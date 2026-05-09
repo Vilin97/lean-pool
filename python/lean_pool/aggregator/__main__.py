@@ -13,6 +13,9 @@ from lean_pool.aggregator.reservoir import (
     save_manifest,
 )
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_OUTPUT = REPO_ROOT / "aggregator" / "candidates" / "raw_data" / "manifest.json"
+
 
 @click.command()
 @click.option(
@@ -24,7 +27,7 @@ from lean_pool.aggregator.reservoir import (
 @click.option(
     "--output",
     type=click.Path(dir_okay=False, path_type=Path),
-    default=Path("cache/manifest.json"),
+    default=DEFAULT_OUTPUT,
     show_default=True,
     help="Where to save the downloaded manifest.",
 )

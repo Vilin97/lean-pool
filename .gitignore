@@ -6,5 +6,9 @@ __pycache__/
 .venv/
 .ruff_cache/
 .pytest_cache/
-cache/
+
+# Aggregator: the Reservoir manifest is fetched on demand and kept
+# locally only. Curated per-package files in candidates/packages/
+# are the source of truth that gets committed.
+/aggregator/candidates/raw_data/
 
