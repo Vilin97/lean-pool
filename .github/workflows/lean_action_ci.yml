@@ -161,15 +161,37 @@ jobs:
 
       - name: Proof profile (advisory)
         run: |
-          set -euo pipefail
+          # Profile every Lean file under LeanPool/. Per-file failures don't
+          # stop the loop; instead they surface in the step's UI (annotation +
+          # log tail) and are summarized at the end. The full log is uploaded
+          # as the proof-profile artifact regardless of outcome.
+          set -uo pipefail
           : > proof-profile.log
+          failed_files=()
           while IFS= read -r -d '' file; do
-            {
-              echo "## $file"
-              ~/.elan/bin/lake env lean --profile "$file"
+            echo "## $file" >> proof-profile.log
+            if ! ~/.elan/bin/lake env lean --profile "$file" >> proof-profile.log 2>&1; then
+              rc=$?
+              failed_files+=("$file")
+              echo "::warning file=$file::lake env lean --profile exited $rc"
               echo
-            } >> proof-profile.log 2>&1
+              echo "----- $file (last 30 lines of profile output) -----"
+              awk -v marker="## $file" '
+                $0 == marker { in_section = 1; next }
+                /^## / && in_section { exit }
+                in_section { print }
+              ' proof-profile.log | tail -n 30
+              echo "----- end $file -----"
+              echo
+            fi
+            echo >> proof-profile.log
           done < <(find LeanPool -name '*.lean' -print0 | sort -z)
+          if [ ${#failed_files[@]} -gt 0 ]; then
+            echo "::error::Proof profiling failed for ${#failed_files[@]} file(s):"
+            printf '  - %s\n' "${failed_files[@]}"
+            echo "Full output is uploaded as the 'proof-profile' artifact."
+            exit 1
+          fi
 
       - name: Upload proof profile
         if: always()
