@@ -14,9 +14,11 @@ from lean_pool.aggregator.reservoir import (
     save_manifest,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def main() -> int:
-    """Download the Reservoir manifest and print a summary.
+    """Download the Reservoir manifest and log a summary.
 
     Returns:
         Process exit code (0 on success).
@@ -43,19 +45,20 @@ def main() -> int:
     save_manifest(manifest, args.output)
 
     packages = manifest.get("packages", [])
-    print(f"Bundled at: {manifest.get('bundledAt')}")
-    print(f"Toolchains: {len(manifest.get('toolchains', []))}")
-    print(f"Packages:   {len(packages)}")
-    print(f"Aliases:    {len(manifest.get('packageAliases', {}))}")
-    print(f"Saved to:   {args.output}")
+    logger.info("Bundled at: %s", manifest.get("bundledAt"))
+    logger.info("Toolchains: %d", len(manifest.get("toolchains", [])))
+    logger.info("Packages:   %d", len(packages))
+    logger.info("Aliases:    %d", len(manifest.get("packageAliases", {})))
+    logger.info("Saved to:   %s", args.output)
 
     if packages:
-        print("\nTop 10 by stars:")
+        logger.info("")
+        logger.info("Top 10 by stars:")
         top = sorted(
             packages, key=lambda package: package.get("stars", 0), reverse=True
         )[:10]
         for package in top:
-            print(f"  {package.get('stars', 0):>5}  {package['fullName']}")
+            logger.info("  %5d  %s", package.get("stars", 0), package["fullName"])
 
     return 0
 
