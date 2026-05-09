@@ -263,7 +263,6 @@ https://github.com/ertwro/one_third_two_thirds
 https://github.com/estradilua/pointwise-birkhoff
 https://github.com/extism/lean4-sdk
 https://github.com/ezhuchko/RLTL-derivatives
-https://github.com/facebookresearch/wybecoder
 https://github.com/faenuccio-teaching/M1_ENS_26
 https://github.com/femtomc/logical_relations.lean
 https://github.com/Ferinko/LeanAStar
