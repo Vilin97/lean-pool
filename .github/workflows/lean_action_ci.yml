@@ -50,7 +50,7 @@ jobs:
             Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
 
       - name: Install Lean
-        uses: leanprover/lean-action@c544e89643240c6b398f14a431bcdc6309e36b3e # v1.4.0
+        uses: leanprover/lean-action@v1
         with:
           auto-config: false
           use-github-cache: false
