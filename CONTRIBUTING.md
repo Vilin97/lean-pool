@@ -26,7 +26,8 @@ lake build
 
 ```bash
 cd python
-uv sync
+uv sync               # install runtime + dev (lint/format) deps
+uv sync --group test  # also install test deps when running pytest
 ```
 
 See [`python/README.md`](python/README.md) for common commands.
@@ -51,7 +52,7 @@ Direct commits to `main` are not allowed. All changes go through pull requests.
 
 ### Lean
 
-CI runs the standard mathlib linter set plus the project-specific checks documented in [`.github/CODE_QUALITY.md`](.github/CODE_QUALITY.md). Build locally with `lake build`.
+CI currently runs `lake exe mk_all --check`, `lake build LeanPool`, and `lake exe runLinter LeanPool` (see [`.github/workflows/lean_action_ci.yml`](.github/workflows/lean_action_ci.yml)). Build locally with `lake build`. Project-wide code-quality conventions and planned automated checks are documented in [`.github/CODE_QUALITY.md`](.github/CODE_QUALITY.md); many are roadmap items not yet enforced in CI.
 
 ### Python
 
@@ -60,7 +61,12 @@ Run from `python/` before pushing:
 ```bash
 uv run ruff check    # lint
 uv run ruff format   # format
-uv run pytest        # tests
+```
+
+When you add Python code, add tests under `python/tests/` and run them with:
+
+```bash
+uv run --group test pytest
 ```
 
 
