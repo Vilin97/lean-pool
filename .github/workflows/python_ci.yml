@@ -1,0 +1,71 @@
+name: Python CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'python/**'
+      - '.github/workflows/python_ci.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'python/**'
+      - '.github/workflows/python_ci.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint (ruff)
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dev dependencies
+        run: cd python && uv sync --locked --group dev
+
+      - name: Ruff check
+        run: cd python && uv run ruff check .
+
+      - name: Ruff format check
+        run: cd python && uv run ruff format --check .
+
+  test:
+    runs-on: ubuntu-latest
+    name: Test (pytest)
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install test dependencies
+        run: cd python && uv sync --locked --group test
+
+      - name: Pytest
+        run: |
+          cd python
+          # Skip cleanly when no tests have been written yet (pytest exits 5
+          # on "no tests collected"). Remove this guard once tests exist.
+          if compgen -G "tests/test_*.py" > /dev/null || compgen -G "tests/**/test_*.py" > /dev/null; then
+            uv run pytest --cov
+          else
+            echo "No test files under tests/; skipping pytest."
+          fi
