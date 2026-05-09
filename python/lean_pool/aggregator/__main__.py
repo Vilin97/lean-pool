@@ -173,6 +173,17 @@ def clone(
     help="Manual package metadata produced by `fetch`.",
 )
 @click.option(
+    "--clones-dir",
+    type=click.Path(file_okay=False, path_type=Path),
+    default=DEFAULT_CLONES_DIR,
+    show_default=True,
+    help=(
+        "Local clone cache (produced by `clone`). Used to read each "
+        "repo's `lean-toolchain` for the Lean column; pass a missing "
+        "directory to leave that column blank."
+    ),
+)
+@click.option(
     "--readme",
     "readme_path",
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
@@ -180,13 +191,19 @@ def clone(
     show_default=True,
     help="Candidates README to update in place.",
 )
-def render(manifest_path: Path, manual_data_path: Path, readme_path: Path) -> None:
+def render(
+    manifest_path: Path,
+    manual_data_path: Path,
+    clones_dir: Path,
+    readme_path: Path,
+) -> None:
     """Render the candidates README table from a manifest."""
     with manifest_path.open() as manifest_file:
         manifest = json.load(manifest_file)
     manual_packages = load_manual_packages(manual_data_path)
     combined = {**manifest, "packages": list(manifest["packages"]) + manual_packages}
-    table = render_table(combined)
+    effective_clones_dir = clones_dir if clones_dir.exists() else None
+    table = render_table(combined, clones_dir=effective_clones_dir)
     update_readme(readme_path, table)
     click.echo(
         f"Rendered {len(combined['packages'])} packages "

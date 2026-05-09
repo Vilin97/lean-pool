@@ -32,8 +32,8 @@ _MARKER_BLOCK = re.compile(
 )
 
 _TABLE_HEADER = (
-    "| Stars | Package | Description | License | Updated | Build |\n"
-    "| ---: | --- | --- | --- | --- | :---: |\n"
+    "| Stars | Package | Description | License | Lean | Updated | Build |\n"
+    "| ---: | --- | --- | --- | --- | --- | :---: |\n"
 )
 
 _DESCRIPTION_LIMIT = 120
@@ -47,6 +47,10 @@ _GITHUB_URL_RE = re.compile(
 # whether two URLs refer to the same repo (Lake project naming convention,
 # git clone URL convention).
 _REPO_NAME_SUFFIXES = (".lean", ".git")
+
+# Strip the ``leanprover/lean4:`` channel prefix from a ``lean-toolchain``
+# pin so the table cell shows just the version (e.g. ``v4.30.0``).
+_TOOLCHAIN_PREFIX_RE = re.compile(r"^leanprover/lean4:", re.IGNORECASE)
 
 
 def canonical_key(owner: str, name: str) -> str:
@@ -123,7 +127,38 @@ def _build_glyph(build: Build | None) -> str:
     return "–"
 
 
-def _row(package: Package) -> str:
+def read_toolchain(clones_dir: Path, key: str) -> str | None:
+    """Read the root ``lean-toolchain`` pin for a cloned repo.
+
+    Looks for ``<clones_dir>/<owner>/<name>/lean-toolchain`` (the
+    canonical key controls the directory layout the cloner writes to)
+    and returns just the version part with the ``leanprover/lean4:``
+    channel prefix stripped, so callers see ``v4.30.0`` rather than
+    ``leanprover/lean4:v4.30.0``.
+
+    Args:
+        clones_dir: Root of the local clone cache.
+        key: Canonical ``owner/name`` key from :func:`package_key`.
+
+    Returns:
+        The toolchain version, or ``None`` if the file is missing,
+        unreadable, or empty.
+    """
+    owner, _, name = key.partition("/")
+    path = clones_dir / owner / name / "lean-toolchain"
+    if not path.is_file():
+        return None
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace").strip()
+    except OSError:
+        return None
+    if not text:
+        return None
+    stripped = _TOOLCHAIN_PREFIX_RE.sub("", text, count=1).strip()
+    return stripped or None
+
+
+def _row(package: Package, toolchain: str | None) -> str:
     """Render a single package as a markdown table row."""
     full_name = package["fullName"]
     repo_url = _repo_url(package)
@@ -132,6 +167,7 @@ def _row(package: Package) -> str:
     raw_description = package.get("description") or ""
     description = _escape_cell(_truncate(raw_description, _DESCRIPTION_LIMIT))
     license_name = _escape_cell(package.get("license") or "")
+    toolchain_cell = _escape_cell(toolchain or "")
 
     # Reservoir reports updatedAt as ISO-8601; the leading 10 chars are the
     # date portion, which is the only granularity that's useful here.
@@ -143,11 +179,11 @@ def _row(package: Package) -> str:
     stars = package.get("stars", 0)
     return (
         f"| {stars} | {name_cell} | {description} | "
-        f"{license_name} | {updated} | {build_glyph} |"
+        f"{license_name} | {toolchain_cell} | {updated} | {build_glyph} |"
     )
 
 
-def render_table(manifest: ReservoirManifest) -> str:
+def render_table(manifest: ReservoirManifest, clones_dir: Path | None = None) -> str:
     """Render the manifest as a markdown table.
 
     Packages are deduplicated by :func:`package_key` first (the first
@@ -158,6 +194,10 @@ def render_table(manifest: ReservoirManifest) -> str:
     Args:
         manifest: The full Reservoir manifest with packages in priority
             order.
+        clones_dir: If set, the directory of local shallow clones
+            (produced by ``lean_pool.aggregator clone``). When present,
+            each row's Lean column is read from the repo's
+            ``lean-toolchain`` file; otherwise that column is blank.
 
     Returns:
         A markdown table including header, separator, and one row per
@@ -179,7 +219,16 @@ def render_table(manifest: ReservoirManifest) -> str:
         deduped,
         key=lambda p: (-p.get("stars", 0), p["fullName"].lower()),
     )
-    rows = "\n".join(_row(p) for p in packages)
+
+    def _toolchain_for(package: Package) -> str | None:
+        if clones_dir is None:
+            return None
+        key = package_key(package)
+        if key is None:
+            return None
+        return read_toolchain(clones_dir, key)
+
+    rows = "\n".join(_row(p, _toolchain_for(p)) for p in packages)
     return _TABLE_HEADER + rows + "\n"
 
 
