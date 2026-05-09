@@ -135,6 +135,98 @@ class ReservoirManifest(TypedDict):
     packageAliases: dict[str, str]
 
 
+class TrimmedPackage(TypedDict):
+    """A package reduced to the fields needed for candidate selection.
+
+    The Reservoir manifest stores the full per-toolchain build history
+    and every released version of every package, which together account
+    for ~97% of the bundle's size. Most of that is irrelevant to picking
+    candidates: we only need to know the latest build attempt and the
+    most recent version. ``dependents`` is dropped entirely because the
+    forward-dependency graph in each version's ``dependencies`` is
+    enough to rebuild it if we ever need to.
+    """
+
+    name: str
+    owner: str
+    fullName: str
+    description: str | None
+    keywords: list[str] | None
+    homepage: str | None
+    license: str | None
+    createdAt: str
+    updatedAt: str
+    stars: int
+    sources: list[PackageSource]
+    latestVersion: PackageVersion | None
+    latestBuild: Build | None
+
+
+class TrimmedManifest(TypedDict):
+    """A trimmed Reservoir manifest suitable for committing to the repo.
+
+    Has the same top-level shape as :class:`ReservoirManifest` but with
+    :class:`TrimmedPackage` entries in ``packages``. Toolchains and
+    package aliases are kept verbatim because they are tiny.
+    """
+
+    bundledAt: str
+    toolchains: list[Toolchain]
+    packages: list[TrimmedPackage]
+    packageAliases: dict[str, str]
+
+
+def trim_package(package: Package) -> TrimmedPackage:
+    """Reduce a package to the fields needed for candidate selection.
+
+    Reservoir orders ``versions`` and ``builds`` newest first, so the
+    most recent entry is always at index ``0``.
+
+    Args:
+        package: A package as published in the full Reservoir manifest.
+
+    Returns:
+        The same package with historical builds, historical versions,
+        and the incoming-dependent list dropped.
+    """
+    versions = package.get("versions") or []
+    builds = package.get("builds") or []
+    return {
+        "name": package["name"],
+        "owner": package["owner"],
+        "fullName": package["fullName"],
+        "description": package.get("description"),
+        "keywords": package.get("keywords"),
+        "homepage": package.get("homepage"),
+        "license": package.get("license"),
+        "createdAt": package["createdAt"],
+        "updatedAt": package["updatedAt"],
+        "stars": package["stars"],
+        "sources": package["sources"],
+        "latestVersion": versions[0] if versions else None,
+        "latestBuild": builds[0] if builds else None,
+    }
+
+
+def trim_manifest(manifest: ReservoirManifest) -> TrimmedManifest:
+    """Produce a trimmed manifest suitable for committing to the repo.
+
+    Args:
+        manifest: The full manifest as fetched from Reservoir.
+
+    Returns:
+        A manifest of the same shape with each package reduced via
+        :func:`trim_package`. The full bundle is roughly 50 MB; the
+        trimmed form is around 3 MB.
+    """
+    return {
+        "bundledAt": manifest["bundledAt"],
+        "toolchains": manifest["toolchains"],
+        "packageAliases": manifest["packageAliases"],
+        "packages": [trim_package(p) for p in manifest["packages"]],
+    }
+
+
 def fetch_manifest(
     url: str = MANIFEST_URL, timeout: float = DEFAULT_TIMEOUT_SECONDS
 ) -> ReservoirManifest:
@@ -153,11 +245,11 @@ def fetch_manifest(
         return json.load(response)
 
 
-def save_manifest(manifest: ReservoirManifest, path: Path) -> None:
+def save_manifest(manifest: ReservoirManifest | TrimmedManifest, path: Path) -> None:
     """Write the manifest to disk as pretty-printed JSON.
 
     Args:
-        manifest: The parsed manifest.
+        manifest: The parsed manifest, full or trimmed.
         path: The output file path; parent directories are created.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
