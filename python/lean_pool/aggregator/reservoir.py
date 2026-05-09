@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 from urllib.request import urlopen
 
 logger = logging.getLogger(__name__)
@@ -20,9 +20,18 @@ MANIFEST_URL = "https://reservoir.lean-lang.org/index/manifest.json"
 DEFAULT_TIMEOUT_SECONDS = 60
 
 
+class ReservoirManifest(TypedDict):
+    """Top-level shape of the Reservoir manifest JSON."""
+
+    bundledAt: str
+    toolchains: list[dict[str, Any]]
+    packages: list[dict[str, Any]]
+    packageAliases: dict[str, str]
+
+
 def fetch_manifest(
     url: str = MANIFEST_URL, timeout: float = DEFAULT_TIMEOUT_SECONDS
-) -> dict[str, Any]:
+) -> ReservoirManifest:
     """Download and parse the Reservoir manifest JSON.
 
     Args:
@@ -30,15 +39,15 @@ def fetch_manifest(
         timeout: Socket timeout in seconds for the HTTP request.
 
     Returns:
-        The parsed manifest as a dictionary with keys ``bundledAt``,
-        ``toolchains``, ``packages``, and ``packageAliases``.
+        The parsed manifest with ``bundledAt``, ``toolchains``,
+        ``packages``, and ``packageAliases`` fields.
     """
     logger.info("Fetching %s", url)
     with urlopen(url, timeout=timeout) as response:
         return json.load(response)
 
 
-def save_manifest(manifest: dict[str, Any], path: Path) -> None:
+def save_manifest(manifest: ReservoirManifest, path: Path) -> None:
     """Write the manifest to disk as pretty-printed JSON.
 
     Args:

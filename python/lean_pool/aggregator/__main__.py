@@ -32,6 +32,7 @@ def main(url: str, output: Path) -> None:
     """Download the Reservoir manifest and save it to disk."""
     manifest = fetch_manifest(url)
     save_manifest(manifest, output)
+    click.echo(f"Saved {len(manifest['packages'])} packages to {output}")
 
 
 if __name__ == "__main__":
