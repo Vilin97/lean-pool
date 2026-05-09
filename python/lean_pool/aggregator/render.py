@@ -32,9 +32,15 @@ _MARKER_BLOCK = re.compile(
 )
 
 _TABLE_HEADER = (
-    "| Stars | Package | Description | License | Lean | Updated | Build |\n"
-    "| ---: | --- | --- | --- | --- | --- | :---: |\n"
+    "| Stars | Package | Description | License | Lean | LOC | Updated | Build |\n"
+    "| ---: | --- | --- | --- | --- | ---: | --- | :---: |\n"
 )
+
+# Directories under a clone whose ``.lean`` files don't count as the
+# project's own code. ``.lake`` is Lake's working dir (downloaded deps,
+# build artefacts); ``lake-packages`` is the older Lake convention;
+# ``build`` and ``.git`` cover the obvious cases.
+_LOC_EXCLUDE_DIR_NAMES = frozenset({".lake", ".git", "lake-packages", "build"})
 
 _DESCRIPTION_LIMIT = 120
 
@@ -127,6 +133,41 @@ def _build_glyph(build: Build | None) -> str:
     return "–"
 
 
+def count_lean_loc(clones_dir: Path, key: str) -> int | None:
+    """Sum lines across every ``.lean`` file in a cloned repo's main tree.
+
+    Walks ``<clones_dir>/<owner>/<name>/`` recursively and totals lines
+    across all files matching ``*.lean``, skipping anything inside Lake's
+    working dirs (``.lake``, ``lake-packages``, ``build``) and ``.git``.
+    The count uses raw newline-count semantics (so it matches ``wc -l``)
+    rather than non-blank or non-comment lines, because the goal is a
+    cheap "is there meaningful code here" signal, not a full SLOC.
+
+    Args:
+        clones_dir: Root of the local clone cache.
+        key: Canonical ``owner/name`` key from :func:`package_key`.
+
+    Returns:
+        ``None`` if the clone directory is missing (so we cannot tell
+        what is there); ``0`` if it exists but has no ``.lean`` files;
+        otherwise the total line count.
+    """
+    owner, _, name = key.partition("/")
+    repo = clones_dir / owner / name
+    if not repo.is_dir():
+        return None
+    total = 0
+    for path in repo.rglob("*.lean"):
+        if any(part in _LOC_EXCLUDE_DIR_NAMES for part in path.parts):
+            continue
+        try:
+            with path.open("rb") as handle:
+                total += sum(1 for _ in handle)
+        except OSError:
+            continue
+    return total
+
+
 def read_toolchain(clones_dir: Path, key: str) -> str | None:
     """Read the root ``lean-toolchain`` pin for a cloned repo.
 
@@ -158,7 +199,7 @@ def read_toolchain(clones_dir: Path, key: str) -> str | None:
     return stripped or None
 
 
-def _row(package: Package, toolchain: str | None) -> str:
+def _row(package: Package, toolchain: str | None, loc: int | None) -> str:
     """Render a single package as a markdown table row."""
     full_name = package["fullName"]
     repo_url = _repo_url(package)
@@ -168,6 +209,7 @@ def _row(package: Package, toolchain: str | None) -> str:
     description = _escape_cell(_truncate(raw_description, _DESCRIPTION_LIMIT))
     license_name = _escape_cell(package.get("license") or "")
     toolchain_cell = _escape_cell(toolchain or "")
+    loc_cell = "" if loc is None else f"{loc:,}"
 
     # Reservoir reports updatedAt as ISO-8601; the leading 10 chars are the
     # date portion, which is the only granularity that's useful here.
@@ -179,7 +221,8 @@ def _row(package: Package, toolchain: str | None) -> str:
     stars = package.get("stars", 0)
     return (
         f"| {stars} | {name_cell} | {description} | "
-        f"{license_name} | {toolchain_cell} | {updated} | {build_glyph} |"
+        f"{license_name} | {toolchain_cell} | {loc_cell} | "
+        f"{updated} | {build_glyph} |"
     )
 
 
@@ -187,14 +230,15 @@ def render_table(
     manifest: ReservoirManifest,
     clones_dir: Path | None = None,
     min_stars: int = 0,
+    min_loc: int = 0,
 ) -> str:
     """Render the manifest as a markdown table.
 
     Packages are deduplicated by :func:`package_key` first (the first
     occurrence wins, so callers should put authoritative entries —
     typically Reservoir packages — before the fallback list), then
-    optionally filtered by ``min_stars``, then sorted by star count
-    descending with ``fullName`` tiebreak.
+    optionally filtered by ``min_stars`` and ``min_loc``, then sorted
+    by star count descending with ``fullName`` tiebreak.
 
     Args:
         manifest: The full Reservoir manifest with packages in priority
@@ -202,12 +246,18 @@ def render_table(
         clones_dir: If set, the directory of local shallow clones
             (produced by ``lean_pool.aggregator clone``). When present,
             each row's Lean column is read from the repo's
-            ``lean-toolchain`` file; otherwise that column is blank.
+            ``lean-toolchain`` file and the LOC column is filled by
+            counting ``.lean`` lines under the clone; otherwise both
+            columns are blank.
         min_stars: Drop rows with strictly fewer stars than this from
             the rendered output. Used to keep the table small enough
             for GitHub to render — the underlying data files still
             contain every package, this only affects the markdown
             table.
+        min_loc: Drop rows whose local clone has fewer ``.lean`` lines
+            than this. Repos that we have no clone for (LOC unknown)
+            are kept regardless. Has no effect when ``clones_dir`` is
+            ``None`` because there's nothing to count.
 
     Returns:
         A markdown table including header, separator, and one row per
@@ -228,20 +278,29 @@ def render_table(
     if min_stars > 0:
         deduped = [p for p in deduped if (p.get("stars") or 0) >= min_stars]
 
-    packages = sorted(
-        deduped,
-        key=lambda p: (-p.get("stars", 0), p["fullName"].lower()),
-    )
-
-    def _toolchain_for(package: Package) -> str | None:
+    def _details(package: Package) -> tuple[str | None, int | None]:
         if clones_dir is None:
-            return None
+            return None, None
         key = package_key(package)
         if key is None:
-            return None
-        return read_toolchain(clones_dir, key)
+            return None, None
+        return read_toolchain(clones_dir, key), count_lean_loc(clones_dir, key)
 
-    rows = "\n".join(_row(p, _toolchain_for(p)) for p in packages)
+    enriched = [(package, *_details(package)) for package in deduped]
+
+    if min_loc > 0 and clones_dir is not None:
+        # LOC == None means "no local clone" — keep those, since absence
+        # of data shouldn't silently drop a package. LOC == 0 with a
+        # clone present is a real "empty repo" signal and gets filtered.
+        enriched = [row for row in enriched if row[2] is None or row[2] >= min_loc]
+
+    enriched.sort(
+        key=lambda row: (-row[0].get("stars", 0), row[0]["fullName"].lower()),
+    )
+
+    rows = "\n".join(
+        _row(package, toolchain, loc) for package, toolchain, loc in enriched
+    )
     return _TABLE_HEADER + rows + "\n"
 
 

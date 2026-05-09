@@ -10,6 +10,7 @@ from lean_pool.aggregator.render import (
     BEGIN_MARKER,
     END_MARKER,
     canonical_key,
+    count_lean_loc,
     package_key,
     read_toolchain,
     render_table,
@@ -312,6 +313,111 @@ def test_render_table_fills_lean_column_from_clones_dir(tmp_path: Path) -> None:
 
     package_row = next(line for line in table.splitlines() if "acme/demo" in line)
     assert " v4.30.0 " in package_row
+
+
+def _write_lean_files(repo_dir: Path, files: dict[str, int]) -> None:
+    """Write fake ``.lean`` files with ``files[path] = line count``."""
+    for relative_path, lines in files.items():
+        path = repo_dir / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("\n".join(["theorem x : True := trivial"] * lines) + "\n")
+
+
+def test_count_lean_loc_sums_all_lean_files(tmp_path: Path) -> None:
+    """LOC = total lines across every ``.lean`` file under the repo dir."""
+    repo = tmp_path / "acme" / "demo"
+    _write_lean_files(repo, {"Main.lean": 5, "Demo/Sub.lean": 7})
+
+    assert count_lean_loc(tmp_path, "acme/demo") == 12
+
+
+def test_count_lean_loc_excludes_lake_and_build_dirs(tmp_path: Path) -> None:
+    """``.lake``, ``lake-packages``, ``build``, and ``.git`` are skipped."""
+    repo = tmp_path / "acme" / "demo"
+    _write_lean_files(
+        repo,
+        {
+            "Main.lean": 3,
+            ".lake/packages/mathlib/Mathlib.lean": 1000,
+            "lake-packages/std/Std.lean": 1000,
+            "build/Output.lean": 100,
+            ".git/hooks/Hook.lean": 1,
+        },
+    )
+
+    assert count_lean_loc(tmp_path, "acme/demo") == 3
+
+
+def test_count_lean_loc_returns_none_without_clone(tmp_path: Path) -> None:
+    """A missing clone dir returns None so the renderer can skip filtering."""
+    assert count_lean_loc(tmp_path, "missing/repo") is None
+
+
+def test_count_lean_loc_returns_zero_for_empty_clone(tmp_path: Path) -> None:
+    """An existing clone with no ``.lean`` files counts as zero, not None."""
+    (tmp_path / "acme" / "empty").mkdir(parents=True)
+
+    assert count_lean_loc(tmp_path, "acme/empty") == 0
+
+
+def test_render_table_includes_loc_column_header() -> None:
+    """The LOC column header lives between Lean and Updated, right-aligned."""
+    table = render_table(_manifest([_package(stars=1)]))
+
+    header_line = table.splitlines()[0]
+    separator_line = table.splitlines()[1]
+    assert "| LOC |" in header_line
+    assert header_line.index("| Lean ") < header_line.index("| LOC ")
+    assert header_line.index("| LOC ") < header_line.index("| Updated ")
+    # LOC column right-aligned via ``---:`` in the separator row.
+    columns = [cell.strip() for cell in separator_line.split("|")]
+    assert columns[6] == "---:"
+
+
+def test_render_table_fills_loc_column_from_clones_dir(tmp_path: Path) -> None:
+    """LOC cells render the per-repo line count formatted with commas."""
+    repo = tmp_path / "acme" / "demo"
+    _write_lean_files(repo, {"Main.lean": 1234})
+    package = _package(
+        full_name="acme/demo",
+        repo_url="https://github.com/acme/demo",
+        stars=1,
+    )
+
+    table = render_table(_manifest([package]), clones_dir=tmp_path)
+
+    package_row = next(line for line in table.splitlines() if "acme/demo" in line)
+    assert " 1,234 " in package_row
+
+
+def test_render_table_filters_below_min_loc(tmp_path: Path) -> None:
+    """``min_loc`` drops rows whose clone has fewer .lean lines than the floor."""
+    big = _package(full_name="alpha/big", stars=5)
+    small = _package(full_name="beta/small", stars=5)
+    no_clone = _package(full_name="gamma/missing", stars=5)
+    _write_lean_files(tmp_path / "alpha" / "big", {"Main.lean": 300})
+    _write_lean_files(tmp_path / "beta" / "small", {"Main.lean": 50})
+    # gamma/missing intentionally has no clone dir.
+
+    table = render_table(
+        _manifest([big, small, no_clone]),
+        clones_dir=tmp_path,
+        min_loc=250,
+    )
+
+    assert "alpha/big" in table
+    assert "beta/small" not in table
+    # Repos without a clone (LOC unknown) are kept; only known-too-small drops.
+    assert "gamma/missing" in table
+
+
+def test_render_table_min_loc_no_op_without_clones_dir(tmp_path: Path) -> None:
+    """Without ``clones_dir`` we cannot count LOC, so the filter is a no-op."""
+    package = _package(full_name="acme/demo", stars=5)
+
+    table = render_table(_manifest([package]), clones_dir=None, min_loc=10000)
+
+    assert "acme/demo" in table
 
 
 def test_render_table_filters_below_min_stars() -> None:

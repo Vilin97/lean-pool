@@ -195,6 +195,19 @@ def clone(
     ),
 )
 @click.option(
+    "--min-loc",
+    type=int,
+    default=250,
+    show_default=True,
+    help=(
+        "Drop rows whose local clone has fewer .lean lines than this. "
+        "Counts every .lean file outside .lake/.git/build dirs. Repos "
+        "with no local clone (LOC unknown) are kept; this is purely a "
+        "preliminary filter to remove empty/MWE/scratch projects. "
+        "Pass 0 to disable; effective only when --clones-dir exists."
+    ),
+)
+@click.option(
     "--readme",
     "readme_path",
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
@@ -207,6 +220,7 @@ def render(
     manual_data_path: Path,
     clones_dir: Path,
     min_stars: int,
+    min_loc: int,
     readme_path: Path,
 ) -> None:
     """Render the candidates README table from a manifest."""
@@ -219,6 +233,7 @@ def render(
         combined,
         clones_dir=effective_clones_dir,
         min_stars=min_stars,
+        min_loc=min_loc,
     )
     update_readme(readme_path, table)
     rendered_rows = sum(1 for line in table.splitlines() if line.startswith("| "))
@@ -227,7 +242,7 @@ def render(
     click.echo(
         f"Rendered {rendered_rows} of {len(combined['packages'])} packages "
         f"({len(manifest['packages'])} reservoir + {len(manual_packages)} manual; "
-        f"min-stars={min_stars}) into {readme_path}"
+        f"min-stars={min_stars}, min-loc={min_loc}) into {readme_path}"
     )
 
 
