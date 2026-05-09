@@ -32,7 +32,7 @@ _MARKER_BLOCK = re.compile(
 )
 
 _TABLE_HEADER = (
-    "| Stars | Package | Description | License | Latest version | Build |\n"
+    "| Stars | Package | Description | License | Updated | Build |\n"
     "| ---: | --- | --- | --- | --- | :---: |\n"
 )
 
@@ -86,8 +86,9 @@ def _row(package: Package) -> str:
     description = _escape_cell(_truncate(raw_description, _DESCRIPTION_LIMIT))
     license_name = _escape_cell(package.get("license") or "")
 
-    versions = package.get("versions") or []
-    latest_version = versions[0]["version"] if versions else ""
+    # Reservoir reports updatedAt as ISO-8601; the leading 10 chars are the
+    # date portion, which is the only granularity that's useful here.
+    updated = (package.get("updatedAt") or "")[:10]
 
     builds = package.get("builds") or []
     build_glyph = _build_glyph(builds[0] if builds else None)
@@ -95,7 +96,7 @@ def _row(package: Package) -> str:
     stars = package.get("stars", 0)
     return (
         f"| {stars} | {name_cell} | {description} | "
-        f"{license_name} | {latest_version} | {build_glyph} |"
+        f"{license_name} | {updated} | {build_glyph} |"
     )
 
 

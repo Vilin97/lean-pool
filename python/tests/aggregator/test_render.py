@@ -86,25 +86,20 @@ def test_render_table_sorts_by_stars_descending_then_name() -> None:
     assert "acme/low" in package_order[2]
 
 
-def test_render_table_renders_latest_version_and_build_glyph() -> None:
-    """The table picks versions[0] and converts builds[0].built to a glyph."""
+def test_render_table_renders_updated_date_and_build_glyph() -> None:
+    """The table shows the updatedAt date and the latest build glyph."""
     manifest = _manifest(
         [
             _package(
                 stars=1,
-                versions=[
-                    {"version": "0.2.0", "revision": "abc", "date": "2026-05-01"},
-                    {"version": "0.1.0", "revision": "def", "date": "2026-04-01"},
-                ],
                 builds=[{"toolchain": "v4.30.0", "built": True, "runAt": "2026-05-02"}],
             )
         ]
     )
-
+    # The fixture's updatedAt is fixed at 2026-05-01T00:00:00Z.
     table = render_table(manifest)
 
-    assert "0.2.0" in table
-    assert "0.1.0" not in table
+    assert "2026-05-01" in table
     assert " ✓ " in table
 
 
