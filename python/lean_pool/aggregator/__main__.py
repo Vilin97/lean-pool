@@ -32,8 +32,8 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("manifest.json"),
-        help="Where to save the downloaded manifest (default: ./manifest.json)",
+        default=Path("cache/manifest.json"),
+        help="Where to save the downloaded manifest (default: ./cache/manifest.json)",
     )
     args = parser.parse_args()
 

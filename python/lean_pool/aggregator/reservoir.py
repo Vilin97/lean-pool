@@ -17,20 +17,24 @@ from urllib.request import urlopen
 logger = logging.getLogger(__name__)
 
 MANIFEST_URL = "https://reservoir.lean-lang.org/index/manifest.json"
+DEFAULT_TIMEOUT_SECONDS = 60
 
 
-def fetch_manifest(url: str = MANIFEST_URL) -> dict[str, Any]:
+def fetch_manifest(
+    url: str = MANIFEST_URL, timeout: float = DEFAULT_TIMEOUT_SECONDS
+) -> dict[str, Any]:
     """Download and parse the Reservoir manifest JSON.
 
     Args:
         url: The URL to fetch the manifest from.
+        timeout: Socket timeout in seconds for the HTTP request.
 
     Returns:
         The parsed manifest as a dictionary with keys ``bundledAt``,
         ``toolchains``, ``packages``, and ``packageAliases``.
     """
     logger.info("Fetching %s", url)
-    with urlopen(url) as response:
+    with urlopen(url, timeout=timeout) as response:
         return json.load(response)
 
 
