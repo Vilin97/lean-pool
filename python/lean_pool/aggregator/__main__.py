@@ -5,6 +5,9 @@ Run with ``uv run python -m lean_pool.aggregator <subcommand>`` from
 
 - ``fetch``: download the Reservoir manifest and the manual package
   list into ``raw_data/``.
+- ``clone``: shallow-clone every candidate repo into
+  ``raw_data/clones/`` so downstream classification can read source
+  files locally.
 - ``render``: regenerate the candidates README table from those files.
 """
 
@@ -13,6 +16,10 @@ from pathlib import Path
 
 import click
 
+from lean_pool.aggregator.cloner import (
+    DEFAULT_PARALLELISM,
+    clone_all,
+)
 from lean_pool.aggregator.manual import (
     fetch_manual_packages,
     load_manual_packages,
@@ -32,6 +39,7 @@ DEFAULT_MANIFEST = CANDIDATES_DIR / "raw_data" / "manifest.json"
 DEFAULT_MANUAL_LIST = CANDIDATES_DIR / "manual.txt"
 DEFAULT_MANUAL_DATA = CANDIDATES_DIR / "raw_data" / "manual_packages.json"
 DEFAULT_MANUAL_CACHE = CANDIDATES_DIR / "raw_data" / "manual_cache"
+DEFAULT_CLONES_DIR = CANDIDATES_DIR / "raw_data" / "clones"
 DEFAULT_README = CANDIDATES_DIR / "README.md"
 
 
@@ -94,6 +102,57 @@ def fetch(
         click.echo(f"Saved {len(manual_packages)} manual packages to {manual_output}")
     else:
         click.echo(f"No manual list at {manual_list}; skipping manual fetch.")
+
+
+@cli.command()
+@click.option(
+    "--manifest",
+    "manifest_path",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=DEFAULT_MANIFEST,
+    show_default=True,
+    help="Manifest JSON produced by `fetch`.",
+)
+@click.option(
+    "--manual-data",
+    "manual_data_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_MANUAL_DATA,
+    show_default=True,
+    help="Manual package metadata produced by `fetch`.",
+)
+@click.option(
+    "--clones-dir",
+    type=click.Path(file_okay=False, path_type=Path),
+    default=DEFAULT_CLONES_DIR,
+    show_default=True,
+    help="Where to write shallow blobless clones.",
+)
+@click.option(
+    "--parallelism",
+    type=int,
+    default=DEFAULT_PARALLELISM,
+    show_default=True,
+    help="Maximum concurrent `git clone` processes.",
+)
+def clone(
+    manifest_path: Path,
+    manual_data_path: Path,
+    clones_dir: Path,
+    parallelism: int,
+) -> None:
+    """Shallow-clone every candidate repo into the local cache."""
+    with manifest_path.open() as manifest_file:
+        manifest = json.load(manifest_file)
+    manual_packages = load_manual_packages(manual_data_path)
+    packages = list(manifest["packages"]) + manual_packages
+    cloned_now, already_present, failed = clone_all(
+        packages, clones_dir, parallelism=parallelism
+    )
+    click.echo(
+        f"Clones at {clones_dir}: "
+        f"{cloned_now} new, {already_present} cached, {failed} failed."
+    )
 
 
 @cli.command()
