@@ -222,6 +222,6 @@ theorem tendsto_path {T : ℝ}
         simpa using eventually_of_mem self_mem_nhdsWithin this)
     (tendsto_nhdsWithin_of_tendsto_nhds <|
       Continuous.tendsto' ((gronwallBound_continuous_ε 0 K (t - t₀)).comp
-        (continuous_id.mul continuous_const)) 0 0 (by grind [gronwallBound_ε0_δ0])))
+        (continuous_id.mul continuous_const)) 0 0 (by simp [gronwallBound_ε0_δ0])))
 
 end ODE.EulerMethod
