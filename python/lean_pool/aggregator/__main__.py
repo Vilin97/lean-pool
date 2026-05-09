@@ -51,9 +51,11 @@ def main() -> int:
 
     if packages:
         print("\nTop 10 by stars:")
-        top = sorted(packages, key=lambda p: p.get("stars", 0), reverse=True)[:10]
-        for pkg in top:
-            print(f"  {pkg.get('stars', 0):>5}  {pkg['fullName']}")
+        top = sorted(
+            packages, key=lambda package: package.get("stars", 0), reverse=True
+        )[:10]
+        for package in top:
+            print(f"  {package.get('stars', 0):>5}  {package['fullName']}")
 
     return 0
 

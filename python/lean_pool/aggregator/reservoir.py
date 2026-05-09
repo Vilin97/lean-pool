@@ -46,5 +46,5 @@ def save_manifest(manifest: dict[str, Any], path: Path) -> None:
         path: The output file path; parent directories are created.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w") as f:
-        json.dump(manifest, f, indent=2)
+    with path.open("w") as output_file:
+        json.dump(manifest, output_file, indent=2)
