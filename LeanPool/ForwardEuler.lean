@@ -34,9 +34,10 @@ Vasily Ilin (with Aristotle).
 
 ## Status
 
-Imported from `Vilin97/forward_euler` (Lean v4.28.0-rc1 / Mathlib
-v4.28.0-rc1). Lean Pool currently pins Lean v4.30.0-rc2 / Mathlib
-v4.30.0-rc2, so this import is **expected to fail the build until the
-sources are ported to the newer Mathlib API**. No `sorry`s in the
-upstream.
+Sorry-free. Ported from `Vilin97/forward_euler` (originally Lean
+v4.28.0-rc1) to Lean Pool's pinned toolchain (Lean v4.30.0-rc2 /
+Mathlib v4.30.0-rc2). Single-tactic adjustment: one `grind` invocation
+in `tendsto_path` was replaced with `simp [gronwallBound_ε0_δ0]`
+because `grind`'s heuristics tightened between v4.28 and v4.30. The
+rest of the upstream proof is verbatim. Builds cleanly.
 -/
