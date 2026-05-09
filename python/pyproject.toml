@@ -4,7 +4,9 @@ version = "0.0.1"
 description = "Python tooling for the lean-pool repository (Reservoir aggregation, candidate filtering)."
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "click>=8.1",
+]
 
 
 [dependency-groups]
