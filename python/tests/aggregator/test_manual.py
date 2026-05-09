@@ -95,7 +95,7 @@ def test_to_package_normalises_unrecognised_license_to_none() -> None:
     assert package["license"] is None
 
 
-def test_fetch_manual_packages_calls_gh_for_each_entry() -> None:
+def test_fetch_manual_packages_calls_gh_for_each_entry(tmp_path: Path) -> None:
     """Each (owner, name) entry triggers one ``gh api repos/...`` call."""
     entries = [("acme", "first"), ("acme", "second")]
     responses = {
@@ -115,10 +115,67 @@ def test_fetch_manual_packages_calls_gh_for_each_entry() -> None:
         return _R()
 
     with patch("lean_pool.aggregator.manual.subprocess.run", side_effect=fake_run):
-        packages = fetch_manual_packages(entries)
+        packages = fetch_manual_packages(entries, tmp_path / "cache")
 
     assert [p["fullName"] for p in packages] == ["acme/first", "acme/second"]
     assert [p["stars"] for p in packages] == [1, 2]
+
+
+def test_fetch_manual_packages_uses_cache_on_second_run(tmp_path: Path) -> None:
+    """A cached entry is loaded from disk without calling gh again."""
+    entries = [("acme", "demo")]
+    cache_dir = tmp_path / "cache"
+    response = _gh_repo_response(full_name="acme/demo", stars=42)
+    call_count = 0
+
+    def fake_run(cmd, **_):
+        nonlocal call_count
+        call_count += 1
+
+        class _R:
+            returncode = 0
+            stdout = json.dumps(response)
+            stderr = ""
+
+        return _R()
+
+    with patch("lean_pool.aggregator.manual.subprocess.run", side_effect=fake_run):
+        first = fetch_manual_packages(entries, cache_dir)
+        second = fetch_manual_packages(entries, cache_dir)
+
+    assert call_count == 1, "second run should hit the cache, not the API"
+    assert first == second
+    assert (cache_dir / "acme__demo.json").exists()
+
+
+def test_fetch_manual_packages_skips_failures(caplog, tmp_path: Path) -> None:
+    """A 404 on one entry does not abort the rest of the bulk fetch."""
+    entries = [("acme", "first"), ("acme", "missing"), ("acme", "third")]
+    responses = {
+        "repos/acme/first": _gh_repo_response(full_name="acme/first", stars=1),
+        "repos/acme/third": _gh_repo_response(full_name="acme/third", stars=3),
+    }
+
+    def fake_run(cmd, **_):
+        endpoint = cmd[2]
+
+        class _R:
+            stdout = ""
+            stderr = ""
+            returncode = 0
+
+        if endpoint not in responses:
+            _R.returncode = 1
+            _R.stderr = "gh: Not Found (HTTP 404)"
+            return _R
+        _R.stdout = json.dumps(responses[endpoint])
+        return _R
+
+    with patch("lean_pool.aggregator.manual.subprocess.run", side_effect=fake_run):
+        packages = fetch_manual_packages(entries, tmp_path / "cache")
+
+    assert [p["fullName"] for p in packages] == ["acme/first", "acme/third"]
+    assert any("acme/missing" in record.message for record in caplog.records)
 
 
 def test_save_and_load_manual_packages_round_trip(tmp_path: Path) -> None:

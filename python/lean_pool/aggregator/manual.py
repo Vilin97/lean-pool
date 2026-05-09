@@ -128,20 +128,54 @@ def _to_package(repo: dict) -> Package:
     }
 
 
-def fetch_manual_packages(entries: list[tuple[str, str]]) -> list[Package]:
-    """Fetch GitHub metadata for each manual entry.
+def _cache_path(cache_dir: Path, owner: str, name: str) -> Path:
+    """Return the per-entry cache file path."""
+    return cache_dir / f"{owner}__{name}.json"
+
+
+def fetch_manual_packages(
+    entries: list[tuple[str, str]], cache_dir: Path
+) -> list[Package]:
+    """Fetch GitHub metadata for each manual entry, caching per-entry.
+
+    Each successful response is written to
+    ``cache_dir/<owner>__<name>.json`` immediately so partial progress
+    survives a rate-limit pause or process interruption. On re-run,
+    cached entries are loaded from disk instead of re-fetched. To force
+    a refresh of one entry, delete its cache file; for a full refresh,
+    delete the cache directory.
+
+    Entries that fail (renamed, deleted, made private, rate-limited)
+    are logged and skipped so the bulk fetch can finish without
+    aborting.
 
     Args:
         entries: ``(owner, name)`` pairs from :func:`parse_manual_list`.
+        cache_dir: Directory holding per-entry JSON files. Created if
+            missing.
 
     Returns:
-        A list of Reservoir-shaped package dicts in input order.
+        A list of Reservoir-shaped package dicts in input order, with
+        skipped entries omitted.
     """
+    cache_dir.mkdir(parents=True, exist_ok=True)
     packages: list[Package] = []
     for owner, name in entries:
+        cached = _cache_path(cache_dir, owner, name)
+        if cached.exists():
+            with cached.open() as cache_file:
+                packages.append(json.load(cache_file))
+            continue
         logger.info("Fetching manual entry %s/%s", owner, name)
-        repo = _gh_api(f"repos/{owner}/{name}")
-        packages.append(_to_package(repo))
+        try:
+            repo = _gh_api(f"repos/{owner}/{name}")
+        except RuntimeError as exc:
+            logger.warning("Skipping %s/%s: %s", owner, name, exc)
+            continue
+        package = _to_package(repo)
+        with cached.open("w") as cache_file:
+            json.dump(package, cache_file, indent=2)
+        packages.append(package)
     return packages
 
 

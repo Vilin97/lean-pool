@@ -31,6 +31,7 @@ CANDIDATES_DIR = REPO_ROOT / "aggregator" / "candidates"
 DEFAULT_MANIFEST = CANDIDATES_DIR / "raw_data" / "manifest.json"
 DEFAULT_MANUAL_LIST = CANDIDATES_DIR / "manual.txt"
 DEFAULT_MANUAL_DATA = CANDIDATES_DIR / "raw_data" / "manual_packages.json"
+DEFAULT_MANUAL_CACHE = CANDIDATES_DIR / "raw_data" / "manual_cache"
 DEFAULT_README = CANDIDATES_DIR / "README.md"
 
 
@@ -67,7 +68,20 @@ def cli() -> None:
     show_default=True,
     help="Where to save the manual package metadata.",
 )
-def fetch(url: str, output: Path, manual_list: Path, manual_output: Path) -> None:
+@click.option(
+    "--manual-cache",
+    type=click.Path(file_okay=False, path_type=Path),
+    default=DEFAULT_MANUAL_CACHE,
+    show_default=True,
+    help="Per-entry cache directory; cached entries skip the API call.",
+)
+def fetch(
+    url: str,
+    output: Path,
+    manual_list: Path,
+    manual_output: Path,
+    manual_cache: Path,
+) -> None:
     """Download the Reservoir manifest and manual package metadata."""
     manifest = fetch_manifest(url)
     save_manifest(manifest, output)
@@ -75,7 +89,7 @@ def fetch(url: str, output: Path, manual_list: Path, manual_output: Path) -> Non
 
     if manual_list.exists():
         entries = parse_manual_list(manual_list)
-        manual_packages = fetch_manual_packages(entries)
+        manual_packages = fetch_manual_packages(entries, manual_cache)
         save_manual_packages(manual_packages, manual_output)
         click.echo(f"Saved {len(manual_packages)} manual packages to {manual_output}")
     else:
