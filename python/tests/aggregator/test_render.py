@@ -314,6 +314,43 @@ def test_render_table_fills_lean_column_from_clones_dir(tmp_path: Path) -> None:
     assert " v4.30.0 " in package_row
 
 
+def test_render_table_filters_below_min_stars() -> None:
+    """``min_stars`` excludes low-star rows so GitHub still renders the table."""
+    manifest = _manifest(
+        [
+            _package(full_name="alpha/big", stars=42),
+            _package(full_name="beta/edge", stars=2),
+            _package(full_name="gamma/one", stars=1),
+            _package(full_name="delta/zero", stars=0),
+        ]
+    )
+
+    table = render_table(manifest, min_stars=2)
+
+    body_lines = [line for line in table.splitlines() if line.startswith("| ")][2:]
+    package_cells = [line.split("|")[2] for line in body_lines]
+    rendered = " ".join(package_cells)
+    assert "alpha/big" in rendered
+    assert "beta/edge" in rendered
+    assert "gamma/one" not in rendered
+    assert "delta/zero" not in rendered
+
+
+def test_render_table_min_stars_zero_keeps_everything() -> None:
+    """``min_stars=0`` is a no-op so existing callers keep current behaviour."""
+    manifest = _manifest(
+        [
+            _package(full_name="alpha/some", stars=3),
+            _package(full_name="beta/zero", stars=0),
+        ]
+    )
+
+    table = render_table(manifest, min_stars=0)
+
+    assert "alpha/some" in table
+    assert "beta/zero" in table
+
+
 def test_render_table_lean_column_blank_without_clone(tmp_path: Path) -> None:
     """Repos without a local clone show an empty Lean cell, not an error."""
     package = _package(stars=1)

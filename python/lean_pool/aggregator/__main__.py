@@ -184,6 +184,17 @@ def clone(
     ),
 )
 @click.option(
+    "--min-stars",
+    type=int,
+    default=2,
+    show_default=True,
+    help=(
+        "Drop rows with fewer stars than this from the rendered table. "
+        "Underlying data files keep every package; this only affects "
+        "the markdown table size so GitHub keeps rendering it."
+    ),
+)
+@click.option(
     "--readme",
     "readme_path",
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
@@ -195,6 +206,7 @@ def render(
     manifest_path: Path,
     manual_data_path: Path,
     clones_dir: Path,
+    min_stars: int,
     readme_path: Path,
 ) -> None:
     """Render the candidates README table from a manifest."""
@@ -203,12 +215,19 @@ def render(
     manual_packages = load_manual_packages(manual_data_path)
     combined = {**manifest, "packages": list(manifest["packages"]) + manual_packages}
     effective_clones_dir = clones_dir if clones_dir.exists() else None
-    table = render_table(combined, clones_dir=effective_clones_dir)
+    table = render_table(
+        combined,
+        clones_dir=effective_clones_dir,
+        min_stars=min_stars,
+    )
     update_readme(readme_path, table)
+    rendered_rows = sum(1 for line in table.splitlines() if line.startswith("| "))
+    # Subtract the two header lines from the count.
+    rendered_rows = max(0, rendered_rows - 2)
     click.echo(
-        f"Rendered {len(combined['packages'])} packages "
-        f"({len(manifest['packages'])} reservoir + {len(manual_packages)} manual) "
-        f"into {readme_path}"
+        f"Rendered {rendered_rows} of {len(combined['packages'])} packages "
+        f"({len(manifest['packages'])} reservoir + {len(manual_packages)} manual; "
+        f"min-stars={min_stars}) into {readme_path}"
     )
 
 

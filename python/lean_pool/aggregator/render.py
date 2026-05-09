@@ -183,13 +183,18 @@ def _row(package: Package, toolchain: str | None) -> str:
     )
 
 
-def render_table(manifest: ReservoirManifest, clones_dir: Path | None = None) -> str:
+def render_table(
+    manifest: ReservoirManifest,
+    clones_dir: Path | None = None,
+    min_stars: int = 0,
+) -> str:
     """Render the manifest as a markdown table.
 
     Packages are deduplicated by :func:`package_key` first (the first
     occurrence wins, so callers should put authoritative entries —
     typically Reservoir packages — before the fallback list), then
-    sorted by star count descending with ``fullName`` tiebreak.
+    optionally filtered by ``min_stars``, then sorted by star count
+    descending with ``fullName`` tiebreak.
 
     Args:
         manifest: The full Reservoir manifest with packages in priority
@@ -198,10 +203,15 @@ def render_table(manifest: ReservoirManifest, clones_dir: Path | None = None) ->
             (produced by ``lean_pool.aggregator clone``). When present,
             each row's Lean column is read from the repo's
             ``lean-toolchain`` file; otherwise that column is blank.
+        min_stars: Drop rows with strictly fewer stars than this from
+            the rendered output. Used to keep the table small enough
+            for GitHub to render — the underlying data files still
+            contain every package, this only affects the markdown
+            table.
 
     Returns:
         A markdown table including header, separator, and one row per
-        unique package.
+        unique package that meets the threshold.
     """
     seen: set[str] = set()
     deduped: list[Package] = []
@@ -214,6 +224,9 @@ def render_table(manifest: ReservoirManifest, clones_dir: Path | None = None) ->
             continue
         seen.add(key)
         deduped.append(package)
+
+    if min_stars > 0:
+        deduped = [p for p in deduped if (p.get("stars") or 0) >= min_stars]
 
     packages = sorted(
         deduped,
