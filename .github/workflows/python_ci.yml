@@ -62,10 +62,15 @@ jobs:
       - name: Pytest
         run: |
           cd python
-          # Skip cleanly when no tests have been written yet (pytest exits 5
-          # on "no tests collected"). Remove this guard once tests exist.
-          if compgen -G "tests/test_*.py" > /dev/null || compgen -G "tests/**/test_*.py" > /dev/null; then
-            uv run pytest --cov
-          else
-            echo "No test files under tests/; skipping pytest."
+          # Translate pytest's exit code 5 ("no tests collected") to success
+          # so CI passes while tests/ is still empty. Remove this once tests
+          # exist; any other failure still fails the job.
+          set +e
+          uv run pytest --cov
+          status=$?
+          set -e
+          if [ "$status" -eq 5 ]; then
+            echo "No tests collected; skipping pytest."
+            exit 0
           fi
+          exit "$status"
