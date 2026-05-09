@@ -4,17 +4,21 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'python/**'
-      - '**/*.md'
-      - 'LICENSE'
+    paths:
+      - '**/*.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/lean_action_ci.yml'
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - 'python/**'
-      - '**/*.md'
-      - 'LICENSE'
+    paths:
+      - '**/*.lean'
+      - 'lakefile.toml'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/lean_action_ci.yml'
   workflow_dispatch:
 
 # Cancel superseded runs on the same branch / PR.
