@@ -1,0 +1,21 @@
+# Lean repositories we want to track that Reservoir does not index.
+#
+# Reservoir's inclusion criteria
+# (https://reservoir.lean-lang.org/inclusion-criteria) exclude packages
+# that are forks, lack a root lake-manifest.json, have a non-OSI
+# license, or have fewer than two stars. Real, completed Lean
+# formalisations sometimes fail one of those — list them here.
+#
+# One GitHub URL per line. Blank lines and `#` comments are ignored.
+
+https://github.com/frenzymath/Archon-FirstProof-Results
+https://github.com/facebookresearch/algebraic-combinatorics
+https://github.com/optpku/ReasBook
+https://github.com/Vilin97/Clawristotle
+https://github.com/math-inc/Sphere-Packing-Lean
+https://github.com/mrdouglasny/gaussian-field
+https://github.com/math-inc/KakeyaFiniteFields
+https://github.com/cameronfreer/erdos124
+https://github.com/AxiomMath/parity-differential
+https://github.com/AxiomMath/lattice-triangle
+https://github.com/AxiomMath/ramanujan-tau-misses-primes
