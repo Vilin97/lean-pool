@@ -2,20 +2,91 @@ name: Lean Action CI
 
 on:
   push:
+    branches:
+      - main
+    paths-ignore:
+      - 'python/**'
+      - '**/*.md'
+      - 'LICENSE'
   pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'python/**'
+      - '**/*.md'
+      - 'LICENSE'
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Cancel superseded runs on the same branch / PR.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
-  contents: read # Read access to repository contents
-  pages: write # Write access to GitHub Pages
-  id-token: write # Write access to ID tokens
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    name: Build project
     steps:
-      - uses: actions/checkout@v5
-      - uses: leanprover/lean-action@v1
-      - uses: leanprover-community/docgen-action@v1
+      - name: Checkout project
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Restore caches
+        id: cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@c544e89643240c6b398f14a431bcdc6309e36b3e # v1.4.0
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install Mathlib cache
+        run: |
+          if [ ! -d ".lake/packages/mathlib" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Check that LeanPool.lean is up to date
+        run: |
+          if ! ~/.elan/bin/lake exe mk_all --check; then
+            echo "::error::LeanPool.lean is out of date. Run 'lake exe mk_all' locally and commit the result."
+            exit 1
+          fi
+
+      - name: Build project
+        run: ~/.elan/bin/lake build LeanPool
+
+      - name: Lint
+        run: ~/.elan/bin/lake exe runLinter LeanPool
+
+      # Documentation generation is disabled for now; re-enable when ready.
+      # - name: Generate documentation
+      #   uses: leanprover-community/docgen-action@v1
+
+      - name: Save caches
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
