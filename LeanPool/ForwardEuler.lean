@@ -1,3 +1,5 @@
+import LeanPool.ForwardEuler.Main
+
 /-!
 # Forward Euler Method
 
@@ -38,5 +40,3 @@ v4.30.0-rc2, so this import is **expected to fail the build until the
 sources are ported to the newer Mathlib API**. No `sorry`s in the
 upstream.
 -/
-
-import LeanPool.ForwardEuler.Main
