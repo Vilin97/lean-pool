@@ -38,6 +38,53 @@ _TABLE_HEADER = (
 
 _DESCRIPTION_LIMIT = 120
 
+_GITHUB_URL_RE = re.compile(
+    r"github\.com/(?P<owner>[^/\s]+)/(?P<name>[^/\s#?]+?)(?:\.git)?/?(?:[\s?#]|$)",
+    re.IGNORECASE,
+)
+
+# Suffixes commonly tacked onto Lean repo names that shouldn't affect
+# whether two URLs refer to the same repo (Lake project naming convention,
+# git clone URL convention).
+_REPO_NAME_SUFFIXES = (".lean", ".git")
+
+
+def canonical_key(owner: str, name: str) -> str:
+    """Reduce ``owner/name`` to a case- and suffix-insensitive key.
+
+    Two URLs that point at the same GitHub repo should produce the same
+    key even when one uses ``Repo.lean`` and the other uses ``Repo``,
+    or when casing differs.
+    """
+    lowered = name.lower()
+    for suffix in _REPO_NAME_SUFFIXES:
+        if lowered.endswith(suffix):
+            lowered = lowered[: -len(suffix)]
+            break
+    return f"{owner.lower()}/{lowered}"
+
+
+def package_key(package: Package) -> str | None:
+    """Return the canonical GitHub key for a package, if derivable.
+
+    Tries each ``sources[*].repoUrl``/``gitUrl`` first because Reservoir
+    sets ``fullName`` to the lakefile package name, which can differ
+    from the GitHub repo path (e.g. ``argumentcomputer/Straume`` for
+    the repo at ``argumentcomputer/straume``). Falls back to splitting
+    ``fullName`` only if no source URL is present.
+    """
+    for source in package.get("sources") or []:
+        for url_field in ("repoUrl", "gitUrl"):
+            url = source.get(url_field) or ""
+            match = _GITHUB_URL_RE.search(url + " ")
+            if match:
+                return canonical_key(match["owner"], match["name"])
+    full_name = package.get("fullName") or ""
+    if "/" in full_name:
+        owner, _, name = full_name.partition("/")
+        return canonical_key(owner, name)
+    return None
+
 
 def _escape_cell(value: str) -> str:
     """Make a string safe to embed in a markdown table cell.
@@ -103,19 +150,33 @@ def _row(package: Package) -> str:
 def render_table(manifest: ReservoirManifest) -> str:
     """Render the manifest as a markdown table.
 
-    Packages are sorted by star count descending, with ties broken by
-    ``fullName`` to keep diffs stable. The returned string includes a
-    trailing newline.
+    Packages are deduplicated by :func:`package_key` first (the first
+    occurrence wins, so callers should put authoritative entries —
+    typically Reservoir packages — before the fallback list), then
+    sorted by star count descending with ``fullName`` tiebreak.
 
     Args:
-        manifest: The full Reservoir manifest.
+        manifest: The full Reservoir manifest with packages in priority
+            order.
 
     Returns:
         A markdown table including header, separator, and one row per
-        package.
+        unique package.
     """
+    seen: set[str] = set()
+    deduped: list[Package] = []
+    for package in manifest["packages"]:
+        key = package_key(package)
+        if key is None:
+            deduped.append(package)
+            continue
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(package)
+
     packages = sorted(
-        manifest["packages"],
+        deduped,
         key=lambda p: (-p.get("stars", 0), p["fullName"].lower()),
     )
     rows = "\n".join(_row(p) for p in packages)

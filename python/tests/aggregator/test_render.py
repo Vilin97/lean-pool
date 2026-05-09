@@ -9,9 +9,13 @@ import pytest
 from lean_pool.aggregator.render import (
     BEGIN_MARKER,
     END_MARKER,
+    canonical_key,
+    package_key,
     render_table,
     update_readme,
 )
+
+_UNSET = object()
 
 
 def _package(
@@ -20,12 +24,20 @@ def _package(
     stars: int = 0,
     description: str | None = "A demo package.",
     license_name: str | None = "MIT",
-    repo_url: str | None = "https://github.com/acme/demo",
+    repo_url: str | None = _UNSET,  # type: ignore[assignment]
     versions: list[dict] | None = None,
     builds: list[dict] | None = None,
 ) -> dict:
-    """Build a minimal package fixture."""
+    """Build a minimal package fixture.
+
+    By default ``repo_url`` is derived from ``full_name`` so each
+    fixture corresponds to a distinct GitHub repo (and therefore a
+    distinct canonical key). Pass ``repo_url=None`` to omit sources, or
+    a string to override.
+    """
     owner, name = full_name.split("/")
+    if repo_url is _UNSET:
+        repo_url = f"https://github.com/{full_name}"
     sources = []
     if repo_url is not None:
         sources.append(
@@ -168,6 +180,73 @@ def test_update_readme_is_idempotent(tmp_path: Path) -> None:
     after_second = readme_path.read_text()
 
     assert after_first == after_second
+
+
+def test_canonical_key_lowercases_and_strips_suffixes() -> None:
+    """Owner/name comparison must ignore case and Lake/git URL suffixes."""
+    assert canonical_key("Acme", "Demo") == "acme/demo"
+    assert canonical_key("acme", "Demo.lean") == "acme/demo"
+    assert canonical_key("acme", "demo.git") == "acme/demo"
+    assert canonical_key("acme", "Demo.LEAN") == "acme/demo"
+    assert canonical_key("acme", "no-suffix") == "acme/no-suffix"
+
+
+def test_package_key_prefers_source_url_over_full_name() -> None:
+    """The source URL beats fullName, which uses the lakefile name."""
+    package = _package(
+        full_name="argumentcomputer/Straume",
+        repo_url="https://github.com/argumentcomputer/straume",
+    )
+    assert package_key(package) == "argumentcomputer/straume"
+
+
+def test_package_key_falls_back_to_full_name_when_no_sources() -> None:
+    """Manual entries with no sources still produce a usable key."""
+    package = _package(full_name="acme/demo", repo_url=None)
+    assert package_key(package) == "acme/demo"
+
+
+def test_render_table_dedupes_keeping_first_occurrence() -> None:
+    """Two packages pointing at the same GitHub repo collapse to one row."""
+    reservoir_entry = _package(
+        full_name="argumentcomputer/Straume",
+        stars=99,
+        repo_url="https://github.com/argumentcomputer/straume",
+    )
+    manual_entry = _package(
+        full_name="argumentcomputer/straume",
+        stars=6,
+        repo_url="https://github.com/argumentcomputer/straume",
+    )
+    manifest = _manifest([reservoir_entry, manual_entry])
+
+    table = render_table(manifest)
+
+    rows = [line for line in table.splitlines() if "argumentcomputer" in line]
+    assert len(rows) == 1, f"expected one row, got {rows}"
+    # The first occurrence (reservoir) should win, so stars=99 not stars=6.
+    assert "| 99 |" in rows[0]
+
+
+def test_render_table_dedupes_lean_suffix_collisions() -> None:
+    """A repo named ``Foo.lean`` and one named ``Foo`` are the same repo."""
+    reservoir_entry = _package(
+        full_name="argumentcomputer/Blake3",
+        stars=50,
+        repo_url="https://github.com/argumentcomputer/Blake3.lean",
+    )
+    manual_entry = _package(
+        full_name="argumentcomputer/Blake3.lean",
+        stars=2,
+        repo_url="https://github.com/argumentcomputer/Blake3.lean",
+    )
+    manifest = _manifest([reservoir_entry, manual_entry])
+
+    table = render_table(manifest)
+
+    rows = [line for line in table.splitlines() if "Blake3" in line]
+    assert len(rows) == 1
+    assert "| 50 |" in rows[0]
 
 
 def test_update_readme_raises_when_markers_missing(tmp_path: Path) -> None:

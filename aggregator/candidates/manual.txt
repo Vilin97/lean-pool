@@ -43,7 +43,6 @@ https://github.com/adomasbaliuka/AdventOfCode2023
 https://github.com/adomasbaliuka/lean4-hacking
 https://github.com/adri326/rubin-lean4
 https://github.com/adrianmartir/categorical-logic
-https://github.com/AdrienChampion/loadTerms.lean
 https://github.com/aetilley/banach-tarski
 https://github.com/aim-cyber-workshop-2023/lean-sage
 https://github.com/AishwaryaS-561/Lean-setup
@@ -76,7 +75,6 @@ https://github.com/AnandGokhale/LeanForControl
 https://github.com/anandijain/DocTest3.lean
 https://github.com/anandijain/is_rectangular_cuboid.lean
 https://github.com/Anderssorby/LeanPlay
-https://github.com/Anderssorby/SDL.lean
 https://github.com/AnirudhG07/LeanBWT-Bzip2
 https://github.com/anishrajeev/ModelTheoryFun
 https://github.com/AntanasKal/Advent-of-Code-2023
@@ -88,7 +86,6 @@ https://github.com/AnvitAggarwal/barrington-theorem-lean
 https://github.com/anzenlang/arrow.lean
 https://github.com/anzenlang/zen
 https://github.com/aochagavia/tic-tac-toe-lean
-https://github.com/argumentcomputer/Blake3.lean
 https://github.com/arienmalec/axler
 https://github.com/arienmalec/mwe
 https://github.com/arnavdandu/dfs-lean
@@ -113,7 +110,6 @@ https://github.com/avoair/Hausdorff
 https://github.com/Avshrek/KakeyaAutoform
 https://github.com/axiomed/Colorized.lean
 https://github.com/axiomed/http
-https://github.com/axiomed/Http.lean
 https://github.com/axiomed/specs
 https://github.com/AxiomMath/putnam2025
 https://github.com/AydenLamp/FinDFA
@@ -242,9 +238,7 @@ https://github.com/dupuisf/aoc2023
 https://github.com/dupuisf/aoc24
 https://github.com/dupuisf/Lean4_AoC2022
 https://github.com/dupuisf/LFTCM2024TraceClass
-https://github.com/dwrensha/Chess.lean
 https://github.com/dwrensha/math-puzzles-in-lean4
-https://github.com/dwrensha/Rupert.lean
 https://github.com/EdAyers/ProofWidgets4
 https://github.com/EdAyers/WidgetKit
 https://github.com/edegeltje/CwFTT
@@ -346,7 +340,6 @@ https://github.com/hargoniX/nest-slimcheck
 https://github.com/hargoniX/nest-unit
 https://github.com/hargoniX/pfmt
 https://github.com/hargoniX/SlimCheck
-https://github.com/hargoniX/socket.lean
 https://github.com/harmonic-ai/IMO2025
 https://github.com/hediet/lean-cellular-automata
 https://github.com/HEPLean/HepLean
@@ -406,7 +399,6 @@ https://github.com/jeffrey-dot-li/lean-homology
 https://github.com/jeremysalwen/advent_of_lean_2022
 https://github.com/jeremysalwen/Lean4-Translate-Tactic
 https://github.com/jeswr/lean_sys_test
-https://github.com/jeswr/RDF.lean
 https://github.com/jjaassoonn/GAGA
 https://github.com/jjdishere/EG
 https://github.com/jjdishere/neukirch
@@ -439,7 +431,6 @@ https://github.com/jt496/Turan_4
 https://github.com/jthulhu/2ltt
 https://github.com/juanjomadrigal/denotational-lean
 https://github.com/juanjomadrigal/lean-crafter
-https://github.com/Julian/generatingfunctionology.lean
 https://github.com/Jun2M/Kura
 https://github.com/Jun2M/Main-theorem-of-polytopes
 https://github.com/Jun2M/MasterDiss
@@ -480,7 +471,6 @@ https://github.com/KisaraBlue/ec-tate-lean
 https://github.com/KislyjKisel/lean4-gameOfLife
 https://github.com/KislyjKisel/mwe-require-externlib
 https://github.com/KislyjKisel/mwe-require-externlib2
-https://github.com/KislyjKisel/Raylib.lean
 https://github.com/klockeph/AdventOfCode2023
 https://github.com/kmill/arrow_poly
 https://github.com/kmill/kmill-aoc2023
