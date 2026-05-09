@@ -1,8 +1,27 @@
-.PHONY: build update agent-docs
+.PHONY: build lint lint-fix check test update agent-docs
 
 # Build the Lean project.
 build:
 	lake build LeanPool
+
+# Run all CI-equivalent linters (Lean and Python).
+lint:
+	lake exe runLinter LeanPool
+	cd python && uv run ruff check
+	cd python && uv run ruff format --check
+
+# Auto-fix Python lint and formatting issues.
+lint-fix:
+	cd python && uv run ruff check --fix
+	cd python && uv run ruff format
+
+# Verify LeanPool.lean imports the full file set (CI gate).
+check:
+	lake exe mk_all --check
+
+# Run the Python test suite.
+test:
+	cd python && uv run --group test pytest
 
 # Update Lean and Python dependencies. Refreshes lake-manifest.json,
 # pulls the matching Mathlib oleans cache, and re-syncs the Python
