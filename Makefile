@@ -1,4 +1,16 @@
-.PHONY: agent-docs
+.PHONY: build update agent-docs
+
+# Build the Lean project.
+build:
+	lake build LeanPool
+
+# Update Lean and Python dependencies. Refreshes lake-manifest.json,
+# pulls the matching Mathlib oleans cache, and re-syncs the Python
+# environment with all dependency groups.
+update:
+	lake update
+	lake exe cache get
+	cd python && uv sync --all-groups
 
 # Generate CLAUDE.md and AGENTS.md from README.md and CONTRIBUTING.md.
 # Run this whenever README.md or CONTRIBUTING.md changes so agents pick
