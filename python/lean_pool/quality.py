@@ -34,6 +34,11 @@ DECLARATION_PREFIX = (
     r"(?:@\[[^\n\]]+\]\s+)*"
     r"(?:(?:private|protected|noncomputable|scoped)\s+)*"
 )
+# A (possibly dotted) Lean identifier: a leading letter or `_`, then letters /
+# digits / `_` / `'` / `.`. `\w` and `\W` are Unicode-aware in Python 3, so
+# this matches names with subscripts or Greek letters (`c₀`, `α`) that an
+# ASCII-only `[A-Za-z0-9_'.]` pattern would truncate.
+LEAN_IDENT = r"[^\W\d][\w'.]*"
 
 FORBIDDEN_DIAGNOSTICS = re.compile(
     r"^\s*#(?:check|print|eval!?|reduce|guard_msgs|lint)\b"
@@ -340,19 +345,17 @@ def _parse_declarations(root: Path) -> list[_Declaration]:
     # subsequent `#print axioms` audit would fail with `unknown constant`.
     decl_pattern = re.compile(
         rf"^\s*{DECLARATION_PREFIX}({keyword_pattern})\s+"
-        rf"([A-Za-z_][A-Za-z0-9_'.]*)(?![A-Za-z0-9_'.])"
+        rf"({LEAN_IDENT})(?![\w'.])"
     )
     for path in _lean_content_files(root):
         namespace_stack: list[str] = []
         stripped = _strip_lean_comments(path.read_text())
         for line_number, line in enumerate(stripped.splitlines(), start=1):
-            namespace_match = re.match(
-                r"^\s*namespace\s+([A-Za-z_][A-Za-z0-9_'.]*)\s*$", line
-            )
+            namespace_match = re.match(rf"^\s*namespace\s+({LEAN_IDENT})\s*$", line)
             if namespace_match:
                 namespace_stack.append(namespace_match.group(1))
                 continue
-            if re.match(r"^\s*end(?:\s+[A-Za-z_][A-Za-z0-9_'.]*)?\s*$", line):
+            if re.match(rf"^\s*end(?:\s+{LEAN_IDENT})?\s*$", line):
                 if namespace_stack:
                     namespace_stack.pop()
                 continue
@@ -373,6 +376,11 @@ def _is_private_declaration_line(line: str) -> bool:
 
 
 def _qualify_name(namespace_stack: list[str], name: str) -> str:
+    if name.startswith("_root_."):
+        # `_root_.Foo.bar` declares `Foo.bar` at the top level regardless of
+        # the enclosing namespace; strip the escape so the audit emits
+        # `#print axioms _root_.Foo.bar`, not `_root_._root_.Foo.bar`.
+        return name.removeprefix("_root_.")
     if "." in name or not namespace_stack:
         return name
     return ".".join([*namespace_stack, name])
