@@ -20,6 +20,7 @@ CODE_QUALITY_URL = (
 FILE_HEADERS_DOC = f"{CODE_QUALITY_URL}#7-file-headers"
 STATUS_VALUES = {"verified"}
 SOURCE_KEYS = {"arxiv", "doi", "url"}
+SOURCE_KEY_ORDER = ("arxiv", "doi", "url")
 DECLARATION_KEYWORDS = (
     "theorem",
     "lemma",
@@ -554,6 +555,9 @@ def _check_projects(root: Path) -> list[_QualityError]:
     errors.extend(_check_project_uniqueness(path, projects))
     if errors:
         return errors
+    errors.extend(_check_top_level_project_modules(root, path, projects))
+    if errors:
+        return errors
 
     for index, project in enumerate(projects, start=1):
         errors.extend(_check_project(root, path, index, project))
@@ -592,6 +596,37 @@ def _check_project_uniqueness(path: Path, projects: list[Any]) -> list[_QualityE
     return errors
 
 
+def _check_top_level_project_modules(
+    root: Path, path: Path, projects: list[Any]
+) -> list[_QualityError]:
+    """Require every top-level LeanPool project module in `projects.yml`."""
+    entry_modules = {
+        project["entry_module"]
+        for project in projects
+        if isinstance(project, dict) and isinstance(project.get("entry_module"), str)
+    }
+    missing = sorted(_top_level_project_modules(root) - entry_modules)
+    return [
+        _QualityError(
+            path, 1, f"top-level project module {module} missing from projects.yml"
+        )
+        for module in missing
+    ]
+
+
+def _top_level_project_modules(root: Path) -> set[str]:
+    """Return direct `LeanPool.Foo` modules that represent project entry points."""
+    lean_pool = root / "LeanPool"
+    if not lean_pool.is_dir():
+        return set()
+    excluded = {"Basic.lean"}
+    return {
+        f"LeanPool.{path.stem}"
+        for path in lean_pool.glob("*.lean")
+        if path.name not in excluded
+    }
+
+
 def _check_project(
     root: Path,
     path: Path,
@@ -618,12 +653,16 @@ def _check_required_project_fields(
     required = {
         "slug",
         "title",
+        "summary",
+        "branch",
         "entry_module",
         "authors",
         "source",
         "status",
         "main_declarations",
+        "main_results",
         "tags",
+        "msc",
     }
     missing = sorted(required - set(project))
     if missing:
@@ -646,19 +685,59 @@ def _check_project_values(
         errors.append(_QualityError(path, 1, f"project #{index} has invalid status"))
     if not _source_is_valid(project["source"]):
         errors.append(_QualityError(path, 1, f"project #{index} has invalid source"))
+    if not _nonempty_string(project["summary"]):
+        errors.append(
+            _QualityError(path, 1, f"project #{index} summary must be nonempty")
+        )
+    if not _nonempty_string(project["branch"]):
+        errors.append(
+            _QualityError(path, 1, f"project #{index} branch must be nonempty")
+        )
     if not _string_list(project["authors"]):
         errors.append(
             _QualityError(path, 1, f"project #{index} authors must be nonempty strings")
         )
-    if not _string_list(project["main_declarations"]):
+    main_declarations_valid = _string_list(project["main_declarations"])
+    if not main_declarations_valid:
         errors.append(
             _QualityError(
                 path, 1, f"project #{index} main_declarations must be nonempty strings"
             )
         )
+    main_results_valid = _main_results(project["main_results"])
+    if not main_results_valid:
+        errors.append(
+            _QualityError(
+                path,
+                1,
+                f"project #{index} main_results must list declaration/informal strings",
+            )
+        )
+    if main_declarations_valid and main_results_valid:
+        result_declarations = {
+            result["declaration"] for result in project["main_results"]
+        }
+        missing_results = [
+            declaration
+            for declaration in project["main_declarations"]
+            if declaration not in result_declarations
+        ]
+        if missing_results:
+            errors.append(
+                _QualityError(
+                    path,
+                    1,
+                    f"project #{index} main_results missing main declarations: "
+                    f"{', '.join(missing_results)}",
+                )
+            )
     if not _string_list(project["tags"]):
         errors.append(
             _QualityError(path, 1, f"project #{index} tags must be nonempty strings")
+        )
+    if not _string_list(project["msc"]):
+        errors.append(
+            _QualityError(path, 1, f"project #{index} msc must be nonempty strings")
         )
     entry_path = _module_to_path(root, str(project["entry_module"]))
     if not entry_path.exists():
@@ -676,12 +755,32 @@ def _source_is_valid(source: Any) -> bool:
     return False
 
 
+def _nonempty_string(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
 def _string_list(value: Any) -> bool:
     return (
         isinstance(value, list)
         and bool(value)
         and all(isinstance(item, str) and item for item in value)
     )
+
+
+def _main_results(value: Any) -> bool:
+    if not isinstance(value, list) or not value:
+        return False
+    for item in value:
+        if not isinstance(item, dict):
+            return False
+        if not _nonempty_string(item.get("declaration")):
+            return False
+        if not _nonempty_string(item.get("informal")):
+            return False
+        for optional_key in ("source_ref", "import"):
+            if optional_key in item and not _nonempty_string(item[optional_key]):
+                return False
+    return True
 
 
 def _check_project_declarations(
@@ -778,7 +877,7 @@ def _project_card(project: dict[str, Any]) -> str:
 def _format_source(source: Any) -> str:
     if isinstance(source, str):
         return source
-    key = next(key for key in SOURCE_KEYS if key in source)
+    key = next(key for key in SOURCE_KEY_ORDER if key in source)
     return f"{key}:{source[key]}"
 
 
@@ -842,7 +941,10 @@ def _write_project_card(path: Path, card: str) -> None:
         else:
             break
     if last_import_line >= 0:
-        imports = "".join(rest_lines[: last_import_line + 1]).rstrip() + "\n"
+        import_lines = rest_lines[: last_import_line + 1]
+        while import_lines and import_lines[0].strip() == "":
+            import_lines.pop(0)
+        imports = "".join(import_lines).rstrip() + "\n"
         body = "".join(rest_lines[last_import_line + 1 :]).lstrip("\n")
     else:
         imports = ""

@@ -46,13 +46,19 @@ def _write_project_yaml(root: Path, projects: list[dict[str, str]]) -> None:
             [
                 f"  - slug: {project['slug']}",
                 f"    title: {project.get('title', 'Test Project')}",
+                f"    summary: {project.get('summary', 'A test project.')}",
+                f"    branch: {project.get('branch', 'test mathematics')}",
                 f"    entry_module: {project['entry_module']}",
                 "    authors: [Test Author]",
                 "    source:",
                 f'      arxiv: "{project.get("arxiv", "1234.5678")}"',
                 f"    status: {project.get('status', 'verified')}",
                 "    main_declarations: [hello]",
+                "    main_results:",
+                "      - declaration: hello",
+                "        informal: A test result.",
                 "    tags: [test]",
+                "    msc: ['00A35']",
             ]
         )
     (root / "LeanPool" / "projects.yml").write_text("\n".join(lines) + "\n")
@@ -107,6 +113,53 @@ def test_quality_check_rejects_missing_project_metadata(tmp_path: Path) -> None:
     errors = run_checks(tmp_path, skip_lean_axioms=True)
 
     assert any("missing LeanPool/projects.yml" in error.message for error in errors)
+
+
+def test_quality_check_rejects_top_level_project_missing_from_metadata(
+    tmp_path: Path,
+) -> None:
+    """Every direct `LeanPool.Foo` project module must be registered."""
+    _write_minimal_repo(tmp_path)
+    (tmp_path / "LeanPool.lean").write_text(
+        "import LeanPool.Basic\nimport LeanPool.MyProj\n"
+    )
+    (tmp_path / "LeanPool" / "MyProj.lean").write_text(
+        f"{HEADER}\nimport LeanPool.Basic\n\ndef project_decl := hello\n"
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("LeanPool.MyProj missing from projects.yml" in e.message for e in errors)
+
+
+def test_quality_check_allows_extra_documented_main_results(tmp_path: Path) -> None:
+    """`main_results` may document more results than the compact card list."""
+    _write_minimal_repo(tmp_path)
+    (tmp_path / "LeanPool.lean").write_text(
+        "import LeanPool.Basic\nimport LeanPool.MyProj\n"
+    )
+    card = _project_card(_PROJECT_FIXTURE)
+    (tmp_path / "LeanPool" / "MyProj.lean").write_text(
+        f"{HEADER}\nimport LeanPool.Basic\n\n{card}\n"
+        "def hello : Nat := 1\n"
+        "def extra : Nat := 2\n"
+    )
+    _write_project_yaml(tmp_path, [{"slug": "p", "entry_module": "LeanPool.MyProj"}])
+    projects = tmp_path / "LeanPool" / "projects.yml"
+    projects.write_text(
+        projects.read_text().replace(
+            "    tags: [test]\n",
+            "      - declaration: extra\n"
+            "        informal: Another documented result.\n"
+            "    tags: [test]\n",
+        )
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert not any(
+        "main_results missing main declarations" in e.message for e in errors
+    )
 
 
 def test_quality_check_finds_prefixed_declarations(tmp_path: Path) -> None:
@@ -194,12 +247,16 @@ def test_quality_check_does_not_honor_size_marker(tmp_path: Path) -> None:
 _PROJECT_FIXTURE = {
     "slug": "p",
     "title": "Test Project",
+    "summary": "A test project.",
+    "branch": "test mathematics",
     "entry_module": "LeanPool.MyProj",
     "authors": ["Test Author"],
     "source": {"arxiv": "1234.5678"},
     "status": "verified",
     "main_declarations": ["hello"],
+    "main_results": [{"declaration": "hello", "informal": "A test result."}],
     "tags": ["test"],
+    "msc": ["00A35"],
 }
 
 
@@ -284,17 +341,7 @@ def test_quality_check_accepts_project_card_after_imports(tmp_path: Path) -> Non
     (tmp_path / "LeanPool.lean").write_text(
         "import LeanPool.Basic\nimport LeanPool.MyProj\n"
     )
-    card = (
-        "/-!\n"
-        "# Test Project\n"
-        "\n"
-        "Source: arxiv:1234.5678\n"
-        "Authors: Test Author\n"
-        "Status: verified\n"
-        "Main declarations: `hello`\n"
-        "Tags: test\n"
-        "-/\n"
-    )
+    card = _project_card(_PROJECT_FIXTURE)
     (tmp_path / "LeanPool" / "MyProj.lean").write_text(
         f"{HEADER}\nimport LeanPool.Basic\n\n{card}\ndef hello : Nat := 1\n"
     )
@@ -319,17 +366,7 @@ def test_quality_check_falls_back_when_lake_missing(tmp_path: Path) -> None:
     (tmp_path / "LeanPool.lean").write_text(
         "import LeanPool.Basic\nimport LeanPool.MyProj\n"
     )
-    card = (
-        "/-!\n"
-        "# Test Project\n"
-        "\n"
-        "Source: arxiv:1234.5678\n"
-        "Authors: Test Author\n"
-        "Status: verified\n"
-        "Main declarations: `hello`\n"
-        "Tags: test\n"
-        "-/\n"
-    )
+    card = _project_card(_PROJECT_FIXTURE)
     (tmp_path / "LeanPool" / "MyProj.lean").write_text(
         f"{HEADER}\nimport LeanPool.Basic\n\n{card}\ndef hello : Nat := 1\n"
     )

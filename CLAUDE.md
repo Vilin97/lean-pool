@@ -1,8 +1,14 @@
 This file is a concatenation of README.md and CONTRIBUTING.md.
 
+<p align="center">
+  <img src="logo.png" alt="Lean Pool logo" width="240">
+</p>
+
 # lean-pool
 
 Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathlib4) and `merely-true`, preserving Lean 4 formalizations that don't fit mathlib's scope. Instead of mathlib's high-bar human review, Lean Pool relies on deterministic linters and LLM judgment, so it can grow faster while staying sorry-free, well-typed, and pinned to the latest Mathlib.
+
+Browse the generated API documentation at <https://vilin97.github.io/lean-pool/>.
 
 ### How it works
 
@@ -86,7 +92,7 @@ See [`python/README.md`](python/README.md) for common commands.
 
 ## Branch and PR Workflow
 
-**Direct commits to `main` are not allowed by project policy.** All changes go through pull requests. Branch protection to enforce this policy is future work.
+**Maintainer direct pushes.** Maintainers may push small, urgent, or operational fixes directly to `main` when they judge a PR is unnecessary. For collaborative, risky, or externally contributed work, prefer pull requests.
 
 **Branch naming.** Use `yourname/description` for solo work (e.g., `justin/aggregator-draft`). Use `feature/` or `fix/` prefixes for branches where multiple people may contribute (e.g., `feature/manifest-summary`, `fix/timeout-default`).
 

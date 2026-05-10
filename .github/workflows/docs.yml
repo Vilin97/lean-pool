@@ -1,0 +1,99 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.lean'
+      - 'LeanPool/projects.yml'
+      - 'lakefile.toml'
+      - 'lake-manifest.json'
+      - 'lean-toolchain'
+      - 'docbuild/**'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**/*.lean'
+      - 'LeanPool/projects.yml'
+      - 'lakefile.toml'
+      - 'lake-manifest.json'
+      - 'lean-toolchain'
+      - 'docbuild/**'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build doc-gen4 site
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Restore caches
+        id: cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+            docbuild/.lake/build
+          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json') }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install Mathlib cache
+        run: |
+          if [ ! -d ".lake/packages/mathlib" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Build documentation
+        run: cd docbuild && ~/.elan/bin/lake build LeanPool:docs
+
+      - name: Configure Pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        with:
+          path: docbuild/.lake/build/doc
+
+      - name: Deploy Pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128
+
+      - name: Save caches
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+            docbuild/.lake/build
+          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json') }}-${{ github.sha }}

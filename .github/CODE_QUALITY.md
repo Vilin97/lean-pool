@@ -31,10 +31,14 @@ Current checks:
 - no theorem/lemma proof body exceeds 200 non-blank, non-comment code lines, using the current text heuristic
 - `LeanPool/projects.yml` exists, is valid YAML, and contains a `projects` list
 - project entries have required fields: `slug`, `title`, `entry_module`, `authors`, `source`, `status`, `main_declarations`, and `tags`
+- project entries also carry documentation metadata: `summary`, `branch`, `main_results`, and `msc`
 - project `status` is `verified`
 - project `source` includes exactly one recognized primary source key among `arxiv`, `doi`, and `url`
 - project authors, main declarations, and tags are nonempty string lists
+- project summaries and branches are nonempty strings, MSC codes are a nonempty string list, and `main_results` is a nonempty list of `declaration` / `informal` entries
+- project `main_results[*].declaration` values include every `main_declarations` entry, so compact project cards and richer documentation metadata cannot drift
 - project `slug` and `entry_module` values are unique
+- every top-level project module `LeanPool/Foo.lean`, except `LeanPool/Basic.lean`, is registered as an `entry_module`
 - project entry modules and listed main declarations resolve in Lean
 - generated entry-point project cards match `LeanPool/projects.yml`
 - public declarations depend only on the allowed axiom set: `Classical.choice`, `propext`, and `Quot.sound`
@@ -103,14 +107,19 @@ Scheduled update checks are future work.
 - stale issues idle another 30 days are closed
 - `pinned`, `roadmap`, and `good-first-issue` labels are exempt
 
+### 10. Documentation
+
+[`docs.yml`](workflows/docs.yml) builds doc-gen4 documentation with the nested
+[`docbuild/`](../docbuild/) Lake project. Pull requests build the docs site as a
+check. Pushes to `main` build `LeanPool:docs` and deploy
+`docbuild/.lake/build/doc` to GitHub Pages.
+
 ## Future Work
 
 The following items are documented goals but are not fully implemented or enforced yet:
 
 - branch protection requiring the CI gates before merge
 - scheduled Lean/Mathlib update checks
-- doc-gen4 build
-- docs deployment and search integration
 - LeanExplore semantic dedup comments in PRs; the prototype CLI is [`python/lean_pool/semantic_dedup.py`](../python/lean_pool/semantic_dedup.py)
 - controlled tag vocabulary for `LeanPool/projects.yml`; tags are currently only checked as nonempty strings
 - generated domain/status indexes

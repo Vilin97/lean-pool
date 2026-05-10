@@ -1,8 +1,14 @@
 This file is a concatenation of README.md and CONTRIBUTING.md.
 
+<p align="center">
+  <img src="logo.png" alt="Lean Pool logo" width="240">
+</p>
+
 # lean-pool
 
 Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathlib4) and `merely-true`, preserving Lean 4 formalizations that don't fit mathlib's scope. Instead of mathlib's high-bar human review, Lean Pool relies on deterministic linters and LLM judgment, so it can grow faster while staying sorry-free, well-typed, and pinned to the latest Mathlib.
+
+Browse the generated API documentation at <https://vilin97.github.io/lean-pool/>.
 
 ### How it works
 
