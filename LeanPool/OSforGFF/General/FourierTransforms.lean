@@ -616,7 +616,8 @@ lemma integrable_fourierIntegral_expDecayFun (μ : ℝ) (hμ : 0 < μ) :
   have h_eq_real : (fun ξ : ℝ => 2 * μ / (4 * π^2 * ξ^2 + μ^2)) =
       (fun ξ => (2 / μ) * (1 + (2 * π / μ * ξ)^2)⁻¹) := by
     ext ξ
-    have denom_pos : (0 : ℝ) < 4 * π^2 * ξ^2 + μ^2 := by nlinarith [sq_nonneg ξ, sq_nonneg μ, Real.pi_pos]
+    have denom_pos : (0 : ℝ) < 4 * π^2 * ξ^2 + μ^2 := by nlinarith [sq_nonneg ξ, sq_nonneg μ,
+      Real.pi_pos]
     have h1 : (2 * π / μ * ξ)^2 = 4 * π^2 * ξ^2 / μ^2 := by ring
     rw [h1]
     have hμsq_pos : (0 : ℝ) < μ^2 := sq_pos_of_pos hμ
@@ -745,10 +746,11 @@ theorem fourier_lorentzian_1d (μ : ℝ) (hμ : 0 < μ) (x : ℝ) :
   -- Rearrange: (μ/π) * ∫ ... = e^{-μ|x|}
   have hμπ_ne : (μ : ℂ) / π ≠ 0 := by
     simp only [ne_eq, div_eq_zero_iff, Complex.ofReal_eq_zero]
-    push_neg
+    push Not
     exact ⟨hμ', hπ⟩
   -- Simplify coefficient: (1/2π) * (2μ * I) = (μ/π) * I
-  have h_rearrange : (1 : ℂ) / (2 * π) * (2 * μ * ∫ k : ℝ, Complex.exp (Complex.I * k * x) / (k^2 + μ^2)) =
+  have h_rearrange : (1 : ℂ) / (2 * π) * (2 * μ * ∫ k : ℝ,
+    Complex.exp (Complex.I * k * x) / (k^2 + μ^2)) =
                      (μ / π : ℂ) * ∫ k : ℝ, Complex.exp (Complex.I * k * x) / (k^2 + μ^2) := by
     ring
   rw [h_rearrange] at hinv

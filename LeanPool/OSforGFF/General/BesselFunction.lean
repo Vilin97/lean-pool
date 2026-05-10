@@ -324,7 +324,7 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
     · intro hx
       by_cases h : x ≤ 1
       · left; exact ⟨hx, h⟩
-      · right; push_neg at h; linarith
+      · right; push Not at h; linarith
     · intro h; cases h with | inl h => exact h.1 | inr h => linarith
   have hf_int_Icc : IntegrableOn f (Icc 0 1) := hf_cont.continuousOn.integrableOn_compact isCompact_Icc
   have hf_int_Ici1 : IntegrableOn f (Ici 1) := by
@@ -474,7 +474,7 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
     · intro hx
       by_cases h : x < 1
       · left; exact ⟨hx, h⟩
-      · right; push_neg at h; exact h
+      · right; push Not at h; exact h
     · intro h; cases h with | inl h => exact h.1 | inr h => linarith
   have hf_int_Ico : IntegrableOn f (Ico 0 1) := hf_int_Icc.mono_set Ico_subset_Icc_self
   have h_disjoint : Disjoint (Ico (0:ℝ) 1) (Ici 1) := by
@@ -997,7 +997,8 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
     rw [hIio_eq] at h2
     -- Iic 0 and Iio 0 are a.e. equal
     exact h2.congr_set_ae Iio_ae_eq_Iic.symm
-  -- 1. Split the integral over ℝ into (-∞, 0] and (0, ∞) using intervalIntegral.integral_Iic_add_Ioi
+  -- 1. Split the integral over ℝ into (-∞, 0] and (0, ∞) using
+  -- intervalIntegral.integral_Iic_add_Ioi
   rw [← intervalIntegral.integral_Iic_add_Ioi (b := 0) hf_int_Iic hf_int_Ioi]
   -- 2. Transform the negative part (Iic 0) using u ↦ -u
   --    ∫_{-∞}^0 f(u) du = ∫_0^∞ f(-u) du = ∫_0^∞ g(u) du  (via u → -u, using cosh(-u) = cosh(u))

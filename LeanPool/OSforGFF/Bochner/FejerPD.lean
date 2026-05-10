@@ -259,7 +259,7 @@ private lemma pd_double_integral_re_nonneg (ψ : V → ℂ) (hpd : IsPositiveDef
       ∑ i : Fin m, ∑ j : Fin m, c i * c j * ψ (x_pts i - x_pts j) := by
       apply Finset.sum_congr rfl; intro i _
       apply Finset.sum_congr rfl; intro j _
-      show (starRingEnd ℂ) (((μ (sn ⁻¹' {(e i : V)})).toReal : ℂ)) * _ * _ = _
+      change (starRingEnd ℂ) (((μ (sn ⁻¹' {(e i : V)})).toReal : ℂ)) * _ * _ = _
       rw [starRingEnd_apply, star_def, Complex.conj_ofReal]
     rwa [hpd_match] at hpd_eval
   -- 3. Pass to the limit
@@ -305,7 +305,7 @@ private lemma measurable_overlapRatio (R : ℝ) : Measurable (overlapRatio R : V
     have hfib : ∀ v : V, Prod.mk v ⁻¹' E =
         Metric.closedBall (0 : V) R ∩ Metric.closedBall v R := by
       intro v; ext x; simp [E, Metric.mem_closedBall, Set.mem_inter_iff, dist_comm x v]
-    show Measurable fun v => (volume (Metric.closedBall (0 : V) R ∩
+    change Measurable fun v => (volume (Metric.closedBall (0 : V) R ∩
         Metric.closedBall v R)).toReal
     simp_rw [← hfib]
     exact (measurable_measure_prodMk_left hE (ν := volume)).ennreal_toReal
@@ -590,7 +590,7 @@ theorem pd_l1_fourier_re_nonneg_theorem
     (ξ : V) : 0 ≤ (𝓕 φ ξ).re := by
   -- Step 1: 𝓕 φ ξ = ∫ v, φ v * exp(-2πi⟨v,ξ⟩)
   have hF : 𝓕 φ ξ = ∫ v, φ v * cexp (-(2 * ↑π * ↑⟪v, ξ⟫_ℝ * I)) := by
-    show ∫ v, 𝐞 (-(innerSL ℝ v ξ)) • φ v = _
+    change ∫ v, 𝐞 (-(innerSL ℝ v ξ)) • φ v = _
     congr 1; ext v
     rw [Circle.smul_def, Real.fourierChar_apply, smul_eq_mul, mul_comm]
     congr 1; congr 1

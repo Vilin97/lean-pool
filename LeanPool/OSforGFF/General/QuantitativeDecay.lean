@@ -199,7 +199,7 @@ def norm_exp_decay_implies_polynomial_decay {F : Type*} [NormedAddCommGroup F]
           calc C_exp * C_poly ≤ max (C_exp * C_poly) (M * (1 + R₀)^α) := le_max_left _ _
             _ ≤ C := by simp only [C]; linarith
   · -- Inside R₀: use global bound
-    push_neg at hz
+    push Not at hz
     have h_one_plus_R₀_pos : 0 < 1 + R₀ := by linarith
     have h_rpow_mono : (1 + ‖z‖)^(-α) ≥ (1 + R₀)^(-α) := by
       have h1 : 1 + ‖z‖ ≤ 1 + R₀ := by linarith
@@ -464,7 +464,7 @@ def convolution_compactSupport_decay (f : SchwartzMap E ℂ) (K : E → ℝ) (R�
     intro z hz
     unfold kernelSingular at hz
     by_contra h_not
-    push_neg at h_not
+    push Not at h_not
     have : z ∉ closedBall (0 : E) R₀ := by
       simp [mem_closedBall, dist_zero_right, not_le.mpr h_not]
     simp [indicator_of_notMem this] at hz
@@ -885,13 +885,13 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
       push_cast
       ring
     -- Unfold H to expose the integral, then rewrite
-    show ‖∫ x, f x * (K (x - y) : ℂ)‖ ≤ (C_Hsing + C_Htail) / (1 + ‖y‖)^N
+    change ‖∫ x, f x * (K (x - y) : ℂ)‖ ≤ (C_Hsing + C_Htail) / (1 + ‖y‖)^N
     simp_rw [h_integrand]
     let I₁ := ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ)
     let I₂ := ∫ x, f x * (kernelTail K R₀ (x - y) : ℂ)
     have hint_sum : ∫ x, (f x * (kernelSingular K R₀ (x - y) : ℂ) + f x * (kernelTail K R₀ (x - y) : ℂ)) = I₁ + I₂ :=
       integral_add hint1 hint2
-    show ‖∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ) + f x * (kernelTail K R₀ (x - y) : ℂ)‖ ≤
+    change ‖∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ) + f x * (kernelTail K R₀ (x - y) : ℂ)‖ ≤
         (C_Hsing + C_Htail) / (1 + ‖y‖)^N
     rw [hint_sum]
     calc ‖I₁ + I₂‖ ≤ ‖I₁‖ + ‖I₂‖ := norm_add_le _ _

@@ -41,7 +41,7 @@ open scoped ContDiff
 
 /-- In `WithTop ℕ∞`, `∞ + ↑n = ∞` so `∞ + ↑n ≤ ∞`. -/
 private lemma le_infty_add (n : ℕ) : (∞ : WithTop ℕ∞) + ↑n ≤ ∞ := by
-  show (↑(⊤ : ℕ∞) : WithTop ℕ∞) + ↑(↑n : ℕ∞) ≤ ↑(⊤ : ℕ∞)
+  change (↑(⊤ : ℕ∞) : WithTop ℕ∞) + ↑(↑n : ℕ∞) ≤ ↑(⊤ : ℕ∞)
   rw [← WithTop.coe_add, WithTop.coe_le_coe]; exact le_of_eq (top_add _)
 
 /-- In `WithTop ℕ∞`, `↑n ≤ ∞`. -/
@@ -100,7 +100,7 @@ private lemma euclideanSnoc_hasTemperateGrowth (d : ℕ)
     funext t
     simp only [c, L, euclideanSnoc, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.single_apply, ContinuousLinearEquiv.coe_coe]
-    show (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) t) =
+    change (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) t) =
       (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) 0) +
       (EuclideanSpace.equiv (Fin (d+2)) ℝ).symm (Pi.single (Fin.last (d+1)) t)
     rw [h_snoc_decomp]
@@ -127,7 +127,7 @@ private lemma euclideanSnoc_antilipschitz (d : ℕ)
     = ‖s - t‖ ^ 2 := by
     conv_lhs => arg 2; ext i; rw [hcoord]
     simp [Finset.sum_ite_eq', Finset.mem_univ]
-  show dist s t ≤ dist (euclideanSnoc (d + 1) y s) (euclideanSnoc (d + 1) y t)
+  change dist s t ≤ dist (euclideanSnoc (d + 1) y s) (euclideanSnoc (d + 1) y t)
   rw [dist_eq_norm, dist_eq_norm (E := EuclideanSpace ℝ _), EuclideanSpace.norm_eq,
     hsum, Real.sqrt_sq (norm_nonneg _)]
 
@@ -295,7 +295,7 @@ private lemma euclideanSnoc_y_hasTemperateGrowth (d : ℕ) (t : ℝ) :
   set L := L_fun.mkContinuous 1 hL_bound
   have h_eq : (fun y => euclideanSnoc (d + 1) y t) = fun y => c + L y := by
     funext y
-    show euclideanSnoc (d + 1) y t =
+    change euclideanSnoc (d + 1) y t =
       euclideanSnoc (d + 1) 0 t + euclideanSnoc (d + 1) y 0
     ext i
     simp only [euclideanSnoc, WithLp.equiv_symm_apply, WithLp.ofLp_add, Pi.add_apply]
@@ -360,7 +360,7 @@ private noncomputable def euclideanSnoc_linearCLM (d : ℕ) :
         · intro j; simp [Fin.snoc_castSucc] }
     1 (fun y => by
       rw [one_mul]
-      show ‖euclideanSnoc (d + 1) y 0‖ ≤ _
+      change ‖euclideanSnoc (d + 1) y 0‖ ≤ _
       have h : ‖euclideanSnoc (d + 1) y 0‖ ^ 2 = ‖y‖ ^ 2 := by
         rw [euclideanSnoc_norm_sq]; ring
       nlinarith [norm_nonneg (euclideanSnoc (d + 1) y 0), norm_nonneg y,
@@ -495,7 +495,7 @@ private lemma contDiff_parametric_hermiteCoeff (d : ℕ)
           funext t
           simp only [L_t, euclideanSnoc, ContinuousLinearMap.comp_apply,
             ContinuousLinearMap.single_apply, ContinuousLinearEquiv.coe_coe]
-          show (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) t) =
+          change (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) t) =
             (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) 0) +
             (EuclideanSpace.equiv (Fin (d + 2)) ℝ).symm (Pi.single (Fin.last (d + 1)) t)
           have : ∀ (s : ℝ), Fin.snoc (α := fun _ => ℝ) (fun i => y.ofLp i) s =
@@ -637,7 +637,7 @@ lemma integral_euclidean_snoc (d : ℕ) (g : EuclideanSpace ℝ (Fin (d + 2)) �
   congr 1; funext y'
   congr 1; funext t
   -- Show the composed function equals g (euclideanSnoc ...)
-  show F (t, y') = g (euclideanSnoc (d + 1) ((MeasurableEquiv.toLp 2 _) y') t)
+  change F (t, y') = g (euclideanSnoc (d + 1) ((MeasurableEquiv.toLp 2 _) y') t)
   simp only [F, e, MeasurableEquiv.piFinSuccAbove_symm_apply, MeasurableEquiv.toLp,
     MeasurableEquiv.coe_mk]
   congr 1
@@ -709,7 +709,7 @@ private lemma euclideanSnoc_t_contDiff (d : ℕ)
     (y : EuclideanSpace ℝ (Fin (d + 1))) :
     ContDiff ℝ ∞ (fun t : ℝ => euclideanSnoc (d + 1) y t) := by
   unfold euclideanSnoc
-  show ContDiff ℝ ∞ (⇑(PiLp.continuousLinearEquiv 2 ℝ
+  change ContDiff ℝ ∞ (⇑(PiLp.continuousLinearEquiv 2 ℝ
     (fun _ : Fin (d + 2) => ℝ)).symm ∘ (fun t => Fin.snoc (fun i => y.ofLp i) t))
   exact (PiLp.continuousLinearEquiv 2 ℝ (fun _ : Fin (d + 2) => ℝ)).symm.contDiff.comp
     (contDiff_pi.mpr (fun i => by
@@ -775,7 +775,7 @@ noncomputable def schwartz_slice_partial (d : ℕ)
       funext s
       simp only [c₀, L_t, euclideanSnoc, ContinuousLinearMap.comp_apply,
         ContinuousLinearMap.single_apply, ContinuousLinearEquiv.coe_coe]
-      show (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) s) =
+      change (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) s) =
         (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) 0) +
         (EuclideanSpace.equiv (Fin (d + 2)) ℝ).symm (Pi.single (Fin.last (d + 1)) s)
       have : ∀ (u : ℝ), Fin.snoc (α := fun _ => ℝ) (fun i => y.ofLp i) u =
@@ -949,7 +949,7 @@ lemma schwartz_partial_hermiteCoeff_iteratedFDeriv (d : ℕ)
           funext t
           simp only [L_t, euclideanSnoc, ContinuousLinearMap.comp_apply,
             ContinuousLinearMap.single_apply, ContinuousLinearEquiv.coe_coe]
-          show (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) t) =
+          change (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) t) =
             (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) 0) +
             (EuclideanSpace.equiv (Fin (d + 2)) ℝ).symm (Pi.single (Fin.last (d + 1)) t)
           have : ∀ (s : ℝ), Fin.snoc (α := fun _ => ℝ) (fun i => y.ofLp i) s =
@@ -1013,7 +1013,7 @@ private lemma schwartz_slice_partial_pointwise_bound (d : ℕ)
     funext t
     simp only [c₀, L_t, euclideanSnoc, ContinuousLinearMap.comp_apply,
       ContinuousLinearMap.single_apply, ContinuousLinearEquiv.coe_coe]
-    show (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) t) =
+    change (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) t) =
       (WithLp.equiv 2 _).symm (Fin.snoc (fun i => y.ofLp i) 0) +
       (EuclideanSpace.equiv (Fin (d + 2)) ℝ).symm (Pi.single (Fin.last (d + 1)) t)
     have : ∀ (s : ℝ), Fin.snoc (α := fun _ => ℝ) (fun i => y.ofLp i) s =
@@ -1037,7 +1037,7 @@ private lemma schwartz_slice_partial_pointwise_bound (d : ℕ)
   -- Key functional equality: g = G' ∘ L_t (avoids rw under iteratedFDeriv)
   have h_fun_eq : (↑g : ℝ → ℝ) = G' ∘ ⇑L_t := by
     ext s
-    show g s = G (c₀ + L_t s)
+    change g s = G (c₀ + L_t s)
     rw [show c₀ + L_t s = euclideanSnoc (d + 1) y s from (congr_fun h_snoc_eq s).symm]
     exact schwartz_slice_partial_chain_rule d f l' y v s
   have h_deriv : ‖iteratedFDeriv ℝ b (↑g) t‖ ≤

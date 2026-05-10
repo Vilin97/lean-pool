@@ -98,8 +98,10 @@ def GJcov_bilin (dμ_config : ProbabilityMeasure FieldConfiguration)
         exact (h_bilinear a x 0 y).1)
     (by intro x y y'  -- additivity in the 2nd arg
         have h := (h_bilinear 1 x y y').2.2.2
-        -- h: SchwingerFunctionℂ₂ dμ_config x (y' + y) = SchwingerFunctionℂ₂ dμ_config x y' + SchwingerFunctionℂ₂ dμ_config x y
-        -- We need: SchwingerFunctionℂ₂ dμ_config x (y + y') = SchwingerFunctionℂ₂ dμ_config x y + SchwingerFunctionℂ₂ dμ_config x y'
+        -- h: SchwingerFunctionℂ₂ dμ_config x (y' + y) = SchwingerFunctionℂ₂ dμ_config x y' +
+        -- SchwingerFunctionℂ₂ dμ_config x y
+        -- We need: SchwingerFunctionℂ₂ dμ_config x (y + y') = SchwingerFunctionℂ₂ dμ_config x y +
+        -- SchwingerFunctionℂ₂ dμ_config x y'
         simp only [add_comm y' y, add_comm (SchwingerFunctionℂ₂ dμ_config x y') _] at h
         exact h)
     (by intro a x y   -- homogeneity in the 2nd arg
@@ -117,7 +119,8 @@ theorem gaussian_satisfies_OS0
     h_gaussian.2
   -- Rewrite the generating functional using Gaussian form
   have h_rewrite : (fun z : Fin n → ℂ => GJGeneratingFunctionalℂ dμ_config (∑ i, z i • J i)) =
-                   (fun z => Complex.exp (-(1/2 : ℂ) * SchwingerFunctionℂ₂ dμ_config (∑ i, z i • J i) (∑ i, z i • J i))) := by
+                   (fun z => Complex.exp (-(1/2 : ℂ) * SchwingerFunctionℂ₂ dμ_config (∑ i,
+                     z i • J i) (∑ i, z i • J i))) := by
     funext z
     exact h_form (∑ i, z i • J i)
   rw [h_rewrite]
@@ -128,16 +131,20 @@ theorem gaussian_satisfies_OS0
   · -- Show the quadratic form is analytic by expanding via bilinearity
     let B := GJcov_bilin dμ_config h_bilinear
     -- Expand quadratic form: ⟨∑ᵢ zᵢJᵢ, C(∑ⱼ zⱼJ⟩) = ∑ᵢⱼ zᵢzⱼ⟨Jᵢ, CJ⟩
-    have h_expansion : (fun z : Fin n → ℂ => SchwingerFunctionℂ₂ dμ_config (∑ i, z i • J i) (∑ i, z i • J i)) =
-                       (fun z => ∑ i, ∑ j, z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) := by
+    have h_expansion : (fun z : Fin n → ℂ => SchwingerFunctionℂ₂ dμ_config (∑ i, z i • J i) (∑ i,
+      z i • J i)) =
+                       (fun z => ∑ i, ∑ j,
+                         z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) := by
       funext z
-      have h_eq : B (∑ i, z i • J i) (∑ i, z i • J i) = SchwingerFunctionℂ₂ dμ_config (∑ i, z i • J i) (∑ i, z i • J i) := rfl
+      have h_eq : B (∑ i, z i • J i) (∑ i, z i • J i) = SchwingerFunctionℂ₂ dμ_config (∑ i,
+        z i • J i) (∑ i, z i • J i) := rfl
       rw [← h_eq]
       exact bilin_sum_sum B n J z
     rw [h_expansion]
     -- Double sum of monomials is analytic
     -- Each monomial z_i * z_j is analytic, and finite sums of analytic functions are analytic
-    have h_sum_analytic : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => ∑ i, ∑ j, z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
+    have h_sum_analytic : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => ∑ i, ∑ j,
+      z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
       -- Each term z_i * z_j * constant is analytic
       have h_monomial : ∀ i j, AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
         intro i j
@@ -156,7 +163,8 @@ theorem gaussian_satisfies_OS0
           exact AnalyticOnNhd.mul coord_i coord_j
       -- Apply finite sum analyticity twice by decomposing the sum
       -- First for outer sum
-      have h_outer_sum : ∀ i, AnalyticOnNhd ℂ (fun z : Fin n → ℂ => ∑ j, z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
+      have h_outer_sum : ∀ i, AnalyticOnNhd ℂ (fun z : Fin n → ℂ => ∑ j,
+        z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
         intro i
         -- Apply sum analyticity to inner sum over j
         have : (fun z : Fin n → ℂ => ∑ j, z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) =
@@ -167,8 +175,10 @@ theorem gaussian_satisfies_OS0
         intro j _
         exact h_monomial i j
       -- Now apply for the outer sum
-      have : (fun z : Fin n → ℂ => ∑ i, ∑ j, z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) =
-             (∑ i : Fin n, fun z => ∑ j, z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) := by
+      have : (fun z : Fin n → ℂ => ∑ i, ∑ j,
+        z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) =
+             (∑ i : Fin n, fun z => ∑ j,
+               z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) := by
         ext z; simp [Finset.sum_apply]
       rw [this]
       apply Finset.analyticOnNhd_sum

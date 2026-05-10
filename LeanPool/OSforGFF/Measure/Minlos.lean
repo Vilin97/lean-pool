@@ -202,7 +202,8 @@ theorem gaussian_measure_characteristic_functional
   : ∃ μ : ProbabilityMeasure (WeakDual ℝ E),
     (∀ f : E, ∫ ω, Complex.exp (I * (ω f)) ∂μ.toMeasure =
               gaussian_characteristic_functional covariance_form f) := by
-  obtain ⟨μ, hchar⟩ := minlos_gaussian_construction T covariance_form h_eq h_symm h_zero h_continuous
+  obtain ⟨μ,
+    hchar⟩ := minlos_gaussian_construction T covariance_form h_eq h_symm h_zero h_continuous
   exact ⟨μ, fun f => (hchar f).symm⟩
 
 /-! ## Minlos Uniqueness (re-exported from bochner) -/

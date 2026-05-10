@@ -264,7 +264,8 @@ lemma schwartz_time_slice_integrable (f : TestFunctionℂ) (t : ℝ) :
       rw [div_eq_mul_inv, h1]
     simp_rw [h_eq]
     exact h_int.const_mul C
-  -- Pointwise bound: |f(spacetimeOfTimeSpace t x)| ≤ C/(1+‖spacetimeOfTimeSpace t x‖)^5 ≤ C/(1+‖x‖)^5
+  -- Pointwise bound: |f(spacetimeOfTimeSpace t x)| ≤ C/(1+‖spacetimeOfTimeSpace t x‖)^5 ≤
+  -- C/(1+‖x‖)^5
   have h_bound : ∀ x : SpatialCoords3,
       ‖f (spacetimeOfTimeSpace t x)‖ ≤ C / (1 + ‖x‖)^5 := by
     intro x
@@ -391,7 +392,7 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
             apply div_le_div_of_nonneg_right _ (le_of_lt h1y_pow)
             simp only [C]; linarith
     · -- Small ‖y‖ case: use uniform bound C_unif
-      push_neg at hy_large
+      push Not at hy_large
       -- For ‖y‖ < 1: (1+‖y‖)^4 < 16, so C_unif ≤ 16*C_unif/(1+‖y‖)^4
       have h_bracket_small : (1 + ‖y‖)^4 ≤ 16 := by
         calc (1 + ‖y‖)^4 ≤ 2^4 := by

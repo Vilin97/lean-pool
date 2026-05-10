@@ -113,11 +113,13 @@ noncomputable def SpatialToMomentum_draft (f : SpatialL2) : SpaceTime → ℂ :=
     The fundamental Parseval identity relating the regulated covariance bilinear form to
     momentum-space propagator. The regulator exp(-α(2π)²‖k‖²) ensures absolute convergence.
 
-    Uses `freePropagatorMomentum_mathlib` which accounts for the 2π factor in Mathlib's Fourier convention.
+    Uses `freePropagatorMomentum_mathlib` which accounts for the 2π factor in Mathlib's Fourier
+    convention.
     Defined in FourierTransforms.lean as `parseval_covariance_schwartz_regulated`.
 -/
 theorem parseval_covariance_schwartz_regulated' (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
-  (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
+  (∫ x, ∫ y,
+    f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
   = ∫ k, Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume :=
   _root_.parseval_covariance_schwartz_regulated α hα m f
 
@@ -374,9 +376,12 @@ lemma compTimeReflection_toComplex_star_eq
 
 -- and theorem spatial_reduction_to_heat_kernel that depended on them
 
--- freeCovariancePositive, freeCovariance_reflection_positive, freeCovarianceReflectionPositiveMomentum,
--- freeCovariance_positive_definite, freeCovariance_positive_definite_regulated, fourierTransform_timeReflection,
--- covarianceBilinearForm, covarianceBilinearForm_continuous_basic, covarianceBilinearForm_continuous,
+-- freeCovariancePositive, freeCovariance_reflection_positive,
+-- freeCovarianceReflectionPositiveMomentum,
+-- freeCovariance_positive_definite, freeCovariance_positive_definite_regulated,
+-- fourierTransform_timeReflection,
+-- covarianceBilinearForm, covarianceBilinearForm_continuous_basic,
+-- covarianceBilinearForm_continuous,
 -- LinearIsometry.inner_adjoint_eq_inv
 
 /-! ## Euclidean Invariance -/
@@ -548,7 +553,8 @@ theorem freeCovarianceℂ_bilinear_symm
   (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     freeCovarianceℂ_bilinear m f g = freeCovarianceℂ_bilinear m g f := by
   unfold freeCovarianceℂ_bilinear
-  -- Use the symmetry of the underlying covariance kernel freeCovariance m x y = freeCovariance m y x
+  -- Use the symmetry of the underlying covariance kernel freeCovariance m x y = freeCovariance m y
+  -- x
   -- Apply change of variables: swap x ↔ y in the integration domain
   have h : ∫ x, ∫ y, (f x) * (freeCovariance m x y) * (g y) ∂volume ∂volume
          = ∫ y, ∫ x, (f x) * (freeCovariance m x y) * (g y) ∂volume ∂volume := by
@@ -578,7 +584,8 @@ theorem freeCovarianceℂ_bilinear_smul_right
   -- Use symmetry to convert right scalar multiplication to left scalar multiplication
   -- freeCovarianceℂ_bilinear m f (c • g) = freeCovarianceℂ_bilinear m (c • g) f
   rw [freeCovarianceℂ_bilinear_symm m f (c • g)]
-  -- Apply left scalar multiplication: freeCovarianceℂ_bilinear m (c • g) f = c * freeCovarianceℂ_bilinear m g f
+  -- Apply left scalar multiplication: freeCovarianceℂ_bilinear m (c • g) f = c *
+  -- freeCovarianceℂ_bilinear m g f
   rw [freeCovarianceℂ_bilinear_smul_left m c g f]
   -- Use symmetry again: c * freeCovarianceℂ_bilinear m g f = c * freeCovarianceℂ_bilinear m f g
   rw [freeCovarianceℂ_bilinear_symm m g f]
@@ -590,9 +597,11 @@ theorem freeCovarianceℂ_bilinear_add_right
   -- Use symmetry to convert right addition to left addition
   -- freeCovarianceℂ_bilinear m f (g₁ + g₂) = freeCovarianceℂ_bilinear m (g₁ + g₂) f
   rw [freeCovarianceℂ_bilinear_symm m f (g₁ + g₂)]
-  -- Apply left addition: freeCovarianceℂ_bilinear m (g₁ + g₂) f = freeCovarianceℂ_bilinear m g₁ f + freeCovarianceℂ_bilinear m g₂ f
+  -- Apply left addition: freeCovarianceℂ_bilinear m (g₁ + g₂) f = freeCovarianceℂ_bilinear m g₁ f +
+  -- freeCovarianceℂ_bilinear m g₂ f
   rw [freeCovarianceℂ_bilinear_add_left m g₁ g₂ f]
-  -- Use symmetry on each term: freeCovarianceℂ_bilinear m g₁ f + freeCovarianceℂ_bilinear m g₂ f = freeCovarianceℂ_bilinear m f g₁ + freeCovarianceℂ_bilinear m f g₂
+  -- Use symmetry on each term: freeCovarianceℂ_bilinear m g₁ f + freeCovarianceℂ_bilinear m g₂ f =
+  -- freeCovarianceℂ_bilinear m f g₁ + freeCovarianceℂ_bilinear m f g₂
   rw [freeCovarianceℂ_bilinear_symm m g₁ f, freeCovarianceℂ_bilinear_symm m g₂ f]
 
 /-- Complex extension of the covariance for complex test functions (using regulated Fourier form). -/

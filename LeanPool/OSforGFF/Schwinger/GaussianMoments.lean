@@ -116,7 +116,8 @@ theorem gaussian_pairing_product_integrable_free_2point
   Integrable (fun ω => distributionPairingℂ_real ω φ * distributionPairingℂ_real ω ψ)
     (gaussianFreeField_free m).toMeasure := by
   -- Strategy: Decompose both complex test functions into real and imaginary parts
-  -- and use the existing real pairing integrability (following gaussian_complex_pairing_abs_sq_integrable)
+  -- and use the existing real pairing integrability (following
+  -- gaussian_complex_pairing_abs_sq_integrable)
   classical
   -- Decompose φ and ψ into real and imaginary parts
   set φRe : TestFunction := (complex_testfunction_decompose φ).1
@@ -163,7 +164,8 @@ theorem gaussian_pairing_product_integrable_free_2point
     ring_nf
     rw [Complex.I_sq]
     ring
-  -- Use the fact that each product of real pairings is integrable (they're in L² so products are in L¹)
+  -- Use the fact that each product of real pairings is integrable (they're in L² so products are in
+  -- L¹)
   -- For L² × L² → L¹, we use Hölder's inequality: p⁻¹ + q⁻¹ = 1⁻¹ gives 2⁻¹ + 2⁻¹ = 1⁻¹
   have h_holder : ENNReal.HolderTriple (2 : ENNReal) 2 1 := by
     -- Need to prove 2⁻¹ + 2⁻¹ = 1⁻¹, i.e., 1/2 + 1/2 = 1

@@ -189,7 +189,8 @@ lemma CovarianceBilinear_of_integrable
             simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, Fin.prod_univ_two, h_add_left_integrand]
       _ = ∫ ω, u₁ ω * v ω ∂dμ_config.toMeasure + ∫ ω, u₂ ω * v ω ∂dμ_config.toMeasure := hsum_left
       _ = SchwingerFunctionℂ₂ dμ_config φ₁ ψ + SchwingerFunctionℂ₂ dμ_config φ₂ ψ := by
-            simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, u₁, u₂, v, Fin.prod_univ_two, Matrix.cons_val_zero]
+            simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, u₁, u₂, v, Fin.prod_univ_two,
+              Matrix.cons_val_zero]
   -- 3) Scalar multiplication in the second argument
   have h_smul_right_integrand :
       (fun ω => distributionPairingℂ_real ω φ₁ * distributionPairingℂ_real ω (c • ψ))
@@ -242,7 +243,8 @@ lemma CovarianceBilinear_of_integrable
             simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, Fin.prod_univ_two, h_add_right_integrand]
       _ = ∫ ω, u₁ ω * v ω ∂dμ_config.toMeasure + ∫ ω, u₁ ω * u₂ ω ∂dμ_config.toMeasure := hsum_right
       _ = SchwingerFunctionℂ₂ dμ_config φ₁ ψ + SchwingerFunctionℂ₂ dμ_config φ₁ φ₂ := by
-            simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, u₁, u₂, v, Fin.prod_univ_two, Matrix.cons_val_zero]
+            simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, u₁, u₂, v, Fin.prod_univ_two,
+              Matrix.cons_val_zero]
   -- Bundle the four identities
   exact And.intro h1 (And.intro h2 (And.intro h3 h4))
 /-! ## Exponential Series Connection to Generating Functional
@@ -381,7 +383,8 @@ private lemma schwinger_eq_integral_pow
   unfold SchwingerFunction
   -- integrand: ∏ i, ⟨ω,J⟩ = (⟨ω,J⟩)^n
   -- Pointwise product-to-power identity
-  have hω : ∀ ω : _root_.FieldConfiguration, (∏ _i : Fin n, distributionPairing ω J) = (distributionPairing ω J) ^ n := by
+  have hω : ∀ ω : _root_.FieldConfiguration, (∏ _i : Fin n,
+    distributionPairing ω J) = (distributionPairing ω J) ^ n := by
     intro ω
     simp only [prod_const_pow]
   -- Rewrite under the integral using the pointwise identity

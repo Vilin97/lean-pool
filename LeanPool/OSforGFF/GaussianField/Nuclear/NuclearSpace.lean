@@ -341,7 +341,7 @@ theorem DyninMityaginSpace.hasSum_basis
     [hN : DyninMityaginSpace E] (f : E) :
     HasSum (fun m => hN.coeff m f • hN.basis m) f := by
   rw [HasSum]
-  show Filter.Tendsto _ Filter.atTop _
+  change Filter.Tendsto _ Filter.atTop _
   rw [hN.h_with.tendsto_nhds _ f]
   intro i ε hε
   have hh_sum := DyninMityaginSpace.summable_coeff_seminorm_basis i f
@@ -403,7 +403,7 @@ theorem DyninMityaginSpace.toNuclearSpace (E : Type*)
       intro t
       induction t using Finset.cons_induction with
       | empty =>
-        show Continuous (⇑(⊥ : Seminorm ℝ E) : E → ℝ)
+        change Continuous (⇑(⊥ : Seminorm ℝ E) : E → ℝ)
         simp [Seminorm.bot_eq_zero]; exact continuous_const
       | cons a t' _ ih =>
         rw [Finset.sup_cons]
@@ -412,7 +412,7 @@ theorem DyninMityaginSpace.toNuclearSpace (E : Type*)
     have hsup₂_cont : Continuous (⇑(s₂.sup hN.p) : E → ℝ) := hsup_cont s₂
     -- q is continuous
     have hq_cont : Continuous q := by
-      show Continuous (fun x => q x)
+      change Continuous (fun x => q x)
       have : (fun x => q x) = fun x =>
           (C₁nn : ℝ) * (s₁.sup hN.p) x + (C₂nn : ℝ) * (s₂.sup hN.p) x := by
         ext x; simp [hq_def, NNReal.smul_def]
@@ -450,7 +450,7 @@ theorem DyninMityaginSpace.toNuclearSpace (E : Type*)
       · intro m; exact div_nonneg (mul_nonneg (NNReal.coe_nonneg C₁nn) (apply_nonneg _ _))
           (pow_nonneg (h1m_pos m).le _)
       · intro m
-        show (C₁nn : ℝ) * (s₁.sup hN.p) (hN.basis m) / (1 + (m : ℝ)) ^ (S + 2) ≤
+        change (C₁nn : ℝ) * (s₁.sup hN.p) (hN.basis m) / (1 + (m : ℝ)) ^ (S + 2) ≤
           (C₁nn : ℝ) * D / (1 + (m : ℝ)) ^ 2
         have hpow_pos : (0 : ℝ) < (1 + (m : ℝ)) ^ (S + 2) := pow_pos (h1m_pos m) _
         rw [div_le_div_iff₀ hpow_pos (pow_pos (h1m_pos m) 2)]
@@ -465,7 +465,7 @@ theorem DyninMityaginSpace.toNuclearSpace (E : Type*)
         exact this.congr (fun m => by ring_nf)
     -- ‖f m x‖ ≤ q x
     · intro m x
-      show ‖((1 + (m : ℝ)) ^ (S + 2)) • hN.coeff m x‖ ≤ q x
+      change ‖((1 + (m : ℝ)) ^ (S + 2)) • hN.coeff m x‖ ≤ q x
       simp only [smul_eq_mul, Real.norm_eq_abs, abs_mul,
         abs_of_nonneg (pow_nonneg (h1m_pos m).le _)]
       rw [mul_comm]
@@ -483,7 +483,7 @@ theorem DyninMityaginSpace.toNuclearSpace (E : Type*)
           ∑' m, ‖f m x‖ * c m := by
         rw [← tsum_mul_left]
         congr 1; ext m
-        show (C₁nn : ℝ) * (|hN.coeff m x| * (s₁.sup hN.p) (hN.basis m)) =
+        change (C₁nn : ℝ) * (|hN.coeff m x| * (s₁.sup hN.p) (hN.basis m)) =
           ‖((1 + (m : ℝ)) ^ (S + 2)) • hN.coeff m x‖ *
           ((C₁nn : ℝ) * (s₁.sup hN.p) (hN.basis m) / (1 + (m : ℝ)) ^ (S + 2))
         simp only [smul_eq_mul, Real.norm_eq_abs, abs_mul,

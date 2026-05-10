@@ -121,12 +121,15 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
     ring_nf
   -- Step 1: Use bilinearity to collect the sums
   have h_step1 : ∑ i, ∑ j, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
-      freeCovarianceFormR m (∑ i, c i • QFT.compTimeReflectionReal (f i).val) (∑ j, c j • (f j).val) := by
+      freeCovarianceFormR m (∑ i, c i • QFT.compTimeReflectionReal (f i).val) (∑ j,
+        c j • (f j).val) := by
       -- Use induction on finite sums combined with the bilinearity axioms
       -- We'll work with the multiplication form and convert to smul at the end
       -- Apply linearity in first argument: ∑ᵢ cᵢ • θfᵢ
-      have h_left : ∑ i, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (∑ j, c j • (f j).val) =
-        freeCovarianceFormR m (∑ i, c i • QFT.compTimeReflectionReal (f i).val) (∑ j, c j • (f j).val) :=
+      have h_left : ∑ i, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (∑ j,
+        c j • (f j).val) =
+        freeCovarianceFormR m (∑ i, c i • QFT.compTimeReflectionReal (f i).val) (∑ j,
+          c j • (f j).val) :=
           freeCovarianceFormR_left_linear_any_right m f c Finset.univ _
       have h_right : ∀ i, ∑ j, freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
         freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (∑ j, c j • (f j).val) := by
@@ -151,19 +154,23 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
       -- Left side: ∑ i, ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j
       -- We need: ∑ i, c i * freeCovarianceFormR m (θf_i) (∑ j, c j • f_j)
       have h_rewrite : ∑ i, ∑ j, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
-        ∑ i, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (∑ j, c j • (f j).val) := by
+        ∑ i, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (∑ j,
+          c j • (f j).val) := by
         congr 1
         ext i
         -- The goal after ext is to show:
-        -- ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j = c i * freeCovarianceFormR m (θf_i) (∑ j, c j • f_j)
+        -- ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j = c i * freeCovarianceFormR m (θf_i)
+        -- (∑ j, c j • f_j)
         -- This follows by factoring out c i and applying h_right i
-        -- Goal: ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j = c i * freeCovarianceFormR m (θf_i) (∑ j, c j • f_j)
+        -- Goal: ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j = c i * freeCovarianceFormR m
+        -- (θf_i) (∑ j, c j • f_j)
         -- We need to rewrite: ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j
         -- as: c i * ∑ j, freeCovarianceFormR m (θf_i) (f_j) * c j
         -- Then apply h_right i
         -- The key insight: we can rewrite each term using mul_assoc and then factor out c i
         conv_lhs =>
-          rw [show ∑ j, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
+          rw [show ∑ j,
+            c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
                   ∑ j, c i * (freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j) by
                 simp only [mul_assoc]]
         -- Now factor out c i
@@ -179,8 +186,10 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
   obtain ⟨g, hg⟩ := PositiveTimeTestFunction.sum_smul_mem f c
   -- Step 4: Combine and apply reflection positivity
   rw [h_expand, h_step1, h_step2]
-  -- Now we have: freeCovarianceFormR m (compTimeReflectionReal (∑ i, c i • (f i).val)) (∑ j, c j • (f j).val)
-  -- Since g.val = ∑ i, c i • (f i).val, we get: freeCovarianceFormR m (compTimeReflectionReal g.val) g.val
+  -- Now we have: freeCovarianceFormR m (compTimeReflectionReal (∑ i, c i • (f i).val)) (∑ j, c j •
+  -- (f j).val)
+  -- Since g.val = ∑ i, c i • (f i).val, we get: freeCovarianceFormR m (compTimeReflectionReal
+  -- g.val) g.val
   rw [← hg]
   exact freeCovarianceFormR_reflection_nonneg m g
 
@@ -613,7 +622,7 @@ private lemma reflection_matrix_IsHermitian
   intro i j
   -- Goal (after beta-reduction):
   -- C(f_j, star f_i) = conj(C(f_i, star f_j))
-  show freeCovarianceℂ_bilinear m (f j).val (star (f i).val) =
+  change freeCovarianceℂ_bilinear m (f j).val (star (f i).val) =
     starRingEnd ℂ (freeCovarianceℂ_bilinear m (f i).val (star (f j).val))
   rw [freeCovarianceℂ_bilinear_symm m (f j).val (star (f i).val)]
   -- Goal: C(star f_i, f_j) = conj(C(f_i, star f_j))

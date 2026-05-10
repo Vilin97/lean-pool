@@ -109,7 +109,8 @@ lemma gaussian_exp_factorize (s : ℂ) (k : SpaceTime) :
 /-- The k₀-integral evaluates to √(π/s) exp(-t²/(4s)) times the k_sp-dependent factor.
 
     For z = Θx - y with z₀ = -x₀ - y₀:
-    ∫_k exp(-ik·z) exp(-s|k|²) = (∫_{k₀} exp(-ik₀z₀) exp(-sk₀²)) × (∫_{k_sp} exp(-ik_sp·z_sp) exp(-s|k_sp|²))
+    ∫_k exp(-ik·z) exp(-s|k|²) = (∫_{k₀} exp(-ik₀z₀) exp(-sk₀²)) × (∫_{k_sp} exp(-ik_sp·z_sp)
+    exp(-s|k_sp|²))
                                 = √(π/s) exp(-z₀²/(4s)) × ∫_{k_sp} exp(-ik_sp·z_sp) exp(-s|k_sp|²)
 -/
 lemma k_integral_after_k0_eval (s : ℝ) (hs : 0 < s) (z : SpaceTime) :
@@ -172,7 +173,8 @@ lemma k_integral_after_k0_eval (s : ℝ) (hs : 0 < s) (z : SpaceTime) :
     ext k_sp
     rw [← Complex.exp_add]
     congr 1
-    -- Goal: match -I * spatialDot(k_sp, z_sp) + (-s * ‖k_sp‖²) with -s * ‖k_sp‖² + (-I) * ⟪z_sp, k_sp⟫
+    -- Goal: match -I * spatialDot(k_sp, z_sp) + (-s * ‖k_sp‖²) with -s * ‖k_sp‖² + (-I) * ⟪z_sp,
+    -- k_sp⟫
     -- Use spatialDot_eq_inner: spatialDot k z = ⟪k, z⟫_ℝ, and inner product is symmetric
     rw [spatialDot_eq_inner]
     simp only [← Complex.ofReal_pow, ← Complex.ofReal_mul, ← Complex.ofReal_neg]
@@ -219,7 +221,8 @@ lemma spatialPart_timeReflection_sub (x y : SpaceTime) :
 
     we obtain:
 
-    (2π)^{-4} ∫₀^∞ ∫_p̄ ∫∫ f̄(x)f(y) √(π/s) exp(-t²/(4s)) exp(-s(|p̄|² + m²)) exp(-ip̄·r̄) dx dy d³p̄ ds
+    (2π)^{-4} ∫₀^∞ ∫_p̄ ∫∫ f̄(x)f(y) √(π/s) exp(-t²/(4s)) exp(-s(|p̄|² + m²)) exp(-ip̄·r̄) dx dy
+    d³p̄ ds
 
     where t = -x₀ - y₀ (time separation under reflection) and r̄ = x̄ - ȳ (spatial separation).
 
@@ -627,7 +630,8 @@ lemma s_integral_complex_eval (k_sp : SpatialCoords) (x y : SpaceTime) (m : ℝ)
       ∫ a, c * g a ∂μ = c * ∫ a, g a ∂μ :=
     fun c g μ => MeasureTheory.integral_const_mul (L := ℂ) c g
   rw [h_icm_r]
-  -- Goal: C * ∫ a, [√(π/a) * cexp(-t²/(4a)) * cexp(-↑a*(↑‖k_sp‖²+↑m²))] = C * (π/ω) * cexp(-ω|t|) * phase
+  -- Goal: C * ∫ a, [√(π/a) * cexp(-t²/(4a)) * cexp(-↑a*(↑‖k_sp‖²+↑m²))] = C * (π/ω) * cexp(-ω|t|) *
+  -- phase
   -- where C = f̄f * cexp(-I*...) and ω = √(‖k_sp‖² + m²)
   --
   -- Step 1: Convert cexp(-↑a * (↑‖k_sp‖² + ↑m²)) to cexp(-(a * ω²) : ℝ)
@@ -959,7 +963,8 @@ theorem schwinger_bilinear_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
     --   bound(s, x, y) = [‖f x‖ * Cf * exp(-sm²)] * H(s, ‖Θx - y‖)
     --
     -- Step 1: For each s > 0, ∫_y H(s, ‖Θx - y‖) dy = 1 (by h_heat_L1 and translation)
-    -- Step 2: Thus ∫∫ bound(s, x, y) dy dx = Cf * exp(-sm²) * ∫_x ‖f x‖ dx = Cf * exp(-sm²) * ‖f‖_{L¹}
+    -- Step 2: Thus ∫∫ bound(s, x, y) dy dx = Cf * exp(-sm²) * ∫_x ‖f x‖ dx = Cf * exp(-sm²) *
+    -- ‖f‖_{L¹}
     -- Step 3: ∫_s Cf * exp(-sm²) * ‖f‖_{L¹} ds = Cf * ‖f‖_{L¹} / m² < ∞
     --
     -- The formal proof requires showing:
@@ -1019,7 +1024,7 @@ theorem schwinger_bilinear_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
   simp only [Set.mem_setOf_eq, not_le] at hp
   simp only [Set.mem_setOf_eq]
   by_contra h_pos
-  push_neg at h_pos
+  push Not at h_pos
   have hpIoi : p.1 ∈ Set.Ioi 0 := h_pos
   exact not_lt.mpr (h_bound p hpIoi) hp
 
@@ -1809,7 +1814,8 @@ theorem bilinear_to_k0_inside (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
         Complex.exp (-(|t| : ℝ) * ω) * Complex.exp (-Complex.I * spatialDot k_spatial r_spatial))
     = (starRingEnd ℂ) (f x) * f y * (↑π * (↑(1 / ω) * Complex.exp (-(|t| : ℝ) * ω))) *
         Complex.exp (-Complex.I * spatialDot k_spatial r_spatial) := by ring
-    _ = (starRingEnd ℂ) (f x) * f y * (↑π * (↑(1 / π) * ∫ k0 : ℝ, Complex.exp (-Complex.I * k0 * t) / (k0^2 + ω^2))) *
+    _ = (starRingEnd ℂ) (f x) * f y * (↑π * (↑(1 / π) * ∫ k0 : ℝ,
+      Complex.exp (-Complex.I * k0 * t) / (k0^2 + ω^2))) *
         Complex.exp (-Complex.I * spatialDot k_spatial r_spatial) := by rw [h_key]
     _ = (starRingEnd ℂ) (f x) * f y * (∫ k0 : ℝ, Complex.exp (-Complex.I * k0 * t) / (k0^2 + ω^2)) *
         Complex.exp (-Complex.I * spatialDot k_spatial r_spatial) := by

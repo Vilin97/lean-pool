@@ -266,7 +266,7 @@ theorem factorization_to_squared_norm_direct (f : TestFunctionℂ) (k_sp : Spati
     · simp only [hf_support x hx, map_zero, zero_mul, mul_zero]
     · by_cases hy : y 0 < 0
       · simp only [hf_support y hy, mul_zero, zero_mul]
-      · push_neg at hx hy
+      · push Not at hx hy
         have h_abs : |-(x 0) - y 0| = x 0 + y 0 := abs_neg_sum_nonneg (x 0) (y 0) hx hy
         rw [h_abs]
         -- Normalize casts: ↑(a + b) → ↑a + ↑b
@@ -433,7 +433,8 @@ lemma star_toComplex_eq_compTimeReflection (f : TestFunction) :
   -- star f is defined as starTestFunction f
   -- starTestFunction f x = starRingEnd ℂ ((compTimeReflection f) x)
   simp only [star, starTestFunction]
-  -- Now goal: starRingEnd ℂ ((compTimeReflection (toComplex f)) x) = (compTimeReflection (toComplex f)) x
+  -- Now goal: starRingEnd ℂ ((compTimeReflection (toComplex f)) x) = (compTimeReflection (toComplex
+  -- f)) x
   exact compTimeReflection_toComplex_star_eq f x
 
 /-- The rpInnerProduct of a real test function equals the complex bilinear form

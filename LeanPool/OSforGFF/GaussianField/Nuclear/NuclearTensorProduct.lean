@@ -140,7 +140,7 @@ def rapidDecaySeminorm (k : ℕ) : Seminorm ℝ RapidDecaySeq where
   neg' a := by
     congr 1; ext m; rw [neg_val, abs_neg]
   smul' r a := by
-    show ∑' m, |r * a.val m| * (1 + ↑m) ^ k = ‖r‖ * ∑' m, |a.val m| * (1 + ↑m) ^ k
+    change ∑' m, |r * a.val m| * (1 + ↑m) ^ k = ‖r‖ * ∑' m, |a.val m| * (1 + ↑m) ^ k
     simp_rw [abs_mul, Real.norm_eq_abs, mul_assoc]
     exact tsum_mul_left
 
@@ -173,7 +173,7 @@ induced by its topological add group structure.
 -- Helper: coordinate projection is bounded by seminorm 0
 private theorem coord_le_seminorm0 (a : RapidDecaySeq) (m : ℕ) :
     |a.val m| ≤ rapidDecaySeminorm 0 a := by
-  show |a.val m| ≤ ∑' n, |a.val n| * (1 + (n : ℝ)) ^ 0
+  change |a.val m| ≤ ∑' n, |a.val n| * (1 + (n : ℝ)) ^ 0
   calc |a.val m|
       = |a.val m| * (1 + (m : ℝ)) ^ 0 := by simp [pow_zero]
     _ ≤ ∑' n, |a.val n| * (1 + (n : ℝ)) ^ 0 :=
@@ -215,7 +215,7 @@ private theorem cauchySeq_seminorm_bound
           (by rw [h0]; exact Iio_mem_nhds hε)
       exact this
     · intro ⟨a, b⟩ (hx : rapidDecaySeminorm k (b - a) < ε)
-      show rapidDecaySeminorm k (a - b) < ε
+      change rapidDecaySeminorm k (a - b) < ε
       rwa [show a - b = -(b - a) from (neg_sub b a).symm, map_neg_eq_map]
   exact hu.mem_entourage h_ent
 
@@ -245,7 +245,7 @@ instance instCompleteSpace :
       rw [Real.dist_eq]
       calc |((u n).val m - (u N).val m)|
           = |(u n - u N).val m| := by
-            show _ = |((u n) + (-(u N))).val m|; simp [add_val, neg_val, sub_eq_add_neg]
+            change _ = |((u n) + (-(u N))).val m|; simp [add_val, neg_val, sub_eq_add_neg]
         _ ≤ rapidDecaySeminorm 0 (u n - u N) := coord_le_seminorm0 _ m
         _ < ε := hN n N hn le_rfl⟩
   -- Get the pointwise limit
@@ -316,11 +316,11 @@ instance instCompleteSpace :
   --   But for j ≥ N, rapidDecaySeminorm k (u n - u j) < ε/2
   --   So ∑_{m∈s} |(u n).val m - a m| * w m ≤ ε/2
   -- By tsum_le_of_sum_le (taking sup over all s), ∑' m ≤ ε/2 < ε
-  show rapidDecaySeminorm k (u n - L) < ε
+  change rapidDecaySeminorm k (u n - L) < ε
   -- Rewrite the seminorm as a tsum of |(u n).val m - a m| * weight
   have h_eq : rapidDecaySeminorm k (u n - L) =
       ∑' m, |(u n).val m - a m| * (1 + (m : ℝ)) ^ k := by
-    show ∑' m, |(u n - L).val m| * (1 + (m : ℝ)) ^ k = _
+    change ∑' m, |(u n - L).val m| * (1 + (m : ℝ)) ^ k = _
     simp only [sub_eq_add_neg, add_val, neg_val, L]
   rw [h_eq]
   -- Show the tsum ≤ ε/2
@@ -364,7 +364,7 @@ def basisVec (m : ℕ) : RapidDecaySeq where
 /-- Seminorm of a basis vector is exactly `(1 + m)^k`. -/
 theorem rapidDecaySeminorm_basisVec (k m : ℕ) :
     rapidDecaySeminorm k (basisVec m) = (1 + (m : ℝ)) ^ k := by
-  show ∑' n, |(basisVec m).val n| * (1 + (n : ℝ)) ^ k = (1 + (m : ℝ)) ^ k
+  change ∑' n, |(basisVec m).val n| * (1 + (n : ℝ)) ^ k = (1 + (m : ℝ)) ^ k
   rw [tsum_eq_single m]
   · simp [basisVec]
   · intro n hn; simp [basisVec, hn]
@@ -439,7 +439,7 @@ theorem hasSum_basisVec (a : RapidDecaySeq) :
       simp only [sub_eq_add_neg, add_val, neg_val, sum_smul_basisVec_val]
       split <;> simp [g, abs_neg]
     -- Show seminorm < ε
-    show (rapidDecaySeminorm k) ((∑ m ∈ s, a.val m • basisVec m) - a) < ε
+    change (rapidDecaySeminorm k) ((∑ m ∈ s, a.val m • basisVec m) - a) < ε
     change ∑' n, |((∑ m ∈ s, a.val m • basisVec m) - a).val n| * (1 + ↑n) ^ k < ε
     simp_rw [h_err_terms]
     -- ∑' n, (if n ∈ s then 0 else g n) = ∑' n, g n - ∑ n ∈ s, g n < ε
@@ -504,14 +504,14 @@ instance rapidDecay_dyninMityaginSpace : DyninMityaginSpace RapidDecaySeq where
   coeff_decay k := ⟨1, one_pos, {k}, fun a m => by
     simp only [Finset.sup_singleton, coeffCLM, ContinuousLinearMap.coe_mk', coeffLM,
       LinearMap.coe_mk, AddHom.coe_mk, one_mul]
-    show |a.val m| * (1 + ↑m) ^ k ≤ ∑' n, |a.val n| * (1 + ↑n) ^ k
+    change |a.val m| * (1 + ↑m) ^ k ≤ ∑' n, |a.val n| * (1 + ↑n) ^ k
     exact (a.rapid_decay k).le_tsum m
       (fun j _ => mul_nonneg (abs_nonneg _) (weight_nonneg j k))⟩
 
 instance rapidDecay_hasBiorthogonalBasis :
     DyninMityaginSpace.HasBiorthogonalBasis RapidDecaySeq where
   coeff_basis n m := by
-    show (basisVec m).val n = if n = m then 1 else 0
+    change (basisVec m).val n = if n = m then 1 else 0
     simp [basisVec]
 
 /-! ### Helper lemmas for seminorm transfer -/
@@ -520,7 +520,7 @@ instance rapidDecay_hasBiorthogonalBasis :
 theorem rapidDecaySeminorm_mono {j j' : ℕ} (hjj : j ≤ j') :
     rapidDecaySeminorm j ≤ rapidDecaySeminorm j' := by
   intro a
-  show ∑' m, |a.val m| * (1 + (m : ℝ)) ^ j ≤ ∑' m, |a.val m| * (1 + (m : ℝ)) ^ j'
+  change ∑' m, |a.val m| * (1 + (m : ℝ)) ^ j ≤ ∑' m, |a.val m| * (1 + (m : ℝ)) ^ j'
   apply (a.rapid_decay j).tsum_le_tsum _ (a.rapid_decay j')
   intro m
   apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
@@ -580,7 +580,7 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
   basis m := equiv.symm (RapidDecaySeq.basisVec m)
   coeff m := (RapidDecaySeq.coeffCLM m).comp equiv.toContinuousLinearMap
   expansion φ f := by
-    show φ f = ∑' m, (equiv f).val m * φ (equiv.symm (RapidDecaySeq.basisVec m))
+    change φ f = ∑' m, (equiv f).val m * φ (equiv.symm (RapidDecaySeq.basisVec m))
     have h := RapidDecaySeq.rapidDecay_expansion
       (φ.comp equiv.symm.toContinuousLinearMap) (equiv f)
     simp only [ContinuousLinearMap.comp_apply] at h
@@ -614,7 +614,7 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
     refine ⟨(C_nn : ℝ), hC_pos, s_fin, fun f m => ?_⟩
     have h_le_tsum : |(RapidDecaySeq.coeffCLM m (equiv f))| * (1 + (m : ℝ)) ^ k ≤
         RapidDecaySeq.rapidDecaySeminorm k (equiv f) := by
-      show |(equiv f).val m| * (1 + (m : ℝ)) ^ k ≤
+      change |(equiv f).val m| * (1 + (m : ℝ)) ^ k ≤
         ∑' n, |(equiv f).val n| * (1 + (n : ℝ)) ^ k
       exact ((equiv f).rapid_decay k).le_tsum m
         (fun j _ => mul_nonneg (abs_nonneg _) (RapidDecaySeq.weight_nonneg j k))
@@ -624,7 +624,7 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
       simp only [Seminorm.smul_apply,
         NNReal.smul_def, smul_eq_mul] at this
       exact this
-    show |(RapidDecaySeq.coeffCLM m (equiv f))| * (1 + (m : ℝ)) ^ k ≤
+    change |(RapidDecaySeq.coeffCLM m (equiv f))| * (1 + (m : ℝ)) ^ k ≤
       (C_nn : ℝ) * (s_fin.sup p) f
     exact le_trans h_le_tsum h_bound
 
@@ -638,10 +638,10 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
     DyninMityaginSpace.HasBiorthogonalBasis E :=
   letI := DyninMityaginSpace.ofRapidDecayEquiv p hp equiv
   { coeff_basis := fun n m => by
-      show RapidDecaySeq.coeffCLM n (equiv (equiv.symm (RapidDecaySeq.basisVec m))) =
+      change RapidDecaySeq.coeffCLM n (equiv (equiv.symm (RapidDecaySeq.basisVec m))) =
         if n = m then 1 else 0
       rw [ContinuousLinearEquiv.apply_symm_apply]
-      show (RapidDecaySeq.basisVec m).val n = if n = m then 1 else 0
+      change (RapidDecaySeq.basisVec m).val n = if n = m then 1 else 0
       simp [RapidDecaySeq.basisVec, eq_comm] }
 
 /-! ## Cantor Pairing Bound -/
@@ -814,7 +814,7 @@ noncomputable def pure
     · intro m
       set i := (Nat.unpair m).1
       set j := (Nat.unpair m).2
-      show |DyninMityaginSpace.coeff i e₁ * DyninMityaginSpace.coeff j e₂| *
+      change |DyninMityaginSpace.coeff i e₁ * DyninMityaginSpace.coeff j e₂| *
         (1 + (m : ℝ)) ^ k ≤
         B₁ * B₂ * (4 : ℝ) ^ k / ((1 + (i : ℝ)) ^ 2 * (1 + (j : ℝ)) ^ 2)
       rw [abs_mul]
@@ -903,7 +903,7 @@ theorem pure_seminorm_bound (k : ℕ) :
   have hC_nn : (0 : ℝ) ≤ C₁ * C₂ * (4 : ℝ) ^ k * T := by positivity
   refine ⟨⟨C₁ * C₂ * (4 : ℝ) ^ k * T, hC_nn⟩, s₁, s₂, fun e₁ e₂ => ?_⟩
   -- The seminorm is a tsum; bound each term
-  show ∑' m, |(pure e₁ e₂).val m| * (1 + (m : ℝ)) ^ k ≤
+  change ∑' m, |(pure e₁ e₂).val m| * (1 + (m : ℝ)) ^ k ≤
     C₁ * C₂ * (4 : ℝ) ^ k * T *
     (s₁.sup DyninMityaginSpace.p) e₁ * (s₂.sup DyninMityaginSpace.p) e₂
   set B₁ := C₁ * (s₁.sup DyninMityaginSpace.p) e₁
@@ -1053,7 +1053,7 @@ theorem pure_continuous :
         ext e₂ m; simp [pureLin, pure_val]; rfl
       map_add' := fun e₁ e₁' => by
         ext e₂ m; simp [pureLin, pure_val, add_mul] }
-  show Continuous (fun p : E₁ × E₂ => f p.1 p.2)
+  change Continuous (fun p : E₁ × E₂ => f p.1 p.2)
   apply continuous_of_continuousAt_zero₂ f
   · -- Continuity at (0, 0): use the seminorm bound
     have hf00 : f 0 0 = 0 := by ext m; simp
@@ -1215,7 +1215,7 @@ private lemma lift_norm_bound
                   (pow_le_pow_left₀ h1j hj_le S₂) (le_of_lt hD₂))
                 (by positivity) (by positivity)
       _ = K * (|a.val m| * (1 + (m : ℝ)) ^ N) := by
-          show |a.val m| * (C * (D₁ * (1 + ↑m) ^ S₁) * (D₂ * (1 + ↑m) ^ S₂)) =
+          change |a.val m| * (C * (D₁ * (1 + ↑m) ^ S₁) * (D₂ * (1 + ↑m) ^ S₂)) =
             C * D₁ * D₂ * (|a.val m| * (1 + ↑m) ^ (S₁ + S₂))
           rw [pow_add]; ring
   have hg_summ : Summable (fun m => K * (|a.val m| * (1 + (m : ℝ)) ^ N)) :=
@@ -1303,7 +1303,7 @@ theorem lift_pure
     (e₁ : E₁) (e₂ : E₂) :
     lift B hC hB (pure e₁ e₂) = B e₁ e₂ := by
   -- Unfold lift to the tsum definition
-  show ∑' m, (pure e₁ e₂).val m •
+  change ∑' m, (pure e₁ e₂).val m •
     B (DyninMityaginSpace.basis (Nat.unpair m).1)
       (DyninMityaginSpace.basis (Nat.unpair m).2) = B e₁ e₂
   simp only [pure_val]
@@ -1320,7 +1320,7 @@ theorem lift_pure
     intro _
     refine ⟨s₂, ⟨C * (s₁.sup DyninMityaginSpace.p) (ψ₁ n),
       mul_nonneg (le_of_lt hC) (apply_nonneg _ _)⟩, fun x => ?_⟩
-    show ‖(B (ψ₁ n)) x‖ ≤
+    change ‖(B (ψ₁ n)) x‖ ≤
       C * (s₁.sup DyninMityaginSpace.p) (ψ₁ n) * (s₂.sup DyninMityaginSpace.p) x
     exact hB (ψ₁ n) x
   -- Step 2: Continuity of B.flip e₂ : E₁ →ₗ G
@@ -1330,7 +1330,7 @@ theorem lift_pure
     intro _
     refine ⟨s₁, ⟨C * (s₂.sup DyninMityaginSpace.p) e₂,
       mul_nonneg (le_of_lt hC) (apply_nonneg _ _)⟩, fun x => ?_⟩
-    show ‖(B.flip e₂) x‖ ≤
+    change ‖(B.flip e₂) x‖ ≤
       C * (s₂.sup DyninMityaginSpace.p) e₂ * (s₁.sup DyninMityaginSpace.p) x
     rw [LinearMap.flip_apply]
     calc ‖(B x) e₂‖

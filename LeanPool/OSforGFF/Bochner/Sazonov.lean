@@ -156,7 +156,7 @@ lemma sqrt_quadForm_add_le (hS : S.IsPositive) (x y : H) :
       Real.sqrt (quadForm S x) * Real.sqrt (quadForm S y) := by
     by_cases hb : @inner ℝ H _ x (S y) ≤ 0
     · exact le_trans hb (mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _))
-    · push_neg at hb
+    · push Not at hb
       rw [← Real.sqrt_mul ha]
       exact Real.le_sqrt_of_sq_le h_cs
   nlinarith [Real.sq_sqrt ha, Real.sq_sqrt hc]

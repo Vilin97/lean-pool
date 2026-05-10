@@ -801,7 +801,8 @@ theorem fubini_schwinger_integrand (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 <
   have h_set_to_full_rhs : (∫ t in Set.Ioi 0, ∫ k : SpaceTime, f (k, t)) =
       ∫ t : ℝ, ∫ k : SpaceTime, f (k, t) := by
     rw [MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero]; intro t ht
-    simp only [Set.mem_Ioi, not_lt] at ht; simp only [hf_def, not_lt.mpr ht, ↓reduceIte, integral_zero]
+    simp only [Set.mem_Ioi, not_lt] at ht; simp only [hf_def, not_lt.mpr ht, ↓reduceIte,
+      integral_zero]
   -- Fubini swap and Re inside integral
   have h_fubini : (∫ k : SpaceTime, ∫ t : ℝ, f (k, t)) = ∫ t : ℝ, ∫ k : SpaceTime, f (k, t) :=
     MeasureTheory.integral_integral_swap hf_int
@@ -815,14 +816,16 @@ theorem fubini_schwinger_integrand (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 <
     · simp only [hf_def, ht, ↓reduceIte, hphase_def]
       have h_split : ∀ k : SpaceTime, Complex.exp (-(↑(α + t) : ℂ) * ‖k‖^2 - ↑(t * m^2)) *
           Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ) = ↑(Real.exp (-t * m^2)) *
-          (Complex.exp (-(↑(α + t) : ℂ) * ‖k‖^2) * Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ)) := fun k => by
+          (Complex.exp (-(↑(α + t) : ℂ) * ‖k‖^2) * Complex.exp (-Complex.I * ⟪k,
+            x - y⟫_ℝ)) := fun k => by
         rw [← Complex.exp_add, ← Complex.exp_add, Complex.ofReal_exp, ← Complex.exp_add]; congr 1
         simp only [Complex.ofReal_neg, Complex.ofReal_mul]; ring
       simp_rw [h_split, ← smul_eq_mul, integral_smul, smul_eq_mul, Complex.re_ofReal_mul]
     · simp only [hf_def, ht, ↓reduceIte, integral_zero, Complex.zero_re]
   -- Combine all steps
   rw [h_lhs, h_set_to_full_lhs, h_fubini, h_re_inside]
-  rw [show (∫ t : ℝ, (∫ k : SpaceTime, f (k, t)).re) = ∫ t in Set.Ioi 0, (∫ k : SpaceTime, f (k, t)).re
+  rw [show (∫ t : ℝ, (∫ k : SpaceTime, f (k, t)).re) = ∫ t in Set.Ioi 0, (∫ k : SpaceTime, f (k,
+    t)).re
       from by rw [← MeasureTheory.setIntegral_eq_integral_of_forall_compl_eq_zero]; intro t ht
               simp only [Set.mem_Ioi, not_lt] at ht; simp [h_factor, not_lt.mpr ht]]
   exact setIntegral_congr_fun measurableSet_Ioi fun t ht => by simp [h_factor, Set.mem_Ioi.mp ht]
@@ -891,7 +894,8 @@ theorem fubini_schwinger_fourier (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m
   -- RHS by definition of covarianceSchwingerRegulated
   -- For the inner k-integral at each t > 0:
   have h_inner_k : ∀ t : ℝ, 0 < t →
-      (∫ k : SpaceTime, Complex.ofReal (Real.exp (-(α + t) * ‖k‖^2) * Real.exp (-t * m^2) / normalisation) *
+      (∫ k : SpaceTime,
+        Complex.ofReal (Real.exp (-(α + t) * ‖k‖^2) * Real.exp (-t * m^2) / normalisation) *
         Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ)) =
       Complex.ofReal (Real.exp (-t * m^2) * heatKernelPositionSpace (α + t) ‖x - y‖) := by
     intro t ht
@@ -976,9 +980,11 @@ theorem fubini_schwinger_fourier (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m
   -- and the t-integral matches covarianceSchwingerRegulated by definition,
   -- the equality holds.
   -- Step 1: Substitute Schwinger representation
-  have h_lhs_step1 : (∫ k : SpaceTime, ↑(Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / normalisation) *
+  have h_lhs_step1 : (∫ k : SpaceTime,
+    ↑(Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / normalisation) *
       Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ)).re =
-      (∫ k : SpaceTime, ↑(Real.exp (-α * ‖k‖^2) * (∫ t in Set.Ioi 0, schwingerIntegrand t m k) / normalisation) *
+      (∫ k : SpaceTime, ↑(Real.exp (-α * ‖k‖^2) * (∫ t in Set.Ioi 0,
+        schwingerIntegrand t m k) / normalisation) *
         Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ)).re := by
     congr 2
     ext k
@@ -1184,7 +1190,8 @@ theorem freeCovariance_regulated_tendsto_bessel (m : ℝ) (hm : 0 < m) (x y : Sp
 -/
 theorem freeCovariance_regulated_limit_eq_freeCovariance (m : ℝ) (hm : 0 < m) (x y : SpaceTime) (hxy : x ≠ y) :
     Filter.Tendsto (fun α => freeCovariance_regulated α m x y) (nhdsWithin 0 (Set.Ioi 0)) (nhds (freeCovariance m x y)) :=
-  -- This is exactly freeCovariance_regulated_tendsto_bessel since freeCovariance = freeCovarianceBessel
+  -- This is exactly freeCovariance_regulated_tendsto_bessel since freeCovariance =
+  -- freeCovarianceBessel
   freeCovariance_regulated_tendsto_bessel m hm x y hxy
 
 /-- **Domination bound (Schwinger):** The Schwinger-regulated covariance is bounded by a constant
@@ -1337,7 +1344,8 @@ lemma gaussian_regulator_integrable' (α : ℝ) (hα : 0 < α) :
   have h' : Integrable (fun k : SpaceTime => (Real.exp (-α * ‖k‖^2) : ℂ)) volume := by
     have heq : ∀ k : SpaceTime, Complex.exp (-↑α * ↑‖k‖ ^ 2) = ↑(Real.exp (-α * ‖k‖ ^ 2)) := by
       intro k
-      simp only [← Complex.ofReal_neg, ← Complex.ofReal_mul, ← Complex.ofReal_pow, Complex.ofReal_exp]
+      simp only [← Complex.ofReal_neg, ← Complex.ofReal_mul, ← Complex.ofReal_pow,
+        Complex.ofReal_exp]
     simp_rw [heq] at h
     exact h
   exact h'.re
@@ -1599,7 +1607,8 @@ lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
 
 /-- The bilinear form f(x) * C_α(x,y) * g(y) is integrable for regulated covariance with Schwartz f, g.
 
-    Since C_α is uniformly bounded and f, g are Schwartz (hence integrable), the product is integrable.
+    Since C_α is uniformly bounded and f, g are Schwartz (hence integrable), the product is
+    integrable.
 
     **Proof:** With bound M from `freeCovariance_regulated_uniformly_bounded`:
     |f(x) * C_α(x,y) * g(y)| ≤ M * |f(x)| * |g(y)|
@@ -1634,7 +1643,8 @@ theorem freeCovariance_regulated_bilinear_integrable (α : ℝ) (hα : 0 < α) (
     have hg_meas : StronglyMeasurable (fun p : SpaceTime × SpaceTime => g p.2) :=
       (g.continuous.comp continuous_snd).stronglyMeasurable
     -- The regulated covariance is bounded and AEStronglyMeasurable as a Schwinger integral
-    -- Proof: freeCovariance_regulated is defined as an integral ∫_k exp(-α‖k‖²) * prop(k) * cos(k·(x-y))
+    -- Proof: freeCovariance_regulated is defined as an integral ∫_k exp(-α‖k‖²) * prop(k) *
+    -- cos(k·(x-y))
     -- This is measurable in (x, y) by Fubini and continuity of the integrand in (x, y).
     have hC_meas : AEStronglyMeasurable
         (fun p : SpaceTime × SpaceTime => (freeCovariance_regulated α m p.1 p.2 : ℂ))
@@ -1752,7 +1762,7 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
               rw [h_rpow, rpow_two]
               field_simp [ne_of_gt hr_pos]
     · -- Case: mr > 1, use besselK1_asymptotic
-      push_neg at hmr_small
+      push Not at hmr_small
       have hmr_ge : 1 ≤ m * ‖z‖ := le_of_lt hmr_small
       have h_bessel_bound := besselK1_asymptotic (m * ‖z‖) hmr_ge
       -- For mr > 1, we have exp(-mr) < exp(-1), and we need to show
@@ -1781,15 +1791,18 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
       -- Now exp(-mr)/r = exp(-mr)/r. For r ≥ 1/m, mr ≥ 1.
       -- The function f(r) = exp(-mr)/r for r ≥ 1/m has f(1/m) = exp(-1) · m
       -- and is decreasing, so f(r) ≤ exp(-1) · m for all r ≥ 1/m.
-      -- Thus (m/(4π²r)) · K₁(mr) ≤ (sinh(1)+2) · m · exp(-1) · m / (4π²) = (sinh(1)+2) · m² · exp(-1) / (4π²)
+      -- Thus (m/(4π²r)) · K₁(mr) ≤ (sinh(1)+2) · m · exp(-1) · m / (4π²) = (sinh(1)+2) · m² ·
+      -- exp(-1) / (4π²)
       -- But this gives a bound independent of r, not 1/r². We need 1/r².
       -- Key insight: for r ≥ 1/m, we have 1/r ≤ m and 1/r² ≤ m². So the bound we computed
-      -- (sinh(1)+2) · m² · exp(-1) / (4π²) ≤ (sinh(1)+2) · exp(-1) / (4π² · (1/m)²) = (sinh(1)+2) · exp(-1) · m² / (4π²)
+      -- (sinh(1)+2) · m² · exp(-1) / (4π²) ≤ (sinh(1)+2) · exp(-1) / (4π² · (1/m)²) = (sinh(1)+2) ·
+      -- exp(-1) · m² / (4π²)
       -- doesn't help directly. Let me try another approach.
       --
       -- For the 1/r² bound, we note that for r ≥ 1/m:
       -- (m/r) · exp(-mr) / r = m · exp(-mr) / r²
-      -- The function g(r) = m · exp(-mr) achieves max at r = 0 where it's m, and at r = 1/m it's m·exp(-1).
+      -- The function g(r) = m · exp(-mr) achieves max at r = 0 where it's m, and at r = 1/m it's
+      -- m·exp(-1).
       -- So m · exp(-mr) ≤ m for all r ≥ 0.
       -- Thus (m/r) · (sinh(1)+2) · exp(-mr) / (4π²) = (sinh(1)+2) · m · exp(-mr) / (4π² r)
       --                                            ≤ (sinh(1)+2) · m · 1 / (4π² r)
@@ -1803,8 +1816,10 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
       --             Actually, exp(-x) ≤ 1/x for x ≥ 1 (since e^x ≥ ex for x ≥ 1).
       --             Wait, e^x ≥ x for all x, so exp(-x) ≤ 1/x only for x ≥ 0 where 1/x ≥ e^{-x}.
       --             For x = 1: e^{-1} ≈ 0.368, 1/1 = 1 ✓. For x = 2: e^{-2} ≈ 0.135, 1/2 = 0.5 ✓.
-      --             Actually, e^x ≥ x+1, so for x ≥ 1: e^x ≥ x, hence e^{-x} ≤ 1/x when e^x ≥ x, i.e., always.
-      --             Wait no, e^x ≥ x for x ≥ 0, so e^{-x} ≤ 1/x iff x ≤ e^x, which is true for x ≥ 0.
+      --             Actually, e^x ≥ x+1, so for x ≥ 1: e^x ≥ x, hence e^{-x} ≤ 1/x when e^x ≥ x,
+      -- i.e., always.
+      --             Wait no, e^x ≥ x for x ≥ 0, so e^{-x} ≤ 1/x iff x ≤ e^x, which is true for x ≥
+      -- 0.
       --             So for mr ≥ 1: exp(-mr) ≤ 1/(mr).
       --             Thus K₁(mr) ≤ (sinh(1)+2)/(mr).
       --             Hence (m/r) · K₁(mr) ≤ (m/r) · (sinh(1)+2)/(mr) = (sinh(1)+2)/r².
@@ -1878,7 +1893,7 @@ lemma freeCovariance_exponential_bound (m : ℝ) (hm : 0 < m) (u v : SpaceTime)
   have hmr_ge1 : 1 ≤ m * r := h_sep
   have hr_pos : 0 < r := by
     by_contra h_neg
-    push_neg at h_neg
+    push Not at h_neg
     have : m * r ≤ 0 := mul_nonpos_of_nonneg_of_nonpos (le_of_lt hm) h_neg
     linarith
   have hr_ne : r ≠ 0 := ne_of_gt hr_pos

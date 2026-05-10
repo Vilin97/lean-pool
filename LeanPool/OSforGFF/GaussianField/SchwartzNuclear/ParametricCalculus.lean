@@ -214,12 +214,13 @@ lemma contDiff_schwartz_parametric_integral
         L.toContinuousLinearMap (iteratedFDeriv ℝ (n + 1) (Φ_t t) y) := by
       intro t y
       have h1 := congrFun (iteratedFDeriv_succ_eq_comp_left (𝕜 := ℝ) (f := Φ_t t) (n := n)) y
-      -- h1 : iteratedFDeriv (n+1) (Φ_t t) y = curryLeftEquiv.symm (fderiv (iteratedFDeriv n (Φ_t t)) y)
+      -- h1 : iteratedFDeriv (n+1) (Φ_t t) y = curryLeftEquiv.symm (fderiv (iteratedFDeriv n (Φ_t
+      -- t)) y)
       rw [Function.comp_def] at h1
       -- curryLeftEquiv.symm = curryLeftLIE n as functions (by curryLeftLIE_coe_eq)
       -- So iteratedFDeriv (n+1) y = curryLeftLIE n (fderiv(iteratedFDeriv n) y)
       -- Apply (curryLeftLIE n).symm = L to both sides
-      show fderiv ℝ (fun y' => iteratedFDeriv ℝ n (Φ_t t) y') y =
+      change fderiv ℝ (fun y' => iteratedFDeriv ℝ n (Φ_t t) y') y =
         (curryLeftLIE (E := H) (F := ℝ) n).symm (iteratedFDeriv ℝ (n + 1) (Φ_t t) y)
       rw [← curryLeftLIE_coe_eq] at h1
       rw [h1, (curryLeftLIE (E := H) (F := ℝ) n).symm_apply_apply]
@@ -229,7 +230,8 @@ lemma contDiff_schwartz_parametric_integral
       intro t y
       rw [← h_fderiv_eq]
       exact (h_differentiable t y).hasFDerivAt
-    -- Bound on the derivative norm: ‖L (iteratedFDeriv (n+1) ...)‖ = ‖iteratedFDeriv (n+1) ...‖ ≤ C * ‖g t‖
+    -- Bound on the derivative norm: ‖L (iteratedFDeriv (n+1) ...)‖ = ‖iteratedFDeriv (n+1) ...‖ ≤ C
+    -- * ‖g t‖
     obtain ⟨C, hC_pos, hC_bound⟩ := h_bound (n + 1)
     -- Apply hasFDerivAt_integral_of_dominated_of_fderiv_le
     have h_result : HasFDerivAt (fun y => ∫ t, iteratedFDeriv ℝ n (Φ_t t) y)
@@ -241,7 +243,7 @@ lemma contDiff_schwartz_parametric_integral
         (Φ_t_integrable n y₀)
         (L.toContinuousLinearMap.continuous.comp_aestronglyMeasurable (Φ_t_meas (n + 1) y₀))
         (Filter.Eventually.of_forall fun t => fun y _ => by
-          show ‖(curryLeftLIE (E := H) (F := ℝ) n).symm
+          change ‖(curryLeftLIE (E := H) (F := ℝ) n).symm
             (iteratedFDeriv ℝ (n + 1) (Φ_t t) y)‖ ≤ C * ‖g t‖
           rw [(curryLeftLIE (E := H) (F := ℝ) n).symm.norm_map]
           exact hC_bound y t)
@@ -262,7 +264,7 @@ lemma contDiff_schwartz_parametric_integral
       exact contDiff_zero.mpr h_diff.continuous
     | succ m ih =>
       intro n
-      show ContDiff ℝ ((↑↑m : WithTop ℕ∞) + 1) (I n)
+      change ContDiff ℝ ((↑↑m : WithTop ℕ∞) + 1) (I n)
       rw [contDiff_succ_iff_fderiv]
       refine ⟨fun y => (I_diff n y).differentiableAt, ?_, ?_⟩
       · -- Analyticity: vacuous since (m : ℕ∞) ≠ ω

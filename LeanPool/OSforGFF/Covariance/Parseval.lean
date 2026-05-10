@@ -182,7 +182,8 @@ The proof uses:
 /-- The phase factor exp(-i⟨k,x-y⟩) is bounded by 1 in norm. -/
 lemma phase_bound (k x y : SpaceTime) :
     ‖Complex.exp (-Complex.I * Complex.ofReal ⟪k, x - y⟫_ℝ)‖ ≤ 1 := by
-  have h : -Complex.I * Complex.ofReal ⟪k, x - y⟫_ℝ = Complex.ofReal (-⟪k, x - y⟫_ℝ) * Complex.I := by
+  have h : -Complex.I * Complex.ofReal ⟪k, x - y⟫_ℝ = Complex.ofReal (-⟪k,
+    x - y⟫_ℝ) * Complex.I := by
     simp only [Complex.ofReal_neg, neg_mul]
     ring
   rw [h, Complex.norm_exp_ofReal_mul_I]
@@ -250,7 +251,8 @@ lemma schwartz_mul_phase_integrable (f : TestFunctionℂ) (k : SpaceTime) :
 
 /-- The conjugate of a Schwartz function times the phase exp(i⟨k,y⟩) is integrable. -/
 lemma schwartz_conj_mul_phase_integrable (f : TestFunctionℂ) (k : SpaceTime) :
-    Integrable (fun y => starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k, y⟫_ℝ)) volume := by
+    Integrable (fun y => starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k,
+      y⟫_ℝ)) volume := by
   have hf_conj_int : Integrable (fun y => starRingEnd ℂ (f y)) volume :=
     SchwartzMap.integrable_conj (μ := volume) f
   have hg_meas := measurable_phase_exp_conj k
@@ -331,11 +333,13 @@ lemma regulated_triple_integrable (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 <
             (Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℂ)) := by
           convert Complex.continuous_ofReal.comp h1 using 1
           ext k
-          simp only [Function.comp_apply, Complex.ofReal_div, Complex.ofReal_mul, Complex.ofReal_pow,
+          simp only [Function.comp_apply, Complex.ofReal_div, Complex.ofReal_mul,
+            Complex.ofReal_pow,
             Complex.ofReal_ofNat]
         exact h2
       exact hcont.aestronglyMeasurable.comp_measurable (measurable_snd.comp measurable_snd)
-    · have h_inner_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime => ⟪p.2.2, p.1 - p.2.1⟫_ℝ) :=
+    · have h_inner_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime => ⟪p.2.2,
+      p.1 - p.2.1⟫_ℝ) :=
         Measurable.inner measurable_snd.snd (measurable_fst.sub measurable_snd.fst)
       have h_phase_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime =>
           -Complex.I * Complex.ofReal ⟪p.2.2, p.1 - p.2.1⟫_ℝ) := by
@@ -350,7 +354,8 @@ lemma regulated_triple_integrable (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 <
 /-- Phase factorization: exp(-i⟨k,x-y⟩) = exp(-i⟨k,x⟩) · exp(i⟨k,y⟩) -/
 lemma phase_factorization (k x y : SpaceTime) :
     Complex.exp (-Complex.I * Complex.ofReal ⟪k, x - y⟫_ℝ) =
-    Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ) * Complex.exp (Complex.I * Complex.ofReal ⟪k, y⟫_ℝ) := by
+    Complex.exp (-Complex.I * Complex.ofReal ⟪k,
+      x⟫_ℝ) * Complex.exp (Complex.I * Complex.ofReal ⟪k, y⟫_ℝ) := by
   rw [inner_sub_right]
   simp only [Complex.ofReal_sub]
   rw [← Complex.exp_add]
@@ -371,7 +376,7 @@ lemma norm_sq_smul_eq (c : ℝ) (hc : 0 ≤ c) (x : SpaceTime) :
 lemma physicsFT_rescale (f : TestFunctionℂ) (ξ : SpaceTime) :
     physicsFT f ((2 * Real.pi) • ξ) = (SchwartzMap.fourierTransformCLM ℂ f) ξ := by
   simp only [physicsFT, SchwartzMap.fourierTransformCLM_apply]
-  show _ = FourierTransform.fourier (⇑f) ξ
+  change _ = FourierTransform.fourier (⇑f) ξ
   rw [Real.fourier_eq]
   congr 1
   ext x
@@ -438,10 +443,13 @@ lemma change_of_variables_momentum (α : ℝ) (m : ℝ) (f : TestFunctionℂ) :
 
 /-- After Fubini, the inner k-integral factorizes. -/
 lemma regulated_fubini_factorization (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
-    (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
-    = (∫ k, ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℝ) : ℂ) *
+    (∫ x, ∫ y,
+      f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
+    = (∫ k,
+      ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℝ) : ℂ) *
         (∫ x, f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ) ∂volume) *
-        (∫ y, starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k, y⟫_ℝ) ∂volume) ∂volume).re := by
+        (∫ y, starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k,
+          y⟫_ℝ) ∂volume) ∂volume).re := by
   have h_int := regulated_triple_integrable α hα m f
   let amplitude : SpaceTime → ℂ := fun k =>
     ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℝ) : ℂ)
@@ -450,7 +458,8 @@ lemma regulated_fubini_factorization (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (
     intro x y
     rw [freeCovariance_regulated_eq_complex_integral]
     simp only [fourierNormalization, amplitude]
-  have h_lhs_triple : (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * starRingEnd ℂ (f y)) =
+  have h_lhs_triple : (∫ x, ∫ y,
+    f x * (freeCovariance_regulated α m x y : ℂ) * starRingEnd ℂ (f y)) =
       ∫ x, ∫ y, ∫ k, f x * amplitude k * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x - y⟫_ℝ) *
         starRingEnd ℂ (f y) := by
     congr 1
@@ -496,7 +505,8 @@ lemma regulated_fubini_factorization (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (
           congr 1; ext x; congr 1; ext y; ring
       _ = (∫ x, amplitude k * f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ)) *
             (∫ y, starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k, y⟫_ℝ)) := by
-          have h_inner : ∀ x, ∫ y, amplitude k * f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ) *
+          have h_inner : ∀ x, ∫ y, amplitude k * f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k,
+            x⟫_ℝ) *
               (starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k, y⟫_ℝ)) =
               amplitude k * f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ) *
               ∫ y, starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k, y⟫_ℝ) :=
@@ -505,8 +515,10 @@ lemma regulated_fubini_factorization (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (
           exact MeasureTheory.integral_mul_const _ _
       _ = amplitude k * (∫ x, f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ)) *
             (∫ y, starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k, y⟫_ℝ)) := by
-          have heq : (fun x => amplitude k * f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ)) =
-              (fun x => amplitude k * (f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ))) := by
+          have heq : (fun x => amplitude k * f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k,
+            x⟫_ℝ)) =
+              (fun x => amplitude k * (f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k,
+                x⟫_ℝ))) := by
             ext x; ring
           rw [heq]
           congr 1
@@ -546,9 +558,11 @@ lemma physicsFT_mul_conj (f : TestFunctionℂ) (k : SpaceTime) :
 
 /-- The factorized form simplifies to an integral of |physics FT|². -/
 lemma factorized_to_physicsFT_norm_sq (α : ℝ) (m : ℝ) (f : TestFunctionℂ) :
-    (∫ k, ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℝ) : ℂ) *
+    (∫ k,
+      ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℝ) : ℂ) *
         (∫ x, f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ) ∂volume) *
-        (∫ y, starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k, y⟫_ℝ) ∂volume) ∂volume).re
+        (∫ y, starRingEnd ℂ (f y) * Complex.exp (Complex.I * Complex.ofReal ⟪k,
+          y⟫_ℝ) ∂volume) ∂volume).re
     = ∫ k, Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension *
         ‖physicsFT f k‖^2 ∂volume := by
   simp_rw [x_integral_eq_physicsFT, y_integral_eq_physicsFT_conj]
@@ -581,7 +595,8 @@ lemma factorized_to_physicsFT_norm_sq (α : ℝ) (m : ℝ) (f : TestFunctionℂ)
     5. Accounting for normalization factors via change of variables
 -/
 theorem parseval_covariance_schwartz_regulated (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
-    (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
+    (∫ x, ∫ y,
+      f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
     = ∫ k, Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume := by
   -- Step 1: Apply Fubini and phase factorization
   rw [regulated_fubini_factorization α hα m f]
@@ -640,9 +655,11 @@ lemma integrable_schwartz_propagator_mathlib (m : ℝ) [Fact (0 < m)] (f : TestF
 -/
 theorem parseval_covariance_schwartz_correct (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     Filter.Tendsto
-      (fun α => (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re)
+      (fun α => (∫ x, ∫ y,
+        f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re)
       (nhdsWithin 0 (Set.Ioi 0))
-      (nhds (∫ k, ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume)) := by
+      (nhds (∫ k,
+        ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume)) := by
   -- Use the regulated Parseval identity to rewrite
   have h_eq : ∀ α > 0, (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) *
       (starRingEnd ℂ (f y)) ∂volume ∂volume).re =
@@ -655,7 +672,8 @@ theorem parseval_covariance_schwartz_correct (m : ℝ) [Fact (0 < m)] (f : TestF
   have hg_int : Integrable g volume := integrable_schwartz_propagator_mathlib m f
   -- The key step: show the regulated momentum integral converges to the unregulated one
   have h_tendsto : Filter.Tendsto
-      (fun α => ∫ k, Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
+      (fun α => ∫ k,
+        Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
         freePropagatorMomentum_mathlib m k ∂volume)
       (nhdsWithin 0 (Set.Ioi 0))
       (nhds (∫ k, g k ∂volume)) := by
@@ -856,7 +874,8 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
   -- We use that ‖conj z‖ = ‖z‖ to transfer integrability from f*C*g to f*C*conj(g)
   --
   -- Technical note: The proof requires showing:
-  -- 1. F α is integrable (follows from freeCovariance_regulated_bilinear_integrable + norm equality)
+  -- 1. F α is integrable (follows from freeCovariance_regulated_bilinear_integrable + norm
+  -- equality)
   -- 2. F_limit is integrable (follows from freeCovarianceℂ_bilinear_integrable' + norm equality)
   -- 3. Fubini converts product integrals to iterated integrals
   --

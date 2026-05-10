@@ -87,7 +87,8 @@ theorem distributionPairingℂ_real_continuous (f : TestFunctionℂ) :
   -- distributionPairingℂ_real ω f = ω f_re + I * ω f_im
   -- where f_re = schwartz_comp_clm f reCLM and f_im = schwartz_comp_clm f imCLM
   simp only [distributionPairingℂ_real, complex_testfunction_decompose]
-  -- Now we need: Continuous (ω ↦ ↑(ω (schwartz_comp_clm f reCLM)) + I * ↑(ω (schwartz_comp_clm f imCLM)))
+  -- Now we need: Continuous (ω ↦ ↑(ω (schwartz_comp_clm f reCLM)) + I * ↑(ω (schwartz_comp_clm f
+  -- imCLM)))
   -- Each evaluation ω ↦ ω g is continuous by WeakDual.eval_continuous
   have h_re : Continuous (fun ω : FieldConfiguration => (ω (schwartz_comp_clm f Complex.reCLM) : ℂ)) :=
     Complex.continuous_ofReal.comp (WeakDual.eval_continuous _)

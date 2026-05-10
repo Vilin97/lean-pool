@@ -115,7 +115,7 @@ Backward: `a ↦ ∑' n, aₙ ψₙ` (tsum in Schwartz topology).
 /-- Kronecker property: the Hermite coefficient of a basis function is δₙₘ. -/
 theorem hermiteCoeff1D_basis_kronecker (n m : ℕ) :
     hermiteCoeff1D n (schwartzHermiteBasis1D m) = if n = m then 1 else 0 := by
-  show ∫ x, schwartzHermiteBasis1D m x * hermiteFunction n x = _
+  change ∫ x, schwartzHermiteBasis1D m x * hermiteFunction n x = _
   simp_rw [schwartzHermiteBasis1D_apply]
   convert hermiteFunction_orthonormal m n using 1
   exact ite_congr (propext eq_comm) (fun _ => rfl) (fun _ => rfl)
@@ -156,7 +156,7 @@ private theorem hermiteCoeff_rapid_decay (f : SchwartzMap ℝ ℝ) (k : ℕ) :
     have h_shifted := h_base.comp_injective
       (show Function.Injective (· + 1 : ℕ → ℕ) from fun a b h => Nat.succ_injective h)
     have h1 : Summable (fun n : ℕ => (1 + (n : ℝ)) ^ ((-2) : ℝ)) :=
-      h_shifted.congr (fun n => by show ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
+      h_shifted.congr (fun n => by change ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
     exact h1.const_smul (C * S)
   exact .of_nonneg_of_le (fun m => mul_nonneg (abs_nonneg _)
     (pow_nonneg (by positivity) k)) h_le h_sum
@@ -189,7 +189,7 @@ private noncomputable def toRapidDecay1DCLM : SchwartzMap ℝ ℝ →L[ℝ] Rapi
     have h_shifted := h_base.comp_injective
       (show Function.Injective (· + 1 : ℕ → ℕ) from fun a b h => Nat.succ_injective h)
     have h_rpow_sum : Summable (fun n : ℕ => (1 + (n : ℝ)) ^ ((-2) : ℝ)) :=
-      h_shifted.congr (fun n => by show ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
+      h_shifted.congr (fun n => by change ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
     set L := ∑' n : ℕ, (1 + (n : ℝ)) ^ ((-2) : ℝ)
     -- Total bound: C * L
     refine ⟨Finset.Iic q, ⟨C * L, by positivity⟩, fun f => ?_⟩
@@ -347,7 +347,7 @@ private lemma rapidDecay_schwartzMap_apply (a : RapidDecaySeq) (x : ℝ) :
 private theorem rapidDecay_hermite_hasSum (a : RapidDecaySeq) :
     HasSum (fun n => a.val n • schwartzHermiteBasis1D n) (rapidDecay_schwartzMap a) := by
   rw [HasSum]
-  show Filter.Tendsto _ Filter.atTop _
+  change Filter.Tendsto _ Filter.atTop _
   rw [(schwartz_withSeminorms ℝ ℝ ℝ).tendsto_nhds _ (rapidDecay_schwartzMap a)]
   intro ⟨k, l⟩ ε hε
   -- Get vanishing condition from summability of ∑ |aₙ| * p_{k,l}(ψₙ)
@@ -580,7 +580,7 @@ noncomputable def schwartzRapidDecayEquiv1D :
     -- Left inverse: fromRapidDecay1DCLM ∘ toRapidDecay1DCLM = id
     (fun f => by
       -- fromRapidDecay1DCLM (toRapidDecay1DCLM f) = ∑' n, cₙ(f) • ψₙ = f
-      show ∑' n, hermiteCoeff1D n f • schwartzHermiteBasis1D n = f
+      change ∑' n, hermiteCoeff1D n f • schwartzHermiteBasis1D n = f
       exact ((schwartz_hermite_hasSum f).unique
         (schwartz_hermite_hasSum f).summable.hasSum).symm)
     -- Right inverse: toRapidDecay1DCLM ∘ fromRapidDecay1DCLM = id
@@ -588,7 +588,7 @@ noncomputable def schwartzRapidDecayEquiv1D :
       -- Need: hermiteCoeff1D n (∑' m, aₘ ψₘ) = aₙ for all n
       apply RapidDecaySeq.ext; intro n
       -- Apply continuous hermiteCoeff1DCLM to interchange with tsum
-      show hermiteCoeff1D n (∑' m, a.val m • schwartzHermiteBasis1D m) = a.val n
+      change hermiteCoeff1D n (∑' m, a.val m • schwartzHermiteBasis1D m) = a.val n
       -- Interchange hermiteCoeff1DCLM (continuous) with tsum
       rw [show hermiteCoeff1D n (∑' m, a.val m • schwartzHermiteBasis1D m) =
         hermiteCoeff1DCLM n (∑' m, a.val m • schwartzHermiteBasis1D m) from rfl,
@@ -611,7 +611,7 @@ theorem schwartzRapidDecayEquiv1D_symm_apply (a : RapidDecaySeq) (t : ℝ) :
   simp only [schwartzRapidDecayEquiv1D, ContinuousLinearEquiv.symm_equivOfInverse,
     ContinuousLinearEquiv.equivOfInverse_apply]
   show fromRapidDecay1DCLM a t = _
-  show fromRapidDecay1DLM a t = _
+  change fromRapidDecay1DLM a t = _
   rw [fromRapidDecay1DLM_eq]
   show rapidDecay_schwartzMap a t = _
   rfl
@@ -689,7 +689,7 @@ lemma multiIndexEquiv_growth (d : ℕ) :
     simp only [multiIndexEquiv, Equiv.funUnique_apply, one_mul, pow_one]
     suffices h : (α default : ℝ) ≤ (MultiIndex.abs α : ℝ) by linarith
     gcongr
-    show α default ≤ ∑ i, α i
+    change α default ≤ ∑ i, α i
     rw [Fin.default_eq_zero]
     exact Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ 0)
   | succ d ih =>
@@ -750,7 +750,7 @@ lemma multiIndexEquiv_symm_growth (d : ℕ) :
     -- d = 0: multiIndexEquiv 0 = Equiv.funUnique (Fin 1) ℕ
     refine ⟨1, one_pos, 1, fun n => ?_⟩
     simp only [multiIndexEquiv, one_mul, pow_one, MultiIndex.abs]
-    show (1 : ℝ) + ↑((Equiv.funUnique (Fin 1) ℕ).symm n 0) ≤ 1 + ↑n
+    change (1 : ℝ) + ↑((Equiv.funUnique (Fin 1) ℕ).symm n 0) ≤ 1 + ↑n
     simp [Equiv.funUnique]
   | succ d ih =>
     -- d + 1: unpairing with IH
@@ -1117,7 +1117,7 @@ lemma hermiteCoeffNd_eq_hermiteCoeff1D
   congr 1; ext x
   simp only [euclideanFin1MeasEquiv_apply]
   congr 1
-  show f (euclideanFin1Equiv.symm (x 0)) = f x
+  change f (euclideanFin1Equiv.symm (x 0)) = f x
   congr 1; simp [euclideanFin1Equiv]; ext i; fin_cases i; rfl
 
 /-! ### Analytical Axioms for Multi-Dimensional Hermite Analysis
@@ -1251,7 +1251,7 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound (d : ℕ) (k' l' : �
   have hc_nonneg : 0 ≤ c := by positivity
   -- Reduce via operator norm: ‖D^l' g(y)‖ ≤ bound / c (when c > 0)
   -- We bound c * ‖D^l' g(y)‖ directly using the multilinear op-norm
-  show c * ‖iteratedFDeriv ℝ l' g y‖ ≤ C₂ * S_f / (1 + (n : ℝ)) ^ k
+  change c * ‖iteratedFDeriv ℝ l' g y‖ ≤ C₂ * S_f / (1 + (n : ℝ)) ^ k
   rw [le_div_iff₀ hc]
   -- Need: c * ‖D^l' g(y)‖ * (1+n)^k ≤ C₂ * S_f
   -- Use op-norm: ‖f‖ ≤ B iff ∀ v, ‖f v‖ ≤ B * ∏ ‖vᵢ‖
@@ -1653,7 +1653,7 @@ private lemma schwartzHermiteBasisNd_growth (d : ℕ) (k l : ℕ) :
     · simp only [pow_zero, one_mul]
       have hf : ⇑(schwartzHermiteBasisNd 0 α) =
           fun (_ : EuclideanSpace ℝ (Fin 0)) => (1 : ℝ) := by
-        ext y; show hermiteFunctionNd 0 α y = 1; simp [hermiteFunctionNd]
+        ext y; change hermiteFunctionNd 0 α y = 1; simp [hermiteFunctionNd]
       rw [hf]
       rcases l with _ | l'
       · simp
@@ -1716,7 +1716,7 @@ private lemma schwartzHermiteBasisNd_growth (d : ℕ) (k l : ℕ) :
   -- α-tracking: (1 + α j) ≤ (1 + |α|) for each j
   have h_alpha_le : ∀ (α : MultiIndex (d + 1)) (j : Fin (d + 1)),
       (1 + (α j : ℝ)) ≤ (1 + (MultiIndex.abs α : ℝ)) := by
-    intro α j; gcongr; show α j ≤ ∑ i, α i
+    intro α j; gcongr; change α j ≤ ∑ i, α i
     exact Finset.single_le_sum (fun _ _ => Nat.zero_le _) (Finset.mem_univ j)
   -- Reduce to pointwise bound
   suffices h_poly : ∃ (C : ℝ) (s : ℕ), 0 < C ∧
@@ -1728,7 +1728,8 @@ private lemma schwartzHermiteBasisNd_growth (d : ℕ) (k l : ℕ) :
       SchwartzMap.seminorm_le_bound ℝ k l (schwartzHermiteBasisNd (d + 1) α) (by positivity)
         (hbound α)⟩
   -- Step 2: Factor bounds with α-tracking
-  -- Using le_seminorm and composition with projection (as in iteratedFDeriv_hermite_comp_proj_bound):
+  -- Using le_seminorm and composition with projection (as in
+  -- iteratedFDeriv_hermite_comp_proj_bound):
   -- ‖D^m (fun x => ψ_n(x j)) x‖ ≤ ‖D^m ψ_n (x j)‖ ≤ seminorm(ψ_n, 0, m)
   -- |x j|^k * ‖D^m (fun x => ψ_n(x j)) x‖ ≤ |x j|^k * ‖D^m ψ_n (x j)‖ ≤ seminorm(ψ_n, k, m)
   set fac : MultiIndex (d + 1) → Fin (d + 1) → EuclideanSpace ℝ (Fin (d + 1)) → ℝ :=
@@ -1974,7 +1975,7 @@ Follows directly from orthonormality of `hermiteFunctionNd`.
 -/
 private lemma hermiteCoeffNd_basisNd_kronecker (d : ℕ) (α β : MultiIndex d) :
     hermiteCoeffNd d α (schwartzHermiteBasisNd d β) = if α = β then 1 else 0 := by
-  show ∫ x, schwartzHermiteBasisNd d β x * hermiteFunctionNd d α x = _
+  change ∫ x, schwartzHermiteBasisNd d β x * hermiteFunctionNd d α x = _
   simp_rw [show ∀ x, schwartzHermiteBasisNd d β x = hermiteFunctionNd d β x from fun _ => rfl]
   convert hermiteFunctionNd_orthonormal d β α using 1
   exact ite_congr (propext eq_comm) (fun _ => rfl) (fun _ => rfl)
@@ -2022,7 +2023,7 @@ private noncomputable def hermiteCoeffNdCLM (d : ℕ) (α : MultiIndex d) :
     intro _
     refine ⟨{(0, 0)}, ⟨M, integral_nonneg (fun _ => norm_nonneg _)⟩, fun f => ?_⟩
     simp only [Seminorm.comp_apply, Finset.sup_singleton, lm]
-    show ‖hermiteCoeffNd d α f‖ ≤
+    change ‖hermiteCoeffNd d α f‖ ≤
       M * SchwartzMap.seminorm ℝ 0 0 f
     calc ‖hermiteCoeffNd d α f‖
         = ‖∫ x, f x * hermiteFunctionNd d α x‖ := rfl
@@ -2095,7 +2096,7 @@ private theorem hermiteCoeffNd_rapid_decayFlat (d' : ℕ)
   have h_sum : Summable (fun n : ℕ => D * S * C₁ ^ (k + 2) * (1 + (n : ℝ)) ^ ((-2) : ℝ)) :=
     (((summable_nat_rpow.mpr (by norm_num : (-2 : ℝ) < -1)).comp_injective
       (fun a b h => Nat.succ_injective h)).congr
-      (fun n => by show ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm]))
+      (fun n => by change ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm]))
     |>.const_smul (D * S * C₁ ^ (k + 2))
   exact .of_nonneg_of_le
     (fun n => mul_nonneg (abs_nonneg _) (pow_nonneg (by positivity) _))
@@ -2126,12 +2127,12 @@ private lemma toRapidDecayNdLM_isBounded (d' : ℕ) :
   have h_rpow_sum : Summable (fun n : ℕ => (1 + (n : ℝ)) ^ ((-2) : ℝ)) :=
     ((summable_nat_rpow.mpr (by norm_num : (-2 : ℝ) < -1)).comp_injective
       (fun a b h => Nat.succ_injective h)).congr
-      (fun n => by show ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
+      (fun n => by change ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
   set L := ∑' n : ℕ, (1 + (n : ℝ)) ^ ((-2) : ℝ)
   refine ⟨q, ⟨D * C₁ ^ (k + 2) * L, by positivity⟩, fun f => ?_⟩
   simp only [Seminorm.comp_apply, Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
   set S := q.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d' + 1))) ℝ) f
-  show ∑' n, |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + ↑n) ^ k ≤
+  change ∑' n, |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + ↑n) ^ k ≤
     D * C₁ ^ (k + 2) * L * S
   have h_le : ∀ n : ℕ,
       |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + (n : ℝ)) ^ k ≤
@@ -2331,7 +2332,7 @@ in the Schwartz topology.
 private theorem rapidDecay_hermite_hasSumNd (d : ℕ) (a : RapidDecaySeq) :
     HasSum (fun n => a.val n • flatBasisNd d n) (rapidDecay_schwartzMapNd d a) := by
   rw [HasSum]
-  show Filter.Tendsto _ Filter.atTop _
+  change Filter.Tendsto _ Filter.atTop _
   rw [(schwartz_withSeminorms ℝ (EuclideanSpace ℝ (Fin (d + 1))) ℝ).tendsto_nhds _
     (rapidDecay_schwartzMapNd d a)]
   intro ⟨k, l⟩ ε hε
@@ -2486,13 +2487,13 @@ private noncomputable def fromRapidDecayNdLM (d : ℕ) :
     RapidDecaySeq →ₗ[ℝ] SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ where
   toFun := rapidDecay_schwartzMapNd d
   map_add' a b := SchwartzMap.ext fun x => by
-    show ∑' n, (a + b).val n * flatBasisNd d n x =
+    change ∑' n, (a + b).val n * flatBasisNd d n x =
       (∑' n, a.val n * flatBasisNd d n x) + (∑' n, b.val n * flatBasisNd d n x)
     simp only [RapidDecaySeq.add_val, add_mul]
     exact (rapidDecay_pointwise_summableNd d a x).tsum_add
       (rapidDecay_pointwise_summableNd d b x)
   map_smul' r a := SchwartzMap.ext fun x => by
-    show ∑' n, (r • a).val n * flatBasisNd d n x =
+    change ∑' n, (r • a).val n * flatBasisNd d n x =
       r • (∑' n, a.val n * flatBasisNd d n x)
     simp only [RapidDecaySeq.smul_val, smul_eq_mul, mul_assoc]
     exact tsum_mul_left
@@ -2655,9 +2656,9 @@ theorem schwartzRapidDecayEquivNd_symm_apply (d' : ℕ) (a : RapidDecaySeq)
   -- which is rapidDecay_schwartzMapNd d' a
   show fromRapidDecayNdCLM (d' + 1) a x = _
   -- Unfold fromRapidDecayNdCLM to fromRapidDecayNdLM, then to rapidDecay_schwartzMapNd
-  show rapidDecay_schwartzMapNd d' a x = _
+  change rapidDecay_schwartzMapNd d' a x = _
   -- By definition, this is ∑' n, a.val n * flatBasisNd d' n x
-  show ∑' n, a.val n * flatBasisNd d' n x = _
+  change ∑' n, a.val n * flatBasisNd d' n x = _
   -- flatBasisNd d' n = schwartzHermiteBasisNd (d'+1) ((multiIndexEquiv d').symm n)
   -- and schwartzHermiteBasisNd (d'+1) α x = hermiteFunctionNd (d'+1) α x
   rfl
@@ -2724,7 +2725,7 @@ theorem hermiteFunctionNd_unpair (d : ℕ) (n : ℕ)
     intro j _
     congr 1
     -- α (castSucc j) = ((multiIndexEquiv d).symm (unpair n).1) j
-    show ((multiIndexEquiv (d + 1)).symm n) (Fin.castSucc j) =
+    change ((multiIndexEquiv (d + 1)).symm n) (Fin.castSucc j) =
         ((multiIndexEquiv d).symm (Nat.unpair n).1) j
     conv_lhs => rw [h_alpha]
     -- succFunEquiv.symm (β, k) at castSucc j: this is β j
@@ -2735,7 +2736,7 @@ theorem hermiteFunctionNd_unpair (d : ℕ) (n : ℕ)
     simp [Fin.append_left]
   · -- α (last (d+1)) = (unpair n).2
     congr 1
-    show ((multiIndexEquiv (d + 1)).symm n) (Fin.last (d + 1)) = (Nat.unpair n).2
+    change ((multiIndexEquiv (d + 1)).symm n) (Fin.last (d + 1)) = (Nat.unpair n).2
     conv_lhs => rw [h_alpha]
     -- Need: (succFunEquiv.symm (β, k)) (Fin.last (d+1)) = k
     -- Key: succFunEquiv applied to the inverse gives back (β, k)
@@ -2770,7 +2771,8 @@ The proof decomposes as:
   `SchwartzMap D ℝ ≃L SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ ≃L RapidDecaySeq`
 where `d = finrank ℝ D ≥ 1` (from `Nontrivial D`).
 
-**Sorry**: sorrys for `d ≥ 2` are decomposed into multi-index Hermite analysis components. count_axioms:skip
+**Sorry**: sorrys for `d ≥ 2` are decomposed into multi-index Hermite analysis components.
+count_axioms:skip
 The 1D forward and backward maps and all structural components are fully proved.
 -/
 noncomputable def schwartzRapidDecayEquiv (D : Type*)

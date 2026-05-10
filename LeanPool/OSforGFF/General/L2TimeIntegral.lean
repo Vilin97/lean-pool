@@ -17,7 +17,8 @@ This file proves L² bounds on time averages and parametric integrals.
 4. `memLp_prod_of_uniform_slicewise_bound` - L² on product from uniform slicewise bounds
 5. `gff_time_integral_aestronglyMeasurable_proved` - Parametric time integral is measurable
 6. `gff_covariance_norm_integrableOn_slice_proved` - Covariance norm integrable on slices
-7. `double_integral_polynomial_decay_bound_proved` - Double integral bound for polynomial decay kernels
+7. `double_integral_polynomial_decay_bound_proved` - Double integral bound for polynomial decay
+kernels
 8. `minkowski_weighted_L2_sum_proved` - Minkowski inequality for weighted L² sums
 
 ## Mathematical Background
@@ -254,7 +255,7 @@ theorem L2_time_average_bound (μ : Measure Ω) [SFinite μ]
     have h_rhs_nonneg : 0 ≤ (1/T : ℝ) * ∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2 := by
       apply mul_nonneg (by positivity); apply integral_nonneg; intro; positivity
     -- Simplify the power of functions applied to ω
-    show ‖((fun x => ‖(1/T : ℂ) * ∫ (s : ℝ) in Icc 0 T, A s x‖) ^ 2) ω‖ ≤ _
+    change ‖((fun x => ‖(1/T : ℂ) * ∫ (s : ℝ) in Icc 0 T, A s x‖) ^ 2) ω‖ ≤ _
     simp only [Pi.pow_apply]
     rw [Real.norm_of_nonneg h_lhs_nonneg, Real.norm_of_nonneg h_rhs_nonneg]
     exact scaled_time_average_pointwise_bound A T hT ω hω_int
@@ -533,7 +534,7 @@ theorem double_integral_polynomial_decay_bound_proved (α : ℝ) (hα : α > 1) 
           setIntegral_le_integral (h_integrable.comp_sub_left s) (by filter_upwards with u; exact h_nonneg _)
       _ = ∫ t, g t := integral_sub_left_eq_self g volume s
   -- g(s-u) unfolds to (1+|s-u|)^(-α), so goals match definitionally
-  show ∫ s in Icc 0 T, ∫ u in Icc 0 T, g (s - u) ≤ (∫ t, g t) * T
+  change ∫ s in Icc 0 T, ∫ u in Icc 0 T, g (s - u) ≤ (∫ t, g t) * T
   calc ∫ s in Icc 0 T, ∫ u in Icc 0 T, g (s - u)
     ≤ ∫ s in Icc 0 T, (∫ t, g t) := by
         apply integral_mono_of_nonneg

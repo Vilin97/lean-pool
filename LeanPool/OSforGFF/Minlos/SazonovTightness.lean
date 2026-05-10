@@ -408,7 +408,7 @@ private lemma half_sq_le_cosh_sub_one' (x : ℝ) : x ^ 2 / 2 ≤ Real.cosh x - 1
   by_cases ht : 0 ≤ t
   · have h1 := id_le_sinh' ht
     exact mul_nonneg (by linarith) (by linarith)
-  · push_neg at ht
+  · push Not at ht
     have h1 : Real.sinh t ≤ t := by
       have := id_le_sinh' (by linarith : 0 ≤ -t)
       rw [Real.sinh_neg] at this; linarith
@@ -512,7 +512,7 @@ private lemma gaussDensity_mul_inner_sq_integrable' (σ : ℝ) (hσ : 0 < σ) (w
       (fun x : V => gaussDensity σ x * (@inner ℝ V _ w x) ^ 2) volume)
   filter_upwards with x
   rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (gaussDensity_nonneg' σ x)]
-  show gaussDensity σ x * |(@inner ℝ V _ w x) ^ 2| ≤
+  change gaussDensity σ x * |(@inner ℝ V _ w x) ^ 2| ≤
     2 * (gaussDensity σ x * Real.cosh (1 * @inner ℝ V _ w x))
   rw [abs_of_nonneg (sq_nonneg _), one_mul]
   nlinarith [half_sq_le_cosh_sub_one' (@inner ℝ V _ w x),
@@ -595,7 +595,7 @@ theorem gaussian_quadForm_integral_le
     rwa [b.repr_apply_apply, b.repr_apply_apply] at this
   -- quadForm S x = ∑ᵢ λᵢ * ⟪b i, x⟫²
   have hqf : ∀ x : V, quadForm S x = ∑ i, ev i * (@inner ℝ V _ (b i) x) ^ 2 := by
-    intro x; show @inner ℝ V _ x (S x) = _
+    intro x; change @inner ℝ V _ x (S x) = _
     conv_lhs => rw [show (S : V →L[ℝ] V) x = (S : V →ₗ[ℝ] V) x from rfl]
     rw [← b.sum_inner_mul_inner x ((S : V →ₗ[ℝ] V) x)]
     congr 1; ext i; rw [hinner, real_inner_comm x (b i)]; ring
@@ -740,7 +740,7 @@ theorem gaussian_averaging_bound
           _ ≤ |(1 - φ x).re| := le_abs_self _
           _ ≤ ‖1 - φ x‖ := abs_re_le_norm _
       linarith [h_bound x hqf, quadForm_nonneg hS x]
-    · push_neg at hqf
+    · push Not at hqf
       have hre_le : (φ x).re ≤ ‖φ x‖ := le_trans (le_abs_self _) (abs_re_le_norm _)
       have hnorm_le : ‖φ x‖ ≤ 1 := by
         rw [← hφ]; haveI : IsProbabilityMeasure μ.toMeasure := inferInstance
@@ -894,7 +894,7 @@ lemma restrictOp_isPositive (S : H →L[ℝ] H) (hS : S.IsPositive)
   · intro x
     simp only [ContinuousLinearMap.reApplyInnerSelf]
     rw [RCLike.re_to_real, real_inner_comm]
-    show 0 ≤ quadForm (restrictOp S v) x
+    change 0 ≤ quadForm (restrictOp S v) x
     rw [restrictOp_quadForm]
     exact quadForm_nonneg hS _
 

@@ -289,7 +289,7 @@ lemma time_average_memLp_two (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (T :
       have h_eq : (fun ω => Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) f)) =
           (fun ω => Complex.exp (distributionPairingℂ_real ω (timeTranslationSchwartzℂ (-s) f))) := by
         ext ω; rw [timeTranslationDistribution_pairingℂ]
-      show StronglyMeasurable (fun ω => Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) f))
+      change StronglyMeasurable (fun ω => Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) f))
       rw [h_eq]
       exact (Complex.continuous_exp.measurable.comp (QFT.distributionPairingℂ_real_measurable _)).stronglyMeasurable
   -- Measurability of the time average
@@ -328,7 +328,8 @@ lemma gff_err_sq_integrable (m : ℝ) [Fact (0 < m)] (T : ℝ) (hT : T > 0) (f :
     have h := h_avg_L2.sub h_const_L2
     convert h using 2
   -- Step 4: L² function has integrable square
-  have h_sq_int : Integrable (fun ω => ‖(1/T : ℂ) * (∫ s in Set.Icc (0 : ℝ) T, A s ω) - EA‖^2) μ := by
+  have h_sq_int : Integrable (fun ω => ‖(1/T : ℂ) * (∫ s in Set.Icc (0 : ℝ) T,
+    A s ω) - EA‖^2) μ := by
     have h_meas := h_diff_L2.1
     rw [memLp_two_iff_integrable_sq_norm h_meas] at h_diff_L2
     exact h_diff_L2
@@ -361,7 +362,8 @@ lemma double_integral_decay_bound :
       ∫ s in Set.Icc (0 : ℝ) T, ∫ u in Set.Icc (0 : ℝ) T,
         (1 + |s - u|)^(-(3 : ℝ)) ≤ 2 * T * C := by
   -- Use the integral bound for α = 3 > 1
-  obtain ⟨C₀, hC₀_pos, hC₀_bound⟩ := OSforGFF.double_integral_polynomial_decay_bound_proved 3 (by norm_num : (3 : ℝ) > 1)
+  obtain ⟨C₀, hC₀_pos,
+    hC₀_bound⟩ := OSforGFF.double_integral_polynomial_decay_bound_proved 3 (by norm_num : (3 : ℝ) > 1)
   use C₀, hC₀_pos
   intro T hT
   calc ∫ s in Set.Icc (0 : ℝ) T, ∫ u in Set.Icc (0 : ℝ) T, (1 + |s - u|)^(-(3 : ℝ))
@@ -452,7 +454,8 @@ lemma gff_covariance_timeTranslation_continuous (m : ℝ) [Fact (0 < m)]
     rw [h_eq]
     apply Integrable.const_mul
     have h_transl : ∀ x y, freeCovariance m x y = freeCovarianceKernel m (x - y) := by
-      intro x y; simp only [freeCovariance, freeCovarianceBessel, freeCovarianceKernel, zero_sub, norm_neg]
+      intro x y; simp only [freeCovariance, freeCovarianceBessel, freeCovarianceKernel, zero_sub,
+        norm_neg]
     have h_eq2 : (fun p : SpaceTime × SpaceTime => ‖(freeCovariance m p.1 p.2 : ℂ)‖ * ‖g p.2‖) =
         (fun p => ‖(freeCovarianceKernel m (p.1 - p.2) : ℂ)‖ * ‖g p.2‖) := by ext p; rw [h_transl]
     rw [h_eq2]
@@ -498,8 +501,10 @@ lemma gff_covariance_continuous (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
       ∫ ω, A p.1 ω * starRingEnd ℂ (A p.2 ω) ∂μ - EA * starRingEnd ℂ EA) := by
   intro μ A EA
   -- Rewrite using stationarity: the function factors through (s, u) ↦ s - u
-  have h_factors : (fun p : ℝ × ℝ => ∫ ω, A p.1 ω * starRingEnd ℂ (A p.2 ω) ∂μ - EA * starRingEnd ℂ EA)
-      = (fun p : ℝ × ℝ => ∫ ω, A (p.1 - p.2) ω * starRingEnd ℂ (A 0 ω) ∂μ - EA * starRingEnd ℂ EA) := by
+  have h_factors : (fun p : ℝ × ℝ => ∫ ω,
+    A p.1 ω * starRingEnd ℂ (A p.2 ω) ∂μ - EA * starRingEnd ℂ EA)
+      = (fun p : ℝ × ℝ => ∫ ω,
+        A (p.1 - p.2) ω * starRingEnd ℂ (A 0 ω) ∂μ - EA * starRingEnd ℂ EA) := by
     ext p
     have := gff_product_expectation_stationarity m f p.1 p.2
     simp only at this ⊢
@@ -609,7 +614,7 @@ lemma L2_time_average_variance_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
           (fun ω => Complex.exp (distributionPairingℂ_real ω (timeTranslationSchwartzℂ (-s) f))) := by
         ext ω; rw [timeTranslationDistribution_pairingℂ]
       -- A s equals this rewritten function
-      show StronglyMeasurable (fun ω => Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) f))
+      change StronglyMeasurable (fun ω => Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) f))
       rw [h_eq]
       -- Now prove continuity of the rewritten function → StronglyMeasurable
       exact (Complex.continuous_exp.measurable.comp (QFT.distributionPairingℂ_real_measurable _)).stronglyMeasurable
@@ -670,7 +675,8 @@ lemma L2_time_average_variance_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
   -- Triangle inequality: ‖∫∫ Cov‖ ≤ ∫∫ ‖Cov‖
   -- First establish that Cov is continuous (from gff_covariance_continuous)
   have h_Cov_cont : Continuous (fun (p : ℝ × ℝ) => Cov p.1 p.2) := gff_covariance_continuous m f
-  -- The inner integral s ↦ ∫_u Cov s u is continuous by continuous_parametric_integral_of_continuous
+  -- The inner integral s ↦ ∫_u Cov s u is continuous by
+  -- continuous_parametric_integral_of_continuous
   have h_inner_cont : Continuous (fun s => ∫ u in Set.Icc (0 : ℝ) T, Cov s u) := by
     apply continuous_parametric_integral_of_continuous h_Cov_cont isCompact_Icc
   -- Similarly, s ↦ ∫_u ‖Cov s u‖ is continuous
@@ -767,7 +773,7 @@ lemma clustering_implies_covariance_decay (m : ℝ) [Fact (0 < m)] (f : TestFunc
           have h_base : 1 ≤ 1 + (s - u) := by linarith
           exact Real.rpow_le_rpow_of_exponent_le h_base (by norm_num : (-6 : ℝ) ≤ -3)
   · -- Case s < u: |s - u| = u - s
-    push_neg at h_sign
+    push Not at h_sign
     have h_abs : |s - u| = u - s := by rw [abs_sub_comm]; exact abs_of_nonneg (by linarith)
     rw [h_abs]
     have h_pos : u - s > 0 := by linarith
@@ -931,9 +937,11 @@ lemma variance_decay_from_clustering (m : ℝ) [Fact (0 < m)] (f : TestFunction�
           exact continuous_parametric_integral_of_continuous h_DecayFn_cont isCompact_Icc
         · exact measurableSet_Icc
         · intro s hs
-          -- Technical integrability: ‖Cov s ·‖ and decay function are continuous hence integrable on [0,T]
+          -- Technical integrability: ‖Cov s ·‖ and decay function are continuous hence integrable
+          -- on [0,T]
           -- These follow from gff_covariance_continuous and continuity of the decay function
-          -- Inner integrability follows from gff_covariance_continuous + Continuous.integrableOn_Icc
+          -- Inner integrability follows from gff_covariance_continuous +
+          -- Continuous.integrableOn_Icc
           -- but Lean times out on the type unification with the Cov definition
           have h_inner_int1 : MeasureTheory.IntegrableOn (fun u => ‖Cov s u‖) (Set.Icc 0 T) :=
             gff_covariance_norm_integrableOn_slice m f s T
@@ -1065,7 +1073,8 @@ theorem OS4'_implies_OS4 (m : ℝ) [Fact (0 < m)] :
       -- Linearity: ∫ (∑ zⱼ expⱼ) = ∑ zⱼ · ∫ expⱼ, then distribute 1/T and subtraction
       -- Key lemmas: MeasureTheory.integral_finset_sum (for both integrals)
       -- Each exp(⟨T_s ω, f_j⟩) is integrable by Fernique (gff_exp_pairing_integrable)
-      -- The structure is: (1/T) * ∫_s (∑ z_j exp_j - mean) = ∑_j z_j * ((1/T) * ∫_s (exp_j - mean_j))
+      -- The structure is: (1/T) * ∫_s (∑ z_j exp_j - mean) = ∑_j z_j * ((1/T) * ∫_s (exp_j -
+      -- mean_j))
       -- where mean = ∫_ω' (∑_j z_j exp_j) is constant in s
       -- Step 1: Expand the sum inside the time integral and pull out constant subtrahend
       -- ∫_s (∑_j (z_j * exp_j) - C) = ∫_s (∑_j (z_j * exp_j - z_j * mean_j))
@@ -1084,7 +1093,8 @@ theorem OS4'_implies_OS4 (m : ℝ) [Fact (0 < m)] :
         simp_rw [h_icm]
       -- Rewrite integrand: (∑_j z_j * exp_j) - (∑_j z_j * mean_j) = ∑_j z_j * (exp_j - mean_j)
       have h_integrand_eq : ∀ s,
-          (∑ j, z j * Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) (f j)))
+          (∑ j,
+            z j * Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) (f j)))
           - (∫ ω', ∑ j, z j * Complex.exp (distributionPairingℂ_real ω' (f j)) ∂μ) =
           ∑ j, z j * (Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) (f j))
             - ∫ ω', Complex.exp (distributionPairingℂ_real ω' (f j)) ∂μ) := by
@@ -1158,7 +1168,8 @@ theorem OS4'_implies_OS4 (m : ℝ) [Fact (0 < m)] :
       apply MeasureTheory.integrable_finset_sum
       intro j _; exact h_each_int j
     -- Each Err j T · is AEStronglyMeasurable
-    -- We derive this from h_each_int: Integrable (‖Err j T ·‖²) implies AEStronglyMeasurable (Err j T ·)
+    -- We derive this from h_each_int: Integrable (‖Err j T ·‖²) implies AEStronglyMeasurable (Err j
+    -- T ·)
     -- via: ‖f‖² integrable → ‖f‖² AEStronglyMeasurable → f AEStronglyMeasurable
     have h_err_meas : ∀ j, AEStronglyMeasurable (Err j T ·) μ := by
       intro j
@@ -1174,7 +1185,7 @@ theorem OS4'_implies_OS4 (m : ℝ) [Fact (0 < m)] :
         have h_eq : (fun ω => Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) (f j))) =
             (fun ω => Complex.exp (distributionPairingℂ_real ω (timeTranslationSchwartzℂ (-s) (f j)))) := by
           ext ω; rw [timeTranslationDistribution_pairingℂ]
-        show Measurable (A_j s)
+        change Measurable (A_j s)
         simp only [A_j]; rw [h_eq]
         exact Complex.continuous_exp.measurable.comp (QFT.distributionPairingℂ_real_measurable _)
       exact OSforGFF.gff_time_integral_aestronglyMeasurable_proved μ A_j EA_j T h_cont h_meas_s

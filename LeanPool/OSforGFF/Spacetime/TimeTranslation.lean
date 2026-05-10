@@ -116,7 +116,7 @@ lemma timeShift_contDiff (s : ℝ) : ContDiff ℝ (⊤ : ℕ∞) (timeShift s) :
   intro i
   have hcoord : ContDiff ℝ (⊤ : ℕ∞) (fun x : SpaceTime => x.ofLp i) :=
     (contDiff_apply ℝ ℝ i).comp PiLp.contDiff_ofLp
-  show ContDiff ℝ (⊤ : ℕ∞) (fun x : SpaceTime => if i.val = 0 then x.ofLp i + s else x.ofLp i)
+  change ContDiff ℝ (⊤ : ℕ∞) (fun x : SpaceTime => if i.val = 0 then x.ofLp i + s else x.ofLp i)
   split_ifs with h
   · exact hcoord.add contDiff_const
   · exact hcoord
@@ -481,7 +481,8 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
     have h_deriv_bound : ∀ t ∈ Set.Icc (0 : ℝ) 1, ‖deriv g t‖ ≤ C := by
       intro t ht
       -- The derivative of g at t is: fderiv (iteratedFDeriv n f) (x+t•y) applied to y
-      -- deriv g t = fderiv g t 1 = fderiv (iter ∘ path) t 1 = fderiv iter (path t) (fderiv path t 1)
+      -- deriv g t = fderiv g t 1 = fderiv (iter ∘ path) t 1 = fderiv iter (path t) (fderiv path t
+      -- 1)
       -- Compute deriv g using chain rule
       have h_deriv_eq : deriv g t = (fderiv ℝ (iteratedFDeriv ℝ n f) (x + t • y)) y := by
         -- deriv g t = fderiv g t 1
@@ -514,7 +515,8 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
         simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, path, h_fderiv_path]
         simp only [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.id_apply, one_smul]
         rfl  -- iter = iteratedFDeriv ℝ n f by definition
-      -- Use fderiv_iteratedFDeriv: fderiv (iteratedFDeriv n f) = curryLeftEquiv ∘ iteratedFDeriv (n+1) f
+      -- Use fderiv_iteratedFDeriv: fderiv (iteratedFDeriv n f) = curryLeftEquiv ∘ iteratedFDeriv
+      -- (n+1) f
       have h_fderiv_iter : fderiv ℝ (iteratedFDeriv ℝ n (f : SpaceTime → ℝ)) (x + t • y) =
           (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
             (iteratedFDeriv ℝ (n + 1) f (x + t • y)) := by
@@ -550,7 +552,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
               apply le_ciSup_of_le h_bdd ⟨0, by simp⟩
               exact norm_nonneg _
             have h_eq : (⨆ s ∈ Set.Icc (0 : ℝ) 1, D s) = ⨆ s : ↑(Set.Icc (0 : ℝ) 1), D s.1 :=
-              ciSup_subtype' (p := (· ∈ Set.Icc (0 : ℝ) 1)) (f := fun s _ => D s) h_bdd h_sSup_le
+              cbiSup_eq_ciSup_subtype (p := (· ∈ Set.Icc (0 : ℝ) 1)) (f := fun s _ => D s) h_bdd h_sSup_le
             rw [h_eq]
             exact le_ciSup h_bdd ⟨t, ht⟩
         _ = C := rfl
@@ -611,7 +613,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
           simp only [max_eq_left (pow_le_one₀ (norm_nonneg w) hw), mul_one]
           exact h1
         · -- ‖w‖ > 1 case: (1 + ‖w‖)^k ≤ (2‖w‖)^k = 2^k * ‖w‖^k = 2^k * max(1, ‖w‖^k)
-          push_neg at hw
+          push Not at hw
           have h1 : 1 + ‖w‖ ≤ 2 * ‖w‖ := by linarith
           have h2 : (1 + ‖w‖) ^ k ≤ (2 * ‖w‖) ^ k := by
             apply pow_le_pow_left₀ (by linarith [norm_nonneg w])
@@ -662,7 +664,8 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
     calc ‖x‖ ^ k * ‖g 1 - g 0‖
       ≤ ‖x‖ ^ k * (|h| * ⨆ t ∈ Set.Icc (0 : ℝ) 1, ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖) := by
           apply mul_le_mul_of_nonneg_left h_mvt_bound (pow_nonneg (norm_nonneg _) _)
-      _ = |h| * (‖x‖ ^ k * ⨆ t ∈ Set.Icc (0 : ℝ) 1, ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖) := by ring
+      _ = |h| * (‖x‖ ^ k * ⨆ t ∈ Set.Icc (0 : ℝ) 1,
+        ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖) := by ring
       _ ≤ |h| * RHS := by
           apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
           -- We need: ‖x‖^k * sup_t A_t ≤ RHS
@@ -692,18 +695,18 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
             -- So: sup_t (‖x‖^k * A_t) ≤ RHS
             -- Using Real.mul_iSup_of_nonneg: ‖x‖^k * sup_t A_t = sup_t (‖x‖^k * A_t)
             --
-            -- Convert biSup to subtype iSup using ciSup_subtype'
+            -- Convert biSup to subtype iSup using cbiSup_eq_ciSup_subtype
             let F : ↑(Set.Icc (0 : ℝ) 1) → ℝ := fun t => ‖iteratedFDeriv ℝ (n + 1) f (x + t.1 • y)‖
             have h_biSup_eq : (⨆ t ∈ Set.Icc (0 : ℝ) 1, ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖) =
                 ⨆ t : ↑(Set.Icc (0 : ℝ) 1), F t := by
-              -- ciSup_subtype' converts biSup to subtype iSup
+              -- cbiSup_eq_ciSup_subtype converts biSup to subtype iSup
               -- ⨆ i, ⨆ (h : p i), f i h = ⨆ x : Subtype p, f x.1 x.2
               have h_sSup_le : sSup (∅ : Set ℝ) ≤ ⨆ i : ↑(Set.Icc (0 : ℝ) 1),
                   ‖iteratedFDeriv ℝ (n + 1) f (x + i.1 • y)‖ := by
                 simp only [Real.sSup_empty]
                 apply le_ciSup_of_le h_bdd ⟨0, by simp⟩
                 exact norm_nonneg _
-              exact ciSup_subtype' (p := (· ∈ Set.Icc (0 : ℝ) 1))
+              exact cbiSup_eq_ciSup_subtype (p := (· ∈ Set.Icc (0 : ℝ) 1))
                   (f := fun t _ => ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖) h_bdd h_sSup_le
             rw [h_biSup_eq, Real.mul_iSup_of_nonneg hxk_nonneg]
             apply ciSup_le
@@ -787,7 +790,8 @@ lemma continuous_timeTranslationSchwartz (f : TestFunction) :
   rw [Metric.tendsto_nhds]
   intro ε hε
   -- Mean Value estimate: ‖T_h f - f‖_{k,n} ≤ |h| · L where L depends on f's seminorms
-  -- The Lipschitz bound: seminorm ≤ |h| * (1+|h|)^k * 2^k * (seminorm k (n+1) + seminorm 0 (n+1) + 1)
+  -- The Lipschitz bound: seminorm ≤ |h| * (1+|h|)^k * 2^k * (seminorm k (n+1) + seminorm 0 (n+1) +
+  -- 1)
   -- For |h| ≤ 1: (1+|h|)^k ≤ 2^k, so total factor is 4^k
   let k := i.1
   let n := i.2

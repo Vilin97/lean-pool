@@ -64,14 +64,15 @@ def negMap : FieldConfiguration → FieldConfiguration := fun ω => -ω
 lemma negMap_measurable : Measurable negMap := by
   rw [measurable_iff_comap_le]
   -- Unfold the cylinder σ-algebra instance and distribute comap over iSup
-  show (⨆ f, (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) f)).comap negMap ≤
+  change (⨆ f,
+    (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) f)).comap negMap ≤
     ⨆ f, (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) f)
   rw [MeasurableSpace.comap_iSup]
   apply iSup_le; intro g
   rw [MeasurableSpace.comap_comp]
   conv_lhs => rw [show (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g) ∘ negMap =
       Neg.neg ∘ (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g) from by
-    ext ω; show (-ω) g = -(ω g); exact ContinuousLinearMap.neg_apply ω g]
+    ext ω; change (-ω) g = -(ω g); exact ContinuousLinearMap.neg_apply ω g]
   rw [← MeasurableSpace.comap_comp]
   have h_neg_meas : (borel ℝ).comap (Neg.neg : ℝ → ℝ) ≤ borel ℝ :=
     measurable_iff_comap_le.mp measurable_neg
@@ -120,7 +121,7 @@ lemma integral_neg_invariance
     rw [h_neg_pairing]
     have h_neg_eq : ∀ ω : FieldConfiguration, distributionPairing (-ω) g = -distributionPairing ω g := by
       intro ω
-      show (-ω) g = -(ω g)
+      change (-ω) g = -(ω g)
       exact ContinuousLinearMap.neg_apply ω g
     have h_lhs_eq : (fun ω => Complex.exp (Complex.I * (distributionPairing (-ω) g : ℂ))) =
                     (fun ω => Complex.exp (-(Complex.I * (distributionPairing ω g : ℂ)))) := by
@@ -141,7 +142,8 @@ lemma integral_neg_invariance
     conv_lhs => rw [h_integrand_conj]
     have h_pull_conj : ∫ ω : FieldConfiguration, (starRingEnd ℂ)
         (Complex.exp (Complex.I * (distributionPairing ω g : ℂ))) ∂μ.toMeasure
-        = (starRingEnd ℂ) (∫ ω, Complex.exp (Complex.I * (distributionPairing ω g : ℂ)) ∂μ.toMeasure) :=
+        = (starRingEnd ℂ) (∫ ω,
+          Complex.exp (Complex.I * (distributionPairing ω g : ℂ)) ∂μ.toMeasure) :=
       integral_conj
     rw [h_pull_conj]
     simp only [distributionPairing] at *

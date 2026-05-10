@@ -170,7 +170,7 @@ theorem minlos_theorem {E : Type*} [AddCommGroup E] [Module ℝ E]
     -- Expand ξ and reduce to ∑ i, s i • x i
     -- Goal after marginalCF/congr: ∑ k, ξ k • testVec k = ∑ i, s i • x i
     -- Convert to a form where we can compute ξ k directly
-    show ∑ k : Fin J.card, ξ k • finsetTestVectors J k = ∑ i, s i • x i
+    change ∑ k : Fin J.card, ξ k • finsetTestVectors J k = ∑ i, s i • x i
     -- Compute ξ k = ∑ i, s i * ite (fi i = k) 1 0
     have h_coord : ∀ k : Fin J.card,
         ξ k = ∑ i : Fin n, s i * if fi i = k then 1 else 0 := by

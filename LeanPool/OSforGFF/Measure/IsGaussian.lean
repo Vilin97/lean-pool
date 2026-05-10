@@ -215,7 +215,8 @@ lemma gff_cf_agrees_on_reals_OS0 (f g : TestFunction) (t s : ℝ) :
         2 * (t : ℂ) * (s : ℂ) * freeCovarianceFormR m f g + (s : ℂ)^2 * freeCovarianceFormR m g g)) := by
   -- Use the real version gff_cf_two_testfunctions and convert
   have h := gff_cf_two_testfunctions m f g t s
-  -- First note: t • f + s • g is real, so toComplex (t • f + s • g) = t • toComplex f + s • toComplex g
+  -- First note: t • f + s • g is real, so toComplex (t • f + s • g) = t • toComplex f + s •
+  -- toComplex g
   have h_eq_test : (t : ℂ) • toComplex f + (s : ℂ) • toComplex g = toComplex (t • f + s • g) := by
     ext x
     simp
@@ -412,7 +413,8 @@ theorem schwinger_eq_covariance_real (f g : TestFunction) :
       freeCovarianceFormR m f f - 2 * freeCovarianceFormR m f g + freeCovarianceFormR m g g := by
     rw [h_sub]
     rw [freeCovarianceFormR_add_left, freeCovarianceFormR_add_right, freeCovarianceFormR_add_right]
-    rw [freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right, freeCovarianceFormR_smul_left,
+    rw [freeCovarianceFormR_smul_left, freeCovarianceFormR_smul_right,
+      freeCovarianceFormR_smul_left,
         freeCovarianceFormR_smul_right]
     rw [freeCovarianceFormR_symm m g f]
     ring

@@ -129,7 +129,7 @@ def hilbertianLift (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
           (mul_le_mul (hfq n x) (hfq n y) (abs_nonneg _) (apply_nonneg q x)) (hc_nn n)
       -- S = A + 2M + B where M = ∑' f n x * f n y * c n
       have hS_eq : S = A + 2 * (∑' n, f n x * f n y * c n) + B := by
-        show ∑' n, (f n (x + y)) ^ 2 * c n = _
+        change ∑' n, (f n (x + y)) ^ 2 * c n = _
         have : (fun n => (f n (x + y)) ^ 2 * c n) =
             (fun n => (f n x) ^ 2 * c n + 2 * (f n x * f n y * c n) + (f n y) ^ 2 * c n) :=
           funext hexpand
@@ -375,7 +375,7 @@ lemma Seminorm.innerProd_smul_left (R : Seminorm ℝ E) (hR : R.IsHilbertian) (a
     map_zero' := by simp [Seminorm.innerProd, map_neg_eq_map]
     map_add' := fun s t => by rw [add_smul]; exact R.innerProd_add_left hR _ _ _ }
   have hf : Continuous f := by
-    show Continuous (fun t => R.innerProd (t • x) y)
+    change Continuous (fun t => R.innerProd (t • x) y)
     simp only [Seminorm.innerProd]
     have h1 := R.continuous_smul_add x y
     have h2 : Continuous (fun t : ℝ => R (t • x - y)) := by
@@ -422,7 +422,7 @@ lemma Seminorm.sq_sum_orthonormal (R : Seminorm ℝ E) (hR : R.IsHilbertian)
     have hw : R w ^ 2 = a (Fin.last n) ^ 2 := by
       simp [w, map_smul_eq_mul, sq_abs, R_orthonormal_norm R v hv (Fin.last n)]
     have horth : R.innerProd u w = 0 := by
-      show R.innerProd (∑ j : Fin n, a (Fin.castSucc j) • v (Fin.castSucc j)) w = 0
+      change R.innerProd (∑ j : Fin n, a (Fin.castSucc j) • v (Fin.castSucc j)) w = 0
       rw [R.innerProd_sum_left hR]
       apply Finset.sum_eq_zero; intro j _
       rw [R.innerProd_smul_left hR, R.innerProd_comm, R.innerProd_smul_left hR,
@@ -620,13 +620,13 @@ private lemma doublePietsch_step
     apply Seminorm.continuous_of_le (show Continuous (L • QB) from
       show Continuous (fun x => L_val * QB x) from continuous_const.mul hQB_cont)
     intro x
-    show K_val * R x ≤ L_val * QB x
+    change K_val * R x ≤ L_val * QB x
     calc K_val * R x ≤ K_val * (Real.sqrt (∑' n, D n) * QB x) :=
           mul_le_mul_of_nonneg_left (hR_le_sqD_QB x) hK_nn
       _ = L_val * QB x := by ring
   · -- Domination: p ≤ K • R
     intro x
-    show p x ≤ K_val * R x
+    change p x ≤ K_val * R x
     -- p ≤ Σ|FA|CA ≤ (ΣCA)·QA ≤ (ΣCA)·√(ΣD)·R ≤ K·R
     have hsC_nn : (0 : ℝ) ≤ ∑' (n : ℕ), CA n := tsum_nonneg hCA_nn
     calc p x ≤ ∑' n, |FA n x| * CA n := hp_nuc x
@@ -639,7 +639,7 @@ private lemma doublePietsch_step
           exact mul_le_mul_of_nonneg_right (le_max_left _ _) hsqrtD_nn
   · -- Functional bound: |FA n x| ≤ K • R x
     intro n x
-    show |FA n x| ≤ K_val * R x
+    change |FA n x| ≤ K_val * R x
     -- |FA n x| ≤ QA x ≤ √(ΣD) · R x ≤ K · R x
     calc |FA n x| ≤ QA x := hFA_QA n x
       _ ≤ Real.sqrt (∑' n, D n) * R x := hQA_le_sqD_R x
@@ -653,7 +653,7 @@ private lemma doublePietsch_step
 private theorem seminorm_continuous_sup [IsTopologicalAddGroup E]
     (p q : Seminorm ℝ E) (hp : Continuous p) (hq : Continuous q) :
     Continuous (p ⊔ q) := by
-  show Continuous (fun x => (p ⊔ q) x)
+  change Continuous (fun x => (p ⊔ q) x)
   simp only [Seminorm.sup_apply]; exact hp.sup hq
 
 /-- Bundled recursive construction carrying continuity for the next step. -/

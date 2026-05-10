@@ -922,7 +922,8 @@ theorem integrable_dominate_G (C : ℝ) (m : ℝ) [Fact (0 < m)] :
               have h_eq : (fun k_sp : SpatialCoords => Complex.exp (-(s : ℂ) * ‖k_sp‖^2)) =
                   (fun k_sp => (Real.exp (-s * ‖k_sp‖^2) : ℂ)) := by
                 ext k_sp
-                simp only [Complex.ofReal_exp, Complex.ofReal_neg, Complex.ofReal_mul, Complex.ofReal_pow]
+                simp only [Complex.ofReal_exp, Complex.ofReal_neg, Complex.ofReal_mul,
+                  Complex.ofReal_pow]
               rw [h_eq] at h
               exact h.re
             -- Show integrand is nonnegative
@@ -1078,7 +1079,8 @@ lemma fubini_s_ksp_integrand_stronglyMeasurable (m : ℝ) (f : TestFunctionℂ) 
     refine Measurable.mul ?_ ?_
     · exact measurable_const
     · refine Complex.measurable_ofReal.comp ?_
-      -- spatialDot k_sp (spatialPart x.2 - spatialPart y) = inner k_sp (spatialPart x.2 - spatialPart y)
+      -- spatialDot k_sp (spatialPart x.2 - spatialPart y) = inner k_sp (spatialPart x.2 -
+      -- spatialPart y)
       -- Use spatialDot_eq_inner to rewrite, then use Measurable.inner
       simp only [spatialDot_eq_inner]
       refine Measurable.inner (𝕜 := ℝ) ?_ ?_
@@ -1222,13 +1224,15 @@ lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
       }
       -- φ is measure preserving
       -- φ(x, y) = (x, x + y) is measure preserving on ℝ² with Lebesgue measure
-      -- This follows from: measurePreserving_add_prod gives (x, y) ↦ (x + y, y) is measure-preserving
+      -- This follows from: measurePreserving_add_prod gives (x, y) ↦ (x + y, y) is
+      -- measure-preserving
       -- And composing with swaps: φ = swap ∘ (add_prod) ∘ swap
       have hφ_mp : MeasurePreserving φ (volume.prod volume) (volume.prod volume) := by
         -- swap: (a, b) ↦ (b, a)
         -- add_prod: (a, b) ↦ (a + b, b)
         -- We want: (x, y) ↦ (x, x + y)
-        -- = (x, y) ↦ swap (y, x) ↦ swap (add_prod (y, x)) = swap (y + x, x) = (x, y + x) = (x, x + y)
+        -- = (x, y) ↦ swap (y, x) ↦ swap (add_prod (y, x)) = swap (y + x, x) = (x, y + x) = (x, x +
+        -- y)
         have h_swap : MeasurePreserving (Prod.swap : ℝ × ℝ → ℝ × ℝ)
             ((volume : Measure ℝ).prod volume) (volume.prod volume) :=
           MeasureTheory.Measure.measurePreserving_swap (μ := (volume : Measure ℝ)) (ν := volume)
@@ -1245,7 +1249,8 @@ lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
       -- g ∘ φ = indicator of square
       have h_eq : g ∘ φ = (Set.Ioi 0 ×ˢ Set.Ioi 0).indicator (fun q => f q.1 (q.1 + q.2)) := by
         ext ⟨x, y⟩
-        simp only [g, T, φ, Set.indicator_apply, Set.mem_prod, Set.mem_Ioi, Set.mem_setOf_eq, Function.comp_apply]
+        simp only [g, T, φ, Set.indicator_apply, Set.mem_prod, Set.mem_Ioi, Set.mem_setOf_eq,
+          Function.comp_apply]
         split_ifs <;> simp_all
       -- Apply transfer
       rw [← hφ_mp.integrable_comp_emb φ_homeo.measurableEmbedding]
@@ -1301,7 +1306,8 @@ lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
 /-- The double Gaussian moment integral:
     ∫∫_{x₀,y₀>0} x₀·y₀·√(π/s)·exp(-(x₀+y₀)²/(4s)) dx₀ dy₀ = (4/3)√π · s^{3/2}
 
-    This is the key bound relating linear vanishing of f at t=0 to the s^{3/2} scaling in dominate_G.
+    This is the key bound relating linear vanishing of f at t=0 to the s^{3/2} scaling in
+    dominate_G.
 
     **Proof** (following user's verification):
     Let J be the integral. Change variables: u = x₀ + y₀.
@@ -1542,7 +1548,8 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
 
 /-- **Bound version**: The double Gaussian moment integral is bounded by a constant times s^{3/2}.
 
-    This is a weaker form of `heat_kernel_moment_integral` that suffices for `F_norm_bound_via_linear_vanishing`.
+    This is a weaker form of `heat_kernel_moment_integral` that suffices for
+    `F_norm_bound_via_linear_vanishing`.
     The exact value is (4/3)√π · s^{3/2}, so we use 10 · s^{3/2} as a comfortable upper bound.
 
     **Proof**: Uses `heat_kernel_moment_integral` and the bound (4/3)√π < 10.
@@ -1755,7 +1762,7 @@ lemma heatKernelMomentExt_parametric_eq_setIntegral (s : ℝ) (t₁ : ℝ) (ht�
     unfold heatKernelMomentExt
     by_cases ht₂ : t₂ > 0
     · simp only [ht₁, ht₂, and_self, ↓reduceIte, Set.indicator_apply, Set.mem_Ioi]
-    · push_neg at ht₂
+    · push Not at ht₂
       simp only [not_lt.mpr ht₂, and_false, ↓reduceIte, Set.indicator_apply, Set.mem_Ioi]
   simp_rw [h_eq]
   rw [MeasureTheory.integral_indicator measurableSet_Ioi]
@@ -1848,7 +1855,8 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
   -- = ∫_{ℝ²} √(π/s)·exp(-(t₁+t₂)²/(4s)) · G(t₁) · G(t₂) dt                            [definition]
   -- = ∫_{(0,∞)²} ... (since G(t) = 0 for t ≤ 0 by hf_supp)
   -- ≤ C_sp² · ∫_{(0,∞)²} t₁·t₂·√(π/s)·exp(-(t₁+t₂)²/(4s)) dt                         [h_spatial]
-  -- ≤ C_sp² · 10 · s^{3/2}                                            [heat_kernel_moment_integral_bound]
+  -- ≤ C_sp² · 10 · s^{3/2}                                           
+  -- [heat_kernel_moment_integral_bound]
   -- Step 1: Rewrite the double integral as iterated integral over time
   -- We'll show: ∫∫ F(x,y) = ∫∫ G(t₁)·G(t₂)·kernel(t₁,t₂) dt₁ dt₂ ≤ C_sp² · 10 · s^{3/2}
   -- Key helper: G(t) = spatialNormIntegral f t satisfies G(t) ≤ C_sp * t for t > 0
@@ -1887,7 +1895,8 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
     have h_joint_sm : MeasureTheory.StronglyMeasurable (fun p : ℝ × EuclideanSpace ℝ (Fin 3) =>
         ‖f (spacetimeOfTimeSpace p.1 p.2)‖) := h_joint_cont.stronglyMeasurable
     -- Use StronglyMeasurable.integral_prod_right
-    have h_sm : MeasureTheory.StronglyMeasurable (fun t => ∫ x_sp, ‖f (spacetimeOfTimeSpace t x_sp)‖) :=
+    have h_sm : MeasureTheory.StronglyMeasurable (fun t => ∫ x_sp,
+      ‖f (spacetimeOfTimeSpace t x_sp)‖) :=
       MeasureTheory.StronglyMeasurable.integral_prod_right h_joint_sm
     exact h_sm.measurable
   -- The heat kernel factor
@@ -1947,7 +1956,7 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
     · have h1 : G t ≤ C_sp * t := h_spatial t ht
       simp only [max_eq_left (le_of_lt ht)]
       exact h1
-    · push_neg at ht
+    · push Not at ht
       have h1 : G t = 0 := hG_zero t ht
       simp only [h1, max_eq_right ht, mul_zero, le_refl]
   -- Bound: K * G(t₁) * G(t₂) ≤ K * C_sp² * max(t₁,0) * max(t₂,0)
@@ -2044,7 +2053,8 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
                 exact hG_meas
             · filter_upwards [MeasureTheory.ae_restrict_mem measurableSet_Ioi] with t₂ ht₂
               simp only [Set.mem_Ioi] at ht₂
-              rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (mul_nonneg (hK_nonneg t₁ t₂) (hG_nonneg t₁)) (hG_nonneg t₂))]
+              rw [Real.norm_eq_abs,
+                abs_of_nonneg (mul_nonneg (mul_nonneg (hK_nonneg t₁ t₂) (hG_nonneg t₁)) (hG_nonneg t₂))]
               rw [Real.norm_eq_abs]
               rw [abs_of_nonneg (mul_nonneg (mul_nonneg (mul_nonneg (Real.sqrt_nonneg _) (Real.exp_nonneg _))
                 (mul_nonneg hC_sp_pos.le (le_of_lt ht₁))) (mul_nonneg hC_sp_pos.le (le_of_lt ht₂)))]
@@ -2084,7 +2094,8 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
           · -- Rewrite to match heatKernelMoment_setIntegral_integrableOn form
             have h_g_integrableOn : MeasureTheory.IntegrableOn
                 (fun t₁ => ∫ t₂ in Set.Ioi 0, K t₁ t₂ * (C_sp * t₁) * (C_sp * t₂)) (Set.Ioi 0) := by
-              -- K t₁ t₂ * (C_sp * t₁) * (C_sp * t₂) = C_sp² * t₁ * t₂ * √(π/s) * exp(-(t₁+t₂)²/(4s))
+              -- K t₁ t₂ * (C_sp * t₁) * (C_sp * t₂) = C_sp² * t₁ * t₂ * √(π/s) *
+              -- exp(-(t₁+t₂)²/(4s))
               have h_eq : ∀ t₁ t₂ : ℝ, K t₁ t₂ * (C_sp * t₁) * (C_sp * t₂) =
                   C_sp^2 * t₁ * t₂ * Real.sqrt (π / s) * Real.exp (-(t₁ + t₂)^2 / (4 * s)) := by
                 intro t₁ t₂; simp only [K]; ring
@@ -2336,7 +2347,8 @@ lemma F_norm_bound_via_linear_vanishing (m : ℝ) [Fact (0 < m)] (f : TestFuncti
             Complex.exp (-Complex.I * spatialDot k_sp (spatialPart x - spatialPart y))
       ‖F_val‖ ≤ C_bound * s^(3/2 : ℝ) * Real.exp (-s * (‖k_sp‖^2 + m^2)) := by
   -- Step 1: Get the Fubini bound constant (uses linear vanishing internally)
-  obtain ⟨K_fubini, hK_fubini_pos, h_fubini_forall⟩ := spacetime_fubini_linear_vanishing_bound f hf_supp
+  obtain ⟨K_fubini, hK_fubini_pos,
+    h_fubini_forall⟩ := spacetime_fubini_linear_vanishing_bound f hf_supp
   -- Also get the linear bound for intermediate steps
   obtain ⟨C_lin, hC_lin_pos, h_lin_bound⟩ := schwartz_vanishing_linear_bound f hf_supp
   -- Use the Fubini constant as C_bound
@@ -2699,7 +2711,8 @@ theorem fubini_s_ksp_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     -- For f vanishing on {x₀ ≤ 0}, the support of |f|·|f| has x₀ + y₀ > 0
     -- By compactness of Schwartz "effective support", there exists t_min > 0.
     -- (This is the atomic fact about Schwartz functions vanishing at t=0)
-    -- Step 2: Define the dominating function using the constant from F_norm_bound_via_linear_vanishing
+    -- Step 2: Define the dominating function using the constant from
+    -- F_norm_bound_via_linear_vanishing
     -- Get the constant C_bound from the linear vanishing bound
     obtain ⟨C_bound, hC_pos, h_F_bound⟩ := F_norm_bound_via_linear_vanishing m f hf_supp
     let G := dominate_G C_bound m
@@ -2813,7 +2826,7 @@ lemma s_xy_swap_bound_integrable (f : TestFunctionℂ) (m : ℝ) [Fact (0 < m)] 
     rw [h_sqrt]
     ring_nf
   · -- For s ≤ 0, both sides are 0 (√ of negative = 0, rpow of nonpositive = 0)
-    push_neg at hs
+    push Not at hs
     have h_sqrt : Real.sqrt (π / s) = 0 :=
       Real.sqrt_eq_zero'.mpr (div_nonpos_of_nonneg_of_nonpos Real.pi_nonneg hs)
     have h_rpow : s ^ (-(1:ℝ)/2) = 0 := by
@@ -2912,7 +2925,8 @@ theorem fubini_s_xy_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (k_sp : 
           apply continuous_pi
           intro i
           have h : i.val + 1 < STDimension := by simp [STDimension]; omega
-          exact PiLp.continuous_apply 2 (fun _ : Fin STDimension => ℝ) (⟨i.val + 1, h⟩ : Fin STDimension)
+          exact PiLp.continuous_apply 2 (fun _ : Fin STDimension => ℝ) (⟨i.val + 1,
+            h⟩ : Fin STDimension)
         have h_sum : Continuous (fun p : ℝ × SpaceTime × SpaceTime =>
             ∑ i, k_sp i * (spatialPart p.2.1 - spatialPart p.2.2) i) := by
           apply continuous_finset_sum
@@ -2939,7 +2953,8 @@ theorem fubini_s_xy_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (k_sp : 
         -- Need: μ({p | 0 < p.1}ᶜ) = 0, i.e., μ({p | p.1 ≤ 0}) = 0
         have h_compl : ({p : ℝ × SpaceTime × SpaceTime | 0 < p.1})ᶜ =
             Prod.fst ⁻¹' Set.Iic 0 := by
-          ext p; simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_lt, Set.mem_preimage, Set.mem_Iic]
+          ext p; simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_lt, Set.mem_preimage,
+            Set.mem_Iic]
         rw [h_compl]
         -- Prod.fst ⁻¹' Iic 0 = Iic 0 ×ˢ univ
         have h_prod : (Prod.fst ⁻¹' Set.Iic (0 : ℝ) : Set (ℝ × SpaceTime × SpaceTime)) =

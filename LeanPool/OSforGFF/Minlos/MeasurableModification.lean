@@ -180,12 +180,12 @@ private lemma extensionFun_eq (d : ℕ → E) (hd : DenseRange d)
       simp only [Set.mem_setOf_eq] at hql_c
       have hbd_c := hC c
       have h1 : c.sum (fun i a => (a : ℝ) • d i) = d m - d n := by
-        show (Finsupp.single m (1 : ℚ) + Finsupp.single n ((-1) : ℚ)).sum _ = _
+        change (Finsupp.single m (1 : ℚ) + Finsupp.single n ((-1) : ℚ)).sum _ = _
         rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_smul]),
           Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
         simp [sub_eq_add_neg]
       have h2 : c.sum (fun i a => (a : ℝ) * ω (d i)) = ω (d m) - ω (d n) := by
-        show (Finsupp.single m (1 : ℚ) + Finsupp.single n ((-1) : ℚ)).sum _ = _
+        change (Finsupp.single m (1 : ℚ) + Finsupp.single n ((-1) : ℚ)).sum _ = _
         rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_mul]),
           Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
         ring
@@ -193,7 +193,7 @@ private lemma extensionFun_eq (d : ℕ → E) (hd : DenseRange d)
       rw [(hql_c.trans h2).symm]
       exact hbd_c
     -- Use the bound to prove ContinuousWithinAt
-    show Filter.Tendsto ω (nhdsWithin (d n) (Set.range d)) (nhds (ω (d n)))
+    change Filter.Tendsto ω (nhdsWithin (d n) (Set.range d)) (nhds (ω (d n)))
     rw [Metric.tendsto_nhds]
     intro ε hε
     have hCε : (0 : ℝ) < (C : ℝ) + 1 := by positivity
@@ -236,12 +236,12 @@ private lemma extensionFun_continuous (d : ℕ → E) (hd : DenseRange d)
     simp only [Set.mem_setOf_eq] at hql_c
     have hbd_c := hC c
     have h1 : c.sum (fun i a => (a : ℝ) • d i) = d m - d n := by
-      show (Finsupp.single m (1 : ℚ) + Finsupp.single n ((-1) : ℚ)).sum _ = _
+      change (Finsupp.single m (1 : ℚ) + Finsupp.single n ((-1) : ℚ)).sum _ = _
       rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_smul]),
         Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
       simp [sub_eq_add_neg]
     have h2 : c.sum (fun i a => (a : ℝ) * ω (d i)) = ω (d m) - ω (d n) := by
-      show (Finsupp.single m (1 : ℚ) + Finsupp.single n ((-1) : ℚ)).sum _ = _
+      change (Finsupp.single m (1 : ℚ) + Finsupp.single n ((-1) : ℚ)).sum _ = _
       rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_mul]),
         Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
       ring
@@ -320,12 +320,12 @@ private lemma extensionFun_map_add (d : ℕ → E) (hd : DenseRange d)
     have hql_c := (Set.mem_iInter.mp hql) c
     simp only [Set.mem_setOf_eq] at hql_c
     have h1 : c.sum (fun i a => (a : ℝ) • d i) = d m + d n := by
-      show (Finsupp.single m (1 : ℚ) + Finsupp.single n (1 : ℚ)).sum _ = _
+      change (Finsupp.single m (1 : ℚ) + Finsupp.single n (1 : ℚ)).sum _ = _
       rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_smul]),
         Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
       simp
     have h2 : c.sum (fun i a => (a : ℝ) * ω (d i)) = ω (d m) + ω (d n) := by
-      show (Finsupp.single m (1 : ℚ) + Finsupp.single n (1 : ℚ)).sum _ = _
+      change (Finsupp.single m (1 : ℚ) + Finsupp.single n (1 : ℚ)).sum _ = _
       rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_mul]),
         Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
       simp
@@ -350,7 +350,7 @@ private lemma extensionFun_map_add (d : ℕ → E) (hd : DenseRange d)
       simp only [Set.mem_setOf_eq] at hql_c'
       have hbd_c' := hC c'
       have h1' : c'.sum (fun i a => (a : ℝ) • d i) = d k - (d m + d n) := by
-        show (Finsupp.single k (1 : ℚ) + Finsupp.single m (-1 : ℚ) +
+        change (Finsupp.single k (1 : ℚ) + Finsupp.single m (-1 : ℚ) +
           Finsupp.single n (-1 : ℚ)).sum _ = _
         rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_smul]),
           Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_smul]),
@@ -359,7 +359,7 @@ private lemma extensionFun_map_add (d : ℕ → E) (hd : DenseRange d)
         simp [sub_eq_add_neg, neg_smul]; abel
       have h2' : c'.sum (fun i a => (a : ℝ) * ω (d i)) =
           ω (d k) - ω (d m) - ω (d n) := by
-        show (Finsupp.single k (1 : ℚ) + Finsupp.single m (-1 : ℚ) +
+        change (Finsupp.single k (1 : ℚ) + Finsupp.single m (-1 : ℚ) +
           Finsupp.single n (-1 : ℚ)).sum _ = _
         rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_mul]),
           Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_mul]),
@@ -413,17 +413,17 @@ private lemma extensionFun_map_smul (d : ℕ → E) (hd : DenseRange d)
     have hql_c := (Set.mem_iInter.mp hql) c
     simp only [Set.mem_setOf_eq] at hql_c
     have h1 : c.sum (fun i a => (a : ℝ) • d i) = (q : ℝ) • d n := by
-      show (Finsupp.single n q).sum _ = _
+      change (Finsupp.single n q).sum _ = _
       rw [Finsupp.sum_single_index (by simp)]
     have h2 : c.sum (fun i a => (a : ℝ) * ω (d i)) = (q : ℝ) * ω (d n) := by
-      show (Finsupp.single n q).sum _ = _
+      change (Finsupp.single n q).sum _ = _
       rw [Finsupp.sum_single_index (by simp)]
     rw [h1] at hql_c
     -- hql_c : ω(q • d n) = q * ω(d n) (after rw h2)
     -- Need: g(q • d n) = q * g(d n)
     -- Use extendFrom_eq to show g(q • d n) = ω(q • d n)
     have hg_at : g ((q : ℝ) • d n) = ω ((q : ℝ) • d n) := by
-      show extendFrom (Set.range d) ω ((q : ℝ) • d n) = ω ((q : ℝ) • d n)
+      change extendFrom (Set.range d) ω ((q : ℝ) • d n) = ω ((q : ℝ) • d n)
       apply extendFrom_eq ((show Dense (Set.range d) from hd).closure_eq ▸ Set.mem_univ _)
       -- Tendsto ω (nhdsWithin (q • d n) (range d)) (nhds (ω(q • d n)))
       rw [Metric.tendsto_nhds]
@@ -447,12 +447,12 @@ private lemma extensionFun_map_smul (d : ℕ → E) (hd : DenseRange d)
       simp only [Set.mem_setOf_eq] at hql_c'
       have hbd_c' := hC c'
       have h1' : c'.sum (fun i a => (a : ℝ) • d i) = d m - (q : ℝ) • d n := by
-        show (Finsupp.single m (1 : ℚ) + Finsupp.single n (-q)).sum _ = _
+        change (Finsupp.single m (1 : ℚ) + Finsupp.single n (-q)).sum _ = _
         rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_smul]),
           Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
         simp [sub_eq_add_neg, neg_smul]
       have h2' : c'.sum (fun i a => (a : ℝ) * ω (d i)) = ω (d m) - (q : ℝ) * ω (d n) := by
-        show (Finsupp.single m (1 : ℚ) + Finsupp.single n (-q)).sum _ = _
+        change (Finsupp.single m (1 : ℚ) + Finsupp.single n (-q)).sum _ = _
         rw [Finsupp.sum_add_index (fun i => by simp) (fun i => by simp [add_mul]),
           Finsupp.sum_single_index (by simp), Finsupp.sum_single_index (by simp)]
         push_cast; ring
@@ -530,7 +530,7 @@ lemma embed_mem_goodPaths [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     simp only [boundedPaths, Set.mem_iUnion, Set.mem_iInter, Set.mem_setOf_eq]
     -- View |l(·)| as a continuous seminorm and apply bound_of_continuous
     have hl_cont : Continuous ((normSeminorm ℝ ℝ).comp l.toLinearMap) := by
-      show Continuous (fun x => ‖l x‖)
+      change Continuous (fun x => ‖l x‖)
       exact continuous_norm.comp l.cont
     obtain ⟨s, C, _, hC⟩ := Seminorm.bound_of_continuous hp_top _ hl_cont
     -- hC : (normSeminorm ℝ ℝ).comp l.toLinearMap ≤ C • s.sup p
@@ -672,7 +672,7 @@ theorem measurable_measurableProjection [SeparableSpace E] [IsHilbertNuclear E] 
   -- comap P (⨆_f comap eval_f) = ⨆_f comap (eval_f ∘ P) (by comap_iSup)
   -- Each eval_f ∘ P is pi-measurable (measurable_eval_comp_projection).
   rw [measurable_iff_comap_le]
-  show (⨆ (f : E), (borel ℝ).comap (fun l : WeakDual ℝ E =>
+  change (⨆ (f : E), (borel ℝ).comap (fun l : WeakDual ℝ E =>
     (l : E →L[ℝ] ℝ) f)).comap measurableProjection ≤ MeasurableSpace.pi
   rw [MeasurableSpace.comap_iSup]
   exact iSup_le fun f => by
@@ -692,7 +692,7 @@ lemma projection_embed_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E] :
       (IsHilbertNuclear.nuclear_hilbert_embeddings (E := E)).choose n) :=
     (IsHilbertNuclear.nuclear_hilbert_embeddings (E := E)).choose_spec.2.1
   -- Unfold to measurableProjectionAux
-  show measurableProjectionAux (denseSeq E) (denseRange_denseSeq E)
+  change measurableProjectionAux (denseSeq E) (denseRange_denseSeq E)
     (IsHilbertNuclear.nuclear_hilbert_embeddings (E := E)).choose hp_top
     (weakDualEmbed E l) = l
   have h_mem := embed_mem_goodPaths (denseSeq E)
@@ -887,7 +887,7 @@ theorem boundedPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
           (C : ℝ) * (s.sup p) (c.sum fun i a => (a : ℝ) • d i))} := by
     intro ω hω
     simp only [Set.mem_setOf_eq, boundedPaths, Set.mem_iUnion, Set.mem_iInter] at hω ⊢
-    push_neg at hω ⊢
+    push Not at hω ⊢
     exact hω s C
   have h_lt := lt_of_le_of_lt (measure_mono h_subset) hC
   rw [hε₀_def, ENNReal.ofReal_toReal (measure_ne_top ν _)] at h_lt
@@ -975,7 +975,7 @@ theorem projection_ae_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     have h_mem : ω ∈ goodPaths d p := hω
     have h_eq_dense : ∀ k, (measurableProjection ω : E →L[ℝ] ℝ) (d (φ k)) = ω (d (φ k)) := by
       intro k
-      show (measurableProjectionAux d (denseRange_denseSeq E) p hp_top ω : E →L[ℝ] ℝ) (d (φ k)) =
+      change (measurableProjectionAux d (denseRange_denseSeq E) p hp_top ω : E →L[ℝ] ℝ) (d (φ k)) =
         ω (d (φ k))
       simp only [measurableProjectionAux, dif_pos h_mem]
       exact extensionCLM_eq_on_dense d (denseRange_denseSeq E) p hp_top ω h_mem (φ k)
@@ -1119,7 +1119,7 @@ lemma uniqueness_via_projection [SeparableSpace E] [IsHilbertNuclear E] [Nonempt
       h_mu'_proj
   -- Step 2: μ' = (μ'.map embed).map P = ν.map P = μ
   apply Subtype.ext
-  show μ'.toMeasure = ν.map measurableProjection
+  change μ'.toMeasure = ν.map measurableProjection
   rw [← h_mu'_embed]
   rw [Measure.map_map measurable_measurableProjection measurable_weakDualEmbed]
   rw [show measurableProjection ∘ weakDualEmbed E = id from projection_embed_eq]

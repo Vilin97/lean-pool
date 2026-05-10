@@ -198,7 +198,8 @@ theorem glasser_weighted_integrable (c : ℝ) (hc : 0 < c) :
     -- g(v) = exp(-(c/v - v)²), f '' (0,1] = [c, ∞)
     -- The RHS is IntegrableOn (fun u => (c/u²) * exp(-(c/(c/u) - c/u)²)) (Ioc 0 1)
     --         = IntegrableOn (fun u => (c/u²) * exp(-(u - c/u)²)) (Ioc 0 1)
-    --         = IntegrableOn (fun u => (c/u²) * exp(-(c/u - u)²)) (Ioc 0 1)  [since (a-b)² = (b-a)²]
+    --         = IntegrableOn (fun u => (c/u²) * exp(-(c/u - u)²)) (Ioc 0 1)  [since (a-b)² =
+    -- (b-a)²]
     have h_base := glasser_integrable c hc
     -- The unweighted integrand is integrable on [c, ∞) ⊆ (0, ∞)
     have h_image : (fun u => c / u) '' (Ioc 0 1) = Ici c := by
@@ -398,7 +399,7 @@ lemma glasser_image_eq_univ (c : ℝ) (hc : 0 < c) :
     rw [h_at_sqrt] at h_ivt
     exact h_ivt (mem_Iic.mpr hw)
   · -- Case w > 0: use IVT from 0⁺ to √c (where f goes from +∞ to 0)
-    push_neg at hw
+    push Not at hw
     haveI : (nhdsWithin (0 : ℝ) (Ioi 0)).NeBot := nhdsWithin_Ioi_neBot (le_refl 0)
     have hnhds_le : nhdsWithin (0 : ℝ) (Ioi 0) ≤ 𝓟 (Ioi 0) :=
       inf_le_right.trans (le_refl _)
@@ -523,7 +524,8 @@ lemma laplace_integral_factor (a b : ℝ) (ha : 0 < a) (hb : 0 < b) :
     exp (-2 * sqrt (a * b)) * ∫ t in Ioi 0, exp (-(sqrt a / t - sqrt b * t)^2) := by
   rw [← integral_const_mul]
   refine setIntegral_congr_fun measurableSet_Ioi fun t ht => ?_
-  rw [show -a/t^2 - b*t^2 = -(a/t^2 + b*t^2) by ring, complete_square a b ha hb t ht, neg_add, exp_add]
+  rw [show -a/t^2 - b*t^2 = -(a/t^2 + b*t^2) by ring, complete_square a b ha hb t ht, neg_add,
+    exp_add]
   ring_nf
 
 /-- Second substitution: u = √b · t, so √a/t - √b·t = √(ab)/u - u -/

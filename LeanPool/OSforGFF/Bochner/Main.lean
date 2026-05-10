@@ -211,7 +211,7 @@ lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite 
     (μ : Measure V) [IsFiniteMeasure μ] :
     IsPositiveDefinite (fun t => φ t * charFun μ t) where
   hermitian t := by
-    show φ (-t) * charFun μ (-t) = (starRingEnd ℂ) (φ t * charFun μ t)
+    change φ (-t) * charFun μ (-t) = (starRingEnd ℂ) (φ t * charFun μ t)
     rw [map_mul, ← hpd.hermitian t]
     congr 1
     rw [starRingEnd_apply, star_def]
@@ -555,7 +555,7 @@ lemma pd_l1_fourier_nonneg (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
   -- conj(φ̂(ξ)) = ∫ conj(𝐞(-⟪v,ξ⟫) • φ v) = ∫ 𝐞(⟪v,ξ⟫) • φ(-v)
   -- = ∫ 𝐞(-⟪w,ξ⟫) • φ(w)  (w = -v) = φ̂(ξ)
   have hft_conj : starRingEnd ℂ (𝓕 φ ξ) = 𝓕 φ ξ := by
-    show starRingEnd ℂ (∫ v, 𝐞 (-⟪v, ξ⟫_ℝ) • φ v) = ∫ v, 𝐞 (-⟪v, ξ⟫_ℝ) • φ v
+    change starRingEnd ℂ (∫ v, 𝐞 (-⟪v, ξ⟫_ℝ) • φ v) = ∫ v, 𝐞 (-⟪v, ξ⟫_ℝ) • φ v
     rw [show starRingEnd ℂ (∫ v, 𝐞 (-⟪v, ξ⟫_ℝ) • φ v) =
       ∫ v, starRingEnd ℂ (𝐞 (-⟪v, ξ⟫_ℝ) • φ v) from integral_conj.symm]
     -- Goal: ∫ v, conj(𝐞(-⟪v,ξ⟫) • φ v) = ∫ v, 𝐞(-⟪v,ξ⟫) • φ v
@@ -674,7 +674,7 @@ lemma measure_of_pd_l1 (φ : V → ℂ)
       hψ_int.fourierInv_fourier_eq hψ_ft_int hψ_cont.continuousAt
     -- Step B: ψ(0) = φ(T 0) = φ(0) = 1
     have hψ0 : ψ 0 = 1 := by
-      show φ (T 0) = 1
+      change φ (T 0) = 1
       simp [T, smul_zero, hnorm]
     -- Step C: ∫ 𝓕ψ = ψ(0) = 1 via Fourier inversion at 0
     have hint_eq : ∫ x, 𝓕 ψ x = 1 := by
@@ -706,11 +706,11 @@ lemma measure_of_pd_l1 (φ : V → ℂ)
   have hfinv := hψ_cont.fourierInv_fourier_eq hψ_int hψ_ft_int
   -- Step B: ψ(τ⁻¹ • ξ) = φ(T(τ⁻¹ • ξ)) = φ(ξ)
   have hψ_eval : ψ (τ⁻¹ • ξ) = φ ξ := by
-    show φ (T (τ⁻¹ • ξ)) = φ ξ
+    change φ (T (τ⁻¹ • ξ)) = φ ξ
     simp [T, smul_smul, inv_mul_cancel₀ hτ_ne]
   -- Step C: charFun computation via withDensity integral
   -- charFun is ∫ cexp(i⟪x,ξ⟫) ∂↑μ, and ↑μ = μ_raw = volume.withDensity density
-  show ∫ x, cexp (↑⟪x, ξ⟫_ℝ * I) ∂μ_raw = φ ξ
+  change ∫ x, cexp (↑⟪x, ξ⟫_ℝ * I) ∂μ_raw = φ ξ
   rw [show μ_raw = volume.withDensity density from rfl]
   rw [integral_withDensity_eq_integral_toReal_smul₀ hdensity_meas.aemeasurable
     (ae_of_all _ (fun x => by simp [density]))]
@@ -826,7 +826,7 @@ private lemma integral_norm_ft_gaussian_eq_one (t : ℝ) (ht : 0 < t) :
   -- ∫ ‖𝓕 g‖ = ∫ (𝓕 g).re = Re(∫ 𝓕 g) = Re(1) = 1
   simp_rw [hnorm_eq_re, show ∀ x : V, (𝓕 g x).re = RCLike.re (𝓕 g x) from fun _ => rfl]
   rw [integral_re hft_int]
-  show RCLike.re (∫ x : V, 𝓕 g x) = 1
+  change RCLike.re (∫ x : V, 𝓕 g x) = 1
   rw [show (∫ x : V, 𝓕 g x) = (∫ x : V, 𝓕 (fun ξ : V => cexp (-(t : ℂ) * ↑(‖ξ‖ ^ 2))) x)
     from rfl, integral_ft_gaussian_eq_one t ht]; simp
 
@@ -847,7 +847,7 @@ theorem gaussianRegularize_ft_integrable (φ : V → ℂ)
   have hft_nonneg := pd_l1_fourier_nonneg φ_ε hφε_pd hφε_int hφε_cont
   -- φ_ε is bounded by (φ 0).re
   have hφε0 : (φ_ε 0).re = (φ 0).re := by
-    show (gaussianRegularize φ ε 0).re = _; rw [gaussianRegularize_zero]
+    change (gaussianRegularize φ ε 0).re = _; rw [gaussianRegularize_zero]
   have hφε_bound : ∀ x : V, ‖φ_ε x‖ ≤ (φ 0).re := by
     intro x; rw [← hφε0]; exact hφε_pd.bounded_by_zero x
   -- 𝓕(φ_ε) is continuous
@@ -878,7 +878,7 @@ theorem gaussianRegularize_ft_integrable (φ : V → ℂ)
       _ ≤ ∫ x, ‖φ_ε x * 𝓕 g_t x‖ := norm_integral_le_integral_norm _
       _ ≤ ∫ x, (φ 0).re * ‖𝓕 g_t x‖ := by
           apply integral_mono hprod_rhs_int.norm (hft_gt_int.norm.const_mul _)
-          intro x; show ‖φ_ε x * 𝓕 g_t x‖ ≤ (φ 0).re * ‖𝓕 g_t x‖
+          intro x; change ‖φ_ε x * 𝓕 g_t x‖ ≤ (φ 0).re * ‖𝓕 g_t x‖
           rw [norm_mul]
           exact mul_le_mul_of_nonneg_right (hφε_bound x) (norm_nonneg _)
       _ = (φ 0).re * ∫ x, ‖𝓕 g_t x‖ := integral_const_mul _ _
@@ -930,7 +930,7 @@ theorem gaussianRegularize_ft_integrable (φ : V → ℂ)
       apply Filter.Tendsto.const_mul
       rw [show (1 : ℂ) = cexp 0 from Complex.exp_zero.symm]
       apply Complex.continuous_exp.continuousAt.tendsto.comp
-      show Tendsto (fun n => -(↑(tn n) : ℂ) * ↑(‖ξ‖ ^ 2)) atTop (𝓝 0)
+      change Tendsto (fun n => -(↑(tn n) : ℂ) * ↑(‖ξ‖ ^ 2)) atTop (𝓝 0)
       rw [show (0 : ℂ) = -(0 : ℂ) * ↑(‖ξ‖ ^ 2) from by simp]
       apply Filter.Tendsto.mul_const
       apply Filter.Tendsto.neg

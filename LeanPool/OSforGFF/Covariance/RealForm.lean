@@ -98,7 +98,7 @@ noncomputable def fourierTransformCLM_real :
     { toFun := SchwartzMap.fourierTransformCLM ℂ
       map_add' := fun x y => map_add _ x y
       map_smul' := fun c x => by
-        show SchwartzMap.fourierTransformCLM ℂ (c • x) = c • SchwartzMap.fourierTransformCLM ℂ x
+        change SchwartzMap.fourierTransformCLM ℂ (c • x) = c • SchwartzMap.fourierTransformCLM ℂ x
         have hcx : c • x = (c : ℂ) • x := schwartz_real_smul_eq_complex c x
         have hmap : SchwartzMap.fourierTransformCLM ℂ ((c : ℂ) • x) =
             (c : ℂ) • SchwartzMap.fourierTransformCLM ℂ x :=
@@ -113,7 +113,7 @@ noncomputable def schwartzToL2CLM_real (_m : ℝ) :
     { toFun := SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure SpaceTime)
       map_add' := fun x y => map_add _ x y
       map_smul' := fun c x => by
-        show SchwartzMap.toLpCLM ℂ ℂ 2 volume (c • x) = c • SchwartzMap.toLpCLM ℂ ℂ 2 volume x
+        change SchwartzMap.toLpCLM ℂ ℂ 2 volume (c • x) = c • SchwartzMap.toLpCLM ℂ ℂ 2 volume x
         have hcx : c • x = (c : ℂ) • x := schwartz_real_smul_eq_complex c x
         have hmap : SchwartzMap.toLpCLM ℂ ℂ 2 volume ((c : ℂ) • x) =
             (c : ℂ) • SchwartzMap.toLpCLM ℂ ℂ 2 volume x :=
@@ -349,7 +349,7 @@ private noncomputable def momentumWeightSqrt_mathlib_mul_CLM_real (m : ℝ) [Fac
     { toFun := momentumWeightSqrt_mathlib_mul_CLM m
       map_add' := fun x y => map_add _ x y
       map_smul' := fun c x => by
-        show momentumWeightSqrt_mathlib_mul_CLM m (c • x)
+        change momentumWeightSqrt_mathlib_mul_CLM m (c • x)
             = c • momentumWeightSqrt_mathlib_mul_CLM m x
         have hcx : c • x = (c : ℂ) • x := lp_real_smul_eq_complex c x
         have hmap : momentumWeightSqrt_mathlib_mul_CLM m ((c : ℂ) • x) =
@@ -412,7 +412,7 @@ theorem sqrtPropagatorEmbedding (m : ℝ) [Fact (0 < m)] :
   unfold sqrtPropagatorMap_norm_sq
   symm
   have h_memLp := sqrtPropagatorMap_memLp (m := m) (f := f)
-  show ‖embeddingMap m f‖ ^ 2 = ∫ (k : SpaceTime), ‖sqrtPropagatorMap m f k‖ ^ 2
+  change ‖embeddingMap m f‖ ^ 2 = ∫ (k : SpaceTime), ‖sqrtPropagatorMap m f k‖ ^ 2
   change ‖h_memLp.toLp (sqrtPropagatorMap m f)‖ ^ 2 = _
   have h_norm : ‖h_memLp.toLp (sqrtPropagatorMap m f)‖ = ENNReal.toReal (eLpNorm (sqrtPropagatorMap m f) 2 volume) :=
     MeasureTheory.Lp.norm_toLp (sqrtPropagatorMap m f) h_memLp

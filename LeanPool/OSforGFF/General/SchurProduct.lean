@@ -111,7 +111,8 @@ If A B are positive definite matrices over ℝ, then the Hadamard product is pos
               simp [y, diagEmbed, Finset.mul_sum, eq_comm]
         _ = x ⬝ᵥ (A ∘ₕ B).mulVec x := by
               -- expand RHS: Hadamard mulVec then dot
-              simp [dotProduct, Matrix.mulVec, Matrix.hadamard, Finset.mul_sum, mul_comm, mul_left_comm]
+              simp [dotProduct, Matrix.mulVec, Matrix.hadamard, Finset.mul_sum, mul_comm,
+                mul_left_comm]
     -- transport positivity
     simpa [hquad_eq] using hk
 

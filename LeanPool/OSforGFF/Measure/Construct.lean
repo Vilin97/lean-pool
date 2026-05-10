@@ -65,7 +65,8 @@ open TopologicalSpace SchwartzMap
 
 /-! ## Dependencies
 
-No axioms declared here. Transitively uses `schwartz_isHilbertNuclear, schwartz_separableSpace` and `minlos_theorem (proven)`.
+No axioms declared here. Transitively uses `schwartz_isHilbertNuclear, schwartz_separableSpace` and
+`minlos_theorem (proven)`.
 -/
 
 noncomputable section

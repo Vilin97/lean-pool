@@ -229,7 +229,8 @@ lemma quadratic_form_entrywiseExp_hadamardSeries
     exact hHas_ij_rewrite i j
   -- Combine over i (finite) similarly
   have hHas_sum_i :
-      HasSum (fun n => ∑ i, ∑ j, (1 / (Nat.factorial n : ℝ)) * (x i * hadamardPow (ι:=ι) R n i j * x j))
+      HasSum (fun n => ∑ i, ∑ j,
+        (1 / (Nat.factorial n : ℝ)) * (x i * hadamardPow (ι:=ι) R n i j * x j))
              (∑ i, ∑ j, x i * ((entrywiseExp_hadamardSeries (ι:=ι) R) i j) * x j) := by
     apply hasSum_sum
     intro i _
@@ -466,7 +467,8 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
   -- Step 6: Limit as ε → 0⁺ gives the result at ε = 0
   have h_limit : entrywiseExp R =
     entrywiseExp (R + 0 • (1 : Matrix ι ι ℝ)) := by
-    -- This uses continuity at ε = 0: lim_{ε→0} entrywiseExp_hadamardSeries(R + εI) = entrywiseExp_hadamardSeries(R)
+    -- This uses continuity at ε = 0: lim_{ε→0} entrywiseExp_hadamardSeries(R + εI) =
+    -- entrywiseExp_hadamardSeries(R)
     simp only [zero_smul, add_zero]
   -- Step 7: PosSemidef is preserved under limits of PosDef sequences
   have h_limit_posSemidef_entry : (entrywiseExp R).PosSemidef := by

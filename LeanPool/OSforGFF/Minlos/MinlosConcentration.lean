@@ -223,7 +223,7 @@ lemma combined_quadratic_bound
     have h3 : (0 : ℝ) ≤ 2 / r ^ 2 * (p m₀) x ^ 2 := by positivity
     linarith [h_ball x hx]
   · -- Outside ball: use quadratic_bound_outside with q = p m₀
-    push_neg at hx
+    push Not at hx
     have hx' : r ≤ (p m₀) x := le_trans hx (h_mono x)
     have := quadratic_bound_outside Φ h_norm_le (p m₀) r hr x hx'
     linarith
@@ -412,7 +412,7 @@ lemma q_linear_ae_all
   have := linear_combination_ae Φ ν h_cf_joint h_normalized e β
   filter_upwards [this] with ω hω
   -- Both sides equal the Fin-indexed sum, via sum_coe_sort + Equiv.sum_comp
-  show ω (∑ a ∈ c.support, (↑(c a) : ℝ) • d a) =
+  change ω (∑ a ∈ c.support, (↑(c a) : ℝ) • d a) =
     ∑ a ∈ c.support, (↑(c a) : ℝ) * ω (d a)
   have h1 : (∑ a ∈ c.support, (↑(c a) : ℝ) • d a : E) = ∑ j, β j • e j := by
     rw [← c.support.sum_coe_sort]; exact (Equiv.sum_comp c.support.equivFin.symm _).symm
@@ -561,7 +561,7 @@ lemma gram_schmidt_seminorm_aux (p : Seminorm ℝ F) (hp : p.IsHilbertian)
     set u := v - ∑ j : Fin k, c j • e j with hu_def
     -- u ⊥ e_j for all j
     have hu_orth : ∀ j : Fin k, p.innerProd u (e j) = 0 := by
-      intro j; show p.innerProd (v - ∑ i : Fin k, c i • e i) (e j) = 0
+      intro j; change p.innerProd (v - ∑ i : Fin k, c i • e i) (e j) = 0
       rw [gs_innerProd_sub_left p hp, p.innerProd_sum_left hp]
       simp_rw [p.innerProd_smul_left hp]
       suffices h : ∑ i : Fin k, c i * p.innerProd (e i) (e j) = c j by linarith
@@ -592,7 +592,7 @@ lemma gram_schmidt_seminorm_aux (p : Seminorm ℝ F) (hp : p.IsHilbertian)
     -- Helper: b • v = b • proj + b • u
     have hv_decomp : ∀ b' : ℝ,
         b' • v = b' • (∑ j : Fin k, c j • e j) + b' • u := by
-      intro b'; show b' • v = b' • (∑ j : Fin k, c j • e j) +
+      intro b'; change b' • v = b' • (∑ j : Fin k, c j • e j) +
         b' • (v - ∑ j : Fin k, c j • e j)
       rw [← smul_add]; congr 1; abel
     -- Case split on whether p(u) = 0 or p(u) > 0
@@ -634,14 +634,14 @@ lemma gram_schmidt_seminorm_aux (p : Seminorm ℝ F) (hp : p.IsHilbertian)
       have hpu_pos : 0 < p u := lt_of_le_of_ne (apply_nonneg p u) (Ne.symm hu0)
       let e_new := (p u)⁻¹ • u
       have he_new_norm : p e_new = 1 := by
-        show p ((p u)⁻¹ • u) = 1
+        change p ((p u)⁻¹ • u) = 1
         rw [map_smul_eq_mul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hpu_pos),
             inv_mul_cancel₀ (ne_of_gt hpu_pos)]
       have he_new_orth_e : ∀ j : Fin k, p.innerProd e_new (e j) = 0 := by
-        intro j; show p.innerProd ((p u)⁻¹ • u) (e j) = 0
+        intro j; change p.innerProd ((p u)⁻¹ • u) (e j) = 0
         rw [p.innerProd_smul_left hp]; simp [hu_orth j]
       have hu_eq_smul : u = p u • e_new := by
-        show u = p u • ((p u)⁻¹ • u)
+        change u = p u • ((p u)⁻¹ • u)
         rw [smul_smul, mul_inv_cancel₀ (ne_of_gt hpu_pos), one_smul]
       -- Extended ONB: e_new at index 0, old e at indices 1..k
       let e' : Fin (k + 1) → F := Fin.cons e_new e
@@ -649,16 +649,16 @@ lemma gram_schmidt_seminorm_aux (p : Seminorm ℝ F) (hp : p.IsHilbertian)
         intro i j
         refine Fin.cases ?_ (fun i' => ?_) i <;> refine Fin.cases ?_ (fun j' => ?_) j
         · -- (0,0)
-          show p.innerProd e_new e_new = if (0 : Fin (k + 1)) = 0 then 1 else 0
+          change p.innerProd e_new e_new = if (0 : Fin (k + 1)) = 0 then 1 else 0
           rw [if_pos rfl, p.innerProd_self, he_new_norm, one_pow]
         · -- (0, succ j')
-          show p.innerProd e_new (e j') = if (0 : Fin (k + 1)) = j'.succ then 1 else 0
+          change p.innerProd e_new (e j') = if (0 : Fin (k + 1)) = j'.succ then 1 else 0
           rw [if_neg (Fin.succ_ne_zero j').symm, he_new_orth_e j']
         · -- (succ i', 0)
-          show p.innerProd (e i') e_new = if i'.succ = (0 : Fin (k + 1)) then 1 else 0
+          change p.innerProd (e i') e_new = if i'.succ = (0 : Fin (k + 1)) then 1 else 0
           rw [if_neg (Fin.succ_ne_zero i'), p.innerProd_comm, he_new_orth_e i']
         · -- (succ i', succ j')
-          show p.innerProd (e i') (e j') = if i'.succ = j'.succ then 1 else 0
+          change p.innerProd (e i') (e j') = if i'.succ = j'.succ then 1 else 0
           rw [show (if i'.succ = j'.succ then (1:ℝ) else 0) =
             if i' = j' then 1 else 0 from by simp [Fin.ext_iff]]
           exact he_orth i' j'
@@ -670,7 +670,7 @@ lemma gram_schmidt_seminorm_aux (p : Seminorm ℝ F) (hp : p.IsHilbertian)
       -- Key identity: the extended ONB sum equals old ONB sum + b•v
       have h_ext_sum : ∑ j : Fin (k + 1), α_new j • e' j =
           (∑ j, α' j • e j) + b • v := by
-        show ∑ j : Fin (k + 1),
+        change ∑ j : Fin (k + 1),
             (Fin.cons (b * p u) (fun j => α' j + b * c j) : Fin (k + 1) → ℝ) j •
             (Fin.cons e_new e : Fin (k + 1) → F) j =
           (∑ j, α' j • e j) + b • v
@@ -680,7 +680,7 @@ lemma gram_schmidt_seminorm_aux (p : Seminorm ℝ F) (hp : p.IsHilbertian)
         -- Since e_new = pu⁻¹•u, (b*pu)•(pu⁻¹•u) = b•u
         -- And b•v = b•Σ cj•ej + b•u (from hv_decomp)
         conv_rhs => rw [show b • v = b • (∑ j : Fin k, c j • e j) + b • u from hv_decomp b]
-        show (β (Fin.last n) * p u) • ((p u)⁻¹ • u) +
+        change (β (Fin.last n) * p u) • ((p u)⁻¹ • u) +
             (∑ j, α' j • e j + β (Fin.last n) • ∑ j : Fin k, c j • e j) =
           ∑ j, α' j • e j +
             (β (Fin.last n) • ∑ j : Fin k, c j • e j +
@@ -878,7 +878,7 @@ private lemma joint_kernel_bound_finite
   -- Step 3: CF of μ' equals v ↦ Φ(∑ vⱼ zⱼ)
   have h_cf : ∀ v : V, charFun μ'.toMeasure v = Φ (∑ i, v i • z i) := by
     intro v; rw [charFun_apply]
-    show ∫ y : V, cexp (@inner ℝ V _ y v * I) ∂(ν.map eval_z) = Φ (∑ i, v i • z i)
+    change ∫ y : V, cexp (@inner ℝ V _ y v * I) ∂(ν.map eval_z) = Φ (∑ i, v i • z i)
     rw [integral_map h_meas_z.aemeasurable (by fun_prop)]
     simp_rw [h_inner]
     have h_eq : ∀ ω : E → ℝ,
@@ -934,7 +934,7 @@ private lemma joint_kernel_bound_finite
     constructor
     · rintro ⟨i, hi⟩
       exact Finset.sum_pos' (fun j _ => sq_nonneg _) ⟨i, Finset.mem_univ _, by positivity⟩
-    · intro hS; by_contra h_all; push_neg at h_all
+    · intro hS; by_contra h_all; push Not at h_all
       exact absurd (Finset.sum_eq_zero (fun i _ => by rw [h_all i, sq, mul_zero])) (ne_of_gt hS)
   have h_union : {ω : E → ℝ | 0 < S ω} =
       ⋃ m : ℕ, {ω | (1 : ℝ) / (↑m + 1) ≤ S ω} := by
@@ -1309,7 +1309,7 @@ private lemma tail_bound_uniform
     -- Step B: CF of μ'
     have h_cf : ∀ v : V, charFun μ'.toMeasure v = Φ (∑ i, v i • e i) := by
       intro v; rw [charFun_apply]
-      show ∫ y : V, cexp (@inner ℝ V _ y v * I) ∂(ν.map eval_e) = Φ (∑ i, v i • e i)
+      change ∫ y : V, cexp (@inner ℝ V _ y v * I) ∂(ν.map eval_e) = Φ (∑ i, v i • e i)
       rw [integral_map h_meas_e.aemeasurable (by fun_prop)]
       simp_rw [h_inner_V, show ∀ ω : E → ℝ,
         cexp (↑(∑ j, v j * ω (e j)) * I) = cexp (I * ↑(∑ j, v j * ω (e j)))
@@ -1350,7 +1350,7 @@ private lemma tail_bound_uniform
     -- = ∑_j ∑_l v_j * M_{j,l} * v_l = p_inner.innerProd(∑ v_j e_j, ∑ v_l e_l) = p_inner(...)²
     have h_qf : ∀ v : V, quadForm S v = p_inner (∑ i, v i • e i) ^ 2 := by
       intro v
-      show @inner ℝ V _ v (S_fun v) = _
+      change @inner ℝ V _ v (S_fun v) = _
       erw [PiLp.inner_apply]
       simp_rw [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
         fun a b => RCLike.inner_apply a b, hS_coord', Finset.sum_mul]
@@ -1362,7 +1362,7 @@ private lemma tail_bound_uniform
     have hS_pos : S.IsPositive := by
       refine ⟨fun v w => ?_, fun v => ?_⟩
       · -- Symmetry: ⟨Sv, w⟩ = ⟨v, Sw⟩
-        show @inner ℝ V _ (S_fun v) w = @inner ℝ V _ v (S_fun w)
+        change @inner ℝ V _ (S_fun v) w = @inner ℝ V _ v (S_fun w)
         -- Compute both to ∑_j ∑_l Mij j l * v l * w j
         have h_expand_inner : ∀ (a b : V),
             @inner ℝ V _ (S_fun a) b = ∑ j, ∑ l, Mij j l * a l * b j := by

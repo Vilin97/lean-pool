@@ -248,7 +248,8 @@ noncomputable def schwartzToL2 (d : ℕ) : SchwartzRd d →L[ℂ] L2Complex d :=
 
 /-- Alternative embedding that produces the exact L² type expected by the unprimed theorems.
     This maps Schwartz functions to Lp ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin d))).
-    The difference from schwartzToL2 is only in the type representation, not the mathematical content.
+    The difference from schwartzToL2 is only in the type representation, not the mathematical
+    content.
 -/
 noncomputable def schwartzToL2' (d : ℕ) [NeZero d] [Fintype (Fin d)] :
   SchwartzMap (EuclideanSpace ℝ (Fin d)) ℂ →L[ℂ] Lp ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin d))) :=
@@ -432,7 +433,7 @@ lemma integrableOn_compact_diff_ball {d : ℕ}
       have hx_norm_pos : 0 < ‖x‖ := hδ.trans_le hx_norm_lower
       calc |f x| ≤ C * ‖x‖ ^ (-α) := h_decay x
         _ ≤ M := by
-          show C * ‖x‖ ^ (-α) ≤ C * max (δ ^ (-α)) (R ^ (-α))
+          change C * ‖x‖ ^ (-α) ≤ C * max (δ ^ (-α)) (R ^ (-α))
           apply mul_le_mul_of_nonneg_left _ (le_of_lt hC)
           by_cases hα_nonneg : 0 ≤ α
           · -- α ≥ 0: -α ≤ 0, so rpow is antitone, ‖x‖^(-α) ≤ δ^(-α)
@@ -443,7 +444,7 @@ lemma integrableOn_compact_diff_ball {d : ℕ}
               · exact hx_norm_lower
             exact le_max_of_le_left h1
           · -- α < 0: -α > 0, so rpow is monotone, ‖x‖^(-α) ≤ R^(-α)
-            push_neg at hα_nonneg
+            push Not at hα_nonneg
             have h1 : ‖x‖ ^ (-α) ≤ R ^ (-α) := by
               apply Real.rpow_le_rpow (le_of_lt hx_norm_pos) hx_norm_upper
               linarith
@@ -586,7 +587,8 @@ theorem schwartz_bilinear_integrable_of_translationInvariant_L1
         ‖K₀ (p.1 - p.2)‖ * ‖g p.2‖) (volume.prod volume) := by
       -- We have hprod : Integrable (fun p => ‖K₀ p.1‖ * ‖g p.2‖)
       -- We want: Integrable (fun p => ‖K₀ (p.1 - p.2)‖ * ‖g p.2‖)
-      -- These are related by: (fun p => ‖K₀ p.1‖ * ‖g p.2‖) ∘ e = (fun p => ‖K₀ (p.1 - p.2)‖ * ‖g p.2‖)
+      -- These are related by: (fun p => ‖K₀ p.1‖ * ‖g p.2‖) ∘ e = (fun p => ‖K₀ (p.1 - p.2)‖ * ‖g
+      -- p.2‖)
       -- where e(p) = (p.1 - p.2, p.2)
       -- Use integrable_comp_emb: (Integrable g μb ↔ Integrable (g ∘ f) μa) for MeasurePreserving f
       have heq : (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin d) =>
@@ -1026,7 +1028,8 @@ theorem double_mollifier_convergence
     filter_upwards [hφ (Metric.ball_mem_nhds 0 hr_pos)] with i hi
     let ψ := (φ i).normed volume
     -- 1. Identify inner integral as convolution
-    have h_inner : ∀ x, ∫ y, C (x - y) * ψ y = (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] C) x := by
+    have h_inner : ∀ x, ∫ y, C (x - y) * ψ y = (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ,
+      volume] C) x := by
       intro x
       rw [convolution_def]
       simp only [ContinuousLinearMap.lsmul_apply, smul_eq_mul]
@@ -1041,7 +1044,8 @@ theorem double_mollifier_convergence
       rw [h_inner x]
     -- 3. Show equal to (ψ ⋆ (ψ ⋆ C))(a)
     have h_outer : (∫ x, ψ (x - a) * (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] C) x) =
-                   (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] C)) a := by
+                   (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ,
+                     volume] C)) a := by
       let g := ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] C
       rw [convolution_def]
       simp only [ContinuousLinearMap.lsmul_apply, smul_eq_mul]
@@ -1103,7 +1107,8 @@ theorem double_mollifier_convergence
              simp only [(φ i).support_normed_eq]
            rw [h_supp_psi, Metric.mem_ball, dist_zero_right] at hv htv
            dsimp [K, K_t, K_v]
-           rw [mem_prod, Metric.mem_closedBall, Metric.mem_closedBall, dist_zero_right, dist_zero_right]
+           rw [mem_prod, Metric.mem_closedBall, Metric.mem_closedBall, dist_zero_right,
+             dist_zero_right]
            constructor
            · calc ‖t‖ = ‖(t-v) + v‖ := by abel_nf
                   _ ≤ ‖t-v‖ + ‖v‖ := norm_add_le _ _
@@ -1122,7 +1127,8 @@ theorem double_mollifier_convergence
               · exact Continuous.continuousOn (continuous_const.sub continuous_fst)
               · intro ⟨t, v⟩ htv
                 dsimp [K, K_t, K_v] at htv
-                simp only [mem_prod, Metric.mem_closedBall, dist_zero_right, mem_setOf_eq, sub_ne_zero] at htv ⊢
+                simp only [mem_prod, Metric.mem_closedBall, dist_zero_right, mem_setOf_eq,
+                  sub_ne_zero] at htv ⊢
                 by_contra h_ta
                 rw [← h_ta] at htv
                 have hr : (φ i).rOut < ‖a‖ / 3 := by

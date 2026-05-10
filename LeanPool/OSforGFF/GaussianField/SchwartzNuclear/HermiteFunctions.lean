@@ -186,7 +186,7 @@ private lemma integrable_eval_mul_exp_neg_mul_sq (p : ℝ[X]) {b : ℝ} (hb : 0 
     rw [this]; exact hp.add hq
   | monomial k a =>
     simp only [Polynomial.eval_monomial]
-    show Integrable (fun x : ℝ => a * x ^ k * Real.exp (-b * x ^ 2)) volume
+    change Integrable (fun x : ℝ => a * x ^ k * Real.exp (-b * x ^ 2)) volume
     have heq : (fun x : ℝ => a * x ^ k * Real.exp (-b * x ^ 2)) =
                fun x => a * (x ^ k * Real.exp (-b * x ^ 2)) := by ext x; ring
     rw [heq]
@@ -265,7 +265,7 @@ theorem hermite_derivative (n : ℕ) :
   induction n with
   | zero => simp [hermite_succ, hermite_zero]
   | succ n ih =>
-    show derivative (X * hermite (n + 1) - derivative (hermite (n + 1)))
+    change derivative (X * hermite (n + 1) - derivative (hermite (n + 1)))
         = (↑(n + 2) : ℤ[X]) * hermite (n + 1)
     rw [map_sub, derivative_mul, derivative_X, one_mul]
     simp only [ih]
@@ -324,7 +324,7 @@ private theorem integrable_hermiteR_mul_gaussian (p : ℝ[X]) :
     Integrable (fun x : ℝ => p.eval x * gaussian x) volume := by
   have h : (fun x : ℝ => p.eval x * gaussian x) =
       fun x => p.eval x * Real.exp (-(1/2) * x ^ 2) := by
-    ext x; show p.eval x * Real.exp (-(x ^ 2 / 2)) = _; congr 1; congr 1; ring
+    ext x; change p.eval x * Real.exp (-(x ^ 2 / 2)) = _; congr 1; congr 1; ring
   rw [h]
   exact integrable_eval_mul_exp_neg_mul_sq p (by positivity : (0:ℝ) < 1/2)
 
@@ -396,7 +396,7 @@ private theorem J_succ_succ (n m : ℕ) : J (n + 1) (m + 1) = (↑(n + 1) : ℝ)
   simp_rw [h_rw, integral_const_mul]
   -- Integrability obligations
   · -- fderiv f · g integrable
-    show Integrable (fun x => fderiv ℝ (fun x => (hermiteR (n + 1)).eval x) x 1 *
+    change Integrable (fun x => fderiv ℝ (fun x => (hermiteR (n + 1)).eval x) x 1 *
       ((hermiteR m).eval x * gaussian x)) volume
     have : (fun x => fderiv ℝ (fun x => (hermiteR (n + 1)).eval x) x 1 *
         ((hermiteR m).eval x * gaussian x)) =
@@ -413,7 +413,7 @@ private theorem J_succ_succ (n m : ℕ) : J (n + 1) (m + 1) = (↑(n + 1) : ℝ)
     rw [this]
     exact (integrable_hermiteProd_mul_gaussian n m).const_mul _
   · -- f · fderiv g integrable
-    show Integrable (fun x => (hermiteR (n + 1)).eval x *
+    change Integrable (fun x => (hermiteR (n + 1)).eval x *
       (fderiv ℝ (fun u => (hermiteR m).eval u * gaussian u) x 1)) volume
     have : (fun x => (hermiteR (n + 1)).eval x *
         (fderiv ℝ (fun u => (hermiteR m).eval u * gaussian u) x 1)) =
@@ -535,7 +535,7 @@ private theorem hermiteFunction_integral_eq (n m : ℕ) :
     set G := Real.exp (-(x ^ 2) / 2)
     show cn * Hn * G * (cm * Hm * G) = cn * cm * (Hn * (Hm * Real.exp (-(x ^ 2))))
     have hG : G * G = Real.exp (-(x ^ 2)) := by
-      show Real.exp (-(x ^ 2) / 2) * Real.exp (-(x ^ 2) / 2) = Real.exp (-(x ^ 2))
+      change Real.exp (-(x ^ 2) / 2) * Real.exp (-(x ^ 2) / 2) = Real.exp (-(x ^ 2))
       rw [← Real.exp_add]; congr 1; ring
     calc cn * Hn * G * (cm * Hm * G)
         = cn * cm * (Hn * Hm) * (G * G) := by ring
@@ -730,7 +730,8 @@ private lemma mul_x_hermiteFunction_aux (n : ℕ) (x : ℝ) :
   ring
 
 /-- Key coefficient identity: c_n / √2 = √((n+1)/2) · c_{n+1}.
-    Proof: c_n = √(n+1) · c_{n+1} (normConst_succ), so c_n/√2 = √(n+1)/√2 · c_{n+1} = √((n+1)/2) · c_{n+1}.
+    Proof: c_n = √(n+1) · c_{n+1} (normConst_succ), so c_n/√2 = √(n+1)/√2 · c_{n+1} = √((n+1)/2) ·
+    c_{n+1}.
 -/
 private lemma normConst_div_sqrt2 (n : ℕ) :
     hermiteFunctionNormConst n / Real.sqrt 2 =
@@ -1119,7 +1120,7 @@ theorem hermiteFunction_sup_bound :
       |f' t| ≤ hermiteFunction n t * hermiteFunction n t +
       deriv (hermiteFunction n) t * deriv (hermiteFunction n) t := by
     intro t
-    show |2 * (hermiteFunction n t * deriv (hermiteFunction n) t)| ≤ _
+    change |2 * (hermiteFunction n t * deriv (hermiteFunction n) t)| ≤ _
     rw [abs_mul, abs_of_nonneg (by positivity : (0:ℝ) ≤ 2), abs_mul]
     -- 2 * (|a| * |b|) ≤ a² + b² from AM-GM: 2ab ≤ a² + b²
     have hab := two_mul_le_add_sq (|hermiteFunction n t|) (|deriv (hermiteFunction n) t|)
@@ -1532,7 +1533,7 @@ private lemma integral_f_xpow_gaussian_zero
         rw [show (fun x => f x * (R.coeff i * (x ^ i * Real.exp (-(x ^ 2 / 2))))) =
           fun x => R.coeff i * (f x * (x ^ i * Real.exp (-(x ^ 2 / 2)))) from by ext x; ring,
           integral_const_mul]
-      · show Integrable (fun x => f x * (R.coeff i * (x ^ i * Real.exp (-(x ^ 2 / 2))))) volume
+      · change Integrable (fun x => f x * (R.coeff i * (x ^ i * Real.exp (-(x ^ 2 / 2))))) volume
         rw [show (fun x => f x * (R.coeff i * (x ^ i * Real.exp (-(x ^ 2 / 2))))) =
           fun x => R.coeff i * (f x * (x ^ i * Real.exp (-(x ^ 2 / 2)))) from by ext x; ring]
         exact h_mono_integrable _ _
@@ -1588,7 +1589,8 @@ private lemma integrable_f_mul_gaussian
   exact (L2.integrable_inner (𝕜 := ℝ) (MemLp.toLp f hf)
     (MemLp.toLp _ hG)).congr
     (by filter_upwards [MemLp.coeFn_toLp hf, MemLp.coeFn_toLp hG] with x hfx hGx
-        rw [hfx, hGx, real_inner_eq_re_inner ℝ, RCLike.inner_apply', conj_trivial, RCLike.re_to_real])
+        rw [hfx, hGx, real_inner_eq_re_inner ℝ, RCLike.inner_apply', conj_trivial,
+          RCLike.re_to_real])
 
 /-- |f(x)| * exp(-x²/4) is integrable when f ∈ L², by Cauchy-Schwarz:
     f ∈ L², exp(-x²/4) ∈ L² (since exp(-x²/4)² = exp(-x²/2)).
@@ -1608,7 +1610,8 @@ private lemma integrable_f_mul_half_gaussian
   exact (L2.integrable_inner (𝕜 := ℝ) (MemLp.toLp f hf)
     (MemLp.toLp _ hG)).congr
     (by filter_upwards [MemLp.coeFn_toLp hf, MemLp.coeFn_toLp hG] with x hfx hGx
-        rw [hfx, hGx, real_inner_eq_re_inner ℝ, RCLike.inner_apply', conj_trivial, RCLike.re_to_real])
+        rw [hfx, hGx, real_inner_eq_re_inner ℝ, RCLike.inner_apply', conj_trivial,
+          RCLike.re_to_real])
 
 /-- g(x) * exp(c|x|) is integrable, where g(x) = f(x) * exp(-x²/2), by completing the square:
     |g(x)| * exp(c|x|) = |f(x)| * exp(-x²/2 + c|x|) ≤ exp(c²) * |f(x)| * exp(-x²/4).
@@ -1692,7 +1695,7 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
   have h_bound : ∀ N, ∀ᵐ x ∂volume, ‖F N x‖ ≤ bound x := by
     intro N
     filter_upwards with x
-    show ‖expPartialSum (z x) N * g_ℂ x‖ ≤ _
+    change ‖expPartialSum (z x) N * g_ℂ x‖ ≤ _
     -- ‖a * b‖ ≤ ‖a‖ * ‖b‖, and ‖g_ℂ x‖ = ‖g x‖
     have hgn : ‖g_ℂ x‖ = ‖g x‖ := by simp [g_ℂ, Complex.norm_real, Real.norm_eq_abs]
     -- Partial sum bound
@@ -1733,7 +1736,7 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
     fun k => (hz_cont.pow k).div_const _
   have h_meas : ∀ N, AEStronglyMeasurable (F N) volume := by
     intro N
-    show AEStronglyMeasurable (fun x => expPartialSum (z x) N * g_ℂ x) volume
+    change AEStronglyMeasurable (fun x => expPartialSum (z x) N * g_ℂ x) volume
     apply AEStronglyMeasurable.mul _ hg_ℂ_meas
     exact Finset.aestronglyMeasurable_fun_sum _ (fun k _ =>
       (h_summand_cont k).measurable.aestronglyMeasurable)
@@ -1774,7 +1777,7 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
   -- Step 7: Each ∫ F N = 0
   have h_zero : ∀ N, ∫ x, F N x = 0 := by
     intro N
-    show ∫ x, expPartialSum (z x) N * g_ℂ x = 0
+    change ∫ x, expPartialSum (z x) N * g_ℂ x = 0
     simp only [expPartialSum, Finset.sum_mul]
     rw [integral_finset_sum _ (fun k _ => h_summand_int k)]
     apply Finset.sum_eq_zero

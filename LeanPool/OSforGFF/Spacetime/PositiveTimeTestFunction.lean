@@ -74,7 +74,8 @@ instance : AddCommGroup PositiveTimeTestFunction := by infer_instance
 lemma PositiveTimeTestFunction.sum_smul_mem
     {n : ℕ} (f : Fin n → PositiveTimeTestFunction) (c : Fin n → ℝ) :
     ∃ g : PositiveTimeTestFunction, g.val = ∑ i, c i • (f i).val := by
-  -- Use the fact that PositiveTimeTestFunctions.submodule is closed under finite linear combinations
+  -- Use the fact that PositiveTimeTestFunctions.submodule is closed under finite linear
+  -- combinations
   use ∑ i, c i • (f i)
   -- The sum automatically lives in the submodule by the submodule properties
   simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower]

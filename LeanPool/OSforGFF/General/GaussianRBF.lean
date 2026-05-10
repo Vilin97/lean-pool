@@ -51,7 +51,8 @@ lemma innerProduct_is_pd_kernel :
   let v_a : H := ∑ i : Fin m, a i • x i
   let v_b : H := ∑ i : Fin m, b i • x i
   -- Key computation: Re(∑∑ c̄ᵢcⱼ⟪xᵢ,xⱼ⟫) = ⟪v_a, v_a⟫ + ⟪v_b, v_b⟫ = ‖v_a‖² + ‖v_b‖²
-  -- First, expand star(c_i) * c_j = (a_i - ib_i)(a_j + ib_j) = (a_i a_j + b_i b_j) + i(a_i b_j - b_i a_j)
+  -- First, expand star(c_i) * c_j = (a_i - ib_i)(a_j + ib_j) = (a_i a_j + b_i b_j) + i(a_i b_j -
+  -- b_i a_j)
   have expand_cc : ∀ i j, star (c i) * c j = (a i * a j + b i * b j : ℝ) + Complex.I * (a i * b j - b i * a j : ℝ) := by
     intro i j
     simp only [a, b, star_def]
@@ -65,7 +66,8 @@ lemma innerProduct_is_pd_kernel :
                  Complex.conj_re, Complex.conj_im]
       ring
   -- The product c̄ᵢcⱼ⟪xᵢ,xⱼ⟫ has real part (aᵢaⱼ + bᵢbⱼ)⟪xᵢ,xⱼ⟫
-  have re_prod : ∀ i j, (star (c i) * c j * (⟪x i, x j⟫_ℝ : ℂ)).re = (a i * a j + b i * b j) * ⟪x i, x j⟫_ℝ := by
+  have re_prod : ∀ i j, (star (c i) * c j * (⟪x i,
+    x j⟫_ℝ : ℂ)).re = (a i * a j + b i * b j) * ⟪x i, x j⟫_ℝ := by
     intro i j
     rw [expand_cc]
     simp only [Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.I_im,
@@ -189,7 +191,8 @@ lemma exp_is_pd_kernel {α : Type*} (K : α → α → ℂ) (hK : IsPositiveDefi
       intro i j
       rw [h_exp_eq]
       simp only [a, b, star_def, N, OSforGFF.entrywiseExp, M, Matrix.of_apply]
-      simp only [Complex.mul_re, Complex.conj_re, Complex.conj_im, Complex.ofReal_re, Complex.ofReal_im,
+      simp only [Complex.mul_re, Complex.conj_re, Complex.conj_im, Complex.ofReal_re,
+        Complex.ofReal_im,
                  mul_zero, sub_zero]
       ring
     simp_rw [h_entry]
@@ -231,7 +234,8 @@ theorem gaussian_rbf_pd_innerProduct_proof :
     ring
   -- Factor the exponential using polar identity
   have factor : ∀ i j, cexp (-(1/2 : ℂ) * (‖x i - x j‖^2 : ℝ)) =
-      cexp (-(1/2 : ℂ) * (‖x i‖^2 : ℝ)) * cexp (-(1/2 : ℂ) * (‖x j‖^2 : ℝ)) * cexp (⟪x i, x j⟫_ℝ : ℂ) := by
+      cexp (-(1/2 : ℂ) * (‖x i‖^2 : ℝ)) * cexp (-(1/2 : ℂ) * (‖x j‖^2 : ℝ)) * cexp (⟪x i,
+        x j⟫_ℝ : ℂ) := by
     intro i j
     rw [polar]
     simp only [Complex.ofReal_sub, Complex.ofReal_add, Complex.ofReal_mul]
@@ -264,7 +268,7 @@ theorem gaussian_rbf_pd_innerProduct_proof :
     simp only [d]
     ring
   -- The goal uses star which equals starRingEnd for Complex
-  show 0 ≤ (∑ i : Fin m, ∑ j : Fin m,
+  change 0 ≤ (∑ i : Fin m, ∑ j : Fin m,
       (starRingEnd ℂ) (c i) * c j * (fun h => cexp (-(1/2 : ℂ) * (‖h‖^2 : ℝ))) (x i - x j)).re
   -- Convert star to starRingEnd in h_sum
   have h_sum' : ∑ i : Fin m, ∑ j : Fin m, (starRingEnd ℂ) (c i) * c j * cexp (-(1/2 : ℂ) * (‖x i - x j‖^2 : ℝ)) =
@@ -273,7 +277,8 @@ theorem gaussian_rbf_pd_innerProduct_proof :
     convert h_sum using 2
   rw [h_sum']
   -- Now apply that exp(⟨·,·⟩) is a PD kernel
-  have h_inner_pd : IsPositiveDefiniteKernel (fun (u v : H) => (⟪u, v⟫_ℝ : ℂ)) := innerProduct_is_pd_kernel
+  have h_inner_pd : IsPositiveDefiniteKernel (fun (u v : H) => (⟪u,
+    v⟫_ℝ : ℂ)) := innerProduct_is_pd_kernel
   have h_exp_inner_pd : IsPositiveDefiniteKernel (fun (u v : H) => cexp (⟪u, v⟫_ℝ : ℂ)) := by
     apply exp_is_pd_kernel _ h_inner_pd
     · exact fun _ _ => ofReal_im ⟪_, _⟫_ℝ

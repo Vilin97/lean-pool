@@ -20,7 +20,8 @@ Assembles OS0–OS4 into `gaussianFreeField_satisfies_all_OS_axioms`:
 - OS0 (Analyticity): Hartogs + Fernique — `OS.OS0_Analyticity`
 - OS1 (Regularity): Plancherel + momentum bound — `OS.OS1_Regularity`
 - OS2 (Euclidean Invariance): C depends on |x−y| — `OS.OS2_Invariance`
-- OS3 (Reflection Positivity): Schwinger parametrization + Schur–Hadamard — `OS.OS3_ReflectionPositivity`
+- OS3 (Reflection Positivity): Schwinger parametrization + Schur–Hadamard —
+`OS.OS3_ReflectionPositivity`
 - OS4 (Clustering): Gaussian factorization + convolution decay — `OS.OS4_Clustering`
 - OS4 (Ergodicity): polynomial clustering α=6 → L² convergence — `OS.OS4_Ergodicity`
 
@@ -39,7 +40,8 @@ noncomputable section
 - OS0 is supplied by `QFT.gaussianFreeField_satisfies_OS0` via the holomorphic integral theorem
 - OS1 is supplied by `gaussianFreeField_satisfies_OS1_revised` via Fourier/momentum space methods
 - OS2 is supplied by `gaussian_satisfies_OS2` via Euclidean invariance of the free covariance
-- OS3 is supplied by `QFT.gaussianFreeField_OS3` via the Schur-Hadamard argument (complex star formulation)
+- OS3 is supplied by `QFT.gaussianFreeField_OS3` via the Schur-Hadamard argument (complex star
+formulation)
 - OS4 Clustering is supplied by `QFT.gaussianFreeField_satisfies_OS4` via Gaussian factorization
 - OS4 Ergodicity is supplied by polynomial clustering (α=6) → ergodicity
 

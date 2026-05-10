@@ -244,10 +244,11 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
   have h_S2_eq : S₂ fC T_a_gC = ↑(SchwingerFunction₂ (gaussianFreeField_free m) f (g.translate a)) := by
     -- Both are integrals of f(x) C(x,y) g(y) for real test functions
     -- SchwingerFunctionℂ₂ on toComplex gives the same as SchwingerFunction₂ cast to ℂ
-    show SchwingerFunctionℂ₂ (gaussianFreeField_free m) fC T_a_gC = _
+    change SchwingerFunctionℂ₂ (gaussianFreeField_free m) fC T_a_gC = _
     -- Use the definitions directly:
     -- SchwingerFunctionℂ₂ = ∫ (distributionPairingℂ_real ω f) * (distributionPairingℂ_real ω g) dμ
-    -- For toComplex of real f, distributionPairingℂ_real ω (toComplex f) = ↑(distributionPairing ω f)
+    -- For toComplex of real f, distributionPairingℂ_real ω (toComplex f) = ↑(distributionPairing ω
+    -- f)
     -- SchwingerFunction₂ = ∫ (distributionPairing ω f) * (distributionPairing ω g) dμ
     -- Both integrals agree: ∫ ↑(a * b) dμ = ↑(∫ a * b dμ) when integrable
     simp only [SchwingerFunctionℂ₂, SchwingerFunctionℂ, SchwingerFunction₂, SchwingerFunction,
@@ -257,8 +258,9 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
         (fun x => (↑(distributionPairing x f * distributionPairing x (g.translate a)) : ℂ)) := by
       ext ω
       -- fC = toComplex f and T_a_gC = toComplex (g.translate a)
-      show distributionPairingℂ_real ω (toComplex f) * distributionPairingℂ_real ω (toComplex (g.translate a)) = _
-      rw [distributionPairingℂ_real_toComplex, distributionPairingℂ_real_toComplex, Complex.ofReal_mul]
+      change distributionPairingℂ_real ω (toComplex f) * distributionPairingℂ_real ω (toComplex (g.translate a)) = _
+      rw [distributionPairingℂ_real_toComplex, distributionPairingℂ_real_toComplex,
+        Complex.ofReal_mul]
     rw [h_fun_eq]
     exact integral_complex_ofReal
   have h_S2_norm : ‖S₂ fC T_a_gC‖ = |SchwingerFunction₂ (gaussianFreeField_free m) f (g.translate a)| := by
@@ -633,7 +635,8 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
   -- Step 4: Define key quantities
   let Ef := ∫ ω, Complex.exp (distributionPairingℂ_real ω f) ∂(gaussianFreeField_free m).toMeasure
   let Eg := ∫ ω, Complex.exp (distributionPairingℂ_real ω g) ∂(gaussianFreeField_free m).toMeasure
-  -- Step 5: The Schwinger function equals the bilinear integral (from schwinger2_time_translated_eq_bilinear)
+  -- Step 5: The Schwinger function equals the bilinear integral (from
+  -- schwinger2_time_translated_eq_bilinear)
   -- We need to bound |S₂(f, T_{-t}g)| for any t ≥ 0
   have h_S2_bound : ∀ t : ℝ, t ≥ 0 →
       ‖SchwingerFunctionℂ₂ (gaussianFreeField_free m) f (TimeTranslation.timeTranslationSchwartzℂ (-t) g)‖ ≤
@@ -655,7 +658,7 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
   refine ⟨final_c, by positivity, ?_⟩
   -- Step 7: Main proof
   -- The goal has `have μ := ...; ∀ s ≥ 0, ...` so we need to handle the let-binding
-  show ∀ s : ℝ, s ≥ 0 →
+  change ∀ s : ℝ, s ≥ 0 →
     ‖∫ ω, Complex.exp (distributionPairingℂ_real ω f +
           distributionPairingℂ_real (TimeTranslation.timeTranslationDistribution s ω) g)
           ∂(gaussianFreeField_free m).toMeasure -

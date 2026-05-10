@@ -64,7 +64,8 @@ def timeReflectionMatrix : Matrix (Fin STDimension) (Fin STDimension) ℝ :=
 
 lemma timeReflectionMatrix_is_orthogonal :
    timeReflectionMatrix ∈ Matrix.orthogonalGroup (Fin STDimension) ℝ := by
-      simp [Matrix.mem_orthogonalGroup_iff, timeReflectionMatrix, Matrix.diagonal_transpose, Matrix.diagonal_mul_diagonal]
+      simp [Matrix.mem_orthogonalGroup_iff, timeReflectionMatrix, Matrix.diagonal_transpose,
+        Matrix.diagonal_mul_diagonal]
       ext i j
       simp [Matrix.one_apply]
       split_ifs <;> norm_num
@@ -133,7 +134,7 @@ def timeReflectionLE : SpaceTime ≃ₗᵢ[ℝ] SpaceTime :=
     intro x
     -- The goal is to show that the LinearIsometryEquiv preserves norms
     -- First simplify the LinearIsometryEquiv application
-    show ‖timeReflection x‖ = ‖x‖
+    change ‖timeReflection x‖ = ‖x‖
     -- Use that time reflection preserves inner products
     have h : ⟪timeReflection x, timeReflection x⟫_ℝ = ⟪x, x⟫_ℝ := timeReflection_inner_map x x
     -- For real inner product spaces, ⟪x, x⟫ = ‖x‖^2 directly

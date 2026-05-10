@@ -133,7 +133,7 @@ lemma posSemidef_diag_pos_exists_of_ne_zero
   classical
   -- Suppose all diagonal entries are ≤ 0; PSD gives ≥ 0, hence all zeros
   by_contra h
-  push_neg at h
+  push Not at h
   have hdiag_nonneg : ∀ i, 0 ≤ H i i := fun i => hH_psd.diag_nonneg
   have hdiag_zero : ∀ i, H i i = 0 := fun i => le_antisymm (h i) (hdiag_nonneg i)
   -- Show all off-diagonals are zero

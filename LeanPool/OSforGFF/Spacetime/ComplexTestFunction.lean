@@ -231,7 +231,7 @@ def toComplex (f : TestFunction) : TestFunctionℂ :=
     use C
     intro x
     -- Use the fact that iteratedFDeriv commutes with continuous linear maps
-    show ‖x‖ ^ k * ‖iteratedFDeriv ℝ n (fun x ↦ (f x : ℂ)) x‖ ≤ C
+    change ‖x‖ ^ k * ‖iteratedFDeriv ℝ n (fun x ↦ (f x : ℂ)) x‖ ≤ C
     rw [iteratedFDeriv_ofReal_norm_eq]
     exact hC x
   )
@@ -273,14 +273,14 @@ noncomputable def toComplexCLM : TestFunction →L[ℝ] TestFunctionℂ :=
     (fun f g x => by simp only [SchwartzMap.add_apply]; exact Complex.ofReal_add _ _)
     (fun c f x => by
       simp only [SchwartzMap.smul_apply, RingHom.id_apply]
-      show (((c • f x : ℝ) : ℂ)) = c • ((f x : ℝ) : ℂ)
+      change (((c • f x : ℝ) : ℂ)) = c • ((f x : ℝ) : ℂ)
       rw [smul_eq_mul, Complex.ofReal_mul, ← Complex.real_smul])
     (fun f => ContDiff.comp Complex.ofRealCLM.contDiff f.smooth')
     (fun ⟨k, n⟩ => by
       use {(k, n)}, 1, zero_le_one
       intro f x
       simp only [Finset.sup_singleton, one_mul]
-      show ‖x‖ ^ k * ‖iteratedFDeriv ℝ n (fun x ↦ (f x : ℂ)) x‖ ≤ _
+      change ‖x‖ ^ k * ‖iteratedFDeriv ℝ n (fun x ↦ (f x : ℂ)) x‖ ≤ _
       rw [iteratedFDeriv_ofReal_norm_eq]
       exact SchwartzMap.le_seminorm ℝ k n f x)
 

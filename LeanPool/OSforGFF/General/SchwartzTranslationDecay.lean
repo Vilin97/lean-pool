@@ -119,7 +119,7 @@ lemma kernelTail_tendsto_zero (K : E → ℝ) (R₀ : ℝ)
       simp only [abs_nonpos_iff] at this
       simp [this, hε]
   · -- C > 0 case
-    push_neg at hC
+    push Not at hC
     let R := max R₀ ((C / ε) ^ (1 / α) + 1)
     rw [Filter.eventually_iff_exists_mem]
     refine ⟨(closedBall 0 R)ᶜ, ?_, ?_⟩
@@ -135,7 +135,7 @@ lemma kernelTail_tendsto_zero (K : E → ℝ) (R₀ : ℝ)
         rw [indicator_of_notMem (by simp [hz_R₀] : z ∉ (closedBall (0 : E) R₀)ᶜ), mul_zero, norm_zero]
         exact hε
       · -- Outside R₀ ball: use decay bound
-        push_neg at hz_R₀
+        push Not at hz_R₀
         simp only [kernelTail]
         have hmem : z ∈ (closedBall (0 : E) R₀)ᶜ := by
           simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le]
@@ -230,7 +230,7 @@ lemma integrable_tail_small {f : E → ℂ} (hf : Integrable f) (ε : ℝ) (hε 
     simp only [mem_iInter, mem_empty_iff_false, iff_false, not_forall]
     -- There exists n with x ∈ closedBall 0 n, i.e., x ∉ s(n)
     refine ⟨⌈‖x‖⌉₊, ?_⟩
-    show x ∉ (closedBall (0 : E) ⌈‖x‖⌉₊)ᶜ
+    change x ∉ (closedBall (0 : E) ⌈‖x‖⌉₊)ᶜ
     simp only [mem_compl_iff, not_not, mem_closedBall, dist_zero_right]
     exact Nat.le_ceil ‖x‖
   rw [h_inter, setIntegral_empty] at htends
@@ -425,7 +425,7 @@ theorem schwartz_bilinear_prod_integrable
     have hg_shift : Integrable (fun y => g (y - a)) volume := hg_int.comp_sub_right a
     -- K_sing is integrable (compact support)
     have hKs_int : Integrable K_sing volume := by
-      show Integrable (kernelSingular K R₀) volume
+      change Integrable (kernelSingular K R₀) volume
       have heq : kernelSingular K R₀ = (closedBall (0 : E) R₀).indicator K := by
         ext x
         simp only [kernelSingular]
@@ -552,7 +552,7 @@ theorem schwartz_bilinear_translation_decay_proof
   let K_tail := kernelTail K R₀
   -- Step 2: Show K_sing is integrable (compact support + locally integrable)
   have hK_sing_int : Integrable K_sing volume := by
-    show Integrable (kernelSingular K R₀) volume
+    change Integrable (kernelSingular K R₀) volume
     unfold kernelSingular
     have heq : (fun x => K x * (closedBall (0 : E) R₀).indicator (fun _ => (1 : ℝ)) x) =
                (closedBall (0 : E) R₀).indicator K := by
@@ -852,7 +852,8 @@ theorem schwartz_bilinear_translation_decay_proof
   --   = ∫ g(w) H(w+a) dw  (translation w = y-a)
   --   = ∫ g(w) H(w-(-a)) dw
   --
-  -- We proved: Tendsto (fun b => ∫ g(w) H(w-b)) (cocompact E) (nhds 0)  [h_fK_vanish + convolution theorem]
+  -- We proved: Tendsto (fun b => ∫ g(w) H(w-b)) (cocompact E) (nhds 0)  [h_fK_vanish + convolution
+  -- theorem]
   -- Composing with negation: Tendsto (fun a => ∫ g(w) H(w-(-a))) (cocompact E) (nhds 0)
   -- Define H(y) = (f⋆K)(y) = ∫ f(x) K(x-y) dx
   let H := fun y => ∫ x, f x * (K (x - y) : ℂ)
@@ -1042,7 +1043,7 @@ theorem schwartz_bilinear_translation_decay_proof
                 simp only [mem_sphere_zero_iff_norm]
                 exact hxy_not_sphere
             · -- Case 2: ‖x - y₀‖ < R₀ (inside ball, indicator = 0 in neighborhood)
-              push_neg at hz_outside
+              push Not at hz_outside
               have hz_inside : ‖x - y₀‖ < R₀ := lt_of_le_of_ne hz_outside hxy_not_sphere
               -- K_tail is locally 0: the indicator is 0 on interior of ball
               -- In a neighborhood of x - y₀, indicator = 0, so K * indicator = 0
