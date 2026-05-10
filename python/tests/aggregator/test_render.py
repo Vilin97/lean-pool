@@ -12,6 +12,7 @@ from lean_pool.aggregator.render import (
     canonical_key,
     count_lean_loc,
     load_decisions,
+    load_pool_repos,
     package_key,
     read_toolchain,
     render_table,
@@ -126,9 +127,12 @@ def test_render_table_handles_missing_optional_fields() -> None:
 
     table = render_table(manifest)
 
-    # Build column is the last cell on the row; expect the missing-glyph.
     package_row = next(line for line in table.splitlines() if "acme/demo" in line)
-    assert package_row.rstrip().endswith("| – |")
+    cells = [cell.strip() for cell in package_row.split("|")]
+    # Build glyph sits in the Build column (index 8); the trailing In
+    # Pool cell is blank when no pool_repos is provided.
+    assert cells[8] == "–"
+    assert cells[9] == ""
 
 
 def test_render_table_escapes_pipes_and_newlines_in_description() -> None:
@@ -536,5 +540,119 @@ def test_render_table_lean_column_blank_without_clone(tmp_path: Path) -> None:
 
     package_row = next(line for line in table.splitlines() if "acme/demo" in line)
     cells = [cell.strip() for cell in package_row.split("|")]
-    # Cells: ['', stars, name, description, license, lean, updated, build, '']
+    # Cells: ['', stars, name, description, license, lean, loc, updated,
+    # build, in_pool, '']
     assert cells[5] == ""
+
+
+def test_load_pool_repos_collects_github_repo_keys(tmp_path: Path) -> None:
+    """Each ``source.github_repo`` becomes a canonical key in the result."""
+    path = tmp_path / "projects.yml"
+    path.write_text(
+        "projects:\n"
+        "  - slug: alpha\n"
+        "    source:\n"
+        "      github_repo: Acme/Demo\n"
+        "  - slug: beta\n"
+        "    source:\n"
+        "      github_repo: other/repo.lean\n"
+    )
+
+    assert load_pool_repos(path) == {"acme/demo", "other/repo"}
+
+
+def test_load_pool_repos_ignores_projects_without_github_repo(tmp_path: Path) -> None:
+    """Projects with only arxiv/doi/url sources contribute no keys."""
+    path = tmp_path / "projects.yml"
+    path.write_text(
+        "projects:\n"
+        "  - slug: alpha\n"
+        "    source:\n"
+        "      arxiv: '2602.03716'\n"
+        "  - slug: beta\n"
+        "    source:\n"
+        "      github_repo: kept/here\n"
+    )
+
+    assert load_pool_repos(path) == {"kept/here"}
+
+
+def test_load_pool_repos_missing_file_returns_empty(tmp_path: Path) -> None:
+    """A missing projects.yml is the same as no merged candidates."""
+    assert load_pool_repos(tmp_path / "absent.yml") == set()
+
+
+def test_load_pool_repos_invalid_yaml_returns_empty(tmp_path: Path) -> None:
+    """A malformed file logs and returns empty rather than crashing render."""
+    path = tmp_path / "projects.yml"
+    path.write_text("projects:\n  - : : :\n  bad indent\n")
+
+    assert load_pool_repos(path) == set()
+
+
+def test_load_pool_repos_skips_malformed_entries(tmp_path: Path) -> None:
+    """Non-mapping projects, missing slashes, and non-string repos are skipped."""
+    path = tmp_path / "projects.yml"
+    path.write_text(
+        "projects:\n"
+        "  - slug: ok\n"
+        "    source:\n"
+        "      github_repo: kept/here\n"
+        "  - slug: bare-source-string\n"
+        "    source: arxiv:1234.5678\n"
+        "  - slug: missing-slash\n"
+        "    source:\n"
+        "      github_repo: noslash\n"
+        "  - slug: non-string\n"
+        "    source:\n"
+        "      github_repo: 42\n"
+    )
+
+    assert load_pool_repos(path) == {"kept/here"}
+
+
+def test_render_table_includes_in_pool_column_header() -> None:
+    """The In Pool column header sits at the right edge of the table."""
+    table = render_table(_manifest([_package(stars=1)]))
+
+    header_line = table.splitlines()[0]
+    separator_line = table.splitlines()[1]
+    assert "| In Pool |" in header_line
+    assert header_line.index("| Build ") < header_line.index("| In Pool ")
+    columns = [cell.strip() for cell in separator_line.split("|")]
+    # Last data column should be center-aligned via ``:---:``.
+    assert columns[9] == ":---:"
+
+
+def test_render_table_marks_pool_repos_with_check() -> None:
+    """Rows whose canonical key is in pool_repos render ✓ in the last cell."""
+    merged = _package(
+        full_name="acme/merged",
+        repo_url="https://github.com/acme/merged",
+        stars=1,
+    )
+    other = _package(
+        full_name="acme/other",
+        repo_url="https://github.com/acme/other",
+        stars=1,
+    )
+
+    table = render_table(
+        _manifest([merged, other]),
+        pool_repos={"acme/merged"},
+    )
+
+    merged_row = next(line for line in table.splitlines() if "acme/merged" in line)
+    other_row = next(line for line in table.splitlines() if "acme/other" in line)
+    assert merged_row.rstrip().endswith("| ✓ |")
+    assert other_row.rstrip().endswith("|  |")
+
+
+def test_render_table_in_pool_column_blank_when_pool_repos_omitted() -> None:
+    """Without ``pool_repos`` every row's In Pool cell is blank."""
+    package = _package(stars=1)
+
+    table = render_table(_manifest([package]))
+
+    package_row = next(line for line in table.splitlines() if "acme/demo" in line)
+    assert package_row.rstrip().endswith("|  |")
