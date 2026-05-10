@@ -36,7 +36,6 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
-<<<<<<< HEAD
   - slug: partial-regularity
     title: Almost all primes are partially regular
     entry_module: LeanPool.PartialRegularity
@@ -54,7 +53,6 @@ projects:
     tags:
       - number-theory
       - asymptotics
-=======
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
@@ -103,4 +101,3 @@ projects:
     tags:
       - number-theory
       - combinatorics
->>>>>>> origin/main
