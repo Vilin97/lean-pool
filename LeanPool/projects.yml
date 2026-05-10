@@ -191,3 +191,17 @@ projects:
       - number-theory
       - quadratic-forms
       - geometry-of-numbers
+  - slug: sensitivity
+    title: 'Sensitivity Conjecture: √(deg) ≤ sensitivity'
+    entry_module: LeanPool.Sensitivity
+    authors:
+      - Samuel Schlesinger
+    source:
+      url: https://github.com/SamuelSchlesinger/sensitivity-conjecture
+      github_repo: samuelschlesinger/sensitivity-conjecture
+    status: verified
+    main_declarations:
+      - LeanPoolSensitivity.sensitivity_ge_sqrt_degree
+    tags:
+      - combinatorics
+      - boolean-functions
