@@ -7,7 +7,6 @@ import Mathlib.NumberTheory.Bernoulli
 import Mathlib.Data.Nat.Choose.Sum
 import Mathlib.RingTheory.PowerSeries.WellKnown
 import Mathlib.Tactic
--- size-limit-ok: imported as a single module from upstream; thematic split planned
 
 
 /-! # Fel's Conjecture for Numerical Semigroups -/
