@@ -34,7 +34,7 @@ lemma fderiv_equilibriumMaxwellian (ρ T : ℝ) (hT : 0 < T) (v : Fin 3 → ℝ)
   have hq_smooth : ContDiff ℝ ⊤ (fun w : Fin 3 → ℝ => -(normSq w) / (2 * T)) :=
     contDiff_negNormSq_div T
   have hq_diff : Differentiable ℝ (fun w : Fin 3 → ℝ => -(normSq w) / (2 * T)) :=
-    hq_smooth.differentiable le_top
+    hq_smooth.differentiable WithTop.top_ne_zero
   -- eM = pf • (exp ∘ q)
   have heM_eq : equilibriumMaxwellian ρ T =
       (ρ / (2 * π * T) ^ ((3:ℝ)/2)) •

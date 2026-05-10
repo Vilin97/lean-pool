@@ -16,7 +16,6 @@ import LeanPool.Clawristotle.FlatTorus3Lemmas
 import LeanPool.Clawristotle.GaussianHelpers
 import LeanPool.Clawristotle.IteratedDerivHelpers
 import LeanPool.Clawristotle.LogBoundHelpers
-import LeanPool.Clawristotle.MaxwellMoleculesTheorem42
 import LeanPool.Clawristotle.NewtonianPotential
 import LeanPool.Clawristotle.SchwartzDecayDefs
 import LeanPool.Clawristotle.Section2

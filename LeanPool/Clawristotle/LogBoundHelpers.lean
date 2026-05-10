@@ -3,10 +3,12 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import Mathlib
 import LeanPool.Clawristotle.Defs
 import LeanPool.Clawristotle.TorusDefs
 import LeanPool.Clawristotle.TorusInstance
+import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Topology.Order.Compact
 
 open ContinuousLinearMap Real Set VML
 
@@ -49,7 +51,7 @@ lemma op_norm_bound_from_basis (L : (Fin 3 → ℝ) →L[ℝ] ℝ) {C : ℝ}
          _ = 3 * (‖x‖ * C) := by simp
          _ = 3 * C * ‖x‖ := by ring
 
-lemma mvt_test (g : (Fin 3 → ℝ) → ℝ) (hg_diff : Differentiable ℝ g) 
+lemma mvt_test (g : (Fin 3 → ℝ) → ℝ) (hg_diff : Differentiable ℝ g)
     (Cg : ℝ) (Kg : ℕ) (hCg : 0 ≤ Cg)
     (bound : ∀ v, ‖fderiv ℝ g v‖ ≤ Cg * (1 + ‖v‖)^Kg) :
     ∀ v, |g v| ≤ |g 0| + Cg * (1 + ‖v‖)^(Kg + 1) := by
@@ -81,11 +83,9 @@ lemma mvt_test (g : (Fin 3 → ℝ) → ℝ) (hg_diff : Differentiable ℝ g)
   calc |g v| ≤ |g 0| + |g v - g 0| := by linarith
        _ ≤ |g 0| + Cg * (1 + ‖v‖)^Kg * ‖v‖ := by linarith
        _ ≤ |g 0| + Cg * (1 + ‖v‖)^Kg * (1 + ‖v‖) := by
-         apply add_le_add_left
-         apply mul_le_mul_of_nonneg_left
-         · exact le_add_of_nonneg_left zero_le_one
-         · have hv : 0 ≤ 1 + ‖v‖ := by positivity
-           exact mul_nonneg hCg (pow_nonneg hv _)
+         have hX : (0:ℝ) ≤ Cg * (1 + ‖v‖)^Kg :=
+           mul_nonneg hCg (pow_nonneg (by positivity) _)
+         nlinarith [hX, norm_nonneg v]
        _ = |g 0| + Cg * (1 + ‖v‖)^(Kg + 1) := by ring
 
 lemma log_f_zero_bound (f : Torus3 → (Fin 3 → ℝ) → ℝ)

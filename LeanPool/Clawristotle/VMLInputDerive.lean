@@ -81,12 +81,15 @@ private def VMLInput.isMaxwellian_at (p : VMLInput X) (x : X) : IsMaxwellian (p.
   steady_state_is_local_maxwellian X p.f p.Ψ p.hΨ p.hf_pos
     p.hf_smooth p.hf_int p.hD_zero p.hScoreForm p.hPSD_cont p.hPSD_inner p.hPSD_outer x
 
+/-- The local log-density parameter `a(x)` extracted from the Maxwellian form of `p.f`. -/
 noncomputable def VMLInput.a_loc (p : VMLInput X) : X → ℝ :=
   fun x => (p.isMaxwellian_at x).choose
 
+/-- The local drift parameter `b(x)` extracted from the Maxwellian form of `p.f`. -/
 noncomputable def VMLInput.b_loc (p : VMLInput X) : X → (Fin 3 → ℝ) :=
   fun x => (p.isMaxwellian_at x).choose_spec.choose
 
+/-- The local inverse-temperature parameter `c(x)` extracted from the Maxwellian form of `p.f`. -/
 noncomputable def VMLInput.c_loc (p : VMLInput X) : X → ℝ :=
   fun x => (p.isMaxwellian_at x).choose_spec.choose_spec.choose
 

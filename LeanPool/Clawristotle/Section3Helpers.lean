@@ -47,7 +47,7 @@ lemma analysis_fluxFactor
     ring_nf
     · erw [ fderiv_comp ] <;> norm_num [ H, ne_of_gt (hf_pos v) ]; ring
     · rw [ fderiv_zero_of_not_differentiableAt ]
-      · rw [ fderiv_zero_of_not_differentiableAt H ] ; norm_num
+      · rw [ fderiv_zero_of_not_differentiableAt H ]; norm_num
       · exact fun h => H <| by
           simpa [ Real.exp_log (hf_pos _) ] using
             h.exp.congr_of_eventuallyEq
@@ -477,22 +477,37 @@ lemma affine_gradient_antiderivative (h : (Fin 3 → ℝ) → ℝ) (b : Fin 3 �
       simp only [map_sum, map_smul, smul_eq_mul, mul_comm]
     simp_all [two_mul]
     ring
-  intros v
-  have : ∫ t in (0 : ℝ)..1, deriv (fun t => h (t • v)) t = h v - h 0 := by
-    have hint : IntervalIntegrable (deriv (fun t => h (t • v))) MeasureTheory.volume 0 1 :=
-      Continuous.intervalIntegrable
-        (by rw [show deriv (fun t => h (t • v)) = fun t => (b + 2 * c₀ • t • v) ⬝ᵥ v
-              from funext fun t => h_deriv v t]
-            continuity) 0 1
+  intro v
+  -- The integrand `deriv (t ↦ h (t • v))` is the affine function
+  -- `t ↦ b ⬝ᵥ v + (2 c₀ ‖v‖²) t`.
+  have hderiv_eq : deriv (fun t => h (t • v)) = fun t : ℝ => b ⬝ᵥ v + (2 * c₀ * normSq v) * t := by
+    funext t
+    show deriv (fun t => h (t • v)) t = b ⬝ᵥ v + (2 * c₀ * normSq v) * t
+    rw [h_deriv v t]
+    simp only [dotProduct, normSq, Fin.sum_univ_three, Pi.add_apply, Pi.smul_apply,
+      Pi.mul_apply, Pi.ofNat_apply, smul_eq_mul]
+    ring
+  have hint : IntervalIntegrable (deriv (fun t => h (t • v))) MeasureTheory.volume 0 1 := by
+    rw [hderiv_eq]; exact (by continuity : Continuous _).intervalIntegrable 0 1
+  -- By the fundamental theorem of calculus, the integral over `[0, 1]` is `h v - h 0`.
+  have hFTC : ∫ t in (0 : ℝ)..1, deriv (fun t => h (t • v)) t = h v - h 0 := by
     have := intervalIntegral.integral_deriv_eq_sub
       (f := fun t => h (t • v))
       (fun t _ => DifferentiableAt.comp t
         (hh_smooth.contDiffAt.differentiableAt (by norm_num))
         (differentiableAt_id.smul_const _))
       hint
-    simp at this; linarith
-  simp_all [VML.normSq]
-  norm_num [mul_assoc, mul_comm, mul_left_comm, Fin.sum_univ_three, dotProduct] at *; linarith!
+    simpa using this
+  -- Evaluate that integral explicitly: ∫₀¹ (b ⬝ᵥ v + (2 c₀ ‖v‖²) t) dt = b ⬝ᵥ v + c₀ ‖v‖².
+  have hval : ∫ t in (0 : ℝ)..1, deriv (fun t => h (t • v)) t = b ⬝ᵥ v + c₀ * normSq v := by
+    have hcongr : (∫ t in (0 : ℝ)..1, deriv (fun t => h (t • v)) t)
+        = ∫ t in (0 : ℝ)..1, (b ⬝ᵥ v + (2 * c₀ * normSq v) * t) :=
+      intervalIntegral.integral_congr (fun t _ => congrFun hderiv_eq t)
+    rw [hcongr, intervalIntegral.integral_add intervalIntegrable_const
+        ((by continuity : Continuous fun t : ℝ => (2 * c₀ * normSq v) * t).intervalIntegrable 0 1),
+      intervalIntegral.integral_const, intervalIntegral.integral_const_mul, integral_id]
+    simp only [smul_eq_mul]; ring
+  linarith [hFTC, hval]
 
 
 end VML

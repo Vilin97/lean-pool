@@ -91,7 +91,10 @@ lemma UniformSchwartzDecay.integrable_poly_mul {f : Torus3 → (Fin 3 → ℝ) �
   have hb := hbound x v
   simp [iteratedFDeriv_zero_eq_comp] at hb
   have hv_pos : (0 : ℝ) < (1 + ‖v‖) ^ 4 := by positivity
-  rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (by positivity)]
+  have hMnn : (0 : ℝ) ≤ (1 + ‖v‖) ^ M := by positivity
+  -- `Continuous.mul` produces a `Pi` product; unfold it pointwise before the abs rewrites.
+  simp only [Pi.mul_apply, Pi.add_apply, Pi.one_apply, Real.norm_eq_abs, abs_mul,
+    abs_of_nonneg hMnn]
   rw [le_div_iff₀ hv_pos]
   calc (1 + ‖v‖) ^ M * |f x v| * (1 + ‖v‖) ^ 4
       = |f x v| * ((1 + ‖v‖) ^ M * (1 + ‖v‖) ^ 4) := by ring

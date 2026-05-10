@@ -169,7 +169,7 @@ lemma gaussian_first_moment (a : ℝ) (b : Fin 3 → ℝ) (c : ℝ) (hc : c < 0)
         grind
       simp_all [ add_mul, div_eq_mul_inv, MeasureTheory.integral_const_mul ]
       rw [ MeasureTheory.integral_add ] at h_gauss_integral <;> norm_num at *
-      · rw [ MeasureTheory.integral_const_mul ] at h_gauss_integral ; linarith
+      · rw [ MeasureTheory.integral_const_mul ] at h_gauss_integral; linarith
       · have h_integrable : MeasureTheory.Integrable
             (fun v : ℝ => v * Real.exp (c * v^2 + b * v))
             MeasureTheory.MeasureSpace.volume := by
@@ -199,12 +199,12 @@ lemma gaussian_first_moment (a : ℝ) (b : Fin 3 → ℝ) (c : ℝ) (hc : c < 0)
               convert @this ( -c / 2) (by linarith) 1 (by norm_num) using 3
               · simp [Real.rpow_one]
               · congr 1; ring
-            convert h_integrable.norm using 2 ; norm_num [ abs_mul, abs_of_nonneg, Real.exp_nonneg ]
+            convert h_integrable.norm using 2; norm_num [ abs_mul, abs_of_nonneg, Real.exp_nonneg ]
           exact MeasureTheory.Integrable.mono'
             (h_integrable.mul_const _)
             (Continuous.aestronglyMeasurable (by continuity))
             (Filter.Eventually.of_forall h_gauss)
-        convert h_integrable.mul_const (Real.exp a) using 2 ; ring_nf
+        convert h_integrable.mul_const (Real.exp a) using 2; ring_nf
         rw [ mul_assoc, ← Real.exp_add ]
       · have h_gauss_integral :
             ∫ v : ℝ, Real.exp (a + b * v + c * v^2) =
@@ -284,7 +284,7 @@ lemma gaussian_first_moment (a : ℝ) (b : Fin 3 → ℝ) (c : ℝ) (hc : c < 0)
       congr 1
       erw [← MeasureTheory.integral_fintype_prod_eq_prod]; rfl
     simp_all [ Finset.prod_erase_mul _ _ (Finset.mem_univ i) ]
-    rw [ ← Finset.mul_prod_erase _ _ (Finset.mem_univ i) ] ; ring_nf
+    rw [ ← Finset.mul_prod_erase _ _ (Finset.mem_univ i) ]; ring_nf
     simp [ Real.exp_add, mul_add, add_comm,
       add_left_comm, mul_assoc, mul_comm, mul_left_comm,
       MeasureTheory.integral_const_mul,
@@ -399,7 +399,7 @@ lemma analysis_gaussian_integrability
     exact absurd (h_integrable.measure_univ_lt_top) (by norm_num)
   · have := h_integrable.comp_smul (inv_ne_zero hb0)
     simp_all [ mul_assoc, mul_comm, mul_left_comm ]
-    convert absurd (this.lintegral_lt_top) _ ; norm_num [ Real.exp_pos ]
+    convert absurd (this.lintegral_lt_top) _; norm_num [ Real.exp_pos ]
     have h_exp_inf :
         ∫⁻ (x : ℝ), ENNReal.ofReal (Real.exp x) ≥
         ∫⁻ (x : ℝ) in Set.Ioi 0,

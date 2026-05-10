@@ -168,16 +168,16 @@ lemma flux_component_aestronglyMeasurable
         ((continuous_apply k).comp (continuous_fst.sub continuous_snd)).mul
         ((continuous_apply k).comp (continuous_fst.sub continuous_snd)))).measurable
     · -- innerLandauMatrix (p.1-p.2) i j is continuous
-      simp only [innerLandauMatrix, sub_apply, HSMul.hSMul, SMul.smul,
-        one_apply, vecMulVec_apply]
+      simp only [innerLandauMatrix_apply]
       apply Continuous.measurable
       apply Continuous.sub
       · by_cases h : i = j
-        · simp only [h, ↓reduceIte, normSq, dotProduct, mul_one]
+        · simp only [h, ↓reduceIte, normSq, dotProduct]
           exact continuous_finset_sum _ fun k _ =>
             ((continuous_apply k).comp (continuous_fst.sub continuous_snd)).mul
             ((continuous_apply k).comp (continuous_fst.sub continuous_snd))
-        · simp [h]; exact continuous_const
+        · simp only [h, ↓reduceIte]
+          exact continuous_const
       · exact ((continuous_apply i).comp (continuous_fst.sub continuous_snd)).mul
               ((continuous_apply j).comp (continuous_fst.sub continuous_snd))
   · -- The vector part is continuous

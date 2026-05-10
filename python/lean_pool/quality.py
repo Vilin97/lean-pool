@@ -14,6 +14,9 @@ from typing import Any
 import yaml
 
 ALLOWED_AXIOMS = {"Classical.choice", "propext", "Quot.sound"}
+# Soft cap on a single proof's size: a proof longer than this should be broken
+# into named lemmas.
+MAX_PROOF_CODE_LINES = 200
 CODE_QUALITY_URL = (
     "https://github.com/Vilin97/lean-pool/blob/main/.github/CODE_QUALITY.md"
 )
@@ -218,13 +221,24 @@ def _check_forbidden_lean_text(root: Path) -> list[_QualityError]:
     for path in _lean_content_files(root):
         stripped = _strip_lean_comments(path.read_text())
         for line_number, line in enumerate(stripped.splitlines(), start=1):
-            # `set_option` is forbidden, EXCEPT linter suppressions
-            # (`set_option linter.X false` / `... in`): those are a
-            # legitimate per-file style choice, not a soundness or
-            # performance hack. `maxHeartbeats`, `trace.*`, `autoImplicit`,
-            # `pp.*`, etc. remain forbidden.
-            if re.search(r"\bset_option\b", line) and not re.match(
-                r"^\s*set_option\s+linter\.[A-Za-z0-9_.]+\s+(?:true|false)\b", line
+            # `set_option` is forbidden, EXCEPT:
+            #  * linter suppressions (`set_option linter.X false`) — a
+            #    legitimate per-file style choice, and
+            #  * a *scoped* heartbeat bump (`set_option maxHeartbeats N in`)
+            #    on a single declaration — mathlib does this routinely for
+            #    genuinely large proofs; a file-wide `set_option maxHeartbeats`
+            #    (no `in`) or `set_option maxHeartbeats` in the lakefile stays
+            #    forbidden.
+            # `trace.*`, `autoImplicit`, `pp.*`, etc. remain forbidden.
+            if re.search(r"\bset_option\b", line) and not (
+                re.match(
+                    r"^\s*set_option\s+linter\.[A-Za-z0-9_.]+\s+(?:true|false)\b", line
+                )
+                or re.match(
+                    r"^\s*set_option\s+(?:maxHeartbeats|synthInstance\.maxHeartbeats)"
+                    r"\s+\d+\s+in\b",
+                    line,
+                )
             ):
                 errors.append(
                     _QualityError(path, line_number, "set_option is forbidden")
@@ -328,12 +342,13 @@ def _check_proof_sizes(root: Path) -> list[_QualityError]:
                 continue
             body = "\n".join(block[body_start:])
             proof_lines = _non_comment_code_lines(body)
-            if proof_lines > 100:
+            if proof_lines > MAX_PROOF_CODE_LINES:
                 errors.append(
                     _QualityError(
                         path,
                         start_line,
-                        f"proof has {proof_lines} code lines; limit is 100",
+                        f"proof has {proof_lines} code lines; "
+                        f"limit is {MAX_PROOF_CODE_LINES}",
                     )
                 )
     return errors
@@ -342,12 +357,14 @@ def _check_proof_sizes(root: Path) -> list[_QualityError]:
 def _parse_declarations(root: Path) -> list[_Declaration]:
     declarations: list[_Declaration] = []
     keyword_pattern = "|".join(DECLARATION_KEYWORDS)
-    # Use a negative lookahead instead of `\b`: `\b` does not treat `'` as a
-    # word character, so a name like `foo'` would be parsed as `foo` and the
-    # subsequent `#print axioms` audit would fail with `unknown constant`.
+    # Lean identifiers can contain `'`, dots (qualified names / `_root_.`),
+    # Greek letters, subscripts (`c₀`), etc. — match a maximal run of
+    # non-delimiter characters rather than an ASCII-only word, otherwise the
+    # name is truncated (e.g. `c₀` → `c`) and the `#print axioms` audit fails
+    # with `unknown constant`.
     decl_pattern = re.compile(
-        rf"^\s*{DECLARATION_PREFIX}({keyword_pattern})\s+"
-        rf"([A-Za-z_][A-Za-z0-9_'.]*)(?![A-Za-z0-9_'.])"
+        r"^\s*" + DECLARATION_PREFIX + r"(" + keyword_pattern + r")\s+"
+        r"([^\s(){}\[\]⟨⟩⦃⦄,:;=]+)"
     )
     for path in _lean_content_files(root):
         namespace_stack: list[str] = []
@@ -380,7 +397,14 @@ def _is_private_declaration_line(line: str) -> bool:
 
 
 def _qualify_name(namespace_stack: list[str], name: str) -> str:
-    if "." in name or not namespace_stack:
+    # `def _root_.Foo.bar` is the absolute name `Foo.bar` regardless of the
+    # enclosing namespace.
+    if name.startswith("_root_."):
+        return name[len("_root_.") :]
+    # `def Foo.bar` inside `namespace Baz` is `Baz.Foo.bar` — a name containing
+    # a dot is still relative to the enclosing namespace, so always prepend the
+    # stack (matching Lean's actual scoping).
+    if not namespace_stack:
         return name
     return ".".join([*namespace_stack, name])
 

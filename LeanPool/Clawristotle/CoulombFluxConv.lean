@@ -185,7 +185,7 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
   refine hasFDerivAt_integral_of_dominated_of_fderiv_le
     (F' := fun v u => landauMatrix coulombKernel u i j • fderiv ℝ g (v - u))
     (bound := fun u => ‖u‖⁻¹ * (D / (1 + ‖v₀ - u‖) ^ 4))
-    (ε := 1) one_pos
+    (s := Metric.ball v₀ 1) (Metric.ball_mem_nhds v₀ one_pos)
     ?_ ?_ ?_ ?_ ?_ ?_
   · -- F measurable
     apply Filter.Eventually.of_forall
@@ -238,8 +238,7 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
     have h_bound_int : Integrable (fun w : Fin 3 → ℝ => D / (1 + ‖w‖) ^ 4) :=
       inverse_poly_integrable D
     have h_bound_meas : AEStronglyMeasurable (fun w : Fin 3 → ℝ => D / (1 + ‖w‖) ^ 4) volume :=
-      ((continuous_const.div ((continuous_const.add continuous_norm).pow 4)
-        (fun w => by positivity)).measurable).aestronglyMeasurable
+      h_bound_int.aestronglyMeasurable
     have h_w_int := inv_norm_bounded_integrable h_bound_fun h_bound_int h_bound_meas v₀
     -- h_w_int : Integrable (fun w => ‖v₀ - w‖⁻¹ * (D / (1+‖w‖)^4))
     -- Substitute u = v₀ - w to get the u-coordinate form

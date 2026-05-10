@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
 import LeanPool.Clawristotle.CoulombKernel
+import Mathlib.Analysis.SpecialFunctions.Log.Base
 
 /-!
 # Newtonian Potential Bounds and Inverse-Norm Integrability
@@ -256,7 +257,7 @@ lemma inv_norm_local_integrable (R : ℝ) (hR : 0 < R) :
       congr 1
       rw [Real.norm_eq_abs, abs_of_nonneg (inv_nonneg.mpr (norm_nonneg z))]
   rwa [ MeasureTheory.IntegrableOn, MeasureTheory.Measure.restrict_congr_set ]
-  rw [ MeasureTheory.ae_eq_set ] ; norm_num
+  rw [ MeasureTheory.ae_eq_set ]; norm_num
   exact MeasureTheory.measure_mono_null (fun x hx => hx.2) (MeasureTheory.measure_singleton 0)
 
 
@@ -276,7 +277,7 @@ lemma convolution_local_int_schwartz
         (fun w => ‖v - w‖⁻¹ * g w)
         (Metric.closedBall v 1) := by
     obtain ⟨M, hM⟩ : ∃ M > 0, ∀ w ∈ Metric.closedBall v 1, |g w| ≤ M := by
-      obtain ⟨ C, hC₀, hC ⟩ := hg_decay 0 ; exact ⟨ C, hC₀, fun w hw => by simpa using hC w ⟩
+      obtain ⟨ C, hC₀, hC ⟩ := hg_decay 0; exact ⟨ C, hC₀, fun w hw => by simpa using hC w ⟩
     have h_inv_integrable :
         MeasureTheory.IntegrableOn (fun w => ‖v - w‖⁻¹) (Metric.closedBall v 1) := by
       rw [ ← MeasureTheory.integrable_indicator_iff (measurableSet_closedBall) ] at *

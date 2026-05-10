@@ -25,10 +25,10 @@ projects:
       arxiv: "2603.15929"
     status: verified
     main_declarations:
-      - Theorem42
-      - CoulombConcreteTheorem42
-      - MaxwellMoleculesTheorem42
-      - CoulombNonvacuous
+      - VML.Theorem42
+      - VML.CoulombConcreteTheorem42
+      - VML.CoulombConcreteTheorem42_classify_T
+      - VML.CoulombConcreteTheorem42_nonvacuous
     tags:
       - pde
       - kinetic-theory

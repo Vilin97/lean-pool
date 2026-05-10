@@ -30,7 +30,7 @@ lemma landau_bound (z u : Fin 3 → ℝ) :
         norm_num [ show z 0 = 0 by nlinarith, show z 1 = 0 by nlinarith,
                    show z 2 = 0 by nlinarith, Matrix.mulVec ]
       · exact False.elim <| ‹¬Real.sqrt (z ⬝ᵥ z) = 0› <| le_antisymm ‹_› <| Real.sqrt_nonneg _
-      · rw [ Real.sqrt_eq_zero' ] at * ; linarith
+      · rw [ Real.sqrt_eq_zero' ] at *; linarith
       · suffices h_simp :
             abs ((Real.sqrt (dotProduct z z))⁻¹ ^ 3 *
               (dotProduct z z * dotProduct u u - (dotProduct z u) ^ 2)) ≤
@@ -38,7 +38,7 @@ lemma landau_bound (z u : Fin 3 → ℝ) :
           convert h_simp using 2
           norm_num [ Matrix.mulVec, dotProduct ]
           ring_nf
-          norm_num [ Fin.sum_univ_three, Matrix.one_apply ] ; ring
+          norm_num [ Fin.sum_univ_three, Matrix.one_apply ]; ring
         suffices h_cancel :
             abs (z ⬝ᵥ z * u ⬝ᵥ u - (z ⬝ᵥ u) ^ 2) ≤
             (Real.sqrt (z ⬝ᵥ z)) ^ 2 * (Real.sqrt (u ⬝ᵥ u)) ^ 2 by
@@ -70,11 +70,11 @@ lemma tendsto_landau_quadratic_diag
               u ∈ U → v ∈ U → eucNorm (G u - G v) ≤ L * eucNorm (u - v) := by
           obtain ⟨U, hU⟩ : ∃ U : Set (Fin 3 → ℝ), IsOpen U ∧ x ∈ U ∧
               ∃ L : ℝ, ∀ u ∈ U, ∀ v ∈ U, ‖G u - G v‖ ≤ L * ‖u - v‖ := by
-            have hG_diff := hG.differentiable le_rfl
+            have hG_diff := hG.differentiable one_ne_zero
             obtain ⟨K, hK⟩ : ∃ K : ℝ, ∀ u ∈ Metric.closedBall x 1, ‖fderiv ℝ G u‖ ≤ K := by
               exact IsCompact.exists_bound_of_continuousOn
                 (ProperSpace.isCompact_closedBall x 1)
-                (hG.continuous_fderiv le_rfl |> Continuous.continuousOn)
+                (hG.continuous_fderiv one_ne_zero |> Continuous.continuousOn)
             refine ⟨ Metric.ball x 1, Metric.isOpen_ball, Metric.mem_ball_self one_pos, K,
               fun u hu v hv => ?_ ⟩
             exact (convex_ball x 1).norm_image_sub_le_of_norm_fderiv_le
@@ -414,16 +414,16 @@ lemma fubini_double_aestronglyMeasurable
         exact (continuous_sqrt.comp (continuous_finset_sum _ fun k _ =>
           ((continuous_apply k).comp (continuous_fst.sub continuous_snd)).mul
           ((continuous_apply k).comp (continuous_fst.sub continuous_snd)))).measurable
-      · simp only [innerLandauMatrix, sub_apply, HSMul.hSMul, SMul.smul,
-          one_apply, vecMulVec_apply]
+      · simp only [innerLandauMatrix_apply]
         apply Continuous.measurable
         apply Continuous.sub
         · by_cases h : i = j
-          · simp only [h, ↓reduceIte, normSq, dotProduct, mul_one]
+          · simp only [h, ↓reduceIte, normSq, dotProduct]
             exact continuous_finset_sum _ fun k _ =>
               ((continuous_apply k).comp (continuous_fst.sub continuous_snd)).mul
               ((continuous_apply k).comp (continuous_fst.sub continuous_snd))
-          · simp [h]; exact continuous_const
+          · simp only [h, ↓reduceIte]
+            exact continuous_const
         · exact ((continuous_apply i).comp (continuous_fst.sub continuous_snd)).mul
                 ((continuous_apply j).comp (continuous_fst.sub continuous_snd))
     · -- flux component: continuous hence measurable

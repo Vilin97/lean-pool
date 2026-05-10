@@ -96,7 +96,7 @@ lemma periodicLift_shift (f : Torus3 → ℝ) (x y : Fin 3 → ℝ)
   linarith
 
 /-- fderiv of the lift at two points that map to the same torus point are equal.
-    This follows because f̃(x) = f̃(x + n) for integer n, so the 1-jets agree. -/
+    This follows because f(x) = f(x + n) for integer n, so the 1-jets agree. -/
 lemma periodicLift_fderiv_eq (f : Torus3 → ℝ) (x y : Fin 3 → ℝ)
     (h : torusMk x = torusMk y) :
     fderiv ℝ (periodicLift f) x = fderiv ℝ (periodicLift f) y := by
@@ -104,13 +104,13 @@ lemma periodicLift_fderiv_eq (f : Torus3 → ℝ) (x y : Fin 3 → ℝ)
   have hshift : (fun z => periodicLift f (z + (x - y))) = periodicLift f := by
     ext z; exact periodicLift_shift f x y h z
   -- By fderiv_comp_add_right:
-  -- fderiv (fun z => f̃(z + (x-y))) y = fderiv f̃ (y + (x-y)) = fderiv f̃ x
+  -- fderiv (fun z => f(z + (x-y))) y = fderiv f (y + (x-y)) = fderiv f x
   have h1 : fderiv ℝ (fun z => periodicLift f (z + (x - y))) y =
              fderiv ℝ (periodicLift f) (y + (x - y)) := fderiv_comp_add_right (x - y)
   -- y + (x - y) = x
   have h2 : y + (x - y) = x := by ext i; simp [Pi.add_apply, Pi.sub_apply]
   rw [h2] at h1
-  -- But also fderiv (fun z => f̃(z + (x-y))) = fderiv f̃ (by hshift)
+  -- But also fderiv (fun z => f(z + (x-y))) = fderiv f (by hshift)
   rw [hshift] at h1
   exact h1.symm
 

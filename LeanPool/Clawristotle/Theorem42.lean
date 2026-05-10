@@ -14,9 +14,9 @@ States and proves the main abstract result: any smooth steady state of the
 Vlasov-Maxwell-Landau system satisfying `VelocityDecayConditions` is a global
 Maxwellian with E = 0 and B = const.
 
-**Physical Context (Non-Relativistic Limit):** 
-Note that this formalization assumes a strictly non-relativistic framework where 
-velocities $v \in \mathbb{R}^3$ are unbounded. This admits superluminal particles, 
+**Physical Context (Non-Relativistic Limit):**
+Note that this formalization assumes a strictly non-relativistic framework where
+velocities $v \in \mathbb{R}^3$ are unbounded. This admits superluminal particles,
 but is the standard mathematical setting for the classical Landau equation.
 -/
 

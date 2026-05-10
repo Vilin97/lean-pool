@@ -163,6 +163,210 @@ lemma psd_outer_integrable_coulomb
               ((1 + ‖v‖) ^ (2 * Kg) * f v) := by ring
 
 
+/-- The `∫_w ‖score · flux‖ ≤ C·(1+‖v‖)^{2Kg}·f(v)` bound used in
+    `fubini_double_integrable_coulomb`; split out to keep that proof under the
+    size limit. -/
+private lemma fubini_double_int_bound_coulomb
+    {f : (Fin 3 → ℝ) → ℝ} (hf_pos : ∀ v, 0 < f v)
+    {Cg : ℝ} {Kg : ℕ} (hCg_nn : 0 ≤ Cg)
+    (hGrad : ∀ v i, |fderiv ℝ f v (Pi.single i 1)| ≤ Cg * (1 + ‖v‖) ^ Kg * f v)
+    {F : (Fin 3 → ℝ) × (Fin 3 → ℝ) → ℝ}
+    (h_pw_bound : ∀ v w, |F (v, w)| ≤
+      3 * Cg * (1 + ‖v‖) ^ Kg * (‖v - w‖⁻¹ *
+        (∑ j : Fin 3, (f w * |vGrad f v j| + f v * |vGrad f w j|))))
+    {M₁ Md₀ Md₁ Md₂ : ℝ} (hMd_pos : 0 ≤ Md₀ + Md₁ + Md₂)
+    (hM₁b : ∀ v, ∫ w, ‖v - w‖⁻¹ * |f w| ≤ M₁)
+    (hMd₀b : ∀ v, ∫ w, ‖v - w‖⁻¹ * |vGrad f w 0| ≤ Md₀)
+    (hMd₁b : ∀ v, ∫ w, ‖v - w‖⁻¹ * |vGrad f w 1| ≤ Md₁)
+    (hMd₂b : ∀ v, ∫ w, ‖v - w‖⁻¹ * |vGrad f w 2| ≤ Md₂)
+    (h_f_abs : ∀ v, Integrable (fun w => ‖v - w‖⁻¹ * |f w|))
+    (h_dj_abs : ∀ j : Fin 3, ∀ v, Integrable (fun w => ‖v - w‖⁻¹ * |vGrad f w j|)) :
+    ∀ v, ∫ w, ‖F (v, w)‖ ≤
+      (9 * Cg ^ 2 * M₁ + 3 * Cg * (Md₀ + Md₁ + Md₂)) * ((1 + ‖v‖) ^ (2 * Kg) * f v) := by
+      intro v
+      -- Helper: f w = |f w| for positive f
+      have hf_eq_abs : ∀ w, f w = |f w| := fun w =>
+        (abs_of_pos (hf_pos w)).symm
+      -- Integrability of each summand
+      have h_each_int : ∀ j : Fin 3, Integrable
+          (fun w => ‖v - w‖⁻¹ *
+            (f w * |vGrad f v j| + f v * |vGrad f w j|)) := by
+        intro j
+        have key : (fun w => ‖v - w‖⁻¹ *
+              (f w * |vGrad f v j| + f v * |vGrad f w j|)) =
+            (fun w => |vGrad f v j| * (‖v - w‖⁻¹ * |f w|) +
+              f v * (‖v - w‖⁻¹ * |vGrad f w j|)) := by
+          ext w; conv_rhs => rw [abs_of_pos (hf_pos w)]
+          ring
+        rw [key]
+        exact ((h_f_abs v).const_mul _).add
+          ((h_dj_abs j v).const_mul _)
+      -- Each ∫ splits into const * ∫ + const * ∫
+      have h_split : ∀ j : Fin 3,
+          ∫ w, ‖v - w‖⁻¹ *
+            (f w * |vGrad f v j| + f v * |vGrad f w j|) =
+          |vGrad f v j| * (∫ w, ‖v - w‖⁻¹ * |f w|) +
+          f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|) := by
+        intro j
+        have : (fun w => ‖v - w‖⁻¹ *
+              (f w * |vGrad f v j| + f v * |vGrad f w j|)) =
+            (fun w => |vGrad f v j| * (‖v - w‖⁻¹ * |f w|) +
+              f v * (‖v - w‖⁻¹ * |vGrad f w j|)) := by
+          ext w; conv_rhs => rw [abs_of_pos (hf_pos w)]
+          ring
+        rw [this, integral_add ((h_f_abs v).const_mul _)
+              ((h_dj_abs j v).const_mul _),
+            integral_const_mul, integral_const_mul]
+      calc ∫ w, ‖F (v, w)‖
+          = ∫ w, |F (v, w)| :=
+            integral_congr_ae (ae_of_all _ fun w => Real.norm_eq_abs _)
+        _ ≤ ∫ w, 3 * Cg * (1 + ‖v‖) ^ Kg * (‖v - w‖⁻¹ *
+              ∑ j : Fin 3,
+                (f w * |vGrad f v j| + f v * |vGrad f w j|)) := by
+            apply integral_mono_of_nonneg
+              (ae_of_all _ fun _ => abs_nonneg _)
+            · apply Integrable.const_mul
+              have : (fun w => ‖v - w‖⁻¹ * ∑ j : Fin 3,
+                    (f w * |vGrad f v j| +
+                     f v * |vGrad f w j|)) =
+                  (fun w => ∑ j : Fin 3, ‖v - w‖⁻¹ *
+                    (f w * |vGrad f v j| +
+                     f v * |vGrad f w j|)) := by
+                ext w; rw [Finset.mul_sum]
+              rw [this]
+              exact integrable_finset_sum _ fun j _ =>
+                h_each_int j
+            · exact ae_of_all _ (h_pw_bound v)
+        _ = 3 * Cg * (1 + ‖v‖) ^ Kg * ∫ w, ‖v - w‖⁻¹ *
+              ∑ j : Fin 3,
+                (f w * |vGrad f v j| +
+                 f v * |vGrad f w j|) := by
+            rw [integral_const_mul]
+        _ = 3 * Cg * (1 + ‖v‖) ^ Kg *
+              ∑ j : Fin 3,
+                (|vGrad f v j| * (∫ w, ‖v - w‖⁻¹ * |f w|) +
+                 f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|)) := by
+            congr 1
+            rw [show (fun w => ‖v - w‖⁻¹ * ∑ j : Fin 3,
+                    (f w * |vGrad f v j| +
+                     f v * |vGrad f w j|)) =
+                (fun w => ∑ j : Fin 3, ‖v - w‖⁻¹ *
+                    (f w * |vGrad f v j| +
+                     f v * |vGrad f w j|)) from by
+                  ext w; rw [Finset.mul_sum],
+              integral_finset_sum _ fun j _ => h_each_int j]
+            congr 1; ext j; exact h_split j
+        _ ≤ (9 * Cg ^ 2 * M₁ + 3 * Cg * (Md₀ + Md₁ + Md₂)) * ((1 + ‖v‖) ^ (2 * Kg) * f v) := by
+            -- Use Finset.sum_le_sum to bound the sum
+            have hv1 : (1 : ℝ) ≤ 1 + ‖v‖ := by
+              linarith [norm_nonneg v]
+            have hpow : (1 : ℝ) ≤ (1 + ‖v‖) ^ Kg :=
+              one_le_pow₀ hv1
+            have hv_nn : (0 : ℝ) ≤ (1 + ‖v‖) ^ Kg :=
+              le_trans zero_le_one hpow
+            have hint_nn : 0 ≤
+                ∫ w, ‖v - w‖⁻¹ * |f w| :=
+              integral_nonneg fun w =>
+                mul_nonneg (inv_nonneg.mpr
+                  (norm_nonneg _)) (abs_nonneg _)
+            have hfv := le_of_lt (hf_pos v)
+            -- Bound each summand
+            have hj_bound : ∀ j : Fin 3,
+              |vGrad f v j| *
+                (∫ w, ‖v - w‖⁻¹ * |f w|) +
+              f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|) ≤
+                Cg * (1 + ‖v‖) ^ Kg * f v * M₁ +
+                f v * (∫ w, ‖v - w‖⁻¹ *
+                  |vGrad f w j|) := by
+              intro j
+              have h1 := mul_le_mul (hGrad v j)
+                (hM₁b v) hint_nn
+                (mul_nonneg (mul_nonneg hCg_nn hv_nn) hfv)
+              -- h1 : |vGrad f v j| * ∫ ≤ Cg*...*M₁; add `f v * ∫ …` on the right of both sides.
+              exact add_le_add_left h1 _
+            -- Sum the bounds
+            have hfin_bound :
+              ∑ j : Fin 3,
+                (|vGrad f v j| *
+                  (∫ w, ‖v - w‖⁻¹ * |f w|) +
+                 f v * (∫ w, ‖v - w‖⁻¹ *
+                  |vGrad f w j|)) ≤
+              ∑ j : Fin 3,
+                (Cg * (1 + ‖v‖) ^ Kg * f v * M₁ +
+                 f v * (∫ w, ‖v - w‖⁻¹ *
+                  |vGrad f w j|)) :=
+              Finset.sum_le_sum fun j _ => hj_bound j
+            -- Simplify RHS of hfin_bound using sum algebra
+            have hRHS_eq : ∑ j : Fin 3,
+                (Cg * (1 + ‖v‖) ^ Kg * f v * M₁ +
+                 f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|)) =
+              3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
+              f v * ∑ j : Fin 3,
+                (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|) := by
+              rw [Finset.sum_add_distrib]
+              congr 1
+              · simp [Finset.sum_const]
+              · rw [← Finset.mul_sum]
+            -- Bound ∑ ∫dⱼ by Md₀+Md₁+Md₂
+            have hd0v := hMd₀b v
+            have hd1v := hMd₁b v
+            have hd2v := hMd₂b v
+            have hMd_sum : ∑ j : Fin 3,
+                (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|) ≤
+                Md₀ + Md₁ + Md₂ := by
+              simp only [Fin.sum_univ_three]
+              exact add_le_add (add_le_add hd0v hd1v) hd2v
+            -- Total sum bound
+            have htotal :
+              ∑ j : Fin 3,
+                (|vGrad f v j| *
+                  (∫ w, ‖v - w‖⁻¹ * |f w|) +
+                 f v * (∫ w, ‖v - w‖⁻¹ *
+                  |vGrad f w j|)) ≤
+                3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
+                f v * (Md₀ + Md₁ + Md₂) := by
+              calc ∑ j : Fin 3, _ ≤ ∑ j : Fin 3,
+                    (Cg * (1 + ‖v‖) ^ Kg * f v * M₁ +
+                     f v * (∫ w, ‖v - w‖⁻¹ *
+                      |vGrad f w j|)) := hfin_bound
+                _ = 3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
+                    f v * ∑ j : Fin 3,
+                      (∫ w, ‖v - w‖⁻¹ *
+                        |vGrad f w j|) := hRHS_eq
+                _ ≤ 3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
+                    f v * (Md₀ + Md₁ + Md₂) :=
+                  add_le_add_right
+                    (mul_le_mul_of_nonneg_left hMd_sum hfv) _
+            -- Multiply by 3*Cg*(1+‖v‖)^Kg
+            have h3_nn : (0 : ℝ) ≤ 3 * Cg * (1 + ‖v‖) ^ Kg :=
+              mul_nonneg (mul_nonneg (by norm_num) hCg_nn) hv_nn
+            calc 3 * Cg * (1 + ‖v‖) ^ Kg *
+                ∑ j : Fin 3, ((|vGrad f v j| *
+                  (∫ w, ‖v - w‖⁻¹ * |f w|)) +
+                  f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|))
+              ≤ 3 * Cg * (1 + ‖v‖) ^ Kg *
+                (3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
+                 f v * (Md₀ + Md₁ + Md₂)) :=
+                mul_le_mul_of_nonneg_left htotal h3_nn
+              _ ≤ (9 * Cg ^ 2 * M₁ + 3 * Cg * (Md₀ + Md₁ + Md₂)) * ((1 + ‖v‖) ^ (2 * Kg) * f v) := by
+                rw [show 2 * Kg = Kg + Kg from by omega,
+                    pow_add]
+                have hP := hv_nn
+                have hMdf_nn : (0 : ℝ) ≤ Md₀ + Md₁ + Md₂ := hMd_pos
+                -- Key: P ≤ P*P since 1 ≤ P
+                have hPP : (1 + ‖v‖) ^ Kg ≤
+                    (1 + ‖v‖) ^ Kg * (1 + ‖v‖) ^ Kg :=
+                  le_mul_of_one_le_left hv_nn hpow
+                nlinarith [sq_nonneg Cg, hf_pos v,
+                  mul_nonneg hCg_nn hP,
+                  mul_nonneg hfv hMdf_nn,
+                  mul_nonneg (mul_nonneg hCg_nn hP)
+                    (mul_nonneg hfv hMdf_nn),
+                  mul_le_mul_of_nonneg_right hPP
+                    (mul_nonneg (mul_nonneg
+                      (by norm_num : (0:ℝ) ≤ 3)
+                      (mul_nonneg hCg_nn hfv)) hMdf_nn)]
+
 /-- The Fubini integrand (score · flux) is jointly integrable on the product space
     for the Coulomb kernel. Uses `integrable_prod_iff` with:
     - Joint measurability from measurability of each factor
@@ -269,193 +473,8 @@ lemma fubini_double_integrable_coulomb
           (∑ j : Fin 3, (f w * |vGrad f v j| + f v * |vGrad f w j|))) :=
       fun v w => fubini_double_pointwise_bound hf_pos h_score v w
     -- Bound on ∫_w |F(v,w)|
-    have h_int_bound : ∀ v, ∫ w, ‖F (v, w)‖ ≤
-        C_out * ((1 + ‖v‖) ^ (2 * Kg) * f v) := by
-      intro v
-      -- Helper: f w = |f w| for positive f
-      have hf_eq_abs : ∀ w, f w = |f w| := fun w =>
-        (abs_of_pos (hf_pos w)).symm
-      -- Integrability of each summand
-      have h_each_int : ∀ j : Fin 3, Integrable
-          (fun w => ‖v - w‖⁻¹ *
-            (f w * |vGrad f v j| + f v * |vGrad f w j|)) := by
-        intro j
-        have key : (fun w => ‖v - w‖⁻¹ *
-              (f w * |vGrad f v j| + f v * |vGrad f w j|)) =
-            (fun w => |vGrad f v j| * (‖v - w‖⁻¹ * |f w|) +
-              f v * (‖v - w‖⁻¹ * |vGrad f w j|)) := by
-          ext w; conv_rhs => rw [abs_of_pos (hf_pos w)]
-          ring
-        rw [key]
-        exact ((h_f_abs v).const_mul _).add
-          ((h_dj_abs j v).const_mul _)
-      -- Each ∫ splits into const * ∫ + const * ∫
-      have h_split : ∀ j : Fin 3,
-          ∫ w, ‖v - w‖⁻¹ *
-            (f w * |vGrad f v j| + f v * |vGrad f w j|) =
-          |vGrad f v j| * (∫ w, ‖v - w‖⁻¹ * |f w|) +
-          f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|) := by
-        intro j
-        have : (fun w => ‖v - w‖⁻¹ *
-              (f w * |vGrad f v j| + f v * |vGrad f w j|)) =
-            (fun w => |vGrad f v j| * (‖v - w‖⁻¹ * |f w|) +
-              f v * (‖v - w‖⁻¹ * |vGrad f w j|)) := by
-          ext w; conv_rhs => rw [abs_of_pos (hf_pos w)]
-          ring
-        rw [this, integral_add ((h_f_abs v).const_mul _)
-              ((h_dj_abs j v).const_mul _),
-            integral_const_mul, integral_const_mul]
-      calc ∫ w, ‖F (v, w)‖
-          = ∫ w, |F (v, w)| :=
-            integral_congr_ae (ae_of_all _ fun w => Real.norm_eq_abs _)
-        _ ≤ ∫ w, 3 * Cg * (1 + ‖v‖) ^ Kg * (‖v - w‖⁻¹ *
-              ∑ j : Fin 3,
-                (f w * |vGrad f v j| + f v * |vGrad f w j|)) := by
-            apply integral_mono_of_nonneg
-              (ae_of_all _ fun _ => abs_nonneg _)
-            · apply Integrable.const_mul
-              have : (fun w => ‖v - w‖⁻¹ * ∑ j : Fin 3,
-                    (f w * |vGrad f v j| +
-                     f v * |vGrad f w j|)) =
-                  (fun w => ∑ j : Fin 3, ‖v - w‖⁻¹ *
-                    (f w * |vGrad f v j| +
-                     f v * |vGrad f w j|)) := by
-                ext w; rw [Finset.mul_sum]
-              rw [this]
-              exact integrable_finset_sum _ fun j _ =>
-                h_each_int j
-            · exact ae_of_all _ (h_pw_bound v)
-        _ = 3 * Cg * (1 + ‖v‖) ^ Kg * ∫ w, ‖v - w‖⁻¹ *
-              ∑ j : Fin 3,
-                (f w * |vGrad f v j| +
-                 f v * |vGrad f w j|) := by
-            rw [integral_const_mul]
-        _ = 3 * Cg * (1 + ‖v‖) ^ Kg *
-              ∑ j : Fin 3,
-                (|vGrad f v j| * (∫ w, ‖v - w‖⁻¹ * |f w|) +
-                 f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|)) := by
-            congr 1
-            rw [show (fun w => ‖v - w‖⁻¹ * ∑ j : Fin 3,
-                    (f w * |vGrad f v j| +
-                     f v * |vGrad f w j|)) =
-                (fun w => ∑ j : Fin 3, ‖v - w‖⁻¹ *
-                    (f w * |vGrad f v j| +
-                     f v * |vGrad f w j|)) from by
-                  ext w; rw [Finset.mul_sum],
-              integral_finset_sum _ fun j _ => h_each_int j]
-            congr 1; ext j; exact h_split j
-        _ ≤ C_out * ((1 + ‖v‖) ^ (2 * Kg) * f v) := by
-            -- Use Finset.sum_le_sum to bound the sum
-            have hv1 : (1 : ℝ) ≤ 1 + ‖v‖ := by
-              linarith [norm_nonneg v]
-            have hpow : (1 : ℝ) ≤ (1 + ‖v‖) ^ Kg :=
-              one_le_pow₀ hv1
-            have hv_nn : (0 : ℝ) ≤ (1 + ‖v‖) ^ Kg :=
-              le_trans zero_le_one hpow
-            have hint_nn : 0 ≤
-                ∫ w, ‖v - w‖⁻¹ * |f w| :=
-              integral_nonneg fun w =>
-                mul_nonneg (inv_nonneg.mpr
-                  (norm_nonneg _)) (abs_nonneg _)
-            have hfv := le_of_lt (hf_pos v)
-            -- Bound each summand
-            have hj_bound : ∀ j : Fin 3,
-              |vGrad f v j| *
-                (∫ w, ‖v - w‖⁻¹ * |f w|) +
-              f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|) ≤
-                Cg * (1 + ‖v‖) ^ Kg * f v * M₁ +
-                f v * (∫ w, ‖v - w‖⁻¹ *
-                  |vGrad f w j|) := by
-              intro j
-              have h1 := mul_le_mul (hGrad v j)
-                (hM₁b v) hint_nn
-                (mul_nonneg (mul_nonneg hCg_nn hv_nn) hfv)
-              -- h1 : |vGrad f v j| * ∫ ≤ Cg*...*M₁
-              exact add_le_add_right h1 _
-            -- Sum the bounds
-            have hfin_bound :
-              ∑ j : Fin 3,
-                (|vGrad f v j| *
-                  (∫ w, ‖v - w‖⁻¹ * |f w|) +
-                 f v * (∫ w, ‖v - w‖⁻¹ *
-                  |vGrad f w j|)) ≤
-              ∑ j : Fin 3,
-                (Cg * (1 + ‖v‖) ^ Kg * f v * M₁ +
-                 f v * (∫ w, ‖v - w‖⁻¹ *
-                  |vGrad f w j|)) :=
-              Finset.sum_le_sum fun j _ => hj_bound j
-            -- Simplify RHS of hfin_bound using sum algebra
-            have hRHS_eq : ∑ j : Fin 3,
-                (Cg * (1 + ‖v‖) ^ Kg * f v * M₁ +
-                 f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|)) =
-              3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
-              f v * ∑ j : Fin 3,
-                (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|) := by
-              rw [Finset.sum_add_distrib]
-              congr 1
-              · simp [Finset.sum_const]
-              · rw [← Finset.mul_sum]
-            -- Bound ∑ ∫dⱼ by Md₀+Md₁+Md₂
-            have hd0v := hMd₀b v
-            have hd1v := hMd₁b v
-            have hd2v := hMd₂b v
-            have hMd_sum : ∑ j : Fin 3,
-                (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|) ≤
-                Md₀ + Md₁ + Md₂ := by
-              simp only [Fin.sum_univ_three]
-              exact add_le_add (add_le_add hd0v hd1v) hd2v
-            -- Total sum bound
-            have htotal :
-              ∑ j : Fin 3,
-                (|vGrad f v j| *
-                  (∫ w, ‖v - w‖⁻¹ * |f w|) +
-                 f v * (∫ w, ‖v - w‖⁻¹ *
-                  |vGrad f w j|)) ≤
-                3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
-                f v * (Md₀ + Md₁ + Md₂) := by
-              calc ∑ j : Fin 3, _ ≤ ∑ j : Fin 3,
-                    (Cg * (1 + ‖v‖) ^ Kg * f v * M₁ +
-                     f v * (∫ w, ‖v - w‖⁻¹ *
-                      |vGrad f w j|)) := hfin_bound
-                _ = 3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
-                    f v * ∑ j : Fin 3,
-                      (∫ w, ‖v - w‖⁻¹ *
-                        |vGrad f w j|) := hRHS_eq
-                _ ≤ 3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
-                    f v * (Md₀ + Md₁ + Md₂) :=
-                  add_le_add_left
-                    (mul_le_mul_of_nonneg_left hMd_sum hfv) _
-            -- Multiply by 3*Cg*(1+‖v‖)^Kg
-            have h3_nn : (0 : ℝ) ≤ 3 * Cg * (1 + ‖v‖) ^ Kg :=
-              mul_nonneg (mul_nonneg (by norm_num) hCg_nn) hv_nn
-            calc 3 * Cg * (1 + ‖v‖) ^ Kg *
-                ∑ j : Fin 3, ((|vGrad f v j| *
-                  (∫ w, ‖v - w‖⁻¹ * |f w|)) +
-                  f v * (∫ w, ‖v - w‖⁻¹ * |vGrad f w j|))
-              ≤ 3 * Cg * (1 + ‖v‖) ^ Kg *
-                (3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
-                 f v * (Md₀ + Md₁ + Md₂)) :=
-                mul_le_mul_of_nonneg_left htotal h3_nn
-              _ ≤ C_out * ((1 + ‖v‖) ^ (2 * Kg) * f v) := by
-                simp only [C_out, M_df]
-                rw [show 2 * Kg = Kg + Kg from by omega,
-                    pow_add]
-                have hP := hv_nn
-                have hMdf_nn : (0 : ℝ) ≤ Md₀ + Md₁ + Md₂ :=
-                  by linarith
-                -- Key: P ≤ P*P since 1 ≤ P
-                have hPP : (1 + ‖v‖) ^ Kg ≤
-                    (1 + ‖v‖) ^ Kg * (1 + ‖v‖) ^ Kg :=
-                  le_mul_of_one_le_left hv_nn hpow
-                nlinarith [sq_nonneg Cg, hf_pos v,
-                  mul_nonneg hCg_nn hP,
-                  mul_nonneg hfv hMdf_nn,
-                  mul_nonneg (mul_nonneg hCg_nn hP)
-                    (mul_nonneg hfv hMdf_nn),
-                  mul_le_mul_of_nonneg_right hPP
-                    (mul_nonneg (mul_nonneg
-                      (by norm_num : (0:ℝ) ≤ 3)
-                      (mul_nonneg hCg_nn hfv)) hMdf_nn)]
+    have h_int_bound := fubini_double_int_bound_coulomb hf_pos hCg_nn hGrad h_pw_bound
+      (by linarith [hMd₀, hMd₁, hMd₂]) hM₁b hMd₀b hMd₁b hMd₂b h_f_abs h_dj_abs
     exact (h_poly_int.const_mul C_out).mono' h_norm_meas
       (ae_of_all _ fun v => by
         rw [Real.norm_eq_abs, abs_of_nonneg

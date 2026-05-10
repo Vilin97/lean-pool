@@ -20,6 +20,168 @@ open MeasureTheory Matrix Finset BigOperators Real
 noncomputable section
 namespace VML
 
+/-- Pointwise bound on the `i`-th component of the Coulomb Landau flux:
+    `|flux_i(v)| ≤ M₀·(3‖∇g(v)‖) + (M₁+M₂+M₃)·‖g(v)‖`, where the `Mⱼ` are
+    uniform Newtonian bounds. Split out of `flux_times_log_integrable_coulomb`
+    to keep that proof under the size limit. -/
+private lemma coulomb_flux_component_pointwise_le
+    {g : (Fin 3 → ℝ) → ℝ}
+    (hg_smooth : ContDiff ℝ 3 g)
+    (hg_decay : ∀ N : ℕ, ∃ C > 0, ∀ w, |g w| * (1 + ‖w‖) ^ N ≤ C)
+    (hdg_decay : ∀ j : Fin 3, ∀ N : ℕ, ∃ C > 0, ∀ w,
+      |fderiv ℝ g w (Pi.single j 1)| * (1 + ‖w‖) ^ N ≤ C)
+    (hFlux : ∀ v, Integrable (fun w => mulVec (landauMatrix coulombKernel (v - w))
+      (g w • vGrad g v - g v • vGrad g w)))
+    (M₀ M₁ M₂ M₃ : ℝ)
+    (hM₀_pos : 0 < M₀) (hM₁_pos : 0 < M₁) (hM₂_pos : 0 < M₂) (hM₃_pos : 0 < M₃)
+    (hM₀ : ∀ v, ∫ w, ‖v - w‖⁻¹ * |g w| ≤ M₀)
+    (hM₁ : ∀ v, ∫ w, ‖v - w‖⁻¹ * |vGrad g w 0| ≤ M₁)
+    (hM₂ : ∀ v, ∫ w, ‖v - w‖⁻¹ * |vGrad g w 1| ≤ M₂)
+    (hM₃ : ∀ v, ∫ w, ‖v - w‖⁻¹ * |vGrad g w 2| ≤ M₃)
+    (i : Fin 3) :
+    ∀ v, |(∫ w, mulVec (landauMatrix coulombKernel (v - w))
+        (g w • vGrad g v - g v • vGrad g w)) i| ≤
+      M₀ * (3 * ‖iteratedFDeriv ℝ 1 g v‖) +
+      (M₁ + M₂ + M₃) * ‖iteratedFDeriv ℝ 0 g v‖ := by
+  intro v
+  -- Step 1: pull component i out of the integral
+  rw [eval_integral (fun j => (hFlux v).eval j)]
+  -- Step 2: pointwise bound on |(mulVec A u) i|
+  set u := fun w => g w • vGrad g v - g v • vGrad g w with hu_def
+  have h_pw : ∀ w, |(landauMatrix coulombKernel (v - w) *ᵥ (u w)) i| ≤
+      ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j| := by
+    intro w
+    by_cases hvw : v - w = 0
+    · have : v = w := sub_eq_zero.mp hvw
+      subst this; simp [mulVec, dotProduct, landauMatrix, innerLandauMatrix,
+        normSq, vecMulVec, eucNorm, coulombKernel]
+    · simp only [mulVec, dotProduct]
+      calc |∑ j : Fin 3, landauMatrix coulombKernel (v - w) i j * u w j|
+          ≤ ∑ j : Fin 3, |landauMatrix coulombKernel (v - w) i j * u w j| :=
+            Finset.abs_sum_le_sum_abs _ _
+        _ = ∑ j : Fin 3, |landauMatrix coulombKernel (v - w) i j| * |u w j| := by
+            congr 1
+            ext j
+            exact abs_mul _ _
+        _ ≤ ∑ j : Fin 3, ‖v - w‖⁻¹ * |u w j| :=
+            Finset.sum_le_sum fun j _ =>
+              mul_le_mul_of_nonneg_right (coulomb_landauMatrix_entry_le_pi _ _ _ hvw)
+                (abs_nonneg _)
+        _ = ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j| := (Finset.mul_sum _ _ _).symm
+  calc |∫ w, (landauMatrix coulombKernel (v - w) *ᵥ (u w)) i|
+      ≤ ∫ w, |(landauMatrix coulombKernel (v - w) *ᵥ (u w)) i| :=
+        abs_integral_le_integral_abs
+    _ ≤ ∫ w, ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j| :=
+        integral_mono_of_nonneg (Filter.Eventually.of_forall fun w => abs_nonneg _)
+          (by
+            simp_rw [Finset.mul_sum]
+            refine integrable_finset_sum _ fun j _ => ?_
+            have h_uj_int : Integrable (fun w => ‖v - w‖⁻¹ * (u w j)) := by
+              have h_f := inv_norm_schwartz_integrable g hg_decay
+                hg_smooth.continuous.aestronglyMeasurable v
+              have h_dj := inv_norm_schwartz_integrable
+                (fun w => fderiv ℝ g w (Pi.single j 1)) (hdg_decay j)
+                ((hg_smooth.continuous_fderiv (by norm_num)).clm_apply
+                  continuous_const).aestronglyMeasurable v
+              convert h_f.mul_const (vGrad g v j) |>.sub
+                (h_dj.const_mul (g v)) using 1
+              ext w; simp only [hu_def, vGrad, Pi.smul_apply, Pi.sub_apply,
+                smul_eq_mul, mul_assoc, mul_comm (‖v - w‖⁻¹)]
+              ring
+            exact h_uj_int.norm.congr (Filter.Eventually.of_forall fun w => by
+              change ‖‖v - w‖⁻¹ * u w j‖ = ‖v - w‖⁻¹ * |u w j|
+              rw [norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
+                Real.norm_eq_abs]))
+          (Filter.Eventually.of_forall h_pw)
+    _ ≤ M₀ * (3 * ‖iteratedFDeriv ℝ 1 g v‖) +
+        (M₁ + M₂ + M₃) * ‖iteratedFDeriv ℝ 0 g v‖ := by
+        have h_f_abs : Integrable (fun w => ‖v - w‖⁻¹ * |g w|) :=
+          (inv_norm_schwartz_integrable g hg_decay
+            hg_smooth.continuous.aestronglyMeasurable v).norm.congr
+            (Filter.Eventually.of_forall fun w => by
+              change ‖‖v - w‖⁻¹ * g w‖ = ‖v - w‖⁻¹ * |g w|
+              rw [norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
+                Real.norm_eq_abs])
+        have h_dj_abs : ∀ j : Fin 3,
+            Integrable (fun w => ‖v - w‖⁻¹ * |vGrad g w j|) := by
+          intro j
+          exact (inv_norm_schwartz_integrable
+            (fun w => fderiv ℝ g w (Pi.single j 1)) (hdg_decay j)
+            ((hg_smooth.continuous_fderiv (by norm_num)).clm_apply
+              continuous_const).aestronglyMeasurable v).norm.congr
+            (Filter.Eventually.of_forall fun w => by
+              change ‖‖v - w‖⁻¹ * fderiv ℝ g w (Pi.single j 1)‖ =
+                ‖v - w‖⁻¹ * |vGrad g w j|
+              rw [norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
+                Real.norm_eq_abs]; rfl)
+        have h_tri : ∀ w j, |u w j| ≤
+            |g w| * |vGrad g v j| + |g v| * |vGrad g w j| := by
+          intro w j
+          simp only [hu_def, Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
+          have := norm_sub_le (g w * vGrad g v j) (g v * vGrad g w j)
+          rwa [Real.norm_eq_abs, Real.norm_eq_abs, Real.norm_eq_abs, abs_mul, abs_mul] at this
+        have h_sum_tri : ∀ w, ∑ j : Fin 3, |u w j| ≤
+            |g w| * ∑ j : Fin 3, |vGrad g v j| +
+            |g v| * ∑ j : Fin 3, |vGrad g w j| := by
+          intro w
+          calc ∑ j : Fin 3, |u w j|
+              ≤ ∑ j, (|g w| * |vGrad g v j| + |g v| * |vGrad g w j|) :=
+                Finset.sum_le_sum fun j _ => h_tri w j
+            _ = _ := by rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
+        have hvg : ∀ j : Fin 3, |vGrad g v j| ≤
+            ‖iteratedFDeriv ℝ 1 g v‖ := by
+          intro j; simp only [vGrad]
+          have h1 : ‖(Pi.single j (1:ℝ) : Fin 3 → ℝ)‖ ≤ 1 := by
+            rw [Pi.norm_single, norm_one]
+          calc |fderiv ℝ g v (Pi.single j 1)|
+              = ‖fderiv ℝ g v (Pi.single j 1)‖ := (Real.norm_eq_abs _).symm
+            _ ≤ ‖fderiv ℝ g v‖ * ‖(Pi.single j (1:ℝ) : Fin 3 → ℝ)‖ :=
+                ContinuousLinearMap.le_opNorm _ _
+            _ ≤ ‖fderiv ℝ g v‖ * 1 := by gcongr
+            _ = ‖fderiv ℝ g v‖ := mul_one _
+            _ = ‖iteratedFDeriv ℝ 1 g v‖ := norm_fderiv_eq_iteratedFDeriv_one _ _
+        have hf0 : |g v| = ‖iteratedFDeriv ℝ 0 g v‖ := by
+          rw [iteratedFDeriv_zero_eq_comp]; simp [Real.norm_eq_abs]
+        have h_pw2 : ∀ w, ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j| ≤
+            (∑ j : Fin 3, |vGrad g v j|) * (‖v - w‖⁻¹ * |g w|) +
+            |g v| * ∑ j : Fin 3, (‖v - w‖⁻¹ * |vGrad g w j|) := by
+          intro w
+          calc ‖v - w‖⁻¹ * ∑ j, |u w j|
+              ≤ ‖v - w‖⁻¹ * (|g w| * ∑ j, |vGrad g v j| +
+                  |g v| * ∑ j, |vGrad g w j|) :=
+                mul_le_mul_of_nonneg_left (h_sum_tri w) (inv_nonneg.mpr (norm_nonneg _))
+            _ = _ := by simp only [← Finset.mul_sum]; ring
+        calc ∫ w, ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j|
+            ≤ ∫ w, ((∑ j, |vGrad g v j|) * (‖v - w‖⁻¹ * |g w|) +
+                |g v| * ∑ j, (‖v - w‖⁻¹ * |vGrad g w j|)) :=
+              integral_mono_of_nonneg
+                (Filter.Eventually.of_forall fun w => mul_nonneg
+                  (inv_nonneg.mpr (norm_nonneg _))
+                  (Finset.sum_nonneg fun j _ => abs_nonneg _))
+                ((h_f_abs.const_mul _).add
+                  ((integrable_finset_sum _ fun j _ => h_dj_abs j).const_mul _))
+                (Filter.Eventually.of_forall h_pw2)
+          _ ≤ (∑ j, |vGrad g v j|) * M₀ +
+              |g v| * (M₁ + M₂ + M₃) := by
+              rw [integral_add (h_f_abs.const_mul _)
+                ((integrable_finset_sum _ fun j _ => h_dj_abs j).const_mul _),
+                integral_const_mul, integral_const_mul]
+              apply add_le_add
+              · exact mul_le_mul_of_nonneg_left (hM₀ v)
+                  (Finset.sum_nonneg fun j _ => abs_nonneg _)
+              · apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
+                rw [integral_finset_sum _ fun j _ => h_dj_abs j]
+                simp only [Fin.sum_univ_three]
+                linarith [hM₁ v, hM₂ v, hM₃ v]
+          _ ≤ 3 * ‖iteratedFDeriv ℝ 1 g v‖ * M₀ +
+              ‖iteratedFDeriv ℝ 0 g v‖ * (M₁ + M₂ + M₃) := by
+              gcongr
+              · simp only [Fin.sum_univ_three]
+                linarith [hvg 0, hvg 1, hvg 2]
+              · rw [← hf0]
+          _ = M₀ * (3 * ‖iteratedFDeriv ℝ 1 g v‖) +
+              (M₁ + M₂ + M₃) * ‖iteratedFDeriv ℝ 0 g v‖ := by ring
+
 /-- The Landau flux × log(f) is integrable for the Coulomb kernel.
     Uses the uniform Newtonian bound to control the flux pointwise. -/
 lemma flux_times_log_integrable_coulomb
@@ -55,14 +217,13 @@ lemma flux_times_log_integrable_coulomb
   obtain ⟨M₁, hM₁, hM₁b⟩ := hMj 0
   obtain ⟨M₂, hM₂, hM₂b⟩ := hMj 1
   obtain ⟨M₃, hM₃, hM₃b⟩ := hMj 2
-  set M_df := M₁ + M₂ + M₃
   -- Dominating function: C_bound / (1+‖v‖)^4
   -- |flux_i(v)| ≤ M₀ * ∑|∂_jf(v)| + M_df * f(v)
   -- |flux_i(v) * log(f(v))| ≤ (M₀ * ∑|∂_jf(v)| + M_df * f(v)) * C_log * (1+‖v‖)^K
   -- Each term like |∂_jf(v)| * (1+‖v‖)^K ≤ C_{j,K+4}/(1+‖v‖)^4
   obtain ⟨C_f, hC_f, hC_f_bound⟩ := hSchwartz.hDecay (K_log + 4) (k := 0) (by omega)
   obtain ⟨C_df, hC_df, hC_df_bound⟩ := hSchwartz.hDecay (K_log + 4) (k := 1) (by omega)
-  set C_bound := (M₀ * 3 * C_df + M_df * C_f) * C_log + 1
+  set C_bound := (M₀ * 3 * C_df + (M₁ + M₂ + M₃) * C_f) * C_log + 1
   -- Flux integrability for eval_integral
   have hf_schwartz_x : ∀ (N : ℕ) {k : ℕ}, k ≤ 2 → ∃ C > 0, ∀ v,
       ‖iteratedFDeriv ℝ k (f x) v‖ * (1 + ‖v‖) ^ N ≤ C :=
@@ -71,159 +232,8 @@ lemma flux_times_log_integrable_coulomb
       (f x w • vGrad (f x) v - f x v • vGrad (f x) w)) :=
     fun v => landau_flux_integrable_coulomb (f x) (fun v => hf_pos x v)
       (hf_smooth_v x) hf_schwartz_x v
-  -- Pointwise flux bound (proved separately)
-  have h_flux_bound : ∀ v, |(∫ w, mulVec (landauMatrix coulombKernel (v - w))
-      (f x w • vGrad (f x) v - f x v • vGrad (f x) w)) i| ≤
-      M₀ * (3 * ‖iteratedFDeriv ℝ 1 (f x) v‖) +
-      M_df * ‖iteratedFDeriv ℝ 0 (f x) v‖ := by
-    intro v
-    -- Step 1: pull component i out of the integral
-    rw [eval_integral (fun j => (hFlux v).eval j)]
-    -- Step 2: pointwise bound on |(mulVec A u) i|
-    set u := fun w => f x w • vGrad (f x) v - f x v • vGrad (f x) w with hu_def
-    -- Key: (mulVec A u) i = ∑ j, A i j * u j, each |A i j| ≤ ‖v-w‖⁻¹
-    have h_pw : ∀ w, |(landauMatrix coulombKernel (v - w) *ᵥ (u w)) i| ≤
-        ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j| := by
-      intro w
-      by_cases hvw : v - w = 0
-      · have : v = w := sub_eq_zero.mp hvw
-        subst this; simp [mulVec, dotProduct, landauMatrix, innerLandauMatrix,
-          normSq, vecMulVec, eucNorm, coulombKernel]
-      · simp only [mulVec, dotProduct]
-        calc |∑ j : Fin 3, landauMatrix coulombKernel (v - w) i j * u w j|
-            ≤ ∑ j : Fin 3, |landauMatrix coulombKernel (v - w) i j * u w j| :=
-              Finset.abs_sum_le_sum_abs _ _
-          _ = ∑ j : Fin 3, |landauMatrix coulombKernel (v - w) i j| * |u w j| := by
-              congr 1
-              ext j
-              exact abs_mul _ _
-          _ ≤ ∑ j : Fin 3, ‖v - w‖⁻¹ * |u w j| :=
-              Finset.sum_le_sum fun j _ =>
-                mul_le_mul_of_nonneg_right (coulomb_landauMatrix_entry_le_pi _ _ _ hvw)
-                  (abs_nonneg _)
-          _ = ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j| := (Finset.mul_sum _ _ _).symm
-    -- Step 3: |∫| ≤ ∫|·| ≤ ∫ bound
-    calc |∫ w, (landauMatrix coulombKernel (v - w) *ᵥ (u w)) i|
-        ≤ ∫ w, |(landauMatrix coulombKernel (v - w) *ᵥ (u w)) i| :=
-          abs_integral_le_integral_abs
-      _ ≤ ∫ w, ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j| :=
-          integral_mono_of_nonneg (Filter.Eventually.of_forall fun w => abs_nonneg _)
-            (by -- Integrable (fun w => ‖v - w‖⁻¹ * ∑ j, |u w j|)
-              simp_rw [Finset.mul_sum]
-              refine integrable_finset_sum _ fun j _ => ?_
-              have h_uj_int : Integrable (fun w => ‖v - w‖⁻¹ * (u w j)) := by
-                have h_f := inv_norm_schwartz_integrable (f x) hf_decay
-                  (hf_smooth_v x).continuous.aestronglyMeasurable v
-                have h_dj := inv_norm_schwartz_integrable
-                  (fun w => fderiv ℝ (f x) w (Pi.single j 1)) (hdf_decay j)
-                  (((hf_smooth_v x).continuous_fderiv (by norm_num)).clm_apply
-                    continuous_const).aestronglyMeasurable v
-                convert h_f.mul_const (vGrad (f x) v j) |>.sub
-                  (h_dj.const_mul (f x v)) using 1
-                ext w; simp only [hu_def, vGrad, Pi.smul_apply, Pi.sub_apply,
-                  smul_eq_mul, mul_assoc, mul_comm (‖v - w‖⁻¹)]
-                ring
-              exact h_uj_int.norm.congr (Filter.Eventually.of_forall fun w => by
-                change ‖‖v - w‖⁻¹ * u w j‖ = ‖v - w‖⁻¹ * |u w j|
-                rw [norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
-                  Real.norm_eq_abs]))
-            (Filter.Eventually.of_forall h_pw)
-      _ ≤ M₀ * (3 * ‖iteratedFDeriv ℝ 1 (f x) v‖) +
-          M_df * ‖iteratedFDeriv ℝ 0 (f x) v‖ := by
-          -- Integrability helpers
-          have h_f_abs : Integrable (fun w => ‖v - w‖⁻¹ * |f x w|) :=
-            (inv_norm_schwartz_integrable (f x) hf_decay
-              (hf_smooth_v x).continuous.aestronglyMeasurable v).norm.congr
-              (Filter.Eventually.of_forall fun w => by
-                change ‖‖v - w‖⁻¹ * f x w‖ = ‖v - w‖⁻¹ * |f x w|
-                rw [norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
-                  Real.norm_eq_abs])
-          have h_dj_abs : ∀ j : Fin 3,
-              Integrable (fun w => ‖v - w‖⁻¹ * |vGrad (f x) w j|) := by
-            intro j
-            exact (inv_norm_schwartz_integrable
-              (fun w => fderiv ℝ (f x) w (Pi.single j 1)) (hdf_decay j)
-              (((hf_smooth_v x).continuous_fderiv (by norm_num)).clm_apply
-                continuous_const).aestronglyMeasurable v).norm.congr
-              (Filter.Eventually.of_forall fun w => by
-                change ‖‖v - w‖⁻¹ * fderiv ℝ (f x) w (Pi.single j 1)‖ =
-                  ‖v - w‖⁻¹ * |vGrad (f x) w j|
-                rw [norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _)),
-                  Real.norm_eq_abs]; rfl)
-          -- Triangle inequality: |u w j| ≤ |f w|*|∇v j| + |f v|*|∇w j|
-          have h_tri : ∀ w j, |u w j| ≤
-              |f x w| * |vGrad (f x) v j| + |f x v| * |vGrad (f x) w j| := by
-            intro w j
-            simp only [hu_def, Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
-            have := norm_sub_le (f x w * vGrad (f x) v j) (f x v * vGrad (f x) w j)
-            rwa [Real.norm_eq_abs, Real.norm_eq_abs, Real.norm_eq_abs, abs_mul, abs_mul] at this
-          -- Sum triangle: ∑|u j| ≤ |f w| * S_v + |f v| * S_w
-          have h_sum_tri : ∀ w, ∑ j : Fin 3, |u w j| ≤
-              |f x w| * ∑ j : Fin 3, |vGrad (f x) v j| +
-              |f x v| * ∑ j : Fin 3, |vGrad (f x) w j| := by
-            intro w
-            calc ∑ j : Fin 3, |u w j|
-                ≤ ∑ j, (|f x w| * |vGrad (f x) v j| + |f x v| * |vGrad (f x) w j|) :=
-                  Finset.sum_le_sum fun j _ => h_tri w j
-              _ = _ := by rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
-          -- vGrad bound: |vGrad v j| ≤ ‖iteratedFDeriv 1 f v‖
-          have hvg : ∀ j : Fin 3, |vGrad (f x) v j| ≤
-              ‖iteratedFDeriv ℝ 1 (f x) v‖ := by
-            intro j; simp only [vGrad]
-            have h1 : ‖(Pi.single j (1:ℝ) : Fin 3 → ℝ)‖ ≤ 1 := by
-              rw [Pi.norm_single, norm_one]
-            calc |fderiv ℝ (f x) v (Pi.single j 1)|
-                = ‖fderiv ℝ (f x) v (Pi.single j 1)‖ := (Real.norm_eq_abs _).symm
-              _ ≤ ‖fderiv ℝ (f x) v‖ * ‖(Pi.single j (1:ℝ) : Fin 3 → ℝ)‖ :=
-                  ContinuousLinearMap.le_opNorm _ _
-              _ ≤ ‖fderiv ℝ (f x) v‖ * 1 := by gcongr
-              _ = ‖fderiv ℝ (f x) v‖ := mul_one _
-              _ = ‖iteratedFDeriv ℝ 1 (f x) v‖ := norm_fderiv_eq_iteratedFDeriv_one _ _
-          -- |f v| = ‖iteratedFDeriv 0 f v‖
-          have hf0 : |f x v| = ‖iteratedFDeriv ℝ 0 (f x) v‖ := by
-            rw [iteratedFDeriv_zero_eq_comp]; simp [Real.norm_eq_abs]
-          -- Main bound via integral monotonicity + linearity
-          -- Step 1: pointwise bound
-          have h_pw2 : ∀ w, ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j| ≤
-              (∑ j : Fin 3, |vGrad (f x) v j|) * (‖v - w‖⁻¹ * |f x w|) +
-              |f x v| * ∑ j : Fin 3, (‖v - w‖⁻¹ * |vGrad (f x) w j|) := by
-            intro w
-            calc ‖v - w‖⁻¹ * ∑ j, |u w j|
-                ≤ ‖v - w‖⁻¹ * (|f x w| * ∑ j, |vGrad (f x) v j| +
-                    |f x v| * ∑ j, |vGrad (f x) w j|) :=
-                  mul_le_mul_of_nonneg_left (h_sum_tri w) (inv_nonneg.mpr (norm_nonneg _))
-              _ = _ := by simp only [← Finset.mul_sum]; ring
-          -- Step 2: integrate
-          calc ∫ w, ‖v - w‖⁻¹ * ∑ j : Fin 3, |u w j|
-              ≤ ∫ w, ((∑ j, |vGrad (f x) v j|) * (‖v - w‖⁻¹ * |f x w|) +
-                  |f x v| * ∑ j, (‖v - w‖⁻¹ * |vGrad (f x) w j|)) :=
-                integral_mono_of_nonneg
-                  (Filter.Eventually.of_forall fun w => mul_nonneg
-                    (inv_nonneg.mpr (norm_nonneg _))
-                    (Finset.sum_nonneg fun j _ => abs_nonneg _))
-                  ((h_f_abs.const_mul _).add
-                    ((integrable_finset_sum _ fun j _ => h_dj_abs j).const_mul _))
-                  (Filter.Eventually.of_forall h_pw2)
-            _ ≤ (∑ j, |vGrad (f x) v j|) * M₀ +
-                |f x v| * (M₁ + M₂ + M₃) := by
-                rw [integral_add (h_f_abs.const_mul _)
-                  ((integrable_finset_sum _ fun j _ => h_dj_abs j).const_mul _),
-                  integral_const_mul, integral_const_mul]
-                apply add_le_add
-                · exact mul_le_mul_of_nonneg_left (hM₀_bound v)
-                    (Finset.sum_nonneg fun j _ => abs_nonneg _)
-                · apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
-                  rw [integral_finset_sum _ fun j _ => h_dj_abs j]
-                  simp only [Fin.sum_univ_three, vGrad]
-                  linarith [hM₁b v, hM₂b v, hM₃b v]
-            _ ≤ 3 * ‖iteratedFDeriv ℝ 1 (f x) v‖ * M₀ +
-                ‖iteratedFDeriv ℝ 0 (f x) v‖ * M_df := by
-                gcongr
-                · simp only [Fin.sum_univ_three]
-                  linarith [hvg 0, hvg 1, hvg 2]
-                · rw [← hf0]
-            _ = M₀ * (3 * ‖iteratedFDeriv ℝ 1 (f x) v‖) +
-                M_df * ‖iteratedFDeriv ℝ 0 (f x) v‖ := by ring
+  have h_flux_bound := coulomb_flux_component_pointwise_le (hf_smooth_v x) hf_decay hdf_decay
+    hFlux M₀ M₁ M₂ M₃ hM₀ hM₁ hM₂ hM₃ hM₀_bound hM₁b hM₂b hM₃b i
   -- Apply Integrable.mono' with C_bound / (1+‖v‖)^4
   refine (inverse_poly_integrable C_bound).mono' ?_ (Filter.Eventually.of_forall fun v => ?_)
   · -- AEStronglyMeasurable of flux_i × log(f)
@@ -250,18 +260,18 @@ lemma flux_times_log_integrable_coulomb
             (f x w • vGrad (f x) v - f x v • vGrad (f x) w)) i| *
           |(Real.log ∘ f x) v|
         ≤ (M₀ * (3 * ‖iteratedFDeriv ℝ 1 (f x) v‖) +
-           M_df * ‖iteratedFDeriv ℝ 0 (f x) v‖) *
+           (M₁ + M₂ + M₃) * ‖iteratedFDeriv ℝ 0 (f x) v‖) *
           |(Real.log ∘ f x) v| :=
           mul_le_mul_of_nonneg_right (h_flux_bound v) (abs_nonneg _)
       _ ≤ (M₀ * (3 * ‖iteratedFDeriv ℝ 1 (f x) v‖) +
-           M_df * ‖iteratedFDeriv ℝ 0 (f x) v‖) *
+           (M₁ + M₂ + M₃) * ‖iteratedFDeriv ℝ 0 (f x) v‖) *
           (C_log * (1 + ‖v‖) ^ K_log) :=
-          mul_le_mul_of_nonneg_left hlog (by simp only [M_df]; positivity)
+          mul_le_mul_of_nonneg_left hlog (by positivity)
       _ ≤ (M₀ * (3 * (C_df / (1 + ‖v‖) ^ (K_log + 4))) +
-           M_df * (C_f / (1 + ‖v‖) ^ (K_log + 4))) *
+           (M₁ + M₂ + M₃) * (C_f / (1 + ‖v‖) ^ (K_log + 4))) *
           (C_log * (1 + ‖v‖) ^ K_log) := by
           gcongr
-      _ = (M₀ * 3 * C_df + M_df * C_f) * C_log / (1 + ‖v‖) ^ 4 := by
+      _ = (M₀ * 3 * C_df + (M₁ + M₂ + M₃) * C_f) * C_log / (1 + ‖v‖) ^ 4 := by
           rw [pow_add (1 + ‖v‖) K_log 4]; field_simp
       _ ≤ C_bound / (1 + ‖v‖) ^ 4 := by
           gcongr

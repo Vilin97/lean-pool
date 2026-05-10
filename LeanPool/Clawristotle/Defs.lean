@@ -405,8 +405,11 @@ class FlatTorus3 (X : Type*) extends MeasureSpace X, TopologicalSpace X where
   instCompact : CompactSpace X
   instNonempty : Nonempty X
   instFirstCountable : FirstCountableTopology X
+  /-- The spatial gradient operator on the torus. -/
   gradX : (X → ℝ) → X → (Fin 3 → ℝ)
+  /-- The spatial divergence operator on the torus. -/
   divX : (X → (Fin 3 → ℝ)) → X → ℝ
+  /-- The spatial curl operator on the torus. -/
   curlX : (X → (Fin 3 → ℝ)) → X → (Fin 3 → ℝ)
   -- Linearity of the divergence operator
   hDivLinear : ∀ (α : ℝ) (G : X → (Fin 3 → ℝ)),
@@ -420,6 +423,7 @@ class FlatTorus3 (X : Type*) extends MeasureSpace X, TopologicalSpace X where
     (∀ x, 0 ≤ g x) → ∫ x, g x = 0 → ∀ x, g x = 0
   -- Spatial differentiability predicate (abstract; on the concrete torus,
   -- this is ContDiff ℝ n (periodicLift f), i.e. the periodic lift is Cⁿ)
+  /-- Spatial `Cⁿ`-smoothness predicate (on the concrete torus, `ContDiff ℝ n (periodicLift f)`). -/
   IsSpatiallySmooth : ℕ∞ → (X → ℝ) → Prop
   hDiff_of_le : ∀ {n m} f, m ≤ n → IsSpatiallySmooth n f → IsSpatiallySmooth m f
   hDiff_const : ∀ n c, IsSpatiallySmooth n (fun _ : X => c)

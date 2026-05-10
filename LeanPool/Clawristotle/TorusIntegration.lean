@@ -25,6 +25,7 @@ noncomputable section
 section AristotleLemmas
 open intervalIntegral
 
+/-- The half-open unit box `(0, 1]³ ⊆ ℝ³`, a fundamental domain for `T³ = (ℝ/ℤ)³`. -/
 def box3 : Set (Fin 3 → ℝ) := Set.pi Set.univ (fun _ => Set.Ioc 0 1)
 
 /-- The volume measure on T³ is the pushforward of the box measure. -/
@@ -180,9 +181,9 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
           fin_cases i <;> simp
           · exact continuous_pi_iff.mpr fun i => by
               fin_cases i <;>
-              [ exact continuous_fst
-              ; exact continuous_apply 0 |> Continuous.comp <| continuous_snd
-              ; exact continuous_apply 1 |> Continuous.comp <| continuous_snd ]
+              [exact continuous_fst;
+               exact continuous_apply 0 |> Continuous.comp <| continuous_snd;
+               exact continuous_apply 1 |> Continuous.comp <| continuous_snd]
           · refine continuous_pi_iff.mpr ?_
             intro i; fin_cases i <;> simp [ Fin.insertNth ]
             · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
@@ -190,9 +191,9 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
             · exact continuous_apply 1 |> Continuous.comp <| continuous_snd
           · exact continuous_pi_iff.mpr fun i => by
               fin_cases i <;>
-              [ exact continuous_pi_iff.mp continuous_snd 0
-              ; exact continuous_pi_iff.mp continuous_snd 1
-              ; exact continuous_fst ]
+              [exact continuous_pi_iff.mp continuous_snd 0;
+               exact continuous_pi_iff.mp continuous_snd 1;
+               exact continuous_fst]
         exact (h_integrable.integrableOn_compact
             (isCompact_Icc.prod (isCompact_univ_pi fun _ => CompactIccSpace.isCompact_Icc)))
           |> fun h => h.mono_set

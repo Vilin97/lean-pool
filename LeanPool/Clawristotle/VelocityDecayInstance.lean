@@ -41,9 +41,16 @@ lemma lorentz_component_bound (E₀ B₀ : Fin 3 → ℝ) :
                  mul_le_mul_of_nonneg_right (norm_le_pi_norm v 1) (abs_nonneg _),
                by simpa [ abs_mul ] using
                  mul_le_mul_of_nonneg_right (norm_le_pi_norm v 2) (abs_nonneg _) ⟩
-    nlinarith [ abs_nonneg (E₀ 0), abs_nonneg (v 1 * B₀ 2), abs_nonneg (v 2 * B₀ 1),
-                abs_nonneg (B₀ 0), abs_nonneg (B₀ 1), abs_nonneg (B₀ 2),
-                norm_nonneg E₀, norm_nonneg v ]
+    -- `ring_nf` left the goal with `E₀ 0 + v 1 * B₀ 2 - v 2 * B₀ 1` (left-assoc);
+    -- reassociate so the `|·|` term matches `h_triangle`.
+    rw [add_sub_assoc]
+    obtain ⟨h2a, h2b, h2c⟩ := h_triangle2
+    nlinarith [ h_triangle, h2a, h2b, h2c, abs_nonneg (E₀ 0), abs_nonneg (v 1 * B₀ 2),
+                abs_nonneg (v 2 * B₀ 1), abs_nonneg (B₀ 0), abs_nonneg (B₀ 1), abs_nonneg (B₀ 2),
+                norm_nonneg E₀, norm_nonneg v, mul_nonneg (norm_nonneg E₀) (norm_nonneg v),
+                mul_nonneg (abs_nonneg (B₀ 0)) (norm_nonneg v),
+                mul_nonneg (abs_nonneg (B₀ 1)) (norm_nonneg v),
+                mul_nonneg (abs_nonneg (B₀ 2)) (norm_nonneg v) ]
   · have h_triangle :
         |E₀ 1| ≤ ‖E₀‖ ∧ |v 2 * B₀ 0| ≤ ‖v‖ * |B₀ 0| ∧ |v 0 * B₀ 2| ≤ ‖v‖ * |B₀ 2| := by
       exact ⟨ by simpa using norm_le_pi_norm E₀ 1,
@@ -66,11 +73,16 @@ lemma lorentz_component_bound (E₀ B₀ : Fin 3 → ℝ) :
         cases abs_cases (v 0 * B₀ 1) <;>
         cases abs_cases (v 1 * B₀ 0) <;> linarith
     norm_num [ abs_mul ] at *
-    nlinarith! [ abs_nonneg (E₀ 2), abs_nonneg (v 0), abs_nonneg (v 1),
-                 abs_nonneg (B₀ 0), abs_nonneg (B₀ 1), abs_nonneg (B₀ 2),
-                 show ‖E₀‖ ≥ |E₀ 2| by exact norm_le_pi_norm E₀ 2,
-                 show ‖v‖ ≥ |v 0| by exact norm_le_pi_norm v 0,
-                 show ‖v‖ ≥ |v 1| by exact norm_le_pi_norm v 1 ]
+    rw [add_sub_assoc]
+    nlinarith! [ h_triangle, abs_nonneg (E₀ 2), abs_nonneg (v 0), abs_nonneg (v 1),
+                 abs_nonneg (B₀ 0), abs_nonneg (B₀ 1), abs_nonneg (B₀ 2), norm_nonneg v,
+                 show ‖E₀‖ ≥ |E₀ 2| from norm_le_pi_norm E₀ 2,
+                 show ‖v‖ ≥ |v 0| from norm_le_pi_norm v 0,
+                 show ‖v‖ ≥ |v 1| from norm_le_pi_norm v 1,
+                 mul_nonneg (norm_nonneg E₀) (norm_nonneg v),
+                 mul_nonneg (abs_nonneg (B₀ 0)) (norm_nonneg v),
+                 mul_nonneg (abs_nonneg (B₀ 1)) (norm_nonneg v),
+                 mul_nonneg (abs_nonneg (B₀ 2)) (norm_nonneg v) ]
 
 
 end VML

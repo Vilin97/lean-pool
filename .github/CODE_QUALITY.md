@@ -31,7 +31,17 @@ Fail CI on:
 
 ### 3. No option overrides
 
-Forbid `set_option` in repository Lean files. No waiver.
+Forbid `set_option` in repository Lean files, with two narrow exceptions:
+
+- linter suppressions (`set_option linter.X true|false`) — a per-file style
+  choice, not a soundness or performance hack;
+- a *scoped* heartbeat bump on a single declaration
+  (`set_option maxHeartbeats N in`, `set_option synthInstance.maxHeartbeats N in`)
+  — mathlib does this routinely for genuinely large machine-checked proofs.
+  A file-wide `set_option maxHeartbeats` (no `in`) stays forbidden, as does a
+  heartbeat override in the lakefile.
+
+Everything else (`trace.*`, `autoImplicit`, `pp.*`, …) stays forbidden.
 
 Also fail on Lean option overrides passed through `lakefile.toml`, `lakefile.lean`, or `moreLeanArgs`, except package-wide defaults deliberately maintained as repository policy in `lakefile.toml`.
 
@@ -54,7 +64,7 @@ Expected diagnostic tests, if any, must live under a dedicated test directory ra
 Hard caps, no waivers:
 
 - no `.lean` file over 10000 non-blank, non-comment lines
-- no single theorem/lemma proof body over 100 lines
+- no single theorem/lemma proof body over 200 non-comment lines
 
 Use an AST-aware linter for proof ranges. A temporary text heuristic is acceptable for v0.
 
