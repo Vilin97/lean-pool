@@ -1,4 +1,20 @@
 projects:
+  - slug: lattice-triangle
+    title: On the paucity of lattice triangles
+    entry_module: LeanPool.LatticeTriangle
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      arxiv: "2603.23928"
+    status: verified
+    main_declarations:
+      - analyticEngine_lower_bound
+    tags:
+      - number-theory
+      - combinatorics
   - slug: fel-conjecture
     title: Fel's Conjecture on Syzygies of Numerical Semigroups
     entry_module: LeanPool.FelConjecture
