@@ -36,7 +36,7 @@ discover → lint → review → promote
 Lean Pool requires Lean (via [`elan`](https://leanprover-community.github.io/install/), with the toolchain pinned in [`lean-toolchain`](lean-toolchain)) and Python 3.13+ with [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
-lake build                 # build the Lean library
+make build                 # build the Lean library
 cd python && uv sync       # install Python tooling
 ```
 
