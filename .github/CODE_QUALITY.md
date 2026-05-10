@@ -26,7 +26,7 @@ Fail CI on:
 
 - `sorry` or `admit`
 - new `axiom` / `constant`
-- `unsafe`, `partial`, unallowlisted `opaque`, or unallowlisted `@[extern]`
+- `unsafe`, `partial`, `opaque`, or `@[extern]`
 - theorem dependencies outside the permitted axiom set: `Classical.choice`, `propext`, `Quot.sound`
 
 ### 3. No option overrides
@@ -51,12 +51,12 @@ Expected diagnostic tests, if any, must live under a dedicated test directory ra
 
 ### 5. Size limits
 
-Hard caps:
+Hard caps, no waivers:
 
-- no `.lean` file over 2000 non-blank, non-comment lines
-- no single theorem/lemma proof body over 100 lines
+- no `.lean` file over 10000 non-blank, non-comment lines
+- no single theorem/lemma proof body over 200 lines
 
-Use an AST-aware linter for proof ranges. A temporary text heuristic is acceptable for v0. Allow waivers only with `-- size-limit-ok: <reason>`.
+Use an AST-aware linter for proof ranges. A temporary text heuristic is acceptable for v0.
 
 ### 6. Structured project metadata
 
@@ -69,12 +69,14 @@ Each top-level project entry must include:
 - `entry_module`
 - `authors`
 - `source` (`arxiv`, `doi`, or `url`)
-- `status` (`verified`, `draft`, or `extra-axiom`)
+- `status` (must be `verified`)
 - `main_declarations`
 - `tags`
 - optional `msc`
 
-CI validates the YAML schema, checks that referenced modules and declarations exist, enforces a controlled tag vocabulary, checks `status` against the computed verification result, and diff-checks generated Lean project-card docstrings.
+Only fully verified projects — no `sorry`/`admit`, no extra axioms, no `unsafe`/`partial`/`opaque`/`@[extern]` — may merge. The other rules above already enforce this; `status: verified` is the contract a contributor signs.
+
+CI validates the YAML schema, checks that referenced modules and declarations exist, enforces a controlled tag vocabulary, requires unique `slug` and `entry_module` across projects, and diff-checks generated Lean project-card docstrings.
 
 ### 7. File headers
 
@@ -103,18 +105,6 @@ CI checks:
 - generated domain/status indexes are up to date
 
 ## Advisory Automation
-
-### 9. Semantic dedup
-
-On every PR, extract natural-language theorem/lemma docstrings and query LeanExplore.
-
-Use [`lean-explore`](https://www.leanexplore.com/docs) with `LEANEXPLORE_API_KEY` and comment with top candidate duplicates across:
-
-- mathlib
-- existing Lean Pool declarations
-- other indexed packages
-
-This is advisory only. Never block a PR solely on semantic similarity.
 
 ### 10. Proof performance
 

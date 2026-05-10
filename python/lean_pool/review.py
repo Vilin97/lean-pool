@@ -1,25 +1,27 @@
 """LLM-driven pull request review for Lean Pool.
 
 Reads the rules from ``.github/REVIEW_RULES.md``, fetches the PR diff via the
-GitHub CLI, asks the configured OpenAI model to apply the rules, and posts the
-findings as a single PR comment that includes token usage, the service tier
-that served the request, and (optionally) estimated USD cost.
+GitHub CLI, asks the configured OpenAI model to evaluate the contribution,
+and posts a single PR comment with a one-paragraph summary, a structured
+assessment table (fit / level / branch / mode / code-quality / etc.), a
+verdict, and any specific findings.
 
-The reviewer prefers OpenAI's `flex` tier (cheaper, slower, occasionally
+The reviewer prefers OpenAI's ``flex`` tier (cheaper, slower, occasionally
 unavailable). When flex returns 429 Resource Unavailable, the request is
-retried with `service_tier="auto"` (standard pricing). The rendered comment
-shows which tier was actually used and costs the request at that tier's rate.
+retried with ``service_tier="auto"`` (standard pricing). The rendered
+comment shows which tier was actually used and prices the request at that
+tier's rate.
 
 Per-token prices live in the ``PRICING_PER_M`` table below — the OpenAI
 API does not return cost in its responses, so we maintain a small lookup
-keyed on (model, tier). Update it when bumping ``DEFAULT_MODEL`` or when
-OpenAI changes pricing.
+keyed on ``(model, tier)``. Update it when bumping ``DEFAULT_MODEL`` or
+when OpenAI changes pricing.
 
 Environment variables:
     OPENAI_API_KEY: OpenAI credentials (required).
     PR_NUMBER:      Pull request number to review (required).
     GH_TOKEN:       Token for the GitHub CLI (required in CI).
-    REVIEW_MODEL:   Model name; defaults to ``gpt-5.4-mini``.
+    REVIEW_MODEL:   Model name; defaults to :data:`DEFAULT_MODEL`.
 
 Run:
     uv run python -m lean_pool.review
@@ -35,11 +37,11 @@ from pathlib import Path
 from textwrap import dedent
 from typing import Any
 
-from openai import OpenAI, RateLimitError
+from openai import APIStatusError, OpenAI, RateLimitError
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RULES_PATH = REPO_ROOT / ".github" / "REVIEW_RULES.md"
-DEFAULT_MODEL = "gpt-5.4-mini"
+DEFAULT_MODEL = "gpt-5.5"
 # Flex tier requests can take longer than the default 10-minute timeout.
 REQUEST_TIMEOUT_SECONDS = 6000.0
 
@@ -47,57 +49,46 @@ REQUEST_TIMEOUT_SECONDS = 6000.0
 # Source: https://developers.openai.com/api/docs/pricing — update when
 # bumping DEFAULT_MODEL or when OpenAI changes pricing.
 PRICING_PER_M: dict[str, dict[str, tuple[float, float]]] = {
+    "gpt-5.5": {
+        "flex": (2.50, 15.00),
+        "standard": (5.00, 30.00),
+    },
     "gpt-5.4-mini": {
         "flex": (0.375, 2.25),
         "standard": (0.75, 4.50),
     },
 }
 
-SEVERITY_ICON = {"info": "ℹ️", "warning": "⚠️", "blocking": "🛑"}
 VERDICT_ICON = {
     "approve": "✅",
     "request_changes": "🛑",
     "needs_discussion": "🤔",
 }
+FIT_ICON = {
+    "good_fit": "✅",
+    "borderline": "🟡",
+    "not_a_fit": "🛑",
+}
 
 SYSTEM_PROMPT = dedent(
     """\
-    You are an automated reviewer for Lean Pool, a curated repository of
-    Lean 4 formalization projects. Your job is to make the judgement calls
-    that automated linters cannot make: significance of contribution,
-    self-containment, project-card presence, informal-vs-formal
-    correspondence, proof verbosity, and redundancy.
+    You are a senior mathematician and Lean engineer reviewing pull
+    requests to Lean Pool, a curated repository of formal-mathematics
+    projects. Your job is to tell the maintainer, in one paragraph plus
+    a short structured assessment, whether this PR is worth merging.
 
-    Mechanical checks (presence of sorry, file headers, naming, size limits,
-    heartbeats, axiom audits, simp discipline, docstring presence) are
-    handled by linters elsewhere in CI. Do NOT flag those here, even if you
-    notice them.
+    Write to a colleague: direct, no encouragement, no editorializing,
+    no convention justifications, no "great work."
 
-    Before applying any qualitative rule, walk the Decision flow in the
-    rules document. Compute and report in your JSON output:
+    Mechanical style issues (presence of sorry, headers, naming, simp
+    discipline, line length, axiom audit, etc.) are caught by linters
+    elsewhere in CI. Do NOT flag those, even if you notice them.
 
-    - N = number of new top-level declarations (theorem / lemma / def /
-      instance / structure / inductive / class) in the diff
-    - F = number of files containing new declarations
-    - A = whether the PR description, project card, or doc comments cite
-      a paper / textbook / named open problem
-    - C = whether a `/-! ... -/` project-card docstring is present at the
-      top of a new entry-point file under `LeanPool/`
-
-    If `N <= 2` and `A` is false, OR if `F == 1` and `N <= 5` and `A` is
-    false, the verdict MUST be `request_changes` with at least one `S1`
-    finding. Do not be charitable with words like "substantive,"
-    "graduate-level," "self-contained," or "main theorem" — apply them
-    only when there is an external anchor and the PR develops a result
-    through multiple intermediate steps. A declaration being labelled
-    `theorem` does not make it the main theorem of a project.
-
-    You flag only specific, actionable rule violations. You do not make
-    stylistic comments outside the rules. When in doubt about everything
-    else, you say nothing.
-
-    You always respond with a single JSON object matching the schema given
-    in the rules document. No prose outside the JSON.
+    Always respond with a single JSON object matching the schema in the
+    rules document. The `assessment` block is the core deliverable —
+    that is what tells the maintainer whether to bother reading the PR.
+    `findings` is for actual specific suggestions; an empty list is
+    fine and often correct.
     """
 )
 
@@ -156,15 +147,20 @@ def request_review(model: str, rules: str, diff: str) -> tuple[dict, Any, str]:
             service_tier="flex",
         )
         tier = "flex"
-    except RateLimitError:
-        # Flex pool exhausted; retry on standard tier.
-        response = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            response_format={"type": "json_object"},
-            service_tier="auto",
-        )
-        tier = "standard"
+    except (RateLimitError, APIStatusError) as e:
+        # Flex either out of capacity (429 RateLimitError) or unsupported
+        # for this model (e.g. 500 InternalServerError on gpt-5.5).
+        # Either way, fall back to standard.
+        if isinstance(e, RateLimitError) or (500 <= e.status_code < 600):
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                response_format={"type": "json_object"},
+                service_tier="auto",
+            )
+            tier = "standard"
+        else:
+            raise
 
     content = response.choices[0].message.content or "{}"
     return json.loads(content), response.usage, tier
@@ -193,21 +189,33 @@ def render_usage(usage: Any, model: str, tier: str) -> str:
     return " · ".join(parts)
 
 
-def render_shape(payload: dict) -> str:
-    """Render the shape (N, F, A, C) audit line, or empty if absent."""
-    shape = payload.get("shape") or {}
-    if not shape:
+def render_assessment(payload: dict) -> str:
+    """Render the structured assessment block as a Markdown table."""
+    a = payload.get("assessment") or {}
+    if not a:
         return ""
-    n = shape.get("N", "?")
-    f = shape.get("F", "?")
-    a = shape.get("A")
-    c = shape.get("C")
-    a_str = "true" if a is True else "false" if a is False else "?"
-    c_str = "true" if c is True else "false" if c is False else "?"
-    return (
-        f"**Shape:** `N={n}` (decls) · `F={f}` (files) · "
-        f"`A={a_str}` (anchor) · `C={c_str}` (project card)"
-    )
+
+    fit = a.get("fit", "")
+    fit_cell = f"{FIT_ICON.get(fit, '•')} `{fit}`" if fit else "?"
+    quality = a.get("code_quality")
+    quality_cell = f"{quality} / 5" if quality is not None else "?"
+
+    rows = [
+        ("Fit", fit_cell),
+        ("Level", f"`{a.get('level', '?')}`"),
+        ("Branch", a.get("branch", "?")),
+        ("Mode", f"`{a.get('mode', '?')}`"),
+        ("Obscure problem", "yes" if a.get("obscure_problem") else "no"),
+        ("Code quality", quality_cell),
+    ]
+    table = "| Aspect | Value |\n|---|---|\n"
+    for k, v in rows:
+        table += f"| {k} | {v} |\n"
+
+    sig = (a.get("significance_one_sentence") or "").strip()
+    if sig:
+        table += f"\n_{sig}_"
+    return table
 
 
 def render_comment(
@@ -223,23 +231,21 @@ def render_comment(
 
     lines = [f"## 🤖 LLM review (`{model}`)", ""]
 
-    shape_line = render_shape(payload)
-    if shape_line:
-        lines.extend([shape_line, ""])
-
     if verdict:
         icon = VERDICT_ICON.get(verdict, "•")
         lines.extend([f"**Verdict:** {icon} `{verdict}`", ""])
 
-    lines.extend([summary, ""])
+    if summary:
+        lines.extend([summary, ""])
 
-    if not findings:
-        lines.append("_No rule violations found._")
-    else:
+    assessment = render_assessment(payload)
+    if assessment:
+        lines.extend([assessment, ""])
+
+    if findings:
         lines.append(f"### Findings ({len(findings)})")
         lines.append("")
         for f in findings:
-            icon = SEVERITY_ICON.get(f.get("severity", "info"), "•")
             path = f.get("file") or ""
             line_no = f.get("line", 0) or 0
             if path and line_no:
@@ -250,10 +256,10 @@ def render_comment(
                 ref = "_PR-wide_"
             rule = f.get("rule", "")
             body = (f.get("comment") or "").strip()
-            lines.append(f"- {icon} **{rule}** — {ref}")
+            lines.append(f"- **{rule}** — {ref}")
             lines.append(f"  {body}")
+        lines.append("")
 
-    lines.append("")
     lines.append("---")
     usage_line = render_usage(usage, model, tier)
     if usage_line:

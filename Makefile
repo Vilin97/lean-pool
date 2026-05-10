@@ -1,8 +1,15 @@
-.PHONY: build lint lint-fix check test update agent-docs
+.PHONY: build setup lint lint-fix check test update agent-docs
 
 # Build the Lean project.
 build:
 	lake build LeanPool
+
+# First-time setup: pull the Mathlib oleans cache, build the Lean
+# library at the pinned version, and install Python tooling.
+setup:
+	lake exe cache get
+	lake build LeanPool
+	cd python && uv sync
 
 # Run all CI-equivalent linters (Lean and Python).
 lint:

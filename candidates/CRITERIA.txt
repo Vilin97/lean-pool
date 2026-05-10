@@ -1,0 +1,57 @@
+lean-pool inclusion criteria
+============================
+
+Goal: arXiv-style index of Lean formalisations whose results could
+plausibly merge into mathlib, cslib, or PhysLean.
+
+INCLUDE if all hold:
+  1. Domain fits one of:
+     - mathlib   = mathematics
+     - cslib     = CS / software (semantics, type theory, logic,
+                   compilers, crypto, distributed systems, concurrency,
+                   OS or hardware specs, network protocols, parsers,
+                   data structures, verified algorithms)
+     - physlean  = physics
+  2. >=250 LOC of the project's own .lean code (not vendored deps).
+  3. Reads like theorems / lemmas / definitions a big library could
+     absorb. Blueprints with stubs OK if stubs are real planned results.
+
+EXCLUDE if any apply:
+  - tool        = tactic, automation, editor/LSP, doc gen, search,
+                  build/test util, Lake plugin, autograder, REPL
+  - educational = course, book, tutorial, Lean game, homework template
+  - personal    = AoC, Project Euler, learning Lean, MWE, bug repro
+  - translation = Lean 3->4, mathport, mathlib3port
+  - fork        = mirror / fork of mathlib / cslib / PhysLean
+  - empty       = no theorems, no stated next step, abandoned
+  - scaffold    = excessive sorrys / mostly placeholders. We want
+                  completed code. A few sorrys in actively developed
+                  files is fine; a majority-sorry repo is not.
+
+Edge cases:
+  - Blueprint mostly LaTeX: include only if .lean side has substantive
+    completed proofs (not just sorry stubs).
+  - Math + tactic helper: judge by the dominant part. If both
+    substantive, category = multi.
+  - Solo-author library with real (non-exercise) theorems: include.
+
+Confidence: high | medium | low (low = flag for human review).
+
+Output: append one JSON line per repo to decisions.jsonl:
+
+  {"repo":"owner/name","include":true,"category":"mathlib","confidence":"high","rationale":"<=200 chars, specific"}
+
+Categories on include: mathlib | cslib | physlean | multi
+Categories on exclude: tool | educational | personal | translation | fork | empty | scaffold
+
+repo = canonical owner/name (lowercase, strip .lean/.git), matches clone dir.
+
+To classify a repo at raw_data/clones/<owner>/<name>/, read:
+  - README (first ~10 KB)
+  - lakefile.lean or lakefile.toml
+  - lean-toolchain
+  - .lean file listing (cap ~200)
+  - 3-5 .lean files, top ~80 lines each, in the project's main namespace
+    (skip .lake/, lake-packages/, build/, .git/)
+
+Read-only. Do not run lake build.

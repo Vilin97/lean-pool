@@ -1,13 +1,15 @@
 name: LLM Review
 
-# Runs only after Lean Action CI succeeds for a pull_request, so the LLM
-# never reviews code that doesn't even build. Also exposes a manual
-# `workflow_dispatch` trigger for testing or for cases where the gate
-# wasn't satisfied but a maintainer wants the review anyway.
+# Triggers: pull_request_target (opened), /review issue comment,
+# workflow_dispatch. PRs with no .lean files skip immediately. Otherwise
+# wait for Lean Action CI on the head SHA and only call gpt-5.5 if it's
+# green. pull_request_target gives secrets for fork PRs; we only check
+# out the base branch.
 on:
-  workflow_run:
-    workflows: ["Lean Action CI"]
-    types: [completed]
+  pull_request_target:
+    types: [opened]
+  issue_comment:
+    types: [created]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -18,58 +20,145 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  # Needed to query Lean Action CI run status for the head SHA.
+  actions: read
 
 jobs:
   review:
     runs-on: ubuntu-latest
-    # Run for manual dispatches, or for successful Lean Action CI runs that
-    # were themselves triggered by a pull_request.
+    # Allow workflow_dispatch and pull_request_target unconditionally;
+    # restrict issue_comment to PR comments whose body starts with
+    # `/review`. (startsWith catches "/review" and "/review please ..."
+    # but not casual mentions like "should we /review this?".)
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.event == 'pull_request')
+      github.event_name == 'pull_request_target' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request != null &&
+       startsWith(github.event.comment.body, '/review'))
     steps:
-      - name: Resolve PR number
+      - name: Resolve PR number and head SHA
         id: pr
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
-          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-          DISPATCH_PR: ${{ inputs.pr_number }}
           EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_PR: ${{ inputs.pr_number }}
+          PR_FROM_PR_EVENT: ${{ github.event.pull_request.number }}
+          PR_FROM_COMMENT: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            echo "number=$DISPATCH_PR" >> "$GITHUB_OUTPUT"
-            echo "Manual dispatch: PR #$DISPATCH_PR"
+          case "$EVENT_NAME" in
+            workflow_dispatch)   pr="$DISPATCH_PR" ;;
+            pull_request_target) pr="$PR_FROM_PR_EVENT" ;;
+            issue_comment)       pr="$PR_FROM_COMMENT" ;;
+            *) echo "::error::Unexpected event $EVENT_NAME"; exit 1 ;;
+          esac
+          if [ -z "$pr" ]; then
+            echo "::error::Could not resolve PR number"; exit 1
+          fi
+          head_sha=$(gh api "repos/$REPO/pulls/$pr" --jq '.head.sha')
+          echo "number=$pr" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
+          echo "Resolved PR #$pr at $head_sha"
+
+      - name: Check whether the PR touches any .lean files
+        id: lean_changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          count=$(gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate \
+                  --jq '[.[] | select(.filename | endswith(".lean"))] | length')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" -eq 0 ]; then
+            echo "PR #$PR_NUMBER touches no .lean files; skipping Lean CI wait and gpt-5.5 review."
           else
-            pr=$(jq -r '.workflow_run.pull_requests[0].number // empty' < "$GITHUB_EVENT_PATH")
-            if [ -z "$pr" ]; then
-              pr=$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" --jq '.[0].number // empty')
-            fi
-            if [ -z "$pr" ]; then
-              echo "No PR associated with workflow_run head sha; skipping." >&2
-              exit 0
-            fi
-            echo "number=$pr" >> "$GITHUB_OUTPUT"
-            echo "Resolved PR #$pr from workflow_run."
+            echo "PR #$PR_NUMBER touches $count .lean file(s); will wait for Lean Action CI."
           fi
 
+      - name: Comment when no .lean files in PR
+        if: steps.lean_changes.outputs.count == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          gh pr comment "$PR_NUMBER" --repo "$REPO" --body \
+            "_LLM review skipped: PR touches no \`.lean\` files. Push a Lean change or comment \`/review\` after one lands to re-trigger._"
+
+      - name: Wait for Lean Action CI on this head
+        id: wait
+        if: steps.lean_changes.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          # Up to 30 minutes — enough for a cold-cache Lean build.
+          deadline=$(( $(date +%s) + 1800 ))
+          conclusion=""
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            run_json=$(gh api \
+              "repos/$REPO/actions/workflows/lean_action_ci.yml/runs?head_sha=$HEAD_SHA&per_page=1" \
+              --jq '.workflow_runs[0] // empty')
+            if [ -n "$run_json" ]; then
+              status=$(echo "$run_json" | jq -r '.status')
+              if [ "$status" = "completed" ]; then
+                conclusion=$(echo "$run_json" | jq -r '.conclusion // ""')
+                break
+              fi
+              echo "Lean Action CI status: $status; waiting..."
+            else
+              echo "No Lean Action CI run for $HEAD_SHA yet; waiting..."
+            fi
+            sleep 30
+          done
+          if [ -z "$conclusion" ]; then
+            conclusion="timed_out"
+          fi
+          echo "conclusion=$conclusion" >> "$GITHUB_OUTPUT"
+          echo "Lean Action CI conclusion: $conclusion"
+
+      - name: Comment when Lean CI is not green
+        if: >-
+          steps.lean_changes.outputs.count != '0' &&
+          steps.wait.outputs.conclusion != 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          CONCLUSION: ${{ steps.wait.outputs.conclusion }}
+        run: |
+          set -euo pipefail
+          gh pr comment "$PR_NUMBER" --repo "$REPO" --body \
+            "_LLM review skipped: Lean Action CI conclusion was \`$CONCLUSION\`. Push a fix or comment \`/review\` after CI is green._"
+
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        if: steps.wait.outputs.conclusion == 'success'
         with:
+          # Always check out the base branch (default), never the PR
+          # head — pull_request_target runs with secrets, so executing
+          # PR-head code would be a token-exfiltration vector.
           fetch-depth: 0
           persist-credentials: false
 
       - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        if: steps.wait.outputs.conclusion == 'success'
         with:
           enable-cache: true
 
       - name: Sync Python dependencies
+        if: steps.wait.outputs.conclusion == 'success'
         working-directory: python
         run: uv sync --group review
 
       - name: Run LLM review
-        if: steps.pr.outputs.number != ''
+        if: steps.wait.outputs.conclusion == 'success'
         working-directory: python
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -78,15 +167,12 @@ jobs:
           # Override here if the model name needs to change. Per-tier
           # prices live in PRICING_PER_M inside review.py — update there
           # when bumping the model.
-          REVIEW_MODEL: gpt-5.4-mini
+          REVIEW_MODEL: gpt-5.5
         run: uv run python -m lean_pool.review
 
-      # Request Copilot's PR review now that Lean CI has passed. This
-      # only matters if the repo's "Automatically request Copilot code
-      # review" setting is OFF — otherwise Copilot already fired on PR
-      # open. The endpoint accepts the literal reviewer name "Copilot";
-      # `if: always()` means we still try this even if the LLM review
-      # step above failed (it's a separate channel).
+      # Request Copilot's PR review. Idempotent — re-requesting the same
+      # reviewer is a no-op. `if: always()` ensures Copilot still gets
+      # asked even when LLM review was skipped or failed.
       - name: Request Copilot review
         if: always() && steps.pr.outputs.number != ''
         env:

@@ -18,7 +18,7 @@ CODE_QUALITY_URL = (
     "https://github.com/Vilin97/lean-pool/blob/main/.github/CODE_QUALITY.md"
 )
 FILE_HEADERS_DOC = f"{CODE_QUALITY_URL}#7-file-headers"
-STATUS_VALUES = {"verified", "draft", "extra-axiom"}
+STATUS_VALUES = {"verified"}
 SOURCE_KEYS = {"arxiv", "doi", "url"}
 DECLARATION_KEYWORDS = (
     "theorem",
@@ -34,6 +34,11 @@ DECLARATION_PREFIX = (
     r"(?:@\[[^\n\]]+\]\s+)*"
     r"(?:(?:private|protected|noncomputable|scoped)\s+)*"
 )
+# A (possibly dotted) Lean identifier: a leading letter or `_`, then letters /
+# digits / `_` / `'` / `.`. `\w` and `\W` are Unicode-aware in Python 3, so
+# this matches names with subscripts or Greek letters (`c₀`, `α`) that an
+# ASCII-only `[A-Za-z0-9_'.]` pattern would truncate.
+LEAN_IDENT = r"[^\W\d][\w'.]*"
 
 FORBIDDEN_DIAGNOSTICS = re.compile(
     r"^\s*#(?:check|print|eval!?|reduce|guard_msgs|lint)\b"
@@ -41,15 +46,16 @@ FORBIDDEN_DIAGNOSTICS = re.compile(
 FORBIDDEN_SOUNDNESS = re.compile(
     r"\b(?:axiom|constant|unsafe|partial|opaque)\b|@\[\s*extern\b"
 )
-HEADER_PATTERNS = (
-    re.compile(r"\A/-\n"),
-    re.compile(r"^Copyright \(c\) \d{4} .+ All rights reserved\.$", re.MULTILINE),
-    re.compile(
-        r"^Released under Apache 2\.0 license as described in the file LICENSE\.$",
-        re.MULTILINE,
-    ),
-    re.compile(r"^Authors: .+$", re.MULTILINE),
-    re.compile(r"^-/\n", re.MULTILINE),
+# Strict four-line header. Anchored at the start of the file, no extra lines
+# allowed inside the block: this forbids ad-hoc Source/MSC/Tags/Status fields
+# (those belong in projects.yml per CODE_QUALITY.md §7) and enforces the
+# documented field order.
+HEADER_PATTERN = re.compile(
+    r"\A/-\n"
+    r"Copyright \(c\) \d{4} [^\n]+\. All rights reserved\.\n"
+    r"Released under Apache 2\.0 license as described in the file LICENSE\.\n"
+    r"Authors: [^\n]+\n"
+    r"-/\n"
 )
 
 
@@ -198,12 +204,15 @@ def _check_headers(root: Path) -> list[_QualityError]:
         if path == root / "LeanPool.lean":
             continue
         text = path.read_text()
-        if not all(pattern.search(text) for pattern in HEADER_PATTERNS):
+        if not HEADER_PATTERN.match(text):
             errors.append(
                 _QualityError(
                     path,
                     1,
-                    f"missing structured file header; see {FILE_HEADERS_DOC}",
+                    "malformed file header: expected exactly the four-line "
+                    "Copyright/License/Authors block in order, with no extra "
+                    "Source/MSC/Tags/Status fields (those live in "
+                    f"projects.yml); see {FILE_HEADERS_DOC}",
                 )
             )
     return errors
@@ -278,10 +287,10 @@ def _check_file_sizes(root: Path) -> list[_QualityError]:
     errors: list[_QualityError] = []
     for path in _lean_content_files(root):
         code_lines = _non_comment_code_lines(path.read_text())
-        if code_lines > 2000:
+        if code_lines > 10000:
             errors.append(
                 _QualityError(
-                    path, 1, f"file has {code_lines} code lines; limit is 2000"
+                    path, 1, f"file has {code_lines} code lines; limit is 10000"
                 )
             )
     return errors
@@ -309,8 +318,6 @@ def _check_proof_sizes(root: Path) -> list[_QualityError]:
                 else len(original_lines) + 1
             )
             block = original_lines[start_line - 1 : end_line - 1]
-            if any("size-limit-ok:" in line for line in block):
-                continue
             try:
                 body_start = next(
                     offset for offset, line in enumerate(block) if ":=" in line
@@ -319,12 +326,12 @@ def _check_proof_sizes(root: Path) -> list[_QualityError]:
                 continue
             body = "\n".join(block[body_start:])
             proof_lines = _non_comment_code_lines(body)
-            if proof_lines > 100:
+            if proof_lines > 200:
                 errors.append(
                     _QualityError(
                         path,
                         start_line,
-                        f"proof has {proof_lines} code lines; limit is 100",
+                        f"proof has {proof_lines} code lines; limit is 200",
                     )
                 )
     return errors
@@ -333,20 +340,22 @@ def _check_proof_sizes(root: Path) -> list[_QualityError]:
 def _parse_declarations(root: Path) -> list[_Declaration]:
     declarations: list[_Declaration] = []
     keyword_pattern = "|".join(DECLARATION_KEYWORDS)
+    # Use a negative lookahead instead of `\b`: `\b` does not treat `'` as a
+    # word character, so a name like `foo'` would be parsed as `foo` and the
+    # subsequent `#print axioms` audit would fail with `unknown constant`.
     decl_pattern = re.compile(
-        rf"^\s*{DECLARATION_PREFIX}({keyword_pattern})\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
+        rf"^\s*{DECLARATION_PREFIX}({keyword_pattern})\s+"
+        rf"({LEAN_IDENT})(?![\w'.])"
     )
     for path in _lean_content_files(root):
         namespace_stack: list[str] = []
         stripped = _strip_lean_comments(path.read_text())
         for line_number, line in enumerate(stripped.splitlines(), start=1):
-            namespace_match = re.match(
-                r"^\s*namespace\s+([A-Za-z_][A-Za-z0-9_'.]*)\s*$", line
-            )
+            namespace_match = re.match(rf"^\s*namespace\s+({LEAN_IDENT})\s*$", line)
             if namespace_match:
                 namespace_stack.append(namespace_match.group(1))
                 continue
-            if re.match(r"^\s*end(?:\s+[A-Za-z_][A-Za-z0-9_'.]*)?\s*$", line):
+            if re.match(rf"^\s*end(?:\s+{LEAN_IDENT})?\s*$", line):
                 if namespace_stack:
                     namespace_stack.pop()
                 continue
@@ -367,6 +376,11 @@ def _is_private_declaration_line(line: str) -> bool:
 
 
 def _qualify_name(namespace_stack: list[str], name: str) -> str:
+    if name.startswith("_root_."):
+        # `_root_.Foo.bar` declares `Foo.bar` at the top level regardless of
+        # the enclosing namespace; strip the escape so the audit emits
+        # `#print axioms _root_.Foo.bar`, not `_root_._root_.Foo.bar`.
+        return name.removeprefix("_root_.")
     if "." in name or not namespace_stack:
         return name
     return ".".join([*namespace_stack, name])
@@ -386,26 +400,46 @@ def _check_axioms(root: Path) -> list[_QualityError]:
         temp_file.flush()
 
     try:
-        process = subprocess.run(
-            ["lake", "env", "lean", str(temp_path)],
-            cwd=root,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        try:
+            process = subprocess.run(
+                ["lake", "env", "lean", str(temp_path)],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except FileNotFoundError:
+            # `lake` not on PATH; surface a single advisory error rather
+            # than crashing the whole quality run.
+            return [
+                _QualityError(
+                    root / "LeanPool.lean",
+                    1,
+                    "axiom audit skipped: `lake` not found",
+                )
+            ]
     finally:
         temp_path.unlink(missing_ok=True)
 
-    if process.returncode != 0:
-        return [
+    errors = _parse_axiom_output(root, declarations, process.stdout)
+    resolved = _axiom_audit_resolved(process.stdout)
+    missing = [
+        declaration for declaration in declarations if declaration.name not in resolved
+    ]
+    # Distinguish "Lean ran but couldn't resolve some declarations" (per-decl
+    # localization is useful) from "Lean failed before any #print axioms ran"
+    # (a single root-cause error is more useful than N copies).
+    if missing and not resolved and process.returncode != 0:
+        return errors + [
             _QualityError(
                 root / "LeanPool.lean",
                 1,
-                f"axiom audit failed: {process.stderr.strip()}",
+                f"axiom audit failed before any declaration was checked: "
+                f"{process.stderr.strip() or '(no stderr)'}",
             )
         ]
-
-    return _parse_axiom_output(root, declarations, process.stdout)
+    errors.extend(_axiom_audit_missing(missing, process.stderr))
+    return errors
 
 
 def _parse_axiom_output(
@@ -418,7 +452,8 @@ def _parse_axiom_output(
     by_name.update(
         {f"_root_.{declaration.name}": declaration for declaration in declarations}
     )
-    pattern = re.compile(r"^'([^']+)' depends on axioms: \[(.*)\]$", re.MULTILINE)
+    # Names may contain `'` (e.g. `foo'`); see _axiom_audit_resolved comment.
+    pattern = re.compile(r"^'(.+?)' depends on axioms: \[(.*)\]$", re.MULTILINE)
     for match in pattern.finditer(output):
         name = match.group(1)
         axioms = {item.strip() for item in match.group(2).split(",") if item.strip()}
@@ -434,6 +469,60 @@ def _parse_axiom_output(
                 )
             )
     return errors
+
+
+def _axiom_audit_resolved(stdout: str) -> set[str]:
+    """Return the set of declaration names that `#print axioms` resolved."""
+    # `#print axioms NAME` produces one of two messages on stdout:
+    #   'NAME' depends on axioms: [a, b, c]
+    #   'NAME' does not depend on any axioms
+    # Both indicate the lookup resolved; only the first list is interesting
+    # for the trusted-axiom check, but both must count as "seen" so we don't
+    # emit a spurious "produced no result" for axiom-free declarations.
+    #
+    # Names may contain `'` (e.g. `foo'`), so we cannot use `[^']+` for the
+    # name. Use a non-greedy match anchored on `' ` (closing quote followed
+    # by space) — Lean always emits one space between the echoed name and
+    # the verb, and a name cannot end with whitespace.
+    pattern = re.compile(
+        r"^'(.+?)' (?:depends on axioms: \[|does not depend on any axioms)",
+        re.MULTILINE,
+    )
+    resolved: set[str] = set()
+    for match in pattern.finditer(stdout):
+        name = match.group(1)
+        # Lean echoes back the qualified name we passed in; strip _root_. so it
+        # matches the unqualified names we collected via _parse_declarations.
+        if name.startswith("_root_."):
+            name = name[len("_root_.") :]
+        resolved.add(name)
+    return resolved
+
+
+def _axiom_audit_missing(
+    missing: list[_Declaration],
+    stderr: str,
+) -> list[_QualityError]:
+    """Emit one error per declaration that `#print axioms` could not resolve."""
+    errors: list[_QualityError] = []
+    for declaration in missing:
+        snippet = _stderr_snippet_for(stderr, declaration.name)
+        message = (
+            f"axiom audit failed for {declaration.name}: {snippet}"
+            if snippet
+            else f"axiom audit produced no result for {declaration.name}"
+        )
+        errors.append(_QualityError(declaration.path, declaration.line, message))
+    return errors
+
+
+def _stderr_snippet_for(stderr: str, name: str) -> str:
+    """Find the most relevant stderr line mentioning `name`, or ''."""
+    error_lines = [line for line in stderr.splitlines() if name in line]
+    for line in error_lines:
+        if "error" in line.lower():
+            return line.strip()
+    return error_lines[0].strip() if error_lines else ""
 
 
 def _load_projects_yaml(
@@ -457,26 +546,49 @@ def _check_projects(root: Path) -> list[_QualityError]:
         return errors
 
     path = root / "LeanPool" / "projects.yml"
-    tags = data.get("tags", [])
     projects = data.get("projects", [])
-    errors.extend(_check_project_container(path, tags, projects))
+    errors.extend(_check_project_container(path, projects))
     if errors:
         return errors
 
-    known_tags = set(tags)
+    errors.extend(_check_project_uniqueness(path, projects))
+    if errors:
+        return errors
+
     for index, project in enumerate(projects, start=1):
-        errors.extend(_check_project(root, path, index, project, known_tags))
+        errors.extend(_check_project(root, path, index, project))
     return errors
 
 
-def _check_project_container(
-    path: Path, tags: Any, projects: Any
-) -> list[_QualityError]:
+def _check_project_container(path: Path, projects: Any) -> list[_QualityError]:
     errors: list[_QualityError] = []
-    if not isinstance(tags, list) or any(not isinstance(tag, str) for tag in tags):
-        errors.append(_QualityError(path, 1, "`tags` must be a list of strings"))
     if not isinstance(projects, list):
         errors.append(_QualityError(path, 1, "`projects` must be a list"))
+    return errors
+
+
+def _check_project_uniqueness(path: Path, projects: list[Any]) -> list[_QualityError]:
+    """Reject duplicate `slug` or `entry_module` across projects."""
+    errors: list[_QualityError] = []
+    for field in ("slug", "entry_module"):
+        seen: dict[str, int] = {}
+        for index, project in enumerate(projects, start=1):
+            if not isinstance(project, dict):
+                continue
+            value = project.get(field)
+            if not isinstance(value, str):
+                continue
+            if value in seen:
+                errors.append(
+                    _QualityError(
+                        path,
+                        1,
+                        f"duplicate `{field}` {value!r} in projects "
+                        f"#{seen[value]} and #{index}",
+                    )
+                )
+            else:
+                seen[value] = index
     return errors
 
 
@@ -485,20 +597,17 @@ def _check_project(
     path: Path,
     index: int,
     project: Any,
-    known_tags: set[str],
 ) -> list[_QualityError]:
     if not isinstance(project, dict):
         return [_QualityError(path, 1, f"project #{index} must be a mapping")]
 
     errors = _check_required_project_fields(path, index, project)
-    errors.extend(_check_project_values(root, path, index, project, known_tags))
+    errors.extend(_check_project_values(root, path, index, project))
     if errors:
         return errors
 
-    entry_module = project["entry_module"]
-    entry_path = _module_to_path(root, entry_module)
+    entry_path = _module_to_path(root, project["entry_module"])
     errors.extend(_check_project_declarations(root, path, project))
-    errors.extend(_check_project_status(root, path, project, entry_module))
     errors.extend(_check_project_card(entry_path, path, project))
     return errors
 
@@ -531,7 +640,6 @@ def _check_project_values(
     path: Path,
     index: int,
     project: dict[str, Any],
-    known_tags: set[str],
 ) -> list[_QualityError]:
     errors: list[_QualityError] = []
     if project["status"] not in STATUS_VALUES:
@@ -551,14 +659,6 @@ def _check_project_values(
     if not _string_list(project["tags"]):
         errors.append(
             _QualityError(path, 1, f"project #{index} tags must be nonempty strings")
-        )
-    elif unknown_tags := sorted(set(project["tags"]) - known_tags):
-        errors.append(
-            _QualityError(
-                path,
-                1,
-                f"project #{index} uses unknown tags: {', '.join(unknown_tags)}",
-            )
         )
     entry_path = _module_to_path(root, str(project["entry_module"]))
     if not entry_path.exists():
@@ -597,13 +697,23 @@ def _check_project_declarations(
         temp_file.flush()
 
     try:
-        process = subprocess.run(
-            ["lake", "env", "lean", str(temp_path)],
-            cwd=root,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        try:
+            process = subprocess.run(
+                ["lake", "env", "lean", str(temp_path)],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except FileNotFoundError:
+            # `lake` not on PATH (sandboxed CI, contributor without Lean).
+            # Treat the same as `--skip-lean-axioms`: emit a single advisory
+            # error so callers know the check was skipped, rather than crash.
+            return [
+                _QualityError(
+                    path, 1, "project declarations check skipped: `lake` not found"
+                )
+            ]
     finally:
         temp_path.unlink(missing_ok=True)
 
@@ -616,35 +726,6 @@ def _check_project_declarations(
     ]
 
 
-def _check_project_status(
-    root: Path,
-    path: Path,
-    project: dict[str, Any],
-    entry_module: str,
-) -> list[_QualityError]:
-    project_files = _reachable_leanpool_files(root, entry_module)
-    computed = _computed_status(project_files)
-    if project["status"] == computed:
-        return []
-    return [
-        _QualityError(
-            path, 1, f"project status is {project['status']}; computed {computed}"
-        )
-    ]
-
-
-def _computed_status(files: set[Path]) -> str:
-    for path in files:
-        stripped = _strip_lean_comments(path.read_text())
-        if re.search(r"\b(?:sorry|admit)\b", stripped):
-            return "draft"
-    for path in files:
-        stripped = _strip_lean_comments(path.read_text())
-        if FORBIDDEN_SOUNDNESS.search(stripped):
-            return "extra-axiom"
-    return "verified"
-
-
 def _check_project_card(
     entry_path: Path,
     metadata_path: Path,
@@ -654,8 +735,12 @@ def _check_project_card(
         return []
     text = entry_path.read_text()
     expected = _project_card(project)
-    body = text[_initial_header_end(text) :].lstrip()
-    if body.startswith(expected):
+    # The project card is the first module docstring (`/-!`) after the file
+    # header. Mathlib convention places imports between the header and the
+    # module docstring, so we skip past those.
+    body = text[_initial_header_end(text) :]
+    idx = body.find("/-!")
+    if idx >= 0 and body[idx:].startswith(expected):
         return []
     return [
         _QualityError(

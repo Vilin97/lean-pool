@@ -8,8 +8,8 @@ still worth tracking. We keep a hand-edited URL list and fetch their
 metadata from the GitHub REST API at the same time we fetch the
 Reservoir manifest.
 
-The list lives at ``aggregator/candidates/manual.txt`` — one GitHub URL
-per line, ``#`` comments and blank lines allowed.
+The list lives at ``candidates/manual.txt`` — one GitHub URL per line,
+``#`` comments and blank lines allowed.
 """
 
 from __future__ import annotations

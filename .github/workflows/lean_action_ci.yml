@@ -113,27 +113,6 @@ jobs:
           uv sync --locked
           uv run python -m lean_pool.quality --repo ..
 
-      - name: Proof profile (advisory)
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          : > proof-profile.log
-          while IFS= read -r -d '' file; do
-            {
-              echo "## $file"
-              ~/.elan/bin/lake env lean --profile "$file"
-              echo
-            } >> proof-profile.log 2>&1
-          done < <(find LeanPool -name '*.lean' -print0 | sort -z)
-
-      - name: Upload proof profile
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: proof-profile
-          path: proof-profile.log
-          if-no-files-found: ignore
-
       - name: Save caches
         if: always() && github.ref == 'refs/heads/main'
         uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
