@@ -210,7 +210,7 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
           · intro x hx
             convert HasFDerivAt.hasDerivAt
                 (HasFDerivAt.comp x
-                  (hF.contDiffAt.differentiableAt le_rfl |> DifferentiableAt.hasFDerivAt)
+                  (hF.contDiffAt.differentiableAt one_ne_zero |> DifferentiableAt.hasFDerivAt)
                   (hasFDerivAt_pi.mpr _)) using 1
             rotate_left
             use fun j => if j = i then 1 else 0
@@ -224,7 +224,7 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
               split <;> simp
           · apply_rules [ Continuous.intervalIntegrable ]
             have h_cont : Continuous (fun y => fderiv ℝ F (Fin.insertNth i y z)) := by
-              exact hF.continuous_fderiv le_rfl |> Continuous.comp <|
+              exact hF.continuous_fderiv one_ne_zero |> Continuous.comp <|
                 continuous_pi_iff.mpr fun j => by fin_cases i <;> fin_cases j <;> continuity
             exact h_cont.clm_apply continuous_const
         convert h_ftc using 1 <;> norm_num [ intervalIntegral.integral_of_le zero_le_one ]
@@ -245,7 +245,7 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
             have h_cont : Continuous
                 (fun p : ℝ × (Fin 2 → ℝ) => fderiv ℝ F (i.insertNth p.1 p.2)) := by
               have h_cont : Continuous (fun p : Fin 3 → ℝ => fderiv ℝ F p) := by
-                exact hF.continuous_fderiv le_rfl
+                exact hF.continuous_fderiv one_ne_zero
               refine h_cont.comp ?_
               refine continuous_pi_iff.mpr ?_
               intro j; fin_cases j <;> simp [ Fin.insertNth ]
@@ -319,7 +319,7 @@ theorem torus_hIBP_spatial (φ ψ : Torus3 → ℝ) (i : Fin 3)
     (∫ x, φ x * torusGradX ψ x i) = -(∫ x, ψ x * torusGradX φ x i) := by
   have hprod : ∫ x : Torus3, torusGradX (fun z => φ z * ψ z) x i =
     (∫ x : Torus3, φ x * torusGradX ψ x i) + ∫ x : Torus3, ψ x * torusGradX φ x i := by
-    simp_rw [torusGradX_mul φ ψ i (hφ.differentiable le_rfl) (hψ.differentiable le_rfl)]
+    simp_rw [torusGradX_mul φ ψ i (hφ.differentiable one_ne_zero) (hψ.differentiable one_ne_zero)]
     exact integral_add (integrable_mul_torusGradX φ ψ i hφ hψ)
       (integrable_mul_torusGradX ψ φ i hψ hφ)
   have hzero : ∫ x : Torus3, torusGradX (fun z => φ z * ψ z) x i = 0 := by
