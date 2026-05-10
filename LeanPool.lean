@@ -1,3 +1,17 @@
 import LeanPool.Basic
+import LeanPool.Erdos1196
+import LeanPool.Erdos1196.Basic
+import LeanPool.Erdos1196.FirstEntryRowTerm
+import LeanPool.Erdos1196.FormalConjecturesErdos1196
+import LeanPool.Erdos1196.HitMass
+import LeanPool.Erdos1196.Main
+import LeanPool.Erdos1196.Markov
+import LeanPool.Erdos1196.Normalization
+import LeanPool.Erdos1196.NormalizationCore
+import LeanPool.Erdos1196.NormalizationSmallPrime
+import LeanPool.Erdos1196.Preliminaries
+import LeanPool.Erdos1196.PreliminariesMertens
+import LeanPool.Erdos1196.PreliminariesTailAux
+import LeanPool.Erdos1196.PrimitiveWeight
 import LeanPool.FelConjecture
 import LeanPool.FelConjecture.Solution

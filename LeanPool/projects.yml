@@ -1,4 +1,19 @@
 projects:
+  - slug: erdos1196
+    title: Primitive Sets Above x (Erdős Problem 1196)
+    entry_module: LeanPool.Erdos1196
+    authors:
+      - Math Inc.
+    source:
+      url: "https://github.com/math-inc/Erdos1196"
+    status: verified
+    main_declarations:
+      - PrimitiveSetsAboveX.mainTheorem
+      - Erdos1196.erdos_1196
+    tags:
+      - number-theory
+      - combinatorics
+      - analysis
   - slug: fel-conjecture
     title: Fel's Conjecture on Syzygies of Numerical Semigroups
     entry_module: LeanPool.FelConjecture
