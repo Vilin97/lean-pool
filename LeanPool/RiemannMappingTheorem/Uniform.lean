@@ -104,7 +104,8 @@ lemma nhds_inf_uniform_nhds_eq_bot {s : Set α} (hf : 𝓝 a ⊓ 𝓟 s = ⊥) :
   rw [← uniform_nhds_set_singleton] at hf ⊢
   exact uniform_nhds_inf_uniform_nhds_eq_bot hf
 
-lemma is_compact.nhds_set_eq_uniform_nhds_set {s : Set α} (hs : IsCompact s) : 𝓝ˢ s = 𝓝ᵘ s :=
+lemma nhds_set_eq_uniform_nhds_set_of_isCompact {s : Set α} (hs : IsCompact s) :
+    𝓝ˢ s = 𝓝ᵘ s :=
   (hs.nhdsSet_basis_uniformity (basis_sets _)).eq_of_same_basis ⟨fun _ => mem_uniform_nhds_set_iff⟩
 
 end UniformSpace
