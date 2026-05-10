@@ -1914,8 +1914,7 @@ lemma error_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.r
   have hL_le_one := localDensityProduct_le_one b T S
   by_cases hM : M = 0
   · exact error_bound_empty_case b hb T hT S X hM
-  ·
-    have hM_pos : 0 < M := Nat.pos_of_ne_zero hM
+  · have hM_pos : 0 < M := Nat.pos_of_ne_zero hM
     have hxL := xL_real_bounds X M L hL_nonneg hM_pos
     exact final_error_bound hcount.1 hcount.2 hxL.1 hxL.2 hL_nonneg hL_le_one
 
