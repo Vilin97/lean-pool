@@ -2,8 +2,7 @@ This file is a concatenation of README.md and CONTRIBUTING.md.
 
 # lean-pool
 
-> [!NOTE]
-> **Lean Pool is arXiv for formal mathematics.** It sits between [`mathlib`](https://github.com/leanprover-community/mathlib4) and `merely-true`, preserving Lean 4 formalizations that don't fit mathlib's scope. Instead of mathlib's high-bar human review, Lean Pool relies on deterministic linters and LLM judgment, so it can grow faster while staying sorry-free, well-typed, and pinned to the latest Mathlib.
+Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathlib4) and `merely-true`, preserving Lean 4 formalizations that don't fit mathlib's scope. Instead of mathlib's high-bar human review, Lean Pool relies on deterministic linters and LLM judgment, so it can grow faster while staying sorry-free, well-typed, and pinned to the latest Mathlib.
 
 ## How it works
 
