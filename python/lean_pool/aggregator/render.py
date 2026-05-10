@@ -15,11 +15,30 @@ The renderer replaces the content between two HTML comment markers in
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 from pathlib import Path
+from typing import TypedDict
 
 from lean_pool.aggregator.reservoir import Build, Package, ReservoirManifest
+
+
+class Decision(TypedDict, total=False):
+    """One classifier verdict from ``decisions.jsonl``.
+
+    ``repo`` is the canonical ``owner/name`` key the renderer joins on.
+    ``include`` is the boolean filter. The remaining fields are kept
+    so future renderers can show category / confidence columns without
+    a schema change.
+    """
+
+    repo: str
+    include: bool
+    category: str
+    confidence: str
+    rationale: str
+
 
 logger = logging.getLogger(__name__)
 
@@ -168,6 +187,44 @@ def count_lean_loc(clones_dir: Path, key: str) -> int | None:
     return total
 
 
+def load_decisions(path: Path) -> dict[str, Decision]:
+    """Load classifier verdicts from a JSONL file, keyed by canonical repo.
+
+    Each line is one JSON object with ``repo``, ``include``, and other
+    fields described in :class:`Decision`. Later lines for the same
+    ``repo`` override earlier ones, so the file can be append-only as
+    classifications are revised.
+
+    Args:
+        path: Path to ``decisions.jsonl``. Lines that fail to parse or
+            lack a ``repo`` key are skipped with a warning so a single
+            bad row can't take rendering offline.
+
+    Returns:
+        A mapping from canonical ``owner/name`` (lowercase) to the
+        decision dict. Empty if the file does not exist.
+    """
+    if not path.is_file():
+        return {}
+    decisions: dict[str, Decision] = {}
+    with path.open() as handle:
+        for line_number, raw in enumerate(handle, start=1):
+            line = raw.strip()
+            if not line:
+                continue
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError as exc:
+                logger.warning("%s:%d: invalid JSON: %s", path, line_number, exc)
+                continue
+            repo = record.get("repo")
+            if not isinstance(repo, str) or not repo:
+                logger.warning("%s:%d: missing 'repo' field", path, line_number)
+                continue
+            decisions[repo.lower()] = record
+    return decisions
+
+
 def read_toolchain(clones_dir: Path, key: str) -> str | None:
     """Read the root ``lean-toolchain`` pin for a cloned repo.
 
@@ -231,14 +288,16 @@ def render_table(
     clones_dir: Path | None = None,
     min_stars: int = 0,
     min_loc: int = 0,
+    decisions: dict[str, Decision] | None = None,
 ) -> str:
     """Render the manifest as a markdown table.
 
     Packages are deduplicated by :func:`package_key` first (the first
     occurrence wins, so callers should put authoritative entries —
     typically Reservoir packages — before the fallback list), then
-    optionally filtered by ``min_stars`` and ``min_loc``, then sorted
-    by star count descending with ``fullName`` tiebreak.
+    optionally filtered by ``min_stars``, ``min_loc``, and
+    ``decisions``, then sorted by star count descending with
+    ``fullName`` tiebreak.
 
     Args:
         manifest: The full Reservoir manifest with packages in priority
@@ -258,6 +317,11 @@ def render_table(
             than this. Repos that we have no clone for (LOC unknown)
             are kept regardless. Has no effect when ``clones_dir`` is
             ``None`` because there's nothing to count.
+        decisions: Optional classifier verdicts (see
+            :func:`load_decisions`). When provided, rows whose
+            canonical key has ``include == False`` are dropped. Repos
+            with no entry in ``decisions`` are kept regardless, so
+            partial classification doesn't silently lose packages.
 
     Returns:
         A markdown table including header, separator, and one row per
@@ -277,6 +341,19 @@ def render_table(
 
     if min_stars > 0:
         deduped = [p for p in deduped if (p.get("stars") or 0) >= min_stars]
+
+    if decisions:
+
+        def _included(package: Package) -> bool:
+            key = package_key(package)
+            if key is None:
+                return True
+            decision = decisions.get(key)
+            if decision is None:
+                return True
+            return bool(decision.get("include", True))
+
+        deduped = [p for p in deduped if _included(p)]
 
     def _details(package: Package) -> tuple[str | None, int | None]:
         if clones_dir is None:

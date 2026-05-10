@@ -26,7 +26,7 @@ from lean_pool.aggregator.manual import (
     parse_manual_list,
     save_manual_packages,
 )
-from lean_pool.aggregator.render import render_table, update_readme
+from lean_pool.aggregator.render import load_decisions, render_table, update_readme
 from lean_pool.aggregator.reservoir import (
     MANIFEST_URL,
     fetch_manifest,
@@ -40,6 +40,7 @@ DEFAULT_MANUAL_LIST = CANDIDATES_DIR / "manual.txt"
 DEFAULT_MANUAL_DATA = CANDIDATES_DIR / "raw_data" / "manual_packages.json"
 DEFAULT_MANUAL_CACHE = CANDIDATES_DIR / "raw_data" / "manual_cache"
 DEFAULT_CLONES_DIR = CANDIDATES_DIR / "raw_data" / "clones"
+DEFAULT_DECISIONS = CANDIDATES_DIR / "decisions.jsonl"
 DEFAULT_README = CANDIDATES_DIR / "README.md"
 
 
@@ -208,6 +209,18 @@ def clone(
     ),
 )
 @click.option(
+    "--decisions",
+    "decisions_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_DECISIONS,
+    show_default=True,
+    help=(
+        "Classifier verdicts (JSONL). When the file exists, rows whose "
+        "canonical key has include=false are dropped. Repos with no "
+        "verdict are kept regardless. Pass a missing path to disable."
+    ),
+)
+@click.option(
     "--readme",
     "readme_path",
     type=click.Path(exists=True, dir_okay=False, path_type=Path),
@@ -221,6 +234,7 @@ def render(
     clones_dir: Path,
     min_stars: int,
     min_loc: int,
+    decisions_path: Path,
     readme_path: Path,
 ) -> None:
     """Render the candidates README table from a manifest."""
@@ -229,11 +243,13 @@ def render(
     manual_packages = load_manual_packages(manual_data_path)
     combined = {**manifest, "packages": list(manifest["packages"]) + manual_packages}
     effective_clones_dir = clones_dir if clones_dir.exists() else None
+    decisions = load_decisions(decisions_path)
     table = render_table(
         combined,
         clones_dir=effective_clones_dir,
         min_stars=min_stars,
         min_loc=min_loc,
+        decisions=decisions,
     )
     update_readme(readme_path, table)
     rendered_rows = sum(1 for line in table.splitlines() if line.startswith("| "))
@@ -242,7 +258,8 @@ def render(
     click.echo(
         f"Rendered {rendered_rows} of {len(combined['packages'])} packages "
         f"({len(manifest['packages'])} reservoir + {len(manual_packages)} manual; "
-        f"min-stars={min_stars}, min-loc={min_loc}) into {readme_path}"
+        f"min-stars={min_stars}, min-loc={min_loc}, "
+        f"decisions={len(decisions)}) into {readme_path}"
     )
 
 

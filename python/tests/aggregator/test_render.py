@@ -11,6 +11,7 @@ from lean_pool.aggregator.render import (
     END_MARKER,
     canonical_key,
     count_lean_loc,
+    load_decisions,
     package_key,
     read_toolchain,
     render_table,
@@ -249,6 +250,76 @@ def test_render_table_dedupes_lean_suffix_collisions() -> None:
     rows = [line for line in table.splitlines() if "Blake3" in line]
     assert len(rows) == 1
     assert "| 50 |" in rows[0]
+
+
+def test_load_decisions_parses_jsonl_and_lowercases_repo(tmp_path: Path) -> None:
+    """Each line becomes a dict; later lines for the same repo override earlier."""
+    path = tmp_path / "decisions.jsonl"
+    path.write_text(
+        '{"repo":"Acme/Demo","include":true,"category":"mathlib"}\n'
+        "\n"
+        '{"repo":"acme/demo","include":false,"category":"tool"}\n'
+        '{"repo":"other/repo","include":true,"category":"cslib"}\n'
+    )
+
+    decisions = load_decisions(path)
+
+    assert set(decisions) == {"acme/demo", "other/repo"}
+    assert decisions["acme/demo"]["include"] is False
+    assert decisions["acme/demo"]["category"] == "tool"
+
+
+def test_load_decisions_missing_file_returns_empty(tmp_path: Path) -> None:
+    """A missing decisions file is the same as no decisions provided."""
+    assert load_decisions(tmp_path / "absent.jsonl") == {}
+
+
+def test_load_decisions_skips_invalid_lines(tmp_path: Path) -> None:
+    """Bad JSON or missing-repo lines are skipped, not fatal."""
+    path = tmp_path / "decisions.jsonl"
+    path.write_text(
+        '{"repo":"acme/demo","include":true}\n'
+        "this is not json\n"
+        '{"include":true}\n'
+        '{"repo":"other/repo","include":false}\n'
+    )
+
+    decisions = load_decisions(path)
+
+    assert set(decisions) == {"acme/demo", "other/repo"}
+
+
+def test_render_table_drops_excluded_repos() -> None:
+    """``decisions`` filters rows where include=false; unknown repos stay."""
+    keep_decided = _package(full_name="alpha/keep", stars=5)
+    drop = _package(full_name="beta/drop", stars=5)
+    no_decision = _package(full_name="gamma/unknown", stars=5)
+
+    decisions = {
+        "alpha/keep": {"repo": "alpha/keep", "include": True, "category": "mathlib"},
+        "beta/drop": {"repo": "beta/drop", "include": False, "category": "tool"},
+    }
+
+    table = render_table(
+        _manifest([keep_decided, drop, no_decision]),
+        decisions=decisions,
+    )
+
+    assert "alpha/keep" in table
+    assert "beta/drop" not in table
+    # Unknown repos are kept, since absence of a verdict is not exclusion.
+    assert "gamma/unknown" in table
+
+
+def test_render_table_no_decisions_keeps_all_rows() -> None:
+    """Passing ``decisions=None`` (or empty dict) is a no-op."""
+    keep = _package(full_name="alpha/keep", stars=5)
+    other = _package(full_name="beta/other", stars=5)
+
+    table = render_table(_manifest([keep, other]), decisions={})
+
+    assert "alpha/keep" in table
+    assert "beta/other" in table
 
 
 def test_update_readme_raises_when_markers_missing(tmp_path: Path) -> None:
