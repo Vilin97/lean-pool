@@ -1111,7 +1111,8 @@ theorem sazonov_tightness (φ : H → ℂ) (_hpd : IsPositiveDefinite φ)
     calc ∑ i, @inner ℝ _ _ (b' i) (restrictOp S.op v (b' i))
         ≤ ∑' i, @inner ℝ H _ (b i) (S.op (b i)) := h_trace_v ι' b'
       _ = T := rfl)
-  have h_tail := tail_bound_from_exp_integral μ σ hσ_pos _ (by nlinarith [sq_nonneg σ]) h_gauss' R hR
+  have h_tail := tail_bound_from_exp_integral μ σ hσ_pos _ (by nlinarith [sq_nonneg σ]) h_gauss' R
+    hR
   calc (μ.toMeasure {y | R ≤ ‖y‖}).toReal
       ≤ C / (1 - Real.exp (-(σ ^ 2 * R ^ 2 / 2))) := h_tail
     _ < η := hR_bound

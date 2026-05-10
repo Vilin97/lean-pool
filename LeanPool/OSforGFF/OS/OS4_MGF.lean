@@ -102,8 +102,10 @@ lemma timeTranslationDistribution_pairingℂ (s : ℝ) (ω : FieldConfiguration)
   set g_im := (complex_testfunction_decompose g).2
   set g'_re := (complex_testfunction_decompose (timeTranslationSchwartzℂ (-s) g)).1
   set g'_im := (complex_testfunction_decompose (timeTranslationSchwartzℂ (-s) g)).2
-  have h_re : g'_re = timeTranslationSchwartz (-s) g_re := timeTranslationSchwartzℂ_decompose_fst (-s) g
-  have h_im : g'_im = timeTranslationSchwartz (-s) g_im := timeTranslationSchwartzℂ_decompose_snd (-s) g
+  have h_re : g'_re = timeTranslationSchwartz (-s) g_re := timeTranslationSchwartzℂ_decompose_fst
+    (-s) g
+  have h_im : g'_im = timeTranslationSchwartz (-s) g_im := timeTranslationSchwartzℂ_decompose_snd
+    (-s) g
   simp only [timeTranslationDistribution_apply]
   rw [h_re, h_im]
 
@@ -154,7 +156,8 @@ lemma euclidean_action_timeTranslationE (t : ℝ) (f : TestFunctionℂ) :
   congr 1
   simp only [QFT.inv_R, QFT.inv_t, QFT.LinearIsometry.inv]
   have h1 : ∀ v, (LinearIsometry.toLinearIsometryEquiv (1 : QFT.O4) rfl).symm v = v := fun v => by
-    have hv : (LinearIsometry.toLinearIsometryEquiv (1 : QFT.O4) rfl) v = v := by simp [LinearIsometry.toLinearIsometryEquiv]
+    have hv : (LinearIsometry.toLinearIsometryEquiv (1 : QFT.O4) rfl) v = v := by simp
+      [LinearIsometry.toLinearIsometryEquiv]
     rw [← hv]; exact LinearIsometryEquiv.symm_apply_apply _ v
   simp only [LinearIsometryEquiv.coe_toLinearIsometry, h1, neg_neg]
 

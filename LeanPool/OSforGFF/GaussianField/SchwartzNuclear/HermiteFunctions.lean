@@ -311,7 +311,8 @@ private theorem deriv_hermiteEval_mul_gaussian (m : ℕ) (x : ℝ) :
     exact h1.exp.deriv.trans (mul_comm _ _)
   rw [hexp]
   -- Hermite recurrence: H_{m+1}(x) = x · Hₘ(x) - Hₘ'(x)
-  have hrec : (hermiteR (m + 1)).eval x = x * (hermiteR m).eval x - (derivative (hermiteR m)).eval x := by
+  have hrec : (hermiteR (m + 1)).eval x = x * (hermiteR m).eval x - (derivative (hermiteR m)).eval
+    x := by
     have h1 : hermiteR (m + 1) = X * hermiteR m - derivative (hermiteR m) := by
       unfold hermiteR
       rw [hermite_succ, Polynomial.map_sub, Polynomial.map_mul, Polynomial.map_X,
@@ -872,7 +873,8 @@ theorem deriv_hermiteFunction (n : ℕ) (x : ℝ) :
     convert this using 2
   -- Compute HasDerivAt for the full hermiteFunction = c_n * (poly * exp)
   have hfn_eq : hermiteFunction n = fun u =>
-      hermiteFunctionNormConst n * ((hermiteR n).eval (u * Real.sqrt 2) * Real.exp (-(u ^ 2) / 2)) := by
+      hermiteFunctionNormConst n * ((hermiteR n).eval (u * Real.sqrt 2) * Real.exp (-(u ^ 2) / 2))
+        := by
     ext u; unfold hermiteFunction; ring
   have hfull := hprod.const_mul (hermiteFunctionNormConst n)
   rw [hfn_eq, hfull.deriv]
@@ -1281,7 +1283,8 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
     -- Linearity of iteratedDeriv: split const_mul and sub
     have hcd1 : ContDiffAt ℝ m (fun x => Real.sqrt ((↑n : ℝ) / 2) * hermiteFunction (n - 1) x) x :=
       ((hermiteFunction_contDiff (n - 1) m).const_smul (Real.sqrt ((↑n : ℝ) / 2))).contDiffAt
-    have hcd2 : ContDiffAt ℝ m (fun x => Real.sqrt ((↑(n + 1) : ℝ) / 2) * hermiteFunction (n + 1) x) x :=
+    have hcd2 : ContDiffAt ℝ m (fun x => Real.sqrt ((↑(n + 1) : ℝ) / 2) * hermiteFunction (n + 1)
+      x) x :=
       ((hermiteFunction_contDiff (n + 1) m).const_smul (Real.sqrt ((↑(n + 1) : ℝ) / 2))).contDiffAt
     rw [iteratedDeriv_fun_sub hcd1 hcd2]
     simp only [iteratedDeriv_const_mul_field]
@@ -1304,7 +1307,8 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
           rw [norm_mul, norm_mul, Real.norm_of_nonneg (Real.sqrt_nonneg _),
               Real.norm_of_nonneg (Real.sqrt_nonneg _)]
       _ = Real.sqrt ((↑n : ℝ) / 2) * (|x| ^ k * ‖iteratedDeriv m (hermiteFunction (n - 1)) x‖) +
-          Real.sqrt ((↑(n + 1) : ℝ) / 2) * (|x| ^ k * ‖iteratedDeriv m (hermiteFunction (n + 1)) x‖) := by
+          Real.sqrt ((↑(n + 1) : ℝ) / 2) * (|x| ^ k * ‖iteratedDeriv m (hermiteFunction (n + 1))
+            x‖) := by
           ring
       _ ≤ Real.sqrt ((↑n : ℝ) / 2) * (C * (1 + ↑(n - 1)) ^ s) +
           Real.sqrt ((↑(n + 1) : ℝ) / 2) * (C * (1 + ↑(n + 1)) ^ s) := by
@@ -1488,7 +1492,8 @@ private lemma integral_f_xpow_gaussian_zero
       have hmon_lead : (Polynomial.C (Real.sqrt 2 ^ k) * Polynomial.X ^ k).leadingCoeff =
           Real.sqrt 2 ^ k :=
         Polynomial.leadingCoeff_C_mul_X_pow _ _
-      have h_cancel : Q.leadingCoeff = (Polynomial.C (Real.sqrt 2 ^ k) * Polynomial.X ^ k).leadingCoeff := by
+      have h_cancel : Q.leadingCoeff = (Polynomial.C (Real.sqrt 2 ^ k) * Polynomial.X ^
+        k).leadingCoeff := by
         rw [hQ_lead, hmon_lead]
       have hQ_ne : Q ≠ 0 := by
         intro h; exact h_sqrt2_pow_ne (hQ_lead ▸ Polynomial.leadingCoeff_eq_zero.mpr h)

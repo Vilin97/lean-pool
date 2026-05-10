@@ -163,7 +163,8 @@ lemma sqrtPropagatorMap_sq_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
     intro k
     have h_weight_le : (momentumWeightSqrt_mathlib m k) ^ 2 ≤ (1 / m) ^ 2 := by
       have h_le := momentumWeightSqrt_mathlib_le_inv_mass (m := m) (k := k)
-      have h_pos : 0 ≤ momentumWeightSqrt_mathlib m k := (momentumWeightSqrt_mathlib_pos (m := m) k).le
+      have h_pos : 0 ≤ momentumWeightSqrt_mathlib m k := (momentumWeightSqrt_mathlib_pos (m := m)
+        k).le
       gcongr
     have h_nonneg_dom : 0 ≤ (1 / m) ^ 2 * ‖F k‖ ^ 2 := by positivity
     calc ‖‖sqrtPropagatorMap m f k‖ ^ 2‖
@@ -195,7 +196,8 @@ lemma sqrtPropagatorMap_memLp (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
     (momentumWeightSqrt_mathlib_measurable (m := m)).aestronglyMeasurable
   have h_weight_C : AEStronglyMeasurable (fun k => (momentumWeightSqrt_mathlib m k : ℂ)) volume :=
     Complex.continuous_ofReal.comp_aestronglyMeasurable h_weight_meas
-  have h_meas_mul : AEStronglyMeasurable (fun k => F k * (momentumWeightSqrt_mathlib m k : ℂ)) volume :=
+  have h_meas_mul : AEStronglyMeasurable (fun k => F k * (momentumWeightSqrt_mathlib m k : ℂ))
+    volume :=
     hF_meas.mul h_weight_C
   have h_meas : AEStronglyMeasurable (sqrtPropagatorMap m f) volume :=
     h_meas_mul.congr <| Filter.Eventually.of_forall fun k => by
@@ -259,7 +261,8 @@ lemma sqrtPropagatorMap_norm_eq_covariance (m : ℝ) [Fact (0 < m)] (f : TestFun
         =ᵐ[volume] fun k => ‖F k‖ ^ 2 * momentumWeight_mathlib m k := by
     refine Filter.Eventually.of_forall ?_
     intro k
-    have h_nonneg : 0 ≤ momentumWeightSqrt_mathlib m k := (momentumWeightSqrt_mathlib_pos (m := m) k).le
+    have h_nonneg : 0 ≤ momentumWeightSqrt_mathlib m k := (momentumWeightSqrt_mathlib_pos (m := m)
+      k).le
     have h_abs : ‖(momentumWeightSqrt_mathlib m k : ℂ)‖ = momentumWeightSqrt_mathlib m k := by
       simp [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg h_nonneg]
     have h_norm : ‖sqrtPropagatorMap m f k‖ = ‖F k‖ * momentumWeightSqrt_mathlib m k := by
@@ -324,7 +327,8 @@ noncomputable def embeddingMap (m : ℝ) [Fact (0 < m)] :
       have hf := sqrtPropagatorMap_memLp (m := m) (f := f)
       have hg := sqrtPropagatorMap_memLp (m := m) (f := g)
       have hfg := sqrtPropagatorMap_memLp (m := m) (f := f + g)
-      have h_linear : sqrtPropagatorMap m (f + g) =ᵐ[volume] sqrtPropagatorMap m f + sqrtPropagatorMap m g := by
+      have h_linear : sqrtPropagatorMap m (f + g) =ᵐ[volume] sqrtPropagatorMap m f +
+        sqrtPropagatorMap m g := by
         filter_upwards with k
         exact sqrtPropagatorMap_linear_add m f g ▸ rfl
       rw [← MeasureTheory.MemLp.toLp_add hf hg]
@@ -336,7 +340,8 @@ noncomputable def embeddingMap (m : ℝ) [Fact (0 < m)] :
       have h_linear : sqrtPropagatorMap m (c • f) =ᵐ[volume] c • sqrtPropagatorMap m f := by
         filter_upwards with k
         exact sqrtPropagatorMap_linear_smul m c f ▸ rfl
-      have : hcf.toLp (sqrtPropagatorMap m (c • f)) = (hf.const_smul c).toLp (c • sqrtPropagatorMap m f) :=
+      have : hcf.toLp (sqrtPropagatorMap m (c • f)) = (hf.const_smul c).toLp (c • sqrtPropagatorMap
+        m f) :=
         MeasureTheory.MemLp.toLp_congr hcf (hf.const_smul c) h_linear
       rw [this]
       exact MeasureTheory.MemLp.toLp_const_smul c hf }
@@ -414,7 +419,8 @@ theorem sqrtPropagatorEmbedding (m : ℝ) [Fact (0 < m)] :
   have h_memLp := sqrtPropagatorMap_memLp (m := m) (f := f)
   change ‖embeddingMap m f‖ ^ 2 = ∫ (k : SpaceTime), ‖sqrtPropagatorMap m f k‖ ^ 2
   change ‖h_memLp.toLp (sqrtPropagatorMap m f)‖ ^ 2 = _
-  have h_norm : ‖h_memLp.toLp (sqrtPropagatorMap m f)‖ = ENNReal.toReal (eLpNorm (sqrtPropagatorMap m f) 2 volume) :=
+  have h_norm : ‖h_memLp.toLp (sqrtPropagatorMap m f)‖ = ENNReal.toReal (eLpNorm (sqrtPropagatorMap
+    m f) 2 volume) :=
     MeasureTheory.Lp.norm_toLp (sqrtPropagatorMap m f) h_memLp
   rw [h_norm]
   have h_integrable := sqrtPropagatorMap_sq_integrable (m := m) (f := f)
@@ -424,9 +430,11 @@ theorem sqrtPropagatorEmbedding (m : ℝ) [Fact (0 < m)] :
           symm; exact ENNReal.toReal_pow _ 2
     _ = ENNReal.toReal (∫⁻ k, (‖sqrtPropagatorMap m f k‖₊ : ENNReal) ^ 2) := by
           congr 1
-          have h_eq := MeasureTheory.eLpNorm_nnreal_pow_eq_lintegral (f := sqrtPropagatorMap m f) (p := 2) (μ := volume) h_two_ne
+          have h_eq := MeasureTheory.eLpNorm_nnreal_pow_eq_lintegral (f := sqrtPropagatorMap m f)
+            (p := 2) (μ := volume) h_two_ne
           simp only [ENNReal.coe_ofNat, NNReal.coe_ofNat] at h_eq
-          have h_pow_cast : (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ) = (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := by
+          have h_pow_cast : (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ) = (eLpNorm
+            (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := by
             simp [pow_two]
           calc (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ)
               = (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := h_pow_cast
@@ -526,7 +534,8 @@ theorem freeCovarianceFormR_continuous (m : ℝ) [Fact (0 < m)] :
 theorem freeCovarianceFormR_pos (m : ℝ) [Fact (0 < m)] :
     ∀ f : TestFunction, 0 ≤ freeCovarianceFormR m f f := by
   intro f
-  have h1 : freeCovarianceℂ_bilinear m (toComplex f) (toComplex f) = (freeCovarianceFormR m f f : ℂ) :=
+  have h1 : freeCovarianceℂ_bilinear m (toComplex f) (toComplex f) = (freeCovarianceFormR m f f :
+    ℂ) :=
     freeCovarianceℂ_bilinear_agrees_on_reals m f f
   have h2 : freeCovarianceℂ m (toComplex f) (toComplex f)
               = freeCovarianceℂ_bilinear m (toComplex f) (toComplex f) :=
@@ -550,7 +559,8 @@ theorem freeCovarianceFormR_symm (m : ℝ) [Fact (0 < m)] (f g : TestFunction) :
 
 /-- Linearity in the first argument of the real covariance bilinear form. -/
 lemma freeCovarianceFormR_add_left (m : ℝ) [Fact (0 < m)] (f₁ f₂ g : TestFunction) :
-    freeCovarianceFormR m (f₁ + f₂) g = freeCovarianceFormR m f₁ g + freeCovarianceFormR m f₂ g := by
+    freeCovarianceFormR m (f₁ + f₂) g = freeCovarianceFormR m f₁ g + freeCovarianceFormR m f₂ g :=
+      by
   apply Complex.ofReal_injective
   have h :=
     freeCovarianceℂ_bilinear_add_left m (toComplex f₁) (toComplex f₂) (toComplex g)
@@ -600,7 +610,8 @@ lemma freeCovarianceFormR_smul_left (m : ℝ) [Fact (0 < m)] (c : ℝ) (f g : Te
 
 /-- Addition in the second argument of the real covariance bilinear form. -/
 lemma freeCovarianceFormR_add_right (m : ℝ) [Fact (0 < m)] (f g₁ g₂ : TestFunction) :
-    freeCovarianceFormR m f (g₁ + g₂) = freeCovarianceFormR m f g₁ + freeCovarianceFormR m f g₂ := by
+    freeCovarianceFormR m f (g₁ + g₂) = freeCovarianceFormR m f g₁ + freeCovarianceFormR m f g₂ :=
+      by
   apply Complex.ofReal_injective
   have h :=
     freeCovarianceℂ_bilinear_add_right m (toComplex f) (toComplex g₁) (toComplex g₂)
@@ -711,7 +722,8 @@ lemma freeCovarianceFormR_reflection_invariant
               * (QFT.compTimeReflection gc) y ∂volume ∂volume
           = ∫ x, ∫ y,
               fc x * (freeCovariance m x y : ℂ)
-                * (QFT.compTimeReflection (QFT.compTimeReflection gc)) y ∂volume ∂volume := h_double'
+                * (QFT.compTimeReflection (QFT.compTimeReflection gc)) y ∂volume ∂volume :=
+                  h_double'
         _ = ∫ x, ∫ y,
                 fc x * (freeCovariance m x y : ℂ) * gc y ∂volume ∂volume := by
               exact
@@ -724,7 +736,8 @@ lemma freeCovarianceFormR_reflection_invariant
     exact h_double''
   have h₁ :
       freeCovarianceℂ_bilinear m (QFT.compTimeReflection fc) (QFT.compTimeReflection gc)
-        = (freeCovarianceFormR m (QFT.compTimeReflectionReal f) (QFT.compTimeReflectionReal g) : ℂ) := by
+        = (freeCovarianceFormR m (QFT.compTimeReflectionReal f) (QFT.compTimeReflectionReal g) : ℂ)
+          := by
     simpa [h_toComplex_comp f, h_toComplex_comp g, fc, gc]
       using (freeCovarianceℂ_bilinear_agrees_on_reals
         (m := m) (f := QFT.compTimeReflectionReal f) (g := QFT.compTimeReflectionReal g))
@@ -737,7 +750,8 @@ lemma freeCovarianceFormR_reflection_invariant
         = (freeCovarianceFormR m f g : ℂ) := by
     calc
       (freeCovarianceFormR m (QFT.compTimeReflectionReal f) (QFT.compTimeReflectionReal g) : ℂ)
-          = freeCovarianceℂ_bilinear m (QFT.compTimeReflection fc) (QFT.compTimeReflection gc) := h₁.symm
+          = freeCovarianceℂ_bilinear m (QFT.compTimeReflection fc) (QFT.compTimeReflection gc) :=
+            h₁.symm
       _ = freeCovarianceℂ_bilinear m fc gc := h_complex
       _ = (freeCovarianceFormR m f g : ℂ) := h₂
   exact ofReal_inj.mp h_complex_eq

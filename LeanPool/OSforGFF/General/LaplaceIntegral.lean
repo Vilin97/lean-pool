@@ -59,7 +59,8 @@ lemma glasser_expand (c u : ℝ) (hu : u ≠ 0) : (c / u - u)^2 = c^2 / u^2 - 2*
 
 /-- Lower bound: (c/u - u)² ≥ u² - 2c -/
 lemma glasser_lower_bound (c u : ℝ) (hu : u ≠ 0) : (c / u - u)^2 ≥ u^2 - 2*c := by
-  rw [glasser_expand c u hu]; have : 0 ≤ c^2 / u^2 := div_nonneg (sq_nonneg c) (sq_nonneg u); linarith
+  rw [glasser_expand c u hu]; have : 0 ≤ c^2 / u^2 := div_nonneg (sq_nonneg c) (sq_nonneg u);
+    linarith
 
 
 /-- The derivative of u ↦ c/u - u is -c/u² - 1 -/
@@ -117,7 +118,8 @@ lemma glasser_integral_substitution_identity (c : ℝ) (hc : 0 < c) :
       (Ioi 0) (fun u => c / u) (fun u => -c / u^2)
       measurableSet_Ioi h_deriv h_inj g
   rw [h_image] at h_cov
-  have h_simp : ∀ u ∈ Ioi 0, |-c / u^2| * g (c / u) = (c / u^2) * exp (-(c/u - u)^2) := fun u hu => by
+  have h_simp : ∀ u ∈ Ioi 0, |-c / u^2| * g (c / u) = (c / u^2) * exp (-(c/u - u)^2) := fun u hu =>
+    by
     have hu_pos : 0 < u := hu
     rw [abs_of_neg (div_neg_of_neg_of_pos (by linarith) (sq_pos_of_pos hu_pos))]
     simp only [g]; congr 2
@@ -231,7 +233,8 @@ theorem glasser_weighted_integrable (c : ℝ) (hc : 0 < c) :
       -- For a/b ≤ a/c with a=c, b=y, c=x: need 0 ≤ c, 0 < x, x ≤ y
       exact div_le_div_of_nonneg_left (le_of_lt hc) hx.1 hxy
     -- Derivative of f
-    have h_deriv : ∀ u ∈ Ioc (0 : ℝ) 1, HasDerivWithinAt (fun u => c / u) (-c / u^2) (Ioc 0 1) u := by
+    have h_deriv : ∀ u ∈ Ioc (0 : ℝ) 1, HasDerivWithinAt (fun u => c / u) (-c / u^2) (Ioc 0 1) u :=
+      by
       intro u hu
       have hu_ne : u ≠ 0 := ne_of_gt hu.1
       convert (HasDerivAt.const_mul c (hasDerivAt_inv hu_ne)).hasDerivWithinAt using 1
@@ -288,7 +291,8 @@ theorem glasser_weighted_integrable (c : ℝ) (hc : 0 < c) :
       simpa using (h1.mono_set (Ioi_subset_Ioi one_pos.le)).const_mul (c * exp (2*c))
     have h_contOn : ContinuousOn (fun u : ℝ => (c/u^2) * exp (-(c/u - u)^2)) (Ioi 1) := by
       apply ContinuousOn.mul
-      · exact continuousOn_const.div (continuousOn_pow 2) (fun x hx => pow_ne_zero 2 (ne_of_gt (lt_trans one_pos hx)))
+      · exact continuousOn_const.div (continuousOn_pow 2) (fun x hx => pow_ne_zero 2 (ne_of_gt
+          (lt_trans one_pos hx)))
       · apply Real.continuous_exp.comp_continuousOn
         apply ContinuousOn.neg; apply ContinuousOn.pow
         apply ContinuousOn.sub
@@ -310,7 +314,8 @@ lemma glasser_integral_double (c : ℝ) (hc : 0 < c) :
 /-- The Glasser map w = c/u - u tends to +∞ as u → 0⁺. -/
 lemma glasser_tendsto_atTop_at_zero (c : ℝ) (hc : 0 < c) :
     Tendsto (fun u => c / u - u) (𝓝[>] 0) atTop := by
-  have h1 : Tendsto (fun (u : ℝ) => u⁻¹) (nhdsWithin (0 : ℝ) (Ioi 0)) atTop := tendsto_inv_nhdsGT_zero
+  have h1 : Tendsto (fun (u : ℝ) => u⁻¹) (nhdsWithin (0 : ℝ) (Ioi 0)) atTop :=
+    tendsto_inv_nhdsGT_zero
   have h2 : Tendsto (fun u => c * u⁻¹) (nhdsWithin (0 : ℝ) (Ioi 0)) atTop :=
     Filter.Tendsto.const_mul_atTop hc h1
   have h3 : Tendsto (fun u => c / u) (nhdsWithin (0 : ℝ) (Ioi 0)) atTop := by
@@ -533,7 +538,8 @@ lemma laplace_integral_subst_scale (a b : ℝ) (ha : 0 < a) (hb : 0 < b) :
     ∫ t in Ioi 0, exp (-(sqrt a / t - sqrt b * t)^2) =
     (1 / sqrt b) * ∫ u in Ioi 0, exp (-(sqrt (a * b) / u - u)^2) := by
   have hsb : 0 < sqrt b := sqrt_pos.mpr hb
-  have h := @integral_comp_mul_left_Ioi ℝ _ _ (fun u => exp (-(sqrt (a * b) / u - u)^2)) 0 (sqrt b) hsb
+  have h := @integral_comp_mul_left_Ioi ℝ _ _ (fun u => exp (-(sqrt (a * b) / u - u)^2)) 0 (sqrt b)
+    hsb
   simp only [mul_zero, smul_eq_mul, inv_eq_one_div] at h ⊢
   rw [← h]; refine setIntegral_congr_fun measurableSet_Ioi fun t ht => ?_
   rw [sqrt_mul ha.le b]; field_simp [hsb.ne', (mem_Ioi.mp ht).ne']

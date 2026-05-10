@@ -190,7 +190,8 @@ instance : Group E where
          act g⁻¹ (act g x) = x.
 -/
 
-/-for all Euclidean motions g and h and any point x ∈ ℝ⁴, pulling x forward by the product g*h equals pulling by h first and then by g.
+/-for all Euclidean motions g and h and any point x ∈ ℝ⁴, pulling x forward by the product g*h
+  equals pulling by h first and then by g.
 This is precisely the group-action law(𝑔ℎ)⁣⋅𝑥=𝑔.(ℎ. 𝑥)(gh)⋅x=g⋅(h⋅x).-/
 
 @[simp] lemma act_mul_general (g h : E) (x : SpaceTime) :
@@ -217,7 +218,8 @@ t into the desired form.
 
 /-Statement: applying g to x and then applying the inverse motion g⁻¹ returns you to x.
 This is the inverse law of a group action.-/
-/-Result: we’ve established that act : E → (ℝ⁴ → ℝ⁴) is a homomorphism into the function-composition monoid—exactly what OS-2 needs for its pull-back action on fields.-/
+/-Result: we’ve established that act : E → (ℝ⁴ → ℝ⁴) is a homomorphism into the
+  function-composition monoid—exactly what OS-2 needs for its pull-back action on fields.-/
 
 @[simp] lemma act_inv_general (g : E) (x : SpaceTime) :
     act g⁻¹ (act g x) = x := by
@@ -225,7 +227,8 @@ This is the inverse law of a group action.-/
   | mk gR gt =>
       -- unfold act, inverse components, then use linearity of gR
       simp [act, inv_R, inv_t, add_comm, add_assoc]
-/-Result: confirms that act really is a faithful left action of the Euclidean group; no hidden sign or composition mistakes remain.-/
+/-Result: confirms that act really is a faithful left action of the Euclidean group; no hidden sign
+  or composition mistakes remain.-/
 
 
 /-! ### Lebesgue measure is invariant under every Euclidean motion --------- -/
@@ -255,7 +258,8 @@ private lemma contDiff_act_inv (g : E) :
   have h₂ : ContDiff ℝ ⊤ (fun _ : SpaceTime => g⁻¹.t) := contDiff_const
   simpa [act, add_comm] using h₁.add h₂
 
-private lemma fderiv_linear_add_const (L : SpaceTime →L[ℝ] SpaceTime) (c : SpaceTime) (x : SpaceTime) :
+private lemma fderiv_linear_add_const (L : SpaceTime →L[ℝ] SpaceTime) (c : SpaceTime) (x :
+  SpaceTime) :
     fderiv ℝ (fun y => L y + c) x = fderiv ℝ L x := by
   apply fderiv_add_const
 

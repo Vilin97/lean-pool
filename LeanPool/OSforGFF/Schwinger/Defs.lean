@@ -81,8 +81,10 @@ lemma schwinger_eq_mean (dμ_config : ProbabilityMeasure FieldConfiguration) (f 
   simp
 
 /-- The Schwinger function equals the direct covariance integral for n=2 -/
-lemma schwinger_eq_covariance (dμ_config : ProbabilityMeasure FieldConfiguration) (f g : TestFunction) :
-  SchwingerFunction₂ dμ_config f g = ∫ ω, (distributionPairing ω f) * (distributionPairing ω g) ∂dμ_config.toMeasure := by
+lemma schwinger_eq_covariance (dμ_config : ProbabilityMeasure FieldConfiguration) (f g :
+  TestFunction) :
+  SchwingerFunction₂ dμ_config f g = ∫ ω, (distributionPairing ω f) * (distributionPairing ω g)
+    ∂dμ_config.toMeasure := by
   unfold SchwingerFunction₂ SchwingerFunction
   -- The product over {0, 1} expands to (f 0) * (f 1) = f * g
   classical
@@ -113,9 +115,11 @@ def SchwingerFunctionℂ₂ (dμ_config : ProbabilityMeasure FieldConfiguration)
 def CovarianceBilinear (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (c : ℂ) (φ₁ φ₂ ψ : TestFunctionℂ),
     SchwingerFunctionℂ₂ dμ_config (c • φ₁) ψ = c * SchwingerFunctionℂ₂ dμ_config φ₁ ψ ∧
-    SchwingerFunctionℂ₂ dμ_config (φ₁ + φ₂) ψ = SchwingerFunctionℂ₂ dμ_config φ₁ ψ + SchwingerFunctionℂ₂ dμ_config φ₂ ψ ∧
+    SchwingerFunctionℂ₂ dμ_config (φ₁ + φ₂) ψ = SchwingerFunctionℂ₂ dμ_config φ₁ ψ +
+      SchwingerFunctionℂ₂ dμ_config φ₂ ψ ∧
     SchwingerFunctionℂ₂ dμ_config φ₁ (c • ψ) = c * SchwingerFunctionℂ₂ dμ_config φ₁ ψ ∧
-    SchwingerFunctionℂ₂ dμ_config φ₁ (ψ + φ₂) = SchwingerFunctionℂ₂ dμ_config φ₁ ψ + SchwingerFunctionℂ₂ dμ_config φ₁ φ₂
+    SchwingerFunctionℂ₂ dμ_config φ₁ (ψ + φ₂) = SchwingerFunctionℂ₂ dμ_config φ₁ ψ +
+      SchwingerFunctionℂ₂ dμ_config φ₁ φ₂
 
 /-- If the product pairing is integrable for all test functions, then the complex
     2-point Schwinger function is ℂ-bilinear in both arguments.
@@ -157,7 +161,8 @@ lemma CovarianceBilinear_of_integrable
         (f := fun ω => u₁ ω * v ω) c)
     calc
       SchwingerFunctionℂ₂ dμ_config (c • φ₁) ψ
-          = ∫ ω, distributionPairingℂ_real ω (c • φ₁) * distributionPairingℂ_real ω ψ ∂dμ_config.toMeasure := by
+          = ∫ ω, distributionPairingℂ_real ω (c • φ₁) * distributionPairingℂ_real ω ψ
+            ∂dμ_config.toMeasure := by
             simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, Fin.prod_univ_two]
       _ = ∫ ω, c • (u₁ ω * v ω) ∂dμ_config.toMeasure := by
             simp [h_smul_left_integrand]
@@ -210,7 +215,8 @@ lemma CovarianceBilinear_of_integrable
         (f := fun ω => u₁ ω * v ω) c)
     calc
       SchwingerFunctionℂ₂ dμ_config φ₁ (c • ψ)
-          = ∫ ω, distributionPairingℂ_real ω φ₁ * distributionPairingℂ_real ω (c • ψ) ∂dμ_config.toMeasure := by
+          = ∫ ω, distributionPairingℂ_real ω φ₁ * distributionPairingℂ_real ω (c • ψ)
+            ∂dμ_config.toMeasure := by
             simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, Fin.prod_univ_two]
       _ = ∫ ω, c • (u₁ ω * v ω) ∂dμ_config.toMeasure := by
             simp [h_smul_right_integrand]
@@ -288,7 +294,8 @@ private def expIPartial (N : ℕ) (x : ℝ) : ℂ :=
 
 /-- Pointwise limit of the partial sums `expIPartial N x` is `exp(i x)`. -/
 private lemma expIPartial_tendsto (x : ℝ) :
-  Filter.Tendsto (fun N => expIPartial N x) Filter.atTop (nhds (Complex.exp (Complex.I * (x : ℂ)))) := by
+  Filter.Tendsto (fun N => expIPartial N x) Filter.atTop (nhds (Complex.exp (Complex.I * (x : ℂ))))
+    := by
   classical
   -- Power series for the complex exponential at z = i * x
   -- Use the Banach algebra version of the exponential series has-sum.

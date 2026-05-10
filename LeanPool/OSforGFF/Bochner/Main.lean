@@ -446,7 +446,8 @@ lemma gaussianRegularize_integrable (φ : V → ℂ) (hpd : IsPositiveDefinite �
   -- So ‖φ(x) * exp(-ε‖x‖²)‖ = ‖φ(x)‖ * ‖exp(-ε‖x‖²)‖ ≤ (φ 0).re * ‖exp(-ε‖x‖²)‖
   -- The bound function (φ 0).re * ‖exp(-ε‖x‖²)‖ is integrable
   refine (hgauss.norm.const_mul (φ 0).re).mono
-    ((hcont.mul (by fun_prop : Continuous (fun x : V => cexp (-(↑ε : ℂ) * ↑(‖x‖ ^ 2))))).aestronglyMeasurable)
+    ((hcont.mul (by fun_prop : Continuous (fun x : V => cexp (-(↑ε : ℂ) * ↑(‖x‖ ^
+        2))))).aestronglyMeasurable)
     (ae_of_all _ fun x => ?_)
   simp only [gaussianRegularize, norm_mul, Real.norm_eq_abs, abs_of_nonneg hpd.eval_zero_nonneg,
     abs_of_nonneg (norm_nonneg _)]
@@ -470,7 +471,8 @@ lemma gaussianRegularize_tendsto (φ : V → ℂ) (x : V) :
   rw [← h0]
   apply Filter.Tendsto.cexp
   apply Filter.Tendsto.mul _ tendsto_const_nhds
-  exact Filter.Tendsto.neg (tendsto_nhdsWithin_of_tendsto_nhds Complex.continuous_ofReal.continuousAt)
+  exact Filter.Tendsto.neg (tendsto_nhdsWithin_of_tendsto_nhds
+    Complex.continuous_ofReal.continuousAt)
 
 /-! ## Phase 1 proof: Re(𝓕φ(ξ)) ≥ 0 for L¹ PD functions
 
@@ -1129,7 +1131,8 @@ theorem gaussianRegularize_measures_tight (φ : V → ℂ)
   -- Step 4: Bound the iSup
   -- For each μ ∈ S: μ {x | r < ‖⟪y,x⟫_ℝ‖} < a
   -- Note: ‖⟪y,x⟫_ℝ‖ = |⟪y,x⟫_ℝ| for real inner product
-  have hr_pos : 0 < r := lt_of_lt_of_le one_pos (le_max_right _ _ |>.trans (le_max_right _ _) |>.trans hr)
+  have hr_pos : 0 < r := lt_of_lt_of_le one_pos (le_max_right _ _ |>.trans (le_max_right _ _)
+    |>.trans hr)
   -- For r ≥ R: 2‖y‖/r < η
   have hsmall : 2 * ‖y‖ * r⁻¹ < η := by
     have hR1 : 2 * ‖y‖ / η + 1 ≤ r := (le_max_left _ _).trans hr
@@ -1270,7 +1273,8 @@ private lemma bochner_mu_eps (φ : V → ℂ)
 private lemma bochner_mu_seq (φ : V → ℂ)
     (hcont : Continuous φ) (hpd : IsPositiveDefinite φ) (hnorm : φ 0 = 1) :
     ∃ μ_seq : ℕ → ProbabilityMeasure V,
-      ∀ n ξ, MeasureTheory.charFun (μ_seq n : Measure V) ξ = gaussianRegularize φ (1 / (↑n + 1)) ξ := by
+      ∀ n ξ, MeasureTheory.charFun (μ_seq n : Measure V) ξ = gaussianRegularize φ (1 / (↑n + 1)) ξ
+        := by
   choose μ_seq hμ_seq using
     fun n : ℕ => bochner_mu_eps φ hcont hpd hnorm (show (0:ℝ) < 1 / (↑n + 1) by positivity)
   exact ⟨μ_seq, hμ_seq⟩

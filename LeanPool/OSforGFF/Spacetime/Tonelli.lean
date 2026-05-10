@@ -174,11 +174,13 @@ theorem schwartz_tonelli_spacetime
         ‖f (spacetimeDecomp.symm p.1)‖ * ‖g (spacetimeDecomp.symm p.2)‖ * K p.1.1 p.2.1)
         ((volume : Measure (ℝ × SpatialCoords)).prod volume) := by
       have h1 := h_prod_int.aestronglyMeasurable
-      have h2 : AEStronglyMeasurable (fun p : (ℝ × SpatialCoords) × (ℝ × SpatialCoords) => K p.1.1 p.2.1)
+      have h2 : AEStronglyMeasurable (fun p : (ℝ × SpatialCoords) × (ℝ × SpatialCoords) => K p.1.1
+        p.2.1)
           ((volume : Measure (ℝ × SpatialCoords)).prod volume) := by
         have hK_comp : Measurable (fun p : (ℝ × SpatialCoords) × (ℝ × SpatialCoords) => (p.1.1,
           p.2.1)) :=
-          Measurable.prodMk (measurable_fst.comp measurable_fst) (measurable_fst.comp measurable_snd)
+          Measurable.prodMk (measurable_fst.comp measurable_fst) (measurable_fst.comp
+            measurable_snd)
         exact (hK_meas.comp hK_comp).aestronglyMeasurable
       exact h1.mul h2
     have h_int_product : Integrable (fun p : (ℝ × SpatialCoords) × (ℝ × SpatialCoords) =>

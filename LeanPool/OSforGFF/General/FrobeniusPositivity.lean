@@ -178,7 +178,8 @@ lemma frobenius_pos_of_psd_posdef
   have hB_decomp : B = U * Matrix.diagonal d * U.transpose := by
     rw [hB_spectral]
     simp only [Unitary.conjStarAlgAut_apply, Matrix.star_eq_conjTranspose,
-               Matrix.conjTranspose_eq_transpose_of_trivial, Function.comp_def, RCLike.ofReal_real_eq_id, id]
+               Matrix.conjTranspose_eq_transpose_of_trivial, Function.comp_def,
+                 RCLike.ofReal_real_eq_id, id]
     rfl
   -- Define H := Uᵀ * G * U and show PSD
   let H : Matrix ι ι ℝ := U.transpose * G * U

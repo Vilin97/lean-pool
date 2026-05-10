@@ -112,7 +112,8 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
   have h_star : star c = c := by ext k; simp
   -- Convert the matrix-vector form to double sum
   have h_expand : star c ⬝ᵥ M *ᵥ c =
-      ∑ i, ∑ j, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j := by
+      ∑ i, ∑ j, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j
+        := by
     simp only [dotProduct, Matrix.mulVec, M]
     congr 1
     ext k
@@ -120,7 +121,8 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
     rw [Finset.mul_sum]
     ring_nf
   -- Step 1: Use bilinearity to collect the sums
-  have h_step1 : ∑ i, ∑ j, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
+  have h_step1 : ∑ i, ∑ j, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f
+    j).val * c j =
       freeCovarianceFormR m (∑ i, c i • QFT.compTimeReflectionReal (f i).val) (∑ j,
         c j • (f j).val) := by
       -- Use induction on finite sums combined with the bilinearity axioms
@@ -131,7 +133,8 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
         freeCovarianceFormR m (∑ i, c i • QFT.compTimeReflectionReal (f i).val) (∑ j,
           c j • (f j).val) :=
           freeCovarianceFormR_left_linear_any_right m f c Finset.univ _
-      have h_right : ∀ i, ∑ j, freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
+      have h_right : ∀ i, ∑ j, freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f
+        j).val * c j =
         freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (∑ j, c j • (f j).val) := by
         intro i
         -- Use induction on the right argument with our right linearity lemmas
@@ -143,7 +146,8 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
           -- Apply right linearity: freeCovarianceFormR_add_right and freeCovarianceFormR_smul_right
           -- First convert multiplications to scalar multiplications
           -- freeCovarianceFormR m u (f j) * c j = freeCovarianceFormR m u (c j • f j)
-          have h_smul_first : freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
+          have h_smul_first : freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f
+            j).val * c j =
             freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (c j • (f j).val) := by
             rw [mul_comm]
             rw [freeCovarianceFormR_smul_right]
@@ -153,7 +157,8 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
       -- Combine the results by showing both sides equal the bilinear form
       -- Left side: ∑ i, ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j
       -- We need: ∑ i, c i * freeCovarianceFormR m (θf_i) (∑ j, c j • f_j)
-      have h_rewrite : ∑ i, ∑ j, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
+      have h_rewrite : ∑ i, ∑ j, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val)
+        (f j).val * c j =
         ∑ i, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (∑ j,
           c j • (f j).val) := by
         congr 1
@@ -171,7 +176,8 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
         conv_lhs =>
           rw [show ∑ j,
             c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
-                  ∑ j, c i * (freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j) by
+                  ∑ j, c i * (freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f
+                    j).val * c j) by
                 simp only [mul_assoc]]
         -- Now factor out c i
         rw [← Finset.mul_sum]
@@ -972,8 +978,10 @@ private lemma gff_complexOS3_matrix
         (Complex.exp (-(1/2 : ℂ) * freeCovarianceℂ_bilinear m (f i).val (f i).val) *
          starRingEnd ℂ (Complex.exp (-(1/2 : ℂ) * freeCovarianceℂ_bilinear m (f j).val (f j).val)) *
          Complex.exp (freeCovarianceℂ_bilinear m (f i).val (star (f j).val))) =
-      starRingEnd ℂ (c i * starRingEnd ℂ (Complex.exp (-(1/2 : ℂ) * freeCovarianceℂ_bilinear m (f i).val (f i).val))) *
-      (c j * starRingEnd ℂ (Complex.exp (-(1/2 : ℂ) * freeCovarianceℂ_bilinear m (f j).val (f j).val))) *
+      starRingEnd ℂ (c i * starRingEnd ℂ (Complex.exp (-(1/2 : ℂ) * freeCovarianceℂ_bilinear m (f
+        i).val (f i).val))) *
+      (c j * starRingEnd ℂ (Complex.exp (-(1/2 : ℂ) * freeCovarianceℂ_bilinear m (f j).val (f
+         j).val))) *
       Complex.exp (freeCovarianceℂ_bilinear m (f i).val (star (f j).val)) := by
     intro i j; simp only [map_mul, RCLike.conj_conj]; ring
   simp_rw [h_rewrite]

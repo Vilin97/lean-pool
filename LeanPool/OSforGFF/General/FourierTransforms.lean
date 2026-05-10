@@ -219,7 +219,8 @@ lemma antideriv_exp_complex_linear (α : ℝ) (hα : α ≠ 0) (k x : ℝ) :
       ring
     exact HasDerivAt.cexp h1
   -- Dividing by c: d/dx [e^{cx}/c] = (e^{cx} * c)/c = e^{cx}
-  have h_div : HasDerivAt (fun t : ℝ => Complex.exp (c * t) / c) (Complex.exp (c * x) * c / c) x := by
+  have h_div : HasDerivAt (fun t : ℝ => Complex.exp (c * t) / c) (Complex.exp (c * x) * c / c) x :=
+    by
     exact h_exp_deriv.div_const c
   -- Simplify: (e^{cx} * c)/c = e^{cx}
   convert h_div using 1
@@ -270,7 +271,8 @@ theorem integrableOn_exp_decay_Ioi (μ : ℝ) (hμ : 0 < μ) (k : ℝ) :
 -/
 theorem exp_pos_integrableOn_Iio (a : ℝ) {b : ℝ} (h : 0 < b) :
     MeasureTheory.IntegrableOn (fun x => Real.exp (b * x)) (Set.Iio a) MeasureTheory.volume := by
-  have h_neg : MeasureTheory.IntegrableOn (fun x => Real.exp (-b * x)) (Set.Ioi (-a)) MeasureTheory.volume :=
+  have h_neg : MeasureTheory.IntegrableOn (fun x => Real.exp (-b * x)) (Set.Ioi (-a))
+    MeasureTheory.volume :=
     exp_neg_integrableOn_Ioi (-a) h
   have h_eq : (fun x => Real.exp (b * x)) = (fun x => Real.exp (-b * (-x))) := by
     ext x; ring_nf
@@ -611,7 +613,8 @@ lemma integrable_fourierIntegral_expDecayFun (μ : ℝ) (hμ : 0 < μ) :
   -- First show integrability of the scaled Lorentzian
   have h_lorentz : Integrable (fun ξ : ℝ => (2 / μ) * (1 + (2 * π / μ * ξ)^2)⁻¹) volume := by
     apply Integrable.const_mul
-    exact (integrable_comp_smul_iff volume (fun y : ℝ => (1 + y^2)⁻¹) h_scale).mpr integrable_inv_one_add_sq
+    exact (integrable_comp_smul_iff volume (fun y : ℝ => (1 + y^2)⁻¹) h_scale).mpr
+      integrable_inv_one_add_sq
   -- Show the two real functions are equal
   have h_eq_real : (fun ξ : ℝ => 2 * μ / (4 * π^2 * ξ^2 + μ^2)) =
       (fun ξ => (2 / μ) * (1 + (2 * π / μ * ξ)^2)⁻¹) := by

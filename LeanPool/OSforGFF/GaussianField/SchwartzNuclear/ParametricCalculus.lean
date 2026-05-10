@@ -196,7 +196,8 @@ lemma contDiff_schwartz_parametric_integral
   -- fderiv(iteratedFDeriv n (Φ_t t)) y = (curryLeftLIE n).symm (iteratedFDeriv (n+1) (Φ_t t) y)
   -- so hasFDerivAt_integral gives HasFDerivAt (I n) ((curryLeftLIE n).symm (I (n+1) y)) y
   have I_diff : ∀ (n : ℕ) (y : H),
-      HasFDerivAt (I n) ((curryLeftLIE (E := H) (F := ℝ) n).symm.toContinuousLinearEquiv.toContinuousLinearMap
+      HasFDerivAt (I n) ((curryLeftLIE (E := H) (F := ℝ)
+        n).symm.toContinuousLinearEquiv.toContinuousLinearMap
         (I (n + 1) y)) y := by
     intro n y₀
     set L := (curryLeftLIE (E := H) (F := ℝ) n).symm.toContinuousLinearEquiv
@@ -271,7 +272,8 @@ lemma contDiff_schwartz_parametric_integral
         intro h; exact absurd h WithTop.coe_ne_top
       · -- ContDiff m (fderiv (I n))
         have h_fderiv_eq : fderiv ℝ (I n) =
-            fun y => (curryLeftLIE (E := H) (F := ℝ) n).symm.toContinuousLinearEquiv.toContinuousLinearMap
+            fun y => (curryLeftLIE (E := H) (F := ℝ)
+              n).symm.toContinuousLinearEquiv.toContinuousLinearMap
               (I (n + 1) y) :=
           funext fun y => (I_diff n y).fderiv
         rw [h_fderiv_eq]

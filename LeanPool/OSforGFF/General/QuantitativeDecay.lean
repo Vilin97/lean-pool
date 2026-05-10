@@ -331,7 +331,8 @@ def convolution_polynomial_decay
               apply div_le_div_of_nonneg_left (le_of_lt hC_u_pos)
               · positivity
               · simp only [A, mem_setOf_eq] at hy
-                exact Real.rpow_le_rpow (by positivity) (by linarith) (lt_of_le_of_lt (Nat.cast_nonneg _) hN_dim).le
+                exact Real.rpow_le_rpow (by positivity) (by linarith) (lt_of_le_of_lt
+                  (Nat.cast_nonneg _) hN_dim).le
       _ = c_A * ∫ y in A, ‖v (x - y)‖ := by
           rw [MeasureTheory.integral_const_mul]
       _ ≤ c_A * ∫ y, ‖v (x - y)‖ := by
@@ -889,7 +890,8 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
     simp_rw [h_integrand]
     let I₁ := ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ)
     let I₂ := ∫ x, f x * (kernelTail K R₀ (x - y) : ℂ)
-    have hint_sum : ∫ x, (f x * (kernelSingular K R₀ (x - y) : ℂ) + f x * (kernelTail K R₀ (x - y) : ℂ)) = I₁ + I₂ :=
+    have hint_sum : ∫ x, (f x * (kernelSingular K R₀ (x - y) : ℂ) + f x * (kernelTail K R₀ (x - y)
+      : ℂ)) = I₁ + I₂ :=
       integral_add hint1 hint2
     change ‖∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ) + f x * (kernelTail K R₀ (x - y) : ℂ)‖ ≤
         (C_Hsing + C_Htail) / (1 + ‖y‖)^N
@@ -920,7 +922,8 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
     have hH_meas : AEStronglyMeasurable H volume := by
       -- Use StronglyMeasurable.integral_prod_right' to show H is strongly measurable
       -- The integrand F(y, x) = f(x) * K(x - y) : ℂ is strongly measurable
-      have h1 : StronglyMeasurable (Function.uncurry (fun (y : E) (x : E) => f x * (K (x - y) : ℂ))) := by
+      have h1 : StronglyMeasurable (Function.uncurry (fun (y : E) (x : E) => f x * (K (x - y) :
+        ℂ))) := by
         apply StronglyMeasurable.mul
         · exact (f.continuous.stronglyMeasurable.comp_measurable measurable_snd)
         · apply Measurable.stronglyMeasurable
@@ -939,7 +942,8 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
   -- ============================================================
   -- Apply convolution_polynomial_decay to get C_conv
   -- ============================================================
-  have h_conv_decay := convolution_polynomial_decay hN_gt_d hH_decay hg_flip_decay hH_int hg_flip_int
+  have h_conv_decay := convolution_polynomial_decay hN_gt_d hH_decay hg_flip_decay hH_int
+    hg_flip_int
   obtain ⟨C_conv, hC_conv_pos, h_conv_bound⟩ := h_conv_decay
   -- ============================================================
   -- NOW introduce the existential with C_conv

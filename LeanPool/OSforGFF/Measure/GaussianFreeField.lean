@@ -115,7 +115,8 @@ theorem gaussian_satisfies_OS0
   intro n J
   -- Extract the Gaussian form: Z[f] = exp(-½⟨f, Cf⟩)
   have h_form : ∀ (f : TestFunctionℂ),
-      GJGeneratingFunctionalℂ dμ_config f = Complex.exp (-(1/2 : ℂ) * SchwingerFunctionℂ₂ dμ_config f f) :=
+      GJGeneratingFunctionalℂ dμ_config f = Complex.exp (-(1/2 : ℂ) * SchwingerFunctionℂ₂ dμ_config
+        f f) :=
     h_gaussian.2
   -- Rewrite the generating functional using Gaussian form
   have h_rewrite : (fun z : Fin n → ℂ => GJGeneratingFunctionalℂ dμ_config (∑ i, z i • J i)) =
@@ -146,10 +147,12 @@ theorem gaussian_satisfies_OS0
     have h_sum_analytic : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => ∑ i, ∑ j,
       z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
       -- Each term z_i * z_j * constant is analytic
-      have h_monomial : ∀ i j, AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
+      have h_monomial : ∀ i j, AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z i * z j *
+        SchwingerFunctionℂ₂ dμ_config (J i) (J j)) Set.univ := by
         intro i j
         -- Rewrite as constant times polynomial
-        have h_factor : (fun z : Fin n → ℂ => z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J j)) =
+        have h_factor : (fun z : Fin n → ℂ => z i * z j * SchwingerFunctionℂ₂ dμ_config (J i) (J
+          j)) =
                         (fun z => SchwingerFunctionℂ₂ dμ_config (J i) (J j) * (z i * z j)) := by
           funext z; ring
         rw [h_factor]

@@ -210,9 +210,11 @@ lemma gaussian_rhs_slice_analytic_z1 (f g : TestFunction) (z₀ : ℂ) :
     This follows from gff_cf_two_testfunctions by converting between types.
 -/
 lemma gff_cf_agrees_on_reals_OS0 (f g : TestFunction) (t s : ℝ) :
-    GJGeneratingFunctionalℂ (gaussianFreeField_free m) ((t : ℂ) • toComplex f + (s : ℂ) • toComplex g) =
+    GJGeneratingFunctionalℂ (gaussianFreeField_free m) ((t : ℂ) • toComplex f + (s : ℂ) • toComplex
+      g) =
       Complex.exp (-(1/2 : ℂ) * ((t : ℂ)^2 * freeCovarianceFormR m f f +
-        2 * (t : ℂ) * (s : ℂ) * freeCovarianceFormR m f g + (s : ℂ)^2 * freeCovarianceFormR m g g)) := by
+        2 * (t : ℂ) * (s : ℂ) * freeCovarianceFormR m f g + (s : ℂ)^2 * freeCovarianceFormR m g g))
+          := by
   -- Use the real version gff_cf_two_testfunctions and convert
   have h := gff_cf_two_testfunctions m f g t s
   -- First note: t • f + s • g is real, so toComplex (t • f + s • g) = t • toComplex f + s •
@@ -256,7 +258,8 @@ theorem gff_complex_characteristic_OS0 :
     intro s z₀
     -- Both slices are entire
     have hF_an : AnalyticOnNhd ℂ (fun z₀ => F z₀ s) Set.univ := gff_slice_analytic_z0 m f g s
-    have hG_an : AnalyticOnNhd ℂ (fun z₀ => G z₀ s) Set.univ := gaussian_rhs_slice_analytic_z0 m f g s
+    have hG_an : AnalyticOnNhd ℂ (fun z₀ => G z₀ s) Set.univ := gaussian_rhs_slice_analytic_z0 m f
+      g s
     -- They agree on ℝ which has accumulation points in ℂ
     have h_agree_slice : ∀ t : ℝ, F t s = G t s := fun t => h_agree_real t s
     -- Apply 1D identity theorem
@@ -287,7 +290,8 @@ theorem gff_complex_characteristic_OS0 :
   have h_step2 : ∀ z₀ z₁ : ℂ, F z₀ z₁ = G z₀ z₁ := by
     intro z₀ z₁
     have hF_an : AnalyticOnNhd ℂ (fun z₁ => F z₀ z₁) Set.univ := gff_slice_analytic_z1 m f g z₀
-    have hG_an : AnalyticOnNhd ℂ (fun z₁ => G z₀ z₁) Set.univ := gaussian_rhs_slice_analytic_z1 m f g z₀
+    have hG_an : AnalyticOnNhd ℂ (fun z₁ => G z₀ z₁) Set.univ := gaussian_rhs_slice_analytic_z1 m f
+      g z₀
     have h_agree_slice : ∀ s : ℝ, F z₀ s = G z₀ s := fun s => h_step1 s z₀
     have h_eq : (fun z₁ => F z₀ z₁) = (fun z₁ => G z₀ z₁) := by
       apply AnalyticOnNhd.eq_of_frequently_eq hF_an hG_an (z₀ := 0)
@@ -498,13 +502,15 @@ theorem gff_two_point_equals_covarianceℂ_free (m : ℝ) [Fact (0 < m)] (f g : 
       c * SchwingerFunctionℂ₂ (gaussianFreeField_free m) a b :=
     fun c a b => (h_bilin c a 0 b).1
   have S2_add_left : ∀ a b c, SchwingerFunctionℂ₂ (gaussianFreeField_free m) (a + b) c =
-      SchwingerFunctionℂ₂ (gaussianFreeField_free m) a c + SchwingerFunctionℂ₂ (gaussianFreeField_free m) b c :=
+      SchwingerFunctionℂ₂ (gaussianFreeField_free m) a c + SchwingerFunctionℂ₂
+        (gaussianFreeField_free m) b c :=
     fun a b c => (h_bilin 1 a b c).2.1
   have S2_smul_right : ∀ (c : ℂ) a b, SchwingerFunctionℂ₂ (gaussianFreeField_free m) a (c • b) =
       c * SchwingerFunctionℂ₂ (gaussianFreeField_free m) a b :=
     fun c a b => (h_bilin c a 0 b).2.2.1
   have S2_add_right : ∀ a b c, SchwingerFunctionℂ₂ (gaussianFreeField_free m) a (b + c) =
-      SchwingerFunctionℂ₂ (gaussianFreeField_free m) a b + SchwingerFunctionℂ₂ (gaussianFreeField_free m) a c :=
+      SchwingerFunctionℂ₂ (gaussianFreeField_free m) a b + SchwingerFunctionℂ₂
+        (gaussianFreeField_free m) a c :=
     fun a b c => (h_bilin 1 a c b).2.2.2
   -- Expand LHS: S₂(frC + I•fiC, grC + I•giC)
   rw [S2_add_left, S2_add_right, S2_add_right, S2_smul_left, S2_smul_left, S2_smul_right,

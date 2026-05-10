@@ -90,9 +90,11 @@ theorem distributionPairingℂ_real_continuous (f : TestFunctionℂ) :
   -- Now we need: Continuous (ω ↦ ↑(ω (schwartz_comp_clm f reCLM)) + I * ↑(ω (schwartz_comp_clm f
   -- imCLM)))
   -- Each evaluation ω ↦ ω g is continuous by WeakDual.eval_continuous
-  have h_re : Continuous (fun ω : FieldConfiguration => (ω (schwartz_comp_clm f Complex.reCLM) : ℂ)) :=
+  have h_re : Continuous (fun ω : FieldConfiguration => (ω (schwartz_comp_clm f Complex.reCLM) :
+    ℂ)) :=
     Complex.continuous_ofReal.comp (WeakDual.eval_continuous _)
-  have h_im : Continuous (fun ω : FieldConfiguration => (ω (schwartz_comp_clm f Complex.imCLM) : ℂ)) :=
+  have h_im : Continuous (fun ω : FieldConfiguration => (ω (schwartz_comp_clm f Complex.imCLM) :
+    ℂ)) :=
     Complex.continuous_ofReal.comp (WeakDual.eval_continuous _)
   -- The full pairing is a continuous combination
   exact h_re.add (continuous_const.mul h_im)
@@ -241,10 +243,12 @@ lemma gff_exp_neg_pairing_integrable (f : TestFunction) :
   -- exp(-ω f) is measurable
   have h_meas : AEStronglyMeasurable (fun ω : FieldConfiguration => Real.exp (-(ω f)))
       (μ_GFF m).toMeasure :=
-    (Real.continuous_exp.measurable.comp (measurable_neg.comp (WeakDual.eval_measurable f))).aestronglyMeasurable
+    (Real.continuous_exp.measurable.comp (measurable_neg.comp (WeakDual.eval_measurable
+       f))).aestronglyMeasurable
   -- Pointwise bound: ‖exp(-ω f)‖ ≤ exp(1/(4α)) * exp(α (ω f)²)
   have h_ae_bound : ∀ᵐ ω ∂(μ_GFF m).toMeasure,
-      ‖Real.exp (-(ω f))‖ ≤ Real.exp (1 / (4 * α)) * Real.exp (α * (distributionPairingCLM f ω)^2) := by
+      ‖Real.exp (-(ω f))‖ ≤ Real.exp (1 / (4 * α)) * Real.exp (α * (distributionPairingCLM f ω)^2)
+        := by
     filter_upwards with ω
     rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
     simp only [distributionPairingCLM_apply, distributionPairing]
@@ -270,7 +274,8 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
   -- Case split on whether p = 0 (trivial) or p > 0
   rcases eq_or_ne p 0 with rfl | hp_pos
   · exact memLp_zero_iff_aestronglyMeasurable.mpr
-      (Real.continuous_exp.measurable.comp (continuous_abs.measurable.comp (WeakDual.eval_measurable f))).aestronglyMeasurable
+      (Real.continuous_exp.measurable.comp (continuous_abs.measurable.comp
+         (WeakDual.eval_measurable f))).aestronglyMeasurable
   -- For 0 < p < ∞, we need ∫ (exp |x|)^p dμ < ∞
   -- (exp |x|)^p = exp(p * |x|), and for p finite this is bounded by C * exp(α x²)
   -- The detailed proof uses Young's inequality: p|x| ≤ p²/(4α) + α x²
@@ -280,7 +285,8 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
   -- For now, use the fact that we have L¹ integrability and the function is AE bounded
   -- by a multiple of exp(α x²) which is integrable
   have h_aesm : AEStronglyMeasurable (fun ω => Real.exp |ω f|) (μ_GFF m).toMeasure :=
-    (Real.continuous_exp.measurable.comp (continuous_abs.measurable.comp (WeakDual.eval_measurable f))).aestronglyMeasurable
+    (Real.continuous_exp.measurable.comp (continuous_abs.measurable.comp (WeakDual.eval_measurable
+       f))).aestronglyMeasurable
   -- The core estimate: exp(p|x|) ≤ C * exp(α x²) for some C depending on p and α
   -- This follows from: p|x| ≤ p²/(4α) + α x² (Young's inequality)
   -- So exp(p|x|) ≤ exp(p²/(4α)) * exp(α x²)
@@ -305,14 +311,16 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
       _ = p.toReal^2 / (4 * α) + α * x^2 := by rw [ha_sq, hb_sq]
   -- Exponential bound: exp(p|x|) ≤ exp(p²/(4α)) * exp(α x²)
   have h_exp_bound : ∀ x : ℝ,
-      Real.exp (p.toReal * |x|) ≤ Real.exp (p.toReal^2 / (4 * α)) * Real.exp (α * x^2) := fun x => by
+      Real.exp (p.toReal * |x|) ≤ Real.exp (p.toReal^2 / (4 * α)) * Real.exp (α * x^2) := fun x =>
+        by
     rw [← Real.exp_add]
     exact Real.exp_le_exp.mpr (h_young x)
   -- The constant C = exp(p²/(4α))
   let C := Real.exp (p.toReal^2 / (4 * α))
   -- The dominating function C * exp(α x²) is integrable
   have h_dom : Integrable (fun ω => C * Real.exp (α * (ω f)^2)) (μ_GFF m).toMeasure := by
-    have h_const_mul : Integrable (fun ω => C * Real.exp (α * (distributionPairingCLM f ω)^2)) (μ_GFF m).toMeasure := by
+    have h_const_mul : Integrable (fun ω => C * Real.exp (α * (distributionPairingCLM f ω)^2))
+      (μ_GFF m).toMeasure := by
       exact h_fernique.const_mul C
     simp only [distributionPairingCLM_apply, distributionPairing] at h_const_mul
     exact h_const_mul
@@ -325,7 +333,8 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
     have h1 := h_exp_bound (ω f)
     exact h1
   -- Integrability of exp(p|ω f|) follows from domination
-  have h_exp_p_integrable : Integrable (fun ω => Real.exp (p.toReal * |ω f|)) (μ_GFF m).toMeasure := by
+  have h_exp_p_integrable : Integrable (fun ω => Real.exp (p.toReal * |ω f|)) (μ_GFF m).toMeasure
+    := by
     have h_meas : AEStronglyMeasurable (fun ω => Real.exp (p.toReal * |ω f|)) (μ_GFF m).toMeasure :=
       (Real.continuous_exp.measurable.comp (measurable_const.mul (continuous_abs.measurable.comp
         (WeakDual.eval_measurable f)))).aestronglyMeasurable
@@ -351,7 +360,8 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
     -- Since ‖exp(|x|)‖ₑ = exp(|x|), we have ‖exp(|x|)‖ₑ^p = exp(p|x|)
     -- and exp(p|x|) is integrable by h_exp_p_integrable
     have h_eq : ∀ ω : FieldConfiguration,
-        (‖Real.exp |ω f|‖ₑ : ENNReal) ^ p.toReal = ENNReal.ofReal (Real.exp (p.toReal * |ω f|)) := by
+        (‖Real.exp |ω f|‖ₑ : ENNReal) ^ p.toReal = ENNReal.ofReal (Real.exp (p.toReal * |ω f|)) :=
+           by
       intro ω
       have h_pos : 0 < Real.exp |ω f| := Real.exp_pos _
       rw [Real.enorm_eq_ofReal (le_of_lt h_pos)]
@@ -626,7 +636,8 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
     apply (fernique_dom (c + 1) (by positivity)).mono
     · exact ((continuous_abs.measurable.comp h_eval_meas_im).aestronglyMeasurable.mul
         ((Real.continuous_exp.measurable.comp
-          (measurable_const.mul (continuous_abs.measurable.comp h_eval_meas_im))).aestronglyMeasurable))
+          (measurable_const.mul (continuous_abs.measurable.comp
+             h_eval_meas_im))).aestronglyMeasurable))
     · filter_upwards with ω
       simp only [bound, Real.norm_eq_abs,
         abs_of_nonneg (mul_nonneg (abs_nonneg _) (Real.exp_nonneg _)),

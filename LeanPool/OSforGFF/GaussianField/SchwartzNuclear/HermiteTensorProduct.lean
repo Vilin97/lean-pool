@@ -1184,7 +1184,8 @@ private lemma hermiteCoeffNd_fubini (d : ℕ)
   ext y
   rw [schwartz_partial_hermiteCoeff_eq_1D]
   unfold hermiteCoeff1D
-  have h_factor : ∀ t, f (euclideanSnoc (d + 1) y t) * hermiteFunctionNd (d + 2) α (euclideanSnoc (d + 1) y t) =
+  have h_factor : ∀ t, f (euclideanSnoc (d + 1) y t) * hermiteFunctionNd (d + 2) α (euclideanSnoc
+    (d + 1) y t) =
       (f (euclideanSnoc (d + 1) y t) * hermiteFunction (α (Fin.last (d + 1))) t) *
       hermiteFunctionNd (d + 1) (fun i => α (Fin.castSucc i)) y := by
     intro t

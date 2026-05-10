@@ -194,7 +194,8 @@ theorem schwinger_two_point_decay_bound (m : ℝ) [Fact (0 < m)] :
     The functions agree on the complement of {0}, which has full measure.
 -/
 theorem schwingerTwoPoint_measurable (m : ℝ) [Fact (0 < m)] :
-    AEStronglyMeasurable (fun x => SchwingerTwoPointFunction (gaussianFreeField_free m) x) volume := by
+    AEStronglyMeasurable (fun x => SchwingerTwoPointFunction (gaussianFreeField_free m) x) volume
+      := by
   -- Use that the abstract and concrete definitions agree except possibly at 0
   -- Since {0} is a null set in Lebesgue measure, AE strong measurability follows from
   -- the measurability of freeCovarianceKernel and the fact that the functions differ
@@ -212,7 +213,8 @@ theorem schwingerTwoPoint_measurable (m : ℝ) [Fact (0 < m)] :
       simp only [ne_eq, Set.compl_setOf, not_not]
       exact h_singleton_null
     -- The functions agree on this set
-    exact Filter.eventuallyEq_of_mem h_mem (fun x hx => schwingerTwoPointFunction_eq_freeCovarianceKernel m x hx)
+    exact Filter.eventuallyEq_of_mem h_mem (fun x hx =>
+      schwingerTwoPointFunction_eq_freeCovarianceKernel m x hx)
   exact AEStronglyMeasurable.congr h_kernel_meas h_ae_eq.symm
 
 /-! ## GFF Exponential Bound
@@ -238,7 +240,8 @@ lemma gff_generating_norm_eq (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
 lemma gff_generating_bound_by_imaginary (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
   Real.exp (-(1/2) * (freeCovarianceℂ_bilinear m f f).re) ≤
     Real.exp ((1/2) * (freeCovarianceℂ_bilinear m (toComplex (complex_testfunction_decompose f).2)
-                                                     (toComplex (complex_testfunction_decompose f).2)).re) := by
+                                                     (toComplex (complex_testfunction_decompose
+                                                        f).2)).re) := by
   -- Apply monotonicity of exp: it suffices to show -(1/2) Re C(f,f) ≤ (1/2) C(Im f, Im f)
   apply Real.exp_le_exp.mpr
   -- Abbreviate the imaginary and real parts
@@ -279,7 +282,8 @@ lemma gff_generating_bound_by_imaginary (m : ℝ) [Fact (0 < m)] (f : TestFuncti
   -- Take real part: Re C(f,f) = Re C(frC,frC) - Re C(fiC,fiC)
   -- The cross terms with I have zero real part, so they vanish
   have h_re : (freeCovarianceℂ_bilinear m f f).re =
-              (freeCovarianceℂ_bilinear m frC frC).re - (freeCovarianceℂ_bilinear m fiC fiC).re := by
+              (freeCovarianceℂ_bilinear m frC frC).re - (freeCovarianceℂ_bilinear m fiC fiC).re :=
+                 by
     rw [h_expand]
     simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.I_re, Complex.I_im]
     -- For real test functions frC and fiC, the bilinear form produces real values
@@ -320,7 +324,8 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
   -- Parseval: real part of the covariance equals the momentum-space integral
   have h_parsevalC :
       (freeCovarianceℂ m (toComplex fIm) (toComplex fIm)).re
-        = ∫ k, ‖(SchwartzMap.fourierTransformCLM ℂ (toComplex fIm)) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume :=
+        = ∫ k, ‖(SchwartzMap.fourierTransformCLM ℂ (toComplex fIm)) k‖^2 *
+          freePropagatorMomentum_mathlib m k ∂volume :=
     parseval_covariance_schwartz_bessel m (toComplex fIm)
   -- For real test functions, complex covariance equals the complex bilinear form
   have h_eq_bilin :
@@ -342,7 +347,8 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
       have : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
       linarith
     -- 0 < m^2 and m^2 ≤ (2π)²‖k‖² + m^2 ⇒ 1 / ((2π)²‖k‖² + m^2) ≤ 1 / m^2
-    have := one_div_le_one_div_of_le (a := m^2) (b := (2 * Real.pi)^2 * ‖k‖^2 + m^2) (by exact hm2pos) hden
+    have := one_div_le_one_div_of_le (a := m^2) (b := (2 * Real.pi)^2 * ‖k‖^2 + m^2) (by exact
+      hm2pos) hden
     simpa [one_div] using this
   -- Show integrability of ‖F‖² via MemLp → Integrable (square norm)
   have hF_memLp : MemLp F 2 volume := F.memLp 2 volume

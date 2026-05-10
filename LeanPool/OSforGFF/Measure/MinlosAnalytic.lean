@@ -79,7 +79,8 @@ lemma negMap_measurable : Measurable negMap := by
   calc ((borel ℝ).comap Neg.neg).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g)
       ≤ (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) g) :=
         MeasurableSpace.comap_mono h_neg_meas
-    _ ≤ _ := le_iSup (fun f => (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) f)) g
+    _ ≤ _ := le_iSup (fun f => (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction
+      →L[ℝ] ℝ) f)) g
 
 /-- Symmetry under global sign flip induced by the real Gaussian CF.
     Uses Minlos uniqueness from the bochner library.
@@ -112,14 +113,16 @@ lemma integral_neg_invariance
     have h_cont_exp : Continuous (fun z : ℂ => Complex.exp z) := Complex.continuous_exp
     have h_outer_meas : Measurable (fun x : ℝ => Complex.exp ((Complex.I : ℂ) * (x : ℂ))) :=
       (h_cont_exp.comp h_cont_mulI).measurable
-    have h_aestrongly_measurable : AEStronglyMeasurable (fun ω => Complex.exp (Complex.I * (distributionPairing ω g))) μneg :=
+    have h_aestrongly_measurable : AEStronglyMeasurable (fun ω => Complex.exp (Complex.I *
+      (distributionPairing ω g))) μneg :=
       (h_outer_meas.comp h_inner_meas).aestronglyMeasurable
     rw [integral_map (Measurable.aemeasurable negMap_measurable) h_aestrongly_measurable]
     have h_neg_pairing : (fun ω => Complex.exp (Complex.I * (distributionPairing (negMap ω) g))) =
                          (fun ω => Complex.exp (Complex.I * (distributionPairing (-ω) g))) := by
       simp [negMap]
     rw [h_neg_pairing]
-    have h_neg_eq : ∀ ω : FieldConfiguration, distributionPairing (-ω) g = -distributionPairing ω g := by
+    have h_neg_eq : ∀ ω : FieldConfiguration, distributionPairing (-ω) g = -distributionPairing ω g
+      := by
       intro ω
       change (-ω) g = -(ω g)
       exact ContinuousLinearMap.neg_apply ω g
@@ -129,14 +132,16 @@ lemma integral_neg_invariance
       rw [h_neg_eq]
       simp only [ofReal_neg, mul_neg]
     conv_lhs => rw [h_lhs_eq]
-    have h_exp_neg_conj : ∀ x : ℝ, Complex.exp (-(Complex.I * (x : ℂ))) = starRingEnd ℂ (Complex.exp (Complex.I * (x : ℂ))) := by
+    have h_exp_neg_conj : ∀ x : ℝ, Complex.exp (-(Complex.I * (x : ℂ))) = starRingEnd ℂ
+      (Complex.exp (Complex.I * (x : ℂ))) := by
       intro x
       rw [← Complex.exp_conj]
       congr 1
       simp only [map_mul, Complex.conj_I, Complex.conj_ofReal]
       ring
     have h_integrand_conj : (fun ω => Complex.exp (-(Complex.I * (distributionPairing ω g : ℂ)))) =
-                            (fun ω => starRingEnd ℂ (Complex.exp (Complex.I * (distributionPairing ω g : ℂ)))) := by
+                            (fun ω => starRingEnd ℂ (Complex.exp (Complex.I * (distributionPairing
+                               ω g : ℂ)))) := by
       funext ω
       exact h_exp_neg_conj (distributionPairing ω g)
     conv_lhs => rw [h_integrand_conj]

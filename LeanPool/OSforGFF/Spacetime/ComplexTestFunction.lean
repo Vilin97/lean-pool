@@ -145,15 +145,19 @@ lemma pairing_linear_combo
     --              = (t * ((ω (..f..).1 + i ω (..f..).2)) + s * ((ω (..g..).1 + i ω (..g..).2))).re
     -- Use algebraic identity on the RHS
     have hre_rhs :
-        (t * ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω ((complex_testfunction_decompose f).2) : ℂ))
-            + s * ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω ((complex_testfunction_decompose g).2) : ℂ))).re
+        (t * ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω
+           ((complex_testfunction_decompose f).2) : ℂ))
+            + s * ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω
+              ((complex_testfunction_decompose g).2) : ℂ))).re
           = t.re * ω ((complex_testfunction_decompose f).1)
               - t.im * ω ((complex_testfunction_decompose f).2)
               + s.re * ω ((complex_testfunction_decompose g).1)
               - s.im * ω ((complex_testfunction_decompose g).2) := by
       simpa using re_of_complex_combination t s
-        ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω ((complex_testfunction_decompose f).2) : ℂ))
-        ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω ((complex_testfunction_decompose g).2) : ℂ))
+        ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω ((complex_testfunction_decompose
+            f).2) : ℂ))
+        ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω ((complex_testfunction_decompose
+            g).2) : ℂ))
     -- Use ω-linearity identity on the LHS
     have hre := ω_re_decompose_linear ω f g t s
     -- Finish by rewriting both sides to the same expression
@@ -162,15 +166,19 @@ lemma pairing_linear_combo
   · -- Imag parts
     simp [distributionPairingℂ_real]
     have him_rhs :
-        (t * ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω ((complex_testfunction_decompose f).2) : ℂ))
-            + s * ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω ((complex_testfunction_decompose g).2) : ℂ))).im
+        (t * ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω
+           ((complex_testfunction_decompose f).2) : ℂ))
+            + s * ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω
+              ((complex_testfunction_decompose g).2) : ℂ))).im
           = t.re * ω ((complex_testfunction_decompose f).2)
               + t.im * ω ((complex_testfunction_decompose f).1)
               + s.re * ω ((complex_testfunction_decompose g).2)
               + s.im * ω ((complex_testfunction_decompose g).1) := by
       simpa using im_of_complex_combination t s
-        ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω ((complex_testfunction_decompose f).2) : ℂ))
-        ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω ((complex_testfunction_decompose g).2) : ℂ))
+        ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω ((complex_testfunction_decompose
+            f).2) : ℂ))
+        ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω ((complex_testfunction_decompose
+            g).2) : ℂ))
     have him := ω_im_decompose_linear ω f g t s
     simpa [him_rhs, add_comm, add_left_comm, add_assoc]
       using him
@@ -195,7 +203,8 @@ lemma norm_compContinuousMultilinearMap_ofReal {n : ℕ} {E : Fin n → Type*}
       _ = 1 * ‖m‖ := by rw [Complex.norm_ofRealCLM]
       _ = ‖m‖ := one_mul _
   · have h_nonneg : (0 : ℝ) ≤ ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖ := norm_nonneg _
-    have h_bound : ∀ v, ‖m v‖ ≤ ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖ * ∏ i, ‖v i‖ := by
+    have h_bound : ∀ v, ‖m v‖ ≤ ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖ * ∏ i, ‖v i‖ :=
+      by
       intro v
       have h_eq : ‖m v‖ = ‖(Complex.ofRealCLM.compContinuousMultilinearMap m) v‖ := by
         simp only [ContinuousLinearMap.compContinuousMultilinearMap_coe, Function.comp_apply]
@@ -333,14 +342,16 @@ noncomputable def conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace �
       simp only [Function.comp_def] at this
       exact this
     rw [h_deriv]
-    have h_norm : ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n f x)‖ ≤
+    have h_norm : ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n f
+      x)‖ ≤
         ‖iteratedFDeriv ℝ n f x‖ := by
       calc ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n f x)‖
           ≤ ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ)‖ * ‖iteratedFDeriv ℝ n f x‖ :=
             ContinuousLinearMap.norm_compContinuousMultilinearMap_le _ _
         _ = 1 * ‖iteratedFDeriv ℝ n f x‖ := by rw [Complex.conjCLE_norm]
         _ = ‖iteratedFDeriv ℝ n f x‖ := one_mul _
-    calc ‖x‖ ^ k * ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n f x)‖
+    calc ‖x‖ ^ k * ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n
+      f x)‖
         ≤ ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ := by
           apply mul_le_mul_of_nonneg_left h_norm (pow_nonneg (norm_nonneg _) _)
       _ ≤ C := hC x
@@ -368,7 +379,8 @@ noncomputable def conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace �
     - conj(f)_re = f_re and conj(f)_im = -f_im
 -/
 lemma distributionPairingℂ_real_conj (ω : FieldConfiguration) (f : TestFunctionℂ) :
-    starRingEnd ℂ (distributionPairingℂ_real ω f) = distributionPairingℂ_real ω (conjSchwartz f) := by
+    starRingEnd ℂ (distributionPairingℂ_real ω f) = distributionPairingℂ_real ω (conjSchwartz f) :=
+      by
   -- Expand distributionPairingℂ_real in terms of real and imaginary parts
   simp only [distributionPairingℂ_real]
   -- For the conjugate side, we need to show conj(f)_re = f_re and conj(f)_im = -f_im

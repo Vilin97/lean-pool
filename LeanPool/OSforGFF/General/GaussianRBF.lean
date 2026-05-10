@@ -53,7 +53,8 @@ lemma innerProduct_is_pd_kernel :
   -- Key computation: Re(∑∑ c̄ᵢcⱼ⟪xᵢ,xⱼ⟫) = ⟪v_a, v_a⟫ + ⟪v_b, v_b⟫ = ‖v_a‖² + ‖v_b‖²
   -- First, expand star(c_i) * c_j = (a_i - ib_i)(a_j + ib_j) = (a_i a_j + b_i b_j) + i(a_i b_j -
   -- b_i a_j)
-  have expand_cc : ∀ i j, star (c i) * c j = (a i * a j + b i * b j : ℝ) + Complex.I * (a i * b j - b i * a j : ℝ) := by
+  have expand_cc : ∀ i j, star (c i) * c j = (a i * a j + b i * b j : ℝ) + Complex.I * (a i * b j -
+    b i * a j : ℝ) := by
     intro i j
     simp only [a, b, star_def]
     apply Complex.ext
@@ -251,7 +252,8 @@ theorem gaussian_rbf_pd_innerProduct_proof :
                  Complex.neg_re, Complex.div_ofNat_im, Complex.one_im]
       ring
     rw [Complex.exp_im, h, Real.sin_zero, mul_zero]
-  have star_exp : ∀ i, star (cexp (-(1/2 : ℂ) * (‖x i‖^2 : ℝ))) = cexp (-(1/2 : ℂ) * (‖x i‖^2 : ℝ)) := by
+  have star_exp : ∀ i, star (cexp (-(1/2 : ℂ) * (‖x i‖^2 : ℝ))) = cexp (-(1/2 : ℂ) * (‖x i‖^2 : ℝ))
+    := by
     intro i
     rw [star_def]
     exact Complex.conj_eq_iff_im.mpr (exp_real i)
@@ -260,7 +262,8 @@ theorem gaussian_rbf_pd_innerProduct_proof :
     simp only [d, StarMul.star_mul, star_exp]
     ring
   -- Rewrite the sum using the factorization
-  have h_sum : ∑ i : Fin m, ∑ j : Fin m, star (c i) * c j * cexp (-(1/2 : ℂ) * (‖x i - x j‖^2 : ℝ)) =
+  have h_sum : ∑ i : Fin m, ∑ j : Fin m, star (c i) * c j * cexp (-(1/2 : ℂ) * (‖x i - x j‖^2 : ℝ))
+    =
                ∑ i : Fin m, ∑ j : Fin m, star (d i) * d j * cexp (⟪x i, x j⟫_ℝ : ℂ) := by
     apply Finset.sum_congr rfl; intro i _
     apply Finset.sum_congr rfl; intro j _
@@ -271,7 +274,8 @@ theorem gaussian_rbf_pd_innerProduct_proof :
   change 0 ≤ (∑ i : Fin m, ∑ j : Fin m,
       (starRingEnd ℂ) (c i) * c j * (fun h => cexp (-(1/2 : ℂ) * (‖h‖^2 : ℝ))) (x i - x j)).re
   -- Convert star to starRingEnd in h_sum
-  have h_sum' : ∑ i : Fin m, ∑ j : Fin m, (starRingEnd ℂ) (c i) * c j * cexp (-(1/2 : ℂ) * (‖x i - x j‖^2 : ℝ)) =
+  have h_sum' : ∑ i : Fin m, ∑ j : Fin m, (starRingEnd ℂ) (c i) * c j * cexp (-(1/2 : ℂ) * (‖x i -
+    x j‖^2 : ℝ)) =
                ∑ i : Fin m, ∑ j : Fin m, (starRingEnd ℂ) (d i) * d j * cexp (⟪x i, x j⟫_ℝ : ℂ) := by
     simp only [star_def] at h_sum
     convert h_sum using 2

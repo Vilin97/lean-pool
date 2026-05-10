@@ -166,7 +166,8 @@ private lemma timeReflection_hg_upper :
   use 1, 1
   intro x
   have h_iso : ‖timeReflectionCLM x‖ = ‖x‖ := by
-    have h_norm_preserved : ‖timeReflection x‖ = ‖x‖ := LinearIsometryEquiv.norm_map timeReflectionLE x
+    have h_norm_preserved : ‖timeReflection x‖ = ‖x‖ := LinearIsometryEquiv.norm_map
+      timeReflectionLE x
     rw [← h_norm_preserved]
     rfl
   rw [h_iso]

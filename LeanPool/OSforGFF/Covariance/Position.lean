@@ -117,10 +117,12 @@ noncomputable def SpatialToMomentum_draft (f : SpatialL2) : SpaceTime → ℂ :=
     convention.
     Defined in FourierTransforms.lean as `parseval_covariance_schwartz_regulated`.
 -/
-theorem parseval_covariance_schwartz_regulated' (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
+theorem parseval_covariance_schwartz_regulated' (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f :
+  TestFunctionℂ) :
   (∫ x, ∫ y,
     f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
-  = ∫ k, Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume :=
+  = ∫ k, Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
+    freePropagatorMomentum_mathlib m k ∂volume :=
   _root_.parseval_covariance_schwartz_regulated α hα m f
 
 /-- **(Time Reflection Change of Variables):**
@@ -159,7 +161,8 @@ lemma double_integral_timeReflection_covariance
         f x * (freeCovariance m (QFT.timeReflection x) (QFT.timeReflection y) : ℂ)
           * (QFT.compTimeReflection g) y ∂volume ∂volume := by
   -- compTimeReflection h x = h (timeReflectionCLM x) = h (timeReflection x)
-  have h_comp : ∀ h : TestFunctionℂ, ∀ x, (QFT.compTimeReflection h) x = h (QFT.timeReflection x) := by
+  have h_comp : ∀ h : TestFunctionℂ, ∀ x, (QFT.compTimeReflection h) x = h (QFT.timeReflection x)
+    := by
     intro h x
     simp only [QFT.compTimeReflection, SchwartzMap.compCLM_apply, Function.comp_apply]
     rfl  -- timeReflectionCLM x = timeReflection x by definition
@@ -172,7 +175,8 @@ lemma double_integral_timeReflection_covariance
     exact QFT.timeReflectionLE.left_inv z
   -- Transform RHS using double_integral_timeReflection (in reverse direction)
   -- After substitution x' = Θx, y' = Θy: RHS = ∫∫ f(Θx') * C(x', y') * g(y')
-  rw [← double_integral_timeReflection (fun x y => f (QFT.timeReflection x) * (freeCovariance m x y : ℂ) * g y) hf]
+  rw [← double_integral_timeReflection (fun x y => f (QFT.timeReflection x) * (freeCovariance m x y
+    : ℂ) * g y) hf]
   -- Use Θ∘Θ = id to simplify f(Θ(Θx)) = f(x)
   simp only [hinv]
 
@@ -413,7 +417,8 @@ lemma act_timeReflectionE (x : SpaceTime) : QFT.act timeReflectionE x = QFT.time
   This follows from general Euclidean invariance since time reflection is in O(4).
 -/
 lemma covariance_timeReflection_invariant (m : ℝ) :
-    ∀ x y, freeCovariance m (QFT.timeReflection x) (QFT.timeReflection y) = freeCovariance m x y := by
+    ∀ x y, freeCovariance m (QFT.timeReflection x) (QFT.timeReflection y) = freeCovariance m x y :=
+      by
   intro x y
   rw [← act_timeReflectionE x, ← act_timeReflectionE y]
   exact freeCovariance_euclidean_invariant m timeReflectionE x y
@@ -609,7 +614,8 @@ def freeCovarianceℂ_regulated (α : ℝ) (m : ℝ) (f g : TestFunctionℂ) : �
   ∫ x, ∫ y, (f x) * (freeCovariance_regulated α m x y) * (starRingEnd ℂ (g y)) ∂volume ∂volume
 
 /-- The regulated complex covariance is positive definite for any α > 0. -/
-theorem freeCovarianceℂ_regulated_positive (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
+theorem freeCovarianceℂ_regulated_positive (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f :
+  TestFunctionℂ) :
   0 ≤ (freeCovarianceℂ_regulated α m f f).re := by
   unfold freeCovarianceℂ_regulated
   rw [parseval_covariance_schwartz_regulated' α hα m f]
@@ -656,7 +662,8 @@ theorem freeCovarianceℂ_positive (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ
 -/
 theorem parseval_covariance_schwartz_bessel (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     (freeCovarianceℂ m f f).re
-    = ∫ k, ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume := by
+    = ∫ k, ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume
+      := by
   -- Strategy: Use uniqueness of limits
   -- 1. bilinear_covariance_regulated_tendsto_self: lim (regulated) = Bessel (in ℂ) for f = f case
   -- 2. parseval_covariance_schwartz_correct: lim (regulated).re = momentum (in ℝ)

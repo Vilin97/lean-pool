@@ -458,9 +458,12 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
       rw [EuclideanSpace.norm_sq_eq, Fin.sum_univ_four]
       -- The components are: time = t, spatial = 0
       have h0 : (spacetimeOfTimeSpace t 0 : SpaceTime).ofLp 0 = t := spacetimeOfTimeSpace_time t 0
-      have h1 : (spacetimeOfTimeSpace t 0 : SpaceTime).ofLp 1 = 0 := spacetimeOfTimeSpace_spatial t 0 0
-      have h2 : (spacetimeOfTimeSpace t 0 : SpaceTime).ofLp 2 = 0 := spacetimeOfTimeSpace_spatial t 0 1
-      have h3 : (spacetimeOfTimeSpace t 0 : SpaceTime).ofLp 3 = 0 := spacetimeOfTimeSpace_spatial t 0 2
+      have h1 : (spacetimeOfTimeSpace t 0 : SpaceTime).ofLp 1 = 0 := spacetimeOfTimeSpace_spatial t
+        0 0
+      have h2 : (spacetimeOfTimeSpace t 0 : SpaceTime).ofLp 2 = 0 := spacetimeOfTimeSpace_spatial t
+        0 1
+      have h3 : (spacetimeOfTimeSpace t 0 : SpaceTime).ofLp 3 = 0 := spacetimeOfTimeSpace_spatial t
+        0 2
       simp only [h0, h1, h2, h3, Real.norm_eq_abs, abs_zero, sq_abs]
       ring
     have hnorm : 0 ≤ ‖spacetimeOfTimeSpace t 0‖ := norm_nonneg _
@@ -526,7 +529,8 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
       rw [h_eq]
       -- Derivative of (const + s • e₀) is 0 + 1 • e₀ = e₀
       have h1 : HasDerivAt (fun _ : ℝ => spacetimeOfTimeSpace 0 x_sp) 0 s := hasDerivAt_const s _
-      have h2 : HasDerivAt (fun r : ℝ => r • e₀) ((1 : ℝ) • e₀) s := hasDerivAt_id s |>.smul_const e₀
+      have h2 : HasDerivAt (fun r : ℝ => r • e₀) ((1 : ℝ) • e₀) s := hasDerivAt_id s |>.smul_const
+        e₀
       convert h1.add h2 using 1
       simp only [zero_add, one_smul]
     -- Step 2: Chain rule for F = f ∘ path
@@ -538,7 +542,8 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
       · exact f.differentiableAt.hasFDerivAt
       · exact h_path_diff.hasDerivWithinAt
     -- Step 3: derivWithin equals the computed derivative
-    have h_deriv_eq : derivWithin F (Set.Icc 0 t) s = (fderiv ℝ f (spacetimeOfTimeSpace s x_sp)) e₀ :=
+    have h_deriv_eq : derivWithin F (Set.Icc 0 t) s = (fderiv ℝ f (spacetimeOfTimeSpace s x_sp)) e₀
+      :=
       h_F_deriv.derivWithin (uniqueDiffOn_Icc (by linarith : (0 : ℝ) < t) s h_in_Icc)
     -- Step 4: Bound using operator norm
     rw [h_deriv_eq]

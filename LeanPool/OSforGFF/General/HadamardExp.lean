@@ -211,7 +211,8 @@ lemma quadratic_form_entrywiseExp_hadamardSeries
     (hHas_ij i j).mul_right (x j)
   -- Then x i
   have hHas_ij_xi_xj (i j : ι) :
-      HasSum (fun n => x i * (s_ij i j n * x j)) (x i * ((entrywiseExp_hadamardSeries R) i j * x j)) :=
+      HasSum (fun n => x i * (s_ij i j n * x j)) (x i * ((entrywiseExp_hadamardSeries R) i j * x
+        j)) :=
     (hHas_ij_xj i j).mul_left (x i)
   -- Rewrite term
   have hHas_ij_rewrite (i j : ι) :
@@ -448,9 +449,11 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
     rw [this, h_expand]
     exact add_pos_of_nonneg_of_pos hR_nonneg hε_pos
   -- Step 2: For each ε > 0, entrywiseExp_hadamardSeries(R + εI) is positive definite
-  have h_exp_perturb_posDef : ∀ (ε : ℝ), ε > 0 → (entrywiseExp (R + ε • (1 : Matrix ι ι ℝ))).PosDef := by
+  have h_exp_perturb_posDef : ∀ (ε : ℝ), ε > 0 → (entrywiseExp (R + ε • (1 : Matrix ι ι ℝ))).PosDef
+    := by
     intro ε hε
-    have h := posDef_entrywiseExp_hadamardSeries_of_posDef (R + ε • (1 : Matrix ι ι ℝ)) (h_perturb_posDef ε hε)
+    have h := posDef_entrywiseExp_hadamardSeries_of_posDef (R + ε • (1 : Matrix ι ι ℝ))
+      (h_perturb_posDef ε hε)
     simpa [entrywiseExp_eq_hadamardSeries] using h
   -- Step 3: Continuity of the map S ↦ entrywiseExp_hadamardSeries(S)
   have h_continuous : Continuous (fun S : Matrix ι ι ℝ => entrywiseExp S) :=
@@ -483,7 +486,8 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
     -- For real vectors, star x = x
     have h_star_eq : star x = x := by simp [star]
     -- For each ε > 0: 0 ≤ xᵀ entrywiseExp(R + εI) x
-    have h_nonneg_eps : ∀ (ε : ℝ), ε > 0 → 0 ≤ x ⬝ᵥ (entrywiseExp (R + ε • (1 : Matrix ι ι ℝ))).mulVec x := by
+    have h_nonneg_eps : ∀ (ε : ℝ), ε > 0 → 0 ≤ x ⬝ᵥ (entrywiseExp (R + ε • (1 : Matrix ι ι
+      ℝ))).mulVec x := by
       intro ε hε
       -- Use the positive semidefiniteness of entrywiseExp (R + εI)
       have hPSD := Matrix.PosDef.posSemidef (h_exp_perturb_posDef ε hε)
@@ -510,7 +514,8 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
         Continuous (fun ε : ℝ => x ⬝ᵥ (entrywiseExp (R + ε • (1 : Matrix ι ι ℝ))).mulVec x) :=
       h_quad_continuous.comp h_path_continuous
     -- Apply ge_of_tendsto: if f(ε) ≥ 0 eventually and f → f(0), then f(0) ≥ 0
-    have h_tendsto : Tendsto (fun ε : ℝ => x ⬝ᵥ (entrywiseExp (R + ε • (1 : Matrix ι ι ℝ))).mulVec x)
+    have h_tendsto : Tendsto (fun ε : ℝ => x ⬝ᵥ (entrywiseExp (R + ε • (1 : Matrix ι ι ℝ))).mulVec
+      x)
         (𝓝[Set.Ioi 0] 0) (𝓝 (x ⬝ᵥ (entrywiseExp R).mulVec x)) := by
       -- Use the continuity at 0 to get the right-sided limit
       have h_cont_at_zero : ContinuousAt

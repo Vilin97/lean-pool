@@ -252,7 +252,8 @@ noncomputable def schwartzToL2 (d : ℕ) : SchwartzRd d →L[ℂ] L2Complex d :=
     content.
 -/
 noncomputable def schwartzToL2' (d : ℕ) [NeZero d] [Fintype (Fin d)] :
-  SchwartzMap (EuclideanSpace ℝ (Fin d)) ℂ →L[ℂ] Lp ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin d))) :=
+  SchwartzMap (EuclideanSpace ℝ (Fin d)) ℂ →L[ℂ] Lp ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin
+    d))) :=
   SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin d)))
 
 /-! ## L∞ Multiplication on L² Spaces
@@ -376,12 +377,14 @@ lemma integrableOn_ball_of_rpow_decay {d : ℕ} (hd : d ≥ 1)
   -- The radial integral becomes ∫_0^r y^(d-1) * C * y^(-α) dy = C * ∫_0^r y^(d-1-α) dy
   -- which converges when d-1-α > -1, i.e., α < d
   -- First show the bound function is radially integrable
-  have hint : IntegrableOn (fun y => y ^ (Module.finrank ℝ (EuclideanSpace ℝ (Fin d)) - 1) • (C * y ^ (-α)))
+  have hint : IntegrableOn (fun y => y ^ (Module.finrank ℝ (EuclideanSpace ℝ (Fin d)) - 1) • (C * y
+    ^ (-α)))
       (Ioo 0 r) volume := by
     have hfinrank : Module.finrank ℝ (EuclideanSpace ℝ (Fin d)) = d := by simp
     simp only [hfinrank, smul_eq_mul]
     -- Simplify y^(d-1) * (C * y^(-α)) = C * y^(d-1-α)
-    have h_simp : ∀ y ∈ Ioo (0 : ℝ) r, (y : ℝ) ^ (d - 1) * (C * y ^ (-α)) = C * y ^ ((d : ℝ) - 1 - α) := by
+    have h_simp : ∀ y ∈ Ioo (0 : ℝ) r, (y : ℝ) ^ (d - 1) * (C * y ^ (-α)) = C * y ^ ((d : ℝ) - 1 -
+      α) := by
       intro y hy
       have hy_pos : 0 < y := hy.1
       rw [mul_comm (y ^ _), mul_assoc]
@@ -513,7 +516,8 @@ lemma polynomial_decay_integrable_3d :
   have hdim : Module.finrank ℝ (EuclideanSpace ℝ (Fin 3)) = 3 := finrank_euclideanSpace
   have hdim_lt : (Module.finrank ℝ (EuclideanSpace ℝ (Fin 3)) : ℝ) < (4 : ℝ) := by
     rw [hdim]; norm_num
-  have h_int := integrable_one_add_norm (E := EuclideanSpace ℝ (Fin 3)) (μ := volume) (r := 4) hdim_lt
+  have h_int := integrable_one_add_norm (E := EuclideanSpace ℝ (Fin 3)) (μ := volume) (r := 4)
+    hdim_lt
   -- Convert (1 + ‖x‖)^(-4) to 1 / (1 + ‖x‖)^4
   convert h_int using 1
   ext x
@@ -607,7 +611,8 @@ theorem schwartz_bilinear_integrable_of_translationInvariant_L1
       -- Use that the shear map (x,y) ↦ (x-y, y) is measure-preserving
       have hK_ae : AEStronglyMeasurable K₀ volume := hK₀_int.1
       -- K₀ ∘ fst is AEStronglyMeasurable on volume.prod volume
-      have hK_fst : AEStronglyMeasurable (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin d) =>
+      have hK_fst : AEStronglyMeasurable (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin
+        d) =>
           K₀ p.1) (volume.prod volume) := hK_ae.comp_fst
       -- The shear map e(x,y) = (x-y, y) is measure-preserving
       have he_sub_preserves : MeasurePreserving
@@ -795,7 +800,8 @@ noncomputable def SchwartzMap.translate {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (f : SchwartzMap E F) (a : E) : SchwartzMap E F :=
-  SchwartzMap.compCLMOfAntilipschitz ℝ (sub_const_hasTemperateGrowth a) (sub_const_antilipschitz a) f
+  SchwartzMap.compCLMOfAntilipschitz ℝ (sub_const_hasTemperateGrowth a) (sub_const_antilipschitz a)
+    f
 
 @[simp]
 theorem SchwartzMap.translate_apply {E F : Type*}
@@ -826,7 +832,8 @@ theorem schwartz_integrable_decay {V : Type*} [NormedAddCommGroup V]
     (f : SchwartzMap V ℂ) (N : ℕ) (_hN : Module.finrank ℝ V < N) :
     ∃ C : ℝ, 0 < C ∧ ∀ x : V, ‖f x‖ ≤ C / (1 + ‖x‖)^N := by
   -- Get bounds for each k ≤ N
-  have h_decay : ∀ k, ∃ C_k > 0, ∀ x, ‖x‖^k * ‖iteratedFDeriv ℝ 0 f x‖ ≤ C_k := fun k => SchwartzMap.decay f k 0
+  have h_decay : ∀ k, ∃ C_k > 0, ∀ x, ‖x‖^k * ‖iteratedFDeriv ℝ 0 f x‖ ≤ C_k := fun k =>
+    SchwartzMap.decay f k 0
   choose C hC_pos hC using h_decay
   let total_C := Finset.sum (Finset.range (N + 1)) (fun k => (N.choose k : ℝ) * C k)
   use total_C
@@ -840,7 +847,8 @@ theorem schwartz_integrable_decay {V : Type*} [NormedAddCommGroup V]
   · intro x
     rw [div_eq_mul_inv, le_mul_inv_iff₀ (pow_pos (by linarith [norm_nonneg x]) _)]
     -- Expand (1 + ‖x‖)^N
-    have h_binom : (1 + ‖x‖)^N = Finset.sum (Finset.range (N + 1)) (fun k => (N.choose k : ℝ) * ‖x‖^k) := by
+    have h_binom : (1 + ‖x‖)^N = Finset.sum (Finset.range (N + 1)) (fun k => (N.choose k : ℝ) *
+      ‖x‖^k) := by
       rw [add_comm, add_pow]
       simp only [one_pow, mul_one]
       congr; ext k
@@ -855,7 +863,8 @@ theorem schwartz_integrable_decay {V : Type*} [NormedAddCommGroup V]
     have h_norm : ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖ := by
        rw [norm_iteratedFDeriv_zero]
     -- Rearrange to match hC
-    have h_rearrange : ‖f x‖ * ((N.choose k : ℝ) * ‖x‖^k) = (N.choose k : ℝ) * (‖x‖^k * ‖iteratedFDeriv ℝ 0 f x‖) := by
+    have h_rearrange : ‖f x‖ * ((N.choose k : ℝ) * ‖x‖^k) = (N.choose k : ℝ) * (‖x‖^k *
+      ‖iteratedFDeriv ℝ 0 f x‖) := by
        rw [h_norm]
        ring
     rw [h_rearrange]
@@ -1089,7 +1098,8 @@ theorem double_mollifier_convergence
          let K_t := Metric.closedBall (0 : E) (2 * (φ i).rOut)
          let K_v := Metric.closedBall (0 : E) ((φ i).rOut)
          let K := K_t ×ˢ K_v
-         have hK_compact : IsCompact K := IsCompact.prod (isCompact_closedBall 0 _) (isCompact_closedBall 0 _)
+         have hK_compact : IsCompact K := IsCompact.prod (isCompact_closedBall 0 _)
+           (isCompact_closedBall 0 _)
          -- Support is in K
          have h_supp_F : support F ⊆ K := by
            intro ⟨t, v⟩ h

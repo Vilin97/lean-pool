@@ -16,7 +16,8 @@ import LeanPool.OSforGFF.Covariance.Momentum
 import LeanPool.OSforGFF.OS.Axioms
 import LeanPool.OSforGFF.General.FunctionalAnalysis
 import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
-import LeanPool.OSforGFF.General.QuantitativeDecay  -- For schwartz_bilinear_translation_decay_polynomial_proof
+import LeanPool.OSforGFF.General.QuantitativeDecay
+  -- For schwartz_bilinear_translation_decay_polynomial_proof
 import LeanPool.OSforGFF.Spacetime.TimeTranslation  -- For time translation on distributions
 import LeanPool.OSforGFF.OS.OS4_MGF  -- For shared OS4 infrastructure (no sorries)
 
@@ -153,7 +154,8 @@ lemma gff_generating_norm_le_one_real (m : ℝ) [Fact (0 < m)] (f : TestFunction
     ‖GJGeneratingFunctionalℂ (gaussianFreeField_free m) (toComplex f)‖ ≤ 1 := by
   rw [gff_complex_generating m (toComplex f)]
   rw [Complex.norm_exp]
-  have h_re : (-(1/2 : ℂ) * SchwingerFunctionℂ₂ (gaussianFreeField_free m) (toComplex f) (toComplex f)).re =
+  have h_re : (-(1/2 : ℂ) * SchwingerFunctionℂ₂ (gaussianFreeField_free m) (toComplex f) (toComplex
+    f)).re =
       -(1/2) * (SchwingerFunctionℂ₂ (gaussianFreeField_free m) (toComplex f) (toComplex f)).re := by
     simp [Complex.mul_re]
   rw [h_re, gff_two_point_equals_covarianceℂ_free]
@@ -237,11 +239,13 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
   set S₂ := SchwingerFunctionℂ₂ (gaussianFreeField_free m)
   have h_combined : Z (fC + T_a_gC) = Z fC * Z gC * Complex.exp (-S₂ fC T_a_gC) := by
     rw [h_factor, h_transl]
-  have h_diff : Z (fC + T_a_gC) - Z fC * Z gC = Z fC * Z gC * (Complex.exp (-S₂ fC T_a_gC) - 1) := by
+  have h_diff : Z (fC + T_a_gC) - Z fC * Z gC = Z fC * Z gC * (Complex.exp (-S₂ fC T_a_gC) - 1) :=
+    by
     rw [h_combined]; ring
   -- The cross term decay: S₂ fC T_a_gC = ↑(SchwingerFunction₂ f (g.translate a))
   -- This follows from the real-complex correspondence of Schwinger functions
-  have h_S2_eq : S₂ fC T_a_gC = ↑(SchwingerFunction₂ (gaussianFreeField_free m) f (g.translate a)) := by
+  have h_S2_eq : S₂ fC T_a_gC = ↑(SchwingerFunction₂ (gaussianFreeField_free m) f (g.translate a))
+    := by
     -- Both are integrals of f(x) C(x,y) g(y) for real test functions
     -- SchwingerFunctionℂ₂ on toComplex gives the same as SchwingerFunction₂ cast to ℂ
     change SchwingerFunctionℂ₂ (gaussianFreeField_free m) fC T_a_gC = _
@@ -258,12 +262,14 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
         (fun x => (↑(distributionPairing x f * distributionPairing x (g.translate a)) : ℂ)) := by
       ext ω
       -- fC = toComplex f and T_a_gC = toComplex (g.translate a)
-      change distributionPairingℂ_real ω (toComplex f) * distributionPairingℂ_real ω (toComplex (g.translate a)) = _
+      change distributionPairingℂ_real ω (toComplex f) * distributionPairingℂ_real ω (toComplex
+        (g.translate a)) = _
       rw [distributionPairingℂ_real_toComplex, distributionPairingℂ_real_toComplex,
         Complex.ofReal_mul]
     rw [h_fun_eq]
     exact integral_complex_ofReal
-  have h_S2_norm : ‖S₂ fC T_a_gC‖ = |SchwingerFunction₂ (gaussianFreeField_free m) f (g.translate a)| := by
+  have h_S2_norm : ‖S₂ fC T_a_gC‖ = |SchwingerFunction₂ (gaussianFreeField_free m) f (g.translate
+    a)| := by
     rw [h_S2_eq, Complex.norm_real, Real.norm_eq_abs]
   have h_S2_small : ‖-S₂ fC T_a_gC‖ ≤ 1 := by
     rw [norm_neg, h_S2_norm, ← Real.norm_eq_abs]
@@ -338,7 +344,8 @@ theorem schwartz_cross_covariance_decay_real (m : ℝ) [Fact (0 < m)]
       (Filter.cocompact SpaceTime)
       (nhds 0) :=
     schwartz_bilinear_translation_decay_proof (toComplex f) (toComplex g)
-      (freeCovarianceKernel m) hK_meas hK_loc 2 (by norm_num) C 1 hC_pos (by norm_num) hK_cont hK_decay'
+      (freeCovarianceKernel m) hK_meas hK_loc 2 (by norm_num) C 1 hC_pos (by norm_num) hK_cont
+         hK_decay'
   -- Step 4: Convert Filter.Tendsto to ε-δ form
   -- The definition: Tendsto f (cocompact X) (nhds 0) means
   -- for any ε > 0, {a | ‖f a‖ < ε} contains the complement of some compact set
@@ -543,7 +550,8 @@ lemma timeShift_eq_add (s : ℝ) (y : SpaceTime) :
 
 /-- Time translation by -s gives g(y - timeShiftConst(s)). -/
 lemma timeTranslationSchwartzℂ_neg_eq_sub (s : ℝ) (g : TestFunctionℂ) (y : SpaceTime) :
-    TimeTranslation.timeTranslationSchwartzℂ (-s) g y = g (y - TimeTranslation.timeShiftConst s) := by
+    TimeTranslation.timeTranslationSchwartzℂ (-s) g y = g (y - TimeTranslation.timeShiftConst s) :=
+      by
   rw [timeTranslationSchwartzℂ_at_point, timeShift_eq_add]
   congr 1
   -- y + timeShiftConst(-s) = y - timeShiftConst(s)
@@ -567,7 +575,8 @@ lemma freeCovariance_eq_kernel (m : ℝ) (x y : SpaceTime) :
     the bilinear integral with translated argument.
 -/
 lemma schwinger2_time_translated_eq_bilinear (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) (s : ℝ) :
-    SchwingerFunctionℂ₂ (gaussianFreeField_free m) f (TimeTranslation.timeTranslationSchwartzℂ (-s) g) =
+    SchwingerFunctionℂ₂ (gaussianFreeField_free m) f (TimeTranslation.timeTranslationSchwartzℂ (-s)
+      g) =
     ∫ x : SpaceTime, ∫ y : SpaceTime,
       f x * (freeCovarianceKernel m (x - y) : ℂ) * g (y - TimeTranslation.timeShiftConst s) := by
   -- S₂(f, T_{-s} g) = freeCovarianceℂ_bilinear m f (T_{-s} g)
@@ -611,7 +620,8 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
       simp only [Set.mem_compl_iff, Metric.mem_closedBall, dist_zero_right, not_le] at hz
       exact norm_ne_zero_iff.mp (ne_of_gt (lt_of_lt_of_le (by positivity) (le_of_lt hz)))
   -- Convert exponential bound from freeCovariance to freeCovarianceKernel
-  have hK_decay : ∀ z : SpaceTime, ‖z‖ ≥ 1/m → |freeCovarianceKernel m z| ≤ C_exp * Real.exp (-m * ‖z‖) := by
+  have hK_decay : ∀ z : SpaceTime, ‖z‖ ≥ 1/m → |freeCovarianceKernel m z| ≤ C_exp * Real.exp (-m *
+    ‖z‖) := by
     intro z hz
     have hmz : m * ‖z‖ ≥ 1 := by
       calc m * ‖z‖ ≥ m * (1/m) := mul_le_mul_of_nonneg_left hz (le_of_lt hm)
@@ -639,7 +649,8 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
   -- schwinger2_time_translated_eq_bilinear)
   -- We need to bound |S₂(f, T_{-t}g)| for any t ≥ 0
   have h_S2_bound : ∀ t : ℝ, t ≥ 0 →
-      ‖SchwingerFunctionℂ₂ (gaussianFreeField_free m) f (TimeTranslation.timeTranslationSchwartzℂ (-t) g)‖ ≤
+      ‖SchwingerFunctionℂ₂ (gaussianFreeField_free m) f (TimeTranslation.timeTranslationSchwartzℂ
+        (-t) g)‖ ≤
         c_decay * (1 + t)^(-α) := by
     intro t ht
     -- Use schwinger2_time_translated_eq_bilinear to rewrite S₂
@@ -669,7 +680,8 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
   -- Abbreviation for the shifted g
   let g_t := TimeTranslation.timeTranslationSchwartzℂ (-t) g
   -- Step 7a: Use time duality to rewrite LHS
-  have h_duality : ∀ ω, distributionPairingℂ_real (TimeTranslation.timeTranslationDistribution t ω) g =
+  have h_duality : ∀ ω, distributionPairingℂ_real (TimeTranslation.timeTranslationDistribution t ω)
+    g =
       distributionPairingℂ_real ω g_t := fun ω => time_translation_pairing_duality t ω g
   -- Step 7b: Apply Gaussian factorization
   have h_gauss := OS4infra.gff_joint_mgf_factorization m f g_t
@@ -693,7 +705,8 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
   calc ‖∫ ω, Complex.exp (distributionPairingℂ_real ω f +
         distributionPairingℂ_real (TimeTranslation.timeTranslationDistribution t ω) g)
         ∂(gaussianFreeField_free m).toMeasure - Ef * Eg‖
-      = ‖Ef * Eg * (Complex.exp (SchwingerFunctionℂ₂ (gaussianFreeField_free m) f g_t) - 1)‖ := by rw [h_diff]
+      = ‖Ef * Eg * (Complex.exp (SchwingerFunctionℂ₂ (gaussianFreeField_free m) f g_t) - 1)‖ :=
+        by rw [h_diff]
     _ = ‖Ef‖ * ‖Eg‖ * ‖Complex.exp (SchwingerFunctionℂ₂ (gaussianFreeField_free m) f g_t) - 1‖ := by
         rw [norm_mul, norm_mul]
     _ ≤ ‖Ef‖ * ‖Eg‖ * (‖SchwingerFunctionℂ₂ (gaussianFreeField_free m) f g_t‖ *

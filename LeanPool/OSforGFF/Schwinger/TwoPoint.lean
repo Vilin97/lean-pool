@@ -113,7 +113,8 @@ noncomputable def SchwingerTwoPointFunction
     -- Use the filter limit along the sequence of bump functions
     -- The limit exists for "good" measures (those with continuous covariance kernels away from 0)
     Filter.limUnder Filter.atTop
-      (fun n : ℕ => if hn : n = 0 then 0 else SmearedTwoPointFunction dμ_config (standardBumpSequence n hn) x)
+      (fun n : ℕ => if hn : n = 0 then 0 else SmearedTwoPointFunction dμ_config
+         (standardBumpSequence n hn) x)
 
 /-- SchwingerTwoPointFunction vanishes at coincident points by definition. -/
 @[simp]
@@ -153,8 +154,10 @@ theorem smearedTwoPoint_tendsto_schwingerTwoPoint
   -- By double_mollifier_convergence, this → C(x)
   simp only [SmearedTwoPointFunction]
   -- Rewrite using hS₂
-  have h_eq : ∀ i, SchwingerFunction₂ dμ_config (translateSchwartz (bumpToSchwartz (φ i)) x) (bumpToSchwartz (φ i)) =
-      ∫ u, ∫ v, (translateSchwartz (bumpToSchwartz (φ i)) x) u * C (u - v) * (bumpToSchwartz (φ i)) v := by
+  have h_eq : ∀ i, SchwingerFunction₂ dμ_config (translateSchwartz (bumpToSchwartz (φ i)) x)
+    (bumpToSchwartz (φ i)) =
+      ∫ u, ∫ v, (translateSchwartz (bumpToSchwartz (φ i)) x) u * C (u - v) * (bumpToSchwartz (φ i))
+        v := by
     intro i
     exact hS₂ _ _
   simp_rw [h_eq]
@@ -183,13 +186,15 @@ theorem schwingerTwoPointFunction_eq_kernel
   simp only [hx, ↓reduceIte]  -- unfold the if x = 0 case
   -- By smearedTwoPoint_tendsto_schwingerTwoPoint, the sequence converges to C x
   have h_tendsto : Filter.Tendsto
-      (fun n : ℕ => if hn : n = 0 then 0 else SmearedTwoPointFunction dμ_config (standardBumpSequence n hn) x)
+      (fun n : ℕ => if hn : n = 0 then 0 else SmearedTwoPointFunction dμ_config
+         (standardBumpSequence n hn) x)
       Filter.atTop (nhds (C x)) := by
     -- For n ≥ 1, apply smearedTwoPoint_tendsto_schwingerTwoPoint
     -- standardBumpSequence n has rOut = 1/n → 0
     -- Define φ indexed by ℕ+ using (n+1) to avoid the n=0 issue
     -- φ n = standardBumpSequence (n+1) _, so φ n has rOut = 1/(n+1)
-    let φ : ℕ → ContDiffBump (0 : SpaceTime) := fun n => standardBumpSequence (n + 1) (Nat.succ_ne_zero n)
+    let φ : ℕ → ContDiffBump (0 : SpaceTime) := fun n => standardBumpSequence (n + 1)
+      (Nat.succ_ne_zero n)
     -- The rOut of this sequence tends to 0: 1/(n+1) → 0
     have hφ_rOut : Filter.Tendsto (fun n => (φ n).rOut) Filter.atTop (nhds 0) := by
       simp only [φ, standardBumpSequence]
