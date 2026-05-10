@@ -1118,7 +1118,7 @@ lemma hermiteCoeffNd_eq_hermiteCoeff1D
   simp only [euclideanFin1MeasEquiv_apply]
   congr 1
   change f (euclideanFin1Equiv.symm (x 0)) = f x
-  congr 1; simp [euclideanFin1Equiv]; ext i; fin_cases i; rfl
+  congr 1; simp only [Fin.isValue]; ext i; fin_cases i; rfl
 
 /-! ### Analytical Axioms for Multi-Dimensional Hermite Analysis
 

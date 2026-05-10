@@ -67,10 +67,10 @@ def act (g : E) (x : SpaceTime) : SpaceTime := g.R x + g.t
 /-act_one, act_mul and act_inv lemmas prove
 identity, composition and inverse. They are needed to say Euclidean sym
 form a group. This mirrors OS-2's S_j= S_{EJ} -/
-@[simp] lemma act_one   (x : SpaceTime) : act ⟨1,0⟩ x = x := by
+@[simp] lemma act_one (x : SpaceTime) : act ⟨1,0⟩ x = x := by
   simp [act]
 
-@[simp] lemma act_mul   (g h : E) (x : SpaceTime) :
+@[simp] lemma act_mul (g h : E) (x : SpaceTime) :
     act ⟨g.R.comp h.R, g.R h.t + g.t⟩ x = g.R (h.R x + h.t) + g.t := by
   simp [act, add_comm, add_left_comm]
 

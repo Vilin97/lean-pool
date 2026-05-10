@@ -324,7 +324,7 @@ private lemma gaussian_eq_charFun (ε : ℝ) (hε : 0 < ε) :
   have hgauss_cint : Integrable (fun x : V => cexp (-(a : ℂ) * ↑(‖x‖ ^ 2))) := by
     have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
       (show 0 < ((a : ℂ)).re by simp [ha]) (0 : ℂ) (0 : V)
-    simp at this; convert this using 1; ext x; simp [Complex.ofReal_pow]
+    simp only [ofReal_pow, neg_mul] at this; convert this using 1; ext x; simp [Complex.ofReal_pow]
   -- The real Gaussian is integrable (derived from complex version)
   have hgauss_rint : Integrable (fun x : V => C * rexp (-a * ‖x‖ ^ 2)) := by
     apply Integrable.const_mul
@@ -440,7 +440,7 @@ lemma gaussianRegularize_integrable (φ : V → ℂ) (hpd : IsPositiveDefinite �
   have hgauss : Integrable (fun x : V => cexp (-(↑ε : ℂ) * ↑(‖x‖ ^ 2))) := by
     have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
       (show 0 < (↑ε : ℂ).re by simp [hε]) (0 : ℂ) (0 : V)
-    simp at this
+    simp only [ofReal_pow, neg_mul] at this
     convert this using 1; ext x; simp [Complex.ofReal_pow]
   -- φ is bounded: ‖φ(x)‖ ≤ (φ 0).re
   -- So ‖φ(x) * exp(-ε‖x‖²)‖ = ‖φ(x)‖ * ‖exp(-ε‖x‖²)‖ ≤ (φ 0).re * ‖exp(-ε‖x‖²)‖

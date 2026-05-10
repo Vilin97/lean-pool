@@ -184,7 +184,7 @@ lemma gaussDensity_integrable' (σ : ℝ) (hσ : 0 < σ) :
   have hcint : Integrable (fun x : V => cexp (-(b : ℂ) * ↑(‖x‖ ^ 2))) := by
     have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
       (show 0 < ((b : ℂ)).re by simp [hb]) (0 : ℂ) (0 : V)
-    simp at this; convert this using 1; ext x; simp [Complex.ofReal_pow]
+    simp only [ofReal_pow, neg_mul] at this; convert this using 1; ext x; simp [Complex.ofReal_pow]
   have heq : gaussDensity (V := V) σ = fun x => ‖cexp (-(b : ℂ) * ↑(‖x‖ ^ 2))‖ := by
     ext x; unfold gaussDensity; rw [Complex.norm_exp]; congr 1
     simp only [Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,

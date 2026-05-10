@@ -32,25 +32,25 @@ namespace IsSetField
 theorem inter_mem (hC : IsSetField C) (hs : s ∈ C) (ht : t ∈ C) : s ∩ t ∈ C :=
   hC.toIsSetRing.inter_mem hs ht
 
-theorem compl_mem (hC :IsSetField C) (hs : s ∈ C) : sᶜ ∈ C := by
+theorem compl_mem (hC : IsSetField C) (hs : s ∈ C) : sᶜ ∈ C := by
   rw [compl_eq_univ_diff]; exact hC.diff_mem hC.univ_mem hs
 
-theorem toIsSetSemiring (hC :IsSetField C) : IsSetSemiring C :=
+theorem toIsSetSemiring (hC : IsSetField C) : IsSetSemiring C :=
   hC.toIsSetRing.isSetSemiring
 
-theorem iUnion_le_mem (hC :IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
+theorem iUnion_le_mem (hC : IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
     (⋃ i ≤ n, s i) ∈ C :=
   hC.toIsSetRing.iUnion_le_mem hs n
 
-theorem iInter_le_mem (hC :IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
+theorem iInter_le_mem (hC : IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
     (⋂ i ≤ n, s i) ∈ C :=
   hC.toIsSetRing.iInter_le_mem hs n
 
-theorem partialSups_mem (hC :IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
+theorem partialSups_mem (hC : IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
     partialSups s n ∈ C :=
   hC.toIsSetRing.partialSups_mem hs n
 
-theorem disjointed_mem (hC :IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
+theorem disjointed_mem (hC : IsSetField C) {s : ℕ → Set α} (hs : ∀ n, s n ∈ C) (n : ℕ) :
     disjointed s n ∈ C :=
   hC.toIsSetRing.disjointed_mem hs n
 

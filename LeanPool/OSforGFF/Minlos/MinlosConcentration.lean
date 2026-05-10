@@ -1730,7 +1730,7 @@ theorem nuclear_cylindrical_concentration
   obtain ⟨h_le_m, C_HS, h_HS_bound⟩ := hp_hs m₀
   have hC_HS : 0 ≤ C_HS := by
     have := h_HS_bound 0 Fin.elim0 (fun i => Fin.elim0 i)
-    simp at this; exact this
+    simp only [ge_iff_le] at this; exact this
   -- Step 4: Quadratic bound on kernel elements
   have h_kernel_quad : ∀ x : E, (p m) x = 0 → ∀ t : ℝ,
       1 - (Φ (t • x)).re ≤ ε / 8 := by

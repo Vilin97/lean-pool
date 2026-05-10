@@ -602,7 +602,7 @@ def convolution_compactSupport_decay (f : SchwartzMap E ℂ) (K : E → ℝ) (R�
 -/
 def convolution_expDecay_polynomial_decay (f : SchwartzMap E ℂ) (K : E → ℝ)
     (R₀ m C_K : ℝ) (hR₀ : R₀ > 0) (hm : m > 0) (hC_K : C_K > 0)
-    (hK_loc : LocallyIntegrable K volume)  -- For measurability
+    (hK_loc : LocallyIntegrable K volume) -- For measurability
     (hK_decay : ∀ z : E, ‖z‖ ≥ R₀ → |K z| ≤ C_K * Real.exp (-m * ‖z‖))
     (hK_bdd : ∃ M : ℝ, ∀ z : E, |kernelTail K R₀ z| ≤ M)  -- K_tail is bounded
     (N : ℝ) (hN_dim : N > Module.finrank ℝ E) (hN : N > 0) :
@@ -627,12 +627,12 @@ def convolution_expDecay_polynomial_decay (f : SchwartzMap E ℂ) (K : E → ℝ
           linarith
         have hnotmem : z ∉ (closedBall (0 : E) R₀)ᶜ := by simp [hmem]
         rw [indicator_of_notMem hnotmem]
-        simp
+        simp only [mul_zero, norm_zero, neg_mul, ge_iff_le]
         exact mul_nonneg hC_K.le (Real.exp_nonneg _)
       · -- Interior case: ‖z‖ > R₀
         have h_strict : ‖z‖ > R₀ := lt_of_le_of_ne hz (Ne.symm h_boundary)
         have hmem : z ∈ (closedBall (0 : E) R₀)ᶜ := by
-          simp [mem_compl_iff, mem_closedBall, dist_zero_right, not_le]
+          simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le]
           exact h_strict
         rw [indicator_of_mem hmem, mul_one]
         exact hK_decay z hz

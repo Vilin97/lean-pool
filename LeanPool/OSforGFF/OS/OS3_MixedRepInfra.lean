@@ -267,7 +267,7 @@ lemma heatKernelPositionSpace_continuousOn :
       exact continuousOn_fst
     · intro ⟨t, _⟩ ⟨ht, _⟩
       simp only [Set.mem_Ioi] at ht
-      simp; exact ht.ne'
+      simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]; exact ht.ne'
 
 /-- **Heat kernel composition is AEStronglyMeasurable.**
 
@@ -2944,7 +2944,7 @@ theorem fubini_s_xy_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (k_sp : 
         apply ContinuousOn.div
         · exact ((hcoord0_1.neg.sub hcoord0_2).pow 2).continuousOn
         · exact (continuous_const.mul continuous_fst).continuousOn
-        · intro ⟨s, _⟩ ⟨hs, _⟩; simp; exact ne_of_gt hs
+        · intro ⟨s, _⟩ ⟨hs, _⟩; simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]; exact ne_of_gt hs
       have h5 : ContinuousOn (fun (p : ℝ × SpaceTime × SpaceTime) =>
           Complex.exp (-(p.1 : ℂ) * (‖k_sp‖^2 + m^2))) (Set.Ioi 0 ×ˢ Set.univ) := by
         apply Complex.continuous_exp.comp_continuousOn

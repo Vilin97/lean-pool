@@ -1070,7 +1070,7 @@ lemma norm_sq_weighted_sum_le {n : ℕ} (w : Fin n → ℂ) (a : Fin n → ℂ) 
     sq_le_sq' (by nlinarith [norm_nonneg (∑ j, w j * a j)]) h1
   have h3 : (∑ j : Fin n, ‖w j‖ * ‖a j‖)^2 ≤ (∑ j, ‖w j‖^2) * (∑ j, ‖a j‖^2) := by
     have := Finset.sum_mul_sq_le_sq_mul_sq Finset.univ (fun j => ‖w j‖) (fun j => ‖a j‖)
-    simp at this; exact this
+    simp only [ge_iff_le] at this; exact this
   linarith
 
 /-- OS4' → OS4: Generating function ergodicity implies full ergodicity.

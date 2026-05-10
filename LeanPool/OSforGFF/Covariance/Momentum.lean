@@ -279,7 +279,7 @@ lemma heatKernelPositionSpace_continuous_at (t : ℝ) (ht : 0 < t) (r : ℝ) :
     apply ContinuousAt.div
     · exact continuousAt_const
     · exact continuousAt_const.mul continuousAt_id
-    · simp; exact ht.ne'
+    · simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]; exact ht.ne'
 
 /-- The heat kernel is bounded by a constant depending only on r > 0.
     Maximum of H(s,r) = (4πs)^{-d/2} exp(-r²/(4s)) occurs at s = r²/(2d).

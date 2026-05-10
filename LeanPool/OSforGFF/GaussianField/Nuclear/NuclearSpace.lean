@@ -199,7 +199,7 @@ lemma seminorm_le_nuclear_expansion
           ≤ |hN.coeff m f| * ((C₁ : ℝ) * (s₁.sup hN.p) (hN.basis m)) := by
             apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
             have h := hqbound (hN.basis m)
-            simp [NNReal.smul_def] at h; exact h
+            simp only [ge_iff_le] at h; exact h
         _ ≤ |hN.coeff m f| * ((C₁ : ℝ) * (D * (1 + (m : ℝ)) ^ S)) := by
             apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
             exact mul_le_mul_of_nonneg_left (hDbound m) (le_of_lt hC₁_pos)
@@ -404,7 +404,7 @@ theorem DyninMityaginSpace.toNuclearSpace (E : Type*)
       induction t using Finset.cons_induction with
       | empty =>
         change Continuous (⇑(⊥ : Seminorm ℝ E) : E → ℝ)
-        simp [Seminorm.bot_eq_zero]; exact continuous_const
+        simp only [Seminorm.coe_bot]; exact continuous_const
       | cons a t' _ ih =>
         rw [Finset.sup_cons]
         exact (hN.h_with.continuous_seminorm a).sup ih

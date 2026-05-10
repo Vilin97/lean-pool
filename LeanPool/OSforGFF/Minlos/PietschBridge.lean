@@ -805,7 +805,7 @@ private theorem buildHilbertianFamily_withSeminorms
     intro n
     refine ⟨{n}, 1, ?_⟩
     intro x
-    simp [Finset.sup_singleton]
+    simp only [Seminorm.comp_id, Finset.sup_singleton, one_smul]
     exact buildHilbertianFamily_dominates_q₀ hPN q₀ hq₀_cont n x
 
 /-! ### Main Bridge Theorem -/

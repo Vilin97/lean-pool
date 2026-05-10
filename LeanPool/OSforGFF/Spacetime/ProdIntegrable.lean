@@ -486,11 +486,11 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
     cases' j using Fin.cases with j
     · -- Time component: (spacetimeOfTimeSpace s 0) 0 = s, (s • e₀) 0 = s * 1 = s
       simp [spacetimeOfTimeSpace, e₀, EuclideanSpace.equiv, Fin.cons_zero,
-            PiLp.single_apply, smul_eq_mul, mul_one]
+            smul_eq_mul, mul_one]
     · -- Spatial components: (spacetimeOfTimeSpace s 0) (j+1) = 0, (s • e₀) (j+1) = s * 0 = 0
       have hne : Fin.succ j ≠ 0 := Fin.succ_ne_zero j
       simp [spacetimeOfTimeSpace, e₀, EuclideanSpace.equiv, Fin.cons_succ,
-            PiLp.single_apply, hne, smul_eq_mul, mul_zero]
+            hne, smul_eq_mul, mul_zero]
   -- The path s ↦ spacetimeOfTimeSpace s x_sp equals spacetimeOfTimeSpace 0 x_sp + s • e₀
   have h_path_eq : ∀ s : ℝ, spacetimeOfTimeSpace s x_sp = spacetimeOfTimeSpace 0 x_sp + s • e₀ := by
     intro s

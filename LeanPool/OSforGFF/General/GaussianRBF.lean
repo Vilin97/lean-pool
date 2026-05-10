@@ -117,7 +117,7 @@ lemma innerProduct_is_pd_kernel :
 -/
 lemma real_valued_PD_kernel_gives_PSD_matrix {α : Type*} (K : α → α → ℂ)
     (h_real : ∀ x y, (K x y).im = 0)
-    (h_symm : ∀ x y, K x y = K y x)  -- Symmetric (automatic for inner product kernels)
+    (h_symm : ∀ x y, K x y = K y x) -- Symmetric (automatic for inner product kernels)
     (hK : IsPositiveDefiniteKernel K) (m : ℕ) (x : Fin m → α) :
     (Matrix.of fun i j => (K (x i) (x j)).re).PosSemidef := by
   rw [Matrix.posSemidef_iff_dotProduct_mulVec]

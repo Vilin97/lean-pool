@@ -752,7 +752,7 @@ private lemma entrywiseExp_IsRePSD
         rw [map_sum, Finset.sum_mul]; congr 1; ext i
         rw [Finset.mul_sum]
       rw [this, ← Complex.normSq_eq_conj_mul_self]
-      simp [Complex.ofReal_re]; exact Complex.normSq_nonneg _
+      simp only [ofReal_re, ge_iff_le]; exact Complex.normSq_nonneg _
     exact posSemidef_of_isRePSD_isHermitian
       (fun _ _ => by simp) hIsRePSD
   -- HP (k+1) = HP k ∘ₕ (of M)
