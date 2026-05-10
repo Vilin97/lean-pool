@@ -49,7 +49,7 @@ See [`python/README.md`](python/README.md) for common commands.
 
 ## Branch and PR Workflow
 
-Direct commits to `main` are not allowed. All changes go through pull requests.
+**Direct commits to `main` are not allowed.** All changes go through pull requests.
 
 **Branch naming.** Use `yourname/description` for solo work (e.g., `justin/aggregator-draft`). Use `feature/` or `fix/` prefixes for branches where multiple people may contribute (e.g., `feature/manifest-summary`, `fix/timeout-default`).
 
@@ -59,10 +59,10 @@ Direct commits to `main` are not allowed. All changes go through pull requests.
 
 **Commit messages.** Write clear, concise commit messages in imperative tense (e.g., "Add manifest fetcher", not "Added manifest fetcher"). Do not include AI-generated tags (e.g., "Generated with Claude", "Co-authored-by: Codex") in commits or PRs.
 
-**Review and merge.** All PRs require at least one review from another contributor before merging.
-
 
 ## Linting and Testing
+
+**Never change the checks or gates themselves.** Do not modify `.github/workflows/`, `.github/CODE_QUALITY.md`, `python/lean_pool/quality.py`, `scripts/nolints-style.txt`, the `[leanOptions]`/lint settings in `lakefile.toml`, or any other CI step, quality gate, or linter configuration — and do not add an exception or waiver of any kind (a `size-limit-ok` comment, a `nolints-style.txt` entry, `set_option linter.X false`, etc.) — unless the user has explicitly asked for that exact change. If a check fails, fix the code, not the check. This applies to everyone, and especially to AI agents working on the repo.
 
 ### Lean
 

@@ -135,6 +135,38 @@ def test_quality_check_parses_declaration_with_prime_suffix(tmp_path: Path) -> N
     assert not any(declaration.name == "foo" for declaration in declarations)
 
 
+def test_quality_check_parses_unicode_declaration_name(tmp_path: Path) -> None:
+    """Unicode in declaration names (subscripts, Greek) must not be truncated.
+
+    Regression: an ASCII-only `[A-Za-z0-9_'.]` name pattern parsed `c₀_pos`
+    as `c`, so the `#print axioms` audit then failed with `unknown constant`.
+    """
+    _write_minimal_repo(tmp_path, "theorem c₀_pos (n : Nat) : n = n := rfl\n")
+
+    declarations = _parse_declarations(tmp_path)
+
+    assert any(declaration.name == "c₀_pos" for declaration in declarations)
+    assert not any(declaration.name == "c" for declaration in declarations)
+
+
+def test_quality_check_strips_root_escape_from_declaration_name(tmp_path: Path) -> None:
+    """`theorem _root_.Foo.bar` is recorded as `Foo.bar`, not the escaped form.
+
+    Regression: the escape prefix was kept, so the audit emitted
+    `#print axioms _root_._root_.Foo.bar` and failed.
+    """
+    _write_minimal_repo(
+        tmp_path,
+        "namespace Ns\ntheorem _root_.Foo.bar : True := trivial\nend Ns\n",
+    )
+
+    names = {declaration.name for declaration in _parse_declarations(tmp_path)}
+
+    assert "Foo.bar" in names
+    assert "_root_.Foo.bar" not in names
+    assert "Ns.Foo.bar" not in names
+
+
 def test_quality_check_rejects_oversized_file(tmp_path: Path) -> None:
     """Files over the 10000-line cap fail; there is no waiver."""
     _write_minimal_repo(tmp_path)
