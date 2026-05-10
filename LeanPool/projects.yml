@@ -36,7 +36,6 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
-<<<<<<< HEAD
   - slug: dead-ends
     title: Dead Ends in Square-Free Digit Walks
     entry_module: LeanPool.DeadEnds
@@ -56,7 +55,6 @@ projects:
       - combinatorics
     msc:
       - "11N25"
-=======
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
@@ -105,4 +103,3 @@ projects:
     tags:
       - number-theory
       - combinatorics
->>>>>>> origin/main
