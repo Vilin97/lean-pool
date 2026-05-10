@@ -16,3 +16,21 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+  - slug: partial-regularity
+    title: Almost all primes are partially regular
+    entry_module: LeanPool.PartialRegularity
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Seewoo Lee
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      arxiv: "2602.05090"
+    status: verified
+    main_declarations:
+      - LeanPool.PartialRegularity.irregular_primes_asymptotic
+      - LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
+    tags:
+      - number-theory
+      - asymptotics
