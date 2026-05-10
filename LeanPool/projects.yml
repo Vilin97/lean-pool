@@ -51,6 +51,41 @@ projects:
       - pde
       - kinetic-theory
       - mathematical-physics
+  - slug: partial-regularity
+    title: Almost all primes are partially regular
+    entry_module: LeanPool.PartialRegularity
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Seewoo Lee
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      arxiv: "2602.05090"
+    status: verified
+    main_declarations:
+      - LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
+    tags:
+      - number-theory
+      - asymptotics
+  - slug: riemann-mapping-theorem
+    title: Riemann Mapping Theorem
+    entry_module: LeanPool.RiemannMappingTheorem
+    authors:
+      - Vincent Beffara
+    source:
+      url: https://github.com/vbeffara/rMT4
+      github_repo: vbeffara/rmt4
+    status: verified
+    main_declarations:
+      - RMT
+      - main
+      - montel
+      - hurwitz
+    tags:
+      - complex-analysis
+      - conformal-maps
+      - schwarz-lemma
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
