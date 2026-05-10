@@ -8,7 +8,7 @@ A bottleneck on mathlib's growth is high-quality human review. Lean Pool replace
 ## How it works
 
 ```
-Reservoir + manual list  →  shallow clone  →  linters  →  LLM review  →  candidates table  →  promote to LeanPool/
+discover → lint → review → promote
 ```
 
 1. **Discover.** [`reservoir.py`](python/lean_pool/aggregator/reservoir.py) pulls the [Reservoir](https://reservoir.lean-lang.org) manifest of Lean packages. [`manual.py`](python/lean_pool/aggregator/manual.py) supplements it with hand-curated GitHub repos that Reservoir misses.
