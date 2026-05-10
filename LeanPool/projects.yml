@@ -9,6 +9,7 @@ projects:
       - Jujian Zhang
     source:
       arxiv: "2603.29970"
+      github_repo: AxiomMath/ramanujan-tau-misses-primes
     status: verified
     main_declarations:
       - main_theorem
@@ -47,6 +48,7 @@ projects:
       - Jujian Zhang
     source:
       arxiv: "2602.05095"
+      github_repo: AxiomMath/dead-ends
     status: verified
     main_declarations:
       - LeanPool.DeadEnds.baseBDeadEnd_density_formula
@@ -55,6 +57,91 @@ projects:
       - combinatorics
     msc:
       - "11N25"
+  - slug: rl-theory-in-lean
+    title: RL Theory in Lean
+    entry_module: LeanPool.RlTheoryInLean
+    authors:
+      - Shangtong Zhang
+    source:
+      arxiv: "2511.03618"
+      github_repo: ShangtongZhang/rl-theory-in-lean
+    status: verified
+    main_declarations:
+      - StochasticMatrix.stationary_distribution_exists
+    tags:
+      - probability
+      - reinforcement-learning
+      - stochastic-matrices
+    msc:
+      - "62L20"
+      - "60J10"
+  - slug: clawristotle
+    title: "Clawristotle: Vlasov-Maxwell-Landau steady-state classification"
+    entry_module: LeanPool.Clawristotle
+    authors:
+      - Vasily Ilin
+    source:
+      arxiv: "2603.15929"
+      github_repo: Vilin97/Clawristotle
+    status: verified
+    main_declarations:
+      - VML.Theorem42
+      - VML.CoulombConcreteTheorem42
+    tags:
+      - pde
+      - kinetic-theory
+      - mathematical-physics
+  - slug: grothendieck-vanishing
+    title: Grothendieck's Vanishing Theorem
+    entry_module: LeanPool.GrothendieckVanishing
+    authors:
+      - Vasily Ilin
+      - Brian Nugent
+    source:
+      url: "https://github.com/Vilin97/Clawristotle/tree/grothendieck-vanishing"
+    status: verified
+    main_declarations:
+      - GrothendieckVanishing
+    tags:
+      - algebraic-geometry
+      - sheaf-theory
+      - topology
+  - slug: partial-regularity
+    title: Almost all primes are partially regular
+    entry_module: LeanPool.PartialRegularity
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Seewoo Lee
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      arxiv: "2602.05090"
+      github_repo: AxiomMath/partial-regularity
+    status: verified
+    main_declarations:
+      - LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
+    tags:
+      - number-theory
+      - asymptotics
+  - slug: riemann-mapping-theorem
+    title: Riemann Mapping Theorem
+    entry_module: LeanPool.RiemannMappingTheorem
+    authors:
+      - Vincent Beffara
+    source:
+      url: https://github.com/vbeffara/rMT4
+      github_repo: vbeffara/rmt4
+    status: verified
+    main_declarations:
+      - RMT
+      - main
+      - montel
+      - hurwitz
+    tags:
+      - complex-analysis
+      - conformal-maps
+      - schwarz-lemma
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
@@ -62,6 +149,7 @@ projects:
       - FrenzyMath
     source:
       url: https://github.com/frenzymath/Archon-FirstProof-Results
+      github_repo: frenzymath/Archon-FirstProof-Results
     status: verified
     main_declarations:
       - Problem4.harmonic_mean_inequality_full
@@ -79,6 +167,7 @@ projects:
       - Math Inc.
     source:
       url: "https://github.com/math-inc/Erdos1196"
+      github_repo: math-inc/Erdos1196
     status: verified
     main_declarations:
       - PrimitiveSetsAboveX.mainTheorem
@@ -97,9 +186,57 @@ projects:
       - Jujian Zhang
     source:
       arxiv: "2603.23928"
+      github_repo: AxiomMath/lattice-triangle
     status: verified
     main_declarations:
       - analyticEngine_lower_bound
     tags:
       - number-theory
       - combinatorics
+  - slug: isoperimetric
+    title: Prékopa–Leindler, Brunn–Minkowski, and the isoperimetric inequality
+    entry_module: LeanPool.Isoperimetric
+    authors:
+      - Jonathan Ho
+    source:
+      url: https://github.com/hojonathanho/isoperimetric
+      github_repo: hojonathanho/isoperimetric
+    status: verified
+    main_declarations:
+      - prekopa_leindler
+      - brunn_minkowski
+      - isoperimetric_inequality
+    tags:
+      - measure-theory
+      - geometric-inequalities
+  - slug: sumsthreesquares
+    title: Sums of Three Squares
+    entry_module: LeanPool.SumsThreeSquares
+    authors:
+      - Bhavik Mehta
+      - Pietro Monticone
+      - Abel Doñate Muñoz
+    source:
+      doi: "10.2307/2033731"
+      github_repo: pitmonticone/SumsThreeSquares
+    status: verified
+    main_declarations:
+      - LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
+    tags:
+      - number-theory
+      - quadratic-forms
+      - geometry-of-numbers
+  - slug: sensitivity
+    title: 'Sensitivity Conjecture: √(deg) ≤ sensitivity'
+    entry_module: LeanPool.Sensitivity
+    authors:
+      - Samuel Schlesinger
+    source:
+      url: https://github.com/SamuelSchlesinger/sensitivity-conjecture
+      github_repo: samuelschlesinger/sensitivity-conjecture
+    status: verified
+    main_declarations:
+      - LeanPoolSensitivity.sensitivity_ge_sqrt_degree
+    tags:
+      - combinatorics
+      - boolean-functions

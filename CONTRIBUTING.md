@@ -35,7 +35,7 @@ See [`python/README.md`](python/README.md) for common commands.
 
 ## Branch and PR Workflow
 
-**Direct commits to `main` are not allowed.** All changes go through pull requests.
+**Direct commits to `main` are not allowed by project policy.** All changes go through pull requests. Branch protection to enforce this policy is future work.
 
 **Branch naming.** Use `yourname/description` for solo work (e.g., `justin/aggregator-draft`). Use `feature/` or `fix/` prefixes for branches where multiple people may contribute (e.g., `feature/manifest-summary`, `fix/timeout-default`).
 
@@ -45,7 +45,7 @@ See [`python/README.md`](python/README.md) for common commands.
 
 **Commit messages.** Write clear, concise commit messages in imperative tense (e.g., "Add manifest fetcher", not "Added manifest fetcher"). Do not include AI-generated tags (e.g., "Generated with Claude", "Co-authored-by: Codex") in commits or PRs.
 
-**Content PRs touch only content.** A PR that imports a formalization or changes a project may modify **only** `LeanPool.lean` (the `mk_all` index), `LeanPool/**/*.lean`, and `LeanPool/projects.yml` — nothing else. No `.github/`, no `python/`, no `scripts/`, no `lakefile.toml`/`lean-toolchain`/`lake-manifest.json`, no root docs, no scratch files like `IMPORT_NOTES.md`/`FAILURE.md`. The `Content-only PR` CI check (`.github/workflows/content-pr-guard.yml`) enforces this. Infra / CI / tooling / doc changes go directly to `main`, not bundled into a content PR.
+**Do not mix content and non-content changes.** A PR that imports a formalization or changes a project may modify **only** `LeanPool.lean` (the `mk_all` index), `LeanPool/**/*.lean`, and `LeanPool/projects.yml`. Infra / CI / tooling / doc changes may touch non-content files, but must not be bundled with content files. The PR separation CI check (`.github/workflows/content-pr-guard.yml`) enforces this.
 
 
 ## Linting and Testing
@@ -54,7 +54,7 @@ See [`python/README.md`](python/README.md) for common commands.
 
 ### Lean
 
-CI currently runs `lake exe mk_all --check`, `lake build LeanPool`, and `lake exe runLinter LeanPool` (see [`.github/workflows/lean_action_ci.yml`](.github/workflows/lean_action_ci.yml)). Build locally with `lake build`. Project-wide code-quality conventions and planned automated checks are documented in [`.github/CODE_QUALITY.md`](.github/CODE_QUALITY.md); many are roadmap items not yet enforced in CI.
+CI currently runs `lake exe mk_all --check`, `lake build LeanPool`, `lake exe runLinter LeanPool`, `lake exe lint-style LeanPool`, and the repository quality checker (see [`.github/workflows/lean_action_ci.yml`](.github/workflows/lean_action_ci.yml)). Build locally with `lake build`. Project-wide code-quality conventions and future work are documented in [`.github/CODE_QUALITY.md`](.github/CODE_QUALITY.md).
 
 ### Python
 

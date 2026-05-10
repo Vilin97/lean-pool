@@ -800,16 +800,65 @@ def _write_project_cards(root: Path) -> None:
             _write_project_card(entry_path, _project_card(project))
 
 
+_PROJECT_CARD_RE = re.compile(
+    # A project card is a `/-! ... -/` block whose first content line is an
+    # h1 heading and which contains a `Source:` line. Matching on `Source:`
+    # distinguishes it from sibling docstrings like `/-! ## Mathematical
+    # overview ... -/`. Non-greedy + DOTALL so we capture exactly one block.
+    r"/-!\s*\n#\s+[^\n]+\n(?:[^\n]*\n)*?Source:[^\n]+\n(?:[^\n]*\n)*?-/\n*",
+    re.MULTILINE,
+)
+_IMPORT_LINE_RE = re.compile(r"^\s*(?:public\s+)?import\s+\S+\s*$")
+
+
 def _write_project_card(path: Path, card: str) -> None:
     text = path.read_text()
-    header_end = _initial_header_end(text)
-    prefix = text[:header_end]
-    body = text[header_end:].lstrip()
-    if body.startswith("/-!"):
-        doc_end = body.find("-/")
-        body = body[doc_end + 2 :].lstrip() if doc_end != -1 else body
-    separator = "\n\n" if prefix else ""
-    path.write_text(f"{prefix}{separator}{card}\n\n{body}")
+    # Strip any existing project card(s) wherever they currently live in the
+    # file — the previous implementation only stripped a card immediately
+    # after the copyright header, leaving a second card behind whenever the
+    # canonical card layout (after imports) was already in use. `count=0`
+    # means "every match", so a malformed file with two cards collapses to
+    # zero cards before we insert the fresh one.
+    stripped = _PROJECT_CARD_RE.sub("", text)
+
+    header_end = _initial_header_end(stripped)
+    header = stripped[:header_end].rstrip()
+    rest = stripped[header_end:]
+
+    # Find the trailing edge of the import block at the top of `rest`. Imports
+    # have to live directly under the copyright header (mathlib / Lean
+    # convention); allow blank lines between them. Anything after the last
+    # import line is the body.
+    rest_lines = rest.splitlines(keepends=True)
+    cursor = 0
+    last_import_line = -1
+    while cursor < len(rest_lines):
+        line = rest_lines[cursor]
+        if _IMPORT_LINE_RE.match(line):
+            last_import_line = cursor
+            cursor += 1
+        elif line.strip() == "":
+            cursor += 1
+        else:
+            break
+    if last_import_line >= 0:
+        imports = "".join(rest_lines[: last_import_line + 1]).rstrip() + "\n"
+        body = "".join(rest_lines[last_import_line + 1 :]).lstrip("\n")
+    else:
+        imports = ""
+        body = rest.lstrip("\n")
+
+    pieces: list[str] = []
+    if header:
+        pieces.append(header + "\n")
+    if imports:
+        pieces.append("\n" + imports)
+    pieces.append("\n" + card + "\n")
+    if body.strip():
+        pieces.append("\n" + body)
+
+    new_text = "".join(pieces).rstrip() + "\n"
+    path.write_text(new_text)
 
 
 def run_checks(root: Path, *, skip_lean_axioms: bool = False) -> list[_QualityError]:

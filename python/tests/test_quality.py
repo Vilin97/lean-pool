@@ -10,7 +10,9 @@ from lean_pool.quality import (
     _axiom_audit_resolved,
     _Declaration,
     _parse_declarations,
+    _project_card,
     _strip_lean_comments,
+    _write_project_card,
     run_checks,
 )
 
@@ -187,6 +189,88 @@ def test_quality_check_does_not_honor_size_marker(tmp_path: Path) -> None:
     errors = run_checks(tmp_path, skip_lean_axioms=True)
 
     assert any("limit is 10000" in error.message for error in errors)
+
+
+_PROJECT_FIXTURE = {
+    "slug": "p",
+    "title": "Test Project",
+    "entry_module": "LeanPool.MyProj",
+    "authors": ["Test Author"],
+    "source": {"arxiv": "1234.5678"},
+    "status": "verified",
+    "main_declarations": ["hello"],
+    "tags": ["test"],
+}
+
+
+def test_write_project_card_inserts_card_after_imports(tmp_path: Path) -> None:
+    """The card writer must place the card after imports, not before them.
+
+    Regression: the previous implementation inserted the card right after
+    the copyright header — Lean then rejected the file with "invalid
+    'import' command, it must be used in the beginning of the file" because
+    the imports came after a non-import block.
+    """
+    entry = tmp_path / "MyProj.lean"
+    entry.write_text(
+        f"{HEADER}\nimport Mathlib.Tactic\nimport Mathlib.Data.Nat.Basic\n\n"
+        "def hello : Nat := 1\n"
+    )
+    _write_project_card(entry, _project_card(_PROJECT_FIXTURE))
+    text = entry.read_text()
+    header_end = text.find("-/") + 2
+    body = text[header_end:].lstrip("\n")
+    assert body.startswith("import "), (
+        "imports must come immediately after the copyright header; got:\n" + body[:200]
+    )
+    assert "/-!\n# Test Project" in text
+    assert text.index("import ") < text.index("/-!\n# Test Project"), (
+        "the project card must come AFTER the import block"
+    )
+
+
+def test_write_project_card_replaces_existing_card(tmp_path: Path) -> None:
+    """Running the writer again with a changed source must not double the card.
+
+    Regression: the previous implementation only stripped a card sitting
+    immediately after the copyright header. A card living in the canonical
+    post-imports location was left alone, so a writer run after a source
+    edit produced two cards in the same file.
+    """
+    entry = tmp_path / "MyProj.lean"
+    initial = _project_card(_PROJECT_FIXTURE)
+    entry.write_text(
+        f"{HEADER}\nimport Mathlib.Tactic\n\n{initial}\n\ndef hello : Nat := 1\n"
+    )
+    updated_fixture = {**_PROJECT_FIXTURE, "source": {"doi": "10.0/x.y"}}
+    _write_project_card(entry, _project_card(updated_fixture))
+    text = entry.read_text()
+    assert text.count("/-!\n# Test Project") == 1, (
+        "there should be exactly one project card; got:\n" + text
+    )
+    assert "Source: doi:10.0/x.y" in text
+    assert "Source: arxiv:1234.5678" not in text
+
+
+def test_write_project_card_moves_misplaced_card(tmp_path: Path) -> None:
+    """A file written by the old buggy writer (card before imports) is repaired.
+
+    Regression: when bumping/repairing files left by the previous writer,
+    the current writer must produce a Lean-valid file (imports first) even
+    when it finds the card in the wrong place.
+    """
+    entry = tmp_path / "MyProj.lean"
+    card = _project_card(_PROJECT_FIXTURE)
+    # buggy old layout: card BEFORE imports (Lean rejects this)
+    entry.write_text(
+        f"{HEADER}\n{card}\n\nimport Mathlib.Tactic\n\ndef hello : Nat := 1\n"
+    )
+    _write_project_card(entry, _project_card(_PROJECT_FIXTURE))
+    text = entry.read_text()
+    assert text.index("import Mathlib.Tactic") < text.index("/-!\n# Test Project"), (
+        "after rewriting, imports must precede the project card; got:\n" + text
+    )
+    assert text.count("/-!\n# Test Project") == 1
 
 
 def test_quality_check_accepts_project_card_after_imports(tmp_path: Path) -> None:

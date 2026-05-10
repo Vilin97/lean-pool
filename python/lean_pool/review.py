@@ -2,9 +2,9 @@
 
 Reads the rules from ``.github/REVIEW_RULES.md``, fetches the PR diff via the
 GitHub CLI, asks the configured OpenAI model to evaluate the contribution,
-and posts a single PR comment with a one-paragraph summary, a structured
-assessment table (fit / level / branch / mode / code-quality / etc.), a
-verdict, and any specific findings.
+and posts or updates a sticky PR comment with the reviewed head SHA, a
+one-paragraph summary, a structured assessment table (fit / level / branch /
+mode / code-quality / etc.), a verdict, and any specific findings.
 
 The reviewer prefers OpenAI's ``flex`` tier (cheaper, slower, occasionally
 unavailable). When flex returns 429 Resource Unavailable, the request is
@@ -21,6 +21,10 @@ Environment variables:
     OPENAI_API_KEY: OpenAI credentials (required).
     PR_NUMBER:      Pull request number to review (required).
     GH_TOKEN:       Token for the GitHub CLI (required in CI).
+    GITHUB_REPOSITORY:
+                    Repository in owner/name form (optional outside CI).
+    REVIEW_HEAD_SHA:
+                    Head SHA being reviewed (optional; fetched if absent).
     REVIEW_MODEL:   Model name; defaults to :data:`DEFAULT_MODEL`.
 
 Run:
@@ -44,6 +48,7 @@ RULES_PATH = REPO_ROOT / ".github" / "REVIEW_RULES.md"
 DEFAULT_MODEL = "gpt-5.5"
 # Flex tier requests can take longer than the default 10-minute timeout.
 REQUEST_TIMEOUT_SECONDS = 6000.0
+LLM_REVIEW_MARKER = "<!-- lean-pool-llm-review -->"
 
 # USD per 1M tokens, keyed by (model, tier) -> (input_per_M, output_per_M).
 # Source: https://developers.openai.com/api/docs/pricing — update when
@@ -116,9 +121,23 @@ def run_gh(*args: str, stdin: str | None = None) -> str:
     return result.stdout
 
 
-def fetch_diff(pr_number: str) -> str:
+def resolve_repo_full_name() -> str:
+    """Return the current GitHub repository as ``owner/name``."""
+    if repo := os.environ.get("GITHUB_REPOSITORY"):
+        return repo
+    return run_gh("repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner")
+
+
+def fetch_diff(pr_number: str, repo_full_name: str) -> str:
     """Return the full unified diff for ``pr_number``, untruncated."""
-    return run_gh("pr", "diff", pr_number)
+    return run_gh("pr", "diff", pr_number, "--repo", repo_full_name)
+
+
+def fetch_head_sha(pr_number: str, repo_full_name: str) -> str:
+    """Return the current head SHA for ``pr_number``."""
+    return run_gh(
+        "api", f"repos/{repo_full_name}/pulls/{pr_number}", "--jq", ".head.sha"
+    )
 
 
 def request_review(model: str, rules: str, diff: str) -> tuple[dict, Any, str]:
@@ -223,13 +242,17 @@ def render_comment(
     model: str,
     usage: Any,
     tier: str,
+    reviewed_head_sha: str,
 ) -> str:
     """Render the model's payload as a Markdown PR comment body."""
     summary = (payload.get("summary") or "").strip()
     verdict = (payload.get("verdict") or "").strip()
     findings = payload.get("findings") or []
 
-    lines = [f"## 🤖 LLM review (`{model}`)", ""]
+    lines = [LLM_REVIEW_MARKER, f"## 🤖 LLM review (`{model}`)", ""]
+
+    if reviewed_head_sha:
+        lines.extend([f"**Reviewed head:** `{reviewed_head_sha}`", ""])
 
     if verdict:
         icon = VERDICT_ICON.get(verdict, "•")
@@ -272,9 +295,42 @@ def render_comment(
     return "\n".join(lines)
 
 
-def post_comment(pr_number: str, body: str) -> None:
-    """Post ``body`` as a top-level PR comment."""
-    run_gh("pr", "comment", pr_number, "--body-file", "-", stdin=body)
+def post_comment(pr_number: str, body: str, repo_full_name: str) -> None:
+    """Create or update the sticky LLM review PR comment."""
+    comments_json = run_gh(
+        "api",
+        f"repos/{repo_full_name}/issues/{pr_number}/comments?per_page=100",
+    )
+    comments = json.loads(comments_json)
+    existing_id = next(
+        (
+            comment["id"]
+            for comment in comments
+            if (comment.get("body") or "").startswith(LLM_REVIEW_MARKER)
+        ),
+        None,
+    )
+    if existing_id is not None:
+        run_gh(
+            "api",
+            "-X",
+            "PATCH",
+            f"repos/{repo_full_name}/issues/comments/{existing_id}",
+            "--input",
+            "-",
+            stdin=json.dumps({"body": body}),
+        )
+    else:
+        run_gh(
+            "pr",
+            "comment",
+            pr_number,
+            "--repo",
+            repo_full_name,
+            "--body-file",
+            "-",
+            stdin=body,
+        )
 
 
 def main() -> int:
@@ -288,16 +344,27 @@ def main() -> int:
         return 2
 
     model = os.environ.get("REVIEW_MODEL", DEFAULT_MODEL)
+    repo_full_name = resolve_repo_full_name().strip()
     rules = RULES_PATH.read_text(encoding="utf-8")
-    diff = fetch_diff(pr_number)
+    diff = fetch_diff(pr_number, repo_full_name)
 
     if not diff.strip():
         print("Empty diff; nothing to review.", file=sys.stderr)
         return 0
 
+    reviewed_head_sha = (
+        os.environ.get("REVIEW_HEAD_SHA")
+        or fetch_head_sha(pr_number, repo_full_name).strip()
+    )
     payload, usage, tier = request_review(model=model, rules=rules, diff=diff)
-    comment = render_comment(payload, model=model, usage=usage, tier=tier)
-    post_comment(pr_number, comment)
+    comment = render_comment(
+        payload,
+        model=model,
+        usage=usage,
+        tier=tier,
+        reviewed_head_sha=reviewed_head_sha,
+    )
+    post_comment(pr_number, comment, repo_full_name=repo_full_name)
     return 0
 
 
