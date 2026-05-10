@@ -47,5 +47,7 @@ import LeanPool.FelConjecture
 import LeanPool.FelConjecture.Solution
 import LeanPool.ForwardEuler
 import LeanPool.ForwardEuler.Main
+import LeanPool.LatticeTriangle
+import LeanPool.LatticeTriangle.Solution
 import LeanPool.RamanujanTauMissesPrimes
 import LeanPool.RamanujanTauMissesPrimes.Solution
