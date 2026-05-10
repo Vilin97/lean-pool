@@ -9,10 +9,19 @@ import LeanPool.FormalLearningTheory.Theorem
 /-!
 # Formal Learning Theory Kernel
 
-Machine-verified computational learning theory, ported from
-<https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel>.
+Source: url:https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+Authors: Dhruv Gupta
+Status: verified
+Main declarations: `fundamental_theorem`, `littlestone_characterization`, `pac_not_implies_online`
+Tags: learning-theory, probability, combinatorics, online-learning
+MSC: 68Q32, 68T05
+-/
 
-The completed public results include:
+/-!
+## Mathematical overview
+
+This development covers several central results in computational learning
+theory. The completed public results include:
 
 * PAC/VC equivalence via `vc_characterization`.
 * The bundled PAC, VC, compression-with-side-information, Rademacher, and

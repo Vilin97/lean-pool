@@ -14,6 +14,7 @@ Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 Status: verified
 Main declarations: `fels_conjecture`
 Tags: number-theory, combinatorics, polynomials
+MSC: 20M14, 13D02
 -/
 
 /-!

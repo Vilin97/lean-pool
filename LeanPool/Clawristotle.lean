@@ -16,6 +16,7 @@ Authors: Vasily Ilin
 Status: verified
 Main declarations: `VML.Theorem42`, `VML.CoulombConcreteTheorem42`
 Tags: pde, kinetic-theory, mathematical-physics
+MSC: 35Q83, 82C40, 35Q61
 -/
 
 /-!

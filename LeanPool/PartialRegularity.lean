@@ -14,6 +14,7 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 Status: verified
 Main declarations: `LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO`
 Tags: number-theory, asymptotics
+MSC: 11B68, 11N05
 -/
 
 /-!

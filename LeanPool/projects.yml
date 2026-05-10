@@ -1,6 +1,8 @@
 projects:
   - slug: ramanujan-tau-misses-primes
     title: ABC implies that Ramanujan's tau function misses almost all primes
+    summary: Formalizes the ABC-conditional proof that Ramanujan's tau function takes prime values only rarely.
+    branch: analytic number theory
     entry_module: LeanPool.RamanujanTauMissesPrimes
     authors:
       - Evan Chen
@@ -16,11 +18,25 @@ projects:
       - reduction_lemma
       - abc_bound_E2
       - abc_bound_E4
+    main_results:
+      - declaration: main_theorem
+        informal: ABC implies that Ramanujan's tau function misses almost all primes.
+      - declaration: reduction_lemma
+        informal: Reduces the main prime-value statement to the key analytic estimates.
+      - declaration: abc_bound_E2
+        informal: ABC-bound input for the Eisenstein-series term E2.
+      - declaration: abc_bound_E4
+        informal: ABC-bound input for the Eisenstein-series term E4.
     tags:
       - number-theory
       - modular-forms
+    msc:
+      - "11F30"
+      - "11N05"
   - slug: fel-conjecture
     title: Fel's Conjecture on Syzygies of Numerical Semigroups
+    summary: Formalizes Fel's conjectural formula for syzygies of numerical semigroups.
+    branch: commutative algebra
     entry_module: LeanPool.FelConjecture
     authors:
       - Evan Chen
@@ -33,12 +49,20 @@ projects:
     status: verified
     main_declarations:
       - fels_conjecture
+    main_results:
+      - declaration: fels_conjecture
+        informal: Proves Fel's conjecture for the polynomial attached to numerical-semigroup syzygies.
     tags:
       - number-theory
       - combinatorics
       - polynomials
+    msc:
+      - "20M14"
+      - "13D02"
   - slug: dead-ends
     title: Dead Ends in Square-Free Digit Walks
+    summary: Formalizes the density formula for base-b dead ends in square-free digit walks.
+    branch: analytic number theory
     entry_module: LeanPool.DeadEnds
     authors:
       - Evan Chen
@@ -52,13 +76,58 @@ projects:
     status: verified
     main_declarations:
       - LeanPool.DeadEnds.baseBDeadEnd_density_formula
+    main_results:
+      - declaration: LeanPool.DeadEnds.baseBDeadEnd_density_formula
+        informal: Proves the inclusion-exclusion density formula for base-b dead ends.
     tags:
       - number-theory
       - combinatorics
     msc:
       - "11N25"
+  - slug: formal-learning-theory
+    title: Formal Learning Theory Kernel
+    summary: Formalizes major equivalences and separations in PAC, VC, Gold-style, and online learning theory.
+    branch: computational learning theory
+    entry_module: LeanPool.FormalLearningTheory
+    authors:
+      - Dhruv Gupta
+    source:
+      url: https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+      github_repo: Zetetic-Dhruv/formal-learning-theory-kernel
+    status: verified
+    main_declarations:
+      - fundamental_theorem
+      - littlestone_characterization
+      - pac_not_implies_online
+    main_results:
+      - declaration: vc_characterization
+        informal: Characterizes PAC learnability by finite VC dimension.
+      - declaration: fundamental_theorem
+        informal: Bundles the central PAC, VC, compression, Rademacher, and sample-complexity equivalences.
+      - declaration: fundamental_vc_compression
+        informal: Relates finite VC dimension to compression with side information.
+      - declaration: gold_theorem
+        informal: States the Gold-style characterization for identification in the limit.
+      - declaration: mind_change_characterization
+        informal: Characterizes learnability by a bounded mind-change ordinal.
+      - declaration: littlestone_characterization
+        informal: Characterizes online learnability by finite Littlestone dimension.
+      - declaration: pac_not_implies_online
+        informal: Separates PAC learnability from online learnability.
+      - declaration: ex_not_implies_pac
+        informal: Separates explanatory learnability from PAC learnability.
+    tags:
+      - learning-theory
+      - probability
+      - combinatorics
+      - online-learning
+    msc:
+      - "68Q32"
+      - "68T05"
   - slug: rl-theory-in-lean
     title: RL Theory in Lean
+    summary: Develops probability, Markov-chain, and stochastic-matrix infrastructure for reinforcement-learning theory.
+    branch: probability theory
     entry_module: LeanPool.RlTheoryInLean
     authors:
       - Shangtong Zhang
@@ -68,6 +137,9 @@ projects:
     status: verified
     main_declarations:
       - StochasticMatrix.stationary_distribution_exists
+    main_results:
+      - declaration: StochasticMatrix.stationary_distribution_exists
+        informal: Proves existence of a stationary distribution for a stochastic matrix.
     tags:
       - probability
       - reinforcement-learning
@@ -75,8 +147,39 @@ projects:
     msc:
       - "62L20"
       - "60J10"
+  - slug: forward-euler
+    title: Forward Euler Method
+    summary: Proves convergence of the explicit Euler method for ordinary differential equations.
+    branch: numerical analysis
+    entry_module: LeanPool.ForwardEuler
+    authors:
+      - Vasily Ilin
+      - Aristotle
+    source:
+      url: https://github.com/Vilin97/forward_euler
+      github_repo: Vilin97/forward_euler
+    status: verified
+    main_declarations:
+      - ODE.EulerMethod.dist_path_le
+      - ODE.EulerMethod.tendsto_path
+    main_results:
+      - declaration: ODE.EulerMethod.dist_deriv_le
+        informal: Bounds the local difference between the Euler derivative and the vector field along the Euler path.
+      - declaration: ODE.EulerMethod.dist_path_le
+        informal: Bounds the distance between the Euler path and an exact solution using Gronwall's inequality.
+      - declaration: ODE.EulerMethod.tendsto_path
+        informal: Proves that Euler paths converge pointwise to the true solution as the step size tends to zero from above.
+    tags:
+      - numerical-analysis
+      - ordinary-differential-equations
+      - numerical-methods
+    msc:
+      - "65L05"
+      - "34A45"
   - slug: clawristotle
     title: "Clawristotle: Vlasov-Maxwell-Landau steady-state classification"
+    summary: Formalizes a steady-state classification result for the Vlasov-Maxwell-Landau system with Coulomb kernel.
+    branch: kinetic theory
     entry_module: LeanPool.Clawristotle
     authors:
       - Vasily Ilin
@@ -87,27 +190,23 @@ projects:
     main_declarations:
       - VML.Theorem42
       - VML.CoulombConcreteTheorem42
+    main_results:
+      - declaration: VML.Theorem42
+        informal: States the abstract steady-state classification theorem for the Vlasov-Maxwell-Landau framework.
+      - declaration: VML.CoulombConcreteTheorem42
+        informal: Specializes the steady-state classification theorem to the Coulomb kernel.
     tags:
       - pde
       - kinetic-theory
       - mathematical-physics
-  - slug: grothendieck-vanishing
-    title: Grothendieck's Vanishing Theorem
-    entry_module: LeanPool.GrothendieckVanishing
-    authors:
-      - Vasily Ilin
-      - Brian Nugent
-    source:
-      url: "https://github.com/Vilin97/Clawristotle/tree/grothendieck-vanishing"
-    status: verified
-    main_declarations:
-      - GrothendieckVanishing
-    tags:
-      - algebraic-geometry
-      - sheaf-theory
-      - topology
+    msc:
+      - "35Q83"
+      - "82C40"
+      - "35Q61"
   - slug: partial-regularity
     title: Almost all primes are partially regular
+    summary: Formalizes an asymptotic theorem about partial regularity of primes via Bernoulli-number irregularity.
+    branch: analytic number theory
     entry_module: LeanPool.PartialRegularity
     authors:
       - Evan Chen
@@ -121,11 +220,19 @@ projects:
     status: verified
     main_declarations:
       - LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
+    main_results:
+      - declaration: LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
+        informal: Proves the asymptotic big-O bound behind the partial-regularity theorem.
     tags:
       - number-theory
       - asymptotics
+    msc:
+      - "11B68"
+      - "11N05"
   - slug: riemann-mapping-theorem
     title: Riemann Mapping Theorem
+    summary: Formalizes a proof of the Riemann mapping theorem for proper simply connected plane domains with primitives.
+    branch: complex analysis
     entry_module: LeanPool.RiemannMappingTheorem
     authors:
       - Vincent Beffara
@@ -138,12 +245,26 @@ projects:
       - main
       - montel
       - hurwitz
+    main_results:
+      - declaration: RMT
+        informal: Proves the Riemann mapping theorem for the project's domain hypotheses.
+      - declaration: main
+        informal: Constructs a conformal map from a good domain onto the unit disk.
+      - declaration: montel
+        informal: Proves a Montel compactness theorem for uniformly bounded holomorphic families.
+      - declaration: hurwitz
+        informal: Proves the Hurwitz theorem used to preserve injectivity under limits.
     tags:
       - complex-analysis
       - conformal-maps
       - schwarz-lemma
+    msc:
+      - "30C35"
+      - "30C20"
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
+    summary: Collects formal solutions from the Archon FirstProof benchmark, including polynomial and graph-theoretic results.
+    branch: problem-solving mathematics
     entry_module: LeanPool.ArchonFirstProofResults
     authors:
       - FrenzyMath
@@ -154,14 +275,25 @@ projects:
     main_declarations:
       - Problem4.harmonic_mean_inequality_full
       - Problem6.exists_eps_light_subset
+    main_results:
+      - declaration: Problem4.harmonic_mean_inequality_full
+        informal: Proves the benchmark harmonic-mean inequality for real-rooted polynomial transforms.
+      - declaration: Problem6.exists_eps_light_subset
+        informal: Proves the benchmark light-subset existence theorem in the graph Laplacian setting.
     tags:
       - polynomials
       - analysis
       - combinatorics
       - linear-algebra
       - graph-theory
+    msc:
+      - "26D15"
+      - "05C50"
+      - "15A42"
   - slug: erdos1196
-    title: Primitive Sets Above x (Erdős Problem 1196)
+    title: Primitive Sets Above x (Erdos Problem 1196)
+    summary: Formalizes Math Inc.'s proof around primitive sets above x for Erdos Problem 1196.
+    branch: analytic number theory
     entry_module: LeanPool.Erdos1196
     authors:
       - Math Inc.
@@ -172,12 +304,22 @@ projects:
     main_declarations:
       - PrimitiveSetsAboveX.mainTheorem
       - Erdos1196.erdos_1196
+    main_results:
+      - declaration: PrimitiveSetsAboveX.mainTheorem
+        informal: Proves the main primitive-sets-above-x theorem.
+      - declaration: Erdos1196.erdos_1196
+        informal: States the formalized version of Erdos Problem 1196.
     tags:
       - number-theory
       - combinatorics
       - analysis
+    msc:
+      - "11N25"
+      - "05D05"
   - slug: lattice-triangle
     title: On the paucity of lattice triangles
+    summary: Formalizes an analytic lower bound used in the paucity theorem for lattice triangles.
+    branch: additive combinatorics
     entry_module: LeanPool.LatticeTriangle
     authors:
       - Evan Chen
@@ -190,11 +332,68 @@ projects:
     status: verified
     main_declarations:
       - analyticEngine_lower_bound
+    main_results:
+      - declaration: analyticEngine_lower_bound
+        informal: Proves the analytic-engine lower bound underlying the lattice-triangle result.
     tags:
       - number-theory
       - combinatorics
+    msc:
+      - "11H06"
+      - "11B30"
+  - slug: grothendieck-vanishing
+    title: Grothendieck's Vanishing Theorem
+    summary: Formalizes Grothendieck's vanishing theorem for sheaf cohomology on Noetherian topological spaces.
+    branch: algebraic geometry
+    entry_module: LeanPool.GrothendieckVanishing
+    authors:
+      - Vasily Ilin
+      - Brian Nugent
+    source:
+      url: https://github.com/Vilin97/Clawristotle/tree/grothendieck-vanishing
+      github_repo: Vilin97/Clawristotle
+    status: verified
+    main_declarations:
+      - GrothendieckVanishing
+    main_results:
+      - declaration: GrothendieckVanishing
+        informal: Proves vanishing of sheaf cohomology above the topological Krull dimension.
+    tags:
+      - algebraic-geometry
+      - sheaf-theory
+      - topology
+    msc:
+      - "14F06"
+      - "18F20"
+  - slug: sensitivity
+    title: "Sensitivity Conjecture: sqrt(deg) <= sensitivity"
+    summary: Formalizes the quantitative Nisan-Szegedy/Huang sensitivity theorem for Boolean functions.
+    branch: extremal combinatorics
+    entry_module: LeanPool.Sensitivity
+    authors:
+      - Samuel Schlesinger
+    source:
+      url: https://github.com/SamuelSchlesinger/sensitivity-conjecture
+      github_repo: SamuelSchlesinger/sensitivity-conjecture
+    status: verified
+    main_declarations:
+      - LeanPoolSensitivity.sensitivity_ge_sqrt_degree
+    main_results:
+      - declaration: LeanPoolSensitivity.sensitivity_ge_sqrt_degree
+        informal: Proves that the square root of multilinear degree is bounded above by sensitivity.
+      - declaration: LeanPoolSensitivity.degree_le_sensitivity_sq
+        informal: Derives the degree bound by the square of sensitivity.
+    tags:
+      - combinatorics
+      - boolean-functions
+      - computational-complexity
+    msc:
+      - "06E30"
+      - "68Q17"
   - slug: isoperimetric
-    title: Prékopa–Leindler, Brunn–Minkowski, and the isoperimetric inequality
+    title: Prekopa-Leindler, Brunn-Minkowski, and the isoperimetric inequality
+    summary: Formalizes the Prekopa-Leindler inequality, Brunn-Minkowski inequality, and an isoperimetric inequality.
+    branch: geometric analysis
     entry_module: LeanPool.Isoperimetric
     authors:
       - Jonathan Ho
@@ -206,37 +405,42 @@ projects:
       - prekopa_leindler
       - brunn_minkowski
       - isoperimetric_inequality
+    main_results:
+      - declaration: prekopa_leindler
+        informal: Proves the Prekopa-Leindler inequality.
+      - declaration: brunn_minkowski
+        informal: Proves the Brunn-Minkowski inequality.
+      - declaration: isoperimetric_inequality
+        informal: Proves the isoperimetric inequality derived from Brunn-Minkowski.
     tags:
       - measure-theory
       - geometric-inequalities
+    msc:
+      - "28A75"
+      - "52A40"
+      - "49Q20"
   - slug: sumsthreesquares
     title: Sums of Three Squares
+    summary: Formalizes a blueprint step in the three-squares theorem using quadratic forms and geometry of numbers.
+    branch: number theory
     entry_module: LeanPool.SumsThreeSquares
     authors:
       - Bhavik Mehta
       - Pietro Monticone
-      - Abel Doñate Muñoz
+      - Abel Donate Munoz
     source:
       doi: "10.2307/2033731"
       github_repo: pitmonticone/SumsThreeSquares
     status: verified
     main_declarations:
       - LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
+    main_results:
+      - declaration: LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
+        informal: Proves the mod-8-equals-3 blueprint case for the three-squares theorem.
     tags:
       - number-theory
       - quadratic-forms
       - geometry-of-numbers
-  - slug: sensitivity
-    title: 'Sensitivity Conjecture: √(deg) ≤ sensitivity'
-    entry_module: LeanPool.Sensitivity
-    authors:
-      - Samuel Schlesinger
-    source:
-      url: https://github.com/SamuelSchlesinger/sensitivity-conjecture
-      github_repo: samuelschlesinger/sensitivity-conjecture
-    status: verified
-    main_declarations:
-      - LeanPoolSensitivity.sensitivity_ge_sqrt_degree
-    tags:
-      - combinatorics
-      - boolean-functions
+    msc:
+      - "11E25"
+      - "11H06"

@@ -14,4 +14,5 @@ Authors: Vasily Ilin, Brian Nugent
 Status: verified
 Main declarations: `GrothendieckVanishing`
 Tags: algebraic-geometry, sheaf-theory, topology
+MSC: 14F06, 18F20
 -/

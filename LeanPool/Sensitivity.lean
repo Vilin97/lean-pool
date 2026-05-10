@@ -3,6 +3,7 @@ Copyright (c) 2026 Samuel Schlesinger. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
+
 import LeanPool.Sensitivity.Defs
 import LeanPool.Sensitivity.Basic
 import LeanPool.Sensitivity.Multilinear
@@ -13,13 +14,14 @@ import LeanPool.Sensitivity.Main
 import LeanPool.Sensitivity.Consequences
 
 /-!
-# Sensitivity Conjecture: √(deg) ≤ sensitivity
+# Sensitivity Conjecture: sqrt(deg) <= sensitivity
 
 Source: url:https://github.com/SamuelSchlesinger/sensitivity-conjecture
 Authors: Samuel Schlesinger
 Status: verified
 Main declarations: `LeanPoolSensitivity.sensitivity_ge_sqrt_degree`
-Tags: combinatorics, boolean-functions
+Tags: combinatorics, boolean-functions, computational-complexity
+MSC: 06E30, 68Q17
 -/
 
 /-!

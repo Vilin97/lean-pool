@@ -10,20 +10,22 @@ import LeanPool.Isoperimetric.Isoperimetric
 import LeanPool.Isoperimetric.PrekopaLeindler
 
 /-!
-# Prékopa–Leindler, Brunn–Minkowski, and the isoperimetric inequality
+# Prekopa-Leindler, Brunn-Minkowski, and the isoperimetric inequality
 
 Source: url:https://github.com/hojonathanho/isoperimetric
 Authors: Jonathan Ho
 Status: verified
 Main declarations: `prekopa_leindler`, `brunn_minkowski`, `isoperimetric_inequality`
 Tags: measure-theory, geometric-inequalities
+MSC: 28A75, 52A40, 49Q20
 -/
 
 /-!
 ## Mathematical overview
 
 Following Terence Tao's [blog post on the Brunn–Minkowski inequality for
-nilpotent groups](https://terrytao.wordpress.com/2011/09/16/the-brunn-minkowski-inequality-for-nilpotent-groups/),
+nilpotent groups]
+(https://terrytao.wordpress.com/2011/09/16/the-brunn-minkowski-inequality-for-nilpotent-groups/),
 this project formalizes three classical inequalities of measure-theoretic
 geometry on Euclidean space `ℝⁿ`:
 
