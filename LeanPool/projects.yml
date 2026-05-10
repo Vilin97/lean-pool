@@ -16,3 +16,17 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+  - slug: kakeyafinitefields
+    title: Kakeya sets in finite fields
+    entry_module: LeanPool.KakeyaFiniteFields
+    authors:
+      - Math Inc.
+    source:
+      url: "https://github.com/math-inc/KakeyaFiniteFields"
+    status: verified
+    main_declarations:
+      - LeanPool.KakeyaFiniteFields.kakeya_set_bound
+    tags:
+      - combinatorics
+      - polynomials
+      - field-theory
