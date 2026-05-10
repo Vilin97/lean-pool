@@ -392,13 +392,24 @@ def _check_axioms(root: Path) -> list[_QualityError]:
         temp_file.flush()
 
     try:
-        process = subprocess.run(
-            ["lake", "env", "lean", str(temp_path)],
-            cwd=root,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        try:
+            process = subprocess.run(
+                ["lake", "env", "lean", str(temp_path)],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except FileNotFoundError:
+            # `lake` not on PATH; surface a single advisory error rather
+            # than crashing the whole quality run.
+            return [
+                _QualityError(
+                    root / "LeanPool.lean",
+                    1,
+                    "axiom audit skipped: `lake` not found",
+                )
+            ]
     finally:
         temp_path.unlink(missing_ok=True)
 
@@ -678,13 +689,23 @@ def _check_project_declarations(
         temp_file.flush()
 
     try:
-        process = subprocess.run(
-            ["lake", "env", "lean", str(temp_path)],
-            cwd=root,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        try:
+            process = subprocess.run(
+                ["lake", "env", "lean", str(temp_path)],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except FileNotFoundError:
+            # `lake` not on PATH (sandboxed CI, contributor without Lean).
+            # Treat the same as `--skip-lean-axioms`: emit a single advisory
+            # error so callers know the check was skipped, rather than crash.
+            return [
+                _QualityError(
+                    path, 1, "project declarations check skipped: `lake` not found"
+                )
+            ]
     finally:
         temp_path.unlink(missing_ok=True)
 
