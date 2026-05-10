@@ -36,7 +36,6 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
-<<<<<<< HEAD
   - slug: osforgff
     title: Osterwalder-Schrader Axioms for the Gaussian Free Field
     entry_module: LeanPool.OSforGFF
@@ -55,7 +54,6 @@ projects:
       - measure-theory
       - probability
       - mathematical-physics
-=======
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
@@ -104,4 +102,3 @@ projects:
     tags:
       - number-theory
       - combinatorics
->>>>>>> origin/main
