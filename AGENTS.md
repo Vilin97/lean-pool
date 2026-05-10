@@ -59,6 +59,8 @@ See [`python/README.md`](python/README.md) for common commands.
 
 **Commit messages.** Write clear, concise commit messages in imperative tense (e.g., "Add manifest fetcher", not "Added manifest fetcher"). Do not include AI-generated tags (e.g., "Generated with Claude", "Co-authored-by: Codex") in commits or PRs.
 
+**Content PRs touch only content.** A PR that imports a formalization or changes a project may modify **only** `LeanPool.lean` (the `mk_all` index), `LeanPool/**/*.lean`, and `LeanPool/projects.yml` — nothing else. No `.github/`, no `python/`, no `scripts/`, no `lakefile.toml`/`lean-toolchain`/`lake-manifest.json`, no root docs, no scratch files like `IMPORT_NOTES.md`/`FAILURE.md`. The `Content-only PR` CI check (`.github/workflows/content-pr-guard.yml`) enforces this. Infra / CI / tooling / doc changes go directly to `main`, not bundled into a content PR.
+
 
 ## Linting and Testing
 
