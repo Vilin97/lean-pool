@@ -102,3 +102,19 @@ projects:
     tags:
       - number-theory
       - combinatorics
+  - slug: archimedes
+    title: 'Archimedes: 3D Euclidean Geometry'
+    entry_module: LeanPool.Archimedes
+    authors:
+      - misaka10987
+    source:
+      url: https://github.com/misaka10987/archimedes
+      github_repo: misaka10987/archimedes
+    status: verified
+    main_declarations:
+      - A.Point.inner_product
+      - A.Point.vector_product
+      - A.Point.parallel_eq
+    tags:
+      - geometry
+      - linear-algebra

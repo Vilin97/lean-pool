@@ -1,3 +1,5 @@
+import LeanPool.Archimedes
+import LeanPool.Archimedes.Basic
 import LeanPool.ArchonFirstProofResults
 import LeanPool.ArchonFirstProofResults.FirstProof4
 import LeanPool.ArchonFirstProofResults.FirstProof4.Auxiliary
