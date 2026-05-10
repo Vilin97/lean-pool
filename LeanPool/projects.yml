@@ -16,3 +16,20 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+  - slug: archon-firstproof-results
+    title: Archon-FirstProof-Results
+    entry_module: LeanPool.ArchonFirstProofResults
+    authors:
+      - FrenzyMath
+    source:
+      url: https://github.com/frenzymath/Archon-FirstProof-Results
+    status: verified
+    main_declarations:
+      - Problem4.harmonic_mean_inequality_full
+      - Problem6.exists_eps_light_subset
+    tags:
+      - polynomials
+      - analysis
+      - combinatorics
+      - linear-algebra
+      - graph-theory
