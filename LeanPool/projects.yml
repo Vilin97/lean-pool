@@ -16,3 +16,20 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+  - slug: sumsthreesquares
+    title: Sums of Three Squares
+    entry_module: LeanPool.SumsThreeSquares
+    authors:
+      - Bhavik Mehta
+      - Pietro Monticone
+      - Abel Doñate Muñoz
+    source:
+      url: "https://github.com/pitmonticone/SumsThreeSquares"
+    status: verified
+    main_declarations:
+      - LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
+      - LeanPool.SumsThreeSquares.IsSumOfThreeSquares
+    tags:
+      - number-theory
+      - quadratic-forms
+      - geometry-of-numbers

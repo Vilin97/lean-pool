@@ -1,3 +1,6 @@
 import LeanPool.Basic
 import LeanPool.FelConjecture
 import LeanPool.FelConjecture.Solution
+import LeanPool.SumsThreeSquares
+import LeanPool.SumsThreeSquares.MinkowskiConvex
+import LeanPool.SumsThreeSquares.SumThreeSquares
