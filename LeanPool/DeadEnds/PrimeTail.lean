@@ -150,7 +150,7 @@ lemma card_multiples_Icc (q : ℕ) (X : ℕ) :
     For a = 0, b = X, the count equals max(⌊(X - v)/r⌋ - ⌊-v/r⌋, 0).
     By `floor_diff_bound`, the expression ⌊(X - v)/r⌋ - ⌊-v/r⌋ ≤ ⌊X/r⌋ + 1.
     Since X, r are naturals, ⌊(X : ℝ)/r⌋ = X / r (integer division).
-    The max(..., 0) is at most the upper bound, giving count ≤ X / r + 1. -/
+    The nonnegative floor difference is at most the upper bound, giving count ≤ X / r + 1. -/
 lemma floor_diff_bound_rat (X v r : ℕ) (hr : 0 < r) :
     ⌊((X : ℚ) - v) / r⌋ - ⌊(-(v : ℚ)) / r⌋ ≤ ⌊(X : ℚ) / r⌋ + 1 := by
   have floor_sub_floor_le : ∀ (a b : ℚ), ⌊a⌋ - ⌊b⌋ ≤ ⌊a - b⌋ + 1 := by

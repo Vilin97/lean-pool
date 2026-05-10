@@ -147,11 +147,11 @@ lemma completeBlock_surjOn (M k : ℕ) (hM : 0 < M) :
   obtain ⟨N, hN, hN'⟩ := h₃
   refine ⟨N, hN, ?_⟩; simp_all
 
-/-- For N in the k-th complete block, N mod M takes each value in {0, 1, ..., M-1} exactly once.
-    This is because N ranges over kM+1, kM+2, ..., (k+1)M, and:
-    - (kM+j) mod M = j for j = 1, ..., M-1
+/-- For N in the k-th complete block, N mod M takes each residue below M exactly once.
+    This is because N ranges from kM+1 through (k+1)M, and:
+    - (kM+j) mod M = j for 1 ≤ j < M
     - (k+1)M mod M = 0
-    More precisely: the map N ↦ N % M is a bijection from B_k to {0, 1, ..., M-1}. -/
+    More precisely: the map N ↦ N % M is a bijection from B_k to `Finset.range M`. -/
 lemma completeBlock_residues_bijective (M k : ℕ) (hM : 0 < M) :
     Set.BijOn (· % M) (completeBlock M k : Set ℕ) (Finset.range M : Set ℕ) := by
   exact Set.BijOn.mk (completeBlock_mapsTo M k hM) (completeBlock_injOn M k hM) (
@@ -221,9 +221,9 @@ lemma filter_card_eq_of_bijOn_filter (b : ℕ) (T : Finset ℕ) (S : Finset Nat.
 
 /-- Each complete block B_k contributes exactly |A| valid integers.
 
-    Since the map N ↦ N % M is a bijection from B_k to {0, ..., M-1}, and by
+    Since the map N ↦ N % M is a bijection from B_k to `Finset.range M`, and by
     condition_mod_invariant validity depends only on N % M, the count of valid N in B_k
-    equals the count of valid residues in {0, ..., M-1}, which is |A|.
+    equals the count of valid residues in `Finset.range M`, which is |A|.
     Uses: condition_mod_invariant, completeBlock_residues_bijective -/
 lemma completeBlock_valid_count (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ) :
     let M := primeSquareProduct S
@@ -253,8 +253,8 @@ lemma completeBlock_disjoint (M : ℕ) (_hM : 0 < M) (i j : ℕ) (hij : i < j) :
   rw [Finset.disjoint_iff_inter_eq_empty]
   exact_mod_cast h₂
 
-/-- The complete blocks B_0, ..., B_{q-1} are pairwise disjoint.
-    Block B_i = {iM+1, ..., (i+1)M} and B_j = {jM+1, ..., (j+1)M} are disjoint for i ≠ j
+/-- The complete blocks indexed by `Finset.range q` are pairwise disjoint.
+    Block B_i = [iM+1, (i+1)M] and B_j = [jM+1, (j+1)M] are disjoint for i ≠ j
     because their ranges don't overlap.
     Uses: For i < j, (i+1)M < jM+1 so the intervals are disjoint. -/
 lemma completeBlocks_pairwise_disjoint (M : ℕ) (hM : 0 < M) :
@@ -327,7 +327,8 @@ lemma count_lower_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
           ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card) := blocks_eq.symm
     _ ≤ count := sum_valid_from_blocks_le_count b T S X
 
-/-- The partial block consists of the remaining integers {q*M+1, ..., X} where q = X/M. -/
+/-- The partial block consists of the remaining integers from `q * M + 1` through `X`,
+where `q = X / M`. -/
 def partialBlock (M X : ℕ) : Finset ℕ := Finset.Icc (X / M * M + 1) X
 
 lemma partialBlock_subset_Icc (M X : ℕ) (_hM : 0 < M) :
@@ -349,7 +350,7 @@ lemma partialBlock_subset_Ico (M X : ℕ) (hM : 0 < M) :
   · calc n ≤ X := hn.2
       _ < X / M * M + M := Nat.lt_div_mul_add hM
 
-/-- The residue map N ↦ N % M is injective on the partial block {q*M+1, ..., X}.
+/-- The residue map N ↦ N % M is injective on the partial block from `q * M + 1` through `X`.
     This is because for any N in the partial block, N = q*M + k where 1 ≤ k ≤ r < M
     (where r = X % M), so N % M = k. Different elements have different k values.
     The key insight is that all elements lie within a single period of M:
@@ -542,8 +543,8 @@ lemma div_sub_one_le_div (M X n : ℕ) (hn_pos : 1 ≤ n) (hn_le : n ≤ X) :
     apply Nat.div_le_div_right; omega
   exact h₁
 
-/-- The interval [1,X] equals the disjoint union of complete blocks B_0,...,B_{q-1} and
-    the partial block V = {qM+1,...,X}.
+/-- The interval [1,X] equals the disjoint union of complete blocks indexed by `Finset.range q` and
+    the partial block V from `qM + 1` through `X`.
     Every n ∈ [1,X] falls into exactly one of:
     - Complete block B_k where k = (n-1)/M for k < q
     - Partial block V if (n-1)/M ≥ q

@@ -151,7 +151,8 @@ lemma countJointSquarefree_as_sum (b X : ℕ) (T : Finset ℕ) :
 
 /-- Finite inclusion-exclusion for dead end counting.
     For each fixed X, the count of dead ends equals the alternating sum over subsets T:
-    #{N ≤ X : dead end} = ∑_{T ⊆ {0,...,b-1}} (-1) ^ |T| · #{N ≤ X : N sf ∧ ∀d∈T, bN+d sf}
+    #{N ≤ X : dead end} =
+      ∑_{T ⊆ Finset.range b} (-1) ^ |T| · #{N ≤ X : N sf ∧ ∀d∈T, bN+d sf}
     This is the finite Bonferroni identity: for events A_d = "bN+d is squarefree",
     #{sf N : all A_d fail} = ∑_T (-1) ^ |T| #{sf N : ∀d∈T, A_d holds}.
     Mathlib has `Finset.sum_powerset_neg_one_pow_card` for this pattern. -/
@@ -183,7 +184,7 @@ lemma dead_end_count_inclusion_exclusion (b : ℕ) (_hb : 2 ≤ b) (X : ℕ) :
   ring
 
 /-- Tendsto of alternating sums given Tendsto of each term.
-    If for each T ⊆ {0,...,b-1}, the ratio (countJointSquarefree b T X)/X → α(b,T),
+    If for each T ⊆ Finset.range b, the ratio (countJointSquarefree b T X)/X → α(b,T),
     then the alternating sum ∑_T (-1) ^ |T| · (countJointSquarefree b T X)/X
     converges to ∑_T (-1) ^ |T| · α(b,T) = explicitDensityFormula b.
     This uses that Filter.Tendsto is preserved under finite sums:
