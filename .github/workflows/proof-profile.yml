@@ -156,14 +156,15 @@ jobs:
           )
 
           # Lean's `cumulative profiling times:` block is one indented
-          # `<phase name> <number>ms` per line. The phase name can contain
+          # `<phase name> <number><unit>` per line, where the unit is `ms`
+          # or `s`. The phase name can contain
           # spaces, parens, and hyphens (`compilation (IR)`,
           # `let-to-have transformation`, ...). Lean only emits a phase if
           # it accumulated nonzero time, so the set of phases differs per
           # file and per run; the renderer captures every phase rather than
           # cherry-picking known names.
           metric_re = re.compile(
-              r"^[ \t]+(.+?)\s+([0-9]+(?:\.[0-9]+)?)\s*ms\s*$"
+              r"^[ \t]+(.+?)\s+([0-9]+(?:\.[0-9]+)?)\s*(ms|s)\s*$"
           )
 
           out = ["## Proof profile (new / modified Lean files)\n\n"]
@@ -206,7 +207,10 @@ jobs:
                           continue
                       m = metric_re.match(line)
                       if m:
-                          total += float(m.group(2))
+                          value = float(m.group(2))
+                          if m.group(3) == "s":
+                              value *= 1000
+                          total += value
                           phases += 1
                   summary_rows.append((fname, total, phases, errors))
               summary_rows.sort(key=lambda r: -r[1])

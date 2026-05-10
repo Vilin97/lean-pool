@@ -86,7 +86,7 @@ See [`python/README.md`](python/README.md) for common commands.
 
 ## Branch and PR Workflow
 
-**Direct commits to `main` are not allowed by project policy.** All changes go through pull requests. Branch protection to enforce this policy is future work.
+**Maintainer direct pushes.** Maintainers may push small, urgent, or operational fixes directly to `main` when they judge a PR is unnecessary. For collaborative, risky, or externally contributed work, prefer pull requests.
 
 **Branch naming.** Use `yourname/description` for solo work (e.g., `justin/aggregator-draft`). Use `feature/` or `fix/` prefixes for branches where multiple people may contribute (e.g., `feature/manifest-summary`, `fix/timeout-default`).
 
