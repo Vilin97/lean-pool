@@ -513,55 +513,14 @@ lemma localValidResidues_card_eq (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (T : Fin
 
 lemma prime_sq_coprime (p q : Nat.Primes) (hne : p ≠ q) :
     ((p : ℕ) ^ 2).Coprime ((q : ℕ) ^ 2) := by
-  have h₁ : p ≠ q := hne
-  have h₂ : (p : ℕ).Prime := p.prop
-  have h₃ : (q : ℕ).Prime := q.prop
-  have h₄ : ((p : ℕ) ^ 2).Coprime ((q : ℕ) ^ 2) := by
-    apply Nat.Coprime.pow_left 2
-    apply Nat.Coprime.pow_right 2
-    have h₅ : (p : ℕ) ≠ (q : ℕ) := by
-      intro h₅
-      apply h₁
-      -- If their natural number representations are equal, then the primes are equal
-      exact Subtype.ext h₅
-    exact Nat.coprime_primes h₂ h₃ |>.mpr h₅
-  exact h₄
+  have hpq : (p : ℕ) ≠ (q : ℕ) := fun h => hne (Subtype.ext h)
+  exact Nat.Coprime.pow_right 2
+    (Nat.Coprime.pow_left 2 ((Nat.coprime_primes p.prop q.prop).mpr hpq))
 
 lemma pairwise_coprime_prime_squares (S : Finset Nat.Primes) :
     (S : Set Nat.Primes).Pairwise (fun p q => ((p : ℕ) ^ 2).Coprime ((q : ℕ) ^ 2)) := by
   intro p _ q _ hpq
-  have h_inj : (p : ℕ) ≠ (q : ℕ) := by
-    intro h
-    apply hpq
-    -- If the underlying natural numbers are equal, then the primes are equal
-    -- because the coercion from Nat.Primes to ℕ is injective.
-    have h₁ : p = q := by
-      apply Subtype.ext
-      simpa using h
-    exact h₁
-  have h_coprime : (p : ℕ).Coprime (q : ℕ) := by
-    have h₁ : Nat.Prime (p : ℕ) := p.prop
-    have h₂ : Nat.Prime (q : ℕ) := q.prop
-    have h₃ : (p : ℕ) ≠ (q : ℕ) := h_inj
-    have h₄ : (p : ℕ).Coprime (q : ℕ) := by
-      apply Nat.coprime_primes h₁ h₂ |>.mpr
-      intro h₅
-      apply h₃
-      simpa using h₅
-    exact h₄
-  have h_pow_left : ((p : ℕ) ^ 2).Coprime (q : ℕ) := by
-    have h₂ : (p : ℕ).Coprime (q : ℕ) := h_coprime
-    have h₃ : ((p : ℕ) ^ 2).Coprime (q : ℕ) := by
-      simpa [Nat.coprime_iff_gcd_eq_one, Nat.gcd_comm] using
-        Nat.Coprime.pow_left 2 h₂
-    exact h₃
-  have h_pow_right : ((p : ℕ) ^ 2).Coprime ((q : ℕ) ^ 2) := by
-    have h₂ : ((p : ℕ) ^ 2).Coprime (q : ℕ) := h_pow_left
-    have h₃ : ((p : ℕ) ^ 2).Coprime ((q : ℕ) ^ 2) := by
-      simpa [Nat.coprime_iff_gcd_eq_one, Nat.gcd_comm] using
-        Nat.Coprime.pow_right 2 h₂
-    exact h₃
-  exact h_pow_right
+  exact prime_sq_coprime p q hpq
 
 /-- The list S.toList satisfies pairwise coprimality for the map p ↦ p².
     Uses `pairwise_coprime_prime_squares` and transfers the set pairwise property to the list.
@@ -583,13 +542,7 @@ lemma list_map_prod_eq_primeSquareProduct (S : Finset Nat.Primes) :
     (List.map (fun p : Nat.Primes => (p : ℕ) ^ 2) S.toList).prod = primeSquareProduct S := by
   aesop
 
-/-- If r₁ ≡ r₂ [MOD p²] for all p ∈ S where the moduli are pairwise coprime,
-    then r₁ ≡ r₂ [MOD ∏ p², p ∈ S].
-    Uses `Nat.modEq_list_map_prod_iff : ∀ {ι : Type u_1} {a b : ℕ} {s : ι → ℕ} {l : List ι},
-      List.Pairwise (Function.onFun Nat.Coprime s) l → (a ≡ b [MOD (List.map s l).prod] ↔ ∀ i ∈ l, a
-      ≡ b [MOD s i])`
-    by converting the Finset to a list and applying the list-based CRT theorem.
-    Requires `toList_pairwise_coprime_prime_squares` and `list_map_prod_eq_primeSquareProduct`. -/
+/-- Congruence modulo each prime-square factor implies congruence modulo their product. -/
 lemma modEq_primeSquareProduct_of_forall_modEq (S : Finset Nat.Primes) (r₁ r₂ : ℕ)
     (h : ∀ p ∈ S, r₁ ≡ r₂ [MOD (p : ℕ) ^ 2]) :
     r₁ ≡ r₂ [MOD primeSquareProduct S] := by
@@ -598,27 +551,15 @@ lemma modEq_primeSquareProduct_of_forall_modEq (S : Finset Nat.Primes) (r₁ r�
   intro p hp
   exact h p (Finset.mem_toList.mp hp)
 
-/-- For r < M (the product of all p² for p ∈ S), the CRT map is injective.
-    Two residues in [0, M) with the same tuple of remainders must be equal.
-    Proof strategy:
-    1. Assume r₁, r₂ < M and the CRT maps are equal
-    2. Equal maps means r₁ % p² = r₂ % p² for all p ∈ S
-    3. This is equivalent to r₁ ≡ r₂ [MOD p²] by definition of ModEq
-    4. By `modEq_primeSquareProduct_of_forall_modEq`, we get r₁ ≡ r₂ [MOD M]
-    5. By `Nat.ModEq.eq_of_lt_of_lt`, since both are < M, we get r₁ = r₂ -/
+/-- The CRT remainder map is injective on residues below the product modulus. -/
 lemma crtMap_injective_on_range (S : Finset Nat.Primes) :
     Set.InjOn (fun r => fun p (_hp : p ∈ S) => r % ((p : ℕ) ^ 2))
       {r | r < primeSquareProduct S} := by
   intro r₁ hr₁ r₂ hr₂ heq
-  -- heq : (fun p _hp => r₁ % p²) = (fun p _hp => r₂ % p²)
-  -- This means for all p ∈ S, r₁ % p² = r₂ % p²
   have h_modEq : ∀ p ∈ S, r₁ ≡ r₂ [MOD (p : ℕ) ^ 2] := by
     intro p hp
-    -- r₁ % p² = r₂ % p² comes from heq
     have h : r₁ % (p : ℕ) ^ 2 = r₂ % (p : ℕ) ^ 2 := congrFun (congrFun heq p) hp
-    -- Nat.ModEq is defined as a % n = b % n
     exact h
-  -- By CRT, r₁ ≡ r₂ [MOD M]
   have h_modEq_M : r₁ ≡ r₂ [MOD primeSquareProduct S] :=
     modEq_primeSquareProduct_of_forall_modEq S r₁ r₂ h_modEq
   exact Nat.ModEq.eq_of_lt_of_lt h_modEq_M hr₁ hr₂
@@ -630,67 +571,8 @@ lemma dvd_iff_mod_dvd (p : ℕ) (_hp : 0 < p ^ 2) (r : ℕ) :
 
 lemma shifted_dvd_iff_mod (p b d r : ℕ) (_hp : 0 < p ^ 2) :
     p ^ 2 ∣ (b * r + d) ↔ p ^ 2 ∣ (b * (r % (p ^ 2)) + d) := by
-  have h₁ : b * r + d ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by
-    have h₂ : r ≡ r % (p ^ 2) [MOD p ^ 2] := by
-      have h₃ : r % (p ^ 2) = r % (p ^ 2) := rfl
-      simp [Nat.ModEq]
-    -- Multiply both sides by b and add d to get the desired congruence
-    have h₃ : b * r + d ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by
-      calc
-        b * r + d ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by
-          have h₄ : b * r ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by
-            -- Multiply both sides of the congruence r ≡ r % (p²) by b
-            calc
-              b * r ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by
-                have h₅ : r ≡ r % (p ^ 2) [MOD p ^ 2] := h₂
-                have h₆ : b * r ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by
-                  calc
-                    b * r ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by
-                      exact Nat.ModEq.mul_left b h₅
-                    _ ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by rfl
-                exact h₆
-              _ ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by rfl
-          -- Add d to both sides
-          have h₅ : b * r + d ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by
-            calc
-              b * r + d ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by
-                exact Nat.ModEq.add h₄ (Nat.ModEq.refl d)
-              _ ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by rfl
-          exact h₅
-        _ ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by rfl
-    exact h₃
-  -- Convert the congruence into divisibility conditions
-  have h₂ : p ^ 2 ∣ (b * r + d) ↔ p ^ 2 ∣ (b * (r % (p ^ 2)) + d) := by
-    constructor
-    · -- Prove the forward direction: if p² divides b*r + d, then it divides b*(r % p²) + d
-      intro h₃
-      have h₄ : p ^ 2 ∣ (b * r + d) := h₃
-      have h₅ : p ^ 2 ∣ (b * (r % (p ^ 2)) + d) := by
-        have h₆ : (b * r + d) % (p ^ 2) = (b * (r % (p ^ 2)) + d) % (p ^ 2) := by
-          rw [Nat.ModEq] at h₁
-          exact h₁
-        have h₈ : (b * (r % (p ^ 2)) + d) % (p ^ 2) = 0 := by
-          omega
-        -- So p² divides b*(r % p²) + d
-        have h₉ : p ^ 2 ∣ (b * (r % (p ^ 2)) + d) := by
-          exact Nat.dvd_of_mod_eq_zero h₈
-        exact h₉
-      exact h₅
-    · -- Prove the reverse direction: if p² divides b*(r % p²) + d, then it divides b*r + d
-      intro h₃
-      have h₄ : p ^ 2 ∣ (b * (r % (p ^ 2)) + d) := h₃
-      have h₅ : p ^ 2 ∣ (b * r + d) := by
-        have h₆ : (b * r + d) % (p ^ 2) = (b * (r % (p ^ 2)) + d) % (p ^ 2) := by
-          rw [Nat.ModEq] at h₁
-          exact h₁
-        have h₈ : (b * r + d) % (p ^ 2) = 0 := by
-          omega
-        -- So p² divides b*r + d
-        have h₉ : p ^ 2 ∣ (b * r + d) := by
-          exact Nat.dvd_of_mod_eq_zero h₈
-        exact h₉
-      exact h₅
-  exact h₂
+  rw [Nat.dvd_iff_mod_eq_zero, Nat.dvd_iff_mod_eq_zero]
+  simp [Nat.add_mod, Nat.mul_mod]
 
 lemma valid_iff_locally_valid (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (r : ℕ) :
     (∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ r) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ (b * r + d))) ↔
@@ -732,17 +614,14 @@ lemma crt_surjective (S : Finset Nat.Primes) (t : (p : Nat.Primes) → p ∈ S �
     ∃ r, r < primeSquareProduct S ∧ ∀ p (hp : p ∈ S), r % ((p : ℕ) ^ 2) = t p hp := by
   let s : Nat.Primes → ℕ := fun p => (p : ℕ) ^ 2
   let a : Nat.Primes → ℕ := fun p => if h : p ∈ S then t p h else 0
-  -- Apply CRT
   have hs : ∀ i ∈ S, s i ≠ 0 := fun p _ => prime_sq_ne_zero p
   have hcoprime : (S : Set Nat.Primes).Pairwise (Function.onFun Nat.Coprime s) :=
     pairwise_coprime_prime_squares S
   let r := Nat.chineseRemainderOfFinset a s S hs hcoprime
   use r
   constructor
-  · -- r < primeSquareProduct S
-    exact Nat.chineseRemainderOfFinset_lt_prod a s hs hcoprime
-  · -- ∀ p (hp : p ∈ S), r % (p : ℕ) ^ 2 = t p hp
-    intro p hp
+  · exact Nat.chineseRemainderOfFinset_lt_prod a s hs hcoprime
+  · intro p hp
     have hcong : (r : ℕ) ≡ a p [MOD s p] := r.2 p hp
     have ha : a p = t p hp := by simp [a, hp]
     rw [ha] at hcong
@@ -754,30 +633,19 @@ lemma crtMap_mapsTo_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (r : �
   simp only [validResiduesMod, Finset.mem_filter, Finset.mem_range] at hr
   obtain ⟨_, hvalid⟩ := hr
   have hp_cond := hvalid p hp
-  -- Show r % p² is in range
   have hp_sq_pos : 0 < (p : ℕ) ^ 2 := sq_pos_of_pos p.prop.pos
   have hmod_lt : r % ((p : ℕ) ^ 2) < (p : ℕ) ^ 2 := Nat.mod_lt r hp_sq_pos
-  -- Show r % p² satisfies the local validity conditions
   simp only [localValidResidues, Finset.mem_filter, Finset.mem_range]
   refine ⟨hmod_lt, ?_, ?_⟩
-  · -- Show ¬ p² ∣ r % p²
-    intro hdvd
-    -- If p² ∣ (r % p²) and r % p² < p², then r % p² = 0
+  · intro hdvd
     have h_rmod_eq_zero : r % ((p : ℕ) ^ 2) = 0 := Nat.eq_zero_of_dvd_of_lt hdvd hmod_lt
-    -- But r % p² = 0 implies p² ∣ r
     have hdvd_r : (p : ℕ) ^ 2 ∣ r := Nat.dvd_of_mod_eq_zero h_rmod_eq_zero
     exact hp_cond.1 hdvd_r
-  · -- Show ∀ d ∈ T, ¬ p² ∣ b * (r % p²) + d
-    intro d hd hdvd_shifted
-    -- From hp_cond we have ¬ p² ∣ b * r + d
+  · intro d hd hdvd_shifted
     have h_not_dvd := hp_cond.2 d hd
-    -- r ≡ r % p² [MOD p²]
     have hmod : (r % ((p : ℕ) ^ 2)) ≡ r [MOD ((p : ℕ) ^ 2)] := Nat.mod_modEq r ((p : ℕ) ^ 2)
-    -- so b * (r % p²) ≡ b * r [MOD p²]
     have hmul : b * (r % ((p : ℕ) ^ 2)) ≡ b * r [MOD ((p : ℕ) ^ 2)] := hmod.mul_left b
-    -- so b * (r % p²) + d ≡ b * r + d [MOD p²]
     have hadd : b * (r % ((p : ℕ) ^ 2)) + d ≡ b * r + d [MOD ((p : ℕ) ^ 2)] := hmul.add_right d
-    -- Apply dvd_iff
     have hdvd_equiv : ((p : ℕ) ^ 2 ∣ b * (r % ((p : ℕ) ^ 2)) + d) ↔ ((p : ℕ) ^ 2 ∣ b * r + d) :=
       hadd.dvd_iff dvd_rfl
     exact h_not_dvd (hdvd_equiv.mp hdvd_shifted)
@@ -788,20 +656,16 @@ lemma not_dvd_of_mod_eq_not_dvd (p r f : ℕ) (_hp : 0 < p ^ 2) (hr_eq : r % p ^
   have h_mod_eq : r % p ^ 2 = 0 := by
     have h₁ : p ^ 2 ∣ r := h_dvd_r
     have h₂ : r % p ^ 2 = 0 := by
-      -- If p² divides r, then the remainder when r is divided by p² is 0.
       have h₃ := Nat.mod_eq_zero_of_dvd h₁
       exact h₃
     exact h₂
   have h_f_eq_zero : f = 0 := by
     linarith
-  -- If f = 0, then p² divides f (since p² is positive).
   have h_p_sq_dvd_f : p ^ 2 ∣ f := by
     have h₁ : f = 0 := h_f_eq_zero
     rw [h₁]
     exact by
-      -- p² divides 0 because p² is positive.
       exact ⟨0, by simp⟩
-  -- This contradicts the assumption that p² does not divide f.
   exact hf_ndiv h_p_sq_dvd_f
 
 lemma not_dvd_shift_of_mod_eq (p b r f d : ℕ) (_hp : 0 < p ^ 2) (hr_eq : r % p ^ 2 = f)
@@ -842,20 +706,16 @@ lemma crt_inverse_mapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes)
     (f : (p : Nat.Primes) → p ∈ S → ℕ)
     (hf : ∀ p (hp : p ∈ S), f p hp ∈ localValidResidues (p : ℕ) b T) :
     ∃ r ∈ validResiduesMod b T S, ∀ p (hp : p ∈ S), r % ((p : ℕ) ^ 2) = f p hp := by
-  -- Extract that f p hp < p ^ 2 from membership in localValidResidues
   have hf_bound : ∀ p (hp : p ∈ S), f p hp < (p : ℕ) ^ 2 := fun p hp => by
     have h := hf p hp
     simp only [localValidResidues, Finset.mem_filter, Finset.mem_range] at h
     exact h.1
-  -- Use CRT to get r < M with r % p ^ 2 = f p hp
   obtain ⟨r, hr_lt, hr_mod⟩ := crt_surjective S f hf_bound
-  -- Show r ∈ validResiduesMod b T S
   refine ⟨r, ?_, hr_mod⟩
   simp only [validResiduesMod, Finset.mem_filter, Finset.mem_range]
   constructor
   · exact hr_lt
   · intro p hp
-    -- We need to show ¬(p ^ 2 ∣ r) ∧ ∀ d ∈ T, ¬(p ^ 2 ∣ b * r + d)
     have hf_valid := hf p hp
     simp only [localValidResidues, Finset.mem_filter, Finset.mem_range] at hf_valid
     obtain ⟨_, hf_ndiv, hf_shift⟩ := hf_valid
@@ -877,7 +737,6 @@ lemma validResidues_equiv_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) 
     exact crtMap_mapsTo_pi b T S r hr p hp
   let f : (validResiduesMod b T S) → (S.pi (fun p => localValidResidues (p : ℕ) b T)) :=
     fun ⟨r, hr⟩ => ⟨fun p hp => r % ((p : ℕ) ^ 2), hfwd r hr⟩
-  -- Prove injectivity
   have hf_inj : Function.Injective f := by
     intro ⟨r₁, hr₁⟩ ⟨r₂, hr₂⟩ heq
     simp only [Subtype.mk.injEq]
@@ -890,7 +749,6 @@ lemma validResidues_equiv_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) 
     ext p hp
     have := congrFun₂ heq' p hp
     exact this
-  -- Prove surjectivity
   have hf_surj : Function.Surjective f := by
     intro ⟨g, hg⟩
     have hg' : ∀ p (hp : p ∈ S), g p hp ∈ localValidResidues (p : ℕ) b T := by
@@ -902,7 +760,6 @@ lemma validResidues_equiv_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) 
     apply Subtype.ext
     ext p hp
     exact hr_eq p hp
-  -- Construct the equivalence
   exact ⟨Equiv.ofBijective f ⟨hf_inj, hf_surj⟩⟩
 
 lemma validResiduesMod_card_eq_pi_card (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) :
@@ -910,26 +767,7 @@ lemma validResiduesMod_card_eq_pi_card (b : ℕ) (T : Finset ℕ) (S : Finset Na
       (S.pi (fun p => localValidResidues (p : ℕ) b T)).card := by
   exact Finset.card_eq_of_equiv (validResidues_equiv_pi b T S).some
 
-/-- The cardinality of validResiduesMod equals the product of local valid residue cardinalities.
-
-    The proof uses the Chinese Remainder Theorem. Key steps:
-    1. The moduli p² for p ∈ S are pairwise coprime. For distinct primes p, q ∈ S, we have
-       `(p² : ℕ).Coprime (q² : ℕ)` because distinct primes are coprime and
-       `IsCoprime.pow : IsCoprime x y → IsCoprime (x ^ m) (y ^ n)` gives powers coprime.
-    2. By CRT (`Nat.chineseRemainderOfFinset`), residues mod M = ∏_{p∈S} p² correspond
-       bijectively to tuples (r_p)_{p∈S} where each r_p ∈ [0, p²).
-    3. The validity condition factors coordinate-wise: r mod M is valid iff for each p ∈ S,
-       - p² ∤ r ↔ (r mod p²) ≢ 0 (mod p²)
-       - ∀ d ∈ T, p² ∤ (b*r + d) ↔ (b*(r mod p²) + d) ≢ 0 (mod p²)
-    4. Hence validResiduesMod ≅ ∏_{p ∈ S} localValidResidues p b T as sets.
-    5. Since the bijection preserves cardinality: |validResiduesMod| = ∏_{p∈S} |localValidResidues|.
-    Definitions:
-    - `localValidResidues p b T = (Finset.range (p ^ 2)).filter (λ r, ¬(p ^ 2 ∣ r) ∧ ∀ d ∈ T, ¬(p ^
-    2 ∣ b*r+d))`
-    - `validResiduesMod b T S = (Finset.range M).filter (λ r, ∀ p ∈ S, ¬(p ^ 2 ∣ r) ∧ ∀ d ∈ T, ¬(p ^
-    2 ∣ b*r+d))`
-      where M = ∏_{p∈S} p²
-    Uses Mathlib's `Finset.card_pi : (s.pi t).card = ∏ i ∈ s, (t i).card` -/
+/-- Valid residue counts factor as the product of local valid residue counts. -/
 lemma validResiduesMod_card_eq_prod (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) :
     ((validResiduesMod b T S).card : ℝ) =
       ∏ p ∈ S, ((localValidResidues (p : ℕ) b T).card : ℝ) := by
@@ -949,9 +787,7 @@ lemma validResidues_card_eq_mul (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT 
   rw [Finset.prod_mul_distrib]
   simp only [primeSquareProduct, localDensityProduct, Nat.cast_prod, Nat.cast_pow]
 
-/-- Key lemma 3: The product of values in [0,1] is at most 1.
-    If each factor ≤ 1 and factors are non-negative, then product ≤ 1.
-    Uses: `Finset.prod_le_one` from Mathlib. -/
+/-- A finite product of local density factors is at most one. -/
 lemma localDensityProduct_le_one (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) :
     localDensityProduct b T S ≤ 1 := by
   unfold localDensityProduct
@@ -976,12 +812,9 @@ lemma dvd_iff_of_mod_eq_primeSquareProduct (S : Finset Nat.Primes) (p : Nat.Prim
       have h₅ : (p : ℕ) ^ 2 ∣ ∏ q ∈ S, (q : ℕ) ^ 2 := by
         apply Finset.dvd_prod_of_mem; simpa using h₃
       exact h₅
-    -- Convert the product to the definition of primeSquareProduct
     simpa [primeSquareProduct] using h₂
-  -- equivalence
   have h₂ : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S := hmod
   have h₃ : N₁ ≡ N₂ [MOD primeSquareProduct S] := by
-    -- Convert the modulus equality to congruence
     rw [Nat.ModEq]; simp_all
   have h₄ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
     have h₇ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
@@ -1078,10 +911,8 @@ lemma completeBlocks_subset_Icc (M X : ℕ) (hM : 0 < M) (k : ℕ) (hk : k < X /
   have h₄ : (k + 1) * M ≤ X := h₂
   have h₆ : Finset.Icc (k * M + 1) ((k + 1) * M) ⊆ Finset.Icc 1 X := by
     apply Finset.Icc_subset_Icc
-    · -- Prove that 1 ≤ k * M + 1
-      omega
-    · -- Prove that (k + 1) * M ≤ X
-      omega
+    · omega
+    · omega
   exact h₆
 
 lemma completeBlock_card (M k : ℕ) (hM : 0 < M) : (completeBlock M k).card = M := by
@@ -1142,8 +973,7 @@ lemma completeBlock_surjOn (M k : ℕ) (hM : 0 < M) :
     have h₂ : r < M := Finset.mem_range.mp hr
     have h₃ : r ≤ M := by linarith
     by_cases h₄ : r = 0
-    · -- If r = 0, we take N = (k + 1) * M
-      have h₅ : ((k + 1) * M : ℕ) ∈ (completeBlock M k : Set ℕ) := by
+    · have h₅ : ((k + 1) * M : ℕ) ∈ (completeBlock M k : Set ℕ) := by
         simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
         constructor <;>
         (try norm_num);
@@ -1154,19 +984,16 @@ lemma completeBlock_surjOn (M k : ℕ) (hM : 0 < M) :
         simp
       rw [h₄] at *
       omega
-    · -- If r ≠ 0, we take N = k * M + r
-      have h₅ : (k * M + r : ℕ) ∈ (completeBlock M k : Set ℕ) := by
+    · have h₅ : (k * M + r : ℕ) ∈ (completeBlock M k : Set ℕ) := by
         simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
         constructor
-        · -- Prove k * M + 1 ≤ k * M + r
-          have h₆ : 1 ≤ r := by
+        · have h₆ : 1 ≤ r := by
             by_contra h₆
             have h₇ : r = 0 := by
               omega
             contradiction
           nlinarith
-        · -- Prove k * M + r ≤ (k + 1) * M
-          nlinarith
+        · nlinarith
       refine ⟨(k * M + r : ℕ), h₅, ?_⟩
       have h₆ : (k * M + r : ℕ) % M = r % M := by
         have h₇ : (k * M + r : ℕ) % M = r % M := by
@@ -1178,7 +1005,6 @@ lemma completeBlock_surjOn (M k : ℕ) (hM : 0 < M) :
         have h₉ : r % M = r := Nat.mod_eq_of_lt h₈
         exact h₉
       omega
-  -- Finset.range M
   intro r hr
   have h₂ : r ∈ (Finset.range M : Set ℕ) := hr
   have h₃ : ∃ N ∈ (completeBlock M k : Set ℕ), N % M = r := h₁ r h₂
@@ -1201,31 +1027,17 @@ lemma filter_mapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ)
     Set.MapsTo (· % M) ((completeBlock M k).filter P : Set ℕ) ((Finset.range M).filter P : Set ℕ) :=
         by
   intro M P N hN
-  -- N ∈ (completeBlock M k).filter P means N ∈ completeBlock M k and P N
   simp only [Finset.coe_filter, Set.mem_setOf_eq] at hN ⊢
   obtain ⟨hNblock, hPN⟩ := hN
   constructor
-  · -- N % M ∈ Finset.range M
-    have hM : 0 < M := primeSquareProduct_pos S
+  · have hM : 0 < M := primeSquareProduct_pos S
     exact (completeBlock_residues_bijective M k hM).mapsTo hNblock
-  · -- P (N % M)
-    have hM : 0 < M := primeSquareProduct_pos S
+  · have hM : 0 < M := primeSquareProduct_pos S
     have hmodlt : N % M < M := Nat.mod_lt N hM
     have hmod : N % M % M = N % M := Nat.mod_eq_of_lt hmodlt
     exact (condition_mod_invariant b T S N (N % M) hmod.symm).mp hPN
 
-/-- InjOn: the filter preserves injectivity from the original bijection.
-
-    The proof proceeds as follows:
-    1. By `completeBlock_residues_bijective`, N ↦ N % M is a bijection on completeBlock M k.
-    2. By `Set.BijOn.injOn`, this means it is injective on completeBlock M k.
-    3. Since (completeBlock M k).filter P ⊆ completeBlock M k (filter is a subset),
-       by `Set.InjOn.mono`, the function is also injective on the filtered set.
-    Uses:
-    - `completeBlock_residues_bijective : 0 < M → Set.BijOn (· % M) (completeBlock M k)
-    (Finset.range M)`
-    - `Set.BijOn.injOn : ∀ {f s t}, Set.BijOn f s t → Set.InjOn f s`
-    - `Set.InjOn.mono : ∀ {s₁ s₂ f}, s₁ ⊆ s₂ → Set.InjOn f s₂ → Set.InjOn f s₁` -/
+/-- Filtering a complete block preserves injectivity of the residue map. -/
 lemma filter_injOn (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ) :
     let M := primeSquareProduct S
     let P := fun N => ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)
@@ -1237,20 +1049,7 @@ lemma filter_injOn (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ) 
     Finset.filter_subset P (completeBlock M k)
   exact h_injOn.mono h_subset
 
-/-- SurjOn: for r ∈ range M with P(r), we find N ∈ completeBlock with N % M = r and P(N).
-
-    The proof proceeds as follows:
-    1. Take r ∈ (Finset.range M).filter P, so r ∈ Finset.range M and P(r) holds.
-    2. By `completeBlock_residues_bijective`, the map is surjective onto Finset.range M.
-    3. So there exists N ∈ completeBlock M k with N % M = r.
-    4. Since r < M (being in Finset.range M), we have r % M = r, so N % M = r % M.
-    5. By `condition_mod_invariant`, since N ≡ r (mod M), we have P(N) ↔ P(r).
-    6. Since P(r) holds, P(N) holds.
-    7. Therefore N ∈ (completeBlock M k).filter P, and N % M = r.
-    Uses:
-    - `completeBlock_surjOn : 0 < M → Set.SurjOn (· % M) (completeBlock M k) (Finset.range M)`
-    - `Set.SurjOn : ∀ {f s t}, Set.SurjOn f s t ↔ t ⊆ f '' s`
-    - `condition_mod_invariant : N₁ % M = N₂ % M → (P N₁ ↔ P N₂)` -/
+/-- Filtering a complete block preserves surjectivity of the residue map onto valid residues. -/
 lemma filter_surjOn (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ) :
     let M := primeSquareProduct S
     let P := fun N => ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)
@@ -1264,13 +1063,11 @@ lemma filter_surjOn (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ)
   rw [Set.SurjOn] at hsurj
   have hr_range' : r ∈ (Finset.range M : Set ℕ) := hr_range
   obtain ⟨N, hN_block, hN_mod⟩ := hsurj hr_range'
-  -- Show N satisfies P using condition_mod_invariant
   have hr_lt : r < M := Finset.mem_range.mp hr_range
   have hr_mod : r % M = r := Nat.mod_eq_of_lt hr_lt
   have hmod_eq : N % M = r % M := by simp only [hN_mod, hr_mod]
   have hP_equiv := condition_mod_invariant b T S N r hmod_eq
   have hN_P : P N := hP_equiv.mpr hr_P
-  -- Construct the witness
   use N
   constructor
   · simp only [Finset.coe_filter, Set.mem_setOf_eq]
@@ -1298,7 +1095,6 @@ lemma completeBlock_valid_count (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Prime
     ((completeBlock M k).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card = A.card := by
   intro M A
-  -- The filtered block equals the valid residues via bijection
   have hbij := filter_card_eq_of_bijOn_filter b T S k
   exact Set.BijOn.finsetCard_eq _ hbij
 
@@ -1314,14 +1110,10 @@ lemma completeBlock_disjoint (M : ℕ) (_hM : 0 < M) (i j : ℕ) (hij : i < j) :
     apply Set.eq_empty_of_forall_notMem
     intro x hx
     simp only [Set.mem_inter_iff, completeBlock] at hx
-    -- Extract the conditions from hx
     have h₃ : x ∈ (Finset.Icc (i * M + 1) ((i + 1) * M) : Finset ℕ) := hx.1
     have h₄ : x ∈ (Finset.Icc (j * M + 1) ((j + 1) * M) : Finset ℕ) := hx.2
-    -- Convert the Finset membership to natural number conditions
     simp only [Finset.mem_Icc] at h₃ h₄
-    -- Derive the inequalities
     linarith
-  -- Convert the Set disjointness to Finset disjointness
   rw [Finset.disjoint_iff_inter_eq_empty]
   exact_mod_cast h₂
 
@@ -1349,13 +1141,8 @@ lemma sum_valid_from_blocks_le_count (b : ℕ) (T : Finset ℕ) (S : Finset Nat.
         ((completeBlock M k).filter fun N =>
           ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card) ≤ count := by
   intro M count
-  -- The key steps:
-  -- 1. Sum of filtered block cards = card of biUnion of filtered blocks (by disjointness)
-  -- 2. biUnion of filtered blocks ⊆ filtered [1, X] (each block is subset of [1, X])
-  -- 3. So sum ≤ count
   have hM : 0 < M := primeSquareProduct_pos S
   let P := fun N => ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)
-  -- The disjoint blocks property for the range
   have hdisj : (↑(Finset.range (X / M)) : Set ℕ).PairwiseDisjoint
       (fun k => (completeBlock M k).filter P) := by
     intro i _ j _ hij
@@ -1370,20 +1157,17 @@ lemma sum_valid_from_blocks_le_count (b : ℕ) (T : Finset ℕ) (S : Finset Nat.
     rw [heq] at hxi'
     rw [Set.disjoint_iff] at hdisj_ij
     exact hdisj_ij ⟨hxi', hyj'⟩
-  -- The sum equals the cardinality of the biUnion
   have hsum : (Finset.range (X / M)).sum (fun k => ((completeBlock M k).filter P).card)
       = ((Finset.range (X / M)).biUnion (fun k => (completeBlock M k).filter P)).card := by
     rw [Finset.card_biUnion]
     · exact hdisj
   rw [hsum]
-  -- The biUnion is a subset of [1, X].filter P
   have hsub : (Finset.range (X / M)).biUnion (fun k => (completeBlock M k).filter P)
       ⊆ (Finset.Icc 1 X).filter P := by
     rw [Finset.biUnion_subset]
     intro k hk
     apply Finset.filter_subset_filter
     exact completeBlocks_subset_Icc M X hM k (Finset.mem_range.mp hk)
-  -- Apply card_le_card
   exact Finset.card_le_card hsub
 
 lemma count_lower_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
@@ -1393,7 +1177,6 @@ lemma count_lower_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
         ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card
     (X / M) * A.card ≤ count := by
   intro M A count
-  -- The sum over blocks equals q * |A| since each block contributes |A|
   have blocks_eq : (Finset.range (X / M)).sum (fun k =>
       ((completeBlock M k).filter fun N =>
         ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card) =
@@ -1410,10 +1193,6 @@ lemma count_lower_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
 
 /-- The partial block consists of the remaining integers {q*M+1, ..., X} where q = X/M. -/
 def partialBlock (M X : ℕ) : Finset ℕ := Finset.Icc (X / M * M + 1) X
-
--- ==========================================================================
--- Helper lemmas
--- ==========================================================================
 
 lemma partialBlock_subset_Icc (M X : ℕ) (_hM : 0 < M) :
     partialBlock M X ⊆ Finset.Icc 1 X := by
@@ -1444,12 +1223,10 @@ lemma partialBlock_subset_Ico (M X : ℕ) (hM : 0 < M) :
 lemma partialBlock_injOn_mod (M X : ℕ) :
     Set.InjOn (fun x => x % M) ↑(partialBlock M X) := by
   rcases eq_or_lt_of_le (Nat.zero_le M) with rfl | hM
-  · -- Case M = 0: x % 0 = x, so the map is identity
-    intro x _ y _ hxy
+  · intro x _ y _ hxy
     simp only [Nat.mod_zero] at hxy
     exact hxy
-  · -- Case M > 0: use Nat.mod_injOn_Ico via subset
-    exact (Nat.mod_injOn_Ico (X / M * M) M).mono (partialBlock_subset_Ico M X hM)
+  · exact (Nat.mod_injOn_Ico (X / M * M) M).mono (partialBlock_subset_Ico M X hM)
 
 lemma partialBlock_valid_mapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
     let M := primeSquareProduct S
@@ -1458,23 +1235,15 @@ lemma partialBlock_valid_mapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Prime
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)
     Set.MapsTo (fun x => x % M) ↑validBlock ↑A := by
   intro M A validBlock N hN
-  -- hN : N ∈ ↑validBlock, need to show (fun x => x % M) N ∈ ↑A
   rw [Finset.mem_coe] at hN ⊢
-  -- hN : N ∈ validBlock, goal : N % M ∈ A
   rw [Finset.mem_filter] at hN
   obtain ⟨_, hvalid⟩ := hN
-  -- hvalid : ∀ p ∈ S, ¬↑p ^ 2 ∣ N ∧ ∀ d ∈ T, ¬↑p ^ 2 ∣ b * N + d
-  -- Goal: N % M ∈ A = validResiduesMod b T S
   simp only at *
   change N % M ∈ validResiduesMod b T S
   rw [validResiduesMod, Finset.mem_filter, Finset.mem_range]
   constructor
-  · -- N % M < M
-    exact Nat.mod_lt N (primeSquareProduct_pos S)
-  · -- ∀ p ∈ S, ¬↑p ^ 2 ∣ N % M ∧ ∀ d ∈ T, ¬↑p ^ 2 ∣ b * (N % M) + d
-    -- From Nat.mod_modEq: (N % M) ≡ N [MOD M]
-    -- Using Nat.ModEq.eq_1: this means (N % M) % M = N % M
-    have hmodEq : (N % M) ≡ N [MOD M] := Nat.mod_modEq N M
+  · exact Nat.mod_lt N (primeSquareProduct_pos S)
+  · have hmodEq : (N % M) ≡ N [MOD M] := Nat.mod_modEq N M
     have hmod : N % M = (N % M) % M := (Nat.ModEq.eq_1 M (N % M) N ▸ hmodEq).symm
     rw [← condition_mod_invariant b T S N (N % M) hmod]
     exact hvalid
@@ -1500,7 +1269,6 @@ lemma completeBlock_disjoint_partialBlock (M X : ℕ) (_hM : 0 < M) (k : ℕ) (h
     apply Finset.eq_empty_of_forall_notMem
     intro n hn
     simp only [completeBlock, partialBlock, Finset.mem_inter, Finset.mem_Icc] at hn
-    -- Extract the inequalities from the intersection
     have h₈ : (k + 1) * M ≤ (X / M) * M := by
       have h₁₁ : (k + 1) * M ≤ (X / M) * M := by
         nlinarith
@@ -1518,7 +1286,6 @@ lemma biUnion_completeBlocks_disjoint_partialBlock (M X : ℕ) (_hM : 0 < M) :
     have h₁ : ∃ k, k ∈ Finset.range (X / M) ∧ x ∈ completeBlock M k := by
       simpa [Finset.mem_biUnion] using hx₁
     obtain ⟨k, hk₁, hk₂⟩ := h₁
-    -- contradiction
     have h₂ : x ∉ partialBlock M X := by
       have h₃ : k < X / M := Finset.mem_range.mp hk₁
       have h₄ : x ∈ completeBlock M k := hk₂
@@ -1541,7 +1308,6 @@ lemma biUnion_completeBlocks_disjoint_partialBlock (M X : ℕ) (_hM : 0 < M) :
           omega
         omega
       exact h₈
-    -- Derive the contradiction
     exact h₂ hx₂
   exact h_main
 
@@ -1653,23 +1419,17 @@ theorem Icc_eq_biUnion_union_partialBlock (M X : ℕ) (hM : 0 < M) :
   ext n
   simp only [Finset.mem_union, Finset.mem_biUnion, Finset.mem_Icc, Finset.mem_range]
   constructor
-  · -- Forward direction: n ∈ [1,X] → n ∈ (⋃ blocks) ∪ V
-    intro ⟨hn_pos, hn_le⟩
+  · intro ⟨hn_pos, hn_le⟩
     have hk_le : (n - 1) / M ≤ X / M := div_sub_one_le_div M X n hn_pos hn_le
     rcases Nat.lt_or_eq_of_le hk_le with hk_lt | hk_eq
-    · -- Case 1: k < q, so n ∈ B_k
-      left
+    · left
       exact ⟨(n - 1) / M, hk_lt, mem_completeBlock_of_div_lt M X n hM hn_pos hn_le hk_lt⟩
-    · -- Case 2: k = q, so n ∈ V
-      right
+    · right
       exact mem_partialBlock_of_div_eq M X n hM hn_pos hn_le hk_eq
-  · -- Backward direction: n ∈ (⋃ blocks) ∪ V → n ∈ [1,X]
-    intro h
+  · intro h
     rcases h with ⟨k, hk, hn_block⟩ | hn_partial
-    · -- n is in some complete block B_k with k < q
-      exact Finset.mem_Icc.mp (completeBlocks_subset_Icc M X hM k hk hn_block)
-    · -- n is in the partial block V
-      exact Finset.mem_Icc.mp (partialBlock_subset_Icc M X hM hn_partial)
+    · exact Finset.mem_Icc.mp (completeBlocks_subset_Icc M X hM k hk hn_block)
+    · exact Finset.mem_Icc.mp (partialBlock_subset_Icc M X hM hn_partial)
 
 lemma filtered_biUnion_disjoint_filtered_partialBlock (M X : ℕ) (_hM : 0 < M)
     (P : ℕ → Prop) [DecidablePred P] :
@@ -1731,7 +1491,6 @@ lemma count_eq_sum_blocks (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X 
         ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card
     count = blockCounts + partialCount := by
   intro M count blockCounts partialCount
-  -- Let P be the filtering predicate
   set P := fun N => ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d) with hP
   have hM : 0 < M := primeSquareProduct_pos S
   have h_partition := Icc_eq_biUnion_union_partialBlock M X hM
@@ -1763,12 +1522,9 @@ lemma count_upper_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
         ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card
     count ≤ (X / M + 1) * A.card := by
   intro M A count
-  -- Unfold count to the explicit formula
   show count ≤ (X / M + 1) * A.card
-  -- Rewrite count using the block decomposition
   have hdecomp := count_eq_sum_blocks b T S X
   simp only at hdecomp
-  -- count = blockCounts + partialCount
   have hcount_eq : count = ∑ k ∈ Finset.range (X / M), ((completeBlock M k).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card +
       ((partialBlock M X).filter fun N =>
@@ -1777,14 +1533,12 @@ lemma count_upper_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
   have hblock : ∀ k, ((completeBlock M k).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card = A.card :=
     fun k => completeBlock_valid_count b T S k
-  -- Sum over blocks = (X/M) * |A|
   have hsum : ∑ k ∈ Finset.range (X / M), ((completeBlock M k).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card = (X / M) * A.card :=
           by
     simp only [hblock]
     rw [Finset.sum_const, Finset.card_range, smul_eq_mul]
   rw [hsum]
-  -- Partial block contributes at most |A|
   have hpartial : ((partialBlock M X).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card ≤ A.card :=
     partialBlock_valid_count_le b T S X
@@ -1807,7 +1561,6 @@ lemma count_bounds (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) 
 lemma localDensityProduct_nonneg (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) :
     0 ≤ localDensityProduct b T S := by
   rw [localDensityProduct]
-  -- Each factor in the product is non-negative
   exact Finset.prod_nonneg fun p _ => localDensityFactor_nonneg _ b T
 
 lemma interval_bound {a b lo hi d : ℝ}
@@ -1839,16 +1592,12 @@ lemma count_real_bounds (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Fi
   have hbounds := count_bounds b T S X
   simp only at hbounds
   have hA := validResidues_card_eq_mul b hb T hT S
-  -- Lower bound: q * |A| ≤ count
   constructor
-  · -- Need: q * M * L ≤ count
-    -- From hA: |A| = M * L
-    calc (q : ℝ) * M * L = q * (M * L) := by ring
+  · calc (q : ℝ) * M * L = q * (M * L) := by ring
       _ = q * (validResiduesMod b T S).card := by rw [← hA]
       _ = (q * (validResiduesMod b T S).card : ℕ) := by simp
       _ ≤ count := by exact Nat.cast_le.mpr hbounds.1
-  · -- Upper bound: count ≤ (q + 1) * M * L
-    calc (count : ℝ) ≤ ((q + 1) * (validResiduesMod b T S).card : ℕ) := by
+  · calc (count : ℝ) ≤ ((q + 1) * (validResiduesMod b T S).card : ℕ) := by
            exact Nat.cast_le.mpr hbounds.2
       _ = (q + 1) * (validResiduesMod b T S).card := by simp
       _ = (q + 1) * (M * L) := by rw [← hA]
@@ -1893,14 +1642,7 @@ lemma error_bound_empty_case (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT : T
     |(count : ℝ) - (X : ℝ) * L| ≤ (M : ℝ) := by
   exact (Nat.ne_of_gt (primeSquareProduct_pos S) hM).elim
 
-/-- Key lemma 6: Both the count and X·L lie in the interval [q·M·L, (q+1)·M·L],
-    so their difference is at most M·L ≤ M.
-    From count_bounds: q·|A_M| ≤ count ≤ (q+1)·|A_M|
-    From validResidues_card_eq_mul: |A_M| = M·L
-    So: q·M·L ≤ count ≤ (q+1)·M·L
-    Also: q ≤ X/M < q+1 (where q = floor(X/M)), so q·M ≤ X < (q+1)·M
-    Therefore: q·M·L ≤ X·L ≤ (q+1)·M·L
-    Both values in same interval of length M·L, so |count - X·L| ≤ M·L ≤ M. -/
+/-- Finite-prime counts differ from the expected local-density main term by at most the modulus. -/
 lemma error_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (X : ℕ) :
     let M := primeSquareProduct S
@@ -1958,7 +1700,6 @@ lemma finite_product_converges_to_density (b : ℕ) (hb : 2 ≤ b)
   use A.image (fun p : Nat.Primes => (p : ℕ)) |>.sup id
   intro S hS
   apply hA S
-  -- Show A ⊆ S: for any p ∈ A, we have (p : ℕ) ≤ y, so p ∈ S by hypothesis
   intro p hp
   apply hS p
   calc (p : ℕ) = id (p : ℕ) := rfl
@@ -1981,12 +1722,10 @@ lemma count_upper_bound_via_finite (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_
   intro p _
   obtain ⟨hSqN, hSqAll⟩ := hN.2
   constructor
-  · -- Show ¬(p ^ 2 ∣ N)
-    rw [Nat.squarefree_iff_prime_squarefree] at hSqN
+  · rw [Nat.squarefree_iff_prime_squarefree] at hSqN
     rw [sq]
     exact hSqN p p.prop
-  · -- Show ∀ d ∈ T, ¬(p ^ 2 ∣ b*N+d)
-    intro d hd
+  · intro d hd
     have hSqd := hSqAll d hd
     rw [Nat.squarefree_iff_prime_squarefree] at hSqd
     rw [sq]
@@ -2237,9 +1976,7 @@ lemma prime_tail_sum_small (ε : ℝ) (hε : 0 < ε) :
   set f : Nat.Primes → ℝ := fun p => 1 / ((p : ℕ) : ℝ) ^ 2 with hf
   have hfnn : ∀ p, 0 ≤ f p := fun p => by simp only [hf]; positivity
   obtain ⟨s, hs⟩ := exists_finset_tsum_compl_lt f hfnn primes_summable_one_div_sq ε hε
-  -- Use y = sup of primes in s
   use s.sup (·.val)
-  -- Primes > y are not in s, so their sum is bounded by the complement sum
   have h1 : ∑' (p : {q : Nat.Primes // (q : ℕ) > s.sup (·.val)}), f p ≤
             ∑' (p : {q : Nat.Primes // q ∉ s}), f p := by
     apply tsum_primes_gt_le_tsum_compl
@@ -2265,7 +2002,6 @@ lemma sqrt_div_X_small (ε : ℝ) (hε : 0 < ε) :
     refine ⟨X₀, ?_⟩
     exact_mod_cast hX₀
   obtain ⟨X₀, hX₀⟩ := h₃
-  -- We need to show that for all X ≥ X₀, (Nat.sqrt X : ℝ) / X < ε
   refine ⟨X₀, ?_⟩
   intro X hX
   have h₄ : (X : ℝ) ≥ (X₀ : ℝ) := by exact_mod_cast hX
@@ -2399,21 +2135,14 @@ lemma zmod_mul_inv_add_eq_zero (n b d : ℕ) (_hn : 0 < n) (hb : b.Coprime n) :
 lemma exists_inverse_residue (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ b) (hbp : b < p) (d : ℕ) :
     ∃ v : ℕ, v < p ^ 2 ∧ (p ^ 2) ∣ (b * v + d) := by
   have hcop : b.Coprime (p ^ 2) := b_coprime_p_sq p hp b hb hbp
-  -- p² > 0
   have hp2_pos : 0 < p ^ 2 := prime_sq_pos p hp
-  -- NeZero (p ^ 2) instance
   haveI : NeZero (p ^ 2) := ⟨Nat.pos_iff_ne_zero.mp hp2_pos⟩
   let v_zmod : ZMod (p ^ 2) := (-↑d : ZMod (p ^ 2)) * (↑b : ZMod (p ^ 2))⁻¹
   use v_zmod.val
   constructor
-  · -- v < p²
-    exact ZMod.val_lt v_zmod
-  · -- p² | b * v + d
-    -- It suffices to show (b * v + d : ZMod (p²)) = 0
-    rw [← CharP.cast_eq_zero_iff (ZMod (p ^ 2)) (p ^ 2)]
-    -- Push the cast through
+  · exact ZMod.val_lt v_zmod
+  · rw [← CharP.cast_eq_zero_iff (ZMod (p ^ 2)) (p ^ 2)]
     simp only [Nat.cast_add, Nat.cast_mul]
-    -- v_zmod.val cast back gives v_zmod
     have hval : (v_zmod.val : ZMod (p ^ 2)) = v_zmod := ZMod.natCast_zmod_val v_zmod
     rw [hval]
     exact zmod_mul_inv_add_eq_zero (p ^ 2) b d hp2_pos hcop
@@ -2421,28 +2150,17 @@ lemma exists_inverse_residue (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ 
 lemma dvd_iff_modEq_of_coprime (p b v d N : ℕ) (hcop : (p ^ 2).gcd b = 1)
     (hdvd_v : (p ^ 2) ∣ (b * v + d)) :
     (p ^ 2) ∣ (b * N + d) ↔ N ≡ v [MOD (p ^ 2)] := by
-  -- Convert hdvd_v to modular form: b*v + d ≡ 0 [MOD p²]
   have h_v_mod : (b * v + d) ≡ 0 [MOD (p ^ 2)] := Nat.modEq_zero_iff_dvd.mpr hdvd_v
   constructor
-  · -- Forward direction: p² | b*N + d → N ≡ v [MOD p²]
-    intro hdvd_N
-    -- b*N + d ≡ 0 [MOD p²]
+  · intro hdvd_N
     have h_N_mod : (b * N + d) ≡ 0 [MOD (p ^ 2)] := Nat.modEq_zero_iff_dvd.mpr hdvd_N
-    -- b*N + d ≡ b*v + d [MOD p²] (both ≡ 0)
     have h_eq : (b * N + d) ≡ (b * v + d) [MOD (p ^ 2)] := h_N_mod.trans h_v_mod.symm
-    -- Cancel d: b*N ≡ b*v [MOD p²]
     have h_mul : b * N ≡ b * v [MOD (p ^ 2)] := Nat.ModEq.add_right_cancel' d h_eq
-    -- Cancel b: N ≡ v [MOD p²]
     exact Nat.ModEq.cancel_left_of_coprime hcop h_mul
-  · -- Backward direction: N ≡ v [MOD p²] → p² | b*N + d
-    intro h_modEq
-    -- b*N ≡ b*v [MOD p²]
+  · intro h_modEq
     have h_mul : b * N ≡ b * v [MOD (p ^ 2)] := h_modEq.mul_left b
-    -- b*N + d ≡ b*v + d [MOD p²]
     have h_add : (b * N + d) ≡ (b * v + d) [MOD (p ^ 2)] := h_mul.add_right d
-    -- b*N + d ≡ 0 [MOD p²]
     have h_zero : (b * N + d) ≡ 0 [MOD (p ^ 2)] := h_add.trans h_v_mod
-    -- p² | b*N + d
     exact Nat.modEq_zero_iff_dvd.mp h_zero
 
 lemma dvd_shift_iff_modEq_unique (b : ℕ) (hb : 2 ≤ b) (q : Nat.Primes) (hq : (q : ℕ) > b) (d : ℕ) :
@@ -2480,8 +2198,6 @@ lemma card_union_shifted_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (_hT : 
     (q : Nat.Primes) (hq : (q : ℕ) > b) (X : ℕ) :
     ((Finset.Icc 1 X).filter fun N => ∃ d ∈ T, (q : ℕ) ^ 2 ∣ b * N + d).card ≤
       T.card * (X / (q : ℕ) ^ 2 + 1) := by
-  -- The key insight: {N : ∃ d ∈ T, q²|(bN+d)} = ⋃_{d ∈ T} {N : q²|(bN+d)}
-  -- We express this as a biUnion, then apply card_biUnion_le_card_mul
   have h_eq : (Finset.Icc 1 X).filter (fun N => ∃ d ∈ T, (q : ℕ) ^ 2 ∣ b * N + d) =
       T.biUnion (fun d => (Finset.Icc 1 X).filter (fun N => (q : ℕ) ^ 2 ∣ b * N + d)) := by
     ext N
@@ -2507,13 +2223,10 @@ lemma single_prime_violation_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT
     ((Finset.Icc 1 X).filter fun N =>
       (q : ℕ) ^ 2 ∣ N ∨ ∃ d ∈ T, (q : ℕ) ^ 2 ∣ b * N + d).card ≤ (T.card + 1) * (X / (q : ℕ) ^ 2 +
           1) := by
-  -- The filtered set is ⊆ A ∪ B where A = {q²|N}, B = {∃d∈T, q²|(bN+d)}
-  -- By union bound: |A ∪ B| ≤ |A| + |B|
   have hA : ((Finset.Icc 1 X).filter fun N => (q : ℕ) ^ 2 ∣ N).card ≤ X / (q : ℕ) ^ 2 :=
     card_multiples_Icc q X
   have hB : ((Finset.Icc 1 X).filter fun N => ∃ d ∈ T, (q : ℕ) ^ 2 ∣ b * N + d).card ≤
       T.card * (X / (q : ℕ) ^ 2 + 1) := card_union_shifted_bound b hb T hT q hq X
-  -- Union bound
   calc ((Finset.Icc 1 X).filter fun N => (q : ℕ) ^ 2 ∣ N ∨ ∃ d ∈ T, (q : ℕ) ^ 2 ∣ b * N + d).card
       ≤ ((Finset.Icc 1 X).filter fun N => (q : ℕ) ^ 2 ∣ N).card +
         ((Finset.Icc 1 X).filter fun N => ∃ d ∈ T, (q : ℕ) ^ 2 ∣ b * N + d).card := by
@@ -2622,11 +2335,9 @@ lemma relevantNotInS_gt_b (b X : ℕ) (S : Finset Nat.Primes) (y : ℕ)
     exact h₁
   have h_main : (q : ℕ) > b := by
     by_cases hqy : (q : ℕ) ≤ y
-    · -- Case: (q : ℕ) ≤ y
-      have hq_in_S : q ∈ S := hy q hqy
+    · have hq_in_S : q ∈ S := hy q hqy
       exact absurd hq_in_S hq_not_in_S
-    · -- Case: (q : ℕ) > y
-      have h₂ : (q : ℕ) > b := by omega
+    · have h₂ : (q : ℕ) > b := by omega
       exact h₂
   exact h_main
 
@@ -2692,7 +2403,6 @@ lemma violation_subset_biUnion (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T
   refine ⟨q₀, ?_, hN_Icc, hq₀_dvd⟩
   simp only [relevantNotInS, Finset.mem_filter]
   refine ⟨?_, hq₀_not_S⟩
-  -- q₀ ∈ primesBelow'(√(bX+b)+1)
   have hq₀_bound : (q₀ : ℕ) < Nat.sqrt (b * X + b) + 1 :=
     hq₀_dvd.elim
       (fun h => prime_sq_bound_from_N_dvd b X N hb q₀ hN_Icc h)
@@ -2737,23 +2447,17 @@ lemma finsum_le_tsum_tail (y : ℕ) (Q : Finset Nat.Primes) (hQ : ∀ q ∈ Q, (
     ≤ (∑' (p : {q : Nat.Primes // (q : ℕ) > y}), 1 / (((p : Nat.Primes) : ℕ) : ℝ) ^ 2) := by
   let S := {q : Nat.Primes // (q : ℕ) > y}
   let f : S → ℝ := fun p => 1 / ((((p : Nat.Primes) : ℕ) : ℝ) ^ 2)
-  -- Summability: f is summable on S since 1/p² is summable on all primes
   have hf_summable : Summable f := primes_summable_one_div_sq.subtype _
-  -- Nonnegativity: f p ≥ 0 for all p
   have hf_nonneg : ∀ p : S, 0 ≤ f p := fun p => by positivity
-  -- Map Q into S using the embedding
   let e : Q → S := fun ⟨q, hq⟩ => ⟨q, hQ q hq⟩
   have he_inj : Function.Injective e := fun ⟨q1, hq1⟩ ⟨q2, hq2⟩ h => by
     simp only [e] at h
     exact Subtype.ext (Subtype.mk.injEq _ _ _ _ ▸ h)
-  -- Map Q.attach to a Finset in S
   let Q_S : Finset S := Q.attach.map ⟨e, he_inj⟩
-  -- The sum over Q equals the sum over Q_S
   have h_sum_eq : ∑ q ∈ Q, 1 / (((q : ℕ) : ℝ) ^ 2) = ∑ s ∈ Q_S, f s := by
     rw [Finset.sum_map]
     conv_lhs => rw [← Finset.sum_attach]
     rfl
-  -- Apply sum_le_tsum
   rw [h_sum_eq]
   exact hf_summable.sum_le_tsum Q_S (fun _ _ => hf_nonneg _)
 
@@ -2765,37 +2469,30 @@ lemma sum_expand (c : ℝ) (X : ℕ) (Q : Finset Nat.Primes) :
     calc
       (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2 + 1))) = (∑ q ∈ Q, (c * ((X : ℝ) / (
           (q : ℕ) : ℝ) ^ 2) + c)) := by
-        -- Distribute c over the sum
         apply Finset.sum_congr rfl
         intro q _
         ring_nf
       _ = (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2)) + ∑ _ ∈ Q, c) := by
-        -- Split the sum into two separate sums
         rw [Finset.sum_add_distrib]
   have h₂ : (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2))) = c * X * (∑ q ∈ Q, 1 / (
       ((q : ℕ) : ℝ) ^ 2)) := by
     calc
       (∑ q ∈ Q, (c * ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2))) = c * (∑ q ∈ Q, ((X : ℝ) / (
           (q : ℕ) : ℝ) ^ 2)) := by
-        -- Factor out the constant c from the sum
         rw [Finset.mul_sum]
       _ = c * (X * ∑ q ∈ Q, (1 / ((q : ℕ) : ℝ) ^ 2)) := by
-        -- Factor out X from the sum
         have h₃ : (∑ q ∈ Q, ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2)) = X * ∑ q ∈ Q, (1 / ((q : ℕ) : ℝ) ^ 2) :=
             by
           calc
             (∑ q ∈ Q, ((X : ℝ) / ((q : ℕ) : ℝ) ^ 2)) = ∑ q ∈ Q, ((X : ℝ) * (1 / (
                 (q : ℕ) : ℝ) ^ 2)) := by
-              -- Rewrite each term as X * (1 / q ^ 2)
               apply Finset.sum_congr rfl
               intro q _
               field_simp [Nat.cast_ne_zero]
             _ = (X : ℝ) * ∑ q ∈ Q, (1 / ((q : ℕ) : ℝ) ^ 2) := by
-              -- Factor out X from the sum
               rw [Finset.mul_sum]
         rw [h₃]
       _ = c * X * (∑ q ∈ Q, 1 / (((q : ℕ) : ℝ) ^ 2)) := by
-        -- Rearrange the multiplication for clarity
         ring_nf
   have h₃ : (∑ _ ∈ Q, c : ℝ) = c * Q.card := by
     calc
@@ -2827,17 +2524,14 @@ lemma sum_bound_real (T : Finset ℕ) (y : ℕ) (X : ℕ)
 lemma nat_div_floor_le_real_div (X : ℕ) (q : Nat.Primes) :
     ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) ≤ (X : ℝ) / ((q : ℕ) ^ 2 : ℝ) := by
   have h₁ : ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) * ((q : ℕ) ^ 2 : ℝ) ≤ (X : ℝ) := by
-    -- Cast the natural number inequality to real numbers
     have h₂ : (X / (q : ℕ) ^ 2 : ℕ) * (q : ℕ) ^ 2 ≤ X := by
       have h₃ : (X / (q : ℕ) ^ 2 : ℕ) * (q : ℕ) ^ 2 ≤ X := Nat.div_mul_le_self X ((q : ℕ) ^ 2)
       exact h₃
-    -- Cast the inequality to real numbers
     norm_cast at h₂ ⊢
   have h₂ : 0 < ((q : ℕ) : ℝ) := by
     norm_cast
     exact Nat.Prime.pos q.property
   have h₄ : ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) ≤ (X : ℝ) / ((q : ℕ) ^ 2 : ℝ) := by
-    -- Divide both sides of h₁ by ((q : ℕ) ^ 2 : ℝ)
     have h₆ : 0 < ((q : ℕ) ^ 2 : ℝ) := by positivity
     calc
       ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) = (((X / (q : ℕ) ^ 2 : ℕ) : ℝ) * ((q : ℕ) ^ 2 : ℝ)) / (
@@ -2859,15 +2553,7 @@ lemma nat_sum_le_real_sum (T : Finset ℕ) (X : ℕ) (Q : Finset Nat.Primes) :
     linarith
   · linarith [T.card.cast_nonneg (α := ℝ)]
 
-/-- Main bound: violation count is at most the tail sum term plus the count term.
-
-    Proof chain:
-    1. violation_count ≤ ∑_{q∈Q} (T+1)*(X/q²+1) [union_card_bound, in ℕ]
-    2. ↑(ℕ sum) ≤ ∑_{q∈Q} (T+1)*(X/q²+1) [nat_sum_le_real_sum, cast to ℝ]
-    3. real sum ≤ (T+1)*X*∑_{q>y} 1/q² + (T+1)*|Q| [sum_bound_real]
-    4. |Q| ≤ √(bX+b) [relevantNotInS_card_le]
-    The key fix is step 2→3: we bound the REAL-division sum directly,
-    not the nat-division sum. This avoids the inequality direction mismatch. -/
+/-- Violation count is bounded by the prime-square tail term plus a square-root count term. -/
 lemma violation_count_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (y : ℕ) (hy : ∀ p : Nat.Primes, (p : ℕ) ≤ y → p ∈ S) (hyb : y ≥ b) (
         X : ℕ) :
@@ -2902,10 +2588,8 @@ lemma sqrt_bXb_div_X_small (b : ℕ) (hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
     have h₄ : ∃ (n : ℕ), (2 * (b : ℝ) / ε ^ 2 : ℝ) < n := by
       obtain ⟨n, hn⟩ := exists_nat_gt (2 * (b : ℝ) / ε ^ 2)
       exact ⟨n, by linarith⟩
-    -- Obtain X₀ from the Archimedean property
     obtain ⟨X₀, hX₀⟩ := h₄
     refine ⟨X₀, ?_⟩
-    -- Cast X₀ to ℝ and verify the inequality
     norm_cast at hX₀ ⊢
   obtain ⟨X₀, hX₀⟩ := h₃
   use max 1 X₀
@@ -2921,10 +2605,8 @@ lemma sqrt_bXb_div_X_small (b : ℕ) (hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
   have h₈ : (ε : ℝ) ^ 2 * (X : ℝ) > 2 * (b : ℝ) := by
     have h₁₀ : 0 < (ε : ℝ) ^ 2 := by positivity
     have h₁₁ : 0 < (ε : ℝ) ^ 2 := by positivity
-    -- Multiply both sides by ε²
     have h₁₂ : (ε : ℝ) ^ 2 * (X : ℝ) > (ε : ℝ) ^ 2 * (2 * (b : ℝ) / ε ^ 2) := by
       nlinarith
-    -- Simplify the right side
     have h₁₃ : (ε : ℝ) ^ 2 * (2 * (b : ℝ) / ε ^ 2) = 2 * (b : ℝ) := by
       field_simp [h₁₁.ne']
     linarith
@@ -2957,7 +2639,6 @@ lemma sqrt_bXb_div_X_small (b : ℕ) (hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
         have h₂₃ : (Nat.sqrt (b * X + b) : ℕ) * (Nat.sqrt (b * X + b) : ℕ) ≤ (b * X + b) := h₁₄
         norm_cast at h₂₃ ⊢
       linarith
-    -- Cast the result back to ℝ
     have h₁₉ : (Nat.sqrt (b * X + b) : ℝ) < (ε : ℝ) * X := by
       norm_cast at h₁₈ ⊢
     exact h₁₉
@@ -2984,9 +2665,6 @@ lemma combine_violation_bounds (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T
           d)).card : ℝ) / X < ε := by
   have hX_pos : (0 : ℝ) < X := Nat.cast_pos.mpr hX
   have hbound := violation_count_bound b hb T hT S y hy hyb X
-  -- We need: V/X < ε where V ≤ (|T|+1)*X*tail + (|T|+1)*sqrt(bX+b)
-  -- Dividing by X: V/X ≤ (|T|+1)*tail + (|T|+1)*sqrt(bX+b)/X
-  -- Using htail and hsqrt: V/X < ε/2 + ε/2 = ε
   calc (((Finset.Icc 1 X).filter fun N =>
       ∃ q : Nat.Primes, q ∉ S ∧ ((q : ℕ) ^ 2 ∣ N ∨ ∃ d ∈ T, (q : ℕ) ^ 2 ∣ b * N + d)).card : ℝ) / X
       ≤ ((T.card + 1 : ℝ) * X * (∑' (p : {q : Nat.Primes // (q : ℕ) > y}), 1 / (
@@ -3007,23 +2685,18 @@ lemma tail_sum_antitone (y y' : ℕ) (h : y ≤ y') :
   let e : {q : Nat.Primes // (q : ℕ) > y'} → {q : Nat.Primes // (q : ℕ) > y} :=
     fun ⟨q, hq⟩ => ⟨q, lt_of_le_of_lt h hq⟩
   apply Summable.tsum_le_tsum_of_inj e
-  · -- he: e is injective
-    intro ⟨a, ha⟩ ⟨b, hb⟩ hab
+  · intro ⟨a, ha⟩ ⟨b, hb⟩ hab
     have : a = b := by
       have := congrArg Subtype.val hab
       simp only at this
       exact this
     exact Subtype.ext this
-  · -- hs: values outside range are non-negative
-    intro c _
+  · intro c _
     positivity
-  · -- h: f i ≤ g (e i) (they're equal)
-    intro i
+  · intro i
     rfl
-  · -- hf: Summable f
-    exact primes_summable_one_div_sq.subtype _
-  · -- hg: Summable g
-    exact primes_summable_one_div_sq.subtype _
+  · exact primes_summable_one_div_sq.subtype _
+  · exact primes_summable_one_div_sq.subtype _
 
 /-- Choose y large enough that the tail sum is small enough, and y ≥ b.
     Uses prime_tail_sum_small with ε/(2*(|T|+1)). -/
@@ -3033,9 +2706,7 @@ lemma choose_y_for_tail (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (ε : ℝ) (h
           ((p : Nat.Primes) : ℕ) : ℝ) ^ 2) < ε / 2 := by
   have hK : (0 : ℝ) < T.card + 1 := by positivity
   have hε' : 0 < ε / (2 * (T.card + 1)) := by positivity
-  -- Use prime_tail_sum_small to get y₁ with tail sum < ε'
   obtain ⟨y₁, hy₁⟩ := prime_tail_sum_small (ε / (2 * (T.card + 1))) hε'
-  -- Take y = max b y₁
   use max b y₁
   constructor
   · exact le_max_left b y₁
@@ -3054,21 +2725,16 @@ lemma choose_y_for_tail (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (ε : ℝ) (h
 lemma choose_X_for_sqrt (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (ε : ℝ) (hε : 0 < ε) :
     ∃ X₀ : ℕ, 0 < X₀ ∧ ∀ X ≥ X₀,
       (T.card + 1 : ℝ) * ((Nat.sqrt (b * X + b) : ℝ) / X) < ε / 2 := by
-  -- Choose ε' = ε / (2 * (T.card + 1))
   have hc : (0 : ℝ) < T.card + 1 := by positivity
   set ε' := ε / (2 * (T.card + 1)) with hε'_def
   have hε' : 0 < ε' := by positivity
-  -- Use sqrt_bXb_div_X_small to get X₀' such that for X ≥ X₀', √(bX+b)/X < ε'
   obtain ⟨X₀', hX₀'⟩ := sqrt_bXb_div_X_small b hb ε' hε'
-  -- Take X₀ = max X₀' 1 to ensure X₀ > 0
   use max X₀' 1
   constructor
   · omega
   · intro X hX
     have hXge : X ≥ X₀' := le_trans (le_max_left _ _) hX
     have hbound := hX₀' X hXge
-    -- We have √(bX+b)/X < ε' = ε / (2 * (T.card + 1))
-    -- So (T.card + 1) * √(bX+b)/X < (T.card + 1) * ε / (2 * (T.card + 1)) = ε / 2
     calc (T.card + 1 : ℝ) * ((Nat.sqrt (b * X + b) : ℝ) / X)
         < (T.card + 1) * ε' := by nlinarith [hbound]
       _ = (T.card + 1) * (ε / (2 * (T.card + 1))) := by rfl
@@ -3255,7 +2921,6 @@ lemma joint_density_eq_euler_product (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (
   intro ε hε
   obtain ⟨X₁, hX₁⟩ := count_lower_bound_estimate b hb T hT (ε/2) (by linarith)
   obtain ⟨X₂, hX₂⟩ := count_upper_bound_direct b hb T hT (ε/2) (by linarith)
-  -- Take max
   use max X₁ X₂
   intro X hX
   rw [Real.dist_eq]
@@ -3468,41 +3133,14 @@ lemma sum_div_eq_div_sum (b : ℕ) (X : ℕ) (_hX : 0 < X) :
       ((-1 : ℝ) ^ T.card) * ((countJointSquarefree b T X : ℝ) / (X : ℝ)) =
     (∑ T ∈ (Finset.range b).powerset,
       ((-1 : ℝ) ^ T.card) * (countJointSquarefree b T X : ℝ)) / (X : ℝ) := by
-  have h_main : ∑ T ∈ (Finset.range b).powerset, ((-1 : ℝ) ^ T.card) * (
-      (countJointSquarefree b T X : ℝ) / (X : ℝ)) = ∑ T ∈ (Finset.range b).powerset, (
-          ((-1 : ℝ) ^ T.card) * (countJointSquarefree b T X : ℝ)) / (X : ℝ) := by
-    apply Finset.sum_congr rfl
-    intro T _
-    have h₁ : ((-1 : ℝ) ^ T.card) * ((countJointSquarefree b T X : ℝ) / (X : ℝ)) = (
-        ((-1 : ℝ) ^ T.card) * (countJointSquarefree b T X : ℝ)) / (X : ℝ) := by
-      ring_nf
-    rw [h₁]
-  have h_sum_div : ∑ T ∈ (Finset.range b).powerset, (((-1 : ℝ) ^ T.card) * (
-      countJointSquarefree b T X : ℝ)) / (X : ℝ) = (∑ T ∈ (Finset.range b).powerset, (
-          (-1 : ℝ) ^ T.card) * (countJointSquarefree b T X : ℝ)) / (X : ℝ) := by
-    have h₁ : ∑ T ∈ (Finset.range b).powerset, (((-1 : ℝ) ^ T.card) * (
-        countJointSquarefree b T X : ℝ)) / (X : ℝ) = (∑ T ∈ (Finset.range b).powerset, (
-            (-1 : ℝ) ^ T.card) * (countJointSquarefree b T X : ℝ)) / (X : ℝ) := by
-      rw [Finset.sum_div]
-    exact h₁
-  have h_final : ∑ T ∈ (Finset.range b).powerset, ((-1 : ℝ) ^ T.card) * (
-      (countJointSquarefree b T X : ℝ) / (X : ℝ)) = (∑ T ∈ (Finset.range b).powerset, (
-          (-1 : ℝ) ^ T.card) * (countJointSquarefree b T X : ℝ)) / (X : ℝ) := by
-    rw [h_main]
-    rw [h_sum_div]
-  apply h_final
+  rw [Finset.sum_div]
+  apply Finset.sum_congr rfl
+  intro T _
+  ring
 
 /-! ## Main theorems -/
 
-/-- Combining inclusion-exclusion and joint densities to get the main density result.
-    Uses:
-    - joint_density_eq_euler_product for each T (joint density = α(b,T))
-    - dead_end_count_inclusion_exclusion (finite IE for counting)
-    - alternating_sum_tendsto (Tendsto preserved under finite sums)
-    The proof shows countBaseBDeadEnds/X → explicitDensityFormula by:
-    1. Rewriting via finite IE
-    2. Factoring division
-    3. Taking limits term by term -/
+/-- The base-`b` dead-end counting ratios tend to the explicit inclusion-exclusion density. -/
 lemma dead_end_tendsto_explicit_formula (b : ℕ) (hb : 2 ≤ b) :
     Filter.Tendsto (fun X : ℕ => (countBaseBDeadEnds b X : ℝ) / (X : ℝ))
       Filter.atTop (nhds (explicitDensityFormula b)) := by
