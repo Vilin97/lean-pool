@@ -15,7 +15,7 @@ import LeanPool.Isoperimetric.PrekopaLeindler
 Source: url:https://github.com/hojonathanho/isoperimetric
 Authors: Jonathan Ho
 Status: verified
-Main declarations: `prekopa_leindler`, `brunn_minkowski`, `brunn_minkowski_euclideanSpace`, `isoperimetric_inequality`
+Main declarations: `prekopa_leindler`, `brunn_minkowski`, `isoperimetric_inequality`
 Tags: measure-theory, geometric-inequalities
 -/
 

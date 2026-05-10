@@ -114,7 +114,6 @@ projects:
     main_declarations:
       - prekopa_leindler
       - brunn_minkowski
-      - brunn_minkowski_euclideanSpace
       - isoperimetric_inequality
     tags:
       - measure-theory
