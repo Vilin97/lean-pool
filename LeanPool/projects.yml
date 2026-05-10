@@ -71,6 +71,21 @@ projects:
       - pde
       - kinetic-theory
       - mathematical-physics
+  - slug: grothendieck-vanishing
+    title: Grothendieck's Vanishing Theorem
+    entry_module: LeanPool.GrothendieckVanishing
+    authors:
+      - Vasily Ilin
+      - Brian Nugent
+    source:
+      url: "https://github.com/Vilin97/Clawristotle/tree/grothendieck-vanishing"
+    status: verified
+    main_declarations:
+      - GrothendieckVanishing
+    tags:
+      - algebraic-geometry
+      - sheaf-theory
+      - topology
   - slug: partial-regularity
     title: Almost all primes are partially regular
     entry_module: LeanPool.PartialRegularity
