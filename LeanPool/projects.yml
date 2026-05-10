@@ -53,6 +53,24 @@ projects:
     tags:
       - number-theory
       - asymptotics
+  - slug: riemann-mapping-theorem
+    title: Riemann Mapping Theorem
+    entry_module: LeanPool.RiemannMappingTheorem
+    authors:
+      - Vincent Beffara
+    source:
+      url: https://github.com/vbeffara/rMT4
+      github_repo: vbeffara/rmt4
+    status: verified
+    main_declarations:
+      - RMT
+      - main
+      - montel
+      - hurwitz
+    tags:
+      - complex-analysis
+      - conformal-maps
+      - schwarz-lemma
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
