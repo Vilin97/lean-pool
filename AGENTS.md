@@ -41,8 +41,6 @@ Lean Pool requires Lean (via [`elan`](https://leanprover-community.github.io/ins
 make setup    # pull Mathlib oleans, build LeanPool, install Python tooling
 ```
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full dev setup, branch and PR workflow, and coding guidelines.
-
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md).
