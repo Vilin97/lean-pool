@@ -1,0 +1,81 @@
+name: PR Separation Guard
+
+# PRs must not mix pooled formalization content with repository infrastructure.
+# Content files are:
+#   - LeanPool.lean
+#   - LeanPool/**/*.lean
+#   - LeanPool/projects.yml
+# A PR may touch only content files, or only non-content files (.github/,
+# python/, scripts/, docs, lakefile.toml, lean-toolchain, etc.). Mixing both
+# categories fails this gate.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to guard (re-triggers the gate without a push)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  # On a workflow_dispatch the pull_request context is empty, so fall back to
+  # the input PR number; otherwise group by the live PR number as before.
+  group: >-
+    content-pr-guard-${{ github.event.pull_request.number ||
+      inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    name: Content / non-content separation
+    steps:
+      - name: Reject mixed content and non-content changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          files="$(gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate --jq '.[].filename')"
+          echo "Files changed in this PR:"
+          printf '%s\n' "$files" | sed 's/^/  /'
+          echo
+
+          # Content: the mk_all index, any .lean under LeanPool/, projects.yml.
+          content_re='^(LeanPool\.lean|LeanPool/.+\.lean|LeanPool/projects\.yml)$'
+          content="$(printf '%s\n' "$files" | { grep -E "$content_re" || true; })"
+          non_content="$(printf '%s\n' "$files" | { grep -vE "$content_re" || true; })"
+
+          if [ -n "$content" ] && [ -n "$non_content" ]; then
+            echo "::error::This PR mixes content and non-content changes."
+            echo "Content files may be changed only in content-only PRs:"
+            echo "  - LeanPool.lean"
+            echo "  - LeanPool/**/*.lean"
+            echo "  - LeanPool/projects.yml"
+            echo
+            echo "Content files in this PR:"
+            while IFS= read -r f; do
+              [ -n "$f" ] || continue
+              echo "  - $f"
+            done <<< "$content"
+            echo
+            echo "Non-content files in this PR:"
+            while IFS= read -r f; do
+              [ -n "$f" ] || continue
+              echo "  - $f"
+              echo "::error file=$f::mixed with LeanPool content; split content and non-content changes into separate PRs"
+            done <<< "$non_content"
+            exit 1
+          fi
+          if [ -n "$content" ]; then
+            echo "✓ Content-only PR."
+          else
+            echo "✓ Non-content-only PR."
+          fi

@@ -1,4 +1,23 @@
 projects:
+  - slug: ramanujan-tau-misses-primes
+    title: ABC implies that Ramanujan's tau function misses almost all primes
+    entry_module: LeanPool.RamanujanTauMissesPrimes
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      arxiv: "2603.29970"
+    status: verified
+    main_declarations:
+      - main_theorem
+      - reduction_lemma
+      - abc_bound_E2
+      - abc_bound_E4
+    tags:
+      - number-theory
+      - modular-forms
   - slug: fel-conjecture
     title: Fel's Conjecture on Syzygies of Numerical Semigroups
     entry_module: LeanPool.FelConjecture
@@ -9,6 +28,7 @@ projects:
       - Jujian Zhang
     source:
       arxiv: "2602.03716"
+      github_repo: axiommath/fel-polynomial
     status: verified
     main_declarations:
       - fels_conjecture
@@ -16,6 +36,7 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+<<<<<<< HEAD
   - slug: clawristotle
     title: "Clawristotle: Vlasov-Maxwell-Landau steady-state classification"
     entry_module: LeanPool.Clawristotle
@@ -31,3 +52,53 @@ projects:
       - pde
       - kinetic-theory
       - mathematical-physics
+=======
+  - slug: archon-firstproof-results
+    title: Archon-FirstProof-Results
+    entry_module: LeanPool.ArchonFirstProofResults
+    authors:
+      - FrenzyMath
+    source:
+      url: https://github.com/frenzymath/Archon-FirstProof-Results
+    status: verified
+    main_declarations:
+      - Problem4.harmonic_mean_inequality_full
+      - Problem6.exists_eps_light_subset
+    tags:
+      - polynomials
+      - analysis
+      - combinatorics
+      - linear-algebra
+      - graph-theory
+  - slug: erdos1196
+    title: Primitive Sets Above x (Erdős Problem 1196)
+    entry_module: LeanPool.Erdos1196
+    authors:
+      - Math Inc.
+    source:
+      url: "https://github.com/math-inc/Erdos1196"
+    status: verified
+    main_declarations:
+      - PrimitiveSetsAboveX.mainTheorem
+      - Erdos1196.erdos_1196
+    tags:
+      - number-theory
+      - combinatorics
+      - analysis
+  - slug: lattice-triangle
+    title: On the paucity of lattice triangles
+    entry_module: LeanPool.LatticeTriangle
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      arxiv: "2603.23928"
+    status: verified
+    main_declarations:
+      - analyticEngine_lower_bound
+    tags:
+      - number-theory
+      - combinatorics
+>>>>>>> origin/main
