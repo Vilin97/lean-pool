@@ -8,12 +8,10 @@ Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathl
 discover → lint → review → promote
 ```
 
-1. **Discover.** [`reservoir.py`](python/lean_pool/aggregator/reservoir.py) pulls the [Reservoir](https://reservoir.lean-lang.org) manifest of Lean packages. [`manual.py`](python/lean_pool/aggregator/manual.py) supplements it with hand-curated GitHub repos that Reservoir misses.
-2. **Clone.** [`cloner.py`](python/lean_pool/aggregator/cloner.py) shallow-clones each candidate into `candidates/raw_data/clones/`.
-3. **Lint.** [`quality.py`](python/lean_pool/quality.py) runs deterministic checks: no `sorry`/`admit`, no extra axioms beyond `Classical.choice`/`propext`/`Quot.sound`, no `unsafe`/`partial`, header format, size limits, schema validation for `projects.yml`.
-4. **Review.** [`review.py`](python/lean_pool/review.py) calls an LLM against [`.github/REVIEW_RULES.md`](.github/REVIEW_RULES.md) to assess fit, significance, and code quality.
-5. **Render.** [`render.py`](python/lean_pool/aggregator/render.py) regenerates [`candidates/README.md`](candidates/README.md) as a filterable table of every reviewed repo.
-6. **Promote.** Accepted projects are vendored into `LeanPool/` and registered in [`LeanPool/projects.yml`](LeanPool/projects.yml).
+1. **Discover** Lean packages from the [Reservoir](https://reservoir.lean-lang.org) manifest plus a hand-curated list of GitHub repos.
+2. **Lint** with deterministic checks: no `sorry`/`admit`, no extra axioms beyond `Classical.choice`/`propext`/`Quot.sound`, no `unsafe`/`partial`, file headers, and size limits.
+3. **Review** with an LLM against [`.github/REVIEW_RULES.md`](.github/REVIEW_RULES.md) to assess fit, significance, and code quality.
+4. **Promote** accepted projects into `LeanPool/` and register them in [`LeanPool/projects.yml`](LeanPool/projects.yml).
 
 ## Key capabilities
 
@@ -46,10 +44,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full dev setup, branch and PR w
 
 ## Contributing
 
-> [!CAUTION]
-> Direct commits to `main` are not allowed. Every change goes through a pull request and at least one review.
-
-Open PRs early (drafts welcome), use `yourname/description` branch names for solo work, and write commit messages in imperative tense. Full guidelines in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Credits
 
