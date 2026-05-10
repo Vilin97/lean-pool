@@ -17,3 +17,24 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+  - slug: cryptography
+    title: 'Cryptography Experiments In Lean 4: SHA-3 Implementation'
+    entry_module: LeanPool.Cryptography
+    authors:
+      - Gerald Doussot
+    source:
+      url: https://eprint.iacr.org/2024/1880
+      github_repo: gdncc/cryptography
+    status: verified
+    main_declarations:
+      - SHA3_224
+      - SHA3_256
+      - SHA3_384
+      - SHA3_512
+      - SHAKE128
+      - SHAKE256
+      - HashFunction.hashData
+    tags:
+      - cryptography
+      - hash-functions
+      - sha3
