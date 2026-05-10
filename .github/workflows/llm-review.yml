@@ -69,9 +69,11 @@ jobs:
           if [ -z "$head_sha" ]; then
             head_sha=$(gh api "repos/$REPO/pulls/$pr" --jq '.head.sha')
           fi
-          echo "number=$pr" >> "$GITHUB_OUTPUT"
-          echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
-          echo "lean_ci_conclusion=$lean_ci_conclusion" >> "$GITHUB_OUTPUT"
+          {
+            echo "number=$pr"
+            echo "head_sha=$head_sha"
+            echo "lean_ci_conclusion=$lean_ci_conclusion"
+          } >> "$GITHUB_OUTPUT"
           echo "Resolved PR #$pr at $head_sha"
 
       - name: Check whether the PR touches any .lean files
