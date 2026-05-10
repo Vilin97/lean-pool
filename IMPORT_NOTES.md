@@ -38,3 +38,28 @@ The source was on `leanprover/lean4:v4.29.0`; bumped to lean-pool's `v4.30.0-rc2
   `Measure/Construct.lean`) were restructured to avoid the slow `isDefEq` (split the anonymous
   constructor against `Set` membership into per-component `refine ⟨…, ?_, ?_, …⟩` goals after
   `rw [Set.mem_setOf_eq]`; replaced `simp`/`congr` chains with explicit rewrites).
+
+## Status of CI checks (as of this commit)
+
+- `lake exe mk_all --check` — passes.
+- `lake build LeanPool` — **compiles with 0 errors**, but the build log still contains ~298 linter
+  warnings (the `linter.style.*` / `linter.flexible` set is enforced for downstream files via
+  `weak.linter.mathlibStandardSet`). Breakdown: ~92 `linter.style.longLine` (mostly in
+  `General/BesselFunction.lean`, `Spacetime/TimeTranslation.lean`, `Measure/Construct.lean`,
+  `General/L2TimeIntegral.lean`, `GaussianField/SchwartzNuclear/SchwartzHermiteExpansion.lean` —
+  the files where the automated wrapper produced syntax errors, so they were left unwrapped),
+  ~35 `linter.flexible` (flexible `simp`/`simp at` followed by a rigid tactic — the ones without a
+  faithful `simp only [...]` "Try this" suggestion), ~59 `linter.style.multiGoal`, ~25
+  `linter.style.commandStart` whitespace, ~22 `linter.unusedSectionVars` /
+  `linter.unusedDecidableInType` (need carefully-placed `omit [...] in`), ~10
+  `linter.unusedSimpArgs`, ~6 `linter.style.cases` (`cases'`), ~5 `linter.style.decidableStatement`,
+  ~2 `linter.style.induction` (`induction'`), plus a handful of misc.
+- `lake exe runLinter LeanPool` — fails: ~50 `docBlame` ("definition missing documentation string"
+  on vendored `def`s), ~5 `defLemma` ("is a def, should be lemma/theorem"), ~10 `unusedArguments`.
+- `lake exe lint-style LeanPool` — not yet run/cleaned.
+- `python -m lean_pool.quality --repo ..` — the file-header/reachability/projects.yml checks pass;
+  not yet handled: ~8 proof bodies over the 200-line cap (`General/SchwartzTranslationDecay.lean`,
+  `General/QuantitativeDecay.lean`, `OS/OS3_MixedRepInfra.lean` ×3, `Spacetime/TimeTranslation.lean`,
+  `Minlos/MinlosConcentration.lean`, `GaussianField/SchwartzNuclear/HermiteTensorProduct.lean`),
+  and ~9 `def Foo.bar` declarations inside `namespace N` blocks that break the `#print axioms`
+  audit (need rewrapping in a nested `namespace Foo`).
