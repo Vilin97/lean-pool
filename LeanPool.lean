@@ -103,6 +103,11 @@ import LeanPool.FormalLearningTheory.Theorem.PACBayes
 import LeanPool.FormalLearningTheory.Theorem.Separation
 import LeanPool.ForwardEuler
 import LeanPool.ForwardEuler.Main
+import LeanPool.Isoperimetric
+import LeanPool.Isoperimetric.Basic
+import LeanPool.Isoperimetric.BrunnMinkowski
+import LeanPool.Isoperimetric.Isoperimetric
+import LeanPool.Isoperimetric.PrekopaLeindler
 import LeanPool.LatticeTriangle
 import LeanPool.LatticeTriangle.Solution
 import LeanPool.RamanujanTauMissesPrimes
