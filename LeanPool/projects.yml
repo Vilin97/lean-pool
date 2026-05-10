@@ -36,7 +36,6 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
-<<<<<<< HEAD
   - slug: riemann-mapping-theorem
     title: Riemann Mapping Theorem
     entry_module: LeanPool.RiemannMappingTheorem
@@ -55,7 +54,6 @@ projects:
       - complex-analysis
       - conformal-maps
       - schwarz-lemma
-=======
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
@@ -104,4 +102,3 @@ projects:
     tags:
       - number-theory
       - combinatorics
->>>>>>> origin/main
