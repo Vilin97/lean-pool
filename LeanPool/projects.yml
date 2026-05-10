@@ -9,6 +9,7 @@ projects:
       - Jujian Zhang
     source:
       arxiv: "2603.29970"
+      github_repo: AxiomMath/ramanujan-tau-misses-primes
     status: verified
     main_declarations:
       - main_theorem
@@ -36,6 +37,24 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+  - slug: rl-theory-in-lean
+    title: RL Theory in Lean
+    entry_module: LeanPool.RlTheoryInLean
+    authors:
+      - Shangtong Zhang
+    source:
+      arxiv: "2511.03618"
+      github_repo: ShangtongZhang/rl-theory-in-lean
+    status: verified
+    main_declarations:
+      - StochasticMatrix.stationary_distribution_exists
+    tags:
+      - probability
+      - reinforcement-learning
+      - stochastic-matrices
+    msc:
+      - "62L20"
+      - "60J10"
   - slug: clawristotle
     title: "Clawristotle: Vlasov-Maxwell-Landau steady-state classification"
     entry_module: LeanPool.Clawristotle
@@ -43,6 +62,7 @@ projects:
       - Vasily Ilin
     source:
       arxiv: "2603.15929"
+      github_repo: Vilin97/Clawristotle
     status: verified
     main_declarations:
       - VML.Theorem42
@@ -62,6 +82,7 @@ projects:
       - Jujian Zhang
     source:
       arxiv: "2602.05090"
+      github_repo: AxiomMath/partial-regularity
     status: verified
     main_declarations:
       - LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
@@ -93,6 +114,7 @@ projects:
       - FrenzyMath
     source:
       url: https://github.com/frenzymath/Archon-FirstProof-Results
+      github_repo: frenzymath/Archon-FirstProof-Results
     status: verified
     main_declarations:
       - Problem4.harmonic_mean_inequality_full
@@ -110,6 +132,7 @@ projects:
       - Math Inc.
     source:
       url: "https://github.com/math-inc/Erdos1196"
+      github_repo: math-inc/Erdos1196
     status: verified
     main_declarations:
       - PrimitiveSetsAboveX.mainTheorem
@@ -128,6 +151,7 @@ projects:
       - Jujian Zhang
     source:
       arxiv: "2603.23928"
+      github_repo: AxiomMath/lattice-triangle
     status: verified
     main_declarations:
       - analyticEngine_lower_bound
@@ -159,6 +183,7 @@ projects:
       - Abel Doñate Muñoz
     source:
       doi: "10.2307/2033731"
+      github_repo: pitmonticone/SumsThreeSquares
     status: verified
     main_declarations:
       - LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
