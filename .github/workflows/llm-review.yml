@@ -1,16 +1,10 @@
 name: LLM Review
 
-# Triggers:
-#  - pull_request_target opened: first review fires when the PR is opened
-#  - issue_comment containing /review: re-run on demand from a comment
-#  - workflow_dispatch: manual run with a PR number
-#
-# Each run waits for Lean Action CI on the current head SHA and only
-# pays for the gpt-5.5 call when CI is green, so the review never
-# critiques code that doesn't even build. pull_request_target (rather
-# than pull_request) is used so secrets/permissions are available for
-# fork PRs; the workflow only checks out the base branch and never
-# executes code from the PR head.
+# Triggers: pull_request_target (opened), /review issue comment,
+# workflow_dispatch. PRs with no .lean files skip immediately. Otherwise
+# wait for Lean Action CI on the head SHA and only call gpt-5.5 if it's
+# green. pull_request_target gives secrets for fork PRs; we only check
+# out the base branch.
 on:
   pull_request_target:
     types: [opened]
@@ -68,8 +62,36 @@ jobs:
           echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
           echo "Resolved PR #$pr at $head_sha"
 
+      - name: Check whether the PR touches any .lean files
+        id: lean_changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          count=$(gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate \
+                  --jq '[.[] | select(.filename | endswith(".lean"))] | length')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          if [ "$count" -eq 0 ]; then
+            echo "PR #$PR_NUMBER touches no .lean files; skipping Lean CI wait and gpt-5.5 review."
+          else
+            echo "PR #$PR_NUMBER touches $count .lean file(s); will wait for Lean Action CI."
+          fi
+
+      - name: Comment when no .lean files in PR
+        if: steps.lean_changes.outputs.count == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          gh pr comment "$PR_NUMBER" --body \
+            "_LLM review skipped: PR touches no \`.lean\` files. Push a Lean change or comment \`/review\` after one lands to re-trigger._"
+
       - name: Wait for Lean Action CI on this head
         id: wait
+        if: steps.lean_changes.outputs.count != '0'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -102,7 +124,9 @@ jobs:
           echo "Lean Action CI conclusion: $conclusion"
 
       - name: Comment when Lean CI is not green
-        if: steps.wait.outputs.conclusion != 'success'
+        if: >-
+          steps.lean_changes.outputs.count != '0' &&
+          steps.wait.outputs.conclusion != 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
@@ -131,28 +155,8 @@ jobs:
         working-directory: python
         run: uv sync --group review
 
-      - name: Check whether the PR touches any .lean files
-        id: lean_changes
-        if: steps.wait.outputs.conclusion == 'success'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ steps.pr.outputs.number }}
-        run: |
-          set -euo pipefail
-          count=$(gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate \
-                  --jq '[.[] | select(.filename | endswith(".lean"))] | length')
-          echo "count=$count" >> "$GITHUB_OUTPUT"
-          if [ "$count" -eq 0 ]; then
-            echo "PR #$PR_NUMBER touches no .lean files; skipping gpt-5.5 review."
-          else
-            echo "PR #$PR_NUMBER touches $count .lean file(s); proceeding."
-          fi
-
       - name: Run LLM review
-        if: >-
-          steps.wait.outputs.conclusion == 'success' &&
-          steps.lean_changes.outputs.count != '0'
+        if: steps.wait.outputs.conclusion == 'success'
         working-directory: python
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
