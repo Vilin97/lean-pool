@@ -36,7 +36,6 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
-<<<<<<< HEAD
   - slug: clawristotle
     title: "Clawristotle: Vlasov-Maxwell-Landau steady-state classification"
     entry_module: LeanPool.Clawristotle
@@ -52,7 +51,6 @@ projects:
       - pde
       - kinetic-theory
       - mathematical-physics
-=======
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
@@ -101,4 +99,3 @@ projects:
     tags:
       - number-theory
       - combinatorics
->>>>>>> origin/main
