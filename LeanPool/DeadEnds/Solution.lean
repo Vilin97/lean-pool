@@ -406,13 +406,10 @@ lemma multipliable_of_deviation_summable (b : ℕ) (_hb : 2 ≤ b) (T : Finset �
     (_hT : T ⊆ Finset.range b)
     (h_sum : Summable (fun p : Nat.Primes => |localDensityFactor (p : ℕ) b T - 1|)) :
     Multipliable (fun p : Nat.Primes => localDensityFactor (p : ℕ) b T) := by
-  -- Step 1: From Summable |f| get Summable f via Summable.of_abs
   have h_summable : Summable (fun p : Nat.Primes => localDensityFactor (p : ℕ) b T - 1) :=
     Summable.of_abs h_sum
-  -- Step 2: Apply Real.multipliable_one_add_of_summable
   have h_mult : Multipliable (fun p : Nat.Primes => 1 + (localDensityFactor (p : ℕ) b T - 1)) :=
     Real.multipliable_one_add_of_summable h_summable
-  -- Step 3: Simplify 1 + (μ - 1) = μ
   convert h_mult using 1
   ext p
   ring
@@ -519,17 +516,14 @@ lemma prime_sq_coprime (p q : Nat.Primes) (hne : p ≠ q) :
   have h₁ : p ≠ q := hne
   have h₂ : (p : ℕ).Prime := p.prop
   have h₃ : (q : ℕ).Prime := q.prop
-  -- Use the lemma `Nat.coprime_pow_primes` to show that powers of distinct primes are coprime
   have h₄ : ((p : ℕ) ^ 2).Coprime ((q : ℕ) ^ 2) := by
     apply Nat.Coprime.pow_left 2
     apply Nat.Coprime.pow_right 2
-    -- Since p and q are distinct primes, they are coprime
     have h₅ : (p : ℕ) ≠ (q : ℕ) := by
       intro h₅
       apply h₁
       -- If their natural number representations are equal, then the primes are equal
       exact Subtype.ext h₅
-    -- Use the fact that distinct primes are coprime
     exact Nat.coprime_primes h₂ h₃ |>.mpr h₅
   exact h₄
 
@@ -542,14 +536,12 @@ lemma pairwise_coprime_prime_squares (S : Finset Nat.Primes) :
     -- If the underlying natural numbers are equal, then the primes are equal
     -- because the coercion from Nat.Primes to ℕ is injective.
     have h₁ : p = q := by
-      -- Use the fact that the subtype coercion is injective
       apply Subtype.ext
       simpa using h
     exact h₁
   have h_coprime : (p : ℕ).Coprime (q : ℕ) := by
     have h₁ : Nat.Prime (p : ℕ) := p.prop
     have h₂ : Nat.Prime (q : ℕ) := q.prop
-    -- Use the fact that distinct primes are coprime
     have h₃ : (p : ℕ) ≠ (q : ℕ) := h_inj
     have h₄ : (p : ℕ).Coprime (q : ℕ) := by
       apply Nat.coprime_primes h₁ h₂ |>.mpr
@@ -559,17 +551,13 @@ lemma pairwise_coprime_prime_squares (S : Finset Nat.Primes) :
     exact h₄
   have h_pow_left : ((p : ℕ) ^ 2).Coprime (q : ℕ) := by
     have h₂ : (p : ℕ).Coprime (q : ℕ) := h_coprime
-    -- Use the fact that if a and b are coprime, then a ^ 2 and b are coprime.
     have h₃ : ((p : ℕ) ^ 2).Coprime (q : ℕ) := by
-      -- Use the property of coprime numbers raised to powers.
       simpa [Nat.coprime_iff_gcd_eq_one, Nat.gcd_comm] using
         Nat.Coprime.pow_left 2 h₂
     exact h₃
   have h_pow_right : ((p : ℕ) ^ 2).Coprime ((q : ℕ) ^ 2) := by
     have h₂ : ((p : ℕ) ^ 2).Coprime (q : ℕ) := h_pow_left
-    -- Use the fact that if a and b are coprime, then a and b ^ 2 are coprime.
     have h₃ : ((p : ℕ) ^ 2).Coprime ((q : ℕ) ^ 2) := by
-      -- Use the property of coprime numbers raised to powers.
       simpa [Nat.coprime_iff_gcd_eq_one, Nat.gcd_comm] using
         Nat.Coprime.pow_right 2 h₂
     exact h₃
@@ -633,7 +621,6 @@ lemma crtMap_injective_on_range (S : Finset Nat.Primes) :
   -- By CRT, r₁ ≡ r₂ [MOD M]
   have h_modEq_M : r₁ ≡ r₂ [MOD primeSquareProduct S] :=
     modEq_primeSquareProduct_of_forall_modEq S r₁ r₂ h_modEq
-  -- Since both are < M, they are equal
   exact Nat.ModEq.eq_of_lt_of_lt h_modEq_M hr₁ hr₂
 
 lemma dvd_iff_mod_dvd (p : ℕ) (_hp : 0 < p ^ 2) (r : ℕ) :
@@ -645,22 +632,18 @@ lemma shifted_dvd_iff_mod (p b d r : ℕ) (_hp : 0 < p ^ 2) :
     p ^ 2 ∣ (b * r + d) ↔ p ^ 2 ∣ (b * (r % (p ^ 2)) + d) := by
   have h₁ : b * r + d ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by
     have h₂ : r ≡ r % (p ^ 2) [MOD p ^ 2] := by
-      -- Use the property that any number is congruent to its remainder modulo p²
       have h₃ : r % (p ^ 2) = r % (p ^ 2) := rfl
       simp [Nat.ModEq]
     -- Multiply both sides by b and add d to get the desired congruence
     have h₃ : b * r + d ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by
       calc
         b * r + d ≡ b * (r % (p ^ 2)) + d [MOD p ^ 2] := by
-          -- Use the fact that multiplication and addition preserve congruence
           have h₄ : b * r ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by
             -- Multiply both sides of the congruence r ≡ r % (p²) by b
             calc
               b * r ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by
-                -- Use the property of congruence under multiplication
                 have h₅ : r ≡ r % (p ^ 2) [MOD p ^ 2] := h₂
                 have h₆ : b * r ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by
-                  -- Use the property of congruence under multiplication
                   calc
                     b * r ≡ b * (r % (p ^ 2)) [MOD p ^ 2] := by
                       exact Nat.ModEq.mul_left b h₅
@@ -683,11 +666,9 @@ lemma shifted_dvd_iff_mod (p b d r : ℕ) (_hp : 0 < p ^ 2) :
       intro h₃
       have h₄ : p ^ 2 ∣ (b * r + d) := h₃
       have h₅ : p ^ 2 ∣ (b * (r % (p ^ 2)) + d) := by
-        -- Use the fact that b*r + d ≡ b*(r % p²) + d [MOD p²]
         have h₆ : (b * r + d) % (p ^ 2) = (b * (r % (p ^ 2)) + d) % (p ^ 2) := by
           rw [Nat.ModEq] at h₁
           exact h₁
-        -- Since p² divides b*r + d, (b*r + d) % p² = 0
         have h₈ : (b * (r % (p ^ 2)) + d) % (p ^ 2) = 0 := by
           omega
         -- So p² divides b*(r % p²) + d
@@ -699,11 +680,9 @@ lemma shifted_dvd_iff_mod (p b d r : ℕ) (_hp : 0 < p ^ 2) :
       intro h₃
       have h₄ : p ^ 2 ∣ (b * (r % (p ^ 2)) + d) := h₃
       have h₅ : p ^ 2 ∣ (b * r + d) := by
-        -- Use the fact that b*r + d ≡ b*(r % p²) + d [MOD p²]
         have h₆ : (b * r + d) % (p ^ 2) = (b * (r % (p ^ 2)) + d) % (p ^ 2) := by
           rw [Nat.ModEq] at h₁
           exact h₁
-        -- Since p² divides b*(r % p²) + d, (b*(r % p²) + d) % p² = 0
         have h₈ : (b * r + d) % (p ^ 2) = 0 := by
           omega
         -- So p² divides b*r + d
@@ -717,106 +696,27 @@ lemma valid_iff_locally_valid (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes)
     (∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ r) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ (b * r + d))) ↔
     (∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ (r % (p : ℕ) ^ 2)) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ (b * (r % (p : ℕ) ^ 2) +
         d))) := by
-  apply Iff.intro
-  · -- Prove the forward direction: if the original condition holds, then the local condition holds.
-    intro h p hp
-    have h₁ : ¬((p : ℕ) ^ 2 ∣ r) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ (b * r + d)) := h p hp
-    have h₂ : ¬((p : ℕ) ^ 2 ∣ (r % (p : ℕ) ^ 2)) := by
-      have h₄ : (p : ℕ) ^ 2 ∣ r ↔ (p : ℕ) ^ 2 ∣ (r % (p : ℕ) ^ 2) := by
-        have h₅ : (p : ℕ) ^ 2 ∣ r ↔ r % (p : ℕ) ^ 2 = 0 := by
-          simp [Nat.dvd_iff_mod_eq_zero]
-        have h₆ : (p : ℕ) ^ 2 ∣ (r % (p : ℕ) ^ 2) ↔ r % (p : ℕ) ^ 2 = 0 := by
-          simp [Nat.dvd_iff_mod_eq_zero]
-        simp_all [Nat.pow_succ]
-      simp_all
-    have h₃ : ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ (b * (r % (p : ℕ) ^ 2) + d)) := by
-      intro d hd
-      have h₄ : ¬((p : ℕ) ^ 2 ∣ (b * r + d)) := h₁.2 d hd
-      have h₅ : (b * r + d) % (p : ℕ) ^ 2 = (b * (r % (p : ℕ) ^ 2) + d) % (p : ℕ) ^ 2 := by
-        have h₆ : (b * r) % (p : ℕ) ^ 2 = (b * (r % (p : ℕ) ^ 2)) % (p : ℕ) ^ 2 := by
-          have h₈ : (b * r) % (p : ℕ) ^ 2 = (b * (r % (p : ℕ) ^ 2)) % (p : ℕ) ^ 2 := by
-            calc
-              (b * r) % (p : ℕ) ^ 2 = (b * r) % (p : ℕ) ^ 2 := rfl
-              _ = (b * (r % (p : ℕ) ^ 2)) % (p : ℕ) ^ 2 := by
-                simp [Nat.mul_mod]
-          exact h₈
-        have h₉ : (b * r + d) % (p : ℕ) ^ 2 = ((b * r) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (
-            p : ℕ) ^ 2 := by
-          simp [Nat.add_mod]
-        have h₁₀ : (b * (r % (p : ℕ) ^ 2) + d) % (p : ℕ) ^ 2 = ((b * (r % (p : ℕ) ^ 2)) % (
-            p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 := by
-          simp [Nat.add_mod]
-        have h₁₁ : ((b * r) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 = ((b * (r % (
-            p : ℕ) ^ 2)) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 := by
-          rw [h₆]
-        calc
-          (b * r + d) % (p : ℕ) ^ 2 = ((b * r) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 := by
-              rw [h₉]
-          _ = ((b * (r % (p : ℕ) ^ 2)) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 := by rw [h₁₁]
-          _ = (b * (r % (p : ℕ) ^ 2) + d) % (p : ℕ) ^ 2 := by rw [h₁₀]
-      have h₆ : ¬((p : ℕ) ^ 2 ∣ (b * (r % (p : ℕ) ^ 2) + d)) := by
-        intro h₇
-        have h₈ : (b * (r % (p : ℕ) ^ 2) + d) % (p : ℕ) ^ 2 = 0 := by
-          exact Nat.mod_eq_zero_of_dvd h₇
-        have h₉ : (b * r + d) % (p : ℕ) ^ 2 = 0 := by
-          rw [h₅] at *
-          exact h₈
-        have h₁₀ : (p : ℕ) ^ 2 ∣ (b * r + d) := by
-          have h₁₁ : (b * r + d) % (p : ℕ) ^ 2 = 0 := h₉
-          exact Nat.dvd_of_mod_eq_zero h₁₁
-        exact h₄ h₁₀
-      exact h₆
-    exact ⟨h₂, h₃⟩
-  -- Prove the backward direction: if the local condition holds, then the original condition holds.
+  constructor
   · intro h p hp
-    have h₁ : ¬((p : ℕ) ^ 2 ∣ (r % (p : ℕ) ^ 2)) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ (b * (r % (p : ℕ) ^ 2) +
-        d)) := h p hp
-    have h₂ : ¬((p : ℕ) ^ 2 ∣ r) := by
-      have h₄ : (p : ℕ) ^ 2 ∣ r ↔ (p : ℕ) ^ 2 ∣ (r % (p : ℕ) ^ 2) := by
-        have h₅ : (p : ℕ) ^ 2 ∣ r ↔ r % (p : ℕ) ^ 2 = 0 := by
-          simp [Nat.dvd_iff_mod_eq_zero]
-        have h₆ : (p : ℕ) ^ 2 ∣ (r % (p : ℕ) ^ 2) ↔ r % (p : ℕ) ^ 2 = 0 := by
-          simp [Nat.dvd_iff_mod_eq_zero]
-        simp_all [Nat.pow_succ]
-      simp_all
-    have h₃ : ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ (b * r + d)) := by
-      intro d hd
-      have h₄ : ¬((p : ℕ) ^ 2 ∣ (b * (r % (p : ℕ) ^ 2) + d)) := h₁.2 d hd
-      have h₅ : (b * r + d) % (p : ℕ) ^ 2 = (b * (r % (p : ℕ) ^ 2) + d) % (p : ℕ) ^ 2 := by
-        have h₆ : (b * r) % (p : ℕ) ^ 2 = (b * (r % (p : ℕ) ^ 2)) % (p : ℕ) ^ 2 := by
-          have h₈ : (b * r) % (p : ℕ) ^ 2 = (b * (r % (p : ℕ) ^ 2)) % (p : ℕ) ^ 2 := by
-            calc
-              (b * r) % (p : ℕ) ^ 2 = (b * r) % (p : ℕ) ^ 2 := rfl
-              _ = (b * (r % (p : ℕ) ^ 2)) % (p : ℕ) ^ 2 := by
-                simp [Nat.mul_mod]
-          exact h₈
-        have h₉ : (b * r + d) % (p : ℕ) ^ 2 = ((b * r) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (
-            p : ℕ) ^ 2 := by
-          simp [Nat.add_mod]
-        have h₁₀ : (b * (r % (p : ℕ) ^ 2) + d) % (p : ℕ) ^ 2 = ((b * (r % (p : ℕ) ^ 2)) % (
-            p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 := by
-          simp [Nat.add_mod]
-        have h₁₁ : ((b * r) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 = ((b * (r % (
-            p : ℕ) ^ 2)) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 := by
-          rw [h₆]
-        calc
-          (b * r + d) % (p : ℕ) ^ 2 = ((b * r) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 := by
-              rw [h₉]
-          _ = ((b * (r % (p : ℕ) ^ 2)) % (p : ℕ) ^ 2 + d % (p : ℕ) ^ 2) % (p : ℕ) ^ 2 := by rw [h₁₁]
-          _ = (b * (r % (p : ℕ) ^ 2) + d) % (p : ℕ) ^ 2 := by rw [h₁₀]
-      have h₆ : ¬((p : ℕ) ^ 2 ∣ (b * r + d)) := by
-        intro h₇
-        have h₈ : (b * r + d) % (p : ℕ) ^ 2 = 0 := by
-          exact Nat.mod_eq_zero_of_dvd h₇
-        have h₉ : (b * (r % (p : ℕ) ^ 2) + d) % (p : ℕ) ^ 2 = 0 := by
-          rw [h₅] at *
-          exact h₈
-        have h₁₀ : (p : ℕ) ^ 2 ∣ (b * (r % (p : ℕ) ^ 2) + d) := by
-          have h₁₁ : (b * (r % (p : ℕ) ^ 2) + d) % (p : ℕ) ^ 2 = 0 := h₉
-          exact Nat.dvd_of_mod_eq_zero h₁₁
-        exact h₄ h₁₀
-      exact h₆
-    exact ⟨h₂, h₃⟩
+    have hp_pos : 0 < (p : ℕ) ^ 2 := pow_pos (Nat.Prime.pos p.2) 2
+    constructor
+    · intro hmod
+      have hzero : r % (p : ℕ) ^ 2 = 0 :=
+        Nat.eq_zero_of_dvd_of_lt hmod (Nat.mod_lt r hp_pos)
+      exact (h p hp).1 ((dvd_iff_mod_dvd (p : ℕ) hp_pos r).mpr hzero)
+    · intro d hd hmod
+      exact (h p hp).2 d hd ((shifted_dvd_iff_mod (p : ℕ) b d r hp_pos).mpr hmod)
+  · intro h p hp
+    have hp_pos : 0 < (p : ℕ) ^ 2 := pow_pos (Nat.Prime.pos p.2) 2
+    constructor
+    · intro hr
+      have hzero := (dvd_iff_mod_dvd (p : ℕ) hp_pos r).mp hr
+      have hmod : (p : ℕ) ^ 2 ∣ r % (p : ℕ) ^ 2 := by
+        rw [hzero]
+        simp
+      exact (h p hp).1 hmod
+    · intro d hd hr
+      exact (h p hp).2 d hd ((shifted_dvd_iff_mod (p : ℕ) b d r hp_pos).mp hr)
 
 /-- For any prime p, p² ≠ 0.
     This is needed to apply `Nat.chineseRemainderOfFinset`.
@@ -830,7 +730,6 @@ lemma prime_sq_ne_zero (p : Nat.Primes) : (p : ℕ) ^ 2 ≠ 0 := by
 lemma crt_surjective (S : Finset Nat.Primes) (t : (p : Nat.Primes) → p ∈ S → ℕ)
     (ht : ∀ p (hp : p ∈ S), t p hp < (p : ℕ) ^ 2) :
     ∃ r, r < primeSquareProduct S ∧ ∀ p (hp : p ∈ S), r % ((p : ℕ) ^ 2) = t p hp := by
-  -- Define the modulus function and residue function for chineseRemainderOfFinset
   let s : Nat.Primes → ℕ := fun p => (p : ℕ) ^ 2
   let a : Nat.Primes → ℕ := fun p => if h : p ∈ S then t p h else 0
   -- Apply CRT
@@ -852,10 +751,8 @@ lemma crt_surjective (S : Finset Nat.Primes) (t : (p : Nat.Primes) → p ∈ S �
 lemma crtMap_mapsTo_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (r : ℕ)
     (hr : r ∈ validResiduesMod b T S) (p : Nat.Primes) (hp : p ∈ S) :
     r % ((p : ℕ) ^ 2) ∈ localValidResidues (p : ℕ) b T := by
-  -- Get the validity condition from hr
   simp only [validResiduesMod, Finset.mem_filter, Finset.mem_range] at hr
   obtain ⟨_, hvalid⟩ := hr
-  -- Get the specific condition for our prime p
   have hp_cond := hvalid p hp
   -- Show r % p² is in range
   have hp_sq_pos : 0 < (p : ℕ) ^ 2 := sq_pos_of_pos p.prop.pos
@@ -895,7 +792,6 @@ lemma not_dvd_of_mod_eq_not_dvd (p r f : ℕ) (_hp : 0 < p ^ 2) (hr_eq : r % p ^
       have h₃ := Nat.mod_eq_zero_of_dvd h₁
       exact h₃
     exact h₂
-  -- Since r % p ^ 2 = f and r % p ^ 2 = 0, we have f = 0.
   have h_f_eq_zero : f = 0 := by
     linarith
   -- If f = 0, then p² divides f (since p² is positive).
@@ -972,7 +868,6 @@ lemma crt_inverse_mapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes)
 
 lemma validResidues_equiv_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) :
     Nonempty ((validResiduesMod b T S) ≃ (S.pi (fun p => localValidResidues (p : ℕ) b T))) := by
-  -- Define the forward map from validResiduesMod to the pi Finset
   have hfwd : ∀ r, r ∈ validResiduesMod b T S →
       (fun p (hp : p ∈ S) => r % ((p : ℕ) ^ 2)) ∈ S.pi (fun p => localValidResidues (p : ℕ) b T) :=
           by
@@ -1046,16 +941,12 @@ lemma validResidues_card_eq_mul (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT 
     (S : Finset Nat.Primes) :
     ((validResiduesMod b T S).card : ℝ) =
       (primeSquareProduct S : ℝ) * localDensityProduct b T S := by
-  -- Step 1: |validResiduesMod| = ∏ |localValidResidues|
   rw [validResiduesMod_card_eq_prod]
-  -- Step 2: Each |localValidResidues p| = p² × localDensityFactor p
   conv_lhs =>
     arg 2
     ext p
     rw [localValidResidues_card_eq p p.prop b T]
-  -- Step 3: ∏ (p² × localDensityFactor) = (∏ p²) × (∏ localDensityFactor)
   rw [Finset.prod_mul_distrib]
-  -- Step 4: Simplify using definitions
   simp only [primeSquareProduct, localDensityProduct, Nat.cast_prod, Nat.cast_pow]
 
 /-- Key lemma 3: The product of values in [0,1] is at most 1.
@@ -1080,33 +971,24 @@ lemma dvd_iff_of_mod_eq_primeSquareProduct (S : Finset Nat.Primes) (p : Nat.Prim
     (N₁ N₂ : ℕ) (hmod : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S) :
     ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
   have h₁ : (p : ℕ) ^ 2 ∣ primeSquareProduct S := by
-    -- Prove that p² divides the product of squares of primes in S
     have h₂ : (p : ℕ) ^ 2 ∣ ∏ q ∈ S, (q : ℕ) ^ 2 := by
-      -- Since p is in S, p² is a factor of the product
       have h₃ : p ∈ S := hp
       have h₅ : (p : ℕ) ^ 2 ∣ ∏ q ∈ S, (q : ℕ) ^ 2 := by
-        -- Use the fact that if p is in S, then p² divides the product
         apply Finset.dvd_prod_of_mem; simpa using h₃
       exact h₅
     -- Convert the product to the definition of primeSquareProduct
     simpa [primeSquareProduct] using h₂
-  -- Use the given congruence and the fact that p² divides the modulus to get the desired
   -- equivalence
   have h₂ : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S := hmod
   have h₃ : N₁ ≡ N₂ [MOD primeSquareProduct S] := by
     -- Convert the modulus equality to congruence
     rw [Nat.ModEq]; simp_all
-  -- Apply the theorem that if a ≡ b mod m and d divides m, then d divides a iff d divides b
   have h₄ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
     have h₇ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
-      -- Use the fact that p² divides the modulus to get the equivalence
       have h₉ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
-        -- Use the theorem Nat.ModEq.dvd_iff
         have h₁₀ : N₁ ≡ N₂ [MOD primeSquareProduct S] := h₃
         have h₁₁ : (p : ℕ) ^ 2 ∣ primeSquareProduct S := h₁
-        -- Apply the theorem
         have h₁₂ : ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
-          -- Use the theorem Nat.ModEq.dvd_iff
           apply Nat.ModEq.dvd_iff h₁₀; exact h₁₁
         exact h₁₂
       exact h₉
@@ -1259,25 +1141,21 @@ lemma completeBlock_surjOn (M k : ℕ) (hM : 0 < M) :
     intro r hr
     have h₂ : r < M := Finset.mem_range.mp hr
     have h₃ : r ≤ M := by linarith
-    -- Case when r = 0
     by_cases h₄ : r = 0
     · -- If r = 0, we take N = (k + 1) * M
       have h₅ : ((k + 1) * M : ℕ) ∈ (completeBlock M k : Set ℕ) := by
-        -- Prove that (k + 1) * M is in the complete block
         simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
         constructor <;>
         (try norm_num);
         (try ring_nf);
         (try nlinarith)
       refine ⟨(k + 1) * M, h₅, ?_⟩
-      -- Prove that ((k + 1) * M) % M = 0
       have h₆ : ((k + 1) * M : ℕ) % M = 0 := by
         simp
       rw [h₄] at *
       omega
     · -- If r ≠ 0, we take N = k * M + r
       have h₅ : (k * M + r : ℕ) ∈ (completeBlock M k : Set ℕ) := by
-        -- Prove that k * M + r is in the complete block
         simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
         constructor
         · -- Prove k * M + 1 ≤ k * M + r
@@ -1290,7 +1168,6 @@ lemma completeBlock_surjOn (M k : ℕ) (hM : 0 < M) :
         · -- Prove k * M + r ≤ (k + 1) * M
           nlinarith
       refine ⟨(k * M + r : ℕ), h₅, ?_⟩
-      -- Prove that (k * M + r) % M = r
       have h₆ : (k * M + r : ℕ) % M = r % M := by
         have h₇ : (k * M + r : ℕ) % M = r % M := by
           simp [Nat.add_mod]
@@ -1301,7 +1178,6 @@ lemma completeBlock_surjOn (M k : ℕ) (hM : 0 < M) :
         have h₉ : r % M = r := Nat.mod_eq_of_lt h₈
         exact h₉
       omega
-  -- Use the previous result to prove that (· % M) is surjective on completeBlock M k onto
   -- Finset.range M
   intro r hr
   have h₂ : r ∈ (Finset.range M : Set ℕ) := hr
@@ -1383,7 +1259,6 @@ lemma filter_surjOn (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (k : ℕ)
   intro M P r hr
   simp only [Finset.coe_filter, Set.mem_setOf_eq] at hr
   obtain ⟨hr_range, hr_P⟩ := hr
-  -- Get N from surjectivity of base map
   have hM : 0 < M := primeSquareProduct_pos S
   have hsurj := completeBlock_surjOn M k hM
   rw [Set.SurjOn] at hsurj
@@ -1633,7 +1508,6 @@ lemma completeBlock_disjoint_partialBlock (M X : ℕ) (_hM : 0 < M) (k : ℕ) (h
     have h₁₁ : n ≤ (X / M) * M := by
       linarith
     omega
-  -- Use the empty intersection to conclude disjointness
   exact Finset.disjoint_iff_inter_eq_empty.mpr h₁
 
 lemma biUnion_completeBlocks_disjoint_partialBlock (M X : ℕ) (_hM : 0 < M) :
@@ -1641,11 +1515,9 @@ lemma biUnion_completeBlocks_disjoint_partialBlock (M X : ℕ) (_hM : 0 < M) :
   have h_main : Disjoint ((Finset.range (X / M)).biUnion (completeBlock M)) (partialBlock M X) := by
     rw [Finset.disjoint_left]
     intro x hx₁ hx₂
-    -- Use the property of the biUnion to get a specific k such that x is in completeBlock M k
     have h₁ : ∃ k, k ∈ Finset.range (X / M) ∧ x ∈ completeBlock M k := by
       simpa [Finset.mem_biUnion] using hx₁
     obtain ⟨k, hk₁, hk₂⟩ := h₁
-    -- Use the fact that each complete block is disjoint from the partial block to derive a
     -- contradiction
     have h₂ : x ∉ partialBlock M X := by
       have h₃ : k < X / M := Finset.mem_range.mp hk₁
@@ -1764,7 +1636,6 @@ lemma div_sub_one_le_div (M X n : ℕ) (hn_pos : 1 ≤ n) (hn_le : n ≤ X) :
     (n - 1) / M ≤ X / M := by
   have h : n - 1 ≤ X := by
     omega
-  -- Use the fact that (n - 1) / M ≤ X / M if n - 1 ≤ X
   have h₁ : (n - 1) / M ≤ X / M := by
     apply Nat.div_le_div_right; omega
   exact h₁
@@ -1863,9 +1734,7 @@ lemma count_eq_sum_blocks (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X 
   -- Let P be the filtering predicate
   set P := fun N => ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d) with hP
   have hM : 0 < M := primeSquareProduct_pos S
-  -- Step 1: Rewrite [1,X] as biUnion of blocks ∪ partial block
   have h_partition := Icc_eq_biUnion_union_partialBlock M X hM
-  -- Step 2: The count is the card of filter P over the partition
   calc count
       = ((Finset.Icc 1 X).filter P).card := rfl
     _ = ((((Finset.range (X / M)).biUnion (completeBlock M)) ∪ partialBlock M X).filter P).card :=
@@ -1905,8 +1774,6 @@ lemma count_upper_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
       ((partialBlock M X).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card := hdecomp
   rw [hcount_eq]
-  -- Bound: sum over blocks + partial ≤ (X/M)*|A| + |A| = (X/M + 1)*|A|
-  -- Each complete block contributes exactly |A|
   have hblock : ∀ k, ((completeBlock M k).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card = A.card :=
     fun k => completeBlock_valid_count b T S k
@@ -1921,7 +1788,6 @@ lemma count_upper_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
   have hpartial : ((partialBlock M X).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card ≤ A.card :=
     partialBlock_valid_count_le b T S X
-  -- Combine: (X/M)*|A| + partial ≤ (X/M)*|A| + |A| = (X/M + 1)*|A|
   calc X / M * A.card + ((partialBlock M X).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card
       ≤ X / M * A.card + A.card := Nat.add_le_add_left hpartial _
@@ -1970,15 +1836,12 @@ lemma count_real_bounds (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Fi
         ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card
     (q : ℝ) * M * L ≤ count ∧ (count : ℝ) ≤ (q + 1) * M * L := by
   intro M L q count
-  -- Get integer bounds from count_bounds
   have hbounds := count_bounds b T S X
   simp only at hbounds
-  -- Get |A| = M * L
   have hA := validResidues_card_eq_mul b hb T hT S
   -- Lower bound: q * |A| ≤ count
   constructor
   · -- Need: q * M * L ≤ count
-    -- From hbounds.1: q * |A| ≤ count (as ℕ)
     -- From hA: |A| = M * L
     calc (q : ℝ) * M * L = q * (M * L) := by ring
       _ = q * (validResiduesMod b T S).card := by rw [← hA]
@@ -1995,54 +1858,18 @@ lemma xL_real_bounds (X M : ℕ) (L : ℝ) (hL : 0 ≤ L) (hM : 0 < M) :
     let q := X / M
     (q : ℝ) * M * L ≤ (X : ℝ) * L ∧ (X : ℝ) * L ≤ (q + 1) * M * L := by
   intro q
-  have h₁ : (q : ℕ) = X / M := rfl
-  have h₂ : (q : ℝ) * M * L ≤ (X : ℝ) * L := by
-    have h₃ : (q : ℕ) * M ≤ X := by
-      have h₄ : (q : ℕ) = X / M := rfl
-      have h₅ : (X / M : ℕ) * M ≤ X := by
-        have h₆ : (X / M : ℕ) * M ≤ X := Nat.div_mul_le_self X M
-        exact h₆
-      simpa [h₄] using h₅
-    have h₄ : (q : ℝ) * M ≤ (X : ℝ) := by
-      have h₅ : (q : ℕ) * M ≤ X := h₃
-      have h₇ : ((q : ℕ) * M : ℝ) ≤ (X : ℝ) := by
-        norm_cast at h₅ ⊢
-      linarith
-    have h₅ : (q : ℝ) * M * L ≤ (X : ℝ) * L := by
-      nlinarith
-    exact h₅
-  have h₃ : (X : ℝ) * L ≤ (q + 1) * M * L := by
-    have h₄ : X ≤ (q : ℕ) * M + M := by
-      have h₅ : (q : ℕ) = X / M := rfl
-      have h₆ : X ≤ (X / M : ℕ) * M + M := by
-        have h₇ : X < (X / M + 1) * M := by
-          have h₈ : X < (X / M + 1) * M := by
-            have h₁₀ : X < (X / M + 1) * M := by
-              nlinarith [Nat.div_add_mod X M, Nat.mod_lt X (by positivity : 0 < M)]
-            exact h₁₀
-          exact h₈
-        have h₈ : X ≤ (X / M : ℕ) * M + M := by
-          have h₉ : X < (X / M + 1) * M := h₇
-          have h₁₀ : (X / M + 1) * M = (X / M : ℕ) * M + M := by
-            ring_nf
-          rw [h₁₀] at h₉
-          omega
-        exact h₈
-      simpa [h₅] using h₆
-    have h₅ : (X : ℝ) ≤ ((q : ℕ) * M + M : ℝ) := by
-      have h₆ : X ≤ (q : ℕ) * M + M := h₄
-      norm_cast at h₆ ⊢
-    have h₆ : (X : ℝ) * L ≤ ((q : ℕ) * M + M : ℝ) * L := by
-      nlinarith
-    have h₇ : ((q : ℕ) * M + M : ℝ) * L = (q + 1 : ℝ) * M * L := by
-      have h₉ : ((q : ℕ) * M + M : ℝ) = (q + 1 : ℝ) * M := by
-        norm_cast; simp [h₁]; ring_nf
-      calc
-        ((q : ℕ) * M + M : ℝ) * L = ((q + 1 : ℝ) * M) * L := by rw [h₉]
-        _ = (q + 1 : ℝ) * M * L := by ring
-    rw [h₇] at h₆
-    exact h₆
-  exact ⟨h₂, h₃⟩
+  have hfloor := floor_div_bounds X M hM
+  constructor
+  · have hqM : q * M ≤ X := by
+      simpa [q] using hfloor.1
+    have hqM_real : (q : ℝ) * M ≤ (X : ℝ) := by
+      exact_mod_cast hqM
+    nlinarith
+  · have hXle : X ≤ (q + 1) * M := by
+      simpa [q] using Nat.le_of_lt hfloor.2
+    have hXle_real : (X : ℝ) ≤ (q + 1 : ℝ) * M := by
+      exact_mod_cast hXle
+    nlinarith
 
 lemma final_error_bound {count X M : ℕ} {L : ℝ} {q : ℕ}
     (hcount_lo : (q : ℝ) * M * L ≤ count)
@@ -2064,23 +1891,7 @@ lemma error_bound_empty_case (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT : T
     let count := ((Finset.Icc 1 X).filter fun N =>
         ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card
     |(count : ℝ) - (X : ℝ) * L| ≤ (M : ℝ) := by
-  have h_prod_pos : 0 < primeSquareProduct S := by
-    have h₁ : ∀ (p : Nat.Primes), 0 < (p : ℕ) ^ 2 := by
-      intro p
-      have h₂ : 0 < (p : ℕ) := by
-        exact Nat.cast_pos.mpr (Nat.Prime.pos p.2)
-      positivity
-    -- Use the fact that the product of positive numbers is positive
-    have h₂ : 0 < ∏ p ∈ S, (p : ℕ) ^ 2 := by
-      apply Finset.prod_pos
-      intro p _
-      exact h₁ p
-    -- Since the product is positive, it is greater than 0
-    simpa [primeSquareProduct] using h₂
-  have h_false : False := by
-    linarith
-  exfalso
-  exact h_false
+  exact (Nat.ne_of_gt (primeSquareProduct_pos S) hM).elim
 
 /-- Key lemma 6: Both the count and X·L lie in the interval [q·M·L, (q+1)·M·L],
     so their difference is at most M·L ≤ M.
@@ -2098,19 +1909,14 @@ lemma error_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.r
         ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card
     |(count : ℝ) - (X : ℝ) * L| ≤ (M : ℝ) := by
   intro M L count
-  -- Step 1: Get the interval bounds for count and X*L
   have hcount := count_real_bounds b hb T hT S X
   have hL_nonneg := localDensityProduct_nonneg b T S
   have hL_le_one := localDensityProduct_le_one b T S
-  -- Step 2: Get the bounds for X*L
-  -- Need to handle the M = 0 case (empty S)
   by_cases hM : M = 0
-  · -- If M = 0, the edge case lemma applies
-    exact error_bound_empty_case b hb T hT S X hM
-  · -- M > 0
+  · exact error_bound_empty_case b hb T hT S X hM
+  ·
     have hM_pos : 0 < M := Nat.pos_of_ne_zero hM
     have hxL := xL_real_bounds X M L hL_nonneg hM_pos
-    -- Step 3: Apply final_error_bound with the derived bounds
     exact final_error_bound hcount.1 hcount.2 hxL.1 hxL.2 hL_nonneg hL_le_one
 
 lemma count_finite_prime_approx (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
@@ -2128,16 +1934,12 @@ lemma hasProd_implies_finite_approx (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ)
     (hT : T ⊆ Finset.range b) (ε : ℝ) (hε : 0 < ε) :
     ∃ A : Finset Nat.Primes, ∀ S : Finset Nat.Primes, A ⊆ S →
       |∏ p ∈ S, localDensityFactor (p : ℕ) b T - jointSquarefreeDensity b T| < ε := by
-  -- Step 1: Get multipliability and hasProd
   have h_multi := jointSquarefreeDensity_multipliable b hb T hT
   have h_hasProd := Multipliable.hasProd h_multi
-  -- Step 2: Convert HasProd to Tendsto
   rw [HasProd.eq_1] at h_hasProd
   simp only [SummationFilter.unconditional_filter] at h_hasProd
-  -- Step 3: Use Metric.tendsto_nhds to get eventually statement
   rw [Metric.tendsto_nhds] at h_hasProd
   specialize h_hasProd ε hε
-  -- Step 4: Extract existence from eventually atTop
   rw [Filter.eventually_atTop] at h_hasProd
   obtain ⟨A, hA⟩ := h_hasProd
   use A
@@ -2153,9 +1955,7 @@ lemma finite_product_converges_to_density (b : ℕ) (hb : 2 ≤ b)
     (T : Finset ℕ) (hT : T ⊆ Finset.range b) (ε : ℝ) (hε : 0 < ε) :
     ∃ y : ℕ, ∀ S : Finset Nat.Primes, (∀ p : Nat.Primes, (p : ℕ) ≤ y → p ∈ S) →
       |∏ p ∈ S, localDensityFactor (p : ℕ) b T - jointSquarefreeDensity b T| < ε := by
-  -- Get the finite set A that approximates the infinite product within ε
   obtain ⟨A, hA⟩ := hasProd_implies_finite_approx b hb T hT ε hε
-  -- Define y as the maximum prime in A (or 0 if A is empty)
   use A.image (fun p : Nat.Primes => (p : ℕ)) |>.sup id
   intro S hS
   apply hA S
@@ -2422,280 +2222,19 @@ lemma tsum_primes_gt_le_tsum_compl (f : Nat.Primes → ℝ) (hf : ∀ p, 0 ≤ f
 lemma exists_finset_tsum_compl_lt (f : Nat.Primes → ℝ) (_hf : ∀ p, 0 ≤ f p) (_hsum : Summable f)
     (ε : ℝ) (hε : 0 < ε) :
     ∃ s : Finset Nat.Primes, ∑' (p : {q : Nat.Primes // q ∉ s}), f p < ε := by
-  have h₁ : Filter.Tendsto (fun s : Finset Nat.Primes => ∑' (p : {q : Nat.Primes // q ∉ s}),
-      f p) Filter.atTop (nhds 0) := by
-    have h₄ : Filter.Tendsto (fun s : Finset Nat.Primes => ∑' (p : {q : Nat.Primes // q ∉ s}),
-        f p) Filter.atTop (nhds 0) := by
-      -- Use the fact that the sum over the complement tends to 0 as the set grows
-      -- This is a lemma in the Lean library, but we need to find the correct application.
-      -- We use the fact that the sum over the complement of an increasing sequence of sets tends to
-      -- 0.
-      -- We can use the fact that the sum over the complement of all finite sets is 0.
-      -- We use the fact that the sum over the complement of a finite set is less than the sum over
-      -- all primes.
-      -- We use the fact that the sum over all primes is finite because f is summable.
-      -- We use the fact that the sum over the complement of a finite set is less than the sum over
-      -- all primes.
-      -- We use the fact that the sum over the complement of a finite set is less than the sum over
-      -- all primes.
-      -- We can use the fact that the sum over the complement of a finite set is less than the sum
-      -- over all primes.
-      -- We use the fact that the sum over the complement of a finite set is less than the sum over
-      -- all primes.
-      -- We use the fact that the sum over the complement of a finite set is less than the sum over
-      -- all primes.
-      have h₅ : Filter.Tendsto (fun s : Finset Nat.Primes => ∑' (p : {q : Nat.Primes // q ∉ s}),
-          f p) Filter.atTop (nhds 0) := by
-        -- Use the fact that the sum over the complement tends to 0 as the set grows
-        -- This is a lemma in the Lean library, but we need to find the correct application.
-        -- We use the fact that the sum over the complement of an increasing sequence of sets tends
-        -- to 0.
-        -- We can use the fact that the sum over the complement of all finite sets is 0.
-        -- We use the fact that the sum over the complement of a finite set is less than the sum
-        -- over all primes.
-        -- We use the fact that the sum over all primes is finite because f is summable.
-        -- We use the fact that the sum over the complement of a finite set is less than the sum
-        -- over all primes.
-        -- We use the fact that the sum over the complement of a finite set is less than the sum
-        -- over all primes.
-        -- We can use the fact that the sum over the complement of a finite set is less than the sum
-        -- over all primes.
-        -- We use the fact that the sum over the complement of a finite set is less than the sum
-        -- over all primes.
-        -- We use the fact that the sum over the complement of a finite set is less than the sum
-        -- over all primes.
-        have h₇ : Filter.Tendsto (fun s : Finset (Nat.Primes) => ∑' (a : { q : Nat.Primes // q ∉
-            s }), f a) Filter.atTop (nhds 0) := by
-          -- Use the fact that the sum over the complement tends to 0 as the set grows
-          -- This is a lemma in the Lean library, but we need to find the correct application.
-          -- We use the fact that the sum over the complement of an increasing sequence of sets
-          -- tends to 0.
-          -- We can use the fact that the sum over the complement of all finite sets is 0.
-          -- We use the fact that the sum over the complement of a finite set is less than the sum
-          -- over all primes.
-          -- We use the fact that the sum over all primes is finite because f is summable.
-          -- We use the fact that the sum over the complement of a finite set is less than the sum
-          -- over all primes.
-          -- We use the fact that the sum over the complement of a finite set is less than the sum
-          -- over all primes.
-          -- We can use the fact that the sum over the complement of a finite set is less than the
-          -- sum over all primes.
-          -- We use the fact that the sum over the complement of a finite set is less than the sum
-          -- over all primes.
-          -- We use the fact that the sum over the complement of a finite set is less than the sum
-          -- over all primes.
-          exact tendsto_tsum_compl_atTop_zero f
-        simpa using h₇
-      exact h₅
-    exact h₄
-  have h₂ : ∃ (s : Finset Nat.Primes), ∑' (p : {q : Nat.Primes // q ∉ s}), f p < ε := by
-    have h₅ : ∃ (s : Finset Nat.Primes), ∑' (p : {q : Nat.Primes // q ∉ s}), f p < ε := by
-      -- Use the fact that the limit of the tail sums is 0 to find the required finite set s
-      have h₆ : ∀ ε > 0, ∃ (s : Finset Nat.Primes), ∀ (s' : Finset Nat.Primes), s ⊆ s' → ∑' (
-          p : {q : Nat.Primes // q ∉ s'}), f p < ε := by
-        intro ε hε
-        -- Use the definition of tendsto to find a finite set s such that the sum over the
-        -- complement is less than ε
-        have h₈ : ∃ (s : Finset Nat.Primes), ∀ (s' : Finset Nat.Primes), s ⊆ s' → ∑' (
-            p : {q : Nat.Primes // q ∉ s'}), f p < ε := by
-          -- Use the definition of tendsto to find a finite set s such that the sum over the
-          -- complement is less than ε
-          have h₉ : ∀ ε > 0, ∃ (s : Finset Nat.Primes), ∀ (s' : Finset Nat.Primes), s ⊆ s' → ∑' (
-              p : {q : Nat.Primes // q ∉ s'}), f p < ε := by
-            intro ε hε
-            -- Use the definition of tendsto to find a finite set s such that the sum over the
-            -- complement is less than ε
-            have h₁₀ : Filter.Tendsto (fun s : Finset Nat.Primes => ∑' (p : {q : Nat.Primes // q ∉
-                s}), f p) Filter.atTop (nhds 0) := h₁
-            -- Use the definition of tendsto to find a finite set s such that the sum over the
-            -- complement is less than ε
-            have h₁₁ : ∃ (s : Finset Nat.Primes), ∀ (s' : Finset Nat.Primes), s ⊆ s' → ∑' (
-                p : {q : Nat.Primes // q ∉ s'}), f p < ε := by
-              -- Use the definition of tendsto to find a finite set s such that the sum over the
-              -- complement is less than ε
-              have h₁₂ : ∃ (s : Finset Nat.Primes), ∀ (s' : Finset Nat.Primes), s ⊆ s' → ∑' (
-                  p : {q : Nat.Primes // q ∉ s'}), f p < ε := by
-                -- Use the definition of tendsto to find a finite set s such that the sum over the
-                -- complement is less than ε
-                -- This is a placeholder for the actual proof, which would use the definition of
-                -- tendsto and properties of filters
-                -- to find the required finite set s.
-                exact by
-                  -- Use the fact that the sum over the complement tends to 0 as the set grows
-                  -- to find a finite set s such that the sum over the complement is less than ε.
-                  -- This is a placeholder for the actual proof, which would use the definition of
-                  -- tendsto and properties of filters
-                  -- to find the required finite set s.
-                  have h₁₃ := Metric.tendsto_atTop.mp h₁₀ ε hε
-                  -- Use the fact that the sum over the complement tends to 0 as the set grows
-                  -- to find a finite set s such that the sum over the complement is less than ε.
-                  -- This is a placeholder for the actual proof, which would use the definition of
-                  -- tendsto and properties of filters
-                  -- to find the required finite set s.
-                  simp only [Real.dist_eq, abs_lt] at h₁₃
-                  -- Use the fact that the sum over the complement tends to 0 as the set grows
-                  -- to find a finite set s such that the sum over the complement is less than ε.
-                  -- This is a placeholder for the actual proof, which would use the definition of
-                  -- tendsto and properties of filters
-                  -- to find the required finite set s.
-                  obtain ⟨s, hs⟩ := h₁₃
-                  -- Use the fact that the sum over the complement tends to 0 as the set grows
-                  -- to find a finite set s such that the sum over the complement is less than ε.
-                  -- This is a placeholder for the actual proof, which would use the definition of
-                  -- tendsto and properties of filters
-                  -- to find the required finite set s.
-                  refine ⟨s, ?_⟩
-                  -- Use the fact that the sum over the complement tends to 0 as the set grows
-                  -- to find a finite set s such that the sum over the complement is less than ε.
-                  -- This is a placeholder for the actual proof, which would use the definition of
-                  -- tendsto and properties of filters
-                  -- to find the required finite set s.
-                  intro s' hs'
-                  -- Use the fact that the sum over the complement tends to 0 as the set grows
-                  -- to find a finite set s such that the sum over the complement is less than ε.
-                  -- This is a placeholder for the actual proof, which would use the definition of
-                  -- tendsto and properties of filters
-                  -- to find the required finite set s.
-                  simp_all
-              -- Use the fact that the sum over the complement tends to 0 as the set grows
-              -- to find a finite set s such that the sum over the complement is less than ε.
-              -- This is a placeholder for the actual proof, which would use the definition of
-              -- tendsto and properties of filters
-              -- to find the required finite set s.
-              exact h₁₂
-            -- Use the fact that the sum over the complement tends to 0 as the set grows
-            -- to find a finite set s such that the sum over the complement is less than ε.
-            -- This is a placeholder for the actual proof, which would use the definition of tendsto
-            -- and properties of filters
-            -- to find the required finite set s.
-            exact h₁₁
-          -- Use the fact that the sum over the complement tends to 0 as the set grows
-          -- to find a finite set s such that the sum over the complement is less than ε.
-          -- This is a placeholder for the actual proof, which would use the definition of tendsto
-          -- and properties of filters
-          -- to find the required finite set s.
-          exact h₉ ε hε
-        -- Use the fact that the sum over the complement tends to 0 as the set grows
-        -- to find a finite set s such that the sum over the complement is less than ε.
-        -- This is a placeholder for the actual proof, which would use the definition of tendsto and
-        -- properties of filters
-        -- to find the required finite set s.
-        exact h₈
-      -- Use the fact that the sum over the complement tends to 0 as the set grows
-      -- to find a finite set s such that the sum over the complement is less than ε.
-      -- This is a placeholder for the actual proof, which would use the definition of tendsto and
-      -- properties of filters
-      -- to find the required finite set s.
-      have h₇ : ∃ (s : Finset Nat.Primes), ∑' (p : {q : Nat.Primes // q ∉ s}), f p < ε := by
-        -- Use the fact that the sum over the complement tends to 0 as the set grows
-        -- to find a finite set s such that the sum over the complement is less than ε.
-        -- This is a placeholder for the actual proof, which would use the definition of tendsto and
-        -- properties of filters
-        -- to find the required finite set s.
-        have h₈ : ∀ ε > 0, ∃ (s : Finset Nat.Primes), ∀ (s' : Finset Nat.Primes), s ⊆ s' → ∑' (
-            p : {q : Nat.Primes // q ∉ s'}), f p < ε := h₆
-        -- Use the fact that the sum over the complement tends to 0 as the set grows
-        -- to find a finite set s such that the sum over the complement is less than ε.
-        -- This is a placeholder for the actual proof, which would use the definition of tendsto and
-        -- properties of filters
-        -- to find the required finite set s.
-        have h₉ : ∃ (s : Finset Nat.Primes), ∑' (p : {q : Nat.Primes // q ∉ s}), f p < ε := by
-          -- Use the fact that the sum over the complement tends to 0 as the set grows
-          -- to find a finite set s such that the sum over the complement is less than ε.
-          -- This is a placeholder for the actual proof, which would use the definition of tendsto
-          -- and properties of filters
-          -- to find the required finite set s.
-          obtain ⟨s, hs⟩ := h₈ ε hε
-          -- Use the fact that the sum over the complement tends to 0 as the set grows
-          -- to find a finite set s such that the sum over the complement is less than ε.
-          -- This is a placeholder for the actual proof, which would use the definition of tendsto
-          -- and properties of filters
-          -- to find the required finite set s.
-          refine ⟨s, ?_⟩
-          -- Use the fact that the sum over the complement tends to 0 as the set grows
-          -- to find a finite set s such that the sum over the complement is less than ε.
-          -- This is a placeholder for the actual proof, which would use the definition of tendsto
-          -- and properties of filters
-          -- to find the required finite set s.
-          have h₁₀ : ∑' (p : {q : Nat.Primes // q ∉ s}), f p < ε := by
-            -- Use the fact that the sum over the complement tends to 0 as the set grows
-            -- to find a finite set s such that the sum over the complement is less than ε.
-            -- This is a placeholder for the actual proof, which would use the definition of tendsto
-            -- and properties of filters
-            -- to find the required finite set s.
-            have h₁₁ : ∀ (s' : Finset Nat.Primes), s ⊆ s' → ∑' (p : {q : Nat.Primes // q ∉ s'}),
-                f p < ε := hs
-            -- Use the fact that the sum over the complement tends to 0 as the set grows
-            -- to find a finite set s such that the sum over the complement is less than ε.
-            -- This is a placeholder for the actual proof, which would use the definition of tendsto
-            -- and properties of filters
-            -- to find the required finite set s.
-            have h₁₂ : ∑' (p : {q : Nat.Primes // q ∉ s}), f p < ε := by
-              -- Use the fact that the sum over the complement tends to 0 as the set grows
-              -- to find a finite set s such that the sum over the complement is less than ε.
-              -- This is a placeholder for the actual proof, which would use the definition of
-              -- tendsto and properties of filters
-              -- to find the required finite set s.
-              have h₁₃ : ∑' (p : {q : Nat.Primes // q ∉ s}), f p < ε := by
-                -- Use the fact that the sum over the complement tends to 0 as the set grows
-                -- to find a finite set s such that the sum over the complement is less than ε.
-                -- This is a placeholder for the actual proof, which would use the definition of
-                -- tendsto and properties of filters
-                -- to find the required finite set s.
-                have h₁₄ := h₁₁ s (by simp)
-                -- Use the fact that the sum over the complement tends to 0 as the set grows
-                -- to find a finite set s such that the sum over the complement is less than ε.
-                -- This is a placeholder for the actual proof, which would use the definition of
-                -- tendsto and properties of filters
-                -- to find the required finite set s.
-                simpa using h₁₄
-              -- Use the fact that the sum over the complement tends to 0 as the set grows
-              -- to find a finite set s such that the sum over the complement is less than ε.
-              -- This is a placeholder for the actual proof, which would use the definition of
-              -- tendsto and properties of filters
-              -- to find the required finite set s.
-              exact h₁₃
-            -- Use the fact that the sum over the complement tends to 0 as the set grows
-            -- to find a finite set s such that the sum over the complement is less than ε.
-            -- This is a placeholder for the actual proof, which would use the definition of tendsto
-            -- and properties of filters
-            -- to find the required finite set s.
-            exact h₁₂
-          -- Use the fact that the sum over the complement tends to 0 as the set grows
-          -- to find a finite set s such that the sum over the complement is less than ε.
-          -- This is a placeholder for the actual proof, which would use the definition of tendsto
-          -- and properties of filters
-          -- to find the required finite set s.
-          exact h₁₀
-        -- Use the fact that the sum over the complement tends to 0 as the set grows
-        -- to find a finite set s such that the sum over the complement is less than ε.
-        -- This is a placeholder for the actual proof, which would use the definition of tendsto and
-        -- properties of filters
-        -- to find the required finite set s.
-        exact h₉
-      -- Use the fact that the sum over the complement tends to 0 as the set grows
-      -- to find a finite set s such that the sum over the complement is less than ε.
-      -- This is a placeholder for the actual proof, which would use the definition of tendsto and
-      -- properties of filters
-      -- to find the required finite set s.
-      exact h₇
-    -- Use the fact that the sum over the complement tends to 0 as the set grows
-    -- to find a finite set s such that the sum over the complement is less than ε.
-    -- This is a placeholder for the actual proof, which would use the definition of tendsto and
-    -- properties of filters
-    -- to find the required finite set s.
-    exact h₅
-  -- Use the fact that the sum over the complement tends to 0 as the set grows
-  -- to find a finite set s such that the sum over the complement is less than ε.
-  -- This is a placeholder for the actual proof, which would use the definition of tendsto and
-  -- properties of filters
-  -- to find the required finite set s.
-  exact h₂
+  have htail : Filter.Tendsto
+      (fun s : Finset Nat.Primes => ∑' (p : {q : Nat.Primes // q ∉ s}), f p)
+      Filter.atTop (nhds 0) := by
+    simpa using tendsto_tsum_compl_atTop_zero f
+  obtain ⟨s, hs⟩ := Metric.tendsto_atTop.mp htail ε hε
+  refine ⟨s, ?_⟩
+  have hs_self := hs s (by simp)
+  rw [Real.dist_eq] at hs_self
+  linarith [(abs_lt.mp hs_self).2]
 
 lemma prime_tail_sum_small (ε : ℝ) (hε : 0 < ε) :
     ∃ y : ℕ, ∑' (p : {q : Nat.Primes // (q : ℕ) > y}), 1 / (((p : Nat.Primes) : ℕ) : ℝ) ^ 2 < ε :=
         by
-  -- Get a finite set s with small complement sum
   set f : Nat.Primes → ℝ := fun p => 1 / ((p : ℕ) : ℝ) ^ 2 with hf
   have hfnn : ∀ p, 0 ≤ f p := fun p => by simp only [hf]; positivity
   obtain ⟨s, hs⟩ := exists_finset_tsum_compl_lt f hfnn primes_summable_one_div_sq ε hε
@@ -2722,7 +2261,6 @@ lemma sqrt_div_X_small (ε : ℝ) (hε : 0 < ε) :
     ∃ X₀ : ℕ, ∀ X ≥ X₀, (Nat.sqrt X : ℝ) / X < ε := by
   have h₁ : 0 < (1 / ε : ℝ) := by positivity
   have h₂ : 0 < (1 / ε : ℝ) ^ 2 := by positivity
-  -- Use the Archimedean property to find X₀ : ℕ such that (X₀ : ℝ) > (1 / ε)²
   have h₃ : ∃ (X₀ : ℕ), (1 / ε : ℝ) ^ 2 < (X₀ : ℝ) := by
     obtain ⟨X₀, hX₀⟩ := exists_nat_gt ((1 / ε : ℝ) ^ 2)
     refine ⟨X₀, ?_⟩
@@ -2741,7 +2279,6 @@ lemma sqrt_div_X_small (ε : ℝ) (hε : 0 < ε) :
     have h₁₂ : (X₀ : ℝ) = 0 := by simp [h₁₀]
     rw [h₁₂] at h₁₁
     norm_num at h₁₁ ⊢; nlinarith [h₂]
-  -- Now we know (X : ℝ) > 0, so we can take square roots
   have h₇ : Real.sqrt (X : ℝ) > 1 / ε := by
     have h₈ : Real.sqrt (X : ℝ) > 1 / ε := by
       have h₉ : Real.sqrt (X : ℝ) > 0 := Real.sqrt_pos.mpr (by positivity)
@@ -2759,7 +2296,6 @@ lemma sqrt_div_X_small (ε : ℝ) (hε : 0 < ε) :
         _ = ε := by
           field_simp
     exact h₁₂
-  -- Now we need to relate (Nat.sqrt X : ℝ) / X to 1 / Real.sqrt (X : ℝ)
   have h₉ : (Nat.sqrt X : ℝ) ≤ Real.sqrt (X : ℝ) := by
     have h₁₁ : (Nat.sqrt X : ℝ) ^ 2 ≤ (X : ℝ) := by
       norm_cast
@@ -2768,7 +2304,6 @@ lemma sqrt_div_X_small (ε : ℝ) (hε : 0 < ε) :
       exact_mod_cast h₁₂
     nlinarith [Real.sq_sqrt (by positivity : 0 ≤ (X : ℝ)),
       sq_nonneg ((Nat.sqrt X : ℝ) - Real.sqrt (X : ℝ))]
-  -- Finally, we can put it all together
   have h₁₀ : (Nat.sqrt X : ℝ) / X ≤ 1 / Real.sqrt (X : ℝ) := by
     have h₁₁ : 0 < (X : ℝ) := by positivity
     calc
@@ -2791,95 +2326,9 @@ lemma card_multiples_Icc (q : ℕ) (X : ℕ) :
     intro N hN
     simp only [Finset.mem_filter, Finset.mem_Icc, Finset.mem_range] at hN ⊢
     exact ⟨by omega, by omega, hN.2⟩
-  have h_card_bound : ((Finset.Icc 1 X).filter fun N => q ^ 2 ∣ N).card ≤ ((Finset.range (X +
-      1)).filter (fun k => k ≠ 0 ∧ q ^ 2 ∣ k)).card := Finset.card_le_card h_subset
   have h_card_multiples' : ((Finset.range (X + 1)).filter (fun k => k ≠ 0 ∧ q ^ 2 ∣ k)).card =
       X / q ^ 2 := Nat.card_multiples' X (q ^ 2)
-  have h_main : ((Finset.Icc 1 X).filter fun N => q ^ 2 ∣ N).card ≤ X / q ^ 2 := by aesop
-  exact h_main
-/-- For natural numbers X, v, r with r > 0:
-    ⌊(X - v)/r⌋ - ⌊-v/r⌋ ≤ ⌊X/r⌋ + 1  (as integer floor over ℝ).
-    The proof uses the general inequality ⌊a⌋ - ⌊b⌋ ≤ ⌊a - b⌋ + 1 for any real a, b.
-    Since ⌊x⌋ ≤ x < ⌊x⌋ + 1 and ⌊y⌋ ≤ y < ⌊y⌋ + 1, we have
-    ⌊x⌋ - ⌊y⌋ < (x - y) + 1, and as the left side is an integer, ⌊x⌋ - ⌊y⌋ ≤ ⌊x - y⌋ + 1.
-    Instantiate with x = (X - v)/r and y = -v/r. Then x - y = X/r.
-    Thus ⌊(X - v)/r⌋ - ⌊-v/r⌋ ≤ ⌊X/r⌋ + 1.
-    No direct Mathlib theorem found for this floor subtraction inequality.
-    Searched: "floor_sub", "Int.floor_sub", "sub_floor". -/
-lemma floor_diff_bound (X v r : ℕ) (hr : 0 < r) :
-    ⌊((X : ℝ) - v) / r⌋ - ⌊(-(v : ℝ)) / r⌋ ≤ ⌊(X : ℝ) / r⌋ + 1 := by
-  have h₁ : ⌊((X : ℝ) - v) / r⌋ - ⌊(-(v : ℝ)) / r⌋ ≤ ⌊(X : ℝ) / r⌋ + 1 := by
-    have h₂ : ⌊((X : ℝ) - v) / r⌋ - ⌊(-(v : ℝ)) / r⌋ ≤ ⌊(X : ℝ) / r⌋ + 1 := by
-      have h₃ : ((X : ℝ) - v) / r - (-(v : ℝ)) / r = (X : ℝ) / r := by
-        have h₄ : (r : ℝ) ≠ 0 := by positivity
-        field_simp [h₄]; ring_nf
-      have h₄ : ⌊((X : ℝ) - v) / r⌋ - ⌊(-(v : ℝ)) / r⌋ ≤ ⌊((X : ℝ) - v) / r - (-(v : ℝ)) / r⌋ + 1 :=
-          by
-        have h₅ : ⌊((X : ℝ) - v) / r⌋ - ⌊(-(v : ℝ)) / r⌋ ≤ ⌊((X : ℝ) - v) / r - (-(v : ℝ)) / r⌋ +
-            1 := by
-          -- Use the property of floor functions for subtraction
-          have h₆ : (⌊((X : ℝ) - v) / r⌋ : ℝ) ≤ ((X : ℝ) - v) / r := by exact Int.floor_le (
-              ((X : ℝ) - v) / r)
-          have h₇ : (⌊(-(v : ℝ)) / r⌋ : ℝ) ≤ (-(v : ℝ)) / r := by exact Int.floor_le (
-              (-(v : ℝ)) / r)
-          have h₉ : (-(v : ℝ)) / r < (⌊(-(v : ℝ)) / r⌋ : ℝ) + 1 := by exact Int.lt_floor_add_one (
-              (-(v : ℝ)) / r)
-          have h₁₀ : ⌊((X : ℝ) - v) / r - (-(v : ℝ)) / r⌋ ≥ ⌊((X : ℝ) - v) / r⌋ - ⌊(-(v : ℝ)) / r⌋ -
-              1 := by
-            -- Use the property of floor functions for subtraction
-            have h₁₂ : ⌊((X : ℝ) - v) / r - (-(v : ℝ)) / r⌋ ≥ ⌊((X : ℝ) - v) / r⌋ -
-                ⌊(-(v : ℝ)) / r⌋ - 1 := by
-              have h₁₄ : ⌊((X : ℝ) - v) / r - (-(v : ℝ)) / r⌋ ≥ ⌊((X : ℝ) - v) / r⌋ -
-                  ⌊(-(v : ℝ)) / r⌋ - 1 := by
-                -- Use the property of floor functions for subtraction
-                have h₁₅ : (⌊((X : ℝ) - v) / r⌋ : ℤ) - (⌊(-(v : ℝ)) / r⌋ : ℤ) - 1 ≤ ⌊((X : ℝ) -
-                    v) / r - (-(v : ℝ)) / r⌋ := by
-                  -- Use the property of floor functions for subtraction
-                  have h₁₇ : (⌊((X : ℝ) - v) / r⌋ : ℤ) - (⌊(-(v : ℝ)) / r⌋ : ℤ) - 1 ≤ ⌊((X : ℝ) -
-                      v) / r - (-(v : ℝ)) / r⌋ := by
-                    -- Use the property of floor functions for subtraction
-                    have h₁₈ : (⌊((X : ℝ) - v) / r⌋ : ℝ) - (⌊(-(v : ℝ)) / r⌋ : ℝ) - 1 ≤ ((X : ℝ) -
-                        v) / r - (-(v : ℝ)) / r := by
-                      linarith [h₆, h₇]
-                    have h₁₉ : (⌊((X : ℝ) - v) / r⌋ : ℤ) - (⌊(-(v : ℝ)) / r⌋ : ℤ) - 1 ≤ ⌊((X : ℝ) -
-                        v) / r - (-(v : ℝ)) / r⌋ := by
-                      -- Use the property of floor functions for subtraction
-                      apply Int.le_floor.mpr
-                      norm_num at h₁₈ ⊢;
-                      (try linarith)
-                    exact h₁₉
-                  exact h₁₇
-                have h₂₁ : ⌊((X : ℝ) - v) / r - (-(v : ℝ)) / r⌋ ≥ (⌊((X : ℝ) - v) / r⌋ : ℤ) - (
-                    ⌊(-(v : ℝ)) / r⌋ : ℤ) - 1 := by
-                  linarith
-                have h₂₂ : ⌊((X : ℝ) - v) / r - (-(v : ℝ)) / r⌋ ≥ ⌊((X : ℝ) - v) / r⌋ -
-                    ⌊(-(v : ℝ)) / r⌋ - 1 := by
-                  norm_num at h₂₁ ⊢;
-                  (try simp_all [Int.floor_le, Int.lt_floor_add_one])
-                exact h₂₂
-              exact h₁₄
-            exact h₁₂
-          have h₂₃ : (⌊((X : ℝ) - v) / r⌋ : ℤ) - (⌊(-(v : ℝ)) / r⌋ : ℤ) ≤ ⌊((X : ℝ) - v) / r - (
-              -(v : ℝ)) / r⌋ + 1 := by
-            have h₂₅ : (⌊((X : ℝ) - v) / r⌋ : ℤ) - (⌊(-(v : ℝ)) / r⌋ : ℤ) ≤ ⌊((X : ℝ) - v) / r - (
-                -(v : ℝ)) / r⌋ + 1 := by
-              linarith
-            exact h₂₅
-          have h₂₆ : ⌊((X : ℝ) - v) / r⌋ - ⌊(-(v : ℝ)) / r⌋ ≤ ⌊((X : ℝ) - v) / r - (-(v : ℝ)) / r⌋ +
-              1 := by
-            norm_cast at h₂₃ ⊢
-          exact h₂₆
-        exact h₅
-      have h₅ : ⌊((X : ℝ) - v) / r - (-(v : ℝ)) / r⌋ = ⌊(X : ℝ) / r⌋ := by
-        have h₆ : ((X : ℝ) - v) / r - (-(v : ℝ)) / r = (X : ℝ) / r := by
-          have h₇ : (r : ℝ) ≠ 0 := by positivity
-          field_simp [h₇]; ring_nf
-        rw [h₆]
-      have h₆ : ⌊((X : ℝ) - v) / r⌋ - ⌊(-(v : ℝ)) / r⌋ ≤ ⌊(X : ℝ) / r⌋ + 1 := by
-        linarith
-      exact h₆
-    exact h₂
-  exact h₁
+  simpa [h_card_multiples'] using Finset.card_le_card h_subset
 
 /-- The number of N ∈ (0, X] satisfying N ≡ v (mod r) is at most X / r + 1.
 
@@ -2950,13 +2399,11 @@ lemma zmod_mul_inv_add_eq_zero (n b d : ℕ) (_hn : 0 < n) (hb : b.Coprime n) :
     The result is a natural number v < p² such that p² | b*v + d. -/
 lemma exists_inverse_residue (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ b) (hbp : b < p) (d : ℕ) :
     ∃ v : ℕ, v < p ^ 2 ∧ (p ^ 2) ∣ (b * v + d) := by
-  -- Get that b is coprime to p²
   have hcop : b.Coprime (p ^ 2) := b_coprime_p_sq p hp b hb hbp
   -- p² > 0
   have hp2_pos : 0 < p ^ 2 := prime_sq_pos p hp
   -- NeZero (p ^ 2) instance
   haveI : NeZero (p ^ 2) := ⟨Nat.pos_iff_ne_zero.mp hp2_pos⟩
-  -- Define v as the value of (-d) * b⁻¹ in ZMod (p²)
   let v_zmod : ZMod (p ^ 2) := (-↑d : ZMod (p ^ 2)) * (↑b : ZMod (p ^ 2))⁻¹
   use v_zmod.val
   constructor
@@ -2970,7 +2417,6 @@ lemma exists_inverse_residue (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ 
     -- v_zmod.val cast back gives v_zmod
     have hval : (v_zmod.val : ZMod (p ^ 2)) = v_zmod := ZMod.natCast_zmod_val v_zmod
     rw [hval]
-    -- Now we need: ↑b * ((-↑d) * (↑b)⁻¹) + ↑d = 0
     exact zmod_mul_inv_add_eq_zero (p ^ 2) b d hp2_pos hcop
 
 lemma dvd_iff_modEq_of_coprime (p b v d N : ℕ) (hcop : (p ^ 2).gcd b = 1)
@@ -3124,10 +2570,8 @@ lemma primesBelow'_card (n : ℕ) : (primesBelow' n).card = n.primesBelow.card :
     have h₄ : p.Prime := by
       have h₅ : p ∈ n.primesBelow := hp
       have h₆ : p.Prime := by
-        -- Prove that if p is in n.primesBelow, then p is prime
         have h₇ : p.Prime := by
           simp only [Nat.mem_primesBelow] at h₅
-          -- Use the fact that p is in the list of primes below n to deduce that p is prime
           exact h₅.2
         exact h₇
       exact h₆
@@ -3247,7 +2691,6 @@ lemma violation_subset_biUnion (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T
   simp only [Finset.mem_filter, Finset.mem_biUnion] at hN ⊢
   obtain ⟨hN_Icc, q₀, hq₀_not_S, hq₀_dvd⟩ := hN
   refine ⟨q₀, ?_, hN_Icc, hq₀_dvd⟩
-  -- Need to show q₀ ∈ relevantNotInS b X S
   simp only [relevantNotInS, Finset.mem_filter]
   refine ⟨?_, hq₀_not_S⟩
   -- q₀ ∈ primesBelow'(√(bX+b)+1)
@@ -3293,9 +2736,7 @@ lemma union_card_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Fin
 lemma finsum_le_tsum_tail (y : ℕ) (Q : Finset Nat.Primes) (hQ : ∀ q ∈ Q, (q : ℕ) > y) :
     (∑ q ∈ Q, 1 / (((q : ℕ) : ℝ) ^ 2))
     ≤ (∑' (p : {q : Nat.Primes // (q : ℕ) > y}), 1 / (((p : Nat.Primes) : ℕ) : ℝ) ^ 2) := by
-  -- Define the subtype of primes > y
   let S := {q : Nat.Primes // (q : ℕ) > y}
-  -- Define the function on S
   let f : S → ℝ := fun p => 1 / ((((p : Nat.Primes) : ℕ) : ℝ) ^ 2)
   -- Summability: f is summable on S since 1/p² is summable on all primes
   have hf_summable : Summable f := primes_summable_one_div_sq.subtype _
@@ -3389,25 +2830,21 @@ lemma nat_div_floor_le_real_div (X : ℕ) (q : Nat.Primes) :
   have h₁ : ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) * ((q : ℕ) ^ 2 : ℝ) ≤ (X : ℝ) := by
     -- Cast the natural number inequality to real numbers
     have h₂ : (X / (q : ℕ) ^ 2 : ℕ) * (q : ℕ) ^ 2 ≤ X := by
-      -- Use the property of natural number division: (X / Y) * Y ≤ X
       have h₃ : (X / (q : ℕ) ^ 2 : ℕ) * (q : ℕ) ^ 2 ≤ X := Nat.div_mul_le_self X ((q : ℕ) ^ 2)
       exact h₃
     -- Cast the inequality to real numbers
     norm_cast at h₂ ⊢
   have h₂ : 0 < ((q : ℕ) : ℝ) := by
-    -- Prove that q as a real number is positive
     norm_cast
     exact Nat.Prime.pos q.property
   have h₄ : ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) ≤ (X : ℝ) / ((q : ℕ) ^ 2 : ℝ) := by
     -- Divide both sides of h₁ by ((q : ℕ) ^ 2 : ℝ)
     have h₆ : 0 < ((q : ℕ) ^ 2 : ℝ) := by positivity
-    -- Use the division inequality to get the final result
     calc
       ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) = (((X / (q : ℕ) ^ 2 : ℕ) : ℝ) * ((q : ℕ) ^ 2 : ℝ)) / (
           (q : ℕ) ^ 2 : ℝ) := by
         field_simp [h₆.ne']
       _ ≤ (X : ℝ) / ((q : ℕ) ^ 2 : ℝ) := by
-        -- Use the fact that ((X / (q : ℕ) ^ 2 : ℕ) : ℝ) * ((q : ℕ) ^ 2 : ℝ) ≤ (X : ℝ)
         gcongr
   exact h₄
 
@@ -3463,9 +2900,7 @@ lemma violation_count_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T �
 lemma sqrt_bXb_div_X_small (b : ℕ) (hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
     ∃ X₀ : ℕ, ∀ X ≥ X₀, (Nat.sqrt (b * X + b) : ℝ) / X < ε := by
   have h₃ : ∃ (X₀ : ℕ), (X₀ : ℝ) > 2 * (b : ℝ) / ε ^ 2 := by
-    -- Use the Archimedean property to find X₀ such that X₀ > 2 * b / ε²
     have h₄ : ∃ (n : ℕ), (2 * (b : ℝ) / ε ^ 2 : ℝ) < n := by
-      -- Apply the Archimedean property
       obtain ⟨n, hn⟩ := exists_nat_gt (2 * (b : ℝ) / ε ^ 2)
       exact ⟨n, by linarith⟩
     -- Obtain X₀ from the Archimedean property
@@ -3473,22 +2908,18 @@ lemma sqrt_bXb_div_X_small (b : ℕ) (hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
     refine ⟨X₀, ?_⟩
     -- Cast X₀ to ℝ and verify the inequality
     norm_cast at hX₀ ⊢
-  -- Step 2: Obtain X₀ from the Archimedean property
   obtain ⟨X₀, hX₀⟩ := h₃
   use max 1 X₀
   intro X hX
   have h₄ : X ≥ 1 := by
-    -- Prove that X ≥ 1
     have h₅ : max 1 X₀ ≥ 1 := by simp
     linarith
   have h₅ : (X : ℝ) ≥ 1 := by exact_mod_cast h₄
   have h₆ : (X : ℝ) ≥ (X₀ : ℝ) := by
-    -- Prove that X ≥ X₀
     have h₇ : (max 1 X₀ : ℕ) ≥ X₀ := by simp
     have h₉ : (X : ℕ) ≥ X₀ := by linarith
     exact_mod_cast h₉
   have h₈ : (ε : ℝ) ^ 2 * (X : ℝ) > 2 * (b : ℝ) := by
-    -- Prove that ε² * X > 2 * b
     have h₁₀ : 0 < (ε : ℝ) ^ 2 := by positivity
     have h₁₁ : 0 < (ε : ℝ) ^ 2 := by positivity
     -- Multiply both sides by ε²
@@ -3497,31 +2928,24 @@ lemma sqrt_bXb_div_X_small (b : ℕ) (hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
     -- Simplify the right side
     have h₁₃ : (ε : ℝ) ^ 2 * (2 * (b : ℝ) / ε ^ 2) = 2 * (b : ℝ) := by
       field_simp [h₁₁.ne']
-    -- Combine the inequalities
     linarith
   have h₉ : (b : ℝ) * X + b ≤ 2 * (b : ℝ) * X := by
-    -- Prove that b * X + b ≤ 2 * b * X
     have h₁₂ : (b : ℝ) * (X : ℝ) ≥ (b : ℝ) := by
       nlinarith
     have h₁₃ : (b : ℝ) * (X : ℝ) + (b : ℝ) ≤ 2 * (b : ℝ) * (X : ℝ) := by
       nlinarith
-    -- Cast back to natural numbers if necessary
     norm_cast at h₁₃ ⊢
   have h₁₀ : (b : ℝ) * X + b < (ε : ℝ) ^ 2 * (X : ℝ) ^ 2 := by
-    -- Prove that b * X + b < ε² * X²
     have h₁₆ : (ε : ℝ) ^ 2 * (X : ℝ) ^ 2 > 2 * (b : ℝ) * (X : ℝ) := by
       nlinarith [sq_nonneg ((X : ℝ) - 1)]
-    -- Combine the inequalities to get the final result
     nlinarith
   have h₁₁ : (Nat.sqrt (b * X + b) : ℝ) < (ε : ℝ) * X := by
-    -- Prove that √(b * X + b) < ε * X
     have h₁₄ : (Nat.sqrt (b * X + b) : ℕ) * (Nat.sqrt (b * X + b) : ℕ) ≤ (b * X + b) := by
       have h₁₅ : (Nat.sqrt (b * X + b)) * (Nat.sqrt (b * X + b)) ≤ (b * X + b) := by
         nlinarith [Nat.sqrt_le (b * X + b), Nat.lt_succ_sqrt (b * X + b)]
       exact h₁₅
     have h₁₈ : (Nat.sqrt (b * X + b) : ℕ) < (ε : ℝ) * X := by
       by_contra h
-      -- If √(b * X + b) ≥ ε * X, then (√(b * X + b))² ≥ (ε * X)²
       have h₁₉ : (ε : ℝ) * X ≤ (Nat.sqrt (b * X + b) : ℕ) := by
         norm_num at h ⊢;
         (try linarith)
@@ -3539,7 +2963,6 @@ lemma sqrt_bXb_div_X_small (b : ℕ) (hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
       norm_cast at h₁₈ ⊢
     exact h₁₉
   have h₁₂ : (Nat.sqrt (b * X + b) : ℝ) / X < ε := by
-    -- Prove that √(b * X + b) / X < ε
     have h₁₃ : 0 < (X : ℝ) := by
       linarith
     have h₁₅ : (Nat.sqrt (b * X + b) : ℝ) / X < ε := by
@@ -3561,7 +2984,6 @@ lemma combine_violation_bounds (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T
       ∃ q : Nat.Primes, q ∉ S ∧ ((q : ℕ) ^ 2 ∣ N ∨ ∃ d ∈ T, (q : ℕ) ^ 2 ∣ b * N +
           d)).card : ℝ) / X < ε := by
   have hX_pos : (0 : ℝ) < X := Nat.cast_pos.mpr hX
-  -- Get the bound from violation_count_bound
   have hbound := violation_count_bound b hb T hT S y hy hyb X
   -- We need: V/X < ε where V ≤ (|T|+1)*X*tail + (|T|+1)*sqrt(bX+b)
   -- Dividing by X: V/X ≤ (|T|+1)*tail + (|T|+1)*sqrt(bX+b)/X
@@ -3583,7 +3005,6 @@ lemma combine_violation_bounds (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T
 lemma tail_sum_antitone (y y' : ℕ) (h : y ≤ y') :
     ∑' (p : {q : Nat.Primes // (q : ℕ) > y'}), 1 / (((p : Nat.Primes) : ℕ) : ℝ) ^ 2 ≤
     ∑' (p : {q : Nat.Primes // (q : ℕ) > y}), 1 / (((p : Nat.Primes) : ℕ) : ℝ) ^ 2 := by
-  -- Define the injection from {p : p > y'} to {p : p > y}
   let e : {q : Nat.Primes // (q : ℕ) > y'} → {q : Nat.Primes // (q : ℕ) > y} :=
     fun ⟨q, hq⟩ => ⟨q, lt_of_le_of_lt h hq⟩
   apply Summable.tsum_le_tsum_of_inj e
@@ -3611,7 +3032,6 @@ lemma choose_y_for_tail (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (ε : ℝ) (h
     ∃ y : ℕ, y ≥ b ∧
       (T.card + 1 : ℝ) * (∑' (p : {q : Nat.Primes // (q : ℕ) > y}), 1 / (
           ((p : Nat.Primes) : ℕ) : ℝ) ^ 2) < ε / 2 := by
-  -- Get small ε' = ε/(2*(T.card+1))
   have hK : (0 : ℝ) < T.card + 1 := by positivity
   have hε' : 0 < ε / (2 * (T.card + 1)) := by positivity
   -- Use prime_tail_sum_small to get y₁ with tail sum < ε'
@@ -3664,9 +3084,7 @@ lemma error_term_vanishes (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (_hT : T ⊆
         (((Finset.Icc 1 X).filter fun N =>
           ∃ q : Nat.Primes, q ∉ S ∧ ((q : ℕ) ^ 2 ∣ N ∨ ∃ d ∈ T, (q : ℕ) ^ 2 ∣ b * N +
               d)).card : ℝ) / X < ε := by
-  -- Get y with y ≥ b and small tail sum
   obtain ⟨y, hyb, htail⟩ := choose_y_for_tail b hb T ε hε
-  -- Get X₀ with 0 < X₀ and small sqrt term
   obtain ⟨X₀, hX₀_pos, hsqrt⟩ := choose_X_for_sqrt b hb T ε hε
   use y, X₀
   intro S hS X hX
@@ -3713,20 +3131,15 @@ lemma count_lower_bound_estimate (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT :
     ∃ X₀ : ℕ, ∀ X ≥ X₀,
       (countJointSquarefree b T X : ℝ) / X ≥ jointSquarefreeDensity b T - ε := by
   have hε2 : 0 < ε / 2 := by linarith
-  -- Step 1: Choose y and X₁ for error term to be < ε/2
   obtain ⟨y, X₁, hy⟩ := error_term_vanishes b hb T hT (ε / 2) hε2
-  -- Step 2: Define S as primes up to y
   let S := primesUpTo y
-  -- Step 3: Choose X₂ so that M/X < ε/2 for X ≥ X₂
   obtain ⟨X₂, hX₂⟩ := exists_large_for_ratio (primeSquareProduct S) (ε / 2) hε2
-  -- Step 4: Let X₀ = max(X₁, X₂, 1) to ensure X > 0
   use max X₁ (max X₂ 1)
   intro X hX
   have hX1 : X ≥ X₁ := le_trans (le_max_left _ _) hX
   have hX2 : X ≥ X₂ := le_trans (le_trans (le_max_left _ _) (le_max_right X₁ _)) hX
   have hXpos : 0 < X := lt_of_lt_of_le (by norm_num : (0 : ℕ) < 1)
     (le_trans (le_trans (le_max_right _ _) (le_max_right X₁ _)) hX)
-  -- Step 5: Apply combine_bounds_lower
   have hS : ∀ p : Nat.Primes, (p : ℕ) ≤ y → p ∈ S := mem_primesUpTo y
   have hviol := hy S hS X hX1
   have hM := hX₂ X hX2
@@ -3841,9 +3254,7 @@ lemma joint_density_eq_euler_product (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (
       Filter.atTop (nhds (jointSquarefreeDensity b T)) := by
   rw [Metric.tendsto_atTop]
   intro ε hε
-  -- Get X₀ for lower bound with ε/2
   obtain ⟨X₁, hX₁⟩ := count_lower_bound_estimate b hb T hT (ε/2) (by linarith)
-  -- Get X₀ for upper bound with ε/2
   obtain ⟨X₂, hX₂⟩ := count_upper_bound_direct b hb T hT (ε/2) (by linarith)
   -- Take max
   use max X₁ X₂
@@ -3930,90 +3341,27 @@ lemma prod_one_sub_eq_sum_powerset (U : Finset ℕ) (a : ℕ → ℝ) :
 lemma deadEnd_indicator_eq (b N : ℕ) (hN : 1 ≤ N) :
     (if IsBaseBDeadEnd b N then (1 : ℝ) else 0) =
     sqfreeIndicator N * ∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) := by
-  have h₁ : (if IsBaseBDeadEnd b N then (1 : ℝ) else 0) =
-    sqfreeIndicator N * ∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) := by
-    split_ifs with h
-    · have h₃ : Squarefree N := h.2.1
-      have h₄ : ∀ d ∈ Finset.range b, ¬Squarefree (b * N + d) := h.2.2
-      have h₅ : sqfreeIndicator N = (1 : ℝ) := by
-        simp [sqfreeIndicator, h₃]
-      have h₆ : (∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) = 1 := by
-        have h₇ : ∀ (d : ℕ), d ∈ Finset.range b → (1 - shiftSqfreeIndicator b N d : ℝ) = 1 := by
-          intro d hd
-          have h₈ : ¬Squarefree (b * N + d) := h₄ d hd
-          have h₉ : shiftSqfreeIndicator b N d = (0 : ℝ) := by
-            simp [shiftSqfreeIndicator, h₈]
-          rw [h₉]; norm_num
-        calc
-          (∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) = ∏ _ ∈ Finset.range b, (
-              1 : ℝ) := by
-            apply Finset.prod_congr rfl
-            intro d hd
-            rw [h₇ d hd]
-          _ = 1 := by simp
-      calc
-        (1 : ℝ) = (1 : ℝ) * 1 := by ring
-        _ = sqfreeIndicator N * ∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) := by
-          rw [h₅, h₆]
-    · by_cases h₃ : 0 < N
-      · by_cases h₄ : Squarefree N
-        · have h₅ : ∃ d ∈ Finset.range b, Squarefree (b * N + d) := by
-            by_contra h₅
-            have h₆ : ∀ d ∈ Finset.range b, ¬Squarefree (b * N + d) := by
-              intro d hd
-              by_contra h₆
-              have h₇ : Squarefree (b * N + d) := by tauto
-              have h₈ : ∃ d ∈ Finset.range b, Squarefree (b * N + d) := ⟨d, hd, h₇⟩
-              tauto
-            have h₇ : 0 < N ∧ Squarefree N ∧ ∀ d ∈ Finset.range b, ¬Squarefree (b * N + d) := ⟨h₃,
-                h₄, h₆⟩
-            contradiction
-          obtain ⟨d, hd, h₅⟩ := h₅
-          have h₆ : (1 - shiftSqfreeIndicator b N d : ℝ) = 0 := by
-            have h₇ : shiftSqfreeIndicator b N d = (1 : ℝ) := by
-              simp [shiftSqfreeIndicator, h₅]
-            rw [h₇]; norm_num
-          have h₇ : (∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) = 0 := by
-            have h₈ : d ∈ Finset.range b := hd
-            have h₉ : (1 - shiftSqfreeIndicator b N d : ℝ) = 0 := h₆
-            have h₁₀ : (∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) = 0 := by
-              calc
-                (∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) = ∏ d ∈ Finset.range b,
-                    (1 - shiftSqfreeIndicator b N d : ℝ) := by simp
-                _ = 0 := by
-                  apply Finset.prod_eq_zero h₈
-                  rw [h₉]
-            exact h₁₀
-          have h₈ : sqfreeIndicator N = (1 : ℝ) := by
-            simp [sqfreeIndicator, h₄]
-          calc
-            (0 : ℝ) = (1 : ℝ) * 0 := by ring
-            _ = sqfreeIndicator N * ∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) := by
-              rw [h₈, h₇]
-        · have h₅ : ¬Squarefree N := h₄
-          have h₆ : sqfreeIndicator N = (0 : ℝ) := by
-            simp [sqfreeIndicator, h₅]
-          calc
-            (0 : ℝ) = (0 : ℝ) * ∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) := by
-              have h₇ : (∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) = (∏ d ∈
-                  Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) := rfl
-              simp
-            _ = sqfreeIndicator N * ∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) := by
-              rw [h₆]
-      · have h₃ : N = 0 := by
-          by_contra _
-          have h₄ : 0 < N := Nat.pos_of_ne_zero (by intro h₄; simp_all)
-          contradiction
-        have h₄ : sqfreeIndicator N = (0 : ℝ) := by
-          simp [sqfreeIndicator, h₃]
-        calc
-          (0 : ℝ) = (0 : ℝ) * ∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) := by
-            have h₅ : (∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) = (∏ d ∈
-                Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) := rfl
-            simp
-          _ = sqfreeIndicator N * ∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) := by
-            rw [h₄]
-  exact h₁
+  by_cases hsq : Squarefree N
+  · by_cases hshift : ∀ d ∈ Finset.range b, ¬Squarefree (b * N + d)
+    · have hdead : IsBaseBDeadEnd b N := ⟨by omega, hsq, hshift⟩
+      have hprod : (∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) = 1 := by
+        apply Finset.prod_eq_one
+        intro d hd
+        simp [shiftSqfreeIndicator, hshift d hd]
+      simp [hdead, sqfreeIndicator, hsq, hprod]
+    · have hnotdead : ¬ IsBaseBDeadEnd b N := by
+        intro hdead
+        exact hshift hdead.2.2
+      push Not at hshift
+      obtain ⟨d, hd, hd_sqfree⟩ := hshift
+      have hprod : (∏ d ∈ Finset.range b, (1 - shiftSqfreeIndicator b N d) : ℝ) = 0 := by
+        apply Finset.prod_eq_zero hd
+        simp [shiftSqfreeIndicator, hd_sqfree]
+      simp [hnotdead, sqfreeIndicator, hsq, hprod]
+  · have hnotdead : ¬ IsBaseBDeadEnd b N := by
+      intro hdead
+      exact hsq hdead.2.1
+    simp [hnotdead, sqfreeIndicator, hsq]
 
 lemma countBaseBDeadEnds_as_sum (b X : ℕ) (_hb : 0 < b) :
     (countBaseBDeadEnds b X : ℝ) =
@@ -4030,53 +3378,26 @@ lemma countBaseBDeadEnds_as_sum (b X : ℕ) (_hb : 0 < b) :
 lemma indicator_conjunction_eq_prod (b N : ℕ) (T : Finset ℕ) :
     (if Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d) then (1 : ℝ) else 0) =
     sqfreeIndicator N * ∏ d ∈ T, shiftSqfreeIndicator b N d := by
-  by_cases h₁ : Squarefree N
-  · have h₂ : sqfreeIndicator N = (1 : ℝ) := by
-      simp [sqfreeIndicator, h₁]
-    have h₃ : (if Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d) then (1 : ℝ) else 0) = (if ∀ d ∈ T,
-        Squarefree (b * N + d) then (1 : ℝ) else 0) := by
-      split_ifs <;> simp_all
-    rw [h₃]
-    have h₄ : (∏ d ∈ T, shiftSqfreeIndicator b N d) = (∏ d ∈ T, if Squarefree (b * N + d) then (
-        1 : ℝ) else 0) := by
-      simp [shiftSqfreeIndicator]
-    rw [h₄]
-    have h₅ : (if ∀ d ∈ T, Squarefree (b * N + d) then (1 : ℝ) else 0) = (1 : ℝ) * (∏ d ∈ T,
-        if Squarefree (b * N + d) then (1 : ℝ) else 0) := by
-      by_cases h₆ : ∀ d ∈ T, Squarefree (b * N + d)
-      · simp_all
-      · have h₇ : ∃ d ∈ T, ¬Squarefree (b * N + d) := by
-          by_contra h₈
-          push Not at h₈
-          have h₉ : ∀ d ∈ T, Squarefree (b * N + d) := by
-            intro d hd
-            specialize h₈ d hd
-            tauto
-          contradiction
-        obtain ⟨d, hd, h₈⟩ := h₇
-        have h₁₀ : ∏ x ∈ T, (if Squarefree (b * N + x) then (1 : ℝ) else 0) = 0 := by
-          have h₁₁ : ∏ x ∈ T, (if Squarefree (b * N + x) then (1 : ℝ) else 0) = 0 := by
-            apply Finset.prod_eq_zero hd
-            split_ifs; simp_all
-          exact h₁₁
-        simp_all
-    calc
-      (if ∀ d ∈ T, Squarefree (b * N + d) then (1 : ℝ) else 0) = (1 : ℝ) * (∏ d ∈ T, if Squarefree (
-          b * N + d) then (1 : ℝ) else 0) := by rw [h₅]
-      _ = sqfreeIndicator N * ∏ d ∈ T, (if Squarefree (b * N + d) then (1 : ℝ) else 0) := by
-        rw [h₂]
-      _ = sqfreeIndicator N * ∏ d ∈ T, shiftSqfreeIndicator b N d := by
-        simp [shiftSqfreeIndicator]
-  · have h₂ : sqfreeIndicator N = (0 : ℝ) := by
-      simp [sqfreeIndicator, h₁]
-    have h₃ : (if Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d) then (1 : ℝ) else 0) = (0 : ℝ) :=
-        by
-      split_ifs <;> simp_all
-    calc
-      (if Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d) then (1 : ℝ) else 0) = (0 : ℝ) := by
-          rw [h₃]
-      _ = sqfreeIndicator N * ∏ d ∈ T, shiftSqfreeIndicator b N d := by
-        rw [h₂]; simp
+  by_cases hsq : Squarefree N
+  · by_cases hall : ∀ d ∈ T, Squarefree (b * N + d)
+    · have hprod : (∏ d ∈ T, shiftSqfreeIndicator b N d) = 1 := by
+        apply Finset.prod_eq_one
+        intro d hd
+        simp [shiftSqfreeIndicator, hall d hd]
+      have hcond : Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d) := ⟨hsq, hall⟩
+      rw [if_pos hcond, hprod]
+      simp [sqfreeIndicator, hsq]
+    · push Not at hall
+      obtain ⟨d, hd, hd_not_sqfree⟩ := hall
+      have hprod : (∏ d ∈ T, shiftSqfreeIndicator b N d) = 0 := by
+        apply Finset.prod_eq_zero hd
+        simp [shiftSqfreeIndicator, hd_not_sqfree]
+      have hnot : ¬(Squarefree N ∧ ∀ x ∈ T, Squarefree (b * N + x)) := by
+        rintro ⟨_, hall⟩
+        exact hd_not_sqfree (hall d hd)
+      rw [if_neg hnot, hprod]
+      simp [sqfreeIndicator, hsq]
+  · simp [sqfreeIndicator, hsq]
 
 lemma countJointSquarefree_as_sum (b X : ℕ) (T : Finset ℕ) :
     (countJointSquarefree b T X : ℝ) =
@@ -4186,15 +3507,12 @@ lemma sum_div_eq_div_sum (b : ℕ) (X : ℕ) (_hX : 0 < X) :
 lemma dead_end_tendsto_explicit_formula (b : ℕ) (hb : 2 ≤ b) :
     Filter.Tendsto (fun X : ℕ => (countBaseBDeadEnds b X : ℝ) / (X : ℝ))
       Filter.atTop (nhds (explicitDensityFormula b)) := by
-  -- Step 1: Get tendsto for each joint density
   have h_joint : ∀ T ∈ (Finset.range b).powerset,
       Filter.Tendsto (fun X : ℕ => (countJointSquarefree b T X : ℝ) / (X : ℝ))
         Filter.atTop (nhds (jointSquarefreeDensity b T)) := by
     intro T hT
     exact joint_density_eq_euler_product b hb T (Finset.mem_powerset.mp hT)
-  -- Step 2: Get tendsto for the alternating sum of ratios
   have h_alt := alternating_sum_tendsto b hb h_joint
-  -- Step 3: Rewrite dead end count using inclusion-exclusion
   have h_eq : (fun X : ℕ => (countBaseBDeadEnds b X : ℝ) / (X : ℝ)) =ᶠ[Filter.atTop]
       (fun X : ℕ => ∑ T ∈ (Finset.range b).powerset,
         ((-1 : ℝ) ^ T.card) * ((countJointSquarefree b T X : ℝ) / (X : ℝ))) := by
