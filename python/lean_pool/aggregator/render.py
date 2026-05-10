@@ -21,6 +21,8 @@ import re
 from pathlib import Path
 from typing import TypedDict
 
+import yaml
+
 from lean_pool.aggregator.reservoir import Build, Package, ReservoirManifest
 
 
@@ -51,8 +53,9 @@ _MARKER_BLOCK = re.compile(
 )
 
 _TABLE_HEADER = (
-    "| Stars | Package | Description | License | Lean | LOC | Updated | Build |\n"
-    "| ---: | --- | --- | --- | --- | ---: | --- | :---: |\n"
+    "| Stars | Package | Description | License | Lean | LOC | Updated"
+    " | Build | In Pool |\n"
+    "| ---: | --- | --- | --- | --- | ---: | --- | :---: | :---: |\n"
 )
 
 # Directories under a clone whose ``.lean`` files don't count as the
@@ -187,6 +190,50 @@ def count_lean_loc(clones_dir: Path, key: str) -> int | None:
     return total
 
 
+def load_pool_repos(projects_yml_path: Path) -> set[str]:
+    """Load canonical GitHub keys for projects already merged into lean-pool.
+
+    Reads ``LeanPool/projects.yml`` and collects the
+    ``source.github_repo`` field of each project that has one. Keys are
+    normalised via :func:`canonical_key` so they match the keys produced
+    by :func:`package_key` for Reservoir entries.
+
+    Args:
+        projects_yml_path: Path to ``LeanPool/projects.yml``.
+
+    Returns:
+        Set of canonical ``owner/name`` keys. Empty if the file is
+        missing, malformed, or contains no ``source.github_repo``
+        fields. A malformed file is logged but not fatal so renderer
+        output keeps working when ``projects.yml`` is being edited.
+    """
+    if not projects_yml_path.is_file():
+        return set()
+    try:
+        data = yaml.safe_load(projects_yml_path.read_text()) or {}
+    except yaml.YAMLError as exc:
+        logger.warning("%s: invalid YAML: %s", projects_yml_path, exc)
+        return set()
+    if not isinstance(data, dict):
+        return set()
+    projects = data.get("projects") or []
+    if not isinstance(projects, list):
+        return set()
+    keys: set[str] = set()
+    for project in projects:
+        if not isinstance(project, dict):
+            continue
+        source = project.get("source")
+        if not isinstance(source, dict):
+            continue
+        repo = source.get("github_repo")
+        if not isinstance(repo, str) or "/" not in repo:
+            continue
+        owner, _, name = repo.partition("/")
+        keys.add(canonical_key(owner, name))
+    return keys
+
+
 def load_decisions(path: Path) -> dict[str, Decision]:
     """Load classifier verdicts from a JSONL file, keyed by canonical repo.
 
@@ -256,7 +303,12 @@ def read_toolchain(clones_dir: Path, key: str) -> str | None:
     return stripped or None
 
 
-def _row(package: Package, toolchain: str | None, loc: int | None) -> str:
+def _row(
+    package: Package,
+    toolchain: str | None,
+    loc: int | None,
+    in_pool: bool,
+) -> str:
     """Render a single package as a markdown table row."""
     full_name = package["fullName"]
     repo_url = _repo_url(package)
@@ -274,12 +326,13 @@ def _row(package: Package, toolchain: str | None, loc: int | None) -> str:
 
     builds = package.get("builds") or []
     build_glyph = _build_glyph(builds[0] if builds else None)
+    in_pool_glyph = "✓" if in_pool else ""
 
     stars = package.get("stars", 0)
     return (
         f"| {stars} | {name_cell} | {description} | "
         f"{license_name} | {toolchain_cell} | {loc_cell} | "
-        f"{updated} | {build_glyph} |"
+        f"{updated} | {build_glyph} | {in_pool_glyph} |"
     )
 
 
@@ -289,6 +342,7 @@ def render_table(
     min_stars: int = 0,
     min_loc: int = 0,
     decisions: dict[str, Decision] | None = None,
+    pool_repos: set[str] | None = None,
 ) -> str:
     """Render the manifest as a markdown table.
 
@@ -322,6 +376,11 @@ def render_table(
             canonical key has ``include == False`` are dropped. Repos
             with no entry in ``decisions`` are kept regardless, so
             partial classification doesn't silently lose packages.
+        pool_repos: Optional set of canonical ``owner/name`` keys for
+            candidates already merged into lean-pool (see
+            :func:`load_pool_repos`). Rows whose key is in the set get
+            a ``✓`` in the ``In Pool`` column; everything else is left
+            blank. Defaults to no merged candidates when omitted.
 
     Returns:
         A markdown table including header, separator, and one row per
@@ -375,8 +434,15 @@ def render_table(
         key=lambda row: (-row[0].get("stars", 0), row[0]["fullName"].lower()),
     )
 
+    pool_keys = pool_repos or set()
+
+    def _in_pool(package: Package) -> bool:
+        key = package_key(package)
+        return key is not None and key in pool_keys
+
     rows = "\n".join(
-        _row(package, toolchain, loc) for package, toolchain, loc in enriched
+        _row(package, toolchain, loc, _in_pool(package))
+        for package, toolchain, loc in enriched
     )
     return _TABLE_HEADER + rows + "\n"
 
