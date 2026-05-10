@@ -29,7 +29,6 @@ projects:
       arxiv: "2602.05090"
     status: verified
     main_declarations:
-      - LeanPool.PartialRegularity.irregular_primes_asymptotic
       - LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
     tags:
       - number-theory

@@ -3,4 +3,3 @@ import LeanPool.FelConjecture
 import LeanPool.FelConjecture.Solution
 import LeanPool.PartialRegularity
 import LeanPool.PartialRegularity.Extension
-import LeanPool.PartialRegularity.Solution

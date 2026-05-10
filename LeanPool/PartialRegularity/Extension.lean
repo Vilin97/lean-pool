@@ -3,7 +3,19 @@ Copyright (c) 2026 Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang. All 
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
-import Mathlib
+import Mathlib.Algebra.Ring.GeomSum
+import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
+import Mathlib.Analysis.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Log.Monotone
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+import Mathlib.Data.Set.Card.Arithmetic
+import Mathlib.NumberTheory.ArithmeticFunction.Misc
+import Mathlib.NumberTheory.Bernoulli
+import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
+import Mathlib.NumberTheory.LSeries.Nonvanishing
+import Mathlib.NumberTheory.ZetaValues
+import Mathlib.RingTheory.ZMod.UnitsCyclic
+import Mathlib.Tactic
 
 /-! # Irregular primes and Bernoulli numbers (extension)
 
@@ -12,23 +24,29 @@ of odd primes `p ≤ X` that are not `M_α(p)`-regular is bounded by `10 · X / 
 
 namespace LeanPool.PartialRegularity.Extension
 
+/-- A prime `p` is `m`-regular if it has no Bernoulli numerator divisor in range. -/
 def isMRegular (m : ℕ) (p : ℕ) : Prop :=
   Nat.Prime p ∧ Odd p ∧
     ∀ k : ℕ, 1 ≤ k → 2 * k ≤ min m (p - 3) → ¬((p : ℤ) ∣ (bernoulli (2 * k)).num)
 
+/-- The cutoff `M_α(p) = ⌊sqrt p / (log p)^α⌋`. -/
 noncomputable def M_alpha (α : ℝ) (p : ℕ) : ℕ :=
   ⌊Real.sqrt p / (Real.log p) ^ α⌋₊
 
+/-- The set of irregular primes up to `X` for the cutoff `M_α`. -/
 noncomputable def irregularPrimesUpTo (α : ℝ) (X : ℕ) : Set ℕ :=
   {p : ℕ | p ≤ X ∧ Nat.Prime p ∧ Odd p ∧ ¬isMRegular (M_alpha α p) p}
 
+/-- A uniform upper bound for the relevant `M_α(p)` values with `p ≤ X`. -/
 noncomputable def K_max_sup (α : ℝ) (X : ℕ) : ℕ :=
   (Finset.filter (fun p => Nat.Prime p) (Finset.range (X + 1))).sup (M_alpha α) + 1
 
+/-- Primes counted at a fixed Bernoulli index `k` in the double-counting argument. -/
 noncomputable def A_k (α : ℝ) (X : ℕ) (k : ℕ) : Set ℕ :=
   {p : ℕ | p ≤ X ∧ Nat.Prime p ∧ Odd p ∧ 2 * k ≤ M_alpha α p ∧
            (p : ℤ) ∣ (bernoulli (2 * k)).num}
 
+/-- The explicit constant used for the Bernoulli-factor counting bound. -/
 noncomputable def bernoulliOmegaConst : ℝ := 10
 
 lemma bernoulliOmegaConst_pos : bernoulliOmegaConst > 0 := by
@@ -70,13 +88,16 @@ lemma A_k_zero_empty (α : ℝ) (X : ℕ) : A_k α X 0 = ∅ := by
   have : (p : ℤ) ≤ 1 := Int.le_of_dvd (by norm_num) hp_dvd
   linarith [hp_prime.two_le]
 
-lemma prime_int_dvd_natAbs (p : ℕ) (z : ℤ) (_hp : Nat.Prime p) (hdvd : (p : ℤ) ∣ z) : p ∣ z.natAbs :=
+lemma prime_int_dvd_natAbs (p : ℕ) (z : ℤ) (_hp : Nat.Prime p)
+    (hdvd : (p : ℤ) ∣ z) : p ∣ z.natAbs :=
   Int.natCast_dvd.mp hdvd
 
 lemma bernoulli_two_mul_ne_zero (k : ℕ) (hk : k ≠ 0) : bernoulli (2 * k) ≠ 0 := by
   intro h
   have hre : (1 : ℝ) < 2 * k := by
-    have : (2 : ℝ) * k ≥ 2 * 1 := mul_le_mul_of_nonneg_left (by exact_mod_cast Nat.one_le_iff_ne_zero.mpr hk) (by norm_num)
+    have : (2 : ℝ) * k ≥ 2 * 1 :=
+      mul_le_mul_of_nonneg_left (by exact_mod_cast Nat.one_le_iff_ne_zero.mpr hk)
+        (by norm_num)
     linarith
   have hne : riemannZeta (2 * k) ≠ 0 := riemannZeta_ne_zero_of_one_lt_re <| by
     simp only [Complex.mul_re, Complex.natCast_re, Complex.natCast_im, mul_zero, sub_zero]
@@ -85,7 +106,8 @@ lemma bernoulli_two_mul_ne_zero (k : ℕ) (hk : k ≠ 0) : bernoulli (2 * k) ≠
   simp only [h, Rat.cast_zero, mul_zero, zero_div] at hzeta
   exact hne hzeta
 
-lemma bernoulli_num_natAbs_ne_zero (k : ℕ) (hk : 1 ≤ k) : (bernoulli (2 * k)).num.natAbs ≠ 0 := by
+lemma bernoulli_num_natAbs_ne_zero (k : ℕ) (hk : 1 ≤ k) :
+    (bernoulli (2 * k)).num.natAbs ≠ 0 := by
   simp only [ne_eq, Int.natAbs_eq_zero, Rat.num_ne_zero]
   exact bernoulli_two_mul_ne_zero k (Nat.one_le_iff_ne_zero.mp hk)
 
@@ -93,10 +115,12 @@ lemma A_k_subset_primeFactors (α : ℝ) (X : ℕ) (k : ℕ) (hk : 1 ≤ k) :
     A_k α X k ⊆ ↑((bernoulli (2 * k)).num.natAbs.primeFactors) := fun p hp => by
   simp only [A_k, Set.mem_setOf_eq] at hp
   rw [Finset.mem_coe, Nat.mem_primeFactors]
-  exact ⟨hp.2.1, prime_int_dvd_natAbs p _ hp.2.1 hp.2.2.2.2, bernoulli_num_natAbs_ne_zero k hk⟩
+  exact ⟨hp.2.1, prime_int_dvd_natAbs p _ hp.2.1 hp.2.2.2.2,
+    bernoulli_num_natAbs_ne_zero k hk⟩
 
 lemma card_A_k_bound (α : ℝ) (X : ℕ) (k : ℕ) (hk : 1 ≤ k) :
-    ((A_k α X k).ncard : ℝ) ≤ ArithmeticFunction.cardDistinctFactors (bernoulli (2 * k)).num.natAbs := by
+    ((A_k α X k).ncard : ℝ) ≤
+      ArithmeticFunction.cardDistinctFactors (bernoulli (2 * k)).num.natAbs := by
   have hle := Set.ncard_le_ncard (A_k_subset_primeFactors α X k hk) (Finset.finite_toSet _)
   rw [Set.ncard_coe_finset] at hle
   rw [ArithmeticFunction.cardDistinctFactors_apply, ← List.card_toFinset
@@ -106,13 +130,15 @@ lemma card_A_k_bound (α : ℝ) (X : ℕ) (k : ℕ) (hk : 1 ≤ k) :
 lemma sorted_primes_get_ge (l : List ℕ) (hsort : l.SortedLT) (hge2 : ∀ x ∈ l, 2 ≤ x)
     (i : Fin l.length) : i.val + 2 ≤ l.get i := by
   have hmono : StrictMono l.get := List.SortedLT.strictMono_get hsort
-  induction' h : i.val with n ih generalizing i
-  · simp only [zero_add]
+  induction h : i.val generalizing i with
+  | zero =>
+    simp only [zero_add]
     exact hge2 (l.get i) (List.get_mem ..)
-  · have hn_lt : n < l.length := by have := h ▸ i.isLt; omega
+  | succ n ih =>
+    have hn_lt : n < l.length := by have := h ▸ i.isLt; omega
     let j : Fin l.length := ⟨n, hn_lt⟩
     have ih_j : n + 2 ≤ l.get j := ih j rfl
-    have hlt : l.get j < l.get i := hmono (by show n < i.val; omega)
+    have hlt : l.get j < l.get i := hmono (by change n < i.val; omega)
     omega
 
 lemma factorial_le_prod_primes (S : Finset ℕ) (hS : ∀ p ∈ S, Nat.Prime p) :
@@ -171,7 +197,8 @@ lemma two_mul_factorial_sq_le_pow (k : ℕ) (hk : 1 ≤ k) :
       _ = (2 * k + 1) ^ (4 * k + 2) := by ring
   calc 2 * (2 * k + 1).factorial ^ 2
       ≤ 2 * (2 * k + 1) ^ (4 * k + 2) := Nat.mul_le_mul_left 2 h2'
-    _ ≤ (2 * k + 1) * (2 * k + 1) ^ (4 * k + 2) := Nat.mul_le_mul_right _ (by omega : 2 ≤ 2 * k + 1)
+    _ ≤ (2 * k + 1) * (2 * k + 1) ^ (4 * k + 2) :=
+      Nat.mul_le_mul_right _ (by omega : 2 ≤ 2 * k + 1)
     _ = (2 * k + 1) ^ (4 * k + 3) := by ring
 
 lemma factorial_prod_bound (k : ℕ) :
@@ -201,8 +228,12 @@ lemma gcd_natAbs_mul_num_dvd_n (n : ℕ) (q : ℚ) : (↑n * q.num).natAbs.gcd q
   rw [h1, gcd_mul_coprime_eq_gcd n q.num.natAbs q.den hcop]
   exact Nat.gcd_dvd_left n q.den
 
-lemma rat_den_dvd_mul_of_int_mul (q : ℚ) (n : ℕ) (_hn : 0 < n) : q.den ∣ n * (↑n * q).den := by
-  have h_eq : (↑n : ℚ).den * q.den = ((↑n : ℚ) * q).den * ((↑n : ℚ).num * q.num).natAbs.gcd ((↑n : ℚ).den * q.den) :=
+lemma rat_den_dvd_mul_of_int_mul (q : ℚ) (n : ℕ) (_hn : 0 < n) :
+    q.den ∣ n * (↑n * q).den := by
+  have h_eq :
+      (↑n : ℚ).den * q.den =
+        ((↑n : ℚ) * q).den *
+          ((↑n : ℚ).num * q.num).natAbs.gcd ((↑n : ℚ).den * q.den) :=
     Rat.den_mul_den_eq_den_mul_gcd (↑n) q
   simp only [Rat.den_natCast, Rat.num_natCast, one_mul] at h_eq
   rw [h_eq, mul_comm]
@@ -221,13 +252,15 @@ lemma sum_bernoulli_eq_neg_mul (k : ℕ) (hk : 2 ≤ k) :
   linarith
 
 lemma den_sum_dvd_of_each_den_dvd {n : ℕ} {f : ℕ → ℚ} {D : ℕ}
-    (_hD : 0 < D) (hf : ∀ j < n, (f j).den ∣ D) : (∑ j ∈ Finset.range n, f j).den ∣ D := by
+    (_hD : 0 < D) (hf : ∀ j < n, (f j).den ∣ D) :
+    (∑ j ∈ Finset.range n, f j).den ∣ D := by
   induction n with
   | zero => simp
   | succ n ih =>
     rw [Finset.sum_range_succ]
     have h1 : (f n).den ∣ D := hf n (Nat.lt_succ_self n)
-    have h2 : (∑ j ∈ Finset.range n, f j).den ∣ D := ih (fun j hj => hf j (Nat.lt_succ_of_lt hj))
+    have h2 : (∑ j ∈ Finset.range n, f j).den ∣ D :=
+      ih (fun j hj => hf j (Nat.lt_succ_of_lt hj))
     have h_lcm : (∑ j ∈ Finset.range n, f j).den.lcm (f n).den ∣ D := Nat.lcm_dvd h2 h1
     exact dvd_trans (Rat.add_den_dvd_lcm _ _) h_lcm
 
@@ -256,7 +289,8 @@ lemma term_even_den_dvd (k m : ℕ) (_hk : 2 ≤ k) (_hm_ge : 1 ≤ m) (hm_lt : 
   have h_mul := Rat.mul_den_dvd (↑((2 * k + 1).choose (2 * m)) : ℚ) (bernoulli (2 * m))
   have h_binom_den : (↑((2 * k + 1).choose (2 * m)) : ℚ).den = 1 := Rat.den_natCast _
   simp only [h_binom_den, one_mul] at h_mul
-  have h_fact : (2 * m + 1).factorial ∣ (2 * k).factorial := Nat.factorial_dvd_factorial (by omega)
+  have h_fact : (2 * m + 1).factorial ∣ (2 * k).factorial :=
+    Nat.factorial_dvd_factorial (by omega)
   exact dvd_trans (dvd_trans h_mul ih) h_fact
 
 lemma each_term_den_dvd_factorial (k : ℕ) (hk : 2 ≤ k)
@@ -273,14 +307,19 @@ lemma each_term_den_dvd_factorial (k : ℕ) (hk : 2 ≤ k)
   · rcases m.eq_zero_or_pos with rfl | hm_pos
     · simp only [hm_eq]
       exact term_j_one_den_dvd k hk
-    · simp only [hm_eq, term_vanishes_for_odd_gt_one k (2 * m + 1) ⟨m, rfl⟩ (by omega : 1 < 2 * m + 1),
-                 Rat.den_zero]
+    · simp only [hm_eq,
+        term_vanishes_for_odd_gt_one k (2 * m + 1) ⟨m, rfl⟩
+          (by omega : 1 < 2 * m + 1),
+        Rat.den_zero]
       exact Nat.one_dvd _
 
 lemma den_mul_factor_bernoulli_dvd_factorial (k : ℕ) (hk : 2 ≤ k)
     (ih : ∀ m : ℕ, 1 ≤ m → m < k → (bernoulli (2 * m)).den ∣ (2 * m + 1).factorial) :
     ((2 * k + 1 : ℕ) * bernoulli (2 * k)).den ∣ (2 * k).factorial := by
-  have hsum_den : (∑ j ∈ Finset.range (2 * k), (↑((2 * k + 1).choose j) : ℚ) * bernoulli j).den ∣ (2 * k).factorial :=
+  have hsum_den :
+      (∑ j ∈ Finset.range (2 * k),
+        (↑((2 * k + 1).choose j) : ℚ) * bernoulli j).den ∣
+        (2 * k).factorial :=
     den_sum_dvd_of_each_den_dvd (Nat.factorial_pos _) (each_term_den_dvd_factorial k hk ih)
   rw [sum_bernoulli_eq_neg_mul k hk] at hsum_den
   simpa only [neg_mul, Rat.den_neg_eq_den] using hsum_den
@@ -321,8 +360,10 @@ lemma tsum_inv_pow_two_mul_le (k : ℕ) (hk : 1 ≤ k) :
   · intro n
     simp only [one_div]
     rcases eq_or_ne n 0 with rfl | hn0
-    · simp only [Nat.cast_zero, zero_pow h2k_ne, inv_zero, zero_pow (by norm_num : (2 : ℕ) ≠ 0), le_refl]
-    · exact inv_anti₀ (by positivity) (pow_le_pow_right₀ (by exact_mod_cast Nat.one_le_iff_ne_zero.mpr hn0) h2k)
+    · simp only [Nat.cast_zero, zero_pow h2k_ne, inv_zero,
+        zero_pow (by norm_num : (2 : ℕ) ≠ 0), le_refl]
+    · exact inv_anti₀ (by positivity)
+        (pow_le_pow_right₀ (by exact_mod_cast Nat.one_le_iff_ne_zero.mpr hn0) h2k)
   · have h1 : (1 : ℝ) < 2 * k := by exact_mod_cast h2k
     refine (Real.summable_one_div_nat_rpow.mpr h1).congr (fun n => ?_)
     simp only [one_div]
@@ -352,20 +393,29 @@ lemma bernoulli_eq_zeta_formula (k : ℕ) (hk : 1 ≤ k) :
   linarith
 
 lemma bernoulli_abs_le_formula (k : ℕ) (hk : 1 ≤ k) :
-    |(bernoulli (2 * k) : ℝ)| ≤ (2 * k).factorial * (Real.pi ^ 2 / 6) / (2 ^ (2 * k - 1) * Real.pi ^ (2 * k)) := by
+    |(bernoulli (2 * k) : ℝ)| ≤
+      (2 * k).factorial * (Real.pi ^ 2 / 6) /
+        (2 ^ (2 * k - 1) * Real.pi ^ (2 * k)) := by
   have hdenom_pos : 0 < 2 ^ (2 * k - 1) * Real.pi ^ (2 * k) := by positivity
   have hfact_pos : 0 < ((2 * k).factorial : ℝ) := by positivity
   rw [bernoulli_eq_zeta_formula k hk, abs_div, abs_mul, abs_mul, abs_neg_one_pow, one_mul,
       abs_of_pos hfact_pos, abs_of_nonneg (tsum_nonneg (fun n => by positivity)),
       abs_of_pos hdenom_pos]
-  exact div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left (tsum_inv_pow_two_mul_le k hk) hfact_pos.le) hdenom_pos.le
+  exact div_le_div_of_nonneg_right
+    (mul_le_mul_of_nonneg_left (tsum_inv_pow_two_mul_le k hk) hfact_pos.le)
+    hdenom_pos.le
 
 lemma formula_le_two_mul_factorial (k : ℕ) (hk : 1 ≤ k) :
-    (2 * k).factorial * (Real.pi ^ 2 / 6) / (2 ^ (2 * k - 1) * Real.pi ^ (2 * k)) ≤ 2 * (2 * k).factorial := by
+    (2 * k).factorial * (Real.pi ^ 2 / 6) /
+        (2 ^ (2 * k - 1) * Real.pi ^ (2 * k)) ≤
+      2 * (2 * k).factorial := by
   have hfact_pos : 0 < ((2 * k).factorial : ℝ) := by positivity
-  have h1 : (2 * k).factorial * (Real.pi ^ 2 / 6) / (2 ^ (2 * k - 1) * Real.pi ^ (2 * k))
-      ≤ (2 * k).factorial * (Real.pi ^ 2 / 6) / 1 :=
-    div_le_div_of_nonneg_left (mul_nonneg hfact_pos.le (by positivity)) (by linarith) (denom_ge_one k hk)
+  have h1 :
+      (2 * k).factorial * (Real.pi ^ 2 / 6) /
+          (2 ^ (2 * k - 1) * Real.pi ^ (2 * k)) ≤
+        (2 * k).factorial * (Real.pi ^ 2 / 6) / 1 :=
+    div_le_div_of_nonneg_left (mul_nonneg hfact_pos.le (by positivity))
+      (by linarith) (denom_ge_one k hk)
   linarith [mul_lt_mul_of_pos_left pi_sq_div_six_lt_two hfact_pos]
 
 lemma bernoulli_abs_le_two_mul_factorial (k : ℕ) (hk : 1 ≤ k) :
@@ -391,7 +441,8 @@ lemma bernoulli_num_natAbs_pos (k : ℕ) (hk : 1 ≤ k) :
     0 < (bernoulli (2 * k)).num.natAbs :=
   Int.natAbs_pos.mpr (Rat.num_ne_zero.mpr (bernoulli_two_mul_ne_zero_1 k hk))
 
-lemma descFactorial_le_factorial (n k : ℕ) (hkn : k ≤ n) : n.descFactorial k ≤ n.factorial := by
+lemma descFactorial_le_factorial (n k : ℕ) (hkn : k ≤ n) :
+    n.descFactorial k ≤ n.factorial := by
   calc n.descFactorial k
       ≤ (n - k).factorial * n.descFactorial k :=
         Nat.le_mul_of_pos_left _ (Nat.factorial_pos _)
@@ -420,14 +471,15 @@ lemma omega_bernoulli_bound (k : ℕ) (hk : 1 ≤ k) :
   set N := (bernoulli (2 * k)).num.natAbs
   set m := ArithmeticFunction.cardDistinctFactors N
   by_contra h_contra
-  push_neg at h_contra
+  push Not at h_contra
   have hN_pos : 0 < N := bernoulli_num_natAbs_pos k hk
   have h_fac_le_N : (m + 1).factorial ≤ N := primeFactors_factorial_le_1 N hN_pos
   have h_ten_k_fac_le_N : (10 * k).factorial ≤ N := calc
     (10 * k).factorial ≤ (10 * k + 1).factorial := Nat.factorial_le (by omega)
     _ ≤ (m + 1).factorial := Nat.factorial_le (by omega)
     _ ≤ N := h_fac_le_N
-  have h_power_strict := Nat.pow_lt_pow_right (by omega : 1 < 2 * k + 1) (by omega : 4 * k + 3 < 8 * k)
+  have h_power_strict :=
+    Nat.pow_lt_pow_right (by omega : 1 < 2 * k + 1) (by omega : 4 * k + 3 < 8 * k)
   exact Nat.lt_irrefl _ <| calc (2 * k + 1) ^ (4 * k + 3)
     _ < (2 * k + 1) ^ (8 * k) := h_power_strict
     _ ≤ (10 * k).factorial := factorial_ten_k_ge_power k hk
@@ -451,18 +503,22 @@ lemma sq_add_one_le_two_sq (A : ℝ) (hA : A ≥ 1 + Real.sqrt 2) : (A + 1) ^ 2 
 lemma tendsto_sqrt_div_log_pow_atTop (α : ℝ) (_hα : 0 < α) :
     Filter.Tendsto (fun x : ℝ => Real.sqrt x / (Real.log x) ^ α) Filter.atTop Filter.atTop := by
   simp only [Real.sqrt_eq_rpow]
-  have h_littleo := isLittleO_log_rpow_rpow_atTop α (by norm_num : (0 : ℝ) < 1/2)
-  have h_ev : ∀ᶠ x in Filter.atTop, (x : ℝ) ^ (1/2 : ℝ) = 0 → (Real.log x) ^ α = 0 := by
+  have h_littleo := isLittleO_log_rpow_rpow_atTop α (by norm_num : (0 : ℝ) < 1 / 2)
+  have h_ev : ∀ᶠ x in Filter.atTop,
+      (x : ℝ) ^ (1 / 2 : ℝ) = 0 → (Real.log x) ^ α = 0 := by
     filter_upwards [Filter.eventually_gt_atTop 0] with x hx h
-    exact absurd h (Real.rpow_pos_of_pos hx (1/2)).ne'
+    exact absurd h (Real.rpow_pos_of_pos hx (1 / 2)).ne'
   rw [Asymptotics.isLittleO_iff_tendsto' h_ev] at h_littleo
-  have h_ev_pos : ∀ᶠ x in Filter.atTop, 0 < (Real.log x) ^ α / x ^ (1/2 : ℝ) := by
+  have h_ev_pos :
+      ∀ᶠ x in Filter.atTop, 0 < (Real.log x) ^ α / x ^ (1 / 2 : ℝ) := by
     filter_upwards [Filter.eventually_gt_atTop 1] with x hx
-    exact div_pos (Real.rpow_pos_of_pos (Real.log_pos hx) α) (Real.rpow_pos_of_pos (by linarith) (1/2))
+    exact div_pos (Real.rpow_pos_of_pos (Real.log_pos hx) α)
+      (Real.rpow_pos_of_pos (by linarith) (1 / 2))
   have h_tendsto_nhdsGT := tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
     _ h_littleo h_ev_pos
-  have h_eq : (fun x : ℝ => x ^ (1/2 : ℝ) / (Real.log x) ^ α) =
-      (fun x : ℝ => ((Real.log x) ^ α / x ^ (1/2 : ℝ))⁻¹) := funext fun x => (inv_div _ _).symm
+  have h_eq : (fun x : ℝ => x ^ (1 / 2 : ℝ) / (Real.log x) ^ α) =
+      (fun x : ℝ => ((Real.log x) ^ α / x ^ (1 / 2 : ℝ))⁻¹) :=
+    funext fun x => (inv_div _ _).symm
   rw [h_eq]
   exact Filter.Tendsto.inv_tendsto_nhdsGT_zero h_tendsto_nhdsGT
 
@@ -474,9 +530,13 @@ lemma eventually_sqrt_div_log_ge_threshold (α : ℝ) (hα : 0 < α) :
 lemma rpow_div_log_monotoneOn (α : ℝ) (hα : 0 < α) :
     MonotoneOn (fun x : ℝ => x ^ (1 / (2 * α)) / Real.log x) {x | Real.exp (2 * α) ≤ x} := by
   have ha : 0 < 1 / (2 * α) := by positivity
-  have hset_eq : {x : ℝ | Real.exp (2 * α) ≤ x} = {x | Real.exp (1 / (1 / (2 * α))) ≤ x} := by
+  have hset_eq :
+      {x : ℝ | Real.exp (2 * α) ≤ x} =
+        {x | Real.exp (1 / (1 / (2 * α))) ≤ x} := by
     simp only [one_div_one_div]
-  have hanti : AntitoneOn (fun x => Real.log x / x ^ (1 / (2 * α))) {x | Real.exp (2 * α) ≤ x} := by
+  have hanti :
+      AntitoneOn (fun x => Real.log x / x ^ (1 / (2 * α)))
+        {x | Real.exp (2 * α) ≤ x} := by
     rw [hset_eq]
     exact Real.log_div_self_rpow_antitoneOn ha
   intro x hx y hy hxy
@@ -487,10 +547,14 @@ lemma rpow_div_log_monotoneOn (α : ℝ) (hα : 0 < α) :
   have hy_pos : 0 < y := lt_of_lt_of_le hexp_pos hy
   have hy_gt_one : 1 < y := Real.one_lt_exp_iff.mpr h2α_pos |>.trans_le hy
   have hlogy_pos : 0 < Real.log y := Real.log_pos hy_gt_one
-  have hgy_pos : 0 < Real.log y / y ^ (1 / (2 * α)) := div_pos hlogy_pos (Real.rpow_pos_of_pos hy_pos _)
-  have hanti_xy : Real.log y / y ^ (1 / (2 * α)) ≤ Real.log x / x ^ (1 / (2 * α)) := hanti hx hy hxy
-  show x ^ (1 / (2 * α)) / Real.log x ≤ y ^ (1 / (2 * α)) / Real.log y
-  have h_eq_one_div : ∀ z : ℝ, 0 < z → z ^ (1 / (2 * α)) / Real.log z = 1 / (Real.log z / z ^ (1 / (2 * α))) := by
+  have hgy_pos : 0 < Real.log y / y ^ (1 / (2 * α)) :=
+    div_pos hlogy_pos (Real.rpow_pos_of_pos hy_pos _)
+  have hanti_xy :
+      Real.log y / y ^ (1 / (2 * α)) ≤ Real.log x / x ^ (1 / (2 * α)) :=
+    hanti hx hy hxy
+  change x ^ (1 / (2 * α)) / Real.log x ≤ y ^ (1 / (2 * α)) / Real.log y
+  have h_eq_one_div : ∀ z : ℝ, 0 < z →
+      z ^ (1 / (2 * α)) / Real.log z = 1 / (Real.log z / z ^ (1 / (2 * α))) := by
     intro z hz
     have hzpow_ne : z ^ (1 / (2 * α)) ≠ 0 := (Real.rpow_pos_of_pos hz _).ne'
     field_simp
@@ -524,7 +588,8 @@ lemma sqrt_div_log_monotoneOn (α : ℝ) (hα : 0 < α) :
 lemma sqrt_div_log_le_of_le_of_large (α : ℝ) (hα : 0 < α) (p X : ℕ)
     (hp_large : Real.exp (2 * α) ≤ p) (hpX : p ≤ X) :
     Real.sqrt p / (Real.log p) ^ α ≤ Real.sqrt X / (Real.log X) ^ α :=
-  sqrt_div_log_monotoneOn α hα hp_large (hp_large.trans (Nat.cast_le.mpr hpX)) (Nat.cast_le.mpr hpX)
+  sqrt_div_log_monotoneOn α hα hp_large
+    (hp_large.trans (Nat.cast_le.mpr hpX)) (Nat.cast_le.mpr hpX)
 
 lemma eventually_sqrt_div_log_ge (α : ℝ) (hα : 0 < α) (M : ℝ) :
     ∀ᶠ X : ℕ in Filter.atTop, M ≤ Real.sqrt X / (Real.log X) ^ α := by
@@ -550,7 +615,8 @@ lemma sqrt_div_log_eventually_le (α : ℝ) (hα : 0 < α) :
   filter_upwards [eventually_sqrt_div_log_ge α hα C, h2] with X hX_ge_C hX_large p hpX
   by_cases hp : p < T
   · exact (hC p hp).trans hX_ge_C
-  · exact sqrt_div_log_le_of_le_of_large α hα p X ((Nat.le_ceil _).trans (Nat.cast_le.mpr (Nat.not_lt.mp hp))) hpX
+  · exact sqrt_div_log_le_of_le_of_large α hα p X
+      ((Nat.le_ceil _).trans (Nat.cast_le.mpr (Nat.not_lt.mp hp))) hpX
 
 lemma K_max_sup_le_sqrt_div_log_add_one (α : ℝ) (hα : 0 < α) :
     ∀ᶠ X : ℕ in Filter.atTop,
@@ -558,12 +624,18 @@ lemma K_max_sup_le_sqrt_div_log_add_one (α : ℝ) (hα : 0 < α) :
   filter_upwards [sqrt_div_log_eventually_le α hα] with X hX
   unfold K_max_sup
   simp only [Nat.cast_add, Nat.cast_one]
-  suffices h : ((Finset.filter (fun p => Nat.Prime p) (Finset.range (X + 1))).sup (M_alpha α) : ℕ) ≤
-      ⌊Real.sqrt X / (Real.log X) ^ α⌋₊ by
-    have hfloor : (⌊Real.sqrt X / (Real.log X) ^ α⌋₊ : ℝ) ≤ Real.sqrt X / (Real.log X) ^ α :=
+  suffices h :
+      ((Finset.filter (fun p => Nat.Prime p) (Finset.range (X + 1))).sup
+          (M_alpha α) : ℕ) ≤
+        ⌊Real.sqrt X / (Real.log X) ^ α⌋₊ by
+    have hfloor :
+        (⌊Real.sqrt X / (Real.log X) ^ α⌋₊ : ℝ) ≤
+          Real.sqrt X / (Real.log X) ^ α :=
       Nat.floor_le (by positivity)
-    have hsup_le : (((Finset.filter (fun p => Nat.Prime p) (Finset.range (X + 1))).sup (M_alpha α) : ℕ) : ℝ)
-        ≤ (⌊Real.sqrt X / (Real.log X) ^ α⌋₊ : ℝ) := Nat.cast_le.mpr h
+    have hsup_le :
+        (((Finset.filter (fun p => Nat.Prime p) (Finset.range (X + 1))).sup
+            (M_alpha α) : ℕ) : ℝ) ≤
+          (⌊Real.sqrt X / (Real.log X) ^ α⌋₊ : ℝ) := Nat.cast_le.mpr h
     linarith
   apply Finset.sup_le
   intro p hp
@@ -573,15 +645,17 @@ lemma K_max_sup_le_sqrt_div_log_add_one (α : ℝ) (hα : 0 < α) :
 lemma two_sq_eq (α : ℝ) (X : ℕ) (hX : (1 : ℝ) < X) :
     2 * (Real.sqrt X / (Real.log X) ^ α)^2 = 2 * (X : ℝ) / (Real.log X) ^ (2 * α) := by
   have hlogX : 0 < Real.log X := Real.log_pos (by exact_mod_cast hX)
-  rw [div_pow, Real.sq_sqrt (by positivity : (0 : ℝ) ≤ X), ← Real.rpow_natCast ((Real.log X) ^ α) 2,
+  rw [div_pow, Real.sq_sqrt (by positivity : (0 : ℝ) ≤ X),
+      ← Real.rpow_natCast ((Real.log X) ^ α) 2,
       ← Real.rpow_mul hlogX.le]
   ring_nf
 
 lemma K_max_sup_sq_bound (α : ℝ) (hα : 0 < α) :
     ∀ᶠ X : ℕ in Filter.atTop,
       ((K_max_sup α X : ℝ))^2 ≤ 2 * (X : ℝ) / (Real.log X) ^ (2 * α) := by
-  filter_upwards [K_max_sup_le_sqrt_div_log_add_one α hα, eventually_sqrt_div_log_ge_threshold α hα,
-      Filter.eventually_gt_atTop 1] with X hK hA hX1
+  filter_upwards [K_max_sup_le_sqrt_div_log_add_one α hα,
+      eventually_sqrt_div_log_ge_threshold α hα, Filter.eventually_gt_atTop 1]
+    with X hK hA hX1
   set A := Real.sqrt X / (Real.log X) ^ α
   have hsqrt2 : (0 : ℝ) < Real.sqrt 2 := Real.sqrt_pos.mpr (by norm_num)
   have hK_nonneg : (0 : ℝ) ≤ K_max_sup α X := Nat.cast_nonneg _
@@ -616,7 +690,7 @@ theorem irregularPrimes_isBigO (α : ℝ) (hα : 1 / 2 < α) :
     (fun X : ℕ => ((irregularPrimesUpTo α X).ncard : ℝ)) =O[Filter.atTop]
       (fun X : ℕ => (X : ℝ) / (Real.log X) ^ (2 * α)) := by
   have hC_pos : bernoulliOmegaConst > 0 := bernoulliOmegaConst_pos
-  have hα_pos : 0 < α := lt_trans (by norm_num : (0 : ℝ) < 1/2) hα
+  have hα_pos : 0 < α := lt_trans (by norm_num : (0 : ℝ) < 1 / 2) hα
   apply Asymptotics.IsBigO.of_bound bernoulliOmegaConst
   filter_upwards [K_max_sup_sq_bound α hα_pos] with X hK_bound
   rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg (Nat.cast_nonneg _)]
@@ -630,7 +704,8 @@ theorem irregularPrimes_isBigO (α : ℝ) (hα : 1 / 2 < α) :
           · exact (card_A_k_bound α X k hk1).trans (omega_bernoulli_bound k hk1)
           · simp only [not_le, Nat.lt_one_iff] at hk1
             simp [hk1, A_k_zero_empty]
-    _ = bernoulliOmegaConst * ∑ k ∈ Finset.range (K_max_sup α X), (k : ℝ) := (Finset.mul_sum ..).symm
+    _ = bernoulliOmegaConst * ∑ k ∈ Finset.range (K_max_sup α X), (k : ℝ) :=
+          (Finset.mul_sum ..).symm
     _ ≤ bernoulliOmegaConst * (((K_max_sup α X : ℝ))^2 / 2) :=
           mul_le_mul_of_nonneg_left (sum_range_le_sq _) hC_pos.le
     _ ≤ bernoulliOmegaConst * ((X : ℝ) / (Real.log X) ^ (2 * α)) := by
