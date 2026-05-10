@@ -1,4 +1,23 @@
 projects:
+  - slug: ramanujan-tau-misses-primes
+    title: ABC implies that Ramanujan's tau function misses almost all primes
+    entry_module: LeanPool.RamanujanTauMissesPrimes
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      arxiv: "2603.29970"
+    status: verified
+    main_declarations:
+      - main_theorem
+      - reduction_lemma
+      - abc_bound_E2
+      - abc_bound_E4
+    tags:
+      - number-theory
+      - modular-forms
   - slug: fel-conjecture
     title: Fel's Conjecture on Syzygies of Numerical Semigroups
     entry_module: LeanPool.FelConjecture
