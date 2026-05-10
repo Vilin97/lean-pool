@@ -26,7 +26,12 @@ from lean_pool.aggregator.manual import (
     parse_manual_list,
     save_manual_packages,
 )
-from lean_pool.aggregator.render import load_decisions, render_table, update_readme
+from lean_pool.aggregator.render import (
+    load_decisions,
+    load_pool_repos,
+    render_table,
+    update_readme,
+)
 from lean_pool.aggregator.reservoir import (
     MANIFEST_URL,
     fetch_manifest,
@@ -42,6 +47,7 @@ DEFAULT_MANUAL_CACHE = CANDIDATES_DIR / "raw_data" / "manual_cache"
 DEFAULT_CLONES_DIR = CANDIDATES_DIR / "raw_data" / "clones"
 DEFAULT_DECISIONS = CANDIDATES_DIR / "decisions.jsonl"
 DEFAULT_README = CANDIDATES_DIR / "README.md"
+DEFAULT_PROJECTS_YML = REPO_ROOT / "LeanPool" / "projects.yml"
 
 
 @click.group()
@@ -228,6 +234,19 @@ def clone(
     show_default=True,
     help="Candidates README to update in place.",
 )
+@click.option(
+    "--projects-yml",
+    "projects_yml_path",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_PROJECTS_YML,
+    show_default=True,
+    help=(
+        "Path to LeanPool/projects.yml. Each project's optional "
+        "`source.github_repo` field marks the upstream candidate as "
+        "merged, putting a ✓ in the In Pool column. Pass a missing "
+        "path to leave the column blank for every row."
+    ),
+)
 def render(
     manifest_path: Path,
     manual_data_path: Path,
@@ -236,6 +255,7 @@ def render(
     min_loc: int,
     decisions_path: Path,
     readme_path: Path,
+    projects_yml_path: Path,
 ) -> None:
     """Render the candidates README table from a manifest."""
     with manifest_path.open() as manifest_file:
@@ -244,12 +264,14 @@ def render(
     combined = {**manifest, "packages": list(manifest["packages"]) + manual_packages}
     effective_clones_dir = clones_dir if clones_dir.exists() else None
     decisions = load_decisions(decisions_path)
+    pool_repos = load_pool_repos(projects_yml_path)
     table = render_table(
         combined,
         clones_dir=effective_clones_dir,
         min_stars=min_stars,
         min_loc=min_loc,
         decisions=decisions,
+        pool_repos=pool_repos,
     )
     update_readme(readme_path, table)
     rendered_rows = sum(1 for line in table.splitlines() if line.startswith("| "))
@@ -259,7 +281,7 @@ def render(
         f"Rendered {rendered_rows} of {len(combined['packages'])} packages "
         f"({len(manifest['packages'])} reservoir + {len(manual_packages)} manual; "
         f"min-stars={min_stars}, min-loc={min_loc}, "
-        f"decisions={len(decisions)}) into {readme_path}"
+        f"decisions={len(decisions)}, pool={len(pool_repos)}) into {readme_path}"
     )
 
 

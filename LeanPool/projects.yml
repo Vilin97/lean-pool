@@ -9,6 +9,7 @@ projects:
       - Jujian Zhang
     source:
       arxiv: "2602.03716"
+      github_repo: axiommath/fel-polynomial
     status: verified
     main_declarations:
       - fels_conjecture
