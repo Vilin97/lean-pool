@@ -16,3 +16,21 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+  - slug: osforgff
+    title: Osterwalder-Schrader Axioms for the Gaussian Free Field
+    entry_module: LeanPool.OSforGFF
+    authors:
+      - Michael R. Douglas
+      - Sarah Hoback
+      - Anna Mei
+      - Ron Nissim
+    source:
+      url: "https://github.com/mrdouglasny/OSforGFF"
+    status: verified
+    main_declarations:
+      - OSforGFF.gaussianFreeField_satisfies_all_OS_axioms
+    tags:
+      - analysis
+      - measure-theory
+      - probability
+      - mathematical-physics
