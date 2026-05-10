@@ -2,15 +2,52 @@ This file is a concatenation of README.md and CONTRIBUTING.md.
 
 # lean-pool
 
-Lean Pool sits between `mathlib` and `merely-true`, like arXiv for formal mathematics. A bottleneck of mathlib growth is the high quality human review. Instead, we use a combination of linters and AI review to uphold as much code quality as possible. We hope to grow Lean Pool much faster than mathlib.
+Lean Pool sits between [`mathlib`](https://github.com/leanprover-community/mathlib4) and `merely-true`, preserving Lean 4 formalizations that don't fit mathlib's scope. Instead of mathlib's high-bar human review, Lean Pool relies on deterministic linters and LLM judgment, so it can grow faster while staying sorry-free, well-typed, and pinned to the latest Mathlib.
 
-Key capabilities:
+### How it works
 
-1. Automatic Lean and Mathlib version bumping.
-2. Automated PR review.
-3. Docs and search.
+```
+discover → lint → review → promote
+```
 
-Created as part of the UW Lean [Hackathon](https://uw2026leanhackathon.github.io/) by Vasily Ilin and Justin Asher.
+1. **Discover** Lean packages from the [Reservoir](https://reservoir.lean-lang.org) manifest plus a hand-curated list of GitHub repos.
+2. **Lint** with deterministic checks: no `sorry`/`admit`, no extra axioms beyond `Classical.choice`/`propext`/`Quot.sound`, no `unsafe`/`partial`, file headers, and size limits.
+3. **Review** with an LLM against [`.github/REVIEW_RULES.md`](.github/REVIEW_RULES.md) to assess fit, significance, and code quality.
+4. **Promote** accepted projects into `LeanPool/` and register them in [`LeanPool/projects.yml`](LeanPool/projects.yml).
+
+### Key capabilities
+
+- Automatic Lean and Mathlib version bumping via [`update.yml`](.github/workflows/update.yml), which opens a PR when a new Mathlib release lands.
+- Automated PR review via [`llm-review.yml`](.github/workflows/llm-review.yml), running on PR open or when you comment `/review`.
+- Proof profiling via [`proof-profile.yml`](.github/workflows/proof-profile.yml), reporting elaboration times when you comment `/profile`.
+- Docs and search through [LeanExplore](https://leanexplore.com/), with [`semantic_dedup.py`](python/lean_pool/semantic_dedup.py) flagging candidates that duplicate existing results.
+
+### Repository layout
+
+| Path | Contents |
+| --- | --- |
+| [`LeanPool/`](LeanPool/) | The pooled Lean library. Each subfolder is one project. |
+| [`LeanPool/projects.yml`](LeanPool/projects.yml) | Project registry: slug, authors, main theorem, source, tags. |
+| [`python/`](python/) | Aggregation, quality, and LLM review tooling. |
+| [`candidates/`](candidates/) | Candidate intake: criteria, manual list, decision log, rendered table. |
+| [`.github/`](.github/) | CI workflows, code-quality gates, review rules. |
+| [`scripts/`](scripts/) | Misc support files. |
+
+### Getting started
+
+Lean Pool requires Lean (via [`elan`](https://leanprover-community.github.io/install/), with the toolchain pinned in [`lean-toolchain`](lean-toolchain)) and Python 3.13+ with [`uv`](https://docs.astral.sh/uv/).
+
+```bash
+make setup    # pull Mathlib oleans, build LeanPool, install Python tooling
+```
+
+### Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+### Credits
+
+Created as part of the [UW Lean Hackathon](https://uw2026leanhackathon.github.io/) by [Vasily Ilin](https://github.com/Vilin97) and [Justin Asher](https://github.com/justincasher).
 
 # Contributing to Lean Pool
 
@@ -58,6 +95,8 @@ See [`python/README.md`](python/README.md) for common commands.
 **Link issues.** Use `Closes #123` in the PR description to automatically close the related issue on merge.
 
 **Commit messages.** Write clear, concise commit messages in imperative tense (e.g., "Add manifest fetcher", not "Added manifest fetcher"). Do not include AI-generated tags (e.g., "Generated with Claude", "Co-authored-by: Codex") in commits or PRs.
+
+**Content PRs touch only content.** A PR that imports a formalization or changes a project may modify **only** `LeanPool.lean` (the `mk_all` index), `LeanPool/**/*.lean`, and `LeanPool/projects.yml` — nothing else. No `.github/`, no `python/`, no `scripts/`, no `lakefile.toml`/`lean-toolchain`/`lake-manifest.json`, no root docs, no scratch files like `IMPORT_NOTES.md`/`FAILURE.md`. The `Content-only PR` CI check (`.github/workflows/content-pr-guard.yml`) enforces this. Infra / CI / tooling / doc changes go directly to `main`, not bundled into a content PR.
 
 
 ## Linting and Testing

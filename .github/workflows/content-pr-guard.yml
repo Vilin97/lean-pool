@@ -1,0 +1,69 @@
+name: Content PR Guard
+
+# A content PR (a formalization import / project change) may touch ONLY:
+#   - LeanPool.lean                (the mk_all index)
+#   - LeanPool/**/*.lean           (vendored Lean source + per-directory index files)
+#   - LeanPool/projects.yml        (project metadata)
+# Anything else — .github/ workflows, python/ (quality.py, tests), scripts/,
+# lakefile.toml, lean-toolchain, lake-manifest.json, root docs (README/AGENTS/
+# CLAUDE/CONTRIBUTING), stray IMPORT_NOTES.md / FAILURE.md, etc. — must NOT be
+# bundled into a content PR. Infra / CI / tooling / doc changes go directly to
+# main (see CONTRIBUTING.md). This gate catches, in particular, an autoformalize
+# agent sneaking a CI/quality-gate edit or an IMPORT_NOTES.md scratch file into
+# an import PR.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to guard (re-triggers the gate without a push)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  # On a workflow_dispatch the pull_request context is empty, so fall back to
+  # the input PR number; otherwise group by the live PR number as before.
+  group: >-
+    content-pr-guard-${{ github.event.pull_request.number ||
+      inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    name: Content-only PR
+    steps:
+      - name: Reject changes outside the content allowlist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          files="$(gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate --jq '.[].filename')"
+          echo "Files changed in this PR:"
+          printf '%s\n' "$files" | sed 's/^/  /'
+          echo
+
+          # Allowlist: the mk_all index, any .lean under LeanPool/, projects.yml.
+          allow_re='^(LeanPool\.lean|LeanPool/.+\.lean|LeanPool/projects\.yml)$'
+          bad="$(printf '%s\n' "$files" | { grep -vE "$allow_re" || true; })"
+
+          if [ -n "$bad" ]; then
+            echo "::error::This PR changes files outside the content allowlist."
+            echo "Content PRs may only touch: LeanPool.lean, LeanPool/**/*.lean, LeanPool/projects.yml"
+            echo "Offending files:"
+            while IFS= read -r f; do
+              [ -n "$f" ] || continue
+              echo "  - $f"
+              echo "::error file=$f::outside the content allowlist; infra/CI/tooling/doc changes go directly to main, not in a content PR"
+            done <<< "$bad"
+            exit 1
+          fi
+          echo "✓ All changed files are within the content allowlist."
