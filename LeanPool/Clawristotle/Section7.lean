@@ -8,8 +8,6 @@ import LeanPool.Clawristotle.Section3
 import LeanPool.Clawristotle.Section6
 
 /-!
-set_option linter.style.longLine false
-
 # Poisson-Boltzmann and Electric Field (Section 7)
 
 Derives the Poisson-Boltzmann equation from force balance and Gauss's law,
@@ -41,12 +39,12 @@ lemma poisson_boltzmann_algebraic
     (hDivLinear : ∀ (α : ℝ) (G : X → Fin 3 → ℝ),
       ∀ x, divX (fun y => α • G y) x = α * divX G x) :
     ∀ x, (-1 / (2 * c₀)) * divX (gradX (Real.log ∘ ρ)) x = ρ x - ρ_ion := by
-  simp_all [div_eq_mul_inv]
   intro x
-  rw [show gradX (Real.log ∘ ρ) = _ from funext hGradLogRho]
-  specialize hDivLinear (-(2 * c₀)) E x
-  simp_all [mul_assoc, mul_comm, mul_left_comm]
-  rw [mul_left_comm, mul_inv_cancel₀ _hc₀.ne, mul_one]
+  have h_eq : gradX (Real.log ∘ ρ) = fun y => (-2 * c₀) • E y :=
+    funext fun y => (hGradLogRho y).trans (hForce y)
+  rw [h_eq, hDivLinear (-2 * c₀) E x, hGauss x]
+  have hc₀_ne : c₀ ≠ 0 := _hc₀.ne
+  field_simp
 
 -- ============================================================================
 -- Section 5d: Maximum Principle / Spatial Uniformity (Section 7 of tex)
@@ -131,7 +129,7 @@ lemma poisson_boltzmann_from_vlasov
     have ha₀_eq : a₀ = fun x => Real.log (f x 0) := by
       ext x
       have h := ha₀ x 0
-      simp [normSq] at h
+      simp only [normSq, dotProduct_zero, mul_zero, add_zero] at h
       have : a₀ x = Real.log (Real.exp (a₀ x)) := (Real.log_exp _).symm
       rw [this, h]
     rw [ha₀_eq]

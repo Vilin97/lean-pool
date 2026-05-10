@@ -38,7 +38,8 @@ lemma op_norm_bound_from_basis (L : (Fin 3 → ℝ) →L[ℝ] ℝ) {C : ℝ}
              congr 1; ext i
              rw [L.map_smul, smul_eq_mul]
     rw [eq1]
-    calc ‖∑ i : Fin 3, x i * L (Pi.single i 1 : Fin 3 → ℝ)‖ ≤ ∑ i : Fin 3, ‖x i * L (Pi.single i 1 : Fin 3 → ℝ)‖ := norm_sum_le _ _
+    calc ‖∑ i : Fin 3, x i * L (Pi.single i 1 : Fin 3 → ℝ)‖
+        ≤ ∑ i : Fin 3, ‖x i * L (Pi.single i 1 : Fin 3 → ℝ)‖ := norm_sum_le _ _
          _ = ∑ i : Fin 3, ‖x i‖ * ‖L (Pi.single i 1 : Fin 3 → ℝ)‖ := by simp_rw [norm_mul]
          _ ≤ ∑ i : Fin 3, ‖x‖ * C := by
            apply Finset.sum_le_sum
@@ -53,7 +54,7 @@ lemma op_norm_bound_from_basis (L : (Fin 3 → ℝ) →L[ℝ] ℝ) {C : ℝ}
 
 lemma mvt_test (g : (Fin 3 → ℝ) → ℝ) (hg_diff : Differentiable ℝ g)
     (Cg : ℝ) (Kg : ℕ) (hCg : 0 ≤ Cg)
-    (bound : ∀ v, ‖fderiv ℝ g v‖ ≤ Cg * (1 + ‖v‖)^Kg) :
+    (bound : ∀ v, ‖fderiv ℝ g v‖ ≤ Cg * (1 + ‖v‖) ^ Kg) :
     ∀ v, |g v| ≤ |g 0| + Cg * (1 + ‖v‖)^(Kg + 1) := by
   intro v
   have H : ‖g v - g 0‖ ≤ Cg * (1 + ‖v‖)^Kg * ‖v - 0‖ := by

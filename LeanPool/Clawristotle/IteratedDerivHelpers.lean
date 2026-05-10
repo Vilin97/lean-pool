@@ -99,7 +99,7 @@ lemma norm_iteratedFDeriv_proj_sq_le (j : Fin 3) (i : ℕ) (hi : 1 ≤ i)
     rcases show s ≥ 2 ∨ i - s ≥ 2 from by omega with h | h
     · simp [hpj_eq, iteratedFDeriv_clm_zero pj s h v]
     · simp [hpj_eq, iteratedFDeriv_clm_zero pj (i - s) h v]
-  · push_neg at h3; interval_cases i
+  · push Not at h3; interval_cases i
     · -- i = 1
       simp only [Nat.reduceAdd, Nat.reduceSub, Finset.sum_range_succ, Finset.sum_range_zero,
         zero_add, Nat.choose, norm_iteratedFDeriv_zero, hpj_eq,

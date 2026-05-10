@@ -8,8 +8,6 @@ import LeanPool.Clawristotle.FlatTorus3Lemmas
 import LeanPool.Clawristotle.Section3
 
 /-!
-set_option linter.style.longLine false
-
 # Transport Constraints (Section 4)
 
 Derives that steady states are local Maxwellians: from the transport equation
@@ -180,7 +178,10 @@ lemma force_transport_zero
       (fun w => g w * Real.log (g w) - g w)
       (by -- differentiability of Lorentz force components (affine in v)
         intro i; simp only [cross, Pi.add_apply]
-        fin_cases i <;> simp [Matrix.cons_val_zero, Matrix.cons_val_one] <;> fun_prop)
+        fin_cases i <;>
+          simp only [Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue, Matrix.cons_val,
+            cons_val_zero, cons_val_one, differentiable_const_add_iff] <;>
+          fun_prop)
       (by -- differentiability of entropy potential (g smooth, g > 0)
         exact ((hg_smooth.mul (hg_smooth.log (fun v => ne_of_gt (hg_pos v)))).sub
           hg_smooth).differentiable (by norm_num))

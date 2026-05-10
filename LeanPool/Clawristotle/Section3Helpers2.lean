@@ -27,9 +27,9 @@ lemma maxwellian_landau_flux_zero (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → �
     intro v
     ext i
     rw [fderiv_exp]
-    norm_num [dotProduct, Fin.sum_univ_three]
-    ring_nf
-    · unfold VML.normSq
+    · norm_num [dotProduct, Fin.sum_univ_three]
+      ring_nf
+      unfold VML.normSq
       norm_num [Fin.sum_univ_three, dotProduct]
       ring_nf
       erw [HasFDerivAt.fderiv
@@ -69,7 +69,7 @@ lemma maxwellian_landau_flux_zero (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → �
         differentiableAt_const]
       all_goals apply_rules [differentiableAt_pi.1, differentiableAt_id]
   intros v w
-  simp [h_grad]
+  simp only [h_grad, Algebra.mul_smul_comm, smul_add]
   convert congr_arg
     (fun x : Fin 3 → ℝ =>
       f w • f v • c₀ • (2 : ℝ) • x)
@@ -86,7 +86,7 @@ lemma maxwellian_landau_flux_zero (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → �
     The flux A(v-w)[f(w)∇f(v) - f(v)∇f(w)] vanishes pointwise (because
     ∇log f is affine, so the score difference is proportional to v-w,
     which is annihilated by A(v-w)), making the integral and its divergence zero. -/
-lemma IsMaxwellian.landauOperator_eq_zero (Ψ : ℝ → ℝ)
+lemma _root_.VML.IsMaxwellian.landauOperator_eq_zero (Ψ : ℝ → ℝ)
     (hM : IsMaxwellian f) (v : Fin 3 → ℝ) :
     LandauOperator Ψ f v = 0 := by
   obtain ⟨a₀, b, c₀, _, hf⟩ := hM
@@ -134,7 +134,7 @@ lemma D_zero_implies_maxwellian (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ)
     rw [← Real.exp_log (hf_pos v)]
     congr 1
     have := hquad v
-    simp [Function.comp] at this
+    simp only [Function.comp] at this
     exact this
   -- Step 5: c₀ < 0 from the form of f
   exact ⟨a₀, b, c₀, analysis_gaussian_integrability f a₀ b c₀ hf_pos hf_int hf_exp, hf_exp⟩

@@ -7,8 +7,6 @@ import LeanPool.Clawristotle.TorusIntegration
 import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 
 /-!
-set_option linter.style.longLine false
-
 # FlatTorus3 Instance for T^3
 
 Proves the remaining `FlatTorus3` axioms (Laplacian maximum principle, Killing
@@ -32,14 +30,15 @@ private theorem second_deriv_nonpos_at_local_max' {f : ℝ → ℝ} {x₀ : ℝ}
     (hf'' : DifferentiableAt ℝ (deriv f) x₀) :
     deriv (deriv f) x₀ ≤ 0 := by
   have h_first_deriv_zero : deriv f x₀ = 0 := IsLocalMax.deriv_eq_zero hmax
-  by_contra h_contra; push_neg at h_contra
+  by_contra h_contra; push Not at h_contra
   obtain ⟨ε, hε⟩ : ∃ ε > 0, ∀ x ∈ Set.Ioo x₀ (x₀ + ε), deriv f x > 0 := by
     have := Metric.tendsto_nhds_nhds.1 (hf''.hasDerivAt.isLittleO.tendsto_div_nhds_zero)
     obtain ⟨δ, δ_pos, H⟩ := this _ h_contra
     use δ, δ_pos
     intro x hx
     have := H (show |x - x₀| < δ from abs_lt.mpr ⟨by linarith [hx.1], by linarith [hx.2]⟩)
-    simp_all [div_eq_mul_inv]
+    simp_all only [gt_iff_lt, sub_zero, smul_eq_mul, div_eq_mul_inv, dist_zero_right, norm_mul,
+      norm_eq_abs, norm_inv, Set.mem_Ioo]
     rw [← div_eq_mul_inv, div_lt_iff₀] at this <;>
       cases abs_cases (deriv f x - (x - x₀) * deriv (deriv f) x₀) <;>
       cases abs_cases (x - x₀) <;>
@@ -48,12 +47,12 @@ private theorem second_deriv_nonpos_at_local_max' {f : ℝ → ℝ} {x₀ : ℝ}
       ∃ c ∈ Set.Ioo x₀ x, deriv f c = (f x - f x₀) / (x - x₀) := by
     intros x hx
     apply exists_deriv_eq_slope f hx.left
-    exact continuousOn_of_forall_continuousAt fun y hy =>
-      if h : y = x₀ then by rw [h]; exact DifferentiableAt.continuousAt hf'.self_of_nhds
-      else DifferentiableAt.continuousAt (differentiableAt_of_deriv_ne_zero
-        (ne_of_gt (hε.2 y ⟨lt_of_le_of_ne hy.1 (Ne.symm h), by linarith [hy.2, hx.2]⟩)))
-    exact fun y hy => DifferentiableAt.differentiableWithinAt
-      (differentiableAt_of_deriv_ne_zero (ne_of_gt (hε.2 y ⟨hy.1, hy.2.trans hx.2⟩)))
+    · exact continuousOn_of_forall_continuousAt fun y hy =>
+        if h : y = x₀ then by rw [h]; exact DifferentiableAt.continuousAt hf'.self_of_nhds
+        else DifferentiableAt.continuousAt (differentiableAt_of_deriv_ne_zero
+          (ne_of_gt (hε.2 y ⟨lt_of_le_of_ne hy.1 (Ne.symm h), by linarith [hy.2, hx.2]⟩)))
+    · exact fun y hy => DifferentiableAt.differentiableWithinAt
+        (differentiableAt_of_deriv_ne_zero (ne_of_gt (hε.2 y ⟨hy.1, hy.2.trans hx.2⟩)))
   have h_inc : ∀ x ∈ Set.Ioo x₀ (x₀ + ε), f x > f x₀ := by
     intro x hx; obtain ⟨c, hc₁, hc₂⟩ := h_mvt x hx
     have := hε.2 c ⟨by linarith [hc₁.1, hx.1], by linarith [hc₁.2, hx.2]⟩

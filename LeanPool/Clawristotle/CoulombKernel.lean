@@ -50,7 +50,8 @@ lemma schwartz_log_bound
   -- From Schwartz: ‖iteratedFDeriv ℝ 0 (f x) v‖ * 1 ≤ C_up → |f x v| ≤ C_up
   have hf_le : ∀ x v, f x v ≤ C_up := by
     intro x v
-    have h := hbound_up x v; simp at h
+    have h := hbound_up x v
+    simp only [norm_iteratedFDeriv_zero, norm_eq_abs, pow_zero, mul_one] at h
     exact le_trans (le_abs_self _) h
   -- log(f x v) ≤ log(C_up)
   have hlog_upper : ∀ x v, Real.log (f x v) ≤ Real.log C_up := by
@@ -102,7 +103,8 @@ lemma schwartz_norm_pow_integrable
   apply (inverse_poly_integrable C).mono'
     ((continuous_norm.pow k |>.mul (hf_smooth x).continuous).aestronglyMeasurable)
   filter_upwards [] with v
-  have hb := hbound x v; simp at hb
+  have hb := hbound x v
+  simp only [norm_iteratedFDeriv_zero, norm_eq_abs] at hb
   -- hb : |f x v| * (1 + ‖v‖) ^ (k + 4) ≤ C
   have hfv_pos := hf_pos x v
   rw [abs_of_pos hfv_pos] at hb

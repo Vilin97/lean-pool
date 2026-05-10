@@ -11,8 +11,6 @@ import LeanPool.Clawristotle.IteratedDerivHelpers
 import LeanPool.Clawristotle.LogBoundHelpers
 
 /-!
-set_option linter.style.longLine false
-
 # Concrete Theorem 4.2 for Coulomb Collisions on T^3
 
 Specializes the abstract `ConcreteTheorem42` to the Coulomb kernel Psi(r) = r^{-3},
@@ -200,7 +198,7 @@ theorem CoulombConcreteTheorem42
       obtain ⟨C, hC_pos, hbound⟩ := hSchwartz.hDecay 4 (k := 0) (by norm_num)
       refine ⟨fun v => C / (1 + ‖v‖) ^ 4, inverse_poly_integrable C, fun x v => ?_⟩
       have hb := hbound x v
-      simp at hb
+      simp only [norm_iteratedFDeriv_zero, norm_eq_abs] at hb
       have hv_pos : (0 : ℝ) < (1 + ‖v‖) ^ 4 := by positivity
       rw [abs_of_pos (hf_pos x v)] at hb
       rwa [le_div_iff₀ hv_pos]

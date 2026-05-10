@@ -116,12 +116,12 @@ lemma IsMaxwellian_params_injective
   exact ⟨h0, hb, hc⟩
 
 /-- A Maxwellian distribution is strictly positive everywhere. -/
-lemma IsMaxwellian.pos (hM : IsMaxwellian f) : ∀ v, 0 < f v := by
+lemma _root_.VML.IsMaxwellian.pos (hM : IsMaxwellian f) : ∀ v, 0 < f v := by
   obtain ⟨a₀, b, c₀, _, hf⟩ := hM
   intro v; rw [hf]; exact Real.exp_pos _
 
 /-- A Maxwellian distribution is smooth (C^∞). -/
-lemma IsMaxwellian.contDiff (hM : IsMaxwellian f) : ContDiff ℝ ⊤ f := by
+lemma _root_.VML.IsMaxwellian.contDiff (hM : IsMaxwellian f) : ContDiff ℝ ⊤ f := by
   obtain ⟨a₀, b, c₀, _, hf⟩ := hM
   have : f = fun v => Real.exp (a₀ + dotProduct b v + c₀ * normSq v) := funext hf
   rw [this]

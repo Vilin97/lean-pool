@@ -23,12 +23,6 @@ open Matrix Finset BigOperators Real MeasureTheory
 
 noncomputable section
 
-set_option linter.unusedVariables false
-set_option linter.unusedSimpArgs false
-set_option linter.style.multiGoal false
-set_option linter.style.show false
-set_option linter.unnecessarySeqFocus false
-
 namespace VML
 
 /-- Flux factoring: f(w)∇f(v) - f(v)∇f(w) = f(v)f(w)(∇logf(v) - ∇logf(w)). -/
@@ -43,8 +37,8 @@ lemma analysis_fluxFactor
       (1 / f v) • VML.vGrad f v := by
     intro v
     ext i
-    by_cases H : DifferentiableAt ℝ f v <;> simp_all [VML.vGrad, fderiv_deriv]
-    ring_nf
+    simp only [VML.vGrad, Pi.smul_apply, smul_eq_mul, one_div]
+    by_cases H : DifferentiableAt ℝ f v
     · erw [ fderiv_comp ] <;> norm_num [ H, ne_of_gt (hf_pos v) ]; ring
     · rw [ fderiv_zero_of_not_differentiableAt ]
       · rw [ fderiv_zero_of_not_differentiableAt H ]; norm_num
@@ -90,7 +84,7 @@ lemma analysis_nonneg_dbl_zero
   · have h_zero_ae : ∀ᵐ v ∂MeasureTheory.volume, ∀ w, g v w = 0 := by
       filter_upwards [ h_fubini ] with v hv w
       contrapose! hv
-      simp_all [ ne_of_gt, MeasureTheory.integral_pos_iff_support_of_nonneg_ae ]
+      simp_all only [Pi.zero_apply, ne_eq]
       rw [ MeasureTheory.integral_eq_zero_iff_of_nonneg_ae ]
       · obtain ⟨ε, hε⟩ : ∃ ε > 0, ∀ w', dist w' w < ε → g v w' ≠ 0 := by
           exact Metric.mem_nhds_iff.mp
@@ -108,7 +102,7 @@ lemma analysis_nonneg_dbl_zero
       · exact hint_inner v
     intro v w
     by_contra h_nonzero
-    push_neg at h_nonzero
+    push Not at h_nonzero
     obtain ⟨U, hU_open, hU_v, hU_nonzero⟩ :
         ∃ U : Set (Fin 3 → ℝ),
         IsOpen U ∧ v ∈ U ∧ ∀ u ∈ U, g u w ≠ 0 := by
@@ -147,7 +141,7 @@ lemma poly_cubic_extraction
   have h_poly_zero : ∀ t : ℝ, (t • v) ⬝ᵥ d_c * normSq (t • v) +
       ∑ i, ∑ j, (t • v i) * (t • v j) * (K i j) +
       (t • v) ⬝ᵥ d_lin + C = 0 := fun t => h _
-  simp [normSq] at h_poly_zero
+  simp only [smul_dotProduct, smul_eq_mul, normSq, dotProduct_smul] at h_poly_zero
   have h_cubic_zero : ∀ t : ℝ, t^3 * (v ⬝ᵥ d_c * (v ⬝ᵥ v)) +
       t^2 * (∑ i, ∑ j, (v i) * (v j) * (K i j)) +
       t * (v ⬝ᵥ d_lin) + C = 0 := by
@@ -194,7 +188,9 @@ lemma poly_linear_extraction
   <;> have := h (fun i => if i = 0 then 1 else 0)
   <;> have := h (fun i => if i = 1 then 1 else 0)
   <;> have := h (fun i => if i = 2 then 1 else 0)
-  <;> simp_all [Fin.sum_univ_three, dotProduct]
+  <;> simp_all only [dotProduct, Fin.sum_univ_three, Fin.isValue, Pi.zero_apply, zero_mul,
+        sum_const_zero, zero_add, ite_mul, one_mul, sum_ite_eq', mem_univ, ↓reduceIte, add_zero,
+        mul_zero, implies_true]
   exact funext fun i => by fin_cases i <;> assumption
 
 -- ============================================================================
@@ -209,7 +205,7 @@ lemma poly_linear_extraction
     Derived from: IBP (Gap 1) + Fubini+symmetrization (Gap 2) + score substitution (Gap 3).
     Reference: Proof of Lemma 5 (lem:entropy_dissipation). -/
 lemma entropy_score_form (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ)
-    (hf_pos : ∀ v, 0 < f v) (hf_smooth : ContDiff ℝ 3 f)
+    (hf_pos : ∀ v, 0 < f v) (_hf_smooth : ContDiff ℝ 3 f)
     (hSWF : ∫ v, LandauOperator Ψ f v * (Real.log ∘ f) v =
       -(1 / 2) * ∫ v, ∫ w, dotProduct (vGrad (Real.log ∘ f) v - vGrad (Real.log ∘ f) w)
         (mulVec (landauMatrix Ψ (v - w))
@@ -243,7 +239,7 @@ lemma psd_weighted_integral_nonneg (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → �
     Reference: Step in the proof of Lemma 6 (lem:D_zero_functional_eq). -/
 lemma entropy_zero_quadform_zero (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ)
     (hΨ : ∀ r, 0 < Ψ r) (hf_pos : ∀ v, 0 < f v)
-    (hf_smooth : ContDiff ℝ 3 f)
+    (_hf_smooth : ContDiff ℝ 3 f)
     (hD : entropyDissipation Ψ f = 0)
     -- Analytical interface hypotheses:
     -- Score form identity (from IBP + Fubini + score substitution)
@@ -289,7 +285,8 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
       intro w
       have h_deriv_eq : ∀ t : ℝ, g (v + t • w) - g v ∈ Submodule.span ℝ {w} := by
         intro t
-        by_cases ht : t = 0 ∨ w = 0 <;> simp_all [Submodule.mem_span_singleton]
+        by_cases ht : t = 0 ∨ w = 0 <;>
+          simp_all only [ne_eq, not_or, Submodule.mem_span_singleton]
         · exact ⟨0, by rcases ht with rfl | rfl <;> simp⟩
         · obtain ⟨l, hl⟩ := hparallel (v + t • w) v (by simp_all)
           use l * t
@@ -319,14 +316,21 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
     choose c hc using h_deriv_scalar
     have h_c_const : ∀ i j : Fin 3, c (Pi.single i 1) = c (Pi.single j 1) := by
       intro i j
-      have := hc (Pi.single i 1 + Pi.single j 1)
-      simp_all [funext_iff, Fin.forall_fin_succ]
-      fin_cases i <;> fin_cases j <;> simp at this ⊢ <;> linarith!
+      rcases eq_or_ne i j with rfl | hij
+      · rfl
+      have key := hc (Pi.single i 1 + Pi.single j 1)
+      rw [map_add, hc, hc] at key
+      have hi := congr_fun key i
+      have hj := congr_fun key j
+      simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul, Pi.single_eq_same,
+        Pi.single_eq_of_ne hij, Pi.single_eq_of_ne hij.symm, mul_one, mul_zero,
+        add_zero, zero_add] at hi hj
+      linarith [hi, hj]
     use c (Pi.single 0 1)
     intro w
     rw [hc]
     ext i
-    simp [← h_c_const i 0]
+    simp only [← h_c_const i 0, Pi.smul_apply, smul_eq_mul, Fin.isValue, mul_eq_mul_right_iff]
     have h_c_const : ∀ w : Fin 3 → ℝ,
         (fderiv ℝ g v) w =
         ∑ i, w i • (fderiv ℝ g v) (Pi.single i 1) := by
@@ -337,11 +341,16 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
       exact Finset.sum_congr rfl fun i _ => by
         rw [← map_smul]; congr; ext j
         fin_cases i <;> fin_cases j <;>
-          simp [Pi.single_apply])
+          simp)
     specialize h_c_const w
     rw [hc] at h_c_const
-    simp [Fin.sum_univ_three] at h_c_const
-    replace h_c_const := congr_fun h_c_const i; fin_cases i <;> simp [hc] at h_c_const ⊢
+    simp only [Fin.sum_univ_three, Fin.isValue] at h_c_const
+    replace h_c_const := congr_fun h_c_const i
+    fin_cases i <;>
+      simp only [Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue, Pi.smul_apply, smul_eq_mul,
+        hc, Pi.add_apply, Pi.single_eq_same, mul_one, ne_eq, zero_ne_one, one_ne_zero,
+        not_false_eq_true, Pi.single_eq_of_ne, mul_zero, add_zero, zero_add, Fin.reduceEq]
+        at h_c_const ⊢
     · exact Classical.or_iff_not_imp_right.2 fun h => mul_left_cancel₀ h <| by linarith
     · exact Classical.or_iff_not_imp_right.2 fun h => mul_left_cancel₀ h <| by linarith
     · exact Classical.or_iff_not_imp_right.2 fun h => mul_left_cancel₀ h <| by linarith
@@ -362,9 +371,9 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
             (Pi.single j 1) i := by
         intro v i j k
         rw [fderiv_clm_apply, fderiv_clm_apply]
-        simp [hg_smooth.contDiffAt.differentiableAt]
-        ring_nf
-        · apply_rules [ContDiffAt.isSymmSndFDerivAt]
+        · simp only [fderiv_fun_const, Pi.zero_apply, ContinuousLinearMap.comp_zero, zero_add,
+            ContinuousLinearMap.flip_apply]
+          apply_rules [ContDiffAt.isSymmSndFDerivAt]
           exacts [hg_smooth.contDiffAt, by norm_num [minSmoothness]]
         · exact h_diff_fderiv.differentiable one_ne_zero v
         · exact differentiableAt_const _
@@ -398,7 +407,7 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
         · simp only [hij, ite_false, mul_zero]
           have heq : (fun v => (fderiv ℝ g v) (Pi.single j 1) i) = fun _ => 0 := by
             ext v; rw [hc_partial]; simp [hij]
-          rw [heq]; simp [fderiv_const]
+          rw [heq]; simp
       have h_zero_deriv : ∀ v : Fin 3 → ℝ, ∀ k : Fin 3, (fderiv ℝ c v) (Pi.single k 1) = 0 := by
         intro v k
         obtain ⟨i, hi⟩ : ∃ i : Fin 3, i ≠ k := by fin_cases k <;> trivial
@@ -408,7 +417,7 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
         have : (fderiv ℝ c v) w =
             ∑ k : Fin 3, w k • (fderiv ℝ c v) (Pi.single k 1) := by
           conv_lhs => rw [show w = ∑ k, Pi.single k (w k) by ext i; simp]
-          simp only [map_sum, map_smul, smul_eq_mul]
+          simp only [map_sum, smul_eq_mul]
           exact Finset.sum_congr rfl fun i _ => by
             have : Pi.single i (w i) = w i • (Pi.single i (1 : ℝ) : Fin 3 → ℝ) := by
               ext j; simp [Pi.single_apply, smul_eq_mul]
@@ -469,7 +478,7 @@ lemma affine_gradient_antiderivative (h : (Fin 3 → ℝ) → ℝ) (b : Fin 3 �
             |> HasFDerivAt.comp _
             <| HasFDerivAt.smul (hasFDerivAt_id t)
             <| hasFDerivAt_const _ _)) using 1
-      norm_num [fderiv_deriv, dotProduct]
+      norm_num [fderiv_apply_one_eq_deriv, dotProduct]
       set L := fderiv ℝ h (t • v)
       have hv_decomp : v = ∑ i, v i • (Pi.single i (1 : ℝ) : Fin 3 → ℝ) := by
         ext i; simp [Pi.single_apply, Finset.sum_apply, smul_eq_mul]

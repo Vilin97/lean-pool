@@ -148,7 +148,9 @@ lemma force_fderiv_log_component_integrable
       change Continuous (fun v => E x i + (cross v (B x)) i)
       apply Continuous.add continuous_const
       unfold cross
-      fin_cases i <;> simp [Matrix.cons_val_zero, Matrix.cons_val_one] <;>
+      fin_cases i <;>
+        simp only [Fin.isValue, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Matrix.cons_val,
+          cons_val_zero, cons_val_one] <;>
         exact (continuous_apply _ |>.mul continuous_const).sub
           (continuous_apply _ |>.mul continuous_const)
     have h2 : Continuous (fun v => fderiv ℝ (f x) v (Pi.single i 1)) :=
@@ -290,7 +292,9 @@ lemma force_ibp_fg_integrable_coulomb
       change Continuous (fun v => E x i + (cross v (B x)) i)
       apply Continuous.add continuous_const
       unfold cross
-      fin_cases i <;> simp [Matrix.cons_val_zero, Matrix.cons_val_one] <;>
+      fin_cases i <;>
+        simp only [Fin.isValue, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Matrix.cons_val,
+          cons_val_zero, cons_val_one] <;>
         exact (continuous_apply _ |>.mul continuous_const).sub
           (continuous_apply _ |>.mul continuous_const)
     have h2 : Continuous (fun v => f x v * Real.log (f x v) - f x v) :=

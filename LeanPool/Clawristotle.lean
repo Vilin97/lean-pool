@@ -14,7 +14,7 @@ import LeanPool.Clawristotle.CoulombNonvacuous
 Source: arxiv:2603.15929
 Authors: Vasily Ilin
 Status: verified
-Main declarations: `VML.Theorem42`, `VML.CoulombConcreteTheorem42`, `VML.CoulombConcreteTheorem42_classify_T`, `VML.CoulombConcreteTheorem42_nonvacuous`
+Main declarations: `VML.Theorem42`, `VML.CoulombConcreteTheorem42`
 Tags: pde, kinetic-theory, mathematical-physics
 -/
 

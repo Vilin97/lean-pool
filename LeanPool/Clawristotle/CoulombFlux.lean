@@ -7,8 +7,6 @@ import LeanPool.Clawristotle.NewtonianPotential
 import Mathlib.MeasureTheory.SpecificCodomains.Pi
 
 /-!
-set_option linter.style.longLine false
-
 # Flux Integrability and Measurability Helpers for Coulomb
 
 Proves integrability of the Landau collision flux, Schwartz partial decay,
@@ -61,10 +59,10 @@ lemma landau_flux_integrable_coulomb
                   |> le_trans <| mul_le_of_le_one_right (norm_nonneg _) <|
                   by simp [Pi.norm_single]
               generalize_proofs at *
-              erw [iteratedFDeriv_succ_eq_comp_left]; norm_num [fderiv_deriv]
+              erw [iteratedFDeriv_succ_eq_comp_left]; norm_num [fderiv_apply_one_eq_deriv]
               erw [iteratedFDeriv_zero_eq_comp]
               erw [fderiv_comp] <;> norm_num [hf_smooth.contDiffAt.differentiableAt]
-              · erw [LinearIsometryEquiv.fderiv]; norm_num [fderiv_deriv]
+              · erw [LinearIsometryEquiv.fderiv]; norm_num [fderiv_apply_one_eq_deriv]
                 erw [ContinuousLinearMap.norm_def]; norm_num [ContinuousLinearMap.opNorm]
                 ring_nf; exact this
               · exact (LinearIsometryEquiv.differentiable _) _
@@ -87,17 +85,20 @@ lemma landau_flux_integrable_coulomb
               Continuous.dotProduct (continuous_const.sub continuous_id')
                 (continuous_const.sub continuous_id')) _
         · unfold innerLandauMatrix
-          simp [normSq, Matrix.vecMulVec]
+          simp only [normSq, dotProduct_sub, sub_dotProduct, vecMulVec, Pi.sub_apply, sub_apply,
+            smul_apply, smul_eq_mul, of_apply]
           fun_prop (disch := norm_num)
       · exact AEStronglyMeasurable.sub
           (Continuous.aestronglyMeasurable (hf_smooth.continuous.mul continuous_const))
           (AEStronglyMeasurable.mul aestronglyMeasurable_const
-            ((hf_smooth.continuous_fderiv (by norm_num)).eval_const (Pi.single j 1)).aestronglyMeasurable)
+            ((hf_smooth.continuous_fderiv (by norm_num)).eval_const
+              (Pi.single j 1)).aestronglyMeasurable)
     · filter_upwards [] with w
-      by_cases hw : v - w = 0 <;> simp_all
+      by_cases hw : v - w = 0
       · simp_all [sub_eq_zero, landauMatrix, innerLandauMatrix, normSq, vecMulVec,
           eucNorm, coulombKernel]
-      · exact mul_le_mul_of_nonneg_right
+      · simp only [norm_mul, Real.norm_eq_abs, abs_inv, abs_norm]
+        exact mul_le_mul_of_nonneg_right
           (coulomb_landauMatrix_entry_le_pi _ _ _ hw) (abs_nonneg _)
   exact integrable_pi_iff.mpr fun i => by
     simp only [mulVec, dotProduct]

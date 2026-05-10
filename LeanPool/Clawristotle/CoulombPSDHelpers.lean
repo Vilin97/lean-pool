@@ -6,8 +6,6 @@ Authors: Vasily Ilin
 import LeanPool.Clawristotle.CoulombFlux
 
 /-!
-set_option linter.style.longLine false
-
 # PSD Helpers: Continuity and Pointwise Bounds for Coulomb
 
 Proves the Landau quadratic form bound, continuity of the PSD integrand
@@ -25,7 +23,7 @@ lemma landau_bound (z u : Fin 3 → ℝ) :
     (if eucNorm z = 0 then 0 else (eucNorm z)⁻¹) * (eucNorm u)^2 := by
       unfold landauMatrix eucNorm coulombKernel innerLandauMatrix normSq
       split_ifs <;> norm_cast <;> norm_num [ Matrix.vecMulVec ] at *
-      · simp_all [ Fin.sum_univ_three, dotProduct ]
+      · simp_all only [dotProduct, Fin.sum_univ_three, Fin.isValue, Std.le_refl]
         rw [ Real.sqrt_eq_zero' ] at *
         norm_num [ show z 0 = 0 by nlinarith, show z 1 = 0 by nlinarith,
                    show z 2 = 0 by nlinarith, Matrix.mulVec ]
@@ -178,8 +176,8 @@ lemma continuous_landau_quadratic
                     by exact Continuous.dotProduct continuous_id continuous_id)
               have h_pos : 0 < eucNorm (p.1 - p.2) := by
                 unfold eucNorm
-                unfold normSq; simp
-                simp_all [ dotProduct, Fin.sum_univ_three ]
+                unfold normSq; simp only [dotProduct_sub, sub_dotProduct, sqrt_pos, sub_pos]
+                simp_all only [ne_eq, dotProduct, Fin.sum_univ_three, Fin.isValue]
                 exact not_le.mp fun h => hp_ne <| by
                   ext i; fin_cases i <;> nlinarith! [ sq_nonneg (p.1 0 - p.2 0),
                     sq_nonneg (p.1 1 - p.2 1), sq_nonneg (p.1 2 - p.2 2) ]
@@ -429,9 +427,11 @@ lemma fubini_double_aestronglyMeasurable
     · -- flux component: continuous hence measurable
       exact (Continuous.sub
         ((hf_smooth.continuous.comp continuous_snd).mul
-          ((hf_smooth.continuous_fderiv (by norm_num)).comp continuous_fst |>.clm_apply continuous_const))
+          ((hf_smooth.continuous_fderiv (by norm_num)).comp continuous_fst
+            |>.clm_apply continuous_const))
         ((hf_smooth.continuous.comp continuous_fst).mul
-          ((hf_smooth.continuous_fderiv (by norm_num)).comp continuous_snd |>.clm_apply continuous_const))
+          ((hf_smooth.continuous_fderiv (by norm_num)).comp continuous_snd
+            |>.clm_apply continuous_const))
         ).measurable
 
 end VML

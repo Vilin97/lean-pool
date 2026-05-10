@@ -5,9 +5,7 @@ Authors: Vasily Ilin
 -/
 import LeanPool.Clawristotle.CoulombFluxConv
 
-/-\!
-set_option linter.style.longLine false
-
+/-!
 # Flux Derivative Decay and IBP Integrability for Coulomb
 
 Proves the Coulomb flux derivative has Schwartz-class decay (from the convolution
@@ -73,7 +71,8 @@ lemma coulomb_flux_deriv_schwartz_decay
       ‖fderiv ℝ (fun v => ∫ w, landauMatrix coulombKernel (v - w) i j *
         fderiv ℝ f w (Pi.single j 1)) v‖ ≤ C :=
     fun j => coulomb_entry_conv_deriv_bounded _ (hf_smooth.fderiv_right (by decide) |>.clm_apply
-      contDiff_const) (fun N {k} (hk : k ≤ 1) => hdf_schwartz j N (by exact_mod_cast (by omega : k + 1 ≤ 2))) i j
+      contDiff_const)
+      (fun N {k} (hk : k ≤ 1) => hdf_schwartz j N (by exact_mod_cast (by omega : k + 1 ≤ 2))) i j
   -- Replace flux with K/L decomposition
   have h_fn_eq : (fun v => (∫ w, mulVec (landauMatrix coulombKernel (v - w))
       (f w • vGrad f v - f v • vGrad f w)) i) =
@@ -91,8 +90,10 @@ lemma coulomb_flux_deriv_schwartz_decay
   have hL_diff : ∀ j, Differentiable ℝ
       (fun v => ∫ w, landauMatrix coulombKernel (v - w) i j *
         fderiv ℝ f w (Pi.single j 1)) :=
-    fun j => coulomb_entry_conv_differentiable _ (hf_smooth.fderiv_right (by exact_mod_cast (by omega : 2 + 1 ≤ 3)) |>.clm_apply
-      contDiff_const) (fun N {k} (hk : k ≤ 1) => hdf_schwartz j N (by exact_mod_cast (by omega : k + 1 ≤ 2))) i j
+    fun j => coulomb_entry_conv_differentiable _
+      (hf_smooth.fderiv_right (by exact_mod_cast (by omega : 2 + 1 ≤ 3))
+        |>.clm_apply contDiff_const)
+      (fun N {k} (hk : k ≤ 1) => hdf_schwartz j N (by exact_mod_cast (by omega : k + 1 ≤ 2))) i j
   have ha_diff : ∀ j, Differentiable ℝ (fun v => fderiv ℝ f v (Pi.single j 1)) := by
     intro j
     have h_cont_diff_df : ContDiff ℝ 1 (fun v => fderiv ℝ f v (Pi.single j 1)) :=
@@ -110,8 +111,9 @@ lemma coulomb_flux_deriv_schwartz_decay
   have hL_bdd : ∀ j, ∃ ML > 0, ∀ v, |∫ w, landauMatrix coulombKernel (v - w) i j *
       fderiv ℝ f w (Pi.single j 1)| ≤ ML :=
     fun j => coulomb_entry_conv_uniform_bound (hdf_decay_abs j)
-      ((ContDiff.continuous (n := 2) ((hf_smooth.fderiv_right (by exact_mod_cast (by omega : 2 + 1 ≤ 3))).clm_apply
-        (contDiff_const (c := (Pi.single j 1 : Fin 3 → ℝ))))).aestronglyMeasurable) i j
+      ((ContDiff.continuous (n := 2)
+          ((hf_smooth.fderiv_right (by exact_mod_cast (by omega : 2 + 1 ≤ 3))).clm_apply
+            (contDiff_const (c := (Pi.single j 1 : Fin 3 → ℝ))))).aestronglyMeasurable) i j
   -- f is bounded
   obtain ⟨Mf, hMf_pos, hMf⟩ := hf_decay 0
   have hf_sup : ∀ v, |f v| ≤ Mf := fun v => by simpa using hMf v

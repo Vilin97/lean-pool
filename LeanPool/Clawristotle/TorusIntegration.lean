@@ -6,8 +6,6 @@ Authors: Vasily Ilin
 import LeanPool.Clawristotle.TorusDefs
 
 /-!
-set_option linter.style.longLine false
-
 # Torus Integration Lemmas
 
 Box integral machinery, integration by parts on T³, curl integral vanishing,
@@ -92,20 +90,12 @@ lemma integral_torus_eq_integral_box (g : Torus3 → ℝ) (hg : Continuous g) :
       · exact measurable_id.aemeasurable
       · exact hg.aestronglyMeasurable
 
-set_option maxHeartbeats 400000 in
--- Fubini decomposition + FTC on the box requires many case splits over Fin 3
-/-- ∫ ∂F/∂xᵢ over [0,1]³ = 0 for periodic F (FTC + periodicity). -/
-lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3)
-    (hF : ContDiff ℝ 1 F) (hper : ∀ x, F (x + Pi.single i 1) = F x) :
-    ∫ y in box3, fderiv ℝ F y (Pi.single i 1) = 0 := by
-      have h_periodic : ∀ x : Fin 3 → ℝ, (F (x + Pi.single i 1)) = (F x) := by
-        assumption
-      have h_fubini : ∀ (g : (Fin 3 → ℝ) → ℝ), Continuous g →
-          (∫ y in (Set.pi Set.univ (fun _ => Set.Ioc 0 1)), g y) =
-          (∫ y : ℝ in Set.Ioc 0 1,
-            ∫ z : Fin 2 → ℝ in (Set.pi Set.univ (fun _ => Set.Ioc 0 1)),
-              g (Fin.insertNth i y z)) := by
-        intro g hg
+/-- Fubini decomposition of the unit-box integral along the `i`-th coordinate. -/
+private lemma box3_fubini_slice (i : Fin 3) (g : (Fin 3 → ℝ) → ℝ) (hg : Continuous g) :
+    (∫ y in (Set.pi Set.univ (fun _ => Set.Ioc 0 1)), g y) =
+    (∫ y : ℝ in Set.Ioc 0 1,
+      ∫ z : Fin 2 → ℝ in (Set.pi Set.univ (fun _ => Set.Ioc 0 1)),
+        g (Fin.insertNth i y z)) := by
         have h_fubini :
             ∫ y : Fin 3 → ℝ in (Set.pi Set.univ (fun _ => Set.Ioc 0 1)), g y =
             ∫ y : ℝ × (Fin 2 → ℝ) in
@@ -118,52 +108,84 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
                   (fun x : ℝ × (Fin 2 → ℝ) => Fin.insertNth i x.1 x.2)
                   (MeasureTheory.volume.prod
                     (MeasureTheory.volume : MeasureTheory.Measure (Fin 2 → ℝ))) := by
-              simp [ MeasureTheory.MeasureSpace.volume ]
+              simp only [volume, Nat.reduceAdd]
               erw [ MeasureTheory.Measure.pi_eq ]
               intro s hs; erw [ MeasureTheory.Measure.map_apply ]
               · rw [ show (fun x : ℝ × (Fin 2 → ℝ) => i.insertNth x.1 x.2) ⁻¹' Set.univ.pi s =
                     (s i) ×ˢ (Set.pi Set.univ fun j => s (Fin.succAbove i j)) from ?_ ]
-                · simp [ Fin.prod_univ_three, MeasureTheory.Measure.prod_prod ]
+                · simp only [Measure.prod_prod, Measure.pi_pi, Fin.prod_univ_two, Fin.isValue,
+                    Fin.prod_univ_three]
                   fin_cases i <;> ring!
-                · ext ⟨x, y⟩; simp [Fin.insertNth]
+                · ext ⟨x, y⟩
+                  simp only [Nat.reduceAdd, Set.mem_preimage, Set.mem_pi, Set.mem_univ,
+                    Fin.insertNth, Fin.succAbove_cases_eq_insertNth, forall_const, Set.mem_prod,
+                    Fin.forall_fin_two, Fin.isValue]
                   fin_cases i <;> simp [ Fin.forall_fin_succ ]
                   · tauto
                   · tauto
               · refine measurable_pi_iff.mpr ?_
-                intro a; fin_cases a <;> simp [ Fin.insertNth ]
-                · fin_cases i <;> simp [ Fin.succAboveCases ]
+                intro a
+                fin_cases a <;>
+                  simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
+                    Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue]
+                · fin_cases i <;>
+                    simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                      ↓reduceDIte, Fin.mk_one, zero_ne_one, Fin.lt_one_iff, Fin.castPred_zero,
+                      Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT]
                   · exact measurable_fst
                   · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
                   · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
                 · fin_cases i <;> simp [ Fin.succAboveCases ] <;> measurability
-                · fin_cases i <;> simp [ Fin.succAboveCases ]
+                · fin_cases i <;>
+                    simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                      Fin.reduceEq, ↓reduceDIte, Fin.not_lt_zero, Fin.reducePred, Fin.mk_one,
+                      Fin.lt_one_iff, Fin.reduceFinMk]
                   · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
                   · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
                   · exact measurable_fst
               · exact MeasurableSet.univ_pi hs
             rw [ h_iso, MeasureTheory.integral_map ]
-            · simp [ Set.indicator ]
-              fin_cases i <;> simp [ Fin.forall_fin_succ ]
+            · simp only [Set.indicator, Nat.reduceAdd, Set.mem_pi, Set.mem_univ, Set.mem_Ioc,
+                forall_const, Set.mem_prod, Fin.forall_fin_two, Fin.isValue]
+              fin_cases i <;>
+                simp only [Fin.zero_eta, Fin.isValue, Fin.insertNth_zero', Nat.reduceAdd,
+                  Fin.forall_fin_succ, Fin.cons_zero, Fin.cons_succ, Fin.succ_zero_eq_one,
+                  IsEmpty.forall_iff, and_true, Fin.mk_one, Fin.insertNth_apply_same,
+                  Fin.succ_one_eq_two, Fin.reduceFinMk]
               · rfl
               · simp only [and_left_comm]
                 rfl
-              · simp [ Fin.insertNth ]
-                simp [ Fin.succAboveCases ]
+              · simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
+                  Fin.isValue]
+                simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.reduceEq,
+                  ↓reduceDIte, Fin.reduceLT, Fin.castPred_zero, Fin.castPred_one]
                 congr
                 ext
                 split_ifs <;> tauto
             · refine Measurable.aemeasurable ?_
               refine measurable_pi_iff.mpr ?_
-              intro a; fin_cases a <;> simp [ Fin.insertNth ]
-              · fin_cases i <;> simp [ Fin.succAboveCases ]
+              intro a
+              fin_cases a <;>
+                simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
+                  Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk]
+              · fin_cases i <;>
+                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                    ↓reduceDIte, Fin.mk_one, zero_ne_one, Fin.lt_one_iff, Fin.castPred_zero,
+                    Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT]
                 · exact measurable_fst
                 · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
                 · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
-              · fin_cases i <;> simp [ Fin.succAboveCases ]
+              · fin_cases i <;>
+                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                    one_ne_zero, ↓reduceDIte, Fin.not_lt_zero, Fin.pred_one, Fin.mk_one,
+                    Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT, Fin.castPred_one]
                 · exact measurable_pi_apply 0 |> Measurable.comp <| measurable_snd
                 · exact measurable_fst
                 · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
-              · fin_cases i <;> simp [ Fin.succAboveCases ]
+              · fin_cases i <;>
+                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                    Fin.reduceEq, ↓reduceDIte, Fin.not_lt_zero, Fin.reducePred, Fin.mk_one,
+                    Fin.lt_one_iff, Fin.reduceFinMk]
                 · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
                 · exact measurable_pi_apply _ |> Measurable.comp <| measurable_snd
                 · exact measurable_fst
@@ -178,14 +200,19 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
             (Set.Icc 0 1 ×ˢ Set.pi Set.univ (fun _ => Set.Icc 0 1)) := by
           refine hg.comp_continuousOn ?_
           refine Continuous.continuousOn ?_
-          fin_cases i <;> simp
+          fin_cases i <;>
+            simp only [Fin.zero_eta, Fin.isValue, Fin.insertNth_zero', Nat.reduceAdd, Fin.mk_one,
+              Fin.reduceFinMk]
           · exact continuous_pi_iff.mpr fun i => by
               fin_cases i <;>
               [exact continuous_fst;
                exact continuous_apply 0 |> Continuous.comp <| continuous_snd;
                exact continuous_apply 1 |> Continuous.comp <| continuous_snd]
           · refine continuous_pi_iff.mpr ?_
-            intro i; fin_cases i <;> simp [ Fin.insertNth ]
+            intro i
+            fin_cases i <;>
+              simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
+                Fin.isValue, Fin.zero_eta, Fin.mk_one, Fin.insertNth_apply_same, Fin.reduceFinMk]
             · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
             · exact continuous_fst
             · exact continuous_apply 1 |> Continuous.comp <| continuous_snd
@@ -199,14 +226,17 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
           |> fun h => h.mono_set
             (Set.prod_mono (Set.Ioc_subset_Icc_self)
               (Set.pi_mono fun _ _ => Set.Ioc_subset_Icc_self))
-      have h_ftc : ∀ (z : Fin 2 → ℝ),
-          ∫ y in Set.Ioc 0 1, (fderiv ℝ F (Fin.insertNth i y z)) (Pi.single i 1) = 0 := by
-        intro z
+
+
+/-- For periodic `F`, the slice integral `∫₀¹ ∂F/∂xᵢ along the `i`-th line vanishes. -/
+private lemma box3_ftc_slice_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3) (hF : ContDiff ℝ 1 F)
+    (hper : ∀ x, F (x + Pi.single i 1) = F x) (z : Fin 2 → ℝ) :
+    ∫ y in Set.Ioc 0 1, (fderiv ℝ F (Fin.insertNth i y z)) (Pi.single i 1) = 0 := by
         have h_ftc : ∫ y in (0 : ℝ)..1, (fderiv ℝ F (Fin.insertNth i y z)) (Pi.single i 1) =
             F (Fin.insertNth i 1 z) - F (Fin.insertNth i 0 z) := by
           rw [ intervalIntegral.integral_eq_sub_of_hasDerivAt ]
           rotate_right
-          use fun x => F (Fin.insertNth i x z)
+          · exact fun x => F (Fin.insertNth i x z)
           · rfl
           · intro x hx
             convert HasFDerivAt.hasDerivAt
@@ -214,14 +244,25 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
                   (hF.contDiffAt.differentiableAt one_ne_zero |> DifferentiableAt.hasFDerivAt)
                   (hasFDerivAt_pi.mpr _)) using 1
             rotate_left
-            use fun j => if j = i then 1 else 0
-            · intro j; split_ifs <;> simp_all [ hasFDerivAt_iff_isLittleO_nhds_zero ]
-              simp_all [ Fin.insertNth ]
-              fin_cases i <;> fin_cases j <;> simp_all [ Fin.succAboveCases ]
+            · exact fun j => if j = i then 1 else 0
+            · intro j
+              split_ifs <;>
+                simp_all only [zero_le_one, Set.uIcc_of_le, Set.mem_Icc,
+                  Fin.insertNth_apply_same, hasFDerivAt_iff_isLittleO_nhds_zero,
+                  add_sub_cancel_left, ContinuousLinearMap.one_apply, sub_self,
+                  Asymptotics.isLittleO_const_left, true_or, ContinuousLinearMap.zero_apply,
+                  sub_zero]
+              simp_all only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd]
+              fin_cases i <;> fin_cases j <;>
+                simp_all only [Fin.zero_eta, Fin.isValue, not_true_eq_false, Fin.mk_one,
+                  one_ne_zero, not_false_eq_true, Fin.succAboveCases, Nat.reduceAdd, ↓reduceDIte,
+                  Fin.not_lt_zero, Fin.pred_one, sub_self, Asymptotics.isLittleO_const_left,
+                  true_or, Fin.reduceFinMk, Fin.reduceEq, Fin.reducePred, zero_ne_one,
+                  Fin.lt_one_iff, Fin.castPred_zero, Fin.reduceLT, Fin.castPred_one]
             · simp only [ContinuousLinearMap.comp_apply]
               congr 1
               ext j
-              simp [Pi.single_apply]
+              simp only [ContinuousLinearMap.pi_apply, Pi.single_apply]
               split <;> simp
           · apply_rules [ Continuous.intervalIntegrable ]
             have h_cont : Continuous (fun y => fderiv ℝ F (Fin.insertNth i y z)) := by
@@ -230,7 +271,7 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
             exact h_cont.clm_apply continuous_const
         convert h_ftc using 1 <;> norm_num [ intervalIntegral.integral_of_le zero_le_one ]
         rw [ eq_comm, sub_eq_zero ]
-        convert h_periodic (Fin.insertNth i 0 z) using 2
+        convert hper (Fin.insertNth i 0 z) using 2
         ext j
         fin_cases i <;> fin_cases j <;> simp [ Fin.insertNth ]
         · rfl
@@ -238,7 +279,14 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
         · rfl
         · rfl
         · rfl
-      convert h_fubini _ _ using 1
+
+
+/-- ∫ ∂F/∂xᵢ over [0,1]³ = 0 for periodic F (FTC + periodicity). -/
+lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3)
+    (hF : ContDiff ℝ 1 F) (hper : ∀ x, F (x + Pi.single i 1) = F x) :
+    ∫ y in box3, fderiv ℝ F y (Pi.single i 1) = 0 := by
+      have h_ftc := box3_ftc_slice_zero F i hF hper
+      convert box3_fubini_slice i _ _ using 1
       · rw [ MeasureTheory.integral_integral_swap ]
         · simp_rw [h_ftc]; simp
         · have h_cont : Continuous
@@ -249,16 +297,28 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
                 exact hF.continuous_fderiv one_ne_zero
               refine h_cont.comp ?_
               refine continuous_pi_iff.mpr ?_
-              intro j; fin_cases j <;> simp [ Fin.insertNth ]
-              · fin_cases i <;> simp [ Fin.succAboveCases ]
+              intro j
+              fin_cases j <;>
+                simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
+                  Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk]
+              · fin_cases i <;>
+                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                    ↓reduceDIte, Fin.mk_one, zero_ne_one, Fin.lt_one_iff, Fin.castPred_zero,
+                    Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT]
                 · exact continuous_fst
                 · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
                 · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
-              · fin_cases i <;> simp [ Fin.succAboveCases ]
+              · fin_cases i <;>
+                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                    one_ne_zero, ↓reduceDIte, Fin.not_lt_zero, Fin.pred_one, Fin.mk_one,
+                    Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT, Fin.castPred_one]
                 · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
                 · exact continuous_fst
                 · exact continuous_apply _ |> Continuous.comp <| continuous_snd
-              · fin_cases i <;> simp [ Fin.succAboveCases ]
+              · fin_cases i <;>
+                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                    Fin.reduceEq, ↓reduceDIte, Fin.not_lt_zero, Fin.reducePred, Fin.mk_one,
+                    Fin.lt_one_iff, Fin.reduceFinMk]
                 · exact continuous_apply _ |> Continuous.comp <| continuous_snd
                 · exact continuous_apply _ |> Continuous.comp <| continuous_snd
                 · exact continuous_fst

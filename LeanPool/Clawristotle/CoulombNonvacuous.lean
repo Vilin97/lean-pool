@@ -21,14 +21,13 @@ open MeasureTheory Matrix Finset BigOperators Real
 
 noncomputable section
 
-set_option linter.unusedVariables false
 namespace VML
 
 /-- The directional derivative of the equilibrium Maxwellian:
     ∂(eM)/∂vᵢ = -(vᵢ/T) · eM(v).
     Proof: eM = C · exp(-normSq/(2T)), chain rule gives
     fderiv(eM) v eᵢ = C · exp(…) · (-2vᵢ/(2T)) = eM(v) · (-vᵢ/T). -/
-lemma fderiv_equilibriumMaxwellian (ρ T : ℝ) (hT : 0 < T) (v : Fin 3 → ℝ) (i : Fin 3) :
+lemma fderiv_equilibriumMaxwellian (ρ T : ℝ) (_hT : 0 < T) (v : Fin 3 → ℝ) (i : Fin 3) :
     fderiv ℝ (equilibriumMaxwellian ρ T) v (Pi.single i 1) =
     -(v i / T) * equilibriumMaxwellian ρ T v := by
   have hq_smooth : ContDiff ℝ ⊤ (fun w : Fin 3 → ℝ => -(normSq w) / (2 * T)) :=
@@ -167,7 +166,7 @@ private lemma poly_mul_gaussian_le (M : ℕ) (a : ℝ) (ha : 0 < a) :
       _ ≤ 2 ^ M * (1 + M.factorial / a ^ M) := by
           gcongr
           linarith [div_nonneg (Nat.cast_nonneg M.factorial) (pow_nonneg ha.le M)]
-  · push_neg at h
+  · push Not at h
     have hu1 : 1 ≤ u := h.le
     have h_sq : u ≤ u ^ 2 := le_self_pow₀ hu1 two_ne_zero
     calc (1 + u) ^ M * Real.exp (-a * u ^ 2)
@@ -341,7 +340,7 @@ lemma integral_equilibriumMaxwellian (ρ T : ℝ) (hT : 0 < T) :
     - (11) hGauss: ∇·0 = 0 = ∫eM - ρ_ion (simp closes)  ✓
     - (12) hDivB: ∇·0 = 0  ✓ -/
 theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
-    (hν : 0 < ν) (hT : 0 < T) (hρ_ion : 0 < ρ_ion) :
+    (_hν : 0 < ν) (hT : 0 < T) (hρ_ion : 0 < ρ_ion) :
     ∃ (f : Torus3 → (Fin 3 → ℝ) → ℝ) (E B : Torus3 → Fin 3 → ℝ),
     (∀ x v, 0 < f x v) ∧                                                  -- (3)
     (∀ x, ContDiff ℝ 3 (f x)) ∧                                           -- (4)

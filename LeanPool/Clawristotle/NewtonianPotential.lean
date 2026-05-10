@@ -28,7 +28,7 @@ lemma coulomb_landauMatrix_entry_le (z : Fin 3 → ℝ) (i j : Fin 3) :
   by_cases hz : z = 0
   · -- z = 0: landauMatrix _ 0 = 0 (inner matrix vanishes)
     simp [hz, landauMatrix, innerLandauMatrix, normSq, dotProduct, vecMulVec, eucNorm]
-  · simp [hz]
+  · rw [if_neg hz]
     -- |Ψ(|z|) * B(z)_{ij}| ≤ |z|^{-3} * |z|² = |z|^{-1}
     simp only [landauMatrix, smul_apply, smul_eq_mul]
     have henz : 0 < eucNorm z := by
@@ -44,7 +44,10 @@ lemma coulomb_landauMatrix_entry_le (z : Fin 3 → ℝ) (i j : Fin 3) :
         have hz0 := mul_self_nonneg (z 0)
         have hz1 := mul_self_nonneg (z 1)
         have hz2 := mul_self_nonneg (z 2)
-        fin_cases i <;> simp <;> rw [abs_of_nonneg (by nlinarith)] <;> nlinarith
+        fin_cases i <;>
+          simp only [Fin.isValue, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, add_sub_cancel_right,
+            ge_iff_le] <;>
+          rw [abs_of_nonneg (by nlinarith)] <;> nlinarith
       · simp only [zero_sub, abs_neg]
         rw [hns]
         simp only [Fin.sum_univ_three]
@@ -84,19 +87,20 @@ lemma coulomb_landauMatrix_entry_le_pi (z : Fin 3 → ℝ) (i j : Fin 3)
     (hz : z ≠ 0) :
     |landauMatrix coulombKernel z i j| ≤ ‖z‖⁻¹ := by
   have h := coulomb_landauMatrix_entry_le z i j
-  simp [hz] at h
+  rw [if_neg hz] at h
   exact le_trans h (inv_anti₀ (norm_pos_iff.mpr hz) (pi_norm_le_eucNorm z))
 
 
 lemma inv_norm_summable_series (R : ℝ) (hR : 0 < R) :
     Summable (fun k : ℕ => (2^(-k-1 : ℝ) * R)⁻¹ * (2^(-k : ℝ) * R)^3) := by
+  have hRne : R ≠ 0 := hR.ne'
   norm_num [ Real.rpow_sub ]
   ring_nf
-  norm_num [ hR.ne' ]
-  norm_num [ pow_mul', mul_assoc, hR.ne' ]
+  norm_num [ hRne ]
+  norm_num [ pow_mul', mul_assoc, hRne ]
   norm_num only [ ← mul_assoc, ← mul_pow ]
   ring_nf
-  norm_num [ hR.ne' ]
+  norm_num [ hRne ]
   exact Summable.mul_right _
     (Summable.mul_left _
       (summable_geometric_of_lt_one (by norm_num) (by norm_num)))
@@ -105,9 +109,9 @@ lemma inv_norm_ball_volume (R : ℝ) (hR : 0 < R) (k : ℕ) :
     (MeasureTheory.volume (Metric.closedBall (0 : Fin 3 → ℝ) (2^(-k : ℝ) * R))).toReal =
     (2^(-k : ℝ) * R)^3 * (MeasureTheory.volume (Metric.closedBall (0 : Fin 3 → ℝ) 1)).toReal := by
   rw [ MeasureTheory.Measure.addHaar_closedBall ]
-  norm_num
-  ring_nf
-  · positivity
+  · norm_num
+    ring_nf
+    positivity
   · positivity
 
 lemma inv_norm_lintegral_bounded (R : ℝ) (hR : 0 < R) (k : ℕ) :
@@ -123,7 +127,8 @@ lemma inv_norm_lintegral_bounded (R : ℝ) (hR : 0 < R) (k : ℕ) :
       z ∈ Metric.closedBall 0 (2^(-k : ℝ) * R) \
         Metric.closedBall 0 (2^(-k-1 : ℝ) * R) →
       ‖z‖⁻¹ ≤ (2^(-k-1 : ℝ) * R)⁻¹ := by
-    simp +zetaDelta at *
+    simp +zetaDelta only [rpow_neg_natCast, zpow_neg, zpow_natCast, Set.mem_diff,
+      Metric.mem_closedBall, dist_zero_right, not_le, _root_.mul_inv_rev, and_imp] at *
     intro z hz₁ hz₂
     rw [ ← mul_inv ]
     gcongr
@@ -146,7 +151,8 @@ lemma inv_norm_lintegral_bounded (R : ℝ) (hR : 0 < R) (k : ℕ) :
         ENNReal.ofReal_le_ofReal <|
           h_bounded z hz)
   refine le_trans h_const_bound ?_
-  simp +zetaDelta at *
+  simp +zetaDelta only [rpow_neg_natCast, zpow_neg, zpow_natCast, _root_.mul_inv_rev,
+    lintegral_const, MeasurableSet.univ, Measure.restrict_apply, Set.univ_inter] at *
   rw [ ENNReal.ofReal_mul (by positivity) ]
   rw [ ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity) ]
   gcongr
@@ -244,8 +250,9 @@ lemma inv_norm_local_integrable (R : ℝ) (hR : 0 < R) :
         norm_num [ Real.rpow_add, Real.rpow_sub ]
         ring_nf
         convert congr_arg (· * R⁻¹ * 2 ^ ‹_› * 2) (h_volume ‹_›) using 1
-          <;> norm_num [ Real.rpow_neg, Real.rpow_mul ] ; ring_nf
-        · norm_num [ mul_comm ]
+          <;> norm_num [ Real.rpow_neg, Real.rpow_mul ]
+        · ring_nf
+          norm_num [ mul_comm ]
         · field_simp
           ring_nf
           norm_num [ ← mul_pow ]
@@ -331,7 +338,7 @@ lemma convolution_local_int_schwartz
         have hw_far : 1 ≤ ‖v - w‖ := by
           rw [Set.mem_diff] at hw
           by_contra h_lt
-          push_neg at h_lt
+          rw [not_le] at h_lt
           exact hw.2 (Metric.mem_closedBall.mpr (by rw [dist_comm, dist_eq_norm]; linarith))
         calc ‖v - w‖⁻¹ * |g w| ≤ 1 * |g w| :=
               mul_le_mul_of_nonneg_right (inv_le_one_of_one_le₀ hw_far) (abs_nonneg _)

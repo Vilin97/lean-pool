@@ -7,8 +7,6 @@ import LeanPool.Clawristotle.CoulombFlux
 import Mathlib.Analysis.Calculus.ParametricIntegral
 
 /-!
-set_option linter.style.longLine false
-
 # Coulomb Entry Convolution: Differentiability and Bounds
 
 Establishes that partial derivatives of functions with C² decay are C² decay,
@@ -61,7 +59,7 @@ private lemma inv_norm_bounded_integrable
           rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (inv_nonneg.mpr (norm_nonneg _))]
           have hw_far : 1 ≤ ‖v - w‖ := by
             rw [Set.mem_diff] at hw
-            by_contra h_lt; push_neg at h_lt
+            by_contra h_lt; rw [not_le] at h_lt
             exact hw.2 (Metric.mem_closedBall.mpr (by rw [dist_comm, dist_eq_norm]; linarith))
           calc ‖v - w‖⁻¹ * |g w| ≤ 1 * |g w| :=
                 mul_le_mul_of_nonneg_right (inv_le_one_of_one_le₀ hw_far) (abs_nonneg _)
@@ -87,8 +85,10 @@ lemma schwartz_fderiv_component_schwartz
   refine ⟨C, hC_pos, fun v => ?_⟩
   have h1 : (fun w => fderiv ℝ f w (Pi.single j 1)) =
       (ContinuousLinearMap.apply ℝ ℝ (Pi.single j 1 : Fin 3 → ℝ)) ∘ (fderiv ℝ f) := rfl
-  have h_cont_diff : ContDiff ℝ k (fderiv ℝ f) := hf_smooth.fderiv_right (by exact_mod_cast (by omega : k + 1 ≤ 3))
-  rw [h1, ContinuousLinearMap.iteratedFDeriv_comp_left (ContinuousLinearMap.apply ℝ ℝ (Pi.single j 1)) h_cont_diff.contDiffAt le_rfl]
+  have h_cont_diff : ContDiff ℝ k (fderiv ℝ f) :=
+    hf_smooth.fderiv_right (by exact_mod_cast (by omega : k + 1 ≤ 3))
+  rw [h1, ContinuousLinearMap.iteratedFDeriv_comp_left
+    (ContinuousLinearMap.apply ℝ ℝ (Pi.single j 1)) h_cont_diff.contDiffAt le_rfl]
   have h_norm_eval : ‖(ContinuousLinearMap.apply ℝ ℝ (Pi.single j 1 : Fin 3 → ℝ))‖ ≤ 1 := by
     apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
     intro L
@@ -122,7 +122,9 @@ lemma coulomb_entry_schwartz_integrable
         (continuous_const.sub continuous_id')
         (continuous_const.sub continuous_id'))).sqrt)).mul
       (by apply Continuous.measurable; unfold innerLandauMatrix
-          simp [normSq, vecMulVec]; fun_prop (disch := norm_num)
+          simp only [normSq, dotProduct_sub, sub_dotProduct, vecMulVec, Pi.sub_apply, sub_apply,
+            smul_apply, smul_eq_mul, of_apply]
+          fun_prop (disch := norm_num)
       )).aestronglyMeasurable).mul hg_smooth.continuous.aestronglyMeasurable
   · -- Domination bound
     rw [norm_mul, norm_mul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg _))]
@@ -209,7 +211,8 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
         (measurable_id.pow_const _)).comp ((Continuous.measurable (Continuous.dotProduct
           continuous_id' continuous_id')).sqrt)).mul
         (by apply Continuous.measurable; unfold innerLandauMatrix
-            simp [normSq, vecMulVec]; fun_prop (disch := norm_num)
+            simp only [normSq, vecMulVec, sub_apply, smul_apply, smul_eq_mul, of_apply]
+            fun_prop (disch := norm_num)
         )).aestronglyMeasurable)
     exact h_sc.smul
       ((ContDiff.continuous (n := 1) (hg_smooth.fderiv_right (by norm_num))).comp
@@ -395,8 +398,8 @@ lemma coulomb_flux_differentiable
     intro j
     have h_cont_diff_df : ContDiff ℝ 2 (fun w => fderiv ℝ f w (Pi.single j 1)) :=
       (hf_smooth.fderiv_right (by decide)).clm_apply contDiff_const
-    have hdf_schwartz_le1 : ∀ (N : ℕ) {k : ℕ}, k ≤ 1 →
-        ∃ C > 0, ∀ (v : Fin 3 → ℝ), ‖iteratedFDeriv ℝ k (fun w ↦ fderiv ℝ f w (Pi.single j 1)) v‖ * (1 + ‖v‖) ^ N ≤ C :=
+    have hdf_schwartz_le1 : ∀ (N : ℕ) {k : ℕ}, k ≤ 1 → ∃ C > 0, ∀ (v : Fin 3 → ℝ),
+        ‖iteratedFDeriv ℝ k (fun w ↦ fderiv ℝ f w (Pi.single j 1)) v‖ * (1 + ‖v‖) ^ N ≤ C :=
       fun N k hk => hdf_schwartz j N (by exact_mod_cast (by omega : k + 1 ≤ 2))
     exact coulomb_entry_conv_differentiable _ h_cont_diff_df hdf_schwartz_le1 i j
   -- The decomposed form Σ_j [∂_j f(v) * K_{ij}(v) - f(v) * L_{ij}(v)] is differentiable

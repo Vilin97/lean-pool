@@ -27,8 +27,6 @@ projects:
     main_declarations:
       - VML.Theorem42
       - VML.CoulombConcreteTheorem42
-      - VML.CoulombConcreteTheorem42_classify_T
-      - VML.CoulombConcreteTheorem42_nonvacuous
     tags:
       - pde
       - kinetic-theory

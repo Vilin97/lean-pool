@@ -61,7 +61,7 @@ lemma inverse_poly_integrable (C : ℝ) :
   simpa using h_integrable.const_mul C
 
 /-- Schwartz decay implies integrability. -/
-lemma UniformSchwartzDecay.integrable {f : Torus3 → (Fin 3 → ℝ) → ℝ}
+lemma _root_.VML.UniformSchwartzDecay.integrable {f : Torus3 → (Fin 3 → ℝ) → ℝ}
     (hS : UniformSchwartzDecay f) (hf_smooth : ∀ x, ContDiff ℝ 3 (f x))
     (x : Torus3) : Integrable (f x) := by
   obtain ⟨C, hC_pos, hbound⟩ := hS.hDecay (k := 0) 4 (by omega)
@@ -79,7 +79,7 @@ lemma UniformSchwartzDecay.integrable {f : Torus3 → (Fin 3 → ℝ) → ℝ}
 /-- Schwartz decay implies integrability with polynomial weight.
     If f(x,·) decays faster than any polynomial, then (1+‖v‖)^M * |f(x,v)| is integrable
     for any M. -/
-lemma UniformSchwartzDecay.integrable_poly_mul {f : Torus3 → (Fin 3 → ℝ) → ℝ}
+lemma _root_.VML.UniformSchwartzDecay.integrable_poly_mul {f : Torus3 → (Fin 3 → ℝ) → ℝ}
     (hS : UniformSchwartzDecay f) (hf_smooth : ∀ x, ContDiff ℝ 3 (f x))
     (x : Torus3) (M : ℕ) :
     Integrable (fun v => (1 + ‖v‖) ^ M * f x v) := by
@@ -89,11 +89,13 @@ lemma UniformSchwartzDecay.integrable_poly_mul {f : Torus3 → (Fin 3 → ℝ) �
     (hf_smooth x).continuous).aestronglyMeasurable
   filter_upwards [] with v
   have hb := hbound x v
-  simp [iteratedFDeriv_zero_eq_comp] at hb
+  simp only [iteratedFDeriv_zero_eq_comp, Function.comp_apply,
+    continuousMultilinearCurryFin0_symm_apply, ContinuousMultilinearMap.uncurry0_norm,
+    norm_eq_abs] at hb
   have hv_pos : (0 : ℝ) < (1 + ‖v‖) ^ 4 := by positivity
   have hMnn : (0 : ℝ) ≤ (1 + ‖v‖) ^ M := by positivity
   -- `Continuous.mul` produces a `Pi` product; unfold it pointwise before the abs rewrites.
-  simp only [Pi.mul_apply, Pi.add_apply, Pi.one_apply, Real.norm_eq_abs, abs_mul,
+  simp only [Pi.mul_apply, Pi.add_apply, Real.norm_eq_abs, abs_mul,
     abs_of_nonneg hMnn]
   rw [le_div_iff₀ hv_pos]
   calc (1 + ‖v‖) ^ M * |f x v| * (1 + ‖v‖) ^ 4

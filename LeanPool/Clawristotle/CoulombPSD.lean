@@ -6,8 +6,6 @@ Authors: Vasily Ilin
 import LeanPool.Clawristotle.CoulombPSDHelpers
 
 /-!
-set_option linter.style.longLine false
-
 # PSD Integrability and Fubini Symmetrization for Coulomb
 
 Inner and outer integrability of the PSD integrand, and the Fubini
@@ -348,7 +346,8 @@ private lemma fubini_double_int_bound_coulomb
                 (3 * (Cg * (1 + ‖v‖) ^ Kg * f v * M₁) +
                  f v * (Md₀ + Md₁ + Md₂)) :=
                 mul_le_mul_of_nonneg_left htotal h3_nn
-              _ ≤ (9 * Cg ^ 2 * M₁ + 3 * Cg * (Md₀ + Md₁ + Md₂)) * ((1 + ‖v‖) ^ (2 * Kg) * f v) := by
+              _ ≤ (9 * Cg ^ 2 * M₁ + 3 * Cg * (Md₀ + Md₁ + Md₂)) *
+                    ((1 + ‖v‖) ^ (2 * Kg) * f v) := by
                 rw [show 2 * Kg = Kg + Kg from by omega,
                     pow_add]
                 have hP := hv_nn
@@ -408,7 +407,7 @@ lemma fubini_double_integrable_coulomb
       hf_smooth.continuous).aestronglyMeasurable v
   -- Cg ≥ 0
   have hCg_nn : 0 ≤ Cg := by
-    by_contra h_neg; push_neg at h_neg
+    by_contra h_neg; push Not at h_neg
     have : Cg * (1 + ‖(0 : Fin 3 → ℝ)‖) ^ Kg * f 0 < 0 :=
       mul_neg_of_neg_of_pos (mul_neg_of_neg_of_pos h_neg (by positivity)) (hf_pos 0)
     linarith [hGrad 0 0, abs_nonneg (fderiv ℝ f 0 (Pi.single 0 1))]
@@ -438,7 +437,8 @@ lemma fubini_double_integrable_coulomb
     have hMj : ∀ j, ∃ M > 0, ∀ v,
         ∫ w, ‖v - w‖⁻¹ * |fderiv ℝ f w (Pi.single j 1)| ≤ M :=
       fun j => newtonian_schwartz_uniform_bound _ (hdg_decay j)
-        ((hf_smooth.continuous_fderiv (by norm_num)).clm_apply continuous_const).aestronglyMeasurable
+        ((hf_smooth.continuous_fderiv (by norm_num)).clm_apply
+          continuous_const).aestronglyMeasurable
     obtain ⟨Md₀, hMd₀, hMd₀b⟩ := hMj 0
     obtain ⟨Md₁, hMd₁, hMd₁b⟩ := hMj 1
     obtain ⟨Md₂, hMd₂, hMd₂b⟩ := hMj 2
