@@ -16,3 +16,20 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+  - slug: clawristotle
+    title: "Clawristotle: Vlasov-Maxwell-Landau steady-state classification"
+    entry_module: LeanPool.Clawristotle
+    authors:
+      - Vasily Ilin
+    source:
+      arxiv: "2603.15929"
+    status: verified
+    main_declarations:
+      - Theorem42
+      - CoulombConcreteTheorem42
+      - MaxwellMoleculesTheorem42
+      - CoulombNonvacuous
+    tags:
+      - pde
+      - kinetic-theory
+      - mathematical-physics
