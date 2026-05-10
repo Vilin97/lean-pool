@@ -232,8 +232,11 @@ This construction gives a unitary operator ℱ : L²(ℝᵈ) ≃ₗᵢ[ℂ] L²(
 variable {d : ℕ} [NeZero d] [Fintype (Fin d)]
 
 -- Type abbreviations for clarity
+/-- The `EuclideanRd` declaration. -/
 abbrev EuclideanRd (d : ℕ) := EuclideanSpace ℝ (Fin d)
+/-- The `SchwartzRd` declaration. -/
 abbrev SchwartzRd (d : ℕ) := SchwartzMap (EuclideanRd d) ℂ
+/-- The `L2Complex` declaration. -/
 abbrev L2Complex (d : ℕ) := Lp ℂ 2 (volume : Measure (EuclideanRd d))
 
 /-! ### Core construction components (using Mathlib APIs) -/

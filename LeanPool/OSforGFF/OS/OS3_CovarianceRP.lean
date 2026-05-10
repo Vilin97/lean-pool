@@ -71,18 +71,22 @@ open scoped ComplexConjugate
 
 /-! ## Part 1: Core Definitions -/
 
+/-- The `timeReflection` declaration. -/
 noncomputable def timeReflection (x : SpaceTime) : SpaceTime :=
   (WithLp.equiv 2 _).symm (Function.update x.ofLp 0 (-x.ofLp 0))
 
 lemma timeReflection_involutive : Function.Involutive timeReflection :=
   _root_.timeReflection_involutive
 
+/-- The `spatialDot` declaration. -/
 noncomputable def spatialDot (k_spatial x_spatial : SpatialCoords) : ℝ :=
   ∑ i, k_spatial i * x_spatial i
 
+/-- The `freeCovarianceℂ_bilinear` declaration. -/
 noncomputable def freeCovarianceℂ_bilinear (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
   ∫ x, ∫ y, (f x) * (_root_.freeCovariance m x y) * (g y)
 
+/-- The `weightedLaplaceFourier` declaration. -/
 noncomputable def weightedLaplaceFourier (m : ℝ) (f : TestFunctionℂ) (k_sp : SpatialCoords) : ℂ :=
   let ω := Real.sqrt (‖k_sp‖^2 + m^2)
   ∫ x : SpaceTime, f x * Complex.exp (-ω * x 0) *
@@ -164,10 +168,12 @@ lemma exp_spatial_phase_factor (k_sp : SpatialCoords) (x_sp y_sp : SpatialCoords
     Complex.exp (Complex.I * spatialDot k_sp y_sp) := by
   rw [← Complex.exp_add, spatialDot_sub]; congr 1; push_cast; ring
 
+/-- The `xIntegralFactor` declaration. -/
 noncomputable def xIntegralFactor (f : TestFunctionℂ) (ω : ℝ) (k_sp : SpatialCoords) : ℂ :=
   ∫ x : SpaceTime, (starRingEnd ℂ (f x)) *
     Complex.exp (-(ω * x 0)) * Complex.exp (-Complex.I * spatialDot k_sp (spatialPart x))
 
+/-- The `yIntegralFactor` declaration. -/
 noncomputable def yIntegralFactor (f : TestFunctionℂ) (ω : ℝ) (k_sp : SpatialCoords) : ℂ :=
   ∫ y : SpaceTime, f y *
     Complex.exp (-(ω * y 0)) * Complex.exp (Complex.I * spatialDot k_sp (spatialPart y))

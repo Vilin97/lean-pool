@@ -88,6 +88,7 @@ Note: The primary proof is in `OSforGFF.OS.OS0_Analyticity`.
 
 namespace OS0_alt
 
+/-- The `GJcov_bilin` declaration. -/
 def GJcov_bilin (dμ_config : ProbabilityMeasure FieldConfiguration)
   (h_bilinear : CovarianceBilinear dμ_config) : LinearMap.BilinMap ℂ TestFunctionℂ ℂ :=
   LinearMap.mk₂ ℂ

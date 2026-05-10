@@ -56,9 +56,11 @@ open MeasureTheory
 
 namespace QFT
 
+/-- The `timeReflection` declaration. -/
 abbrev timeReflection (x : SpaceTime) : SpaceTime :=
   (WithLp.equiv 2 _).symm (Function.update x.ofLp 0 (-x.ofLp 0))
 
+/-- The `timeReflectionMatrix` declaration. -/
 def timeReflectionMatrix : Matrix (Fin STDimension) (Fin STDimension) ℝ :=
   Matrix.diagonal (fun i => if i = 0 then -1 else 1)
 
@@ -70,9 +72,11 @@ lemma timeReflectionMatrix_is_orthogonal :
       simp []
       split_ifs <;> norm_num
 
+/-- The `timeReflectionIsometry` declaration. -/
 def timeReflectionIsometry : Matrix.orthogonalGroup (Fin STDimension) ℝ :=
   ⟨timeReflectionMatrix, timeReflectionMatrix_is_orthogonal⟩
 
+/-- The `timeReflectionLinear` declaration. -/
 def timeReflectionLinear : SpaceTime →ₗ[ℝ] SpaceTime :=
 { toFun := timeReflection
   map_add' := by
@@ -95,6 +99,7 @@ def timeReflectionLinear : SpaceTime →ₗ[ℝ] SpaceTime :=
       simp [Function.update_self]
     · simp [Function.update_of_ne h] }
 
+/-- The `timeReflectionCLM` declaration. -/
 noncomputable def timeReflectionCLM : SpaceTime →L[ℝ] SpaceTime :=
 timeReflectionLinear.toContinuousLinearMap (E := SpaceTime) (F' := SpaceTime)
 
@@ -123,6 +128,7 @@ lemma timeReflection_inner_map (x y : SpaceTime) :
     simp [Function.update_self]
   · simp [Function.update_of_ne h]
 
+/-- The `timeReflectionLE` declaration. -/
 def timeReflectionLE : SpaceTime ≃ₗᵢ[ℝ] SpaceTime :=
 { toFun := timeReflection
   invFun := timeReflection  -- Time reflection is self-inverse
@@ -176,6 +182,7 @@ private lemma timeReflection_hg_upper :
     ‖x‖ ≤ 1 + ‖x‖ := hx
     _ = 1 * (1 + ‖x‖) ^ (1 : ℕ) := by simp [pow_one]
 
+/-- The `compTimeReflection` declaration. -/
 noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ :=
   SchwartzMap.compCLM (𝕜 := ℝ)
     (hg := timeReflectionCLM.hasTemperateGrowth)

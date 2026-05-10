@@ -58,10 +58,12 @@ Core type definitions for the formalization:
     see `docs/dimension_dependence.md` for a detailed inventory.
 -/
 abbrev STDimension := 4
+/-- The `SpaceTime` declaration. -/
 abbrev SpaceTime := EuclideanSpace ℝ (Fin STDimension)
 
 noncomputable instance : InnerProductSpace ℝ SpaceTime := by infer_instance
 
+/-- The `getTimeComponent` declaration. -/
 abbrev getTimeComponent (x : SpaceTime) : ℝ :=
  x ⟨0, by simp +arith⟩
 
@@ -75,12 +77,15 @@ noncomputable section
 
 variable {𝕜 : Type} [RCLike 𝕜]
 
+/-- The `μ` declaration. -/
 abbrev μ : Measure SpaceTime := volume    -- Lebesgue, just named “μ”
 
 /- Distributions and test functions -/
 
+/-- The `TestFunction` declaration. -/
 abbrev TestFunction : Type := SchwartzMap SpaceTime ℝ
 abbrev TestFunction𝕜 : Type := SchwartzMap SpaceTime 𝕜
+/-- The `TestFunctionℂ` declaration. -/
 abbrev TestFunctionℂ := TestFunction𝕜 (𝕜 := ℂ)
 
 example : AddCommGroup TestFunctionℂ := by infer_instance
@@ -139,6 +144,7 @@ def distributionPairing (ω : FieldConfiguration) (f : TestFunction) : ℝ := ω
   -- This follows from the linearity of the dual pairing
   map_smul ω s a
 
+/-- The `distributionPairingCLM` declaration. -/
 @[simp] def distributionPairingCLM (a : TestFunction) : FieldConfiguration →L[ℝ] ℝ where
   toFun ω := distributionPairing ω a
   map_add' ω₁ ω₂ := by
