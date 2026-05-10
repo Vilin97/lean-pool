@@ -4,6 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz
 -/
 
+import LeanPool.SumsThreeSquares.MinkowskiConvex
+import LeanPool.SumsThreeSquares.SumThreeSquares
+
 /-!
 # Sums of Three Squares
 
@@ -13,9 +16,6 @@ Status: verified
 Main declarations: `LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3`
 Tags: number-theory, quadratic-forms, geometry-of-numbers
 -/
-
-import LeanPool.SumsThreeSquares.MinkowskiConvex
-import LeanPool.SumsThreeSquares.SumThreeSquares
 
 /-!
 # Sums of Three Squares
