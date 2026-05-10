@@ -83,10 +83,11 @@ jobs:
         if: steps.lean_changes.outputs.count == '0'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
         run: |
           set -euo pipefail
-          gh pr comment "$PR_NUMBER" --body \
+          gh pr comment "$PR_NUMBER" --repo "$REPO" --body \
             "_LLM review skipped: PR touches no \`.lean\` files. Push a Lean change or comment \`/review\` after one lands to re-trigger._"
 
       - name: Wait for Lean Action CI on this head
@@ -129,11 +130,12 @@ jobs:
           steps.wait.outputs.conclusion != 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
           CONCLUSION: ${{ steps.wait.outputs.conclusion }}
         run: |
           set -euo pipefail
-          gh pr comment "$PR_NUMBER" --body \
+          gh pr comment "$PR_NUMBER" --repo "$REPO" --body \
             "_LLM review skipped: Lean Action CI conclusion was \`$CONCLUSION\`. Push a fix or comment \`/review\` after CI is green._"
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
