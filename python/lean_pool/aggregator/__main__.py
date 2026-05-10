@@ -34,7 +34,7 @@ from lean_pool.aggregator.reservoir import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-CANDIDATES_DIR = REPO_ROOT / "aggregator" / "candidates"
+CANDIDATES_DIR = REPO_ROOT / "candidates"
 DEFAULT_MANIFEST = CANDIDATES_DIR / "raw_data" / "manifest.json"
 DEFAULT_MANUAL_LIST = CANDIDATES_DIR / "manual.txt"
 DEFAULT_MANUAL_DATA = CANDIDATES_DIR / "raw_data" / "manual_packages.json"

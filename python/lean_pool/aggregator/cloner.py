@@ -6,7 +6,7 @@ are downloaded on demand the first time they are read, so an idle
 clone is typically a few hundred KB.
 
 The cache lives at
-``aggregator/candidates/raw_data/clones/<owner>/<name>/``, keyed by the
+``candidates/raw_data/clones/<owner>/<name>/``, keyed by the
 package's canonical GitHub key (lowercased, ``.lean``/``.git`` suffix
 stripped) so two manifest entries pointing at the same repo (e.g.
 Reservoir's ``leanprover-community/mathlib`` and a manual entry's
