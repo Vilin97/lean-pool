@@ -28,7 +28,6 @@ projects:
     status: verified
     main_declarations:
       - LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
-      - LeanPool.SumsThreeSquares.IsSumOfThreeSquares
     tags:
       - number-theory
       - quadratic-forms

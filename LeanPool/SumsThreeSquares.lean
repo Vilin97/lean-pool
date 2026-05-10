@@ -12,7 +12,7 @@ import LeanPool.SumsThreeSquares.SumThreeSquares
 Source: url:https://github.com/pitmonticone/SumsThreeSquares
 Authors: Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz
 Status: verified
-Main declarations: `LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3`, `LeanPool.SumsThreeSquares.IsSumOfThreeSquares`
+Main declarations: `LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3`
 Tags: number-theory, quadratic-forms, geometry-of-numbers
 -/
 

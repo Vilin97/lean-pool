@@ -29,7 +29,8 @@ variable {n : ℕ} {s : Set (EuclideanSpace ℝ (Fin n))}
 private lemma euclideanSpace_F_measurableSet :
     MeasurableSet ({x : EuclideanSpace ℝ (Fin n) | ∀ i, x i ∈ Set.Ico (0 : ℝ) 1}) := by
   rw [show {x : EuclideanSpace ℝ (Fin n) | ∀ i, x i ∈ Set.Ico (0 : ℝ) 1} =
-    (MeasurableEquiv.toLp 2 (Fin n → ℝ)) '' Set.pi Set.univ (fun _ => Set.Ico (0 : ℝ) 1) from by
+    (MeasurableEquiv.toLp 2 (Fin n → ℝ)) ''
+      Set.pi Set.univ (fun _ => Set.Ico (0 : ℝ) 1) from by
     ext x
     simp only [Set.mem_Ico, Set.mem_setOf_eq, MeasurableEquiv.toLp_apply, Set.mem_image,
       Set.mem_pi, Set.mem_univ, forall_const]
@@ -112,10 +113,12 @@ theorem classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
         have : m = -⌊x i⌋ := by
           by_contra hne; cases Int.lt_or_gt_of_ne hne with
           | inl hlt =>
-            have : (m : ℝ) + 1 ≤ (-⌊x i⌋ : ℝ) := by exact_mod_cast Int.lt_iff_add_one_le.mp hlt
+            have : (m : ℝ) + 1 ≤ (-⌊x i⌋ : ℝ) := by
+              exact_mod_cast Int.lt_iff_add_one_le.mp hlt
             linarith [h_in.2, h_floor.1]
           | inr hrt =>
-            have : (-⌊x i⌋ : ℝ) + 1 ≤ (m : ℝ) := by exact_mod_cast Int.lt_iff_add_one_le.mp hrt
+            have : (-⌊x i⌋ : ℝ) + 1 ≤ (m : ℝ) := by
+              exact_mod_cast Int.lt_iff_add_one_le.mp hrt
             linarith [h_in.1, h_floor.2]
         change y i = g i
         calc
