@@ -16,3 +16,22 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
+  - slug: dead-ends
+    title: Dead Ends in Square-Free Digit Walks
+    entry_module: LeanPool.DeadEnds
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Seewoo Lee
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      arxiv: "2602.05095"
+    status: verified
+    main_declarations:
+      - LeanPool.DeadEnds.baseBDeadEnd_density_formula
+    tags:
+      - number-theory
+      - combinatorics
+    msc:
+      - "11N25"
