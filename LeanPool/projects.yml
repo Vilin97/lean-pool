@@ -36,7 +36,6 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
-<<<<<<< HEAD
   - slug: sumsthreesquares
     title: Sums of Three Squares
     entry_module: LeanPool.SumsThreeSquares
@@ -53,7 +52,6 @@ projects:
       - number-theory
       - quadratic-forms
       - geometry-of-numbers
-=======
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
@@ -102,4 +100,3 @@ projects:
     tags:
       - number-theory
       - combinatorics
->>>>>>> origin/main
