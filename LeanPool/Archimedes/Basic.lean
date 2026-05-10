@@ -393,7 +393,9 @@ private lemma _asymm_chosen_iff_aux (a b c : ℝ) (h : ¬(a = 0 ∧ b = 0 ∧ c 
       · exact absurd (Or.inl (neg_pos.mpr ha)) hneg
       · exact Or.inl ha
 
-theorem NonZero.asymm_chosen_iff_not_opposite (v : NonZero) :
+namespace NonZero
+
+theorem asymm_chosen_iff_not_opposite (v : NonZero) :
     v.val.asymm_chosen ↔ ¬(-v).val.asymm_chosen := by
   have hx : (-v).val.x = -v.val.x := by simp
   have hy : (-v).val.y = -v.val.y := by simp
@@ -420,28 +422,30 @@ The choice is done under the following algorithm:
 
 - If the y-components are also both zero, choose the vector with positive z-component.
 -/
-noncomputable def NonZero.asymm_choose (v : NonZero) : AsymmChosen :=
+noncomputable def asymm_choose (v : NonZero) : AsymmChosen :=
   if h : v.val.asymm_chosen then
     ⟨ v, h ⟩
   else by
     refine ⟨-v, ?_⟩
     by_contra hn
-    exact h ((NonZero.asymm_chosen_iff_not_opposite v).mpr hn)
+    exact h ((asymm_chosen_iff_not_opposite v).mpr hn)
 
 /--
 The asymmetrical choice is an even function.
 -/
-theorem NonZero.asymm_choose_even (v : NonZero) : v.asymm_choose = (-v).asymm_choose := by
+theorem asymm_choose_even (v : NonZero) : v.asymm_choose = (-v).asymm_choose := by
   simp [asymm_choose]
   by_cases v.val.asymm_chosen <;> simp [asymm_chosen_iff_not_opposite]
 
 /--
 The asymmetrical choice either chooses a non-zero vector itself or its opposite.
 -/
-theorem NonZero.asymm_choose_either (v : NonZero) :
+theorem asymm_choose_either (v : NonZero) :
     v.asymm_choose.val = v ∨ v.asymm_choose.val = -v := by
   simp [asymm_choose]
   by_cases h : v.val.asymm_chosen <;> simp [h]
+
+end NonZero
 
 end Point
 
