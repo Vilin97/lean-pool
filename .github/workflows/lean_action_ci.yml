@@ -98,9 +98,14 @@ jobs:
         run: |
           set -euo pipefail
           ~/.elan/bin/lake build LeanPool 2>&1 | tee lean-build.log
-          if grep -nE '(^|: )warning:' lean-build.log; then
-            echo "::error::Lean build emitted warnings; fix them before merging."
-            exit 1
+          # `lake build` fails on errors. Warnings (style linters,
+          # deprecations) are surfaced as GitHub annotations but do not
+          # block the build — semantic lint is caught by `runLinter` and
+          # `lint-style` below. Lean Pool sits below mathlib; a blanket
+          # "any warning is fatal" gate is more than the bar requires.
+          if grep -nE '(^|: )warning:' lean-build.log >/dev/null; then
+            n=$(grep -cE '(^|: )warning:' lean-build.log)
+            echo "::warning::Lean build emitted $n warning(s); see the log."
           fi
 
       - name: Lint

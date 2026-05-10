@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from unittest.mock import patch
 
 from lean_pool.quality import (
     _axiom_audit_missing,
@@ -188,6 +189,44 @@ def test_quality_check_accepts_project_card_after_imports(tmp_path: Path) -> Non
     # The project-card position check must accept this layout. (lake env lean
     # for the declarations check fails in the test sandbox; that's unrelated.)
     assert not any("project card for p is out of date" in e.message for e in errors)
+
+
+def test_quality_check_falls_back_when_lake_missing(tmp_path: Path) -> None:
+    """A missing `lake` binary yields a single advisory error, not a crash.
+
+    The python_ci job runs without a Lean toolchain, so the subprocess
+    that invokes ``lake env lean`` raises ``FileNotFoundError``. The
+    quality module must catch that and emit a clear "skipped" message
+    rather than aborting the whole run.
+    """
+    _write_minimal_repo(tmp_path)
+    (tmp_path / "LeanPool.lean").write_text(
+        "import LeanPool.Basic\nimport LeanPool.MyProj\n"
+    )
+    card = (
+        "/-!\n"
+        "# Test Project\n"
+        "\n"
+        "Source: arxiv:1234.5678\n"
+        "Authors: Test Author\n"
+        "Status: verified\n"
+        "Main declarations: `hello`\n"
+        "Tags: test\n"
+        "-/\n"
+    )
+    (tmp_path / "LeanPool" / "MyProj.lean").write_text(
+        f"{HEADER}\nimport LeanPool.Basic\n\n{card}\ndef hello : Nat := 1\n"
+    )
+    _write_project_yaml(tmp_path, [{"slug": "p", "entry_module": "LeanPool.MyProj"}])
+
+    with patch(
+        "lean_pool.quality.subprocess.run",
+        side_effect=FileNotFoundError("[Errno 2] No such file or directory: 'lake'"),
+    ):
+        errors = run_checks(tmp_path)
+
+    messages = [error.message for error in errors]
+    assert any("`lake` not found" in message for message in messages)
 
 
 def test_quality_check_rejects_non_verified_status(tmp_path: Path) -> None:

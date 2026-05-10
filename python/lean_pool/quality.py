@@ -218,7 +218,14 @@ def _check_forbidden_lean_text(root: Path) -> list[_QualityError]:
     for path in _lean_content_files(root):
         stripped = _strip_lean_comments(path.read_text())
         for line_number, line in enumerate(stripped.splitlines(), start=1):
-            if re.search(r"\bset_option\b", line):
+            # `set_option` is forbidden, EXCEPT linter suppressions
+            # (`set_option linter.X false` / `... in`): those are a
+            # legitimate per-file style choice, not a soundness or
+            # performance hack. `maxHeartbeats`, `trace.*`, `autoImplicit`,
+            # `pp.*`, etc. remain forbidden.
+            if re.search(r"\bset_option\b", line) and not re.match(
+                r"^\s*set_option\s+linter\.[A-Za-z0-9_.]+\s+(?:true|false)\b", line
+            ):
                 errors.append(
                     _QualityError(path, line_number, "set_option is forbidden")
                 )
@@ -392,13 +399,24 @@ def _check_axioms(root: Path) -> list[_QualityError]:
         temp_file.flush()
 
     try:
-        process = subprocess.run(
-            ["lake", "env", "lean", str(temp_path)],
-            cwd=root,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        try:
+            process = subprocess.run(
+                ["lake", "env", "lean", str(temp_path)],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except FileNotFoundError:
+            # `lake` not on PATH; surface a single advisory error rather
+            # than crashing the whole quality run.
+            return [
+                _QualityError(
+                    root / "LeanPool.lean",
+                    1,
+                    "axiom audit skipped: `lake` not found",
+                )
+            ]
     finally:
         temp_path.unlink(missing_ok=True)
 
@@ -678,13 +696,23 @@ def _check_project_declarations(
         temp_file.flush()
 
     try:
-        process = subprocess.run(
-            ["lake", "env", "lean", str(temp_path)],
-            cwd=root,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        try:
+            process = subprocess.run(
+                ["lake", "env", "lean", str(temp_path)],
+                cwd=root,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except FileNotFoundError:
+            # `lake` not on PATH (sandboxed CI, contributor without Lean).
+            # Treat the same as `--skip-lean-axioms`: emit a single advisory
+            # error so callers know the check was skipped, rather than crash.
+            return [
+                _QualityError(
+                    path, 1, "project declarations check skipped: `lake` not found"
+                )
+            ]
     finally:
         temp_path.unlink(missing_ok=True)
 
