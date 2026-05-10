@@ -42,7 +42,8 @@ open scoped ENNReal NNReal Topology ComplexConjugate Real InnerProductSpace BigO
 
 The reflection positivity inner product is defined using the distributional bilinear form
 composed with the star operation. This is the mathematically correct formulation that
-avoids non-convergent pointwise integrals. -/
+avoids non-convergent pointwise integrals.
+-/
 
 /-- The reflection positivity inner product using the distributional bilinear form:
     ⟨Θf, f⟩_C = freeCovarianceℂ_bilinear m (star f) f
@@ -52,14 +53,16 @@ avoids non-convergent pointwise integrals. -/
     (star f)(x) = conj(f(Θx))  (time reflection composed with conjugation)
 
     This is the distributional formulation that is mathematically well-defined
-    for Schwartz test functions. -/
+    for Schwartz test functions.
+-/
 noncomputable def rpInnerProduct (m : ℝ) (f : TestFunctionℂ) : ℂ :=
   freeCovarianceℂ_bilinear m (star f) f
 
 /-! ## Direct Proof of Reflection Positivity
 
 The following namespace contains the complete self-contained proof of reflection positivity
-using the direct momentum representation approach. -/
+using the direct momentum representation approach.
+-/
 
 namespace RPProof
 
@@ -117,7 +120,8 @@ theorem rpInnerProduct_eq_bessel_reflected (f : TestFunctionℂ) :
 
 /-- The mixed representation from the Schwinger pathway.
     This is more direct than the k₀-inside form for proving reflection positivity,
-    because `(1/ω) exp(-ω|t|)` already factorizes for positive-time test functions. -/
+    because `(1/ω) exp(-ω|t|)` already factorizes for positive-time test functions.
+-/
 theorem mixed_representation (f : TestFunctionℂ)
     (hf_supp : ∀ x, x 0 ≤ 0 → f x = 0) :
     rpInnerProduct m f =
@@ -232,7 +236,8 @@ lemma yIntegralFactor_eq_neg (f : TestFunctionℂ) (k_sp : SpatialCoords) :
     - `exp(-ω(x₀+y₀)) = exp(-ωx₀) · exp(-ωy₀)`
     - `exp(-ik_sp·r) = exp(-ik_sp·x_sp) · exp(+ik_sp·y_sp)`
 
-    This avoids the round-trip through k₀ space that the old proof used. -/
+    This avoids the round-trip through k₀ space that the old proof used.
+-/
 theorem factorization_to_squared_norm_direct (f : TestFunctionℂ) (k_sp : SpatialCoords)
     (hf_support : ∀ x : SpaceTime, x 0 < 0 → f x = 0) :
     let ω := Real.sqrt (‖k_sp‖^2 + m^2)
@@ -326,7 +331,8 @@ theorem factorization_to_squared_norm_direct (f : TestFunctionℂ) (k_sp : Spati
 /-- The RP inner product equals `(1/(2(2π)^{d-1})) ∫_{k_sp} (1/ω) |F_ω(-k_sp)|²`.
 
     This follows directly from the mixed representation + factorization,
-    without going through the k₀-inside form. -/
+    without going through the k₀-inside form.
+-/
 theorem rp_equals_squared_norm_integral (f : TestFunctionℂ)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
     rpInnerProduct m f =
@@ -351,7 +357,8 @@ theorem rp_equals_squared_norm_integral (f : TestFunctionℂ)
 
     Proof: By `rp_equals_squared_norm_integral`,
       ⟨Θf, f⟩_C = (1/(2(2π)^{d-1})) * ∫_{k_sp} (1/ω) |F_ω(-k_sp)|² dk_sp
-    Both the prefactor and integrand are non-negative. -/
+    Both the prefactor and integrand are non-negative.
+-/
 theorem freeCovariance_reflection_positive_direct (f : TestFunctionℂ)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
     0 ≤ (rpInnerProduct m f).re := by
@@ -385,7 +392,8 @@ end RPProof
 /-- **Bridge Lemma**: The QFT namespace rpInnerProduct equals the RPProof rpInnerProduct.
 
     Both are defined using the same Bessel kernel C(x,y) = (m/(4π²r)) K₁(mr),
-    so this equality holds by definition (rfl). -/
+    so this equality holds by definition (rfl).
+-/
 lemma rpInnerProduct_eq_rpProof (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     rpInnerProduct m f = RPProof.rpInnerProduct m f := by
   -- Both sides expand to the same integral using freeCovariance (Bessel)
@@ -403,7 +411,8 @@ lemma rpInnerProduct_eq_rpProof (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     where C is the unregulated Bessel covariance kernel.
 
     **Proof:** Bridge to RPProof, then apply the direct proof
-    via momentum representation and non-negativity of the integrand. -/
+    via momentum representation and non-negativity of the integrand.
+-/
 theorem freeCovariance_reflection_positive_bilinear (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
   0 ≤ (rpInnerProduct m f).re := by
@@ -412,10 +421,12 @@ theorem freeCovariance_reflection_positive_bilinear (m : ℝ) [Fact (0 < m)] (f 
 
 /-! ## Connection to Real Test Functions
 
-The result extends to real test functions via embedding. -/
+The result extends to real test functions via embedding.
+-/
 
 /-- For real test functions, `star (toComplex f) = compTimeReflection (toComplex f)`.
-    This is because conjugation is identity for real-valued functions. -/
+    This is because conjugation is identity for real-valued functions.
+-/
 lemma star_toComplex_eq_compTimeReflection (f : TestFunction) :
     star (toComplex f) = compTimeReflection (toComplex f) := by
   ext x
@@ -426,7 +437,8 @@ lemma star_toComplex_eq_compTimeReflection (f : TestFunction) :
   exact compTimeReflection_toComplex_star_eq f x
 
 /-- The rpInnerProduct of a real test function equals the complex bilinear form
-    with compTimeReflection. -/
+    with compTimeReflection.
+-/
 lemma rpInnerProduct_toComplex_eq (m : ℝ) (f : TestFunction) :
     rpInnerProduct m (toComplex f) =
       freeCovarianceℂ_bilinear m (compTimeReflection (toComplex f)) (toComplex f) := by

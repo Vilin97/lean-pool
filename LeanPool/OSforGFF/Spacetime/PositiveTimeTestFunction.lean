@@ -80,7 +80,8 @@ lemma PositiveTimeTestFunction.sum_smul_mem
   simp only [Submodule.coe_sum, Submodule.coe_smul_of_tower]
 
 /-- Submodule of **complex-valued** test functions supported in the positive time region.
-    This is a ℂ-submodule since ℂ-scalar multiplication preserves support. -/
+    This is a ℂ-submodule since ℂ-scalar multiplication preserves support.
+-/
 def PositiveTimeTestFunctionsℂ.submodule : Submodule ℂ TestFunctionℂ where
   carrier := { f : TestFunctionℂ | tsupport f ⊆ positiveTimeSet }
   zero_mem' := by

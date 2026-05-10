@@ -55,7 +55,8 @@ namespace QFT
     S₂(f+g, f+g) = S₂(f,f) + S₂(f,g) + S₂(g,f) + S₂(g,g)
                  = S₂(f,f) + 2·S₂(f,g) + S₂(g,g)  (by symmetry)
 
-    This uses the bilinearity proved in Measure.IsGaussian. -/
+    This uses the bilinearity proved in Measure.IsGaussian.
+-/
 lemma schwinger2_sum_expansion (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     SchwingerFunctionℂ₂ (gaussianFreeField_free m) (f + g) (f + g) =
       SchwingerFunctionℂ₂ (gaussianFreeField_free m) f f +
@@ -88,7 +89,8 @@ lemma schwinger2_sum_expansion (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) 
     This follows from expanding ⟨f+g, C(f+g)⟩ = ⟨f,Cf⟩ + 2⟨f,Cg⟩ + ⟨g,Cg⟩.
 
     Compare with `gaussianFreeField_real_entry_factor` in OS.OS3_ReflectionPositivity which
-    proves the analogous factorization for real test functions. -/
+    proves the analogous factorization for real test functions.
+-/
 lemma gff_generating_sum_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     GJGeneratingFunctionalℂ (gaussianFreeField_free m) (f + g) =
       GJGeneratingFunctionalℂ (gaussianFreeField_free m) f *
@@ -145,7 +147,8 @@ lemma generating_euclidean_invariant
     NOTE: For complex test functions f = fRe + i*fIm, the bilinear form satisfies
     Re C_bilin(f,f) = C(fRe,fRe) - C(fIm,fIm), which can be negative!
     The bound |Z[f]| ≤ 1 does NOT hold for general complex f.
-    Instead, use gff_generating_L2_bound from OS.OS1_Regularity for the general case. -/
+    Instead, use gff_generating_L2_bound from OS.OS1_Regularity for the general case.
+-/
 lemma gff_generating_norm_le_one_real (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
     ‖GJGeneratingFunctionalℂ (gaussianFreeField_free m) (toComplex f)‖ ≤ 1 := by
   rw [gff_complex_generating m (toComplex f)]
@@ -181,7 +184,8 @@ lemma gff_generating_norm_le_one_real (m : ℝ) [Fact (0 < m)] (f : TestFunction
     - Combined: Z[f + T_a g] = Z[f]·Z[g]·exp(-S₂(f, T_a g))
     - Therefore: Z[f + T_a g] - Z[f]·Z[g] = Z[f]·Z[g]·(exp(-S₂(f, T_a g)) - 1)
     - Real test function bound: |Z[f]| ≤ 1 for real f (positive definite covariance)
-    - Exponential estimate: |exp(-z) - 1| ≤ 2|z| for |z| ≤ 1 -/
+    - Exponential estimate: |exp(-z) - 1| ≤ 2|z| for |z| ≤ 1
+-/
 lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
     (f g : TestFunction) (a : SpaceTime) (δ : ℝ) (_hδ_pos : δ > 0) (hδ_small : δ ≤ 1)
     (h_decay : ‖SchwingerFunction₂ (gaussianFreeField_free m) f (g.translate a)‖ < δ) :
@@ -294,7 +298,8 @@ lemma GFF_OS4_from_small_decay_real (m : ℝ) [Fact (0 < m)]
     - `schwartz_bilinear_translation_decay`
 
     Uses the covariance representation:
-    S₂(f, T_a g) = ∫∫ f(x) · C(x-y) · g(y-a) dx dy -/
+    S₂(f, T_a g) = ∫∫ f(x) · C(x-y) · g(y-a) dx dy
+-/
 theorem schwartz_cross_covariance_decay_real (m : ℝ) [Fact (0 < m)]
     (f g : TestFunction) (ε : ℝ) (hε : ε > 0) :
     ∃ R > 0, ∀ a : SpaceTime, ‖a‖ > R →
@@ -422,7 +427,8 @@ theorem schwartz_cross_covariance_decay_real (m : ℝ) [Fact (0 < m)]
     2. Translation invariance: Z[T_a g] = Z[g]  (from OS2)
     3. Cross term decay: S₂(f, T_a g) → 0 as |a| → ∞
     4. Continuity: exp(-z) → exp(0) = 1 as z → 0
-    5. For real test functions: |Z[f]| ≤ 1 (positive definite covariance) -/
+    5. For real test functions: |Z[f]| ≤ 1 (positive definite covariance)
+-/
 theorem gaussianFreeField_satisfies_OS4 (m : ℝ) [Fact (0 < m)] :
     OS4_Clustering (gaussianFreeField_free m) := by
   intro f g ε hε
@@ -456,7 +462,8 @@ theorem gaussianFreeField_satisfies_OS4 (m : ℝ) [Fact (0 < m)] :
 /-! ## Alternative: Direct (ε-δ) Formulation
 
 These are not used in the main OS4 proof path (which goes through `OS4_PolynomialClustering`),
-but kept as an alternative qualitative formulation of clustering. -/
+but kept as an alternative qualitative formulation of clustering.
+-/
 
 /-- Covariance clustering property: the 2-point function decays at large separations. -/
 def CovarianceClustering_real (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
@@ -490,7 +497,8 @@ This connects time translation of distributions to translation of test functions
 -/
 
 /-- Time translation vector: shifts only the time coordinate by s.
-    timeVector s = (s, 0, 0, 0) in coordinates. -/
+    timeVector s = (s, 0, 0, 0) in coordinates.
+-/
 def timeVector (s : ℝ) : SpaceTime :=
   EuclideanSpace.equiv (Fin STDimension) ℝ |>.symm
     (fun i => if i = 0 then s else 0)
@@ -504,7 +512,8 @@ def timeVector (s : ℝ) : SpaceTime :=
 
     The proof follows from:
     1. timeTranslationDistribution_apply: (T_s ω)(f) = ω(T_{-s} f) for real test functions
-    2. Time translation commutes with taking real/imaginary parts of complex Schwartz functions -/
+    2. Time translation commutes with taking real/imaginary parts of complex Schwartz functions
+-/
 lemma time_translation_pairing_duality (s : ℝ) (ω : FieldConfiguration) (g : TestFunctionℂ) :
     distributionPairingℂ_real (TimeTranslation.timeTranslationDistribution s ω) g =
     distributionPairingℂ_real ω (TimeTranslation.timeTranslationSchwartzℂ (-s) g) := by
@@ -553,7 +562,8 @@ lemma freeCovariance_eq_kernel (m : ℝ) (x y : SpaceTime) :
   rw [zero_sub, norm_neg]
 
 /-- The Schwinger 2-point function for time-translated test function equals
-    the bilinear integral with translated argument. -/
+    the bilinear integral with translated argument.
+-/
 lemma schwinger2_time_translated_eq_bilinear (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) (s : ℝ) :
     SchwingerFunctionℂ₂ (gaussianFreeField_free m) f (TimeTranslation.timeTranslationSchwartzℂ (-s) g) =
     ∫ x : SpaceTime, ∫ y : SpaceTime,
@@ -576,7 +586,8 @@ lemma schwinger2_time_translated_eq_bilinear (m : ℝ) [Fact (0 < m)] (f g : Tes
     4. Proved theorem: schwartz_bilinear_translation_decay_polynomial_proof for polynomial bound
 
     The mass gap m > 0 ensures exponential decay, which is stronger than any polynomial.
-    Therefore the GFF satisfies OS4_PolynomialClustering for all α > 0. -/
+    Therefore the GFF satisfies OS4_PolynomialClustering for all α > 0.
+-/
 theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 < m)]
     (α : ℝ) (hα : α > 0) :
     OS4_PolynomialClustering (gaussianFreeField_free m) α hα := by

@@ -103,7 +103,8 @@ The lemma `parseval_covariance_schwartz` now correctly uses
 -/
 
 /-- The relationship between physics and Mathlib propagators under rescaling.
-    `freePropagatorMomentum_mathlib` is defined in Covariance.Momentum. -/
+    `freePropagatorMomentum_mathlib` is defined in Covariance.Momentum.
+-/
 lemma freePropagatorMomentum_rescale (m : ℝ) (k : SpaceTime) :
     freePropagatorMomentum m ((2 * Real.pi) • k) = freePropagatorMomentum_mathlib m k := by
   simp only [freePropagatorMomentum, freePropagatorMomentum_mathlib]
@@ -132,15 +133,18 @@ noncomputable def momentumScaleEquiv : SpaceTime ≃ₗ[ℝ] SpaceTime :=
 The "physics" Fourier transform uses convention `∫ f(x) exp(-i⟨k,x⟩) dx`
 while Mathlib uses `∫ f(x) exp(-2πi⟨x,ξ⟩) dx`.
 
-Key relationship: `f̂_phys(2πξ) = 𝓕f(ξ)` -/
+Key relationship: `f̂_phys(2πξ) = 𝓕f(ξ)`
+-/
 
 /-- The physics-convention Fourier transform of a Schwartz function.
-    Uses `exp(-i⟨k,x⟩)` instead of Mathlib's `exp(-2πi⟨x,ξ⟩)`. -/
+    Uses `exp(-i⟨k,x⟩)` instead of Mathlib's `exp(-2πi⟨x,ξ⟩)`.
+-/
 noncomputable def physicsFourierTransform (f : TestFunctionℂ) (k : SpaceTime) : ℂ :=
   ∫ x, f x * Complex.exp (-Complex.I * ((@inner ℝ SpaceTime _ k x : ℝ) : ℂ)) ∂volume
 
 /-- The regulated Fourier covariance equals the full complex Fourier integral (not just the real part).
-    The regulator exp(-α‖k‖²) ensures absolute convergence. -/
+    The regulator exp(-α‖k‖²) ensures absolute convergence.
+-/
 lemma freeCovariance_regulated_eq_complex_integral (α : ℝ) (m : ℝ) (x y : SpaceTime) :
     (freeCovariance_regulated α m x y : ℂ) =
     ∫ k, ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / fourierNormalization STDimension : ℝ) : ℂ) *
@@ -574,7 +578,8 @@ lemma factorized_to_physicsFT_norm_sq (α : ℝ) (m : ℝ) (f : TestFunctionℂ)
     2. Applying Fubini (justified by regulated_triple_integrable)
     3. Factoring the phase using phase_factorization
     4. Recognizing the x and y integrals as Fourier transforms
-    5. Accounting for normalization factors via change of variables -/
+    5. Accounting for normalization factors via change of variables
+-/
 theorem parseval_covariance_schwartz_regulated (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
     = ∫ k, Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume := by
@@ -631,7 +636,8 @@ lemma integrable_schwartz_propagator_mathlib (m : ℝ) [Fact (0 < m)] (f : TestF
     to the unregulated momentum-space integral as α → 0⁺.
 
     The proof uses dominated convergence to pass from the regulated identity
-    (parseval_covariance_schwartz_regulated) to the unregulated limit. -/
+    (parseval_covariance_schwartz_regulated) to the unregulated limit.
+-/
 theorem parseval_covariance_schwartz_correct (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     Filter.Tendsto
       (fun α => (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re)
@@ -717,7 +723,8 @@ theorem parseval_covariance_schwartz_correct (m : ℝ) [Fact (0 < m)] (f : TestF
     **Proof outline:** Dominated convergence theorem on the product space:
     1. Pointwise convergence: `freeCovariance_regulated_limit_eq_freeCovariance`
     2. Dominator: exp(m²) × |f(x)| × |C_Bessel(x,y)| × |g(y)| is integrable
-    3. Bound: `freeCovariance_regulated_le_const_mul_freeCovariance` gives the uniform bound -/
+    3. Bound: `freeCovariance_regulated_le_const_mul_freeCovariance` gives the uniform bound
+-/
 theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     Filter.Tendsto
       (fun α => ∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (g y)))
@@ -904,7 +911,8 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
 /-- **Complex convergence for the symmetric case (f = f):**
 The regulated bilinear form converges to the Bessel form in ℂ when both test functions are the same.
 
-This is a direct corollary of `bilinear_covariance_regulated_tendstoℂ` with g = f. -/
+This is a direct corollary of `bilinear_covariance_regulated_tendstoℂ` with g = f.
+-/
 theorem bilinear_covariance_regulated_tendsto_self (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     Filter.Tendsto
       (fun α => ∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)))
@@ -917,7 +925,8 @@ end ParsevalCovariance
 /-! ## Global Definitions
 
 The following definitions are placed outside the section to ensure they are
-accessible globally without namespace qualification. -/
+accessible globally without namespace qualification.
+-/
 
 section GlobalBilinearDefs
 
@@ -926,7 +935,8 @@ open scoped InnerProductSpace
 
 /-- Bilinear extension of the covariance for complex test functions.
     This is the distributional formulation: the double integral is well-defined
-    for Schwartz test functions due to the L¹ integrability of the Bessel kernel. -/
+    for Schwartz test functions due to the L¹ integrability of the Bessel kernel.
+-/
 noncomputable def freeCovarianceℂ_bilinear (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
   ∫ x, ∫ y, (f x) * (freeCovariance m x y) * (g y)
 

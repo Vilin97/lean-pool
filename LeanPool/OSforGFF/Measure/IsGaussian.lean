@@ -38,7 +38,8 @@ namespace GFFIsGaussian
 variable (m : ℝ) [Fact (0 < m)]
 
 /-- For the Gaussian Free Field measure, the product of two complex pairings with test functions
-    is integrable. Uses the direct 2-point theorem from GaussianMoments. -/
+    is integrable. Uses the direct 2-point theorem from GaussianMoments.
+-/
 lemma gaussian_pairing_product_integrable_free_core
     (φ ψ : TestFunctionℂ) :
     Integrable (fun ω => distributionPairingℂ_real ω φ * distributionPairingℂ_real ω ψ)
@@ -55,7 +56,8 @@ The proofs use OS0's derivative interchange machinery:
 -/
 
 /-- Bilinearity expansion of Q(tf+sg, tf+sg).
-    Q(tf+sg, tf+sg) = t²Q(f,f) + 2ts Q(f,g) + s²Q(g,g) -/
+    Q(tf+sg, tf+sg) = t²Q(f,f) + 2ts Q(f,g) + s²Q(g,g)
+-/
 lemma freeCovarianceFormR_bilinear_expand (f g : TestFunction) (t s : ℝ) :
     freeCovarianceFormR m (t • f + s • g) (t • f + s • g) =
       t^2 * freeCovarianceFormR m f f + 2 * t * s * freeCovarianceFormR m f g +
@@ -93,7 +95,8 @@ lemma gff_cf_two_testfunctions (f g : TestFunction) (t s : ℝ) :
 
 /-! ## OS0-Based Derivative Machinery
 
-The following lemmas use OS0's analyticity to compute mixed derivatives. -/
+The following lemmas use OS0's analyticity to compute mixed derivatives.
+-/
 
 /-- OS0 specialized to two test functions gives analyticity of Z[tf + sg] in (t,s) ∈ ℂ² -/
 lemma gff_two_param_analytic (f g : TestFunction) :
@@ -118,11 +121,13 @@ The key insight is that we can extend from real to complex test functions using:
 3. The Gaussian formula defines an entire function of (z₀, z₁)
 4. By the identity theorem (applied twice in 1D), the two analytic functions agree everywhere
 
-This eliminates the need for `twoD_line_from_realCF` from MinlosAnalytic. -/
+This eliminates the need for `twoD_line_from_realCF` from MinlosAnalytic.
+-/
 
 /-- Key technical lemma: fixing one coordinate, the slice is analytic in the other.
     For z₀ ↦ Z[z₀•f + t•g] where t is a fixed complex number.
-    Derived from OS0 by composition with linear embedding z₀ ↦ ![z₀, t]. -/
+    Derived from OS0 by composition with linear embedding z₀ ↦ ![z₀, t].
+-/
 lemma gff_slice_analytic_z0 (f g : TestFunction) (t : ℂ) :
     AnalyticOnNhd ℂ (fun z₀ : ℂ =>
       GJGeneratingFunctionalℂ (gaussianFreeField_free m) (z₀ • toComplex f + t • toComplex g))
@@ -202,7 +207,8 @@ lemma gaussian_rhs_slice_analytic_z1 (f g : TestFunction) (z₀ : ℂ) :
     exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
 
 /-- The GFF CF and Gaussian formula agree on ℝ².
-    This follows from gff_cf_two_testfunctions by converting between types. -/
+    This follows from gff_cf_two_testfunctions by converting between types.
+-/
 lemma gff_cf_agrees_on_reals_OS0 (f g : TestFunction) (t s : ℝ) :
     GJGeneratingFunctionalℂ (gaussianFreeField_free m) ((t : ℂ) • toComplex f + (s : ℂ) • toComplex g) =
       Complex.exp (-(1/2 : ℂ) * ((t : ℂ)^2 * freeCovarianceFormR m f f +
@@ -218,7 +224,8 @@ lemma gff_cf_agrees_on_reals_OS0 (f g : TestFunction) (t s : ℝ) :
   rw [GJGeneratingFunctionalℂ_toComplex, h]
 
 /-- Complex generating functional for the free GFF via OS0 + identity theorem.
-    This proves the result WITHOUT using twoD_line_from_realCF. -/
+    This proves the result WITHOUT using twoD_line_from_realCF.
+-/
 theorem gff_complex_characteristic_OS0 :
     ∀ J : TestFunctionℂ,
       GJGeneratingFunctionalℂ (gaussianFreeField_free m) J =
@@ -353,7 +360,8 @@ By polarization:
 - With X = ⟨ω,f⟩, Y = ⟨ω,g⟩:
   E[⟨ω,f⟩⟨ω,g⟩] = ¼(Q(f+g,f+g) - Q(f-g,f-g)) = Q(f,g)
 
-This avoids all derivative calculus! -/
+This avoids all derivative calculus!
+-/
 
 /-- For real test functions, the second moment equals the covariance.
     S₂(f,g) = Q(f,g) = freeCovarianceFormR(f,g)
@@ -361,7 +369,8 @@ This avoids all derivative calculus! -/
     Proof via polarization identity:
     E[XY] = ¼(E[(X+Y)²] - E[(X-Y)²])
          = ¼(Q(f+g,f+g) - Q(f-g,f-g))
-         = Q(f,g) by bilinearity -/
+         = Q(f,g) by bilinearity
+-/
 theorem schwinger_eq_covariance_real (f g : TestFunction) :
     ∫ ω, (ω f) * (ω g) ∂(gaussianFreeField_free m).toMeasure =
       freeCovarianceFormR m f g := by
@@ -414,7 +423,8 @@ theorem schwinger_eq_covariance_real (f g : TestFunction) :
   · exact gff_pairing_square_integrable m (f - g)
 
 /-- For real test functions embedded into complex, the Schwinger 2-point function
-    equals the complex covariance. -/
+    equals the complex covariance.
+-/
 lemma schwinger_eq_covarianceℂ_on_reals (f g : TestFunction) :
     SchwingerFunctionℂ₂ (gaussianFreeField_free m) (toComplex f) (toComplex g) =
       freeCovarianceℂ_bilinear m (toComplex f) (toComplex g) := by
@@ -452,7 +462,8 @@ end GFFIsGaussian
     This extends schwinger_eq_covariance_real to complex test functions by bilinearity:
     both S₂ and freeCovarianceℂ_bilinear are bilinear, and they agree on real inputs.
 
-    For any complex f = fRe + I•fIm, g = gRe + I•gIm, we expand by bilinearity. -/
+    For any complex f = fRe + I•fIm, g = gRe + I•gIm, we expand by bilinearity.
+-/
 theorem gff_two_point_equals_covarianceℂ_free (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     SchwingerFunctionℂ₂ (gaussianFreeField_free m) f g = freeCovarianceℂ_bilinear m f g := by
   -- Decompose complex test functions into real and imaginary parts
@@ -512,7 +523,8 @@ theorem gff_two_point_equals_covarianceℂ_free (m : ℝ) [Fact (0 < m)] (f g : 
 
     This follows from gff_real_characteristic (for real J) extended to complex J
     via analyticity (gaussianFreeField_satisfies_OS0). Both sides are analytic in J
-    and agree on real J, hence they are equal everywhere. -/
+    and agree on real J, hence they are equal everywhere.
+-/
 theorem gff_complex_generating (m : ℝ) [Fact (0 < m)] :
     ∀ J : TestFunctionℂ,
       GJGeneratingFunctionalℂ (gaussianFreeField_free m) J =
@@ -528,7 +540,8 @@ theorem gff_complex_generating (m : ℝ) [Fact (0 < m)] :
 
     This combines:
     1. Centering: E[⟨ω,φ⟩] = 0 (from gaussianFreeField_free_centered)
-    2. Gaussian CF: Z[J] = exp(-½ S₂(J,J)) (from gff_complex_generating) -/
+    2. Gaussian CF: Z[J] = exp(-½ S₂(J,J)) (from gff_complex_generating)
+-/
 theorem isGaussianGJ_gaussianFreeField_free (m : ℝ) [Fact (0 < m)] :
     isGaussianGJ (gaussianFreeField_free m) := by
   constructor

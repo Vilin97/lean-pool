@@ -102,7 +102,8 @@ lemma measurePreserving_actEquiv (g : E) :
     has the form `f(g⁻¹•x) * C(g⁻¹•x, g⁻¹•y) * h(g⁻¹•y)` which matches this pattern
     for the product integral ∫ F(e p.1, e p.2) d(p) where e = actEquiv g⁻¹.
 
-    Need to carefully apply integral_prod and MeasurePreserving.prod to complete. -/
+    Need to carefully apply integral_prod and MeasurePreserving.prod to complete.
+-/
 theorem freeCovarianceℂ_bilinear_euclidean_invariant (g : E) (f h : TestFunctionℂ) :
     freeCovarianceℂ_bilinear m (euclidean_action g f) (euclidean_action g h) =
     freeCovarianceℂ_bilinear m f h := by
@@ -142,7 +143,8 @@ theorem freeCovarianceℂ_bilinear_euclidean_invariant (g : E) (f h : TestFuncti
   simp only [actEquiv, MeasurableEquiv.coe_mk, Equiv.coe_fn_mk, euclidean_pullback_act]
 
 /-- The free GFF measure satisfies the complex covariance Euclidean invariance property.
-    This removes the `h_euc` hypothesis from the master theorem. -/
+    This removes the `h_euc` hypothesis from the master theorem.
+-/
 theorem CovarianceEuclideanInvariantℂ_μ_GFF :
     CovarianceEuclideanInvariantℂ (μ_GFF m) := by
   intro g f h

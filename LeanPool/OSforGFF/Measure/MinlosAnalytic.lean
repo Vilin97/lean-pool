@@ -45,7 +45,8 @@ namespace MinlosAnalytic
 
 /-- A real symmetric, positive semidefinite covariance form on real test functions,
     together with a proof that the associated Gaussian characteristic functional
-    exp(-½Q(f,f)) is positive definite (in the bochner sense). -/
+    exp(-½Q(f,f)) is positive definite (in the bochner sense).
+-/
 structure CovarianceForm where
   Q : TestFunction → TestFunction → ℝ
   symm : ∀ f g, Q f g = Q g f
@@ -80,7 +81,8 @@ lemma negMap_measurable : Measurable negMap := by
     _ ≤ _ := le_iSup (fun f => (borel ℝ).comap (fun l : FieldConfiguration => (l : TestFunction →L[ℝ] ℝ) f)) g
 
 /-- Symmetry under global sign flip induced by the real Gaussian CF.
-    Uses Minlos uniqueness from the bochner library. -/
+    Uses Minlos uniqueness from the bochner library.
+-/
 lemma integral_neg_invariance
   [IsHilbertNuclear TestFunction] [SeparableSpace TestFunction] [Nonempty TestFunction]
   [IsTopologicalAddGroup TestFunction] [ContinuousSMul ℝ TestFunction]

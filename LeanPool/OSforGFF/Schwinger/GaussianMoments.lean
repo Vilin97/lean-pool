@@ -52,7 +52,8 @@ open MeasureTheory Complex
 
 /-- Auxiliary lemma: the complex pairing has an integrable square under the free GFF measure.
 This is the complex analogue of `gaussian_pairing_square_integrable_real` and will serve as the
-base estimate for higher Gaussian moments. -/
+base estimate for higher Gaussian moments.
+-/
 lemma gaussian_complex_pairing_abs_sq_integrable
     (m : ℝ) [Fact (0 < m)] (φ : TestFunctionℂ) :
   Integrable (fun ω => ‖distributionPairingℂ_real ω φ‖ ^ 2)
@@ -108,7 +109,8 @@ lemma gaussian_complex_pairing_abs_sq_integrable
 end GaussianMoments
 
 /-- **Foundation**: The original 2-point case implemented directly.
-    This provides the base case for the general n-point theorem. -/
+    This provides the base case for the general n-point theorem.
+-/
 theorem gaussian_pairing_product_integrable_free_2point
   (m : ℝ) [Fact (0 < m)] (φ ψ : TestFunctionℂ) :
   Integrable (fun ω => distributionPairingℂ_real ω φ * distributionPairingℂ_real ω ψ)

@@ -44,7 +44,8 @@ open MeasureTheory Set Filter Asymptotics Real
 
 /-- The modified Bessel function K₁(z) via cosh integral representation.
     K₁(z) = ∫₀^∞ exp(-z cosh(t)) cosh(t) dt
-    This is well-defined and positive for z > 0. -/
+    This is well-defined and positive for z > 0.
+-/
 noncomputable def besselK1 (z : ℝ) : ℝ :=
   ∫ t : ℝ in Ici 0, exp (-z * cosh t) * cosh t
 
@@ -208,7 +209,8 @@ lemma besselK1_pos (z : ℝ) (hz : 0 < z) : 0 < besselK1 z := by
     for z ≥ ε, which is integrable.
 
     The formal proof uses MeasureTheory.continuousOn_of_dominated_of_compact:
-    for z in compact K ⊆ (0, ∞), bound by exp(-min(K) * cosh(t)) * cosh(t). -/
+    for z in compact K ⊆ (0, ∞), bound by exp(-min(K) * cosh(t)) * cosh(t).
+-/
 lemma besselK1_continuousOn : ContinuousOn besselK1 (Ioi 0) := by
   -- Show ContinuousAt at each z₀ > 0 using dominated convergence
   rw [isOpen_Ioi.continuousOn_iff]
@@ -307,7 +309,8 @@ lemma besselK1_continuousOn : ContinuousOn besselK1 (Ioi 0) := by
 
 /-- K₁ has exponential decay: K₁(z) ≤ (sinh(1) + 2) · exp(-z) for z ≥ 1.
     This bound is sufficient for proving integrability of the free covariance kernel.
-    The proof uses the same technique as besselK1_mul_self_le but for z ≥ 1. -/
+    The proof uses the same technique as besselK1_mul_self_le but for z ≥ 1.
+-/
 lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
     besselK1 z ≤ (sinh 1 + 2) * exp (-z) := by
   unfold besselK1
@@ -486,7 +489,8 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
 /-- For z ∈ (0, 1], we have z · K₁(z) ≤ cosh(1) + 2.
     This follows from splitting the integral at t = 1:
     - On [0,1]: z · ∫₀¹ exp(-z cosh t) cosh t dt ≤ z · cosh(1) ≤ cosh(1)
-    - On [1,∞): z · ∫₁^∞ exp(-z cosh t) cosh t dt ≤ 2 (via exponential bound) -/
+    - On [1,∞): z · ∫₁^∞ exp(-z cosh t) cosh t dt ≤ 2 (via exponential bound)
+-/
 lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
     z * besselK1 z ≤ cosh 1 + 2 := by
   unfold besselK1
@@ -702,7 +706,8 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
   exact add_le_add h_part1' h_part2
 
 /-- Near-origin bound for K₁: K₁(z) ≤ (cosh(1) + 2)/z for z ∈ (0, 1].
-    This follows from z · K₁(z) ≤ cosh(1) + 2 (proved in besselK1_mul_self_le). -/
+    This follows from z · K₁(z) ≤ cosh(1) + 2 (proved in besselK1_mul_self_le).
+-/
 lemma besselK1_near_origin_bound (z : ℝ) (hz : 0 < z) (hz_small : z ≤ 1) :
     besselK1 z ≤ (cosh 1 + 2) / z := by
   have h_bound := besselK1_mul_self_le z hz hz_small
@@ -715,7 +720,8 @@ lemma besselK1_near_origin_bound (z : ℝ) (hz : 0 < z) (hz_small : z ≤ 1) :
     - Near 0: K₁(mr) ~ 1/(mr), so r² K₁(mr) ~ r/m, which is integrable near 0
     - At ∞: K₁(mr) ~ e^{-mr}/√(mr), so r² K₁(mr) decays exponentially
 
-    This is a key ingredient for showing the free covariance kernel is L¹ in 4D. -/
+    This is a key ingredient for showing the free covariance kernel is L¹ in 4D.
+-/
 lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
     IntegrableOn (fun r => r ^ 2 * besselK1 (m * r)) (Set.Ioi 0) volume := by
   -- Split (0, ∞) = (0, 1/m] ∪ (1/m, ∞)
@@ -864,7 +870,8 @@ lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
 
     ∫_{-∞}^∞ exp(-u) * exp(-z cosh u) du = 2 ∫_0^∞ cosh(u) * exp(-z cosh u) du
 
-    This follows from splitting at 0 and using cosh(-u) = cosh(u). -/
+    This follows from splitting at 0 and using cosh(-u) = cosh(u).
+-/
 lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
     ∫ u : ℝ, exp (-u) * exp (-z * cosh u) = 2 * besselK1 z := by
   -- Integrability conditions (both decay super-exponentially as u → ∞)
@@ -1032,7 +1039,8 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
     ∫₀^∞ t^{-2} exp(-m²t - r²/(4t)) dt = (4m/r) · K₁(mr)
 
     This is proven directly via the substitution t = (r/(2m)) exp(u),
-    which transforms the integral to the cosh representation of K₁. -/
+    which transforms the integral to the cosh representation of K₁.
+-/
 lemma schwingerIntegral_eq_besselK1 (m r : ℝ) (hm : 0 < m) (hr : 0 < r) :
     ∫ t in Ioi 0, (1 / t^2) * exp (-m^2 * t - r^2 / (4 * t)) =
     (4 * m / r) * besselK1 (m * r) := by

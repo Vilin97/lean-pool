@@ -55,16 +55,19 @@ where ψₙ are the Hermite functions. This is proved in `SchwartzNuclear.Basis1
 
 For D = ℝ^d with d > 1, the proof uses multi-index Hermite expansion:
   f ↦ (∫ f(x) · ∏ᵢ ψ_{αᵢ}(xᵢ) dx)_α
-flattened via a polynomially-bounded bijection `ℕ^d → ℕ`. -/
+flattened via a polynomially-bounded bijection `ℕ^d → ℕ`.
+-/
 
 /-! ## Domain Transfer
 
 `schwartzDomCongr` transfers Schwartz maps along a continuous linear equivalence
 of domains. This is the key ingredient for reducing `SchwartzMap D ℝ` to
-`SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ` and then to `SchwartzMap ℝ ℝ`. -/
+`SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ` and then to `SchwartzMap ℝ ℝ`.
+-/
 
 /-- Composition with a continuous linear equivalence gives a topological isomorphism
-of Schwartz spaces. Forward: `f ↦ f ∘ g`, backward: `f ↦ f ∘ g⁻¹`. -/
+of Schwartz spaces. Forward: `f ↦ f ∘ g`, backward: `f ↦ f ∘ g⁻¹`.
+-/
 noncomputable def schwartzDomCongr {D E F : Type*}
     [NormedAddCommGroup D] [NormedSpace ℝ D]
     [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -86,7 +89,8 @@ noncomputable def euclideanFin1Equiv : EuclideanSpace ℝ (Fin 1) ≃L[ℝ] ℝ 
   (EuclideanSpace.equiv (Fin 1) ℝ).trans (ContinuousLinearEquiv.funUnique (Fin 1) ℝ ℝ)
 
 /-- Measurable equivalence `EuclideanSpace ℝ (Fin 1) ≃ᵐ ℝ`, composing the `WithLp`
-unwrapping with the `Fin 1 → ℝ ≃ᵐ ℝ` unique-function equivalence. -/
+unwrapping with the `Fin 1 → ℝ ≃ᵐ ℝ` unique-function equivalence.
+-/
 noncomputable def euclideanFin1MeasEquiv : EuclideanSpace ℝ (Fin 1) ≃ᵐ ℝ :=
   (MeasurableEquiv.toLp 2 (Fin 1 → ℝ)).symm.trans (MeasurableEquiv.funUnique (Fin 1) ℝ)
 
@@ -105,7 +109,8 @@ lemma euclideanFin1MeasEquiv_apply (x : EuclideanSpace ℝ (Fin 1)) :
 
 The Hermite expansion gives a topological isomorphism `SchwartzMap ℝ ℝ ≃L[ℝ] RapidDecaySeq`.
 Forward: `f ↦ (cₙ(f))ₙ` where `cₙ(f) = ∫ f ψₙ`.
-Backward: `a ↦ ∑' n, aₙ ψₙ` (tsum in Schwartz topology). -/
+Backward: `a ↦ ∑' n, aₙ ψₙ` (tsum in Schwartz topology).
+-/
 
 /-- Kronecker property: the Hermite coefficient of a basis function is δₙₘ. -/
 theorem hermiteCoeff1D_basis_kronecker (n m : ℕ) :
@@ -118,7 +123,8 @@ theorem hermiteCoeff1D_basis_kronecker (n m : ℕ) :
 /-- Hermite coefficients of a Schwartz function form a rapidly decreasing sequence.
 From `hermiteCoeff1D_decay` at exponent `k + 2`:
   `|cₙ(f)| · (1+n)^(k+2) ≤ C · ‖f‖`, so `|cₙ(f)| · (1+n)^k ≤ C · ‖f‖ · (1+n)⁻²`,
-which is summable. -/
+which is summable.
+-/
 private theorem hermiteCoeff_rapid_decay (f : SchwartzMap ℝ ℝ) (k : ℕ) :
     Summable (fun m => |hermiteCoeff1D m f| * (1 + (m : ℝ)) ^ k) := by
   -- Get decay bound at k+2 (real exponent)
@@ -156,7 +162,8 @@ private theorem hermiteCoeff_rapid_decay (f : SchwartzMap ℝ ℝ) (k : ℕ) :
     (pow_nonneg (by positivity) k)) h_le h_sum
 
 /-- The forward linear map of the 1D Hermite isomorphism:
-`f ↦ (hermiteCoeff1D n f)ₙ` as a rapid decay sequence. -/
+`f ↦ (hermiteCoeff1D n f)ₙ` as a rapid decay sequence.
+-/
 private def toRapidDecay1DLM : SchwartzMap ℝ ℝ →ₗ[ℝ] RapidDecaySeq where
   toFun f := ⟨fun n => hermiteCoeff1D n f, hermiteCoeff_rapid_decay f⟩
   map_add' f g := RapidDecaySeq.ext fun n => (hermiteCoeff1D_linear n).map_add f g
@@ -213,7 +220,8 @@ private noncomputable def toRapidDecay1DCLM : SchwartzMap ℝ ℝ →L[ℝ] Rapi
       _ = C * L * S := by ring
 
 /-- T2Space instance for Schwartz maps.
-Derived from T1Space via topological group structure. -/
+Derived from T1Space via topological group structure.
+-/
 noncomputable instance schwartzMap_T2Space : T2Space (SchwartzMap ℝ ℝ) := by
   haveI : T1Space (SchwartzMap ℝ ℝ) :=
     WithSeminorms.T1_of_separating (schwartz_withSeminorms ℝ ℝ ℝ) fun f hf =>
@@ -227,7 +235,8 @@ noncomputable instance schwartzMap_T2Space : T2Space (SchwartzMap ℝ ℝ) := by
 
 For a rapid-decay sequence `a`, the pointwise series `g(x) = ∑' n, aₙ · ψₙ(x)` converges
 (in ℝ, which is complete) and defines a Schwartz function. We construct it explicitly,
-avoiding the need for `CompleteSpace (SchwartzMap ℝ ℝ)` (not yet in Mathlib). -/
+avoiding the need for `CompleteSpace (SchwartzMap ℝ ℝ)` (not yet in Mathlib).
+-/
 
 /-- Bound on iterated derivative of `c * ψₙ`: `‖D^k(c·ψₙ)(x)‖ ≤ |c| · p_{0,k}(ψₙ)`. -/
 private lemma scalar_hermite_iteratedFDeriv_bound (c : ℝ) (n k : ℕ) (x : ℝ) :
@@ -246,7 +255,8 @@ private lemma scalar_hermite_iteratedFDeriv_bound (c : ℝ) (n k : ℕ) (x : ℝ
     (abs_nonneg _)
 
 /-- Summability of `∑ |aₙ| · p_{k,l}(ψₙ)` for rapid-decay sequences.
-Uses basis growth `p_{k,l}(ψₙ) ≤ C(1+n)^s` and rapid decay `∑ |aₙ|(1+n)^s < ∞`. -/
+Uses basis growth `p_{k,l}(ψₙ) ≤ C(1+n)^s` and rapid decay `∑ |aₙ|(1+n)^s < ∞`.
+-/
 private lemma rapidDecay_seminorm_summable (a : RapidDecaySeq) (k l : ℕ) :
     Summable (fun n => |a.val n| * SchwartzMap.seminorm ℝ k l (schwartzHermiteBasis1D n)) := by
   obtain ⟨C, hC, s, hbasis⟩ := schwartzHermiteBasis1D_growth k l
@@ -542,7 +552,8 @@ private lemma fromRapidDecay1DLM_bound (k l : ℕ) :
           rw [← tsum_mul_left]; congr 1; ext n; ring⟩
 
 /-- The `IsBounded` property for `fromRapidDecay1DLM`: each Schwartz seminorm of the
-output is bounded by a rapid-decay seminorm of the input. -/
+output is bounded by a rapid-decay seminorm of the input.
+-/
 private lemma fromRapidDecay1DLM_isBounded :
     Seminorm.IsBounded RapidDecaySeq.rapidDecaySeminorm
       (schwartzSeminormFamily ℝ ℝ ℝ) fromRapidDecay1DLM := by
@@ -592,7 +603,8 @@ noncomputable def schwartzRapidDecayEquiv1D :
       simp [mul_ite, mul_one, mul_zero, tsum_ite_eq])
 
 /-- The inverse of `schwartzRapidDecayEquiv1D` evaluates pointwise as the 1D Hermite series
-reconstruction: `(equiv.symm a) t = ∑' n, a_n * ψ_n(t)`. -/
+reconstruction: `(equiv.symm a) t = ∑' n, a_n * ψ_n(t)`.
+-/
 theorem schwartzRapidDecayEquiv1D_symm_apply (a : RapidDecaySeq) (t : ℝ) :
     (schwartzRapidDecayEquiv1D.symm a) t =
       ∑' n, a.val n * hermiteFunction n t := by
@@ -618,7 +630,8 @@ in both directions. We use iterated Cantor pairing: peel off the last coordinate
 via `Fin.succFunEquiv`, recurse, then pair with `Nat.pairEquiv`.
 
 The domain is `MultiIndex (d + 1)` (i.e., `Fin (d + 1) → ℕ`) since `Fin 0 → ℕ`
-is a singleton and cannot biject with `ℕ`. All downstream consumers have `d ≥ 1`. -/
+is a singleton and cannot biject with `ℕ`. All downstream consumers have `d ≥ 1`.
+-/
 noncomputable def multiIndexEquiv : (d : ℕ) → MultiIndex (d + 1) ≃ ℕ
   | 0 => Equiv.funUnique (Fin 1) ℕ
   | (d + 1) => (Fin.succFunEquiv ℕ (d + 1)).trans
@@ -664,7 +677,8 @@ private lemma multiIndex_abs_succ_symm (d : ℕ) (n : ℕ) :
   exact h
 
 /-- The multi-index enumeration has polynomial growth.
-Stated for `MultiIndex (d + 1)` since `multiIndexEquiv d : MultiIndex (d + 1) ≃ ℕ`. -/
+Stated for `MultiIndex (d + 1)` since `multiIndexEquiv d : MultiIndex (d + 1) ≃ ℕ`.
+-/
 lemma multiIndexEquiv_growth (d : ℕ) :
     ∃ C > 0, ∃ k : ℕ, ∀ α : MultiIndex (d + 1),
       (1 + (multiIndexEquiv d α : ℝ)) ≤ C * (1 + (MultiIndex.abs α : ℝ)) ^ k := by
@@ -726,7 +740,8 @@ lemma multiIndexEquiv_growth (d : ℕ) :
           rw [mul_pow]; ring_nf
 
 /-- The inverse of the multi-index enumeration has polynomial growth.
-Stated for `multiIndexEquiv d : MultiIndex (d + 1) ≃ ℕ`. -/
+Stated for `multiIndexEquiv d : MultiIndex (d + 1) ≃ ℕ`.
+-/
 lemma multiIndexEquiv_symm_growth (d : ℕ) :
     ∃ C > 0, ∃ k : ℕ, ∀ n : ℕ,
       (1 + (MultiIndex.abs ((multiIndexEquiv d).symm n) : ℝ)) ≤ C * (1 + (n : ℝ)) ^ k := by
@@ -795,7 +810,8 @@ so for any `k`, the factor at coordinate `i` satisfies `|x_i|^k * |D^m ψ_{α_i}
 The `iteratedFDeriv` of the product decomposes via the multilinear Leibniz rule into sums of
 products of individual derivatives. Each term has at most one "active" coordinate that absorbs
 the `‖x‖^k` factor through Schwartz decay, while all other coordinates contribute bounded
-derivative values. -/
+derivative values.
+-/
 -- 1D Schwartz seminorm bound: |t|^k * ‖iteratedFDeriv ℝ m (hermiteFunction n) t‖ ≤ C
 private lemma hermiteFunction_schwartz_seminorm_bound (n k m : ℕ) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ t : ℝ,
@@ -1088,7 +1104,8 @@ noncomputable def hermiteCoeffNd (d : ℕ) (α : MultiIndex d)
 
 /-- For `d = 1`, the multi-dimensional Hermite coefficient reduces to the 1D coefficient
 transferred through `euclideanFin1Equiv`. Uses `euclideanFin1MeasEquiv` for the
-measure-preserving change of variables. -/
+measure-preserving change of variables.
+-/
 lemma hermiteCoeffNd_eq_hermiteCoeff1D
     (f : SchwartzMap (EuclideanSpace ℝ (Fin 1)) ℝ) (n : ℕ) :
     hermiteCoeffNd 1 (fun _ : Fin 1 => n) f =
@@ -1310,7 +1327,8 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound (d : ℕ) (k' l' : �
     _ = C₂ * S_f := div_mul_cancel₀ _ hc.ne.symm
 
 /-- Packages `schwartz_partial_hermiteCoeff_seminorm_bound` for `schwartzSeminormFamily`-indexed
-seminorms over a finite set `q`, with `(1+n)^k` decay. -/
+seminorms over a finite set `q`, with `(1+n)^k` decay.
+-/
 private lemma schwartz_partial_hermiteCoeff_seminorm_bound'
     (d : ℕ) (q : Finset (ℕ × ℕ)) (k : ℝ) :
     ∃ (C : ℝ) (q' : Finset (ℕ × ℕ)), 0 < C ∧
@@ -1376,7 +1394,8 @@ and standard Mathlib seminorm API.
 /-- Inductive step for injectivity: reduces d' + 2 to d' + 1.
 Proved by Fubini: c_α(f) = ∫ c_{α_d}^{1D}(slice f x_{rest}) Ψ_{α_{rest}} dx_{rest}.
 If all coefficients vanish, then for each fixed x_{rest}, all 1D coefficients of
-the slice vanish → slice = 0 by 1D injectivity → by IH the function is zero. -/
+the slice vanish → slice = 0 by 1D injectivity → by IH the function is zero.
+-/
 private lemma hermiteCoeffNd_injective_succ (d' : ℕ)
     (ih : ∀ f : SchwartzMap (EuclideanSpace ℝ (Fin (d' + 1))) ℝ,
       (∀ α : MultiIndex (d' + 1), hermiteCoeffNd (d' + 1) α f = 0) → f = 0)
@@ -1421,7 +1440,8 @@ For `d = d' + 1 ≥ 1`, proved by induction on `d'`:
 - **Base case** (`d' = 0`, i.e. d = 1): from 1D completeness (`schwartz_hermite_hasSum`)
   transferred through `euclideanFin1Equiv`.
 - **Inductive step** (`d' + 1`, i.e. d = d'+2 from d'+1):
-  `hermiteCoeffNd_injective_succ` via Fubini slicing. -/
+  `hermiteCoeffNd_injective_succ` via Fubini slicing.
+-/
 private lemma hermiteCoeffNd_injective (d' : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d' + 1))) ℝ)
     (h : ∀ α : MultiIndex (d' + 1), hermiteCoeffNd (d' + 1) α f = 0) : f = 0 := by
@@ -1454,7 +1474,8 @@ Proved by induction on `d'`:
 - **Inductive step** (`d' = d'' + 1`, i.e. d = d''+2 from d''+1):
   For `k ≥ 0`: Factor `(1+|α|)^k ≤ (1+|α_rest|)^k · (1+n)^k`, apply IH for first factor
   and weighted axiom for second. For `k < 0`: directly use `(1+|α|)^k ≤ (1+|α_rest|)^k`
-  since the base is ≥ 1 and the exponent is negative. -/
+  since the base is ≥ 1 and the exponent is negative.
+-/
 private lemma hermiteCoeffNd_decay (d' : ℕ) (k : ℝ) :
     ∃ (C : ℝ) (q : Finset (ℕ × ℕ)), 0 < C ∧
       ∀ (f : SchwartzMap (EuclideanSpace ℝ (Fin (d' + 1))) ℝ)
@@ -1612,7 +1633,8 @@ private lemma hermiteCoeffNd_decay (d' : ℕ) (k : ℝ) :
 
 The proof tracks the α-dependence through the Leibniz expansion: each 1D factor
 `ψ_{α_j}` has seminorm `≤ C * (1 + α_j)^s` from `schwartzHermiteBasis1D_growth`,
-and `(1 + α_j) ≤ (1 + |α|)`, so the product bound grows polynomially in `|α|`. -/
+and `(1 + α_j) ≤ (1 + |α|)`, so the product bound grows polynomially in `|α|`.
+-/
 private lemma schwartzHermiteBasisNd_growth (d : ℕ) (k l : ℕ) :
     ∃ (C : ℝ) (_ : 0 < C) (s : ℕ), ∀ (α : MultiIndex d),
       SchwartzMap.seminorm ℝ k l (schwartzHermiteBasisNd d α) ≤
@@ -1913,7 +1935,8 @@ private lemma schwartzHermiteBasisNd_growth (d : ℕ) (k l : ℕ) :
 
 /-- Fubini for EuclideanSpace: factors a product integral into individual integrals.
 Bridges the MeasurableSpace instance diamond between EuclideanSpace (inner product
-based Haar measure) and Pi (product measure) via the volume-preserving equivalence. -/
+based Haar measure) and Pi (product measure) via the volume-preserving equivalence.
+-/
 private lemma integral_euclidean_prod_eq_prod (d : ℕ)
     (f : Fin d → ℝ → ℝ) :
     ∫ x : EuclideanSpace ℝ (Fin d), ∏ i, f i (x i) =
@@ -1926,7 +1949,8 @@ private lemma integral_euclidean_prod_eq_prod (d : ℕ)
 /-- Multi-dimensional Hermite orthonormality:
   `∫ Ψ_α(x) Ψ_β(x) dx = δ_{α,β}`.
 Uses product structure `Ψ_α(x) = ∏ᵢ ψ_{αᵢ}(xᵢ)` and Fubini
-(`integral_fintype_prod_volume_eq_prod`) to reduce to 1D orthonormality. -/
+(`integral_fintype_prod_volume_eq_prod`) to reduce to 1D orthonormality.
+-/
 private lemma hermiteFunctionNd_orthonormal (d : ℕ) (α β : MultiIndex d) :
     ∫ x : EuclideanSpace ℝ (Fin d),
       hermiteFunctionNd d α x * hermiteFunctionNd d β x =
@@ -1946,7 +1970,8 @@ private lemma hermiteFunctionNd_orthonormal (d : ℕ) (α β : MultiIndex d) :
     exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
 /-- Kronecker property for multi-d Hermite coefficients:
   `hermiteCoeffNd d α (schwartzHermiteBasisNd d β) = δ_{α,β}`.
-Follows directly from orthonormality of `hermiteFunctionNd`. -/
+Follows directly from orthonormality of `hermiteFunctionNd`.
+-/
 private lemma hermiteCoeffNd_basisNd_kronecker (d : ℕ) (α β : MultiIndex d) :
     hermiteCoeffNd d α (schwartzHermiteBasisNd d β) = if α = β then 1 else 0 := by
   show ∫ x, schwartzHermiteBasisNd d β x * hermiteFunctionNd d α x = _
@@ -1973,7 +1998,8 @@ private lemma hermiteCoeffNd_linear (d : ℕ) (α : MultiIndex d) :
     exact MeasureTheory.integral_const_mul c _
 
 /-- Multi-d Hermite coefficient as a continuous linear map (for fixed α).
-Continuity follows from `|∫ f · Ψ_α| ≤ ‖Ψ_α‖_{L¹} · seminorm(0,0)(f)`. -/
+Continuity follows from `|∫ f · Ψ_α| ≤ ‖Ψ_α‖_{L¹} · seminorm(0,0)(f)`.
+-/
 private noncomputable def hermiteCoeffNdCLM (d : ℕ) (α : MultiIndex d) :
     SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ →L[ℝ] ℝ where
   toLinearMap := {
@@ -2020,7 +2046,8 @@ private noncomputable def hermiteCoeffNdCLM (d : ℕ) (α : MultiIndex d) :
     hermiteCoeffNdCLM d α f = hermiteCoeffNd d α f := rfl
 
 /-- Flattened multi-d Hermite coefficients form a rapid-decay sequence.
-Uses `hermiteCoeffNd_decay` and `multiIndexEquiv_growth`. -/
+Uses `hermiteCoeffNd_decay` and `multiIndexEquiv_growth`.
+-/
 private theorem hermiteCoeffNd_rapid_decayFlat (d' : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d' + 1))) ℝ) (k : ℕ) :
     Summable (fun n => |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| *
@@ -2075,7 +2102,8 @@ private theorem hermiteCoeffNd_rapid_decayFlat (d' : ℕ)
     h_le h_sum
 
 /-- The forward linear map for the multi-d Hermite expansion.
-Maps `S(ℝ^{d'+1})` to `s(ℕ)` via flattened Hermite coefficients. -/
+Maps `S(ℝ^{d'+1})` to `s(ℕ)` via flattened Hermite coefficients.
+-/
 private noncomputable def toRapidDecayNdLM (d' : ℕ) :
     SchwartzMap (EuclideanSpace ℝ (Fin (d' + 1))) ℝ →ₗ[ℝ] RapidDecaySeq where
   toFun f := ⟨fun n => hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f,
@@ -2151,7 +2179,8 @@ private lemma toRapidDecayNdLM_isBounded (d' : ℕ) :
     _ = D * C₁ ^ (k + 2) * L * S := by ring
 
 /-- The forward continuous linear map for the d-dimensional Hermite expansion.
-Maps `S(ℝ^d)` to `s(ℕ)` using the flattened multi-index. -/
+Maps `S(ℝ^d)` to `s(ℕ)` using the flattened multi-index.
+-/
 noncomputable def toRapidDecayNdCLM (d : ℕ) :
     SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ →L[ℝ] RapidDecaySeq :=
   match d with
@@ -2172,7 +2201,8 @@ private noncomputable def flatBasisNd (d : ℕ) (n : ℕ) :
   schwartzHermiteBasisNd (d + 1) ((multiIndexEquiv d).symm n)
 
 /-- Bound on iterated derivative of `c * flatBasisNd d n`:
-`‖D^l(c · Φₙ)(x)‖ ≤ |c| · p_{0,l}(Φₙ)`. -/
+`‖D^l(c · Φₙ)(x)‖ ≤ |c| · p_{0,l}(Φₙ)`.
+-/
 private lemma scalar_flatBasisNd_iFDeriv_bound (d : ℕ) (c : ℝ) (n l : ℕ)
     (x : EuclideanSpace ℝ (Fin (d + 1))) :
     ‖iteratedFDeriv ℝ l (fun y => c * flatBasisNd d n y) x‖ ≤
@@ -2188,7 +2218,8 @@ private lemma scalar_flatBasisNd_iFDeriv_bound (d : ℕ) (c : ℝ) (n l : ℕ)
           rw [map_smul_eq_mul, Real.norm_eq_abs]
 
 /-- Summability of `∑ₙ |aₙ| · p_{k,l}(Φₙ)` for the flattened multi-d basis.
-Uses `schwartzHermiteBasisNd_growth` and `multiIndexEquiv_symm_growth`. -/
+Uses `schwartzHermiteBasisNd_growth` and `multiIndexEquiv_symm_growth`.
+-/
 private lemma rapidDecay_seminorm_summableNd (d : ℕ) (a : RapidDecaySeq) (k l : ℕ) :
     Summable (fun n => |a.val n| * SchwartzMap.seminorm ℝ k l (flatBasisNd d n)) := by
   obtain ⟨C₁, hC₁, s₁, hbasis⟩ := schwartzHermiteBasisNd_growth (d + 1) k l
@@ -2295,7 +2326,8 @@ private noncomputable instance schwartzMapNd_T2Space (d : ℕ) :
   exact inferInstance
 
 /-- The multi-d Hermite expansion converges to `rapidDecay_schwartzMapNd d a`
-in the Schwartz topology. -/
+in the Schwartz topology.
+-/
 private theorem rapidDecay_hermite_hasSumNd (d : ℕ) (a : RapidDecaySeq) :
     HasSum (fun n => a.val n • flatBasisNd d n) (rapidDecay_schwartzMapNd d a) := by
   rw [HasSum]
@@ -2514,7 +2546,8 @@ private lemma fromRapidDecayNdLM_isBounded (d : ℕ) :
     exact hbound a⟩
 
 /-- The backward continuous linear map for the d-dimensional Hermite expansion.
-Maps `s(ℕ)` to `S(ℝ^d)`. -/
+Maps `s(ℕ)` to `S(ℝ^d)`.
+-/
 noncomputable def fromRapidDecayNdCLM (d : ℕ) :
     RapidDecaySeq →L[ℝ] SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ :=
   match d with
@@ -2530,7 +2563,8 @@ noncomputable def fromRapidDecayNdCLM (d : ℕ) :
 /-! ### Left Inverse and Completeness via Injectivity -/
 
 /-- Right inverse property extracted as a lemma: the Hermite coefficients of the reconstructed
-Schwartz function exactly match the input sequence. -/
+Schwartz function exactly match the input sequence.
+-/
 private lemma hermiteCoeffNd_rapidDecay_schwartzMapNd (d' : ℕ) (a : RapidDecaySeq) (n : ℕ) :
     hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n)
       (rapidDecay_schwartzMapNd d' a) = a.val n := by
@@ -2558,7 +2592,8 @@ private lemma hermiteCoeffNd_rapidDecay_schwartzMapNd (d' : ℕ) (a : RapidDecay
 /-- **Completeness of the multi-d Hermite expansion in Schwartz topology.**
 Proved purely algebraically! The series converges to `S_f := from(to(f))`.
 By the right inverse (Kronecker), `c_α(S_f) = c_α(f)` for all `α`.
-By `hermiteCoeffNd_injective`, `S_f - f = 0`, so `S_f = f`. -/
+By `hermiteCoeffNd_injective`, `S_f - f = 0`, so `S_f = f`.
+-/
 private lemma schwartz_hermite_completeness_nd (d' : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d' + 1))) ℝ) :
     HasSum (fun n => hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f •
@@ -2588,7 +2623,8 @@ private lemma schwartz_hermite_completeness_nd (d' : ℕ)
 /-- The d-dimensional Hermite topological isomorphism (for d = d' + 1 ≥ 1).
 The `d' + 1` signature avoids the d=0 branch entirely —
 `EuclideanSpace ℝ (Fin 0)` is topologically degenerate and never reached
-because `Nontrivial D` forces `finrank ℝ D ≥ 1`. -/
+because `Nontrivial D` forces `finrank ℝ D ≥ 1`.
+-/
 noncomputable def schwartzRapidDecayEquivNd (d' : ℕ) :
     SchwartzMap (EuclideanSpace ℝ (Fin (d' + 1))) ℝ ≃L[ℝ] RapidDecaySeq :=
   ContinuousLinearEquiv.equivOfInverse
@@ -2605,7 +2641,8 @@ noncomputable def schwartzRapidDecayEquivNd (d' : ℕ) :
       exact hermiteCoeffNd_rapidDecay_schwartzMapNd d' a n)
 
 /-- The inverse of `schwartzRapidDecayEquivNd` evaluates pointwise as the Hermite series
-reconstruction: `(equiv.symm a) x = ∑' n, a_n * Ψ_n(x)`. -/
+reconstruction: `(equiv.symm a) x = ∑' n, a_n * Ψ_n(x)`.
+-/
 theorem schwartzRapidDecayEquivNd_symm_apply (d' : ℕ) (a : RapidDecaySeq)
     (x : EuclideanSpace ℝ (Fin (d' + 1))) :
     ((schwartzRapidDecayEquivNd d').symm a) x =
@@ -2660,7 +2697,8 @@ into a product along `euclideanInit` and `Fin.last` coordinates.
 
 This is the key identity for proving that the inverse of `schwartzPeelOff` sends pure tensors
 to pointwise products. It uses the decomposition of `multiIndexEquiv (d+1)` via Cantor
-unpairing and the product structure of `hermiteFunctionNd`. -/
+unpairing and the product structure of `hermiteFunctionNd`.
+-/
 theorem hermiteFunctionNd_unpair (d : ℕ) (n : ℕ)
     (x : EuclideanSpace ℝ (Fin (d + 2))) :
     hermiteFunctionNd (d + 2) ((multiIndexEquiv (d + 1)).symm n) x =
@@ -2717,7 +2755,8 @@ theorem hermiteFunctionNd_unpair (d : ℕ) (n : ℕ)
 /-- Schwartz space isomorphism for `EuclideanSpace ℝ (Fin d)` with `d ≥ 1`.
 - For `d = 1`: reduces to `SchwartzMap ℝ ℝ` via `euclideanFin1Equiv`,
   then uses `schwartzRapidDecayEquiv1D`.
-- For `d ≥ 2`: uses the generalized `schwartzRapidDecayEquivNd`. -/
+- For `d ≥ 2`: uses the generalized `schwartzRapidDecayEquivNd`.
+-/
 noncomputable def schwartzRapidDecayEquivFin (d : ℕ) (hd : 0 < d) :
     SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ ≃L[ℝ] RapidDecaySeq :=
   match d, hd with
@@ -2732,7 +2771,8 @@ The proof decomposes as:
 where `d = finrank ℝ D ≥ 1` (from `Nontrivial D`).
 
 **Sorry**: sorrys for `d ≥ 2` are decomposed into multi-index Hermite analysis components. count_axioms:skip
-The 1D forward and backward maps and all structural components are fully proved. -/
+The 1D forward and backward maps and all structural components are fully proved.
+-/
 noncomputable def schwartzRapidDecayEquiv (D : Type*)
     [NormedAddCommGroup D] [NormedSpace ℝ D] [FiniteDimensional ℝ D] [Nontrivial D] :
     SchwartzMap D ℝ ≃L[ℝ] RapidDecaySeq :=

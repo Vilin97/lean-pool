@@ -71,7 +71,8 @@ noncomputable def spatial_convolution (_f : SpatialL2) (_g : SpatialL2) : Spatia
   where exists_spatialL2_function : ∃ _h : SpatialL2, True := ⟨0, trivial⟩
 
 /-- Fourier transform on spatial coordinates only.
-    Note: This has type issues that need to be resolved for spatial coordinates -/
+    Note: This has type issues that need to be resolved for spatial coordinates
+-/
 noncomputable def fourierTransform_spatial_draft (h : SpatialL2) (k : SpatialCoords) : ℂ :=
   -- The proper spatial Fourier transform: ∫ x, h(x) * exp(-i k·x) dx
   -- For the GFF, this is essential for momentum space methods and reflection positivity
@@ -97,7 +98,8 @@ noncomputable def fourierTransform_spatial_draft (h : SpatialL2) (k : SpatialCoo
     Since the Fourier transform of δ(k₀) is the constant function 1,
     we can implement this by extending the spatial function to be independent of time.
 
-    This is much cleaner than the position space approach! -/
+    This is much cleaner than the position space approach!
+-/
 noncomputable def SpatialToMomentum_draft (f : SpatialL2) : SpaceTime → ℂ :=
   fun k =>
     -- Extract the spatial part of the momentum vector k
@@ -112,7 +114,8 @@ noncomputable def SpatialToMomentum_draft (f : SpatialL2) : SpaceTime → ℂ :=
     momentum-space propagator. The regulator exp(-α(2π)²‖k‖²) ensures absolute convergence.
 
     Uses `freePropagatorMomentum_mathlib` which accounts for the 2π factor in Mathlib's Fourier convention.
-    Defined in FourierTransforms.lean as `parseval_covariance_schwartz_regulated`. -/
+    Defined in FourierTransforms.lean as `parseval_covariance_schwartz_regulated`.
+-/
 theorem parseval_covariance_schwartz_regulated' (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
   (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
   = ∫ k, Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume :=
@@ -121,7 +124,8 @@ theorem parseval_covariance_schwartz_regulated' (α : ℝ) (hα : 0 < α) (m : �
 /-- **(Time Reflection Change of Variables):**
     Integrating a function over spacetime is unchanged when both variables are composed with
     geometric time reflection.  This packages the measure-preserving property of time reflection
-    together with Fubini's theorem for later use in reflection-positivity arguments. -/
+    together with Fubini's theorem for later use in reflection-positivity arguments.
+-/
 lemma double_integral_timeReflection
   (G : SpaceTime → SpaceTime → ℂ)
   (_hG : Integrable (fun p : SpaceTime × SpaceTime => G p.1 p.2) (volume.prod volume)) :
@@ -140,7 +144,8 @@ lemma double_integral_timeReflection
     This packages the combination of `double_integral_timeReflection` and the
     observation that `compTimeReflection` is just composition with
     `timeReflection`, so we can reuse the general measure-preserving lemma
-    without re-establishing integrability each time. -/
+    without re-establishing integrability each time.
+-/
 lemma double_integral_timeReflection_covariance
   (m : ℝ) (f g : TestFunctionℂ)
   (hf : Integrable (fun p : SpaceTime × SpaceTime =>
@@ -182,16 +187,19 @@ e^{-ω|t|} factor (where ω = √(|p|² + m²)) which ensures the cross-term is 
 This is the key input for Osterwalder-Schrader reflection positivity (OS3).
 
 **PROVEN:** See `QFT.freeCovariance_reflection_positive_bilinear` in CovarianceRP.lean,
-which uses the direct momentum representation approach (RPProof namespace). -/
+which uses the direct momentum representation approach (RPProof namespace).
+-/
 
 
 /-! ### Complex Bilinear Form on Test Functions
 
 The following section develops the bilinear structure of the covariance form.
-All results assume m > 0 (positive mass) which is required for integrability. -/
+All results assume m > 0 (positive mass) which is required for integrability.
+-/
 
 /-- The position-space integrand for the complex covariance bilinear form is integrable
-    for Schwartz test functions, using translation-invariant L¹ kernel integrability. -/
+    for Schwartz test functions, using translation-invariant L¹ kernel integrability.
+-/
 theorem freeCovarianceℂ_bilinear_integrable
     (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     Integrable (fun p : SpaceTime × SpaceTime =>
@@ -200,7 +208,8 @@ theorem freeCovarianceℂ_bilinear_integrable
 
 /-- Integrability of the covariance kernel evaluated on a time-reflected test function.
     This follows directly from `freeCovarianceℂ_bilinear_integrable` since `compTimeReflection`
-    maps test functions to test functions. -/
+    maps test functions to test functions.
+-/
 lemma integrable_compTimeReflection_covariance
   (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
   Integrable (fun p : SpaceTime × SpaceTime =>
@@ -211,7 +220,8 @@ lemma integrable_compTimeReflection_covariance
 
 
 /-- Relationship between compTimeReflection of toComplex and compTimeReflectionReal:
-    they agree pointwise as complex values. -/
+    they agree pointwise as complex values.
+-/
 lemma compTimeReflection_toComplex_eq_ofReal
   (f : TestFunction) (x : SpaceTime) :
   (QFT.compTimeReflection (toComplex f)) x = ((QFT.compTimeReflectionReal f) x : ℂ) := by
@@ -219,7 +229,8 @@ lemma compTimeReflection_toComplex_eq_ofReal
     SchwartzMap.compCLM_apply, Function.comp_apply, toComplex_apply]
 
 /-- The real part of a complex integral of a real-valued function equals the real integral.
-    This uses `integral_ofReal_eq` and `Complex.ofReal_re`. -/
+    This uses `integral_ofReal_eq` and `Complex.ofReal_re`.
+-/
 lemma re_integral_ofReal {α : Type*} [MeasurableSpace α] (μ : Measure α) (h : α → ℝ)
     (hf : Integrable h μ) :
     (∫ x, (h x : ℂ) ∂μ).re = ∫ x, h x ∂μ := by
@@ -301,7 +312,8 @@ lemma integral_prod_complex_covariance_kernel
   **Proof idea**: The complex integrand equals `(r x y : ℂ)` where `r` is the real integrand
   (using `compTimeReflection_toComplex_eq_ofReal` and `toComplex_apply`).
   For real-valued integrands, the `.re` of the complex integral equals the real integral
-  via `integral_ofReal_eq` applied twice. -/
+  via `integral_ofReal_eq` applied twice.
+-/
 lemma real_integral_eq_complex_re
   (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
   ∫ x, ∫ y, (QFT.compTimeReflectionReal f) x * freeCovariance m x y * f y ∂volume ∂volume
@@ -339,7 +351,8 @@ lemma real_integral_eq_complex_re
 
 /-- ** (Complex Conjugate Identity for Real Functions):**
   For real-valued test functions lifted to complex, the complex conjugate equals the original.
-  This allows us to match the Parseval identity which uses starRingEnd. -/
+  This allows us to match the Parseval identity which uses starRingEnd.
+-/
 lemma toComplex_star_eq
   (f : TestFunction) (x : SpaceTime) :
   starRingEnd ℂ ((toComplex f) x) = (toComplex f) x := by
@@ -370,7 +383,8 @@ lemma compTimeReflection_toComplex_star_eq
 
 /-- Euclidean invariance of the free covariance.
     Since freeCovariance only depends on ‖x - y‖ (via the Bessel form), and Euclidean
-    transformations preserve distances, this follows immediately. -/
+    transformations preserve distances, this follows immediately.
+-/
 theorem freeCovariance_euclidean_invariant (m : ℝ)
   (g : QFT.E) (x y : SpaceTime) :
   freeCovariance m (QFT.act g x) (QFT.act g y) = freeCovariance m x y := by
@@ -391,7 +405,8 @@ lemma act_timeReflectionE (x : SpaceTime) : QFT.act timeReflectionE x = QFT.time
 
 /-- ** (Time Reflection Invariance - Position Space):**
   The position-space covariance kernel is invariant under geometric time reflection.
-  This follows from general Euclidean invariance since time reflection is in O(4). -/
+  This follows from general Euclidean invariance since time reflection is in O(4).
+-/
 lemma covariance_timeReflection_invariant (m : ℝ) :
     ∀ x y, freeCovariance m (QFT.timeReflection x) (QFT.timeReflection y) = freeCovariance m x y := by
   intro x y
@@ -401,10 +416,12 @@ lemma covariance_timeReflection_invariant (m : ℝ) :
 /-! ## Complex Extension
 
 Note: `freeCovarianceℂ_bilinear` is defined in Parseval.lean (imported above).
-The following lemmas prove properties of this bilinear form. -/
+The following lemmas prove properties of this bilinear form.
+-/
 
 /-- For each fixed `x`, the inner integral in the complex bilinear form is absolutely integrable.
-    This follows from product integrability (`freeCovarianceℂ_bilinear_integrable`) plus Fubini. -/
+    This follows from product integrability (`freeCovarianceℂ_bilinear_integrable`) plus Fubini.
+-/
 lemma freeCovarianceℂ_bilinear_inner_integrable
   (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
   Integrable (fun x => ∫ y, (f x) * (freeCovariance m x y) * (g y) ∂volume) volume := by
@@ -414,7 +431,8 @@ lemma freeCovarianceℂ_bilinear_inner_integrable
 
 /-- For each fixed `x`, the inner integral defining the bilinear form is integrable in `y`.
     Together with the previous lemma, this allows iterated integration.
-    Follows from product integrability via Fubini (`Integrable.prod_right_ae`). -/
+    Follows from product integrability via Fubini (`Integrable.prod_right_ae`).
+-/
 lemma freeCovarianceℂ_bilinear_slice_integrable
   (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
   ∀ᵐ x ∂volume, Integrable (fun y => (f x) * (freeCovariance m x y) * (g y)) volume := by
@@ -625,7 +643,8 @@ theorem freeCovarianceℂ_positive (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ
 
     Note: Unlike the regulated form, this uses freeCovariance (Bessel K₁ form) which is
     well-defined pointwise. The equality holds because the Bessel form equals the limit
-    of the regulated forms. -/
+    of the regulated forms.
+-/
 theorem parseval_covariance_schwartz_bessel (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     (freeCovarianceℂ m f f).re
     = ∫ k, ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume := by

@@ -34,7 +34,8 @@ variable {ι : Type u} [Fintype ι] [DecidableEq ι]
 notation:100 A "∘ₕ" B => Matrix.hadamard A B
 
 /-- Auxiliary: diagonal embedding of a vector `x : ι → ℝ` into `ι×ι` used for the restriction
-argument: only the diagonal entries are nonzero and equal to `x`. -/
+argument: only the diagonal entries are nonzero and equal to `x`.
+-/
 @[simp] def diagEmbed (x : ι → ℝ) : ι × ι → ℝ := fun p => if p.2 = p.1 then x p.1 else 0
 
 lemma diagEmbed_ne_zero_of_ne_zero {x : ι → ℝ} (hx : x ≠ 0) : diagEmbed (ι:=ι) x ≠ 0 := by
@@ -63,7 +64,8 @@ private lemma isHermitian_hadamard_real {A B : Matrix ι ι ℝ}
   simp [Matrix.conjTranspose, Matrix.hadamard, hAij, hBij]
 
 /-- Schur product theorem (real case, finite index):
-If A B are positive definite matrices over ℝ, then the Hadamard product is positive definite. -/
+If A B are positive definite matrices over ℝ, then the Hadamard product is positive definite.
+-/
 @[simp] theorem schur_product_posDef
   (A B : Matrix ι ι ℝ)
   (hA : A.PosDef) (hB : B.PosDef) :

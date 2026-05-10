@@ -52,7 +52,8 @@ variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 omit [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] in
 /-- The exponential character x ↦ exp(2πi⟨x,ξ⟩) is positive definite.
-    The PD sum equals |∑ cₖ exp(2πi⟨xₖ,ξ⟩)|². -/
+    The PD sum equals |∑ cₖ exp(2πi⟨xₖ,ξ⟩)|².
+-/
 private lemma isPositiveDefinite_exp_inner (ξ : V) :
     IsPositiveDefinite (fun x : V => cexp (2 * ↑π * ↑⟪x, ξ⟫_ℝ * I)) where
   hermitian x := by
@@ -89,7 +90,8 @@ private lemma isPositiveDefinite_exp_inner (ξ : V) :
 /-! ### Haar measure neg-invariance -/
 
 /-- Volume on a finite-dimensional inner product space is neg-invariant.
-    Proof: negation is a linear isometry equiv, which preserves addHaar measure. -/
+    Proof: negation is a linear isometry equiv, which preserves addHaar measure.
+-/
 instance volume_isNegInvariant : (volume : Measure V).IsNegInvariant := by
   constructor; exact ((LinearIsometryEquiv.neg ℝ (E := V)).measurePreserving).map_eq
 
@@ -106,7 +108,8 @@ private lemma integral_sub_left_eq (f : V → ℂ) (a : V) :
 omit [NormedAddCommGroup V] [InnerProductSpace ℝ V] [FiniteDimensional ℝ V] [BorelSpace V] in
 open Classical in
 /-- For a simple function sₙ : V → V and any g : V → ℂ,
-    ∫ g(sₙ x) dμ = ∑ u ∈ sₙ.range, μ(sₙ⁻¹'{u}).toReal • g u. -/
+    ∫ g(sₙ x) dμ = ∑ u ∈ sₙ.range, μ(sₙ⁻¹'{u}).toReal • g u.
+-/
 private lemma integral_simpleFunc_comp (sn : SimpleFunc V V) (g : V → ℂ)
     (μ : Measure V) [IsFiniteMeasure μ] :
     ∫ x, g (sn x) ∂μ = ∑ u ∈ sn.range, (μ (⇑sn ⁻¹' {u})).toReal • g u := by
@@ -127,7 +130,8 @@ private lemma integral_simpleFunc_comp (sn : SimpleFunc V V) (g : V → ℂ)
     integral ∫∫ ψ(sₙ(x)-sₙ(y)) dμ dμ expands as ∑ᵢⱼ μ(Aᵢ)μ(Aⱼ)ψ(uᵢ-uⱼ),
     a PD double sum with real coefficients, so Re ≥ 0. The sums converge to
     ∫∫ ψ(x-y) dμ dμ by DCT, so Re ≥ 0 passes to the limit.
-    See Rudin, *Fourier Analysis on Groups*, proof of Theorem 1.4.3, step 1. -/
+    See Rudin, *Fourier Analysis on Groups*, proof of Theorem 1.4.3, step 1.
+-/
 private lemma pd_double_integral_re_nonneg (ψ : V → ℂ) (hpd : IsPositiveDefinite ψ)
     (hcont : Continuous ψ) (S : Set V) (_hSmeas : MeasurableSet S)
     (hSbdd : Bornology.IsBounded S) :
@@ -322,7 +326,8 @@ private lemma closedBall_sub_norm_subset (v : V) (R : ℝ) :
 
 /-- The overlap ratio → 1 as R → ∞ for fixed v.
     Proof: closedBall 0 (R-‖v‖) ⊆ closedBall 0 R ∩ closedBall v R, so
-    overlapRatio ≥ ((R-‖v‖)/R)^d → 1. Upper bound is 1. Squeeze. -/
+    overlapRatio ≥ ((R-‖v‖)/R)^d → 1. Upper bound is 1. Squeeze.
+-/
 private lemma overlapRatio_tendsto_one (v : V) :
     Filter.Tendsto (fun n : ℕ => overlapRatio (n : ℝ) v) Filter.atTop (nhds 1) := by
   -- Use squeeze: lower bound → 1, upper bound = 1
@@ -384,7 +389,8 @@ private lemma overlapRatio_tendsto_one (v : V) :
     (Filter.Eventually.of_forall (fun n => overlapRatio_le_one (n : ℝ) v))
 
 /-- Inner integral substitution via Haar invariance:
-    ∫ y in closedBall 0 R, ψ(x-y) = ∫ v in closedBall x R, ψ(v). -/
+    ∫ y in closedBall 0 R, ψ(x-y) = ∫ v in closedBall x R, ψ(v).
+-/
 private lemma inner_integral_sub (ψ : V → ℂ) (x : V) (R : ℝ) :
     ∫ y in Metric.closedBall (0 : V) R, ψ (x - y) =
     ∫ v in Metric.closedBall x R, ψ v := by
@@ -407,7 +413,8 @@ private lemma inner_integral_sub (ψ : V → ℂ) (x : V) (R : ℝ) :
 omit [InnerProductSpace ℝ V] [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] in
 /-- Indicator equivalence: for x ∈ B and the intersection set B ∩ closedBall v R,
     the nested indicators agree. Uses dist_comm to convert v ∈ closedBall x R
-    to x ∈ closedBall v R. -/
+    to x ∈ closedBall v R.
+-/
 private lemma indicator_closedBall_inter (ψ : V → ℂ) (R : ℝ) (x v : V) :
     (Metric.closedBall (0 : V) R).indicator
       (fun x => (Metric.closedBall x R).indicator ψ v) x =
@@ -418,7 +425,8 @@ private lemma indicator_closedBall_inter (ψ : V → ℂ) (R : ℝ) (x v : V) :
 
 /-- The integrand (B ∩ closedBall v R).indicator is integrable on V × V.
     Rewrite as indicator of the compact product set S = {(x,v) | x ∈ B, dist x v ≤ R}
-    applied to the continuous function ψ ∘ snd. -/
+    applied to the continuous function ψ ∘ snd.
+-/
 private lemma integrable_indicator_prod (ψ : V → ℂ) (hcont : Continuous ψ)
     (_hint : Integrable ψ) (R : ℝ) :
     Integrable (Function.uncurry fun x v =>
@@ -459,7 +467,8 @@ private lemma integrable_indicator_prod (ψ : V → ℂ) (hcont : Continuous ψ)
     on V × V using the key equivalence v ∈ closedBall x R ↔ x ∈ closedBall v R
     (dist_comm), we apply integral_integral_swap (Fubini). The inner integral
     over x evaluates to vol(B ∩ closedBall v R) · ψ(v).
-    See Folland, *A Course in Abstract Harmonic Analysis*, §4.2. -/
+    See Folland, *A Course in Abstract Harmonic Analysis*, §4.2.
+-/
 private lemma fejer_avg_eq_integral (ψ : V → ℂ) (hcont : Continuous ψ)
     (hint : Integrable ψ) (R : ℝ) (hR : 0 < R) :
     (volume (Metric.closedBall (0 : V) R)).toReal⁻¹ •
@@ -515,7 +524,8 @@ private lemma fejer_avg_eq_integral (ψ : V → ℂ) (hcont : Continuous ψ)
 
 /-- For a continuous integrable PD function ψ, Re(∫ ψ) ≥ 0.
     This is the core result: the Fejér-averaged double integral J_R converges
-    to ∫ ψ and has Re ≥ 0 for each R. -/
+    to ∫ ψ and has Re ≥ 0 for each R.
+-/
 private lemma pd_integral_re_nonneg (ψ : V → ℂ) (hpd : IsPositiveDefinite ψ)
     (hint : Integrable ψ) (hcont : Continuous ψ) :
     0 ≤ (∫ x, ψ x).re := by
@@ -572,7 +582,8 @@ private lemma pd_integral_re_nonneg (ψ : V → ℂ) (hpd : IsPositiveDefinite �
 /-! ### Step B + C: The main theorem -/
 
 /-- The Fourier transform of a continuous integrable positive-definite function
-    on a finite-dimensional real inner product space has nonneg real part. -/
+    on a finite-dimensional real inner product space has nonneg real part.
+-/
 theorem pd_l1_fourier_re_nonneg_theorem
     (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
     (hint : Integrable φ) (hcont : Continuous φ)

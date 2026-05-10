@@ -30,7 +30,8 @@ open BigOperators
 /-! ## Positive Definiteness
 
 Namespaced under `GFF4D` to avoid clash with `IsPositiveDefinite` from the
-bochner library (which requires both hermitian + nonneg). -/
+bochner library (which requires both hermitian + nonneg).
+-/
 
 namespace GFF4D
 
@@ -38,13 +39,15 @@ namespace GFF4D
     of points x₁, ..., xₘ and complex coefficients c₁, ..., cₘ, we have
     ∑ᵢⱼ c̄ᵢ cⱼ φ(xᵢ - xⱼ) ≥ 0
 
-    This is the standard definition in harmonic analysis and probability theory. -/
+    This is the standard definition in harmonic analysis and probability theory.
+-/
 def IsPositiveDefinite {α : Type*} [AddGroup α] (φ : α → ℂ) : Prop :=
   ∀ (m : ℕ) (x : Fin m → α) (c : Fin m → ℂ),
     0 ≤ (∑ i, ∑ j, (starRingEnd ℂ) (c i) * c j * φ (x i - x j)).re
 
 /-- Composition preserves positive definiteness: if ψ is positive definite on H and
-    T : E →ₗ[ℝ] H is linear, then ψ ∘ T is positive definite on E. -/
+    T : E →ₗ[ℝ] H is linear, then ψ ∘ T is positive definite on E.
+-/
 lemma isPositiveDefinite_precomp_linear
   {E H : Type*} [AddCommGroup E] [AddCommGroup H]
   [Module ℝ E] [Module ℝ H]

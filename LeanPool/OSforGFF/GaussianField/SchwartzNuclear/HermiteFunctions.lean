@@ -69,12 +69,14 @@ Key properties:
 -/
 
 /-- Normalization constant for the n-th Hermite function:
-    cₙ = (n! · √π)^{-1/2} -/
+    cₙ = (n! · √π)^{-1/2}
+-/
 def hermiteFunctionNormConst (n : ℕ) : ℝ :=
   Real.sqrt ((n.factorial * Real.sqrt Real.pi)⁻¹)
 
 /-- The n-th Hermite function ψₙ(x) = cₙ · Hₙ(x√2) · exp(-x²/2)
-    where Hₙ is the probabilist's Hermite polynomial evaluated at x√2. -/
+    where Hₙ is the probabilist's Hermite polynomial evaluated at x√2.
+-/
 def hermiteFunction (n : ℕ) (x : ℝ) : ℝ :=
   hermiteFunctionNormConst n *
   ((hermite n).map (Int.castRingHom ℝ)).eval (x * Real.sqrt 2) *
@@ -87,7 +89,8 @@ These are standard results from harmonic analysis. Proofs require:
 - Recurrence-based orthogonality
 - Schwartz space membership via polynomial bounds on derivatives
 
-The polynomial algebraic infrastructure is available in auto1/lean/SpecialFunctions/Hermite/. -/
+The polynomial algebraic infrastructure is available in auto1/lean/SpecialFunctions/Hermite/.
+-/
 
 /-- Hermite functions are continuous. -/
 private lemma continuous_hermiteFunction (n : ℕ) : Continuous (hermiteFunction n) := by
@@ -125,7 +128,8 @@ private lemma pow_mul_exp_neg_le (k : ℕ) {b : ℝ} (hb : 0 < b) (x : ℝ) :
 /-- Monomial times Gaussian is integrable: ∫ |x^k · exp(-b·x²)| dx < ∞.
     Uses the bound |x|^k ≤ k! · exp(|x|) (from Taylor series of exp) and
     |x| ≤ (b/2)·x² + 1/(2b) (completing the square) to get
-    |x^k · exp(-b·x²)| ≤ k!·exp(1/(2b)) · exp(-(b/2)·x²). -/
+    |x^k · exp(-b·x²)| ≤ k!·exp(1/(2b)) · exp(-(b/2)·x²).
+-/
 private lemma integrable_pow_mul_exp_neg_mul_sq (k : ℕ) {b : ℝ} (hb : 0 < b) :
     Integrable (fun x : ℝ => x ^ k * Real.exp (-b * x ^ 2)) volume := by
   have hcont : Continuous (fun x : ℝ => x ^ k * Real.exp (-b * x ^ 2)) := by fun_prop
@@ -169,7 +173,8 @@ private lemma integrable_pow_mul_exp_neg_mul_sq (k : ℕ) {b : ℝ} (hb : 0 < b)
         exact Real.exp_le_exp.mpr (by linarith)
 
 /-- For any polynomial p and b > 0, the function x ↦ p(x) · exp(-b·x²) is integrable.
-    Proved by polynomial induction, reducing to monomial integrability. -/
+    Proved by polynomial induction, reducing to monomial integrability.
+-/
 private lemma integrable_eval_mul_exp_neg_mul_sq (p : ℝ[X]) {b : ℝ} (hb : 0 < b) :
     Integrable (fun x : ℝ => p.eval x * Real.exp (-b * x ^ 2)) volume := by
   induction p using Polynomial.induction_on' with
@@ -253,7 +258,8 @@ Key identity: `J(n, m+1) = n · J(n-1, m)`, giving `J(n,m) = δₙₘ · n! · �
 abbrev hermiteR (n : ℕ) : ℝ[X] := (hermite n).map (Int.castRingHom ℝ)
 
 /-- The derivative of the (n+1)-th Hermite polynomial is (n+1) times the n-th.
-    Adapted from auto1's `probHermite_derivative`. -/
+    Adapted from auto1's `probHermite_derivative`.
+-/
 theorem hermite_derivative (n : ℕ) :
     derivative (hermite (n + 1)) = (↑(n + 1) : ℤ[X]) * hermite n := by
   induction n with
@@ -282,7 +288,8 @@ private theorem hermiteR_derivative (n : ℕ) :
 abbrev gaussian (x : ℝ) : ℝ := Real.exp (-(x ^ 2 / 2))
 
 /-- Derivative of `Hₘ(x) · exp(-x²/2)` equals `-H_{m+1}(x) · exp(-x²/2)`.
-    From `H_{m+1} = X·Hₘ - Hₘ'` and the product rule. -/
+    From `H_{m+1} = X·Hₘ - Hₘ'` and the product rule.
+-/
 private theorem deriv_hermiteEval_mul_gaussian (m : ℕ) (x : ℝ) :
     deriv (fun u => (hermiteR m).eval u * gaussian u) x =
     -((hermiteR (m + 1)).eval x) * gaussian x := by
@@ -441,7 +448,8 @@ private theorem J_zero_zero : J 0 0 = Real.sqrt (2 * Real.pi) := by
   congr 1; ring
 
 /-- Base case: `J(k+1, 0) = 0` for all k.
-    Proof: from `J_succ_succ` and `J_comm`, `(k+2)·J(k+1,0) = J(k+1,0)`, so `(k+1)·J(k+1,0) = 0`. -/
+    Proof: from `J_succ_succ` and `J_comm`, `(k+2)·J(k+1,0) = J(k+1,0)`, so `(k+1)·J(k+1,0) = 0`.
+-/
 private theorem J_succ_zero (k : ℕ) : J (k + 1) 0 = 0 := by
   -- J(k+2, 1) = (k+2) * J(k+1, 0) by J_succ_succ
   have h1 : J (k + 2) 1 = (↑(k + 2) : ℝ) * J (k + 1) 0 := J_succ_succ (k + 1) 0
@@ -484,7 +492,8 @@ theorem J_eq : ∀ m n : ℕ,
       · simp [h]
 
 /-- Substitution lemma: ∫ Hₙ(x√2)·Hₘ(x√2)·exp(-x²) dx = (√2)⁻¹ · J(n,m).
-    Uses the substitution u = √2·x and `integral_comp_mul_left`. -/
+    Uses the substitution u = √2·x and `integral_comp_mul_left`.
+-/
 private theorem integral_hermiteProd_gaussian_sq (n m : ℕ) :
     ∫ x, (hermiteR n).eval (x * Real.sqrt 2) *
       ((hermiteR m).eval (x * Real.sqrt 2) * Real.exp (-(x ^ 2))) =
@@ -507,7 +516,8 @@ private theorem integral_hermiteProd_gaussian_sq (n m : ℕ) :
   congr 1
 
 /-- Product of two Hermite functions expressed via J.
-    `∫ ψₙ·ψₘ = cₙ·cₘ·(√2)⁻¹·J(n,m)` after substitution u = x√2. -/
+    `∫ ψₙ·ψₘ = cₙ·cₘ·(√2)⁻¹·J(n,m)` after substitution u = x√2.
+-/
 private theorem hermiteFunction_integral_eq (n m : ℕ) :
     ∫ x, hermiteFunction n x * hermiteFunction m x =
     hermiteFunctionNormConst n * hermiteFunctionNormConst m *
@@ -536,7 +546,8 @@ private theorem hermiteFunction_integral_eq (n m : ℕ) :
   exact integral_hermiteProd_gaussian_sq n m
 
 /-- Hermite functions are orthonormal in L²(ℝ):
-    ∫ ψₙ(x) ψₘ(x) dx = δₙₘ -/
+    ∫ ψₙ(x) ψₘ(x) dx = δₙₘ
+-/
 theorem hermiteFunction_orthonormal :
     ∀ n m : ℕ, ∫ x, hermiteFunction n x * hermiteFunction m x = if n = m then 1 else 0 := by
   intro n m
@@ -601,7 +612,8 @@ private lemma derivCLM_iterate_apply (n : ℕ) (g : SchwartzMap ℝ ℝ) (x : �
   | succ n ih => exact ih _
 
 /-- `x ^ k * exp(-x²/2)` is a Schwartz function, proved by iterating multiplication by x
-    via `SchwartzMap.smulLeftCLM`. -/
+    via `SchwartzMap.smulLeftCLM`.
+-/
 private lemma pow_mul_gaussian_schwartz (k : ℕ) :
     ∃ (φ : SchwartzMap ℝ ℝ), ∀ x, φ x = x ^ k * Real.exp (-(x ^ 2 / 2)) := by
   induction k with
@@ -718,7 +730,8 @@ private lemma mul_x_hermiteFunction_aux (n : ℕ) (x : ℝ) :
   ring
 
 /-- Key coefficient identity: c_n / √2 = √((n+1)/2) · c_{n+1}.
-    Proof: c_n = √(n+1) · c_{n+1} (normConst_succ), so c_n/√2 = √(n+1)/√2 · c_{n+1} = √((n+1)/2) · c_{n+1}. -/
+    Proof: c_n = √(n+1) · c_{n+1} (normConst_succ), so c_n/√2 = √(n+1)/√2 · c_{n+1} = √((n+1)/2) · c_{n+1}.
+-/
 private lemma normConst_div_sqrt2 (n : ℕ) :
     hermiteFunctionNormConst n / Real.sqrt 2 =
     Real.sqrt ((↑(n + 1) : ℝ) / 2) * hermiteFunctionNormConst (n + 1) := by
@@ -727,7 +740,8 @@ private lemma normConst_div_sqrt2 (n : ℕ) :
 
 /-- Key coefficient identity: (n+1) · c_{n+1} / √2 = √((n+1)/2) · c_n.
     Proof: c_n = √(n+1) · c_{n+1}, so √(n+1) · c_{n+1} = c_n, and
-    (n+1) · c_{n+1} / √2 = √(n+1) · √(n+1) · c_{n+1} / √2 = √(n+1)/√2 · c_n = √((n+1)/2) · c_n. -/
+    (n+1) · c_{n+1} / √2 = √(n+1) · √(n+1) · c_{n+1} / √2 = √(n+1)/√2 · c_n = √((n+1)/2) · c_n.
+-/
 private lemma normConst_mul_div_sqrt2 (n : ℕ) :
     ↑(n + 1) * hermiteFunctionNormConst (n + 1) / Real.sqrt 2 =
     Real.sqrt ((↑(n + 1) : ℝ) / 2) * hermiteFunctionNormConst n := by
@@ -811,7 +825,8 @@ lemma hermiteFunction_contDiff (j : ℕ) (m : ℕ) :
   rw [this]; exact φ.smooth _
 
 /-- Derivative identity: ψₙ'(x) = √(n/2) ψ_{n-1}(x) - √((n+1)/2) ψ_{n+1}(x).
-    Proved from the product rule on cₙ · Hₙ(x√2) · exp(-x²/2) and Hermite recurrence. -/
+    Proved from the product rule on cₙ · Hₙ(x√2) · exp(-x²/2) and Hermite recurrence.
+-/
 theorem deriv_hermiteFunction (n : ℕ) (x : ℝ) :
     deriv (hermiteFunction n) x =
     Real.sqrt ((↑n : ℝ) / 2) * hermiteFunction (n - 1) x -
@@ -1052,7 +1067,8 @@ private lemma hermiteFunction_sq_tendsto_atTop (n : ℕ) :
 
 /-- Agmon-type sup bound: |ψₙ(x)| grows at most polynomially in n.
     Uses FTC + Cauchy-Schwarz + orthonormality + derivative identity:
-    |ψₙ(x)|² ≤ 2‖ψₙ‖₂ · ‖ψₙ'‖₂ = 2√((2n+1)/2) ≤ C·(1+n)^{1/2}. -/
+    |ψₙ(x)|² ≤ 2‖ψₙ‖₂ · ‖ψₙ'‖₂ = 2√((2n+1)/2) ≤ C·(1+n)^{1/2}.
+-/
 theorem hermiteFunction_sup_bound :
     ∃ (C : ℝ) (s : ℝ), 0 < C ∧ 0 ≤ s ∧
     ∀ (n : ℕ) (x : ℝ), |hermiteFunction n x| ≤ C * (1 + ↑n) ^ s := by
@@ -1164,7 +1180,8 @@ theorem hermiteFunction_sup_bound :
   exact h_abs_le
 
 /-- Pointwise bound on |x|^k · ‖d^m ψₙ(x)‖ ≤ C · (1+n)^s.
-    Proved via raising/lowering operators, L² bounds, and Agmon inequality. -/
+    Proved via raising/lowering operators, L² bounds, and Agmon inequality.
+-/
 private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
     ∃ (C : ℝ) (s : ℝ), 0 < C ∧ 0 ≤ s ∧
     ∀ (n : ℕ) (x : ℝ),
@@ -1324,7 +1341,8 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
     This is the key property ensuring that the inclusion between Sobolev-Hermite
     levels is Hilbert-Schmidt. The exponent s depends on the seminorm order:
     for the Schwartz seminorm p_{k,m}(f) = sup_x (1+|x|)^k |f^(m)(x)|,
-    we have ‖ψₙ‖_{k,m} ≤ C_{k,m} · (1+n)^{(k+m)/2 + 1/4}. -/
+    we have ‖ψₙ‖_{k,m} ≤ C_{k,m} · (1+n)^{(k+m)/2 + 1/4}.
+-/
 theorem hermiteFunction_seminorm_bound (k m : ℕ) :
     ∃ (C : ℝ) (s : ℝ), 0 < C ∧ 0 ≤ s ∧
     ∀ n : ℕ, SchwartzMap.seminorm ℝ k m
@@ -1349,10 +1367,12 @@ The inclusion Hˢ⁺¹ ↪ Hˢ is diagonal with eigenvalues (1+n)^{-1},
 and ∑ₙ (1+n)^{-2} = π²/6 < ∞, so each inclusion is Hilbert-Schmidt.
 
 The Schwartz space equals ∩ₛ Hˢ, and the Schwartz topology is generated
-by the Sobolev-Hermite norms. -/
+by the Sobolev-Hermite norms.
+-/
 
 /-- The Hilbert-Schmidt sum for the inclusion between Sobolev-Hermite levels:
-    ∑_{n=0}^{N-1} (1+n)^{-2s} is bounded for s > 1/2, uniformly in N. -/
+    ∑_{n=0}^{N-1} (1+n)^{-2s} is bounded for s > 1/2, uniformly in N.
+-/
 theorem sobolevHermite_hs_sum_bound (s : ℝ) (hs : 1/2 < s) :
     ∃ C : ℝ, ∀ N : ℕ, ∑ i ∈ Finset.range N, ((1 + (i : ℝ)) ^ (-2 * s)) ≤ C := by
   -- The series ∑ (1+n)^{-2s} converges when 2s > 1, so partial sums are bounded by tsum
@@ -1370,10 +1390,12 @@ theorem sobolevHermite_hs_sum_bound (s : ℝ) (hs : 1/2 < s) :
 
 We now prove `hermiteFunction_complete` (stated as an axiom above).
 Phase 1: Show ∫ f·xᵏ·exp(-x²/2) = 0 using the `mul_x_hermiteFunction` recurrence.
-Phase 2-3: Conclude f = 0 via Schwartz density in L². -/
+Phase 2-3: Conclude f = 0 via Schwartz density in L².
+-/
 
 /-- ψₙ(x) = cₙ · (hermiteR n).eval(x·√2) · exp(-x²/2), so
-    (hermiteR n).eval(x·√2) · exp(-x²/2) = cₙ⁻¹ · ψₙ(x). -/
+    (hermiteR n).eval(x·√2) · exp(-x²/2) = cₙ⁻¹ · ψₙ(x).
+-/
 private lemma hermiteR_eval_mul_gaussian_eq (n : ℕ) (x : ℝ) :
     (hermiteR n).eval (x * Real.sqrt 2) * Real.exp (-(x ^ 2 / 2)) =
     (hermiteFunctionNormConst n)⁻¹ * hermiteFunction n x := by
@@ -1396,7 +1418,8 @@ private lemma integral_f_hermiteR_gaussian_zero
   rw [integral_const_mul, horth n, mul_zero]
 
 /-- Phase 1: If f ∈ L² is orthogonal to all Hermite functions, then
-    ∫ f(x) · x^k · exp(-x²/2) dx = 0 for all k. -/
+    ∫ f(x) · x^k · exp(-x²/2) dx = 0 for all k.
+-/
 private lemma integral_f_xpow_gaussian_zero
     (f : ℝ → ℝ) (hf : MemLp f 2 volume)
     (horth : ∀ n, ∫ x, f x * hermiteFunction n x = 0) :
@@ -1568,7 +1591,8 @@ private lemma integrable_f_mul_gaussian
         rw [hfx, hGx, real_inner_eq_re_inner ℝ, RCLike.inner_apply', conj_trivial, RCLike.re_to_real])
 
 /-- |f(x)| * exp(-x²/4) is integrable when f ∈ L², by Cauchy-Schwarz:
-    f ∈ L², exp(-x²/4) ∈ L² (since exp(-x²/4)² = exp(-x²/2)). -/
+    f ∈ L², exp(-x²/4) ∈ L² (since exp(-x²/4)² = exp(-x²/2)).
+-/
 private lemma integrable_f_mul_half_gaussian
     (f : ℝ → ℝ) (hf : MemLp f 2 volume) :
     Integrable (fun x => f x * Real.exp (-(x ^ 2 / 4))) volume := by
@@ -1587,7 +1611,8 @@ private lemma integrable_f_mul_half_gaussian
         rw [hfx, hGx, real_inner_eq_re_inner ℝ, RCLike.inner_apply', conj_trivial, RCLike.re_to_real])
 
 /-- g(x) * exp(c|x|) is integrable, where g(x) = f(x) * exp(-x²/2), by completing the square:
-    |g(x)| * exp(c|x|) = |f(x)| * exp(-x²/2 + c|x|) ≤ exp(c²) * |f(x)| * exp(-x²/4). -/
+    |g(x)| * exp(c|x|) = |f(x)| * exp(-x²/2 + c|x|) ≤ exp(c²) * |f(x)| * exp(-x²/4).
+-/
 private lemma integrable_g_mul_exp_linear
     (f : ℝ → ℝ) (hf : MemLp f 2 volume) (c : ℝ) :
     Integrable (fun x => ‖f x * Real.exp (-(x ^ 2 / 2))‖ * Real.exp (c * |x|)) volume := by
@@ -1617,7 +1642,8 @@ private lemma integrable_g_mul_exp_linear
           rw [Real.exp_add]; ring
 
 /-- The L^1 Fourier transform of g(x) = f(x) exp(-x^2/2) vanishes when all
-    polynomial moments of g are zero. Uses DCT with partial sums of exp. -/
+    polynomial moments of g are zero. Uses DCT with partial sums of exp.
+-/
 private lemma fourierIntegral_f_mul_gaussian_eq_zero
     (f : ℝ → ℝ) (hf : MemLp f 2 volume)
     (h_moments : ∀ k : ℕ, ∫ x, f x * (x ^ k * Real.exp (-(x ^ 2 / 2))) = 0) :
@@ -1765,7 +1791,8 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
     (tendsto_const_nhds.congr (fun N => (h_zero N).symm))
 
 /-- If ĝ = 0 and φ is smooth compactly supported, then ∫ φ · g = 0.
-    Uses Parseval identity and Fourier inversion for Schwartz functions. -/
+    Uses Parseval identity and Fourier inversion for Schwartz functions.
+-/
 private lemma integral_smul_f_mul_gaussian_eq_zero
     (f : ℝ → ℝ) (hf : MemLp f 2 volume)
     (h_moments : ∀ k : ℕ, ∫ x, f x * (x ^ k * Real.exp (-(x ^ 2 / 2))) = 0)
@@ -1828,7 +1855,8 @@ private theorem hermiteFunction_complete_proof :
     (integral_smul_f_mul_gaussian_eq_zero f hf h_moments)
 
 /-- Hermite functions form a complete system in L²(ℝ):
-    if ∫ f ψₙ = 0 for all n, then f = 0 a.e. -/
+    if ∫ f ψₙ = 0 for all n, then f = 0 a.e.
+-/
 theorem hermiteFunction_complete :
     ∀ f : ℝ → ℝ, MemLp f 2 volume →
     (∀ n, ∫ x, f x * hermiteFunction n x = 0) →
@@ -1840,7 +1868,8 @@ theorem hermiteFunction_complete :
 For ℝᵈ, Hermite functions are tensor products:
   Ψ_α(x) = ∏ᵢ ψ_{αᵢ}(xᵢ)  for multi-index α = (α₁, ..., αd)
 
-These form an ONB of L²(ℝᵈ) and lie in 𝓢(ℝᵈ, ℝ). -/
+These form an ONB of L²(ℝᵈ) and lie in 𝓢(ℝᵈ, ℝ).
+-/
 
 -- Multi-index Hermite function for ℝᵈ
 -- (Definition deferred until the 1D properties are proved)

@@ -51,7 +51,8 @@ lemma frobenius_eq_trace_transpose_mul
     _ = Matrix.trace (G.transpose * B) := htrace.symm
 
 /-- Congruence by an orthogonal/invertible matrix preserves nonzeroness (real case).
-If `U * Uᵀ = 1`, then `Uᵀ G U ≠ 0` whenever `G ≠ 0`. -/
+If `U * Uᵀ = 1`, then `Uᵀ G U ≠ 0` whenever `G ≠ 0`.
+-/
 lemma congr_transpose_mul_mul_ne_zero
   (U G : Matrix ι ι ℝ) (hU_right : U * U.transpose = 1) (hG_ne_zero : G ≠ 0) :
   U.transpose * G * U ≠ 0 := by
@@ -66,7 +67,8 @@ lemma congr_transpose_mul_mul_ne_zero
   exact hG_ne_zero this
 
 /-- Cauchy–Schwarz for the semi-inner product induced by a PSD real matrix.
-For all vectors x,y: (xᵀ H y)^2 ≤ (xᵀ H x) (yᵀ H y). -/
+For all vectors x,y: (xᵀ H y)^2 ≤ (xᵀ H x) (yᵀ H y).
+-/
 lemma psd_cauchy_schwarz
   (H : Matrix ι ι ℝ) (hH_psd : H.PosSemidef) (x y : ι → ℝ) :
   ((x ⬝ᵥ H.mulVec y)^2) ≤ (x ⬝ᵥ H.mulVec x) * (y ⬝ᵥ H.mulVec y) := by

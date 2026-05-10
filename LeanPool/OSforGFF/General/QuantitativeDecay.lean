@@ -55,7 +55,8 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 /-! ## Phase 1: Polynomial Decay Structure and Schwartz Bridge -/
 
 /-- A function f has polynomial decay of order N with constant C if
-    ‖f(x)‖ ≤ C / (1 + ‖x‖)^N for all x. -/
+    ‖f(x)‖ ≤ C / (1 + ‖x‖)^N for all x.
+-/
 structure PolynomialDecayBound {E F : Type*} [NormedAddCommGroup E]
     [NormedAddCommGroup F] (f : E → F) (N : ℝ) where
   C : ℝ
@@ -67,7 +68,8 @@ structure PolynomialDecayBound {E F : Type*} [NormedAddCommGroup E]
 This follows from SchwartzMap.one_add_le_sup_seminorm_apply:
   (1 + ‖x‖)^k * ‖D^n f(x)‖ ≤ 2^k * seminorm_{k,n} f
 
-Taking n = 0 and rearranging gives ‖f(x)‖ ≤ C * (1 + ‖x‖)^{-k}. -/
+Taking n = 0 and rearranging gives ‖f(x)‖ ≤ C * (1 + ‖x‖)^{-k}.
+-/
 def schwartz_has_polynomial_decay (f : SchwartzMap E ℂ) (k : ℕ) :
     PolynomialDecayBound f (k : ℝ) := by
   -- Use SchwartzMap.one_add_le_sup_seminorm_apply with m = (k, 0)
@@ -119,7 +121,8 @@ def schwartz_has_polynomial_decay_real (f : SchwartzMap E ℂ) (N : ℝ) (_hN : 
 /-- For any α > 0 and m > 0, exponential decay implies polynomial decay:
     exp(-mx) ≤ C * (1 + x)^{-α} for all x ≥ 0.
 
-This uses the fact that x^α * exp(-mx) is bounded (it tends to 0 at infinity). -/
+This uses the fact that x^α * exp(-mx) is bounded (it tends to 0 at infinity).
+-/
 lemma exp_decay_implies_polynomial_decay (m α : ℝ) (hm : m > 0) (hα : α > 0) :
     ∃ C : ℝ, C > 0 ∧ ∀ x : ℝ, x ≥ 0 → Real.exp (-m * x) ≤ C * (1 + x)^(-α) := by
   -- We show (1+x)^α * exp(-mx) is bounded using u^p ≤ (p/|t|)^p * exp(|t|u)
@@ -232,7 +235,8 @@ def norm_exp_decay_implies_polynomial_decay {F : Type*} [NormedAddCommGroup F]
 
 /-- Helper: (1 + x/2)^{-N} ≤ 2^N * (1 + x)^{-N} for x ≥ 0 and N > 0.
 
-This follows from 1 + x ≤ 2 + x = 2(1 + x/2), so (1+x)^N ≤ 2^N(1+x/2)^N. -/
+This follows from 1 + x ≤ 2 + x = 2(1 + x/2), so (1+x)^N ≤ 2^N(1+x/2)^N.
+-/
 lemma one_add_half_pow_le (x : ℝ) (hx : x ≥ 0) (N : ℝ) (hN : N > 0) :
     (1 + x/2)^(-N) ≤ (2:ℝ)^N * (1 + x)^(-N) := by
   have h1 : 0 < 1 + x/2 := by linarith
@@ -269,7 +273,8 @@ lemma one_add_half_pow_le (x : ℝ) (hx : x ≥ 0) (N : ℝ) (hN : N > 0) :
 
     The proof splits the integral at |y| = |x|/2:
     - Region A (|y| ≥ |x|/2): u(y) is small, v integrable
-    - Region B (|y| < |x|/2): v(x-y) is small (since |x-y| ≥ |x|/2), u integrable -/
+    - Region B (|y| < |x|/2): v(x-y) is small (since |x-y| ≥ |x|/2), u integrable
+-/
 def convolution_polynomial_decay
     {u v : E → ℂ} {N : ℝ} (hN_dim : N > Module.finrank ℝ E)
     (hu_decay : PolynomialDecayBound u N)
@@ -423,7 +428,8 @@ def convolution_polynomial_decay
 /-! ## Phase 4: Kernel Decomposition Bounds -/
 
 /-- The convolution of a Schwartz function with the singular part of the kernel
-    (compactly supported) has polynomial decay. -/
+    (compactly supported) has polynomial decay.
+-/
 def convolution_compactSupport_decay (f : SchwartzMap E ℂ) (K : E → ℝ) (R₀ : ℝ)
     (hR₀ : R₀ > 0) (hK_loc : LocallyIntegrable K volume)
     (N : ℕ) (_hN : N > 0) :
@@ -591,7 +597,8 @@ def convolution_compactSupport_decay (f : SchwartzMap E ℂ) (K : E → ℝ) (R�
           _ ≤ C := by simp only [C]; linarith
 
 /-- The convolution of a Schwartz function with the tail part of the kernel
-    (exponentially decaying) has polynomial decay at any rate. -/
+    (exponentially decaying) has polynomial decay at any rate.
+-/
 def convolution_expDecay_polynomial_decay (f : SchwartzMap E ℂ) (K : E → ℝ)
     (R₀ m C_K : ℝ) (hR₀ : R₀ > 0) (hm : m > 0) (hC_K : C_K > 0)
     (hK_loc : LocallyIntegrable K volume)  -- For measurability
@@ -722,7 +729,8 @@ The proof structure:
 1. Decompose K = K_sing + K_tail
 2. Show H(y) = ∫ f(x) K(x-y) dx = H_sing(y) + H_tail(y) has polynomial decay
 3. The integral I(a) = ∫ H(y) g(y-a) dy = (H ⋆ ǧ)(a) where ǧ(z) = g(-z)
-4. Apply convolution_polynomial_decay to get the result -/
+4. Apply convolution_polynomial_decay to get the result
+-/
 theorem schwartz_bilinear_translation_decay_polynomial_proof
     (f g : SchwartzMap E ℂ)
     (K : E → ℝ)

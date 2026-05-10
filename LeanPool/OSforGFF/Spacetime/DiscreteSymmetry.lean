@@ -158,7 +158,8 @@ example (x : SpaceTime) :
     test functions. This maps a test function `f` to the function `x ↦ f(timeReflection(x))`,
     where `timeReflection` negates the time coordinate (0th component) while
     preserving spatial coordinates. This version acts on complex test functions and
-    is used to formulate the Osterwalder-Schrader star operation. -/
+    is used to formulate the Osterwalder-Schrader star operation.
+-/
 private lemma timeReflection_hg_upper :
     ∃ (k : ℕ) (C : ℝ), ∀ (x : SpaceTime), ‖x‖ ≤ C * (1 + ‖timeReflectionCLM x‖) ^ k := by
   use 1, 1
@@ -181,7 +182,8 @@ noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ
 /-- Composition with time reflection as a continuous linear map on **real-valued**
     test functions. This version will be used when working with positive-time
     subspaces defined over ℝ, so that reflection positivity can be formulated
-    without passing through complex scalars. -/
+    without passing through complex scalars.
+-/
 noncomputable def compTimeReflectionReal : TestFunction →L[ℝ] TestFunction := by
   exact SchwartzMap.compCLM (𝕜 := ℝ)
     (hg := timeReflectionCLM.hasTemperateGrowth)

@@ -51,7 +51,8 @@ noncomputable section
 
     Proof sketch: Re(1 - ∫ exp(itX)) = ∫ (1 - cos(tX)) = 0. Since 1 - cos ≥ 0,
     cos(tX) = 1 a.e. for each t. Over countably many t ∈ ℚ simultaneously,
-    this forces X = 0. -/
+    this forces X = 0.
+-/
 lemma ae_eq_zero_of_charfun_eq_one {Ω : Type*} [MeasurableSpace Ω]
     {ν : Measure Ω} [IsProbabilityMeasure ν]
     {X : Ω → ℝ} (hX : Measurable X)
@@ -87,7 +88,8 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E]
 
 omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- The characteristic functional satisfies `‖Φ(x)‖ ≤ 1`, as the integral
-    of a unit-modulus function against a probability measure. -/
+    of a unit-modulus function against a probability measure.
+-/
 lemma cf_norm_le_one
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -113,7 +115,8 @@ lemma one_sub_re_le_two_of_norm_le (z : ℂ) (hz : ‖z‖ ≤ 1) : 1 - z.re ≤
 
 omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- Quadratic bound outside a seminorm ball: if `q(x) ≥ δ > 0` and `‖Φ(x)‖ ≤ 1`,
-    then `1 - Re(Φ(x)) ≤ (2/δ²) · q(x)²`. -/
+    then `1 - Re(Φ(x)) ≤ (2/δ²) · q(x)²`.
+-/
 lemma quadratic_bound_outside
     (Φ : E → ℂ) (h_norm_le : ∀ x : E, ‖Φ x‖ ≤ 1)
     (q : Seminorm ℝ E) (δ : ℝ) (hδ : 0 < δ)
@@ -139,7 +142,8 @@ lemma one_sub_re_nonneg
 omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- From `Continuous Φ`, `Φ 0 = 1`, and `WithSeminorms p`: extract a finite set
     of seminorm indices s and radius r > 0 such that `(s.sup p)(x) < r`
-    implies `‖1 - Φ(x)‖ < ε`. -/
+    implies `‖1 - Φ(x)‖ < ε`.
+-/
 lemma cf_nhds_ball
     (Φ : E → ℂ) (h_cf_cont : Continuous Φ) (h_normalized : Φ 0 = 1)
     (p : ℕ → Seminorm ℝ E) (hp_top : WithSeminorms (fun n => p n))
@@ -176,7 +180,8 @@ lemma seminorm_mono_of_le (p : ℕ → Seminorm ℝ E)
 
 omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- For a finite set of indices, `s.sup p ≤ p m` when `m` dominates every index in `s`
-    (which holds when `m ≥ max s`, given monotonicity). -/
+    (which holds when `m ≥ max s`, given monotonicity).
+-/
 lemma finset_sup_le_of_mono (p : ℕ → Seminorm ℝ E)
     (hp_hs : ∀ n, (p (n + 1)).IsHilbertSchmidtEmbedding (p n))
     (s : Finset ℕ) (m : ℕ) (hm : ∀ n ∈ s, n ≤ m) :
@@ -190,7 +195,8 @@ lemma finset_sup_le_of_mono (p : ℕ → Seminorm ℝ E)
 
 omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- **Combined quadratic bound** from CF continuity: for any ε > 0, there exist m₀ : ℕ
-    and K ≥ 0 such that `1 - Re(Φ(x)) ≤ ε + K · (p m₀)(x)²` for all x. -/
+    and K ≥ 0 such that `1 - Re(Φ(x)) ≤ ε + K · (p m₀)(x)²` for all x.
+-/
 lemma combined_quadratic_bound
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_cont : Continuous Φ) (h_normalized : Φ 0 = 1)
@@ -230,7 +236,8 @@ omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
     where `‖1 - Φ‖ < ε`), then `Φ(t • z) = 1` for all `t`.
 
     Proof: `q(t•z) = |t| · q(z) = 0 < r` for any `r > 0`, so `‖1 - Φ(t•z)‖ < ε`
-    for all `ε > 0`. -/
+    for all `ε > 0`.
+-/
 lemma cf_kernel_of_ball_bound
     (Φ : E → ℂ)
     (q : Seminorm ℝ E) (z : E) (hz : q z = 0)
@@ -254,7 +261,8 @@ omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
     for ν-a.e. ω. Uses `h_cf_joint` directly — no linearity of ω assumed.
 
     This is the key trick: the joint CF condition forces the "linear decomposition"
-    to hold a.e. even for real (not just rational) coefficients. -/
+    to hold a.e. even for real (not just rational) coefficients.
+-/
 lemma linear_combination_ae
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -303,7 +311,8 @@ lemma linear_combination_ae
 omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- The pushforward of ν to `Fin k → ℝ` via evaluation at vectors `e₀,...,e_{k-1}`
     has characteristic function `v ↦ Φ(∑ vⱼ • eⱼ)`. This is a direct consequence
-    of `h_cf_joint` and `integral_map`. -/
+    of `h_cf_joint` and `integral_map`.
+-/
 lemma pushforward_charfun_eq
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -326,7 +335,8 @@ omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
     `x = ∑ βⱼ eⱼ`, we have `|ω(x)| ≤ R · p(x)`.
 
     This is the pointwise bound at the heart of the concentration argument:
-    ω in the "good set" (bounded evaluation norm) respects the seminorm. -/
+    ω in the "good set" (bounded evaluation norm) respects the seminorm.
+-/
 lemma bound_on_good_set
     (p : Seminorm ℝ E) (hp : p.IsHilbertian)
     {k : ℕ} (e : Fin k → E) (he : p.IsOrthonormalSeq e)
@@ -357,7 +367,8 @@ lemma bound_on_good_set
 omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- If `p(z) = 0` and `p` dominates the CF (i.e., the CF at multiples of z
     is always 1), then `ω(z) = 0` for ν-a.e. ω. Proof: the CF of ω(z)
-    is constantly 1, so ω(z) = 0 a.e. by `ae_eq_zero_of_charfun_eq_one`. -/
+    is constantly 1, so ω(z) = 0 a.e. by `ae_eq_zero_of_charfun_eq_one`.
+-/
 lemma kernel_eval_ae_zero
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -381,7 +392,8 @@ omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
     `∑ cᵢ ω(dᵢ)` for **all** `c : ℕ →₀ ℚ` simultaneously.
 
     Uses countable intersection (`eventually_countable_forall`) since `ℕ →₀ ℚ`
-    is countable, plus `linear_combination_ae` for each individual `c`. -/
+    is countable, plus `linear_combination_ae` for each individual `c`.
+-/
 lemma q_linear_ae_all
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -413,7 +425,8 @@ lemma q_linear_ae_all
 
 omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- The "bad set" for the concentration bound: the set of ω where some
-    ℚ-linear combination of dense vectors violates the seminorm bound. -/
+    ℚ-linear combination of dense vectors violates the seminorm bound.
+-/
 def concentrationBadSet (d : ℕ → E) (p : Seminorm ℝ E) (C : ℝ) :
     Set (E → ℝ) :=
   {ω | ∃ c : ℕ →₀ ℚ,
@@ -422,7 +435,8 @@ def concentrationBadSet (d : ℕ → E) (p : Seminorm ℝ E) (C : ℝ) :
 
 omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- The "restricted bad set" B_N: bad set restricted to ℚ-linear combinations
-    with support in `{0, ..., N-1}`. -/
+    with support in `{0, ..., N-1}`.
+-/
 def concentrationBadSetN (d : ℕ → E) (p : Seminorm ℝ E) (C : ℝ) (N : ℕ) :
     Set (E → ℝ) :=
   {ω | ∃ c : ℕ →₀ ℚ, c.support ⊆ Finset.range N ∧
@@ -440,7 +454,8 @@ lemma concentrationBadSetN_mono (d : ℕ → E) (p : Seminorm ℝ E) (C : ℝ)
 
 omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- The full bad set equals the union of the restricted bad sets.
-    Every `c : ℕ →₀ ℚ` has finite support contained in some `Finset.range N`. -/
+    Every `c : ℕ →₀ ℚ` has finite support contained in some `Finset.range N`.
+-/
 lemma concentrationBadSet_eq_iUnion (d : ℕ → E) (p : Seminorm ℝ E) (C : ℝ) :
     concentrationBadSet d p C = ⋃ N, concentrationBadSetN d p C N := by
   ext ω
@@ -457,7 +472,8 @@ lemma concentrationBadSet_eq_iUnion (d : ℕ → E) (p : Seminorm ℝ E) (C : �
 
 omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- If `ν(B_N) ≤ δ` for all N, then `ν(full bad set) ≤ δ`.
-    Uses continuity of measure from below (`tendsto_measure_iUnion`). -/
+    Uses continuity of measure from below (`tendsto_measure_iUnion`).
+-/
 lemma concentrationBadSet_measure_le (d : ℕ → E) (p : Seminorm ℝ E) (C : ℝ)
     (ν : Measure (E → ℝ)) (δ : ENNReal)
     (h_bound : ∀ N, ν (concentrationBadSetN d p C N) ≤ δ) :
@@ -524,7 +540,8 @@ omit [TopologicalSpace F] [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] in
 /-- **Gram-Schmidt for Hilbertian seminorms**: given N vectors in F and a Hilbertian
     seminorm p, there exist k orthonormal vectors such that every element of
     the span of the original vectors decomposes as a p-ONB combination plus a kernel
-    element (where p vanishes). -/
+    element (where p vanishes).
+-/
 lemma gram_schmidt_seminorm_aux (p : Seminorm ℝ F) (hp : p.IsHilbertian)
     (N : ℕ) (d : Fin N → F) :
     ∃ (k : ℕ) (e : Fin k → F),
@@ -710,7 +727,8 @@ omit [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 
     Key argument: on the a.e. set where all decompositions hold,
     Cauchy-Schwarz + Parseval gives |ω(x_c)| ≤ R · p(x_c) whenever Σ ω(eⱼ)² ≤ R².
-    So B_N ⊆ {Σ ω(eⱼ)² > R²} ∪ (null set). -/
+    So B_N ⊆ {Σ ω(eⱼ)² > R²} ∪ (null set).
+-/
 lemma concentrationBadSetN_measure_bound
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -817,7 +835,8 @@ the conclusion is: for any `ε > 0`, there exist `m, C : ℕ` such that
 /-- **Joint kernel bound for finite collection**.
     If z₁,...,zₙ are kernel elements (p_m(zᵢ) = 0) and the quadratic CF bound gives
     `1 - Re(Φ(∑ tᵢ zᵢ)) ≤ ε_q` for all t, then `P(∃i, ω(zᵢ) ≠ 0) ≤ ε_q`.
-    Proved by pushforward to ℝⁿ and multivariate Gaussian averaging. -/
+    Proved by pushforward to ℝⁿ and multivariate Gaussian averaging.
+-/
 private lemma joint_kernel_bound_finite
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -1233,7 +1252,8 @@ private lemma kernel_concentration_bound
     Uses Gaussian averaging on the pushforward measure to ℝ^k:
     `𝔼[1 - exp(-σ²∑ω(eⱼ)²/2)] ≤ ε_q + 2σ²K·C_HS`
     Combined with the exponential Chebyshev bound `P(‖Y‖ ≥ R) ≤ C/(1-exp(-σ²R²/2))`,
-    choose σ, R to make the tail probability ≤ δ. -/
+    choose σ, R to make the tail probability ≤ δ.
+-/
 private lemma tail_bound_uniform
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -1615,7 +1635,8 @@ private lemma tail_bound_uniform
 
     This is the version of `concentrationBadSetN_measure_bound` that does NOT require
     the CF kernel condition `Φ(t·z) = 1`, instead accounting for the kernel
-    contribution via an additive probability bound. -/
+    contribution via an additive probability bound.
+-/
 private lemma badSetN_bound_with_kernel
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -1679,7 +1700,8 @@ private lemma badSetN_bound_with_kernel
 
     Given Hilbertian seminorms with consecutive HS embeddings generating the topology,
     a cylindrical probability measure with continuous CF, and any sequence of vectors,
-    there exist `m, C : ℕ` such that the concentration bound holds. -/
+    there exist `m, C : ℕ` such that the concentration bound holds.
+-/
 theorem nuclear_cylindrical_concentration
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -1821,7 +1843,8 @@ theorem nuclear_cylindrical_concentration
 /-! ## Main theorem -/
 
 /-- **Minlos concentration bound** — wrapper around
-`nuclear_cylindrical_concentration`. -/
+`nuclear_cylindrical_concentration`.
+-/
 theorem minlos_concentration [SeparableSpace E] [Nonempty E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_cont : Continuous Φ)

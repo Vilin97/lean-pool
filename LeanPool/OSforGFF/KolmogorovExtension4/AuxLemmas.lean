@@ -10,7 +10,6 @@ import Mathlib.MeasureTheory.MeasurableSpace.Defs
 /-!
 
 THIS FILE IS NOT USED FOR THE MAIN RESULT
-
 -/
 
 open Finset Set Filter

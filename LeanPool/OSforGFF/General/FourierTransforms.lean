@@ -53,7 +53,6 @@ The 1D result follows from Fourier inversion:
 1. Compute half-line integrals using the fundamental theorem of calculus
 2. Sum to get FT[e^{-μ|x|}] = 2μ/(k² + μ²)
 3. Apply Fourier inversion to derive the Lorentzian result
-
 -/
 
 open MeasureTheory Complex Real
@@ -63,13 +62,15 @@ noncomputable section
 
 /-! ## Dependencies
 
-No axioms declared in this file. -/
+No axioms declared in this file.
+-/
 
 
 variable {α : Type*} [MeasureSpace α] [SigmaFinite (volume : Measure α)]
 
 /-- The permutation map (x, (y, k)) ↦ (k, (x, y)) as a measurable equivalence.
-    Constructed by composing prodAssoc.symm (reassociating) with prodComm (swapping). -/
+    Constructed by composing prodAssoc.symm (reassociating) with prodComm (swapping).
+-/
 private def tripleReorder : α × (α × α) ≃ᵐ α × (α × α) :=
   MeasurableEquiv.prodAssoc.symm.trans MeasurableEquiv.prodComm
 
@@ -95,7 +96,8 @@ private lemma measurePreserving_tripleReorder :
     the integration from ∫x ∫y ∫k to ∫k ∫x ∫y.
 
     This follows from Fubini-Tonelli: if F is integrable on the product space,
-    then we can integrate in any order. -/
+    then we can integrate in any order.
+-/
 lemma fubini_triple_reorder {F : α → α → α → ℂ}
     (hF : Integrable (fun p : α × α × α => F p.1 p.2.1 p.2.2)
       (volume.prod (volume.prod volume))) :
@@ -135,7 +137,8 @@ lemma fubini_triple_reorder {F : α → α → α → ℂ}
 /-- The exponential decay function is integrable when μ > 0.
     Proof: Split ℝ into (-∞, 0] ∪ (0, ∞) and use:
     - integrableOn_exp_mul_Iic for exp(μx) on (-∞, 0] (since μ > 0)
-    - integrableOn_exp_mul_Ioi for exp(-μx) on (0, ∞) (since -μ < 0) -/
+    - integrableOn_exp_mul_Ioi for exp(-μx) on (0, ∞) (since -μ < 0)
+-/
 lemma integrable_exponential_decay (μ : ℝ) (hμ : 0 < μ) :
     Integrable (fun x : ℝ => Real.exp (-μ * |x|)) volume := by
   rw [← integrableOn_univ, ← Set.Iic_union_Ioi (a := (0 : ℝ))]
@@ -158,7 +161,8 @@ lemma integrable_exponential_decay (μ : ℝ) (hμ : 0 < μ) :
 
 /-- The Fourier integrand of exponential decay is integrable.
     Proof: |exp(ikx)| = 1, so the norm of the integrand equals exp(-μ|x|),
-    which is integrable by integrable_exponential_decay. -/
+    which is integrable by integrable_exponential_decay.
+-/
 lemma integrable_exponential_decay_fourier (μ : ℝ) (hμ : 0 < μ) (k : ℝ) :
     Integrable (fun x : ℝ => Complex.exp (Complex.I * k * x) * Real.exp (-μ * |x|)) volume := by
   have hint : Integrable (fun x : ℝ => (Real.exp (-μ * |x|) : ℂ)) volume :=
@@ -197,7 +201,8 @@ lemma ik_add_ne_zero (α : ℝ) (hα : α ≠ 0) (k : ℝ) : Complex.I * k + (α
 
     Special cases:
     - α = -μ (μ > 0): gives decay on [0,∞), converges at +∞
-    - α = +μ (μ > 0): gives growth on (-∞,0], converges at -∞ -/
+    - α = +μ (μ > 0): gives growth on (-∞,0], converges at -∞
+-/
 lemma antideriv_exp_complex_linear (α : ℝ) (hα : α ≠ 0) (k x : ℝ) :
     HasDerivAt (fun t : ℝ => Complex.exp ((Complex.I * k + α) * t) / (Complex.I * k + α))
                (Complex.exp ((Complex.I * k + α) * x))
@@ -221,7 +226,8 @@ lemma antideriv_exp_complex_linear (α : ℝ) (hα : α ≠ 0) (k x : ℝ) :
   field_simp
 
 /-- Complex exponential e^{cx} tends to 0 as x → +∞ when Re(c) < 0.
-    Proof: ‖e^{cx}‖ = e^{Re(c)·x} → 0 since Re(c) < 0 and x → +∞. -/
+    Proof: ‖e^{cx}‖ = e^{Re(c)·x} → 0 since Re(c) < 0 and x → +∞.
+-/
 theorem tendsto_cexp_atTop_zero {c : ℂ} (hc : c.re < 0) :
     Filter.Tendsto (fun x : ℝ => Complex.exp (c * x)) Filter.atTop (nhds 0) := by
   rw [Complex.tendsto_exp_nhds_zero_iff]
@@ -236,7 +242,8 @@ theorem tendsto_cexp_atTop_zero {c : ℂ} (hc : c.re < 0) :
   convert h2 using 1; funext x; ring
 
 /-- Complex exponential e^{cx} tends to 0 as x → -∞ when Re(c) > 0.
-    Proof: ‖e^{cx}‖ = e^{Re(c)·x} → 0 since Re(c) > 0 and x → -∞. -/
+    Proof: ‖e^{cx}‖ = e^{Re(c)·x} → 0 since Re(c) > 0 and x → -∞.
+-/
 theorem tendsto_cexp_atBot_zero {c : ℂ} (hc : c.re > 0) :
     Filter.Tendsto (fun x : ℝ => Complex.exp (c * x)) Filter.atBot (nhds 0) := by
   rw [Complex.tendsto_exp_nhds_zero_iff]
@@ -246,7 +253,8 @@ theorem tendsto_cexp_atBot_zero {c : ℂ} (hc : c.re > 0) :
   exact Filter.tendsto_id.const_mul_atBot hc
 
 /-- The integrand e^{(ik-μ)x} is integrable on [0, ∞) when μ > 0.
-    This follows from the exponential decay since Re(ik - μ) = -μ < 0. -/
+    This follows from the exponential decay since Re(ik - μ) = -μ < 0.
+-/
 theorem integrableOn_exp_decay_Ioi (μ : ℝ) (hμ : 0 < μ) (k : ℝ) :
     MeasureTheory.IntegrableOn
       (fun x : ℝ => Complex.exp ((Complex.I * k - μ) * x))
@@ -258,7 +266,8 @@ theorem integrableOn_exp_decay_Ioi (μ : ℝ) (hμ : 0 < μ) (k : ℝ) :
   exact integrableOn_exp_mul_complex_Ioi hc_re 0
 
 /-- Exponential e^{bx} is integrable on (-∞, a) when b > 0.
-    Proved by change of variables from exp_neg_integrableOn_Ioi. -/
+    Proved by change of variables from exp_neg_integrableOn_Ioi.
+-/
 theorem exp_pos_integrableOn_Iio (a : ℝ) {b : ℝ} (h : 0 < b) :
     MeasureTheory.IntegrableOn (fun x => Real.exp (b * x)) (Set.Iio a) MeasureTheory.volume := by
   have h_neg : MeasureTheory.IntegrableOn (fun x => Real.exp (-b * x)) (Set.Ioi (-a)) MeasureTheory.volume :=
@@ -274,13 +283,15 @@ theorem exp_pos_integrableOn_Iio (a : ℝ) {b : ℝ} (h : 0 < b) :
   exact h_neg.comp_neg
 
 /-- Exponential e^{bx} is integrable on (-∞, a] when b > 0.
-    Follows from Iio version since measure of a point is 0. -/
+    Follows from Iio version since measure of a point is 0.
+-/
 theorem exp_pos_integrableOn_Iic (a : ℝ) {b : ℝ} (h : 0 < b) :
     MeasureTheory.IntegrableOn (fun x => Real.exp (b * x)) (Set.Iic a) MeasureTheory.volume :=
   integrableOn_exp_mul_Iic h a
 
 /-- The integrand e^{(ik+μ)x} is integrable on (-∞, 0] when μ > 0.
-    This follows from the exponential decay since Re(ik + μ) = μ > 0. -/
+    This follows from the exponential decay since Re(ik + μ) = μ > 0.
+-/
 theorem integrableOn_exp_growth_Iic (μ : ℝ) (hμ : 0 < μ) (k : ℝ) :
     MeasureTheory.IntegrableOn
       (fun x : ℝ => Complex.exp ((Complex.I * k + μ) * x))
@@ -305,7 +316,8 @@ lemma ik_sub_ne_zero (μ : ℝ) (hμ : μ ≠ 0) (k : ℝ) : Complex.I * k - (μ
     Proof: Use FTC with antiderivative e^{(ik-μ)x}/(ik-μ).
     At +∞: e^{(ik-μ)x} → 0 since Re(ik-μ) = -μ < 0.
     At 0: e^0/(ik-μ) = 1/(ik-μ).
-    Result: 0 - 1/(ik-μ) = -1/(ik-μ) = 1/(μ-ik). -/
+    Result: 0 - 1/(ik-μ) = -1/(ik-μ) = 1/(μ-ik).
+-/
 theorem fourier_exp_decay_positive_halfline (μ : ℝ) (hμ : 0 < μ) (k : ℝ) :
     ∫ x : ℝ in Set.Ioi 0, Complex.exp (Complex.I * k * x) * Real.exp (-μ * x) =
       1 / (μ - Complex.I * k) := by
@@ -363,7 +375,8 @@ theorem fourier_exp_decay_positive_halfline (μ : ℝ) (hμ : 0 < μ) (k : ℝ) 
 
     Proof: Use FTC with antiderivative e^{(ik+μ)x}/(ik+μ).
     At -∞: e^{(ik+μ)x} → 0 since Re(ik+μ) = μ > 0.
-    At 0: e^0/(ik+μ) = 1/(ik+μ) = 1/(μ+ik). -/
+    At 0: e^0/(ik+μ) = 1/(ik+μ) = 1/(μ+ik).
+-/
 theorem fourier_exp_decay_negative_halfline (μ : ℝ) (hμ : 0 < μ) (k : ℝ) :
     ∫ x : ℝ in Set.Iic 0, Complex.exp (Complex.I * k * x) * Real.exp (μ * x) =
       1 / (μ + Complex.I * k) := by
@@ -417,7 +430,8 @@ theorem fourier_exp_decay_negative_halfline (μ : ℝ) (hμ : 0 < μ) (k : ℝ) 
     This is the key decomposition:
     ∫_{-∞}^∞ e^{ikx} e^{-μ|x|} dx = ∫_{-∞}^0 e^{ikx} e^{μx} dx + ∫_0^∞ e^{ikx} e^{-μx} dx
                                    = 1/(μ+ik) + 1/(μ-ik)
-                                   = 2μ/(k² + μ²) -/
+                                   = 2μ/(k² + μ²)
+-/
 lemma fourier_exponential_decay_split (μ : ℝ) (hμ : 0 < μ) (k : ℝ) :
     (∫ x : ℝ in Set.Iic 0, Complex.exp (Complex.I * k * x) * Real.exp (μ * x)) +
     (∫ x : ℝ in Set.Ioi 0, Complex.exp (Complex.I * k * x) * Real.exp (-μ * x)) =
@@ -460,7 +474,8 @@ This is the "forward" direction of the Fourier pair.
 /-- The Fourier transform of the exponential decay function e^{-μ|x|}.
     ∫_{-∞}^{∞} e^{ikx} e^{-μ|x|} dx = 2μ/(k² + μ²)
 
-    This follows from splitting at x = 0 (see fourier_exponential_decay_split). -/
+    This follows from splitting at x = 0 (see fourier_exponential_decay_split).
+-/
 lemma fourier_exponential_decay' (μ : ℝ) (hμ : 0 < μ) (k : ℝ) :
     ∫ x : ℝ, Complex.exp (Complex.I * k * x) * Real.exp (-μ * |x|) =
       2 * μ / (k^2 + μ^2) := by
@@ -551,7 +566,8 @@ lemma integrable_expDecayFun (μ : ℝ) (hμ : 0 < μ) : Integrable (expDecayFun
 
 /-- Mathlib's Fourier transform of expDecayFun equals the scaled Lorentzian.
     FT_mathlib(e^{-μ|x|})(ξ) = 2μ/(4π²ξ² + μ²)
-    This follows from fourier_exponential_decay' via the substitution k = -2πξ. -/
+    This follows from fourier_exponential_decay' via the substitution k = -2πξ.
+-/
 lemma fourierIntegral_expDecayFun_eq (μ : ℝ) (hμ : 0 < μ) (ξ : ℝ) :
     𝓕 (expDecayFun μ) ξ = 2 * μ / (4 * π^2 * ξ^2 + μ^2) := by
   rw [Real.fourier_eq']
@@ -619,7 +635,8 @@ lemma integrable_fourierIntegral_expDecayFun (μ : ℝ) (hμ : 0 < μ) :
     (1/2π) ∫ e^{ikx} · 2μ/(k² + μ²) dk = e^{-μ|x|}
 
     This follows from Mathlib's Fourier inversion theorem applied to the exponential decay function,
-    combined with the explicit formula for its Fourier transform and a change of variables. -/
+    combined with the explicit formula for its Fourier transform and a change of variables.
+-/
 theorem fourier_inversion_exp_decay (μ : ℝ) (hμ : 0 < μ) (x : ℝ) :
     (1 / (2 * π) : ℂ) * ∫ k : ℝ, Complex.exp (Complex.I * k * x) * (2 * μ / (k^2 + μ^2)) =
       (Real.exp (-μ * |x|) : ℂ) := by
@@ -702,7 +719,8 @@ We derive the Lorentzian Fourier transform from the Fourier inversion theorem.
     From `fourier_inversion_exp_decay`: (1/2π) ∫ e^{ikx} · 2μ/(k² + μ²) dk = e^{-μ|x|}
     Multiply both sides by π/μ:
       (1/2π) · (π/μ) · 2μ ∫ e^{ikx} / (k² + μ²) dk = (π/μ) e^{-μ|x|}
-      ∫ e^{ikx} / (k² + μ²) dk = (π/μ) e^{-μ|x|} -/
+      ∫ e^{ikx} / (k² + μ²) dk = (π/μ) e^{-μ|x|}
+-/
 theorem fourier_lorentzian_1d (μ : ℝ) (hμ : 0 < μ) (x : ℝ) :
     ∫ k : ℝ, Complex.exp (Complex.I * k * x) / (k^2 + μ^2) =
       (π / μ) * Real.exp (-μ * |x|) := by
@@ -747,7 +765,8 @@ theorem fourier_lorentzian_1d (μ : ℝ) (hμ : 0 < μ) (x : ℝ) :
 
 /-- The exponential from the Lorentzian Fourier transform factorizes.
     For x, y with x ≥ 0 and y ≤ 0, we have |x - y| = x - y = x + |y|,
-    so e^{-μ|x-y|} = e^{-μx} · e^{-μ|y|} = e^{-μx} · e^{μy}. -/
+    so e^{-μ|x-y|} = e^{-μx} · e^{-μ|y|} = e^{-μx} · e^{μy}.
+-/
 lemma exp_factorization_reflection (μ : ℝ) (x y : ℝ) (hx : 0 ≤ x) (hy : y ≤ 0) :
     Real.exp (-μ * |x - y|) = Real.exp (-μ * x) * Real.exp (μ * y) := by
   have h_diff : |x - y| = x - y := abs_of_nonneg (by linarith)
@@ -761,7 +780,8 @@ end
 /-- Negative phase variant: ∫ e^{-ikx} / (k² + μ²) dk = (π/μ) e^{-μ|x|}
 
     This follows from `fourier_lorentzian_1d` by the substitution k ↦ -k.
-    Since (-k)² = k² and the integral over ℝ is symmetric, we get the same result. -/
+    Since (-k)² = k² and the integral over ℝ is symmetric, we get the same result.
+-/
 theorem fourier_lorentzian_1d_neg (μ : ℝ) (hμ : 0 < μ) (x : ℝ) :
     ∫ k : ℝ, Complex.exp (-Complex.I * k * x) / (k^2 + μ^2) =
       (π / μ) * Real.exp (-μ * |x|) := by

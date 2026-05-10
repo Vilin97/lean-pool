@@ -92,7 +92,8 @@ theorem integral_const_mul_eq {α} [MeasurableSpace α] (μ : Measure α) (c : �
   exact MeasureTheory.integral_const_mul c f
 
 /-- Helper theorem: Monotonicity of the real integral for pointwise ≤ between nonnegative functions,
-    assuming the larger one is integrable. -/
+    assuming the larger one is integrable.
+-/
 theorem real_integral_mono_of_le
   {α} [MeasurableSpace α] (μ : Measure α) (f g : α → ℝ)
   (hg : Integrable g μ) (hf_nonneg : ∀ x, 0 ≤ f x) (hle : ∀ x, f x ≤ g x) :
@@ -119,7 +120,8 @@ Key point: In Lean, we can use ⟨x, y⟩ for the inner product and ‖x‖ for 
 variable {m : ℝ} [Fact (0 < m)]
 
 /-- The free propagator in momentum space: 1/(k² + m²)
-    This is the Fourier transform of the free covariance -/
+    This is the Fourier transform of the free covariance
+-/
 def freePropagatorMomentum (m : ℝ) (k : SpaceTime) : ℝ :=
   1 / (‖k‖^2 + m^2)
 
@@ -131,7 +133,8 @@ lemma freePropagator_even (m : ℝ) (k : SpaceTime) :
 
 /-- The propagator in "Mathlib momentum coordinates".
     When using Mathlib's Fourier transform convention, the propagator acquires (2π)² factors.
-    This is `P_mathlib(k) = 1/((2π)²‖k‖² + m²)` which equals `P_phys(2πk)`. -/
+    This is `P_mathlib(k) = 1/((2π)²‖k‖² + m²)` which equals `P_phys(2πk)`.
+-/
 noncomputable def freePropagatorMomentum_mathlib (m : ℝ) (k : SpaceTime) : ℝ :=
   1 / ((2 * Real.pi)^2 * ‖k‖^2 + m^2)
 
@@ -159,7 +162,8 @@ lemma freePropagatorMomentum_mathlib_nonneg (m : ℝ) (hm : 0 < m) (k : SpaceTim
     which equals the Bessel form.
 
     We realise this as the real part of a complex Fourier integral with the
-    standard 2π-normalisation. -/
+    standard 2π-normalisation.
+-/
 noncomputable def freeCovariance_regulated (α : ℝ) (m : ℝ) (x y : SpaceTime) : ℝ :=
   let normalisation : ℝ := (2 * Real.pi) ^ STDimension
   let regulator : SpaceTime → ℝ := fun k => Real.exp (-α * ‖k‖^2)
@@ -192,14 +196,16 @@ which leads to the Bessel K₁ function.
 -/
 
 /-- The Schwinger integrand: exp(-t(k² + m²)) for t > 0.
-    Integrating this over t ∈ (0, ∞) gives 1/(k² + m²). -/
+    Integrating this over t ∈ (0, ∞) gives 1/(k² + m²).
+-/
 noncomputable def schwingerIntegrand (t : ℝ) (m : ℝ) (k : SpaceTime) : ℝ :=
   Real.exp (-t * (‖k‖^2 + m^2))
 
 
 /-- Integral of exp(-a*t) over (0, ∞) equals 1/a for a > 0.
     This is the Laplace transform of 1 at parameter a.
-    Proof: Change of variables u = at gives (1/a) ∫₀^∞ e^{-u} du = 1/a. -/
+    Proof: Change of variables u = at gives (1/a) ∫₀^∞ e^{-u} du = 1/a.
+-/
 lemma integral_exp_neg_mul_Ioi_eq_inv (a : ℝ) (ha : 0 < a) :
     ∫ t in Set.Ioi 0, Real.exp (-a * t) = 1 / a := by
   -- Use integral_exp_mul_Ioi with -a < 0 and c = 0
@@ -211,7 +217,8 @@ lemma integral_exp_neg_mul_Ioi_eq_inv (a : ℝ) (ha : 0 < a) :
   field_simp
 
 /-- The Schwinger representation: ∫₀^∞ exp(-t(k² + m²)) dt = 1/(k² + m²).
-    This is valid when k² + m² > 0. -/
+    This is valid when k² + m² > 0.
+-/
 theorem schwinger_representation (m : ℝ) (hm : 0 < m) (k : SpaceTime) :
     ∫ t in Set.Ioi 0, schwingerIntegrand t m k = 1 / (‖k‖^2 + m^2) := by
   unfold schwingerIntegrand
@@ -221,13 +228,15 @@ theorem schwinger_representation (m : ℝ) (hm : 0 < m) (k : SpaceTime) :
   exact integral_exp_neg_mul_Ioi_eq_inv (‖k‖^2 + m^2) ha
 
 /-- The combined Gaussian factor for the Schwinger-regulated integral.
-    This combines the propagator Schwinger factor with the UV regulator. -/
+    This combines the propagator Schwinger factor with the UV regulator.
+-/
 noncomputable def schwingerGaussian (α t : ℝ) (m : ℝ) (k : SpaceTime) : ℝ :=
   Real.exp (-(α + t) * ‖k‖^2 - t * m^2)
 
 /-- The heat kernel in d dimensions for position space: (4πt)^{-d/2} · exp(-r²/(4t)).
     This is the Fourier transform of the Gaussian exp(-t·k²).
-    Named with PositionSpace suffix to distinguish from momentum-space version. -/
+    Named with PositionSpace suffix to distinguish from momentum-space version.
+-/
 noncomputable def heatKernelPositionSpace (t : ℝ) (r : ℝ) : ℝ :=
   (4 * Real.pi * t) ^ (-(STDimension : ℝ) / 2) * Real.exp (-r^2 / (4 * t))
 
@@ -273,7 +282,8 @@ lemma heatKernelPositionSpace_continuous_at (t : ℝ) (ht : 0 < t) (r : ℝ) :
     · simp; exact ht.ne'
 
 /-- The heat kernel is bounded by a constant depending only on r > 0.
-    Maximum of H(s,r) = (4πs)^{-d/2} exp(-r²/(4s)) occurs at s = r²/(2d). -/
+    Maximum of H(s,r) = (4πs)^{-d/2} exp(-r²/(4s)) occurs at s = r²/(2d).
+-/
 lemma heatKernelPositionSpace_bounded (r : ℝ) (hr : 0 < r) :
     ∃ C : ℝ, 0 < C ∧ ∀ s > 0, heatKernelPositionSpace s r ≤ C := by
   -- Use the bound: H(s,r) ≤ 4/(π²r⁴) derived from u² * exp(-cu) ≤ (2/c)²
@@ -363,7 +373,8 @@ lemma heatKernelPositionSpace_bounded (r : ℝ) (hr : 0 < r) :
     ∫ exp(-b‖v‖²) dv = (π/b)^{d/2}
 
     With b = 1/(4t) and d = 4:
-    ∫ (4πt)^{-2} exp(-‖z‖²/(4t)) dz = (4πt)^{-2} × (4πt)² = 1 -/
+    ∫ (4πt)^{-2} exp(-‖z‖²/(4t)) dz = (4πt)^{-2} × (4πt)² = 1
+-/
 theorem heatKernelPositionSpace_integral_eq_one (t : ℝ) (ht : 0 < t) :
     ∫ z : SpaceTime, heatKernelPositionSpace t ‖z‖ = 1 := by
   unfold heatKernelPositionSpace
@@ -403,12 +414,14 @@ theorem heatKernelPositionSpace_integral_eq_one (t : ℝ) (ht : 0 < t) :
   rw [inv_mul_cancel₀ h_ne]
 
 /-- The Schwinger representation of the position-space covariance.
-    This expresses C(r) as a 1D integral over proper time. -/
+    This expresses C(r) as a 1D integral over proper time.
+-/
 noncomputable def covarianceSchwingerRep (m : ℝ) (r : ℝ) : ℝ :=
   ∫ t in Set.Ioi 0, Real.exp (-t * m^2) * heatKernelPositionSpace t r
 
 /-- In 4D, the Schwinger representation of the covariance equals:
-    (1/(16π²)) ∫₀^∞ exp(-tm²) · (1/t²) · exp(-r²/(4t)) dt -/
+    (1/(16π²)) ∫₀^∞ exp(-tm²) · (1/t²) · exp(-r²/(4t)) dt
+-/
 lemma covarianceSchwingerRep_4D (m : ℝ) (_hm : 0 < m) (r : ℝ) (_hr : 0 < r) :
     covarianceSchwingerRep m r =
     (1 / (16 * Real.pi^2)) * ∫ t in Set.Ioi 0,
@@ -428,7 +441,8 @@ lemma covarianceSchwingerRep_4D (m : ℝ) (_hm : 0 < m) (r : ℝ) (_hr : 0 < r) 
     C(r) = covarianceSchwingerRep m r = (m/(4π²r)) K₁(mr)
 
     This is the main result connecting the Schwinger proper-time representation
-    to the explicit Bessel function formula for the free scalar propagator in 4D. -/
+    to the explicit Bessel function formula for the free scalar propagator in 4D.
+-/
 theorem covarianceSchwingerRep_eq_besselFormula (m r : ℝ) (hm : 0 < m) (hr : 0 < r) :
     covarianceSchwingerRep m r = (m / (4 * Real.pi^2 * r)) * besselK1 (m * r) := by
   rw [covarianceSchwingerRep_4D m hm r hr]
@@ -453,7 +467,8 @@ theorem covarianceSchwingerRep_eq_besselFormula (m r : ℝ) (hm : 0 < m) (hr : 0
     C(x,y) = (m / (4π² |x-y|)) · K₁(m |x-y|)
 
     This is the explicit formula for the massive scalar field propagator in 4D.
-    The formula is valid for x ≠ y and m > 0. -/
+    The formula is valid for x ≠ y and m > 0.
+-/
 noncomputable def freeCovarianceBessel (m : ℝ) (x y : SpaceTime) : ℝ :=
   let r := ‖x - y‖
   if r = 0 then 0  -- Undefined at coincident points; regularize to 0
@@ -507,7 +522,8 @@ is to use the Schwinger representation as an intermediate step:
     C_α^{Schwinger}(r) = ∫₀^∞ e^{-tm²} H(α+t, r) dt
     where H(s,r) = (4πs)^{-d/2} e^{-r²/(4s)} is the heat kernel.
 
-    This is an intermediate form between the Fourier representation and the Bessel form. -/
+    This is an intermediate form between the Fourier representation and the Bessel form.
+-/
 noncomputable def covarianceSchwingerRegulated (α : ℝ) (m : ℝ) (r : ℝ) : ℝ :=
   ∫ t in Set.Ioi 0, Real.exp (-t * m^2) * heatKernelPositionSpace (α + t) r
 
@@ -528,7 +544,8 @@ lemma integrableOn_exp_neg_mul_sq_const_Ioi (m : ℝ) (hm : 0 < m) (C : ℝ) :
 /-- The Gaussian Fourier transform gives the heat kernel (times normalization).
     ∫_k e^{-s‖k‖²} e^{-ik·z} dk = (2π)^d H(s, ‖z‖)
 
-    This is the key identity connecting momentum and position space. -/
+    This is the key identity connecting momentum and position space.
+-/
 lemma gaussianFT_eq_heatKernel_times_norm (s : ℝ) (hs : 0 < s) (z : SpaceTime) :
     ∫ k : SpaceTime, Complex.exp (-(s : ℂ) * ‖k‖^2) * Complex.exp (-Complex.I * ⟪k, z⟫_ℝ) =
     ((2 * Real.pi) ^ STDimension : ℝ) * (heatKernelPositionSpace s ‖z‖ : ℂ) := by
@@ -611,7 +628,8 @@ lemma gaussianFT_eq_heatKernel_times_norm (s : ℝ) (hs : 0 < s) (z : SpaceTime)
     - The integrand factors as exp(-(α+t)‖k‖²) × exp(-tm²)
     - For k: ∫ exp(-(α+t)‖k‖²) dk is finite (Gaussian integral, since α+t > α > 0)
     - For t: ∫_0^∞ exp(-tm²) dt = 1/m² (exponential integral)
-    - The product integral converges by Tonelli since all terms are non-negative -/
+    - The product integral converges by Tonelli since all terms are non-negative
+-/
 theorem integrable_schwinger_fourier_integrand (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m) :
     Integrable (fun p : SpaceTime × ℝ =>
       if p.2 > 0 then Real.exp (-(α + p.2) * ‖p.1‖^2 - p.2 * m^2)
@@ -715,7 +733,8 @@ theorem integrable_schwinger_fourier_integrand (α : ℝ) (hα : 0 < α) (m : �
     Fubini applies because the absolute value is integrable (the phase has norm 1).
 
     This follows from `MeasureTheory.integral_integral_swap` together with
-    integrability bounds from the Gaussian decay. -/
+    integrability bounds from the Gaussian decay.
+-/
 theorem fubini_schwinger_integrand (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m)
     (x y : SpaceTime) (_hxy : x ≠ y) :
     (∫ k : SpaceTime, (↑(∫ t in Set.Ioi 0, Real.exp (-(α + t) * ‖k‖^2) * Real.exp (-t * m^2)) : ℂ) *
@@ -1127,7 +1146,8 @@ lemma covarianceSchwingerRep_eq_freeCovarianceBessel (m : ℝ) (hm : 0 < m) (x y
     This follows from the Schwinger representation approach:
     1. Use `fubini_schwinger_fourier` to convert Fourier → Schwinger
     2. Use `covarianceSchwingerRegulated_tendsto` for the α → 0 limit
-    3. Use `covarianceSchwingerRep_eq_freeCovarianceBessel` for Schwinger → Bessel -/
+    3. Use `covarianceSchwingerRep_eq_freeCovarianceBessel` for Schwinger → Bessel
+-/
 theorem freeCovariance_regulated_tendsto_bessel (m : ℝ) (hm : 0 < m) (x y : SpaceTime) (hxy : x ≠ y) :
     Filter.Tendsto (fun α => freeCovariance_regulated α m x y)
       (nhdsWithin 0 (Set.Ioi 0))
@@ -1160,7 +1180,8 @@ theorem freeCovariance_regulated_tendsto_bessel (m : ℝ) (hm : 0 < m) (x y : Sp
     4. Taking the limit α → 0⁺ of the regulated integral
 
     The regulator exp(-α‖k‖²) makes the integral absolutely convergent for any α > 0.
-    The limit exists and equals the Bessel form for x ≠ y. -/
+    The limit exists and equals the Bessel form for x ≠ y.
+-/
 theorem freeCovariance_regulated_limit_eq_freeCovariance (m : ℝ) (hm : 0 < m) (x y : SpaceTime) (hxy : x ≠ y) :
     Filter.Tendsto (fun α => freeCovariance_regulated α m x y) (nhdsWithin 0 (Set.Ioi 0)) (nhds (freeCovariance m x y)) :=
   -- This is exactly freeCovariance_regulated_tendsto_bessel since freeCovariance = freeCovarianceBessel
@@ -1176,7 +1197,8 @@ theorem freeCovariance_regulated_limit_eq_freeCovariance (m : ℝ) (hm : 0 < m) 
                = exp(αm²) × ∫_α^∞ exp(-sm²) H(s, r) ds
                ≤ exp(αm²) × ∫₀^∞ exp(-sm²) H(s, r) ds   (since integrand ≥ 0)
                = exp(αm²) × C_Bessel(m, r)
-               ≤ exp(m²) × C_Bessel(m, r)   (for α ≤ 1) -/
+               ≤ exp(m²) × C_Bessel(m, r)   (for α ≤ 1)
+-/
 lemma covarianceSchwingerRegulated_le_const_mul (m : ℝ) (hm : 0 < m) (r : ℝ) (hr : 0 < r)
     (α : ℝ) (hα : 0 < α) (hα1 : α ≤ 1) :
     covarianceSchwingerRegulated α m r ≤ Real.exp (m^2) * covarianceSchwingerRep m r := by
@@ -1281,7 +1303,8 @@ lemma covarianceSchwingerRegulated_le_const_mul (m : ℝ) (hm : 0 < m) (r : ℝ)
     by a constant times the Bessel form:
       |freeCovariance_regulated α m x y| ≤ exp(m²) × freeCovariance m x y
 
-    This bound enables dominated convergence for the bilinear form. -/
+    This bound enables dominated convergence for the bilinear form.
+-/
 lemma freeCovariance_regulated_le_const_mul_freeCovariance (m : ℝ) (hm : 0 < m)
     (x y : SpaceTime) (hxy : x ≠ y) (α : ℝ) (hα : 0 < α) (hα1 : α ≤ 1) :
     |freeCovariance_regulated α m x y| ≤ Real.exp (m^2) * freeCovariance m x y := by
@@ -1327,7 +1350,8 @@ lemma gaussian_regulator_integrable' (α : ℝ) (hα : 0 < α) :
     **Proof sketch:**
     - The Fourier integrand has |phase| = 1 and |amplitude| ≤ exp(-α‖k‖²)/(m²(2π)^d)
     - The Gaussian is integrable, giving the uniform bound M = ∫ exp(-α‖k‖²)/(m²(2π)^d) dk
-    - Since C_α is the real part of the integral, |C_α| ≤ M for all (x,y) -/
+    - Since C_α is the real part of the integral, |C_α| ≤ M for all (x,y)
+-/
 lemma freeCovariance_regulated_uniformly_bounded (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m) :
     ∃ M > 0, ∀ x y : SpaceTime, |freeCovariance_regulated α m x y| ≤ M := by
   -- The bound is ∫ exp(-α‖k‖²) / (m² (2π)^d) dk
@@ -1412,7 +1436,8 @@ lemma freeCovariance_regulated_uniformly_bounded (α : ℝ) (hα : 0 < α) (m : 
 
     **Proof:** The Schwinger representation is an integral ∫_k exp(-α‖k‖²) * prop(k) * cos(k·(x-y)).
     The integrand is continuous in (x, y) for fixed k, hence measurable.
-    By Fubini theorem structure, the integral inherits measurability in (x, y). -/
+    By Fubini theorem structure, the integral inherits measurability in (x, y).
+-/
 lemma aestronglyMeasurable_freeCovariance_regulated (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m) :
     AEStronglyMeasurable
       (fun p : SpaceTime × SpaceTime => (freeCovariance_regulated α m p.1 p.2 : ℂ))
@@ -1492,7 +1517,8 @@ lemma aestronglyMeasurable_freeCovariance_regulated (α : ℝ) (hα : 0 < α) (m
 
     **Proof:** The Bessel covariance is continuous on the off-diagonal set {(x,y) | x ≠ y},
     which has full measure in the product space (diagonal has measure zero).
-    Continuity implies strong measurability, hence AEStronglyMeasurable. -/
+    Continuity implies strong measurability, hence AEStronglyMeasurable.
+-/
 lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
     AEStronglyMeasurable
       (fun p : SpaceTime × SpaceTime => (freeCovariance m p.1 p.2 : ℂ))
@@ -1577,7 +1603,8 @@ lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
 
     **Proof:** With bound M from `freeCovariance_regulated_uniformly_bounded`:
     |f(x) * C_α(x,y) * g(y)| ≤ M * |f(x)| * |g(y)|
-    The RHS is integrable since f, g ∈ L¹ (Schwartz functions are integrable). -/
+    The RHS is integrable since f, g ∈ L¹ (Schwartz functions are integrable).
+-/
 theorem freeCovariance_regulated_bilinear_integrable (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)]
     (f g : TestFunctionℂ) :
     Integrable (fun p : SpaceTime × SpaceTime =>
@@ -1642,7 +1669,8 @@ noncomputable def freeCovarianceKernel (m : ℝ) (z : SpaceTime) : ℝ :=
     In d=4 dimensions with f(r) = (m/(4π²r)) K₁(mr):
     ∫_{ℝ⁴} |K(z)| dz ↔ ∫₀^∞ r³ |f(r)| dr = (m/4π²) ∫₀^∞ r² K₁(mr) dr
 
-    This is finite by `radial_besselK1_integrable`. -/
+    This is finite by `radial_besselK1_integrable`.
+-/
 lemma freeCovarianceKernel_integrable (m : ℝ) (hm : 0 < m) :
     Integrable (freeCovarianceKernel m) volume := by
   -- The kernel is a radial function: K(z) = f(‖z‖) where
@@ -1675,7 +1703,8 @@ lemma freeCovarianceKernel_integrable (m : ℝ) (hm : 0 < m) :
     - Near origin (mr ≤ 1): K₁(mr) ≤ (cosh(1) + 2)/(mr), giving C(z) ≤ (cosh(1)+2)/(4π²r²)
     - Far from origin (mr > 1): K₁(mr) ≤ (sinh(1) + 2)·exp(-mr), decays faster than 1/r²
 
-    The bound is essential for OS1 local integrability in d=4 dimensions. -/
+    The bound is essential for OS1 local integrability in d=4 dimensions.
+-/
 lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
     ∃ C : ℝ, C > 0 ∧ ∀ z : SpaceTime, |freeCovarianceKernel m z| ≤ C * ‖z‖ ^ (-2 : ℝ) := by
   -- Define the constant C = (cosh(1) + 2) / (4π²)
@@ -1832,7 +1861,8 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
     This combines:
     - The covariance formula: C(u,v) = (m / (4π² ‖u-v‖)) · K₁(m‖u-v‖)
     - The Bessel asymptotic: K₁(z) ≤ (sinh 1 + 2) · e^{-z} for z ≥ 1
-    - The condition m‖u-v‖ ≥ 1, which implies ‖u-v‖ ≥ 1/m, so m/‖u-v‖ ≤ m² -/
+    - The condition m‖u-v‖ ≥ 1, which implies ‖u-v‖ ≥ 1/m, so m/‖u-v‖ ≤ m²
+-/
 lemma freeCovariance_exponential_bound (m : ℝ) (hm : 0 < m) (u v : SpaceTime)
     (h_sep : 1 ≤ m * ‖u - v‖) :
     |freeCovariance m u v| ≤ (m^2 * (Real.sinh 1 + 2) / (4 * Real.pi^2)) * Real.exp (-m * ‖u - v‖) := by
@@ -1886,7 +1916,8 @@ lemma freeCovariance_exponential_bound (m : ℝ) (hm : 0 < m) (u v : SpaceTime)
 /-! ### Fact versions of decay bounds
 
 These are convenience wrappers that use `[Fact (0 < m)]` instead of explicit `(hm : 0 < m)`,
-for compatibility with code that uses the Fact type class. -/
+for compatibility with code that uses the Fact type class.
+-/
 
 /-- Exponential bound with `[Fact (0 < m)]` type class. -/
 lemma freeCovariance_exponential_bound' (m : ℝ) [Fact (0 < m)] (u v : SpaceTime)
@@ -1903,7 +1934,8 @@ lemma freeCovariance_exponential_bound' (m : ℝ) [Fact (0 < m)] (u v : SpaceTim
     - K₁ is continuous on (0, ∞) (see `besselK1_continuousOn`)
     - Division by ‖z‖ is continuous for z ≠ 0
 
-    This is essential for the double mollifier convergence theorem. -/
+    This is essential for the double mollifier convergence theorem.
+-/
 lemma freeCovarianceKernel_continuousOn (m : ℝ) (hm : 0 < m) :
     ContinuousOn (freeCovarianceKernel m) {z : SpaceTime | z ≠ 0} := by
   -- The kernel is f(‖z‖) where f(r) = (m/(4π²r)) K₁(mr)
@@ -1943,7 +1975,8 @@ lemma freeCovarianceKernel_continuousOn (m : ℝ) (hm : 0 < m) :
   exact hg_cont.comp h_norm_cont h_norm_pos
 
 /-- The bilinear form f(x) * C(x,y) * g(y) is integrable on product space for Schwartz f, g.
-    This uses the L¹ integrability of the translation-invariant Bessel kernel. -/
+    This uses the L¹ integrability of the translation-invariant Bessel kernel.
+-/
 theorem freeCovarianceℂ_bilinear_integrable' (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     Integrable (fun p : SpaceTime × SpaceTime =>
       (f p.1) * (freeCovariance m p.1 p.2 : ℂ) * (g p.2)) volume := by
@@ -1966,7 +1999,8 @@ def negSpaceTime : SpaceTime ≃ₗᵢ[ℝ] SpaceTime where
   norm_map' := norm_neg
 
 /-- Helper lemma: Integral with change of variables k ↦ -k for SpaceTime.
-    This uses that linear isometries preserve measure on finite-dimensional inner product spaces. -/
+    This uses that linear isometries preserve measure on finite-dimensional inner product spaces.
+-/
 theorem integral_comp_neg_spacetime {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
     (f : SpaceTime → E) : ∫ k, f (-k) = ∫ k, f k := by
   have h := (LinearIsometryEquiv.measurePreserving negSpaceTime).integral_comp
@@ -2093,7 +2127,8 @@ noncomputable def momentumWeight (m : ℝ) (k : SpaceTime) : ℝ :=
   1 / (‖k‖^2 + m^2)
 
 /-- The weight function in momentum space (Mathlib convention): 1 / ((2π)²‖k‖² + m²)
-    This is the correct weight to use with Mathlib's Fourier transform. -/
+    This is the correct weight to use with Mathlib's Fourier transform.
+-/
 noncomputable def momentumWeight_mathlib (m : ℝ) (k : SpaceTime) : ℝ :=
   freePropagatorMomentum_mathlib m k
 
@@ -2102,7 +2137,8 @@ noncomputable def momentumWeightSqrt (m : ℝ) (k : SpaceTime) : ℝ :=
   1 / Real.sqrt (‖k‖^2 + m^2)
 
 /-- The square root of the weight function (Mathlib convention).
-    This is the correct weight to use with Mathlib's Fourier transform. -/
+    This is the correct weight to use with Mathlib's Fourier transform.
+-/
 noncomputable def momentumWeightSqrt_mathlib (m : ℝ) (k : SpaceTime) : ℝ :=
   1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2)
 
@@ -2219,7 +2255,8 @@ lemma momentumWeightSqrt_mathlib_bounded_ae (m : ℝ) [Fact (0 < m)] :
     _ ≤ 1 / m := h_inv_le
 
 /-- Multiplication by the square-root momentum weight defines a bounded
-    linear operator on complex L² (physics convention). -/
+    linear operator on complex L² (physics convention).
+-/
 noncomputable def momentumWeightSqrt_mul_CLM (m : ℝ) [Fact (0 < m)] :
     Lp ℂ 2 (volume : Measure SpaceTime) →L[ℂ]
       Lp ℂ 2 (volume : Measure SpaceTime) :=
@@ -2232,7 +2269,8 @@ noncomputable def momentumWeightSqrt_mul_CLM (m : ℝ) [Fact (0 < m)] :
     (momentumWeightSqrt_bounded_ae m)
 
 /-- Multiplication by the square-root momentum weight defines a bounded
-    linear operator on complex L² (Mathlib convention). -/
+    linear operator on complex L² (Mathlib convention).
+-/
 noncomputable def momentumWeightSqrt_mathlib_mul_CLM (m : ℝ) [Fact (0 < m)] :
     Lp ℂ 2 (volume : Measure SpaceTime) →L[ℂ]
       Lp ℂ 2 (volume : Measure SpaceTime) :=

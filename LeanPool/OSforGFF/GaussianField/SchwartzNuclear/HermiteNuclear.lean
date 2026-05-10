@@ -34,7 +34,8 @@ basis/coefficient system derived from the topological isomorphism
 `SchwartzMap D ℝ ≃L[ℝ] RapidDecaySeq`.
 
 Proved via the topological isomorphism `SchwartzMap D ℝ ≃L[ℝ] RapidDecaySeq`
-constructed from multi-dimensional Hermite analysis. -/
+constructed from multi-dimensional Hermite analysis.
+-/
 noncomputable instance schwartz_dyninMityaginSpace [Nontrivial D] :
     DyninMityaginSpace (SchwartzMap D ℝ) :=
   DyninMityaginSpace.ofRapidDecayEquiv
@@ -44,7 +45,8 @@ noncomputable instance schwartz_dyninMityaginSpace [Nontrivial D] :
 
 /-- Specialized `DyninMityaginSpace` instance for `SchwartzMap ℝ ℝ` using
 `schwartzRapidDecayEquiv1D` directly, avoiding the `toEuclidean` detour.
-This is preferred by instance resolution since `ℝ` is more specific than `D`. -/
+This is preferred by instance resolution since `ℝ` is more specific than `D`.
+-/
 noncomputable instance schwartz_dyninMityaginSpace_1D :
     DyninMityaginSpace (SchwartzMap ℝ ℝ) :=
   DyninMityaginSpace.ofRapidDecayEquiv
@@ -63,7 +65,8 @@ noncomputable instance schwartz_hasBiorthogonalBasis_1D :
 /-- Specialized `DyninMityaginSpace` instance for `SchwartzMap (EuclideanSpace ℝ (Fin (d+1))) ℝ`
 using `schwartzRapidDecayEquivNd` directly, avoiding the `toEuclidean` detour.
 This ensures that `DyninMityaginSpace.coeff` produces the Hermite coefficients from the
-standard multi-index encoding, matching the basis used by `schwartzPeelOff`. -/
+standard multi-index encoding, matching the basis used by `schwartzPeelOff`.
+-/
 noncomputable instance schwartz_dyninMityaginSpace_euclidean (d : ℕ) :
     DyninMityaginSpace (SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ) :=
   DyninMityaginSpace.ofRapidDecayEquiv
@@ -75,10 +78,12 @@ noncomputable instance schwartz_dyninMityaginSpace_euclidean (d : ℕ) :
 
 `RapidDecaySeq` is separable because the basis vectors `basisVec m` span a dense subspace
 (by `hasSum_basisVec`). Schwartz space inherits separability via the CLE
-`schwartzRapidDecayEquiv`. -/
+`schwartzRapidDecayEquiv`.
+-/
 
 /-- `RapidDecaySeq` is separable: the countable set `{basisVec m | m ∈ ℕ}` spans a dense
-    subspace (every element is the limit of finite linear combinations by `hasSum_basisVec`). -/
+    subspace (every element is the limit of finite linear combinations by `hasSum_basisVec`).
+-/
 instance rapidDecaySeq_separableSpace : SeparableSpace RapidDecaySeq := by
   rw [← TopologicalSpace.isSeparable_univ_iff]
   have h_dense : (Submodule.span ℝ (Set.range RapidDecaySeq.basisVec)).topologicalClosure = ⊤ := by
@@ -99,7 +104,8 @@ instance rapidDecaySeq_separableSpace : SeparableSpace RapidDecaySeq := by
 
     Proved via the topological isomorphism `SchwartzMap D ℝ ≃L[ℝ] RapidDecaySeq`:
     since `RapidDecaySeq` is separable (countable Hermite basis spans a dense subspace),
-    and a CLE is a homeomorphism, Schwartz space is separable. -/
+    and a CLE is a homeomorphism, Schwartz space is separable.
+-/
 instance schwartz_separableSpace [Nontrivial D] :
     SeparableSpace (SchwartzMap D ℝ) := by
   rw [← TopologicalSpace.isSeparable_univ_iff]

@@ -110,7 +110,8 @@ lemma innerProduct_is_pd_kernel :
   exact add_nonneg h1 h2
 
 /-- Helper: For a real-valued PD kernel, the kernel matrix is PSD.
-    Forward direction of the bridge between complex kernels and real matrices. -/
+    Forward direction of the bridge between complex kernels and real matrices.
+-/
 lemma real_valued_PD_kernel_gives_PSD_matrix {α : Type*} (K : α → α → ℂ)
     (h_real : ∀ x y, (K x y).im = 0)
     (h_symm : ∀ x y, K x y = K y x)  -- Symmetric (automatic for inner product kernels)
@@ -144,7 +145,8 @@ lemma real_valued_PD_kernel_gives_PSD_matrix {α : Type*} (K : α → α → ℂ
     exact h
 
 /-- Step 3b: Exponential of a symmetric real-valued PD kernel is PD.
-    Uses the Hadamard series machinery from HadamardExp.lean (same as OS3 proof). -/
+    Uses the Hadamard series machinery from HadamardExp.lean (same as OS3 proof).
+-/
 lemma exp_is_pd_kernel {α : Type*} (K : α → α → ℂ) (hK : IsPositiveDefiniteKernel K)
     (h_real : ∀ x y, (K x y).im = 0)
     (h_symm : ∀ x y, K x y = K y x) :

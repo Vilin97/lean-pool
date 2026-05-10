@@ -62,7 +62,8 @@ omit [MeasurableSpace E] [BorelSpace E] in
 /-- Schwartz functions vanish at infinity (C₀).
 
 Proof: Schwartz decay gives ‖x‖^k · ‖f(x)‖ ≤ seminorm k 0 f for all k.
-Taking k = 1: ‖f(x)‖ ≤ C/‖x‖ → 0 as ‖x‖ → ∞. -/
+Taking k = 1: ‖f(x)‖ ≤ C/‖x‖ → 0 as ‖x‖ → ∞.
+-/
 lemma schwartz_tendsto_zero (f : SchwartzMap E ℂ) :
     Tendsto f (cocompact E) (nhds 0) :=
   zero_at_infty f
@@ -171,7 +172,8 @@ lemma kernelTail_tendsto_zero (K : E → ℝ) (R₀ : ℝ)
 /-! ## Key theorem: L¹ ⋆ C₀ → C₀
 
 This is the main engine of the proof. In Mathlib this should be something like
-`convolution_tendsto_zero_of_integrable_of_continuous_vanishing` or similar. -/
+`convolution_tendsto_zero_of_integrable_of_continuous_vanishing` or similar.
+-/
 
 omit [InnerProductSpace ℝ E] [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] in
 /-- A continuous function vanishing at infinity is bounded. -/
@@ -207,7 +209,8 @@ lemma bounded_of_continuous_tendsto_zero
 
 /-- For integrable f and ε > 0, there exists a compact set K with small tail integral.
 
-This is a standard consequence of integrability - the integral concentrates on compact sets. -/
+This is a standard consequence of integrability - the integral concentrates on compact sets.
+-/
 lemma integrable_tail_small {f : E → ℂ} (hf : Integrable f) (ε : ℝ) (hε : 0 < ε) :
     ∃ K : Set E, IsCompact K ∧ ∫ x in Kᶜ, ‖f x‖ < ε := by
   -- Use: for antitone sequence of sets, integral tends to integral over intersection
@@ -243,7 +246,8 @@ lemma integrable_tail_small {f : E → ℂ} (hf : Integrable f) (ε : ℝ) (hε 
   exact hN
 
 /-- Convolution of an integrable function with a function vanishing at infinity
-also vanishes at infinity. This is a fundamental result in harmonic analysis. -/
+also vanishes at infinity. This is a fundamental result in harmonic analysis.
+-/
 theorem convolution_vanishes_of_integrable_and_C0
     {f : E → ℂ} {g : E → ℂ}
     (hf_int : Integrable f)
@@ -372,7 +376,8 @@ The bilinear integrand f(x) K(x-y) g(y-a) is integrable on E × E when:
 - f, g are Schwartz functions
 - K is locally integrable with bounded tail (e.g., exponential/polynomial decay)
 
-This is used for Fubini swaps in bilinear integral proofs. -/
+This is used for Fubini swaps in bilinear integral proofs.
+-/
 
 /-- **Product integrability for Schwartz bilinear forms with locally integrable kernel**
 
@@ -381,7 +386,8 @@ For Schwartz f, g and kernel K = K_sing + K_tail where K_sing is compactly suppo
 on E × E.
 
 This enables Fubini's theorem to swap integration order:
-∫∫ f(x) K(x-y) g(y-a) dx dy = ∫ (∫ f(x) K(x-y) dx) g(y-a) dy -/
+∫∫ f(x) K(x-y) g(y-a) dx dy = ∫ (∫ f(x) K(x-y) dx) g(y-a) dy
+-/
 theorem schwartz_bilinear_prod_integrable
     (f g : SchwartzMap E ℂ)
     (K : E → ℝ) (hK_meas : Measurable K) (hK_loc : LocallyIntegrable K volume)

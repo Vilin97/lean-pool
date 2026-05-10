@@ -97,7 +97,8 @@ Substituting w = c/u - u (which maps (0,∞) → ℝ bijectively):
 Therefore I = √π/2.
 -/
 /-- The substitution u ↦ c/u shows that the Glasser integral is invariant under
-    multiplication by c/u². This is the key identity that enables the proof. -/
+    multiplication by c/u². This is the key identity that enables the proof.
+-/
 lemma glasser_integral_substitution_identity (c : ℝ) (hc : 0 < c) :
     ∫ u in Ioi 0, exp (-(c/u - u)^2) =
     ∫ u in Ioi 0, (c/u^2) * exp (-(c/u - u)^2) := by
@@ -136,7 +137,8 @@ private lemma Ioi_zero_eq_Ioc_union_Ioi : Ioi (0 : ℝ) = Ioc 0 1 ∪ Ioi 1 := b
 
 /-- The Glasser integrand is integrable on (0, ∞).
     Proof: On (0, 1], bounded by 1 on finite measure set.
-           On (1, ∞), dominated by e^{2c} · e^{-u²} which is Gaussian-integrable. -/
+           On (1, ∞), dominated by e^{2c} · e^{-u²} which is Gaussian-integrable.
+-/
 theorem glasser_integrable (c : ℝ) (_hc : 0 < c) :
     IntegrableOn (fun u => exp (-(c/u - u)^2)) (Ioi 0) := by
   rw [Ioi_zero_eq_Ioc_union_Ioi]
@@ -183,7 +185,8 @@ theorem glasser_integrable (c : ℝ) (_hc : 0 < c) :
 
 /-- The weighted Glasser integrand is integrable on (0, ∞).
     Proof: Use change of variables v = c/u which maps (0,1] → [c,∞) and (1,∞) → (0,c].
-    On each piece, the weighted integrand transforms to the unweighted one on a subset of (0,∞). -/
+    On each piece, the weighted integrand transforms to the unweighted one on a subset of (0,∞).
+-/
 theorem glasser_weighted_integrable (c : ℝ) (hc : 0 < c) :
     IntegrableOn (fun u => (c/u^2) * exp (-(c/u - u)^2)) (Ioi 0) := by
   rw [Ioi_zero_eq_Ioc_union_Ioi]
@@ -411,7 +414,8 @@ lemma glasser_deriv_abs (c : ℝ) (hc : 0 < c) (u : ℝ) (hu : u ∈ Ioi 0) :
   rw [show -c / u^2 = -(c / u^2) by ring, abs_of_neg (by linarith)]; ring
 
 /-- The weighted integral equals √π via change of variables w = c/u - u.
-    This is the core analytical step. -/
+    This is the core analytical step.
+-/
 theorem weighted_glasser_integral_eq_gaussian (c : ℝ) (hc : 0 < c) :
     ∫ u in Ioi 0, (1 + c/u^2) * exp (-(c/u - u)^2) = sqrt π := by
   -- Use change of variables: w = c/u - u

@@ -91,7 +91,8 @@ def isCenteredGJ (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (f : TestFunction), GJMean dμ_config f = 0
 
 /-- A measure is Gaussian if its generating functional has the Gaussian form.
-    For a centered Gaussian measure, Z[J] = exp(-½⟨J, CJ⟩) where C is the covariance. -/
+    For a centered Gaussian measure, Z[J] = exp(-½⟨J, CJ⟩) where C is the covariance.
+-/
 def isGaussianGJ (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   isCenteredGJ dμ_config ∧
   ∀ (J : TestFunctionℂ),
@@ -146,7 +147,8 @@ noncomputable def gaussianFreeField_free (m : ℝ) [Fact (0 < m)] : ProbabilityM
 @[simp] abbrev μ_GFF (m : ℝ) [Fact (0 < m)] := gaussianFreeField_free m
 
 /-- Real characteristic functional of the free GFF: for real test functions f, the generating
-    functional equals the Gaussian form with the real covariance. -/
+    functional equals the Gaussian form with the real covariance.
+-/
 theorem gff_real_characteristic (m : ℝ) [Fact (0 < m)] :
   ∀ f : TestFunction,
     GJGeneratingFunctional (gaussianFreeField_free m) f =
@@ -190,7 +192,8 @@ proving that `gaussianFreeField_pairing_memLp` can be derived from first princip
 -/
 
 /-- If a probability measure has the characteristic function of a Gaussian,
-    then it is that Gaussian measure (Lévy uniqueness). -/
+    then it is that Gaussian measure (Lévy uniqueness).
+-/
 private lemma charFun_implies_gaussian
   (μ : Measure ℝ) [IsProbabilityMeasure μ]
   (mean : ℝ) (σ : NNReal)
@@ -202,7 +205,8 @@ private lemma charFun_implies_gaussian
   ring_nf
 
 /-- The characteristic function of a pushforward measure by `distributionPairingCLM φ`
-    equals the generating functional at a scaled test function. -/
+    equals the generating functional at a scaled test function.
+-/
 private lemma charFun_eq_GJGeneratingFunctional
   (μ : ProbabilityMeasure FieldConfiguration) (φ : TestFunction) (t : ℝ)
   [IsProbabilityMeasure (μ.toMeasure.map (distributionPairingCLM φ))] :
@@ -213,15 +217,16 @@ private lemma charFun_eq_GJGeneratingFunctional
   rw [GJGeneratingFunctional]
   congr 1
   ext ω
+  simp only [distributionPairingCLM, ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk,
+    distributionPairing, map_smul, smul_eq_mul]
+  rw [show (inner ℝ (ω φ) t : ℝ) = ω φ * t by rw [real_inner_comm]; exact Real.ext_cauchy rfl]
   congr 1
-  simp only [distributionPairingCLM, ContinuousLinearMap.coe_mk', real_inner_comm]
-  rw [mul_comm _ I]
-  congr 1
-  simp [distributionPairing]
+  push_cast
   ring
 
 /-- For the GFF measure, the pushforward by `distributionPairingCLM φ` has
-    the characteristic function of a centered Gaussian with variance `freeCovarianceFormR m φ φ`. -/
+    the characteristic function of a centered Gaussian with variance `freeCovarianceFormR m φ φ`.
+-/
 private lemma gff_pushforward_charFun
   (m : ℝ) [Fact (0 < m)] (φ : TestFunction) (t : ℝ) :
   charFun ((gaussianFreeField_free m).toMeasure.map (distributionPairingCLM φ)) t =
@@ -237,7 +242,8 @@ private lemma gff_pushforward_charFun
   ring
 
 /-- The pushforward of the GFF measure by pairing with a test function is a 1D Gaussian.
-    Proven via characteristic functions and Lévy's uniqueness theorem. -/
+    Proven via characteristic functions and Lévy's uniqueness theorem.
+-/
 theorem gff_pairing_is_gaussian
   (m : ℝ) [Fact (0 < m)] (φ : TestFunction) :
   (gaussianFreeField_free m).toMeasure.map (distributionPairingCLM φ)
@@ -260,7 +266,8 @@ theorem gff_pairing_is_gaussian
     2. Gaussian measures on ℝ have finite moments (Mathlib's `memLp_id_gaussianReal`)
     3. Pull back through the measurable pairing map
 
-    Proven via the characteristic function bridge. -/
+    Proven via the characteristic function bridge.
+-/
 theorem gaussianFreeField_pairing_memLp
   (m : ℝ) [Fact (0 < m)] (φ : TestFunction) (p : ENNReal) (hp : p ≠ ⊤) :
   MemLp (distributionPairingCLM φ) p (gaussianFreeField_free m).toMeasure := by
@@ -276,7 +283,8 @@ theorem gaussianFreeField_pairing_memLp
 
 /-- The GFF pairing has an integrable square (is in L²).
     This follows from the fact that the pushforward is a Gaussian measure,
-    and Gaussian measures have finite moments of all orders. -/
+    and Gaussian measures have finite moments of all orders.
+-/
 lemma gff_pairing_square_integrable
   (m : ℝ) [Fact (0 < m)] (φ : TestFunction) :
   Integrable (fun ω => (distributionPairingCLM φ ω)^2) (gaussianFreeField_free m).toMeasure := by
@@ -294,7 +302,8 @@ lemma gff_pairing_square_integrable
 
 /-- The second moment of the GFF pairing equals the covariance form.
     This follows from the fact that the pushforward is a Gaussian with variance
-    equal to the covariance form, and for centered Gaussians, variance = second moment. -/
+    equal to the covariance form, and for centered Gaussians, variance = second moment.
+-/
 lemma gff_second_moment_eq_covariance
   (m : ℝ) [Fact (0 < m)] (φ : TestFunction) :
   ∫ ω, (distributionPairingCLM φ ω)^2 ∂(gaussianFreeField_free m).toMeasure =
@@ -320,7 +329,8 @@ lemma gff_second_moment_eq_covariance
       simp [Real.coe_toNNReal', freeCovarianceFormR_pos]
 
 /-- The Gaussian CF with the free covariance is positive definite,
-    via the square-root propagator embedding into a Hilbert space. -/
+    via the square-root propagator embedding into a Hilbert space.
+-/
 lemma freeCovarianceFormR_gaussian_cf_pd (m : ℝ) [Fact (0 < m)] :
     IsPositiveDefinite
       (fun f : TestFunction => Complex.exp (-(1/2 : ℂ) * (freeCovarianceFormR m f f : ℂ))) := by
@@ -356,7 +366,8 @@ def freeCovarianceForm (m : ℝ) [Fact (0 < m)] : MinlosAnalytic.CovarianceForm 
     which is symmetric under f ↦ -f. By `integral_neg_invariance`, the measure is
     invariant under ω ↦ -ω. From this negation invariance:
       GJMean μ φ = ∫ ⟨ω,φ⟩ dμ = ∫ ⟨-ω,φ⟩ dμ = -∫ ⟨ω,φ⟩ dμ
-    implying GJMean μ φ = 0. -/
+    implying GJMean μ φ = 0.
+-/
 theorem gaussianFreeField_free_centered (m : ℝ) [Fact (0 < m)] :
     isCenteredGJ (gaussianFreeField_free m) := by
   intro φ
@@ -394,7 +405,6 @@ there exists `α > 0` such that `exp(α * ⟨ω, φ⟩²)` is integrable under t
 
 This follows from `gff_pairing_is_gaussian` which shows the pushforward is a 1D Gaussian,
 combined with Mathlib's `IsGaussian.exists_integrable_exp_sq` (Fernique's theorem).
-
 -/
 theorem gaussianFreeField_pairing_expSq_integrable
   (m : ℝ) [Fact (0 < m)] (φ : TestFunction) :
@@ -425,7 +435,8 @@ theorem gaussianFreeField_pairing_expSq_integrable
 
 /-- For real test functions, the square of the Gaussian pairing is integrable under the
     free Gaussian Free Field measure. This is the diagonal (f = g) case needed for
-    establishing two-point integrability. -/
+    establishing two-point integrability.
+-/
 lemma gaussian_pairing_square_integrable_real
     (m : ℝ) [Fact (0 < m)] (φ : TestFunction) :
   Integrable (fun ω => (distributionPairing ω φ) ^ 2)

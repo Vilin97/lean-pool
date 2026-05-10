@@ -42,7 +42,8 @@ private lemma tendsto_of_tendsto_succ {α : Type*} {f : ℕ → α} {L : Filter 
 
 /-- Convert a ContDiffBump centered at 0 to a normalized Schwartz function.
     This produces the L¹-normalized version φ.normed volume, which integrates to 1.
-    Bump functions have compact support and are smooth, so they are Schwartz. -/
+    Bump functions have compact support and are smooth, so they are Schwartz.
+-/
 noncomputable def bumpToSchwartz (φ : ContDiffBump (0 : SpaceTime)) : TestFunction :=
   -- The normed bump has compact support and is C^∞, hence Schwartz
   (φ.hasCompactSupport_normed (μ := volume)).toSchwartzMap φ.contDiff_normed
@@ -56,7 +57,8 @@ theorem bumpToSchwartz_apply (φ : ContDiffBump (0 : SpaceTime)) (x : SpaceTime)
     This is an alias for `SchwartzMap.translate` specialized to SpaceTime.
 
     Translation preserves smoothness and decay properties.
-    See `SchwartzMap.translate` in FunctionalAnalysis.lean for the general version. -/
+    See `SchwartzMap.translate` in FunctionalAnalysis.lean for the general version.
+-/
 noncomputable def translateSchwartz (f : TestFunction) (a : SpaceTime) : TestFunction :=
   f.translate a
 
@@ -64,7 +66,8 @@ noncomputable def translateSchwartz (f : TestFunction) (a : SpaceTime) : TestFun
     This is well-defined (modulo bumpToSchwartz) and converges to the
     pointwise value as the bump width → 0.
 
-    SmearedTwoPointFunction dμ φ x = ∫∫ φ(u-x) ⟨φ(u)φ(v)⟩ φ(v) du dv -/
+    SmearedTwoPointFunction dμ φ x = ∫∫ φ(u-x) ⟨φ(u)φ(v)⟩ φ(v) du dv
+-/
 noncomputable def SmearedTwoPointFunction (dμ_config : ProbabilityMeasure FieldConfiguration)
     (φ : ContDiffBump (0 : SpaceTime)) (x : SpaceTime) : ℝ :=
   SchwingerFunction₂ dμ_config
@@ -72,7 +75,8 @@ noncomputable def SmearedTwoPointFunction (dμ_config : ProbabilityMeasure Field
     (bumpToSchwartz φ)
 
 /-- A canonical sequence of bump functions with rOut → 0.
-    We use rOut = 1/n for n ∈ ℕ⁺. -/
+    We use rOut = 1/n for n ∈ ℕ⁺.
+-/
 noncomputable def standardBumpSequence (n : ℕ) (hn : n ≠ 0) : ContDiffBump (0 : SpaceTime) :=
   -- Create a bump with rOut = 1/n and rIn = 1/(2n)
   { rIn := 1 / (2 * n)
@@ -99,7 +103,8 @@ noncomputable def standardBumpSequence (n : ℕ) (hn : n ≠ 0) : ContDiffBump (
     by setting S₂(0) = 0, which is consistent with the convention used in
     freeCovarianceKernel and makes the decay bounds hold trivially at x = 0.
 
-    For the GFF, this limit equals freeCovarianceKernel(x) by `double_mollifier_convergence`. -/
+    For the GFF, this limit equals freeCovarianceKernel(x) by `double_mollifier_convergence`.
+-/
 noncomputable def SchwingerTwoPointFunction
     (dμ_config : ProbabilityMeasure FieldConfiguration) (x : SpaceTime) : ℝ :=
   -- Regularize at coincident points: S₂(0) = 0
@@ -128,7 +133,8 @@ theorem schwingerTwoPointFunction_zero
     such that SchwingerFunction₂ computes the double integral against C.
     This holds for Gaussian measures where C is the covariance kernel.
 
-    The proof uses `double_mollifier_convergence` from FunctionalAnalysis.lean. -/
+    The proof uses `double_mollifier_convergence` from FunctionalAnalysis.lean.
+-/
 theorem smearedTwoPoint_tendsto_schwingerTwoPoint
     (dμ_config : ProbabilityMeasure FieldConfiguration) (x : SpaceTime) (hx : x ≠ 0)
     {ι : Type*} {l : Filter ι} [l.NeBot]
@@ -164,7 +170,8 @@ theorem smearedTwoPoint_tendsto_schwingerTwoPoint
     then the limit-based definition of SchwingerTwoPointFunction evaluates to that kernel.
 
     Note: For x = 0, the SchwingerTwoPointFunction is defined to be 0 by regularization,
-    so this theorem requires x ≠ 0. -/
+    so this theorem requires x ≠ 0.
+-/
 theorem schwingerTwoPointFunction_eq_kernel
     (dμ_config : ProbabilityMeasure FieldConfiguration) (x : SpaceTime) (hx : x ≠ 0)
     (C : SpaceTime → ℝ)

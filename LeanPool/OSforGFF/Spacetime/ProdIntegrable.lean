@@ -36,7 +36,8 @@ section SpaceTime
 -- No namespace needed, TestFunctionℂ and SpaceTime are top-level
 
 /-- For a Schwartz function vanishing on {x₀ ≤ 0}, the linear bound ‖f(x)‖ ≤ C · x₀ holds.
-    Follows from mean value theorem + global derivative bounds on Schwartz functions. -/
+    Follows from mean value theorem + global derivative bounds on Schwartz functions.
+-/
 theorem schwartz_vanishing_linear_bound (f : TestFunctionℂ)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
     ∃ C : ℝ, 0 < C ∧ ∀ x : SpaceTime, 0 < x 0 → ‖f x‖ ≤ C * (x 0) := by
@@ -146,14 +147,16 @@ lemma spacetimeOfTimeSpace_time (t : ℝ) (x : SpatialCoords3) :
   simp [spacetimeOfTimeSpace, EuclideanSpace.equiv]
 
 /-- Access the i-th spatial component of spacetimeOfTimeSpace.
-    Mathematical fact: (spacetimeOfTimeSpace t x) (i+1) = x i -/
+    Mathematical fact: (spacetimeOfTimeSpace t x) (i+1) = x i
+-/
 lemma spacetimeOfTimeSpace_spatial (t : ℝ) (x : SpatialCoords3) (i : Fin 3) :
     (spacetimeOfTimeSpace t x) ⟨i.val + 1, Nat.add_lt_add_right i.isLt 1⟩ = x i := by
   have h : (⟨i.val + 1, Nat.add_lt_add_right i.isLt 1⟩ : Fin 4) = Fin.succ i := rfl
   simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, h]
 
 /-- The decomposition: spacetimeOfTimeSpace t x = timeOrigin t + spatialEmbed x.
-    This is the key structural fact: (t, x) = (t, 0) + (0, x). -/
+    This is the key structural fact: (t, x) = (t, 0) + (0, x).
+-/
 lemma spacetimeOfTimeSpace_decompose (t : ℝ) (x : SpatialCoords3) :
     spacetimeOfTimeSpace t x = spacetimeOfTimeSpace t 0 + spacetimeOfTimeSpace 0 x := by
   ext j
@@ -187,7 +190,8 @@ lemma spacetimeOfTimeSpace_norm_ge (t : ℝ) (x : SpatialCoords3) :
   exact (sq_le_sq₀ hx hy).mp hsq_le
 
 /-- Linear embedding of ℝ³ into ℝ⁴ as the spatial subspace at time 0.
-    This maps x ↦ (0, x₀, x₁, x₂), i.e., spacetimeOfTimeSpace 0 x. -/
+    This maps x ↦ (0, x₀, x₁, x₂), i.e., spacetimeOfTimeSpace 0 x.
+-/
 noncomputable def spatialEmbed : SpatialCoords3 →ₗ[ℝ] SpaceTime where
   toFun := fun x => spacetimeOfTimeSpace 0 x
   map_add' := fun x y => by
@@ -226,7 +230,8 @@ lemma continuous_spacetimeOfTimeSpace_right (t : ℝ) : Continuous (spacetimeOfT
   exact (continuous_congr h_decompose).mpr h_cont
 
 /-- A Schwartz function restricted to a fixed time slice is integrable over ℝ³.
-    Uses decay transfer: 4D Schwartz decay implies 3D integrability via norm comparison. -/
+    Uses decay transfer: 4D Schwartz decay implies 3D integrability via norm comparison.
+-/
 lemma schwartz_time_slice_integrable (f : TestFunctionℂ) (t : ℝ) :
     Integrable (fun x : SpatialCoords3 => f (spacetimeOfTimeSpace t x)) volume := by
   -- Strategy: Show the function has rapid decay and use integrability of decay functions
@@ -329,7 +334,8 @@ lemma spatialNormIntegral_nonneg (f : TestFunctionℂ) (t : ℝ) :
     Schwartz property of the derivative). This combination is what makes the spatial
     integral ∫ ‖f(t, ·)‖ dx bounded by C·t.
 
-    **Used by**: `spatialNormIntegral_linear_bound` and `F_norm_bound_via_linear_vanishing`. -/
+    **Used by**: `spatialNormIntegral_linear_bound` and `F_norm_bound_via_linear_vanishing`.
+-/
 lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
     ∃ C : ℝ, 0 < C ∧ ∀ (t : ℝ) (_ht : 0 < t) (x_sp : SpatialCoords3),
@@ -555,7 +561,8 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
 
     This follows from integrating the pointwise bound ‖f(t,x)‖ ≤ C·t
     over the spatial coordinates. Since Schwartz functions have fast decay,
-    the spatial integral is finite. -/
+    the spatial integral is finite.
+-/
 theorem spatialNormIntegral_linear_bound (f : TestFunctionℂ)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
     ∃ C : ℝ, 0 < C ∧ ∀ t : ℝ, 0 < t → spatialNormIntegral f t ≤ C * t := by

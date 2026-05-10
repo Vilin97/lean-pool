@@ -12,7 +12,6 @@ A semi-ring of sets `C` is a family of sets containing `∅`, stable by intersec
 for all `s, t ∈ C`, `t \ s` is equal to a disjoint union of finitely many sets in `C`.
 
 THIS FILE IS NOT USED FOR THE MAIN RESULT
-
 -/
 
 
@@ -23,7 +22,8 @@ open Finset Set
 namespace MeasureTheory
 
 /-- A field of sets is a family of sets which is stable under union, difference, and contains
-the empty set and the whole space. -/
+the empty set and the whole space.
+-/
 structure IsSetField (C : Set (Set α)) : Prop extends IsSetRing C where
   univ_mem : Set.univ ∈ C
 

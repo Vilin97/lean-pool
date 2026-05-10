@@ -51,7 +51,8 @@ noncomputable section
 /-! ## Section 1: The 1D Schwartz Hermite Basis -/
 
 /-- The n-th Hermite function as a Schwartz map. Uses `Classical.choose` on
-    `hermiteFunction_schwartz n`. -/
+    `hermiteFunction_schwartz n`.
+-/
 def schwartzHermiteBasis1D (n : ℕ) : SchwartzMap ℝ ℝ :=
   Classical.choose (hermiteFunction_schwartz n)
 
@@ -68,7 +69,8 @@ theorem schwartzHermiteBasis1D_coe (n : ℕ) :
 /-! ## Section 2: The 1D Hermite Coefficients -/
 
 /-- The n-th Hermite coefficient of a Schwartz function f:
-    cₙ(f) = ∫ f(x) ψₙ(x) dx. -/
+    cₙ(f) = ∫ f(x) ψₙ(x) dx.
+-/
 def hermiteCoeff1D (n : ℕ) (f : SchwartzMap ℝ ℝ) : ℝ :=
   ∫ x, f x * hermiteFunction n x
 
@@ -111,7 +113,8 @@ NOTE: Currently blocked because `mul_x_hermiteFunction` and
 -/
 
 /-- The harmonic oscillator eigenvalue equation:
-    -ψₙ''(x) + x² ψₙ(x) = (2n+1) ψₙ(x). -/
+    -ψₙ''(x) + x² ψₙ(x) = (2n+1) ψₙ(x).
+-/
 -- Helper: differentiability of hermiteFunction
 private theorem hermiteFunction_differentiable (k : ℕ) : Differentiable ℝ (hermiteFunction k) :=
   (hermiteFunction_contDiff k 1).differentiable_one
@@ -248,7 +251,8 @@ theorem schwartz_integration_by_parts_twice
   linarith
 
 /-- The harmonic oscillator is symmetric on Schwartz space:
-    ∫ Hf · ψₙ = (2n+1) ∫ f · ψₙ. -/
+    ∫ Hf · ψₙ = (2n+1) ∫ f · ψₙ.
+-/
 theorem hermiteCoeff_harmonic_oscillator (n : ℕ) (f : SchwartzMap ℝ ℝ) :
     ∫ x, (-(iteratedDeriv 2 f x) + x ^ 2 * f x) * hermiteFunction n x =
     (2 * ↑n + 1) * hermiteCoeff1D n f := by
@@ -357,7 +361,8 @@ This gives super-polynomial decay of Hermite coefficients.
 /-- **Coefficient decay**: Hermite coefficients of Schwartz functions
     decay faster than any polynomial.
     For any k, there exist C > 0 and seminorm index q such that
-    |cₙ(f)| · (1+n)^k ≤ C · p_q(f) for all f ∈ 𝓢 and n ∈ ℕ. -/
+    |cₙ(f)| · (1+n)^k ≤ C · p_q(f) for all f ∈ 𝓢 and n ∈ ℕ.
+-/
 -- Helper: Cauchy-Schwarz for integrals
 private lemma cauchy_schwarz_integral (f g : ℝ → ℝ) (hf : Integrable (fun x => f x ^ 2))
     (hg : Integrable (fun x => g x ^ 2)) (hfg : Integrable (fun x => f x * g x)) :
@@ -758,7 +763,8 @@ and both are continuous, g = f everywhere.
 -/
 
 /-- The Hermite expansion of a Schwartz function converges in L² to f.
-    This follows from `hermiteFunction_orthonormal` and `hermiteFunction_complete`. -/
+    This follows from `hermiteFunction_orthonormal` and `hermiteFunction_complete`.
+-/
 -- Helper: integrability of f * ψₙ
 private lemma schwartz_mul_hermite_integrable (f : SchwartzMap ℝ ℝ) (n : ℕ) :
     Integrable (fun x => f x * hermiteFunction n x) volume :=
@@ -1265,7 +1271,8 @@ private lemma hermite_series_iteratedFDeriv (f : SchwartzMap ℝ ℝ) (l : ℕ) 
     2. Termwise differentiation: D^l(f)(x) = ∑' cₙ · D^l(ψₙ)(x) [hermite_series_iteratedFDeriv]
        So the remainder r = f - ∑_{i∈s} cᵢψᵢ satisfies D^l(r)(x) = ∑'_{i∉s} cᵢ D^l(ψᵢ)(x)
     3. For each x: ‖x‖^k · ‖D^l(r)(x)‖ ≤ ∑'_{i∉s} |cᵢ| · ‖x‖^k · ‖D^l(ψᵢ)(x)‖
-    4. Bound by ∑'_{i∉s} |cᵢ| · p_{k,l}(ψᵢ) ≤ ε (from vanishing condition). -/
+    4. Bound by ∑'_{i∉s} |cᵢ| · p_{k,l}(ψᵢ) ≤ ε (from vanishing condition).
+-/
 private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : ℕ)
     (s : Finset ℕ) {ε : ℝ} (hε : 0 ≤ ε)
     (h_vanish : ∀ t : Finset ℕ, Disjoint t s →

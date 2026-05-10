@@ -63,7 +63,8 @@ private lemma freeCovarianceFormR_reflection_nonneg
   simpa [freeCovarianceFormR] using h
 
 /-- Entrywise exponential preserves PSD on real symmetric PSD matrices (finite index).
-    Bridge lemma to be discharged using HadamardExp (Hadamard series) machinery. -/
+    Bridge lemma to be discharged using HadamardExp (Hadamard series) machinery.
+-/
 private lemma entrywiseExp_posSemidef_of_posSemidef
   {n : ℕ} (R : Matrix (Fin n) (Fin n) ℝ)
   (hR : R.PosSemidef) : Matrix.PosSemidef (fun i j => Real.exp (R i j)) := by
@@ -82,7 +83,8 @@ attribute [local simp] inner_sub_right inner_sub_left
 
 
 /-- Reflection matrix built from the real covariance is positive semidefinite.
-    This is the real analogue of covariance reflection positivity. -/
+    This is the real analogue of covariance reflection positivity.
+-/
 lemma freeCovarianceFormR_reflection_matrix_posSemidef
     (m : ℝ) [Fact (0 < m)]
     {n : ℕ} (f : Fin n → PositiveTimeTestFunction) :
@@ -482,7 +484,8 @@ variable (m : ℝ) [Fact (0 < m)]
 /-! ### Helper lemmas for the complex OS3 proof -/
 
 /-- Bilinear expansion: `C(f − g, f − g) = C(f,f) − C(f,g) − C(g,f) + C(g,g)`.
-    Proved from `freeCovarianceℂ_bilinear_add_left/right` and `_smul_left/right`. -/
+    Proved from `freeCovarianceℂ_bilinear_add_left/right` and `_smul_left/right`.
+-/
 private lemma freeCovarianceℂ_bilinear_sub_sub
     (f g : TestFunctionℂ) :
     freeCovarianceℂ_bilinear m (f - g) (f - g) =
@@ -501,7 +504,8 @@ private lemma freeCovarianceℂ_bilinear_sub_sub
 
     Proof sketch: `C(star f, star g) = ∫∫ conj(f(Θx)) K(x−y) conj(g(Θy)) dx dy`.
     Change variables `x → Θx`, `y → Θy` (measure-preserving, `|Θx−Θy| = |x−y|`):
-    `= ∫∫ conj(f(x)) K(x−y) conj(g(y)) dx dy = conj(∫∫ f(x) K(x−y) g(y) dx dy)`. -/
+    `= ∫∫ conj(f(x)) K(x−y) conj(g(y)) dx dy = conj(∫∫ f(x) K(x−y) g(y) dx dy)`.
+-/
 private lemma freeCovarianceℂ_bilinear_star_star_conj
     (f g : TestFunctionℂ) :
     freeCovarianceℂ_bilinear m (star f) (star g) =
@@ -584,7 +588,8 @@ private lemma freeCovarianceℂ_bilinear_star_star_conj
 
 /-- A complex matrix has nonneg Hermitian quadratic form:
     `Re(∑ᵢⱼ v̄ᵢ vⱼ Mᵢⱼ) ≥ 0` for all `v`.
-    This avoids `Matrix.PosSemidef` which requires `PartialOrder ℂ`. -/
+    This avoids `Matrix.PosSemidef` which requires `PartialOrder ℂ`.
+-/
 private def IsRePSD {n : ℕ} (M : Fin n → Fin n → ℂ) : Prop :=
   ∀ v : Fin n → ℂ, 0 ≤ (∑ i, ∑ j, starRingEnd ℂ (v i) * v j * M i j).re
 
@@ -600,7 +605,8 @@ private lemma star_star_testFunctionℂ (f : TestFunctionℂ) : star (star f) = 
 
 /-- The reflection matrix `R_{ij} = C(fᵢ, star fⱼ)` is Hermitian.
     Proof: `R_{ji} = C(f_j, star f_i) = C(star f_i, f_j)` by symmetry
-    `= C(star f_i, star(star f_j))` by star involution `= conj(C(f_i, star f_j))` by star_star_conj. -/
+    `= C(star f_i, star(star f_j))` by star involution `= conj(C(f_i, star f_j))` by star_star_conj.
+-/
 private lemma reflection_matrix_IsHermitian
     {n : ℕ} (f : Fin n → PositiveTimeTestFunctionℂ) :
     IsHermitianMatrix fun i j => freeCovarianceℂ_bilinear m (f i).val (star (f j).val) := by
@@ -630,7 +636,8 @@ private lemma isHermitian_of_isHermitianMatrix
   rw [hH i j]; exact starRingEnd_self_apply (M i j)
 
 /-- The quadratic form `star v ⬝ᵥ (of M *ᵥ v)` equals the double sum
-    `∑ i, ∑ j, conj(v i) * v j * M i j`. -/
+    `∑ i, ∑ j, conj(v i) * v j * M i j`.
+-/
 private lemma quadForm_eq_double_sum
     {n : ℕ} (M : Fin n → Fin n → ℂ) (v : Fin n → ℂ) :
     star v ⬝ᵥ (Matrix.of M *ᵥ v) =
@@ -683,7 +690,8 @@ private lemma isRePSD_of_posSemidef
 
 /-- Complex Schur product theorem: the Hadamard product of two `PosSemidef`
     complex matrices is `PosSemidef`.  Follows from the Kronecker product
-    (`PosSemidef.kronecker`) restricted to the diagonal (`PosSemidef.submatrix`). -/
+    (`PosSemidef.kronecker`) restricted to the diagonal (`PosSemidef.submatrix`).
+-/
 private lemma posSemidef_hadamard_complex
     {n : ℕ} {A B : Matrix (Fin n) (Fin n) ℂ}
     (hA : A.PosSemidef) (hB : B.PosSemidef) :
@@ -700,7 +708,8 @@ private lemma posSemidef_hadamard_complex
     `exp(Mᵢⱼ) = ∑ₖ Mᵢⱼᵏ/k!`.  Each Hadamard power is `PosSemidef` by the complex
     Schur product theorem (Kronecker ⊗ submatrix).  Partial sums are `PosSemidef`
     (nonneg coefficients), and the limit preserves nonnegativity of the
-    real part of the quadratic form. -/
+    real part of the quadratic form.
+-/
 private lemma entrywiseExp_IsRePSD
     {n : ℕ} {M : Fin n → Fin n → ℂ} (hH : IsHermitianMatrix M) (hM : IsRePSD M) :
     IsRePSD fun i j => Complex.exp (M i j) := by
@@ -803,7 +812,8 @@ private lemma entrywiseExp_IsRePSD
 
 /-- Entry factorization for the GFF:
     `Z[fᵢ − star fⱼ] = Aᵢ · conj(Aⱼ) · exp(Rᵢⱼ)`
-    where `Aᵢ = exp(−½ C(fᵢ,fᵢ))` and `Rᵢⱼ = C(fᵢ, star fⱼ)`. -/
+    where `Aᵢ = exp(−½ C(fᵢ,fᵢ))` and `Rᵢⱼ = C(fᵢ, star fⱼ)`.
+-/
 private lemma gff_complexZ_entry_factor (fi fj : TestFunctionℂ) :
     Complex.exp (-(1/2 : ℂ) * freeCovarianceℂ_bilinear m (fi - star fj) (fi - star fj)) =
     Complex.exp (-(1/2 : ℂ) * freeCovarianceℂ_bilinear m fi fi) *
@@ -834,7 +844,8 @@ private lemma gff_complexZ_entry_factor (fi fj : TestFunctionℂ) :
 
 /-- Star is antilinear on TestFunctionℂ: `star(∑ conj(vⱼ) fⱼ) = ∑ vⱼ star(fⱼ)`.
     Proof: pointwise, `star(c • f)(x) = conj(c f(Θx)) = conj(c) conj(f(Θx))`,
-    and `compTimeReflection` is a continuous linear map. -/
+    and `compTimeReflection` is a continuous linear map.
+-/
 private lemma star_apply (f : TestFunctionℂ) (x : SpaceTime) :
     (star f) x = starRingEnd ℂ (f (QFT.timeReflection x)) := by
   rfl
@@ -889,7 +900,8 @@ private lemma freeCovarianceℂ_bilinear_sum_sum {n : ℕ}
     For any `v`, define `h = ∑ conj(vⱼ) fⱼ` (positive-time).  Then
     `rpInnerProduct(h) = C(star h, h) = C(∑ vⱼ star(fⱼ), ∑ conj(vᵢ) fᵢ)
       = ∑ᵢⱼ conj(vᵢ) vⱼ C(star(fⱼ), fᵢ) = ∑ᵢⱼ conj(vᵢ) vⱼ C(fᵢ, star(fⱼ))`.
-    `Re(rpInnerProduct(h)) ≥ 0` by `freeCovariance_reflection_positive_bilinear`. -/
+    `Re(rpInnerProduct(h)) ≥ 0` by `freeCovariance_reflection_positive_bilinear`.
+-/
 private lemma reflection_matrix_IsRePSD
     {n : ℕ} (f : Fin n → PositiveTimeTestFunctionℂ) :
     IsRePSD fun i j => freeCovarianceℂ_bilinear m (f i).val (star (f j).val) := by
@@ -964,7 +976,8 @@ private lemma gff_complexOS3_matrix
     functions and complex coefficients, compatible with OS reconstruction.
 
     The `star` operation is `(star f)(x) = conj(f(Θx))`.  For real test functions,
-    `star = compTimeReflection` (see `star_toComplex_eq_compTimeReflection`). -/
+    `star = compTimeReflection` (see `star_toComplex_eq_compTimeReflection`).
+-/
 theorem gaussianFreeField_OS3 :
     OS3_ReflectionPositivity (gaussianFreeField_free m) := by
   intro n f c

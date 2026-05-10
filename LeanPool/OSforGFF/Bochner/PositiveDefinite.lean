@@ -60,14 +60,16 @@ open scoped ComplexOrder
     - `nonneg`: Re(∑ᵢⱼ c̄ᵢ cⱼ φ(xᵢ - xⱼ)) ≥ 0 (positive semidefiniteness)
 
     The Hermitian condition ensures the quadratic form is real, so Re ≥ 0
-    is equivalent to the full condition ≥ 0. -/
+    is equivalent to the full condition ≥ 0.
+-/
 structure IsPositiveDefinite {α : Type*} [AddGroup α] (φ : α → ℂ) : Prop where
   hermitian : ∀ x : α, φ (-x) = starRingEnd ℂ (φ x)
   nonneg : ∀ (m : ℕ) (x : Fin m → α) (c : Fin m → ℂ),
     0 ≤ (∑ i, ∑ j, (starRingEnd ℂ) (c i) * c j * φ (x i - x j)).re
 
 /-- Composition preserves positive definiteness: if ψ is positive definite on H and
-    T : E →ₗ[ℝ] H is linear, then ψ ∘ T is positive definite on E. -/
+    T : E →ₗ[ℝ] H is linear, then ψ ∘ T is positive definite on E.
+-/
 lemma isPositiveDefinite_precomp_linear
     {E H : Type*} [AddCommGroup E] [AddCommGroup H]
     [Module ℝ E] [Module ℝ H]
@@ -177,7 +179,8 @@ lemma bounded_by_zero (hpd : IsPositiveDefinite φ) (x : α) :
     This is the key fact used in Phase 2 (Gaussian regularization).
 
     Proof idea: The Hadamard (entrywise) product of two PSD Hermitian matrices
-    is PSD. For the Hermitian condition, use conj(φψ) = conj(φ)conj(ψ). -/
+    is PSD. For the Hermitian condition, use conj(φψ) = conj(φ)conj(ψ).
+-/
 lemma mul (hpd : IsPositiveDefinite φ) {ψ : α → ℂ} (hψ : IsPositiveDefinite ψ) :
     IsPositiveDefinite (fun x => φ x * ψ x) := by
   refine ⟨?_, ?_⟩

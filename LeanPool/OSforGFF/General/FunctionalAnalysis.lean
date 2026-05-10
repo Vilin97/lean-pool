@@ -195,7 +195,7 @@ section LiftMeasure
   /--
   Lifts a probability measure from the space of real Lp functions to the space of
   complex Lp functions, with support on the real subspace.
-  -/
+-/
   noncomputable def liftMeasure_real_to_complex
       (dμ_real : ProbabilityMeasure (Lp ℝ 2 μ)) :
       ProbabilityMeasure (Lp ℂ 2 μ) :=
@@ -241,13 +241,15 @@ abbrev L2Complex (d : ℕ) := Lp ℂ 2 (volume : Measure (EuclideanRd d))
 
 /-- Embedding Schwartz functions into L² space using Mathlib's toLpCLM.
     This is a continuous linear map from Schwartz space to L²(ℝᵈ, ℂ).
-    ✅ IMPLEMENTED: Uses SchwartzMap.toLpCLM from Mathlib -/
+    ✅ IMPLEMENTED: Uses SchwartzMap.toLpCLM from Mathlib
+-/
 noncomputable def schwartzToL2 (d : ℕ) : SchwartzRd d →L[ℂ] L2Complex d :=
   SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure (EuclideanRd d))
 
 /-- Alternative embedding that produces the exact L² type expected by the unprimed theorems.
     This maps Schwartz functions to Lp ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin d))).
-    The difference from schwartzToL2 is only in the type representation, not the mathematical content. -/
+    The difference from schwartzToL2 is only in the type representation, not the mathematical content.
+-/
 noncomputable def schwartzToL2' (d : ℕ) [NeZero d] [Fintype (Fin d)] :
   SchwartzMap (EuclideanSpace ℝ (Fin d)) ℂ →L[ℂ] Lp ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin d))) :=
   SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin d)))
@@ -271,7 +273,8 @@ These theorems are used to construct specific multiplication operators
 -/
 
 /-- Given a measurable function `g` that is essentially bounded by `C`,
-    multiplication by `g` defines a bounded linear operator on `L²`. -/
+    multiplication by `g` defines a bounded linear operator on `L²`.
+-/
 noncomputable def linfty_mul_L2_CLM {μ : Measure α}
     (g : α → ℂ) (hg_meas : Measurable g) (C : ℝ)
     (hg_bound : ∀ᵐ x ∂μ, ‖g x‖ ≤ C) :
@@ -292,7 +295,8 @@ lemma linfty_mul_L2_CLM_spec {μ : Measure α}
   simp [h, hg]
 
 /-- The operator norm of the multiplication operator is bounded by C.
-    This gives ‖Mg f‖₂ ≤ C · ‖f‖₂ for all f ∈ L². -/
+    This gives ‖Mg f‖₂ ≤ C · ‖f‖₂ for all f ∈ L².
+-/
 theorem linfty_mul_L2_CLM_norm_bound {μ : Measure α}
     (g : α → ℂ) (hg_meas : Measurable g) (C : ℝ) (hC : 0 ≤ C)
     (hg_bound : ∀ᵐ x ∂μ, ‖g x‖ ≤ C)
@@ -320,7 +324,8 @@ open Set Metric in
     Key technique: Use indicator functions to reduce to the global `integrable_fun_norm_addHaar`.
     - Define g := indicator (Iio r) f, so g(y) = f(y) for y < r, else 0
     - Then indicator (ball 0 r) (f ∘ ‖·‖) = g ∘ ‖·‖
-    - Apply global lemma to g -/
+    - Apply global lemma to g
+-/
 lemma integrableOn_ball_of_radial {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [Nontrivial E]
     [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E]
@@ -355,7 +360,8 @@ lemma integrableOn_ball_of_radial {E F : Type*}
 
 open Set Metric in
 /-- Integrability on balls for power-law decay functions.
-    If |f(x)| ≤ C‖x‖^{-α} with α < d, then f is integrable on any ball centered at 0. -/
+    If |f(x)| ≤ C‖x‖^{-α} with α < d, then f is integrable on any ball centered at 0.
+-/
 lemma integrableOn_ball_of_rpow_decay {d : ℕ} (hd : d ≥ 1)
     {f : EuclideanSpace ℝ (Fin d) → ℝ} {C α r : ℝ}
     (_hC : 0 < C) (hα : α < d) (hr : 0 < r)
@@ -457,7 +463,8 @@ lemma integrableOn_compact_diff_ball {d : ℕ}
     exact integrableOn_empty
 
 /-- Functions with polynomial decay are locally integrable.
-    For d-dimensional space, if α < d and |f(x)| ≤ C‖x‖^{-α}, then f is locally integrable. -/
+    For d-dimensional space, if α < d and |f(x)| ≤ C‖x‖^{-α}, then f is locally integrable.
+-/
 theorem locallyIntegrable_of_rpow_decay_real {d : ℕ} (hd : d ≥ 3)
     {f : EuclideanSpace ℝ (Fin d) → ℝ} {C : ℝ} {α : ℝ}
     (hC : C > 0) (hα : α < d)
@@ -497,7 +504,8 @@ theorem locallyIntegrable_of_rpow_decay_real {d : ℕ} (hd : d ≥ 3)
 
     **Used by**: `spatialNormIntegral_linear_bound` and `F_norm_bound_via_linear_vanishing`
     to show that spatial integrals of Schwartz functions with linear time vanishing
-    are bounded by C·t. -/
+    are bounded by C·t.
+-/
 lemma polynomial_decay_integrable_3d :
     Integrable (fun x : EuclideanSpace ℝ (Fin 3) => 1 / (1 + ‖x‖)^4) volume := by
   -- Use integrable_one_add_norm: (1 + ‖x‖)^(-r) is integrable when r > dim
@@ -529,7 +537,8 @@ This applies to exponentially decaying kernels like the massive free covariance.
     - Schwartz functions are bounded: ‖f‖_∞ < ∞ (via toBoundedContinuousFunction)
     - Schwartz functions are integrable: ‖g‖_{L¹} < ∞
     - K₀ is integrable: ‖K₀‖_{L¹} < ∞
-    - Then: ∫∫ |f(x) K₀(x-y) g(y)| dx dy ≤ ‖f‖_∞ · ‖K₀‖_{L¹} · ‖g‖_{L¹} < ∞ -/
+    - Then: ∫∫ |f(x) K₀(x-y) g(y)| dx dy ≤ ‖f‖_∞ · ‖K₀‖_{L¹} · ‖g‖_{L¹} < ∞
+-/
 theorem schwartz_bilinear_integrable_of_translationInvariant_L1
     {d : ℕ}
     (K₀ : EuclideanSpace ℝ (Fin d) → ℂ)
@@ -638,7 +647,8 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace
   [SecondCountableTopology E] {μ : Measure E} [μ.HasTemperateGrowth]
 
 /-- A Schwartz function times a bounded measurable function is integrable.
-    This is the key technical lemma for Fourier-type integrals. -/
+    This is the key technical lemma for Fourier-type integrals.
+-/
 lemma SchwartzMap.integrable_mul_bounded (f : SchwartzMap E ℂ) (g : E → ℂ)
     (hg_meas : Measurable g) (hg_bdd : ∀ x, ‖g x‖ ≤ 1) :
     Integrable (fun x => f x * g x) μ := by
@@ -777,7 +787,8 @@ lemma sub_const_antilipschitz {E : Type*} [NormedAddCommGroup E] (a : E) :
     For f ∈ 𝒮(E, F) and a ∈ E, the translated function f(· - a) is also in 𝒮(E, F).
 
     This is proved using Mathlib's `compCLMOfAntilipschitz`: translation is composition
-    with `x ↦ x - a`, which has temperate growth and is antilipschitz (an isometry). -/
+    with `x ↦ x - a`, which has temperate growth and is antilipschitz (an isometry).
+-/
 noncomputable def SchwartzMap.translate {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
@@ -806,7 +817,8 @@ open Real
     More precisely, for any N, there exists C such that
     |f(x)| ≤ C / (1 + |x|)^N. If N > dim(V), this implies integrability.
 
-    **Reference**: Stein-Weiss, Chapter 1, Proposition 1.1 -/
+    **Reference**: Stein-Weiss, Chapter 1, Proposition 1.1
+-/
 theorem schwartz_integrable_decay {V : Type*} [NormedAddCommGroup V]
     [NormedSpace ℝ V] [FiniteDimensional ℝ V] [MeasureSpace V] [BorelSpace V]
     (f : SchwartzMap V ℂ) (N : ℕ) (_hN : Module.finrank ℝ V < N) :

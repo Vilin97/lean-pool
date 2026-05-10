@@ -85,7 +85,8 @@ Test the PD condition with g_a(x) = exp(-a‖x‖²) exp(-i⟨ξ₀,x⟩):
 Since ĝ_a is an explicit Gaussian (Mathlib: `fourier_gaussian_innerProductSpace'`),
 |ĝ_a|² is a Gaussian centered at ξ₀ with width ~ 1/√a. As a → 0⁺, this
 concentrates at ξ₀. Since φ̂ is continuous (Riemann-Lebesgue), the integral
-converges to φ̂(ξ₀) · (const), giving φ̂(ξ₀) ≥ 0. -/
+converges to φ̂(ξ₀) · (const), giving φ̂(ξ₀) ≥ 0.
+-/
 
 /-- The double sum ∑ᵢ ∑ⱼ conj(aᵢ) * aⱼ equals normSq(∑ₖ aₖ). -/
 private lemma sum_star_mul_eq_normSq {m : ℕ} (a : Fin m → ℂ) :
@@ -99,7 +100,8 @@ private lemma sum_star_mul_eq_normSq {m : ℕ} (a : Fin m → ℂ) :
 
 The "forward" direction of Bochner: the characteristic function of any
 finite measure is positive definite. This gives us PD of the Gaussian
-as a corollary: exp(-ε‖x‖²) is the charFun of a Gaussian measure. -/
+as a corollary: exp(-ε‖x‖²) is the charFun of a Gaussian measure.
+-/
 
 omit [FiniteDimensional ℝ V] in
 /-- Forward Bochner: the characteristic function of any finite measure is PD.
@@ -108,7 +110,8 @@ omit [FiniteDimensional ℝ V] in
     ∑ᵢⱼ c̄ᵢcⱼ charFun(tᵢ-tⱼ) = ∫ |∑ₖ cₖ exp(i⟨x,tₖ⟩)|² dμ(x) ≥ 0.
 
     The key steps are: (1) swap finite sum and integral, (2) recognize
-    the integrand as a norm squared. -/
+    the integrand as a norm squared.
+-/
 lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
     IsPositiveDefinite (fun t : V => charFun μ t) where
   hermitian t := by
@@ -202,7 +205,8 @@ omit [FiniteDimensional ℝ V] in
 /-- Pointwise product of a PD function and the characteristic function of a
     finite measure is PD. This is a "continuous Schur product" — the same
     algebraic trick as `isPositiveDefinite_charFun` but with modified
-    coefficients d_k(x) = c_k · exp(-i⟨x, t_k⟩) absorbed into the PD condition. -/
+    coefficients d_k(x) = c_k · exp(-i⟨x, t_k⟩) absorbed into the PD condition.
+-/
 lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite φ)
     (μ : Measure V) [IsFiniteMeasure μ] :
     IsPositiveDefinite (fun t => φ t * charFun μ t) where
@@ -295,7 +299,8 @@ lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite 
     (4πε)^{-n/2} exp(-‖x‖²/(4ε)) has charFun(t) = exp(-ε‖t‖²).
 
     Proof: define μ = C · exp(-a‖x‖²) · dλ where a = 1/(4ε) and C normalizes.
-    Use `integral_cexp_neg_mul_sq_norm_add` for the charFun computation. -/
+    Use `integral_cexp_neg_mul_sq_norm_add` for the charFun computation.
+-/
 private lemma gaussian_eq_charFun (ε : ℝ) (hε : 0 < ε) :
     ∃ (μ : Measure V), IsFiniteMeasure μ ∧
     ∀ t, charFun μ t = cexp (-(ε : ℂ) * ↑(‖t‖ ^ 2)) := by
@@ -376,7 +381,8 @@ private lemma gaussian_eq_charFun (ε : ℝ) (hε : 0 < ε) :
 /-- The Gaussian function x ↦ exp(-ε‖x‖²) is positive definite.
 
     Proved by showing it is the characteristic function of a centered
-    Gaussian measure with variance 1/(2ε). -/
+    Gaussian measure with variance 1/(2ε).
+-/
 lemma isPositiveDefinite_gaussian (ε : ℝ) (hε : 0 < ε) :
     IsPositiveDefinite (fun x : V => cexp (-(ε : ℂ) * ↑(‖x‖ ^ 2))) := by
   obtain ⟨μ, hfin, hcharFun⟩ := gaussian_eq_charFun (V := V) ε hε
@@ -386,7 +392,8 @@ lemma isPositiveDefinite_gaussian (ε : ℝ) (hε : 0 < ε) :
 
 /-! ## Phase 2: Gaussian regularization
 
-φ_ε(x) = φ(x) · exp(-ε‖x‖²) is PD (Schur) and L¹ (bounded × Gaussian). -/
+φ_ε(x) = φ(x) · exp(-ε‖x‖²) is PD (Schur) and L¹ (bounded × Gaussian).
+-/
 
 /-- The Gaussian-regularized function. -/
 noncomputable def gaussianRegularize (φ : V → ℂ) (ε : ℝ) : V → ℂ :=
@@ -402,7 +409,8 @@ noncomputable def gaussianRegularize (φ : V → ℂ) (ε : ℝ) : V → ℂ :=
     So ∑ᵢⱼ c̄ᵢcⱼ φ(xᵢ-xⱼ) exp(-ε‖xᵢ-xⱼ‖²)
       = ∫ g(ξ) [∑ᵢⱼ (cᵢ e^{2πi⟨xᵢ,ξ⟩})* (cⱼ e^{2πi⟨xⱼ,ξ⟩}) φ(xᵢ-xⱼ)] dξ
 
-    The inner sum has .re ≥ 0 by PD of φ, and g ≥ 0, so the integral ≥ 0. -/
+    The inner sum has .re ≥ 0 by PD of φ, and g ≥ 0, so the integral ≥ 0.
+-/
 lemma gaussianRegularize_pd (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
     (ε : ℝ) (hε : 0 < ε) :
     IsPositiveDefinite (gaussianRegularize φ ε) where
@@ -480,7 +488,8 @@ As the lattice refines and grows, S_N → 𝓕ψ(ξ), giving Re(𝓕ψ(ξ)) ≥ 
     on a finite-dimensional real inner product space has nonneg real part.
 
     Proved in `Bochner.FejerPD` via Fejér-weighted PD sums.
-    Refs: Rudin, Theorem 1.4.3; Folland, §4.2, Lemma 4.8. -/
+    Refs: Rudin, Theorem 1.4.3; Folland, §4.2, Lemma 4.8.
+-/
 theorem pd_l1_fourier_re_nonneg_ax
     (V : Type*) [NormedAddCommGroup V] [InnerProductSpace ℝ V]
     [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V]
@@ -490,7 +499,8 @@ theorem pd_l1_fourier_re_nonneg_ax
 
 omit [InnerProductSpace ℝ V] [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] in
 /-- 𝓕(φ_ε)(ξ) → 𝓕(φ)(ξ) as ε → 0⁺, by dominated convergence.
-    The integrand φ_ε(x)·e^{-2πi⟨x,ξ⟩} is dominated by |φ(x)|. -/
+    The integrand φ_ε(x)·e^{-2πi⟨x,ξ⟩} is dominated by |φ(x)|.
+-/
 private lemma gaussianRegularize_norm_le (φ : V → ℂ) {ε : ℝ} (hε : 0 ≤ ε) (x : V) :
     ‖gaussianRegularize φ ε x‖ ≤ ‖φ x‖ := by
   simp only [gaussianRegularize, norm_mul]
@@ -528,14 +538,16 @@ private lemma ft_gaussianRegularize_tendsto (φ : V → ℂ) (hint : Integrable 
     exact ae_of_all _ (fun x => Tendsto.smul tendsto_const_nhds (gaussianRegularize_tendsto φ x))
 
 /-- The real part of the Fourier transform of an L¹ PD function is nonneg.
-    Ref: Folland, *A Course in Abstract Harmonic Analysis*, §4.2, Lemma 4.8. -/
+    Ref: Folland, *A Course in Abstract Harmonic Analysis*, §4.2, Lemma 4.8.
+-/
 theorem pd_l1_fourier_re_nonneg (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
     (hint : Integrable φ) (hcont : Continuous φ) (ξ : V) : 0 ≤ (𝓕 φ ξ).re :=
   pd_l1_fourier_re_nonneg_ax V φ hpd hint hcont ξ
 
 /-- An L¹ positive-definite function has a nonneg real Fourier transform.
     Continuity of φ̂ (from Riemann-Lebesgue) means this holds everywhere,
-    not just a.e. -/
+    not just a.e.
+-/
 lemma pd_l1_fourier_nonneg (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
     (hint : Integrable φ) (hcont : Continuous φ) (ξ : V) :
     0 ≤ (𝓕 φ ξ).re ∧ (𝓕 φ ξ).im = 0 := by
@@ -577,14 +589,16 @@ lemma pd_l1_fourier_real_nonneg (φ : V → ℂ) (hpd : IsPositiveDefinite φ)
 
 Given φ ∈ L¹ PD with φ(0) = 1, define dμ = φ̂ · dλ. Since φ̂ ≥ 0 (Phase 1)
 and ∫ φ̂ = φ(0) = 1 (Fourier inversion at 0), μ is a probability measure.
-By Fourier inversion, charFun(μ) = φ. -/
+By Fourier inversion, charFun(μ) = φ.
+-/
 
 /-- Given an L¹ PD function with φ(0) = 1, there exists a probability measure
     whose characteristic function equals φ.
 
     Key idea: define ψ(x) = φ(2πx) to absorb the 2π convention difference
     between charFun (uses e^{i⟪x,t⟫}) and 𝓕 (uses e^{-2πi⟪x,ξ⟫}).
-    Then dμ = 𝓕ψ · dλ is a probability measure with charFun(μ) = φ. -/
+    Then dμ = 𝓕ψ · dλ is a probability measure with charFun(μ) = φ.
+-/
 lemma measure_of_pd_l1 (φ : V → ℂ)
     (hpd : IsPositiveDefinite φ) (hint : Integrable φ)
     (hcont : Continuous φ) (hnorm : φ 0 = 1)
@@ -737,10 +751,12 @@ uniformly in ε as R → ∞.
 
 Prokhorov's theorem (Mathlib: `isCompact_closure_of_isTightMeasureSet`)
 extracts a weakly convergent subsequence. Testing the limit against
-x ↦ exp(i⟨ξ,x⟩) identifies charFun(μ) = φ. -/
+x ↦ exp(i⟨ξ,x⟩) identifies charFun(μ) = φ.
+-/
 
 /-- L¹ Parseval/Fubini: ∫ (𝓕 f) • g = ∫ f • (𝓕 g) for f, g ∈ L¹.
-    This is `integral_fourierIntegral_smul_eq_flip` with L.flip = L (symmetric IP). -/
+    This is `integral_fourierIntegral_smul_eq_flip` with L.flip = L (symmetric IP).
+-/
 private lemma parseval_l1 (f g : V → ℂ) (hf : Integrable f) (hg : Integrable g) :
     ∫ ξ, 𝓕 f ξ * g ξ = ∫ x, f x * 𝓕 g x := by
   have hL : Continuous fun p : V × V => (innerₗ V) p.1 p.2 :=
@@ -774,7 +790,8 @@ private lemma ft_gaussian_integrable (t : ℝ) (ht : 0 < t) :
   convert this using 1; ext w; congr 1; push_cast; ring
 
 /-- The Fourier transform of a Gaussian has integral equal to 1.
-    Uses Fourier inversion: 𝓕⁻(𝓕 g)(0) = g(0) = 1, and 𝓕⁻(h)(0) = ∫ h. -/
+    Uses Fourier inversion: 𝓕⁻(𝓕 g)(0) = g(0) = 1, and 𝓕⁻(h)(0) = ∫ h.
+-/
 private lemma integral_ft_gaussian_eq_one (t : ℝ) (ht : 0 < t) :
     ∫ x : V, 𝓕 (fun ξ : V => cexp (-(t : ℂ) * ↑(‖ξ‖ ^ 2))) x = 1 := by
   set g := fun ξ : V => cexp (-(t : ℂ) * ↑(‖ξ‖ ^ 2))
@@ -817,7 +834,8 @@ private lemma integral_norm_ft_gaussian_eq_one (t : ℝ) (ht : 0 < t) :
     Proof: 𝓕(φ_ε) ≥ 0 (from PD), and for each t > 0 the Parseval/Fubini identity
     gives ∫ (𝓕 φ_ε) * g_t = ∫ φ_ε * (𝓕 g_t), bounded by ‖φ_ε‖∞ * ‖𝓕 g_t‖₁ = (φ 0).re.
     Monotone convergence (g_t ↗ 1) gives ∫⁻ ‖𝓕 φ_ε‖ ≤ (φ 0).re < ∞.
-    Ref: Folland, A Course in Abstract Harmonic Analysis, 4.2. -/
+    Ref: Folland, A Course in Abstract Harmonic Analysis, 4.2.
+-/
 theorem gaussianRegularize_ft_integrable (φ : V → ℂ)
     (hpd : IsPositiveDefinite φ) (hcont : Continuous φ)
     (ε : ℝ) (hε : 0 < ε) :
@@ -975,7 +993,8 @@ private lemma one_sub_exp_neg_le {x : ℝ} (_hx : 0 ≤ x) : 1 - Real.exp (-x) �
 
 omit [InnerProductSpace ℝ V] [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] in
 /-- Bound on ‖1 - gaussianRegularize φ ε v‖ in terms of ‖1 - φ v‖ and ‖v‖².
-    Uses triangle inequality, bounded_by_zero, and 1-exp(-x) ≤ x. -/
+    Uses triangle inequality, bounded_by_zero, and 1-exp(-x) ≤ x.
+-/
 private lemma gaussianRegularize_deviation_bound (φ : V → ℂ)
     (hpd : IsPositiveDefinite φ) (hnorm : φ 0 = 1)
     (v : V) (ε : ℝ) (hε : 0 < ε) (hε1 : ε ≤ 1) :
@@ -1013,7 +1032,8 @@ omit [FiniteDimensional ℝ V] in
 /-- Key bound: for a probability measure μ with charFun μ = gaussianRegularize φ ε (ε ≤ 1),
     and for any y and r > 0:
     μ.real {x | r < |⟪y,x⟫|} ≤ 2 * C + 8 * ‖y‖² * r⁻²
-    where C bounds ‖1 - φ(t•y)‖ for |t| ≤ 2/r. -/
+    where C bounds ‖1 - φ(t•y)‖ for |t| ≤ 2/r.
+-/
 private lemma charFun_measure_inner_bound (φ : V → ℂ)
     (hpd : IsPositiveDefinite φ) (hnorm : φ 0 = 1)
     {μ : Measure V} [IsProbabilityMeasure μ] {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1)
@@ -1065,7 +1085,8 @@ private lemma charFun_measure_inner_bound (φ : V → ℂ)
     (Mathlib: `measureReal_abs_inner_gt_le_integral_charFun`).
     Since charFun(μ_ε) = φ_ε → φ uniformly on compacts and φ is continuous
     at 0 with φ(0) = 1, the RHS → 0 uniformly in ε as r → ∞.
-    Ref: Folland, §4.2, proof of Theorem 4.15. -/
+    Ref: Folland, §4.2, proof of Theorem 4.15.
+-/
 theorem gaussianRegularize_measures_tight (φ : V → ℂ)
     (hpd : IsPositiveDefinite φ) (hcont : Continuous φ) (hnorm : φ 0 = 1) :
     IsTightMeasureSet
@@ -1174,12 +1195,14 @@ theorem gaussianRegularize_measures_tight (φ : V → ℂ)
 /-! ## Phase 5: Uniqueness (from Mathlib)
 
 `MeasureTheory.Measure.ext_of_charFun` already proves that charFun determines
-the measure uniquely. -/
+the measure uniquely.
+-/
 
 /-! ## Main Theorem -/
 
 /-- The characteristic function of the weak limit equals `φ` (per-test-vector step of
-`bochner_existence`). -/
+`bochner_existence`).
+-/
 private lemma bochner_charFun_eq (φ : V → ℂ) {μ : ProbabilityMeasure V}
     {μ_seq : ℕ → ProbabilityMeasure V} {f : ℕ → ℕ}
     (hμ_seq : ∀ n ξ, MeasureTheory.charFun (μ_seq n : Measure V) ξ
@@ -1230,7 +1253,8 @@ private lemma bochner_charFun_eq (φ : V → ℂ) {μ : ProbabilityMeasure V}
   exact tendsto_nhds_unique hcharfun_conv hgr_conv'
 
 /-- For each `ε > 0` the Gaussian-regularised functional `φ_ε` is the characteristic function
-of a probability measure. -/
+of a probability measure.
+-/
 private lemma bochner_mu_eps (φ : V → ℂ)
     (hcont : Continuous φ) (hpd : IsPositiveDefinite φ) (hnorm : φ 0 = 1) {ε : ℝ} (hε : 0 < ε) :
     ∃ μ_ε : ProbabilityMeasure V,
@@ -1257,10 +1281,14 @@ private lemma bochner_mem_tight (φ : V → ℂ) {μ_seq : ℕ → ProbabilityMe
       = gaussianRegularize φ (1 / (↑n + 1)) ξ) (n : ℕ) :
     (μ_seq n : Measure V) ∈ {(μ : Measure V) | ∃ ε, 0 < ε ∧ ε ≤ 1 ∧
       ∃ (_ : IsProbabilityMeasure μ), ∀ ξ, charFun μ ξ = gaussianRegularize φ ε ξ} := by
-  refine ⟨1 / (↑n + 1), by positivity, ?_, (μ_seq n).prop, hμ_seq n⟩
-  have h1 : (0 : ℝ) < (n : ℝ) + 1 := by positivity
-  rw [div_le_one₀ h1]
-  linarith [n.cast_nonneg (α := ℝ)]
+  rw [Set.mem_setOf_eq]
+  refine ⟨1 / (↑n + 1), ?_, ?_, ?_, ?_⟩
+  · positivity
+  · have h1 : (0 : ℝ) < (n : ℝ) + 1 := by positivity
+    rw [div_le_one₀ h1]
+    linarith [n.cast_nonneg (α := ℝ)]
+  · exact (μ_seq n).prop
+  · exact hμ_seq n
 
 /-- The range of the Gaussian-regularised sequence is a tight set of probability measures. -/
 private lemma bochner_S_tight (φ : V → ℂ)
@@ -1275,7 +1303,8 @@ private lemma bochner_S_tight (φ : V → ℂ)
   exact bochner_mem_tight φ hμ_seq n
 
 /-- Existence half of `bochner_theorem`: from a continuous positive-definite normalized functional
-build a probability measure with the given characteristic function. -/
+build a probability measure with the given characteristic function.
+-/
 private theorem bochner_existence (φ : V → ℂ)
     (hcont : Continuous φ) (hpd : IsPositiveDefinite φ) (hnorm : φ 0 = 1) :
     ∃ μ : ProbabilityMeasure V,
@@ -1294,7 +1323,8 @@ characteristic function of a unique probability measure on V.
 
 This is the finite-dimensional version. The infinite-dimensional
 generalization (Bochner-Minlos) additionally requires nuclearity of the
-domain space. -/
+domain space.
+-/
 theorem bochner_theorem (φ : V → ℂ)
     (hcont : Continuous φ) (hpd : IsPositiveDefinite φ) (hnorm : φ 0 = 1) :
     ∃! μ : ProbabilityMeasure V,

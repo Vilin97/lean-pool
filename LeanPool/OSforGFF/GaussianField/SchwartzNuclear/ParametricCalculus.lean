@@ -31,7 +31,8 @@ open scoped ContDiff
 The `continuousMultilinearCurryLeftEquiv` is parameterized by `SeminormedAddCommGroup`
 instances, while `LinearIsometryEquiv.norm_iteratedFDeriv_comp_left` requires
 `NormedAddCommGroup`. We rebuild the isometry with explicit `NormedAddCommGroup`
-instances to resolve this diamond. -/
+instances to resolve this diamond.
+-/
 
 private noncomputable def curryLeftLIE {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -59,7 +60,8 @@ Proof by induction on `l'`. The key difficulty is a typeclass diamond: the
 `SeminormedAddCommGroup` instances on `ContinuousMultilinearMap` and `ContinuousLinearMap`
 differ from those derived from `NormedAddCommGroup`, preventing direct use of
 `LinearIsometryEquiv.norm_iteratedFDeriv_comp_left`. We resolve this by rebuilding the
-currying isometry with explicit `NormedAddCommGroup` instances via `curryLeftLIE`. -/
+currying isometry with explicit `NormedAddCommGroup` instances via `curryLeftLIE`.
+-/
 lemma norm_iteratedFDeriv_iteratedFDeriv {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
@@ -92,7 +94,8 @@ The proof uses a "double induction" on `I n y := ∫ t, D^n_y[Φ_t(t)](y)`:
 
 The `hι_meas` hypothesis provides measurability of the parametric iterated
 derivatives `t ↦ D^m_y[f(ι(·,t))](y)`. In all applications (e.g., `ι = euclideanSnoc`),
-this follows from joint smoothness of `ι` via `Continuous.aestronglyMeasurable`. -/
+this follows from joint smoothness of `ι` via `Continuous.aestronglyMeasurable`.
+-/
 
 /-- **Leibniz integral rule (C^∞, Schwartz integrand).**
 
@@ -104,7 +107,8 @@ a parametric embedding `ι : H → ℝ → E`, if:
 
 then `y ↦ ∫_t f(ι(y,t)) · g(t) dt` is C^∞ and `D^m` commutes with `∫`.
 
-**Reference**: Folland, "Real Analysis", Theorem 2.27 (iterated version). -/
+**Reference**: Folland, "Real Analysis", Theorem 2.27 (iterated version).
+-/
 lemma contDiff_schwartz_parametric_integral
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpace E]
     [BorelSpace E] [FiniteDimensional ℝ E]

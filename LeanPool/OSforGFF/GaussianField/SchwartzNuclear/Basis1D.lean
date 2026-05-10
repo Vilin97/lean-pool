@@ -26,7 +26,8 @@ noncomputable section
 /-! ## Hermite Coefficient as a Continuous Linear Map
 
 `hermiteCoeff1D` is linear (proved) and bounded by a Schwartz seminorm
-(from the decay estimate at k=0), hence continuous. -/
+(from the decay estimate at k=0), hence continuous.
+-/
 
 /-- The Hermite coefficient as a continuous linear map on Schwartz space. -/
 def hermiteCoeff1DCLM (n : ℕ) : SchwartzMap ℝ ℝ →L[ℝ] ℝ where
@@ -73,11 +74,13 @@ def hermiteCoeff1DCLM (n : ℕ) : SchwartzMap ℝ ℝ →L[ℝ] ℝ where
 /-! ## Expansion Identity for Scalar CLFs
 
 Specializing `schwartz_hermite_expansion_1D` to H = ℝ gives the
-expansion for arbitrary continuous linear functionals. -/
+expansion for arbitrary continuous linear functionals.
+-/
 
 /-- The Hermite expansion recovers any continuous linear functional.
     For φ : S(ℝ) →L[ℝ] ℝ and f ∈ S(ℝ):
-      φ(f) = ∑' n, cₙ(f) · φ(ψₙ) -/
+      φ(f) = ∑' n, cₙ(f) · φ(ψₙ)
+-/
 theorem schwartz_hermite_expansion_CLF
     (φ : SchwartzMap ℝ ℝ →L[ℝ] ℝ) (f : SchwartzMap ℝ ℝ) :
     φ f = ∑' n, hermiteCoeff1D n f * φ (schwartzHermiteBasis1D n) := by
@@ -101,12 +104,14 @@ We show this sup is controlled by a single seminorm using:
 - We apply `seminorm_le_bound` to lift to the seminorm level
 
 Key fact: Mathlib's Schwartz seminorms use ‖x‖^k (NOT (1+‖x‖)^k), so they are
-NOT individually monotone in k. The bound goes through the (1+‖x‖) framework. -/
+NOT individually monotone in k. The bound goes through the (1+‖x‖) framework.
+-/
 
 /-- Each individual Schwartz seminorm in `Finset.Iic q` is bounded by
     `2^q.1` times the sup over the same finite set. Combined with
     `finset_sup_apply_le`, this gives the sup bounded by itself (with constant),
-    which then allows us to bound by any element with a larger constant. -/
+    which then allows us to bound by any element with a larger constant.
+-/
 private theorem seminorm_le_sup_of_mem {q : ℕ × ℕ} {k' l' : ℕ}
     (hk : k' ≤ q.1) (hl : l' ≤ q.2) (f : SchwartzMap ℝ ℝ) :
     SchwartzMap.seminorm ℝ k' l' f ≤
@@ -125,7 +130,8 @@ private theorem seminorm_le_sup_of_mem {q : ℕ × ℕ} {k' l' : ℕ}
         SchwartzMap.one_add_le_sup_seminorm_apply le_rfl hl f x
 
 /-- Coefficient decay with a finset-sup seminorm bound. This is the natural form
-    that follows directly from `hermiteCoeff1D_decay`. -/
+    that follows directly from `hermiteCoeff1D_decay`.
+-/
 theorem hermiteCoeff1D_decay_single :
     ∀ (k : ℕ), ∃ (C : ℝ) (q : ℕ × ℕ), 0 < C ∧
       ∀ (f : SchwartzMap ℝ ℝ) (n : ℕ),
@@ -136,10 +142,12 @@ theorem hermiteCoeff1D_decay_single :
 
 /-! ## Basis Growth (seminorm bound)
 
-Repackage `hermiteFunction_seminorm_bound` with ℕ exponent. -/
+Repackage `hermiteFunction_seminorm_bound` with ℕ exponent.
+-/
 
 /-- Basis growth: Schwartz seminorms of Hermite functions grow polynomially.
-    Compatible with DyninMityaginSpace.basis_growth. -/
+    Compatible with DyninMityaginSpace.basis_growth.
+-/
 theorem schwartzHermiteBasis1D_growth (k l : ℕ) :
     ∃ (C : ℝ), 0 < C ∧ ∃ (s : ℕ),
       ∀ m, SchwartzMap.seminorm ℝ k l (schwartzHermiteBasis1D m) ≤

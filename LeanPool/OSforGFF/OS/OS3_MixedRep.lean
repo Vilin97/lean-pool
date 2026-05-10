@@ -40,7 +40,6 @@ The mixed representation exhibits:
 - Osterwalder & Schrader, "Axioms for Euclidean Green's Functions I & II" (1973, 1975)
 - Glimm & Jaffe, "Quantum Physics: A Functional Integral Point of View" (1987), §11.4
 - Haag, "Local Quantum Physics" (1996), §V.3
-
 -/
 
 open MeasureTheory Complex Real Filter QFT LaplaceIntegral
@@ -54,7 +53,8 @@ variable {m : ℝ} [Fact (0 < m)]
 /-- The 1D Gaussian Fourier transform in real form:
     ∫ exp(-ik₀t) exp(-sk₀²) dk₀ = √(π/s) exp(-t²/(4s))
 
-    This follows from Mathlib's `fourierIntegral_gaussian`. -/
+    This follows from Mathlib's `fourierIntegral_gaussian`.
+-/
 lemma gaussian_fourier_1d (s : ℝ) (hs : 0 < s) (t : ℝ) :
     ∫ k₀ : ℝ, Complex.exp (-Complex.I * k₀ * t) * Complex.exp (-(s : ℂ) * k₀^2) =
     Real.sqrt (π / s) * Complex.exp (-(t^2 / (4 * s) : ℝ)) := by
@@ -110,7 +110,8 @@ lemma gaussian_exp_factorize (s : ℂ) (k : SpaceTime) :
 
     For z = Θx - y with z₀ = -x₀ - y₀:
     ∫_k exp(-ik·z) exp(-s|k|²) = (∫_{k₀} exp(-ik₀z₀) exp(-sk₀²)) × (∫_{k_sp} exp(-ik_sp·z_sp) exp(-s|k_sp|²))
-                                = √(π/s) exp(-z₀²/(4s)) × ∫_{k_sp} exp(-ik_sp·z_sp) exp(-s|k_sp|²) -/
+                                = √(π/s) exp(-z₀²/(4s)) × ∫_{k_sp} exp(-ik_sp·z_sp) exp(-s|k_sp|²)
+-/
 lemma k_integral_after_k0_eval (s : ℝ) (hs : 0 < s) (z : SpaceTime) :
     ∫ k : SpaceTime, Complex.exp (-Complex.I * ⟪k, z⟫_ℝ) * Complex.exp (-(s : ℂ) * ‖k‖^2) =
     (Real.sqrt (π / s) : ℂ) * Complex.exp (-(((z 0)^2 / (4 * s)) : ℝ)) *
@@ -222,7 +223,8 @@ lemma spatialPart_timeReflection_sub (x y : SpaceTime) :
 
     where t = -x₀ - y₀ (time separation under reflection) and r̄ = x̄ - ȳ (spatial separation).
 
-    The exp(-sm²) factor combines with exp(-s|p̄|²) to give exp(-s(|p̄|² + m²)). -/
+    The exp(-sm²) factor combines with exp(-s|p̄|²) to give exp(-s(|p̄|² + m²)).
+-/
 theorem heatKernel_bilinear_fourier_form (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     ∫ s in Set.Ioi 0, (Real.exp (-s * m^2) : ℂ) *
       ∫ x : SpaceTime, ∫ y : SpaceTime,
@@ -458,7 +460,8 @@ lemma omega_pos (k_sp : SpatialCoords) (m : ℝ) (hm : 0 < m) :
 /-- The normalization constant relation:
     (1/(2π)⁴) × π = 1/(2(2π)³)
 
-    Proof: (2π)⁴ = 2 × (2π)³ × π, so π/(2π)⁴ = 1/(2(2π)³) -/
+    Proof: (2π)⁴ = 2 × (2π)³ × π, so π/(2π)⁴ = 1/(2(2π)³)
+-/
 lemma normalization_constant_laplace :
     (1 / (2 * π) ^ 4 : ℝ) * π = 1 / (2 * (2 * π) ^ 3) := by field_simp
 
@@ -474,7 +477,8 @@ lemma normalization_constant_laplace :
     1. Factor √(π/s) = √π · s^(-1/2)
     2. Combine exponentials: exp(-t²/(4s)) * exp(-s*ω²) = exp(-t²/(4s) - s*ω²)
     3. Apply laplace_integral_half_power_nonneg with a = t²/4, b = ω²
-    4. Result: √π * √(π/ω²) * exp(-2√((t²/4)*ω²)) = (π/ω) * exp(-ω|t|) -/
+    4. Result: √π * √(π/ω²) * exp(-2√((t²/4)*ω²)) = (π/ω) * exp(-ω|t|)
+-/
 lemma s_integral_eval (t : ℝ) (ω : ℝ) (hω : 0 < ω) :
     ∫ s in Set.Ioi 0, Real.sqrt (π / s) * Real.exp (-(t^2 / (4 * s))) *
       Real.exp (-s * ω^2) = (π / ω) * Real.exp (-ω * |t|) := by
@@ -590,7 +594,8 @@ lemma s_integral_eval_complex (t : ℝ) (ω : ℝ) (hω : 0 < ω) :
     Note: The integrand has the form:
     f̄ * f * √(π/s) * cexp(-t²/(4s)) * cexp(-sω²) * cexp(-I*phase)
 
-    where all exponentials have real arguments (cast to ℂ). -/
+    where all exponentials have real arguments (cast to ℂ).
+-/
 lemma s_integral_complex_eval (k_sp : SpatialCoords) (x y : SpaceTime) (m : ℝ) (hm : 0 < m)
     (f : TestFunctionℂ) :
     ∫ s in Set.Ioi 0, (starRingEnd ℂ (f x)) * f y *
@@ -691,7 +696,8 @@ lemma s_integral_complex_eval (k_sp : SpatialCoords) (x y : SpaceTime) (m : ℝ)
     **Normalization:** (1/(2π)⁴) × π = 1/(2(2π)³) ✓
 
     **Proof:** Uses `fubini_s_xy_swap` to move s inside, then
-    `s_integral_eval` to evaluate the Laplace transform. -/
+    `s_integral_eval` to evaluate the Laplace transform.
+-/
 theorem laplace_s_integral_with_norm (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     (1 / (2 * π) ^ STDimension : ℝ) *
     ∫ k_sp : SpatialCoords, ∫ s in Set.Ioi 0, ∫ x : SpaceTime, ∫ y : SpaceTime,
@@ -846,7 +852,8 @@ theorem laplace_s_integral_with_norm (m : ℝ) [Fact (0 < m)] (f : TestFunction�
     **Proof:**
     Uses `Integrable.mono'` with the bound from `schwinger_bound_integrable`.
     The pointwise bound |integrand| ≤ bound is verified for s > 0,
-    and the set s ≤ 0 has measure zero under the restricted measure. -/
+    and the set s ≤ 0 has measure zero under the restricted measure.
+-/
 theorem schwinger_bilinear_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     Integrable (fun (p : ℝ × SpaceTime × SpaceTime) =>
       (starRingEnd ℂ (f p.2.1)) * f p.2.2 *
@@ -1017,13 +1024,15 @@ theorem schwinger_bilinear_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
   exact not_lt.mpr (h_bound p hpIoi) hp
 
 /-- The permutation map (x, (y, s)) ↦ (s, (x, y)) as a measurable equivalence.
-    Constructed by composing prodAssoc.symm (reassociating) with prodComm (swapping). -/
+    Constructed by composing prodAssoc.symm (reassociating) with prodComm (swapping).
+-/
 private def schwinger_tripleReorder :
     SpaceTime × (SpaceTime × ℝ) ≃ᵐ ℝ × (SpaceTime × SpaceTime) :=
   MeasurableEquiv.prodAssoc.symm.trans MeasurableEquiv.prodComm
 
 /-- The schwinger_tripleReorder map is measure-preserving on product Lebesgue measures
-    with the s-measure restricted to Ioi 0. -/
+    with the s-measure restricted to Ioi 0.
+-/
 private lemma measurePreserving_schwinger_tripleReorder :
     MeasurePreserving schwinger_tripleReorder
       ((volume : Measure SpaceTime).prod (volume.prod (volume.restrict (Set.Ioi 0))))
@@ -1053,7 +1062,8 @@ private lemma measurePreserving_schwinger_tripleReorder :
     **Proof:**
     Both sides equal ∫∫∫ F over (Ioi 0) × SpaceTime × SpaceTime by Fubini-Tonelli.
     The proof uses `integral_prod` to convert iterated integrals to product integrals,
-    and the measure-preserving map `schwinger_tripleReorder` to connect them. -/
+    and the measure-preserving map `schwinger_tripleReorder` to connect them.
+-/
 theorem schwinger_fubini_core (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     ∫ x : SpaceTime, ∫ y : SpaceTime, ∫ s in Set.Ioi 0,
       (starRingEnd ℂ (f x)) * f y *
@@ -1125,7 +1135,8 @@ theorem schwinger_fubini_core (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     The key steps:
     1. Rewrite both sides as integrals over ℝ × SpaceTime × SpaceTime
     2. Apply Fubini to swap the order of integration
-    3. Use the integrability hypothesis to justify the swap -/
+    3. Use the integrability hypothesis to justify the swap
+-/
 theorem schwinger_fubini_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     ∫ x : SpaceTime, ∫ y : SpaceTime,
       (starRingEnd ℂ (f x)) * f y *
@@ -1199,7 +1210,8 @@ theorem schwinger_fubini_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
   exact schwinger_fubini_core m f
 
 /-- The kernel-level Schwinger representation holds for Θx ≠ y.
-    This follows from `covarianceSchwingerRep_eq_freeCovarianceBessel`. -/
+    This follows from `covarianceSchwingerRep_eq_freeCovarianceBessel`.
+-/
 lemma freeCovariance_eq_schwingerRep (m : ℝ) (hm : 0 < m) (x y : SpaceTime)
     (hxy : timeReflection x ≠ y) :
     (freeCovariance m (timeReflection x) y : ℂ) =
@@ -1606,7 +1618,8 @@ theorem heatKernel_bilinear_to_mixed_rep (m : ℝ) [Fact (0 < m)] (f : TestFunct
     7. **Normalize**: (1/(2π)^4) × π = 1/(2(2π)³) ✓
 
     **Note**: Working directly at bilinear level ensures absolute convergence
-    (Schwartz test functions provide decay even when t = 0). -/
+    (Schwartz test functions provide decay even when t = 0).
+-/
 theorem bessel_bilinear_eq_mixed_representation (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     (hf_supp : ∀ x, x 0 ≤ 0 → f x = 0) :
   ∫ x : SpaceTime, ∫ y : SpaceTime,
@@ -1631,7 +1644,8 @@ theorem bessel_bilinear_eq_mixed_representation (m : ℝ) [Fact (0 < m)] (f : Te
     By `fourier_lorentzian_1d_neg`:
     (π/ω) exp(-ω|t|) = ∫_{k₀} exp(-ik₀t)/(k₀²+ω²) dk₀
 
-    So: (1/ω) exp(-ω|t|) = (1/π) ∫_{k₀} exp(-ik₀t)/(k₀²+ω²) dk₀ -/
+    So: (1/ω) exp(-ω|t|) = (1/π) ∫_{k₀} exp(-ik₀t)/(k₀²+ω²) dk₀
+-/
 lemma mixed_rep_to_k0_inside_integrand (k_spatial : SpatialCoords) (m : ℝ) [Fact (0 < m)]
     (t : ℝ) :
     let ω := Real.sqrt (‖k_spatial‖^2 + m^2)
@@ -1667,7 +1681,8 @@ lemma mixed_rep_to_k0_inside_integrand (k_spatial : SpatialCoords) (m : ℝ) [Fa
     1. Apply `bessel_bilinear_eq_mixed_representation` to convert LHS to mixed rep
     2. Use `mixed_rep_to_k0_inside_integrand`: (1/ω) exp(-ω|t|) = (1/π) ∫_{k₀}...
     3. Factor the spatial phase into the k₀ integral
-    4. Combine normalizations: 1/(2(2π)^{d-1}) × (1/π) = 1/(2π)^d -/
+    4. Combine normalizations: 1/(2(2π)^{d-1}) × (1/π) = 1/(2π)^d
+-/
 theorem bilinear_to_k0_inside (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     (hf_supp : ∀ x, x 0 ≤ 0 → f x = 0) :
   ∫ x : SpaceTime, ∫ y : SpaceTime,

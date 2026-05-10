@@ -106,7 +106,8 @@ def OS2_EuclideanInvariance (dμ_config : ProbabilityMeasure FieldConfiguration)
 
     For real positive-time test functions embedded via `toComplex`, `star = compTimeReflection`
     (see `star_toComplex_eq_compTimeReflection`), so this reduces to
-    `OS3_ReflectionPositivity_real`. -/
+    `OS3_ReflectionPositivity_real`.
+-/
 def OS3_ReflectionPositivity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (f : Fin n → PositiveTimeTestFunctionℂ) (c : Fin n → ℂ),
     0 ≤ (∑ i, ∑ j, starRingEnd ℂ (c i) * c j *
@@ -116,7 +117,8 @@ def OS3_ReflectionPositivity (dμ_config : ProbabilityMeasure FieldConfiguration
 /-- Real formulation of OS3 reflection positivity using real-valued positive-time
     test functions and real coefficients.  This is equivalent to `OS3_ReflectionPositivity`
     for measures where the generating functional is real on real test functions
-    (in particular for Gaussian measures). -/
+    (in particular for Gaussian measures).
+-/
 def OS3_ReflectionPositivity_real (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (f : Fin n → PositiveTimeTestFunction) (c : Fin n → ℝ),
     let reflection_matrix := fun i j : Fin n =>
@@ -189,7 +191,8 @@ def OS4_PolynomialClustering (dμ_config : ProbabilityMeasure FieldConfiguration
 /-! ## Bundled Axiom Conjunction -/
 
 /-- A probability measure on field configurations satisfies all Osterwalder-Schrader axioms.
-    This bundles OS0 through OS4 (clustering and ergodicity) into a single predicate. -/
+    This bundles OS0 through OS4 (clustering and ergodicity) into a single predicate.
+-/
 structure SatisfiesAllOS (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop where
   os0 : OS0_Analyticity dμ_config
   os1 : OS1_Regularity dμ_config

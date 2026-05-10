@@ -58,7 +58,8 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E]
 
 /-- The evaluation embedding sending a continuous linear functional to its
     underlying function. This is measurable (but NOT a MeasurableEmbedding
-    when E is uncountable-dimensional). -/
+    when E is uncountable-dimensional).
+-/
 def weakDualEmbed (E : Type*) [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] :
     WeakDual ℝ E → (E → ℝ) :=
@@ -73,7 +74,8 @@ lemma weakDualEmbed_injective : Function.Injective (weakDualEmbed E) := by
   exact ContinuousLinearMap.ext this
 
 /-- The embedding is measurable: each coordinate l ↦ l(f) is measurable
-    w.r.t. the cylinder σ-algebra (by definition). -/
+    w.r.t. the cylinder σ-algebra (by definition).
+-/
 lemma measurable_weakDualEmbed : Measurable (weakDualEmbed E) := by
   apply measurable_pi_lambda
   intro f
@@ -85,7 +87,8 @@ lemma measurable_weakDualEmbed : Measurable (weakDualEmbed E) := by
     ω respects all finite ℚ-linear combinations:
     ω(∑ cᵢ • d(i)) = ∑ cᵢ * ω(d(i)) for every c : ℕ →₀ ℚ.
 
-    This is a countable intersection (ℕ →₀ ℚ is countable) of measurable sets. -/
+    This is a countable intersection (ℕ →₀ ℚ is countable) of measurable sets.
+-/
 def qLinearPaths (d : ℕ → E) : Set (E → ℝ) :=
   ⋂ (c : ℕ →₀ ℚ),
     { ω | ω (c.sum fun i a => (a : ℝ) • d i) =
@@ -111,7 +114,8 @@ lemma qLinearPaths_measurableSet (d : ℕ → E) :
     Combined with ℚ-linearity, this gives uniform continuity of ω on
     the ℚ-span of range(d).
 
-    This is measurable (countable ⋃/⋂ over ℕ × ℕ × (ℕ →₀ ℚ)). -/
+    This is measurable (countable ⋃/⋂ over ℕ × ℕ × (ℕ →₀ ℚ)).
+-/
 def boundedPaths (d : ℕ → E) (p : ℕ → Seminorm ℝ E) : Set (E → ℝ) :=
   ⋃ (s : Finset ℕ) (C : ℕ), ⋂ (c : ℕ →₀ ℚ),
     { ω | |ω (c.sum fun i a => (a : ℝ) • d i)| ≤
@@ -127,7 +131,8 @@ lemma boundedPaths_measurableSet (d : ℕ → E) (p : ℕ → Seminorm ℝ E) :
     ((measurable_pi_apply (c.sum fun i a => (a : ℝ) • d i)).norm) measurable_const
 
 /-- The "good paths" set: ω that are ℚ-linear and bounded on the dense sequence.
-    This is measurable (countable Boolean operations on measurable sets). -/
+    This is measurable (countable Boolean operations on measurable sets).
+-/
 def goodPaths (d : ℕ → E) (p : ℕ → Seminorm ℝ E) : Set (E → ℝ) :=
   qLinearPaths d ∩ boundedPaths d p
 
@@ -150,7 +155,8 @@ lemma goodPaths_measurableSet (d : ℕ → E) (p : ℕ → Seminorm ℝ E) :
        Both sides are continuous in x, y, and agree on range(d) × range(d).
     3. **ℝ-linearity**: g(r•x) = r•g(x) for r ∈ ℝ by density of ℚ in ℝ.
 
-    Ref: Rudin, *Functional Analysis*, Thm 1.18 (bounded linear extension). -/
+    Ref: Rudin, *Functional Analysis*, Thm 1.18 (bounded linear extension).
+-/
 noncomputable def extensionFun [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (d : ℕ → E) (_hd : DenseRange d)
     (p : ℕ → Seminorm ℝ E) (ω : E → ℝ) (_hω : ω ∈ goodPaths d p) : E → ℝ :=
@@ -495,7 +501,8 @@ noncomputable def extensionCLM [SeparableSpace E] [IsHilbertNuclear E] [Nonempty
 /-- The extension agrees with ω on the dense sequence.
     Follows from the BLT construction: Dense.extend agrees with ω on range(d).
 
-    Ref: follows from extensionCLM construction. -/
+    Ref: follows from extensionCLM construction.
+-/
 theorem extensionCLM_eq_on_dense [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (d : ℕ → E) (hd : DenseRange d)
     (p : ℕ → Seminorm ℝ E) (hp_top : WithSeminorms (fun n => p n))
@@ -505,7 +512,8 @@ theorem extensionCLM_eq_on_dense [SeparableSpace E] [IsHilbertNuclear E] [Nonemp
 
 /-- For a continuous linear functional l, embed(l) ∈ goodPaths.
     Proof: l is ℝ-linear (hence ℚ-linear on all Finsupp combinations),
-    and bounded by continuity. -/
+    and bounded by continuity.
+-/
 lemma embed_mem_goodPaths [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (d : ℕ → E) (p : ℕ → Seminorm ℝ E)
     (hp_top : WithSeminorms (fun n => p n))
@@ -540,7 +548,8 @@ lemma embed_mem_goodPaths [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
 
 /-- The extension of embed(l) recovers l.
     Proof: both are ContinuousLinearMaps that agree on the dense set D,
-    hence they agree everywhere by uniqueness of continuous extension. -/
+    hence they agree everywhere by uniqueness of continuous extension.
+-/
 lemma extensionCLM_embed [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (d : ℕ → E) (hd : DenseRange d)
     (p : ℕ → Seminorm ℝ E)
@@ -566,7 +575,8 @@ lemma extensionCLM_embed [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
 /-! ## Measurable Projection -/
 
 /-- Auxiliary projection given explicit dense sequence and seminorms.
-    On good paths, extends ω to a ContinuousLinearMap; on bad paths, returns 0. -/
+    On good paths, extends ω to a ContinuousLinearMap; on bad paths, returns 0.
+-/
 def measurableProjectionAux [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (d : ℕ → E) (hd : DenseRange d)
     (p : ℕ → Seminorm ℝ E) (hp_top : WithSeminorms (fun n => p n)) :
@@ -579,7 +589,8 @@ def measurableProjectionAux [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
 /-- The measurable projection P : (E → ℝ) → WeakDual ℝ E.
 
     On good paths (ℚ-linear + bounded on dense sequence), P(ω) is the unique
-    continuous linear extension of ω|_D. On bad paths, P(ω) = 0. -/
+    continuous linear extension of ω|_D. On bad paths, P(ω) = 0.
+-/
 def measurableProjection [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E] :
     (E → ℝ) → WeakDual ℝ E :=
   measurableProjectionAux (denseSeq E) (denseRange_denseSeq E)
@@ -588,7 +599,8 @@ def measurableProjection [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E] :
 
 /-- For each f : E, the evaluation ω ↦ P(ω)(f) is measurable as a function (E → ℝ) → ℝ.
     On goodPaths, P(ω)(f) = lim ω(dₙ) for dₙ → f (pointwise limit of measurable functions).
-    On badPaths, P(ω)(f) = 0 (constant, measurable). -/
+    On badPaths, P(ω)(f) = 0 (constant, measurable).
+-/
 private lemma measurable_eval_comp_projection
     [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E] (f : E) :
     Measurable (fun ω : E → ℝ => (measurableProjection (E := E) ω : E →L[ℝ] ℝ) f) := by
@@ -651,7 +663,8 @@ private lemma measurable_eval_comp_projection
     by evaluations). So measurability of P : (E → ℝ) → WeakDual reduces to showing
     each composition eval_f ∘ P is measurable, which is measurable_eval_comp_projection.
 
-    Ref: standard measurability of piecewise + pointwise limits (Billingsley, §13). -/
+    Ref: standard measurability of piecewise + pointwise limits (Billingsley, §13).
+-/
 theorem measurable_measurableProjection [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E] :
     Measurable (measurableProjection (E := E)) := by
   -- Measurable means: comap P (cylinder σ-algebra) ≤ MeasurableSpace.pi
@@ -668,7 +681,8 @@ theorem measurable_measurableProjection [SeparableSpace E] [IsHilbertNuclear E] 
 
 /-- The projection composed with the embedding is the identity on WeakDual ℝ E.
     For l ∈ WeakDual ℝ E, embed(l) ∈ goodPaths (l is linear + bounded), and
-    extensionCLM(embed(l)) = l by uniqueness of continuous extension from dense. -/
+    extensionCLM(embed(l)) = l by uniqueness of continuous extension from dense.
+-/
 lemma projection_embed_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E] :
     (measurableProjection (E := E)) ∘ weakDualEmbed E = id := by
   ext l
@@ -696,7 +710,8 @@ These axioms use the **joint characteristic function** hypothesis:
     ∫ ω, exp(I * ↑(∑ i, s i * ω(x i))) dν = Φ(∑ i, s i • x i)
 
 This captures all finite-dimensional marginals of ν, not just the 1D marginals.
-It is provable from the projective limit property. -/
+It is provable from the projective limit property.
+-/
 
 omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
 /-- ℚ-linearity holds ν-a.e.
@@ -709,7 +724,8 @@ omit [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] in
     Hence X = 0 a.s. (by Measure.ext_of_charFun with δ₀).
     Countable intersection over c ∈ ℕ →₀ ℚ preserves full measure.
 
-    Ref: Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. IV, §3.3. -/
+    Ref: Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. IV, §3.3.
+-/
 theorem qLinearPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
@@ -841,7 +857,8 @@ private lemma boundedPaths_tail_bound [SeparableSpace E] [IsHilbertNuclear E] [N
     ℚ-linear combinations, and Borel-Cantelli yields the result.
 
     Ref: Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. IV, §3.3;
-    also Billingsley, "Convergence of Probability Measures", §6. -/
+    also Billingsley, "Convergence of Probability Measures", §6.
+-/
 theorem boundedPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_cont : Continuous Φ)
@@ -900,7 +917,8 @@ lemma goodPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
       and scalars (t, -t), CF = Φ(t(f-d_n)) → Φ(0) = 1 by continuity
     - A.s. + in-probability convergence to the same limit → P(ω)(f) = ω(f) a.e.
 
-    Ref: Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. IV, §3.3. -/
+    Ref: Gel'fand-Vilenkin, "Generalized Functions" Vol. 4, Ch. IV, §3.3.
+-/
 theorem projection_ae_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),

@@ -80,7 +80,8 @@ where dμ is the Gaussian measure on field configurations.
 variable (m : ℝ) [Fact (0 < m)]
 
 /-- The complex pairing is continuous in ω.
-    This follows from the continuity of the evaluation map on WeakDual. -/
+    This follows from the continuity of the evaluation map on WeakDual.
+-/
 theorem distributionPairingℂ_real_continuous (f : TestFunctionℂ) :
     Continuous (fun ω : FieldConfiguration => distributionPairingℂ_real ω f) := by
   -- distributionPairingℂ_real ω f = ω f_re + I * ω f_im
@@ -96,7 +97,8 @@ theorem distributionPairingℂ_real_continuous (f : TestFunctionℂ) :
   exact h_re.add (continuous_const.mul h_im)
 
 /-- The complex pairing is measurable in ω (cylinder σ-algebra version).
-    This follows from the measurability of the evaluation map on WeakDual. -/
+    This follows from the measurability of the evaluation map on WeakDual.
+-/
 lemma distributionPairingℂ_real_measurable (f : TestFunctionℂ) :
     Measurable (fun ω : FieldConfiguration => distributionPairingℂ_real ω f) := by
   simp only [distributionPairingℂ_real, complex_testfunction_decompose]
@@ -117,7 +119,8 @@ theorem gff_integrand_measurable
     This follows from the fact that:
     1. z ↦ ∑ᵢ zᵢ • Jᵢ is linear (hence analytic) in z
     2. ω ↦ ⟨ω, f⟩ is linear in f
-    3. exp(i · _) is entire -/
+    3. exp(i · _) is entire
+-/
 theorem gff_integrand_analytic
     (n : ℕ) (J : Fin n → TestFunctionℂ) (ω : FieldConfiguration) (z₀ : Fin n → ℂ) :
     AnalyticAt ℂ
@@ -189,7 +192,8 @@ theorem gff_integrand_analytic
     - distributionPairingℂ_real ω f = (ω f_re) + I * (ω f_im)
     - I * distributionPairingℂ_real ω f = I * (ω f_re) - (ω f_im)
     - Re(I * distributionPairingℂ_real ω f) = -(ω f_im)
-    - ‖exp(z)‖ = exp(Re(z)), so ‖exp(I * ...)‖ = exp(-(ω f_im)) -/
+    - ‖exp(z)‖ = exp(Re(z)), so ‖exp(I * ...)‖ = exp(-(ω f_im))
+-/
 lemma norm_exp_I_distributionPairingℂ_real (f : TestFunctionℂ) (ω : FieldConfiguration) :
     ‖Complex.exp (Complex.I * distributionPairingℂ_real ω f)‖ =
       Real.exp (-(ω (complex_testfunction_decompose f).2)) := by
@@ -207,7 +211,8 @@ lemma norm_exp_I_distributionPairingℂ_real (f : TestFunctionℂ) (ω : FieldCo
 
 /-- Integrability of exp(-ω f) for a real test function f under the GFF measure.
     This follows from the Gaussian nature: for centered Gaussian X with variance σ²,
-    E[exp(-X)] = exp(σ²/2). -/
+    E[exp(-X)] = exp(σ²/2).
+-/
 lemma gff_exp_neg_pairing_integrable (f : TestFunction) :
     Integrable (fun ω : FieldConfiguration => Real.exp (-(ω f)))
       (μ_GFF m).toMeasure := by
@@ -248,7 +253,8 @@ lemma gff_exp_neg_pairing_integrable (f : TestFunction) :
 
 /-- exp(|ω f|) is in L^2 (and in fact all L^p) under the GFF measure.
     This follows from Fernique's theorem: if exp(α x²) is integrable, then exp(|x|)^p is integrable
-    for all p < ∞ because |x|^p ≤ C_p * exp(ε x²) for small ε. -/
+    for all p < ∞ because |x|^p ≤ C_p * exp(ε x²) for small ε.
+-/
 lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤) :
     MemLp (fun ω : FieldConfiguration => Real.exp |ω f|) p (μ_GFF m).toMeasure := by
   -- By Fernique, ∃ α > 0 such that exp(α x²) is integrable
@@ -364,7 +370,8 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
   exact ⟨h_aesm, h_eLpNorm_lt⟩
 
 /-- Integrability of exp(|ω f|) under the GFF measure.
-    This is the L¹ special case of gff_exp_abs_pairing_memLp. -/
+    This is the L¹ special case of gff_exp_abs_pairing_memLp.
+-/
 lemma gff_exp_abs_pairing_integrable (f : TestFunction) :
     Integrable (fun ω : FieldConfiguration => Real.exp |ω f|) (μ_GFF m).toMeasure :=
   memLp_one_iff_integrable.mp (gff_exp_abs_pairing_memLp m f 1 ENNReal.one_ne_top)
@@ -372,7 +379,8 @@ lemma gff_exp_abs_pairing_integrable (f : TestFunction) :
 /-- Product of exponentials of absolute pairings is in L².
     If we have k test functions g₁, ..., gₖ, then exp(∑ᵢ |ω gᵢ|) = ∏ᵢ exp(|ω gᵢ|).
     Each exp(|ω gᵢ|) ∈ L^(2k) by gff_exp_abs_pairing_memLp.
-    By generalized Hölder (MemLp.prod'), a product of k functions in L^(2k) is in L². -/
+    By generalized Hölder (MemLp.prod'), a product of k functions in L^(2k) is in L².
+-/
 lemma gff_exp_abs_sum_memLp {ι : Type*} (s : Finset ι) (g : ι → TestFunction) :
     MemLp (fun ω : FieldConfiguration => Real.exp (∑ i ∈ s, |ω (g i)|)) 2 (μ_GFF m).toMeasure := by
   -- Rewrite exp(sum) as product of exp
@@ -425,7 +433,8 @@ lemma gff_exp_abs_sum_memLp {ι : Type*} (s : Finset ι) (g : ι → TestFunctio
   simp only [inv_inv]
 
 /-- The integral of ‖exp(I * distributionPairingℂ_real ω f)‖ is finite for any complex test function.
-    This follows from the Gaussian exponential integrability applied to the imaginary part. -/
+    This follows from the Gaussian exponential integrability applied to the imaginary part.
+-/
 lemma gff_integrand_norm_integrable (f : TestFunctionℂ) :
     Integrable (fun ω : FieldConfiguration =>
         ‖Complex.exp (Complex.I * distributionPairingℂ_real ω f)‖)
@@ -439,7 +448,8 @@ lemma gff_integrand_norm_integrable (f : TestFunctionℂ) :
 
 /-- The GFF integrand is integrable for each z.
     This follows from the norm being exp(-(ω f_im)) which is integrable by
-    Gaussian exponential integrability. -/
+    Gaussian exponential integrability.
+-/
 theorem gff_integrand_integrable (n : ℕ) (J : Fin n → TestFunctionℂ) (z : Fin n → ℂ) :
     Integrable
       (fun ω : FieldConfiguration =>
@@ -461,7 +471,8 @@ C_ℂ(f,g) = ∫∫ f(x) C(x,y) g(y) is the complexified covariance bilinear for
 
 This follows from the bivariate Gaussian MGF: for (X,Y) = (ω(f_re), ω(f_im))
 jointly Gaussian, E[exp(iX - Y)] = exp(½(-Var(X) - 2i Cov(X,Y) + Var(Y)))
-which equals exp(-½ C_ℂ(f,f)). -/
+which equals exp(-½ C_ℂ(f,f)).
+-/
 
 /-- The complex generating functional is analytic in a 1-parameter family.
     For fixed real f_re, f_im, the map t ↦ Z[toComplex f_re + t • toComplex f_im]
@@ -470,7 +481,8 @@ which equals exp(-½ C_ℂ(f,f)). -/
     This follows from: for each ω, the integrand exp(i⟨ω,f_re⟩ + it⟨ω,f_im⟩) is
     entire in t; the modulus is bounded by exp(|Im(t)| · |⟨ω,f_im⟩|), which is
     integrable by Fernique's theorem (gaussianFreeField_pairing_memLp).
-    Standard parameter-dependent holomorphy then gives analyticity of the integral. -/
+    Standard parameter-dependent holomorphy then gives analyticity of the integral.
+-/
 lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
     AnalyticOnNhd ℂ (fun t : ℂ =>
       GJGeneratingFunctionalℂ (μ_GFF m) (toComplex f_re + t • toComplex f_im))
@@ -638,7 +650,8 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
 
     Proved by 1-parameter analytic continuation: decompose f = f_re + I·f_im,
     show the generating functional and Gaussian formula agree on ℝ (from
-    `gff_real_characteristic`), extend to ℂ via the identity theorem. -/
+    `gff_real_characteristic`), extend to ℂ via the identity theorem.
+-/
 theorem gff_complex_CF_covariance (f : TestFunctionℂ) :
     GJGeneratingFunctionalℂ (μ_GFF m) f =
     cexp (-(1/2 : ℂ) * freeCovarianceℂ_bilinear m f f) := by
@@ -732,7 +745,8 @@ theorem gff_complex_CF_covariance (f : TestFunctionℂ) :
 /-! ## Bilinear Expansion for Finite Sums
 
 Using the ℂ-bilinearity of `freeCovarianceℂ_bilinear`, we expand
-C_ℂ(∑ᵢ zᵢ Jᵢ, ∑ⱼ zⱼ Jⱼ) = ∑ᵢ ∑ⱼ zᵢ zⱼ C_ℂ(Jᵢ, Jⱼ). -/
+C_ℂ(∑ᵢ zᵢ Jᵢ, ∑ⱼ zⱼ Jⱼ) = ∑ᵢ ∑ⱼ zᵢ zⱼ C_ℂ(Jᵢ, Jⱼ).
+-/
 
 /-- C_ℂ(f, 0) = 0, derived from smul_right with c = 0. -/
 private lemma freeCovarianceℂ_bilinear_zero_right (f : TestFunctionℂ) :
@@ -791,7 +805,8 @@ theorem gff_generating_eq_exp_quadratic {n : ℕ}
 /-! ## Analyticity of exp(finite quadratic form)
 
 A finite quadratic form z ↦ ∑ᵢⱼ Aᵢⱼ zᵢ zⱼ is a polynomial, hence analytic.
-Composing with exp preserves analyticity. -/
+Composing with exp preserves analyticity.
+-/
 
 /-- A finite quadratic form ∑ᵢⱼ Aᵢⱼ zᵢ zⱼ is analytic (it's a polynomial). -/
 theorem analyticOn_finite_quadratic {n : ℕ} (A : Fin n → Fin n → ℂ) :
@@ -810,7 +825,8 @@ theorem analyticOn_finite_quadratic {n : ℕ} (A : Fin n → Fin n → ℂ) :
 /-- The Gaussian Free Field satisfies the OS0 Analyticity axiom.
 
     **Direct proof** from the covariance structure: Z[f] = exp(-½ C_ℂ(f,f))
-    and C_ℂ is ℂ-bilinear, so Z[∑ zᵢ Jᵢ] = exp(quadratic polynomial in z). -/
+    and C_ℂ is ℂ-bilinear, so Z[∑ zᵢ Jᵢ] = exp(quadratic polynomial in z).
+-/
 theorem gaussianFreeField_satisfies_OS0 : OS0_Analyticity (μ_GFF m) := by
   intro n J
   -- Step 1: Rewrite using the covariance quadratic form

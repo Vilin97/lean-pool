@@ -54,7 +54,8 @@ S_n(f₁,...,fₙ) = (-i)ⁿ (coefficient of (iJ)ⁿ/n! in Z[J])
     S_n(f₁,...,fₙ) = ∫ ⟨ω,f₁⟩ ⟨ω,f₂⟩ ... ⟨ω,fₙ⟩ dμ(ω)
 
     This is the fundamental object in constructive QFT - all physics is contained
-    in the infinite sequence of Schwinger functions {S_n}_{n=1}^∞. -/
+    in the infinite sequence of Schwinger functions {S_n}_{n=1}^∞.
+-/
 def SchwingerFunction (dμ_config : ProbabilityMeasure FieldConfiguration) (n : ℕ)
   (f : Fin n → TestFunction) : ℝ :=
   ∫ ω, (∏ i, distributionPairing ω (f i)) ∂dμ_config.toMeasure
@@ -100,13 +101,15 @@ def SchwingerFunctionℂ (dμ_config : ProbabilityMeasure FieldConfiguration) (n
   ∫ ω, (∏ i, distributionPairingℂ_real ω (f i)) ∂dμ_config.toMeasure
 
 /-- The complex 2-point Schwinger function for complex test functions.
-    This is the natural extension of SchwingerFunction₂ to complex test functions. -/
+    This is the natural extension of SchwingerFunction₂ to complex test functions.
+-/
 def SchwingerFunctionℂ₂ (dμ_config : ProbabilityMeasure FieldConfiguration)
   (φ ψ : TestFunctionℂ) : ℂ :=
   SchwingerFunctionℂ dμ_config 2 ![φ, ψ]
 
 /-- Property that SchwingerFunctionℂ₂ is ℂ-bilinear in both arguments.
-    This is a key property for Gaussian measures and essential for OS0 analyticity. -/
+    This is a key property for Gaussian measures and essential for OS0 analyticity.
+-/
 def CovarianceBilinear (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (c : ℂ) (φ₁ φ₂ ψ : TestFunctionℂ),
     SchwingerFunctionℂ₂ dμ_config (c • φ₁) ψ = c * SchwingerFunctionℂ₂ dμ_config φ₁ ψ ∧
@@ -115,7 +118,8 @@ def CovarianceBilinear (dμ_config : ProbabilityMeasure FieldConfiguration) : Pr
     SchwingerFunctionℂ₂ dμ_config φ₁ (ψ + φ₂) = SchwingerFunctionℂ₂ dμ_config φ₁ ψ + SchwingerFunctionℂ₂ dμ_config φ₁ φ₂
 
 /-- If the product pairing is integrable for all test functions, then the complex
-    2-point Schwinger function is ℂ-bilinear in both arguments. -/
+    2-point Schwinger function is ℂ-bilinear in both arguments.
+-/
 lemma CovarianceBilinear_of_integrable
   (dμ_config : ProbabilityMeasure FieldConfiguration)
   (h_int : ∀ (φ ψ : TestFunctionℂ),

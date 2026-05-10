@@ -91,7 +91,8 @@ lemma timeTranslationSchwartzℂ_decompose_snd (s : ℝ) (g : TestFunctionℂ) :
     timeTranslationSchwartzℂ_apply]
 
 /-- Time translation on distributions is compatible with complex pairing.
-    ⟨T_s ω, g⟩_ℂ = ⟨ω, T_{-s} g⟩_ℂ -/
+    ⟨T_s ω, g⟩_ℂ = ⟨ω, T_{-s} g⟩_ℂ
+-/
 lemma timeTranslationDistribution_pairingℂ (s : ℝ) (ω : FieldConfiguration)
     (g : TestFunctionℂ) :
     distributionPairingℂ_real (timeTranslationDistribution s ω) g =
@@ -139,7 +140,8 @@ lemma continuous_distributionPairingℂ_timeTranslation (ω : FieldConfiguration
 /-! ## Euclidean Group Infrastructure for Time Translation -/
 
 /-- Time translation as a Euclidean group element.
-    timeTranslationE t = (1, -timeShiftConst t) where 1 is the identity rotation. -/
+    timeTranslationE t = (1, -timeShiftConst t) where 1 is the identity rotation.
+-/
 def timeTranslationE (t : ℝ) : QFT.E := ⟨1, -timeShiftConst t⟩
 
 /-- The Euclidean action of timeTranslationE equals timeTranslationSchwartzℂ. -/
@@ -169,7 +171,8 @@ lemma freeCovarianceℂ_bilinear_timeTranslation_invariant (m : ℝ) [Fact (0 < 
 /-! ## GFF Moment Generating Function -/
 
 /-- MGF formula for GFF: ∫ exp(⟨ω,J⟩) dμ = exp(+(1/2) * C(J,J)).
-    This follows from the characteristic function formula via substitution J → (-I)•J. -/
+    This follows from the characteristic function formula via substitution J → (-I)•J.
+-/
 lemma gff_mgf_formula (m : ℝ) [Fact (0 < m)] (J : TestFunctionℂ) :
     (∫ ω, Complex.exp (distributionPairingℂ_real ω J) ∂(gaussianFreeField_free m).toMeasure) =
     Complex.exp ((1/2 : ℂ) * freeCovarianceℂ_bilinear m J J) := by
@@ -213,7 +216,8 @@ lemma gff_generating_time_invariant (m : ℝ) [Fact (0 < m)] (s : ℝ) (f : Test
 
 /-- Joint MGF factorization for GFF.
     E[e^{⟨ω,f⟩+⟨ω,g⟩}] = E[e^{⟨ω,f⟩}] E[e^{⟨ω,g⟩}] e^{C(f,g)}
-    This follows from the GFF being Gaussian. -/
+    This follows from the GFF being Gaussian.
+-/
 lemma gff_joint_mgf_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     (∫ ω, Complex.exp (distributionPairingℂ_real ω f + distributionPairingℂ_real ω g)
       ∂(gaussianFreeField_free m).toMeasure) =

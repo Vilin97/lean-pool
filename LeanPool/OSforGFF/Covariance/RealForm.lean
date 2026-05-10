@@ -90,7 +90,8 @@ private lemma lp_real_smul_eq_complex (c : ℝ) (g : Lp ℂ 2 (volume : Measure 
 /-- ℝ-linear view of the complex Fourier transform on Schwartz space.
 
 Note: we build this manually instead of using `restrictScalars` because the
-`LinearMap.CompatibleSMul` instance is not found automatically in mathlib v4.29. -/
+`LinearMap.CompatibleSMul` instance is not found automatically in mathlib v4.29.
+-/
 noncomputable def fourierTransformCLM_real :
     TestFunctionℂ →L[ℝ] TestFunctionℂ where
   toLinearMap :=
@@ -123,7 +124,8 @@ noncomputable def schwartzToL2CLM_real (_m : ℝ) :
 /-! ## The Embedding Map -/
 
 /-- The embedding T maps a test function to a weighted function in momentum space.
-    Conceptually: T f = FourierTransform(f) * (‖k‖² + m²)^(-1/2). -/
+    Conceptually: T f = FourierTransform(f) * (‖k‖² + m²)^(-1/2).
+-/
 noncomputable def sqrtPropagatorMap (m : ℝ) (f : TestFunction) : SpaceTime → ℂ :=
   fun k =>
     (SchwartzMap.fourierTransformCLM ℂ (toComplex f)) k
@@ -398,7 +400,8 @@ lemma embeddingMapCLM_apply (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
 
 /-- Existence of a linear embedding realizing the free covariance as a squared norm.
     The target space H is an inner product space (L² is a Hilbert space).
-    Note: InnerProductSpace ℝ H implies NormedSpace ℝ H via InnerProductSpace.toNormedSpace. -/
+    Note: InnerProductSpace ℝ H implies NormedSpace ℝ H via InnerProductSpace.toNormedSpace.
+-/
 theorem sqrtPropagatorEmbedding (m : ℝ) [Fact (0 < m)] :
   ∃ (H : Type) (_ : NormedAddCommGroup H) (_ : InnerProductSpace ℝ H)
     (T : TestFunction →ₗ[ℝ] H),

@@ -58,7 +58,8 @@ namespace OSforGFF
 /-! ## Injectivity of the real-to-complex embedding -/
 
 /-- The embedding `toComplex : S(ℝ⁴,ℝ) → S(ℝ⁴,ℂ)` is injective.
-    Follows from injectivity of `ℝ → ℂ` applied pointwise. -/
+    Follows from injectivity of `ℝ → ℂ` applied pointwise.
+-/
 theorem toComplex_injective : Function.Injective (toComplex : TestFunction → TestFunctionℂ) := by
   intro f g h
   ext x
@@ -69,7 +70,8 @@ theorem toComplex_injective : Function.Injective (toComplex : TestFunction → T
 /-! ## Injectivity of the Fourier transform on Schwartz space -/
 
 /-- The Fourier transform is injective on complex Schwartz space.
-    Proof: `FourierPair` gives `𝓕⁻(𝓕 f) = f`, so `𝓕` has a left inverse. -/
+    Proof: `FourierPair` gives `𝓕⁻(𝓕 f) = f`, so `𝓕` has a left inverse.
+-/
 theorem fourierTransform_schwartz_injective :
     Function.Injective
       (SchwartzMap.fourierTransformCLM ℂ : TestFunctionℂ → TestFunctionℂ) := by
@@ -93,7 +95,8 @@ theorem fourierTransform_schwartz_injective :
 
     Proof: if `f(x₀) ≠ 0`, then `U = f⁻¹(ℂ \ {0})` is open and nonempty.
     Since volume on `ℝ⁴` is an `IsOpenPosMeasure`, `μ(U) > 0`,
-    contradicting `f = 0` a.e. -/
+    contradicting `f = 0` a.e.
+-/
 private lemma eq_zero_of_continuous_ae_zero
     {f : SpaceTime → ℂ} (hcont : Continuous f) (hae : f =ᵐ[volume] 0) :
     f = 0 := by
@@ -115,7 +118,8 @@ private lemma eq_zero_of_continuous_ae_zero
 
     `sqrtPropagatorMap m f k = 𝓕(toComplex f)(k) · w(k)` where `w(k) > 0`,
     so vanishing of the product forces `𝓕(toComplex f) = 0`, hence `f = 0`
-    by Fourier injectivity. -/
+    by Fourier injectivity.
+-/
 theorem sqrtPropagatorMap_eq_zero_iff (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
     (∀ k : SpaceTime, sqrtPropagatorMap m f k = 0) ↔ f = 0 := by
   constructor
@@ -154,7 +158,8 @@ theorem sqrtPropagatorMap_eq_zero_iff (m : ℝ) [Fact (0 < m)] (f : TestFunction
     If `T f = T g` then `‖T(f−g)‖ = 0`, so `∫ |sqrtPropagatorMap m (f−g)|² = 0`.
     The integrand is continuous and nonneg, so it vanishes a.e., hence everywhere
     (volume is `IsOpenPosMeasure`).  Since the momentum weight is positive, the
-    Fourier transform of `f−g` vanishes, giving `f = g`. -/
+    Fourier transform of `f−g` vanishes, giving `f = g`.
+-/
 theorem embeddingMap_injective (m : ℝ) [Fact (0 < m)] :
     Function.Injective (embeddingMap m) := by
   intro f g h
@@ -194,7 +199,8 @@ theorem embeddingMap_injective (m : ℝ) [Fact (0 < m)] :
     a model satisfying the OS axioms.
 
     Proof: `C(f,f) = ‖T f‖²` where `T` is injective, so `f ≠ 0 ⟹ T f ≠ 0
-    ⟹ ‖T f‖ > 0 ⟹ ‖T f‖² > 0`. -/
+    ⟹ ‖T f‖ > 0 ⟹ ‖T f‖² > 0`.
+-/
 theorem freeCovarianceFormR_strictPos (m : ℝ) [Fact (0 < m)]
     (f : TestFunction) (hf : f ≠ 0) :
     0 < freeCovarianceFormR m f f := by
@@ -207,7 +213,8 @@ theorem freeCovarianceFormR_strictPos (m : ℝ) [Fact (0 < m)]
 /-! ## Nontriviality of the GFF measure -/
 
 /-- The variance of `⟨ω,f⟩` under the GFF is strictly positive for `f ≠ 0`.
-    Equivalently, the pushforward by the pairing is a non-degenerate Gaussian. -/
+    Equivalently, the pushforward by the pairing is a non-degenerate Gaussian.
+-/
 theorem gaussianFreeField_variance_pos (m : ℝ) [Fact (0 < m)]
     (f : TestFunction) (hf : f ≠ 0) :
     0 < ∫ ω, (distributionPairingCLM f ω) ^ 2 ∂(μ_GFF m).toMeasure := by
@@ -219,7 +226,8 @@ theorem gaussianFreeField_variance_pos (m : ℝ) [Fact (0 < m)]
     verification in `Master.lean` is nontrivial.
 
     Any nonzero Schwartz function witnesses this.  We use a standard bump
-    function on ℝ⁴, which exists by `ContDiff.exists_eq_one_of_isOpen`. -/
+    function on ℝ⁴, which exists by `ContDiff.exists_eq_one_of_isOpen`.
+-/
 theorem gaussianFreeField_not_dirac (m : ℝ) [Fact (0 < m)] :
     ∃ f : TestFunction, f ≠ 0 ∧
       0 < ∫ ω, (distributionPairingCLM f ω) ^ 2 ∂(μ_GFF m).toMeasure := by
@@ -243,7 +251,8 @@ the free field has genuine UV singularity.
 
 The smeared covariance `C(f,f) = ∫∫ f(x) C(x,y) f(y) dx dy` remains finite for all
 Schwartz functions because the `1/r²` singularity of `K₁(mr)/r` is integrable
-in 4 spatial dimensions (surface area ~ r³ compensates the kernel ~ 1/r²). -/
+in 4 spatial dimensions (surface area ~ r³ compensates the kernel ~ 1/r²).
+-/
 
 /-- `K₁(z) → +∞` as `z → 0⁺`.
 
@@ -254,7 +263,8 @@ in 4 spatial dimensions (surface area ~ r³ compensates the kernel ~ 1/r²). -/
 
     Formal proof uses monotone convergence: the integrand
     `e^{-z cosh t} cosh t` increases monotonically to `cosh t`
-    as `z ↓ 0`, and `∫₀^∞ cosh t dt = +∞`. -/
+    as `z ↓ 0`, and `∫₀^∞ cosh t dt = +∞`.
+-/
 theorem besselK1_tendsto_atTop_at_zero :
     Filter.Tendsto besselK1 (nhdsWithin 0 (Set.Ioi 0)) Filter.atTop := by
   rw [Filter.tendsto_atTop]
@@ -315,7 +325,8 @@ theorem besselK1_tendsto_atTop_at_zero :
 
     `C(x,y) = (m/(4π²r)) · K₁(mr)` where `r = ‖x-y‖`.  As `r → 0⁺`,
     `K₁(mr) ≥ K₁(1) > 0` for `mr ≤ 1` and `m/(4π²r) → +∞`,
-    so the product diverges. -/
+    so the product diverges.
+-/
 theorem freeCovariance_tendsto_atTop (m : ℝ) [Fact (0 < m)] (x₀ : SpaceTime) :
     Filter.Tendsto (fun x => freeCovarianceBessel m x₀ x)
       (nhdsWithin x₀ {x₀}ᶜ) Filter.atTop := by

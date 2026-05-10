@@ -67,7 +67,8 @@ def timeIndex : Fin STDimension := ⟨0, by norm_num⟩
 def getTime (u : SpaceTime) : ℝ := u timeIndex
 
 /-- Time translation on spacetime points: shifts the time coordinate by s.
-    (timeShift s u)_0 = u_0 + s, and (timeShift s u)_i = u_i for i ≠ 0. -/
+    (timeShift s u)_0 = u_0 + s, and (timeShift s u)_i = u_i for i ≠ 0.
+-/
 def timeShift (s : ℝ) (u : SpaceTime) : SpaceTime :=
   WithLp.toLp 2 (fun i => if i.val = 0 then u.ofLp i + s else u.ofLp i)
 
@@ -107,7 +108,8 @@ lemma timeShift_comm (s t : ℝ) (u : SpaceTime) :
   rw [← timeShift_add, ← timeShift_add, add_comm]
 
 /-- Time shift is smooth as a map SpaceTime → SpaceTime.
-    This is because it's an affine map (linear + constant). -/
+    This is because it's an affine map (linear + constant).
+-/
 lemma timeShift_contDiff (s : ℝ) : ContDiff ℝ (⊤ : ℕ∞) (timeShift s) := by
   unfold timeShift
   apply contDiff_piLp'
@@ -152,7 +154,8 @@ lemma timeShift_eq_add_const (s : ℝ) (u : SpaceTime) :
   split_ifs with h <;> ring
 
 /-- Time shift has temperate growth (key for Schwartz composition).
-    This follows because timeShift is an affine map (id + constant). -/
+    This follows because timeShift is an affine map (id + constant).
+-/
 lemma timeShift_hasTemperateGrowth (s : ℝ) : Function.HasTemperateGrowth (timeShift s) := by
   -- The derivative is constant (= id), so has temperate growth
   have h_fderiv_temperate : Function.HasTemperateGrowth (fderiv ℝ (timeShift s)) := by
@@ -196,7 +199,8 @@ is a linear map on the Schwartz space.
 /-- Time translation as a continuous linear map on real-valued Schwartz functions.
     Uses mathlib's `compCLMOfAntilipschitz` which requires:
     1. The composition function has temperate growth
-    2. The composition function is antilipschitz -/
+    2. The composition function is antilipschitz
+-/
 def timeTranslationSchwartzCLM (s : ℝ) : TestFunction →L[ℝ] TestFunction :=
   SchwartzMap.compCLMOfAntilipschitz ℝ (timeShift_hasTemperateGrowth s) (timeShift_antilipschitz s)
 
@@ -298,7 +302,8 @@ lemma continuous_timeShift_param (x : SpaceTime) : Continuous (fun s : ℝ => ti
 /-- Peetre's inequality for polynomial weights in SpaceTime.
     (1 + ‖x‖)^k ≤ (1 + ‖x + y‖)^k * (1 + ‖y‖)^k
 
-    This handles weight shifting when translating between seminorms at different points. -/
+    This handles weight shifting when translating between seminorms at different points.
+-/
 lemma peetre_weight_bound (x y : SpaceTime) (k : ℕ) :
     (1 + ‖x‖) ^ k ≤ (1 + ‖x + y‖) ^ k * (1 + ‖y‖) ^ k := by
   have h1 : ‖x‖ ≤ ‖x + y‖ + ‖y‖ := by
@@ -314,7 +319,8 @@ lemma peetre_weight_bound (x y : SpaceTime) (k : ℕ) :
        _ = (1 + ‖x + y‖) ^ k * (1 + ‖y‖) ^ k := mul_pow _ _ _
 
 /-- The iterated derivative commutes with time translation.
-    D^n(T_h f)(x) = D^n f(x + h·e₀) -/
+    D^n(T_h f)(x) = D^n f(x + h·e₀)
+-/
 lemma iteratedFDeriv_timeTranslationSchwartz (n : ℕ) (h : ℝ) (f : TestFunction) (x : SpaceTime) :
     iteratedFDeriv ℝ n (timeTranslationSchwartz h f) x =
     iteratedFDeriv ℝ n f (x + h • unitTimeDir) := by
@@ -355,7 +361,8 @@ lemma iteratedFDeriv_timeTranslationSchwartz (n : ℕ) (h : ℝ) (f : TestFuncti
     2. Use `iteratedFDeriv_comp_add_right`: D^n(T_h f)(x) = D^n f(x + h·e₀)
     3. Apply MVT: ‖D^n f(x+h·e₀) - D^n f(x)‖ ≤ |h| · sup ‖D^{n+1} f(path)‖
     4. Apply Peetre: ‖x‖^k ≤ (1+|h|)^k · (1+‖w‖)^k for path points w
-    5. Bound (1+‖w‖)^k ≤ 2^k · max(1, ‖w‖^k) and use seminorms -/
+    5. Bound (1+‖w‖)^k ≤ 2^k · max(1, ‖w‖^k) and use seminorms
+-/
 theorem schwartz_timeTranslation_lipschitz_seminorm
     (k n : ℕ) (f : TestFunction) (h : ℝ) :
     (SchwartzMap.seminorm ℝ k n) (timeTranslationSchwartz h f - f) ≤
@@ -722,7 +729,8 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
       ‖T_h f - f‖_{k,n} ≤ |h| · (‖f‖_{k,n+1} + ‖f‖_{0,n+1} + 1)
 
     ## References
-    Reed-Simon V.3 (Schwartz distributions), Hörmander Ch. 7 (test functions) -/
+    Reed-Simon V.3 (Schwartz distributions), Hörmander Ch. 7 (test functions)
+-/
 lemma continuous_timeTranslationSchwartz (f : TestFunction) :
     Continuous (fun s => timeTranslationSchwartz s f) := by
   -- Strategy: Prove continuity at each point s₀ using the group action

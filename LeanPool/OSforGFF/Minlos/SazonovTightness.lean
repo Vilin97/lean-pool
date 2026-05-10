@@ -46,7 +46,8 @@ variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteS
 /-! ## Sazonov Continuity -/
 
 /-- Sazonov continuity at 0: for every ε > 0, there exists a positive trace-class
-    operator S such that ⟪x, Sx⟫ < 1 implies |1 - φ(x)| < ε. -/
+    operator S such that ⟪x, Sx⟫ < 1 implies |1 - φ(x)| < ε.
+-/
 def SazonovContinuousAt (φ : H → ℂ) :=
   ∀ ε > 0, ∃ S : SazonovIndex H,
     ∀ x : H, quadForm S.op x < 1 → ‖1 - φ x‖ < ε
@@ -54,7 +55,8 @@ def SazonovContinuousAt (φ : H → ℂ) :=
 /-! ## Finite-Dimensional Marginals -/
 
 /-- For a family v : Fin n → H, the marginal function
-    φ_v(t) = φ(∑ i, t i • v i). -/
+    φ_v(t) = φ(∑ i, t i • v i).
+-/
 def marginalFun (φ : H → ℂ) {n : ℕ} (v : Fin n → H) :
     EuclideanSpace ℝ (Fin n) → ℂ :=
   fun t => φ (∑ i, t i • v i)
@@ -97,7 +99,8 @@ lemma one_sub_exp_half_sq_pos (R : ℝ) (hR : 0 < R) :
   apply one_sub_exp_neg_pos; positivity
 
 /-- Chebyshev/Markov bound with scaling: if ∫ (1 - exp(-σ²‖y‖²/2)) dμ ≤ C,
-    then μ({‖y‖ ≥ R}) ≤ C / (1 - exp(-σ²R²/2)). -/
+    then μ({‖y‖ ≥ R}) ≤ C / (1 - exp(-σ²R²/2)).
+-/
 lemma tail_bound_from_exp_integral {V : Type*} [NormedAddCommGroup V]
     [MeasurableSpace V] [BorelSpace V]
     (μ : ProbabilityMeasure V) (σ : ℝ) (hσ : 0 < σ)
@@ -275,7 +278,8 @@ private lemma gaussDensity_mul_charFun_integrable' (μ : ProbabilityMeasure V)
     (norm_charFun_le_one (μ := μ.toMeasure) x)
 
 /-- Fubini identity for Gaussian averaging:
-    ∫_μ (1-exp(-σ²‖y‖²/2)) = C⁻¹ ∫ exp(-b‖x‖²) Re(1-φ(x)) dx. -/
+    ∫_μ (1-exp(-σ²‖y‖²/2)) = C⁻¹ ∫ exp(-b‖x‖²) Re(1-φ(x)) dx.
+-/
 theorem fubini_gaussian_charFun
     (μ : ProbabilityMeasure V) (φ : V → ℂ)
     (hφ : ∀ t, charFun μ.toMeasure t = φ t) (σ : ℝ) (hσ : 0 < σ) :
@@ -564,7 +568,8 @@ private lemma gaussian_inner_sq_le' (σ : ℝ) (hσ : 0 < σ) (w : V) :
 
 /-- Gaussian second moment bound:
     C⁻¹ ∫ exp(-b‖x‖²) ⟪x,Sx⟫ dx ≤ σ²·Tr(S).
-    Uses spectral decomposition to reduce to single-direction bounds. -/
+    Uses spectral decomposition to reduce to single-direction bounds.
+-/
 theorem gaussian_quadForm_integral_le
     (σ : ℝ) (hσ : 0 < σ)
     (S : V →L[ℝ] V) (hS : S.IsPositive)
@@ -706,7 +711,8 @@ lemma gaussDensity_mul_quadForm_integrable' (σ : ℝ) (hσ : 0 < σ)
 
     Here exp(-σ²‖y‖²/2) is the characteristic function of N(0, σ²I).
     The bound follows from Fubini + pointwise bound Re(1-φ) ≤ ε + 2·qf
-    + Gaussian second moment E_γ[⟨x,Sx⟩] ≤ σ²·Tr(S). -/
+    + Gaussian second moment E_γ[⟨x,Sx⟩] ≤ σ²·Tr(S).
+-/
 theorem gaussian_averaging_bound
     (μ : ProbabilityMeasure V) (φ : V → ℂ)
     (hφ : ∀ t, charFun μ.toMeasure t = φ t)
@@ -837,7 +843,8 @@ private def projON {n : ℕ} (v : Fin n → H) : H →ₗ[ℝ] EuclideanSpace �
 
 /-- Restriction of an operator S on H to a finite-dimensional subspace
     spanned by an orthonormal family v : Fin n → H. Defined as π ∘ S ∘ ι
-    where ι embeds and π projects. Matrix: (S_v)_{ij} = ⟪vᵢ, S(vⱼ)⟫. -/
+    where ι embeds and π projects. Matrix: (S_v)_{ij} = ⟪vᵢ, S(vⱼ)⟫.
+-/
 def restrictOp (S : H →L[ℝ] H) {n : ℕ} (v : Fin n → H) :
     EuclideanSpace ℝ (Fin n) →L[ℝ] EuclideanSpace ℝ (Fin n) :=
   LinearMap.toContinuousLinearMap (projON v ∘ₗ S.toLinearMap ∘ₗ embedON v)
@@ -895,7 +902,8 @@ lemma restrictOp_isPositive (S : H →L[ℝ] H) (hS : S.IsPositive)
     entries ∑ⱼ ⟪vⱼ, S(vⱼ)⟫ is bounded by the trace ∑' k ⟪bₖ, S(bₖ)⟫.
     Proof: decompose bₖ = P(bₖ) + Q(bₖ) via the projection P onto span(v).
     The cross term ∑' k ⟪Q(bₖ), S(P(bₖ))⟫ vanishes by Parseval + orthonormality,
-    so the difference = ∑' k ⟪Q(bₖ), S(Q(bₖ))⟫ ≥ 0 by positivity of S. -/
+    so the difference = ∑' k ⟪Q(bₖ), S(Q(bₖ))⟫ ≥ 0 by positivity of S.
+-/
 theorem orthonormal_diag_le_hilbert_trace (S : H →L[ℝ] H) (hS : S.IsPositive)
     {n : ℕ} (v : Fin n → H) (hv : Orthonormal ℝ v)
     {ι : Type} (b : HilbertBasis ι ℝ H)
@@ -973,7 +981,8 @@ theorem orthonormal_diag_le_hilbert_trace (S : H →L[ℝ] H) (hS : S.IsPositive
 omit [CompleteSpace H] in
 /-- The trace of restrictOp in any ONB of EuclideanSpace equals ∑ⱼ ⟪vⱼ, S(vⱼ)⟫.
     Uses `LinearMap.trace_eq_sum_inner` for basis independence on finite-dimensional
-    EuclideanSpace, then computes the standard basis entries. -/
+    EuclideanSpace, then computes the standard basis entries.
+-/
 lemma restrictOp_trace_eq_diag (S : H →L[ℝ] H) {n : ℕ} (v : Fin n → H)
     (_hv : Orthonormal ℝ v)
     (ι' : Type*) [Fintype ι'] [DecidableEq ι']
@@ -1006,7 +1015,8 @@ lemma restrictOp_trace_eq_diag (S : H →L[ℝ] H) {n : ℕ} (v : Fin n → H)
 
 /-- The trace of the restricted operator is bounded by the trace of the
     original on any Hilbert basis. Combines trace basis independence on
-    EuclideanSpace with the diagonal bound. -/
+    EuclideanSpace with the diagonal bound.
+-/
 lemma restrictOp_trace_le (S : H →L[ℝ] H) (hS : S.IsPositive)
     {n : ℕ} (v : Fin n → H) (hv : Orthonormal ℝ v)
     {ι : Type} (b : HilbertBasis ι ℝ H)
@@ -1022,7 +1032,8 @@ lemma restrictOp_trace_le (S : H →L[ℝ] H) (hS : S.IsPositive)
 /-! ## Main Tightness Theorem -/
 
 /-- For any C < η and σ > 0, there exists R > 0 such that
-    C / (1 - exp(-σ²R²/2)) < η. -/
+    C / (1 - exp(-σ²R²/2)) < η.
+-/
 lemma exists_R_for_tail_bound (C η σ : ℝ) (hC : 0 < C) (hCη : C < η) (hσ : 0 < σ) :
     ∃ R > 0, C / (1 - Real.exp (-(σ ^ 2 * R ^ 2 / 2))) < η := by
   have hη : 0 < η := by linarith
@@ -1048,7 +1059,8 @@ lemma exists_R_for_tail_bound (C η σ : ℝ) (hC : 0 < C) (hCη : C < η) (hσ 
 
 /-- **Sazonov Tightness Theorem.** If φ : H → ℂ is positive definite, normalized,
     and Sazonov-continuous at 0, then the family of all finite-dimensional
-    marginal measures is uniformly tight. -/
+    marginal measures is uniformly tight.
+-/
 theorem sazonov_tightness (φ : H → ℂ) (_hpd : IsPositiveDefinite φ)
     (_hnorm : φ 0 = 1) (_hcont : Continuous φ)
     (hsaz : SazonovContinuousAt φ) :

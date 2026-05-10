@@ -41,7 +41,8 @@ def finsetReindexEquiv (J : Finset E) :
   measurable_invFun := measurable_pi_lambda _ (fun j => measurable_pi_apply _)
 
 /-- Measurable equivalence between `∀ j : J, ℝ` and `EuclideanSpace ℝ (Fin |J|)`.
-    Composition of reindexing by `J.equivFin` and `MeasurableEquiv.toLp`. -/
+    Composition of reindexing by `J.equivFin` and `MeasurableEquiv.toLp`.
+-/
 def finsetPiMeasEquiv (J : Finset E) :
     (↥J → ℝ) ≃ᵐ EuclideanSpace ℝ (Fin J.card) :=
   (finsetReindexEquiv J).trans (MeasurableEquiv.toLp 2 (Fin J.card → ℝ))
@@ -66,7 +67,8 @@ theorem marginalMeasure_charFun (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
 
 /-- The projective family of measures indexed by `Finset E`. For each `J`, we take the
     Bochner marginal on `EuclideanSpace ℝ (Fin |J|)` and transport it to `∀ j : J, ℝ`
-    via the `finsetPiMeasEquiv`. -/
+    via the `finsetPiMeasEquiv`.
+-/
 def marginalFamily (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     (hΦ_pd : IsPositiveDefinite Φ) (hΦ_norm : Φ 0 = 1) :
     ∀ J : Finset E, Measure (∀ j : ↥J, (fun (_ : E) => ℝ) ↑j) :=
@@ -87,7 +89,8 @@ instance marginalFamily_isProbabilityMeasure (Φ : E → ℂ) (hΦ_cont : Contin
 
 The marginal family is projective. The proof uses characteristic function uniqueness:
 for `J ⊆ I`, the pushforward of `P(I)` along `Finset.restrict₂` has the same
-characteristic function as `P(J)`, namely `ξ ↦ Φ(∑_{j∈J} ξⱼ fⱼ)`. -/
+characteristic function as `P(J)`, namely `ξ ↦ Φ(∑_{j∈J} ξⱼ fⱼ)`.
+-/
 
 /-- The injection from `Fin J.card` to `Fin I.card` induced by `J ⊆ I`. -/
 private def finsetIndexInj (I J : Finset E) (hJI : J ⊆ I) (k : Fin J.card) : Fin I.card :=
@@ -102,7 +105,8 @@ private lemma finsetIndexInj_injective (I J : Finset E) (hJI : J ⊆ I) :
   exact J.equivFin.symm.injective (Subtype.ext h)
 
 /-- The coordinate projection from `EuclideanSpace` indexed by `I` to `J`, for `J ⊆ I`.
-    Must wrap/unwrap `WithLp` since `EuclideanSpace = PiLp 2`. -/
+    Must wrap/unwrap `WithLp` since `EuclideanSpace = PiLp 2`.
+-/
 private def euclideanProject (I J : Finset E) (hJI : J ⊆ I) :
     EuclideanSpace ℝ (Fin I.card) → EuclideanSpace ℝ (Fin J.card) :=
   fun x => (WithLp.equiv 2 _).symm
@@ -124,7 +128,8 @@ private lemma trans_symm_apply_eq {α β γ : Type*} [MeasurableSpace α] [Measu
 omit [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [IsTopologicalAddGroup E]
   [ContinuousSMul ℝ E] in
 /-- `e_J.symm ∘ euclideanProject = restrict₂ ∘ e_I.symm` — relates the EuclideanSpace
-    projection to the Pi-type restriction map. -/
+    projection to the Pi-type restriction map.
+-/
 private lemma euclideanProject_restrict₂ (I J : Finset E) (hJI : J ⊆ I) :
     ⇑(finsetPiMeasEquiv J).symm ∘ euclideanProject I J hJI =
     (Finset.restrict₂ (π := fun (_ : E) => ℝ) hJI) ∘ ⇑(finsetPiMeasEquiv I).symm := by
@@ -143,7 +148,8 @@ private lemma finsetTestVectors_comp_inj (I J : Finset E) (hJI : J ⊆ I) (k : F
   simp [finsetTestVectors, finsetIndexInj]
 
 /-- The marginal family is projective: for `J ⊆ I`, the restriction of `P(I)` to
-    `J`-coordinates equals `P(J)`. -/
+    `J`-coordinates equals `P(J)`.
+-/
 theorem marginalFamily_isProjective (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     (hΦ_pd : IsPositiveDefinite Φ) (hΦ_norm : Φ 0 = 1) :
     IsProjectiveMeasureFamily (α := fun (_ : E) => ℝ)

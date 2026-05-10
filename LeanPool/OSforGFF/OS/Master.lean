@@ -43,7 +43,8 @@ noncomputable section
 - OS4 Clustering is supplied by `QFT.gaussianFreeField_satisfies_OS4` via Gaussian factorization
 - OS4 Ergodicity is supplied by polynomial clustering (α=6) → ergodicity
 
-This is an unconditional theorem with no assumptions beyond m > 0. -/
+This is an unconditional theorem with no assumptions beyond m > 0.
+-/
 theorem gaussianFreeField_satisfies_all_OS_axioms (m : ℝ) [Fact (0 < m)] :
     SatisfiesAllOS (μ_GFF m) where
   -- OS0 from the holomorphic integral theorem (differentiation under the integral)

@@ -45,7 +45,8 @@ spaces — the Hilbert-space form is recovered as `expansion_H`.
 The class includes `h_countable` (countable seminorm index) and
 `h_completeSpace` (completeness w.r.t. the canonical uniform structure).
 Together these give `BaireSpace E` (see `DyninMityaginSpace.instBaireSpace`)
-via: countable seminorms → pseudometrizable + complete → Baire. -/
+via: countable seminorms → pseudometrizable + complete → Baire.
+-/
 class DyninMityaginSpace (E : Type*)
     [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E]
@@ -71,7 +72,8 @@ class DyninMityaginSpace (E : Type*)
 `coeff n (basis m) = δ_{nm}`. This holds for all DM spaces constructed
 via `ofRapidDecayEquiv` (including Schwartz spaces and smooth circle functions).
 
-Finite-dimensional spaces with eventually-zero bases do NOT satisfy this. -/
+Finite-dimensional spaces with eventually-zero bases do NOT satisfy this.
+-/
 class DyninMityaginSpace.HasBiorthogonalBasis (E : Type*)
     [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E]
@@ -86,7 +88,8 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E]
 /-- The Hilbert-space expansion recovered from the scalar axiom.
 
 For any CLM `T : E →L[ℝ] H` and `w : H`, the map `f ↦ ⟪w, T f⟫` is a scalar
-CLF, so the intrinsic `DyninMityaginSpace.expansion` applies. -/
+CLF, so the intrinsic `DyninMityaginSpace.expansion` applies.
+-/
 theorem DyninMityaginSpace.expansion_H
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (T : E →L[ℝ] H) (w : H) (f : E) :

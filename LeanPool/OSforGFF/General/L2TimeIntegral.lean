@@ -74,14 +74,16 @@ Proof outline:
 The L² Cauchy-Schwarz inequality |⟨1, f⟩|² ≤ ‖1‖² · ‖f‖² applied to integrals:
   ‖∫_[a,b] f‖² ≤ (b-a) · ∫_[a,b] ‖f‖²
 
-Proof uses Hölder's inequality with p = q = 2, taking one function to be constant 1. -/
+Proof uses Hölder's inequality with p = q = 2, taking one function to be constant 1.
+-/
 
 /-- **Cauchy-Schwarz for set integrals.**
 
 For f : ℝ → ℂ with ‖f‖² integrable on [a,b]:
   ‖∫_[a,b] f(x) dx‖² ≤ (b-a) · ∫_[a,b] ‖f(x)‖² dx
 
-This is |⟨1, f⟩|² ≤ ‖1‖² · ‖f‖² in L². -/
+This is |⟨1, f⟩|² ≤ ‖1‖² · ‖f‖² in L².
+-/
 theorem sq_setIntegral_le_measure_mul_setIntegral_sq_proved
     {f : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     (hf_sq : IntegrableOn (fun x => ‖f x‖^2) (Icc a b) volume) :
@@ -290,7 +292,8 @@ Key insight: Use `integrable_prod_iff` (Tonelli) to split product integrability 
 
 /-- **L² on product from uniform slicewise bounds.**
 
-By Tonelli: ∫∫ |A|² = ∫₀ᵀ (∫_Ω |A_s|² dμ) ds = ∫₀ᵀ C ds = TC -/
+By Tonelli: ∫∫ |A|² = ∫₀ᵀ (∫_Ω |A_s|² dμ) ds = ∫₀ᵀ C ds = TC
+-/
 theorem memLp_prod_of_uniform_slicewise_bound (μ : Measure Ω) [SFinite μ]
     (A : ℝ → Ω → ℂ) (T : ℝ)
     -- AEStronglyMeasurable on product
@@ -336,11 +339,13 @@ theorem memLp_prod_of_uniform_slicewise_bound (μ : Measure Ω) [SFinite μ]
 
 /-! ## Time Average is in L² (Theorem 2)
 
-This is a corollary using Theorem 3 + Integrable.mono. -/
+This is a corollary using Theorem 3 + Integrable.mono.
+-/
 
 /-- **Time average is in L²** (Corollary of memLp_prod)
 
-This follows from product integrability + Integrable.mono with the pointwise bound. -/
+This follows from product integrability + Integrable.mono with the pointwise bound.
+-/
 theorem time_average_memLp_two (μ : Measure Ω) [SFinite μ]
     (A : ℝ → Ω → ℂ) (T : ℝ) (hT : T > 0)
     -- Each A_s is in L²
@@ -406,7 +411,8 @@ For A : ℝ → Ω → ℂ with s ↦ A s ω continuous for each ω and A s meas
 the time integral ω ↦ (1/T) * ∫ₛ (A s ω - EA) ds is AEStronglyMeasurable.
 
 Proof: continuous-in-s + measurable-in-ω → jointly StronglyMeasurable (Mathlib),
-then swap product measure and integrate out s via `integral_prod_right'`. -/
+then swap product measure and integrate out s via `integral_prod_right'`.
+-/
 theorem gff_time_integral_aestronglyMeasurable_proved
     (μ : Measure Ω) [IsProbabilityMeasure μ]
     (A : ℝ → Ω → ℂ) (EA : ℂ) (T : ℝ)
@@ -445,7 +451,8 @@ is integrable. This is immediate from continuity on compact sets.
 
 If the covariance (s,u) ↦ ∫ A_s · conj(A_u) - EA·conj(EA) is continuous,
 then u ↦ ‖Cov(s,u)‖ is integrable on [0,T] since continuous functions on
-compact sets are integrable. -/
+compact sets are integrable.
+-/
 theorem gff_covariance_norm_integrableOn_slice_proved
     (μ : Measure Ω) [IsProbabilityMeasure μ]
     (A : ℝ → Ω → ℂ) (EA : ℂ) (s T : ℝ)
@@ -480,7 +487,8 @@ where C = ∫_ℝ (1+|t|)^{-α} dt is the integral of the kernel over all of ℝ
 
 **Key tools:** `integrableOn_add_rpow_Ioi_of_lt` (decay integral), `integral_sub_left_eq_self`
 (translation invariance), `setIntegral_le_integral` (set ≤ full for nonneg integrable functions),
-`MeasurePreserving.integrableOn_comp_preimage` (negation symmetry for even functions). -/
+`MeasurePreserving.integrableOn_comp_preimage` (negation symmetry for even functions).
+-/
 theorem double_integral_polynomial_decay_bound_proved (α : ℝ) (hα : α > 1) :
     ∃ C : ℝ, C > 0 ∧ ∀ T : ℝ, T > 0 →
       ∫ s in Icc (0 : ℝ) T, ∫ u in Icc (0 : ℝ) T,
@@ -540,7 +548,8 @@ theorem double_integral_polynomial_decay_bound_proved (α : ℝ) (hα : α > 1) 
 /-! ## Minkowski Inequality for Weighted L² Sums
 
 The triangle inequality in L²: √(∫(∑ wⱼfⱼ)²) ≤ ∑ wⱼ√(∫ fⱼ²)
-for nonneg weights and functions. Proved by induction using Cauchy-Schwarz. -/
+for nonneg weights and functions. Proved by induction using Cauchy-Schwarz.
+-/
 
 section Minkowski
 
@@ -650,7 +659,8 @@ private lemma integrable_sq_of_memLp_two {f : α → ℝ} (hf : MemLp f 2 μ) :
     For nonneg weights wⱼ and nonneg functions fⱼ with fⱼ² integrable:
     √(∫ (∑ⱼ wⱼfⱼ)² dμ) ≤ ∑ⱼ wⱼ √(∫ fⱼ² dμ)
 
-    Proof by induction on n, using Cauchy-Schwarz for integrals at each step. -/
+    Proof by induction on n, using Cauchy-Schwarz for integrals at each step.
+-/
 theorem minkowski_weighted_L2_sum_proved {n : ℕ} {w : Fin n → ℝ} {f : Fin n → α → ℝ}
     (hw : ∀ j, 0 ≤ w j) (hf : ∀ j ω, 0 ≤ f j ω)
     (hf_int : ∀ j, Integrable (fun ω => (f j ω)^2) μ)
@@ -708,7 +718,8 @@ variable {Ω : Type*} [MeasurableSpace Ω]
 For an L² stationary process A with constant mean EA:
   ‖E[‖T⁻¹∫₀ᵀ A_s ds - EA‖²]‖ ≤ T⁻² · ‖∫₀ᵀ∫₀ᵀ Cov(s,u) ds du‖
 
-The proof actually gives equality (the bound is tight). -/
+The proof actually gives equality (the bound is tight).
+-/
 theorem L2_variance_time_average_bound (μ : Measure Ω) [IsProbabilityMeasure μ]
     (A : ℝ → Ω → ℂ) (EA : ℂ)
     (T : ℝ) (hT : T > 0)
@@ -845,7 +856,8 @@ Proves that (A_s(ω) - c) · conj(A_u(ω) - c) is integrable on the triple produ
 given that A is jointly L² on [0,T] × Ω, continuous in time, and measurable in ω.
 
 Strategy: bound |f·g| ≤ |f|² + |g|² to decouple the product, then use Tonelli to
-factor the triple integral into ν(univ) × double integral, which is finite by L². -/
+factor the triple integral into ν(univ) × double integral, which is finite by L².
+-/
 
 open Function ENNReal
 
@@ -872,7 +884,8 @@ private lemma memLp_two_lintegral_nnnorm_sq {α ε : Type*} [MeasurableSpace α]
   norm_cast
 
 /-- Term-by-term finiteness used in `L2_process_covariance_fubini_integrable` (factor out the
-last `ℝ`-coordinate via Tonelli). -/
+last `ℝ`-coordinate via Tonelli).
+-/
 private lemma l2cov_term_finite {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} {ν : Measure ℝ} [SFinite μ] [SFinite ν] {A : ℝ → Ω → ℂ} {c : ℂ}
     (hm : Measurable (fun x : Ω × (ℝ × ℝ) => (↑‖A x.2.1 x.1 - c‖₊ : ℝ≥0∞) ^ 2))
@@ -891,7 +904,8 @@ private lemma l2cov_term_finite {Ω : Type*} [MeasurableSpace Ω]
   exact h_both_finite
 
 /-- Term-by-term finiteness used in `L2_process_covariance_fubini_integrable` (factor out the
-first `ℝ`-coordinate via Tonelli). -/
+first `ℝ`-coordinate via Tonelli).
+-/
 private lemma l2cov_term2_finite {Ω : Type*} [MeasurableSpace Ω]
     {μ : Measure Ω} {ν : Measure ℝ} [SFinite μ] [SFinite ν] {A : ℝ → Ω → ℂ} {c : ℂ}
     (hm : Measurable (fun x : Ω × (ℝ × ℝ) => (↑‖A x.2.2 x.1 - c‖₊ : ℝ≥0∞) ^ 2))

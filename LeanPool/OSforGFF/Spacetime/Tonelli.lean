@@ -31,7 +31,8 @@ open MeasureTheory MeasureSpace FiniteDimensional Real
 /-! ### Auxiliary Lemmas -/
 
 /-- Norm bound: ‖spacetimeDecomp.symm (t, v)‖ ≥ ‖v‖.
-    This follows from: ‖x‖² = t² + ‖v‖² ≥ ‖v‖². -/
+    This follows from: ‖x‖² = t² + ‖v‖² ≥ ‖v‖².
+-/
 lemma spacetimeDecomp_symm_norm_ge (t : ℝ) (v : SpatialCoords) :
     ‖spacetimeDecomp.symm (t, v)‖ ≥ ‖v‖ := by
   have h_spatial : spatialPart (spacetimeDecomp.symm (t, v)) = v :=
@@ -109,7 +110,8 @@ depending only on time coordinates, the double integral factors:
 
 where G_f(t) = ∫ ‖f(t, v)‖ dv is the spatial integral at time t.
 
-This is a key tool for establishing reflection positivity (OS3) bounds. -/
+This is a key tool for establishing reflection positivity (OS3) bounds.
+-/
 theorem schwartz_tonelli_spacetime
     (f g : SchwartzMap SpaceTime ℂ)
     (K : ℝ → ℝ → ℝ)

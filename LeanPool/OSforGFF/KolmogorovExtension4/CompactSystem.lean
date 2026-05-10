@@ -15,7 +15,8 @@ section definition
 variable {α : Type*} {p : Set α → Prop} {C : ℕ → Set α}
 
 /-- In a compact system, given a countable family with empty intersection, we choose a finite
-subfamily with empty intersection -/
+subfamily with empty intersection
+-/
 noncomputable
 def IsCompactSystem.support (hp : IsCompactSystem p) (hC : ∀ i, p (C i)) (hC_empty : ⋂ i, C i = ∅) :
     ℕ := (hp C hC hC_empty).choose
@@ -39,7 +40,8 @@ local notation "As" => closedCompactCylinders.set
 section AllProj
 
 /-- All indices in `ι` that are constrained by the condition `∀ n, s n ∈ closedCompactCylinders α`.
-That is, the union of all indices in the bases of the cylinders. -/
+That is, the union of all indices in the bases of the cylinders.
+-/
 def allProj (hs : ∀ n, s n ∈ closedCompactCylinders α) : Set ι := ⋃ n, Js (hs n)
 
 theorem subset_allProj (hs : ∀ n, s n ∈ closedCompactCylinders α) (n : ℕ) :
@@ -52,7 +54,8 @@ theorem exists_nat_proj (hs : ∀ n, s n ∈ closedCompactCylinders α) (i : ι)
 
 open Classical in
 /-- The smallest `n` such that `i ∈ Js (hs n)`. That is, the first `n` such that `i` belongs to the
-finset defining the cylinder for `s n`. -/
+finset defining the cylinder for `s n`.
+-/
 noncomputable def indexProj (hs : ∀ n, s n ∈ closedCompactCylinders α) (i : allProj hs) : ℕ :=
   Nat.find (exists_nat_proj hs i i.2)
 
@@ -78,7 +81,8 @@ end AllProj
 section projCylinder
 
 /-- Given a countable family of closed cylinders, consider one of them as depending only on
-the countably many coordinates that appear in all of them. -/
+the countably many coordinates that appear in all of them.
+-/
 def projCylinder (hs : ∀ n, s n ∈ closedCompactCylinders α) (n : ℕ) :
     Set (Π i : allProj hs, α i) :=
   (fun (f : Π i : allProj hs, α i) (i : Js (hs n)) ↦ f ⟨i, subset_allProj hs _ i.2⟩) ⁻¹' (As (hs n))
@@ -126,7 +130,8 @@ section piCylinderSet
 
 open Classical in
 /-- Given countably many closed compact cylinders, the product set which, in each relevant
-coordinate, is the projection of the first cylinder for which this coordinate is relevant. -/
+coordinate, is the projection of the first cylinder for which this coordinate is relevant.
+-/
 def piCylinderSet (hs : ∀ n, s n ∈ closedCompactCylinders α) :
     Set (Π i : allProj hs, α i) :=
   {x : Π i : allProj hs, α i |

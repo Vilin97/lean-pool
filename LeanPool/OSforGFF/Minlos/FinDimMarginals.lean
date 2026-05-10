@@ -35,7 +35,8 @@ noncomputable section
 /-- The finite-dimensional marginal CF: Φ_F(t) = Φ(∑ tᵢ • fᵢ).
 
     Defined on `EuclideanSpace ℝ (Fin n)` (which is `PiLp 2 (fun _ => ℝ)`)
-    so that we can apply Bochner's theorem (which requires inner product spaces). -/
+    so that we can apply Bochner's theorem (which requires inner product spaces).
+-/
 def marginalCF {E : Type*} [AddCommGroup E] [Module ℝ E]
     (Φ : E → ℂ) {n : ℕ} (f : Fin n → E) :
     EuclideanSpace ℝ (Fin n) → ℂ :=
@@ -45,7 +46,8 @@ def marginalCF {E : Type*} [AddCommGroup E] [Module ℝ E]
 
     Proof: Each summand `tᵢ • fᵢ` is continuous in t (scalar multiplication
     by a continuous coordinate projection), and a finite sum of continuous
-    functions is continuous. Then compose with continuous Φ. -/
+    functions is continuous. Then compose with continuous Φ.
+-/
 theorem marginalCF_continuous {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     (Φ : E → ℂ) {n : ℕ} (f : Fin n → E)
@@ -67,7 +69,8 @@ private def spanLinearMap {E : Type*} [AddCommGroup E] [Module ℝ E]
 /-- The marginal CF is positive definite.
 
     Uses `isPositiveDefinite_precomp_linear`: if Φ is PD on E and T : V →ₗ E
-    is linear, then Φ ∘ T is PD on V. -/
+    is linear, then Φ ∘ T is PD on V.
+-/
 theorem marginalCF_pd {E : Type*} [AddCommGroup E] [Module ℝ E]
     (Φ : E → ℂ) {n : ℕ} (f : Fin n → E)
     (hPD : IsPositiveDefinite Φ) : IsPositiveDefinite (marginalCF Φ f) :=
@@ -83,7 +86,8 @@ theorem marginalCF_normalized {E : Type*} [AddCommGroup E] [Module ℝ E]
     measure on ℝⁿ whose characteristic function equals the marginal CF.
 
     This is the core step connecting the infinite-dimensional Minlos problem
-    to the finite-dimensional Bochner theorem. -/
+    to the finite-dimensional Bochner theorem.
+-/
 theorem marginal_measure_exists {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     (Φ : E → ℂ) {n : ℕ} (f : Fin n → E)

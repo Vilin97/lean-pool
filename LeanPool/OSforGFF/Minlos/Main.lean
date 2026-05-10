@@ -57,7 +57,8 @@ private lemma trans_symm_apply_eq' {α β γ : Type*} [MeasurableSpace α] [Meas
     (P ∘ embed = id).
 
     **References**: Minlos (1959), Gel'fand-Vilenkin Vol. 4, Billingsley,
-    Degenne-Pfaffelhuber (KolmogorovExtension4). -/
+    Degenne-Pfaffelhuber (KolmogorovExtension4).
+-/
 theorem minlos_theorem {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     [IsHilbertNuclear E] [SeparableSpace E] [Nonempty E] (Φ : E → ℂ)
@@ -201,7 +202,8 @@ theorem minlos_theorem {E : Type*} [AddCommGroup E] [Module ℝ E]
 /-! ## Derived results -/
 
 /-- Derived uniqueness: two probability measures with the same characteristic functional
-    on a nuclear space must be equal. -/
+    on a nuclear space must be equal.
+-/
 theorem minlos_uniqueness {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     [IsHilbertNuclear E] [SeparableSpace E] [Nonempty E]

@@ -81,7 +81,8 @@ lemma spatialDot_eq_inner (k_spatial x_spatial : SpatialCoords) :
   rw [real_inner_eq_mul]
 
 /-- The inner product on SpaceTime decomposes into time and spatial parts:
-    ⟪k, z⟫ = k₀ z₀ + ⟪k_sp, z_sp⟫ = k₀ z₀ + spatialDot(k_sp, z_sp) -/
+    ⟪k, z⟫ = k₀ z₀ + ⟪k_sp, z_sp⟫ = k₀ z₀ + spatialDot(k_sp, z_sp)
+-/
 lemma spacetime_inner_decompose (k z : SpaceTime) :
     ⟪k, z⟫_ℝ = k 0 * z 0 + spatialDot (spatialPart k) (spatialPart z) := by
   unfold spatialDot spatialPart
@@ -100,7 +101,8 @@ lemma spacetime_inner_decompose (k z : SpaceTime) :
 
     This is the key quantity that appears after contour integration. For functions
     supported on positive time (x₀ ≥ 0), this becomes a product of two Fourier-Laplace
-    transforms, leading to the squared norm factorization. -/
+    transforms, leading to the squared norm factorization.
+-/
 noncomputable def weightedLaplaceFourier (m : ℝ) (f : TestFunctionℂ) (k_spatial : SpatialCoords) : ℂ :=
   let ω := Real.sqrt (‖k_spatial‖^2 + m^2)
   ∫ x : SpaceTime, f x * Complex.exp (-|x 0| * ω) *
@@ -140,7 +142,8 @@ So (1/ω) exp(-ω|t|) = (1/π) ∫_{k₀} exp(-ik₀t)/(k₀²+ω²) dk₀
 
 This allows us to convert between:
 - Mixed representation: with exp(-ω|t|) evaluated
-- k₀-inside form: with ∫_{k₀} 1/(k₀²+ω²) unevaluated -/
+- k₀-inside form: with ∫_{k₀} 1/(k₀²+ω²) unevaluated
+-/
 
 /-! ## Laplace Integral Identity
 
@@ -169,7 +172,8 @@ Since K_{1/2}(z) = √(π/(2z)) exp(-z), the identity follows.
                                   = (π/s)^{d/2} * exp(-‖z‖²/(4s))
 
     Combined with the normalization (1/(2π)^d) and the heat kernel formula:
-    (1/(2π)^d) * (π/s)^{d/2} = (4πs)^{-d/2} -/
+    (1/(2π)^d) * (π/s)^{d/2} = (4πs)^{-d/2}
+-/
 theorem heatKernel_eq_gaussianFT (s : ℝ) (hs : 0 < s) (z : SpaceTime) :
     (heatKernelPositionSpace s ‖z‖ : ℂ) =
     (1 / (2 * π) ^ STDimension : ℝ) *
@@ -228,7 +232,8 @@ theorem heatKernel_eq_gaussianFT (s : ℝ) (hs : 0 < s) (z : SpaceTime) :
 /-! ### Technical Integration Lemmas
 
 The following lemmas establish integrability and measurability conditions
-that are mathematically standard but require substantial Mathlib plumbing. -/
+that are mathematically standard but require substantial Mathlib plumbing.
+-/
 
 /-- The heat kernel is jointly continuous on (0, ∞) × ℝ as a function of (t, r). -/
 lemma heatKernelPositionSpace_continuousOn :
@@ -272,7 +277,8 @@ lemma heatKernelPositionSpace_continuousOn :
     1. The heat kernel is jointly continuous on (0, ∞) × ℝ
     2. The map (s, x, y) ↦ (s, ‖Θx - y‖) is continuous
     3. Composition is continuous on the support set
-    4. Apply ContinuousOn.aestronglyMeasurable -/
+    4. Apply ContinuousOn.aestronglyMeasurable
+-/
 theorem heatKernelPositionSpace_aestronglyMeasurable :
     AEStronglyMeasurable
       (fun p : ℝ × SpaceTime × SpaceTime =>
@@ -368,7 +374,8 @@ theorem heatKernelPositionSpace_aestronglyMeasurable_real :
     This follows from:
     1. Lebesgue measure on SpaceTime is translation invariant
     2. The norm satisfies ‖a - y‖ = ‖-(y - a)‖ = ‖y - a‖
-    3. The heat kernel integrates to 1 (heatKernelPositionSpace_integral_eq_one) -/
+    3. The heat kernel integrates to 1 (heatKernelPositionSpace_integral_eq_one)
+-/
 lemma heatKernelPositionSpace_integral_translated (s : ℝ) (hs : 0 < s) (a : SpaceTime) :
     ∫ y : SpaceTime, heatKernelPositionSpace s ‖a - y‖ = 1 := by
   -- First, ‖a - y‖ = ‖y - a‖ (norm is symmetric under negation)
@@ -678,7 +685,8 @@ theorem schwinger_bound_integrable_fubini (m : ℝ) [Fact (0 < m)] (f : TestFunc
     - `SchwartzMap.integrable` for Schwartz L¹ integrability
     - `integral_exp_neg_mul_Ioi_eq_inv` for exponential integral
 
-    The proof delegates to `schwinger_bound_integrable_fubini` for the technical Tonelli step. -/
+    The proof delegates to `schwinger_bound_integrable_fubini` for the technical Tonelli step.
+-/
 theorem schwinger_bound_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     (Cf : ℝ) (hCf : ∀ x, ‖f x‖ ≤ Cf) :
     Integrable
@@ -737,7 +745,8 @@ The key insight is that with f(s) = s⁻¹:
 - Under substitution z = 1/s: s⁻² * exp(-a/s) ds becomes exp(-a·z) dz
 - ∫₀^∞ exp(-a·z) dz is finite for a > 0
 
-This uses `integrableOn_image_iff_integrableOn_deriv_smul_of_antitoneOn`. -/
+This uses `integrableOn_image_iff_integrableOn_deriv_smul_of_antitoneOn`.
+-/
 theorem integrable_s_inv_sq_exp_neg_inv_s {a : ℝ} (ha : 0 < a) :
     IntegrableOn (fun s => s^((-2 : ℝ)) * Real.exp (-a / s)) (Set.Ioi 0) := by
   -- Strategy: Use the change of variables theorem
@@ -792,7 +801,8 @@ theorem integrable_s_inv_sq_exp_neg_inv_s {a : ℝ} (ha : 0 < a) :
 
     Represents the bound `C * s^(3/2) * exp(-s(m² + k²))` which comes from:
     1. Linear vanishing of f at t=0 giving s^(3/2) scaling (offsetting s^(-2) divergence).
-    2. Exponential decay in mass and momentum. -/
+    2. Exponential decay in mass and momentum.
+-/
 def dominate_G (C : ℝ) (m : ℝ) (p : ℝ × SpatialCoords) : ℝ :=
   if p.1 > 0 then
     C * p.1 ^ (3 / 2 : ℝ) * Real.exp (-p.1 * (‖p.2‖^2 + m^2))
@@ -803,7 +813,8 @@ def dominate_G (C : ℝ) (m : ℝ) (p : ℝ × SpatialCoords) : ℝ :=
     Integrable on (0, ∞) × ℝ³ because:
     ∫ exp(-s|k|²) dk = (π/s)^(3/2).
     ∫ s^(3/2) * (π/s)^(3/2) * exp(-s*m²) ds = π^(3/2) ∫ exp(-s*m²) ds.
-    The latter converges for m > 0. -/
+    The latter converges for m > 0.
+-/
 theorem integrable_dominate_G (C : ℝ) (m : ℝ) [Fact (0 < m)] :
     Integrable (dominate_G C m) ((volume.restrict (Set.Ioi 0)).prod volume) := by
   have hm : 0 < m := Fact.out
@@ -1012,7 +1023,8 @@ lemma spatialPart_measurable : Measurable (spatialPart : SpaceTime → SpatialCo
     `(((ℝ × SpatialCoords) × SpaceTime) × SpaceTime) → ℂ`
     represented as `x : (ℝ × SpatialCoords) × SpaceTime`, `y : SpaceTime`.
 
-    This is a product of continuous/measurable functions, hence measurable. -/
+    This is a product of continuous/measurable functions, hence measurable.
+-/
 lemma fubini_s_ksp_integrand_stronglyMeasurable (m : ℝ) (f : TestFunctionℂ) :
     StronglyMeasurable (Function.uncurry fun (x : (ℝ × SpatialCoords) × SpaceTime) (y : SpaceTime) =>
       (starRingEnd ℂ (f x.2)) * f y *
@@ -1093,7 +1105,8 @@ This is done via change of variables u = x₀ + y₀, v = x₀ - y₀ and standa
     - ∫ u³ exp(-b·u²) du = b^(-(3+1)/2) * (1/2) * Γ((3+1)/2)
     - = b^(-2) * (1/2) * Γ(2)
     - = (4s)² * (1/2) * 1   [since Γ(2) = 1]
-    - = 8s² -/
+    - = 8s²
+-/
 lemma integral_u_cubed_gaussian (s : ℝ) (hs : 0 < s) :
     ∫ u in Set.Ioi 0, u^3 * Real.exp (-u^2 / (4 * s)) = 8 * s^2 := by
   have hb : 0 < 1 / (4 * s) := by positivity
@@ -1137,7 +1150,8 @@ lemma integral_u_cubed_gaussian (s : ℝ) (hs : 0 < s) :
     **Proof sketch:**
     1. Both regions have the same measure under the product Lebesgue measure
     2. The map (x, y) ↦ (x, x+y) is measure-preserving (shear with det = 1)
-    3. Apply Fubini to swap the order of integration -/
+    3. Apply Fubini to swap the order of integration
+-/
 lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
     (_hf_nn : ∀ x y, 0 ≤ x → 0 ≤ y → 0 ≤ f x (x + y))
     (hf_int : MeasureTheory.Integrable (fun p : ℝ × ℝ =>
@@ -1300,7 +1314,8 @@ lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
     So: J = √(π/s) · (1/6) · ∫₀^∞ u³ exp(-u²/(4s)) du
           = √(π/s) · (1/6) · 8s²  [by integral_u_cubed_gaussian]
           = √π · s^(-1/2) · (4/3) · s²
-          = (4/3)√π · s^(3/2) -/
+          = (4/3)√π · s^(3/2)
+-/
 lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
     ∫ x₀ in Set.Ioi 0, ∫ y₀ in Set.Ioi 0,
       x₀ * y₀ * Real.sqrt (π / s) * Real.exp (-(x₀ + y₀)^2 / (4 * s)) =
@@ -1530,7 +1545,8 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
     This is a weaker form of `heat_kernel_moment_integral` that suffices for `F_norm_bound_via_linear_vanishing`.
     The exact value is (4/3)√π · s^{3/2}, so we use 10 · s^{3/2} as a comfortable upper bound.
 
-    **Proof**: Uses `heat_kernel_moment_integral` and the bound (4/3)√π < 10. -/
+    **Proof**: Uses `heat_kernel_moment_integral` and the bound (4/3)√π < 10.
+-/
 lemma heat_kernel_moment_integral_bound (s : ℝ) (hs : 0 < s) :
     ∫ x₀ in Set.Ioi 0, ∫ y₀ in Set.Ioi 0,
       x₀ * y₀ * Real.sqrt (π / s) * Real.exp (-(x₀ + y₀)^2 / (4 * s)) ≤
@@ -1551,7 +1567,8 @@ lemma heat_kernel_moment_integral_bound (s : ℝ) (hs : 0 < s) :
   nlinarith
 
 /-- Helper lemma: t * exp(-b*t²) is integrable on (0, ∞) for b > 0.
-    This follows from `integrable_mul_exp_neg_mul_sq` restricted to positive reals. -/
+    This follows from `integrable_mul_exp_neg_mul_sq` restricted to positive reals.
+-/
 lemma gaussian_moment_integrableOn_Ioi {b : ℝ} (hb : 0 < b) :
     MeasureTheory.IntegrableOn (fun t => t * Real.exp (-b * t^2)) (Set.Ioi 0) := by
   -- |t| * exp(-b*t²) is integrable on all of ℝ
@@ -1582,7 +1599,8 @@ lemma gaussian_moment_integrableOn_Ioi {b : ℝ} (hb : 0 < b) :
 
     **Proof**: For t₁, t₂ ≥ 0, we have (t₁+t₂)² ≥ t₂², so
     exp(-(t₁+t₂)²/(4s)) ≤ exp(-t₂²/(4s)), and the integrand is dominated by
-    t₂ * exp(-t₂²/(4s)) which is integrable by `gaussian_moment_integrableOn_Ioi`. -/
+    t₂ * exp(-t₂²/(4s)) which is integrable by `gaussian_moment_integrableOn_Ioi`.
+-/
 lemma heat_kernel_inner_integrableOn {s t₁ : ℝ} (hs : 0 < s) (ht₁ : 0 ≤ t₁) :
     MeasureTheory.IntegrableOn
       (fun t₂ => t₂ * Real.exp (-(t₁ + t₂)^2 / (4 * s))) (Set.Ioi 0) := by
@@ -1622,7 +1640,8 @@ lemma heat_kernel_inner_integrableOn {s t₁ : ℝ} (hs : 0 < s) (ht₁ : 0 ≤ 
     nlinarith [sq_nonneg t₁]
 
 /-- The heat kernel moment integrand is integrable on the product quadrant (0,∞)².
-    This is the key integrability result extracted from heat_kernel_moment_integral. -/
+    This is the key integrability result extracted from heat_kernel_moment_integral.
+-/
 lemma heat_kernel_moment_integrableOn_quadrant (s : ℝ) (hs : 0 < s) :
     MeasureTheory.IntegrableOn
       (fun z : ℝ × ℝ => z.1 * z.2 * Real.sqrt (π/s) * Real.exp (-(z.1 + z.2)^2 / (4 * s)))
@@ -1684,7 +1703,8 @@ the integrand to be zero outside the region of interest, then use global Fubini 
 -/
 
 /-- Heat kernel moment integrand extended by zero outside (0,∞)².
-    F(t₁, t₂) = t₁ · t₂ · √(π/s) · exp(-(t₁+t₂)²/(4s)) for t₁, t₂ > 0, else 0. -/
+    F(t₁, t₂) = t₁ · t₂ · √(π/s) · exp(-(t₁+t₂)²/(4s)) for t₁, t₂ > 0, else 0.
+-/
 def heatKernelMomentExt (s : ℝ) : ℝ × ℝ → ℝ := fun p =>
   if p.1 > 0 ∧ p.2 > 0 then
     p.1 * p.2 * Real.sqrt (π / s) * Real.exp (-(p.1 + p.2)^2 / (4 * s))
@@ -1698,7 +1718,8 @@ def heatKernelMomentExt (s : ℝ) : ℝ × ℝ → ℝ := fun p =>
     Mathematical justification: For nonnegative measurable f, ∫ f < ∞ implies Integrable f
     (Tonelli's theorem). Here f = heatKernelMomentExt and ∫ f = (π/2)·s^{3/2}.
 
-    **Reference**: Rudin "Real and Complex Analysis" Ch.8 (Tonelli). -/
+    **Reference**: Rudin "Real and Complex Analysis" Ch.8 (Tonelli).
+-/
 lemma heatKernelMomentExt_integrable (s : ℝ) (hs : 0 < s) :
     MeasureTheory.Integrable (heatKernelMomentExt s) (volume.prod volume) := by
   -- heatKernelMomentExt is the indicator of the heat kernel moment on (0,∞)²
@@ -1717,7 +1738,8 @@ lemma heatKernelMomentExt_integrable (s : ℝ) (hs : 0 < s) :
 /-- Parametric integral of extended heat kernel moment is integrable on ℝ.
 
     This follows from Fubini's theorem: if f is integrable on the product,
-    then t₁ ↦ ∫ t₂, f(t₁, t₂) is integrable. -/
+    then t₁ ↦ ∫ t₂, f(t₁, t₂) is integrable.
+-/
 lemma heatKernelMomentExt_parametric_integrable (s : ℝ) (hs : 0 < s) :
     MeasureTheory.Integrable (fun t₁ => ∫ t₂, heatKernelMomentExt s (t₁, t₂)) volume :=
   (heatKernelMomentExt_integrable s hs).integral_prod_left
@@ -1747,7 +1769,8 @@ lemma heatKernelMomentExt_parametric_eq_setIntegral (s : ℝ) (t₁ : ℝ) (ht�
     1. heatKernelMomentExt is integrable on ℝ² (sorry - uses Tonelli + finite integral)
     2. By Fubini, t₁ ↦ ∫ t₂, heatKernelMomentExt(t₁,t₂) is integrable on ℝ
     3. The set integral on (0,∞) equals the full integral (zero outside)
-    4. Multiply by constant c preserves integrability -/
+    4. Multiply by constant c preserves integrability
+-/
 lemma heatKernelMoment_setIntegral_integrableOn (s : ℝ) (hs : 0 < s) (c : ℝ) :
     MeasureTheory.IntegrableOn
       (fun t₁ => ∫ t₂ in Set.Ioi 0,
@@ -1788,7 +1811,8 @@ lemma heatKernelMoment_setIntegral_integrableOn (s : ℝ) (hs : 0 < s) (c : ℝ)
     4. Apply `heat_kernel_moment_integral_bound`: ≤ C_sp² · 10 · s^{3/2}
 
     **Reference**: Rudin "Real and Complex Analysis" Ch.8 (Fubini);
-                  Standard heat kernel estimates. -/
+                  Standard heat kernel estimates.
+-/
 lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
     ∃ K : ℝ, 0 < K ∧ ∀ (s : ℝ) (_hs : 0 < s),
@@ -2146,7 +2170,8 @@ lemma spacetime_fubini_linear_vanishing_bound (f : TestFunctionℂ)
     functions are measurable.
 
     **Reference**: Rudin "Real and Complex Analysis" Ch.1 (measurable functions);
-                  Folland "Real Analysis" Ch.2. -/
+                  Folland "Real Analysis" Ch.2.
+-/
 lemma schwartz_heat_product_aestronglymeasurable (f : TestFunctionℂ)
     (x : SpaceTime) (c₁ c₂ : ℝ) (s : ℝ) (_hs : 0 < s) :
     AEStronglyMeasurable (fun a : SpaceTime =>
@@ -2185,7 +2210,8 @@ lemma schwartz_heat_product_aestronglymeasurable (f : TestFunctionℂ)
     direct Schwartz decay estimates.
 
     **Reference**: Rudin "Real and Complex Analysis" Ch.8 (Fubini);
-                  Folland "Real Analysis" Ch.2 (Tonelli). -/
+                  Folland "Real Analysis" Ch.2 (Tonelli).
+-/
 lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
     (hf_int_norm : Integrable (fun x => ‖f x‖) volume)
     (c₁ c₂ : ℝ) (s : ℝ) (hs : 0 < s) :
@@ -2298,7 +2324,8 @@ lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
     **Mathematical justification:**
     The bound uses the linear vanishing property |f(x)| ≤ C·x₀ for x₀ > 0, which combined
     with heat_kernel_moment_integral gives |F| ≤ C² · (4/3)√π · s^{3/2} · exp(-sω²).
-    The constant C comes from schwartz_vanishing_linear_bound (derivative bound via MVT). -/
+    The constant C comes from schwartz_vanishing_linear_bound (derivative bound via MVT).
+-/
 lemma F_norm_bound_via_linear_vanishing (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     (hf_supp : ∀ x : SpaceTime, x 0 ≤ 0 → f x = 0) :
     ∃ C_bound : ℝ, 0 < C_bound ∧ ∀ (s : ℝ) (_hs : 0 < s) (k_sp : SpatialCoords),
@@ -2605,7 +2632,8 @@ lemma F_norm_bound_via_linear_vanishing (m : ℝ) [Fact (0 < m)] (f : TestFuncti
     assuming m > 0 which ensures exponential decay at large s for all k_sp.
 
     **Key integrability lemma:** Uses `integrable_s_inv_sq_exp_neg_inv_s` to
-    handle the s^{-1/2} * exp(-t²/(4s)) term via substitution z = 1/s. -/
+    handle the s^{-1/2} * exp(-t²/(4s)) term via substitution z = 1/s.
+-/
 theorem fubini_s_ksp_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     (hf_supp : ∀ x, x 0 ≤ 0 → f x = 0) :
     ∫ s in Set.Ioi 0, ∫ k_sp : SpatialCoords, ∫ x : SpaceTime, ∫ y : SpaceTime,
@@ -2808,7 +2836,8 @@ lemma s_xy_swap_bound_integrable (f : TestFunctionℂ) (m : ℝ) [Fact (0 < m)] 
 
     **Proof:** Uses `MeasureTheory.integral_integral_swap` with
     integrability on `(Set.Ioi 0) × SpaceTime × SpaceTime`.
-    The bound function is `s^{-1/2} * exp(-s*m^2) * |f(x)| * |f(y)|`. -/
+    The bound function is `s^{-1/2} * exp(-s*m^2) * |f(x)| * |f(y)|`.
+-/
 theorem fubini_s_xy_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (k_sp : SpatialCoords) :
     ∫ s in Set.Ioi 0, ∫ x : SpaceTime, ∫ y : SpaceTime,
       (starRingEnd ℂ (f x)) * f y *
@@ -3102,7 +3131,8 @@ reflection positivity proof. The key observation is that:
 
 The common bound for all Fubini swaps is:
   |integrand| ≤ |f(x)| |f(y)| × C(s) × exp(-s‖k_sp‖²)
-which factors and is therefore integrable on the product space. -/
+which factors and is therefore integrable on the product space.
+-/
 
 /-- The Gaussian exp(-s‖k‖²) is integrable over SpatialCoords for s > 0. -/
 lemma gaussian_integrable_spatialCoords (s : ℝ) (hs : 0 < s) :
@@ -3141,7 +3171,8 @@ lemma continuous_spatialPart : Continuous spatialPart := by
     SpatialCoords × SpaceTime × SpaceTime because:
     1. ∫_{k_sp} exp(-s‖k_sp‖²) dk_sp = (π/s)^{3/2} < ∞
     2. ∫∫_{x,y} |f(x)| |f(y)| dx dy = ‖f‖₁² < ∞
-    3. The product factorizes on independent spaces -/
+    3. The product factorizes on independent spaces
+-/
 lemma fubini_ksp_xy_integrand_integrable (s : ℝ) (hs : 0 < s) (f : TestFunctionℂ) :
     MeasureTheory.Integrable
       (fun p : SpatialCoords × SpaceTime × SpaceTime =>
@@ -3176,7 +3207,8 @@ lemma fubini_ksp_xy_integrand_integrable (s : ℝ) (hs : 0 < s) (f : TestFunctio
     - |starRingEnd ℂ (f x)| = |f x|
     - |ofReal (√(π/s))| = √(π/s) (non-negative)
     - |exp(negative real)| ≤ 1
-    - |exp(pure imaginary)| = 1 -/
+    - |exp(pure imaginary)| = 1
+-/
 lemma fubini_ksp_xy_full_integrand_integrable (s : ℝ) (hs : 0 < s) (f : TestFunctionℂ) :
     MeasureTheory.Integrable
       (fun p : SpatialCoords × SpaceTime × SpaceTime =>
@@ -3283,7 +3315,8 @@ lemma fubini_ksp_xy_full_integrand_integrable (s : ℝ) (hs : 0 < s) (f : TestFu
 
     **Proof:** Two steps:
     1. Pull the k_sp integral out: A(x,y) * ∫_{k_sp} B = ∫_{k_sp} A(x,y) * B
-    2. Apply Fubini (integral_integral_swap) to swap x,y,k_sp to k_sp,x,y -/
+    2. Apply Fubini (integral_integral_swap) to swap x,y,k_sp to k_sp,x,y
+-/
 theorem fubini_ksp_xy_swap (s : ℝ) (hs : 0 < s) (f : TestFunctionℂ) :
     ∫ x : SpaceTime, ∫ y : SpaceTime,
       (starRingEnd ℂ (f x)) * f y *

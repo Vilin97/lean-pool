@@ -32,7 +32,8 @@ the bochner library (Minlos theorem).
 /-! ### WithSeminorms reindexing
 
 A general reindexing lemma: if `p` generates the topology and `e` is an equivalence,
-then `p ∘ e` also generates the topology. -/
+then `p ∘ e` also generates the topology.
+-/
 
 open TopologicalSpace
 
@@ -54,7 +55,8 @@ end Reindex
 
 gaussian-field's `NuclearSpace` (Pietsch characterization with `‖f n x‖`) is
 equivalent to bochner's `IsNuclear` (same, with `|f n x|`), since for `ℝ`-valued
-CLFs, `‖y‖ = |y|`. -/
+CLFs, `‖y‖ = |y|`.
+-/
 
 section Bridge
 
@@ -81,7 +83,8 @@ end Bridge
 1. gaussian-field: `DyninMityaginSpace (SchwartzMap D ℝ)` (Hermite basis)
 2. gaussian-field: `DyninMityaginSpace → NuclearSpace` (Pietsch characterization)
 3. bridge: `NuclearSpace → IsNuclear` (norm = abs for ℝ)
-4. bochner: `isHilbertNuclear_of_nuclear` (Pietsch → Hilbert-Schmidt embeddings) -/
+4. bochner: `isHilbertNuclear_of_nuclear` (Pietsch → Hilbert-Schmidt embeddings)
+-/
 noncomputable instance schwartz_isHilbertNuclear {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [Nontrivial E] :
     IsHilbertNuclear (SchwartzMap E ℝ) := by

@@ -38,7 +38,8 @@ universe u
 variable {ι : Type u} [Fintype ι] [DecidableEq ι]
 
 /-- Entrywise real exponential of a matrix: `(entrywiseExp R) i j = exp (R i j)`.
-    Used for the OS3 proof (Glimm–Jaffe): if `R` is PSD, then `exp(R)` (entrywise) should be PSD. -/
+    Used for the OS3 proof (Glimm–Jaffe): if `R` is PSD, then `exp(R)` (entrywise) should be PSD.
+-/
 noncomputable def entrywiseExp (R : Matrix ι ι ℝ) : Matrix ι ι ℝ :=
   fun i j => Real.exp (R i j)
 
@@ -70,7 +71,8 @@ private lemma isHermitian_entrywiseExp_real (R : Matrix ι ι ℝ)
 @[simp] def hadamardOne (ι : Type u) [Fintype ι] : Matrix ι ι ℝ := fun _ _ => 1
 
 /-- n-fold Hadamard power of a matrix: `hadamardPow R n = R ∘ₕ ⋯ ∘ₕ R` (n times),
-    with `hadamardPow R 0 = hadamardOne`. -/
+    with `hadamardPow R 0 = hadamardOne`.
+-/
 @[simp] def hadamardPow (R : Matrix ι ι ℝ) : ℕ → Matrix ι ι ℝ
   | 0     => hadamardOne (ι := ι)
   | n+1   => hadamardPow R n ∘ₕ R
@@ -106,7 +108,8 @@ noncomputable def entrywiseExp_hadamardSeries (R : Matrix ι ι ℝ) : Matrix ι
   fun i j => tsum (fun n : ℕ => (1 / (Nat.factorial n : ℝ)) * (hadamardPow R n i j))
 
 /-- The entrywise exponential agrees with its Hadamard series expansion.
-    Uses the Taylor series for Complex.exp and converts to the real case. -/
+    Uses the Taylor series for Complex.exp and converts to the real case.
+-/
 lemma entrywiseExp_eq_hadamardSeries (R : Matrix ι ι ℝ) :
   entrywiseExp R = entrywiseExp_hadamardSeries R := by
   classical
@@ -183,7 +186,8 @@ lemma hadamardPow_posDef_of_posDef
       schur_product_posDef (A := hadamardPow R (k+1)) (B := R) hPD_k1 hR
 
 /-- The quadratic form of the Hadamard series equals the sum of quadratic forms of individual terms.
-    This lemma handles the complex interchange of summation and quadratic form evaluation. -/
+    This lemma handles the complex interchange of summation and quadratic form evaluation.
+-/
 lemma quadratic_form_entrywiseExp_hadamardSeries
   (R : Matrix ι ι ℝ) (x : ι → ℝ) :
   x ⬝ᵥ (entrywiseExp_hadamardSeries R).mulVec x =
@@ -249,7 +253,8 @@ lemma quadratic_form_entrywiseExp_hadamardSeries
   simp only [hlhs_identify]
 
 /-- Summability of the scalar quadratic-form coefficients appearing in the
-    Hadamard exponential series. -/
+    Hadamard exponential series.
+-/
 lemma summable_hadamardQuadSeries
     (R : Matrix ι ι ℝ) (x : ι → ℝ) :
     Summable (fun n : ℕ =>
@@ -304,7 +309,8 @@ lemma summable_hadamardQuadSeries
     Sketch: each Hadamard power (for n ≥ 1) is PD by the Schur product theorem and induction;
     summing with positive coefficients 1/n! yields strictly positive quadratic form for every x ≠ 0
     since the n = 1 term already contributes xᵀ R x > 0. Interchange of sum and quadratic form
-    follows from absolute convergence of the scalar exp series; IsHermitian follows termwise. -/
+    follows from absolute convergence of the scalar exp series; IsHermitian follows termwise.
+-/
 lemma posDef_entrywiseExp_hadamardSeries_of_posDef
   (R : Matrix ι ι ℝ) (hR : R.PosDef) :
   (entrywiseExp_hadamardSeries (ι:=ι) R).PosDef := by
@@ -401,7 +407,8 @@ lemma posDef_entrywiseExp_hadamardSeries_of_posDef
     taking ε → 0⁺ with continuity of entrywiseExp_hadamardSeries gives that
     entrywiseExp_hadamardSeries(R) is PSD.
 
-    NOTE: This proof is simplified to avoid matrix reduction timeouts. -/
+    NOTE: This proof is simplified to avoid matrix reduction timeouts.
+-/
 lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
   (R : Matrix ι ι ℝ) (hR : R.PosSemidef) :
   (entrywiseExp_hadamardSeries (ι:=ι) R).PosSemidef := by

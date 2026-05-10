@@ -51,7 +51,8 @@ noncomputable section
 
 /-! ## GFF4D Positive Definiteness Lemmas
 
-These use the GFF4D (nonneg-only) notion of positive definiteness. -/
+These use the GFF4D (nonneg-only) notion of positive definiteness.
+-/
 
 /-- **Gaussian RBF kernel is positive definite on inner product spaces** (GFF4D version). -/
 theorem gaussian_rbf_pd_innerProduct
@@ -61,7 +62,8 @@ theorem gaussian_rbf_pd_innerProduct
 
 /-- If covariance is realized as a squared norm via a linear embedding T into
     a real inner product space H, then the Gaussian characteristic functional
-    is positive definite (GFF4D sense). -/
+    is positive definite (GFF4D sense).
+-/
 lemma gaussian_positive_definite_via_embedding
   {E H : Type*} [AddCommGroup E] [Module ℝ E]
   [NormedAddCommGroup H] [InnerProductSpace ℝ H]
@@ -98,10 +100,12 @@ The bochner library's `IsPositiveDefinite` requires both:
 2. `nonneg`: Re(∑ᵢⱼ c̄ᵢ cⱼ φ(xᵢ - xⱼ)) ≥ 0
 
 The GFF4D version only requires (2). For the Gaussian CF exp(-½Q(f,f)),
-hermiticity follows from Q(-f,-f) = Q(f,f) (which must be supplied). -/
+hermiticity follows from Q(-f,-f) = Q(f,f) (which must be supplied).
+-/
 
 /-- Promote GFF4D's nonneg-only PD to bochner's hermitian+nonneg PD,
-    given an explicit symmetry proof φ(-x) = conj(φ(x)). -/
+    given an explicit symmetry proof φ(-x) = conj(φ(x)).
+-/
 def gff4d_to_bochner_pd {α : Type*} [AddGroup α] {φ : α → ℂ}
     (h_nonneg : GFF4D.IsPositiveDefinite φ)
     (h_symm : ∀ x, φ (-x) = starRingEnd ℂ (φ x)) :
@@ -121,7 +125,8 @@ private lemma gaussian_cf_im_zero (r : ℝ) :
   simp [Complex.mul_im, Complex.neg_im, Complex.ofReal_im]
 
 /-- The Gaussian RBF kernel is positive definite in the bochner sense.
-    The hermitian condition follows from ‖-h‖ = ‖h‖. -/
+    The hermitian condition follows from ‖-h‖ = ‖h‖.
+-/
 theorem gaussian_rbf_pd_bochner
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] :
     IsPositiveDefinite (fun h : H => Complex.exp (-(1/2 : ℂ) * (‖h‖^2 : ℝ))) :=
@@ -151,7 +156,8 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
   [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
 
 /-- For Gaussian measures, the characteristic functional has the special form
-    Φ(f) = exp(-½⟨f, Cf⟩) where C is a nuclear covariance operator. -/
+    Φ(f) = exp(-½⟨f, Cf⟩) where C is a nuclear covariance operator.
+-/
 def gaussian_characteristic_functional
   (covariance_form : E → E → ℝ) (f : E) : ℂ :=
   Complex.exp (-(1/2 : ℂ) * (covariance_form f f))
@@ -182,7 +188,8 @@ theorem minlos_gaussian_construction
   exact ⟨μ, hchar⟩
 
 /-- The measure constructed by Minlos theorem for a Gaussian characteristic functional
-    indeed has that functional as its characteristic function. -/
+    indeed has that functional as its characteristic function.
+-/
 theorem gaussian_measure_characteristic_functional
   [IsHilbertNuclear E] [SeparableSpace E] [Nonempty E]
   {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
@@ -201,7 +208,8 @@ theorem gaussian_measure_characteristic_functional
 /-! ## Minlos Uniqueness (re-exported from bochner) -/
 
 /-- Uniqueness for the Gaussian CF: if two probability measures have the same
-    Gaussian characteristic functional, they are equal. -/
+    Gaussian characteristic functional, they are equal.
+-/
 theorem minlos_gaussian_uniqueness
   [IsHilbertNuclear E] [SeparableSpace E] [Nonempty E]
   {Φ : E → ℂ} (hΦ_cont : Continuous Φ)
@@ -215,7 +223,8 @@ theorem minlos_gaussian_uniqueness
 /-! ## Symmetry Transfer from Characteristic Functional to Measure -/
 
 /-- Corollary for Gaussian measures: if the covariance form is invariant under g,
-    then the Gaussian measure is invariant under the dual action of g. -/
+    then the Gaussian measure is invariant under the dual action of g.
+-/
 theorem gaussian_measure_symmetry
   [IsHilbertNuclear E] [SeparableSpace E] [Nonempty E]
   (covariance_form : E → E → ℝ)

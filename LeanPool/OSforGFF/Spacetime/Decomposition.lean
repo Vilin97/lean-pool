@@ -33,7 +33,6 @@ open MeasureTheory MeasureSpace FiniteDimensional Real
 We establish that integrals over SpaceTime can be decomposed into
 iterated integrals over ℝ (time component) and SpatialCoords (spatial components).
 This uses `MeasurableEquiv.piFinSuccAbove` and `measurePreserving_piFinSuccAbove`.
-
 -/
 
 /-- MeasurableEquiv between PiLp and the underlying pi type. -/
@@ -46,7 +45,8 @@ def piLpMeasurableEquiv (n : ℕ) : PiLp 2 (fun _ : Fin n => ℝ) ≃ᵐ (Fin n 
     Composes three measure-preserving maps:
     1. piLpMeasurableEquiv : EuclideanSpace ℝ (Fin 4) → (Fin 4 → ℝ)
     2. piFinSuccAbove 0 : (Fin 4 → ℝ) → ℝ × (Fin 3 → ℝ)
-    3. id × piLpMeasurableEquiv.symm : ℝ × (Fin 3 → ℝ) → ℝ × SpatialCoords -/
+    3. id × piLpMeasurableEquiv.symm : ℝ × (Fin 3 → ℝ) → ℝ × SpatialCoords
+-/
 def spacetimeDecomp : SpaceTime ≃ᵐ ℝ × SpatialCoords :=
   (piLpMeasurableEquiv STDimension).trans
   ((MeasurableEquiv.piFinSuccAbove (fun _ => ℝ) 0).trans
@@ -88,7 +88,8 @@ theorem spacetimeDecomp_apply (k : SpaceTime) :
     spacetimeDecomp k = (k 0, spatialPart k) := rfl
 
 /-- `spacetimeDecomp.symm` equals `spacetimeOfTimeSpace` (from SchwartzProdIntegrable.lean).
-    Both construct a SpaceTime point from time t and spatial coordinates v. -/
+    Both construct a SpaceTime point from time t and spatial coordinates v.
+-/
 lemma spacetimeDecomp_symm_eq_spacetimeOfTimeSpace (t : ℝ) (v : SpatialCoords) :
     spacetimeDecomp.symm (t, v) = spacetimeOfTimeSpace t v := by
   -- Both definitions construct a point x with x 0 = t and x i = v (i-1) for i > 0

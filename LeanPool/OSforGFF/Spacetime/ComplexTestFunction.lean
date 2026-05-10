@@ -62,7 +62,8 @@ private lemma im_of_complex_combination (a b : ℂ) (u v : ℂ) :
 
 /-- ω-linearity of the real component of the complex test-function decomposition under
     complex linear combinations. This follows from ℝ-linearity of ω and pointwise
-    behavior of complex operations on Schwartz functions. -/
+    behavior of complex operations on Schwartz functions.
+-/
 lemma ω_re_decompose_linear
   (ω : FieldConfiguration) (f g : TestFunctionℂ) (t s : ℂ) :
   ω ((complex_testfunction_decompose (t • f + s • g)).1)
@@ -96,7 +97,8 @@ lemma ω_re_decompose_linear
     using this
 
 /-- ω-linearity of the imaginary component of the complex test-function decomposition under
-    complex linear combinations. -/
+    complex linear combinations.
+-/
 lemma ω_im_decompose_linear
   (ω : FieldConfiguration) (f g : TestFunctionℂ) (t s : ℂ) :
   ω ((complex_testfunction_decompose (t • f + s • g)).2)
@@ -181,7 +183,8 @@ lemma Complex.norm_ofRealCLM : ‖Complex.ofRealCLM‖ = 1 :=
   ofRealCLM_norm
 
 /-- Composing a continuous multilinear map (to ℝ) with the real→complex embedding
-    preserves the operator norm, since the embedding is an isometry. -/
+    preserves the operator norm, since the embedding is an isometry.
+-/
 lemma norm_compContinuousMultilinearMap_ofReal {n : ℕ} {E : Fin n → Type*}
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace ℝ (E i)]
     (m : ContinuousMultilinearMap ℝ E ℝ) :
@@ -204,7 +207,8 @@ lemma norm_compContinuousMultilinearMap_ofReal {n : ℕ} {E : Fin n → Type*}
 /-- The norm of the n-th iterated derivative of a Schwartz function composed with
     real→complex embedding equals the norm of the n-th iterated derivative of the
     original Schwartz function. This follows from the chain rule and the fact that
-    the embedding is an isometry. -/
+    the embedding is an isometry.
+-/
 lemma iteratedFDeriv_ofReal_norm_eq (f : TestFunction) (n : ℕ) (x : SpaceTime) :
     ‖iteratedFDeriv ℝ n (fun x ↦ (f x : ℂ)) x‖ = ‖iteratedFDeriv ℝ n f.toFun x‖ := by
   have h_comp : (fun x => (f x : ℂ)) = Complex.ofRealCLM ∘ f.toFun := rfl
@@ -262,7 +266,8 @@ def toComplex (f : TestFunction) : TestFunctionℂ :=
     1. The map is linear (toComplex_add, toComplex_smul)
     2. The composition with ofRealCLM is smooth
     3. Derivative norms are preserved (iteratedFDeriv_ofReal_norm_eq)
-    so the Schwartz seminorm bounds are satisfied. -/
+    so the Schwartz seminorm bounds are satisfied.
+-/
 noncomputable def toComplexCLM : TestFunction →L[ℝ] TestFunctionℂ :=
   SchwartzMap.mkCLM (𝕜 := ℝ) (𝕜' := ℝ) (G := ℂ) (σ := RingHom.id ℝ) (fun f x => (f x : ℂ))
     (fun f g x => by simp only [SchwartzMap.add_apply]; exact Complex.ofReal_add _ _)
@@ -301,13 +306,15 @@ variable (dμ_config : ProbabilityMeasure FieldConfiguration)
 
 For a complex-valued Schwartz function f : E → ℂ, we define the pointwise conjugate
 conjSchwartz f := fun x ↦ conj (f x). This is again a Schwartz function because
-conjugation is a continuous ℝ-linear map on ℂ. -/
+conjugation is a continuous ℝ-linear map on ℂ.
+-/
 
 /-- Pointwise conjugation of a complex Schwartz function.
     (conjSchwartz f)(x) = conj(f(x))
 
     This is defined using the continuous ℝ-linear equivalence `Complex.conjCLE : ℂ ≃L[ℝ] ℂ`.
-    Since conjugation is smooth and an isometry, it preserves all Schwartz seminorms. -/
+    Since conjugation is smooth and an isometry, it preserves all Schwartz seminorms.
+-/
 noncomputable def conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f : SchwartzMap E ℂ) : SchwartzMap E ℂ := {
   toFun := fun x => starRingEnd ℂ (f x)
@@ -358,7 +365,8 @@ noncomputable def conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace �
     - ⟨ω, f⟩ = ⟨ω, f_re⟩ + i⟨ω, f_im⟩
     - conj(⟨ω, f⟩) = ⟨ω, f_re⟩ - i⟨ω, f_im⟩
     - ⟨ω, conj(f)⟩ = ⟨ω, conj(f)_re⟩ + i⟨ω, conj(f)_im⟩
-    - conj(f)_re = f_re and conj(f)_im = -f_im -/
+    - conj(f)_re = f_re and conj(f)_im = -f_im
+-/
 lemma distributionPairingℂ_real_conj (ω : FieldConfiguration) (f : TestFunctionℂ) :
     starRingEnd ℂ (distributionPairingℂ_real ω f) = distributionPairingℂ_real ω (conjSchwartz f) := by
   -- Expand distributionPairingℂ_real in terms of real and imaginary parts

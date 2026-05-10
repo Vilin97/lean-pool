@@ -90,7 +90,8 @@ def OS4'_Ergodicity_generating (m : ℝ) [Fact (0 < m)] : Prop :=
       (nhds 0)
 
 /-- OS4'' (Polynomial Clustering): This is exactly OS4_PolynomialClustering
-    specialized to the GFF with decay exponent α = 6. -/
+    specialized to the GFF with decay exponent α = 6.
+-/
 def OS4''_Clustering (m : ℝ) [Fact (0 < m)] : Prop :=
   OS4_PolynomialClustering (gaussianFreeField_free m) 6 (by norm_num)
 
@@ -120,7 +121,8 @@ lemma gff_exp_pairing_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) 
 
 /-- Time-translated complex exponential is in L² under the GFF measure.
     This follows from |exp(z)|² = exp(2 Re z) ≤ exp(2|Re z|) which is integrable.
-    (Copied from OS4Ron.lean - needed for integrability proofs) -/
+    (Copied from OS4Ron.lean - needed for integrability proofs)
+-/
 lemma gff_exp_time_translated_memLp_two (m : ℝ) [Fact (0 < m)] (s : ℝ) (f : TestFunctionℂ) :
     MemLp (fun ω : FieldConfiguration =>
         Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) f))
@@ -181,7 +183,8 @@ lemma timeTranslationSchwartzℂ_conj_comm (t : ℝ) (f : TestFunctionℂ) :
   rfl
 
 /-- The product exp(⟨ω, T_t g₁⟩) · conj(exp(⟨ω, T_t g₂⟩)) integral is time-shift invariant.
-    This follows from the GFF characteristic function and covariance time-translation invariance. -/
+    This follows from the GFF characteristic function and covariance time-translation invariance.
+-/
 lemma gff_exp_product_time_shift_invariant (m : ℝ) [Fact (0 < m)] (g₁ g₂ : TestFunctionℂ) (t : ℝ) :
     let μ := (gaussianFreeField_free m).toMeasure
     ∫ ω, Complex.exp (distributionPairingℂ_real ω (timeTranslationSchwartzℂ t g₁)) *
@@ -215,7 +218,8 @@ lemma gff_exp_product_time_shift_invariant (m : ℝ) [Fact (0 < m)] (g₁ g₂ :
     (Add.add g₁ (conjSchwartz g₂) : TestFunctionℂ)
 
 /-- The L² norm of A_s is constant in s by stationarity.
-    Proof: Uses OS2 → gff_exp_product_time_shift_invariant → this result. -/
+    Proof: Uses OS2 → gff_exp_product_time_shift_invariant → this result.
+-/
 lemma gff_exp_L2_norm_constant (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (s : ℝ) :
     ∫ ω, ‖Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) f)‖^2
       ∂(gaussianFreeField_free m).toMeasure =
@@ -400,7 +404,8 @@ lemma gff_product_expectation_stationarity (m : ℝ) [Fact (0 < m)] (f : TestFun
 
 /-- The Schwinger two-point function (covariance) is continuous under time translation.
     s ↦ C(T_s f, g) is continuous.
-    (Proved via dominated convergence, copied from GFFCovarianceContinuity.) -/
+    (Proved via dominated convergence, copied from GFFCovarianceContinuity.)
+-/
 lemma gff_covariance_timeTranslation_continuous (m : ℝ) [Fact (0 < m)]
     (f g : TestFunctionℂ) :
     Continuous (fun s => SchwingerFunctionℂ₂ (gaussianFreeField_free m)
@@ -483,7 +488,8 @@ lemma gff_covariance_timeTranslation_continuous (m : ℝ) [Fact (0 < m)]
     1. By stationarity, Cov(s,u) = g(s-u) for g(t) = E[A_t·conj(A_0)] - EA·conj(EA)
     2. By Gaussian MGF formula, g(t) = EA·conj(EA)·(exp(C(T_{-t}f, conj(f))) - 1)
     3. C(T_s f, g) is continuous in s by dominated convergence
-    4. Compose with exp and subtraction -/
+    4. Compose with exp and subtraction
+-/
 lemma gff_covariance_continuous (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     let μ := (gaussianFreeField_free m).toMeasure
     let A := fun t ω => Complex.exp (distributionPairingℂ_real (timeTranslationDistribution t ω) f)
@@ -563,7 +569,8 @@ lemma gff_covariance_continuous (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
 /-- L² variance can be bounded by double integral of covariance.
 
     This combines the integral bound (which gives ‖∫∫ Cov‖) with triangle inequality
-    to get the bound in terms of ∫∫ ‖Cov‖ which is what we need for decay estimates. -/
+    to get the bound in terms of ∫∫ ‖Cov‖ which is what we need for decay estimates.
+-/
 lemma L2_time_average_variance_bound (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (T : ℝ) (hT : T > 0) :
     let μ := (gaussianFreeField_free m).toMeasure
     let A := fun s ω => Complex.exp (distributionPairingℂ_real (timeTranslationDistribution s ω) f)
@@ -832,7 +839,8 @@ lemma clustering_implies_covariance_decay (m : ℝ) [Fact (0 < m)] (f : TestFunc
           exact Real.rpow_le_rpow_of_exponent_le h_base (by norm_num : (-6 : ℝ) ≤ -3)
 
 /-- The norm of the GFF covariance is integrable on [0,T] for each fixed first argument.
-    Uses gff_covariance_norm_integrableOn_slice_axiom to avoid expensive type unification. -/
+    Uses gff_covariance_norm_integrableOn_slice_axiom to avoid expensive type unification.
+-/
 lemma gff_covariance_norm_integrableOn_slice (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     (s : ℝ) (T : ℝ) :
     let μ := (gaussianFreeField_free m).toMeasure
@@ -1020,7 +1028,8 @@ lemma norm_sq_weighted_sum_le {n : ℕ} (w : Fin n → ℂ) (a : Fin n → ℂ) 
 /-- OS4' → OS4: Generating function ergodicity implies full ergodicity.
 
     The proof uses Cauchy-Schwarz to bound the variance of ∑ⱼ zⱼ exp(⟨ω, fⱼ⟩)
-    by the sum of individual variances, then applies OS4' to each term. -/
+    by the sum of individual variances, then applies OS4' to each term.
+-/
 theorem OS4'_implies_OS4 (m : ℝ) [Fact (0 < m)] :
     OS4'_Ergodicity_generating m → OS4_Ergodicity (gaussianFreeField_free m) := by
   intro h_erg n z f

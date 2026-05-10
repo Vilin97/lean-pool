@@ -44,7 +44,8 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
 /-- A locally convex TVS is **Pietsch nuclear** if for every continuous seminorm `p`,
 there exist CLFs `fₙ` and non-negative reals `cₙ` with `Σ cₙ < ∞`, and a
 continuous seminorm `q ≥ p`, such that `|fₙ(x)| ≤ q(x)` and
-`p(x) ≤ Σₙ |fₙ(x)| · cₙ`. -/
+`p(x) ≤ Σₙ |fₙ(x)| · cₙ`.
+-/
 def IsNuclear (E : Type*) [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] : Prop :=
   ∀ (p : Seminorm ℝ E), Continuous p →
@@ -57,7 +58,8 @@ def IsNuclear (E : Type*) [AddCommGroup E] [Module ℝ E]
 /-! ### Hilbertian Lift -/
 
 /-- Summability of the weighted square series: `∑ₙ fₙ(x)² · cₙ < ∞`.
-This uses the bound `|fₙ(x)| ≤ q(x)` to dominate by `q(x)² · ∑ cₙ`. -/
+This uses the bound `|fₙ(x)| ≤ q(x)` to dominate by `q(x)² · ∑ cₙ`.
+-/
 lemma summable_sq_mul_of_bounded (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
     (hc_nn : ∀ n, 0 ≤ c n) (hc_sum : Summable c)
     (q : Seminorm ℝ E) (hfq : ∀ n x, |f n x| ≤ q x) (x : E) :
@@ -85,7 +87,8 @@ This seminorm satisfies the parallelogram law and dominates the original
 seminorm via Cauchy-Schwarz.
 
 The bound `|fₙ(x)| ≤ q(x)` ensures the series converges and the
-triangle inequality holds (Minkowski's inequality for weighted ℓ²). -/
+triangle inequality holds (Minkowski's inequality for weighted ℓ²).
+-/
 def hilbertianLift (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
     (hc_nn : ∀ n, 0 ≤ c n) (hc_sum : Summable c)
     (q : Seminorm ℝ E) (hfq : ∀ n x, |f n x| ≤ q x) : Seminorm ℝ E :=
@@ -179,7 +182,8 @@ theorem hilbertianLift_apply (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
 /-- The Hilbertian lift satisfies the parallelogram law.
 
 Proof: `fₙ(x+y)² + fₙ(x-y)² = (fₙx + fₙy)² + (fₙx - fₙy)² = 2(fₙx² + fₙy²)`
-for each `n` (using linearity of `fₙ`), then sum and take √. -/
+for each `n` (using linearity of `fₙ`), then sum and take √.
+-/
 theorem hilbertianLift_isHilbertian (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
     (hc_nn : ∀ n, 0 ≤ c n) (hc_sum : Summable c)
     (q : Seminorm ℝ E) (hfq : ∀ n x, |f n x| ≤ q x) :
@@ -202,7 +206,8 @@ theorem hilbertianLift_isHilbertian (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ →
   ring
 
 /-- Cauchy-Schwarz: the nuclear expansion is bounded by `√(Σcₖ) · r(x)`.
-  `Σₖ |fₖ(x)|·cₖ ≤ √(Σₖ fₖ(x)²·cₖ) · √(Σₖ cₖ) = √(Σcₖ) · r(x)` -/
+  `Σₖ |fₖ(x)|·cₖ ≤ √(Σₖ fₖ(x)²·cₖ) · √(Σₖ cₖ) = √(Σcₖ) · r(x)`
+-/
 theorem hilbertianLift_dominates (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
     (hc_nn : ∀ n, 0 ≤ c n) (hc_sum : Summable c)
     (q : Seminorm ℝ E) (hfq : ∀ n x, |f n x| ≤ q x)
@@ -240,7 +245,8 @@ theorem hilbertianLift_dominates (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → �
         · exact Real.sqrt_nonneg _
 
 /-- Functionals bounded by a dominating seminorm `q` are also bounded by the
-Hilbertian lift: `r(x) ≤ √(Σcₖ) · q(x)`. -/
+Hilbertian lift: `r(x) ≤ √(Σcₖ) · q(x)`.
+-/
 theorem hilbertianLift_le_dominator (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
     (hc_nn : ∀ n, 0 ≤ c n) (hc_sum : Summable c)
     (q : Seminorm ℝ E) (hfq : ∀ n x, |f n x| ≤ q x)
@@ -307,7 +313,8 @@ omit [TopologicalSpace E] in
 /-- `ip(x₁ + x₂, y) = ip(x₁, y) + ip(x₂, y)` (additivity from parallelogram law).
 
 Uses four applications of the parallelogram identity with different argument pairs,
-then combines by linear arithmetic. -/
+then combines by linear arithmetic.
+-/
 lemma Seminorm.innerProd_add_left (R : Seminorm ℝ E) (hR : R.IsHilbertian) (x₁ x₂ y : E) :
     R.innerProd (x₁ + x₂) y = R.innerProd x₁ y + R.innerProd x₂ y := by
   simp only [Seminorm.innerProd]
@@ -359,7 +366,8 @@ omit [TopologicalSpace E] in
 
 Proof: `t ↦ ip(t•x, y)` is additive (from `innerProd_add_left`) and continuous
 (since `R` is Lipschitz). A continuous additive function `ℝ → ℝ` is ℝ-linear
-by `map_real_smul`. -/
+by `map_real_smul`.
+-/
 lemma Seminorm.innerProd_smul_left (R : Seminorm ℝ E) (hR : R.IsHilbertian) (a : ℝ) (x y : E) :
     R.innerProd (a • x) y = a * R.innerProd x y := by
   let f : ℝ →+ ℝ := {
@@ -432,7 +440,8 @@ then for any finite R-orthonormal sequence `{eⱼ}`, we have `Σⱼ φ(eⱼ)² �
 
 Proof: let `w = Σⱼ φ(vⱼ)·vⱼ`. By orthonormality `R(w)² = Σⱼ φ(vⱼ)²`,
 by linearity `φ(w) = Σⱼ φ(vⱼ)²`, and `|φ(w)| ≤ R(w)`.
-So `S ≤ R(w) = √S`, giving `S ≤ 1`. -/
+So `S ≤ R(w) = √S`, giving `S ≤ 1`.
+-/
 theorem bessel_hilbertian {N : ℕ}
     (R : Seminorm ℝ E) (hR : R.IsHilbertian)
     (φ : E →L[ℝ] ℝ) (hφ : ∀ x, |φ x| ≤ R x)
@@ -458,7 +467,8 @@ For any finite R-orthonormal sequence `{eⱼ}`:
 Σⱼ p(eⱼ)² ≤ Σⱼ (Σₖ |fₖ(eⱼ)|·cₖ)²
            ≤ (Σₖ cₖ) · Σₖ cₖ·(Σⱼ |fₖ(eⱼ)|²)    [Cauchy-Schwarz + swap]
            ≤ (Σₖ cₖ)²                               [Bessel: Σⱼ|fₖ(eⱼ)|² ≤ 1]
-``` -/
+```
+-/
 theorem isHilbertSchmidtEmbedding_of_nuclear
     (p R : Seminorm ℝ E)
     (hR : R.IsHilbertian)
@@ -570,7 +580,8 @@ seminorm `r ≥ p` with a nuclear expansion whose functionals are bounded by `r`
 
 This is the key construction: a single Pietsch application gives `|fₖ| ≤ q` but
 we need `|fₖ| ≤ r` for the Hilbertian lift `r`. Applying Pietsch twice and scaling
-by `K = max(Σ cₖ, 1) · √(Σ dₖ)` achieves both `p ≤ r` and `|fₖ| ≤ r`. -/
+by `K = max(Σ cₖ, 1) · √(Σ dₖ)` achieves both `p ≤ r` and `|fₖ| ≤ r`.
+-/
 private lemma doublePietsch_step
     [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     (hPN : IsNuclear E) (p : Seminorm ℝ E) (hp : Continuous p) :
@@ -775,7 +786,8 @@ private theorem buildHilbertianFamily_hs
 /-- The Hilbertian family generates the same topology as `q₀`.
 
 Uses `WithSeminorms.congr`: the two families are mutually bounded because
-`q₀(n) ≤ r(n)` and each `r(n)` is continuous in the `q₀`-topology. -/
+`q₀(n) ≤ r(n)` and each `r(n)` is continuous in the `q₀`-topology.
+-/
 private theorem buildHilbertianFamily_withSeminorms
     [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     (hPN : IsNuclear E)
@@ -805,7 +817,8 @@ A locally convex space satisfying Pietsch's nuclear dominance condition
 `IsHilbertNuclear` in the Hilbertian-seminorm sense.
 
 The proof constructs a recursive family of Hilbertian seminorms from the
-Pietsch factorizations and shows they have Hilbert-Schmidt embeddings. -/
+Pietsch factorizations and shows they have Hilbert-Schmidt embeddings.
+-/
 theorem isHilbertNuclear_of_nuclear
     [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     (hPN : IsNuclear E)

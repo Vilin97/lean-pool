@@ -57,7 +57,8 @@ open scoped NNReal
     (2) `‖fₙ(x)‖ ≤ q(x)` for all `x`, `n`
 
     This is Pietsch's characterization, equivalent to Grothendieck's definition that
-    the canonical map `E_q → E_p` between seminorm completions is nuclear. -/
+    the canonical map `E_q → E_p` between seminorm completions is nuclear.
+-/
 class NuclearSpace (E : Type*) [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] : Prop where
   nuclear_dominance : ∀ (p : Seminorm ℝ E), Continuous p →
@@ -73,7 +74,8 @@ class NuclearSpace (E : Type*) [AddCommGroup E] [Module ℝ E]
 /-- **Hahn-Banach for continuous seminorms.**
 
 For a continuous seminorm `q` and any vector `f`, there exists a continuous
-linear functional `φ` attaining `q` at `f` and bounded by `q` everywhere. -/
+linear functional `φ` attaining `q` at `f` and bounded by `q` everywhere.
+-/
 lemma exists_CLF_le_seminorm
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -127,7 +129,8 @@ growth in each seminorm has a uniform polynomial bound.
 
 Given `p' : ι → Seminorm ℝ E` and a finite set `s`, if each `p' i` for `i ∈ s`
 satisfies `p' i (x m) ≤ Cᵢ · (1+m)^{tᵢ}`, then `(s.sup p') (x m) ≤ D · (1+m)^S`
-where `S = max tᵢ` and `D = ∑ Cᵢ`. -/
+where `S = max tᵢ` and `D = ∑ Cᵢ`.
+-/
 lemma finset_sup_poly_bound {E : Type*} [AddCommGroup E] [Module ℝ E]
     {ι : Type*} [DecidableEq ι]
     (p' : ι → Seminorm ℝ E) (s : Finset ι) (x : ℕ → E)
@@ -169,7 +172,8 @@ For a continuous seminorm `q` and a Schauder basis with expansion
 `q(f) ≤ ∑ₘ |cₘ(f)| · q(ψₘ)`.
 
 The proof uses Hahn-Banach to find a CLF `φ` with `φ(f) = q(f)` and `|φ| ≤ q`,
-then applies the Schauder expansion to `φ` and bounds the resulting tsum. -/
+then applies the Schauder expansion to `φ` and bounds the resulting tsum.
+-/
 lemma seminorm_le_nuclear_expansion
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -232,7 +236,8 @@ lemma seminorm_le_nuclear_expansion
 
 For any seminorm index `i` and vector `f`, the series `∑ₘ |cₘ(f)| · pᵢ(ψₘ)` converges.
 The proof combines coefficient decay (exponent `S+2`) with basis growth (exponent `S`)
-to produce a summable majorant `1/(1+m)²`. -/
+to produce a summable majorant `1/(1+m)²`.
+-/
 lemma DyninMityaginSpace.summable_coeff_seminorm_basis
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -266,7 +271,8 @@ If for every finite set `t` disjoint from `s`, the partial sum
 `p_i(f - ∑_{m∈s} c_m(f) • ψ_m) ≤ ε`.
 
 The proof uses Hahn-Banach to find a CLF `φ` attaining `p_i` at the error,
-then the expansion axiom to express `φ(error)` as a tail of the Schauder series. -/
+then the expansion axiom to express `φ(error)` as a tail of the Schauder series.
+-/
 private lemma schauder_remainder_le
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -327,7 +333,8 @@ private lemma schauder_remainder_le
 For any `f : E` in a `DyninMityaginSpace`, the series `∑ₘ cₘ(f) • ψₘ` converges to `f`
 in the locally convex topology. The proof uses Hahn-Banach for each seminorm
 to bound the remainder by the tail of the summable series
-`∑ₘ |cₘ(f)| · pᵢ(ψₘ)`. -/
+`∑ₘ |cₘ(f)| · pᵢ(ψₘ)`.
+-/
 theorem DyninMityaginSpace.hasSum_basis
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -368,7 +375,8 @@ gives rise to a `NuclearSpace` (Pietsch nuclear dominance).
 3. Get coefficient decay with extra room: `|cₘ(f)| · (1+m)^{S+2} ≤ C₂ · (s₂.sup hN.p)(f)`
 4. Define CLFs `fₘ := (1+m)^{S+2} · cₘ` and coefficients
    `aₘ := C₁ · D · (1+m)^{-(2:ℤ)}` (summable since exponent < -1)
-5. The dominating seminorm is `q := C₁ · s₁.sup(p) + C₂ · s₂.sup(p)` -/
+5. The dominating seminorm is `q := C₁ · s₁.sup(p) + C₂ · s₂.sup(p)`
+-/
 theorem DyninMityaginSpace.toNuclearSpace (E : Type*)
     [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]

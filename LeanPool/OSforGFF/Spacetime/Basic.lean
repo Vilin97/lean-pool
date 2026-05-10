@@ -55,7 +55,8 @@ Core type definitions for the formalization:
 
 /-- Spacetime dimension. Currently set to 4 (Euclidean ℝ⁴).
     Changing this value requires corresponding changes throughout the project;
-    see `docs/dimension_dependence.md` for a detailed inventory. -/
+    see `docs/dimension_dependence.md` for a detailed inventory.
+-/
 abbrev STDimension := 4
 abbrev SpaceTime := EuclideanSpace ℝ (Fin STDimension)
 
@@ -110,7 +111,8 @@ the existing L2 framework for comparison and gradual transition.
     This follows the Glimm-Jaffe approach where the field measure is supported
     on the space of distributions, not L2 functions.
 
-    Using WeakDual gives the correct weak-* topology on the dual space. -/
+    Using WeakDual gives the correct weak-* topology on the dual space.
+-/
 abbrev FieldConfiguration := WeakDual ℝ (SchwartzMap SpaceTime ℝ)
 
 -- MeasurableSpace on FieldConfiguration = WeakDual ℝ TestFunction is the cylinder σ-algebra
@@ -120,7 +122,8 @@ abbrev FieldConfiguration := WeakDual ℝ (SchwartzMap SpaceTime ℝ)
     This is ⟨ω, f⟩ in the Glimm-Jaffe notation.
 
     Note: FieldConfiguration = WeakDual ℝ (SchwartzMap SpaceTime ℝ) has the correct
-    weak-* topology, making evaluation maps x ↦ ω(x) continuous for each test function x. -/
+    weak-* topology, making evaluation maps x ↦ ω(x) continuous for each test function x.
+-/
 def distributionPairing (ω : FieldConfiguration) (f : TestFunction) : ℝ := ω f
 
 @[simp] lemma distributionPairing_add (ω₁ ω₂ : FieldConfiguration) (a : TestFunction) :
@@ -161,13 +164,15 @@ where the integral is over field configurations ω (distributions).
 -/
 
 /-- The Glimm-Jaffe generating functional: Z[J] = ∫ exp(i⟨ω, J⟩) dμ(ω)
-    This is the fundamental object in constructive QFT. -/
+    This is the fundamental object in constructive QFT.
+-/
 def GJGeneratingFunctional (dμ_config : ProbabilityMeasure FieldConfiguration)
   (J : TestFunction) : ℂ :=
   ∫ ω, Complex.exp (Complex.I * (distributionPairing ω J : ℂ)) ∂dμ_config.toMeasure
 
 /-- Helper function to create a Schwartz map from a complex test function by applying a continuous linear map.
-    This factors out the common pattern for extracting real/imaginary parts. -/
+    This factors out the common pattern for extracting real/imaginary parts.
+-/
 def schwartz_comp_clm (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) : TestFunction :=
   SchwartzMap.mk (fun x => L (f x)) (by
     -- L is a continuous linear map, hence smooth
@@ -204,7 +209,8 @@ omit [SigmaFinite μ]
   (schwartz_comp_clm f L) x = L (f x) := rfl
 
 /-- Decompose a complex test function into its real and imaginary parts as real test functions.
-    This is more efficient than separate extraction functions. -/
+    This is more efficient than separate extraction functions.
+-/
 def complex_testfunction_decompose (f : TestFunctionℂ) : TestFunction × TestFunction :=
   (schwartz_comp_clm f Complex.reCLM, schwartz_comp_clm f Complex.imCLM)
 
@@ -247,7 +253,8 @@ lemma complex_testfunction_decompose_recompose
 
 /-- Complex version of the pairing: real field configuration with complex test function
     We extend the pairing by treating the complex test function as f(x) = f_re(x) + i*f_im(x)
-    and defining ⟨ω, f⟩ = ⟨ω, f_re⟩ + i*⟨ω, f_im⟩ -/
+    and defining ⟨ω, f⟩ = ⟨ω, f_re⟩ + i*⟨ω, f_im⟩
+-/
 def distributionPairingℂ_real (ω : FieldConfiguration) (f : TestFunctionℂ) : ℂ :=
   -- Extract real and imaginary parts using our efficient decomposition
   let ⟨f_re, f_im⟩ := complex_testfunction_decompose f

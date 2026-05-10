@@ -45,7 +45,8 @@ namespace GaussianField
 /-! ## Rapidly Decreasing Sequences -/
 
 /-- A rapidly decreasing sequence: `val : ℕ → ℝ` such that
-`∑ₘ |val m| · (1 + m)^k` converges for all `k : ℕ`. -/
+`∑ₘ |val m| · (1 + m)^k` converges for all `k : ℕ`.
+-/
 structure RapidDecaySeq where
   val : ℕ → ℝ
   rapid_decay : ∀ k : ℕ, Summable (fun m => |val m| * (1 + (m : ℝ)) ^ k)
@@ -167,7 +168,8 @@ induced by its topological add group structure.
 2. The sequence `u` is eventually bounded in each seminorm (Cauchy property),
    so `a` inherits rapid decay: `∑ |a m| (1+m)^k ≤ B`.
 3. Convergence `u n → a` in the seminorm topology follows from passing
-   the Cauchy bounds through limits of partial sums. -/
+   the Cauchy bounds through limits of partial sums.
+-/
 -- Helper: coordinate projection is bounded by seminorm 0
 private theorem coord_le_seminorm0 (a : RapidDecaySeq) (m : ℕ) :
     |a.val m| ≤ rapidDecaySeminorm 0 a := by
@@ -376,7 +378,8 @@ def coeffLM (m : ℕ) : RapidDecaySeq →ₗ[ℝ] ℝ where
 /-- The m-th coefficient as a continuous linear map.
 
 Continuity follows from `|a.val m| ≤ rapidDecaySeminorm 0 a`:
-the coordinate projection is bounded by the 0-th seminorm. -/
+the coordinate projection is bounded by the 0-th seminorm.
+-/
 def coeffCLM (m : ℕ) : RapidDecaySeq →L[ℝ] ℝ where
   toLinearMap := coeffLM m
   cont := by
@@ -398,7 +401,8 @@ def coeffCLM (m : ℕ) : RapidDecaySeq →L[ℝ] ℝ where
 /-- The partial sums `∑_{m∈s} a.val(m) • basisVec(m)` converge to `a`.
 
 For each seminorm `k` and `ε > 0`, the error `∑_{n ∉ s} |aₙ| · (1+n)^k` is the tail
-of the convergent series `a.rapid_decay k`, hence eventually less than `ε`. -/
+of the convergent series `a.rapid_decay k`, hence eventually less than `ε`.
+-/
 private theorem sum_smul_basisVec_val (a : RapidDecaySeq) (s : Finset ℕ) (n : ℕ) :
     (∑ m ∈ s, a.val m • basisVec m).val n = if n ∈ s then a.val n else 0 := by
   induction s using Finset.induction with
@@ -523,7 +527,8 @@ theorem rapidDecaySeminorm_mono {j j' : ℕ} (hjj : j ≤ j') :
   exact pow_le_pow_right₀ (le_add_of_nonneg_right (Nat.cast_nonneg m)) hjj
 
 /-- The sup of rapid-decay seminorms over a finset is bounded by the seminorm
-at the max index. -/
+at the max index.
+-/
 theorem finset_sup_rapidDecaySeminorm_le (s : Finset ℕ) :
     s.sup rapidDecaySeminorm ≤ rapidDecaySeminorm (s.sup id) := by
   apply Finset.sup_le
@@ -531,7 +536,8 @@ theorem finset_sup_rapidDecaySeminorm_le (s : Finset ℕ) :
   exact rapidDecaySeminorm_mono (Finset.le_sup (f := id) hj)
 
 /-- The sup of rapid-decay seminorms evaluated at a basis vector gives
-polynomial growth. -/
+polynomial growth.
+-/
 theorem finset_sup_rapidDecaySeminorm_basisVec_le (s : Finset ℕ) (m : ℕ) :
     (s.sup rapidDecaySeminorm) (basisVec m) ≤ (1 + (m : ℝ)) ^ (s.sup id) := by
   calc (s.sup rapidDecaySeminorm) (basisVec m)
@@ -549,7 +555,8 @@ that is continuously linearly equivalent to it. Given seminorms `p` with
 `WithSeminorms p` and a CLE `equiv : E ≃L[ℝ] RapidDecaySeq`, constructs the
 DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
 `coeff m := coeffCLM m ∘ equiv`. Countability of `ι` and completeness of `E`
-(transferred from `RapidDecaySeq` via the CLE) are propagated automatically. -/
+(transferred from `RapidDecaySeq` via the CLE) are propagated automatically.
+-/
 @[reducible] noncomputable def DyninMityaginSpace.ofRapidDecayEquiv
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
@@ -658,7 +665,8 @@ sequence space of rapidly decreasing sequences. The product basis indices
 `ℕ × ℕ` are encoded into `ℕ` via `Nat.pair`.
 
 Mathematically, if `E₁ ≅ s(ℕ)` and `E₂ ≅ s(ℕ)` as nuclear Fréchet spaces,
-then `E₁ ⊗̂ E₂ ≅ s(ℕ × ℕ) ≅ s(ℕ)` via the Cantor pairing. -/
+then `E₁ ⊗̂ E₂ ≅ s(ℕ × ℕ) ≅ s(ℕ)` via the Cantor pairing.
+-/
 def NuclearTensorProduct (_E₁ _E₂ : Type*) := RapidDecaySeq
 
 namespace NuclearTensorProduct
@@ -730,7 +738,8 @@ theorem summable_inv_one_add_sq :
   · exact fun a b hab => by omega
 
 /-- The inverse-square series over Cantor-paired indices converges:
-`∑_m 1/((1+fst(m))² · (1+snd(m))²)` is finite. -/
+`∑_m 1/((1+fst(m))² · (1+snd(m))²)` is finite.
+-/
 private theorem summable_unpair_inv_sq :
     Summable (fun m : ℕ =>
       ((1 + ((Nat.unpair m).1 : ℝ)) ^ 2 * (1 + ((Nat.unpair m).2 : ℝ)) ^ 2)⁻¹) := by
@@ -758,7 +767,8 @@ private theorem summable_unpair_inv_sq :
 /-- Arithmetic bound: `(1 + Nat.pair i j) ≤ (2 * (1 + i) * (1 + j)) ^ 2`.
 
 Used to transfer rapid decay of individual coefficient sequences to rapid
-decay of the tensor product sequence indexed via Cantor pairing. -/
+decay of the tensor product sequence indexed via Cantor pairing.
+-/
 private theorem one_add_pair_le_sq (i j : ℕ) :
     (1 + (Nat.pair i j : ℝ)) ≤ (2 * (1 + (i : ℝ)) * (1 + (j : ℝ))) ^ 2 := by
   have hi : (0 : ℝ) ≤ i := Nat.cast_nonneg i
@@ -775,7 +785,8 @@ private theorem one_add_pair_le_sq (i j : ℕ) :
 produces the sequence `m ↦ coeff(unpair(m).1, e₁) * coeff(unpair(m).2, e₂)`.
 
 This is the bilinear embedding `E₁ × E₂ → E₁ ⊗̂ E₂` realized at the level
-of Köthe sequence spaces. -/
+of Köthe sequence spaces.
+-/
 noncomputable def pure
     [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁]
     [IsTopologicalAddGroup E₁] [ContinuousSMul ℝ E₁]
@@ -875,7 +886,8 @@ variable [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁]
 
 /-- Seminorm bound for the pure tensor: for each target seminorm index `k`,
 there exist constants `C`, source seminorm index sets `s₁, s₂` such that
-`rapidDecaySeminorm k (pure e₁ e₂) ≤ C * (s₁.sup p) e₁ * (s₂.sup p) e₂`. -/
+`rapidDecaySeminorm k (pure e₁ e₂) ≤ C * (s₁.sup p) e₁ * (s₂.sup p) e₂`.
+-/
 theorem pure_seminorm_bound (k : ℕ) :
     ∃ (C : NNReal) (s₁ : Finset (@DyninMityaginSpace.ι E₁ _ _ _ _ _ _))
       (s₂ : Finset (@DyninMityaginSpace.ι E₂ _ _ _ _ _ _)),
@@ -978,7 +990,8 @@ def pureLin : E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] NuclearTensorProduct E₁ E₂ w
       LinearMap.smul_apply, map_smul, smul_eq_mul, RingHom.id_apply, mul_assoc]
 
 /-- For fixed `e₁`, the map `e₂ ↦ pure e₁ e₂` is a continuous linear map.
-Continuity follows from the seminorm bound via `continuous_of_isBounded`. -/
+Continuity follows from the seminorm bound via `continuous_of_isBounded`.
+-/
 def pureCLM_right (e₁ : E₁) : E₂ →L[ℝ] NuclearTensorProduct E₁ E₂ where
   toLinearMap := pureLin e₁
   cont := by
@@ -1084,7 +1097,8 @@ variable {G : Type*} [NormedAddCommGroup G] [NormedSpace ℝ G] [CompleteSpace G
 
 /-- Summability of the lifted series. Given a bilinear map `B : E₁ →ₗ E₂ →ₗ G` that is
 bounded by seminorms, the series `∑ₘ aₘ • B(ψ₁ᵢ, ψ₂ⱼ)` converges for any
-`a : NuclearTensorProduct E₁ E₂`, where `(i,j) = unpair(m)`. -/
+`a : NuclearTensorProduct E₁ E₂`, where `(i,j) = unpair(m)`.
+-/
 private lemma lift_summable
     (B : E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] G)
     {C : ℝ} {s₁ : Finset (@DyninMityaginSpace.ι E₁ _ _ _ _ _ _)}
@@ -1140,7 +1154,8 @@ private lemma lift_summable
           rw [hK_def, pow_add]; ring
 
 /-- Auxiliary: the norm bound for `lift` as a term-by-term inequality.
-Extracts the common calculation used in both `lift` continuity and `lift_summable`. -/
+Extracts the common calculation used in both `lift` continuity and `lift_summable`.
+-/
 private lemma lift_norm_bound
     (B : E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] G)
     {C : ℝ} {s₁ : Finset (@DyninMityaginSpace.ι E₁ _ _ _ _ _ _)}
@@ -1248,7 +1263,8 @@ Every continuous bilinear map `B : E₁ × E₂ → G` (into a complete normed s
 factors through `pure` via a CLM `lift B : NuclearTensorProduct E₁ E₂ →L[ℝ] G`.
 
 The definition is `lift B a = ∑' m, aₘ • B(ψ₁ᵢ, ψ₂ⱼ)` where `(i,j) = unpair(m)`.
-Linearity follows from tsum linearity; continuity from a seminorm bound. -/
+Linearity follows from tsum linearity; continuity from a seminorm bound.
+-/
 def lift
     (B : E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] G)
     {C : ℝ} {s₁ : Finset (@DyninMityaginSpace.ι E₁ _ _ _ _ _ _)}
@@ -1275,7 +1291,8 @@ def lift
 
 The proof uses the double Schauder expansion: `hasSum_basis` gives convergent
 expansions `e₁ = ∑ c₁_n • ψ₁_n` and `e₂ = ∑ c₂_j • ψ₂_j`, then applies `B`
-(continuous from the bound) and rearranges via Cantor pairing. -/
+(continuous from the bound) and rearranges via Cantor pairing.
+-/
 theorem lift_pure
     (B : E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] G)
     {C : ℝ} {s₁ : Finset (@DyninMityaginSpace.ι E₁ _ _ _ _ _ _)}
@@ -1408,7 +1425,8 @@ applied to the bilinear form `(e₁, e₂) ↦ φ₁(e₁) · φ₂(e₂)`.
 On pure tensors: `evalCLM φ₁ φ₂ (pure e₁ e₂) = φ₁ e₁ * φ₂ e₂`.
 
 The bilinear bound `‖φ₁(e₁) · φ₂(e₂)‖ ≤ C · p₁(e₁) · p₂(e₂)` follows from
-`Seminorm.bound_of_continuous` applied to each functional. -/
+`Seminorm.bound_of_continuous` applied to each functional.
+-/
 def evalCLM (φ₁ : E₁ →L[ℝ] ℝ) (φ₂ : E₂ →L[ℝ] ℝ) :
     NuclearTensorProduct E₁ E₂ →L[ℝ] ℝ := by
   classical
@@ -1454,7 +1472,8 @@ theorem evalCLM_pure {E₁ : Type*} [AddCommGroup E₁] [Module ℝ E₁] [Topol
 end Eval
 
 /-- Under biorthogonality, basis vectors equal pure tensors of basis elements.
-`basisVec m = pure (basis a) (basis b)` where `(a,b) = unpair(m)`. -/
+`basisVec m = pure (basis a) (basis b)` where `(a,b) = unpair(m)`.
+-/
 theorem basisVec_eq_pure
     {E₁ : Type*} [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁]
     [IsTopologicalAddGroup E₁] [ContinuousSMul ℝ E₁] [DyninMityaginSpace E₁]
