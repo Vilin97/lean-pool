@@ -15,10 +15,10 @@ discover → lint → review → promote
 
 ### Key capabilities
 
-- Automatic Lean and Mathlib version bumping via [`update.yml`](.github/workflows/update.yml), which opens a PR when a new Mathlib release lands.
-- Automated PR review via [`llm-review.yml`](.github/workflows/llm-review.yml), running on PR open or when you comment `/review`.
+- Manual Lean and Mathlib version bumping via [`update.yml`](.github/workflows/update.yml), which opens a PR or issue when explicitly dispatched. Scheduled update checks are future work.
+- Automated PR review via [`llm-review.yml`](.github/workflows/llm-review.yml), running after Lean Action CI succeeds or when you comment `/review`.
 - Proof profiling via [`proof-profile.yml`](.github/workflows/proof-profile.yml), reporting elaboration times when you comment `/profile`.
-- Docs and search through [LeanExplore](https://leanexplore.com/), with [`semantic_dedup.py`](python/lean_pool/semantic_dedup.py) flagging candidates that duplicate existing results.
+- A prototype [LeanExplore](https://leanexplore.com/) duplicate-search CLI in [`semantic_dedup.py`](python/lean_pool/semantic_dedup.py). Wiring this into PR comments is future work.
 
 ### Repository layout
 

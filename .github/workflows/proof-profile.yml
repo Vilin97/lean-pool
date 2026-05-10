@@ -210,12 +210,26 @@ jobs:
                           phases += 1
                   summary_rows.append((fname, total, phases, errors))
               summary_rows.sort(key=lambda r: -r[1])
+              total_ms = sum(r[1] for r in summary_rows)
+              total_phases = sum(r[2] for r in summary_rows)
+              total_errors = sum(r[3] for r in summary_rows)
+              out.append(
+                  f"**Total cumulative time:** {total_ms:.1f} ms "
+                  f"(= {total_ms / 1000:.2f} s) across {len(summary_rows)} file"
+                  f"{'' if len(summary_rows) == 1 else 's'}.\n\n"
+              )
               out.append("| File | Cumulative (ms) | Phases | Errors |\n")
               out.append("|---|---:|---:|---:|\n")
               for fname, total, phases, errors in summary_rows:
                   out.append(
                       f"| `{fname}` | {total:.1f} | {phases} | {errors} |\n"
                   )
+              # Total row in the same table so any single file's cumulative
+              # time can be compared against the whole at a glance.
+              out.append(
+                  f"| **Total** | **{total_ms:.1f}** "
+                  f"| **{total_phases}** | **{total_errors}** |\n"
+              )
               out.append("\n")
 
               # Full per-file output, collapsed by default so the comment

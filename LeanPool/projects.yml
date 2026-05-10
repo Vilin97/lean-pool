@@ -36,22 +36,56 @@ projects:
       - number-theory
       - combinatorics
       - polynomials
-  - slug: sumsthreesquares
-    title: Sums of Three Squares
-    entry_module: LeanPool.SumsThreeSquares
+  - slug: clawristotle
+    title: "Clawristotle: Vlasov-Maxwell-Landau steady-state classification"
+    entry_module: LeanPool.Clawristotle
     authors:
-      - Bhavik Mehta
-      - Pietro Monticone
-      - Abel Doñate Muñoz
+      - Vasily Ilin
     source:
-      url: "https://github.com/pitmonticone/SumsThreeSquares"
+      arxiv: "2603.15929"
     status: verified
     main_declarations:
-      - LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
+      - VML.Theorem42
+      - VML.CoulombConcreteTheorem42
+    tags:
+      - pde
+      - kinetic-theory
+      - mathematical-physics
+  - slug: partial-regularity
+    title: Almost all primes are partially regular
+    entry_module: LeanPool.PartialRegularity
+    authors:
+      - Evan Chen
+      - Kenny Lau
+      - Seewoo Lee
+      - Ken Ono
+      - Jujian Zhang
+    source:
+      arxiv: "2602.05090"
+    status: verified
+    main_declarations:
+      - LeanPool.PartialRegularity.Extension.irregularPrimes_isBigO
     tags:
       - number-theory
-      - quadratic-forms
-      - geometry-of-numbers
+      - asymptotics
+  - slug: riemann-mapping-theorem
+    title: Riemann Mapping Theorem
+    entry_module: LeanPool.RiemannMappingTheorem
+    authors:
+      - Vincent Beffara
+    source:
+      url: https://github.com/vbeffara/rMT4
+      github_repo: vbeffara/rmt4
+    status: verified
+    main_declarations:
+      - RMT
+      - main
+      - montel
+      - hurwitz
+    tags:
+      - complex-analysis
+      - conformal-maps
+      - schwarz-lemma
   - slug: archon-firstproof-results
     title: Archon-FirstProof-Results
     entry_module: LeanPool.ArchonFirstProofResults
@@ -100,3 +134,35 @@ projects:
     tags:
       - number-theory
       - combinatorics
+  - slug: isoperimetric
+    title: Prékopa–Leindler, Brunn–Minkowski, and the isoperimetric inequality
+    entry_module: LeanPool.Isoperimetric
+    authors:
+      - Jonathan Ho
+    source:
+      url: https://github.com/hojonathanho/isoperimetric
+      github_repo: hojonathanho/isoperimetric
+    status: verified
+    main_declarations:
+      - prekopa_leindler
+      - brunn_minkowski
+      - isoperimetric_inequality
+    tags:
+      - measure-theory
+      - geometric-inequalities
+  - slug: sumsthreesquares
+    title: Sums of Three Squares
+    entry_module: LeanPool.SumsThreeSquares
+    authors:
+      - Bhavik Mehta
+      - Pietro Monticone
+      - Abel Doñate Muñoz
+    source:
+      doi: "10.2307/2033731"
+    status: verified
+    main_declarations:
+      - LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3
+    tags:
+      - number-theory
+      - quadratic-forms
+      - geometry-of-numbers
