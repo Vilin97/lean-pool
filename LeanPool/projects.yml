@@ -444,3 +444,32 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: testing-lower-bounds
+    title: Lower bounds for hypothesis testing based on information theory
+    summary: Vendored utility lemmas (`AbsolutelyContinuous`, `EReal`, `KernelFstSnd`, deterministic kernels, etc.) from the `testing-lower-bounds` project. The core divergence content (f-divergence, KL, Hellinger, Rényi, statistical information, risk) failed to bump from Lean 4.13 to 4.30 in this session and was excluded.
+    branch: information theory
+    entry_module: LeanPool.TestingLowerBounds
+    authors:
+      - Rémy Degenne
+      - Lorenzo Luccioli
+    source:
+      url: https://github.com/RemyDegenne/testing-lower-bounds
+      github_repo: RemyDegenne/testing-lower-bounds
+    status: verified
+    main_declarations:
+      - ProbabilityTheory.Kernel.fst'
+      - ProbabilityTheory.Kernel.snd'
+    main_results:
+      - declaration: ProbabilityTheory.Kernel.fst'
+        informal: Evaluate a `Kernel (α × β) γ` at a fixed second coordinate, returning `Kernel α γ`.
+      - declaration: ProbabilityTheory.Kernel.snd'
+        informal: Evaluate a `Kernel (α × β) γ` at a fixed first coordinate, returning `Kernel β γ`.
+    tags:
+      - probability
+      - information-theory
+      - measure-theory
+    msc:
+      - "62F03"
+      - "62B10"
+      - "94A17"
+      - "60A10"
