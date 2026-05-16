@@ -444,3 +444,34 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: lean-bourgain
+    title: Lean Bourgain explicit constants
+    summary: Vendors the LeanAPAP-free analytical layer of the Bourgain two-source extractor formalization (constants, epsilon schedules, structural inequalities).
+    branch: additive combinatorics
+    entry_module: LeanPool.LeanBourgain
+    authors:
+      - Command Master
+    source:
+      url: https://github.com/Command-Master/lean-bourgain
+      github_repo: Command-Master/lean-bourgain
+    status: verified
+    main_declarations:
+      - LeanPool.LeanBourgain.pos_ST_prime_field_eps
+      - LeanPool.LeanBourgain.ST_C_pos
+    main_results:
+      - declaration: LeanPool.LeanBourgain.pos_ST_prime_field_eps
+        informal: The prime-field Szemerédi-Trotter epsilon is positive whenever its argument is.
+      - declaration: LeanPool.LeanBourgain.ST_C_pos
+        informal: The compounded Szemerédi-Trotter constant `ST_C` is strictly positive.
+      - declaration: LeanPool.LeanBourgain.full_C_neq_zero
+        informal: The doubling-dependent constant `full_C β` is never zero.
+      - declaration: LeanPool.LeanBourgain.half_le_floor_of_one_le
+        informal: For `a ≥ 1`, the floor satisfies `a / 2 ≤ ⌊a⌋₊`.
+    tags:
+      - additive-combinatorics
+      - sum-product
+      - extractors
+    msc:
+      - "11B30"
+      - "11T23"
+      - "68P30"

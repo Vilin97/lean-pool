@@ -171,6 +171,12 @@ import LeanPool.Isoperimetric.Isoperimetric
 import LeanPool.Isoperimetric.PrekopaLeindler
 import LeanPool.LatticeTriangle
 import LeanPool.LatticeTriangle.Solution
+import LeanPool.LeanBourgain
+import LeanPool.LeanBourgain.Additive
+import LeanPool.LeanBourgain.Additive.Constants
+import LeanPool.LeanBourgain.Incidence
+import LeanPool.LeanBourgain.Incidence.Constants
+import LeanPool.LeanBourgain.Util
 import LeanPool.PartialRegularity
 import LeanPool.PartialRegularity.Extension
 import LeanPool.RamanujanTauMissesPrimes
