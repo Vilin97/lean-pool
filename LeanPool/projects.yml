@@ -444,3 +444,29 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: ellipticcurve
+    title: EllipticCurve
+    summary: Vendors the small-lemmas scratchpad and the corepresentable-functors infrastructure from the upstream EllipticCurve project.
+    branch: algebraic geometry
+    entry_module: LeanPool.EllipticCurve
+    authors:
+      - Kenny Lau
+    source:
+      url: https://github.com/kckennylau/EllipticCurve
+      github_repo: kckennylau/EllipticCurve
+    status: verified
+    main_declarations:
+      - MultilinearMap.hom_ext
+    main_results:
+      - declaration: MultilinearMap.hom_ext
+        informal: Extensionality for multilinear maps using a spanning family in each coordinate.
+      - declaration: CategoryTheory.Functor.CorepresentableBy.homOfNatTrans
+        informal: A natural transformation between corepresentable functors is corepresented by a morphism between the corepresenting objects.
+    tags:
+      - algebraic-geometry
+      - elliptic-curves
+      - multilinear-maps
+    msc:
+      - "14H52"
+      - "15A69"
+      - "18A40"

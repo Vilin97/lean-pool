@@ -74,6 +74,10 @@ import LeanPool.DeadEnds.PrimeTail
 import LeanPool.DeadEnds.RelevantPrimes
 import LeanPool.DeadEnds.Solution
 import LeanPool.DeadEnds.TailEstimates
+import LeanPool.EllipticCurve
+import LeanPool.EllipticCurve.CategoryTheory
+import LeanPool.EllipticCurve.CategoryTheory.EqualizerCorepresentable
+import LeanPool.EllipticCurve.Lemmas
 import LeanPool.Erdos1196
 import LeanPool.Erdos1196.Basic
 import LeanPool.Erdos1196.FirstEntryRowTerm
