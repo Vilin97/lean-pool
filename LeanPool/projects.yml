@@ -444,3 +444,41 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: neuralnetworks
+    title: Neural Networks
+    summary: Formalizes Hopfield networks (state space, energy, convergence) and the GPT-2 LLM scaffolding (core types, tensor views, model structure).
+    branch: machine learning
+    entry_module: LeanPool.NeuralNetworks
+    authors:
+      - Matteo Cipollina
+      - Alok Singh
+    source:
+      url: https://github.com/or4nge19/NeuralNetworks
+      github_repo: or4nge19/NeuralNetworks
+    status: verified
+    main_declarations:
+      - HopfieldNetwork
+      - HopfieldState.energy_monotonically_decreases
+      - HopfieldState.convergence
+      - LLM.GPT2.Model
+      - LLM.GPT2.TensorView
+    main_results:
+      - declaration: HopfieldNetwork
+        informal: Defines a Hopfield network as a symmetric weight matrix with zero diagonal and thresholds.
+      - declaration: HopfieldState.energy_monotonically_decreases
+        informal: Proves that the Hopfield energy is non-increasing along every update sequence with zero thresholds.
+      - declaration: HopfieldState.convergence
+        informal: Proves that from any initial state, a finite sequence of single-neuron updates reaches a fixed point.
+      - declaration: LLM.GPT2.Model
+        informal: Defines the top-level GPT-2 model structure bundling configuration, parameters, activations, and state.
+      - declaration: LLM.GPT2.TensorView
+        informal: Defines a safe tensor view over byte-array storage with a row-major shape and stride.
+    tags:
+      - neural-networks
+      - hopfield-networks
+      - large-language-models
+      - dynamical-systems
+    msc:
+      - "68T07"
+      - "68T50"
+      - "37N40"
