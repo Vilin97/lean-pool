@@ -171,6 +171,15 @@ import LeanPool.Isoperimetric.Isoperimetric
 import LeanPool.Isoperimetric.PrekopaLeindler
 import LeanPool.LatticeTriangle
 import LeanPool.LatticeTriangle.Solution
+import LeanPool.LeanFibredCategories
+import LeanPool.LeanFibredCategories.ForMathlib
+import LeanPool.LeanFibredCategories.ForMathlib.Data
+import LeanPool.LeanFibredCategories.ForMathlib.Data.Fiber
+import LeanPool.LeanFibredCategories.ForMathlib.FibredCats
+import LeanPool.LeanFibredCategories.ForMathlib.FibredCats.Basic
+import LeanPool.LeanFibredCategories.ForMathlib.FibredCats.CartesianLift
+import LeanPool.LeanFibredCategories.ForMathlib.FibredCats.Total
+import LeanPool.LeanFibredCategories.ForMathlib.FibredCats.VerticalLift
 import LeanPool.PartialRegularity
 import LeanPool.PartialRegularity.Extension
 import LeanPool.RamanujanTauMissesPrimes
