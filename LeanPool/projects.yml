@@ -419,6 +419,30 @@ projects:
       - "28A75"
       - "52A40"
       - "49Q20"
+  - slug: leancondensed
+    title: "LeanCondensed: split short exact sequence and infrastructure for light condensed modules"
+    summary: Vendors `sorry`-free fragments of the LeanCondensed project, including a split short exact sequence on `ℕ∪{∞}` and supporting category-theoretic infrastructure.
+    branch: condensed mathematics
+    entry_module: LeanPool.LeanCondensed
+    authors:
+      - Dagur Asgeirsson
+      - Jonas van der Schaaf
+    source:
+      url: https://github.com/dagurtomas/LeanCondensed
+      github_repo: dagurtomas/LeanCondensed
+    status: verified
+    main_declarations:
+      - LightCondensed.PSequence_exact
+    main_results:
+      - declaration: LightCondensed.PSequence_exact
+        informal: Exhibits the short complex induced by the inclusion `PUnit → ℕ∪{∞}` of light profinite spaces as a split short exact sequence in `LightCondMod R`.
+    tags:
+      - condensed-mathematics
+      - category-theory
+      - monoidal-categories
+    msc:
+      - "18N99"
+      - "18F20"
   - slug: sumsthreesquares
     title: Sums of Three Squares
     summary: Formalizes a blueprint step in the three-squares theorem using quadratic forms and geometry of numbers.
