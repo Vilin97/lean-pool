@@ -21,7 +21,7 @@ import LeanPool.NeuralNetworks.LLM.GPT2.TensorView.ComputeBounds
 Source: url:https://github.com/or4nge19/NeuralNetworks
 Authors: Matteo Cipollina, Alok Singh
 Status: verified
-Main declarations: `HopfieldNetwork`, `HopfieldState.energy_monotonically_decreases`, `HopfieldState.convergence`, `LLM.GPT2.Model`, `LLM.GPT2.TensorView`
+Main declarations: `HopfieldNetwork`, `HopfieldState.convergence`, `LLM.GPT2.Model`
 Tags: neural-networks, hopfield-networks, large-language-models, dynamical-systems
 MSC: 68T07, 68T50, 37N40
 -/

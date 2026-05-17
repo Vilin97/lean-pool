@@ -458,10 +458,8 @@ projects:
     status: verified
     main_declarations:
       - HopfieldNetwork
-      - HopfieldState.energy_monotonically_decreases
       - HopfieldState.convergence
       - LLM.GPT2.Model
-      - LLM.GPT2.TensorView
     main_results:
       - declaration: HopfieldNetwork
         informal: Defines a Hopfield network as a symmetric weight matrix with zero diagonal and thresholds.
