@@ -25,7 +25,6 @@ structure Dim where
   /-- TODO. -/
   val : Nat
   isPos : val > 0
-  deriving Repr
 
 instance : Coe Dim Nat where
   coe := Dim.val
@@ -41,6 +40,6 @@ inductive TensorError where
   | bufferSizeNotDivisible (size : Nat) (divisor : Nat) : TensorError
   | writeOutOfBounds (absByteIndex : Nat) (viewOffsetBytes: Nat)
     (viewSizeBytes : Nat) (storageSize : Nat) : TensorError
-  deriving Repr, DecidableEq
+  deriving DecidableEq
 
 end LLM.GPT2

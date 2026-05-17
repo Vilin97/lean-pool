@@ -178,7 +178,7 @@ def TensorView.mkUnsafe (s : Type) (shape : Array Nat) (rank : Nat)
   { shape, rank, storageRef, offsetBytes, h_offset_aligned, h_dims_positive, h_rank_eq_size }
 
 /-- Represent the `TensorView` as `Std.Format` with the given precedence. -/
-protected def TensorView.reprPrec {s : Type} (tv : TensorView s) (_prec : Nat) : Std.Format :=
+protected def TensorView.reprPrec {s : Type} (tv : TensorView s) (_ : Nat) : Std.Format :=
   let shapeStr := toString tv.shape
   let rankStr := toString tv.rank
   let offsetStr := toString tv.offsetBytes

@@ -25,7 +25,7 @@ structure Config where
   numHeads : Nat        := 12
   /-- TODO. -/
   channels : Nat        := 768
-  deriving Repr, Inhabited
+  deriving Inhabited
 
 /-- TODO. -/
 structure ParameterTensors (s : Type) where
@@ -61,7 +61,6 @@ structure ParameterTensors (s : Type) where
   lnfw : TensorView s
   /-- TODO. -/
   lnfb : TensorView s
-  deriving Repr
 
 /-- TODO. -/
 structure ActivationTensors (s : Type) where
@@ -107,7 +106,6 @@ structure ActivationTensors (s : Type) where
   probs : TensorView s
   /-- TODO. -/
   losses : TensorView s
-  deriving Repr
 
 /-- TODO. -/
 structure Model (s : Type) where
