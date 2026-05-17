@@ -44,7 +44,7 @@ lemma extract_eq_self_of_rank_gt_size (shape : Array Nat) (rank : Nat) (h : shap
 
 /-- For elements within a prefix extract, the extract's element equals the original array's
 element. -/
-lemma getElem!_extract_prefix (shape : Array Nat) (rank : Nat) (i : Nat)
+lemma getElem_bang_extract_prefix (shape : Array Nat) (rank : Nat) (i : Nat)
     (h_i_lt_rank : i < rank) (h_i_lt_size : i < shape.size) :
   (shape.extract 0 rank)[i]! = shape[i]! := by
   have h_extract_get : (shape.extract 0 rank).size > i := by
@@ -84,10 +84,10 @@ lemma list_map_range_eq_extract_toList (shape : Array Nat) (rank : Nat)
       simp only [Array.size_extract, Nat.sub_zero, min_eq_left h_rank_le_size]
     have h_n_lt_extract_size : n < (shape.extract 0 rank).size := by
       rw [h_extract_size_eq_rank]; simpa using h_n_lt_map_len
-    rw [← Array.getElem_eq_get! (arr := shape.extract 0 rank) (i := n) h_n_lt_extract_size]
+    rw [← Array.getElem_eq_get_safe (arr := shape.extract 0 rank) (i := n) h_n_lt_extract_size]
     have h_n_lt_rank : n < rank := by simpa using h_n_lt_map_len
     have h_n_lt_shape_size : n < shape.size := Nat.lt_of_lt_of_le h_n_lt_rank h_rank_le_size
-    exact Eq.symm (getElem!_extract_prefix shape rank n h_n_lt_rank h_n_lt_size)
+    exact Eq.symm (getElem_bang_extract_prefix shape rank n h_n_lt_rank h_n_lt_size)
 
 /--
 Helper Lemma: The product of elements in `shape.extract 0 rank` is equal to the product of
@@ -151,7 +151,7 @@ lemma array_elem_properties_from_list_drop_mem (shape : Array Nat) (rank : Nat)
       exact h_indices_eq
     rw [h_get_drop_eq_get_orig]
     simp only [Array.length_toList, List.get_eq_getElem, Array.getElem_toList]
-    rw [Array.getElem_eq_get! h_j_lt_shape_size]
+    rw [Array.getElem_eq_get_safe h_j_lt_shape_size]
   exact ⟨j, h_j_ge_rank, h_j_lt_shape_size, h_shape_j_eq_x⟩
 
 /--
@@ -206,9 +206,9 @@ lemma product_list_take_eq_product_map_range (shape : Array Nat) (rank : Nat)
         have h_i_lt_shape_size : i < shape.size := by
           apply Nat.lt_of_lt_of_le h_i_lt_rank h_rank_le_size
         simp only [Array.getElem_toList]
-        exact Eq.symm (Array.getElem_eq_get! h_i_lt_shape_size)
+        exact Eq.symm (Array.getElem_eq_get_safe h_i_lt_shape_size)
       rw [← h_list_eq_array]
-      rw [← Array.getElem_eq_get! h_i_lt_shape_size]
+      rw [← Array.getElem_eq_get_safe h_i_lt_shape_size]
       rw [h_list_eq_array]
   rw [h_lists_eq]
 
@@ -286,7 +286,7 @@ lemma extract_at_rank_empty (shape : Array Nat) (rank : Nat) (h_rank_eq_size : r
 
 /-- When the start index is greater than or equal to the stop index, list extraction yields
 an empty list. -/
-lemma List.extract_of_start_ge_end {α : Type} {l : List α} {start stop : Nat}
+lemma _root_.List.extract_of_start_ge_end {α : Type} {l : List α} {start stop : Nat}
     (h : start ≥ stop) :
   List.extract l start stop = [] := by
   unfold List.extract
@@ -299,7 +299,7 @@ lemma List.extract_of_start_ge_end {α : Type} {l : List α} {start stop : Nat}
   | inr h_gt =>
     simp [h_gt]
 
-lemma Array.extract_toList_eq_list_extract {α : Type} (arr : Array α) (start stop : Nat) :
+lemma _root_.Array.extract_toList_eq_list_extract {α : Type} (arr : Array α) (start stop : Nat) :
   (arr.extract start stop).toList = List.extract arr.toList start (min stop arr.size) := by
   simp only [Array.toList_extract, List.extract_eq_take_drop, List.take_eq_take_iff,
     List.length_drop, Array.length_toList]
@@ -308,7 +308,7 @@ lemma Array.extract_toList_eq_list_extract {α : Type} (arr : Array α) (start s
   · simp_all only [Array.size_extract, inf_le_right, inf_of_le_left]
   · simp_all only [Array.getElem_extract]
 
-lemma Array.extract_prefix_toList_eq_take_toList {α : Type} (arr : Array α) (i : Nat)
+lemma _root_.Array.extract_prefix_toList_eq_take_toList {α : Type} (arr : Array α) (i : Nat)
     (h_i_le_size : i ≤ arr.size) :
   (arr.extract 0 i).toList = arr.toList.take i := by
   rw [Array.extract_toList_eq_list_extract]
@@ -316,7 +316,7 @@ lemma Array.extract_prefix_toList_eq_take_toList {α : Type} (arr : Array α) (i
   rw [@List.extract_eq_take_drop]
   exact rfl
 
-lemma Array.extract_suffix_toList_eq_drop_toList {α : Type} (arr : Array α) (i : Nat)
+lemma _root_.Array.extract_suffix_toList_eq_drop_toList {α : Type} (arr : Array α) (i : Nat)
     (_ : i ≤ arr.size) :
   (arr.extract i arr.size).toList = arr.toList.drop i := by
   rw [Array.extract_toList_eq_list_extract, Nat.min_self]
@@ -334,7 +334,8 @@ lemma shape_extract_product_split (shape : Array Nat) (i : Nat) (h_i_le_size : i
   rw [List.prod_take_mul_prod_drop (shape.toList) i]
   rw [List.prod_eq_foldl (l := shape.toList)]
 
-lemma Array.size_extract_of_start_lt_stop_le_size {α : Type} (arr : Array α) (start stop : Nat)
+lemma _root_.Array.size_extract_of_start_lt_stop_le_size {α : Type} (arr : Array α)
+    (start stop : Nat)
     (h_start_lt_stop : start < stop) (h_stop_le_size : stop ≤ arr.size) :
   (arr.extract start stop).size = stop - start := by
   simp only [Array.size_extract]
@@ -342,7 +343,7 @@ lemma Array.size_extract_of_start_lt_stop_le_size {α : Type} (arr : Array α) (
   simp [min_eq_left h_stop_le_size]
 
 /-- When the start index equals or exceeds the stop index, the extract has size 0. -/
-lemma Array.size_extract_of_stop_le_start {α : Type} (arr : Array α) (start stop : Nat)
+lemma _root_.Array.size_extract_of_stop_le_start {α : Type} (arr : Array α) (start stop : Nat)
     (h : stop ≤ start) : (arr.extract start stop).size = 0 := by
   simp only [Array.size_extract]
   have h_min_le : min stop arr.size ≤ start := by
@@ -351,7 +352,7 @@ lemma Array.size_extract_of_stop_le_start {α : Type} (arr : Array α) (start st
     · exact h
   exact Nat.sub_eq_zero_of_le h_min_le
 
-lemma Array.extract_toList_length_eq_cons_extract_toList_length {α : Type} [Inhabited α]
+lemma _root_.Array.extract_toList_length_eq_cons_extract_toList_length {α : Type} [Inhabited α]
     (arr : Array α) (idx : Nat) (stop : Nat)
     (h_idx_lt_stop : idx < stop) (h_stop_le_arr_size : stop ≤ arr.size) :
   (arr.extract idx stop).toList.length =
@@ -375,7 +376,7 @@ lemma Array.extract_toList_length_eq_cons_extract_toList_length {α : Type} [Inh
     exact Nat.le_sub_of_add_le' h_idx_lt_stop
 
 /-- Base case: The first element of an array extract equals the source array element. -/
-lemma Array.extract_toList_getElem_zero {α : Type} [Inhabited α]
+lemma _root_.Array.extract_toList_getElem_zero {α : Type} [Inhabited α]
     (arr : Array α) (idx : Nat) (stop : Nat)
     (h_idx_lt_stop : idx < stop) (h_stop_le_arr_size : stop ≤ arr.size)
     (h_0_lt_len : 0 < (arr.extract idx stop).toList.length) :
@@ -387,11 +388,11 @@ lemma Array.extract_toList_getElem_zero {α : Type} [Inhabited α]
     apply Array.getElem_extract
   rw [h_extract_getElem]
   simp only [add_zero]
-  rw [← @getElem_eq_get!]
+  rw [← @Array.getElem_eq_get_safe]
 
 /-- For an array extract, the jth element in the list view equals the corresponding array element.
     Requires explicit bounds to simplify the proof. -/
-lemma Array.extract_toList_getElem {α : Type} [Inhabited α]
+lemma _root_.Array.extract_toList_getElem {α : Type} [Inhabited α]
     (arr : Array α) (idx : Nat) (stop : Nat)
     (j : Nat) (h_j_lt_len : j < (arr.extract idx stop).toList.length)
     (h_idx_lt_stop : idx < stop) (h_stop_le_size : stop ≤ arr.size) :
@@ -410,10 +411,10 @@ lemma Array.extract_toList_getElem {α : Type} [Inhabited α]
       arr[idx + j]'h_idx_j_lt_arr_size := by
     rw [Array.getElem_extract]
   rw [h_extract_elem]
-  exact Eq.symm (Array.getElem_eq_get! h_idx_j_lt_arr_size)
+  exact Eq.symm (Array.getElem_eq_get_safe h_idx_j_lt_arr_size)
 
 /-- When j > 0, extracting from index idx+1 gives the same element as from idx at position j-1. -/
-lemma Array.extract_idx_succ_elem_eq {α : Type} [Inhabited α]
+lemma _root_.Array.extract_idx_succ_elem_eq {α : Type} [Inhabited α]
     (arr : Array α) (idx : Nat) (_ : Nat) (j : Nat) (h_j_gt_zero : j > 0) :
   arr[idx + j]! = arr[(idx + 1) + (j - 1)]! := by
   calc
@@ -425,7 +426,7 @@ lemma Array.extract_idx_succ_elem_eq {α : Type} [Inhabited α]
     _ = arr[(idx + 1) + (j - 1)]! := by
         rw [Nat.add_assoc]
 
-lemma Array.extract_toList_getElem_succ {α : Type} [Inhabited α]
+lemma _root_.Array.extract_toList_getElem_succ {α : Type} [Inhabited α]
     (arr : Array α) (idx : Nat) (stop : Nat)
     (h_idx_succ_lt_stop : idx + 1 < stop) (h_stop_le_arr_size : stop ≤ arr.size)
     (j : Nat) (h_j_gt_zero : j > 0)
@@ -439,13 +440,13 @@ lemma Array.extract_toList_getElem_succ {α : Type} [Inhabited α]
       h_j_minus_1_lt_next_len h_idx_succ_lt_stop h_stop_le_arr_size]
   exact Array.extract_idx_succ_elem_eq arr idx stop j h_j_gt_zero
 
-/-- Lemma establishing the relationship between List.get of a cons list for j = 0 -/
-lemma List.getElem_cons_zero {α : Type} (head : α) (tail : List α)
+/-- Local cons-list zero-getter (about `.get`, complementing Mathlib's `[0]` lemma). -/
+lemma List.getElem_cons_zero_local {α : Type} (head : α) (tail : List α)
     (h_len : 0 < (head :: tail).length) :
   (head :: tail).get ⟨0, h_len⟩ = head := by
   rfl
 
-lemma List.getElem_cons_pos {α : Type}
+lemma _root_.List.getElem_cons_pos {α : Type}
     (head : α) (tail : List α)
     (j : Nat) (h_j_gt_zero : j > 0)
     (h_j_lt_len : j < (head :: tail).length) :
@@ -460,7 +461,7 @@ lemma List.getElem_cons_pos {α : Type}
     exact rfl
 
 /-- Main lemma using the helper lemmas -/
-lemma Array.extract_toList_getElem_eq_cons_extract_toList_getElem {α : Type} [Inhabited α]
+lemma _root_.Array.extract_toList_getElem_eq_cons_extract_toList_getElem {α : Type} [Inhabited α]
     (arr : Array α) (idx : Nat) (stop : Nat)
     (h_idx_lt_stop : idx < stop) (h_stop_le_arr_size : stop ≤ arr.size)
     (j : Nat) (h_j_lt_lhs_len : j < (arr.extract idx stop).toList.length)
@@ -468,7 +469,7 @@ lemma Array.extract_toList_getElem_eq_cons_extract_toList_getElem {α : Type} [I
   (arr.extract idx stop).toList.get ⟨j, h_j_lt_lhs_len⟩ =
   (arr[idx]! :: (arr.extract (idx + 1) stop).toList).get ⟨j, h_j_lt_rhs_len⟩ := by
   by_cases h_j_eq_zero : j = 0
-  · subst j; rw [List.getElem_cons_zero]
+  · subst j; rw [List.getElem_cons_zero_local]
     exact Array.extract_toList_getElem_zero arr idx stop h_idx_lt_stop h_stop_le_arr_size
       h_j_lt_lhs_len
   · have h_j_gt_zero : j > 0 := Nat.pos_of_ne_zero h_j_eq_zero
@@ -492,7 +493,7 @@ lemma Array.extract_toList_getElem_eq_cons_extract_toList_getElem {α : Type} [I
       j h_j_gt_zero h_j_lt_lhs_len h_j_minus_1_lt_tail_len
 
 -- Refactored main lemma
-lemma Array.extract_toList_eq_getElem_bang_cons_extract_toList {α : Type} [Inhabited α]
+lemma _root_.Array.extract_toList_eq_getElem_bang_cons_extract_toList {α : Type} [Inhabited α]
     (arr : Array α) (idx : Nat) (stop : Nat)
     (h_idx_lt_stop : idx < stop) (h_stop_le_arr_size : stop ≤ arr.size) :
   (arr.extract idx stop).toList = arr[idx]! :: (arr.extract (idx + 1) stop).toList := by
@@ -568,7 +569,7 @@ lemma product_extract_prefix_step (shape : Array Nat) (k_idx : Nat)
   rw [List.prod_take_succ _ _ h_k_idx_lt_list_len]
   have h_list_get_eq_array_get_bang : shape.toList[k_idx] = shape[k_idx]! := by
     simp only [Array.getElem_toList]
-    exact Eq.symm (Array.getElem_eq_get! h_k_idx_lt_shape_size)
+    exact Eq.symm (Array.getElem_eq_get_safe h_k_idx_lt_shape_size)
   rw [h_list_get_eq_array_get_bang]
   exact Nat.mul_comm _ _
 
@@ -649,7 +650,7 @@ lemma flatIndex_bound_maintained
         let fin_k_idx : Fin rank :=
           ⟨k_idx, by { rwa [←h_rank_eq_size] at h_k_idx_lt_shape_size }⟩
         change shape[k_idx]! > 0
-        rw [Array.getElem_eq_get! (Nat.lt_of_lt_of_eq fin_k_idx.isLt h_rank_eq_size)]
+        rw [Array.getElem_eq_get_safe (Nat.lt_of_lt_of_eq fin_k_idx.isLt h_rank_eq_size)]
         exact h_dims_pos fin_k_idx
       have h_one_le_ds_stride : 1 ≤ dimSize_k * stride :=
         one_le_mul_of_one_le_of_one_le (Nat.one_le_of_lt h_dim_k_pos)
@@ -811,7 +812,8 @@ lemma extract_prefix_product_positive (shape : Array Nat) (rank : Nat) (i : Nat)
     have h_shape_j_idx : shape.toList[j] = shape[j]! :=
       calc
         shape.toList[j] = shape[j]   := Array.getElem_toList h_j_lt_shape_size
-        _               = shape[j]!  := by exact Eq.symm (Array.getElem_eq_get! h_j_lt_shape_size)
+        _               = shape[j]!  := by
+              exact Eq.symm (Array.getElem_eq_get_safe h_j_lt_shape_size)
     have h_x_eq_toList_j : x = shape.toList[j] := by
       rw [← Option.some_inj]
       rw [← List.getElem?_eq_getElem h_j_lt_len]
@@ -820,7 +822,7 @@ lemma extract_prefix_product_positive (shape : Array Nat) (rank : Nat) (i : Nat)
     exact h_shape_j_idx
   rw [h_shape_j_eq_x]
   have h_shape_j_eq_shape_fin_j : shape[j]! = shape[fin_j.val] := by
-    exact Array.getElem_eq_get! h_j_lt_shape_size
+    exact Array.getElem_eq_get_safe h_j_lt_shape_size
   rw [h_shape_j_eq_shape_fin_j]
   have h_pos := h_dims_pos fin_j
   exact Nat.lt_of_lt_of_eq (h_dims_pos fin_j) h_shape_j_eq_shape_fin_j
@@ -873,7 +875,7 @@ lemma extract_sub_array_product_positive (shape : Array Nat) (rank_param : Nat)
       simp only [extracted_arr, original_idx]
       rw [Array.getElem_extract]
     rw [h_get_extract]
-    exact Eq.symm (Array.getElem_eq_get! h_original_idx_lt_shape_size)
+    exact Eq.symm (Array.getElem_eq_get_safe h_original_idx_lt_shape_size)
   rw [h_x_eq_shape_original_idx_bang]
   have h_original_idx_lt_rank : original_idx < rank_param := by
     rw [h_rank_eq_size]; exact h_original_idx_lt_shape_size
@@ -1334,8 +1336,8 @@ lemma computeHelper_bounds_base_rank_one_fixed
             shape[0]'h_0_lt_shape_size := by
           apply Array.getElem_extract
         have h_extract_elem_get_bang : (shape.extract 0 1)[0]! = shape[0]! := by
-          rw [Array.getElem_eq_get! h_0_lt_extract_size]
-          rw [Array.getElem_eq_get! h_0_lt_shape_size]
+          rw [Array.getElem_eq_get_safe h_0_lt_extract_size]
+          rw [Array.getElem_eq_get_safe h_0_lt_shape_size]
           exact h_extract_elem
         exact id (Eq.symm h_extract_elem_get_bang)
       have h_index_lt_dim : indices[0]! < shape[0]! := by

@@ -55,18 +55,23 @@ structure TensorView (s : Type) where
       }) > 0
   -- No Inhabited instance needed or desirable
 
+namespace TensorView
+
 /-- Total number of elements in the tensor view. Guaranteed > 0 since dims > 0. -/
-@[inline] def TensorView.elementCount {s : Type} (tv : TensorView s) : Nat :=
+@[inline] def elementCount {s : Type} (tv : TensorView s) : Nat :=
   -- Foldl starts with 1, and all shape[i] > 0, so result > 0
   tv.shape.foldl (· * ·) 1
 
+
+end TensorView
 namespace Array
 
 /--
 If an index `i` is within the bounds of an array `arr`, then `arr[i]!` (unsafe get)
 is equal to `arr[i]` (safe get, written as `arr[i]'h_bounds`).
 -/
-lemma getElem_eq_get! {α : Type} [Inhabited α] {arr : Array α} {i : Nat} (h_bounds : i < arr.size) :
+lemma getElem_eq_get_safe {α : Type} [Inhabited α] {arr : Array α} {i : Nat}
+    (h_bounds : i < arr.size) :
     arr[i]! = arr[i]'h_bounds := by
   exact getElem!_pos arr i h_bounds
 
@@ -82,12 +87,14 @@ lemma exists_index_of_mem_with_get_bang
     ∃ i : Nat, i < arr.size ∧ arr[i]! = x := by
   rcases Array.getElem_of_mem h_mem with ⟨i, h_i_lt, h_get⟩
   have h_get_bang : arr[i]! = x := by
-    rw [Array.getElem_eq_get! h_i_lt]
+    rw [Array.getElem_eq_get_safe h_i_lt]
     exact h_get
   exact ⟨i, h_i_lt, h_get_bang⟩
 
+namespace TensorView
+
 /-- Proof that the element count is positive. -/
-lemma TensorView.elementCount_pos {s : Type} (tv : TensorView s) : tv.elementCount > 0 := by
+lemma elementCount_pos {s : Type} (tv : TensorView s) : tv.elementCount > 0 := by
   rw [TensorView.elementCount]
   have h_array_to_list : tv.shape.foldl (· * ·) 1 = List.foldl (· * ·) 1 tv.shape.toList := by
     simp only [Array.foldl_toList]
@@ -125,17 +132,19 @@ lemma TensorView.elementCount_pos {s : Type} (tv : TensorView s) : tv.elementCou
   exact h_pos
 
 /-- Total size in bytes of this tensor view. Guaranteed divisible by `bytesPerFloat`. -/
-@[inline] def TensorView.sizeBytes {s : Type} (tv : TensorView s) : Nat :=
+@[inline] def sizeBytes {s : Type} (tv : TensorView s) : Nat :=
   tv.elementCount * bytesPerFloat
 
 /-- Proof that sizeBytes is a multiple of bytesPerFloat. -/
-lemma TensorView.sizeBytes_dvd {s : Type} (tv : TensorView s) : bytesPerFloat ∣ tv.sizeBytes := by
+lemma sizeBytes_dvd {s : Type} (tv : TensorView s) : bytesPerFloat ∣ tv.sizeBytes := by
   simp [sizeBytes];
 
 /-- Proof that the view fits within the storage, derived from creation. -/
-structure TensorView.ValidView {s : Type} (tv : TensorView s) (storageSize : Nat) where
+structure ValidView {s : Type} (tv : TensorView s) (storageSize : Nat) where
   h_valid : tv.offsetBytes + tv.sizeBytes <= storageSize
 
+
+end TensorView
 /-- Internal helper to validate shape dimensions. -/
 def validateShape (shape : Array Nat) : Except TensorError (Nat × (Nat → Prop)) := Id.run do
   if shape.isEmpty then
@@ -166,9 +175,11 @@ def validateShapeLoopRec (shape : Array Nat) (idx : Nat) : Except TensorError Un
     Except.ok () -- All checked dimensions were positive
 termination_by shape.size - idx
 
+namespace TensorView
+
 /-- Creates a TensorView assuming validation and checks passed during buffer construction. -/
 @[inline]
-def TensorView.mkUnsafe (s : Type) (shape : Array Nat) (rank : Nat)
+def mkUnsafe (s : Type) (shape : Array Nat) (rank : Nat)
     (storageRef : ST.Ref s ByteArray)
     (offsetBytes : Nat) (h_offset_aligned : offsetBytes % bytesPerFloat = 0)
     (h_rank_eq_size : rank = shape.size)
@@ -178,7 +189,7 @@ def TensorView.mkUnsafe (s : Type) (shape : Array Nat) (rank : Nat)
   { shape, rank, storageRef, offsetBytes, h_offset_aligned, h_dims_positive, h_rank_eq_size }
 
 /-- Represent the `TensorView` as `Std.Format` with the given precedence. -/
-protected def TensorView.reprPrec {s : Type} (tv : TensorView s) (prec : Nat) : Std.Format :=
+protected def reprPrec {s : Type} (tv : TensorView s) (prec : Nat) : Std.Format :=
   let _ := prec  -- precedence is required by the Repr typeclass shape but unused here
   let shapeStr := toString tv.shape
   let rankStr := toString tv.rank
@@ -186,6 +197,8 @@ protected def TensorView.reprPrec {s : Type} (tv : TensorView s) (prec : Nat) : 
   Std.Format.bracket "TensorView(" (Std.Format.text ("shape: " ++ shapeStr ++ ",
     rank: " ++ rankStr ++ ", offsetBytes: " ++ offsetStr)) ")"
 
+
+end TensorView
 instance (s : Type) : Repr (TensorView s) where
   reprPrec := TensorView.reprPrec
 

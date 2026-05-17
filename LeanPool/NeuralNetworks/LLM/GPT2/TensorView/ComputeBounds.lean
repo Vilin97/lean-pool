@@ -49,9 +49,9 @@ lemma computeHelper_eq_ok_iff_rel
       let current_idx_val_safe : Nat := indices[k_val]'hk_indices_bounds
       let current_dim_val_safe : Nat := shape[k_val]'hk_shape_bounds
       have h_get_bang_idx_eq_safe : indices[k_val]! = current_idx_val_safe :=
-        Array.getElem_eq_get! hk_indices_bounds
+        Array.getElem_eq_get_safe hk_indices_bounds
       have h_get_bang_shape_eq_safe : shape[k_val]! = current_dim_val_safe :=
-        Array.getElem_eq_get! hk_shape_bounds
+        Array.getElem_eq_get_safe hk_shape_bounds
       by_cases h_idx_bang_ge_dim_bang : indices[k_val]! ≥ shape[k_val]!
       · -- Case 1: indices[k_val]! ≥ shape[k_val]! (Error case in computeHelper)
         have h_error_branch_is_taken :
@@ -124,8 +124,8 @@ lemma computeHelper_eq_ok_iff_rel
       rw [if_neg (Nat.not_le_of_lt h_not_term)]
       simp (config := {zetaDelta := true}) only [
         ←h_k_def,
-        Array.getElem_eq_get! hk_idx_lt_idx_size,
-        Array.getElem_eq_get! hk_idx_lt_shape_size,
+        Array.getElem_eq_get_safe hk_idx_lt_idx_size,
+        Array.getElem_eq_get_safe hk_idx_lt_shape_size,
         ←h_idx_eq,
         ←h_dim_eq,
         Nat.not_le_of_lt h_bound,
@@ -177,7 +177,7 @@ theorem computeHelper_bounds
     : result < shape.foldl (· * ·) 1 := by
   let h_dims_pos_bang := fun (k : Fin rank) => by {
     have hk_lt_size : k.val < shape.size := by { rw [←h_rank_eq_size]; exact k.isLt };
-    exact (Array.getElem_eq_get! hk_lt_size).symm ▸ (h_dims_pos_main k)
+    exact (Array.getElem_eq_get_safe hk_lt_size).symm ▸ (h_dims_pos_main k)
   }
   have current_fir_lt_current_stride : flatIndexRel < stride := by
     if h_i_rev_is_zero : i_rev = 0 then
@@ -412,9 +412,11 @@ theorem computeFlatIndex_bounds
     apply extract_prefix_product_positive shape rank rank h_rank_eq_size (Nat.le_refl rank)
       (fun k => by {
         have hk_lt_size : k.val < shape.size := by { rw [←h_rank_eq_size]; exact k.isLt };
-        exact (Array.getElem_eq_get! hk_lt_size).symm ▸ (h_dims_pos k)
+        exact (Array.getElem_eq_get_safe hk_lt_size).symm ▸ (h_dims_pos k)
       })
   · exact h_compute_main
+
+namespace TensorView
 
 /--
 Safely retrieves a `Float` value from the `TensorView` at the specified multi-dimensional `indices`.
@@ -432,16 +434,16 @@ This function performs the following steps:
       `h_valid` proof.
 5. Retrieves the `storage` `ByteArray` from `tv.storageRef`.
 6. Reads the `Float` value from the `storage` at `byteIndexAbs` in Little Endian format
-   using `LLM.GPT2.ByteArray.readFloatLE?`.
+   using `LLM.GPT2.ByteArray.readFloatLEOpt`.
 
 If any step (like index computation or bounds validation) fails, it returns a `TensorError`.
 The function operates within the `ST s` monad due to access to `tv.storageRef`.
 
-A panic occurs if `LLM.GPT2.ByteArray.readFloatLE?` returns `none` after all bounds proofs have
-passed, as this would indicate an internal inconsistency (e.g., a bug in `readFloatLE?` or an
+A panic occurs if `LLM.GPT2.ByteArray.readFloatLEOpt` returns `none` after all bounds proofs have
+passed, as this would indicate an internal inconsistency (e.g., a bug in `readFloatLEOpt` or an
 incorrect proof).
 -/
-def TensorView.get? {s : Type} (tv : TensorView s) (indices : Array Nat)
+def getOpt {s : Type} (tv : TensorView s) (indices : Array Nat)
     (storageSize : Nat) (h_valid : tv.offsetBytes + tv.sizeBytes <= storageSize)
     : ST s (Except TensorError Float) := do
   -- Compute flat index, getting potential errors
@@ -473,10 +475,10 @@ def TensorView.get? {s : Type} (tv : TensorView s) (indices : Array Nat)
         exact Nat.le_trans h_read_in_view h_valid
       -- Perform the read
       let storage ← ST.Ref.get tv.storageRef
-      match LLM.GPT2.ByteArray.readFloatLE? storage byteIndexAbs with
+      match LLM.GPT2.ByteArray.readFloatLEOpt storage byteIndexAbs with
       | some val => return Except.ok val
       | none =>
-          panic! "Internal error: readFloatLE? failed despite bounds proof"
+          panic! "Internal error: readFloatLEOpt failed despite bounds proof"
 
 /--
 Sets a `Float` value at the specified `indices` within the `TensorView`.
@@ -489,7 +491,7 @@ at that position using little-endian byte order.
 The function includes proofs to ensure that the write operation is within the bounds of both
 the `TensorView` itself (`h_write_in_view`) and the total `storageSize` (`h_write_in_storage`).
 -/
-def TensorView.set! {s : Type} (tv : TensorView s) (indices : Array Nat) (value : Float)
+def setUnsafe {s : Type} (tv : TensorView s) (indices : Array Nat) (value : Float)
     (storageSize : Nat) (h_valid : tv.offsetBytes + tv.sizeBytes <= storageSize)
     : ST s (Except TensorError Unit) := do
   match h_compute_eq : computeFlatIndex tv.shape tv.rank tv.h_rank_eq_size tv.h_dims_positive
@@ -511,8 +513,9 @@ def TensorView.set! {s : Type} (tv : TensorView s) (indices : Array Nat) (value 
       have h_write_in_storage : byteIndexAbs + bytesPerFloat <= storageSize := by
          exact Nat.le_trans h_write_in_view h_valid
       ST.Ref.modify tv.storageRef (fun storage =>
-        LLM.GPT2.ByteArray.writeFloatLE! storage byteIndexAbs value
+        LLM.GPT2.ByteArray.writeFloatLEUnsafe storage byteIndexAbs value
       )
       return Except.ok ()
+end TensorView
 
 end LLM.GPT2

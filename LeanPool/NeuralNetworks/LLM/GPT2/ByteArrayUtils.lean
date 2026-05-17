@@ -19,7 +19,7 @@ Uses direct byte manipulation instead of `extract`.
 Returns `none` if the read would go beyond the array bounds.
 -/
 @[inline]
-def readFloatLE? (b : ByteArray) (o : Nat) : Option Float :=
+def readFloatLEOpt (b : ByteArray) (o : Nat) : Option Float :=
   if o + bytesPerFloat ≤ b.size then
     let b0 := UInt64.ofNat (b.get! o).toNat
     let b1 := UInt64.ofNat (b.get! (o+1)).toNat
@@ -40,7 +40,7 @@ Will panic if the write goes beyond the array bounds (`set!` panics).
 Assumes offset is valid and aligned for performance.
 -/
 @[inline]
-def writeFloatLE! (b : ByteArray) (o : Nat) (v : Float) : ByteArray := Id.run do
+def writeFloatLEUnsafe (b : ByteArray) (o : Nat) (v : Float) : ByteArray := Id.run do
   let u64val := Float.toUInt64 v
   let mut new_b := b
   new_b := new_b.set! o         (u64val >>> 0).toUInt8
