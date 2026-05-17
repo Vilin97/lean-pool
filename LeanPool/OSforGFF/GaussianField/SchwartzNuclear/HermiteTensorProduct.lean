@@ -622,7 +622,7 @@ theorem schwartzRapidDecayEquiv1D_symm_apply (a : RapidDecaySeq) (t : ℝ) :
 abbrev MultiIndex (d : ℕ) := Fin d → ℕ
 
 /-- The magnitude (L1 norm) of a multi-index. -/
-def MultiIndex.abs {d : ℕ} (α : MultiIndex d) : ℕ :=
+def _root_.GaussianField.MultiIndex.abs {d : ℕ} (α : MultiIndex d) : ℕ :=
   ∑ i, α i
 
 /-- To flatten s(ℕ^d) to s(ℕ), we need a bijection that is polynomially bounded
@@ -1630,6 +1630,114 @@ private lemma hermiteCoeffNd_decay (d' : ℕ) (k : ℝ) :
         _ = (C_ih * C_ax) * q_ax.sup (schwartzSeminormFamily ℝ
               (EuclideanSpace ℝ (Fin (d'' + 2))) ℝ) f := by ring
 
+private lemma schwartzHermiteBasisNd_weighted_product_bound (d k l : ℕ)
+    (C₁ : ℝ) (s₁ : ℕ) (hC₁_pos : 0 < C₁)
+    (fac : MultiIndex (d + 1) → Fin (d + 1) → EuclideanSpace ℝ (Fin (d + 1)) → ℝ)
+    (hM_poly : ∀ (α : MultiIndex (d + 1)) (j : Fin (d + 1)) (m : ℕ) (_ : m ≤ l)
+      (x : EuclideanSpace ℝ (Fin (d + 1))),
+      ‖iteratedFDeriv ℝ m (fac α j) x‖ ≤ C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁)
+    (hC_poly : ∀ (α : MultiIndex (d + 1)) (j : Fin (d + 1)) (m : ℕ) (_ : m ≤ l)
+      (x : EuclideanSpace ℝ (Fin (d + 1))),
+      |x j| ^ k * ‖iteratedFDeriv ℝ m (fac α j) x‖ ≤
+        C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) :
+    ∀ (α : MultiIndex (d + 1)) (x : EuclideanSpace ℝ (Fin (d + 1)))
+      (p : Sym (Fin (d + 1)) l),
+      ‖x‖ ^ k *
+        ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
+          ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖ ≤
+        (d + 1 : ℝ) ^ (k + 1) *
+          (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
+  have h_count_le : ∀ (p : Sym (Fin (d + 1)) l) (j : Fin (d + 1)),
+      (p : Multiset (Fin (d + 1))).count j ≤ l :=
+    fun p j => (Multiset.count_le_card j ↑p).trans (le_of_eq p.prop)
+  have h_l2_le_l1 : ∀ x : EuclideanSpace ℝ (Fin (d + 1)),
+      ‖x‖ ≤ ∑ j : Fin (d + 1), |x j| := by
+    intro x
+    rw [EuclideanSpace.norm_eq]
+    have hsq : ∑ j : Fin (d + 1), ‖x j‖ ^ 2 ≤
+        (∑ j : Fin (d + 1), |x j|) ^ 2 := by
+      convert Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
+        (fun j _ => abs_nonneg (x j)) using 2
+    calc √(∑ j, ‖x j‖ ^ 2) ≤ √((∑ j, |x j|) ^ 2) :=
+          Real.sqrt_le_sqrt hsq
+      _ = ∑ j, |x j| := by
+          rw [Real.sqrt_sq_eq_abs, abs_of_nonneg
+            (Finset.sum_nonneg (fun j _ => abs_nonneg _))]
+  have h_norm_pow_le : ∀ x : EuclideanSpace ℝ (Fin (d + 1)),
+      ‖x‖ ^ k ≤ ((d + 1 : ℝ) ^ k) * ∑ j : Fin (d + 1), |x j| ^ k := by
+    intro x
+    rcases k with _ | k_
+    · simp only [pow_zero, one_mul, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+        nsmul_eq_mul, mul_one]
+      exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
+    have h1 : (1 : ℝ) ≤ (d + 1 : ℝ) := by exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
+    calc ‖x‖ ^ (k_ + 1) ≤ (∑ j : Fin (d + 1), |x j|) ^ (k_ + 1) :=
+          pow_le_pow_left₀ (norm_nonneg _) (h_l2_le_l1 x) _
+      _ ≤ ((Finset.univ : Finset (Fin (d + 1))).card : ℝ) ^ k_ *
+            ∑ j ∈ Finset.univ, |x j| ^ (k_ + 1) :=
+          _root_.pow_sum_le_card_mul_sum_pow (fun j _ => abs_nonneg (x j)) k_
+      _ = (d + 1 : ℝ) ^ k_ * ∑ j : Fin (d + 1), |x j| ^ (k_ + 1) := by
+          simp [Finset.card_univ, Fintype.card_fin]
+      _ ≤ (d + 1 : ℝ) ^ (k_ + 1) * ∑ j : Fin (d + 1), |x j| ^ (k_ + 1) := by
+          apply mul_le_mul_of_nonneg_right
+          · exact pow_le_pow_right₀ h1 (Nat.le_succ k_)
+          · exact Finset.sum_nonneg (fun j _ => pow_nonneg (abs_nonneg _) _)
+  have h_term : ∀ (α : MultiIndex (d + 1)) (x : EuclideanSpace ℝ (Fin (d + 1)))
+      (j₀ : Fin (d + 1)) (p : Sym (Fin (d + 1)) l),
+      |x j₀| ^ k *
+        ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
+          ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖ ≤
+        (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
+    intro α x j₀ p
+    rw [(Finset.mul_prod_erase (Finset.univ : Finset (Fin (d + 1)))
+      (fun j => ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖)
+      (Finset.mem_univ j₀)).symm, ← mul_assoc]
+    calc |x j₀| ^ k * ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j₀) (fac α j₀) x‖ *
+          ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))).erase j₀,
+            ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖
+        ≤ (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) *
+            ∏ _j ∈ (Finset.univ : Finset (Fin (d + 1))).erase j₀,
+              (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) := by
+          apply mul_le_mul
+          · exact hC_poly α j₀ _ (h_count_le p j₀) x
+          · exact Finset.prod_le_prod (fun j _ => norm_nonneg _)
+              (fun j _ => hM_poly α j _ (h_count_le p j) x)
+          · exact Finset.prod_nonneg fun j _ => norm_nonneg _
+          · positivity
+      _ = (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) *
+            (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^
+              ((Finset.univ : Finset (Fin (d + 1))).erase j₀).card := by
+          rw [Finset.prod_const]
+      _ ≤ (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
+          have hcard : ((Finset.univ : Finset (Fin (d + 1))).erase j₀).card = d := by
+            rw [Finset.card_erase_of_mem (Finset.mem_univ j₀),
+              Finset.card_univ, Fintype.card_fin]; omega
+          rw [hcard, pow_succ']
+  intro α x p
+  calc ‖x‖ ^ k *
+        ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
+          ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖
+      ≤ ((d + 1 : ℝ) ^ k * ∑ j₀ : Fin (d + 1), |x j₀| ^ k) *
+          ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
+            ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖ :=
+        mul_le_mul_of_nonneg_right (h_norm_pow_le x)
+          (Finset.prod_nonneg fun j _ => norm_nonneg _)
+    _ = (d + 1 : ℝ) ^ k *
+          ∑ j₀ : Fin (d + 1), |x j₀| ^ k *
+            ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
+              ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖ := by
+        rw [mul_assoc, Finset.sum_mul]
+    _ ≤ (d + 1 : ℝ) ^ k *
+          ∑ _j₀ : Fin (d + 1),
+            (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
+        apply mul_le_mul_of_nonneg_left
+        · exact Finset.sum_le_sum fun j₀ _ => h_term α x j₀ p
+        · positivity
+    _ = (d + 1 : ℝ) ^ (k + 1) *
+          (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
+        rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+        push_cast; ring
+
 /-- The multidimensional Hermite basis functions have polynomial growth in seminorms.
 
 The proof tracks the α-dependence through the Leibniz expansion: each 1D factor
@@ -1781,44 +1889,6 @@ private lemma schwartzHermiteBasisNd_growth (d : ℕ) (k l : ℕ) :
       _ ≤ C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁ :=
           mul_le_mul_of_nonneg_left
             (pow_le_pow_left₀ (by positivity) (h_alpha_le α j) s₁) hC₁_pos.le
-  -- Count bound: in a Sym partition of l, each count ≤ l
-  have h_count_le : ∀ (p : Sym (Fin (d + 1)) l) (j : Fin (d + 1)),
-      (p : Multiset (Fin (d + 1))).count j ≤ l :=
-    fun p j => (Multiset.count_le_card j ↑p).trans (le_of_eq p.prop)
-  -- Step A: ℓ² ≤ ℓ¹ norm inequality (same as decay proof)
-  have h_l2_le_l1 : ∀ x : EuclideanSpace ℝ (Fin (d + 1)),
-      ‖x‖ ≤ ∑ j : Fin (d + 1), |x j| := by
-    intro x
-    rw [EuclideanSpace.norm_eq]
-    have hsq : ∑ j : Fin (d + 1), ‖x j‖ ^ 2 ≤
-        (∑ j : Fin (d + 1), |x j|) ^ 2 := by
-      convert Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
-        (fun j _ => abs_nonneg (x j)) using 2
-    calc √(∑ j, ‖x j‖ ^ 2) ≤ √((∑ j, |x j|) ^ 2) :=
-          Real.sqrt_le_sqrt hsq
-      _ = ∑ j, |x j| := by
-          rw [Real.sqrt_sq_eq_abs, abs_of_nonneg
-            (Finset.sum_nonneg (fun j _ => abs_nonneg _))]
-  -- Step B: ‖x‖^k ≤ (d+1)^k * ∑ |x j|^k
-  have h_norm_pow_le : ∀ x : EuclideanSpace ℝ (Fin (d + 1)),
-      ‖x‖ ^ k ≤ ((d + 1 : ℝ) ^ k) * ∑ j : Fin (d + 1), |x j| ^ k := by
-    intro x
-    rcases k with _ | k_
-    · simp only [pow_zero, one_mul, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-        nsmul_eq_mul, mul_one]
-      exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
-    have h1 : (1 : ℝ) ≤ (d + 1 : ℝ) := by exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
-    calc ‖x‖ ^ (k_ + 1) ≤ (∑ j : Fin (d + 1), |x j|) ^ (k_ + 1) :=
-          pow_le_pow_left₀ (norm_nonneg _) (h_l2_le_l1 x) _
-      _ ≤ ((Finset.univ : Finset (Fin (d + 1))).card : ℝ) ^ k_ *
-            ∑ j ∈ Finset.univ, |x j| ^ (k_ + 1) :=
-          _root_.pow_sum_le_card_mul_sum_pow (fun j _ => abs_nonneg (x j)) k_
-      _ = (d + 1 : ℝ) ^ k_ * ∑ j : Fin (d + 1), |x j| ^ (k_ + 1) := by
-          simp [Finset.card_univ, Fintype.card_fin]
-      _ ≤ (d + 1 : ℝ) ^ (k_ + 1) * ∑ j : Fin (d + 1), |x j| ^ (k_ + 1) := by
-          apply mul_le_mul_of_nonneg_right
-          · exact pow_le_pow_right₀ h1 (Nat.le_succ k_)
-          · exact Finset.sum_nonneg (fun j _ => pow_nonneg (abs_nonneg _) _)
   -- Step C: Product equation
   have hprod_eq : ∀ (α : MultiIndex (d + 1)),
       (fun x => ∏ j : Fin (d + 1), fac α j x) = hermiteFunctionNd (d + 1) α := by
@@ -1833,71 +1903,8 @@ private lemma schwartzHermiteBasisNd_growth (d : ℕ) (k l : ℕ) :
     intro α y
     exact norm_iteratedFDeriv_prod_le
       (fun j _ => hfac_smooth α j) (mod_cast le_top)
-  -- Step E: For each partition p and active coordinate j₀, bound the product
-  -- using Finset.mul_prod_erase. All factor bounds are C₁*(1+|α|)^s₁.
-  have h_term : ∀ (α : MultiIndex (d + 1)) (x : EuclideanSpace ℝ (Fin (d + 1)))
-      (j₀ : Fin (d + 1)) (p : Sym (Fin (d + 1)) l),
-      |x j₀| ^ k *
-        ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
-          ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖ ≤
-        (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
-    intro α x j₀ p
-    rw [(Finset.mul_prod_erase (Finset.univ : Finset (Fin (d + 1)))
-      (fun j => ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖)
-      (Finset.mem_univ j₀)).symm, ← mul_assoc]
-    calc |x j₀| ^ k * ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j₀) (fac α j₀) x‖ *
-          ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))).erase j₀,
-            ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖
-        ≤ (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) *
-            ∏ _j ∈ (Finset.univ : Finset (Fin (d + 1))).erase j₀,
-              (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) := by
-          apply mul_le_mul
-          · exact hC_poly α j₀ _ (h_count_le p j₀) x
-          · exact Finset.prod_le_prod (fun j _ => norm_nonneg _)
-              (fun j _ => hM_poly α j _ (h_count_le p j) x)
-          · exact Finset.prod_nonneg fun j _ => norm_nonneg _
-          · positivity
-      _ = (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) *
-            (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^
-              ((Finset.univ : Finset (Fin (d + 1))).erase j₀).card := by
-          rw [Finset.prod_const]
-      _ ≤ (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
-          have hcard : ((Finset.univ : Finset (Fin (d + 1))).erase j₀).card = d := by
-            rw [Finset.card_erase_of_mem (Finset.mem_univ j₀),
-              Finset.card_univ, Fintype.card_fin]; omega
-          rw [hcard, pow_succ']
-  -- Step F: Distribute ‖x‖^k and sum over active coordinates
-  have h_full : ∀ (α : MultiIndex (d + 1)) (x : EuclideanSpace ℝ (Fin (d + 1)))
-      (p : Sym (Fin (d + 1)) l),
-      ‖x‖ ^ k *
-        ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
-          ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖ ≤
-        (d + 1 : ℝ) ^ (k + 1) *
-          (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
-    intro α x p
-    calc ‖x‖ ^ k *
-          ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
-            ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖
-        ≤ ((d + 1 : ℝ) ^ k * ∑ j₀ : Fin (d + 1), |x j₀| ^ k) *
-            ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
-              ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖ :=
-          mul_le_mul_of_nonneg_right (h_norm_pow_le x)
-            (Finset.prod_nonneg fun j _ => norm_nonneg _)
-      _ = (d + 1 : ℝ) ^ k *
-            ∑ j₀ : Fin (d + 1), |x j₀| ^ k *
-              ∏ j ∈ (Finset.univ : Finset (Fin (d + 1))),
-                ‖iteratedFDeriv ℝ ((p : Multiset (Fin (d + 1))).count j) (fac α j) x‖ := by
-          rw [mul_assoc, Finset.sum_mul]
-      _ ≤ (d + 1 : ℝ) ^ k *
-            ∑ _j₀ : Fin (d + 1),
-              (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
-          apply mul_le_mul_of_nonneg_left
-          · exact Finset.sum_le_sum fun j₀ _ => h_term α x j₀ p
-          · positivity
-      _ = (d + 1 : ℝ) ^ (k + 1) *
-            (C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ s₁) ^ (d + 1) := by
-          rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-          push_cast; ring
+  have h_full := schwartzHermiteBasisNd_weighted_product_bound d k l C₁ s₁ hC₁_pos fac
+    hM_poly hC_poly
   -- Step G: Final assembly
   -- Define total constant (independent of α)
   set K := (d + 1 : ℝ) ^ (k + 1) * C₁ ^ (d + 1) *

@@ -45,10 +45,10 @@ import LeanPool.OSforGFF.Spacetime.Euclidean
 /-!
 # Time Reflection Θ and Discrete Symmetries
 
-Time reflection Θ: (t, x̄) ↦ (−t, x̄) as an orthogonal involution on ℝ⁴.
+Time reflection Θ: (t, xbar) ↦ (−t, xbar) as an orthogonal involution on ℝ⁴.
 Properties: self-inverse (Θ² = id), measure-preserving, isometric.
 
-Induced actions on test functions: (Θf)(x) = f(Θx) = f(−t, x̄).
+Induced actions on test functions: (Θf)(x) = f(Θx) = f(−t, xbar).
 Foundation for the OS3 reflection positivity axiom.
 -/
 
@@ -66,10 +66,10 @@ def timeReflectionMatrix : Matrix (Fin STDimension) (Fin STDimension) ℝ :=
 
 lemma timeReflectionMatrix_is_orthogonal :
    timeReflectionMatrix ∈ Matrix.orthogonalGroup (Fin STDimension) ℝ := by
-      simp [Matrix.mem_orthogonalGroup_iff, timeReflectionMatrix, Matrix.diagonal_transpose,
-        Matrix.diagonal_mul_diagonal]
+      rw [Matrix.mem_orthogonalGroup_iff]
       ext i j
-      simp []
+      simp only [timeReflectionMatrix, Matrix.diagonal_transpose,
+        Matrix.diagonal_mul_diagonal, Matrix.diagonal_apply, Matrix.one_apply]
       split_ifs <;> norm_num
 
 /-- The `timeReflectionIsometry` declaration. -/

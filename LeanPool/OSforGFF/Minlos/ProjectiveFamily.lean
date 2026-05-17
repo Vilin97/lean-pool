@@ -20,7 +20,7 @@ by `Finset E`), enabling application of the Kolmogorov extension theorem.
 - `marginalFamily_isProjective` — the family is projective (consistent under restriction)
 -/
 
-open BigOperators MeasureTheory Complex Classical
+open BigOperators MeasureTheory Complex
 
 noncomputable section
 
@@ -155,6 +155,7 @@ theorem marginalFamily_isProjective (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     IsProjectiveMeasureFamily (α := fun (_ : E) => ℝ)
       (marginalFamily Φ hΦ_cont hΦ_pd hΦ_norm) := by
   intro I J hJI
+  classical
   -- Unfold marginalFamily and compose maps on RHS
   simp only [marginalFamily]
   conv_rhs => erw [Measure.map_map (Finset.measurable_restrict₂ hJI)
@@ -247,8 +248,9 @@ theorem marginalFamily_isProjective (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
 
 /-- The Kolmogorov projective limit of the marginal family. -/
 def marginalProjectiveLimit (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
-    (hΦ_pd : IsPositiveDefinite Φ) (hΦ_norm : Φ 0 = 1) [Nonempty E] :
+    (hΦ_pd : IsPositiveDefinite Φ) (hΦ_norm : Φ 0 = 1) [hE : Nonempty E] :
     Measure (E → ℝ) :=
+  let _ := hE
   projectiveLimit (α := fun (_ : E) => ℝ)
     (marginalFamily Φ hΦ_cont hΦ_pd hΦ_norm)
     (marginalFamily_isProjective Φ hΦ_cont hΦ_pd hΦ_norm)

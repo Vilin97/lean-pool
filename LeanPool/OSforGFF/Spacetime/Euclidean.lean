@@ -56,7 +56,9 @@ abbrev O4 : Type :=
 /-!  Euclidean group -/
 /-- Euclidean motion = rotation / reflection + translation. E= R^4 x O(4) -/
 structure E where
+  /-- Orthogonal linear part of the Euclidean motion. -/
   R : O4
+  /-- Translation part of the Euclidean motion. -/
   t : SpaceTime
 
 /-- Action of g : E on a spacetime point x.
@@ -123,7 +125,7 @@ end LinearIsometry
 
 /-(extentionality) Allows Lean to prove equality of Euclidean motions by checking the R and t
 components separately—hugely convenient for the group-law proofs. -/
-@[ext] lemma E.ext {g h : E} (hR : g.R = h.R) (ht : g.t = h.t) : g = h := by
+@[ext] lemma _root_.QFT.E.ext {g h : E} (hR : g.R = h.R) (ht : g.t = h.t) : g = h := by
   cases g; cases h; cases hR; cases ht; rfl
 
 /-!  ##  Group structure on `E`  ----------------------------------------- -/
@@ -192,7 +194,7 @@ instance : Group E where
 
 /-for all Euclidean motions g and h and any point x ∈ ℝ⁴, pulling x forward by the product g*h
   equals pulling by h first and then by g.
-This is precisely the group-action law(𝑔ℎ)⁣⋅𝑥=𝑔.(ℎ. 𝑥)(gh)⋅x=g⋅(h⋅x).-/
+This is precisely the group-action law(𝑔h)⋅𝑥=𝑔.(h. 𝑥)(gh)⋅x=g⋅(h⋅x).-/
 
 @[simp] lemma act_mul_general (g h : E) (x : SpaceTime) :
     act (g * h) x = act g (act h x) := by
@@ -211,7 +213,7 @@ act unfolds to R x + t.
 
 mul_R, mul_t give formulas for the rotation/translation of g*h.
 
-A handful of commutativity/associativity lemmas reorganise 𝑔𝑅(ℎ𝑅𝑥+ℎ𝑡)+𝑔𝑡gR(hRx+ht)+g
+A handful of commutativity/associativity lemmas reorganise 𝑔𝑅(h𝑅𝑥+h𝑡)+𝑔𝑡gR(hRx+ht)+g
 t into the desired form.
 → Goal reduces to reflexive equality, proof finished.-/
       simp [act, mul_R, mul_t, add_comm, add_left_comm]
@@ -264,7 +266,7 @@ private lemma fderiv_linear_add_const (L : SpaceTime →L[ℝ] SpaceTime) (c : S
   apply fderiv_add_const
 
 private def fderiv_act_inv_eq_linear (g : E) :
-  (fun x => fderiv ℝ (act g⁻¹) x) = fun x => g⁻¹.R.toContinuousLinearMap := by
+  (fun x => fderiv ℝ (act g⁻¹) x) = fun _ => g⁻¹.R.toContinuousLinearMap := by
   ext x v i
   let L := g⁻¹.R.toContinuousLinearMap
   calc (fderiv ℝ (act g⁻¹) x v) i
@@ -293,7 +295,7 @@ private def act_inv_poly_bound (g : E) :
         have h1 : 0 ≤ ‖x‖ := norm_nonneg x
         have h2 : 0 ≤ ‖g⁻¹.t‖ := norm_nonneg _
         linarith [mul_nonneg h2 h1]
- /-! ### Unified Action of Euclidean group on function spaces ---------
+/-! ### Unified Action of Euclidean group on function spaces ---------
 
     UNIFIED EUCLIDEAN ACTION FRAMEWORK
 
@@ -410,3 +412,5 @@ lemma euclidean_actions_unified (g : E) :
   · use euclidean_action_L2 g
     intro f
     rfl  -- by definition of euclidean_action_L2
+
+end QFT

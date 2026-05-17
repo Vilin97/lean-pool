@@ -320,14 +320,15 @@ private theorem deriv_hermiteEval_mul_gaussian (m : ℕ) (x : ℝ) :
     rw [h1]; simp [Polynomial.eval_sub, Polynomial.eval_mul, Polynomial.eval_X]
   rw [hrec]; ring
 
-/-- Polynomial times `exp(-x²/2)` is integrable (wrapper around `integrable_eval_mul_exp_neg_mul_sq`). -/
+/-- Polynomial times `exp(-x²/2)` is integrable, via
+`integrable_eval_mul_exp_neg_mul_sq`. -/
 private theorem integrable_hermiteR_mul_gaussian (p : ℝ[X]) :
     Integrable (fun x : ℝ => p.eval x * gaussian x) volume := by
   have h : (fun x : ℝ => p.eval x * gaussian x) =
-      fun x => p.eval x * Real.exp (-(1/2) * x ^ 2) := by
+      fun x => p.eval x * Real.exp (-(1 / 2) * x ^ 2) := by
     ext x; change p.eval x * Real.exp (-(x ^ 2 / 2)) = _; congr 1; congr 1; ring
   rw [h]
-  exact integrable_eval_mul_exp_neg_mul_sq p (by positivity : (0:ℝ) < 1/2)
+  exact integrable_eval_mul_exp_neg_mul_sq p (by positivity : (0 : ℝ) < 1 / 2)
 
 /-- Product of two Hermite polynomials times `exp(-x²/2)` is integrable. -/
 private theorem integrable_hermiteProd_mul_gaussian (n m : ℕ) :
@@ -376,29 +377,9 @@ private theorem J_succ_succ (n m : ℕ) : J (n + 1) (m + 1) = (↑(n + 1) : ℝ)
     simp_rw [h_eq, integral_neg]
   rw [hJ]
   -- Apply IBP with v = 1
-  have hibp := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable (𝕜 := ℝ) (E := ℝ)
-    (μ := volume)
-    (f := fun x => (hermiteR (n + 1)).eval x)
-    (g := fun u => (hermiteR m).eval u * gaussian u)
-    (v := (1 : ℝ))
-    ?_ ?_ ?_ (fun x _ => (hermiteR (n + 1)).differentiable.differentiableAt)
-    (fun x _ => (differentiable_hermiteEval_mul_gaussian m).differentiableAt)
-  -- IBP gives: ∫ f * g' = -∫ f' * g
-  -- So -∫ f * g' = ∫ f' * g
-  simp only [fderiv_apply_one_eq_deriv] at hibp
-  rw [neg_eq_iff_eq_neg.mpr hibp]
-  -- Simplify deriv of polynomial and factor out constant
-  have h_rw : ∀ x : ℝ, deriv (fun x => (hermiteR (n + 1)).eval x) x *
-      ((hermiteR m).eval x * gaussian x) =
-      (↑(n + 1) : ℝ) * ((hermiteR n).eval x * ((hermiteR m).eval x * gaussian x)) := by
-    intro x
-    rw [Polynomial.deriv, hermiteR_derivative]
-    simp [Polynomial.eval_mul, Polynomial.eval_natCast]; ring
-  simp_rw [h_rw, integral_const_mul]
-  -- Integrability obligations
-  · -- fderiv f · g integrable
-    change Integrable (fun x => fderiv ℝ (fun x => (hermiteR (n + 1)).eval x) x 1 *
-      ((hermiteR m).eval x * gaussian x)) volume
+  have h_int_fderiv_g : Integrable
+      (fun x => fderiv ℝ (fun x => (hermiteR (n + 1)).eval x) x 1 *
+        ((hermiteR m).eval x * gaussian x)) volume := by
     have : (fun x => fderiv ℝ (fun x => (hermiteR (n + 1)).eval x) x 1 *
         ((hermiteR m).eval x * gaussian x)) =
         fun x => ((↑(n + 1) : ℝ) * (hermiteR n).eval x) *
@@ -409,13 +390,14 @@ private theorem J_succ_succ (n m : ℕ) : J (n + 1) (m + 1) = (↑(n + 1) : ℝ)
     rw [this]
     have : (fun x => ((↑(n + 1) : ℝ) * (hermiteR n).eval x) *
         ((hermiteR m).eval x * gaussian x)) =
-        fun x => (↑(n + 1) : ℝ) * ((hermiteR n).eval x * (hermiteR m).eval x * gaussian x) := by
+        fun x => (↑(n + 1) : ℝ) *
+          ((hermiteR n).eval x * (hermiteR m).eval x * gaussian x) := by
       ext x; ring
     rw [this]
     exact (integrable_hermiteProd_mul_gaussian n m).const_mul _
-  · -- f · fderiv g integrable
-    change Integrable (fun x => (hermiteR (n + 1)).eval x *
-      (fderiv ℝ (fun u => (hermiteR m).eval u * gaussian u) x 1)) volume
+  have h_int_f_gderiv : Integrable
+      (fun x => (hermiteR (n + 1)).eval x *
+        (fderiv ℝ (fun u => (hermiteR m).eval u * gaussian u) x 1)) volume := by
     have : (fun x => (hermiteR (n + 1)).eval x *
         (fderiv ℝ (fun u => (hermiteR m).eval u * gaussian u) x 1)) =
         fun x => (hermiteR (n + 1)).eval x *
@@ -429,9 +411,31 @@ private theorem J_succ_succ (n m : ℕ) : J (n + 1) (m + 1) = (↑(n + 1) : ℝ)
       ext x; rw [deriv_hermiteEval_mul_gaussian]
     rw [this]
     exact integrable_hermite_mul_neg_hermite_gaussian (n + 1) m
-  · -- f · g integrable
+  have h_int_f_g : Integrable
+      (fun x => (hermiteR (n + 1)).eval x * ((hermiteR m).eval x * gaussian x))
+      volume := by
     exact (integrable_hermiteProd_mul_gaussian (n + 1) m).congr
       (by filter_upwards; intro x; ring)
+  have hibp := integral_mul_fderiv_eq_neg_fderiv_mul_of_integrable (𝕜 := ℝ) (E := ℝ)
+    (μ := volume)
+    (f := fun x => (hermiteR (n + 1)).eval x)
+    (g := fun u => (hermiteR m).eval u * gaussian u)
+    (v := (1 : ℝ))
+    h_int_fderiv_g h_int_f_gderiv h_int_f_g
+    (fun x _ => (hermiteR (n + 1)).differentiable.differentiableAt)
+    (fun x _ => (differentiable_hermiteEval_mul_gaussian m).differentiableAt)
+  -- IBP gives: ∫ f * g' = -∫ f' * g
+  -- So -∫ f * g' = ∫ f' * g
+  simp only [fderiv_apply_one_eq_deriv] at hibp
+  rw [neg_eq_iff_eq_neg.mpr hibp]
+  -- Simplify deriv of polynomial and factor out constant
+  have h_rw : ∀ x : ℝ, deriv (fun x => (hermiteR (n + 1)).eval x) x *
+      ((hermiteR m).eval x * gaussian x) =
+      (↑(n + 1) : ℝ) * ((hermiteR n).eval x * ((hermiteR m).eval x * gaussian x)) := by
+    intro x
+    rw [Polynomial.deriv, hermiteR_derivative]
+    simp [Polynomial.eval_mul, Polynomial.eval_natCast]; ring
+  simp_rw [h_rw, integral_const_mul]
 
 /-- Symmetry of the J integral. -/
 private theorem J_comm (n m : ℕ) : J n m = J m n := by
@@ -443,9 +447,9 @@ private theorem J_zero_zero : J 0 0 = Real.sqrt (2 * Real.pi) := by
   simp only [hermite_zero]
   have h : (fun x : ℝ => (Polynomial.map (Int.castRingHom ℝ) (C 1)).eval x *
       ((Polynomial.map (Int.castRingHom ℝ) (C 1)).eval x * gaussian x)) =
-      fun x => Real.exp (-(1/2) * x ^ 2) := by
+      fun x => Real.exp (-(1 / 2) * x ^ 2) := by
     ext x; simp [gaussian]; ring
-  rw [h, integral_gaussian (1/2)]
+  rw [h, integral_gaussian (1 / 2)]
   congr 1; ring
 
 /-- Base case: `J(k+1, 0) = 0` for all k.
@@ -731,7 +735,8 @@ private lemma mul_x_hermiteFunction_aux (n : ℕ) (x : ℝ) :
   ring
 
 /-- Key coefficient identity: c_n / √2 = √((n+1)/2) · c_{n+1}.
-    Proof: c_n = √(n+1) · c_{n+1} (normConst_succ), so c_n/√2 = √(n+1)/√2 · c_{n+1} = √((n+1)/2) ·
+    Proof: c_n = √(n+1) · c_{n+1} (normConst_succ), so
+    c_n/√2 = √(n+1)/√2 · c_{n+1} = √((n+1)/2) ·
     c_{n+1}.
 -/
 private lemma normConst_div_sqrt2 (n : ℕ) :
@@ -742,7 +747,9 @@ private lemma normConst_div_sqrt2 (n : ℕ) :
 
 /-- Key coefficient identity: (n+1) · c_{n+1} / √2 = √((n+1)/2) · c_n.
     Proof: c_n = √(n+1) · c_{n+1}, so √(n+1) · c_{n+1} = c_n, and
-    (n+1) · c_{n+1} / √2 = √(n+1) · √(n+1) · c_{n+1} / √2 = √(n+1)/√2 · c_n = √((n+1)/2) · c_n.
+    (n+1) · c_{n+1} / √2 =
+    √(n+1) · √(n+1) · c_{n+1} / √2 = √(n+1)/√2 · c_n =
+    √((n+1)/2) · c_n.
 -/
 private lemma normConst_mul_div_sqrt2 (n : ℕ) :
     ↑(n + 1) * hermiteFunctionNormConst (n + 1) / Real.sqrt 2 =
@@ -964,12 +971,15 @@ private lemma hermiteFunction_l2_sq (j : ℕ) :
   have := hermiteFunction_orthonormal j j
   simp only [ite_true] at this; exact this
 
-/-- The L² integral of (ψₙ')² equals (2n+1)/2, from the derivative identity + orthonormality. -/
+/-- The L² integral of (ψₙ')² equals (2n+1)/2, from the derivative identity and
+orthonormality. -/
 private lemma hermiteFunction_deriv_l2_sq (n : ℕ) :
     ∫ x, deriv (hermiteFunction n) x * deriv (hermiteFunction n) x = (2 * ↑n + 1) / 2 := by
   -- Define the three component functions
-  let f_A : ℝ → ℝ := fun x => ↑n / 2 * (hermiteFunction (n - 1) x * hermiteFunction (n - 1) x)
-  let f_B : ℝ → ℝ := fun x => ↑(n + 1) / 2 * (hermiteFunction (n + 1) x * hermiteFunction (n + 1) x)
+  let f_A : ℝ → ℝ := fun x =>
+    ↑n / 2 * (hermiteFunction (n - 1) x * hermiteFunction (n - 1) x)
+  let f_B : ℝ → ℝ := fun x =>
+    ↑(n + 1) / 2 * (hermiteFunction (n + 1) x * hermiteFunction (n + 1) x)
   let f_C : ℝ → ℝ := fun x => 2 * Real.sqrt (↑n / 2) * Real.sqrt (↑(n + 1) / 2) *
       (hermiteFunction (n - 1) x * hermiteFunction (n + 1) x)
   -- Rewrite integrand as f_A + f_B - f_C
@@ -1234,7 +1244,7 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
         have hb2 := hbound (n - 1) x
         -- Arithmetic bound (tested separately)
         have hsqrt1 : Real.sqrt ((↑(n + 1) : ℝ) / 2) ≤ 1 + (↑n : ℝ) := by
-          rw [← Real.sqrt_sq (by positivity : (0:ℝ) ≤ 1 + ↑n)]
+          rw [← Real.sqrt_sq (by positivity : (0 : ℝ) ≤ 1 + ↑n)]
           apply Real.sqrt_le_sqrt; push_cast
           have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg n
           nlinarith [sq_nonneg ((n : ℝ) + 1)]
@@ -1243,8 +1253,10 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
           apply Real.sqrt_le_sqrt
           have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg n
           nlinarith [sq_nonneg ((n : ℕ) : ℝ)]
-        have hrpow1 : (1 + ↑(n + 1) : ℝ) ^ s ≤ (2:ℝ) ^ s * (1 + ↑n) ^ s := by
-          rw [← Real.mul_rpow (by positivity : (0:ℝ) ≤ 2) (by positivity : (0:ℝ) ≤ 1 + ↑n)]
+        have hrpow1 : (1 + ↑(n + 1) : ℝ) ^ s ≤
+            (2 : ℝ) ^ s * (1 + ↑n) ^ s := by
+          rw [← Real.mul_rpow (by positivity : (0 : ℝ) ≤ 2)
+            (by positivity : (0 : ℝ) ≤ 1 + ↑n)]
           apply Real.rpow_le_rpow (by positivity) _ hs; push_cast; linarith
         have hrpow2 : (1 + ↑(n - 1) : ℝ) ^ s ≤ (1 + (↑n : ℝ)) ^ s := by
           apply Real.rpow_le_rpow (by positivity) _ hs
@@ -1281,34 +1293,47 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
       ext x; exact deriv_hermiteFunction n x
     rw [hderiv_eq]
     -- Linearity of iteratedDeriv: split const_mul and sub
-    have hcd1 : ContDiffAt ℝ m (fun x => Real.sqrt ((↑n : ℝ) / 2) * hermiteFunction (n - 1) x) x :=
+    have hcd1 : ContDiffAt ℝ m
+        (fun x => Real.sqrt ((↑n : ℝ) / 2) * hermiteFunction (n - 1) x) x :=
       ((hermiteFunction_contDiff (n - 1) m).const_smul (Real.sqrt ((↑n : ℝ) / 2))).contDiffAt
-    have hcd2 : ContDiffAt ℝ m (fun x => Real.sqrt ((↑(n + 1) : ℝ) / 2) * hermiteFunction (n + 1)
-      x) x :=
-      ((hermiteFunction_contDiff (n + 1) m).const_smul (Real.sqrt ((↑(n + 1) : ℝ) / 2))).contDiffAt
+    have hcd2 : ContDiffAt ℝ m
+        (fun x => Real.sqrt ((↑(n + 1) : ℝ) / 2) *
+          hermiteFunction (n + 1) x) x :=
+      ((hermiteFunction_contDiff (n + 1) m).const_smul
+        (Real.sqrt ((↑(n + 1) : ℝ) / 2))).contDiffAt
     rw [iteratedDeriv_fun_sub hcd1 hcd2]
     simp only [iteratedDeriv_const_mul_field]
-    -- Goal: |x|^k * ‖√(n/2) * iteratedDeriv m ψ_{n-1} x - √((n+1)/2) * iteratedDeriv m ψ_{n+1} x‖
+    -- Goal: |x|^k times the norm of the derivative recurrence is bounded by
     --       ≤ C*(2^s+1)*(1+n)^(s+1)
     -- Triangle inequality: ‖a - b‖ ≤ ‖a‖ + ‖b‖
-    have h_tri : ‖Real.sqrt ((↑n : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n - 1)) x -
-        Real.sqrt ((↑(n + 1) : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n + 1)) x‖ ≤
-        ‖Real.sqrt ((↑n : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n - 1)) x‖ +
-        ‖Real.sqrt ((↑(n + 1) : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n + 1)) x‖ :=
+    have h_tri :
+        ‖Real.sqrt ((↑n : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n - 1)) x -
+          Real.sqrt ((↑(n + 1) : ℝ) / 2) *
+            iteratedDeriv m (hermiteFunction (n + 1)) x‖ ≤
+          ‖Real.sqrt ((↑n : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n - 1)) x‖ +
+          ‖Real.sqrt ((↑(n + 1) : ℝ) / 2) *
+            iteratedDeriv m (hermiteFunction (n + 1)) x‖ :=
       norm_sub_le _ _
     calc |x| ^ k * ‖Real.sqrt ((↑n : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n - 1)) x -
             Real.sqrt ((↑(n + 1) : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n + 1)) x‖
-        ≤ |x| ^ k * (‖Real.sqrt ((↑n : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n - 1)) x‖ +
-            ‖Real.sqrt ((↑(n + 1) : ℝ) / 2) * iteratedDeriv m (hermiteFunction (n + 1)) x‖) := by
+        ≤ |x| ^ k *
+            (‖Real.sqrt ((↑n : ℝ) / 2) *
+                iteratedDeriv m (hermiteFunction (n - 1)) x‖ +
+              ‖Real.sqrt ((↑(n + 1) : ℝ) / 2) *
+                iteratedDeriv m (hermiteFunction (n + 1)) x‖) := by
           gcongr
-      _ = |x| ^ k * (Real.sqrt ((↑n : ℝ) / 2) * ‖iteratedDeriv m (hermiteFunction (n - 1)) x‖ +
-            Real.sqrt ((↑(n + 1) : ℝ) / 2) * ‖iteratedDeriv m (hermiteFunction (n + 1)) x‖) := by
+      _ = |x| ^ k *
+            (Real.sqrt ((↑n : ℝ) / 2) *
+                ‖iteratedDeriv m (hermiteFunction (n - 1)) x‖ +
+              Real.sqrt ((↑(n + 1) : ℝ) / 2) *
+                ‖iteratedDeriv m (hermiteFunction (n + 1)) x‖) := by
           congr 1
           rw [norm_mul, norm_mul, Real.norm_of_nonneg (Real.sqrt_nonneg _),
               Real.norm_of_nonneg (Real.sqrt_nonneg _)]
-      _ = Real.sqrt ((↑n : ℝ) / 2) * (|x| ^ k * ‖iteratedDeriv m (hermiteFunction (n - 1)) x‖) +
-          Real.sqrt ((↑(n + 1) : ℝ) / 2) * (|x| ^ k * ‖iteratedDeriv m (hermiteFunction (n + 1))
-            x‖) := by
+      _ = Real.sqrt ((↑n : ℝ) / 2) *
+            (|x| ^ k * ‖iteratedDeriv m (hermiteFunction (n - 1)) x‖) +
+          Real.sqrt ((↑(n + 1) : ℝ) / 2) *
+            (|x| ^ k * ‖iteratedDeriv m (hermiteFunction (n + 1)) x‖) := by
           ring
       _ ≤ Real.sqrt ((↑n : ℝ) / 2) * (C * (1 + ↑(n - 1)) ^ s) +
           Real.sqrt ((↑(n + 1) : ℝ) / 2) * (C * (1 + ↑(n + 1)) ^ s) := by
@@ -1319,7 +1344,7 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
           (1 + ↑n) * (C * ((2:ℝ) ^ s * (1 + ↑n) ^ s)) := by
           apply add_le_add
           · apply mul_le_mul _ _ (by positivity) (by positivity)
-            · rw [← Real.sqrt_sq (by positivity : (0:ℝ) ≤ 1 + ↑n)]
+            · rw [← Real.sqrt_sq (by positivity : (0 : ℝ) ≤ 1 + ↑n)]
               apply Real.sqrt_le_sqrt
               have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg n
               nlinarith [sq_nonneg ((n : ℕ) : ℝ)]
@@ -1333,7 +1358,8 @@ private theorem hermiteFunction_pointwise_bound (k m : ℕ) :
               have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg n
               nlinarith [sq_nonneg ((n : ℝ) + 1)]
             · apply mul_le_mul_of_nonneg_left _ (le_of_lt hC)
-              rw [← Real.mul_rpow (by positivity : (0:ℝ) ≤ 2) (by positivity : (0:ℝ) ≤ 1 + ↑n)]
+              rw [← Real.mul_rpow (by positivity : (0 : ℝ) ≤ 2)
+                (by positivity : (0 : ℝ) ≤ 1 + ↑n)]
               apply Real.rpow_le_rpow (by positivity) _ hs; push_cast; linarith
       _ = C * ((2:ℝ) ^ s + 1) * ((1 + ↑n) ^ s * (1 + ↑n)) := by ring
       _ = C * ((2:ℝ) ^ s + 1) * (1 + ↑n) ^ (s + 1) := by
@@ -1378,7 +1404,7 @@ by the Sobolev-Hermite norms.
 /-- The Hilbert-Schmidt sum for the inclusion between Sobolev-Hermite levels:
     ∑_{n=0}^{N-1} (1+n)^{-2s} is bounded for s > 1/2, uniformly in N.
 -/
-theorem sobolevHermite_hs_sum_bound (s : ℝ) (hs : 1/2 < s) :
+theorem sobolevHermite_hs_sum_bound (s : ℝ) (hs : 1 / 2 < s) :
     ∃ C : ℝ, ∀ N : ℕ, ∑ i ∈ Finset.range N, ((1 + (i : ℝ)) ^ (-2 * s)) ≤ C := by
   -- The series ∑ (1+n)^{-2s} converges when 2s > 1, so partial sums are bounded by tsum
   have hexp : -2 * s < -1 := by linarith
@@ -1429,9 +1455,11 @@ private lemma integral_f_xpow_gaussian_zero
     (f : ℝ → ℝ) (hf : MemLp f 2 volume)
     (horth : ∀ n, ∫ x, f x * hermiteFunction n x = 0) :
     ∀ k : ℕ, ∫ x, f x * (x ^ k * Real.exp (-(x ^ 2 / 2))) = 0 := by
-  have h_sqrt2_pos : (0 : ℝ) < Real.sqrt 2 := Real.sqrt_pos.mpr (by norm_num : (0:ℝ) < 2)
+  have h_sqrt2_pos : (0 : ℝ) < Real.sqrt 2 :=
+    Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 2)
   have h_sqrt2_ne : Real.sqrt 2 ≠ 0 := ne_of_gt h_sqrt2_pos
-  have h_sqrt2_sq : Real.sqrt 2 * Real.sqrt 2 = 2 := Real.mul_self_sqrt (by norm_num : (0:ℝ) ≤ 2)
+  have h_sqrt2_sq : Real.sqrt 2 * Real.sqrt 2 = 2 :=
+    Real.mul_self_sqrt (by norm_num : (0 : ℝ) ≤ 2)
   have h_pG_memLp : ∀ (p : ℝ[X]),
       MemLp (fun x => p.eval x * Real.exp (-(x ^ 2 / 2))) 2 volume := by
     intro p
@@ -1572,12 +1600,14 @@ private lemma integral_f_poly_gaussian_zero
         MemLp.ae_eq (Filter.Eventually.of_forall hφ) (φ.memLp 2 volume)
       refine (L2.integrable_inner (𝕜 := ℝ) (MemLp.toLp f hf) (MemLp.toLp _ hrG)).congr ?_
       filter_upwards [MemLp.coeFn_toLp hf, MemLp.coeFn_toLp hrG] with x hfx hrGx
-      rw [hfx, hrGx, real_inner_eq_re_inner ℝ, RCLike.inner_apply', conj_trivial, RCLike.re_to_real]
+      rw [hfx, hrGx, real_inner_eq_re_inner ℝ, RCLike.inner_apply', conj_trivial,
+        RCLike.re_to_real]
     rw [integral_add (h_int_poly p) (h_int_poly q), hp, hq, add_zero]
   | monomial k a =>
     simp only [Polynomial.eval_monomial]
     have h_rw : (fun x => f x * (a * x ^ k * Real.exp (-(x ^ 2 / 2)))) =
-        fun x => a * (f x * (x ^ k * Real.exp (-(x ^ 2 / 2)))) := by ext x; ring
+        fun x => a * (f x * (x ^ k * Real.exp (-(x ^ 2 / 2)))) := by
+      ext x; ring
     rw [h_rw, integral_const_mul, integral_f_xpow_gaussian_zero f hf horth k, mul_zero]
 
 /-  Phase 2-3: Conclude f = 0 a.e. from moment vanishing. -/
@@ -1754,7 +1784,8 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
     intro k y
     simp only [z, innerₗ_apply_apply]
     rw [show @inner ℝ ℝ _ y ξ = y * ξ from by
-      rw [real_inner_eq_re_inner ℝ, RCLike.inner_apply, conj_trivial, RCLike.re_to_real, mul_comm]]
+      rw [real_inner_eq_re_inner ℝ, RCLike.inner_apply, conj_trivial, RCLike.re_to_real,
+        mul_comm]]
     rw [show (↑(-2 * π * (y * ξ)) : ℂ) * Complex.I = c * ↑y from by
       simp only [c]; push_cast; ring]
     rw [mul_pow, Complex.ofReal_pow]

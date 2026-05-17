@@ -9,7 +9,6 @@ import LeanPool.OSforGFF.Measure.IsGaussian
 import LeanPool.OSforGFF.Covariance.Position
 import LeanPool.OSforGFF.Spacetime.Euclidean
 import LeanPool.OSforGFF.Measure.GaussianFreeField
-
 /-!
 # OS2 — Euclidean Invariance
 
@@ -78,6 +77,7 @@ lemma measurePreserving_actEquiv (g : E) :
 
 /-! ## Main theorem: Bilinear form invariance -/
 
+omit [Fact (0 < m)] in
 /-- The complex bilinear covariance form is invariant under Euclidean transformations.
     This is the key lemma showing ⟨g•f, C(g•h)⟩ = ⟨f, Ch⟩.
 

@@ -60,7 +60,8 @@ noncomputable section
 /-! ### Small helper lemmas for integration and complex algebra -/
 
 
-/-- Helper theorem: integral of a real-valued function, coerced to ℂ, equals `ofReal` of the real integral. -/
+/-- Helper theorem: integral of a real-valued function, coerced to ℂ, equals `ofReal`
+of the real integral. -/
 theorem integral_ofReal_eq {α} [MeasurableSpace α] (μ : Measure α) (h : α → ℝ)
   (_hf : Integrable h μ) :
   ∫ x, (h x : ℂ) ∂μ = Complex.ofReal (∫ x, h x ∂μ) := by
@@ -77,7 +78,8 @@ lemma schwartz_L2_integrable (f : TestFunctionℂ) :
   -- Translate the `L^2` membership into integrability of the squared norm.
   simpa using (memLp_two_iff_integrable_sq_norm hf_meas).1 hf_memLp
 
-/-- Helper theorem: Integrability is preserved by multiplying a real integrand with a real constant. -/
+/-- Helper theorem: Integrability is preserved by multiplying a real integrand with a real
+constant. -/
 theorem integral_const_mul {α} [MeasurableSpace α] (μ : Measure α) (c : ℝ)
   (f : α → ℝ) (hf : Integrable f μ) :
   Integrable (fun x => c * f x) μ := by
@@ -701,9 +703,9 @@ theorem integrable_schwinger_fourier_integrand (α : ℝ) (hα : 0 < α) (m : �
       calc Real.exp (-α * ‖k‖^2) * Real.exp (-t * ‖k‖^2) * Real.exp (-t * m^2)
           ≤ Real.exp (-α * ‖k‖^2) * 1 * Real.exp (-t * m^2) := by
             apply mul_le_mul_of_nonneg_right
-            apply mul_le_mul_of_nonneg_left h2
-            exact Real.exp_nonneg _
-            exact Real.exp_nonneg _
+            · apply mul_le_mul_of_nonneg_left h2
+              exact Real.exp_nonneg _
+            · exact Real.exp_nonneg _
         _ = Real.exp (-α * ‖k‖^2) * Real.exp (-t * m^2) := by ring
     · -- Case t ≤ 0: f = 0, h t = 0, so ‖f‖ = 0 ≤ g * h = g * 0 = 0
       simp only [norm_zero, mul_zero, le_refl]
@@ -1521,8 +1523,8 @@ lemma aestronglyMeasurable_freeCovariance_regulated (α : ℝ) (hα : 0 < α) (m
       calc Real.exp (-α * ‖k‖ ^ 2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension
           ≤ Real.exp (-α * ‖k‖ ^ 2) * (1 / m^2) / (2 * Real.pi) ^ STDimension := by
             apply div_le_div_of_nonneg_right
-            apply mul_le_mul_of_nonneg_left h_prop_bound (Real.exp_nonneg _)
-            positivity
+            · apply mul_le_mul_of_nonneg_left h_prop_bound (Real.exp_nonneg _)
+            · positivity
         _ = Real.exp (-α * ‖k‖ ^ 2) / (m^2 * (2 * Real.pi) ^ STDimension) := by ring
     have h_bound_int : Integrable bound volume := by
       exact (gaussian_regulator_integrable' α hα).div_const _
@@ -1599,9 +1601,9 @@ lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
         (Set.Ioi 0) := by
       apply ContinuousOn.mul
       · apply ContinuousOn.div continuousOn_const
-        apply ContinuousOn.mul continuousOn_const continuousOn_id
-        intro r hr; simp only [Set.mem_Ioi] at hr
-        exact mul_ne_zero (by positivity : (4 : ℝ) * Real.pi^2 ≠ 0) (ne_of_gt hr)
+        · exact continuousOn_const.mul continuousOn_id
+        · intro r hr; simp only [Set.mem_Ioi] at hr
+          exact mul_ne_zero (by positivity : (4 : ℝ) * Real.pi^2 ≠ 0) (ne_of_gt hr)
       · apply besselK1_continuousOn.comp (continuousOn_const.mul continuousOn_id)
         intro r hr; simp only [Set.mem_Ioi] at hr
         exact mul_pos hm hr
@@ -1616,8 +1618,9 @@ lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
       simp only [hr_ne, ↓reduceIte]
     -- The formula is continuous on S (composition of continuous functions)
     have h_comp_cont : ContinuousOn
-        (fun p : SpaceTime × SpaceTime => (m / (4 * Real.pi^2 * ‖p.1 - p.2‖)) * besselK1 (m * ‖p.1
-           - p.2‖)) S := by
+        (fun p : SpaceTime × SpaceTime =>
+          (m / (4 * Real.pi^2 * ‖p.1 - p.2‖)) *
+            besselK1 (m * ‖p.1 - p.2‖)) S := by
       apply h_formula_cont.comp h_norm_cont.continuousOn
       intro p hp
       rw [Set.mem_compl_iff, Set.mem_diagonal_iff] at hp
@@ -1626,7 +1629,8 @@ lemma aestronglyMeasurable_freeCovariance (m : ℝ) [Fact (0 < m)] :
   -- Step 6: ContinuousOn on measurable set implies AEStronglyMeasurable on restriction
   exact hcont.aestronglyMeasurable hS_meas
 
-/-- The bilinear form f(x) * C_α(x,y) * g(y) is integrable for regulated covariance with Schwartz f, g.
+/-- The bilinear form f(x) * C_α(x,y) * g(y) is integrable for regulated covariance
+with Schwartz f, g.
 
     Since C_α is uniformly bounded and f, g are Schwartz (hence integrable), the product is
     integrable.
@@ -1686,8 +1690,8 @@ theorem freeCovariance_regulated_bilinear_integrable (α : ℝ) (hα : 0 < α) (
     calc ‖f p.1‖ * |freeCovariance_regulated α m p.1 p.2| * ‖g p.2‖
         ≤ ‖f p.1‖ * M * ‖g p.2‖ := by
           apply mul_le_mul_of_nonneg_right
-          apply mul_le_mul_of_nonneg_left (hM_bound p.1 p.2) (norm_nonneg _)
-          exact norm_nonneg _
+          · apply mul_le_mul_of_nonneg_left (hM_bound p.1 p.2) (norm_nonneg _)
+          · exact norm_nonneg _
       _ = M * ‖f p.1‖ * ‖g p.2‖ := by ring
   -- Apply Integrable.mono'
   exact Integrable.mono' hbound_int hmeas hnorm
@@ -2053,12 +2057,12 @@ lemma freeCovariance_symmetric (m : ℝ) (x y : SpaceTime) :
   freeCovarianceBessel_symm m x y
 
 /-- The position-space free covariance is real-valued after ℂ coercion. -/
-@[simp] lemma freeCovariance_star (m : ℝ) (x y : SpaceTime) :
+lemma freeCovariance_star (m : ℝ) (x y : SpaceTime) :
   star (freeCovariance m x y : ℂ) = (freeCovariance m x y : ℂ) := by
   simp
 
 /-- Hermiticity of the complex-lifted position-space kernel. -/
-@[simp] lemma freeCovariance_hermitian (m : ℝ) (x y : SpaceTime) :
+lemma freeCovariance_hermitian (m : ℝ) (x y : SpaceTime) :
   (freeCovariance m x y : ℂ) = star (freeCovariance m y x : ℂ) := by
   -- symmetry plus real-valuedness
   simp [freeCovariance_symmetric m x y]
@@ -2152,7 +2156,7 @@ lemma freePropagator_continuous {m : ℝ} [Fact (0 < m)] :
   simp
 
 /-- Same statement via the star ring endomorphism (complex conjugate). -/
-@[simp] lemma freePropagatorMomentum_starRing (m : ℝ) (k : SpaceTime) :
+lemma freePropagatorMomentum_starRing (m : ℝ) (k : SpaceTime) :
   (starRingEnd ℂ) (freePropagatorMomentum m k : ℂ) = (freePropagatorMomentum m k : ℂ) := by
   simp
 
@@ -2264,7 +2268,9 @@ lemma momentumWeightSqrt_bounded_ae (m : ℝ) [Fact (0 < m)] :
   have h_inv_le : 1 / Real.sqrt (‖k‖^2 + m^2) ≤ 1 / m :=
     one_div_le_one_div_of_le hmpos hm_sqrt_le
   have h_inv_pos : 0 < 1 / Real.sqrt (‖k‖^2 + m^2) := by
-    apply div_pos; norm_num; exact h_sqrt_pos
+    apply div_pos
+    · norm_num
+    · exact h_sqrt_pos
   calc ‖1 / Real.sqrt (‖k‖^2 + m^2)‖
       = |1 / Real.sqrt (‖k‖^2 + m^2)| := Real.norm_eq_abs _
     _ = 1 / Real.sqrt (‖k‖^2 + m^2) := abs_of_pos h_inv_pos
@@ -2289,7 +2295,9 @@ lemma momentumWeightSqrt_mathlib_bounded_ae (m : ℝ) [Fact (0 < m)] :
   have h_inv_le : 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) ≤ 1 / m :=
     one_div_le_one_div_of_le hmpos hm_sqrt_le
   have h_inv_pos : 0 < 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := by
-    apply div_pos; norm_num; exact h_sqrt_pos
+    apply div_pos
+    · norm_num
+    · exact h_sqrt_pos
   calc ‖1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2)‖
       = |1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2)| := Real.norm_eq_abs _
     _ = 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := abs_of_pos h_inv_pos

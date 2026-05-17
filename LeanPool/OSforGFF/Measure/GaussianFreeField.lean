@@ -254,10 +254,12 @@ To complete these proofs, we need to:
    - **OS4**: Covariance decay → correlation decay ✓
 
 5. **Glimm-Jaffe Theorem 6.2.2 Implementation:**
-   - Defined the key expansion: `glimm_jaffe_exponent` captures ⟨F̄ - CF', C(F̄ - CF')⟩
-   - Structured the proof around the exponential form Z[F̄ - CF'] = exp(-½⟨F̄ - CF', C(F̄ - CF')⟩)
-   - The reflection positivity condition ensures Re⟨F̄ - CF', C(F̄ - CF')⟩ ≥ 0
-   - This gives |Z[F̄ - CF']| ≤ 1, which is the heart of reflection positivity
+   - Defined the key expansion:
+     `glimm_jaffe_exponent` captures ⟨Fbar - CF', C(Fbar - CF')⟩
+   - Structured the proof around the exponential form
+     Z[Fbar - CF'] = exp(-½⟨Fbar - CF', C(Fbar - CF')⟩)
+   - The reflection positivity condition ensures Re⟨Fbar - CF', C(Fbar - CF')⟩ ≥ 0
+   - This gives |Z[Fbar - CF']| ≤ 1, which is the heart of reflection positivity
 
 6. **Connection to existing GFF work:**
    - Use results from `GFF.lean` and `GFF2.lean` where applicable

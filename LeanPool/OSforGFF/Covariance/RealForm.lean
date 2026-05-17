@@ -108,18 +108,20 @@ noncomputable def fourierTransformCLM_real :
 
 /-- ℝ-linear view of the Schwartz-to-`L²` embedding. -/
 noncomputable def schwartzToL2CLM_real (_m : ℝ) :
-    TestFunctionℂ →L[ℝ] Lp ℂ 2 (volume : Measure SpaceTime) where
-  toLinearMap :=
-    { toFun := SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure SpaceTime)
-      map_add' := fun x y => map_add _ x y
-      map_smul' := fun c x => by
-        change SchwartzMap.toLpCLM ℂ ℂ 2 volume (c • x) = c • SchwartzMap.toLpCLM ℂ ℂ 2 volume x
-        have hcx : c • x = (c : ℂ) • x := schwartz_real_smul_eq_complex c x
-        have hmap : SchwartzMap.toLpCLM ℂ ℂ 2 volume ((c : ℂ) • x) =
-            (c : ℂ) • SchwartzMap.toLpCLM ℂ ℂ 2 volume x :=
-          ContinuousLinearMap.map_smul _ _ _
-        rw [hcx, hmap, ← lp_real_smul_eq_complex] }
-  cont := (SchwartzMap.toLpCLM ℂ ℂ 2 volume).continuous
+    TestFunctionℂ →L[ℝ] Lp ℂ 2 (volume : Measure SpaceTime) :=
+  let _ := _m
+  { toLinearMap :=
+      { toFun := SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure SpaceTime)
+        map_add' := fun x y => map_add _ x y
+        map_smul' := fun c x => by
+          change SchwartzMap.toLpCLM ℂ ℂ 2 volume (c • x) =
+            c • SchwartzMap.toLpCLM ℂ ℂ 2 volume x
+          have hcx : c • x = (c : ℂ) • x := schwartz_real_smul_eq_complex c x
+          have hmap : SchwartzMap.toLpCLM ℂ ℂ 2 volume ((c : ℂ) • x) =
+              (c : ℂ) • SchwartzMap.toLpCLM ℂ ℂ 2 volume x :=
+            ContinuousLinearMap.map_smul _ _ _
+          rw [hcx, hmap, ← lp_real_smul_eq_complex] }
+    cont := (SchwartzMap.toLpCLM ℂ ℂ 2 volume).continuous }
 
 /-! ## The Embedding Map -/
 
@@ -315,6 +317,7 @@ lemma sqrtPropagatorMap_norm_eq_covariance (m : ℝ) [Fact (0 < m)] (f : TestFun
 
 /-- The target Hilbert space: L²(SpaceTime, Lebesgue) with complex values. -/
 abbrev TargetHilbertSpace (_m : ℝ) : Type :=
+  let _ := _m
   Lp (E := ℂ) 2 (volume : Measure SpaceTime)
 
 /-- The linear map T: TestFunction → L². -/
@@ -804,10 +807,12 @@ lemma freeCovarianceFormR_left_linear_any_right
     (s : Finset (Fin n)) (g : TestFunction) :
     ∑ i ∈ s, c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) g =
     freeCovarianceFormR m (∑ i ∈ s, c i • QFT.compTimeReflectionReal (f i).val) g := by
-  induction' s using Finset.induction with k t hk ih
-  · simp only [Finset.sum_empty]
+  induction s using Finset.induction with
+  | empty =>
+    simp only [Finset.sum_empty]
     rw [← freeCovarianceFormR_zero_left (m := m)]
-  · rw [Finset.sum_insert hk, Finset.sum_insert hk]
+  | insert k t hk ih =>
+    rw [Finset.sum_insert hk, Finset.sum_insert hk]
     have h_smul : c k * freeCovarianceFormR m (QFT.compTimeReflectionReal (f k).val) g =
       freeCovarianceFormR m (c k • QFT.compTimeReflectionReal (f k).val) g :=
       (freeCovarianceFormR_smul_left m (c k) (QFT.compTimeReflectionReal (f k).val) g).symm

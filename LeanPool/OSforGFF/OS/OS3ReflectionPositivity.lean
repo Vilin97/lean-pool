@@ -12,7 +12,7 @@ import LeanPool.OSforGFF.OS.Axioms
 import LeanPool.OSforGFF.Measure.Construct
 import LeanPool.OSforGFF.General.HadamardExp
 import LeanPool.OSforGFF.Covariance.RealForm
-import LeanPool.OSforGFF.OS.OS3_CovarianceRP
+import LeanPool.OSforGFF.OS.OS3CovarianceRP
 import LeanPool.OSforGFF.Measure.IsGaussian
 
 /-!
@@ -31,7 +31,7 @@ theorem (entrywise exponential of a PSD matrix is PSD).
 
 **Complex version**: For positive-time complex fⱼ and complex coefficients cⱼ:
 
-  ∑ᵢⱼ c̄ᵢcⱼ Z_ℂ[fᵢ − star fⱼ] ≥ 0
+  ∑ᵢⱼ cbarᵢcⱼ Z_ℂ[fᵢ − star fⱼ] ≥ 0
 
 where `star f = conj ∘ f ∘ Θ`.  The factorisation gives `Z_ℂ[fᵢ − star fⱼ] =
 conj(Aᵢ)·Aⱼ·exp(Rᵢⱼ)` with Hermitian PSD R, requiring the complex entrywise
@@ -138,11 +138,13 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
         freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (∑ j, c j • (f j).val) := by
         intro i
         -- Use induction on the right argument with our right linearity lemmas
-        induction' (Finset.univ : Finset (Fin n)) using Finset.induction with j t hj ih_right
-        · simp only [Finset.sum_empty]
+        induction (Finset.univ : Finset (Fin n)) using Finset.induction with
+        | empty =>
+          simp only [Finset.sum_empty]
           -- freeCovarianceFormR m u 0 = 0 (follows from linearity)
           rw [← freeCovarianceFormR_zero_right (m := m)]
-        · rw [Finset.sum_insert hj, Finset.sum_insert hj]
+        | insert j t hj ih_right =>
+          rw [Finset.sum_insert hj, Finset.sum_insert hj]
           -- Apply right linearity: freeCovarianceFormR_add_right and freeCovarianceFormR_smul_right
           -- First convert multiplications to scalar multiplications
           -- freeCovarianceFormR m u (f j) * c j = freeCovarianceFormR m u (c j • f j)
@@ -447,8 +449,7 @@ lemma gaussianFreeField_OS3_matrix_real
       = Z i * Z j * E i j := by
     intro i j
     have h_entry := gaussianFreeField_real_entry_factor (m := m) (f := f i) (g := f j)
-    simp [Z, E, R] at h_entry ⊢
-    exact h_entry
+    simpa [Z, E, R] using h_entry
   -- Step 2: Rewrite the sum using the factorisation
   have h_sum₁ :
       (∑ i, ∑ j, c i * c j *
@@ -484,7 +485,8 @@ lemma gaussianFreeField_OS3_matrix_real
     simpa [h_sum₁] using h₂
   exact h_goal
 
-/-- Main theorem: the Gaussian free field satisfies OS3_real (reflection positivity, real version). -/
+/-- Main theorem: the Gaussian free field satisfies OS3_real (reflection positivity,
+real version). -/
 theorem gaussianFreeField_OS3_real :
     OS3_ReflectionPositivity_real (gaussianFreeField_free m) := by
   intro n f c
@@ -602,7 +604,7 @@ private lemma freeCovarianceℂ_bilinear_star_star_conj
     (fun x y => starRingEnd ℂ (f x) * (freeCovariance m x y : ℂ) * starRingEnd ℂ (g y)) h_int
 
 /-- A complex matrix has nonneg Hermitian quadratic form:
-    `Re(∑ᵢⱼ v̄ᵢ vⱼ Mᵢⱼ) ≥ 0` for all `v`.
+    `Re(∑ᵢⱼ vbarᵢ vⱼ Mᵢⱼ) ≥ 0` for all `v`.
     This avoids `Matrix.PosSemidef` which requires `PartialOrder ℂ`.
 -/
 private def IsRePSD {n : ℕ} (M : Fin n → Fin n → ℂ) : Prop :=
@@ -995,7 +997,7 @@ private lemma gff_complexOS3_matrix
     The `star` operation is `(star f)(x) = conj(f(Θx))`.  For real test functions,
     `star = compTimeReflection` (see `star_toComplex_eq_compTimeReflection`).
 -/
-theorem gaussianFreeField_OS3 :
+theorem _root_.QFT.gaussianFreeField_OS3 :
     OS3_ReflectionPositivity (gaussianFreeField_free m) := by
   intro n f c
   exact gff_complexOS3_matrix m f c

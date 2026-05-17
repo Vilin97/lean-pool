@@ -149,11 +149,14 @@ lemma besselK1_pos (z : ℝ) (hz : 0 < z) : 0 < besselK1 z := by
             have h_scaled : Tendsto (fun t : ℝ => 4 / z * (t / exp t)) atTop (nhds (4 / z * 0)) :=
               h_ratio.const_mul (4 / z)
             simp only [mul_zero] at h_scaled
-            have h_shifted : Tendsto (fun t : ℝ => 4 / z * (t / exp t) - 1) atTop (nhds (-1)) := by
+            have h_shifted :
+                Tendsto (fun t : ℝ => 4 / z * (t / exp t) - 1) atTop (nhds (-1)) := by
               convert h_scaled.sub_const 1 using 1
               simp
-            have h_prod : Tendsto (fun t : ℝ => (z * exp t / 2) * (4 / z * (t / exp t) - 1))
-                atTop atBot := Tendsto.atTop_mul_neg (by norm_num : (-1 : ℝ) < 0) hexp_inf h_shifted
+            have h_prod :
+                Tendsto (fun t : ℝ => (z * exp t / 2) * (4 / z * (t / exp t) - 1))
+                  atTop atBot :=
+              Tendsto.atTop_mul_neg (by norm_num : (-1 : ℝ) < 0) hexp_inf h_shifted
             convert h_prod using 1
             ext t
             field_simp
@@ -238,12 +241,21 @@ lemma besselK1_continuousOn : ContinuousOn besselK1 (Ioi 0) := by
     nlinarith [hcosh, hz]
   -- Bound is integrable (same proof as in besselK1_pos)
   · have hz₀' : 0 < z₀ / 2 := by linarith
-    have hcont : Continuous bound := (continuous_exp.comp (continuous_const.mul continuous_cosh)).mul continuous_cosh
+    have hcont : Continuous bound :=
+      (continuous_exp.comp (continuous_const.mul continuous_cosh)).mul continuous_cosh
     have h_union : Ici (0 : ℝ) = Icc 0 1 ∪ Ici 1 := by
       ext x; simp only [mem_Ici, mem_union, mem_Icc]
       constructor
-      · intro hx; by_cases h : x ≤ 1; left; exact ⟨hx, h⟩; right; linarith
-      · intro h; cases h with | inl h => exact h.1 | inr h => linarith
+      · intro hx
+        by_cases h : x ≤ 1
+        · left
+          exact ⟨hx, h⟩
+        · right
+          linarith
+      · intro h
+        cases h with
+        | inl h => exact h.1
+        | inr h => linarith
     rw [h_union]
     apply IntegrableOn.union
     · exact hcont.continuousOn.integrableOn_compact isCompact_Icc
@@ -258,18 +270,34 @@ lemma besselK1_continuousOn : ContinuousOn besselK1 (Ioi 0) := by
             intro t; simp only [hbound_def]; rw [div_eq_mul_inv, ← exp_neg, neg_neg]
             rw [mul_comm (exp _) (cosh t), mul_assoc, ← exp_add]; congr 1; ring_nf
           simp_rw [h_eq]
-          have hbound' : ∀ t, 0 ≤ t → cosh t * exp (t - (z₀/2) * cosh t) ≤ exp (2 * t - (z₀/2) * exp t / 2) := by
+          have hbound' :
+              ∀ t, 0 ≤ t →
+                cosh t * exp (t - (z₀ / 2) * cosh t) ≤
+                  exp (2 * t - (z₀ / 2) * exp t / 2) := by
             intro t ht
-            have h_cosh_le : cosh t ≤ exp t := by rw [cosh_eq]; have : exp (-t) ≤ exp t := exp_le_exp.mpr (by linarith); linarith
-            have h_cosh_ge : cosh t ≥ exp t / 2 := by rw [cosh_eq]; have : exp (-t) ≥ 0 := exp_nonneg _; linarith
-            calc cosh t * exp (t - (z₀/2) * cosh t)
-                ≤ exp t * exp (t - (z₀/2) * cosh t) := mul_le_mul_of_nonneg_right h_cosh_le (exp_nonneg _)
-              _ ≤ exp t * exp (t - (z₀/2) * (exp t / 2)) := by
-                  apply mul_le_mul_of_nonneg_left _ (exp_nonneg _); apply exp_le_exp.mpr
-                  have : -(z₀/2) * cosh t ≤ -(z₀/2) * (exp t / 2) := mul_le_mul_of_nonpos_left h_cosh_ge (by linarith)
+            have h_cosh_le : cosh t ≤ exp t := by
+              rw [cosh_eq]
+              have : exp (-t) ≤ exp t := exp_le_exp.mpr (by linarith)
+              linarith
+            have h_cosh_ge : cosh t ≥ exp t / 2 := by
+              rw [cosh_eq]
+              have : exp (-t) ≥ 0 := exp_nonneg _
+              linarith
+            calc cosh t * exp (t - (z₀ / 2) * cosh t)
+                ≤ exp t * exp (t - (z₀ / 2) * cosh t) :=
+                  mul_le_mul_of_nonneg_right h_cosh_le (exp_nonneg _)
+              _ ≤ exp t * exp (t - (z₀ / 2) * (exp t / 2)) := by
+                  apply mul_le_mul_of_nonneg_left _ (exp_nonneg _)
+                  apply exp_le_exp.mpr
+                  have :
+                      -(z₀ / 2) * cosh t ≤ -(z₀ / 2) * (exp t / 2) :=
+                    mul_le_mul_of_nonpos_left h_cosh_ge (by linarith)
                   linarith
-              _ = exp (2 * t - (z₀/2) * exp t / 2) := by rw [← exp_add]; ring_nf
-          have h_exp_to_zero : Tendsto (fun t => exp (2 * t - (z₀/2) * exp t / 2)) atTop (nhds 0) := by
+              _ = exp (2 * t - (z₀ / 2) * exp t / 2) := by
+                  rw [← exp_add]
+                  ring_nf
+          have h_exp_to_zero :
+              Tendsto (fun t => exp (2 * t - (z₀ / 2) * exp t / 2)) atTop (nhds 0) := by
             apply tendsto_exp_atBot.comp
             have hexp_inf : Tendsto (fun t : ℝ => (z₀/2) * exp t / 2) atTop atTop := by
               apply Tendsto.atTop_div_const (by linarith : (0 : ℝ) < 2)
@@ -279,13 +307,24 @@ lemma besselK1_continuousOn : ContinuousOn besselK1 (Ioi 0) := by
               simp only [pow_one] at h; convert h using 1; ext t; rw [exp_neg, div_eq_mul_inv]
             have h_scaled : Tendsto (fun t : ℝ => 4 / (z₀/2) * (t / exp t)) atTop (nhds 0) := by
               convert h_ratio.const_mul (4 / (z₀/2)) using 1; simp
-            have h_shifted : Tendsto (fun t : ℝ => 4 / (z₀/2) * (t / exp t) - 1) atTop (nhds (-1)) := by
+            have h_shifted :
+                Tendsto (fun t : ℝ => 4 / (z₀ / 2) * (t / exp t) - 1)
+                  atTop (nhds (-1)) := by
               convert h_scaled.sub_const 1 using 1; simp
-            have h_prod : Tendsto (fun t : ℝ => ((z₀/2) * exp t / 2) * (4 / (z₀/2) * (t / exp t) - 1)) atTop atBot :=
+            have h_prod :
+                Tendsto
+                  (fun t : ℝ =>
+                    ((z₀ / 2) * exp t / 2) * (4 / (z₀ / 2) * (t / exp t) - 1))
+                  atTop atBot :=
               Tendsto.atTop_mul_neg (by norm_num : (-1 : ℝ) < 0) hexp_inf h_shifted
             convert h_prod using 1; ext t; field_simp; ring
-          have hpos : ∀ t, 0 ≤ cosh t * exp (t - (z₀/2) * cosh t) := fun t => mul_nonneg (cosh_pos t).le (exp_nonneg _)
-          exact squeeze_zero' (Eventually.of_forall hpos) (by filter_upwards [eventually_ge_atTop (0:ℝ)] with t ht; exact hbound' t ht) h_exp_to_zero
+          have hpos : ∀ t, 0 ≤ cosh t * exp (t - (z₀ / 2) * cosh t) := fun t =>
+            mul_nonneg (cosh_pos t).le (exp_nonneg _)
+          exact squeeze_zero' (Eventually.of_forall hpos)
+            (by
+              filter_upwards [eventually_ge_atTop (0 : ℝ)] with t ht
+              exact hbound' t ht)
+            h_exp_to_zero
         have h_ev : ∀ᶠ t in atTop, bound t ≤ exp (-1 * t) := by
           have h1 := (Metric.tendsto_nhds.mp h_ratio_tendsto 1 one_pos).mono fun t ht => by
             simp only [Real.dist_eq, sub_zero] at ht; rw [abs_lt] at ht; exact ht.2
@@ -315,7 +354,8 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
     besselK1 z ≤ (sinh 1 + 2) * exp (-z) := by
   unfold besselK1
   set f : ℝ → ℝ := fun t => exp (-z * cosh t) * cosh t with hf_def
-  have hf_cont : Continuous f := (continuous_exp.comp (continuous_const.mul continuous_cosh)).mul continuous_cosh
+  have hf_cont : Continuous f :=
+    (continuous_exp.comp (continuous_const.mul continuous_cosh)).mul continuous_cosh
   have hf_nonneg : ∀ t, 0 ≤ f t := fun t => mul_nonneg (exp_nonneg _) (cosh_pos t).le
   -- Split [0, ∞) = [0, 1] ∪ [1, ∞)
   have h_union : Ici (0 : ℝ) = Icc 0 1 ∪ Ici 1 := by
@@ -326,7 +366,8 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
       · left; exact ⟨hx, h⟩
       · right; push Not at h; linarith
     · intro h; cases h with | inl h => exact h.1 | inr h => linarith
-  have hf_int_Icc : IntegrableOn f (Icc 0 1) := hf_cont.continuousOn.integrableOn_compact isCompact_Icc
+  have hf_int_Icc : IntegrableOn f (Icc 0 1) :=
+    hf_cont.continuousOn.integrableOn_compact isCompact_Icc
   have hf_int_Ici1 : IntegrableOn f (Ici 1) := by
     -- Reuse the integrability argument from besselK1_pos
     have h_Ioi : IntegrableOn f (Ioi 0) volume := by
@@ -336,12 +377,17 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
         have h_eq : ∀ t, f t / exp (-t) = cosh t * exp (t - z * cosh t) := fun t => by
           simp only [f]; field_simp; rw [mul_comm, ← exp_add]; ring_nf
         simp_rw [h_eq]
-        have hbound : ∀ t, 0 ≤ t → cosh t * exp (t - z * cosh t) ≤ exp (2 * t - z * exp t / 2) := by
+        have hbound :
+            ∀ t, 0 ≤ t →
+              cosh t * exp (t - z * cosh t) ≤ exp (2 * t - z * exp t / 2) := by
           intro t ht
-          have h_cosh_le : cosh t ≤ exp t := by rw [cosh_eq]; linarith [exp_le_exp.mpr (by linarith : -t ≤ t)]
+          have h_cosh_le : cosh t ≤ exp t := by
+            rw [cosh_eq]
+            linarith [exp_le_exp.mpr (by linarith : -t ≤ t)]
           have h_cosh_ge : cosh t ≥ exp t / 2 := by rw [cosh_eq]; linarith [exp_nonneg (-t)]
           calc cosh t * exp (t - z * cosh t)
-              ≤ exp t * exp (t - z * cosh t) := mul_le_mul_of_nonneg_right h_cosh_le (exp_nonneg _)
+              ≤ exp t * exp (t - z * cosh t) :=
+                mul_le_mul_of_nonneg_right h_cosh_le (exp_nonneg _)
             _ ≤ exp t * exp (t - z * (exp t / 2)) := by
                 apply mul_le_mul_of_nonneg_left _ (exp_nonneg _); apply exp_le_exp.mpr
                 linarith [mul_le_mul_of_nonpos_left h_cosh_ge (by linarith : -z ≤ 0)]
@@ -349,7 +395,8 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
         have h_exp_to_zero : Tendsto (fun t => exp (2 * t - z * exp t / 2)) atTop (nhds 0) := by
           apply tendsto_exp_atBot.comp
           have hexp_inf : Tendsto (fun t : ℝ => z * exp t / 2) atTop atTop :=
-            Tendsto.atTop_div_const (by linarith) (Tendsto.const_mul_atTop (by linarith : 0 < z) tendsto_exp_atTop)
+            Tendsto.atTop_div_const (by linarith)
+              (Tendsto.const_mul_atTop (by linarith : 0 < z) tendsto_exp_atTop)
           have h_ratio : Tendsto (fun t : ℝ => t / exp t) atTop (nhds 0) := by
             have h := tendsto_pow_mul_exp_neg_atTop_nhds_zero 1; simp only [pow_one] at h
             convert h using 1; ext t; rw [exp_neg, div_eq_mul_inv]
@@ -357,11 +404,16 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
             simpa using h_ratio.const_mul (4/z)
           have h_shifted : Tendsto (fun t : ℝ => 4 / z * (t / exp t) - 1) atTop (nhds (-1)) := by
             convert h_scaled.sub_const 1 using 1; simp
-          have h_prod : Tendsto (fun t : ℝ => (z * exp t / 2) * (4 / z * (t / exp t) - 1)) atTop atBot :=
+          have h_prod :
+              Tendsto (fun t : ℝ => (z * exp t / 2) * (4 / z * (t / exp t) - 1))
+                atTop atBot :=
             Tendsto.atTop_mul_neg (by norm_num : (-1 : ℝ) < 0) hexp_inf h_shifted
           convert h_prod using 1; ext t; field_simp; ring
-        refine squeeze_zero' (Eventually.of_forall fun t => mul_nonneg (cosh_pos t).le (exp_nonneg _)) ?_ h_exp_to_zero
-        filter_upwards [eventually_ge_atTop (0 : ℝ)] with t ht; exact hbound t ht
+        refine squeeze_zero'
+          (Eventually.of_forall fun t => mul_nonneg (cosh_pos t).le (exp_nonneg _))
+          ?_ h_exp_to_zero
+        filter_upwards [eventually_ge_atTop (0 : ℝ)] with t ht
+        exact hbound t ht
       have h_eventually_le : ∀ᶠ t in atTop, f t ≤ exp (-1 * t) := by
         have h1 : ∀ᶠ t in atTop, |f t / exp (-t)| < 1 := by
           have := Metric.tendsto_nhds.mp h_ratio_tendsto 1 one_pos
@@ -387,7 +439,8 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
       exact (continuous_const.mul continuous_cosh).integrableOn_Icc
     have h_val : ∫ t in Icc 0 1, exp (-z) * cosh t = exp (-z) * sinh 1 := by
       -- Compute integral of exp(-z) * cosh on [0,1] via FTC for (exp(-z) * sinh)
-      have h := intervalIntegral.integral_eq_sub_of_hasDeriv_right_of_le (by norm_num : (0:ℝ) ≤ 1)
+      have h := intervalIntegral.integral_eq_sub_of_hasDeriv_right_of_le
+        (by norm_num : (0 : ℝ) ≤ 1)
         ((continuous_const.mul continuous_sinh).continuousOn)
         (fun x _ => by
           have hd : HasDerivAt (fun t => exp (-z) * sinh t) (exp (-z) * cosh x) x := by
@@ -395,7 +448,8 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
           exact hd.hasDerivWithinAt)
         ((continuous_const.mul continuous_cosh).intervalIntegrable 0 1)
       simp only [Pi.mul_apply, sinh_zero, mul_zero, sub_zero] at h
-      rw [integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le (by norm_num : (0:ℝ) ≤ 1)]
+      rw [integral_Icc_eq_integral_Ioc,
+        ← intervalIntegral.integral_of_le (by norm_num : (0 : ℝ) ≤ 1)]
       exact h
     linarith
   -- Part 2: ∫₁^∞ f ≤ 2 exp(-z) using the same FTC argument as in besselK1_mul_self_le
@@ -406,7 +460,9 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
     have h_bound' : ∀ t ≥ (1:ℝ), f t ≤ g t := by
       intro t ht; simp only [hf_def, g]
       have h_cosh_ge : cosh t ≥ exp t / 2 := by rw [cosh_eq]; linarith [exp_nonneg (-t)]
-      have h_cosh_le : cosh t ≤ exp t := by rw [cosh_eq]; linarith [exp_le_exp.mpr (by linarith : -t ≤ t)]
+      have h_cosh_le : cosh t ≤ exp t := by
+        rw [cosh_eq]
+        linarith [exp_le_exp.mpr (by linarith : -t ≤ t)]
       calc exp (-z * cosh t) * cosh t
           ≤ exp (-z * (exp t / 2)) * cosh t := by
             apply mul_le_mul_of_nonneg_right _ (cosh_pos t).le; apply exp_le_exp.mpr; nlinarith
@@ -416,7 +472,8 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
       intro t
       have h1 : HasDerivAt (fun s => -z * exp s / 2) (-z / 2 * exp t) t := by
         have := (hasDerivAt_exp t).const_mul (-z / 2); convert this using 1; funext; ring
-      have h2 : HasDerivAt (fun s => exp (-z * exp s / 2)) (exp (-z * exp t / 2) * (-z / 2 * exp t)) t :=
+      have h2 : HasDerivAt (fun s => exp (-z * exp s / 2))
+          (exp (-z * exp t / 2) * (-z / 2 * exp t)) t :=
         (hasDerivAt_exp _).comp t h1
       simp only [g]; convert h2.const_mul (-2/z) using 1; field_simp
     have hF_cont : ContinuousWithinAt F (Ici 1) 1 := by
@@ -428,21 +485,25 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
         apply tendsto_exp_atBot.comp
         have h3 : Tendsto (fun t : ℝ => z / 2 * exp t) atTop atTop :=
           tendsto_exp_atTop.const_mul_atTop (by linarith : 0 < z / 2)
-        have h4 : Tendsto (fun t => -(z / 2 * exp t)) atTop atBot := Filter.tendsto_neg_atTop_atBot.comp h3
+        have h4 : Tendsto (fun t => -(z / 2 * exp t)) atTop atBot :=
+          Filter.tendsto_neg_atTop_atBot.comp h3
         convert h4 using 1; ext t; ring
       have h2 : Tendsto (fun t => (-2/z) * exp (-z * exp t / 2)) atTop (nhds ((-2/z) * 0)) :=
         h1.const_mul (-2/z)
       simp only [mul_zero] at h2
       convert h2 using 1
     have hg_int : IntegrableOn g (Ioi 1) := by
-      apply integrableOn_Ioi_deriv_of_nonneg hF_cont (fun x _ => hF_deriv x) (fun x _ => hg_nonneg x) hF_tendsto
+      apply integrableOn_Ioi_deriv_of_nonneg hF_cont
+        (fun x _ => hF_deriv x) (fun x _ => hg_nonneg x) hF_tendsto
     have h_int_g : ∫ t in Ioi 1, g t = 2/z * exp (-z * exp 1 / 2) := by
       rw [integral_Ioi_of_hasDerivAt_of_tendsto hF_cont (fun x _ => hF_deriv x) hg_int hF_tendsto]
       simp only [F]; ring
     have hf_int_Ioi : IntegrableOn f (Ioi 1) := hf_int_Ici1.mono_set Ioi_subset_Ici_self
-    have h_Ici_eq_Ioi : ∫ t in Ici 1, f t = ∫ t in Ioi 1, f t := setIntegral_congr_set Ioi_ae_eq_Ici.symm
+    have h_Ici_eq_Ioi : ∫ t in Ici 1, f t = ∫ t in Ioi 1, f t :=
+      setIntegral_congr_set Ioi_ae_eq_Ici.symm
     have h_mono : ∫ t in Ioi 1, f t ≤ ∫ t in Ioi 1, g t := by
-      apply setIntegral_mono_on hf_int_Ioi hg_int measurableSet_Ioi (fun t ht => h_bound' t (le_of_lt ht))
+      apply setIntegral_mono_on hf_int_Ioi hg_int measurableSet_Ioi
+        (fun t ht => h_bound' t (le_of_lt ht))
     calc ∫ t in Ici 1, f t = ∫ t in Ioi 1, f t := h_Ici_eq_Ioi
       _ ≤ ∫ t in Ioi 1, g t := h_mono
       _ = 2/z * exp (-z * exp 1 / 2) := h_int_g
@@ -478,13 +539,103 @@ lemma besselK1_asymptotic (z : ℝ) (hz : 1 ≤ z) :
     · intro h; cases h with | inl h => exact h.1 | inr h => linarith
   have hf_int_Ico : IntegrableOn f (Ico 0 1) := hf_int_Icc.mono_set Ico_subset_Icc_self
   have h_disjoint : Disjoint (Ico (0:ℝ) 1) (Ici 1) := by
-    rw [Set.disjoint_left]; intro x hx hx'; simp only [mem_Ico] at hx; simp only [mem_Ici] at hx'; linarith
-  have h_Ico_eq_Icc : ∫ t in Ico 0 1, f t = ∫ t in Icc 0 1, f t := setIntegral_congr_set Ico_ae_eq_Icc
+    rw [Set.disjoint_left]
+    intro x hx hx'
+    simp only [mem_Ico] at hx
+    simp only [mem_Ici] at hx'
+    linarith
+  have h_Ico_eq_Icc : ∫ t in Ico 0 1, f t = ∫ t in Icc 0 1, f t :=
+    setIntegral_congr_set Ico_ae_eq_Icc
   rw [h_union', setIntegral_union h_disjoint measurableSet_Ici hf_int_Ico hf_int_Ici1]
   calc (∫ t in Ico 0 1, f t) + (∫ t in Ici 1, f t)
       = (∫ t in Icc 0 1, f t) + (∫ t in Ici 1, f t) := by rw [h_Ico_eq_Icc]
     _ ≤ sinh 1 * exp (-z) + 2 * exp (-z) := add_le_add h_part1 h_part2
     _ = (sinh 1 + 2) * exp (-z) := by ring
+
+private lemma besselK1_near_origin_tail_bound (z : ℝ) (hz : 0 < z)
+    (f : ℝ → ℝ) (hf_def : f = fun t => exp (-z * cosh t) * cosh t)
+    (hf_int_Ici : IntegrableOn f (Ici 1)) :
+    z * ∫ t in Ici 1, f t ≤ 2 := by
+  have h_bound : ∀ t ≥ 1, f t ≤ exp (-z * exp t / 2) * exp t := by
+    intro t ht
+    simp only [hf_def]
+    have h_cosh_ge : cosh t ≥ exp t / 2 := by rw [cosh_eq]; linarith [exp_nonneg (-t)]
+    have h_cosh_le : cosh t ≤ exp t := by
+      rw [cosh_eq]
+      linarith [exp_le_exp.mpr (by linarith : -t ≤ t)]
+    have h_exp_eq : -z * (exp t / 2) = -z * exp t / 2 := by ring
+    calc exp (-z * cosh t) * cosh t
+        ≤ exp (-z * (exp t / 2)) * cosh t := by
+          apply mul_le_mul_of_nonneg_right _ (cosh_pos t).le
+          apply exp_le_exp.mpr
+          have : -z * cosh t ≤ -z * (exp t / 2) := by nlinarith
+          exact this
+      _ = exp (-z * exp t / 2) * cosh t := by rw [h_exp_eq]
+      _ ≤ exp (-z * exp t / 2) * exp t := by
+          apply mul_le_mul_of_nonneg_left h_cosh_le (exp_nonneg _)
+  set g : ℝ → ℝ := fun t => exp t * exp (-z * exp t / 2)
+  set F : ℝ → ℝ := fun t => -2/z * exp (-z * exp t / 2)
+  have hg_nonneg : ∀ t, 0 ≤ g t := fun t => mul_nonneg (exp_nonneg _) (exp_nonneg _)
+  have h_bound' : ∀ t ≥ (1:ℝ), f t ≤ g t := by
+    intro t ht; simp only [g]; rw [mul_comm]; exact h_bound t ht
+  have hF_deriv : ∀ t, HasDerivAt F (g t) t := by
+    intro t
+    have h1 : HasDerivAt (fun s => -z * exp s / 2) (-z / 2 * exp t) t := by
+      have := (hasDerivAt_exp t).const_mul (-z / 2)
+      convert this using 1; funext; ring
+    have h2 : HasDerivAt (fun s => exp (-z * exp s / 2))
+        (exp (-z * exp t / 2) * (-z / 2 * exp t)) t :=
+      (hasDerivAt_exp _).comp t h1
+    have h3 := h2.const_mul (-2/z)
+    simp only [g] at *
+    convert h3 using 1
+    field_simp
+  have hF_cont : ContinuousWithinAt F (Ici 1) 1 := by
+    apply ContinuousAt.continuousWithinAt
+    refine ContinuousAt.mul ?_ ?_
+    · exact continuousAt_const
+    · exact continuous_exp.continuousAt.comp
+        ((continuousAt_const.mul continuous_exp.continuousAt).div_const _)
+  have hF_tendsto : Tendsto F atTop (nhds 0) := by
+    have h1 : Tendsto (fun t => exp (-z * exp t / 2)) atTop (nhds 0) := by
+      apply tendsto_exp_atBot.comp
+      have h3 : Tendsto (fun t : ℝ => z / 2 * exp t) atTop atTop :=
+        tendsto_exp_atTop.const_mul_atTop (by linarith : 0 < z / 2)
+      have h4 : Tendsto (fun t => -(z / 2 * exp t)) atTop atBot :=
+        Filter.tendsto_neg_atTop_atBot.comp h3
+      convert h4 using 1
+      ext t; ring
+    have h4 := h1.const_mul (-2/z)
+    simp only [mul_zero] at h4
+    exact h4
+  have hg_int : IntegrableOn g (Ioi 1) := by
+    apply integrableOn_Ioi_deriv_of_nonneg hF_cont
+    · intro x _; exact hF_deriv x
+    · intro x _; exact hg_nonneg x
+    · exact hF_tendsto
+  have h_int_g : ∫ t in Ioi 1, g t = -F 1 := by
+    rw [integral_Ioi_of_hasDerivAt_of_tendsto hF_cont (fun x _ => hF_deriv x) hg_int hF_tendsto]
+    ring
+  have h_neg_F1 : -F 1 = 2/z * exp (-z * exp 1 / 2) := by simp only [F]; ring
+  have hf_int_Ioi : IntegrableOn f (Ioi 1) :=
+    hf_int_Ici.mono_set (fun x hx => by exact mem_Ici_of_Ioi hx)
+  have h_Ici_eq_Ioi : ∫ t in Ici 1, f t = ∫ t in Ioi 1, f t :=
+    setIntegral_congr_set Ioi_ae_eq_Ici.symm
+  have h_mono : ∫ t in Ioi 1, f t ≤ ∫ t in Ioi 1, g t := by
+    apply setIntegral_mono_on hf_int_Ioi hg_int measurableSet_Ioi
+    intro t ht; exact h_bound' t (le_of_lt ht)
+  calc z * ∫ t in Ici 1, f t
+      = z * ∫ t in Ioi 1, f t := by rw [h_Ici_eq_Ioi]
+    _ ≤ z * ∫ t in Ioi 1, g t := mul_le_mul_of_nonneg_left h_mono hz.le
+    _ = z * (-F 1) := by rw [h_int_g]
+    _ = z * (2/z * exp (-z * exp 1 / 2)) := by rw [h_neg_F1]
+    _ = 2 * exp (-z * exp 1 / 2) := by field_simp
+    _ ≤ 2 * 1 := by
+        apply mul_le_mul_of_nonneg_left _ (by norm_num : (0:ℝ) ≤ 2)
+        rw [exp_le_one_iff]
+        have he : exp 1 > 0 := exp_pos 1
+        nlinarith
+    _ = 2 := by ring
 
 /-- For z ∈ (0, 1], we have z · K₁(z) ≤ cosh(1) + 2.
     This follows from splitting the integral at t = 1:
@@ -496,7 +647,8 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
   unfold besselK1
   set f : ℝ → ℝ := fun t => exp (-z * cosh t) * cosh t with hf_def
   -- f is continuous and nonnegative
-  have hf_cont : Continuous f := (continuous_exp.comp (continuous_const.mul continuous_cosh)).mul continuous_cosh
+  have hf_cont : Continuous f :=
+    (continuous_exp.comp (continuous_const.mul continuous_cosh)).mul continuous_cosh
   have hf_nonneg : ∀ t, 0 ≤ f t := fun t => mul_nonneg (exp_nonneg _) (cosh_pos t).le
   -- Split [0,∞) = [0,1] ∪ [1,∞)
   have h_union : Ici (0 : ℝ) = Icc 0 1 ∪ Ici 1 := by
@@ -508,7 +660,8 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
       · right; simp only [not_le] at h; linarith
     · intro h; cases h with | inl h => exact h.1 | inr h => linarith
   -- Integrability on both parts
-  have hf_int_Icc : IntegrableOn f (Icc 0 1) := hf_cont.continuousOn.integrableOn_compact isCompact_Icc
+  have hf_int_Icc : IntegrableOn f (Icc 0 1) :=
+    hf_cont.continuousOn.integrableOn_compact isCompact_Icc
   have hf_int_Ici : IntegrableOn f (Ici 1) := by
     -- Use exponential decay bound from besselK1_pos proof
     have h_Ioi : IntegrableOn f (Ioi 0) volume := by
@@ -519,31 +672,44 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
         have h_eq : ∀ t, f t / exp (-t) = cosh t * exp (t - z * cosh t) := fun t => by
           simp only [f]; field_simp; rw [mul_comm, ← exp_add]; ring_nf
         simp_rw [h_eq]
-        have hbound : ∀ t, 0 ≤ t → cosh t * exp (t - z * cosh t) ≤ exp (2 * t - z * exp t / 2) := by
+        have hbound :
+            ∀ t, 0 ≤ t →
+              cosh t * exp (t - z * cosh t) ≤ exp (2 * t - z * exp t / 2) := by
           intro t ht
-          have h_cosh_le : cosh t ≤ exp t := by rw [cosh_eq]; linarith [exp_le_exp.mpr (by linarith : -t ≤ t)]
+          have h_cosh_le : cosh t ≤ exp t := by
+            rw [cosh_eq]
+            linarith [exp_le_exp.mpr (by linarith : -t ≤ t)]
           have h_cosh_ge : cosh t ≥ exp t / 2 := by rw [cosh_eq]; linarith [exp_nonneg (-t)]
           calc cosh t * exp (t - z * cosh t)
-              ≤ exp t * exp (t - z * cosh t) := mul_le_mul_of_nonneg_right h_cosh_le (exp_nonneg _)
+              ≤ exp t * exp (t - z * cosh t) :=
+                mul_le_mul_of_nonneg_right h_cosh_le (exp_nonneg _)
             _ ≤ exp t * exp (t - z * (exp t / 2)) := by
                 apply mul_le_mul_of_nonneg_left _ (exp_nonneg _)
-                apply exp_le_exp.mpr; linarith [mul_le_mul_of_nonpos_left h_cosh_ge (by linarith : -z ≤ 0)]
+                apply exp_le_exp.mpr
+                linarith [mul_le_mul_of_nonpos_left h_cosh_ge (by linarith : -z ≤ 0)]
             _ = exp (2 * t - z * exp t / 2) := by rw [← exp_add]; ring_nf
         have h_exp_to_zero : Tendsto (fun t => exp (2 * t - z * exp t / 2)) atTop (nhds 0) := by
           apply tendsto_exp_atBot.comp
           have hexp_inf : Tendsto (fun t : ℝ => z * exp t / 2) atTop atTop :=
-            Tendsto.atTop_div_const (by linarith) (Tendsto.const_mul_atTop hz tendsto_exp_atTop)
+            Tendsto.atTop_div_const (by linarith)
+              (Tendsto.const_mul_atTop hz tendsto_exp_atTop)
           have h_ratio : Tendsto (fun t : ℝ => t / exp t) atTop (nhds 0) := by
             have h := tendsto_pow_mul_exp_neg_atTop_nhds_zero 1; simp only [pow_one] at h
             convert h using 1; ext t; rw [exp_neg, div_eq_mul_inv]
-          have h_scaled : Tendsto (fun t : ℝ => 4 / z * (t / exp t)) atTop (nhds 0) := by simpa using h_ratio.const_mul (4/z)
+          have h_scaled : Tendsto (fun t : ℝ => 4 / z * (t / exp t)) atTop (nhds 0) := by
+            simpa using h_ratio.const_mul (4 / z)
           have h_shifted : Tendsto (fun t : ℝ => 4 / z * (t / exp t) - 1) atTop (nhds (-1)) := by
             convert h_scaled.sub_const 1 using 1; simp
-          have h_prod : Tendsto (fun t : ℝ => (z * exp t / 2) * (4 / z * (t / exp t) - 1)) atTop atBot :=
+          have h_prod :
+              Tendsto (fun t : ℝ => (z * exp t / 2) * (4 / z * (t / exp t) - 1))
+                atTop atBot :=
             Tendsto.atTop_mul_neg (by norm_num : (-1 : ℝ) < 0) hexp_inf h_shifted
           convert h_prod using 1; ext t; field_simp; ring
-        refine squeeze_zero' (Eventually.of_forall fun t => mul_nonneg (cosh_pos t).le (exp_nonneg _)) ?_ h_exp_to_zero
-        filter_upwards [eventually_ge_atTop (0 : ℝ)] with t ht; exact hbound t ht
+        refine squeeze_zero'
+          (Eventually.of_forall fun t => mul_nonneg (cosh_pos t).le (exp_nonneg _))
+          ?_ h_exp_to_zero
+        filter_upwards [eventually_ge_atTop (0 : ℝ)] with t ht
+        exact hbound t ht
       have h_eventually_le : ∀ᶠ t in atTop, f t ≤ exp (-1 * t) := by
         have h1 : ∀ᶠ t in atTop, |f t / exp (-t)| < 1 := by
           have := Metric.tendsto_nhds.mp h_ratio_tendsto 1 one_pos
@@ -574,7 +740,8 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
         _ ≤ cosh 1 := by simp [h_cosh_le]
     have h_meas_finite : volume (Icc (0:ℝ) 1) < ⊤ := measure_Icc_lt_top
     have h_meas_ne_top : volume (Icc (0:ℝ) 1) ≠ ⊤ := h_meas_finite.ne
-    have h_const_int : IntegrableOn (fun _ => cosh 1) (Icc (0:ℝ) 1) := integrableOn_const (hs := h_meas_ne_top)
+    have h_const_int : IntegrableOn (fun _ => cosh 1) (Icc (0 : ℝ) 1) :=
+      integrableOn_const (hs := h_meas_ne_top)
     have h_mono : ∫ t in Icc 0 1, f t ≤ ∫ _ in Icc (0:ℝ) 1, cosh 1 := by
       apply setIntegral_mono_on hf_int_Icc h_const_int measurableSet_Icc
       exact h_pointwise
@@ -584,94 +751,8 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
     linarith
   -- Part 2: Bound z * ∫₁^∞ f(t) dt ≤ 2
   -- Using cosh(t) ≤ exp(t) and cosh(t) ≥ exp(t)/2, we bound the integral
-  have h_part2 : z * ∫ t in Ici 1, f t ≤ 2 := by
-    -- Key bound: f(t) = exp(-z cosh t) * cosh t ≤ exp(-z exp(t)/2) * exp(t)
-    have h_bound : ∀ t ≥ 1, f t ≤ exp (-z * exp t / 2) * exp t := by
-      intro t ht
-      simp only [hf_def]
-      have h_cosh_ge : cosh t ≥ exp t / 2 := by rw [cosh_eq]; linarith [exp_nonneg (-t)]
-      have h_cosh_le : cosh t ≤ exp t := by rw [cosh_eq]; linarith [exp_le_exp.mpr (by linarith : -t ≤ t)]
-      have h_exp_eq : -z * (exp t / 2) = -z * exp t / 2 := by ring
-      calc exp (-z * cosh t) * cosh t
-          ≤ exp (-z * (exp t / 2)) * cosh t := by
-            apply mul_le_mul_of_nonneg_right _ (cosh_pos t).le
-            apply exp_le_exp.mpr
-            have : -z * cosh t ≤ -z * (exp t / 2) := by nlinarith
-            exact this
-        _ = exp (-z * exp t / 2) * cosh t := by rw [h_exp_eq]
-        _ ≤ exp (-z * exp t / 2) * exp t := by
-            apply mul_le_mul_of_nonneg_left h_cosh_le (exp_nonneg _)
-    -- Define bounding function g(t) = exp(t) * exp(-z exp(t)/2) and its antiderivative
-    set g : ℝ → ℝ := fun t => exp t * exp (-z * exp t / 2)
-    set F : ℝ → ℝ := fun t => -2/z * exp (-z * exp t / 2)
-    have hg_nonneg : ∀ t, 0 ≤ g t := fun t => mul_nonneg (exp_nonneg _) (exp_nonneg _)
-    -- Rewrite h_bound in terms of g
-    have h_bound' : ∀ t ≥ (1:ℝ), f t ≤ g t := by
-      intro t ht; simp only [g]; rw [mul_comm]; exact h_bound t ht
-    -- F'(t) = g(t)
-    have hF_deriv : ∀ t, HasDerivAt F (g t) t := by
-      intro t
-      have h1 : HasDerivAt (fun s => -z * exp s / 2) (-z / 2 * exp t) t := by
-        have := (hasDerivAt_exp t).const_mul (-z / 2)
-        convert this using 1; funext; ring
-      have h2 : HasDerivAt (fun s => exp (-z * exp s / 2)) (exp (-z * exp t / 2) * (-z / 2 * exp t)) t :=
-        (hasDerivAt_exp _).comp t h1
-      have h3 := h2.const_mul (-2/z)
-      simp only [g] at *
-      convert h3 using 1
-      field_simp
-    -- F is continuous at 1
-    have hF_cont : ContinuousWithinAt F (Ici 1) 1 := by
-      apply ContinuousAt.continuousWithinAt
-      refine ContinuousAt.mul ?_ ?_
-      · exact continuousAt_const
-      · exact continuous_exp.continuousAt.comp
-          ((continuousAt_const.mul continuous_exp.continuousAt).div_const _)
-    -- F(t) → 0 as t → ∞
-    have hF_tendsto : Tendsto F atTop (nhds 0) := by
-      have h1 : Tendsto (fun t => exp (-z * exp t / 2)) atTop (nhds 0) := by
-        apply tendsto_exp_atBot.comp
-        have h3 : Tendsto (fun t : ℝ => z / 2 * exp t) atTop atTop :=
-          tendsto_exp_atTop.const_mul_atTop (by linarith : 0 < z / 2)
-        have h4 : Tendsto (fun t => -(z / 2 * exp t)) atTop atBot :=
-          Filter.tendsto_neg_atTop_atBot.comp h3
-        convert h4 using 1
-        ext t; ring
-      have h4 := h1.const_mul (-2/z)
-      simp only [mul_zero] at h4
-      exact h4
-    -- g is integrable on (1, ∞)
-    have hg_int : IntegrableOn g (Ioi 1) := by
-      apply integrableOn_Ioi_deriv_of_nonneg hF_cont
-      · intro x _; exact hF_deriv x
-      · intro x _; exact hg_nonneg x
-      · exact hF_tendsto
-    -- Compute ∫ g = 0 - F(1) = 2/z exp(-ze/2)
-    have h_int_g : ∫ t in Ioi 1, g t = -F 1 := by
-      rw [integral_Ioi_of_hasDerivAt_of_tendsto hF_cont (fun x _ => hF_deriv x) hg_int hF_tendsto]
-      ring
-    have h_neg_F1 : -F 1 = 2/z * exp (-z * exp 1 / 2) := by simp only [F]; ring
-    -- f is integrable on (1, ∞) by comparison with g
-    have hf_int_Ioi : IntegrableOn f (Ioi 1) :=
-      hf_int_Ici.mono_set (fun x hx => by exact mem_Ici_of_Ioi hx)
-    -- Relate ∫ on Ici to ∫ on Ioi
-    have h_Ici_eq_Ioi : ∫ t in Ici 1, f t = ∫ t in Ioi 1, f t :=
-      setIntegral_congr_set Ioi_ae_eq_Ici.symm
-    have h_mono : ∫ t in Ioi 1, f t ≤ ∫ t in Ioi 1, g t := by
-      apply setIntegral_mono_on hf_int_Ioi hg_int measurableSet_Ioi
-      intro t ht; exact h_bound' t (le_of_lt ht)
-    calc z * ∫ t in Ici 1, f t
-        = z * ∫ t in Ioi 1, f t := by rw [h_Ici_eq_Ioi]
-      _ ≤ z * ∫ t in Ioi 1, g t := mul_le_mul_of_nonneg_left h_mono hz.le
-      _ = z * (-F 1) := by rw [h_int_g]
-      _ = z * (2/z * exp (-z * exp 1 / 2)) := by rw [h_neg_F1]
-      _ = 2 * exp (-z * exp 1 / 2) := by field_simp
-      _ ≤ 2 * 1 := by
-          apply mul_le_mul_of_nonneg_left _ (by norm_num : (0:ℝ) ≤ 2)
-          rw [exp_le_one_iff]
-          have he : exp 1 > 0 := exp_pos 1
-          nlinarith
-      _ = 2 := by ring
+  have h_part2 : z * ∫ t in Ici 1, f t ≤ 2 :=
+    besselK1_near_origin_tail_bound z hz f hf_def hf_int_Ici
   -- Combine: Use Ico instead of Icc for proper disjointness
   have h_union' : Ici (0 : ℝ) = Ico 0 1 ∪ Ici 1 := by
     ext x; simp only [mem_Ici, mem_union, mem_Ico]
@@ -690,7 +771,8 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
     simp only [mem_Ici] at hx'
     linarith
   -- The integrals over Ico and Icc are equal (they differ by a null set)
-  have h_Ico_eq_Icc : ∫ t in Ico 0 1, f t = ∫ t in Icc 0 1, f t := setIntegral_congr_set Ico_ae_eq_Icc
+  have h_Ico_eq_Icc : ∫ t in Ico 0 1, f t = ∫ t in Icc 0 1, f t :=
+    setIntegral_congr_set Ico_ae_eq_Icc
   have h_part1' : z * ∫ t in Ico 0 1, f t ≤ cosh 1 := by
     have h_int_le : ∫ t in Ico 0 1, f t ≤ cosh 1 := by rw [h_Ico_eq_Icc]; exact h_part1
     have h_z_mul_le : z * ∫ t in Ico 0 1, f t ≤ z * cosh 1 :=
@@ -700,7 +782,9 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
   have h_split : ∫ t in Ici 0, f t = (∫ t in Ico 0 1, f t) + (∫ t in Ici 1, f t) := by
     rw [h_union']
     exact setIntegral_union h_disjoint measurableSet_Ici hf_int_Ico hf_int_Ici
-  have h_distrib : z * ∫ t in Ici 0, f t = (z * ∫ t in Ico 0 1, f t) + (z * ∫ t in Ici 1, f t) := by
+  have h_distrib :
+      z * ∫ t in Ici 0, f t =
+        (z * ∫ t in Ico 0 1, f t) + (z * ∫ t in Ici 1, f t) := by
     rw [h_split, mul_add]
   rw [h_distrib]
   exact add_le_add h_part1' h_part2
@@ -753,8 +837,10 @@ lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
       exact h_cont.integrableOn_Ioc
     -- Key insight: the function is continuous and bounded by an integrable function
     -- Use Integrable.mono' with the bound
-    have hf_meas : AEStronglyMeasurable (fun r => r ^ 2 * besselK1 (m * r)) (volume.restrict (Ioc 0 (1/m))) := by
-      -- besselK1 ∘ (m * ·) is continuous on (0, ∞) since besselK1 is continuous on (0, ∞) and m > 0
+    have hf_meas :
+        AEStronglyMeasurable
+          (fun r => r ^ 2 * besselK1 (m * r)) (volume.restrict (Ioc 0 (1 / m))) := by
+      -- besselK1 ∘ (m * ·) is continuous on (0, ∞); here `m > 0`.
       have hcont : ContinuousOn (fun r => r ^ 2 * besselK1 (m * r)) (Ioi 0) := by
         apply ContinuousOn.mul (continuous_pow 2).continuousOn
         apply besselK1_continuousOn.comp (continuous_const_mul m).continuousOn
@@ -762,9 +848,12 @@ lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
       -- Ioc 0 (1/m) ⊆ Ioi 0 for the restriction
       have hsub : Ioc 0 (1/m) ⊆ Ioi 0 := fun r ⟨hr, _⟩ => hr
       exact (hcont.mono hsub).aestronglyMeasurable measurableSet_Ioc
-    have h_nonneg : ∀ r ∈ Ioc (0:ℝ) (1/m), 0 ≤ r ^ 2 * besselK1 (m * r) := fun r ⟨hr_pos, _⟩ =>
+    have h_nonneg :
+        ∀ r ∈ Ioc (0 : ℝ) (1 / m), 0 ≤ r ^ 2 * besselK1 (m * r) := fun r ⟨hr_pos, _⟩ =>
       mul_nonneg (sq_nonneg r) (besselK1_pos (m * r) (by positivity)).le
-    have h_norm_bound : ∀ᵐ r ∂(volume.restrict (Ioc 0 (1/m))), ‖r ^ 2 * besselK1 (m * r)‖ ≤ C * r / m := by
+    have h_norm_bound :
+        ∀ᵐ r ∂(volume.restrict (Ioc 0 (1 / m))),
+          ‖r ^ 2 * besselK1 (m * r)‖ ≤ C * r / m := by
       rw [ae_restrict_iff' measurableSet_Ioc]
       apply Eventually.of_forall
       intro r hr
@@ -775,9 +864,13 @@ lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
   · -- At infinity: use besselK1_asymptotic for exponential decay
     -- For r > 1/m, we have mr > 1, so K₁(mr) ≤ (sinh 1 + 2) exp(-mr)
     set C := sinh 1 + 2 with hC_def
-    have hC_pos : 0 < C := by simp only [hC_def]; nlinarith [sinh_pos_iff.mpr (by norm_num : (0:ℝ) < 1)]
+    have hC_pos : 0 < C := by
+      simp only [hC_def]
+      nlinarith [sinh_pos_iff.mpr (by norm_num : (0 : ℝ) < 1)]
     -- Bound: r² K₁(mr) ≤ C * r² * exp(-mr) for r > 1/m
-    have h_bound : ∀ r ∈ Ioi (1/m : ℝ), r ^ 2 * besselK1 (m * r) ≤ C * r ^ 2 * exp (-m * r) := by
+    have h_bound :
+        ∀ r ∈ Ioi (1 / m : ℝ),
+          r ^ 2 * besselK1 (m * r) ≤ C * r ^ 2 * exp (-m * r) := by
       intro r hr
       have hmr_ge : m * r ≥ 1 := by
         simp only [mem_Ioi] at hr
@@ -817,7 +910,9 @@ lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
             have h3 : (m/2)^2 ≠ 0 := by positivity
             -- Use tendsto_const_smul_iff₀: if c ≠ 0 then (c • f → c • a) ↔ (f → a)
             -- In ℝ, c • x = c * x, so this applies
-            have h1' : Tendsto (fun r => (m/2)^2 • (r ^ 2 * exp (-(m/2) * r))) atTop (nhds ((m/2)^2 • 0)) := by
+            have h1' :
+                Tendsto (fun r => (m / 2) ^ 2 • (r ^ 2 * exp (-(m / 2) * r)))
+                  atTop (nhds ((m / 2) ^ 2 • 0)) := by
               simp only [smul_eq_mul, mul_zero]; exact h1
             rw [tendsto_const_smul_iff₀ h3] at h1'
             exact h1'
@@ -843,21 +938,27 @@ lemma radial_besselK1_integrable (m : ℝ) (hm : 0 < m) :
       rw [h_eq]
       exact h_int'.const_mul C
     -- The function r² K₁(mr) is ae strongly measurable
-    have hf_meas : AEStronglyMeasurable (fun r => r ^ 2 * besselK1 (m * r)) (volume.restrict (Ioi (1/m))) := by
-      -- besselK1 ∘ (m * ·) is continuous on (0, ∞) since besselK1 is continuous on (0, ∞) and m > 0
+    have hf_meas :
+        AEStronglyMeasurable
+          (fun r => r ^ 2 * besselK1 (m * r)) (volume.restrict (Ioi (1 / m))) := by
+      -- besselK1 ∘ (m * ·) is continuous on (0, ∞); here `m > 0`.
       have hcont : ContinuousOn (fun r => r ^ 2 * besselK1 (m * r)) (Ioi 0) := by
         apply ContinuousOn.mul (continuous_pow 2).continuousOn
         apply besselK1_continuousOn.comp (continuous_const_mul m).continuousOn
         intro r hr; simp only [mem_Ioi] at hr ⊢; exact mul_pos hm hr
       -- Ioi (1/m) ⊆ Ioi 0 for the restriction
-      have hsub : Ioi (1/m) ⊆ Ioi 0 := fun r hr => by simp only [mem_Ioi] at hr ⊢; linarith [one_div_pos.mpr hm]
+      have hsub : Ioi (1 / m) ⊆ Ioi 0 := fun r hr => by
+        simp only [mem_Ioi] at hr ⊢
+        linarith [one_div_pos.mpr hm]
       exact (hcont.mono hsub).aestronglyMeasurable measurableSet_Ioi
     have h_nonneg : ∀ r ∈ Ioi (1/m : ℝ), 0 ≤ r ^ 2 * besselK1 (m * r) := by
       intro r hr
       apply mul_nonneg (sq_nonneg r)
       have hr' : 0 < r := by simp only [mem_Ioi] at hr; linarith [one_div_pos.mpr hm]
       exact (besselK1_pos (m * r) (mul_pos hm hr')).le
-    have h_norm_bound : ∀ᵐ r ∂(volume.restrict (Ioi (1/m))), ‖r ^ 2 * besselK1 (m * r)‖ ≤ C * r ^ 2 * exp (-m * r) := by
+    have h_norm_bound :
+        ∀ᵐ r ∂(volume.restrict (Ioi (1 / m))),
+          ‖r ^ 2 * besselK1 (m * r)‖ ≤ C * r ^ 2 * exp (-m * r) := by
       rw [ae_restrict_iff' measurableSet_Ioi]
       apply Eventually.of_forall
       intro r hr
@@ -922,13 +1023,15 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
             -- Derivative of exp(v) - v²/2 is exp(v) - v
             have hderiv : deriv (fun v => exp v - v^2 / 2) x = exp x - x := by
               have hd1 : DifferentiableAt ℝ (fun v => exp v) x := differentiableAt_exp
-              have hd2 : DifferentiableAt ℝ (fun v => v^2 / 2) x := (differentiableAt_pow 2).div_const 2
+              have hd2 : DifferentiableAt ℝ (fun v => v ^ 2 / 2) x :=
+                (differentiableAt_pow 2).div_const 2
               have heq : (fun v => exp v - v^2 / 2) = (fun v => exp v) - (fun v => v^2 / 2) := by
                 ext v; simp [sub_eq_add_neg]
               rw [heq, deriv_sub hd1 hd2, deriv_div_const]
               simp only [Real.deriv_exp]
               -- deriv (fun v => v^2) x = 2 * x
-              have hpow : deriv (fun v : ℝ => v^(2 : ℕ)) x = (2 : ℝ) * x^(2-1) := deriv_pow_field 2
+              have hpow : deriv (fun v : ℝ => v ^ (2 : ℕ)) x = (2 : ℝ) * x ^ (2 - 1) :=
+                deriv_pow_field 2
               simp only [pow_one, Nat.add_one_sub_one] at hpow
               rw [hpow]; ring
             rw [hderiv]
@@ -1001,7 +1104,8 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
   -- intervalIntegral.integral_Iic_add_Ioi
   rw [← intervalIntegral.integral_Iic_add_Ioi (b := 0) hf_int_Iic hf_int_Ioi]
   -- 2. Transform the negative part (Iic 0) using u ↦ -u
-  --    ∫_{-∞}^0 f(u) du = ∫_0^∞ f(-u) du = ∫_0^∞ g(u) du  (via u → -u, using cosh(-u) = cosh(u))
+  --    ∫_{-∞}^0 f(u) du = ∫_0^∞ f(-u) du = ∫_0^∞ g(u) du.
+  --    This uses `u → -u` and `cosh(-u) = cosh(u)`.
   have h_neg_part : ∫ u in Iic 0, exp (-u) * exp (-z * cosh u) =
                     ∫ u in Ioi 0, exp u * exp (-z * cosh u) := by
     have h := integral_comp_neg_Iic (f := fun u => exp u * exp (-z * cosh u)) 0
@@ -1062,10 +1166,10 @@ lemma schwingerIntegral_eq_besselK1 (m r : ℝ) (hm : 0 < m) (hr : 0 < r) :
   -/
   let z := m * r
   have hz : 0 < z := mul_pos hm hr
-  -- We'll show this equals (2m/r) * (full-line integral) = (2m/r) * 2 K₁(mr) = (4m/r) K₁(mr)
+  -- This equals `(2m/r) * (full-line integral)`, hence `(4m/r) * K₁(mr)`.
   have h_factor : (4 * m / r) = (2 * m / r) * 2 := by ring
   rw [h_factor, mul_assoc, ← bessel_symmetry_integral z hz]
-  -- Now need: ∫ t in Ioi 0, (1/t²) exp(-m²t - r²/(4t)) dt = (2m/r) ∫ u, exp(-u) exp(-z cosh u) du
+  -- It remains to relate the proper-time integral to the full-line cosh integral.
   -- Define the substitution φ(u) = (r/(2m)) exp(u)
   let c := r / (2 * m)
   have hc : 0 < c := by simp only [c]; positivity

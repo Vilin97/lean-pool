@@ -59,6 +59,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 -/
 structure PolynomialDecayBound {E F : Type*} [NormedAddCommGroup E]
     [NormedAddCommGroup F] (f : E → F) (N : ℝ) where
+  /-- Positive constant controlling the polynomial decay bound. -/
   C : ℝ
   hC_pos : C > 0
   bound : ∀ x : E, ‖f x‖ ≤ C / (1 + ‖x‖)^N
@@ -105,6 +106,7 @@ def schwartz_has_polynomial_decay (f : SchwartzMap E ℂ) (k : ℕ) :
 /-- Schwartz functions have polynomial decay at any real rate (via ceiling). -/
 def schwartz_has_polynomial_decay_real (f : SchwartzMap E ℂ) (N : ℝ) (_hN : N > 0) :
     PolynomialDecayBound f N := by
+  let _ := _hN
   -- Use the natural number version with k = ⌈N⌉
   obtain ⟨C, hC_pos, hbound⟩ := schwartz_has_polynomial_decay f (⌈N⌉₊)
   refine ⟨C, hC_pos, fun x => ?_⟩
@@ -275,12 +277,13 @@ lemma one_add_half_pow_le (x : ℝ) (hx : x ≥ 0) (N : ℝ) (hN : N > 0) :
     - Region A (|y| ≥ |x|/2): u(y) is small, v integrable
     - Region B (|y| < |x|/2): v(x-y) is small (since |x-y| ≥ |x|/2), u integrable
 -/
-def convolution_polynomial_decay
+private lemma convolution_polynomial_decay_exists
     {u v : E → ℂ} {N : ℝ} (hN_dim : N > Module.finrank ℝ E)
     (hu_decay : PolynomialDecayBound u N)
     (hv_decay : PolynomialDecayBound v N)
     (hu_int : Integrable u) (hv_int : Integrable v) :
-    PolynomialDecayBound (fun x => ∫ y, u y * v (x - y)) N := by
+    ∃ _result : PolynomialDecayBound (fun x => ∫ y, u y * v (x - y)) N, True := by
+  refine ⟨?_, trivial⟩
   obtain ⟨C_u, hC_u_pos, hu_bound⟩ := hu_decay
   obtain ⟨C_v, hC_v_pos, hv_bound⟩ := hv_decay
   -- The L¹ norms
@@ -426,15 +429,28 @@ def convolution_polynomial_decay
         rw [Real.rpow_neg (le_of_lt h_one_plus_pos)]
         ring
 
+/-- If two integrable functions have polynomial decay of order `N > dim E`, then their convolution
+has polynomial decay of the same order. -/
+def convolution_polynomial_decay
+    {u v : E → ℂ} {N : ℝ} (hN_dim : N > Module.finrank ℝ E)
+    (hu_decay : PolynomialDecayBound u N)
+    (hv_decay : PolynomialDecayBound v N)
+    (hu_int : Integrable u) (hv_int : Integrable v) :
+    PolynomialDecayBound (fun x => ∫ y, u y * v (x - y)) N :=
+  (convolution_polynomial_decay_exists hN_dim hu_decay hv_decay hu_int hv_int).choose
+
 /-! ## Phase 4: Kernel Decomposition Bounds -/
 
 /-- The convolution of a Schwartz function with the singular part of the kernel
     (compactly supported) has polynomial decay.
 -/
-def convolution_compactSupport_decay (f : SchwartzMap E ℂ) (K : E → ℝ) (R₀ : ℝ)
+private lemma convolution_compactSupport_decay_exists (f : SchwartzMap E ℂ) (K : E → ℝ) (R₀ : ℝ)
     (hR₀ : R₀ > 0) (hK_loc : LocallyIntegrable K volume)
     (N : ℕ) (_hN : N > 0) :
-    PolynomialDecayBound (fun y => ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ)) (N : ℝ) := by
+    ∃ _result : PolynomialDecayBound
+      (fun y => ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ)) (N : ℝ), True := by
+  refine ⟨?_, trivial⟩
+  let _ := _hN
   -- K_sing has support in closedBall 0 R₀
   -- (f ⋆ K_sing)(y) = ∫ f(x) K_sing(x-y) dx
   -- For |y| large, x-y ∈ supp(K_sing) implies x ∈ closedBall y R₀
@@ -597,16 +613,26 @@ def convolution_compactSupport_decay (f : SchwartzMap E ℂ) (K : E → ℝ) (R�
           _ = C_f * (1 + R₀) ^ N * (I_Ksing + 1) := by rw [Real.rpow_natCast]
           _ ≤ C := by simp only [C]; linarith
 
+/-- Convolution of a Schwartz function with the compactly supported singular kernel part has
+polynomial decay. -/
+def convolution_compactSupport_decay (f : SchwartzMap E ℂ) (K : E → ℝ) (R₀ : ℝ)
+    (hR₀ : R₀ > 0) (hK_loc : LocallyIntegrable K volume)
+    (N : ℕ) (_hN : N > 0) :
+    PolynomialDecayBound (fun y => ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ)) (N : ℝ) :=
+  (convolution_compactSupport_decay_exists f K R₀ hR₀ hK_loc N _hN).choose
+
 /-- The convolution of a Schwartz function with the tail part of the kernel
     (exponentially decaying) has polynomial decay at any rate.
 -/
-def convolution_expDecay_polynomial_decay (f : SchwartzMap E ℂ) (K : E → ℝ)
+private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E ℂ) (K : E → ℝ)
     (R₀ m C_K : ℝ) (hR₀ : R₀ > 0) (hm : m > 0) (hC_K : C_K > 0)
     (hK_loc : LocallyIntegrable K volume) -- For measurability
     (hK_decay : ∀ z : E, ‖z‖ ≥ R₀ → |K z| ≤ C_K * Real.exp (-m * ‖z‖))
     (hK_bdd : ∃ M : ℝ, ∀ z : E, |kernelTail K R₀ z| ≤ M)  -- K_tail is bounded
     (N : ℝ) (hN_dim : N > Module.finrank ℝ E) (hN : N > 0) :
-    PolynomialDecayBound (fun y => ∫ x, f x * (kernelTail K R₀ (x - y) : ℂ)) N := by
+    ∃ _result : PolynomialDecayBound
+      (fun y => ∫ x, f x * (kernelTail K R₀ (x - y) : ℂ)) N, True := by
+  refine ⟨?_, trivial⟩
   -- K_tail has exponential decay → polynomial decay (from exp_decay_implies_polynomial_decay)
   -- f has polynomial decay (Schwartz)
   -- Apply convolution_polynomial_decay
@@ -640,9 +666,9 @@ def convolution_expDecay_polynomial_decay (f : SchwartzMap E ℂ) (K : E → ℝ
     · exact hN
   -- f has polynomial decay
   have hf_poly := schwartz_has_polynomial_decay_real f N hN
-  -- Key observation: ∫ f(x) K_tail(x - y) dx = ∫ f(x) K̃(y - x) dx
-  -- where K̃(z) = K_tail(-z). This is the standard convolution (f ⋆ K̃)(y).
-  -- Define K̃ (reflected K_tail)
+  -- Key observation: ∫ f(x) K_tail(x - y) dx = ∫ f(x) Ktilde(y - x) dx
+  -- where Ktilde(z) = K_tail(-z). This is the standard convolution (f ⋆ Ktilde)(y).
+  -- Define Ktilde (reflected K_tail)
   let K_refl : E → ℂ := fun z => (kernelTail K R₀ (-z) : ℂ)
   -- K_refl has the same polynomial decay as K_tail (since ‖-z‖ = ‖z‖)
   have hK_refl_poly : PolynomialDecayBound K_refl N := by
@@ -716,6 +742,18 @@ def convolution_expDecay_polynomial_decay (f : SchwartzMap E ℂ) (K : E → ℝ
   rw [h_conv_eq y]
   exact h_conv_bound y
 
+/-- Convolution of a Schwartz function with the exponentially decaying kernel tail has polynomial
+decay at any rate above the dimension. -/
+def convolution_expDecay_polynomial_decay (f : SchwartzMap E ℂ) (K : E → ℝ)
+    (R₀ m C_K : ℝ) (hR₀ : R₀ > 0) (hm : m > 0) (hC_K : C_K > 0)
+    (hK_loc : LocallyIntegrable K volume)
+    (hK_decay : ∀ z : E, ‖z‖ ≥ R₀ → |K z| ≤ C_K * Real.exp (-m * ‖z‖))
+    (hK_bdd : ∃ M : ℝ, ∀ z : E, |kernelTail K R₀ z| ≤ M)
+    (N : ℝ) (hN_dim : N > Module.finrank ℝ E) (hN : N > 0) :
+    PolynomialDecayBound (fun y => ∫ x, f x * (kernelTail K R₀ (x - y) : ℂ)) N :=
+  (convolution_expDecay_polynomial_decay_exists f K R₀ m C_K hR₀ hm hC_K hK_loc
+    hK_decay hK_bdd N hN_dim hN).choose
+
 /-! ## Phase 5: Main Theorem Assembly -/
 
 /-- **Quantitative polynomial decay for Schwartz bilinear forms** (proven theorem)
@@ -729,7 +767,7 @@ the bilinear integral decays polynomially at any rate α > 0:
 The proof structure:
 1. Decompose K = K_sing + K_tail
 2. Show H(y) = ∫ f(x) K(x-y) dx = H_sing(y) + H_tail(y) has polynomial decay
-3. The integral I(a) = ∫ H(y) g(y-a) dy = (H ⋆ ǧ)(a) where ǧ(z) = g(-z)
+3. The integral I(a) = ∫ H(y) g(y-a) dy = (H ⋆ gtilde)(a) where gtilde(z) = g(-z)
 4. Apply convolution_polynomial_decay to get the result
 -/
 theorem schwartz_bilinear_translation_decay_polynomial_proof

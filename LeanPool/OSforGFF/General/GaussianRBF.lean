@@ -50,7 +50,7 @@ lemma innerProduct_is_pd_kernel :
   -- Define weighted sums of x's
   let v_a : H := ∑ i : Fin m, a i • x i
   let v_b : H := ∑ i : Fin m, b i • x i
-  -- Key computation: Re(∑∑ c̄ᵢcⱼ⟪xᵢ,xⱼ⟫) = ⟪v_a, v_a⟫ + ⟪v_b, v_b⟫ = ‖v_a‖² + ‖v_b‖²
+  -- Key computation: Re(∑∑ cbarᵢcⱼ⟪xᵢ,xⱼ⟫) = ⟪v_a, v_a⟫ + ⟪v_b, v_b⟫ = ‖v_a‖² + ‖v_b‖²
   -- First, expand star(c_i) * c_j = (a_i - ib_i)(a_j + ib_j) = (a_i a_j + b_i b_j) + i(a_i b_j -
   -- b_i a_j)
   have expand_cc : ∀ i j, star (c i) * c j = (a i * a j + b i * b j : ℝ) + Complex.I * (a i * b j -
@@ -66,7 +66,7 @@ lemma innerProduct_is_pd_kernel :
                  Complex.ofReal_re, mul_zero, zero_add,
                  Complex.conj_re, Complex.conj_im]
       ring
-  -- The product c̄ᵢcⱼ⟪xᵢ,xⱼ⟫ has real part (aᵢaⱼ + bᵢbⱼ)⟪xᵢ,xⱼ⟫
+  -- The product cbarᵢcⱼ⟪xᵢ,xⱼ⟫ has real part (aᵢaⱼ + bᵢbⱼ)⟪xᵢ,xⱼ⟫
   have re_prod : ∀ i j, (star (c i) * c j * (⟪x i,
     x j⟫_ℝ : ℂ)).re = (a i * a j + b i * b j) * ⟪x i, x j⟫_ℝ := by
     intro i j
@@ -175,14 +175,14 @@ lemma exp_is_pd_kernel {α : Type*} (K : α → α → ℂ) (hK : IsPositiveDefi
       apply Complex.ext <;> simp [him]
     rw [hK_real_eq, ← Complex.ofReal_exp]
     simp only [Complex.ofReal_re]
-  -- The sum ∑∑ c̄ᵢcⱼ exp(K_{ij}) has nonneg real part
+  -- The sum ∑∑ cbarᵢcⱼ exp(K_{ij}) has nonneg real part
   -- Decompose c = a + ib and use that exp(M) is PSD
   let a : Fin m → ℝ := fun i => (c i).re
   let b : Fin m → ℝ := fun i => (c i).im
   -- For PSD real matrix N and real vectors a, b: aᵀNa + bᵀNb ≥ 0
   let N : Matrix (Fin m) (Fin m) ℝ := OSforGFF.entrywiseExp M
   have hN_psd : N.PosSemidef := hExpM_psd
-  -- Compute: Re(∑∑ c̄ᵢcⱼ exp(K_{ij})) = aᵀNa + bᵀNb
+  -- Compute: Re(∑∑ cbarᵢcⱼ exp(K_{ij})) = aᵀNa + bᵀNb
   have h_sum_eq : (∑ i : Fin m, ∑ j : Fin m, star (c i) * c j * cexp (K (x i) (x j))).re =
                   (a ⬝ᵥ (N.mulVec a)) + (b ⬝ᵥ (N.mulVec b)) := by
     -- Similar to innerProduct_is_pd_kernel proof
@@ -223,7 +223,7 @@ theorem gaussian_rbf_pd_innerProduct_proof :
   -- 2. Factor the Gaussian kernel:
   --    exp(-½‖x-y‖²) = exp(-½‖x‖²) · exp(-½‖y‖²) · exp(⟨x,y⟩)
   -- 3. Define d_i = c_i * exp(-½‖x_i‖²). Then:
-  --    ∑∑ c̄ᵢcⱼ exp(-½‖xᵢ-xⱼ‖²) = ∑∑ d̄ᵢdⱼ exp(⟨xᵢ,xⱼ⟩) ≥ 0
+  --    ∑∑ cbarᵢcⱼ exp(-½‖xᵢ-xⱼ‖²) = ∑∑ dbarᵢdⱼ exp(⟨xᵢ,xⱼ⟩) ≥ 0
   -- 4. The RHS is ≥ 0 by exp_is_pd_kernel + innerProduct_is_pd_kernel.
   intro m x c
   -- Define the scaled coefficients

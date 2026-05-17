@@ -94,12 +94,14 @@ lemma spacetimeDecomp_symm_eq_spacetimeOfTimeSpace (t : ℝ) (v : SpatialCoords)
     spacetimeDecomp.symm (t, v) = spacetimeOfTimeSpace t v := by
   -- Both definitions construct a point x with x 0 = t and x i = v (i-1) for i > 0
   ext i
-  cases' i using Fin.cases with j
-  · -- i = 0: time component
+  cases i using Fin.cases with
+  | zero =>
+    -- i = 0: time component
     have h1 : (spacetimeDecomp.symm (t, v)) 0 = t :=
       congr_arg Prod.fst (spacetimeDecomp.apply_symm_apply (t, v))
     rw [h1, spacetimeOfTimeSpace_time]
-  · -- i = j + 1: spatial components
+  | succ j =>
+    -- i = j + 1: spatial components
     have h_spatial : spatialPart (spacetimeDecomp.symm (t, v)) = v :=
       congr_arg Prod.snd (spacetimeDecomp.apply_symm_apply (t, v))
     -- spatialPart k (j) = k (j + 1) by definition

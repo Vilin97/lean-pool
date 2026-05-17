@@ -5,7 +5,7 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import LeanPool.OSforGFF.OS.OS3_MixedRepInfra
+import LeanPool.OSforGFF.OS.OS3MixedRepInfra
 
 /-!
 # OS3 — Mixed Representation via Schwinger Parametrization
@@ -14,13 +14,13 @@ Derives the mixed (momentum-position) representation of the covariance bilinear 
 by performing the Fubini exchanges justified in `OS3_MixedRepInfra`. The chain is:
 
 1. Schwinger → heat kernel: ⟨Θf, Cf⟩ = ∫₀^∞ e^{−sm²} [∫∫ f*(x) f(y) H(s,|Θx−y|)] ds
-2. Fourier representation of heat kernel introduces spatial momenta k̄
+2. Fourier representation of heat kernel introduces spatial momenta kbar
 3. k₀ Gaussian integral: ∫ e^{ik₀(x₀+y₀)} e^{−sk₀²} dk₀ = √(π/s) e^{−(x₀+y₀)²/4s}
 4. Laplace transform in s: ∫₀^∞ s^{−1/2} e^{−(x₀+y₀)²/4s − sω²} ds = √(π/ω²) e^{−ω|x₀+y₀|}
 
 The final result (Bessel K_{1/2} identity) is:
 
-  ⟨Θf, Cf⟩ = (1/2(2π)³) ∫_{k̄} ∫∫ f*(x) f(y) (1/ω) e^{−ω|x₀+y₀|} e^{ik̄·(x̄−ȳ)} dk̄ dx dy
+  ⟨Θf, Cf⟩ = (1/2(2π)³) ∫_{kbar} ∫∫ f*(x) f(y) (1/ω) e^{−ω|x₀+y₀|} e^{ikbar·(xbar−ybar)} dkbar dx dy
 
 This is the integration order exchange from eq. (4.19) that the naive approach could
 not justify due to the non-absolute-integrability of 1/√(k²+m²) in 3D.
@@ -214,7 +214,7 @@ lemma spatialPart_timeReflection_sub (x y : SpaceTime) :
 
     Starting from the Schwinger representation with heat kernel H(s,r):
 
-    ∫₀^∞ exp(-sm²) ∫∫ f̄(x)f(y) H(s, |Θx-y|) dx dy ds
+    ∫₀^∞ exp(-sm²) ∫∫ fbar(x)f(y) H(s, |Θx-y|) dx dy ds
 
     After substituting H(s,r) = (2π)^{-d} ∫_k exp(-ik·z) exp(-s|k|²) and
     performing the k₀ integral using the 1D Gaussian FT:
@@ -223,12 +223,14 @@ lemma spatialPart_timeReflection_sub (x y : SpaceTime) :
 
     we obtain:
 
-    (2π)^{-4} ∫₀^∞ ∫_p̄ ∫∫ f̄(x)f(y) √(π/s) exp(-t²/(4s)) exp(-s(|p̄|² + m²)) exp(-ip̄·r̄) dx dy
-    d³p̄ ds
+    (2π)^{-4} ∫₀^∞ ∫_pbar ∫∫ fbar(x)f(y) √(π/s) exp(-t²/(4s))
+    exp(-s(|pbar|² + m²)) exp(-ipbar·rbar) dx dy
+    d³pbar ds
 
-    where t = -x₀ - y₀ (time separation under reflection) and r̄ = x̄ - ȳ (spatial separation).
+    where t = -x₀ - y₀ (time separation under reflection) and
+    rbar = xbar - ybar (spatial separation).
 
-    The exp(-sm²) factor combines with exp(-s|p̄|²) to give exp(-s(|p̄|² + m²)).
+    The exp(-sm²) factor combines with exp(-s|pbar|²) to give exp(-s(|pbar|² + m²)).
 -/
 theorem heatKernel_bilinear_fourier_form (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     ∫ s in Set.Ioi 0, (Real.exp (-s * m^2) : ℂ) *
@@ -592,13 +594,13 @@ lemma s_integral_eval_complex (t : ℝ) (ω : ℝ) (hω : 0 < ω) :
     with complex exponentials evaluates to the propagator form.
 
     This wraps `s_integral_eval` by:
-    1. Factoring out constant terms (f̄f and phase)
+    1. Factoring out constant terms (fbarf and phase)
     2. Converting Complex.exp to Real.exp for real arguments
     3. Applying s_integral_eval
     4. Reassembling the complex result
 
     Note: The integrand has the form:
-    f̄ * f * √(π/s) * cexp(-t²/(4s)) * cexp(-sω²) * cexp(-I*phase)
+    fbar * f * √(π/s) * cexp(-t²/(4s)) * cexp(-sω²) * cexp(-I*phase)
 
     where all exponentials have real arguments (cast to ℂ).
 -/
@@ -635,7 +637,7 @@ lemma s_integral_complex_eval (k_sp : SpatialCoords) (x y : SpaceTime) (m : ℝ)
   rw [h_icm_r]
   -- Goal: C * ∫ a, [√(π/a) * cexp(-t²/(4a)) * cexp(-↑a*(↑‖k_sp‖²+↑m²))] = C * (π/ω) * cexp(-ω|t|) *
   -- phase
-  -- where C = f̄f * cexp(-I*...) and ω = √(‖k_sp‖² + m²)
+  -- where C = fbarf * cexp(-I*...) and ω = √(‖k_sp‖² + m²)
   --
   -- Step 1: Convert cexp(-↑a * (↑‖k_sp‖² + ↑m²)) to cexp(-(a * ω²) : ℝ)
   -- using ω² = ‖k_sp‖² + m²
@@ -663,7 +665,7 @@ lemma s_integral_complex_eval (k_sp : SpatialCoords) (x y : SpaceTime) (m : ℝ)
   -- Step 3: Algebraic simplification to match the goal
   -- After s_integral_eval_complex:
   -- LHS: C * ↑((π / ω) * Real.exp (-ω * |t|))
-  -- RHS: f̄f * (↑π / ↑ω) * cexp(-↑|t| * ↑ω) * phase
+  -- RHS: fbarf * (↑π / ↑ω) * cexp(-↑|t| * ↑ω) * phase
   --
   -- We need to:
   -- 1. Split the single cast: ↑(a * b) = ↑a * ↑b
@@ -692,13 +694,13 @@ lemma s_integral_complex_eval (k_sp : SpatialCoords) (x y : SpaceTime) (m : ℝ)
 
     √π · ∫₀^∞ s^{-1/2} exp(-t²/(4s) - sω²) ds = (π/ω) · exp(-ω|t|)
 
-    where ω = √(|p̄|² + m²) is the relativistic dispersion relation.
+    where ω = √(|pbar|² + m²) is the relativistic dispersion relation.
 
     This transforms the Schwinger proper-time representation into the
-    Euclidean propagator in mixed (p̄, x₀) representation:
+    Euclidean propagator in mixed (pbar, x₀) representation:
 
-    1/(2π)⁴ · ∫_p̄ ∫₀^∞ √(π/s) exp(-t²/(4s)) exp(-s(|p̄|² + m²)) exp(-ip̄·r̄) ds d³p̄
-    = 1/(2(2π)³) · ∫_p̄ (1/ω) exp(-ω|t|) exp(-ip̄·r̄) d³p̄
+    1/(2π)⁴ · ∫_pbar ∫₀^∞ √(π/s) exp(-t²/(4s)) exp(-s(|pbar|² + m²)) exp(-ipbar·rbar) ds d³pbar
+    = 1/(2(2π)³) · ∫_pbar (1/ω) exp(-ω|t|) exp(-ipbar·rbar) d³pbar
 
     **Normalization:** (1/(2π)⁴) × π = 1/(2(2π)³) ✓
 
@@ -959,10 +961,10 @@ theorem schwinger_bilinear_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
     intro p hp
     simp only [bound, Set.mem_Ioi] at hp ⊢
     apply mul_nonneg
-    apply mul_nonneg
-    apply mul_nonneg (norm_nonneg _) hCf_nonneg
-    exact le_of_lt (Real.exp_pos _)
-    exact heatKernelPositionSpace_nonneg p.1 hp _
+    · apply mul_nonneg
+      · apply mul_nonneg (norm_nonneg _) hCf_nonneg
+      · exact le_of_lt (Real.exp_pos _)
+    · exact heatKernelPositionSpace_nonneg p.1 hp _
   -- The bound is integrable: ∫∫∫ bound = Cf * ‖f‖_{L¹} / m²
   -- This follows from Tonelli's theorem applied in the order y, x, s
   have h_bound_integrable : Integrable bound μ := by
@@ -1164,14 +1166,14 @@ theorem schwinger_fubini_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
   -- from schwinger_bilinear_integrable.
   --
   -- The proof uses:
-  -- 1. Pull f̄(x) * f(y) into the s-integral (independent of s)
+  -- 1. Pull fbar(x) * f(y) into the s-integral (independent of s)
   -- 2. Fubini: swap ∫ x ∫ y ∫ s → ∫ s ∫ x ∫ y
   -- 3. Factor exp(-sm²) out of spatial integrals (independent of x, y)
   --
   -- The key technical ingredient is schwinger_bilinear_integrable which ensures
   -- integrability on the triple product space, justifying the Fubini swap.
   have h_int := schwinger_bilinear_integrable m f
-  -- Step 1: Rewrite LHS by pulling f̄ f into the s-integral
+  -- Step 1: Rewrite LHS by pulling fbar f into the s-integral
   have h_pull_in : ∀ x y : SpaceTime,
       (starRingEnd ℂ (f x)) * f y *
         (∫ s in Set.Ioi 0, (Real.exp (-s * m^2) : ℂ) *
@@ -1210,7 +1212,7 @@ theorem schwinger_fubini_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
   -- Step 3: Apply Fubini to swap ∫_x ∫_y ∫_s with ∫_s ∫_x ∫_y
   --
   -- After steps 1 and 2, both sides have the integrand:
-  -- F(s,x,y) = f̄(x) * f(y) * exp(-sm²) * H(s, ‖Θx-y‖)
+  -- F(s,x,y) = fbar(x) * f(y) * exp(-sm²) * H(s, ‖Θx-y‖)
   --
   -- LHS = ∫_x ∫_y [∫_s F(s,x,y) ds] dy dx
   -- RHS = ∫_s [∫_x ∫_y F(s,x,y) dy dx] ds
@@ -1393,7 +1395,7 @@ theorem heatKernel_bilinear_to_mixed_rep (m : ℝ) [Fact (0 < m)] (f : TestFunct
   PROOF OUTLINE:
 
   Step 1: Substitute `heatKernel_eq_gaussianFT` for H(s, |z|)
-    LHS becomes: ∫_s e^{-sm²} ∫_x ∫_y f̄(x) f(y) · (1/(2π)^4) · ∫_k e^{-ik·z} e^{-s|k|²}
+    LHS becomes: ∫_s e^{-sm²} ∫_x ∫_y fbar(x) f(y) · (1/(2π)^4) · ∫_k e^{-ik·z} e^{-s|k|²}
     where z = Θx - y = (-x₀-y₀, x_sp - y_sp)
 
   Step 2: Decompose k = (k₀, k_sp) ∈ ℝ × ℝ³
@@ -1448,7 +1450,7 @@ theorem heatKernel_bilinear_to_mixed_rep (m : ℝ) [Fact (0 < m)] (f : TestFunct
   **PROOF STRUCTURE:**
 
   **Stage 1:** Substitute h_hk_eq to get:
-    LHS = ∫_s e^{-sm²} ∫_x ∫_y f̄(x)f(y) · (1/(2π)^4) · ∫_k e^{-ik·z} e^{-s|k|²}
+    LHS = ∫_s e^{-sm²} ∫_x ∫_y fbar(x)f(y) · (1/(2π)^4) · ∫_k e^{-ik·z} e^{-s|k|²}
     where z = Θx - y
 
   **Stage 2:** Apply h_exp_factor and h_norm to decompose:
@@ -1715,8 +1717,8 @@ theorem bilinear_to_k0_inside (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
         (k0^2 + (Real.sqrt (‖k_spatial‖^2 + m^2))^2)) := by
   -- Step 1: Convert LHS to mixed representation
   rw [bessel_bilinear_eq_mixed_representation m f hf_supp]
-  -- Now LHS = (1/(2(2π)^{d-1})) * ∫_{k_sp} ∫_x ∫_y f̄ f (1/ω) exp(-ω|t|) exp(-i k·r)
-  -- RHS = (1/(2π)^d) * ∫_{k_sp} ∫_x ∫_y f̄ f [∫_{k₀} exp(-iφ)/(k₀²+ω²)]
+  -- Now LHS = (1/(2(2π)^{d-1})) * ∫_{k_sp} ∫_x ∫_y fbar f (1/ω) exp(-ω|t|) exp(-i k·r)
+  -- RHS = (1/(2π)^d) * ∫_{k_sp} ∫_x ∫_y fbar f [∫_{k₀} exp(-iφ)/(k₀²+ω²)]
   -- Step 2: Prove normalization identity (as complex numbers)
   have h_norm : ((1 / (2 * (2 * π) ^ (STDimension - 1)) : ℝ) : ℂ) =
       ((1 / (2 * π) ^ STDimension : ℝ) : ℂ) * (π : ℂ) := by
@@ -1761,8 +1763,8 @@ theorem bilinear_to_k0_inside (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
   apply MeasureTheory.integral_congr_ae
   filter_upwards with y
   -- Now at the pointwise level:
-  -- LHS: π * (f̄ f (1/ω) exp(-ω|t|) exp(-i k·r))
-  -- RHS: f̄ f [∫_{k₀} exp(-i(k₀t + k·r))/(k₀²+ω²)]
+  -- LHS: π * (fbar f (1/ω) exp(-ω|t|) exp(-i k·r))
+  -- RHS: fbar f [∫_{k₀} exp(-i(k₀t + k·r))/(k₀²+ω²)]
   set ω := Real.sqrt (‖k_spatial‖^2 + m^2) with hω_def
   set t := -(x 0) - y 0 with ht_def
   set r_spatial := spatialPart x - spatialPart y with hr_def
@@ -1793,8 +1795,8 @@ theorem bilinear_to_k0_inside (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     rw [h_phase_factor]
     ring
   -- The goal is now at the pointwise level:
-  -- LHS: π * (f̄ f (1/ω) exp(-|t|ω) exp(-i k·r))
-  -- RHS: f̄ f [∫_{k₀} exp(-i(k₀t + k·r))/(k₀²+ω²)]
+  -- LHS: π * (fbar f (1/ω) exp(-|t|ω) exp(-i k·r))
+  -- RHS: fbar f [∫_{k₀} exp(-i(k₀t + k·r))/(k₀²+ω²)]
   -- h_integral_factor says:
   -- ∫_{k₀} exp(-i(k₀t + k·r))/(k₀²+ω²) = exp(-i k·r) * ∫_{k₀} exp(-ik₀t)/(k₀²+ω²)
   -- h_key says: (1/ω) exp(-|t|ω) = (1/π) ∫_{k₀} exp(-ik₀t)/(k₀²+ω²)
@@ -1807,10 +1809,10 @@ theorem bilinear_to_k0_inside (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
   conv_rhs => rw [ht_eq]
   -- Substitute RHS using h_integral_factor
   rw [h_integral_factor]
-  -- Now RHS = f̄ f (exp(-i k·r) * ∫_{k₀} exp(-ik₀t)/(k₀²+ω²))
+  -- Now RHS = fbar f (exp(-i k·r) * ∫_{k₀} exp(-ik₀t)/(k₀²+ω²))
   -- Simplify LHS using h_key
   simp only [hω_def] at h_key ⊢
-  -- LHS: π * (f̄ f (1/ω) exp(-|t|ω) exp(-i k·r))
+  -- LHS: π * (fbar f (1/ω) exp(-|t|ω) exp(-i k·r))
   -- Use h_key: (1/ω) exp(-|t|ω) = (1/π) ∫_{k₀}...
   -- First, simplify π * (1/π) = 1
   have hπ_ne : (π : ℂ) ≠ 0 := by exact_mod_cast Real.pi_ne_zero

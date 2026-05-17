@@ -82,7 +82,8 @@ theorem fourier_plancherel_schwartz (g : TestFunctionℂ) :
     a limit (using `limUnder`), properly avoiding DiracDelta. For the GFF specifically,
     we use this direct definition for computational convenience.
 -/
-noncomputable def SchwingerTwoPointFunction_GFF (m : ℝ) [Fact (0 < m)] (x : SpaceTime) : ℝ :=
+noncomputable def SchwingerTwoPointFunction_GFF (m : ℝ) [hm : Fact (0 < m)] (x : SpaceTime) : ℝ :=
+  let _ := hm
   freeCovarianceKernel m x
 
 /-- The GFF two-point function equals the free covariance kernel by definition. -/

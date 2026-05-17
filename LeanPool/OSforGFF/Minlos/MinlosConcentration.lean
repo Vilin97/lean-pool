@@ -40,7 +40,7 @@ nuclear cylindrical measures. `minlos_concentration` is a convenience wrapper.
 - Trèves, "Topological Vector Spaces", Ch. 50-51
 -/
 
-open BigOperators MeasureTheory Complex TopologicalSpace Classical Finsupp
+open BigOperators MeasureTheory Complex TopologicalSpace Finsupp
 
 noncomputable section
 
@@ -1246,6 +1246,224 @@ private lemma kernel_concentration_bound
 
 /-! ### Tail bound for evaluation on ONB (key step) -/
 
+private lemma gaussian_charFun_quad_average_bound
+    {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+    [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] [SecondCountableTopology V]
+    (μ' : ProbabilityMeasure V) (σ ε_q K C_HS : ℝ) (hσ : 0 < σ)
+    (hK : 0 ≤ K) (hC_HS : 0 ≤ C_HS) (S : V →L[ℝ] V) (hS_pos : S.IsPositive)
+    (hpw : ∀ x : V, 1 - (charFun μ'.toMeasure x).re ≤ ε_q + K * quadForm S x)
+    (h_trace : ∀ (ι : Type*) [Fintype ι] (b : OrthonormalBasis ι ℝ V),
+      ∑ i, @inner ℝ V _ (b i) (S (b i)) ≤ C_HS) :
+    ∫ y, (1 - Real.exp (-(σ ^ 2 * ‖y‖ ^ 2 / 2))) ∂μ'.toMeasure ≤
+      ε_q + K * σ ^ 2 * C_HS := by
+  rw [fubini_gaussian_charFun μ' (charFun μ'.toMeasure) (fun _ => rfl) σ hσ]
+  set C := ∫ x : V, gaussDensity σ x
+  have hC_pos : 0 < C := gaussDensity_integral_pos' (V := V) σ hσ
+  have hCinv_nn : 0 ≤ C⁻¹ := inv_nonneg.mpr hC_pos.le
+  have hgqf_int : Integrable (fun x => gaussDensity σ x * quadForm S x) volume :=
+    gaussDensity_mul_quadForm_integrable' (V := V) σ hσ S
+  have hg_int := gaussDensity_integrable' (V := V) σ hσ
+  have hprod_int : Integrable (fun x => gaussDensity σ x *
+      (1 - (charFun μ'.toMeasure x).re)) volume := by
+    have h1 := gaussDensity_mul_charFun_re_integrable' μ' _ (fun _ => rfl) σ hσ
+    exact hg_int.sub h1 |>.congr
+      (Filter.Eventually.of_forall fun x => by simp [Pi.sub_apply]; ring)
+  have hprod2_int : Integrable (fun x => gaussDensity σ x *
+      (ε_q + K * quadForm S x)) volume := by
+    have : (fun x => gaussDensity σ x * (ε_q + K * quadForm S x)) =
+        (fun x => ε_q * gaussDensity σ x + K * (gaussDensity σ x * quadForm S x)) := by
+      ext x; ring
+    rw [this]; exact (hg_int.const_mul ε_q).add (hgqf_int.const_mul K)
+  calc C⁻¹ * ∫ x : V, gaussDensity σ x * (1 - (charFun μ'.toMeasure x).re)
+      ≤ C⁻¹ * ∫ x : V, gaussDensity σ x * (ε_q + K * quadForm S x) := by
+        apply mul_le_mul_of_nonneg_left _ hCinv_nn
+        exact integral_mono hprod_int hprod2_int fun x =>
+          mul_le_mul_of_nonneg_left (hpw x) (gaussDensity_nonneg' σ x)
+    _ = ε_q + K * (C⁻¹ * ∫ x : V, gaussDensity σ x * quadForm S x) := by
+        rw [show (fun x => gaussDensity σ x * (ε_q + K * quadForm S x)) =
+          (fun x => ε_q * gaussDensity σ x + K * (gaussDensity σ x * quadForm S x))
+          from by ext x; ring]
+        rw [integral_add (hg_int.const_mul ε_q) (hgqf_int.const_mul K),
+          integral_const_mul, integral_const_mul, mul_add]
+        congr 1
+        · rw [mul_comm C⁻¹ (ε_q * C), mul_assoc, mul_inv_cancel₀ (ne_of_gt hC_pos),
+            mul_one]
+        · ring
+    _ ≤ ε_q + K * (σ ^ 2 * C_HS) := by
+        have h_gq := gaussian_quadForm_integral_le (V := V) σ hσ S hS_pos C_HS hC_HS
+          h_trace
+        have : K * (C⁻¹ * ∫ x : V, gaussDensity σ x * quadForm S x) ≤
+            K * (σ ^ 2 * C_HS) :=
+          mul_le_mul_of_nonneg_left h_gq hK
+        linarith
+    _ = ε_q + K * σ ^ 2 * C_HS := by ring
+
+private lemma tail_bound_uniform_gaussian_average
+    {E : Type*} [AddCommGroup E] [Module ℝ E]
+    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
+    (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
+    (h_cf_joint : ∀ (n : ℕ) (s : Fin n → ℝ) (x : Fin n → E),
+      ∫ ω : E → ℝ, exp (I * ↑(∑ i, s i * ω (x i))) ∂ν =
+        Φ (∑ i, s i • x i))
+    (p_inner : Seminorm ℝ E) (hp_inner : p_inner.IsHilbertian)
+    (ε_q K : ℝ) (hK : 0 ≤ K)
+    (hε_q : 0 < ε_q)
+    (h_quad : ∀ x : E, 1 - (Φ x).re ≤ ε_q + K * p_inner x ^ 2)
+    (C_HS : ℝ) (hC_HS : 0 ≤ C_HS)
+    (p_outer : Seminorm ℝ E)
+    (h_HS : ∀ (n : ℕ) (e : Fin n → E),
+      p_outer.IsOrthonormalSeq e → ∑ i, p_inner (e i) ^ 2 ≤ C_HS)
+    (σ : ℝ) (hσ : 0 < σ) (k : ℕ) (e : Fin k → E)
+    (he : p_outer.IsOrthonormalSeq e) :
+    ∫ ω, (1 - Real.exp (-(σ ^ 2 * (∑ i, ω (e i) ^ 2) / 2))) ∂ν ≤
+      ε_q + K * σ ^ 2 * C_HS := by
+  rcases k with _ | k
+  · simp [Finset.sum_empty, Real.exp_zero]
+    linarith [hε_q, mul_nonneg (mul_nonneg hK (sq_nonneg σ)) hC_HS]
+  set V := EuclideanSpace ℝ (Fin (k + 1)) with hV_def
+  let toLp := MeasurableEquiv.toLp (p := 2) (X := Fin (k + 1) → ℝ)
+  let eval_e : (E → ℝ) → V := fun ω => toLp (fun j => ω (e j))
+  have h_meas_e : Measurable eval_e :=
+    toLp.measurable.comp (measurable_pi_lambda _ (fun j => measurable_pi_apply (e j)))
+  let μ := ν.map eval_e
+  haveI h_prob : IsProbabilityMeasure μ :=
+    Measure.isProbabilityMeasure_map h_meas_e.aemeasurable
+  let μ' : ProbabilityMeasure V := ⟨μ, h_prob⟩
+  have h_coord : ∀ (ω : E → ℝ) (i : Fin (k + 1)), (eval_e ω) i = ω (e i) := fun _ _ => rfl
+  have h_inner_V : ∀ (ω : E → ℝ) (v : V),
+      @inner ℝ V _ (eval_e ω) v = ∑ j, v j * ω (e j) := by
+    intro ω v; erw [PiLp.inner_apply]
+    simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
+      fun a b => RCLike.inner_apply a b, h_coord]
+  have h_cf : ∀ v : V, charFun μ'.toMeasure v = Φ (∑ i, v i • e i) := by
+    intro v; rw [charFun_apply]
+    change ∫ y : V, cexp (@inner ℝ V _ y v * I) ∂(ν.map eval_e) = Φ (∑ i, v i • e i)
+    rw [integral_map h_meas_e.aemeasurable (by fun_prop)]
+    simp_rw [h_inner_V, show ∀ ω : E → ℝ,
+      cexp (↑(∑ j, v j * ω (e j)) * I) = cexp (I * ↑(∑ j, v j * ω (e j)))
+      from fun _ => by congr 1; ring]
+    exact h_cf_joint (k + 1) (fun j => v j) e
+  let Mij : Fin (k + 1) → Fin (k + 1) → ℝ := fun j l => p_inner.innerProd (e j) (e l)
+  let S_fun : V → V := fun v => toLp (fun j => ∑ l, Mij j l * v l)
+  have hS_coord : ∀ (v : V) (j : Fin (k + 1)),
+      (S_fun v) j = ∑ l, Mij j l * v l := fun _ _ => rfl
+  have hS_coord' : ∀ (v : V) (j : Fin (k + 1)),
+      (S_fun v).ofLp j = ∑ l, Mij j l * v.ofLp l := fun u j => hS_coord u j
+  have hS_add : ∀ v w : V, S_fun (v + w) = S_fun v + S_fun w := by
+    intro v w; apply PiLp.ext; intro j
+    change ∑ l, Mij j l * ((v + w : V) : Fin _ → ℝ) l =
+      ((∑ l, Mij j l * (v : Fin _ → ℝ) l) + (∑ l, Mij j l * (w : Fin _ → ℝ) l))
+    rw [show ((v + w : V) : Fin _ → ℝ) = (v : Fin _ → ℝ) + (w : Fin _ → ℝ) from rfl]
+    rw [← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun l _ => by simp [Pi.add_apply]; ring
+  have hS_smul : ∀ (c : ℝ) (v : V), S_fun (c • v) = c • S_fun v := by
+    intro c v; apply PiLp.ext; intro j
+    change ∑ l, Mij j l * ((c • v : V) : Fin _ → ℝ) l =
+      c * (∑ l, Mij j l * (v : Fin _ → ℝ) l)
+    rw [show ((c • v : V) : Fin _ → ℝ) = c • (v : Fin _ → ℝ) from rfl]
+    rw [Finset.mul_sum]
+    exact Finset.sum_congr rfl fun l _ => by simp [Pi.smul_apply, smul_eq_mul]; ring
+  let S_lm : V →ₗ[ℝ] V := {
+    toFun := S_fun
+    map_add' := hS_add
+    map_smul' := hS_smul }
+  let S : V →L[ℝ] V := LinearMap.toContinuousLinearMap S_lm
+  have h_qf : ∀ v : V, quadForm S v = p_inner (∑ i, v i • e i) ^ 2 := by
+    intro v
+    change @inner ℝ V _ v (S_fun v) = _
+    erw [PiLp.inner_apply]
+    simp_rw [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
+      fun a b => RCLike.inner_apply a b, hS_coord', Finset.sum_mul]
+    rw [← Seminorm.innerProd_self p_inner, p_inner.innerProd_sum_left hp_inner]
+    simp_rw [gs_innerProd_sum_right p_inner hp_inner,
+      p_inner.innerProd_smul_left hp_inner, gs_innerProd_smul_right p_inner hp_inner]
+    congr 1; ext j; congr 1; ext l; ring
+  have hS_pos : S.IsPositive := by
+    refine ⟨fun v w => ?_, fun v => ?_⟩
+    · change @inner ℝ V _ (S_fun v) w = @inner ℝ V _ v (S_fun w)
+      have h_expand_inner : ∀ (a b : V),
+          @inner ℝ V _ (S_fun a) b = ∑ j, ∑ l, Mij j l * a l * b j := by
+        intro a b; erw [PiLp.inner_apply]
+        simp_rw [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
+          fun a b => RCLike.inner_apply a b, hS_coord', Finset.mul_sum]
+        congr 1; ext j; congr 1; ext l; ring
+      rw [h_expand_inner]
+      rw [show @inner ℝ V _ v (S_fun w) = @inner ℝ V _ (S_fun w) v from
+        (real_inner_comm v (S_fun w)).symm]
+      rw [h_expand_inner]
+      rw [Finset.sum_comm (f := fun j l => Mij j l * w l * v j)]
+      congr 1; ext j; congr 1; ext l
+      have : Mij l j = Mij j l := (Seminorm.innerProd_comm p_inner _ _).symm
+      rw [this]; ring
+    · have : 0 ≤ quadForm S v := by rw [h_qf]; positivity
+      simp only [quadForm] at this ⊢
+      rwa [real_inner_comm] at this
+  have h_trace : ∀ (ι : Type) [Fintype ι] (b : OrthonormalBasis ι ℝ V),
+      ∑ i, @inner ℝ V _ (b i) (S (b i)) ≤ C_HS := by
+    intro ι _ b
+    have hqf_b : ∀ i, @inner ℝ V _ (b i) (S (b i)) =
+        p_inner (∑ j, (b i) j • e j) ^ 2 := by
+      intro i; exact h_qf (b i)
+    simp_rw [hqf_b]
+    have h_expand : ∀ i, p_inner (∑ j, (b i) j • e j) ^ 2 =
+        ∑ j, ∑ l, (b i) j * (b i) l * Mij j l := by
+      intro i
+      rw [← Seminorm.innerProd_self p_inner, p_inner.innerProd_sum_left hp_inner]
+      simp_rw [gs_innerProd_sum_right p_inner hp_inner,
+        p_inner.innerProd_smul_left hp_inner, gs_innerProd_smul_right p_inner hp_inner]
+      congr 1; ext j; congr 1; ext l; ring
+    simp_rw [h_expand]
+    rw [Finset.sum_comm]
+    conv_lhs => arg 2; ext j; rw [Finset.sum_comm]
+    simp_rw [show ∀ (j l : Fin (k+1)) (i : ι),
+      (b i) j * (b i) l * Mij j l = Mij j l * ((b i) j * (b i) l) from
+      fun _ _ _ => by ring]
+    simp_rw [← Finset.mul_sum]
+    have h_parseval : ∀ (j l : Fin (k + 1)),
+        ∑ i, (b i) j * (b i) l = if j = l then 1 else 0 := by
+      intro j l
+      have key := b.sum_inner_mul_inner
+        (EuclideanSpace.single j (1 : ℝ)) (EuclideanSpace.single l 1)
+      have h_single_left : ∀ (v : V),
+          @inner ℝ V _ (EuclideanSpace.single j 1) v = v j := by
+        intro v; erw [PiLp.inner_apply]
+        simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
+          fun a b => RCLike.inner_apply a b]
+        simp [PiLp.single_apply]
+      have h_single_right : ∀ (v : V),
+          @inner ℝ V _ v (EuclideanSpace.single l 1) = v l := by
+        intro v; erw [PiLp.inner_apply]
+        simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
+          fun a b => RCLike.inner_apply a b]
+        simp [PiLp.single_apply]
+      simp only [h_single_left, h_single_right, PiLp.single_apply] at key
+      exact key.symm.symm
+    suffices h_suff : ∑ j, Mij j j ≤ C_HS by
+      apply le_trans _ h_suff
+      apply le_of_eq
+      apply Finset.sum_congr rfl; intro j _
+      have h_collapse_j : ∀ l, Mij j l * (∑ i, (b i) j * (b i) l) =
+          if j = l then Mij j l else 0 := by
+        intro l; rw [h_parseval j l]; split_ifs <;> simp [*]
+      simp only [h_collapse_j]
+      simp
+    simp_rw [show ∀ j : Fin (k + 1), Mij j j = p_inner (e j) ^ 2 from
+      fun j => Seminorm.innerProd_self p_inner (e j)]
+    exact h_HS (k + 1) e he
+  have h_norm_sq : ∀ ω : E → ℝ, ‖eval_e ω‖ ^ 2 = ∑ i, ω (e i) ^ 2 := by
+    intro ω
+    rw [EuclideanSpace.norm_eq, Real.sq_sqrt (Finset.sum_nonneg (fun i _ => sq_nonneg _))]
+    congr 1; ext i; simp [h_coord]
+  have hpw : ∀ x : V, 1 - (charFun μ'.toMeasure x).re ≤ ε_q + K * quadForm S x := by
+    intro x; rw [h_cf, h_qf]; exact h_quad _
+  have h_gauss_V := gaussian_charFun_quad_average_bound μ' σ ε_q K C_HS hσ hK
+    hC_HS S hS_pos hpw h_trace
+  rw [show μ'.toMeasure = ν.map eval_e from rfl] at h_gauss_V
+  rw [integral_map h_meas_e.aemeasurable] at h_gauss_V
+  · convert h_gauss_V using 1; congr 1; ext ω; congr 2; rw [h_norm_sq]
+  · exact (continuous_const.sub (by fun_prop :
+      Continuous (fun y : V => Real.exp (-(σ ^ 2 * ‖y‖ ^ 2 / 2))))).aestronglyMeasurable
+
 /-- Tail probability `ν{∑ ω(eⱼ)² > R²}` can be made arbitrarily small by choosing
     R large. The bound is UNIFORM in the dimension k of the ONB.
 
@@ -1281,233 +1499,8 @@ private lemma tail_bound_uniform
   -- Step 1: Gaussian averaging bound on ν for ANY k and ONB
   -- For any σ > 0, k, and p_outer-ONB e of size k:
   -- ∫ (1-exp(-σ²·∑ω(eⱼ)²/2)) dν ≤ ε_q + K·σ²·C_HS
-  have h_gauss_ν : ∀ (σ : ℝ) (hσ : 0 < σ) (k : ℕ) (e : Fin k → E)
-      (_ : p_outer.IsOrthonormalSeq e),
-      ∫ ω, (1 - Real.exp (-(σ ^ 2 * (∑ i, ω (e i) ^ 2) / 2))) ∂ν ≤
-        ε_q + K * σ ^ 2 * C_HS := by
-    intro σ hσ k e he
-    -- Case k = 0: integral is 0
-    rcases k with _ | k
-    · simp [Finset.sum_empty, Real.exp_zero]
-      linarith [mul_nonneg (mul_nonneg hK (sq_nonneg σ)) hC_HS]
-    -- Step A: Pushforward to V := EuclideanSpace ℝ (Fin (k+1))
-    set V := EuclideanSpace ℝ (Fin (k + 1)) with hV_def
-    let toLp := MeasurableEquiv.toLp (p := 2) (X := Fin (k + 1) → ℝ)
-    let eval_e : (E → ℝ) → V := fun ω => toLp (fun j => ω (e j))
-    have h_meas_e : Measurable eval_e :=
-      toLp.measurable.comp (measurable_pi_lambda _ (fun j => measurable_pi_apply (e j)))
-    let μ := ν.map eval_e
-    haveI h_prob : IsProbabilityMeasure μ :=
-      Measure.isProbabilityMeasure_map h_meas_e.aemeasurable
-    let μ' : ProbabilityMeasure V := ⟨μ, h_prob⟩
-    have h_coord : ∀ (ω : E → ℝ) (i : Fin (k + 1)), (eval_e ω) i = ω (e i) := fun _ _ => rfl
-    have h_inner_V : ∀ (ω : E → ℝ) (v : V),
-        @inner ℝ V _ (eval_e ω) v = ∑ j, v j * ω (e j) := by
-      intro ω v; erw [PiLp.inner_apply]
-      simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-        fun a b => RCLike.inner_apply a b, h_coord]
-    -- Step B: CF of μ'
-    have h_cf : ∀ v : V, charFun μ'.toMeasure v = Φ (∑ i, v i • e i) := by
-      intro v; rw [charFun_apply]
-      change ∫ y : V, cexp (@inner ℝ V _ y v * I) ∂(ν.map eval_e) = Φ (∑ i, v i • e i)
-      rw [integral_map h_meas_e.aemeasurable (by fun_prop)]
-      simp_rw [h_inner_V, show ∀ ω : E → ℝ,
-        cexp (↑(∑ j, v j * ω (e j)) * I) = cexp (I * ↑(∑ j, v j * ω (e j)))
-        from fun _ => by congr 1; ring]
-      exact h_cf_joint (k + 1) (fun j => v j) e
-    -- Step C: CF bound on V: 1 - Re(charFun μ' v) ≤ ε_q + K * p_inner(∑ vⱼ eⱼ)²
-    have h_cf_re_bound : ∀ v : V,
-        1 - (charFun μ'.toMeasure v).re ≤ ε_q + K * p_inner (∑ i, v i • e i) ^ 2 := by
-      intro v; rw [h_cf]; exact h_quad _
-    -- Step D: Construct Gram matrix S : V →L[ℝ] V
-    let Mij : Fin (k + 1) → Fin (k + 1) → ℝ := fun j l => p_inner.innerProd (e j) (e l)
-    let S_fun : V → V := fun v => toLp (fun j => ∑ l, Mij j l * v l)
-    have hS_coord : ∀ (v : V) (j : Fin (k + 1)),
-        (S_fun v) j = ∑ l, Mij j l * v l := fun _ _ => rfl
-    have hS_coord' : ∀ (v : V) (j : Fin (k + 1)),
-        (S_fun v).ofLp j = ∑ l, Mij j l * v.ofLp l := fun u j => hS_coord u j
-    have hS_add : ∀ v w : V, S_fun (v + w) = S_fun v + S_fun w := by
-      intro v w; apply PiLp.ext; intro j
-      change ∑ l, Mij j l * ((v + w : V) : Fin _ → ℝ) l =
-        ((∑ l, Mij j l * (v : Fin _ → ℝ) l) + (∑ l, Mij j l * (w : Fin _ → ℝ) l))
-      rw [show ((v + w : V) : Fin _ → ℝ) = (v : Fin _ → ℝ) + (w : Fin _ → ℝ) from rfl]
-      rw [← Finset.sum_add_distrib]
-      exact Finset.sum_congr rfl fun l _ => by simp [Pi.add_apply]; ring
-    have hS_smul : ∀ (c : ℝ) (v : V), S_fun (c • v) = c • S_fun v := by
-      intro c v; apply PiLp.ext; intro j
-      change ∑ l, Mij j l * ((c • v : V) : Fin _ → ℝ) l =
-        c * (∑ l, Mij j l * (v : Fin _ → ℝ) l)
-      rw [show ((c • v : V) : Fin _ → ℝ) = c • (v : Fin _ → ℝ) from rfl]
-      rw [Finset.mul_sum]
-      exact Finset.sum_congr rfl fun l _ => by simp [Pi.smul_apply, smul_eq_mul]; ring
-    let S_lm : V →ₗ[ℝ] V := {
-      toFun := S_fun
-      map_add' := hS_add
-      map_smul' := hS_smul }
-    let S : V →L[ℝ] V := LinearMap.toContinuousLinearMap S_lm
-    -- Step E: quadForm(S, v) = p_inner(∑ vⱼ eⱼ)²
-    -- quadForm S v = ⟨v, Sv⟩ = ∑_j v_j * (Sv)_j = ∑_j v_j * ∑_l M_{j,l} * v_l
-    -- = ∑_j ∑_l v_j * M_{j,l} * v_l = p_inner.innerProd(∑ v_j e_j, ∑ v_l e_l) = p_inner(...)²
-    have h_qf : ∀ v : V, quadForm S v = p_inner (∑ i, v i • e i) ^ 2 := by
-      intro v
-      change @inner ℝ V _ v (S_fun v) = _
-      erw [PiLp.inner_apply]
-      simp_rw [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-        fun a b => RCLike.inner_apply a b, hS_coord', Finset.sum_mul]
-      rw [← Seminorm.innerProd_self p_inner, p_inner.innerProd_sum_left hp_inner]
-      simp_rw [gs_innerProd_sum_right p_inner hp_inner,
-        p_inner.innerProd_smul_left hp_inner, gs_innerProd_smul_right p_inner hp_inner]
-      congr 1; ext j; congr 1; ext l; ring
-    -- Step F: S is positive
-    have hS_pos : S.IsPositive := by
-      refine ⟨fun v w => ?_, fun v => ?_⟩
-      · -- Symmetry: ⟨Sv, w⟩ = ⟨v, Sw⟩
-        change @inner ℝ V _ (S_fun v) w = @inner ℝ V _ v (S_fun w)
-        -- Compute both to ∑_j ∑_l Mij j l * v l * w j
-        have h_expand_inner : ∀ (a b : V),
-            @inner ℝ V _ (S_fun a) b = ∑ j, ∑ l, Mij j l * a l * b j := by
-          intro a b; erw [PiLp.inner_apply]
-          simp_rw [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-            fun a b => RCLike.inner_apply a b, hS_coord', Finset.mul_sum]
-          congr 1; ext j; congr 1; ext l; ring
-        rw [h_expand_inner]
-        rw [show @inner ℝ V _ v (S_fun w) = @inner ℝ V _ (S_fun w) v from
-          (real_inner_comm v (S_fun w)).symm]
-        rw [h_expand_inner]
-        rw [Finset.sum_comm (f := fun j l => Mij j l * w l * v j)]
-        congr 1; ext j; congr 1; ext l
-        have : Mij l j = Mij j l := (Seminorm.innerProd_comm p_inner _ _).symm
-        rw [this]; ring
-      · -- Nonneg: re⟨Sv, v⟩ = p_inner(...)² ≥ 0
-        have : 0 ≤ quadForm S v := by rw [h_qf]; positivity
-        simp only [quadForm] at this ⊢
-        rwa [real_inner_comm] at this
-    -- Step G: Trace bound for any ONB b of V
-    have h_trace : ∀ (ι : Type) [Fintype ι] (b : OrthonormalBasis ι ℝ V),
-        ∑ i, @inner ℝ V _ (b i) (S (b i)) ≤ C_HS := by
-      intro ι _ b
-      have hqf_b : ∀ i, @inner ℝ V _ (b i) (S (b i)) =
-          p_inner (∑ j, (b i) j • e j) ^ 2 := by
-        intro i; exact h_qf (b i)
-      simp_rw [hqf_b]
-      -- Expand using bilinearity
-      have h_expand : ∀ i, p_inner (∑ j, (b i) j • e j) ^ 2 =
-          ∑ j, ∑ l, (b i) j * (b i) l * Mij j l := by
-        intro i
-        rw [← Seminorm.innerProd_self p_inner, p_inner.innerProd_sum_left hp_inner]
-        simp_rw [gs_innerProd_sum_right p_inner hp_inner,
-          p_inner.innerProd_smul_left hp_inner, gs_innerProd_smul_right p_inner hp_inner]
-        congr 1; ext j; congr 1; ext l; ring
-      simp_rw [h_expand]
-      -- Swap sums: ∑_i ∑_j ∑_l = ∑_j ∑_l ∑_i
-      rw [Finset.sum_comm]
-      conv_lhs => arg 2; ext j; rw [Finset.sum_comm]
-      -- Factor out Mij: ∑_i a_i * b_i * c = c * ∑_i a_i * b_i
-      simp_rw [show ∀ (j l : Fin (k+1)) (i : ι),
-        (b i) j * (b i) l * Mij j l = Mij j l * ((b i) j * (b i) l) from
-        fun _ _ _ => by ring]
-      simp_rw [← Finset.mul_sum]
-      -- Parseval: ∑_i (b i) j * (b i) l = δ_{j,l}
-      -- Now goal: ∑_j ∑_l Mij j l * (∑_i (b i) j * (b i) l) ≤ C_HS
-      have h_parseval : ∀ (j l : Fin (k + 1)),
-          ∑ i, (b i) j * (b i) l = if j = l then 1 else 0 := by
-        intro j l
-        have key := b.sum_inner_mul_inner
-          (EuclideanSpace.single j (1 : ℝ)) (EuclideanSpace.single l 1)
-        have h_single_left : ∀ (v : V),
-            @inner ℝ V _ (EuclideanSpace.single j 1) v = v j := by
-          intro v; erw [PiLp.inner_apply]
-          simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-            fun a b => RCLike.inner_apply a b]
-          simp [PiLp.single_apply]
-        have h_single_right : ∀ (v : V),
-            @inner ℝ V _ v (EuclideanSpace.single l 1) = v l := by
-          intro v; erw [PiLp.inner_apply]
-          simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-            fun a b => RCLike.inner_apply a b]
-          simp [PiLp.single_apply]
-        simp only [h_single_left, h_single_right, PiLp.single_apply] at key
-        exact key.symm.symm
-      -- Apply Parseval and collapse: use convert to handle ofLp coercion
-      -- Goal: ∑_j ∑_l Mij j l * (∑_i (b i).ofLp j * (b i).ofLp l) ≤ C_HS
-      -- Since (b i) j = (b i).ofLp j definitionally, we can convert
-      suffices h_suff : ∑ j, Mij j j ≤ C_HS by
-        apply le_trans _ h_suff
-        apply le_of_eq
-        apply Finset.sum_congr rfl; intro j _
-        have h_collapse_j : ∀ l, Mij j l * (∑ i, (b i) j * (b i) l) =
-            if j = l then Mij j l else 0 := by
-          intro l; rw [h_parseval j l]; split_ifs <;> simp [*]
-        simp only [h_collapse_j]
-        simp
-      simp_rw [show ∀ j : Fin (k + 1), Mij j j = p_inner (e j) ^ 2 from
-        fun j => Seminorm.innerProd_self p_inner (e j)]
-      exact h_HS (k + 1) e he
-    -- Step H: Norm of pushforward: ‖eval_e ω‖² = ∑ ω(e_i)²
-    have h_norm_sq : ∀ ω : E → ℝ, ‖eval_e ω‖ ^ 2 = ∑ i, ω (e i) ^ 2 := by
-      intro ω
-      rw [EuclideanSpace.norm_eq, Real.sq_sqrt (Finset.sum_nonneg (fun i _ => sq_nonneg _))]
-      congr 1; ext i; simp [h_coord]
-    -- Step I: Transfer Gaussian averaging from V to ν
-    -- On V: ∫ (1-exp(-σ²‖y‖²/2)) dμ' = C⁻¹ * ∫ g(x)(1-Re(φ(x))) dx
-    -- where φ(x) = charFun μ' x = Φ(∑ x_j e_j)
-    -- Pointwise: 1 - Re(φ(x)) ≤ ε_q + K * p_inner(∑ x_j e_j)² = ε_q + K * quadForm(S, x)
-    -- So C⁻¹ * ∫ g(x)(1-Re(φ(x))) ≤ C⁻¹ * ∫ g(x)(ε_q + K * quadForm(S,x))
-    --   = ε_q + K * (C⁻¹ * ∫ g * quadForm(S,·)) ≤ ε_q + K * σ² * C_HS
-    have h_gauss_V : ∫ y, (1 - Real.exp (-(σ ^ 2 * ‖y‖ ^ 2 / 2))) ∂μ'.toMeasure ≤
-        ε_q + K * σ ^ 2 * C_HS := by
-      rw [fubini_gaussian_charFun μ' (charFun μ'.toMeasure) (fun _ => rfl) σ hσ]
-      set C := ∫ x : V, gaussDensity σ x
-      have hC_pos : 0 < C := gaussDensity_integral_pos' (V := V) σ hσ
-      have hCinv_nn : 0 ≤ C⁻¹ := inv_nonneg.mpr hC_pos.le
-      -- Pointwise bound
-      have hpw : ∀ x : V, 1 - (charFun μ'.toMeasure x).re ≤
-          ε_q + K * quadForm S x := by
-        intro x; rw [h_cf, h_qf]; exact h_quad _
-      -- Integrability
-      have hgqf_int : Integrable (fun x => gaussDensity σ x * quadForm S x) volume :=
-        gaussDensity_mul_quadForm_integrable' (V := V) σ hσ S
-      have hg_int := gaussDensity_integrable' (V := V) σ hσ
-      have hprod_int : Integrable (fun x => gaussDensity σ x *
-          (1 - (charFun μ'.toMeasure x).re)) volume := by
-        have h1 := gaussDensity_mul_charFun_re_integrable' μ' _ (fun _ => rfl) σ hσ
-        exact hg_int.sub h1 |>.congr
-          (Filter.Eventually.of_forall fun x => by simp [Pi.sub_apply]; ring)
-      have hprod2_int : Integrable (fun x => gaussDensity σ x *
-          (ε_q + K * quadForm S x)) volume := by
-        have : (fun x => gaussDensity σ x * (ε_q + K * quadForm S x)) =
-            (fun x => ε_q * gaussDensity σ x + K * (gaussDensity σ x * quadForm S x)) := by
-          ext x; ring
-        rw [this]; exact (hg_int.const_mul ε_q).add (hgqf_int.const_mul K)
-      calc C⁻¹ * ∫ x : V, gaussDensity σ x * (1 - (charFun μ'.toMeasure x).re)
-          ≤ C⁻¹ * ∫ x : V, gaussDensity σ x * (ε_q + K * quadForm S x) := by
-            apply mul_le_mul_of_nonneg_left _ hCinv_nn
-            exact integral_mono hprod_int hprod2_int fun x =>
-              mul_le_mul_of_nonneg_left (hpw x) (gaussDensity_nonneg' σ x)
-        _ = ε_q + K * (C⁻¹ * ∫ x : V, gaussDensity σ x * quadForm S x) := by
-            rw [show (fun x => gaussDensity σ x * (ε_q + K * quadForm S x)) =
-              (fun x => ε_q * gaussDensity σ x + K * (gaussDensity σ x * quadForm S x))
-              from by ext x; ring]
-            rw [integral_add (hg_int.const_mul ε_q) (hgqf_int.const_mul K),
-              integral_const_mul, integral_const_mul, mul_add]
-            congr 1
-            · rw [mul_comm C⁻¹ (ε_q * C), mul_assoc, mul_inv_cancel₀ (ne_of_gt hC_pos),
-                mul_one]
-            · ring
-        _ ≤ ε_q + K * (σ ^ 2 * C_HS) := by
-            have h_gq := gaussian_quadForm_integral_le (V := V) σ hσ S hS_pos C_HS hC_HS
-              (fun ι _ b => h_trace ι b)
-            have : K * (C⁻¹ * ∫ x : V, gaussDensity σ x * quadForm S x) ≤
-                K * (σ ^ 2 * C_HS) :=
-              mul_le_mul_of_nonneg_left h_gq hK
-            linarith
-        _ = ε_q + K * σ ^ 2 * C_HS := by ring
-    -- Step J: Transfer from V back to ν
-    rw [show μ'.toMeasure = ν.map eval_e from rfl] at h_gauss_V
-    rw [integral_map h_meas_e.aemeasurable] at h_gauss_V
-    · convert h_gauss_V using 1; congr 1; ext ω; congr 2; rw [h_norm_sq]
-    · exact (continuous_const.sub (by fun_prop :
-        Continuous (fun y : V => Real.exp (-(σ ^ 2 * ‖y‖ ^ 2 / 2))))).aestronglyMeasurable
+  have h_gauss_ν := tail_bound_uniform_gaussian_average Φ ν h_cf_joint p_inner hp_inner
+    ε_q K hK hε_q h_quad C_HS hC_HS p_outer h_HS
   -- Step 2: Choose σ and R (depending on ε_q, K, C_HS, δ, not on k)
   set gap := δ - ε_q
   have h_gap_pos : 0 < gap := by linarith
@@ -1730,7 +1723,7 @@ theorem nuclear_cylindrical_concentration
   obtain ⟨h_le_m, C_HS, h_HS_bound⟩ := hp_hs m₀
   have hC_HS : 0 ≤ C_HS := by
     have := h_HS_bound 0 Fin.elim0 (fun i => Fin.elim0 i)
-    simp only [ge_iff_le] at this; exact this
+    exact this
   -- Step 4: Quadratic bound on kernel elements
   have h_kernel_quad : ∀ x : E, (p m) x = 0 → ∀ t : ℝ,
       1 - (Φ (t • x)).re ≤ ε / 8 := by

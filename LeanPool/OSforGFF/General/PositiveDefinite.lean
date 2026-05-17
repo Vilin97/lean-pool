@@ -18,7 +18,7 @@ Extracted from Minlos.lean to avoid circular imports with GaussianRBF.lean.
 
 Key definitions:
 - `IsPositiveDefinite`: A function φ : α → ℂ is positive definite if for any finite
-  collection of points and complex coefficients, ∑ᵢⱼ c̄ᵢ cⱼ φ(xᵢ - xⱼ) ≥ 0
+  collection of points and complex coefficients, ∑ᵢⱼ cbarᵢ cⱼ φ(xᵢ - xⱼ) ≥ 0
 
 Key lemmas:
 - `isPositiveDefinite_precomp_linear`: Composition with linear map preserves PD
@@ -37,7 +37,7 @@ namespace GFF4D
 
 /-- A function φ : α → ℂ is positive definite if for any finite collection
     of points x₁, ..., xₘ and complex coefficients c₁, ..., cₘ, we have
-    ∑ᵢⱼ c̄ᵢ cⱼ φ(xᵢ - xⱼ) ≥ 0
+    ∑ᵢⱼ cbarᵢ cⱼ φ(xᵢ - xⱼ) ≥ 0
 
     This is the standard definition in harmonic analysis and probability theory.
 -/

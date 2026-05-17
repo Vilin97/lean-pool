@@ -94,7 +94,8 @@ theorem projectiveFamilyContent_iUnion_le_sum_of_innerRegular (hP : IsProjective
 end InnerRegular
 
 /-- Projective limit of a projective measure family. -/
-noncomputable def projectiveLimitWithWeakestHypotheses [∀ i, PseudoEMetricSpace (α i)]
+noncomputable def _root_.MeasureTheory.projectiveLimitWithWeakestHypotheses
+    [∀ i, PseudoEMetricSpace (α i)]
     [∀ i, BorelSpace (α i)] [∀ i, SecondCountableTopology (α i)]
     [∀ i, CompleteSpace (α i)] (P : ∀ J : Finset ι, Measure (Π j : J, α j))
     [∀ i, IsFiniteMeasure (P i)] (hP : IsProjectiveMeasureFamily P) : Measure (Π i, α i) :=
@@ -108,7 +109,8 @@ section Polish
 variable [∀ i, TopologicalSpace (α i)] [∀ i, BorelSpace (α i)]
   [∀ i, PolishSpace (α i)] [∀ I, IsFiniteMeasure (P I)]
 
-theorem projectiveFamilyContent_sigma_additive (hP : IsProjectiveMeasureFamily P)
+theorem _root_.MeasureTheory.projectiveFamilyContent_sigma_additive
+    (hP : IsProjectiveMeasureFamily P)
     ⦃f : ℕ → Set (Π i, α i)⦄
     (hf : ∀ i, f i ∈ measurableCylinders α) (hf_Union : (⋃ i, f i) ∈ measurableCylinders α)
     (h_disj : Pairwise (Function.onFun Disjoint f)) :
@@ -116,7 +118,8 @@ theorem projectiveFamilyContent_sigma_additive (hP : IsProjectiveMeasureFamily P
   refine projectiveFamilyContent_sigma_additive_of_innerRegular hP ?_ hf hf_Union h_disj
   exact fun J ↦ MeasureTheory.innerRegular_isCompact_isClosed_measurableSet_of_finite (P J)
 
-theorem projectiveFamilyContent_iUnion_le_sum (hP : IsProjectiveMeasureFamily P)
+theorem _root_.MeasureTheory.projectiveFamilyContent_iUnion_le_sum
+    (hP : IsProjectiveMeasureFamily P)
     ⦃f : ℕ → Set (Π i, α i)⦄
     (hf : ∀ i, f i ∈ measurableCylinders α) (hf_Union : (⋃ i, f i) ∈ measurableCylinders α) :
     projectiveFamilyContent hP (⋃ i, f i) ≤ ∑' i, projectiveFamilyContent hP (f i) := by
@@ -124,7 +127,8 @@ theorem projectiveFamilyContent_iUnion_le_sum (hP : IsProjectiveMeasureFamily P)
   exact fun J ↦ MeasureTheory.innerRegular_isCompact_isClosed_measurableSet_of_finite (P J)
 
 /-- Projective limit of a projective measure family. -/
-noncomputable def projectiveLimit (P : ∀ J : Finset ι, Measure (Π j : J, α j))
+noncomputable def _root_.MeasureTheory.projectiveLimit
+    (P : ∀ J : Finset ι, Measure (Π j : J, α j))
     [∀ i, IsFiniteMeasure (P i)] (hP : IsProjectiveMeasureFamily P) : Measure (Π i, α i) :=
   (projectiveFamilyContent hP).measure isSetSemiring_measurableCylinders
       generateFrom_measurableCylinders.symm.le
@@ -135,7 +139,7 @@ on `Π i, α i` which is the projective limit of `P`. That measure is given by
 `projectiveLimit P hP`, where `hP : IsProjectiveMeasureFamily P`.
 The projective limit is unique: see `IsProjectiveLimit.unique`.
 -/
-theorem isProjectiveLimit_projectiveLimit (hP : IsProjectiveMeasureFamily P) :
+theorem _root_.MeasureTheory.isProjectiveLimit_projectiveLimit (hP : IsProjectiveMeasureFamily P) :
     IsProjectiveLimit (projectiveLimit P hP) P := by
   intro J
   ext s hs
@@ -147,11 +151,11 @@ theorem isProjectiveLimit_projectiveLimit (hP : IsProjectiveMeasureFamily P) :
     projectiveFamilyContent_congr hP (_ ⁻¹' _) rfl hs]
   exact generateFrom_measurableCylinders.symm
 
-instance isFiniteMeasure_projectiveLimit (hP : IsProjectiveMeasureFamily P) :
+instance _root_.MeasureTheory.isFiniteMeasure_projectiveLimit (hP : IsProjectiveMeasureFamily P) :
     IsFiniteMeasure (projectiveLimit P hP) :=
   IsProjectiveLimit.isFiniteMeasure (isProjectiveLimit_projectiveLimit hP)
 
-instance isProbabilityMeasure_projectiveLimit [hι : Nonempty ι]
+instance _root_.MeasureTheory.isProbabilityMeasure_projectiveLimit [hι : Nonempty ι]
     {P : ∀ J : Finset ι, Measure (Π j : J, α j)} [∀ i, IsProbabilityMeasure (P i)]
     (hP : IsProjectiveMeasureFamily P) : IsProbabilityMeasure (projectiveLimit P hP) := by
   constructor

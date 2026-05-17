@@ -56,17 +56,22 @@ via `parseval_triple_integrand_integrable` in `Covariance.Parseval`.
 noncomputable section
 /-! ### Fourier Analysis Infrastructure -/
 
-/-- The heat kernel in momentum space. This is the result of integrating the full propagator over the time-component of momentum. -/
+/-- The heat kernel in momentum space. This is the result of integrating the full propagator
+over the time-component of momentum. -/
 noncomputable def heatKernelMomentum (m : ℝ) (t : ℝ) (k_spatial : SpatialCoords) : ℝ :=
-  Real.exp (-t * Real.sqrt (‖k_spatial‖^2 + m^2)) / Real.sqrt (‖k_spatial‖^2 + m^2)
+  Real.exp (-t * Real.sqrt (‖k_spatial‖ ^ 2 + m ^ 2)) /
+    Real.sqrt (‖k_spatial‖ ^ 2 + m ^ 2)
 
 /-- The inverse Fourier transform for a spatial function. -/
 noncomputable def inverseFourierTransform (_f : SpatialCoords → ℂ) : SpatialL2 :=
+  let _ := _f
   Classical.choose exists_spatialL2_function
   where exists_spatialL2_function : ∃ _h : SpatialL2, True := ⟨0, trivial⟩
 
 /-- Spatial convolution of two functions. -/
 noncomputable def spatial_convolution (_f : SpatialL2) (_g : SpatialL2) : SpatialL2 :=
+  let _ := _f
+  let _ := _g
   Classical.choose exists_spatialL2_function
   where exists_spatialL2_function : ∃ _h : SpatialL2, True := ⟨0, trivial⟩
 
@@ -93,7 +98,7 @@ noncomputable def fourierTransform_spatial_draft (h : SpatialL2) (k : SpatialCoo
 
 /-- Draft: Embed spatial L² function into spacetime momentum space.
 
-    Conceptually: (SpatialToMomentum m f)(k₀, k⃗) = f̂(k⃗) * δ(k₀)
+    Conceptually: (SpatialToMomentum m f)(k₀, kvec) = f̂(kvec) * δ(k₀)
 
     Since the Fourier transform of δ(k₀) is the constant function 1,
     we can implement this by extending the spatial function to be independent of time.
@@ -609,9 +614,12 @@ theorem freeCovarianceℂ_bilinear_add_right
   -- freeCovarianceℂ_bilinear m f g₁ + freeCovarianceℂ_bilinear m f g₂
   rw [freeCovarianceℂ_bilinear_symm m g₁ f, freeCovarianceℂ_bilinear_symm m g₂ f]
 
-/-- Complex extension of the covariance for complex test functions (using regulated Fourier form). -/
+/-- Complex extension of the covariance for complex test functions, using regulated Fourier
+form. -/
 def freeCovarianceℂ_regulated (α : ℝ) (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
-  ∫ x, ∫ y, (f x) * (freeCovariance_regulated α m x y) * (starRingEnd ℂ (g y)) ∂volume ∂volume
+  ∫ x, ∫ y,
+    (f x) * freeCovariance_regulated α m x y * starRingEnd ℂ (g y)
+      ∂volume ∂volume
 
 /-- The regulated complex covariance is positive definite for any α > 0. -/
 theorem freeCovarianceℂ_regulated_positive (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f :

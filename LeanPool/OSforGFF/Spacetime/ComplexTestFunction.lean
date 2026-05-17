@@ -84,7 +84,8 @@ lemma ω_re_decompose_linear
         = t.re * Complex.reCLM (f x) - t.im * Complex.imCLM (f x)
           + s.re * Complex.reCLM (g x) - s.im * Complex.imCLM (g x)
     -- Evaluate pointwise scalar multiplication and addition
-    simp
+    simp only [SchwartzMap.add_apply, SchwartzMap.smul_apply, smul_eq_mul, reCLM_apply,
+      add_re, mul_re, imCLM_apply]
     -- Switch CLMs to the scalar functions and finish with the algebraic identity
     change Complex.re (t * f x + s * g x)
         = t.re * Complex.re (f x) - t.im * Complex.im (f x)
@@ -119,7 +120,8 @@ lemma ω_im_decompose_linear
         = t.re * Complex.imCLM (f x) + t.im * Complex.reCLM (f x)
           + s.re * Complex.imCLM (g x) + s.im * Complex.reCLM (g x)
     -- Evaluate pointwise scalar multiplication and addition
-    simp
+    simp only [SchwartzMap.add_apply, SchwartzMap.smul_apply, smul_eq_mul, imCLM_apply,
+      add_im, mul_im, reCLM_apply]
     -- Switch CLMs to scalar functions and finish with the algebraic identity
     change Complex.im (t * f x + s * g x)
         = t.re * Complex.im (f x) + t.im * Complex.re (f x)
@@ -140,7 +142,7 @@ lemma pairing_linear_combo
   apply Complex.ext
   · -- Real parts
     -- Expand both sides to re/imag pieces
-    simp [distributionPairingℂ_real]
+    simp only [distributionPairingℂ_real, add_re, mul_re]
     -- Goal is now: ω ((complex_testfunction_decompose (t•f+s•g)).1)
     --              = (t * ((ω (..f..).1 + i ω (..f..).2)) + s * ((ω (..g..).1 + i ω (..g..).2))).re
     -- Use algebraic identity on the RHS
@@ -164,7 +166,7 @@ lemma pairing_linear_combo
     simpa [hre_rhs, add_comm, add_left_comm, add_assoc, sub_eq_add_neg]
       using hre
   · -- Imag parts
-    simp [distributionPairingℂ_real]
+    simp only [distributionPairingℂ_real, add_im, mul_im]
     have him_rhs :
         (t * ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω
            ((complex_testfunction_decompose f).2) : ℂ))

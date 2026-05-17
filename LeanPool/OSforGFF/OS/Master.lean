@@ -5,12 +5,12 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 import LeanPool.OSforGFF.Measure.GaussianFreeField
-import LeanPool.OSforGFF.OS.OS3_ReflectionPositivity
-import LeanPool.OSforGFF.OS.OS0_Analyticity
-import LeanPool.OSforGFF.OS.OS1_Regularity
-import LeanPool.OSforGFF.OS.OS2_Invariance
-import LeanPool.OSforGFF.OS.OS4_Clustering
-import LeanPool.OSforGFF.OS.OS4_Ergodicity
+import LeanPool.OSforGFF.OS.OS3ReflectionPositivity
+import LeanPool.OSforGFF.OS.OS0Analyticity
+import LeanPool.OSforGFF.OS.OS1Regularity
+import LeanPool.OSforGFF.OS.OS2Invariance
+import LeanPool.OSforGFF.OS.OS4Clustering
+import LeanPool.OSforGFF.OS.OS4Ergodicity
 
 /-!
 # Master Theorem

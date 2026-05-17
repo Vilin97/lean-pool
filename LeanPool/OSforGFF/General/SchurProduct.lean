@@ -28,7 +28,7 @@ namespace OSforGFF
 
 universe u
 
-variable {ι : Type u} [Fintype ι] [DecidableEq ι]
+variable {ι : Type u}
 
 /-- Notation alias for the Hadamard (entrywise) product from Mathlib. -/
 notation:100 A "∘ₕ" B => Matrix.hadamard A B
@@ -36,7 +36,9 @@ notation:100 A "∘ₕ" B => Matrix.hadamard A B
 /-- Auxiliary: diagonal embedding of a vector `x : ι → ℝ` into `ι×ι` used for the restriction
 argument: only the diagonal entries are nonzero and equal to `x`.
 -/
-@[simp] def diagEmbed (x : ι → ℝ) : ι × ι → ℝ := fun p => if p.2 = p.1 then x p.1 else 0
+@[simp] noncomputable def diagEmbed (x : ι → ℝ) : ι × ι → ℝ := by
+  classical
+  exact fun p => if p.2 = p.1 then x p.1 else 0
 
 lemma diagEmbed_ne_zero_of_ne_zero {x : ι → ℝ} (hx : x ≠ 0) : diagEmbed (ι:=ι) x ≠ 0 := by
   classical
@@ -48,7 +50,7 @@ lemma diagEmbed_ne_zero_of_ne_zero {x : ι → ℝ} (hx : x ≠ 0) : diagEmbed (
   simpa [diagEmbed] using this
 
 /-- Finite sum over pairs equals iterated double sum over coordinates (binderless sums). -/
-lemma sum_pairs_eq_double (g : ι × ι → ℝ) :
+lemma sum_pairs_eq_double [Fintype ι] (g : ι × ι → ℝ) :
   (∑ p, g p) = ∑ i, ∑ j, g (i, j) :=
   Fintype.sum_prod_type g
 
@@ -67,10 +69,11 @@ private lemma isHermitian_hadamard_real {A B : Matrix ι ι ℝ}
 If A B are positive definite matrices over ℝ, then the Hadamard product is positive definite.
 -/
 @[simp] theorem schur_product_posDef
-  (A B : Matrix ι ι ℝ)
+  [Finite ι] (A B : Matrix ι ι ℝ)
   (hA : A.PosDef) (hB : B.PosDef) :
   (A ∘ₕ B).PosDef := by
   classical
+  letI := Fintype.ofFinite ι
   -- Use the characterization via dotProduct_mulVec
   rw [Matrix.posDef_iff_dotProduct_mulVec]
   constructor

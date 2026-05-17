@@ -142,7 +142,8 @@ Key relationship: `f̂_phys(2πξ) = 𝓕f(ξ)`
 noncomputable def physicsFourierTransform (f : TestFunctionℂ) (k : SpaceTime) : ℂ :=
   ∫ x, f x * Complex.exp (-Complex.I * ((@inner ℝ SpaceTime _ k x : ℝ) : ℂ)) ∂volume
 
-/-- The regulated Fourier covariance equals the full complex Fourier integral (not just the real part).
+/-- The regulated Fourier covariance equals the full complex Fourier integral, not just the
+    real part.
     The regulator exp(-α‖k‖²) ensures absolute convergence.
 -/
 lemma freeCovariance_regulated_eq_complex_integral (α : ℝ) (m : ℝ) (x y : SpaceTime) :
@@ -328,32 +329,33 @@ lemma regulated_triple_integrable (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 <
   refine h_bound.mono' ?meas ?bound
   case meas =>
     apply AEStronglyMeasurable.mul
-    apply AEStronglyMeasurable.mul
-    apply AEStronglyMeasurable.mul
-    · exact f.continuous.aestronglyMeasurable.comp_measurable measurable_fst
-    · have hcont : Continuous (fun k : SpaceTime =>
-          (Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℂ))
-             := by
-        have h1 : Continuous (fun k : SpaceTime =>
-            Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension) :=
-          ((gaussian_regulator_continuous α).mul (freePropagator_continuous (m := m))).div_const _
-        have h2 : Continuous (fun k : SpaceTime =>
-            (Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℂ))
-               := by
-          convert Complex.continuous_ofReal.comp h1 using 1
-          ext k
-          simp only [Function.comp_apply, Complex.ofReal_div, Complex.ofReal_mul,
-            Complex.ofReal_pow,
-            Complex.ofReal_ofNat]
-        exact h2
-      exact hcont.aestronglyMeasurable.comp_measurable (measurable_snd.comp measurable_snd)
-    · have h_inner_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime => ⟪p.2.2,
-      p.1 - p.2.1⟫_ℝ) :=
-        Measurable.inner measurable_snd.snd (measurable_fst.sub measurable_snd.fst)
-      have h_phase_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime =>
-          -Complex.I * Complex.ofReal ⟪p.2.2, p.1 - p.2.1⟫_ℝ) := by
-        exact (measurable_const.mul (Complex.measurable_ofReal.comp h_inner_meas))
-      exact Complex.continuous_exp.aestronglyMeasurable.comp_measurable h_phase_meas
+    · apply AEStronglyMeasurable.mul
+      · apply AEStronglyMeasurable.mul
+        · exact f.continuous.aestronglyMeasurable.comp_measurable measurable_fst
+        · have hcont : Continuous (fun k : SpaceTime =>
+              (Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k /
+                (2 * Real.pi) ^ STDimension : ℂ)) := by
+            have h1 : Continuous (fun k : SpaceTime =>
+                Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k /
+                  (2 * Real.pi) ^ STDimension) :=
+              ((gaussian_regulator_continuous α).mul
+                (freePropagator_continuous (m := m))).div_const _
+            have h2 : Continuous (fun k : SpaceTime =>
+                (Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k /
+                  (2 * Real.pi) ^ STDimension : ℂ)) := by
+              convert Complex.continuous_ofReal.comp h1 using 1
+              ext k
+              simp only [Function.comp_apply, Complex.ofReal_div, Complex.ofReal_mul,
+                Complex.ofReal_pow, Complex.ofReal_ofNat]
+            exact h2
+          exact hcont.aestronglyMeasurable.comp_measurable (measurable_snd.comp measurable_snd)
+      · have h_inner_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime => ⟪p.2.2,
+          p.1 - p.2.1⟫_ℝ) :=
+          Measurable.inner measurable_snd.snd (measurable_fst.sub measurable_snd.fst)
+        have h_phase_meas : Measurable (fun p : SpaceTime × SpaceTime × SpaceTime =>
+            -Complex.I * Complex.ofReal ⟪p.2.2, p.1 - p.2.1⟫_ℝ) := by
+          exact (measurable_const.mul (Complex.measurable_ofReal.comp h_inner_meas))
+        exact Complex.continuous_exp.aestronglyMeasurable.comp_measurable h_phase_meas
     · have hcont : Continuous (fun y => starRingEnd ℂ (f y)) := f.continuous.star
       exact hcont.aestronglyMeasurable.comp_measurable measurable_snd.fst
   case bound =>
@@ -830,9 +832,9 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
     -- F α p = f x * C_α(x,y) * conj(g y), and we need convergence of this
     simp only [F, F_limit]
     apply Filter.Tendsto.mul
-    apply Filter.Tendsto.mul
-    · exact tendsto_const_nhds
-    · exact Filter.Tendsto.comp Complex.continuous_ofReal.continuousAt hC
+    · apply Filter.Tendsto.mul
+      · exact tendsto_const_nhds
+      · exact Filter.Tendsto.comp Complex.continuous_ofReal.continuousAt hC
     · exact tendsto_const_nhds
   -- Uniform bound: ‖F α p‖ ≤ bound p for α ∈ (0, 1]
   have h_bound : ∀ᶠ α in nhdsWithin 0 (Set.Ioi 0), ∀ᵐ p ∂(volume.prod volume), ‖F α p‖ ≤ bound p :=
@@ -870,8 +872,8 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
           rw [norm_mul, norm_mul, Complex.norm_real, Real.norm_eq_abs, RCLike.norm_conj]
       _ ≤ ‖f p.1‖ * (Real.exp (m^2) * freeCovariance m p.1 p.2) * ‖g p.2‖ := by
           apply mul_le_mul_of_nonneg_right
-          apply mul_le_mul_of_nonneg_left h_cov_bound (norm_nonneg _)
-          exact norm_nonneg _
+          · exact mul_le_mul_of_nonneg_left h_cov_bound (norm_nonneg _)
+          · exact norm_nonneg _
       _ = Real.exp (m^2) * ‖f p.1‖ * freeCovariance m p.1 p.2 * ‖g p.2‖ := by ring
       _ = Real.exp (m^2) * ‖f p.1‖ * |freeCovariance m p.1 p.2| * ‖g p.2‖ := by
           congr 1

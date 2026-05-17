@@ -34,7 +34,7 @@ probability measure on the topological dual E' = WeakDual ℝ E.
 - Degenne-Pfaffelhuber, KolmogorovExtension4 (formalized Kolmogorov extension)
 -/
 
-open BigOperators MeasureTheory Complex TopologicalSpace Classical
+open BigOperators MeasureTheory Complex TopologicalSpace
 
 noncomputable section
 
@@ -123,6 +123,7 @@ theorem minlos_theorem {E : Type*} [AddCommGroup E] [Module ℝ E]
       ∫ ω : E → ℝ, Complex.exp (Complex.I * ↑(∑ i, s i * ω (x i))) ∂ν =
         Φ (∑ i, s i • x i) := by
     intro n s x
+    classical
     set J := Finset.image x Finset.univ with J_def
     have hx_mem : ∀ i, x i ∈ J :=
       fun i => Finset.mem_image_of_mem x (Finset.mem_univ i)

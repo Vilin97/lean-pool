@@ -154,17 +154,14 @@ theorem gff_integrand_analytic
       have h_add : ∀ f g : TestFunctionℂ, distributionPairingℂ_real ω (f + g) =
           distributionPairingℂ_real ω f + distributionPairingℂ_real ω g := fun f g => by
         have := pairing_linear_combo ω f g 1 1
-        simp at this
-        exact this
+        simpa only [one_smul, one_mul] using this
       have h_smul : ∀ (c : ℂ) (f : TestFunctionℂ), distributionPairingℂ_real ω (c • f) =
           c * distributionPairingℂ_real ω f := fun c f => by
         have := pairing_linear_combo ω f 0 c 0
-        simp at this
-        exact this
+        simpa only [zero_smul, add_zero, zero_mul] using this
       have h_zero : distributionPairingℂ_real ω 0 = 0 := by
         have := pairing_linear_combo ω 0 0 0 0
-        simp at this
-        exact this
+        simpa only [zero_smul, zero_add, zero_mul, add_zero] using this
       -- Use Finset.induction_on for the sum
       have h_gen : ∀ (s : Finset (Fin n)),
           distributionPairingℂ_real ω (∑ i ∈ s, z i • J i) =
@@ -443,7 +440,8 @@ lemma gff_exp_abs_sum_memLp {ι : Type*} (s : Finset ι) (g : ι → TestFunctio
   -- Goal: 2 = 2⁻¹⁻¹
   simp only [inv_inv]
 
-/-- The integral of ‖exp(I * distributionPairingℂ_real ω f)‖ is finite for any complex test function.
+/-- The integral of ‖exp(I * distributionPairingℂ_real ω f)‖ is finite for any
+complex test function.
     This follows from the Gaussian exponential integrability applied to the imaginary part.
 -/
 lemma gff_integrand_norm_integrable (f : TestFunctionℂ) :
@@ -704,13 +702,13 @@ theorem gff_complex_CF_covariance (f : TestFunctionℂ) :
     apply AnalyticOnNhd.cexp
     apply AnalyticOnNhd.mul analyticOnNhd_const
     apply AnalyticOnNhd.add
-    apply AnalyticOnNhd.add
-    · exact analyticOnNhd_const
-    · -- 2 * t * Q_ri is linear in t
-      have : AnalyticOnNhd ℂ (fun t : ℂ =>
-          (2 * (freeCovarianceFormR m f_re f_im : ℂ)) * t) Set.univ :=
-        AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
-      convert this using 2; ring
+    · apply AnalyticOnNhd.add
+      · exact analyticOnNhd_const
+      · -- 2 * t * Q_ri is linear in t
+        have : AnalyticOnNhd ℂ (fun t : ℂ =>
+            (2 * (freeCovarianceFormR m f_re f_im : ℂ)) * t) Set.univ :=
+          AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
+        convert this using 2; ring
     · -- t^2 * Q_ii is polynomial in t
       apply AnalyticOnNhd.mul _ analyticOnNhd_const
       exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
@@ -764,13 +762,13 @@ C_ℂ(∑ᵢ zᵢ Jᵢ, ∑ⱼ zⱼ Jⱼ) = ∑ᵢ ∑ⱼ zᵢ zⱼ C_ℂ(Jᵢ, 
 private lemma freeCovarianceℂ_bilinear_zero_right (f : TestFunctionℂ) :
     freeCovarianceℂ_bilinear m f 0 = 0 := by
   have h := freeCovarianceℂ_bilinear_smul_right m (0 : ℂ) f (0 : TestFunctionℂ)
-  simp at h; exact h
+  simpa only [zero_smul, zero_mul] using h
 
 /-- C_ℂ(0, g) = 0, derived from smul_left with c = 0. -/
 private lemma freeCovarianceℂ_bilinear_zero_left (g : TestFunctionℂ) :
     freeCovarianceℂ_bilinear m 0 g = 0 := by
   have h := freeCovarianceℂ_bilinear_smul_left m (0 : ℂ) (0 : TestFunctionℂ) g
-  simp at h; exact h
+  simpa only [zero_smul, zero_mul] using h
 
 /-- Right linearity over finite sums for the complexified covariance. -/
 private lemma freeCovarianceℂ_sum_right (f : TestFunctionℂ)

@@ -33,8 +33,9 @@ noncomputable section
 -/
 def IsNuclearMap {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [hF : CompleteSpace F]
     (T : E →L[ℝ] F) : Prop :=
+  let _ := hF
   ∃ (φ : ℕ → (E →L[ℝ] ℝ)) (y : ℕ → F),
     Summable (fun n => ‖φ n‖ * ‖y n‖) ∧
     ∀ x, T x = ∑' n, (φ n x) • y n

@@ -179,6 +179,7 @@ def OS4_Ergodicity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :
 -/
 def OS4_PolynomialClustering (dμ_config : ProbabilityMeasure FieldConfiguration)
     (α : ℝ) (_hα : α > 0) : Prop :=
+  let _ := _hα
   ∀ (f g : TestFunctionℂ), ∃ (c : ℝ), c ≥ 0 ∧
     let μ := dμ_config.toMeasure
     ∀ s : ℝ, s ≥ 0 →

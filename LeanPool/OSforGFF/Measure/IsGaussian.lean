@@ -5,7 +5,7 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import LeanPool.OSforGFF.OS.OS0_Analyticity
+import LeanPool.OSforGFF.OS.OS0Analyticity
 import LeanPool.OSforGFF.Schwinger.GaussianMoments
 
 /-!
@@ -172,16 +172,18 @@ lemma gaussian_rhs_slice_analytic_z0 (f g : TestFunction) (t : ℂ) :
   apply AnalyticOnNhd.cexp
   apply AnalyticOnNhd.mul analyticOnNhd_const
   apply AnalyticOnNhd.add
-  apply AnalyticOnNhd.add
-  · apply AnalyticOnNhd.mul _ (analyticOnNhd_const (v := (freeCovarianceFormR m f f : ℂ)))
-    exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
-  · -- 2 * z₀ * t * Q(f,g)
-    have h1 : AnalyticOnNhd ℂ (fun z₀ : ℂ => 2 * z₀ * t * freeCovarianceFormR m f g) Set.univ := by
-      have : AnalyticOnNhd ℂ (fun z₀ : ℂ => (2 * t * freeCovarianceFormR m f g) * z₀) Set.univ :=
-        AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
-      convert this using 2
-      ring
-    exact h1
+  · apply AnalyticOnNhd.add
+    · apply AnalyticOnNhd.mul _ (analyticOnNhd_const (v := (freeCovarianceFormR m f f : ℂ)))
+      exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
+    · -- 2 * z₀ * t * Q(f,g)
+      have h1 : AnalyticOnNhd ℂ
+          (fun z₀ : ℂ => 2 * z₀ * t * freeCovarianceFormR m f g) Set.univ := by
+        have : AnalyticOnNhd ℂ
+            (fun z₀ : ℂ => (2 * t * freeCovarianceFormR m f g) * z₀) Set.univ :=
+          AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
+        convert this using 2
+        ring
+      exact h1
   · exact analyticOnNhd_const
 
 omit [Fact (0 < m)] in
@@ -194,15 +196,17 @@ lemma gaussian_rhs_slice_analytic_z1 (f g : TestFunction) (z₀ : ℂ) :
   apply AnalyticOnNhd.cexp
   apply AnalyticOnNhd.mul analyticOnNhd_const
   apply AnalyticOnNhd.add
-  apply AnalyticOnNhd.add
-  · exact analyticOnNhd_const
-  · -- 2 * z₀ * z₁ * Q(f,g)
-    have h1 : AnalyticOnNhd ℂ (fun z₁ : ℂ => 2 * z₀ * z₁ * freeCovarianceFormR m f g) Set.univ := by
-      have : AnalyticOnNhd ℂ (fun z₁ : ℂ => (2 * z₀ * freeCovarianceFormR m f g) * z₁) Set.univ :=
-        AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
-      convert this using 2
-      ring
-    exact h1
+  · apply AnalyticOnNhd.add
+    · exact analyticOnNhd_const
+    · -- 2 * z₀ * z₁ * Q(f,g)
+      have h1 : AnalyticOnNhd ℂ
+          (fun z₁ : ℂ => 2 * z₀ * z₁ * freeCovarianceFormR m f g) Set.univ := by
+        have : AnalyticOnNhd ℂ
+            (fun z₁ : ℂ => (2 * z₀ * freeCovarianceFormR m f g) * z₁) Set.univ :=
+          AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
+        convert this using 2
+        ring
+      exact h1
   · apply AnalyticOnNhd.mul _ (analyticOnNhd_const (v := (freeCovarianceFormR m g g : ℂ)))
     exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2
 
@@ -399,13 +403,22 @@ theorem schwinger_eq_covariance_real (f g : TestFunction) :
     have := gff_second_moment_eq_covariance m (f - g)
     simp only [distributionPairingCLM_apply, distributionPairing] at this
     exact this
-  rw [integral_sub, h_sq_fg, h_sq_f_g]
+  have h_int_plus : Integrable (fun ω : FieldConfiguration => (ω (f + g)) ^ 2)
+      (gaussianFreeField_free m).toMeasure := by
+    simpa only [distributionPairingCLM_apply, distributionPairing] using
+      gff_pairing_square_integrable m (f + g)
+  have h_int_minus : Integrable (fun ω : FieldConfiguration => (ω (f - g)) ^ 2)
+      (gaussianFreeField_free m).toMeasure := by
+    simpa only [distributionPairingCLM_apply, distributionPairing] using
+      gff_pairing_square_integrable m (f - g)
+  rw [integral_sub h_int_plus h_int_minus, h_sq_fg, h_sq_f_g]
   -- Expand using bilinearity of Q
   -- Q(f+g,f+g) = Q(f,f) + 2Q(f,g) + Q(g,g)
   -- Q(f-g,f-g) = Q(f,f) - 2Q(f,g) + Q(g,g)
   -- Difference = 4Q(f,g)
   -- Use f - g = f + (-1) • g for subtraction
-  have h_sub : f - g = f + (-1 : ℝ) • g := by simp [sub_eq_add_neg, neg_smul, one_smul]
+  have h_sub : f - g = f + (-1 : ℝ) • g := by
+    simp only [sub_eq_add_neg, neg_smul, one_smul]
   -- Expand Q(f+g, f+g)
   have h_expand_plus : freeCovarianceFormR m (f + g) (f + g) =
       freeCovarianceFormR m f f + 2 * freeCovarianceFormR m f g + freeCovarianceFormR m g g := by
@@ -424,9 +437,6 @@ theorem schwinger_eq_covariance_real (f g : TestFunction) :
     ring
   rw [h_expand_plus, h_expand_minus]
   ring
-  -- Integrability for subtraction
-  · exact gff_pairing_square_integrable m (f + g)
-  · exact gff_pairing_square_integrable m (f - g)
 
 /-- For real test functions embedded into complex, the Schwinger 2-point function
     equals the complex covariance.

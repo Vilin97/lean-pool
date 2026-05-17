@@ -84,6 +84,7 @@ abbrev μ : Measure SpaceTime := volume    -- Lebesgue, just named “μ”
 
 /-- The `TestFunction` declaration. -/
 abbrev TestFunction : Type := SchwartzMap SpaceTime ℝ
+/-- Test functions over an arbitrary scalar field. -/
 abbrev TestFunction𝕜 : Type := SchwartzMap SpaceTime 𝕜
 /-- The `TestFunctionℂ` declaration. -/
 abbrev TestFunctionℂ := TestFunction𝕜 (𝕜 := ℂ)
@@ -96,6 +97,7 @@ example : Module ℂ TestFunctionℂ := by infer_instance
 variable (x : SpaceTime)
 
 /- Probability distribution over field configurations (distributions) -/
+/-- Continuous bilinear pointwise multiplication on complex scalars. -/
 def pointwiseMulCLM : ℂ →L[ℂ] ℂ →L[ℂ] ℂ := ContinuousLinearMap.mul ℂ ℂ
 
 /-- Multiplication lifted to the Schwartz space. -/
@@ -139,7 +141,7 @@ def distributionPairing (ω : FieldConfiguration) (f : TestFunction) : ℝ := ω
   -- This follows from the definition of scalar multiplication in WeakDual
   rfl
 
-@[simp] lemma pairing_smul_real (ω : FieldConfiguration) (s : ℝ) (a : TestFunction) :
+lemma pairing_smul_real (ω : FieldConfiguration) (s : ℝ) (a : TestFunction) :
   ω (s • a) = s * (ω a) :=
   -- This follows from the linearity of the dual pairing
   map_smul ω s a
@@ -176,7 +178,8 @@ def GJGeneratingFunctional (dμ_config : ProbabilityMeasure FieldConfiguration)
   (J : TestFunction) : ℂ :=
   ∫ ω, Complex.exp (Complex.I * (distributionPairing ω J : ℂ)) ∂dμ_config.toMeasure
 
-/-- Helper function to create a Schwartz map from a complex test function by applying a continuous linear map.
+/-- Helper function to create a Schwartz map from a complex test function by applying a
+    continuous linear map.
     This factors out the common pattern for extracting real/imaginary parts.
 -/
 def schwartz_comp_clm (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) : TestFunction :=
@@ -194,15 +197,15 @@ def schwartz_comp_clm (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) : TestFuncti
     -- Key: iteratedFDeriv of L ∘ f equals L.compContinuousMultilinearMap (iteratedFDeriv f)
     have h_deriv : iteratedFDeriv ℝ n (L ∘ f.toFun) x =
         L.compContinuousMultilinearMap (iteratedFDeriv ℝ n f.toFun x) :=
-      ContinuousLinearMap.iteratedFDeriv_comp_left L f.smooth'.contDiffAt (WithTop.coe_le_coe.mpr
-        le_top)
+      ContinuousLinearMap.iteratedFDeriv_comp_left L f.smooth'.contDiffAt
+        (WithTop.coe_le_coe.mpr le_top)
     rw [h_eq, h_deriv]
     -- Use the norm bound: ‖L.compContinuousMultilinearMap m‖ ≤ ‖L‖ * ‖m‖
     calc ‖x‖ ^ k * ‖L.compContinuousMultilinearMap (iteratedFDeriv ℝ n f.toFun x)‖
         ≤ ‖x‖ ^ k * (‖L‖ * ‖iteratedFDeriv ℝ n f.toFun x‖) := by
           apply mul_le_mul_of_nonneg_left
-          exact ContinuousLinearMap.norm_compContinuousMultilinearMap_le L _
-          exact pow_nonneg (norm_nonneg _) _
+          · exact ContinuousLinearMap.norm_compContinuousMultilinearMap_le L _
+          · exact pow_nonneg (norm_nonneg _) _
       _ = ‖L‖ * (‖x‖ ^ k * ‖iteratedFDeriv ℝ n f.toFun x‖) := by ring
       _ ≤ ‖L‖ * C := by
           apply mul_le_mul_of_nonneg_left (hC x) (norm_nonneg _)
@@ -234,13 +237,13 @@ def complex_testfunction_decompose (f : TestFunctionℂ) : TestFunction × TestF
   simp [complex_testfunction_decompose]
 
 /-- Coerced-to-ℂ version (useful for complex-side algebra). -/
-@[simp] lemma complex_testfunction_decompose_fst_apply_coe
+lemma complex_testfunction_decompose_fst_apply_coe
   (f : TestFunctionℂ) (x : SpaceTime) :
   ((complex_testfunction_decompose f).1 x : ℂ) = ((f x).re : ℂ) := by
   simp [complex_testfunction_decompose]
 
 /-- Coerced-to-ℂ version (useful for complex-side algebra). -/
-@[simp] lemma complex_testfunction_decompose_snd_apply_coe
+lemma complex_testfunction_decompose_snd_apply_coe
   (f : TestFunctionℂ) (x : SpaceTime) :
   ((complex_testfunction_decompose f).2 x : ℂ) = ((f x).im : ℂ) := by
   simp [complex_testfunction_decompose]

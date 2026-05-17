@@ -132,10 +132,11 @@ satisfies `p' i (x m) ≤ Cᵢ · (1+m)^{tᵢ}`, then `(s.sup p') (x m) ≤ D ·
 where `S = max tᵢ` and `D = ∑ Cᵢ`.
 -/
 lemma finset_sup_poly_bound {E : Type*} [AddCommGroup E] [Module ℝ E]
-    {ι : Type*} [DecidableEq ι]
+    {ι : Type*}
     (p' : ι → Seminorm ℝ E) (s : Finset ι) (x : ℕ → E)
     (hx : ∀ i ∈ s, ∃ C > 0, ∃ t : ℕ, ∀ m, p' i (x m) ≤ C * (1 + (m : ℝ)) ^ t) :
     ∃ D > 0, ∃ S : ℕ, ∀ m, (s.sup p') (x m) ≤ D * (1 + (m : ℝ)) ^ S := by
+  classical
   induction s using Finset.cons_induction with
   | empty =>
     exact ⟨1, one_pos, 0, fun m => by simp [Finset.sup_empty, Seminorm.bot_eq_zero]⟩
@@ -199,7 +200,7 @@ lemma seminorm_le_nuclear_expansion
           ≤ |hN.coeff m f| * ((C₁ : ℝ) * (s₁.sup hN.p) (hN.basis m)) := by
             apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
             have h := hqbound (hN.basis m)
-            simp only [ge_iff_le] at h; exact h
+            exact h
         _ ≤ |hN.coeff m f| * ((C₁ : ℝ) * (D * (1 + (m : ℝ)) ^ S)) := by
             apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
             exact mul_le_mul_of_nonneg_left (hDbound m) (le_of_lt hC₁_pos)
@@ -238,7 +239,7 @@ For any seminorm index `i` and vector `f`, the series `∑ₘ |cₘ(f)| · pᵢ(
 The proof combines coefficient decay (exponent `S+2`) with basis growth (exponent `S`)
 to produce a summable majorant `1/(1+m)²`.
 -/
-lemma DyninMityaginSpace.summable_coeff_seminorm_basis
+lemma _root_.GaussianField.DyninMityaginSpace.summable_coeff_seminorm_basis
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     [hN : DyninMityaginSpace E] (i : hN.ι) (f : E) :
@@ -335,7 +336,7 @@ in the locally convex topology. The proof uses Hahn-Banach for each seminorm
 to bound the remainder by the tail of the summable series
 `∑ₘ |cₘ(f)| · pᵢ(ψₘ)`.
 -/
-theorem DyninMityaginSpace.hasSum_basis
+theorem _root_.GaussianField.DyninMityaginSpace.hasSum_basis
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     [hN : DyninMityaginSpace E] (f : E) :
@@ -377,7 +378,7 @@ gives rise to a `NuclearSpace` (Pietsch nuclear dominance).
    `aₘ := C₁ · D · (1+m)^{-(2:ℤ)}` (summable since exponent < -1)
 5. The dominating seminorm is `q := C₁ · s₁.sup(p) + C₂ · s₂.sup(p)`
 -/
-theorem DyninMityaginSpace.toNuclearSpace (E : Type*)
+theorem _root_.GaussianField.DyninMityaginSpace.toNuclearSpace (E : Type*)
     [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     [hN : DyninMityaginSpace E] : NuclearSpace E where

@@ -51,13 +51,17 @@ class DyninMityaginSpace (E : Type*)
     [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E]
     [ContinuousSMul ℝ E] extends T1Space E where
+  /-- Index type for the defining seminorm family. -/
   ι : Type
+  /-- Defining seminorm family. -/
   p : ι → Seminorm ℝ E
   h_with : WithSeminorms p
   h_countable : Countable ι
   h_completeSpace :
     @CompleteSpace E (IsTopologicalAddGroup.rightUniformSpace E)
+  /-- Schauder basis vectors. -/
   basis : ℕ → E
+  /-- Coefficient functionals for the basis expansion. -/
   coeff : ℕ → (E →L[ℝ] ℝ)
   expansion :
     ∀ (φ : E →L[ℝ] ℝ) (f : E), φ f = ∑' m, (coeff m f) * φ (basis m)
@@ -74,7 +78,7 @@ via `ofRapidDecayEquiv` (including Schwartz spaces and smooth circle functions).
 
 Finite-dimensional spaces with eventually-zero bases do NOT satisfy this.
 -/
-class DyninMityaginSpace.HasBiorthogonalBasis (E : Type*)
+class _root_.GaussianField.DyninMityaginSpace.HasBiorthogonalBasis (E : Type*)
     [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E]
     [ContinuousSMul ℝ E] [DyninMityaginSpace E] : Prop where
@@ -90,7 +94,7 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E]
 For any CLM `T : E →L[ℝ] H` and `w : H`, the map `f ↦ ⟪w, T f⟫` is a scalar
 CLF, so the intrinsic `DyninMityaginSpace.expansion` applies.
 -/
-theorem DyninMityaginSpace.expansion_H
+theorem _root_.GaussianField.DyninMityaginSpace.expansion_H
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     (T : E →L[ℝ] H) (w : H) (f : E) :
     @inner ℝ H _ w (T f) =

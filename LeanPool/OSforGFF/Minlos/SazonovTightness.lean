@@ -163,6 +163,7 @@ variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
   [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V]
   [SecondCountableTopology V]
 
+/-- Centered Gaussian density profile with scale `σ`. -/
 abbrev gaussDensity (σ : ℝ) (x : V) : ℝ :=
   Real.exp (-(1 / (2 * σ ^ 2)) * ‖x‖ ^ 2)
 
@@ -184,7 +185,10 @@ lemma gaussDensity_integrable' (σ : ℝ) (hσ : 0 < σ) :
   have hcint : Integrable (fun x : V => cexp (-(b : ℂ) * ↑(‖x‖ ^ 2))) := by
     have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
       (show 0 < ((b : ℂ)).re by simp [hb]) (0 : ℂ) (0 : V)
-    simp only [ofReal_pow, neg_mul] at this; convert this using 1; ext x; simp [Complex.ofReal_pow]
+    simp only [neg_mul] at this
+    convert this using 1
+    ext x
+    simp [Complex.ofReal_pow]
   have heq : gaussDensity (V := V) σ = fun x => ‖cexp (-(b : ℂ) * ↑(‖x‖ ^ 2))‖ := by
     ext x; unfold gaussDensity; rw [Complex.norm_exp]; congr 1
     simp only [Complex.neg_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
@@ -459,7 +463,7 @@ private lemma tendsto_exp_slope' (A : ℝ) :
     have h1 : HasDerivAt (fun t => rexp (t * A)) A 0 := by
       have := (Real.hasDerivAt_exp (0 * A)).comp (0 : ℝ)
         ((hasDerivAt_id (0 : ℝ)).mul_const A)
-      simp [zero_mul, Real.exp_zero] at this; exact this
+      simpa [zero_mul, Real.exp_zero] using this
     have h2 : HasDerivAt (fun _ : ℝ => (1 : ℝ)) 0 0 := hasDerivAt_const 0 1
     convert h1.sub h2 using 1; simp
   have := hd.tendsto_slope_zero_right
@@ -985,10 +989,11 @@ omit [CompleteSpace H] in
 -/
 lemma restrictOp_trace_eq_diag (S : H →L[ℝ] H) {n : ℕ} (v : Fin n → H)
     (_hv : Orthonormal ℝ v)
-    (ι' : Type*) [Fintype ι'] [DecidableEq ι']
+    (ι' : Type*) [Fintype ι']
     (b' : OrthonormalBasis ι' ℝ (EuclideanSpace ℝ (Fin n))) :
     ∑ i, @inner ℝ (EuclideanSpace ℝ (Fin n)) _ (b' i) (restrictOp S v (b' i)) =
     ∑ j : Fin n, @inner ℝ H _ (v j) (S (v j)) := by
+  classical
   set T := (restrictOp S v).toLinearMap
   have h1 := LinearMap.trace_eq_sum_inner T b'
   have h2 := LinearMap.trace_eq_sum_inner T (EuclideanSpace.basisFun (Fin n) ℝ)

@@ -122,10 +122,12 @@ private theorem hermiteFunction_differentiable (k : ℕ) : Differentiable ℝ (h
 -- Helper: second derivative of hermiteFunction
 private theorem deriv2_hermiteFunction (n : ℕ) (x : ℝ) :
     deriv (deriv (hermiteFunction n)) x =
-    Real.sqrt ((↑n : ℝ) / 2) * Real.sqrt ((↑(n - 1) : ℝ) / 2) * hermiteFunction (n - 1 - 1) x -
+    Real.sqrt ((↑n : ℝ) / 2) * Real.sqrt ((↑(n - 1) : ℝ) / 2) *
+      hermiteFunction (n - 1 - 1) x -
     Real.sqrt ((↑n : ℝ) / 2) * Real.sqrt ((↑n : ℝ) / 2) * hermiteFunction n x -
     Real.sqrt ((↑(n + 1) : ℝ) / 2) * Real.sqrt ((↑(n + 1) : ℝ) / 2) * hermiteFunction n x +
-    Real.sqrt ((↑(n + 1) : ℝ) / 2) * Real.sqrt ((↑(n + 2) : ℝ) / 2) * hermiteFunction (n + 2) x := by
+    Real.sqrt ((↑(n + 1) : ℝ) / 2) * Real.sqrt ((↑(n + 2) : ℝ) / 2) *
+      hermiteFunction (n + 2) x := by
   have hderiv_eq : deriv (hermiteFunction n) =
       fun y => Real.sqrt ((↑n : ℝ) / 2) * hermiteFunction (n - 1) y -
                Real.sqrt ((↑(n + 1) : ℝ) / 2) * hermiteFunction (n + 1) y := by
@@ -159,10 +161,12 @@ private theorem deriv2_hermiteFunction (n : ℕ) (x : ℝ) :
 -- so we handle the two cases separately.
 private theorem x_sq_mul_hermiteFunction (n : ℕ) (x : ℝ) :
     x ^ 2 * hermiteFunction n x =
-    Real.sqrt ((↑(n + 1) : ℝ) / 2) * Real.sqrt ((↑(n + 2) : ℝ) / 2) * hermiteFunction (n + 2) x +
+    Real.sqrt ((↑(n + 1) : ℝ) / 2) * Real.sqrt ((↑(n + 2) : ℝ) / 2) *
+      hermiteFunction (n + 2) x +
     Real.sqrt ((↑(n + 1) : ℝ) / 2) * Real.sqrt ((↑(n + 1) : ℝ) / 2) * hermiteFunction n x +
     Real.sqrt ((↑n : ℝ) / 2) * Real.sqrt ((↑n : ℝ) / 2) * hermiteFunction n x +
-    Real.sqrt ((↑n : ℝ) / 2) * Real.sqrt ((↑(n - 1) : ℝ) / 2) * hermiteFunction (n - 1 - 1) x := by
+    Real.sqrt ((↑n : ℝ) / 2) * Real.sqrt ((↑(n - 1) : ℝ) / 2) *
+      hermiteFunction (n - 1 - 1) x := by
   have hx2 : x ^ 2 * hermiteFunction n x = x * (x * hermiteFunction n x) := by ring
   rw [hx2, mul_x_hermiteFunction n x]
   have hdist : x * (Real.sqrt ((↑(n + 1) : ℝ) / 2) * hermiteFunction (n + 1) x +
@@ -192,8 +196,11 @@ theorem hermiteFunction_harmonic_oscillator_eigenvalue (n : ℕ) (x : ℝ) :
     rw [iteratedDeriv_succ, iteratedDeriv_succ, iteratedDeriv_zero]
   rw [hiter, deriv2_hermiteFunction, x_sq_mul_hermiteFunction]
   -- Now the ψ_{n+2} and ψ_{n-1-1} terms cancel, leaving coefficient calculation on ψ_n
-  -- √(n/2)^2 + √((n+1)/2)^2 + √((n+1)/2)^2 + √(n/2)^2 = n/2 + (n+1)/2 + (n+1)/2 + n/2 = 2n+1
-  have hsq_np1 : Real.sqrt ((↑(n + 1) : ℝ) / 2) * Real.sqrt ((↑(n + 1) : ℝ) / 2) = (↑(n + 1) : ℝ) / 2 :=
+  -- √(n/2)^2 + √((n+1)/2)^2 + √((n+1)/2)^2 + √(n/2)^2
+  -- equals n/2 + (n+1)/2 + (n+1)/2 + n/2 = 2n+1.
+  have hsq_np1 :
+      Real.sqrt ((↑(n + 1) : ℝ) / 2) * Real.sqrt ((↑(n + 1) : ℝ) / 2) =
+        (↑(n + 1) : ℝ) / 2 :=
     Real.mul_self_sqrt (by positivity)
   have hsq_n : Real.sqrt ((↑n : ℝ) / 2) * Real.sqrt ((↑n : ℝ) / 2) = (↑n : ℝ) / 2 :=
     Real.mul_self_sqrt (by positivity)
@@ -293,14 +300,18 @@ theorem hermiteCoeff_harmonic_oscillator (n : ℕ) (f : SchwartzMap ℝ ℝ) :
     exact (f.memLp 2 volume).integrable_mul (hermiteFunction_memLp n)
   have hint_x2fψ : Integrable (fun x => x ^ 2 * f x * hermiteFunction n x) := by
     have heigen : ∀ x, x ^ 2 * f x * hermiteFunction n x =
-        (2 * ↑n + 1) * (f x * hermiteFunction n x) + f x * iteratedDeriv 2 (hermiteFunction n) x := by
+        (2 * ↑n + 1) * (f x * hermiteFunction n x) +
+          f x * iteratedDeriv 2 (hermiteFunction n) x := by
       intro x
       have h := hermiteFunction_harmonic_oscillator_eigenvalue n x
       have : x ^ 2 * hermiteFunction n x =
-          (2 * ↑n + 1) * hermiteFunction n x + iteratedDeriv 2 (hermiteFunction n) x := by linarith
+          (2 * ↑n + 1) * hermiteFunction n x +
+            iteratedDeriv 2 (hermiteFunction n) x := by
+        linarith
       calc x ^ 2 * f x * hermiteFunction n x
           = f x * (x ^ 2 * hermiteFunction n x) := by ring
-        _ = f x * ((2 * ↑n + 1) * hermiteFunction n x + iteratedDeriv 2 (hermiteFunction n) x) := by
+        _ = f x * ((2 * ↑n + 1) * hermiteFunction n x +
+              iteratedDeriv 2 (hermiteFunction n) x) := by
             rw [this]
         _ = (2 * ↑n + 1) * (f x * hermiteFunction n x) +
             f x * iteratedDeriv 2 (hermiteFunction n) x := by ring
@@ -321,20 +332,27 @@ theorem hermiteCoeff_harmonic_oscillator (n : ℕ) (f : SchwartzMap ℝ ℝ) :
     intro x
     have h := hermiteFunction_harmonic_oscillator_eigenvalue n x
     have hx2 : x ^ 2 * hermiteFunction n x =
-        (2 * ↑n + 1) * hermiteFunction n x + iteratedDeriv 2 (hermiteFunction n) x := by linarith
+        (2 * ↑n + 1) * hermiteFunction n x +
+          iteratedDeriv 2 (hermiteFunction n) x := by
+      linarith
     calc x ^ 2 * f x * hermiteFunction n x
         = f x * (x ^ 2 * hermiteFunction n x) := by ring
-      _ = f x * ((2 * ↑n + 1) * hermiteFunction n x + iteratedDeriv 2 (hermiteFunction n) x) := by rw [hx2]
+      _ = f x * ((2 * ↑n + 1) * hermiteFunction n x +
+            iteratedDeriv 2 (hermiteFunction n) x) := by
+          rw [hx2]
       _ = _ := by ring
   -- Rewrite full integrand
   have h_integrand : ∀ x, (-(iteratedDeriv 2 (⇑f) x) + x ^ 2 * f x) * hermiteFunction n x =
       (2 * ↑n + 1) * (f x * hermiteFunction n x) +
-      (f x * iteratedDeriv 2 (hermiteFunction n) x - iteratedDeriv 2 (⇑f) x * hermiteFunction n x) := by
+      (f x * iteratedDeriv 2 (hermiteFunction n) x -
+        iteratedDeriv 2 (⇑f) x * hermiteFunction n x) := by
     intro x
     have h1 := heigen x
     -- Expand and simplify: both sides equal -f''·ψ + (2n+1)·f·ψ + f·ψ''
     have hlhs : (-(iteratedDeriv 2 (⇑f) x) + x ^ 2 * f x) * hermiteFunction n x =
-        -(iteratedDeriv 2 (⇑f) x * hermiteFunction n x) + x ^ 2 * f x * hermiteFunction n x := by ring
+        -(iteratedDeriv 2 (⇑f) x * hermiteFunction n x) +
+          x ^ 2 * f x * hermiteFunction n x := by
+      ring
     rw [hlhs, h1]; ring
   simp_rw [h_integrand]
   -- Split: ∫ (a + b) = ∫ a + ∫ b
@@ -439,10 +457,12 @@ private lemma abs_hermiteCoeff1D_le_sqrt_integral_sq (n : ℕ) (f : SchwartzMap 
     exact h.congr (by filter_upwards with x; change f x * f x = f x ^ 2; ring)
   have hψ2 : Integrable (fun x => hermiteFunction n x ^ 2) := by
     have h := (hermiteFunction_memLp n).integrable_mul (hermiteFunction_memLp n)
-    exact h.congr (by filter_upwards with x; change hermiteFunction n x * hermiteFunction n x = hermiteFunction n x ^ 2; ring)
+    exact h.congr (by
+      filter_upwards with x
+      change hermiteFunction n x * hermiteFunction n x = hermiteFunction n x ^ 2
+      ring)
   have horth : ∫ x, hermiteFunction n x ^ 2 = 1 := by
-    have := hermiteFunction_orthonormal n n
-    simp at this; convert this using 1; congr 1; ext x; ring
+    simpa only [pow_two, ite_true] using hermiteFunction_orthonormal n n
   calc |∫ x, f x * hermiteFunction n x|
       ≤ Real.sqrt (∫ x, f x ^ 2) * Real.sqrt (∫ x, hermiteFunction n x ^ 2) :=
         cauchy_schwarz_integral f (hermiteFunction n) hf2 hψ2 hint
@@ -565,7 +585,8 @@ private lemma clm_single_seminorm_bound (T : (SchwartzMap ℝ ℝ) →L[ℝ] (Sc
   exact Seminorm.bound_of_continuous hws q hq
 
 -- Helper: for any finite set of index pairs, the sup of seminorms of T f is bounded
-private lemma clm_finset_sup_seminorm_bound (T : (SchwartzMap ℝ ℝ) →L[ℝ] (SchwartzMap ℝ ℝ)) :
+private lemma clm_finset_sup_seminorm_bound
+    (T : (SchwartzMap ℝ ℝ) →L[ℝ] (SchwartzMap ℝ ℝ)) :
     ∀ (S : Finset (ℕ × ℕ)),
     ∃ (q : ℕ × ℕ) (C : ℝ), 0 < C ∧ ∀ (f : SchwartzMap ℝ ℝ),
       S.sup (fun p => SchwartzMap.seminorm ℝ p.1 p.2) (T f) ≤
@@ -664,7 +685,8 @@ theorem hermiteCoeff1D_decay :
   -- Get CLM seminorm bound for harmonicOscillator^m
   obtain ⟨q_H, C_H, hC_H_pos, h_H⟩ := pow_clm_sup_seminorm_bound harmonicOscillator m q₀
   refine ⟨C₀ * C_H, q_H, by positivity, fun f n => ?_⟩
-  -- Key bound: |cₙ(f)| ≤ (2n+1)^{-m} · √(∫ (H^m f)²) ≤ (2n+1)^{-m} · C₀ · C_H · sup(f)
+  -- Key bound: |cₙ(f)| ≤ (2n+1)^{-m} · √(∫ (H^m f)²)
+  -- and this is at most (2n+1)^{-m} · C₀ · C_H · sup(f).
   have h_cs := abs_hermiteCoeff1D_le_sqrt_integral_sq n ((harmonicOscillator ^ m) f)
   have h_l2' := h_l2 ((harmonicOscillator ^ m) f)
   have h_H' := h_H f
@@ -683,7 +705,7 @@ theorem hermiteCoeff1D_decay :
       _ = (1 + ↑n) ^ m := by rw [rpow_natCast]
       _ ≤ (2 * ↑n + 1) ^ m :=
           pow_le_pow_left₀ (by positivity) (by linarith) m
-  -- Combine: |cₙ(f)| * (1+n)^k ≤ |cₙ(f)| * (2n+1)^m = |cₙ(H^m f)| ≤ ... ≤ C₀*C_H*sup(f)
+  -- Combine the exponent comparison and coefficient bound.
   calc |hermiteCoeff1D n f| * (1 + ↑n) ^ k
       ≤ |hermiteCoeff1D n f| * (2 * ↑n + 1) ^ m :=
         mul_le_mul_of_nonneg_left h_rpow_le (abs_nonneg _)
@@ -936,7 +958,8 @@ private lemma hermiteCoeff_abs_summable (f : SchwartzMap ℝ ℝ) :
   exact .of_nonneg_of_le (fun n => abs_nonneg _) h_bound h_sum
 
 -- Helper: the pointwise tsum ∑' cₙψₙ is in L²
--- Proof: by Fatou's lemma. S_N² → (∑'cₙψₙ)² pointwise, and ∫S_N² = ∑_{n<N} cₙ² ≤ ∫f².
+-- Proof: by Fatou's lemma. S_N² → (∑'cₙψₙ)² pointwise, and
+-- ∫S_N² = ∑_{n<N} cₙ² ≤ ∫f².
 private lemma hermite_series_memLp (f : SchwartzMap ℝ ℝ) :
     MemLp (fun x => ∑' n, hermiteCoeff1D n f * hermiteFunction n x) 2 volume := by
   -- Define partial sums S_N(x) = ∑_{n<N} cₙ ψₙ(x)
@@ -966,7 +989,8 @@ private lemma hermite_series_memLp (f : SchwartzMap ℝ ℝ) :
   -- Step 2: liminf eLpNorm(S_N) ≤ eLpNorm(f) < ∞
   -- Helper: convert ∫⁻ ‖g‖ₑ^(ENNReal.toReal 2) to ENNReal.ofReal (∫ g^2)
   have h_lintegral_sq : ∀ (g : ℝ → ℝ) (hg : Integrable (fun x => g x ^ 2) volume),
-      ∫⁻ x, ‖g x‖ₑ ^ ENNReal.toReal 2 ∂volume = ENNReal.ofReal (∫ x, g x ^ 2 ∂volume) := by
+      ∫⁻ x, ‖g x‖ₑ ^ ENNReal.toReal 2 ∂volume =
+        ENNReal.ofReal (∫ x, g x ^ 2 ∂volume) := by
     intro g hg
     have h_nn : 0 ≤ᵐ[volume] (fun x => g x ^ 2) := ae_of_all _ (fun x => sq_nonneg _)
     simp only [ENNReal.toReal_ofNat]
@@ -1019,8 +1043,7 @@ private lemma integral_tsum_mul_hermite (f : SchwartzMap ℝ ℝ) (m : ℕ) :
           (fun n => by simp [coe_nnnorm, Real.norm_eq_abs])
       -- Helper: ∫ ψₖ² = 1 (from orthonormality)
       have hψ_sq : ∀ k, ∫ x, hermiteFunction k x ^ 2 = 1 := fun k => by
-        have := hermiteFunction_orthonormal k k
-        simp at this; convert this using 1; congr 1; ext x; ring
+        simpa only [pow_two, ite_true] using hermiteFunction_orthonormal k k
       -- Helper: integrability of ψₖ²
       have hψ_sq_int : ∀ k, Integrable (fun x => hermiteFunction k x ^ 2) := fun k =>
         ((hermiteFunction_memLp k).integrable_mul (hermiteFunction_memLp k)).congr
@@ -1159,15 +1182,19 @@ private lemma parseval_identity (f : SchwartzMap ℝ ℝ) :
     -- Now: ∫⁻ ofReal T(x)² ≤ ofReal (∑' cₙ²)
     -- Step: rewrite as lintegral via ofReal_integral
     calc ∫⁻ x, ENNReal.ofReal ((T x) ^ 2) ∂volume
-        = ∫⁻ x, Filter.liminf (fun N => ENNReal.ofReal ((S N x) ^ 2)) Filter.atTop ∂volume := by
+        = ∫⁻ x,
+            Filter.liminf (fun N => ENNReal.ofReal ((S N x) ^ 2)) Filter.atTop
+            ∂volume := by
           congr 1; ext x
           exact (Filter.Tendsto.liminf_eq (ENNReal.tendsto_ofReal
             ((Filter.Tendsto.pow (hS_tendsto x) 2)))).symm
-      _ ≤ Filter.liminf (fun N => ∫⁻ x, ENNReal.ofReal ((S N x) ^ 2) ∂volume) Filter.atTop := by
+      _ ≤ Filter.liminf
+            (fun N => ∫⁻ x, ENNReal.ofReal ((S N x) ^ 2) ∂volume) Filter.atTop := by
           apply lintegral_liminf_le'
           intro N
           exact (hS_sq_int N).aestronglyMeasurable.aemeasurable.ennreal_ofReal
-      _ = Filter.liminf (fun N => ENNReal.ofReal (∫ x, (S N x) ^ 2 ∂volume)) Filter.atTop := by
+      _ = Filter.liminf
+            (fun N => ENNReal.ofReal (∫ x, (S N x) ^ 2 ∂volume)) Filter.atTop := by
           congr 1; ext N
           exact (ofReal_integral_eq_lintegral_ofReal (hS_sq_int N)
             (ae_of_all _ (fun x => sq_nonneg _))).symm
@@ -1258,7 +1285,9 @@ private lemma hermite_series_iteratedFDeriv (f : SchwartzMap ℝ ℝ) (l : ℕ) 
     iteratedFDeriv ℝ l (fun y => ∑' n, hermiteCoeff1D n f * hermiteFunction n y) x =
     ∑' n, iteratedFDeriv ℝ l (fun y => hermiteCoeff1D n f * hermiteFunction n y) x := by
   apply iteratedFDeriv_tsum_apply (N := ⊤)
-      (v := fun k n => |hermiteCoeff1D n f| * SchwartzMap.seminorm ℝ 0 k (schwartzHermiteBasis1D n))
+      (v := fun k n =>
+        |hermiteCoeff1D n f| *
+          SchwartzMap.seminorm ℝ 0 k (schwartzHermiteBasis1D n))
   · intro n; exact contDiff_infty.mpr (fun m => contDiff_const.mul (hermiteFunction_contDiff n m))
   · intro k _; exact hermite_term_bound_summable f k
   · intro k n y _; exact hermite_term_iteratedFDeriv_bound f k n y
@@ -1270,9 +1299,13 @@ private lemma hermite_series_iteratedFDeriv (f : SchwartzMap ℝ ℝ) (l : ℕ) 
 
     Proof:
     1. f(x) = ∑' cₙ ψₙ(x) everywhere [hermite_series_eq_f_everywhere]
-    2. Termwise differentiation: D^l(f)(x) = ∑' cₙ · D^l(ψₙ)(x) [hermite_series_iteratedFDeriv]
-       So the remainder r = f - ∑_{i∈s} cᵢψᵢ satisfies D^l(r)(x) = ∑'_{i∉s} cᵢ D^l(ψᵢ)(x)
-    3. For each x: ‖x‖^k · ‖D^l(r)(x)‖ ≤ ∑'_{i∉s} |cᵢ| · ‖x‖^k · ‖D^l(ψᵢ)(x)‖
+    2. Termwise differentiation:
+       D^l(f)(x) = ∑' cₙ · D^l(ψₙ)(x) [hermite_series_iteratedFDeriv].
+       So r = f - ∑_{i∈s} cᵢψᵢ satisfies
+       D^l(r)(x) = ∑'_{i∉s} cᵢ D^l(ψᵢ)(x).
+    3. For each x:
+       ‖x‖^k · ‖D^l(r)(x)‖ ≤
+       ∑'_{i∉s} |cᵢ| · ‖x‖^k · ‖D^l(ψᵢ)(x)‖.
     4. Bound by ∑'_{i∉s} |cᵢ| · p_{k,l}(ψᵢ) ≤ ε (from vanishing condition).
 -/
 private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : ℕ)
@@ -1317,8 +1350,10 @@ private lemma schwartz_seminorm_remainder_le (f : SchwartzMap ℝ ℝ) (k l : �
   have h_iFD_sum : iteratedFDeriv ℝ l
       (⇑(∑ i ∈ s, hermiteCoeff1D i f • schwartzHermiteBasis1D i : SchwartzMap ℝ ℝ)) x =
       ∑ i ∈ s, iteratedFDeriv ℝ l (g i) x := by
-    have hcoe : ⇑(∑ i ∈ s, hermiteCoeff1D i f • schwartzHermiteBasis1D i : SchwartzMap ℝ ℝ) =
-        fun y => ∑ i ∈ s, g i y := funext hsum_coe
+    have hcoe :
+        ⇑((∑ i ∈ s, hermiteCoeff1D i f • schwartzHermiteBasis1D i :
+          SchwartzMap ℝ ℝ)) =
+          fun y => ∑ i ∈ s, g i y := funext hsum_coe
     rw [hcoe]
     have h_eq := iteratedFDeriv_sum (𝕜 := ℝ) (f := g) (u := s) (i := l)
       (fun i _ => (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)

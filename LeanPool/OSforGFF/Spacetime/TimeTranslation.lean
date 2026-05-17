@@ -242,13 +242,15 @@ lemma timeTranslationSchwartzℂ_apply (s : ℝ) (f : TestFunctionℂ) (u : Spac
 
 /-- Time translation is a group homomorphism: T_{s+t} = T_s ∘ T_t -/
 lemma timeTranslationSchwartz_add (s t : ℝ) (f : TestFunction) :
-    timeTranslationSchwartz (s + t) f = timeTranslationSchwartz s (timeTranslationSchwartz t f) := by
+    timeTranslationSchwartz (s + t) f =
+      timeTranslationSchwartz s (timeTranslationSchwartz t f) := by
   ext u
   simp only [timeTranslationSchwartz_apply, timeShift_add, timeShift_comm]
 
 /-- Time translation on complex functions: T_{s+t} = T_s ∘ T_t -/
 lemma timeTranslationSchwartzℂ_add (s t : ℝ) (f : TestFunctionℂ) :
-    timeTranslationSchwartzℂ (s + t) f = timeTranslationSchwartzℂ s (timeTranslationSchwartzℂ t f) := by
+    timeTranslationSchwartzℂ (s + t) f =
+      timeTranslationSchwartzℂ s (timeTranslationSchwartzℂ t f) := by
   ext u
   simp only [timeTranslationSchwartzℂ_apply, timeShift_add, timeShift_comm]
 
@@ -268,7 +270,8 @@ lemma timeTranslationSchwartzℂ_zero (f : TestFunctionℂ) :
 
 /-- Time translation preserves addition of Schwartz functions -/
 lemma timeTranslationSchwartz_add_fun (s : ℝ) (f g : TestFunction) :
-    timeTranslationSchwartz s (f + g) = timeTranslationSchwartz s f + timeTranslationSchwartz s g := by
+    timeTranslationSchwartz s (f + g) =
+      timeTranslationSchwartz s f + timeTranslationSchwartz s g := by
   ext u
   simp only [timeTranslationSchwartz_apply, SchwartzMap.add_apply]
 
@@ -293,9 +296,9 @@ def unitTimeDir : SpaceTime := EuclideanSpace.single timeIndex (1 : ℝ)
 lemma continuous_timeShift_param (x : SpaceTime) : Continuous (fun s : ℝ => timeShift s x) := by
   have h_shift : (fun s : ℝ => timeShift s x) = (fun s => x + s • unitTimeDir) := by
     funext s; simp only [timeShift, unitTimeDir, EuclideanSpace.single]
-    ext i; simp only [PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, Pi.single,
-      Function.update, timeIndex, eq_rec_constant, dite_eq_ite]
-    split_ifs with h1 h2 <;> simp_all
+    ext i
+    simp only [PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, timeIndex]
+    split_ifs <;> simp_all
   rw [h_shift]
   exact continuous_const.add (continuous_id.smul continuous_const)
 
@@ -341,9 +344,105 @@ lemma iteratedFDeriv_timeTranslationSchwartz (n : ℕ) (h : ℝ) (f : TestFuncti
   have h_eq : ∀ z, timeTranslationSchwartz h f z = f (z + h • unitTimeDir) := by
     intro z
     rw [timeTranslationSchwartz_apply, timeShift_eq_add_const, h_shift_eq]
-  conv_lhs => rw [show (timeTranslationSchwartz h f : SpaceTime → ℝ) = fun z => f (z + h • unitTimeDir)
-    from funext h_eq]
+  conv_lhs =>
+    rw [show
+        (timeTranslationSchwartz h f : SpaceTime → ℝ) =
+          fun z => f (z + h • unitTimeDir)
+        from funext h_eq]
   exact iteratedFDeriv_comp_add_right n _ x
+
+private lemma schwartz_timeTranslation_mvt_bound
+    (n : ℕ) (f : TestFunction) (h : ℝ) (x y : SpaceTime)
+    (hy : ‖y‖ = |h|) :
+    ‖(fun t : ℝ => iteratedFDeriv ℝ n f (x + t • y)) 1 -
+        (fun t : ℝ => iteratedFDeriv ℝ n f (x + t • y)) 0‖ ≤
+      |h| * ⨆ t ∈ Set.Icc (0 : ℝ) 1,
+        ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ := by
+  let g : ℝ → (SpaceTime [×n]→L[ℝ] ℝ) := fun t => iteratedFDeriv ℝ n f (x + t • y)
+  change ‖g 1 - g 0‖ ≤
+    |h| * ⨆ t ∈ Set.Icc (0 : ℝ) 1, ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖
+  let D := fun (t : ℝ) => ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖
+  let C := |h| * ⨆ t ∈ Set.Icc (0 : ℝ) 1, D t
+  have hg_diff_at : ∀ t, DifferentiableAt ℝ g t := by
+    intro t
+    apply DifferentiableAt.comp
+    · exact (f.smooth (n + 1)).differentiable_iteratedFDeriv
+        (by exact WithTop.coe_lt_coe.mpr ENat.natCast_lt_succ) |>.differentiableAt
+    · exact (differentiableAt_const _).add (differentiableAt_id.smul_const y)
+  have h_deriv_bound : ∀ t ∈ Set.Icc (0 : ℝ) 1, ‖deriv g t‖ ≤ C := by
+    intro t ht
+    have h_deriv_eq : deriv g t = (fderiv ℝ (iteratedFDeriv ℝ n f) (x + t • y)) y := by
+      have h1 : deriv g t = fderiv ℝ g t 1 := fderiv_apply_one_eq_deriv.symm
+      let path : ℝ → SpaceTime := fun s => x + s • y
+      let iter := iteratedFDeriv ℝ n (f : SpaceTime → ℝ)
+      have hg_eq : g = iter ∘ path := rfl
+      have h_path_diff : DifferentiableAt ℝ path t :=
+        (differentiableAt_const x).add (differentiableAt_id.smul_const y)
+      have h_iter_diff : DifferentiableAt ℝ iter (path t) :=
+        (f.smooth (n + 1)).differentiable_iteratedFDeriv
+          (by exact WithTop.coe_lt_coe.mpr ENat.natCast_lt_succ) |>.differentiableAt
+      have h_fderiv_path : fderiv ℝ path t = ContinuousLinearMap.smulRight
+          (ContinuousLinearMap.id ℝ ℝ) y := by
+        have h_smul_eq : (fun r : ℝ => r • y) =
+            (ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℝ ℝ) y) := by ext r; simp
+        calc fderiv ℝ path t
+          = fderiv ℝ (fun s => x + s • y) t := rfl
+          _ = fderiv ℝ (fun s => x + (fun r => r • y) s) t := rfl
+          _ = fderiv ℝ (fun r => r • y) t := fderiv_const_add x
+          _ = fderiv ℝ (ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℝ ℝ) y) t := by
+              rw [h_smul_eq]
+          _ = ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℝ ℝ) y :=
+              ContinuousLinearMap.fderiv _
+      rw [h1, hg_eq]
+      rw [fderiv_comp t h_iter_diff h_path_diff]
+      simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, path, h_fderiv_path]
+      simp only [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.id_apply, one_smul]
+      rfl
+    have h_fderiv_iter : fderiv ℝ (iteratedFDeriv ℝ n (f : SpaceTime → ℝ)) (x + t • y) =
+        (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
+          (iteratedFDeriv ℝ (n + 1) f (x + t • y)) := by
+      have := @fderiv_iteratedFDeriv ℝ _ SpaceTime _ _ ℝ _ _ f n
+      exact congrFun this (x + t • y)
+    rw [h_deriv_eq, h_fderiv_iter]
+    calc ‖(continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
+            (iteratedFDeriv ℝ (n + 1) f (x + t • y)) y‖
+      ≤ ‖(continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
+            (iteratedFDeriv ℝ (n + 1) f (x + t • y))‖ * ‖y‖ :=
+          ContinuousLinearMap.le_opNorm _ _
+      _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * ‖y‖ := by
+          rw [LinearIsometryEquiv.norm_map]
+      _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * |h| := by rw [hy]
+      _ = |h| * D t := by ring
+      _ ≤ |h| * ⨆ s ∈ Set.Icc (0 : ℝ) 1, D s := by
+          apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
+          have h_bdd : BddAbove (Set.range fun s : ↑(Set.Icc (0 : ℝ) 1) => D s.1) := by
+            use (SchwartzMap.seminorm ℝ 0 (n + 1)) f
+            rintro _ ⟨⟨s, _⟩, rfl⟩
+            have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f (x + s • y)
+            simp only [pow_zero, one_mul] at this
+            exact this
+          haveI : Nonempty ↑(Set.Icc (0 : ℝ) 1) := ⟨⟨0, by simp⟩⟩
+          have h_sSup_le : sSup (∅ : Set ℝ) ≤ ⨆ i : ↑(Set.Icc (0 : ℝ) 1), D i.1 := by
+            simp only [Real.sSup_empty]
+            apply le_ciSup_of_le h_bdd ⟨0, by simp⟩
+            exact norm_nonneg _
+          have h_eq :
+              (⨆ s ∈ Set.Icc (0 : ℝ) 1, D s) =
+                ⨆ s : ↑(Set.Icc (0 : ℝ) 1), D s.1 :=
+            cbiSup_eq_ciSup_subtype (p := (· ∈ Set.Icc (0 : ℝ) 1))
+              (f := fun s _ => D s) h_bdd h_sSup_le
+          rw [h_eq]
+          exact le_ciSup h_bdd ⟨t, ht⟩
+      _ = C := rfl
+  have h_mvt := Convex.norm_image_sub_le_of_norm_deriv_le
+    (s := Set.Icc (0 : ℝ) 1)
+    (fun t _ => hg_diff_at t)
+    (fun t ht => h_deriv_bound t ht)
+    (convex_Icc 0 1)
+    (Set.left_mem_Icc.mpr zero_le_one)
+    (Set.right_mem_Icc.mpr zero_le_one)
+  simp only [sub_zero, Real.norm_eq_abs, abs_one, mul_one] at h_mvt
+  exact h_mvt
 
 /-- **Locally Uniform Lipschitz Bound for Time Translation.**
 
@@ -429,15 +528,6 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
   -- Apply MVT: Define g(t) = iteratedFDeriv ℝ n f (x + t • y) for t ∈ [0,1]
   -- Then g(1) - g(0) = iteratedFDeriv at z minus iteratedFDeriv at x
   let g : ℝ → (SpaceTime [×n]→L[ℝ] ℝ) := fun t => iteratedFDeriv ℝ n f (x + t • y)
-  -- g is differentiable (f is smooth)
-  have hg_diff : DifferentiableOn ℝ g (Set.Icc 0 1) := by
-    intro t _
-    apply DifferentiableAt.differentiableWithinAt
-    -- g = (iteratedFDeriv ℝ n f) ∘ (fun t => x + t • y)
-    apply DifferentiableAt.comp
-    · exact (f.smooth (n + 1)).differentiable_iteratedFDeriv (by exact WithTop.coe_lt_coe.mpr ENat.natCast_lt_succ)
-        |>.differentiableAt
-    · exact (differentiableAt_const _).add (differentiableAt_id.smul_const y)
   -- Goal: ‖x‖^k * ‖g(1) - g(0)‖ ≤ |h| * (1+|h|)^k * seminorm k (n+1) f
   -- We show this by bounding the derivative of g along [0,1]
   have hg_eq : g 1 - g 0 = iteratedFDeriv ℝ n f z - iteratedFDeriv ℝ n f x := by
@@ -463,109 +553,8 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
   -- MVT + derivative bound step using chain rule and currying
   -- The key technical step is computing the derivative norm using fderiv_iteratedFDeriv
   have h_mvt_bound : ‖g 1 - g 0‖ ≤ |h| * ⨆ t ∈ Set.Icc (0 : ℝ) 1,
-      ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ := by
-    -- MVT + chain rule + currying step
-    -- Strategy: Apply MVT with bound C = |h| * sup_t ‖D^{n+1} f(x+t•y)‖
-    -- Then show ‖deriv g t‖ ≤ C for all t ∈ [0,1]
-    -- Define the derivative bound
-    let D := fun (t : ℝ) => ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖
-    let C := |h| * ⨆ t ∈ Set.Icc (0 : ℝ) 1, D t
-    -- g is differentiable everywhere (not just on the interval)
-    have hg_diff_at : ∀ t, DifferentiableAt ℝ g t := by
-      intro t
-      apply DifferentiableAt.comp
-      · exact (f.smooth (n + 1)).differentiable_iteratedFDeriv
-          (by exact WithTop.coe_lt_coe.mpr ENat.natCast_lt_succ) |>.differentiableAt
-      · exact (differentiableAt_const _).add (differentiableAt_id.smul_const y)
-    -- Key: bound on deriv g at each point
-    have h_deriv_bound : ∀ t ∈ Set.Icc (0 : ℝ) 1, ‖deriv g t‖ ≤ C := by
-      intro t ht
-      -- The derivative of g at t is: fderiv (iteratedFDeriv n f) (x+t•y) applied to y
-      -- deriv g t = fderiv g t 1 = fderiv (iter ∘ path) t 1 = fderiv iter (path t) (fderiv path t
-      -- 1)
-      -- Compute deriv g using chain rule
-      have h_deriv_eq : deriv g t = (fderiv ℝ (iteratedFDeriv ℝ n f) (x + t • y)) y := by
-        -- deriv g t = fderiv g t 1
-        have h1 : deriv g t = fderiv ℝ g t 1 := fderiv_apply_one_eq_deriv.symm
-        -- g = iter ∘ path where path s = x + s • y
-        let path : ℝ → SpaceTime := fun s => x + s • y
-        let iter := iteratedFDeriv ℝ n (f : SpaceTime → ℝ)
-        have hg_eq : g = iter ∘ path := rfl
-        -- fderiv of path at t is: s ↦ s • y
-        have h_path_diff : DifferentiableAt ℝ path t :=
-          (differentiableAt_const x).add (differentiableAt_id.smul_const y)
-        have h_iter_diff : DifferentiableAt ℝ iter (path t) :=
-          (f.smooth (n + 1)).differentiable_iteratedFDeriv
-            (by exact WithTop.coe_lt_coe.mpr ENat.natCast_lt_succ) |>.differentiableAt
-        have h_fderiv_path : fderiv ℝ path t = ContinuousLinearMap.smulRight
-            (ContinuousLinearMap.id ℝ ℝ) y := by
-          -- path s = x + s • y = x + (smulRight id y) s
-          have h_smul_eq : (fun r : ℝ => r • y) =
-              (ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℝ ℝ) y) := by ext r; simp
-          calc fderiv ℝ path t
-            = fderiv ℝ (fun s => x + s • y) t := rfl
-            _ = fderiv ℝ (fun s => x + (fun r => r • y) s) t := rfl
-            _ = fderiv ℝ (fun r => r • y) t := fderiv_const_add x
-            _ = fderiv ℝ (ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℝ ℝ) y) t := by
-                rw [h_smul_eq]
-            _ = ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℝ ℝ) y :=
-                ContinuousLinearMap.fderiv _
-        rw [h1, hg_eq]
-        rw [fderiv_comp t h_iter_diff h_path_diff]
-        simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, path, h_fderiv_path]
-        simp only [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.id_apply, one_smul]
-        rfl  -- iter = iteratedFDeriv ℝ n f by definition
-      -- Use fderiv_iteratedFDeriv: fderiv (iteratedFDeriv n f) = curryLeftEquiv ∘ iteratedFDeriv
-      -- (n+1) f
-      have h_fderiv_iter : fderiv ℝ (iteratedFDeriv ℝ n (f : SpaceTime → ℝ)) (x + t • y) =
-          (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
-            (iteratedFDeriv ℝ (n + 1) f (x + t • y)) := by
-        have := @fderiv_iteratedFDeriv ℝ _ SpaceTime _ _ ℝ _ _ f n
-        exact congrFun this (x + t • y)
-      rw [h_deriv_eq, h_fderiv_iter]
-      -- Now bound using CLM.le_opNorm and the fact that curryLeftEquiv is norm-preserving
-      calc ‖(continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
-              (iteratedFDeriv ℝ (n + 1) f (x + t • y)) y‖
-        ≤ ‖(continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
-              (iteratedFDeriv ℝ (n + 1) f (x + t • y))‖ * ‖y‖ :=
-            ContinuousLinearMap.le_opNorm _ _
-        _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * ‖y‖ := by
-            rw [LinearIsometryEquiv.norm_map]
-        _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * |h| := by rw [hy]
-        _ = |h| * D t := by ring
-        _ ≤ |h| * ⨆ s ∈ Set.Icc (0 : ℝ) 1, D s := by
-            apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
-            -- Show D t ≤ biSup D over [0,1] for t ∈ [0,1]
-            -- biSup = ⨆ s, ⨆ _ : s ∈ S, D s
-            have h_bdd : BddAbove (Set.range fun s : ↑(Set.Icc (0 : ℝ) 1) => D s.1) := by
-              use (SchwartzMap.seminorm ℝ 0 (n + 1)) f
-              rintro _ ⟨⟨s, _⟩, rfl⟩
-              -- D s = ‖iteratedFDeriv (n+1) f (...)‖
-              -- seminorm 0 (n+1) gives: ‖x‖^0 * ‖D^{n+1} f(x)‖ ≤ seminorm, and ‖x‖^0 = 1
-              have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f (x + s • y)
-              simp only [pow_zero, one_mul] at this
-              exact this
-            haveI : Nonempty ↑(Set.Icc (0 : ℝ) 1) := ⟨⟨0, by simp⟩⟩
-            -- Convert biSup to subtype iSup
-            have h_sSup_le : sSup (∅ : Set ℝ) ≤ ⨆ i : ↑(Set.Icc (0 : ℝ) 1), D i.1 := by
-              simp only [Real.sSup_empty]
-              apply le_ciSup_of_le h_bdd ⟨0, by simp⟩
-              exact norm_nonneg _
-            have h_eq : (⨆ s ∈ Set.Icc (0 : ℝ) 1, D s) = ⨆ s : ↑(Set.Icc (0 : ℝ) 1), D s.1 :=
-              cbiSup_eq_ciSup_subtype (p := (· ∈ Set.Icc (0 : ℝ) 1)) (f := fun s _ => D s) h_bdd h_sSup_le
-            rw [h_eq]
-            exact le_ciSup h_bdd ⟨t, ht⟩
-        _ = C := rfl
-    -- Apply MVT using Convex.norm_image_sub_le_of_norm_deriv_le
-    have h_mvt := Convex.norm_image_sub_le_of_norm_deriv_le
-      (s := Set.Icc (0 : ℝ) 1)
-      (fun t _ => hg_diff_at t)
-      (fun t ht => h_deriv_bound t ht)
-      (convex_Icc 0 1)
-      (Set.left_mem_Icc.mpr zero_le_one)
-      (Set.right_mem_Icc.mpr zero_le_one)
-    simp only [sub_zero, Real.norm_eq_abs, abs_one, mul_one] at h_mvt
-    exact h_mvt
+      ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ :=
+    schwartz_timeTranslation_mvt_bound n f h x y hy
   -- Step 3: Bound using Peetre and seminorms (simplified approach)
   -- Key insight: We bound ‖x‖^k * ‖g 1 - g 0‖ directly without using supremum
   -- For each point on the path, the weighted derivative is bounded by the seminorms
@@ -625,7 +614,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
       -- Use seminorm bounds
       have h_S0 : ‖iteratedFDeriv ℝ (n + 1) f w‖ ≤ S_0 := by
         have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f w
-        simp at this; exact this
+        simpa only [pow_zero, one_mul] using this
       have h_Sk : ‖w‖ ^ k * ‖iteratedFDeriv ℝ (n + 1) f w‖ ≤ S_k :=
         SchwartzMap.le_seminorm ℝ k (n + 1) f w
       -- Combine
@@ -633,13 +622,19 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
         ≤ (2 : ℝ) ^ k * max 1 (‖w‖ ^ k) * ‖iteratedFDeriv ℝ (n + 1) f w‖ := by
             apply mul_le_mul_of_nonneg_right h_one_plus (norm_nonneg _)
         _ = (2 : ℝ) ^ k * (max 1 (‖w‖ ^ k) * ‖iteratedFDeriv ℝ (n + 1) f w‖) := by ring
-        _ ≤ (2 : ℝ) ^ k * (‖iteratedFDeriv ℝ (n + 1) f w‖ + ‖w‖ ^ k * ‖iteratedFDeriv ℝ (n + 1) f w‖) := by
+        _ ≤ (2 : ℝ) ^ k *
+              (‖iteratedFDeriv ℝ (n + 1) f w‖ +
+                ‖w‖ ^ k * ‖iteratedFDeriv ℝ (n + 1) f w‖) := by
             apply mul_le_mul_of_nonneg_left _ (pow_nonneg (by norm_num) k)
-            have := max_le_add_of_nonneg (by positivity : 0 ≤ (1 : ℝ)) (pow_nonneg (norm_nonneg w) k)
+            have := max_le_add_of_nonneg
+              (by positivity : 0 ≤ (1 : ℝ))
+              (pow_nonneg (norm_nonneg w) k)
             calc max 1 (‖w‖ ^ k) * ‖iteratedFDeriv ℝ (n + 1) f w‖
               ≤ (1 + ‖w‖ ^ k) * ‖iteratedFDeriv ℝ (n + 1) f w‖ := by
                   apply mul_le_mul_of_nonneg_right this (norm_nonneg _)
-              _ = ‖iteratedFDeriv ℝ (n + 1) f w‖ + ‖w‖ ^ k * ‖iteratedFDeriv ℝ (n + 1) f w‖ := by ring
+              _ = ‖iteratedFDeriv ℝ (n + 1) f w‖ +
+                    ‖w‖ ^ k * ‖iteratedFDeriv ℝ (n + 1) f w‖ := by
+                  ring
         _ ≤ (2 : ℝ) ^ k * (S_0 + S_k) := by
             apply mul_le_mul_of_nonneg_left _ (pow_nonneg (by norm_num) k)
             linarith
@@ -681,7 +676,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
               use S_0
               rintro v ⟨⟨t, ht⟩, rfl⟩
               have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f (x + t • y)
-              simp at this; exact this
+              simpa only [pow_zero, one_mul] using this
             -- BddAbove for the product sup
             have h_bdd_prod : BddAbove (Set.range fun t : ↑(Set.Icc (0 : ℝ) 1) =>
                 ‖x‖ ^ k * ‖iteratedFDeriv ℝ (n + 1) f (x + t.1 • y)‖) := by
@@ -762,7 +757,8 @@ lemma continuous_timeTranslationSchwartz (f : TestFunction) :
     funext h_group
   rw [h_eq]
   -- Now use that T_{s₀} is continuous
-  have h_cont : Continuous (timeTranslationSchwartzCLM s₀) := (timeTranslationSchwartzCLM s₀).continuous
+  have h_cont : Continuous (timeTranslationSchwartzCLM s₀) :=
+    (timeTranslationSchwartzCLM s₀).continuous
   -- It suffices to show: T_{s-s₀} f → T_0 f = f as s → s₀
   apply Filter.Tendsto.comp h_cont.continuousAt
   -- Now prove: T_{s-s₀} f → f as s → s₀ (equivalently, T_h f → f as h → 0)

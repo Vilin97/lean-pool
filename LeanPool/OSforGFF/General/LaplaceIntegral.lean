@@ -210,7 +210,7 @@ theorem glasser_weighted_integrable (c : ℝ) (hc : 0 < c) :
       · rintro ⟨u, ⟨hu_pos, hu_le⟩, rfl⟩
         have : c / u ≥ c / 1 := by
           apply div_le_div_of_nonneg_left (le_of_lt hc) hu_pos hu_le
-        simp at this; exact this
+        simpa only [ge_iff_le, div_one] using this
       · intro hv
         have hv_pos : 0 < v := lt_of_lt_of_le hc hv
         use c / v

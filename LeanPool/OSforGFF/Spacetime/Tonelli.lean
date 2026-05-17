@@ -264,9 +264,14 @@ theorem schwartz_tonelli_spacetime
       simp only [Pi.mul_apply]
       rw [Real.norm_eq_abs, abs_mul]
       rw [abs_of_nonneg (hK_nn t₁ t₂)]
-      rw [abs_of_nonneg]; rotate_left; apply integral_nonneg; intro; exact norm_nonneg _
-      apply mul_le_mul_of_nonneg_right (hC t₁ t₂)
-      apply integral_nonneg; intro; exact norm_nonneg _
+      rw [abs_of_nonneg]
+      · apply mul_le_mul_of_nonneg_right (hC t₁ t₂)
+        apply integral_nonneg
+        intro
+        exact norm_nonneg _
+      · apply integral_nonneg
+        intro
+        exact norm_nonneg _
     have h_final := hf_slice.mul_prod h_right_int
     apply Integrable.congr h_final
     filter_upwards with p

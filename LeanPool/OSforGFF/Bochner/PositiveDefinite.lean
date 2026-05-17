@@ -24,7 +24,7 @@ import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 A function φ : α → ℂ on an additive group is **positive definite** if:
 1. φ(-x) = conj(φ(x)) for all x (Hermitian symmetry), and
 2. For any finite collection of points x₁, ..., xₘ and complex coefficients
-   c₁, ..., cₘ, the quadratic form ∑ᵢⱼ c̄ᵢ cⱼ φ(xᵢ - xⱼ) ≥ 0.
+   c₁, ..., cₘ, the quadratic form ∑ᵢⱼ cbarᵢ cⱼ φ(xᵢ - xⱼ) ≥ 0.
 
 Condition (1) ensures that the matrix [φ(xᵢ-xⱼ)] is Hermitian, so the
 quadratic form in (2) is automatically real-valued. Together they say the
@@ -57,7 +57,7 @@ open scoped ComplexOrder
 
     This bundles two conditions:
     - `hermitian`: φ(-x) = conj(φ(x)) (ensures the matrix is Hermitian)
-    - `nonneg`: Re(∑ᵢⱼ c̄ᵢ cⱼ φ(xᵢ - xⱼ)) ≥ 0 (positive semidefiniteness)
+    - `nonneg`: Re(∑ᵢⱼ cbarᵢ cⱼ φ(xᵢ - xⱼ)) ≥ 0 (positive semidefiniteness)
 
     The Hermitian condition ensures the quadratic form is real, so Re ≥ 0
     is equivalent to the full condition ≥ 0.
@@ -108,8 +108,7 @@ lemma conj_symm (hpd : IsPositiveDefinite φ) (x : α) :
 /-- φ(0) is real and nonneg. (Test with m = 1, c₁ = 1.) -/
 lemma eval_zero_nonneg (hpd : IsPositiveDefinite φ) : 0 ≤ (φ 0).re := by
   have h := hpd.nonneg 1 (fun _ => 0) (fun _ => 1)
-  simp [starRingEnd_apply, star_one] at h
-  exact h
+  simpa [starRingEnd_apply, star_one] using h
 
 /-- φ(0) is real (imaginary part is zero). -/
 lemma eval_zero_real (hpd : IsPositiveDefinite φ) : (φ 0).im = 0 := by

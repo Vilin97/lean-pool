@@ -22,15 +22,15 @@ import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Schwinger.Defs
 import LeanPool.OSforGFF.Measure.Construct
 import LeanPool.OSforGFF.Measure.IsGaussian
-import LeanPool.OSforGFF.OS.OS0_Analyticity
-import LeanPool.OSforGFF.OS.OS2_Invariance
+import LeanPool.OSforGFF.OS.OS0Analyticity
+import LeanPool.OSforGFF.OS.OS2Invariance
 import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
 import LeanPool.OSforGFF.Spacetime.TimeTranslation
 import LeanPool.OSforGFF.Covariance.Momentum
 import LeanPool.OSforGFF.OS.Axioms
 import LeanPool.OSforGFF.General.L2TimeIntegral
 import LeanPool.OSforGFF.General.SchwartzTranslationDecay
-import LeanPool.OSforGFF.OS.OS4_MGF
+import LeanPool.OSforGFF.OS.OS4MGF
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.MeasureTheory.Group.Measure
@@ -466,8 +466,8 @@ lemma gff_covariance_timeTranslation_continuous (m : ℝ) [Fact (0 < m)]
           rw [norm_mul, norm_mul]
       _ ≤ Cf * ‖(freeCovariance m x y : ℂ)‖ * ‖g y‖ := by
           apply mul_le_mul_of_nonneg_right
-          apply mul_le_mul_of_nonneg_right (hTsf_bdd s x) (norm_nonneg _)
-          exact norm_nonneg _
+          · exact mul_le_mul_of_nonneg_right (hTsf_bdd s x) (norm_nonneg _)
+          · exact norm_nonneg _
   -- The bound is integrable via convolution estimate
   have h_bound_int : Integrable bound' (volume.prod volume) := by
     simp only [bound']
@@ -1070,7 +1070,7 @@ lemma norm_sq_weighted_sum_le {n : ℕ} (w : Fin n → ℂ) (a : Fin n → ℂ) 
     sq_le_sq' (by nlinarith [norm_nonneg (∑ j, w j * a j)]) h1
   have h3 : (∑ j : Fin n, ‖w j‖ * ‖a j‖)^2 ≤ (∑ j, ‖w j‖^2) * (∑ j, ‖a j‖^2) := by
     have := Finset.sum_mul_sq_le_sq_mul_sq Finset.univ (fun j => ‖w j‖) (fun j => ‖a j‖)
-    simp only [ge_iff_le] at this; exact this
+    exact this
   linarith
 
 /-- OS4' → OS4: Generating function ergodicity implies full ergodicity.
@@ -1099,7 +1099,7 @@ theorem OS4'_implies_OS4 (m : ℝ) [Fact (0 < m)] :
   -- The sum of Var_j tends to 0 (finite sum of convergent sequences)
   have h_sum_tends : Filter.Tendsto (fun T => ∑ j, Var_j j T) Filter.atTop (nhds 0) := by
     have := tendsto_finset_sum Finset.univ (fun j _ => h_each_tends j)
-    simp at this; exact this
+    simpa using this
   -- The constant ∑|zⱼ|²
   let Z : ℝ := ∑ j, ‖z j‖^2
   -- Upper bound: variance ≤ Z · ∑ Var_j (for T > 0)

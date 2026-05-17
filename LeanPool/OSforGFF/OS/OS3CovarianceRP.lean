@@ -9,8 +9,8 @@ import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
 import LeanPool.OSforGFF.General.FourierTransforms
 import LeanPool.OSforGFF.Covariance.Momentum
-import LeanPool.OSforGFF.OS.OS3_MixedRep
-import LeanPool.OSforGFF.OS.OS3_MixedRepInfra
+import LeanPool.OSforGFF.OS.OS3MixedRep
+import LeanPool.OSforGFF.OS.OS3MixedRepInfra
 import LeanPool.OSforGFF.Covariance.Parseval
 import LeanPool.OSforGFF.Covariance.Position
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
@@ -21,11 +21,11 @@ import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 Proves ⟨Θf, Cf⟩ ≥ 0 for positive-time test functions f, using the mixed
 representation derived in `OS3_MixedRep`:
 
-  ⟨Θf, Cf⟩ = (1/2(2π)³) ∫_{k̄} (1/ω) |∫ f̃(t, k̄) e^{−ωt} dt|² dk̄ ≥ 0
+  ⟨Θf, Cf⟩ = (1/2(2π)³) ∫_{kbar} (1/ω) |∫ ftilde(t, kbar) e^{−ωt} dt|² dkbar ≥ 0
 
 The key factorization: for f supported at positive time, |x₀+y₀| = x₀+y₀,
 so e^{−ω|x₀+y₀|} = e^{−ωx₀} · e^{−ωy₀} and the bilinear form becomes a
-perfect square ∫ (1/ω)|F_ω(k̄)|² dk̄ with F_ω(k̄) = ∫ f̃(t,k̄) e^{−ωt} dt.
+perfect square ∫ (1/ω)|F_ω(kbar)|² dkbar with F_ω(kbar) = ∫ ftilde(t,kbar) e^{−ωt} dt.
 
 ## Main results
 
@@ -92,6 +92,7 @@ noncomputable def weightedLaplaceFourier (m : ℝ) (f : TestFunctionℂ) (k_sp :
   ∫ x : SpaceTime, f x * Complex.exp (-ω * x 0) *
     Complex.exp (-Complex.I * spatialDot k_sp (spatialPart x))
 
+/-- Reflection-positivity quadratic form used in the direct proof namespace. -/
 noncomputable def rpInnerProduct (m : ℝ) (f : TestFunctionℂ) : ℂ :=
   freeCovarianceℂ_bilinear m (star f) f
 

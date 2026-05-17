@@ -45,7 +45,7 @@ P : (E → ℝ) → WeakDual ℝ E that agrees with the identity on "good paths"
 - Minlos, "Generalized random processes and their extension to measures" (1959)
 -/
 
-open BigOperators MeasureTheory Complex TopologicalSpace Classical Finsupp
+open BigOperators MeasureTheory Complex TopologicalSpace Finsupp
 
 noncomputable section
 
@@ -61,8 +61,10 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E]
     when E is uncountable-dimensional).
 -/
 def weakDualEmbed (E : Type*) [AddCommGroup E] [Module ℝ E]
-    [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E] :
+    [TopologicalSpace E] [hAdd : IsTopologicalAddGroup E] [hSmul : ContinuousSMul ℝ E] :
     WeakDual ℝ E → (E → ℝ) :=
+  let _ := hAdd
+  let _ := hSmul
   fun l f => (l : E →L[ℝ] ℝ) f
 
 lemma weakDualEmbed_apply (l : WeakDual ℝ E) (f : E) :
@@ -157,9 +159,15 @@ lemma goodPaths_measurableSet (d : ℕ → E) (p : ℕ → Seminorm ℝ E) :
 
     Ref: Rudin, *Functional Analysis*, Thm 1.18 (bounded linear extension).
 -/
-noncomputable def extensionFun [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
+noncomputable def extensionFun [hSep : SeparableSpace E] [hNuclear : IsHilbertNuclear E]
+    [hNonempty : Nonempty E]
     (d : ℕ → E) (_hd : DenseRange d)
     (p : ℕ → Seminorm ℝ E) (ω : E → ℝ) (_hω : ω ∈ goodPaths d p) : E → ℝ :=
+  let _ := hSep
+  let _ := hNuclear
+  let _ := hNonempty
+  let _ := _hd
+  let _ := _hω
   extendFrom (Set.range d) ω
 
 omit [ContinuousSMul ℝ E] in
@@ -487,6 +495,7 @@ private lemma extensionFun_map_smul (d : ℕ → E) (hd : DenseRange d)
     (continuous_const.mul hg_cont)
     (fun z hz => by obtain ⟨n, rfl⟩ := hz; exact h_fix_x n r))
 
+/-- The continuous linear extension associated to a good path. -/
 noncomputable def extensionCLM [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (d : ℕ → E) (hd : DenseRange d)
     (p : ℕ → Seminorm ℝ E) (hp_top : WithSeminorms (fun n => p n))
@@ -566,14 +575,15 @@ lemma extensionCLM_embed [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
       E →L[ℝ] ℝ).cont
     (l : E →L[ℝ] ℝ).cont
     (fun x hx => ?_)
-  exact congr_fun h_ext f
-  -- Show agreement on range(d): extensionCLM(embed(l))(d n) = l(d n)
-  obtain ⟨n, rfl⟩ := hx
-  exact extensionCLM_eq_on_dense d hd p hp_top (weakDualEmbed E l)
-    (embed_mem_goodPaths d p hp_top l) n
+  · exact congr_fun h_ext f
+  · -- Show agreement on range(d): extensionCLM(embed(l))(d n) = l(d n)
+    obtain ⟨n, rfl⟩ := hx
+    exact extensionCLM_eq_on_dense d hd p hp_top (weakDualEmbed E l)
+      (embed_mem_goodPaths d p hp_top l) n
 
 /-! ## Measurable Projection -/
 
+open Classical in
 /-- Auxiliary projection given explicit dense sequence and seminorms.
     On good paths, extends ω to a ContinuousLinearMap; on bad paths, returns 0.
 -/
@@ -604,6 +614,7 @@ def measurableProjection [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E] :
 private lemma measurable_eval_comp_projection
     [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E] (f : E) :
     Measurable (fun ω : E → ℝ => (measurableProjection (E := E) ω : E →L[ℝ] ℝ) f) := by
+  classical
   set d := denseSeq E
   set p := (IsHilbertNuclear.nuclear_hilbert_embeddings (E := E)).choose
   have hp_top : WithSeminorms (fun n => p n) :=
@@ -803,7 +814,6 @@ theorem qLinearPaths_ae [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
   linarith [show X ω = 0 from hω]
 
 /-- **Minlos concentration** — see `Minlos.MinlosConcentration`. -/
-
 private lemma boundedPaths_tail_bound [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     (Φ : E → ℂ) (ν : Measure (E → ℝ)) [IsProbabilityMeasure ν]
     (h_cf_cont : Continuous Φ)
@@ -1051,8 +1061,7 @@ lemma charFunctional_map_projection [SeparableSpace E] [IsHilbertNuclear E] [Non
       Complex.exp (Complex.I * ↑(ω f)) ∂ν = Φ f := by
     intro f'
     have := h_cf_joint 1 (fun _ => 1) (fun _ => f')
-    simp at this
-    exact this
+    simpa using this
   rw [integral_map measurable_measurableProjection.aemeasurable]
   · have h_ae : ∀ᵐ ω ∂ν, (measurableProjection ω : E →L[ℝ] ℝ) f = ω f :=
       projection_ae_eq Φ ν h_cf_joint h_cf_cont f

@@ -181,6 +181,7 @@ def sazonovSeminorm (S : H →L[ℝ] H) (hS : S.IsPositive) : Seminorm ℝ H whe
 /-- The index type for the Sazonov seminorm family: positive trace-class operators. -/
 structure SazonovIndex (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     [CompleteSpace H] where
+  /-- The positive trace-class operator defining this seminorm. -/
   op : H →L[ℝ] H
   pos : op.IsPositive
   traceClass : IsPositiveTraceClass op

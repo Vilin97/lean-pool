@@ -149,7 +149,7 @@ private lemma pd_double_integral_re_nonneg (ψ : V → ℂ) (hpd : IsPositiveDef
     -- Uniform bound from PD condition: ‖ψ(z)‖ ≤ (ψ 0).re for all z
     have hbound : ∀ z, ‖ψ z‖ ≤ (ψ 0).re := hpd.bounded_by_zero
     have hfm : IsFiniteMeasure μ :=
-      ⟨by simp [μ]; exact hSbdd.measure_lt_top⟩
+      ⟨by simpa [μ] using hSbdd.measure_lt_top⟩
     -- Inner integral converges for each x via DCT
     have h_inner_conv : ∀ x, Filter.Tendsto
         (fun n => ∫ y, ψ (hid.approx n x - hid.approx n y) ∂μ)
@@ -202,7 +202,7 @@ private lemma pd_double_integral_re_nonneg (ψ : V → ℂ) (hpd : IsPositiveDef
     let sn := s n
     let R := sn.range
     have hfm : IsFiniteMeasure μ :=
-      ⟨by simp [μ]; exact hSbdd.measure_lt_top⟩
+      ⟨by simpa [μ] using hSbdd.measure_lt_top⟩
     have h_double_integral : (∫ x, ∫ y, ψ (sn x - sn y) ∂μ ∂μ) =
         ∑ u ∈ R, ∑ v ∈ R,
           ((μ (sn ⁻¹' {u})).toReal : ℂ) *
@@ -341,7 +341,8 @@ private lemma overlapRatio_tendsto_one (v : V) :
           filter_upwards [Filter.eventually_gt_atTop 0] with n hn; field_simp
         have hc : Filter.Tendsto (fun n : ℕ => ‖v‖ / (↑n : ℝ)) Filter.atTop (nhds 0) :=
           tendsto_const_nhds.div_atTop tendsto_natCast_atTop_atTop
-        exact Tendsto.congr' (EventuallyEq.symm h1) (by simpa using Tendsto.sub tendsto_const_nhds hc)
+        exact Tendsto.congr' (EventuallyEq.symm h1)
+          (by simpa using Tendsto.sub tendsto_const_nhds hc)
       simpa using h.pow (n := d))
     -- upper bound: constant 1
     tendsto_const_nhds
@@ -529,7 +530,7 @@ private lemma fejer_avg_eq_integral (ψ : V → ℂ) (hcont : Continuous ψ)
 private lemma pd_integral_re_nonneg (ψ : V → ℂ) (hpd : IsPositiveDefinite ψ)
     (hint : Integrable ψ) (hcont : Continuous ψ) :
     0 ≤ (∫ x, ψ x).re := by
-  -- Define J_n = (1/vol(B_n)) ∬_{B_n×B_n} ψ(x-y) dx dy
+  -- Define J_n = (1/vol(B_n)) double_integral_{B_n×B_n} ψ(x-y) dx dy
   set J : ℕ → ℂ := fun n =>
     if n = 0 then ψ 0
     else (volume (Metric.closedBall (0 : V) (n : ℝ))).toReal⁻¹ •

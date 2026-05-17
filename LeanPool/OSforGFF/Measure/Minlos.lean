@@ -69,24 +69,24 @@ lemma gaussian_positive_definite_via_embedding
   [NormedAddCommGroup H] [InnerProductSpace ℝ H]
   (T : E →ₗ[ℝ] H)
   (covariance_form : E → E → ℝ)
-  (h_eq : ∀ f, covariance_form f f = (‖T f‖^2 : ℝ)) :
+  (h_eq : ∀ f, covariance_form f f = (‖T f‖ ^ 2 : ℝ)) :
   GFF4D.IsPositiveDefinite (fun f => Complex.exp (-(1/2 : ℂ) * (covariance_form f f))) := by
   have hPD_H := gaussian_rbf_pd_innerProduct (H := H)
   intro m x c
   have repl : ∀ i j,
       covariance_form (x i - x j) (x i - x j)
-      = (‖T (x i - x j)‖^2 : ℝ) := by
+      = (‖T (x i - x j)‖ ^ 2 : ℝ) := by
     intro i j; simpa using h_eq (x i - x j)
   have hPD_comp :
     0 ≤ (∑ i, ∑ j,
       (starRingEnd ℂ) (c i) * c j *
-        Complex.exp (-(1/2 : ℂ) * ((‖T (x i) - T (x j)‖^2 : ℝ)))).re := by
+        Complex.exp (-(1/2 : ℂ) * ((‖T (x i) - T (x j)‖ ^ 2 : ℝ)))).re := by
     simpa using (GFF4D.isPositiveDefinite_precomp_linear
       (ψ := fun h : H => Complex.exp (-(1/2 : ℂ) * (‖h‖^2 : ℝ))) hPD_H T) m x c
   have hPD_comp1 :
     0 ≤ (∑ i, ∑ j,
       (starRingEnd ℂ) (c i) * c j *
-        Complex.exp (-(1/2 : ℂ) * ((‖T (x i - x j)‖^2 : ℝ)))).re := by
+        Complex.exp (-(1/2 : ℂ) * ((‖T (x i - x j)‖ ^ 2 : ℝ)))).re := by
     simpa [LinearMap.map_sub] using hPD_comp
   have : 0 ≤ (∑ i, ∑ j, (starRingEnd ℂ) (c i) * c j *
       Complex.exp (-(1/2 : ℂ) * (covariance_form (x i - x j) (x i - x j)))).re := by
@@ -97,7 +97,7 @@ lemma gaussian_positive_definite_via_embedding
 
 The bochner library's `IsPositiveDefinite` requires both:
 1. `hermitian`: φ(-x) = conj(φ(x))
-2. `nonneg`: Re(∑ᵢⱼ c̄ᵢ cⱼ φ(xᵢ - xⱼ)) ≥ 0
+2. `nonneg`: Re(∑ᵢⱼ cbarᵢ cⱼ φ(xᵢ - xⱼ)) ≥ 0
 
 The GFF4D version only requires (2). For the Gaussian CF exp(-½Q(f,f)),
 hermiticity follows from Q(-f,-f) = Q(f,f) (which must be supplied).
@@ -106,7 +106,7 @@ hermiticity follows from Q(-f,-f) = Q(f,f) (which must be supplied).
 /-- Promote GFF4D's nonneg-only PD to bochner's hermitian+nonneg PD,
     given an explicit symmetry proof φ(-x) = conj(φ(x)).
 -/
-def gff4d_to_bochner_pd {α : Type*} [AddGroup α] {φ : α → ℂ}
+theorem gff4d_to_bochner_pd {α : Type*} [AddGroup α] {φ : α → ℂ}
     (h_nonneg : GFF4D.IsPositiveDefinite φ)
     (h_symm : ∀ x, φ (-x) = starRingEnd ℂ (φ x)) :
     IsPositiveDefinite φ where
@@ -139,14 +139,15 @@ lemma gaussian_positive_definite_bochner
     [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     (T : E →ₗ[ℝ] H)
     (covariance_form : E → E → ℝ)
-    (h_eq : ∀ f, covariance_form f f = (‖T f‖^2 : ℝ))
+    (h_eq : ∀ f, covariance_form f f = (‖T f‖ ^ 2 : ℝ))
     (h_symm : ∀ f, covariance_form (-f) (-f) = covariance_form f f) :
     IsPositiveDefinite
       (fun f => Complex.exp (-(1/2 : ℂ) * (covariance_form f f))) :=
   gff4d_to_bochner_pd
     (gaussian_positive_definite_via_embedding T covariance_form h_eq)
     (fun f => by
-      simp [h_symm]
+      rw [h_symm]
+      simp only [one_div, neg_mul]
       apply (conj_cexp_real _ _).symm
       simp [Complex.mul_im, Complex.neg_im, Complex.ofReal_im])
 
@@ -170,7 +171,7 @@ theorem minlos_gaussian_construction
   {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
   (T : E →ₗ[ℝ] H)
   (covariance_form : E → E → ℝ)
-  (h_eq : ∀ f, covariance_form f f = (‖T f‖^2 : ℝ))
+  (h_eq : ∀ f, covariance_form f f = (‖T f‖ ^ 2 : ℝ))
   (h_symm : ∀ f, covariance_form (-f) (-f) = covariance_form f f)
   (h_zero : covariance_form 0 0 = 0)
   (h_continuous : Continuous (fun f => covariance_form f f))
@@ -195,7 +196,7 @@ theorem gaussian_measure_characteristic_functional
   {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
   (T : E →ₗ[ℝ] H)
   (covariance_form : E → E → ℝ)
-  (h_eq : ∀ f, covariance_form f f = (‖T f‖^2 : ℝ))
+  (h_eq : ∀ f, covariance_form f f = (‖T f‖ ^ 2 : ℝ))
   (h_symm : ∀ f, covariance_form (-f) (-f) = covariance_form f f)
   (h_zero : covariance_form 0 0 = 0)
   (h_continuous : Continuous (fun f => covariance_form f f))

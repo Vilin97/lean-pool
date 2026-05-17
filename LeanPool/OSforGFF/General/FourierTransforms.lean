@@ -41,7 +41,7 @@ For the time direction k₀, we need:
 
   ∫ dk₀ e^{ik₀(x₀ - y₀)} / (k₀² + μ²) = (π/μ) e^{-μ|x₀ - y₀|}
 
-where μ² = |p̄|² + m² (with p̄ the spatial momentum).
+where μ² = |pbar|² + m² (with pbar the spatial momentum).
 
 When x₀ > 0 and y₀ < 0 (positive and negative time respectively), we have
 x₀ - y₀ > 0, so the exponential is e^{-μ(x₀ - y₀)} which factorizes as
@@ -630,9 +630,9 @@ lemma integrable_fourierIntegral_expDecayFun (μ : ℝ) (hμ : 0 < μ) :
   have h_int_real : Integrable (fun ξ : ℝ => 2 * μ / (4 * π^2 * ξ^2 + μ^2)) volume := by
     rw [h_eq_real]; exact h_lorentz
   convert h_int_real.ofReal using 1
-  ext ξ
-  push_cast
-  rfl
+  · ext ξ
+    push_cast
+    rfl
 
 /-- Fourier inversion theorem for the exponential decay / Lorentzian pair.
     If FT[e^{-μ|x|}](k) = 2μ/(k² + μ²), then the inverse transform gives:
@@ -809,7 +809,7 @@ The free field propagator in d=4 Euclidean dimensions is:
 
 We can split this into time and spatial parts. After integrating over the
 time component k₀, we get an exponential factor e^{-μ|x₀|} where
-μ = √(|p̄|² + m²).
+μ = √(|pbar|² + m²).
 -/
 
 /-! ## Proof Strategy: Fourier Inversion Approach

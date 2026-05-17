@@ -10,7 +10,7 @@ import LeanPool.OSforGFF.Schwinger.Defs
 import LeanPool.OSforGFF.Measure.Construct
 import LeanPool.OSforGFF.Measure.IsGaussian
 import LeanPool.OSforGFF.Measure.GaussianFreeField -- For gaussian_satisfies_OS2
-import LeanPool.OSforGFF.OS.OS2_Invariance -- For CovarianceEuclideanInvariantℂ_μ_GFF
+import LeanPool.OSforGFF.OS.OS2Invariance -- For CovarianceEuclideanInvariantℂ_μ_GFF
 import LeanPool.OSforGFF.Covariance.Position  -- For freeCovarianceℂ_bilinear_symm
 import LeanPool.OSforGFF.Covariance.Momentum
 import LeanPool.OSforGFF.OS.Axioms
@@ -19,7 +19,7 @@ import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
 import LeanPool.OSforGFF.General.QuantitativeDecay
   -- For schwartz_bilinear_translation_decay_polynomial_proof
 import LeanPool.OSforGFF.Spacetime.TimeTranslation  -- For time translation on distributions
-import LeanPool.OSforGFF.OS.OS4_MGF  -- For shared OS4 infrastructure (no sorries)
+import LeanPool.OSforGFF.OS.OS4MGF  -- For shared OS4 infrastructure (no sorries)
 
 /-!
 # OS4 — Polynomial Clustering
@@ -447,7 +447,9 @@ theorem gaussianFreeField_satisfies_OS4 (m : ℝ) [Fact (0 < m)] :
   -- Define the decay target
   set δ := min (ε / 2) (1 / 2) with hδ_def
   have hδ_pos : δ > 0 := by simp only [δ, lt_min_iff]; constructor <;> linarith
-  have hδ_small : δ ≤ 1 := by simp [δ]; right; norm_num
+  have hδ_small : δ ≤ 1 := by
+    rw [hδ_def]
+    exact le_trans (min_le_right _ _) (by norm_num)
   have hδ_gives_ε : 2 * δ ≤ ε := by
     simp only [δ, min_def]
     split_ifs with h <;> linarith

@@ -24,8 +24,8 @@ import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Schwinger.Defs
 import LeanPool.OSforGFF.Measure.Construct
 import LeanPool.OSforGFF.Measure.IsGaussian
-import LeanPool.OSforGFF.OS.OS0_Analyticity
-import LeanPool.OSforGFF.OS.OS2_Invariance
+import LeanPool.OSforGFF.OS.OS0Analyticity
+import LeanPool.OSforGFF.OS.OS2Invariance
 import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
 import LeanPool.OSforGFF.Spacetime.TimeTranslation
 import LeanPool.OSforGFF.Covariance.Momentum
@@ -190,8 +190,7 @@ lemma gff_mgf_formula (m : ℝ) [Fact (0 < m)] (J : TestFunctionℂ) :
     have h_lin : distributionPairingℂ_real ω (negI • J) =
         negI * distributionPairingℂ_real ω J := by
       have := pairing_linear_combo ω J 0 negI 0
-      simp at this
-      exact this
+      simpa using this
     rw [h_lin]
     simp only [negI]
     ring_nf

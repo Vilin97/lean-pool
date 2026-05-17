@@ -32,11 +32,11 @@ open scoped BigOperators MatrixOrder
 
 universe u
 
-variable {ι : Type u} [Fintype ι] [DecidableEq ι]
+variable {ι : Type u}
 
 /-- Helper: Frobenius inner product equals `trace (Gᵀ * B)` (real case). -/
 lemma frobenius_eq_trace_transpose_mul
-  (G B : Matrix ι ι ℝ) :
+  [Fintype ι] (G B : Matrix ι ι ℝ) :
   (∑ j, ∑ l, G j l * B j l) = Matrix.trace (G.transpose * B) := by
   classical
   -- Expand the trace of Gᵀ * B
@@ -54,7 +54,9 @@ lemma frobenius_eq_trace_transpose_mul
 If `U * Uᵀ = 1`, then `Uᵀ G U ≠ 0` whenever `G ≠ 0`.
 -/
 lemma congr_transpose_mul_mul_ne_zero
-  (U G : Matrix ι ι ℝ) (hU_right : U * U.transpose = 1) (hG_ne_zero : G ≠ 0) :
+  [Fintype ι] [DecidableEq ι]
+  (U G : Matrix ι ι ℝ) (hU_right : U * U.transpose = 1)
+  (hG_ne_zero : G ≠ 0) :
   U.transpose * G * U ≠ 0 := by
   intro hH
   -- Conjugate back with U on the left and Uᵀ on the right to recover G
@@ -70,7 +72,7 @@ lemma congr_transpose_mul_mul_ne_zero
 For all vectors x,y: (xᵀ H y)^2 ≤ (xᵀ H x) (yᵀ H y).
 -/
 lemma psd_cauchy_schwarz
-  (H : Matrix ι ι ℝ) (hH_psd : H.PosSemidef) (x y : ι → ℝ) :
+  [Fintype ι] (H : Matrix ι ι ℝ) (hH_psd : H.PosSemidef) (x y : ι → ℝ) :
   ((x ⬝ᵥ H.mulVec y)^2) ≤ (x ⬝ᵥ H.mulVec x) * (y ⬝ᵥ H.mulVec y) := by
   classical
   obtain ⟨B, hB⟩ := CStarAlgebra.nonneg_iff_eq_star_mul_self.mp hH_psd.nonneg
@@ -108,15 +110,17 @@ lemma psd_cauchy_schwarz
 
 /-- If H is PSD over ℝ and H ii = H jj = 0 then H ij = 0. -/
 lemma psd_offdiag_zero_of_diag_zero
+  [Finite ι]
   (H : Matrix ι ι ℝ) (hH_psd : H.PosSemidef) {i j : ι}
   (hii : H i i = 0) (hjj : H j j = 0) : H i j = 0 := by
+  letI := Fintype.ofFinite ι
   classical
   -- Apply Cauchy–Schwarz with x = e_i, y = e_j
-  have hcs := psd_cauchy_schwarz H hH_psd (Pi.single i (1:ℝ)) (Pi.single j (1:ℝ))
+  have hcs := psd_cauchy_schwarz H hH_psd (Pi.single i (1 : ℝ)) (Pi.single j (1 : ℝ))
   -- Rewrite each quadratic form
-  have hx : (Pi.single i (1:ℝ)) ⬝ᵥ H.mulVec (Pi.single i 1) = H i i := by simp
-  have hy : (Pi.single j (1:ℝ)) ⬝ᵥ H.mulVec (Pi.single j 1) = H j j := by simp
-  have hxy : (Pi.single i (1:ℝ)) ⬝ᵥ H.mulVec (Pi.single j 1) = H i j := by simp
+  have hx : (Pi.single i (1 : ℝ)) ⬝ᵥ H.mulVec (Pi.single i 1) = H i i := by simp
+  have hy : (Pi.single j (1 : ℝ)) ⬝ᵥ H.mulVec (Pi.single j 1) = H j j := by simp
+  have hxy : (Pi.single i (1 : ℝ)) ⬝ᵥ H.mulVec (Pi.single j 1) = H i j := by simp
   -- Substitute and use hii, hjj
   have : (H i j)^2 ≤ (H i i) * (H j j) := by simpa [hx, hy, hxy]
     using hcs
@@ -128,8 +132,10 @@ lemma psd_offdiag_zero_of_diag_zero
 
 /-- For a real PSD matrix, if it is nonzero then some diagonal entry is strictly positive. -/
 lemma posSemidef_diag_pos_exists_of_ne_zero
+  [Finite ι]
   (H : Matrix ι ι ℝ) (hH_psd : H.PosSemidef) (hH_ne_zero : H ≠ 0) :
   ∃ i, 0 < H i i := by
+  letI := Fintype.ofFinite ι
   classical
   -- Suppose all diagonal entries are ≤ 0; PSD gives ≥ 0, hence all zeros
   by_contra h
@@ -151,7 +157,8 @@ If `G` is positive semidefinite and nonzero, and `B` is positive definite,
 then the Frobenius inner product `∑ j, ∑ l, G j l * B j l` is strictly positive.
 
 High-level proof sketch (to be formalized):
-- Use spectral theorem for real symmetric PD matrices: B = U D Uᵀ with D diagonal, diag(λ), λ > 0.
+- Use spectral theorem for real symmetric PD matrices: B = U D Uᵀ with D diagonal,
+  diag(λ), λ > 0.
 - Let H := Uᵀ G U. Then H is PSD and H ≠ 0 (congruence by invertible U).
 - Frobenius inner product equals trace: ⟪G,B⟫ = tr(G B) = tr(H D) = ∑ i λ i * H i i.
 - For PSD H, diagonal entries are ≥ 0, and H ≠ 0 ⇒ ∃ i, H i i > 0.
@@ -159,6 +166,7 @@ High-level proof sketch (to be formalized):
 - This avoids Cholesky and uses spectral decomposition/unitary congruence invariance.
 -/
 lemma frobenius_pos_of_psd_posdef
+  [Fintype ι]
   (G B : Matrix ι ι ℝ) (hG_psd : G.PosSemidef) (hG_ne_zero : G ≠ 0) (hB : B.PosDef) :
   0 < ∑ j, ∑ l, G j l * B j l := by
   classical

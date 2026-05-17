@@ -160,10 +160,12 @@ lemma spacetimeOfTimeSpace_spatial (t : ℝ) (x : SpatialCoords3) (i : Fin 3) :
 lemma spacetimeOfTimeSpace_decompose (t : ℝ) (x : SpatialCoords3) :
     spacetimeOfTimeSpace t x = spacetimeOfTimeSpace t 0 + spacetimeOfTimeSpace 0 x := by
   ext j
-  cases' j using Fin.cases with j
-  · -- time coordinate
+  cases j using Fin.cases with
+  | zero =>
+    -- time coordinate
     simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_zero]
-  · -- spatial coordinates
+  | succ j =>
+    -- spatial coordinates
     simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_succ]
 
 /-- Norm comparison: the spacetime norm dominates the spatial norm. -/
@@ -196,14 +198,14 @@ noncomputable def spatialEmbed : SpatialCoords3 →ₗ[ℝ] SpaceTime where
   toFun := fun x => spacetimeOfTimeSpace 0 x
   map_add' := fun x y => by
     ext j
-    cases' j using Fin.cases with j
-    · simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_zero]
-    · simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_succ]
+    cases j using Fin.cases with
+    | zero => simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_zero]
+    | succ j => simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_succ]
   map_smul' := fun r x => by
     ext j
-    cases' j using Fin.cases with j
-    · simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_zero]
-    · simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_succ]
+    cases j using Fin.cases with
+    | zero => simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_zero]
+    | succ j => simp [spacetimeOfTimeSpace, EuclideanSpace.equiv, Fin.cons_succ]
 
 /-- The spatial embedding is continuous (being linear on finite-dim spaces). -/
 lemma spatialEmbed_continuous : Continuous spatialEmbed :=
@@ -483,11 +485,13 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
   have h_time_smul : ∀ s : ℝ, spacetimeOfTimeSpace s 0 = s • e₀ := by
     intro s
     ext j
-    cases' j using Fin.cases with j
-    · -- Time component: (spacetimeOfTimeSpace s 0) 0 = s, (s • e₀) 0 = s * 1 = s
+    cases j using Fin.cases with
+    | zero =>
+      -- Time component: (spacetimeOfTimeSpace s 0) 0 = s, (s • e₀) 0 = s * 1 = s
       simp [spacetimeOfTimeSpace, e₀, EuclideanSpace.equiv, Fin.cons_zero,
             smul_eq_mul, mul_one]
-    · -- Spatial components: (spacetimeOfTimeSpace s 0) (j+1) = 0, (s • e₀) (j+1) = s * 0 = 0
+    | succ j =>
+      -- Spatial components: (spacetimeOfTimeSpace s 0) (j+1) = 0, (s • e₀) (j+1) = s * 0 = 0
       have hne : Fin.succ j ≠ 0 := Fin.succ_ne_zero j
       simp [spacetimeOfTimeSpace, e₀, EuclideanSpace.equiv, Fin.cons_succ,
             hne, smul_eq_mul, mul_zero]

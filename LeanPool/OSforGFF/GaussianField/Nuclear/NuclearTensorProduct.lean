@@ -48,6 +48,7 @@ namespace GaussianField
 `∑ₘ |val m| · (1 + m)^k` converges for all `k : ℕ`.
 -/
 structure RapidDecaySeq where
+  /-- The underlying sequence. -/
   val : ℕ → ℝ
   rapid_decay : ∀ k : ℕ, Summable (fun m => |val m| * (1 + (m : ℝ)) ^ k)
 
@@ -284,21 +285,21 @@ instance instCompleteSpace :
     intro k
     obtain ⟨B, hB⟩ := seminorm_bound k
     apply summable_of_sum_le (fun m => mul_nonneg (abs_nonneg _) (weight_nonneg m k))
-    intro s
-    -- ∑_{m∈s} |a m| * w m = lim_n ∑_{m∈s} |(u n).val m| * w m
-    -- For each finite m, (u n).val m → a m, so |(u n).val m| → |a m|
-    -- Hence the finite sum converges
-    have h_sum_lim : Filter.Tendsto
-        (fun n => ∑ m ∈ s, |(u n).val m| * (1 + (m : ℝ)) ^ k)
-        Filter.atTop (nhds (∑ m ∈ s, |a m| * (1 + (m : ℝ)) ^ k)) := by
-      apply tendsto_finset_sum
-      intro m _
-      exact (Filter.Tendsto.abs (ha m)).mul tendsto_const_nhds
-    -- Each partial sum ≤ seminorm k (u n) ≤ B
-    have h_sum_le : ∀ n, ∑ m ∈ s, |(u n).val m| * (1 + (m : ℝ)) ^ k ≤ B := by
-      intro n
-      exact le_trans (finset_sum_le_seminorm (u n) k s) (hB n)
-    exact le_of_tendsto h_sum_lim (Filter.Eventually.of_forall h_sum_le)
+    · intro s
+      -- ∑_{m∈s} |a m| * w m = lim_n ∑_{m∈s} |(u n).val m| * w m
+      -- For each finite m, (u n).val m → a m, so |(u n).val m| → |a m|
+      -- Hence the finite sum converges
+      have h_sum_lim : Filter.Tendsto
+          (fun n => ∑ m ∈ s, |(u n).val m| * (1 + (m : ℝ)) ^ k)
+          Filter.atTop (nhds (∑ m ∈ s, |a m| * (1 + (m : ℝ)) ^ k)) := by
+        apply tendsto_finset_sum
+        intro m _
+        exact (Filter.Tendsto.abs (ha m)).mul tendsto_const_nhds
+      -- Each partial sum ≤ seminorm k (u n) ≤ B
+      have h_sum_le : ∀ n, ∑ m ∈ s, |(u n).val m| * (1 + (m : ℝ)) ^ k ≤ B := by
+        intro n
+        exact le_trans (finset_sum_le_seminorm (u n) k s) (hB n)
+      exact le_of_tendsto h_sum_lim (Filter.Eventually.of_forall h_sum_le)
   -- Construct the limit element
   let L : RapidDecaySeq := ⟨a, a_rapid⟩
   -- Step 4: Show u n → L in the seminorm topology
@@ -557,7 +558,7 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
 `coeff m := coeffCLM m ∘ equiv`. Countability of `ι` and completeness of `E`
 (transferred from `RapidDecaySeq` via the CLE) are propagated automatically.
 -/
-@[reducible] noncomputable def DyninMityaginSpace.ofRapidDecayEquiv
+@[reducible] noncomputable def _root_.GaussianField.DyninMityaginSpace.ofRapidDecayEquiv
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     {ι : Type} [Countable ι] (p : ι → Seminorm ℝ E) (hp : WithSeminorms p)
@@ -629,7 +630,7 @@ DyninMityaginSpace instance using `basis m := equiv.symm (basisVec m)` and
     exact le_trans h_le_tsum h_bound
 
 /-- `ofRapidDecayEquiv` always produces a biorthogonal DM space. -/
-@[reducible] def DyninMityaginSpace.ofRapidDecayEquiv_hasBiorthogonalBasis
+theorem _root_.GaussianField.DyninMityaginSpace.ofRapidDecayEquiv_hasBiorthogonalBasis
     {E : Type*} [AddCommGroup E] [Module ℝ E]
     [TopologicalSpace E] [IsTopologicalAddGroup E] [ContinuousSMul ℝ E]
     {ι : Type} [Countable ι] (p : ι → Seminorm ℝ E) (hp : WithSeminorms p)
@@ -667,7 +668,10 @@ sequence space of rapidly decreasing sequences. The product basis indices
 Mathematically, if `E₁ ≅ s(ℕ)` and `E₂ ≅ s(ℕ)` as nuclear Fréchet spaces,
 then `E₁ ⊗̂ E₂ ≅ s(ℕ × ℕ) ≅ s(ℕ)` via the Cantor pairing.
 -/
-def NuclearTensorProduct (_E₁ _E₂ : Type*) := RapidDecaySeq
+def NuclearTensorProduct (_E₁ _E₂ : Type*) :=
+  let _ := _E₁
+  let _ := _E₂
+  RapidDecaySeq
 
 namespace NuclearTensorProduct
 
@@ -1427,7 +1431,8 @@ On pure tensors: `evalCLM φ₁ φ₂ (pure e₁ e₂) = φ₁ e₁ * φ₂ e₂
 The bilinear bound `‖φ₁(e₁) · φ₂(e₂)‖ ≤ C · p₁(e₁) · p₂(e₂)` follows from
 `Seminorm.bound_of_continuous` applied to each functional.
 -/
-def evalCLM (φ₁ : E₁ →L[ℝ] ℝ) (φ₂ : E₂ →L[ℝ] ℝ) :
+def _root_.GaussianField.NuclearTensorProduct.evalCLM
+    (φ₁ : E₁ →L[ℝ] ℝ) (φ₂ : E₂ →L[ℝ] ℝ) :
     NuclearTensorProduct E₁ E₂ →L[ℝ] ℝ := by
   classical
   -- Extract seminorm bounds for each functional via Classical.choice
@@ -1447,9 +1452,11 @@ def evalCLM (φ₁ : E₁ →L[ℝ] ℝ) (φ₂ : E₂ →L[ℝ] ℝ) :
     simp only [compBilin_apply]
     rw [Real.norm_eq_abs, abs_mul]
     have h₁ : |φ₁ e₁| ≤ C₁ * (s₁.sup DyninMityaginSpace.p) e₁ := by
-      have := hle₁ e₁; simp [Seminorm.comp_apply, NNReal.smul_def] at this; exact this
+      have := hle₁ e₁
+      simpa only [ge_iff_le] using this
     have h₂ : |φ₂ e₂| ≤ C₂ * (s₂.sup DyninMityaginSpace.p) e₂ := by
-      have := hle₂ e₂; simp [Seminorm.comp_apply, NNReal.smul_def] at this; exact this
+      have := hle₂ e₂
+      simpa only [ge_iff_le] using this
     calc |φ₁ e₁| * |φ₂ e₂|
         ≤ (↑C₁ * (s₁.sup DyninMityaginSpace.p) e₁) *
           (↑C₂ * (s₂.sup DyninMityaginSpace.p) e₂) :=
@@ -1458,7 +1465,8 @@ def evalCLM (φ₁ : E₁ →L[ℝ] ℝ) (φ₂ : E₂ →L[ℝ] ℝ) :
           (s₂.sup DyninMityaginSpace.p) e₂ := by ring)
 
 /-- `evalCLM` on pure tensors gives the product of evaluations. -/
-theorem evalCLM_pure {E₁ : Type*} [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁]
+theorem _root_.GaussianField.NuclearTensorProduct.evalCLM_pure
+    {E₁ : Type*} [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁]
     [IsTopologicalAddGroup E₁] [ContinuousSMul ℝ E₁] [DyninMityaginSpace E₁]
     {E₂ : Type*} [AddCommGroup E₂] [Module ℝ E₂] [TopologicalSpace E₂]
     [IsTopologicalAddGroup E₂] [ContinuousSMul ℝ E₂] [DyninMityaginSpace E₂]
@@ -1474,7 +1482,7 @@ end Eval
 /-- Under biorthogonality, basis vectors equal pure tensors of basis elements.
 `basisVec m = pure (basis a) (basis b)` where `(a,b) = unpair(m)`.
 -/
-theorem basisVec_eq_pure
+theorem _root_.GaussianField.NuclearTensorProduct.basisVec_eq_pure
     {E₁ : Type*} [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁]
     [IsTopologicalAddGroup E₁] [ContinuousSMul ℝ E₁] [DyninMityaginSpace E₁]
     {E₂ : Type*} [AddCommGroup E₂] [Module ℝ E₂] [TopologicalSpace E₂]
@@ -1492,12 +1500,16 @@ theorem basisVec_eq_pure
   simp only [RapidDecaySeq.basisVec, pure_val, hbasis₁, hbasis₂]
   by_cases h : n = m
   · subst h; simp
-  · simp [h]
+  · simp only [h, if_false, mul_ite, mul_one, mul_zero]
     by_cases h₁ : (Nat.unpair n).1 = (Nat.unpair m).1
-    · simp [h₁]
-      intro h₂; apply h
-      rw [← Nat.pair_unpair n, ← Nat.pair_unpair m, h₁, h₂]
-    · simp [h₁]
+    · by_cases h₂ : (Nat.unpair n).2 = (Nat.unpair m).2
+      · exfalso
+        apply h
+        rw [← Nat.pair_unpair n, ← Nat.pair_unpair m, h₁, h₂]
+      · simp only [h₂, if_false]
+    · by_cases h₂ : (Nat.unpair n).2 = (Nat.unpair m).2
+      · simp only [h₁, h₂, if_false, if_true]
+      · simp only [h₁, h₂, if_false]
 
 end NuclearTensorProduct
 

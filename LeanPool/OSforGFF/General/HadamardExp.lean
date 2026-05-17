@@ -35,7 +35,7 @@ namespace OSforGFF
 
 universe u
 
-variable {ι : Type u} [Fintype ι] [DecidableEq ι]
+variable {ι : Type u}
 
 /-- Entrywise real exponential of a matrix: `(entrywiseExp R) i j = exp (R i j)`.
     Used for the OS3 proof (Glimm–Jaffe): if `R` is PSD, then `exp(R)` (entrywise) should be PSD.
@@ -47,7 +47,7 @@ noncomputable def entrywiseExp (R : Matrix ι ι ℝ) : Matrix ι ι ℝ :=
   entrywiseExp R i j = Real.exp (R i j) := rfl
 
 /-- Continuity of the entrywise exponential map `R ↦ exp ∘ R` on matrices. -/
-lemma continuous_entrywiseExp (ι : Type u) [Fintype ι] [DecidableEq ι] :
+lemma continuous_entrywiseExp (ι : Type u) :
   Continuous (fun R : Matrix ι ι ℝ => entrywiseExp R) := by
   classical
   -- Matrices are pi-types `ι → ι → ℝ`; use coordinatewise continuity
@@ -68,7 +68,7 @@ private lemma isHermitian_entrywiseExp_real (R : Matrix ι ι ℝ)
   simpa [Matrix.conjTranspose, entrywiseExp] using congrArg Real.exp h_R_herm
 
 /-- Hadamard identity element: the all-ones matrix for entrywise multiplication. -/
-@[simp] def hadamardOne (ι : Type u) [Fintype ι] : Matrix ι ι ℝ := fun _ _ => 1
+@[simp] def hadamardOne (ι : Type u) : Matrix ι ι ℝ := fun _ _ => 1
 
 /-- n-fold Hadamard power of a matrix: `hadamardPow R n = R ∘ₕ ⋯ ∘ₕ R` (n times),
     with `hadamardPow R 0 = hadamardOne`.
@@ -166,8 +166,9 @@ lemma hadamardOne_hMul_left (R : Matrix ι ι ℝ) : Matrix.hadamard (hadamardOn
 
 /-- Hadamard powers of a positive definite matrix are positive definite for all n ≥ 1. -/
 lemma hadamardPow_posDef_of_posDef
-  (R : Matrix ι ι ℝ) (hR : R.PosDef) : ∀ n, 1 ≤ n → (hadamardPow R n).PosDef := by
+  [Finite ι] (R : Matrix ι ι ℝ) (hR : R.PosDef) : ∀ n, 1 ≤ n → (hadamardPow R n).PosDef := by
   classical
+  letI := Fintype.ofFinite ι
   intro n hn
   -- write n = k+1
   obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.pos_iff_ne_zero.mp hn)
@@ -189,7 +190,7 @@ lemma hadamardPow_posDef_of_posDef
     This lemma handles the complex interchange of summation and quadratic form evaluation.
 -/
 lemma quadratic_form_entrywiseExp_hadamardSeries
-  (R : Matrix ι ι ℝ) (x : ι → ℝ) :
+  [Fintype ι] (R : Matrix ι ι ℝ) (x : ι → ℝ) :
   x ⬝ᵥ (entrywiseExp_hadamardSeries R).mulVec x =
   ∑' n : ℕ, (1 / (Nat.factorial n : ℝ)) * (x ⬝ᵥ (hadamardPow R n).mulVec x) := by
   classical
@@ -258,7 +259,7 @@ lemma quadratic_form_entrywiseExp_hadamardSeries
     Hadamard exponential series.
 -/
 lemma summable_hadamardQuadSeries
-    (R : Matrix ι ι ℝ) (x : ι → ℝ) :
+    [Fintype ι] (R : Matrix ι ι ℝ) (x : ι → ℝ) :
     Summable (fun n : ℕ =>
       (1 / (Nat.factorial n : ℝ)) * (x ⬝ᵥ (hadamardPow (ι:=ι) R n).mulVec x)) := by
   classical
@@ -314,9 +315,10 @@ lemma summable_hadamardQuadSeries
     follows from absolute convergence of the scalar exp series; IsHermitian follows termwise.
 -/
 lemma posDef_entrywiseExp_hadamardSeries_of_posDef
-  (R : Matrix ι ι ℝ) (hR : R.PosDef) :
+  [Finite ι] (R : Matrix ι ι ℝ) (hR : R.PosDef) :
   (entrywiseExp_hadamardSeries (ι:=ι) R).PosDef := by
   classical
+  letI := Fintype.ofFinite ι
   -- Extract Hermitian part from PosDef
   have hHermR : R.IsHermitian := hR.isHermitian
   -- Each Hadamard power is Hermitian
@@ -335,7 +337,7 @@ lemma posDef_entrywiseExp_hadamardSeries_of_posDef
   have hHermS : (entrywiseExp_hadamardSeries (ι:=ι) R).IsHermitian := by
     rw [Matrix.IsHermitian]
     ext i j
-    simp [entrywiseExp_hadamardSeries, Matrix.conjTranspose]
+    simp only [entrywiseExp_hadamardSeries, Matrix.conjTranspose_apply, star_trivial]
     -- Use termwise symmetry under tsum
     have hsym_term : ∀ n, (hadamardPow (ι:=ι) R n i j) = (hadamardPow (ι:=ι) R n j i) := by
       intro n
@@ -412,9 +414,10 @@ lemma posDef_entrywiseExp_hadamardSeries_of_posDef
     NOTE: This proof is simplified to avoid matrix reduction timeouts.
 -/
 lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
-  (R : Matrix ι ι ℝ) (hR : R.PosSemidef) :
+  [Finite ι] (R : Matrix ι ι ℝ) (hR : R.PosSemidef) :
   (entrywiseExp_hadamardSeries (ι:=ι) R).PosSemidef := by
   classical
+  letI := Fintype.ofFinite ι
   -- Step 1: For any ε > 0, R + εI is positive definite
   have h_perturb_posDef : ∀ (ε : ℝ), ε > 0 → (R + ε • (1 : Matrix ι ι ℝ)).PosDef := by
     intro ε hε

@@ -30,7 +30,6 @@ This file provides infrastructure for Gaussian measures constructed via Minlos' 
 - `moment_zero_from_realCF`: Zero mean from characteristic functional symmetry
 -/
 
-open Classical
 open TopologicalSpace MeasureTheory Complex Filter
 
 /-! ## Contents
@@ -48,6 +47,7 @@ namespace MinlosAnalytic
     exp(-½Q(f,f)) is positive definite (in the bochner sense).
 -/
 structure CovarianceForm where
+  /-- The real covariance bilinear form. -/
   Q : TestFunction → TestFunction → ℝ
   symm : ∀ f g, Q f g = Q g f
   psd  : ∀ f, 0 ≤ Q f f

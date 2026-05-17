@@ -469,10 +469,10 @@ theorem schwartz_bilinear_prod_integrable
     refine h_dom.mono' ?_ ?_
     · -- AEStronglyMeasurable
       apply AEStronglyMeasurable.mul
-      apply AEStronglyMeasurable.mul
-      · exact f.continuous.aestronglyMeasurable.comp_measurable measurable_fst
-      · exact (hKs_meas.comp (measurable_fst.sub
-          measurable_snd)).complex_ofReal.aestronglyMeasurable
+      · apply AEStronglyMeasurable.mul
+        · exact f.continuous.aestronglyMeasurable.comp_measurable measurable_fst
+        · exact (hKs_meas.comp (measurable_fst.sub
+            measurable_snd)).complex_ofReal.aestronglyMeasurable
       · exact (g.continuous.comp (continuous_snd.sub continuous_const)).aestronglyMeasurable
     · filter_upwards with ⟨x, y⟩
       simp only [Function.uncurry]
@@ -481,8 +481,9 @@ theorem schwartz_bilinear_prod_integrable
             rw [norm_mul, norm_mul]
         _ ≤ max Cf 1 * ‖(K_sing (x - y) : ℂ)‖ * ‖g (y - a)‖ := by
             apply mul_le_mul_of_nonneg_right
-            apply mul_le_mul_of_nonneg_right (le_trans (hCf x) (le_max_left _ _)) (norm_nonneg _)
-            exact norm_nonneg _
+            · exact mul_le_mul_of_nonneg_right (le_trans (hCf x) (le_max_left _ _))
+                (norm_nonneg _)
+            · exact norm_nonneg _
         _ = max Cf 1 * (‖(K_sing (x - y) : ℂ)‖ * ‖g (y - a)‖) := by ring
         _ = max Cf 1 * ‖(K_sing (x - y) : ℂ) * g (y - a)‖ := by rw [← norm_mul]
   -- K_tail part: f integrable, K_tail bounded, g integrable
@@ -518,8 +519,8 @@ theorem schwartz_bilinear_prod_integrable
           = ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ * ‖g (y - a)‖ := by rw [norm_mul, norm_mul]
         _ ≤ ‖f x‖ * M_tail * ‖g (y - a)‖ := by
             apply mul_le_mul_of_nonneg_right
-            apply mul_le_mul_of_nonneg_left hKt_bnd (norm_nonneg _)
-            exact norm_nonneg _
+            · exact mul_le_mul_of_nonneg_left hKt_bnd (norm_nonneg _)
+            · exact norm_nonneg _
         _ = M_tail * (‖f x‖ * ‖g (y - a)‖) := by ring
         _ = M_tail * ‖f x * g (y - a)‖ := by rw [← norm_mul]
   -- Combine using integral_add for product integrals
@@ -536,6 +537,374 @@ theorem schwartz_bilinear_prod_integrable
 /-- The bilinear integral of Schwartz functions against a decaying kernel -/
 def schwartzBilinearIntegral (f g : SchwartzMap E ℂ) (K : E → ℝ) (a : E) : ℂ :=
   ∫ x : E, ∫ y : E, f x * (K (x - y) : ℂ) * g (y - a)
+
+private lemma schwartz_bilinear_kernelSingular_vanish
+    (f : SchwartzMap E ℂ) (K : E → ℝ) (R₀ : ℝ)
+    (hK_sing_int : Integrable (kernelSingular K R₀) volume)
+    (hf_C0 : Tendsto f (cocompact E) (nhds 0)) :
+    Tendsto (fun y => ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ))
+      (cocompact E) (nhds 0) := by
+  let K_sing := kernelSingular K R₀
+  change Tendsto (fun y => ∫ x, f x * (K_sing (x - y) : ℂ)) (cocompact E) (nhds 0)
+  change Integrable K_sing volume at hK_sing_int
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  have hK_sing_norm : 0 ≤ ∫ x, ‖(K_sing x : ℂ)‖ := integral_nonneg (fun _ => norm_nonneg _)
+  let I_Ksing := ∫ x, ‖(K_sing x : ℂ)‖
+  have hI_pos : 0 < I_Ksing + 1 := by linarith
+  let δ := ε / (I_Ksing + 1)
+  have hδ_pos : δ > 0 := div_pos hε hI_pos
+  rw [Metric.tendsto_nhds] at hf_C0
+  have hf_small := hf_C0 δ hδ_pos
+  rw [Filter.eventually_iff_exists_mem] at hf_small
+  obtain ⟨S, hS_mem, hS⟩ := hf_small
+  rw [Filter.mem_cocompact] at hS_mem
+  obtain ⟨L, hL_cpct, hL_sub⟩ := hS_mem
+  obtain ⟨R_L, hR_L⟩ := hL_cpct.isBounded.subset_closedBall 0
+  let R := R_L + R₀
+  rw [Filter.eventually_iff_exists_mem]
+  refine ⟨(closedBall 0 R)ᶜ, ?_, ?_⟩
+  · rw [Filter.mem_cocompact]
+    exact ⟨closedBall 0 R, isCompact_closedBall 0 R, fun x hx => hx⟩
+  · intro y hy
+    simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] at hy
+    simp only [dist_zero_right]
+    have hxy_outside : ∀ x, K_sing (x - y) ≠ 0 → x ∉ L := by
+      intro x hK_ne hx_in_L
+      have hxy_in_ball : x - y ∈ closedBall (0 : E) R₀ := by
+        by_contra h
+        simp only [mem_closedBall, dist_zero_right, not_le] at h
+        have : K_sing (x - y) = 0 := by
+          simp only [K_sing, kernelSingular]
+          rw [indicator_of_notMem]
+          · ring
+          · simp [mem_closedBall, dist_zero_right, not_le.mpr h]
+        exact hK_ne this
+      have h1 : ‖x - y‖ ≤ R₀ := by simpa [mem_closedBall, dist_zero_right] using hxy_in_ball
+      have h2 : ‖x‖ ≤ R_L := by simpa [mem_closedBall, dist_zero_right] using hR_L hx_in_L
+      have h3 : ‖y‖ ≤ ‖y - x‖ + ‖x‖ := by
+        calc ‖y‖ = ‖(y - x) + x‖ := by rw [sub_add_cancel]
+          _ ≤ ‖y - x‖ + ‖x‖ := norm_add_le _ _
+      have h4 : ‖y - x‖ = ‖x - y‖ := norm_sub_rev y x
+      linarith
+    have hf_small_on_supp : ∀ x, K_sing (x - y) ≠ 0 → ‖f x‖ < δ := by
+      intro x hK_ne
+      have hx_not_L : x ∉ L := hxy_outside x hK_ne
+      have hx_in_S : x ∈ S := hL_sub hx_not_L
+      simpa [dist_zero_right] using hS x hx_in_S
+    have hfK_bdd : ∀ x, ‖f x * (K_sing (x - y) : ℂ)‖ ≤ δ * ‖(K_sing (x - y) : ℂ)‖ := by
+      intro x
+      rw [norm_mul]
+      by_cases hK : K_sing (x - y) = 0
+      · simp [hK]
+      · exact mul_le_mul_of_nonneg_right (hf_small_on_supp x hK).le (norm_nonneg _)
+    have hKs_y_int : Integrable (fun x => (K_sing (x - y) : ℂ)) volume :=
+      (hK_sing_int.comp_sub_right y).ofReal
+    obtain ⟨Cf, hCf⟩ := bounded_of_continuous_tendsto_zero f.continuous (schwartz_tendsto_zero f)
+    have hint1 : Integrable (fun x => ‖f x * (K_sing (x - y) : ℂ)‖) volume :=
+      (Integrable.bdd_mul hKs_y_int f.continuous.aestronglyMeasurable
+        (Eventually.of_forall hCf)).norm
+    have hint2 : Integrable (fun x => δ * ‖(K_sing (x - y) : ℂ)‖) volume := by
+      simp only [mul_comm δ]
+      exact hKs_y_int.norm.mul_const δ
+    calc ‖∫ x, f x * (K_sing (x - y) : ℂ)‖ ≤ ∫ x, ‖f x * (K_sing (x - y) : ℂ)‖ :=
+          norm_integral_le_integral_norm _
+      _ ≤ ∫ x, δ * ‖(K_sing (x - y) : ℂ)‖ := integral_mono hint1 hint2 hfK_bdd
+      _ = δ * ∫ x, ‖(K_sing (x - y) : ℂ)‖ := by
+          simp only [mul_comm δ]
+          exact integral_mul_const δ _
+      _ = δ * I_Ksing := by
+          congr 1
+          have : ∫ x, ‖(K_sing (x - y) : ℂ)‖ = ∫ z, ‖(K_sing z : ℂ)‖ :=
+            integral_sub_right_eq_self (fun z => ‖(K_sing z : ℂ)‖) y
+          exact this
+      _ < ε := by
+          have : δ * I_Ksing < δ * (I_Ksing + 1) := mul_lt_mul_of_pos_left (lt_add_one _) hδ_pos
+          have heq : δ * (I_Ksing + 1) = ε := by simp only [δ]; field_simp
+          linarith
+
+private lemma schwartz_bilinear_kernelTail_vanish
+    (f : SchwartzMap E ℂ) (K : E → ℝ) (hK_meas : Measurable K)
+    (α : ℝ) (hα : α > 0) (C R₀ : ℝ) (hC : C > 0) (hR₀ : R₀ > 0)
+    (hK_decay : ∀ z : E, ‖z‖ ≥ R₀ → |K z| ≤ C / ‖z‖ ^ α)
+    (hK_tail_C0 : Tendsto (kernelTail K R₀) (cocompact E) (nhds 0))
+    (hf_int : Integrable f) :
+    Tendsto (fun y => ∫ x, f x * (kernelTail K R₀ (x - y) : ℂ))
+      (cocompact E) (nhds 0) := by
+  let K_tail := kernelTail K R₀
+  change Tendsto (fun y => ∫ x, f x * (K_tail (x - y) : ℂ)) (cocompact E) (nhds 0)
+  change Tendsto K_tail (cocompact E) (nhds 0) at hK_tail_C0
+  have hK_tail_bdd : ∃ M : ℝ, 0 < M ∧ ∀ z, ‖(K_tail z : ℂ)‖ ≤ M := by
+    use max (C / R₀ ^ α) 1
+    constructor
+    · exact lt_max_of_lt_right one_pos
+    intro z
+    rw [Complex.norm_real]
+    simp only [K_tail, kernelTail]
+    by_cases hz : z ∈ (closedBall (0 : E) R₀)ᶜ
+    · rw [indicator_of_mem hz, mul_one]
+      have hz' : ‖z‖ ≥ R₀ := by
+        simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] at hz
+        exact hz.le
+      calc |K z| ≤ C / ‖z‖ ^ α := hK_decay z hz'
+        _ ≤ C / R₀ ^ α := by
+            apply div_le_div_of_nonneg_left hC.le (Real.rpow_pos_of_pos hR₀ α)
+            exact Real.rpow_le_rpow hR₀.le hz' hα.le
+        _ ≤ max (C / R₀ ^ α) 1 := le_max_left _ _
+    · rw [indicator_of_notMem hz, mul_zero]
+      simp only [norm_zero]
+      exact le_of_lt (lt_max_of_lt_right one_pos)
+  obtain ⟨M, hM_pos, hM⟩ := hK_tail_bdd
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  obtain ⟨K_set, hK_cpct, hf_tail⟩ := integrable_tail_small hf_int (ε / (2 * M))
+    (div_pos hε (mul_pos two_pos hM_pos))
+  let If := ∫ x, ‖f x‖
+  have hIf_nonneg : 0 ≤ If := integral_nonneg (fun _ => norm_nonneg _)
+  let η := ε / (2 * (If + 1))
+  have hη_pos : 0 < η := div_pos hε (mul_pos two_pos (by linarith))
+  rw [Metric.tendsto_nhds] at hK_tail_C0
+  have hKt_small := hK_tail_C0 η hη_pos
+  rw [Filter.eventually_iff_exists_mem] at hKt_small
+  obtain ⟨S, hS_mem, hS⟩ := hKt_small
+  rw [Filter.mem_cocompact] at hS_mem
+  obtain ⟨L, hL_cpct, hL_sub⟩ := hS_mem
+  obtain ⟨R_K, hR_K⟩ := hK_cpct.isBounded.subset_closedBall 0
+  obtain ⟨R_L, hR_L⟩ := hL_cpct.isBounded.subset_closedBall 0
+  let R := R_K + R_L
+  rw [Filter.eventually_iff_exists_mem]
+  refine ⟨(closedBall 0 R)ᶜ, ?_, ?_⟩
+  · rw [Filter.mem_cocompact]
+    exact ⟨closedBall 0 R, isCompact_closedBall 0 R, fun x hx => hx⟩
+  · intro y hy
+    simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] at hy
+    simp only [dist_zero_right]
+    have hxy_outside : ∀ x ∈ K_set, x - y ∉ L := by
+      intro x hxK
+      have hx_bound : ‖x‖ ≤ R_K := by simpa [mem_closedBall, dist_zero_right] using hR_K hxK
+      intro hxy_in_L
+      have hxy_bound : ‖x - y‖ ≤ R_L := by simpa [mem_closedBall,
+                                                  dist_zero_right] using hR_L hxy_in_L
+      have h1 : ‖y‖ ≤ ‖y - x‖ + ‖x‖ := by
+        calc ‖y‖ = ‖(y - x) + x‖ := by rw [sub_add_cancel]
+          _ ≤ ‖y - x‖ + ‖x‖ := norm_add_le _ _
+      have h2 : ‖y - x‖ = ‖x - y‖ := norm_sub_rev y x
+      linarith
+    have hKt_small_on_K : ∀ x ∈ K_set, ‖(K_tail (x - y) : ℂ)‖ < η := by
+      intro x hxK
+      have : x - y ∈ S := hL_sub (hxy_outside x hxK)
+      have h := hS (x - y) this
+      simp only [dist_zero_right] at h
+      rwa [Complex.norm_real]
+    have hKt_y_meas : AEStronglyMeasurable (fun x => (K_tail (x - y) : ℂ)) volume := by
+      have hind : Measurable ((closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ))) :=
+        measurable_const.indicator isClosed_closedBall.measurableSet.compl
+      have h1 : Measurable (K_tail) := hK_meas.mul hind
+      have h2 : Measurable (fun x => K_tail (x - y)) := h1.comp (measurable_id.sub
+        measurable_const)
+      exact (measurable_ofReal.comp h2).aestronglyMeasurable
+    have h_int : Integrable (fun x => ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖) volume := by
+      refine Integrable.mul_bdd (c := M) hf_int.norm hKt_y_meas.norm ?_
+      filter_upwards with x
+      simp only [Real.norm_of_nonneg (norm_nonneg _)]
+      exact hM (x - y)
+    have hK_meas : MeasurableSet K_set := hK_cpct.isClosed.measurableSet
+    have hK_bound : ∫ x in K_set, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ η * If := by
+      have h1 : ∫ x in K_set, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ ∫ x in K_set, ‖f x‖ * η := by
+        refine setIntegral_mono_on h_int.integrableOn (hf_int.norm.mul_const _).integrableOn
+          hK_meas ?_
+        intro x hxK
+        exact mul_le_mul_of_nonneg_left (hKt_small_on_K x hxK).le (norm_nonneg _)
+      have h2 : ∫ x in K_set, ‖f x‖ * η = η * ∫ x in K_set, ‖f x‖ := by
+        rw [integral_mul_const]; ring
+      have h3 : ∫ x in K_set, ‖f x‖ ≤ If := setIntegral_le_integral hf_int.norm
+        (Eventually.of_forall (fun _ => norm_nonneg _))
+      linarith [mul_le_mul_of_nonneg_left h3 hη_pos.le]
+    have hKc_bound : ∫ x in K_setᶜ, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ M * (ε / (2 * M)) := by
+      have h1 : ∫ x in K_setᶜ, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ ∫ x in K_setᶜ, ‖f x‖ * M := by
+        refine setIntegral_mono h_int.integrableOn (hf_int.norm.mul_const _).integrableOn ?_
+        intro x
+        exact mul_le_mul_of_nonneg_left (hM (x - y)) (norm_nonneg _)
+      have h2 : ∫ x in K_setᶜ, ‖f x‖ * M = M * ∫ x in K_setᶜ, ‖f x‖ := by
+        rw [integral_mul_const]; ring
+      linarith [mul_le_mul_of_nonneg_left hf_tail.le hM_pos.le]
+    calc ‖∫ x, f x * (K_tail (x - y) : ℂ)‖
+        ≤ ∫ x, ‖f x * (K_tail (x - y) : ℂ)‖ := norm_integral_le_integral_norm _
+      _ = ∫ x, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ := by congr 1; ext x; exact norm_mul _ _
+      _ = ∫ x in K_set, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ∂volume +
+          ∫ x in K_setᶜ, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ∂volume := (integral_add_compl hK_meas
+            h_int).symm
+      _ ≤ η * If + M * (ε / (2 * M)) := add_le_add hK_bound hKc_bound
+      _ < ε := by
+          have h1 : η * If < ε / 2 := by
+            have hlt : η * If < η * (If + 1) := mul_lt_mul_of_pos_left (lt_add_one If) hη_pos
+            have heq : η * (If + 1) = ε / 2 := by
+              simp only [η]
+              have hne : If + 1 ≠ 0 := by linarith
+              field_simp
+            linarith
+          have h2 : M * (ε / (2 * M)) = ε / 2 := by
+            have hne : M ≠ 0 := ne_of_gt hM_pos
+            field_simp
+          linarith
+
+private lemma schwartz_bilinear_kernel_convolution_continuous
+    (f : SchwartzMap E ℂ) (K : E → ℝ) (hK_meas : Measurable K)
+    (R₀ : ℝ) (hR₀ : R₀ > 0)
+    (hK_cont : ContinuousOn K (closedBall (0 : E) R₀)ᶜ)
+    (hK_sing_int : Integrable (kernelSingular K R₀) volume)
+    (hf_int : Integrable f)
+    (Cf : ℝ) (hCf : ∀ x, ‖f x‖ ≤ Cf)
+    (M_tail : ℝ) (hM_tail : ∀ z, ‖(kernelTail K R₀ z : ℂ)‖ ≤ M_tail) :
+    Continuous (fun y => ∫ x, f x * (K (x - y) : ℂ)) := by
+  let K_sing := kernelSingular K R₀
+  let K_tail := kernelTail K R₀
+  let H := fun y => ∫ x, f x * (K (x - y) : ℂ)
+  change Continuous H
+  change Integrable K_sing volume at hK_sing_int
+  let H_sing := fun y => ∫ x, f x * (K_sing (x - y) : ℂ)
+  let H_tail := fun y => ∫ x, f x * (K_tail (x - y) : ℂ)
+  have hH_eq : H = fun y => H_sing y + H_tail y := by
+    ext y
+    simp only [H, H_sing, H_tail]
+    have hdec := kernel_decomposition K R₀
+    have hK_eq : ∀ x, (K (x - y) : ℂ) = (K_sing (x - y) : ℂ) + (K_tail (x - y) : ℂ) := by
+      intro x
+      have h := congrFun hdec (x - y)
+      rw [h, Complex.ofReal_add]
+    conv_lhs => arg 2; ext x; rw [hK_eq x, mul_add]
+    have h_int_sing : Integrable (fun x => f x * (K_sing (x - y) : ℂ)) volume := by
+      refine Integrable.bdd_mul ((hK_sing_int.comp_sub_right y).ofReal)
+        f.continuous.aestronglyMeasurable (Eventually.of_forall hCf)
+    have h_int_tail : Integrable (fun x => f x * (K_tail (x - y) : ℂ)) volume := by
+      have hKt_meas : AEStronglyMeasurable (fun x => (kernelTail K R₀ (x - y) : ℂ)) volume := by
+        have hind : Measurable ((closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ))) :=
+          measurable_const.indicator isClosed_closedBall.measurableSet.compl
+        have h1 : Measurable (kernelTail K R₀) := hK_meas.mul hind
+        have h2 : Measurable (fun x => kernelTail K R₀ (x - y)) :=
+          h1.comp (measurable_id.sub measurable_const)
+        exact (measurable_ofReal.comp h2).aestronglyMeasurable
+      exact Integrable.mul_bdd hf_int hKt_meas (Eventually.of_forall (fun x => hM_tail (x - y)))
+    exact integral_add h_int_sing h_int_tail
+  rw [hH_eq]
+  apply Continuous.add
+  · have hH_sing_eq : H_sing = fun y => ∫ z, f (z + y) * (K_sing z : ℂ) := by
+      ext y
+      simp only [H_sing]
+      rw [← integral_add_right_eq_self (fun x => f x * (K_sing (x - y) : ℂ)) y]
+      congr 1
+      ext x
+      simp only [add_sub_cancel_right]
+    rw [hH_sing_eq]
+    have hKs_meas : Measurable K_sing :=
+      hK_meas.mul (measurable_const.indicator isClosed_closedBall.measurableSet)
+    refine continuous_of_dominated (bound := fun z => max Cf 1 * |K_sing z|) ?_ ?_ ?_ ?_
+    · intro y
+      exact (f.continuous.comp (continuous_id.add continuous_const)).aestronglyMeasurable.mul
+        (measurable_ofReal.comp hKs_meas).aestronglyMeasurable
+    · intro y
+      filter_upwards with z
+      simp only [norm_mul, Complex.norm_real]
+      exact mul_le_mul_of_nonneg_right (le_max_of_le_left (hCf (z + y))) (abs_nonneg _)
+    · exact hK_sing_int.abs.const_mul _
+    · filter_upwards with z
+      exact (f.continuous.comp (continuous_const.add continuous_id)).mul continuous_const
+  · rw [continuous_iff_continuousAt]
+    intro y₀
+    have hKt_meas : Measurable (kernelTail K R₀) := by
+      have hind : Measurable ((closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ))) :=
+        measurable_const.indicator isClosed_closedBall.measurableSet.compl
+      exact hK_meas.mul hind
+    refine MeasureTheory.tendsto_integral_filter_of_dominated_convergence
+      (bound := fun x => M_tail * ‖f x‖) ?_ ?_ ?_ ?_
+    · filter_upwards with y
+      have h1 : Measurable (fun x => (kernelTail K R₀ (x - y) : ℂ)) :=
+        measurable_ofReal.comp (hKt_meas.comp (measurable_id.sub measurable_const))
+      exact f.continuous.aestronglyMeasurable.mul h1.aestronglyMeasurable
+    · filter_upwards with y
+      filter_upwards with x
+      simp only [norm_mul, Complex.norm_real]
+      calc ‖f x‖ * |kernelTail K R₀ (x - y)| ≤ ‖f x‖ * M_tail := by
+            apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
+            have h := hM_tail (x - y)
+            rwa [Complex.norm_real] at h
+        _ = M_tail * ‖f x‖ := mul_comm _ _
+    · exact hf_int.norm.const_mul M_tail
+    · by_cases hnt : Nontrivial E
+      · haveI := hnt
+        haveI : NoAtoms (volume : Measure E) := inferInstance
+        have h_vol_sphere : volume (Metric.sphere y₀ R₀) = 0 :=
+          MeasureTheory.Measure.addHaar_sphere volume y₀ R₀
+        have h_vol_singleton : volume {y₀} = 0 := measure_singleton y₀
+        have h_ae_sphere : ∀ᵐ x ∂volume, x ∉ Metric.sphere y₀ R₀ :=
+          compl_mem_ae_iff.mpr h_vol_sphere
+        have h_ae_sing : ∀ᵐ x ∂volume, x ∉ ({y₀} : Set E) :=
+          compl_mem_ae_iff.mpr h_vol_singleton
+        filter_upwards [h_ae_sphere, h_ae_sing] with x hx_sphere hx_sing
+        apply Tendsto.mul tendsto_const_nhds
+        have h_comp : (fun y => (kernelTail K R₀ (x - y) : ℂ)) =
+            (fun z => (kernelTail K R₀ z : ℂ)) ∘ (fun y => x - y) := rfl
+        rw [h_comp]
+        apply Tendsto.comp _ (tendsto_const_nhds.sub tendsto_id)
+        have hxy_ne_zero : x - y₀ ≠ 0 := by
+          intro h
+          apply hx_sing
+          rw [mem_singleton_iff]
+          exact sub_eq_zero.mp h
+        have hxy_not_sphere : ‖x - y₀‖ ≠ R₀ := by
+          intro h
+          apply hx_sphere
+          rw [Metric.mem_sphere, dist_eq_norm]
+          exact h
+        apply ContinuousAt.comp (g := Complex.ofReal)
+        · exact Complex.continuous_ofReal.continuousAt
+        · unfold kernelTail
+          by_cases hz_outside : ‖x - y₀‖ > R₀
+          · apply ContinuousAt.mul
+            · have h_mem : x - y₀ ∈ (closedBall (0 : E) R₀)ᶜ := by
+                simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le]
+                exact hz_outside
+              exact hK_cont.continuousAt ((isOpen_compl_iff.mpr isClosed_closedBall).mem_nhds
+                h_mem)
+            · apply ContinuousOn.continuousAt_indicator continuousOn_const
+              rw [frontier_compl, frontier_closedBall (0 : E) hR₀.ne']
+              simp only [mem_sphere_zero_iff_norm]
+              exact hxy_not_sphere
+          · push Not at hz_outside
+            have hz_inside : ‖x - y₀‖ < R₀ := lt_of_le_of_ne hz_outside hxy_not_sphere
+            have h_mem_interior : x - y₀ ∈ interior (closedBall (0 : E) R₀) := by
+              rw [interior_closedBall _ hR₀.ne']
+              simp only [mem_ball, dist_zero_right]
+              exact hz_inside
+            have h_eq : (fun z => K z * (closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ)) z)
+              =ᶠ[nhds (x - y₀)] (fun _ => 0) := by
+              have h_open : IsOpen (interior (closedBall (0 : E) R₀)) := isOpen_interior
+              filter_upwards [h_open.mem_nhds h_mem_interior] with z hz_int
+              have hz_not_compl : z ∉ (closedBall (0 : E) R₀)ᶜ := by
+                simp only [mem_compl_iff, not_not]
+                exact interior_subset hz_int
+              simp only [indicator_of_notMem hz_not_compl, mul_zero]
+            exact h_eq.continuousAt
+      · simp only [not_nontrivial_iff_subsingleton] at hnt
+        filter_upwards with x
+        apply Tendsto.mul tendsto_const_nhds
+        apply Tendsto.comp Complex.continuous_ofReal.continuousAt
+        have h_sub_zero : ∀ y : E, x - y = 0 := fun y => by
+          exact Subsingleton.eq_zero (x - y)
+        have hK_tail_zero : kernelTail K R₀ (0 : E) = 0 := by
+          unfold kernelTail
+          rw [indicator_of_notMem]
+          · ring
+          · simp only [mem_compl_iff, mem_closedBall, dist_zero_right, norm_zero, not_not]
+            exact hR₀.le
+        have hK_tail_const : ∀ y, kernelTail K R₀ (x - y) = 0 := fun y => by
+          rw [h_sub_zero y, hK_tail_zero]
+        have hK_tail_xy₀ : K_tail (x - y₀) = 0 := hK_tail_const y₀
+        have h_eq : (fun y => K_tail (x - y)) = fun _ => (0 : ℝ) := by
+          ext y
+          exact hK_tail_const y
+        rw [h_eq, hK_tail_xy₀]
+        exact tendsto_const_nhds
 
 /-- **Clustering decay for Schwartz bilinear forms** (proof version)
 
@@ -584,220 +953,17 @@ theorem schwartz_bilinear_translation_decay_proof
   -- As y → ∞, the support of K_sing(·-y) moves to where f is small
   have h_fKsing_vanish : Tendsto (fun y => ∫ x,
                                   f x * (K_sing (x - y) : ℂ)) (cocompact E) (nhds 0) := by
-    rw [Metric.tendsto_nhds]
-    intro ε hε
-    -- K_sing is integrable, get its L¹ norm
-    have hK_sing_norm : 0 ≤ ∫ x, ‖(K_sing x : ℂ)‖ := integral_nonneg (fun _ => norm_nonneg _)
-    let I_Ksing := ∫ x, ‖(K_sing x : ℂ)‖
-    have hI_pos : 0 < I_Ksing + 1 := by linarith
-    -- f is C₀, so for any δ > 0, f is bounded by δ outside some compact set
-    let δ := ε / (I_Ksing + 1)
-    have hδ_pos : δ > 0 := div_pos hε hI_pos
-    rw [Metric.tendsto_nhds] at hf_C0
-    have hf_small := hf_C0 δ hδ_pos
-    rw [Filter.eventually_iff_exists_mem] at hf_small
-    obtain ⟨S, hS_mem, hS⟩ := hf_small
-    rw [Filter.mem_cocompact] at hS_mem
-    obtain ⟨L, hL_cpct, hL_sub⟩ := hS_mem
-    -- So for x ∉ L, ‖f x‖ < δ
-    -- K_sing has support in closedBall 0 R₀
-    obtain ⟨R_L, hR_L⟩ := hL_cpct.isBounded.subset_closedBall 0
-    -- For ‖y‖ > R_L + R₀, closedBall y R₀ ⊆ Lᶜ
-    let R := R_L + R₀
-    rw [Filter.eventually_iff_exists_mem]
-    refine ⟨(closedBall 0 R)ᶜ, ?_, ?_⟩
-    · rw [Filter.mem_cocompact]
-      exact ⟨closedBall 0 R, isCompact_closedBall 0 R, fun x hx => hx⟩
-    · intro y hy
-      simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] at hy
-      simp only [dist_zero_right]
-      -- Key: K_sing(x-y) ≠ 0 ⟹ ‖x-y‖ ≤ R₀ ⟹ x ∈ closedBall y R₀ ⟹ x ∉ L
-      have hxy_outside : ∀ x, K_sing (x - y) ≠ 0 → x ∉ L := by
-        intro x hK_ne hx_in_L
-        -- K_sing(x-y) ≠ 0 ⟹ x - y ∈ closedBall 0 R₀, i.e., ‖x - y‖ ≤ R₀
-        have hxy_in_ball : x - y ∈ closedBall (0 : E) R₀ := by
-          by_contra h
-          simp only [mem_closedBall, dist_zero_right, not_le] at h
-          -- x - y ∉ closedBall 0 R₀ ⟹ indicator is 0 ⟹ K_sing = 0
-          have : K_sing (x - y) = 0 := by
-            simp only [K_sing, kernelSingular]
-            rw [indicator_of_notMem]
-            · ring
-            · simp [mem_closedBall, dist_zero_right, not_le.mpr h]
-          exact hK_ne this
-        have h1 : ‖x - y‖ ≤ R₀ := by simpa [mem_closedBall, dist_zero_right] using hxy_in_ball
-        have h2 : ‖x‖ ≤ R_L := by simpa [mem_closedBall, dist_zero_right] using hR_L hx_in_L
-        -- ‖y‖ = ‖(y - x) + x‖ ≤ ‖y - x‖ + ‖x‖ = ‖x - y‖ + ‖x‖
-        have h3 : ‖y‖ ≤ ‖y - x‖ + ‖x‖ := by
-          calc ‖y‖ = ‖(y - x) + x‖ := by rw [sub_add_cancel]
-            _ ≤ ‖y - x‖ + ‖x‖ := norm_add_le _ _
-        have h4 : ‖y - x‖ = ‖x - y‖ := norm_sub_rev y x
-        linarith
-      -- f is small where K_sing is nonzero (since those x are outside L)
-      have hf_small_on_supp : ∀ x, K_sing (x - y) ≠ 0 → ‖f x‖ < δ := by
-        intro x hK_ne
-        have hx_not_L : x ∉ L := hxy_outside x hK_ne
-        have hx_in_S : x ∈ S := hL_sub hx_not_L
-        simpa [dist_zero_right] using hS x hx_in_S
-      -- The integral is bounded by δ * I_Ksing < ε
-      have hfK_bdd : ∀ x, ‖f x * (K_sing (x - y) : ℂ)‖ ≤ δ * ‖(K_sing (x - y) : ℂ)‖ := by
-        intro x
-        rw [norm_mul]
-        by_cases hK : K_sing (x - y) = 0
-        · simp [hK]
-        · exact mul_le_mul_of_nonneg_right (hf_small_on_supp x hK).le (norm_nonneg _)
-      -- Integrability of ‖f · K_sing(·-y)‖ and δ * ‖K_sing(·-y)‖
-      have hKs_y_int : Integrable (fun x => (K_sing (x - y) : ℂ)) volume :=
-        (hK_sing_int.comp_sub_right y).ofReal
-      -- f is bounded (Schwartz C₀)
-      obtain ⟨Cf, hCf⟩ := bounded_of_continuous_tendsto_zero f.continuous (schwartz_tendsto_zero f)
-      have hint1 : Integrable (fun x => ‖f x * (K_sing (x - y) : ℂ)‖) volume :=
-        (Integrable.bdd_mul hKs_y_int f.continuous.aestronglyMeasurable
-          (Eventually.of_forall hCf)).norm
-      have hint2 : Integrable (fun x => δ * ‖(K_sing (x - y) : ℂ)‖) volume := by
-        simp only [mul_comm δ]
-        exact hKs_y_int.norm.mul_const δ
-      calc ‖∫ x, f x * (K_sing (x - y) : ℂ)‖ ≤ ∫ x, ‖f x * (K_sing (x - y) : ℂ)‖ :=
-            norm_integral_le_integral_norm _
-        _ ≤ ∫ x, δ * ‖(K_sing (x - y) : ℂ)‖ := integral_mono hint1 hint2 hfK_bdd
-        _ = δ * ∫ x, ‖(K_sing (x - y) : ℂ)‖ := by
-            simp only [mul_comm δ]
-            exact integral_mul_const δ _
-        _ = δ * I_Ksing := by
-            congr 1
-            have : ∫ x, ‖(K_sing (x - y) : ℂ)‖ = ∫ z, ‖(K_sing z : ℂ)‖ :=
-              integral_sub_right_eq_self (fun z => ‖(K_sing z : ℂ)‖) y
-            exact this
-        _ < ε := by
-            have : δ * I_Ksing < δ * (I_Ksing + 1) := mul_lt_mul_of_pos_left (lt_add_one _) hδ_pos
-            have heq : δ * (I_Ksing + 1) = ε := by simp only [δ]; field_simp
-            linarith
+    change Tendsto (fun y => ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ))
+      (cocompact E) (nhds 0)
+    exact schwartz_bilinear_kernelSingular_vanish f K R₀ hK_sing_int hf_C0
   -- Step 8: Show f ⋆ K_tail vanishes at infinity
   -- Pattern: f is L¹, K_tail is bounded and C₀ → use ε-δ argument
   have h_fKtail_vanish : Tendsto (fun y => ∫ x,
                                   f x * (K_tail (x - y) : ℂ)) (cocompact E) (nhds 0) := by
-    -- K_tail is bounded
-    have hK_tail_bdd : ∃ M : ℝ, 0 < M ∧ ∀ z, ‖(K_tail z : ℂ)‖ ≤ M := by
-      use max (C / R₀ ^ α) 1
-      constructor
-      · exact lt_max_of_lt_right one_pos
-      intro z
-      rw [Complex.norm_real]
-      simp only [K_tail, kernelTail]
-      by_cases hz : z ∈ (closedBall (0 : E) R₀)ᶜ
-      · rw [indicator_of_mem hz, mul_one]
-        have hz' : ‖z‖ ≥ R₀ := by
-          simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] at hz
-          exact hz.le
-        calc |K z| ≤ C / ‖z‖ ^ α := hK_decay z hz'
-          _ ≤ C / R₀ ^ α := by
-              apply div_le_div_of_nonneg_left hC.le (Real.rpow_pos_of_pos hR₀ α)
-              exact Real.rpow_le_rpow hR₀.le hz' hα.le
-          _ ≤ max (C / R₀ ^ α) 1 := le_max_left _ _
-      · rw [indicator_of_notMem hz, mul_zero]
-        simp only [norm_zero]
-        exact le_of_lt (lt_max_of_lt_right one_pos)
-    obtain ⟨M, hM_pos, hM⟩ := hK_tail_bdd
-    rw [Metric.tendsto_nhds]
-    intro ε hε
-    -- Get a compact set K where f's tail integral is small
-    obtain ⟨K, hK_cpct, hf_tail⟩ := integrable_tail_small hf_int (ε / (2 * M))
-      (div_pos hε (mul_pos two_pos hM_pos))
-    -- K_tail is C₀: get R where |K_tail| < η for ‖z‖ > R
-    let If := ∫ x, ‖f x‖
-    have hIf_nonneg : 0 ≤ If := integral_nonneg (fun _ => norm_nonneg _)
-    let η := ε / (2 * (If + 1))
-    have hη_pos : 0 < η := div_pos hε (mul_pos two_pos (by linarith))
-    rw [Metric.tendsto_nhds] at hK_tail_C0
-    have hKt_small := hK_tail_C0 η hη_pos
-    rw [Filter.eventually_iff_exists_mem] at hKt_small
-    obtain ⟨S, hS_mem, hS⟩ := hKt_small
-    rw [Filter.mem_cocompact] at hS_mem
-    obtain ⟨L, hL_cpct, hL_sub⟩ := hS_mem
-    -- Combine: get radius from compact sets K and L
-    obtain ⟨R_K, hR_K⟩ := hK_cpct.isBounded.subset_closedBall 0
-    obtain ⟨R_L, hR_L⟩ := hL_cpct.isBounded.subset_closedBall 0
-    let R := R_K + R_L
-    rw [Filter.eventually_iff_exists_mem]
-    refine ⟨(closedBall 0 R)ᶜ, ?_, ?_⟩
-    · rw [Filter.mem_cocompact]
-      exact ⟨closedBall 0 R, isCompact_closedBall 0 R, fun x hx => hx⟩
-    · intro y hy
-      simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le] at hy
-      simp only [dist_zero_right]
-      -- Key: for x ∈ K, x - y ∉ L, so |K_tail(x - y)| < η
-      have hxy_outside : ∀ x ∈ K, x - y ∉ L := by
-        intro x hxK
-        have hx_bound : ‖x‖ ≤ R_K := by simpa [mem_closedBall, dist_zero_right] using hR_K hxK
-        intro hxy_in_L
-        have hxy_bound : ‖x - y‖ ≤ R_L := by simpa [mem_closedBall,
-                                                    dist_zero_right] using hR_L hxy_in_L
-        have h1 : ‖y‖ ≤ ‖y - x‖ + ‖x‖ := by
-          calc ‖y‖ = ‖(y - x) + x‖ := by rw [sub_add_cancel]
-            _ ≤ ‖y - x‖ + ‖x‖ := norm_add_le _ _
-        have h2 : ‖y - x‖ = ‖x - y‖ := norm_sub_rev y x
-        linarith
-      have hKt_small_on_K : ∀ x ∈ K, ‖(K_tail (x - y) : ℂ)‖ < η := by
-        intro x hxK
-        have : x - y ∈ S := hL_sub (hxy_outside x hxK)
-        have h := hS (x - y) this
-        simp only [dist_zero_right] at h
-        rwa [Complex.norm_real]
-      -- Integrability of ‖f · K_tail(·-y)‖
-      have hKt_y_meas : AEStronglyMeasurable (fun x => (K_tail (x - y) : ℂ)) volume := by
-        have hind : Measurable ((closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ))) :=
-          measurable_const.indicator isClosed_closedBall.measurableSet.compl
-        have h1 : Measurable (K_tail) := hK_meas.mul hind
-        have h2 : Measurable (fun x => K_tail (x - y)) := h1.comp (measurable_id.sub
-          measurable_const)
-        exact (measurable_ofReal.comp h2).aestronglyMeasurable
-      have h_int : Integrable (fun x => ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖) volume := by
-        refine Integrable.mul_bdd (c := M) hf_int.norm hKt_y_meas.norm ?_
-        filter_upwards with x
-        simp only [Real.norm_of_nonneg (norm_nonneg _)]
-        exact hM (x - y)
-      -- Set integral bounds
-      have hK_meas : MeasurableSet K := hK_cpct.isClosed.measurableSet
-      -- On K: |K_tail(x-y)| < η
-      have hK_bound : ∫ x in K, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ η * If := by
-        have h1 : ∫ x in K, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ ∫ x in K, ‖f x‖ * η := by
-          refine setIntegral_mono_on h_int.integrableOn (hf_int.norm.mul_const _).integrableOn
-            hK_meas ?_
-          intro x hxK
-          exact mul_le_mul_of_nonneg_left (hKt_small_on_K x hxK).le (norm_nonneg _)
-        have h2 : ∫ x in K, ‖f x‖ * η = η * ∫ x in K, ‖f x‖ := by
-          rw [integral_mul_const]; ring
-        have h3 : ∫ x in K, ‖f x‖ ≤ If := setIntegral_le_integral hf_int.norm
-          (Eventually.of_forall (fun _ => norm_nonneg _))
-        linarith [mul_le_mul_of_nonneg_left h3 hη_pos.le]
-      -- On Kᶜ: ∫_{Kᶜ} |f| < ε/(2M), and |K_tail| ≤ M
-      have hKc_bound : ∫ x in Kᶜ, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ M * (ε / (2 * M)) := by
-        have h1 : ∫ x in Kᶜ, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ≤ ∫ x in Kᶜ, ‖f x‖ * M := by
-          refine setIntegral_mono h_int.integrableOn (hf_int.norm.mul_const _).integrableOn ?_
-          intro x
-          exact mul_le_mul_of_nonneg_left (hM (x - y)) (norm_nonneg _)
-        have h2 : ∫ x in Kᶜ, ‖f x‖ * M = M * ∫ x in Kᶜ, ‖f x‖ := by
-          rw [integral_mul_const]; ring
-        linarith [mul_le_mul_of_nonneg_left hf_tail.le hM_pos.le]
-      calc ‖∫ x, f x * (K_tail (x - y) : ℂ)‖
-          ≤ ∫ x, ‖f x * (K_tail (x - y) : ℂ)‖ := norm_integral_le_integral_norm _
-        _ = ∫ x, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ := by congr 1; ext x; exact norm_mul _ _
-        _ = ∫ x in K, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ∂volume +
-            ∫ x in Kᶜ, ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ ∂volume := (integral_add_compl hK_meas
-              h_int).symm
-        _ ≤ η * If + M * (ε / (2 * M)) := add_le_add hK_bound hKc_bound
-        _ < ε := by
-            have h1 : η * If < ε / 2 := by
-              have hlt : η * If < η * (If + 1) := mul_lt_mul_of_pos_left (lt_add_one If) hη_pos
-              have heq : η * (If + 1) = ε / 2 := by
-                simp only [η]
-                have hne : If + 1 ≠ 0 := by linarith
-                field_simp
-              linarith
-            have h2 : M * (ε / (2 * M)) = ε / 2 := by
-              have hne : M ≠ 0 := ne_of_gt hM_pos
-              field_simp
-            linarith
+    change Tendsto (fun y => ∫ x, f x * (kernelTail K R₀ (x - y) : ℂ))
+      (cocompact E) (nhds 0)
+    exact schwartz_bilinear_kernelTail_vanish f K hK_meas α hα C R₀ hC hR₀
+      hK_decay hK_tail_C0 hf_int
   -- Step 9: Combine: f ⋆ K vanishes at infinity
   have h_fK_vanish : Tendsto (fun y => ∫ x, f x * (K (x - y) : ℂ)) (cocompact E) (nhds 0) := by
     -- Use kernel_decomposition and linearity of integral
@@ -897,211 +1063,11 @@ theorem schwartz_bilinear_translation_decay_proof
       simp only [norm_zero]
       exact le_of_lt (lt_max_of_lt_right one_pos)
   obtain ⟨M_tail, hM_tail_pos, hM_tail⟩ := hK_tail_bdd
-  -- Constants for bounds
-  let I_Ksing := ∫ x, ‖(K_sing x : ℂ)‖
-  have hI_Ksing_nonneg : 0 ≤ I_Ksing := integral_nonneg (fun _ => norm_nonneg _)
-  let If := ∫ x, ‖f x‖
-  have hIf_nonneg : 0 ≤ If := integral_nonneg (fun _ => norm_nonneg _)
-  let B := (max Cf 1) * I_Ksing + If * M_tail + 1
   -- Step 10a: H is continuous (convolution of Schwartz with locally integrable kernel)
   have hH_cont : Continuous H := by
-    -- Decompose: H = H_sing + H_tail where
-    -- H_sing(y) = ∫ f(x) K_sing(x-y) dx
-    -- H_tail(y) = ∫ f(x) K_tail(x-y) dx
-    -- Prove each is continuous, then sum is continuous
-    let H_sing := fun y => ∫ x, f x * (K_sing (x - y) : ℂ)
-    let H_tail := fun y => ∫ x, f x * (K_tail (x - y) : ℂ)
-    have hH_eq : H = fun y => H_sing y + H_tail y := by
-      ext y
-      simp only [H, H_sing, H_tail]
-      have hdec := kernel_decomposition K R₀
-      have hK_eq : ∀ x, (K (x - y) : ℂ) = (K_sing (x - y) : ℂ) + (K_tail (x - y) : ℂ) := by
-        intro x
-        have h := congrFun hdec (x - y)
-        rw [h, Complex.ofReal_add]
-      conv_lhs => arg 2; ext x; rw [hK_eq x, mul_add]
-      -- Integrability for integral_add
-      have h_int_sing : Integrable (fun x => f x * (K_sing (x - y) : ℂ)) volume := by
-        refine Integrable.bdd_mul ((hK_sing_int.comp_sub_right y).ofReal)
-          f.continuous.aestronglyMeasurable (Eventually.of_forall hCf)
-      have h_int_tail : Integrable (fun x => f x * (K_tail (x - y) : ℂ)) volume := by
-        have hKt_meas : AEStronglyMeasurable (fun x => (kernelTail K R₀ (x - y) : ℂ)) volume := by
-          have hind : Measurable ((closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ))) :=
-            measurable_const.indicator isClosed_closedBall.measurableSet.compl
-          have h1 : Measurable (kernelTail K R₀) := hK_meas.mul hind
-          have h2 : Measurable (fun x => kernelTail K R₀ (x - y)) :=
-            h1.comp (measurable_id.sub measurable_const)
-          exact (measurable_ofReal.comp h2).aestronglyMeasurable
-        exact Integrable.mul_bdd hf_int hKt_meas (Eventually.of_forall (fun x => hM_tail (x - y)))
-      exact integral_add h_int_sing h_int_tail
-    rw [hH_eq]
-    apply Continuous.add
-    · -- H_sing is continuous
-      -- Change variables: H_sing(y) = ∫ f(z+y) K_sing(z) dz
-      -- Use dominated convergence: f(z+y) → f(z+y₀), dominated by (max Cf 1) · |K_sing(z)|
-      have hH_sing_eq : H_sing = fun y => ∫ z, f (z + y) * (K_sing z : ℂ) := by
-        ext y
-        simp only [H_sing]
-        rw [← integral_add_right_eq_self (fun x => f x * (K_sing (x - y) : ℂ)) y]
-        congr 1
-        ext x
-        simp only [add_sub_cancel_right]
-      rw [hH_sing_eq]
-      -- Apply continuous_of_dominated with bound(z) = (max Cf 1) * |K_sing(z)|
-      have hKs_meas : Measurable K_sing :=
-        hK_meas.mul (measurable_const.indicator isClosed_closedBall.measurableSet)
-      refine continuous_of_dominated (bound := fun z => max Cf 1 * |K_sing z|) ?_ ?_ ?_ ?_
-      · -- hF_meas: ∀ y, AEStronglyMeasurable (fun z => f(z+y) * K_sing(z))
-        intro y
-        exact (f.continuous.comp (continuous_id.add continuous_const)).aestronglyMeasurable.mul
-          (measurable_ofReal.comp hKs_meas).aestronglyMeasurable
-      · -- h_bound: ∀ y, ∀ᵐ z, ‖f(z+y) * K_sing(z)‖ ≤ bound(z)
-        intro y
-        filter_upwards with z
-        simp only [norm_mul, Complex.norm_real]
-        exact mul_le_mul_of_nonneg_right (le_max_of_le_left (hCf (z + y))) (abs_nonneg _)
-      · -- bound_integrable: Integrable (fun z => (max Cf 1) * |K_sing(z)|)
-        exact hK_sing_int.abs.const_mul _
-      · -- h_cont: ∀ᵐ z, Continuous (fun y => f(z+y) * K_sing(z))
-        filter_upwards with z
-        exact (f.continuous.comp (continuous_const.add continuous_id)).mul continuous_const
-    · -- H_tail is continuous: H_tail(y) = ∫ f(x) K_tail(x-y) dx
-      --
-      -- Use tendsto_integral_filter_of_dominated_convergence to show continuity at each point.
-      -- Key insight: K_tail(x-y) → K_tail(x-y₀) for ae x (the sphere where it fails has measure 0)
-      -- Dominator: |f(x) K_tail(x-y)| ≤ M_tail |f(x)| (integrable, independent of y)
-      --
-      rw [continuous_iff_continuousAt]
-      intro y₀
-      -- Measurability of K_tail
-      have hKt_meas : Measurable (kernelTail K R₀) := by
-        have hind : Measurable ((closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ))) :=
-          measurable_const.indicator isClosed_closedBall.measurableSet.compl
-        exact hK_meas.mul hind
-      -- Apply tendsto_integral_filter_of_dominated_convergence
-      refine MeasureTheory.tendsto_integral_filter_of_dominated_convergence
-        (bound := fun x => M_tail * ‖f x‖) ?_ ?_ ?_ ?_
-      · -- 1. AEStronglyMeasurable for all y in nhds y₀
-        filter_upwards with y
-        have h1 : Measurable (fun x => (kernelTail K R₀ (x - y) : ℂ)) :=
-          measurable_ofReal.comp (hKt_meas.comp (measurable_id.sub measurable_const))
-        exact f.continuous.aestronglyMeasurable.mul h1.aestronglyMeasurable
-      · -- 2. Uniform bound: ‖f(x) * K_tail(x-y)‖ ≤ M_tail * ‖f(x)‖ for ae x
-        filter_upwards with y
-        filter_upwards with x
-        simp only [norm_mul, Complex.norm_real]
-        calc ‖f x‖ * |kernelTail K R₀ (x - y)| ≤ ‖f x‖ * M_tail := by
-              apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-              have h := hM_tail (x - y)
-              rwa [Complex.norm_real] at h
-          _ = M_tail * ‖f x‖ := mul_comm _ _
-      · -- 3. Bound is integrable
-        exact hf_int.norm.const_mul M_tail
-      · -- 4. Pointwise limit almost everywhere
-        -- The bad set is S = sphere(y₀, R₀) ∪ {y₀}
-        -- In a trivial space, everything is continuous, so ae holds trivially.
-        -- In a nontrivial space, these sets have measure 0.
-        by_cases hnt : Nontrivial E
-        · -- Nontrivial case: sphere and singleton have measure 0
-          haveI := hnt
-          haveI : NoAtoms (volume : Measure E) := inferInstance
-          -- Sphere has measure 0
-          have h_vol_sphere : volume (Metric.sphere y₀ R₀) = 0 :=
-            MeasureTheory.Measure.addHaar_sphere volume y₀ R₀
-          -- Singleton has measure 0
-          have h_vol_singleton : volume {y₀} = 0 := measure_singleton y₀
-          -- Convert to ae statements using compl_mem_ae_iff
-          have h_ae_sphere : ∀ᵐ x ∂volume, x ∉ Metric.sphere y₀ R₀ :=
-            compl_mem_ae_iff.mpr h_vol_sphere
-          have h_ae_sing : ∀ᵐ x ∂volume, x ∉ ({y₀} : Set E) :=
-            compl_mem_ae_iff.mpr h_vol_singleton
-          filter_upwards [h_ae_sphere, h_ae_sing] with x hx_sphere hx_sing
-          -- Prove: Tendsto (fun y => f x * K_tail(x - y)) (nhds y₀) (nhds (f x * K_tail(x - y₀)))
-          -- f x is constant, so we need K_tail(x - ·) continuous at y₀
-          apply Tendsto.mul tendsto_const_nhds
-          -- K_tail(x - y) as y → y₀
-          have h_comp : (fun y => (kernelTail K R₀ (x - y) : ℂ)) =
-              (fun z => (kernelTail K R₀ z : ℂ)) ∘ (fun y => x - y) := rfl
-          rw [h_comp]
-          apply Tendsto.comp _ (tendsto_const_nhds.sub tendsto_id)
-          -- Show K_tail is continuous at x - y₀
-          -- x ≠ y₀ (from hx_sing)
-          -- ‖x - y₀‖ ≠ R₀ (from hx_sphere)
-          have hxy_ne_zero : x - y₀ ≠ 0 := by
-            intro h
-            apply hx_sing
-            rw [mem_singleton_iff]
-            exact sub_eq_zero.mp h
-          have hxy_not_sphere : ‖x - y₀‖ ≠ R₀ := by
-            intro h
-            apply hx_sphere
-            rw [Metric.mem_sphere, dist_eq_norm]
-            exact h
-          -- K_tail continuous at x - y₀ (inline proof)
-          -- K_tail(z) = K(z) * indicator_{(closedBall 0 R₀)ᶜ}(z)
-          apply ContinuousAt.comp (g := Complex.ofReal)
-          · exact Complex.continuous_ofReal.continuousAt
-          · -- K_tail continuous at x - y₀
-            unfold kernelTail
-            by_cases hz_outside : ‖x - y₀‖ > R₀
-            · -- Case 1: ‖x - y₀‖ > R₀ (outside ball, indicator = 1)
-              -- K_tail = K in a neighborhood, so need K continuous
-              apply ContinuousAt.mul
-              · -- K is continuous at x - y₀ (which is outside the R₀-ball)
-                have h_mem : x - y₀ ∈ (closedBall (0 : E) R₀)ᶜ := by
-                  simp only [mem_compl_iff, mem_closedBall, dist_zero_right, not_le]
-                  exact hz_outside
-                exact hK_cont.continuousAt ((isOpen_compl_iff.mpr isClosed_closedBall).mem_nhds
-                  h_mem)
-              · -- indicator is continuous at x - y₀
-                apply ContinuousOn.continuousAt_indicator continuousOn_const
-                rw [frontier_compl, frontier_closedBall (0 : E) hR₀.ne']
-                simp only [mem_sphere_zero_iff_norm]
-                exact hxy_not_sphere
-            · -- Case 2: ‖x - y₀‖ < R₀ (inside ball, indicator = 0 in neighborhood)
-              push Not at hz_outside
-              have hz_inside : ‖x - y₀‖ < R₀ := lt_of_le_of_ne hz_outside hxy_not_sphere
-              -- K_tail is locally 0: the indicator is 0 on interior of ball
-              -- In a neighborhood of x - y₀, indicator = 0, so K * indicator = 0
-              have h_mem_interior : x - y₀ ∈ interior (closedBall (0 : E) R₀) := by
-                rw [interior_closedBall _ hR₀.ne']
-                simp only [mem_ball, dist_zero_right]
-                exact hz_inside
-              -- Use continuity of the zero function: f =ᶠ g → f continuous at x → g continuous at x
-              have h_eq : (fun z => K z * (closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ)) z)
-                =ᶠ[nhds (x - y₀)] (fun _ => 0) := by
-                have h_open : IsOpen (interior (closedBall (0 : E) R₀)) := isOpen_interior
-                filter_upwards [h_open.mem_nhds h_mem_interior] with z hz_int
-                have hz_not_compl : z ∉ (closedBall (0 : E) R₀)ᶜ := by
-                  simp only [mem_compl_iff, not_not]
-                  exact interior_subset hz_int
-                simp only [indicator_of_notMem hz_not_compl, mul_zero]
-              exact h_eq.continuousAt
-        · -- Trivial (subsingleton) case: ae holds trivially
-          simp only [not_nontrivial_iff_subsingleton] at hnt
-          filter_upwards with x
-          apply Tendsto.mul tendsto_const_nhds
-          apply Tendsto.comp Complex.continuous_ofReal.continuousAt
-          -- K_tail(x - y) = K_tail(0) = 0 for all y (since x = y in subsingleton)
-          have h_sub_zero : ∀ y : E, x - y = 0 := fun y => by
-            exact Subsingleton.eq_zero (x - y)
-          have hK_tail_zero : kernelTail K R₀ (0 : E) = 0 := by
-            unfold kernelTail
-            rw [indicator_of_notMem]
-            · ring
-            · -- Show 0 ∉ (closedBall 0 R₀)ᶜ, i.e., 0 ∈ closedBall 0 R₀
-              simp only [mem_compl_iff, mem_closedBall, dist_zero_right, norm_zero, not_not]
-              exact hR₀.le
-          have hK_tail_const : ∀ y, kernelTail K R₀ (x - y) = 0 := fun y => by
-            rw [h_sub_zero y, hK_tail_zero]
-          -- Show constant function tends to constant
-          -- Note: K_tail = kernelTail K R₀ by definition
-          have hK_tail_xy₀ : K_tail (x - y₀) = 0 := hK_tail_const y₀
-          have h_eq : (fun y => K_tail (x - y)) = fun _ => (0 : ℝ) := by
-            ext y
-            exact hK_tail_const y
-          rw [h_eq, hK_tail_xy₀]
-          exact tendsto_const_nhds
+    change Continuous (fun y => ∫ x, f x * (K (x - y) : ℂ))
+    exact schwartz_bilinear_kernel_convolution_continuous f K hK_meas R₀ hR₀
+      hK_cont hK_sing_int hf_int Cf hCf M_tail (fun z => by simpa [K_tail] using hM_tail z)
   -- Step 10b: Apply the proven convolution theorem
   -- For integrable g and continuous C₀ H, (fun b => ∫ g(w) H(w - b)) → 0 as b → cocompact
   have h_decay := convolution_vanishes_of_integrable_and_C0 hg_int h_fK_vanish hH_cont
@@ -1138,123 +1104,13 @@ theorem schwartz_bilinear_translation_decay_proof
     --   Integral ≤ M_tail · ‖f‖_1 · ‖g‖_1
     have h_int : Integrable (uncurry (fun x y => f x * (K (x - y) : ℂ) * g (y - a)))
         (volume.prod volume) := by
-      -- Decompose K = K_sing + K_tail
-      -- K_sing part: f bounded, K_sing integrable, g integrable
-      -- K_tail part: f integrable, K_tail bounded, g integrable
-      --
-      -- Bound: |f(x) K(x-y) g(y-a)| ≤ |f(x)| |K_sing(x-y)| |g(y-a)| + |f(x)| |K_tail(x-y)| |g(y-a)|
-      --   ≤ Cf · |K_sing(x-y)| · |g(y-a)| + |f(x)| · M_tail · |g(y-a)|
-      -- Get bounds
-      obtain ⟨Cf',
-              hCf'⟩ := bounded_of_continuous_tendsto_zero f.continuous (schwartz_tendsto_zero f)
-      have hCf'_pos : 0 < max Cf' 1 := lt_max_of_lt_right one_pos
-      obtain ⟨Cg, hCg⟩ := bounded_of_continuous_tendsto_zero g.continuous (schwartz_tendsto_zero g)
-      -- Split into K_sing and K_tail parts using linearity
-      have hK_eq : ∀ x y, (K (x - y) : ℂ) = (K_sing (x - y) : ℂ) + (K_tail (x - y) : ℂ) := by
-        intro x y
-        have h := congrFun (kernel_decomposition K R₀) (x - y)
-        rw [h, Complex.ofReal_add]
-      -- The integrand splits as F_sing + F_tail
-      have h_split : ∀ x y, f x * (K (x - y) : ℂ) * g (y - a) =
-          f x * (K_sing (x - y) : ℂ) * g (y - a) + f x * (K_tail (x - y) : ℂ) * g (y - a) := by
-        intro x y
-        rw [hK_eq x y]
-        ring
-      -- Integrability of K_sing part: f bounded, K_sing integrable (compact support), g integrable
-      -- Bound: |f(x) K_sing(x-y) g(y-a)| ≤ Cf · |K_sing(x-y)| · |g(y-a)|
-      -- ∫∫ Cf |K_sing(x-y)| |g(y-a)| dx dy = Cf · ‖K_sing‖_1 · ‖g‖_1 < ∞
-      have h_sing_int : Integrable (uncurry (fun x y => f x * (K_sing (x - y) : ℂ) * g (y - a)))
-          (volume.prod volume) := by
-        -- **Strategy:**
-        -- Bound: |f(x) K_sing(x-y) g(y-a)| ≤ Cf · |K_sing(x-y)| · |g(y-a)|
-        -- The dominator is integrable via convolution_integrand theorem.
-        have hKs_meas : Measurable K_sing :=
-          hK_meas.mul (measurable_const.indicator isClosed_closedBall.measurableSet)
-        have hg_shift : Integrable (fun y => g (y - a)) volume := hg_int.comp_sub_right a
-        -- Step 1: The "convolution integrand" (x,y) ↦ ‖K_sing(x-y)‖ · ‖g(y-a)‖ is integrable
-        -- Use Integrable.convolution_integrand with the multiplication bilinear map
-        have h_conv_int : Integrable (fun p : E × E => ‖g (p.2 - a)‖ * ‖K_sing (p.1 - p.2)‖)
-            (volume.prod volume) := by
-          have hg_norm : Integrable (fun y => ‖g (y - a)‖) volume := hg_shift.norm
-          have hKs_norm : Integrable (fun x => ‖K_sing x‖) volume := hK_sing_int.norm
-          have h_temp := @Integrable.convolution_integrand ℝ E ℝ ℝ ℝ _ _ _ (fun y => ‖g (y - a)‖)
-            (fun x => ‖K_sing x‖) _ _ _ _ (ContinuousLinearMap.mul ℝ ℝ) _ volume volume
-            _ _ _ _ _ _ hg_norm hKs_norm
-          simp only [ContinuousLinearMap.mul_apply'] at h_temp
-          exact h_temp
-        -- Step 2: Scale by Cf' to get the dominating function
-        -- Dominator: (x,y) ↦ Cf' · ‖K_sing(x-y)‖ · ‖g(y-a)‖
-        let Cf := max Cf' 1
-        have hCf_pos : 0 < Cf := lt_max_of_lt_right one_pos
-        have h_dom : Integrable (fun p : E × E => Cf * (‖g (p.2 - a)‖ * ‖K_sing (p.1 - p.2)‖))
-            (volume.prod volume) := h_conv_int.const_mul Cf
-        -- Step 3: Use mono' with the dominating function
-        refine h_dom.mono' ?_ ?_
-        · -- AEStronglyMeasurable
-          have h1 : Measurable (fun z : E × E => (K_sing (z.1 - z.2) : ℂ)) :=
-            measurable_ofReal.comp (hKs_meas.comp (measurable_fst.sub measurable_snd))
-          have h2 : AEStronglyMeasurable (fun z : E × E => f z.1) (volume.prod volume) :=
-            (f.continuous.comp continuous_fst).aestronglyMeasurable
-          have h3 : AEStronglyMeasurable (fun z : E × E => g (z.2 - a)) (volume.prod volume) :=
-            (g.continuous.comp (continuous_snd.sub continuous_const)).aestronglyMeasurable
-          exact (h2.mul h1.aestronglyMeasurable).mul h3
-        · -- ae bound: ‖f(x) K_sing(x-y) g(y-a)‖ ≤ Cf * (‖g(y-a)‖ * ‖K_sing(x-y)‖)
-          filter_upwards with ⟨x, y⟩
-          simp only [uncurry, norm_mul, Complex.norm_real]
-          have hf_bdd : ‖f x‖ ≤ Cf := le_trans (hCf' x) (le_max_left Cf' 1)
-          calc ‖f x‖ * |K_sing (x - y)| * ‖g (y - a)‖
-              ≤ Cf * |K_sing (x - y)| * ‖g (y - a)‖ := by
-                apply mul_le_mul_of_nonneg_right
-                apply mul_le_mul_of_nonneg_right hf_bdd (abs_nonneg _)
-                exact norm_nonneg _
-            _ = Cf * (‖g (y - a)‖ * |K_sing (x - y)|) := by ring
-            _ = Cf * (‖g (y - a)‖ * ‖K_sing (x - y)‖) := by rw [Real.norm_eq_abs]
-      -- Integrability of K_tail part: f integrable, K_tail bounded, g integrable
-      -- Bound: |f(x) K_tail(x-y) g(y-a)| ≤ |f(x)| · M_tail · |g(y-a)|
-      -- ∫∫ M_tail |f(x)| |g(y-a)| dx dy = M_tail · ‖f‖_1 · ‖g‖_1 < ∞
-      have h_tail_int : Integrable (uncurry (fun x y => f x * (K_tail (x - y) : ℂ) * g (y - a)))
-          (volume.prod volume) := by
-        -- Use Integrable.mul_prod: (x,y) ↦ f(x) * g(y-a) is integrable on product
-        have hg_shift : Integrable (fun y => g (y - a)) volume := hg_int.comp_sub_right a
-        have h_prod : Integrable (fun z : E × E => f z.1 * g (z.2 - a)) (volume.prod volume) :=
-          Integrable.mul_prod hf_int hg_shift
-        -- The dominating function is M_tail * ‖f(x) * g(y-a)‖
-        have h_dom : Integrable (fun z : E × E => M_tail * ‖f z.1 * g (z.2 - a)‖) (volume.prod
-          volume) :=
-          h_prod.norm.const_mul M_tail
-        -- Now bound our integrand
-        refine h_dom.mono' ?_ ?_
-        · -- AEStronglyMeasurable
-          have hKt_meas : Measurable (kernelTail K R₀) := by
-            have hind : Measurable ((closedBall (0 : E) R₀)ᶜ.indicator (fun _ => (1 : ℝ))) :=
-              measurable_const.indicator isClosed_closedBall.measurableSet.compl
-            exact hK_meas.mul hind
-          have h1 : Measurable (fun z : E × E => (kernelTail K R₀ (z.1 - z.2) : ℂ)) :=
-            measurable_ofReal.comp (hKt_meas.comp (measurable_fst.sub measurable_snd))
-          have h2 : AEStronglyMeasurable (fun z : E × E => f z.1) (volume.prod volume) :=
-            (f.continuous.comp continuous_fst).aestronglyMeasurable
-          have h3 : AEStronglyMeasurable (fun z : E × E => g (z.2 - a)) (volume.prod volume) :=
-            (g.continuous.comp (continuous_snd.sub continuous_const)).aestronglyMeasurable
-          exact (h2.mul h1.aestronglyMeasurable).mul h3
-        · -- ae bound: ‖f(x) K_tail(x-y) g(y-a)‖ ≤ M_tail * ‖f(x) * g(y-a)‖
-          filter_upwards with ⟨x, y⟩
-          simp only [uncurry, norm_mul]
-          have h1 : ‖f x‖ * ‖(K_tail (x - y) : ℂ)‖ * ‖g (y - a)‖ ≤ ‖f x‖ * M_tail * ‖g (y - a)‖ :=
-            by
-            apply mul_le_mul_of_nonneg_right
-            apply mul_le_mul_of_nonneg_left (hM_tail (x - y)) (norm_nonneg _)
-            exact norm_nonneg _
-          have h2 : ‖f x‖ * M_tail * ‖g (y - a)‖ = M_tail * (‖f x‖ * ‖g (y - a)‖) := by ring
-          have h3 : ‖f x‖ * ‖g (y - a)‖ = ‖f x * g (y - a)‖ := (norm_mul _ _).symm
-          linarith [h1, congrArg (M_tail * ·) h3]
-      -- Combine using integral_add for product integrals
-      have h_eq : uncurry (fun x y => f x * (K (x - y) : ℂ) * g (y - a)) =
-          uncurry (fun x y => f x * (K_sing (x - y) : ℂ) * g (y - a)) +
-          uncurry (fun x y => f x * (K_tail (x - y) : ℂ) * g (y - a)) := by
-        ext ⟨x, y⟩
-        simp only [uncurry, Pi.add_apply, h_split]
-      rw [h_eq]
-      exact Integrable.add h_sing_int h_tail_int
+      have hK_tail_bdd_abs : ∃ M : ℝ, ∀ z : E, |kernelTail K R₀ z| ≤ M := by
+        refine ⟨M_tail, ?_⟩
+        intro z
+        have h := hM_tail z
+        simpa [K_tail, Complex.norm_real] using h
+      exact schwartz_bilinear_prod_integrable f g K hK_meas hK_loc R₀ hR₀
+        hK_tail_bdd_abs a
     -- Step 2: Apply Fubini to swap integration order
     have h_swap : ∫ x : E, ∫ y : E, f x * (K (x - y) : ℂ) * g (y - a) =
         ∫ y : E, ∫ x : E, f x * (K (x - y) : ℂ) * g (y - a) := by

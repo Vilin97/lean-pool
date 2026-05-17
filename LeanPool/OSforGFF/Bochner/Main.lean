@@ -80,7 +80,7 @@ The proof uses explicit shifted Gaussians rather than abstract Plancherel.
 Given φ ∈ L¹ with φ positive-definite, we want φ̂(ξ₀) ≥ 0 for each ξ₀.
 
 Test the PD condition with g_a(x) = exp(-a‖x‖²) exp(-i⟨ξ₀,x⟩):
-  0 ≤ ∫∫ ḡ_a(x) g_a(y) φ(x-y) dx dy = ∫ |ĝ_a(ξ)|² φ̂(ξ) dξ
+  0 ≤ ∫∫ gbar_a(x) g_a(y) φ(x-y) dx dy = ∫ |ĝ_a(ξ)|² φ̂(ξ) dξ
 
 Since ĝ_a is an explicit Gaussian (Mathlib: `fourier_gaussian_innerProductSpace'`),
 |ĝ_a|² is a Gaussian centered at ξ₀ with width ~ 1/√a. As a → 0⁺, this
@@ -107,7 +107,7 @@ omit [FiniteDimensional ℝ V] in
 /-- Forward Bochner: the characteristic function of any finite measure is PD.
 
     Proof: charFun(μ)(t) = ∫ exp(i⟨x,t⟩) dμ(x). So
-    ∑ᵢⱼ c̄ᵢcⱼ charFun(tᵢ-tⱼ) = ∫ |∑ₖ cₖ exp(i⟨x,tₖ⟩)|² dμ(x) ≥ 0.
+    ∑ᵢⱼ cbarᵢcⱼ charFun(tᵢ-tⱼ) = ∫ |∑ₖ cₖ exp(i⟨x,tₖ⟩)|² dμ(x) ≥ 0.
 
     The key steps are: (1) swap finite sum and integral, (2) recognize
     the integrand as a norm squared.
@@ -131,11 +131,11 @@ lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
         cexp (↑⟪x, v⟫_ℝ * I)) μ :=
       fun v => (memLp_top_of_bound (by fun_prop : Continuous _).aestronglyMeasurable 1
         (ae_of_all _ fun x => by simp [Complex.norm_exp_ofReal_mul_I])).integrable le_top
-    -- Integrability of each summand c̄ᵢcⱼ·exp
+    -- Integrability of each summand cbarᵢcⱼ·exp
     have hterm_int : ∀ i j, Integrable (fun x : V =>
         (starRingEnd ℂ) (c i) * c j * cexp (↑⟪x, t i - t j⟫_ℝ * I)) μ :=
       fun i j => (hexp_int (t i - t j)).const_mul _
-    -- Step A: Complex equality: ∑ᵢ∑ⱼ c̄ᵢcⱼ ∫ exp = ∫ ↑(normSq(∑ cₖexp))
+    -- Step A: Complex equality: ∑ᵢ∑ⱼ cbarᵢcⱼ ∫ exp = ∫ ↑(normSq(∑ cₖexp))
     have hcomplex : ∑ i, ∑ j, (starRingEnd ℂ) (c i) * c j *
         ∫ x, cexp (↑⟪x, t i - t j⟫_ℝ * I) ∂μ =
         ∫ x, ↑(normSq (∑ k, c k * cexp (↑(-⟪x, t k⟫_ℝ) * I))) ∂μ := by
@@ -155,11 +155,11 @@ lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
               integrable_finset_sum _ (fun j _ => hterm_int i j))).symm
         _ = ∫ x, ↑(normSq (∑ k, c k * cexp (↑(-⟪x, t k⟫_ℝ) * I))) ∂μ := by
             congr 1; ext x
-            -- Algebraic identity: ∑ᵢ∑ⱼ c̄ᵢcⱼe^{i⟨x,tᵢ-tⱼ⟩} = ↑(normSq(∑ cₖe^{-i⟨x,tₖ⟩}))
+            -- Algebraic identity: ∑ᵢ∑ⱼ cbarᵢcⱼe^{i⟨x,tᵢ-tⱼ⟩} = ↑(normSq(∑ cₖe^{-i⟨x,tₖ⟩}))
             -- Use sum_star_mul_eq_normSq with aₖ = cₖ * exp(-i⟨x,tₖ⟩)
             rw [← sum_star_mul_eq_normSq]
             congr 1; ext i; congr 1; ext j
-            -- Goal: c̄ᵢ * cⱼ * exp(⟨x,tᵢ-tⱼ⟩*I) = conj(cᵢ*exp(-⟨x,tᵢ⟩*I)) * (cⱼ*exp(-⟨x,tⱼ⟩*I))
+            -- Goal: cbarᵢ * cⱼ * exp(⟨x,tᵢ-tⱼ⟩*I) = conj(cᵢ*exp(-⟨x,tᵢ⟩*I)) * (cⱼ*exp(-⟨x,tⱼ⟩*I))
             rw [map_mul, mul_mul_mul_comm]
             congr 1
             -- conj(exp(-⟨x,tᵢ⟩*I)) * exp(-⟨x,tⱼ⟩*I) = exp(⟨x,tᵢ-tⱼ⟩*I)
@@ -223,7 +223,7 @@ lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite 
         cexp (↑⟪x, v⟫_ℝ * I)) μ :=
       fun v => (memLp_top_of_bound (by fun_prop : Continuous _).aestronglyMeasurable 1
         (ae_of_all _ fun x => by simp [Complex.norm_exp_ofReal_mul_I])).integrable le_top
-    -- Integrability of each summand c̄ᵢcⱼφ(dᵢⱼ)·exp
+    -- Integrability of each summand cbarᵢcⱼφ(dᵢⱼ)·exp
     have hterm_int : ∀ i j, Integrable (fun x : V =>
         (starRingEnd ℂ) (c i) * c j * φ (t i - t j) *
         cexp (↑⟪x, t i - t j⟫_ℝ * I)) μ :=
@@ -248,7 +248,7 @@ lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite 
             exact (integral_finset_sum _ (fun i _ =>
               integrable_finset_sum _ (fun j _ => hterm_int i j))).symm
     -- Step B: Algebraic identity — absorb exponentials into modified coefficients
-    -- For each x: c̄ᵢcⱼφ(dᵢⱼ)e^{i⟨x,dᵢⱼ⟩} = conj(cᵢe^{-i⟨x,tᵢ⟩})(cⱼe^{-i⟨x,tⱼ⟩})φ(dᵢⱼ)
+    -- For each x: cbarᵢcⱼφ(dᵢⱼ)e^{i⟨x,dᵢⱼ⟩} = conj(cᵢe^{-i⟨x,tᵢ⟩})(cⱼe^{-i⟨x,tⱼ⟩})φ(dᵢⱼ)
     -- Exponential splitting: exp(i⟨x,tᵢ-tⱼ⟩) = conj(exp(-i⟨x,tᵢ⟩)) * exp(-i⟨x,tⱼ⟩)
     have hexp_split : ∀ (x : V) (i j : Fin m),
         cexp (↑⟪x, t i - t j⟫_ℝ * I) =
@@ -324,7 +324,10 @@ private lemma gaussian_eq_charFun (ε : ℝ) (hε : 0 < ε) :
   have hgauss_cint : Integrable (fun x : V => cexp (-(a : ℂ) * ↑(‖x‖ ^ 2))) := by
     have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
       (show 0 < ((a : ℂ)).re by simp [ha]) (0 : ℂ) (0 : V)
-    simp only [ofReal_pow, neg_mul] at this; convert this using 1; ext x; simp [Complex.ofReal_pow]
+    simp only [neg_mul] at this
+    convert this using 1
+    ext x
+    simp [Complex.ofReal_pow]
   -- The real Gaussian is integrable (derived from complex version)
   have hgauss_rint : Integrable (fun x : V => C * rexp (-a * ‖x‖ ^ 2)) := by
     apply Integrable.const_mul
@@ -406,7 +409,7 @@ noncomputable def gaussianRegularize (φ : V → ℂ) (ε : ℝ) : V → ℂ :=
 
     exp(-ε‖xᵢ-xⱼ‖²) = ∫ exp(2πi⟨ξ,xᵢ-xⱼ⟩) g(ξ) dξ  where g ≥ 0
 
-    So ∑ᵢⱼ c̄ᵢcⱼ φ(xᵢ-xⱼ) exp(-ε‖xᵢ-xⱼ‖²)
+    So ∑ᵢⱼ cbarᵢcⱼ φ(xᵢ-xⱼ) exp(-ε‖xᵢ-xⱼ‖²)
       = ∫ g(ξ) [∑ᵢⱼ (cᵢ e^{2πi⟨xᵢ,ξ⟩})* (cⱼ e^{2πi⟨xⱼ,ξ⟩}) φ(xᵢ-xⱼ)] dξ
 
     The inner sum has .re ≥ 0 by PD of φ, and g ≥ 0, so the integral ≥ 0.
@@ -440,8 +443,10 @@ lemma gaussianRegularize_integrable (φ : V → ℂ) (hpd : IsPositiveDefinite �
   have hgauss : Integrable (fun x : V => cexp (-(↑ε : ℂ) * ↑(‖x‖ ^ 2))) := by
     have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
       (show 0 < (↑ε : ℂ).re by simp [hε]) (0 : ℂ) (0 : V)
-    simp only [ofReal_pow, neg_mul] at this
-    convert this using 1; ext x; simp [Complex.ofReal_pow]
+    simp only [neg_mul] at this
+    convert this using 1
+    ext x
+    simp [Complex.ofReal_pow]
   -- φ is bounded: ‖φ(x)‖ ≤ (φ 0).re
   -- So ‖φ(x) * exp(-ε‖x‖²)‖ = ‖φ(x)‖ * ‖exp(-ε‖x‖²)‖ ≤ (φ 0).re * ‖exp(-ε‖x‖²)‖
   -- The bound function (φ 0).re * ‖exp(-ε‖x‖²)‖ is integrable
@@ -1203,10 +1208,11 @@ the measure uniquely.
 
 /-! ## Main Theorem -/
 
+omit [FiniteDimensional ℝ V] in
 /-- The characteristic function of the weak limit equals `φ` (per-test-vector step of
 `bochner_existence`).
 -/
-private lemma bochner_charFun_eq (φ : V → ℂ) {μ : ProbabilityMeasure V}
+private theorem bochner_charFun_eq (φ : V → ℂ) {μ : ProbabilityMeasure V}
     {μ_seq : ℕ → ProbabilityMeasure V} {f : ℕ → ℕ}
     (hμ_seq : ∀ n ξ, MeasureTheory.charFun (μ_seq n : Measure V) ξ
       = gaussianRegularize φ (1 / (↑n + 1)) ξ)
@@ -1279,8 +1285,10 @@ private lemma bochner_mu_seq (φ : V → ℂ)
     fun n : ℕ => bochner_mu_eps φ hcont hpd hnorm (show (0:ℝ) < 1 / (↑n + 1) by positivity)
   exact ⟨μ_seq, hμ_seq⟩
 
-/-- Each Gaussian-regularised measure lies in the tight set from `gaussianRegularize_measures_tight`. -/
-private lemma bochner_mem_tight (φ : V → ℂ) {μ_seq : ℕ → ProbabilityMeasure V}
+omit [FiniteDimensional ℝ V] [BorelSpace V] in
+/-- Each Gaussian-regularised measure lies in the tight set from
+`gaussianRegularize_measures_tight`. -/
+private theorem bochner_mem_tight (φ : V → ℂ) {μ_seq : ℕ → ProbabilityMeasure V}
     (hμ_seq : ∀ n ξ, MeasureTheory.charFun (μ_seq n : Measure V) ξ
       = gaussianRegularize φ (1 / (↑n + 1)) ξ) (n : ℕ) :
     (μ_seq n : Measure V) ∈ {(μ : Measure V) | ∃ ε, 0 < ε ∧ ε ≤ 1 ∧

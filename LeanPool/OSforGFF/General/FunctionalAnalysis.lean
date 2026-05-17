@@ -175,7 +175,7 @@ Compose an Lp function with a continuous linear map.
 This should be the canonical way to lift real Lp functions to complex Lp functions.
 -/
 noncomputable def composed_function {α : Type*} [MeasurableSpace α] {μ : Measure α}
-    (f : Lp ℝ 2 μ) (A : ℝ →L[ℝ] ℂ): Lp ℂ 2 μ :=
+    (f : Lp ℝ 2 μ) (A : ℝ →L[ℝ] ℂ) : Lp ℂ 2 μ :=
   A.compLp f
 
 -- Check that we get the expected norm bound
@@ -191,24 +191,27 @@ noncomputable def embedding_real_to_complex {α : Type*} [MeasurableSpace α] {�
   composed_function φ (Complex.ofRealCLM)
 
 section LiftMeasure
-  variable {α : Type*} [MeasurableSpace α] {μ : Measure α}
-  /--
-  Lifts a probability measure from the space of real Lp functions to the space of
-  complex Lp functions, with support on the real subspace.
+variable {α : Type*} [MeasurableSpace α] {μ : Measure α}
+
+/--
+Lifts a probability measure from the space of real Lp functions to the space of
+complex Lp functions, with support on the real subspace.
 -/
-  noncomputable def liftMeasure_real_to_complex
-      (dμ_real : ProbabilityMeasure (Lp ℝ 2 μ)) :
-      ProbabilityMeasure (Lp ℂ 2 μ) :=
-    let dμ_complex_measure : Measure (Lp ℂ 2 μ) :=
-      Measure.map embedding_real_to_complex dμ_real
-    have h_ae : AEMeasurable embedding_real_to_complex dμ_real := by
-      apply Continuous.aemeasurable
-      unfold embedding_real_to_complex composed_function
-      have : Continuous (fun φ : Lp ℝ 2 μ => Complex.ofRealCLM.compLp φ : Lp ℝ 2 μ → Lp ℂ 2 μ) :=
-        Complex.ofRealCLM_continuous_compLp
-      exact this
-    have h_is_prob := isProbabilityMeasure_map h_ae
-    ⟨dμ_complex_measure, h_is_prob⟩
+noncomputable def liftMeasure_real_to_complex
+    (dμ_real : ProbabilityMeasure (Lp ℝ 2 μ)) :
+    ProbabilityMeasure (Lp ℂ 2 μ) :=
+  let dμ_complex_measure : Measure (Lp ℂ 2 μ) :=
+    Measure.map embedding_real_to_complex dμ_real
+  have h_ae : AEMeasurable embedding_real_to_complex dμ_real := by
+    apply Continuous.aemeasurable
+    unfold embedding_real_to_complex composed_function
+    have :
+        Continuous
+          (fun φ : Lp ℝ 2 μ => Complex.ofRealCLM.compLp φ : Lp ℝ 2 μ → Lp ℂ 2 μ) :=
+      Complex.ofRealCLM_continuous_compLp
+    exact this
+  have h_is_prob := isProbabilityMeasure_map h_ae
+  ⟨dμ_complex_measure, h_is_prob⟩
 
 end LiftMeasure
 
@@ -244,7 +247,7 @@ abbrev L2Complex (d : ℕ) := Lp ℂ 2 (volume : Measure (EuclideanRd d))
 
 /-- Embedding Schwartz functions into L² space using Mathlib's toLpCLM.
     This is a continuous linear map from Schwartz space to L²(ℝᵈ, ℂ).
-    ✅ IMPLEMENTED: Uses SchwartzMap.toLpCLM from Mathlib
+    OK IMPLEMENTED: Uses SchwartzMap.toLpCLM from Mathlib
 -/
 noncomputable def schwartzToL2 (d : ℕ) : SchwartzRd d →L[ℂ] L2Complex d :=
   SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure (EuclideanRd d))
@@ -254,9 +257,10 @@ noncomputable def schwartzToL2 (d : ℕ) : SchwartzRd d →L[ℂ] L2Complex d :=
     The difference from schwartzToL2 is only in the type representation, not the mathematical
     content.
 -/
-noncomputable def schwartzToL2' (d : ℕ) [NeZero d] [Fintype (Fin d)] :
+noncomputable def schwartzToL2' (d : ℕ) [hd : NeZero d] [Fintype (Fin d)] :
   SchwartzMap (EuclideanSpace ℝ (Fin d)) ℂ →L[ℂ] Lp ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin
     d))) :=
+  let _ := hd
   SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure (EuclideanSpace ℝ (Fin d)))
 
 /-! ## L∞ Multiplication on L² Spaces
@@ -608,27 +612,29 @@ theorem schwartz_bilinear_integrable_of_translationInvariant_L1
     exact hchange.const_mul Cf
   · -- AEStronglyMeasurable of the integrand
     apply AEStronglyMeasurable.mul
-    apply AEStronglyMeasurable.mul
-    · exact f.continuous.aestronglyMeasurable.comp_measurable measurable_fst
-    · -- K₀ is AEStronglyMeasurable on volume, need it on product
-      -- Use that the shear map (x,y) ↦ (x-y, y) is measure-preserving
-      have hK_ae : AEStronglyMeasurable K₀ volume := hK₀_int.1
-      -- K₀ ∘ fst is AEStronglyMeasurable on volume.prod volume
-      have hK_fst : AEStronglyMeasurable (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin
-        d) =>
-          K₀ p.1) (volume.prod volume) := hK_ae.comp_fst
-      -- The shear map e(x,y) = (x-y, y) is measure-preserving
-      have he_sub_preserves : MeasurePreserving
-          (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin d) => (p.1 - p.2, p.2))
-          (volume.prod volume) (volume.prod volume) := by
-        have := measurePreserving_sub_prod (G := EuclideanSpace ℝ (Fin d)) volume volume
-        convert this using 1
-      -- Composition: K₀ ∘ fst ∘ e = fun p => K₀ (p.1 - p.2)
-      have heq : (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin d) => K₀ (p.1 - p.2)) =
-          (fun p => K₀ p.1) ∘ (fun p => (p.1 - p.2, p.2)) := by
-        ext p; simp only [Function.comp_apply]
-      rw [heq]
-      exact hK_fst.comp_measurePreserving he_sub_preserves
+    · apply AEStronglyMeasurable.mul
+      · exact f.continuous.aestronglyMeasurable.comp_measurable measurable_fst
+      · -- K₀ is AEStronglyMeasurable on volume, need it on product
+        -- Use that the shear map (x,y) ↦ (x-y, y) is measure-preserving
+        have hK_ae : AEStronglyMeasurable K₀ volume := hK₀_int.1
+        -- K₀ ∘ fst is AEStronglyMeasurable on volume.prod volume
+        have hK_fst :
+            AEStronglyMeasurable
+              (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin d) => K₀ p.1)
+              (volume.prod volume) := hK_ae.comp_fst
+        -- The shear map e(x,y) = (x-y, y) is measure-preserving
+        have he_sub_preserves : MeasurePreserving
+            (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin d) => (p.1 - p.2, p.2))
+            (volume.prod volume) (volume.prod volume) := by
+          have := measurePreserving_sub_prod (G := EuclideanSpace ℝ (Fin d)) volume volume
+          convert this using 1
+        -- Composition: K₀ ∘ fst ∘ e = fun p => K₀ (p.1 - p.2)
+        have heq :
+            (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin d) => K₀ (p.1 - p.2)) =
+              (fun p => K₀ p.1) ∘ (fun p => (p.1 - p.2, p.2)) := by
+          ext p; simp only [Function.comp_apply]
+        rw [heq]
+        exact hK_fst.comp_measurePreserving he_sub_preserves
     · exact g.continuous.aestronglyMeasurable.comp_measurable measurable_snd
   · -- Pointwise bound: ‖f(x) K₀(x-y) g(y)‖ ≤ Cf * ‖K₀(x-y)‖ * ‖g(y)‖
     filter_upwards with p
@@ -890,7 +896,7 @@ so by associativity we reduce to a single convolution limit.
 section DoubleMollifierConvergence
 
 variable (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
-  [MeasurableSpace E] [BorelSpace E] [NoAtoms (volume : Measure E)]
+  [MeasurableSpace E] [BorelSpace E]
 
 open MeasureTheory Filter Convolution Set Function Topology
 open scoped Pointwise BigOperators
@@ -982,6 +988,7 @@ lemma bumpSelfConv_support_tendsto {ι : Type*} {l : Filter ι} [l.NeBot]
     3. Apply single-convolution theorem: (ψ ⋆ C)(a) → C(a)
 -/
 theorem double_mollifier_convergence
+    [NoAtoms (volume : Measure E)]
     (C : E → ℝ)
     (hC : ContinuousOn C {x | x ≠ 0})
     (a : E) (ha : a ≠ 0)

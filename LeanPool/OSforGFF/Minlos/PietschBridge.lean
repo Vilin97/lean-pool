@@ -355,7 +355,7 @@ private lemma Seminorm.continuous_smul_add (R : Seminorm ℝ E) (x y : E) :
     _ = |t - s| * R x := by rw [map_smul_eq_mul]; simp
     _ < ε := by
         by_cases hRx : R x = 0
-        · simp [hRx]; exact hε
+        · simpa [hRx] using hε
         · rw [if_neg hRx] at hst'
           calc |t - s| * R x < ε / R x * R x :=
                 mul_lt_mul_of_pos_right hst' (lt_of_le_of_ne (apply_nonneg R x) (Ne.symm hRx))
@@ -379,10 +379,10 @@ lemma Seminorm.innerProd_smul_left (R : Seminorm ℝ E) (hR : R.IsHilbertian) (a
     simp only [Seminorm.innerProd]
     have h1 := R.continuous_smul_add x y
     have h2 : Continuous (fun t : ℝ => R (t • x - y)) := by
-      have := R.continuous_smul_add x (-y); simp [sub_eq_add_neg] at this ⊢; exact this
+      simpa [sub_eq_add_neg] using R.continuous_smul_add x (-y)
     exact (h1.pow 2 |>.sub (h2.pow 2)).div_const 4
   have hsmul := map_real_smul f hf a 1
-  simp [f] at hsmul; exact hsmul
+  simpa [f] using hsmul
 
 /-! ### Bessel Inequality for Hilbertian Seminorms -/
 
@@ -399,7 +399,8 @@ omit [TopologicalSpace E] in
 /-- `R(vⱼ) = 1` for an R-orthonormal sequence. -/
 private lemma R_orthonormal_norm (R : Seminorm ℝ E) {N : ℕ} (v : Fin N → E)
     (hv : R.IsOrthonormalSeq v) (j : Fin N) : R (v j) = 1 := by
-  have h := hv j j; simp at h; rw [R.innerProd_self] at h
+  have h : R (v j) ^ 2 = 1 := by
+    simpa [R.innerProd_self] using hv j j
   nlinarith [apply_nonneg R (v j)]
 
 omit [TopologicalSpace E] in
