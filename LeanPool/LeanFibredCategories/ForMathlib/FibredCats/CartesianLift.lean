@@ -72,13 +72,7 @@ structure BasedLift (P : E ⥤ C) {c d : C} (f : c ⟶ d) (src : P ⁻¹ c) (tgt
   /-- The lift compatibility equation. -/
   over : (P.map hom) ≫ eqToHom (tgt.over) = eqToHom (src.2) ≫ f
 
-section BasedLiftNotation
-
-variable (P : E ⥤ C) {c d : C} (f : c ⟶ d) {x : P ⁻¹ c} {y : P ⁻¹ d}
-
 @[inherit_doc] notation x " ⟶[" f "] " y => BasedLift (P := _) f x y
-
-end BasedLiftNotation
 
 /-- The type `Lift P f tgt` of lifts of `f` with target `tgt` consists of an object
 in the fiber of the domain of `f` and a based-lift of `f` starting at this object
@@ -155,10 +149,8 @@ def comp {c d d' : C} {f : c ⟶ d} {f' : d ⟶ d'} {x : P ⁻¹ c} {y : P ⁻¹
   ⟨g.hom ≫ g'.hom, by
     simp only [P.map_comp]; rw [assoc, over_base g, over_base g']; simp⟩
 
-section
 /-- Notation for the composition of based-lifts. -/
 scoped infixr:80 " ≫[l] " => BasedLift.comp
-end
 
 /-- The underlying morphism of a composition of based-lifts is the composition
 of the underlying morphisms. -/
@@ -457,8 +449,6 @@ def isCartesianMorphism {P : E ⥤ C} {x y : E} (g : x ⟶ y) : Prop :=
 /-- The class of cartesian morphisms. -/
 def CartMor (P : E ⥤ C) : MorphismProperty E := fun _ _ g => isCartesianMorphism (P := P) g
 
-section CartMor
-
 open MorphismProperty BasedLift
 
 variable {P : E ⥤ C} {x y : E}
@@ -547,11 +537,6 @@ instance instCartMorIsStableUnderComposition :
     (CartMor P).IsStableUnderComposition where
   comp_mem f g hf hg := cart_comp_mem f g hf hg
 
-
-end CartMor
-
-section CartLift
-
 variable {P : E ⥤ C} {c d : C}
 
 /-- Given a morphism `f` in the base category `C`, the type `CartLifts P f src tgt`
@@ -571,9 +556,13 @@ class CartLift (f : c ⟶ d) (y : P ⁻¹ d) extends Lift P f y where
   /-- The associated based-lift is cartesian. -/
   is_cart : BasedLift.Cartesian based_lift
 
+namespace CartLift
+
 /-- The underlying morphism of a cartesian lift in the domain category. -/
-def CartLift.homOf {f : c ⟶ d} {y : P ⁻¹ d} (g : CartLift (P := P) f y) :
+def homOf {f : c ⟶ d} {y : P ⁻¹ d} (g : CartLift (P := P) f y) :
     (g.src : E) ⟶ y := g.based_lift.hom
+
+end CartLift
 
 instance instCoeLiftOfCartLift {c d : C} {f : c ⟶ d} {y : P ⁻¹ d} :
     Coe (CartLift (P := P) f y) (Lift P f y) where
@@ -589,8 +578,6 @@ def HasCartLift (f : c ⟶ d) (y : P ⁻¹ d) := Nonempty (CartLift (P := P) f y
 
 /-- Mere existence of a cocartesian lift with fixed source. -/
 def HasCoCartLift (f : c ⟶ d) (x : P ⁻¹ c) := Nonempty (CoCartLift (P := P) f x)
-
-end CartLift
 
 /-- The carrier for the subcategory of cartesian morphisms in the domain of `P`. -/
 structure Cart (P : E ⥤ C) where

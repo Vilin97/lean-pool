@@ -444,3 +444,29 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: leanfibredcategories
+    title: Lean4 Formalization Of Fibred Categories
+    summary: Foundational API for Grothendieck fibrations, including cartesian morphisms and the total category of a functor.
+    branch: category theory
+    entry_module: LeanPool.LeanFibredCategories
+    authors:
+      - Sina Hazratpour
+    source:
+      url: https://github.com/sinhp/LeanFibredCategories
+      github_repo: sinhp/LeanFibredCategories
+    status: verified
+    main_declarations:
+      - CategoryTheory.BasedLift
+      - CategoryTheory.CartMor
+    main_results:
+      - declaration: CategoryTheory.BasedLift
+        informal: The type of lifts of a base morphism with fixed source and target in the fibers.
+      - declaration: CategoryTheory.CartMor
+        informal: The class of cartesian morphisms in the domain of a functor.
+    tags:
+      - category-theory
+      - fibrations
+      - cartesian-morphisms
+    msc:
+      - "18D30"
+      - "18A22"

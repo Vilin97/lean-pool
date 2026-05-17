@@ -9,13 +9,16 @@ import LeanPool.LeanFibredCategories.ForMathlib
 /-!
 # Lean4 Formalization Of Fibred Categories
 
-Source: https://github.com/sinhp/LeanFibredCategories
+Source: url:https://github.com/sinhp/LeanFibredCategories
 Authors: Sina Hazratpour
 Status: verified
-Main declarations: `CategoryTheory.Fiber`, `CategoryTheory.FiberCat`,
-  `CategoryTheory.BasedLift`, `CategoryTheory.CartMor`, `CategoryTheory.TotalCat`
+Main declarations: `CategoryTheory.BasedLift`, `CategoryTheory.CartMor`
 Tags: category-theory, fibrations, cartesian-morphisms
 MSC: 18D30, 18A22
+-/
+
+/-!
+## Mathematical overview
 
 This pool entry vendors the *For_Mathlib* core of Sina Hazratpour's Lean4
 formalisation of the theory of Grothendieck fibrations. The development gives
