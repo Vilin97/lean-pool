@@ -444,3 +444,29 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: noperthedron
+    title: A convex polyhedron without Rupert's property
+    summary: Formalizes rotation, projection, and symmetry lemmas used in a noperthedron construction.
+    branch: convex geometry
+    entry_module: LeanPool.Noperthedron
+    authors:
+      - Reuben Steenekamp
+    source:
+      arxiv: "2508.18475"
+      github_repo: badly-drawn-wizards/noperthedron
+    status: verified
+    main_declarations:
+      - LeanPool.Noperthedron.noperthedron
+      - LeanPool.Noperthedron.lemma7_2
+    main_results:
+      - declaration: LeanPool.Noperthedron.noperthedron
+        informal: Defines the symmetric finite point configuration used as the noperthedron seed construction.
+      - declaration: LeanPool.Noperthedron.lemma7_2
+        informal: Shows that rotating a projected noperthedron by a half-turn preserves the projected set.
+    tags:
+      - convex-geometry
+      - polyhedra
+      - rotations
+    msc:
+      - "52B10"
+      - "52A20"
