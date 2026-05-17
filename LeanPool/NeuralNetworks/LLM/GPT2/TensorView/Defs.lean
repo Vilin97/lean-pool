@@ -178,7 +178,8 @@ def TensorView.mkUnsafe (s : Type) (shape : Array Nat) (rank : Nat)
   { shape, rank, storageRef, offsetBytes, h_offset_aligned, h_dims_positive, h_rank_eq_size }
 
 /-- Represent the `TensorView` as `Std.Format` with the given precedence. -/
-protected def TensorView.reprPrec {s : Type} (tv : TensorView s) (_ : Nat) : Std.Format :=
+protected def TensorView.reprPrec {s : Type} (tv : TensorView s) (prec : Nat) : Std.Format :=
+  let _ := prec  -- precedence is required by the Repr typeclass shape but unused here
   let shapeStr := toString tv.shape
   let rankStr := toString tv.rank
   let offsetStr := toString tv.offsetBytes
@@ -305,12 +306,13 @@ Note:
 @[inline]
 def computeFlatIndex (shape : Array Nat) (rank : Nat)
                      (h_rank_eq_size : rank = shape.size)
-                     (_ : ∀ (i : Fin rank), shape[i.val]'(by {
+                     (h_dims_pos : ∀ (i : Fin rank), shape[i.val]'(by {
                         have h1 : i.val < rank := i.isLt
                         have h2 : rank = shape.size := h_rank_eq_size
                         exact Nat.lt_of_lt_of_eq h1 h2
                       }) > 0)
                      (indices : Array Nat) : Except TensorError Nat :=
+  let _ := h_dims_pos  -- positivity proof is part of the specification but not consumed in the body
   if indices.size != rank then
     Except.error (TensorError.shapeMismatch rank indices.size)
   else
