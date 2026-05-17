@@ -457,11 +457,11 @@ projects:
       github_repo: or4nge19/NeuralNetworks
     status: verified
     main_declarations:
-      - HopfieldNetwork
+      - HopfieldState.HopfieldNetwork
       - HopfieldState.convergence
       - LLM.GPT2.Model
     main_results:
-      - declaration: HopfieldNetwork
+      - declaration: HopfieldState.HopfieldNetwork
         informal: Defines a Hopfield network as a symmetric weight matrix with zero diagonal and thresholds.
       - declaration: HopfieldState.energy_monotonically_decreases
         informal: Proves that the Hopfield energy is non-increasing along every update sequence with zero thresholds.
