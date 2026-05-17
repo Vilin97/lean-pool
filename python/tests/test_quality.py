@@ -10,7 +10,9 @@ from lean_pool.quality import (
     _axiom_audit_resolved,
     _Declaration,
     _parse_declarations,
+    _project_card,
     _strip_lean_comments,
+    _write_project_card,
     run_checks,
 )
 
@@ -44,13 +46,19 @@ def _write_project_yaml(root: Path, projects: list[dict[str, str]]) -> None:
             [
                 f"  - slug: {project['slug']}",
                 f"    title: {project.get('title', 'Test Project')}",
+                f"    summary: {project.get('summary', 'A test project.')}",
+                f"    branch: {project.get('branch', 'test mathematics')}",
                 f"    entry_module: {project['entry_module']}",
                 "    authors: [Test Author]",
                 "    source:",
                 f'      arxiv: "{project.get("arxiv", "1234.5678")}"',
                 f"    status: {project.get('status', 'verified')}",
                 "    main_declarations: [hello]",
+                "    main_results:",
+                "      - declaration: hello",
+                "        informal: A test result.",
                 "    tags: [test]",
+                "    msc: ['00A35']",
             ]
         )
     (root / "LeanPool" / "projects.yml").write_text("\n".join(lines) + "\n")
@@ -87,6 +95,43 @@ def test_quality_check_rejects_set_option(tmp_path: Path) -> None:
     assert any("set_option is forbidden" in error.message for error in errors)
 
 
+def test_quality_check_rejects_nolint_attribute(tmp_path: Path) -> None:
+    """Lean files may not waive linters with `@[nolint ...]`."""
+    _write_minimal_repo(
+        tmp_path,
+        "@[nolint unusedArguments]\ndef hello (_n : Nat) := 1\n",
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("nolint waiver is forbidden" in error.message for error in errors)
+
+
+def test_quality_check_rejects_nolint_command(tmp_path: Path) -> None:
+    """Lean files may not waive linters with `attribute [nolint ...]`."""
+    _write_minimal_repo(
+        tmp_path,
+        "def hello := 1\nattribute [nolint docBlame] hello\n",
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("nolint waiver is forbidden" in error.message for error in errors)
+
+
+def test_quality_check_rejects_style_linter_allowlist_entry(tmp_path: Path) -> None:
+    """The style-linter allowlist file may not carry active entries."""
+    _write_minimal_repo(tmp_path)
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts" / "nolints-style.txt").write_text(
+        "-- comments are fine\nLeanPool/Basic.lean:12\n"
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("style linter waiver is forbidden" in error.message for error in errors)
+
+
 def test_quality_check_rejects_unreachable_lean_file(tmp_path: Path) -> None:
     """Every Lean file under LeanPool must be imported by LeanPool.lean."""
     _write_minimal_repo(tmp_path)
@@ -105,6 +150,53 @@ def test_quality_check_rejects_missing_project_metadata(tmp_path: Path) -> None:
     errors = run_checks(tmp_path, skip_lean_axioms=True)
 
     assert any("missing LeanPool/projects.yml" in error.message for error in errors)
+
+
+def test_quality_check_rejects_top_level_project_missing_from_metadata(
+    tmp_path: Path,
+) -> None:
+    """Every direct `LeanPool.Foo` project module must be registered."""
+    _write_minimal_repo(tmp_path)
+    (tmp_path / "LeanPool.lean").write_text(
+        "import LeanPool.Basic\nimport LeanPool.MyProj\n"
+    )
+    (tmp_path / "LeanPool" / "MyProj.lean").write_text(
+        f"{HEADER}\nimport LeanPool.Basic\n\ndef project_decl := hello\n"
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("LeanPool.MyProj missing from projects.yml" in e.message for e in errors)
+
+
+def test_quality_check_allows_extra_documented_main_results(tmp_path: Path) -> None:
+    """`main_results` may document more results than the compact card list."""
+    _write_minimal_repo(tmp_path)
+    (tmp_path / "LeanPool.lean").write_text(
+        "import LeanPool.Basic\nimport LeanPool.MyProj\n"
+    )
+    card = _project_card(_PROJECT_FIXTURE)
+    (tmp_path / "LeanPool" / "MyProj.lean").write_text(
+        f"{HEADER}\nimport LeanPool.Basic\n\n{card}\n"
+        "def hello : Nat := 1\n"
+        "def extra : Nat := 2\n"
+    )
+    _write_project_yaml(tmp_path, [{"slug": "p", "entry_module": "LeanPool.MyProj"}])
+    projects = tmp_path / "LeanPool" / "projects.yml"
+    projects.write_text(
+        projects.read_text().replace(
+            "    tags: [test]\n",
+            "      - declaration: extra\n"
+            "        informal: Another documented result.\n"
+            "    tags: [test]\n",
+        )
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert not any(
+        "main_results missing main declarations" in e.message for e in errors
+    )
 
 
 def test_quality_check_finds_prefixed_declarations(tmp_path: Path) -> None:
@@ -189,6 +281,92 @@ def test_quality_check_does_not_honor_size_marker(tmp_path: Path) -> None:
     assert any("limit is 10000" in error.message for error in errors)
 
 
+_PROJECT_FIXTURE = {
+    "slug": "p",
+    "title": "Test Project",
+    "summary": "A test project.",
+    "branch": "test mathematics",
+    "entry_module": "LeanPool.MyProj",
+    "authors": ["Test Author"],
+    "source": {"arxiv": "1234.5678"},
+    "status": "verified",
+    "main_declarations": ["hello"],
+    "main_results": [{"declaration": "hello", "informal": "A test result."}],
+    "tags": ["test"],
+    "msc": ["00A35"],
+}
+
+
+def test_write_project_card_inserts_card_after_imports(tmp_path: Path) -> None:
+    """The card writer must place the card after imports, not before them.
+
+    Regression: the previous implementation inserted the card right after
+    the copyright header — Lean then rejected the file with "invalid
+    'import' command, it must be used in the beginning of the file" because
+    the imports came after a non-import block.
+    """
+    entry = tmp_path / "MyProj.lean"
+    entry.write_text(
+        f"{HEADER}\nimport Mathlib.Tactic\nimport Mathlib.Data.Nat.Basic\n\n"
+        "def hello : Nat := 1\n"
+    )
+    _write_project_card(entry, _project_card(_PROJECT_FIXTURE))
+    text = entry.read_text()
+    header_end = text.find("-/") + 2
+    body = text[header_end:].lstrip("\n")
+    assert body.startswith("import "), (
+        "imports must come immediately after the copyright header; got:\n" + body[:200]
+    )
+    assert "/-!\n# Test Project" in text
+    assert text.index("import ") < text.index("/-!\n# Test Project"), (
+        "the project card must come AFTER the import block"
+    )
+
+
+def test_write_project_card_replaces_existing_card(tmp_path: Path) -> None:
+    """Running the writer again with a changed source must not double the card.
+
+    Regression: the previous implementation only stripped a card sitting
+    immediately after the copyright header. A card living in the canonical
+    post-imports location was left alone, so a writer run after a source
+    edit produced two cards in the same file.
+    """
+    entry = tmp_path / "MyProj.lean"
+    initial = _project_card(_PROJECT_FIXTURE)
+    entry.write_text(
+        f"{HEADER}\nimport Mathlib.Tactic\n\n{initial}\n\ndef hello : Nat := 1\n"
+    )
+    updated_fixture = {**_PROJECT_FIXTURE, "source": {"doi": "10.0/x.y"}}
+    _write_project_card(entry, _project_card(updated_fixture))
+    text = entry.read_text()
+    assert text.count("/-!\n# Test Project") == 1, (
+        "there should be exactly one project card; got:\n" + text
+    )
+    assert "Source: doi:10.0/x.y" in text
+    assert "Source: arxiv:1234.5678" not in text
+
+
+def test_write_project_card_moves_misplaced_card(tmp_path: Path) -> None:
+    """A file written by the old buggy writer (card before imports) is repaired.
+
+    Regression: when bumping/repairing files left by the previous writer,
+    the current writer must produce a Lean-valid file (imports first) even
+    when it finds the card in the wrong place.
+    """
+    entry = tmp_path / "MyProj.lean"
+    card = _project_card(_PROJECT_FIXTURE)
+    # buggy old layout: card BEFORE imports (Lean rejects this)
+    entry.write_text(
+        f"{HEADER}\n{card}\n\nimport Mathlib.Tactic\n\ndef hello : Nat := 1\n"
+    )
+    _write_project_card(entry, _project_card(_PROJECT_FIXTURE))
+    text = entry.read_text()
+    assert text.index("import Mathlib.Tactic") < text.index("/-!\n# Test Project"), (
+        "after rewriting, imports must precede the project card; got:\n" + text
+    )
+    assert text.count("/-!\n# Test Project") == 1
+
+
 def test_quality_check_accepts_project_card_after_imports(tmp_path: Path) -> None:
     """Regression test for e161b8c: project card may follow imports.
 
@@ -200,17 +378,7 @@ def test_quality_check_accepts_project_card_after_imports(tmp_path: Path) -> Non
     (tmp_path / "LeanPool.lean").write_text(
         "import LeanPool.Basic\nimport LeanPool.MyProj\n"
     )
-    card = (
-        "/-!\n"
-        "# Test Project\n"
-        "\n"
-        "Source: arxiv:1234.5678\n"
-        "Authors: Test Author\n"
-        "Status: verified\n"
-        "Main declarations: `hello`\n"
-        "Tags: test\n"
-        "-/\n"
-    )
+    card = _project_card(_PROJECT_FIXTURE)
     (tmp_path / "LeanPool" / "MyProj.lean").write_text(
         f"{HEADER}\nimport LeanPool.Basic\n\n{card}\ndef hello : Nat := 1\n"
     )
@@ -235,17 +403,7 @@ def test_quality_check_falls_back_when_lake_missing(tmp_path: Path) -> None:
     (tmp_path / "LeanPool.lean").write_text(
         "import LeanPool.Basic\nimport LeanPool.MyProj\n"
     )
-    card = (
-        "/-!\n"
-        "# Test Project\n"
-        "\n"
-        "Source: arxiv:1234.5678\n"
-        "Authors: Test Author\n"
-        "Status: verified\n"
-        "Main declarations: `hello`\n"
-        "Tags: test\n"
-        "-/\n"
-    )
+    card = _project_card(_PROJECT_FIXTURE)
     (tmp_path / "LeanPool" / "MyProj.lean").write_text(
         f"{HEADER}\nimport LeanPool.Basic\n\n{card}\ndef hello : Nat := 1\n"
     )

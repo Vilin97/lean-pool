@@ -14,6 +14,7 @@ Authors: Evan Chen, Kenny Lau, Ken Ono, Jujian Zhang
 Status: verified
 Main declarations: `main_theorem`, `reduction_lemma`, `abc_bound_E2`, `abc_bound_E4`
 Tags: number-theory, modular-forms
+MSC: 11F30, 11N05
 -/
 
 /-!

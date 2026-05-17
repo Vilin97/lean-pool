@@ -3,6 +3,7 @@ Copyright (c) 2026 FrenzyMath. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: FrenzyMath
 -/
+
 import LeanPool.ArchonFirstProofResults.FirstProof4
 import LeanPool.ArchonFirstProofResults.FirstProof6
 
@@ -14,6 +15,7 @@ Authors: FrenzyMath
 Status: verified
 Main declarations: `Problem4.harmonic_mean_inequality_full`, `Problem6.exists_eps_light_subset`
 Tags: polynomials, analysis, combinatorics, linear-algebra, graph-theory
+MSC: 26D15, 05C50, 15A42
 -/
 
 /-!

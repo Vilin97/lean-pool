@@ -23,4 +23,5 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 Status: verified
 Main declarations: `OSforGFF.gaussianFreeField_satisfies_all_OS_axioms`
 Tags: analysis, measure-theory, probability, mathematical-physics
+MSC: 81T08, 60G15, 46G12
 -/

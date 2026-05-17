@@ -13,13 +13,14 @@ import LeanPool.Erdos1196.Main
 import LeanPool.Erdos1196.FormalConjecturesErdos1196
 
 /-!
-# Primitive Sets Above x (Erdős Problem 1196)
+# Primitive Sets Above x (Erdos Problem 1196)
 
 Source: url:https://github.com/math-inc/Erdos1196
 Authors: Math Inc.
 Status: verified
 Main declarations: `PrimitiveSetsAboveX.mainTheorem`, `Erdos1196.erdos_1196`
 Tags: number-theory, combinatorics, analysis
+MSC: 11N25, 05D05
 -/
 
 /-!

@@ -1,4 +1,4 @@
-.PHONY: build setup lint lint-fix check test update agent-docs
+.PHONY: build setup lint lint-fix check test docs update agent-docs
 
 # Build the Lean project.
 build:
@@ -29,6 +29,10 @@ check:
 # Run the Python test suite.
 test:
 	cd python && uv run --group test pytest
+
+# Build doc-gen4 documentation.
+docs:
+	cd docbuild && lake build LeanPool:docs
 
 # Update Lean and Python dependencies. Refreshes lake-manifest.json,
 # pulls the matching Mathlib oleans cache, and re-syncs the Python
