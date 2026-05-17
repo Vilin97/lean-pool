@@ -40,27 +40,25 @@ def vertHomOfBasedLift {X Y : Vert P} (h : X.1 = Y.1)
   simp only [Fiber.cast] at f
   exact ⟨f.1, by aesop⟩
 
-@[simp]
 lemma base_eq_of_vert_hom {X Y : Vert P} (f : X ⟶ Y) : X.1 = Y.1 := by
   cases f
   rfl
 
 /-- The underlying morphism on fibers of a morphism in `Vert P`. -/
-@[simp]
 def basedLiftOfVertHomAux {X Y : Vert P} (f : X ⟶ Y) : X.2.1 ⟶ Y.2.1 := by
   obtain ⟨f'⟩ := f
   exact f'.1
 
-@[simp]
 lemma basedLiftOfVertHomAux_over {X Y : Vert P} {f : X ⟶ Y} :
     have : P.obj Y.2.1 = X.1 := (Fiber.over _).trans (base_eq_of_vert_hom f).symm
     P.map (basedLiftOfVertHomAux f) ≫ eqToHom this = eqToHom (X.2.over) ≫ 𝟙 X.1 := by
-  cases f; simp
+  cases f; simp [basedLiftOfVertHomAux]
 
 /-- The based-lift associated to a vertical morphism. -/
 def basedLiftOfVertHom {X Y : Vert P} (f : X ⟶ Y) :
     have : X.1 = Y.1 := base_eq_of_vert_hom f
-    X.2 ⟶[𝟙 X.1] Y.2.cast this.symm := ⟨basedLiftOfVertHomAux f, by cases f; simp⟩
+    X.2 ⟶[𝟙 X.1] Y.2.cast this.symm := ⟨basedLiftOfVertHomAux f, by
+      cases f; simp [basedLiftOfVertHomAux]⟩
 
 /-- A morphism in a fiber, regarded as a based-lift of the identity. -/
 @[simp]

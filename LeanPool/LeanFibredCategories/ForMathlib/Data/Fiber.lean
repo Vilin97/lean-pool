@@ -17,7 +17,6 @@ This file defines the type `Fiber` of the fiber of a map at a given point.
 
 
 /-- The fiber of a map at a given point. -/
-@[simp]
 def Fiber {C E : Type*} (P : E → C) (c : C) := {d : E // P d = c}
 
 namespace Fiber
@@ -56,20 +55,24 @@ def cast (e : Fiber P c) (eq : c = d) : Fiber P d := ⟨e.1, by simp_all only [o
 theorem coe_cast (e : Fiber P c) (eq : c = d) : (cast e eq : E) = e.1 := rfl
 
 lemma cast_coe_tauto (e : Fiber P c) : cast (tauto e.1) (by simp [over]) =  e := by
-  simp
+  rfl
 
 lemma cast_coe_tauto' (e : Fiber P c) : (tauto e.1) = cast e (by simp [over]) := by
-  simp
+  rfl
 
-@[simps!]
+/-- The fiber of a composition `P ∘ Q` at `c` is equivalent to the dependent pair
+of a fiber of `P` over `c` and a fiber of `Q` over its underlying element. -/
 def equivCompSigma {C E F : Type*} (P : E → C) (Q : F → E) (c : C) :
     (Fiber (P ∘ Q) c) ≃ (t : Fiber P c) × Fiber Q (t.1)  where
   toFun := fun x => ⟨⟨Q x.1 , x.2⟩ , x.1⟩
   invFun := fun x => ⟨x.2 , by dsimp; rw [x.2.over, x.1.over]⟩
-  left_inv := by
+  left_inv := by intro x; rfl
+  right_inv := by
     intro x
-    simp_all only [Fiber, Function.comp_apply, tauto, Subtype.coe_eta]
-  right_inv := by intro x; ext <;> simp [over]
+    obtain ⟨⟨tv, ht⟩, ⟨fv, hf⟩⟩ := x
+    dsimp only at hf
+    subst hf
+    rfl
 
 /-- The total space of a map. -/
 @[ext]

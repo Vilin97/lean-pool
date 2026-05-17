@@ -144,30 +144,30 @@ instance instCoeTautoBasedLift {e e' : E} {g : e ⟶ e'} :
   coe := tauto g
 
 /-- The identity based-lift. -/
-@[simp]
 def id (x : P ⁻¹ c) : BasedLift P (𝟙 c) x x := ⟨𝟙 _, by simp⟩
 
+@[simp]
 lemma id_hom {x : P ⁻¹ c} : (id x).hom = 𝟙 x.1 := rfl
 
 /-- The composition of based-lifts. -/
-@[simp]
 def comp {c d d' : C} {f : c ⟶ d} {f' : d ⟶ d'} {x : P ⁻¹ c} {y : P ⁻¹ d} {z : P ⁻¹ d'}
     (g : x ⟶[f] y) (g' : y ⟶[f'] z) : x ⟶[f ≫ f'] z :=
   ⟨g.hom ≫ g'.hom, by
     simp only [P.map_comp]; rw [assoc, over_base g, over_base g']; simp⟩
 
 section
+/-- Notation for the composition of based-lifts. -/
 scoped infixr:80 " ≫[l] " => BasedLift.comp
 end
 
 /-- The underlying morphism of a composition of based-lifts is the composition
 of the underlying morphisms. -/
+@[simp]
 lemma comp_hom {c d d' : C} {f₁ : c ⟶ d} {f₂ : d ⟶ d'}
     {x : P ⁻¹ c} {y : P ⁻¹ d} {z : P ⁻¹ d'}
     (g₁ : x ⟶[f₁] y) (g₂ : y ⟶[f₂] z) :
     (g₁ ≫[l] g₂).hom = g₁.hom ≫ g₂.hom := rfl
 
-@[simp]
 lemma comp_hom' {c d d' : C} {f₁ : c ⟶ d} {f₂ : d ⟶ d'}
     {x : P ⁻¹ c} {y : P ⁻¹ d} {z : P ⁻¹ d'}
     {g₁ : x ⟶[f₁] y} {g₂ : y ⟶[f₂] z} {h : x ⟶[f₁ ≫ f₂] z} :
@@ -213,10 +213,10 @@ lemma hom_comp_cast {c d d' : C} {f₁ : c ⟶ d} {f₂ : d ⟶ d'} {f : c ⟶ d
   · intro h
     rw [← comp_hom, h, cast_hom]
 
-@[simp]
 lemma id_comp_cast {c d : C} {f : c ⟶ d} {x : P ⁻¹ c} {y : P ⁻¹ d}
     {g : x ⟶[f] y} : id x  ≫[l] g = (cast ((id_comp f).symm : f = 𝟙 c ≫ f)) g := by
-  simp_all only [comp, id, id_comp]; rfl
+  ext
+  simp [comp, id]
 
 /-- Casting equivalence along postcomposition with the identity morphism. -/
 @[simp]
@@ -235,7 +235,6 @@ def castAssoc {c' c d d' : C} {u' : c' ⟶ c} {f : c ⟶ d} {u : d ⟶ d'} {x : 
   castEquiv (Category.assoc u' f u)
 
 /-- Casting equivalence along the `eqToHom` of the fiber. -/
-@[simps]
 def castOfeqToHom {c d : C} {f : c ⟶ d} {x : P ⁻¹ c} {y : P ⁻¹ d} :
     (x ⟶[f] y) ≃ (x.1 ⟶[(eqToHom x.2) ≫ f] y) where
   toFun := fun g => ⟨g.hom, by simp⟩
@@ -245,19 +244,19 @@ def castOfeqToHom {c d : C} {f : c ⟶ d} {x : P ⁻¹ c} {y : P ⁻¹ d} :
 
 /-- The composition of based-lifts is associative up to casting along equalities
 of the base morphisms. -/
-@[simp]
 lemma assoc {c' c d d' : C} {f₁ : c' ⟶ c} {f₂ : c ⟶ d} {f₃ : d ⟶ d'}
     {w : P ⁻¹ c'} {x : P ⁻¹ c} {y : P ⁻¹ d} {z : P ⁻¹ d'}
     (g₁ : w ⟶[f₁] x) (g₂ : x ⟶[f₂] y) (g₃ : y ⟶[f₃] z) :
     ((g₁ ≫[l] g₂) ≫[l] g₃) = castAssoc.invFun (g₁ ≫[l] g₂ ≫[l] g₃) := by
-  simp only [comp]; ext; simp [cast_hom, castEquiv]
+  ext
+  simp [comp]
 
-@[simp]
 lemma assoc_inv {c' c d d' : C} {f₁ : c' ⟶ c} {f₂ : c ⟶ d} {f₃ : d ⟶ d'} {w : P ⁻¹ c'}
     {x : P ⁻¹ c} {y : P ⁻¹ d} {z : P ⁻¹ d'}
     (g₁ : w ⟶[f₁] x) (g₂ : x ⟶[f₂] y) (g₃ : y ⟶[f₃] z) :
     castAssoc.toFun ((g₁ ≫[l] g₂) ≫[l] g₃) =  (g₁ ≫[l] (g₂ ≫[l] g₃)) := by
-  simp only [comp]; ext; simp [cast_hom, castEquiv]
+  ext
+  simp [comp]
 
 lemma tauto_comp_cast {e e' e'' : E} {g : e ⟶ e'} {g' : e' ⟶ e''} :
     tauto (g ≫ g') = cast (P.map_comp g g').symm (tauto g ≫[l] tauto g') := rfl
@@ -271,7 +270,6 @@ variable {P : E ⥤ C}
 instance : CoeOut (Lift P f y) (Σ x : E, (x : E) ⟶ y) where
   coe := fun l ↦ ⟨l.src, l.based_lift.hom⟩
 
-@[simp]
 lemma over_base (f : c ⟶ d) (y : P ⁻¹ d) (g : Lift P f y) :
     P.map g.based_lift.hom = (eqToHom (g.src.over)) ≫ f ≫ eqToHom (y.over).symm := by
   simp only [BasedLift.over_base]
@@ -361,7 +359,6 @@ lemma gaplift_cast (u : c' ⟶ c) {f' : c' ⟶ d} (g' : x' ⟶[f'] y)
   rfl
 
 /-- The composition of the gap lift and the cartesian lift is the given lift. -/
-@[simp]
 lemma gaplift_property (u : c' ⟶ c) (g' : x' ⟶[u ≫ f] y) :
     ((gaplift g u g') ≫[l] g) = g' :=
   (Cartesian.uniq_lift (P := P) (f := f) (g := g) (z := x') u g').default.property
@@ -373,32 +370,28 @@ lemma gaplift_hom_property (u : c' ⟶ c) (g' : x' ⟶[u ≫ f] y) :
   rw [← BasedLift.comp_hom _ _]; congr 1; exact gaplift_property g u g'
 
 /-- The uniqueness part of the universal property of the gap lift. -/
-@[simp]
 lemma gaplift_uniq {u : c' ⟶ c} (g' : x' ⟶[u ≫ f] y) (v : x' ⟶[u] x)
     (hv : v ≫[l] g = g') : v = gaplift (g := g) u g' :=
   congrArg Subtype.val
     ((Cartesian.uniq_lift (P := P) (f := f) (g := g) (z := x') u g').uniq ⟨v, hv⟩)
 
 /-- A variant of the uniqueness lemma. -/
-@[simp]
 lemma gaplift_uniq' {u : c' ⟶ c} (v : x' ⟶[u] x) (v' : x' ⟶[u] x)
     (hv : v ≫[l] g = v' ≫[l] g) : v = v' := by
   rw [gaplift_uniq g (v' ≫[l] g) v hv]; symm; apply gaplift_uniq; rfl
 
 /-- The gaplift of any cartesian based-lift with respect to itself is the identity. -/
-@[simp]
 lemma gaplift'_self : gaplift' g (𝟙 c) g (id_comp f).symm = BasedLift.id x := by
   simp only [gaplift_cast]
   symm
   apply gaplift_uniq
-  simp_all only [BasedLift.comp, BasedLift.id, id_comp]
-  rfl
+  ext
+  simp [BasedLift.comp, BasedLift.id]
 
 variable {g}
 
 /-- The composition of gaplifts with respect to morphisms `u' : c'' ⟶ c` and
 `u : c' ⟶ c` is the gap lift of the composition `u' ≫ u`. -/
-@[simp]
 lemma gaplift_comp {u : c' ⟶ c} {u' : c'' ⟶ c'} {x'' : P ⁻¹ c''}
     {g' : x' ⟶[u ≫ f] y} [Cartesian (P := P) (f := u ≫ f) g']
     {g'' : x'' ⟶[u' ≫ u ≫ f] y} :
@@ -500,7 +493,6 @@ lemma gapmap_uniq {gcart : CartMor P g} {z : E} {u : P.obj z ⟶ P.obj x}
   rw [this]
   simp [gapmap]
 
-@[simp]
 lemma gapmap_uniq' (g : x ⟶ y) (gcart : CartMor P g) {c : C} {z : P ⁻¹ c}
     (v₁ : (z : E) ⟶ x) (v₂ : (z : E) ⟶ x) (hv : v₁ ≫ g = v₂ ≫ g)
     (hv' : P.map v₁ = P.map v₂) : v₁ = v₂ := by
@@ -520,9 +512,14 @@ lemma gapmap_uniq' (g : x ⟶ y) (gcart : CartMor P g) {c : C} {z : P ⁻¹ c}
 
 /-- `cart_id e` says that the identity morphism `𝟙 e` is cartesian. -/
 lemma cart_id (e : E) : CartMor P (𝟙 e) := fun _ u g' ↦ by
-  refine ⟨⟨g'.cast ((whisker_eq u (P.map_id e)).trans (comp_id _)), by aesop⟩, ?_, ?_⟩
-  · simp [BasedLift.cast]
-  · intro v hv; ext; aesop
+  refine ⟨g'.cast ((whisker_eq u (P.map_id e)).trans (comp_id _)), ?_, ?_⟩
+  · change g'.hom ≫ 𝟙 e = g'.hom
+    exact comp_id _
+  · intro v hv
+    apply BasedLift.hom_ext
+    change v.hom = g'.hom
+    rw [← hv]
+    exact (comp_id _).symm
 
 /-- Cartesian morphisms are closed under composition. -/
 lemma cart_comp_mem {x y z : E} (f : x ⟶ y) (g : y ⟶ z)
@@ -596,12 +593,14 @@ def HasCoCartLift (f : c ⟶ d) (x : P ⁻¹ c) := Nonempty (CoCartLift (P := P)
 end CartLift
 
 /-- The carrier for the subcategory of cartesian morphisms in the domain of `P`. -/
-abbrev Cart (_ : E ⥤ C) := E
+structure Cart (P : E ⥤ C) where
+  /-- The underlying object in `E`. -/
+  obj : E
 
 /-- The subcategory of cartesian morphisms. -/
 instance instCategoryCart {P : E ⥤ C} : Category (Cart P) where
-  Hom x y := { f : x ⟶ y |  CartMor (P := P) f }
-  id x := ⟨𝟙 x, cart_id x⟩
+  Hom x y := { f : x.obj ⟶ y.obj | CartMor (P := P) f }
+  id x := ⟨𝟙 x.obj, cart_id x.obj⟩
   comp := @fun _ _ _ f g => ⟨f.1 ≫ g.1, cart_comp_mem f.1 g.1 f.2 g.2⟩
 
 namespace Cart
@@ -609,8 +608,8 @@ namespace Cart
 /-- The forgetful functor from the category of cartesian morphisms to the domain
 category. -/
 def forget {P : E ⥤ C} : Cart P ⥤ E where
-  obj := fun x => x
-  map := @fun _ _ f => f
+  obj := fun x => x.obj
+  map := @fun _ _ f => f.1
 
 end Cart
 

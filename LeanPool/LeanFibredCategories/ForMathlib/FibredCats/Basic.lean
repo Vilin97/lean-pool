@@ -88,7 +88,6 @@ def equiv (c : C) : (P.op ⁻¹ (op c)) ≃ (P ⁻¹ c) where
   left_inv := by intro _; rfl
   right_inv := by intro _; rfl
 
-@[simp]
 lemma unop_op_map {c : C} {x y : (P.op) ⁻¹ (op c)} (f : x ⟶ y) :
     unop (P.op.map f.1) = P.map f.1.unop := by rfl
 
