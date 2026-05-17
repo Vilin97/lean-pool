@@ -22,6 +22,7 @@ def bytesPerFloat : Nat := 8
 
 /-- Basic dimension type, ensuring positivity. -/
 structure Dim where
+  /-- TODO. -/
   val : Nat
   isPos : val > 0
   deriving Repr
