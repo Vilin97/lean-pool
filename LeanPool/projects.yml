@@ -444,3 +444,31 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: quadraticintegers
+    title: Quadratic Integers
+    summary: Imports the completed quadratic-algebra base-change component from the Quadratic Integers project.
+    branch: algebraic number theory
+    entry_module: LeanPool.QuadraticIntegers
+    authors:
+      - Riccardo Brasca
+      - Pietro Monticone
+    source:
+      url: https://github.com/pitmonticone/QuadraticIntegers
+      github_repo: pitmonticone/QuadraticIntegers
+    status: verified
+    main_declarations:
+      - LeanPool.QuadraticIntegers.Mathlib.QuadraticAlgebra.instAlgebraBaseChange
+    main_results:
+      - declaration: LeanPool.QuadraticIntegers.Mathlib.QuadraticAlgebra.instAlgebraBaseChange
+        informal: Gives scalar-extension algebra structure between quadratic algebras over a base-change algebra.
+      - declaration: LeanPool.QuadraticIntegers.Mathlib.QuadraticAlgebra.instAlgebraInt
+        informal: Specializes the base-change algebra structure from integer quadratic algebras.
+      - declaration: LeanPool.QuadraticIntegers.Mathlib.QuadraticAlgebra.instAlgebraIntPure
+        informal: Specializes the integer base-change algebra structure to pure quadratic algebras.
+    tags:
+      - number-theory
+      - quadratic-fields
+      - quadratic-algebras
+    msc:
+      - "11R04"
+      - "11R11"

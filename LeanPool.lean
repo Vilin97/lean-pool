@@ -173,6 +173,9 @@ import LeanPool.LatticeTriangle
 import LeanPool.LatticeTriangle.Solution
 import LeanPool.PartialRegularity
 import LeanPool.PartialRegularity.Extension
+import LeanPool.QuadraticIntegers
+import LeanPool.QuadraticIntegers.Mathlib
+import LeanPool.QuadraticIntegers.Mathlib.QuadraticAlgebra
 import LeanPool.RamanujanTauMissesPrimes
 import LeanPool.RamanujanTauMissesPrimes.Solution
 import LeanPool.RiemannMappingTheorem
