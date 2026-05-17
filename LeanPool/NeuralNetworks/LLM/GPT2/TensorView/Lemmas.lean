@@ -441,7 +441,7 @@ lemma _root_.Array.extract_toList_getElem_succ {α : Type} [Inhabited α]
   exact Array.extract_idx_succ_elem_eq arr idx stop j h_j_gt_zero
 
 /-- Local cons-list zero-getter (about `.get`, complementing Mathlib's `[0]` lemma). -/
-lemma List.getElem_cons_zero_local {α : Type} (head : α) (tail : List α)
+lemma _root_.List.getElem_cons_zero_local {α : Type} (head : α) (tail : List α)
     (h_len : 0 < (head :: tail).length) :
   (head :: tail).get ⟨0, h_len⟩ = head := by
   rfl
