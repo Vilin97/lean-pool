@@ -207,6 +207,7 @@ case "$AGENT" in
   codex)  command -v codex >/dev/null || die "codex CLI not found in PATH." ;;
 esac
 command -v gh >/dev/null     || die "gh CLI not found in PATH; needed to open the PR."
+command -v python3 >/dev/null || die "python3 not found in PATH; needed to scan Lean diffs."
 gh auth status >/dev/null 2>&1 || die "gh is not authenticated. Run 'gh auth login' first."
 
 # Refuse to clobber an existing worktree silently.
@@ -475,8 +476,12 @@ if ! git diff --quiet || ! git diff --cached --quiet || [[ -n "$(git ls-files --
   warn "Uncommitted changes detected; committing as WIP."
   git add -A
   unstage_scratch
-  git commit -m "WIP: agent partial progress on $SLUG import" \
-    -m "The wrapper script committed this on the agent's behalf because the agent left changes uncommitted (likely exited early)."
+  # After unstaging scratch files (IMPORT_NOTES.md / FAILURE.md), there may be
+  # nothing left to commit if the agent only added those. That's not an error.
+  if ! git diff --cached --quiet; then
+    git commit -m "WIP: agent partial progress on $SLUG import" \
+      -m "The wrapper script committed this on the agent's behalf because the agent left changes uncommitted (likely exited early)."
+  fi
 fi
 
 # If the agent's own commits tracked the scratch files, untrack them (keeping the
@@ -545,19 +550,151 @@ fi
 # there. That does not permit Lean escape hatches or diagnostics inside the
 # imported Lean files, so scan the committed Lean diff before opening the PR.
 FORBIDDEN_LEAN_DIFF="$(
-  git diff --unified=0 "$BASE_REF..HEAD" -- LeanPool.lean 'LeanPool/**/*.lean' \
-    | awk '
-      /^\+\+\+ b\// {
-        file = substr($0, 7)
-        next
-      }
-      /^\+[^+]/ && file ~ /\.lean$/ {
-        line = substr($0, 2)
-        if (line ~ /(^|[^[:alnum:]_])set_option([^[:alnum:]_]|$)|maxHeartbeats|synthInstance\.maxHeartbeats|#(check|print|eval|reduce|guard_msgs|lint)|(^|[^[:alnum:]_])(sorry|admit|axiom|constant|unsafe|partial|opaque)([^[:alnum:]_]|$)|@\[[:space:]]*extern/) {
-          print file ": " line
-        }
-      }
-    '
+  python3 - "$BASE_REF" <<'PY'
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+base_ref = sys.argv[1]
+forbidden = re.compile(
+    r"(?<![A-Za-z0-9_])set_option(?![A-Za-z0-9_])"
+    r"|maxHeartbeats"
+    r"|synthInstance\.maxHeartbeats"
+    r"|#(?:check|print|eval|reduce|guard_msgs|lint)"
+    r"|(?<![A-Za-z0-9_])(?:sorry|admit|axiom|constant|unsafe|partial|opaque)(?![A-Za-z0-9_])"
+    r"|@\[\s*extern"
+)
+hunk_header = re.compile(r"^@@ .* \+(\d+)(?:,(\d+))? @@")
+
+
+def strip_lean_comments_and_strings(text: str) -> str:
+    """Blank Lean comments and strings while preserving line numbers."""
+    result: list[str] = []
+    index = 0
+    block_depth = 0
+    in_line_comment = False
+    in_string = False
+    escaped = False
+
+    while index < len(text):
+        char = text[index]
+        pair = text[index : index + 2]
+
+        if in_line_comment:
+            if char == "\n":
+                in_line_comment = False
+                result.append("\n")
+            else:
+                result.append(" ")
+            index += 1
+            continue
+
+        if block_depth > 0:
+            if pair == "/-":
+                block_depth += 1
+                result.append("  ")
+                index += 2
+            elif pair == "-/":
+                block_depth -= 1
+                result.append("  ")
+                index += 2
+            else:
+                result.append("\n" if char == "\n" else " ")
+                index += 1
+            continue
+
+        if in_string:
+            result.append("\n" if char == "\n" else " ")
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            index += 1
+            continue
+
+        if pair == "--":
+            in_line_comment = True
+            result.append("  ")
+            index += 2
+        elif pair == "/-":
+            block_depth = 1
+            result.append("  ")
+            index += 2
+        elif char == '"':
+            in_string = True
+            result.append(" ")
+            index += 1
+        else:
+            result.append(char)
+            index += 1
+
+    return "".join(result)
+
+
+diff = subprocess.run(
+    [
+        "git",
+        "diff",
+        "--unified=0",
+        f"{base_ref}..HEAD",
+        "--",
+        "LeanPool.lean",
+        "LeanPool/**/*.lean",
+    ],
+    check=True,
+    stdout=subprocess.PIPE,
+    text=True,
+).stdout
+
+added_lines: dict[str, set[int]] = {}
+current_file: str | None = None
+new_line: int | None = None
+
+for raw_line in diff.splitlines():
+    if raw_line.startswith("+++ b/"):
+        current_file = raw_line[6:]
+        new_line = None
+        continue
+    if raw_line.startswith("+++ /dev/null"):
+        current_file = None
+        new_line = None
+        continue
+
+    match = hunk_header.match(raw_line)
+    if match:
+        new_line = int(match.group(1))
+        continue
+
+    if current_file is None or new_line is None:
+        continue
+
+    if raw_line.startswith("+") and not raw_line.startswith("+++"):
+        if current_file.endswith(".lean"):
+            added_lines.setdefault(current_file, set()).add(new_line)
+        new_line += 1
+    elif raw_line.startswith("-") and not raw_line.startswith("---"):
+        continue
+    elif raw_line.startswith("\\ No newline"):
+        continue
+    else:
+        new_line += 1
+
+for file_name in sorted(added_lines):
+    path = Path(file_name)
+    if not path.exists():
+        continue
+    original_lines = path.read_text().splitlines()
+    stripped_lines = strip_lean_comments_and_strings(path.read_text()).splitlines()
+    for line_number in sorted(added_lines[file_name]):
+        if line_number > len(stripped_lines):
+            continue
+        if forbidden.search(stripped_lines[line_number - 1]):
+            original = original_lines[line_number - 1] if line_number <= len(original_lines) else ""
+            print(f"{file_name}: {original}")
+PY
 )"
 
 if [[ -n "$FORBIDDEN_LEAN_DIFF" ]]; then

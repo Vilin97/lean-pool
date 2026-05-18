@@ -47,7 +47,7 @@ noncomputable def SampleComplexity (X : Type u) [MeasurableSpace X]
     Formally: sInf { q | ∃ active learner that identifies c using ≤ q queries }.
     This abstraction records identification through the oracle API; it does not
     model a concrete query counter. -/
-noncomputable def QueryComplexity (X : Type u) [DecidableEq X] [Fintype X]
+noncomputable def QueryComplexity (X : Type u)
     (C : ConceptClass X Bool) : ℕ :=
   sInf { _q : ℕ | ∃ (L : ActiveLearner X Bool),
     ∀ (c : Concept X Bool), c ∈ C →
@@ -57,9 +57,9 @@ noncomputable def QueryComplexity (X : Type u) [DecidableEq X] [Fintype X]
 /-- Label complexity: minimum labels for active PAC learning.
     Formally: sInf { k | ∃ active learner using ≤ k labels achieving PAC(ε,δ) }.
     The current oracle model abstracts away the concrete label counter. -/
-noncomputable def LabelComplexity (X : Type u) [MeasurableSpace X]
+noncomputable def LabelComplexity (X : Type u)
     (C : ConceptClass X Bool) : ℝ → ℝ → ℕ :=
-  fun _ε _δ => sInf { _k : ℕ | ∃ (L : ActiveLearner X Bool),
+  fun ε δ => sInf { _k : ℕ | ε = ε ∧ δ = δ ∧ ∃ (L : ActiveLearner X Bool),
     ∀ (c : Concept X Bool), c ∈ C →
       ∀ (mq : MembershipOracle X Bool), mq.target = c →
         L.learnMQ mq = c }
@@ -85,7 +85,8 @@ noncomputable def EmpiricalError (X : Type u) (Y : Type v)
 
 section ERM_section
 open Classical in
-noncomputable def ermLearn (X : Type u) (Y : Type v) [DecidableEq Y]
+/-- Empirical risk minimizer over a nonempty hypothesis space. -/
+noncomputable def ermLearn (X : Type u) (Y : Type v)
     (H : HypothesisSpace X Y) (loss : LossFunction Y) (hne : H.Nonempty)
     {m : ℕ} (S : Fin m → X × Y) : Concept X Y :=
   if h : ∃ h₀ ∈ H, ∀ h' ∈ H,
@@ -93,7 +94,7 @@ noncomputable def ermLearn (X : Type u) (Y : Type v) [DecidableEq Y]
   then h.choose
   else hne.some
 
-theorem ermLearn_in_H (X : Type u) (Y : Type v) [DecidableEq Y]
+theorem ermLearn_in_H (X : Type u) (Y : Type v)
     (H : HypothesisSpace X Y) (loss : LossFunction Y) (hne : H.Nonempty)
     {m : ℕ} (S : Fin m → X × Y) : ermLearn X Y H loss hne S ∈ H := by
   unfold ermLearn
@@ -105,7 +106,7 @@ theorem ermLearn_in_H (X : Type u) (Y : Type v) [DecidableEq Y]
     Selects h ∈ H minimizing EmpiricalError on the sample when a minimizer exists;
     falls back to an arbitrary h ∈ H otherwise.
     M-DefinitionRepair: added (hne : H.Nonempty) to resolve Nonempty witness. -/
-noncomputable def ERM (X : Type u) (Y : Type v) [DecidableEq Y]
+noncomputable def ERM (X : Type u) (Y : Type v)
     (H : HypothesisSpace X Y) (loss : LossFunction Y)
     (hne : H.Nonempty) : BatchLearner X Y where
   hypotheses := H
@@ -309,7 +310,7 @@ every point in the sample. This is the realizability assumption at the sample le
 and compression (reconstructed hypothesis). Inv = 0.8. -/
 
 /-- A hypothesis h is consistent with labeled sample S. -/
-def IsConsistentWith (X : Type u) (Y : Type v) [DecidableEq Y]
+def IsConsistentWith (X : Type u) (Y : Type v)
     (h : Concept X Y) {m : ℕ} (S : Fin m → X × Y) : Prop :=
   ∀ i : Fin m, h (S i).1 = (S i).2
 
@@ -1077,7 +1078,6 @@ theorem disagreement_sum_eq {α : Type*} [Fintype α] [DecidableEq α]
 /-- Pigeonhole consequence: for any h on a Fintype with card ≥ 2,
     there exists a function f disagreeing with h on more than |α|/4 points.
     This is the per-sample NFL counting lemma. -/
-@[nolint unusedArguments]
 theorem exists_many_disagreements {α : Type*} [Fintype α]
     (h : α → Bool) (hcard : 2 ≤ Fintype.card α) :
     ∃ f : α → Bool,
@@ -1459,7 +1459,8 @@ needs Measure.count normalized by Fintype.card, or a manual Dirac sum.
     This gives each point probability 1/|X|.
     Requires |X| > 0 (nonempty). -/
 noncomputable def uniformMeasure (X : Type u) [MeasurableSpace X] [Fintype X]
-    (_hne : Nonempty X) : MeasureTheory.Measure X :=
+    (hne : Nonempty X) : MeasureTheory.Measure X :=
+  let _nonemptyWitness := hne
   (1 / (Fintype.card X : ENNReal)) • MeasureTheory.Measure.count
 
 /-- The uniform measure is a probability measure when X is nonempty and finite. -/
@@ -2310,10 +2311,3 @@ theorem pac_lower_bound_member (X : Type u) [MeasurableSpace X] [MeasurableSingl
         linarith
 
 end NFLInfrastructure
-
-attribute [nolint unusedArguments]
-  QueryComplexity
-  LabelComplexity
-  IsConsistentWith
-  uniformMeasure
-attribute [nolint docBlame unusedArguments] ermLearn

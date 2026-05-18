@@ -95,6 +95,43 @@ def test_quality_check_rejects_set_option(tmp_path: Path) -> None:
     assert any("set_option is forbidden" in error.message for error in errors)
 
 
+def test_quality_check_rejects_nolint_attribute(tmp_path: Path) -> None:
+    """Lean files may not waive linters with `@[nolint ...]`."""
+    _write_minimal_repo(
+        tmp_path,
+        "@[nolint unusedArguments]\ndef hello (_n : Nat) := 1\n",
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("nolint waiver is forbidden" in error.message for error in errors)
+
+
+def test_quality_check_rejects_nolint_command(tmp_path: Path) -> None:
+    """Lean files may not waive linters with `attribute [nolint ...]`."""
+    _write_minimal_repo(
+        tmp_path,
+        "def hello := 1\nattribute [nolint docBlame] hello\n",
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("nolint waiver is forbidden" in error.message for error in errors)
+
+
+def test_quality_check_rejects_style_linter_allowlist_entry(tmp_path: Path) -> None:
+    """The style-linter allowlist file may not carry active entries."""
+    _write_minimal_repo(tmp_path)
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts" / "nolints-style.txt").write_text(
+        "-- comments are fine\nLeanPool/Basic.lean:12\n"
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("style linter waiver is forbidden" in error.message for error in errors)
+
+
 def test_quality_check_rejects_unreachable_lean_file(tmp_path: Path) -> None:
     """Every Lean file under LeanPool must be imported by LeanPool.lean."""
     _write_minimal_repo(tmp_path)
