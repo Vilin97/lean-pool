@@ -88,6 +88,11 @@ import LeanPool.Erdos1196.Preliminaries
 import LeanPool.Erdos1196.PreliminariesMertens
 import LeanPool.Erdos1196.PreliminariesTailAux
 import LeanPool.Erdos1196.PrimitiveWeight
+import LeanPool.FactorizationSystems
+import LeanPool.FactorizationSystems.Basic
+import LeanPool.FactorizationSystems.Characterization
+import LeanPool.FactorizationSystems.OrthogonalComplements
+import LeanPool.FactorizationSystems.Orthogonality
 import LeanPool.FelConjecture
 import LeanPool.FelConjecture.Solution
 import LeanPool.FormalLearningTheory
