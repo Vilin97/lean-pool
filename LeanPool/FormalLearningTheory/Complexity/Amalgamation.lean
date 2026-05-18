@@ -44,12 +44,12 @@ def agreementRel {Θ₁ Θ₂ S : Type*}
   {p | π₁ p.1 = π₂ p.2}
 
 /-- Parameterized sub-class: concepts e(θ) for θ restricted to a subset R. -/
-def relParamClass {X : Type u} [MeasurableSpace X]
+def relParamClass {X : Type u}
     {Θ : Type*} (R : Set Θ) (e : Θ → Concept X Bool) : ConceptClass X Bool :=
   {h | ∃ θ ∈ R, h = e θ}
 
 /-- The amalgamation class: merge(θ₁, θ₂) for (θ₁, θ₂) in the agreement fiber. -/
-def amalgClass {X : Type u} [MeasurableSpace X]
+def amalgClass {X : Type u}
     {Θ₁ Θ₂ S : Type*}
     (π₁ : Θ₁ → S) (π₂ : Θ₂ → S)
     (merge : Θ₁ × Θ₂ → Concept X Bool) : ConceptClass X Bool :=
@@ -122,5 +122,3 @@ theorem interpClassFixed_subset_amalgClass
   obtain ⟨h₁, ⟨θ₁, rfl⟩, h₂, ⟨θ₂, rfl⟩, rfl⟩ := hh
   simp only [amalgClass, relParamClass, agreementRel, Set.mem_setOf_eq]
   exact ⟨(θ₁, θ₂), trivial, rfl⟩
-
-attribute [nolint unusedArguments] relParamClass

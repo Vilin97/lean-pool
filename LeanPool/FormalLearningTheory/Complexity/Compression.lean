@@ -94,7 +94,9 @@ lemma supportError_le_one {X : Type u} (Y : Finset X) (q : FinitePMF ↥Y)
     with error at most 1 / 3 for any C-realizable finite distribution.
     CORRECTED: good_on_support returns Finset X (not Fin k → X). -/
 structure ProperFiniteSupportLearner (X : Type u) (C : ConceptClass X Bool) where
+  /-- Uniform upper bound on the selected support size. -/
   sampleBound : ℕ
+  /-- Learner evaluated on a finite labeled sample. -/
   learn : {m : ℕ} → (Fin m → X × Bool) → (X → Bool)
   output_mem : ∀ {m : ℕ} (S : Fin m → X × Bool), learn S ∈ C
   good_on_support : ∀ (c : X → Bool) (_ : c ∈ C) (Y : Finset X)
@@ -455,7 +457,6 @@ lemma decodeWitnessLabel_eq_on_encoded
 
 /-- If two label functions agree on all points of `Z`, then the labeled samples they
 induce on `Z.equivFin` are equal. -/
-@[nolint unusedArguments]
 lemma labeledSampleOfFinset_eq_of_eq_on_support
     {X : Type u}
     {ℓ₁ ℓ₂ : X → Bool} {Z : Finset X}
@@ -504,7 +505,6 @@ theorem roundtrip_blockHyp_eq_rep
     `|T| ≥ 2^(d+1)`, embed bitstrings into `T`, extract `d+1` distinct points from `Y`
     via shattering, and show these points are shattered by `C` (using the XOR trick
     where `b(j) = decide(g(x_j) = c(x_j))` absorbs the agree/disagree flip). -/
-@[nolint unusedArguments]
 private lemma agreeTests_boolVCDim_le
     {X : Type u}
     (C : ConceptClass X Bool) (c : X → Bool) (Y : Finset X)
@@ -1339,7 +1339,3 @@ theorem fundamental_vc_compression_with_info
    fun ⟨k, cs, hk⟩ => compression_with_info_imp_vcdim_finite X C ⟨k, cs, hk⟩⟩
 
 end -- noncomputable section
-
-attribute [nolint docBlame]
-  ProperFiniteSupportLearner.sampleBound
-  ProperFiniteSupportLearner.learn

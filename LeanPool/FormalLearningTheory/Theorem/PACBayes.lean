@@ -47,7 +47,7 @@ noncomputable def gibbsError {X : Type u} [MeasurableSpace X]
 
 /-- Empirical Gibbs error: expected empirical error under Q.
     E_{h~Q}[EmpErr(h, S)]. -/
-noncomputable def gibbsEmpError {X : Type u} [MeasurableSpace X]
+noncomputable def gibbsEmpError {X : Type u}
     {H : Type*} [Fintype H]
     (Q : FinitePMF H) (hs : H → Concept X Bool) (c : Concept X Bool)
     {m : ℕ} (S : Fin m → X) : ℝ :=
@@ -497,5 +497,3 @@ theorem pac_bayes_finite {X : Type u} [MeasurableSpace X]
       ≥ μ AllHyp := μ.mono h_sub
     _ ≥ ENNReal.ofReal (1 - δ) :=
         pac_bayes_all_hypotheses D c hc_meas hs hhs_meas P hP_pos m hm δ hδ hδ1
-
-attribute [nolint unusedArguments] gibbsEmpError

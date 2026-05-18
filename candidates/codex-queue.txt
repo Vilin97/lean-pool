@@ -1,0 +1,31 @@
+# Codex import queue.
+#
+# Run with:
+#   scripts/run-import-queue.sh --agent codex --jobs 1 --urls-file candidates/codex-queue.txt --ci-timeout 0
+#
+# This queue contains clearly licensed shortlist entries and is disjoint from
+# candidates/claude-queue.txt. Very large projects and no-license projects are
+# intentionally left out for manual scheduling.
+
+https://github.com/b-mehta/ABC-Exceptions
+https://github.com/sven-manthe/A-formalization-of-Borel-determinacy-in-Lean
+https://github.com/b-mehta/AharoniKorman
+https://github.com/ahhwuhu/zeta_3_irrational
+https://github.com/FLDutchmann/selberg-sieve4
+https://github.com/pitmonticone/QuadraticIntegers
+https://github.com/Whysoserioushah/BrauerGroup_new
+https://github.com/bolito2/DemazureOperatorsLean
+https://github.com/chrisflav/bruhat-tits
+https://github.com/badly-drawn-wizards/noperthedron
+https://github.com/SamuelSchlesinger/shannon-1948-formalization
+https://github.com/kkytola/VirasoroProject
+https://github.com/lua-vr/pointwise-birkhoff
+https://github.com/fpvandoorn/sard
+https://github.com/dhyan-aranha/Monsky
+https://github.com/siddhartha-gadgil/Polylean
+https://github.com/JoeyEremondi/lean-cwf
+https://github.com/ivankobe/FactorizationSystems
+https://github.com/VTrelat/ZFLean
+https://github.com/suomela/2-coloring-1-round
+https://github.com/ruplet/formalization-of-bounded-arithmetic
+https://github.com/pannous/hyper-lean

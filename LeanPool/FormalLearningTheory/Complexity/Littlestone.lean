@@ -108,7 +108,6 @@ theorem MistakeTree.fromList_shattered {X : Type u} [DecidableEq X] {C : Concept
 
 /-- Ldim (branch-wise) upper bounds VCdim: Ldim(C) ≥ VCdim(C) for all C.
     Uses the branch-wise definition. See Theorem/Online.lean for the corrected version. -/
-@[nolint unusedArguments]
 theorem BranchWiseLittlestoneDim_ge_VCDim (X : Type u)
     (C : ConceptClass X Bool) : VCDim X C ≤ BranchWiseLittlestoneDim X C := by
   classical

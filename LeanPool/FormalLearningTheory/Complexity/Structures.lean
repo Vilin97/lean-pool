@@ -57,8 +57,11 @@ structure CompressionScheme (X : Type u) (Y : Type v) (C : ConceptClass X Y) whe
 
 /-- Unlabeled compression: reconstruction uses only input points, not labels. -/
 structure UnlabeledCompression (X : Type u) (Y : Type v) where
+  /-- Size of the compressed representation. -/
   size : ℕ
+  /-- Selected sample indices. -/
   compress : {m : ℕ} → (Fin m → X × Y) → Finset (Fin m)
+  /-- Reconstruct a concept from unlabeled sample points and selected indices. -/
   reconstruct : {m : ℕ} → (Fin m → X) → Finset (Fin m) → Concept X Y
   small : ∀ {m : ℕ} (S : Fin m → X × Y), (compress S).card ≤ size
 
@@ -73,6 +76,7 @@ structure AlgorithmicStability (X : Type u) (Y : Type v) where
   /-- Stability parameter -/
   beta : ℝ
   beta_nonneg : 0 ≤ beta
+  /-- Loss function used to measure prediction changes. -/
   loss : LossFunction Y
   /-- Stability: for any sample S and any index i, the loss of L(S) vs L(S\i)
       on any fresh point z differs by at most β.
@@ -89,7 +93,7 @@ structure AlgorithmicStability (X : Type u) (Y : Type v) where
     Largest d such that ∃ S with |S| = d and two witness functions f₀ f₁ : S → Y
     disagreeing everywhere on S, such that for every binary selection h,
     some concept in C picks f₀ or f₁ at each point according to h. -/
-noncomputable def NatarajanDim (X : Type u) (Y : Type v) [Fintype Y]
+noncomputable def NatarajanDim (X : Type u) (Y : Type v)
     (C : ConceptClass X Y) : WithTop ℕ :=
   ⨆ (S : Finset X)
     (_ : ∃ (f₀ f₁ : X → Y), (∀ x ∈ S, f₀ x ≠ f₁ x) ∧
@@ -99,7 +103,7 @@ noncomputable def NatarajanDim (X : Type u) (Y : Type v) [Fintype Y]
 
 /-- DS dimension: multiclass shattering where EVERY labeling is realizable.
     Strictly stronger than Natarajan dimension. -/
-noncomputable def DSDim (X : Type u) (Y : Type v) [Fintype Y]
+noncomputable def DSDim (X : Type u) (Y : Type v)
     (C : ConceptClass X Y) : WithTop ℕ :=
   ⨆ (S : Finset X)
     (_ : ∀ (f : X → Y), ∃ c ∈ C, ∀ x ∈ S, c x = f x),
@@ -110,7 +114,7 @@ noncomputable def DSDim (X : Type u) (Y : Type v) [Fintype Y]
     sets satisfy the DS condition, hence DSDim ≤ NatarajanDim.
     Requires |Y| ≥ 2 (Nontrivial Y): when |Y| = 1, Natarajan witnesses f₀ ≠ f₁ cannot exist.
     M-DefinitionRepair (Γ₈): original statement had wrong direction. -/
-theorem DSDim_le_NatarajanDim (X : Type u) (Y : Type v) [Fintype Y] [Nontrivial Y]
+theorem DSDim_le_NatarajanDim (X : Type u) (Y : Type v) [Nontrivial Y]
     (C : ConceptClass X Y) : DSDim X Y C ≤ NatarajanDim X Y C := by
   obtain ⟨y₀, y₁, hne⟩ := exists_pair_ne Y
   apply iSup₂_le
@@ -135,11 +139,13 @@ noncomputable def Pseudodimension (X : Type u) (C : ConceptClass X ℝ) : WithTo
 /-- Fat-shattering dimension at margin γ > 0.
     Like pseudodimension but with γ-margin on both sides of the threshold. -/
 noncomputable def FatShatteringDim (X : Type u) (C : ConceptClass X ℝ)
-    (γ : ℝ) (_hγ : 0 < γ) : WithTop ℕ :=
-  ⨆ (S : Finset X) (t : X → ℝ)
-    (_ : ∀ (b : X → Bool), ∃ c ∈ C, ∀ x ∈ S,
-      (b x = true → c x ≥ t x + γ) ∧ (b x = false → c x ≤ t x - γ)),
-    (S.card : WithTop ℕ)
+    (γ : ℝ) (hγ : 0 < γ) : WithTop ℕ :=
+  if h : 0 < γ then
+    ⨆ (S : Finset X) (t : X → ℝ)
+      (_ : ∀ (b : X → Bool), ∃ c ∈ C, ∀ x ∈ S,
+        (b x = true → c x ≥ t x + γ) ∧ (b x = false → c x ≤ t x - γ)),
+      (S.card : WithTop ℕ)
+  else False.elim (h hγ)
 
 /-!
 ## Other Complexity Measures
@@ -150,8 +156,7 @@ noncomputable def FatShatteringDim (X : Type u) (C : ConceptClass X ℝ)
     using only statistical queries (expected values of functions of the sample).
     M-DefinitionRepair: added distribution parameter D (originally missing). -/
 noncomputable def SQDimension (X : Type u) [MeasurableSpace X]
-    (C : ConceptClass X Bool) (D : MeasureTheory.Measure X)
-    [MeasureTheory.IsProbabilityMeasure D] (τ : ℝ) : WithTop ℕ :=
+    (C : ConceptClass X Bool) (D : MeasureTheory.Measure X) (τ : ℝ) : WithTop ℕ :=
   ⨆ (S : Finset (Concept X Bool))
     (_ : ↑S ⊆ C ∧ ∀ c₁ ∈ S, ∀ c₂ ∈ S, c₁ ≠ c₂ →
       |∫ x, (if c₁ x = c₂ x then (1 : ℝ) else -1) ∂D| ≤ τ),
@@ -195,9 +200,12 @@ noncomputable def KLComplexity (α : Type*) (prior posterior : α → ℝ) : ℝ
 
 /-- Margin theory: framework connecting margins to generalization. -/
 structure MarginTheory (X : Type u) where
+  /-- Positive margin parameter. -/
   margin : ℝ
   margin_pos : 0 < margin
+  /-- Real-valued concept class controlled by the margin bound. -/
   conceptClass : ConceptClass X ℝ
+  /-- Generalization bound as a function of sample size. -/
   bound : ℕ → ℝ
 
 /-! ## Compression with Side Information (Moran-Yehudayoff 2016)
@@ -269,18 +277,3 @@ def Open_NoInfoCompressionStrengthening : Prop :=
   ∀ (X : Type*) (C : ConceptClass X Bool),
     VCDim X C < ⊤ →
     ∃ (k : ℕ) (cs : CompressionScheme X Bool C), cs.size = k
-
-attribute [nolint docBlame]
-  UnlabeledCompression.size
-  UnlabeledCompression.compress
-  UnlabeledCompression.reconstruct
-  AlgorithmicStability.loss
-  MarginTheory.margin
-  MarginTheory.conceptClass
-  MarginTheory.bound
-
-attribute [nolint unusedArguments]
-  NatarajanDim
-  DSDim
-  FatShatteringDim
-  SQDimension
