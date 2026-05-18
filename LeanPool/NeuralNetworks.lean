@@ -11,11 +11,7 @@ import LeanPool.NeuralNetworks.Hopfield.Convergence
 /-!
 # Neural Networks
 
-Source: John J. Hopfield, "Neural networks and physical systems with
-  emergent collective computational abilities", Proceedings of the National
-  Academy of Sciences 79 (1982), 2554-2558, for the Hopfield-network energy
-  and convergence mechanism; formalization source:
-  url:https://github.com/or4nge19/NeuralNetworks
+Source: doi:10.1073/pnas.79.8.2554
 Authors: Matteo Cipollina, Alok Singh
 Status: verified
 Main declarations: `HopfieldState.HopfieldNetwork`, `HopfieldState.convergence`
