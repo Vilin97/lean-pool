@@ -52,6 +52,7 @@ theorem boolToSign_mul_abs_le_one (b₁ b₂ : Bool) : |boolToSign b₁ * boolTo
           (abs_nonneg _) (by norm_num)
     _ = 1 := one_mul 1
 
+/-- Boolean sign assignments used as Rademacher variables. -/
 abbrev SignVector (m : ℕ) := Fin m → Bool
 
 /-- Bit-flip at coordinate i: σ ↦ σ' where σ'(i) = !σ(i), σ'(k) = σ(k) for k ≠ i. -/
@@ -176,6 +177,7 @@ private theorem rademacher_variance_eq {m : ℕ} (_hm : 0 < m) (a : Fin m → �
     nlinarith [this]
   rw [hai, one_mul]
 
+/-- Normalized signed correlation of a hypothesis on a finite sample. -/
 noncomputable def rademacherCorrelation {X : Type u} {m : ℕ}
     (h : Concept X Bool) (σ : SignVector m) (xs : Fin m → X) : ℝ :=
   if _hm : m = 0 then 0
@@ -204,6 +206,7 @@ theorem rademacherCorrelation_abs_le_one {X : Type u} {m : ℕ} (hm : 0 < m)
         exact div_nonneg one_pos.le hm_pos.le
     _ = 1 := by field_simp
 
+/-- Empirical Rademacher complexity of a Boolean concept class on a fixed sample. -/
 noncomputable def EmpiricalRademacherComplexity (X : Type u)
     (C : ConceptClass X Bool) {m : ℕ} (xs : Fin m → X) : ℝ :=
   if _hm : m = 0 then 0
@@ -246,6 +249,7 @@ theorem empiricalRademacherComplexity_le_one (X : Type u)
         exact div_nonneg one_pos.le hnum_pos.le
     _ = 1 := by field_simp
 
+/-- Distributional Rademacher complexity, averaging empirical complexity over samples. -/
 noncomputable def RademacherComplexity (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) (D : MeasureTheory.Measure X) (m : ℕ) : ℝ :=
   ∫ xs : Fin m → X,
@@ -397,7 +401,6 @@ private theorem empRad_eq_one_of_all_labelings {X : Type u}
 /-! ## Helpers for VCDim → Rademacher bound (Massart + Sauer-Shelah) -/
 
 /-- Soft-max bound: exp(t · Finset.sup') ≤ Σ exp(t · f_i). -/
-@[nolint unusedArguments]
 theorem exp_mul_sup'_le_sum {ι : Type*} (s : Finset ι) (hs : s.Nonempty)
     (f : ι → ℝ) (t : ℝ) (_ht : 0 ≤ t) :
     Real.exp (t * s.sup' hs f) ≤ ∑ i ∈ s, Real.exp (t * f i) := by
@@ -1191,7 +1194,6 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
 /-! ## Rademacher ↔ PAC -/
 
 /-- Key combinatorial lemma: injective samples from a shattered set have EmpRad = 1. -/
-@[nolint unusedArguments]
 private theorem empRad_eq_one_of_injective_in_shattered {X : Type u}
     (C : ConceptClass X Bool) {m : ℕ} (hm : 0 < m)
     (T : Finset X) (hT : Shatters X C T)
@@ -1891,9 +1893,3 @@ theorem vcdim_finite_imp_rademacher_vanishing (X : Type u) [MeasurableSpace X]
         _ = ε := by rw [Real.sqrt_sq (le_of_lt hε)]
 
 -- fundamental_rademacher_equiv assembled in Theorem/PAC.lean (DAG constraint).
-
-attribute [nolint docBlame]
-  SignVector
-  rademacherCorrelation
-  EmpiricalRademacherComplexity
-  RademacherComplexity

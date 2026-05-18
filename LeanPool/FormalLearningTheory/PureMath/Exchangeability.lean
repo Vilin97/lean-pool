@@ -34,7 +34,9 @@ open MeasureTheory ENNReal
 
 /-- Bundle for an exchangeable sample: sample size, measure, and probability measure proof. -/
 structure ExchangeableSample {X : Type*} [MeasurableSpace X] where
+  /-- Sample size. -/
   m : ℕ
+  /-- Underlying sample distribution. -/
   μ : MeasureTheory.Measure X
   hμ : MeasureTheory.IsProbabilityMeasure μ
 
@@ -116,21 +118,15 @@ noncomputable def SplitMeasure (m : ℕ) : MeasureTheory.Measure (ValidSplit m) 
     ∑ vs : ValidSplit m, MeasureTheory.Measure.dirac vs
 
 /-- Given a merged sample z and a valid split, extract the first group (training sample). -/
-def splitFirst {X : Type u} {m : ℕ} (z : MergedSample X m) (_vs : ValidSplit m) :
+def splitFirst {X : Type u} {m : ℕ} (z : MergedSample X m) (vs : ValidSplit m) :
     Fin m → X := by
+  let _validSplit := vs.card_true
   -- The first group consists of the m indices where assign = true
   -- We need to enumerate them and index into z
   exact fun i => z (Fin.castAdd m i |>.cast (two_mul m).symm)
 
 /-- Given a merged sample z and a valid split, extract the second group (ghost sample). -/
-def splitSecond {X : Type u} {m : ℕ} (z : MergedSample X m) (_vs : ValidSplit m) :
+def splitSecond {X : Type u} {m : ℕ} (z : MergedSample X m) (vs : ValidSplit m) :
     Fin m → X := by
+  let _validSplit := vs.card_true
   exact fun i => z (Fin.natAdd m i |>.cast (two_mul m).symm)
-
-attribute [nolint docBlame]
-  ExchangeableSample.m
-  ExchangeableSample.μ
-
-attribute [nolint unusedArguments]
-  splitFirst
-  splitSecond

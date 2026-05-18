@@ -40,29 +40,29 @@ attribute [local instance] Classical.propDecidable
 /-! ## Definitions -/
 
 /-- Piecewise concept: agrees with h₁ on A, with h₂ on Aᶜ. -/
-noncomputable def piecewiseConcept {X : Type u} [MeasurableSpace X]
+noncomputable def piecewiseConcept {X : Type u}
     (A : Set X) (h₁ h₂ : Concept X Bool) : Concept X Bool :=
   fun x => if x ∈ A then h₁ x else h₂ x
 
 /-- Router from a single fixed set: maps Unit × X → Bool. -/
-noncomputable def routerOfSet {X : Type u} [MeasurableSpace X]
+noncomputable def routerOfSet {X : Type u}
     (A : Set X) : Unit → Concept X Bool :=
-  fun _ x => if x ∈ A then true else false
+  fun u x => if u = () then if x ∈ A then true else false else false
 
 /-- Router from a countable family of sets: maps ℕ × X → Bool. -/
-noncomputable def routerOfSetFamily {X : Type u} [MeasurableSpace X]
+noncomputable def routerOfSetFamily {X : Type u}
     (A : ℕ → Set X) : ℕ → Concept X Bool :=
   fun n x => if x ∈ A n then true else false
 
 /-! ## Concept Class Definitions -/
 
 /-- Interpolation with a fixed region A. -/
-def interpClassFixed {X : Type u} [MeasurableSpace X]
+def interpClassFixed {X : Type u}
     (C₁ C₂ : ConceptClass X Bool) (A : Set X) : ConceptClass X Bool :=
   {h | ∃ h₁ ∈ C₁, ∃ h₂ ∈ C₂, h = piecewiseConcept A h₁ h₂}
 
 /-- Interpolation with a countable family of regions. -/
-def interpClassCountable {X : Type u} [MeasurableSpace X]
+def interpClassCountable {X : Type u}
     (C₁ C₂ : ConceptClass X Bool) (A : ℕ → Set X) : ConceptClass X Bool :=
   {h | ∃ n, ∃ h₁ ∈ C₁, ∃ h₂ ∈ C₂, h = piecewiseConcept (A n) h₁ h₂}
 
@@ -246,8 +246,3 @@ theorem interpClass_wellBehaved_of_routerCode
     region can be encoded by a Borel-parameterized router. -/
 def HasFullInterpolationRouterCode (X : Type u) [MeasurableSpace X] : Prop :=
   Nonempty (BorelRouterCode X)
-
-attribute [nolint unusedArguments]
-  piecewiseConcept
-  routerOfSet
-  routerOfSetFamily

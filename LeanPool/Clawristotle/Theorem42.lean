@@ -6,8 +6,6 @@ Authors: Vasily Ilin
 import LeanPool.Clawristotle.VMLInputDerive
 
 /-!
-set_option linter.style.longLine false
-
 # Abstract Theorem 4.2: Steady State Implies Maxwellian
 
 States and proves the main abstract result: any smooth steady state of the

@@ -122,7 +122,6 @@ lemma boolGamePayoff_pointMass {R C : Type*} [Fintype R] [DecidableEq R]
   simp
 
 /-- The minimax value of a Boolean game is at most 1. -/
-@[nolint unusedArguments]
 lemma minimax_value_le_one {R C : Type*} [Fintype C] [Nonempty C]
     (M : R → C → Bool) (v : ℝ)
     (hrow : ∀ q : FinitePMF C, ∃ r : R,
@@ -139,7 +138,6 @@ lemma minimax_value_le_one {R C : Type*} [Fintype C] [Nonempty C]
 /-! ## Covering Row Lemma -/
 
 /-- If minimax value > 0, every column has a row with M(r,c) = true. -/
-@[nolint unusedArguments]
 lemma exists_covering_row {R C : Type*} [Fintype C]
     [Nonempty C]
     (M : R → C → Bool) (v : ℝ) (hv : 0 < v)
@@ -178,7 +176,6 @@ lemma exists_covering_row {R C : Type*} [Fintype C]
     (guaranteed by `exists_covering_row`). The empirical distribution of
     these rows gives payoff ≥ 1/|C| against every column, since each
     column c₀ is covered by at least one row (namely r_c₀). -/
-@[nolint unusedArguments]
 theorem covering_minimax
     {R C : Type*} [Fintype R] [Fintype C] [Nonempty C]
     (M : R → C → Bool) (v : ℝ) (hv : 0 < v)
@@ -225,7 +222,6 @@ every pure column gets payoff ≥ v - ε.
 
 This version uses the covering argument (payoff ≥ 1/|C| for all columns)
 combined with the feasibility condition v - ε ≤ 1/|C|. -/
-@[nolint unusedArguments]
 theorem finite_approx_minimax
     {R C : Type*} [Fintype R] [Fintype C] [Nonempty C] [Nonempty R]
     (M : R → C → Bool) (v ε : ℝ) (hε : 0 < ε)
@@ -249,6 +245,7 @@ is the core analytic result: after T rounds, Φ_T ≤ |C| · (1 - ηv)^T.
 
 /-- MWU config: weight vector with positivity proof. -/
 structure MWUConfig (C : Type*) [Fintype C] where
+  /-- Current nonnegative weight for each expert/concept. -/
   weights : C → ℝ
   weights_pos : ∀ c, 0 < weights c
 
@@ -282,7 +279,6 @@ def mwuUpdateWeights {C : Type*} [Fintype C] {R : Type*}
   weights_pos c := mul_pos (cfg.weights_pos c) (by split_ifs <;> linarith)
 
 /-- Best response payoff ≥ v · Φ in terms of weights. -/
-@[nolint unusedArguments]
 lemma best_response_payoff_weights {R C : Type*} [Fintype C] [Nonempty C]
     (M : R → C → Bool) (v : ℝ)
     (hrow : ∀ q : FinitePMF C, ∃ r : R,
@@ -305,7 +301,6 @@ lemma best_response_payoff_weights {R C : Type*} [Fintype C] [Nonempty C]
   rwa [le_div_iff₀ hΦ_pos] at hr
 
 /-- Potential bound after one step: Φ' ≤ Φ · (1 - η·v). -/
-@[nolint unusedArguments]
 lemma potential_one_step_bound {R C : Type*} [Fintype C] [Nonempty C]
     (M : R → C → Bool) (η : ℝ) (hη : 0 ≤ η) (hη1 : η < 1) (v : ℝ)
     (hrow : ∀ q : FinitePMF C, ∃ r : R,
@@ -601,7 +596,6 @@ private lemma hitRate_from_potential
 /-- **Genuine approximate minimax via MWU regret extraction.**
     If every column mixture admits a pure row with expected payoff ≥ v,
     then there is a row mixture with payoff ≥ v - ε against every column. -/
-@[nolint unusedArguments]
 theorem mwu_approx_minimax
     {R C : Type*} [Fintype R] [Fintype C] [Nonempty R] [Nonempty C]
     (M : R → C → Bool) (v ε : ℝ) (hε : 0 < ε)
@@ -646,5 +640,3 @@ theorem mwu_approx_minimax
   exact hitRate_from_potential hNpos hη hη1 hv1 hTpos hpot (by dsimp [η]; linarith) hlargeT
 
 end -- noncomputable section
-
-attribute [nolint docBlame] MWUConfig.weights

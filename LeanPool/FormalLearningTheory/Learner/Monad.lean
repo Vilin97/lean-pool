@@ -26,6 +26,7 @@ of the learner monad: pairs a `BatchLearner` with a proof of `MeasurableBatchLea
 so that monadic composition can automatically preserve measurability without
 re-derivation at the call site. -/
 structure MeasLearner (X : Type u) [MeasurableSpace X] where
+  /-- Underlying batch learner. -/
   learner : BatchLearner X Bool
   measurable : MeasurableBatchLearner X learner
 
@@ -33,7 +34,7 @@ structure MeasLearner (X : Type u) [MeasurableSpace X] where
 data and always outputs the fixed measurable hypothesis `h`. The hypothesis space is
 the singleton `{h}`; measurability is the projection-then-constant pattern. -/
 noncomputable def MeasLearner.pure
-    {X : Type u} [MeasurableSpace X] [MeasurableSingletonClass X]
+    {X : Type u} [MeasurableSpace X]
     (h : Concept X Bool) (hm : Measurable h) : MeasLearner X where
   learner := {
     hypotheses := {h}
@@ -104,6 +105,3 @@ theorem MeasLearner.assoc
     {m : ℕ} (S : Fin m → X × Bool) (x : X) :
     (concatLearner (fun n => (family n).learner) sel).learn S x =
     (family (sel S)).learner.learn S x := by rfl
-
-attribute [nolint docBlame] MeasLearner.learner
-attribute [nolint unusedArguments] MeasLearner.pure
