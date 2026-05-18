@@ -249,8 +249,7 @@ def evaluate_stats(
     missing_files = tuple(
         file.path
         for file in sorted(upstream.files, key=lambda item: item.loc, reverse=True)
-        if file.loc >= large_file_cutoff
-        and file.normalized_stem not in imported_stems
+        if file.loc >= large_file_cutoff and file.normalized_stem not in imported_stems
     )[:MAX_MISSING_FILES]
     file_count_suspicious = upstream.file_count >= 3 and file_ratio < cutoff
     if loc_ratio >= cutoff and not file_count_suspicious and not missing_files:
