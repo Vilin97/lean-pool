@@ -444,3 +444,32 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: hyper-lean
+    title: Hyperreal numbers via Laurent series
+    summary: Formalizes a Laurent-series model of hyperreal-like numbers with infinitesimal and infinite generators.
+    branch: nonstandard analysis
+    entry_module: LeanPool.HyperLean
+    authors:
+      - Pannous
+    source:
+      url: https://github.com/pannous/hyper-lean
+      github_repo: pannous/hyper-lean
+    status: verified
+    main_declarations:
+      - LeanPool.HyperLean.omega_mul_epsilon
+    main_results:
+      - declaration: LeanPool.HyperLean.omega_mul_epsilon
+        informal: Proves the gauging relation that the infinite generator times the infinitesimal generator is one.
+      - declaration: LeanPool.HyperLean.epsilon_mul_omega
+        informal: Proves the commuted gauging relation for the infinitesimal and infinite generators.
+      - declaration: LeanPool.HyperLean.epsilon_lt_embedReal
+        informal: Proves that the infinitesimal is smaller than every positive embedded real number.
+      - declaration: LeanPool.HyperLean.one_add_epsilon_mul_inv
+        informal: Proves that one plus the infinitesimal has an exact Laurent-series field inverse.
+    tags:
+      - hyperreal-numbers
+      - nonstandard-analysis
+      - laurent-series
+    msc:
+      - "26E35"
+      - "12J25"
