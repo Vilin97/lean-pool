@@ -444,3 +444,34 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: sard
+    title: Towards the Sard-Smale theorem
+    summary: Develops measure-zero and subtype-set infrastructure used in work toward Sard and Sard-Smale theorems.
+    branch: differential topology
+    entry_module: LeanPool.Sard
+    authors:
+      - Floris van Doorn
+      - Michael Rothgang
+    source:
+      url: https://github.com/fpvandoorn/sard
+      github_repo: fpvandoorn/sard
+    status: verified
+    main_declarations:
+      - LeanPool.Sard.MeasureZero
+      - LeanPool.Sard.MeasureZero.iUnion
+    main_results:
+      - declaration: LeanPool.Sard.MeasureZero
+        informal: Defines measure-zero subsets of a finite-dimensional manifold by requiring null chart images for every preferred chart.
+      - declaration: LeanPool.Sard.MeasureZero.mono
+        informal: Proves that the manifold measure-zero predicate is monotone under taking subsets.
+      - declaration: LeanPool.Sard.MeasureZero.iUnion
+        informal: Proves closure of manifold measure-zero sets under countable indexed unions.
+      - declaration: LeanPool.Sard.toSubset_compact
+        informal: Shows that a compact subset remains compact when viewed inside a containing subtype.
+    tags:
+      - differential-topology
+      - measure-theory
+      - manifolds
+    msc:
+      - "57R35"
+      - "28A75"
