@@ -444,3 +444,25 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: lean-cwf
+    title: Categories with Families
+    summary: Formalizes categories with families, their type-and-term presheaves, context extension, and strict morphisms.
+    branch: type theory
+    entry_module: LeanPool.LeanCwf
+    authors:
+      - Joseph Eremondi
+    source:
+      url: https://github.com/JoeyEremondi/lean-cwf
+    status: verified
+    main_declarations:
+      - LeanPool.LeanCwf.CwF.Structure
+    main_results:
+      - declaration: LeanPool.LeanCwf.CwF.Structure
+        informal: Defines a category with families using a type-and-term presheaf, context extension, and terminal empty context.
+    tags:
+      - type-theory
+      - category-theory
+      - categories-with-families
+    msc:
+      - "03B15"
+      - "18D20"
