@@ -168,7 +168,6 @@ lemma boolTestExpectation_empirical_eq_avg
 /-- Identifies the game-theoretic payoff (a row distribution against a fixed column in
 the Bool game) with the corresponding test expectation. The translation that lets the
 MWU regret bound be applied directly to the compression problem. -/
-@[nolint unusedArguments]
 lemma boolGamePayoff_eq_boolTestExpectation
     {R : Type*} [Fintype R]
     {C : Type*} (M : R → C → Bool) (p : FinitePMF R) (c : C) :

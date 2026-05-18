@@ -41,8 +41,6 @@ private def liftClass {H : Type*} (A : Finset (H → Bool)) :
   { h | ∃ a ∈ A, h = extendBool a }
 
 /-! ## Boolean Expectation Bridges -/
-
-@[nolint unusedArguments]
 private lemma trueErrorReal_extend_false
     {H : Type*} [Fintype H]
     [MeasurableSpace H] [MeasurableSingletonClass H]

@@ -59,7 +59,7 @@ def IsFirstConsistent {X : Type u} (enum : ℕ → Concept X Bool)
 /-- Version space learner: select the first consistent hypothesis in the enumeration.
     Falls back to the zero concept (always false) if no hypothesis is consistent. -/
 noncomputable def versionSpaceLearner
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (enum : ℕ → Concept X Bool) : BatchLearner X Bool where
   hypotheses := range enum ∪ {fun _ => false}
   learn S := by
@@ -207,5 +207,3 @@ theorem versionSpaceLearner_measurableBatchLearner
     exact (measurableSet_versionSpace_true enum h_meas m).compl
   · -- b = true: countable union of measurable rectangles
     exact measurableSet_versionSpace_true enum h_meas m
-
-attribute [nolint unusedArguments] versionSpaceLearner

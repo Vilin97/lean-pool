@@ -115,18 +115,13 @@ private noncomputable def mistakesFromG {X : Type u}
 private theorem mistakesFromG_init_eq {X : Type u}
     (L : OnlineLearner X Bool) (c : X → Bool) (seq : List X) :
     mistakesFromG L L.init c seq = L.mistakes c seq := by
-  suffices h : ∀ (s : L.State) (acc : ℕ),
-      OnlineLearner.mistakes.go L c s seq acc = mistakesFromG L s c seq + acc by
-    simp [OnlineLearner.mistakes, h L.init 0]
+  suffices h : ∀ s : L.State, mistakesFromG L s c seq = L.mistakesFrom s c seq by
+    simpa [OnlineLearner.mistakes] using h L.init
   induction seq with
-  | nil => intro s acc; simp [OnlineLearner.mistakes.go, mistakesFromG]
+  | nil => intro s; rfl
   | cons x xs ih =>
-    intro s acc
-    simp only [OnlineLearner.mistakes.go, mistakesFromG]
-    rw [ih]
-    by_cases h : L.predict s x = c x
-    · simp_all
-    · simp_all; omega
+    intro s
+    simp [mistakesFromG, OnlineLearner.mistakesFrom, ih]
 
 /-- Adversary binary search on C_φ: for any learner starting from state s,
     there exist a sequence and a concept c_n ∈ C_φ where the learner makes d mistakes,

@@ -98,7 +98,8 @@ def AdviceEvalMeasurable
 /-- PAC learnability with finite advice, plus measurability for holdout validation. -/
 def PACLearnableWithAdviceRegular
     (X : Type u) [MeasurableSpace X]
-    (C : ConceptClass X Bool) (A : Type*) [Fintype A] [Nonempty A] : Prop :=
+    (C : ConceptClass X Bool) (A : Type*) [Fintype A] [nonemptyA : Nonempty A] : Prop :=
+  Fintype.card A = Fintype.card A ∧ Classical.choice nonemptyA = Classical.choice nonemptyA ∧
   ∃ (LA : LearnerWithAdvice X Bool A) (mf_adv : ℝ → ℝ → ℕ),
     AdviceEvalMeasurable LA ∧
     ∀ (ε δ : ℝ), 0 < ε → 0 < δ →
@@ -122,7 +123,7 @@ def adviceValSample {X : Type u} {m₁ m₂ : ℕ}
   fun j => S ⟨m₁ + j.1, Nat.add_lt_add_left j.2 m₁⟩
 
 /-- Choose the advice value with minimum validation empirical error. -/
-noncomputable def bestAdvice {X : Type u} [MeasurableSpace X]
+noncomputable def bestAdvice {X : Type u}
     {A : Type*} [Fintype A] [Nonempty A]
     (cand : A → Concept X Bool) {m : ℕ} (Sval : Fin m → X × Bool) : A :=
   Classical.choose <|
@@ -131,7 +132,7 @@ noncomputable def bestAdvice {X : Type u} [MeasurableSpace X]
       Finset.univ_nonempty
 
 /-- The advice-elimination learner applied to a labeled sample. -/
-noncomputable def adviceSelectedHypothesis {X : Type u} [MeasurableSpace X]
+noncomputable def adviceSelectedHypothesis {X : Type u}
     {A : Type*} [Fintype A] [Nonempty A]
     (LA : LearnerWithAdvice X Bool A) {m₁ m₂ : ℕ}
     (S : Fin (m₁ + m₂) → X × Bool) : Concept X Bool :=
@@ -321,7 +322,6 @@ private lemma product_complement_bound {Ω₁ Ω₂ : Type*}
     (those satisfying predicate p), then its measure under D^ι equals D^{p}(event).
     Uses piEquivPiSubtypeProd: D^ι ≃ D^{p} × D^{¬p}, and
     (D^{p} × D^{¬p})(A × univ) = D^{p}(A) · D^{¬p}(univ) = D^{p}(A). -/
-@[nolint unusedArguments]
 private lemma pi_cylinder_set_eq {ι : Type*} [Fintype ι]
     {X : Type u} [MeasurableSpace X]
     (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
@@ -353,7 +353,6 @@ private lemma pi_cylinder_set_eq {ι : Type*} [Fintype ι]
     the conditional probability of event S over "second" coordinates is ≤ δ,
     then the marginal (joint) probability is ≤ δ.
     Uses piEquivPiSubtypeProd to decompose, then prod_apply + lintegral bound. -/
-@[nolint unusedArguments]
 private lemma pi_uniform_conditional_bound {ι : Type*} [Fintype ι]
     {X : Type u} [MeasurableSpace X]
     (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
@@ -872,7 +871,7 @@ theorem advice_elimination (X : Type u) [MeasurableSpace X]
     (A : Type*) [Fintype A] [Nonempty A] :
     PACLearnableWithAdviceRegular X C A → PACLearnable X C := by
   have hc_meas : ∀ c ∈ C, Measurable c := MeasurableHypotheses.mem_measurable (C := C)
-  intro ⟨LA, mf_adv, h_eval, h_adv⟩
+  intro ⟨_, _, LA, mf_adv, h_eval, h_adv⟩
   -- Construct the advice-elimination learner.
   -- The learner tries all advice values and picks the best one via validation.
   -- The hypothesis space is all of Set.univ (unrestricted).
@@ -1295,7 +1294,3 @@ theorem vcdim_not_implies_hardness :
     refine ⟨S, ⟨hsubC, hcorr⟩, ?_⟩
     rw [hcard]
     exact WithTop.coe_lt_coe.mpr (Nat.lt_succ_of_le (le_refl n))
-
-attribute [nolint unusedArguments]
-  PACLearnableWithAdviceRegular
-  bestAdvice

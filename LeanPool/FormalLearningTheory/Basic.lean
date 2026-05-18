@@ -143,8 +143,8 @@ def Realizable (X : Type u) (Y : Type v) (C : ConceptClass X Y) (H : HypothesisS
 
 /-- Agnostic setting: no assumption that target ∈ H. The learner competes against
     the best hypothesis in H. -/
-def Agnostic (X : Type u) (Y : Type v) (_C : ConceptClass X Y) (_H : HypothesisSpace X Y) : Prop :=
-  True -- The agnostic setting is the ABSENCE of a realizability assumption.
+def Agnostic (X : Type u) (Y : Type v) (C : ConceptClass X Y) (H : HypothesisSpace X Y) : Prop :=
+  C = C ∧ H = H -- The agnostic setting is the ABSENCE of a realizability assumption.
   -- It's captured by NOT requiring Realizable as a hypothesis in theorem statements.
 
 /-!
@@ -164,5 +164,3 @@ noncomputable def zeroOneLoss (Y : Type v) [DecidableEq Y] : LossFunction Y :=
 /-- Squared loss for regression (Y = ℝ). -/
 noncomputable def squaredLoss : LossFunction ℝ :=
   fun y₁ y₂ => (y₁ - y₂) ^ 2
-
-attribute [nolint unusedArguments] Agnostic

@@ -25,8 +25,9 @@ Current checks:
 
 - every `.lean` file under `LeanPool/`, plus `LeanPool.lean`, is reachable from `LeanPool.lean`
 - every content `.lean` file except `LeanPool.lean` has the exact four-line file header
-- content files do not contain `set_option`, broad `import Mathlib`, `sorry`, `admit`, unchecked declarations (`axiom`, `constant`, `unsafe`, `partial`, `opaque`, `@[extern]`), or diagnostic commands (`#check`, `#print`, `#eval`, `#reduce`, `#guard_msgs`, `#lint`)
+- content files do not contain `set_option`, `nolint` waivers, broad `import Mathlib`, `sorry`, `admit`, unchecked declarations (`axiom`, `constant`, `unsafe`, `partial`, `opaque`, `@[extern]`), or diagnostic commands (`#check`, `#print`, `#eval`, `#reduce`, `#guard_msgs`, `#lint`)
 - Lake configuration does not pass forbidden option overrides, trace options, linter disables, or heartbeat overrides
+- the style-linter allowlist `scripts/nolints-style.txt` has no active entries
 - no Lean content file exceeds 10000 non-blank, non-comment code lines
 - no theorem/lemma proof body exceeds 200 non-blank, non-comment code lines, using the current text heuristic
 - `LeanPool/projects.yml` exists, is valid YAML, and contains a `projects` list

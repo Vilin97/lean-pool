@@ -168,39 +168,45 @@ Formalization of the ghost-gap machinery from Krapp & Wirth (2024, arXiv:2410.10
 Uses sSup over value sets (not ⨆) to avoid class-inference ambiguity.
 V-measurability is ONE-SIDED (not absolute) to match WellBehavedVC's event shape. -/
 
+/-- One-sided ghost-sample empirical error gap. -/
 noncomputable def oneSidedGhostGap
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (h : Concept X Bool) (c : Concept X Bool) (m : ℕ)
     (p : (Fin m → X) × (Fin m → X)) : ℝ :=
   EmpiricalError X Bool h (fun i => (p.2 i, c (p.2 i))) (zeroOneLoss Bool) -
   EmpiricalError X Bool h (fun i => (p.1 i, c (p.1 i))) (zeroOneLoss Bool)
 
+/-- Absolute value of the ghost-sample empirical error gap. -/
 noncomputable def absGhostGap
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (h : Concept X Bool) (c : Concept X Bool) (m : ℕ)
     (p : (Fin m → X) × (Fin m → X)) : ℝ :=
   |oneSidedGhostGap h c m p|
 
+/-- Value set of one-sided ghost gaps over a concept class. -/
 noncomputable def ghostGapVals
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (C : ConceptClass X Bool) (c : Concept X Bool) (m : ℕ)
     (p : (Fin m → X) × (Fin m → X)) : Set ℝ :=
   {r | ∃ h ∈ C, r = oneSidedGhostGap h c m p}
 
+/-- Value set of absolute ghost gaps over a concept class. -/
 noncomputable def absGhostGapVals
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (C : ConceptClass X Bool) (c : Concept X Bool) (m : ℕ)
     (p : (Fin m → X) × (Fin m → X)) : Set ℝ :=
   {r | ∃ h ∈ C, r = absGhostGap h c m p}
 
+/-- Supremum of one-sided ghost gaps over a concept class. -/
 noncomputable def ghostGapSup
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (C : ConceptClass X Bool) (c : Concept X Bool) (m : ℕ)
     (p : (Fin m → X) × (Fin m → X)) : ℝ :=
   sSup (ghostGapVals C c m p)
 
+/-- Supremum of absolute ghost gaps over a concept class. -/
 noncomputable def absGhostGapSup
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (C : ConceptClass X Bool) (c : Concept X Bool) (m : ℕ)
     (p : (Fin m → X) × (Fin m → X)) : ℝ :=
   sSup (absGhostGapVals C c m p)
@@ -249,10 +255,12 @@ EmpiricalError on m samples takes values in {0/m, 1/m, ..., m/m}.
 So the one-sided ghost gap takes values in a finite set (differences of grid values).
 Therefore sSup is attained, and {sSup ≥ ε} = {∃ h ∈ C, gap(h) ≥ ε}. -/
 
+/-- Finite grid of possible empirical-error values for `m` Boolean samples. -/
 noncomputable def empErrGrid (m : ℕ) : Finset ℝ :=
   if m = 0 then {0}
   else (Finset.range (m + 1)).image (fun (k : ℕ) => (k : ℝ) / (m : ℝ))
 
+/-- Finite grid of possible differences between two empirical-error values. -/
 noncomputable def ghostGapGrid (m : ℕ) : Finset ℝ :=
   ((empErrGrid m).product (empErrGrid m)).image (fun ab => ab.1 - ab.2)
 
@@ -406,14 +414,3 @@ def KrappWirthSeparationMeasTarget : Prop :=
     MeasurableHypotheses ℝ C ∧
     WellBehavedVCMeasTarget ℝ C ∧
     ¬ KrappWirthWellBehaved ℝ C
-
-attribute [nolint docBlame]
-  absGhostGap
-  ghostGapVals
-  absGhostGapVals
-  ghostGapSup
-  absGhostGapSup
-  empErrGrid
-  ghostGapGrid
-
-attribute [nolint docBlame unusedArguments] oneSidedGhostGap

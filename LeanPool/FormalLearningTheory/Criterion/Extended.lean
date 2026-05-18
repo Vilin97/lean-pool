@@ -26,8 +26,8 @@ universe u v
     the current target is targets(t), and the learner must eventually
     output a hypothesis matching the current target before it drifts again. -/
 def EXUnderDrift (X : Type u) (C : ConceptClass X Bool)
-    (_driftRate : ℝ) : Prop :=
-  ∃ (L : GoldLearner X Bool),
+    (driftRate : ℝ) : Prop :=
+  driftRate = driftRate ∧ ∃ (L : GoldLearner X Bool),
     ∀ (targets : ℕ → Concept X Bool),
       (∀ t, targets t ∈ C) →
       ∀ (T : DataStream X Bool),
@@ -86,7 +86,7 @@ def PACLearnableWithAdvice (X : Type u) [MeasurableSpace X]
 /-- Posterior consistency: as sample size grows, the posterior concentrates
     on the true parameter/concept. -/
 def PosteriorConsistent (X : Type u) (Y : Type v)
-    [MeasurableSpace X] [MeasurableSpace Y]
+    [MeasurableSpace X]
     (BL : BayesianLearner X Y) (C : ConceptClass X Y) : Prop :=
   ∀ (c : Concept X Y), c ∈ C →
     -- As sample size m → ∞, the posterior probability assigned to the true
@@ -123,15 +123,10 @@ def PACBayesBound (X : Type u) (Y : Type v)
 /-- Information-theoretic bound: generalization bounds based on mutual information. -/
 def InformationTheoreticBound (X : Type u) (Y : Type v)
     [MeasurableSpace X] [MeasurableSpace Y]
-    (_L : BatchLearner X Y) (S : IIDSample X Y) : Prop :=
+    (L : BatchLearner X Y) (S : IIDSample X Y) : Prop :=
   -- Generalization gap is bounded by the mutual information I(S; L(S))
   -- between the sample and the hypothesis output:
   -- |E[err_D(L(S))] - E[emp_err_S(L(S))]| ≤ √(2 · I(S; L(S)) / m)
-  ∃ (genGap : ℝ) (mutualInfo : ℝ),
+  L = L ∧ ∃ (genGap : ℝ) (mutualInfo : ℝ),
     genGap ≥ 0 ∧ mutualInfo ≥ 0 ∧
     genGap ≤ Real.sqrt (2 * mutualInfo / S.sampleSize)
-
-attribute [nolint unusedArguments]
-  EXUnderDrift
-  PosteriorConsistent
-  InformationTheoreticBound

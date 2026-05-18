@@ -47,8 +47,8 @@ abbrev GhostPairs (X : Type u) (m : ℕ) := (Fin m → X) × (Fin m → X)
     {(θ, p) | EmpErr(h_θ, ghost, c) - EmpErr(h_θ, train, c) ≥ ε/2}.
     This is Borel when e and c are measurable (Theorem A). -/
 def paramWitnessSet
-    {X : Type u} [MeasurableSpace X]
-    {Θ : Type*} [MeasurableSpace Θ]
+    {X : Type u}
+    {Θ : Type*}
     (e : Θ → Concept X Bool) (c : Concept X Bool) (m : ℕ) (ε : ℝ) :
     Set (Θ × GhostPairs X m) :=
   {q | EmpiricalError X Bool (e q.1) (fun i => (q.2.2 i, c (q.2.2 i))) (zeroOneLoss Bool) -
@@ -58,8 +58,8 @@ def paramWitnessSet
     Existential over the parameter: {p | ∃ θ, gap(θ, p) ≥ ε/2}.
     This is analytic when the witness set is Borel (Theorem B). -/
 def paramBadEvent
-    {X : Type u} [MeasurableSpace X]
-    {Θ : Type*} [MeasurableSpace Θ]
+    {X : Type u}
+    {Θ : Type*}
     (e : Θ → Concept X Bool) (c : Concept X Bool) (m : ℕ) (ε : ℝ) :
     Set (GhostPairs X m) :=
   Prod.snd '' paramWitnessSet e c m ε
@@ -68,8 +68,8 @@ def paramBadEvent
     patchEval(θ₁, θ₂, ρ)(x) = e₁(θ₁)(x) if r(ρ)(x), else e₂(θ₂)(x).
     Used for the closure principle (Theorem F). -/
 def patchEval
-    {X : Type u} [MeasurableSpace X]
-    {Θ₁ Θ₂ Ρ : Type*} [MeasurableSpace Θ₁] [MeasurableSpace Θ₂] [MeasurableSpace Ρ]
+    {X : Type u}
+    {Θ₁ Θ₂ Ρ : Type*}
     (e₁ : Θ₁ → Concept X Bool) (e₂ : Θ₂ → Concept X Bool)
     (r : Ρ → Concept X Bool) :
     (Θ₁ × Θ₂ × Ρ) → Concept X Bool :=
@@ -160,6 +160,7 @@ theorem borel_param_badEvent_analytic
 
 /-! ## Theorem C' (F4c): Sample-space specialization -/
 
+/-- Product measure on a pair of independent ghost samples. -/
 noncomputable abbrev GhostPairMeasure
     {X : Type u} [MeasurableSpace X]
     (D : MeasureTheory.Measure X) (m : ℕ) :
@@ -283,6 +284,3 @@ theorem patch_borel_param_wellBehavedVCMeasTarget
     WellBehavedVCMeasTarget X (Set.range (patchEval e₁ e₂ r)) :=
   borel_param_wellBehavedVCMeasTarget (patchEval e₁ e₂ r)
     (patchEval_measurable e₁ e₂ r he₁ he₂ hr)
-
-attribute [nolint docBlame] GhostPairMeasure
-attribute [nolint unusedArguments] paramWitnessSet patchEval
