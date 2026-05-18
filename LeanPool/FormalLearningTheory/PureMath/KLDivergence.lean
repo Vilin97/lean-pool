@@ -30,6 +30,7 @@ open Finset
 /-- A probability mass function over a finite type.
     Named FinitePMF to avoid conflict with Mathlib's PMF. -/
 structure FinitePMF (H : Type*) [Fintype H] where
+  /-- Probability assigned to each point. -/
   prob : H → ℝ
   prob_nonneg : ∀ h, 0 ≤ prob h
   prob_sum_one : ∑ h : H, prob h = 1
@@ -57,5 +58,3 @@ noncomputable def expectFinitePMF {H : Type*} [Fintype H]
 /-- Typeclass asserting that a FinitePMF has strictly positive weights. -/
 class HasPositivePrior {H : Type*} [Fintype H] (P : FinitePMF H) : Prop where
   pos : ∀ h, 0 < P.prob h
-
-attribute [nolint docBlame] FinitePMF.prob

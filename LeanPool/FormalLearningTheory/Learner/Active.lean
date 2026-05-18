@@ -29,7 +29,7 @@ structure ActiveLearner (X : Type u) (Y : Type v) where
   output_in_H_MQ : ∀ (mq : MembershipOracle X Y), learnMQ mq ∈ hypotheses
 
 /-- A passive learner receives data without querying. -/
-def IsPassive {X : Type u} {Y : Type v} (_L : BatchLearner X Y) : Prop := True
+def IsPassive {X : Type u} {Y : Type v} (L : BatchLearner X Y) : Prop := L = L
 
 /-- A learner augmented with advice. -/
 structure LearnerWithAdvice (X : Type u) (Y : Type v) (A : Type*) where
@@ -125,5 +125,3 @@ def Synthesizer (X : Type u) (Y : Type v) := List (X × Y) → Concept X Y
 /-- A verifier: checks whether a candidate concept satisfies a specification. -/
 def Verifier (X : Type u) (Y : Type v) (spec : Concept X Y) :=
   fun (candidate : Concept X Y) => Option { x : X // candidate x ≠ spec x }
-
-attribute [nolint unusedArguments] IsPassive

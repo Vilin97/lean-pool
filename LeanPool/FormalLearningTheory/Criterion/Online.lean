@@ -15,17 +15,18 @@ Characterized by Littlestone dimension.
 
 universe u v
 
+/-- Count mistakes from an arbitrary online-learner state. -/
+noncomputable def OnlineLearner.mistakesFrom {X : Type u} {Y : Type v} [DecidableEq Y]
+    (L : OnlineLearner X Y) (state : L.State) (c : Concept X Y) : List X → ℕ
+  | [] => 0
+  | x :: xs =>
+    (if L.predict state x ≠ c x then 1 else 0) +
+      L.mistakesFrom (L.update state x (c x)) c xs
+
 /-- Helper: run an online learner on a sequence, counting mistakes. -/
 noncomputable def OnlineLearner.mistakes {X : Type u} {Y : Type v} [DecidableEq Y]
     (L : OnlineLearner X Y) (c : Concept X Y) (seq : List X) : ℕ :=
-  let rec go (state : L.State) (remaining : List X) (count : ℕ) : ℕ :=
-    match remaining with
-    | [] => count
-    | x :: xs =>
-      let pred := L.predict state x
-      let newState := L.update state x (c x)
-      go newState xs (if pred ≠ c x then count + 1 else count)
-  go L.init seq 0
+  L.mistakesFrom L.init c seq
 
 /-- Mistake-bounded learning: the learner makes at most M mistakes on ANY sequence.
     No distribution assumption. Characterized by Littlestone dimension. -/
@@ -42,14 +43,12 @@ def OnlineLearnable (X : Type u) (Y : Type v) [DecidableEq Y] (C : ConceptClass 
 /-- Helper: cumulative loss of an online learner on a sequence. -/
 noncomputable def OnlineLearner.cumulativeLoss {X : Type u} {Y : Type v}
     (L : OnlineLearner X Y) (loss : LossFunction Y) (seq : List (X × Y)) : ℝ :=
-  let rec go (state : L.State) (remaining : List (X × Y)) (acc : ℝ) : ℝ :=
-    match remaining with
-    | [] => acc
-    | (x, y) :: rest =>
-      let pred := L.predict state x
-      let newState := L.update state x y
-      go newState rest (acc + loss pred y)
-  go L.init seq 0
+  (seq.foldl
+    (fun stateAndLoss sample =>
+      let prediction := L.predict stateAndLoss.1 sample.1
+      (L.update stateAndLoss.1 sample.1 sample.2,
+        stateAndLoss.2 + loss prediction sample.2))
+    (L.init, 0)).2
 
 /-- Helper: cumulative loss of a fixed hypothesis on a sequence. -/
 noncomputable def fixedHypothesisLoss {X : Type u} {Y : Type v}
@@ -64,7 +63,3 @@ def RegretBounded (X : Type u) (Y : Type v)
     ∀ (seq : List (X × Y)),
       ∀ (h : Concept X Y), h ∈ H →
         L.cumulativeLoss loss seq - fixedHypothesisLoss h loss seq ≤ bound seq.length
-
-attribute [nolint docBlame]
-  OnlineLearner.mistakes.go
-  OnlineLearner.cumulativeLoss.go

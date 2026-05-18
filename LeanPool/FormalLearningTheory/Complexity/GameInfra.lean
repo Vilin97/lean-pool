@@ -76,18 +76,6 @@ noncomputable def LittlestoneDim (X : Type) (C : ConceptClass X Bool) :
     (↑(↑n : WithTop ℕ) : WithBot (WithTop ℕ))
 
 -- ============================================================
--- COUNTING MISTAKES FROM ARBITRARY STATE
--- ============================================================
-
-/-- Count mistakes starting from state s. -/
-noncomputable def OnlineLearner.mistakesFrom {X : Type}
-    (L : OnlineLearner X Bool) (s : L.State) (c : X → Bool) : List X → ℕ
-  | [] => 0
-  | x :: xs =>
-    (if L.predict s x ≠ c x then 1 else 0) +
-      L.mistakesFrom (L.update s x (c x)) c xs
-
--- ============================================================
 -- CORE ADVERSARY LEMMA
 -- ============================================================
 
@@ -125,18 +113,7 @@ theorem adversary_core {X : Type}
 theorem mistakesFrom_init_eq {X : Type}
     (L : OnlineLearner X Bool) (c : X → Bool) (seq : List X) :
     L.mistakesFrom L.init c seq = L.mistakes c seq := by
-  suffices h : ∀ (s : L.State) (acc : ℕ),
-      OnlineLearner.mistakes.go L c s seq acc = L.mistakesFrom s c seq + acc by
-    simp [OnlineLearner.mistakes, h L.init 0]
-  induction seq with
-  | nil => intro s acc; simp [OnlineLearner.mistakes.go, OnlineLearner.mistakesFrom]
-  | cons x xs ih =>
-    intro s acc
-    simp only [OnlineLearner.mistakes.go, OnlineLearner.mistakesFrom]
-    rw [ih]
-    by_cases h : L.predict s x = c x
-    · simp_all
-    · simp_all; omega
+  rfl
 
 -- ============================================================
 -- VERSION SPACE AND SOA
