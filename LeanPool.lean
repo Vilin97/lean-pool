@@ -236,3 +236,16 @@ import LeanPool.Sensitivity.Subcube
 import LeanPool.SumsThreeSquares
 import LeanPool.SumsThreeSquares.MinkowskiConvex
 import LeanPool.SumsThreeSquares.SumThreeSquares
+import LeanPool.ZFLean
+import LeanPool.ZFLean.Basic
+import LeanPool.ZFLean.Booleans
+import LeanPool.ZFLean.Embeddings
+import LeanPool.ZFLean.Functions
+import LeanPool.ZFLean.Integers
+import LeanPool.ZFLean.Isomorphisms
+import LeanPool.ZFLean.IsomorphismsFunsToPowRel
+import LeanPool.ZFLean.IsomorphismsZFNatIso
+import LeanPool.ZFLean.Naturals
+import LeanPool.ZFLean.Rationals
+import LeanPool.ZFLean.Sum
+import LeanPool.ZFLean.Tactics
