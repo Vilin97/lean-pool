@@ -444,3 +444,33 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: monsky
+    title: "Monsky's Theorem: basic geometry"
+    summary: Formalizes basic point, segment, triangle, determinant, and unit-area geometry used in Monsky's theorem.
+    branch: discrete geometry
+    entry_module: LeanPool.Monsky
+    authors:
+      - Dhyan Aranha et al.
+    source:
+      url: https://github.com/dhyan-aranha/Monsky
+      github_repo: dhyan-aranha/Monsky
+    status: verified
+    main_declarations:
+      - LeanPool.Monsky.det_unitTriangle
+      - LeanPool.Monsky.triangleArea_unitTriangle
+    main_results:
+      - declaration: LeanPool.Monsky.det_unitTriangle
+        informal: Computes the oriented determinant of the standard unit triangle as 1.
+      - declaration: LeanPool.Monsky.triangleArea_unitTriangle
+        informal: Computes the determinant-normalized area of the standard unit triangle as 1/2.
+      - declaration: LeanPool.Monsky.reverseSegment_involutive
+        informal: Proves that reversing a segment twice returns the original segment.
+      - declaration: LeanPool.Monsky.det_swap_vertices
+        informal: Proves that swapping the first two triangle vertices negates the determinant.
+    tags:
+      - geometry
+      - combinatorics
+      - discrete-geometry
+    msc:
+      - "52C20"
+      - "05B45"
