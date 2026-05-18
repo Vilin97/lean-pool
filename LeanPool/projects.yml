@@ -452,7 +452,10 @@ projects:
     authors:
       - Vincent Trélat
     source:
-      url: https://github.com/VTrelat/ZFLean
+      title: Set Theory
+      authors:
+        - Thomas Jech
+      url: https://doi.org/10.1007/3-540-44761-X
       github_repo: VTrelat/ZFLean
     status: verified
     main_declarations:
