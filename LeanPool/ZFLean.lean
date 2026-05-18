@@ -20,9 +20,7 @@ import LeanPool.ZFLean.Sum
 /-!
 # ZFLean
 
-Source: Thomas Jech, "Set Theory", 3rd millennium ed., Springer, 2003,
-  Chapters 1-3, for ZFC set constructions and Cantor-Bernstein; formalization
-  source: url:https://github.com/VTrelat/ZFLean
+Source: url:https://doi.org/10.1007/3-540-44761-X
 Authors: Vincent Trélat
 Status: verified
 Main declarations: `ZFSet.isIso_of_biembedding`, `ZFSet.ZFNat.induction`, `ZFSet.ZFInt.induction`
