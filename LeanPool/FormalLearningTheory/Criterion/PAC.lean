@@ -95,12 +95,10 @@ def AgnosticPACLearnable (X : Type u) [MeasurableSpace X]
     This is a deterministic, query-based paradigm  -  no distributional assumptions.
     This is a genuinely different paradigm from PAC  -  deterministic, query-based,
     with no distributional assumptions. -/
-def ExactLearnable (X : Type u) [DecidableEq X] [Fintype X]
+def ExactLearnable (X : Type u)
     (C : ConceptClass X Bool) : Prop :=
   ∃ (L : ActiveLearner X Bool),
     ∀ (c : Concept X Bool), c ∈ C →
       ∀ (mq : MembershipOracle X Bool),
         mq.target = c →
           L.learnMQ mq = c
-
-attribute [nolint unusedArguments] ExactLearnable

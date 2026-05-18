@@ -7,8 +7,6 @@ import LeanPool.Clawristotle.Defs
 import LeanPool.Clawristotle.Section3
 
 /-!
-set_option linter.style.longLine false
-
 # Polynomial Matching (Section 5)
 
 Temperature is spatially constant, Lorentz force expansion, and polynomial

@@ -28,7 +28,7 @@ and a jointly measurable combiner `F : X × (Fin k → Bool) → Bool`, returns 
 whose prediction at `x` is `F` applied to `x` and the vector of base predictions. The
 foundational closure operation: every other operation in this file is a special case. -/
 noncomputable def combineLearner
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (k : ℕ) (F : X → (Fin k → Bool) → Bool)
     (L : Fin k → BatchLearner X Bool) : BatchLearner X Bool where
   hypotheses := {h | ∃ hs : Fin k → Concept X Bool,
@@ -67,7 +67,7 @@ and outputs the majority of their predictions at each query point. Used in the
 probability at least `2 / 3` to a full PAC learner; the quantitative `7 / 12`-Chebyshev
 step lives in the proof of that reduction, not in the construction itself. -/
 noncomputable def boostLearner
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (k : ℕ) (L : Fin k → BatchLearner X Bool) : BatchLearner X Bool :=
   combineLearner k (fun _ v => majority_vote k v) L
 
@@ -93,7 +93,7 @@ not required by the definition and appears only in the accompanying
 `measurableBatchLearner_interp` theorem. The constructive content of the
 `Complexity/Interpolation.lean` module. -/
 noncomputable def interpLearner
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (A : Set X) (L₁ L₂ : BatchLearner X Bool) : BatchLearner X Bool :=
   combineLearner 2
     (fun x v => if x ∈ A then v 0 else v 1)
@@ -155,7 +155,7 @@ hypothesis space is the union of the component spaces. No measurability requirem
 `measurableBatchLearner_concat` theorem adds that hypothesis to derive closure under
 the uniform-measurable family. The construction underlying the monadic `bind`. -/
 noncomputable def concatLearner
-    {X : Type u} [MeasurableSpace X]
+    {X : Type u}
     (L : ℕ → BatchLearner X Bool)
     (sel : {m : ℕ} → (Fin m → X × Bool) → ℕ) : BatchLearner X Bool where
   hypotheses := ⋃ n, (L n).hypotheses
@@ -179,5 +179,3 @@ theorem measurableBatchLearner_concat
     exact (hL.eval_measurable m).comp
       (Measurable.prodMk ((hsel m).comp measurable_fst)
         (Measurable.prodMk measurable_fst measurable_snd))
-
-attribute [nolint unusedArguments] combineLearner concatLearner

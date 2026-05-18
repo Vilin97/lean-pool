@@ -30,7 +30,9 @@ universe u v
 
 /-- An alphabet for formal language theory. Finite type with decidable equality. -/
 class Alphabet (Sym : Type*) where
+  /-- The alphabet is finite. -/
   [toFintype : Fintype Sym]
+  /-- Symbols have decidable equality. -/
   [toDecidableEq : DecidableEq Sym]
 
 /-- A word over an alphabet. -/
@@ -62,8 +64,11 @@ def DFA'.accepts {Sym : Type*} {Q : Type*} [Fintype Q] [DecidableEq Q]
 
 /-- Nondeterministic finite automaton. -/
 structure NFA' (Sym : Type*) (Q : Type*) [Fintype Q] where
+  /-- Transition relation from a state and input symbol. -/
   step : Q → Sym → Set Q
+  /-- Initial states. -/
   start : Set Q
+  /-- Accepting states. -/
   accept : Set Q
 
 /-- A regular language is a language accepted by some DFA. -/
@@ -103,9 +108,13 @@ def IsContextFree (Sym : Type*) (L : FormalLanguage Sym) : Prop :=
 
 /-- Pushdown automaton - extends DFA with a stack. -/
 structure PDA (Sym : Type*) (Q : Type*) (Γ : Type*) where
+  /-- Transition relation using an optional input symbol and top stack symbol. -/
   step : Q → Option Sym → Γ → Set (Q × List Γ)
+  /-- Initial control state. -/
   start : Q
+  /-- Initial stack symbol. -/
   startStack : Γ
+  /-- Accepting control states. -/
   accept : Set Q
 
 /-!
@@ -132,18 +141,18 @@ def PartialComputable (α β : Type*) [Encodable α] [Encodable β] :=
     ∀ a : α, (f a).map Encodable.encode = g (Encodable.encode a) }
 
 /-- Recursively enumerable set. -/
-def RESet (α : Type*) [Encodable α] :=
+def RESet (α : Type*) :=
   { S : Set α // ∃ f : ℕ → Option α, S = { a | ∃ n, f n = some a } }
 
 /-- Limiting recursion: functions that converge in the limit.
     f is limiting-recursive if there exists a total computable g such that
     f(x) = lim_{s→∞} g(x, s). This is the computational substrate of EX-learning. -/
-def LimitingRecursive (α β : Type*) [Encodable α] [Encodable β] :=
+def LimitingRecursive (α β : Type*) :=
   { f : α → β // ∃ g : α → ℕ → β, (∀ x, ∃ s₀, ∀ s ≥ s₀, g x s = f x) }
 
 /-- Δ₀₂ class: sets whose characteristic function is limiting-recursive.
     EX-learnable concept classes have Δ₀₂ membership. -/
-def Delta02Class (α : Type*) [Encodable α] :=
+def Delta02Class (α : Type*) :=
   { S : Set α // ∃ f : α → ℕ → Bool, ∀ x, (x ∈ S ↔ ∃ s₀, ∀ s ≥ s₀, f x s = true) }
 
 /-!
@@ -181,7 +190,9 @@ structure MDLPrinciple (X : Type u) (Y : Type v) [Inhabited (Concept X Y)] where
     MML seeks the hypothesis that minimizes expected message length under
     a prior and likelihood model. -/
 structure MMLPrinciple (X : Type u) (Y : Type v) [Inhabited (Concept X Y)] where
+  /-- Description length of a hypothesis. -/
   hypothesisLength : Concept X Y → ℝ
+  /-- Data-fit cost of a hypothesis on observations. -/
   dataFit : Concept X Y → List (X × Y) → ℝ
   /-- MML selection: minimize total message length (hypothesisLength + dataFit).
       Inhabited provides the Nonempty witness for epsilon. -/
@@ -233,21 +244,3 @@ def ExecutionTrace (X : Type u) (Y : Type v) := ℕ → Concept X Y
 
 /-- A partial trace that may not be defined at all time steps. -/
 def PartialTrace (X : Type u) (Y : Type v) := ℕ → Option (Concept X Y)
-
-attribute [nolint docBlame]
-  Alphabet.toFintype
-  Alphabet.toDecidableEq
-  NFA'.step
-  NFA'.start
-  NFA'.accept
-  PDA.step
-  PDA.start
-  PDA.startStack
-  PDA.accept
-  MMLPrinciple.hypothesisLength
-  MMLPrinciple.dataFit
-
-attribute [nolint unusedArguments]
-  RESet
-  LimitingRecursive
-  Delta02Class

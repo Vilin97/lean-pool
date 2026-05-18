@@ -81,7 +81,7 @@ conceptClassToFinsetFamily C = C.image conceptToFinset.
 
 /-- Convert a concept (X → Bool) to its level set as a Finset.
     This is the atomic bridge from function-representation to set-representation. -/
-def conceptToFinset {X : Type u} [Fintype X] [DecidableEq X] (c : X → Bool) : Finset X :=
+def conceptToFinset {X : Type u} [Fintype X] (c : X → Bool) : Finset X :=
   Finset.univ.filter (fun x => c x = true)
 
 /-- Convert a finite concept class to a Finset family.
@@ -94,7 +94,7 @@ def conceptClassToFinsetFamily {X : Type u} [Fintype X] [DecidableEq X]
 /-- The concept-to-finset map is injective: distinct Bool-valued functions
     produce distinct level sets. This ensures conceptClassToFinsetFamily
     preserves the cardinality of C. -/
-theorem conceptToFinset_injective {X : Type u} [Fintype X] [DecidableEq X] :
+theorem conceptToFinset_injective {X : Type u} [Fintype X] :
     Function.Injective (conceptToFinset (X := X)) := by
   intro c₁ c₂ h
   funext x
@@ -249,7 +249,6 @@ theorem vcdim_eq_finset_vcdim {X : Type u} [Fintype X] [DecidableEq X]
 
 /-- VCDim is finite for finite concept classes over finite domains.
     This is a consequence of the bridge: Finset.vcDim is always finite (it's ℕ). -/
-@[nolint unusedArguments]
 theorem vcdim_finite_of_fintype {X : Type u}
     (hX : Fintype X) (hdec : DecidableEq X) (C : Finset (X → Bool)) :
     VCDim X (↑C : Set (X → Bool)) < ⊤ := by
@@ -278,15 +277,14 @@ def restrictToFinset {X : Type u} (c : X → Bool) (S : Finset X) : ↥S → Boo
 
 /-- Restrict a finite concept class to a Finset S.
     Produces a Finset of functions S → Bool (the distinct restrictions). -/
-def restrictConceptClass {X : Type u} [DecidableEq X]
+def restrictConceptClass {X : Type u}
     (C : Finset (X → Bool)) (S : Finset X) : Finset (↥S → Bool) :=
   C.image (fun c => restrictToFinset c S)
 
 /-- The number of distinct restrictions is our GrowthFunction.
     GrowthFunction X C m = max over m-element S of |C|_S|.
     This lemma connects GrowthFunction to the restriction operation. -/
-@[nolint unusedArguments]
-theorem growthFunction_le_card_restrict {X : Type u} [DecidableEq X]
+theorem growthFunction_le_card_restrict {X : Type u}
     (C : Finset (X → Bool)) (S : Finset X) :
     (restrictConceptClass C S).card ≤ C.card := by
   exact Finset.card_image_le
@@ -304,7 +302,6 @@ def funcToSubsetFamily {X : Type u} [DecidableEq X] (S : Finset X)
   fs.image (fun f => Finset.univ.filter (fun x => f x = true))
 
 -- The map f ↦ univ.filter (f · = true) is injective on Bool-valued functions.
-@[nolint unusedArguments]
 private theorem funcToSubset_injective {X : Type u} (S : Finset X) :
     Function.Injective (fun (f : ↥S → Bool) => Finset.univ.filter (fun x => f x = true)) := by
   intro f g h
@@ -438,8 +435,7 @@ theorem card_restrict_le_sauer_shelah_bound {X : Type u} [Fintype X] [DecidableE
     4. sSup of uniform bound ≤ bound -/
 -- Helper: the set of restrictions represented by `C` has ncard equal to
 -- `(restrictConceptClass C S).card`.
-@[nolint unusedArguments]
-private theorem ncard_restrictions_eq_card {X : Type u} [DecidableEq X]
+private theorem ncard_restrictions_eq_card {X : Type u}
     (C : Finset (X → Bool)) (S : Finset X) :
     ({ f : ↥S → Bool | ∃ c ∈ (↑C : Set (X → Bool)),
         ∀ x : ↥S, c ↑x = f x } : Set (↥S → Bool)).ncard =
@@ -776,5 +772,3 @@ theorem compression_bounds_vcdim (X : Type u)
       Finset.exists_ne_map_eq_of_card_lt_of_maps_to h_card_lt
         (fun x _ => h_maps_to x)
     exact absurd heq (fun h => hne (h_inj_false h)))
-
-attribute [nolint unusedArguments] conceptToFinset restrictConceptClass

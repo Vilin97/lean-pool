@@ -228,6 +228,10 @@ def _check_forbidden_lean_text(root: Path) -> list[_QualityError]:
                 errors.append(
                     _QualityError(path, line_number, "set_option is forbidden")
                 )
+            if re.search(r"\bnolint\b", line):
+                errors.append(
+                    _QualityError(path, line_number, "nolint waiver is forbidden")
+                )
             if re.match(r"^\s*(?:public\s+)?import\s+Mathlib\s*$", line):
                 errors.append(
                     _QualityError(
@@ -276,6 +280,21 @@ def _check_lake_options(root: Path) -> list[_QualityError]:
                         path, _line_number(text, match.start()), f"{label} is forbidden"
                     )
                 )
+    return errors
+
+
+def _check_style_nolints(root: Path) -> list[_QualityError]:
+    """Reject style-linter allowlist entries."""
+    path = root / "scripts" / "nolints-style.txt"
+    if not path.exists():
+        return []
+    errors: list[_QualityError] = []
+    for line_number, line in enumerate(path.read_text().splitlines(), start=1):
+        stripped = line.strip()
+        if stripped and not stripped.startswith(("--", "#")):
+            errors.append(
+                _QualityError(path, line_number, "style linter waiver is forbidden")
+            )
     return errors
 
 
@@ -970,6 +989,7 @@ def run_checks(root: Path, *, skip_lean_axioms: bool = False) -> list[_QualityEr
         _check_headers,
         _check_forbidden_lean_text,
         _check_lake_options,
+        _check_style_nolints,
         _check_file_sizes,
         _check_proof_sizes,
         _check_projects,

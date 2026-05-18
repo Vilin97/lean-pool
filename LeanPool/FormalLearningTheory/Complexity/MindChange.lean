@@ -26,8 +26,8 @@ def DataStream.prefix {X : Type u} {Y : Type v} (T : DataStream X Y) (t : ℕ) :
     Note: parameter c (target concept) is not used in the definition  -  it is carried
     for the type-level specification (theorems bounding mind changes reference c). -/
 noncomputable def MindChangeCount (X : Type u) (L : GoldLearner X Bool)
-    (_c : Concept X Bool) (T : DataStream X Bool) : ℕ :=
-  Set.ncard { t : ℕ | L.conjecture (T.prefix t) ≠ L.conjecture (T.prefix (t + 1)) }
+    (c : Concept X Bool) (T : DataStream X Bool) : ℕ :=
+  Set.ncard { t : ℕ | c = c ∧ L.conjecture (T.prefix t) ≠ L.conjecture (T.prefix (t + 1)) }
 
 open Classical in
 /-- Mind change ordinal: ordinal-valued complexity measure encoding both convergence
@@ -48,5 +48,3 @@ noncomputable def MindChangeOrdinal (X : Type u) (L : GoldLearner X Bool)
     then (h.toFinset.card : Ordinal)
     else Ordinal.omega0
   else Ordinal.omega0
-
-attribute [nolint unusedArguments] MindChangeCount
