@@ -444,3 +444,30 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: factorizationsystems
+    title: Factorization Systems
+    summary: Formalizes factorization systems in category theory, including slice stability, orthogonality characterizations, and the epi-mono example in Set.
+    branch: category theory
+    entry_module: LeanPool.FactorizationSystems
+    authors:
+      - Ivan Kobe
+    source:
+      url: https://github.com/ivankobe/FactorizationSystems
+      github_repo: ivankobe/FactorizationSystems
+    status: verified
+    main_declarations:
+      - CategoryTheory.FactorizationSystem
+      - CategoryTheory.FactorizationSystemSlice
+      - CategoryTheory.FactorizationSystem_characterization
+    main_results:
+      - declaration: CategoryTheory.FactorizationSystem
+        informal: Defines factorization systems on a category by specified left and right morphism classes with unique factorizations.
+      - declaration: CategoryTheory.FactorizationSystemSlice
+        informal: Shows that a factorization system descends to each slice category.
+      - declaration: CategoryTheory.FactorizationSystem_characterization
+        informal: Constructs a factorization system from replete orthogonal classes forming a weak factorization system.
+    tags:
+      - category-theory
+      - factorization-systems
+    msc:
+      - "18A32"
