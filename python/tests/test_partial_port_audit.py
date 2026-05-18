@@ -65,6 +65,26 @@ def test_evaluate_stats_flags_missing_large_file() -> None:
     assert finding.missing_files == ("Lean4/directed_van_kampen.lean",)
 
 
+def test_evaluate_stats_lists_largest_missing_files_for_ratio_gap() -> None:
+    """Suspicious partial imports report useful filenames even for small files."""
+    imported = LeanStats((LeanFile("LeanPool/Foo/Main.lean", 100, "main"),))
+    upstream = LeanStats(
+        (
+            LeanFile("Foo/Main.lean", 100, "main"),
+            LeanFile("Foo/SkippedA.lean", 80, "skippeda"),
+            LeanFile("Foo/SkippedB.lean", 60, "skippedb"),
+            LeanFile("Foo/SkippedC.lean", 40, "skippedc"),
+        )
+    )
+    finding = evaluate_stats("LeanPool.Foo", "owner/foo", imported, upstream)
+    assert finding is not None
+    assert finding.missing_files == (
+        "Foo/SkippedA.lean",
+        "Foo/SkippedB.lean",
+        "Foo/SkippedC.lean",
+    )
+
+
 def test_evaluate_stats_accepts_close_import() -> None:
     """A near-complete import passes the tolerance check."""
     imported = LeanStats((LeanFile("LeanPool/Foo/Main.lean", 920, "main"),))

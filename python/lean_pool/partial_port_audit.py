@@ -75,7 +75,7 @@ class AuditFinding:
         return (
             f"{self.project}: imported {self.imported_files}/{self.upstream_files} "
             f"Lean files and {self.imported_loc}/{self.upstream_loc} non-comment "
-            f"LOC from {self.upstream_repo}; missing large upstream filenames: "
+            f"LOC from {self.upstream_repo}; largest unmatched upstream filenames: "
             f"{missing}"
         )
 
@@ -245,15 +245,22 @@ def evaluate_stats(
     )
     cutoff = 1.0 - loc_tolerance
     imported_stems = imported.normalized_stems
+    missing_upstream_files = tuple(
+        file
+        for file in sorted(upstream.files, key=lambda item: item.loc, reverse=True)
+        if file.normalized_stem not in imported_stems
+    )
     large_file_cutoff = max(25, int(upstream.loc * loc_tolerance))
     missing_files = tuple(
-        file.path
-        for file in sorted(upstream.files, key=lambda item: item.loc, reverse=True)
-        if file.loc >= large_file_cutoff and file.normalized_stem not in imported_stems
+        file.path for file in missing_upstream_files if file.loc >= large_file_cutoff
     )[:MAX_MISSING_FILES]
     file_count_suspicious = upstream.file_count >= 3 and file_ratio < cutoff
     if loc_ratio >= cutoff and not file_count_suspicious and not missing_files:
         return None
+    if not missing_files:
+        missing_files = tuple(file.path for file in missing_upstream_files)[
+            :MAX_MISSING_FILES
+        ]
     return AuditFinding(
         project=project,
         upstream_repo=upstream_repo,
