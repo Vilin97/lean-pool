@@ -5,7 +5,6 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 import LeanPool.OSforGFF.General.PositiveDefinite
-import LeanPool.OSforGFF.General.SchurProduct
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.Complex.Basic

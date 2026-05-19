@@ -5,37 +5,6 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import Mathlib.Algebra.Algebra.Defs
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.LinearMap
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Analysis.Normed.Module.RCLike.Basic
-import Mathlib.Analysis.Normed.Module.RCLike.Real
-import Mathlib.Analysis.Normed.Module.RCLike.Extend
-import Mathlib.Analysis.RCLike.Extend
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Normed.Group.Uniform
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Calculus.FDeriv.Basic
-import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
-
-import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
-import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.FiniteMeasureExt
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-
-import Mathlib.LinearAlgebra.UnitaryGroup
-import Mathlib.LinearAlgebra.GeneralLinearGroup.Basic
-import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-import Mathlib.GroupTheory.GroupAction.Basic
-
 -- Import our functional analysis utilities
 import LeanPool.OSforGFF.General.FunctionalAnalysis
 -- Bochner library provides the cylinder σ-algebra MeasurableSpace instance on WeakDual

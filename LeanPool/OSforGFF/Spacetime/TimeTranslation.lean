@@ -5,12 +5,6 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.LineDeriv.Basic
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
-import Mathlib.Tactic
-
 import LeanPool.OSforGFF.Spacetime.Basic
 
 /-!

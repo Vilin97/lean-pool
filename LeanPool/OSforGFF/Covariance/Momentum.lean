@@ -23,8 +23,6 @@ import Mathlib.Probability.Moments.IntegrableExpMul
 -- Import our basic definitions
 import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Spacetime.Euclidean
-import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.Schwinger.Defs
 import LeanPool.OSforGFF.General.FunctionalAnalysis
 import LeanPool.OSforGFF.General.BesselFunction
 

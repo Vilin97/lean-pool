@@ -18,13 +18,8 @@ import Mathlib.Tactic.NormNum
 import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.OS.Axioms
 import LeanPool.OSforGFF.Measure.Construct
-import LeanPool.OSforGFF.Measure.IsGaussian
 import LeanPool.OSforGFF.Spacetime.Euclidean
 import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
-import LeanPool.OSforGFF.General.FunctionalAnalysis
-import LeanPool.OSforGFF.Measure.Minlos
-import LeanPool.OSforGFF.Covariance.Position
-import LeanPool.OSforGFF.Measure.MinlosAnalytic
 import LeanPool.OSforGFF.Schwinger.Defs
 
 /-!

@@ -5,21 +5,6 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import Mathlib.Tactic
-import Mathlib.Data.Complex.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Function.LpSpace.Basic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Factorial.DoubleFactorial
-import Mathlib.Topology.Constructions
-
 import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.OS.Axioms
 import LeanPool.OSforGFF.Covariance.Position

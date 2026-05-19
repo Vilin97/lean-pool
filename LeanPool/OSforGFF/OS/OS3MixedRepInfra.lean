@@ -5,22 +5,9 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Factorial.DoubleFactorial
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.Complex.Exponential
-import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
+import Mathlib.MeasureTheory.Integral.Gamma
 import Mathlib.Analysis.SpecialFunctions.Gamma.Beta
 import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Order.Filter.Basic
-import Mathlib.MeasureTheory.Function.JacobianOneDim
-
 import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Spacetime.Euclidean
 import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry

@@ -5,12 +5,6 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import Mathlib.Tactic
-import Mathlib.Analysis.Calculus.BumpFunction.Convolution
-import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.Order.Filter.Basic
-
 import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Schwinger.Defs
 

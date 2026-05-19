@@ -5,7 +5,6 @@ Authors: Michael R. Douglas
 -/
 
 import LeanPool.OSforGFF.Bochner.Main
-import LeanPool.OSforGFF.Minlos.NuclearSpace
 
 /-!
 # Finite-Dimensional Marginals for Minlos' Theorem

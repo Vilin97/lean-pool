@@ -8,16 +8,9 @@ import Mathlib.RingTheory.Polynomial.Hermite.Basic
 import Mathlib.RingTheory.Polynomial.Hermite.Gaussian
 import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.PSeries
-import Mathlib.Topology.Algebra.InfiniteSum.Order
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.Topology.Algebra.Polynomial
 import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
-import Mathlib.MeasureTheory.Measure.Haar.NormedSpace
 import Mathlib.Analysis.Distribution.AEEqOfIntegralContDiff
-import Mathlib.Analysis.Fourier.FourierTransform
-import Mathlib.Analysis.Fourier.Inversion
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 /-!

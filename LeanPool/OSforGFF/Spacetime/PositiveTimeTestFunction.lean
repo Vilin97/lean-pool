@@ -4,14 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
-import Mathlib.Tactic  -- gives `ext` and `simp` power
-import Mathlib.Data.Complex.Basic
-import Mathlib.Algebra.Star.Basic
-import Mathlib.Analysis.InnerProductSpace.LinearMap
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.LinearAlgebra.TensorAlgebra.Basic
-
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
 

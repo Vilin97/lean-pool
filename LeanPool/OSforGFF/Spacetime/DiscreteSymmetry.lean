@@ -5,7 +5,29 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import Mathlib.Tactic  -- gives `ext` and `simp` power
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.GCongr
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Push
+import Mathlib.Tactic.Tauto
+import Mathlib.Tactic.ApplyFun
+import Mathlib.Tactic.Convert
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Cases
+import Mathlib.Tactic.Choose
+import Mathlib.Tactic.SimpRw
+import Mathlib.Tactic.SuppressCompilation
+import Mathlib.Tactic.Use
+import Mathlib.Tactic.Have
+import Mathlib.Tactic.Set
+import Mathlib.Tactic.Polyrith
+import Mathlib.Tactic.SplitIfs
+import Mathlib.Tactic.Generalize
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Algebra.Group.Support

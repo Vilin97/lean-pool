@@ -7,7 +7,6 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 
 import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Spacetime.PositiveTimeTestFunction
-import LeanPool.OSforGFF.General.FourierTransforms
 import LeanPool.OSforGFF.Covariance.Momentum
 import LeanPool.OSforGFF.OS.OS3MixedRep
 import LeanPool.OSforGFF.OS.OS3MixedRepInfra

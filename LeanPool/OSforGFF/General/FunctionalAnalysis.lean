@@ -5,54 +5,21 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
 
-import Mathlib.Tactic  -- gives `ext` and `simp` power
-import Mathlib.Data.Complex.Basic
-import Mathlib.Analysis.InnerProductSpace.LinearMap
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
-import Mathlib.Analysis.SpecialFunctions.Bernstein
-import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-import Mathlib.Data.Nat.Factorial.DoubleFactorial
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Analysis.Analytic.Constructions
-
-import Mathlib.Topology.Algebra.Module.LinearMapPiProd
-
 import Mathlib.MeasureTheory.Function.Holder
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
-import Mathlib.MeasureTheory.Measure.FiniteMeasureExt
-
-import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Analysis.Normed.Module.RCLike.Basic
-import Mathlib.Analysis.Normed.Module.RCLike.Real
-import Mathlib.Analysis.Normed.Field.Basic
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Analysis.Fourier.FourierTransform
 import Mathlib.Analysis.Fourier.Inversion
-import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Analysis.InnerProductSpace.EuclideanDist
-
-import Mathlib.Data.Real.Basic
-import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 import Mathlib.Analysis.Calculus.BumpFunction.Normed
-import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
-
-import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
-import Mathlib.Analysis.Calculus.LineDeriv.Basic
-
-import Mathlib.Data.Nat.Choose.Sum
-
-import Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions
-import Mathlib.MeasureTheory.Function.LpSpace.ContinuousCompMeasurePreserving
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-
-import Mathlib.Probability.Independence.Basic
-import Mathlib.Probability.Density
-
-import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
-import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
-import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
+
+
+
+
+
+
+
+
+
 
 /-!
 ## Functional Analysis for AQFT

@@ -15,8 +15,29 @@ import Mathlib.Topology.Algebra.Module.Spaces.WeakDual
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Analysis.Calculus.ContDiff.Basic
 import Mathlib.Topology.Algebra.InfiniteSum.NatInt
-import Mathlib.Tactic
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.GCongr
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Push
+import Mathlib.Tactic.Tauto
+import Mathlib.Tactic.ApplyFun
+import Mathlib.Tactic.Convert
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Cases
+import Mathlib.Tactic.Choose
+import Mathlib.Tactic.SimpRw
+import Mathlib.Tactic.SuppressCompilation
+import Mathlib.Tactic.Use
+import Mathlib.Tactic.Have
+import Mathlib.Tactic.Set
+import Mathlib.Tactic.Polyrith
+import Mathlib.Tactic.SplitIfs
+import Mathlib.Tactic.Generalize
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Algebra.Order.Chebyshev
 
@@ -24,11 +45,9 @@ import LeanPool.OSforGFF.Spacetime.Basic
 import LeanPool.OSforGFF.Schwinger.Defs
 import LeanPool.OSforGFF.Measure.Construct
 import LeanPool.OSforGFF.Measure.IsGaussian
-import LeanPool.OSforGFF.OS.OS0Analyticity
 import LeanPool.OSforGFF.OS.OS2Invariance
 import LeanPool.OSforGFF.Spacetime.ComplexTestFunction
 import LeanPool.OSforGFF.Spacetime.TimeTranslation
-import LeanPool.OSforGFF.Covariance.Momentum
 import LeanPool.OSforGFF.OS.Axioms
 
 /-!

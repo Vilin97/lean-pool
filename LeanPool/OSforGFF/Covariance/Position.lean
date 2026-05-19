@@ -23,7 +23,6 @@ import LeanPool.OSforGFF.Spacetime.DiscreteSymmetry
 import LeanPool.OSforGFF.Schwinger.Defs
 import LeanPool.OSforGFF.General.FunctionalAnalysis
 import LeanPool.OSforGFF.Covariance.Momentum
-import LeanPool.OSforGFF.General.FourierTransforms
 import LeanPool.OSforGFF.Covariance.Parseval
 
 /-!
