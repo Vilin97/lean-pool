@@ -9,7 +9,12 @@ import LeanPool.VirasoroProject.CentralChargeCalc
 import LeanPool.VirasoroProject.Commutator
 import LeanPool.VirasoroProject.LieAlgebraRepresentationOfBasis
 import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Convert
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 
 /-!
 # The bosonic Sugawara construction
