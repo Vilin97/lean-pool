@@ -6,7 +6,7 @@ Authors: Judith Ludwig, Christian Merten
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.Acyclic
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
 
 open Module
 

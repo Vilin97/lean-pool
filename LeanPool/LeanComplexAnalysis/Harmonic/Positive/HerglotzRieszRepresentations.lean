@@ -14,7 +14,18 @@ import Mathlib.Topology.ContinuousMap.SecondCountableSpace
 import Mathlib.Topology.ContinuousMap.CompactlySupported
 import Mathlib.RingTheory.FractionalIdeal.Basic
 import Mathlib.NumberTheory.Real.Irrational
-import Mathlib.Tactic
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Continuity
+import Mathlib.Tactic.Convert
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.FunProp
+import Mathlib.Tactic.GCongr
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Tauto
 import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
 import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HerglotzRieszUnique
 

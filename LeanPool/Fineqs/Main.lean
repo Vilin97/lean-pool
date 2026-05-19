@@ -9,7 +9,8 @@ import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.LinearAlgebra.Dimension.RankNullity
 import Mathlib.Data.Set.Card
 import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Tactic
+import Mathlib.Tactic.Bound
+import Mathlib.Tactic.Common
 
 /-!
 # FinEqs main file

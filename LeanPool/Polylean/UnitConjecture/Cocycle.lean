@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
 
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
 import Mathlib.Algebra.Group.Action.Defs
 import Mathlib.Algebra.Group.Hom.Defs
 import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets

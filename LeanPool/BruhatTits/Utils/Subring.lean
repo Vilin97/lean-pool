@@ -6,7 +6,7 @@ Authors: Judith Ludwig, Christian Merten
 import Mathlib.Algebra.Ring.Subring.Basic
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.RingTheory.Localization.Module
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
 
 open Module
 
