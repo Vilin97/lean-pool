@@ -44,26 +44,189 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  # Step 1: warm the shared Mathlib / Lake cache and verify the mk_all
+  # index. All matrix shards depend on this job so they all see the same
+  # cache state.
+  preflight:
     runs-on: ubuntu-latest
-    name: Build project
+    name: Preflight
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.value }}
     steps:
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
+      - name: Compute cache key
+        id: cache-key
+        run: echo "value=Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}" >> "$GITHUB_OUTPUT"
+
       - name: Restore caches
-        id: cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.elan
             .lake/packages
             .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ steps.cache-key.outputs.value }}-${{ github.sha }}
           restore-keys: |
-            Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-
+            ${{ steps.cache-key.outputs.value }}-
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Install Mathlib cache
+        run: |
+          if [ ! -d ".lake/packages/mathlib/.lake/build" ]; then
+            ~/.elan/bin/lake exe cache get
+          else
+            echo "Mathlib already present from cache"
+          fi
+
+      - name: Check that LeanPool.lean is up to date
+        run: |
+          if ! ~/.elan/bin/lake exe mk_all --check; then
+            echo "::error::LeanPool.lean is out of date. Run 'lake exe mk_all' locally and commit the result."
+            exit 1
+          fi
+
+      - name: Save warm cache (so all matrix shards see the same starting state)
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: ${{ steps.cache-key.outputs.value }}-${{ github.sha }}-preflight
+
+  # Step 2: build LeanPool in parallel shards. Each shard owns roughly a
+  # quarter of the top-level LeanPool projects (by total build time) and
+  # invokes lake on its slice. Shards run in parallel across separate
+  # runners, multiplying the available CPU.
+  build:
+    needs: preflight
+    runs-on: ubuntu-latest
+    name: Build shard ${{ matrix.shard.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          # Heaviest single project; gets its own shard.
+          - name: polylean
+            targets: LeanPool.Polylean
+          # Other heavy projects, grouped to balance against `polylean`.
+          - name: heavy-a
+            targets: >-
+              LeanPool.GrothendieckVanishing
+              LeanPool.VirasoroProject
+              LeanPool.LatticeTriangle
+              LeanPool.SumsThreeSquares
+              LeanPool.LeanComplexAnalysis
+          - name: heavy-b
+            targets: >-
+              LeanPool.BruhatTits
+              LeanPool.FormalLearningTheory
+              LeanPool.RamanujanTauMissesPrimes
+              LeanPool.FelConjecture
+              LeanPool.Clawristotle
+          # Remaining projects, mostly small.
+          - name: misc
+            targets: >-
+              LeanPool.ABCExceptions
+              LeanPool.AharoniKorman
+              LeanPool.ArchonFirstProofResults
+              LeanPool.ArtinWedderburn
+              LeanPool.Basic
+              LeanPool.DeadEnds
+              LeanPool.DirectedTopologyLean4
+              LeanPool.Duality
+              LeanPool.Erdos1196
+              LeanPool.FactorizationSystems
+              LeanPool.Fineqs
+              LeanPool.ForwardEuler
+              LeanPool.Isoperimetric
+              LeanPool.LeanBooleanfun
+              LeanPool.LowDimSolvClassification
+              LeanPool.OrderPQ
+              LeanPool.PartialCombinatoryAlgebras
+              LeanPool.PartialRegularity
+              LeanPool.PCFTheory
+              LeanPool.PointwiseBirkhoff
+              LeanPool.PolyaEnumerationTheorem
+              LeanPool.RiemannMappingTheorem
+              LeanPool.RlTheoryInLean
+              LeanPool.SelbergSieve4
+              LeanPool.Sensitivity
+              LeanPool.Shannon1948Formalization
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Restore preflight cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: ${{ needs.preflight.outputs.cache-key }}-${{ github.sha }}-preflight
+          fail-on-cache-miss: true
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Build shard ${{ matrix.shard.name }}
+        run: |
+          set -euo pipefail
+          ~/.elan/bin/lake build ${{ matrix.shard.targets }} 2>&1 | tee lean-build.log
+          if grep -nE '(^|: )warning:' lean-build.log; then
+            echo "::error::Lean build emitted warnings; fix them before merging."
+            exit 1
+          fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lake-build-${{ matrix.shard.name }}
+          path: .lake/build
+          retention-days: 1
+          include-hidden-files: true
+          compression-level: 1
+
+  # Step 3: finalize. Restore preflight cache, overlay all per-shard build
+  # artifacts on top, run lake exe mk_all --check (redundant with preflight
+  # but cheap), run the full lake build (which should hit every cached
+  # olean), and run the lint and quality checks.
+  finalize:
+    needs: [preflight, build]
+    runs-on: ubuntu-latest
+    name: Lint + quality
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Restore preflight cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: ${{ needs.preflight.outputs.cache-key }}-${{ github.sha }}-preflight
+          fail-on-cache-miss: true
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -77,22 +240,25 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install Mathlib cache
-        run: |
-          if [ ! -d ".lake/packages/mathlib" ]; then
-            ~/.elan/bin/lake exe cache get
-          else
-            echo "Mathlib already present from cache"
-          fi
+      - name: Download all shard artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: lake-build-*
+          path: .lake-shards
 
-      - name: Check that LeanPool.lean is up to date
+      - name: Merge shard build outputs into .lake/build
         run: |
-          if ! ~/.elan/bin/lake exe mk_all --check; then
-            echo "::error::LeanPool.lean is out of date. Run 'lake exe mk_all' locally and commit the result."
-            exit 1
-          fi
+          set -euo pipefail
+          mkdir -p .lake/build
+          for shard in .lake-shards/lake-build-*; do
+            if [ -d "$shard" ]; then
+              echo "Merging $shard"
+              cp -RPp "$shard"/. .lake/build/
+            fi
+          done
+          rm -rf .lake-shards
 
-      - name: Build project
+      - name: Final lake build (incremental)
         run: |
           set -euo pipefail
           ~/.elan/bin/lake build LeanPool 2>&1 | tee lean-build.log
@@ -121,4 +287,4 @@ jobs:
             ~/.elan
             .lake/packages
             .lake/build
-          key: Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ needs.preflight.outputs.cache-key }}-${{ github.sha }}
