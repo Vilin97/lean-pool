@@ -8,8 +8,8 @@
 #      with a detailed prompt covering the bump, vendoring, projects.yml
 #      entry, file headers, and CI checks documented in
 #      .github/CODE_QUALITY.md.
-#   4. Whatever progress the agent makes, push the branch and open a draft
-#      PR in lean-pool. Partial progress is acceptable and expected.
+#   4. Whatever progress the agent makes, push the branch and open a PR in
+#      lean-pool. Partial progress is acceptable and expected.
 #
 # Usage:
 #   scripts/import-formalization.sh <source-repo-url> [options]
@@ -779,13 +779,12 @@ PR_BODY_FILE="$BUMPS_DIR/$SLUG-pr-body.md"
   echo "_Opened automatically by \`scripts/import-formalization.sh\`. Review the diff carefully before merging — the agent ran unattended._"
 } > "$PR_BODY_FILE"
 
-log "Opening draft PR against $BASE_BRANCH"
+log "Opening PR against $BASE_BRANCH"
 PR_URL="$(gh pr create \
   --base "$BASE_BRANCH" \
   --head "$BRANCH" \
   --title "$PR_TITLE" \
-  --body-file "$PR_BODY_FILE" \
-  --draft)"
+  --body-file "$PR_BODY_FILE")"
 
 ok "PR opened: $PR_URL"
 

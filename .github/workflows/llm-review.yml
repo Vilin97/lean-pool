@@ -84,8 +84,13 @@ jobs:
           PR_NUMBER: ${{ steps.pr.outputs.number }}
         run: |
           set -euo pipefail
+          # `gh api --paginate` runs `--jq` once per page and concatenates
+          # outputs with newlines, so an aggregating filter like `length`
+          # emits one number per page (breaks once a PR exceeds 100 files).
+          # Emit one line per matching filename and count with `wc -l`.
           count=$(gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate \
-                  --jq '[.[] | select(.filename | endswith(".lean"))] | length')
+                    --jq '.[] | select(.filename | endswith(".lean")) | .filename' \
+                  | wc -l | tr -d '[:space:]')
           echo "count=$count" >> "$GITHUB_OUTPUT"
           if [ "$count" -eq 0 ]; then
             echo "PR #$PR_NUMBER touches no .lean files; skipping gpt-5.5 review."
