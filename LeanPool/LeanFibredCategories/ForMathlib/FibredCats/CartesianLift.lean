@@ -38,14 +38,12 @@ respectively.
 For a functor `P : E ⥤ C`, we provide the class `CartMor` of cartesian morphisms in
 `E`. The type `CartMor P` is defined in terms of the predicate `isCartesianMorphism`.
 
-We prove the following closure properties of the class `CartMor` of cartesian
-morphisms:
+We prove the following closure properties and category-theoretic API for the
+class `CartMor` of cartesian morphisms:
 - `cart_id` proves that the identity morphism is cartesian.
 - `cart_comp` proves that the composition of cartesian morphisms is cartesian.
-- `cart_iso_closed` proves that the class of cartesian morphisms is closed under
-  isomorphisms.
-- `cart_pullback` proves that, if `P` preserves pullbacks, then the pullback of a
-  cartesian morphism is cartesian.
+- `instCartMorIsStableUnderComposition` packages the composition closure as a
+  `MorphismProperty.IsStableUnderComposition` instance.
 
 `instCatCart` provides a category instance for the class of cartesian morphisms,
 and `Cart.forget` provides the forgetful functor from the category of cartesian
