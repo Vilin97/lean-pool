@@ -19,53 +19,14 @@ noncomputable def shiftSqfreeIndicator (b N d : ℕ) : ℝ := if Squarefree (b *
 lemma sum_over_subsets_containing_x (s : Finset ℕ) (x : ℕ) (hx : x ∉ s) (a : ℕ → ℝ) :
     ∑ T ∈ s.powerset, ((-1 : ℝ) ^ (insert x T).card * ∏ d ∈ (insert x T), a d) =
     - a x * ∑ T ∈ s.powerset, (-1 : ℝ) ^ T.card * ∏ d ∈ T, a d := by
-  have h₁ : ∀ T : Finset ℕ, T ∈ s.powerset → ((-1 : ℝ) ^ (insert x T).card * ∏ d ∈ (insert x T),
-      a d) = (-1 : ℝ) ^ (T.card + 1) * (a x * ∏ d ∈ T, a d) := by
-    intro T hT
-    have h₂ : x ∉ T := by
-      have h₃ : T ⊆ s := Finset.mem_powerset.mp hT
-      intro h₄
-      have h₅ : x ∈ s := h₃ h₄
-      exact hx h₅
-    have h₃ : (insert x T).card = T.card + 1 := by
-      rw [Finset.card_insert_of_notMem h₂]
-    have h₄ : ∏ d ∈ (insert x T), a d = a x * ∏ d ∈ T, a d := by
-      rw [Finset.prod_insert h₂]
-    calc
-      (-1 : ℝ) ^ (insert x T).card * ∏ d ∈ (insert x T), a d
-        = (-1 : ℝ) ^ (T.card + 1) * ∏ d ∈ (insert x T), a d := by
-          rw [h₃]
-        _ = (-1 : ℝ) ^ (T.card + 1) * (a x * ∏ d ∈ T, a d) := by
-          rw [h₄]
-        _ = (-1 : ℝ) ^ (T.card + 1) * (a x * ∏ d ∈ T, a d) := by rfl
-  calc
-    ∑ T ∈ s.powerset, ((-1 : ℝ) ^ (insert x T).card * ∏ d ∈ (insert x T), a d)
-      = ∑ T ∈ s.powerset, ((-1 : ℝ) ^ (T.card + 1) * (a x * ∏ d ∈ T, a d)) := by
-        apply Finset.sum_congr rfl
-        intro T hT
-        rw [h₁ T hT]
-      _ = ∑ T ∈ s.powerset, ((-1 : ℝ) * (-1 : ℝ) ^ T.card * (a x * ∏ d ∈ T, a d)) := by
-        apply Finset.sum_congr rfl
-        intro T _
-        have h₂ : (-1 : ℝ) ^ (T.card + 1) = (-1 : ℝ) * (-1 : ℝ) ^ T.card := by
-          simp [pow_succ, mul_comm]
-        rw [h₂]
-      _ = (-1 : ℝ) * a x * ∑ T ∈ s.powerset, (-1 : ℝ) ^ T.card * ∏ d ∈ T, a d := by
-        calc
-          ∑ T ∈ s.powerset, ((-1 : ℝ) * (-1 : ℝ) ^ T.card * (a x * ∏ d ∈ T, a d))
-            = ∑ T ∈ s.powerset, (-1 : ℝ) * a x * ((-1 : ℝ) ^ T.card * ∏ d ∈ T, a d) := by
-              apply Finset.sum_congr rfl
-              intro T _
-              ring
-            _ = (-1 : ℝ) * a x * ∑ T ∈ s.powerset, (-1 : ℝ) ^ T.card * ∏ d ∈ T, a d := by
-              calc
-                ∑ T ∈ s.powerset, (-1 : ℝ) * a x * ((-1 : ℝ) ^ T.card * ∏ d ∈ T, a d)
-                  = (-1 : ℝ) * a x * ∑ T ∈ s.powerset, (-1 : ℝ) ^ T.card * ∏ d ∈ T, a d := by
-                    simp [Finset.mul_sum]
-                  _ = (-1 : ℝ) * a x * ∑ T ∈ s.powerset, (-1 : ℝ) ^ T.card * ∏ d ∈ T, a d := by rfl
-            _ = (-1 : ℝ) * a x * ∑ T ∈ s.powerset, (-1 : ℝ) ^ T.card * ∏ d ∈ T, a d := by rfl
-      _ = -a x * ∑ T ∈ s.powerset, (-1 : ℝ) ^ T.card * ∏ d ∈ T, a d := by
-        ring
+  have hnotIn : ∀ T ∈ s.powerset, x ∉ T := fun T hT h =>
+    hx ((Finset.mem_powerset.mp hT) h)
+  have hstep : ∀ T ∈ s.powerset, (-1:ℝ)^(insert x T).card * ∏ d ∈ insert x T, a d =
+      (-1)^(T.card+1) * (a x * ∏ d ∈ T, a d) := fun T hT => by
+    rw [Finset.card_insert_of_notMem (hnotIn T hT), Finset.prod_insert (hnotIn T hT)]
+  simp_rw [Finset.sum_congr rfl hstep, pow_succ]
+  simp only [Finset.mul_sum]
+  ring
 
 lemma prod_one_sub_eq_sum_powerset (U : Finset ℕ) (a : ℕ → ℝ) :
     ∏ d ∈ U, (1 - a d) = ∑ T ∈ U.powerset, (-1 : ℝ) ^ T.card * ∏ d ∈ T, a d := by
@@ -109,12 +70,8 @@ lemma countBaseBDeadEnds_as_sum (b X : ℕ) (_hb : 0 < b) :
     ∑ N ∈ Finset.Icc 1 X, sqfreeIndicator N * ∏ d ∈ Finset.range b, (1 -
         shiftSqfreeIndicator b N d) := by
   unfold countBaseBDeadEnds
-  rw [Finset.card_filter]
-  push_cast
-  apply Finset.sum_congr rfl
-  intro N hN
-  rw [Finset.mem_Icc] at hN
-  exact deadEnd_indicator_eq b N hN.1
+  rw [Finset.card_filter]; push_cast
+  exact Finset.sum_congr rfl fun N hN => deadEnd_indicator_eq b N (Finset.mem_Icc.mp hN).1
 
 lemma indicator_conjunction_eq_prod (b N : ℕ) (T : Finset ℕ) :
     (if Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d) then (1 : ℝ) else 0) =
@@ -144,10 +101,7 @@ lemma countJointSquarefree_as_sum (b X : ℕ) (T : Finset ℕ) :
     (countJointSquarefree b T X : ℝ) =
     ∑ N ∈ Finset.Icc 1 X, sqfreeIndicator N * ∏ d ∈ T, shiftSqfreeIndicator b N d := by
   unfold countJointSquarefree
-  rw [Finset.natCast_card_filter]
-  congr 1
-  ext N
-  exact indicator_conjunction_eq_prod b N T
+  simp [Finset.natCast_card_filter, indicator_conjunction_eq_prod]
 
 /-- Finite inclusion-exclusion for dead end counting.
     For each fixed X, the count of dead ends equals the alternating sum over subsets T:
@@ -163,25 +117,15 @@ lemma dead_end_count_inclusion_exclusion (b : ℕ) (_hb : 2 ≤ b) (X : ℕ) :
   rw [countBaseBDeadEnds_as_sum b X hb_pos]
   have h1 : ∑ N ∈ Finset.Icc 1 X, sqfreeIndicator N * ∏ d ∈ Finset.range b, (1 -
       shiftSqfreeIndicator b N d) =
-            ∑ N ∈ Finset.Icc 1 X, sqfreeIndicator N * ∑ T ∈ (Finset.range b).powerset, (
-                -1 : ℝ) ^ T.card * ∏ d ∈ T, shiftSqfreeIndicator b N d := by
-    congr 1
-    ext N
-    congr 1
-    exact prod_one_sub_eq_sum_powerset (Finset.range b) (shiftSqfreeIndicator b N)
-  rw [h1]
-  simp only [Finset.mul_sum]
-  rw [Finset.sum_comm]
-  congr 1
-  ext T
+      ∑ N ∈ Finset.Icc 1 X, sqfreeIndicator N * ∑ T ∈ (Finset.range b).powerset,
+        (-1:ℝ)^T.card * ∏ d ∈ T, shiftSqfreeIndicator b N d :=
+    Finset.sum_congr rfl fun N _ => by rw [prod_one_sub_eq_sum_powerset]
+  rw [h1]; simp only [Finset.mul_sum]; rw [Finset.sum_comm]
+  congr 1; ext T
   rw [countJointSquarefree_as_sum b X T]
-  have h2 : ∀ N, sqfreeIndicator N * ((-1:ℝ) ^ T.card * ∏ d ∈ T, shiftSqfreeIndicator b N d) =
-            (sqfreeIndicator N * ∏ d ∈ T, shiftSqfreeIndicator b N d) * (-1:ℝ) ^ T.card := by
-    intro N
-    ring
-  simp only [h2]
-  rw [← Finset.sum_mul]
-  ring
+  have h2 : ∀ N, sqfreeIndicator N * ((-1:ℝ)^T.card * ∏ d ∈ T, shiftSqfreeIndicator b N d) =
+      (sqfreeIndicator N * ∏ d ∈ T, shiftSqfreeIndicator b N d) * (-1:ℝ)^T.card := fun N => by ring
+  simp only [h2, ← Finset.sum_mul]; ring
 
 /-- Tendsto of alternating sums given Tendsto of each term.
     If for each T ⊆ Finset.range b, the ratio (countJointSquarefree b T X)/X → α(b,T),

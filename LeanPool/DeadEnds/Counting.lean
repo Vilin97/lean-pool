@@ -31,18 +31,11 @@ lemma count_upper_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card = A.card :=
     fun k => completeBlock_valid_count b T S k
   have hsum : ∑ k ∈ Finset.range (X / M), ((completeBlock M k).filter fun N =>
-      ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card = (X / M) * A.card :=
-          by
-    simp only [hblock]
-    rw [Finset.sum_const, Finset.card_range, smul_eq_mul]
+      ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card =
+      (X / M) * A.card := by
+    simp only [hblock]; rw [Finset.sum_const, Finset.card_range, smul_eq_mul]
   rw [hsum]
-  have hpartial : ((partialBlock M X).filter fun N =>
-      ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card ≤ A.card :=
-    partialBlock_valid_count_le b T S X
-  calc X / M * A.card + ((partialBlock M X).filter fun N =>
-      ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card
-      ≤ X / M * A.card + A.card := Nat.add_le_add_left hpartial _
-    _ = (X / M + 1) * A.card := by ring
+  linarith [partialBlock_valid_count_le b T S X]
 
 lemma count_bounds (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
     let M := primeSquareProduct S
@@ -69,12 +62,11 @@ lemma interval_bound {a b lo hi d : ℝ}
   linarith
 
 lemma floor_div_bounds (X M : ℕ) (hM : 0 < M) :
-    (X / M) * M ≤ X ∧ X < (X / M + 1) * M := by
-  have h_div_add_mod : X = M * (X / M) + (X % M) := (Nat.div_add_mod X M).symm
-  have h_mod_lt : X % M < M := Nat.mod_lt X hM
-  have h₁ : (X / M) * M ≤ X := Nat.div_mul_le_self X M
-  have h₂ : X < (X / M + 1) * M := by nlinarith [h_div_add_mod, h_mod_lt]
-  exact ⟨h₁, h₂⟩
+    (X / M) * M ≤ X ∧ X < (X / M + 1) * M :=
+  ⟨Nat.div_mul_le_self X M, by
+    have h1 : X % M < M := Nat.mod_lt X hM
+    have h2 : M * (X / M) + X % M = X := Nat.div_add_mod X M
+    nlinarith⟩
 
 /-- Helper: From count_bounds + validResidues_card_eq_mul, get the real-valued bounds. -/
 lemma count_real_bounds (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
@@ -89,33 +81,24 @@ lemma count_real_bounds (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Fi
   have hbounds := count_bounds b T S X
   simp only at hbounds
   have hA := validResidues_card_eq_mul b hb T hT S
+  have hA' : (M : ℝ) * L = (validResiduesMod b T S).card := by
+    simp only [hA]; ring
   constructor
   · calc (q : ℝ) * M * L = q * (M * L) := by ring
-      _ = q * (validResiduesMod b T S).card := by rw [← hA]
-      _ = (q * (validResiduesMod b T S).card : ℕ) := by simp
-      _ ≤ count := by exact Nat.cast_le.mpr hbounds.1
-  · calc (count : ℝ) ≤ ((q + 1) * (validResiduesMod b T S).card : ℕ) := by
-           exact Nat.cast_le.mpr hbounds.2
-      _ = (q + 1) * (validResiduesMod b T S).card := by simp
-      _ = (q + 1) * (M * L) := by rw [← hA]
-      _ = (q + 1) * M * L := by ring
+      _ = q * (validResiduesMod b T S).card := by rw [← hA']
+      _ ≤ count := by exact_mod_cast hbounds.1
+  · calc (count : ℝ) ≤ (q + 1) * (validResiduesMod b T S).card := by exact_mod_cast hbounds.2
+      _ = (q + 1) * M * L := by rw [← hA']; ring
 
 lemma xL_real_bounds (X M : ℕ) (L : ℝ) (hL : 0 ≤ L) (hM : 0 < M) :
     let q := X / M
     (q : ℝ) * M * L ≤ (X : ℝ) * L ∧ (X : ℝ) * L ≤ (q + 1) * M * L := by
   intro q
   have hfloor := floor_div_bounds X M hM
-  constructor
-  · have hqM : q * M ≤ X := by
-      simpa [q] using hfloor.1
-    have hqM_real : (q : ℝ) * M ≤ (X : ℝ) := by
-      exact_mod_cast hqM
-    nlinarith
-  · have hXle : X ≤ (q + 1) * M := by
-      simpa [q] using Nat.le_of_lt hfloor.2
-    have hXle_real : (X : ℝ) ≤ (q + 1 : ℝ) * M := by
-      exact_mod_cast hXle
-    nlinarith
+  have hqM_real : (q : ℝ) * M ≤ (X : ℝ) := by exact_mod_cast (by simpa [q] using hfloor.1)
+  have hXle_real : (X : ℝ) ≤ (q + 1 : ℝ) * M := by
+    exact_mod_cast (by simpa [q] using Nat.le_of_lt hfloor.2)
+  exact ⟨by nlinarith, by nlinarith⟩
 
 lemma final_error_bound {count X M : ℕ} {L : ℝ} {q : ℕ}
     (hcount_lo : (q : ℝ) * M * L ≤ count)
@@ -124,11 +107,8 @@ lemma final_error_bound {count X M : ℕ} {L : ℝ} {q : ℕ}
     (hxL_hi : (X : ℝ) * L ≤ (q + 1) * M * L)
     (_hL_nonneg : 0 ≤ L)
     (hL_le_one : L ≤ 1) :
-    |(count : ℝ) - (X : ℝ) * L| ≤ (M : ℝ) := by
-  have h_upper : (count : ℝ) - (X : ℝ) * L ≤ (M : ℝ) := by nlinarith
-  have h_lower : (-(M : ℝ)) ≤ (count : ℝ) - (X : ℝ) * L := by nlinarith
-  have h_main : |(count : ℝ) - (X : ℝ) * L| ≤ (M : ℝ) := abs_le.mpr ⟨h_lower, h_upper⟩
-  exact h_main
+    |(count : ℝ) - (X : ℝ) * L| ≤ (M : ℝ) :=
+  abs_le.mpr ⟨by nlinarith, by nlinarith⟩
 
 lemma error_bound_empty_case (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (X : ℕ) (hM : primeSquareProduct S = 0) :
@@ -215,18 +195,12 @@ lemma count_upper_bound_via_finite (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_
   apply Finset.card_le_card
   intro N hN
   simp only [Finset.mem_filter] at hN ⊢
-  refine ⟨hN.1, ?_⟩
-  intro p _
-  obtain ⟨hSqN, hSqAll⟩ := hN.2
-  constructor
-  · rw [Nat.squarefree_iff_prime_squarefree] at hSqN
-    rw [sq]
-    exact hSqN p p.prop
-  · intro d hd
-    have hSqd := hSqAll d hd
-    rw [Nat.squarefree_iff_prime_squarefree] at hSqd
-    rw [sq]
-    exact hSqd p p.prop
+  obtain ⟨hNIcc, hSqN, hSqAll⟩ := hN
+  refine ⟨hNIcc, fun p _ => ?_⟩
+  rw [Nat.squarefree_iff_prime_squarefree] at hSqN
+  exact ⟨by rw [sq]; exact hSqN p p.prop,
+    fun d hd => by simp only [Nat.squarefree_iff_prime_squarefree] at hSqAll
+                   rw [sq]; exact (hSqAll d hd) p p.prop⟩
 
 /-- The number of `N ∈ [1, X]` such that for every `p ∈ S` we have `p² ∤ N` and `p² ∤ b * N + d`
 for all `d ∈ T` (i.e. the square-free conditions checked only at the primes in `S`). -/
@@ -242,21 +216,8 @@ def primesUpTo (n : ℕ) : Finset Nat.Primes :=
 lemma mem_primesUpTo (n : ℕ) (p : Nat.Primes) :
     (p : ℕ) ≤ n → p ∈ primesUpTo n := by
   intro hpn
-  have h1 : (p : ℕ) ∈ Finset.filter Nat.Prime (Finset.range (n + 1)) := by
-    have h₁ : (p : ℕ) < n + 1 := by omega
-    have h₂ : (p : ℕ) ∈ Finset.range (n + 1) := Finset.mem_range.mpr h₁
-    have h₃ : Nat.Prime (p : ℕ) := p.prop
-    exact Finset.mem_filter.mpr ⟨h₂, h₃⟩
-  have h2 : (⟨(p : ℕ), p.prop⟩ : { q : ℕ // Nat.Prime q }) ∈ (Finset.filter Nat.Prime (
-      Finset.range (n + 1))).subtype Nat.Prime := by
-    simp only [Finset.mem_subtype] at h1 ⊢
-    exact h1
-  have h5 : p ∈ ((Finset.filter Nat.Prime (Finset.range (n + 1))).subtype Nat.Prime).image (fun ⟨q,
-      hq⟩ => ⟨q, hq⟩) := by
-    apply Finset.mem_image.mpr
-    refine ⟨⟨(p : ℕ), p.prop⟩, h2, ?_⟩
-    simp
-  simpa [primesUpTo] using h5
+  simp only [primesUpTo, Finset.mem_image, Finset.mem_subtype, Finset.mem_filter, Finset.mem_range]
+  exact ⟨⟨(p : ℕ), p.prop⟩, ⟨Nat.lt_succ_of_le hpn, p.prop⟩, by simp⟩
 
 lemma crt_error_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (X : ℕ) :
@@ -299,17 +260,12 @@ lemma finite_product_ge_density (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : 
   have hS_eq : (∏' (x : {p : Nat.Primes // p ∈ S}), f x) = ∏ p ∈ S, f p :=
     Finset.tprod_subtype S f
   have hS_nonneg : 0 ≤ (∏' (x : {p : Nat.Primes // p ∈ S}), f x) := by
-    rw [hS_eq]
-    apply Finset.prod_nonneg
-    intro p _
-    exact localDensityFactor_nonneg p b T
+    rw [hS_eq]; exact Finset.prod_nonneg fun p _ => localDensityFactor_nonneg p b T
   unfold localDensityProduct jointSquarefreeDensity
   rw [ge_iff_le, ← hfactor, ← hS_eq]
-  have h1 : (∏' (x : {p // p ∈ S}), f ↑x) * (∏' (x : {p // p ∉ S}), f ↑x)
-          ≤ (∏' (x : {p // p ∈ S}), f ↑x) * 1 := by
-    apply mul_le_mul_of_nonneg_left hcompl_le hS_nonneg
-  simp only [mul_one] at h1
-  exact h1
+  calc (∏' (x : {p // p ∈ S}), f ↑x) * (∏' (x : {p // p ∉ S}), f ↑x)
+      ≤ (∏' (x : {p // p ∈ S}), f ↑x) * 1 := mul_le_mul_of_nonneg_left hcompl_le hS_nonneg
+    _ = _ := mul_one _
 
 lemma jointSquarefree_subset_finitePrime (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
     (Finset.Icc 1 X).filter (fun N => Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d)) ⊆
@@ -317,34 +273,19 @@ lemma jointSquarefree_subset_finitePrime (b : ℕ) (T : Finset ℕ) (S : Finset 
         d)) := by
   intro N hN
   simp only [Finset.mem_filter] at hN ⊢
-  refine ⟨hN.1, ?_⟩
-  intro p _
-  obtain ⟨hSqN, hSqAll⟩ := hN.2
-  constructor
-  · rw [Nat.squarefree_iff_prime_squarefree] at hSqN
-    rw [sq]
-    exact hSqN p p.prop
-  · intro d hd
-    have hSqd := hSqAll d hd
-    rw [Nat.squarefree_iff_prime_squarefree] at hSqd
-    rw [sq]
-    exact hSqd p p.prop
+  obtain ⟨hNIcc, hSqN, hSqAll⟩ := hN
+  refine ⟨hNIcc, fun p _ => ?_⟩
+  rw [Nat.squarefree_iff_prime_squarefree] at hSqN
+  exact ⟨by rw [sq]; exact hSqN p p.prop,
+    fun d hd => by simp only [Nat.squarefree_iff_prime_squarefree] at hSqAll
+                   rw [sq]; exact (hSqAll d hd) p p.prop⟩
 
 lemma not_squarefree_has_prime_sq_divisor (n : ℕ) (h : ¬Squarefree n) :
     ∃ p : Nat.Primes, (p : ℕ) ^ 2 ∣ n := by
-  have h₁ : ¬ (∀ (x : ℕ), Nat.Prime x → ¬x * x ∣ n) := by
-    intro h₂
-    have h₃ : Squarefree n := by
-      rw [Nat.squarefree_iff_prime_squarefree]
-      exact h₂
-    contradiction
-  have h₂ : ∃ (x : ℕ), Nat.Prime x ∧ x * x ∣ n := by
-    by_contra! h₃
-    have h₄ : ∀ (x : ℕ), Nat.Prime x → ¬x * x ∣ n := fun x hx => h₃ x hx
-    exact h₁ h₄
-  obtain ⟨p, hp, hp'⟩ := h₂
-  refine ⟨⟨p, hp⟩, ?_⟩
-  simpa [pow_two] using hp'
+  rw [Nat.squarefree_iff_prime_squarefree] at h
+  push Not at h
+  obtain ⟨p, hp, hp'⟩ := h
+  exact ⟨⟨p, hp⟩, by simpa [pow_two] using hp'⟩
 
 lemma sdiff_subset_violations (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
     (Finset.Icc 1 X).filter (fun N => ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N +
@@ -386,13 +327,10 @@ lemma count_ge_finite_minus_violations (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ
       q : ℕ) ^ 2 ∣ b * N + d))
   change (A.card : ℝ) ≥ (B.card : ℝ) - (V.card : ℝ)
   have hAB : A ⊆ B := jointSquarefree_subset_finitePrime b T S X
-  have hDiff : B \ A ⊆ V := sdiff_subset_violations b T S X
+  have hDiffCard : (B \ A).card ≤ V.card := Finset.card_le_card (sdiff_subset_violations b T S X)
   have hCard : (B \ A).card + A.card = B.card := Finset.card_sdiff_add_card_eq_card hAB
-  have hDiffCard : (B \ A).card ≤ V.card := Finset.card_le_card hDiff
   have h2 : (A.card : ℤ) ≥ B.card - V.card := by omega
-  have h3 : (A.card : ℝ) ≥ (B.card : ℤ) - (V.card : ℤ) := by exact_mod_cast h2
-  simp only [Int.cast_natCast] at h3
-  exact h3
+  exact_mod_cast (show (A.card : ℤ) ≥ (B.card : ℤ) - (V.card : ℤ) from h2)
 
 lemma combine_bounds_lower (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (X : ℕ) (hX : 0 < X)
