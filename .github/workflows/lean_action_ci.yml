@@ -45,8 +45,8 @@ permissions:
 
 jobs:
   # Step 1: warm the shared Mathlib / Lake cache and verify the mk_all
-  # index. All matrix shards depend on this job so they all see the same
-  # cache state.
+  # index. All matrix shards depend on this job so they all start from
+  # the same cache state.
   preflight:
     runs-on: ubuntu-latest
     name: Preflight
@@ -104,10 +104,13 @@ jobs:
             .lake/build
           key: ${{ steps.cache-key.outputs.value }}-${{ github.sha }}-preflight
 
-  # Step 2: build LeanPool in parallel shards. Each shard owns roughly a
-  # quarter of the top-level LeanPool projects (by total build time) and
-  # invokes lake on its slice. Shards run in parallel across separate
-  # runners, multiplying the available CPU.
+  # Step 2: build LeanPool in parallel shards. Each shard owns a balanced
+  # group of top-level LeanPool projects (no cross-project Lean imports
+  # exist between top-levels, so the groups build independently) and runs
+  # lake on its slice. Each shard records exactly which build artifacts it
+  # produced (via a pre-build timestamp marker) and uploads only those, so
+  # merging shard outputs in `finalize` never clobbers a fresh olean with a
+  # stale one from the inherited cache.
   build:
     needs: preflight
     runs-on: ubuntu-latest
@@ -116,25 +119,27 @@ jobs:
       fail-fast: false
       matrix:
         shard:
-          # Heaviest single project; gets its own shard.
           - name: polylean
             targets: LeanPool.Polylean
-          # Other heavy projects, grouped to balance against `polylean`.
-          - name: heavy-a
+          - name: grothendieck
             targets: >-
               LeanPool.GrothendieckVanishing
               LeanPool.VirasoroProject
-              LeanPool.LatticeTriangle
-              LeanPool.SumsThreeSquares
-              LeanPool.LeanComplexAnalysis
-          - name: heavy-b
+          - name: bruhat
             targets: >-
               LeanPool.BruhatTits
+              LeanPool.Clawristotle
+          - name: learning
+            targets: >-
               LeanPool.FormalLearningTheory
               LeanPool.RamanujanTauMissesPrimes
+          - name: analysis
+            targets: >-
+              LeanPool.LeanComplexAnalysis
+              LeanPool.LatticeTriangle
+              LeanPool.SumsThreeSquares
               LeanPool.FelConjecture
-              LeanPool.Clawristotle
-          # Remaining projects, mostly small.
+              LeanPool.RiemannMappingTheorem
           - name: misc
             targets: >-
               LeanPool.ABCExceptions
@@ -158,7 +163,6 @@ jobs:
               LeanPool.PCFTheory
               LeanPool.PointwiseBirkhoff
               LeanPool.PolyaEnumerationTheorem
-              LeanPool.RiemannMappingTheorem
               LeanPool.RlTheoryInLean
               LeanPool.SelbergSieve4
               LeanPool.Sensitivity
@@ -189,25 +193,46 @@ jobs:
       - name: Build shard ${{ matrix.shard.name }}
         run: |
           set -euo pipefail
+          # Marker predating every build artifact this shard produces.
+          touch .shard-marker
+          sleep 1
           ~/.elan/bin/lake build ${{ matrix.shard.targets }} 2>&1 | tee lean-build.log
           if grep -nE '(^|: )warning:' lean-build.log; then
             echo "::error::Lean build emitted warnings; fix them before merging."
             exit 1
           fi
 
+      - name: Stage build outputs produced by this shard
+        run: |
+          set -euo pipefail
+          mkdir -p .shard-out
+          if [ -d .lake/build ]; then
+            # Copy only the files lake (re)built during this shard, preserving
+            # their paths relative to .lake/build. Stale oleans inherited from
+            # the preflight cache predate `.shard-marker` and are skipped.
+            find .lake/build -newer .shard-marker -type f -print0 \
+              | while IFS= read -r -d '' file; do
+                  rel="${file#.lake/build/}"
+                  mkdir -p ".shard-out/$(dirname "$rel")"
+                  cp -p "$file" ".shard-out/$rel"
+                done
+          fi
+          echo "Staged $(find .shard-out -type f | wc -l) files for shard ${{ matrix.shard.name }}"
+
       - name: Upload build artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: lake-build-${{ matrix.shard.name }}
-          path: .lake/build
+          path: .shard-out
           retention-days: 1
           include-hidden-files: true
           compression-level: 1
+          if-no-files-found: ignore
 
-  # Step 3: finalize. Restore preflight cache, overlay all per-shard build
-  # artifacts on top, run lake exe mk_all --check (redundant with preflight
-  # but cheap), run the full lake build (which should hit every cached
-  # olean), and run the lint and quality checks.
+  # Step 3: finalize. Restore the preflight cache, overlay every shard's
+  # freshly built artifacts on top, run an incremental `lake build LeanPool`
+  # (which now finds every olean valid and only links the `LeanPool` root),
+  # then run the lint and quality checks.
   finalize:
     needs: [preflight, build]
     runs-on: ubuntu-latest
@@ -246,19 +271,19 @@ jobs:
           pattern: lake-build-*
           path: .lake-shards
 
-      - name: Merge shard build outputs into .lake/build
+      - name: Overlay shard build outputs onto .lake/build
         run: |
           set -euo pipefail
           mkdir -p .lake/build
           for shard in .lake-shards/lake-build-*; do
             if [ -d "$shard" ]; then
-              echo "Merging $shard"
+              echo "Overlaying $shard"
               cp -RPp "$shard"/. .lake/build/
             fi
           done
           rm -rf .lake-shards
 
-      - name: Final lake build (incremental)
+      - name: Final lake build
         run: |
           set -euo pipefail
           ~/.elan/bin/lake build LeanPool 2>&1 | tee lean-build.log
