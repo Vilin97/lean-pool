@@ -109,7 +109,7 @@ jobs:
   # exist between top-levels, so the groups build independently) and runs
   # lake on its slice. Each shard records exactly which build artifacts it
   # produced (via a pre-build timestamp marker) and uploads only those, so
-  # merging shard outputs in `finalize` never clobbers a fresh olean with a
+  # merging shard outputs downstream never clobbers a fresh olean with a
   # stale one from the inherited cache.
   build:
     needs: preflight
@@ -140,33 +140,35 @@ jobs:
               LeanPool.SumsThreeSquares
               LeanPool.FelConjecture
               LeanPool.RiemannMappingTheorem
-          - name: misc
+          - name: misc-a
             targets: >-
               LeanPool.ABCExceptions
-              LeanPool.AharoniKorman
               LeanPool.ArchonFirstProofResults
+              LeanPool.DirectedTopologyLean4
+              LeanPool.Isoperimetric
+              LeanPool.LowDimSolvClassification
+              LeanPool.AharoniKorman
               LeanPool.ArtinWedderburn
               LeanPool.Basic
               LeanPool.DeadEnds
-              LeanPool.DirectedTopologyLean4
               LeanPool.Duality
               LeanPool.Erdos1196
               LeanPool.FactorizationSystems
-              LeanPool.Fineqs
-              LeanPool.ForwardEuler
-              LeanPool.Isoperimetric
-              LeanPool.LeanBooleanfun
-              LeanPool.LowDimSolvClassification
-              LeanPool.OrderPQ
+          - name: misc-b
+            targets: >-
+              LeanPool.SelbergSieve4
+              LeanPool.Shannon1948Formalization
               LeanPool.PartialCombinatoryAlgebras
               LeanPool.PartialRegularity
+              LeanPool.Fineqs
+              LeanPool.ForwardEuler
+              LeanPool.LeanBooleanfun
+              LeanPool.OrderPQ
               LeanPool.PCFTheory
               LeanPool.PointwiseBirkhoff
               LeanPool.PolyaEnumerationTheorem
               LeanPool.RlTheoryInLean
-              LeanPool.SelbergSieve4
               LeanPool.Sensitivity
-              LeanPool.Shannon1948Formalization
     steps:
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -229,14 +231,88 @@ jobs:
           compression-level: 1
           if-no-files-found: ignore
 
-  # Step 3: finalize. Restore the preflight cache, overlay every shard's
-  # freshly built artifacts on top, run an incremental `lake build LeanPool`
-  # (which now finds every olean valid and only links the `LeanPool` root),
-  # then run the lint and quality checks.
-  finalize:
+  # Step 3a: lint. Restore the preflight cache, overlay every shard's
+  # freshly built artifacts, run an incremental `lake build LeanPool`
+  # (a no-op verification plus the `LeanPool` root link once the overlay
+  # is in place), then the linters. On main it saves the merged cache so
+  # the next run's preflight is warm.
+  lint:
     needs: [preflight, build]
     runs-on: ubuntu-latest
-    name: Lint + quality
+    name: Lint
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Restore preflight cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: ${{ needs.preflight.outputs.cache-key }}-${{ github.sha }}-preflight
+          fail-on-cache-miss: true
+
+      - name: Install Lean
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
+        with:
+          auto-config: false
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Download all shard artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: lake-build-*
+          path: .lake-shards
+
+      - name: Overlay shard build outputs onto .lake/build
+        run: |
+          set -euo pipefail
+          mkdir -p .lake/build
+          for shard in .lake-shards/lake-build-*; do
+            if [ -d "$shard" ]; then
+              echo "Overlaying $shard"
+              cp -RPp "$shard"/. .lake/build/
+            fi
+          done
+          rm -rf .lake-shards
+
+      - name: Final lake build
+        run: |
+          set -euo pipefail
+          ~/.elan/bin/lake build LeanPool 2>&1 | tee lean-build.log
+          if grep -nE '(^|: )warning:' lean-build.log; then
+            echo "::error::Lean build emitted warnings; fix them before merging."
+            exit 1
+          fi
+
+      - name: Lint
+        run: ~/.elan/bin/lake exe runLinter LeanPool
+
+      - name: Text style lint
+        run: ~/.elan/bin/lake exe lint-style LeanPool
+
+      - name: Save caches
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+          key: ${{ needs.preflight.outputs.cache-key }}-${{ github.sha }}
+
+  # Step 3b: repository quality checks. Runs in parallel with `lint`; it
+  # likewise overlays the shard artifacts so the axiom audit sees every
+  # built olean.
+  quality:
+    needs: [preflight, build]
+    runs-on: ubuntu-latest
+    name: Repository quality
     steps:
       - name: Checkout project
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -292,24 +368,8 @@ jobs:
             exit 1
           fi
 
-      - name: Lint
-        run: ~/.elan/bin/lake exe runLinter LeanPool
-
-      - name: Text style lint
-        run: ~/.elan/bin/lake exe lint-style LeanPool
-
       - name: Repository quality checks
         run: |
           cd python
           uv sync --locked
           uv run python -m lean_pool.quality --repo ..
-
-      - name: Save caches
-        if: always() && github.ref == 'refs/heads/main'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: |
-            ~/.elan
-            .lake/packages
-            .lake/build
-          key: ${{ needs.preflight.outputs.cache-key }}-${{ github.sha }}
