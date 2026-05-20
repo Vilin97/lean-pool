@@ -8,11 +8,12 @@ import LeanPool.NeuralNetworks.Hopfield.Basic
 import LeanPool.NeuralNetworks.Hopfield.Energy
 
 /-!
-# Convergence Theorems for Hopfield Networks
+# Fixed-Point Reachability for Hopfield Networks
 
-This file proves the convergence of Hopfield networks under certain conditions.
-Specifically, it shows that starting from any initial state, a finite sequence of
-single-neuron updates leads to a stable fixed point.
+This file proves a finite fixed-point reachability theorem for zero-threshold
+Hopfield networks. Specifically, it shows that starting from any initial state,
+there exists a finite sequence of single-neuron updates leading to a stable fixed
+point.
 
 The key ideas behind the proof are:
 
@@ -27,10 +28,10 @@ The key ideas behind the proof are:
 4.  **Well-Foundedness:** The energy order is well-founded, meaning there are no
   infinite descending chains.
 
-5.  **Convergence:** By well-founded induction on the energy order, we can show that
-  starting from any initial state, there is a finite sequence of updates that leads
-  to a stable fixed point.
-  This convergence result relies on the assumption that all thresholds are zero,
+5.  **Reachability:** By well-founded induction on the energy order, we can show
+  that starting from any initial state, there is a finite sequence of updates that
+  leads to a stable fixed point.
+  This reachability result relies on the assumption that all thresholds are zero,
   i.e., `(h_threshold_zero : ∀ j, net.thresholds j = 0)`.
 
 ## Key Definitions
@@ -55,8 +56,8 @@ The key ideas behind the proof are:
 *   `energy_wf`: Well‐foundedness of the `energy_order`: any infinite descending
   chain in energy would require infinitely many distinct states from a finite set,
   which is impossible.
-*   `convergence`: Main convergence theorem: from any initial state `x₀`, there is
-  a finite sequence of single-neuron updates leading to a stable fixed point.
+*   `convergence`: Main reachability theorem: from any initial state `x₀`, there is
+  some finite sequence of single-neuron updates leading to a stable fixed point.
 -/
 
 namespace HopfieldState

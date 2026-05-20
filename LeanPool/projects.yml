@@ -445,8 +445,8 @@ projects:
       - "11E25"
       - "11H06"
   - slug: neuralnetworks
-    title: Neural Networks
-    summary: Formalizes finite Hopfield networks, their energy function, monotonicity, and convergence to a fixed point under zero thresholds.
+    title: Hopfield Network Energy Descent
+    summary: Formalizes finite zero-threshold Hopfield networks, energy descent along updates, and existence of a finite update path to a fixed point.
     branch: machine learning
     entry_module: LeanPool.NeuralNetworks
     authors:
@@ -457,18 +457,15 @@ projects:
       authors:
         - John J. Hopfield
       doi: "10.1073/pnas.79.8.2554"
-      github_repo: or4nge19/NeuralNetworks
     status: verified
     main_declarations:
-      - HopfieldState.HopfieldNetwork
+      - HopfieldState.energy_monotonically_decreases
       - HopfieldState.convergence
     main_results:
-      - declaration: HopfieldState.HopfieldNetwork
-        informal: Defines a Hopfield network as a symmetric weight matrix with zero diagonal and thresholds.
       - declaration: HopfieldState.energy_monotonically_decreases
         informal: Proves that the Hopfield energy is non-increasing along every update sequence with zero thresholds.
       - declaration: HopfieldState.convergence
-        informal: Proves that from any initial state, a finite sequence of single-neuron updates reaches a fixed point.
+        informal: Proves that from any initial state, there exists a finite sequence of single-neuron updates reaching a fixed point.
     tags:
       - neural-networks
       - hopfield-networks

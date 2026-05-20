@@ -11,7 +11,7 @@ import LeanPool.NeuralNetworks.Hopfield.Convergence
 /-!
 # Hopfield Networks
 
-Formalization of Hopfield networks: spin states, network structure, energy
-function, monotonic energy decrease during updates, and convergence to fixed
-points.
+Formalization of finite Hopfield networks: spin states, network structure,
+energy function, monotonic energy decrease during zero-threshold updates, and
+existence of a finite update path to a fixed point.
 -/

@@ -452,29 +452,6 @@ noncomputable def randomUpdate {n : ℕ} (net : HopfieldNetwork n) (selector : N
   let i ← selector x
   let x' := updateState net x i
   if x' = x then none else some x'
-/--
-`ContentAddressableMemory` wraps a `HopfieldNetwork` and a finite set of
-stored patterns with a threshold criterion guaranteeing pattern completion.
--/
-structure ContentAddressableMemory (n : ℕ) : Type where
-  /-- The underlying Hopfield network used for pattern storage and recall. -/
-  network : HopfieldNetwork n
-  /-- The set of stored patterns that can be recalled. -/
-  patterns : Finset (HopfieldState n)
-  /-- The overlap threshold required for pattern completion. -/
-  threshold : ℝ
-  completes :
-    ∀ p ∈ patterns, ∀ x : HopfieldState n,
-      overlap x p ≥ threshold →
-      ∃ y : HopfieldState n,
-        isFixedPoint network y ∧ overlap y p = (n : ℝ)
-
-/--
-Convenience coercion from `ContentAddressableMemory` to its underlying `HopfieldNetwork`.
--/
-instance contentAddressableMemoryToHopfieldNetwork {n : ℕ} :
-    Coe (ContentAddressableMemory n) (HopfieldNetwork n) where
-  coe c := c.network
 
 end UpdateSeq
 end HopfieldState
