@@ -144,8 +144,6 @@ jobs:
             targets: >-
               LeanPool.ABCExceptions
               LeanPool.ArchonFirstProofResults
-              LeanPool.DirectedTopologyLean4
-              LeanPool.Isoperimetric
               LeanPool.LowDimSolvClassification
               LeanPool.AharoniKorman
               LeanPool.ArtinWedderburn
@@ -158,6 +156,8 @@ jobs:
             targets: >-
               LeanPool.SelbergSieve4
               LeanPool.Shannon1948Formalization
+              LeanPool.DirectedTopologyLean4
+              LeanPool.Isoperimetric
               LeanPool.PartialCombinatoryAlgebras
               LeanPool.PartialRegularity
               LeanPool.Fineqs
