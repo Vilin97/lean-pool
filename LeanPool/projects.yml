@@ -445,15 +445,17 @@ projects:
       - "11E25"
       - "11H06"
   - slug: leanfibredcategories
-    title: Lean4 Formalization Of Fibred Categories
-    summary: Foundational API for Grothendieck fibrations, including cartesian morphisms and the total category of a functor.
+    title: Cartesian Morphisms for Fibred Categories
+    summary: Foundational API for fibers of a functor, based and cartesian lifts, cartesian and vertical morphisms, and the total category.
     branch: category theory
     entry_module: LeanPool.LeanFibredCategories
     authors:
       - Sina Hazratpour
     source:
-      url: https://github.com/sinhp/LeanFibredCategories
-      github_repo: sinhp/LeanFibredCategories
+      title: "Handbook of Categorical Algebra 2: Categories and Structures"
+      authors:
+        - Francis Borceux
+      doi: 10.1017/CBO9780511525865
     status: verified
     main_declarations:
       - CategoryTheory.BasedLift
