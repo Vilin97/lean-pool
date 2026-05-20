@@ -15,14 +15,7 @@ import Mathlib.NumberTheory.LSeries.HurwitzZetaValues
 import Mathlib.NumberTheory.LSeries.Nonvanishing
 import Mathlib.NumberTheory.ZetaValues
 import Mathlib.RingTheory.ZMod.UnitsCyclic
-import Mathlib.Tactic.Common
-import Mathlib.Tactic.Bound
-import Mathlib.Tactic.Convert
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
+import Mathlib.Tactic
 
 /-! # Irregular primes and Bernoulli numbers (extension)
 
