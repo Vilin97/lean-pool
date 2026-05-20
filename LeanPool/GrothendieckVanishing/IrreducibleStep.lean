@@ -134,10 +134,9 @@ theorem exists_nonzero_stalk_in_V
     ∃ (x : X) (_ : x ∈ V)
       (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj R),
       a ≠ 0 := by
-  let Rsh : TopCat.Sheaf AddCommGrpCat.{u} X := ⟨R, hRsh⟩
   by_contra! h
   apply hR
-  have hRsh_zero : IsZero Rsh :=
+  have hRsh_zero : IsZero (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) :=
     sheaf_isZero_of_zero_stalks X hRsh (fun x a ↦ by
       by_cases hx : (x : X) ∈ (V : Set X)
       · exact h x hx a
@@ -150,12 +149,9 @@ theorem exists_nonzero_stalk_in_V
         exact hi_inj ((stalk_zeroOutsideInt_zero_outside V x hx _).trans (map_zero _).symm))
   refine Functor.isZero R ?_
   intro U
-  have hforget_eval :
-      (TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
-        (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj U).PreservesZeroMorphisms := by
-    refine ⟨?_⟩
-    intro A B
-    rfl
+  haveI : (TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
+      (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj U).PreservesZeroMorphisms :=
+    ⟨fun A B ↦ rfl⟩
   simpa using Functor.map_isZero
     (TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
       (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj U) hRsh_zero
@@ -379,18 +375,16 @@ theorem closedComplementVanishing
   let Csh : TopCat.Sheaf AddCommGrpCat.{u} X := ⟨C, hC⟩
   set Y := (V : Set X)ᶜ
   have hYcl : IsClosed Y := V.2.isClosed_compl
-  have hY_dim_lt_top : topologicalKrullDim Y < ⊤ :=
-    topologicalKrullDim_lt_top_of_lt_nat (by simpa [gt_iff_lt] using hn)
   have hY_dim_lt : topologicalKrullDim Y < topologicalKrullDim X :=
     topologicalKrullDim_lt_of_isIrreducible_of_isClosed hYcl
       (Set.compl_ne_univ.mpr (Set.nonempty_iff_ne_empty.mpr (Opens.coe_eq_empty.not.mpr hV)))
-      hY_dim_lt_top
+      (topologicalKrullDim_lt_top_of_lt_nat (by simpa [gt_iff_lt] using hn))
   let closedIncl := TopCat.closedIncl hYcl
   let CY := ((TopCat.Sheaf.pullback AddCommGrpCat.{u} closedIncl).obj Csh)
   let S := closedImmersionSES (Z := Y) (hZ := hYcl) Csh
   have hSE := closedImmersionSES_shortExact (Z := Y) (hZ := hYcl) Csh
-  have hSX₁_zero : IsZero S.X₁ := by
-    exact sheaf_isZero_of_zero_stalks X S.X₁.property (fun x a ↦ by
+  have hSX₁_zero : IsZero S.X₁ :=
+    sheaf_isZero_of_zero_stalks X S.X₁.property (fun x a ↦ by
       by_cases hxY : x ∈ Y
       · haveI : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
           simpa [S, closedImmersionSES, closedIncl, Csh] using
@@ -441,17 +435,13 @@ theorem zeroOutsideInt_cohomology_vanishing
   have hm_ne : m ≠ 0 := by
     intro h; subst h; exact absurd hm (not_lt.mpr topologicalKrullDim_nonneg)
   obtain ⟨m', rfl⟩ := Nat.exists_eq_succ_of_ne_zero hm_ne
-  have hVcompl_lt_succ :
-      topologicalKrullDim (Set.compl (V : Set X)) < ↑↑(m' + 1 : ℕ) :=
-    topologicalKrullDim_subspace_lt_of_lt (X := X) (Set.compl (V : Set X))
-      (by simpa [gt_iff_lt] using hm)
   have hVcompl_lt_top : topologicalKrullDim (Set.compl (V : Set X)) < ⊤ :=
-    topologicalKrullDim_lt_top_of_lt_nat hVcompl_lt_succ
+    topologicalKrullDim_lt_top_of_lt_nat
+      (topologicalKrullDim_subspace_lt_of_lt (X := X) (Set.compl (V : Set X))
+        (by simpa [gt_iff_lt] using hm))
   have hVcompl_lt_X : topologicalKrullDim (Set.compl (V : Set X)) < topologicalKrullDim X :=
-    topologicalKrullDim_lt_of_isIrreducible_of_isClosed
-      V.2.isClosed_compl
-      (Set.compl_ne_univ.mpr (Set.nonempty_iff_ne_empty.mpr
-        (Opens.coe_eq_empty.not.mpr hV)))
+    topologicalKrullDim_lt_of_isIrreducible_of_isClosed V.2.isClosed_compl
+      (Set.compl_ne_univ.mpr (Set.nonempty_iff_ne_empty.mpr (Opens.coe_eq_empty.not.mpr hV)))
       hVcompl_lt_top
   have hVcompl_lt_m' : topologicalKrullDim (Set.compl (V : Set X)) < ↑↑(m' : ℕ) :=
     topologicalKrullDim_lt_nat_of_lt_of_lt_nat_succ hVcompl_lt_X
@@ -488,8 +478,8 @@ theorem subsheaf_zeroOutsideInt_vanishing
     haveI : Mono j := hj_mono
     let jsh : TopCat.Sheaf.zeroOutsideInt V' ⟶
         (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) := ObjectProperty.homMk j
-    haveI : Mono jsh := by
-      exact (Sheaf.Hom.mono_iff_presheaf_mono
+    haveI : Mono jsh :=
+      (Sheaf.Hom.mono_iff_presheaf_mono
         (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) jsh).2
           (inferInstanceAs (Mono j))
     let C : TopCat.Sheaf AddCommGrpCat.{u} X :=
@@ -497,14 +487,12 @@ theorem subsheaf_zeroOutsideInt_vanishing
     have hC : Subsingleton (Sheaf.H C m) := by
       have hV'compl_lt_nat :
           topologicalKrullDim (Set.compl (V' : Set X)) < ↑↑(m : ℕ) :=
-        topologicalKrullDim_subspace_lt_of_lt (X := X) (Set.compl (V' : Set X))
-          hm
+        topologicalKrullDim_subspace_lt_of_lt (X := X) (Set.compl (V' : Set X)) hm
       have hV'compl_lt_top : topologicalKrullDim (Set.compl (V' : Set X)) < ⊤ :=
         topologicalKrullDim_lt_top_of_lt_nat hV'compl_lt_nat
       have hV'compl_lt_X :
           topologicalKrullDim (Set.compl (V' : Set X)) < topologicalKrullDim X :=
-        topologicalKrullDim_lt_of_isIrreducible_of_isClosed
-          V'.2.isClosed_compl
+        topologicalKrullDim_lt_of_isIrreducible_of_isClosed V'.2.isClosed_compl
           (Set.compl_ne_univ.mpr (Set.nonempty_iff_ne_empty.mpr
             (Opens.coe_eq_empty.not.mpr hV'ne)))
           hV'compl_lt_top
@@ -536,9 +524,8 @@ theorem epiImage_zeroOutsideInt_vanishing_of_locallySurjective
   · subst hV
     let fshBot : TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X) ⟶
         (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) := ObjectProperty.homMk f
-    have hEpiBot : Epi fshBot := by
-      rw [← TopCat.Sheaf.isLocallySurjective_iff_epi fshBot]
-      simpa using hf
+    have hEpiBot : Epi fshBot :=
+      (TopCat.Sheaf.isLocallySurjective_iff_epi fshBot).mp (by simpa using hf)
     have hZero : IsZero ((⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)) :=
       @IsZero.of_epi _ _ _ _ _ fshBot hEpiBot (isZero_zeroOutsideInt_bot X)
     simpa using sheafH_subsingleton_of_isZero hZero m

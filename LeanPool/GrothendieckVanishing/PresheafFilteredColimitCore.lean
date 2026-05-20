@@ -182,15 +182,15 @@ theorem sheafH_filtered_colimit_succ_iota_fac
     c'.ι.app j ≫ sheafH_filtered_colimit_succ_iota Y' c' hc' =
       (sheafH_filtered_colimit_succ_eta Y').app j ≫
         (sheafH_filtered_colimit_succ_injCocone Y').ι.app j :=
-  hc'.fac (sheafH_filtered_colimit_succ_iotaCocone Y') j
+  hc'.fac _ j
 
 noncomputable instance sheafH_filtered_colimit_succ_iota_mono
     (c' : Cocone Y') (hc' : IsColimit c') :
-    Mono (sheafH_filtered_colimit_succ_iota Y' c' hc') := by
+    Mono (sheafH_filtered_colimit_succ_iota Y' c' hc') :=
   haveI : ∀ j, Mono ((sheafH_filtered_colimit_succ_eta Y').app j) :=
     sheafH_filtered_colimit_succ_eta_mono (Y' := Y')
   haveI : Mono (sheafH_filtered_colimit_succ_eta Y') := NatTrans.mono_of_mono_app _
-  exact colim.map_mono' (sheafH_filtered_colimit_succ_eta Y') hc'
+  colim.map_mono' (sheafH_filtered_colimit_succ_eta Y') hc'
     (colimit.isColimit (sheafH_filtered_colimit_succ_Inj Y'))
     (sheafH_filtered_colimit_succ_iota Y' c' hc')
     (sheafH_filtered_colimit_succ_iota_fac Y' c' hc')
@@ -387,10 +387,10 @@ omit [IsFiltered J'] in
 theorem sheafH_filtered_colimit_succ_stage_shortExact (j : J') :
     (ShortComplex.mk ((sheafH_filtered_colimit_succ_eta Y').app j)
       (cokernel.π ((sheafH_filtered_colimit_succ_eta Y').app j))
-      (cokernel.condition ((sheafH_filtered_colimit_succ_eta Y').app j))).ShortExact := by
+      (cokernel.condition ((sheafH_filtered_colimit_succ_eta Y').app j))).ShortExact :=
   haveI : Mono ((sheafH_filtered_colimit_succ_eta Y').app j) :=
     sheafH_filtered_colimit_succ_eta_mono (Y' := Y') j
-  exact ShortComplex.ShortExact.mk'
+  ShortComplex.ShortExact.mk'
     (ShortComplex.exact_of_g_is_cokernel _
       (cokernelIsCokernel ((sheafH_filtered_colimit_succ_eta Y').app j)))
     inferInstance inferInstance
@@ -511,8 +511,8 @@ noncomputable def sheafH_filtered_colimit_comparison
     (n : ℕ) (c' : Cocone Y') (j : J') :
     colimit.ι (Y' ⋙ sheafCohomologyFunctor X n) j ≫
         sheafH_filtered_colimit_comparison Y' n c' =
-      (sheafCohomologyFunctor X n).map (c'.ι.app j) := by
-  exact colimit.ι_desc ((sheafCohomologyFunctor X n).mapCocone c') j
+      (sheafCohomologyFunctor X n).map (c'.ι.app j) :=
+  colimit.ι_desc ((sheafCohomologyFunctor X n).mapCocone c') j
 
 /-- Successor-step compatibility for the filtered-colimit comparison map: whenever the
 associated sheaf diagram and its colimit have vanishing injective-replacement cohomology in

@@ -229,17 +229,9 @@ noncomputable def sheafH_succ_map {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
     (hS : S.ShortExact)
     (n : ℕ) :
-    AddCommGrpCat.of (Sheaf.H S.X₃ n) ⟶ AddCommGrpCat.of (Sheaf.H S.X₁ (n + 1)) := by
-  exact AddCommGrpCat.ofHom <|
-    AddMonoidHom.mk'
-      (fun y ↦ y.comp hS.extClass rfl)
-      (by
-        intro a b
-        change (a + b).comp hS.extClass rfl = a.comp hS.extClass rfl + b.comp hS.extClass rfl
-        change (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)) (a + b) =
-          (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)) a +
-            (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)) b
-        exact (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)).map_add a b)
+    AddCommGrpCat.of (Sheaf.H S.X₃ n) ⟶ AddCommGrpCat.of (Sheaf.H S.X₁ (n + 1)) :=
+  AddCommGrpCat.ofHom <| AddMonoidHom.mk' (fun y ↦ y.comp hS.extClass rfl)
+    fun a b ↦ (hS.extClass.postcomp _ (rfl : n + 1 = n + 1)).map_add a b
 
 private theorem sheafH_succ_map_apply {X : TopCat.{u}}
     {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)}
@@ -258,16 +250,13 @@ theorem sheafH_succ_map_exists_preimage_of_subsingleton_middle {X : TopCat.{u}}
     (x : Sheaf.H S.X₁ (n + 1)) :
     ∃ y : Sheaf.H S.X₃ n, ConcreteCategory.hom (sheafH_succ_map hS n) y = x := by
   obtain ⟨y, hy⟩ := Ext.covariant_sequence_exact₁ _ hS x (@Subsingleton.elim _ h₂H _ _) rfl
-  refine ⟨y, ?_⟩
-  rw [sheafH_succ_map_apply]
-  exact hy
+  exact ⟨y, sheafH_succ_map_apply hS n y ▸ hy⟩
 
 theorem sheaf_isZero_of_zero_stalks (X : TopCat.{u})
     {F : TopCat.Presheaf AddCommGrpCat.{u} X} (hF : F.IsSheaf)
     (hstalk : ∀ (x : X)
       (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj F), a = 0) :
     IsZero ((⟨F, hF⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)) := by
-  let Fsh : TopCat.Sheaf AddCommGrpCat.{u} X := ⟨F, hF⟩
   have hZ : IsZero F := Functor.isZero F (fun ⟨U⟩ ↦
     @AddCommGrpCat.isZero_of_subsingleton _
       ⟨fun s t ↦ by
@@ -279,13 +268,11 @@ theorem sheaf_isZero_of_zero_stalks (X : TopCat.{u})
         have hWU : W ≤ U := leOfHom iV
         rw [Subsingleton.elim iV (homOfLE hWU)] at hEq
         exact ⟨W, hWU, hxW, hEq⟩⟩)
-  have hFsh : IsZero Fsh := by
-    exact IsZero.mk
-      (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
-        fun U ↦ (hZ.obj U).eq_zero_of_src (f.hom.app U))) }⟩)
-      (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
-        fun U ↦ (hZ.obj U).eq_zero_of_tgt (f.hom.app U))) }⟩)
-  simpa [Fsh] using hFsh
+  exact IsZero.mk
+    (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
+      fun U ↦ (hZ.obj U).eq_zero_of_src (f.hom.app U))) }⟩)
+    (fun G ↦ ⟨{ default := 0, uniq := fun f ↦ InducedCategory.Hom.ext (NatTrans.ext (funext
+      fun U ↦ (hZ.obj U).eq_zero_of_tgt (f.hom.app U))) }⟩)
 
 /-- If a bundled sheaf is zero, then its cohomology is subsingleton in every degree. -/
 theorem sheafH_subsingleton_of_isZero {X : TopCat.{u}}
@@ -303,24 +290,22 @@ theorem stalk_zero_of_ses_g_iso
     (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj S.X₁.obj) :
     a = 0 := by
   let T := TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x
-  have hf_mono : Mono S.f.hom := by
-    exact (Sheaf.Hom.mono_iff_presheaf_mono
-      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).1 hS.mono_f
-  haveI : Mono S.f := by
-    exact (Sheaf.Hom.mono_iff_presheaf_mono
-      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).2 hf_mono
+  have hf_mono : Mono S.f.hom :=
+    (Sheaf.Hom.mono_iff_presheaf_mono (J := Opens.grothendieckTopology X)
+      (D := AddCommGrpCat.{u}) S.f).1 hS.mono_f
+  haveI : Mono S.f :=
+    (Sheaf.Hom.mono_iff_presheaf_mono (J := Opens.grothendieckTopology X)
+      (D := AddCommGrpCat.{u}) S.f).2 hf_mono
   haveI := TopCat.Presheaf.stalkFunctor_preserves_mono (C := AddCommGrpCat.{u}) (X := X) x
   have hTf_mono : Mono (T.map S.f.hom) := by
     simpa [T] using (Functor.map_mono (TopCat.Sheaf.forget _ _ ⋙ T) S.f)
   have hf0 : T.map S.f.hom = 0 := by
-    have : T.map S.f.hom ≫ T.map S.g.hom = 0 := by
-      have hzero : S.f.hom ≫ S.g.hom = 0 := congrArg InducedCategory.Hom.hom S.zero
-      have hcomp_map : T.map (S.f.hom ≫ S.g.hom) = 0 :=
-        (congrArg (fun h ↦ T.map h) hzero).trans
-          (Functor.map_zero T S.X₁.obj S.X₃.obj)
-      simpa [Functor.map_comp] using hcomp_map
+    have hzero : S.f.hom ≫ S.g.hom = 0 := congrArg InducedCategory.Hom.hom S.zero
+    have hcomp : T.map S.f.hom ≫ T.map S.g.hom = 0 := by
+      rw [← T.map_comp]
+      exact (congrArg (fun h ↦ T.map h) hzero).trans (Functor.map_zero T S.X₁.obj S.X₃.obj)
     rw [show T.map S.f.hom = (T.map S.f.hom ≫ T.map S.g.hom) ≫ inv (T.map S.g.hom) by simp,
-      this, zero_comp]
+      hcomp, zero_comp]
   exact (AddCommGrpCat.mono_iff_injective _).mp hTf_mono
     (show ConcreteCategory.hom (T.map S.f.hom) a = ConcreteCategory.hom (T.map S.f.hom) 0 by
       simp [hf0])
@@ -335,12 +320,12 @@ theorem stalk_zero_of_shortExact_kernel
     (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj S.X₁.obj) :
     a = 0 := by
   let T := TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x
-  have hf_mono : Mono S.f.hom := by
-    exact (Sheaf.Hom.mono_iff_presheaf_mono
-      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).1 hS.mono_f
-  haveI : Mono S.f := by
-    exact (Sheaf.Hom.mono_iff_presheaf_mono
-      (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) S.f).2 hf_mono
+  have hf_mono : Mono S.f.hom :=
+    (Sheaf.Hom.mono_iff_presheaf_mono (J := Opens.grothendieckTopology X)
+      (D := AddCommGrpCat.{u}) S.f).1 hS.mono_f
+  haveI : Mono S.f :=
+    (Sheaf.Hom.mono_iff_presheaf_mono (J := Opens.grothendieckTopology X)
+      (D := AddCommGrpCat.{u}) S.f).2 hf_mono
   haveI := TopCat.Presheaf.stalkFunctor_preserves_mono (C := AddCommGrpCat.{u}) (X := X) x
   have hTf_mono : Mono (T.map S.f.hom) := by
     simpa [T] using (Functor.map_mono (TopCat.Sheaf.forget _ _ ⋙ T) S.f)
@@ -561,10 +546,10 @@ theorem sheafH_subsingleton_H1_of_injective_of_epi_app_top {X : TopCat.{u}}
     (hS : S.ShortExact)
     [hI : Injective S.X₂]
     (hg : Epi (S.g.hom.app (op ⊤))) :
-    Subsingleton (Sheaf.H S.X₁ 1) := by
-  exact sheafH_subsingleton_H1_via_epi_app_top hS
-    (@sheafH_subsingleton_of_injective (Opens X) _ (Opens.grothendieckTopology X)
-      _ _ S.X₂ hI 0) hg
+    Subsingleton (Sheaf.H S.X₁ 1) :=
+  sheafH_subsingleton_H1_via_epi_app_top hS
+    (@sheafH_subsingleton_of_injective (Opens X) _ (Opens.grothendieckTopology X) _ _ S.X₂ hI 0)
+    hg
 
 /-- Forward dimension shift for a short exact sequence of sheaves. -/
 theorem sheafH_dimension_shift_of_both {X : TopCat.{u}}
@@ -587,10 +572,9 @@ theorem sheafH_dimension_shift_of_mono {X : TopCat.{u}}
     Subsingleton (Sheaf.H F (n + 1)) := by
   let S := ShortComplex.mk f (cokernel.π f) (cokernel.condition f)
   have hS : S.ShortExact := ShortComplex.ShortExact.mk'
-    (ShortComplex.exact_of_g_is_cokernel _ (cokernelIsCokernel f))
-    inferInstance inferInstance
-  simpa [S] using
-    sheafH_dimension_shift_of_both hS n (by simpa [S] using h₃) (by simpa [S] using h₂)
+    (ShortComplex.exact_of_g_is_cokernel _ (cokernelIsCokernel f)) inferInstance inferInstance
+  simpa [S] using sheafH_dimension_shift_of_both hS n (by simpa [S] using h₃)
+    (by simpa [S] using h₂)
 
 /-- Forward dimension shifting with injective middle term:
     if `0 → S.X₁ → S.X₂ → S.X₃ → 0` is short exact, `S.X₂` is injective,
@@ -615,9 +599,7 @@ theorem sheafH_dimension_shift_X₃_of_locallySurjective {X : TopCat.{u}}
     Subsingleton (Sheaf.H G n) := by
   letI : Balanced (CategoryTheory.Sheaf (Opens.grothendieckTopology X)
       AddCommGrpCat.{u}) := balanced_of_strongEpiCategory
-  haveI : Epi f := by
-    rw [← TopCat.Sheaf.isLocallySurjective_iff_epi f]
-    simpa using hf
+  haveI : Epi f := (TopCat.Sheaf.isLocallySurjective_iff_epi f).mp (by simpa using hf)
   let S := ShortComplex.mk (kernel.ι f) f (kernel.condition f)
   have hS : S.ShortExact := ShortComplex.ShortExact.mk'
     (ShortComplex.exact_of_f_is_kernel _ (kernelIsKernel f)) inferInstance inferInstance
@@ -660,17 +642,13 @@ theorem subsingleton_sheafH_of_shortExact_middle {X : TopCat.{u}}
   have hS : S.ShortExact := ShortComplex.ShortExact.mk'
     (ShortComplex.exact_of_g_is_cokernel _ (cokernelIsCokernel f))
     inferInstance inferInstance
-  have h₁' : Subsingleton (Sheaf.H S.X₁ n) := by
-    simpa [S] using h₁
-  have h₃' : Subsingleton (Sheaf.H S.X₃ n) := by
-    simpa [S] using h₃
   constructor
   intro a b
   obtain ⟨c, hc⟩ := Ext.covariant_sequence_exact₂ _ hS a
-    (@Subsingleton.elim _ ((add_zero n) ▸ h₃') _ _)
+    (@Subsingleton.elim _ ((add_zero n) ▸ (by simpa [S] using h₃)) _ _)
   obtain ⟨d, hd⟩ := Ext.covariant_sequence_exact₂ _ hS b
-    (@Subsingleton.elim _ ((add_zero n) ▸ h₃') _ _)
-  rw [← hc, ← hd, @Subsingleton.elim _ h₁' c d]
+    (@Subsingleton.elim _ ((add_zero n) ▸ (by simpa [S] using h₃)) _ _)
+  rw [← hc, ← hd, @Subsingleton.elim _ (by simpa [S] using h₁) c d]
 
 /-- Naturality of `sheafH1_cokernel_iso_of_subsingleton_middle` for a morphism between
     two short exact sequences of sheaves. -/

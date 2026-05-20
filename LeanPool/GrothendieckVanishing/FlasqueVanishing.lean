@@ -59,17 +59,16 @@ lemma sections_exact_of_shortExact {X : TopCat.{u}}
   let sectV :=
     sheafToPresheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u} ⋙
       (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op V)
-  have hzero : sectV.PreservesZeroMorphisms := by
+  haveI hzero : sectV.PreservesZeroMorphisms := by
     dsimp [sectV]
     infer_instance
-  have hlimits : PreservesLimitsOfShape WalkingParallelPair sectV := by
+  haveI hlimits : PreservesLimitsOfShape WalkingParallelPair sectV := by
     dsimp [sectV]
     infer_instance
   let complex := @ShortComplex.map _ _ _ _ _ _ S sectV hzero
-  have hhomology : complex.HasHomology := inferInstance
   have hexact : complex.Exact :=
     @ShortComplex.Exact.map_of_mono_of_preservesKernel _ _ _ _ _ _ S _
-      hS.exact sectV hzero hhomology hS.mono_f
+      hS.exact sectV hzero inferInstance hS.mono_f
       (PreservesLimitsOfShape.preservesLimit (F := sectV) (K := parallelPair S.g 0))
   simpa [complex, sectV] using
     (ShortComplex.ab_exact_iff complex).mp hexact x hx
@@ -265,8 +264,7 @@ private lemma under_extend_by_one_open {X : TopCat.{u}}
   have hV₀U : V₀ ≤ U := leOfHom t.hom.val.unop
   have ht₀ : ConcreteCategory.hom (S.g.hom.app (op V₀)) t₀ =
       ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s := by
-    have hmap := CategoryOfElements.map_snd t.hom
-    simpa [V₀, t₀] using hmap.symm
+    simpa [V₀, t₀] using (CategoryOfElements.map_snd t.hom).symm
   obtain ⟨t'', hgt'', hcompat_patch⟩ :=
     exists_patch_of_shortExact hS hX₁_epi hV₀U hWU ht₀ ht'
   let T : Bool → PartialLift S.g s
@@ -310,8 +308,7 @@ theorem epi_app_of_shortExact_of_epi_restrictions {X : TopCat.{u}}
   have hV₀U : V₀ ≤ U := leOfHom t.hom.val.unop
   have ht₀ : ConcreteCategory.hom (S.g.hom.app (op V₀)) t₀ =
       ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s := by
-    have hmap := CategoryOfElements.map_snd t.hom
-    simpa [V₀, t₀] using hmap.symm
+    simpa [V₀, t₀] using (CategoryOfElements.map_snd t.hom).symm
   have hUleV₀ : U ≤ V₀ := by
     by_contra hnot
     have hlt : V₀ < U := lt_of_le_not_ge hV₀U hnot
@@ -349,13 +346,11 @@ theorem isFlasque_X₃_of_shortExact {X : TopCat.{u}}
     IsFlasqueSheaf S.X₃ := by
   intro U V j
   have hg_U : Epi (S.g.hom.app (op U)) :=
-    epi_app_of_shortExact_of_epi_restrictions hS
-      (fun {_ _} i ↦ hX₁ i) U
-  have hres₂ : Epi (S.X₂.obj.map j.op) := hX₂ j
-  rw [AddCommGrpCat.epi_iff_surjective] at hg_U hres₂ ⊢
+    epi_app_of_shortExact_of_epi_restrictions hS (fun {_ _} i ↦ hX₁ i) U
+  rw [AddCommGrpCat.epi_iff_surjective] at hg_U ⊢
   intro z
   obtain ⟨w, hw⟩ := hg_U z
-  obtain ⟨x, hx⟩ := hres₂ w
+  obtain ⟨x, hx⟩ := (AddCommGrpCat.epi_iff_surjective _).mp (hX₂ j) w
   exact ⟨ConcreteCategory.hom (S.g.hom.app (op V)) x, by
     have := congrArg (· x) (S.g.hom.naturality j.op)
     simp only [AddCommGrpCat.hom_comp] at this
@@ -412,15 +407,10 @@ theorem sheafH_subsingleton_of_flasque
       letI : Injective S.X₂ := by
         simpa [S] using (inferInstance : Injective S.X₂)
       have hX₁ : IsFlasqueSheaf S.X₁ := fun i ↦ by simpa [S] using hF i
-      have hX₂ : IsFlasqueSheaf S.X₂ := isFlasque_of_injective S.X₂
       have hX₃ : IsFlasqueSheaf S.X₃ := fun i ↦ by
-        simpa [S] using
-          (isFlasque_X₃_of_shortExact
-            (by simpa [S] using ip.shortExact_shortComplex) hX₁ hX₂) i
-      have h₃H : Subsingleton (Sheaf.H S.X₃ (n + 1)) := by
-        simpa using (ih S.X₃ hX₃)
-      simpa [S] using
-        (sheafH_dimension_shift_of_injective
-          (S := S)
+        simpa [S] using (isFlasque_X₃_of_shortExact
           (by simpa [S] using ip.shortExact_shortComplex)
-          (n + 1) h₃H)
+          hX₁ (isFlasque_of_injective S.X₂)) i
+      simpa [S] using sheafH_dimension_shift_of_injective (S := S)
+        (by simpa [S] using ip.shortExact_shortComplex)
+        (n + 1) (by simpa using ih S.X₃ hX₃)

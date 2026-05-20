@@ -151,14 +151,11 @@ theorem cohomology_vanishing_of_finitelyGenerated_vanishing
     simpa [finsetGenFunctor, sheafCohomologyFunctor] using
       (AddCommGrpCat.isZero_of_subsingleton
         (AddCommGrpCat.of (Sheaf.H (TopCat.Presheaf.finsetGeneratedSheaf hK S) m)))
-  have hZeroColim :
-      IsZero (colimit (finsetGenFunctor hK ⋙ sheafCohomologyFunctor X m)) :=
-    (colimit.isColimit _).isZero_pt hZeroDiagram
   have hZeroTarget :
       IsZero (AddCommGrpCat.of
         (Sheaf.H (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m)) := by
     simpa [finsetGenCocone] using
-      IsZero.of_iso hZeroColim
+      IsZero.of_iso ((colimit.isColimit _).isZero_pt hZeroDiagram)
         (sheafH_preserves_filtered_colimits
           (Y' := finsetGenFunctor hK)
           (c' := finsetGenCocone hK)

@@ -171,32 +171,25 @@ theorem topologicalKrullDim_add_one_eq_iSup_height_add_one (X : Type u) [Topolog
       ⨆ S : IrreducibleCloseds X, ((S.height : WithBot ℕ∞) + 1) := by
   cases isEmpty_or_nonempty (IrreducibleCloseds X) with
   | inl h =>
-      rw [topologicalKrullDim_eq_iSup_height]
-      letI := h
-      simp
+    letI := h
+    rw [topologicalKrullDim_eq_iSup_height]
+    simp
   | inr h =>
-      letI := h
-      rw [topologicalKrullDim_eq_iSup_height]
-      have bdd :
-          BddAbove (Set.range (fun S : IrreducibleCloseds X ↦ IrreducibleCloseds.height S)) :=
-        OrderTop.bddAbove _
-      have hcoe_iSup :
-          (⨆ S : IrreducibleCloseds X, (S.height : WithBot ℕ∞)) =
-            ↑(⨆ S : IrreducibleCloseds X, IrreducibleCloseds.height S) :=
-        (WithBot.coe_iSup
-          (f := fun S : IrreducibleCloseds X ↦ IrreducibleCloseds.height S) bdd).symm
-      have hcoe_add :
-          (↑(⨆ S : IrreducibleCloseds X, IrreducibleCloseds.height S) : WithBot ℕ∞) + 1 =
-            ↑((⨆ S : IrreducibleCloseds X, IrreducibleCloseds.height S) + 1) := by
-        push_cast; ring
-      have hsucc_coe : ∀ S : IrreducibleCloseds X,
-          (↑(S.height + 1 : ℕ∞) : WithBot ℕ∞) = (↑S.height : WithBot ℕ∞) + 1 := by
-        intro S; push_cast; ring
-      rw [hcoe_iSup, hcoe_add, ENat.iSup_add,
-        WithBot.coe_iSup
-          (f := fun S : IrreducibleCloseds X ↦ IrreducibleCloseds.height S + 1)
-          (OrderTop.bddAbove _)]
-      simp_rw [hsucc_coe]
+    letI := h
+    rw [topologicalKrullDim_eq_iSup_height]
+    have bdd : BddAbove (Set.range (fun S : IrreducibleCloseds X ↦ IrreducibleCloseds.height S)) :=
+      OrderTop.bddAbove _
+    rw [(WithBot.coe_iSup (f := fun S : IrreducibleCloseds X ↦ IrreducibleCloseds.height S)
+          bdd).symm,
+      (by push_cast; ring :
+        (↑(⨆ S : IrreducibleCloseds X, IrreducibleCloseds.height S) : WithBot ℕ∞) + 1 =
+          ↑((⨆ S : IrreducibleCloseds X, IrreducibleCloseds.height S) + 1)),
+      ENat.iSup_add,
+      WithBot.coe_iSup (f := fun S : IrreducibleCloseds X ↦ IrreducibleCloseds.height S + 1)
+        (OrderTop.bddAbove _)]
+    simp_rw [show ∀ S : IrreducibleCloseds X,
+        (↑(S.height + 1 : ℕ∞) : WithBot ℕ∞) = (↑S.height : WithBot ℕ∞) + 1 from
+      fun S ↦ by push_cast; ring]
 
 end TopologicalSpace
 
@@ -227,16 +220,11 @@ private theorem topologicalKrullDim_lt_of_add_one_le_of_lt_top {X Y : Type u}
     · rw [hYdim, hXdim] at h
       rw [hYdim] at hfin
       have hy_coe_ne_top : (((ydim : ℕ∞) : WithBot ℕ∞)) ≠ ⊤ := ne_top_of_lt hfin
-      have hy_ne_top : ydim ≠ ⊤ := by
-        intro hy_top
-        exact hy_coe_ne_top (by simp [hy_top])
+      have hy_ne_top : ydim ≠ ⊤ := fun hy_top ↦ hy_coe_ne_top (by simp [hy_top])
       have hy_lt : ydim < ydim + 1 := (ENat.lt_add_one_iff hy_ne_top).mpr le_rfl
-      have hy_lt' :
-          (((ydim : ℕ∞) : WithBot ℕ∞) < (((ydim + 1 : ℕ∞) : WithBot ℕ∞))) := by
-        exact_mod_cast hy_lt
-      have h' : (((ydim + 1 : ℕ∞) : WithBot ℕ∞) ≤ ((xdim : ℕ∞) : WithBot ℕ∞)) := by
-        simpa using h
-      exact lt_of_lt_of_le hy_lt' h'
+      have hy_lt' : (((ydim : ℕ∞) : WithBot ℕ∞) < (((ydim + 1 : ℕ∞) : WithBot ℕ∞))) :=
+        by exact_mod_cast hy_lt
+      exact lt_of_lt_of_le hy_lt' (by simpa using h)
 
 /-- On an irreducible space, a proper closed subset with finite Krull dimension has
 strictly smaller Krull dimension. The finiteness hypothesis excludes the case where both

@@ -283,10 +283,8 @@ theorem presheaf_stalk_zeroOutside_eq_zsmul_generator
       ConcreteCategory.hom ((constZ.zeroOutside V).map (homOfLE hWV).op) (generator V)
     have hgenW_val : (AddCommGrpCat.Hom.hom (eqToHom hObjW)) genW = (1 : ULift ℤ) :=
       resGen_eqToHom_eq_one V hWV hObjW
-    have hinj : Function.Injective (AddCommGrpCat.Hom.hom (eqToHom hObjW)) :=
-      (ConcreteCategory.bijective_of_isIso (eqToHom hObjW)).1
     have hs_zsmul : s = w.down • genW := by
-      apply hinj
+      apply (ConcreteCategory.bijective_of_isIso (eqToHom hObjW)).1
       rw [map_zsmul, hgenW_val]
       change w = w.down • (1 : ULift ℤ)
       ext
@@ -377,8 +375,7 @@ theorem openHom_val_app_generator {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U)
         AddCommGrpCat.of (ULift ℤ) := by
       simp [Presheaf.zeroOutside, Presheaf.constZ]
     apply (ConcreteCategory.bijective_of_isIso (eqToHom hObjV)).1
-    have hright := Presheaf.zeroOutside.resGen_eqToHom_eq_one U h hObjV
-    rw [hright]
+    rw [Presheaf.zeroOutside.resGen_eqToHom_eq_one U h hObjV]
     have hopen : (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h).app (op V) =
         eqToHom (by rw [hObjSource, hObjV]) := by
       simp [Presheaf.zeroOutside_openHom]
@@ -424,14 +421,11 @@ theorem _root_.stalk_zeroOutsideInt_zero_outside
 
 /-- `zeroOutsideInt ⊥` is the zero sheaf (all stalks vanish). -/
 theorem _root_.isZero_zeroOutsideInt_bot (X : TopCat.{u}) :
-    IsZero (TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X)) := by
-  let F := TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X)
-  change IsZero F
-  have hstalk :
-      ∀ (x : X) (a : (TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).obj F.obj), a = 0 := by
-    intro x a
-    exact stalk_zeroOutsideInt_zero_outside ⊥ x (Opens.mem_bot.not.mpr (fun h ↦ h.elim)) a
-  exact sheaf_isZero_of_zero_stalks X F.property hstalk
+    IsZero (TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X)) :=
+  sheaf_isZero_of_zero_stalks X
+    (TopCat.Sheaf.zeroOutsideInt (⊥ : Opens X)).property
+    (fun x a ↦ stalk_zeroOutsideInt_zero_outside ⊥ x
+      (Opens.mem_bot.not.mpr (fun h ↦ h.elim)) a)
 
 /-- At a point inside the support open, every stalk element of `zeroOutsideInt V` is an integer
     multiple of the germ of the distinguished generator over `V`. -/
