@@ -142,17 +142,21 @@ jobs:
               LeanPool.RiemannMappingTheorem
           - name: misc-a
             targets: >-
-              LeanPool.ABCExceptions
               LeanPool.ArchonFirstProofResults
-              LeanPool.LowDimSolvClassification
+              LeanPool.ABCExceptions
               LeanPool.AharoniKorman
               LeanPool.ArtinWedderburn
               LeanPool.Basic
               LeanPool.DeadEnds
+          - name: misc-b
+            targets: >-
+              LeanPool.LowDimSolvClassification
               LeanPool.Duality
               LeanPool.Erdos1196
               LeanPool.FactorizationSystems
-          - name: misc-b
+              LeanPool.Fineqs
+              LeanPool.ForwardEuler
+          - name: misc-c
             targets: >-
               LeanPool.SelbergSieve4
               LeanPool.Shannon1948Formalization
@@ -160,8 +164,8 @@ jobs:
               LeanPool.Isoperimetric
               LeanPool.PartialCombinatoryAlgebras
               LeanPool.PartialRegularity
-              LeanPool.Fineqs
-              LeanPool.ForwardEuler
+          - name: misc-d
+            targets: >-
               LeanPool.LeanBooleanfun
               LeanPool.OrderPQ
               LeanPool.PCFTheory
