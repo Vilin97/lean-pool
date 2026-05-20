@@ -351,10 +351,7 @@ import LeanPool.Polylean.UnitConjecture.AddFreeGroup
 import LeanPool.Polylean.UnitConjecture.Cocycle
 import LeanPool.Polylean.UnitConjecture.EnumDecide
 import LeanPool.Polylean.UnitConjecture.FreeModule
-import LeanPool.Polylean.UnitConjecture.GardamDefs
 import LeanPool.Polylean.UnitConjecture.GardamGroup
-import LeanPool.Polylean.UnitConjecture.GardamMulAlpha
-import LeanPool.Polylean.UnitConjecture.GardamMulAlphaPrime
 import LeanPool.Polylean.UnitConjecture.GardamTheorem
 import LeanPool.Polylean.UnitConjecture.GroupRing
 import LeanPool.Polylean.UnitConjecture.MetabelianGroup
