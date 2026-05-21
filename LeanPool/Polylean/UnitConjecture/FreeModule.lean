@@ -73,18 +73,14 @@ omit [DecidableEq R] in
 theorem monom_coords_hom (x₀ x : X) (a b : R) :
     monomCoeff R X x₀ (a + b, x) =
       monomCoeff R X x₀ (a, x) + monomCoeff R X x₀ (b, x) := by
-  repeat
-    (
-      rw [monomCoeff])
+  simp [monomCoeff]
   cases x == x₀ <;> simp
 
 omit [DecidableEq R] in
 /-- Associativity of scalar multiplication coordinates for a formal sum with one term. -/
 theorem monom_coords_mul (x₀ : X) (a b : R) :
     monomCoeff R X x₀ (a * b, x) = a * monomCoeff R X x₀ (b, x) := by
-  repeat
-    (
-      rw [monomCoeff])
+  simp [monomCoeff]
   cases x == x₀ <;> simp
 
 omit [DecidableEq R] in
@@ -170,55 +166,37 @@ theorem equalOnList_of_equal (l : List X) (f g : X → R) :
     f = g → equalOnList l f g := by
   intro hyp
   induction l with
-  | nil =>
-    rw [equalOnList]
+  | nil => rw [equalOnList]
   | cons h t step =>
     rw [equalOnList]
-    constructor
-    · rw [hyp]
-    · exact step
+    exact ⟨congrFun hyp _, step⟩
 
 omit [Ring R] [DecidableEq R] [DecidableEq X] in
 /-- Functions equal on support `l` are equal on each `x ∈ l`. -/
 theorem eq_mem_of_equalOnList (l : List X) (f g : X → R) (x : X) (mhyp : x ∈ l) :
     equalOnList l f g → f x = g x :=
   match l with
-  | [] => by
-    contradiction
+  | [] => by contradiction
   | h :: t => by
     intro hyp
     simp only [equalOnList] at hyp
     cases mhyp
     · exact hyp.left
-    · have inTail : x ∈ t := by
-        assumption
-      have step := eq_mem_of_equalOnList t f g x inTail hyp.right
-      exact step
+    · exact eq_mem_of_equalOnList t f g x ‹x ∈ t› hyp.right
 
 /-- Decidability of equality on list. -/
 @[reducible, instance] def decidableEqualOnList (l : List X) (f g : X → R) :
     Decidable (equalOnList l f g) :=
   match l with
-  | [] =>
-    Decidable.isTrue
-      (by
-        simp only [equalOnList])
+  | [] => Decidable.isTrue (by simp only [equalOnList])
   | h :: t => by
     simp only [equalOnList]
     cases (decidableEqualOnList t f g) with
     | isTrue hs =>
-      exact
-        (if c : f h = g h then (Decidable.isTrue ⟨c, hs⟩)
-        else by
-          apply Decidable.isFalse
-          intro contra
-          have contra' := contra.left
-          contradiction)
+      exact if c : f h = g h then Decidable.isTrue ⟨c, hs⟩
+            else Decidable.isFalse (fun contra => c contra.left)
     | isFalse hs =>
-      apply Decidable.isFalse
-      intro contra
-      have contra' := contra.right
-      contradiction
+      exact Decidable.isFalse (fun contra => hs contra.right)
 
 
 /-!
@@ -236,29 +214,18 @@ namespace eqlCoords
 
 omit [DecidableEq R] in
 /-- Relation by equal coordinates is reflexive. -/
-theorem refl (s : FormalSum R X) : eqlCoords R X s s :=
-  by
-  rfl
+theorem refl (s : FormalSum R X) : eqlCoords R X s s := rfl
 
 omit [DecidableEq R] in
 /-- Relation by equal coordinates is  symmetric. -/
-theorem symm {s₁ s₂ : FormalSum R X} : eqlCoords R X s₁ s₂ → eqlCoords R X s₂ s₁ := by
-  intro hyp
-  apply funext
-  intro x
-  apply Eq.symm
-  exact congrFun hyp x
+theorem symm {s₁ s₂ : FormalSum R X} : eqlCoords R X s₁ s₂ → eqlCoords R X s₂ s₁ :=
+  fun hyp => funext fun x => (congrFun hyp x).symm
 
 omit [DecidableEq R] in
 /-- Relation by equal coordinates is transitive. -/
 theorem trans {s₁ s₂ s₃ : FormalSum R X} :
-    eqlCoords R X s₁ s₂ → eqlCoords R X s₂ s₃ → eqlCoords R X s₁ s₃ := by
-  intro hyp₁ hyp₂
-  apply funext
-  intro x
-  have l₁ := congrFun hyp₁ x
-  have l₂ := congrFun hyp₂ x
-  exact Eq.trans l₁ l₂
+    eqlCoords R X s₁ s₂ → eqlCoords R X s₂ s₃ → eqlCoords R X s₁ s₃ :=
+  fun hyp₁ hyp₂ => funext fun x => (congrFun hyp₁ x).trans (congrFun hyp₂ x)
 
 omit [DecidableEq R] in
 /-- Relation by equal coordinates is an equivalence relation. -/
@@ -350,14 +317,11 @@ theorem eql_on_support_of_true {l : List X} {f g : X → R} :
     beqOnSupport l f g = true → equalOnList l f g := by
   intro hyp
   induction l with
-  | nil =>
-    simp only [equalOnList]
+  | nil => simp only [equalOnList]
   | cons h t step =>
     simp only [equalOnList]
-    simp only [beqOnSupport, List.all, Bool.and_eq_true, decide_eq_true_eq, List.all_eq_true] at hyp
-    simp only [beqOnSupport, List.all_eq_true, decide_eq_true_eq] at step
-    let p₂ := step hyp.right
-    exact And.intro hyp.left p₂
+    simp only [beqOnSupport, List.all_eq_true, decide_eq_true_eq] at hyp step
+    exact ⟨hyp h List.mem_cons_self, step (fun x hx => hyp x (List.mem_cons_of_mem _ hx))⟩
 
 /-- Boolean equality on support gives equal quotients. -/
 theorem eqlquot_of_beq_support (s₁ s₂ : FormalSum R X)
@@ -403,10 +367,8 @@ Boolean equality for the quotient is equality.
 -/
 lemma eq_of_beq_true : ∀ x₁ x₂ : R[X], x₁.beq_quot x₂ = true → x₁ = x₂ := by
   apply Quotient.ind₂
-    (motive := fun (x₁ x₂ : R[X]) => x₁.beq_quot x₂ = true → x₁ = x₂)
-  intro s₁ s₂ eqv
-  let eql := of_decide_eq_true eqv
-  assumption
+  intro _ _ eqv
+  exact of_decide_eq_true eqv
 
 /--
 Boolean inequality for the quotient is inequality.
@@ -414,24 +376,16 @@ Boolean inequality for the quotient is inequality.
 lemma neq_of_beq_false :
     ∀ x₁ x₂ : R[X], x₁.beq_quot x₂ = false → Not (x₁ = x₂) := by
   apply Quotient.ind₂
-    (motive := fun (x₁ x₂ : R[X]) => x₁.beq_quot x₂ = false → Not (x₁ = x₂))
-  intro s₁ s₂ neqv
-  let neql := of_decide_eq_false neqv
-  assumption
+  intro _ _ neqv
+  exact of_decide_eq_false neqv
 
 /--
 Decidable equality for the free module.
 -/
-@[reducible, instance] def decEq (x₁ x₂ : R[X]) : Decidable (x₁ = x₂) := by
+@[reducible, instance] def decEq (x₁ x₂ : R[X]) : Decidable (x₁ = x₂) :=
   match p : x₁.beq_quot x₂ with
-  | true =>
-    apply Decidable.isTrue
-    apply FreeModule.eq_of_beq_true
-    assumption
-  | false =>
-    apply Decidable.isFalse
-    apply FreeModule.neq_of_beq_false
-    assumption
+  | true => Decidable.isTrue (FreeModule.eq_of_beq_true x₁ x₂ p)
+  | false => Decidable.isFalse (FreeModule.neq_of_beq_false x₁ x₂ p)
 
 /-!
 ### Induced coordinates on the quotient.
@@ -439,17 +393,13 @@ Decidable equality for the free module.
 
 /-- Coordinates are well defined on the quotient. -/
 theorem equal_coords_of_approx (s₁ s₂ : FormalSum R X) :
-    s₁ ≈ s₂ → s₁.coords = s₂.coords := by
-    intro hyp
-    apply funext; intro x₀
-    exact congrFun hyp x₀
+    s₁ ≈ s₂ → s₁.coords = s₂.coords :=
+  fun hyp => funext fun x₀ => congrFun hyp x₀
 
 /-- coordinates for the quotient -/
-def coordinates (x₀ : X) : R[X] → R := by
-  apply Quotient.lift (fun s : FormalSum R X => s.coords x₀)
-  intro a b hyp
-  let l := equal_coords_of_approx _ _ hyp
-  exact congrFun l x₀
+def coordinates (x₀ : X) : R[X] → R :=
+  Quotient.lift (fun s : FormalSum R X => s.coords x₀)
+    fun _ _ hyp => congrFun (equal_coords_of_approx _ _ hyp) x₀
 
 end FreeModule
 
@@ -480,26 +430,14 @@ omit [DecidableEq R] in
 theorem scmul_coords (r : R) (s : FormalSum R X) (x₀ : X) :
     (r * s.coords x₀) = (s.scmul r).coords x₀ := by
   induction s with
-  | nil =>
-    simp only [coords, mul_zero, scmul]
-  | cons h t ih =>
-    simp only [coords, left_distrib, ih, scmul, monom_coords_mul]
+  | nil => simp only [coords, mul_zero, scmul]
+  | cons h t ih => simp only [coords, left_distrib, ih, scmul, monom_coords_mul]
 
 /-- Scalar multiplication on the Free Module. -/
-def _root_.LeanPool.Polylean.FreeModule.scmul : R → R[X] → R[X] := by
-  intro r
-  let f : FormalSum R X → R[X] := fun s => ⟦s.scmul r⟧
-  apply Quotient.lift f
-  intro s₁ s₂
-  simp only [f]
-  intro hypeq
-  apply Quotient.sound
-  apply funext
-  intro x₀
-  have l₁ := scmul_coords r s₁ x₀
-  have l₂ := scmul_coords r s₂ x₀
-  rw [← l₁, ← l₂]
-  rw [hypeq]
+def _root_.LeanPool.Polylean.FreeModule.scmul : R → R[X] → R[X] := fun r =>
+  Quotient.lift (fun s => ⟦s.scmul r⟧) fun s₁ s₂ hypeq =>
+    Quotient.sound (funext fun x₀ => by
+      rw [← scmul_coords r s₁ x₀, ← scmul_coords r s₂ x₀, hypeq])
 
 /-!
 ### Addition: on formal sums and on the quotient.
@@ -510,41 +448,22 @@ omit [DecidableEq R] in
 theorem append_coords (s₁ s₂ : FormalSum R X) (x₀ : X) :
     (s₁.coords x₀) + (s₂.coords x₀) = (s₁ ++ s₂).coords x₀ := by
   induction s₁ with
-  | nil =>
-    simp only [coords, zero_add, List.nil_append]
-  | cons h t ih =>
-    simp only [coords, add_assoc, List.cons_append, ← ih]
+  | nil => simp only [coords, zero_add, List.nil_append]
+  | cons h t ih => simp only [coords, add_assoc, List.cons_append, ← ih]
 
 /-- Coordinates well-defined up to equivalence. -/
 theorem append_equiv (s₁ s₂ t₁ t₂ : FormalSum R X) :
-    (s₁ ≈ s₂) → (t₁ ≈ t₂) → s₁ ++ t₁ ≈ s₂ ++ t₂ := by
-    intro eqv₁ eqv₂
-    apply funext
-    intro x₀
-    rw [← append_coords]
-    rw [← append_coords]
-    have ls : coords s₁ x₀ = coords s₂ x₀ := by
-      apply congrFun eqv₁
-    have lt : coords t₁ x₀ = coords t₂ x₀ := by
-      apply congrFun eqv₂
-    rw [← ls, ← lt]
+    (s₁ ≈ s₂) → (t₁ ≈ t₂) → s₁ ++ t₁ ≈ s₂ ++ t₂ := fun eqv₁ eqv₂ =>
+  funext fun x₀ => by
+    rw [← append_coords, ← append_coords, congrFun eqv₁ x₀, congrFun eqv₂ x₀]
 
 end FormalSum
 
 /-- Addition of elements in the free module. -/
-def _root_.LeanPool.Polylean.FreeModule.add : R[X] → R[X] → R[X] := by
-  let f : FormalSum R X → FormalSum R X → R[X] := fun s₁ s₂ => ⟦s₁ ++ s₂⟧
-  apply Quotient.lift₂ f
-  intro a₁ b₁ a₂ b₂
-  simp only [f]
-  intro eq₁ eq₂
-  apply Quotient.sound
-  apply funext
-  intro x₀
-  have l₁ := append_coords a₁ b₁ x₀
-  have l₂ := append_coords a₂ b₂ x₀
-  rw [← l₁, ← l₂]
-  rw [eq₁, eq₂]
+def _root_.LeanPool.Polylean.FreeModule.add : R[X] → R[X] → R[X] :=
+  Quotient.lift₂ (fun s₁ s₂ => ⟦s₁ ++ s₂⟧)
+    fun a₁ b₁ a₂ b₂ eq₁ eq₂ => Quotient.sound (funext fun x₀ => by
+      rw [← append_coords a₁ b₁, ← append_coords a₂ b₂, eq₁, eq₂])
 
 instance : Add (R[X]) :=
   ⟨FreeModule.add⟩
@@ -561,10 +480,8 @@ omit [DecidableEq R] [DecidableEq X] in
 /-- Associativity for scalar multiplication for formal sums. -/
 theorem action (a b : R) (s : FormalSum R X) : (s.scmul b).scmul a = s.scmul (a * b) := by
   induction s with
-  | nil =>
-    simp only [scmul]
-  | cons h t ih =>
-    simp only [scmul, ih, mul_assoc]
+  | nil => simp only [scmul]
+  | cons h t ih => simp only [scmul, ih, mul_assoc]
 
 /-- Distributivity for the module operations. -/
 theorem act_sum (a b : R) (s : FormalSum R X) : (s.scmul a) ++ (s.scmul b) ≈ s.scmul (a + b) := by
@@ -606,19 +523,13 @@ theorem module_action (a b : R) (x : R[X]) : a • (b • x) = (a * b) • x := 
   intro s
   apply Quotient.sound
   rw [FormalSum.action]
-  apply eqlCoords.refl
+  exact eqlCoords.refl _
 
 /-- Commutativity of addition. -/
-theorem addn_comm (x₁ x₂ : R[X]) : x₁ + x₂ = x₂ + x₁ := by
-  apply @Quotient.ind₂ (motive := fun x₁ x₂ : R[X] => x₁ + x₂ = x₂ + x₁)
-  intro s₁ s₂
-  apply Quotient.sound
-  apply funext
-  intro x₀
-  let lm₁ := append_coords s₁ s₂ x₀
-  let lm₂ := append_coords s₂ s₁ x₀
-  rw [← lm₁, ← lm₂]
-  simp only [add_comm]
+theorem addn_comm (x₁ x₂ : R[X]) : x₁ + x₂ = x₂ + x₁ :=
+  Quotient.ind₂ (fun s₁ s₂ => Quotient.sound (funext fun x₀ => by
+    rw [← append_coords s₁ s₂, ← append_coords s₂ s₁]
+    simp only [add_comm])) x₁ x₂
 
 theorem add_assoc_aux (s₁ : FormalSum R X) (x₂ x₃ : R[X]) :
     (⟦s₁⟧ + x₂) + x₃ = ⟦s₁⟧ + (x₂ + x₃) := by
@@ -626,19 +537,13 @@ theorem add_assoc_aux (s₁ : FormalSum R X) (x₂ x₃ : R[X]) :
     (motive := fun x₂ x₃ : R[X] => (⟦s₁⟧ + x₂) + x₃ = ⟦s₁⟧ + (x₂ + x₃))
   intro x₂ x₃
   apply Quotient.sound
-  apply funext
-  intro x₀
-  rw [← append_coords]
-  rw [← append_coords]
-  rw [← append_coords]
-  rw [← append_coords]
-  simp only [add_assoc]
+  apply funext; intro x₀
+  simp only [← append_coords, add_assoc]
 
 /-- Associativity of addition. -/
 theorem addn_assoc (x₁ x₂ x₃ : R[X]) : (x₁ + x₂) + x₃ = x₁ + (x₂ + x₃) := by
   apply @Quotient.ind (motive := fun x₁ : R[X] => (x₁ + x₂) + x₃ = x₁ + (x₂ + x₃))
-  intro x₁
-  apply add_assoc_aux
+  intro x₁; exact add_assoc_aux x₁ x₂ x₃
 
 /-- The zero element of the free module. -/
 def zero : R[X] := ⟦[]⟧
@@ -647,73 +552,44 @@ def zero : R[X] := ⟦[]⟧
 theorem addn_zero (x : R[X]) : x + zero = x := by
   apply @Quotient.ind (motive := fun x : R[X] => x + zero = x)
   intro x
-  apply Quotient.sound
-  apply funext
-  intro x₀
-  rw [← append_coords]
-  simp only [coords, add_zero]
+  apply Quotient.sound; apply funext; intro x₀
+  rw [← append_coords]; simp only [coords, add_zero]
 
 /-- adding zero -/
 theorem zero_addn (x : R[X]) : zero + x = x := by
   apply @Quotient.ind (motive := fun x : R[X] => zero + x = x)
   intro x
-  apply Quotient.sound
-  apply funext
-  intro x₀
-  rw [← append_coords]
-  simp only [coords, zero_add]
+  apply Quotient.sound; apply funext; intro x₀
+  rw [← append_coords]; simp only [coords, zero_add]
 
 /-- Distributivity for addition of module elements. -/
 theorem elem_distrib (a : R) (x₁ x₂ : R[X]) :
     a • (x₁ + x₂) = a • x₁ + a • x₂ := by
-  apply @Quotient.ind₂
-    (motive := fun x₁ x₂ : R[X] => a • (x₁ + x₂) = a • x₁ + a • x₂)
+  apply @Quotient.ind₂ (motive := fun x₁ x₂ : R[X] => a • (x₁ + x₂) = a • x₁ + a • x₂)
   intro s₁ s₂
-  apply Quotient.sound
-  apply funext
-  intro x₀
-  rw [← scmul_coords]
-  rw [← append_coords]
-  rw [← append_coords]
-  rw [← scmul_coords]
-  rw [← scmul_coords]
-  simp only [left_distrib]
+  apply Quotient.sound; apply funext; intro x₀
+  simp only [← scmul_coords, ← append_coords, left_distrib]
 
 /-- Distributivity with respect to scalars. -/
 theorem coeffs_distrib (a b : R) (x : R[X]) : a • x + b • x = (a + b) • x := by
-  apply @Quotient.ind (motive := fun x : R[X] =>
-    a • x + b • x = (a + b) • x)
+  apply @Quotient.ind (motive := fun x : R[X] => a • x + b • x = (a + b) • x)
   intro s
-  apply Quotient.sound
-  apply funext
-  intro x₀
-  let l := act_sum a b s
-  let l'' := congrFun l x₀
-  exact l''
+  apply Quotient.sound; apply funext; intro x₀
+  exact congrFun (act_sum a b s) x₀
 
 /-- Multiplication by `1 : R`. -/
 theorem unit_coeffs (x : R[X]) : (1 : R) • x = x := by
-  apply @Quotient.ind (motive := fun x : R[X] =>
-    (1 : R) • x = x)
+  apply @Quotient.ind (motive := fun x : R[X] => (1 : R) • x = x)
   intro s
-  apply Quotient.sound
-  apply funext
-  intro x₀
-  let l := scmul_coords 1 s x₀
-  rw [← l]
-  simp only [one_mul]
+  apply Quotient.sound; apply funext; intro x₀
+  rw [← scmul_coords]; simp only [one_mul]
 
 /-- Multiplication by `0 : R`. -/
 theorem zero_coeffs (x : R[X]) : (0 : R) • x = ⟦ [] ⟧ := by
-  apply @Quotient.ind (motive := fun x : R[X] =>
-    (0 : R) • x = ⟦ [] ⟧)
+  apply @Quotient.ind (motive := fun x : R[X] => (0 : R) • x = ⟦ [] ⟧)
   intro s
-  apply Quotient.sound
-  apply funext
-  intro x₀
-  let l := scmul_coords 0 s x₀
-  rw [← l]
-  simp only [zero_mul, coords]
+  apply Quotient.sound; apply funext; intro x₀
+  rw [← scmul_coords]; simp only [zero_mul, coords]
 
 instance : Zero (R[X]) :=
   ⟨FreeModule.zero⟩
@@ -737,10 +613,8 @@ instance : AddCommGroup (R[X]) :=
 
     neg_add_cancel := by
       intro x
-      let l := FreeModule.coeffs_distrib (-1 : R) (1 : R) x
-      simp only [neg_add_cancel] at l
-      rw [FreeModule.unit_coeffs] at l
-      rw [FreeModule.zero_coeffs] at l
+      have l := FreeModule.coeffs_distrib (-1 : R) (1 : R) x
+      simp only [neg_add_cancel, FreeModule.unit_coeffs, FreeModule.zero_coeffs] at l
       exact l
 
     add_comm := FreeModule.addn_comm
@@ -798,14 +672,10 @@ infix: 65 " ≃ " => FormalSum.equiv
 theorem coords_move_invariant (x₀ : X) (s₁ s₂ : FormalSum R X)
     (h : ElementaryMove R X s₁ s₂) : coords s₁ x₀ = coords s₂ x₀ := by
   induction h with
-  | zeroCoeff tail x a hyp =>
-    simp only [coords, hyp, monom_coords_at_zero, zero_add]
-  | addCoeffs a b x tail =>
-    simp only [coords, ← add_assoc, monom_coords_hom]
-  | cons a x s₁ s₂ _ step =>
-    simp only [coords, step]
-  | swap a₁ a₂ x₁ x₂ tail =>
-    simp only [coords, ← add_assoc, add_comm]
+  | zeroCoeff tail x a hyp => simp only [coords, hyp, monom_coords_at_zero, zero_add]
+  | addCoeffs a b x tail => simp only [coords, ← add_assoc, monom_coords_hom]
+  | cons a x s₁ s₂ _ step => simp only [coords, step]
+  | swap a₁ a₂ x₁ x₂ tail => simp only [coords, ← add_assoc, add_comm]
 
 end FormalSum
 
@@ -816,20 +686,13 @@ def _root_.LeanPool.Polylean.FreeModuleAux.coeff (x₀ : X) : FreeModuleAux R X 
 namespace FormalSum
 
 /-- Commutative diagram for coordinates. -/
-theorem coeff_factors (x : X) (s : FormalSum R X) : FreeModuleAux.coeff x (sum s) = s.coords x := by
-  simp only [FreeModuleAux.coeff]
-  apply @Quot.liftBeta (r := ElementaryMove R X) (f := fun s => s.coords x)
-  apply coords_move_invariant
+theorem coeff_factors (x : X) (s : FormalSum R X) : FreeModuleAux.coeff x (sum s) = s.coords x :=
+  @Quot.liftBeta _ (ElementaryMove R X) _ (fun s => s.coords x) (coords_move_invariant x) s
 
 /-- Coordinates well-defined under the equivalence generated by moves. -/
 theorem coords_well_defined (x : X) (s₁ s₂ : FormalSum R X) :
-    s₁ ≃ s₂ → s₁.coords x = s₂.coords x := by
-  intro hyp
-  have l : FreeModuleAux.coeff x (sum s₂) = s₂.coords x := by
-    simp only [coeff_factors]
-  rw [← l]
-  rw [← coeff_factors]
-  rw [hyp]
+    s₁ ≃ s₂ → s₁.coords x = s₂.coords x := fun hyp => by
+  rw [← coeff_factors, hyp, coeff_factors]
 
 /-!
 ### Equal coordinates implies related by elementary moves.
@@ -837,20 +700,13 @@ theorem coords_well_defined (x : X) (s₁ s₂ : FormalSum R X) :
 
 /-- Cons respects equivalence. -/
 theorem cons_equiv_of_equiv (s₁ s₂ : FormalSum R X) (a : R) (x : X) :
-    s₁ ≃ s₂ → (a, x) :: s₁ ≃ (a, x) :: s₂ := by
-  intro h
+    s₁ ≃ s₂ → (a, x) :: s₁ ≃ (a, x) :: s₂ := fun h => by
   let f : FormalSum R X → FreeModuleAux R X := fun s => sum <| (a, x) :: s
-  let wit : (s₁ s₂ : FormalSum R X) → (ElementaryMove R X s₁ s₂) → f s₁ = f s₂ := by
-    intro s₁ s₂ hyp
-    apply Quot.sound
-    apply ElementaryMove.cons
-    assumption
-  let g := Quot.lift f wit
-  let factorizes : (s : FormalSum R X) → g (s.sum) = sum ((a, x) :: s) := Quot.liftBeta f wit
-  rw [equiv]
-  rw [← factorizes]
-  rw [← factorizes]
-  rw [h]
+  let wit : (s₁ s₂ : FormalSum R X) → (ElementaryMove R X s₁ s₂) → f s₁ = f s₂ :=
+    fun s₁ s₂ hyp => Quot.sound (ElementaryMove.cons _ _ _ _ hyp)
+  let factorizes : (s : FormalSum R X) → Quot.lift f wit (s.sum) = sum ((a, x) :: s) :=
+    Quot.liftBeta f wit
+  rw [equiv, ← factorizes, ← factorizes, h]
 
 /-- If a coordinate `x` for a formal sum `s` is non-zero, `s` is related by moves to a formal sum
 with first term `x` with coefficient its coordinates, and the rest shorter than `s`. -/
@@ -1089,20 +945,12 @@ theorem equiv_of_equal_coeffs (s₁ s₂ : FormalSum R X)
 /-- Lifting functions to the move induced quotient. -/
 theorem func_eql_of_move_equiv {β : Sort u} (f : FormalSum R X → β) :
     (∀ s₁ s₂ : FormalSum R X, ElementaryMove R X s₁ s₂ → f s₁ = f s₂) →
-      (∀ s₁ s₂ : FormalSum R X, s₁ ≈ s₂ → f s₁ = f s₂) :=
-  by
-  intro hyp
+      (∀ s₁ s₂ : FormalSum R X, s₁ ≈ s₂ → f s₁ = f s₂) := fun hyp => by
   let fbar : FreeModuleAux R X → β := Quot.lift f hyp
-  let fct : ∀ s : FormalSum R X, f s = fbar (sum s) := by
-    apply Quot.liftBeta
-    apply hyp
+  let fct : ∀ s : FormalSum R X, f s = fbar (sum s) := Quot.liftBeta f hyp
   intro s₁ s₂ sim
-  have ec : eqlCoords R X s₁ s₂ := sim
-  rw [eqlCoords] at ec
-  have pullback : sum s₁ = sum s₂ := by
-    apply equiv_of_equal_coeffs
-    intro x
-    exact congrFun ec x
+  have pullback : sum s₁ = sum s₂ :=
+    equiv_of_equal_coeffs s₁ s₂ (fun x => congrFun sim x)
   simp only [fct, pullback]
 
 end FormalSum
@@ -1126,27 +974,23 @@ equivalence. -/
 theorem monom_elem_eq_of_coord_eq_nonzero (a : R) (non_zero : a ≠ 0) (x₀ x₁ : X) :
     coords [(a, x₀)] = coords [(a, x₁)] → x₀ = x₁ := by
   intro hyp
-  have sup₀ : support [(a, x₀)] = [x₀] := by
-    rfl
   have c₁ : coords [(a, x₁)] x₁ = a := by
     simp only [coords, monomCoeff, BEq.rfl, add_zero]
-  rw [← c₁] at non_zero
-  symm at non_zero
-  rw [← hyp] at non_zero
-  let lem := nonzero_coord_in_support [(a, x₀)] x₁ non_zero
+  have non_zero' : 0 ≠ coords [(a, x₀)] x₁ := by
+    rw [hyp, c₁]; exact non_zero.symm
+  have lem := nonzero_coord_in_support [(a, x₀)] x₁ non_zero'
   have lem' : x₁ = x₀ := by
     simpa only [support, List.map_cons, List.map_nil, List.mem_cons, List.not_mem_nil,
       or_false] using lem
-  exact Eq.symm lem'
+  exact lem'.symm
 
 omit [DecidableEq R] in
 /-- For `x : X`, injectivity of the function `a : R ↦ [(a, x)]` up to equivalence. -/
 theorem monom_coeff_eq_of_coord_eq (x : X) (a₀ a₁ : R) :
-    coords [(a₀, x)] = coords [(a₁, x)] → a₀ = a₁ := by
-  intro hyp
-  let h₁ := congrFun hyp x
+    coords [(a₀, x)] = coords [(a₁, x)] → a₀ = a₁ := fun hyp => by
+  have h₁ := congrFun hyp x
   simp only [coords, monomCoeff, BEq.rfl, add_zero] at h₁
-  assumption
+  exact h₁
 
 
 /-- For `x: X`, the functions `a : R ↦ ⟦[(a, x)]⟧` -/
@@ -1156,10 +1000,8 @@ def coeffInclusion (x₀ : X) : R → R[X] :=
 /-- Injectivity of `coeffInclusion` -/
 theorem coeffInclusion_injective (x₀ : X)
  (a₀ a₁ : R) : coeffInclusion x₀ a₀ =
-                coeffInclusion x₀ a₁ → a₀ = a₁ := by
-  intro hyp
-  simp only [coeffInclusion] at hyp
-  rw [Quotient.eq] at hyp
+                coeffInclusion x₀ a₁ → a₀ = a₁ := fun hyp => by
+  simp only [coeffInclusion, Quotient.eq] at hyp
   exact monom_coeff_eq_of_coord_eq x₀ a₀ a₁ hyp
 
 /-- For `a: A`, the function `x: X ↦ ⟦[(a, x)]⟧` -/
@@ -1169,10 +1011,8 @@ def baseInclusion (a₀ : R) : X → R[X] :=
 /-- Injectivity of `baseInclusion a` give `a ≠0` -/
 theorem baseInclusion_injective (a₀ : R) (non_zero : a₀ ≠ 0)
  (x₀ x₁ : X) : baseInclusion a₀ x₀ =
-                baseInclusion a₀ x₁ → x₀ = x₁ := by
-  intro hyp
-  simp only [baseInclusion] at hyp
-  rw [Quotient.eq] at hyp
+                baseInclusion a₀ x₁ → x₀ = x₁ := fun hyp => by
+  simp only [baseInclusion, Quotient.eq] at hyp
   exact monom_elem_eq_of_coord_eq_nonzero a₀ non_zero x₀ x₁ hyp
 /-!
 ## Basic `Repr`
@@ -1182,50 +1022,14 @@ by constructing a norm ball containing all the non-zero coordinates, and then ma
 non-zero coordinates.
 -/
 
-theorem fst_le_max (a b : Nat) : a ≤ max a b := by
-    exact if c : a ≤ b
-          then by
-              unfold max
-              unfold Nat.instMax
-              unfold maxOfLe
-              simp only [if_pos c]
-              assumption
-          else by
-              unfold max
-              unfold Nat.instMax
-              unfold maxOfLe
-              simp only [if_neg c, Std.le_refl]
+theorem fst_le_max (a b : Nat) : a ≤ max a b := Nat.le_max_left a b
 
-
-theorem snd_le_max (a b : Nat) : b ≤ max a b := by
-    exact if c : a ≤ b
-    then by
-      unfold max
-      unfold Nat.instMax
-      unfold maxOfLe
-      simp only [if_pos c, Std.le_refl]
-    else by
-      unfold max
-      unfold Nat.instMax
-      unfold maxOfLe
-      simp only [if_neg c]
-      apply Nat.le_of_lt
-      let c' := Nat.gt_of_not_le c
-      assumption
-
+theorem snd_le_max (a b : Nat) : b ≤ max a b := Nat.le_max_right a b
 
 theorem eq_fst_or_snd_of_max (a b : Nat) : (max a b = a) ∨ (max a b = b) := by
-      exact if c : a ≤ b
-        then by
-          unfold max
-          unfold Nat.instMax
-          unfold maxOfLe
-          simp only [if_pos c, or_true]
-        else by
-          unfold max
-          unfold Nat.instMax
-          unfold maxOfLe
-          simp only [if_neg c, true_or]
+  rcases Nat.le_or_le a b with h | h
+  · exact Or.inr (Nat.max_eq_right h)
+  · exact Or.inl (Nat.max_eq_left h)
 
 /-- The successor of the largest norm with nonzero coordinate on a support list. -/
 def maxNormSuccOnSupp (norm : X → Nat) (crds : X → R) (s : List X) : Nat :=
@@ -1303,40 +1107,23 @@ def _root_.LeanPool.Polylean.FormalSum.normSucc (norm : X → Nat) (s : FormalSu
 
 open FormalSum
 theorem normsucc_le (norm : X → Nat) (s₁ s₂ : FormalSum R X) (eql : s₁ ≈ s₂) :
-    s₁.normSucc norm ≤ s₂.normSucc norm :=
-      if c : s₁.normSucc norm = 0 then
-      by
-        rw [c]
-        apply Nat.zero_le
-      else by
-        simp only [normSucc]
-        simp only [normSucc] at c
-        let c' : maxNormSuccOnSupp norm (coords s₁) (support s₁) > 0 :=
-            by
-            cases Nat.eq_zero_or_pos (maxNormSuccOnSupp norm (coords s₁) (support s₁))
-            · contradiction
-            · assumption
-        let l := max_in_support norm s₁.coords s₁.support c'
-        let ⟨x₀, p⟩ := l
-        let nonzr' := p.left
-        let l := congrFun eql x₀
-        rw [l] at nonzr'
-        let nonzr : 0 ≠ s₂.coords x₀ := by
-          intro hyp
-          let l' := Eq.symm hyp
-          contradiction
-        let in_supp := nonzero_coord_in_support s₂ x₀ nonzr
-        rw [p.right]
-        apply supp_below_max norm s₂.coords s₂.support x₀ in_supp nonzr'
+    s₁.normSucc norm ≤ s₂.normSucc norm := by
+  if c : s₁.normSucc norm = 0 then
+    rw [c]; exact Nat.zero_le _
+  else
+    simp only [normSucc] at c ⊢
+    have c' : maxNormSuccOnSupp norm (coords s₁) (support s₁) > 0 :=
+      Nat.pos_of_ne_zero c
+    let ⟨x₀, p⟩ := max_in_support norm s₁.coords s₁.support c'
+    have nonzr' : (s₁.coords x₀) ≠ 0 := p.left
+    rw [congrFun eql x₀] at nonzr'
+    let in_supp := nonzero_coord_in_support s₂ x₀ (Ne.symm nonzr')
+    rw [p.right]
+    exact supp_below_max norm s₂.coords s₂.support x₀ in_supp nonzr'
 
 theorem norm_succ_eq (norm : X → Nat) (s₁ s₂ : FormalSum R X) (eql : s₁ ≈ s₂) :
-    s₁.normSucc norm = s₂.normSucc norm := by
-      apply Nat.le_antisymm
-      · apply normsucc_le
-        assumption
-      · apply normsucc_le
-        apply eqlCoords.symm
-        assumption
+    s₁.normSucc norm = s₂.normSucc norm :=
+  Nat.le_antisymm (normsucc_le norm s₁ s₂ eql) (normsucc_le norm s₂ s₁ (eqlCoords.symm eql))
 
 /-- Finite exhaustive approximations to a type, organized by a norm. -/
 class NormCube (α : Type) where

@@ -37,47 +37,21 @@ numbers below a given bound.
 def decideBelow (p : Nat → Prop) [DecidablePred p] (bound : Nat) :
     Decidable (∀ n : Nat, n < bound → p n) :=
     match bound with
-    | 0 => by
-      apply Decidable.isTrue
-      intro n bd
-      contradiction
+    | 0 => .isTrue (fun _ bd => absurd bd (Nat.not_lt_zero _))
     | k + 1 =>
       let prev := decideBelow p k
       match prev with
-      | Decidable.isTrue hyp =>
+      | .isTrue hyp =>
         if c: p k then
-          by
-          apply Decidable.isTrue
-          intro n bd
-          cases Nat.eq_or_lt_of_le bd with
-          | inl eql =>
-            have eql' : n = k := by
-                injection eql
-            simp [eql']
-            assumption
-          | inr lt =>
-            have lt' : n < k := by
-                apply Nat.le_of_succ_le_succ
-                assumption
-            exact hyp n lt'
+          .isTrue (fun n bd => by
+            rcases Nat.eq_or_lt_of_le bd with eql | lt
+            · have : n = k := by injection eql
+              exact this ▸ c
+            · exact hyp n (Nat.le_of_succ_le_succ lt))
         else
-          by
-          apply Decidable.isFalse
-          intro contra
-          have lem : p k := by
-            apply contra k
-            apply Nat.le_refl
-          contradiction
-      | Decidable.isFalse hyp => by
-        apply Decidable.isFalse
-        intro contra
-        have lem : ∀ (n : Nat), n < k → p n := by
-          intro n bd
-          have bd' : n < k + 1 := by
-            apply Nat.le_succ_of_le
-            exact bd
-          exact contra n bd'
-        contradiction
+          .isFalse (fun contra => c (contra k (Nat.lt_succ_self k)))
+      | .isFalse hyp =>
+        .isFalse (fun contra => hyp (fun n bd => contra n (Nat.le_succ_of_le bd)))
 
 /--
 It is possible to check whether a decidable predicate on `Fin m` holds below a
@@ -86,74 +60,31 @@ given natural-number bound.
 def decideBelowFin {m : Nat} (p : Fin m → Prop) [DecidablePred p] (bound : Nat) :
     Decidable (∀ n : Fin m, n < bound → p n) :=
     match bound with
-    | 0 => by
-      apply Decidable.isTrue
-      intro n bd
-      contradiction
+    | 0 => .isTrue (fun _ bd => absurd bd (Nat.not_lt_zero _))
     | k + 1 =>
       let prev := decideBelowFin p k
       match prev with
-      | Decidable.isTrue hyp =>
+      | .isTrue hyp =>
         if ineq : k < m then
           if c: p ⟨k, ineq⟩ then
-            by
-            apply Decidable.isTrue
-            intro n bd
-            cases Nat.eq_or_lt_of_le bd with
-            | inl eql =>
-              have eql' : n = ⟨k, ineq⟩ := by
-                  apply Fin.eq_of_val_eq
-                  injection eql
-              simp [eql']
-              assumption
-            | inr lt =>
-              have lt' : n < k := by
-                  apply Nat.le_of_succ_le_succ
-                  assumption
-              exact hyp n lt'
+            .isTrue (fun n bd => by
+              rcases Nat.eq_or_lt_of_le bd with eql | lt
+              · have : n = ⟨k, ineq⟩ := Fin.eq_of_val_eq (by injection eql)
+                exact this ▸ c
+              · exact hyp n (Nat.le_of_succ_le_succ lt))
           else
-            by
-            apply Decidable.isFalse
-            intro contra
-            have lem : p ⟨k, ineq⟩ := by
-              apply contra ⟨k, ineq⟩
-              apply Nat.le_refl
-            contradiction
+            .isFalse (fun contra => c (contra ⟨k, ineq⟩ (Nat.lt_succ_self k)))
         else
-          by
-          apply Decidable.isTrue
-          intro ⟨n, nbd⟩ _
-          have ineq' : m ≤ k := by
-            apply Nat.le_of_succ_le_succ
-            apply Nat.gt_of_not_le ineq
-          have ineq'' := Nat.le_trans nbd ineq'
-          exact hyp ⟨n, nbd⟩ ineq''
-      | Decidable.isFalse hyp => by
-        apply Decidable.isFalse
-        intro contra
-        have lem : ∀ (n : Fin m), n < k → p n := by
-          intro n bd
-          have bd' : n < k + 1 := by
-            apply Nat.le_succ_of_le
-            exact bd
-          exact contra n bd'
-        contradiction
+          .isTrue (fun ⟨n, nbd⟩ _ => hyp ⟨n, nbd⟩ (Nat.le_trans nbd (by omega)))
+      | .isFalse hyp =>
+        .isFalse (fun contra => hyp (fun n bd => contra n (Nat.le_succ_of_le bd)))
 
 /-- It is possible to decide whether a predicate holds for all elements of `Fin n`. -/
 def decideFin {m : Nat} (p : Fin m → Prop) [DecidablePred p] :
     Decidable (∀ n : Fin m, p n) :=
   match decideBelowFin p m with
-  | Decidable.isTrue hyp =>
-    by
-    apply Decidable.isTrue
-    intro ⟨n, ineq⟩
-    exact hyp ⟨n, ineq⟩ ineq
-  | Decidable.isFalse hyp => by
-    apply Decidable.isFalse
-    intro contra
-    apply hyp
-    intro ⟨n, ineq⟩ _
-    exact contra ⟨n, ineq⟩
+  | .isTrue hyp => .isTrue (fun ⟨n, ineq⟩ => hyp ⟨n, ineq⟩ ineq)
+  | .isFalse hyp => .isFalse (fun contra => hyp (fun ⟨n, ineq⟩ _ => contra ⟨n, ineq⟩))
 
 /--
 A typeclass for "exhaustively verifiable types", i.e., types for which it is
@@ -181,19 +112,10 @@ example : ∀ x y z : Fin 3, (x + y) + z = x + (y + z) := by decide
 @[reducible, instance]
 def decideProd {α β : Type _} [dfa : DecideForall α] [dfb : DecideForall β]
     (p : α × β → Prop) [DecidablePred p] : Decidable (∀ xy : α × β, p xy) :=
-    if c: (∀ x: α, ∀ y : β, p (x, y))
-    then
-      by
-      apply Decidable.isTrue
-      intro (x, y)
-      exact c x y
+    if c: (∀ x: α, ∀ y : β, p (x, y)) then
+      .isTrue (fun (x, y) => c x y)
     else
-      by
-      apply Decidable.isFalse
-      intro contra
-      apply c
-      intro x y
-      exact contra (x, y)
+      .isFalse (fun contra => c (fun x y => contra (x, y)))
 
 instance {α β : Type _} [dfa : DecideForall α] [dfb : DecideForall β] :
   DecideForall (α × β) :=
@@ -201,17 +123,10 @@ instance {α β : Type _} [dfa : DecideForall α] [dfb : DecideForall β] :
 
 @[reducible, instance]
 def decideUnit (p : Unit → Prop) [DecidablePred p] : Decidable (∀ x : Unit, p x) :=
-   if c : p (()) then by
-      apply Decidable.isTrue
-      intro x
-      have l : x = () := by rfl
-      rw [l]
-      exact c
-    else by
-      apply Decidable.isFalse
-      intro contra
-      apply c
-      exact contra ()
+  if c : p () then
+    .isTrue (fun x => by cases x; exact c)
+  else
+    .isFalse (fun contra => c (contra ()))
 
 instance : DecideForall Unit :=
   ⟨by apply decideUnit⟩
@@ -220,25 +135,12 @@ instance : DecideForall Unit :=
 def decideSum {α β : Type _} [dfa : DecideForall α] [dfb : DecideForall β]
     (p : α ⊕ β → Prop) [DecidablePred p] : Decidable (∀ x : α ⊕ β, p x) :=
     if c: ∀x: α, p (Sum.inl x) then
-       if c': ∀y: β , p (Sum.inr y) then
-       by
-        apply Decidable.isTrue
-        intro x
-        cases x with
-        | inl a => exact c a
-        | inr a => exact c' a
-      else by
-        apply Decidable.isFalse
-        intro contra
-        apply c'
-        intro x
-        exact contra (Sum.inr x)
-    else by
-      apply Decidable.isFalse
-      intro contra
-      apply c
-      intro x
-      exact contra (Sum.inl x)
+      if c': ∀y: β, p (Sum.inr y) then
+        .isTrue (fun x => by cases x with | inl a => exact c a | inr a => exact c' a)
+      else
+        .isFalse (fun contra => c' (fun x => contra (Sum.inr x)))
+    else
+      .isFalse (fun contra => c (fun x => contra (Sum.inl x)))
 
 instance {α β : Type _} [dfa : DecideForall α] [dfb : DecideForall β] :
   DecideForall (α ⊕ β) :=
@@ -247,18 +149,9 @@ instance {α β : Type _} [dfa : DecideForall α] [dfb : DecideForall β] :
 instance funEnum {α β : Type _} [dfa : DecideForall α] [dfb : DecidableEq β] :
     DecidableEq (α → β) := fun f g =>
       if c: ∀ x: α, f x = g x then
-        by
-        apply Decidable.isTrue
-        apply funext
-        intro x
-        exact c x
+        .isTrue (funext c)
       else
-        by
-        apply Decidable.isFalse
-        intro contra
-        apply c
-        intro x
-        exact congrFun contra x
+        .isFalse (fun contra => c (congrFun contra))
 
 
 example : ∀ xy : (Fin 3) × (Fin 2),

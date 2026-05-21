@@ -182,22 +182,17 @@ theorem one : (1 : P) = ((0, 0, 0), Q.e) := rfl
 theorem kernel_pow (k : K) (n : ℕ) : ((k, Q.e) : P) ^ n = (n • k, Q.e) := by
   induction n with
   | zero =>
-      unfold HPow.hPow instHPow Pow.pow instPow
-      simp
-      rfl
+    unfold HPow.hPow instHPow Pow.pow instPow
+    simp; rfl
   | succ n ih =>
-      unfold HPow.hPow instHPow Pow.pow instPow
-      change PGrp.toMonoid.npow (n + 1) ((k, Q.e) : P) = ((n + 1) • k, Q.e)
-      rw [PGrp.toMonoid.npow_succ]
-      change ((k, Q.e) : P) ^ n * (k, Q.e) = ((n + 1) • k, Q.e)
-      rw [ih]
-      rw [P.mul]
-      simp only [nsmul_eq_mul, AddMonoidHom.coe_prodMap, AddMonoidHom.coe_id,
-        Prod.map_id, id_eq, add_zero, Nat.cast_add, Nat.cast_one, Prod.mk.injEq,
-        add_eq_left]
-      constructor
-      · ext <;> ring_nf
-      · rfl
+    unfold HPow.hPow instHPow Pow.pow instPow
+    change PGrp.toMonoid.npow (n + 1) ((k, Q.e) : P) = ((n + 1) • k, Q.e)
+    rw [PGrp.toMonoid.npow_succ]
+    change ((k, Q.e) : P) ^ n * (k, Q.e) = ((n + 1) • k, Q.e)
+    rw [ih, P.mul]
+    simp only [nsmul_eq_mul, AddMonoidHom.coe_prodMap, AddMonoidHom.coe_id,
+      Prod.map_id, id_eq, add_zero, Nat.cast_add, Nat.cast_one, Prod.mk.injEq]
+    exact ⟨by ext <;> ring_nf, rfl⟩
 
 end P
 
