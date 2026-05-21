@@ -9,8 +9,7 @@ import LeanPool.Rupert.Convex
 import LeanPool.Rupert.MatrixSimps
 import LeanPool.Rupert.Quaternion
 import LeanPool.Rupert.Equivalences.RupertEquivRupertPrime
-
-import Mathlib
+import LeanPool.Rupert.FinCases
 
 namespace Tetrahedron
 

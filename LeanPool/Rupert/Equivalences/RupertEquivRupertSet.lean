@@ -19,7 +19,7 @@ theorem rupert_imp_rupert_set {ι : Type} [Fintype ι] (v : ι → ℝ³) :
       apply AffineMap.image_convexHull
     change inner_shadow = convexHull ℝ (tx '' Set.range v) at inner_shadow_is_txed_convex_hull
     rw [inner_shadow_is_txed_convex_hull, ← Set.range_comp]
-    exact Set.Finite.isClosed_convexHull (Set.finite_range (tx ∘ v))
+    exact Set.Finite.isClosed_convexHull ℝ (Set.finite_range (tx ∘ v))
 
   rw [closure_eq_iff_isClosed.mpr inner_shadow_closed]
   exact rupert

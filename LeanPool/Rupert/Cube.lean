@@ -243,9 +243,9 @@ theorem rnn_contains_cube2 : rnn 0 < 1 ∧ rnn 1 < 1 := by
      PiLp.add_apply, PiLp.smul_apply, smul_eq_mul]
  constructor
  · have : 0 < 3 / 4 * (1 / √6 * (√3 * 2)) + 1 / 4 * (1 / √6 * 0) + 1 := by positivity
-   lia
+   linarith
  · have : 0 < 3 / 4 * (1 / √6 * 2) + 1 / 4 * (1 / √6 * 4) + 1 := by positivity
-   lia
+   linarith
 
 ---------------------------------------------------------------------------------
 

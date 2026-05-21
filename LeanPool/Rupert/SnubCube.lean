@@ -10,7 +10,7 @@ namespace SnubCube
 
 noncomputable abbrev cbrt (x : ℝ) : ℝ := x ^ (1/3 : ℝ)
 
-/-- tribonacci constant-/
+/-- tribonacci constant -/
 noncomputable def trib : ℝ :=
   (1 + cbrt (19 + 3 * √33) + cbrt (19 - 3 * √33) ) / 3
 
