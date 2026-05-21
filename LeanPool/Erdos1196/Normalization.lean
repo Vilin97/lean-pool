@@ -37,21 +37,27 @@ lemma hasSum_normalizationFirstEntryPart {x Y : ℕ} (hx : 1 ≤ x)
   let row : ℕ → ℝ := fun m => ∑' q : ℕ, firstEntryPairWeight x Y (m, q)
   have hrow : ∀ m : ℕ,
       row m = if 1 ≤ m ∧ m < x then (1 / (m : ℝ)) * firstEntryTail x Y m else 0 := by
-    intro m; dsimp [row]; rw [firstEntryPairWeight_row]
+    intro m
+    dsimp [row]
+    rw [firstEntryPairWeight_row]
     by_cases hm : 1 ≤ m ∧ m < x
     · rw [if_pos hm, tsum_mul_left, firstEntryTail, if_pos hm]
     · simp [hm]
   have hIcc : ∀ m : ℕ, (1 ≤ m ∧ m < x) ↔ m ∈ Finset.Icc 1 (x - 1) := by
-    intro m; simp [Finset.mem_Icc]; omega
+    intro m
+    simp [Finset.mem_Icc]
+    omega
   have hslice : ∀ m : ℕ, Summable (fun q : ℕ => firstEntryPairWeight x Y (m, q)) := by
-    intro m; rw [firstEntryPairWeight_row]
+    intro m
+    rw [firstEntryPairWeight_row]
     by_cases hm : 1 ≤ m ∧ m < x
     · rcases hm with ⟨hm1, hmx⟩
       rw [if_pos ⟨hm1, hmx⟩]
       exact (hsummable hm1 hmx).mul_left (1 / (m : ℝ))
     · simp [hm]
   have hrow_zero : ∀ m ∉ Finset.Icc 1 (x - 1), row m = 0 := fun m hm => by
-    rw [hrow m, if_neg]; simpa [hIcc m] using hm
+    rw [hrow m, if_neg]
+    simpa [hIcc m] using hm
   have hrow_summable : Summable row :=
     summable_of_hasFiniteSupport ((Finset.Icc 1 (x - 1)).finite_toSet.subset
       (fun m hm => by by_contra hm'; exact hm (hrow_zero m hm')))
@@ -115,7 +121,8 @@ lemma normalizationFirstEntryPart_estimate {Y : ℕ} (hY : 2 ≤ Y) :
     have hzero : firstEntryTail x Y m = 0 := by
       rw [firstEntryTail, tsum_eq_zero_of_not_summable hs]
     have hmain : 0 < 1 / Real.log (x : ℝ) - C0 / (Real.log (x : ℝ)) ^ 2 := by
-      field_simp [hxlog_pos.ne']; nlinarith
+      field_simp [hxlog_pos.ne']
+      nlinarith
     linarith [(abs_le.mp (happrox hx2 hm1 hmx)).1, hzero ▸ hmain]
   have hfirst := hasSum_normalizationFirstEntryPart (x := x) (Y := Y) hx1 hsummable
   have hfirst_eq : ∑' n : ℕ, normalizationFirstEntryPart x Y n =
@@ -141,8 +148,11 @@ lemma normalizationFirstEntryPart_estimate {Y : ℕ} (hY : 2 ≤ Y) :
         simpa [E, H, Finset.mul_sum, Real.norm_eq_abs, mul_comm, mul_left_comm, mul_assoc] using
           hnorm
       _ ≤ (C0 / (Real.log (x : ℝ)) ^ 2) * (Real.log (x : ℝ) + 1) := by
-            gcongr; linarith [(abs_le.mp hHabs).2]
-      _ ≤ (2 * C0) / Real.log (x : ℝ) := by field_simp [hxlog_pos.ne']; nlinarith [hC0pos, hxlog_ge]
+            gcongr
+            linarith [(abs_le.mp hHabs).2]
+      _ ≤ (2 * C0) / Real.log (x : ℝ) := by
+        field_simp [hxlog_pos.ne']
+        nlinarith [hC0pos, hxlog_ge]
   have hsplit : ∑ m ∈ Finset.Icc 1 (x - 1), (1 / (m : ℝ)) * firstEntryTail x Y m =
       (1 / Real.log (x : ℝ)) * H + E := by
     calc
@@ -160,7 +170,8 @@ lemma normalizationFirstEntryPart_estimate {Y : ℕ} (hY : 2 ≤ Y) :
           rw [hfirst_eq, hsplit]
           have hrew : (1 / Real.log (x : ℝ)) * H + E - 1 =
               ((H - Real.log (x : ℝ)) / Real.log (x : ℝ)) + E := by
-            field_simp [hxlog_pos.ne']; ring
+            field_simp [hxlog_pos.ne']
+            ring
           simpa [sub_eq_add_neg] using congrArg abs hrew
       _ ≤ |(H - Real.log (x : ℝ)) / Real.log (x : ℝ)| + |E| := abs_add_le _ _
       _ ≤ 1 / Real.log (x : ℝ) + (2 * C0) / Real.log (x : ℝ) := by

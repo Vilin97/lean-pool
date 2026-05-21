@@ -84,7 +84,8 @@ private lemma ryApproximation :
     rw [Nat.cast_mul, Real.log_mul] <;> positivity
   have hmain : Real.log (m : ℝ) * (1 / Real.log ((m * Y : ℕ) : ℝ)) =
       1 - Real.log (Y : ℝ) / Real.log ((m * Y : ℕ) : ℝ) := by
-    field_simp [hlogMY_pos.ne']; linarith
+    field_simp [hlogMY_pos.ne']
+    linarith
   rw [ryEqLogMulTailSum]
   calc
     |Real.log (m : ℝ) * tailSum m Y - (1 - Real.log (Y : ℝ) / Real.log ((m * Y : ℕ) : ℝ))|
@@ -164,7 +165,9 @@ lemma normalizationEstimate {Y : ℕ} (hY : 2 ≤ Y) :
     |normalizationConstant x Y - 1|
       = |(∑' n : ℕ, normalizationSmallPrimePart x Y n) +
           ((∑' n : ℕ, normalizationFirstEntryPart x Y n) - 1)| := by
-            rw [hdecomp]; congr 1; ring_nf
+            rw [hdecomp]
+            congr 1
+            ring_nf
     _ ≤ ∑' n : ℕ, normalizationSmallPrimePart x Y n +
           |(∑' n : ℕ, normalizationFirstEntryPart x Y n) - 1| := by
             simpa [abs_of_nonneg hsmall_nonneg] using
@@ -260,7 +263,8 @@ lemma lastJumpContribution_eq_of_formula {x Y : ℕ} (hx : 2 ≤ x) {n q : ℕ}
           grind only [Nat.div_mul_cancel hdvd]
     _ = (1 / normalizationConstant x Y) *
           ((1 / ((n : ℝ) * (Real.log (n : ℝ)) ^ 2)) * Λ q) := by
-          congr 1; field_simp [hlog_ne, show (q : ℝ) ≠ 0 from by exact_mod_cast hq_pos.ne']
+          congr 1
+          field_simp [hlog_ne, show (q : ℝ) ≠ 0 from by exact_mod_cast hq_pos.ne']
 
 /--
 The divisor decomposition of `log n` rewrites the explicit target formula as the normalized initial
@@ -279,7 +283,8 @@ lemma formula_eq_initialDistribution_add_filteredVonMangoldt {x Y n : ℕ} :
         (1 / normalizationConstant x Y) *
           ((1 / ((n : ℝ) * (Real.log (n : ℝ)) ^ 2)) *
             (n.divisors.sum fun q => Λ q)) := by
-          rw [ArithmeticFunction.vonMangoldt_sum (n := n)]; grind only
+          rw [ArithmeticFunction.vonMangoldt_sum (n := n)]
+          grind only
     _ = (1 / normalizationConstant x Y) *
           (entryWeight x Y n +
             n.divisors.sum (fun q =>
@@ -327,7 +332,8 @@ lemma explicitFormula_eq_recurrence_rhs {x Y n : ℕ} (hx : 2 ≤ x) (hn : x ≤
     refine Finset.sum_congr rfl fun q hq => ?_
     by_cases hqx : Y ≤ q ∧ x ≤ n / q
     · by_cases hq1 : q = 1
-      · subst hq1; simp [transitionWeight, hqx]
+      · subst hq1
+        simp [transitionWeight, hqx]
       · simpa [hqx] using
           (lastJumpContribution_eq_of_formula (x := x) (Y := Y) (n := n) (q := q)
             hx hq hqx (v := f (n / q)) (hvisit hq hqx hq1))
@@ -380,6 +386,7 @@ nonnegative on the state space `n ≥ x`. -/
 lemma visitProbability_nonneg {x Y : ℕ} (chain : MarkovLayer x Y) (hx : 2 ≤ x)
     (hB : 0 < normalizationConstant x Y) {n : ℕ} (hn : x ≤ n) :
     0 ≤ chain.visitProbability n := by
-  rw [visitProbabilityFormula chain hx hn]; positivity
+  rw [visitProbabilityFormula chain hx hn]
+  positivity
 
 end PrimitiveSetsAboveX

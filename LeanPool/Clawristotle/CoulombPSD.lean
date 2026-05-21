@@ -262,7 +262,9 @@ private lemma fubini_double_int_bound_coulomb
                   Cg * (1 + ‖v‖) ^ Kg * f v * M₁ :=
                 fun j => mul_le_mul (hGrad v j) (hM₁b v) hint_nn
                   (mul_nonneg (mul_nonneg hCg_nn hv_nn) hfv)
-              have hd0v := hMd₀b v; have hd1v := hMd₁b v; have hd2v := hMd₂b v
+              have hd0v := hMd₀b v
+              have hd1v := hMd₁b v
+              have hd2v := hMd₂b v
               simp only [Fin.sum_univ_three]
               linarith [hj 0, hj 1, hj 2,
                 mul_le_mul_of_nonneg_left hd0v hfv,

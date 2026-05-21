@@ -93,7 +93,8 @@ lemma typeA_card_eq_one (p : ℕ) (hp : Nat.Prime p) : (typeA p).card = 1 := by
       exact absurd (Nat.le_of_dvd (Nat.pos_of_ne_zero (by simp_all)) h₃) (by linarith)
     · intro h
       simp_all [pow_pos hp.pos 2]
-  rw [h₁]; simp
+  rw [h₁]
+  simp
 
 lemma b_coprime_p_sq (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ b) (hbp : b < p) :
     b.Coprime (p ^ 2) := by
@@ -108,16 +109,21 @@ lemma r_eq_inv_image (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ b) (hbp 
   have hbUnit : IsUnit ((b : ℕ) : ZMod (p ^ 2)) := by rwa [ZMod.isUnit_iff_coprime]
   haveI : Fact (1 < p ^ 2) := ⟨by nlinarith [hp.two_le, Nat.le_mul_self p]⟩
   have hZero : ((b * r + d : ℕ) : ZMod (p ^ 2)) = 0 := by
-    rw [ZMod.natCast_eq_zero_iff]; exact hd
+    rw [ZMod.natCast_eq_zero_iff]
+    exact hd
   have hEq : (b : ZMod (p ^ 2)) * (r : ZMod (p ^ 2)) = -((d : ℕ) : ZMod (p ^ 2)) := by
     have h1 : ((b * r + d : ℕ) : ZMod (p ^ 2)) = (b : ZMod (p ^ 2)) * (r : ZMod (p ^ 2)) +
-        ((d : ℕ) : ZMod (p ^ 2)) := by push_cast; ring
+        ((d : ℕ) : ZMod (p ^ 2)) := by
+          push_cast
+          ring
     rw [h1] at hZero
     linear_combination hZero
   have hR : (r : ZMod (p ^ 2)) = -((d : ℕ) : ZMod (p ^ 2)) * ((b : ℕ) : ZMod (p ^ 2))⁻¹ := by
     have key := ZMod.inv_mul_of_unit (b : ZMod (p ^ 2)) hbUnit
     calc (r : ZMod (p ^ 2))
-        = ((b : ℕ) : ZMod (p ^ 2))⁻¹ * ((b : ℕ) : ZMod (p ^ 2)) * r := by rw [key]; ring
+        = ((b : ℕ) : ZMod (p ^ 2))⁻¹ * ((b : ℕ) : ZMod (p ^ 2)) * r := by
+          rw [key]
+          ring
       _ = ((b : ℕ) : ZMod (p ^ 2))⁻¹ * (-((d : ℕ) : ZMod (p ^ 2))) := by rw [mul_assoc, hEq]
       _ = -((d : ℕ) : ZMod (p ^ 2)) * ((b : ℕ) : ZMod (p ^ 2))⁻¹ := by ring
   calc r = ((r : ℕ) : ZMod (p ^ 2)).val := (ZMod.val_natCast_of_lt hr).symm
@@ -217,7 +223,9 @@ lemma localDensityFactor_ge_sub (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 �
       _ = b := Finset.card_range b
   have hTcard_bound : T.card + 1 ≤ p ^ 2 := by nlinarith [hp.two_le, Nat.le_mul_self p]
   have hcast2 : ((p : ℝ) ^ 2) - (↑T.card + 1) = ((p ^ 2 - (T.card + 1) : ℕ) : ℝ) := by
-    rw [Nat.cast_sub hTcard_bound]; push_cast; ring
+    rw [Nat.cast_sub hTcard_bound]
+    push_cast
+    ring
   rw [hcast2]
   exact Nat.cast_le.mpr hcard
 

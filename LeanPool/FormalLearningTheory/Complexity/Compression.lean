@@ -468,7 +468,8 @@ private lemma agreeTests_boolVCDim_le
       exact this.2.2
   choose x hxY hx using hpoints
   have hx_inj : Function.Injective x := by
-    intro j k hjk; by_contra hjk_ne
+    intro j k hjk
+    by_contra hjk_ne
     let b0 : Fin (d + 1) → Bool := fun i => i == j
     let h0 : ↥T := embed b0
     have h0_in_j : h0.val ∈ halfSet' j := by
@@ -478,7 +479,9 @@ private lemma agreeTests_boolVCDim_le
       simp only [halfSet', Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
       intro ⟨b', hb'k, hb'eq⟩
       have := hembed_inj (Subtype.ext hb'eq : embed b' = h0)
-      rw [this] at hb'k; simp [b0] at hb'k; exact hjk_ne hb'k.symm
+      rw [this] at hb'k
+      simp [b0] at hb'k
+      exact hjk_ne hb'k.symm
     exact h0_nin_k ((hx k h0.val h0.property).mp (hjk ▸ (hx j h0.val h0.property).mpr h0_in_j))
   let P : Finset X := Finset.univ.image x
   have hP_card : P.card = d + 1 := by
@@ -489,7 +492,8 @@ private lemma agreeTests_boolVCDim_le
     let b : Fin (d + 1) → Bool := fun j => decide (g ⟨x j, hx_mem j⟩ = c (x j))
     let h_wit : ↥T := embed b
     refine ⟨h_wit.val.val, hHY _ h_wit.val.property, fun ⟨y, hy⟩ => ?_⟩
-    rw [Finset.mem_image] at hy; obtain ⟨j, _, rfl⟩ := hy
+    rw [Finset.mem_image] at hy
+    obtain ⟨j, _, rfl⟩ := hy
     have h_wit_in_half_iff : h_wit.val ∈ halfSet' j ↔ b j = true := by
       simp only [halfSet', Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
       exact ⟨fun ⟨b', hb'j, hb'eq⟩ => by
@@ -498,8 +502,11 @@ private lemma agreeTests_boolVCDim_le
     have h_agree_iff := (hx j h_wit.val h_wit.property).trans h_wit_in_half_iff
     change h_wit.val.val (x j) = g ⟨x j, hx_mem j⟩
     by_cases heq : g ⟨x j, hx_mem j⟩ = c (x j)
-    · rw [heq]; exact h_agree_iff.mpr (by simp [b, heq])
-    · have hbj : b j = false := by simp only [b, decide_eq_false_iff_not]; exact heq
+    · rw [heq]
+      exact h_agree_iff.mpr (by simp [b, heq])
+    · have hbj : b j = false := by
+        simp only [b, decide_eq_false_iff_not]
+        exact heq
       have h_ne : h_wit.val.val (x j) ≠ c (x j) :=
         fun hc => Bool.noConfusion (show true = false from hbj ▸ (h_agree_iff.mp hc).symm)
       cases hc : c (x j) <;> cases hw : h_wit.val.val (x j) <;>
@@ -567,14 +574,16 @@ private lemma majority_vote_eq_of_agree_gt_half
     have hgt_nat : 2 * (Finset.univ.filter (fun t => votes t = true)).card > T := by
       exact_mod_cast show (2 * (Finset.univ.filter (fun t => votes t = true)).card : ℝ) > T by
         rw [sum_indicator_eq_card_filter votes true] at hmajor
-        rw [gt_iff_lt, lt_div_iff₀ hTreal] at hmajor; linarith
+        rw [gt_iff_lt, lt_div_iff₀ hTreal] at hmajor
+        linarith
     simp [majority_vote, hgt_nat]
   · have hyf : y = false := by cases y <;> simp_all
     subst hyf
     have hgt_false_nat : 2 * (Finset.univ.filter (fun t => votes t = false)).card > T := by
       exact_mod_cast show (2 * (Finset.univ.filter (fun t => votes t = false)).card : ℝ) > T by
         rw [sum_indicator_eq_card_filter votes false] at hmajor
-        rw [gt_iff_lt, lt_div_iff₀ hTreal] at hmajor; linarith
+        rw [gt_iff_lt, lt_div_iff₀ hTreal] at hmajor
+        linarith
     simp [majority_vote, show ¬2 * (Finset.univ.filter (fun t => votes t = true)).card > T from by
       have : (Finset.univ.filter (fun t => votes t = true)).card +
              (Finset.univ.filter (fun t => votes t = false)).card = T := by
@@ -660,7 +669,8 @@ private lemma good_on_support_gives_row_response
   refine ⟨⟨h, by rw [hHY]; exact Finset.mem_image.mpr ⟨Z, Finset.mem_filter.mpr
       ⟨Finset.mem_powerset.mpr hZY, hZcard⟩, rfl⟩⟩, ?_⟩
   have hag := supportAgreement_eq_one_sub_supportError Y q h c
-  simp_rw [decide_eq_true_eq] at *; linarith
+  simp_rw [decide_eq_true_eq] at *
+  linarith
 
 @[reducible]
 private def pointSupportNonempty {X : Type u} {m : ℕ} (S : Fin m → X × Bool)
@@ -723,7 +733,8 @@ private theorem moran_yehudayoff_forward_construction
       Finset (X × Bool) × IncidenceInfo Tvc Kreal :=
     fun {m} S =>
       if hreal : ∃ c ∈ C, ∀ i : Fin m, c (S i).1 = (S i).2 then
-        let c := hreal.choose; let Y := pointSupport S
+        let c := hreal.choose
+        let Y := pointSupport S
         if hm : 0 < m then
           haveI : Nonempty ↥Y := pointSupportNonempty S hm
           let HY := hypothesisEnvelope L c Y
@@ -768,7 +779,8 @@ private theorem moran_yehudayoff_forward_construction
       · next hm =>
         rw [Finset.mem_coe, Finset.mem_biUnion] at hp
         obtain ⟨t, _, hp2⟩ := hp
-        rw [Finset.mem_image] at hp2; obtain ⟨x, hxw, hpx⟩ := hp2
+        rw [Finset.mem_image] at hp2
+        obtain ⟨x, hxw, hpx⟩ := hp2
         have hgw : ∀ (h : ↥(hypothesisEnvelope L hreal.choose (pointSupport S))),
             (Finset.mem_image.mp h.property).choose ⊆ pointSupport S := by
           intro h
@@ -848,7 +860,8 @@ private theorem moran_yehudayoff_forward_construction
           boolTestExpectation (empiricalPMF hTvcPos (mkReps S hreal hm)) a| ≤ 1 / 24 :=
       fun a ha => by convert vc_result.choose_spec a ha using 3
     have hxi_in_Y : (S i).1 ∈ Y' := by
-      simp only [Y', pointSupport, Finset.mem_image, Finset.mem_univ, true_and]; exact ⟨i, rfl⟩
+      simp only [Y', pointSupport, Finset.mem_image, Finset.mem_univ, true_and]
+      exact ⟨i, rfl⟩
     have hat_mem : agreeTest c' (S i).1 HY' ∈ agreeTests c' Y' HY' :=
       Finset.mem_image.mpr ⟨(S i).1, hxi_in_Y, rfl⟩
     have h_minimax : boolTestExpectation p (agreeTest c' (S i).1 HY') ≥ 7 / 12 := by
@@ -859,7 +872,8 @@ private theorem moran_yehudayoff_forward_construction
       linarith
     have h_emp_ge : boolTestExpectation (empiricalPMF hTvcPos (mkReps S hreal hm))
         (agreeTest c' (S i).1 HY') ≥ 13 / 24 := by
-      have ⟨_, h_hi⟩ := abs_le.mp (hreps (agreeTest c' (S i).1 HY') hat_mem); linarith
+      have ⟨_, h_hi⟩ := abs_le.mp (hreps (agreeTest c' (S i).1 HY') hat_mem)
+      linarith
     linarith [boolTestExpectation_empirical_agreeTest_eq_avg
       hTvcPos (mkReps S hreal hm) c' (S i).1]
   exact finalizeIncidenceScheme Tvc Kreal compressCore blockHyp rowHyp
@@ -930,14 +944,18 @@ private lemma succ_le_two_pow_compression (k : ℕ) : k + 1 ≤ 2 ^ k := by
 private lemma exp_beats_poly_compression (s : ℕ) :
     (s + 1) ^ 2 * (4 * (s + 1) ^ 2) ^ s < 2 ^ (2 * (s + 1) * (s + 1)) := by
   have h1 : (s + 1) ^ 2 * (4 * (s + 1) ^ 2) ^ s =
-      (s + 1) ^ (2 * s + 2) * 4 ^ s := by rw [mul_pow, ← pow_mul]; ring_nf
+      (s + 1) ^ (2 * s + 2) * 4 ^ s := by
+        rw [mul_pow, ← pow_mul]
+        ring_nf
   have h2 : (s + 1) ^ (2 * s + 2) ≤ (2 ^ s) ^ (2 * s + 2) :=
     Nat.pow_le_pow_left (succ_le_two_pow_compression s) _
   rw [h1, show (4 : ℕ) ^ s = 2 ^ (2 * s) from by
     rw [show (4 : ℕ) = 2 ^ 2 from by norm_num, ← pow_mul]]
   calc (s + 1) ^ (2 * s + 2) * 2 ^ (2 * s)
       ≤ (2 ^ s) ^ (2 * s + 2) * 2 ^ (2 * s) := Nat.mul_le_mul_right _ h2
-    _ = 2 ^ (2 * s ^ 2 + 4 * s) := by rw [← pow_mul, ← pow_add]; ring_nf
+    _ = 2 ^ (2 * s ^ 2 + 4 * s) := by
+      rw [← pow_mul, ← pow_add]
+      ring_nf
     _ < 2 ^ (2 * (s + 1) * (s + 1)) := Nat.pow_lt_pow_right (by norm_num) (by nlinarith)
 
 theorem compression_with_info_imp_vcdim_finite
@@ -992,8 +1010,11 @@ theorem compression_with_info_imp_vcdim_finite
              Finset.mem_univ _⟩
     · exact cs.compress_small (mkSample f)
   have hA_card : A.card = 2 * n := by
-    simp only [hA_def, Finset.card_product, Finset.card_univ, Fintype.card_bool]; ring
-  have hn_pos : 0 < n := by rw [hn_eq]; positivity
+    simp only [hA_def, Finset.card_product, Finset.card_univ, Fintype.card_bool]
+    ring
+  have hn_pos : 0 < n := by
+    rw [hn_eq]
+    positivity
   have h_target_card : target.card ≤ (K + 1) * (2 * n) ^ K * I := by
     simp only [htarget_def, Finset.card_product, Finset.card_univ, ← hI_def]
     apply Nat.mul_le_mul_right
@@ -1028,7 +1049,8 @@ theorem compression_with_info_imp_vcdim_finite
   have h_card_lt : target.card < (Finset.univ : Finset (Fin n → Bool)).card := by
     have : (Finset.univ : Finset (Fin n → Bool)).card = 2 ^ n := by
       simp [Fintype.card_fin, Fintype.card_bool]
-    rw [this]; exact h_target_lt
+    rw [this]
+    exact h_target_lt
   exact absurd h_inj (by
     intro h_inj_false
     obtain ⟨f, _, g, _, hne, heq⟩ :=

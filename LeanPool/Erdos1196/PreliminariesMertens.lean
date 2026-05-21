@@ -62,7 +62,8 @@ private lemma sum_vonMangoldt_mul_div_eq_log_factorial (N : ℕ) :
     (Finset.Icc 1 N).sum (fun m => Λ m * ((N / m : ℕ) : ℝ)) =
       Real.log (Nat.factorial N) := by
   have hI : Finset.Icc 1 N = Finset.Ioc 0 N := by
-    ext n; simp [Finset.mem_Icc, Finset.mem_Ioc, Nat.succ_le_iff]
+    ext n
+    simp [Finset.mem_Icc, Finset.mem_Ioc, Nat.succ_le_iff]
   have hprod : (∏ n ∈ Finset.Icc 1 N, (n : ℝ)) = Nat.factorial N := by
     rw [← Finset.Ico_add_one_right_eq_Icc 1 N, Finset.prod_Ico_eq_prod_range]
     simpa [Nat.succ_eq_add_one, add_comm] using
@@ -151,12 +152,14 @@ private lemma mertensPartialSum_eq_log_factorial_div_add_fractional (t : ℕ) :
             ((1 / (t : ℝ)) * (Λ m * (((t / m : ℕ) : ℝ))) +
               (1 / (t : ℝ)) * (Λ m * ((t : ℝ) / m - ↑(t / m)))) :=
             Finset.sum_congr rfl fun m _ => by
-              rw [← one_div_mul_mul_natCast_div (a := Λ m) ht]; ring
+              rw [← one_div_mul_mul_natCast_div (a := Λ m) ht]
+              ring
       _ = (1 / (t : ℝ)) * ∑ m ∈ Finset.Icc 1 t, Λ m * (((t / m : ℕ) : ℝ)) +
             (1 / (t : ℝ)) * ∑ m ∈ Finset.Icc 1 t, Λ m * ((t : ℝ) / m - ↑(t / m)) := by
             rw [Finset.sum_add_distrib, Finset.mul_sum, Finset.mul_sum]
       _ = Real.log (Nat.factorial t) / t + mertensFractionalError t := by
-            rw [sum_vonMangoldt_mul_div_eq_log_factorial, mertensFractionalError]; ring_nf
+            rw [sum_vonMangoldt_mul_div_eq_log_factorial, mertensFractionalError]
+            ring_nf
 
 /-- The fractional correction term is nonnegative. -/
 private lemma mertensFractionalError_nonneg {t : ℕ} (ht : 1 ≤ t) :
@@ -202,7 +205,8 @@ lemma mertensEstimate :
   calc
     |Real.log (Nat.factorial t) / t + mertensFractionalError t - Real.log (t : ℝ)|
       = |(Real.log (Nat.factorial t) / t - Real.log (t : ℝ)) + mertensFractionalError t| := by
-          congr; ring
+          congr
+          ring
     _ ≤ |Real.log (Nat.factorial t) / t - Real.log (t : ℝ)| + |mertensFractionalError t| :=
         abs_add_le _ _
     _ = |Real.log (Nat.factorial t) / t - Real.log (t : ℝ)| + mertensFractionalError t := by

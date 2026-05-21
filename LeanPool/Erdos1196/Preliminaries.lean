@@ -51,11 +51,18 @@ private lemma tailCutoffCoeff_partialSum {y n : ℕ} (hy0 : 1 ≤ y) (hy : y ≤
     (Finset.Icc 0 n).sum (tailCutoffCoeff y) =
       mertensPartialSum n - mertensPartialSum (y - 1) := by
   have hfilter : (Finset.Icc 0 n).filter (fun q => y ≤ q) = Finset.Icc y n := by
-    ext q; simp; omega
-  have hunion : Finset.Icc 0 n = Finset.Icc 0 (y - 1) ∪ Finset.Icc y n := by ext q; simp; omega
+    ext q
+    simp
+    omega
+  have hunion : Finset.Icc 0 n = Finset.Icc 0 (y - 1) ∪ Finset.Icc y n := by
+    ext q
+    simp
+    omega
   have hdisj : Disjoint (Finset.Icc 0 (y - 1)) (Finset.Icc y n) :=
     Finset.disjoint_left.mpr fun q hq0 hqy => by
-      have := (Finset.mem_Icc.mp hq0).2; have := (Finset.mem_Icc.mp hqy).1; omega
+      have := (Finset.mem_Icc.mp hq0).2
+      have := (Finset.mem_Icc.mp hqy).1
+      omega
   calc
     (Finset.Icc 0 n).sum (tailCutoffCoeff y)
         = ((Finset.Icc 0 n).filter (fun q => y ≤ q)).sum (fun q => Λ q / (q : ℝ)) := by
@@ -65,7 +72,8 @@ private lemma tailCutoffCoeff_partialSum {y n : ℕ} (hy0 : 1 ≤ y) (hy : y ≤
     _ = (Finset.Icc y n).sum (fun q => Λ q / (q : ℝ)) := by rw [hfilter]
     _ = (Finset.Icc 0 n).sum (fun q => Λ q / (q : ℝ)) -
           (Finset.Icc 0 (y - 1)).sum (fun q => Λ q / (q : ℝ)) := by
-            rw [hunion, Finset.sum_union hdisj]; ring
+            rw [hunion, Finset.sum_union hdisj]
+            ring
     _ = mertensPartialSum n - mertensPartialSum (y - 1) := by
           rw [← mertensPartialSum_eq_sum_Icc_zero, ← mertensPartialSum_eq_sum_Icc_zero]
 
@@ -92,7 +100,9 @@ private lemma hasDerivAt_tailKernel {m : ℕ} {t : ℝ} (hmt : 1 < (m : ℝ) * t
     have hm0 : (m : ℝ) = 0 := le_antisymm (not_lt.mp hm) (by positivity)
     linarith [show (m : ℝ) * t = 0 by rw [hm0, zero_mul]]
   convert hasDerivAt_inv_log_sq_mul (c := (m : ℝ)) (t := t) hm hmt using 1
-  · funext u; rw [tailKernel]; exact (inv_pow (Real.log ((m : ℝ) * u)) 2).symm
+  · funext u
+    rw [tailKernel]
+    exact (inv_pow (Real.log ((m : ℝ) * u)) 2).symm
   · ring_nf
 
 /-- The derivative formula for the tail kernel. -/
@@ -125,7 +135,8 @@ private lemma continuousOn_tailKernelDerivFactor_Ici {m y : ℕ} (hm : 1 ≤ m) 
 
 /-- The tail kernel is nonnegative. -/
 private lemma tailKernel_nonneg (m : ℕ) (t : ℝ) : 0 ≤ tailKernel m t := by
-  unfold tailKernel; positivity
+  unfold tailKernel
+  positivity
 
 /-- The floor/log discrepancy on a unit interval is bounded by `log 2`. -/
 private lemma abs_log_floor_sub_log_le_log_two {t : ℝ} (ht : 2 ≤ t) :
@@ -232,7 +243,8 @@ private lemma abs_mertensPartialSum_floor_sub_log_le {C : ℝ} {t : ℝ}
 private lemma abs_log_natPred_sub_log_le_log_two {y : ℕ} (hy : 2 ≤ y) :
     |Real.log ((y - 1 : ℕ) : ℝ) - Real.log (y : ℝ)| ≤ Real.log 2 := by
   by_cases hy2 : y = 2
-  · subst hy2; simp [abs_of_nonneg (by positivity : (0 : ℝ) ≤ Real.log 2)]
+  · subst hy2
+    simp [abs_of_nonneg (by positivity : (0 : ℝ) ≤ Real.log 2)]
   · have hy3 : 3 ≤ y := by omega
     have hpred_pos : 0 < ((y - 1 : ℕ) : ℝ) := by exact_mod_cast (show 0 < y - 1 by omega)
     have hneg : Real.log ((y - 1 : ℕ) : ℝ) - Real.log (y : ℝ) ≤ 0 :=
@@ -336,7 +348,8 @@ private lemma tendsto_tailKernel_mul_log_sub_log_zero_aux {m y : ℕ} (hm : 1 �
             mul_le_mul_of_nonneg_left hdiff.2 hkernel_nonneg
       _ = (Real.log ((m : ℝ) * t))⁻¹ := by
             have hlog_ne := Real.log_ne_zero_of_pos_of_ne_one (by positivity) (ne_of_gt hmt)
-            unfold tailKernel; field_simp [hlog_ne]
+            unfold tailKernel
+            field_simp [hlog_ne]
   rw [tendsto_zero_iff_norm_tendsto_zero]
   simpa using squeeze_zero' (Eventually.of_forall fun _ => abs_nonneg _) hbound hinv
 
@@ -603,9 +616,11 @@ lemma tailEstimate :
     have hcoeff_eq : coeff = fun q : ℕ =>
         if y ≤ q then Λ q / ((q : ℝ) * Real.log ((m * q : ℕ) : ℝ) ^ 2) else 0 :=
       funext fun q => by
-        unfold coeff; by_cases hyq : y ≤ q
+        unfold coeff
+        by_cases hyq : y ≤ q
         · simp only [tailKernel, tailCutoffCoeff, if_pos hyq]
-          push_cast; field_simp
+          push_cast
+          field_simp
         · simp [tailCutoffCoeff, hyq]
     calc
       tailSum m y = ∑' q : ℕ, coeff q := by simp [tailSum, hcoeff_eq]

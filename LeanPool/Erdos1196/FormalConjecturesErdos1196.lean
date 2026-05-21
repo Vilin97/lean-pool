@@ -36,7 +36,8 @@ private lemma log_pos_nat {n : ℕ} (hn : 2 ≤ n) : 0 < Real.log (n : ℝ) :=
 
 private lemma div_lt_abs_add_one_div {C t : ℝ} (ht : 0 < t) :
     C / t < (|C| + 1) / t := by
-  field_simp [ht.ne']; nlinarith [le_abs_self C]
+  field_simp [ht.ne']
+  nlinarith [le_abs_self C]
 
 private lemma isPrimitive_nat_iff (A : Set ℕ) :
     IsPrimitive A ↔ PrimitiveSetsAboveX.PrimitiveSet A :=
@@ -108,7 +109,8 @@ theorem erdos_1196 :
           by_cases hnN : n < N
           · simp [head, tail, hnA, show n ∈ Set.Icc x (N - 1) from ⟨hxn, by omega⟩, hnN.not_ge]
           · have hHead : n ∉ Set.Icc x (N - 1) := by
-              intro hmem; exact hnN (lt_of_le_of_lt hmem.2 (Nat.sub_lt (by omega) (by decide)))
+              intro hmem
+              exact hnN (lt_of_le_of_lt hmem.2 (Nat.sub_lt (by omega) (by decide)))
             simp [head, tail, hnA, hHead, not_lt.mp hnN]
         · simp [head, tail, hnA]
       have hHeadZero : ∀ n ∉ Finset.Icc x (N - 1), head n = 0 := fun n hn => by
@@ -134,6 +136,8 @@ theorem erdos_1196 :
               simpa [Pi.add_apply] using Summable.tsum_add hHeadSummable hTailSummable'
           _ ≤ headBound x + ∑' n : ℕ, tail n := add_le_add hHeadLe le_rfl
           _ < headBound x + (1 + (|C| + 1) / Real.log (N : ℝ)) := by linarith
-          _ = 1 + o x := by simp [o, headBound, hxN']; ring
+          _ = 1 + o x := by
+            simp [o, headBound, hxN']
+            ring
 
 end Erdos1196

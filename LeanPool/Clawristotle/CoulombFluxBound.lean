@@ -50,7 +50,9 @@ private lemma landauMatrix_mulVec_component_le (z u : Fin 3 → ℝ) (i : Fin 3)
         ≤ ∑ j : Fin 3, |landauMatrix coulombKernel z i j * u j| :=
           Finset.abs_sum_le_sum_abs _ _
       _ = ∑ j : Fin 3, |landauMatrix coulombKernel z i j| * |u j| := by
-          congr 1; ext j; exact abs_mul _ _
+          congr 1
+          ext j
+          exact abs_mul _ _
       _ ≤ ∑ j : Fin 3, ‖z‖⁻¹ * |u j| :=
           Finset.sum_le_sum fun j _ =>
             mul_le_mul_of_nonneg_right (coulomb_landauMatrix_entry_le_pi _ _ _ hz) (abs_nonneg _)
@@ -355,7 +357,10 @@ lemma coulomb_flux_component_bound
     calc ‖v - w‖⁻¹ * ∑ j, |u w j|
         ≤ ‖v - w‖⁻¹ * (g w * ∑ j, |vGrad g v j| + g v * ∑ j, |vGrad g w j|) :=
           mul_le_mul_of_nonneg_left h_sum_tri (inv_nonneg.mpr (norm_nonneg _))
-      _ = _ := by rw [abs_of_pos (hg_pos w)]; simp only [← Finset.mul_sum]; ring
+      _ = _ := by
+        rw [abs_of_pos (hg_pos w)]
+        simp only [← Finset.mul_sum]
+        ring
   -- Step 5: integrate and apply newtonian bounds
   have h_rhs_int : Integrable (fun w =>
       (∑ j : Fin 3, |vGrad g v j|) * (‖v - w‖⁻¹ * |g w|) +

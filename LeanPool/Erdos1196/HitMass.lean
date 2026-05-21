@@ -179,7 +179,8 @@ private lemma summable_transitionTailSummand (Y m : ℕ) (hm : 1 ≤ m) :
   have hN_log_pos : 0 < Real.log ((m * N : ℕ) : ℝ) := lt_trans hCpos hN_log_large
   have h_err_lt :
       C / Real.log ((m * N : ℕ) : ℝ) ^ 2 < 1 / Real.log ((m * N : ℕ) : ℝ) := by
-    field_simp [hN_log_pos.ne']; nlinarith
+    field_simp [hN_log_pos.ne']
+    nlinarith
   have htail_pos : 0 < tailSum m N := by
     grind only [= abs.eq_1, = max_def]
   have hsN :
@@ -441,7 +442,8 @@ private lemma firstHitMassAtStep_eq_tsum_indicator_arrivalMass {x Y : ℕ}
   | 0 => by
       rfl
   | k + 1 => by
-      apply tsum_congr; intro n
+      apply tsum_congr
+      intro n
       by_cases hnA : n ∈ A
       · simpa [firstHitMassAtStep, arrivalMass, hnA] using tsum_congr fun m => by
           by_cases hcond : x ≤ m ∧ m ∣ n ∧ Y ≤ n / m
@@ -467,14 +469,16 @@ private theorem tsum_indicator_ofReal_visitProbability_eq_visitMass {x Y : ℕ}
   calc
     (∑' n : ℕ, A.indicator (fun n => ENNReal.ofReal (chain.visitProbability n)) n) =
         ∑' n : ℕ, ∑' k : ℕ, A.indicator (arrivalMass chain k) n := by
-          apply tsum_congr; intro n
+          apply tsum_congr
+          intro n
           by_cases hnA : n ∈ A
           · simpa [hnA] using
               (tsum_arrivalMass_eq_ofReal_visitProbability chain hx hY hB (hAx hnA)).symm
           · simp [hnA]
       _ = ∑' k : ℕ, ∑' n : ℕ, A.indicator (arrivalMass chain k) n := ENNReal.tsum_comm
       _ = ∑' k : ℕ, firstHitMassAtStep chain A k := by
-            apply tsum_congr; intro k
+            apply tsum_congr
+            intro k
             simpa using
               (PrimitiveSet.firstHitMassAtStep_eq_tsum_indicator_arrivalMass chain hA hY k).symm
       _ = visitMass chain A := by rw [visitMass]
@@ -503,7 +507,8 @@ theorem summable_indicator_visitProbability_and_tsum_le_one_of_visitMass_le_one
       · simp [f, hnA, ENNReal.toReal_ofReal, visitProbability_nonneg chain hx hB (hAx hnA)]
       · simp [f, hnA]
     · rw [← hmass, ENNReal.tsum_toReal_eq]
-      intro n; by_cases hnA : n ∈ A <;> simp [f, hnA]
+      intro n
+      by_cases hnA : n ∈ A <;> simp [f, hnA]
   exact ⟨hseries.summable, by
     rw [hseries.tsum_eq]
     exact ENNReal.toReal_le_of_le_ofReal zero_le_one (by simpa using hVisitMass)⟩

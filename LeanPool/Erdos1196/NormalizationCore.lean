@@ -87,7 +87,8 @@ lemma entryWeight_add_filtered_vonMangoldt_eq_entryWeightFactor_sum_divisors (x 
           (((n.divisors.filter fun q => q < Y).sum fun q => Λ q) +
             ((n.divisors.filter fun q => Y ≤ q ∧ n / q < x).sum fun q => Λ q) +
             ((n.divisors.filter fun q => Y ≤ q ∧ x ≤ n / q).sum fun q => Λ q)) := by
-          simp [entryWeight, entryWeightFactor]; ring_nf
+          simp [entryWeight, entryWeightFactor]
+          ring_nf
     _ = entryWeightFactor n * (n.divisors.sum fun q => Λ q) := by
           congr 1
           rw [Finset.sum_filter, Finset.sum_filter, Finset.sum_filter,
@@ -225,7 +226,8 @@ used in the normalization argument.
 private lemma abs_harmonic_pred_sub_log_le_one (x : ℕ) (hx : 1 ≤ x) :
     |(harmonic (x - 1) : ℝ) - Real.log (x : ℝ)| ≤ 1 := by
   by_cases hx1 : x = 1
-  · subst hx1; norm_num [harmonic_zero]
+  · subst hx1
+    norm_num [harmonic_zero]
   have hlower : Real.log (x : ℝ) ≤ (harmonic (x - 1) : ℝ) :=
     by simpa [Nat.sub_add_cancel hx] using log_add_one_le_harmonic (x - 1)
   have hupper0 : (harmonic (x - 1) : ℝ) ≤ 1 + Real.log ((x - 1 : ℕ) : ℝ) :=
@@ -270,8 +272,10 @@ private lemma sum_sigma_divisorsAntidiagonal_eq_sum_product
     rcases z with ⟨n, q, m⟩
     simp only [Sigma.mk.injEq, heq_eq_eq, and_true]
     exact (Nat.mem_divisorsAntidiagonal.1 (Finset.mem_sigma.1 hz).2).1
-  · intro p hp; simp
-  · intro z hz; rfl
+  · intro p hp
+    simp
+  · intro z hz
+    rfl
 
 /-- The small-prime divisor sum can be rewritten over the divisor antidiagonal. -/
 private lemma smallPrimeDivisorSum_eq_sum_divisorsAntidiagonal (Y n : ℕ) :
@@ -391,7 +395,9 @@ lemma tsum_firstEntryPairWeight_fiber_prod {x Y n : ℕ} (hx : 1 ≤ x) :
               by_cases hcond : Y ≤ q ∧ n / q < x
               · rw [firstEntryPairWeight_eq (x := x) (Y := Y) hmq_ge hcond.2, if_pos hcond,
                   if_pos (hiff.2 hcond.1)]
-                have hmul' : q * (n / q) = n := by rw [mul_comm]; exact hmul
+                have hmul' : q * (n / q) = n := by
+                  rw [mul_comm]
+                  exact hmul
                 simpa [div_eq_mul_inv, Nat.cast_mul, mul_comm, mul_left_comm, mul_assoc, hmul']
                   using (entryWeightFactor_mul_vonMangoldt_eq_smallFactor q (n / q)).symm
               · simp [firstEntryPairWeight, hiff, hmq_ge, hcond, and_comm]

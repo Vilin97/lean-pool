@@ -33,7 +33,8 @@ lemma count_upper_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
   have hsum : ∑ k ∈ Finset.range (X / M), ((completeBlock M k).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card =
       (X / M) * A.card := by
-    simp only [hblock]; rw [Finset.sum_const, Finset.card_range, smul_eq_mul]
+    simp only [hblock]
+    rw [Finset.sum_const, Finset.card_range, smul_eq_mul]
   rw [hsum]
   linarith [partialBlock_valid_count_le b T S X]
 
@@ -82,13 +83,16 @@ lemma count_real_bounds (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Fi
   simp only at hbounds
   have hA := validResidues_card_eq_mul b hb T hT S
   have hA' : (M : ℝ) * L = (validResiduesMod b T S).card := by
-    simp only [hA]; ring
+    simp only [hA]
+    ring
   constructor
   · calc (q : ℝ) * M * L = q * (M * L) := by ring
       _ = q * (validResiduesMod b T S).card := by rw [← hA']
       _ ≤ count := by exact_mod_cast hbounds.1
   · calc (count : ℝ) ≤ (q + 1) * (validResiduesMod b T S).card := by exact_mod_cast hbounds.2
-      _ = (q + 1) * M * L := by rw [← hA']; ring
+      _ = (q + 1) * M * L := by
+        rw [← hA']
+        ring
 
 lemma xL_real_bounds (X M : ℕ) (L : ℝ) (hL : 0 ≤ L) (hM : 0 < M) :
     let q := X / M

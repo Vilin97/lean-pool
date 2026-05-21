@@ -47,7 +47,8 @@ theorem boolToSign_sum_zero : ∑ b : Bool, boolToSign b = 0 := by
 
 theorem boolToSign_mul_abs_le_one (b₁ b₂ : Bool) : |boolToSign b₁ * boolToSign b₂| ≤ 1 := by
   rw [abs_mul]
-  have h₁ := boolToSign_abs_le_one b₁; have h₂ := boolToSign_abs_le_one b₂
+  have h₁ := boolToSign_abs_le_one b₁
+  have h₂ := boolToSign_abs_le_one b₂
   nlinarith [abs_nonneg (boolToSign b₁), abs_nonneg (boolToSign b₂)]
 
 /-- Boolean sign assignments used as Rademacher variables. -/
@@ -110,7 +111,8 @@ private theorem rademacher_variance_eq {m : ℕ} (_hm : 0 < m) (a : Fin m → �
       ∑ j : Fin m, (boolToSign (σ i) * a i) * (boolToSign (σ j) * a j) = N by
     simp_rw [sq, Finset.sum_mul, Finset.mul_sum]
     rw [Finset.sum_comm (s := Finset.univ) (t := Finset.univ)]
-    simp_rw [h_each]; simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
+    simp_rw [h_each]
+    simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
   intro i
   rw [Finset.sum_comm (s := Finset.univ) (t := Finset.univ)]
   have h_term : ∀ j : Fin m, ∑ σ : SignVector m,
@@ -225,10 +227,13 @@ private theorem empRad_nonneg {X : Type u} (C : ConceptClass X Bool) {m : ℕ}
           (fun _ _ _ => rfl)]) ▸
       Finset.sum_le_sum (fun σ _ => le_csSup_of_le (hbdd σ) ⟨h₀, hh₀, rfl⟩ le_rfl)]
   · rw [Set.not_nonempty_iff_eq_empty] at hC
-    apply Finset.sum_nonneg; intro σ _
+    apply Finset.sum_nonneg
+    intro σ _
     have : { r : ℝ | ∃ h ∈ C, r = rademacherCorrelation h σ xs } = ∅ := by
-      ext r; simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
-      rintro ⟨h, hh, _⟩; simp [hC] at hh
+      ext r
+      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+      rintro ⟨h, hh, _⟩
+      simp [hC] at hh
     rw [this, Real.sSup_empty]
 
 theorem rademacherComplexity_le_one (X : Type u) [MeasurableSpace X]
@@ -433,7 +438,9 @@ theorem finite_massart_lemma {m : ℕ} (_hm : 0 < m) {N : ℕ} (hN : 0 < N)
             (le_of_lt h1card_pos)
       _ = ∑ j, (1 / (Fintype.card (SignVector m) : ℝ)) *
             ∑ sv, Real.exp (t * Z j sv) := by
-          rw [Finset.mul_sum]; simp_rw [Finset.mul_sum]; rw [Finset.sum_comm]
+          rw [Finset.mul_sum]
+          simp_rw [Finset.mul_sum]
+          rw [Finset.sum_comm]
       _ ≤ ∑ _ : Fin N, Real.exp (t ^ 2 * σ_param ^ 2 / 2) :=
           Finset.sum_le_sum (fun j _ => h_mgf j t (le_of_lt ht))
       _ = ↑N * Real.exp (t ^ 2 * σ_param ^ 2 / 2) := by
@@ -457,7 +464,9 @@ theorem finite_massart_lemma {m : ℕ} (_hm : 0 < m) {N : ℕ} (hN : 0 < N)
     by_contra h_neg
     push Not at h_neg
     have ht₀_pos : 0 < E_max / σ_param ^ 2 := div_pos h_neg (sq_pos_of_pos hσ)
-    have h_bd := h_linear_bound _ ht₀_pos; rw [hlog] at h_bd; simp only [zero_div, zero_add] at h_bd
+    have h_bd := h_linear_bound _ ht₀_pos
+    rw [hlog] at h_bd
+    simp only [zero_div, zero_add] at h_bd
     linarith [show E_max / σ_param ^ 2 * σ_param ^ 2 / 2 = E_max / 2 by field_simp]
   · have hsqrt_pos : 0 < Real.sqrt (2 * Real.log ↑N) :=
       Real.sqrt_pos_of_pos (by linarith [lt_of_le_of_ne hlog_N_nonneg (Ne.symm hlog)])
@@ -485,7 +494,8 @@ private theorem ncard_restrictions_le_sum_choose_set {X : Type u}
   set AA := R_fin.image (fun f => Finset.univ.filter (fun x => f x = true)) with hAA_def
   have h_inj : Function.Injective
       (fun (f : ↥S → Bool) => Finset.univ.filter (fun x => f x = true)) := by
-    intro f g hfg; funext x
+    intro f g hfg
+    funext x
     have := Finset.ext_iff.mp hfg x
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at this
     cases hf : f x <;> cases hg : g x <;> simp_all
@@ -527,7 +537,9 @@ private theorem ncard_restrictions_le_sum_choose_set {X : Type u}
     cases hf : f ⟨y', hy'S⟩ <;> cases hg : g' ⟨y', hy'S⟩ <;> simp_all
   have h3 := @Finset.card_shatterer_le_sum_vcDim ↥S _ AA
   calc R.toFinset.card
-      = AA.card := by rw [hAA_def]; exact (Finset.card_image_of_injective _ h_inj).symm
+      = AA.card := by
+        rw [hAA_def]
+        exact (Finset.card_image_of_injective _ h_inj).symm
     _ ≤ AA.shatterer.card := Finset.card_le_card_shatterer AA
     _ ≤ ∑ k ∈ Finset.Iic AA.vcDim, (Fintype.card ↥S).choose k := h3
     _ = ∑ k ∈ Finset.Iic AA.vcDim, S.card.choose k := by rw [Fintype.card_coe]
@@ -539,7 +551,8 @@ private theorem ncard_restrictions_le_sum_choose_set {X : Type u}
 private theorem growth_function_le_sum_choose_set {X : Type u}
     (C : ConceptClass X Bool) (d m : ℕ) (_hdm : d ≤ m) (hvc : VCDim X C = ↑d) :
     GrowthFunction X C m ≤ ∑ i ∈ Finset.range (d + 1), Nat.choose m i := by
-  unfold GrowthFunction; apply csSup_le'
+  unfold GrowthFunction
+  apply csSup_le'
   intro n hn
   obtain ⟨⟨S, hSm⟩, rfl⟩ := hn
   change ({ f : ↥S → Bool | ∃ c ∈ C, ∀ x : ↥S, c ↑x = f x } : Set _).ncard ≤ _
@@ -559,13 +572,19 @@ theorem sum_choose_le_exp_pow (d m : ℕ) (hd : 0 < d) (hdm : d ≤ m) :
       have := add_pow t 1 m; rw [add_comm] at this; rw [this]
       congr 1; ext i; rw [one_pow, mul_one]; ring]
     apply Finset.sum_le_sum_of_subset_of_nonneg
-    · intro i hi; simp only [Finset.mem_range] at hi ⊢; omega
-    · intro i _ _; exact mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (le_of_lt ht_pos) _)
+    · intro i hi
+      simp only [Finset.mem_range] at hi ⊢
+      omega
+    · intro i _ _
+      exact mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (le_of_lt ht_pos) _)
   have h_exp_bound : (1 + t) ^ m ≤ Real.exp 1 ^ d :=
     calc (1 + t) ^ m
         ≤ (Real.exp t) ^ m := pow_le_pow_left₀ (by linarith)
               (by linarith [Real.add_one_le_exp t]) m
-      _ = Real.exp (t * ↑m) := by rw [← Real.exp_nat_mul]; congr 1; ring
+      _ = Real.exp (t * ↑m) := by
+        rw [← Real.exp_nat_mul]
+        congr 1
+        ring
       _ = Real.exp ↑d := by rw [show t * ↑m = ↑d from by simp only [ht_def]; field_simp]
       _ = Real.exp 1 ^ d := by rw [← Real.exp_nat_mul]; simp
   have h_factor : (∑ i ∈ Finset.range (d + 1), (Nat.choose m i : ℝ)) ≤
@@ -659,7 +678,8 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
         dpats.sup' hdpats_ne (cf σ) := fun σ => by
       apply csSup_le
       · exact ⟨rademacherCorrelation h₀ σ xs, h₀, hh₀, rfl⟩
-      · rintro r ⟨h, hh, rfl⟩; rw [h_corr_eq]
+      · rintro r ⟨h, hh, rfl⟩
+        rw [h_corr_eq]
         exact Finset.le_sup' (cf σ) (h_mem_dpats h hh)
     have h_empRad_le : EmpiricalRademacherComplexity X C xs ≤
         (1 / (Fintype.card (SignVector m) : ℝ)) *
@@ -696,7 +716,8 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
         (fun i => le_of_eq (boolToSign_abs_eq_one (p i))) t ht
       have h_Z_rewrite : ∀ sv, Z j sv =
           (1 / (m : ℝ)) * ∑ i, (fun i => boolToSign (p i)) i * boolToSign (sv i) := fun sv => by
-        change cf sv p = _; simp only [cf]
+        change cf sv p = _
+        simp only [cf]
         congr 1; exact Finset.sum_congr rfl (fun i _ => by ring)
       simp_rw [show ∀ sv, Real.exp (t * Z j sv) = Real.exp (t * ((1 / (m : ℝ)) *
             ∑ i, (fun i => boolToSign (p i)) i * boolToSign (sv i))) from
@@ -735,7 +756,9 @@ theorem vcdim_bounds_rademacher_quantitative (X : Type u) [MeasurableSpace X]
             exact Finset.sum_le_sum (fun i _ => by
               exact_mod_cast Nat.choose_le_choose i (Finset.card_image_le.trans (by simp)))
         _ ≤ (Real.exp 1 * ↑m / ↑d) ^ d := by
-            have := sum_choose_le_exp_pow d m hd_pos hdm; push_cast at this ⊢; exact this
+            have := sum_choose_le_exp_pow d m hd_pos hdm
+            push_cast at this ⊢
+            exact this
     calc EmpiricalRademacherComplexity X C xs
         ≤ (1 / (Fintype.card (SignVector m) : ℝ)) *
             ∑ σ, Finset.univ.sup' Finset.univ_nonempty (fun j => Z j σ) := h_empRad_le2
@@ -854,7 +877,8 @@ private theorem uniform_injective_tuple_measure_half
       have hfact_le : ∀ k : Fin m,
           D_sub (if k = i then {t} else if k = j then {t} else Set.univ) ≤
           (if k = i then 1 / (n : ENNReal) else if k = j then 1 / (n : ENNReal) else 1) := by
-        intro k; split_ifs <;> [rw [hDsub_sing]; rw [hDsub_sing]; rw [hD_sub_prob.measure_univ]]
+        intro k
+        split_ifs <;> [rw [hDsub_sing]; rw [hDsub_sing]; rw [hD_sub_prob.measure_univ]]
       have hfact_eq : ∀ k : Fin m,
           (if k = i then 1 / (n : ENNReal) else if k = j then 1 / (n : ENNReal) else 1) =
           (if k = i ∨ k = j then 1 / (n : ENNReal) else 1) := by
@@ -944,7 +968,8 @@ theorem rademacher_lower_bound_on_shattered (X : Type u) [MeasurableSpace X]
   haveI : @MeasurableSingletonClass ↥T ⊤ := ⟨fun _ => MeasurableSpace.measurableSet_top⟩
   have hTne_type : Nonempty ↥T := hT_ne.coe_sort
   have hTpos : 0 < Fintype.card ↥T := by
-    rw [Fintype.card_coe]; exact Finset.Nonempty.card_pos hT_ne
+    rw [Fintype.card_coe]
+    exact Finset.Nonempty.card_pos hT_ne
   let D_sub := @uniformMeasure ↥T ⊤ _ hTne_type
   have hD_sub_prob : @MeasureTheory.IsProbabilityMeasure ↥T ⊤ D_sub :=
     @uniformMeasure_isProbability ↥T ⊤ _ ⟨fun _ => trivial⟩ hTne_type hTpos
@@ -1041,13 +1066,18 @@ private theorem vcdim_zero_concepts_agree (X : Type u) (C : ConceptClass X Bool)
     intro f
     by_cases hf : f ⟨x, Finset.mem_singleton_self x⟩ = h₁ x
     · refine ⟨h₁, hh₁, fun ⟨y, hy⟩ => ?_⟩
-      have hyx := Finset.mem_singleton.mp hy; subst hyx; exact hf.symm
+      have hyx := Finset.mem_singleton.mp hy
+      subst hyx
+      exact hf.symm
     · have hf2 : f ⟨x, Finset.mem_singleton_self x⟩ = h₂ x := by
         cases hv1 : h₁ x <;> cases hv2 : h₂ x <;> simp_all
       refine ⟨h₂, hh₂, fun ⟨y, hy⟩ => ?_⟩
-      have hyx := Finset.mem_singleton.mp hy; subst hyx; exact hf2.symm
+      have hyx := Finset.mem_singleton.mp hy
+      subst hyx
+      exact hf2.symm
   have h1le : (1 : WithTop ℕ) ≤ VCDim X C := le_iSup₂_of_le {x} hshat (by simp)
-  rw [hd] at h1le; exact absurd h1le (by norm_num)
+  rw [hd] at h1le
+  exact absurd h1le (by norm_num)
 
 private theorem vcdim_zero_rademacher_le_inv_sqrt (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) (D : MeasureTheory.Measure X) (hd : VCDim X C = (0 : ℕ))
@@ -1126,7 +1156,9 @@ private theorem analytical_log_sqrt_bound (d m : ℕ) (ε : ℝ)
   set t := (m : ℝ) / d with ht_def
   have ht_pos : 0 < t := div_pos hm_pos hd_pos_r
   have h_rewrite : 2 * ↑d * Real.log (Real.exp 1 * ↑m / ↑d) / ↑m =
-      2 * Real.log (Real.exp 1 * t) / t := by rw [ht_def]; field_simp
+      2 * Real.log (Real.exp 1 * t) / t := by
+        rw [ht_def]
+        field_simp
   rw [h_rewrite]
   have h_log_t_bound : Real.log t ≤ 2 * Real.sqrt t := by
     have h1 := Real.log_le_rpow_div (le_of_lt ht_pos) (show (0 : ℝ) < 1 / 2 by norm_num)
@@ -1149,7 +1181,8 @@ private theorem analytical_log_sqrt_bound (d m : ℕ) (ε : ℝ)
     rw [ht_def, div_lt_div_iff₀ hε4_pos hd_pos_r]
     have hceil : (32 * (↑d + 1) / ε ^ 4 : ℝ) < m :=
       (Nat.le_ceil _).trans_lt (by exact_mod_cast (by omega : ⌈32 * ((d : ℝ) + 1) / ε ^ 4⌉₊ < m))
-    rw [div_lt_iff₀ hε4_pos] at hceil; nlinarith
+    rw [div_lt_iff₀ hε4_pos] at hceil
+    nlinarith
   have h_sqrt_t_lower : 4 * Real.sqrt 2 / ε ^ 2 < Real.sqrt t := by
     rw [Real.lt_sqrt (by positivity)]
     calc (4 * Real.sqrt 2 / ε ^ 2) ^ 2
@@ -1199,7 +1232,10 @@ theorem vcdim_finite_imp_rademacher_vanishing (X : Type u) [MeasurableSpace X]
         (MeasureTheory.Measure.pi (fun _ : Fin m => D)) :=
       MeasureTheory.Measure.pi.instIsProbabilityMeasure _
     by_cases hd_pos : d = 0
-    · have hd0 : VCDim X C = (0 : ℕ) := by rw [← hd]; subst hd_pos; rfl
+    · have hd0 : VCDim X C = (0 : ℕ) := by
+        rw [← hd]
+        subst hd_pos
+        rfl
       calc RademacherComplexity X C D m
           ≤ 1 / Real.sqrt m := vcdim_zero_rademacher_le_inv_sqrt X C D hd0 m hm_pos
         _ < ε := by

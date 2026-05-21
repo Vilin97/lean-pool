@@ -34,18 +34,22 @@ lemma analysis_fluxFactor
   intro v w
   have h_log_grad : ∀ (v : (Fin 3) → ℝ),
       VML.vGrad (Real.log ∘ f) v = (1 / f v) • VML.vGrad f v := by
-    intro v; ext i
+    intro v
+    ext i
     simp only [VML.vGrad, Pi.smul_apply, smul_eq_mul, one_div]
     by_cases H : DifferentiableAt ℝ f v
-    · erw [fderiv_comp] <;> norm_num [H, ne_of_gt (hf_pos v)]; ring
+    · erw [fderiv_comp] <;> norm_num [H, ne_of_gt (hf_pos v)]
+      ring
     · rw [fderiv_zero_of_not_differentiableAt]
-      · rw [fderiv_zero_of_not_differentiableAt H]; norm_num
+      · rw [fderiv_zero_of_not_differentiableAt H]
+        norm_num
       · exact fun h => H <| by
           simpa [Real.exp_log (hf_pos _)] using
             h.exp.congr_of_eventuallyEq
             (by filter_upwards [] using fun _ => by simp [Real.exp_log (hf_pos _)])
   simp only [h_log_grad, smul_sub]
-  ext i; simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
+  ext i
+  simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
   field_simp [ne_of_gt (hf_pos v), ne_of_gt (hf_pos w)]
 
 /-- Scalar factors through mulVec and dotProduct:
@@ -59,7 +63,8 @@ lemma analysis_scalarFactor
       dotProduct (vGrad (Real.log ∘ f) v - vGrad (Real.log ∘ f) w)
         (mulVec (landauMatrix Ψ (v - w))
           (vGrad (Real.log ∘ f) v - vGrad (Real.log ∘ f) w)) := fun v w => by
-  simp only [dotProduct, Matrix.mulVec, Pi.smul_apply, smul_eq_mul, Fin.sum_univ_three]; ring
+  simp only [dotProduct, Matrix.mulVec, Pi.smul_apply, smul_eq_mul, Fin.sum_univ_three]
+  ring
 
 /-- Nonneg double integral zero → pointwise zero. -/
 lemma analysis_nonneg_dbl_zero
@@ -124,7 +129,9 @@ lemma poly_cubic_extraction
       t^2 * (∑ i, ∑ j, (v i) * (v j) * (K i j)) +
       t * (v ⬝ᵥ d_lin) + C = 0 := by
     convert h_poly_zero using 2
-    ring_nf; simp [Fin.sum_univ_three]; ring
+    ring_nf
+    simp [Fin.sum_univ_three]
+    ring
   have h_coeff_zero : v ⬝ᵥ d_c * (v ⬝ᵥ v) = 0 := by
     linarith [h_cubic_zero (-2), h_cubic_zero (-1), h_cubic_zero 0,
               h_cubic_zero 1, h_cubic_zero 2]
@@ -357,7 +364,8 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
           rw [fderiv_pi hDiff_comp_j]; simp only [ContinuousLinearMap.pi_apply]
         rw [h_pi_comp]
         by_cases hij : i = j
-        · subst hij; simp only [ite_true, mul_one]
+        · subst hij
+          simp only [ite_true, mul_one]
           rw [show (fun v => (fderiv ℝ g v) (Pi.single i 1) i) = c from
             funext fun v => by rw [hc_partial]; simp]
         · simp only [hij, ite_false, mul_zero]

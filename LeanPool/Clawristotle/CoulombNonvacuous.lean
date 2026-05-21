@@ -169,7 +169,9 @@ private lemma poly_mul_gaussian_le (M : ℕ) (a : ℝ) (ha : 0 < a) :
           · exact Real.exp_nonneg _
           · positivity
       _ = 2 ^ M * (u ^ M * Real.exp (-a * u)) := by ring_nf
-      _ ≤ 2 ^ M * (M.factorial / a ^ M) := by gcongr; exact pow_mul_exp_neg_le M a ha u hu
+      _ ≤ 2 ^ M * (M.factorial / a ^ M) := by
+        gcongr
+        exact pow_mul_exp_neg_le M a ha u hu
       _ ≤ 2 ^ M * (1 + M.factorial / a ^ M) := by gcongr; linarith
 
 /-- The equilibrium Maxwellian has Schwartz decay: all iterated velocity derivatives
@@ -284,7 +286,11 @@ lemma integral_equilibriumMaxwellian (ρ T : ℝ) (hT : 0 < T) :
   rw [integral_const_mul]
   have h_factor : (fun v : Fin 3 → ℝ => exp (-(normSq v) / (2 * T))) =
       (fun v => ∏ i : Fin 3, exp (-(1/(2*T)) * (v i)^2)) := by
-    ext v; rw [← exp_sum]; congr 1; simp only [normSq, dotProduct, Fin.sum_univ_three, sq]; ring
+    ext v
+    rw [← exp_sum]
+    congr 1
+    simp only [normSq, dotProduct, Fin.sum_univ_three, sq]
+    ring
   rw [h_factor]
   have h_fubini : ∫ v : Fin 3 → ℝ, ∏ i : Fin 3, exp (-(1/(2*T)) * (v i)^2) =
       ∏ i : Fin 3, ∫ x : ℝ, exp (-(1/(2*T)) * x^2) := by

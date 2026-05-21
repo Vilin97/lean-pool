@@ -40,7 +40,8 @@ private lemma smallPrimeKernel_nonneg {q : ℕ} {t : ℝ} (htq : 1 < t * q) :
     0 ≤ smallPrimeKernel q t := by
   have ht : 0 < t := by nlinarith [show (0 : ℝ) ≤ q by positivity]
   have hlog : 0 < Real.log (t * q) := Real.log_pos htq
-  dsimp [smallPrimeKernel]; positivity
+  dsimp [smallPrimeKernel]
+  positivity
 
 /-- The real kernel is antitone on the tail where the logarithm is positive. -/
 private lemma smallPrimeKernel_antitoneOn {q : ℕ} (hq : 0 < q) {a : ℝ} (ha : 1 < a * q) :
@@ -163,9 +164,11 @@ lemma sum_range_smallPrimeTail_le_two_inv_log {x q N : ℕ} (hx : 3 ≤ x) (hq :
         smallPrimeTailTerm q M ≤ 1 / Real.log (x : ℝ) := by
       have hMpos : 0 < M := by
         by_contra hMpos
-        rw [Nat.eq_zero_of_not_pos hMpos, Nat.mul_zero] at hxq; omega
+        rw [Nat.eq_zero_of_not_pos hMpos, Nat.mul_zero] at hxq
+        omega
       have hlogMq_ge_one : 1 ≤ Real.log ((M : ℝ) * q) := by
-        rw [← Real.log_exp 1]; exact Real.log_le_log (Real.exp_pos 1)
+        rw [← Real.log_exp 1]
+        exact Real.log_le_log (Real.exp_pos 1)
           (le_trans Real.exp_one_lt_three.le (le_trans (by exact_mod_cast hx) hMq_ge_x))
       have hden : Real.log (x : ℝ) ≤ (M : ℝ) * (Real.log ((M : ℝ) * q)) ^ 2 := by
         have hM_ge_one : (1 : ℝ) ≤ M := by exact_mod_cast Nat.succ_le_of_lt hMpos
@@ -274,7 +277,8 @@ lemma summable_normalizationSmallPrimePart_and_tsum_le {x Y : ℕ} (hx : 3 ≤ x
                 (fun q hq => Finset.mem_Ico.mpr (Finset.mem_filter.mp hq).2)
                 (fun q _ _ => mul_nonneg (hcoeff_nonneg q) (by positivity))
       _ = (2 * ∑ q ∈ Finset.Ico 1 Y, coeff q) / Real.log (x : ℝ) := by
-              rw [← Finset.sum_mul]; ring
+              rw [← Finset.sum_mul]
+              ring
   exact ⟨summable_of_sum_range_le hpart_nonneg hprefix,
     Real.tsum_le_of_sum_range_le (hf := hpart_nonneg) (h := hprefix)⟩
 end PrimitiveSetsAboveX

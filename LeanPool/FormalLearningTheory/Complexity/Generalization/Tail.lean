@@ -145,7 +145,8 @@ theorem nfl_per_sample_shattered {X : Type u} {C : ConceptClass X Bool}
       omega
     calc T.card < 4 * (T.card - m) := by omega
       _ ≤ 4 * disagree.card := by
-          have := le_trans hsdiff_card (Finset.card_le_card hsub); omega
+          have := le_trans hsdiff_card (Finset.card_le_card hsub)
+          omega
 /-- If VCDim = ⊤, then C is not PAC learnable.
     Proof: for any learner L with sample function mf, pick ε = 1 / 4, δ = 1 / 4.
     Let m = mf(1 / 4, 1 / 4). Since VCDim = ⊤, ∃ shattered set S with |S| ≥ 2m.

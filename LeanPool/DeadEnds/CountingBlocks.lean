@@ -28,7 +28,9 @@ lemma completeBlocks_subset_Icc (M X : ℕ) (_hM : 0 < M) (k : ℕ) (hk : k < X 
 lemma completeBlock_card (M k : ℕ) (hM : 0 < M) : (completeBlock M k).card = M := by
   have h₂ : k * M + 1 ≤ (k + 1) * M := by nlinarith
   rw [Finset.card_eq_sum_ones]
-  simp [completeBlock]; ring_nf at *; simp_all
+  simp [completeBlock]
+  ring_nf at *
+  simp_all
 
 lemma completeBlock_mapsTo (M k : ℕ) (hM : 0 < M) :
     Set.MapsTo (· % M) (completeBlock M k : Set ℕ) (Finset.range M : Set ℕ) := by
@@ -76,7 +78,8 @@ lemma completeBlock_surjOn (M k : ℕ) (hM : 0 < M) :
   have h₂ : r < M := Finset.mem_range.mp hr
   by_cases h₄ : r = 0
   · refine ⟨(k + 1) * M, ?_, ?_⟩
-    · simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]; constructor <;> nlinarith
+    · simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
+      constructor <;> nlinarith
     · simp [h₄]
   · refine ⟨k * M + r, ?_, ?_⟩
     · simp only [completeBlock, Finset.mem_coe, Finset.mem_Icc]
@@ -329,7 +332,8 @@ lemma mem_completeBlock_of_div_lt (M X n : ℕ) (hM : 0 < M) (hn_pos : 1 ≤ n) 
     (_hk : (n - 1) / M < X / M) : n ∈ completeBlock M ((n - 1) / M) := by
   simp only [completeBlock, Finset.mem_Icc]
   have h₁ : (n - 1) / M * M + 1 ≤ n := by
-    have := Nat.div_mul_le_self (n - 1) M; omega
+    have := Nat.div_mul_le_self (n - 1) M
+    omega
   have h₂ : n ≤ ((n - 1) / M + 1) * M := by
     have h : n - 1 < (n - 1) / M * M + M := Nat.lt_div_mul_add hM
     have heq : ((n - 1) / M + 1) * M = (n - 1) / M * M + M := by ring

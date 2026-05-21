@@ -88,19 +88,24 @@ lemma gaussian_normalization_maxwellian
       have h_fubini : ∫ v : Fin 3 → ℝ, Real.exp (c₀ * normSq v) =
           ∫ v : Fin 3 → ℝ, (∏ i : Fin 3, Real.exp (c₀ * (v i) ^ 2)) := by
         norm_num [← Real.exp_sum, normSq, dotProduct, Fin.sum_univ_three]
-        congr; ext; ring_nf
+        congr
+        ext
+        ring_nf
       generalize_proofs at *
-      erw [h_fubini, ← MeasureTheory.integral_fintype_prod_eq_prod]; rfl
+      erw [h_fubini, ← MeasureTheory.integral_fintype_prod_eq_prod]
+      rfl
     generalize_proofs at *
     have := integral_gaussian (-c₀)
     simp_all only [prod_const, card_univ, Fintype.card_fin, neg_neg, div_eq_mul_inv, inv_neg,
       mul_neg, mul_comm]
     have hnn : (0 : ℝ) ≤ -(π * c₀⁻¹) := by
       nlinarith [Real.pi_pos, inv_neg''.mpr hc₀]
-    rw [Real.sqrt_eq_rpow, ← Real.rpow_natCast, ← Real.rpow_mul hnn]; norm_num
+    rw [Real.sqrt_eq_rpow, ← Real.rpow_natCast, ← Real.rpow_mul hnn]
+    norm_num
   simp_all only [exp_add, integral_const_mul]
   intro v
-  rw [← hf_int]; unfold equilibriumMaxwellian
+  rw [← hf_int]
+  unfold equilibriumMaxwellian
   have hc₀_ne : c₀ ≠ 0 := ne_of_lt hc₀
   rw [show 2 * Real.pi * (-1 / (2 * c₀)) = Real.pi / (-c₀) from by field_simp]
   have h_rpow_ne : (Real.pi / (-c₀)) ^ ((3 : ℝ) / 2) ≠ 0 :=

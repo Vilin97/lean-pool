@@ -35,7 +35,9 @@ lemma localValidResidues_card_eq (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (T : Fin
   have h : ((p : ℝ) ^ 2 : ℝ) = (p ^ 2 : ℕ) := by norm_cast
   simp only [localDensityFactor, localValidResidues]
   rw [h]
-  have hp2 : ((p ^ 2 : ℕ) : ℝ) ≠ 0 := by rw [← h]; exact h6
+  have hp2 : ((p ^ 2 : ℕ) : ℝ) ≠ 0 := by
+    rw [← h]
+    exact h6
   field_simp [hp2]
 
 lemma prime_sq_coprime (p q : Nat.Primes) (hne : p ≠ q) :
@@ -179,7 +181,9 @@ lemma crtMap_mapsTo_pi (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (r : �
 lemma not_dvd_of_mod_eq_not_dvd (p r f : ℕ) (_hp : 0 < p ^ 2) (hr_eq : r % p ^ 2 = f)
     (hf_ndiv : ¬(p ^ 2 ∣ f)) : ¬(p ^ 2 ∣ r) := by
   intro h_dvd_r
-  have h_f_eq_zero : f = 0 := by rw [← hr_eq]; exact Nat.mod_eq_zero_of_dvd h_dvd_r
+  have h_f_eq_zero : f = 0 := by
+    rw [← hr_eq]
+    exact Nat.mod_eq_zero_of_dvd h_dvd_r
   exact hf_ndiv (h_f_eq_zero ▸ dvd_zero _)
 
 lemma not_dvd_shift_of_mod_eq (p b r f d : ℕ) (_hp : 0 < p ^ 2) (hr_eq : r % p ^ 2 = f)

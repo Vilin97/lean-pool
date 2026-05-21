@@ -70,7 +70,8 @@ lemma countBaseBDeadEnds_as_sum (b X : ℕ) (_hb : 0 < b) :
     ∑ N ∈ Finset.Icc 1 X, sqfreeIndicator N * ∏ d ∈ Finset.range b, (1 -
         shiftSqfreeIndicator b N d) := by
   unfold countBaseBDeadEnds
-  rw [Finset.card_filter]; push_cast
+  rw [Finset.card_filter]
+  push_cast
   exact Finset.sum_congr rfl fun N hN => deadEnd_indicator_eq b N (Finset.mem_Icc.mp hN).1
 
 lemma indicator_conjunction_eq_prod (b N : ℕ) (T : Finset ℕ) :
@@ -120,12 +121,16 @@ lemma dead_end_count_inclusion_exclusion (b : ℕ) (_hb : 2 ≤ b) (X : ℕ) :
       ∑ N ∈ Finset.Icc 1 X, sqfreeIndicator N * ∑ T ∈ (Finset.range b).powerset,
         (-1:ℝ)^T.card * ∏ d ∈ T, shiftSqfreeIndicator b N d :=
     Finset.sum_congr rfl fun N _ => by rw [prod_one_sub_eq_sum_powerset]
-  rw [h1]; simp only [Finset.mul_sum]; rw [Finset.sum_comm]
-  congr 1; ext T
+  rw [h1]
+  simp only [Finset.mul_sum]
+  rw [Finset.sum_comm]
+  congr 1
+  ext T
   rw [countJointSquarefree_as_sum b X T]
   have h2 : ∀ N, sqfreeIndicator N * ((-1:ℝ)^T.card * ∏ d ∈ T, shiftSqfreeIndicator b N d) =
       (sqfreeIndicator N * ∏ d ∈ T, shiftSqfreeIndicator b N d) * (-1:ℝ)^T.card := fun N => by ring
-  simp only [h2, ← Finset.sum_mul]; ring
+  simp only [h2, ← Finset.sum_mul]
+  ring
 
 /-- Tendsto of alternating sums given Tendsto of each term.
     If for each T ⊆ Finset.range b, the ratio (countJointSquarefree b T X)/X → α(b,T),

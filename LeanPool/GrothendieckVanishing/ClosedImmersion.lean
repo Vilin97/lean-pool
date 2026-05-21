@@ -481,7 +481,8 @@ theorem closedIncl_unit_stalk_isIso
     stalkFunctor_map_iso_toSheafify P x
   haveI hPullComp :
       IsIso (Tz.map (pull.map η.hom) ≫ Tz.map (CategoryTheory.toSheafify K P₂)) := by
-    rw [hts]; exact @IsIso.comp_isIso _ _ _ _ _ _ _ (hToSheafifyIso P₁) hSheafifyMap
+    rw [hts]
+    exact @IsIso.comp_isIso _ _ _ _ _ _ _ (hToSheafifyIso P₁) hSheafifyMap
   haveI hPullMap : IsIso (Tz.map (pull.map η.hom)) :=
     @IsIso.of_isIso_comp_right _ _ _ _ _ (Tz.map (pull.map η.hom))
       (Tz.map (CategoryTheory.toSheafify K P₂)) (hToSheafifyIso P₂) hPullComp
