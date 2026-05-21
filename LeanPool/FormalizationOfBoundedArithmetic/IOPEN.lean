@@ -62,12 +62,9 @@ by
   rw [forall_swap_231]
   apply ind ?base ?step
   · intro x y
-    rw [B3 (x + y)]
-    rw [B3 y]
+    rw [B3 (x + y), B3 y]
   · intro z hInd x y
-    rw [B4]
-    rw [B4]
-    rw [B4]
+    rw [B4, B4, B4]
     rw [<- (B2 (x + y + z) (x + (y + z)))]
     rw [hInd]
 
@@ -83,10 +80,7 @@ by
   apply ind ?base ?step
   · trivial
   · intro a ha
-    rw [← add_assoc]
-    rw [← ha]
-    rw [B3]
-    rw [B3]
+    rw [← add_assoc, ← ha, B3, B3]
 
 -- this is necessary to prove axiom `C` from BasicExt
 lemma zero_add
@@ -109,8 +103,7 @@ by
       (0 : M) + 1 = 1 := zero_add 1
       _ = 1 + 0 := (B3 1).symm
   · intro a ha
-    rw [<- add_assoc]
-    rw [ha]
+    rw [<- add_assoc, ha]
 
 -- O2. x + y = y + x (Commutativity of +)
 -- proof : induction on y, first establishing the special cases y = 0 and y = 1
@@ -145,14 +138,9 @@ by
   rw [forall_swap_231]
   apply ind ?base ?step
   · intro a b
-    rw [B3]
-    rw [B5]
-    rw [B3]
+    rw [B3, B5, B3]
   · intro b hInd_b a2 a3
-    rw [add_comm]
-    rw [add_assoc]
-    rw [add_comm]
-    rw [hInd_b]
+    rw [add_comm, add_assoc, add_comm, hInd_b]
     conv => lhs; left; rw [add_comm]; rw [B6]
     rw [B6]
     conv => rhs; right; rw [add_comm]
@@ -180,12 +168,9 @@ theorem mul_assoc
     rw [forall_swap_231]
     apply ind ?base ?step
     · intro x y
-      rw [B5]
-      rw [B5]
-      rw [B5]
+      rw [B5, B5, B5]
     · intro x hInd_x y z
-      rw [mul_add]
-      rw [mul_add]
+      rw [mul_add, mul_add]
       calc
         y * z * x + y * z * 1 = y * (z * x) + y * z := by
           rw [hInd_x]
@@ -203,9 +188,7 @@ by
   apply ind ?base ?step
   · rw [B5]
   · intro x hInd_0_x
-    rw [B6]
-    rw [hInd_0_x]
-    rw [B3]
+    rw [B6, hInd_0_x, B3]
 
 lemma one_mul
   : ∀ x : M, 1 * x = x :=
@@ -217,8 +200,7 @@ by
   apply ind ?base ?step
   · rw [B5]
   · intro x hInd_1_x
-    rw [B6]
-    rw [hInd_1_x]
+    rw [B6, hInd_1_x]
 
 lemma mul_add_1_left
   : ∀ x y : M, (x + 1) * y = x * y + y :=
@@ -230,13 +212,9 @@ by
   rw [forall_comm]
   apply ind ?base ?step
   · intro x
-    rw [B5]
-    rw [B5]
-    rw [B3]
+    rw [B5, B5, B3]
   · intro y hInd_y x
-    rw [B6]
-    rw [B6]
-    rw [hInd_y]
+    rw [B6, B6, hInd_y]
     conv => lhs; rw [add_assoc]; right; rw [<- add_assoc]; left; rw [add_comm]
     conv => rhs; rw [add_assoc]; right; rw [<- add_assoc]
 
@@ -274,15 +252,13 @@ theorem mp
     rw [forall_swap_231]
     apply ind ?base ?step
     · intro x y
-      rw [B3]
-      rw [B3]
+      rw [B3, B3]
       intro h
       exact h
     · intro x hInd_x y z
       conv => lhs; lhs; right; rw [add_comm]
       conv => lhs; rhs; right; rw [add_comm]
-      rw [<- add_assoc]
-      rw [<- add_assoc]
+      rw [<- add_assoc, <- add_assoc]
       intro h
       apply B2
       apply hInd_x
@@ -292,40 +268,24 @@ end add_cancel_right
 
 theorem add_cancel_right
   : ∀ {x y z : M}, x + z = y + z <-> x = y :=
-by
-  intro x y z
-  constructor
-  · exact add_cancel_right.mp
-  · intro h
-    rw [h]
+  fun {x} {y} {z} => ⟨add_cancel_right.mp, fun h => by rw [h]⟩
 
 theorem add_cancel_left
   : ∀ {x y z : M}, z + x = z + y <-> x = y :=
-by
-  intro x y z
-  constructor
-  · conv => rw [add_comm]; lhs; rhs; rw [add_comm]
-    apply add_cancel_right.mp
-  · intro h
-    rw [h]
+  fun {x} {y} {z} => ⟨fun h => by
+    conv at h => lhs; rw [add_comm]
+    conv at h => rhs; rw [add_comm]
+    exact add_cancel_right.mp h, fun h => by rw [h]⟩
 
 -- O7. 0 ≤ x
 theorem zero_le
-  : ∀ x : M, 0 ≤ x :=
-by
-  intro x
-  rw [<- B3 x]
-  rw [add_comm]
-  apply B8
+  : ∀ x : M, 0 ≤ x := fun x => by
+  rw [<- B3 x, add_comm]; exact B8
 
 -- O8. x ≤ 0 → x = 0
 theorem le_zero_eq
   : ∀ x : M, x ≤ 0 → x = 0 :=
-by
-  intro x h
-  apply B7
-  · exact h
-  · apply zero_le
+  fun x h => B7 h (zero_le x)
 
 -- O9. x ≤ x
 -- This is proved already as BASICModel.le_refl (doesn't need induction)
@@ -349,17 +309,13 @@ by
     -- TODO: why this self is necessary?
     exact (B1 (self := iopen.toBASICModel)) h.symm
   · intro a h hq
-    apply h
-    apply B2
-    exact hq
+    exact h (B2 _ _ hq)
 
 theorem add_mul
   : ∀ x y z : M, (x + y) * z = x * z + y * z :=
 by
   intro x y z
-  rw [mul_comm]
-  rw [mul_add]
-  rw [mul_comm]
+  rw [mul_comm, mul_add, mul_comm]
   conv => lhs; rhs; rw [mul_comm]
 
 end IOPENModel

@@ -79,15 +79,11 @@ theorem mpr {L : Language} {α} {m} {φ ψ : L.BoundedFormula α m} :
 by
   constructor
   · intro h
-    constructor
-    · cases h with
-      | of_isAtomic h' => cases h'
-      | imp pre post => exact pre
-    · cases h with
-      | of_isAtomic h' => cases h'
-      | imp pre post => exact post
+    cases h with
+    | of_isAtomic h' => cases h'
+    | imp pre post => exact ⟨pre, post⟩
   · intro h
-    apply IsQF.imp h.left h.right
+    exact IsQF.imp h.left h.right
 
 end imp
 
@@ -125,12 +121,10 @@ by
 @[delta0_simps]
 theorem mpr {L : Language} {α β} {m : ℕ} {φ : L.BoundedFormula α m} (f : α ≃ β)
   (h : (φ.relabelEquiv f).IsQF)
-  : φ.IsQF :=
-by
+  : φ.IsQF := by
   have h' : relabelEquiv f.symm ((relabelEquiv f) φ) = φ := relabelEquiv.comp_inv f
   rw [<- h']
-  apply relabelEquiv.mp
-  exact h
+  exact relabelEquiv.mp f.symm h
 
 end relabelEquiv
 
@@ -259,17 +253,13 @@ end BoundedFormula
 namespace IsDelta0
 
 @[delta0_simps]
-theorem bot {a n} : (⊥ : L.BoundedFormula a n).IsDelta0  := by
-  constructor
-  exact isQF_bot
+theorem bot {a n} : (⊥ : L.BoundedFormula a n).IsDelta0 :=
+  IsDelta0.of_isQF isQF_bot
 
 @[delta0_simps]
 theorem equal {a n} (t1 t2 : L.Term (a ⊕ Fin n))
   : (t1.bdEqual t2).IsDelta0 :=
-by
-  constructor
-  constructor
-  apply IsAtomic.equal
+  IsDelta0.of_isQF (IsQF.of_isAtomic (IsAtomic.equal t1 t2))
 
 namespace of_open
 
@@ -331,25 +321,15 @@ end of_notfalsum
 @[delta0_simps]
 theorem neq {a n} (t1 t2 : L.Term (a ⊕ Fin n))
   : (t1 ≠' t2).IsDelta0 :=
-by
-  constructor
-  · apply equal
-  · apply bot
+  IsDelta0.imp (equal t1 t2) bot
 
 namespace of_open
 
 theorem not {a n} {phi : L.BoundedFormula a n} (h : phi.IsOpen)
-  : phi.not.IsDelta0 <-> phi.IsDelta0 :=
-by
+  : phi.not.IsDelta0 <-> phi.IsDelta0 := by
   unfold BoundedFormula.not
   rw [of_open.imp h]
-  constructor
-  · intro h
-    exact h.left
-  · intro h
-    constructor
-    · exact h
-    · exact IsDelta0.bot
+  exact ⟨And.left, fun h => ⟨h, IsDelta0.bot⟩⟩
 
 end of_open
 
@@ -383,8 +363,7 @@ theorem gSumCongr
   (g : a ≃ b)
   (h : phi.IsDelta0)
   : ((relabelEquiv (g.sumCongr (_root_.Equiv.refl c))) phi).IsDelta0 :=
-by
-  exact relabelEquiv.mpAux (g.sumCongr (_root_.Equiv.refl c)) h
+  relabelEquiv.mpAux (g.sumCongr (_root_.Equiv.refl c)) h
 
 
 @[delta0_simps]
@@ -392,19 +371,16 @@ theorem mp {a b} {phi : peano.Formula a}
   (g : a ≃ b)
   (h : phi.IsDelta0)
   : (phi.relabelEquiv g).IsDelta0 :=
-by
-  exact relabelEquiv.mpAux g h
+  relabelEquiv.mpAux g h
 
 
 @[delta0_simps]
 theorem mpr {α β} {φ : peano.Formula α} (f : α ≃ β)
   (h : (φ.relabelEquiv f).IsDelta0)
-  : φ.IsDelta0 :=
-by
+  : φ.IsDelta0 := by
   have h' : relabelEquiv f.symm ((relabelEquiv f) φ) = φ := relabelEquiv.comp_inv f
   rw [<- h']
-  apply relabelEquiv.mp
-  exact h
+  exact relabelEquiv.mp f.symm h
 
 end relabelEquiv
 
@@ -527,8 +503,7 @@ by
 theorem mprAux {a b n} {phi : zambella.BoundedFormula a n}
   (g : a ≃ b)
   (h : (phi.relabelEquiv g).IsSigma0B)
-  : phi.IsSigma0B :=
-by
+  : phi.IsSigma0B := by
   have h' : relabelEquiv g.symm ((relabelEquiv g) phi) = phi := relabelEquiv.comp_inv g
   rw [<- h']
   exact relabelEquiv.mpAux g.symm h
@@ -538,96 +513,75 @@ end relabelEquiv
 @[delta0_simps]
 theorem relabelEquiv {a b} {g : a ≃ b} (phi : zambella.Formula a) :
   (phi.relabelEquiv g).IsSigma0B <-> phi.IsSigma0B :=
-by
-  exact ⟨relabelEquiv.mprAux g, relabelEquiv.mpAux g⟩
+  ⟨relabelEquiv.mprAux g, relabelEquiv.mpAux g⟩
 
 @[delta0_simps]
 nonrec theorem display1 {n1 : FvName}
-  (phi : zambella.Formula (Vars1 n1))
-  :
-  phi.display1.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (Vars1 n1)) :
+  phi.display1.IsSigma0B <-> phi.IsSigma0B := by
   unfold display1
   apply relabelEquiv
 
 @[delta0_simps]
 nonrec theorem display2 {n1 n2 : FvName}
-  (phi : zambella.Formula (Vars2 n1 n2))
-  :
-  phi.display2.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (Vars2 n1 n2)) :
+  phi.display2.IsSigma0B <-> phi.IsSigma0B := by
   unfold display2
   apply relabelEquiv
 
 @[delta0_simps]
 nonrec theorem display3 {n1 n2 n3 : FvName}
-  (phi : zambella.Formula (Vars3 n1 n2 n3))
-  :
-  phi.display3.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (Vars3 n1 n2 n3)) :
+  phi.display3.IsSigma0B <-> phi.IsSigma0B := by
   unfold display3
   apply relabelEquiv
 
 @[delta0_simps]
 nonrec theorem display4 {n1 n2 n3 n4 : FvName}
-  (phi : zambella.Formula (Vars4 n1 n2 n3 n4))
-  :
-  phi.display4.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (Vars4 n1 n2 n3 n4)) :
+  phi.display4.IsSigma0B <-> phi.IsSigma0B := by
   unfold display4
   apply relabelEquiv
 
 @[delta0_simps]
 nonrec theorem display_swapleft {n1 n2 n3 : FvName}
-  (phi : zambella.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
-  :
-  phi.display_swapleft.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (Vars1 n1 ⊕ Vars2 n2 n3)) :
+  phi.display_swapleft.IsSigma0B <-> phi.IsSigma0B := by
   unfold display_swapleft
   apply relabelEquiv
 
 @[delta0_simps]
 nonrec theorem display_swapleft' {n1 n2 n3 : FvName}
-  (phi : zambella.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
-  :
-  phi.display_swapleft'.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (Vars1 n1 ⊕ Vars2 n2 n3)) :
+  phi.display_swapleft'.IsSigma0B <-> phi.IsSigma0B := by
   unfold display_swapleft'
   apply relabelEquiv
 
 @[delta0_simps]
 nonrec theorem rotate_21 {n1 n2 : FvName}
-  (phi : zambella.Formula (Vars2 n1 n2))
-  :
-  phi.rotate_21.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (Vars2 n1 n2)) :
+  phi.rotate_21.IsSigma0B <-> phi.IsSigma0B := by
   unfold rotate_21
   apply relabelEquiv
 
 @[delta0_simps]
 nonrec theorem rotate_213 {n1 n2 n3 : FvName}
-  (phi : zambella.Formula (Vars3 n1 n2 n3))
-  :
-  phi.rotate_213.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (Vars3 n1 n2 n3)) :
+  phi.rotate_213.IsSigma0B <-> phi.IsSigma0B := by
   unfold rotate_213
   apply relabelEquiv
 
 @[delta0_simps]
 nonrec theorem rotate_231 {n1 n2 n3 : FvName}
-  (phi : zambella.Formula (Vars3 n1 n2 n3))
-  :
-  phi.rotate_231.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (Vars3 n1 n2 n3)) :
+  phi.rotate_231.IsSigma0B <-> phi.IsSigma0B := by
   unfold rotate_231
   apply relabelEquiv
 
 @[delta0_simps]
 nonrec theorem flip {a b}
-  (phi : zambella.Formula (a ⊕ b))
-  :
-  phi.flip.IsSigma0B <-> phi.IsSigma0B :=
-by
+  (phi : zambella.Formula (a ⊕ b)) :
+  phi.flip.IsSigma0B <-> phi.IsSigma0B := by
   unfold Formula.flip
   apply relabelEquiv
 
