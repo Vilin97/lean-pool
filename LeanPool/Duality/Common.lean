@@ -14,15 +14,26 @@ lemma Finset.subtype_univ_sum_eq_subtype_univ_sum {p q : α → Prop} (hpq : p =
     [Fintype { a : α // p a }] [Fintype { a : α // q a }] [AddCommMonoid β]
     {f : { a : α // p a } → β} {g : { a : α // q a } → β}
     (hfg : ∀ a : α, ∀ hpa : p a, ∀ hqa : q a, f ⟨a, hpa⟩ = g ⟨a, hqa⟩) :
-    Finset.univ.sum f = Finset.univ.sum g :=
-  hpq ▸ Finset.sum_congr rfl fun a _ => hfg a.val a.property a.property
+    Finset.univ.sum f = Finset.univ.sum g := by
+  subst hpq
+  convert rfl
+  ext
+  symm
+  apply hfg
 
 lemma Finset.univ_sum_of_zero_when_not [Fintype α] [AddCommMonoid β]
     {f : α → β} (p : α → Prop) [DecidablePred p] (hpf : ∀ a : α, ¬(p a) → f a = 0) :
     Finset.univ.sum f = Finset.univ.sum (fun a : { a : α // p a } => f a.val) := by
   classical
-  rw [←Finset.sum_subtype _ (by simp) f]
-  exact Finset.sum_subset_zero_on_sdiff (Finset.subset_univ _) (by simpa) (fun _ _ => rfl)
+  trans (Finset.univ.filter p).sum f
+  · symm
+    apply Finset.sum_subset_zero_on_sdiff
+    · apply Finset.subset_univ
+    · simpa
+    · intros
+      rfl
+  · apply Finset.sum_subtype
+    simp
 
 end finset_sums
 

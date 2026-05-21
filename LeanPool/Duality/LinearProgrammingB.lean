@@ -88,8 +88,11 @@ theorem StandardLP.weakDuality [Fintype I] [CommRing R] [PartialOrder R] [IsOrde
   obtain ⟨y, hyc, rfl⟩ := hQ
   have hyxx : (-P.Aᵀ) *ᵥ ↑y ⬝ᵥ ↑x ≤ P.c ⬝ᵥ ↑x :=
     dotProduct_le_dotProduct_of_nonneg_right hyc (x ·|>.property)
+  have hxyy : P.A *ᵥ ↑x ⬝ᵥ ↑y ≤ P.b ⬝ᵥ ↑y :=
+    dotProduct_le_dotProduct_of_nonneg_right hxb (y ·|>.property)
   rw [←neg_le_iff_add_nonneg']
-  rwa [Matrix.neg_mulVec, neg_dotProduct, neg_le, Matrix.transpose_mulVec_dotProduct] at hyxx
+  rw [Matrix.neg_mulVec, neg_dotProduct, neg_le, Matrix.transpose_mulVec_dotProduct] at hyxx
+  exact (hyxx.trans hxyy)
 
 
 variable [Field R] [LinearOrder R] [IsStrictOrderedRing R]
@@ -115,35 +118,55 @@ private def StandardLP.toValidELP (P : StandardLP I J R) : ValidELP I J R :=
 omit [IsStrictOrderedRing R] in
 private lemma StandardLP.toE_dotProduct_apply (P : StandardLP I J R) (x : J → R≥0) :
     toE (P.c ⬝ᵥ x) = (toE ∘ P.c ᵥ⬝ x) := by
-  simp_rw [dotProduct, dotWeig, mul_comm, Finset.sum_toE]
+  simp_rw [dotProduct, dotWeig, mul_comm]
+  apply Finset.sum_toE
 
 omit [IsStrictOrderedRing R] in
 private lemma StandardLP.toE_mulVec_apply (P : StandardLP I J R) (x : J → R≥0) (i : I) :
     toE ((P.A *ᵥ x) i) = (P.A.map toE ₘ* x) i := by
   simp_rw [Matrix.mulVec, Matrix.mulWeig, Matrix.map, dotProduct, dotWeig, Matrix.of_apply,
-    mul_comm, Finset.sum_toE]
+    mul_comm]
+  apply Finset.sum_toE
 
 private lemma StandardLP.toValidELP.isSolution_iff (P : StandardLP I J R) (x : J → R≥0) :
     P.toValidELP.IsSolution x ↔ P.IsSolution x := by
-  simp [Function.comp_apply, StandardLP.toE_mulVec_apply, EF.coe_le_coe_iff, Pi.le_def]
+  change P.A.map toE ₘ* x ≤ toE ∘ P.b ↔ P.A *ᵥ x ≤ P.b
+  constructor
+  · intro h i
+    have := h i
+    rw [Function.comp_apply, ←StandardLP.toE_mulVec_apply, EF.coe_le_coe_iff] at this
+    exact this
+  · intro h i
+    rw [Function.comp_apply, ←StandardLP.toE_mulVec_apply, EF.coe_le_coe_iff]
+    exact h i
 
 private lemma StandardLP.toValidELP_reaches_iff (P : StandardLP I J R) (r : R) :
     P.toValidELP.Reaches r ↔ P.Reaches r := by
   peel with x
-  exact and_congr (P.toValidELP.isSolution_iff x) (P.toE_dotProduct_apply x ▸ EF.coe_eq_coe_iff)
+  apply and_congr
+  · apply StandardLP.toValidELP.isSolution_iff
+  · exact P.toE_dotProduct_apply x ▸ EF.coe_eq_coe_iff
 
 private lemma StandardLP.toValidELP_isFeasible_iff (P : StandardLP I J R) :
     P.toValidELP.IsFeasible ↔ P.IsFeasible := by
   constructor
   · intro ⟨r, ⟨x, hx, hxr⟩, hr⟩
     match r with
-    | ⊥ => simp [StandardLP.toValidELP, dotWeig_eq_bot] at hxr
-    | ⊤ => exact hr rfl
-    | (p : R) => exact ⟨p, x, (StandardLP.toValidELP.isSolution_iff P x).mp hx,
-        EF.coe_eq_coe_iff.mp (P.toE_dotProduct_apply x ▸ hxr)⟩
+    | ⊥ =>
+      exfalso
+      rw [←dotWeig_eq_bot] at hxr
+      simp [StandardLP.toValidELP] at hxr
+    | ⊤ =>
+      exfalso
+      exact hr rfl
+    | (p : R) =>
+      refine ⟨p, x, ?_, ?_⟩
+      · rwa [StandardLP.toValidELP.isSolution_iff] at hx
+      · rwa [←EF.coe_eq_coe_iff, P.toE_dotProduct_apply]
   · intro ⟨r, x, hx, hxr⟩
-    exact ⟨toE r, ⟨x, (StandardLP.toValidELP.isSolution_iff P x).mpr hx,
-      (P.toE_dotProduct_apply x ▸ EF.coe_eq_coe_iff.mpr hxr)⟩, EF.coe_neq_top r⟩
+    refine ⟨toE r, ⟨x, ?_, ?_⟩, EF.coe_neq_top r⟩
+    · rwa [StandardLP.toValidELP.isSolution_iff]
+    · rwa [←EF.coe_eq_coe_iff, P.toE_dotProduct_apply] at hxr
 
 private lemma StandardLP.toValidELP_isBoundedBy_iff (P : StandardLP I J R) (r : R) :
     P.toValidELP.IsBoundedBy r ↔ P.IsBoundedBy r := by
@@ -152,10 +175,17 @@ private lemma StandardLP.toValidELP_isBoundedBy_iff (P : StandardLP I J R) (r : 
   · simpa [EF.coe_le_coe_iff] using
       hP (toE p) (by simpa [StandardLP.toValidELP_reaches_iff] using hPp)
   · match p with
-    | ⊥ => simp [StandardLP.toValidELP, StandardLP.IsFeasible, dotWeig_eq_bot] at hPp
-    | ⊤ => apply le_top
+    | ⊥ =>
+      exfalso
+      obtain ⟨_, -, impos⟩ := hPp
+      rw [←dotWeig_eq_bot] at impos
+      simp [StandardLP.toValidELP] at impos
+    | ⊤ =>
+      apply le_top
     | (_ : R) =>
-      exact EF.coe_le_coe_iff.← (hP _ (by simpa [StandardLP.toValidELP_reaches_iff] using hPp))
+      rw [EF.coe_le_coe_iff]
+      apply hP
+      simpa [StandardLP.toValidELP_reaches_iff] using hPp
 
 private lemma StandardLP.toValidELP_isUnbounded_iff (P : StandardLP I J R) :
     P.toValidELP.IsUnbounded ↔ P.IsUnbounded := by
@@ -166,18 +196,25 @@ private theorem StandardLP.toValidELP_optimum_eq (P : StandardLP I J R) :
     P.toValidELP.optimum = P.optimum := by
   if feas : P.IsFeasible then
     if unbo : P.IsUnbounded then
-      simp only [ExtendedLP.optimum, feas, unbo, P.toValidELP_isFeasible_iff,
-        P.toValidELP_isUnbounded_iff, StandardLP.optimum, ite_true, ite_false]
+      convert Eq.refl (some (⊥ : R∞))
+      · simp [ExtendedLP.optimum, feas, unbo, P.toValidELP_isFeasible_iff,
+          P.toValidELP_isUnbounded_iff]
+      · simp [StandardLP.optimum, feas, unbo]
     else
       simp only [StandardLP.optimum, ExtendedLP.optimum, feas, unbo,
         P.toValidELP_isFeasible_iff, P.toValidELP_isUnbounded_iff]
       if hr : ∃ r : R, P.Reaches r ∧ P.IsBoundedBy r then
-        simp only [hr, P.toValidELP_reaches_iff, P.toValidELP_isBoundedBy_iff, dif_pos]
+        convert Eq.refl (some (toE hr.choose))
+        · simp [hr, P.toValidELP_reaches_iff, P.toValidELP_isBoundedBy_iff]
+        · simp [hr]
       else
-        simp only [hr, P.toValidELP_reaches_iff, P.toValidELP_isBoundedBy_iff, dif_neg,
-          not_false_eq_true]
+        convert Eq.refl none
+        · simp [hr, P.toValidELP_reaches_iff, P.toValidELP_isBoundedBy_iff]
+        · simp [hr]
   else
-    simp [ExtendedLP.optimum, StandardLP.optimum, feas, P.toValidELP_isFeasible_iff]
+    convert Eq.refl (some (⊤ : R∞))
+    · simp [ExtendedLP.optimum, feas, P.toValidELP_isFeasible_iff]
+    · simp [StandardLP.optimum, feas]
 
 omit [Fintype J] in
 private lemma StandardLP.toValidELP_dualize_eq (P : StandardLP I J R) :

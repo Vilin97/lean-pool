@@ -109,13 +109,26 @@ end extended_LP_definitions
 
 section weak_duality
 
-lemma EF.one_smul (r : F∞) : (1 : F≥0) • r = r :=
+lemma EF.one_smul (r : F∞) : (1 : F≥0) • r = r := by
   match r with
   | ⊥ => rfl
-  | ⊤ => EF.pos_smul_top one_pos
-  | (q : F) => congr_arg toE (one_mul q)
+  | ⊤ =>
+    change EF.smulNN 1 ⊤ = ⊤
+    change (if (1 : F≥0) = 0 then (0 : F∞) else ⊤) = ⊤
+    exact if_neg (by norm_num)
+  | (q : F) => exact congr_arg toE (one_mul q)
 
-lemma EF.sub_nonpos_iff (r s : F∞) : r + (-s) ≤ 0 ↔ r ≤ s := by simp [←EF.coe_neg, ←EF.coe_add]
+lemma EF.sub_nonpos_iff (r s : F∞) : r + (-s) ≤ 0 ↔ r ≤ s := by
+  match r with
+  | ⊥ => convert_to True ↔ True <;> simp
+  | ⊤ => match s with
+    | ⊥ => convert_to False ↔ False <;> simp
+    | ⊤ => convert_to True ↔ True <;> simp
+    | (_ : F) => convert_to False ↔ False <;> simp [←EF.coe_neg]
+  | (_ : F) => match s with
+    | ⊥ => convert_to False ↔ False <;> simp
+    | ⊤ => convert_to True ↔ True <;> simp
+    | (_ : F) => simp [←EF.coe_neg, ←EF.coe_add]
 
 lemma EF.vec_sub_nonpos_iff (u v : I → F∞) : u + (-v) ≤ 0 ↔ u ≤ v := by
   constructor <;> intro huv i <;> simpa [EF.sub_nonpos_iff] using huv i
@@ -140,8 +153,13 @@ lemma Matrix.fromCols_mulWeig_sumElim {J₁ J₂ : Type*} [Fintype J₁] [Fintyp
   simp [Matrix.fromCols, Matrix.mulWeig, dotWeig]
 
 lemma dotWeig_eq_bot [Fintype J] {v : J → F∞} {w : J → F≥0} :
-    (∃ j : J, v j = ⊥) ↔ v ᵥ⬝ w = ⊥ :=
-  ⟨fun ⟨j, hvj⟩ => has_bot_dotWeig_nneg hvj w, fun hvw => by_contra (no_bot_dotWeig_nneg · w hvw)⟩
+    (∃ j : J, v j = ⊥) ↔ v ᵥ⬝ w = ⊥ := by
+  constructor
+  · intro ⟨j, hvj⟩
+    apply has_bot_dotWeig_nneg hvj
+  · intro hvw
+    by_contra! contr
+    exact no_bot_dotWeig_nneg contr w hvw
 
 lemma ValidELP.weakDuality_of_no_bot [Fintype I] [Fintype J]
     (P : ValidELP I J F) (hb : ¬∃ i : I, P.b i = ⊥) (hc : ¬∃ j : J, P.c j = ⊥)
@@ -183,8 +201,20 @@ lemma ValidELP.weakDuality_of_no_bot [Fintype I] [Fintype J]
             push Not at contr
             rw [hi] at contr
             match hby : P.b ᵥ⬝ y with
-            | ⊥ => exact hb (dotWeig_eq_bot.← hby)
-            | ⊤ | (_ : F) => simp [hby, ValidELP.dualize] at contr
+            | ⊥ =>
+              change hby to P.b ᵥ⬝ y = ⊥
+              rw [←dotWeig_eq_bot] at hby
+              exact hb hby
+            | ⊤ =>
+              dsimp only [ValidELP.dualize] at contr
+              rw [hby] at contr
+              change contr to ⊤ + ⊤ < 0
+              simp at contr
+            | (q : F) =>
+              dsimp only [ValidELP.dualize] at contr
+              rw [hby] at contr
+              change contr to ⊤ + toE q < 0
+              simp at contr
         )
         (by
           intro ⟨i, ⟨j, hij⟩, hi⟩
@@ -193,27 +223,47 @@ lemma ValidELP.weakDuality_of_no_bot [Fintype I] [Fintype J]
           | inr => exact hc ⟨j, hij⟩
         )
       )
-  refine ⟨⟨x, Matrix.fromRows_mulWeig .. ▸ Sum.elim_le_elim_iff.mpr ⟨hx, by rfl⟩⟩, Sum.elim y 1, ?_, ?_⟩
+  constructor
+  · use x
+    rw [Matrix.fromRows_mulWeig, Sum.elim_le_elim_iff]
+    exact ⟨hx, by rfl⟩
+  · use Sum.elim y 1
+    constructor
     · rw [Matrix.transpose_fromRows, Matrix.fromCols_neg, Matrix.fromCols_mulWeig_sumElim]
-      convert (show (-P.Aᵀ) ₘ* y + (-P.c) ≤ 0 from by rwa [EF.vec_sub_nonpos_iff])
+      have hle0 : (-P.Aᵀ) ₘ* y + (-P.c) ≤ 0
+      · rwa [EF.vec_sub_nonpos_iff]
+      convert hle0
       ext
       simp [Matrix.mulWeig, dotWeig, EF.one_smul]
-    · simp only [sumElim_dotWeig_sumElim, dotWeig, EF.one_smul]
-      push Not at contr
-      rwa [add_comm] at contr
+    · have hlt0 : P.b ᵥ⬝ y + P.c ᵥ⬝ x < 0
+      · push Not at contr
+        rwa [add_comm]
+      rw [sumElim_dotWeig_sumElim]
+      have h1 : (↓(P.c ᵥ⬝ x) : Unit → F∞) ᵥ⬝ (1 : Unit → F≥0) = P.c ᵥ⬝ x := by
+        simp only [dotWeig, Fintype.sum_unique, EF.one_smul, Pi.one_apply]
+      rw [h1]
+      exact hlt0
 
 lemma ValidELP.no_bot_of_reaches [Fintype J] (P : ValidELP I J F) {p : F∞} (hP : P.Reaches p)
-    (i : I) : P.b i ≠ ⊥ := fun contr =>
-  P.hbA ⟨i, dotWeig_eq_bot.← (le_bot_iff.mp (contr ▸ hP.choose_spec.1 i)), contr⟩
+    (i : I) : P.b i ≠ ⊥ := by
+  intro contr
+  obtain ⟨x, hx, -⟩ := hP
+  have impos : P.A i ᵥ⬝ x ≤ ⊥ := contr ▸ hx i
+  rw [le_bot_iff, ←dotWeig_eq_bot] at impos
+  exact P.hbA ⟨i, impos, contr⟩
 
 theorem ValidELP.weakDuality [Fintype I] [Fintype J]
     (P : ValidELP I J F)
     {p : F∞} (hP : P.Reaches p) {q : F∞} (hQ : P.dualize.Reaches q) :
     0 ≤ p + q := by
   by_cases hb : ∃ i : I, P.b i = ⊥
-  · exact absurd hb.choose_spec (P.no_bot_of_reaches hP hb.choose)
+  · exfalso
+    obtain ⟨i, hi⟩ := hb
+    exact P.no_bot_of_reaches hP i hi
   by_cases hc : ∃ j : J, P.c j = ⊥
-  · exact absurd hc.choose_spec (P.dualize.no_bot_of_reaches hQ hc.choose)
+  · exfalso
+    obtain ⟨j, hj⟩ := hc
+    exact P.dualize.no_bot_of_reaches hQ j hj
   exact P.weakDuality_of_no_bot hb hc hP hQ
 
 end weak_duality
@@ -230,94 +280,210 @@ lemma eq_zero_of_zero_eq_val {k : F≥0} (hk : 0 = k.val) :
 
 omit [IsStrictOrderedRing F] in
 lemma pos_of_NN_not_zero {k : F≥0} (hk : ¬(k = 0)) :
-    0 < k :=
-  lt_of_le_of_ne k.property (hk ∘ eq_zero_of_zero_eq_val)
+    0 < k := by
+  apply lt_of_le_of_ne k.property
+  exact hk ∘ eq_zero_of_zero_eq_val
 
 end nneg_vs_zero
 
 section misc_EF_properties
 
 lemma EF.smul_nonpos {r : F∞} (hr : r ≤ 0) (k : F≥0) :
-    k • r ≤ 0 :=
+    k • r ≤ 0 := by
   match r with
-  | ⊥ => bot_le
-  | ⊤ => absurd hr (not_le.mpr EF.zero_lt_top)
-  | (f : F) => EF.coe_le_coe_iff.← (mul_nonpos_of_nonneg_of_nonpos k.property (EF.coe_nonpos.→ hr))
+  | ⊥ => apply bot_le
+  | ⊤ => exact absurd hr (not_le.mpr EF.zero_lt_top)
+  | (f : F) =>
+    change (toE (k.val * f) : F∞) ≤ (0 : F∞)
+    exact (EF.coe_le_coe_iff (x := k.val * f) (y := 0)).←
+      (mul_nonpos_of_nonneg_of_nonpos k.property (EF.coe_nonpos.→ hr))
 
 lemma EF.smul_lt_smul_left {k : F≥0} (hk : 0 < k) (r s : F∞) :
     k • r < k • s ↔ r < s := by
-  match r, s with
-  | _, ⊥ => simp
-  | ⊥, ⊤ => simp [EF.pos_smul_top hk]
-  | ⊤, ⊤ => simp
-  | (_ : F), ⊤ => simp [EF.pos_smul_top hk]
-  | ⊥, (_ : F) => simp
-  | ⊤, (_ : F) => simp [EF.pos_smul_top hk]
-  | (p : F), (q : F) => simp [EF.coe_lt_coe_iff, mul_lt_mul_iff_right₀ hk]
+  match s with
+  | ⊥ =>
+    convert_to False ↔ False
+    · rw [iff_false]
+      apply not_lt_bot
+    · simp
+    rfl
+  | ⊤ =>
+    match r with
+    | ⊥ =>
+      convert_to True ↔ True
+      · rw [EF.pos_smul_top hk, iff_true]
+        apply bot_lt_top
+      · simp
+      rfl
+    | ⊤ =>
+      convert_to False ↔ False
+      · apply lt_self_iff_false
+      · apply lt_self_iff_false
+      rfl
+    | (_ : F) =>
+      convert_to True ↔ True
+      · rw [EF.pos_smul_top hk, iff_true]
+        apply EF.coe_lt_top
+      · simp
+      rfl
+  | (q : F) =>
+    match r with
+    | ⊥ =>
+      convert_to True ↔ True
+      · rw [iff_true]
+        apply EF.bot_lt_coe
+      · simp
+      rfl
+    | ⊤ =>
+      convert_to False ↔ False
+      · rw [EF.pos_smul_top hk, iff_false]
+        apply not_top_lt
+      · simp
+      rfl
+    | (p : F) =>
+      rw [EF.coe_lt_coe_iff]
+      change (toE (k.val * p) < toE (k.val * q) : Prop) ↔ p < q
+      rw [EF.coe_lt_coe_iff]
+      have hk' : (0 : F) < k.val := hk
+      exact mul_lt_mul_iff_right₀ hk'
 
 lemma EF.smul_le_smul_left {k : F≥0} (hk : 0 < k) (r s : F∞) :
     k • r ≤ k • s ↔ r ≤ s := by
   convert neg_iff_neg (EF.smul_lt_smul_left hk s r) <;> exact Iff.symm not_lt
 
 lemma EF.smul_neg {k : F≥0} {r : F∞} (hkr : k = 0 → r ≠ ⊥ ∧ r ≠ ⊤) :
-    k • (-r) = -(k • r) :=
+    k • (-r) = -(k • r) := by
   match r with
-  | ⊥ => if hk : 0 < k then EF.pos_smul_top hk ▸ rfl else by simp_all [EF.neg_bot]
-  | ⊤ => if hk : 0 < k then by simp [EF.pos_smul_top hk, EF.neg_top] else by simp_all [EF.neg_top]
-  | (f : F) => by simp [EF.coe_neg, mul_neg]
+  | ⊥ =>
+    rw [EF.neg_bot]
+    if hk : 0 < k then
+      rewrite [EF.pos_smul_top hk]
+      rfl
+    else
+      exfalso
+      simp_all
+  | ⊤ =>
+    rw [EF.neg_top]
+    if hk : 0 < k then
+      rewrite [EF.pos_smul_top hk, EF.neg_top]
+      rfl
+    else
+      exfalso
+      simp_all
+  | (f : F) =>
+    rw [←EF.coe_neg]
+    change toE (k * (-f)) = toE (-(k * f))
+    rw [mul_neg]
 
 lemma EF.pos_smul_neg {k : F≥0} (hk : 0 < k) (r : F∞) :
-    k • (-r) = -(k • r) :=
-  EF.smul_neg (fun h0 => absurd (h0 ▸ hk) (lt_irrefl 0))
+    k • (-r) = -(k • r) := by
+  apply EF.smul_neg
+  intro h0
+  exfalso
+  exact (h0 ▸ hk).false
 
 lemma EF.smul_smul {k : F≥0} (hk : 0 < k) (l : F≥0) (r : F∞) :
     l • (k • r) = k • (l • r) := by
   match r with
-  | ⊥ => simp [EF.smul_bot]
+  | ⊥ =>
+    rw [EF.smul_bot, EF.smul_bot, EF.smul_bot]
   | ⊤ =>
     rw [EF.pos_smul_top hk]
-    by_cases hl : l = 0 <;> simp_all [EF.zero_smul_nonbot, EF.pos_smul_top, pos_of_NN_not_zero]
-  | (f : F) => exact EF.coe_eq_coe_iff.← (mul_left_comm l.val k.val f)
+    if hl : 0 < l then
+      rw [EF.pos_smul_top hl, EF.pos_smul_top hk]
+    else if hl0 : l = 0 then
+      rw [hl0, EF.zero_smul_nonbot top_ne_bot, smul_zero]
+    else
+      exfalso
+      simp_all only [not_lt, nonpos_iff_eq_zero]
+  | (f : F) =>
+    exact EF.coe_eq_coe_iff.← (mul_left_comm l.val k.val f)
 
 lemma EF.add_smul (k l : F≥0) (r : F∞) :
     (k + l) • r = k • r + l • r := by
   match r with
-  | ⊥ => simp [EF.smul_bot]
-  | ⊤ => by_cases hk : k = 0 <;> by_cases hl : l = 0 <;>
-      simp_all [EF.zero_smul_nonbot, EF.pos_smul_top, pos_of_NN_not_zero]
-  | (f : F) => simp [←EF.coe_add, add_mul]
+  | ⊥ =>
+    rewrite [EF.smul_bot, EF.smul_bot, EF.smul_bot]
+    rfl
+  | ⊤ =>
+    if k_eq_0 : k = 0 then
+      rw [k_eq_0, EF.zero_smul_nonbot top_ne_bot, zero_add, zero_add]
+    else
+      have k_pos : 0 < k
+      · exact pos_of_NN_not_zero k_eq_0
+      rw [EF.pos_smul_top (add_pos_of_pos_of_nonneg k_pos l.property)]
+      rw [EF.pos_smul_top k_pos]
+      if l_eq_0 : l = 0 then
+        rw [l_eq_0, EF.zero_smul_nonbot top_ne_bot, add_zero]
+      else
+        rw [EF.pos_smul_top (pos_of_NN_not_zero l_eq_0)]
+        rfl
+  | (f : F) =>
+    change toE ((k.val + l.val) * f) = toE (k.val * f) + toE (l.val * f)
+    rw [←EF.coe_add, add_mul]
 
 omit [IsStrictOrderedRing F] in
 lemma EF.smul_add {k : F≥0} (hk : 0 < k) (r s : F∞) :
     k • (r + s) = k • r + k • s := by
   match r, s with
-  | ⊥, _ => simp [EF.smul_bot]
-  | _, ⊥ => simp [EF.smul_bot]
-  | (p : F), (q : F) => simp [←EF.coe_add, mul_add]
-  | (p : F), ⊤ => simp [EF.pos_smul_top hk, EF.coe_add_top]
-  | ⊤, (q : F) => simp [EF.pos_smul_top hk, EF.top_add_coe]
-  | ⊤, ⊤ => simp [EF.pos_smul_top hk]
+  | ⊥, _ =>
+    rw [EF.bot_add, EF.smul_bot, EF.bot_add]
+  | _, ⊥ =>
+    rw [EF.add_bot, EF.smul_bot, EF.add_bot]
+  | (p : F), (q : F) =>
+    change toE (k * (p + q)) = toE (k * p) + toE (k * q)
+    rewrite [mul_add]
+    rfl
+  | (p : F), ⊤ =>
+    rw [EF.coe_add_top, EF.pos_smul_top hk]
+    change ⊤ = toE (k * p) + ⊤
+    rw [EF.coe_add_top]
+  | ⊤, (q : F) =>
+    rw [EF.top_add_coe, EF.pos_smul_top hk]
+    change ⊤ = ⊤ + toE (k * q)
+    rw [EF.top_add_coe]
+  | ⊤, ⊤ =>
+    rw [EF.top_add_top, EF.pos_smul_top hk, EF.top_add_top]
 
 lemma EF.mul_smul (k l : F≥0) (r : F∞) :
     (k * l) • r = k • (l • r) := by
   match r with
-  | ⊥ => simp [EF.smul_bot]
-  | ⊤ => by_cases hl : l = 0 <;> by_cases hk : k = 0 <;>
-      simp_all [EF.zero_smul_nonbot, EF.pos_smul_top, pos_of_NN_not_zero]
-  | (f : F) => simp [←EF.coe_eq_coe_iff, mul_assoc]
+  | ⊥ =>
+    iterate 3 rw [EF.smul_bot]
+  | ⊤ =>
+    if l_eq_0 : l = 0 then
+      rw [l_eq_0, EF.zero_smul_nonbot top_ne_bot, mul_zero, EF.zero_smul_nonbot top_ne_bot,
+        smul_zero]
+    else
+      have l_pos : 0 < l
+      · apply lt_of_le_of_ne l.property
+        exact l_eq_0 ∘ eq_zero_of_zero_eq_val
+      rw [EF.pos_smul_top l_pos]
+      if k_eq_0 : k = 0 then
+        rw [k_eq_0, EF.zero_smul_nonbot top_ne_bot, zero_mul, EF.zero_smul_nonbot top_ne_bot]
+      else
+        have c_pos : 0 < k
+        · exact pos_of_NN_not_zero k_eq_0
+        rw [EF.pos_smul_top c_pos, EF.pos_smul_top (mul_pos c_pos l_pos)]
+  | (f : F) =>
+    change toE ((k * l) * f) = toE (k * (l * f))
+    rw [mul_assoc]
 
 lemma EF.one_smul_vec (v : J → F∞) :
-    (1 : F≥0) • v = v :=
-  funext (fun i => EF.one_smul _)
+    (1 : F≥0) • v = v := by
+  ext
+  apply EF.one_smul
 
 omit [IsStrictOrderedRing F] in
 lemma EF.smul_add_vec {k : F≥0} (hk : 0 < k) (v w : J → F∞) :
-    k • (v + w) = k • v + k • w :=
-  funext (fun i => EF.smul_add hk _ _)
+    k • (v + w) = k • v + k • w := by
+  ext
+  apply EF.smul_add hk
 
 lemma EF.mul_smul_vec (k l : F≥0) (v : J → F∞) :
-    (k * l) • v = k • (l • v) :=
-  funext (fun i => EF.mul_smul _ _ _)
+    (k * l) • v = k • (l • v) := by
+  ext
+  apply EF.mul_smul
 
 lemma EF.vec_smul_le_smul_left {k : F≥0} (hk : 0 < k) (u v : I → F∞) :
     k • u ≤ k • v ↔ u ≤ v := by
@@ -347,14 +513,18 @@ lemma Multiset.smul_EF_sum {k : F≥0} (hk : 0 < k) (s : Multiset F∞) :
 omit [IsStrictOrderedRing F] in
 lemma Finset.smul_EF_sum [Fintype J] {k : F≥0} (hk : 0 < k) (v : J → F∞) :
     ∑ j : J, k • v j = k • ∑ j : J, v j := by
-  simp only [←Multiset.smul_EF_sum hk, Finset.sum, Multiset.map_map, Function.comp_def]
+  convert Multiset.smul_EF_sum hk (Finset.univ.val.map v)
+  simp
 
 end misc_EF_properties
 
 section dotWeig_EF_properties
 
 omit [IsStrictOrderedRing F] in
-lemma zero_dotWeig [Fintype J] (w : J → F≥0) : (0 : J → F∞) ᵥ⬝ w = 0 := by simp [dotWeig]
+lemma zero_dotWeig [Fintype J] (w : J → F≥0) : (0 : J → F∞) ᵥ⬝ w = 0 := by
+  apply Finset.sum_eq_zero
+  intro j _
+  exact smul_zero (w j)
 
 lemma dotWeig_add [Fintype J] (x : J → F∞) (v w : J → F≥0) :
     x ᵥ⬝ (v + w) = x ᵥ⬝ v + x ᵥ⬝ w := by
@@ -362,46 +532,58 @@ lemma dotWeig_add [Fintype J] (x : J → F∞) (v w : J → F≥0) :
 
 lemma dotWeig_smul [Fintype J] {k : F≥0} (hk : 0 < k) (x : J → F∞) (v : J → F≥0) :
     x ᵥ⬝ (k • v) = k • (x ᵥ⬝ v) := by
-  simp [dotWeig, EF.mul_smul, ←Finset.smul_EF_sum hk]
+  change ∑ j : J, (k * v j) • x j = k • ∑ j : J, v j • x j
+  rw [←Finset.smul_EF_sum hk]
+  apply congr_arg
+  ext
+  apply EF.mul_smul
 
 lemma no_top_dotWeig_nneg [Fintype J] {v : J → F∞} (hv : ∀ j, v j ≠ ⊤) (w : J → F≥0) :
-    v ᵥ⬝ w ≠ (⊤ : F∞) :=
-  Multiset.sum_neq_EF_top (by
-    rw [Multiset.mem_map]
-    rintro ⟨i, -, hi⟩
-    exact match hvi : v i with
-    | ⊥ => bot_ne_top (hvi ▸ hi)
-    | ⊤ => false_of_ne (hvi ▸ hv i)
-    | (_ : F) => EF.coe_neq_top _ (hvi ▸ hi))
+    v ᵥ⬝ w ≠ (⊤ : F∞) := by
+  apply Multiset.sum_neq_EF_top
+  rw [Multiset.mem_map]
+  intro ⟨i, _, hi⟩
+  match hvi : v i with
+  | ⊥ => exact bot_ne_top (hvi ▸ hi)
+  | ⊤ => exact false_of_ne (hvi ▸ hv i)
+  | (_ : F) => exact EF.coe_neq_top _ (hvi ▸ hi)
 
 end dotWeig_EF_properties
 
 section matrix_EF_properties
 
 omit [IsStrictOrderedRing F] in
-lemma Matrix.EF_neg_zero : -(0 : Matrix I J F∞) = 0 := by simp
+lemma Matrix.EF_neg_zero : -(0 : Matrix I J F∞) = 0 := by
+  ext
+  apply neg_zero
 
 omit [IsStrictOrderedRing F] in
-lemma Matrix.EF_neg_neg (M : Matrix I J F∞) : -(-M) = M := by simp
+lemma Matrix.EF_neg_neg (M : Matrix I J F∞) : -(-M) = M := by
+  ext
+  apply neg_neg
 
 omit [IsStrictOrderedRing F] in
 lemma Matrix.zero_mulWeig [Fintype J] (v : J → F≥0) : (0 : Matrix I J F∞) ₘ* v = 0 := by
+  ext
   simp [Matrix.mulWeig, dotWeig]
 
 lemma Matrix.mulWeig_add [Fintype J] (M : Matrix I J F∞) (v w : J → F≥0) :
-    M ₘ* (v + w) = M ₘ* v + M ₘ* w :=
-  funext (fun i => dotWeig_add _ _ _)
+    M ₘ* (v + w) = M ₘ* v + M ₘ* w := by
+  ext
+  apply dotWeig_add
 
 lemma Matrix.mulWeig_smul [Fintype J] {k : F≥0} (hk : 0 < k) (M : Matrix I J F∞) (v : J → F≥0) :
-    M ₘ* (k • v) = k • (M ₘ* v) :=
-  funext (fun i => dotWeig_smul hk _ _)
+    M ₘ* (k • v) = k • (M ₘ* v) := by
+  ext
+  apply dotWeig_smul hk
 
 end matrix_EF_properties
 
 section extended_LP_properties
 
 lemma ValidELP.dualize_dualize (P : ValidELP I J F) : P = P.dualize.dualize := by
-  simp [ValidELP.dualize, ValidELP.ext_iff]
+  obtain ⟨⟨_, _, _⟩⟩ := P
+  simp [ValidELP.dualize]
 
 lemma ValidELP.no_bot_of_feasible [Fintype J] (P : ValidELP I J F) (hP : P.IsFeasible) (i : I) :
     P.b i ≠ ⊥ :=
@@ -415,19 +597,22 @@ lemma ValidELP.isUnbounded_iff (P : ValidELP I J F) :
 
 lemma ValidELP.unbounded_of_reaches_le (P : ValidELP I J F)
     (hP : ∀ r : F, ∃ p : F∞, P.Reaches p ∧ p ≤ r) :
-    P.IsUnbounded :=
-  ValidELP.isUnbounded_iff.mpr fun r =>
-    let ⟨p, hPp, hpr⟩ := hP (r-1)
-    ⟨p, hPp, hpr.trans_lt (EF.coe_lt_coe_iff.← (sub_one_lt r))⟩
+    P.IsUnbounded := by
+  rw [ValidELP.isUnbounded_iff]
+  intro r
+  obtain ⟨p, hPp, hpr⟩ := hP (r-1)
+  exact ⟨p, hPp, hpr.trans_lt (EF.coe_lt_coe_iff.← (sub_one_lt r))⟩
 
 lemma ValidELP.unbounded_of_feasible_of_neg (P : ValidELP I J F) (hP : P.IsFeasible)
     {x₀ : J → F≥0} (hx₀ : P.c ᵥ⬝ x₀ < 0) (hAx₀ : P.A ₘ* x₀ + (0 : F≥0) • (-P.b) ≤ 0) :
     P.IsUnbounded := by
+  have nobot := P.no_bot_of_feasible hP
   obtain ⟨e, ⟨xₚ, hxₚ, hce⟩, he⟩ := hP
   apply P.unbounded_of_reaches_le
   intro s
   if hs : e ≤ s then
-    exact ⟨e, ⟨xₚ, hxₚ, hce⟩, by simpa using hs⟩
+    refine ⟨e, ⟨xₚ, hxₚ, hce⟩, ?_⟩
+    simpa using hs
   else
     push Not at hs
     match e with
@@ -436,27 +621,52 @@ lemma ValidELP.unbounded_of_feasible_of_neg (P : ValidELP I J F) (hP : P.IsFeasi
     | (e : F) =>
       clear he
       match hcx₀ : P.c ᵥ⬝ x₀ with
-      | ⊥ => exact ⟨⊥, ⟨xₚ, hxₚ, dotWeig_eq_bot.← hcx₀⟩, bot_le⟩
-      | ⊤ => simp [hcx₀] at hx₀
+      | ⊥ =>
+        refine ⟨⊥, ⟨xₚ, hxₚ, ?_⟩, bot_le⟩
+        change hcx₀ to P.c ᵥ⬝ x₀ = ⊥
+        rwa [←dotWeig_eq_bot] at hcx₀ ⊢
+      | ⊤ =>
+        exfalso
+        rw [hcx₀] at hx₀
+        exact (hx₀.trans_le le_top).false
       | (d : F) =>
         rw [hcx₀] at hx₀
-        have coef_pos : 0 < (s - e) / d :=
-          div_pos_of_neg_of_neg (by rwa [sub_neg, ←EF.coe_lt_coe_iff]) (by rwa [←EF.coe_neg'])
+        have coef_pos : 0 < (s - e) / d
+        · apply div_pos_of_neg_of_neg
+          · rwa [sub_neg, ←EF.coe_lt_coe_iff]
+          · rwa [←EF.coe_neg']
         let k : F≥0 := ⟨((s - e) / d), coef_pos.le⟩
+        let k_pos : 0 < k := coef_pos
         refine ⟨s, ⟨xₚ + k • x₀, ?_, ?_⟩, by rfl⟩
         · intro i
           match hi : P.b i with
-          | ⊥ => exact absurd hi (P.no_bot_of_feasible hP i)
-          | ⊤ => exact le_top
+          | ⊥ =>
+            exfalso
+            exact nobot i hi
+          | ⊤ =>
+            apply le_top
           | (bᵢ : F) =>
             specialize hAx₀ i
-            simp only [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hi, ←EF.coe_neg,
-              EF.zero_smul_coe, add_zero] at hAx₀
-            rw [Matrix.mulWeig_add, Matrix.mulWeig_smul coef_pos, Pi.add_apply]
-            exact add_le_of_le_of_nonpos (hi ▸ hxₚ i) (EF.smul_nonpos hAx₀ k)
-        · rw [dotWeig_add, hce, dotWeig_smul coef_pos, hcx₀, EF.coe_eq_coe_iff, div_mul_cancel_of_imp,
-            add_sub_cancel]
-          exact fun d_eq_0 => absurd (d_eq_0 ▸ hx₀) (lt_irrefl _)
+            rw [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hi] at hAx₀
+            have zeros : (P.A ₘ* x₀) i + (0 : F∞) ≤ 0
+            · convert hAx₀
+              change 0 = 0 • -(toE bᵢ)
+              rw [←EF.coe_neg, EF.zero_smul_coe]
+            rw [add_zero] at zeros
+            rw [Matrix.mulWeig_add, Matrix.mulWeig_smul k_pos, Pi.add_apply]
+            apply add_le_of_le_of_nonpos
+            · convert_to (P.A ₘ* xₚ) i ≤ P.b i
+              · exact hi.symm
+              exact hxₚ i
+            · exact EF.smul_nonpos zeros k
+        · rw [dotWeig_add, hce, dotWeig_smul k_pos, hcx₀]
+          change toE (e + ((s - e) / d) * d) = toE s
+          rw [EF.coe_eq_coe_iff, div_mul_cancel_of_imp]
+          · exact add_sub_cancel e s
+          · intro d_eq_0
+            exfalso
+            rw [d_eq_0] at hx₀
+            exact hx₀.false
 
 variable [Fintype I]
 
@@ -468,37 +678,68 @@ lemma ValidELP.unbounded_of_feasible_of_infeasible (P : ValidELP I J F)
   let b' : I' → F∞ := (fun i' : I' => P.b i'.val)
   cases or_of_neq (extendedFarkas (-A'ᵀ) P.c
       (by aeply P.hAj) (by aeply P.hAi) (by aeply P.hAc) (by aeply P.hcA)) with
-  | inl ⟨y, hy⟩ =>
+  | inl caseI =>
+    exfalso
+    obtain ⟨y, hy⟩ := caseI
     match hby : b' ᵥ⬝ y with
     | ⊥ => exact no_bot_dotWeig_nneg (P.no_bot_of_feasible hP ·.val ·) y hby
     | ⊤ => exact no_top_dotWeig_nneg (·.property) y hby
     | (q : F) =>
       apply hQ
-      refine ⟨toE q, ⟨fun i : I => if hi : (P.b i ≠ ⊤) then y ⟨i, hi⟩ else 0, ?_, ?_⟩,
+      refine ⟨toE q, ⟨fun i : I => if hi : (P.b i ≠ ⊤) then y ⟨i, hi⟩ else 0, ?_⟩,
         EF.coe_neq_top q⟩
-      · simp only [ValidELP.dualize, ExtendedLP.IsSolution, Matrix.mulWeig, dotWeig, dite_not,
-          dite_smul, Finset.sum_dite]
+      constructor
+      · unfold ValidELP.dualize ExtendedLP.IsSolution Matrix.mulWeig
+        convert hy
+        simp only [Matrix.mulWeig, dotWeig, dite_not, dite_smul]
+        rw [Finset.sum_dite]
         convert zero_add _ using 1
         apply congr_arg₂
-        · exact Finset.sum_eq_zero (fun i _ => EF.zero_smul_nonbot
-            (fun contr => P.hAb ⟨i.val, by aesop, by aesop⟩))
+        · apply Finset.sum_eq_zero
+          intro i _
+          apply EF.zero_smul_nonbot
+          intro contr
+          exact P.hAb ⟨i.val, by aesop, by aesop⟩
         · erw [←Finset.sum_coe_sort_eq_attach]
-          apply Finset.subtype_univ_sum_eq_subtype_univ_sum <;> simp_all
-      · simp only [dotWeig, dite_not, dite_smul, Finset.sum_dite]
+          apply Finset.subtype_univ_sum_eq_subtype_univ_sum
+          · ext
+            simp
+          · intros
+            rfl
+      · simp only [dotWeig, dite_not, dite_smul]
+        rw [Finset.sum_dite]
         convert zero_add _
-        · exact Finset.sum_eq_zero (fun i _ => EF.zero_smul_nonbot (P.no_bot_of_feasible hP i.val))
-        · erw [←Finset.sum_coe_sort_eq_attach, ←hby]
-          apply Finset.subtype_univ_sum_eq_subtype_univ_sum <;> simp_all
-  | inr ⟨x, hAx, hcx⟩ =>
+        · apply Finset.sum_eq_zero
+          intro i _
+          apply EF.zero_smul_nonbot
+          exact P.no_bot_of_feasible hP i.val
+        · change hby to b' ᵥ⬝ y = toE q
+          erw [←Finset.sum_coe_sort_eq_attach]
+          rw [←hby]
+          apply Finset.subtype_univ_sum_eq_subtype_univ_sum
+          · ext
+            simp
+          · intros
+            rfl
+  | inr caseJ =>
+    obtain ⟨x, hAx, hcx⟩ := caseJ
     apply P.unbounded_of_feasible_of_neg hP hcx
     rw [Matrix.transpose_neg, Matrix.transpose_transpose, Matrix.EF_neg_neg] at hAx
     intro i
     match hbi : P.b i with
-    | ⊥ => exact absurd hbi (P.no_bot_of_feasible hP i)
-    | ⊤ => simp [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hbi]
+    | ⊥ =>
+      exfalso
+      exact P.no_bot_of_feasible hP i hbi
+    | ⊤ =>
+      change hbi to P.b i = ⊤
+      rw [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hbi, EF.neg_top, EF.smul_bot, EF.add_bot]
+      apply bot_le
     | (f : F) =>
-      rw [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hbi,
-        EF.zero_smul_nonbot (EF.coe_neq_bot _), add_zero]
+      change hbi to P.b i = toE f
+      have hf : -(toE f) ≠ (⊥ : F∞)
+      · rw [←EF.coe_neg]
+        apply EF.coe_neq_bot
+      rw [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hbi, EF.zero_smul_nonbot hf, add_zero]
       exact hAx ⟨i, hbi ▸ EF.coe_neq_top f⟩
 
 lemma ValidELP.infeasible_of_unbounded (P : ValidELP I J F) (hP : P.IsUnbounded) :
@@ -506,15 +747,21 @@ lemma ValidELP.infeasible_of_unbounded (P : ValidELP I J F) (hP : P.IsUnbounded)
   intro ⟨q, hPq, hq⟩
   rw [ValidELP.isUnbounded_iff] at hP
   match q with
-  | ⊥ => simpa using P.weakDuality (hP 0).choose_spec.1 hPq
-  | ⊤ => exact hq rfl
+  | ⊥ =>
+    obtain ⟨p, hp, -⟩ := hP 0
+    simpa using P.weakDuality hp hPq
+  | ⊤ =>
+    exact hq rfl
   | (f : F) =>
     obtain ⟨p, hp, hpq⟩ := hP (-f)
+    have wd := P.weakDuality hp hPq
     match p with
-    | ⊥ => simp at (P.weakDuality hp hPq)
+    | ⊥ => simp at wd
     | ⊤ => simp at hpq
     | (_ : F) =>
-      linarith [EF.coe_le_coe_iff.mp (P.weakDuality hp hPq), EF.coe_lt_coe_iff.mp hpq]
+      rw [←EF.coe_add, ←EF.coe_zero, EF.coe_le_coe_iff] at wd
+      rw [EF.coe_lt_coe_iff] at hpq
+      linarith
 
 /-! The strong duality auxiliary proof is split because the original single proof exceeded the
 LeanPool 200-line cap. We dispatch on the two cases coming from `extendedFarkas` and finish
@@ -538,20 +785,40 @@ private lemma ValidELP.strongDuality_aux_caseX (P : ValidELP I J F)
   set x := X ∘ Sum.inl
   set y := X ∘ Sum.inr
   obtain ⟨⟨hx, hy⟩, hxy⟩ := hX
-  have hxy := sumElim_dotWeig_sumElim P.c P.b x y ▸ hxy 0
+  specialize hxy 0
+  change hxy to Sum.elim P.c P.b ᵥ⬝ Sum.elim x y ≤ 0
+  rw [sumElim_dotWeig_sumElim] at hxy
   match hcx : P.c ᵥ⬝ x with
   | ⊥ =>
-    exact P.dualize.no_bot_of_feasible hQ (dotWeig_eq_bot.← hcx).choose (dotWeig_eq_bot.← hcx).choose_spec
+    exfalso
+    obtain ⟨j, hj⟩ := dotWeig_eq_bot.← hcx
+    exact P.dualize.no_bot_of_feasible hQ j hj
   | ⊤ =>
+    exfalso
     match hby : P.b ᵥ⬝ y with
-    | ⊥ => exact P.no_bot_of_feasible hP (dotWeig_eq_bot.← hby).choose (dotWeig_eq_bot.← hby).choose_spec
-    | ⊤ | (_ : F) => simp [hcx, hby] at hxy
+    | ⊥ =>
+      obtain ⟨i, hi⟩ := dotWeig_eq_bot.← hby
+      exact P.no_bot_of_feasible hP i hi
+    | ⊤ =>
+      rw [hcx, hby] at hxy
+      exact (hxy.trans_lt EF.zero_lt_top).false
+    | (_ : F) =>
+      rw [hcx, hby] at hxy
+      exact (hxy.trans_lt EF.zero_lt_top).false
   | (p : F) =>
     match hby : P.b ᵥ⬝ y with
-    | ⊥ => exact P.no_bot_of_feasible hP (dotWeig_eq_bot.← hby).choose (dotWeig_eq_bot.← hby).choose_spec
-    | ⊤ => simp [hcx, hby] at hxy
+    | ⊥ =>
+      exfalso
+      obtain ⟨i, hi⟩ := dotWeig_eq_bot.← hby
+      exact P.no_bot_of_feasible hP i hi
+    | ⊤ =>
+      exfalso
+      rw [hcx, hby] at hxy
+      exact (hxy.trans_lt EF.zero_lt_top).false
     | (q : F) =>
-      exact ⟨p, q, ⟨x, hx, hcx⟩, ⟨y, hy, hby⟩, EF.coe_le_coe_iff.← (hcx ▸ hby ▸ hxy)⟩
+      refine ⟨p, q, ⟨x, hx, hcx⟩, ⟨y, hy, hby⟩, ?_⟩
+      rw [←EF.coe_le_coe_iff]
+      rwa [hcx, hby] at hxy
 
 private lemma ValidELP.strongDuality_aux_caseY (P : ValidELP I J F)
     (hP : P.IsFeasible) (hQ : P.dualize.IsFeasible)
@@ -577,54 +844,85 @@ private lemma ValidELP.strongDuality_aux_caseY (P : ValidELP I J F)
   set x := (Y ∘ Sum.inl) ∘ Sum.inr
   set y := (Y ∘ Sum.inl) ∘ Sum.inl
   set z := (Y ∘ Sum.inr) 0
-  have hAyx' :
-      Sum.elim (-P.Aᵀ ₘ* y) (P.A ₘ* x) + Sum.elim (z • (-P.c)) (z • (-P.b)) ≤ 0
+  have hAyx : Sum.elim (-P.Aᵀ ₘ* y) (P.A ₘ* x) + z • (-Sum.elim P.c P.b) ≤ 0
   · convert hAY
     ext
-    aesop [Matrix.replicateCol, Matrix.mulWeig, dotWeig, z]
-  clear hAY
+    simp [Matrix.replicateCol, Matrix.mulWeig, dotWeig, z]
+  have hAyx' :
+      Sum.elim (-P.Aᵀ ₘ* y) (P.A ₘ* x) + Sum.elim (z • (-P.c)) (z • (-P.b)) ≤ 0
+  · convert hAyx
+    aesop
+  clear hAY hAyx
   rw [←Sum.elim_add_add, Sum.elim_nonpos_iff] at hAyx'
   obtain ⟨hy, hx⟩ := hAyx'
   rw [sumElim_dotWeig_sumElim, zero_dotWeig, add_zero, sumElim_dotWeig_sumElim] at hbc
   have z_pos : 0 < z
   · by_contra contr
-    simp only [le_antisymm (not_lt.mp contr) z.property, zero_smul] at hx hy
+    have z_eq_0 : z = 0
+    · push Not at contr
+      exact nonpos_iff_eq_zero.→ contr
+    rw [z_eq_0] at hx hy
+    clear contr z_eq_0 z
     if hxc : P.c ᵥ⬝ x < 0 then
       exact P.infeasible_of_unbounded (P.unbounded_of_feasible_of_neg hP hxc hx) hQ
     else
+      have hyb : P.b ᵥ⬝ y < 0
+      · push Not at hxc
+        by_contra! contr
+        exact (hbc.trans_le (add_nonneg contr hxc)).false
       exact P.dualize.infeasible_of_unbounded
-        (P.dualize.unbounded_of_feasible_of_neg hQ
-          (lt_of_not_le (fun contr => (hbc.trans_le (add_nonneg contr (not_lt.mp hxc))).false)) hy)
-        (P.dualize_dualize ▸ hP)
+        (P.dualize.unbounded_of_feasible_of_neg hQ hyb hy) (P.dualize_dualize ▸ hP)
   match hcx : P.c ᵥ⬝ x with
   | ⊥ =>
-    exact P.dualize.no_bot_of_feasible hQ (dotWeig_eq_bot.← hcx).choose (dotWeig_eq_bot.← hcx).choose_spec
+    exfalso
+    obtain ⟨j, hj⟩ := dotWeig_eq_bot.← hcx
+    exact P.dualize.no_bot_of_feasible hQ j hj
   | ⊤ =>
+    exfalso
     match hby : P.b ᵥ⬝ y with
-    | ⊥ => exact P.no_bot_of_feasible hP (dotWeig_eq_bot.← hby).choose (dotWeig_eq_bot.← hby).choose_spec
-    | ⊤ | (_ : F) => simp [hcx, hby] at hbc
+    | ⊥ =>
+      obtain ⟨i, hi⟩ := dotWeig_eq_bot.← hby
+      exact P.no_bot_of_feasible hP i hi
+    | ⊤ =>
+      rw [hcx, hby] at hbc
+      exact (hbc.trans EF.zero_lt_top).false
+    | (_ : F) =>
+      rw [hcx, hby] at hbc
+      exact (hbc.trans EF.zero_lt_top).false
   | (p : F) =>
     match hby : P.b ᵥ⬝ y with
-    | ⊥ => exact P.no_bot_of_feasible hP (dotWeig_eq_bot.← hby).choose (dotWeig_eq_bot.← hby).choose_spec
-    | ⊤ => simp [hcx, hby] at hbc
+    | ⊥ =>
+      exfalso
+      obtain ⟨i, hi⟩ := dotWeig_eq_bot.← hby
+      exact P.no_bot_of_feasible hP i hi
+    | ⊤ =>
+      exfalso
+      rw [hcx, hby] at hbc
+      exact (hbc.trans EF.zero_lt_top).false
     | (q : F) =>
-      have z_inv_pos : 0 < z⁻¹ := inv_pos_of_pos z_pos
+      have z_inv_pos : 0 < z⁻¹
+      · exact inv_pos_of_pos z_pos
       refine ⟨z⁻¹ * p, z⁻¹ * q, ⟨z⁻¹ • x, ?_, ?_⟩, ⟨z⁻¹ • y, ?_, ?_⟩, ?_⟩
       · rwa [
           ←EF.vec_smul_le_smul_left z_inv_pos, smul_zero,
           EF.smul_add_vec z_inv_pos, ←Matrix.mulWeig_smul z_inv_pos, ←EF.mul_smul_vec,
           inv_mul_cancel₀ (ne_of_lt z_pos).symm, EF.one_smul_vec, EF.vec_sub_nonpos_iff
         ] at hx
-      · simp only [dotWeig_smul z_inv_pos, hcx]
+      · rewrite [dotWeig_smul z_inv_pos, hcx]
+        rfl
       · rwa [
           ←EF.vec_smul_le_smul_left z_inv_pos, smul_zero,
           EF.smul_add_vec z_inv_pos, ←Matrix.mulWeig_smul z_inv_pos, ←EF.mul_smul_vec,
           inv_mul_cancel₀ (ne_of_lt z_pos).symm, EF.one_smul_vec, EF.vec_sub_nonpos_iff
         ] at hy
-      · simp only [ValidELP.dualize, dotWeig_smul z_inv_pos, hby]
-      rw [hcx, hby, ←mul_add] at hbc ⊢
-      exact mul_nonpos_of_nonneg_of_nonpos z_inv_pos.le
-        (le_of_lt (by rwa [←EF.coe_lt_coe_iff, add_comm] at hbc))
+      · dsimp only [ValidELP.dualize]
+        rewrite [dotWeig_smul z_inv_pos, hby]
+        rfl
+      rw [hcx, hby] at hbc
+      rw [←mul_add]
+      have hpq : p + q < 0
+      · rwa [←EF.coe_lt_coe_iff, add_comm]
+      exact mul_nonpos_of_nonneg_of_nonpos z_inv_pos.le hpq.le
 
 lemma ValidELP.strongDuality_aux (P : ValidELP I J F)
     (hP : P.IsFeasible) (hQ : P.dualize.IsFeasible) :
@@ -727,15 +1025,24 @@ lemma ValidELP.strongDuality_aux (P : ValidELP I J F)
           | inr => simp at hk
         )
       ) with
-  | inl ⟨X, hX⟩ => exact P.strongDuality_aux_caseX hP hQ hX
-  | inr ⟨Y, hAY, hbc⟩ => exact P.strongDuality_aux_caseY hP hQ hAY hbc
+  | inl case_X =>
+    obtain ⟨X, hX⟩ := case_X
+    exact P.strongDuality_aux_caseX hP hQ hX
+  | inr case_Y =>
+    obtain ⟨Y, hAY, hbc⟩ := case_Y
+    exact P.strongDuality_aux_caseY hP hQ hAY hbc
 
 lemma ValidELP.strongDuality_of_both_feasible (P : ValidELP I J F)
     (hP : P.IsFeasible) (hQ : P.dualize.IsFeasible) :
     ∃ r : F, P.Reaches (toE (-r)) ∧ P.dualize.Reaches (toE r) := by
   obtain ⟨p, q, hp, hq, hpq⟩ := P.strongDuality_aux hP hQ
-  exact ⟨q, (neg_eq_iff_add_eq_zero.mpr (add_comm q p ▸ le_antisymm hpq
-    (EF.coe_le_coe_iff.← (EF.coe_add p q ▸ P.weakDuality hp hq)))) ▸ hp, hq⟩
+  have h0pq : 0 ≤ p + q
+  · rw [←EF.coe_le_coe_iff, EF.coe_add, EF.coe_zero]
+    exact P.weakDuality hp hq
+  have hqp : -q = p
+  · rw [neg_eq_iff_add_eq_zero, add_comm]
+    exact le_antisymm hpq h0pq
+  exact ⟨q, hqp ▸ hp, hq⟩
 
 end extended_LP_properties
 
@@ -743,21 +1050,51 @@ section extended_LP_optima
 
 lemma ExtendedLP.optimum_unique [Fintype J] {P : ExtendedLP I J F} {r s : F}
     (hPr : P.Reaches (toE r) ∧ P.IsBoundedBy r) (hPs : P.Reaches (toE s) ∧ P.IsBoundedBy s) :
-    r = s :=
-  EF.coe_eq_coe_iff.← (le_antisymm (hPr.right _ hPs.left) (hPs.right _ hPr.left))
+    r = s := by
+  rw [←EF.coe_eq_coe_iff]
+  apply le_antisymm
+  · apply hPr.right
+    exact hPs.left
+  · apply hPs.right
+    exact hPr.left
 
 lemma ExtendedLP.optimum_eq_of_reaches_bounded [Fintype J] {P : ExtendedLP I J F} {r : F}
     (reaches : P.Reaches (toE r)) (bounded : P.IsBoundedBy r) :
     P.optimum = some r := by
-  have hP : P.IsFeasible := ⟨toE r, ⟨reaches.choose, reaches.choose_spec.1, reaches.choose_spec.2⟩, EF.coe_neq_top r⟩
-  have hPb : ¬P.IsUnbounded := (· ⟨r, bounded⟩)
-  unfold ExtendedLP.optimum
-  rw [if_neg (not_not.mpr hP), if_neg hPb, dif_pos ⟨r, reaches, bounded⟩]
-  exact congr_arg (some ∘ toE) (ExtendedLP.optimum_unique (Exists.choose_spec _) ⟨reaches, bounded⟩)
+  have hP : P.IsFeasible
+  · obtain ⟨x, hx⟩ := reaches
+    exact ⟨toE r, ⟨x, hx⟩, EF.coe_neq_top r⟩
+  have hPP : ∃ r : F, P.Reaches (toE r) ∧ P.IsBoundedBy r
+  · use r
+  have hPb : ¬P.IsUnbounded
+  · exact (· ⟨r, bounded⟩)
+  have hopt : P.optimum = some (toE hPP.choose) := by
+    unfold ExtendedLP.optimum
+    rw [if_neg (not_not.mpr hP), if_neg hPb, dif_pos hPP]
+  rw [hopt]
+  exact congr_arg (some <| toE ·) (ExtendedLP.optimum_unique hPP.choose_spec ⟨reaches, bounded⟩)
 
 omit [IsStrictOrderedRing F] in
 lemma oppositesOpt_comm (p q : Option F∞) : OppositesOpt p q ↔ OppositesOpt q p := by
-  simp [OppositesOpt, neg_eq_iff_eq_neg]
+  cases p with
+  | none =>
+    convert_to False ↔ False
+    · simp [OppositesOpt]
+    rfl
+  | some r =>
+    cases q with
+    | none => trivial
+    | some s =>
+      if hrs : r = -s then
+        convert_to True ↔ True
+        · simpa [OppositesOpt]
+        · simpa [OppositesOpt, neg_eq_iff_eq_neg] using hrs.symm
+        rfl
+      else
+        convert_to False ↔ False
+        · simpa [OppositesOpt]
+        · simpa [OppositesOpt, neg_eq_iff_eq_neg] using Ne.symm hrs
+        rfl
 
 variable [Fintype I] [Fintype J]
 
@@ -765,28 +1102,39 @@ lemma ValidELP.strongDuality_of_prim_feasible (P : ValidELP I J F) (hP : P.IsFea
     OppositesOpt P.optimum P.dualize.optimum := by
   if hQ : P.dualize.IsFeasible then
     obtain ⟨r, hPr, hQr⟩ := P.strongDuality_of_both_feasible hP hQ
-    rw [ExtendedLP.optimum_eq_of_reaches_bounded hPr
-      (fun p hPp =>
-        match p with
-        | ⊥ => by simp at (P.weakDuality hPp hQr)
-        | ⊤ => le_top
-        | (_ : F) => by
-          have Pwd := P.weakDuality hPp hQr
-          simp only [←EF.coe_add, ←EF.coe_zero, EF.coe_le_coe_iff] at Pwd ⊢
-          linarith),
-      ExtendedLP.optimum_eq_of_reaches_bounded hQr
-      (fun q hQq =>
-        match q with
-        | ⊥ => by simp at (P.weakDuality hPr hQq)
-        | ⊤ => le_top
-        | (_ : F) => by
-          have Qwd := P.weakDuality hPr hQq
-          simp only [←EF.coe_add, ←EF.coe_zero, EF.coe_le_coe_iff] at Qwd ⊢
-          linarith)]
+    have hPopt : P.optimum = some (toE (-r))
+    · apply ExtendedLP.optimum_eq_of_reaches_bounded hPr
+      intro p hPp
+      have Pwd := P.weakDuality hPp hQr
+      match p with
+      | ⊥ => simp at Pwd
+      | ⊤ => apply le_top
+      | (_ : F) =>
+        rw [←EF.coe_add, ←EF.coe_zero] at Pwd
+        rw [EF.coe_le_coe_iff] at Pwd ⊢
+        rwa [neg_le_iff_add_nonneg]
+    have hQopt : P.dualize.optimum = some (toE r)
+    · apply ExtendedLP.optimum_eq_of_reaches_bounded hQr
+      intro q hQq
+      have Qwd := P.weakDuality hPr hQq
+      match q with
+      | ⊥ => simp at Qwd
+      | ⊤ => apply le_top
+      | (_ : F) =>
+        rw [←EF.coe_add, ←EF.coe_zero, add_comm] at Qwd
+        rw [EF.coe_le_coe_iff] at Qwd ⊢
+        rwa [le_add_neg_iff_le] at Qwd
+    rewrite [hPopt, hQopt]
     rfl
   else
-    simp only [ExtendedLP.optimum, P.unbounded_of_feasible_of_infeasible hP hQ, hP, hQ,
-      not_false_eq_true, ite_true, ite_false, OppositesOpt, EF.neg_top]
+    have hPopt : P.optimum = some ⊥
+    · simp only [ExtendedLP.optimum, hP, P.unbounded_of_feasible_of_infeasible hP hQ]
+      rfl
+    have hQopt : P.dualize.optimum = some ⊤
+    · simp only [ExtendedLP.optimum, hQ]
+      rfl
+    rw [hPopt, hQopt]
+    exact EF.neg_top
 
 omit [Fintype I] in
 theorem ValidELP.optimum_neq_none [Finite I] (P : ValidELP I J F) : P.optimum ≠ none := by

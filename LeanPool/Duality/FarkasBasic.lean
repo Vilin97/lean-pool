@@ -60,29 +60,35 @@ theorem basicLinearAlgebra_lt (A : Matrix I J F) (b : I → F) :
   convert equalityFarkas (Matrix.fromCols A (-A)) b using 1
   · constructor
     · intro ⟨x, hAx⟩
-      exact ⟨Sum.elim x⁺ x⁻, Sum.nonneg_elim_iff.mpr ⟨posPart_nonneg x, negPart_nonneg x⟩, by
-        rw [Matrix.fromCols_mulVec_sumElim, Matrix.neg_mulVec, ←Matrix.mulVec_neg,
+      use Sum.elim x⁺ x⁻
+      constructor
+      · rw [Sum.nonneg_elim_iff]
+        exact ⟨posPart_nonneg x, negPart_nonneg x⟩
+      · rw [Matrix.fromCols_mulVec_sumElim, Matrix.neg_mulVec, ←Matrix.mulVec_neg,
           ←Matrix.mulVec_add, ←sub_eq_add_neg]
         convert hAx
-        aesop⟩
+        aesop
     · intro ⟨x, _, hAx⟩
-      exact ⟨x ∘ Sum.inl - x ∘ Sum.inr, by
-        rw [Matrix.mulVec_sub]
-        rwa [←Sum.elim_comp_inl_inr x, Matrix.fromCols_mulVec_sumElim, Matrix.neg_mulVec,
-          ←sub_eq_add_neg] at hAx⟩
+      use x ∘ Sum.inl - x ∘ Sum.inr
+      rw [Matrix.mulVec_sub]
+      rwa [←Sum.elim_comp_inl_inr x, Matrix.fromCols_mulVec_sumElim, Matrix.neg_mulVec,
+        ←sub_eq_add_neg] at hAx
   · constructor
-    · rintro ⟨y, hAy, hby⟩
+    · intro ⟨y, hAy, hby⟩
       refine ⟨y, ?_, hby⟩
-      rw [Matrix.transpose_fromCols, Matrix.fromRows_mulVec, Sum.nonneg_elim_iff, hAy]
-      exact ⟨rfl, by rw [Matrix.transpose_neg, Matrix.neg_mulVec, hAy, neg_zero]⟩
+      rw [Matrix.transpose_fromCols, Matrix.fromRows_mulVec, Sum.nonneg_elim_iff]
+      constructor
+      · rw [hAy]
+      · rw [Matrix.transpose_neg, Matrix.neg_mulVec, hAy, neg_zero]
     · intro ⟨y, hAy, hby⟩
       refine ⟨y, ?_, hby⟩
       rw [Matrix.transpose_fromCols, Matrix.fromRows_mulVec, Sum.nonneg_elim_iff] at hAy
       obtain ⟨hAyp, hAyn⟩ := hAy
-      exact le_antisymm (fun i => by
-        specialize hAyn i
-        rwa [Matrix.transpose_neg, Matrix.neg_mulVec, Pi.zero_apply, Pi.neg_apply,
-          Right.nonneg_neg_iff] at hAyn) hAyp
+      refine le_antisymm ?_ hAyp
+      intro i
+      specialize hAyn i
+      rwa [Matrix.transpose_neg, Matrix.neg_mulVec, Pi.zero_apply, Pi.neg_apply,
+        Right.nonneg_neg_iff] at hAyn
 
 /-- A system of linear equalities has a solution if and only if
 we cannot obtain a contradiction by taking a linear combination of the equalities;
@@ -94,8 +100,10 @@ theorem basicLinearAlgebra (A : Matrix I J F) (b : I → F) :
   if hlt : b ⬝ᵥ y < 0 then
     aesop
   else
-    exact ⟨-y, by rw [Matrix.mulVec_neg, hAy, neg_zero, dotProduct_neg, neg_lt_zero]
-      exact ⟨rfl, lt_of_le_of_ne (not_lt.mp hlt) hby.symm⟩⟩
+    use -y
+    rw [Matrix.mulVec_neg, hAy, neg_zero, dotProduct_neg, neg_lt_zero]
+    push Not at hlt
+    exact ⟨rfl, lt_of_le_of_ne hlt hby.symm⟩
 
 /- Let's move to the "symmetric" variants now. They will also be used in the upcoming extended
 setting and in the upcoming theory of linear programming. -/
@@ -108,18 +116,42 @@ theorem inequalityFarkas (A : Matrix I J F) (b : I → F) :
   let A' : Matrix I (I ⊕ J) F := Matrix.fromCols 1 A
   convert equalityFarkas A' b using 1 <;> constructor
   · intro ⟨x, hx, hAxb⟩
-    exact ⟨Sum.elim (b - A *ᵥ x) x, Sum.nonneg_elim_iff.mpr ⟨fun i : I => sub_nonneg_of_le (hAxb i), hx⟩, by aesop⟩
-  · rintro ⟨x, hx, hAxb⟩
-    refine ⟨x ∘ Sum.inr, (hx ·), fun i => le_of_nneg_add (congr_fun hAxb i) ?_⟩
-    simp only [A', Matrix.mulVec, dotProduct, Matrix.fromCols, Matrix.of_apply,
-      Sum.elim_inl, Sum.elim_inr, Fintype.sum_sum_type]
-    exact Fintype.sum_nonneg (fun j _ => mul_nonneg (Matrix.zero_le_one_elem _ _) (hx j))
+    use Sum.elim (b - A *ᵥ x) x
+    constructor
+    · rw [Sum.nonneg_elim_iff]
+      exact ⟨fun i : I => sub_nonneg_of_le (hAxb i), hx⟩
+    · aesop
+  · intro ⟨x, hx, hAxb⟩
+    use x ∘ Sum.inr
+    constructor
+    · intro
+      apply hx
+    · intro i
+      have hi := congr_fun hAxb i
+      simp only [A', Matrix.mulVec, dotProduct, Matrix.fromCols, Matrix.of_apply,
+        Sum.elim_inl, Sum.elim_inr, Fintype.sum_sum_type] at hi
+      apply le_of_nneg_add hi
+      apply Fintype.sum_nonneg
+      rw [Pi.le_def]
+      intro
+      rw [Pi.zero_apply]
+      apply mul_nonneg
+      · apply Matrix.zero_le_one_elem
+      · apply hx
   · intro ⟨y, hy, hAy, hby⟩
-    exact ⟨y, fun k => k.casesOn (fun i => by simpa [A', Matrix.neg_mulVec] using
-      dotProduct_nonneg_of_nonneg (Matrix.zero_le_one_elem · i) hy) (fun j => hAy j), hby⟩
+    refine ⟨y, ?_, hby⟩
+    intro k
+    cases k with
+    | inl i => simpa [A', Matrix.neg_mulVec] using
+      dotProduct_nonneg_of_nonneg (Matrix.zero_le_one_elem · i) hy
+    | inr j => apply hAy
   · intro ⟨y, hAy, hby⟩
-    simp only [A', Matrix.transpose_fromCols, Matrix.transpose_one] at hAy
-    exact ⟨y, fun i : I => by simpa using hAy (Sum.inl i), fun j : J => hAy (Sum.inr j), hby⟩
+    have h1Ay : 0 ≤ (Matrix.fromRows (1 : Matrix I I F) Aᵀ *ᵥ y)
+    · intro k
+      simp only [A', Matrix.transpose_fromCols, Matrix.transpose_one] at hAy
+      apply hAy
+    refine ⟨y, fun i : I => ?_, fun j : J => h1Ay (Sum.inr j), hby⟩
+    simpa using h1Ay (Sum.inl i)
 
 /-- A system of linear inequalities over nonnegative variables has a solution if and only if
 we cannot obtain a contradiction by taking a nonnegative linear combination of the inequalities;
@@ -127,4 +159,5 @@ midly reformulated. -/
 theorem inequalityFarkas_neg (A : Matrix I J F) (b : I → F) :
     (∃ x : J → F, 0 ≤ x ∧ A *ᵥ x ≤ b) ≠ (∃ y : I → F, 0 ≤ y ∧ -Aᵀ *ᵥ y ≤ 0 ∧ b ⬝ᵥ y < 0) := by
   convert inequalityFarkas A b using 5
-  simp [Matrix.neg_mulVec]
+  rw [Matrix.neg_mulVec, ←neg_zero]
+  constructor <;> intro hAx i <;> simpa using hAx i
