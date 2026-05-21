@@ -51,9 +51,9 @@ jobs:
             .lake/packages
             .lake/build
             docbuild/.lake/build
-          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json') }}-${{ github.sha }}
+          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
           restore-keys: |
-            Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json') }}-
+            Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9
@@ -96,4 +96,4 @@ jobs:
             .lake/packages
             .lake/build
             docbuild/.lake/build
-          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json') }}-${{ github.sha }}
+          key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
