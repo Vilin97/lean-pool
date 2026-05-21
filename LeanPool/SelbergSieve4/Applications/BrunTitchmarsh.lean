@@ -46,9 +46,7 @@ def primesBetween (a b : ℝ) : ℕ :=
 theorem primesBetween_eq_ncard {a b : ℝ} (hb : 0 ≤ b) :
     primesBetween a b = Set.ncard {p : ℕ | a ≤ p ∧ p ≤ b ∧ p.Prime} := by
   unfold primesBetween
-  rw [← Set.ncard_coe_finset]
-  congr
-  ext p
+  rw [← Set.ncard_coe_finset]; congr; ext p
   simp only [Finset.coe_filter, Finset.mem_Icc, Nat.ceil_le, Nat.le_floor_iff hb,
     Set.mem_setOf_eq, and_assoc]
 
@@ -72,17 +70,12 @@ theorem primesBetween_subset :
     (Finset.Icc 1 (Nat.floor z)) := by
   intro p hp_mem
   simp only [Finset.mem_filter, Finset.mem_Icc] at hp_mem
+  obtain ⟨hp_range, hp⟩ := hp_mem
   rw [Finset.mem_union]
-  rcases hp_mem with ⟨hp_range, hp⟩
   by_cases hpz : p ≤ z
-  · right
-    exact Finset.mem_Icc.mpr ⟨hp.one_le, (Nat.le_floor_iff (by linarith)).mpr hpz⟩
-  · left
-    refine Finset.mem_filter.mpr ⟨Finset.mem_Icc.mpr hp_range, ?_⟩
-    intro q hq hqz
-    rw[hp.dvd_iff_eq (hq.ne_one)]
-    rintro rfl
-    exact hpz hqz
+  · exact Or.inr (Finset.mem_Icc.mpr ⟨hp.one_le, (Nat.le_floor_iff (by linarith)).mpr hpz⟩)
+  · exact Or.inl (Finset.mem_filter.mpr ⟨Finset.mem_Icc.mpr hp_range, fun q hq hqz => by
+      rw [hp.dvd_iff_eq hq.ne_one]; rintro rfl; exact hpz hqz⟩)
 
 theorem primesBetween_le_siftedSum_add :
     primesBetween x (x+y) ≤ (primeInterSieve x y z hz).siftedSum + z := by
@@ -154,38 +147,26 @@ theorem rem_eq (hx : 0 < x) (d : ℕ) (hd : d ≠ 0) :
   simp [primeInterSieve, if_neg hd]
 
 theorem natCeil_le_self_add_one (x : ℝ) (hx : 0 ≤ x) : Nat.ceil x ≤ x + 1 := by
-  trans Nat.floor x + 1
-  · norm_cast
-    exact Nat.ceil_le_floor_add_one x
-  gcongr
-  apply Nat.floor_le hx
+  calc (Nat.ceil x : ℝ) ≤ Nat.floor x + 1 := by exact_mod_cast Nat.ceil_le_floor_add_one x
+    _ ≤ x + 1 := by gcongr; exact Nat.floor_le hx
 
-theorem floor_approx (x : ℝ) (hx : 0 ≤ x) : ∃ C, |C| ≤ 1 ∧  ↑((Nat.floor x)) = x + C := by
-  use ↑(Nat.floor x) - x
-  constructor
-  · rw[abs_le]
-    constructor
-    · simp only [neg_le_sub_iff_le_add]
-      linarith [Nat.lt_floor_add_one x]
-    · simp only [tsub_le_iff_right]
-      linarith [Nat.floor_le hx]
-  · ring
+theorem floor_approx (x : ℝ) (hx : 0 ≤ x) : ∃ C, |C| ≤ 1 ∧  ↑((Nat.floor x)) = x + C :=
+  ⟨↑(Nat.floor x) - x, by
+    rw [abs_le]; constructor
+    · linarith [Nat.lt_floor_add_one x]
+    · linarith [Nat.floor_le hx],
+   by ring⟩
 
-theorem ceil_approx (x : ℝ) (hx : 0 ≤ x) : ∃ C, |C| ≤ 1 ∧  ↑((Nat.ceil x)) = x + C := by
-  use ↑(Nat.ceil x) - x
-  constructor
-  · rw[abs_le]
-    constructor
-    · simp only [neg_le_sub_iff_le_add]
-      linarith [Nat.le_ceil x]
-    · simp only [tsub_le_iff_right]
-      rw[add_comm]
-      exact natCeil_le_self_add_one x hx
-  · ring
+theorem ceil_approx (x : ℝ) (hx : 0 ≤ x) : ∃ C, |C| ≤ 1 ∧  ↑((Nat.ceil x)) = x + C :=
+  ⟨↑(Nat.ceil x) - x, by
+    rw [abs_le]; constructor
+    · linarith [Nat.le_ceil x]
+    · linarith [natCeil_le_self_add_one x hx],
+   by ring⟩
 
 theorem nat_div_approx (a b : ℕ) : ∃ C, |C| ≤ 1 ∧ ↑(a/b) = (a/b : ℝ) + C := by
-  rw[←Nat.floor_div_eq_div (K:=ℝ)]
-  apply floor_approx (a/b:ℝ) (by positivity)
+  rw [← Nat.floor_div_eq_div (K := ℝ)]
+  exact floor_approx _ (by positivity)
 
 theorem floor_div_approx (x : ℝ) (hx : 0 ≤ x) (d : ℕ) :
     ∃ C, |C| ≤ 2 ∧  ↑((Nat.floor x)/d) = x / d + C := by
@@ -193,17 +174,11 @@ theorem floor_div_approx (x : ℝ) (hx : 0 ≤ x) (d : ℕ) :
   · simp [hd]
   obtain ⟨C₁, hC₁_le, hC₁⟩ := nat_div_approx (Nat.floor x) d
   obtain ⟨C₂, hC₂_le, hC₂⟩ := floor_approx x hx
-  rw[hC₁, hC₂]
-  use  C₁ + C₂/d
-  refine ⟨?_, by ring⟩
-  have : |C₁ + C₂/d| ≤ |C₁| + |C₂/d| := abs_add_le C₁ (C₂ / ↑d)
-  have : |C₂/d| ≤ |C₂| := by
-    rw[abs_div]
-    apply div_le_self
-    · exact abs_nonneg C₂
-    · simp only [Nat.abs_cast, Nat.one_le_cast]
-      omega
-  linarith
+  refine ⟨C₁ + C₂/d, ?_, by rw [hC₁, hC₂]; ring⟩
+  have hC₂d : |C₂/d| ≤ |C₂| := by
+    rw [abs_div]; apply div_le_self (abs_nonneg _)
+    simp only [Nat.abs_cast, Nat.one_le_cast]; omega
+  linarith [abs_add_le C₁ (C₂ / ↑d)]
 
 theorem abs_rem_le (hx : 0 < x) (hy : 0 < y) {d : ℕ} (hd : d ≠ 0) :
     |(primeInterSieve x y z hz).rem d| ≤ 5 := by
@@ -223,28 +198,20 @@ theorem abs_rem_le (hx : 0 < x) (hy : 0 < y) {d : ℕ} (hd : d ≠ 0) :
   obtain ⟨C₁, hC₁_le, hC₁⟩ := floor_div_approx (x + y) (by linarith) d
   obtain ⟨C₂, hC₂_le, hC₂⟩ := nat_div_approx (Nat.ceil x - 1) d
   obtain ⟨C₃, hC₃_le, hC₃⟩ := ceil_approx (x) (by linarith)
-  rw[hC₁, hC₂, Nat.cast_sub, hC₃]
+  rw [hC₁, hC₂, Nat.cast_sub, hC₃]
   · ring_nf
-    have hinv : |(d:ℝ)⁻¹| ≤ 1 := by
-      rw[abs_inv]
-      simp only [Nat.abs_cast]
-      apply Nat.cast_inv_le_one
-    have hmul : |(↑d)⁻¹*C₃| ≤ |C₃| := by
-      rw[inv_mul_eq_div, abs_div]
-      apply div_le_self
-      · exact abs_nonneg _
-      · simp only [Nat.abs_cast, Nat.one_le_cast]
-        omega
-    calc
-      |(↑d)⁻¹ - (↑d)⁻¹ * C₃ + C₁ - C₂|
-          = |(↑d)⁻¹ - (↑d)⁻¹ * C₃ + (C₁ - C₂)| := by ring_nf
-      _ ≤ |(↑d)⁻¹ - (↑d)⁻¹*C₃| + |C₁ - C₂| := abs_add_le _ _
-      _ ≤ (|(↑d)⁻¹| + |(↑d)⁻¹*C₃|) + (|C₁| + |C₂|) := by
-        exact add_le_add (abs_sub _ _) (abs_sub _ _)
+    have hmul : |(↑d)⁻¹ * C₃| ≤ |C₃| := by
+      rw [inv_mul_eq_div, abs_div]
+      exact div_le_self (abs_nonneg _) (by simp only [Nat.abs_cast, Nat.one_le_cast]; omega)
+    calc |(↑d)⁻¹ - (↑d)⁻¹ * C₃ + C₁ - C₂|
+        = |(↑d)⁻¹ - (↑d)⁻¹ * C₃ + (C₁ - C₂)| := by ring_nf
+      _ ≤ |(↑d)⁻¹ - (↑d)⁻¹ * C₃| + |C₁ - C₂| := abs_add_le _ _
+      _ ≤ (|(↑d)⁻¹| + |(↑d)⁻¹ * C₃|) + (|C₁| + |C₂|) :=
+          add_le_add (abs_sub _ _) (abs_sub _ _)
       _ ≤ (1 + |C₃|) + (2 + 1) := by
-        gcongr
-      _ ≤ 5 := by
-        linarith
+          gcongr
+          rw [abs_inv]; simp [Nat.cast_inv_le_one]
+      _ ≤ 5 := by linarith
   · simp [hx]
 
 end Remainder
@@ -280,12 +247,8 @@ theorem _root_.BrunTitchmarsh.siftedSum_le (hx : 0 < x) (hy : 0 < y) (hz : 1 < z
 
 theorem _root_.BrunTitchmarsh.primesBetween_le (hx : 0 < x) (hy : 0 < y) (hz : 1 < z) :
     primesBetween x (x+y) ≤ 2 * y / Real.log z + 6 * z * (1+Real.log z)^3 := by
-  have : z ≤ z * (1+Real.log z)^3 := by
-    apply le_mul_of_one_le_right
-    · linarith
-    apply one_le_pow₀
-    linarith [Real.log_nonneg (by linarith)]
-  linarith [siftedSum_le x y z hx hy hz,
-    primesBetween_le_siftedSum_add x y z (le_of_lt hz)]
+  have hzpow : z ≤ z * (1+Real.log z)^3 :=
+    le_mul_of_one_le_right (by linarith) (one_le_pow₀ (by linarith [Real.log_nonneg (by linarith)]))
+  linarith [siftedSum_le x y z hx hy hz, primesBetween_le_siftedSum_add x y z (le_of_lt hz)]
 
 end BrunTitchmarsh
