@@ -1253,3 +1253,33 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: ringofintegersproject
+    title: Certifying rings of integers in number fields
+    summary: Formalizes a Lean framework for certifying computations of rings of integers of number fields, including resultants, discriminants, and irreducibility tests, with verified LMFDB integral-basis entries.
+    branch: algebraic number theory
+    entry_module: LeanPool.RingOfIntegersProject
+    authors:
+      - Anne Baanen
+      - Alex J. Best
+      - Nirvana Coppola
+      - Sander R. Dahmen
+    source:
+      url: https://github.com/alainchmt/RingOfIntegersProject
+      github_repo: alainchmt/RingOfIntegersProject
+    status: verified
+    main_declarations:
+      - pMaximal_of_MaximalOrderCertificateLists
+      - pMaximal_of_MaximalOrderCertificateOfUnramifiedLists
+    main_results:
+      - declaration: pMaximal_of_MaximalOrderCertificateLists
+        informal: Certifies p-maximality of an order from a list-encoded maximal-order certificate.
+      - declaration: pMaximal_of_MaximalOrderCertificateOfUnramifiedLists
+        informal: Certifies p-maximality of an order in the unramified case from a list-encoded certificate.
+    tags:
+      - algebraic-number-theory
+      - rings-of-integers
+      - number-fields
+      - formal-verification
+    msc:
+      - "11R04"
+      - "11Y40"
