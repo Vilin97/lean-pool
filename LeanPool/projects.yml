@@ -1253,3 +1253,32 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: rupert
+    title: The Rupert Problem for convex polyhedra
+    summary: Formalizes the Rupert property for the cube, the regular tetrahedron, and the triakis tetrahedron, exhibiting for each an explicit straight-through hole admitting a congruent copy.
+    branch: convex geometry
+    entry_module: LeanPool.Rupert
+    authors:
+      - David Renshaw
+    source:
+      url: https://github.com/dwrensha/Rupert.lean
+      github_repo: dwrensha/Rupert.lean
+    status: verified
+    main_declarations:
+      - Cube.rupert
+      - Tetrahedron.rupert
+      - TriakisTetrahedron.rupert
+    main_results:
+      - declaration: Cube.rupert
+        informal: Proves that the cube has the Rupert property.
+      - declaration: Tetrahedron.rupert
+        informal: Proves that the regular tetrahedron has the Rupert property.
+      - declaration: TriakisTetrahedron.rupert
+        informal: Proves that the triakis tetrahedron has the Rupert property.
+    tags:
+      - convex-geometry
+      - polyhedra
+      - rupert-problem
+    msc:
+      - "52B10"
+      - "52A15"
