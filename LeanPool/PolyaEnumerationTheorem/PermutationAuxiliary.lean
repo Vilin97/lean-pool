@@ -187,21 +187,19 @@ private def contractFwd (f : Equiv.Perm (Fin (n + 1))) (i : Fin n) : Fin n :=
 
 private lemma contractFwd_pos (f : Equiv.Perm (Fin (n + 1))) (i : Fin n)
     (h : (f (liftFin i)).1 = n) :
-    contractFwd f i = ⟨(f (f (liftFin i))).1, perm_perm_val_lt_of_perm_val_eq h⟩ := by
-  unfold contractFwd; exact dif_pos h
+    contractFwd f i = ⟨(f (f (liftFin i))).1, perm_perm_val_lt_of_perm_val_eq h⟩ :=
+  dif_pos h
 
 private lemma contractFwd_neg (f : Equiv.Perm (Fin (n + 1))) (i : Fin n)
     (h : (f (liftFin i)).1 ≠ n) :
-    contractFwd f i = ⟨(f (liftFin i)).1, lt_of_lt_succ_of_neq (f (liftFin i)).2 h⟩ := by
-  unfold contractFwd; exact dif_neg h
+    contractFwd f i = ⟨(f (liftFin i)).1, lt_of_lt_succ_of_neq (f (liftFin i)).2 h⟩ :=
+  dif_neg h
 
 private lemma f_inv_apply_self (f : Equiv.Perm (Fin (n + 1))) (y : Fin (n + 1)) :
-    f⁻¹ (f y) = y := by
-  rw [← Equiv.Perm.mul_apply, inv_mul_cancel, Equiv.Perm.one_apply]
+    f⁻¹ (f y) = y := by simp
 
 private lemma f_apply_inv_self (f : Equiv.Perm (Fin (n + 1))) (y : Fin (n + 1)) :
-    f (f⁻¹ y) = y := by
-  rw [← Equiv.Perm.mul_apply, mul_inv_cancel, Equiv.Perm.one_apply]
+    f (f⁻¹ y) = y := by simp
 
 /-- A function that takes a permutation `f` of `Fin (n + 1)` and returns a permutation of `Fin n`
     that behaves exactly the same as `f` on all inputs except on `f⁻¹ n`, where it returns `f n`,
@@ -213,29 +211,20 @@ def permContract (f : Equiv.Perm (Fin (n + 1))) : Equiv.Perm (Fin n) where
     intro i
     apply Fin.ext
     by_cases h1 : (f (liftFin i)).1 = n
-    · -- case h1 = true
-      rw [contractFwd_pos f i h1]
-      -- liftFin of ⟨(f (f (liftFin i))).1, _⟩ equals f (f (liftFin i))
+    · rw [contractFwd_pos f i h1]
       have hl : liftFin (⟨(f (f (liftFin i))).1, perm_perm_val_lt_of_perm_val_eq h1⟩ : Fin n)
           = f (f (liftFin i)) := liftFin_of_lt _
-      -- Condition for contractFwd f⁻¹: (f⁻¹ (liftFin _)).1 = n?
-      -- f⁻¹ (f (f (liftFin i))) = f (liftFin i). Its .1 = h1 = n.
       have h2 : (f⁻¹ (liftFin (⟨(f (f (liftFin i))).1,
           perm_perm_val_lt_of_perm_val_eq h1⟩ : Fin n))).1 = n := by
         rw [hl, f_inv_apply_self]; exact h1
       rw [contractFwd_pos f⁻¹ _ h2]
-      -- Now goal: (f⁻¹ (f⁻¹ (liftFin _))).1 = i.1
       simp only
       rw [hl, f_inv_apply_self, f_inv_apply_self]
       rfl
-    · -- case h1 = false
-      rw [contractFwd_neg f i h1]
-      -- liftFin of ⟨(f (liftFin i)).1, _⟩ equals f (liftFin i)
+    · rw [contractFwd_neg f i h1]
       have hl : liftFin (⟨(f (liftFin i)).1,
           lt_of_lt_succ_of_neq (f (liftFin i)).2 h1⟩ : Fin n) = f (liftFin i) :=
         liftFin_of_lt _
-      -- Condition for contractFwd f⁻¹: (f⁻¹ (liftFin _)).1 = n?
-      -- f⁻¹ (f (liftFin i)) = liftFin i. Its .1 = i.1, which is < n.
       have h2 : (f⁻¹ (liftFin (⟨(f (liftFin i)).1,
           lt_of_lt_succ_of_neq (f (liftFin i)).2 h1⟩ : Fin n))).1 ≠ n := by
         rw [hl, f_inv_apply_self, liftFin_val]
@@ -277,18 +266,16 @@ private def expandFwd (f : Equiv.Perm (Fin n)) (i : Fin (n + 1)) : Fin (n + 1) :
   else liftFin (f ⟨i.1, lt_of_lt_succ_of_neq i.2 h⟩)
 
 private lemma expandFwd_pos (f : Equiv.Perm (Fin n)) (i : Fin (n + 1)) (h : i.1 = n) :
-    expandFwd f i = ⟨n, Nat.lt_succ_self n⟩ := by
-  unfold expandFwd; exact dif_pos h
+    expandFwd f i = ⟨n, Nat.lt_succ_self n⟩ :=
+  dif_pos h
 
 private lemma expandFwd_neg (f : Equiv.Perm (Fin n)) (i : Fin (n + 1)) (h : i.1 ≠ n) :
-    expandFwd f i = liftFin (f ⟨i.1, lt_of_lt_succ_of_neq i.2 h⟩) := by
-  unfold expandFwd; exact dif_neg h
+    expandFwd f i = liftFin (f ⟨i.1, lt_of_lt_succ_of_neq i.2 h⟩) :=
+  dif_neg h
 
-private lemma f_inv_apply_self' (f : Equiv.Perm (Fin n)) (y : Fin n) : f⁻¹ (f y) = y := by
-  rw [← Equiv.Perm.mul_apply, inv_mul_cancel, Equiv.Perm.one_apply]
+private lemma f_inv_apply_self' (f : Equiv.Perm (Fin n)) (y : Fin n) : f⁻¹ (f y) = y := by simp
 
-private lemma f_apply_inv_self' (f : Equiv.Perm (Fin n)) (y : Fin n) : f (f⁻¹ y) = y := by
-  rw [← Equiv.Perm.mul_apply, mul_inv_cancel, Equiv.Perm.one_apply]
+private lemma f_apply_inv_self' (f : Equiv.Perm (Fin n)) (y : Fin n) : f (f⁻¹ y) = y := by simp
 
 /-- A function that takes a permutation `f` of `Fin n` and returns a permutation of `Fin (n + 1)`
     that behaves exactly the same as `f` on all inputs except on `n`, where it returns `n`. -/
@@ -299,21 +286,12 @@ def permExpand (f : Equiv.Perm (Fin n)) : Equiv.Perm (Fin (n + 1)) where
     intro x
     apply Fin.ext
     by_cases h1 : x.1 = n
-    · -- x.1 = n
-      rw [expandFwd_pos f x h1]
-      -- Now compute expandFwd f⁻¹ ⟨n, _⟩
-      have h2 : (⟨n, Nat.lt_succ_self n⟩ : Fin (n + 1)).1 = n := rfl
-      rw [expandFwd_pos f⁻¹ _ h2]
+    · rw [expandFwd_pos f x h1, expandFwd_pos f⁻¹ _ rfl]
       exact h1.symm
     · rw [expandFwd_neg f x h1]
-      -- expandFwd f⁻¹ (liftFin (f ⟨x.1, _⟩))
       have h2 : (liftFin (f ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).1 ≠ n := by
-        rw [liftFin_val]
-        exact Nat.ne_of_lt (f _).2
-      rw [expandFwd_neg f⁻¹ _ h2]
-      rw [liftFin_val]
-      -- Goal: (f⁻¹ ⟨(liftFin (f _)).1, _⟩).1 = x.1
-      -- Use that ⟨(liftFin (f _)).1, _⟩ = f ⟨x.1, _⟩ via Fin.ext
+        rw [liftFin_val]; exact Nat.ne_of_lt (f _).2
+      rw [expandFwd_neg f⁻¹ _ h2, liftFin_val]
       have he : (⟨(liftFin (f ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).1,
           lt_of_lt_succ_of_neq (liftFin (f ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).2 h2⟩ : Fin n)
           = f ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩ := Fin.ext rfl
@@ -322,16 +300,12 @@ def permExpand (f : Equiv.Perm (Fin n)) : Equiv.Perm (Fin (n + 1)) where
     intro x
     apply Fin.ext
     by_cases h1 : x.1 = n
-    · rw [expandFwd_pos f⁻¹ x h1]
-      have h2 : (⟨n, Nat.lt_succ_self n⟩ : Fin (n + 1)).1 = n := rfl
-      rw [expandFwd_pos f _ h2]
+    · rw [expandFwd_pos f⁻¹ x h1, expandFwd_pos f _ rfl]
       exact h1.symm
     · rw [expandFwd_neg f⁻¹ x h1]
       have h2 : (liftFin (f⁻¹ ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).1 ≠ n := by
-        rw [liftFin_val]
-        exact Nat.ne_of_lt (f⁻¹ _).2
-      rw [expandFwd_neg f _ h2]
-      rw [liftFin_val]
+        rw [liftFin_val]; exact Nat.ne_of_lt (f⁻¹ _).2
+      rw [expandFwd_neg f _ h2, liftFin_val]
       have he : (⟨(liftFin (f⁻¹ ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).1,
           lt_of_lt_succ_of_neq (liftFin (f⁻¹ ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩)).2 h2⟩ : Fin n)
           = f⁻¹ ⟨x.1, lt_of_lt_succ_of_neq x.2 h1⟩ := Fin.ext rfl

@@ -206,15 +206,8 @@ def fixedBy_coloring_of_cycle_coloring (g : G) (f : (CyclesOfGroup X g) → Y) :
 def equiv_of_fixedBy_coloring_of_cycle_coloring (g : G) :
     (CyclesOfGroup X g → Y) ≃ (MulAction.fixedBy (X → Y) g) :=
   ⟨fixedBy_coloring_of_cycle_coloring g, cycle_coloring_of_fixedBy_coloring g,
-  by
-    intro f
-    ext x
-    rcases Quotient.mk_surjective x with ⟨y, hy⟩
-    rw [← hy]
-    rfl,
-  by
-    intro _
-    rfl⟩
+  fun f => funext (Quotient.ind fun _ => rfl),
+  fun _ => rfl⟩
 
 /-- For any `g : G` we have: the number of colors raised to the power of the number of cycles of
     `g` is equal to the number of colorings that are fixed by `g`. -/
@@ -274,9 +267,7 @@ theorem numDistinctColorings_mul_card_group_eq_sum_numGroupOfNumCycles_mul_card_
         ∑ i : Fin (Fintype.card X + 1), ∑ _ ∈ {g : G | numCyclesOfGroup X g = i},
           (Fintype.card Y) ^ i.1 := by
       rw [← Finset.sum_fiberwise _ (fun g ↦ (⟨numCyclesOfGroup X g,
-        by
-          apply Order.lt_add_one_iff.2
-          apply Fintype.card_quotient_le⟩
+        Order.lt_add_one_iff.2 (Fintype.card_quotient_le ..)⟩
         : Fin (Fintype.card X + 1))) _]
       congr
       ext

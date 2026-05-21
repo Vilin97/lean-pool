@@ -66,11 +66,8 @@ lemma birkhoffMax_measurable [MeasurableSpace α]
       unfold birkhoffMax
       measurability
   | succ n hn =>
-    have hsucc :
-        birkhoffMax f φ n.succ = φ + (0 ⊔ (birkhoffMax f φ n ∘ f)) := by
-      funext x
-      exact birkhoffMax_succ
-    rw [hsucc]
+    rw [show birkhoffMax f φ n.succ = φ + (0 ⊔ (birkhoffMax f φ n ∘ f)) from
+      funext fun x => birkhoffMax_succ]
     exact hφ.add (measurable_const.sup (hn.comp hf))
 
 open MeasureTheory Measure MeasurableSpace Filter Topology
@@ -192,12 +189,12 @@ lemma birkhoffAverage_tendsto_nonpos_of_not_mem_divergentSet
       norm_cast at M_is_bound
       /- use archimedian property of reals -/
       rcases Archimedean.arch M hε with ⟨N, hN⟩
-      have upperBound (n : ℕ) (hn : N ≤ n) : birkhoffAverage ℝ f φ (n + 1) x < ε
-      · have : M < (n + 1) • ε
-        · exact hN.trans_lt <| smul_lt_smul_of_pos_right (Nat.lt_succ_of_le hn) hε
-        · rw [nsmul_eq_mul] at this
-          exact (inv_smul_lt_iff_of_pos (Nat.cast_pos.mpr (Nat.zero_lt_succ n))).mpr
-            ((M_is_bound n).trans_lt this)
+      have upperBound (n : ℕ) (hn : N ≤ n) : birkhoffAverage ℝ f φ (n + 1) x < ε := by
+        have hMn : M < (n + 1) • ε :=
+          hN.trans_lt (smul_lt_smul_of_pos_right (Nat.lt_succ_of_le hn) hε)
+        rw [nsmul_eq_mul] at hMn
+        exact (inv_smul_lt_iff_of_pos (Nat.cast_pos.mpr (Nat.zero_lt_succ n))).mpr
+          ((M_is_bound n).trans_lt hMn)
       /- conclusion -/
       use N + 1
       intro n hn
@@ -339,8 +336,7 @@ theorem birkhoffErgodicTheorem_aux {ε : ℝ} (hε : 0 < ε) (hf : MeasurePreser
     _ =ᵐ[μ] _ - (_ + _) := (condExp_add integrable_condExp (integrable_const _) _).neg.add_left
     _ =ᵐ[μ] _ - (_ + _) := (condExp_condExp_of_le (le_of_eq rfl)
                             (invariants_le f)).add_right.neg.add_left
-    _ = - μ[fun _ ↦ ε | invariants f] := by simp
-    _ = - fun _ ↦ ε := by rw [condExp_const (invariants_le f)]
+    _ = - fun _ ↦ ε := by simp [condExp_const (invariants_le f)]
   have limsup_nonpos : ∀ᵐ x ∂μ, Tendsto (birkhoffAverage ℝ f ψ · x) atTop nonneg
   · suffices ∀ᵐ x ∂μ, invCondexp μ f ψ x < 0 from
       limsup_birkhoffAverage_nonpos_of_condexp_neg μ hf ψ_integrable ψ_measurable this
@@ -376,7 +372,7 @@ theorem birkhoffErgodicTheorem (hf : MeasurePreserving f μ μ) (hφ : Integrabl
     apply ae_all_iff.mpr
     rintro ⟨k, hk⟩
     let δ := (k : ℝ)⁻¹/2
-    have hδ : δ > 0 := by simpa [δ]
+    have hδ : δ > 0 := by positivity
     have p₁ := birkhoffErgodicTheorem_aux μ hδ hf hφ hφ'
     have p₂ := birkhoffErgodicTheorem_aux μ hδ hf hφ.neg hφ'.neg
     have : invCondexp μ f (-φ) =ᵐ[μ] -invCondexp μ f φ := condExp_neg _ _
@@ -414,19 +410,15 @@ theorem birkhoffErgodicTheorem' {Φ : α → ℝ} (hf : MeasurePreserving f μ �
     (hΦ : Integrable Φ μ) :
     ∀ᵐ x ∂μ,
       Tendsto (birkhoffAverage ℝ f Φ · x) atTop (𝓝 (invCondexp μ f Φ x)) := by
-  -- Take `φ` as the measurable approximation to the ae measurable `Φ`.
   let φ := hΦ.left.mk
   have hφ' : Measurable φ := hΦ.left.measurable_mk
   have hΦ' : Φ =ᵐ[μ] φ := hΦ.left.ae_eq_mk
   have hφ : Integrable φ μ := (integrable_congr hΦ.left.ae_eq_mk).mp hΦ
-  -- Obtain a full measure set such that the three relevant results hold.
   obtain ⟨s, hs, hs'⟩ : ∃ s ∈ ae μ, Set.EqOn (invCondexp μ f Φ) (invCondexp μ f φ) s :=
     eventuallyEq_iff_exists_mem.mp <| condExp_congr_ae hΦ'
   obtain ⟨t, ht, ht'⟩ := eventually_iff_exists_mem.mp <| birkhoffErgodicTheorem μ hf hφ hφ'
-  have := ae_all_iff.mpr <|
-    hf.quasiMeasurePreserving.birkhoffAverage_ae_eq_of_ae_eq ℝ hΦ'
-  obtain ⟨u, hu, hu'⟩ := eventually_iff_exists_mem.mp this
-  -- Apply the three results on the chosen set.
+  obtain ⟨u, hu, hu'⟩ := eventually_iff_exists_mem.mp (ae_all_iff.mpr <|
+    hf.quasiMeasurePreserving.birkhoffAverage_ae_eq_of_ae_eq ℝ hΦ')
   refine eventually_iff_exists_mem.mpr
     ⟨s ∩ t ∩ u, inter_mem (inter_mem hs ht) hu, fun y hy ↦ ?_⟩
   simp [hs' hy.1.1, ht' y hy.1.2, hu' y hy.2]

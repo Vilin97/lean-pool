@@ -71,8 +71,7 @@ lemma card_projectivization_minus_point (n : ℕ) (α : Projectivization F (Fin 
   have hPq : P * (q - 1) = q ^ (n + 1) - 1 := by omega
   have h_eq : q ^ (n + 1) - q = (P - 1) * (q - 1) := by
     rw [Nat.sub_mul, one_mul]; omega
-  have hdvd : (q - 1) ∣ (q ^ (n + 1) - q) := ⟨P - 1, by rw [mul_comm]; exact h_eq⟩
-  rw [eq_comm, Nat.div_eq_iff_eq_mul_left hqsub hdvd]
+  rw [eq_comm, Nat.div_eq_iff_eq_mul_left hqsub ⟨P - 1, by rw [mul_comm]; exact h_eq⟩]
   exact h_eq
 
 /-- The cardinality of `P^n(F)` in the form used by the sharpness example. -/
@@ -547,9 +546,7 @@ theorem remark_example (n : ℕ) (hn : n > 0) :
       exact hx (f i) ⟨i, rfl⟩
     · intro hx y hy
       rcases hy with ⟨i, rfl⟩
-      have hx0 : x = 0 := by
-        simpa using hx
-      simp [hx0, f]
+      simp [show x = 0 from by simpa using hx, f]
   · intro g hg
     have hcoeff :
         ∀ j : Fin (n - 1), ∃ c : Fin n → F,
@@ -578,8 +575,8 @@ theorem remark_example (n : ℕ) (hn : n > 0) :
       have hcomponent := congr_fun hvzero j
       simpa [A, Matrix.mulVec, dotProduct, Finset.mul_sum, mul_assoc, mul_left_comm, mul_comm]
         using congrArg (fun z => a * z) hcomponent
-    have hline_card : (Set.range line).ncard = Nat.card F := by
-      exact Set.ncard_range_of_injective (fun a b h => smul_left_injective F hvne h)
+    have hline_card : (Set.range line).ncard = Nat.card F :=
+      Set.ncard_range_of_injective (fun a b h => smul_left_injective F hvne h)
     calc
       Fintype.card F = Nat.card F := by rw [Nat.card_eq_fintype_card]
       _ = (Set.range line).ncard := hline_card.symm
