@@ -277,12 +277,7 @@ lemma tripleAt_strictMono : StrictMono tripleAt := by
   simp only [tripleAt, Prod.mk_lt_mk, lt_self_iff_false, Prod.mk_le_mk, tsub_le_iff_right,
     false_and, le_refl, true_and, false_or]
   right
-  constructor
-  · rw [mul_add_one, pow_add]
-    omega
-  · gcongr
-    · simp
-    · simp
+  exact ⟨by rw [mul_add_one, pow_add]; omega, by gcongr <;> simp⟩
 
 lemma abcExceptions_zero_infinite : (abcExceptions 0).Infinite :=
   ((Set.Ioi_infinite 0).image tripleAt_strictMono.injective.injOn).mono
@@ -356,9 +351,8 @@ private theorem mem_indexSet (ε : ℝ) (X : ℕ) (i j k n : ℕ) :
   norm_cast
   aesop
 
-theorem Nat.Coprime.isRelPrime (a b : ℕ) (h : a.Coprime b) : IsRelPrime a b := by
-  rw [← Nat.coprime_iff_isRelPrime]
-  exact h
+theorem Nat.Coprime.isRelPrime (a b : ℕ) (h : a.Coprime b) : IsRelPrime a b :=
+  Nat.coprime_iff_isRelPrime.mp h
 
 theorem Finset.abcExceptionsBelow_subset_union_dyadicPoints (ε : ℝ) (X : ℕ) :
     Finset.abcExceptionsBelow ε X ⊆
@@ -426,13 +420,8 @@ theorem Finset.abcExceptionsBelow_subset_union_dyadicPoints (ε : ℝ) (X : ℕ)
     Nat.mul_le_mul_left 2 (Nat.pow_log_le_self 2 (show c ≠ 0 by omega))
 
 theorem sum_le_card_mul_sup {ι : Type*} (f : ι → ℕ) (s : Finset ι) :
-    ∑ i ∈ s, f i ≤ s.card * s.sup f := calc
-  ∑ i ∈ s, f i ≤ ∑ i ∈ s, s.sup f := by
-    apply Finset.sum_le_sum
-    intro i hi
-    exact Finset.le_sup hi
-  _ = s.card * s.sup f := by
-    simp
+    ∑ i ∈ s, f i ≤ s.card * s.sup f :=
+  (Finset.sum_le_sum (fun i hi ↦ Finset.le_sup hi)).trans (by simp)
 
 theorem card_union_dyadicPoints_le_log_pow_mul_sup (ε : ℝ) (X : ℕ) :
     ((indexSet ε X).biUnion fun ⟨i, j, k, n⟩ ↦
@@ -538,23 +527,15 @@ theorem Nat.factorization_le_right (p n : ℕ) (hp : p.Prime) : n.factorization 
   induction n with
   | zero => simp
   | succ n ih =>
-    have : 1 ≤ p ^ n := by
-      apply Nat.one_le_pow
-      apply hp.pos
-    have : 2 ≤ p := hp.two_le
+    have h1 : 1 ≤ p ^ n := Nat.one_le_pow _ _ hp.pos
+    have h2 := hp.two_le
     rw [pow_succ]
-    calc _ ≤ p^n + p^n := by gcongr
-      _ = p^n * 2 := by ring
-      _ ≤ p^n * p := by gcongr
+    nlinarith
 
 theorem Nat.ceil_lt_floor (a b : ℝ) (ha : 0 ≤ a) (hab : a + 2 ≤ b) : ⌈a⌉₊ < ⌊b⌋₊ := by
   exact_mod_cast calc
-    ⌈a⌉₊ < a + 1 := by
-      exact ceil_lt_add_one ha
-    _ ≤ b - 1 := by
-      linarith
-    _ < ⌊b⌋₊ := by
-      exact sub_one_lt_floor b
+    ⌈a⌉₊ < a + 1 := ceil_lt_add_one ha
+    _ < ⌊b⌋₊ := by linarith [sub_one_lt_floor b]
 
 namespace NiceFactorization
 
@@ -616,16 +597,13 @@ private theorem prod_y_pow_eq_n_subset {s : Finset ℕ}
 private theorem prod_y_pow_eq_n : ∏ m ∈ Finset.Icc 1 d ∪ Finset.Ioc d n, y m ^ m = n := by
   apply prod_y_pow_eq_n_subset
   intro p hp hpn
-  simp only [Finset.mem_union, Finset.mem_Icc]
-  have : n.factorization p ≤ n := Nat.factorization_le_right p n hp
-  have : n.factorization p ≤ d ∨ d < n.factorization p := le_or_gt (n.factorization p) d
-  simp only [Finset.mem_Ioc]
-  have : 1 ≤ n.factorization p := by
+  simp only [Finset.mem_union, Finset.mem_Icc, Finset.mem_Ioc]
+  have hle := Nat.factorization_le_right p n hp
+  have hge : 1 ≤ n.factorization p := by
     rw [← hp.dvd_iff_one_le_factorization]
     · exact hpn
-    · have := h1n
-      omega
-  tauto
+    · have := h1n; omega
+  omega
 
 private theorem p_dvd_y_iff (i : ℕ) (p : ℕ) (hp : p.Prime) : p ∣ y i → n.factorization p = i := by
   rw [y, Prime.dvd_finset_prod_iff hp.prime]
@@ -698,14 +676,9 @@ private theorem two_lt_K : 2 < K := by
 
 private theorem K_inv_le_eps : (K : ℝ)⁻¹ ≤ ε := by
   rw [inv_le_iff_one_le_mul₀]
-  · calc
-    1 = ε * ε⁻¹ := by
-      field_simp [hε_pos.ne.symm]
-    _ ≤ ε * K := by
-      have := hε_pos
-      gcongr
-      rw [K]
-      apply Nat.le_ceil
+  · have := hε_pos
+    calc 1 = ε * ε⁻¹ := by field_simp [hε_pos.ne.symm]
+      _ ≤ ε * K := by gcongr; rw [K]; apply Nat.le_ceil
   · simp [hK_pos]
 
 private theorem hd_pos : 0 < d := by
@@ -713,37 +686,24 @@ private theorem hd_pos : 0 < d := by
   nlinarith only [two_lt_eps_inv]
 
 private instance hd_ne_zero : NeZero d := by
-  simp_rw [neZero_iff]
-  apply ne_of_gt hd_pos
+  simp_rw [neZero_iff]; exact hd_pos.ne'
 
 private theorem hKd : K < d := by
-  have := two_lt_eps_inv
+  have := hε_pos
   simp_rw [K, hd]
   rw [Nat.lt_iff_add_one_le]
   apply Nat.ceil_lt_floor
   · positivity
-  nlinarith
+  nlinarith [two_lt_eps_inv]
 
 private theorem hK_div_d : (K / d : ℝ) ≤ ε := by
-  have := hε
   have := hε_pos
-  have := two_lt_eps_inv
   rw [div_le_iff₀ (mod_cast hd_pos)]
   simp only [K]
-  calc
-    _ ≤ ε⁻¹ + 1 := by
-      apply le_of_lt
-      apply Nat.ceil_lt_add_one
-      positivity
-    _ ≤ 5 / 2 * ε⁻¹ - ε := by
-      linarith
-    _ = ε * (5 / 2 * ε⁻¹ ^ 2 - 1) := by
-      field_simp [hε_pos.ne.symm]
-    _ ≤ _ := by
-      rw [hd]
-      gcongr
-      apply le_of_lt
-      apply Nat.sub_one_lt_floor
+  calc _ ≤ ε⁻¹ + 1 := (Nat.ceil_lt_add_one (by positivity)).le
+    _ ≤ 5 / 2 * ε⁻¹ - ε := by linarith [hε, two_lt_eps_inv]
+    _ = ε * (5 / 2 * ε⁻¹ ^ 2 - 1) := by field_simp [hε_pos.ne.symm]
+    _ ≤ _ := by rw [hd]; gcongr; exact (Nat.sub_one_lt_floor _).le
 
 /-- `x` in the proof of lemma 2.5 -/
 noncomputable def x (j : Fin d) : ℕ :=
@@ -760,10 +720,8 @@ theorem x_pos (j : Fin d) : 0 < x j := by
   · simp [hy_pos]
 
 private theorem x_pairwise_coprime (i j : Fin d) (hij : i ≠ j) : Nat.gcd (x i) (x j) = 1 := by
-  have hij' : i.val ≠ j.val := by
-    simp [Fin.val_inj, hij]
-  have hij'' : i.val + 1 ≠ j.val + 1 := by
-    simp [Fin.val_inj, hij]
+  have hij' : i.val ≠ j.val := Fin.val_inj.not.mpr hij
+  have hij'' : i.val + 1 ≠ j.val + 1 := by omega
   simp_rw [x]
   rw [← Nat.coprime_iff_gcd_eq_one]
   split_ifs with hik hjk
@@ -796,10 +754,8 @@ noncomputable def c : ℕ := ∏ m ∈ Finset.Ioc d n, y m ^ (m % K)
 private theorem c_pos : 0 < c := by
   rw [c]
   apply Finset.prod_pos
-  simp only [Finset.mem_Ioc, and_imp]
-  intro i _ _
-  apply pow_pos
-  exact hy_pos _
+  intro i _
+  apply pow_pos (hy_pos _)
 
 omit data in
 theorem nat_eq_fin_iff {n a : ℕ} {b : Fin n} [NeZero n] (ha : a < n) :
@@ -1124,31 +1080,19 @@ theorem exists_nice_factorization
     simpa [data] using h_le_rad
   have h_rad_le' : (radical n : ℕ) ≤ (X : ℝ) ^ ε * ∏ j, x j := by
     simpa [data] using h_rad_le
-  have hc_pos : 0 < c := by
-    have : 0 < n := by omega
-    apply Nat.pos_of_mul_pos_right (hn' ▸ this)
+  have hc_pos : 0 < c := Nat.pos_of_mul_pos_right (hn' ▸ (by omega : 0 < n))
   have x_le_X (i : Fin d) : x i ≤ X := by
     apply le_trans _ hnX
-    apply Nat.le_of_dvd
-    · omega
+    apply Nat.le_of_dvd (by omega)
     rw [hn']
     apply Dvd.dvd.mul_left
-    trans x i ^ (i.val + 1)
-    · apply dvd_pow (dvd_rfl)
-      omega
-    apply Finset.dvd_prod_of_mem
-    exact Finset.mem_univ i
+    exact (dvd_pow dvd_rfl (by omega)).trans (Finset.dvd_prod_of_mem _ (Finset.mem_univ i))
   have hx_pos (i : Fin d) : 0 < x i := by
     apply Nat.pos_of_ne_zero
     intro h
-    have hprod : (∏ j : Fin d, x j ^ (j.val + 1)) = 0 := by
-      apply Finset.prod_eq_zero (Finset.mem_univ i)
-      simp [h]
-    have hn_zero : n = 0 := by
-      calc
-        n = c * (∏ j : Fin d, x j ^ (j.val + 1)) := hn'
-        _ = c * 0 := by rw [hprod]
-        _ = 0 := by rw [mul_zero]
+    have : n = 0 := by
+      rw [hn', mul_eq_zero]
+      exact Or.inr (Finset.prod_eq_zero (Finset.mem_univ i) (by simp [h]))
     omega
   exact ⟨x, c, hn', hc', hcop', h_le_rad', h_rad_le', hc_pos, hx_pos, x_le_X⟩
 
@@ -1252,12 +1196,9 @@ noncomputable def BUnion (α β γ : ℝ) {d : ℕ} (x : ℕ) (ε : ℝ) :
 theorem similar_pow_log {x : ℕ} (hx : 0 < x) : x ~ 2 ^ Nat.log 2 x := by
   simp only [similar, Set.mem_Icc]
   norm_cast
-  constructor
-  · refine Nat.pow_log_le_self 2 hx.ne.symm
-  · rw [mul_comm, ← Nat.pow_succ]
-    apply le_of_lt
-    refine Nat.lt_pow_succ_log_self ?_ x
-    norm_num
+  refine ⟨Nat.pow_log_le_self 2 hx.ne.symm, ?_⟩
+  rw [mul_comm, ← Nat.pow_succ]
+  exact (Nat.lt_pow_succ_log_self (by norm_num) x).le
 
 theorem coprime_mul_prod_aux {ι : Type*} {s : Finset ι} {f g u v : ι → ℕ} {a b : ℕ}
     (hu : ∀ i, 0 < u i) (hv : ∀ i, 0 < v i)
@@ -1424,9 +1365,7 @@ theorem refinedCountTriplesStar_le_card_BUnion (α β γ : ℝ) {d : ℕ} (x : �
     refinedCountTriplesStar α β γ x ≤ (BUnion α β γ x ε (d := d)).card := by
   rw [refinedCountTriplesStar]
   apply Finset.card_le_card_of_surjOn _ (B_to_triple_surjOn ..)
-  · exact hε_pos
-  · exact hε
-  · exact hd
+  all_goals assumption
 
 section Asymptotics
 /- TODO: The results in this section should probably be cleaned up - in the end we also lose a

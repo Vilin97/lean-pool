@@ -1168,9 +1168,7 @@ lemma GeometryBound.s21_application_basic
     exact this.1
 
 lemma min_le_half_add {x y : ℝ} : min x y ≤ (x + y) / 2 := by
-  rw [min_le_iff]
-  by_contra! h
-  exact lt_irrefl x (by linear_combination h.1 + h.2)
+  linarith [min_le_left x y, min_le_right x y]
 
 include ha hb hc h43bc htab in
 lemma case_2_subcase_1_subsubcase_1
