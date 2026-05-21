@@ -26,43 +26,39 @@ lemma isIsoIsEpi : {X Y : C} → (f : X ⟶ Y) →
       MorphismProperty.isomorphisms _ f → MorphismProperty.epimorphisms _ f := by
   intro X Y f hf
   simp at hf
-  exact {left_cancellation := by exact (IsIso.epi_of_iso f).left_cancellation}
+  exact {left_cancellation := (IsIso.epi_of_iso f).left_cancellation}
 
 
 /- Iso ⊆ Epi -/
-lemma epimorphismsContainsIsos : contains_isos (MorphismProperty.epimorphisms C) := by
-    intro X Y isof
-    exact isIsoIsEpi isof.hom (Iso.isIso_hom isof)
+lemma epimorphismsContainsIsos : contains_isos (MorphismProperty.epimorphisms C) := fun _ _ isof =>
+  isIsoIsEpi isof.hom (Iso.isIso_hom isof)
 
 /- Epimorphisms are closed under composition -/
 lemma epimorphismsClosedUnderComp : is_closed_comp (MorphismProperty.epimorphisms C) where
-    precomp := by exact epi_comp
+    precomp := epi_comp
     postcomp := by
-        intro _ _ _ f hf g hg
-        simp at hf
-        simp at hg
-        exact epi_comp g f
+      intro _ _ _ f hf g hg
+      simp at hf hg
+      exact epi_comp g f
 
 /- Every iso is a mono -/
 lemma isIsoIsMono : {X Y : C} → (f : X ⟶ Y) →
         MorphismProperty.isomorphisms _ f → MorphismProperty.monomorphisms _ f := by
     intro X Y f hf
     simp at hf
-    exact {right_cancellation := by exact (IsIso.mono_of_iso f).right_cancellation}
+    exact {right_cancellation := (IsIso.mono_of_iso f).right_cancellation}
 
 /- Mono ⊆ Iso -/
-lemma monomorphismsContainsIsos : contains_isos (MorphismProperty.monomorphisms C) := by
-    intro X Y isof
-    exact isIsoIsMono isof.hom (Iso.isIso_hom isof)
+lemma monomorphismsContainsIsos : contains_isos (MorphismProperty.monomorphisms C) :=
+  fun _ _ isof => isIsoIsMono isof.hom (Iso.isIso_hom isof)
 
 /- Monomorphisms are closed under composition -/
 lemma monomorphismsClosedUnderComp : is_closed_comp (MorphismProperty.monomorphisms C) where
-    precomp := by exact mono_comp
+    precomp := mono_comp
     postcomp := by
-        intro _ _ _ f hf g hg
-        simp at hf
-        simp at hg
-        exact mono_comp g f
+      intro _ _ _ f hf g hg
+      simp at hf hg
+      exact mono_comp g f
 
 /- The image of a function of sets -/
 /-- Imported FactorizationSystems declaration. -/

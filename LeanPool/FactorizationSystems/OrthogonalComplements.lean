@@ -98,7 +98,7 @@ def source_limit_cone_arrow_limit_cone {J : Type u} [Category.{v} J] (f : J ⥤ 
                 congrArg (fun h => h ≫ (f.obj j).hom) (p j)
         have uniq' := Cf.isLimit.uniq (cone_source_triv_cone_arrow f s) m_triv p'
         calc
-          m = m_triv.left := by rfl
+          m = m_triv.left := rfl
           _ = (Cf.isLimit.lift (cone_source_triv_cone_arrow f s)).left := by
             exact congrArg (fun h : Arrow.mk (𝟙 s.pt) ⟶ Cf.cone.pt => h.left) uniq'
     }
@@ -171,7 +171,7 @@ def target_limit_cone_arrow_limit_cone {J : Type u} [Category.{v} J]
         have uniq' := Cf.isLimit.uniq (cone_target_triv_cone_arrow f s)
             (map_triv_map_arrow_target Cf.cone.pt s.pt m) p'
         calc
-          m = (map_triv_map_arrow_target Cf.cone.pt s.pt m).right := by rfl
+          m = (map_triv_map_arrow_target Cf.cone.pt s.pt m).right := rfl
           _ = (Cf.isLimit.lift (cone_target_triv_cone_arrow f s)).right := by
             exact congrArg (fun h : Arrow.mk (Limits.initial.to s.pt) ⟶ Cf.cone.pt => h.right)
               uniq'}
@@ -257,7 +257,7 @@ def cone_limit_is_closed_under_limits_r_ort_complement (W : MorphismProperty C) 
                 _ = sq_lim.top ≫ leftFunc.map (s.cone.π.app j) := by
                   exact congrArg (fun h : s.cone.pt ⟶ f.obj j => sq_lim.top ≫ leftFunc.map h)
                     naturality'
-            _ = sq_j.top := by rfl
+            _ = sq_j.top := rfl
           comm_bot := by calc
             ((m_ort_fi.diagonal sq_i).map ≫ (f.map α).left) ≫ (f.obj j).hom =
               ((m_ort_fi.diagonal sq_i).map ≫ (f.obj i).hom) ≫ (f.map α).right := by simp
@@ -275,7 +275,7 @@ def cone_limit_is_closed_under_limits_r_ort_complement (W : MorphismProperty C) 
                 _ = sq_lim.bot ≫ rightFunc.map (s.cone.π.app j) := by
                   exact congrArg (fun h : s.cone.pt ⟶ f.obj j => sq_lim.bot ≫ rightFunc.map h)
                     naturality'
-            _ = sq_j.bot := by rfl}
+            _ = sq_j.bot := rfl}
         apply (m_ort_fj.diagonal_unique sq_j) d d'}
   }
 
@@ -474,13 +474,13 @@ lemma is_closed_under_comp_r_ort_complement (W : MorphismProperty C) {X Y Z : C}
         map := d.map ≫ r
         comm_top := by calc
           l ≫ d.map ≫ r = S.top ≫ r := by rw [←d.comm_top]; simp
-          _ = a ≫ r := by rfl
+          _ = a ≫ r := rfl
         comm_bot := by have comm_bot' := d.comm_bot; aesop_cat}
       let D' : diagonal_filler S' := {
         map := d'.map ≫ r
         comm_top := by calc
           l ≫ d'.map ≫ r = S.top ≫ r := by rw [←d'.comm_top]; simp
-          _ = a ≫ r := by rfl
+          _ = a ≫ r := rfl
         comm_bot := by have comm_bot' := d'.comm_bot; aesop_cat}
       let eq : d.map ≫ r = d'.map ≫ r :=
         (hom_orthogonal_implies_orthogonal (hr' l hl)).diagonal_unique S' D D'
@@ -550,7 +550,7 @@ lemma is_closed_under_comp_l_ort_complement (W : MorphismProperty C) {D E F : C}
           _ = (l' ≫ d.map) ≫ r := by simp }
       let Δ : diagonal_filler S'' := {
         map := d.map
-        comm_top := by rfl
+        comm_top := rfl
         comm_bot := d.comm_bot }
       let Δ' : diagonal_filler S'' := {
         map := d'.map
@@ -589,7 +589,7 @@ lemma left_cancellation_r_ort_complement (W : MorphismProperty C) {X Y Z : C} (r
             comm_top := by calc
               l ≫ d.map ≫ r = (l ≫ d.map) ≫ r := by simp
               _ = S'.top ≫ r := by rw [d.comm_top]
-              _ = S''.top := by rfl
+              _ = S''.top := rfl
             comm_bot := by have comm_bot' := d.comm_bot; aesop_cat}
           let D' : diagonal_filler S'' := {
             map := S.bot
@@ -704,7 +704,7 @@ lemma contains_isos_left_ort_complement (R : MorphismProperty C) :
   intro A B f X Y g Rg
   apply orthogonal_implies_hom_orthogonal
   exact {
-    diagonal := fun S => by exact {
+    diagonal := fun S => {
       map := f.inv ≫ S.top
       comm_top := by have c := f.hom_inv_id; aesop_cat
       comm_bot := by calc
@@ -724,8 +724,7 @@ lemma contains_isos_right_ort_complement (L : MorphismProperty C) :
     intro X Y g A B f Lf
     apply orthogonal_implies_hom_orthogonal
     exact {
-      diagonal := fun S => by
-        exact {
+      diagonal := fun S => {
           map := S.bot ≫ g.inv
           comm_top := by calc
             f ≫ S.bot ≫ g.inv = (f ≫ S.bot) ≫ g.inv := by simp

@@ -32,7 +32,7 @@ lemma is_replete_left_class
   let i' := i.symm
   have eq : l' = i'.hom ≫ l ≫ j.hom := by calc
     l' = i.inv ≫ i.hom ≫ l' := by simp
-    _ = i'.hom ≫ i.hom ≫ l' := by rfl
+    _ = i'.hom ≫ i.hom ≫ l' := rfl
     _ = i'.hom ≫ l ≫ j.hom := by rw [c]
   rw [ eq ]
   apply  F.is_closed_comp_left_class.precomp
@@ -48,7 +48,7 @@ lemma is_replete_right_class
   let i' := i.symm
   have eq : r' = i'.hom ≫ r ≫ j.hom := by calc
     r' = i.inv ≫ i.hom ≫ r' := by simp
-    _ = i'.hom ≫ i.hom ≫ r' := by rfl
+    _ = i'.hom ≫ i.hom ≫ r' := rfl
     _ = i'.hom ≫ r ≫ j.hom := by rw [c]
   rw [ eq ]
   apply  F.is_closed_comp_right_class.precomp
@@ -226,7 +226,7 @@ lemma FactorizationSystem_diagonal_canonicity
       _ = K.fst.inv ≫ (K.fst.hom ≫ F.right_map d.map) := by simp
       _ = K.fst.inv ≫ F.right_map S.top := by rw [K.snd.right]
     _ = F.left_map S.bot ≫ (K'.fst ≪≫ K.fst.symm).hom ≫ F.right_map S.top := by simp
-    _ = F.left_map S.bot ≫ kk.hom ≫ F.right_map S.top := by rfl
+    _ = F.left_map S.bot ≫ kk.hom ≫ F.right_map S.top := rfl
     _ = F.left_map S.bot ≫ ii.hom ≫ F.right_map S.top := by rw [ uniq ]
     _ = (FactorizationSystem_diagonal F l hl r hr S).map := by aesop_cat
 

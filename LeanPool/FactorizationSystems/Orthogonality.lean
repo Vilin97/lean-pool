@@ -369,7 +369,7 @@ lemma orthogonal_implies_hom_orthogonal :
         _ = Limits.pullback.snd (hom_square_right l r) (hom_square_bot l r) (j δ) := by aesop_cat
         _ = (Limits.pullback.lift (hom_square l r).top (hom_square l r).left
             homSquareComm ≫
-            Limits.pullback.snd (hom_square l r).right (hom_square l r).bot) δ := by rfl
+            Limits.pullback.snd (hom_square l r).right (hom_square l r).bot) δ := rfl
         _ = (hom_square l r).left δ := by rw [comm_snd]
       comm_bot := by calc
         i (j δ) ≫ r = (hom_cospan_pullback_to_square_completion l r (j δ)).bot :=
@@ -377,13 +377,13 @@ lemma orthogonal_implies_hom_orthogonal :
         _ = Limits.pullback.fst (hom_square_right l r) (hom_square_bot l r) (j δ) := by aesop_cat
         _ = (Limits.pullback.lift (hom_square l r).top (hom_square l r).left
             homSquareComm ≫
-            Limits.pullback.fst (hom_square l r).right (hom_square l r).bot) δ := by rfl
+            Limits.pullback.fst (hom_square l r).right (hom_square l r).bot) δ := rfl
         _ = (hom_square l r).top δ := by rw [comm_fst]
       }
     calc
-      i (j δ) = Δ'.map := by rfl
+      i (j δ) = Δ'.map := rfl
       _ = Δ.map := by rw [← u _ Δ Δ']
-      _ = δ := by rfl
+      _ = δ := rfl
   · apply Limits.pullback.hom_ext
     · rw [Category.assoc, Limits.pullback.lift_fst]
       ext x
@@ -393,7 +393,7 @@ lemma orthogonal_implies_hom_orthogonal :
         (δ ≫ (hom_square l r).top) x = (δ x) ≫ r := rfl
         _ = (hom_cospan_pullback_to_square_completion l r x).bot :=
           hom_cospan_pullback_to_diagonal_filler_map_comm_bot l r ⟨d,u⟩ x
-        _ = g := by rfl
+        _ = g := rfl
     · rw [Category.assoc, Limits.pullback.lift_snd]
       ext x
       let f := Limits.pullback.snd (hom_square l r).right (hom_square l r).bot x
@@ -402,7 +402,7 @@ lemma orthogonal_implies_hom_orthogonal :
         (δ ≫ (hom_square l r).left) x = l ≫ (δ x) := rfl
         _ = (hom_cospan_pullback_to_square_completion l r x).top :=
           hom_cospan_pullback_to_diagonal_filler_map_comm_top l r ⟨d,u⟩ x
-        _ = f := by rfl
+        _ = f := rfl
 
 /- We now start working towards the proof of the implication in the other direction -/
 
@@ -556,7 +556,7 @@ lemma hom_orthogonal_aux_fac_left
     (Limits.pullback.isLimit (hom_square l r).right (hom_square l r).bot).lift s
   calc
     hom_orthogonal_aux_lift l r h s ≫ diagonals_cone_fst l r =
-    lift ≫ (hom_orthogonal_aux_inv l r h ≫ diagonals_cone_fst l r) := by rfl
+    lift ≫ (hom_orthogonal_aux_inv l r h ≫ diagonals_cone_fst l r) := rfl
     _ = lift ≫ hom_cospan_pullback_fst l r := by
       have triangle_comm :
         (diagonals_hom_cospan_pullback_lift l r) ≫ hom_cospan_pullback_fst l r =
@@ -570,7 +570,7 @@ lemma hom_orthogonal_aux_fac_left
         _ = (hom_orthogonal_aux_inv l r h ≫ diagonals_hom_cospan_pullback_lift l r) ≫
           hom_cospan_pullback_fst l r := by aesop_cat
         _ = (hom_orthogonal_aux_inv l r h ≫ hom_orthogonal_aux_hom l r h) ≫
-          hom_cospan_pullback_fst l r := by rfl
+          hom_cospan_pullback_fst l r := rfl
         _ = hom_cospan_pullback_fst l r := by rw [hom_orthogonal_aux_inv_hom_id l r h]; simp
     _ = s.fst := (hom_pullback_cone_isLimit l r).fac s Limits.WalkingCospan.left
 
@@ -583,7 +583,7 @@ lemma hom_orthogonal_aux_fac_right
     (Limits.pullback.isLimit (hom_square l r).right (hom_square l r).bot).lift s
   calc
     hom_orthogonal_aux_lift l r h s ≫ diagonals_cone_snd l r =
-    lift ≫ (hom_orthogonal_aux_inv l r h ≫ diagonals_cone_snd l r) := by rfl
+    lift ≫ (hom_orthogonal_aux_inv l r h ≫ diagonals_cone_snd l r) := rfl
     _ = lift ≫ hom_cospan_pullback_snd l r := by
       have triangle_comm :
         (diagonals_hom_cospan_pullback_lift l r) ≫ hom_cospan_pullback_snd l r =
@@ -595,7 +595,7 @@ lemma hom_orthogonal_aux_fac_right
           (diagonals_hom_cospan_pullback_lift l r ≫ hom_cospan_pullback_snd l r) :=
           by rw [triangle_comm]
         _ = (hom_orthogonal_aux_inv l r h ≫ hom_orthogonal_aux_hom l r h) ≫
-          hom_cospan_pullback_snd l r := by rfl
+          hom_cospan_pullback_snd l r := rfl
         _ = hom_cospan_pullback_snd l r := by rw [hom_orthogonal_aux_inv_hom_id l r]; simp
     _ = s.snd := (hom_pullback_cone_isLimit l r).fac s Limits.WalkingCospan.right
 
@@ -639,12 +639,11 @@ lemma hom_orthogonal_aux_uniq
           ((hom_pullback_cone_isLimit l r).fac s Limits.WalkingCospan.right).symm
   have whee : m ≫ hom_orthogonal_aux_hom l r h = (hom_pullback_cone_isLimit l r).lift s :=
     Limits.pullback.hom_ext comm₁' comm₂'
-  calc
-    m = m ≫ (hom_orthogonal_aux_hom l r h ≫ hom_orthogonal_aux_inv l r h) := by
-      rw [hom_orthogonal_aux_hom_inv_id l r h, Category.comp_id]
-    _ = (m ≫ hom_orthogonal_aux_hom l r h) ≫ hom_orthogonal_aux_inv l r h := by rfl
-    _ = (hom_pullback_cone_isLimit l r).lift s ≫ hom_orthogonal_aux_inv l r h := by
-      exact congrArg (fun q => q ≫ hom_orthogonal_aux_inv l r h) whee
+  calc m = m ≫ (hom_orthogonal_aux_hom l r h ≫ hom_orthogonal_aux_inv l r h) := by
+        simp [hom_orthogonal_aux_hom_inv_id l r h]
+    _ = (m ≫ hom_orthogonal_aux_hom l r h) ≫ hom_orthogonal_aux_inv l r h := rfl
+    _ = (hom_pullback_cone_isLimit l r).lift s ≫ hom_orthogonal_aux_inv l r h :=
+        congrArg (· ≫ hom_orthogonal_aux_inv l r h) whee
 
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
@@ -705,35 +704,15 @@ def is_hom_orthogonal_aux_implies_is_orthogonal
       map := (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
         (square_completion_cone l r S) PUnit.unit
       comm_top := by
-        have comm : (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-            (square_completion_cone l r S) ≫
-            (hom_square l r).left =
-            square_completion_cone_snd l r S :=
-          (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).fac
-          (square_completion_cone l r S) Limits.WalkingCospan.right
-        calc
-          l ≫ ((hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-          (square_completion_cone l r S) PUnit.unit) =
-          ((hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-          (square_completion_cone l r S) ≫ (hom_square l r).left) PUnit.unit := by rfl
-          _ = square_completion_cone_snd l r S PUnit.unit := by
-            exact congrArg (fun f : PUnit ⟶ (A ⟶ X) => f PUnit.unit) comm
-          _ = S.top := by rfl
+        let lim := hom_orthogonal_aux_implies_is_pullback_diagonals l r h
+        have := congrArg (fun f : PUnit ⟶ (A ⟶ X) => f PUnit.unit)
+          (lim.fac (square_completion_cone l r S) Limits.WalkingCospan.right)
+        simpa using this
       comm_bot := by
-        have comm : (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-            (square_completion_cone l r S) ≫
-            (hom_square l r).top =
-            square_completion_cone_fst l r S :=
-          (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).fac
-          (square_completion_cone l r S) Limits.WalkingCospan.left
-        calc
-          ((hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-          (square_completion_cone l r S) PUnit.unit) ≫ r =
-          ((hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-          (square_completion_cone l r S) ≫ (hom_square l r).top) PUnit.unit := by rfl
-          _ = square_completion_cone_fst l r S PUnit.unit := by
-            exact congrArg (fun f : PUnit ⟶ (B ⟶ Y) => f PUnit.unit) comm
-          _ = S.bot := by rfl
+        let lim := hom_orthogonal_aux_implies_is_pullback_diagonals l r h
+        have := congrArg (fun f : PUnit ⟶ (B ⟶ Y) => f PUnit.unit)
+          (lim.fac (square_completion_cone l r S) Limits.WalkingCospan.left)
+        simpa using this
     }
   diagonal_unique := by
     intro S d d'
@@ -745,10 +724,10 @@ def is_hom_orthogonal_aux_implies_is_orthogonal
         ((diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_fst l r) PUnit.unit)).mpr
       calc
         (diagonal_filler_to_pullback l r S d ≫ diagonals_cone_fst l r) PUnit.unit =
-        d.map ≫ r:= by rfl
+        d.map ≫ r:= rfl
         _ = S.bot := by rw [d.comm_bot]
         _ = d'.map ≫ r := by rw [d'.comm_bot]
-        _ = (diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_fst l r) PUnit.unit := by rfl
+        _ = (diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_fst l r) PUnit.unit := rfl
     have comm₂ :
         (diagonal_filler_to_pullback l r S d) ≫ diagonals_cone_snd l r =
         (diagonal_filler_to_pullback l r S d') ≫ diagonals_cone_snd l r:= by
@@ -757,10 +736,10 @@ def is_hom_orthogonal_aux_implies_is_orthogonal
         ((diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_snd l r) PUnit.unit)).mpr
       calc
         (diagonal_filler_to_pullback l r S d ≫ diagonals_cone_snd l r) PUnit.unit =
-        l ≫ d.map:= by rfl
+        l ≫ d.map:= rfl
         _ = S.top := by rw [d.comm_top]
         _ = l ≫ d'.map := by rw [d'.comm_top]
-        _ = (diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_snd l r) PUnit.unit := by rfl
+        _ = (diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_snd l r) PUnit.unit := rfl
     have unique := Limits.PullbackCone.IsLimit.hom_ext
       (hom_orthogonal_aux_implies_is_pullback_diagonals l r h) comm₁ comm₂
     simpa [diagonal_filler_to_pullback] using
