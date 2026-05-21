@@ -55,31 +55,21 @@ lemma prob_sum_eq_one {α : Type} [Fintype α] (p : ProbDist α) : (∑ a, p a) 
   p.2.2
 
 lemma prob_le_one {α : Type} [Fintype α] (p : ProbDist α) (a : α) : p a ≤ 1 := by
-  have hsingle : p a ≤ ∑ b, p b := by
-    simpa using (Finset.single_le_sum (fun b _ => prob_nonneg p b) (Finset.mem_univ a))
-  linarith [hsingle, prob_sum_eq_one p]
+  have := Finset.single_le_sum (fun b _ => prob_nonneg p b) (Finset.mem_univ a)
+  linarith [prob_sum_eq_one p, show p a ≤ ∑ b, p b by simpa using this]
 
 /-- Uniform distribution on `Fin (n + 1)`. -/
-def uniformFin (n : ℕ) : ProbDist (Fin (n + 1)) := by
-  refine ⟨fun _ => 1 / (n + 1 : ℝ), ?_⟩
-  constructor
-  · intro _
-    positivity
-  · have h : (n + 1 : ℝ) ≠ 0 := by exact_mod_cast (Nat.succ_ne_zero n)
-    simp [Finset.card_univ, h]
+def uniformFin (n : ℕ) : ProbDist (Fin (n + 1)) :=
+  ⟨fun _ => 1 / (n + 1 : ℝ), fun _ => by positivity,
+    by simp [Finset.card_univ, show (n + 1 : ℝ) ≠ 0 by exact_mod_cast Nat.succ_ne_zero n]⟩
 
 /--
 Uniform distribution on `Fin n` for positive natural `n : ℕ+`.
 This avoids `n + 1` index gymnastics when formalizing Appendix 2.
 -/
-def uniformPNat (n : ℕ+) : ProbDist (Fin n) := by
-  refine ⟨fun _ => 1 / (n : ℝ), ?_⟩
-  constructor
-  · intro _
-    positivity
-  · have h : (n : ℝ) ≠ 0 := by
-      exact_mod_cast (show (n : ℕ) ≠ 0 from Nat.ne_of_gt n.2)
-    simp [Finset.card_univ, h]
+def uniformPNat (n : ℕ+) : ProbDist (Fin n) :=
+  ⟨fun _ => 1 / (n : ℝ), fun _ => by positivity,
+    by simp [Finset.card_univ, show (n : ℝ) ≠ 0 by exact_mod_cast Nat.ne_of_gt n.2]⟩
 
 /-- Composite distribution for a two-stage random choice. -/
 def composeProb
@@ -88,26 +78,11 @@ def composeProb
     (p : ProbDist α)
     (q : (a : α) → ProbDist (β a)) :
     ProbDist (Sigma β) := by
+  classical
   refine ⟨fun x => p x.1 * q x.1 x.2, ?_⟩
   constructor
-  · intro x
-    exact mul_nonneg (prob_nonneg p x.1) (prob_nonneg (q x.1) x.2)
-  · classical
-    calc
-      (∑ x : Sigma β, p x.1 * q x.1 x.2)
-          = ∑ a, ∑ b, p a * q a b := by
-              simpa using
-                (Fintype.sum_sigma (f := fun x : Sigma β => p x.1 * q x.1 x.2))
-      _ = ∑ a, p a * (∑ b, q a b) := by
-            refine Finset.sum_congr rfl ?_
-            intro a _
-            rw [Finset.mul_sum]
-      _ = ∑ a, p a * 1 := by
-            refine Finset.sum_congr rfl ?_
-            intro a _
-            rw [prob_sum_eq_one (q a)]
-      _ = ∑ a, p a := by simp
-      _ = 1 := prob_sum_eq_one p
+  · intro x; exact mul_nonneg (prob_nonneg p x.1) (prob_nonneg (q x.1) x.2)
+  · simp_rw [Fintype.sum_sigma, ← Finset.mul_sum, prob_sum_eq_one (q _), mul_one, prob_sum_eq_one p]
 
 /-- Equivalence between two-stage finite outcomes and `Fin (n * m)`. -/
 def sigmaConstFinEquivFinMul (n m : ℕ+) :
@@ -123,12 +98,9 @@ def relabelProb
     {α β : Type} [Fintype α] [Fintype β]
     (e : α ≃ β)
     (p : ProbDist α) :
-    ProbDist β := by
-  refine ⟨fun b => p (e.symm b), ?_⟩
-  constructor
-  · intro b
-    exact prob_nonneg p (e.symm b)
-  · simpa using (e.symm.sum_comp (fun a => p a)).trans (prob_sum_eq_one p)
+    ProbDist β :=
+  ⟨fun b => p (e.symm b), fun b => prob_nonneg p (e.symm b),
+    by simpa using (e.symm.sum_comp (fun a => p a)).trans (prob_sum_eq_one p)⟩
 
 /--
 Shannon's three conditions for a finite-choice uncertainty functional `H`.
