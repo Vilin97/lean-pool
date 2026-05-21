@@ -136,7 +136,6 @@ def _root_.LieAlgebra.Dim2.Affine.equivToRealHyperbolic : Affine K ≃ₗ⁅K⁆
   toFun := fun v ↦ ⟨v 0, ![v 1]⟩
   map_add' := by
     intro x y
-    simp only [Affine]
     ext
     · rfl
     · change ![(x + y) 1] = ![x 1] + ![y 1]
@@ -671,8 +670,7 @@ noncomputable def _root_.LieAlgebra.Dim3.Hyperbolic.stdBasis : Basis (Fin 3) K (
 theorem _root_.LieAlgebra.Dim3.Hyperbolic.stdBasis₁ : (stdBasis 0 : Hyperbolic K) = e₁ := by
   unfold stdBasis Hyperbolic
   rw [e₁_def]
-  simp only [Basis.coe_ofEquivFun, LinearEquiv.refl_symm, LinearEquiv.refl_apply,
-    ]
+  simp only [Basis.coe_ofEquivFun, LinearEquiv.refl_symm, LinearEquiv.refl_apply]
   ext i
   fin_cases i <;> simp
 
