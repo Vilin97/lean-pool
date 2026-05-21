@@ -1168,6 +1168,91 @@ projects:
     msc:
       - "37A30"
       - "28D05"
+  - slug: fo-zfc
+    title: First Order Language of ZF Set Theory
+    summary: Formalizes ZF set theory inside Lean's `FirstOrder.Language` framework, enabling meta-mathematical arguments such as elementary submodels.
+    branch: mathematical logic
+    entry_module: LeanPool.FoZfc
+    authors:
+      - Tetsuya Ishiu
+    source:
+      title: Set Theory
+      authors:
+        - Thomas Jech
+      url: https://doi.org/10.1007/3-540-44761-X
+      github_repo: ishiut/fo_zfc
+    status: verified
+    main_declarations:
+      - FirstOrder.ZFC.ModelZF
+      - FirstOrder.ZFC.ext_induction
+    main_results:
+      - declaration: FirstOrder.ZFC.ModelZF
+        informal: Bundles the ZF axioms (Emptyset, Pairing, Union, Powerset, Infinity, Regularity, Comprehension, Replacement) into a single model class.
+      - declaration: FirstOrder.ZFC.ext_induction
+        informal: States the principle of mathematical induction over ω externally for any bounded formula in LZFC.
+    tags:
+      - model-theory
+      - set-theory
+      - zf
+    msc:
+      - "03B10"
+      - "03E30"
+  - slug: sardmoreira
+    title: Moreira's version of Sard's theorem
+    summary: Formalizes Moreira's strengthening of Sard's theorem, bounding the Hausdorff dimension of critical-value images of C^{k+alpha} maps.
+    branch: geometric measure theory
+    entry_module: LeanPool.SardMoreira
+    authors:
+      - Yury G. Kudryashov
+    source:
+      url: https://github.com/urkud/SardMoreira
+      github_repo: urkud/SardMoreira
+      paper: http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+    status: verified
+    main_declarations:
+      - dimH_image_le_sardMoreiraBound_of_finrank_le
+    main_results:
+      - declaration: hausdorffMeasure_sardMoreiraBound_image_null_of_finrank_le
+        informal: Proves Hausdorff-measure nullity for images of points where the derivative rank is bounded by p, at Moreira's Sard bound.
+        source_ref: Moreira 2001, http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+      - declaration: dimH_image_le_sardMoreiraBound_of_finrank_le
+        informal: Converts the measure-null theorem into the headline Hausdorff-dimension upper bound for critical-value images.
+        source_ref: Moreira 2001, http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+    tags:
+      - analysis
+      - measure-theory
+      - sard-theorem
+      - hausdorff-measure
+    msc:
+      - "28A78"
+      - "58C25"
+  - slug: 2-coloring-1-round
+    title: 2-Coloring Cycles in One Round
+    summary: Formalizes certified upper and lower bounds for one-round randomized algorithms that 2-color cycles.
+    branch: distributed computing
+    entry_module: LeanPool.TwoColoringOneRound
+    authors:
+      - Jukka Suomela
+    source:
+      arxiv: "2603.04235"
+      github_repo: suomela/2-coloring-1-round
+    status: verified
+    main_declarations:
+      - Distributed2Coloring.pStar_ge_23879
+      - Distributed2Coloring.pStar_lt_24118
+    main_results:
+      - declaration: Distributed2Coloring.pStar_ge_23879
+        informal: Proves that every one-round classical algorithm has monochromatic-edge probability at least 0.23879.
+      - declaration: Distributed2Coloring.pStar_lt_24118
+        informal: Proves that an explicit one-round algorithm attains monochromatic-edge probability strictly below 0.24118.
+    tags:
+      - distributed-computing
+      - graph-coloring
+      - randomized-algorithms
+      - formal-verification
+    msc:
+      - "68W15"
+      - "05C15"
   - slug: zflean
     title: ZFLean
     summary: Develops a practical ZFC set-theory framework with von Neumann naturals, integers, rationals, functions, embeddings, isomorphisms, booleans, and sums.
