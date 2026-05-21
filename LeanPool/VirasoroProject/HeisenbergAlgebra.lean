@@ -272,15 +272,10 @@ lemma _root_.VirasoroProject.HeisenbergAlgebra.toAbelianLieAlgebraOn_kgen :
 @[simp] lemma _root_.VirasoroProject.HeisenbergAlgebra.lie_jgen (k l : ℤ) :
     ⁅jgen 𝕜 k, jgen 𝕜 l⁆ = if k + l = 0 then (k : 𝕜) • kgen 𝕜 else 0 := by
   simp_rw [bracket_def']
-  by_cases h : k + l = 0
-  · rw [if_pos h]
-    apply ext'
-    · simp [kgen_eq']
-    · simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, kgen_eq', h]
-  · rw [if_neg h]
-    apply ext'
-    · change (0 : AbelianLieAlgebraOn ℤ 𝕜) = 0
-      rfl
+  split_ifs with h
+  · apply ext' <;> simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, kgen_eq', h]
+  · apply ext'
+    · change (0 : AbelianLieAlgebraOn ℤ 𝕜) = 0; rfl
     · change AbelianLieAlgebraOn.heisenbergCocycle 𝕜 (AbelianLieAlgebraOn.jgen 𝕜 k)
           (AbelianLieAlgebraOn.jgen 𝕜 l) = 0
       simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, h]
