@@ -270,14 +270,11 @@ lemma torusGradX_mul (φ ψ : Torus3 → ℝ) (i : Fin 3)
       φ x * torusGradX ψ x i + ψ x * torusGradX φ x i := by
   intro x
   simp only [torusGradX]
-  have hlift : periodicLift (fun z => φ z * ψ z) = periodicLift φ * periodicLift ψ := by
-    ext y; simp [periodicLift, Pi.mul_apply]
-  rw [hlift]
-  let x₀ := (torusMk_surjective x).choose
-  have hx₀ := (torusMk_surjective x).choose_spec
+  rw [show periodicLift (fun z => φ z * ψ z) = periodicLift φ * periodicLift ψ from
+    by ext y; simp [periodicLift, Pi.mul_apply]]
   rw [fderiv_mul hφ.differentiableAt hψ.differentiableAt]
   simp only [ContinuousLinearMap.add_apply, periodicLift, Function.comp_apply]
-  rw [show torusMk x₀ = x from hx₀]
+  rw [show torusMk (torusMk_surjective x).choose = x from (torusMk_surjective x).choose_spec]
   simp [smul_eq_mul]
 
 private lemma integrable_mul_torusGradX (φ ψ : Torus3 → ℝ) (i : Fin 3)
@@ -297,11 +294,10 @@ theorem torus_hIBP_spatial (φ ψ : Torus3 → ℝ) (i : Fin 3)
     simp_rw [torusGradX_mul φ ψ i (hφ.differentiable one_ne_zero) (hψ.differentiable one_ne_zero)]
     exact integral_add (integrable_mul_torusGradX φ ψ i hφ hψ)
       (integrable_mul_torusGradX ψ φ i hψ hφ)
-  have hzero : ∫ x : Torus3, torusGradX (fun z => φ z * ψ z) x i = 0 := by
-    apply torus_gradX_integral_zero
-    have : periodicLift (fun z => φ z * ψ z) = fun y => periodicLift φ y * periodicLift ψ y := by
-      ext y; simp [periodicLift]
-    rw [this]; exact hφ.mul hψ
+  have hzero : ∫ x : Torus3, torusGradX (fun z => φ z * ψ z) x i = 0 :=
+    torus_gradX_integral_zero _ i (by
+      rw [show periodicLift (fun z => φ z * ψ z) = fun y => periodicLift φ y * periodicLift ψ y
+        from by ext y; simp [periodicLift]]; exact hφ.mul hψ)
   linarith [hprod ▸ hzero]
 
 /-- ∫ u · (∇×F) = 0 on T³. Each gradient integral vanishes by periodicity. -/
@@ -348,13 +344,9 @@ theorem torus_hHarmonic_const (φ : Torus3 → ℝ)
     (hharmonic : ∀ x, torusDivX (torusGradX φ) x = 0) :
     ∀ x y, φ x = φ y := by
   -- Smoothness of gradient components (C¹ suffices for IBP)
-  have hgrad_pl : ∀ i, periodicLift (fun x => torusGradX φ x i) =
-      fun y => fderiv ℝ (periodicLift φ) y (Pi.single i 1) :=
-    fun i => funext (periodicLift_torusGradX φ i)
   have hgrad_c1 : ∀ i, ContDiff ℝ 1 (periodicLift (fun x => torusGradX φ x i)) := fun i => by
-    rw [hgrad_pl]
-    exact ((hd.fderiv_right
-      (show (1 : WithTop ℕ∞) + 1 ≤ 2 by decide)).clm_apply
+    rw [funext (periodicLift_torusGradX φ i)]
+    exact ((hd.fderiv_right (show (1 : WithTop ℕ∞) + 1 ≤ 2 by decide)).clm_apply
       contDiff_const).of_le le_rfl
   have hφ_cont : Continuous φ :=
     isOpenQuotientMap_torusMk.isQuotientMap.continuous_iff.mpr
@@ -362,9 +354,8 @@ theorem torus_hHarmonic_const (φ : Torus3 → ℝ)
   -- IBP: ∫ (∂φ/∂xᵢ)² = -∫ φ·∂²φ/∂xᵢ²
   have hIBP_i : ∀ i, ∫ x : Torus3, torusGradX φ x i * torusGradX φ x i =
       -(∫ x : Torus3, φ x * torusGradX (fun y => torusGradX φ y i) x i) :=
-    fun i => torus_hIBP_spatial (fun y => torusGradX φ y i)
-      φ i (hgrad_c1 i)
-      (hd.of_le (show 1 ≤ 2 by decide))
+    fun i => torus_hIBP_spatial (fun y => torusGradX φ y i) φ i
+      (hgrad_c1 i) (hd.of_le (show 1 ≤ 2 by decide))
   -- Each φ * ∂²φ/∂xᵢ² is integrable (continuous on compact)
   have hint : ∀ i, Integrable (fun x : Torus3 =>
       φ x * torusGradX (fun y => torusGradX φ y i) x i) :=

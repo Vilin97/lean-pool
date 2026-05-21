@@ -178,8 +178,8 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
     fun w => (hg_smooth.differentiable (by norm_num)).differentiableAt.hasFDerivAt
   -- Use the shifted-Schwartz bound for the dominator
   have h_int_shift : ∀ x, Integrable (fun u => landauMatrix coulombKernel u i j * g (x - u)) :=
-    fun x => (coulomb_entry_schwartz_integrable g hg_smooth hg_decay x i j).comp_sub_left x
-      |>.congr (ae_of_all _ fun u => by abel_nf)
+    fun x => ((coulomb_entry_schwartz_integrable g hg_smooth hg_decay x i j).comp_sub_left x).congr
+      (ae_of_all _ fun u => by abel_nf)
   refine hasFDerivAt_integral_of_dominated_of_fderiv_le
     (F' := fun v u => landauMatrix coulombKernel u i j • fderiv ℝ g (v - u))
     (bound := fun u => ‖u‖⁻¹ * (D / (1 + ‖v₀ - u‖) ^ 4))
@@ -245,13 +245,11 @@ lemma coulomb_entry_conv_differentiable
     Differentiable ℝ (fun v => ∫ w, landauMatrix coulombKernel (v - w) i j * g w) := by
   -- Rewrite in u-coordinates and use HasFDerivAt
   suffices h : Differentiable ℝ (fun v => ∫ u, landauMatrix coulombKernel u i j * g (v - u)) by
-    have h_eq : (fun v => ∫ u, landauMatrix coulombKernel u i j * g (v - u)) =
-        (fun v => ∫ w, landauMatrix coulombKernel (v - w) i j * g w) := by
-      ext v
-      rw [← integral_sub_left_eq_self
-        (fun w => landauMatrix coulombKernel w i j * g (v - w)) volume v]
-      simp [sub_sub_cancel]
-    rwa [← h_eq]
+    rwa [show (fun v => ∫ u, landauMatrix coulombKernel u i j * g (v - u)) =
+        (fun v => ∫ w, landauMatrix coulombKernel (v - w) i j * g w) from
+      funext fun v => by
+        rw [← integral_sub_left_eq_self (fun w => landauMatrix coulombKernel w i j * g (v - w))
+          volume v]; simp [sub_sub_cancel]] at h
   exact fun v₀ =>
     (coulomb_entry_conv_hasFDerivAt_aux g hg_smooth hg_schwartz i j v₀).differentiableAt
 
@@ -291,11 +289,10 @@ lemma coulomb_entry_conv_deriv_bounded
   -- The fderiv in u-coordinates equals ∫ A(u) • fderiv(g)(v-u)
   -- We use HasFDerivAt.fderiv to get the concrete representation
   have h_conv_eq : (fun v => ∫ w, landauMatrix coulombKernel (v - w) i j * g w) =
-      (fun v => ∫ u, landauMatrix coulombKernel u i j * g (v - u)) := by
-    ext v
-    rw [← integral_sub_left_eq_self
-      (fun w => landauMatrix coulombKernel w i j * g (v - w)) volume v]
-    simp [sub_sub_cancel]
+      (fun v => ∫ u, landauMatrix coulombKernel u i j * g (v - u)) :=
+    funext fun v => by
+      rw [← integral_sub_left_eq_self (fun w => landauMatrix coulombKernel w i j * g (v - w))
+        volume v]; simp [sub_sub_cancel]
   rw [h_conv_eq]
   have h_hfd := coulomb_entry_conv_hasFDerivAt_aux g hg_smooth hg_schwartz i j v
   rw [h_hfd.fderiv]
@@ -323,11 +320,7 @@ lemma coulomb_entry_conv_deriv_bounded
                 (norm_nonneg _))
     _ = ∫ w, ‖v - w‖⁻¹ * ‖fderiv ℝ g w‖ := by
         rw [← integral_sub_left_eq_self (fun u => ‖u‖⁻¹ * ‖fderiv ℝ g (v - u)‖) volume v]
-        congr 1
-        ext u
-        congr 2
-        congr 1
-        abel
+        congr 1; ext u; congr 2; congr 1; abel
     _ ≤ M := by simp only [abs_norm] at hM; exact hM v
     _ ≤ M + 1 := le_add_of_nonneg_right one_pos.le
 

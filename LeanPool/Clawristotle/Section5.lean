@@ -188,16 +188,15 @@ lemma polynomial_identity_from_vlasov
         dotProduct v ((2 * c x) • E x + cross (B x) (b x))) := by
     rw [hvGrad, dotProduct_smul, lorentz_force_expansion, smul_eq_mul]
   -- Combine: transport = f(x,v) * (polynomial) = 0
+  -- Since f(x,v) > 0, the polynomial must be 0
   have hPoly : f x v * (dotProduct v (FlatTorus3.gradX c x) * normSq v +
       (∑ i : Fin 3, ∑ j : Fin 3, v i * v j *
         (FlatTorus3.gradX (fun y => b y j) x i)) +
       dotProduct v (FlatTorus3.gradX a x) +
       dotProduct (E x) (b x) +
       dotProduct v ((2 * c x) • E x + cross (B x) (b x))) = 0 := by
-    have h := hTransport
-    rw [hgradX_dot, hvGrad_dot] at h
+    rw [hgradX_dot, hvGrad_dot] at hTransport
     linarith
-  -- Since f(x,v) > 0, the polynomial must be 0
   exact (mul_eq_zero.mp hPoly).resolve_left (ne_of_gt hfv_pos)
 
 end VML

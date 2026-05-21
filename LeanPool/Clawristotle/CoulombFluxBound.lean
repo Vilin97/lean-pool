@@ -49,10 +49,8 @@ private lemma landauMatrix_mulVec_component_le (z u : Fin 3 → ℝ) (i : Fin 3)
     calc |∑ j : Fin 3, landauMatrix coulombKernel z i j * u j|
         ≤ ∑ j : Fin 3, |landauMatrix coulombKernel z i j * u j| :=
           Finset.abs_sum_le_sum_abs _ _
-      _ = ∑ j : Fin 3, |landauMatrix coulombKernel z i j| * |u j| := by
-          congr 1
-          ext j
-          exact abs_mul _ _
+      _ = ∑ j : Fin 3, |landauMatrix coulombKernel z i j| * |u j| :=
+          Finset.sum_congr rfl fun j _ => abs_mul _ _
       _ ≤ ∑ j : Fin 3, ‖z‖⁻¹ * |u j| :=
           Finset.sum_le_sum fun j _ =>
             mul_le_mul_of_nonneg_right (coulomb_landauMatrix_entry_le_pi _ _ _ hz) (abs_nonneg _)

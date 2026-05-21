@@ -114,17 +114,11 @@ lemma psd_outer_integrable_coulomb
                                     ‖v - w‖⁻¹ * ((1 + ‖w‖) ^ (2 * Kg) * f w)) :=
         integral_const_mul _ _
     _ ≤ 18 * Cg ^ 2 * f v * ((1 + ‖v‖) ^ (2 * Kg) * M₁ + M₂) := by
-        have h_eq : ∫ w, (1 + ‖v‖) ^ (2 * Kg) *
-              (‖v - w‖⁻¹ * f w) +
+        conv_lhs => rw [show ∫ w, (1 + ‖v‖) ^ (2 * Kg) * (‖v - w‖⁻¹ * f w) +
               ‖v - w‖⁻¹ * ((1 + ‖w‖) ^ (2 * Kg) * f w) =
-            (1 + ‖v‖) ^ (2 * Kg) *
-              (∫ w, ‖v - w‖⁻¹ * f w) +
-              ∫ w, ‖v - w‖⁻¹ *
-                ((1 + ‖w‖) ^ (2 * Kg) * f w) := by
-          rw [integral_add
-              ((h_int_f v).const_mul _) (h_int_pf v),
-              integral_const_mul]
-        conv_lhs => rw [h_eq]
+            (1 + ‖v‖) ^ (2 * Kg) * (∫ w, ‖v - w‖⁻¹ * f w) +
+              ∫ w, ‖v - w‖⁻¹ * ((1 + ‖w‖) ^ (2 * Kg) * f w) from
+          by rw [integral_add ((h_int_f v).const_mul _) (h_int_pf v), integral_const_mul]]
         apply mul_le_mul_of_nonneg_left _
           (by nlinarith [sq_nonneg Cg, hf_pos v])
         apply add_le_add
@@ -262,14 +256,11 @@ private lemma fubini_double_int_bound_coulomb
                   Cg * (1 + ‖v‖) ^ Kg * f v * M₁ :=
                 fun j => mul_le_mul (hGrad v j) (hM₁b v) hint_nn
                   (mul_nonneg (mul_nonneg hCg_nn hv_nn) hfv)
-              have hd0v := hMd₀b v
-              have hd1v := hMd₁b v
-              have hd2v := hMd₂b v
               simp only [Fin.sum_univ_three]
               linarith [hj 0, hj 1, hj 2,
-                mul_le_mul_of_nonneg_left hd0v hfv,
-                mul_le_mul_of_nonneg_left hd1v hfv,
-                mul_le_mul_of_nonneg_left hd2v hfv]
+                mul_le_mul_of_nonneg_left (hMd₀b v) hfv,
+                mul_le_mul_of_nonneg_left (hMd₁b v) hfv,
+                mul_le_mul_of_nonneg_left (hMd₂b v) hfv]
             calc 3 * Cg * (1 + ‖v‖) ^ Kg *
                 ∑ j : Fin 3, ((|vGrad f v j| *
                   (∫ w, ‖v - w‖⁻¹ * |f w|)) +

@@ -80,22 +80,19 @@ theorem landauMatrix_quadForm_eq_zero_iff {Ψ : ℝ → ℝ} {z : Fin 3 → ℝ}
   have hinner : dotProduct Y (mulVec (innerLandauMatrix z) Y) = 0 := by
     have hqf : Ψ (eucNorm z) * dotProduct Y (mulVec (innerLandauMatrix z) Y) = 0 := by
       have : dotProduct Y (mulVec (landauMatrix Ψ z) Y) =
-        Ψ (eucNorm z) * dotProduct Y (mulVec (innerLandauMatrix z) Y) := by
-        unfold landauMatrix
-        rw [smul_mulVec]
-        simp [dotProduct_smul, smul_eq_mul]
+          Ψ (eucNorm z) * dotProduct Y (mulVec (innerLandauMatrix z) Y) := by
+        unfold landauMatrix; rw [smul_mulVec]; simp [dotProduct_smul, smul_eq_mul]
       linarith
     exact (mul_eq_zero.mp hqf).resolve_left (ne_of_gt hΨ)
   -- Step 2: Cauchy-Schwarz equality: normSq z * normSq Y = (z . Y)^2
   have heq : normSq z * normSq Y = dotProduct z Y ^ 2 := by
-    have := innerLandauMatrix_quadForm z Y; linarith
+    linarith [innerLandauMatrix_quadForm z Y]
   -- Step 3: Expand on Fin 3 to show all cross terms vanish
   have hcross :
       (z 0 * Y 1 - z 1 * Y 0) ^ 2 + (z 0 * Y 2 - z 2 * Y 0) ^ 2 +
       (z 1 * Y 2 - z 2 * Y 1) ^ 2 = 0 := by
     simp only [dotProduct, normSq, Fin.sum_univ_three, sq] at heq
-    nlinarith [sq_nonneg (z 0 * Y 1 - z 1 * Y 0),
-               sq_nonneg (z 0 * Y 2 - z 2 * Y 0),
+    nlinarith [sq_nonneg (z 0 * Y 1 - z 1 * Y 0), sq_nonneg (z 0 * Y 2 - z 2 * Y 0),
                sq_nonneg (z 1 * Y 2 - z 2 * Y 1)]
   -- Step 4: Extract individual proportionality relations z_i * Y_j = z_j * Y_i
   have h01 : z 0 * Y 1 = z 1 * Y 0 := by
@@ -111,11 +108,8 @@ theorem landauMatrix_quadForm_eq_zero_iff {Ψ : ℝ → ℝ} {z : Fin 3 → ℝ}
                sq_nonneg (z 0 * Y 2 - z 2 * Y 0),
                sq_nonneg (z 1 * Y 2 - z 2 * Y 1)]
   -- Step 5: Since z != 0, find a nonzero component and set l = Y_k / z_k
-  have hne : ¬(z 0 = 0 ∧ z 1 = 0 ∧ z 2 = 0) := by
-    intro ⟨h0, h1, h2⟩
-    apply hz
-    ext i
-    fin_cases i <;> assumption
+  have hne : ¬(z 0 = 0 ∧ z 1 = 0 ∧ z 2 = 0) :=
+    fun ⟨h0, h1, h2⟩ => hz (funext fun i => by fin_cases i <;> assumption)
   rcases not_and_or.mp hne with h0 | h12ne
   · -- Case z 0 != 0: let l = Y 0 / z 0
     refine ⟨Y 0 / z 0, ?_⟩

@@ -233,8 +233,7 @@ lemma psd_continuous_coulomb
       (hf_smooth.continuous.comp continuous_fst)
       (hf_smooth.continuous.comp continuous_snd) ) ?_
   set G := fun v => fderiv ℝ (Real.log ∘ f) v
-  have h_log_smooth : ContDiff ℝ 3 (Real.log ∘ f) := by
-    exact ContDiff.log hf_smooth fun v => ne_of_gt <| hf_pos v
+  have h_log_smooth : ContDiff ℝ 3 (Real.log ∘ f) := hf_smooth.log fun v => ne_of_gt <| hf_pos v
   have h_G_smooth : ContDiff ℝ 1 G := by
     apply_rules [ ContDiff.fderiv, h_log_smooth ]
     exacts [ h_log_smooth.comp (contDiff_snd), contDiff_id, by norm_num ]

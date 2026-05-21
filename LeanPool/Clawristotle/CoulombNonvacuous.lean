@@ -193,21 +193,18 @@ lemma equilibriumMaxwellian_schwartz_decay (ρ T : ℝ) (hρ : 0 < ρ) (hT : 0 <
     rfl
   -- Step 1: Pull constant pf out of iteratedFDeriv
   have h_norm : ∀ v, ‖iteratedFDeriv ℝ k (equilibriumMaxwellian ρ T) v‖ =
-      pf * ‖iteratedFDeriv ℝ k (Real.exp ∘ q) v‖ := by
-    intro v
+      pf * ‖iteratedFDeriv ℝ k (Real.exp ∘ q) v‖ := fun v => by
     rw [heM_eq, show (fun v => pf * (Real.exp ∘ q) v) = pf • (Real.exp ∘ q) from by
-      ext w; simp [Pi.smul_apply, smul_eq_mul]]
-    rw [iteratedFDeriv_const_smul_apply (hexpq_smooth.contDiffAt.of_le le_top)]
-    rw [norm_smul, Real.norm_eq_abs, abs_of_pos hpf_pos]
+      ext w; simp [Pi.smul_apply, smul_eq_mul],
+      iteratedFDeriv_const_smul_apply (hexpq_smooth.contDiffAt.of_le le_top),
+      norm_smul, Real.norm_eq_abs, abs_of_pos hpf_pos]
   -- Step 2: Derivative bound for q (quadratic form)
   obtain ⟨c, hc_pos, hc⟩ := quadratic_iteratedFDeriv_bound T hT k
   -- Step 3: Apply norm_iteratedFDeriv_comp_le (Faà di Bruno)
   have h_comp_bound : ∀ v, ‖iteratedFDeriv ℝ k (Real.exp ∘ q) v‖ ≤
-      k.factorial * Real.exp (q v) * (c * (1 + ‖v‖)) ^ k := by
-    intro v
+      k.factorial * Real.exp (q v) * (c * (1 + ‖v‖)) ^ k := fun v => by
     apply norm_iteratedFDeriv_comp_le contDiff_exp hq_smooth le_top v
-    · -- exp derivatives: ‖iteratedFDeriv i exp y‖ = exp(y)
-      intro i _
+    · intro i _
       rw [norm_iteratedFDeriv_eq_norm_iteratedDeriv,
         show Real.exp = fun s => Real.exp (1 * s) from by ext s; simp,
         iteratedDeriv_exp_const_mul]
@@ -215,11 +212,10 @@ lemma equilibriumMaxwellian_schwartz_decay (ρ T : ℝ) (hρ : 0 < ρ) (hT : 0 <
       exact le_refl _
     · exact fun i hi1 hi2 => hc v i hi1 hi2
   -- Step 4: q(v) ≤ -‖v‖²/(2T) since normSq v ≥ ‖v‖²
-  have h_q_ub : ∀ v, q v ≤ -(1/(2*T)) * ‖v‖ ^ 2 := by
-    intro v; simp only [q]
+  have h_q_ub : ∀ v, q v ≤ -(1/(2*T)) * ‖v‖ ^ 2 := fun v => by
+    simp only [q]
     rw [show -(1 / (2 * T)) * ‖v‖ ^ 2 = -(‖v‖ ^ 2 / (2 * T)) from by ring, neg_div]
-    exact neg_le_neg
-      (div_le_div_of_nonneg_right (norm_sq_le_normSq v) (by positivity : (0:ℝ) ≤ 2*T))
+    exact neg_le_neg (div_le_div_of_nonneg_right (norm_sq_le_normSq v) (by positivity))
   -- Step 5: Polynomial × Gaussian bound
   obtain ⟨Cg, hCg_pos, hCg⟩ := poly_mul_gaussian_le (k + N) (1/(2*T)) (by positivity)
   refine ⟨pf * k.factorial * c ^ k * Cg, by positivity, fun v => ?_⟩
@@ -267,12 +263,10 @@ lemma integral_coord_mul_equilibriumMaxwellian_eq_zero (ρ T : ℝ) (i : Fin 3) 
   have h_odd : ∀ v : Fin 3 → ℝ, (-v) i * equilibriumMaxwellian ρ T (-v) =
       -(v i * equilibriumMaxwellian ρ T v) := by
     intro v; simp [Pi.neg_apply, equilibriumMaxwellian, normSq, dotProduct]
-  have h_neg : (fun v : Fin 3 → ℝ => (-v) i * equilibriumMaxwellian ρ T (-v)) =
-      (fun v => -(v i * equilibriumMaxwellian ρ T v)) := funext h_odd
   have h := MeasureTheory.integral_neg_eq_self
     (fun v : Fin 3 → ℝ => v i * equilibriumMaxwellian ρ T v)
     (μ := MeasureTheory.MeasureSpace.volume)
-  rw [h_neg, MeasureTheory.integral_neg] at h
+  rw [funext h_odd, MeasureTheory.integral_neg] at h
   linarith
 
 /-- The integral of the equilibrium Maxwellian equals the density ρ:
@@ -284,19 +278,14 @@ lemma integral_equilibriumMaxwellian (ρ T : ℝ) (hT : 0 < T) :
     ∫ v : Fin 3 → ℝ, equilibriumMaxwellian ρ T v = ρ := by
   unfold equilibriumMaxwellian
   rw [integral_const_mul]
-  have h_factor : (fun v : Fin 3 → ℝ => exp (-(normSq v) / (2 * T))) =
-      (fun v => ∏ i : Fin 3, exp (-(1/(2*T)) * (v i)^2)) := by
-    ext v
-    rw [← exp_sum]
-    congr 1
-    simp only [normSq, dotProduct, Fin.sum_univ_three, sq]
-    ring
-  rw [h_factor]
-  have h_fubini : ∫ v : Fin 3 → ℝ, ∏ i : Fin 3, exp (-(1/(2*T)) * (v i)^2) =
-      ∏ i : Fin 3, ∫ x : ℝ, exp (-(1/(2*T)) * x^2) := by
-    erw [← MeasureTheory.integral_fintype_prod_eq_prod]; rfl
-  rw [h_fubini, show (∫ x : ℝ, exp (-(1/(2*T)) * x^2)) = sqrt (π / (1/(2*T))) from
-    integral_gaussian _]
+  rw [show (fun v : Fin 3 → ℝ => exp (-(normSq v) / (2 * T))) =
+      fun v => ∏ i : Fin 3, exp (-(1/(2*T)) * (v i)^2) from funext fun v => by
+    rw [← exp_sum]; congr 1
+    simp only [normSq, dotProduct, Fin.sum_univ_three, sq]; ring]
+  rw [show ∫ v : Fin 3 → ℝ, ∏ i : Fin 3, exp (-(1/(2*T)) * (v i)^2) =
+      ∏ i : Fin 3, ∫ x : ℝ, exp (-(1/(2*T)) * x^2) from by
+    erw [← MeasureTheory.integral_fintype_prod_eq_prod]; rfl,
+    show (∫ x : ℝ, exp (-(1/(2*T)) * x^2)) = sqrt (π / (1/(2*T))) from integral_gaussian _]
   simp only [Fin.prod_univ_three, show π / (1/(2*T)) = 2 * π * T from by field_simp]
   have h2piT_pos : (0:ℝ) < 2 * π * T := by positivity
   have h_sqrt_cube : sqrt (2 * π * T) * sqrt (2 * π * T) * sqrt (2 * π * T) =
@@ -373,10 +362,10 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
     · -- hGradDecay: spatial gradient of constant function is 0
       intro N i
       refine ⟨1, one_pos, fun x v => ?_⟩
-      simp only [torusGradX, periodicLift]
-      have : (fun y => equilibriumMaxwellian ρ_ion T v) ∘ torusMk =
-          fun _ => equilibriumMaxwellian ρ_ion T v := by ext; rfl
-      rw [this]; simp
+      simp only [torusGradX, periodicLift,
+        show (fun y => equilibriumMaxwellian ρ_ion T v) ∘ torusMk =
+          fun _ => equilibriumMaxwellian ρ_ion T v from by ext; rfl]
+      simp
   -- (8) hGradBound: |∂eM/∂vᵢ| = |vᵢ/T| · eM ≤ (1+‖v‖)/T · eM
   · refine ⟨1 / T, 1, fun _ v i => ?_⟩
     rw [fderiv_equilibriumMaxwellian ρ_ion T hT v i]
@@ -394,91 +383,78 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
   · intro x v
     -- Spatial gradient of constant is 0
     have hgrad_zero : ∀ i : Fin 3,
-        torusGradX (fun y => equilibriumMaxwellian ρ_ion T v) x i = 0 := by
-      intro i; simp only [torusGradX, periodicLift]
-      have : (fun y => equilibriumMaxwellian ρ_ion T v) ∘ torusMk =
-          fun _ => equilibriumMaxwellian ρ_ion T v := by ext; rfl
-      rw [this]; simp
+        torusGradX (fun y => equilibriumMaxwellian ρ_ion T v) x i = 0 := fun i => by
+      simp only [torusGradX, periodicLift,
+        show (fun y => equilibriumMaxwellian ρ_ion T v) ∘ torusMk =
+          fun _ => equilibriumMaxwellian ρ_ion T v from by ext; rfl]
+      simp
     -- LandauOperator eM v = 0 because integrand vanishes
     suffices h : LandauOperator coulombKernel (equilibriumMaxwellian ρ_ion T) v = 0 by
       have hd : v ⬝ᵥ (fun i => torusGradX (fun y =>
           equilibriumMaxwellian ρ_ion T v) x i) = 0 := by
         simp only [dotProduct, hgrad_zero, mul_zero, Finset.sum_const_zero]
       simp only [hd, h, mul_zero, zero_add]
-      unfold cross; simp [dotProduct, vGrad, Fin.sum_univ_three, mul_zero,
-        zero_mul, sub_self]
-    -- The integrand is 0 for all w: A(v-w) · (eM(w)·∇eM(v) - eM(v)·∇eM(w)) = 0
-    -- because the vector argument is proportional to (v-w) and A(z)·z = 0
+      unfold cross; simp [dotProduct, vGrad, Fin.sum_univ_three, mul_zero, zero_mul, sub_self]
     unfold LandauOperator vDiv
-    -- Show the flux function is identically 0
     have hflux_zero : ∀ v', (∫ w, mulVec (landauMatrix coulombKernel (v' - w))
         (equilibriumMaxwellian ρ_ion T w • vGrad (equilibriumMaxwellian ρ_ion T) v' -
          equilibriumMaxwellian ρ_ion T v' • vGrad (equilibriumMaxwellian ρ_ion T) w)) = 0 := by
       intro v'
-      -- Show integrand is 0 pointwise
-      have h_integrand : ∀ w, mulVec (landauMatrix coulombKernel (v' - w))
+      simp only [show ∀ w, mulVec (landauMatrix coulombKernel (v' - w))
           (equilibriumMaxwellian ρ_ion T w • vGrad (equilibriumMaxwellian ρ_ion T) v' -
-           equilibriumMaxwellian ρ_ion T v' • vGrad (equilibriumMaxwellian ρ_ion T) w) = 0 := by
-        intro w
-        -- The bracket vector = (-eM(v')*eM(w)/T) • (v' - w)
-        have hbracket : equilibriumMaxwellian ρ_ion T w • vGrad (equilibriumMaxwellian ρ_ion T) v' -
-            equilibriumMaxwellian ρ_ion T v' • vGrad (equilibriumMaxwellian ρ_ion T) w =
-            (-(equilibriumMaxwellian ρ_ion T v' * equilibriumMaxwellian ρ_ion T w / T)) •
-              (v' - w) := by
-          ext i
-          simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul, vGrad,
-            fderiv_equilibriumMaxwellian ρ_ion T hT v' i,
-            fderiv_equilibriumMaxwellian ρ_ion T hT w i]
-          ring
-        rw [hbracket, Matrix.mulVec_smul, landauMatrix_mulVec_self, smul_zero]
-      simp [h_integrand]
-    -- vDiv of zero function = 0
-    have : ∀ i, fderiv ℝ (fun w => (0 : Fin 3 → ℝ) i) v (Pi.single i 1) = 0 := by
-      intro i; simp
+           equilibriumMaxwellian ρ_ion T v' • vGrad (equilibriumMaxwellian ρ_ion T) w) = 0
+        from fun w => by
+          have hbracket : equilibriumMaxwellian ρ_ion T w •
+              vGrad (equilibriumMaxwellian ρ_ion T) v' -
+              equilibriumMaxwellian ρ_ion T v' • vGrad (equilibriumMaxwellian ρ_ion T) w =
+              (-(equilibriumMaxwellian ρ_ion T v' * equilibriumMaxwellian ρ_ion T w / T)) •
+                (v' - w) := by
+            ext i
+            simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul, vGrad,
+              fderiv_equilibriumMaxwellian ρ_ion T hT v' i,
+              fderiv_equilibriumMaxwellian ρ_ion T hT w i]
+            ring
+          rw [hbracket, Matrix.mulVec_smul, landauMatrix_mulVec_self, smul_zero]]
+      simp
     conv => arg 2; rw [show (0:ℝ) = ν * 0 from by ring]
     simp only [hflux_zero]
     simp [ContinuousLinearMap.zero_apply]
   -- (10) hAmpere: Ampere's law (curl 0 = ∫ vᵢ eM dv)
   · intro x
     ext i
-    simp only [torusCurlX, periodicLift, Pi.zero_apply]
-    -- fderiv of (fun z => 0) ∘ torusMk = fderiv of constant = 0
-    have hzero : ∀ (j : Fin 3) (p : Fin 3 → ℝ),
-        fderiv ℝ (fun y => ((fun _ : Torus3 => (0 : ℝ)) ∘ torusMk) y) p (Pi.single j 1) = 0 := by
-      intro j p
-      have : ((fun _ : Torus3 => (0 : ℝ)) ∘ torusMk) = fun _ => (0 : ℝ) := by ext; rfl
-      rw [show (fun y => ((fun _ : Torus3 => (0 : ℝ)) ∘ torusMk) y) =
-          (fun _ => (0 : ℝ)) from by ext; rfl]
-      simp
-    simp only [hzero, sub_self]
-    -- ∫ vᵢ * eM = 0 by odd symmetry of Gaussian
+    simp only [torusCurlX, periodicLift, Pi.zero_apply,
+      show ∀ (j : Fin 3) (p : Fin 3 → ℝ),
+          fderiv ℝ (fun y => ((fun _ : Torus3 => (0 : ℝ)) ∘ torusMk) y) p (Pi.single j 1) = 0
+        from fun j p => by
+          simp only [show (fun y => ((fun _ : Torus3 => (0 : ℝ)) ∘ torusMk) y) =
+            (fun _ => (0 : ℝ)) from by ext; rfl]
+          simp,
+      sub_self]
     have hint := integral_coord_mul_equilibriumMaxwellian_eq_zero ρ_ion T i
     fin_cases i <;> simp_all [Matrix.cons_val_zero, Matrix.cons_val_one]
   -- (11) hGauss: Gauss's law
   · intro x
-    simp only [torusDivX, periodicLift]
-    -- Each summand: fderiv of (fun z => 0 i) ∘ torusMk = 0
-    have hzero : ∀ j : Fin 3,
-        fderiv ℝ (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y)
-          (torusMk_surjective x).choose (Pi.single j 1) = 0 := by
-      intro j
-      rw [show (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) =
-          (fun _ => (0 : ℝ)) from by ext; simp]
-      simp
-    simp only [hzero, Finset.sum_const_zero]
-    -- ∫ eM(v) dv = ρ_ion (Gaussian normalization)
+    simp only [torusDivX, periodicLift,
+      show ∀ j : Fin 3, fderiv ℝ (fun y =>
+          ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y)
+          (torusMk_surjective x).choose (Pi.single j 1) = 0
+        from fun j => by
+          simp only [show (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) =
+            (fun _ => (0 : ℝ)) from by ext; simp]
+          simp,
+      Finset.sum_const_zero]
     linarith [integral_equilibriumMaxwellian ρ_ion T hT]
   -- (12) hDivB: divergence of B = 0
   · intro x
-    simp only [torusDivX, periodicLift]
-    have hzero : ∀ j : Fin 3,
-        fderiv ℝ (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y)
-          (torusMk_surjective x).choose (Pi.single j 1) = 0 := by
-      intro j
-      rw [show (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) =
-          (fun _ => (0 : ℝ)) from by ext; simp]
-      simp
-    simp only [hzero, Finset.sum_const_zero]
+    simp only [torusDivX, periodicLift,
+      show ∀ j : Fin 3, fderiv ℝ (fun y =>
+          ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y)
+          (torusMk_surjective x).choose (Pi.single j 1) = 0
+        from fun j => by
+          simp only [show (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) =
+            (fun _ => (0 : ℝ)) from by ext; simp]
+          simp,
+      Finset.sum_const_zero]
 
 /-- **Full round-trip for CoulombConcreteTheorem42.**
 
