@@ -112,13 +112,11 @@ theorem corner_ring_both_mul_mem (x w y : R) (hx : x ∈ CornerSubringNonUnital 
 -- e is the left/right unit in the subring
 theorem left_unit_mul (idem_e : IsIdempotentElem e) (h : x ∈ CornerSubringNonUnital e) :
     e * x = x := by
-  rw [(corner_ring_set_mem idem_e).1 h]
-  rw [← mul_assoc, ← mul_assoc, idem_e]
+  rw [(corner_ring_set_mem idem_e).1 h, ← mul_assoc, ← mul_assoc, idem_e]
 
 theorem right_unit_mul (idem_e : IsIdempotentElem e) (h : x ∈ CornerSubringNonUnital e) :
     x * e = x := by
-  rw [(corner_ring_set_mem idem_e).1 h]
-  rw [mul_assoc, mul_assoc, idem_e, mul_assoc]
+  rw [(corner_ring_set_mem idem_e).1 h, mul_assoc, mul_assoc, idem_e, mul_assoc]
 
 open NonUnitalSubringClass
 
@@ -131,7 +129,7 @@ theorem corner_ring_hom (a b : CornerSubringNonUnital e) :
 
 -- we can now start on adding the unit to the nonunital subring in the case when e is an idempotent
 instance CornerRingOne (idem_e : IsIdempotentElem e) : One (CornerSubring idem_e) :=
-  ⟨e, by rw [subring_mem_idem idem_e]; rw [idem_e, idem_e]⟩
+  ⟨e, by rw [subring_mem_idem idem_e, idem_e, idem_e]⟩
 
 theorem corner_ring_one (idem_e : IsIdempotentElem e) :
     (1 : CornerSubring idem_e) = e := rfl
@@ -153,18 +151,12 @@ theorem is_right_unit : ∀ (x : CornerSubring idem_e), x * 1 = x := by
 
 -- e is in the subring belonging to it
 lemma e_in_corner_ring : e ∈ (CornerSubring idem_e) := by
-  rw [subring_mem_idem]
-  rw [IsIdempotentElem.eq idem_e, IsIdempotentElem.eq idem_e]
+  rw [subring_mem_idem, IsIdempotentElem.eq idem_e, IsIdempotentElem.eq idem_e]
 
 -- the underlying set of the corner subring defined by 1 is the whole ring
 theorem both_mul_one_one_eq_R : both_mul (1 : R) 1 = ⊤ := by
   ext x
-  constructor
-  · intro ⟨_, _⟩
-    trivial
-  · intro _
-    use x
-    noncomm_ring
+  simp [both_mul, mul_one, one_mul]
 
 -- if a nonunital subring's carrier is R it is isomorphic to R
 /-- A non-unital subring whose carrier is all of `R` is ring-isomorphic to `R`. -/
@@ -192,11 +184,9 @@ lemma nonzero (x : CornerSubring idem_e) :
     (x : CornerSubring idem_e) ≠ 0 ↔ x.val ≠ 0 := by
   constructor
   · intro hnz hz
-    apply hnz
-    exact Subtype.ext hz
+    exact hnz (Subtype.ext hz)
   · intro hnz hz
-    rw [Subtype.ext_iff] at hz
-    exact hnz hz
+    exact hnz (Subtype.ext_iff.mp hz)
 
 -- nonzero elements produces a non-zero corner subring
 lemma e_nonzero_corner_nontrivial (R : Type*) [Ring R] {e : R} (idem_e : IsIdempotentElem e)
@@ -210,8 +200,8 @@ lemma eq_iff_val (x y z : CornerSubring idem_e) :
 lemma e_x_e_in_corner : ∀ (x : R), e * x * e ∈ CornerSubring idem_e := by
   intro x
   rw [subring_mem_idem, eq_comm]
-  calc _ = (e * e) * x * (e * e) := by noncomm_ring
-        _ = e * x * e := by rw [idem_e]
+  calc e * (e * x * e) * e = (e * e) * x * (e * e) := by noncomm_ring
+    _ = e * x * e := by rw [idem_e]
 
 -- The corner ring is a ring
 instance CornerRingIsRing (idem_e : IsIdempotentElem e) : Ring (CornerSubring idem_e) :=
@@ -235,14 +225,11 @@ def coercion_to_eRe (e f : R) (idem_e : IsIdempotentElem e) (idem_f : IsIdempote
 lemma corner_ring_division_e_nonzero
     (idem_e : IsIdempotentElem e) (heRe : IsDivisionRing (CornerSubring idem_e)) : e ≠ 0 := by
   by_contra he
-  have ha : ∀ (a : R), e * a * e = 0 := fun a ↦ mul_eq_zero_of_right (e * a) he
   have h_zero : ∀ (x : CornerSubring idem_e), x = 0 := by
     intro ⟨x, hx⟩
-    apply x_in_corner_x_eq_e_y_e at hx
-    obtain ⟨y, hy⟩ := hx
-    specialize ha y
-    rw [ha] at hy
-    exact (NonUnitalSubring.coe_eq_zero_iff (CornerSubring idem_e)).mp hy
+    obtain ⟨y, hy⟩ := x_in_corner_x_eq_e_y_e hx
+    exact (NonUnitalSubring.coe_eq_zero_iff (CornerSubring idem_e)).mp
+      (hy.trans (mul_eq_zero_of_right (e * y) he))
   obtain ⟨⟨x, hx⟩, _⟩ := heRe
   exact hx (h_zero x)
 
@@ -355,15 +342,10 @@ lemma el_push_smul_in_I (a y : R) (I : Ideal (CornerSubring idem_e)) :
         _ = e * a * e * (e * s * e) := by noncomm_ring
         _ = (e * a * e) * r := by rw [← hs]
   let w : CornerSubring idem_e := ⟨e * a * e, e_x_e_in_corner idem_e a⟩
-  have h' : w * r ∈ I := by
-    have hr : r ∈ I := hr1
-    exact Ideal.mul_mem_left I w hr
-  let v : CornerSubring idem_e := el_push idem_e (a • r)
-  have v_val : v.val = e * (a * r) * e := rfl
-  have h'' : v = w * r := by
-    rw [Subtype.ext_iff]
-    rw [NonUnitalSubring.val_mul]
-    simp only [v, w, el_push]
+  have h' : w * r ∈ I := Ideal.mul_mem_left I w hr1
+  have h'' : el_push idem_e (a • r) = w * r := by
+    rw [Subtype.ext_iff, NonUnitalSubring.val_mul]
+    simp only [w, el_push]
     exact h
   rw [← h''] at h'
   exact h'
@@ -394,33 +376,18 @@ theorem push_pull (idem_e : IsIdempotentElem e) (I : Ideal (CornerSubring idem_e
     rw [← hy]
     exact ideal_push_pull_inclusion idem_e I y hy_mem
   · intro hx
-    have h : (↑x : R) ∈ ideal_lift idem_e I := by
-      unfold ideal_lift
-      have hx1 : (↑x : R) ∈ (Subtype.val '' I.carrier : Set R) :=
-        Set.mem_image_of_mem Subtype.val hx
-      exact (Ideal.mem_span (↑x : R)).mpr fun _ a ↦ a hx1
-    unfold ideal_push
+    have h : (↑x : R) ∈ ideal_lift idem_e I :=
+      (Ideal.mem_span (↑x : R)).mpr fun _ a ↦ a (Set.mem_image_of_mem Subtype.val hx)
     refine ⟨↑x, h, ?_⟩
-    obtain ⟨y, hy⟩ := x.2
     have hx' : (↑x : R) ∈ CornerRingSet e := Subtype.coe_prop x
-    apply (corner_ring_set_mem idem_e).1 at hx'
-    unfold el_push
-    symm
-    exact SetLike.coe_eq_coe.mp hx'
+    exact SetLike.coe_eq_coe.mp ((corner_ring_set_mem idem_e).1 hx').symm
 
 theorem lift_strict_monotonicity (I J : Ideal (CornerSubring idem_e)) :
     I < J → (ideal_lift idem_e I) < (ideal_lift idem_e J) := by
   intro I_leq_J
-  have I_neq_J : I ≠ J := ne_of_lt I_leq_J
-  have lift_leq : (ideal_lift idem_e I) ≤ (ideal_lift idem_e J) :=
-    lift_monotonicity idem_e I J (le_of_lt I_leq_J)
-  have lift_neq : (ideal_lift idem_e I) ≠ (ideal_lift idem_e J) := by
-    by_contra h_eq
-    have h_eq : ideal_push idem_e (ideal_lift idem_e I) = ideal_push idem_e (ideal_lift idem_e J) :=
-      congrArg (ideal_push idem_e) h_eq
-    rw [push_pull, push_pull] at h_eq
-    exact I_neq_J h_eq
-  exact lt_of_le_of_ne lift_leq lift_neq
+  refine lt_of_le_of_ne (lift_monotonicity idem_e I J (le_of_lt I_leq_J)) ?_
+  intro h_eq
+  exact (ne_of_lt I_leq_J) (by simpa [push_pull] using congrArg (ideal_push idem_e) h_eq)
 
 -- if the lift of an ideal is accesible then so is the ideal
 theorem lift_acc_then_ideal_acc (idem_e : IsIdempotentElem e) (J : Ideal R)
@@ -431,29 +398,20 @@ theorem lift_acc_then_ideal_acc (idem_e : IsIdempotentElem e) (J : Ideal R)
   | intro J2 _ hi =>
     obtain ⟨I, hI⟩ := h_J_is_lift
     rw [hI, push_pull idem_e I]
-    have c1 : (I2 : Ideal (CornerSubring idem_e)) → I2 < I → Acc (fun x y => x < y) I2 := by
-      intro I2 hI2
+    exact Acc.intro I fun I2 hI2 => by
       rw [← push_pull idem_e I2]
-      have subJ2 := (lift_strict_monotonicity idem_e I2 I) hI2
-      rw [← hI] at subJ2
-      exact hi (ideal_lift idem_e I2) subJ2 ⟨I2, rfl⟩
-    exact Acc.intro I c1
+      exact hi (ideal_lift idem_e I2) (hI ▸ lift_strict_monotonicity idem_e I2 I hI2) ⟨I2, rfl⟩
 
 -- Lemma 2.10
 -- a) If R is artinian, then the corner ring is artinian
 theorem corner_ring_artinian [h_ar : IsArtinian R R] :
     IsArtinian (CornerSubring idem_e) (CornerSubring idem_e) := by
-  unfold IsArtinian at *
-  unfold WellFoundedLT at *
-  have Iacc : ∀ I : Ideal R, Acc (fun x y => x < y) I := fun I ↦ WellFounded.apply h_ar.wf I
+  unfold IsArtinian WellFoundedLT at *
   apply IsWellFounded.mk
-  have allacc : ∀ I : Ideal (CornerSubring idem_e), Acc (fun x y => x < y) I := by
-    intro I
-    have h : Acc (fun x y => x < y) (ideal_push idem_e (ideal_lift idem_e I)) :=
-      lift_acc_then_ideal_acc idem_e I ⟨I, rfl⟩ (Iacc (ideal_lift idem_e I))
-    rw [push_pull idem_e I] at h
-    exact h
-  exact WellFounded.intro allacc
+  exact WellFounded.intro fun I => by
+    have h := lift_acc_then_ideal_acc idem_e I ⟨I, rfl⟩
+      (WellFounded.apply h_ar.wf (ideal_lift idem_e I))
+    rwa [push_pull idem_e I] at h
 
 -- if we have two elements x y in the corners subring, then any element of the form x w y is
 -- also in the corner
@@ -469,34 +427,27 @@ theorem both_mul_lift (x y : CornerSubring idem_e) :
   ext a
   constructor
   · rintro ⟨r, ⟨s, hs⟩, rfl⟩
-    refine ⟨s, ?_⟩
-    simp only [NonUnitalSubring.val_mul, hs]
+    exact ⟨s, by simp only [NonUnitalSubring.val_mul, hs]⟩
   · rintro ⟨s, hs⟩
     rw [← is_right_unit idem_e ↑x, ← is_left_unit idem_e ↑y] at hs
     simp only [NonUnitalSubring.val_mul] at hs
     let sc : R := (1 : (CornerSubring idem_e)) * s * (1 : (CornerSubring idem_e))
     rw [← mul_assoc] at hs
-    have ha : a = x * sc * y := by
-      simp only [sc]
-      rw [hs]
-      simp only [mul_assoc]
     have hsc : sc ∈ CornerSubring idem_e := by
       simp only [sc]
       apply corner_ring_both_mul_mem'
-    refine ⟨x * ⟨sc, hsc⟩ * y, ⟨⟨sc, hsc⟩, ?_⟩, ?_⟩
-    · rfl
-    · simp only [NonUnitalSubring.val_mul, ha]
+    refine ⟨x * ⟨sc, hsc⟩ * y, ⟨⟨sc, hsc⟩, rfl⟩, ?_⟩
+    simp only [NonUnitalSubring.val_mul]
+    have : a = (x : R) * sc * y := by simp only [sc]; rw [hs]; simp only [mul_assoc]
+    exact this.symm
 
 -- b) If R is a prime ring, then the corner ring is prime
 theorem corner_ring_prime (hRP : IsPrimeRing R) : IsPrimeRing (CornerSubring idem_e) := by
   rw [prime_ring_equiv]
   intro a b h
   have h_lift : ((both_mul a b) : Set R) = {0} := by
-    rw [← both_mul_lift, congrArg (Set.image Subtype.val) h]
-    exact Set.image_singleton
-  have l := prime_ring_equiv.1 hRP _ _ h_lift
-  simp only [ZeroMemClass.coe_eq_zero] at l
-  exact l
+    rw [← both_mul_lift, congrArg (Set.image Subtype.val) h]; exact Set.image_singleton
+  simpa [ZeroMemClass.coe_eq_zero] using prime_ring_equiv.1 hRP _ _ h_lift
 
 -- if a cornersubring is a division subring then it is a division ring on its own
 theorem div_subring_to_div_ring (e : R) (idem_e : IsIdempotentElem e)
@@ -511,8 +462,6 @@ theorem div_subring_to_div_ring (e : R) (idem_e : IsIdempotentElem e)
   clear a a_mem a_nz
   intro x x_nz
   let ⟨y, ⟨y_mem, hy⟩⟩ := h_inv x (SetLike.coe_mem x) ((nonzero idem_e x).mp x_nz)
-  refine ⟨⟨y, y_mem⟩, ?_⟩
-  apply Subtype.ext
-  exact hy
+  exact ⟨⟨y, y_mem⟩, Subtype.ext hy⟩
 
 end LeanPool.ArtinWedderburn

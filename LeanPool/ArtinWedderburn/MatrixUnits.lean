@@ -37,30 +37,18 @@ open hasMatrixUnits
 variable (R : Type*) [Ring R]
 
 -- in a nontrivial ring, 0 and 1 are different elements
-theorem nontrivial_zero_not_one (nontriv : Nontrivial R) : (0 : R) ≠ (1 : R) := by
-  intro h
-  obtain ⟨x, y, x_neq_y⟩ := nontriv.exists_pair_ne
-  have x_eq_y : x = y := by
-    calc
-      x = x * 1 := by noncomm_ring
-      _ = x * 0 := by rw [← h]
-      _ = y * 0 := by noncomm_ring
-      _ = y * 1 := by rw [h]
-      _ = y := by noncomm_ring
-  exact x_neq_y x_eq_y
+theorem nontrivial_zero_not_one (nontriv : Nontrivial R) : (0 : R) ≠ (1 : R) :=
+  haveI := nontriv; zero_ne_one
 
 theorem nontrivial_ortidem_n_pos (nontriv : Nontrivial R) (ort_idem : OrtIdemDiv R) :
     0 < ort_idem.n := by
-  refine Nat.pos_of_ne_zero ?_
   by_contra n_zero
-  have not_less_zero (n : ℕ) : ¬ n < ort_idem.n := by rw [n_zero]; exact Nat.not_lt_zero n
-  have fin_empty : IsEmpty (Fin ort_idem.n) := isEmpty_iff.mpr (fun ⟨n, hn⟩ => not_less_zero n hn)
-  have zero_eq_one : (1 : R) = (0 : R) := by
-    haveI := fin_empty
-    calc
-      1 = ∑ i : Fin ort_idem.n, ort_idem.f i := Eq.symm ort_idem.sum_one
+  push Not at n_zero
+  haveI : IsEmpty (Fin ort_idem.n) := isEmpty_iff.mpr fun ⟨n, hn⟩ => absurd hn (by omega)
+  have : (1 : R) = 0 := by
+    calc (1 : R) = ∑ i : Fin ort_idem.n, ort_idem.f i := ort_idem.sum_one.symm
       _ = 0 := Fintype.sum_empty ort_idem.f
-  exact nontrivial_zero_not_one R nontriv (Eq.symm zero_eq_one)
+  exact nontrivial_zero_not_one R nontriv this.symm
 
 theorem OrtIdem_imply_MatUnits' {n : ℕ} (hn : 0 < n)
     (diag_es : Fin n → R)
@@ -85,49 +73,36 @@ theorem OrtIdem_imply_MatUnits' {n : ℕ} (hn : 0 < n)
     · rw [h]
       have col_mul_diag : col_es i * diag_es ⟨0, hn⟩ = col_es i := by
         obtain ⟨r, hr⟩ := col_in i
-        calc
-          col_es i * diag_es ⟨0, hn⟩ = diag_es i * r * (diag_es ⟨0, hn⟩ * diag_es ⟨0, hn⟩) := by
-            rw [hr]; noncomm_ring
+        calc col_es i * diag_es ⟨0, hn⟩
+            = diag_es i * r * (diag_es ⟨0, hn⟩ * diag_es ⟨0, hn⟩) := by rw [hr]; noncomm_ring
           _ = diag_es i * r * diag_es ⟨0, hn⟩ := by rw [idem ⟨0, hn⟩]
           _ = col_es i := by rw [hr]
-      calc
-        (col_es i * row_es k) * (col_es k * row_es l) =
-            col_es i * (row_es k * col_es k) * row_es l := by noncomm_ring
+      calc (col_es i * row_es k) * (col_es k * row_es l)
+          = col_es i * (row_es k * col_es k) * row_es l := by noncomm_ring
         _ = col_es i * diag_es ⟨0, hn⟩ * row_es l := by rw [comp1 k]
         _ = col_es i * row_es l := by rw [col_mul_diag]
     · obtain ⟨r, hr⟩ := row_in j
       obtain ⟨s, hs⟩ := col_in k
-      calc
-        (col_es i * row_es j) * (col_es k * row_es l) =
-            col_es i *
-              (diag_es ⟨0, hn⟩ * r * (diag_es j * diag_es k) * s * diag_es ⟨0, hn⟩) *
+      calc (col_es i * row_es j) * (col_es k * row_es l)
+          = col_es i * (diag_es ⟨0, hn⟩ * r * (diag_es j * diag_es k) * s * diag_es ⟨0, hn⟩) *
               row_es l := by rw [hr, hs]; noncomm_ring
         _ = 0 := by rw [(ort j k h).left]; noncomm_ring
   let mat_units : hasMatrixUnits R n :=
     { es := es,
       diag_sum_eq_one := diag_sum_eq_one,
       mul_ij_kl_eq_kron_delta_jk_mul_es_il := delta }
-  refine ⟨mat_units, ?_⟩
-  calc
-    mat_units.es ⟨0, hn⟩ ⟨0, hn⟩ = col_es ⟨0, hn⟩ * row_es ⟨0, hn⟩ := rfl
-    _ = diag_es ⟨0, hn⟩ := by simp_rw [comp2]
+  exact ⟨mat_units, comp2 ⟨0, hn⟩⟩
 
 theorem lemma_2_20' (prime : IsPrimeRing R) (ort_idem : OrtIdemDiv R) (n_pos : 0 < ort_idem.n) :
     ∃ mat_units : hasMatrixUnits R ort_idem.n,
       mat_units.es ⟨0, n_pos⟩ ⟨0, n_pos⟩ = ort_idem.f ⟨0, n_pos⟩ := by
-  have proof_uv := fun i =>
+  let proof_uv := fun i =>
     lemma_2_19' prime (ort_idem.f ⟨0, n_pos⟩) (ort_idem.f i) (ort_idem.h ⟨0, n_pos⟩)
       (ort_idem.h i) (ort_idem.div ⟨0, n_pos⟩) (ort_idem.div i)
-  let row_es : Fin ort_idem.n → R := fun i => (proof_uv i).u
-  let col_es : Fin ort_idem.n → R := fun i => (proof_uv i).v
-  let row_in := fun i => (proof_uv i).u_mem
-  let col_in := fun i => (proof_uv i).v_mem
-  let comp1 := fun i => (proof_uv i).u_mul_v
-  let comp2 := fun i => (proof_uv i).v_mul_u
-  have mat_units :=
-    @OrtIdem_imply_MatUnits' R _ ort_idem.n n_pos ort_idem.f ort_idem.h ort_idem.orthogonal
-      ort_idem.sum_one row_es row_in col_es col_in comp1 comp2
-  exact mat_units
+  exact @OrtIdem_imply_MatUnits' R _ ort_idem.n n_pos ort_idem.f ort_idem.h ort_idem.orthogonal
+    ort_idem.sum_one (fun i => (proof_uv i).u) (fun i => (proof_uv i).u_mem)
+    (fun i => (proof_uv i).v) (fun i => (proof_uv i).v_mem)
+    (fun i => (proof_uv i).u_mul_v) (fun i => (proof_uv i).v_mul_u)
 
 variable {n : ℕ} {hn : 0 < n} [mu : hasMatrixUnits R n]
 
@@ -213,22 +188,15 @@ theorem ring_to_matrix_ring_multiplicative (a b : R) :
   unfold ij_corner
   apply Subtype.ext
   simp only [MulMemClass.mk_mul_mk]
-  calc
-    es ⟨0, hn⟩ i * ((a * ∑ i : Fin n, es i ⟨0, hn⟩ * es ⟨0, hn⟩ i) * b) * es j ⟨0, hn⟩ =
-        (es ⟨0, hn⟩ i * a) * (∑ i : Fin n, es i ⟨0, hn⟩ * es ⟨0, hn⟩ i) * (b * es j ⟨0, hn⟩) := by
-      rw [mul_assoc, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
-    _ = (∑ i_1 : Fin n, es ⟨0, hn⟩ i * a * (es i_1 ⟨0, hn⟩ * es ⟨0, hn⟩ i_1)) *
+  calc es ⟨0, hn⟩ i * ((a * ∑ i : Fin n, es i ⟨0, hn⟩ * es ⟨0, hn⟩ i) * b) * es j ⟨0, hn⟩
+      = (es ⟨0, hn⟩ i * a) * (∑ i : Fin n, es i ⟨0, hn⟩ * es ⟨0, hn⟩ i) * (b * es j ⟨0, hn⟩) := by
+        noncomm_ring
+    _ = ∑ i_1 : Fin n, es ⟨0, hn⟩ i * a * (es i_1 ⟨0, hn⟩ * es ⟨0, hn⟩ i_1) *
           (b * es j ⟨0, hn⟩) := by
-      rw [Finset.mul_sum Finset.univ]
-    _ = (∑ i_1 : Fin n, es ⟨0, hn⟩ i * a * (es i_1 ⟨0, hn⟩ * es ⟨0, hn⟩ i_1) *
-          (b * es j ⟨0, hn⟩)) := by
-      rw [Finset.sum_mul]
+        rw [Finset.mul_sum, Finset.sum_mul]
     _ = ∑ j_1 : Fin n, es ⟨0, hn⟩ i * a * es j_1 ⟨0, hn⟩ *
           (es ⟨0, hn⟩ j_1 * b * es j ⟨0, hn⟩) := by
-      apply Finset.sum_congr
-      · simp
-      · intro x hx
-        rw [mul_assoc, mul_assoc, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
+        apply Finset.sum_congr rfl; intro x _; noncomm_ring
   symm
   rw [_lift_sum]
 
@@ -242,44 +210,34 @@ theorem corner_matrix_zero_equiv (a : R) :
   constructor
   · intro hij
     have h : ∀ (i : Fin n), (es i i) * a = 0 := by
-      have a1 : a = a * 1 := by simp
-      rw [a1, ← mu.diag_sum_eq_one]
       intro i
-      rw [Finset.mul_sum Finset.univ, Finset.mul_sum Finset.univ]
+      have : a = a * 1 := by simp
+      rw [this, ← mu.diag_sum_eq_one, Finset.mul_sum, Finset.mul_sum]
       simp only [mul_assoc] at hij
-      simp only [hij]
-      apply Fintype.sum_eq_zero
-      simp
-    have hs : ∑ (i : Fin n), (es i i) * a = 0 := by
-      simp only [h]
-      exact Fintype.sum_eq_zero (fun a ↦ 0) (congrFun rfl)
-    rw [← Finset.sum_mul Finset.univ] at hs
-    rw [mu.diag_sum_eq_one] at hs
-    simp only [one_mul] at hs
+      simp [hij]
+    have hs : ∑ i : Fin n, (es i i) * a = 0 := by simp [h]
+    rw [← Finset.sum_mul, mu.diag_sum_eq_one, one_mul] at hs
     exact hs
-  · intro h
-    rw [h]
-    simp only [mul_zero, zero_mul, implies_true]
+  · rintro rfl
+    simp
 
 -- same as previous but in a more applicable form
 theorem corner_matrix_zero_crit (a : R) :
     (∀ (i j : Fin n), @ij_corner R _ n hn mu i j a = 0) → a = 0 := by
   rw [← (@corner_matrix_zero_equiv R _ n)]
-  intro h
-  unfold ij_corner at h
-  intro i j
-  have h' : (mu.es i ⟨0, hn⟩ * (mu.es ⟨0, hn⟩ i * a * mu.es j ⟨0, hn⟩) * mu.es ⟨0, hn⟩ j) = 0 := by
-    have l := h i j
-    have l' : (mu.es ⟨0, hn⟩ i * a * mu.es j ⟨0, hn⟩) = 0 := congrArg Subtype.val l
-    simp only [l']
-    simp only [mul_zero, zero_mul]
+  intro h i j
+  have l' : mu.es ⟨0, hn⟩ i * a * mu.es j ⟨0, hn⟩ = 0 :=
+    congrArg Subtype.val (h i j)
   have h'' : (mu.es i ⟨0, hn⟩ * mu.es ⟨0, hn⟩ i) * a *
-        (mu.es j ⟨0, hn⟩ * mu.es ⟨0, hn⟩ j) = 0 := by
-    rw [← h']
-    repeat rw [mul_assoc]
-  simp only [mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il i ⟨0, hn⟩ ⟨0, hn⟩ i] at h''
-  simp only [mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il j ⟨0, hn⟩ ⟨0, hn⟩ j] at h''
-  simp only [↓reduceIte] at h''
+      (mu.es j ⟨0, hn⟩ * mu.es ⟨0, hn⟩ j) = 0 := by
+    have key : mu.es i ⟨0, hn⟩ * (mu.es ⟨0, hn⟩ i * a * mu.es j ⟨0, hn⟩) * mu.es ⟨0, hn⟩ j = 0 :=
+      by rw [l']; noncomm_ring
+    calc (mu.es i ⟨0, hn⟩ * mu.es ⟨0, hn⟩ i) * a * (mu.es j ⟨0, hn⟩ * mu.es ⟨0, hn⟩ j)
+        = mu.es i ⟨0, hn⟩ * (mu.es ⟨0, hn⟩ i * a * mu.es j ⟨0, hn⟩) * mu.es ⟨0, hn⟩ j := by
+          noncomm_ring
+      _ = 0 := key
+  simp only [mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il i ⟨0, hn⟩ ⟨0, hn⟩ i,
+    mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il j ⟨0, hn⟩ ⟨0, hn⟩ j, ↓reduceIte] at h''
   exact h''
 
 -- the actual definition of the homomorphism
@@ -291,21 +249,15 @@ def ring_to_matrix_ring_hom :
       ext i j
       simp only [SetLike.coe_eq_coe]
       unfold ring_to_matrix_ring ij_corner
-      simp only [mul_one]
-      simp only [matrix_one (@e00_cornerring R _ n hn mu)]
-      have h := mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il ⟨0, hn⟩ i j ⟨0, hn⟩
-      simp only [h]
-      split_ifs
-      · rfl
-      · rfl
+      simp only [mul_one, matrix_one (@e00_cornerring R _ n hn mu),
+        mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il ⟨0, hn⟩ i j ⟨0, hn⟩]
+      split_ifs <;> rfl
     map_add' := ring_to_matrix_ring_additive R
     map_mul' := ring_to_matrix_ring_multiplicative R
     map_zero' := by
       ext i j
-      simp only [Matrix.zero_apply, ZeroMemClass.coe_zero, ZeroMemClass.coe_eq_zero]
       unfold ring_to_matrix_ring ij_corner
-      simp only [mul_zero, zero_mul]
-      rfl }
+      simp }
 
 -- define the reverse map from matrix ring to R
 /-- Reassemble a ring element from its matrix of corner components by summing
@@ -349,15 +301,11 @@ lemma matrixcorner1 :
 
 lemma e00_unit (a : @e00_cornerring R _ n hn mu) :
     mu.es ⟨0, hn⟩ ⟨0, hn⟩ * (a : R) = a := by
-  have h : 1 * a = a := one_mul a
-  nth_rewrite 2 [← h]
-  rfl
+  nth_rewrite 2 [show a = 1 * a from (one_mul a).symm]; rfl
 
 lemma unit_e00 (a : @e00_cornerring R _ n hn mu) :
     (a : R) * mu.es ⟨0, hn⟩ ⟨0, hn⟩ = a := by
-  have h : a * 1 = a := mul_one a
-  nth_rewrite 2 [← h]
-  rfl
+  nth_rewrite 2 [show a = a * 1 from (mul_one a).symm]; rfl
 
 -- the main statement of this file: if a ring has matrix units then it is isomorphic to the
 -- matrix ring over the corner ring of the first matrix unit
@@ -367,38 +315,22 @@ noncomputable
 def ring_to_matrix_iso [mu : hasMatrixUnits R n] :
     R ≃+* Matrix (Fin n) (Fin n) (@e00_cornerring R _ n hn mu) := by
   apply RingEquiv.ofBijective (ring_to_matrix_ring_hom R)
-  refine ⟨?_, ?_⟩
-  · refine (injective_iff_map_eq_zero (ring_to_matrix_ring_hom R)).mpr ?_
-    intro a
-    simp only [ring_to_matrix_ring_hom]
-    unfold ring_to_matrix_ring
-    simp only [RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
-    intro h
-    apply @corner_matrix_zero_crit R _ n hn mu
+  refine ⟨(injective_iff_map_eq_zero _).mpr fun a h => ?_, fun A => ?_⟩
+  · apply @corner_matrix_zero_crit R _ n hn mu
     intro i j
-    have fn_lemma {α β} {f g : α → β} (h : f = g) (a : α) : f a = g a := by rw [h]
-    have h := fn_lemma h i
-    exact fn_lemma h j
-  · intro A
-    let a : R := ∑ i, ∑ j, es i ⟨0, hn⟩ * ((A i j : R) * es ⟨0, hn⟩ j)
-    refine ⟨a, ?_⟩
+    exact congrFun (congrFun h i) j
+  · refine ⟨∑ i, ∑ j, es i ⟨0, hn⟩ * ((A i j : R) * es ⟨0, hn⟩ j), ?_⟩
     simp only [ring_to_matrix_ring_hom, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk]
     unfold ring_to_matrix_ring
     ext i j
+    simp only [SetLike.coe_eq_coe]
     unfold ij_corner
-    simp only [a]
-    have h : (es ⟨0, hn⟩ i *
-          ∑ i : Fin n, ∑ j : Fin n, es i ⟨0, hn⟩ * ((A i j : R) * es ⟨0, hn⟩ j)) =
-        (es ⟨0, hn⟩ i * ∑ i : Fin n, es i ⟨0, hn⟩ * ∑ j : Fin n,
-            ((A i j : R) * es ⟨0, hn⟩ j)) := by
-      rw [Finset.sum_congr]
-      · rfl
-      · intro i _
-        rw [Finset.mul_sum]
-    rw [h, e0k_left_mul_sum]
-    simp only [mul_assoc]
-    rw [right_mul_sum_e0k]
-    simp only [unit_e00, e00_unit]
+    have h : es ⟨0, hn⟩ i *
+          ∑ i : Fin n, ∑ j : Fin n, es i ⟨0, hn⟩ * ((A i j : R) * es ⟨0, hn⟩ j) =
+        es ⟨0, hn⟩ i * ∑ i : Fin n, es i ⟨0, hn⟩ * ∑ j : Fin n,
+            ((A i j : R) * es ⟨0, hn⟩ j) := by
+      congr 1; apply Finset.sum_congr rfl; intro i _; rw [Finset.mul_sum]
+    simp only [h, e0k_left_mul_sum, mul_assoc, right_mul_sum_e0k, unit_e00, e00_unit]
 
 -- Lemma 2.17
 -- hypothesis: R is a ring with matrix units

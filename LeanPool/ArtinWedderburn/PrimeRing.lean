@@ -43,48 +43,31 @@ theorem prime_ring_equiv :
       rw [both_mul_zero_one_left_zero a b hab] at hx
       trivial
     have h := hR (left_ideal_of_element a) (left_ideal_of_element b) (Ideal.span_eq_bot.mpr rhs)
-    cases h with
-    | inl ha =>
-      apply Or.inl
-      have ainbot : a ∈ left_ideal_of_element a := by use 1; simp
-      rw [ha] at ainbot
-      exact ainbot
-    | inr hb =>
-      apply Or.inr
-      have binbot : b ∈ left_ideal_of_element b := by use 1; simp
-      rw [hb] at binbot
-      exact binbot
+    rcases h with ha | hb
+    · exact Or.inl (by have ainbot : a ∈ left_ideal_of_element a := ⟨1, by simp⟩
+                       rw [ha] at ainbot; exact ainbot)
+    · exact Or.inr (by have binbot : b ∈ left_ideal_of_element b := ⟨1, by simp⟩
+                       rw [hb] at binbot; exact binbot)
   · intro h I J hIJ
-    have hI : I = ⊥ ∨ I ≠ ⊥ := by apply Classical.em
-    cases hI with
-    | inl hi => apply Or.inl; exact hi
-    | inr hi =>
-      apply Or.inr
+    rcases Classical.em (I = ⊥) with hi | hi
+    · exact Or.inl hi
+    · apply Or.inr
       refine (Submodule.eq_bot_iff J).mpr ?_
       obtain ⟨x, hx, hnz⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hi
       intro y hy
       have hxRy : both_mul x y = {0} := by
-        apply Set.ext_iff.mpr
-        intro z
-        constructor
+        ext z; constructor
         · rintro ⟨r, hr⟩
           rw [hr]
           have hry : r * y ∈ J := Ideal.mul_mem_left J r hy
-          have hz : x * (r * y) ∈ (↑I : Set R) * (↑J : Set R) :=
-            ⟨x, hx, r * y, hry, rfl⟩
+          have hz : x * (r * y) ∈ (↑I : Set R) * (↑J : Set R) := ⟨x, hx, r * y, hry, rfl⟩
           have k : x * r * y = 0 := by
-            calc
-              x * r * y = x * (r * y) := by noncomm_ring
-              _ = 0 := Ideal.span_eq_bot.mp hIJ (x * (r * y)) hz
-          rw [k]
-          rfl
-        · intro hz
-          rw [Set.mem_singleton_iff] at hz
-          rw [hz]
-          exact ⟨0, by noncomm_ring⟩
-      cases h x y hxRy with
-      | inl hx => contradiction
-      | inr hy => exact hy
+            have : x * r * y = x * (r * y) := by noncomm_ring
+            rw [this]; exact Ideal.span_eq_bot.mp hIJ _ hz
+          simp [k]
+        · rintro hz
+          exact ⟨0, by simp [Set.mem_singleton_iff.mp hz]⟩
+      exact (h x y hxRy).resolve_left hnz
 
 theorem span_le_two_sided_span (S : Set R) :
     Ideal.span S ≤ TwoSidedIdeal.asIdeal (TwoSidedIdeal.span S) := by
@@ -102,8 +85,7 @@ theorem equal_sets (I : TwoSidedIdeal R) :
 theorem ideal_eq_to_two_sided_ideal_eq (I J : TwoSidedIdeal R) :
     I = J ↔ TwoSidedIdeal.asIdeal I = TwoSidedIdeal.asIdeal J := by
   constructor
-  · intro h
-    rw [h]
+  · intro h; rw [h]
   · intro h
     apply (two_sided_ideal_equality I J).mpr
     rw [← equal_sets I, ← equal_sets J]
@@ -117,12 +99,8 @@ theorem ideal_bot_iff_set_zero (I : Ideal R) : I = ⊥ ↔ (I : Set R) = {0} :=
 
 theorem ideal_bot (I : TwoSidedIdeal R) : I = ⊥ ↔ TwoSidedIdeal.asIdeal I = ⊥ := by
   constructor
-  · intro h
-    rw [h]
-    rfl
-  · intro h
-    apply (two_sided_bot_iff_set_zero I).mpr
-    apply (ideal_bot_iff_set_zero (TwoSidedIdeal.asIdeal I)).mp h
+  · intro h; rw [h]; rfl
+  · exact fun h => (two_sided_bot_iff_set_zero I).mpr ((ideal_bot_iff_set_zero _).mp h)
 
 theorem ideal_span_sub_two_sided_ideal_span (S : Set R) :
     Ideal.span S ≤ TwoSidedIdeal.asIdeal (TwoSidedIdeal.span S) := span_le_two_sided_span S
@@ -148,11 +126,7 @@ theorem same_prod (I J : TwoSidedIdeal R) :
 theorem prime_ring_implies_prime_by_two_sided :
     IsPrimeRing R → ∀ (I J : TwoSidedIdeal R), I * J = ⊥ → I = ⊥ ∨ J = ⊥ := by
   rintro hR I J hIJ
-  have hIJasIdeals := same_prod I J hIJ
-  have h := hR (TwoSidedIdeal.asIdeal I) (TwoSidedIdeal.asIdeal J) hIJasIdeals
-  cases h with
-  | inl hi => apply Or.inl; exact (ideal_bot I).mpr hi
-  | inr hj => apply Or.inr; exact (ideal_bot J).mpr hj
+  exact (hR _ _ (same_prod I J hIJ)).imp (ideal_bot I).mpr (ideal_bot J).mpr
 
 theorem two_sided_span_bot_el_zero (a : R) : TwoSidedIdeal.span {a} = ⊥ → a = 0 := by
   intro h
@@ -311,39 +285,27 @@ theorem prime_for_two_sided_implies_condition2 :
     (∀ (I J : TwoSidedIdeal R), I * J = ⊥ → I = ⊥ ∨ J = ⊥) →
       (∀ (a b : R), both_mul a b = {0} → a = 0 ∨ b = 0) := by
   rintro hR a b hab
-  have RaRbR_zero : TwoSidedIdeal.span {a} * TwoSidedIdeal.span {b} = ⊥ :=
-    bothmul_zero_implies_prod_zero a b hab
-  have h := hR (TwoSidedIdeal.span {a}) (TwoSidedIdeal.span {b}) RaRbR_zero
-  cases h with
-  | inl ha => apply Or.inl; exact two_sided_span_bot_el_zero a ha
-  | inr hb => apply Or.inr; exact two_sided_span_bot_el_zero b hb
+  exact (hR _ _ (bothmul_zero_implies_prod_zero a b hab)).imp
+    (two_sided_span_bot_el_zero a) (two_sided_span_bot_el_zero b)
 
 -- equivalence between 1) and 3)
 theorem prime_ring_equiv' :
-    IsPrimeRing R ↔ ∀ (I J : TwoSidedIdeal R), I * J = ⊥ → I = ⊥ ∨ J = ⊥ := by
-  constructor
-  · exact prime_ring_implies_prime_by_two_sided
-  · intro hR
-    exact prime_ring_equiv.mpr (prime_for_two_sided_implies_condition2 hR)
+    IsPrimeRing R ↔ ∀ (I J : TwoSidedIdeal R), I * J = ⊥ → I = ⊥ ∨ J = ⊥ :=
+  ⟨prime_ring_implies_prime_by_two_sided,
+   fun hR => prime_ring_equiv.mpr (prime_for_two_sided_implies_condition2 hR)⟩
 
 -- Every simple ring is prime
 theorem simple_ring_is_prime [IsSimpleRing R] : IsPrimeRing R := by
   apply prime_ring_equiv'.mpr
   intro I J hIJ
-  cases eq_bot_or_eq_top I with
-  | inl hi => apply Or.inl; exact hi
-  | inr hi =>
-    apply Or.inr
-    cases eq_bot_or_eq_top J with
-    | inl hj => exact hj
-    | inr hj =>
-      have h : I * J = ⊤ := by
-        apply (TwoSidedIdeal.one_mem_iff (I * J)).mp
-        apply TwoSidedIdeal.subset_span
-        refine ⟨1, by rw [hi]; trivial, 1, by rw [hj]; trivial, by noncomm_ring⟩
-      rw [hIJ] at h
-      have k : (⊥ : TwoSidedIdeal R) ≠ (⊤ : TwoSidedIdeal R) := bot_ne_top
-      absurd h
-      trivial
+  rcases eq_bot_or_eq_top I with hi | hi
+  · exact Or.inl hi
+  · rcases eq_bot_or_eq_top J with hj | hj
+    · exact Or.inr hj
+    · exfalso
+      have h : I * J = ⊤ :=
+        (TwoSidedIdeal.one_mem_iff (I * J)).mp (TwoSidedIdeal.subset_span
+          ⟨1, by rw [hi]; trivial, 1, by rw [hj]; trivial, by noncomm_ring⟩)
+      exact bot_ne_top (hIJ ▸ h)
 
 end LeanPool.ArtinWedderburn
