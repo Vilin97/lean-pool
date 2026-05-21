@@ -599,6 +599,18 @@ lemma integral_legendre_mul_smooth_eq {x z : ℝ} (n : ℕ) (hx : x ∈ Set.Ioo 
   rw [h]
   simp_rw [← mul_assoc]
 
+private lemma one_sub_pow_pos {x z : ℝ} (n : ℕ) (hx : x ∈ Set.Ioo 0 1)
+    (hz : z ∈ Set.Ioo 0 1) (y : ℝ) (hy : y ∈ Set.Icc 0 1) :
+    (1 - (1 - x * y) * z) ^ (n + 1) > 0 := by
+  simp only [Set.mem_Ioo] at hx hz
+  simp only [Set.mem_Icc] at hy
+  apply pow_pos
+  simp only [sub_pos]
+  suffices (1 - x * y) * z ≤ z by linarith
+  apply mul_le_of_le_one_left (by linarith [mul_nonneg (le_of_lt hx.1) hy.1])
+  simp only [tsub_le_iff_right, le_add_iff_nonneg_right]
+  nlinarith
+
 lemma legendre_integral_special {x z : ℝ} (n : ℕ) (hx : x ∈ Set.Ioo 0 1)
     (hz : z ∈ Set.Ioo 0 1) :
     ∫ (y : ℝ) in (0)..1, eval y (shiftedLegendre n) * (1 / (1 - (1 - x * y) * z)) =
@@ -627,19 +639,7 @@ lemma legendre_integral_special {x z : ℝ} (n : ℕ) (hx : x ∈ Set.Ioo 0 1)
         ring
     · norm_cast
       exact Nat.factorial_ne_zero n
-  · suffices (1 - (1 - x * y) * z) ^ (n + 1) > 0 by linarith
-    apply pow_pos
-    simp only [sub_pos]
-    suffices (1 - x * y) * z ≤ z by linarith
-    apply mul_le_of_le_one_left (by linarith)
-    simp only [tsub_le_iff_right, le_add_iff_nonneg_right]
-    nlinarith
-  · suffices (1 - (1 - x * y) * z) ^ (n + 1) > 0 by linarith
-    apply pow_pos
-    simp only [sub_pos]
-    suffices (1 - x * y) * z ≤ z by linarith
-    apply mul_le_of_le_one_left (by linarith)
-    simp only [tsub_le_iff_right, le_add_iff_nonneg_right]
-    nlinarith
+  · linarith [one_sub_pow_pos n hx hz y hy]
+  · linarith [one_sub_pow_pos n hx hz y hy]
 
 end Polynomial

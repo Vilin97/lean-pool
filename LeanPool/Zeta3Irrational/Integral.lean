@@ -811,47 +811,67 @@ lemma fun_of_J_nonneg (r s : ℕ) (x : ℝ × ℝ) (hx : x ∈ Set.Ioo 0 1 ×ˢ 
     · apply pow_nonneg (by linarith)
   · apply pow_nonneg (by linarith)
 
+private lemma J_integrand_aestronglyMeasurable (r s : ℕ) :
+    MeasureTheory.AEStronglyMeasurable
+      (fun x : ℝ × ℝ => -Real.log (x.1 * x.2) / (1 - x.1 * x.2) * x.1 ^ r * x.2 ^ s)
+      (MeasureTheory.volume.restrict (Set.Ioo 0 1 ×ˢ Set.Ioo 0 1)) := by
+  apply AEMeasurable.aestronglyMeasurable
+  apply Measurable.aemeasurable
+  apply Measurable.mul
+  · apply Measurable.mul
+    · apply Measurable.div
+      · apply Measurable.neg (Measurable.log (Measurable.mul measurable_fst measurable_snd))
+      · apply Measurable.const_sub (Measurable.mul measurable_fst measurable_snd)
+    · apply Measurable.pow measurable_fst measurable_const
+  · apply Measurable.pow measurable_snd measurable_const
+
+private lemma J_lnorm_eq (r s : ℕ) :
+    ∫⁻ (a : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
+      ENNReal.ofReal ‖-Real.log (a.1 * a.2) / (1 - a.1 * a.2) * a.1 ^ r * a.2 ^ s‖ =
+    ∫⁻ (a : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
+      ENNReal.ofReal (-Real.log (a.1 * a.2) / (1 - a.1 * a.2) * a.1 ^ r * a.2 ^ s) := by
+  rw [← MeasureTheory.lintegral_indicator (by measurability),
+    ← MeasureTheory.lintegral_indicator (by measurability)]
+  congr
+  ext x
+  rw [Set.indicator_apply, Set.indicator_apply]
+  by_cases hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
+  · simp only [hx, ↓reduceIte, norm_mul, norm_div, norm_neg, Real.norm_eq_abs, norm_pow]
+    simp only [Set.mem_prod, Set.mem_Ioo] at hx
+    rw [ENNReal.ofReal_eq_ofReal_iff]
+    · congr 3
+      · simp only [abs_eq_neg_self]
+        apply Real.log_nonpos <;> nlinarith
+      · simp only [abs_eq_self, sub_nonneg]; nlinarith
+      · simp only [abs_eq_self]; nlinarith
+      · simp only [abs_eq_self]; nlinarith
+    · positivity
+    · exact fun_of_J_nonneg r s x hx
+  · simp only [hx, ↓reduceIte]
+
+private lemma J_ae_nonneg_inter (r s : ℕ)
+    (hint : MeasureTheory.IntegrableOn
+      (fun x : ℝ × ℝ => -Real.log (x.1 * x.2) / (1 - x.1 * x.2) * x.1 ^ r * x.2 ^ s)
+      (Set.Ioo 0 1 ×ˢ Set.Ioo 0 1) MeasureTheory.volume) :
+    0 ≤ᵐ[MeasureTheory.volume.restrict (Set.Ioo 0 1 ×ˢ Set.Ioo 0 1)]
+      (fun x : ℝ × ℝ => -Real.log (x.1 * x.2) / (1 - x.1 * x.2) * x.1 ^ r * x.2 ^ s) := by
+  apply MeasureTheory.ae_nonneg_restrict_of_forall_setIntegral_nonneg_inter hint
+  rintro x _ -
+  apply MeasureTheory.setIntegral_nonneg (by measurability)
+  intro y hy
+  by_cases h : y ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
+  · exact fun_of_J_nonneg r s y h
+  · rw [Set.mem_inter_iff] at hy
+    tauto
+
 lemma integrableOn_J_rr (r : ℕ) : MeasureTheory.IntegrableOn
     (fun x ↦ -Real.log (x.1 * x.2) / (1 - x.1 * x.2) * x.1 ^ r * x.2 ^ r)
     (Set.Ioo 0 1 ×ˢ Set.Ioo 0 1) MeasureTheory.volume := by
   have h := J_ENN_rr r
   simp only [J_ENN] at h
-  rw [MeasureTheory.IntegrableOn, MeasureTheory.Integrable]
-  constructor
-  · apply AEMeasurable.aestronglyMeasurable
-    apply Measurable.aemeasurable
-    · apply Measurable.mul
-      · apply Measurable.mul
-        · apply Measurable.div
-          · apply Measurable.neg (Measurable.log (Measurable.mul measurable_fst measurable_snd))
-          · apply Measurable.const_sub (Measurable.mul measurable_fst measurable_snd)
-        · apply Measurable.pow measurable_fst measurable_const
-      · apply Measurable.pow measurable_snd measurable_const
-  · rw [MeasureTheory.hasFiniteIntegral_iff_norm]
-    have h1 : ∫⁻ (a : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
-      ENNReal.ofReal ‖-Real.log (a.1 * a.2) / (1 - a.1 * a.2) * a.1 ^ r * a.2 ^ r‖ =
-      ∫⁻ (a : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
-      ENNReal.ofReal (-Real.log (a.1 * a.2) / (1 - a.1 * a.2) * a.1 ^ r * a.2 ^ r) := by
-      rw [← MeasureTheory.lintegral_indicator (by measurability),
-        ← MeasureTheory.lintegral_indicator (by measurability)]
-      congr
-      ext x
-      rw [Set.indicator_apply, Set.indicator_apply]
-      by_cases hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
-      · simp only [hx, ↓reduceIte, norm_mul, norm_div, norm_neg, Real.norm_eq_abs, norm_pow]
-        simp only [Set.mem_prod, Set.mem_Ioo] at hx
-        rw [ENNReal.ofReal_eq_ofReal_iff]
-        · congr 3
-          · simp only [abs_eq_neg_self]
-            apply Real.log_nonpos <;> nlinarith
-          · simp only [abs_eq_self, sub_nonneg]; nlinarith
-          · simp only [abs_eq_self]; nlinarith
-          · simp only [abs_eq_self]; nlinarith
-        · positivity
-        · exact fun_of_J_nonneg r r x hx
-      · simp only [hx, ↓reduceIte]
-    rw [h1, h]
-    simp only [one_div, ENNReal.ofReal_lt_top]
+  refine ⟨J_integrand_aestronglyMeasurable r r, ?_⟩
+  rw [MeasureTheory.hasFiniteIntegral_iff_norm, J_lnorm_eq, h]
+  simp
 
 theorem J_rr (r : ℕ) :
     J r r =
@@ -877,24 +897,8 @@ theorem J_rr (r : ℕ) :
           Real.summable_one_div_nat_pow (p := 3)]
         norm_num
     · norm_num
-  · apply MeasureTheory.ae_nonneg_restrict_of_forall_setIntegral_nonneg_inter
-    · exact integrableOn_J_rr r
-    · rintro x hx -
-      apply MeasureTheory.setIntegral_nonneg (by measurability)
-      intro y hy
-      by_cases h : y ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
-      · exact fun_of_J_nonneg r r y h
-      · rw [Set.mem_inter_iff] at hy
-        tauto
-  · apply AEMeasurable.aestronglyMeasurable
-    apply Measurable.aemeasurable
-    · apply Measurable.mul
-      · apply Measurable.mul
-        · apply Measurable.div
-          · apply Measurable.neg (Measurable.log (Measurable.mul measurable_fst measurable_snd))
-          · apply Measurable.const_sub (Measurable.mul measurable_fst measurable_snd)
-        · apply Measurable.pow measurable_fst measurable_const
-      · apply Measurable.pow measurable_snd measurable_const
+  · exact J_ae_nonneg_inter r r (integrableOn_J_rr r)
+  · exact J_integrand_aestronglyMeasurable r r
 
 theorem zeta_3 : J 0 0 = 2 * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 := by
   simp only [J_rr, one_div, zero_lt_one, Finset.Icc_eq_empty_of_lt, Finset.sum_empty, mul_zero,
@@ -1007,42 +1011,9 @@ lemma integrableOn_J_rs' (r s : ℕ) (h : r > s) : MeasureTheory.IntegrableOn
     (Set.Ioo 0 1 ×ˢ Set.Ioo 0 1) MeasureTheory.volume := by
   have h₀ := J_ENN_rs r s h
   simp only [J_ENN] at h₀
-  rw [MeasureTheory.IntegrableOn, MeasureTheory.Integrable]
-  constructor
-  · apply AEMeasurable.aestronglyMeasurable
-    apply Measurable.aemeasurable
-    · apply Measurable.mul
-      · apply Measurable.mul
-        · apply Measurable.div
-          · apply Measurable.neg (Measurable.log (Measurable.mul measurable_fst measurable_snd))
-          · apply Measurable.const_sub (Measurable.mul measurable_fst measurable_snd)
-        · apply Measurable.pow measurable_fst measurable_const
-      · apply Measurable.pow measurable_snd measurable_const
-  · rw [MeasureTheory.hasFiniteIntegral_iff_norm]
-    have h1 : ∫⁻ (a : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
-      ENNReal.ofReal ‖-Real.log (a.1 * a.2) / (1 - a.1 * a.2) * a.1 ^ r * a.2 ^ s‖ =
-      ∫⁻ (a : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
-      ENNReal.ofReal (-Real.log (a.1 * a.2) / (1 - a.1 * a.2) * a.1 ^ r * a.2 ^ s) := by
-      rw [← MeasureTheory.lintegral_indicator (by measurability),
-        ← MeasureTheory.lintegral_indicator (by measurability)]
-      congr
-      ext x
-      rw [Set.indicator_apply, Set.indicator_apply]
-      by_cases hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
-      · simp only [hx, ↓reduceIte, norm_mul, norm_div, norm_neg, Real.norm_eq_abs, norm_pow]
-        simp only [Set.mem_prod, Set.mem_Ioo] at hx
-        rw [ENNReal.ofReal_eq_ofReal_iff]
-        · congr 3
-          · simp only [abs_eq_neg_self]
-            apply Real.log_nonpos <;> nlinarith
-          · simp only [abs_eq_self, sub_nonneg]; nlinarith
-          · simp only [abs_eq_self]; nlinarith
-          · simp only [abs_eq_self]; nlinarith
-        · positivity
-        · exact fun_of_J_nonneg r s x hx
-      · simp only [hx, ↓reduceIte]
-    rw [h1, h₀]
-    simp only [one_div, ENNReal.ofReal_lt_top]
+  refine ⟨J_integrand_aestronglyMeasurable r s, ?_⟩
+  rw [MeasureTheory.hasFiniteIntegral_iff_norm, J_lnorm_eq, h₀]
+  simp
 
 lemma J_rs' (r s : ℕ) (h : r > s) :
     J r s = (∑ k ∈ Finset.Ioc s r, 1 / (k : ℝ) ^ 2) / (r - s) := by
@@ -1057,24 +1028,8 @@ lemma J_rs' (r s : ℕ) (h : r > s) :
     simp only [one_div, inv_nonneg, Nat.cast_nonneg, pow_nonneg, sub_nonneg, Nat.cast_le,
       true_and]
     linarith
-  · apply MeasureTheory.ae_nonneg_restrict_of_forall_setIntegral_nonneg_inter
-    · exact integrableOn_J_rs' r s h
-    · rintro x hx -
-      apply MeasureTheory.setIntegral_nonneg (by measurability)
-      intro y hy
-      by_cases h : y ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
-      · exact fun_of_J_nonneg r s y h
-      · rw [Set.mem_inter_iff] at hy
-        tauto
-  · apply AEMeasurable.aestronglyMeasurable
-    apply Measurable.aemeasurable
-    · apply Measurable.mul
-      · apply Measurable.mul
-        · apply Measurable.div
-          · apply Measurable.neg (Measurable.log (Measurable.mul measurable_fst measurable_snd))
-          · apply Measurable.const_sub (Measurable.mul measurable_fst measurable_snd)
-        · apply Measurable.pow measurable_fst measurable_const
-      · apply Measurable.pow measurable_snd measurable_const
+  · exact J_ae_nonneg_inter r s (integrableOn_J_rs' r s h)
+  · exact J_integrand_aestronglyMeasurable r s
 
 lemma J_ENN_rs_symm (r s : ℕ) : J_ENN r s = J_ENN s r := by
   simp only [J_ENN_rs_eq_tsum, add_comm, mul_comm]
@@ -1085,72 +1040,19 @@ lemma integrableOn_J_rs (r s : ℕ) : MeasureTheory.IntegrableOn
   by_cases h : r > s
   · exact integrableOn_J_rs' r s h
   · by_cases h1 : s = r
-    · rw [h1]
-      exact integrableOn_J_rr r
-    · have h2 : s > r := by
-        by_contra!; apply h1; linarith
-      rw [MeasureTheory.IntegrableOn, MeasureTheory.Integrable]
-      constructor
-      · apply AEMeasurable.aestronglyMeasurable
-        apply Measurable.aemeasurable
-        · apply Measurable.mul
-          · apply Measurable.mul
-            · apply Measurable.div
-              · apply Measurable.neg
-                apply Measurable.log
-                apply Measurable.mul measurable_fst measurable_snd
-              · apply Measurable.const_sub (Measurable.mul measurable_fst measurable_snd)
-            · apply Measurable.pow measurable_fst measurable_const
-          · apply Measurable.pow measurable_snd measurable_const
-      · rw [MeasureTheory.hasFiniteIntegral_iff_norm]
-        have h1 : ∫⁻ (a : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
-          ENNReal.ofReal ‖-Real.log (a.1 * a.2) / (1 - a.1 * a.2) * a.1 ^ r * a.2 ^ s‖ =
-          ∫⁻ (a : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
-          ENNReal.ofReal (-Real.log (a.1 * a.2) / (1 - a.1 * a.2) * a.1 ^ r * a.2 ^ s) := by
-          rw [← MeasureTheory.lintegral_indicator (by measurability),
-            ← MeasureTheory.lintegral_indicator (by measurability)]
-          congr
-          ext x
-          rw [Set.indicator_apply, Set.indicator_apply]
-          by_cases hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
-          · simp only [hx, ↓reduceIte, norm_mul, norm_div, norm_neg, Real.norm_eq_abs, norm_pow]
-            simp only [Set.mem_prod, Set.mem_Ioo] at hx
-            rw [ENNReal.ofReal_eq_ofReal_iff]
-            · congr 3
-              · simp only [abs_eq_neg_self]
-                apply Real.log_nonpos <;> nlinarith
-              · simp only [abs_eq_self, sub_nonneg]; nlinarith
-              · simp only [abs_eq_self]; nlinarith
-              · simp only [abs_eq_self]; nlinarith
-            · positivity
-            · exact fun_of_J_nonneg r s x hx
-          · simp only [hx, ↓reduceIte]
-        have h₀ := J_ENN_rs s r h2
-        rw [J_ENN_rs_symm s r] at h₀
-        simp only [J_ENN] at h₀
-        rw [h1, h₀]
-        simp only [one_div, ENNReal.ofReal_lt_top]
+    · rw [h1]; exact integrableOn_J_rr r
+    · have h2 : s > r := by by_contra!; apply h1; linarith
+      have h₀ := J_ENN_rs s r h2
+      rw [J_ENN_rs_symm s r] at h₀
+      simp only [J_ENN] at h₀
+      refine ⟨J_integrand_aestronglyMeasurable r s, ?_⟩
+      rw [MeasureTheory.hasFiniteIntegral_iff_norm, J_lnorm_eq, h₀]
+      simp
 
 lemma J_eq_toReal_J_ENN (r s : ℕ) : J r s = (J_ENN r s).toReal := by
   rw [J, J_ENN, MeasureTheory.integral_eq_lintegral_of_nonneg_ae]
-  · apply MeasureTheory.ae_nonneg_restrict_of_forall_setIntegral_nonneg_inter
-    · exact integrableOn_J_rs r s
-    · rintro x hx -
-      apply MeasureTheory.setIntegral_nonneg (by measurability)
-      intro y hy
-      by_cases h : y ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
-      · exact fun_of_J_nonneg r s y h
-      · rw [Set.mem_inter_iff] at hy
-        tauto
-  · apply AEMeasurable.aestronglyMeasurable
-    apply Measurable.aemeasurable
-    · apply Measurable.mul
-      · apply Measurable.mul
-        · apply Measurable.div
-          · apply Measurable.neg (Measurable.log (Measurable.mul measurable_fst measurable_snd))
-          · apply Measurable.const_sub (Measurable.mul measurable_fst measurable_snd)
-        · apply Measurable.pow measurable_fst measurable_const
-      · apply Measurable.pow measurable_snd measurable_const
+  · exact J_ae_nonneg_inter r s (integrableOn_J_rs r s)
+  · exact J_integrand_aestronglyMeasurable r s
 
 lemma J_rs_symm (r s : ℕ) : J r s = J s r := by
   rw [J_eq_toReal_J_ENN, J_eq_toReal_J_ENN, J_ENN_rs_symm]

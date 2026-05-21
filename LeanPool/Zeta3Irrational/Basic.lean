@@ -106,6 +106,24 @@ lemma pos_aux (x : ℝ × ℝ × ℝ)
     nlinarith
   · nlinarith
 
+private lemma JJ'_nonneg (x : ℝ × ℝ × ℝ) (hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1)
+    (n : ℕ) :
+    0 ≤ (x.2.1 * (1 - x.2.1) * x.2.2 * (1 - x.2.2) * x.1 * (1 - x.1) /
+      (1 - (1 - x.2.1 * x.2.2) * x.1)) ^ n /
+      (1 - (1 - x.2.1 * x.2.2) * x.1) := by
+  simp only [Set.mem_prod, Set.mem_Ioo] at hx
+  obtain ⟨⟨hx0, hx1⟩, ⟨hy0, hy1⟩, hz0, hz1⟩ := hx
+  apply div_nonneg
+  · apply pow_nonneg
+    apply div_nonneg
+    · apply mul_nonneg _ (by linarith)
+      apply mul_nonneg _ (by linarith)
+      apply mul_nonneg _ (by linarith)
+      apply mul_nonneg _ (by linarith)
+      apply mul_nonneg (by linarith) (by linarith)
+    · linarith [pos_aux x ⟨⟨hx0, hx1⟩, ⟨hy0, hy1⟩, hz0, hz1⟩]
+  · linarith [pos_aux x ⟨⟨hx0, hx1⟩, ⟨hy0, hy1⟩, hz0, hz1⟩]
+
 lemma JJENN_upper (n : ℕ) : JJENN n ≤
     ENNReal.ofReal (2 * (1 / 24) ^ n * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3) := by
   calc
@@ -196,16 +214,7 @@ lemma integrableOn_JJ' (n : ℕ) : MeasureTheory.Integrable (fun (x : ℝ × ℝ
           · simp only [abs_eq_self, sub_nonneg]
             apply mul_le_one₀ (by nlinarith) (by linarith) (by linarith)
         · positivity
-        · apply div_nonneg
-          · apply pow_nonneg
-            apply div_nonneg
-            · apply mul_nonneg _ (by linarith)
-              apply mul_nonneg _ (by linarith)
-              apply mul_nonneg _ (by linarith)
-              apply mul_nonneg _ (by linarith)
-              apply mul_nonneg (by linarith) (by linarith)
-            · linarith [pos_aux x hx]
-          · linarith [pos_aux x hx]
+        · exact JJ'_nonneg x hx n
       · simp only [hx, ↓reduceIte]
     rw [this]
     apply LE.le.trans_lt (JJENN_upper n)
@@ -1031,50 +1040,16 @@ theorem JJ_pos (n : ℕ) : 0 < JJ n := by
       apply MeasureTheory.setIntegral_nonneg (by measurability)
       intro x hx
       by_cases h : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
-      · simp only [Set.mem_prod, Set.mem_Ioo] at h
-        apply div_nonneg
-        · apply pow_nonneg
-          apply div_nonneg
-          · apply mul_nonneg _ (by linarith)
-            apply mul_nonneg _ (by linarith)
-            apply mul_nonneg _ (by linarith)
-            apply mul_nonneg _ (by linarith)
-            apply mul_nonneg (by linarith) (by linarith)
-          · simp only [sub_nonneg]
-            apply mul_le_one₀ (by nlinarith) (by linarith) (by linarith)
-        · simp only [sub_nonneg]
-          apply mul_le_one₀ (by nlinarith) (by linarith) (by linarith)
+      · exact JJ'_nonneg x h n
       · rw [Set.mem_inter_iff] at hx
         tauto
   · exact integrableOn_JJ' n
 
 lemma Summable_of_zeta_two' : Summable (fun (n : ℕ) ↦ 1 / ((n : ℝ) + 1) ^ 2) := by
-  rw [Summable]
-  use Real.pi ^ 2 / 6
-  obtain h := hasSum_zeta_two
-  let f := fun (n : ℕ) ↦ 1 / (n : ℝ) ^ 2
-  let g := fun (n : ℕ) => n + 1
-  have h1 : Function.Injective g := by
-    intro m n h
-    simp only [g] at h
-    linarith
-  have h2 : ∀ x ∉ Set.range g, f x = 0 := by
-    intro x hx
-    simp only [Set.mem_range, not_exists] at hx
-    suffices x = 0 by simp only [one_div, inv_eq_zero, ne_eq, OfNat.ofNat_ne_zero,
-      not_false_eq_true, pow_eq_zero_iff, Nat.cast_eq_zero, f, this]
-    by_contra! h
-    apply hx (x - 1)
-    simp only [g]
-    omega
-  have h3 : f ∘ g = fun (n : ℕ) ↦ 1 / (n + 1 : ℝ) ^ 2 := by
-    ext x
-    simp [f, g]
-  have := Function.Injective.hasSum_iff (f := f) (g := g) (a := (Real.pi ^ 2 / 6 : ℝ)) h1 h2
-  rw [h3] at this
-  rw [this]
-  simp only [f]
-  exact h
+  norm_cast
+  simp only [Nat.cast_pow]
+  rw [summable_nat_add_iff (k := 1) (f := fun k => 1 / (k ^ 2 : ℝ))]
+  simp
 
 lemma zeta_3_pos : 0 < ∑' (n : ℕ), 1 / ((n : ℝ) + 1) ^ 3 := by
   apply Summable.tsum_pos (g := fun n : ℕ => 1 / ((n : ℝ) + 1) ^ 3) (i := 1)
@@ -1130,19 +1105,7 @@ theorem JJ_upper (n : ℕ) :
       apply MeasureTheory.setIntegral_nonneg (by measurability)
       intro x hx
       by_cases h : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1
-      · simp only [Set.mem_prod, Set.mem_Ioo] at h
-        apply div_nonneg
-        · apply pow_nonneg
-          apply div_nonneg
-          · apply mul_nonneg _ (by linarith)
-            apply mul_nonneg _ (by linarith)
-            apply mul_nonneg _ (by linarith)
-            apply mul_nonneg _ (by linarith)
-            apply mul_nonneg (by linarith) (by linarith)
-          · simp only [sub_nonneg]
-            apply mul_le_one₀ (by nlinarith) (by linarith) (by linarith)
-        · simp only [sub_nonneg]
-          apply mul_le_one₀ (by nlinarith) (by linarith) (by linarith)
+      · exact JJ'_nonneg x h n
       · rw [Set.mem_inter_iff] at hx
         tauto
   · apply AEMeasurable.aestronglyMeasurable
