@@ -1253,3 +1253,30 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: hopfieldnet
+    title: Hopfield Networks
+    summary: Formalizes discrete Hopfield networks, their energy function and stochastic dynamics, and proves convergence of the asynchronous update rule under fair and cyclic neuron-update schedules.
+    branch: neural networks
+    entry_module: LeanPool.HopfieldNet
+    authors:
+      - Matvei Karatarakis
+    source:
+      url: https://github.com/mkaratarakis/HopfieldNet
+      github_repo: mkaratarakis/HopfieldNet
+    status: verified
+    main_declarations:
+      - HopfieldNet_convergence_fair
+      - HopfieldNet_convergence_cyclic
+    main_results:
+      - declaration: HopfieldNet_convergence_fair
+        informal: Proves that asynchronous Hopfield network updates converge to a fixed point under any fair update schedule.
+      - declaration: HopfieldNet_convergence_cyclic
+        informal: Proves convergence of asynchronous Hopfield network updates under a cyclic update schedule.
+    tags:
+      - neural-networks
+      - hopfield-networks
+      - dynamical-systems
+      - machine-learning
+    msc:
+      - "68T05"
+      - "92B20"

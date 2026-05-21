@@ -1,0 +1,10 @@
+/-
+Copyright (c) 2026 Matvei Karatarakis. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Matvei Karatarakis
+-/
+
+import LeanPool.HopfieldNet.CReals.CRealPre2.PreBasics
+import LeanPool.HopfieldNet.CReals.CRealPre2.Algebra
+import LeanPool.HopfieldNet.CReals.CRealPre2.Order
+import LeanPool.HopfieldNet.CReals.CRealPre2.InvTranscendental
