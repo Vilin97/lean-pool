@@ -67,7 +67,9 @@ lemma uIoo_eq_uIoc_sdiff_ends : uIoo a b = Ι a b \ {a, b} := by
     cases le_total a b <;> simp [*]
 
 lemma uIoo_eq_uIcc_sdiff_ends : uIoo a b = uIcc a b \ {a, b} := by
-  cases le_total a b <;> simp [uIoo, uIcc, *, pair_comm a b]
+  cases le_total a b
+  · simp [uIoo, uIcc, *]
+  · simp [uIoo, uIcc, *, pair_comm a b]
 
 lemma uIcc_mem_nhds (h : t ∈ uIoo a b) : uIcc a b ∈ 𝓝 t :=
   mem_of_superset (isOpen_Ioo.mem_nhds h) Set.uIoo_subset_uIcc_self

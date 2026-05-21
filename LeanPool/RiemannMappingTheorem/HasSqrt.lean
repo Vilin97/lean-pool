@@ -37,7 +37,8 @@ lemma EqOn_zero_of_deriv_eq_zero (hU : IsOpen U) (hU' : IsPreconnected U) {f : �
   intro w hw
   rw [fderivWithin_eq_fderiv (isOpen_ball.uniqueDiffWithinAt hw)
     (hf.differentiableAt (hU.mem_nhds (hrU hw)))]
-  ext1; simpa [fderiv_apply_one_eq_deriv] using hf' (hrU hw)
+  ext1
+  simpa [fderiv_apply_one_eq_deriv] using hf' (hrU hw)
 
 lemma EqOn_of_deriv_eq_zero (hU : IsOpen U) (hU' : IsPreconnected U) {f : ℂ → ℂ}
     (hf : DifferentiableOn ℂ f U) (hf' : EqOn (deriv f) 0 U) (hz₀ : z₀ ∈ U) :
@@ -51,10 +52,13 @@ lemma EqOn_of_deriv_eq_zero (hU : IsOpen U) (hU' : IsPreconnected U) {f : ℂ �
 lemma EqOn_of_EqOn_deriv {f g : ℂ → ℂ} (hU : IsOpen U) (hU' : IsPreconnected U)
     (hf : DifferentiableOn ℂ f U) (hg : DifferentiableOn ℂ g U)
     (hfg : EqOn (deriv f) (deriv g) U) (hz₀ : z₀ ∈ U) (hfgz₀ : f z₀ = g z₀) :
-    EqOn f g U := fun z hz => sub_eq_zero.1 <|
-  EqOn_zero_of_deriv_eq_zero hU hU' (hf.sub hg) (fun z hz => by
-    rw [deriv_fun_sub (hf.differentiableAt (hU.mem_nhds hz)) (hg.differentiableAt (hU.mem_nhds hz)),
-      hfg hz, sub_self]; rfl) hz₀ (by simp [hfgz₀]) hz
+    EqOn f g U := by
+  refine fun z hz => sub_eq_zero.1 ?_
+  have h2 : EqOn (deriv (fun y => f y - g y)) 0 U := fun z hz => by
+    rw [deriv_fun_sub (hf.differentiableAt (hU.mem_nhds hz))
+      (hg.differentiableAt (hU.mem_nhds hz)), hfg hz, sub_self]
+    rfl
+  exact EqOn_zero_of_deriv_eq_zero hU hU' (hf.sub hg) h2 hz₀ (by simp [hfgz₀]) hz
 
 lemma has_logs.has_sqrt (h : has_logs U) : has_sqrt U := by
   rintro f hfz hf
@@ -78,10 +82,11 @@ lemma has_primitives.has_logs (hp : has_primitives U) (hU : IsOpen U) (hU' : IsP
     have e1 : DifferentiableOn ℂ h U := hf.div e4 (fun z _ => exp_ne_zero _)
     refine ⟨g, h3, ?_⟩
     suffices heq : EqOn h (fun _ => 1) U by exact fun z hz => eq_of_div_eq_one (heq hz)
-    rw [show (1 : ℂ → ℂ) = h z₀ by simp [h, g, exp_log, hfz z₀ hz₀]]
+    rw [show (1 : ℂ) = h z₀ by simp [h, g, exp_log, hfz z₀ hz₀]]
     refine EqOn_of_deriv_eq_zero hU hU' e1 (fun z hz => ?_) hz₀
     have f0 : U ∈ 𝓝 z := hU.mem_nhds hz
     rw [show h = f / (exp ∘ g) from rfl, Pi.div_def,
       deriv_fun_div (hf.differentiableAt f0) (e4.differentiableAt f0) (exp_ne_zero _),
       deriv.scomp z differentiableAt_exp (h3.differentiableAt f0)]
-    simp [field, exp_ne_zero, hlf2 hz, show deriv g z = deriv lf z by simp [g], hfz z hz]
+    have := hfz z hz
+    simp [field, exp_ne_zero, hlf2 hz, show deriv g z = deriv lf z by simp [g]]

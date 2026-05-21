@@ -204,8 +204,10 @@ lemma hurwitz2_1 {K : Set ℂ} (hK : IsCompact K) (F_conv : TendstoUniformlyOn F
       hK.exists_isMinOn (nonempty_iff_ne_empty.2 h) (continuous_norm.comp_continuousOn hf1)
     filter_upwards [tendstoUniformlyOn_iff.1 F_conv (‖f z₀‖) (norm_pos_iff.2 (hf2 _ h1))]
       with n hn z hz h
-    simp [h] at hn
-    linarith [hn z hz, h2 z hz]
+    have hnz := hn z hz
+    have h2z := h2 z hz
+    simp [h] at hnz
+    linarith
 
 lemma TendstoUniformlyOn.tendsto_circle_integral (hr : 0 < r)
     (F_cont : ∀ᶠ n in p, ContinuousOn (F n) (sphere z₀ r))
@@ -249,7 +251,8 @@ lemma hurwitz2_2 (hU : IsOpen U) (hF : ∀ᶠ n in p, DifferentiableOn ℂ (F n)
         hF.mono (fun n h => (h.deriv hU).continuousOn.mono hr2),
         hF.mono (fun n h => h.continuousOn.mono hr2)] with n hn H6 H5 using
         ContinuousOn.div H6 H5 hn
-    · exact TendstoUniformlyOn.div_of_compact H7 H2 (H3.deriv hU).continuousOn.mono hr2 H4 hf1 H1
+    · exact TendstoUniformlyOn.div_of_compact H7 H2
+        ((H3.deriv hU).continuousOn.mono hr2) H4 hf1 H1
 
 lemma hurwitz2
     (hU : IsOpen U)
@@ -292,12 +295,14 @@ lemma hurwitz3 {s : Set ℂ}
     rw [eventually_nhdsWithin_iff] at h2
     have h4 : ∀ᶠ r in 𝓝[>] 0, closedBall z₀ r ⊆ U :=
       (eventually_closedBall_subset (hU.mem_nhds hz₀)).filter_mono nhdsWithin_le_nhds
+    have h4' : ∀ᶠ r in 𝓝[>] 0, closedBall z₀ r ⊆ s :=
+      (eventually_closedBall_subset hs).filter_mono nhdsWithin_le_nhds
     obtain ⟨r, hr, h5, h6, h7, h9⟩ :=
-      (eventually_nhds_iff_eventually_closed_ball.1 h2 |>.and
-        (h4.and (H5.and ((eventually_closedBall_subset hs).filter_mono nhdsWithin_le_nhds)))).exists'
-    exact (hurwitz2 hU hF hf hr h6
-      (fun z hz => h5 z (sphere_subset_closedBall hz) (ne_of_mem_sphere hz hr.lt.ne.symm)) h7).mono
-      fun n ⟨z, hz, hFnz⟩ => ⟨z, h9 (ball_subset_closedBall hz), hFnz⟩
+      (eventually_nhds_iff_eventually_closed_ball.1 h2 |>.and (h4.and (H5.and h4'))).exists'
+    refine (hurwitz2 hU hF hf hr h6 (fun z hz => h5 z (sphere_subset_closedBall hz)
+      (ne_of_mem_sphere hz hr.lt.ne.symm)) h7).mono ?_
+    rintro n ⟨z, hz, hFnz⟩
+    exact ⟨z, h9 (ball_subset_closedBall hz), hFnz⟩
 
 ----------------
 
@@ -323,8 +328,8 @@ theorem local_hurwitz [NeBot p]
       have h5 : ∀ᶠ r in 𝓝[>] 0, closedBall z₀ r ⊆ U :=
         (eventually_closedBall_subset (hU.mem_nhds hz₀)).filter_mono nhdsWithin_le_nhds
       obtain ⟨r, h6, h7, h8, h9⟩ := (h.and (cindex_eventually_eq_order hp |>.and h5)).exists'
-      exact ⟨r, h6, h9, fun z hz => h7 z (sphere_subset_closedBall hz) (ne_of_mem_sphere hz h6.lt.ne.symm),
-        by simp [h8, h1.ne.symm]⟩
+      refine ⟨r, h6, h9, fun z hz => ?_, by simp [h8, h1.ne.symm]⟩
+      exact h7 z (sphere_subset_closedBall hz) (ne_of_mem_sphere hz h6.lt.ne.symm)
     obtain ⟨n, z, h5, h6⟩ := (hurwitz2 hU F_holo F_conv h1 h2 h3 h4).exists
     cases F_noz n z (h2 (ball_subset_closedBall (mem_ball.mpr h5))) h6
 
@@ -336,9 +341,10 @@ theorem hurwitz [NeBot p]
     (F_conv : TendstoLocallyUniformlyOn F f p U)
     (hz₀ : z₀ ∈ U)
     (hfz₀ : f z₀ = 0) :
-    ∀ z ∈ U, f z = 0 :=
-  (F_conv.differentiableOn F_holo hU).analyticOnNhd hU |>.eqOn_zero_of_preconnected_of_eventuallyEq_zero
-    hU' hz₀ (local_hurwitz hU F_holo F_noz F_conv hz₀ hfz₀)
+    ∀ z ∈ U, f z = 0 := by
+  have h := (F_conv.differentiableOn F_holo hU).analyticOnNhd hU
+  exact h.eqOn_zero_of_preconnected_of_eventuallyEq_zero hU' hz₀
+    (local_hurwitz hU F_holo F_noz F_conv hz₀ hfz₀)
 
 theorem hurwitz' [NeBot p]
     (hU : IsOpen U)

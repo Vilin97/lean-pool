@@ -30,12 +30,17 @@ def 𝓗 (U : Set ℂ) := {f : 𝓒 U | DifferentiableOn ℂ f U}
 lemma isClosed_𝓗 (hU : IsOpen U) : IsClosed (𝓗 U) := by
   refine isClosed_iff_clusterPt.2 (fun f hf => ?_)
   haveI : (𝓝 f ⊓ 𝓟 (𝓗 U)).NeBot := hf
-  exact ((tendsto_𝓒_iff hU).1 (tendsto_id.mono_left inf_le_left)).differentiableOn
-    (by rw [eventually_inf_principal]; exact Eventually.of_forall fun g hg => hg) hU
+  have hconv : TendstoLocallyUniformlyOn (id : 𝓒 U → 𝓒 U) f (𝓝 f ⊓ 𝓟 (𝓗 U)) U :=
+    (tendsto_𝓒_iff hU).1 (tendsto_id.mono_left inf_le_left)
+  have hF : ∀ᶠ (g : 𝓒 U) in 𝓝 f ⊓ 𝓟 (𝓗 U), DifferentiableOn ℂ g U := by
+    rw [eventually_inf_principal]
+    exact Eventually.of_forall fun g hg => hg
+  exact hconv.differentiableOn hF hU
 
-lemma ContinuousOn_uderiv (hU : IsOpen U) : ContinuousOn uderiv (𝓗 U) := fun f _ =>
-  (tendsto_𝓒_iff hU).2 (((tendsto_𝓒_iff hU).1 nhdsWithin_le_nhds).deriv
-    eventually_mem_nhdsWithin hU)
+lemma ContinuousOn_uderiv (hU : IsOpen U) : ContinuousOn uderiv (𝓗 U) := by
+  rintro f -
+  refine (tendsto_𝓒_iff hU).2 (TendstoLocallyUniformlyOn.deriv ?_ eventually_mem_nhdsWithin hU)
+  exact (tendsto_𝓒_iff hU).1 nhdsWithin_le_nhds
 
 /-- `𝓑 U Q` : the collection of holomorphic maps on `U` whose image on
 each compact `K ⊆ U` is contained in `Q K`. Used to formalise local
@@ -62,12 +67,12 @@ def 𝓜 (U : Set ℂ) := {f ∈ 𝓗 U | MapsTo f U (closedBall (0 : ℂ) 1)}
 
 lemma 𝓜_eq_𝓑 : 𝓜 U = 𝓑 U (fun _ => closedBall 0 1) := 𝓑_const.symm
 
-lemma IsClosed_𝓜 (hU : IsOpen U) : IsClosed (𝓜 U) :=
-  (isClosed_𝓗 hU).inter (by
-    simp_rw [MapsTo, setOf_forall]
-    refine isClosed_biInter (fun z hz => isClosed_closedBall.preimage ?_)
-    exact ((UniformOnFun.uniformContinuous_eval_of_mem ℂ (compacts U)
-      (mem_singleton z) ⟨singleton_subset_iff.2 hz, isCompact_singleton⟩).continuous))
+lemma IsClosed_𝓜 (hU : IsOpen U) : IsClosed (𝓜 U) := by
+  suffices h : IsClosed {f : 𝓒 U | MapsTo f U (closedBall 0 1)} from (isClosed_𝓗 hU).inter h
+  simp_rw [MapsTo, setOf_forall]
+  refine isClosed_biInter (fun z hz => isClosed_closedBall.preimage ?_)
+  exact ((UniformOnFun.uniformContinuous_eval_of_mem ℂ (compacts U)
+    (mem_singleton z) ⟨singleton_subset_iff.2 hz, isCompact_singleton⟩).continuous)
 
 /-- `𝓘 U` : holomorphic injections from `U` into the closed unit disk. -/
 def 𝓘 (U : Set ℂ) := {f ∈ 𝓜 U | InjOn f U}
@@ -89,7 +94,10 @@ lemma 𝓘_nonempty [good_domain U] : (𝓘 U).Nonempty := by
       simp only [differentiableAt_fun_id, differentiableAt_const, deriv_fun_sub, deriv_id'',
         deriv_const', sub_zero, Nat.cast_ofNat, Nat.reduceSub, pow_one, one_div, mul_inv_rev,
         ne_eq, mul_eq_zero, inv_eq_zero, OfNat.ofNat_ne_zero, or_false, f]
-      exact fun h => f_noz hz₀ (by rw [← g_sqf hz₀, Pi.pow_apply, h, zero_pow two_ne_zero])
+      intro h
+      have hf0 := g_sqf hz₀
+      rw [Pi.pow_apply, h, zero_pow two_ne_zero] at hf0
+      exact f_noz hz₀ hf0
     refine e2.eventually_constant_or_nhds_le_map_nhds.resolve_left (fun h => ?_) (image_mem_map e1)
     simp [EventuallyEq.deriv_eq h] at dg_nonzero
   obtain ⟨r, r_pos, hr⟩ := Metric.mem_nhds_iff.mp gU_nhd
@@ -104,7 +112,8 @@ lemma 𝓘_nonempty [good_domain U] : (𝓘 U).Nonempty := by
       have hzz' : z = z' := f_inj (by simp [g_sqf hz, g_sqf hz', hgz'])
       simpa [hzz', CharZero.neg_eq_self_iff, g_sqf hz'] using hgz'.symm }
   let ggg := (embedding.inv _ (by linarith)).comp gg
-  exact ⟨ggg.to_fun, ⟨ggg.is_diff, fun z hz => ball_subset_closedBall (ggg.maps_to hz)⟩, ggg.is_inj⟩
+  refine ⟨ggg.to_fun, ⟨ggg.is_diff, ?_⟩, ggg.is_inj⟩
+  exact fun z hz => ball_subset_closedBall (ggg.maps_to hz)
 
 /-- `𝓙 U` : the closure of `𝓘 U` in the compact-open topology — holomorphic
 maps `U → closedBall 0 1` that are either injective or constant.

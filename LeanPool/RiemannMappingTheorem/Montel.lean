@@ -56,7 +56,8 @@ lemma UniformlyBoundedOn.equicontinuousOn (h1 : UniformlyBoundedOn F U) (hU : Is
   have e4 : w.1 ∈ closedBall z δ := by simpa using (lt_inf_iff.1 hw).1.le
   rw [dist_eq_norm]
   have hzw : ‖z - w.val‖ < ε / M := by
-    rwa [← dist_eq_norm, dist_comm, Subtype.dist_eq, ← dist_eq_norm, ← lt_inf_iff]
+    have hw2 := (lt_inf_iff.1 hw).2
+    rwa [dist_comm, Subtype.dist_eq, dist_eq_norm] at hw2
   refine ((convex_closedBall _ _).norm_image_sub_le_of_norm_deriv_le e1 e2 e4 e3).trans_lt ?_
   convert mul_lt_mul' le_rfl hzw (norm_nonneg _) hMp
   field_simp [hMp.lt.ne.symm, mul_comm]

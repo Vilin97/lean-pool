@@ -42,11 +42,11 @@ lemma IsCompact_𝓙 [good_domain U] : IsCompact (𝓙 U) := by
 over `𝓘 U` produces the Riemann-mapping conformal isomorphism. -/
 noncomputable def obs (z₀ : ℂ) (f : 𝓒 U) : ℝ := ‖deriv f z₀‖
 
-lemma ContinuousOn_obs (hU : IsOpen U) (hz₀ : z₀ ∈ U) : ContinuousOn (obs z₀) (𝓗 U) :=
-  continuous_norm.comp_continuousOn <|
-    (UniformOnFun.uniformContinuous_eval_of_mem _ _ (mem_singleton _)
-      ⟨singleton_subset_iff.2 hz₀, isCompact_singleton⟩).continuous.comp_continuousOn
-      (ContinuousOn_uderiv hU)
+lemma ContinuousOn_obs (hU : IsOpen U) (hz₀ : z₀ ∈ U) : ContinuousOn (obs z₀) (𝓗 U) := by
+  have e2 : {z₀} ∈ compacts U := ⟨singleton_subset_iff.2 hz₀, isCompact_singleton⟩
+  refine continuous_norm.comp_continuousOn ?_
+  exact (UniformOnFun.uniformContinuous_eval_of_mem _ _ (mem_singleton _)
+    e2).continuous.comp_continuousOn (ContinuousOn_uderiv hU)
 
 theorem main [good_domain U] : ∃ f ∈ 𝓘 U, f '' U = ball (0 : ℂ) 1 := by
   obtain ⟨z₀, hz₀⟩ : U.Nonempty := good_domain.is_nonempty

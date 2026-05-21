@@ -48,7 +48,7 @@ lemma DifferentiableOn.iterate_dslope (hf : DifferentiableOn ℂ f U) (hU : IsOp
 lemma HasFPowerSeriesAt.dslope_order_eventually_ne_zero (hp : HasFPowerSeriesAt f p z₀)
     (h : p ≠ 0) :
     ∀ᶠ z in 𝓝 z₀, iterate (swap dslope z₀) p.order f z ≠ 0 := by
-  obtain ⟨r, hf⟩ := hp
+  obtain ⟨r, hf⟩ := id hp
   exact ContinuousAt.eventually_ne
     ((DifferentiableOn.iterate_dslope hf.differentiableOn Metric.isOpen_eball
       (Metric.mem_eball_self hf.r_pos)).continuousOn.continuousAt
@@ -115,7 +115,8 @@ lemma cindex_eq_order_aux (hU : IsOpen U) (hr : 0 < r) (h0 : closedBall z₀ r �
       ((continuousOn_const.div (continuousOn_id.sub continuousOn_const)
         (fun z hz => sub_ne_zero.mpr (ne_of_mem_sphere hz hr.ne.symm))).circleIntegrable hr.le)
       ((ContinuousOn.div (h1.contDiffOn hU |>.continuousOn_deriv_of_isOpen hU le_rfl |>.mono e2)
-        (h1.continuousOn.mono e2) (fun z hz => h2 _ (sphere_subset_closedBall hz))).circleIntegrable hr.le)
+        (h1.continuousOn.mono e2)
+        (fun z hz => h2 _ (sphere_subset_closedBall hz))).circleIntegrable hr.le)
   have e6 : (∮ z in C(z₀, r), deriv g z / g z) = 0 :=
     by simpa [cindex, Real.pi_ne_zero, I_ne_zero] using cindex_eq_zero hU hr h0 h1 h2
   have e7 : (∮ z in C(z₀, r), c / (z - z₀)) = 2 * π * I * c := by
@@ -147,11 +148,15 @@ lemma exists_cindex_eq_order (hp : HasFPowerSeriesAt f p z₀) :
     have heq : Set.EqOn (fun z => deriv f z / f z) 0 (sphere z₀ r) := by
       intro z hz
       have hd : dist z z₀ < R := by
-        rw [mem_sphere_iff_norm, ← Complex.dist_eq] at hz; simpa [hz] using hr.2
-      have hev : ∀ᶠ y in 𝓝 z, f y = 0 :=
-        (Metric.ball_mem_nhds z (by linarith [hd])).mono
-          fun y hy => hf (by linarith [dist_triangle y z z₀, hy])
-      simp [((hev.mono fun _ h => h).deriv_eq.trans (by simp)), hf hd]
+        rw [mem_sphere_iff_norm, ← Complex.dist_eq] at hz
+        simpa [hz] using hr.2
+      have hev : f =ᶠ[𝓝 z] 0 :=
+        Filter.eventually_of_mem (Metric.ball_mem_nhds z (sub_pos.mpr hd))
+          fun y hy => hf (by linarith [dist_triangle y z z₀, mem_ball.mp hy])
+      have hderiv : deriv f z = 0 := by
+        rw [hev.deriv_eq]
+        simp
+      simp [hderiv, hf hd]
     simp only [cindex, mul_inv_rev, inv_I, neg_mul, FormalMultilinearSeries.order_zero,
       CharP.cast_eq_zero, neg_eq_zero, _root_.mul_eq_zero, I_ne_zero, inv_eq_zero,
       ofReal_eq_zero, pi_ne_zero, OfNat.ofNat_ne_zero, or_self, false_or]
