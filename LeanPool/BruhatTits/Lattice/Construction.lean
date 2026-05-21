@@ -278,30 +278,21 @@ lemma twist₂_le_twist₂_iff (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ
     (n₁ m₁ n₂ m₂ : ℤ) :
     (b.twist₂ hϖ n₁ m₁).toSubmodule (R := R) ≤ (b.twist₂ hϖ n₂ m₂).toSubmodule ↔
       n₂ ≤ n₁ ∧ m₂ ≤ m₁ := by
-  rw [twist₂, twist₂]
-  rw [twist_le_twist_iff]
+  rw [twist₂, twist₂, twist_le_twist_iff]
   constructor
   · intro h
-    constructor
-    · simpa using h 0
-    · simpa using h 1
+    exact ⟨by simpa using h 0, by simpa using h 1⟩
   · intro h i
-    match i with
-    | 0 => exact h.left
-    | 1 => exact h.right
+    fin_cases i <;> [exact h.left; exact h.right]
 
 lemma twist₂_eq_twist₂_iff (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Irreducible ϖ)
     (n₁ m₁ n₂ m₂ : ℤ) :
     (b.twist₂ hϖ n₁ m₁).toSubmodule (R := R) = (b.twist₂ hϖ n₂ m₂).toSubmodule ↔
       n₂ = n₁ ∧ m₂ = m₁ := by
-  rw [twist₂, twist₂]
-  rw [twist_eq_twist_iff]
-  refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · exact ⟨by simpa using congrFun h 0, by simpa using congrFun h 1⟩
-  · ext i
-    match i with
-    | 0 => exact h.left
-    | 1 => exact h.right
+  rw [twist₂, twist₂, twist_eq_twist_iff]
+  refine ⟨fun h ↦ ⟨by simpa using congrFun h 0, by simpa using congrFun h 1⟩, fun h ↦ ?_⟩
+  ext i
+  fin_cases i <;> [exact h.left; exact h.right]
 
 lemma ntwist₂_le_ntwist₂_iff (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Irreducible ϖ)
     (n₁ m₁ n₂ m₂ : ℕ) :
@@ -532,9 +523,7 @@ lemma smul_ntwist₂ (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Irreduc
   rw [smul_twist]
   congr
   ext i : 1
-  match i with
-  | 0 => simp
-  | 1 => simp
+  fin_cases i <;> simp
 
 lemma smul_pow_twist (b : Basis ι K (ι → K)) {ϖ : R} (hϖ : Irreducible ϖ) (f : ι → ℤ) (k : ℤ) :
     ϖ.val ^ k • (b.twist hϖ f).toSubmodule (R := R) = (b.twist hϖ (f + k)).toSubmodule := by
@@ -561,9 +550,7 @@ lemma smul_pow_twist₂ (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Irre
   rw [smul_pow_twist]
   congr
   ext i : 1
-  match i with
-  | 0 => simp
-  | 1 => simp
+  fin_cases i <;> simp
 
 lemma twist_zero (b : Basis ι K (ι → K)) {ϖ : R} (hϖ : Irreducible ϖ) :
     b.twist hϖ 0 = b := by
@@ -573,9 +560,7 @@ lemma twist_zero (b : Basis ι K (ι → K)) {ϖ : R} (hϖ : Irreducible ϖ) :
 lemma ntwist₂_zero_zero (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Irreducible ϖ) :
     b.ntwist₂ hϖ 0 0 = b := by
   ext i : 1
-  match i with
-  | 0 => simp
-  | 1 => simp
+  fin_cases i <;> simp
 
 lemma ntwist₂_toSubmodule_le_ntwist₂_toSubmodule (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R}
     (hϖ : Irreducible ϖ) {n₁ m₁ n₂ m₂ : ℕ} (hn : n₂ ≤ n₁) (hm : m₂ ≤ m₁) :
@@ -595,9 +580,7 @@ lemma ntwist₂_ntwist₂ (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (hϖ : Ir
     (n₁ m₁ n₂ m₂ : ℕ) :
     (b.ntwist₂ hϖ n₁ m₁).ntwist₂ hϖ n₂ m₂ = b.ntwist₂ hϖ (n₁ + n₂) (m₁ + m₂) := by
   ext i : 1
-  match i with
-  | 0 => simp [pow_add, smul_smul, mul_comm]
-  | 1 => simp [pow_add, smul_smul, mul_comm]
+  fin_cases i <;> simp [pow_add, smul_smul, mul_comm]
 
 end «SMul»
 
@@ -661,13 +644,9 @@ lemma swap_toSubmodule (b : Basis (Fin 2) K (Fin 2 → K)) :
   ext x
   constructor
   · rintro ⟨i, rfl⟩
-    match i with
-    | 0 => use 1; simp
-    | 1 => use 0; simp
+    fin_cases i <;> simp [swap_apply₀, swap_apply₁]
   · rintro ⟨i, rfl⟩
-    match i with
-    | 0 => use 1; simp
-    | 1 => use 0; simp
+    fin_cases i <;> [exact ⟨1, by simp⟩; exact ⟨0, by simp⟩]
 
 /-- The swap matrix associated to a basis `b`: the invertible matrix acting on `Fin 2 → K` by
 swapping the entries of `b`. -/

@@ -703,53 +703,31 @@ omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
 lemma conj_cartanDiag_zero_zero {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K) (f : Fin 2 → ℤ) :
     MulAut.conj (cartanDiag ϖ hϖ f) g 0 0 = g 0 0 := by
   rw [cartanDiag, Matrix.GL.conj_diagonal_apply]
-  simp only [Fin.isValue, zpow_neg, Units.inv_mk]
-  rw [mul_inv_cancel₀]
-  · simp
-  · apply zpow_ne_zero
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
+  simp [Fin.isValue, zpow_ne_zero, hϖ.ne_zero]
 
 omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
 lemma conj_cartanDiag_one_one {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K) (f : Fin 2 → ℤ) :
     MulAut.conj (cartanDiag ϖ hϖ f) g 1 1 = g 1 1 := by
   rw [cartanDiag, Matrix.GL.conj_diagonal_apply]
-  simp only [Fin.isValue, zpow_neg, Units.inv_mk]
-  rw [mul_inv_cancel₀]
-  · simp
-  · apply zpow_ne_zero
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
+  simp [Fin.isValue, zpow_ne_zero, hϖ.ne_zero]
 
 omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
 lemma conj_cartanDiag_one_zero {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K) (f : Fin 2 → ℤ) :
     MulAut.conj (cartanDiag ϖ hϖ f) g 1 0 = ϖ.val ^ (f 1 - f 0) * g 1 0 := by
   rw [cartanDiag, Matrix.GL.conj_diagonal_apply]
   simp only [Fin.isValue, zpow_neg, Units.inv_mk, mul_eq_mul_right_iff]
-  have hzero : (↑ϖ : K) ≠ 0 := by
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
-  rw [zpow_sub₀ hzero]
-  ring
   left
-  trivial
+  rw [zpow_sub₀ (by exact_mod_cast hϖ.ne_zero)]
+  exact (div_eq_mul_inv _ _).symm
 
 omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
 lemma conj_cartanDiag_zero_one {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K) (f : Fin 2 → ℤ) :
     MulAut.conj (cartanDiag ϖ hϖ f) g 0 1 = ϖ.val ^ (f 0 - f 1) * g 0 1 := by
   rw [cartanDiag, Matrix.GL.conj_diagonal_apply]
   simp only [Fin.isValue, zpow_neg, Units.inv_mk, mul_eq_mul_right_iff]
-  have hzero : (↑ϖ : K) ≠ 0 := by
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
-  rw [zpow_sub₀ hzero]
-  ring
   left
-  trivial
+  rw [zpow_sub₀ (by exact_mod_cast hϖ.ne_zero)]
+  exact (div_eq_mul_inv _ _).symm
 
 /--
 Existence part of cartan decomposition: If `R` is a discrete valuation ring with

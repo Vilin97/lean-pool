@@ -322,13 +322,9 @@ lemma IsLattice.intersection (M N : Submodule R (ι → K)) [Finite ι]
     [IsLattice M] [IsLattice N] :
     IsLattice (M ⊓ N) where
   isFG := by
-    have aux : M.FG := IsLattice.isFG
-    have : IsNoetherian R M := isNoetherian_of_fg_of_noetherian M aux
-    have g : (M ⊓ N) ≤ M := inf_le_left
-    have : IsNoetherian R ↥(M ⊓ N) := isNoetherian_of_le g
-    have h: Module.Finite R ↥(M ⊓ N):= Module.IsNoetherian.finite R ↥(M ⊓ N)
-    apply Module.Finite.iff_fg.mp
-    exact h
+    have : IsNoetherian R M := isNoetherian_of_fg_of_noetherian M IsLattice.isFG
+    have : IsNoetherian R ↥(M ⊓ N) := isNoetherian_of_le inf_le_left
+    exact Module.Finite.iff_fg.mp (Module.IsNoetherian.finite R ↥(M ⊓ N))
   spans := by
     letI : Fintype ι := Fintype.ofFinite ι
     apply Submodule.span_eq_top_of_rank
