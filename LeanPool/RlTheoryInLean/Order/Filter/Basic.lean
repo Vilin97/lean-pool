@@ -22,8 +22,7 @@ lemma EventuallyEq.finset_sum {α ι β : Type*} [AddCommGroup β] {l : Filter �
   | empty => simp
   | insert a s ha ih =>
     simp only [Finset.sum_insert ha]
-    apply EventuallyEq.add
-    · exact hfg a (Finset.mem_insert_self a s)
-    · exact ih (fun i hi => hfg i (Finset.mem_insert_of_mem hi))
+    exact (hfg a (Finset.mem_insert_self a s)).add
+      (ih (fun i hi => hfg i (Finset.mem_insert_of_mem hi)))
 
 end Filter
