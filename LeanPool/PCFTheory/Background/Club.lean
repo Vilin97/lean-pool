@@ -222,10 +222,8 @@ theorem isAcc_iSup_of_between {δ : Ordinal.{u}} (C : Set Ordinal) (δLim : IsSu
   rw [Ordinal.lt_iSup_iff] at hp
   obtain ⟨r, hr⟩ := hp
   obtain ⟨q, hq⟩ := h r
-  use q
-  refine ⟨hq.1, ⟨hr.trans_le hq.2.1, ?_⟩⟩
-  rw [Ordinal.lt_iSup_iff]
-  exact ⟨succ (succ r), hq.2.2.trans_lt (sInc (succ r))⟩
+  exact ⟨q, hq.1, hr.trans_le hq.2.1,
+    (Ordinal.lt_iSup_iff).mpr ⟨succ (succ r), hq.2.2.trans_lt (sInc (succ r))⟩⟩
 
 namespace IsClub
 
@@ -378,8 +376,7 @@ theorem exists_unbounded_Iio_cof {α : Ordinal} (hlim : IsSuccLimit α) : ∃ S,
     intro β βltα
     obtain ⟨x, hx⟩ := hUnb ⟨succ β, hlim.succ_lt βltα⟩
     refine ⟨x.1, ⟨x, hx.1, rfl⟩, ?_, x.2⟩
-    have hx2 : succ β < x.1 := hx.2
-    exact (lt_succ β).trans hx2
+    exact (lt_succ β).trans hx.2
   · rw [Cardinal.mk_image_eq Subtype.val_injective, hCard, type_lt_Iio, lift_cof]
 
 theorem exists_club_card {o : Ordinal.{u}} (h : IsSuccLimit o) :

@@ -231,8 +231,8 @@ lemma exists_b_h (m : ℕ) (q : ℕ) (hm_mod : m % 8 = 3)
   -- We need $b^2 \equiv -m \pmod{4q}$.
   have hb_mod : b ^ 2 ≡ -↑m [ZMOD (4 * ↑q : ℤ)] := by
     -- Since `q` is odd, combine the congruences modulo `q` and modulo `4`.
-    have h_crt : b ^ 2 ≡ -↑m [ZMOD ↑q] ∧ b ^ 2 ≡ -↑m [ZMOD 4] := by
-      exact ⟨hb_mod_q, by
+    have h_crt : b ^ 2 ≡ -↑m [ZMOD ↑q] ∧ b ^ 2 ≡ -↑m [ZMOD 4] :=
+      ⟨hb_mod_q, by
         rw [← Int.emod_add_mul_ediv b 2, hb_odd]
         ring_nf
         norm_num [Int.ModEq, Int.add_emod, Int.sub_emod, Int.mul_emod]
@@ -263,7 +263,8 @@ lemma exists_t (m : ℕ) (q : ℕ) (hm_sq : Squarefree m) (hm_mod : m % 8 = 3)
           ne_eq, ← ZMod.intCast_eq_intCast_iff, Int.cast_pow, Int.cast_neg,
           Int.cast_mul, Int.cast_ofNat, Int.cast_natCast]
         specialize h_jacobi p hp.2.1 hp.1
-        simp_all? +decide [Nat.primeFactorsList_prime hp.1]
+        simp_all +decide only [Nat.primeFactorsList_prime hp.1, List.pmap_cons, List.pmap_nil,
+          List.prod_cons, List.prod_nil, mul_one]
         rw [legendreSym.eq_one_iff] at h_jacobi
         · obtain ⟨x, hx⟩ := h_jacobi
           use x.val
@@ -338,7 +339,7 @@ lemma exists_t (m : ℕ) (q : ℕ) (hm_sq : Squarefree m) (hm_mod : m % 8 = 3)
     intro p pp dp dm
     rw [Finset.sum_eq_single p] <;> aesop
   -- Since $m$ is squarefree, $m = \prod p$, so $2q t^2 \equiv -1 \pmod m$.
-  use t;
+  use t
   -- Since $m$ is squarefree, it is the product of its distinct prime factors.
   have h_prod : (m : ℤ) = ∏ p ∈ Nat.primeFactors m, (p : ℤ) := by
     rw [← Nat.cast_prod, Nat.prod_primeFactors_of_squarefree hm_sq]
@@ -510,14 +511,11 @@ private lemma exists_lattice_xyz_lt_two_m (m q : ℕ) (t b : ℤ) (hm : 0 < m) (
       · positivity
     all_goals positivity
   let E := EuclideanSpace ℝ (Fin 3)
-  have := classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure h_symm h_conv h_vol
-  obtain ⟨x, hx0, hxs, h⟩ := this
-  have hcoor0 := h 0
-  have hcoor1 := h 1
-  have hcoor2 := h 2
-  obtain ⟨R, hr⟩ := hcoor0
-  obtain ⟨S, hs⟩ := hcoor1
-  obtain ⟨T, ht⟩ := hcoor2
+  obtain ⟨x, hx0, hxs, h⟩ :=
+    classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure h_symm h_conv h_vol
+  obtain ⟨R, hr⟩ := h 0
+  obtain ⟨S, hs⟩ := h 1
+  obtain ⟨T, ht⟩ := h 2
   use R, S, T
   constructor
   · contrapose! hx0
@@ -734,7 +732,7 @@ lemma exists_Rv_from_Minkowski (m q : ℕ) (t b h : ℤ) (hm : 0 < m) (hq : 0 < 
       (Real.sqrt (2 * q) * x + (b : ℝ) / Real.sqrt (2 * q) * y) ^ 2 +
       (Real.sqrt m / Real.sqrt (2 * q) * y) ^ 2 < 2 * m := by
     simpa using exists_lattice_xyz_lt_two_m m q t b hm hq
-  obtain ⟨x, y, z, hne, hlt⟩ := h_exists;
+  obtain ⟨x, y, z, hne, hlt⟩ := h_exists
   -- The integer expression is nonnegative, divisible by `m`, and strictly below `2m`.
   have h_cases :
       (2 * t * q * x + t * b * y + m * z : ℤ) ^ 2 +
@@ -764,8 +762,8 @@ lemma exists_Rv_from_Minkowski (m q : ℕ) (t b h : ℤ) (hm : 0 < m) (hq : 0 < 
           _ = (2 * t * q * x + t * b * y + m * z : ℝ) ^ 2 +
               2 * (q * x ^ 2 + b * x * y + h * y ^ 2) :=
                 rst_expand_eq m q t b h x y z (by positivity) (by simpa using hbqm)
-      exact_mod_cast h_expand ▸ hlt;
-    obtain ⟨k, hk⟩ := Int.modEq_zero_iff_dvd.mp ‹_›;
+      exact_mod_cast h_expand ▸ hlt
+    obtain ⟨k, hk⟩ := Int.modEq_zero_iff_dvd.mp ‹_›
     have hquad_nonneg : (q : ℤ) * x ^ 2 + b * x * y + h * y ^ 2 ≥ 0 := by
       nlinarith [sq_nonneg (2 * q * x + b * y)]
     have hexpr_nonneg : 0 ≤ (2 * t * q * x + t * b * y + m * z : ℤ) ^ 2 +
@@ -935,7 +933,8 @@ lemma p_mod4_eq1_of_dvd_v_not_dvd_m (p : ℕ) (q : ℤ) (b h x y v R m : ℤ)
     haveI := Fact.mk hp
     simp_all +decide only [ne_eq, Nat.not_even_iff_odd, ← ZMod.intCast_eq_intCast_iff,
       Int.cast_pow, jacobiSym]
-    simp? +decide [Nat.primeFactorsList_prime hp]
+    simp +decide only [Nat.primeFactorsList_prime hp, List.pmap_cons, List.pmap_nil,
+      List.prod_cons, List.prod_nil, mul_one]
     haveI := Fact.mk hp
     rw [legendreSym.eq_one_iff]
     · aesop
@@ -946,8 +945,9 @@ lemma p_mod4_eq1_of_dvd_v_not_dvd_m (p : ℕ) (q : ℤ) (b h x y v R m : ℤ)
         exact Int.modEq_iff_dvd.mpr ⟨-4 * h * hpq.choose, by
           linear_combination -hbqm - 4 * h * hpq.choose_spec⟩
       haveI := Fact.mk hp
-      simp_all? +decide [← ZMod.intCast_eq_intCast_iff, jacobiSym]
-      simp_all? +decide [Nat.primeFactorsList_prime hp]
+      simp_all +decide only [jacobiSym, ← ZMod.intCast_eq_intCast_iff, Int.cast_pow, Int.cast_neg]
+      simp_all +decide only [Nat.primeFactorsList_prime hp, List.pmap_cons, List.pmap_nil,
+        List.prod_cons, List.prod_nil, mul_one]
       rw [legendreSym.eq_one_iff] at *
       · exact ⟨b, by simpa [sq] using hb_sq_mod_p.symm⟩
       · rwa [← ZMod.intCast_zmod_eq_zero_iff_dvd] at hpm
@@ -1006,7 +1006,7 @@ lemma p_mod4_of_dvd_v_dvd_m (p : ℕ) (q : ℕ) (b h x y : ℤ) (R v : ℤ) (m :
         simp_all +decide only [Int.reduceNeg, neg_mul, Int.modEq_iff_dvd]
         obtain ⟨a, ha⟩ := hp_R
         obtain ⟨b', hb'⟩ := hp_2qx_by
-        simp_all? +decide [← eq_sub_iff_add_eq', ← mul_assoc]
+        simp_all +decide only [← eq_sub_iff_add_eq', ← mul_assoc]
         exact ⟨a ^ 2 * 2 * q, by nlinarith⟩
       have h_div_p : (4 * q * v : ℤ) ≡ (2 * q * x + b * y) ^ 2 + m * y ^ 2 [ZMOD p ^ 2] := by
         exact Int.modEq_of_dvd ⟨0, by rw [hv]; linear_combination' hbqm * y ^ 2⟩
@@ -1028,7 +1028,8 @@ lemma p_mod4_of_dvd_v_dvd_m (p : ℕ) (q : ℕ) (b h x y : ℤ) (R v : ℤ) (m :
     simp_all +decide only [jacobiSym, Int.reduceNeg, neg_mul,
       ← ZMod.intCast_eq_intCast_iff, Int.cast_pow, Int.cast_mul, Int.cast_ofNat,
       Int.cast_natCast]
-    simp_all? +decide [Nat.primeFactorsList_prime hp]
+    simp_all +decide only [Nat.primeFactorsList_prime hp, List.pmap_cons, List.pmap_nil,
+      List.prod_cons, List.prod_nil, mul_one]
     rw [legendreSym.eq_one_iff]
     · exact ⟨y, by simpa [sq, ← ZMod.intCast_eq_intCast_iff] using h_y_sq_mod_p.symm⟩
     · intro H
@@ -1065,7 +1066,7 @@ lemma even_padicVal_of_mod4_eq3 (p : ℕ) (q : ℕ) (b h x y : ℤ) (R : ℤ) (v
         simp_all +decide only [Int.reduceNeg, neg_mul, Nat.not_even_iff_odd,
           imp_false, Nat.not_odd_iff_even, ne_eq, hv_pos.ne', not_false_eq_true,
           padicValNat.mul]
-        simp_all? [← hv_def]
+        simp_all only [← hv_def, padicValInt.of_nat]
         rw [padicValNat.eq_zero_of_not_dvd] <;> simp_all +decide [Nat.prime_dvd_prime_iff_eq]
     · rw [padicValNat.eq_zero_of_not_dvd] <;> norm_num
       exact fun h => hpv <| Int.natCast_dvd_natCast.mpr <| hp.dvd_mul.mp h |> Or.resolve_left <| by
@@ -1093,9 +1094,7 @@ theorem blueprint_case_mod8_eq3 (m : ℕ) (hm_sq : Squarefree m) (hm_pos : 0 < m
   obtain ⟨q, b, h, x, y, R, v, hq_prime, hq_mod, hjac, hbqm, hv_def, hRv, hv_pos⟩ :=
     exists_R_v_of_mod8_eq3 m hm_sq hm_pos hm_mod
   have h2v := two_v_sum_two_squares q b h x y R v m hm_sq hv_pos hv_def hbqm hRv hjac
-  have habc : ∃ a b c : ℤ, (m : ℤ) = a ^ 2 + b ^ 2 + c ^ 2 := by
-    grind +qlia
-  obtain ⟨a, b, c, habc⟩ := habc
+  obtain ⟨a, b, c, habc⟩ : ∃ a b c : ℤ, (m : ℤ) = a ^ 2 + b ^ 2 + c ^ 2 := by grind +qlia
   refine ⟨a.natAbs, b.natAbs, c.natAbs, ?_⟩
   apply Int.ofNat.inj
   calc
