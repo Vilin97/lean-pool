@@ -153,7 +153,6 @@ lemma _root_.Dipath.Dihomotopy.hcomp_apply_half_left (ht : t = half_I) :
     (dihom_to_hom F).hcomp (dihom_to_hom G) (s, t) = F (s, 1) := by
   rw [Path.Homotopy.hcomp_apply]
   have ht_coe : (t : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr ht
-  have : (t : ℝ) ≤ 2⁻¹ := by linarith
   simp [ht_coe]
 
 lemma _root_.Dipath.Dihomotopy.hcomp_apply_half_right (ht : t = half_I) :
@@ -173,9 +172,8 @@ lemma _root_.Dipath.Dihomotopy.hcomp_apply_right (ht : 2⁻¹ ≤ (t : ℝ)) :
         := by
   rw [Path.Homotopy.hcomp_apply]
   simp
-  split_ifs
-  · have : (t : ℝ) = 2⁻¹ := by linarith
-    simp [this]
+  split_ifs with h
+  · simp [show (t : ℝ) = 2⁻¹ by linarith]
   · rfl
 
 lemma _root_.Dipath.Dihomotopy.hcomp_first_case (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁)
@@ -224,8 +222,7 @@ lemma _root_.Dipath.Dihomotopy.hcomp_second_case (F : Dihomotopy p₀ q₀) (G :
     rw [Path.Homotopy.hcomp_apply (dihom_to_hom F) (dihom_to_hom G) (s, t)]
     split_ifs with ht'
     · simp at ht'
-      have : ↑t = (2⁻¹ : ℝ) := by linarith
-      simp [this]
+      simp [show (t : ℝ) = 2⁻¹ by linarith]
     · rfl
   have ht₁ : 2⁻¹ ≤ (t₁ : ℝ) := by
     have h_le : t₀ ≤ t₁ := directed_path_source_le_target γ_dipath.2
@@ -434,8 +431,7 @@ def _root_.Dipath.Dihomotopy.trans_refl (p : Dipath x y) :
     change (t : ℝ) ≤ Path.Homotopy.transReflReparamAux t
     unfold Path.Homotopy.transReflReparamAux
     split_ifs
-    · have : 0 ≤ (t : ℝ) := t.2.1
-      linarith
+    · linarith [t.2.1]
     · exact t.2.2
   have hf₀ : f 0 = 0 := rfl
   have hf₁ : f 1 = 1 := rfl

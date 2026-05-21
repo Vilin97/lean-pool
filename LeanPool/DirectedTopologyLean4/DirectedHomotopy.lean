@@ -189,8 +189,6 @@ lemma trans_apply_half_left (ht : t = half_I) : (dihom_to_hom F).trans (dihom_to
     = F (1, x) := by
   rw [ContinuousMap.Homotopy.trans_apply]
   have ht_coe : (t : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr ht
-  have : (t : ℝ) ≤ 2⁻¹ := by linarith
-  simp [this]
   simp [ht_coe]
 
 lemma trans_apply_half_right (ht : t = half_I) : (dihom_to_hom F).trans (dihom_to_hom G) (t, x)
@@ -209,12 +207,9 @@ lemma trans_apply_right (t : I) (x : X) (ht : 2⁻¹ ≤ (t : ℝ)) :
   (dihom_to_hom F).trans (dihom_to_hom G) (t, x) = G (⟨2 * t - 1, double_sub_one_mem_I ht⟩, x) := by
   rw [ContinuousMap.Homotopy.trans_apply]
   simp only [one_div]
-  split_ifs
-  {
-    have : (t : ℝ) = 2⁻¹ := by linarith
-    simp [this]
-  }
-  rfl
+  split_ifs with h
+  · simp [show (t : ℝ) = 2⁻¹ by linarith]
+  · rfl
 
 lemma trans_first_case {a₀ a₁ : I × X} {γ : Path a₀ a₁} (γ_dipath : IsDipath γ)
     (ht₁ : (a₁.1 : ℝ) ≤ 2⁻¹) :
@@ -261,8 +256,7 @@ lemma trans_second_case {a₀ a₁ : I × X} {γ : Path a₀ a₁} (γ_dipath : 
     rw [ContinuousMap.Homotopy.trans_apply (dihom_to_hom F) (dihom_to_hom G) (t, x)]
     split_ifs with ht'
     · simp at ht'
-      have : ↑t = (2⁻¹ : ℝ) := by linarith
-      simp [this]
+      simp [show (t : ℝ) = 2⁻¹ by linarith]
     · rfl
   have : 2⁻¹ ≤ (t₁ : ℝ) := by
     have h_le : t₀ ≤ t₁ := directed_path_source_le_target γ₁.dipath_toPath
