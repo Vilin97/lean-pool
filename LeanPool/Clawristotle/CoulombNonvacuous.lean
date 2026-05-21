@@ -99,27 +99,19 @@ private lemma equilibriumMaxwellian_exp_lower_bound (ρ T : ℝ) (hρ : 0 < ρ) 
     unfold normSq dotProduct; simp only [Fin.sum_univ_three]
     have h : ∀ j : Fin 3, v j * v j ≤ ‖v‖ * ‖v‖ := fun j => by
       have : |v j| ≤ ‖v‖ := by rw [← Real.norm_eq_abs]; exact norm_le_pi_norm v j
-      calc v j * v j = |v j| * |v j| := (abs_mul_abs_self _).symm
-        _ ≤ ‖v‖ * ‖v‖ := mul_self_le_mul_self (abs_nonneg _) this
+      nlinarith [abs_nonneg (v j), abs_mul_abs_self (v j)]
     nlinarith [h 0, h 1, h 2, norm_nonneg v]
   have h_s1 : (1 : ℝ) ≤ (1 + ‖v‖) ^ 2 := by nlinarith [norm_nonneg v]
   have hM_nn : 0 ≤ M := le_max_left 0 _
-  -- Factor: exp(-(3/(2T)+M)*s) = exp(-M*s) * exp(-3s/(2T))
-  have h_split : -(3 / (2 * T) + M) * (1 + ‖v‖) ^ 2 =
-      -M * (1 + ‖v‖) ^ 2 + -(3 * (1 + ‖v‖) ^ 2 / (2 * T)) := by ring
-  rw [h_split, Real.exp_add]
+  rw [show -(3 / (2 * T) + M) * (1 + ‖v‖) ^ 2 =
+      -M * (1 + ‖v‖) ^ 2 + -(3 * (1 + ‖v‖) ^ 2 / (2 * T)) from by ring, Real.exp_add]
   apply mul_le_mul
-  -- exp(-M*s) ≤ pf: from M ≥ -log(pf) and s ≥ 1
   · rw [← Real.exp_log hpf]
     exact Real.exp_le_exp.mpr
       (by nlinarith [le_max_right (0:ℝ) (-Real.log pf), le_mul_of_one_le_right hM_nn h_s1])
-  -- exp(-3s/(2T)) ≤ exp(-normSq/(2T)): from normSq ≤ 3s
   · apply Real.exp_le_exp.mpr
     have hT2 : (0 : ℝ) < 2 * T := by linarith
-    have h_div : normSq v / (2 * T) ≤ 3 * (1 + ‖v‖) ^ 2 / (2 * T) :=
-      div_le_div_of_nonneg_right h_normSq hT2.le
-    have : -(3 * (1 + ‖v‖) ^ 2 / (2 * T)) = -(3 * (1 + ‖v‖) ^ 2) / (2 * T) := by ring
-    rw [this]
+    rw [show -(3 * (1 + ‖v‖) ^ 2 / (2 * T)) = -(3 * (1 + ‖v‖) ^ 2) / (2 * T) from by ring]
     exact div_le_div_of_nonneg_right (neg_le_neg h_normSq) hT2.le
   · exact Real.exp_nonneg _
   · exact hpf.le
@@ -177,8 +169,7 @@ private lemma poly_mul_gaussian_le (M : ℕ) (a : ℝ) (ha : 0 < a) :
           · exact Real.exp_nonneg _
           · positivity
       _ = 2 ^ M * (u ^ M * Real.exp (-a * u)) := by ring_nf
-      _ ≤ 2 ^ M * (M.factorial / a ^ M) := by
-          gcongr; exact pow_mul_exp_neg_le M a ha u hu
+      _ ≤ 2 ^ M * (M.factorial / a ^ M) := by gcongr; exact pow_mul_exp_neg_le M a ha u hu
       _ ≤ 2 ^ M * (1 + M.factorial / a ^ M) := by gcongr; linarith
 
 /-- The equilibrium Maxwellian has Schwartz decay: all iterated velocity derivatives
@@ -259,12 +250,11 @@ lemma equilibriumMaxwellian_log_bound (ρ T : ℝ) (hρ : 0 < ρ) (hT : 0 < T) :
   obtain ⟨C_log, K_log, hbound⟩ := schwartz_log_bound
     (fun _ v => equilibriumMaxwellian_pos ρ T hρ hT v)
     ⟨fun N {k} _ => (equilibriumMaxwellian_schwartz_decay ρ T hρ hT N k).imp
-      fun C hC => ⟨hC.1, fun _ v => hC.2 v⟩,
+        fun C hC => ⟨hC.1, fun _ v => hC.2 v⟩,
      fun N i => ⟨1, one_pos, fun x v => by
-      simp only [torusGradX, periodicLift]
-      have : (fun y => equilibriumMaxwellian ρ T v) ∘ torusMk =
-          fun _ => equilibriumMaxwellian ρ T v := by ext; rfl
-      rw [this]; simp⟩⟩
+        simp only [torusGradX, periodicLift]
+        rw [show (fun y => equilibriumMaxwellian ρ T v) ∘ torusMk =
+          fun _ => equilibriumMaxwellian ρ T v from by ext; rfl]; simp⟩⟩
     ((equilibriumMaxwellian_exp_lower_bound ρ T hρ hT).imp
       fun C hC => hC.imp fun K hCK => fun _ => hCK)
   exact ⟨C_log, K_log, fun v => hbound default v⟩
@@ -292,30 +282,20 @@ lemma integral_equilibriumMaxwellian (ρ T : ℝ) (hT : 0 < T) :
     ∫ v : Fin 3 → ℝ, equilibriumMaxwellian ρ T v = ρ := by
   unfold equilibriumMaxwellian
   rw [integral_const_mul]
-  -- Factor the exponential as a product
   have h_factor : (fun v : Fin 3 → ℝ => exp (-(normSq v) / (2 * T))) =
       (fun v => ∏ i : Fin 3, exp (-(1/(2*T)) * (v i)^2)) := by
-    ext v; rw [← exp_sum]; congr 1
-    simp only [normSq, dotProduct, Fin.sum_univ_three, sq]; ring
+    ext v; rw [← exp_sum]; congr 1; simp only [normSq, dotProduct, Fin.sum_univ_three, sq]; ring
   rw [h_factor]
-  -- Apply Fubini: ∫ ∏ fᵢ(vᵢ) = ∏ ∫ fᵢ
   have h_fubini : ∫ v : Fin 3 → ℝ, ∏ i : Fin 3, exp (-(1/(2*T)) * (v i)^2) =
       ∏ i : Fin 3, ∫ x : ℝ, exp (-(1/(2*T)) * x^2) := by
     erw [← MeasureTheory.integral_fintype_prod_eq_prod]; rfl
-  rw [h_fubini]
-  -- Each 1D integral: ∫ exp(-bx²) = √(π/b) with b = 1/(2T)
-  have h_gauss : ∫ x : ℝ, exp (-(1/(2*T)) * x^2) = sqrt (π / (1/(2*T))) :=
-    integral_gaussian _
-  simp only [Fin.prod_univ_three, h_gauss]
-  -- Simplify π / (1/(2T)) = 2πT
-  have h_simp : π / (1/(2*T)) = 2 * π * T := by field_simp
-  rw [h_simp]
-  -- √(2πT)³ = (2πT)^(3/2)
+  rw [h_fubini, show (∫ x : ℝ, exp (-(1/(2*T)) * x^2)) = sqrt (π / (1/(2*T))) from
+    integral_gaussian _]
+  simp only [Fin.prod_univ_three, show π / (1/(2*T)) = 2 * π * T from by field_simp]
   have h2piT_pos : (0:ℝ) < 2 * π * T := by positivity
   have h_sqrt_cube : sqrt (2 * π * T) * sqrt (2 * π * T) * sqrt (2 * π * T) =
       (2 * π * T) ^ ((3:ℝ)/2) := by
-    rw [show (3:ℝ)/2 = 1/2 + 1/2 + 1/2 from by ring]
-    rw [rpow_add h2piT_pos, rpow_add h2piT_pos]
+    rw [show (3:ℝ)/2 = 1/2 + 1/2 + 1/2 from by ring, rpow_add h2piT_pos, rpow_add h2piT_pos]
     simp [sqrt_eq_rpow]
   rw [h_sqrt_cube]
   exact div_mul_cancel₀ ρ (ne_of_gt (rpow_pos_of_pos h2piT_pos _))
