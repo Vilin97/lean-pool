@@ -1,4 +1,116 @@
 projects:
+  - slug: demazureoperatorslean
+    title: Demazure Operators and Lean
+    summary: Formalizes Demazure operators on multivariate polynomials and their nilpotence, braid, commutation, and symmetric-polynomial linearity relations, with auxiliary Coxeter-theory support including strong exchange and a conditional Matsumoto theorem.
+    branch: algebraic combinatorics
+    entry_module: LeanPool.DemazureOperatorsLean
+    authors:
+      - Óscar Álvarez Sánchez
+    source:
+      title: "Schubert cells, and the cohomology of the spaces G/P"
+      authors:
+        - I. N. Bernstein
+        - I. M. Gelfand
+        - S. I. Gelfand
+      doi: "10.1070/RM1973v028n03ABEH001549"
+      github_repo: bolito2/DemazureOperatorsLean
+    status: verified
+    main_declarations:
+      - Demazure.Dem
+      - CoxeterSystem.strongExchangeProperty
+    main_results:
+      - declaration: Demazure.Dem
+        informal: Defines the Demazure operator as a linear map over the subalgebra of symmetric polynomials.
+      - declaration: Demazure.demazure_order_two
+        informal: Proves that applying the Demazure operator twice gives zero.
+      - declaration: Demazure.demazure_commutes_adjacent
+        informal: Proves the braid relation for adjacent Demazure operators.
+      - declaration: Demazure.demazure_commutes_non_adjacent
+        informal: Proves that non-adjacent Demazure operators commute.
+      - declaration: Demazure.demazure_mul_symm
+        informal: Proves that symmetric polynomials act as scalars with respect to Demazure operators.
+      - declaration: CoxeterSystem.strongExchangeProperty
+        informal: Proves the strong exchange property for Coxeter systems.
+        source_ref: "J. E. Humphreys, Reflection Groups and Coxeter Groups, Cambridge University Press, 1990."
+      - declaration: CoxeterSystem.matsumoto_reduced
+        informal: Auxiliary theorem proving, under the extra MatsumotoCondition hypothesis, that reduced words for the same Coxeter group element are connected by braid moves.
+        source_ref: "J. E. Humphreys, Reflection Groups and Coxeter Groups, Cambridge University Press, 1990."
+    tags:
+      - algebraic-combinatorics
+      - demazure-operators
+      - polynomials
+      - representation-theory
+    msc:
+      - "05E05"
+      - "13P10"
+      - "20F55"
+  - slug: zeta_3_irrational
+    title: Beukers integral estimates for ζ(3)
+    summary: Formalizes the Beukers integral identities, denominator estimates, positivity, and upper bounds used in Apéry's theorem for ζ(3).
+    branch: analytic number theory
+    entry_module: LeanPool.Zeta3Irrational
+    authors:
+      - Junqi Liu
+      - Jujian Zhang
+    source:
+      title: A note on the irrationality of ζ(2) and ζ(3)
+      authors:
+        - Frits Beukers
+      doi: "10.1112/blms/11.3.268"
+      github_repo: ahhwuhu/zeta_3_irrational
+    status: verified
+    main_declarations:
+      - LeanPool.Zeta3Irrational.linear_int
+      - LeanPool.Zeta3Irrational.JJ_upper
+    main_results:
+      - declaration: LeanPool.Zeta3Irrational.linear_int
+        informal: Clears denominators in the Apéry integral to produce a linear form in 1 and ζ(3).
+      - declaration: LeanPool.Zeta3Irrational.JJ_pos
+        informal: Proves positivity of the transformed Beukers-Apéry integral.
+      - declaration: LeanPool.Zeta3Irrational.JJ_upper
+        informal: Bounds the Beukers-Apéry integral by a geometric factor times the ζ(3) series.
+      - declaration: LeanPool.Zeta3Irrational.zeta3_le_zeta2
+        informal: Compares the ζ(3) series with the convergent ζ(2) series.
+    tags:
+      - number-theory
+      - analysis
+      - zeta-functions
+    msc:
+      - "11M06"
+      - "11J72"
+  - slug: bruhat-tits
+    title: Formalisation of the Bruhat-Tits Tree
+    summary: Formalizes the Bruhat-Tits tree for GL₂ over the fraction field of a discrete valuation ring.
+    branch: algebraic geometry
+    entry_module: LeanPool.BruhatTits
+    authors:
+      - Judith Ludwig
+      - Christian Merten
+    source:
+      title: Trees
+      authors:
+        - Jean-Pierre Serre
+      url: https://doi.org/10.1007/978-3-642-61856-7
+      github_repo: chrisflav/bruhat-tits
+    status: verified
+    main_declarations:
+      - BruhatTits.BTtree
+      - BruhatTits.BTlaplace_surjective
+    main_results:
+      - declaration: BruhatTits.BTtree
+        informal: Proves that the Bruhat-Tits graph is a tree.
+      - declaration: BruhatTits.btgraph_regular
+        informal: Proves regularity of the Bruhat-Tits graph when the residue field is finite.
+      - declaration: BruhatTits.BTlaplace_surjective
+        informal: Proves surjectivity of the Bruhat-Tits Laplacian on harmonic cochains.
+    tags:
+      - algebraic-geometry
+      - graph-theory
+      - discrete-valuation-rings
+    msc:
+      - "20E42"
+      - "05C25"
+      - "13H05"
   - slug: ramanujan-tau-misses-primes
     title: ABC implies that Ramanujan's tau function misses almost all primes
     summary: Formalizes the ABC-conditional proof that Ramanujan's tau function takes prime values only rarely.
@@ -59,34 +171,6 @@ projects:
     msc:
       - "20M14"
       - "13D02"
-  - slug: osforgff
-    title: Osterwalder-Schrader Axioms for the Gaussian Free Field
-    summary: Formalizes Osterwalder-Schrader axioms for the massive Gaussian free field using Minlos, covariance, and reflection-positivity infrastructure.
-    branch: mathematical physics
-    entry_module: LeanPool.OSforGFF
-    authors:
-      - Michael R. Douglas
-      - Sarah Hoback
-      - Anna Mei
-      - Ron Nissim
-    source:
-      url: https://github.com/mrdouglasny/OSforGFF
-      github_repo: mrdouglasny/OSforGFF
-    status: verified
-    main_declarations:
-      - OSforGFF.gaussianFreeField_satisfies_all_OS_axioms
-    main_results:
-      - declaration: OSforGFF.gaussianFreeField_satisfies_all_OS_axioms
-        informal: Proves that the massive Gaussian free field satisfies the OS0-OS4 Osterwalder-Schrader axioms.
-    tags:
-      - analysis
-      - measure-theory
-      - probability
-      - mathematical-physics
-    msc:
-      - "81T08"
-      - "60G15"
-      - "46G12"
   - slug: dead-ends
     title: Dead Ends in Square-Free Digit Walks
     summary: Formalizes the density formula for base-b dead ends in square-free digit walks.
@@ -447,6 +531,102 @@ projects:
       - "28A75"
       - "52A40"
       - "49Q20"
+  - slug: leancomplexanalysis
+    title: Formalized Complex Analysis in Lean
+    summary: Formalizes Poisson integral formulas on the unit disc and arbitrary centered discs, Herglotz–Riesz representation, and Harnack's inequality on the unit disc, plus infrastructure for univalent function classes S and Σ.
+    branch: complex analysis
+    entry_module: LeanPool.LeanComplexAnalysis
+    authors:
+      - seb488
+      - Aristotle
+    source:
+      url: https://github.com/seb488/LeanComplexAnalysis
+      github_repo: seb488/LeanComplexAnalysis
+    status: verified
+    main_declarations:
+      - LeanPool.LeanComplexAnalysis.harnack_ineq
+    main_results:
+      - declaration: LeanPool.LeanComplexAnalysis.poisson_integral_of_harmonicOn_unitDisc_continuousOn_closedUnitDisc
+        informal: Proves the Poisson integral formula for harmonic functions on the unit disc.
+      - declaration: LeanPool.LeanComplexAnalysis.poisson_integral_of_harmonicOn_disc_continuousOn_closedDisc
+        informal: Proves the Poisson integral formula for harmonic functions on arbitrary centered discs.
+      - declaration: LeanPool.LeanComplexAnalysis.HerglotzRiesz_representation_harmonic
+        informal: Proves that every positive harmonic function on the unit disc with value 1 at 0 has a unique Herglotz–Riesz representation by a probability measure on the unit circle.
+      - declaration: LeanPool.LeanComplexAnalysis.harnack_ineq
+        informal: Proves Harnack's inequality for positive harmonic functions on the unit disc.
+    tags:
+      - complex-analysis
+      - harmonic-functions
+      - poisson-integral
+      - univalent-functions
+    msc:
+      - "30A99"
+      - "31A05"
+      - "30C55"
+  - slug: partial-combinatory-algebras
+    title: Partial Combinatory Algebras
+    summary: Formalises partial combinatory algebras with the K/S combinators, programming combinators, the free combinatory algebra, and the graph model.
+    branch: logic and computability
+    entry_module: LeanPool.PartialCombinatoryAlgebras
+    authors:
+      - Andrej Bauer
+    source:
+      title: "Realizability: An Introduction to its Categorical Side"
+      authors:
+        - Jaap van Oosten
+      url: https://doi.org/10.1016/S0049-237X(08)80044-6
+      github_repo: andrejbauer/partial-combinatory-algebras
+    status: verified
+    main_declarations:
+      - LeanPool.PartialCombinatoryAlgebras.PCA
+    main_results:
+      - declaration: LeanPool.PartialCombinatoryAlgebras.PCA
+        informal: Defines the class of partial combinatory algebras (PCAs) with K and S combinators.
+      - declaration: LeanPool.PartialCombinatoryAlgebras.CA
+        informal: Defines total combinatory algebras and exhibits every total combinatory algebra as a PCA.
+      - declaration: LeanPool.PartialCombinatoryAlgebras.FreeCA
+        informal: Constructs the free total combinatory algebra as a quotient of formal expressions.
+      - declaration: LeanPool.PartialCombinatoryAlgebras.GraphModel.isCA
+        informal: Constructs the graph-model combinatory algebra on the powerset of any Listing-typed carrier.
+    tags:
+      - combinatory-algebra
+      - lambda-calculus
+      - computability
+    msc:
+      - "03B40"
+      - "03D75"
+  - slug: duality
+    title: Duality theory in linear optimization and its extensions
+    summary: Formalizes Farkas-like theorems and strong LP duality, including extensions to a linearly ordered field with bot and top.
+    branch: linear optimization
+    entry_module: LeanPool.Duality
+    authors:
+      - Martin Dvorak
+    source:
+      arxiv: "2409.08119"
+      github_repo: madvorak/duality
+    status: verified
+    main_declarations:
+      - extendedFarkas
+      - StandardLP.strongDuality
+    main_results:
+      - declaration: equalityFarkas
+        informal: Farkas' lemma for linear equalities over nonnegative variables.
+      - declaration: inequalityFarkas
+        informal: Farkas' lemma for linear inequalities over nonnegative variables.
+      - declaration: extendedFarkas
+        informal: Extended Farkas theorem for matrices and vectors over a linearly ordered field with bot and top.
+      - declaration: ValidELP.strongDuality
+        informal: Strong duality theorem for extended linear programs.
+      - declaration: StandardLP.strongDuality
+        informal: Strong duality theorem for linear programs in standard form.
+    tags:
+      - linear-programming
+      - optimization
+      - farkas-lemma
+    msc:
+      - "90C05"
+      - "90C46"
   - slug: sumsthreesquares
     title: Sums of Three Squares
     summary: Formalizes a blueprint step in the three-squares theorem using quadratic forms and geometry of numbers.
@@ -472,3 +652,547 @@ projects:
     msc:
       - "11E25"
       - "11H06"
+  - slug: formalization-of-bounded-arithmetic
+    title: Strengthened V0 Bounded Arithmetic Interfaces
+    summary: Formalizes first-order and two-sorted bounded-arithmetic model infrastructure, including arithmetic model laws and string-addition laws for strengthened bundled V0-style interfaces with propositional induction, order, cancellation, decidability, and algebraic laws assumed as fields rather than derived from a separate raw V0 class.
+    branch: mathematical logic
+    entry_module: LeanPool.FormalizationOfBoundedArithmetic
+    authors:
+      - ruplet
+    source:
+      title: Logical Foundations of Proof Complexity
+      authors:
+        - Stephen Cook
+        - Phuong Nguyen
+      doi: "10.1017/CBO9780511676277"
+      github_repo: ruplet/formalization-of-bounded-arithmetic
+    status: verified
+    main_declarations:
+      - V0Model.ind_strengthened_v0
+      - str_add_assoc_strengthened_v0
+    main_results:
+      - declaration: IOPENModel.add_assoc
+        informal: Proves associativity of addition in IOPEN models.
+      - declaration: IOPENModel.add_comm
+        informal: Proves commutativity of addition in IOPEN models.
+      - declaration: IDelta0Model.pred_exists
+        informal: Shows that nonzero elements in IDelta0 models have predecessors.
+      - declaration: IDelta0Model.mul_cancel_right
+        informal: Proves right cancellation for multiplication by a nonzero element in IDelta0 models.
+      - declaration: V0Model.xind
+        informal: Exposes string induction inside the strengthened bundled V0Model structure, whose fields include the comprehension and induction/order principles used downstream.
+      - declaration: V0Model.ind_strengthened_v0
+        informal: Exposes propositional induction inside the strengthened bundled V0Model structure, rather than deriving it from only the raw finite V0 axiom list.
+      - declaration: str_add_comm_strengthened_v0
+        informal: Proves commutativity of string addition in V0 extension models extending the strengthened V0Model bundle.
+      - declaration: str_add_assoc_strengthened_v0
+        informal: Proves associativity of string addition in V0 extension models extending the strengthened V0Model bundle, using the bundled propositional induction field.
+      - declaration: str_succ_assoc_strengthened_v0
+        informal: Proves that string addition associates with string successor in V0 extension models extending the strengthened V0Model bundle.
+    tags:
+      - logic
+      - bounded-arithmetic
+      - model-theory
+      - computational-complexity
+    msc:
+      - "03F30"
+      - "03D15"
+  - slug: polylean
+    title: Polylean Unit Conjecture Counterexample
+    summary: Formalizes Gardam's counterexample to Kaplansky's Unit Conjecture, including the Promislow group, group rings, torsion-freeness of the group, and the non-trivial unit in 𝔽₂[P].
+    branch: algebra
+    entry_module: LeanPool.Polylean
+    authors:
+      - Siddhartha Gadgil
+      - Anand Rao
+    source:
+      url: https://github.com/siddhartha-gadgil/Polylean
+      github_repo: siddhartha-gadgil/Polylean
+    status: verified
+    main_declarations:
+      - LeanPool.Polylean.P.torsionFree
+      - LeanPool.Polylean.Gardam.GardamTheorem
+    main_results:
+      - declaration: LeanPool.Polylean.P.torsionFree
+        informal: Proves that the Promislow group used in Gardam's construction is torsion-free.
+      - declaration: LeanPool.Polylean.Gardam.GardamTheorem
+        informal: Proves Gardam's counterexample to Kaplansky's Unit Conjecture by constructing a non-trivial unit in the group ring 𝔽₂[P].
+    tags:
+      - algebra
+      - group-theory
+      - ring-theory
+      - unit-conjecture
+    msc:
+      - "16S34"
+      - "20F65"
+  - slug: directed-topology-lean-4
+    title: Directed Topology in Lean 4
+    summary: Foundational library for directed topological spaces, dipaths, dihomotopy, the fundamental category functor, and a directed Van Kampen pushout theorem.
+    branch: algebraic topology
+    entry_module: LeanPool.DirectedTopologyLean4
+    authors:
+      - Dominique Lawson
+      - Henning Basold
+      - Peter Bruin
+    source:
+      url: https://github.com/Dominique-Lawson/Directed-Topology-Lean-4
+      github_repo: Dominique-Lawson/Directed-Topology-Lean-4
+    status: verified
+    main_declarations:
+      - DirectedSpace
+      - Dipath
+      - DirectedVanKampen.directed_van_kampen
+    main_results:
+      - declaration: DirectedSpace
+        informal: Definition of a directed topological space as a topological space with a class of directed paths closed under constant paths, concatenation, and monotone reparametrization.
+      - declaration: Dipath
+        informal: A directed path in a directed space.
+      - declaration: Dipath.Dihomotopic
+        informal: Dihomotopy equivalence relation on dipaths between fixed endpoints.
+      - declaration: DirectedVanKampen.directed_van_kampen
+        informal: Proves the directed Van Kampen theorem, showing that the directed fundamental category functor sends the standard open cover square to a pushout in the category of categories.
+    tags:
+      - directed-topology
+      - algebraic-topology
+      - category-theory
+    msc:
+      - "55U40"
+      - "55Q05"
+      - "18A30"
+  - slug: selberg-sieve4
+    title: Selberg Sieve
+    summary: Formalizes the Selberg sieve with applications to prime-counting bounds and a Brun-Titchmarsh-style estimate.
+    branch: analytic number theory
+    entry_module: LeanPool.SelbergSieve4
+    authors:
+      - Arend Mellendijk
+    source:
+      title: Sieve Methods
+      authors:
+        - Heini Halberstam
+        - Hans-Egon Richert
+      url: https://archive.org/details/sievemethods0000halb
+      github_repo: FLDutchmann/selberg-sieve4
+    status: verified
+    main_declarations:
+      - fundamental_theorem_simple
+      - primeCounting_isBigO_atTop
+      - primesBetween_le
+    main_results:
+      - declaration: fundamental_theorem_simple
+        informal: Proves the simple Selberg sieve upper-bound theorem.
+      - declaration: primeCounting_isBigO_atTop
+        informal: Derives the asymptotic prime-counting upper bound.
+      - declaration: primeCounting_le_mul
+        informal: Gives an eventual explicit constant upper bound for the prime-counting function.
+      - declaration: primesBetween_le
+        informal: Bounds the number of primes in an interval using the sieve estimate.
+    tags:
+      - number-theory
+      - analytic-number-theory
+      - sieve-theory
+      - prime-counting
+    msc:
+      - "11N35"
+      - "11N05"
+      - "11N13"
+  - slug: abc-exceptions
+    title: Exceptional Set in the abc Conjecture
+    summary: Formalizes reductions and optimization bounds for a power-saving estimate on exceptional triples in the abc conjecture.
+    branch: analytic number theory
+    entry_module: LeanPool.ABCExceptions
+    authors:
+      - Bhavik Mehta
+      - Arend Mellendijk
+    source:
+      url: https://arxiv.org/abs/2410.12234
+      title: Bounds on the exceptional set in the abc conjecture
+      authors:
+        - Tim Browning
+        - Jared Duker Lichtman
+        - Joni Teräväinen
+      github_repo: b-mehta/ABC-Exceptions
+    status: verified
+    main_declarations:
+      - abcConjecture_iff_countTriples
+      - thm_4_point_3
+    main_results:
+      - declaration: abcConjecture_iff_countTriples
+        informal: Recasts the abc conjecture as a uniform big-O bound for bounded exceptional triples.
+      - declaration: refinedCountTriplesStar_isBigO_B
+        informal: Bounds the refined exceptional-triple count by the dyadic structured-box supremum.
+      - declaration: thm_4_point_3
+        informal: Derives the Section 4 optimization bound from the determinant, geometry, and Fourier hypotheses.
+    tags:
+      - number-theory
+      - analytic-number-theory
+      - abc-conjecture
+    msc:
+      - "11D75"
+      - "11N37"
+  - slug: lean-booleanfun
+    title: Analysis of Boolean functions in Lean
+    summary: Walsh-Fourier analysis on Boolean functions, including Arrow's theorem and BLR linearity testing.
+    branch: combinatorics
+    entry_module: LeanPool.LeanBooleanfun
+    authors:
+      - Joris Roos
+    source:
+      url: https://github.com/roos-j/lean-booleanfun
+      github_repo: roos-j/lean-booleanfun
+    status: verified
+    main_declarations:
+      - LeanPool.LeanBooleanfun.BooleanFun.BV.dictator_of_condorcet_and_unanimous
+    main_results:
+      - declaration: LeanPool.LeanBooleanfun.BooleanFun.BV.dictator_of_condorcet_and_unanimous
+        informal: Arrow's theorem for two-candidate Boolean voting rules.
+    tags:
+      - boolean-functions
+      - fourier-analysis
+      - social-choice
+    msc:
+      - "06E30"
+      - "42C10"
+      - "91B14"
+  - slug: polya-enumeration-theorem
+    title: "Pólya's enumeration theorem"
+    summary: Formalizes Pólya's enumeration theorem counting orbits of colorings under a group action.
+    branch: combinatorics
+    entry_module: LeanPool.PolyaEnumerationTheorem
+    authors:
+      - Luka Opravš
+    source:
+      url: "https://github.com/Luka-O/polya-enumeration-theorem"
+      github_repo: Luka-O/polya-enumeration-theorem
+    status: verified
+    main_declarations:
+      - LeanPool.PolyaEnumerationTheorem.polya_theorem
+    main_results:
+      - declaration: LeanPool.PolyaEnumerationTheorem.polya_theorem
+        informal: Counts distinct colorings of a finite set under a group action by averaging powers of the number of colors over cycle indices.
+    tags:
+      - combinatorics
+      - group-theory
+      - enumeration
+    msc:
+      - "05A15"
+      - "20B30"
+  - slug: fineqs
+    title: FinEqs - reducing equations defining a subset of n-space over a finite field
+    summary: Formalizes the finite-field equation-reduction theorem and sharpness examples.
+    branch: number theory
+    entry_module: LeanPool.Fineqs
+    authors:
+      - Stefan Barańczuk
+      - Aristotle
+    source:
+      arxiv: "1906.11174"
+      github_repo: nasqret/fineqs
+    status: verified
+    main_declarations:
+      - LeanPool.Fineqs.theorem_1
+      - LeanPool.Fineqs.prop_1
+    main_results:
+      - declaration: LeanPool.Fineqs.theorem_1
+        informal: Reduces equations on a small finite set to at most n equations in the same span.
+      - declaration: LeanPool.Fineqs.prop_1
+        informal: Shows the cardinality bound in the reduction theorem is sharp.
+      - declaration: LeanPool.Fineqs.corollary_2
+        informal: Applies the reduction theorem to affine space over a finite field.
+      - declaration: LeanPool.Fineqs.corollary_3
+        informal: Applies the reduction theorem to nonempty projective zero loci.
+      - declaration: LeanPool.Fineqs.remark_example
+        informal: Shows n - 1 coordinate-function combinations have at least q common zeros.
+    tags:
+      - number-theory
+      - finite-fields
+      - algebraic-geometry
+    msc:
+      - "14G15"
+      - "11T06"
+  - slug: virasoroproject
+    title: Virasoro Project
+    summary: Formalizes the Virasoro algebra, its Witt-algebra central extension, Verma modules, and the basic bosonic Sugawara construction.
+    branch: representation theory
+    entry_module: LeanPool.VirasoroProject
+    authors:
+      - Kalle Kytölä
+    source:
+      title: Infinite-Dimensional Lie Algebras
+      authors:
+        - Victor Kac
+      url: https://doi.org/10.1017/CBO9780511626234
+      github_repo: kkytola/VirasoroProject
+    status: verified
+    main_declarations:
+      - VirasoroProject.VirasoroAlgebra
+      - VirasoroProject.sugawaraRepresentation
+    main_results:
+      - declaration: VirasoroProject.VirasoroAlgebra
+        informal: Defines the Virasoro algebra as a one-dimensional central extension of the Witt algebra.
+      - declaration: VirasoroProject.sugawaraRepresentation
+        informal: Constructs the basic bosonic Sugawara representation of the Virasoro algebra from locally truncated Heisenberg actions.
+    tags:
+      - representation-theory
+      - lie-algebras
+      - mathematical-physics
+      - virasoro-algebra
+    msc:
+      - "17B68"
+      - "17B56"
+      - "81R10"
+
+  - slug: lowdimsolvclassification
+    title: Classification of low-dimensional solvable Lie algebras
+    summary: Formalises the classification of solvable Lie algebras up to dimension three.
+    branch: lie theory
+    entry_module: LeanPool.LowDimSolvClassification
+    authors:
+      - Viviana del Barco
+      - Gustavo Infanti
+      - Exequiel Rivas
+      - Paul Schwahn
+    source:
+      title: Classification and Identification of Lie Algebras
+      authors:
+        - Pavel Winternitz
+        - Libor Šnobl
+      url: https://bookstore.ams.org/crmm-33
+      github_repo: LieLean/LowDimSolvClassification
+    status: verified
+    main_declarations:
+      - LieAlgebra.Dim3.classification
+    main_results:
+      - declaration: LieAlgebra.Dim3.classification
+        informal: Classifies three-dimensional solvable Lie algebras over arbitrary fields.
+    tags:
+      - lie-algebras
+      - solvable
+      - classification
+    msc:
+      - "17B30"
+  - slug: artin-wedderburn
+    title: Artin-Wedderburn Theorem
+    summary: Formalizes the Artin-Wedderburn theorem for prime and simple Artinian rings.
+    branch: ring theory
+    entry_module: LeanPool.ArtinWedderburn
+    authors:
+      - Matevz Miščič
+      - Maša Žaucer
+      - Job Petrovčič
+    source:
+      title: A First Course in Noncommutative Rings
+      authors:
+        - T. Y. Lam
+      url: https://doi.org/10.1007/978-1-4419-8616-0
+      github_repo: JobPetrovcic/ArtinWedderburn
+    status: verified
+    main_declarations:
+      - LeanPool.ArtinWedderburn.ArtinWedderburnForPrime
+    main_results:
+      - declaration: LeanPool.ArtinWedderburn.ArtinWedderburnForPrime
+        informal: A nontrivial prime Artinian ring is isomorphic to a matrix ring over a division ring.
+    tags:
+      - ring-theory
+      - noncommutative-algebra
+      - artinian-rings
+    msc:
+      - "16K20"
+      - "16P20"
+  - slug: order-p-q
+    title: Classification of groups of order p * q
+    summary: Classification of noncyclic finite groups of order p*q, including the prime-square direct-product case and the p<q semidirect-product normal form.
+    branch: group theory
+    entry_module: LeanPool.OrderPQ
+    authors:
+      - Scott Harper
+      - Peiran Wu
+    source:
+      arxiv: "2501.09769"
+      github_repo: wupr/order-p-q
+    status: verified
+    main_declarations:
+      - OrderPQ.exists_card_eq_prime_mul_prime_and_not_isCyclic_iff
+    main_results:
+      - declaration: OrderPQ.exists_card_eq_prime_mul_prime_and_not_isCyclic_iff
+        informal: There exists a noncyclic group of order p*q exactly when p=q, p divides q-1, or q divides p-1.
+      - declaration: OrderPQ.nonempty_mulEquiv_of_card_eq_prime_mul_prime_of_not_isCyclic
+        informal: Any two noncyclic groups of order p*q are isomorphic.
+      - declaration: OrderPQ.nonempty_mulEquiv_semidirectProduct_of_card_eq_prime_mul_prime
+        informal: If p<q, every group of order p*q is isomorphic to a semidirect product of MulZMod q by MulZMod p.
+    tags:
+      - group-theory
+      - finite-groups
+      - semidirect-products
+    msc:
+      - "20D20"
+      - "20E22"
+      - "20D60"
+  - slug: factorizationsystems
+    title: Factorization Systems
+    summary: Formalizes factorization systems, orthogonality, orthogonal complements, and the standard construction from weak factorization plus orthogonality.
+    branch: category theory
+    entry_module: LeanPool.FactorizationSystems
+    authors:
+      - Ivan Kobe
+    source:
+      title: Category Theory in Context
+      authors:
+        - Emily Riehl
+      url: https://emilyriehl.github.io/files/context.pdf
+      github_repo: ivankobe/FactorizationSystems
+    status: verified
+    main_declarations:
+      - CategoryTheory.FactorizationSystem_characterization
+    main_results:
+      - declaration: CategoryTheory.FactorizationSystem
+        informal: Defines factorization systems on a category with specified left and right classes.
+      - declaration: CategoryTheory.FactorizationSystem_characterization
+        informal: Constructs a factorization system from repleteness, weak factorizations, and orthogonality.
+      - declaration: CategoryTheory.orthogonal
+        informal: Defines orthogonality of two morphisms by existence and uniqueness of diagonal fillers.
+      - declaration: CategoryTheory.right_orthogonal_complement
+        informal: Defines the right orthogonal complement of a morphism property.
+    tags:
+      - category-theory
+      - factorization-systems
+      - orthogonality
+    msc:
+      - "18A32"
+      - "18A40"
+  - slug: shannon-1948-formalization
+    title: Shannon Entropy Characterization
+    summary: Formalizes Shannon's finite-alphabet characterization theorem for entropy from the 1948 paper.
+    branch: information theory
+    entry_module: LeanPool.Shannon1948Formalization
+    authors:
+      - Samuel Schlesinger
+    source:
+      url: https://github.com/SamuelSchlesinger/shannon-1948-formalization
+      github_repo: SamuelSchlesinger/shannon-1948-formalization
+    status: verified
+    main_declarations:
+      - LeanPool.Shannon1948Formalization.entropyNat_unique
+    main_results:
+      - declaration: LeanPool.Shannon1948Formalization.entropyNat_unique
+        informal: Proves that any finite-alphabet uncertainty functional satisfying Shannon's conditions equals natural-log entropy up to a positive scale.
+      - declaration: LeanPool.Shannon1948Formalization.entropyBase_unique
+        informal: Restates the characterization for any logarithm base greater than one.
+      - declaration: LeanPool.Shannon1948Formalization.entropyNat_shannonAxioms
+        informal: Proves the converse, showing that Shannon entropy satisfies the formal condition bundle.
+      - declaration: LeanPool.Shannon1948Formalization.chain_rule
+        informal: Proves the finite joint-entropy chain rule.
+      - declaration: LeanPool.Shannon1948Formalization.entropyNat_joint_le_add
+        informal: Proves subadditivity of finite joint entropy.
+    tags:
+      - information-theory
+      - entropy
+      - probability
+    msc:
+      - "94A17"
+      - "60C05"
+  - slug: aharonikorman
+    title: Disproof of the Aharoni-Korman Conjecture
+    summary: Formalizes Hollom's counterexample to the Aharoni-Korman fishbone conjecture for partially ordered sets.
+    branch: order theory
+    entry_module: LeanPool.AharoniKorman
+    authors:
+      - Bhavik Mehta
+    source:
+      url: https://github.com/b-mehta/AharoniKorman
+      github_repo: b-mehta/AharoniKorman
+    status: verified
+    main_declarations:
+      - LeanPool.AharoniKorman.aharoni_korman_false
+    main_results:
+      - declaration: LeanPool.AharoniKorman.aharoni_korman_false
+        informal: Proves that not every partially ordered set has either an infinite antichain or a chain meeting every antichain in a partition.
+    tags:
+      - order-theory
+      - combinatorics
+      - partial-orders
+    msc:
+      - "06A06"
+      - "06A07"
+  - slug: pcf-theory
+    title: PCF Theory
+    summary: Formalizes foundational results from Shelah's Possible Cofinality theory, including the existence of club-guessing sequences.
+    branch: set theory
+    entry_module: LeanPool.PCFTheory
+    authors:
+      - YnirPaz
+    source:
+      url: https://github.com/YnirPaz/PCF-Theory
+      github_repo: YnirPaz/PCF-Theory
+    status: verified
+    main_declarations:
+      - Ordinal.exists_isClubGuessing_of_cof_uncountable
+    main_results:
+      - declaration: Ordinal.exists_isClubGuessing_of_cof_uncountable
+        informal: Proves the existence of a club-guessing sequence on a stationary set whose elements share a common uncountable cofinality bounded by the cofinality of the ambient ordinal.
+    tags:
+      - set-theory
+      - cardinal-arithmetic
+      - club-guessing
+    msc:
+      - "03E04"
+      - "03E10"
+      - "03E55"
+  - slug: pointwise-birkhoff
+    title: Pointwise Birkhoff Ergodic Theorem
+    summary: Formalizes the pointwise Birkhoff ergodic theorem for integrable real-valued observables.
+    branch: ergodic theory
+    entry_module: LeanPool.PointwiseBirkhoff
+    authors:
+      - Lua Viana Reis
+      - Oliver Butterley
+      - Pietro Monticone
+    source:
+      title: Ergodic Theory
+      authors:
+        - Karl Petersen
+      url: https://doi.org/10.1017/CBO9780511608728
+      github_repo: lua-vr/pointwise-birkhoff
+    status: verified
+    main_declarations:
+      - LeanPool.PointwiseBirkhoff.birkhoffErgodicTheorem'
+    main_results:
+      - declaration: LeanPool.PointwiseBirkhoff.birkhoffErgodicTheorem'
+        informal: Proves almost-everywhere convergence of Birkhoff averages to invariant conditional expectation for any integrable real-valued observable.
+      - declaration: LeanPool.PointwiseBirkhoff.birkhoffErgodicTheorem
+        informal: Proves the measurable-observable version of the pointwise Birkhoff ergodic theorem.
+    tags:
+      - ergodic-theory
+      - measure-theory
+      - probability
+    msc:
+      - "37A30"
+      - "28D05"
+  - slug: osforgff
+    title: Osterwalder-Schrader Axioms for the Gaussian Free Field
+    summary: Formalizes Osterwalder-Schrader axioms for the massive Gaussian free field using Minlos, covariance, and reflection-positivity infrastructure.
+    branch: mathematical physics
+    entry_module: LeanPool.OSforGFF
+    authors:
+      - Michael R. Douglas
+      - Sarah Hoback
+      - Anna Mei
+      - Ron Nissim
+    source:
+      url: https://github.com/mrdouglasny/OSforGFF
+      github_repo: mrdouglasny/OSforGFF
+    status: verified
+    main_declarations:
+      - OSforGFF.gaussianFreeField_satisfies_all_OS_axioms
+    main_results:
+      - declaration: OSforGFF.gaussianFreeField_satisfies_all_OS_axioms
+        informal: Proves that the massive Gaussian free field satisfies the OS0-OS4 Osterwalder-Schrader axioms.
+    tags:
+      - analysis
+      - measure-theory
+      - probability
+      - mathematical-physics
+    msc:
+      - "81T08"
+      - "60G15"
+      - "46G12"
