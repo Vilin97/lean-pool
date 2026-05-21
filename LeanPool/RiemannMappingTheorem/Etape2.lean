@@ -80,28 +80,21 @@ lemma non_injective_schwarz {f : ℂ → ℂ} (f_diff : DifferentiableOn ℂ f �
   have g_0_eq_0 : g 0 = 0 := by simp [g, φ, u]
   by_cases h : ‖deriv g 0‖ = 1
   case pos =>
+    have h2 : MapsTo g (ball 0 1) (closedBall (g 0) 1) := by
+      rw [g_0_eq_0]; exact g_maps.mono_right ball_subset_closedBall
+    have h1 : Set.EqOn g (fun z => g 0 + (z - 0) • dslope g 0 0) (Metric.ball 0 1) :=
+      affine_of_mapsTo_ball_of_norm_dslope_eq_div g_diff h2 (mem_ball_self zero_lt_one)
+        (by rw [dslope_same, div_one]; exact h)
     have g_lin : EqOn g (fun (z : ℂ) => z • deriv g 0) (ball 0 1) := by
-      have h2 : MapsTo g (ball 0 1) (closedBall (g 0) 1) := by
-        rw [g_0_eq_0]
-        exact (g_maps.mono_right (s := 𝔻) ball_subset_closedBall).mono_left (le_refl _)
-      have h1 : Set.EqOn g (fun z => g 0 + (z - 0) • dslope g 0 0) (Metric.ball 0 1) := by
-        refine affine_of_mapsTo_ball_of_norm_dslope_eq_div g_diff h2 (mem_ball_self zero_lt_one) ?_
-        rw [dslope_same, div_one]
-        exact h
-      convert h1 using 1
-      ext1 z
-      rw [g_0_eq_0, zero_add, sub_zero, dslope_same]
+      convert h1 using 1; ext1 z; rw [g_0_eq_0, zero_add, sub_zero, dslope_same]
     have g'0_ne_0 : deriv g 0 ≠ 0 := fun h' => by simp [h'] at h
-    have g_inj : InjOn g 𝔻 := fun x hx y hy => by
-      rw [g_lin hx, g_lin hy]
-      simp [g'0_ne_0]
-    cases f_noninj g_inj.of_comp
+    exact absurd (fun x hx y hy => by rw [g_lin hx, g_lin hy]; simp [g'0_ne_0] : InjOn g 𝔻)
+      (mt InjOn.of_comp f_noninj)
   case neg =>
     have g_maps_cl : MapsTo g (ball 0 1) (closedBall (g 0) 1) := by
-      rw [g_0_eq_0]
-      exact g_maps.mono_right ball_subset_closedBall
-    have g'0_le_1 := norm_deriv_le_one_of_mapsTo_ball g_diff g_maps_cl zero_lt_one
-    have g'0_lt_1 : ‖deriv g 0‖ < 1 := Ne.lt_of_le h g'0_le_1
+      rw [g_0_eq_0]; exact g_maps.mono_right ball_subset_closedBall
+    have g'0_lt_1 : ‖deriv g 0‖ < 1 :=
+      Ne.lt_of_le h (norm_deriv_le_one_of_mapsTo_ball g_diff g_maps_cl zero_lt_one)
     have g'0_eq_mul : deriv g 0 = deriv (φ u_in_𝔻) u * deriv f 0 :=
       deriv_comp 0 ((φ u_in_𝔻).is_diff.differentiableAt (isOpen_ball.mem_nhds u_in_𝔻))
         (f_diff.differentiableAt (ball_mem_nhds _ zero_lt_one))
@@ -112,18 +105,16 @@ lemma non_injective_schwarz {f : ℂ → ℂ} (f_diff : DifferentiableOn ℂ f �
       have : w ≠ 0 := by simpa [normSq_eq_conj_mul_self, mul_comm u] using e1
       rw [φ_deriv u_in_𝔻 u_in_𝔻, normSq_eq_conj_mul_self, mul_comm u, ← hw]
       field_simp
-    have e2 : 0 ≤ normSq u := normSq_nonneg _
     have e3 : normSq u < 1 := by
       rw [normSq_eq_norm_sq]
-      have : ‖u‖ < 1 := mem_𝔻_iff.mp u_in_𝔻
-      simp only [sq_lt_one_iff_abs_lt_one, abs_norm, this]
+      simp only [sq_lt_one_iff_abs_lt_one, abs_norm, mem_𝔻_iff.mp u_in_𝔻]
     simp only [φ'u_u, one_div] at g'0_eq_mul
     rw [eq_comm, inv_mul_eq_iff_eq_mul₀ e1] at g'0_eq_mul
     rw [g'0_eq_mul, norm_mul, mul_comm, ← one_mul (1 : ℝ)]
     refine mul_lt_mul g'0_lt_1 ?_ (norm_pos_iff.mpr e1) zero_le_one
     norm_cast
     rw [Real.norm_eq_abs, abs_sub_le_iff]
-    refine ⟨?_, ?_⟩; repeat linarith
+    refine ⟨by linarith [normSq_nonneg u], by linarith⟩
 
 lemma step_2 (hz₀ : z₀ ∈ U) (f : embedding U 𝔻) (hf : f '' U ⊂ 𝔻) :
     ∃ h : embedding U 𝔻, ‖deriv f z₀‖ < ‖deriv h z₀‖ := by
@@ -150,27 +141,15 @@ lemma step_2 (hz₀ : z₀ ∈ U) (f : embedding U 𝔻) (hf : f '' U ⊂ 𝔻) 
     dsimp [φᵤf] at e2
     simp [ψ, σ, h, e1, ← e2, e3, φᵤ]
   have ψ_is_diff : DifferentiableOn ℂ ψ 𝔻 := by
-    refine (φ (neg_in_𝔻 u_in_𝔻)).is_diff.comp ?_ ?_
-    · apply DifferentiableOn.comp
-      case t => exact 𝔻
-      case hg =>
-        apply DifferentiableOn.pow
-        exact differentiable_id.differentiableOn
-      case hf =>
-        exact (φ (neg_in_𝔻 v_in_𝔻)).is_diff
-      case st =>
-        exact (φ (neg_in_𝔻 v_in_𝔻)).maps_to
-    · refine MapsTo.comp ?_ (φ (neg_in_𝔻 v_in_𝔻)).maps_to
-      intros z hz
-      simpa [σ, 𝔻] using hz
+    refine (φ (neg_in_𝔻 u_in_𝔻)).is_diff.comp
+      (differentiable_id.differentiableOn.pow.comp (φ (neg_in_𝔻 v_in_𝔻)).is_diff
+        (φ (neg_in_𝔻 v_in_𝔻)).maps_to) ?_
+    exact fun z hz => by simpa [σ, 𝔻] using (φ (neg_in_𝔻 v_in_𝔻)).maps_to hz
   have deriv_eq_mul : deriv f z₀ = deriv ψ 0 * deriv h z₀ := by
-    have e1 : U ∈ 𝓝 z₀ := good_domain.is_open.mem_nhds hz₀
-    have e2 : 𝔻 ∈ 𝓝 (0 : ℂ) := ball_mem_nhds _ zero_lt_one
-    have e3 : deriv f z₀ = deriv (ψ ∘ h) z₀ := (eventuallyEq_of_mem e1 f_eq_ψ_h).deriv_eq
-    rw [e3, ← h_z₀_eq_0]
-    refine deriv_comp z₀ ?_ (h.is_diff.differentiableAt e1)
-    rw [h_z₀_eq_0]
-    exact ψ_is_diff.differentiableAt e2
+    rw [(eventuallyEq_of_mem (good_domain.is_open.mem_nhds hz₀) f_eq_ψ_h).deriv_eq,
+      ← h_z₀_eq_0]
+    exact deriv_comp z₀ (h_z₀_eq_0 ▸ ψ_is_diff.differentiableAt (ball_mem_nhds _ zero_lt_one))
+      (h.is_diff.differentiableAt (good_domain.is_open.mem_nhds hz₀))
   rw [deriv_eq_mul, norm_mul]
   refine ⟨h, mul_lt_of_lt_one_left ?_ ?_⟩
   · exact norm_pos_iff.2 (embedding.deriv_ne_zero good_domain.is_open hz₀)
@@ -178,10 +157,8 @@ lemma step_2 (hz₀ : z₀ ∈ U) (f : embedding U 𝔻) (hf : f '' U ⊂ 𝔻) 
     · refine fun z hz => (φ (neg_in_𝔻 u_in_𝔻)).maps_to (mem_𝔻_iff.mpr ?_)
       simpa [σ] using mem_𝔻_iff.mp ((φ (neg_in_𝔻 v_in_𝔻)).maps_to hz)
     · simp only [InjOn, not_forall, exists_prop]
-      have e1 : (2⁻¹ : ℂ) ∈ 𝔻 := by apply mem_𝔻_iff.mpr; norm_num
-      have e2 : (-2⁻¹ : ℂ) ∈ 𝔻 := neg_in_𝔻 e1
-      refine ⟨φ v_in_𝔻 2⁻¹, (φ v_in_𝔻).maps_to e1, φ v_in_𝔻 (-2⁻¹), (φ v_in_𝔻).maps_to e2, ?_, ?_⟩
-      · simp [ψ, σ, φ_inv v_in_𝔻 e1, φ_inv v_in_𝔻 e2]
-      · intro h
-        have := (φ v_in_𝔻).is_inj e1 e2 h
-        norm_num at this
+      have e1 : (2⁻¹ : ℂ) ∈ 𝔻 := mem_𝔻_iff.mpr (by norm_num)
+      exact ⟨φ v_in_𝔻 2⁻¹, (φ v_in_𝔻).maps_to e1, φ v_in_𝔻 (-2⁻¹),
+        (φ v_in_𝔻).maps_to (neg_in_𝔻 e1),
+        by simp [ψ, σ, φ_inv v_in_𝔻 e1, φ_inv v_in_𝔻 (neg_in_𝔻 e1)],
+        fun h => by norm_num at (φ v_in_𝔻).is_inj e1 (neg_in_𝔻 e1) h⟩

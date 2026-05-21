@@ -32,21 +32,17 @@ lemma crucial (hU : IsOpen U) (hcr : closedBall c r ⊆ U) (hz₀ : z₀ ∈ bal
     ring
   have h6 : ∀ z ∈ sphere c r, deriv f z / f z = (z - z₀)⁻¹ + deriv g z / g z := by
     rintro z hz
-    have h3 : ∀ z ∈ U, f z = (z - z₀) * g z :=
-      fun z _ => by simpa only [smul_eq_mul, hfz₀, sub_zero] using (sub_smul_dslope f z₀ z).symm
     have hz' : z ∈ U := hcr (sphere_subset_closedBall hz)
     have e0 : U ∈ 𝓝 z := hU.mem_nhds hz'
-    have h4 : deriv f z = deriv (fun w => (w - z₀) * g w) z :=
-      EventuallyEq.deriv_eq (eventually_of_mem e0 h3)
-    have e1 : DifferentiableAt ℂ (fun y => y - z₀) z := differentiableAt_id.sub_const z₀
+    have h3 : ∀ w ∈ U, f w = (w - z₀) * g w :=
+      fun w _ => by simpa only [smul_eq_mul, hfz₀, sub_zero] using (sub_smul_dslope f z₀ w).symm
     have e2 : DifferentiableAt ℂ g z := h1.differentiableAt e0
     have h5 : deriv f z = g z + (z - z₀) * deriv g z := by
-      rw [h4, deriv_fun_mul e1 e2]
-      simp
-    have e3 : g z ≠ 0 := h2 z (sphere_subset_closedBall hz)
+      rw [EventuallyEq.deriv_eq (eventually_of_mem e0 h3),
+        deriv_fun_mul (differentiableAt_id.sub_const z₀) e2]; simp
     have := h10 z hz
     field_simp
-    simp [h3 z hz', h5, mul_comm]
+    simp [h3 z hz', h5, mul_comm, h2 z (sphere_subset_closedBall hz)]
     field_simp
   simp only [cindex, integral_congr hr.le h6, ← mul_add]
   congr
@@ -65,38 +61,31 @@ lemma tendsto_uniformly_on_const {f : α → β} [UniformSpace β] {p : Filter �
 lemma bla (hf : AnalyticAt ℂ f z₀)
     (hf' : HasFPowerSeriesAt (deriv f) (0 : FormalMultilinearSeries ℂ ℂ ℂ) z₀) :
     ∀ᶠ z in 𝓝 z₀, f z = f z₀ := by
-  have h1 : ∀ᶠ z in 𝓝 z₀, AnalyticAt ℂ f z := (isOpen_analyticAt ℂ f).mem_nhds hf
-  obtain ⟨ε, hε, h⟩ := Metric.mem_nhds_iff.1 (h1.and hf'.eventually_eq_zero)
+  obtain ⟨ε, hε, h⟩ := Metric.mem_nhds_iff.1
+    ((isOpen_analyticAt ℂ f).mem_nhds hf |>.and hf'.eventually_eq_zero)
   refine Metric.mem_nhds_iff.2 ⟨ε, hε, fun z hz => ?_⟩
-  have h3 : ∀ z ∈ ball z₀ ε, fderivWithin ℂ f (ball z₀ ε) z = 0 := by
-    rintro z hz
-    rw [fderivWithin_eq_fderiv (isOpen_ball.uniqueDiffWithinAt hz) ((h hz).1.differentiableAt)]
-    ext1
-    simpa [fderiv_apply_one_eq_deriv] using (h hz).2
-  have h4 : DifferentiableOn ℂ f (ball z₀ ε) := fun z hz => (h hz).1.differentiableWithinAt
-  exact Convex.is_const_of_fderivWithin_eq_zero (convex_ball z₀ ε) h4 h3 hz (mem_ball_self hε)
+  have h3 : ∀ z ∈ ball z₀ ε, fderivWithin ℂ f (ball z₀ ε) z = 0 := fun z hz => by
+    rw [fderivWithin_eq_fderiv (isOpen_ball.uniqueDiffWithinAt hz) (h hz).1.differentiableAt]
+    ext1; simpa [fderiv_apply_one_eq_deriv] using (h hz).2
+  exact Convex.is_const_of_fderivWithin_eq_zero (convex_ball z₀ ε)
+    (fun z hz => (h hz).1.differentiableWithinAt) h3 hz (mem_ball_self hε)
 
 lemma two_le_order_of_deriv_eq_zero {g : ℂ → ℂ} {p : FormalMultilinearSeries ℂ ℂ ℂ}
     (hgp : HasFPowerSeriesAt g p z₀) (hp : p ≠ 0) (hg : g z₀ = 0) (hg' : deriv g z₀ = 0) :
     2 ≤ p.order := by
   classical
-  have h1 : p.coeff 1 = 0 := by simpa only [hg'] using hgp.deriv.symm
   have h2 : p 0 = 0 := by ext1; simpa only [hg] using hgp.coeff_zero _
-  have h3 : p 1 = 0 := by ext1; simp [h1]
+  have h3 : p 1 = 0 := by ext1; simp [show p.coeff 1 = 0 by simpa only [hg'] using hgp.deriv.symm]
   rw [FormalMultilinearSeries.order_eq_find' hp, Nat.le_find_iff]
-  intro n hn
-  cases n
-  case zero => simp [h2]
-  case succ n =>
-    cases n
-    case zero => simpa using h3
-    case succ => linarith
+  rintro (_ | _ | n) hn
+  · simp [h2]
+  · simpa using h3
+  · linarith
 
 lemma tendsto_uniformly_on_add_const :
-    TendstoUniformlyOn (fun (ε z : ℂ) => g z + ε) g (𝓝[≠] 0) U := by
-  have : Tendsto id (𝓝[≠] (0 : ℂ)) (𝓝 0) := nhdsWithin_le_nhds
-  have : TendstoUniformlyOn (fun (ε _ : ℂ) => ε) 0 (𝓝[≠] 0) U := this.tendstoUniformlyOn_const U
-  simpa using tendsto_uniformly_on_const.add this
+    TendstoUniformlyOn (fun (ε z : ℂ) => g z + ε) g (𝓝[≠] 0) U :=
+  simpa using tendsto_uniformly_on_const.add
+    (nhdsWithin_le_nhds (a := (0 : ℂ)) |>.tendstoUniformlyOn_const U)
 
 lemma deriv_ne_zero_of_inj_aux {g : ℂ → ℂ} (hU : IsOpen U) (hg : DifferentiableOn ℂ g U)
     (hi : InjOn g U) (hz₀ : z₀ ∈ U) (hgz₀ : g z₀ = 0) :
