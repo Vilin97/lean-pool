@@ -48,7 +48,9 @@ theorem entropyNat_unique
       Tendsto (fun N : ℕ => K H * entropyNat (approxProb p N)) atTop (𝓝 (K H * entropyNat p)) :=
     (continuous_const.mul continuous_entropyNat).continuousAt.tendsto.comp (tendsto_approxProb p)
   have hright' : Tendsto (fun N : ℕ => H (approxProb p N)) atTop (𝓝 (K H * entropyNat p)) := by
-    convert hright using 1; funext N; exact hseq N
+    convert hright using 1
+    funext N
+    exact hseq N
   simpa [entropyNat, mul_assoc, mul_left_comm, mul_comm] using tendsto_nhds_unique hleft hright'
 
 /--
@@ -69,7 +71,8 @@ theorem entropyBase_unique
   refine ⟨K H * Real.log b, mul_pos (K_pos H hH) (Real.log_pos hb), fun {α} _ p => ?_⟩
   have hsum : (∑ a, p a * Real.log (p a)) = Real.log b * (∑ a, p a * Real.logb b (p a)) := by
     simp_rw [Finset.mul_sum]
-    congr 1; ext a
+    congr 1
+    ext a
     simp only [Real.logb, mul_div_assoc']
     field_simp [hlogb_ne]
   rw [entropyNat_unique H hH p, hsum]

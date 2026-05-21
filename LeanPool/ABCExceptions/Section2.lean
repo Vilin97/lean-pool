@@ -602,7 +602,8 @@ private theorem prod_y_pow_eq_n : ∏ m ∈ Finset.Icc 1 d ∪ Finset.Ioc d n, y
   have hge : 1 ≤ n.factorization p := by
     rw [← hp.dvd_iff_one_le_factorization]
     · exact hpn
-    · have := h1n; omega
+    · have := h1n
+      omega
   omega
 
 private theorem p_dvd_y_iff (i : ℕ) (p : ℕ) (hp : p.Prime) : p ∣ y i → n.factorization p = i := by
@@ -678,7 +679,9 @@ private theorem K_inv_le_eps : (K : ℝ)⁻¹ ≤ ε := by
   rw [inv_le_iff_one_le_mul₀]
   · have := hε_pos
     calc 1 = ε * ε⁻¹ := by field_simp [hε_pos.ne.symm]
-      _ ≤ ε * K := by gcongr; rw [K]; apply Nat.le_ceil
+      _ ≤ ε * K := by gcongr
+                      rw [K]
+                      apply Nat.le_ceil
   · simp [hK_pos]
 
 private theorem hd_pos : 0 < d := by
@@ -686,7 +689,8 @@ private theorem hd_pos : 0 < d := by
   nlinarith only [two_lt_eps_inv]
 
 private instance hd_ne_zero : NeZero d := by
-  simp_rw [neZero_iff]; exact hd_pos.ne'
+  simp_rw [neZero_iff]
+  exact hd_pos.ne'
 
 private theorem hKd : K < d := by
   have := hε_pos
@@ -703,7 +707,9 @@ private theorem hK_div_d : (K / d : ℝ) ≤ ε := by
   calc _ ≤ ε⁻¹ + 1 := (Nat.ceil_lt_add_one (by positivity)).le
     _ ≤ 5 / 2 * ε⁻¹ - ε := by linarith [hε, two_lt_eps_inv]
     _ = ε * (5 / 2 * ε⁻¹ ^ 2 - 1) := by field_simp [hε_pos.ne.symm]
-    _ ≤ _ := by rw [hd]; gcongr; exact (Nat.sub_one_lt_floor _).le
+    _ ≤ _ := by rw [hd]
+                gcongr
+                exact (Nat.sub_one_lt_floor _).le
 
 /-- `x` in the proof of lemma 2.5 -/
 noncomputable def x (j : Fin d) : ℕ :=

@@ -264,7 +264,8 @@ lemma finite_product_ge_density (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : 
   have hS_eq : (∏' (x : {p : Nat.Primes // p ∈ S}), f x) = ∏ p ∈ S, f p :=
     Finset.tprod_subtype S f
   have hS_nonneg : 0 ≤ (∏' (x : {p : Nat.Primes // p ∈ S}), f x) := by
-    rw [hS_eq]; exact Finset.prod_nonneg fun p _ => localDensityFactor_nonneg p b T
+    rw [hS_eq]
+    exact Finset.prod_nonneg fun p _ => localDensityFactor_nonneg p b T
   unfold localDensityProduct jointSquarefreeDensity
   rw [ge_iff_le, ← hfactor, ← hS_eq]
   calc (∏' (x : {p // p ∈ S}), f ↑x) * (∏' (x : {p // p ∉ S}), f ↑x)

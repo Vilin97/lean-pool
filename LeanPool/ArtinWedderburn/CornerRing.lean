@@ -438,7 +438,9 @@ theorem both_mul_lift (x y : CornerSubring idem_e) :
       apply corner_ring_both_mul_mem'
     refine ⟨x * ⟨sc, hsc⟩ * y, ⟨⟨sc, hsc⟩, rfl⟩, ?_⟩
     simp only [NonUnitalSubring.val_mul]
-    have : a = (x : R) * sc * y := by simp only [sc]; rw [hs]; simp only [mul_assoc]
+    have : a = (x : R) * sc * y := by simp only [sc]
+                                      rw [hs]
+                                      simp only [mul_assoc]
     exact this.symm
 
 -- b) If R is a prime ring, then the corner ring is prime
@@ -446,7 +448,8 @@ theorem corner_ring_prime (hRP : IsPrimeRing R) : IsPrimeRing (CornerSubring ide
   rw [prime_ring_equiv]
   intro a b h
   have h_lift : ((both_mul a b) : Set R) = {0} := by
-    rw [← both_mul_lift, congrArg (Set.image Subtype.val) h]; exact Set.image_singleton
+    rw [← both_mul_lift, congrArg (Set.image Subtype.val) h]
+    exact Set.image_singleton
   simpa [ZeroMemClass.coe_eq_zero] using prime_ring_equiv.1 hRP _ _ h_lift
 
 -- if a cornersubring is a division subring then it is a division ring on its own

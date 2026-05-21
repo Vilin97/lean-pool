@@ -81,7 +81,8 @@ def composeProb
   classical
   refine ⟨fun x => p x.1 * q x.1 x.2, ?_⟩
   constructor
-  · intro x; exact mul_nonneg (prob_nonneg p x.1) (prob_nonneg (q x.1) x.2)
+  · intro x
+    exact mul_nonneg (prob_nonneg p x.1) (prob_nonneg (q x.1) x.2)
   · simp_rw [Fintype.sum_sigma, ← Finset.mul_sum, prob_sum_eq_one (q _), mul_one, prob_sum_eq_one p]
 
 /-- Equivalence between two-stage finite outcomes and `Fin (n * m)`. -/

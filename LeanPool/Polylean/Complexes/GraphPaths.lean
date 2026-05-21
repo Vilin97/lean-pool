@@ -416,7 +416,8 @@ infixl: 65 " # " => homotopy_multiplication
 theorem homotopy_mult_path_path_assoc {G : Graph V E} {w x y z : V}
     (p : EdgePath G w x) (q : EdgePath G x y) :
     (r : ht G y z) → (htclass (multiply p q)) # r = (htclass p) # ((htclass q) # r) := by
-  apply Quot.ind; intro b
+  apply Quot.ind
+  intro b
   change htclass (multiply (multiply p q) b) = htclass (multiply p (multiply q b))
   simp [mult_assoc]
 

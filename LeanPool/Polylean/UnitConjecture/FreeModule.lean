@@ -537,13 +537,15 @@ theorem add_assoc_aux (s₁ : FormalSum R X) (x₂ x₃ : R[X]) :
     (motive := fun x₂ x₃ : R[X] => (⟦s₁⟧ + x₂) + x₃ = ⟦s₁⟧ + (x₂ + x₃))
   intro x₂ x₃
   apply Quotient.sound
-  apply funext; intro x₀
+  apply funext
+  intro x₀
   simp only [← append_coords, add_assoc]
 
 /-- Associativity of addition. -/
 theorem addn_assoc (x₁ x₂ x₃ : R[X]) : (x₁ + x₂) + x₃ = x₁ + (x₂ + x₃) := by
   apply @Quotient.ind (motive := fun x₁ : R[X] => (x₁ + x₂) + x₃ = x₁ + (x₂ + x₃))
-  intro x₁; exact add_assoc_aux x₁ x₂ x₃
+  intro x₁
+  exact add_assoc_aux x₁ x₂ x₃
 
 /-- The zero element of the free module. -/
 def zero : R[X] := ⟦[]⟧
@@ -552,44 +554,60 @@ def zero : R[X] := ⟦[]⟧
 theorem addn_zero (x : R[X]) : x + zero = x := by
   apply @Quotient.ind (motive := fun x : R[X] => x + zero = x)
   intro x
-  apply Quotient.sound; apply funext; intro x₀
-  rw [← append_coords]; simp only [coords, add_zero]
+  apply Quotient.sound
+  apply funext
+  intro x₀
+  rw [← append_coords]
+  simp only [coords, add_zero]
 
 /-- adding zero -/
 theorem zero_addn (x : R[X]) : zero + x = x := by
   apply @Quotient.ind (motive := fun x : R[X] => zero + x = x)
   intro x
-  apply Quotient.sound; apply funext; intro x₀
-  rw [← append_coords]; simp only [coords, zero_add]
+  apply Quotient.sound
+  apply funext
+  intro x₀
+  rw [← append_coords]
+  simp only [coords, zero_add]
 
 /-- Distributivity for addition of module elements. -/
 theorem elem_distrib (a : R) (x₁ x₂ : R[X]) :
     a • (x₁ + x₂) = a • x₁ + a • x₂ := by
   apply @Quotient.ind₂ (motive := fun x₁ x₂ : R[X] => a • (x₁ + x₂) = a • x₁ + a • x₂)
   intro s₁ s₂
-  apply Quotient.sound; apply funext; intro x₀
+  apply Quotient.sound
+  apply funext
+  intro x₀
   simp only [← scmul_coords, ← append_coords, left_distrib]
 
 /-- Distributivity with respect to scalars. -/
 theorem coeffs_distrib (a b : R) (x : R[X]) : a • x + b • x = (a + b) • x := by
   apply @Quotient.ind (motive := fun x : R[X] => a • x + b • x = (a + b) • x)
   intro s
-  apply Quotient.sound; apply funext; intro x₀
+  apply Quotient.sound
+  apply funext
+  intro x₀
   exact congrFun (act_sum a b s) x₀
 
 /-- Multiplication by `1 : R`. -/
 theorem unit_coeffs (x : R[X]) : (1 : R) • x = x := by
   apply @Quotient.ind (motive := fun x : R[X] => (1 : R) • x = x)
   intro s
-  apply Quotient.sound; apply funext; intro x₀
-  rw [← scmul_coords]; simp only [one_mul]
+  apply Quotient.sound
+  apply funext
+  intro x₀
+  rw [← scmul_coords]
+  simp only [one_mul]
 
 /-- Multiplication by `0 : R`. -/
 theorem zero_coeffs (x : R[X]) : (0 : R) • x = ⟦ [] ⟧ := by
   apply @Quotient.ind (motive := fun x : R[X] => (0 : R) • x = ⟦ [] ⟧)
   intro s
-  apply Quotient.sound; apply funext; intro x₀
-  rw [← scmul_coords]; simp only [zero_mul, coords]
+  apply Quotient.sound
+  apply funext
+  intro x₀
+  rw [← scmul_coords]
+  simp only [zero_mul, coords]
 
 instance : Zero (R[X]) :=
   ⟨FreeModule.zero⟩
@@ -977,7 +995,8 @@ theorem monom_elem_eq_of_coord_eq_nonzero (a : R) (non_zero : a ≠ 0) (x₀ x�
   have c₁ : coords [(a, x₁)] x₁ = a := by
     simp only [coords, monomCoeff, BEq.rfl, add_zero]
   have non_zero' : 0 ≠ coords [(a, x₀)] x₁ := by
-    rw [hyp, c₁]; exact non_zero.symm
+    rw [hyp, c₁]
+    exact non_zero.symm
   have lem := nonzero_coord_in_support [(a, x₀)] x₁ non_zero'
   have lem' : x₁ = x₀ := by
     simpa only [support, List.map_cons, List.map_nil, List.mem_cons, List.not_mem_nil,
@@ -1109,7 +1128,8 @@ open FormalSum
 theorem normsucc_le (norm : X → Nat) (s₁ s₂ : FormalSum R X) (eql : s₁ ≈ s₂) :
     s₁.normSucc norm ≤ s₂.normSucc norm := by
   if c : s₁.normSucc norm = 0 then
-    rw [c]; exact Nat.zero_le _
+    rw [c]
+    exact Nat.zero_le _
   else
     simp only [normSucc] at c ⊢
     have c' : maxNormSuccOnSupp norm (coords s₁) (support s₁) > 0 :=

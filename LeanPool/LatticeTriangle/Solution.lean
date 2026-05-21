@@ -844,7 +844,8 @@ lemma mul_P_mem_set (B : ℤ) (P : ℕ) (_hP : 0 < P) (hB : 0 ≤ B)
     (Nat.mul_le_mul_right P hk).trans (Nat.div_mul_le_self B.toNat P)
   have h₂ : (↑k * ↑P : ℤ) ≤ B := by
     have : (B.toNat : ℤ) ≤ B := Int.toNat_of_nonneg hB ▸ le_refl B
-    calc (↑k * ↑P : ℤ) = ↑(k * P) := by push_cast; ring
+    calc (↑k * ↑P : ℤ) = ↑(k * P) := by push_cast
+                                        ring
       _ ≤ ↑B.toNat := by exact_mod_cast h_kP_le
       _ ≤ B := this
   exact ⟨h₁, h₂, ⟨k, by ring⟩⟩
@@ -976,7 +977,8 @@ lemma pos_of_mem_truncatedObtuseRegion_fst_fb (n : ℕ) (η : ℝ) (hη_pos : 0 
   · have h₆ : η * (n : ℝ) = 0 := by simp only [hn, Nat.cast_zero, mul_zero]
     have h₃ : (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 := h.2.2.1
     have h₃' : (pq.1 : ℝ) + (pq.2 : ℝ) < 0 := by
-      simp only [hn, Nat.cast_zero, zero_div] at h₃; exact h₃
+      simp only [hn, Nat.cast_zero, zero_div] at h₃
+      exact h₃
     have h₂ : η * (n : ℝ) ≤ (pq.2 : ℝ) := h.2.1
     have : (pq.1 : ℝ) > 0 := by linarith
     exact_mod_cast this
@@ -991,7 +993,8 @@ lemma pos_of_mem_truncatedObtuseRegion_snd_fb (n : ℕ) (η : ℝ) (hη_pos : 0 
   · have h₇ : η * (n : ℝ) = 0 := by simp only [hn, Nat.cast_zero, mul_zero]
     have h₃ : (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 := h.2.2.1
     have h₃' : (pq.1 : ℝ) + (pq.2 : ℝ) < 0 := by
-      simp only [hn, Nat.cast_zero, zero_div] at h₃; exact h₃
+      simp only [hn, Nat.cast_zero, zero_div] at h₃
+      exact h₃
     have h₁ : η * (n : ℝ) ≤ (pq.1 : ℝ) := h.1
     have : (pq.2 : ℝ) > 0 := by linarith
     exact_mod_cast this
@@ -1195,7 +1198,8 @@ lemma fourier_inversion (n : ℕ) [NeZero n] (f : ZMod n → ℂ) (x : ZMod n) :
     LinearEquiv.symm_apply_apply _ _
   have h₂ : (ZMod.dft.symm : (ZMod n → ℂ) ≃ₗ[ℂ] (ZMod n → ℂ)) (ZMod.dft f) = (fun x =>
     (↑(n : ℕ) : ℂ)⁻¹ • (∑ (k : ZMod n), ZMod.stdAddChar (k * x) • (ZMod.dft f) k)) := by
-    ext x; simp [ZMod.invDFT_apply]
+    ext x
+    simp [ZMod.invDFT_apply]
   calc f x = (ZMod.dft.symm (ZMod.dft f)) x := by rw [h₁]
     _ = (↑(n : ℕ) : ℂ)⁻¹ • (∑ (k : ZMod n), ZMod.stdAddChar (k * x) • (ZMod.dft f) k) := by
         rw [h₂]
@@ -1446,7 +1450,8 @@ lemma normalizedDFT_intervalIndicator_zero (n : ℕ) [NeZero n] (m : ℕ) (hm1 :
 lemma mp_lower_bound (p : ℤ) (hp : 1 ≤ p) :
     1 ≤ (2 * p - 1).toNat := by
   have h₁₃ : (2 * p - 1 : ℤ) ≥ 1 := by linarith
-  norm_cast at h₁₃ ⊢; omega
+  norm_cast at h₁₃ ⊢
+  omega
 
 lemma mp_upper_bound (n : ℕ) (_hn : 2 ≤ n) (p q : ℤ) (hp : 1 ≤ p) (hq : 1 ≤ q)
     (hpq : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2) :
@@ -1470,8 +1475,10 @@ lemma mq_valid (n : ℕ) (_hn : 2 ≤ n) (p q : ℤ) (hp : 1 ≤ p) (hq : 1 ≤ 
     have hp' : (p : ℝ) ≥ 1 := by exact_mod_cast hp
     exact_mod_cast (show (2 : ℝ) * q - 1 < n by linarith)
   constructor
-  · norm_cast; omega
-  · rw [Int.toNat_lt (by linarith)]; exact_mod_cast h₂
+  · norm_cast
+    omega
+  · rw [Int.toNat_lt (by linarith)]
+    exact_mod_cast h₂
 
 lemma zero_zero_term_eq_main
     (n : ℕ) [NeZero n] (hn : 2 ≤ n)
@@ -1507,7 +1514,8 @@ lemma full_sum_split_zero_nonzero
   congr 1
   have : ∀ k : ZMod n, ∑ l : ZMod n, (if (k = 0 ∧ l = 0) then F 0 0 else 0) =
       if k = 0 then F 0 0 else 0 := by
-    intro k; by_cases hk : k = 0 <;> simp [hk]
+    intro k
+    by_cases hk : k = 0 <;> simp [hk]
   simp_rw [this]
   simp
 
@@ -1799,7 +1807,9 @@ theorem ramanujanSum_multiplicative {n₁ n₂ : ℕ} [hn₁ : NeZero n₁] [hn�
 lemma largestPrimeFactor_mem_primeFactors (n : ℕ) (hn : 2 ≤ n) :
     largestPrimeFactor n ∈ n.primeFactors := by
   obtain ⟨a, ha_max, _⟩ := largestPrimeFactor_pos_helper_fb n hn
-  have : largestPrimeFactor n = a := by unfold largestPrimeFactor; rw [ha_max]; rfl
+  have : largestPrimeFactor n = a := by unfold largestPrimeFactor
+                                        rw [ha_max]
+                                        rfl
   rw [this]
   exact Finset.mem_of_max ha_max
 
@@ -2019,7 +2029,8 @@ lemma ramanujanSum_norm_le_totient (n : ℕ) [NeZero n] (t : ℤ) :
       _ ≤ ∑ a : (ZMod n)ˣ, ‖ZMod.stdAddChar (a.val * (t : ZMod n))‖ := norm_sum_le _ _
       _ = (Fintype.card (ZMod n)ˣ : ℝ) := by simp [Finset.sum_const, nsmul_eq_mul]
   have h2 : (Fintype.card (ZMod n)ˣ : ℝ) = (Nat.totient n : ℝ) := by
-    norm_cast; simp [ZMod.card_units_eq_totient]
+    norm_cast
+    simp [ZMod.card_units_eq_totient]
   linarith
 
 lemma ramanujanSum_prime_pow_eq_neg {p : ℕ} [hp : Fact (Nat.Prime p)] {k : ℕ} (hk : 0 < k)
@@ -2051,7 +2062,9 @@ lemma totient_div_prime_minus_one
   have htotient_n : (Nat.totient n : ℝ) =
       (P : ℝ) ^ (α - 1) * ((P : ℝ) - 1) * (Nat.totient m : ℝ) := by
     simp_all
-  field_simp; rw [htotient_n]; ring
+  field_simp
+  rw [htotient_n]
+  ring
 
 lemma ramanujanSum_EP0_norm_bound
     (n : ℕ) [NeZero n] (hn : 2 ≤ n)
@@ -2383,7 +2396,9 @@ lemma symmetric_sum_odd (N : ℕ) (hN : 1 ≤ N) :
 lemma Icc_split_three (N : ℕ) (hN : 2 ≤ N) :
     Finset.Icc 1 (2 * N - 1) =
       Finset.Icc 1 (N - 1) ∪ {N} ∪ Finset.Icc (N + 1) (2 * N - 1) := by
-  ext x; simp only [Finset.mem_union, Finset.mem_Icc, Finset.mem_singleton]; omega
+  ext x
+  simp only [Finset.mem_union, Finset.mem_Icc, Finset.mem_singleton]
+  omega
 
 lemma Icc_disjoint_high (N : ℕ) (hN : 2 ≤ N) :
     Disjoint (Finset.Icc 1 (N - 1) ∪ {N}) (Finset.Icc (N + 1) (2 * N - 1)) := by
@@ -2391,10 +2406,12 @@ lemma Icc_disjoint_high (N : ℕ) (hN : 2 ≤ N) :
   constructor
   · apply Finset.disjoint_left.mpr
     intro x hx₁ hx₂
-    simp only [Finset.mem_Icc] at hx₁ hx₂; omega
+    simp only [Finset.mem_Icc] at hx₁ hx₂
+    omega
   · apply Finset.disjoint_left.mpr
     intro x hx₁ hx₂
-    simp only [Finset.mem_singleton, Finset.mem_Icc] at hx₁ hx₂; omega
+    simp only [Finset.mem_singleton, Finset.mem_Icc] at hx₁ hx₂
+    omega
 
 lemma Icc_disjoint_mid (N : ℕ) (hN : 2 ≤ N) :
     Disjoint (Finset.Icc 1 (N - 1)) ({N} : Finset ℕ) := by
@@ -2468,13 +2485,15 @@ lemma ratio_rewrite (u : ℕ) (hu : 1 ≤ u) :
     (2 * (u : ℝ) + 1) / (2 * u - 1) = 1 + 2 / (2 * u - 1) := by
   have h₁ : (u : ℝ) ≥ 1 := by exact_mod_cast hu
   have h₂ : (2 * (u : ℝ) - 1) ≠ 0 := by linarith
-  field_simp [h₂]; ring
+  field_simp [h₂]
+  ring
 
 lemma pade_algebraic_identity (u : ℕ) (hu : 1 ≤ u) :
     2 * (2 / (2 * (u : ℝ) - 1)) / (2 / (2 * u - 1) + 2) = (u : ℝ)⁻¹ := by
   have h₁ : (u : ℝ) ≥ 1 := by exact_mod_cast hu
   have h₂ : (2 : ℝ) * (u : ℝ) - 1 ≠ 0 := by linarith
-  field_simp [h₂]; ring
+  field_simp [h₂]
+  ring
 
 lemma inv_le_log_ratio (u : ℕ) (hu : 1 ≤ u) :
     (u : ℝ)⁻¹ ≤ Real.log ((2 * u + 1) / (2 * u - 1)) := by
@@ -2493,8 +2512,10 @@ lemma telescoping_log_sum (N : ℕ) (hN : 1 ≤ N) :
     rw [Finset.sum_Icc_succ_top (by omega : 1 ≤ n.succ), IH]
     have hn1 : (n : ℝ) ≥ 1 := by exact_mod_cast hn
     have h2n1_pos : (2 * (n : ℝ) + 1) > 0 := by linarith
-    have hsucc_eq : (2 * (n.succ : ℝ) - 1 : ℝ) = 2 * (n : ℝ) + 1 := by push_cast; ring
-    have hsucc_eq2 : (2 * (n.succ : ℝ) + 1 : ℝ) = 2 * (n : ℝ) + 3 := by push_cast; ring
+    have hsucc_eq : (2 * (n.succ : ℝ) - 1 : ℝ) = 2 * (n : ℝ) + 1 := by push_cast
+                                                                       ring
+    have hsucc_eq2 : (2 * (n.succ : ℝ) + 1 : ℝ) = 2 * (n : ℝ) + 3 := by push_cast
+                                                                        ring
     rw [hsucc_eq2, hsucc_eq, Real.log_div (by linarith) (by linarith)]
     linarith
 
@@ -2510,7 +2531,8 @@ lemma one_sub_inv_ratio_eq (N : ℕ) (hN : 1 ≤ N) :
   have h₁ : (N : ℝ) ≥ 1 := by exact_mod_cast hN
   have h₂ : (2 : ℝ) * (N : ℝ) - 1 ≠ 0 := by linarith
   have h₃ : (2 : ℝ) * (N : ℝ) ≠ 0 := by linarith
-  field_simp [h₂, h₃]; ring
+  field_simp [h₂, h₃]
+  ring
 
 lemma inv_two_N_le_log_ratio (N : ℕ) (hN : 1 ≤ N) :
     1 / (2 * (N : ℝ)) ≤ Real.log (2 * N / (2 * N - 1)) := by
@@ -3020,7 +3042,8 @@ lemma split_nonzero_by_divisibility
   have heq : Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ ¬((d : ℕ) ∣ ZMod.val k)) ∪
       Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ (d : ℕ) ∣ ZMod.val k) =
       Finset.univ.filter (fun k : ZMod n => k ≠ 0) := by
-    ext x; simp only [Finset.mem_union, Finset.mem_filter]
+    ext x
+    simp only [Finset.mem_union, Finset.mem_filter]
     by_cases hx : x = 0 <;> by_cases hd : (d : ℕ) ∣ ZMod.val x <;> simp_all
   have hdisj : Disjoint (Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ ¬((d : ℕ) ∣ ZMod.val k)))
       (Finset.univ.filter (fun k : ZMod n => k ≠ 0 ∧ (d : ℕ) ∣ ZMod.val k)) := by
@@ -3092,7 +3115,8 @@ lemma dvd_simplify_multiple_case
   have hdk' : (d : ℤ) ∣ ↑(ZMod.val k) := by exact_mod_cast hdk
   have hdk_mul : (d : ℤ) ∣ ↑(ZMod.val k) * ↑(u : ZMod d).val := dvd_mul_of_dvd_left hdk' _
   have hcop : IsCoprime (q : ℤ) (d : ℤ) := by
-    rw [Int.isCoprime_iff_gcd_eq_one]; simp_all
+    rw [Int.isCoprime_iff_gcd_eq_one]
+    simp_all
   constructor
   · intro h
     have : (d : ℤ) ∣ ↑(ZMod.val l) * q := by
@@ -4560,7 +4584,8 @@ lemma pow_pred_mul_eq (P α : ℕ) (hα : 0 < α) :
 
 
 lemma cast_nat_sub_one (P : ℕ) (hP2 : 2 ≤ P) : (↑(P - 1) : ℝ) = ↑P - 1 := by
-  rw [Nat.cast_sub (by omega)]; simp
+  rw [Nat.cast_sub (by omega)]
+  simp
 
 
 
@@ -4727,7 +4752,9 @@ lemma dvd_iff_zmod_eq_zero
     (d : ℕ) [NeZero d] (k_val u_val l_val : ℕ) (q : ℤ) :
     ((d : ℤ) ∣ (↑k_val * ↑u_val + ↑l_val * q)) ↔
     ((k_val : ZMod d) * (u_val : ZMod d) + (l_val : ZMod d) * (q : ZMod d) = 0) := by
-  rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]; push_cast; rfl
+  rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
+  push_cast
+  rfl
 
 
 
@@ -4758,7 +4785,8 @@ lemma zmod_eq_zero_backward
   rw [h, show ((k_val * u_val : ℕ) : ZMod d) = (k_val : ZMod d) * u_val from by push_cast; rfl]
   rw [show -(q : ZMod d)⁻¹ * ((k_val : ZMod d) * ↑u_val) * (q : ZMod d) =
       -((q : ZMod d)⁻¹ * (q : ZMod d)) * ((k_val : ZMod d) * ↑u_val) from by ring]
-  rw [h2]; ring
+  rw [h2]
+  ring
 
 
 
@@ -5850,7 +5878,9 @@ lemma per_unit_inner_sum_bound
 lemma combine_orbit_and_tail_bounds
     (C L d_real : ℝ) (_hC : 0 ≤ C) (_hL : 0 ≤ L) (hd : 0 < d_real) :
     C * (4 * L / d_real) + C * (L / d_real) ≤ C * (5 * L / d_real) := by
-  field_simp [hd.ne']; ring_nf; linarith
+  field_simp [hd.ne']
+  ring_nf
+  linarith
 
 
 lemma orbit_average_bound
@@ -6217,7 +6247,8 @@ lemma int_coprime_dvd_mul_imp_dvd (d v : ℕ) (q : ℤ)
     (hdvd : (d : ℤ) ∣ (↑v * q)) :
     d ∣ v := by
   have hcop : IsCoprime (d : ℤ) q := by
-    rw [Int.isCoprime_iff_gcd_eq_one]; simp_all [Int.gcd_comm]
+    rw [Int.isCoprime_iff_gcd_eq_one]
+    simp_all [Int.gcd_comm]
   have hdvd' : (d : ℤ) ∣ (v : ℤ) * q := by simpa [mul_comm] using hdvd
   exact Int.natCast_dvd_natCast.mp (by simpa using hcop.dvd_of_dvd_mul_right hdvd')
 

@@ -202,11 +202,14 @@ theorem empiricalMeasureError_eq_empiricalError (X : Type u) [MeasurableSpace X]
       ENNReal.toReal_div, ENNReal.toReal_one, ENNReal.toReal_natCast]
   have hsum_eq : (∑ x : Fin m, (if h (xs x) ≠ c (xs x) then (1 : ENNReal) else 0).toReal) =
       (∑ x : Fin m, zeroOneLoss Bool (h (xs x)) (c (xs x))) := by
-    apply Finset.sum_congr rfl; intro i _; unfold zeroOneLoss
+    apply Finset.sum_congr rfl
+    intro i _
+    unfold zeroOneLoss
     by_cases hd : h (xs i) = c (xs i)
     · simp [hd]
     · simp [hd, ENNReal.toReal_one]
-  rw [hsum_eq]; ring
+  rw [hsum_eq]
+  ring
 
 end EmpiricalMeasureError
 
@@ -281,12 +284,14 @@ theorem erm_consistent_realizable (X : Type u) [MeasurableSpace X] [DecidableEq 
       (fun i => (S i, c (S i))) := by
   set S' := (fun i => (S i, c (S i)))
   have hEmp_nonneg : ∀ h' : Concept X Bool, 0 ≤ EmpiricalError X Bool h' S' loss := by
-    intro h'; unfold EmpiricalError
+    intro h'
+    unfold EmpiricalError
     split_ifs with hm
     · rfl
     · exact div_nonneg (Finset.sum_nonneg (fun i _ => hloss_nonneg _ _)) (Nat.cast_nonneg m)
   have hc_emp_zero : EmpiricalError X Bool c S' loss = 0 := by
-    unfold EmpiricalError; split_ifs with hm
+    unfold EmpiricalError
+    split_ifs with hm
     · rfl
     · rw [Finset.sum_eq_zero (fun i _ => hfaith.loss_self_zero _), zero_div]
   have hexists : ∃ h₀ ∈ H, ∀ h' ∈ H,
@@ -429,9 +434,11 @@ theorem vcdim_finite_imp_growth_bounded (X : Type u)
     ∃ (d : ℕ), ∀ (m : ℕ), d ≤ m →
       GrowthFunction X C m ≤ ∑ i ∈ Finset.range (d + 1), Nat.choose m i := by
   obtain ⟨v, hv⟩ : ∃ v : ℕ, VCDim X C = (v : WithTop ℕ) :=
-    let ⟨n, hn⟩ := WithTop.ne_top_iff_exists.mp (ne_of_lt hC); ⟨n, hn.symm⟩
+    let ⟨n, hn⟩ := WithTop.ne_top_iff_exists.mp (ne_of_lt hC)
+    ⟨n, hn.symm⟩
   haveI : DecidableEq X := Classical.decEq X
-  use v; intro m hm
+  use v
+  intro m hm
   unfold GrowthFunction
   apply csSup_le'
   rintro n ⟨⟨S, hSm⟩, rfl⟩
@@ -458,7 +465,8 @@ theorem vcdim_finite_imp_growth_bounded (X : Type u)
     suffices hT_lift : Shatters X C (T.map ⟨Subtype.val, Subtype.val_injective⟩) by
       have hle : ((T.map ⟨Subtype.val, Subtype.val_injective⟩).card : WithTop ℕ) ≤ v :=
         hv ▸ le_iSup₂_of_le _ hT_lift le_rfl
-      rw [Finset.card_map] at hle; exact_mod_cast hle
+      rw [Finset.card_map] at hle
+      exact_mod_cast hle
     intro f
     let fb : ↥S → Bool := fun y =>
       if hy : y ∈ T then f ⟨↑y, Finset.mem_map.mpr ⟨y, hy, rfl⟩⟩ else false
@@ -472,7 +480,8 @@ theorem vcdim_finite_imp_growth_bounded (X : Type u)
     simp only [Finset.mem_map, Function.Embedding.coeFn_mk] at hx_mem
     obtain ⟨y, hyT, rfl⟩ := hx_mem
     have hcgy : c ↑y = g y := hcg y
-    have hy_in_A : y ∈ A ↔ g y = true := by subst hg_eq; simp [toSub, Finset.mem_filter]
+    have hy_in_A : y ∈ A ↔ g y = true := by subst hg_eq
+                                            simp [toSub, Finset.mem_filter]
     have hy_in_t : y ∈ t ↔ fb y = true := by simp [t, Finset.mem_filter, hyT]
     have hy_inter : y ∈ T ∩ A ↔ y ∈ t :=
       ⟨fun h => (Finset.ext_iff.mp hTA y).mp h, fun h => (Finset.ext_iff.mp hTA y).mpr h⟩
@@ -484,13 +493,15 @@ theorem vcdim_finite_imp_growth_bounded (X : Type u)
       · exact absurd (hy_in_t.mp (hy_inter.mp (Finset.mem_inter.mpr ⟨hyT, hy_in_A.mpr hgy⟩)))
           (by simp_all)
       · rfl
-    rw [hcgy, key]; simp [fb, hyT]
+    rw [hcgy, key]
+    simp [fb, hyT]
   have h3 := @Finset.card_shatterer_le_sum_vcDim ↥S _ 𝒜
   calc RS_fs.card
       = 𝒜.card := (Finset.card_image_of_injective _ h_toSub_inj).symm
     _ ≤ 𝒜.shatterer.card := Finset.card_le_card_shatterer 𝒜
     _ ≤ ∑ k ∈ Finset.Iic 𝒜.vcDim, S.card.choose k := by
-        rw [← Fintype.card_coe S]; exact h3
+        rw [← Fintype.card_coe S]
+        exact h3
     _ ≤ ∑ k ∈ Finset.Iic v, S.card.choose k :=
         Finset.sum_le_sum_of_subset (Finset.Iic_subset_Iic.mpr h_vcdim_le)
     _ = ∑ k ∈ Finset.range (v + 1), S.card.choose k := by
@@ -575,7 +586,8 @@ theorem uc_imp_pac (X : Type u) [MeasurableSpace X]
     exact (hexists.choose_spec).2 i
   have hxs_h₀ := hxs h₀ hh₀C
   have hempzero : EmpiricalError X Bool h₀ S (zeroOneLoss Bool) = 0 := by
-    unfold EmpiricalError; split_ifs with hm0
+    unfold EmpiricalError
+    split_ifs with hm0
     · rfl
     · rw [Finset.sum_eq_zero (fun i _ => by unfold zeroOneLoss; rw [if_pos (hcons i)]), zero_div]
   unfold TrueErrorReal TrueError at hxs_h₀
@@ -679,7 +691,8 @@ theorem exists_many_disagreements {α : Type*} [Fintype α]
   push Not at H
   have H' : ∀ f : α → Bool,
       (Finset.univ.filter fun x => f x ≠ h x).card ≤ Fintype.card α / 4 :=
-    fun f => by have := H f; omega
+    fun f => by have := H f
+                omega
   have hsum_le : ∑ f : α → Bool,
       (Finset.univ.filter fun x => f x ≠ h x).card ≤
       Fintype.card (α → Bool) * (Fintype.card α / 4) :=
@@ -745,7 +758,8 @@ theorem agreement_count_markov {α : Type*} [Fintype α] [DecidableEq α]
           rw [hS_def]
           apply Finset.card_nsmul_le_sum
           intro f hf
-          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hf; omega
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hf
+          omega
       _ ≤ ∑ f : α → Bool, (n - disagree_count f) :=
           Finset.sum_le_univ_sum_of_nonneg (fun _ => Nat.zero_le _)
       _ = n * 2 ^ (n - 1) := hsum_agree
@@ -883,7 +897,8 @@ lemma nfl_counting_core {X : Type u} {C : ConceptClass X Bool} {T : Finset X}
       (Finset.univ.filter fun xs : Fin m → ↥T =>
         (Finset.univ.filter fun t : ↥T =>
           f t ≠ (L.learn (fun i => ((↑(xs i) : X), f (xs i)))) (↑t)).card * 4
-        ≤ d).card by rw [← heq]; exact hlt
+        ≤ d).card by rw [← heq]
+                     exact hlt
     congr 1; apply Finset.filter_congr; intro xs _
     have hinner : (Finset.univ.filter fun t : ↥T =>
           (hrealize f).choose ((↑t : X)) ≠
@@ -1045,7 +1060,8 @@ theorem nfl_core (X : Type u) [MeasurableSpace X] [Fintype X]
     calc ENNReal.ofReal (1 / 8)
         < 1 / 2 := by
             rw [ENNReal.ofReal_div_of_pos (by norm_num : (0:ℝ) < 8)]
-            simp only [ENNReal.ofReal_one, ENNReal.ofReal_ofNat]; norm_num
+            simp only [ENNReal.ofReal_one, ENNReal.ofReal_ofNat]
+            norm_num
       _ ≤ 1 - D (Set.range xs) := by
             calc (1 : ENNReal) / 2 = 1 - 1 / 2 := by norm_num
               _ ≤ 1 - D (Set.range xs) := tsub_le_tsub_left hD_seen_le 1
@@ -1177,7 +1193,8 @@ theorem pac_lower_bound_good_event_le_half
       rw [← Fintype.card_coe]; exact Nat.pos_iff_ne_zero.mp hTpos)
     have hd_nt : (T.card : ENNReal) ≠ ⊤ := ENNReal.natCast_ne_top T.card
     have h14 : ENNReal.ofReal (1 / 4 : ℝ) = (4 : ENNReal)⁻¹ := by
-      rw [one_div, ENNReal.ofReal_inv_of_pos (by norm_num : (0:ℝ) < 4)]; norm_num
+      rw [one_div, ENNReal.ofReal_inv_of_pos (by norm_num : (0:ℝ) < 4)]
+      norm_num
     constructor
     · intro hle
       rw [ENNReal.div_le_iff hd_ne hd_nt, h14, mul_comm] at hle
@@ -1246,14 +1263,16 @@ theorem pac_lower_bound_good_event_le_half
       rw [hcard_eq] at h_le_card
       exact_mod_cast h_le_card
     have h12 : ENNReal.ofReal (1 / 2 : ℝ) = (2 : ENNReal)⁻¹ := by
-      rw [one_div, ENNReal.ofReal_inv_of_pos (by norm_num : (0:ℝ) < 2)]; norm_num
+      rw [one_div, ENNReal.ofReal_inv_of_pos (by norm_num : (0:ℝ) < 2)]
+      norm_num
     calc (count_finset.card : ENNReal)
         = (count_finset.card : ENNReal) * 1 := (mul_one _).symm
       _ = (count_finset.card : ENNReal) * (2 * (2 : ENNReal)⁻¹) := by
           rw [ENNReal.mul_inv_cancel (by norm_num) (by norm_num)]
       _ = (2 * count_finset.card : ENNReal) * (2 : ENNReal)⁻¹ := by ring
       _ ≤ (T.card : ENNReal) ^ m * (2 : ENNReal)⁻¹ := mul_le_mul_left h_ennreal _
-      _ = ENNReal.ofReal (1 / 2 : ℝ) * (T.card : ENNReal) ^ m := by rw [h12]; ring
+      _ = ENNReal.ofReal (1 / 2 : ℝ) * (T.card : ENNReal) ^ m := by rw [h12]
+                                                                    ring
   calc MeasureTheory.Measure.pi (fun _ : Fin m => D) good_X
       ≤ MeasureTheory.Measure.pi (fun _ : Fin m => D) good_quarter :=
         MeasureTheory.measure_mono hgood_sub
@@ -1270,7 +1289,10 @@ private lemma vcdim_eq_imp_shattered_card {X : Type u} (C : ConceptClass X Bool)
   by_contra h_none
   push Not at h_none
   have hstrict : ∀ S, Shatters X C S → S.card ≤ d - 1 := by
-    intro S hS; have := hle S hS; have := h_none S hS; omega
+    intro S hS
+    have := hle S hS
+    have := h_none S hS
+    omega
   have hbound : VCDim X C ≤ ↑(d - 1) := iSup₂_le fun S hS =>
     WithTop.coe_le_coe.mpr (hstrict S hS)
   rw [hd] at hbound
@@ -1352,10 +1374,12 @@ theorem compress_injective_on_labelings {X : Type u} {n : ℕ}
   funext i
   have hf_real' : ∃ c ∈ C, ∀ i : Fin n,
       c ((fun i => (pts i, f i)) i).1 = ((fun i => (pts i, f i)) i).2 :=
-    let ⟨c, hcC, hc⟩ := hf_real; ⟨c, hcC, fun i => by simp [hc i]⟩
+    let ⟨c, hcC, hc⟩ := hf_real
+    ⟨c, hcC, fun i => by simp [hc i]⟩
   have hg_real' : ∃ c ∈ C, ∀ i : Fin n,
       c ((fun i => (pts i, g i)) i).1 = ((fun i => (pts i, g i)) i).2 :=
-    let ⟨c, hcC, hc⟩ := hg_real; ⟨c, hcC, fun i => by simp [hc i]⟩
+    let ⟨c, hcC, hc⟩ := hg_real
+    ⟨c, hcC, fun i => by simp [hc i]⟩
   have hf := cs.correct (fun i => (pts i, f i)) hf_real' i
   have hg := cs.correct (fun i => (pts i, g i)) hg_real' i
   simp only at hf hg
@@ -1371,7 +1395,8 @@ private lemma succ_le_two_pow (k : ℕ) : k + 1 ≤ 2 ^ k := by
 /-- Shattering is monotone: subsets of shattered sets are shattered. -/
 private lemma shatters_subset {X : Type u} {C : ConceptClass X Bool}
     {S T : Finset X} (hST : T ⊆ S) (hS : Shatters X C S) : Shatters X C T := by
-  intro f; classical
+  intro f
+  classical
   let g : ↥S → Bool := fun ⟨x, hx⟩ => if h : x ∈ T then f ⟨x, h⟩ else false
   obtain ⟨c, hcC, hcg⟩ := hS g
   exact ⟨c, hcC, fun ⟨x, hx⟩ => by
@@ -1398,7 +1423,8 @@ private lemma exp_beats_poly_at (k : ℕ) :
     _ = 2 ^ (2 * k + k * (2 * k + 1)) := by rw [← pow_add]
     _ = 2 ^ (2 * k ^ 2 + 3 * k) := by ring_nf
     _ < 2 ^ (2 * (k + 1) ^ 2) := by
-        apply Nat.pow_lt_pow_right (by norm_num : 1 < 2); nlinarith
+        apply Nat.pow_lt_pow_right (by norm_num : 1 < 2)
+        nlinarith
 
 /-- ∃ compression scheme → VCDim < ⊤.
     Pigeonhole: compress is injective on C-realizable labelings (by correctness),

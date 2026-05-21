@@ -42,7 +42,8 @@ theorem left_inv_implies_divring [Nontrivial R]
   obtain ⟨z, hz⟩ := h y (left_ne_zero_of_mul_eq_one hy)
   have x_eq_z : x = z := by
     calc x = (z * y) * x := by rw [hz]; noncomm_ring
-      _ = z := by rw [mul_assoc, hy]; noncomm_ring
+      _ = z := by rw [mul_assoc, hy]
+                  noncomm_ring
   exact ⟨y, hy, x_eq_z ▸ hz⟩
 
 /-- Promote a proof of `IsDivisionRing R` to a Mathlib `DivisionRing R` instance. -/
@@ -70,7 +71,9 @@ theorem isomorphic_ring_div {R' : Type*} [Ring R'] (f : R ≃+* R') (h_div : IsD
   obtain ⟨a, rfl⟩ : ∃ a : R, f a = x' := ⟨f.symm x', f.right_inv x'⟩
   obtain ⟨b, hb1, hb2⟩ := h_div.2 a ((RingEquiv.map_ne_zero_iff f).mp hx')
   refine ⟨f b, ?_, ?_⟩
-  · rw [map_mul_eq_one]; exact hb1
-  · rw [map_mul_eq_one]; exact hb2
+  · rw [map_mul_eq_one]
+    exact hb1
+  · rw [map_mul_eq_one]
+    exact hb2
 
 end LeanPool.ArtinWedderburn

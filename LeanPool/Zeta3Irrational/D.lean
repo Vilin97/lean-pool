@@ -91,17 +91,21 @@ private lemma Nat_lcm_pow_n (n a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) :
 
 theorem Nat_lcm_pow_two (a b : ℕ) : (Nat.lcm a b) ^ 2 = Nat.lcm (a ^ 2) (b ^ 2) := by
   by_cases ha : a = 0
-  · subst ha; simp
+  · subst ha
+    simp
   by_cases hb : b = 0
-  · subst hb; simp
+  · subst hb
+    simp
   exact Nat_lcm_pow_n 2 a b ha hb
 
 theorem Nat_lcm_pow_three (a b : ℕ) :
     (Nat.lcm a b) ^ 3 = Nat.lcm (a ^ 3) (b ^ 3) := by
   by_cases ha : a = 0
-  · subst ha; simp
+  · subst ha
+    simp
   by_cases hb : b = 0
-  · subst hb; simp
+  · subst hb
+    simp
   exact Nat_lcm_pow_n 3 a b ha hb
 
 theorem d_sq (s : Finset ℕ) : (d s)^2 = d (s.image (· ^ 2)) := by

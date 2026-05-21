@@ -147,9 +147,11 @@ theorem nu_lt_self_of_dvd_prodPrimes : ∀ d : ℕ, d ∣ P → d ≠ 1 → ν d
         eq_comm.mp (prod_factors_of_mult ν s.nu_mult hd_sq)
       _ < ∏ p ∈ d.primeFactors, 1 := by
           apply prod_lt_prod_of_nonempty
-          · intro p hp; simp only [mem_primeFactors] at hp
+          · intro p hp
+            simp only [mem_primeFactors] at hp
             exact s.nu_pos_of_prime p (by aesop) (by aesop_div)
-          · intro p hpd; rw [mem_primeFactors_of_ne_zero hd_ne_zero] at hpd
+          · intro p hpd
+            rw [mem_primeFactors_of_ne_zero hd_ne_zero] at hpd
             exact s.nu_lt_one_of_prime p hpd.left (by aesop_div)
           · exact primeDivisors_nonempty _ ((two_le_iff d).mpr ⟨hd_ne_zero, hd_ne_one⟩)
       _ = 1 := by simp
@@ -159,7 +161,8 @@ theorem nu_lt_self_of_dvd_prodPrimes : ∀ d : ℕ, d ∣ P → d ≠ 1 → ν d
 theorem selbergTerms_pos (l : ℕ) (hl : l ∣ P) : 0 < g l := by
   rw [selbergTerms_apply]
   apply mul_pos (s.nu_pos_of_dvd_prodPrimes hl)
-  apply prod_pos; intro p hp
+  apply prod_pos
+  intro p hp
   rw [one_div_pos]
   linarith [s.nu_lt_one_of_prime p (prime_of_mem_primeFactors hp)
     ((Nat.dvd_of_mem_primeFactors hp).trans hl)]
@@ -242,11 +245,16 @@ theorem siftedSum_le_mainSum_errSum_of_UpperBoundSieve (μPlus : UpperBoundSieve
       ≤ ∑ d ∈ divisors P, μPlus d * s.multSum d := upper_bound_of_UpperBoundSieve s μPlus
     _ = X * ∑ d ∈ divisors P, μPlus d * ν d + ∑ d ∈ divisors P, μPlus d * R d := by
         rw [mul_sum, ← sum_add_distrib]
-        apply sum_congr rfl; intro d _; dsimp only [rem]; ring
+        apply sum_congr rfl
+        intro d _
+        dsimp only [rem]
+        ring
     _ ≤ _ := by
         apply _root_.add_le_add le_rfl
-        apply sum_le_sum; intro d _
-        rw [← abs_mul]; exact le_abs_self _
+        apply sum_le_sum
+        intro d _
+        rw [← abs_mul]
+        exact le_abs_self _
 
 end SieveLemmas
 

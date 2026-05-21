@@ -174,9 +174,12 @@ lemma mulDef (f g : cs.Reflection × ZMod 2 → cs.Reflection × ZMod 2) : f * g
 instance : Monoid (cs.Reflection × ZMod 2 → cs.Reflection × ZMod 2) where
   one := id
   mul := (instMul cs).mul
-  one_mul := fun f => by funext x; rfl
-  mul_one := fun f => by funext x; rfl
-  mul_assoc := fun f g h => by funext x; rfl
+  one_mul := fun f => by funext x
+                         rfl
+  mul_one := fun f => by funext x
+                         rfl
+  mul_assoc := fun f g h => by funext x
+                               rfl
 
 /-- The permutation map associated to a word, built by composing simple permutation maps. -/
 def permutationMap_ofList (l : List B) : cs.Reflection × ZMod 2 → cs.Reflection × ZMod 2 :=

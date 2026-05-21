@@ -151,8 +151,10 @@ lemma apply_braidMoveSequence_cons (bm : cs.BraidMove) (bms : List (cs.BraidMove
 lemma cons_of_length_succ {α : Type} (l : List α) {p : ℕ} (h : l.length = p + 1) :
   ∃ (a : α) (t : List α), l = a :: t ∧ t.length = p := by
   cases l with
-  | nil => simp only [List.length_nil] at h; omega
-  | cons a t => simp only [List.length_cons, Nat.add_one_inj] at h; exact ⟨a, t, rfl, h⟩
+  | nil => simp only [List.length_nil] at h
+           omega
+  | cons a t => simp only [List.length_cons, Nat.add_one_inj] at h
+                exact ⟨a, t, rfl, h⟩
 /-- Shift a braid move one position to the right. -/
 def shift_braidMove (bm : cs.BraidMove) : cs.BraidMove :=
   match bm with
@@ -200,7 +202,8 @@ theorem alternatingWord_succ_ne_alternatingWord_eraseIdx [MatsumotoCondition cs]
   | succ p ih =>
     intro i j hp hij k hk
     have hp' : p < M i j := by linarith
-    have hp'' : p < M j i := by rw [M.symmetric]; exact hp'
+    have hp'' : p < M j i := by rw [M.symmetric]
+                                exact hp'
     have zero_lt_p_succ : 0 < p + 1 := Nat.succ_pos p
     rw[alternatingWord_succ]
     nth_rewrite 2 [alternatingWord_succ]
@@ -424,7 +427,8 @@ theorem concatenate_braidMove_sequences (l l' l'' : List B)
 theorem isReduced_of_eq_length (l l' : List B) (h_len : l.length = l'.length) (h_eq : π l = π l')
    (hr : cs.IsReduced l) : cs.IsReduced l' := by
   rw [IsReduced] at hr ⊢
-  rw [← h_eq]; omega
+  rw [← h_eq]
+  omega
 
 theorem eq_length_of_isReduced (l l' : List B)
 (h_eq : π l = π l') (hr : cs.IsReduced l) (hr' : cs.IsReduced l') :
@@ -518,9 +522,11 @@ theorem matsumoto_reduced_aux [MatsumotoCondition cs] (p : ℕ) (l l' : List B)
               braidWord M i j ++ b_tail
             rw [apply_braidMove]
             have htake : List.take (M j i) (braidWord M j i ++ b_tail) = braidWord M j i := by
-              rw [← length_alternatingWord j i (M j i)]; exact List.take_left
+              rw [← length_alternatingWord j i (M j i)]
+              exact List.take_left
             have hdrop : List.drop (M j i) (braidWord M j i ++ b_tail) = b_tail := by
-              rw [← length_alternatingWord j i (M j i)]; exact List.drop_left
+              rw [← length_alternatingWord j i (M j i)]
+              exact List.drop_left
             rw [if_pos htake, hdrop]
           · have switch_braidWord :
                 π (braidWord M j i ++ b_tail) = π (braidWord M i j ++ b_tail) := by
@@ -597,9 +603,11 @@ theorem matsumoto_reduced_aux [MatsumotoCondition cs] (p : ℕ) (l l' : List B)
               braidWord M j i ++ b_tail
             rw [apply_braidMove]
             have htake : List.take (M i j) (braidWord M i j ++ b_tail) = braidWord M i j := by
-              rw [← length_alternatingWord i j (M i j)]; exact List.take_left
+              rw [← length_alternatingWord i j (M i j)]
+              exact List.take_left
             have hdrop : List.drop (M i j) (braidWord M i j ++ b_tail) = b_tail := by
-              rw [← length_alternatingWord i j (M i j)]; exact List.drop_left
+              rw [← length_alternatingWord i j (M i j)]
+              exact List.drop_left
             rw [if_pos htake, hdrop]
           · have b_word_cons :
                 (braidWord M j i ++ b_tail) = j :: (alternatingWord j i m ++ b_tail) := by

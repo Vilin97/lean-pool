@@ -69,7 +69,8 @@ def splits (l : Letter) :
     let x := w.back
     have _ : w.size - 1 < w.size := by omega
     let ys := w.pop
-    have ysize : ys.size = m := by rw [Array.size_pop, h]; rfl
+    have ysize : ys.size = m := by rw [Array.size_pop, h]
+                                   rfl
     let tailSplits := (splits l ys).map fun ⟨(fst, snd), hh⟩ =>
       ⟨(fst, snd.push x), by
         simp only [Array.size_push, h, ysize] at *
@@ -95,9 +96,11 @@ do
         have lll : w.size - 1 < w.size := by omega
         let base := 1 + (← length <| ys)
         let derived ← (splits x⁻¹ ys).mapM fun ⟨(fst, snd), h0⟩ =>
-          have ysize : ys.size = m := by rw [Array.size_pop, h]; rfl
+          have ysize : ys.size = m := by rw [Array.size_pop, h]
+                                         rfl
           have h0 : fst.size + snd.size < w.size := by
-            simp only [h, ← ysize]; exact Nat.lt_trans h0 (Nat.lt_succ_self _)
+            simp only [h, ← ysize]
+            exact Nat.lt_trans h0 (Nat.lt_succ_self _)
           have _ : snd.size < w.size := Nat.lt_of_le_of_lt (Nat.le_add_left _ _) h0
           have _ : fst.size < w.size := Nat.lt_of_le_of_lt (Nat.le_add_right _ _) h0
           return (← length fst) + (← length snd)

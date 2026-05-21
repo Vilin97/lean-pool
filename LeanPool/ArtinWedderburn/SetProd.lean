@@ -52,8 +52,10 @@ theorem both_mul_zero_one_left_zero :
   intro x
   constructor
   · rintro ⟨y, ⟨r, hr⟩, z, ⟨s, hs⟩, rfl⟩
-    calc y * z = r * (a * s * b) := by rw [hr, hs]; noncomm_ring
-      _ = 0 := by rw [in_particular a s b h]; noncomm_ring
+    calc y * z = r * (a * s * b) := by rw [hr, hs]
+                                       noncomm_ring
+      _ = 0 := by rw [in_particular a s b h]
+                  noncomm_ring
   · rintro (rfl : x = 0)
     exact ⟨0, ⟨0, by noncomm_ring⟩, 0, ⟨0, by noncomm_ring⟩, by simp⟩
 

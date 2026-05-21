@@ -87,7 +87,8 @@ lemma hasSum_normalizationFirstEntryPart {x Y : ℕ} (hx : 1 ≤ x)
   rw [hrows] at hfirst
   rw [tsum_eq_sum (s := Finset.Icc 1 (x - 1)) hrow_zero] at hfirst
   convert hfirst using 1
-  exact Finset.sum_congr rfl fun m hm => by rw [hrow m, if_pos]; simpa [hIcc m] using hm
+  exact Finset.sum_congr rfl fun m hm => by rw [hrow m, if_pos]
+                                            simpa [hIcc m] using hm
 
 /--
 For fixed `Y ≥ 2`, the first-entry contribution to `B_x` is summable and equals

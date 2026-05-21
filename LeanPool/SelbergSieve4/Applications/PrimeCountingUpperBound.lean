@@ -146,7 +146,8 @@ theorem pi_le_siftedSum (N : ℕ) (y : ℝ) (hy : 1 ≤ y) :
     π N ≤ (primeSieve N y hy).siftedSum + y := by
   trans ((primeSieve N y hy).siftedSum + Nat.floor y)
   · have hcard : (Finset.Icc 1 (Nat.floor y)).card = Nat.floor y := by
-      rw [Nat.card_Icc]; norm_num
+      rw [Nat.card_Icc]
+      norm_num
     rw [primeSieve_siftedSum_eq, ← hcard]
     unfold Nat.primeCounting Nat.primeCounting'
     rw [Nat.count_eq_card_filter_range]
@@ -548,7 +549,8 @@ theorem boundingSum_ge_log (s : SelbergSieve) (hnu : s.nu = (ζ : ArithmeticFunc
       ≥ ∑ m ∈ Finset.Icc 1 (Nat.floor (Real.sqrt s.level)), 1 / (m : ℝ) :=
         boundingSum_ge_sum s hnu hP
     _ ≥ Real.log (Real.sqrt s.level) := by
-        rw [ge_iff_le]; simp_rw [one_div]
+        rw [ge_iff_le]
+        simp_rw [one_div]
         exact Aux.log_le_sum_inv _ (by rw [Real.le_sqrt] <;> linarith [s.one_le_level])
     _ = Real.log (s.level) / 2 := by
         rw [Real.log_sqrt (by linarith [s.one_le_level])]
@@ -608,7 +610,8 @@ theorem primeSieve_abs_rem_eq (N : ℕ) (y : ℝ) (hy : 1 ≤ y) (d : ℕ) (hd :
   have hinv : 1 / (d : ℝ) ≤ 1 := by
     rw [one_div]
     apply inv_le_one_of_one_le₀
-    norm_cast; linarith [Nat.pos_of_ne_zero hd]
+    norm_cast
+    linarith [Nat.pos_of_ne_zero hd]
   constructor
   · apply le_sub_right_of_add_le
     trans ((N + 1 : ℕ) : ℝ) / d
@@ -751,7 +754,8 @@ theorem pi_le_id_div_log_of_eps (N : ℕ) (ε : ℝ) (_hε_pos : ε > 0) (hε : 
     apply le_trans h
     gcongr (?_ + ?_)
     apply le_of_eq
-    field_simp; ring_nf
+    field_simp
+    ring_nf
 
 theorem pi_le_id_div_log (N : ℕ) :
     π N ≤ (4 : ℝ) * N / Real.log N +
@@ -775,11 +779,14 @@ theorem _lemma7 :
   · apply Asymptotics.IsBigO.add
     · apply Asymptotics.IsBigO.of_bound'
       rw [Filter.eventually_iff, Filter.mem_atTop_sets]
-      use 1; intro x hx
+      use 1
+      intro x hx
       simp only [norm_one, Real.norm_eq_abs, Set.mem_setOf_eq]
       rw [Real.abs_rpow_of_nonneg (by linarith)]
       apply Real.one_le_rpow
-      · rw [le_abs]; left; linarith
+      · rw [le_abs]
+        left
+        linarith
       · norm_num
     · exact (isLittleO_log_rpow_atTop (by norm_num)).isBigO.const_mul_left _
   · exact tendsto_natCast_atTop_atTop
@@ -792,25 +799,32 @@ theorem _lemma8 :
     trans (fun x => x * x ^ (-1 / 4 : ℝ))
     · apply Asymptotics.IsBigO.of_bound'
       rw [Filter.eventually_iff, Filter.mem_atTop_sets]
-      use 1; intro x hx
+      use 1
+      intro x hx
       simp only [norm_mul, Real.norm_eq_abs, Set.mem_setOf_eq]
       rw [← abs_mul, ← abs_mul]
-      apply le_of_eq; apply congr_arg
+      apply le_of_eq
+      apply congr_arg
       trans (x ^ (1 : ℝ) * x ^ (-1 / 4 : ℝ))
-      · rw [← Real.rpow_add (by linarith), ← Real.rpow_add (by linarith)]; norm_num
+      · rw [← Real.rpow_add (by linarith), ← Real.rpow_add (by linarith)]
+        norm_num
       · rw [Real.rpow_one]
     · apply Asymptotics.IsBigO.mul (Asymptotics.isBigO_refl _ _)
       trans (fun x => (x ^ (1 / 4 : ℝ))⁻¹)
       · apply Asymptotics.IsBigO.of_bound'
         rw [Filter.eventually_iff, Filter.mem_atTop_sets]
-        use 1; intro x hx
+        use 1
+        intro x hx
         simp only [Real.norm_eq_abs, Set.mem_setOf_eq]
         rw [neg_div, Real.rpow_neg (by linarith : 0 ≤ x), abs_inv]
       apply Asymptotics.IsBigO.inv_rev
       · apply (isLittleO_log_rpow_atTop (by norm_num)).isBigO
       · rw [Filter.eventually_iff, Filter.mem_atTop_sets]
-        use 100; intro x hx; rw [Set.mem_setOf_eq]
-        intro hlog; exfalso
+        use 100
+        intro x hx
+        rw [Set.mem_setOf_eq]
+        intro hlog
+        exfalso
         linarith [Real.log_pos (show (1 : ℝ) < x by linarith)]
   · exact tendsto_natCast_atTop_atTop
 

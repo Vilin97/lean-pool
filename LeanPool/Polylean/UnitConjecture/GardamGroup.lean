@@ -183,7 +183,8 @@ theorem kernel_pow (k : K) (n : ℕ) : ((k, Q.e) : P) ^ n = (n • k, Q.e) := by
   induction n with
   | zero =>
     unfold HPow.hPow instHPow Pow.pow instPow
-    simp; rfl
+    simp
+    rfl
   | succ n ih =>
     unfold HPow.hPow instHPow Pow.pow instPow
     change PGrp.toMonoid.npow (n + 1) ((k, Q.e) : P) = ((n + 1) • k, Q.e)

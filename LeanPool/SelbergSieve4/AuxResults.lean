@@ -158,17 +158,24 @@ theorem inv_sub_antitoneOn_Icc {R : Type*} [Field R] [LinearOrder R] [IsStrictOr
 
 theorem inv_antitoneOn_pos {R : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R] :
     AntitoneOn (fun x:R ↦ x⁻¹) (Set.Ioi 0) := by
-  have := inv_sub_antitoneOn_gt (R := R) 0; simp only [sub_zero] at this; exact this
+  have := inv_sub_antitoneOn_gt (R := R) 0
+  simp only [sub_zero] at this
+  exact this
 
 theorem inv_antitoneOn_Icc {R : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R]
     (a b : R) (ha : 0 < a) :
     AntitoneOn (fun x ↦ x⁻¹) (Set.Icc a b) := by
-  have := inv_sub_antitoneOn_Icc a b 0 ha; simp only [sub_zero] at this; exact this
+  have := inv_sub_antitoneOn_Icc a b 0 ha
+  simp only [sub_zero] at this
+  exact this
 
 theorem log_add_one_le_sum_inv (n : ℕ) :
     Real.log ↑(n+1) ≤ ∑ d ∈ Finset.Icc 1 n, (d:ℝ)⁻¹ := by
   have h1 : Real.log (n + 1 : ℕ) = ∫ x in (1:ℕ)..↑(n+1), x⁻¹ := by
-    rw [integral_inv (by simp [(show ¬ (1:ℝ) ≤ 0 by norm_num)])]; congr; push_cast; ring
+    rw [integral_inv (by simp [(show ¬ (1:ℝ) ≤ 0 by norm_num)])]
+    congr
+    push_cast
+    ring
   rw [h1, show Finset.Icc 1 n = Finset.Ico 1 (n + 1) from by ext; simp]
   exact AntitoneOn.integral_le_sum_Ico (by norm_num) (inv_antitoneOn_Icc _ _ (by norm_num))
 
@@ -176,8 +183,10 @@ theorem log_le_sum_inv (y : ℝ) (hy : 1 ≤ y) :
     Real.log y ≤ ∑ d ∈ Finset.Icc 1 (⌊y⌋₊), (d:ℝ)⁻¹ := by
   calc Real.log y
       ≤ Real.log (Nat.floor y + 1) := by
-        gcongr; exact (le_ceil y).trans (by exact_mod_cast ceil_le_floor_add_one y)
-    _ = Real.log ↑(⌊y⌋₊ + 1) := by push_cast; ring_nf
+        gcongr
+        exact (le_ceil y).trans (by exact_mod_cast ceil_le_floor_add_one y)
+    _ = Real.log ↑(⌊y⌋₊ + 1) := by push_cast
+                                   ring_nf
     _ ≤ _ := log_add_one_le_sum_inv _
 
 theorem sum_inv_le_log (n : ℕ) (hn : 1 ≤ n) :
@@ -188,22 +197,26 @@ theorem sum_inv_le_log (n : ℕ) (hn : 1 ≤ n) :
   · simp
   rw [show Ioc 1 n = Ico 2 (n + 1) from by ext x; simp [Nat.succ_le_iff]]
   calc ∑ d ∈ Ico 2 (n + 1), (d : ℝ)⁻¹
-      = ∑ d ∈ Ico 2 (n + 1), (↑(d + 1) - 1)⁻¹ := by congr; norm_num
+      = ∑ d ∈ Ico 2 (n + 1), (↑(d + 1) - 1)⁻¹ := by congr
+                                                    norm_num
     _ ≤ ∫ x in (2).. ↑(n + 1), (x - 1)⁻¹ :=
         @AntitoneOn.sum_le_integral_Ico 2 (n + 1) (fun x : ℝ => (x - 1)⁻¹) (by linarith)
           (inv_sub_antitoneOn_Icc _ _ _ (by norm_num))
     _ = Real.log ↑n := by
         rw [intervalIntegral.integral_comp_sub_right _ 1, integral_inv]
         · norm_num
-        · norm_num; simp [hn]
+        · norm_num
+          simp [hn]
 
 theorem sum_inv_le_log_real (y : ℝ) (hy : 1 ≤ y) :
     ∑ d ∈ Finset.Icc 1 (⌊y⌋₊), (d:ℝ)⁻¹ ≤ 1 + Real.log y := by
   have h1 : 1 ≤ ⌊y⌋₊ := by
-    apply le_floor; exact_mod_cast hy
+    apply le_floor
+    exact_mod_cast hy
   calc ∑ d ∈ Finset.Icc 1 (⌊y⌋₊), (d:ℝ)⁻¹
       ≤ 1 + Real.log (⌊y⌋₊) := sum_inv_le_log _ h1
-    _ ≤ 1 + Real.log y := by gcongr; exact floor_le (by linarith)
+    _ ≤ 1 + Real.log y := by gcongr
+                             exact floor_le (by linarith)
 
 theorem nat_le_prod {f : ι → ℕ} {s : Finset ι} {i : ι} (hi : i ∈ s)
     (hf : ∀ i ∈ s, f i ≠ 0) :
@@ -242,7 +255,8 @@ theorem sum_pow_cardDistinctFactors_div_self_le_log_pow {P k : ℕ} (x : ℝ) (h
     simp only [div_eq_mul_inv, nsmul_eq_mul, cast_pow, mul_ite, mul_zero]
   · rw [sum_comm]; apply sum_congr rfl; intro a _; rw [sum_eq_single (∏ i, a i)]
     · apply if_ctx_congr _ _ (fun _ => rfl)
-      · rw [Iff.comm, iff_and_self]; exact fun _ => rfl
+      · rw [Iff.comm, iff_and_self]
+        exact fun _ => rfl
       intro; rw [cast_prod, ← prod_inv_distrib]
     · exact fun d _ hd_ne ↦ if_neg fun h => hd_ne.symm h.1
     · exact fun h ↦ if_neg fun h' => h (mem_divisors.mpr ⟨h'.2, hP.ne_zero⟩)
@@ -255,21 +269,28 @@ theorem sum_pow_cardDistinctFactors_div_self_le_log_pow {P k : ℕ} (x : ℝ) (h
     · rfl
   · apply sum_le_sum; intro a ha
     split_ifs with h
-    · apply le_of_eq; apply prod_congr rfl; intro i hi
+    · apply le_of_eq
+      apply prod_congr rfl
+      intro i hi
       have hai_le_x : (a i : ℝ) ≤ x := by
-        refine le_trans ?_ h; norm_cast
+        refine le_trans ?_ h
+        norm_cast
         rw [← prod_erase_mul (a := i) (h := hi)]
         apply Nat.le_mul_of_pos_left
         rw [Fintype.mem_piFinset] at ha
         exact prod_pos fun j hj => pos_of_mem_divisors (ha j)
       rw [if_pos hai_le_x]
-    · apply prod_nonneg; intro j _; split_ifs <;> norm_num
+    · apply prod_nonneg
+      intro j _
+      split_ifs <;> norm_num
   · rw [← sum_filter]
     gcongr
     calc ∑ d ∈ P.divisors.filter (fun d : ℕ => (d : ℝ) ≤ x), (d : ℝ)⁻¹
         ≤ ∑ d ∈ Icc 1 (floor x), (d : ℝ)⁻¹ := by
           apply sum_le_sum_of_subset_of_nonneg
-          · intro d; rw [mem_filter, mem_Icc]; intro hd
+          · intro d
+            rw [mem_filter, mem_Icc]
+            intro hd
             exact ⟨Nat.succ_le_iff.mpr (pos_of_mem_divisors hd.1),
                    (le_floor_iff (le_of_lt hx_pos)).mpr hd.2⟩
           · norm_num

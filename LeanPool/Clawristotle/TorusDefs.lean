@@ -60,10 +60,13 @@ def periodicLift (f : Torus3 → ℝ) : (Fin 3 → ℝ) → ℝ := f ∘ torusMk
 lemma periodicLift_periodic (f : Torus3 → ℝ) (x : Fin 3 → ℝ) (i : Fin 3) :
     periodicLift f (x + Pi.single i 1) = periodicLift f x := by
   simp only [periodicLift, Function.comp_apply]
-  congr 1; ext j; simp only [torusMk, Pi.add_apply]
+  congr 1
+  ext j
+  simp only [torusMk, Pi.add_apply]
   by_cases h : j = i
   · subst h; simp only [Pi.single_eq_same]
-    rw [QuotientAddGroup.eq]; exact ⟨-1, by simp⟩
+    rw [QuotientAddGroup.eq]
+    exact ⟨-1, by simp⟩
   · simp [Pi.single_eq_of_ne h]
 
 -- ============================================================================
@@ -219,18 +222,21 @@ theorem clairaut_fderiv {n : ℕ} (g : (Fin n → ℝ) → ℝ) (x : Fin n → �
 /-- hGradConst: gradient of constant function vanishes. -/
 theorem torus_hGradConst (φ : Torus3 → ℝ) (hconst : ∀ x y, φ x = φ y) :
     ∀ x, torusGradX φ x = 0 := by
-  intro x; ext i
+  intro x
+  ext i
   simp only [torusGradX, Pi.zero_apply]
   have : periodicLift φ = fun _ => φ x :=
     funext (fun y => by simp only [periodicLift, Function.comp_apply]; exact hconst _ _)
-  rw [this, hasFDerivAt_const (φ x) _ |>.fderiv]; rfl
+  rw [this, hasFDerivAt_const (φ x) _ |>.fderiv]
+  rfl
 
 /-- hGradAdd: gradient additivity for C¹ functions. -/
 theorem torus_hGradAdd' (f g : Torus3 → ℝ)
     (hf : ContDiff ℝ 1 (periodicLift f)) (hg : ContDiff ℝ 1 (periodicLift g)) :
     ∀ x, torusGradX (fun y => f y + g y) x =
       torusGradX f x + torusGradX g x := by
-  intro x; ext i
+  intro x
+  ext i
   simp only [torusGradX, Pi.add_apply]
   have hlift : periodicLift (fun y => f y + g y) = periodicLift f + periodicLift g := by
     ext y; simp [periodicLift]

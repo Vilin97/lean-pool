@@ -96,7 +96,8 @@ lemma harnack_ineq_cont_normalized_upper
         exact mul_le_mul_of_nonneg_left h_max (by positivity)
     _ = 1 / (2 * π) * ((1 - ‖z‖ ^ 2) / (1 - ‖z‖) ^ 2 *
         ∫ (t : ℝ) in 0..2 * π, u (cexp (↑t * I))) := by
-        congr 1; rw [← intervalIntegral.integral_const_mul]
+        congr 1
+        rw [← intervalIntegral.integral_const_mul]
     _ = (1 + ‖z‖) / (1 - ‖z‖) := by
         rw [h_integral]
         field_simp [show (1 - ‖z‖) ≠ (0 : ℝ) by linarith]
@@ -144,14 +145,16 @@ lemma harnack_ineq_cont_normalized_lower
       · exact le_trans (norm_sub_le _ _) (by simp [Complex.norm_exp]);
   have h_univ_mean : ∫ t in (0 : ℝ)..(2 * π), u (exp (t * I)) = 2 * π * u 0 := by
     have := @poisson_integral_of_harmonicOn_unitDisc_continuousOn_closedUnitDisc u 0
-    simp at this; grind
+    simp at this
+    grind
   have hz' : ‖z‖ < 1 := mem_ball_zero_iff.mp hz
   rw [h_integral]
   have key : (1 - ‖z‖ ^ 2) / (1 + ‖z‖) ^ 2 * (2 * π) ≤
       ∫ (t : ℝ) in 0..2 * π, (1 - ‖z‖ ^ 2) / ‖cexp (↑t * I) - z‖ ^ 2 * u (cexp (↑t * I)) :=
     calc (1 - ‖z‖ ^ 2) / (1 + ‖z‖) ^ 2 * (2 * π)
         = ∫ (t : ℝ) in 0..2 * π, (1 - ‖z‖ ^ 2) / (1 + ‖z‖) ^ 2 * u (cexp (↑t * I)) := by
-          rw [intervalIntegral.integral_const_mul, h_univ_mean, h_f_zero]; ring
+          rw [intervalIntegral.integral_const_mul, h_univ_mean, h_f_zero]
+          ring
       _ ≤ _ := h_mean_value
   linarith [mul_le_mul_of_nonneg_left key (by positivity : (0 : ℝ) ≤ 1 / (2 * π)),
             show (1 / (2 * π)) * ((1 - ‖z‖ ^ 2) / (1 + ‖z‖) ^ 2 * (2 * π)) =
@@ -175,7 +178,9 @@ private lemma harnack_ineq_cont
   have hv_harmonic : HarmonicOnNhd v (ball 0 1) := by
     intro w hw
     change HarmonicAt (fun z => u z / u 0) w
-    have : (fun z => u z / u 0) = (1 / u 0) • u := by ext; simp [smul_eq_mul]; ring
+    have : (fun z => u z / u 0) = (1 / u 0) • u := by ext
+                                                      simp [smul_eq_mul]
+                                                      ring
     rw [this]
     exact (h_harmonic w hw).const_smul
   have hv_cont : ContinuousOn v (closedBall 0 1) :=
@@ -206,7 +211,8 @@ private lemma harmonic_scaling
           · intro x hx
             rw [mem_ball_zero_iff] at hx ⊢
             simp only [Complex.norm_mul, Complex.norm_real]
-            rw [Real.norm_of_nonneg hr.1.le]; nlinarith [norm_nonneg x]
+            rw [Real.norm_of_nonneg hr.1.le]
+            nlinarith [norm_nonneg x]
           · exact (DifferentiableOn.mul (differentiableOn_const _) differentiableOn_id)
         · exact isOpen_ball
       have hv_harmonic : ∀ w ∈ ball 0 1, HarmonicAt (fun w => (f (r * w)).re) w :=
@@ -251,10 +257,12 @@ private lemma harnack_ineq_aux
         congr 1
         field_simp [hr.1.ne']
       convert hv_ineq using 2 <;> norm_num [abs_of_pos hr.1, mul_div_cancel₀, hr.1.ne']
-      · rw [hv0]; field_simp [hr.1.ne']
+      · rw [hv0]
+        field_simp [hr.1.ne']
       · exact hvz.symm
       · exact hvz.symm
-      · rw [hv0]; field_simp [hr.1.ne']
+      · rw [hv0]
+        field_simp [hr.1.ne']
 
 /-- **Harnack's inequality for positive harmonic functions.**
 A positive harmonic function on the unit disc satisfies

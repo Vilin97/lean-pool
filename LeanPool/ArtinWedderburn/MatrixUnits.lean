@@ -38,7 +38,8 @@ variable (R : Type*) [Ring R]
 
 -- in a nontrivial ring, 0 and 1 are different elements
 theorem nontrivial_zero_not_one (nontriv : Nontrivial R) : (0 : R) ≠ (1 : R) :=
-  haveI := nontriv; zero_ne_one
+  haveI := nontriv
+  zero_ne_one
 
 theorem nontrivial_ortidem_n_pos (nontriv : Nontrivial R) (ort_idem : OrtIdemDiv R) :
     0 < ort_idem.n := by
@@ -74,7 +75,8 @@ theorem OrtIdem_imply_MatUnits' {n : ℕ} (hn : 0 < n)
       have col_mul_diag : col_es i * diag_es ⟨0, hn⟩ = col_es i := by
         obtain ⟨r, hr⟩ := col_in i
         calc col_es i * diag_es ⟨0, hn⟩
-            = diag_es i * r * (diag_es ⟨0, hn⟩ * diag_es ⟨0, hn⟩) := by rw [hr]; noncomm_ring
+            = diag_es i * r * (diag_es ⟨0, hn⟩ * diag_es ⟨0, hn⟩) := by rw [hr]
+                                                                        noncomm_ring
           _ = diag_es i * r * diag_es ⟨0, hn⟩ := by rw [idem ⟨0, hn⟩]
           _ = col_es i := by rw [hr]
       calc (col_es i * row_es k) * (col_es k * row_es l)
@@ -196,7 +198,9 @@ theorem ring_to_matrix_ring_multiplicative (a b : R) :
         rw [Finset.mul_sum, Finset.sum_mul]
     _ = ∑ j_1 : Fin n, es ⟨0, hn⟩ i * a * es j_1 ⟨0, hn⟩ *
           (es ⟨0, hn⟩ j_1 * b * es j ⟨0, hn⟩) := by
-        apply Finset.sum_congr rfl; intro x _; noncomm_ring
+        apply Finset.sum_congr rfl
+        intro x _
+        noncomm_ring
   symm
   rw [_lift_sum]
 
@@ -231,7 +235,8 @@ theorem corner_matrix_zero_crit (a : R) :
   have h'' : (mu.es i ⟨0, hn⟩ * mu.es ⟨0, hn⟩ i) * a *
       (mu.es j ⟨0, hn⟩ * mu.es ⟨0, hn⟩ j) = 0 := by
     have key : mu.es i ⟨0, hn⟩ * (mu.es ⟨0, hn⟩ i * a * mu.es j ⟨0, hn⟩) * mu.es ⟨0, hn⟩ j = 0 :=
-      by rw [l']; noncomm_ring
+      by rw [l']
+         noncomm_ring
     calc (mu.es i ⟨0, hn⟩ * mu.es ⟨0, hn⟩ i) * a * (mu.es j ⟨0, hn⟩ * mu.es ⟨0, hn⟩ j)
         = mu.es i ⟨0, hn⟩ * (mu.es ⟨0, hn⟩ i * a * mu.es j ⟨0, hn⟩) * mu.es ⟨0, hn⟩ j := by
           noncomm_ring
@@ -301,11 +306,13 @@ lemma matrixcorner1 :
 
 lemma e00_unit (a : @e00_cornerring R _ n hn mu) :
     mu.es ⟨0, hn⟩ ⟨0, hn⟩ * (a : R) = a := by
-  nth_rewrite 2 [show a = 1 * a from (one_mul a).symm]; rfl
+  nth_rewrite 2 [show a = 1 * a from (one_mul a).symm]
+  rfl
 
 lemma unit_e00 (a : @e00_cornerring R _ n hn mu) :
     (a : R) * mu.es ⟨0, hn⟩ ⟨0, hn⟩ = a := by
-  nth_rewrite 2 [show a = a * 1 from (mul_one a).symm]; rfl
+  nth_rewrite 2 [show a = a * 1 from (mul_one a).symm]
+  rfl
 
 -- the main statement of this file: if a ring has matrix units then it is isomorphic to the
 -- matrix ring over the corner ring of the first matrix unit
@@ -329,7 +336,10 @@ def ring_to_matrix_iso [mu : hasMatrixUnits R n] :
           ∑ i : Fin n, ∑ j : Fin n, es i ⟨0, hn⟩ * ((A i j : R) * es ⟨0, hn⟩ j) =
         es ⟨0, hn⟩ i * ∑ i : Fin n, es i ⟨0, hn⟩ * ∑ j : Fin n,
             ((A i j : R) * es ⟨0, hn⟩ j) := by
-      congr 1; apply Finset.sum_congr rfl; intro i _; rw [Finset.mul_sum]
+      congr 1
+      apply Finset.sum_congr rfl
+      intro i _
+      rw [Finset.mul_sum]
     simp only [h, e0k_left_mul_sum, mul_assoc, right_mul_sum_e0k, unit_e00, e00_unit]
 
 -- Lemma 2.17

@@ -275,7 +275,8 @@ lemma _root_.VirasoroProject.HeisenbergAlgebra.toAbelianLieAlgebraOn_kgen :
   split_ifs with h
   · apply ext' <;> simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, kgen_eq', h]
   · apply ext'
-    · change (0 : AbelianLieAlgebraOn ℤ 𝕜) = 0; rfl
+    · change (0 : AbelianLieAlgebraOn ℤ 𝕜) = 0
+      rfl
     · change AbelianLieAlgebraOn.heisenbergCocycle 𝕜 (AbelianLieAlgebraOn.jgen 𝕜 k)
           (AbelianLieAlgebraOn.jgen 𝕜 l) = 0
       simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, h]

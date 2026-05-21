@@ -32,7 +32,8 @@ lemma sqrt_pullback_loewner
     rw [hLhalf_herm.eq]
     simp only [Matrix.mul_sub, Matrix.sub_mul, smul_mul_assoc, Matrix.mul_one,
                mul_smul_comm, Matrix.mul_assoc, ← hLhalf_sq]
-  rw [h_eq]; exact hM.conjTranspose_mul_mul_same Lhalf
+  rw [h_eq]
+  exact hM.conjTranspose_mul_mul_same Lhalf
 
 lemma eps_light_of_loewner_bound
     (G : SimpleGraph V) [DecidableRel G.Adj]
@@ -52,7 +53,8 @@ lemma eps_light_of_loewner_bound
   have h_split : ε • graphLaplacian G - inducedLaplacian G S =
       (u • graphLaplacian G - inducedLaplacian G S) + (ε - u) • graphLaplacian G := by
     rw [sub_smul]; abel
-  rw [h_split]; exact h_uL.add ((graphLaplacian_posSemidef G).smul (by linarith))
+  rw [h_split]
+  exact h_uL.add ((graphLaplacian_posSemidef G).smul (by linarith))
 
 end Problem6
 

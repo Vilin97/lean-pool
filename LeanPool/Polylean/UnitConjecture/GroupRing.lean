@@ -183,7 +183,8 @@ theorem mul_monom_invariant (b : R) (h x₀ : G) (s₁ s₂ : FormalSum R G)
     coords (mulMonom b h s₁) x₀ = coords (mulMonom b h s₂) x₀ := by
       induction rel with
       | zeroCoeff tail g a hyp =>
-        rw [hyp]; simp only [mulMonom, zero_mul, coords, monom_coords_at_zero, zero_add]
+        rw [hyp]
+        simp only [mulMonom, zero_mul, coords, monom_coords_at_zero, zero_add]
       | addCoeffs a₁ a₂ x tail =>
         simp only [mulMonom, coords, right_distrib, monom_coords_hom, add_assoc]
       | cons a x t₁ t₂ _ step =>
@@ -197,7 +198,8 @@ theorem first_arg_invariant (s₁ s₂ t : FormalSum R G)
     (rel : ElementaryMove R G s₁ s₂) :
     FormalSum.mul s₁ t ≈ FormalSum.mul s₂ t := by
     cases t
-    case nil => simp only [mul]; exact eqlCoords.refl _
+    case nil => simp only [mul]
+                exact eqlCoords.refl _
     case cons head' tail' =>
       let (b, h) := head'
       induction rel with

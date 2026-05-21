@@ -225,7 +225,8 @@ lemma velocity_ibp
   -- Both sides equal Finset.sum over per-component integrals
   have lhs_eq : (fun v => vDiv F v * g v) = fun v =>
       ∑ i : Fin 3, fderiv ℝ (fun w => F w i) v (Pi.single i 1) * g v :=
-    funext fun v => by simp only [vDiv, Fin.sum_univ_three]; ring
+    funext fun v => by simp only [vDiv, Fin.sum_univ_three]
+                       ring
   have rhs_eq : (fun v => dotProduct (F v) (vGrad g v)) = fun v =>
       ∑ i : Fin 3, F v i * fderiv ℝ g v (Pi.single i 1) :=
     funext fun v => by simp only [dotProduct, vGrad, Fin.sum_univ_three]
@@ -298,7 +299,8 @@ lemma landau_ibp (Ψ : ℝ → ℝ) (g : (Fin 3 → ℝ) → ℝ)
     h_int_df_g h_int_f_dg h_int_fg
   rw [h_ibp]
   -- Step 3: Pull w-integral through dot product: ⟨c, ∫ F dw⟩ = ∫ ⟨c, F⟩ dw
-  congr 2; funext v
+  congr 2
+  funext v
   rw [dotProduct_comm]
   -- ⟨∇log g(v), ∫ w, A·flux dw⟩ = ∫ w, ⟨∇log g(v), A·flux(w)⟩ via CLM
   set c := vGrad (Real.log ∘ g) v
@@ -307,7 +309,8 @@ lemma landau_ibp (Ψ : ℝ → ℝ) (g : (Fin 3 → ℝ) → ℝ)
   -- Express dotProduct c as a continuous linear map
   let L : (Fin 3 → ℝ) →L[ℝ] ℝ :=
     ∑ i : Fin 3, ContinuousLinearMap.smulRight (ContinuousLinearMap.proj i) (c i)
-  have hL : ∀ x, L x = dotProduct c x := fun x => by simp [L, dotProduct, Fin.sum_univ_three]; ring
+  have hL : ∀ x, L x = dotProduct c x := fun x => by simp [L, dotProduct, Fin.sum_univ_three]
+                                                     ring
   rw [show dotProduct c (∫ w, F w) = L (∫ w, F w) from (hL _).symm,
     show (∫ w, dotProduct c (F w)) = ∫ w, L (F w) from by
       congr 1; ext w; exact (hL _).symm]

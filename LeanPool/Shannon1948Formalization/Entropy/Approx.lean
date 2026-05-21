@@ -67,7 +67,8 @@ def approxProb
   have hT_ne : (T : ℝ) ≠ 0 := by exact_mod_cast Nat.ne_of_gt hT
   refine ⟨fun a => (approxCount p N a : ℝ) / (T : ℝ), ?_⟩
   constructor
-  · intro a; positivity
+  · intro a
+    positivity
   · have hsum : (∑ a, (approxCount p N a : ℝ)) = (T : ℝ) := by
       have : T = ∑ a, approxCount p N a := rfl
       exact_mod_cast this.symm
@@ -104,7 +105,8 @@ lemma approxCount_mul_bounds
     0 ≤ (approxCount p N a : ℝ) - M * p a ∧
       (approxCount p N a : ℝ) - M * p a ≤ 1 := by
   intro M
-  have hM_nonneg : 0 ≤ M := by dsimp [M]; positivity
+  have hM_nonneg : 0 ≤ M := by dsimp [M]
+                               positivity
   have hfloor_le : (Nat.floor (M * p a) : ℝ) ≤ M * p a :=
     Nat.floor_le (mul_nonneg hM_nonneg (prob_nonneg p a))
   have hlt : M * p a < (Nat.floor (M * p a) : ℝ) + 1 := Nat.lt_floor_add_one _
@@ -146,7 +148,8 @@ lemma approxProb_error_bound
     |approxProb p N a - p a|
       ≤ ((Fintype.card α : ℝ) + 1) / M := by
   intro M
-  have hM_pos : 0 < M := by dsimp [M]; positivity
+  have hM_pos : 0 < M := by dsimp [M]
+                            positivity
   let T : ℝ := (approxTotal p N : ℝ)
   have hT_bounds : 0 ≤ T - M ∧ T - M ≤ Fintype.card α := by
     simpa [T, M] using approxTotal_bounds p N
@@ -202,7 +205,8 @@ lemma tendsto_approxProb_apply
     squeeze_zero (fun N => abs_nonneg _) (fun N => by simpa using approxProb_error_bound p N a)
       hbound_tendsto
   have hsub : Tendsto (fun N : ℕ => approxProb p N a - p a) atTop (𝓝 (0 : ℝ)) := by
-    rw [tendsto_zero_iff_abs_tendsto_zero]; simpa using habs_tendsto
+    rw [tendsto_zero_iff_abs_tendsto_zero]
+    simpa using habs_tendsto
   exact (Filter.tendsto_sub_const_iff (b := p a)).1 (by simpa using hsub)
 
 lemma tendsto_approxProb

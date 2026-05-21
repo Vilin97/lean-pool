@@ -45,7 +45,9 @@ private lemma psd_resolvent_sqrt (U : Matrix V V ℝ) (hU : U.PosDef) :
           rw [hP_star_mul, Matrix.mul_one]; simp only [Matrix.mul_assoc]
       _ = eigP * Matrix.diagonal d * star eigP := by
           have h : Matrix.diagonal (fun i => sqrtd i * sqrtd i) = Matrix.diagonal d := by
-            congr 1; ext i; exact Real.mul_self_sqrt (le_of_lt (hU.eigenvalues_pos i))
+            congr 1
+            ext i
+            exact Real.mul_self_sqrt (le_of_lt (hU.eigenvalues_pos i))
           rw [Matrix.diagonal_mul_diagonal, h]
   have hdiag_herm : (Matrix.diagonal sqrtd).IsHermitian := by
     simp [Matrix.IsHermitian]
@@ -72,7 +74,9 @@ private lemma psd_resolvent_conj_inv (U B Uhalf K : Matrix V V ℝ)
     (Matrix.mul_inv_rev Uhalf Uhalf).symm ▸ congrArg Inv.inv hUhalf_sq
   have hUinv_sub_B : U⁻¹ - B = Uhalf⁻¹ * ((1 : Matrix V V ℝ) - K) * Uhalf⁻¹ := by
     rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, hUhalf_inv_sq]
-    congr 1; rw [hK_def]; symm
+    congr 1
+    rw [hK_def]
+    symm
     have : Uhalf⁻¹ * (Uhalf * B * Uhalf) * Uhalf⁻¹ =
         (Uhalf⁻¹ * Uhalf) * B * (Uhalf * Uhalf⁻¹) := by simp only [Matrix.mul_assoc]
     simp only [this, hUU, hUU', one_mul, mul_one]
@@ -111,7 +115,8 @@ private lemma psd_resolvent_conj_inv (U B Uhalf K : Matrix V V ℝ)
             (Uhalf⁻¹ * Uhalf) * ((1 : Matrix V V ℝ) - K)⁻¹ * Uhalf := by
           simp only [Matrix.mul_assoc]
       _ = Uhalf⁻¹ * (((1 : Matrix V V ℝ) - K) * ((1 : Matrix V V ℝ) - K)⁻¹) * Uhalf := by
-          rw [hUU]; simp only [Matrix.mul_one, Matrix.mul_assoc]
+          rw [hUU]
+          simp only [Matrix.mul_one, Matrix.mul_assoc]
       _ = 1 := by rw [Matrix.mul_nonsing_inv _ hIK_det, Matrix.mul_one, hUU]
   exact Matrix.inv_eq_right_inv h_prod
 
@@ -159,18 +164,22 @@ private lemma psd_resolvent_trace_le (U B Uhalf K : Matrix V V ℝ) (hU : U.PosD
           conv_lhs =>
             rw [show eigQ * star eigQ = eigQ * 1 * star eigQ from by rw [Matrix.mul_one]]
           rw [← Matrix.sub_mul, ← Matrix.mul_sub]]
-    congr 1; congr 1; rw [D_def]
+    congr 1
+    congr 1
+    rw [D_def]
     ext i j; simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.diagonal_apply]
     split_ifs <;> simp
   have h_diag_det : IsUnit D.det := by
     rw [D_def, Matrix.det_diagonal]
     exact IsUnit.mk0 _ (Finset.prod_ne_zero_iff.mpr fun i _ => ne_of_gt (h_1_sub_pos i))
   have hIK_inv : ((1 : Matrix V V ℝ) - K)⁻¹ = eigQ * invD * star eigQ := by
-    rw [hIK_eq]; apply Matrix.inv_eq_right_inv
+    rw [hIK_eq]
+    apply Matrix.inv_eq_right_inv
     calc eigQ * D * star eigQ * (eigQ * invD * star eigQ)
         = eigQ * D * (star eigQ * eigQ) * invD * star eigQ := by simp only [Matrix.mul_assoc]
       _ = eigQ * (D * invD) * star eigQ := by
-          rw [hQ_star_mul, Matrix.mul_one]; simp only [Matrix.mul_assoc]
+          rw [hQ_star_mul, Matrix.mul_one]
+          simp only [Matrix.mul_assoc]
       _ = 1 := by rw [hD_invD, Matrix.mul_one, hQ_mul_star]
   set U' := star eigQ * U * eigQ with hU'_def
   have hU'_psd : U'.PosSemidef := by
@@ -192,7 +201,9 @@ private lemma psd_resolvent_trace_le (U B Uhalf K : Matrix V V ℝ) (hU : U.PosD
         show invD * (star eigQ * U) * eigQ = invD * (star eigQ * U * eigQ) from by
           simp only [Matrix.mul_assoc],
         ← hU'_def, invD_def, trace_diag_mul]
-    apply Finset.sum_congr rfl; intro i _; rw [div_eq_inv_mul]
+    apply Finset.sum_congr rfl
+    intro i _
+    rw [div_eq_inv_mul]
   have htr_U : U.trace = ∑ i, U' i i := by
     rw [show U = eigQ * star eigQ * U from by rw [hQ_mul_star, one_mul],
         show eigQ * star eigQ * U = eigQ * (star eigQ * U) from Matrix.mul_assoc _ _ _,
@@ -208,16 +219,21 @@ private lemma psd_resolvent_trace_le (U B Uhalf K : Matrix V V ℝ) (hU : U.PosD
   have htr_KU_eq_BUU : (K * U).trace = (B * U * U).trace := by
     rw [hK_def]
     rw [show Uhalf * B * Uhalf * U = Uhalf * (B * Uhalf * U) from by simp only [Matrix.mul_assoc]]
-    rw [Matrix.trace_mul_comm, ← hUhalf_sq]; simp only [Matrix.mul_assoc]
+    rw [Matrix.trace_mul_comm, ← hUhalf_sq]
+    simp only [Matrix.mul_assoc]
   rw [htr_expand, htr_U, ← htr_KU_eq_BUU, htr_KU, ← htrK]
   have hU'_diag_nn : ∀ i, 0 ≤ U' i i := fun i => hU'_psd.diag_nonneg
   have h_split_sum : ∑ i : V, U' i i / (1 - eig i) =
       ∑ i : V, U' i i + ∑ i : V, eig i * U' i i / (1 - eig i) := by
     rw [← Finset.sum_add_distrib]
     apply Finset.sum_congr rfl; intro i _
-    field_simp [ne_of_gt (h_1_sub_pos i)]; ring
-  rw [h_split_sum]; gcongr
-  rw [Finset.sum_div]; apply Finset.sum_le_sum; intro i _
+    field_simp [ne_of_gt (h_1_sub_pos i)]
+    ring
+  rw [h_split_sum]
+  gcongr
+  rw [Finset.sum_div]
+  apply Finset.sum_le_sum
+  intro i _
   apply div_le_div_of_nonneg_left (mul_nonneg (h_eig_nn i) (hU'_diag_nn i)) h1t_pos
   linarith [eigenvalue_le_trace_of_posSemidef K hK_psd i]
 

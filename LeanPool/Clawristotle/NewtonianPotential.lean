@@ -63,7 +63,8 @@ lemma coulomb_landauMatrix_entry_le (z : Fin 3 → ℝ) (i j : Fin 3) :
       _ ≤ |coulombKernel (eucNorm z)| * normSq z :=
           mul_le_mul_of_nonneg_left h_inner (abs_nonneg _)
       _ = eucNorm z ^ (-3 : ℝ) * normSq z := by
-          congr 1; rw [coulombKernel, if_neg (by linarith : ¬eucNorm z ≤ 0)]
+          congr 1
+          rw [coulombKernel, if_neg (by linarith : ¬eucNorm z ≤ 0)]
           exact abs_of_pos (rpow_pos_of_pos henz _)
       _ = eucNorm z ^ (-3 : ℝ) * eucNorm z ^ (2 : ℕ) := by
           congr 1; exact (eucNorm_sq z).symm
@@ -108,7 +109,9 @@ lemma inv_norm_ball_volume (R : ℝ) (hR : 0 < R) (k : ℕ) :
     (MeasureTheory.volume (Metric.closedBall (0 : Fin 3 → ℝ) (2^(-k : ℝ) * R))).toReal =
     (2^(-k : ℝ) * R)^3 * (MeasureTheory.volume (Metric.closedBall (0 : Fin 3 → ℝ) 1)).toReal := by
   rw [MeasureTheory.Measure.addHaar_closedBall]
-  · norm_num; ring_nf; positivity
+  · norm_num
+    ring_nf
+    positivity
   · positivity
 
 lemma inv_norm_lintegral_bounded (R : ℝ) (hR : 0 < R) (k : ℕ) :
@@ -257,7 +260,9 @@ lemma inv_norm_local_integrable (R : ℝ) (hR : 0 < R) :
     · exact Measurable.aestronglyMeasurable (by exact Measurable.inv (measurable_norm))
     · rw [MeasureTheory.hasFiniteIntegral_iff_norm]
       convert h_integrable using 2
-      ext z; congr 1; rw [Real.norm_eq_abs, abs_of_nonneg (inv_nonneg.mpr (norm_nonneg z))]
+      ext z
+      congr 1
+      rw [Real.norm_eq_abs, abs_of_nonneg (inv_nonneg.mpr (norm_nonneg z))]
   rwa [ MeasureTheory.IntegrableOn, MeasureTheory.Measure.restrict_congr_set ]
   rw [ MeasureTheory.ae_eq_set ]; norm_num
   exact MeasureTheory.measure_mono_null (fun x hx => hx.2) (MeasureTheory.measure_singleton 0)

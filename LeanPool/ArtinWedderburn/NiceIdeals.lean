@@ -44,7 +44,8 @@ lemma idem_lift_is_idem {e : R} {idem_e : IsIdempotentElem e}
 /-- The zero ideal is a nice ideal. -/
 def zero_ideal_nice : NiceIdeal (⊥ : Ideal R) := by
   intro _ e idem_e h
-  have e_zero : e = 0 := by rw [← Ideal.span_singleton_eq_bot]; exact h.symm
+  have e_zero : e = 0 := by rw [← Ideal.span_singleton_eq_bot]
+                            exact h.symm
   exact
     { n := 0,
       f := fun _ => 0,

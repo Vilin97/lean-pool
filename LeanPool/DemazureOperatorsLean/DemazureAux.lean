@@ -41,8 +41,10 @@ def r (n : ℕ) : PolyFraction' n → PolyFraction' n → Prop :=
 
 lemma r_equiv : Equivalence (r n) := by
   constructor
-  · intro p; rfl
-  · intro p q h; exact h.symm
+  · intro p
+    rfl
+  · intro p q h
+    exact h.symm
   · intro x y z h1 h2
     change x.numerator * z.denominator = z.numerator * x.denominator
     change x.numerator * y.denominator = y.numerator * x.denominator at h1
@@ -325,13 +327,17 @@ the equivalence of both operators
 to get the result for Demazure (in DemazureRelations.lean).-/
 lemma eq_zero_of_mk'_zero {p : MvPolynomial (Fin (n + 1)) ℂ} : mk' p = zero ↔ p = 0 := by
   constructor
-  · intro h; simpa [mk', zero] using h
-  · intro h; simp [h, mk', zero]
+  · intro h
+    simpa [mk', zero] using h
+  · intro h
+    simp [h, mk', zero]
 
 lemma eq_of_eq_mk' {p q : MvPolynomial (Fin (n + 1)) ℂ} : mk' p = mk' q ↔ p = q := by
   constructor
-  · intro h; simpa [mk'] using h
-  · intro h; simp [h]
+  · intro h
+    simpa [mk'] using h
+  · intro h
+    simp [h]
 
 
 /- Some lemmas for interplay between mk and add -/

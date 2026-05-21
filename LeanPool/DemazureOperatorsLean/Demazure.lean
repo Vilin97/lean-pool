@@ -269,7 +269,8 @@ lemma poly_div_cancel {p q r : Polynomial (MvPolynomial (Fin n) ℂ)}
     (hr : Polynomial.Monic r) (hp : p %ₘ r = 0) (hq : q %ₘ r = 0) :
     p = q ↔ (p /ₘ r) = (q /ₘ r) := by
   constructor
-  · intro h; exact congrArg (· /ₘ r) h
+  · intro h
+    exact congrArg (· /ₘ r) h
   · intro h
     have div_p := Polynomial.modByMonic_add_div p r
     have div_q := Polynomial.modByMonic_add_div q r

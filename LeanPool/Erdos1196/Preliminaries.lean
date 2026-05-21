@@ -549,7 +549,8 @@ lemma tailEstimate :
           (by exact_mod_cast (lt_of_lt_of_le (by decide : 0 < 2) (le_trans hy hyq)).le))
     · simp [coeff, tailCutoffCoeff, hyq]
   have hAeq : A = (fun t => deriv (tailKernel m) t * (Real.log t - Real.log (y : ℝ)) +
-      deriv (tailKernel m) t * E t) := funext fun t => by simp [A, E]; ring
+      deriv (tailKernel m) t * E t) := funext fun t => by simp [A, E]
+                                                          ring
   have hEbound : ∀ᵐ t ∂(MeasureTheory.volume.restrict (Set.Ioi (y : ℝ))),
       |E t| ≤ 2 * (C₀ + Real.log 2) := by
     filter_upwards [ae_restrict_mem measurableSet_Ioi] with t ht

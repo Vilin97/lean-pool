@@ -169,7 +169,8 @@ lemma _root_.VirasoroProject.VirasoroAlgebra.hw_apply_cgen (c h : 𝕜) :
     mul_ite, ite_mul, one_mul, zero_mul, ← virasoroTri_cartan_basis_none_eq_cgen]
   rw [Finset.sum_eq_single ⟨none, Set.mem_insert none {some 0}⟩]
   · simp
-  · intro j _ hj; simp [hj.symm, show ¬ (j : Option ℤ) = none by aesop]
+  · intro j _ hj
+    simp [hj.symm, show ¬ (j : Option ℤ) = none by aesop]
   · simp
 
 lemma _root_.VirasoroProject.VirasoroAlgebra.hw_apply_lzero (c h : 𝕜) :
@@ -178,7 +179,8 @@ lemma _root_.VirasoroProject.VirasoroAlgebra.hw_apply_lzero (c h : 𝕜) :
     mul_ite, ite_mul, one_mul, zero_mul, ← virasoroTri_cartan_basis_some_eq_lzero]
   rw [Finset.sum_eq_single ⟨some 0, by exact Set.mem_insert_of_mem none rfl⟩]
   · simp
-  · intro j _ hj; simp [hj.symm]
+  · intro j _ hj
+    simp [hj.symm]
   · simp
 
 /-- The Verma module for the Virasoso algebra with central charge `c` and conformal weight `h`. -/

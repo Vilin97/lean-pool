@@ -31,8 +31,10 @@ noncomputable def iter (κ : Kernel α α) : ℕ → Kernel α α
 instance (n : ℕ) (κ : Kernel α α) [IsMarkovKernel κ] :
   IsMarkovKernel (κ.iter n) := by
   induction n with
-  | zero => simp only [iter]; infer_instance
-  | succ n ih => simp only [iter]; infer_instance
+  | zero => simp only [iter]
+            infer_instance
+  | succ n ih => simp only [iter]
+                 infer_instance
 
 lemma iter_comm (κ : Kernel α α) (n : ℕ) :
   κ ∘ₖ κ.iter n = κ.iter n ∘ₖ κ := by

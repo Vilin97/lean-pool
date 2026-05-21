@@ -55,10 +55,12 @@ private def fwdColoring (f : X → Y) : Fin enum.card → Y := fun i => f (enum.
 private def invColoring (f : Fin enum.card → Y) : X → Y := fun x => f (enum.equiv x)
 
 private lemma fwd_inv (f : X → Y) : invColoring X Y (fwdColoring X Y f) = f := by
-  funext x; simp [invColoring, fwdColoring]
+  funext x
+  simp [invColoring, fwdColoring]
 
 private lemma inv_fwd (f : Fin enum.card → Y) : fwdColoring X Y (invColoring X Y f) = f := by
-  funext i; simp [fwdColoring, invColoring]
+  funext i
+  simp [fwdColoring, invColoring]
 
 private lemma fwd_smul (g : G) (f : X → Y) :
     fwdColoring X Y (g • f) = g • fwdColoring X Y f := by

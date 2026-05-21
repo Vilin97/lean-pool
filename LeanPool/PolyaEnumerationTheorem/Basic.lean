@@ -206,7 +206,7 @@ def fixedBy_coloring_of_cycle_coloring (g : G) (f : (CyclesOfGroup X g) → Y) :
 def equiv_of_fixedBy_coloring_of_cycle_coloring (g : G) :
     (CyclesOfGroup X g → Y) ≃ (MulAction.fixedBy (X → Y) g) :=
   ⟨fixedBy_coloring_of_cycle_coloring g, cycle_coloring_of_fixedBy_coloring g,
-  fun f => funext (Quotient.ind fun _ => rfl),
+  fun _ => funext (Quotient.ind fun _ => rfl),
   fun _ => rfl⟩
 
 /-- For any `g : G` we have: the number of colors raised to the power of the number of cycles of

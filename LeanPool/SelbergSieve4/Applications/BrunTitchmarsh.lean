@@ -46,7 +46,9 @@ def primesBetween (a b : ℝ) : ℕ :=
 theorem primesBetween_eq_ncard {a b : ℝ} (hb : 0 ≤ b) :
     primesBetween a b = Set.ncard {p : ℕ | a ≤ p ∧ p ≤ b ∧ p.Prime} := by
   unfold primesBetween
-  rw [← Set.ncard_coe_finset]; congr; ext p
+  rw [← Set.ncard_coe_finset]
+  congr
+  ext p
   simp only [Finset.coe_filter, Finset.mem_Icc, Nat.ceil_le, Nat.le_floor_iff hb,
     Set.mem_setOf_eq, and_assoc]
 
@@ -148,7 +150,8 @@ theorem rem_eq (hx : 0 < x) (d : ℕ) (hd : d ≠ 0) :
 
 theorem natCeil_le_self_add_one (x : ℝ) (hx : 0 ≤ x) : Nat.ceil x ≤ x + 1 := by
   calc (Nat.ceil x : ℝ) ≤ Nat.floor x + 1 := by exact_mod_cast Nat.ceil_le_floor_add_one x
-    _ ≤ x + 1 := by gcongr; exact Nat.floor_le hx
+    _ ≤ x + 1 := by gcongr
+                    exact Nat.floor_le hx
 
 theorem floor_approx (x : ℝ) (hx : 0 ≤ x) : ∃ C, |C| ≤ 1 ∧  ↑((Nat.floor x)) = x + C :=
   ⟨↑(Nat.floor x) - x, by
@@ -176,8 +179,10 @@ theorem floor_div_approx (x : ℝ) (hx : 0 ≤ x) (d : ℕ) :
   obtain ⟨C₂, hC₂_le, hC₂⟩ := floor_approx x hx
   refine ⟨C₁ + C₂/d, ?_, by rw [hC₁, hC₂]; ring⟩
   have hC₂d : |C₂/d| ≤ |C₂| := by
-    rw [abs_div]; apply div_le_self (abs_nonneg _)
-    simp only [Nat.abs_cast, Nat.one_le_cast]; omega
+    rw [abs_div]
+    apply div_le_self (abs_nonneg _)
+    simp only [Nat.abs_cast, Nat.one_le_cast]
+    omega
   linarith [abs_add_le C₁ (C₂ / ↑d)]
 
 theorem abs_rem_le (hx : 0 < x) (hy : 0 < y) {d : ℕ} (hd : d ≠ 0) :
@@ -210,7 +215,8 @@ theorem abs_rem_le (hx : 0 < x) (hy : 0 < y) {d : ℕ} (hd : d ≠ 0) :
           add_le_add (abs_sub _ _) (abs_sub _ _)
       _ ≤ (1 + |C₃|) + (2 + 1) := by
           gcongr
-          rw [abs_inv]; simp [Nat.cast_inv_le_one]
+          rw [abs_inv]
+          simp [Nat.cast_inv_le_one]
       _ ≤ 5 := by linarith
   · simp [hx]
 

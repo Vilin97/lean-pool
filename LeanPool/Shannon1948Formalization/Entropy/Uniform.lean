@@ -48,7 +48,8 @@ lemma Apos_mul
       = uniformPNat (n * m) :=
     by simpa [p, q] using relabel_compose_uniform_eq_uniform_mul n m
   have hrelab' : H (uniformPNat (n * m)) = H (composeProb p q) := by
-    rw [← hident]; exact hH.relabelInvariant (sigmaConstFinEquivFinMul n m) (composeProb p q)
+    rw [← hident]
+    exact hH.relabelInvariant (sigmaConstFinEquivFinMul n m) (composeProb p q)
   calc
     Apos H (n * m) = H (composeProb p q) := by simpa [Apos] using hrelab'
     _ = H p + (∑ a : Fin n, p a * H (q a)) := hH.grouping p q
@@ -200,8 +201,10 @@ lemma Apos_ratio_logb_close
   have habs : |ratioA - ratioL| ≤ (((m + 1 : ℕ) : ℝ) / nR) - ((m : ℝ) / nR) :=
     abs_sub_le_of_mem_interval hA_left hA_right hL_left hL_right
   have hwidth : (((m + 1 : ℕ) : ℝ) / nR) - ((m : ℝ) / nR) = 1 / nR := by
-    have : ((m + 1 : ℕ) : ℝ) - (m : ℝ) = 1 := by push_cast; ring
-    field_simp [show nR ≠ 0 from hn_ne]; linarith
+    have : ((m + 1 : ℕ) : ℝ) - (m : ℝ) = 1 := by push_cast
+                                                 ring
+    field_simp [show nR ≠ 0 from hn_ne]
+    linarith
   simpa [ratioA, ratioL, nR] using habs.trans_eq hwidth
 
 lemma Apos_ratio_eq_logb
