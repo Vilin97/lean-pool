@@ -83,25 +83,16 @@ lemma entryWeight_add_filtered_vonMangoldt_eq_entryWeightFactor_sum_divisors (x 
           entryWeightFactor n *
             ((n.divisors.filter fun q => Y ≤ q ∧ x ≤ n / q).sum fun q => Λ q) := by
           rw [← Finset.sum_filter, Finset.mul_sum]
-    _
-      = entryWeightFactor n *
+    _ = entryWeightFactor n *
           (((n.divisors.filter fun q => q < Y).sum fun q => Λ q) +
             ((n.divisors.filter fun q => Y ≤ q ∧ n / q < x).sum fun q => Λ q) +
             ((n.divisors.filter fun q => Y ≤ q ∧ x ≤ n / q).sum fun q => Λ q)) := by
-          simp [entryWeight, entryWeightFactor]
-          ring_nf
+          simp [entryWeight, entryWeightFactor]; ring_nf
     _ = entryWeightFactor n * (n.divisors.sum fun q => Λ q) := by
           congr 1
-          rw [Finset.sum_filter, Finset.sum_filter, Finset.sum_filter, ← Finset.sum_add_distrib,
-            ← Finset.sum_add_distrib]
-          calc
-            n.divisors.sum (fun q =>
-                (if q < Y then Λ q else 0) +
-                  (if Y ≤ q ∧ n / q < x then Λ q else 0) +
-                    (if Y ≤ q ∧ x ≤ n / q then Λ q else 0))
-            _ = n.divisors.sum fun q => Λ q := by
-                  refine Finset.sum_congr rfl ?_
-                  grind only
+          rw [Finset.sum_filter, Finset.sum_filter, Finset.sum_filter,
+            ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+          exact Finset.sum_congr rfl fun q _ => by grind only
 
 /-- The small-prime contribution to `b_x(n)` is nonnegative. -/
 lemma smallPrimeEntryWeight_nonneg (Y n : ℕ) : 0 ≤ smallPrimeEntryWeight Y n := by
@@ -120,10 +111,8 @@ The first-entry threshold always lands in the admissible range `x ≤ m * q`, si
 ceiling quotient `x ⌈/⌉ m`.
 -/
 lemma le_mul_entryThreshold (x Y m : ℕ) (hm : 0 < m) :
-    x ≤ m * entryThreshold x Y m := by
-  have hceil : x ≤ m * (x ⌈/⌉ m) := le_smul_ceilDiv hm
-  have hle : x ⌈/⌉ m ≤ entryThreshold x Y m := le_max_right _ _
-  exact hceil.trans (Nat.mul_le_mul_left _ hle)
+    x ≤ m * entryThreshold x Y m :=
+  (le_smul_ceilDiv hm).trans (Nat.mul_le_mul_left _ (le_max_right _ _))
 
 /--
 For `m < x`, the ceiling-quotient part of the first-entry threshold overshoots `x / m` by less than
@@ -143,10 +132,8 @@ private lemma mul_entryThreshold_le (x Y m : ℕ) (hY : 2 ≤ Y) (hm : 0 < m) (h
     m * entryThreshold x Y m ≤ x * Y := by
   rcases le_total Y (x ⌈/⌉ m) with hcase | hcase
   · rw [entryThreshold, max_eq_right hcase]
-    have hlt : m * (x ⌈/⌉ m) < 2 * x := mul_ceilDiv_lt_two_mul x m hm hmx
-    have hxy : 2 * x ≤ x * Y := by
-      simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using Nat.mul_le_mul_left x hY
-    exact hlt.le.trans hxy
+    exact (mul_ceilDiv_lt_two_mul x m hm hmx).le.trans
+      (by simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using Nat.mul_le_mul_left x hY)
   · rw [entryThreshold, max_eq_left hcase]
     exact Nat.mul_le_mul_right Y hmx.le
 
@@ -158,48 +145,27 @@ private lemma abs_inv_log_sub_inv_log_le (x Y n : ℕ) (hx : 2 ≤ x) (hY : 1 �
     (hxn : x ≤ n) (hnY : n ≤ x * Y) :
     |1 / Real.log (n : ℝ) - 1 / Real.log (x : ℝ)| ≤
       Real.log (Y : ℝ) / (Real.log (x : ℝ)) ^ 2 := by
-  have hxpos : 0 < (x : ℝ) := by positivity
-  have hnpos : 0 < (n : ℝ) := by
-    exact_mod_cast (show 0 < n by omega)
-  have hxlog : 0 < Real.log (x : ℝ) :=
-    Real.log_pos (by exact_mod_cast hx)
-  have hnlog : 0 < Real.log (n : ℝ) :=
-    Real.log_pos (by exact_mod_cast (le_trans hx hxn))
+  have hxlog : 0 < Real.log (x : ℝ) := Real.log_pos (by exact_mod_cast hx)
   have hlog_le : Real.log (x : ℝ) ≤ Real.log (n : ℝ) :=
-    Real.log_le_log hxpos (by exact_mod_cast hxn)
-  have hnonpos : 1 / Real.log (n : ℝ) - 1 / Real.log (x : ℝ) ≤ 0 := by
-    linarith [one_div_le_one_div_of_le hxlog hlog_le]
-  rw [abs_of_nonpos hnonpos]
-  have hident :
-      -(1 / Real.log (n : ℝ) - 1 / Real.log (x : ℝ)) =
-        (Real.log (n : ℝ) - Real.log (x : ℝ)) /
-          (Real.log (x : ℝ) * Real.log (n : ℝ)) := by
-    grind only
-  rw [hident]
+    Real.log_le_log (by positivity) (by exact_mod_cast hxn)
+  rw [abs_of_nonpos (sub_nonpos.mpr (one_div_le_one_div_of_le hxlog hlog_le)),
+    show -(1 / Real.log (n : ℝ) - 1 / Real.log (x : ℝ)) =
+      (Real.log (n : ℝ) - Real.log (x : ℝ)) / (Real.log (x : ℝ) * Real.log (n : ℝ)) by
+        grind only]
   have hnum_nonneg : 0 ≤ Real.log (n : ℝ) - Real.log (x : ℝ) := sub_nonneg.mpr hlog_le
-  have hsq_le : (Real.log (x : ℝ)) ^ 2 ≤ Real.log (x : ℝ) * Real.log (n : ℝ) := by
-    nlinarith
-  have hfirst :
-      (Real.log (n : ℝ) - Real.log (x : ℝ)) /
-          (Real.log (x : ℝ) * Real.log (n : ℝ)) ≤
-        (Real.log (n : ℝ) - Real.log (x : ℝ)) / (Real.log (x : ℝ)) ^ 2 :=
-    div_le_div_of_nonneg_left hnum_nonneg (sq_pos_of_pos hxlog) hsq_le
-  have hlog_mul : Real.log ((x * Y : ℕ) : ℝ) = Real.log (x : ℝ) + Real.log (Y : ℝ) := by
-    rw [Nat.cast_mul, Real.log_mul (show (x : ℝ) ≠ 0 by exact_mod_cast (show x ≠ 0 by omega))
-      (show (Y : ℝ) ≠ 0 by exact_mod_cast (show Y ≠ 0 by omega))]
   have hlog_upper : Real.log (n : ℝ) ≤ Real.log (x : ℝ) + Real.log (Y : ℝ) := by
-    calc
-      Real.log (n : ℝ) ≤ Real.log ((x * Y : ℕ) : ℝ) := by
-        apply Real.log_le_log hnpos
-        exact_mod_cast hnY
-      _ = Real.log (x : ℝ) + Real.log (Y : ℝ) := hlog_mul
-  have hnum_le : Real.log (n : ℝ) - Real.log (x : ℝ) ≤ Real.log (Y : ℝ) := by
-    linarith
-  have hsecond :
-      (Real.log (n : ℝ) - Real.log (x : ℝ)) / (Real.log (x : ℝ)) ^ 2 ≤
-        Real.log (Y : ℝ) / (Real.log (x : ℝ)) ^ 2 :=
-    (div_le_div_iff_of_pos_right (sq_pos_of_pos hxlog)).2 hnum_le
-  exact hfirst.trans hsecond
+    calc Real.log (n : ℝ) ≤ Real.log ((x * Y : ℕ) : ℝ) :=
+          Real.log_le_log (by exact_mod_cast (show 0 < n by omega)) (by exact_mod_cast hnY)
+      _ = Real.log (x : ℝ) + Real.log (Y : ℝ) := by
+          rw [Nat.cast_mul, Real.log_mul
+            (by exact_mod_cast (show x ≠ 0 by omega))
+            (by exact_mod_cast (show Y ≠ 0 by omega))]
+  calc
+    (Real.log (n : ℝ) - Real.log (x : ℝ)) / (Real.log (x : ℝ) * Real.log (n : ℝ))
+      ≤ (Real.log (n : ℝ) - Real.log (x : ℝ)) / (Real.log (x : ℝ)) ^ 2 :=
+        div_le_div_of_nonneg_left hnum_nonneg (sq_pos_of_pos hxlog) (by nlinarith)
+    _ ≤ Real.log (Y : ℝ) / (Real.log (x : ℝ)) ^ 2 :=
+        (div_le_div_iff_of_pos_right (sq_pos_of_pos hxlog)).2 (by linarith)
 
 /--
 Specializing the interval estimate to the first-entry threshold gives a uniform logarithmic error
@@ -208,10 +174,9 @@ bound along the initial-entry contribution.
 private lemma abs_inv_log_entryThreshold_sub_inv_log_le (x Y m : ℕ)
     (hx : 2 ≤ x) (hY : 2 ≤ Y) (hm : 0 < m) (hmx : m < x) :
     |1 / Real.log ((m * entryThreshold x Y m : ℕ) : ℝ) - 1 / Real.log (x : ℝ)| ≤
-      Real.log (Y : ℝ) / (Real.log (x : ℝ)) ^ 2 := by
-  have hlower : x ≤ m * entryThreshold x Y m := le_mul_entryThreshold x Y m hm
-  have hupper : m * entryThreshold x Y m ≤ x * Y := mul_entryThreshold_le x Y m hY hm hmx
-  exact abs_inv_log_sub_inv_log_le x Y (m * entryThreshold x Y m) hx (le_of_lt hY) hlower hupper
+      Real.log (Y : ℝ) / (Real.log (x : ℝ)) ^ 2 :=
+  abs_inv_log_sub_inv_log_le x Y (m * entryThreshold x Y m) hx (le_of_lt hY)
+    (le_mul_entryThreshold x Y m hm) (mul_entryThreshold_le x Y m hY hm hmx)
 
 /--
 For fixed `Y ≥ 2`, the first-entry tail at the faithful cutoff `entryThreshold x Y m`
@@ -224,10 +189,9 @@ lemma firstEntryTailApproximation {Y : ℕ} (hY : 2 ≤ Y) :
         |firstEntryTail x Y m - 1 / Real.log (x : ℝ)| ≤
           C / (Real.log (x : ℝ)) ^ 2 := by
   rcases tailEstimate with ⟨C0, hC0pos, hC0⟩
-  refine ⟨C0 + Real.log (Y : ℝ), by
-    have hlogY : 0 < Real.log (Y : ℝ) :=
-      Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hY))
-    linarith, ?_⟩
+  have hlogY : 0 < Real.log (Y : ℝ) :=
+    Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hY))
+  refine ⟨C0 + Real.log (Y : ℝ), by linarith, ?_⟩
   intro x m hx hm hmx
   have hthreshold : 2 ≤ entryThreshold x Y m := le_trans hY (le_max_left _ _)
   have htail :
@@ -235,30 +199,23 @@ lemma firstEntryTailApproximation {Y : ℕ} (hY : 2 ≤ Y) :
         C0 / (Real.log ((m * entryThreshold x Y m : ℕ) : ℝ)) ^ 2 := by
     simpa [firstEntryTail, tailSum] using hC0 hm hthreshold
   have hmul_lower : x ≤ m * entryThreshold x Y m := le_mul_entryThreshold x Y m hm
-  have hlogsq :
-      C0 / (Real.log ((m * entryThreshold x Y m : ℕ) : ℝ)) ^ 2 ≤
-        C0 / (Real.log (x : ℝ)) ^ 2 := by
-    have hxlog : 0 < Real.log (x : ℝ) :=
-      Real.log_pos (by exact_mod_cast hx)
-    have hmul_log : Real.log (x : ℝ) ≤ Real.log ((m * entryThreshold x Y m : ℕ) : ℝ) := by
-      apply Real.log_le_log
-      · positivity
-      · exact_mod_cast hmul_lower
-    have hsq : (Real.log (x : ℝ)) ^ 2 ≤ (Real.log ((m * entryThreshold x Y m : ℕ) : ℝ)) ^ 2 := by
-      nlinarith
-    exact div_le_div_of_nonneg_left (by positivity) (sq_pos_of_pos hxlog) hsq
+  have hxlog : 0 < Real.log (x : ℝ) := Real.log_pos (by exact_mod_cast hx)
+  have hmul_log : Real.log (x : ℝ) ≤ Real.log ((m * entryThreshold x Y m : ℕ) : ℝ) :=
+    Real.log_le_log (by positivity) (by exact_mod_cast hmul_lower)
+  have hlogsq : C0 / (Real.log ((m * entryThreshold x Y m : ℕ) : ℝ)) ^ 2 ≤
+      C0 / (Real.log (x : ℝ)) ^ 2 :=
+    div_le_div_of_nonneg_left (by positivity) (sq_pos_of_pos hxlog) (by nlinarith)
   calc
     |firstEntryTail x Y m - 1 / Real.log (x : ℝ)|
       ≤ |firstEntryTail x Y m - 1 / Real.log ((m * entryThreshold x Y m : ℕ) : ℝ)| +
           |1 / Real.log ((m * entryThreshold x Y m : ℕ) : ℝ) - 1 / Real.log (x : ℝ)| := by
             simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
               abs_sub_le (firstEntryTail x Y m)
-                (1 / Real.log ((m * entryThreshold x Y m : ℕ) : ℝ))
-                (1 / Real.log (x : ℝ))
+                (1 / Real.log ((m * entryThreshold x Y m : ℕ) : ℝ)) (1 / Real.log (x : ℝ))
     _ ≤ C0 / (Real.log (x : ℝ)) ^ 2 + Real.log (Y : ℝ) / (Real.log (x : ℝ)) ^ 2 := by
-      gcongr
-      · exact htail.trans hlogsq
-      · exact abs_inv_log_entryThreshold_sub_inv_log_le x Y m hx hY hm hmx
+          gcongr
+          · exact htail.trans hlogsq
+          · exact abs_inv_log_entryThreshold_sub_inv_log_le x Y m hx hY hm hmx
     _ = (C0 + Real.log (Y : ℝ)) / (Real.log (x : ℝ)) ^ 2 := by ring
 
 /--
@@ -268,18 +225,14 @@ used in the normalization argument.
 private lemma abs_harmonic_pred_sub_log_le_one (x : ℕ) (hx : 1 ≤ x) :
     |(harmonic (x - 1) : ℝ) - Real.log (x : ℝ)| ≤ 1 := by
   by_cases hx1 : x = 1
-  · subst hx1
-    norm_num [harmonic_zero]
-  have hlower : Real.log (x : ℝ) ≤ (harmonic (x - 1) : ℝ) := by
-    simpa [Nat.sub_add_cancel hx] using
-      (show Real.log (((x - 1) + 1 : ℕ) : ℝ) ≤ (harmonic (x - 1) : ℝ) from
-        log_add_one_le_harmonic (x - 1))
-  have hupper0 : (harmonic (x - 1) : ℝ) ≤ 1 + Real.log ((x - 1 : ℕ) : ℝ) := by
-    exact_mod_cast harmonic_le_one_add_log (x - 1)
-  have hlog_mono : Real.log ((x - 1 : ℕ) : ℝ) ≤ Real.log (x : ℝ) := by
-    apply Real.log_le_log
-    · exact_mod_cast (show 0 < x - 1 by omega)
-    · exact_mod_cast Nat.sub_le x 1
+  · subst hx1; norm_num [harmonic_zero]
+  have hlower : Real.log (x : ℝ) ≤ (harmonic (x - 1) : ℝ) :=
+    by simpa [Nat.sub_add_cancel hx] using log_add_one_le_harmonic (x - 1)
+  have hupper0 : (harmonic (x - 1) : ℝ) ≤ 1 + Real.log ((x - 1 : ℕ) : ℝ) :=
+    by exact_mod_cast harmonic_le_one_add_log (x - 1)
+  have hlog_mono : Real.log ((x - 1 : ℕ) : ℝ) ≤ Real.log (x : ℝ) :=
+    Real.log_le_log (by exact_mod_cast show 0 < x - 1 by omega)
+      (by exact_mod_cast Nat.sub_le x 1)
   grind only [= abs.eq_1, = max_def]
 
 /-- Equivalently, the finite reciprocal sum `∑_{m < x} 1 / m` is within `1` of `log x`. -/
@@ -296,45 +249,29 @@ private lemma sum_sigma_divisorsAntidiagonal_eq_sum_product
     ∑ z ∈ (Finset.range N).sigma (fun n => n.divisorsAntidiagonal), F z.2.1 z.2.2 =
       ∑ p ∈ (((Finset.range N).product (Finset.range N)).filter
         (fun p : ℕ × ℕ => 0 < p.1 ∧ 0 < p.2 ∧ p.1 * p.2 < N)), F p.1 p.2 := by
-  refine Finset.sum_bij'
-    (i := fun z _ => z.2)
-    (j := fun p _ => ⟨p.1 * p.2, p⟩)
-    ?_ ?_ ?_ ?_ ?_
+  refine Finset.sum_bij' (i := fun z _ => z.2) (j := fun p _ => ⟨p.1 * p.2, p⟩) ?_ ?_ ?_ ?_ ?_
   · intro z hz
     rcases Finset.mem_sigma.1 hz with ⟨hzN, hzdiv⟩
-    rcases (Nat.mem_divisorsAntidiagonal.1 hzdiv) with ⟨hmul, hn0⟩
+    rcases Nat.mem_divisorsAntidiagonal.1 hzdiv with ⟨hmul, _⟩
     have hzN' : z.1 < N := Finset.mem_range.1 hzN
-    have hz1pos : 0 < z.2.1 := by
-      apply Nat.pos_of_ne_zero
-      exact Nat.left_ne_zero_of_mem_divisorsAntidiagonal hzdiv
-    have hz2pos : 0 < z.2.2 := by
-      apply Nat.pos_of_ne_zero
-      exact Nat.right_ne_zero_of_mem_divisorsAntidiagonal hzdiv
-    refine Finset.mem_filter.2 ?_
-    refine ⟨Finset.mem_product.2 ?_, ?_⟩
-    · constructor
-      · exact Finset.mem_range.2 <|
-          lt_of_le_of_lt (Nat.le_mul_of_pos_right z.2.1 hz2pos) (hmul ▸ hzN')
-      · exact Finset.mem_range.2 <|
-          lt_of_le_of_lt (Nat.le_mul_of_pos_left z.2.2 hz1pos) (hmul ▸ hzN')
-    · exact ⟨hz1pos, hz2pos, hmul ▸ hzN'⟩
+    have hz1pos : 0 < z.2.1 :=
+      Nat.pos_of_ne_zero (Nat.left_ne_zero_of_mem_divisorsAntidiagonal hzdiv)
+    have hz2pos : 0 < z.2.2 :=
+      Nat.pos_of_ne_zero (Nat.right_ne_zero_of_mem_divisorsAntidiagonal hzdiv)
+    exact Finset.mem_filter.2 ⟨Finset.mem_product.2
+      ⟨Finset.mem_range.2 (lt_of_le_of_lt (Nat.le_mul_of_pos_right z.2.1 hz2pos) (hmul ▸ hzN')),
+       Finset.mem_range.2 (lt_of_le_of_lt (Nat.le_mul_of_pos_left z.2.2 hz1pos) (hmul ▸ hzN'))⟩,
+      ⟨hz1pos, hz2pos, hmul ▸ hzN'⟩⟩
   · intro p hp
-    rcases Finset.mem_filter.1 hp with ⟨hpprod, hpcond⟩
-    rcases Finset.mem_product.1 hpprod with ⟨hp1, hp2⟩
-    rcases hpcond with ⟨hp1pos, hp2pos, hplt⟩
-    refine Finset.mem_sigma.2 ?_
-    refine ⟨Finset.mem_range.2 hplt, ?_⟩
-    exact Nat.mem_divisorsAntidiagonal.2 ⟨rfl, mul_ne_zero hp1pos.ne' hp2pos.ne'⟩
+    rcases Finset.mem_filter.1 hp with ⟨hpprod, hp1pos, hp2pos, hplt⟩
+    refine Finset.mem_sigma.2 ⟨Finset.mem_range.2 hplt,
+      Nat.mem_divisorsAntidiagonal.2 ⟨rfl, mul_ne_zero hp1pos.ne' hp2pos.ne'⟩⟩
   · intro z hz
-    rcases z with ⟨n, p⟩
-    rcases p with ⟨q, m⟩
+    rcases z with ⟨n, q, m⟩
     simp only [Sigma.mk.injEq, heq_eq_eq, and_true]
-    rcases Finset.mem_sigma.1 hz with ⟨_, hzdiv⟩
-    exact (Nat.mem_divisorsAntidiagonal.1 hzdiv).1
-  · intro p hp
-    simp
-  · intro z hz
-    rfl
+    exact (Nat.mem_divisorsAntidiagonal.1 (Finset.mem_sigma.1 hz).2).1
+  · intro p hp; simp
+  · intro z hz; rfl
 
 /-- The small-prime divisor sum can be rewritten over the divisor antidiagonal. -/
 private lemma smallPrimeDivisorSum_eq_sum_divisorsAntidiagonal (Y n : ℕ) :
@@ -365,35 +302,30 @@ lemma sum_range_normalizationSmallPrimePart_eq
             (1 / ((m : ℝ) * (Real.log ((m * q : ℕ) : ℝ)) ^ 2))
         else 0 := by
   let F : ℕ → ℕ → ℝ := fun q m =>
-    if x ≤ q * m then
-      entryWeightFactor (q * m) * (if q < Y then Λ q else 0)
-    else 0
+    if x ≤ q * m then entryWeightFactor (q * m) * (if q < Y then Λ q else 0) else 0
   calc
     ∑ n ∈ Finset.range N, normalizationSmallPrimePart x Y n
       = ∑ n ∈ Finset.range N, ∑ p ∈ n.divisorsAntidiagonal, F p.1 p.2 := by
-          refine Finset.sum_congr rfl ?_
-          intro n hn
+          refine Finset.sum_congr rfl fun n hn => ?_
           by_cases hx : x ≤ n
           · rw [normalizationSmallPrimePart, if_pos hx, smallPrimeEntryWeight,
               smallPrimeDivisorSum_eq_sum_divisorsAntidiagonal, Finset.mul_sum]
-            refine Finset.sum_congr rfl ?_
-            intro p hp
+            refine Finset.sum_congr rfl fun p hp => ?_
             rcases Nat.mem_divisorsAntidiagonal.1 hp with ⟨hp_mul, _⟩
             simp [F, hp_mul, hx]
           · have hzero : ∑ p ∈ n.divisorsAntidiagonal, F p.1 p.2 = 0 := by
-              refine Finset.sum_eq_zero ?_
-              intro p hp
-              rcases Nat.mem_divisorsAntidiagonal.1 hp with ⟨hp_mul, _⟩
-              simp [F, hp_mul, hx]
+              exact Finset.sum_eq_zero fun p hp => by
+                rcases Nat.mem_divisorsAntidiagonal.1 hp with ⟨hp_mul, _⟩
+                simp [F, hp_mul, hx]
             simp [normalizationSmallPrimePart, hx, hzero]
-    _ = ∑ z ∈ (Finset.range N).sigma (fun n => n.divisorsAntidiagonal), F z.2.1 z.2.2 := by
-          exact Finset.sum_sigma' (Finset.range N) Nat.divisorsAntidiagonal fun _ p => F p.1 p.2
+    _ = ∑ z ∈ (Finset.range N).sigma (fun n => n.divisorsAntidiagonal), F z.2.1 z.2.2 :=
+          Finset.sum_sigma' (Finset.range N) Nat.divisorsAntidiagonal fun _ p => F p.1 p.2
     _ = ∑ p ∈ (((Finset.range N).product (Finset.range N)).filter
           (fun p : ℕ × ℕ => 0 < p.1 ∧ 0 < p.2 ∧ p.1 * p.2 < N)), F p.1 p.2 := by
           simpa [F] using sum_sigma_divisorsAntidiagonal_eq_sum_product N F
     _ = ∑ p ∈ (Finset.range N).product (Finset.range N),
-          if 0 < p.1 ∧ 0 < p.2 ∧ p.1 * p.2 < N then F p.1 p.2 else 0 := by
-          rw [Finset.sum_filter]
+          if 0 < p.1 ∧ 0 < p.2 ∧ p.1 * p.2 < N then F p.1 p.2 else 0 :=
+          Finset.sum_filter _ _
     _ = ∑ q ∈ Finset.range N, ∑ m ∈ Finset.range N,
           if 0 < q ∧ 0 < m ∧ q * m < N then F q m else 0 := by
           simpa [F] using
@@ -404,10 +336,7 @@ lemma sum_range_normalizationSmallPrimePart_eq
             (Λ q / (q : ℝ)) *
               (1 / ((m : ℝ) * (Real.log ((m * q : ℕ) : ℝ)) ^ 2))
           else 0 := by
-          refine Finset.sum_congr rfl ?_
-          intro q hq
-          refine Finset.sum_congr rfl ?_
-          intro m hm
+          refine Finset.sum_congr rfl fun q _ => Finset.sum_congr rfl fun m _ => ?_
           by_cases hbase : 0 < q ∧ 0 < m ∧ q * m < N
           · rcases hbase with ⟨hqpos, hmpos, hqmN⟩
             by_cases hxqm : x ≤ q * m <;> by_cases hqY : q < Y
@@ -417,11 +346,8 @@ lemma sum_range_normalizationSmallPrimePart_eq
             · simp [F, hqpos, hmpos, hqmN, hxqm, hqY, ceilDiv_le_iff_le_mul hqpos]
             · simp [F, hqpos, hmpos, hqmN, hxqm, hqY, ceilDiv_le_iff_le_mul hqpos]
             · simp [F, hqpos, hmpos, hqmN, hxqm, hqY, ceilDiv_le_iff_le_mul hqpos]
-          · have hcond :
-                ¬ (0 < q ∧ 0 < m ∧ q * m < N ∧ q < Y ∧ x ⌈/⌉ q ≤ m) := by
-                  intro h
-                  exact hbase ⟨h.1, h.2.1, h.2.2.1⟩
-            simp [F, hbase, hcond]
+          · simp [F, hbase, show ¬ (0 < q ∧ 0 < m ∧ q * m < N ∧ q < Y ∧ x ⌈/⌉ q ≤ m) from
+              fun h => hbase ⟨h.1, h.2.1, h.2.2.1⟩]
 
 /-- Reindexing the product fiber of `firstEntryPairWeight` recovers the first-entry normalization
 summand, including the zero fiber. -/
@@ -440,15 +366,9 @@ lemma tsum_firstEntryPairWeight_fiber_prod {x Y n : ℕ} (hx : 1 ≤ x) :
         have : m * q = 0 := by simpa using hp
         omega
       · simp [firstEntryPairWeight, hmq]
-    have hx0 : ¬ x ≤ 0 := by omega
-    have htsum :
-        (∑' p : (fun mq : ℕ × ℕ => mq.1 * mq.2) ⁻¹' ({0} : Set ℕ), firstEntryPairWeight x Y p) =
-          ∑' _ : (fun mq : ℕ × ℕ => mq.1 * mq.2) ⁻¹' ({0} : Set ℕ), (0 : ℝ) := by
-      exact tsum_congr hzero
-    simpa [normalizationFirstEntryPart, hx0] using htsum
+    simpa [normalizationFirstEntryPart, show ¬ x ≤ 0 from by omega] using tsum_congr hzero
   · rw [show (fun mq : ℕ × ℕ => mq.1 * mq.2) ⁻¹' {n} = n.divisorsAntidiagonal by
-      ext mq
-      simp [Nat.mem_divisorsAntidiagonal, hn],
+      ext mq; simp [Nat.mem_divisorsAntidiagonal, hn],
       Finset.tsum_subtype' n.divisorsAntidiagonal fun mq => firstEntryPairWeight x Y mq,
       Nat.sum_divisorsAntidiagonal' (f := fun m q => firstEntryPairWeight x Y (m, q))]
     by_cases hxn : x ≤ n
@@ -457,52 +377,38 @@ lemma tsum_firstEntryPairWeight_fiber_prod {x Y n : ℕ} (hx : 1 ≤ x) :
         ∑ q ∈ n.divisors, firstEntryPairWeight x Y (n / q, q) =
             ∑ q ∈ n.divisors,
               entryWeightFactor n * (if Y ≤ q ∧ n / q < x then Λ q else 0) := by
-              refine Finset.sum_congr rfl ?_
-              intro q hq
+              refine Finset.sum_congr rfl fun q hq => ?_
               have hq_dvd : q ∣ n := (Nat.mem_divisors.mp hq).1
-              have hmq_pos : 0 < n / q := by
-                refine Nat.pos_of_dvd_of_pos ?_ (Nat.pos_iff_ne_zero.mpr hn)
-                exact ⟨q, by simpa using (Nat.div_mul_cancel hq_dvd).symm⟩
+              have hmq_pos : 0 < n / q :=
+                Nat.pos_of_dvd_of_pos ⟨q, by simpa using (Nat.div_mul_cancel hq_dvd).symm⟩
+                  (Nat.pos_iff_ne_zero.mpr hn)
               have hmul : (n / q) * q = n := Nat.div_mul_cancel hq_dvd
-              have hiff : entryThreshold x Y (n / q) ≤ q ↔ Y ≤ q := by
-                constructor
-                · intro hle
-                  exact (entryThreshold_le_iff x Y (n / q) q hmq_pos).1 hle |>.1
-                · intro hYq
-                  exact (entryThreshold_le_iff x Y (n / q) q hmq_pos).2
-                    ⟨hYq, by simpa [hmul] using hxn⟩
+              have hiff : entryThreshold x Y (n / q) ≤ q ↔ Y ≤ q :=
+                ⟨fun hle => (entryThreshold_le_iff x Y (n / q) q hmq_pos).1 hle |>.1,
+                 fun hYq => (entryThreshold_le_iff x Y (n / q) q hmq_pos).2
+                   ⟨hYq, by simpa [hmul] using hxn⟩⟩
               have hmq_ge : 1 ≤ n / q := Nat.succ_le_of_lt hmq_pos
               by_cases hcond : Y ≤ q ∧ n / q < x
-              · rw [firstEntryPairWeight_eq (x := x) (Y := Y) hmq_ge hcond.2, if_pos hcond]
-                rw [if_pos (hiff.2 hcond.1)]
-                calc
-                  (1 / ((n / q : ℕ) : ℝ)) *
-                      (Λ q / ((q : ℝ) * Real.log (((n / q) * q : ℕ) : ℝ) ^ 2)) =
-                      entryWeightFactor ((n / q) * q) * Λ q := by
-                        simpa [div_eq_mul_inv, Nat.cast_mul, mul_comm, mul_left_comm, mul_assoc]
-                          using (entryWeightFactor_mul_vonMangoldt_eq_smallFactor q (n / q)).symm
-                  _ = entryWeightFactor n * Λ q := by simp [hmul]
+              · rw [firstEntryPairWeight_eq (x := x) (Y := Y) hmq_ge hcond.2, if_pos hcond,
+                  if_pos (hiff.2 hcond.1)]
+                have hmul' : q * (n / q) = n := by rw [mul_comm]; exact hmul
+                simpa [div_eq_mul_inv, Nat.cast_mul, mul_comm, mul_left_comm, mul_assoc, hmul']
+                  using (entryWeightFactor_mul_vonMangoldt_eq_smallFactor q (n / q)).symm
               · simp [firstEntryPairWeight, hiff, hmq_ge, hcond, and_comm]
         _ = entryWeightFactor n *
-              ∑ q ∈ n.divisors, if Y ≤ q ∧ n / q < x then Λ q else 0 := by
-              rw [Finset.mul_sum]
-        _ = entryWeightFactor n *
               ∑ q ∈ n.divisors.filter (fun q => Y ≤ q ∧ n / q < x), Λ q := by
-              rw [Finset.sum_filter]
-        _ = entryWeightFactor n * firstEntryDivisorSum x Y n := by
-              simp [firstEntryDivisorSum]
+              rw [← Finset.mul_sum, ← Finset.sum_filter]
+        _ = entryWeightFactor n * firstEntryDivisorSum x Y n := by simp [firstEntryDivisorSum]
     · rw [normalizationFirstEntryPart, if_neg hxn]
-      refine Finset.sum_eq_zero ?_
-      intro q hq
+      refine Finset.sum_eq_zero fun q hq => ?_
       have hq_dvd : q ∣ n := (Nat.mem_divisors.mp hq).1
-      have hmq_pos : 0 < n / q := by
-        refine Nat.pos_of_dvd_of_pos ?_ (Nat.pos_iff_ne_zero.mpr hn)
-        exact ⟨q, by simpa using (Nat.div_mul_cancel hq_dvd).symm⟩
-      have hx_false : ¬ entryThreshold x Y (n / q) ≤ q := by
-        intro hle
-        exact hxn <| (entryThreshold_le_iff x Y (n / q) q hmq_pos).1 hle |>.2.trans_eq
-          (Nat.div_mul_cancel hq_dvd)
-      simp [firstEntryPairWeight, Nat.succ_le_of_lt hmq_pos, hx_false]
+      have hmq_pos : 0 < n / q :=
+        Nat.pos_of_dvd_of_pos ⟨q, by simpa using (Nat.div_mul_cancel hq_dvd).symm⟩
+          (Nat.pos_iff_ne_zero.mpr hn)
+      simp [firstEntryPairWeight, Nat.succ_le_of_lt hmq_pos,
+        show ¬ entryThreshold x Y (n / q) ≤ q from fun hle =>
+          hxn ((entryThreshold_le_iff x Y (n / q) q hmq_pos).1 hle |>.2.trans_eq
+            (Nat.div_mul_cancel hq_dvd))]
 
 /-- The normalization constant `B_x` is exactly the sum of its small-prime and first-entry
 contributions. -/

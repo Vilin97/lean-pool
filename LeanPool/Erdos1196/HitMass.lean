@@ -99,12 +99,9 @@ private lemma transitionWeight_nonneg (Y m q : ℕ) : 0 ≤ transitionWeight Y m
   · by_cases hm : m = 0
     · simp [transitionWeight, hYq, hm]
     · have hm1 : 1 ≤ m := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hm)
-      have hlog_nonneg : 0 ≤ Real.log (m : ℝ) := by
-        positivity
       rw [transitionWeight, if_pos hYq]
-      refine mul_nonneg ?_ ?_
-      · exact div_nonneg hlog_nonneg (sq_nonneg _)
-      · exact div_nonneg ArithmeticFunction.vonMangoldt_nonneg (by positivity)
+      exact mul_nonneg (div_nonneg (by positivity) (sq_nonneg _))
+        (div_nonneg ArithmeticFunction.vonMangoldt_nonneg (by positivity))
   · simp [transitionWeight, hYq]
 
 /--
@@ -136,26 +133,22 @@ private lemma tsum_transitionKernel_eq {x Y m : ℕ} (hm : x ≤ m) :
     let e : ℕ ≃ {n : ℕ // m ∣ n} :=
       { toFun := fun q => ⟨m * q, dvd_mul_right m q⟩
         invFun := fun n => n.1 / m
-        left_inv := by
-          intro q
-          simpa [Nat.mul_comm] using Nat.mul_div_left q hmpos
-        right_inv := by
-          intro n
-          apply Subtype.ext
-          simpa [Nat.mul_comm] using Nat.div_mul_cancel n.2 }
+        left_inv := fun q => by simpa [Nat.mul_comm] using Nat.mul_div_left q hmpos
+        right_inv := fun n => Subtype.ext (by simpa [Nat.mul_comm] using Nat.div_mul_cancel n.2) }
+    have hind : (fun n => transitionKernel x Y m n) =
+        Set.indicator {n : ℕ | m ∣ n}
+          (fun n => ENNReal.ofReal (transitionWeight Y m (n / m))) :=
+      funext fun n => transitionKernel_eq_indicator (x := x) (Y := Y) (m := m) hm
     calc
       (∑' n : ℕ, transitionKernel x Y m n)
         = ∑' n : {n : ℕ // m ∣ n}, ENNReal.ofReal (transitionWeight Y m (n.1 / m)) := by
-            rw [show (fun n => transitionKernel x Y m n) =
-              Set.indicator {n : ℕ | m ∣ n}
-                (fun n => ENNReal.ofReal (transitionWeight Y m (n / m))) by
-                  funext n
-                  exact transitionKernel_eq_indicator (x := x) (Y := Y) (m := m) hm]
+            rw [hind]
             simpa using (tsum_subtype {n : ℕ | m ∣ n}
               (fun n => ENNReal.ofReal (transitionWeight Y m (n / m)))).symm
       _ = ∑' q : ℕ, ENNReal.ofReal (transitionWeight Y m ((e q).1 / m)) := by
             simpa [e] using (Equiv.tsum_eq e
-              (fun n : {n : ℕ // m ∣ n} => ENNReal.ofReal (transitionWeight Y m (n.1 / m)))).symm
+              (fun n : {n : ℕ // m ∣ n} =>
+                ENNReal.ofReal (transitionWeight Y m (n.1 / m)))).symm
       _ = ∑' q : ℕ, ENNReal.ofReal (transitionWeight Y m q) := by
             grind only [= Equiv.coe_fn_mk]
 
@@ -172,31 +165,21 @@ private lemma summable_transitionTailSummand (Y m : ℕ) (hm : 1 ≤ m) :
   rcases tailEstimate with ⟨C, hCpos, htail⟩
   let N : ℕ := max Y (Nat.ceil (Real.exp C) + 1)
   have hN_ge_Y : Y ≤ N := le_max_left Y (Nat.ceil (Real.exp C) + 1)
-  have hN_ge_two : 2 ≤ N := by
-    have hceil_pos : 0 < Nat.ceil (Real.exp C) := Nat.ceil_pos.2 (Real.exp_pos _)
-    have hN0_ge_two : 2 ≤ Nat.ceil (Real.exp C) + 1 := by
-      omega
-    exact le_trans hN0_ge_two (le_max_right Y (Nat.ceil (Real.exp C) + 1))
+  have hN_ge_two : 2 ≤ N :=
+    le_trans (Nat.succ_le_succ (Nat.one_le_ceil_iff.mpr (Real.exp_pos _)))
+      (le_max_right Y (Nat.ceil (Real.exp C) + 1))
   have hN_log_large : C < Real.log ((m * N : ℕ) : ℝ) := by
-    calc
-      C = Real.log (Real.exp C) := by rw [Real.log_exp]
-      _ < Real.log ((m * N : ℕ) : ℝ) := by
-        apply Real.log_lt_log (Real.exp_pos _)
-        calc
-          Real.exp C ≤ (Nat.ceil (Real.exp C) : ℝ) := by exact_mod_cast Nat.le_ceil _
-          _ < (Nat.ceil (Real.exp C) + 1 : ℕ) := by
-              exact_mod_cast Nat.lt_succ_self (Nat.ceil (Real.exp C))
-          _ ≤ (N : ℝ) := by
-              exact_mod_cast (le_max_right Y (Nat.ceil (Real.exp C) + 1))
-          _ ≤ (((m * N : ℕ) : ℝ)) := by
-              exact_mod_cast (by
-                simpa [one_mul, Nat.mul_comm] using Nat.mul_le_mul_right N hm)
+    rw [← Real.log_exp C]
+    apply Real.log_lt_log (Real.exp_pos _)
+    calc Real.exp C ≤ (Nat.ceil (Real.exp C) : ℝ) := by exact_mod_cast Nat.le_ceil _
+      _ < (Nat.ceil (Real.exp C) + 1 : ℕ) := by exact_mod_cast Nat.lt_succ_self _
+      _ ≤ (N : ℝ) := by exact_mod_cast le_max_right Y (Nat.ceil (Real.exp C) + 1)
+      _ ≤ (((m * N : ℕ) : ℝ)) := by
+            exact_mod_cast (by simpa [one_mul, Nat.mul_comm] using Nat.mul_le_mul_right N hm)
   have hN_log_pos : 0 < Real.log ((m * N : ℕ) : ℝ) := lt_trans hCpos hN_log_large
   have h_err_lt :
       C / Real.log ((m * N : ℕ) : ℝ) ^ 2 < 1 / Real.log ((m * N : ℕ) : ℝ) := by
-    have hlog_ne : Real.log ((m * N : ℕ) : ℝ) ≠ 0 := hN_log_pos.ne'
-    field_simp [hlog_ne]
-    nlinarith
+    field_simp [hN_log_pos.ne']; nlinarith
   have htail_pos : 0 < tailSum m N := by
     grind only [= abs.eq_1, = max_def]
   have hsN :
@@ -212,21 +195,14 @@ private lemma summable_transitionTailSummand (Y m : ℕ) (hm : 1 ≤ m) :
   rw [← Finset.summable_compl_iff (s := Finset.range N)]
   refine (hsN.subtype {q : ℕ | q ∉ Finset.range N}).congr ?_
   intro q
-  have hq : N ≤ q := by
-    simpa [Finset.mem_range, not_lt] using q.2
-  have hYq : Y ≤ q := le_trans hN_ge_Y hq
-  simp [hq, hYq]
+  have hq : N ≤ q := by simpa [Finset.mem_range, not_lt] using q.2
+  simp [hq, le_trans hN_ge_Y hq]
 
 /-- The transition-weight series is summable for every `m ≥ 1`. -/
 private lemma summable_transitionWeight (Y m : ℕ) (hm : 1 ≤ m) :
-    Summable (fun q : ℕ => transitionWeight Y m q) := by
-  let g : ℕ → ℝ := fun q =>
-    if Y ≤ q then
-      Λ q / ((q : ℝ) * Real.log ((m * q : ℕ) : ℝ) ^ 2)
-    else
-      0
-  simpa [g, transitionWeight, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using
-    (summable_transitionTailSummand Y m hm).mul_left (Real.log (m : ℝ))
+    Summable (fun q : ℕ => transitionWeight Y m q) :=
+  (summable_transitionTailSummand Y m hm).mul_left (Real.log (m : ℝ)) |>.congr fun q => by
+    simp [transitionWeight, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
 
 namespace MarkovLayer
 
@@ -239,16 +215,10 @@ theorem kernelRowBound {x Y : ℕ} (chain : MarkovLayer x Y) :
   intro m hm
   by_cases hm0 : m = 0
   · subst hm0
-    have hzero : ∀ n : ℕ, transitionKernel x Y 0 n = 0 := by
-      intro n
-      simp [transitionKernel, transitionWeight]
-    rw [show (∑' n : ℕ, transitionKernel x Y 0 n) = 0 by
-      exact (ENNReal.tsum_eq_zero).2 hzero]
-    simp
-  · have hmpos : 0 < m := Nat.pos_iff_ne_zero.mpr hm0
-    have hm1 : 1 ≤ m := Nat.succ_le_of_lt hmpos
-    have hs : Summable (fun q : ℕ => transitionWeight Y m q) :=
-      summable_transitionWeight Y m hm1
+    simp [show ∀ n : ℕ, transitionKernel x Y 0 n = 0 from fun n => by
+      simp [transitionKernel, transitionWeight]]
+  · have hm1 : 1 ≤ m := Nat.succ_le_of_lt (Nat.pos_iff_ne_zero.mpr hm0)
+    have hs : Summable (fun q : ℕ => transitionWeight Y m q) := summable_transitionWeight Y m hm1
     rw [tsum_transitionKernel_eq hm,
       ← ENNReal.ofReal_tsum_of_nonneg (transitionWeight_nonneg Y m) hs]
     exact_mod_cast chain.transitionSubMarkov hm
@@ -259,36 +229,28 @@ end MarkovLayer
 lemma tsum_initialMass_eq_one {x Y : ℕ} (hB : 0 < normalizationConstant x Y) :
     (∑' n : ℕ, initialMass x Y n) = 1 := by
   let f : ℕ → ℝ := fun n => if x ≤ n then entryWeight x Y n else 0
-  have hf_nonneg : ∀ n, 0 ≤ f n := by
-    intro n
+  have hf_nonneg : ∀ n, 0 ≤ f n := fun n => by
     by_cases hn : x ≤ n
     · simpa [f, hn, entryWeight_eq_smallPrimeEntryWeight_add_firstEntryEntryWeight] using
         add_nonneg (smallPrimeEntryWeight_nonneg Y n) (firstEntryEntryWeight_nonneg x Y n)
     · simp [f, hn]
   have hf_summable : Summable f := by
     by_contra hf
-    exact hB.ne' (by simpa [normalizationConstant, f] using (tsum_eq_zero_of_not_summable hf))
+    exact hB.ne' (by simpa [normalizationConstant, f] using tsum_eq_zero_of_not_summable hf)
   calc
-    ∑' n : ℕ, initialMass x Y n = ∑' n : ℕ, ENNReal.ofReal (f n / normalizationConstant x Y) := by
-      refine tsum_congr ?_
-      intro n
-      by_cases hn : x ≤ n <;> simp [initialMass, f, initialDistribution, hn]
-    _ = ENNReal.ofReal (∑' n : ℕ, f n / normalizationConstant x Y) := by
-      rw [ENNReal.ofReal_tsum_of_nonneg
-        (fun n => div_nonneg (hf_nonneg n) hB.le)
-        (by simpa [div_eq_mul_inv] using hf_summable.mul_right ((normalizationConstant x Y)⁻¹))]
-    _ = ENNReal.ofReal ((∑' n : ℕ, f n) / normalizationConstant x Y) := by
-      congr 1
-      rw [show (fun n : ℕ => f n / normalizationConstant x Y) =
-        fun n => f n * (normalizationConstant x Y)⁻¹ by
-          funext n
-          simp [div_eq_mul_inv]]
-      rw [tsum_mul_right]
-      simp [div_eq_mul_inv]
-    _ = 1 := by
-      rw [show ∑' n : ℕ, f n = normalizationConstant x Y by simp [normalizationConstant, f]]
-      field_simp [hB.ne']
-      simp
+    ∑' n : ℕ, initialMass x Y n
+        = ∑' n : ℕ, ENNReal.ofReal (f n / normalizationConstant x Y) := by
+          refine tsum_congr fun n => ?_
+          by_cases hn : x ≤ n <;> simp [initialMass, f, initialDistribution, hn]
+      _ = ENNReal.ofReal (∑' n : ℕ, f n / normalizationConstant x Y) := by
+          rw [ENNReal.ofReal_tsum_of_nonneg
+            (fun n => div_nonneg (hf_nonneg n) hB.le)
+            (by simpa [div_eq_mul_inv] using hf_summable.mul_right ((normalizationConstant x Y)⁻¹))]
+      _ = 1 := by
+          rw [tsum_div_const, show ∑' n : ℕ, f n = normalizationConstant x Y from by
+            simp [normalizationConstant, f]]
+          field_simp [hB.ne']
+          simp
 /-- A kernel term landing below `x` is zero once `Y ≥ 1` and `x > 0`. -/
 private lemma transitionKernel_eq_zero_of_lt {x Y m n : ℕ} (hY : 1 ≤ Y) (hn : n < x) :
     transitionKernel x Y m n = 0 := by
@@ -335,14 +297,9 @@ private lemma survivingArrivalMass_eq_arrivalMass_of_no_dvd {x Y : ℕ} (chain :
     ∀ k {n : ℕ}, (∀ ⦃a : ℕ⦄, a ∈ A → a ∣ n → False) →
       survivingArrivalMass chain A k n = arrivalMass chain k n
   | 0, n, hNo => by
-      have hnA : n ∉ A := by
-        intro hnA
-        exact hNo hnA dvd_rfl
-      simp [survivingArrivalMass, arrivalMass, hnA]
+      simp [survivingArrivalMass, arrivalMass, show n ∉ A from fun hnA => hNo hnA dvd_rfl]
   | k + 1, n, hNo => by
-      have hnA : n ∉ A := by
-        intro hnA
-        exact hNo hnA dvd_rfl
+      have hnA : n ∉ A := fun hnA => hNo hnA dvd_rfl
       simpa [survivingArrivalMass, arrivalMass, hnA] using
         (tsum_congr fun m => by
           by_cases hcond : x ≤ m ∧ m ∣ n ∧ Y ≤ n / m
@@ -395,51 +352,28 @@ private lemma tsum_arrivalMass_eq_initial_add_parentSum {x Y : ℕ} (chain : Mar
             (∑' k : ℕ, arrivalMass chain k m) * ENNReal.ofReal (transitionWeight Y m (n / m))
           else 0) := by
   rw [tsum_eq_zero_add' ENNReal.summable]
-  calc
-    arrivalMass chain 0 n + ∑' k : ℕ, arrivalMass chain (k + 1) n
-      = initialMass x Y n + ∑' k : ℕ, arrivalMass chain (k + 1) n := by
-          simp [arrivalMass]
-    _ = initialMass x Y n +
-          ∑' k : ℕ,
-            n.divisors.sum (fun m =>
-              if x ≤ m ∧ Y ≤ n / m then
-                arrivalMass chain k m * ENNReal.ofReal (transitionWeight Y m (n / m))
-              else 0) := by
-            congr 1
-            apply tsum_congr
-            intro k
-            exact arrivalMass_succ_sum_parents chain hn
-    _ = initialMass x Y n +
-          n.divisors.sum (fun m =>
-            ∑' k : ℕ,
-              if x ≤ m ∧ Y ≤ n / m then
-                arrivalMass chain k m * ENNReal.ofReal (transitionWeight Y m (n / m))
-              else 0) := by
-            congr 1
-            exact Summable.tsum_finsetSum (fun _ _ ↦ ENNReal.summable)
-    _ = initialMass x Y n +
+  simp only [arrivalMass]
+  congr 1
+  rw [show (∑' k : ℕ, ∑' m : ℕ, arrivalMass chain k m * transitionKernel x Y m n) =
+        ∑' k : ℕ,
           n.divisors.sum (fun m =>
             if x ≤ m ∧ Y ≤ n / m then
-              (∑' k : ℕ, arrivalMass chain k m) * ENNReal.ofReal (transitionWeight Y m (n / m))
-            else 0) := by
-            congr 1
-            refine Finset.sum_congr rfl ?_
-            intro m hm
-            by_cases hcond : x ≤ m ∧ Y ≤ n / m
-            · simp [hcond, ENNReal.tsum_mul_right]
-            · simp [hcond]
+              arrivalMass chain k m * ENNReal.ofReal (transitionWeight Y m (n / m))
+            else 0) from
+          tsum_congr fun k => arrivalMass_succ_sum_parents chain hn]
+  rw [Summable.tsum_finsetSum (fun _ _ ↦ ENNReal.summable)]
+  refine Finset.sum_congr rfl fun m _ => ?_
+  by_cases hcond : x ≤ m ∧ Y ≤ n / m
+  · simp [hcond, ENNReal.tsum_mul_right]
+  · simp [hcond]
 
 private lemma lt_of_dvd_of_two_le_div {m n Y : ℕ} (hmn : m ∣ n) (hY : 2 ≤ Y)
     (hYm : Y ≤ n / m) : m < n := by
   have hm_pos : 0 < m := by
     by_contra hm_pos
-    have hm0 : m = 0 := Nat.eq_zero_of_not_pos hm_pos
-    have : Y ≤ 0 := by simpa [hm0] using hYm
-    omega
-  have hmul : m * 2 ≤ n := by
-    calc
-      m * 2 ≤ m * (n / m) := Nat.mul_le_mul_left _ (le_trans hY hYm)
-      _ = n := Nat.mul_div_cancel' hmn
+    exact absurd (by simpa [Nat.eq_zero_of_not_pos hm_pos] using hYm : Y ≤ 0) (by omega)
+  have hmul : m * 2 ≤ n :=
+    (Nat.mul_le_mul_left _ (le_trans hY hYm)).trans_eq (Nat.mul_div_cancel' hmn)
   omega
 
 /--
@@ -455,26 +389,18 @@ private lemma tsum_arrivalMass_eq_ofReal_visitProbability {x Y : ℕ} (chain : M
   have hinit :
       initialMass x Y n = ENNReal.ofReal (initialDistribution x Y n) := by
     simp [initialMass, hn]
-  have harr :=
-    tsum_arrivalMass_eq_initial_add_parentSum chain hn_pos
+  have harr := tsum_arrivalMass_eq_initial_add_parentSum chain hn_pos
   rw [hinit] at harr
   have hterm_nonneg :
       ∀ m ∈ n.divisors, 0 ≤
         if x ≤ m ∧ Y ≤ n / m then
           chain.visitProbability m * transitionWeight Y m (n / m)
-        else 0 := by
-    intro m hm
+        else 0 := fun m _ => by
     by_cases hcond : x ≤ m ∧ Y ≤ n / m
     · simpa [hcond] using
         mul_nonneg (visitProbability_nonneg chain hx hB hcond.1)
           (transitionWeight_nonneg Y m (n / m))
     · simp [hcond]
-  have hsum_nonneg :
-      0 ≤ n.divisors.sum (fun m =>
-        if x ≤ m ∧ Y ≤ n / m then
-          chain.visitProbability m * transitionWeight Y m (n / m)
-        else 0) :=
-    Finset.sum_nonneg fun m hm => hterm_nonneg m hm
   have hvisit :
       ENNReal.ofReal (chain.visitProbability n) =
         ENNReal.ofReal (initialDistribution x Y n) +
@@ -482,39 +408,25 @@ private lemma tsum_arrivalMass_eq_ofReal_visitProbability {x Y : ℕ} (chain : M
             if x ≤ m ∧ Y ≤ n / m then
               ENNReal.ofReal (chain.visitProbability m * transitionWeight Y m (n / m))
             else 0) := by
+    have := congrArg ENNReal.ofReal (visitProbabilityRecurrence_sum_parents chain hn hn_pos)
     simpa [apply_ite ENNReal.ofReal,
-      ENNReal.ofReal_add (initialDistribution_nonneg hB) hsum_nonneg,
-      ENNReal.ofReal_sum_of_nonneg
-        (s := n.divisors)
-        (f := fun m =>
-          if x ≤ m ∧ Y ≤ n / m then
-            chain.visitProbability m * transitionWeight Y m (n / m)
-          else 0)
-        hterm_nonneg] using
-      congrArg ENNReal.ofReal (visitProbabilityRecurrence_sum_parents chain hn hn_pos)
-  calc
-    (∑' k : ℕ, arrivalMass chain k n) =
-        ENNReal.ofReal (initialDistribution x Y n) +
-          n.divisors.sum (fun m =>
-            if x ≤ m ∧ Y ≤ n / m then
-              (∑' k : ℕ, arrivalMass chain k m) *
-                ENNReal.ofReal (transitionWeight Y m (n / m))
-            else 0) := harr
-    _ = ENNReal.ofReal (initialDistribution x Y n) +
-          n.divisors.sum (fun m =>
-            if x ≤ m ∧ Y ≤ n / m then
-              ENNReal.ofReal (chain.visitProbability m * transitionWeight Y m (n / m))
-            else 0) := by
-            congr 1
-            refine Finset.sum_congr rfl ?_
-            intro m hm
-            by_cases hcond : x ≤ m ∧ Y ≤ n / m
-            · have hm_lt_n : m < n := by
-                exact lt_of_dvd_of_two_le_div (Nat.dvd_of_mem_divisors hm) hY hcond.2
-              rw [ih m hm_lt_n hcond.1]
-              rw [ENNReal.ofReal_mul (visitProbability_nonneg chain hx hB hcond.1)]
-            · simp [hcond]
-    _ = ENNReal.ofReal (chain.visitProbability n) := hvisit.symm
+      ENNReal.ofReal_add (initialDistribution_nonneg hB) (Finset.sum_nonneg hterm_nonneg),
+      ENNReal.ofReal_sum_of_nonneg (s := n.divisors) hterm_nonneg] using this
+  have hreplace : n.divisors.sum (fun m =>
+      if x ≤ m ∧ Y ≤ n / m then
+        (∑' k : ℕ, arrivalMass chain k m) * ENNReal.ofReal (transitionWeight Y m (n / m))
+      else 0) =
+      n.divisors.sum (fun m =>
+        if x ≤ m ∧ Y ≤ n / m then
+          ENNReal.ofReal (chain.visitProbability m * transitionWeight Y m (n / m))
+        else 0) :=
+    Finset.sum_congr rfl fun m hm => by
+      by_cases hcond : x ≤ m ∧ Y ≤ n / m
+      · rw [ih m (lt_of_dvd_of_two_le_div (Nat.dvd_of_mem_divisors hm) hY hcond.2) hcond.1,
+          ENNReal.ofReal_mul (visitProbability_nonneg chain hx hB hcond.1)]
+      · simp [hcond]
+  rw [harr, hreplace]
+  exact hvisit.symm
 
 namespace PrimitiveSet
 
@@ -529,21 +441,18 @@ private lemma firstHitMassAtStep_eq_tsum_indicator_arrivalMass {x Y : ℕ}
   | 0 => by
       rfl
   | k + 1 => by
-      apply tsum_congr
-      intro n
+      apply tsum_congr; intro n
       by_cases hnA : n ∈ A
-      · simpa [firstHitMassAtStep, arrivalMass, hnA] using
-          (tsum_congr fun m => by
-            by_cases hcond : x ≤ m ∧ m ∣ n ∧ Y ≤ n / m
-            · have hNo_m : ∀ ⦃a : ℕ⦄, a ∈ A → a ∣ m → False := by
-                intro a haA hadivm
-                have hmn : m = n := by
-                  apply Nat.dvd_antisymm hcond.2.1
-                  simpa [hA haA hnA (dvd_trans hadivm hcond.2.1)] using hadivm
-                exact (lt_of_dvd_of_two_le_div hcond.2.1 hY hcond.2.2).ne hmn
-              simp [transitionKernel, hcond,
-                survivingArrivalMass_eq_arrivalMass_of_no_dvd chain A k hNo_m]
-            · simp [transitionKernel, hcond])
+      · simpa [firstHitMassAtStep, arrivalMass, hnA] using tsum_congr fun m => by
+          by_cases hcond : x ≤ m ∧ m ∣ n ∧ Y ≤ n / m
+          · have hNo_m : ∀ ⦃a : ℕ⦄, a ∈ A → a ∣ m → False := fun a haA hadivm => by
+              have hmn : m = n :=
+                Nat.dvd_antisymm hcond.2.1
+                  (by simpa [hA haA hnA (dvd_trans hadivm hcond.2.1)] using hadivm)
+              exact (lt_of_dvd_of_two_le_div hcond.2.1 hY hcond.2.2).ne hmn
+            simp [transitionKernel, hcond,
+              survivingArrivalMass_eq_arrivalMass_of_no_dvd chain A k hNo_m]
+          · simp [transitionKernel, hcond]
       · simp [hnA]
 
 /--
@@ -558,20 +467,17 @@ private theorem tsum_indicator_ofReal_visitProbability_eq_visitMass {x Y : ℕ}
   calc
     (∑' n : ℕ, A.indicator (fun n => ENNReal.ofReal (chain.visitProbability n)) n) =
         ∑' n : ℕ, ∑' k : ℕ, A.indicator (arrivalMass chain k) n := by
-          apply tsum_congr
-          intro n
+          apply tsum_congr; intro n
           by_cases hnA : n ∈ A
           · simpa [hnA] using
               (tsum_arrivalMass_eq_ofReal_visitProbability chain hx hY hB (hAx hnA)).symm
           · simp [hnA]
-    _ = ∑' k : ℕ, ∑' n : ℕ, A.indicator (arrivalMass chain k) n := by
-          rw [ENNReal.tsum_comm]
-    _ = ∑' k : ℕ, firstHitMassAtStep chain A k := by
-          apply tsum_congr
-          intro k
-          simpa using
-            (PrimitiveSet.firstHitMassAtStep_eq_tsum_indicator_arrivalMass chain hA hY k).symm
-    _ = visitMass chain A := by rw [visitMass]
+      _ = ∑' k : ℕ, ∑' n : ℕ, A.indicator (arrivalMass chain k) n := ENNReal.tsum_comm
+      _ = ∑' k : ℕ, firstHitMassAtStep chain A k := by
+            apply tsum_congr; intro k
+            simpa using
+              (PrimitiveSet.firstHitMassAtStep_eq_tsum_indicator_arrivalMass chain hA hY k).symm
+      _ = visitMass chain A := by rw [visitMass]
 
 /--
 If the first-hit mass budget of a primitive set `A` is at most `1`, then the real indicator
@@ -585,28 +491,22 @@ theorem summable_indicator_visitProbability_and_tsum_le_one_of_visitMass_le_one
       (∑' n : ℕ, A.indicator (chain.visitProbability) n) ≤ 1 := by
   let f : ℕ → ENNReal := fun n =>
     A.indicator (fun n => ENNReal.ofReal (chain.visitProbability n)) n
-  have hmass :
-      (∑' n : ℕ, f n) = visitMass chain A := by
-    simpa [f] using
+  have hmass : (∑' n : ℕ, f n) = visitMass chain A :=
+    by simpa [f] using
       PrimitiveSet.tsum_indicator_ofReal_visitProbability_eq_visitMass chain hA hAx hx hY hB
-  have htop :
-      (∑' n : ℕ, f n) ≠ ⊤ := by
-    rw [hmass]
-    exact ne_of_lt <| lt_of_le_of_lt hVisitMass (by simp)
-  have hseries :
-      HasSum (A.indicator (chain.visitProbability))
-        (visitMass chain A).toReal := by
+  have htop : (∑' n : ℕ, f n) ≠ ⊤ :=
+    hmass ▸ ne_of_lt (lt_of_le_of_lt hVisitMass (by simp))
+  have hseries : HasSum (A.indicator (chain.visitProbability)) (visitMass chain A).toReal := by
     convert (ENNReal.hasSum_toReal (f := f) htop) using 1
     · funext n
       by_cases hnA : n ∈ A
       · simp [f, hnA, ENNReal.toReal_ofReal, visitProbability_nonneg chain hx hB (hAx hnA)]
       · simp [f, hnA]
     · rw [← hmass, ENNReal.tsum_toReal_eq]
-      intro n
-      by_cases hnA : n ∈ A <;> simp [f, hnA]
-  refine ⟨hseries.summable, ?_⟩
-  rw [hseries.tsum_eq]
-  exact ENNReal.toReal_le_of_le_ofReal zero_le_one (by simpa using hVisitMass)
+      intro n; by_cases hnA : n ∈ A <;> simp [f, hnA]
+  exact ⟨hseries.summable, by
+    rw [hseries.tsum_eq]
+    exact ENNReal.toReal_le_of_le_ofReal zero_le_one (by simpa using hVisitMass)⟩
 
 end PrimitiveSet
 
