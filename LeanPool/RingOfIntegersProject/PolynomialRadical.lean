@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
 
+import Mathlib.Tactic.Cases
 import Mathlib.FieldTheory.Finite.Basic
 import Mathlib.FieldTheory.SeparableDegree
 import Mathlib.RingTheory.AdjoinRoot

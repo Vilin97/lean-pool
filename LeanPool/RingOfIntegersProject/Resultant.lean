@@ -10,7 +10,7 @@ import Mathlib.Algebra.Polynomial.Splits
 import Mathlib.Data.Finset.Lattice.Fold
 import Mathlib.Data.Finsupp.Notation
 import Mathlib.Data.Matrix.Basic
-import Mathlib.Data.Matrix.Notation
+import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.LinearAlgebra.Determinant
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -19,7 +19,7 @@ import Mathlib.RingTheory.MvPolynomial.Homogeneous
 import Mathlib.RingTheory.Polynomial.Basic
 import Mathlib.RingTheory.Polynomial.UniqueFactorization
 import Mathlib.RingTheory.Polynomial.Vieta
-import Mathlib.Tactic.CC
+
 import Mathlib.Tactic.Qify
 
 import LeanPool.RingOfIntegersProject.DegreeLT

@@ -5,7 +5,7 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
 
 import Mathlib.Algebra.Polynomial.Degree.Lemmas
-import Mathlib.Data.Matrix.Notation
+import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Data.ZMod.Defs
 
 import LeanPool.RingOfIntegersProject.PolynomialAsVec

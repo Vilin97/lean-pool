@@ -5,7 +5,8 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
 
 import Mathlib.Algebra.Polynomial.FieldDivision
-import Mathlib.Data.ZMod.Quotient
+import Mathlib.Data.ZMod.QuotientRing
+import Mathlib.Data.ZMod.QuotientGroup
 
 /-! # Polynomials lifts
 

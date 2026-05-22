@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
 
+import Mathlib.Tactic.Cases
 import LeanPool.RingOfIntegersProject.IrreduciblePolynomialZModp
 import LeanPool.RingOfIntegersProject.PolynomialsAsLists
 import Mathlib.Analysis.Complex.Polynomial.Basic
-import Mathlib.Data.Complex.Cardinality
+import Mathlib.Analysis.Complex.Cardinality
 import Mathlib.Data.List.Indexes
 import Mathlib.FieldTheory.Finite.Basic
 import Mathlib.RingTheory.MvPolynomial.Homogeneous
