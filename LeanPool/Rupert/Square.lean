@@ -255,3 +255,5 @@ by π/4 radians. No offset translation is needed.
  · exact posx_in_outer
  · exact negx_in_outer
  · exact posx_in_outer
+
+end Square

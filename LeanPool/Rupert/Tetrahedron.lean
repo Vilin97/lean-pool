@@ -40,6 +40,8 @@ lemma inner_rot_so3 : inner_rot ∈ SO3 := by
 def inner_offset : ℝ² := !₂[0.098412,-0.165800]
 
 set_option maxHeartbeats 400000 in
+-- The `rupert` certificate is verified by `decide` on a `Convex.combo_*` payload, which exceeds
+-- the default heartbeat budget.
 theorem rupert : IsRupert vertices := by
   rw [rupert_iff_rupert']
   use inner_rot, inner_rot_so3, inner_offset, outer_rot, outer_rot_so3
@@ -115,3 +117,5 @@ theorem rupert : IsRupert vertices := by
       simp only [proj_xy, outer_rot, matrix_of_quat, outer_quat, vertices, Fin.sum_univ_four,
                  inner_offset, inner_rot, inner_quat, ε₁, matrix_simps]
       ext i; fin_cases i <;> norm_num
+
+end Tetrahedron

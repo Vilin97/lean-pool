@@ -47,3 +47,5 @@ noncomputable def snub_cube : Fin 24 → ℝ³ :=
   ]
 
 proof_wanted rupert : ¬ IsRupert snub_cube
+
+end SnubCube

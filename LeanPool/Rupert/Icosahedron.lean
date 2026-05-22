@@ -30,3 +30,5 @@ noncomputable def icosahedron : Fin 12 → ℝ³ := ![
   !₂[ 0, -1, -φ]]
 
 proof_wanted rupert : IsRupert icosahedron
+
+end Icosahedron

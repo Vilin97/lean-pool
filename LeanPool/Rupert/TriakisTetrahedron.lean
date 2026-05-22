@@ -49,6 +49,8 @@ lemma outer_rot_so3 : outer_rot ∈ SO3 := by
   exact matrix_of_quat_is_s03 h
 
 set_option maxHeartbeats 1000000 in
+-- The `rupert` certificate is verified by `decide` on a larger `Convex.combo_*` payload, which
+-- exceeds the default heartbeat budget by an order of magnitude.
 theorem rupert : IsRupert vertices := by
   rw [rupert_iff_rupert']
   use inner_rot, inner_rot_so3, inner_offset, outer_rot, outer_rot_so3
@@ -184,3 +186,5 @@ theorem rupert : IsRupert vertices := by
       simp only [proj_xy, outer_rot, matrix_of_quat, outer_quat, vertices,
         Fin.sum_univ_eight, inner_offset, inner_rot, inner_quat, ε₁, matrix_simps]
       ext i; fin_cases i <;> norm_num
+
+end TriakisTetrahedron

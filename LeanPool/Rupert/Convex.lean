@@ -159,3 +159,5 @@ lemma ball_in_hull_of_corners_in_hull {X : Set (E 2)} {ε : ℝ} (hε : ε ∈ S
     fin_cases i
     · simp; field
     · simp; field
+
+end Convex

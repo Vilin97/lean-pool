@@ -506,3 +506,5 @@ theorem rupert : IsRupert cube := by
     · simp [rpp_contains_cube2.1]
     · simp [rnn_contains_cube2.2]
     · simp [rpp_contains_cube.2]
+
+end Cube
