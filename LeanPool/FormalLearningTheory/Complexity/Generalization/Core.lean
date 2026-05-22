@@ -404,12 +404,8 @@ theorem growth_function_cover {X : Type u} [MeasurableSpace X]
       (∀ j, reps j ∈ C) ∧
       ∀ h ∈ C, (∀ i, h (xs i) = c (xs i)) →
         D { x | h x ≠ c x } > ENNReal.ofReal ε →
-        ∃ j : Fin n, ∀ i, reps j (xs i) = c (xs i) := by
-  exact ⟨1, hGF, fun _ => c, fun _ => hcC,
-    fun _ _ _ _ => ⟨⟨0, Nat.one_pos⟩, fun _ => rfl⟩⟩
+        ∃ j : Fin n, ∀ i, reps j (xs i) = c (xs i) := by aesop
 
-/-- Key arithmetic lemma for PAC bound: for t > 0, t^d * exp(-t) ≤ (d+1)!/t.
-    Follows from exp(t) ≥ t^(d+1)/(d+1)! (partial sum of Taylor series). -/
 lemma pow_mul_exp_neg_le_factorial_div {d : ℕ} {t : ℝ} (ht : 0 < t) :
     t ^ d * Real.exp (-t) ≤ ↑((d + 1).factorial) / t := by
   have h1 : t ^ (d + 1) / ↑((d + 1).factorial) ≤ Real.exp t :=

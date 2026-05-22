@@ -1774,14 +1774,8 @@ private theorem uniform_good_event_eq_bad_compl {X : Type u} [MeasurableSpace X]
           EmpiricalError X Bool h (fun i => (xs i, c (xs i))) (zeroOneLoss Bool)| < ε } =
       { xs : Fin m → X | ∃ h ∈ C,
         |TrueErrorReal X h c D -
-          EmpiricalError X Bool h (fun i => (xs i, c (xs i))) (zeroOneLoss Bool)| ≥ ε }ᶜ := by
-  ext xs
-  simp only [Set.mem_setOf_eq, Set.mem_compl_iff, not_exists, not_and, not_le]
+          EmpiricalError X Bool h (fun i => (xs i, c (xs i))) (zeroOneLoss Bool)| ≥ ε }ᶜ := by aesop
 
-/-- Finite VCDim implies uniform convergence.
-    Proof: VCDim < ∞ → UC.
-    - Finite X: direct Hoeffding per-hypothesis + finite union bound.
-    - Infinite X: Sauer-Shelah → symmetrization + growth function → UC. -/
 theorem vcdim_finite_imp_uc' (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) (hC : VCDim X C < ⊤)
     (hmeas_C : ∀ h ∈ C, Measurable h) (hc_meas : ∀ c : Concept X Bool, Measurable c)
