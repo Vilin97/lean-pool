@@ -1231,25 +1231,10 @@ lemma natDegree_one_sub_X_pow_eq (k : ℕ) (hk : 0 < k) :
 
 lemma one_sub_X_pow_term_eq_zero (k n j : ℕ) (_hk : 0 < k) (hn : 1 ≤ n)
     (_hj_mem : j ∈ Finset.range (k + 1)) (hj_ne : j ≠ k) :
-    ((1 - Polynomial.X ^ k : Polynomial ℤ).coeff j : ℚ) * (j : ℚ)^n = 0 := by
-  by_cases h : j = 0
-  · subst h
-    simp only [Polynomial.coeff_sub, Polynomial.coeff_one, Polynomial.coeff_X_pow]
-    by_cases hk_ne : (0 : ℕ) = k
-    · subst hk_ne
-      simp_all
-    · have hn_ne : n ≠ 0 := by omega
-      simp [hk_ne, zero_pow hn_ne]
-  · have h₈ : (1 - Polynomial.X ^ k : Polynomial ℤ).coeff j = 0 := by
-      simp [Polynomial.coeff_sub, Polynomial.coeff_one, Polynomial.coeff_X_pow, h, hj_ne]
-    simp [show (1 - Polynomial.X ^ k : Polynomial ℤ).coeff j = 0 from h₈]
+    ((1 - Polynomial.X ^ k : Polynomial ℤ).coeff j : ℚ) * (j : ℚ)^n = 0 := by aesop
 
 lemma one_sub_X_pow_term_at_k (k n : ℕ) (hk : 0 < k) :
-    ((1 - Polynomial.X ^ k : Polynomial ℤ).coeff k : ℚ) * (k : ℚ)^n = -((k : ℚ)^n) := by
-  have h₁ : (1 - Polynomial.X ^ k : Polynomial ℤ).coeff k = (-1 : ℤ) := by
-    simp [Polynomial.coeff_sub, Polynomial.coeff_one, Polynomial.coeff_X_pow]
-    cases k <;> simp_all
-  simp [h₁]
+    ((1 - Polynomial.X ^ k : Polynomial ℤ).coeff k : ℚ) * (k : ℚ)^n = -((k : ℚ)^n) := by aesop
 
 lemma one_sub_X_pow_sum_eq (k n : ℕ) (hk : 0 < k) (hn : 1 ≤ n) :
     ∑ j ∈ Finset.range ((1 - Polynomial.X ^ k : Polynomial ℤ).natDegree + 1),
@@ -1612,12 +1597,7 @@ lemma drop_k_eq_zero_term {S : NumericalSemigroup} (G : NumericalSemigroupGenera
         (-1 / (k.factorial : ℚ)) *
         ((∑ j ∈ Finset.range (G.hilbertNumerator.natDegree + 1),
           (∑ m ∈ Finset.range (j + 1), (G.productPolynomial.coeff m : ℚ)) * (j : ℚ)^(n - k)) /
-         ((n - k).factorial : ℚ))) := by
-  apply Finset.sum_congr rfl
-  intro k _
-  split_ifs with hk
-  · simp
-  · ring
+         ((n - k).factorial : ℚ))) := by simp_all
 
 lemma summand_eq_for_pos {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n k : ℕ)
     (_hk_pos : k ≠ 0) (hk_le : k ≤ n) :
@@ -1889,16 +1869,12 @@ lemma hilbertNumerator_natDegree_ge_prod_plus_gap {S : NumericalSemigroup}
 lemma forward_map_mem {S : NumericalSemigroup}
     (G : NumericalSemigroupGenerators S) (g j : ℕ)
     (hj : j ∈ (Finset.range (G.hilbertNumerator.natDegree + 1)).filter (g ≤ ·)) :
-    j - g ∈ Finset.range (G.hilbertNumerator.natDegree + 1 - g) := by
-  simp only [Finset.mem_filter, Finset.mem_range] at hj ⊢
-  omega
+    j - g ∈ Finset.range (G.hilbertNumerator.natDegree + 1 - g) := by grind
 
 lemma inverse_map_mem {S : NumericalSemigroup}
     (G : NumericalSemigroupGenerators S) (g k : ℕ)
     (hk : k ∈ Finset.range (G.hilbertNumerator.natDegree + 1 - g)) :
-    k + g ∈ (Finset.range (G.hilbertNumerator.natDegree + 1)).filter (g ≤ ·) := by
-  simp only [Finset.mem_filter, Finset.mem_range] at hk ⊢
-  omega
+    k + g ∈ (Finset.range (G.hilbertNumerator.natDegree + 1)).filter (g ≤ ·) := by grind
 
 lemma forward_inverse_id' {S : NumericalSemigroup}
     (G : NumericalSemigroupGenerators S) (g j : ℕ)
