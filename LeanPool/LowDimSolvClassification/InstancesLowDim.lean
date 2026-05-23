@@ -111,24 +111,17 @@ def _root_.LieAlgebra.Dim2.Affine.equivToLieAlgOfAffineEquiv : 𝔞𝔣𝔣 K K 
     rw [LieEquiv.coe_toLieHom]
     unfold mkAbelian at *
     ext i
+    have hf : ∀ x : K, f x = f 1 * x := fun x => by
+      have : f x = x • f 1 := by rw [← map_smul]; simp
+      rw [this, smul_eq_mul, mul_comm]
+    have hg : ∀ x : K, g x = g 1 * x := fun x => by
+      have : g x = x • g 1 := by rw [← map_smul]; simp
+      rw [this, smul_eq_mul, mul_comm]
     fin_cases i
     · simp only []
       change f (g 1) - g (f 1) = 0
-      have hf : ∀ x : K, f x = f 1 * x := fun x => by
-        have : f x = x • f 1 := by rw [← map_smul]; simp
-        rw [this, smul_eq_mul, mul_comm]
-      have hg : ∀ x : K, g x = g 1 * x := fun x => by
-        have : g x = x • g 1 := by rw [← map_smul]; simp
-        rw [this, smul_eq_mul, mul_comm]
       rw [hf (g 1), hg (f 1)]; ring
-    · simp only [Fin.mk_one, Matrix.cons_val_one,
-      Abelian.DerivationCoeFun]
-      have hf : ∀ x : K, f x = f 1 * x := fun x => by
-        have : f x = x • f 1 := by rw [← map_smul]; simp
-        rw [this, smul_eq_mul, mul_comm]
-      have hg : ∀ x : K, g x = g 1 * x := fun x => by
-        have : g x = x • g 1 := by rw [← map_smul]; simp
-        rw [this, smul_eq_mul, mul_comm]
+    · simp only [Fin.mk_one, Matrix.cons_val_one, Abelian.DerivationCoeFun]
       rw [hf y, hg x]
 
 /-- TODO. -/

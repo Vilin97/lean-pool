@@ -113,24 +113,17 @@ lemma sum_lt_half_zero_case (p q : ℤ)
     (hgcd : Int.gcd p q = 1) :
     (p : ℝ) + (q : ℝ) < ((0 : ℕ) : ℝ) / 2 := by
   have h₁ : ⌊((0 : ℕ) : ℝ) / 6⌋ = 0 := by norm_num [Int.floor_eq_iff]
-  have h₂ : p ≤ 0 := by exact_mod_cast (hp.trans (le_of_eq h₁))
-  have h₃ : q ≤ 0 := by exact_mod_cast (hq.trans (le_of_eq h₁))
-  have h₉ : p < 0 ∨ q < 0 := by
-    by_contra! h
-    obtain ⟨h_p, h_q⟩ := h
-    have : p = 0 := le_antisymm h₂ h_p
-    have : q = 0 := le_antisymm h₃ h_q
-    simp_all
-  norm_num
-  cases h₉ with
-  | inl h₉ =>
-    have : (p : ℝ) < 0 := by exact_mod_cast h₉
-    have : (q : ℝ) ≤ 0 := by exact_mod_cast h₃
-    linarith
-  | inr h₉ =>
-    have : (q : ℝ) < 0 := by exact_mod_cast h₉
-    have : (p : ℝ) ≤ 0 := by exact_mod_cast h₂
-    linarith
+  have h₂ : p ≤ 0 := by exact_mod_cast hp.trans h₁.le
+  have h₃ : q ≤ 0 := by exact_mod_cast hq.trans h₁.le
+  have hpR : (p : ℝ) ≤ 0 := by exact_mod_cast h₂
+  have hqR : (q : ℝ) ≤ 0 := by exact_mod_cast h₃
+  rcases h₂.lt_or_eq with hp_lt | hp_eq
+  · have : (p : ℝ) < 0 := by exact_mod_cast hp_lt
+    push_cast; linarith
+  rcases h₃.lt_or_eq with hq_lt | hq_eq
+  · have : (q : ℝ) < 0 := by exact_mod_cast hq_lt
+    push_cast; linarith
+  simp [hp_eq, hq_eq] at hgcd
 
 lemma sum_lt_half_pos_case (n : ℕ) (p q : ℤ) (hn : 1 ≤ n)
     (hp : p ≤ ⌊(n : ℝ) / 6⌋) (hq : q ≤ ⌊(n : ℝ) / 6⌋) :
@@ -966,33 +959,21 @@ lemma int_le_half_of_real_lt_half_fb (n : ℕ) (q : ℤ) (hq : (q : ℝ) < (n : 
 lemma pos_of_mem_truncatedObtuseRegion_fst_fb (n : ℕ) (η : ℝ) (hη_pos : 0 < η)
     (pq : ℤ × ℤ) (h : pq ∈ truncatedObtuseRegion n η) :
     0 < pq.1 := by
-  have h₁ : η * (n : ℝ) ≤ (pq.1 : ℝ) := h.1
+  obtain ⟨h₁, h₂, h₃, _⟩ := h
   by_cases hn : n = 0
-  · have h₆ : η * (n : ℝ) = 0 := by simp only [hn, Nat.cast_zero, mul_zero]
-    have h₃ : (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 := h.2.2.1
-    have h₃' : (pq.1 : ℝ) + (pq.2 : ℝ) < 0 := by
-      simp only [hn, Nat.cast_zero, zero_div] at h₃
-      exact h₃
-    have h₂ : η * (n : ℝ) ≤ (pq.2 : ℝ) := h.2.1
-    have : (pq.1 : ℝ) > 0 := by linarith
-    exact_mod_cast this
-  · have h₇ : 0 < η * (n : ℝ) := by positivity
+  · subst hn; push_cast at h₁ h₂ h₃
+    exact_mod_cast (show (pq.1 : ℝ) > 0 by linarith)
+  · have : 0 < η * (n : ℝ) := by positivity
     exact_mod_cast (show (pq.1 : ℝ) > 0 by linarith)
 
 lemma pos_of_mem_truncatedObtuseRegion_snd_fb (n : ℕ) (η : ℝ) (hη_pos : 0 < η)
     (pq : ℤ × ℤ) (h : pq ∈ truncatedObtuseRegion n η) :
     0 < pq.2 := by
-  have h₂ : η * (n : ℝ) ≤ (pq.2 : ℝ) := h.2.1
+  obtain ⟨h₁, h₂, h₃, _⟩ := h
   by_cases hn : n = 0
-  · have h₇ : η * (n : ℝ) = 0 := by simp only [hn, Nat.cast_zero, mul_zero]
-    have h₃ : (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 := h.2.2.1
-    have h₃' : (pq.1 : ℝ) + (pq.2 : ℝ) < 0 := by
-      simp only [hn, Nat.cast_zero, zero_div] at h₃
-      exact h₃
-    have h₁ : η * (n : ℝ) ≤ (pq.1 : ℝ) := h.1
-    have : (pq.2 : ℝ) > 0 := by linarith
-    exact_mod_cast this
-  · have h₇ : 0 < η * (n : ℝ) := by positivity
+  · subst hn; push_cast at h₁ h₂ h₃
+    exact_mod_cast (show (pq.2 : ℝ) > 0 by linarith)
+  · have : 0 < η * (n : ℝ) := by positivity
     exact_mod_cast (show (pq.2 : ℝ) > 0 by linarith)
 
 lemma fiber_subset_range (n : ℕ) (η : ℝ) (hη_pos : 0 < η) (q : ℤ) :
@@ -1098,26 +1079,18 @@ lemma product_ge_eta_sq_n_sq (η : ℝ) (hη_pos : 0 < η)
     (η * (n : ℝ)) ^ 2 ≤ (2 * (p : ℝ) - 1) * (2 * (q : ℝ) - 1) := by
   have h₂ : 0 < η * (n : ℝ) := by positivity
   by_cases h₃ : η * (n : ℝ) ≥ 1
-  · have h₆ : (2 * (p : ℝ) - 1) * (2 * (q : ℝ) - 1) ≥ (η * (n : ℝ)) * (η * (n : ℝ)) := by
-      nlinarith
-    nlinarith
-  · have h₅ : p ≥ 1 := by
-      by_contra h₅₁
-      have h₅₂ : p ≤ 0 := by linarith
-      have h₅₃ : (p : ℝ) ≤ 0 := by exact_mod_cast h₅₂
-      linarith
-    have h₆ : q ≥ 1 := by
-      by_contra h₆₁
-      have h₆₂ : q ≤ 0 := by linarith
-      have h₆₃ : (q : ℝ) ≤ 0 := by exact_mod_cast h₆₂
-      linarith
-    have h₇ : (p : ℝ) ≥ 1 := by exact_mod_cast h₅
-    have h₈ : (q : ℝ) ≥ 1 := by exact_mod_cast h₆
-    have h₁₁ : (2 * (p : ℝ) - 1) * (2 * (q : ℝ) - 1) ≥ 1 := by
-      nlinarith
-    have h₁₂ : (η * (n : ℝ)) ^ 2 < 1 := by
-      nlinarith
-    nlinarith
+  · nlinarith
+  have hp1 : (1 : ℝ) ≤ p := by
+    by_contra h; push_neg at h
+    have : p < 1 := by exact_mod_cast h
+    have : (p : ℝ) ≤ 0 := by exact_mod_cast (by omega : p ≤ 0)
+    linarith
+  have hq1 : (1 : ℝ) ≤ q := by
+    by_contra h; push_neg at h
+    have : q < 1 := by exact_mod_cast h
+    have : (q : ℝ) ≤ 0 := by exact_mod_cast (by omega : q ≤ 0)
+    linarith
+  nlinarith
 
 lemma rearrange_ineq (η : ℝ) (n : ℕ) (hn : 2 ≤ n) (p q : ℤ)
     (h : (η * (n : ℝ)) ^ 2 ≤ (2 * (p : ℝ) - 1) * (2 * (q : ℝ) - 1)) :
@@ -6814,34 +6787,20 @@ lemma fourier_bound_lt_target (η θ : ℝ)
 lemma region_implies_bounds (n : ℕ) (η : ℝ) (hη_pos : 0 < η) (hn : 2 ≤ n)
     (p q : ℤ) (hpq : (p, q) ∈ truncatedObtuseRegion n η) :
     1 ≤ p ∧ 1 ≤ q ∧ (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 ∧ (q : ℝ) < (n : ℝ) / 2 := by
-  have h₁ : (η : ℝ) * n ≤ (p : ℝ) := by
-    simp only [truncatedObtuseRegion, Set.mem_setOf_eq] at hpq
-    exact hpq.1
-  have h₂ : (η : ℝ) * n ≤ (q : ℝ) := by
-    simp only [truncatedObtuseRegion, Set.mem_setOf_eq] at hpq
-    exact hpq.2.1
-  have h₃ : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 := by
-    simp only [truncatedObtuseRegion, Set.mem_setOf_eq] at hpq
-    exact hpq.2.2.1
-  have hηn_pos : 0 < (η : ℝ) * n := by
-    positivity
+  simp only [truncatedObtuseRegion, Set.mem_setOf_eq] at hpq
+  obtain ⟨h₁, h₂, h₃, _⟩ := hpq
+  have hηn_pos : 0 < (η : ℝ) * n := by positivity
   have hp_pos : 1 ≤ p := by
     by_contra h
-    have h₅ : p ≤ 0 := by
-      linarith
-    have h₆ : (p : ℝ) ≤ 0 := by
-      exact_mod_cast h₅
+    have hp_le : p ≤ 0 := by omega
+    have : (p : ℝ) ≤ 0 := by exact_mod_cast hp_le
     linarith
   have hq_pos : 1 ≤ q := by
     by_contra h
-    have h₅ : q ≤ 0 := by
-      linarith
-    have h₆ : (q : ℝ) ≤ 0 := by
-      exact_mod_cast h₅
+    have hq_le : q ≤ 0 := by omega
+    have : (q : ℝ) ≤ 0 := by exact_mod_cast hq_le
     linarith
-  have hq_bound : (q : ℝ) < (n : ℝ) / 2 := by
-    linarith
-  exact ⟨hp_pos, hq_pos, h₃, hq_bound⟩
+  exact ⟨hp_pos, hq_pos, h₃, by linarith⟩
 
 lemma error_bound_with_bad_set (η : ℝ) (θ : ℝ)
     (hη_pos : 0 < η) (_hη_lt : η < 1 / 6) (hθ_pos : 0 < θ) (_hθ_lt : θ < 1)
@@ -7526,22 +7485,13 @@ lemma pdivPairs_subset_prod_half (n : ℕ) (η : ℝ) (hη_pos : 0 < η) :
       Set.Icc (0 : ℤ) (n / 2 : ℤ) := by
   intro ⟨a, b⟩ h
   simp only [pdivPairs, truncatedObtuseRegion, Set.mem_setOf_eq, Set.mem_prod] at h ⊢
-  have h₁ : (η : ℝ) * (n : ℝ) ≤ (a : ℝ) := h.1.1
-  have h₂ : (η : ℝ) * (n : ℝ) ≤ (b : ℝ) := h.1.2.1
-  have h₃ : (a : ℝ) + (b : ℝ) < (n : ℝ) / 2 := h.1.2.2.1
-  have h₆ : (largestPrimeFactor n : ℤ) ∣ a := h.2.2
+  obtain ⟨⟨h₁, h₂, h₃, _⟩, _, h₆⟩ := h
   have hηn : 0 ≤ (η : ℝ) * (n : ℝ) := by positivity
   have h₇ : 0 ≤ a := by exact_mod_cast (by linarith : (0 : ℝ) ≤ (a : ℝ))
   have h₈ : 0 ≤ b := by exact_mod_cast (by linarith : (0 : ℝ) ≤ (b : ℝ))
-  have ha2 : (2 * a : ℤ) < (n : ℤ) := by
-    have hr : (2 : ℝ) * (a : ℝ) < (n : ℝ) := by linarith
-    exact_mod_cast hr
-  have hb2 : (2 * b : ℤ) < (n : ℤ) := by
-    have hr : (2 : ℝ) * (b : ℝ) < (n : ℝ) := by linarith
-    exact_mod_cast hr
-  have h₁₁ : (a : ℤ) ≤ (n / 2 : ℤ) := by omega
-  have h₁₂ : (b : ℤ) ≤ (n / 2 : ℤ) := by omega
-  exact ⟨⟨h₇, h₁₁, h₆⟩, ⟨h₈, h₁₂⟩⟩
+  have ha2 : (2 * a : ℤ) < (n : ℤ) := by exact_mod_cast (by linarith : (2 : ℝ) * a < n)
+  have hb2 : (2 * b : ℤ) < (n : ℤ) := by exact_mod_cast (by linarith : (2 : ℝ) * b < n)
+  exact ⟨⟨h₇, by omega, h₆⟩, h₈, by omega⟩
 
 lemma ncard_nonneg_multiples_eq (B : ℤ) (P : ℕ) (hP : 0 < P) (hB : 0 ≤ B) :
     ({x : ℤ | 0 ≤ x ∧ x ≤ B ∧ (P : ℤ) ∣ x}).ncard = B.toNat / P + 1 :=
@@ -8067,78 +8017,31 @@ lemma badPairsSet_ncard_upper_bound (η : ℝ) (θ : ℝ)
   obtain ⟨N₀, hN₀⟩ := countingFunctionS_ge_five_outside_exceptional η θ hη_pos hη_lt hθ_pos hθ_lt
   refine ⟨1, N₀, one_pos, fun n hn hP => ?_⟩
   obtain ⟨E, hE_fin, hE_card, hE_good⟩ := hN₀ n hn hP
-  have hbad_sub : badPairsSet n η ⊆ E := by
-    intro pq hpq
+  have hbad_sub : badPairsSet n η ⊆ E := fun pq hpq => by
     by_contra hpqE
-    have hpq_mem := hpq.1
-    have hpq_gcd := hpq.2.1
-    have hpq_lt := hpq.2.2
-    have hge := hE_good pq hpq_mem hpq_gcd hpqE
+    have := hE_good pq hpq.1 hpq.2.1 hpqE
+    have := hpq.2.2
     omega
-  calc ((badPairsSet n η).ncard : ℝ)
-      ≤ (E.ncard : ℝ) := by
-        exact_mod_cast Set.ncard_le_ncard hbad_sub hE_fin
-    _ ≤ (n : ℝ) ^ 2 * (1 / (n : ℝ) ^ θ + 1 / Real.log n) := hE_card
-    _ = 1 * (n : ℝ) ^ 2 * (1 / (n : ℝ) ^ θ + 1 / Real.log n) := by ring
+  have : ((badPairsSet n η).ncard : ℝ) ≤ (E.ncard : ℝ) :=
+    by exact_mod_cast Set.ncard_le_ncard hbad_sub hE_fin
+  linarith [hE_card]
 lemma inv_rpow_tendsto_zero (θ : ℝ) (hθ_pos : 0 < θ) :
     Filter.Tendsto (fun n : ℕ => 1 / (n : ℝ) ^ θ) Filter.atTop (nhds 0) := by
-  have h1 : Filter.Tendsto (fun n : ℕ => (n : ℝ)) Filter.atTop Filter.atTop := by
-    simpa using tendsto_natCast_atTop_atTop
-  have h2 : Filter.Tendsto (fun x : ℝ => x ^ θ) Filter.atTop Filter.atTop := by
-    apply tendsto_rpow_atTop
-    linarith
-  have h3 : Filter.Tendsto (fun n : ℕ => (n : ℝ) ^ θ) Filter.atTop Filter.atTop := by
-    have h4 : Filter.Tendsto (fun n : ℕ => (n : ℝ)) Filter.atTop Filter.atTop := h1
-    have h5 : Filter.Tendsto (fun x : ℝ => x ^ θ) Filter.atTop Filter.atTop := h2
-    have h6 : Filter.Tendsto (fun n : ℕ => (n : ℝ)) Filter.atTop Filter.atTop := h4
-    have h7 : Filter.Tendsto (fun x : ℝ => x ^ θ) Filter.atTop Filter.atTop := h5
-    have h8 : Filter.Tendsto (fun n : ℕ => (n : ℝ) ^ θ) Filter.atTop Filter.atTop := h7.comp h6
-    exact h8
-  have h4 : Filter.Tendsto (fun n : ℕ => 1 / (n : ℝ) ^ θ) Filter.atTop (nhds 0) := by
-    have h5 : Filter.Tendsto (fun n : ℕ => (n : ℝ) ^ θ) Filter.atTop Filter.atTop := h3
-    have h6 : Filter.Tendsto (fun n : ℕ => (1 : ℝ) / (n : ℝ) ^ θ) Filter.atTop (nhds 0) := by
-      have h7 : Filter.Tendsto (fun n : ℕ => (n : ℝ) ^ θ) Filter.atTop Filter.atTop := h5
-      have h8 : Filter.Tendsto (fun x : ℝ => (1 : ℝ) / x) (Filter.atTop : Filter ℝ) (nhds 0) := by
-        have h9 : Filter.Tendsto (fun x : ℝ => (1 : ℝ) / x) (Filter.atTop : Filter ℝ) (nhds 0) := by
-          simpa using tendsto_inv_atTop_zero
-        exact h9
-      have h9 : Filter.Tendsto (fun n : ℕ => (n : ℝ) ^ θ) Filter.atTop Filter.atTop := h7
-      have h10 : Filter.Tendsto (fun x : ℝ => (1 : ℝ) / x) (Filter.atTop : Filter ℝ) (nhds 0) := h8
-      have h11 : Filter.Tendsto (fun n : ℕ => (1 : ℝ) / (n : ℝ) ^ θ) Filter.atTop (nhds 0) :=
-        h10.comp (h9)
-      exact h11
-    exact h6
-  exact h4
+  have hpow : Filter.Tendsto (fun n : ℕ => (n : ℝ) ^ θ) Filter.atTop Filter.atTop :=
+    (tendsto_rpow_atTop hθ_pos).comp (by simpa using tendsto_natCast_atTop_atTop)
+  simpa using (tendsto_inv_atTop_zero.comp hpow)
 
 lemma dist_to_ineq (θ : ℝ) (_hθ_pos : 0 < θ) (ε : ℝ) (_hε : 0 < ε) :
     (∃ N : ℕ, ∀ n : ℕ, N ≤ n → dist (1 / (n : ℝ) ^ θ) 0 < ε) →
     ∃ N : ℕ, ∀ n : ℕ, N ≤ n → 1 / (n : ℝ) ^ θ < ε := by
-  intro h
-  have h_main : ∀ (n : ℕ), 1 / (n : ℝ) ^ θ ≥ 0 := by
-    intro n
-    by_cases hn : n = 0
-    · rw [hn]
-      simp only [CharP.cast_eq_zero, one_div, ge_iff_le, inv_nonneg]
-      positivity
-    · have h₃ : 1 / (n : ℝ) ^ θ ≥ 0 := by positivity
-      exact h₃
-  have h_dist_eq : ∀ (n : ℕ), dist (1 / (n : ℝ) ^ θ) 0 = 1 / (n : ℝ) ^ θ := by
-    intro n
-    have h₁ : 1 / (n : ℝ) ^ θ ≥ 0 := h_main n
-    have h₂ : dist (1 / (n : ℝ) ^ θ) 0 = |(1 / (n : ℝ) ^ θ : ℝ)| := by
-      simp
-    rw [h₂]
-    have h₃ : |(1 / (n : ℝ) ^ θ : ℝ)| = 1 / (n : ℝ) ^ θ := by
-      rw [abs_of_nonneg h₁]
-    rw [h₃]
-  have h_final : ∃ N : ℕ, ∀ n : ℕ, N ≤ n → 1 / (n : ℝ) ^ θ < ε := by
-    obtain ⟨N, hN⟩ := h
-    refine ⟨N, fun n hn => ?_⟩
-    have h₁ : dist (1 / (n : ℝ) ^ θ) 0 < ε := hN n hn
-    have h₂ : dist (1 / (n : ℝ) ^ θ) 0 = 1 / (n : ℝ) ^ θ := h_dist_eq n
-    rw [h₂] at h₁
-    exact h₁
-  exact h_final
+  rintro ⟨N, hN⟩
+  refine ⟨N, fun n hn => ?_⟩
+  have hnn : (0 : ℝ) ≤ 1 / (n : ℝ) ^ θ := by
+    rcases eq_or_ne (n : ℝ) 0 with h0 | h0
+    · rw [h0]; positivity
+    · positivity
+  have h := hN n hn
+  rwa [Real.dist_0_eq_abs, abs_of_nonneg hnn] at h
 
 lemma inv_rpow_eventually_lt (θ : ℝ) (hθ_pos : 0 < θ) :
     ∀ ε : ℝ, 0 < ε →
@@ -8154,60 +8057,12 @@ lemma inv_log_eventually_lt :
       ∃ N : ℕ, ∀ n : ℕ, N ≤ n →
         1 / Real.log n < ε := by
   intro ε hε
-  have h₁ : Filter.Tendsto (fun n : ℕ => (1 : ℝ) / Real.log n) Filter.atTop (nhds 0) := by
-    have h₂ : Filter.Tendsto (fun n : ℕ => (n : ℝ)) Filter.atTop Filter.atTop := by
-      simpa using tendsto_natCast_atTop_atTop
-    have h₃ : Filter.Tendsto (fun x : ℝ => Real.log x) Filter.atTop Filter.atTop :=
-      Real.tendsto_log_atTop
-    have h₄ : Filter.Tendsto (fun n : ℕ => Real.log (n : ℝ)) Filter.atTop Filter.atTop := by
-      have h₅ : Filter.Tendsto (fun n : ℕ => (n : ℝ)) Filter.atTop Filter.atTop := h₂
-      have h₆ : Filter.Tendsto (fun x : ℝ => Real.log x) Filter.atTop Filter.atTop := h₃
-      exact h₆.comp h₅
-    have h₅ : Filter.Tendsto (fun n : ℕ => (1 : ℝ) / Real.log n) Filter.atTop (nhds 0) := by
-      have h₇ : Filter.Tendsto (fun n : ℕ => (1 : ℝ) / Real.log (n : ℝ)) Filter.atTop (nhds 0) := by
-        have h₈ : Filter.Tendsto (fun n : ℕ => Real.log (n : ℝ)) Filter.atTop Filter.atTop := h₄
-        have h₉ : Filter.Tendsto (fun x : ℝ => (1 : ℝ) / x) Filter.atTop (nhds 0) := by
-          simpa using tendsto_inv_atTop_zero
-        have h₁₀ : Filter.Tendsto (fun n : ℕ => (1 : ℝ) / Real.log (n : ℝ)) Filter.atTop (nhds 0) :=
-          h₉.comp h₈
-        exact h₁₀
-      convert h₇ using 1
-    exact h₅
-  have h₂ : ∀ ε : ℝ, 0 < ε → (∃ N : ℕ, ∀ n : ℕ, N ≤ n → 1 / Real.log n < ε) := by
-    intro ε hε
-    have h₅ : ∃ (N : ℕ), ∀ (n : ℕ), N ≤ n → (1 : ℝ) / Real.log n < ε := by
-      have h₆ : ∀ᶠ (n : ℕ) in Filter.atTop, (1 : ℝ) / Real.log n < ε := by
-        have h₉ : ∀ᶠ (n : ℕ) in Filter.atTop, (1 : ℝ) / Real.log n < ε := by
-          have h₁₃ : ∀ᶠ (n : ℕ) in Filter.atTop, (1 : ℝ) / Real.log n < ε := by
-            have h₁₆ : ∀ᶠ (n : ℕ) in Filter.atTop, (1 : ℝ) / Real.log n ∈ Set.Iio ε := by
-              have h₁₉ : Set.Iio ε ∈ nhds (0 : ℝ) := by
-                apply Iio_mem_nhds
-                linarith
-              have h₂₀ : ∀ᶠ (n : ℕ) in Filter.atTop, (1 : ℝ) / Real.log n ∈ Set.Iio ε := by
-                have h₂₁ : Filter.Tendsto (fun n : ℕ =>
-                  (1 : ℝ) / Real.log n) Filter.atTop (nhds 0) := h₁
-                have h₂₂ : Set.Iio ε ∈ nhds (0 : ℝ) := h₁₉
-                exact h₂₁ h₂₂
-              exact h₂₀
-            have h₂₁ : ∀ᶠ (n : ℕ) in Filter.atTop, (1 : ℝ) / Real.log n ∈ Set.Iio ε := h₁₆
-            filter_upwards [h₂₁] with n hn
-            exact hn
-          exact h₁₃
-        exact h₉
-      have h₇ : ∃ (N : ℕ), ∀ (n : ℕ), N ≤ n → (1 : ℝ) / Real.log n < ε := by
-        have h₈ : ∀ᶠ (n : ℕ) in Filter.atTop, (1 : ℝ) / Real.log n < ε := h₆
-        have h₉ : ∃ (N : ℕ), ∀ (n : ℕ), N ≤ n → (1 : ℝ) / Real.log n < ε := by
-          have h₁₀ : ∃ (N : ℕ), ∀ (n : ℕ), N ≤ n → (1 : ℝ) / Real.log n < ε := by
-            simp only [Filter.eventually_atTop] at h₈
-            obtain ⟨N, hN⟩ := h₈
-            refine ⟨N, ?_⟩
-            intro n hn
-            exact hN n hn
-          exact h₁₀
-        exact h₉
-      exact h₇
-    exact h₅
-  exact h₂ ε hε
+  have htendsto : Filter.Tendsto (fun n : ℕ => (1 : ℝ) / Real.log n) Filter.atTop (nhds 0) := by
+    simpa using tendsto_inv_atTop_zero.comp
+      (Real.tendsto_log_atTop.comp (by simpa using tendsto_natCast_atTop_atTop))
+  have hev : ∀ᶠ (n : ℕ) in Filter.atTop, (1 : ℝ) / Real.log n < ε :=
+    htendsto (Iio_mem_nhds hε)
+  exact hev.exists_forall_of_atTop
 
 lemma asymptotic_decay (θ : ℝ) (hθ_pos : 0 < θ) :
     ∀ ε : ℝ, 0 < ε →
