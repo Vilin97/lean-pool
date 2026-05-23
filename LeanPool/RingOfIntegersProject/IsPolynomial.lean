@@ -5,7 +5,7 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
 
 import Mathlib.Algebra.MvPolynomial.Rename
-import Mathlib.LinearAlgebra.Matrix.Det
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 import LeanPool.RingOfIntegersProject.PolynomialAsVec
 import LeanPool.RingOfIntegersProject.Resultant

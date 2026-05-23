@@ -6,10 +6,13 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 
 import Mathlib.Algebra.Module.Equiv.Basic
 import Mathlib.FieldTheory.Finite.Basic
+import Mathlib.LinearAlgebra.Basis.Defs
 import Mathlib.LinearAlgebra.Dimension.Free
 import Mathlib.RingTheory.Localization.Module
 
 /-!  # Linear Algebra auxiliary lemmas   -/
+
+open Module
 
 lemma Basis.equivFun_symm_eq_repr_symm {M ι R : Type*}
     [Fintype ι] [AddCommMonoid M] [Semiring R] [Module R M] (b : Basis ι R M) (f : ι →₀ R) :
