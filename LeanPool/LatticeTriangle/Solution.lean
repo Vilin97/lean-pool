@@ -882,8 +882,7 @@ lemma truncatedObtuseRegion_subset_box_rb (n : ℕ) (η : ℝ) :
 
 lemma truncatedObtuseRegion_finite_rb (n : ℕ) (η : ℝ) :
     (truncatedObtuseRegion n η).Finite :=
-  ((Set.finite_Icc _ _).prod (Set.finite_Icc _ _)).subset
-    (truncatedObtuseRegion_subset_box_rb n η)
+  truncatedObtuseRegion_finite n η
 
 lemma residueBadPairs_finite (n : ℕ) (η : ℝ) :
     (residueBadPairs n η).Finite :=
