@@ -27,7 +27,7 @@ class nzPattern_n (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) extends
   non_zero : ∀ i, ∀ m, 1 ≤ i ∧ i ≤ n → f (i,m) ≠ 0
 
 
-lemma pattern_nContinuant1 (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n-1 → ∀m, f (i+2,m) = f (2,m+i)*f (i+1,m) - f (i,m) := by
+lemma pattern_nContinuant1 (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n-1 → ∀m, f (i+2,m) = f (2,m+i)*f (i+1,m) - f (i,m) := by
   intro i
   induction i with
   | zero =>
@@ -61,7 +61,7 @@ lemma pattern_nContinuant1 (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [
   convert hgoal using 2 <;> ring
 
 -- The second continuant lemma is proved like the first
-lemma pattern_nContinuant2 (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n-1 → ∀m, f (i,m+2) = f (n-1,m+2)*f (i+1,m+1) - f (i+2,m) := by
+lemma pattern_nContinuant2 (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n-1 → ∀m, f (i,m+2) = f (n-1,m+2)*f (i+1,m+1) - f (i+2,m) := by
 by_cases one_leq_n : 1 ≤ n
 suffices pattern_nContinuant2flipped : ∀ i, i ≤ n-1 → ∀m, f (n-i-1,m+2) = f (n-1,m+2)*f (n-i,m+1) - f (n-i+1,m)
 -- Flip i to n-i so we can induct forwards
@@ -127,7 +127,7 @@ rw[i_eq_zero, n_eq_zero]
 simp
 rw[@pattern_n.topBordZeros F _ f n _ (m+2), @pattern_n.botBordZeros_n F _ f n _ (2) m (by linarith),zero_mul, sub_zero]
 
-theorem glideSymm (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n+1 → ∀ m, f (n+1-i, m+i) = f (i,m) := by
+theorem glideSymm (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n+1 → ∀ m, f (n+1-i, m+i) = f (i,m) := by
 -- we need glideSymm in chapter 3
   intro i ileq
   induction' i using Nat.twoStepInduction with i ih₁ ih₂
@@ -161,7 +161,7 @@ theorem glideSymm (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [nzPattern
               _ = f (n-1,m+i+2) * f (n-i,m+i+1) - f (n+1-i,m+i) := by congr
               _ = f (n-i-1,m+i+2) := by rw [h₅]
 
-theorem translationInvariance (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n+1 → ∀m, f (i,m) = f (i,m+n+1) := by
+theorem translationInvariance (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n+1 → ∀m, f (i,m) = f (i,m+n+1) := by
   intro i ileq m
   have key := glideSymm F f n i ileq m
   have key2 := glideSymm F f n (n+1-i) (Nat.sub_le (n+1) i) (m+i)
@@ -170,7 +170,7 @@ theorem translationInvariance (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ
 
 
 -- A stronger version of the translation invariance - may be useful
-lemma strongTranslationInvariance (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n+1 → ∀m, f (i,m) = f (i,m%(n+1)) := by
+lemma strongTranslationInvariance (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n+1 → ∀m, f (i,m) = f (i,m%(n+1)) := by
   intro i ileq m
   induction' m using Nat.strong_induction_on with m ih
   by_cases hm : m < n+1
@@ -186,7 +186,7 @@ lemma strongTranslationInvariance (F : Type*) [Field F] (f : ℕ×ℕ → F) (n:
   have h₃ : m % (n + 1) = (m - (n + 1)) % (n + 1) := by apply Nat.mod_eq_sub_mod h₁
   rw [h₃, ih]
 
-lemma imageFinite (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [nzPattern_n F f n] : Finite (Set.range f) := by
+lemma imageFinite (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) [nzPattern_n F f n] : Finite (Set.range f) := by
 -- We use i ≤ n instead of 1 ≤ i ≤ n to simplify the induction. Lean also automatically infers that {i : ℕ | i ≤ n} is finite.
   have key : Set.range f = f '' ({i : ℕ | i ≤ n} ×ˢ {m : ℕ | m ≤ n}) := by
     apply Set.ext_iff.mpr
@@ -207,7 +207,7 @@ lemma imageFinite (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [nzPattern
     · use ⟨0, 0⟩ ; apply And.intro (by simp) -- if i > n, then f(i,n) = 0, so we can use (0,0)
       rw [@pattern_n.topBordZeros F _ f n _ 0, ← hx, @pattern_n.botBordZeros_n F _ f n _ i m (by linarith)]
     -- now the trivial part
-    exact λ ⟨y, hy⟩ => ⟨y, hy.2⟩
+    exact fun ⟨y, hy⟩ => ⟨y, hy.2⟩
   rw [key]
   have : Finite ({i : ℕ | i ≤ n} ×ˢ {m : ℕ | m ≤ n}) := Finite.Set.finite_prod _ _
   exact Finite.Set.finite_image ({i : ℕ | i ≤ n} ×ˢ {m : ℕ | m ≤ n}) f

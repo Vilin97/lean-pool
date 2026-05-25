@@ -76,7 +76,7 @@ def friezeToFlute (f : ℕ×ℕ → ℚ) (n m: ℕ) (hn : 2 ≤ n) [arith_fp f n
     have i_plus_two_even : (i+2)%2 = 0 := by rw[Nat.add_mod_right i 2, i_even]
 
     simp [n_eq_three]
-    simp [i_even, i_plus_one_odd, i_plus_two_even]
+    simp [i_even, i_plus_one_odd]
     rw[@pattern_n.topBordOnes ℚ _ f n _ m]
     simp
     have this : f (2, m) * f (2, m + 1) = 2 :=
@@ -89,7 +89,7 @@ def friezeToFlute (f : ℕ×ℕ → ℚ) (n m: ℕ) (hn : 2 ≤ n) [arith_fp f n
 
     have this.num : (f (2, m)).num * (f (2, m + 1)).num = 2 := by
       have key : (f (2, m)).num * (f (2, m + 1)).num = (f (2, m) * f (2, m + 1)).num := by
-        simp [Rat.mul_num, arith_fp.integral n, arith_fp.integral n]
+        simp [Rat.mul_num, arith_fp.integral n]
       simp [key, this]
 
     have this.num.toNat : (f (2, m)).num.toNat * (f (2, m + 1)).num.toNat = 2 := by
@@ -405,9 +405,9 @@ lemma main1 (n : ℕ) (h : n ≠ 0) : ∀ (f : ℕ × ℕ → ℚ) (_ : arith_fp
   by_cases hn : n=1
   simp [hn, Nat.fib_one]
   match i with
-  | 0 => simp [hn, hf.topBordZeros m]
-  | 1 => simp [hn, hf.topBordOnes m]
-  | i+2 => simp [hn, hf.botBordZeros_n (i+2) m (by omega)]
+  | 0 => simp [hf.topBordZeros m]
+  | 1 => simp [hf.topBordOnes m]
+  | i+2 => simp [hf.botBordZeros_n (i+2) m (by omega)]
   have hn' : n > 1 := by omega
   let g := @friezeToFlute f n m (by omega) hf
   by_cases hi₀ : i = 0
@@ -418,7 +418,7 @@ lemma main1 (n : ℕ) (h : n ≠ 0) : ∀ (f : ℕ × ℕ → ℚ) (_ : arith_fp
   have : Nat.fib n > 0 := Nat.fib_pos.mpr hn''
   linarith
   by_cases hi₂ : i ≥ n+1
-  simp [hi₂, hf.botBordZeros_n i m hi₂]
+  simp [hf.botBordZeros_n i m hi₂]
   by_cases hi₃ : i = n
   simp [hi₃, hf.botBordOnes_n m]
   have hi₄ : 0 < Nat.fib n := Nat.fib_pos.mpr (by omega)
@@ -437,7 +437,7 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) : ∃ (f : ℕ × ℕ → ℚ) (hf : arith_
   -- even case
   · have : k > 0 := by
       by_contra!
-      simp [hk] at this; rw [this] at hk; simp at hk; omega
+      simp [] at this; rw [this] at hk; simp at hk; omega
     have : k ≠ 0 := by omega
     let j := k-1
     have hj : n = 2*j+2 := by omega
@@ -454,12 +454,12 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) : ∃ (f : ℕ × ℕ → ℚ) (hf : arith_
       unfold fib_flute_even
       by_cases h₂ : j = 0
       simp [h₂]
-      unfold a_even; simp [h₂,hj]
+      unfold a_even; simp []
       -- j ≠ 0
-      simp [h₂]
+      simp []
       have h₄ : ¬ j ≥ 2*j +1 := by omega
       --have h₅ : 1 + 4 * j - 2 * j = 2*j + 2 := by omega
-      unfold a_even; simp [h₂,hj,h₄]
+      unfold a_even; simp [h₄]
     choose w hw using h₁
     use w
     rw [hj]
@@ -479,12 +479,12 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) : ∃ (f : ℕ × ℕ → ℚ) (hf : arith_
       unfold fib_flute_odd
       by_cases h₂ : k = 0
       simp [h₂]
-      unfold a_odd; simp [h₂,hk]
+      unfold a_odd; simp []
       -- k ≠ 0
       simp [h₂]
       have h₄ : ¬ 2*k ≤ k := by omega
       have h₅ : 1 + 4 * k - 2 * k = 2*k + 1 := by omega
-      unfold a_odd; simp [h₂,hk,h₄,h₅]
+      unfold a_odd; simp [h₂,h₄,h₅]
     choose w hw using h₁
     use w
     rw [hk]
