@@ -444,12 +444,13 @@ lemma main1 (n : ℕ) (h : n ≠ 0) : ∀ (f : ℕ × ℕ → ℚ) (_ : arith_fp
     rw [← Rat.num_div_den (f (i, m)), hd]; simp]
   exact_mod_cast key
 
-lemma main2 (n : ℕ) (hn : n ≠ 0) : ∃ (f : ℕ × ℕ → ℚ) (hf : arith_fp f n), ∃ (a : ℕ × ℕ), f a = Nat.fib n := by
+lemma main2 (n : ℕ) (hn : n ≠ 0) :
+    ∃ (f : ℕ × ℕ → ℚ) (_ : arith_fp f n), ∃ (a : ℕ × ℕ), f a = Nat.fib n := by
   rcases Nat.even_or_odd n with ⟨k, hk⟩ | ⟨k, hk⟩
   -- even case
   · have : k > 0 := by
       by_contra!
-      simp [] at this; rw [this] at hk; simp at hk; omega
+      simp at this; rw [this] at hk; simp at hk; omega
     have : k ≠ 0 := by omega
     let j := k-1
     have hj : n = 2*j+2 := by omega

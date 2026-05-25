@@ -39,7 +39,7 @@ def csteFlute (n : ℕ) : Inhabited (flute n) := by
 
 /-- The set of all `n`-flutes. -/
 def fluteSet (n : ℕ) : Set (flute n) :=
-  { f | true }
+  Set.univ
 
 /-- The underlying sequence of the Fibonacci-maximal `(2k+1)`-flute. -/
 def a_odd (k i : ℕ) : ℕ :=
@@ -56,7 +56,8 @@ def a_odd (k i : ℕ) : ℕ :=
 /-- The Fibonacci-maximal `(2k+1)`-flute, built from `a_odd`. -/
 def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
   by_cases hk : k = 0
-  exact ⟨a_odd k 0, fun i => by simp [hk, a_odd], by simp [hk, a_odd], by simp [hk, a_odd], fun _ => by simp⟩
+  exact ⟨a_odd k 0, fun _ => by simp [hk, a_odd], by simp [hk, a_odd],
+    by simp [hk, a_odd], fun _ => by simp⟩
   have pos : ∀ i, a_odd k i > 0 := by
     intro i
     induction' i using Nat.strong_induction_on with i ih
@@ -238,7 +239,7 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
     have hi₅ : i = k := by omega
     have hi₆ : ¬ 2 * k + 1 ≤ k := by omega
     unfold a_even; simp [hi₅,hi₆]
-    -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ pos + by_cases hk₀ pos
+    -- by_cases hi/hi₂/hi₃ neg + hi₄/hk₀ pos
     by_cases hk₀ : k = 0
     simp [hk₀]
     have : a_even k 0 = 1 := by exact hd
@@ -247,7 +248,7 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
     -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ pos + by_cases hk₀ neg
     have hi₇ : ¬ 2 * k ≤ k := by omega
     simp [hi₇]
-    -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ pos + by_cases hk₀ neg + by_cases hk₁ pos
+    -- by_cases hi/hi₂/hi₃ neg + hi₄/hk₁ pos + hk₀ neg
     by_cases hk₁ : k = 1
     simp [hk₁]
     have f₁ : a_even k 0 = 1 := by exact hd
@@ -256,7 +257,7 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
     rw [hk₁] at f₁
     rw [f₁, f₃, f₄]
     use 2
-    -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ pos + by_cases hk₀ neg + by_cases hk₁ neg
+    -- by_cases hi/hi₂/hi₃ neg + hi₄ pos + hk₀/hk₁ neg
     have hk₂ : 1 < k := by omega
     have h₈ : ¬ 2 * k ≤ k + 1 := by omega
     have h₉ : 3 + 4 * k - 2 * (k + 1) = 2*k + 1 := by omega
@@ -275,9 +276,9 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
     have h₉ : i = 2*k := by omega
     rw [h₉]; simp; rw [hd]
     use (Nat.fib (3 + 4 * k - 2 * (2 * k)) + a_even k 1); omega
-    -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ neg + by_cases hi₅ neg
+    -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg
     simp [hi₅]
-    -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ neg + by_cases hi₅ neg + by_cases hi₆ pos
+    -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg + by_cases hi₆ pos
     by_cases hi₆ : 2*k ≤ i+1
     have h₁ : i+1 = 2*k := by omega
     rw [h₁]; simp
@@ -288,7 +289,7 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
     have f₅ : Nat.fib 5 = 5 := by simp [Nat.fib]
     rw [h₂,h₃,h₄,hd,f₃,f₅]
     use 3;
-    -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ neg + by_cases hi₅ neg + by_cases hi₆ neg
+    -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg + by_cases hi₆ neg
     simp [hi₆]
     have h₁: 3 + 4 * k - 2 * (i + 1) = 4*k -2*i +1 := by omega
     have h₂ : 3 + 4 * k - 2 * i = 4*k -2*i + 1 + 2 :=by omega
@@ -568,8 +569,7 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
 /-- The set of `n`-flutes is nonempty. -/
 lemma fluteSetNonEmpty (n : ℕ) : Nonempty (fluteSet n) := by
   rcases csteFlute n with ⟨f⟩
-  use f
-  rfl
+  exact ⟨f, trivial⟩
 
 /-- Every `n`-flute either has `f.a 1 = 1`, has `f.a (n-2) = 1`, or admits a *reducible*
 index `i` where `f.a (i+1) = f.a i + f.a (i+2)`. -/
