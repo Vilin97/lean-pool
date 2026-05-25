@@ -4,8 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint-Germain
 -/
 
-import Mathlib.Algebra.Ring.Basic
-import Mathlib.Tactic
+import Mathlib.Algebra.Field.Basic
+import Mathlib.Data.Finite.Prod
+import Mathlib.Data.Nat.Basic
+import Mathlib.Data.Set.Finite.Range
+import Mathlib.Tactic.Cases
+import Mathlib.Tactic.Convert
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Have
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 ---- Field-valued patterns ----
 class pattern_n (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) : Prop where

@@ -5,6 +5,11 @@ Authors: Antoine de Saint-Germain
 -/
 
 import LeanPool.FriezePatterns.chapter1
+import Mathlib.Data.Nat.Fib.Basic
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormNum.NatFib
+import Mathlib.Tactic.NthRewrite
+import Mathlib.Tactic.Positivity
 ---- n-Flutes ----
 
 structure flute (n : ℕ) where -- changed class to structure so that Lean displays f.a g.a instead of flute (n+3).a flute (n+2).a

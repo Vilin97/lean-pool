@@ -6,6 +6,9 @@ Authors: Antoine de Saint-Germain
 
 import LeanPool.FriezePatterns.chapter1
 import LeanPool.FriezePatterns.chapter2
+import Mathlib.Data.Nat.ModEq
+import Mathlib.Data.Rat.Defs
+import Mathlib.Tactic.Positivity
 
 
 class arith_fp (f : ℕ × ℕ → ℚ) (n : ℕ) : Prop where
@@ -289,7 +292,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
     unfold frieze_f ; simp +arith [this]
     have h₁ := ih₁ (i+1) (by omega) (by omega)
     have h₂ := ih₁ (i+2) (by omega) (by omega)
-    positivity
+    exact div_pos (by linarith [mul_pos h₂ ih₂]) h₁
   have diamond : ∀ i, ∀ m,  i ≤ n-1 → frieze_f g (i+1,m) * frieze_f g (i+1,m+1)-1 = frieze_f g (i+2,m) * frieze_f g (i,m+1) := by
     intro i m hi
     conv =>
