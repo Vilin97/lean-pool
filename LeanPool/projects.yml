@@ -1253,3 +1253,28 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: ramanujan-nagell
+    title: The Ramanujan-Nagell theorem
+    summary: Formalizes the Ramanujan-Nagell theorem, proving that the Diophantine equation x^2 + 7 = 2^n has exactly the five positive-integer solutions (|x|, n) = (1, 3), (3, 4), (5, 5), (11, 7), (181, 15).
+    branch: number theory
+    entry_module: LeanPool.RamanujanNagell
+    authors:
+      - Barinder S. Banwait
+      - Xinze Li
+    source:
+      url: https://github.com/BarinderBanwait/ramanujan_nagell
+      github_repo: BarinderBanwait/ramanujan_nagell
+    status: verified
+    main_declarations:
+      - RamanujanNagell
+    main_results:
+      - declaration: RamanujanNagell
+        informal: Proves that the integer solutions of x^2 + 7 = 2^n are exactly (x, n) = (+/-1, 3), (+/-3, 4), (+/-5, 5), (+/-11, 7), (+/-181, 15).
+    tags:
+      - number-theory
+      - diophantine-equations
+      - quadratic-integers
+    msc:
+      - "11D61"
+      - "11D45"
+      - "11R11"
