@@ -363,6 +363,12 @@ import LeanPool.PartialCombinatoryAlgebras.PartialCombinatoryAlgebra
 import LeanPool.PartialCombinatoryAlgebras.Programming
 import LeanPool.PartialRegularity
 import LeanPool.PartialRegularity.Extension
+import LeanPool.PentagonalNumberTheorem
+import LeanPool.PentagonalNumberTheorem.Complex
+import LeanPool.PentagonalNumberTheorem.Generic
+import LeanPool.PentagonalNumberTheorem.Old
+import LeanPool.PentagonalNumberTheorem.Partition
+import LeanPool.PentagonalNumberTheorem.PowerSeries
 import LeanPool.PointwiseBirkhoff
 import LeanPool.PointwiseBirkhoff.Main
 import LeanPool.PolyaEnumerationTheorem

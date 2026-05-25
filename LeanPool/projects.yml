@@ -1253,3 +1253,33 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: pentagonal-number-theorem
+    title: Euler's pentagonal number theorem
+    summary: Formalizes Euler's pentagonal number theorem as a generating-function identity for power series and for real/complex numbers, with a partition-recurrence corollary and a self-contained Franklin-style combinatorial proof.
+    branch: number theory
+    entry_module: LeanPool.PentagonalNumberTheorem
+    authors:
+      - Weiyi Wang
+    source:
+      github_repo: wwylele/PentagonalNumberTheorem
+    status: verified
+    main_declarations:
+      - Pentagonal.pentagonalNumberTheorem_powerSeries
+      - Pentagonal.pentagonalNumberTheorem_complex
+      - Nat.Partition.sum_partition
+    main_results:
+      - declaration: Pentagonal.pentagonalNumberTheorem_powerSeries
+        informal: Proves Euler's pentagonal number theorem as a formal power series identity ∏(1-xⁿ) = Σ(-1)ᵏ x^(k(3k-1)/2).
+      - declaration: Pentagonal.pentagonalNumberTheorem_complex
+        informal: Proves the analytic version of the pentagonal number theorem for real or complex numbers of norm less than one.
+      - declaration: Nat.Partition.sum_partition
+        informal: Derives Euler's pentagonal recurrence for the partition function from the pentagonal number theorem.
+    tags:
+      - number-theory
+      - combinatorics
+      - partitions
+      - power-series
+      - pentagonal-number-theorem
+    msc:
+      - "11P81"
+      - "05A17"
