@@ -287,9 +287,9 @@ import LeanPool.FormalizationOfBoundedArithmetic.V0StrSuccAssoc
 import LeanPool.ForwardEuler
 import LeanPool.ForwardEuler.Main
 import LeanPool.FriezePatterns
-import LeanPool.FriezePatterns.chapter1
-import LeanPool.FriezePatterns.chapter2
-import LeanPool.FriezePatterns.chapter3
+import LeanPool.FriezePatterns.Chapter1
+import LeanPool.FriezePatterns.Chapter2
+import LeanPool.FriezePatterns.Chapter3
 import LeanPool.GrothendieckVanishing
 import LeanPool.GrothendieckVanishing.ClosedImmersion
 import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology

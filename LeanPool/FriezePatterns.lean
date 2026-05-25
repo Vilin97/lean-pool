@@ -4,9 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint-Germain
 -/
 
-import LeanPool.FriezePatterns.chapter1
-import LeanPool.FriezePatterns.chapter2
-import LeanPool.FriezePatterns.chapter3
+import LeanPool.FriezePatterns.Chapter1
+import LeanPool.FriezePatterns.Chapter2
+import LeanPool.FriezePatterns.Chapter3
 
 /-!
 # Frieze patterns and Fibonacci maxima

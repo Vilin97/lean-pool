@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine de Saint-Germain
 -/
 
-import LeanPool.FriezePatterns.chapter1
-import LeanPool.FriezePatterns.chapter2
+import LeanPool.FriezePatterns.Chapter1
+import LeanPool.FriezePatterns.Chapter2
 import Mathlib.Data.Nat.ModEq
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic.Positivity
@@ -96,7 +96,7 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
     have this.num.toNat : (f (2, m)).num.toNat * (f (2, m + 1)).num.toNat = 2 := by
       have h₃ : 0 ≤ (f (2,m)).num := by linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 m (by omega) (by omega))]
       have h₄ : 0 ≤ (f (2,m+1)).num := by linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 (m+1) (by omega) (by omega))]
-      zify ; rw [Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄, this.num]
+      zify; rw [Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄, this.num]
 
     nth_rewrite 2 [← this.num.toNat]
     simp                                              --finish if n=3, i_even
@@ -163,7 +163,7 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
       have h₃ : 0 ≤ (f ((n - 2) + 1 + 1, m)).num := by linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ ((n - 2) + 1 + 1) m (by omega) (by omega))]
       have h₄ : 0 ≤ (f (2, m + ((n - 2)))).num := by linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 (m + ((n - 2))) (by omega) (by omega))]
       have h₅ : 0 ≤ (f ((n - 2) + 1,m)).num := by linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ ((n - 2) + 1) m (by omega) (by omega))]
-      zify ; rw [Int.toNat_of_nonneg h₂, Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄, Int.toNat_of_nonneg h₅, continuant3.num]
+      zify; rw [Int.toNat_of_nonneg h₂, Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄, Int.toNat_of_nonneg h₅, continuant3.num]
 
     simp[continuant3.num.toNat]                                           --finish boundary' case if (i + 2) % (n - 1) = 0
 
@@ -232,7 +232,7 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
       have h₃ : 0 ≤ (f (i % (n - 1) + 1 + 1 + 1, m)).num := by linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ (i % (n - 1) + 1 + 1 + 1) m (by omega) (by omega))]
       have h₄ : 0 ≤ (f (2, m + (i % (n - 1) + 1))).num := by linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 (m + (i % (n - 1) + 1)) (by omega) (by omega))]
       have h₅ : 0 ≤ (f (i % (n - 1) + 1 + 1,m)).num := by linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ (i % (n - 1) + 1 + 1) m (by omega) (by omega))]
-      zify ; rw [Int.toNat_of_nonneg h₂, Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄, Int.toNat_of_nonneg h₅, continuant.num]
+      zify; rw [Int.toNat_of_nonneg h₂, Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄, Int.toNat_of_nonneg h₅, continuant.num]
 
     simp[continuant.num.toNat]
 
@@ -258,7 +258,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
     induction' m with m ih
     simp [frieze_f, hn, g.hd]
     have : ¬ 1 ≥ n+1 := by omega
-    unfold frieze_f ; simp [this, ih]
+    unfold frieze_f; simp [this, ih]
     right
     exact topBordZeros (m+1)
   have botBordOnes_n : ∀ m, frieze_f g (n, m) = 1 := by
@@ -269,7 +269,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
     simp [g.hd] at this
     exact this.symm
     have : ¬ n ≥ n+1 := by omega
-    unfold frieze_f ; simp [this, ih, hn]
+    unfold frieze_f; simp [this, ih, hn]
     left
     exact botBordZeros_n (n+1) m (by rfl)
   have positive: ∀ i, ∀ m, 1 ≤ i → i ≤ n → frieze_f g (i,m) > 0 := by
@@ -278,7 +278,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
     intro hi₁ hi₂
     have hi₃ : ¬ i = 0 := by omega
     have hi₄ : ¬ i ≥ n+1 := by omega
-    unfold frieze_f ; simp [hi₃, hi₄]
+    unfold frieze_f; simp [hi₃, hi₄]
     exact g.pos (i-1)
     induction' i with i ih₂
     omega
@@ -290,7 +290,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
     simp [this, hi', botBordOnes_n]
     specialize ih₂ (by omega) (by omega)
     have : ¬ n ≤ i := by omega
-    unfold frieze_f ; simp +arith [this]
+    unfold frieze_f; simp +arith [this]
     have h₁ := ih₁ (i+1) (by omega) (by omega)
     have h₂ := ih₁ (i+2) (by omega) (by omega)
     exact div_pos (by linarith [mul_pos h₂ ih₂]) h₁
@@ -320,7 +320,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
         have hm₃ : ¬ n ≤ m := by omega
         have hm₄ : ¬ n ≤ m+1 := by omega
         have hm₅ : ¬ n+1 ≤ m := by omega
-        unfold frieze_f ; simp [hm, hm₃, hm₄, hm₅]
+        unfold frieze_f; simp [hm, hm₃, hm₄, hm₅]
         norm_cast
         have := g.div (m-1)
         have hm₆ : m-1+1 = m := by omega
@@ -348,7 +348,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
       have key := glideSymm ℚ (frieze_f g) n (n-1) (by omega) 1
       have hm₅ : 1+(n-1)=n := by omega
       simp [this, hm₅] at key
-      rw [hm₄, key] ; rw [hm₄] at ih
+      rw [hm₄, key]; rw [hm₄] at ih
       suffices : ∀ i ≤ n-1, (frieze_f g (i,1)).den = 1
       · exact this (n-1) (by omega)
       intro i hi
@@ -363,7 +363,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
       have := ih (1+i) (by omega)
       -- there should be a tactic to do the following two steps?
       rw [Rat.sub_eq_add_neg, Rat.add_num_den, Rat.neg_den, Rat.mul_den, ih₁, ih₂, this]
-      simp ; norm_cast
+      simp; norm_cast
       have h := translationInvariance ℚ (frieze_f g) n 2 (by omega) (m-(n+1))
       have : m-(n+1)+n+1 = m := by omega
       rw [this] at h
@@ -371,12 +371,12 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
     intro i
     induction' i using Nat.strong_induction_on with i ih
     match i with
-    | 0 => intro ; simp [topBordZeros]
-    | 1 => intro ; simp [topBordOnes]
+    | 0 => intro; simp [topBordZeros]
+    | 1 => intro; simp [topBordOnes]
     | 2 => exact key
     | i+3 =>
       by_cases hi : i+2 ≥ n
-      intro ; simp [botBordZeros_n (i+3) _ (by omega)]
+      intro; simp [botBordZeros_n (i+3) _ (by omega)]
       intro m
       have key₂ := pattern_nContinuant1 ℚ (frieze_f g) n (i+1) (by omega) m
       simp +arith at key₂
