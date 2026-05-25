@@ -1,0 +1,20 @@
+/-
+Copyright (c) 2026 Antoine de Saint-Germain. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Antoine de Saint-Germain
+-/
+
+import LeanPool.FriezePatterns.chapter1
+import LeanPool.FriezePatterns.chapter2
+import LeanPool.FriezePatterns.chapter3
+
+/-!
+# Frieze patterns and Fibonacci maxima
+
+Source: https://github.com/Antoine-dSG/frieze_patterns (arXiv:2407.16717)
+Authors: Antoine de Saint-Germain
+Status: verified
+Main declarations: `main3`, `FluteBounded`, `glideSymm`, `translationInvariance`
+Tags: combinatorics, frieze-patterns, fibonacci, coxeter
+MSC: 05E15, 11B39, 13F60
+-/

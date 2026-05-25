@@ -1253,3 +1253,41 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: frieze-patterns
+    title: Maxima of Coxeter frieze patterns are Fibonacci numbers
+    summary: Formalizes the claim that the sequence of maxima of values of (Coxeter) arithmetic frieze patterns is the Fibonacci sequence, using a correspondence between arithmetic frieze patterns and n-flutes.
+    branch: combinatorics
+    entry_module: LeanPool.FriezePatterns
+    authors:
+      - Antoine de Saint-Germain
+    source:
+      title: "On upper bounds in frieze patterns"
+      authors:
+        - Antoine de Saint-Germain
+      arxiv: "2407.16717"
+      github_repo: Antoine-dSG/frieze_patterns
+    status: verified
+    main_declarations:
+      - main3
+      - FluteBounded
+      - glideSymm
+      - translationInvariance
+    main_results:
+      - declaration: main3
+        informal: Proves that the maximum value of an arithmetic frieze pattern of width n is exactly the n-th Fibonacci number, and that this bound is attained.
+      - declaration: FluteBounded
+        informal: Proves that every entry of an n-flute is bounded above by the n-th Fibonacci number.
+      - declaration: glideSymm
+        informal: Proves the glide-reflection symmetry of Coxeter frieze patterns.
+      - declaration: translationInvariance
+        informal: Proves the (n+1)-periodicity (horizontal translation invariance) of Coxeter frieze patterns.
+    tags:
+      - combinatorics
+      - frieze-patterns
+      - fibonacci
+      - coxeter
+    msc:
+      - "05E15"
+      - "11B39"
+      - "13F60"
+
