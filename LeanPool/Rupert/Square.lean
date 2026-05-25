@@ -16,7 +16,8 @@ open Real
 /--
 A square in the xy-plane, centered at the origin and with side length 2.
 -/
-abbrev vertices : Fin 4 → ℝ³ := ![ !₂[-1, -1, 0], !₂[1, -1, 0], !₂[-1, 1, 0], !₂[1, 1, 0] ]
+abbrev vertices : Fin 4 → ℝ³ :=
+  ![!₂[-1, -1, 0], !₂[1, -1, 0], !₂[-1, 1, 0], !₂[1, 1, 0]]
 
 /-- square root of one-half -/
 noncomputable def rh : ℝ := √2/2
@@ -31,6 +32,7 @@ theorem rh_lemma : rh * rh + rh * rh  = 1 := by
        _ = 2 * (2 / 2^2) := by simp
        _ = 1 := by norm_num
 
+/-- Rotation matrix for the inner square shadow. -/
 abbrev inner_rot : Matrix (Fin 3) (Fin 3) ℝ :=
    !![1, 0, 0;
       0, 0,-1;
@@ -44,6 +46,7 @@ lemma inner_rot_so3 : inner_rot ∈ SO3 := by
      simp [Matrix.mul_apply, Fin.sum_univ_three]
   · simp [det_succ_row_zero, Fin.sum_univ_three]
 
+/-- Rotation matrix for the outer square shadow. -/
 noncomputable abbrev outer_rot : Matrix (Fin 3) (Fin 3) ℝ :=
    !![ rh, rh, 0;
       -rh, rh, 0;
@@ -78,9 +81,7 @@ by π/4 radians. No offset translation is needed.
  rw [rupert_iff_rupert']
  let inner_offset : ℝ² := 0
  use inner_rot, inner_rot_so3, inner_offset, outer_rot, outer_rot_so3
-
  intro inner_shadow outer_shadow x hx
-
  obtain ⟨ε₀, hε₀0, hε₀⟩ : ∃ ε₀, 0 < ε₀ ∧ ε₀ < √2/2 := by
    use 0.00001
    have h : 1 / 2 < √2 / 2 := by
@@ -102,7 +103,7 @@ by π/4 radians. No offset translation is needed.
    refine ⟨?_, ?_, ?_, ?_⟩
    · intro i
      fin_cases i
-     · simp
+     · simp only [Fin.isValue, one_div, Fin.zero_eta, cons_val_zero]
        suffices H : 0 * (2 * √2) ≤ (4⁻¹ + v 0 / (2 * √2)) * (2 * √2) by
          have : 0 < 2 * √2 := by positivity
          exact le_of_mul_le_mul_right H this
@@ -111,13 +112,14 @@ by π/4 radians. No offset translation is needed.
        rw [mul_assoc]
        simp
        linarith
-     · simp
+     · simp only [Fin.isValue, one_div, Fin.mk_one, cons_val_one, cons_val_zero,
+         sub_nonneg]
        suffices H : v 0 / (2 * √2) * (2 * √2) ≤ 4⁻¹ * (2 * √2) by
          have : 0 < 2 * √2 := by positivity
          exact le_of_mul_le_mul_right H this
        simp
        linarith
-     · simp
+     · simp only [Fin.isValue, one_div, Fin.reduceFinMk, cons_val]
        suffices H : 0 * (2 * √2) ≤ (4⁻¹ + v 1 / (2 * √2)) * (2 * √2) by
          have : 0 < 2 * √2 := by positivity
          exact le_of_mul_le_mul_right H this
@@ -126,7 +128,7 @@ by π/4 radians. No offset translation is needed.
        rw [mul_assoc]
        simp
        linarith
-     · simp
+     · simp only [Fin.isValue, one_div, Fin.reduceFinMk, cons_val, sub_nonneg]
        suffices H : v 1 / (2 * √2) * (2 * √2) ≤ 4⁻¹ * (2 * √2) by
          have : 0 < 2 * √2 := by positivity
          exact le_of_mul_le_mul_right H this
@@ -136,23 +138,22 @@ by π/4 radians. No offset translation is needed.
      ring
    · intro i
      fin_cases i
-     · simp [outer_shadow, proj_xy, rh]
-       use 3; simp [vecHead, vecTail]
-     · simp [outer_shadow, proj_xy, rh]
-       use 0; simp [vecHead, vecTail]
+     · refine ⟨3, ?_⟩
+       simp [proj_xy, rh]
+     · refine ⟨0, ?_⟩
+       simp [proj_xy, rh]
        ring_nf
-     · simp [outer_shadow, proj_xy, rh]
-       use 2; simp [vecHead, vecTail]
-     · simp [outer_shadow, proj_xy, rh]
-       use 1; simp [neg_div', vecHead, vecTail]; ring_nf
+     · refine ⟨2, ?_⟩
+       simp [proj_xy, rh]
+     · refine ⟨1, ?_⟩
+       simp [proj_xy, rh]
+       ring_nf
    · rw [Fin.sum_univ_four]
      ext i
      fin_cases i <;> (simp; grind)
-
  -- subset_interior_hull
  let ε₁ : ℝ := 0.001
  have hε₁ : ε₁ ∈ Set.Ioo 0 1 := by norm_num
-
  have negx_in_outer : !₂[-1, 0] ∈ interior (convexHull ℝ outer_shadow) := by
    apply Convex.mem_interior_hull hε₀0 hε₁ zero_in_outer
    rw [mem_convexHull_iff_exists_fintype]
@@ -164,14 +165,14 @@ by π/4 radians. No offset translation is needed.
    use ![!₂[(1-ε₁) * √2, 0], !₂[-(1-ε₁) * √2, 0]]
    refine ⟨?_, ?_, ?_, ?_⟩
    · intro i; fin_cases i
-     · simp [ε₁]
+     · simp only [Fin.zero_eta, Fin.isValue, cons_val_zero]
        have h1 : 0 ≤ 2 * (1 - 1e-3) * √2 := by positivity
        suffices H : (0:ℝ) ≤ (1 - 1e-3) * √2 - 1 from div_nonneg H h1
        suffices H : (1:ℝ) ≤ (1 - 1e-3) * √2 from sub_nonneg_of_le H
        refine (sq_le_sq₀ zero_le_one (by positivity)).mp ?_
        rw [mul_pow, Real.sq_sqrt zero_le_two]
        norm_num
-     · simp [ε₁]
+     · simp only [Fin.mk_one, Fin.isValue, cons_val_one, cons_val_fin_one]
        positivity
    · simp only [Fin.sum_univ_two, Fin.isValue, cons_val_zero, cons_val_one,
                 cons_val_fin_one]
@@ -212,9 +213,9 @@ by π/4 radians. No offset translation is needed.
    use ![!₂[(1-ε₁) * √2, 0], !₂[-(1-ε₁) * √2, 0]]
    refine ⟨?_, ?_, ?_, ?_⟩
    · intro i; fin_cases i
-     · simp [ε₁]
+     · simp only [Fin.zero_eta, Fin.isValue, cons_val_zero]
        positivity
-     · simp [ε₁]
+     · simp only [Fin.mk_one, Fin.isValue, cons_val_one, cons_val_fin_one]
        have h1 : 0 ≤ 2 * (1 - 1e-3) * √2 := by positivity
        suffices H : (0:ℝ) ≤ (1 - 1e-3) * √2 - 1 from div_nonneg H h1
        suffices H : (1:ℝ) ≤ (1 - 1e-3) * √2 from sub_nonneg_of_le H
@@ -243,17 +244,17 @@ by π/4 radians. No offset translation is needed.
      fin_cases i
      · simp; field
      · simp
-
  -- we have y ∈ ℝ³ that came from the square, which after being rotated by
  -- inner_rot and projected, is x
  rw [Set.mem_setOf] at hx
  obtain ⟨y, proj_rot_y_eq_x⟩ := hx
- rw [← proj_rot_y_eq_x]; unfold inner_offset; simp;
+ rw [← proj_rot_y_eq_x]
+ unfold inner_offset
+ simp only [zero_add]
  fin_cases y
- all_goals (simp [proj_xy, vecHead, vecTail])
- · exact negx_in_outer
- · exact posx_in_outer
- · exact negx_in_outer
- · exact posx_in_outer
+ · simpa [proj_xy, vecHead, vecTail] using negx_in_outer
+ · simpa [proj_xy, vecHead, vecTail] using posx_in_outer
+ · simpa [proj_xy, vecHead, vecTail] using negx_in_outer
+ · simpa [proj_xy, vecHead, vecTail] using posx_in_outer
 
 end Square

@@ -8,4 +8,6 @@ import LeanPool.Rupert.Basic
 import LeanPool.Rupert.Set
 import LeanPool.Rupert.Affine
 
-proof_wanted affine_rupert_iff_rupert_set (X : Set (EuclideanSpace ℝ (Fin 3))) :  IsAffineRupertSet X ↔ IsRupertSet X
+proof_wanted affine_rupert_iff_rupert_set
+    (X : Set (EuclideanSpace ℝ (Fin 3))) :
+    IsAffineRupertSet X ↔ IsRupertSet X

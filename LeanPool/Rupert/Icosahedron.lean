@@ -15,6 +15,7 @@ namespace Icosahedron
 
 open scoped Matrix goldenRatio
 
+/-- The twelve vertices of a regular icosahedron in `ℝ³`. -/
 noncomputable def icosahedron : Fin 12 → ℝ³ := ![
   !₂[ 1,  φ,  0],
   !₂[ 1, -φ,  0],

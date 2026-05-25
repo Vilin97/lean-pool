@@ -29,7 +29,7 @@ def IsAffineRupertPair {P : Type*} {V : Type*} [MetricSpace P] [NormedAddCommGro
 
 /-- The Rupert Property for a subset S of affine space P. S has the Rupert property
     if it has the pairwise Rupert property with respect to itself. -/
-def IsAffineRupertSet  {P : Type*} {V : Type*} [MetricSpace P] [NormedAddCommGroup V]
+def IsAffineRupertSet {P : Type*} {V : Type*} [MetricSpace P] [NormedAddCommGroup V]
     [InnerProductSpace ℝ V] [NormedAddTorsor V P] [FiniteDimensional ℝ V]
     (S : Set P) : Prop :=
     IsAffineRupertPair S S

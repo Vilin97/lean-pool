@@ -15,11 +15,7 @@ namespace TriakisTetrahedron
 
 open scoped Matrix
 
-/- This is tom7's triakis tetrahedron scaled by 3/5, so that the
-   first four vertices make up a regular tetrahedron with nice unit
-   coordinates, and the remaining vertices represent the augmentations
-   of each of the faces of that tetrahedron. -/
-
+/-- Vertices of tom7's triakis tetrahedron, scaled by `3 / 5`. -/
 noncomputable def vertices : Fin 8 → ℝ³ :=
   ![!₂[   1,    1,    1],
     !₂[   1,   -1,   -1],
@@ -30,27 +26,73 @@ noncomputable def vertices : Fin 8 → ℝ³ :=
     !₂[ 3/5,  3/5, -3/5],
     !₂[-3/5, -3/5, -3/5]]
 
+/-- Quaternion certificate for the inner rotation. -/
 def inner_quat : Quaternion ℝ := ⟨0.144873924, 0.365747659, -0.854692880, -0.338733344⟩
 
+/-- Translation offset for the inner shadow. -/
 def inner_offset : ℝ² := !₂[8.5629464761e-05, 8.9387250451e-05]
 
+/-- Quaternion certificate for the outer rotation. -/
 def outer_quat : Quaternion ℝ := ⟨0.858732110, -0.148912807, -0.352436516, -0.340870417⟩
 
+/-- Rotation matrix for the inner triakis tetrahedron. -/
 noncomputable def inner_rot := matrix_of_quat inner_quat
 
 lemma inner_rot_so3 : inner_rot ∈ SO3 := by
   have h : inner_quat.normSq ≠ 0 := by norm_num [inner_quat, Quaternion.normSq_def]
   exact matrix_of_quat_is_s03 h
 
+/-- Rotation matrix for the outer triakis tetrahedron. -/
 noncomputable def outer_rot := matrix_of_quat outer_quat
 
 lemma outer_rot_so3 : outer_rot ∈ SO3 := by
   have h : outer_quat.normSq ≠ 0 := by norm_num [outer_quat, Quaternion.normSq_def]
   exact matrix_of_quat_is_s03 h
 
-set_option maxHeartbeats 1000000 in
--- The `rupert` certificate is verified by `decide` on a larger `Convex.combo_*` payload, which
--- exceeds the default heartbeat budget by an order of magnitude.
+lemma outer_ball_subset :
+    Metric.ball 0 (0.006 : ℝ) ⊆
+      convexHull ℝ { proj_xy (outer_rot.toEuclideanLin (vertices i)) | i } := by
+  let ε₀ : ℝ := 0.006
+  have hε₀ : ε₀ ∈ Set.Ioo 0 1 := by norm_num
+  refine Convex.ball_in_hull_of_corners_in_hull hε₀ ?_ ?_ ?_ ?_ <;>
+    apply mem_convexHull_iff_exists_fintype.mpr <;>
+    use Fin 8, Fin.fintype 8
+  <;> [
+    use ![0, 0, 0,
+          209107410810126884571/565617601328354816800,
+          245824061168864729/35351100083022176050,
+          0,
+          70515401107905219313/113123520265670963360,
+          0];
+    use ![0,
+          1051981313303264779479/2828088006641774084000,
+          0,
+          19719000787634436/6798288477504264625,
+          353580717802170675829/565617601328354816800,
+          0, 0, 0];
+    use ![3938334956654107739/8031045263445271000,
+          2045224314929433491/8031045263445271000,
+          0,
+          204748599186172977/803104526344527100,
+          0, 0, 0, 0];
+    use ![0,
+          1095105012905906001/353511000830221760500,
+          0,
+          1052120747247162610137/2828088006641774084000,
+          0, 0,
+          353441283858272845171/565617601328354816800,
+          0]
+  ]
+  all_goals
+    use fun i ↦ proj_xy (outer_rot.toEuclideanLin (vertices i))
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · apply all_fin_8_vec <;> norm_num
+    · simp [Fin.sum_univ_eight]; norm_num
+    · exact fun i ↦ ⟨i, rfl⟩
+    · simp only [proj_xy, outer_rot, matrix_of_quat, outer_quat, vertices,
+                 Fin.sum_univ_eight, matrix_simps]
+      ext i; fin_cases i <;> norm_num
+
 theorem rupert : IsRupert vertices := by
   rw [rupert_iff_rupert']
   use inner_rot, inner_rot_so3, inner_offset, outer_rot, outer_rot_so3
@@ -58,44 +100,7 @@ theorem rupert : IsRupert vertices := by
   let ε₀ : ℝ := 0.006
   have hε₀ : ε₀ ∈ Set.Ioo 0 1 := by norm_num
   have hb : Metric.ball 0 ε₀ ⊆ convexHull ℝ outer_shadow := by
-    refine Convex.ball_in_hull_of_corners_in_hull hε₀ ?_ ?_ ?_ ?_ <;>
-      apply mem_convexHull_iff_exists_fintype.mpr <;>
-      use Fin 8, Fin.fintype 8
-    <;> [
-      use ![0, 0, 0,
-            209107410810126884571/565617601328354816800,
-            245824061168864729/35351100083022176050,
-            0,
-            70515401107905219313/113123520265670963360,
-            0];
-      use ![0,
-            1051981313303264779479/2828088006641774084000,
-            0,
-            19719000787634436/6798288477504264625,
-            353580717802170675829/565617601328354816800,
-            0, 0, 0];
-      use ![3938334956654107739/8031045263445271000,
-            2045224314929433491/8031045263445271000,
-            0,
-            204748599186172977/803104526344527100,
-            0, 0, 0, 0];
-      use ![0,
-            1095105012905906001/353511000830221760500,
-            0,
-            1052120747247162610137/2828088006641774084000,
-            0, 0,
-            353441283858272845171/565617601328354816800,
-            0]
-    ]
-    all_goals
-      use fun i ↦ proj_xy (outer_rot.toEuclideanLin (vertices i))
-      refine ⟨?_, ?_, ?_, ?_⟩
-      · apply all_fin_8_vec <;> norm_num
-      · simp [Fin.sum_univ_eight]; norm_num
-      · exact fun i ↦ ⟨i, rfl⟩
-      · simp only [proj_xy, outer_rot, matrix_of_quat, outer_quat, vertices,
-                   Fin.sum_univ_eight, ε₀, matrix_simps]
-        ext i; fin_cases i <;> norm_num
+    simpa [ε₀, outer_shadow] using outer_ball_subset
   intro v hv
   let ε₁ : ℝ := 1e-11
   have hε₁ : ε₁ ∈ Set.Ioo 0 1 := by norm_num

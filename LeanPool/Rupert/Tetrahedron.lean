@@ -15,33 +15,36 @@ namespace Tetrahedron
 
 open scoped Matrix
 
+/-- Vertices of a regular tetrahedron. -/
 def vertices : Fin 4 → ℝ³ :=
   ![!₂[ 1,  1,  1],
     !₂[ 1, -1, -1],
     !₂[-1,  1, -1],
     !₂[-1, -1,  1]]
 
+/-- Quaternion certificate for the outer tetrahedron rotation. -/
 def outer_quat : Quaternion ℝ := ⟨0.338990, -0.426182, 0.173602, -0.820558⟩
 
+/-- Rotation matrix for the outer tetrahedron. -/
 noncomputable def outer_rot := matrix_of_quat outer_quat
 
 lemma outer_rot_so3 : outer_rot ∈ SO3 := by
   have h : outer_quat.normSq ≠ 0 := by norm_num [outer_quat, Quaternion.normSq_def]
   exact matrix_of_quat_is_s03 h
 
+/-- Quaternion certificate for the inner tetrahedron rotation. -/
 def inner_quat : Quaternion ℝ := ⟨0.857701, -0.119161, 0.443971, 0.230299⟩
 
+/-- Rotation matrix for the inner tetrahedron. -/
 noncomputable def inner_rot := matrix_of_quat inner_quat
 
 lemma inner_rot_so3 : inner_rot ∈ SO3 := by
   have h : inner_quat.normSq ≠ 0 := by norm_num [inner_quat, Quaternion.normSq_def]
   exact matrix_of_quat_is_s03 h
 
+/-- Translation offset for the inner tetrahedron shadow. -/
 def inner_offset : ℝ² := !₂[0.098412,-0.165800]
 
-set_option maxHeartbeats 400000 in
--- The `rupert` certificate is verified by `decide` on a `Convex.combo_*` payload, which exceeds
--- the default heartbeat budget.
 theorem rupert : IsRupert vertices := by
   rw [rupert_iff_rupert']
   use inner_rot, inner_rot_so3, inner_offset, outer_rot, outer_rot_so3
