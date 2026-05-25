@@ -9,6 +9,7 @@ import LeanPool.FriezePatterns.chapter2
 import Mathlib.Data.Nat.ModEq
 import Mathlib.Data.Rat.Defs
 import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Push
 
 
 class arith_fp (f : ℕ × ℕ → ℚ) (n : ℕ) : Prop where
@@ -29,12 +30,12 @@ instance [arith_fp f n] : nzPattern_n ℚ f n := {
   non_zero := λ i m ⟨hi1, hi2⟩ => by linarith [@arith_fp.positive f n _ i m hi1 hi2]
 }
 
-def flute_f (f : ℕ×ℕ → ℚ) (n m: ℕ) [arith_fp f n] (i:ℕ) : ℕ :=        -- definition only good when n ≥ 2, as otherwise i%0 = i for all i
+def flute_f (f : ℕ × ℕ → ℚ) (n m : ℕ) [arith_fp f n] (i : ℕ) : ℕ :=        -- definition only good when n ≥ 2, as otherwise i%0 = i for all i
   ((f (i%(n-1) + 1, m)).num).toNat                                                    -- also needs this shifting by one, old defn would start seq with (1,1,...), this fixes having multiple cases as well
 
 
 
-def friezeToFlute (f : ℕ×ℕ → ℚ) (n m: ℕ) (hn : 2 ≤ n) [arith_fp f n] : flute n := by
+def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp f n] : flute n := by
   have pos : ∀ i, flute_f f n m i > 0 := by
     intro i
 
@@ -241,8 +242,8 @@ def friezeToFlute (f : ℕ×ℕ → ℚ) (n m: ℕ) (hn : 2 ≤ n) [arith_fp f n
 
 
 -- The following two definitions turn a flute to a frieze.
-def frieze_f {n : ℕ} (g : flute n): ℕ × ℕ → ℚ :=
-  λ ⟨i, m⟩ =>
+def frieze_f {n : ℕ} (g : flute n) : ℕ × ℕ → ℚ :=
+  fun ⟨i, m⟩ =>
     if i = 0 then 0
     else if i ≥ n+1 then 0
     else if m = 0 then g.a (i-1)
@@ -389,7 +390,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
       simp
   exact {topBordZeros, topBordOnes, botBordOnes_n, botBordZeros_n, diamond, integral, positive}
 
-def arithFriezePatSet (n: ℕ) : Set (ℕ × ℕ → ℚ) :=
+def arithFriezePatSet (n : ℕ) : Set (ℕ × ℕ → ℚ) :=
   { f | arith_fp f n}
 
 
@@ -490,8 +491,9 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) : ∃ (f : ℕ × ℕ → ℚ) (hf : arith_
     rw [hk]
     assumption
 
-theorem main3 (n : ℕ) (hn: n≠ 0) : ∃ (g : ℕ × ℕ → ℚ) (_ : arith_fp g n), ∃ (b : ℕ × ℕ ), (∀ (f : ℕ × ℕ → ℚ) (_ : arith_fp f n), ∀ (a : ℕ × ℕ),
-(f a ≥ g b → f a = g b)) ∧ g b = Nat.fib n := by
+theorem main3 (n : ℕ) (hn : n ≠ 0) : ∃ (g : ℕ × ℕ → ℚ) (_ : arith_fp g n),
+    ∃ (b : ℕ × ℕ), (∀ (f : ℕ × ℕ → ℚ) (_ : arith_fp f n), ∀ (a : ℕ × ℕ),
+      (f a ≥ g b → f a = g b)) ∧ g b = Nat.fib n := by
   have h : ∃ (g : ℕ × ℕ → ℚ) (_ : arith_fp g n), ∃ (b : ℕ × ℕ), g b = Nat.fib n := main2 n hn
   choose g hg b hb using h
   use g; use hg; use b

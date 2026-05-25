@@ -297,7 +297,8 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
     omega
   exact ⟨a_even k, pos, hd, period, div⟩
 
-lemma FluteReduction (n : ℕ)(f : flute n) : ((f.a 1 =1) ∨ (f.a (n-2) = 1)) ∨ (∃ i ≤ n-3, f.a (i+1) = f.a i + f.a (i+2)) := by
+lemma FluteReduction (n : ℕ) (f : flute n) : ((f.a 1 = 1) ∨ (f.a (n - 2) = 1)) ∨
+    (∃ i ≤ n - 3, f.a (i + 1) = f.a i + f.a (i + 2)) := by
   by_contra! H
   rcases H with ⟨⟨h₁, h₂⟩, h₃⟩
   have ha₁ : (↑(f.a 1):ℤ) - f.a 0 > 0 := by
@@ -344,7 +345,7 @@ lemma FluteReduction (n : ℕ)(f : flute n) : ((f.a 1 =1) ∨ (f.a (n-2) = 1)) �
     linarith
 
 
-def a_1 (n : ℕ) (f : flute (n+3)) (h : f.a 1 = 1) (k : ℕ) : ℕ :=
+def a_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) (k : ℕ) : ℕ :=
   if k ≥ n+1 then
     a_1 n f h (k-(n+1))
   else if k = 0 then
@@ -352,7 +353,7 @@ def a_1 (n : ℕ) (f : flute (n+3)) (h : f.a 1 = 1) (k : ℕ) : ℕ :=
   else
     f.a (k+1)
 
-def aux_1 (n : ℕ) (f : flute (n+3)) (h : f.a 1 = 1) : flute (n+2) := by
+def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
   have pos : ∀ i, a_1 n f h i > 0 := by
     intro i
     induction' i using Nat.strong_induction_on with i ih
@@ -427,13 +428,13 @@ def aux_1 (n : ℕ) (f : flute (n+3)) (h : f.a 1 = 1) : flute (n+2) := by
     exact f.div (i+1)
   exact ⟨a_1 n f h, pos, hd, period, div⟩
 
-def a_2 (n : ℕ) (f : flute (n+3)) (h : f.a (n+1) = 1) (k : ℕ) : ℕ :=
+def a_2 (n : ℕ) (f : flute (n + 3)) (h : f.a (n + 1) = 1) (k : ℕ) : ℕ :=
   if k ≥ n+1 then
     a_2 n f h (k-(n+1))
   else
     f.a k
 
-def aux_2 (n : ℕ) (f : flute (n+3)) (h : f.a (n+1) = 1) : flute (n+2) := by
+def aux_2 (n : ℕ) (f : flute (n + 3)) (h : f.a (n + 1) = 1) : flute (n + 2) := by
   have pos : ∀ i, a_2 n f h i > 0 := by
     intro i
     induction' i using Nat.strong_induction_on with i ih
@@ -484,14 +485,16 @@ def aux_2 (n : ℕ) (f : flute (n+3)) (h : f.a (n+1) = 1) : flute (n+2) := by
     simp [hi₃, hi₄, f.div i]
   exact ⟨a_2 n f h, pos, hd, period, div⟩
 
-def a_3 (n : ℕ) (f : flute (n+3)) (i : ℕ) (hi : i ≤ n ∧ f.a (i+1) = f.a i + f.a (i+2)) (k : ℕ) : ℕ :=
+def a_3 (n : ℕ) (f : flute (n + 3)) (i : ℕ)
+    (hi : i ≤ n ∧ f.a (i + 1) = f.a i + f.a (i + 2)) (k : ℕ) : ℕ :=
   if k ≥ n+1 then
     a_3 n f i hi (k-(n+1))
   else if k ≤ i then
     f.a k
   else f.a (k+1)
 
-def aux_3 (n : ℕ) (f : flute (n+3)) (j : ℕ) (hj : j ≤ n ∧ f.a (j+1) = f.a j + f.a (j+2)) : flute (n+2) := by
+def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
+    (hj : j ≤ n ∧ f.a (j + 1) = f.a j + f.a (j + 2)) : flute (n + 2) := by
   have pos : ∀ i, a_3 n f j hj i > 0 := by
     intro i
     induction' i using Nat.strong_induction_on with i ih
@@ -595,7 +598,8 @@ def aux_3 (n : ℕ) (f : flute (n+3)) (j : ℕ) (hj : j ≤ n ∧ f.a (j+1) = f.
     simp [hij, hij₂, hij₃, f.div (i+1)]
   exact ⟨a_3 n f j hj, pos, hd, period, div⟩
 
-theorem FluteBounded (n : ℕ) (hn: n>0) (f : flute n) : ∀ i ≤ n-1, f.a i ≤ Nat.fib n := by
+theorem FluteBounded (n : ℕ) (hn : n > 0) (f : flute n) :
+    ∀ i ≤ n - 1, f.a i ≤ Nat.fib n := by
   -- note the statement is false without hn
   suffices : ∃ l, ∀ i ≤ n-1, ((i ≠ l → f.a i ≤ Nat.fib (n-2+1)) ∧ (i=l → f.a i ≤ Nat.fib n)) -- we strengthen the inductive hypothesis to avoid having to do everything twice
   · rcases this with ⟨l, hl⟩
