@@ -13,11 +13,10 @@ import LeanPool.PentagonalNumberTheorem.PowerSeries
 /-!
 # Euler's pentagonal number theorem
 
-Source: https://github.com/wwylele/PentagonalNumberTheorem
+Source: url:https://en.wikipedia.org/wiki/Pentagonal_number_theorem
 Authors: Weiyi Wang
 Status: verified
-Main declarations: `Pentagonal.pentagonalNumberTheorem_powerSeries`,
-`Pentagonal.pentagonalNumberTheorem_complex`, `Nat.Partition.sum_partition`
+Main declarations: `pentagonalNumberTheorem_powerSeries`, `Nat.Partition.sum_partition`
 Tags: number-theory, combinatorics, partitions, power-series, pentagonal-number-theorem
 MSC: 11P81, 05A17
 -/
