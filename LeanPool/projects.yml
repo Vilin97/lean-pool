@@ -1253,3 +1253,45 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: neukirch
+    title: Neukirch's Algebraic Number Theory — selected formalizations
+    summary: Vendors a Lean formalization of selected results from Neukirch's Algebraic Number Theory, including Hilbert's ramification theory (decomposition and inertia groups), extensions of Dedekind domains, cyclotomic fields, the Gaussian integers, and a draft development of valuation theory and p-adic completions. Phase-1 vendor-only import; many proofs remain `sorry` upstream.
+    branch: number theory
+    entry_module: LeanPool.Neukirch
+    authors:
+      - Jiedong Jiang
+      - Hu Yongle
+      - Zou Wenrong
+      - Sun Tiantong
+      - LeiBichang
+      - Prowler99
+    source:
+      title: Algebraic Number Theory
+      authors:
+        - Jürgen Neukirch
+      url: https://github.com/jjdishere/neukirch
+      github_repo: jjdishere/neukirch
+    status: verified
+    main_declarations:
+      - DecompositionGroup
+      - InertiaGroup
+      - finrank_eq_ramificationIdx_mul_inertiaDeg
+    main_results:
+      - declaration: DecompositionGroup
+        informal: Defines the decomposition group of a prime ideal P over a prime p in a Galois extension as the stabilizer of P inside the Galois group.
+      - declaration: InertiaGroup
+        informal: Defines the inertia group of P over p as the subgroup acting trivially on the residue field extension.
+      - declaration: finrank_eq_ramificationIdx_mul_inertiaDeg
+        informal: "Proves the local fundamental identity `[L_P : K_p] = e(P|p) * f(P|p)` for a prime P in a Galois extension of number fields."
+    tags:
+      - number-theory
+      - algebraic-number-theory
+      - dedekind-domains
+      - ramification
+      - valuation-theory
+      - p-adic
+    msc:
+      - "11R04"
+      - "11R32"
+      - "11S15"
+      - "13F30"
