@@ -401,36 +401,40 @@ lemma arithFriezePatSetNonEmpty {n : ℕ} (h : n ≠ 0) : (arithFriezePatSet n).
 
 
 
-lemma main1 (n : ℕ) (h : n ≠ 0) : ∀ (f : ℕ × ℕ → ℚ) (_ : arith_fp f n), ∀ (a : ℕ × ℕ), f a ≤ Nat.fib n := by
-  intro f hf ⟨i,m⟩
-  by_cases hn : n=1
-  simp [hn, Nat.fib_one]
-  match i with
-  | 0 => simp [hf.topBordZeros m]
-  | 1 => simp [hf.topBordOnes m]
-  | i+2 => simp [hf.botBordZeros_n (i+2) m (by omega)]
+lemma main1 (n : ℕ) (h : n ≠ 0) : ∀ (f : ℕ × ℕ → ℚ) (_ : arith_fp f n), ∀ (a : ℕ × ℕ),
+    f a ≤ Nat.fib n := by
+  intro f hf ⟨i, m⟩
+  by_cases hn : n = 1
+  · simp only [hn, Nat.fib_one]
+    match i with
+    | 0 => simp [hf.topBordZeros m]
+    | 1 => simp [hf.topBordOnes m]
+    | i + 2 => simp [hf.botBordZeros_n (i + 2) m (by omega)]
   have hn' : n > 1 := by omega
   let g := @friezeToFlute f n m (by omega) hf
   by_cases hi₀ : i = 0
-  simp [hi₀, hf.topBordZeros m]
+  · simp [hi₀, hf.topBordZeros m]
   by_cases hi₁ : i = 1
-  simp [hi₁, hf.topBordOnes m]
-  have hn'' : n >0 := by omega
-  have : Nat.fib n > 0 := Nat.fib_pos.mpr hn''
-  linarith
-  by_cases hi₂ : i ≥ n+1
-  simp [hf.botBordZeros_n i m hi₂]
+  · simp only [hi₁, hf.topBordOnes m]
+    have hn'' : n > 0 := by omega
+    have : Nat.fib n > 0 := Nat.fib_pos.mpr hn''
+    exact_mod_cast this
+  by_cases hi₂ : i ≥ n + 1
+  · simp [hf.botBordZeros_n i m hi₂]
   by_cases hi₃ : i = n
-  simp [hi₃, hf.botBordOnes_n m]
-  have hi₄ : 0 < Nat.fib n := Nat.fib_pos.mpr (by omega)
-  linarith
-  have key := FluteBounded n (by omega) g (i-1) (by omega)
+  · simp only [hi₃, hf.botBordOnes_n m]
+    have hi₄ : 0 < Nat.fib n := Nat.fib_pos.mpr (by omega)
+    exact_mod_cast hi₄
+  have key := FluteBounded n (by omega) g (i - 1) (by omega)
   have hg : g = @friezeToFlute f n m (by omega) hf := rfl
-  rw [hg] at key ; unfold friezeToFlute at key ; dsimp only at key ; unfold flute_f at key ; simp at key
-  have hi₆ : (i-1)%(n-1)+1 = i := by rw [Nat.mod_eq_of_lt (by omega)] ; omega
+  rw [hg] at key; unfold friezeToFlute at key; dsimp only at key; unfold flute_f at key
+  simp at key
+  have hi₆ : (i - 1) % (n - 1) + 1 = i := by
+    rw [Nat.mod_eq_of_lt (by omega)]; omega
   rw [hi₆] at key
   have hd : (f (i, m)).den = 1 := hf.integral i m
-  rw [show (f (i, m) : ℚ) = ((f (i, m)).num : ℚ) by rw [← Rat.num_div_den (f (i, m)), hd]; simp]
+  rw [show (f (i, m) : ℚ) = ((f (i, m)).num : ℚ) by
+    rw [← Rat.num_div_den (f (i, m)), hd]; simp]
   exact_mod_cast key
 
 lemma main2 (n : ℕ) (hn : n ≠ 0) : ∃ (f : ℕ × ℕ → ℚ) (hf : arith_fp f n), ∃ (a : ℕ × ℕ), f a = Nat.fib n := by
