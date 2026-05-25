@@ -5,6 +5,9 @@ Authors: Weiyi Wang
 -/
 
 import LeanPool.PentagonalNumberTheorem.Generic
+import Mathlib.RingTheory.PowerSeries.Basic
+import Mathlib.RingTheory.PowerSeries.Order
+import Mathlib.RingTheory.PowerSeries.PiTopology
 
 /-!
 

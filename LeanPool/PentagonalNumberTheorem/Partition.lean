@@ -5,6 +5,8 @@ Authors: Weiyi Wang
 -/
 
 import LeanPool.PentagonalNumberTheorem.PowerSeries
+import Mathlib.Combinatorics.Enumerative.Partition.Glaisher
+import Mathlib.Data.Int.Order.Lemmas
 
 theorem two_pentagonal (k : ℤ) : 2 * (k * (3 * k - 1) / 2) = k * (3 * k - 1) := by
   refine Int.two_mul_ediv_two_of_even ?_
@@ -71,6 +73,8 @@ theorem powerSeriesMk_card_partition_mul_tprod_one_sub_pow [Nontrivial R]
     (WithPiTopology.multipliable_one_sub_X_pow _)]
   simp [pow_mul, PowerSeries.WithPiTopology.tsum_pow_mul_one_sub_of_constantCoeff_eq_zero]
 
+/-- The finite set of integers `k` for which the pentagonal number `k * (3 * k - 1) / 2` is
+at most `n`. Used to express the pentagonal recurrence for the partition function. -/
 noncomputable def kSet (n : ℤ) : Finset ℤ :=
   Finset.Icc (-(((1 + 24 * n).sqrt - 1) / 6)) (((1 + 24 * n).sqrt + 1) / 6)
 

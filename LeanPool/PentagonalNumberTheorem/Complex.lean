@@ -5,6 +5,8 @@ Authors: Weiyi Wang
 -/
 
 import LeanPool.PentagonalNumberTheorem.Generic
+import Mathlib.Analysis.SpecialFunctions.Log.Summable
+import Mathlib.Analysis.RCLike.Basic
 
 /-!
 
