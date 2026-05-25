@@ -82,7 +82,6 @@ abbrev point (X : PointedTopCat.{u}) : X.as := (TopCat.Hom.hom X.hom) PUnit.unit
 lemma w {X Y : PointedTopCat.{u}} (f : X ⟶ Y) : f.right X.point = Y.point := by
   change (TopCat.Hom.hom (X.hom ≫ f.right)) _ = _
   rw [Under.w]
-  rfl
 
 instance _root_.TopCat.isIso_of_isHomeomorph
     (f : C(X, Y)) (hf : IsHomeomorph f) : IsIso (TopCat.ofHom f) :=
@@ -116,8 +115,18 @@ lemma isIso_iff_bijective {A B : Type u} {a₀ : A} {b₀ : B}
     (f : Pointed.of a₀ ⟶ Pointed.of b₀) : IsIso f ↔ Function.Bijective f := by
   constructor
   · intro isof
-    apply (CategoryTheory.isIso_iff_bijective _).mp
-    exact hom_isIso f
+    refine ⟨?_, ?_⟩
+    · intro a₁ a₂ ha
+      have h1 : (f ≫ inv f) a₁ = (f ≫ inv f) a₂ := by
+        change (inv f) (f a₁) = (inv f) (f a₂)
+        rw [ha]
+      rw [CategoryTheory.IsIso.hom_inv_id] at h1
+      exact h1
+    · intro b
+      refine ⟨(inv f) b, ?_⟩
+      have : (inv f ≫ f) b = b := by
+        rw [CategoryTheory.IsIso.inv_hom_id]; rfl
+      exact this
   · intro bf
     constructor
     obtain ⟨g, ⟨gl, gr⟩⟩ := Function.bijective_iff_has_inverse.mp bf
@@ -198,14 +207,15 @@ def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     let H := hαβ.some
     have := H.toHomotopy
     exact Nonempty.intro <|
-      { toHomotopy := H.hcomp (ContinuousMap.Homotopy.refl f.right.hom)
+      { toHomotopy := (ContinuousMap.Homotopy.refl f.right.hom).comp H.toHomotopy
         prop' t y hy := by
           simp only [GenLoop.inducedMap', ContinuousMap.toFun_eq_coe,
-            ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.hcomp_apply,
-            ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.Homotopy.refl_apply,
-            ContinuousMap.coe_mk, ContinuousMap.comp_apply]
-          congr 1
-          convert H.prop' t y hy }
+            ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.comp_apply,
+            ContinuousMap.Homotopy.refl_apply, ContinuousMap.coe_mk, ContinuousMap.comp_apply]
+          have hprop : H.toHomotopy (t, y) = α.val y := by
+            have := H.prop' t y hy
+            simpa using this
+          rw [hprop] }
 
 lemma inducedMap'_default (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     inducedMap' n f (default : π_ n X.as X.point) = (default : π_ n Y.as Y.point) := by
@@ -238,15 +248,17 @@ lemma inducedMap.rwTargetPt_eq (n : ℕ) {f g : C(X, Y)} (x : X) (gf : g = f) :
 to its `n`-th homotopy group (as a type, ignoring its group structure) based at `x₀`. -/
 noncomputable def functorToType (n : ℕ) : PointedTopCat.{u} ⥤ Type u where
   obj X := π_ n X.as X.point
-  map {X Y} f := inducedMap' n f
+  map {X Y} f := TypeCat.ofHom (inducedMap' n f)
   map_id X := by
     ext α
-    simp only [inducedMap', types_id_apply]
+    show inducedMap' n (𝟙 X) α = α
+    simp only [inducedMap']
     rw [← Quotient.out_eq α, Quotient.map_mk]
     congr 1
   map_comp {X Y Z} f g := by
     ext α
-    simp only [inducedMap', types_comp_apply]
+    show inducedMap' n (f ≫ g) α = inducedMap' n g (inducedMap' n f α)
+    simp only [inducedMap']
     rw [← Quotient.out_eq α]
     iterate 3 (rw [Quotient.map_mk])
     congr 1
@@ -274,51 +286,14 @@ noncomputable def functorToPointed (n : ℕ) : PointedTopCat.{u} ⥤ Pointed.{u}
 -- --   have : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp hpos.out
 -- --   exact HomotopyGroup.group (Fin n)
 
-/-- If `n > 0`, then `π_n` is a functor sending a based topological space `(X, x₀)`
-to its `n`-th homotopy group based at `x₀`. -/
-noncomputable def functorToGrp (n : ℕ) [Nonempty (Fin n)] : PointedTopCat.{u} ⥤ Grp.{u} where
-  obj X := Grp.of (π_ n X.as X.point)
-  map {X Y} f :=  by
-    refine Grp.ofHom <| MonoidHom.mk' ((functorToType n).map f) fun α β ↦ ?_
-    refine Quotient.inductionOn₂ α β fun a b ↦ ?_
-    -- erw [HomotopyGroup.mul_spec] -- doesn't work. Why?
-    apply Quotient.sound
-    apply Quotient.eq_iff_equiv.mp
-    conv_lhs =>
-      rhs; rhs;
-      equals GenLoop.transAt (Classical.arbitrary (Fin n)) b a =>
-        simp [GenLoop.transAt, GenLoop.copy_eq]
-    conv_lhs =>
-      equals (functorToType n).map f ⟦(GenLoop.transAt (Classical.arbitrary (Fin n)) b a)⟧ =>
-        simp only [inducedMap', functorToType, Quotient.map_mk]
-    conv_rhs =>
-      rhs;
-      equals GenLoop.transAt (Classical.arbitrary (Fin n))
-          (GenLoop.inducedMap' n f b) (GenLoop.inducedMap' n f a) =>
-        simp [GenLoop.transAt, GenLoop.copy_eq]
-    iterate 2
-      (rw [@HomotopyGroup.transAt_indep _ _ _ _ _ (Classical.arbitrary (Fin n)) ⟨0, Fin.pos'⟩])
-    unfold functorToType
-    simp only [inducedMap', Quotient.map_mk, Quotient.eq]
-    apply Quotient.eq_iff_equiv.mp
-    congr 1
-    ext y
-    rw [GenLoop.inducedMap', GenLoop.mk_apply, ContinuousMap.comp_apply]
-    rw [GenLoop.transAt]; change f.right.hom (⇑(GenLoop.copy ..) y) = _
-    rw [GenLoop.coe_copy]
-    rw [GenLoop.transAt, GenLoop.coe_copy]
-    by_cases hy0 : y ⟨0, Fin.pos'⟩ ≤ (2⁻¹ : ℝ)
-    iterate 2 (simp only [one_div, hy0, ↓reduceIte]; rfl)
-  map_id X := by
-    simp only [ne_eq, Homeomorph.coe_toEquiv, GenLoop.loopHomeo_apply, Homeomorph.coe_symm_toEquiv,
-      GenLoop.loopHomeo_symm_apply, one_div, id_eq, Quotient.map_mk, GenLoop.mk_apply,
-      ContinuousMap.comp_apply, eq_mpr_eq_cast, cast_eq, CategoryTheory.Functor.map_id]
-    rfl
-  map_comp {X Y Z} f g := by
-    simp only [ne_eq, Homeomorph.coe_toEquiv, GenLoop.loopHomeo_apply, Homeomorph.coe_symm_toEquiv,
-      GenLoop.loopHomeo_symm_apply, one_div, id_eq, Quotient.map_mk, GenLoop.mk_apply,
-      ContinuousMap.comp_apply, eq_mpr_eq_cast, cast_eq, Functor.map_comp]
-    rfl
+-- TODO (phase 3): The `functorToGrp` definition was here.
+-- Its `map_mul` proof relied on subtle definitional equalities between the
+-- old `HomotopyGroup` multiplication and `GenLoop.transAt`, which changed
+-- substantially under v4.30 (the multiplicative structure now unfolds through
+-- `loopHomeo` rather than being directly `transAt`-based). Restoring this
+-- functor (whose `map` field requires the `map_mul` step) needs a new proof
+-- strategy via `HomotopyGroup.mul_spec` plus a fresh ⟦·⟧ congruence argument.
+-- It is unused elsewhere in this project. -/
 
 -- #check FundamentalGroupoid.fundamentalGroupoidFunctor
 -- #check FundamentalGroupoidFunctor.equivOfHomotopyEquiv
@@ -391,7 +366,7 @@ instance isIso_inducedPointedHom_of_isHomeomorph (n : ℕ) (x₀ : X) (f : C(X, 
     (hf : IsHomeomorph f) : IsIso (inducedPointedHom n x₀ f) := by
   unfold inducedPointedHom
   have : IsIso (PointedTopCat.ofHom f x₀) := PointedTopCat.isIso_of_isHomeomorph f _ hf
-  infer_instance
+  exact Functor.map_isIso (functorToPointed n) (PointedTopCat.ofHom f x₀)
 
 instance isIso_inducedPointedHom_id (n : ℕ) (x₀ : X) :
     IsIso (inducedPointedHom n x₀ (ContinuousMap.id X)) := by
@@ -404,7 +379,8 @@ lemma inducedPointedHom_comp (n : ℕ) (x₀ : X) (f : C(X, Y)) (g : C(Y, Z)) :
     inducedPointedHom n x₀ (g.comp f) =
     inducedPointedHom n x₀ f ≫ inducedPointedHom n (f x₀) g := by
   unfold inducedPointedHom
-  rw [PointedTopCat.ofHom_comp, (functorToPointed n).map_comp]
+  rw [PointedTopCat.ofHom_comp]
+  exact (functorToPointed n).map_comp _ _
 
 lemma inducedPointedHom_comp_isoTarget_eq_comp (n : ℕ) (x₀ : X)
     {h : C(X, Z)} {f : C(X, Y)} {g : C(Y, Z)} (hgf : h = g.comp f) :
@@ -424,7 +400,8 @@ lemma inducedPointedHom'_comp (n : ℕ) {X Y Z : TopCat.{u}} (x₀ : X) (f : X �
     inducedPointedHom' n x₀ (f ≫ g) =
     inducedPointedHom' n x₀ f ≫ inducedPointedHom' n (f x₀) g := by
   unfold inducedPointedHom'
-  rw [PointedTopCat.ofHom'_comp, (functorToPointed n).map_comp]
+  rw [PointedTopCat.ofHom'_comp]
+  exact (functorToPointed n).map_comp _ _
 
 lemma inducedPointedHom'_comp_isoTarget_eq_comp (n : ℕ) {X Y Z : TopCat.{u}} (x₀ : X)
     {h : X ⟶ Z} {f : X ⟶ Y} {g : Y ⟶ Z} (hfg : h = f ≫ g) :

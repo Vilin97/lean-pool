@@ -221,13 +221,20 @@ lemma homotopyExtension_wall_commutes (n : ℕ) {Y : Type*} [TopologicalSpace Y]
     obtain ⟨_, _⟩ := hy
     linarith
   conv_rhs => equals (proj n f H 1) ⟨⟨q, ⟨y, hy⟩⟩, hq⟩ => apply ContinuousMap.liftCoverClosed_coe'
-  simp only [proj, Fin.succ_zero_eq_one, Fin.cons_one, Fin.cons_zero, ContinuousMap.comp_apply]
-  congr
-  · dsimp only [rimProjFst, diskBoundaryIncl, ContinuousMap.coe_mk, rimProjFstToFun, one_div,
-      q]
-    rw [mem_sphere_zero_iff_norm.mp hx, div_one, one_smul]
-  · dsimp only [diskBoundaryIncl, q]
-    rw [mem_sphere_zero_iff_norm.mp hx, div_one, sub_add_cancel]
+  show H _ = (H.comp (rimProj n)) ⟨(q, ⟨y, hy⟩), hq⟩
+  rw [ContinuousMap.comp_apply]
+  have hrim : rimProj n ⟨(q, ⟨y, hy⟩), hq⟩ = (⟨x, hx⟩, ⟨y, hy⟩) := by
+    apply Prod.ext
+    · show rimProjFst n _ = { down := ⟨x, hx⟩ }
+      apply ULift.ext
+      apply Subtype.ext
+      show (1 / ‖x‖) • x = x
+      rw [mem_sphere_zero_iff_norm.mp hx, div_one, one_smul]
+    · show rimProjSnd n _ = (⟨y, hy⟩ : I)
+      apply Subtype.ext
+      show (y - 2) / ‖x‖ + 2 = y
+      rw [mem_sphere_zero_iff_norm.mp hx, div_one, sub_add_cancel]
+  rw [hrim]
 
 end Jar
 

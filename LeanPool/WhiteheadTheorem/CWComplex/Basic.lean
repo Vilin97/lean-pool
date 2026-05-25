@@ -161,7 +161,7 @@ noncomputable abbrev pushout_inr :=
 
 lemma attachMaps_apply_eq_ι_desc : att.attachMaps α =
     Limits.Sigma.ι (fun _ ↦ S) α ≫ Limits.Sigma.desc att.attachMaps := by
-  simp only [Limits.colimit.ι_desc, Limits.Cofan.mk_pt, Limits.Cofan.mk_ι_app]
+  exact (Limits.Sigma.ι_desc _ _).symm
 
 /--
 ```
@@ -175,7 +175,7 @@ D --> ∐ D
 @[reassoc]
 lemma w_sigma_cells : f ≫ Limits.Sigma.ι (fun _ ↦ D) α =
     Limits.Sigma.ι (fun _ ↦ S) α ≫ (Limits.Sigma.map fun _ ↦ f) := by
-  simp only [Limits.ι_colimMap, Discrete.functor_obj_eq_as, Discrete.natTrans_app]
+  simp [Limits.Sigma.ι_map]
 
 /--
 ```

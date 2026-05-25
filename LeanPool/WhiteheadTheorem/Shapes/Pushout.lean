@@ -38,12 +38,12 @@ lemma pushout_isOpen (s : Set (pushout f g).carrier)
   | WalkingSpan.zero => by
       change IsOpen ((colimit.ι (span f g) WalkingSpan.zero).hom ⁻¹' s)
       have : colimit.ι (span f g) WalkingSpan.zero = f ≫ pushout.inl f g := by
-        have : f = (span f g).map WalkingSpan.Hom.fst := rfl
-        simp_all only [span_zero]
-        rw [(by rfl : pushout.inl f g = colimit.ι (span f g) WalkingSpan.left)]
-        rw [colimit.w (span f g) WalkingSpan.Hom.fst]
+        change colimit.ι (span f g) WalkingSpan.zero =
+          (span f g).map WalkingSpan.Hom.fst ≫ colimit.ι (span f g) WalkingSpan.left
+        exact (colimit.w (span f g) WalkingSpan.Hom.fst).symm
       rw [this]
-      simp only [span_zero, hom_comp, ContinuousMap.coe_comp]
+      simp only [span_zero, hom_comp]
+      change IsOpen ((pushout.inl f g).hom ∘ f.hom ⁻¹' s)
       rw [Set.preimage_comp]
       apply Continuous.isOpen_preimage (ContinuousMap.continuous _)
       exact hl
@@ -129,22 +129,22 @@ lemma injective_pushoutInr' : Function.Injective <| pushoutInr' f g := by
     let pY : Y ⟶ Z' := @TopCat.ofHom _ _ _ ⊤ <| @ContinuousMap.const _ _ _ ⊤ z₀
     let pYZ : pushout f g ⟶ Z' := pushout.desc pY pZ (by
       ext x
-      simp only [Set.mem_setOf_eq, Set.coe_setOf, hom_comp, hom_ofHom, ContinuousMap.const_comp,
-        ContinuousMap.const_apply, ContinuousMap.comp_apply, pY, pZ, Z']
-      have : g x ∈ Set.range g := Set.mem_range_self x
-      simp only [Set.mem_range, not_exists, dite_not, ContinuousMap.coe_mk, this, ↓reduceDIte, pZ,
-        pY, Z'] )
+      have hgx : g x ∈ Set.range g := Set.mem_range_self x
+      simp only [hom_comp, hom_ofHom, ContinuousMap.const_comp, ContinuousMap.comp_apply,
+        ContinuousMap.const_apply, ContinuousMap.coe_mk, pY, pZ]
+      rw [dif_neg (not_not.mpr hgx)] )
     let inr' := (pushout.inr f g).hom.restrict {z | z ∉ Set.range g}
     change Function.Injective inr'
     have : pYZ.hom ∘ inr' = ContinuousMap.id _ := by
       ext ⟨z, hz⟩
-      simp [pYZ, inr', ContinuousMap.restrict]
-      rw [← @ContinuousMap.comp_apply, ← hom_comp, pushout.inr_desc]
-      unfold pZ
-      simp only [Set.coe_setOf, Set.mem_range, not_exists, Set.mem_setOf_eq, dite_not, hom_ofHom,
-        pZ, pYZ, pY, inr', Z']
-      simp_all only [Set.mem_range, not_exists, Set.mem_setOf_eq, ContinuousMap.coe_mk,
-        exists_false, ↓reduceDIte, pZ, pYZ, pY, inr', Z']
+      have heq : (pushout.inr f g ≫ pYZ).hom z =
+          (if h : z ∉ Set.range g then (⟨z, h⟩ : {z | z ∉ Set.range g}) else z₀) := by
+        rw [pushout.inr_desc]; rfl
+      change (pYZ.hom ((pushout.inr f g).hom z) : Z) = _
+      have hfinal : (pushout.inr f g ≫ pYZ).hom z = (⟨z, hz⟩ : {z | z ∉ Set.range g}) := by
+        rw [heq]
+        exact dif_pos hz
+      exact congrArg Subtype.val hfinal
     have : Function.Injective (pYZ.hom ∘ inr') := by
       rw [this]
       exact fun ⦃a₁ a₂⦄ a ↦ a
@@ -203,15 +203,15 @@ lemma pushout_inr_neq_pushout_inl_of_mem_compl_range :
       simp only [Set.mem_range, ContinuousMap.coe_mk, this, ↓reduceIte, pZ, B, pY] )
     intro z hz y
     have p_neq : pYZ ((pushout.inr f g) z) ≠ pYZ ((pushout.inl f g) y) := by
-      change (pushout.inr f g ≫ pYZ) z ≠ (pushout.inl f g ≫ pYZ) y
-      unfold pYZ
-      rw [pushout.inr_desc]
-      simp only [colimit.ι_desc, hom_comp, ContinuousMap.comp_apply, Set.mem_range, not_exists,
-        dite_eq_ite, ContinuousMap.coe_mk, exists_apply_eq_apply, ContinuousMap.const_apply,
-        hom_ofHom, not_true_eq_false, id_eq, eq_mpr_eq_cast, PushoutCocone.mk_pt,
-        PushoutCocone.mk_ι_app, ne_eq, B, pZ, pY]
-      simp_all only [Set.mem_compl_iff, Set.mem_range, not_exists, exists_false,
-        not_false_eq_true, ↓reduceIte, ULift.up.injEq, Bool.true_eq_false, B, pZ, pY]
+      have hl : (pushout.inl f g ≫ pYZ).hom y = (⟨false⟩ : ULift Bool) := by
+        rw [pushout.inl_desc]; rfl
+      have hr : (pushout.inr f g ≫ pYZ).hom z = (⟨true⟩ : ULift Bool) := by
+        rw [pushout.inr_desc]
+        show (if _ : z ∉ Set.range g then (⟨true⟩ : ULift Bool) else ⟨false⟩) = ⟨true⟩
+        exact dif_pos hz
+      change (pushout.inr f g ≫ pYZ).hom z ≠ (pushout.inl f g ≫ pYZ).hom y
+      rw [hl, hr]
+      decide
     have {A B : Type u} {f : A → B} {a1 a2 : A} (h : f a1 ≠ f a2) : a1 ≠ a2 :=
       fun a ↦ h (congrArg f a)
     exact this p_neq

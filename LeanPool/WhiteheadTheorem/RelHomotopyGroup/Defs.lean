@@ -114,13 +114,14 @@ def iStar' (f : Ω^ (Fin n) A a) : π_ n X a :=
 def iStar : π_ n A a → π_ n X a :=
   Quotient.lift (iStar' n X A a) fun f g H ↦   -- if `f ≈ g` by `H`
     Quotient.sound <| Nonempty.intro   -- then `inc f ≈ inc g` by this homotopy:
-      { toHomotopy := H.some.toHomotopy.hcomp <|
-          ContinuousMap.Homotopy.refl ⟨Subtype.val, continuous_subtype_val⟩
+      { toHomotopy := (ContinuousMap.Homotopy.refl
+          ⟨Subtype.val, continuous_subtype_val⟩).comp H.some.toHomotopy
         prop' t y hy := by
           have := H.some.prop' t y hy
           simp at this
-          change Subtype.val ((Nonempty.some H) (t, y)) = _
-          simp only [this, ContinuousMap.coe_mk, Function.comp_apply] }
+          show ((Nonempty.some H) (t, y) : X) = _
+          rw [this]
+          rfl }
 
 def jStar' (f : Ω^ (Fin n) X a) : π﹍ n X A a :=
   Quotient.mk _ ⟨f,
@@ -162,7 +163,7 @@ def bd' (f : RelGenLoop (n + 1) X A a) : π_ n A a :=
 def bd : π﹍ (n + 1) X A a → π_ n A a :=
   Quotient.lift (bd' n X A a) fun f g H ↦ Quotient.sound <| Nonempty.intro
     { toFun ty :=
-        ⟨ContinuousMap.Homotopy.refl Cube.inclToTop |>.hcomp H.some.toHomotopy ty,
+        ⟨H.some.toHomotopy.comp (ContinuousMap.Homotopy.refl Cube.inclToTop) ty,
           by apply H.some.prop' ty.1 |>.left; exact Cube.inclToTop.mem_boundary _ ⟩
       continuous_toFun := by
         refine Continuous.subtype_mk ?_ _
@@ -188,12 +189,12 @@ i.e., they map (the homotopy class of) the constant loop to the constant loop.
 -- noncomputable example [Nonempty (Fin n)] : π_ n A a := (1 : HomotopyGroup (Fin n) A a)
 
 private lemma iStar'_const : iStar' n X A a GenLoop.const = ⟦GenLoop.const⟧ :=
-  Quotient.sound ⟨⟨ContinuousMap.Homotopy.refl _, by simp⟩⟩
+  Quotient.sound ⟨⟨ContinuousMap.Homotopy.refl _, fun _ _ _ ↦ rfl⟩⟩
 private lemma jStar'_const : jStar' n X A a GenLoop.const = ⟦RelGenLoop.const⟧ :=
   Quotient.sound ⟨⟨ContinuousMap.Homotopy.refl _, fun _ ↦
     ⟨fun _ _ ↦ Set.mem_of_eq_of_mem rfl (Subtype.coe_prop a), fun _ _ ↦ rfl ⟩ ⟩⟩
 private lemma bd'_const : bd' n X A a RelGenLoop.const = ⟦GenLoop.const⟧ :=
-  Quotient.sound ⟨⟨ContinuousMap.Homotopy.refl _, by simp⟩⟩
+  Quotient.sound ⟨⟨ContinuousMap.Homotopy.refl _, fun _ _ _ ↦ rfl⟩⟩
 
 -- lemma iStar_const : iStar n X A a default = default := by apply iStar'_const
 -- lemma jStar_const : jStar n X A a default = default := by apply jStar'_const

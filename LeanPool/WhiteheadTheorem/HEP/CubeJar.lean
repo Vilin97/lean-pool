@@ -209,11 +209,11 @@ lemma botSidesCoverMapVec_compatible_01
   intro ⟨y, ⟨i, hi⟩⟩ hy0 hy1
   change jarBotMap _ _ = jarSidesMap _ _
   unfold jarBotMap jarSidesMap
-  simp only [Set.coe_setOf, Set.mem_setOf_eq, Fin.isValue, Matrix.cons_val_zero,
-    ContinuousMap.coe_mk, Matrix.cons_val_one]
-  simp only [Cube.splitAtLast_fst_eq, show y (Fin.last _) = 0 by exact hy0]
   let y' : I^ Fin (n + 1) := Cube.splitAtLast.symm ⟨1, (Cube.splitAtLast y).snd⟩
-  change f ⟨y', _⟩ = h ⟨⟨y', _⟩, 0⟩
+  have hsplit : (Cube.splitAtLast y).1 = 0 := by
+    rw [Cube.splitAtLast_fst_eq]; exact hy0
+  show f ⟨y', _⟩ = h ⟨⟨y', _⟩, (Cube.splitAtLast y).1⟩
+  rw [hsplit]
   generalize_proofs
   have := congrFun fh ⟨y', ‹_›⟩
   simp only [Function.comp_apply] at this
@@ -303,19 +303,24 @@ lemma backFlrCover_mapVec_compatible_01
     obtain ⟨i, hin, hi⟩ := hy1.right hy0
     use i, hin
     unfold backIsoCube yt
-    simp only [Set.coe_setOf, Set.mem_setOf_eq, Homeomorph.homeomorph_mk_coe, Equiv.coe_fn_mk]
+    show Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2) i = 0 ∨
+        Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2) i = 1
     rwa [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ (Fin.lt_last_iff_ne_last.mp hin)]
   replace := ContinuousMap.liftCoverClosed_coe' _ _ (botSidesCoverMapVec_compatible f h fh)
     (cubeBoundaryJar.botSidesCover_cover n) (cubeBoundaryJar.botSidesCover_closed n) _ this
   rw [jarMap, this]
   change jarSidesMap _ _ = _
   unfold jarSidesMap yt_jar yt backIsoCube
-  simp only [Set.coe_setOf, Set.mem_setOf_eq, Fin.isValue, Matrix.cons_val_one,
-    Matrix.cons_val_zero, Homeomorph.homeomorph_mk_coe, Equiv.coe_fn_mk, ContinuousMap.coe_mk,
-    Homeomorph.apply_symm_apply]
-  congr 4
-  ext i
-  congr 1
+  show h ({ down := ⟨Cube.splitAtLast.symm (1, (Cube.splitAtLast
+      (Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2))).2), _⟩ },
+      (Cube.splitAtLast (Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2))).1) =
+      h ({ down := ⟨y, hy1⟩ }, t)
+  simp only [Homeomorph.apply_symm_apply]
+  congr 2
+  apply ULift.ext
+  apply Subtype.ext
+  show Cube.splitAtLast.symm (1, (Cube.splitAtLast y).2) = y
+  funext i
   by_cases hin : i = Fin.last _
   · rw [hin, Cube.splitAtLast_symm_apply_last, hy0]
   · rw [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ hin]; rfl
@@ -385,7 +390,7 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       replace : yt_jar ∈ cubeBoundaryJar.botSidesCover n 0 := by
         change _ ∈ cubeBoundaryJar.bot n
         unfold cubeBoundaryJar.bot yt_jar backIsoCube yt_back yb_t yb
-        simp only [Set.coe_setOf, Set.mem_setOf_eq, Homeomorph.homeomorph_mk_coe, Equiv.coe_fn_mk]
+        show Cube.splitAtLast.symm (0, (Cube.splitAtLast y).2) (Fin.last n) = 0
         rw [Cube.splitAtLast_symm_apply_last]
       replace := ContinuousMap.liftCoverClosed_coe' _ _ (botSidesCoverMapVec_compatible f h fh)
         (cubeBoundaryJar.botSidesCover_cover n) (cubeBoundaryJar.botSidesCover_closed n) _ this
@@ -393,16 +398,20 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       rw [jarMap, this]
       change _ = jarBotMap f _
       unfold jarBotMap yt_jar yb
-      simp only [Set.coe_setOf, Set.mem_setOf_eq, ContinuousMap.coe_mk]
-      congr 3
-      ext i
-      congr 1
+      show f { down := ⟨y, _⟩ } =
+        f { down := ⟨Cube.splitAtLast.symm
+          (1, (Cube.splitAtLast ((backIsoCube n) yt_back)).2), _⟩ }
+      congr 2
+      apply Subtype.ext
+      show y = Cube.splitAtLast.symm (1, (Cube.splitAtLast ((backIsoCube n) yt_back)).2)
+      funext i
       by_cases hin : i = Fin.last _
       · rw [hin, Cube.splitAtLast_symm_apply_last, hyn]
       · rw [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ hin]
         unfold yt_back yb_t yb backIsoCube
-        simp only [Set.coe_setOf, Set.mem_setOf_eq, Homeomorph.homeomorph_mk_coe, Equiv.coe_fn_mk,
-          Homeomorph.apply_symm_apply]
+        show y i = (Cube.splitAtLast (Cube.splitAtLast.symm (0, (Cube.splitAtLast y).2))).2
+          ⟨i.val, ?_⟩
+        rw [Homeomorph.apply_symm_apply]
         rfl
     · --     __________
       --    /|        /|

@@ -14,7 +14,7 @@ import Mathlib.CategoryTheory.Comma.Arrow
 import Mathlib.Analysis.InnerProductSpace.PiL2
 
 
-open scoped Topology TopCat ENNReal
+open scoped Topology TopCat ENNReal unitInterval
 
 namespace TopCat
 
@@ -44,9 +44,11 @@ namespace pDisk
 
 -- Note: need to declare the instances manually because `pDisk` and `TopCat` are not `abbrev`s.
 instance instT1Space : T1Space (pDisk n p) :=
-  letI : T1Space (ULift _) := inferInstance; ‹_›
+  letI : T1Space ↑(Metric.closedBall (0 : PiLp p fun (_ : Fin n) ↦ ℝ) 1) := inferInstance
+  ULift.instT1Space
 instance boundaryInstT1Space : T1Space (pDiskBoundary n p) :=
-  letI : T1Space (ULift _) := inferInstance; ‹_›
+  letI : T1Space ↑(Metric.sphere (0 : PiLp p fun (_ : Fin n) ↦ ℝ) 1) := inferInstance
+  ULift.instT1Space
 
 noncomputable instance instPseudoMetricSpace : PseudoMetricSpace (pDisk n p) :=
   letI : PseudoMetricSpace (ULift _) := inferInstance; ‹_›
@@ -69,14 +71,12 @@ lemma eq_zero_iff (x : pDisk n p) : x = 0 ↔ x.down.val = 0 :=
 /-- Map `x` to `(‖x‖_p / ‖x‖_q) • x`.
 Note that division by zero evaluates to zero (see `toQDisk_zero`). -/
 noncomputable def toQDisk : pDisk n p → pDisk n q
-  | ⟨x, hx⟩ => ⟨ (‖x‖ * ‖WithLp.equiv q (Fin n → ℝ) |>.symm x‖⁻¹) • x, by
+  | ⟨x, hx⟩ => ⟨ (‖x‖ * ‖WithLp.toLp q (WithLp.ofLp x)‖⁻¹) • WithLp.toLp q (WithLp.ofLp x), by
       simp only [Metric.mem_closedBall, dist_zero_right] at *
       simp only [norm_smul, norm_mul, Real.norm_eq_abs, abs_norm, norm_inv]
       rw [mul_assoc]
-      -- Note that the two occurrences of `‖x‖` in the goal
-      -- `⊢ ‖x‖ * (‖(WithLp.equiv q (Fin n.toNat → ℝ)).symm x‖⁻¹ * ‖x‖) ≤ 1` are different.
       -- The first `‖x‖` is `@norm (PiLp p fun x => ℝ) SeminormedAddGroup.toNorm x : ℝ`
-      -- The last `‖x‖` is `@norm (PiLp q fun x => ℝ) SeminormedAddGroup.toNorm x : ℝ`
+      -- The last `‖x‖` is `@norm (PiLp q fun x => ℝ) (WithLp.toLp q ..) : ℝ`
       -- Hence the goal is interpreted as `‖x‖_p * (‖x‖_q⁻¹ * ‖x‖_q) ≤ 1`
       exact (mul_le_of_le_one_right (norm_nonneg _) inv_mul_le_one).trans hx ⟩
 
@@ -84,28 +84,31 @@ noncomputable def toQDisk : pDisk n p → pDisk n q
 Note that division by zero evaluates to zero, due to `GroupWithZero.inv_zero`. -/
 lemma toQDisk_zero : pDisk.toQDisk n p q 0 = 0 := by
   unfold toQDisk
-  simp only [norm_zero, WithLp.equiv_symm_zero, inv_zero, mul_zero, smul_zero]
+  simp only [norm_zero, zero_mul, zero_smul]
   congr
 
 /-- The map `toQDisk` has a left inverse. -/
 lemma toPDisk_comp_toQDisk x : toQDisk n q p (toQDisk n p q x) = x := by
   unfold toQDisk
   by_cases hx0 : x = 0
-  · simp only [hx0, norm_zero, WithLp.equiv_symm_zero, inv_zero, mul_zero, smul_zero, eq_zero_iff]
+  · simp only [hx0, norm_zero, zero_mul, zero_smul, eq_zero_iff]
   split; next _ y hy hfx =>
     rcases x with ⟨x, _⟩
     replace hx0 : x ≠ 0 := fun h ↦ hx0 (by congr)
+    have hx0' : WithLp.toLp q x.ofLp ≠ 0 := fun h ↦ hx0 (by
+      have := congrArg WithLp.ofLp h
+      simpa using this)
     replace hfx := congrArg ULift.down hfx
     simp only [Subtype.mk.injEq] at hfx
     congr
-    simp only [← hfx, WithLp.equiv_symm_smul]
+    simp only [← hfx, WithLp.ofLp_smul, WithLp.toLp_smul, WithLp.ofLp_toLp]
     simp only [norm_smul, norm_mul, norm_norm, norm_inv, mul_inv_rev, inv_inv, smul_smul]
     rw [mul_assoc ‖x‖]
-    conv in ‖x‖ * _ => arg 2; equals 1 => exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx0)
+    conv in ‖x‖ * _ => arg 2; equals 1 => exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx0')
     simp only [mul_one, ← mul_assoc]
     conv in ‖x‖ * _ => equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0)
     rw [one_mul, mul_assoc _ _ ‖x‖, @inv_mul_cancel₀ _ _ ‖x‖ (norm_ne_zero_iff.mpr hx0), mul_one]
-    conv_lhs => arg 1; equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0)
+    conv_lhs => arg 1; equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0')
     rw [one_smul]
 
 /-- The map `toQDisk` is continuous at `0`. -/
@@ -117,7 +120,7 @@ lemma continuousAt_toQDisk_zero : ContinuousAt (toQDisk n p q) 0 := by
   simp only [dist_eq, ← zero_eq, dist_zero_right, one_mul] at *
   simp only [toQDisk, norm_smul, norm_mul, norm_norm, norm_inv]
   by_cases hx0 : x = 0
-  · simp only [hx0, norm_zero, WithLp.equiv_symm_zero, inv_zero, mul_zero, le_refl]
+  · simp only [hx0, norm_zero, zero_mul, le_refl]
   rw [mul_assoc, mul_le_iff_le_one_right (norm_pos_iff.mpr hx0)]
   exact inv_mul_le_one
 
@@ -127,18 +130,23 @@ lemma continuousOn_toQDisk_nonzero : ContinuousOn (toQDisk n p q) {x | x ≠ 0} 
   unfold Set.restrict toQDisk
   simp only [ne_eq, Set.coe_setOf, Set.mem_setOf_eq]
   refine continuous_uliftUp.comp <| Continuous.subtype_mk ?_ _
-  refine Continuous.smul ?_ (continuous_uliftDown.comp continuous_subtype_val).subtype_val
+  refine Continuous.smul ?_ <| (PiLp.continuous_toLp q _).comp <|
+    (PiLp.continuous_ofLp p _).comp <| (continuous_uliftDown.comp continuous_subtype_val).subtype_val
   apply Continuous.mul (continuous_uliftDown.comp continuous_subtype_val).subtype_val.norm
   conv_rhs => intro x; rw [inv_eq_one_div]
   apply Continuous.div continuous_const
   · apply Continuous.norm
-    apply @PiLp.continuous_equiv_symm _ _ (fun _ ↦ ℝ) |>.comp -- deleting this line results in deterministic timeout
+    refine (PiLp.continuous_toLp q (fun _ : Fin n ↦ ℝ)).comp ?_
+    refine (PiLp.continuous_ofLp p _).comp ?_
     exact continuous_uliftDown.comp continuous_subtype_val |>.subtype_val
   intro ⟨x, hx0⟩ h
   simp only [norm_eq_zero] at h
-  change x.down.val = 0 at h
-  rw [← eq_zero_iff] at h
-  exact hx0 h
+  change WithLp.toLp q x.down.val.ofLp = 0 at h
+  have hxz : x.down.val = 0 := by
+    have := congrArg WithLp.ofLp h
+    simpa using this
+  rw [← eq_zero_iff] at hxz
+  exact hx0 hxz
 
 /-- The map `toQDisk` is continuous. -/
 lemma continuous_toQDisk : Continuous (toQDisk n p q) :=
@@ -171,9 +179,7 @@ namespace pDiskBoundary
 
 instance instIsEmptyZero : IsEmpty (pDiskBoundary 0 p) where
   false := fun ⟨p, p1⟩ ↦ by
-    unfold PiLp WithLp at p; simp only at p
-    have p0 : p = (0 : Fin 0 → ℝ) := List.ofFn_inj.mp rfl
-    -- replace p0 : ‖p‖ = 0 := by rw [p0]; rfl
+    have p0 : p = 0 := Subsingleton.elim _ _
     simp only [mem_sphere_iff_norm, sub_zero] at p1
     have : (1 : ℝ) = (0 : ℝ) := p1.symm.trans (by rw [p0, norm_zero])
     exact (by norm_num : (1 : ℝ) ≠ (0 : ℝ)) this
@@ -186,12 +192,19 @@ lemma neq_zero (x : pDiskBoundary n p) : x.down.val ≠ 0 := fun xz ↦ by
   exact (by norm_num : (0 : ℝ) ≠ 1) (x0.symm.trans x1)
 
 noncomputable def toQDiskBoundary : pDiskBoundary.{u} n p → pDiskBoundary n q
-  | ⟨x, hx⟩ => ⟨ (‖x‖ * ‖WithLp.equiv q (Fin n → ℝ) |>.symm x‖⁻¹) • x, by
+  | ⟨x, hx⟩ => ⟨ (‖x‖ * ‖WithLp.toLp q (WithLp.ofLp x)‖⁻¹) • WithLp.toLp q (WithLp.ofLp x), by
       have xnz := neq_zero.{u} n p ⟨x, hx⟩
       simp only [mem_sphere_iff_norm, sub_zero] at hx ⊢
       rw [hx, one_mul, norm_smul, norm_inv, norm_norm]
       refine inv_mul_cancel₀ (norm_ne_zero_iff.mpr ?_)
-      intro xz; change x = 0 at xz; exact xnz xz ⟩
+      intro xz
+      have : x.ofLp = 0 := by
+        have := congrArg WithLp.ofLp xz
+        simpa using this
+      have : x = 0 := by
+        have h2 := congrArg (WithLp.toLp p) this
+        simpa using h2
+      exact xnz this ⟩
 
 /-- The map `boundaryToQDiskBoundary` has a left inverse. -/
 lemma toPDiskBoundary_comp_toQDiskBoundary x :
@@ -200,33 +213,43 @@ lemma toPDiskBoundary_comp_toQDiskBoundary x :
   split; next _ y hy hfx =>
     rcases x with ⟨x, hx⟩
     have hx0 : x ≠ 0 := neq_zero.{u} n p ⟨x, hx⟩
+    have hx0' : WithLp.toLp q x.ofLp ≠ 0 := fun h ↦ hx0 (by
+      have := congrArg WithLp.ofLp h
+      have h2 := congrArg (WithLp.toLp p) (by simpa using this : x.ofLp = 0)
+      simpa using h2)
     replace hfx := congrArg ULift.down hfx
     simp only [Subtype.mk.injEq] at hfx
     congr
-    simp only [← hfx, WithLp.equiv_symm_smul]
+    simp only [← hfx, WithLp.ofLp_smul, WithLp.toLp_smul, WithLp.ofLp_toLp]
     simp only [norm_smul, norm_mul, norm_norm, norm_inv, mul_inv_rev, inv_inv, smul_smul]
     rw [mul_assoc ‖x‖]
-    conv in ‖x‖ * _ => arg 2; equals 1 => exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx0)
+    conv in ‖x‖ * _ => arg 2; equals 1 => exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx0')
     simp only [mul_one, ← mul_assoc]
     conv in ‖x‖ * _ => equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0)
     rw [one_mul, mul_assoc _ _ ‖x‖, @inv_mul_cancel₀ _ _ ‖x‖ (norm_ne_zero_iff.mpr hx0), mul_one]
-    conv_lhs => arg 1; equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0)
+    conv_lhs => arg 1; equals 1 => exact mul_inv_cancel₀ (norm_ne_zero_iff.mpr hx0')
     rw [one_smul]
 
 /-- The map `boundaryToQDiskBoundary` is continuous. -/
 lemma continuous_toQDiskBoundary : Continuous (toQDiskBoundary n p q) := by
   refine continuous_uliftUp.comp <| Continuous.subtype_mk ?_ _
-  refine Continuous.smul ?_ (continuous_induced_dom.comp continuous_induced_dom)
+  refine Continuous.smul ?_ <| (PiLp.continuous_toLp q _).comp <|
+    (PiLp.continuous_ofLp p _).comp <| continuous_induced_dom.comp continuous_induced_dom
   apply Continuous.mul (by simp only [norm_eq_of_mem_sphere]; exact continuous_const)
   conv_rhs => intro x; rw [inv_eq_one_div]
   apply Continuous.div continuous_const
   · apply Continuous.norm
-    apply @PiLp.continuous_equiv_symm _ _ (fun _ ↦ ℝ) |>.comp
+    refine (PiLp.continuous_toLp q (fun _ : Fin n ↦ ℝ)).comp ?_
+    refine (PiLp.continuous_ofLp p _).comp ?_
     exact Continuous.subtype_val continuous_induced_dom
   intro x h
   rw [norm_eq_zero] at h
-  change x.down.val = 0 at h
-  exact (neq_zero n p x) h
+  change WithLp.toLp q x.down.val.ofLp = 0 at h
+  have : x.down.val = 0 := by
+    have h1 := congrArg WithLp.ofLp h
+    have h2 := congrArg (WithLp.toLp p) (by simpa using h1 : x.down.val.ofLp = 0)
+    simpa using h2
+  exact (neq_zero n p x) this
 
 /-- `pDiskBounday n p` is homeomorphic to `pDiskBoundary n q`. -/
 noncomputable def homeoQDiskBoundary : pDiskBoundary n p ≃ₜ pDiskBoundary n q where
@@ -270,28 +293,25 @@ namespace TopCat
 /-- The large cube $[-1, 1]^n$ is homeomorphic to `pDisk n ∞`
 (the disk in `ℝⁿ` according to the `L∞` norm). -/
 def largeCubeHomeoPDisk (n : ℕ) : (Fin n → Set.Icc (-1 : ℝ) (1 : ℝ)) ≃ₜ pDisk n ∞ where
-  toFun := fun x ↦ ⟨⟨fun i ↦ x i, by
-    simp only [Int.toNat_natCast, Metric.mem_closedBall, PiLp.dist_eq_iSup]
+  toFun := fun x ↦ ⟨⟨WithLp.toLp ∞ (fun i ↦ (x i : ℝ)), by
+    simp only [Metric.mem_closedBall, PiLp.dist_eq_iSup]
     refine Real.iSup_le ?_ (by norm_num)
     intro i
     simp only [PiLp.zero_apply, dist_zero_right, Real.norm_eq_abs, abs_le]
-    exact ⟨le_trans (by norm_num) (x i).prop.left, (x i).prop.right⟩ ⟩⟩
-  invFun := fun ⟨⟨x, hx⟩⟩ i ↦ ⟨x i, by
+    refine ⟨le_trans (by norm_num) (x i).prop.left, (x i).prop.right⟩ ⟩⟩
+  invFun := fun ⟨⟨x, hx⟩⟩ i ↦ ⟨x.ofLp i, by
     simp only [Metric.mem_closedBall, dist_zero_right, PiLp.norm_eq_ciSup, Real.norm_eq_abs] at hx
-    -- Note: Here we cannot simply use `iSup_le_iff` because `ℝ` is not a `CompleteLattice`.
-    -- We cannot use `Finset.le_sup` either, because although `ℝ` is a `SemilatticeSup`,
-    -- it does not have a smallest element (i.e., we do not have `[OrderBot ℝ]`).
-    -- With these restrictions, `Real.sSup_def`, the supremum of a set of real numbers,
-    -- is defined in mathlib to be `0` if the set is not bounded from above or is empty.
     have := Real.forall_le_of_iSup_le_of_finite_domain hx i
     exact ⟨neg_le_of_abs_le this, le_of_max_le_left this⟩ ⟩
   left_inv x := rfl
   right_inv x := rfl
   continuous_toFun := by
     refine continuous_uliftUp.comp (Continuous.subtype_mk ?_ _)
+    refine (PiLp.continuous_toLp ∞ _).comp ?_
     exact continuous_pi fun i ↦ Continuous.subtype_val (continuous_apply i)
   continuous_invFun := continuous_pi fun i ↦
-    (continuous_apply i).comp continuous_uliftDown.subtype_val |>.subtype_mk _
+    ((continuous_apply i).comp <| (PiLp.continuous_ofLp ∞ _).comp <|
+      continuous_uliftDown.subtype_val).subtype_mk _
 
 /-- The large cube $[-1, 1]^n$ is homeomorphic to the cube $[0, 1]^n$. -/
 noncomputable def largeCubeHomeoCube (n : ℕ) :
@@ -303,20 +323,24 @@ noncomputable def diskHomeoCube (n : ℕ) : TopCat.disk.{u} n ≃ₜ (I^ Fin n) 
   (pDisk.homeoQDisk.{u, u} n 2 ∞).trans <|
     (largeCubeHomeoPDisk n).symm.trans (largeCubeHomeoCube n)
 
-noncomputable def largeCubeBoundaryHomeoPDiskBoundary.{u} (n : ℕ) :
+noncomputable def largeCubeBoundaryHomeoPDiskBoundary (n : ℕ) :
     { x : Fin n → Set.Icc (-1 : ℝ) (1 : ℝ) | ∃ i, x i = (-1 : ℝ) ∨ x i = (1 : ℝ) } ≃ₜ
       pDiskBoundary n ∞ where
-  toFun := fun ⟨x, hx⟩ ↦ ⟨⟨fun i ↦ x i, by
+  toFun := fun ⟨x, hx⟩ ↦ ⟨⟨WithLp.toLp ∞ (fun i ↦ (x i : ℝ)), by
     rw [Metric.mem_sphere, PiLp.dist_eq_iSup]
-    apply eq_of_le_of_le
+    apply le_antisymm
     · refine Real.iSup_le ?_ (by norm_num : (0 : ℝ) ≤ (1 : ℝ))
       simp only [PiLp.zero_apply, dist_zero_right, Real.norm_eq_abs, ge_iff_le]
       exact fun i ↦ abs_le.mpr (x i).property
     · apply Real.le_iSup_of_exists_ge_of_finite_domain
       obtain ⟨i, hi | hi⟩ := hx
-      repeat {use i; rw [hi]; simp} ⟩⟩
+      all_goals
+        use i
+        simp only [WithLp.ofLp_toLp, WithLp.ofLp_zero, PiLp.zero_apply,
+          dist_zero_right, Real.norm_eq_abs, hi]
+        norm_num ⟩⟩
   invFun := fun ⟨⟨x, hx⟩⟩ ↦
-    ⟨fun i ↦ ⟨x i, by
+    ⟨fun i ↦ ⟨x.ofLp i, by
       simp only [mem_sphere_iff_norm, sub_zero, PiLp.norm_eq_ciSup, Real.norm_eq_abs] at hx
       have := Real.forall_le_of_iSup_le_of_finite_domain (le_of_eq hx) i
       exact ⟨neg_le_of_abs_le this, le_of_max_le_left this⟩ ⟩,
@@ -324,23 +348,25 @@ noncomputable def largeCubeBoundaryHomeoPDiskBoundary.{u} (n : ℕ) :
       simp only [Set.mem_setOf_eq]
       obtain hn | hn := Nat.eq_zero_or_pos n
       · exfalso
-        have : pDiskBoundary.{u} 0 ∞ := by rw [← hn]; exact ⟨x, hx⟩
-        exact (pDiskBoundary.instIsEmptyZero.{u} ∞).false this
+        have h0 : pDiskBoundary.{0} 0 ∞ := by subst hn; exact ⟨x, hx⟩
+        exact (pDiskBoundary.instIsEmptyZero ∞).false h0
       simp only [mem_sphere_iff_norm, sub_zero, PiLp.norm_eq_ciSup, Real.norm_eq_abs] at hx
-      have : ∃ i, |x i| ≥ 0 := by use ⟨0, hn⟩; simp only [ge_iff_le, abs_nonneg]
-      have : ∃ i, |x i| = 1 := Real.exists_eq_of_iSup_eq_of_finite_domain this hx
+      have : ∃ i, |x.ofLp i| ≥ 0 := by use ⟨0, hn⟩; simp only [ge_iff_le, abs_nonneg]
+      have : ∃ i, |x.ofLp i| = 1 := Real.exists_eq_of_iSup_eq_of_finite_domain this hx
       obtain ⟨i, hi⟩ := this
       exact ⟨i, Or.symm (eq_or_eq_neg_of_abs_eq hi)⟩ ⟩
   left_inv x := rfl
   right_inv x := rfl
   continuous_toFun := by
     refine continuous_uliftUp.comp (Continuous.subtype_mk ?_ _)
+    refine (PiLp.continuous_toLp ∞ _).comp ?_
     refine continuous_pi fun i ↦ Continuous.subtype_val ?_
     exact (continuous_apply i).comp continuous_subtype_val
   continuous_invFun := by
     refine Continuous.subtype_mk ?_ _
     refine continuous_pi fun i ↦ Continuous.subtype_mk ?_ _
-    exact (continuous_apply i).comp continuous_uliftDown.subtype_val
+    exact (continuous_apply i).comp <| (PiLp.continuous_ofLp ∞ _).comp <|
+      continuous_uliftDown.subtype_val
 
 noncomputable def largeCubeBoundaryHomeoCubeBoundary (n : ℕ) :
     { x : Fin n → Set.Icc (-1 : ℝ) (1 : ℝ) | ∃ i, x i = (-1 : ℝ) ∨ x i = (1 : ℝ) } ≃ₜ
@@ -369,7 +395,7 @@ noncomputable def largeCubeBoundaryHomeoCubeBoundary (n : ℕ) :
 noncomputable def diskBoundaryHomeoCubeBoundary (n : ℕ) :
     TopCat.diskBoundary.{u} n ≃ₜ Cube.boundary (Fin n) :=
   (pDiskBoundary.homeoQDiskBoundary.{u, u} n 2 ∞).trans <|
-    (largeCubeBoundaryHomeoPDiskBoundary.{u} n).symm.trans (largeCubeBoundaryHomeoCubeBoundary n)
+    (largeCubeBoundaryHomeoPDiskBoundary n).symm.trans (largeCubeBoundaryHomeoCubeBoundary n)
 
 --------------------------------------------------------------------------------------
 

@@ -394,8 +394,7 @@ def cubeSplitAtLast {n : ℕ} : 𝕀 (n + 1) ≅ TopCat.of (I × 𝕀 n) where
     · congr 1
       change (Cube.splitAtLast (Cube.splitAtLast.symm _)).fst = _
       simp only [Homeomorph.apply_symm_apply]
-    · congr 1
-      change (Cube.splitAtLast (Cube.splitAtLast.symm _)).snd = _
+    · change ({ down := (Cube.splitAtLast (Cube.splitAtLast.symm (t, y))).2 } : ULift _) = _
       simp only [Homeomorph.apply_symm_apply]
 
 /-- This lemma should be applied before expanding the `match` expression. -/

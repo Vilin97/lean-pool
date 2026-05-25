@@ -87,12 +87,12 @@ produce a level homotopy from `g ∘ f₀` to `g ∘ f₁`. -/
 def map (g : C(X, Y)) (L : LevelHomotopy f₀ f₁ p) :
     LevelHomotopy (GenLoop.inducedMap n x₀ g f₀) (GenLoop.inducedMap n x₁ g f₁)
       (p.map g.continuous) where
-  toHomotopy := L.toHomotopy.hcomp (ContinuousMap.Homotopy.refl _)
+  toHomotopy := (ContinuousMap.Homotopy.refl g).comp L.toHomotopy
   prop' t y hy := by
     simp only [ContinuousMap.toFun_eq_coe, ContinuousMap.Homotopy.coe_toContinuousMap, Path.map_coe,
       Function.comp_apply]
-    rw [ContinuousMap.Homotopy.hcomp_apply]
-    rw [ContinuousMap.Homotopy.refl_apply]
+    show ((ContinuousMap.Homotopy.refl g).comp L.toHomotopy) (t, y) = _
+    simp only [ContinuousMap.Homotopy.comp_apply, ContinuousMap.Homotopy.refl_apply]
     congr 1
     exact L.prop' t y hy
 
