@@ -41,13 +41,6 @@ def csteFlute (n : ℕ) : Inhabited (flute n) := by
 def fluteSet (n : ℕ) : Set (flute n) :=
   { f | true }
 
--- The set of all flutes of height n is nonempty. We might need this in Chapter 3.
-lemma fluteSetNonEmpty (n : ℕ) : Nonempty (fluteSet n) := by
-  rcases csteFlute n with ⟨f⟩
-  use f
-  rfl
-
-
 /-- The underlying sequence of the Fibonacci-maximal `(2k+1)`-flute. -/
 def a_odd (k i : ℕ) : ℕ :=
   if k = 0 then
@@ -310,54 +303,6 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
     omega
   exact ⟨a_even k, pos, hd, period, div⟩
 
-lemma FluteReduction (n : ℕ) (f : flute n) : ((f.a 1 = 1) ∨ (f.a (n - 2) = 1)) ∨
-    (∃ i ≤ n - 3, f.a (i + 1) = f.a i + f.a (i + 2)) := by
-  by_contra! H
-  rcases H with ⟨⟨h₁, h₂⟩, h₃⟩
-  have ha₁ : (↑(f.a 1):ℤ) - f.a 0 > 0 := by
-    have := f.pos 1
-    have := f.hd
-    omega
-  have ha₂ : (↑(f.a (n-1)):ℤ) - f.a (n-2) < 0 := by
-    have := f.pos (n-2)
-    have := f.period 0
-    simp [f.hd] at this
-    omega
-  have key : ∀ i ≤ n-3, (↑(f.a i):ℤ) + f.a (i+2) ≥ (f.a (i+1))*2 := by
-    intro i hi
-    rcases f.div i with ⟨k, hk⟩
-    match k with
-    | 0 =>
-      simp at hk
-      have := f.pos i
-      omega
-    | 1 =>
-      specialize h₃ i hi
-      omega
-    | k+2 =>
-      nlinarith
-  have key₂ : ∀ i ≤ n-3, (↑ (f.a (i+2)) : ℤ) - f.a (i+1) ≥ f.a 1 - f.a 0 := by
-    intro i hi
-    induction' i with i ih
-    specialize key 0 hi
-    linarith
-    specialize key (i+1) hi
-    specialize ih (by omega)
-    linarith
-  have key₃ : f.a (n-1) = 1 := by
-    have := f.period 0
-    simp [f.hd] at this
-    rw [←this]
-  match n with -- n ≤ 2 contradicts with h₁ and h₂
-  | 0 => linarith
-  | 1 => linarith
-  | 2 => linarith
-  | n+3 =>
-    simp at *
-    specialize key₂ n (by omega)
-    linarith
-
-
 /-- Reduction of an `(n+3)`-flute (assuming `f.a 1 = 1`) to an `(n+2)`-flute (underlying
 sequence). -/
 def a_1 (n : ℕ) (f : flute (n + 3)) (k : ℕ) : ℕ :=
@@ -619,6 +564,61 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
     have hij₅ : ¬ i < j := by omega
     simp [hij, hij₂, hij₃, f.div (i+1)]
   exact ⟨a_3 n f j hj, pos, hd, period, div⟩
+
+/-- The set of `n`-flutes is nonempty. -/
+lemma fluteSetNonEmpty (n : ℕ) : Nonempty (fluteSet n) := by
+  rcases csteFlute n with ⟨f⟩
+  use f
+  rfl
+
+/-- Every `n`-flute either has `f.a 1 = 1`, has `f.a (n-2) = 1`, or admits a *reducible*
+index `i` where `f.a (i+1) = f.a i + f.a (i+2)`. -/
+lemma FluteReduction (n : ℕ) (f : flute n) : ((f.a 1 = 1) ∨ (f.a (n - 2) = 1)) ∨
+    (∃ i ≤ n - 3, f.a (i + 1) = f.a i + f.a (i + 2)) := by
+  by_contra! H
+  rcases H with ⟨⟨h₁, h₂⟩, h₃⟩
+  have ha₁ : (↑(f.a 1):ℤ) - f.a 0 > 0 := by
+    have := f.pos 1
+    have := f.hd
+    omega
+  have ha₂ : (↑(f.a (n-1)):ℤ) - f.a (n-2) < 0 := by
+    have := f.pos (n-2)
+    have := f.period 0
+    simp [f.hd] at this
+    omega
+  have key : ∀ i ≤ n-3, (↑(f.a i):ℤ) + f.a (i+2) ≥ (f.a (i+1))*2 := by
+    intro i hi
+    rcases f.div i with ⟨k, hk⟩
+    match k with
+    | 0 =>
+      simp at hk
+      have := f.pos i
+      omega
+    | 1 =>
+      specialize h₃ i hi
+      omega
+    | k+2 =>
+      nlinarith
+  have key₂ : ∀ i ≤ n-3, (↑ (f.a (i+2)) : ℤ) - f.a (i+1) ≥ f.a 1 - f.a 0 := by
+    intro i hi
+    induction' i with i ih
+    specialize key 0 hi
+    linarith
+    specialize key (i+1) hi
+    specialize ih (by omega)
+    linarith
+  have key₃ : f.a (n-1) = 1 := by
+    have := f.period 0
+    simp [f.hd] at this
+    rw [←this]
+  match n with -- n ≤ 2 contradicts with h₁ and h₂
+  | 0 => linarith
+  | 1 => linarith
+  | 2 => linarith
+  | n+3 =>
+    simp at *
+    specialize key₂ n (by omega)
+    linarith
 
 theorem FluteBounded (n : ℕ) (hn : n > 0) (f : flute n) :
     ∀ i ≤ n - 1, f.a i ≤ Nat.fib n := by

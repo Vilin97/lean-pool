@@ -9,9 +9,9 @@ import LeanPool.FriezePatterns.Chapter2
 import LeanPool.FriezePatterns.Chapter3
 
 /-!
-# Frieze patterns and Fibonacci maxima
+# Maxima of Coxeter frieze patterns are Fibonacci numbers
 
-Source: https://github.com/Antoine-dSG/frieze_patterns (arXiv:2407.16717)
+Source: arxiv:2407.16717
 Authors: Antoine de Saint-Germain
 Status: verified
 Main declarations: `main3`, `FluteBounded`, `glideSymm`, `translationInvariance`
