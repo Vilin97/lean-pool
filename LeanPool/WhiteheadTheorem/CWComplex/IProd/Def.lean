@@ -66,6 +66,9 @@ def skZeroIsoSkOne : CWComplex.IProd.sk X 0 ≅ CWComplex.IProd.sk X 1 :=
   have : IsIso <| ofHom <| zeroOneIncl.prodMap <| ContinuousMap.id <| X.sk 0 := by
     have := X.isEmpty_sk_zero
     infer_instance  -- TopCat.isIso_of_isEmpty
+  haveI : IsIso (r X 0) := this
+  haveI : IsIso (Limits.pushout.inl (l X 0) (r X 0)) :=
+    Limits.pushout_inl_iso_of_right_iso _ _
   asIso <| Limits.pushout.inl (l X 0) (r X 0)  -- Limits.pushout_inl_iso_of_right_iso
 
 end IProd
@@ -105,7 +108,27 @@ lemma cubeAtt_compatible {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) 
       (X.attachCells n).isoPushout.inv ≫ X.skIncl _ ≫ iX ≫ Limits.pushout.inl .. ) y =
     ((diskPair.homeoCubePairULift n).inv.left ≫ (X.attachCells n).attachMaps α ≫
       isk ≫ r X n ≫ Limits.pushout.inr .. ) y
-  rw [(X.attachCells n).w_cell_assoc α]
+  have h := (X.attachCells n).w_cell α
+  unfold RelCWComplex.AttachGeneralizedCells.pushout_inr at h
+  unfold RelCWComplex.AttachGeneralizedCells.pushout_inl at h
+  -- `reassoc_of% h` doesn't pattern-match the original; use a direct `have` then rewrite.
+  have h' : Arrow.Hom.left (diskPair.homeoCubePairULift n).inv ≫ diskBoundaryIncl n ≫
+      Limits.Sigma.ι (fun x ↦ 𝔻 n) α ≫
+        Limits.pushout.inr (Limits.Sigma.desc (X.attachCells n).attachMaps)
+          (Limits.Sigma.map fun x ↦ diskBoundaryIncl n) ≫
+        (X.attachCells n).isoPushout.inv ≫ X.skIncl (n + 1) ≫ iX ≫
+          Limits.pushout.inl (l X n) (r X n) =
+      Arrow.Hom.left (diskPair.homeoCubePairULift n).inv ≫ (X.attachCells n).attachMaps α ≫
+        Limits.pushout.inl (Limits.Sigma.desc (X.attachCells n).attachMaps)
+          (Limits.Sigma.map fun x ↦ diskBoundaryIncl n) ≫
+        (X.attachCells n).isoPushout.inv ≫ X.skIncl (n + 1) ≫ iX ≫
+          Limits.pushout.inl (l X n) (r X n) := by
+    have hr := h =≫ (X.attachCells n).isoPushout.inv ≫ X.skIncl (n + 1) ≫ iX ≫
+      Limits.pushout.inl (l X n) (r X n)
+    have hr2 := Arrow.Hom.left (diskPair.homeoCubePairULift n).inv ≫= hr
+    simp only [Category.assoc] at hr2 ⊢
+    exact hr2
+  rw [h']
   congr 4
   -- TODO: refactor
   -- have : X.skIncl n ≫ iX = isk ≫ l X n := rfl
@@ -114,11 +137,14 @@ lemma cubeAtt_compatible {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) 
   have : (X.attachCells n).pushout_inl ≫ (X.attachCells n).isoPushout.inv ≫
       X.skIncl (n + 1) ≫ iX = isk ≫ l X n := by
     ext x
-    all_goals simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
-      ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
-      Limits.colimit.cocone_x, ContinuousMap.comp_assoc, isk, iX]
-    change (X.skInclSucc _ ≫ X.skIncl _) x = (X.skIncl _) x
-    rw [X.skInclSucc_skIncl_eq]
+    · simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
+        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
+        Limits.colimit.cocone_x, ContinuousMap.comp_assoc, isk, iX]
+    · simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
+        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
+        Limits.colimit.cocone_x, ContinuousMap.comp_assoc, isk, iX]
+      change (X.skInclSucc _ ≫ X.skIncl _) x = (X.skIncl _) x
+      rw [X.skInclSucc_skIncl_eq]
   change (_ ≫ _ ≫ _ ≫ iX) ≫ _ = _
   rw [this, Category.assoc, Limits.pushout.condition]
 
@@ -160,7 +186,7 @@ lemma inl_skInclSucc {n : ℕ} :
     Limits.pushout.inl (l X n) (r X n) ≫ IProd.skInclSucc X n =
     Limits.pushout.inl (l X (n + 1)) (r X (n + 1)) := by
   unfold IProd.skInclSucc
-  simp only [Limits.colimit.ι_desc, Limits.PushoutCocone.mk_pt, Limits.PushoutCocone.mk_ι_app]
+  exact Limits.pushout.inl_desc _ _ _
 
 @[reassoc]
 lemma inr_skInclSucc {n : ℕ} :
@@ -168,7 +194,7 @@ lemma inr_skInclSucc {n : ℕ} :
     ofHom ((ContinuousMap.id I).prodMap (X.skInclSucc _).hom) ≫
       Limits.pushout.inr (l X (n + 1)) (r X (n + 1)) := by
   unfold IProd.skInclSucc
-  simp only [Limits.colimit.ι_desc, Limits.PushoutCocone.mk_pt, Limits.PushoutCocone.mk_ι_app]
+  exact Limits.pushout.inr_desc _ _ _
 
 /--
 ```
