@@ -42,12 +42,19 @@ lemma isIso_inducedPointedHom'_mapCyl_domIncl_of_isIso
     (hf : IsIso <| inducedPointedHom' n x₀ f) :
     IsIso <| inducedPointedHom' n x₀ (MapCyl.domIncl f) := by
   have f_i_r := inducedPointedHom'_comp_isoTarget_eq_comp n x₀ (MapCyl.domIncl_retr_eq f).symm
-  have iso_r : IsIso <| inducedPointedHom' n ((MapCyl.domIncl f).hom x₀) (MapCyl.retr f) := by
+  haveI iso_r : IsIso <| inducedPointedHom'
+      n (ConcreteCategory.hom (MapCyl.domIncl f) x₀) (MapCyl.retr f) := by
     apply isIso_inducedPointedHom'_of_isHomotopyEquiv
     exact MapCyl.isHomotopyEquiv_retr f
-  replace f_i_r := (IsIso.comp_inv_eq _).mpr f_i_r
-  rw [← f_i_r]
-  infer_instance  -- `IsIso.comp_isIso` and `IsIso.inv_isIso`
+  -- We provide all `IsIso` instances explicitly to avoid synthesis failure on the abbreviated
+  -- `Pointed.of default` form.
+  have h_isoTarget : IsIso
+      (inducedPointedHom'.isoTarget n x₀ (MapCyl.domIncl_retr_eq f).symm).hom :=
+    Iso.isIso_hom _
+  haveI : IsIso (inducedPointedHom' n x₀ f ≫
+      (inducedPointedHom'.isoTarget n x₀ (MapCyl.domIncl_retr_eq f).symm).hom) :=
+    @IsIso.comp_isIso _ _ _ _ _ _ _ hf h_isoTarget
+  exact @IsIso.of_isIso_fac_right _ _ _ _ _ _ _ _ iso_r (by assumption) f_i_r.symm
 
 /-- If the map `πₙ(X, x₀) ⟶ πₙ(Y, f x₀)` induced by `f` is an isomorphism,
 then the map `πₙ(X, MapCyl.top f) ⟶ πₙ(MapCyl f, ⋯)` induced by
@@ -55,15 +62,23 @@ the inclusion `domInclFromTop f : C(top f, MapCyl f)` is an isomorphism. -/
 lemma isIso_inducedPointedHom_mapCyl_domInclFromTop_of_isIso
     (hf : IsIso <| inducedPointedHom' n x₀ f) :
     IsIso <| inducedPointedHom n (MapCyl.domInclToTop f x₀) (MapCyl.domInclFromTop f) := by
-  replace hf := isIso_inducedPointedHom'_mapCyl_domIncl_of_isIso _ _ _ hf
+  have hf := isIso_inducedPointedHom'_mapCyl_domIncl_of_isIso _ _ _ hf
+  have hf' : IsIso (inducedPointedHom n x₀ (Hom.hom (MapCyl.domIncl f))) := hf
   have i_it_if := inducedPointedHom_comp_isoTarget_eq_comp n x₀
     (MapCyl.domIncl_hom_eq_domInclFromTop_comp_domInclToTop f)
-  have iso_it : IsIso <| inducedPointedHom n x₀ (MapCyl.domInclToTop f) := by
+  haveI iso_it : IsIso <| inducedPointedHom n x₀ (MapCyl.domInclToTop f) := by
     apply HomotopyGroup.isIso_inducedPointedHom'_of_isHomeomorph
     exact MapCyl.isHomeomorph_domInclToTop f
-  replace i_it_if := (IsIso.inv_comp_eq _).mpr i_it_if
-  rw [← i_it_if]
-  infer_instance
+  -- `(domIncl).hom ≫ isoTarget.hom = domInclToTop ≫ domInclFromTop` ⇒ `domInclFromTop` iso.
+  have h_isoTarget : IsIso
+      (inducedPointedHom.isoTarget n x₀
+        (MapCyl.domIncl_hom_eq_domInclFromTop_comp_domInclToTop f)).hom :=
+    Iso.isIso_hom _
+  haveI : IsIso (inducedPointedHom n x₀ (Hom.hom (MapCyl.domIncl f)) ≫
+      (inducedPointedHom.isoTarget n x₀
+        (MapCyl.domIncl_hom_eq_domInclFromTop_comp_domInclToTop f)).hom) :=
+    @IsIso.comp_isIso _ _ _ _ _ _ _ hf' h_isoTarget
+  exact @IsIso.of_isIso_fac_left _ _ _ _ _ _ _ _ iso_it (by assumption) i_it_if.symm
 
 end HomotopyGroup
 
@@ -126,7 +141,7 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
   let fj : C(⊔I^(n + 1), A) := fb.comp <| boundaryJarInclToBoundary (n + 1)
   obtain ⟨y₀, Hfj⟩ := contractible_iff_id_nullhomotopic (⊔I^(n + 1)) |>.mp
     instContractibleSpaceBoundaryJar
-  replace Hfj := Hfj.some.hcomp (ContinuousMap.Homotopy.refl fj)
+  replace Hfj := (ContinuousMap.Homotopy.refl fj).comp Hfj.some
   simp only [ContinuousMap.comp_id, ContinuousMap.comp_const] at Hfj
   let a₀ : A := ⟨fj y₀, by
     change f y₀ ∈ A
@@ -244,6 +259,7 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
     ∃ a : A, f.HomotopicWith (ContinuousMap.const _ a) fun h ↦ IsMapOfPairs X A h := by
   obtain ⟨a, g, H⟩ := exists_relGenLoop_homotopicWith_isMapOfPairs X A f hf
   have g0 := (hpi a |>.some.uniq ⟦g⟧).trans (hpi a |>.some.uniq ⟦RelGenLoop.const⟧).symm
+  change @Quotient.mk _ _ _ = @Quotient.mk _ _ _ at g0
   rw [Quotient.eq] at g0
   change RelGenLoop.Homotopic .. at g0
   use a
@@ -285,7 +301,7 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
   obtain ⟨a, H⟩ := Cube.homotopicWith_const_isMapOfPairs_of_unique_pi X A f' hf' hpi
   use a
   replace H := H.some
-  let H' := (ContinuousMap.Homotopy.refl d_i).hcomp H.toHomotopy
+  let H' := H.toHomotopy.comp (ContinuousMap.Homotopy.refl d_i)
   have f'_d_i : f'.comp d_i = f := by
     unfold f' d_i i_d
     simp only [Arrow.mk_right, ContinuousMap.comp_assoc]
@@ -293,8 +309,9 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
     congr 1
     change e.inv.right.hom.comp ((iup.comp idown).comp e.hom.right.hom) = _
     rw [(by rfl : iup.comp idown = ContinuousMap.id _), ContinuousMap.id_comp]
-    change (e.hom.right ≫ e.inv.right).hom = _
-    simp only [Arrow.mk_right, Arrow.hom_inv_id_right, hom_id]
+    rw [show e.inv.right.hom.comp e.hom.right.hom = (e.hom.right ≫ e.inv.right).hom from rfl,
+      Arrow.hom_inv_id_right, hom_id]
+    rfl
   exact Nonempty.intro <|
     { toContinuousMap := H'.toContinuousMap
       map_zero_left x := by rw [H'.map_zero_left x, f'_d_i]
@@ -302,7 +319,7 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
       prop' t x := by
         unfold H' d_i diskBoundaryIncl
         simp only [Arrow.mk_right, ContinuousMap.toFun_eq_coe,
-          ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.hcomp_apply,
+          ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.comp_apply,
           ContinuousMap.Homotopy.refl_apply, ContinuousMap.comp_apply,
           ContinuousMap.HomotopyWith.coe_toHomotopy, hom_ofHom, ContinuousMap.coe_mk]
         apply H.prop' t
@@ -579,6 +596,7 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
             ContinuousMap.coe_mk, Function.comp_apply, ContinuousMap.HomotopyWith.apply_one,
             Subtype.coe_eta, hom_comp, hom_ofHom, ContinuousMap.comp_const,
             ContinuousMap.const_apply]
+          rfl
         prop' t x := by
           simp only [Set.mem_range, IsEmpty.exists_iff, ContinuousMap.Homotopy.coe_toContinuousMap,
             ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk, IsEmpty.forall_iff] }
