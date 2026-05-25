@@ -13,7 +13,7 @@ import LeanPool.RamanujanNagell.QuadraticIntegers.RingOfIntegers
 /-!
 # The Ramanujan-Nagell theorem
 
-Source: https://github.com/BarinderBanwait/ramanujan_nagell
+Source: url:https://github.com/BarinderBanwait/ramanujan_nagell
 Authors: Barinder S. Banwait, Xinze Li
 Status: verified
 Main declarations: `RamanujanNagell`

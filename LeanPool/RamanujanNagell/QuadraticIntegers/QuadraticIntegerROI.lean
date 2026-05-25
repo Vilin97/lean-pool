@@ -22,7 +22,10 @@ import Mathlib.Tactic.ModCases
 import Mathlib.RingTheory.Norm.Transitivity
 import Mathlib.Data.Nat.Prime.Int
 import Mathlib.Tactic.Qify
-import Mathlib.Tactic
+import Mathlib.Tactic.ComputeDegree
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
 
 attribute [-instance] DivisionRing.toRatAlgebra
 
@@ -78,8 +81,6 @@ lemma im_intCast_K (n : ℤ) : (↑n : K).im = 0 := by
   rw [show (↑n : K) = (↑(↑n : ℚ) : K) from by push_cast; ring]
   exact im_ratCast _
 
-section trace_and_norm
-
 variable {a b : ℚ}
 
 local notation3 "z" => a + b • (ω : K)
@@ -89,7 +90,7 @@ lemma rational_iff : z ∈ range (algebraMap ℚ K) ↔ b = 0 := by
   constructor
   · rintro ⟨y, hy⟩
     have h := congr_arg QuadraticAlgebra.im hy
-    simp only [omega_im, im_add, im_smul, coe_algebraMap, im_coe, im_ratCast, smul_eq_mul,
+    simp only [omega_im, im_add, im_smul, im_ratCast, smul_eq_mul,
                mul_one, zero_add] at h
     exact h.symm
   · rintro rfl; exact ⟨a, by simp⟩
@@ -100,7 +101,7 @@ lemma minpoly (hb : b ≠ 0) : minpoly ℚ z = X ^ 2 - C (2 * a) * X + C (a ^ 2 
       _ = z ^ 2 - 2 * a * z + (a ^ 2 - d * b ^ 2) := by simp
       _ = (b • (ω : K)) ^ 2 - d * b ^ 2 := by ring
       _ = b ^ 2 • ((ω : K) * (ω : K)) - d * b ^ 2 := by rw [smul_pow, pow_two ω]
-      _ = 0 := by simp [omega_mul_omega_eq_add, Algebra.smul_def] ; ring
+      _ = 0 := by simp [omega_mul_omega_eq_add, Algebra.smul_def]; ring
   · replace qdeg_lt_2 : q.degree ≤ 1 := by
       apply Order.le_of_lt_succ
       convert qdeg_lt_2; symm; compute_degree!
@@ -145,8 +146,6 @@ lemma norm : norm ℚ z = a ^ 2 - d * b ^ 2 := by
       rw [this, pb.norm_gen_eq_coeff_zero_minpoly, ← this, minpoly h, ← pb.finrank]
       simp [finrank_eq_two, coeff_zero_eq_eval_zero]
 
-section integrality
-
 lemma trace_int (hz : IsIntegral ℤ z) : ∃ (t : ℤ), t = 2 * a := by
   simpa [trace, IsIntegrallyClosed.isIntegral_iff] using isIntegral_trace (L := ℚ) hz
 
@@ -164,6 +163,7 @@ lemma a_half_int (hz : IsIntegral ℤ z) (ha : ¬(∃ (A : ℤ), A = a)) :
 lemma norm_int (hz : IsIntegral ℤ z) : ∃ (n : ℤ), n = a ^ 2 - d * b ^ 2 := by
   simpa [norm, IsIntegrallyClosed.isIntegral_iff] using isIntegral_norm ℚ hz
 
+/-- An integer witnessing that the norm of an integral element is an integer. -/
 noncomputable def n (hz : IsIntegral ℤ z) := (norm_int hz).choose
 
 lemma n_spec (hz : IsIntegral ℤ z) : n hz = a ^ 2 - d * b ^ 2 := (norm_int hz).choose_spec
@@ -197,12 +197,6 @@ lemma two_b_int (hz : IsIntegral ℤ z) : ∃ (B₂ : ℤ), B₂ = 2 * b := by
 lemma b_int_of_a_int (hz : IsIntegral ℤ z) (ha : ∃ (A : ℤ), A = a) : ∃ (B : ℤ), B = b := by
   obtain ⟨A, hA⟩ := ha
   exact squarefree_mul sf.out ⟨A ^ 2 - (n hz), by push_cast; rw [hA]; linarith [n_spec hz]⟩
-
-end integrality
-
-end trace_and_norm
-
-section d_1
 
 variable [h : Fact (d ≡ 1 [ZMOD 4])]
 
@@ -245,7 +239,7 @@ theorem d_1 : IsIntegralClosure S ℤ K := by
     have him := congr_arg QuadraticAlgebra.im h
     simp only [algebraMap_S_K_omega, re_add, re_mul, omega_re, re_one,
       im_add, omega_im, im_one, im_mul, mul_one, mul_zero,
-      zero_mul, zero_add, add_zero, map_intCast, re_intCast_K, im_intCast_K,
+      zero_mul, zero_add, add_zero, re_intCast_K, im_intCast_K,
       ] at hre him
     have h2re : (2⁻¹ : K).re = (2 : ℚ)⁻¹ := by
       conv_lhs => rw [show (2⁻¹ : K) = (↑(2⁻¹ : ℚ) : K) from by push_cast; ring]
@@ -287,7 +281,5 @@ theorem d_1 : IsIntegralClosure S ℤ K := by
       rw [H] at hz' ⊢
       exact d_1_int hz' (a_half_int hz_conv ha)
   · exact hx ▸ (IsIntegral.isIntegral x).algebraMap
-
-end d_1
 
 end QuadraticInteger

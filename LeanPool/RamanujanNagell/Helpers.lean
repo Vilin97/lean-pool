@@ -9,6 +9,7 @@ import Mathlib.Data.Int.Star
 import Mathlib.Algebra.QuadraticAlgebra.Basic
 import Mathlib.Algebra.QuadraticAlgebra.NormDeterminant
 import Mathlib.Algebra.Polynomial.Degree.IsMonicOfDegree
+import Mathlib.Algebra.Polynomial.SpecificDegree
 import Mathlib.NumberTheory.KummerDedekind
 import Mathlib.NumberTheory.NumberField.Basic
 import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
@@ -53,24 +54,19 @@ noncomputable section
 abbrev f_minpoly : ℚ[X] := X ^ 2 - X + C 2
 
 instance : Fact (Irreducible f_minpoly) := ⟨by
--- Since $f_minpoly$ is a quadratic polynomial with no rational roots, it must be irreducible over $\mathbb{Q}$.
-have h_irred : ∀ p q : ℚ[X], p.degree > 0 → q.degree > 0 → f_minpoly = p * q → False := by
-  intros p q hp hq h_eq
-  have h_deg : p.degree + q.degree = 2 := by
-    erw [ ← Polynomial.degree_mul, ← h_eq, Polynomial.degree_add_C ] <;> erw [ Polynomial.degree_sub_eq_left_of_degree_lt ] <;> norm_num;
-  -- Since $p$ and $q$ are non-constant polynomials with degrees adding up to 2, they must both be linear.
-  have h_linear : p.degree = 1 ∧ q.degree = 1 := by
-    rw [ Polynomial.degree_eq_natDegree ( Polynomial.ne_zero_of_degree_gt hp ), Polynomial.degree_eq_natDegree ( Polynomial.ne_zero_of_degree_gt hq ) ] at * ; norm_cast at * ; exact ⟨ by linarith, by linarith ⟩;
-  -- Let $r$ be a root of $p$. Then $p(r) = 0$, which implies $r^2 - r + 2 = 0$.
-  obtain ⟨r, hr⟩ : ∃ r : ℚ, p.eval r = 0 := by
-    exact Polynomial.exists_root_of_degree_eq_one h_linear.1;
-  replace h_eq := congr_arg ( Polynomial.eval r ) h_eq; norm_num [ hr ] at h_eq; nlinarith [ sq_nonneg ( r - 1 / 2 ) ] ;
--- Apply the definition of irreducibility using h_irred.
-apply Irreducible.mk;
-· exact fun h => absurd ( Polynomial.degree_eq_zero_of_isUnit h ) ( by erw [ show f_minpoly = Polynomial.X ^ 2 - Polynomial.X + 2 from rfl ] ; erw [ Polynomial.degree_add_C ] <;> erw [ Polynomial.degree_sub_eq_left_of_degree_lt ] <;> norm_num );
-· contrapose! h_irred;
-  obtain ⟨ a, b, h₁, h₂, h₃ ⟩ := h_irred; exact ⟨ a, b, not_le.mp fun h => h₂ <| Polynomial.isUnit_iff_degree_eq_zero.mpr <| le_antisymm h <| le_of_not_gt fun h' => by { apply_fun Polynomial.eval 0 at h₁; aesop }, not_le.mp fun h => h₃ <| Polynomial.isUnit_iff_degree_eq_zero.mpr <| le_antisymm h <| le_of_not_gt fun h' => by { apply_fun Polynomial.eval 0 at h₁; aesop }, h₁, trivial ⟩ ;⟩
+  -- `f_minpoly = X^2 - X + 2` has degree 2 and no rational root (discriminant 1 - 8 < 0),
+  -- so it is irreducible over ℚ.
+  have h_deg : f_minpoly.natDegree = 2 := by
+    unfold f_minpoly; compute_degree!
+  refine Polynomial.irreducible_of_degree_le_three_of_not_isRoot ?_ ?_
+  · rw [h_deg]; decide
+  · intro r hr
+    have h1 : r ^ 2 - r + 2 = 0 := by
+      simpa [f_minpoly, Polynomial.IsRoot, Polynomial.eval_add, Polynomial.eval_sub,
+        Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C] using hr
+    nlinarith [sq_nonneg (r - 1 / 2)]⟩
 
+/-- The number field `ℚ(√-7)`, presented as `QuadraticAlgebra ℚ (-2) 1`. -/
 notation "K" => QuadraticAlgebra ℚ (-2) 1
 
 -- ω² = -2 + 1*ω, i.e. ω = (1 + √(-7))/2, the generator of the ring of integers of Q(√(-7)).
@@ -99,6 +95,7 @@ instance : NumberField K := by
 
 -- Field instance is provided automatically by QuadraticAlgebra.instField
 
+/-- The ring of integers of `K = ℚ(√-7)`. -/
 notation "R" => (𝓞 K)
 
 lemma is_integral_ω : IsIntegral ℤ (ω : K) := by
@@ -208,7 +205,7 @@ lemma K_nrRealPlaces_zero : nrRealPlaces K = 0 := by
   -- ⟨-2, 1⟩ = -2 + ω in K
   have h_mk : (⟨-2, 1⟩ : K) = -2 + ω := by
     have := @QuadraticAlgebra.mk_eq_add_smul_omega ℚ (-2) 1 _ (-2 : ℚ) (1 : ℚ)
-    simp at this
+    simp only [one_smul, map_neg, map_ofNat] at this
     exact this
   rw [h_mk] at h_eq
   have h1 := congr_arg ψ h_eq
@@ -275,10 +272,10 @@ lemma span_eq_top : adjoin ℤ {θ} = ⊤ := by
 -- θ² = θ - 2 in 𝓞 K (from ω² = -2 + ω in K)
 private lemma theta_sq : (θ : 𝓞 K) * θ = θ - 2 := by
   apply Subtype.ext
-  show (ω : K) * ω = ω - 2
+  change (ω : K) * ω = ω - 2
   have h1 := @QuadraticAlgebra.omega_mul_omega_eq_mk ℚ (-2) 1 _
   have h2 := @QuadraticAlgebra.mk_eq_add_smul_omega ℚ (-2) 1 _ (-2 : ℚ) (1 : ℚ)
-  simp at h2
+  simp only [one_smul, map_neg, map_ofNat] at h2
   rw [h1, h2]; ring
 
 lemma K_discriminant : discr K = -7 := by
@@ -498,6 +495,116 @@ private lemma hno_i_aux : ∀ z : 𝓞 K, z ^ 2 + 1 ≠ 0 := by
     have h7dvd1 : (7 : ℤ) ∣ 1 := ⟨m ^ 2, by linarith⟩
     exact absurd h7dvd1 (by intro ⟨x, hx⟩; omega)
 
+/-- Auxiliary divisibility step used in `orderOf_unit_le_six`: an odd `n > 1` whose prime
+factors are all ≤ 3 must be divisible by 3. -/
+private lemma three_dvd_of_primes_le_three (n : ℕ) (hn : 1 < n) (hodd : ¬ 2 ∣ n)
+    (hle3 : ∀ p, p.Prime → p ∣ n → p ≤ 3) : 3 ∣ n := by
+  obtain ⟨p, hp, hpn⟩ := Nat.exists_prime_and_dvd (show n ≠ 1 by omega)
+  have hple3 := hle3 p hp hpn
+  have hge2 := hp.two_le
+  have hoddp : ¬ 2 ∣ p := fun h2 => hodd (h2.trans hpn)
+  have : p = 3 := by omega
+  exact this ▸ hpn
+
+/-- If `φ(orderOf u) = 2` and `orderOf u > 6`, we derive a contradiction by
+showing `orderOf u` must be divisible by `8`, `9`, or `12`. -/
+private lemma orderOf_unit_le_six {n : ℕ} (h_pos : 0 < n) (hphi2 : Nat.totient n = 2) : n ≤ 6 := by
+  by_contra h
+  push Not at h
+  have hn7 : 7 ≤ n := h
+  have h_primes_le3 : ∀ p, p.Prime → p ∣ n → p ≤ 3 := by
+    intro p hp hpd
+    have hdvd := Nat.totient_dvd_of_dvd hpd
+    rw [Nat.totient_prime hp, hphi2] at hdvd
+    have := Nat.le_of_dvd (by norm_num) hdvd; omega
+  have h_no8 : ¬ 8 ∣ n := fun h8 => by
+    have hdvd := Nat.totient_dvd_of_dvd h8
+    have h8phi : Nat.totient 8 = 4 := by decide
+    rw [h8phi, hphi2] at hdvd; omega
+  have h_no9 : ¬ 9 ∣ n := fun h9 => by
+    have hdvd := Nat.totient_dvd_of_dvd h9
+    have h9phi : Nat.totient 9 = 6 := by decide
+    rw [h9phi, hphi2] at hdvd; omega
+  have h_not_prime : ¬ n.Prime := fun hp => by
+    have := Nat.totient_prime hp; omega
+  by_cases hn_odd : ¬ 2 ∣ n
+  · have h3n : 3 ∣ n := three_dvd_of_primes_le_three n (by omega) hn_odd h_primes_le3
+    have hmin3 : n.minFac = 3 := by
+      have hmp := Nat.minFac_prime (show n ≠ 1 by omega)
+      have hmd := Nat.minFac_dvd n
+      have hle3 := h_primes_le3 _ hmp hmd
+      have hodd_mf : ¬ 2 ∣ n.minFac := fun hh => hn_odd (hh.trans hmd)
+      have hge2 := hmp.two_le
+      have hne2 : n.minFac ≠ 2 := by intro heq; apply hodd_mf; rw [heq]
+      omega
+    have h9le : 9 ≤ n := by
+      have hsq := Nat.minFac_sq_le_self h_pos h_not_prime
+      rw [hmin3] at hsq; linarith
+    obtain ⟨j, hj⟩ := h3n
+    have hn3_dvd : n / 3 ∣ n := ⟨3, by omega⟩
+    have hn3_gt1 : 1 < n / 3 := by omega
+    have hn3_odd : ¬ 2 ∣ n / 3 := fun h2 => hn_odd (h2.trans hn3_dvd)
+    have hn3_primes : ∀ p, p.Prime → p ∣ n / 3 → p ≤ 3 :=
+      fun p hp hpd => h_primes_le3 p hp (hpd.trans hn3_dvd)
+    have h3n3 : 3 ∣ n / 3 := three_dvd_of_primes_le_three _ hn3_gt1 hn3_odd hn3_primes
+    obtain ⟨k, hk⟩ := h3n3
+    exact h_no9 ⟨k, by omega⟩
+  · push Not at hn_odd
+    have hn2_dvd : n / 2 ∣ n := by obtain ⟨j, hj⟩ := hn_odd; exact ⟨2, by omega⟩
+    have hn2_gt1 : 1 < n / 2 := by omega
+    have hn2_primes : ∀ p, p.Prime → p ∣ n / 2 → p ≤ 3 :=
+      fun p hp hpd => h_primes_le3 p hp (hpd.trans hn2_dvd)
+    by_cases h3n : 3 ∣ n
+    · obtain ⟨m, hm⟩ := h3n
+      obtain ⟨j, hj⟩ := hn_odd
+      have hn12 : 12 ≤ n := by omega
+      have hn3_dvd : n / 3 ∣ n := ⟨3, by omega⟩
+      have hn3_gt1 : 1 < n / 3 := by omega
+      have hm_even : 2 ∣ m := ⟨j / 3, by omega⟩
+      have hn3_even : 2 ∣ n / 3 := by
+        have heq : n / 3 = m := by omega
+        rw [heq]; exact hm_even
+      have hn3_primes : ∀ p, p.Prime → p ∣ n / 3 → p ≤ 3 :=
+        fun p hp hpd => h_primes_le3 p hp (hpd.trans hn3_dvd)
+      by_cases h3n3 : 3 ∣ n / 3
+      · obtain ⟨k, hk⟩ := h3n3
+        exact h_no9 ⟨k, by omega⟩
+      · obtain ⟨j2, hj2⟩ := hn3_even
+        have hn3_eq_m : n / 3 = m := by omega
+        have hn6_dvd : n / 6 ∣ n / 3 := ⟨2, by omega⟩
+        have hn6_dvd_n : n / 6 ∣ n := hn6_dvd.trans hn3_dvd
+        have hn6_gt1 : 1 < n / 6 := by omega
+        have hn6_primes : ∀ p, p.Prime → p ∣ n / 6 → p ≤ 3 :=
+          fun p hp hpd => h_primes_le3 p hp (hpd.trans hn6_dvd_n)
+        have hn6_not3 : ¬ 3 ∣ n / 6 := fun h36 => h3n3 (h36.trans hn6_dvd)
+        have h2n6 : 2 ∣ n / 6 := by
+          by_contra hodd6
+          exact hn6_not3 (three_dvd_of_primes_le_three _ hn6_gt1 hodd6 hn6_primes)
+        obtain ⟨k, hk⟩ := h2n6
+        have h12n : 12 ∣ n := ⟨k, by omega⟩
+        have h12phi : Nat.totient 12 = 4 := by decide
+        have hdvd12 := Nat.totient_dvd_of_dvd h12n
+        rw [h12phi, hphi2] at hdvd12; omega
+    · have h2n2_not3 : ¬ 3 ∣ n / 2 := fun hh => h3n (hh.trans hn2_dvd)
+      have h4n : 4 ∣ n := by
+        have h2n2 : 2 ∣ n / 2 := by
+          by_contra hodd2
+          exact h2n2_not3 (three_dvd_of_primes_le_three _ hn2_gt1 hodd2 hn2_primes)
+        obtain ⟨j, hj⟩ := hn_odd; obtain ⟨k, hk⟩ := h2n2
+        exact ⟨k, by omega⟩
+      have hn4_dvd : n / 4 ∣ n := by obtain ⟨j, hj⟩ := h4n; exact ⟨4, by omega⟩
+      have hn4_gt1 : 1 < n / 4 := by omega
+      have hn4_primes : ∀ p, p.Prime → p ∣ n / 4 → p ≤ 3 :=
+        fun p hp hpd => h_primes_le3 p hp (hpd.trans hn4_dvd)
+      have h4n_not3 : ¬ 3 ∣ n / 4 := fun hh => h3n (hh.trans hn4_dvd)
+      have h8n : 8 ∣ n := by
+        have h2n4 : 2 ∣ n / 4 := by
+          by_contra hodd4
+          exact h4n_not3 (three_dvd_of_primes_le_three _ hn4_gt1 hodd4 hn4_primes)
+        obtain ⟨j, hj⟩ := h4n; obtain ⟨k, hk⟩ := h2n4
+        exact ⟨k, by omega⟩
+      exact h_no8 h8n
+
 lemma units_pm_one : ∀ u : Rˣ, u = 1 ∨ u = -1 := by
   intro u
   -- Step 1: reduce to "u is a root of unity in K"
@@ -535,8 +642,7 @@ lemma units_pm_one : ∀ u : Rˣ, u = 1 ∨ u = -1 := by
               h_aeval_lmul.symm.trans h_cayham
             -- Evaluate both sides at 1 to extract the element equation
             have h1 := LinearMap.congr_fun h_key 1
-            simp [Algebra.lmul] at h1
-            exact h1
+            simpa using h1
           -- minpoly ℤ (u:R) divides charpoly of lm
           have h_int : IsIntegral ℤ (u : R) := Algebra.IsIntegral.isIntegral _
           have h_dvd : minpoly ℤ (u : R) ∣ lm.charpoly :=
@@ -552,115 +658,12 @@ lemma units_pm_one : ∀ u : Rˣ, u = 1 ∨ u = -1 := by
       -- For n ≥ 7, φ(n) ≥ 4 > 2, so orderOf u ≤ 6
       have h_le6 : orderOf u ≤ 6 := by
         by_contra h
-        push_neg at h
-        have hn7 : 7 ≤ orderOf u := h
+        push Not at h
         have hphi2 : φ (orderOf u) = 2 := by
           have hev := Nat.totient_even (show 2 < orderOf u by omega)
           have hpos := Nat.totient_pos.2 h_pos
           obtain ⟨k, hk⟩ := hev; omega
-        have h_primes_le3 : ∀ p, p.Prime → p ∣ orderOf u → p ≤ 3 := by
-          intro p hp hpd
-          have hdvd := Nat.totient_dvd_of_dvd hpd
-          rw [Nat.totient_prime hp, hphi2] at hdvd
-          have := Nat.le_of_dvd (by norm_num) hdvd; omega
-        have h_no8 : ¬ 8 ∣ orderOf u := fun h8 => by
-          have hdvd := Nat.totient_dvd_of_dvd h8
-          have h8phi : φ 8 = 4 := by decide
-          rw [h8phi, hphi2] at hdvd; omega
-        have h_no9 : ¬ 9 ∣ orderOf u := fun h9 => by
-          have hdvd := Nat.totient_dvd_of_dvd h9
-          have h9phi : φ 9 = 6 := by decide
-          rw [h9phi, hphi2] at hdvd; omega
-        have h_not_prime : ¬ (orderOf u).Prime := fun hp => by
-          have := Nat.totient_prime hp; omega
-        have aux : ∀ n' : ℕ, 1 < n' → ¬ 2 ∣ n' → (∀ p, p.Prime → p ∣ n' → p ≤ 3) → 3 ∣ n' := by
-          intro n' hn' hodd hle3
-          obtain ⟨p, hp, hpn⟩ := Nat.exists_prime_and_dvd (show n' ≠ 1 by omega)
-          have hple3 := hle3 p hp hpn
-          have hge2 := hp.two_le
-          have hoddp : ¬ 2 ∣ p := fun h2 => hodd (h2.trans hpn)
-          have : p = 3 := by omega
-          exact this ▸ hpn
-        by_cases hn_odd : ¬ 2 ∣ orderOf u
-        · have h3n : 3 ∣ orderOf u := aux _ (by omega) hn_odd h_primes_le3
-          have hmin3 : (orderOf u).minFac = 3 := by
-            have hmp := Nat.minFac_prime (show orderOf u ≠ 1 by omega)
-            have hmd := Nat.minFac_dvd (orderOf u)
-            have hle3 := h_primes_le3 _ hmp hmd
-            have hodd_mf : ¬ 2 ∣ (orderOf u).minFac := fun h => hn_odd (h.trans hmd)
-            have hge2 := hmp.two_le
-            have hne2 : (orderOf u).minFac ≠ 2 := by
-              intro heq; apply hodd_mf; rw [heq]
-            omega
-          have h9le : 9 ≤ orderOf u := by
-            have hsq := Nat.minFac_sq_le_self (show 0 < orderOf u by omega) h_not_prime
-            rw [hmin3] at hsq; linarith
-          obtain ⟨j, hj⟩ := h3n
-          have hn3_dvd : orderOf u / 3 ∣ orderOf u := ⟨3, by omega⟩
-          have hn3_gt1 : 1 < orderOf u / 3 := by omega
-          have hn3_odd : ¬ 2 ∣ orderOf u / 3 := fun h2 => hn_odd (h2.trans hn3_dvd)
-          have hn3_primes : ∀ p, p.Prime → p ∣ orderOf u / 3 → p ≤ 3 :=
-            fun p hp hpd => h_primes_le3 p hp (hpd.trans hn3_dvd)
-          have h3n3 : 3 ∣ orderOf u / 3 := aux _ hn3_gt1 hn3_odd hn3_primes
-          obtain ⟨k, hk⟩ := h3n3
-          exact h_no9 ⟨k, by omega⟩
-        · push_neg at hn_odd
-          have hn2_dvd : orderOf u / 2 ∣ orderOf u := by
-            obtain ⟨j, hj⟩ := hn_odd; exact ⟨2, by omega⟩
-          have hn2_gt1 : 1 < orderOf u / 2 := by omega
-          have hn2_primes : ∀ p, p.Prime → p ∣ orderOf u / 2 → p ≤ 3 :=
-            fun p hp hpd => h_primes_le3 p hp (hpd.trans hn2_dvd)
-          by_cases h3n : 3 ∣ orderOf u
-          · obtain ⟨m, hm⟩ := h3n
-            obtain ⟨j, hj⟩ := hn_odd
-            have hn12 : 12 ≤ orderOf u := by omega
-            have hn3_dvd : orderOf u / 3 ∣ orderOf u := ⟨3, by omega⟩
-            have hn3_gt1 : 1 < orderOf u / 3 := by omega
-            have hm_even : 2 ∣ m := ⟨j / 3, by omega⟩
-            have hn3_even : 2 ∣ orderOf u / 3 := by
-              have heq : orderOf u / 3 = m := by omega
-              rw [heq]; exact hm_even
-            have hn3_primes : ∀ p, p.Prime → p ∣ orderOf u / 3 → p ≤ 3 :=
-              fun p hp hpd => h_primes_le3 p hp (hpd.trans hn3_dvd)
-            by_cases h3n3 : 3 ∣ orderOf u / 3
-            · obtain ⟨k, hk⟩ := h3n3
-              exact h_no9 ⟨k, by omega⟩
-            · obtain ⟨j2, hj2⟩ := hn3_even
-              have hn3_eq_m : orderOf u / 3 = m := by omega
-              have hn6_dvd : orderOf u / 6 ∣ orderOf u / 3 := ⟨2, by omega⟩
-              have hn6_dvd_n : orderOf u / 6 ∣ orderOf u := hn6_dvd.trans hn3_dvd
-              have hn6_gt1 : 1 < orderOf u / 6 := by omega
-              have hn6_primes : ∀ p, p.Prime → p ∣ orderOf u / 6 → p ≤ 3 :=
-                fun p hp hpd => h_primes_le3 p hp (hpd.trans hn6_dvd_n)
-              have hn6_not3 : ¬ 3 ∣ orderOf u / 6 := fun h36 => h3n3 (h36.trans hn6_dvd)
-              have h2n6 : 2 ∣ orderOf u / 6 := by
-                by_contra hodd6
-                exact hn6_not3 (aux _ hn6_gt1 hodd6 hn6_primes)
-              obtain ⟨k, hk⟩ := h2n6
-              have h12n : 12 ∣ orderOf u := ⟨k, by omega⟩
-              have h12phi : φ 12 = 4 := by decide
-              have hdvd12 := Nat.totient_dvd_of_dvd h12n
-              rw [h12phi, hphi2] at hdvd12; omega
-          · have h2n2_not3 : ¬ 3 ∣ orderOf u / 2 := fun h => h3n (h.trans hn2_dvd)
-            have h4n : 4 ∣ orderOf u := by
-              have h2n2 : 2 ∣ orderOf u / 2 := by
-                by_contra hodd2
-                exact h2n2_not3 (aux _ hn2_gt1 hodd2 hn2_primes)
-              obtain ⟨j, hj⟩ := hn_odd; obtain ⟨k, hk⟩ := h2n2
-              exact ⟨k, by omega⟩
-            have hn4_dvd : orderOf u / 4 ∣ orderOf u := by
-              obtain ⟨j, hj⟩ := h4n; exact ⟨4, by omega⟩
-            have hn4_gt1 : 1 < orderOf u / 4 := by omega
-            have hn4_primes : ∀ p, p.Prime → p ∣ orderOf u / 4 → p ≤ 3 :=
-              fun p hp hpd => h_primes_le3 p hp (hpd.trans hn4_dvd)
-            have h4n_not3 : ¬ 3 ∣ orderOf u / 4 := fun h => h3n (h.trans hn4_dvd)
-            have h8n : 8 ∣ orderOf u := by
-              have h2n4 : 2 ∣ orderOf u / 4 := by
-                by_contra hodd4
-                exact h4n_not3 (aux _ hn4_gt1 hodd4 hn4_primes)
-              obtain ⟨j, hj⟩ := h4n; obtain ⟨k, hk⟩ := h2n4
-              exact ⟨k, by omega⟩
-            exact h_no8 h8n
+        exact absurd (orderOf_unit_le_six h_pos hphi2) (by omega)
       -- K has no cube roots of unity (K ≇ ℚ(ζ₃) = ℚ(√-3), since -7 ≠ -3):
       have hno_cube : ∀ z : R, z ^ 2 + z + 1 ≠ 0 := hno_cube_aux
       -- K has no square root of -1 (K ≇ ℚ(i), since -7 ≠ -4):
@@ -770,11 +773,9 @@ lemma ne_dvd_exponent (p : ℕ) [hp : Fact p.Prime] : ¬ (p ∣ RingOfIntegers.e
   exact hp.1.ne_one
 
 lemma two_factorisation_R : θ * (1 - θ) = 2 := by
--- Strip the subtype wrapper to check equality in the field K
+  -- Strip the subtype wrapper to check equality in the field K
   apply Subtype.ext
-  -- Push the coercion through multiplication, subtraction, and numerals
-  push_cast
-  show (ω : K) * (1 - ω) = 2
+  change (ω : K) * (1 - ω) = 2
   calc
     ω * ((1 : K) - ω) = ω - ω ^ 2 := by ring
     _ = ω - (-2 + ω) := by
@@ -785,22 +786,13 @@ lemma two_factorisation_R : θ * (1 - θ) = 2 := by
 
 -- Local helper: Algebra.norm is a unit iff the element is a unit
 lemma norm_isUnit_iff (x : 𝓞 K) : IsUnit (Algebra.norm ℤ x) ↔ IsUnit x := by
-  constructor <;> intro h <;> contrapose! h;
-  · -- By definition of norm, if $x$ is not a unit, then its norm $N(x)$ is not a unit in $\mathbb{Z}$.
-    have h_norm_not_unit : ∀ y : 𝓞 K, ¬IsUnit y → ¬IsUnit (Algebra.norm ℤ y) := by
-      intro y hy; intro H; have := H.exists_left_inv; obtain ⟨ z, hz ⟩ := this; simp_all +decide [ Algebra.norm ] ;
-      -- Since $y$ is not a unit, the linear map $mul y$ is not invertible, hence its determinant is zero.
-      have h_det_zero : ¬IsUnit (LinearMap.mul ℤ (𝓞 K) y) := by
-        intro h_inv
-        have h_inv_mul : ∃ z : 𝓞 K, y * z = 1 := by
-          obtain ⟨ z, hz ⟩ := h_inv.exists_right_inv;
-          exact ⟨ z 1, by simpa using congr_arg ( fun f => f 1 ) hz ⟩;
-        exact hy (isUnit_iff_exists_inv.mpr h_inv_mul)
-      apply h_det_zero;
-      exact (LinearMap.isUnit_iff_isUnit_det ((LinearMap.mul ℤ (𝓞 K)) y)).mpr H;
-    exact h_norm_not_unit x h;
-  · contrapose! h with hx;
-    exact IsUnit.map (Algebra.norm ℤ) hx
+  refine ⟨fun h ↦ ?_, fun h ↦ h.map (Algebra.norm ℤ)⟩
+  -- If `Algebra.norm ℤ x` is a unit, then so is `LinearMap.mul ℤ (𝓞 K) x`, hence `x`.
+  have h_det : IsUnit ((LinearMap.mul ℤ (𝓞 K)) x) :=
+    (LinearMap.isUnit_iff_isUnit_det ((LinearMap.mul ℤ (𝓞 K)) x)).mpr h
+  obtain ⟨g, hg⟩ := h_det.exists_right_inv
+  refine isUnit_iff_exists_inv.mpr ⟨g 1, ?_⟩
+  simpa using congr_arg (fun f => f 1) hg
 
 -- Local lemma equating the norm to the constant term of the minimal polynomial (up to sign)
 lemma norm_eq_coeff_zero_minpoly (x : 𝓞 K) (h_deg : (minpoly ℤ x).natDegree = 2) :
@@ -808,13 +800,14 @@ lemma norm_eq_coeff_zero_minpoly (x : 𝓞 K) (h_deg : (minpoly ℤ x).natDegree
   -- By definition of minimal polynomial, we know that its degree is 2.
   have h_deg : (minpoly ℤ x).degree = 2 := by
     rw [ Polynomial.degree_eq_natDegree ] <;> aesop;
-  -- Since $x$ is an algebraic integer, its minimal polynomial is monic and has integer coefficients.
+  -- The minimal polynomial of an algebraic integer is monic with integer coefficients.
   have h_minpoly_monic : (minpoly ℤ x).Monic := by
     exact minpoly.monic ( show IsIntegral ℤ x from by exact isIntegral x );
-  -- Since $x$ is an algebraic integer, its minimal polynomial is monic and has integer coefficients. Therefore, the characteristic polynomial of $x$ is equal to its minimal polynomial.
+  -- The characteristic polynomial of mulLeft equals the minimal polynomial.
   have h_charpoly_eq_minpoly : (LinearMap.charpoly (LinearMap.mulLeft ℤ x)) = (minpoly ℤ x) := by
     have h_charpoly_eq_minpoly : (LinearMap.charpoly (LinearMap.mulLeft ℤ x)).degree = 2 := by
-      have h_charpoly_eq_minpoly : (LinearMap.charpoly (LinearMap.mulLeft ℤ x)).degree = Module.finrank ℤ (𝓞 K) := by
+      have h_charpoly_eq_minpoly :
+          (LinearMap.charpoly (LinearMap.mulLeft ℤ x)).degree = Module.finrank ℤ (𝓞 K) := by
         rw [ LinearMap.charpoly ];
         rw [ Matrix.charpoly_degree_eq_dim ];
         rw [ Module.finrank_eq_card_basis ( Module.Free.chooseBasis ℤ (𝓞 K) ) ];
@@ -826,7 +819,7 @@ lemma norm_eq_coeff_zero_minpoly (x : 𝓞 K) (h_deg : (minpoly ℤ x).natDegree
       simp_all +decide [ f_minpoly ];
       norm_num [ Polynomial.natDegree_sub_eq_left_of_natDegree_lt ];
     have h_charpoly_eq_minpoly : (minpoly ℤ x) ∣ (LinearMap.charpoly (LinearMap.mulLeft ℤ x)) := by
-      refine' minpoly.isIntegrallyClosed_dvd _ _;
+      refine minpoly.isIntegrallyClosed_dvd ?_ ?_;
       · exact isIntegral x;
       · have := LinearMap.aeval_self_charpoly ( LinearMap.mulLeft ℤ x );
         convert congr_arg ( fun f => f 1 ) this using 1;
@@ -835,18 +828,22 @@ lemma norm_eq_coeff_zero_minpoly (x : 𝓞 K) (h_deg : (minpoly ℤ x).natDegree
     have hq_monic : q.Monic := by
       have hq_monic : Polynomial.Monic (LinearMap.charpoly (LinearMap.mulLeft ℤ x)) := by
         convert LinearMap.charpoly_monic ( LinearMap.mulLeft ℤ x );
-      rw [ hq, Polynomial.Monic.def, Polynomial.leadingCoeff_mul ] at hq_monic ; aesop;
+      rw [ hq, Polynomial.Monic.def, Polynomial.leadingCoeff_mul ] at hq_monic; aesop;
     have hq_one : q.degree = 0 := by
-      have := congr_arg Polynomial.degree hq; rw [ Polynomial.degree_mul, h_charpoly_eq_minpoly, h_deg ] at this; rw [ Polynomial.degree_eq_natDegree hq_monic.ne_zero ] at *; norm_cast at *; linarith;
+      have := congr_arg Polynomial.degree hq
+      rw [Polynomial.degree_mul, h_charpoly_eq_minpoly, h_deg] at this
+      rw [Polynomial.degree_eq_natDegree hq_monic.ne_zero] at *
+      norm_cast at *; linarith
     rw [ Polynomial.degree_eq_natDegree ] at hq_one <;> aesop;
-  have h_det_eq_charpoly : ∀ (f : Module.End ℤ (𝓞 K)), f.charpoly.coeff 0 = (-1) ^ (Module.finrank ℤ (𝓞 K)) * LinearMap.det f := by
+  have h_det_eq_charpoly : ∀ (f : Module.End ℤ (𝓞 K)),
+      f.charpoly.coeff 0 = (-1) ^ (Module.finrank ℤ (𝓞 K)) * LinearMap.det f := by
     intro f; rw [ LinearMap.det_eq_sign_charpoly_coeff ] ; ring;
     norm_num [ pow_mul' ];
   have h_finrank : Module.finrank ℤ (𝓞 K) = 2 := by
     have := Eq.symm (IsAlgebraic.finrank_of_isFractionRing ℤ ℚ (𝓞 K) K)
     rw [QuadraticAlgebra.finrank_eq_two] at this
     exact this
-  specialize h_det_eq_charpoly ( LinearMap.mulLeft ℤ x ) ; aesop;
+  specialize h_det_eq_charpoly ( LinearMap.mulLeft ℤ x ); aesop;
 
 /-! ## Facts about θ
 
@@ -1027,7 +1024,7 @@ lemma theta_pow_dvd_of_coprime_prod (α β : R) (m : ℕ)
 lemma associated_of_theta_pow_dvd (α β : R) (m : ℕ)
     (h_prod : α * β = θ ^ m * θ' ^ m)
     (h_coprime : IsCoprime α β)
-    (hα : ¬IsUnit α) (hβ : ¬IsUnit β)
+    (_hα : ¬IsUnit α) (hβ : ¬IsUnit β)
     (h_dvd : θ ^ m ∣ α) :
     Associated α (θ ^ m) := by
   haveI := class_number_one
@@ -1089,7 +1086,7 @@ lemma associated_of_theta_pow_dvd (α β : R) (m : ℕ)
 lemma associated_of_theta_pow_dvd_right (α β : R) (m : ℕ)
     (h_prod : α * β = θ ^ m * θ' ^ m)
     (h_coprime : IsCoprime α β)
-    (hα : ¬IsUnit α) (hβ : ¬IsUnit β)
+    (hα : ¬IsUnit α) (_hβ : ¬IsUnit β)
     (h_dvd : θ ^ m ∣ β) :
     Associated α (θ' ^ m) := by
   haveI := class_number_one

@@ -20,20 +20,27 @@ Stuff
 Summary
 
 PROVIDED SOLUTION
-We begin by applying `main_factorisation_lemma` below. The relationship between `m` here and `n` there is `m = n - 2`.
-We then have the factorization
-((x + √-7)/2) * ((x - √-7)/2) = 2^m = ((1 + √-7)/2)^m * ((1 - √-7)/2)^m
-which is written in Lean as ((↑x + 2*(↑θ : K) - 1) / 2) * ((↑x - 2*(↑θ : K) + 1) / 2) = (↑θ : K) ^ m * (1 - (↑θ : K)) ^ m.
-This is a factorization into irreducible elements in the ring of integers of ℚ(√-7) (which is ℤ[θ]).
-Since the class number is 1, we have unique factorization into irreducibles. Equivalently, the prime elements are the same as the irreducible elements.
-One shows that the two factors (↑x + 2*(↑θ : K) - 1) / 2) and ((↑x - 2*(↑θ : K) + 1) / 2) are coprime as follows: by uniqueness of factorization,
-we only need to consider the elements θ and (1 - θ) (the prime factors of 2 in this ring). If either of these divided both factors, then it would divide their difference,
-which is 2*θ - 1 = √-7, which by taking norms is seen to not be the case. Therefore, by unique factorization, each factor must be equal to one of the two factors on the right up to multiplication by a unit.
-The units in this ring are just ±1 (use `units_pm_one` above). Therefore, we obtain the important equation
-(x ± √-7)/2 = \pm ((1 ± √-7)/2)^m.
-Eliminating x by taking the difference of these two equations, we obtain the two cases stated in the lemma. There might be several similar
-cases to deal with at the end to keep track of the signs.
-The relevant results about unique factorization and UFDs can be found in the NumberTheory and RingTheory folders of mathlib.
+We begin by applying `main_factorisation_lemma` below. The relationship between
+`m` here and `n` there is `m = n - 2`. We then have the factorization
+((x + √-7)/2) * ((x - √-7)/2) = 2^m = ((1 + √-7)/2)^m * ((1 - √-7)/2)^m,
+written in Lean as
+((↑x + 2*(↑θ : K) - 1) / 2) * ((↑x - 2*(↑θ : K) + 1) / 2)
+  = (↑θ : K) ^ m * (1 - (↑θ : K)) ^ m.
+This is a factorization into irreducible elements in the ring of integers of
+ℚ(√-7) (which is ℤ[θ]). Since the class number is 1, we have unique
+factorization into irreducibles; equivalently, the prime elements are the
+same as the irreducible elements. One shows that the two factors
+(↑x + 2*(↑θ : K) - 1) / 2 and (↑x - 2*(↑θ : K) + 1) / 2 are coprime as
+follows: by uniqueness of factorization, we only need to consider the elements
+θ and (1 - θ) (the prime factors of 2 in this ring); if either of these
+divided both factors, then it would divide their difference 2*θ - 1 = √-7,
+which by taking norms is seen to not be the case. Therefore each factor must
+equal one of the two factors on the right up to multiplication by a unit. The
+units in this ring are just ±1 (use `units_pm_one` above), so we obtain
+(x ± √-7)/2 = ± ((1 ± √-7)/2)^m. Eliminating x by taking the difference of
+these equations gives the cases stated in the lemma. The relevant results
+about unique factorization and UFDs can be found in the NumberTheory and
+RingTheory folders of mathlib.
 -/
 /- Exercise 1: The conjugate factors (x ± √-7)/2 lie in R (since x is odd) and
     their product equals (x²+7)/4 = 2^m = θ^m · (1-θ)^m. The division by 4 is
@@ -70,7 +77,7 @@ lemma factors_in_R_with_product (x : ℤ) (m : ℕ) (hm_ge : m ≥ 3)
     · -- t odd: t = 2s+1, t² = 4s²+4s+1, 4 ∣ (t²-1), so 4 ∣ (t²+1) implies 4 ∣ 2
       have : (4 : ℤ) ∣ (t ^ 2 - 1) := ⟨s ^ 2 + s, by rw [hs]; ring⟩
       have h4_dvd_2 : (4 : ℤ) ∣ ((t ^ 2 + 1) - (t ^ 2 - 1)) := Int.dvd_sub h4_dvd this
-      -- have : (4 : ℤ) ∣ 2 := by linarith_or_polyrith_or_convert h4_dvd_2; convert h4_dvd_2 using 1; ring
+      -- have : (4 : ℤ) ∣ 2 := by convert h4_dvd_2 using 1; ring
       omega
   -- Step 2: Get k with x = 2*k + 1
   obtain ⟨k, hk⟩ := hx_odd
@@ -88,8 +95,8 @@ lemma factors_in_R_with_product (x : ℤ) (m : ℕ) (hm_ge : m ≥ 3)
     push_cast at h1
     -- h1 : ((θ : 𝓞 K) : K) * (1 - ((θ : 𝓞 K) : K)) = 2
     -- Note (θ : 𝓞 K).val = (ω : K), so coercion ↑θ = ω.
-    show (ω : K) * (1 - ω) = (2 : K)
-    convert h1 using 2 <;> rfl
+    change (ω : K) * (1 - ω) = (2 : K)
+    convert h1 using 2
   -- Step 5: Construct α = k + θ, β = k + θ' as elements of R
   refine ⟨⟨(k : K) + ω, IsIntegral.add isIntegral_algebraMap is_integral_ω⟩,
          ⟨(k : K) + (1 - ω), IsIntegral.add isIntegral_algebraMap is_integral_one_sub_ω⟩,
@@ -105,8 +112,7 @@ lemma factors_in_R_with_product (x : ℤ) (m : ℕ) (hm_ge : m ≥ 3)
         exact this
       _ = ω ^ m * (1 - ω) ^ m := by rw [← mul_pow, hω_prod]
   · -- Difference: (k + ω) - (k + (1-ω)) = 2ω - 1 = 2·↑θ - 1
-    show ((k : K) + ω) - ((k : K) + (1 - ω)) = 2 * ((θ : 𝓞 K) : K) - 1
-    show ((k : K) + ω) - ((k : K) + (1 - ω)) = 2 * (ω : K) - 1
+    change ((k : K) + ω) - ((k : K) + (1 - ω)) = 2 * (ω : K) - 1
     ring
 
 /-- Exercise 2: The conjugate factors are coprime in R. The only prime factors of 2
@@ -138,7 +144,7 @@ lemma conjugate_factors_coprime (α β : R) (m : ℕ)
            have h_poly : (θ : K)^2 - (θ : K) = -2 := by
             -- Prove that ω² - ω + 2 = 0 using the same steps as is_integral_ω
             have h_zero : (θ : K) ^ 2 - (θ : K) + 2 = 0 := by
-              show (ω : K) ^ 2 - (ω : K) + 2 = 0
+              change (ω : K) ^ 2 - (ω : K) + 2 = 0
               rw [sq, omega_mul_omega_eq_mk]
               ext <;> simp
            -- Rearrange (ω² - ω + 2 = 0) to (ω² - ω = -2)
@@ -155,7 +161,7 @@ lemma conjugate_factors_coprime (α β : R) (m : ℕ)
       -- FIX: Prove θ' is syntactically equal to (1 - θ) so the lemma matches
       have h_rewrite : (θ' : 𝓞 K) = 1 - θ := by
         apply Subtype.ext
-        show (1 - ω : K) = (1 : K) - (ω : K)
+        change (1 - ω : K) = (1 : K) - (ω : K)
         rfl
       rw [h_rewrite, two_factorisation_R]
     have h_p_dvd_two : p ∣ 2 := by
@@ -179,7 +185,8 @@ lemma conjugate_factors_coprime (α β : R) (m : ℕ)
         have h4 : Algebra.norm ℤ (2 : 𝓞 K) = 4 := by
           exact_mod_cast h1
         simp [h4]
-    have h_norm_two_again : QuadraticAlgebra.norm (2 : K) = 4 := by apply QuadraticAlgebra.norm_intCast
+    have h_norm_two_again : QuadraticAlgebra.norm (2 : K) = 4 := by
+      apply QuadraticAlgebra.norm_intCast
     -- First prove (α - β)^2 = -7
 
 -- Lift the difference equation from K to R
@@ -198,7 +205,7 @@ lemma conjugate_factors_coprime (α β : R) (m : ℕ)
       rw [h_diff_R]
       -- Use the defining polynomial identity: ω² - ω + 2 = 0
       have h_zero : (θ : K) ^ 2 - (θ : K) + 2 = 0 := by
-        show (ω : K) ^ 2 - (ω : K) + 2 = 0
+        change (ω : K) ^ 2 - (ω : K) + 2 = 0
         rw [sq, omega_mul_omega_eq_mk]
         ext
         · simp
@@ -280,7 +287,7 @@ lemma factor_not_unit_left (α β : R) (m : ℕ)
   -- θ' = 1 - θ, so θ^m * θ'^m = 2^m
   have hθ' : (θ' : 𝓞 K) = 1 - θ := by
     apply Subtype.ext
-    show (1 - ω : K) = (1 : K) - (ω : K)
+    change (1 - ω : K) = (1 : K) - (ω : K)
     rfl
   have h2m : θ ^ m * θ' ^ m = (2 : R) ^ m := by
     rw [hθ', ← mul_pow, two_factorisation_R]
@@ -296,16 +303,30 @@ lemma factor_not_unit_left (α β : R) (m : ℕ)
     have hβ : β = (2 : R) ^ m := by simpa using h_prod
     rw [hβ] at h_diff
     -- Compare im-components: 0 = 2
-    have h_im := congrArg QuadraticAlgebra.im h_diff
-    simp at h_im; rw [h2m_im] at h_im; simp at h_im
+    have h_im : ((↑(1 : 𝓞 K) - ↑((2 : R) ^ m) : K).im : ℚ) = (2 * (θ : K) - 1).im :=
+      congrArg QuadraticAlgebra.im h_diff
+    have him_rhs : ((2 * (θ : K) - 1).im : ℚ) = 2 := by
+      simp [im_sub, im_mul, im_one, im_ofNat, omega_im]
+    have him_lhs : ((↑(1 : 𝓞 K) - ↑((2 : R) ^ m) : K).im : ℚ) = 0 := by
+      have : ((1 : 𝓞 K) : K) = (1 : K) := rfl
+      simp [this, im_sub, im_one, ← h2m_im]
+    rw [him_lhs, him_rhs] at h_im
+    exact absurd h_im (by norm_num)
   · -- Case α = -1: β = -(2^m)
     have hβ : β = -((2 : R) ^ m) := by
       have : (-1 : R) * β = (2 : R) ^ m := h_prod
       linear_combination -this
     rw [hβ] at h_diff
     -- Compare im-components: 0 = 2
-    have h_im := congrArg QuadraticAlgebra.im h_diff
-    simp at h_im; rw [h2m_im] at h_im; simp at h_im
+    have h_im : ((↑((-1 : R)) - ↑(-((2 : R) ^ m)) : K).im : ℚ) = (2 * (θ : K) - 1).im :=
+      congrArg QuadraticAlgebra.im h_diff
+    have him_rhs : ((2 * (θ : K) - 1).im : ℚ) = 2 := by
+      simp [im_sub, im_mul, im_one, im_ofNat, omega_im]
+    have him_lhs : ((↑((-1 : R)) - ↑(-((2 : R) ^ m)) : K).im : ℚ) = 0 := by
+      have h1 : ((-1 : 𝓞 K) : K) = (-1 : K) := rfl
+      simp [h1, im_neg, im_one, ← h2m_im]
+    rw [him_lhs, him_rhs] at h_im
+    exact absurd h_im (by norm_num)
 
 lemma factor_not_unit_right (α β : R) (m : ℕ)
     (h_prod : α * β = θ ^ m * θ' ^ m)
@@ -316,7 +337,10 @@ lemma factor_not_unit_right (α β : R) (m : ℕ)
   by_contra h_unit
   have h_cases : β = 1 ∨ β = -1 := by
     have := units_pm_one h_unit.unit; simpa [Units.ext_iff] using this
-  have hθ' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
+  have hθ' : (θ' : 𝓞 K) = 1 - θ := by
+    apply Subtype.ext
+    change (1 - ω : K) = (1 : K) - (ω : K)
+    rfl
   have h2m : θ ^ m * θ' ^ m = (2 : R) ^ m := by
     rw [hθ', ← mul_pow, two_factorisation_R]
   rw [h2m] at h_prod
@@ -329,16 +353,30 @@ lemma factor_not_unit_right (α β : R) (m : ℕ)
   · -- Case β = 1: α = 2^m
     have hα : α = (2 : R) ^ m := by simpa using h_prod
     rw [hα] at h_diff
-    have h_im := congrArg QuadraticAlgebra.im h_diff
-    simp at h_im; rw [h2m_im] at h_im; simp at h_im
+    have h_im : ((↑((2 : R) ^ m) - ↑(1 : 𝓞 K) : K).im : ℚ) = (2 * (θ : K) - 1).im :=
+      congrArg QuadraticAlgebra.im h_diff
+    have him_rhs : ((2 * (θ : K) - 1).im : ℚ) = 2 := by
+      simp [im_sub, im_mul, im_one, im_ofNat, omega_im]
+    have him_lhs : ((↑((2 : R) ^ m) - ↑(1 : 𝓞 K) : K).im : ℚ) = 0 := by
+      have : ((1 : 𝓞 K) : K) = (1 : K) := rfl
+      simp [this, im_sub, im_one, ← h2m_im]
+    rw [him_lhs, him_rhs] at h_im
+    exact absurd h_im (by norm_num)
   · -- Case β = -1: α = -(2^m)
     have hα : α = -((2 : R) ^ m) := by
       have : α * (-1 : R) = (2 : R) ^ m := h_prod
       have : -α = (2 : R) ^ m := by linear_combination this
       linear_combination -this
     rw [hα] at h_diff
-    have h_im := congrArg QuadraticAlgebra.im h_diff
-    simp at h_im; rw [h2m_im] at h_im; simp at h_im
+    have h_im : ((↑(-((2 : R) ^ m)) - ↑((-1 : R)) : K).im : ℚ) = (2 * (θ : K) - 1).im :=
+      congrArg QuadraticAlgebra.im h_diff
+    have him_rhs : ((2 * (θ : K) - 1).im : ℚ) = 2 := by
+      simp [im_sub, im_mul, im_one, im_ofNat, omega_im]
+    have him_lhs : ((↑(-((2 : R) ^ m)) - ↑((-1 : R)) : K).im : ℚ) = 0 := by
+      have h1 : ((-1 : 𝓞 K) : K) = (-1 : K) := rfl
+      simp [h1, im_neg, im_one, ← h2m_im]
+    rw [him_lhs, him_rhs] at h_im
+    exact absurd h_im (by norm_num)
 
 /-- Exercise 4: From α = ±θ^m or α = ±θ'^m, use the product relation to determine β,
     then take the difference α - β = 2θ-1 to eliminate x and obtain the conclusion. -/
@@ -411,7 +449,10 @@ lemma must_have_minus_sign (m : ℕ) (hm_odd : Odd m) (hm_ge : m ≥ 3)
     exfalso
     -- Step 1: (A) θ + θ' = 1; (B) θ - θ' = 2*θ - 1 (= √-7)
     have hA : θ + θ' = 1 := by exact add_eq_of_eq_sub' rfl
-    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
+    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by
+      apply Subtype.ext
+      change (1 - ω : K) = (1 : K) - (ω : K)
+      rfl
     have hB : θ - θ' = 2 * θ - 1 := by
       calc θ - θ' = θ - (1 - θ) := by rw [h_theta']
         _ = 2 * θ - 1 := by ring
@@ -556,7 +597,7 @@ lemma expand_by_binomial (m : ℕ) (hm_odd : Odd m) (hm_ge : m ≥ 3)
       calc (2 * (↑θ : K) - 1) ^ 2
           = 4 * (↑θ : K) ^ 2 - 4 * (↑θ : K) + 1 := by ring
         _ = 4 * ((↑θ : K) - 2) - 4 * (↑θ : K) + 1 := by
-          show 4 * (ω : K) ^ 2 - 4 * (ω : K) + 1 = 4 * ((ω : K) - 2) - 4 * (ω : K) + 1
+          change 4 * (ω : K) ^ 2 - 4 * (ω : K) + 1 = 4 * ((ω : K) - 2) - 4 * (ω : K) + 1
           rw [sq, omega_mul_omega_eq_mk]; ext <;> simp
         _ = -8 + 1 := by ring
         _ = -7 := by norm_num
@@ -651,10 +692,8 @@ lemma expand_by_binomial (m : ℕ) (hm_odd : Odd m) (hm_ge : m ≥ 3)
         -- Step B4: For odd k=2j+1: α^(2j+1) = α*(α²)^j = α*(-7)^j
         -- Step B5: Reindex from k ∈ range(m+1) to j ∈ range((m+1)/2)
         -- and factor out 2*α to get the result
-
         -- 1. Split the sum into Even and Odd indices
         rw [← Finset.sum_filter_add_sum_filter_not (s := Finset.range (m + 1)) (p := Odd)]
-
         -- 2. Prove the Even terms are all zero
         have h_even_zero : ∑ k ∈ Finset.filter (fun x => ¬Odd x) (Finset.range (m + 1)),
             ↑(m.choose k) * (α ^ k - (-α) ^ k) = 0 := by
@@ -663,37 +702,30 @@ lemma expand_by_binomial (m : ℕ) (hm_odd : Odd m) (hm_ge : m ≥ 3)
           -- Use the fact that k is even to show (-α)^k = α^k
           have h_ev : Even k := (Nat.even_or_odd k).resolve_right hk.2
           simp [Even.neg_pow h_ev, sub_self]
-
         -- 3. Simplify LHS using the zero result
         rw [h_even_zero, add_zero]
-
         -- 4. Rewrite RHS: expand T and distribute 2 * α
         rw [hT_def]
         rw [Int.cast_sum]    -- Moves the ↑ inside: ↑(∑ ...) becomes ∑ ↑(...)
         rw [Finset.mul_sum]  -- Now we can distribute: c * ∑ ... becomes ∑ c * ...
         simp only [Int.cast_mul, Int.cast_pow, Int.cast_natCast]
-
         -- 5. Swap sides so we map FROM the simple set (RHS) TO the complex set (LHS)
         symm
         refine Finset.sum_bij (fun j _ => 2 * j + 1) ?_ ?_ ?_ ?_
-
         -- Goal 5.1: "Into" - Show 2j+1 is in the LHS range (Odd and < m+1)
         · intro j hj
           simp only [Finset.mem_range] at hj ⊢
           simp only [Finset.mem_filter, Finset.mem_range]
           exact ⟨by omega, ⟨j, by ring⟩⟩
-
         -- Goal 5.2: Injectivity (If 2i+1 = 2j+1, then i=j)
         · intro a b _ _ h_eq
           linarith
-
         -- Goal 5.3: Surjectivity (Every odd k in LHS comes from some j in RHS)
         · intro k hk
           simp only [Finset.mem_filter, Finset.mem_range] at hk
           obtain ⟨j, hj⟩ := hk.2
           obtain ⟨n, hn⟩ := hm_odd
           exact ⟨j, Finset.mem_range.mpr (by omega), hj.symm⟩
-
         -- Goal 5.4: Algebraic Equality
         · intro j hj
           simp only [Odd.neg_pow ⟨j, rfl⟩, sub_neg_eq_add]
@@ -701,7 +733,6 @@ lemma expand_by_binomial (m : ℕ) (hm_odd : Odd m) (hm_ge : m ≥ 3)
           rw [hpow, hsq]
           push_cast
           ring
-
       -- Cancel 2*(2θ-1) from both sides of hS and hK_identity
       have hne : (2 : K) * (2 * (↑θ : K) - 1) ≠ 0 := by
         intro h0
@@ -845,8 +876,7 @@ lemma corollary_C (x₁ x₂ : ℤ) (m₁ m₂ : ℕ)
   rw [← h1, ← h2]
 
 /-- The odd-indexed binomial sum: B_d = Σ_{j=0}^{(d-1)/2} C(d, 2j+1) · (-7)^j.
-    This arises from expanding (1+√-7)^d = A_d + √-7 · B_d.
-    -/
+    This arises from expanding (1+√-7)^d = A_d + √-7 · B_d. -/
 noncomputable def binomial_B (d : ℕ) : ℤ :=
   ∑ j ∈ Finset.range ((d + 1) / 2), (d.choose (2 * j + 1)) * (-7) ^ j
 
@@ -867,7 +897,7 @@ private lemma j_gt_padicValNat_two_mul_add_one (j : ℕ) (hj : j ≥ 1) :
     j > padicValNat 7 (2 * j + 1) := by
   set m := padicValNat 7 (2 * j + 1)
   by_contra h_le
-  push_neg at h_le
+  push Not at h_le
   have h_dvd : 7 ^ m ∣ (2 * j + 1) := pow_padicValNat_dvd
   have h_le2 : 7 ^ m ≤ 2 * j + 1 := Nat.le_of_dvd (by omega) h_dvd
   have h_le3 : 7 ^ j ≤ 7 ^ m := Nat.pow_le_pow_right (by norm_num) h_le
@@ -887,9 +917,10 @@ private lemma higher_term_nat_dvd (d l j : ℕ) (hd : d > 0) (hj : j ≥ 1)
   have hk_ne : k ≠ 0 := by omega
   -- Absorption identity: d * C(d-1, 2j) = C(d, 2j+1) * (2j+1)
   have h_absorb : d * (d - 1).choose (2 * j) = C * k := by
-    have hds : (d - 1).succ = d := Nat.succ_pred_eq_of_pos hd
-    have h := Nat.succ_mul_choose_eq (d - 1) (2 * j)
-    rw [hds] at h; convert h using 2 <;> omega
+    have hds : (d - 1) + 1 = d := by omega
+    have h := Nat.add_one_mul_choose_eq (d - 1) (2 * j)
+    rw [hds] at h
+    convert h using 2
   -- 7^l ∣ C * k (from 7^l ∣ d and absorption identity)
   have h_dvd_prod : 7 ^ l ∣ C * k := by
     rw [← h_absorb]; exact dvd_trans h_div (dvd_mul_right d _)
@@ -984,9 +1015,10 @@ private lemma higher_even_term_nat_dvd (d l j : ℕ) (hd : d > 0) (hj : j ≥ 1)
   have hk_ne : k ≠ 0 := by omega
   -- Absorption identity: d * C(d-1, 2j+1) = C(d, 2(j+1)) * (2(j+1))
   have h_absorb : d * (d - 1).choose (2 * j + 1) = C * k := by
-    have hds : (d - 1).succ = d := Nat.succ_pred_eq_of_pos hd
-    have h := Nat.succ_mul_choose_eq (d - 1) (2 * j + 1)
-    rw [hds] at h; convert h using 2 <;> omega
+    have hds : (d - 1) + 1 = d := by omega
+    have h := Nat.add_one_mul_choose_eq (d - 1) (2 * j + 1)
+    rw [hds] at h
+    convert h using 2
   -- 7^l ∣ C * k (from 7^l ∣ d and absorption identity)
   have h_dvd_prod : 7 ^ l ∣ C * k := by
     rw [← h_absorb]; exact dvd_trans h_div (dvd_mul_right d _)
@@ -1000,7 +1032,7 @@ private lemma higher_even_term_nat_dvd (d l j : ℕ) (hd : d > 0) (hj : j ≥ 1)
     rw [hk_def]
     set m := padicValNat 7 (2 * (j + 1))
     by_contra h_le
-    push_neg at h_le
+    push Not at h_le
     have h_dvd : 7 ^ m ∣ (2 * (j + 1)) := pow_padicValNat_dvd
     have h_le2 : 7 ^ m ≤ 2 * (j + 1) := Nat.le_of_dvd (by omega) h_dvd
     have h_le3 : 7 ^ j ≤ 7 ^ m := Nat.pow_le_pow_right (by norm_num) h_le
@@ -1109,12 +1141,18 @@ lemma trace_seq_eq (n : ℕ) : (trace_seq n : R) = θ ^ n + θ' ^ n := by
     ring
   | case2 =>
     simp only [trace_seq, Int.cast_one, pow_one]
-    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
+    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by
+      apply Subtype.ext
+      change (1 - ω : K) = (1 : K) - (ω : K)
+      rfl
     rw [h_theta']; ring
   | case3 n ih1 ih2 =>
     simp only [trace_seq, Int.cast_sub, Int.cast_mul, Int.cast_ofNat]
     rw [ih1, ih2]
-    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
+    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by
+      apply Subtype.ext
+      change (1 - ω : K) = (1 : K) - (ω : K)
+      rfl
     have h_prod : θ * θ' = 2 := by rw [h_theta']; exact two_factorisation_R
     have key : θ ^ (n + 2) + θ' ^ (n + 2) =
         (θ + θ') * (θ ^ (n + 1) + θ' ^ (n + 1)) - θ * θ' * (θ ^ n + θ' ^ n) := by ring
@@ -1152,7 +1190,8 @@ private lemma trace_seq_mod7_period (m : ℕ) :
 lemma trace_seq_not_dvd_seven (n : ℕ) : ¬((7 : ℤ) ∣ trace_seq n) := by
   intro ⟨k, hk⟩
   have h := trace_seq_mod7_period n
-  rw [hk] at h; simp [Int.mul_emod] at h
+  rw [hk] at h
+  rw [Int.mul_emod_right] at h
   have : n % 3 = 0 ∨ n % 3 = 1 ∨ n % 3 = 2 := by omega
   rcases this with h0 | h1 | h2
   · rw [h0] at h; simp [trace_seq] at h
@@ -1162,6 +1201,171 @@ lemma trace_seq_not_dvd_seven (n : ℕ) : ¬((7 : ℤ) ∣ trace_seq n) := by
 lemma nat_even_iff_not_odd (n : ℕ) : Even n ↔ ¬ Odd n := by
   exact Iff.symm not_odd_iff_even
 
+/-- Auxiliary algebraic identity used in `at_most_one_m_per_class`: given the algebraic-integer
+data tying `θ^m_i - θ'^m_i = -2θ + 1`, one has
+`P * binomial_B d = 1 - 7 * A'_d - 2^d` (as integers), where `P = θ^m₁ + θ'^m₁`,
+`A'_d = ∑_{j} C(d, 2(j+1)) (-7)^j`, and `d = m₂ - m₁`. -/
+private lemma seven_adic_identity (m₁ m₂ d : ℕ) (P : ℤ)
+    (hP_eq : (P : R) = ↑(θ ^ m₁ + θ' ^ m₁))
+    (h_m2_eq : m₂ = m₁ + d)
+    (h_eq : θ ^ m₁ - θ' ^ m₁ = θ ^ m₂ - θ' ^ m₂)
+    (h₁_theta : -2 * θ + 1 = θ ^ m₁ - θ' ^ m₁) :
+    P * binomial_B d = 1 - 7 *
+      (∑ j ∈ Finset.range (d / 2), (d.choose (2 * (j + 1)) : ℤ) * (-7) ^ j) - (2 : ℤ) ^ d := by
+  set A'_d := ∑ j ∈ Finset.range (d / 2),
+    (d.choose (2 * (j + 1)) : ℤ) * (-7) ^ j with hA'_def
+  have h_theta' : (θ' : 𝓞 K) = 1 - θ := by
+    apply Subtype.ext
+    change (1 - ω : K) = (1 : K) - (ω : K)
+    rfl
+  set α_K := 2 * (↑θ : K) - 1 with hα_def
+  have hsq : α_K ^ 2 = (-7 : K) := by
+    have h_zero : (θ : K) ^ 2 - (θ : K) + 2 = 0 := by
+      change (ω : K) ^ 2 - (ω : K) + 2 = 0
+      rw [sq, omega_mul_omega_eq_mk]; ext <;> simp
+    have h_theta_sq : (θ : K) ^ 2 = (θ : K) - 2 := by linear_combination h_zero
+    calc α_K ^ 2 = 4 * (θ : K) ^ 2 - 4 * (θ : K) + 1 := by rw [hα_def]; ring
+      _ = 4 * ((θ : K) - 2) - 4 * (θ : K) + 1 := by rw [h_theta_sq]
+      _ = -7 := by ring
+  have hα_ne : α_K ≠ 0 := by
+    intro h0; rw [h0, zero_pow two_ne_zero] at hsq; norm_num at hsq
+  have h_eq_K : (θ : K) ^ m₁ - (θ' : K) ^ m₁ =
+      (θ : K) ^ m₁ * (θ : K) ^ d - (θ' : K) ^ m₁ * (θ' : K) ^ d := by
+    have h0 := congr_arg ((↑) : 𝓞 K → K) h_eq
+    push_cast at h0
+    rw [h_m2_eq] at h0
+    simp only [pow_add] at h0
+    exact h0
+  have h_cross : ((θ : K) ^ m₁ + (θ' : K) ^ m₁) * ((θ : K) ^ d - (θ' : K) ^ d) =
+      -((θ : K) ^ m₁ - (θ' : K) ^ m₁) * ((θ : K) ^ d + (θ' : K) ^ d - 2) := by
+    linear_combination -2 * h_eq_K
+  have h_diff_eq : (θ : K) ^ m₁ - (θ' : K) ^ m₁ = -α_K := by
+    have h0 : -(2 : K) * (↑θ : K) + 1 = (↑θ : K) ^ m₁ - (↑θ' : K) ^ m₁ := by
+      have h0' := congr_arg ((↑) : 𝓞 K → K) h₁_theta
+      push_cast at h0'
+      convert h0' using 2
+    rw [hα_def, ← h0]; ring
+  have hP_K : (P : K) = (θ : K) ^ m₁ + (θ' : K) ^ m₁ := by
+    have h0 := congr_arg ((↑) : 𝓞 K → K) hP_eq
+    push_cast at h0
+    exact h0
+  have hbinom_plus : (2 * (↑θ : K)) ^ d =
+      ∑ k ∈ Finset.range (d + 1), (↑(d.choose k) : K) * α_K ^ k := by
+    have h := add_pow α_K 1 d
+    simp only [one_pow, mul_one] at h
+    rw [show α_K + 1 = 2 * (↑θ : K) from by rw [hα_def]; ring] at h
+    rw [h]; exact Finset.sum_congr rfl (fun k _ => mul_comm _ _)
+  have hbinom_minus : (2 * (1 - (↑θ : K))) ^ d =
+      ∑ k ∈ Finset.range (d + 1), (↑(d.choose k) : K) * (-α_K) ^ k := by
+    have h := add_pow (-α_K) 1 d
+    simp only [one_pow, mul_one] at h
+    rw [show -α_K + 1 = 2 * (1 - (↑θ : K)) from by rw [hα_def]; ring] at h
+    rw [h]; exact Finset.sum_congr rfl (fun k _ => mul_comm _ _)
+  have h_diff_binom : (2 * (↑θ : K)) ^ d - (2 * (1 - (↑θ : K))) ^ d =
+      2 * α_K * (↑(binomial_B d) : K) := by
+    rw [hbinom_plus, hbinom_minus, ← Finset.sum_sub_distrib]
+    rw [← Finset.sum_filter_add_sum_filter_not (s := Finset.range (d+1)) (p := Odd)]
+    have h_even_zero : ∑ k ∈ Finset.filter (fun x => ¬Odd x) (Finset.range (d + 1)),
+        ((d.choose k : K) * α_K ^ k - (d.choose k : K) * (-α_K) ^ k) = 0 := by
+      refine Finset.sum_eq_zero (fun k hk => ?_)
+      simp only [Finset.mem_filter] at hk
+      have h_ev : Even k := (Nat.even_or_odd k).resolve_right hk.2
+      simp [Even.neg_pow h_ev, sub_self]
+    rw [h_even_zero, add_zero]
+    unfold binomial_B
+    rw [Int.cast_sum, Finset.mul_sum]
+    simp only [Int.cast_mul, Int.cast_pow, Int.cast_natCast, Int.cast_neg, Int.cast_ofNat]
+    symm
+    refine Finset.sum_bij (fun j _ => 2 * j + 1) ?_ ?_ ?_ ?_
+    · intro j hj; simp only [Finset.mem_range] at hj ⊢
+      simp only [Finset.mem_filter, Finset.mem_range]
+      exact ⟨by omega, ⟨j, by ring⟩⟩
+    · intro a b _ _ h_ab; linarith
+    · intro k hk; simp only [Finset.mem_filter, Finset.mem_range] at hk
+      obtain ⟨j, hj⟩ := hk.2
+      exact ⟨j, Finset.mem_range.mpr (by omega), hj.symm⟩
+    · intro j hj
+      simp only [Odd.neg_pow ⟨j, rfl⟩]
+      have hpow : α_K ^ (2 * j + 1) = α_K * (α_K ^ 2) ^ j := by ring_nf
+      rw [hpow, hsq]; ring
+  have h_sum_binom : (2 * (↑θ : K)) ^ d + (2 * (1 - (↑θ : K))) ^ d =
+      2 * (1 - 7 * (↑A'_d : K)) := by
+    rw [hbinom_plus, hbinom_minus, ← Finset.sum_add_distrib]
+    rw [← Finset.sum_filter_add_sum_filter_not (s := Finset.range (d+1)) (p := Odd)]
+    have h_odd_zero : ∑ k ∈ Finset.filter Odd (Finset.range (d + 1)),
+        ((d.choose k : K) * α_K ^ k + (d.choose k : K) * (-α_K) ^ k) = 0 := by
+      refine Finset.sum_eq_zero (fun k hk => ?_)
+      simp only [Finset.mem_filter] at hk
+      rw [Odd.neg_pow hk.2]; ring
+    rw [h_odd_zero, zero_add]
+    rw [hA'_def, Int.cast_sum]
+    simp only [Int.cast_mul, Int.cast_pow, Int.cast_natCast, Int.cast_neg, Int.cast_ofNat]
+    symm
+    rw [show (2 : K) * (1 - 7 * ∑ j ∈ Finset.range (d / 2),
+           (↑(d.choose (2 * (j + 1))) : K) * ((-7 : K)) ^ j) =
+         2 + ∑ j ∈ Finset.range (d / 2),
+           2 * (↑(d.choose (2 * (j + 1))) : K) * (-7 : K) ^ (j + 1) from by
+      rw [mul_sub, mul_one, ← mul_assoc, Finset.mul_sum, sub_eq_add_neg,
+        ← Finset.sum_neg_distrib]
+      congr 1
+      apply Finset.sum_congr rfl
+      intro j hj
+      ring]
+    simp_rw [← nat_even_iff_not_odd]
+    rw [show Finset.filter Even (Finset.range (d + 1)) =
+           Finset.image (fun j => 2 * j) (Finset.range (d / 2 + 1)) from by
+      ext k
+      simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_image, Even]
+      constructor
+      · rintro ⟨hk, m, rfl⟩
+        refine ⟨m, ?_, (two_mul m)⟩
+        omega
+      · rintro ⟨m, hm, rfl⟩
+        refine ⟨by omega, ⟨m, two_mul m⟩⟩]
+    rw [Finset.sum_image (fun a _ b _ hab => by omega)]
+    rw [show d / 2 + 1 = (d / 2) + 1 from rfl]
+    rw [Finset.sum_range_succ']
+    simp only [Nat.choose_zero_right, pow_zero, mul_one, Nat.cast_one, mul_zero]
+    norm_num
+    rw [add_comm _ (2:K), add_left_cancel_iff]
+    apply Finset.sum_congr rfl
+    intro j _
+    have : α_K ^ (2 * (j + 1)) = (α_K ^ 2) ^ (j + 1) := by ring_nf
+    rw [this, hsq]; ring
+  have h_in_K : 2 * (P : K) * (↑(binomial_B d) : K) =
+      2 * ((1 : K) - 7 * ↑A'_d - (2 : K) ^ d) := by
+    have h_sub1 : (P : K) * ((θ : K) ^ d - (θ' : K) ^ d) =
+        α_K * ((θ : K) ^ d + (θ' : K) ^ d - 2) := by
+      rw [hP_K]; rw [h_cross, h_diff_eq]; ring
+    have h_scaled : (P : K) * ((2:K)^d * ((θ : K) ^ d - (θ' : K) ^ d)) =
+        α_K * ((2:K)^d * ((θ : K) ^ d + (θ' : K) ^ d) - (2:K)^d * 2) := by
+      calc (P : K) * ((2:K)^d * ((θ : K) ^ d - (θ' : K) ^ d))
+          = (2:K)^d * ((P : K) * ((θ : K) ^ d - (θ' : K) ^ d)) := by ring
+        _ = (2:K)^d * (α_K * ((θ : K) ^ d + (θ' : K) ^ d - 2)) := by rw [h_sub1]
+        _ = α_K * ((2:K)^d * ((θ : K) ^ d + (θ' : K) ^ d) - (2:K)^d * 2) := by ring
+    have h_lhs_eq : (2:K)^d * ((θ : K) ^ d - (θ' : K) ^ d) =
+        (2 * (↑θ : K))^d - (2 * (1 - (↑θ : K)))^d := by
+      rw [mul_pow, mul_pow, h_theta']; push_cast; ring
+    rw [h_lhs_eq, h_diff_binom] at h_scaled
+    have h_rhs_eq : (2:K)^d * ((θ : K) ^ d + (θ' : K) ^ d) =
+        (2 * (↑θ : K))^d + (2 * (1 - (↑θ : K)))^d := by
+      rw [mul_pow, mul_pow, h_theta']; push_cast; ring
+    rw [h_rhs_eq, h_sum_binom] at h_scaled
+    have h_cancel : α_K * (2 * (P : K) * ↑(binomial_B d)) =
+        α_K * (2 * (1 - 7 * ↑A'_d - (2:K)^d)) := by linear_combination h_scaled
+    exact mul_left_cancel₀ hα_ne h_cancel
+  apply Int.cast_injective (α := K)
+  have h_lhs : ((P * binomial_B d : ℤ) : K) = (P : K) * (↑(binomial_B d) : K) := by
+    push_cast; ring
+  have h_rhs : ((1 - 7 * A'_d - (2 : ℤ) ^ d : ℤ) : K) =
+      (1 : K) - 7 * ↑A'_d - (2 : K) ^ d := by push_cast; ring
+  rw [h_lhs, h_rhs]
+  have h_two_K_ne : (2 : K) ≠ 0 := by
+    intro h0; exact absurd (show (2 : ℚ) = 0 from by exact_mod_cast h0) (by norm_num)
+  rw [mul_assoc] at h_in_K
+  have h_reduced := mul_left_cancel₀ h_two_K_ne h_in_K
+  exact h_reduced
+
 /-- If two solutions m₁, m₂ satisfy m₁ ≡ m₂ (mod 42) and both give
     θ^m - θ'^m = -2θ+1, then m₁ = m₂. This is proved by contradiction:
     if m₁ ≠ m₂, the difference d = |m₂ - m₁| is divisible by 42 (hence by 7),
@@ -1170,15 +1374,17 @@ lemma nat_even_iff_not_odd (n : ℕ) : Even n ↔ ¬ Odd n := by
 
     PROVIDED SOLUTION
 
-    1. WLOG m₂ > m₁ (else swap or they're equal).                                                                           │
-    2. Let d = m₂ - m₁, which is divisible by 42, hence by 7.                                                               │
-    3. Let l = v₇(d).                                                                                                       │
-    4. From corollary_C (via h₁_theta, h₂_theta): θ^m₁ - θ'^m₁ = θ^m₂ - θ'^m₂.                                              │
-    5. Expand using binomial sums: this forces B_{m₂} = 2^d · B_{m₁}, equivalently B_d has certain 7-adic properties.       │
-    6. From lemma_A_binomial_valuation: v₇(B_d) = l exactly.                                                                │
-    7. The identity (2θ-1)² = -7 means v_p(√-7) = 1 where p = (2θ-1).                                                       │
-    8. For d ∈ ℤ: v_p(d) = 2·v₇(d) = 2l (always even).                                                                      │
-    9. Need v_p(d · √-7) ≥ 2(l+1) but v_p(d · √-7) = 2l+1 < 2l+2. Contradiction.
+    1. WLOG m₂ > m₁ (else swap or they're equal).
+    2. Let d = m₂ - m₁, which is divisible by 42, hence by 7.
+    3. Let l = v₇(d).
+    4. From corollary_C: θ^m₁ - θ'^m₁ = θ^m₂ - θ'^m₂.
+    5. Expand using binomial sums: this forces B_{m₂} = 2^d · B_{m₁};
+       equivalently, B_d has certain 7-adic properties.
+    6. From lemma_A_binomial_valuation: v₇(B_d) = l exactly.
+    7. The identity (2θ-1)² = -7 means v_p(√-7) = 1 where p = (2θ-1).
+    8. For d ∈ ℤ: v_p(d) = 2·v₇(d) = 2l (always even).
+    9. Need v_p(d · √-7) ≥ 2(l+1) but v_p(d · √-7) = 2l+1 < 2l+2.
+       Contradiction.
 -/
 lemma at_most_one_m_per_class (m₁ m₂ : ℕ)
     (h₁_odd : Odd m₁) (h₂_odd : Odd m₂)
@@ -1232,193 +1438,9 @@ lemma at_most_one_m_per_class (m₁ m₂ : ℕ)
   -- Step 7b: Algebraic identity from the theta equation and binomial expansion:
   -- P · B_d = -7 · A'_d, derived from expanding θ^d - 1 and θ'^d - 1 via binomials.
   obtain ⟨P, hP_eq, hP_coprime⟩ := h_trace
-  have h_identity : P * binomial_B d = 1 - 7 * A'_d - (2 : ℤ) ^ d := by
-    -- Strategy: prove in K, then lift to ℤ via Int.cast_injective.
-    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
-    set α_K := 2 * (↑θ : K) - 1 with hα_def
-    have hsq : α_K ^ 2 = (-7 : K) := by
-      have h_zero : (θ : K) ^ 2 - (θ : K) + 2 = 0 := by
-        show (ω : K) ^ 2 - (ω : K) + 2 = 0
-        rw [sq, omega_mul_omega_eq_mk]; ext <;> simp
-      have h_theta_sq : (θ : K) ^ 2 = (θ : K) - 2 := by linear_combination h_zero
-      calc α_K ^ 2 = 4 * (θ : K) ^ 2 - 4 * (θ : K) + 1 := by rw [hα_def]; ring
-        _ = 4 * ((θ : K) - 2) - 4 * (θ : K) + 1 := by rw [h_theta_sq]
-        _ = -7 := by ring
-    have hα_ne : α_K ≠ 0 := by
-      intro h0; rw [h0, zero_pow two_ne_zero] at hsq; norm_num at hsq
-    -- Key relation from h_eq: P·D = α·(S - 2) in K
-    -- where S = θ^d + θ'^d, D = θ^d - θ'^d, P = θ^m₁ + θ'^m₁
-    -- Proof: from h_eq, θ^m₁·θ^d - θ'^m₁·θ'^d = θ^m₁ - θ'^m₁
-    -- This can be rearranged algebraically to P·D = (θ^m₁ - θ'^m₁)·(S - 2)
-    have h_m2_eq : m₂ = m₁ + d := by omega
-    -- Cross-multiply identity: (a+b)(c-e) = -(a-b)(c+e-2)
-    have h_eq_K : (θ : K) ^ m₁ - (θ' : K) ^ m₁ =
-        (θ : K) ^ m₁ * (θ : K) ^ d - (θ' : K) ^ m₁ * (θ' : K) ^ d := by
-      have h0 := congr_arg ((↑) : 𝓞 K → K) h_eq
-      push_cast at h0
-      rw [h_m2_eq] at h0
-      simp only [pow_add] at h0
-      exact h0
-    have h_cross : ((θ : K) ^ m₁ + (θ' : K) ^ m₁) * ((θ : K) ^ d - (θ' : K) ^ d) =
-        -((θ : K) ^ m₁ - (θ' : K) ^ m₁) * ((θ : K) ^ d + (θ' : K) ^ d - 2) := by
-      -- (a+b)(c-e) + (a-b)(c+e-2) = 2(ac-be) - 2(a-b) = 0 by h_eq_K
-      linear_combination -2 * h_eq_K
-    -- From h₁_theta: θ^m₁ - θ'^m₁ = -(2θ - 1) = -α_K
-    have h_diff_eq : (θ : K) ^ m₁ - (θ' : K) ^ m₁ = -α_K := by
-      have h0 : -(2 : K) * (↑θ : K) + 1 = (↑θ : K) ^ m₁ - (↑θ' : K) ^ m₁ := by
-        have h0' := congr_arg ((↑) : 𝓞 K → K) h₁_theta
-        push_cast at h0'
-        convert h0' using 2
-      rw [hα_def, ← h0]; ring
-    -- Cast hP_eq to K
-    have hP_K : (P : K) = (θ : K) ^ m₁ + (θ' : K) ^ m₁ := by
-      have h0 := congr_arg ((↑) : 𝓞 K → K) hP_eq
-      push_cast at h0
-      exact h0
-    -- Binomial expansions of (2θ)^d and (2θ')^d
-    have hbinom_plus : (2 * (↑θ : K)) ^ d =
-        ∑ k ∈ Finset.range (d + 1), (↑(d.choose k) : K) * α_K ^ k := by
-      have h := add_pow α_K 1 d
-      simp only [one_pow, mul_one] at h
-      rw [show α_K + 1 = 2 * (↑θ : K) from by rw [hα_def]; ring] at h
-      rw [h]; exact Finset.sum_congr rfl (fun k _ => mul_comm _ _)
-    have hbinom_minus : (2 * (1 - (↑θ : K))) ^ d =
-        ∑ k ∈ Finset.range (d + 1), (↑(d.choose k) : K) * (-α_K) ^ k := by
-      have h := add_pow (-α_K) 1 d
-      simp only [one_pow, mul_one] at h
-      rw [show -α_K + 1 = 2 * (1 - (↑θ : K)) from by rw [hα_def]; ring] at h
-      rw [h]; exact Finset.sum_congr rfl (fun k _ => mul_comm _ _)
-    -- Difference identity: (2θ)^d - (2θ')^d = 2*α*B_d
-    have h_diff_binom : (2 * (↑θ : K)) ^ d - (2 * (1 - (↑θ : K))) ^ d =
-        2 * α_K * (↑(binomial_B d) : K) := by
-      rw [hbinom_plus, hbinom_minus, ← Finset.sum_sub_distrib]
-      rw [← Finset.sum_filter_add_sum_filter_not (s := Finset.range (d+1)) (p := Odd)]
-      have h_even_zero : ∑ k ∈ Finset.filter (fun x => ¬Odd x) (Finset.range (d + 1)),
-          ((d.choose k : K) * α_K ^ k - (d.choose k : K) * (-α_K) ^ k) = 0 := by
-        refine Finset.sum_eq_zero (fun k hk => ?_)
-        simp only [Finset.mem_filter] at hk
-        have h_ev : Even k := (Nat.even_or_odd k).resolve_right hk.2
-        simp [Even.neg_pow h_ev, sub_self]
-      rw [h_even_zero, add_zero]
-      unfold binomial_B
-      rw [Int.cast_sum, Finset.mul_sum]
-      simp only [Int.cast_mul, Int.cast_pow, Int.cast_natCast, Int.cast_neg, Int.cast_ofNat]
-      symm
-      refine Finset.sum_bij (fun j _ => 2 * j + 1) ?_ ?_ ?_ ?_
-      · intro j hj; simp only [Finset.mem_range] at hj ⊢
-        simp only [Finset.mem_filter, Finset.mem_range]
-        exact ⟨by omega, ⟨j, by ring⟩⟩
-      · intro a b _ _ h_ab; linarith
-      · intro k hk; simp only [Finset.mem_filter, Finset.mem_range] at hk
-        obtain ⟨j, hj⟩ := hk.2
-        exact ⟨j, Finset.mem_range.mpr (by omega), hj.symm⟩
-      · intro j hj
-        simp only [Odd.neg_pow ⟨j, rfl⟩]
-        have hpow : α_K ^ (2 * j + 1) = α_K * (α_K ^ 2) ^ j := by ring_nf
-        rw [hpow, hsq]; push_cast; ring
-    -- Sum identity: (2θ)^d + (2θ')^d = 2*(1 - 7*A'_d)
-    have h_sum_binom : (2 * (↑θ : K)) ^ d + (2 * (1 - (↑θ : K))) ^ d =
-        2 * (1 - 7 * (↑A'_d : K)) := by
-      rw [hbinom_plus, hbinom_minus, ← Finset.sum_add_distrib]
-      rw [← Finset.sum_filter_add_sum_filter_not (s := Finset.range (d+1)) (p := Odd)]
-      have h_odd_zero : ∑ k ∈ Finset.filter Odd (Finset.range (d + 1)),
-          ((d.choose k : K) * α_K ^ k + (d.choose k : K) * (-α_K) ^ k) = 0 := by
-        refine Finset.sum_eq_zero (fun k hk => ?_)
-        simp only [Finset.mem_filter] at hk
-        rw [Odd.neg_pow hk.2]; ring
-      rw [h_odd_zero, zero_add]
-      rw [hA'_def, Int.cast_sum]
-      simp only [Int.cast_mul, Int.cast_pow, Int.cast_natCast, Int.cast_neg, Int.cast_ofNat]
-      -- Reindex: even filter = image of (fun j => 2*j) over range(d/2+1)
-      symm
-      -- Replace your existing 'rw [show ... ]' block with this:
-      rw [show (2 : K) * (1 - 7 * ∑ j ∈ Finset.range (d / 2),
-             (↑(d.choose (2 * (j + 1))) : K) * ((-7 : K)) ^ j) =
-           2 + ∑ j ∈ Finset.range (d / 2),
-             2 * (↑(d.choose (2 * (j + 1))) : K) * (-7 : K) ^ (j + 1) from by
-        -- 1. Distribute 2 * (1 - ...) -> 2 - 2 * ...
-        rw [mul_sub, mul_one]
-        -- 2. Move constants inside the sum on the LHS
-        --    2 * (7 * Sum) -> Sum (2 * 7 * ...)
-        rw [← mul_assoc, Finset.mul_sum]
-        -- 3. Align the LHS (subtraction) with the RHS (addition)
-        --    Turn "2 - Sum" into "2 + (-Sum)" and push negation inside
-        rw [sub_eq_add_neg, ← Finset.sum_neg_distrib]
-        -- 4. Strip the "2 +" from both sides and match the sums
-        congr 1
-        apply Finset.sum_congr rfl
-        intro j hj
-        -- 5. Prove that -(2 * 7 * term) = 2 * term * (-7)^(j+1)
-        --    ring can handle this easily (since (-7)^(j+1) includes a -7 factor)
-        ring]
-      -- 1. Align the syntax: Turn "¬Odd" into "Even" in the goal
-      simp_rw [← nat_even_iff_not_odd]
-      -- 2. Now perform the set rewrite
-      rw [show Finset.filter Even (Finset.range (d + 1)) =
-             Finset.image (fun j => 2 * j) (Finset.range (d / 2 + 1)) from by
-        ext k
-        simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_image, Even]
-        constructor
-        -- Left to Right: If k is even (k = m + m) and k < d+1, then k is in the image
-        · rintro ⟨hk, m, rfl⟩
-          refine ⟨m, ?_, (two_mul m)⟩ -- Use two_mul to switch j+j to 2*j
-          omega -- Omega handles the inequality logic (2m < d+1 -> m < d/2 + 1)
-        -- Right to Left: If k = 2*m and m < d/2+1, then k is even and k < d+1
-        · rintro ⟨m, hm, rfl⟩
-          refine ⟨by omega, ⟨m, two_mul m⟩⟩] -- Use two_mul to switch 2*m back to m+m
-      rw [Finset.sum_image (fun a _ b _ hab => by omega)]
-      rw [show d / 2 + 1 = (d / 2) + 1 from rfl]
-      rw [Finset.sum_range_succ']
-      simp only [Nat.choose_zero_right, pow_zero, mul_one, Nat.cast_one, mul_zero]
-      norm_num
-      rw [add_comm _ (2:K)]
-      rw [add_left_cancel_iff]
-      -- rw [show d / 2 + 1 = (d / 2) + 1 from rfl, Finset.sum_range_succ']
-      -- simp -- only [Nat.choose_zero_right, pow_zero, mul_one, Nat.cast_one]
-      -- rw [add_left_cancel_iff]
-      apply Finset.sum_congr rfl
-      intro j _
-      have : α_K ^ (2 * (j + 1)) = (α_K ^ 2) ^ (j + 1) := by ring_nf
-      rw [this, hsq]; ring
-    -- Combine: P*(c-e) = α_K*(c+e-2), multiply by 2^d, substitute, cancel α_K
-    have h_in_K : 2 * (P : K) * (↑(binomial_B d) : K) =
-        2 * ((1 : K) - 7 * ↑A'_d - (2 : K) ^ d) := by
-      -- From h_cross + h_diff_eq: P*(c-e) = α_K*(c+e-2)
-      have h_sub1 : (P : K) * ((θ : K) ^ d - (θ' : K) ^ d) =
-          α_K * ((θ : K) ^ d + (θ' : K) ^ d - 2) := by
-        rw [hP_K]; rw [h_cross, h_diff_eq]; ring
-      -- Multiply by 2^d and substitute binomial identities
-      have h_scaled : (P : K) * ((2:K)^d * ((θ : K) ^ d - (θ' : K) ^ d)) =
-          α_K * ((2:K)^d * ((θ : K) ^ d + (θ' : K) ^ d) - (2:K)^d * 2) := by
-        calc (P : K) * ((2:K)^d * ((θ : K) ^ d - (θ' : K) ^ d))
-            = (2:K)^d * ((P : K) * ((θ : K) ^ d - (θ' : K) ^ d)) := by ring
-          _ = (2:K)^d * (α_K * ((θ : K) ^ d + (θ' : K) ^ d - 2)) := by rw [h_sub1]
-          _ = α_K * ((2:K)^d * ((θ : K) ^ d + (θ' : K) ^ d) - (2:K)^d * 2) := by ring
-      -- Replace using binomial identities
-      have h_lhs_eq : (2:K)^d * ((θ : K) ^ d - (θ' : K) ^ d) =
-          (2 * (↑θ : K))^d - (2 * (1 - (↑θ : K)))^d := by
-        rw [mul_pow, mul_pow, h_theta']; push_cast; ring
-      rw [h_lhs_eq, h_diff_binom] at h_scaled
-      have h_rhs_eq : (2:K)^d * ((θ : K) ^ d + (θ' : K) ^ d) =
-          (2 * (↑θ : K))^d + (2 * (1 - (↑θ : K)))^d := by
-        rw [mul_pow, mul_pow, h_theta']; push_cast; ring
-      rw [h_rhs_eq, h_sum_binom] at h_scaled
-      -- h_scaled: P*(2*α*B_d) = α*(2*(1-7*A'_d) - 2^d*2). Cancel α.
-      have h_cancel : α_K * (2 * (P : K) * ↑(binomial_B d)) =
-          α_K * (2 * (1 - 7 * ↑A'_d - (2:K)^d)) := by linear_combination h_scaled
-      exact mul_left_cancel₀ hα_ne h_cancel
-    -- Lift from K to ℤ via Int.cast_injective
-    apply Int.cast_injective (α := K)
-    have h_lhs : ((P * binomial_B d : ℤ) : K) = (P : K) * (↑(binomial_B d) : K) := by
-      push_cast; ring
-    have h_rhs : ((1 - 7 * A'_d - (2 : ℤ) ^ d : ℤ) : K) =
-        (1 : K) - 7 * ↑A'_d - (2 : K) ^ d := by push_cast; ring
-    rw [h_lhs, h_rhs]
-    have h_two_K_ne : (2 : K) ≠ 0 := by
-      intro h0; exact absurd (show (2 : ℚ) = 0 from by exact_mod_cast h0) (by norm_num)
-    rw [mul_assoc] at h_in_K
-    have h_reduced := mul_left_cancel₀ h_two_K_ne h_in_K
-    exact h_reduced
+  have h_m2_eq : m₂ = m₁ + d := by omega
+  have h_identity : P * binomial_B d = 1 - 7 * A'_d - (2 : ℤ) ^ d :=
+    seven_adic_identity m₁ m₂ d P hP_eq h_m2_eq h_eq h₁_theta
   -- Step 8: v₇(A'_d) = l (same ultrametric argument as lemma_A, for even-indexed terms).
   -- The j=0 term C(d,2) = d(d-1)/2 has v₇ = l (since 7^l ∥ d and 7∤(d-1), 7∤2).
   -- All j≥1 terms have v₇ ≥ l+1 (by absorption identity, same as higher_term_nat_dvd).
@@ -1591,7 +1613,7 @@ lemma ramanujan_nagell_even_pow_factors :
   -- Both factors must be positive
   have h_both_pos : 2^k + x > 0 ∧ 2^k - x > 0 := by
     by_contra h_neg
-    push_neg at h_neg
+    push Not at h_neg
     rcases le_or_gt (2^k + x) 0 with ha | ha
     · rcases le_or_gt (2^k - x) 0 with hb | hb
       · linarith
@@ -1752,7 +1774,7 @@ theorem RamanujanNagell :
   intro x n h
   have n_ge_3 : n ≥ 3 := by
     by_contra h_lt
-    push_neg at h_lt
+    push Not at h_lt
     have h_sq_nonneg : 0 ≤ x ^ 2 := sq_nonneg x
     have h_pow_bound : (2 : ℤ) ^ n ≤ 4 := by
       match n with

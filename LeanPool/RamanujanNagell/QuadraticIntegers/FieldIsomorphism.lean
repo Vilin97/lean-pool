@@ -34,14 +34,16 @@ def toK : K' →ₐ[ℚ] Klocal :=
     -- Need: (2ω-1)² = (-7:ℚ)•1 + 0•(2ω-1)  in Klocal
     -- Verified component-wise: .re = 1 - 8 = -7, .im = -2 - 2 + 4 = 0
     ext
-    · show ((2 * (ω : Klocal) - 1) * (2 * ω - 1)).re = ((-7 : ℤ) • (1 : Klocal) + 0 • (2 * ω - 1)).re
-      simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_add, im_add,
-        re_smul, im_smul, omega_re, omega_im, re_intCast, im_intCast,
+    · change ((2 * (ω : Klocal) - 1) * (2 * ω - 1)).re =
+        ((-7 : ℤ) • (1 : Klocal) + 0 • (2 * ω - 1)).re
+      simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_add,
+        re_smul, omega_re, omega_im,
         re_ofNat, im_ofNat]
       push_cast; ring
-    · show ((2 * (ω : Klocal) - 1) * (2 * ω - 1)).im = ((-7 : ℤ) • (1 : Klocal) + 0 • (2 * ω - 1)).im
-      simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_add, im_add,
-        re_smul, im_smul, omega_re, omega_im, re_intCast, im_intCast,
+    · change ((2 * (ω : Klocal) - 1) * (2 * ω - 1)).im =
+        ((-7 : ℤ) • (1 : Klocal) + 0 • (2 * ω - 1)).im
+      simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, im_add,
+        im_smul, omega_re, omega_im,
         re_ofNat, im_ofNat]
       push_cast; ring⟩
 
@@ -51,13 +53,13 @@ def toK' : Klocal →ₐ[ℚ] K' :=
     -- Need: ((ω'+1)/2)² = (-2:ℚ)•1 + 1•((ω'+1)/2)  in K'
     -- LHS: (-7+2ω'+1)/4 = -3/2 + ω'/2 = -2 + (ω'+1)/2 = RHS  ✓
     ext
-    · simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_add, im_add,
-        re_smul, im_smul, omega_re, omega_im, re_intCast, im_intCast,
-        re_ofNat, im_ofNat, smul_eq_mul]
+    · simp only [re_mul, re_one, im_one, re_add, im_add,
+        re_smul, im_smul, omega_re, omega_im,
+        smul_eq_mul]
       push_cast; ring
-    · simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_add, im_add,
-        re_smul, im_smul, omega_re, omega_im, re_intCast, im_intCast,
-        re_ofNat, im_ofNat, smul_eq_mul]
+    · simp only [im_mul, re_one, im_one, re_add, im_add,
+        re_smul, im_smul, omega_re, omega_im,
+        smul_eq_mul]
       push_cast; ring⟩
 
 /-- The field isomorphism K' ≃ₐ[ℚ] K. -/
@@ -67,21 +69,21 @@ def fieldIso : K' ≃ₐ[ℚ] Klocal :=
       simp only [AlgHom.comp_apply, AlgHom.id_apply, toK, toK', QuadraticAlgebra.lift_apply_apply,
         omega_re, omega_im, zero_smul, one_smul, zero_add]
       ext
-      · simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_smul, im_smul,
+      · simp only [re_mul, re_sub, re_one, im_one, re_smul, im_smul,
           re_add, im_add, omega_re, omega_im, smul_eq_mul, re_ofNat, im_ofNat]
         push_cast; ring
-      · simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_smul, im_smul,
+      · simp only [im_mul, im_sub, re_one, im_one, re_smul, im_smul,
           re_add, im_add, omega_re, omega_im, smul_eq_mul, re_ofNat, im_ofNat]
-        push_cast; ring))
+        ring))
     (QuadraticAlgebra.algHom_ext (by
       simp only [AlgHom.comp_apply, AlgHom.id_apply, toK, toK', QuadraticAlgebra.lift_apply_apply,
         omega_re, omega_im, zero_smul, one_smul, zero_add]
       ext
-      · simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_smul, im_smul,
-          re_add, im_add, omega_re, omega_im, smul_eq_mul, re_ofNat, im_ofNat]
+      · simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_smul,
+          re_add, omega_re, omega_im, smul_eq_mul, re_ofNat, im_ofNat]
         push_cast; ring
-      · simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, re_smul, im_smul,
-          re_add, im_add, omega_re, omega_im, smul_eq_mul, re_ofNat, im_ofNat]
+      · simp only [re_mul, im_mul, re_sub, im_sub, re_one, im_one, im_smul,
+          im_add, omega_re, omega_im, smul_eq_mul, re_ofNat, im_ofNat]
         push_cast; ring))
 
 /-- The isomorphism sends ω' to 2ω - 1. -/
@@ -89,7 +91,8 @@ lemma fieldIso_omega : fieldIso (ω : K') = 2 * (ω : Klocal) - 1 := by
   rw [fieldIso, AlgEquiv.ofAlgHom_apply, toK, QuadraticAlgebra.lift_apply_apply]
   simp [omega_re, omega_im]
 
--- Provide the natural ℤ-algebra map from the integer quadratic algebra to the rational one.
+/-- The natural ℤ-algebra map from `QuadraticAlgebra ℤ (-2) 1` (the ring of integers)
+to `Klocal = QuadraticAlgebra ℚ (-2) 1`, sending `ω` to `ω`. -/
 def OK_to_K : QuadraticAlgebra ℤ (-2 : ℤ) 1 →ₐ[ℤ] Klocal :=
   QuadraticAlgebra.lift ⟨(ω : Klocal), by
     -- lift requires us to prove: u * u = a • 1 + b • u
@@ -131,10 +134,10 @@ private lemma fieldIso_half_omega_plus_one :
     fieldIso ((1 / 2 : ℚ) • ((ω : K') + 1)) = (ω : Klocal) := by
   rw [map_smul, map_add, fieldIso_omega, map_one]
   ext
-  · simp only [re_smul, re_add, re_sub, re_mul, re_one, im_one, re_ofNat, im_ofNat,
+  · simp only [re_smul, re_add, re_sub, re_mul, re_one, re_ofNat, im_ofNat,
       omega_re, omega_im, smul_eq_mul]
     ring
-  · simp only [im_smul, im_add, im_sub, im_mul, re_one, im_one, re_ofNat, im_ofNat,
+  · simp only [im_smul, im_add, im_sub, im_mul, im_one, re_ofNat, im_ofNat,
       omega_re, omega_im, smul_eq_mul]
     ring
 
@@ -177,7 +180,9 @@ lemma isIntegralClosure_K
       -- Transport integrality from Klocal to K' via fieldIso.symm
       have hx' : IsIntegral ℤ (fieldIso.symm x) :=
         (isIntegral_algEquiv (fieldIso.restrictScalars ℤ).symm).mpr hx
-      obtain ⟨y, hy⟩ := (IsIntegralClosure.isIntegral_iff (A := QuadraticAlgebra ℤ (-2 : ℤ) 1) (R := ℤ)).mp hx'
+      obtain ⟨y, hy⟩ :=
+        (IsIntegralClosure.isIntegral_iff
+          (A := QuadraticAlgebra ℤ (-2 : ℤ) 1) (R := ℤ)).mp hx'
       exact ⟨y, by rw [← h_comm, hy, AlgEquiv.apply_symm_apply]⟩
     · rintro ⟨y, hy⟩
       rw [← hy, ← h_comm]

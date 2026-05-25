@@ -2,7 +2,9 @@
 Copyright (c) 2026 Barinder S. Banwait. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Barinder S. Banwait
+-/
 
+/-
 Attribution: This file is adapted from
   ~/Documents/QuadraticIntegers/QuadraticIntegers/RingOfIntegers.lean
 by Brasca et al. The theorem `ring_of_integers_neg7` is the specialisation of
@@ -12,7 +14,8 @@ by Brasca et al. The theorem `ring_of_integers_neg7` is the specialisation of
 
 import Mathlib.Algebra.QuadraticAlgebra.Basic
 import Mathlib.NumberTheory.NumberField.Basic
-import Mathlib.Tactic
+import Mathlib.Tactic.NormNum.Prime
+import Mathlib.Tactic.Ring
 import LeanPool.RamanujanNagell.QuadraticIntegers.QuadraticIntegerROI
 
 open QuadraticAlgebra
@@ -24,6 +27,7 @@ noncomputable section
 In this presentation ω' satisfies (ω')² = -7 + 0·ω' = -7, so ω' = √(-7).
 -/
 
+/-- The number field `ℚ(√-7)`, presented as `QuadraticAlgebra ℚ (-7) 0`. -/
 notation "K'" => QuadraticAlgebra ℚ (-7 : ℤ) 0
 
 /-! ## Algebra instance: QuadraticAlgebra ℤ (-2) 1 → K'
@@ -51,7 +55,6 @@ noncomputable instance algebraIntZ_K' : Algebra (QuadraticAlgebra ℤ (-2 : ℤ)
   (QuadraticAlgebra.lift (R := ℤ) ⟨(1 / 2 : ℚ) • ((ω : K') + 1), algK'Proof⟩).toRingHom.toAlgebra
 
 /-- The algebra map sends ω to (1+ω')/2. -/
-@[simp]
 lemma algebraMap_omega_K' :
     algebraMap (QuadraticAlgebra ℤ (-2 : ℤ) 1) K' (ω : QuadraticAlgebra ℤ (-2 : ℤ) 1) =
     (1 / 2 : ℚ) • ((ω : K') + 1) := by
@@ -85,7 +88,8 @@ theorem ring_of_integers_neg7 : IsIntegralClosure (QuadraticAlgebra ℤ (-2 : �
   unfold algebraIntZ_K'
     -- The `change` here is optional documentation, but good for readability
   change (QuadraticAlgebra.lift (R := ℤ) ⟨(1 / 2 : ℚ) • ((ω : K') + 1), algK'Proof⟩).toRingHom =
-    (QuadraticAlgebra.lift (R := ℤ) ⟨(1 + (ω : K')) / 2, QuadraticInteger.algebra_S_K (d := -7)⟩).toRingHom
+    (QuadraticAlgebra.lift (R := ℤ)
+        ⟨(1 + (ω : K')) / 2, QuadraticInteger.algebra_S_K (d := -7)⟩).toRingHom
   congr 1; congr 1; apply Subtype.ext
   change (1 / 2 : ℚ) • ((ω : K') + 1) = (1 + (ω : K')) / 2
   -- Inline the two_ne_zero proof directly into the rewrite
