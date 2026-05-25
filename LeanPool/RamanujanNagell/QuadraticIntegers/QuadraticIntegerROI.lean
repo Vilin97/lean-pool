@@ -52,17 +52,17 @@ instance field : Fact (∀ (r : ℚ), r ^ 2 ≠ d + 0 * r) := by
 
 @[simp]
 lemma re_ratCast (q : ℚ) : (q : K).re = q := by
-  have : (q : K) = algebraMap ℚ K q := (eq_ratCast (algebraMap ℚ K) q).symm
-  rw [this, congr_fun coe_algebraMap q, re_coe]
+  have h1 : (q : K) = algebraMap ℚ K q := (eq_ratCast (algebraMap ℚ K) q).symm
+  rw [h1, ← QuadraticAlgebra.C_eq_algebraMap, QuadraticAlgebra.re_C]
 
 @[simp]
 lemma im_ratCast (q : ℚ) : (q : K).im = 0 := by
-  have : (q : K) = algebraMap ℚ K q := (eq_ratCast (algebraMap ℚ K) q).symm
-  rw [this, congr_fun coe_algebraMap q, im_coe]
+  have h1 : (q : K) = algebraMap ℚ K q := (eq_ratCast (algebraMap ℚ K) q).symm
+  rw [h1, ← QuadraticAlgebra.C_eq_algebraMap, QuadraticAlgebra.im_C]
 
-lemma ratCast_eq_coe (q : ℚ) : (q : K) = QuadraticAlgebra.coe q := by
-  have : (q : K) = algebraMap ℚ K q := (eq_ratCast (algebraMap ℚ K) q).symm
-  rw [this, congr_fun coe_algebraMap q]
+lemma ratCast_eq_coe (q : ℚ) : (q : K) = QuadraticAlgebra.C q := by
+  have h1 : (q : K) = algebraMap ℚ K q := (eq_ratCast (algebraMap ℚ K) q).symm
+  rw [h1, ← QuadraticAlgebra.C_eq_algebraMap]
 
 -- The IntCast ℤ → K goes through ℤ → ℚ → K (via Rat.cast), so re_intCast/im_intCast
 -- (which are rfl for QuadraticAlgebra.intCast) don't apply directly.
@@ -241,8 +241,6 @@ theorem d_1 : IsIntegralClosure S ℤ K := by
   refine ⟨fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ h ↦ ?_, @fun ⟨a, b⟩ ↦ ⟨fun hz ↦ ?_, fun ⟨x, hx⟩ ↦ ?_⟩⟩
   · simp only [mk_eq_add_smul_omega, zsmul_eq_mul, map_add,
     map_intCast, map_mul] at h
-    -- After mk_eq_add_smul_omega, ↑a₁ in S is QuadraticAlgebra.coe which equals Int.cast
-    simp only [show ∀ n : ℤ, (QuadraticAlgebra.coe n : S) = (↑n : S) from fun n => rfl] at h
     have hre := congr_arg QuadraticAlgebra.re h
     have him := congr_arg QuadraticAlgebra.im h
     simp only [algebraMap_S_K_omega, re_add, re_mul, omega_re, re_one,
@@ -256,7 +254,13 @@ theorem d_1 : IsIntegralClosure S ℤ K := by
       conv_lhs => rw [show (2⁻¹ : K) = (↑(2⁻¹ : ℚ) : K) from by push_cast; ring]
       exact im_ratCast _
     rw [h2re, h2im] at hre him
-    simp only [mul_zero, add_zero] at hre him
+    -- Simplify (algebraMap S K) ((algebraMap ℤ S) n) to (n : K)
+    have hcast : ∀ n : ℤ, (algebraMap S K) ((algebraMap ℤ S) n) = (n : K) := by
+      intro n
+      rw [← IsScalarTower.algebraMap_apply]
+      exact (eq_intCast _ n)
+    rw [hcast a₁, hcast a₂] at hre him
+    simp only [re_intCast_K, im_intCast_K, mul_zero, add_zero, zero_add] at hre him
     -- him : ↑b₁ * 2⁻¹ = ↑b₂ * 2⁻¹ in ℚ
     have hb : b₁ = b₂ := by
       exact_mod_cast mul_right_cancel₀ (show (2 : ℚ)⁻¹ ≠ 0 by norm_num) him

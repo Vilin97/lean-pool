@@ -34,9 +34,6 @@ import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
 import LeanPool.RamanujanNagell.QuadraticIntegers.RingOfIntegers
 import LeanPool.RamanujanNagell.QuadraticIntegers.FieldIsomorphism
 
-set_option linter.style.longLine false
-set_option diagnostics true
-
 open Polynomial NumberField QuadraticAlgebra RingOfIntegers Algebra Nat Ideal InfinitePlace
   UniqueFactorizationMonoid
 
@@ -116,8 +113,8 @@ lemma is_integral_ω : IsIntegral ℤ (ω : K) := by
     rw [sq, omega_mul_omega_eq_mk]
     ext <;> simp
 
-set_option quotPrecheck false in
-notation "θ" => (⟨ω, is_integral_ω⟩ : 𝓞 K)
+/-- The element θ = (1 + √-7)/2 of 𝓞 K, expressed as ω = (1+√-7)/2 with its integrality proof. -/
+abbrev θ : 𝓞 K := ⟨ω, is_integral_ω⟩
 
 lemma is_integral_one_sub_ω : IsIntegral ℤ ((1 : K) - ω) := by
 -- 1 - ω satisfies the same polynomial X² - X + 2 = 0
@@ -136,9 +133,8 @@ lemma is_integral_one_sub_ω : IsIntegral ℤ ((1 : K) - ω) := by
     ext <;> simp
     ring
 
--- θ' = (1 - √-7)/2, the conjugate of θ in the ring of integers
-set_option quotPrecheck false in
-notation "θ'" => (⟨1 - ω, is_integral_one_sub_ω⟩ : 𝓞 K)
+/-- θ' = (1 - √-7)/2, the conjugate of θ in the ring of integers. -/
+abbrev θ' : 𝓞 K := ⟨1 - ω, is_integral_one_sub_ω⟩
 
 lemma my_minpoly : minpoly ℤ θ = X ^ 2 - X + 2 := by
   -- Reduce from θ : 𝓞 K to ω : K via minpoly_coe
@@ -246,7 +242,8 @@ lemma span_eq_top : adjoin ℤ {θ} = ⊤ := by
       IsScalarTower.of_algebraMap_eq fun r => (OK_to_K.commutes r).symm
     haveI hIC : IsIntegralClosure (QuadraticAlgebra ℤ (-2 : ℤ) 1) ℤ K := isIntegralClosure_K (by
       change OK_to_K ω = ω
-      simp [OK_to_K, QuadraticAlgebra.lift])
+      rw [OK_to_K, QuadraticAlgebra.lift_apply_apply]
+      simp [omega_re, omega_im])
     -- Apply IsIntegralClosure.equiv to obtain the canonical AlgEquiv
     refine ⟨IsIntegralClosure.equiv ℤ (QuadraticAlgebra ℤ (-2 : ℤ) 1) K (𝓞 K), ?_⟩
     -- Show iso ω = θ = ⟨ω, is_integral_ω⟩ by comparing underlying elements in K
@@ -257,7 +254,8 @@ lemma span_eq_top : adjoin ℤ {θ} = ⊤ := by
     -- With alg_int_K = OK_to_K.toAlgebra, algebraMap ... K ω = OK_to_K ω = ω.
     have h2 : (algebraMap (QuadraticAlgebra ℤ (-2 : ℤ) 1) K) ω = (ω : K) := by
       change OK_to_K ω = ω
-      simp [OK_to_K, QuadraticAlgebra.lift]
+      rw [OK_to_K, QuadraticAlgebra.lift_apply_apply]
+      simp [omega_re, omega_im]
     exact h.trans h2
   -- Every element of QuadraticAlgebra ℤ (-2) 1 is in adjoin ℤ {ω}
   have h_top : Algebra.adjoin ℤ ({ω} : Set (QuadraticAlgebra ℤ (-2 : ℤ) 1)) = ⊤ :=
@@ -312,13 +310,13 @@ lemma K_discriminant : discr K = -7 := by
       !![2, 1; 1, -3] := by
     have h_gen : pb.gen = θ := PowerBasis.ofAdjoinEqTop'_gen h_int span_eq_top
     -- trace(1) = finrank = 2
-    have h_tr_one : Algebra.trace ℤ (integralClosure ℤ K) (1 : integralClosure ℤ K) = 2 := by
-      rw [show (1 : integralClosure ℤ K) = algebraMap ℤ _ 1 from (map_one _).symm,
+    have h_tr_one : Algebra.trace ℤ (𝓞 K) (1 : 𝓞 K) = 2 := by
+      rw [show (1 : 𝓞 K) = algebraMap ℤ _ 1 from (map_one _).symm,
           Algebra.trace_algebraMap_of_basis pb.basis,
           show Fintype.card (Fin pb.dim) = 2 from by rw [Fintype.card_fin, h_dim]]
       simp
     -- trace(θ) = -(minpoly).nextCoeff = -(-1) = 1
-    have h_tr_gen : Algebra.trace ℤ (integralClosure ℤ K) θ = 1 := by
+    have h_tr_gen : Algebra.trace ℤ (𝓞 K) θ = 1 := by
       rw [← h_gen,
           Algebra.trace_eq_matrix_trace pb.basis, Matrix.trace_eq_neg_charpoly_nextCoeff,
           charpoly_leftMulMatrix, h_gen, my_minpoly]
@@ -326,9 +324,9 @@ lemma K_discriminant : discr K = -7 := by
       rw [nextCoeff_of_natDegree_pos (by omega : 0 < _), hnd]
       norm_num [coeff_add, coeff_sub, coeff_X_pow, coeff_X]
     -- trace(θ²) = trace(θ - 2) = 1 - 4 = -3
-    have h_tr_sq : Algebra.trace ℤ (integralClosure ℤ K) (θ * θ) = -3 := by
+    have h_tr_sq : Algebra.trace ℤ (𝓞 K) (θ * θ) = -3 := by
       rw [theta_sq, map_sub,
-          show (2 : integralClosure ℤ K) = algebraMap ℤ _ 2 from by simp,
+          show (2 : 𝓞 K) = algebraMap ℤ _ 2 from by simp,
           Algebra.trace_algebraMap_of_basis pb.basis,
           show Fintype.card (Fin pb.dim) = 2 from by rw [Fintype.card_fin, h_dim],
           h_tr_gen]; ring
@@ -350,7 +348,6 @@ lemma K_discriminant : discr K = -7 := by
       = (!![2, 1; 1, -3] : Matrix (Fin 2) (Fin 2) ℤ).det := congr_arg Matrix.det h_mat
     _ = -7 := by rw [Matrix.det_fin_two_of]; norm_num
 
-set_option maxHeartbeats 400000 in -- long proof with many case splits and polynomial checks
 private lemma hno_cube_aux : ∀ z : 𝓞 K, z ^ 2 + z + 1 ≠ 0 := by
   intro z hz_eq
   -- Build a power basis for 𝓞 K / ℤ with generator θ
@@ -396,7 +393,10 @@ private lemma hno_cube_aux : ∀ z : 𝓞 K, z ^ 2 + z + 1 ≠ 0 := by
     ext
     · simp [re_add, omega_re]
     · simp [im_add, omega_im]
-  have hz_eq_K : (z : K) ^ 2 + (z : K) + 1 = 0 := by exact_mod_cast hz_eq
+  have hz_eq_K : (z : K) ^ 2 + (z : K) + 1 = 0 := by
+    have := congr_arg ((↑) : 𝓞 K → K) hz_eq
+    push_cast at this
+    exact this
   have hcomputed : (⟨(m : ℚ), (n : ℚ)⟩ : K) ^ 2 + ⟨(m : ℚ), (n : ℚ)⟩ + 1 = 0 := by
     rw [← hz_K]; exact hz_eq_K
   -- Substituting into z² + z + 1 = 0 yields two ℤ equations
@@ -423,7 +423,6 @@ private lemma hno_cube_aux : ∀ z : 𝓞 K, z ^ 2 + z + 1 ≠ 0 := by
     have h7dvd1 : (7 : ℤ) ∣ 1 := ⟨-(m ^ 2 + m), by linarith⟩
     exact absurd h7dvd1 (by intro ⟨x, hx⟩; omega)
 
-set_option maxHeartbeats 400000 in -- long proof with many case splits and polynomial checks
 private lemma hno_i_aux : ∀ z : 𝓞 K, z ^ 2 + 1 ≠ 0 := by
   intro z hz_eq
   -- Build a power basis for 𝓞 K / ℤ with generator θ
@@ -469,7 +468,10 @@ private lemma hno_i_aux : ∀ z : 𝓞 K, z ^ 2 + 1 ≠ 0 := by
     ext
     · simp [re_add, omega_re]
     · simp [im_add, omega_im]
-  have hz_eq_K : (z : K) ^ 2 + 1 = 0 := by exact_mod_cast hz_eq
+  have hz_eq_K : (z : K) ^ 2 + 1 = 0 := by
+    have := congr_arg ((↑) : 𝓞 K → K) hz_eq
+    push_cast at this
+    exact this
   have hcomputed : (⟨(m : ℚ), (n : ℚ)⟩ : K) ^ 2 + 1 = 0 := by
     rw [← hz_K]; exact hz_eq_K
   -- Substituting into z² + 1 = 0 yields two ℤ equations
@@ -771,7 +773,8 @@ lemma two_factorisation_R : θ * (1 - θ) = 2 := by
 -- Strip the subtype wrapper to check equality in the field K
   apply Subtype.ext
   -- Push the coercion through multiplication, subtraction, and numerals
-  simp
+  push_cast
+  show (ω : K) * (1 - ω) = 2
   calc
     ω * ((1 : K) - ω) = ω - ω ^ 2 := by ring
     _ = ω - (-2 + ω) := by

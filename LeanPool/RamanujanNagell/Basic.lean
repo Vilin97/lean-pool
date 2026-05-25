@@ -6,9 +6,6 @@ Authors: Barinder S. Banwait, Xinze Li
 
 import LeanPool.RamanujanNagell.Helpers
 
-set_option linter.style.longLine false
-set_option diagnostics true
-
 open Polynomial NumberField QuadraticAlgebra RingOfIntegers Algebra Nat Ideal
   UniqueFactorizationMonoid
 
@@ -84,8 +81,15 @@ lemma factors_in_R_with_product (x : ℤ) (m : ℕ) (hm_ge : m ≥ 3)
   rw [hdiv] at h -- h : k^2 + k + 2 = 2^m
   -- Step 4: Key identity ω * (1 - ω) = 2 in K (from two_factorisation_R)
   have hω_prod : (ω : K) * (1 - ω) = 2 := by
-    have := congr_arg Subtype.val two_factorisation_R
-    simpa using this
+    -- two_factorisation_R: θ * (1 - θ) = 2 in 𝓞 K.  Lift to K coordinates.
+    have h1 : ((θ * (1 - θ) : 𝓞 K) : K) = ((2 : 𝓞 K) : K) :=
+      congr_arg ((↑) : 𝓞 K → K) two_factorisation_R
+    -- Simplify the coercions component-wise
+    push_cast at h1
+    -- h1 : ((θ : 𝓞 K) : K) * (1 - ((θ : 𝓞 K) : K)) = 2
+    -- Note (θ : 𝓞 K).val = (ω : K), so coercion ↑θ = ω.
+    show (ω : K) * (1 - ω) = (2 : K)
+    convert h1 using 2 <;> rfl
   -- Step 5: Construct α = k + θ, β = k + θ' as elements of R
   refine ⟨⟨(k : K) + ω, IsIntegral.add isIntegral_algebraMap is_integral_ω⟩,
          ⟨(k : K) + (1 - ω), IsIntegral.add isIntegral_algebraMap is_integral_one_sub_ω⟩,
@@ -101,9 +105,9 @@ lemma factors_in_R_with_product (x : ℤ) (m : ℕ) (hm_ge : m ≥ 3)
         exact this
       _ = ω ^ m * (1 - ω) ^ m := by rw [← mul_pow, hω_prod]
   · -- Difference: (k + ω) - (k + (1-ω)) = 2ω - 1 = 2·↑θ - 1
-    simp only
-    norm_num
-    grind
+    show ((k : K) + ω) - ((k : K) + (1 - ω)) = 2 * ((θ : 𝓞 K) : K) - 1
+    show ((k : K) + ω) - ((k : K) + (1 - ω)) = 2 * (ω : K) - 1
+    ring
 
 /-- Exercise 2: The conjugate factors are coprime in R. The only prime factors of 2
     in R are θ and θ' (since 2 = θ·θ' by `two_factorisation_R`). If either
@@ -134,6 +138,7 @@ lemma conjugate_factors_coprime (α β : R) (m : ℕ)
            have h_poly : (θ : K)^2 - (θ : K) = -2 := by
             -- Prove that ω² - ω + 2 = 0 using the same steps as is_integral_ω
             have h_zero : (θ : K) ^ 2 - (θ : K) + 2 = 0 := by
+              show (ω : K) ^ 2 - (ω : K) + 2 = 0
               rw [sq, omega_mul_omega_eq_mk]
               ext <;> simp
            -- Rearrange (ω² - ω + 2 = 0) to (ω² - ω = -2)
@@ -147,9 +152,11 @@ lemma conjugate_factors_coprime (α β : R) (m : ℕ)
     intro p hp hpa hpb
     have h_prod_val : α * β = (2 : R) ^ m := by
       rw [h_prod, ← mul_pow]
-    -- FIX: Prove θ' is syntactically equal to (1 - θ) so the lemma matches
-      have h_rewrite : θ' = 1 - θ := Subtype.ext (by simp)
-    -- Now rewrite θ' -> (1 - θ), then apply the factorization lemma
+      -- FIX: Prove θ' is syntactically equal to (1 - θ) so the lemma matches
+      have h_rewrite : (θ' : 𝓞 K) = 1 - θ := by
+        apply Subtype.ext
+        show (1 - ω : K) = (1 : K) - (ω : K)
+        rfl
       rw [h_rewrite, two_factorisation_R]
     have h_p_dvd_two : p ∣ 2 := by
       have : p ∣ (2 : R) ^ m := h_prod_val ▸ dvd_mul_of_dvd_left hpa β
@@ -191,6 +198,7 @@ lemma conjugate_factors_coprime (α β : R) (m : ℕ)
       rw [h_diff_R]
       -- Use the defining polynomial identity: ω² - ω + 2 = 0
       have h_zero : (θ : K) ^ 2 - (θ : K) + 2 = 0 := by
+        show (ω : K) ^ 2 - (ω : K) + 2 = 0
         rw [sq, omega_mul_omega_eq_mk]
         ext
         · simp
@@ -270,7 +278,10 @@ lemma factor_not_unit_left (α β : R) (m : ℕ)
   have h_cases : α = 1 ∨ α = -1 := by
     have := units_pm_one h_unit.unit; simpa [Units.ext_iff] using this
   -- θ' = 1 - θ, so θ^m * θ'^m = 2^m
-  have hθ' : θ' = 1 - θ := Subtype.ext (by simp)
+  have hθ' : (θ' : 𝓞 K) = 1 - θ := by
+    apply Subtype.ext
+    show (1 - ω : K) = (1 : K) - (ω : K)
+    rfl
   have h2m : θ ^ m * θ' ^ m = (2 : R) ^ m := by
     rw [hθ', ← mul_pow, two_factorisation_R]
   rw [h2m] at h_prod
@@ -305,7 +316,7 @@ lemma factor_not_unit_right (α β : R) (m : ℕ)
   by_contra h_unit
   have h_cases : β = 1 ∨ β = -1 := by
     have := units_pm_one h_unit.unit; simpa [Units.ext_iff] using this
-  have hθ' : θ' = 1 - θ := Subtype.ext (by simp)
+  have hθ' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
   have h2m : θ ^ m * θ' ^ m = (2 : R) ^ m := by
     rw [hθ', ← mul_pow, two_factorisation_R]
   rw [h2m] at h_prod
@@ -387,7 +398,6 @@ lemma eliminate_x_conclude (α β : R) (m : ℕ)
       change -(((1 : K) - ω) ^ m) - (-(ω ^ m)) = 2 * ω - 1 at h_diff
       linear_combination -h_diff)
 
-set_option maxHeartbeats 400000 in -- long proof with many case splits and polynomial checks
 /-- If we know one of (2*θ - 1 = θ^m - θ'^m) ∨ (-2*θ + 1 = θ^m - θ'^m), then in fact
     the minus sign must hold: -2*θ + 1 = θ^m - θ'^m. This is proved by reducing modulo
     θ'^2 and checking which sign is consistent. -/
@@ -401,7 +411,7 @@ lemma must_have_minus_sign (m : ℕ) (hm_odd : Odd m) (hm_ge : m ≥ 3)
     exfalso
     -- Step 1: (A) θ + θ' = 1; (B) θ - θ' = 2*θ - 1 (= √-7)
     have hA : θ + θ' = 1 := by exact add_eq_of_eq_sub' rfl
-    have h_theta' : θ' = 1 - θ := Subtype.ext (by simp)
+    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
     have hB : θ - θ' = 2 * θ - 1 := by
       calc θ - θ' = θ - (1 - θ) := by rw [h_theta']
         _ = 2 * θ - 1 := by ring
@@ -526,9 +536,13 @@ lemma expand_by_binomial (m : ℕ) (hm_odd : Odd m) (hm_ge : m ≥ 3)
   -- Equivalently (using √-7 = 2θ - 1):
   have step1 : -(2 : K) ^ m * (2 * (↑θ : K) - 1) =
       (2 * (↑θ : K)) ^ m - (2 * (1 - (↑θ : K))) ^ m := by
-    have h_K : -(2 : K) * ω + 1 = ω ^ m - (1 - ω) ^ m := by
-      have h0 := congr_arg Subtype.val h
-      simpa using h0
+    have h_K : -(2 : K) * (↑θ : K) + 1 = (↑θ : K) ^ m - (↑θ' : K) ^ m := by
+      have h0 := congr_arg ((↑) : 𝓞 K → K) h
+      push_cast at h0
+      exact h0
+    -- ↑θ' = 1 - ω = 1 - ↑θ by rfl
+    have hθ'coe : (↑θ' : K) = 1 - (↑θ : K) := rfl
+    rw [hθ'coe] at h_K
     simp only [mul_pow]
     linear_combination (2 : K) ^ m * h_K
   -- Step 2: Expand the RHS via the binomial theorem. The even-power terms cancel,
@@ -542,6 +556,7 @@ lemma expand_by_binomial (m : ℕ) (hm_odd : Odd m) (hm_ge : m ≥ 3)
       calc (2 * (↑θ : K) - 1) ^ 2
           = 4 * (↑θ : K) ^ 2 - 4 * (↑θ : K) + 1 := by ring
         _ = 4 * ((↑θ : K) - 2) - 4 * (↑θ : K) + 1 := by
+          show 4 * (ω : K) ^ 2 - 4 * (ω : K) + 1 = 4 * ((ω : K) - 2) - 4 * (ω : K) + 1
           rw [sq, omega_mul_omega_eq_mk]; ext <;> simp
         _ = -8 + 1 := by ring
         _ = -7 := by norm_num
@@ -1094,19 +1109,18 @@ lemma trace_seq_eq (n : ℕ) : (trace_seq n : R) = θ ^ n + θ' ^ n := by
     ring
   | case2 =>
     simp only [trace_seq, Int.cast_one, pow_one]
-    have h_theta' : θ' = 1 - θ := Subtype.ext (by simp)
+    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
     rw [h_theta']; ring
   | case3 n ih1 ih2 =>
     simp only [trace_seq, Int.cast_sub, Int.cast_mul, Int.cast_ofNat]
     rw [ih1, ih2]
-    have h_theta' : θ' = 1 - θ := Subtype.ext (by simp)
+    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
     have h_prod : θ * θ' = 2 := by rw [h_theta']; exact two_factorisation_R
     have key : θ ^ (n + 2) + θ' ^ (n + 2) =
         (θ + θ') * (θ ^ (n + 1) + θ' ^ (n + 1)) - θ * θ' * (θ ^ n + θ' ^ n) := by ring
     rw [key, show θ + θ' = 1 from by rw [h_theta']; ring, h_prod]
     ring
 
-set_option maxHeartbeats 400000 in
 /-- trace_seq m % 7 depends only on m % 3 (the recurrence has period 3 mod 7). -/
 private lemma trace_seq_mod7_period (m : ℕ) :
     trace_seq m % 7 = trace_seq (m % 3) % 7 := by
@@ -1220,10 +1234,11 @@ lemma at_most_one_m_per_class (m₁ m₂ : ℕ)
   obtain ⟨P, hP_eq, hP_coprime⟩ := h_trace
   have h_identity : P * binomial_B d = 1 - 7 * A'_d - (2 : ℤ) ^ d := by
     -- Strategy: prove in K, then lift to ℤ via Int.cast_injective.
-    have h_theta' : θ' = 1 - θ := Subtype.ext (by simp)
+    have h_theta' : (θ' : 𝓞 K) = 1 - θ := by apply Subtype.ext; show (1 - ω : K) = (1 : K) - (ω : K); rfl
     set α_K := 2 * (↑θ : K) - 1 with hα_def
     have hsq : α_K ^ 2 = (-7 : K) := by
       have h_zero : (θ : K) ^ 2 - (θ : K) + 2 = 0 := by
+        show (ω : K) ^ 2 - (ω : K) + 2 = 0
         rw [sq, omega_mul_omega_eq_mk]; ext <;> simp
       have h_theta_sq : (θ : K) ^ 2 = (θ : K) - 2 := by linear_combination h_zero
       calc α_K ^ 2 = 4 * (θ : K) ^ 2 - 4 * (θ : K) + 1 := by rw [hα_def]; ring
@@ -1239,8 +1254,8 @@ lemma at_most_one_m_per_class (m₁ m₂ : ℕ)
     -- Cross-multiply identity: (a+b)(c-e) = -(a-b)(c+e-2)
     have h_eq_K : (θ : K) ^ m₁ - (θ' : K) ^ m₁ =
         (θ : K) ^ m₁ * (θ : K) ^ d - (θ' : K) ^ m₁ * (θ' : K) ^ d := by
-      have h0 := congr_arg Subtype.val h_eq
-      simp at h0
+      have h0 := congr_arg ((↑) : 𝓞 K → K) h_eq
+      push_cast at h0
       rw [h_m2_eq] at h0
       simp only [pow_add] at h0
       exact h0
@@ -1250,20 +1265,16 @@ lemma at_most_one_m_per_class (m₁ m₂ : ℕ)
       linear_combination -2 * h_eq_K
     -- From h₁_theta: θ^m₁ - θ'^m₁ = -(2θ - 1) = -α_K
     have h_diff_eq : (θ : K) ^ m₁ - (θ' : K) ^ m₁ = -α_K := by
-      have h0 := congr_arg Subtype.val h₁_theta
-      simp at h0
-      -- 1. Substitute the power difference using h0 (replace RHS with LHS)
-      -- 2. Substitute the definition of α_K
-      rw [← h0, hα_def]
-      -- 3. Verify that -2ω + 1 = -(2ω - 1)
-      ring_nf
-      rw [mul_comm]
-      exact rfl
+      have h0 : -(2 : K) * (↑θ : K) + 1 = (↑θ : K) ^ m₁ - (↑θ' : K) ^ m₁ := by
+        have h0' := congr_arg ((↑) : 𝓞 K → K) h₁_theta
+        push_cast at h0'
+        convert h0' using 2
+      rw [hα_def, ← h0]; ring
     -- Cast hP_eq to K
     have hP_K : (P : K) = (θ : K) ^ m₁ + (θ' : K) ^ m₁ := by
-      have h0 := congr_arg Subtype.val hP_eq
-      simp at h0
-      push_cast at h0 ⊢; exact h0
+      have h0 := congr_arg ((↑) : 𝓞 K → K) hP_eq
+      push_cast at h0
+      exact h0
     -- Binomial expansions of (2θ)^d and (2θ')^d
     have hbinom_plus : (2 * (↑θ : K)) ^ d =
         ∑ k ∈ Finset.range (d + 1), (↑(d.choose k) : K) * α_K ^ k := by
