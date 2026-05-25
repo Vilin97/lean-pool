@@ -67,9 +67,8 @@ def skZeroIsoSkOne : CWComplex.IProd.sk X 0 ≅ CWComplex.IProd.sk X 1 :=
     have := X.isEmpty_sk_zero
     infer_instance  -- TopCat.isIso_of_isEmpty
   haveI : IsIso (r X 0) := this
-  haveI : IsIso (Limits.pushout.inl (l X 0) (r X 0)) :=
-    Limits.pushout_inl_iso_of_right_iso _ _
-  asIso <| Limits.pushout.inl (l X 0) (r X 0)  -- Limits.pushout_inl_iso_of_right_iso
+  @asIso _ _ _ _ (Limits.pushout.inl (l X 0) (r X 0))
+    (Limits.pushout_inl_iso_of_right_iso _ _)
 
 end IProd
 
@@ -140,6 +139,7 @@ lemma cubeAtt_compatible {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) 
     · simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
         ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
         Limits.colimit.cocone_x, ContinuousMap.comp_assoc, isk, iX]
+      rfl
     · simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
         ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
         Limits.colimit.cocone_x, ContinuousMap.comp_assoc, isk, iX]
