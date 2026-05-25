@@ -12,14 +12,16 @@ import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Push
 
 
+/-- An *arithmetic frieze pattern* of height `n`: a rational-valued frieze pattern with all
+denominators equal to one and positive interior entries. -/
 class arith_fp (f : ℕ × ℕ → ℚ) (n : ℕ) : Prop where
-  topBordZeros : ∀ m, f (0,m) = 0
-  topBordOnes : ∀ m, f (1,m) = 1
+  topBordZeros : ∀ m, f (0, m) = 0
+  topBordOnes : ∀ m, f (1, m) = 1
   botBordOnes_n : ∀ m, f (n, m) = 1
-  botBordZeros_n : ∀ i, ∀ m,  i ≥ n+1 → (f (i,m) = 0)
-  diamond : ∀ i, ∀ m,  i ≤ n-1 → f (i+1,m) * f (i+1,m+1)-1 = f (i+2,m)*f (i,m+1)
-  integral: ∀ i, ∀ m, (f (i,m)).den = 1
-  positive: ∀ i, ∀ m, 1 ≤ i → i ≤ n → f (i,m) > 0
+  botBordZeros_n : ∀ i, ∀ m, i ≥ n + 1 → (f (i, m) = 0)
+  diamond : ∀ i, ∀ m, i ≤ n - 1 → f (i + 1, m) * f (i + 1, m + 1) - 1 = f (i + 2, m) * f (i, m + 1)
+  integral : ∀ i, ∀ m, (f (i, m)).den = 1
+  positive : ∀ i, ∀ m, 1 ≤ i → i ≤ n → f (i, m) > 0
 
 instance [arith_fp f n] : nzPattern_n ℚ f n := {
   topBordZeros := arith_fp.topBordZeros n,
@@ -30,11 +32,13 @@ instance [arith_fp f n] : nzPattern_n ℚ f n := {
   non_zero := fun i m ⟨hi1, hi2⟩ => by linarith [@arith_fp.positive f n _ i m hi1 hi2]
 }
 
-def flute_f (f : ℕ × ℕ → ℚ) (n m : ℕ) [arith_fp f n] (i : ℕ) : ℕ :=        -- definition only good when n ≥ 2, as otherwise i%0 = i for all i
-  ((f (i%(n-1) + 1, m)).num).toNat                                                    -- also needs this shifting by one, old defn would start seq with (1,1,...), this fixes having multiple cases as well
+-- The definition is only sensible when `n ≥ 2`; otherwise `i % 0 = i` for all `i`.
+-- The shifted indexing avoids starting the sequence with `(1, 1, ...)`.
+/-- The flute underlying sequence extracted from an arithmetic frieze pattern. -/
+def flute_f (f : ℕ × ℕ → ℚ) (n m : ℕ) (i : ℕ) : ℕ :=
+  ((f (i % (n - 1) + 1, m)).num).toNat
 
-
-
+/-- The flute associated to an arithmetic frieze pattern of height `n ≥ 2`. -/
 def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp f n] : flute n := by
   have pos : ∀ i, flute_f f n m i > 0 := by
     intro i
@@ -241,16 +245,18 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
 
 
 
--- The following two definitions turn a flute to a frieze.
+/-- The arithmetic frieze pattern associated to a flute, defined recursively over the second
+coordinate `m` (and as a tie-breaker the first coordinate `i`). -/
 def frieze_f {n : ℕ} (g : flute n) : ℕ × ℕ → ℚ :=
   fun ⟨i, m⟩ =>
     if i = 0 then 0
-    else if i ≥ n+1 then 0
-    else if m = 0 then g.a (i-1)
-    else (frieze_f g (i+1,m-1) * frieze_f g (i-1, m) + 1) / frieze_f g (i,m-1)
+    else if i ≥ n + 1 then 0
+    else if m = 0 then g.a (i - 1)
+    else (frieze_f g (i + 1, m - 1) * frieze_f g (i - 1, m) + 1) / frieze_f g (i, m - 1)
     termination_by x => (x.2, x.1)
 
-def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g) n := by
+/-- The frieze pattern built from a flute is in fact an arithmetic frieze pattern. -/
+lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g) n := by
   have topBordZeros : ∀ m, frieze_f g (0,m) = 0 := fun m => (by simp [frieze_f])
   have botBordZeros_n : ∀ i, ∀ m,  i ≥ n+1 → (frieze_f g (i,m) = 0) := fun i m h => by simp [frieze_f, h]
   have topBordOnes : ∀ m, frieze_f g (1,m) = 1 := by
@@ -390,6 +396,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
       simp
   exact {topBordZeros, topBordOnes, botBordOnes_n, botBordZeros_n, diamond, integral, positive}
 
+/-- The set of arithmetic frieze patterns of height `n`. -/
 def arithFriezePatSet (n : ℕ) : Set (ℕ × ℕ → ℚ) :=
   { f | arith_fp f n}
 

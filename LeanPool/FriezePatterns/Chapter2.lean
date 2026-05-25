@@ -12,17 +12,23 @@ import Mathlib.Tactic.NthRewrite
 import Mathlib.Tactic.Positivity
 ---- n-Flutes ----
 
--- changed class to structure so that Lean displays `f.a g.a` instead of
--- `flute (n+3).a flute (n+2).a`
+/-- An `n`-flute: a positive integer sequence `a` with `a 0 = 1`, periodic with period
+`n - 1`, and satisfying the divisibility relation `a (k + 1) ∣ a k + a (k + 2)`. -/
 structure flute (n : ℕ) where
+  /-- The underlying sequence of the flute. -/
   a : ℕ → ℕ
+  /-- Every entry of the flute is positive. -/
   pos : ∀ i, a i > 0
+  /-- The flute starts at `1`. -/
   hd : a 0 = 1
+  /-- The flute is periodic with period `n - 1`. -/
   period : ∀ k, a k = a (k + (n - 1))
+  /-- Each interior entry divides the sum of its neighbours. -/
   div : ∀ k, a (k + 1) ∣ (a k + a (k + 2))
 
--- `Inhabited` is probably better than `Nonempty` here, as we actually construct an
--- inhabitant of `flute n`, so Lean lets us extract *the* inhabitant.
+/-- The constant flute (the sequence identically equal to `1`).
+
+`Inhabited` is preferred over `Nonempty` so that we can recover the explicit witness. -/
 def csteFlute (n : ℕ) : Inhabited (flute n) := by
   let a : ℕ → ℕ := fun _ => 1
   have pos : ∀ i, a i > 0 := fun _ => Nat.one_pos
@@ -31,7 +37,7 @@ def csteFlute (n : ℕ) : Inhabited (flute n) := by
   have div : ∀ k, a (k + 1) ∣ (a k + a (k + 2)) := fun _ => ⟨2, rfl⟩
   exact ⟨a, pos, hd, period, div⟩
 
--- Set of all flutes of height n.
+/-- The set of all `n`-flutes. -/
 def fluteSet (n : ℕ) : Set (flute n) :=
   { f | true }
 
@@ -42,17 +48,19 @@ lemma fluteSetNonEmpty (n : ℕ) : Nonempty (fluteSet n) := by
   rfl
 
 
+/-- The underlying sequence of the Fibonacci-maximal `(2k+1)`-flute. -/
 def a_odd (k i : ℕ) : ℕ :=
   if k = 0 then
     1
-  else if i ≥ 2*k then
-    a_odd k (i-2*k) -- this does not terminate when k=0
+  else if i ≥ 2 * k then
+    a_odd k (i - 2 * k) -- this does not terminate when k = 0
     else
     if i < k then
-      Nat.fib (2*i+2)
+      Nat.fib (2 * i + 2)
     else
-      Nat.fib (1+4*k-2*i)
+      Nat.fib (1 + 4 * k - 2 * i)
 
+/-- The Fibonacci-maximal `(2k+1)`-flute, built from `a_odd`. -/
 def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
   by_cases hk : k = 0
   exact ⟨a_odd k 0, fun i => by simp [hk, a_odd], by simp [hk, a_odd], by simp [hk, a_odd], fun _ => by simp⟩
@@ -159,15 +167,16 @@ def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
         omega
   exact ⟨a_odd k, pos, hd, period, div⟩
 
+/-- The underlying sequence of the Fibonacci-maximal `(2k+2)`-flute. -/
 def a_even (k i : ℕ) : ℕ :=
-  if i ≥ 2*k+1 then
-    a_even k (i-2*k-1)
-  else if i < k+1 then
-    Nat.fib (2*i+2)
+  if i ≥ 2 * k + 1 then
+    a_even k (i - 2 * k - 1)
+  else if i < k + 1 then
+    Nat.fib (2 * i + 2)
     else
-    Nat.fib (3+4*k-2*i)
+    Nat.fib (3 + 4 * k - 2 * i)
 
-
+/-- The Fibonacci-maximal `(2k+2)`-flute, built from `a_even`. -/
 def fib_flute_even (k : ℕ) : flute (2*k+2) := by
   have pos : ∀ i, a_even k i > 0 := by
     intro i
@@ -349,16 +358,19 @@ lemma FluteReduction (n : ℕ) (f : flute n) : ((f.a 1 = 1) ∨ (f.a (n - 2) = 1
     linarith
 
 
-def a_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) (k : ℕ) : ℕ :=
-  if k ≥ n+1 then
-    a_1 n f h (k-(n+1))
+/-- Reduction of an `(n+3)`-flute (assuming `f.a 1 = 1`) to an `(n+2)`-flute (underlying
+sequence). -/
+def a_1 (n : ℕ) (f : flute (n + 3)) (k : ℕ) : ℕ :=
+  if k ≥ n + 1 then
+    a_1 n f (k - (n + 1))
   else if k = 0 then
     f.a 0
   else
-    f.a (k+1)
+    f.a (k + 1)
 
+/-- Reduction of an `(n+3)`-flute with `f.a 1 = 1` to an `(n+2)`-flute. -/
 def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
-  have pos : ∀ i, a_1 n f h i > 0 := by
+  have pos : ∀ i, a_1 n f i > 0 := by
     intro i
     induction' i using Nat.strong_induction_on with i ih
     by_cases hi : i ≥ n+1
@@ -369,12 +381,12 @@ def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
     exact f.pos 0
     simp [a_1, hi, hi₂]
     exact f.pos (i+1)
-  have hd : a_1 n f h 0 = 1 := by simp [a_1, f.hd]
-  have period : ∀ i, a_1 n f h i = a_1 n f h (i+(n+2)-1) := by
+  have hd : a_1 n f 0 = 1 := by simp [a_1, f.hd]
+  have period : ∀ i, a_1 n f i = a_1 n f (i+(n+2)-1) := by
     intro i
     nth_rw 2 [a_1]
     simp
-  have div : ∀ i, a_1 n f h (i+1) ∣ (a_1 n f h i + a_1 n f h (i+2)) := by
+  have div : ∀ i, a_1 n f (i+1) ∣ (a_1 n f i + a_1 n f (i+2)) := by
     intro i
     induction' i using Nat.strong_induction_on with i ih
     by_cases hi : i ≥ n+1
@@ -430,28 +442,31 @@ def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
       exact f.div (n+2)
     unfold a_1; simp [hi, hi₂, hi₃, hi₄]
     exact f.div (i+1)
-  exact ⟨a_1 n f h, pos, hd, period, div⟩
+  exact ⟨a_1 n f, pos, hd, period, div⟩
 
-def a_2 (n : ℕ) (f : flute (n + 3)) (h : f.a (n + 1) = 1) (k : ℕ) : ℕ :=
-  if k ≥ n+1 then
-    a_2 n f h (k-(n+1))
+/-- Reduction of an `(n+3)`-flute (assuming `f.a (n + 1) = 1`) to an `(n+2)`-flute
+(underlying sequence). -/
+def a_2 (n : ℕ) (f : flute (n + 3)) (k : ℕ) : ℕ :=
+  if k ≥ n + 1 then
+    a_2 n f (k - (n + 1))
   else
     f.a k
 
+/-- Reduction of an `(n+3)`-flute with `f.a (n + 1) = 1` to an `(n+2)`-flute. -/
 def aux_2 (n : ℕ) (f : flute (n + 3)) (h : f.a (n + 1) = 1) : flute (n + 2) := by
-  have pos : ∀ i, a_2 n f h i > 0 := by
+  have pos : ∀ i, a_2 n f i > 0 := by
     intro i
     induction' i using Nat.strong_induction_on with i ih
     by_cases hi : i ≥ n+1
     unfold a_2; simp [hi]
     exact ih (i-(n+1)) (by omega)
     simpa [a_2, hi] using f.pos i
-  have hd : a_2 n f h 0 = 1 := by simp [a_2, f.hd]
-  have period : ∀ i, a_2 n f h i = a_2 n f h (i+(n+2)-1) := by
+  have hd : a_2 n f 0 = 1 := by simp [a_2, f.hd]
+  have period : ∀ i, a_2 n f i = a_2 n f (i+(n+2)-1) := by
     intro i
     nth_rw 2 [a_2]
     simp
-  have div : ∀ i, a_2 n f h (i+1) ∣ (a_2 n f h i + a_2 n f h (i+2)) := by
+  have div : ∀ i, a_2 n f (i+1) ∣ (a_2 n f i + a_2 n f (i+2)) := by
     intro i
     induction' i using Nat.strong_induction_on with i ih
     by_cases hi : i ≥ n+1
@@ -487,16 +502,19 @@ def aux_2 (n : ℕ) (f : flute (n + 3)) (h : f.a (n + 1) = 1) : flute (n + 2) :=
     rw [hi₅, ←one_add_one_eq_two, ←add_assoc, hi₅, h] at key
     exact key
     simp [hi₃, hi₄, f.div i]
-  exact ⟨a_2 n f h, pos, hd, period, div⟩
+  exact ⟨a_2 n f, pos, hd, period, div⟩
 
+/-- Reduction of an `(n+3)`-flute admitting a reducible index `i` to an `(n+2)`-flute
+(underlying sequence). -/
 def a_3 (n : ℕ) (f : flute (n + 3)) (i : ℕ)
     (hi : i ≤ n ∧ f.a (i + 1) = f.a i + f.a (i + 2)) (k : ℕ) : ℕ :=
-  if k ≥ n+1 then
-    a_3 n f i hi (k-(n+1))
+  if k ≥ n + 1 then
+    a_3 n f i hi (k - (n + 1))
   else if k ≤ i then
     f.a k
-  else f.a (k+1)
+  else f.a (k + 1)
 
+/-- Reduction of an `(n+3)`-flute admitting a reducible index `j` to an `(n+2)`-flute. -/
 def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
     (hj : j ≤ n ∧ f.a (j + 1) = f.a j + f.a (j + 2)) : flute (n + 2) := by
   have pos : ∀ i, a_3 n f j hj i > 0 := by

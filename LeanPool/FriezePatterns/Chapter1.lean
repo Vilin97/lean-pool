@@ -16,7 +16,10 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Push
 import Mathlib.Tactic.Ring
 
----- Field-valued patterns ----
+/-- A field-valued frieze pattern of height `n`: a function `f : ℕ × ℕ → F` with `0`s on
+the row `i = 0`, `1`s on rows `i = 1` and `i = n`, `0`s on rows `i ≥ n + 1`, satisfying the
+diamond (or unimodular) relation `f (i + 1, m) * f (i + 1, m + 1) - 1 = f (i + 2, m) * f (i, m + 1)`
+for `i ≤ n - 1`. -/
 class pattern_n (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) : Prop where
   topBordZeros : ∀ m, f (0, m) = 0
   topBordOnes : ∀ m, f (1, m) = 1
@@ -24,6 +27,7 @@ class pattern_n (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) : Prop wh
   botBordZeros_n : ∀ i, ∀ m, i ≥ n + 1 → (f (i, m) = 0)
   diamond : ∀ i, ∀ m, i ≤ n - 1 → f (i + 1, m) * f (i + 1, m + 1) - 1 = f (i + 2, m) * f (i, m + 1)
 
+/-- A frieze pattern is *non-zero* if it never vanishes on the interior rows `1 ≤ i ≤ n`. -/
 class nzPattern_n (F : Type*) [Field F] (f : ℕ × ℕ → F) (n : ℕ) extends pattern_n F f n where
   non_zero : ∀ i, ∀ m, 1 ≤ i ∧ i ≤ n → f (i, m) ≠ 0
 
