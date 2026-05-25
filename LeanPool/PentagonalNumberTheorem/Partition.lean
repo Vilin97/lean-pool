@@ -71,7 +71,7 @@ theorem powerSeriesMk_card_partition_mul_tprod_one_sub_pow [Nontrivial R]
     (WithPiTopology.multipliable_one_sub_X_pow _)]
   simp [pow_mul, PowerSeries.WithPiTopology.tsum_pow_mul_one_sub_of_constantCoeff_eq_zero]
 
-def kSet (n : ℤ) : Finset ℤ :=
+noncomputable def kSet (n : ℤ) : Finset ℤ :=
   Finset.Icc (-(((1 + 24 * n).sqrt - 1) / 6)) (((1 + 24 * n).sqrt + 1) / 6)
 
 theorem mem_kSet_iff {n k : ℤ} :
@@ -127,7 +127,7 @@ theorem sum_partition (n : ℕ) (hn : n ≠ 0) :
       ext _
       rw [(summable_pentagonalRhs_intPos_powerSeries _).map_tsum _
         (WithPiTopology.continuous_coeff _ _)]
-    simp_rw [← zsmul_eq_mul, coeff_smul]
+    simp_rw [← zsmul_eq_mul]
     refine Finset.sum_of_injOn (fun k ↦ (n - (k * (3 * k - 1) / 2).toNat,
       (k * (3 * k - 1) / 2).toNat)) ?_ ?_ ?_ ?_
     · intro k hk l hl h
@@ -145,6 +145,7 @@ theorem sum_partition (n : ℕ) (hn : n ≠ 0) :
       apply mul_eq_zero_of_right
       convert tsum_zero with k
       suffices i.2 ≠ (k * (3 * k - 1) / 2).toNat by
+        change (k.negOnePow : ℤ) • (coeff i.2 (X ^ (k * (3 * k - 1) / 2).toNat : ℤ⟦X⟧)) = 0
         simp [coeff_X_pow, this]
       contrapose! hmem with hi2
       simp_rw [Set.mem_image, mem_coe]
@@ -154,8 +155,11 @@ theorem sum_partition (n : ℕ) (hn : n ≠ 0) :
       · simp [← hi, ← hi2]
     · intro k hk
       rw [tsum_eq_single k ?_]
-      · simp [mul_comm (k.negOnePow : ℤ)]
+      · change (k.negOnePow : ℤ) * _ =
+          _ * ((k.negOnePow : ℤ) • coeff _ (X ^ (k * (3 * k - 1) / 2).toNat : ℤ⟦X⟧))
+        simp [mul_comm (k.negOnePow : ℤ)]
       intro i h
+      change ((i.negOnePow : ℤ) • coeff _ (X ^ (i * (3 * i - 1) / 2).toNat : ℤ⟦X⟧)) = 0
       simpa [coeff_X_pow] using pentagonal_toNat_injective.eq_iff.ne.mpr h.symm
   · simp [hn]
 

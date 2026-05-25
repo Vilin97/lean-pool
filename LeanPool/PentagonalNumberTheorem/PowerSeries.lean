@@ -25,14 +25,14 @@ variable (R : Type*) [CommRing R]
 
 namespace Pentagonal
 
-theorem summable_γ_powerSeries [TopologicalSpace R] (k : ℕ) :
-    Summable (γ k · (X : R⟦X⟧)) := by
+theorem summable_gamma_powerSeries [TopologicalSpace R] (k : ℕ) :
+    Summable (gamma k · (X : R⟦X⟧)) := by
   rw [PowerSeries.WithPiTopology.summable_iff_summable_coeff]
-  refine fun n ↦ summable_of_finite_support <| Set.Finite.subset (Set.finite_Iic n) ?_
+  refine fun n ↦ summable_of_hasFiniteSupport <| Set.Finite.subset (Set.finite_Iic n) ?_
   simp_rw [Function.support_subset_iff, Set.mem_Iic]
   intro i h
   contrapose! h
-  unfold γ
+  unfold gamma
   have : ¬ (k + 1) * i ≤ n := by
     rw [not_le]
     exact h.trans_le <| Nat.le_mul_of_pos_left i (by simp)
@@ -82,7 +82,7 @@ theorem pentagonalNumberTheorem_powerSeries
     refine fun d ↦ tendsto_atTop_of_eventually_const fun i (hi : i ≥ d + 1) ↦ ?_
     simp_rw [coeff_X_pow]
     aesop
-  · apply summable_γ_powerSeries
+  · apply summable_gamma_powerSeries
   · apply multipliable_pentagonalLhs_powerSeries'
   · apply summable_pentagonalRhs_powerSeries
   · rw [PowerSeries.WithPiTopology.tendsto_iff_coeff_tendsto]

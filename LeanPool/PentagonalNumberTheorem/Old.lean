@@ -987,7 +987,8 @@ theorem delta_up (hn : 0 < n) (x : FerrersDiagram n)
     convert this
     · exact (aux_up_size hn x).symm
     · simp
-  simp [putDiag, takeLast]
+  change putDiagFun (takeLastFun x.delta (x.delta_ne_nil hn)) _ _ = _
+  rfl
 
 theorem one_lt_length (hn : 0 < n) (x : FerrersDiagram n)
     (hdown : ¬ x.IsToDown hn)
@@ -2050,9 +2051,9 @@ theorem phiCoeff_eq (n : ℕ) : phiCoeff n = phiCoeff' n := by
   rw [phiCoeff']
   let even := (Nat.Partition.distincts n).filter (Even ·.parts.card)
   let odd := (Nat.Partition.distincts n).filter (¬Even ·.parts.card)
-  have hdisj : Disjoint even odd := Finset.disjoint_filter_filter_neg _ _ _
+  have hdisj : Disjoint even odd := Finset.disjoint_filter_filter_not _ _ _
   have hunion : Nat.Partition.distincts n = even ∪ odd :=
-    (Finset.filter_union_filter_neg_eq _ _).symm
+    (Finset.filter_union_filter_not_eq _ _).symm
   rw [hunion, Finset.sum_union hdisj]
   have heven : ∑ x ∈ even, (-1) ^ x.parts.card = ∑ x ∈ even, 1 := by
     apply Finset.sum_congr rfl

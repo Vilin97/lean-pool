@@ -21,9 +21,9 @@ variable {K : Type*} [RCLike K]
 
 namespace Pentagonal
 
-theorem γ_bound (k n : ℕ) {x : K} (hx : ‖x‖ < 1) :
-    ‖γ k n x‖ ≤ ‖x‖ ^ ((k + 1) * n) * ∏' i, (1 + ‖x‖ ^ i) := by
-  unfold γ
+theorem gamma_bound (k n : ℕ) {x : K} (hx : ‖x‖ < 1) :
+    ‖gamma k n x‖ ≤ ‖x‖ ^ ((k + 1) * n) * ∏' i, (1 + ‖x‖ ^ i) := by
+  unfold gamma
   rw [norm_mul, norm_prod, norm_pow]
   refine mul_le_mul_of_nonneg_left ?_ (by simp)
   trans ∏ i ∈ Finset.Ico (k + 1) (n + 1 + (k + 1)), (1 + ‖x‖ ^ i)
@@ -47,19 +47,19 @@ theorem γ_bound (k n : ℕ) {x : K} (hx : ‖x‖ < 1) :
     rw [Finset.prod_cons]
     exact one_le_mul_of_one_le_of_one_le (by simp) ih
 
-theorem summable_γ_complex (k : ℕ) {x : K} (hx : ‖x‖ < 1) : Summable (γ k · x) := by
+theorem summable_gamma_complex (k : ℕ) {x : K} (hx : ‖x‖ < 1) : Summable (gamma k · x) := by
   rw [← summable_norm_iff]
-  refine Summable.of_nonneg_of_le (by simp) (γ_bound k · hx) <| Summable.mul_right _ ?_
+  refine Summable.of_nonneg_of_le (by simp) (gamma_bound k · hx) <| Summable.mul_right _ ?_
   simp_rw [pow_mul]
   apply summable_geometric_of_lt_one (by simp)
   exact (pow_lt_one_iff_of_nonneg (by simp) (by simp)).mpr hx
 
-theorem tsum_γ_bound (k : ℕ) {x : K} (hx : ‖x‖ < 1) :
-    ‖∑' n, γ k n x‖ ≤ (1 - ‖x‖)⁻¹ * ∏' i, (1 + ‖x‖ ^ i) := by
-  obtain hsum := (summable_γ_complex k hx).norm
+theorem tsum_gamma_bound (k : ℕ) {x : K} (hx : ‖x‖ < 1) :
+    ‖∑' n, gamma k n x‖ ≤ (1 - ‖x‖)⁻¹ * ∏' i, (1 + ‖x‖ ^ i) := by
+  obtain hsum := (summable_gamma_complex k hx).norm
   have hx' : ‖x‖ ^ (k + 1) < 1 := (pow_lt_one_iff_of_nonneg (by simp) (by simp)).mpr hx
   apply (norm_tsum_le_tsum_norm hsum).trans
-  refine (Summable.tsum_le_tsum (γ_bound k · hx) hsum ?_).trans ?_
+  refine (Summable.tsum_le_tsum (gamma_bound k · hx) hsum ?_).trans ?_
   · simp_rw [pow_mul]
     exact Summable.mul_right _ <| summable_geometric_of_lt_one (by simp) hx'
   rw [tsum_mul_right]
@@ -114,7 +114,7 @@ theorem pentagonalNumberTheorem_complex {x : K} (hx : ‖x‖ < 1) :
     ∑' k, (-1) ^ k * (x ^ (k * (3 * k + 1) / 2) - x ^ ((k + 1) * (3 * k + 2) / 2)) := by
   refine pentagonalNumberTheorem_generic ?_ ?_ ?_ ?_ ?_
   · exact tendsto_pow_atTop_nhds_zero_of_norm_lt_one hx
-  · exact (summable_γ_complex · hx)
+  · exact (summable_gamma_complex · hx)
   · exact (multipliable_pentagonalLhs_complex' · hx)
   · exact summable_pentagonalRhs_complex hx
   · apply Filter.Tendsto.zero_mul_isBoundedUnder_le
@@ -126,7 +126,7 @@ theorem pentagonalNumberTheorem_complex {x : K} (hx : ‖x‖ < 1) :
       exact Nat.mul_le_mul (by simp) (by simp)
     · use (1 - ‖x‖)⁻¹ * ∏' i, (1 + ‖x‖ ^ i)
       simp_rw [eventually_map, Function.comp_apply, eventually_atTop]
-      exact ⟨0, fun k _ ↦ tsum_γ_bound k hx⟩
+      exact ⟨0, fun k _ ↦ tsum_gamma_bound k hx⟩
 
 theorem summable_pentagonalRhs_intNeg_complex {x : K} (hx : ‖x‖ < 1) :
     Summable (fun (k : ℤ) ↦ (-1) ^ k * x ^ (k * (3 * k + 1) / 2)) := by
