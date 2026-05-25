@@ -47,11 +47,10 @@ lemma pattern_nContinuant1 (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [
       _= f (k + 2, m) * f (2, m + k + 1) * f (k + 1, m + 1) - (f (k + 1, m) * f (k + 1, m + 1) - 1 + 1) := by rw [← pattern_n.diamond k m hh']
       _= f (k + 2, m) * f (2, m + k + 1) * f (k + 1, m + 1) - f (k + 1, m) * f (k + 1, m + 1) := by rw [add_comm_sub, sub_self, add_zero]
       _= (f (k + 2, m) * f (2, m + k + 1) - f (k + 1, m)) * f (k + 1, m + 1) := by rw [← sub_mul]
-  simp_arith
-  rw [← mul_inv_cancel_right₀ h₂ (f (k + 3, m))]
-  rw [mul_inv_eq_iff_eq_mul₀, mul_comm (f (2,m+(k+1)))]
-  exact h₃
-  exact h₂
+  show f (k + 1 + 2, m) = f (2, m + (k + 1)) * f (k + 1 + 1, m) - f (k + 1, m)
+  have hgoal : f (k + 3, m) = f (2, m + (k + 1)) * f (k + 2, m) - f (k + 1, m) :=
+    mul_right_cancel₀ h₂ (by rw [h₃]; ring)
+  convert hgoal using 2 <;> ring
 
 -- The second continuant lemma is proved like the first
 lemma pattern_nContinuant2 (F : Type*) [Field F] (f : ℕ×ℕ → F) (n: ℕ) [nzPattern_n F f n] : ∀ i, i ≤ n-1 → ∀m, f (i,m+2) = f (n-1,m+2)*f (i+1,m+1) - f (i+2,m) := by
@@ -75,7 +74,9 @@ suffices pattern_nContinuant2flipped : ∀ i, i ≤ n-1 → ∀m, f (n-i-1,m+2) 
  | zero =>
  intro m
  simp
- have hₙ : f (n,m+1) = 1 ∧ f (n+1,m) = 0 := by exact ⟨pattern_n.botBordOnes_n (m+1), pattern_n.botBordZeros_n (n+1) m (by linarith)⟩
+ have hₙ : f (n,m+1) = 1 ∧ f (n+1,m) = 0 := by
+   refine ⟨pattern_n.botBordOnes_n (m+1), ?_⟩
+   exact pattern_n.botBordZeros_n (n := n) (n+1) m (le_refl _)
  rw[hₙ.2,hₙ.1,sub_zero,mul_one]
  | succ k ih =>
  intro m

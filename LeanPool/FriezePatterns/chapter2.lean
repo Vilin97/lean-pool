@@ -15,11 +15,11 @@ structure flute (n : ℕ) where -- changed class to structure so that Lean displ
   div : ∀ k, a (k+1) ∣ (a k + a (k+2))
 
 def csteFlute (n : ℕ) : Inhabited (flute n) := by -- Inhabited is probably better than Nonempty here, as we actually construct an inhabitant of flute n, so Lean lets us extract *the* inhabitant
-  let a : ℕ → ℕ := λ _ => 1
-  have pos : ∀ i, a i > 0 := λ _ => by simp
+  let a : ℕ → ℕ := fun _ => 1
+  have pos : ∀ i, a i > 0 := fun _ => Nat.one_pos
   have hd : a 0 = 1 := rfl
-  have period : ∀ k, a k = a (k+n-1) := λ k => rfl
-  have div : ∀ k, a (k+1) ∣ (a k + a (k+2)) := λ k => by simp
+  have period : ∀ k, a k = a (k+n-1) := fun _ => rfl
+  have div : ∀ k, a (k+1) ∣ (a k + a (k+2)) := fun _ => ⟨2, rfl⟩
   exact ⟨a, pos, hd, period, div⟩
 
 -- Set of all flutes of height n.
@@ -112,7 +112,9 @@ def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
         by_cases hk₁ : k = 1
         have hi₀ : i = 0 := by omega
         simp [hk₁, hi₀]
-        use 1 ; rfl
+        use 1
+        unfold a_odd
+        decide
         have hi₆ : ¬ 2*k ≤ i+2 := by omega
         have hi₇ : 1+4*k-2*(i+1) = (2*k-1)+2 := by omega
         have hi₈ : 2*i+2 = (2*k-1)+1 := by omega
@@ -560,11 +562,13 @@ def aux_3 (n : ℕ) (f : flute (n+3)) (j : ℕ) (hj : j ≤ n ∧ f.a (j+1) = f.
     by_cases hij : i+2 ≤ j
     have hij₂ : i+1 ≤ j := by omega
     have hij₃ : i ≤ j := by omega
-    simp [hij, hij₂, hij₃, f.div i]
+    have hij₅ : i < j := by omega
+    simp [hij, hij₂, hij₃, hij₅, f.div i]
     by_cases hij₂ : i+1 ≤ j
     have hij₃ : i ≤ j := by omega
     have hij₄ : i+1 = j := by omega
-    simp [hij, hij₂, hij₃, ←hij₄]
+    have hij₅ : i < j := by omega
+    simp [hij, hij₂, hij₃, ←hij₄, hij₅]
     have key := hij₄ ▸ hj.2
     simp [add_assoc] at key
     rcases f.div i with ⟨k, hk⟩
@@ -574,14 +578,16 @@ def aux_3 (n : ℕ) (f : flute (n+3)) (j : ℕ) (hj : j ≤ n ∧ f.a (j+1) = f.
       _ = f.a (i+1) * (k-1) := by exact (Nat.mul_sub_one (f.a (i+1)) k).symm
     by_cases hij₃ : i ≤ j
     have hij₄ : i = j := by omega
-    simp [hij, hij₂, hij₃, hij₄]
+    have hij₅ : ¬ i < j := by omega
+    simp [hij, hij₂, hij₃, hij₄, hij₅]
     rcases f.div (j+1) with ⟨k, hk⟩
     simp [add_assoc] at hk
     use k-1
     calc
       f.a j + f.a (j+3) = f.a (j+2) * k - f.a (j+2) := by omega
       _ = f.a (j+2) * (k-1) := by exact (Nat.mul_sub_one (f.a (j+2)) k).symm
-    simp [hij, hij₂, hij₃, f.div (i+1)]
+    have hij₅ : ¬ i < j := by omega
+    simp [hij, hij₂, hij₃, hij₅, f.div (i+1)]
   exact ⟨a_3 n f j hj, pos, hd, period, div⟩
 
 theorem FluteBounded (n : ℕ) (hn: n>0) (f : flute n) : ∀ i ≤ n-1, f.a i ≤ Nat.fib n := by
@@ -646,7 +652,9 @@ theorem FluteBounded (n : ℕ) (hn: n>0) (f : flute n) : ∀ i ≤ n-1, f.a i �
       specialize h₁ g
       rcases h₁ with ⟨l, h₁⟩
       specialize h₁ (i+1) (by omega)
-      unfold_let at h₁ ; unfold aux_1 at h₁ ; unfold a_1 at h₁ ; simp at h₁
+      change (¬i + 1 = l → (aux_1 n f h₂).a (i + 1) ≤ Nat.fib (n + 1)) ∧
+        (i + 1 = l → (aux_1 n f h₂).a (i + 1) ≤ Nat.fib (n + 2)) at h₁
+      unfold aux_1 at h₁ ; dsimp only at h₁ ; unfold a_1 at h₁ ; simp at h₁
       simp [add_assoc]
       by_cases hi₂ : n ≤ i
       have : i = n := by omega
@@ -674,7 +682,9 @@ theorem FluteBounded (n : ℕ) (hn: n>0) (f : flute n) : ∀ i ≤ n-1, f.a i �
     rcases h₁ g with ⟨l, h₁⟩
     specialize h₁ i (by omega)
     have hi₄ : ¬ n+1 ≤ i := by omega
-    unfold_let at h₁ ; unfold aux_2 at h₁ ; unfold a_2 at h₁ ; simp [hi₄] at h₁
+    change (¬i = l → (aux_2 n f h₂).a i ≤ Nat.fib (n + 1)) ∧
+      (i = l → (aux_2 n f h₂).a i ≤ Nat.fib (n + 2)) at h₁
+    unfold aux_2 at h₁ ; dsimp only at h₁ ; unfold a_2 at h₁ ; simp [hi₄] at h₁
     by_cases hil : i = l
     exact h₁.2 hil
     have := h₁.1 hil
@@ -682,18 +692,19 @@ theorem FluteBounded (n : ℕ) (hn: n>0) (f : flute n) : ∀ i ≤ n-1, f.a i �
     rcases h₂ with ⟨j, hj⟩
     simp at hj ; simp [add_assoc]
     let g := aux_3 n f j hj -- case 3 : ∃ i ≤ n, f.a (i+1) = f.a i + f.a (i+2)
+    have hg : g = aux_3 n f j hj := rfl
     have key₁ : ∀ i ≤ n+2, i ≠ j+1 → f.a i ≤ Nat.fib (n+2) := by
       intro i hi hij
       by_cases hij : i≤j
       rcases h₁ g with ⟨l, h₁⟩
       specialize h₁ i (by omega)
       have hi₂ : ¬ n+1 ≤ i := by omega
-      unfold_let at h₁ ; unfold aux_3 at h₁ ; unfold a_3 at h₁ ; simp [hij, hi₂] at h₁
+      rw [hg] at h₁ ; unfold aux_3 at h₁ ; dsimp only at h₁ ; unfold a_3 at h₁ ; simp [hij, hi₂] at h₁
       omega
       have hij : ¬ i≤j+1 := by omega
       rcases h₁ g with ⟨l, h₁⟩
       specialize h₁ (i-1) (by omega)
-      unfold_let at h₁ ; unfold aux_3 at h₁ ; unfold a_3 at h₁ ; simp [hij] at h₁
+      rw [hg] at h₁ ; unfold aux_3 at h₁ ; dsimp only at h₁ ; unfold a_3 at h₁ ; simp [hij] at h₁
       by_cases hi₃ : n+1 ≤ i-1
       have hi₄ : i = n+2 := by omega
       rw [hi₄]
@@ -702,7 +713,8 @@ theorem FluteBounded (n : ℕ) (hn: n>0) (f : flute n) : ∀ i ≤ n-1, f.a i �
       have : Nat.fib (n+2) > 0 := Nat.fib_pos.mpr (by omega)
       omega
       have hi₄ : ¬ i-1<j := by omega
-      simp [hi₃, hi₄, @Nat.sub_add_cancel i 1 (by omega)] at h₁
+      have hi₅ : ¬ n < i - 1 := by omega
+      simp [hi₃, hi₄, hi₅, @Nat.sub_add_cancel i 1 (by omega)] at h₁
       omega
     use j+1 ; intro i hi
     by_cases hij : i = j+1
@@ -713,11 +725,12 @@ theorem FluteBounded (n : ℕ) (hn: n>0) (f : flute n) : ∀ i ≤ n-1, f.a i �
       rcases h₁ g with ⟨l, h₁⟩
       by_cases hjl : l = j+1
       have hf₁ := (h₁ j (by omega)).1 (by omega)
-      unfold_let at hf₁ ; unfold aux_3 at hf₁ ; unfold a_3 at hf₁ ; simp [hjl] at hf₁
+      rw [hg] at hf₁ ; unfold aux_3 at hf₁ ; dsimp only at hf₁ ; unfold a_3 at hf₁ ; simp [hjl] at hf₁
       have : ¬ (n+1) ≤ j := by omega
-      simp [this] at hf₁
+      have hnj : ¬ n < j := by omega
+      simp [this, hnj] at hf₁
       have hf₂ := (h₁ (j+1) (by omega)).2 (by omega)
-      unfold_let at hf₂ ; unfold aux_3 at hf₂ ; unfold a_3 at hf₂ ; simp [hjl] at hf₂
+      rw [hg] at hf₂ ; unfold aux_3 at hf₂ ; dsimp only at hf₂ ; unfold a_3 at hf₂ ; simp [hjl] at hf₂
       by_cases hj : n ≤ j
       simp [hj] at hf₂
       have hj : j = n := by omega
@@ -727,7 +740,7 @@ theorem FluteBounded (n : ℕ) (hn: n>0) (f : flute n) : ∀ i ≤ n-1, f.a i �
       simp [hj, add_assoc] at hf₂ ; omega
       have hf₁ := (h₁ (j+1) (by omega)).1 (by omega)
       have hf₂ := key₁ j (by omega) (by omega)
-      unfold_let at hf₁ ; unfold aux_3 at hf₁ ; unfold a_3 at hf₁ ; simp [hj] at hf₁
+      rw [hg] at hf₁ ; unfold aux_3 at hf₁ ; dsimp only at hf₁ ; unfold a_3 at hf₁ ; simp [hj] at hf₁
       by_cases hj : n ≤ j
       have hj : j = n := by omega
       rw [hj] ; rw [hj] at hf₂

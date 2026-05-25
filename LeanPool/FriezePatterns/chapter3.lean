@@ -148,6 +148,7 @@ def friezeToFlute (f : ℕ×ℕ → ℚ) (n m: ℕ) (hn : 2 ≤ n) [arith_fp f n
       have key₁ : (f ((n - 2), m)).num + (f ((n - 2) + 1 + 1, m)).num = (f ((n - 2), m) + f ((n - 2) + 1 + 1, m)).num := by
         simp [Rat.add_num_den, arith_fp.integral n ((n - 2)) m]
         simp [arith_fp.integral n ((n - 2) + 1 + 1) m]
+        rw [Rat.mkRat_one]
         norm_cast
       have key₂ : (f (2, m + ((n - 2)))).num * (f ((n - 2) + 1,m)).num = (f (2, m + ((n - 2))) * f ((n - 2) + 1,m)).num := by
         simp [Rat.mul_num, arith_fp.integral n 2 (m + ((n - 2))), arith_fp.integral n ((n - 2) + 1) m]
@@ -174,7 +175,9 @@ def friezeToFlute (f : ℕ×ℕ → ℚ) (n m: ℕ) (hn : 2 ≤ n) [arith_fp f n
 
     have a₀₁ : (i) % (n - 1) + (1) % (n - 1) < n - 1 := by
         rw[Nat.mod_eq_of_lt (one_lt_n_sub_one)]
-        contrapose boundary ; simp
+        by_contra boundary_neg
+        push_neg at boundary_neg
+        apply boundary
         have this : i % (n - 1) + 1 = n - 1 := by linarith
         rw[Nat.add_mod, Nat.mod_eq_of_lt (one_lt_n_sub_one), this]
         simp
@@ -186,8 +189,9 @@ def friezeToFlute (f : ℕ×ℕ → ℚ) (n m: ℕ) (hn : 2 ≤ n) [arith_fp f n
 
     have a₀₂ : (i) % (n - 1) + (2) % (n - 1) < n - 1 := by
         rw[Nat.mod_eq_of_lt (two_lt_n_sub_one)]
-        contrapose boundary'
-        simp
+        by_contra boundary_neg
+        push_neg at boundary_neg
+        apply boundary'
         have this : n - 1 = i % (n - 1) + 2 := by omega
         rw[Nat.add_mod]
         rw[Nat.mod_eq_of_lt (two_lt_n_sub_one)]
@@ -213,6 +217,7 @@ def friezeToFlute (f : ℕ×ℕ → ℚ) (n m: ℕ) (hn : 2 ≤ n) [arith_fp f n
       have key₁ : (f (i % (n - 1) + 1, m)).num + (f (i % (n - 1) + 1 + 1 + 1, m)).num = (f (i % (n - 1) + 1, m) + f (i % (n - 1) + 1 + 1 + 1, m)).num := by
         simp [Rat.add_num_den, arith_fp.integral n (i % (n - 1) + 1) m]
         simp [arith_fp.integral n (i % (n - 1) + 1 + 1 + 1) m]
+        rw [Rat.mkRat_one]
         norm_cast
       have key₂ : (f (2, m + (i % (n - 1) + 1))).num * (f (i % (n - 1) + 1 + 1,m)).num = (f (2, m + (i % (n - 1) + 1)) * f (i % (n - 1) + 1 + 1,m)).num := by
         simp [Rat.mul_num, arith_fp.integral n 2 (m + (i % (n - 1) + 1)), arith_fp.integral n (i % (n - 1) + 1 + 1) m]
@@ -281,19 +286,20 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
     simp [this, hi', botBordOnes_n]
     specialize ih₂ (by omega) (by omega)
     have : ¬ n ≤ i := by omega
-    unfold frieze_f ; simp_arith [this]
+    unfold frieze_f ; simp +arith [this]
     have h₁ := ih₁ (i+1) (by omega) (by omega)
     have h₂ := ih₁ (i+2) (by omega) (by omega)
-    field_simp [h₁]
+    positivity
   have diamond : ∀ i, ∀ m,  i ≤ n-1 → frieze_f g (i+1,m) * frieze_f g (i+1,m+1)-1 = frieze_f g (i+2,m) * frieze_f g (i,m+1) := by
     intro i m hi
     conv =>
       enter [1,1,2]
       unfold frieze_f
     have : ¬ n ≤ i := by omega
-    simp_arith [this]
-    have : frieze_f g (i+1, m) > 0 := by linarith [positive (i+1) m (by omega) (by omega)]
+    simp +arith [this]
+    have hpos : frieze_f g (i+1, m) > 0 := by linarith [positive (i+1) m (by omega) (by omega)]
     field_simp
+    ring
   have non_zero : ∀ i m, 1 ≤ i ∧ i ≤ n → frieze_f g (i,m) ≠ 0 := λ i m ⟨hi₁, hi₂⟩ => by linarith [positive i m hi₁ hi₂]
   have : nzPattern_n ℚ (frieze_f g) n := by
     exact {topBordZeros, topBordOnes, botBordOnes_n, botBordZeros_n, diamond, non_zero}
@@ -319,11 +325,15 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
         exact this
       rcases div with ⟨k, hk⟩
       simp at key
-      have : frieze_f g (m+1, 0) ≠ 0 := by linarith [positive (m+1) 0 (by omega) (by omega)]
-      have : frieze_f g (2,m) = k := by
-        calc frieze_f g (2,m) = (frieze_f g (m,0) + frieze_f g (m+2,0)) / frieze_f g (m+1,0) := by field_simp [hm, hm₂, this, key]
-        _ = k := by field_simp [hk]
-      field_simp [this]
+      have hne : frieze_f g (m+1, 0) ≠ 0 := by linarith [positive (m+1) 0 (by omega) (by omega)]
+      have hfrac : frieze_f g (2,m) = k := by
+        have hkey : frieze_f g (2, m) * frieze_f g (m + 1, 0) = frieze_f g (m, 0) + frieze_f g (m + 2, 0) := by
+          linarith [key]
+        have : frieze_f g (2, m) * frieze_f g (m + 1, 0) = ↑k * frieze_f g (m + 1, 0) := by
+          rw [hkey, hk]; ring
+        exact mul_right_cancel₀ hne this
+      rw [hfrac]
+      norm_cast
       have : n+1-(n-1)=2 := by omega
       by_cases hm₃ : m = n-1
       have key := glideSymm ℚ (frieze_f g) n (n-1) (by omega) 0
@@ -341,7 +351,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
       induction' i using Nat.twoStepInduction with i ih₁ ih₂
       simp [frieze_f]
       simp [frieze_f, hn, g.hd]
-      simp_arith at ih₁ ih₂ hi
+      simp +arith at ih₁ ih₂ hi
       specialize ih₁ (by omega)
       specialize ih₂ (by omega)
       have := pattern_nContinuant1 ℚ (frieze_f g) n i (by omega) 1
@@ -365,13 +375,15 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
       intro ; simp [botBordZeros_n (i+3) _ (by omega)]
       intro m
       have key₂ := pattern_nContinuant1 ℚ (frieze_f g) n (i+1) (by omega) m
-      simp_arith at key₂
+      simp +arith at key₂
       rw [key₂]
-      have h₁ := key (m+(i+1))
+      have h₁ : (frieze_f g (2, i+m+1)).den = 1 := by
+        have := key (m+(i+1))
+        convert this using 2; ring
       have h₂ := ih (i+1) (by omega) m
       have h₃ := ih (i+2) (by omega) m
       rw [Rat.sub_eq_add_neg, Rat.add_num_den, Rat.neg_den, Rat.mul_den, h₁, h₂, h₃]
-      simp ; norm_cast
+      simp
   exact {topBordZeros, topBordOnes, botBordOnes_n, botBordZeros_n, diamond, integral, positive}
 
 def arithFriezePatSet (n: ℕ) : Set (ℕ × ℕ → ℚ) :=
@@ -409,11 +421,13 @@ lemma main1 (n : ℕ) (h : n ≠ 0) : ∀ (f : ℕ × ℕ → ℚ) (_ : arith_fp
   have hi₄ : 0 < Nat.fib n := Nat.fib_pos.mpr (by omega)
   linarith
   have key := FluteBounded n (by omega) g (i-1) (by omega)
-  unfold_let g at key ; unfold friezeToFlute at key ; unfold flute_f at key ; simp at key
+  have hg : g = @friezeToFlute f n m (by omega) hf := rfl
+  rw [hg] at key ; unfold friezeToFlute at key ; dsimp only at key ; unfold flute_f at key ; simp at key
   have hi₆ : (i-1)%(n-1)+1 = i := by rw [Nat.mod_eq_of_lt (by omega)] ; omega
   rw [hi₆] at key
-  apply Rat.le_def.mpr
-  simp [hf.integral i m] ; norm_cast
+  have hd : (f (i, m)).den = 1 := hf.integral i m
+  rw [show (f (i, m) : ℚ) = ((f (i, m)).num : ℚ) by rw [← Rat.num_div_den (f (i, m)), hd]; simp]
+  exact_mod_cast key
 
 lemma main2 (n : ℕ) (hn : n ≠ 0) : ∃ (f : ℕ × ℕ → ℚ) (hf : arith_fp f n), ∃ (a : ℕ × ℕ), f a = Nat.fib n := by
   rcases Nat.even_or_odd n with ⟨k, hk⟩ | ⟨k, hk⟩
