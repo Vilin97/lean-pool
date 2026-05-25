@@ -87,7 +87,8 @@ theorem ker_bd_supset_im_jStar (f : π﹍ (n+1) X A a) :
           Function.comp_apply, coe_mk]
         dsimp [GenLoop.const]
         apply Subtype.eq_iff.mpr; dsimp
-        rw [g'.property _ (Cube.inclToTop.mem_boundary y)]
+        rw [show (g' (Cube.inclToTop y) : X) = ↑a from
+          g'.property _ (Cube.inclToTop.mem_boundary y)]
       map_one_left y := by
         simp only [toFun_eq_coe, Homotopy.coe_toContinuousMap, Homotopy.apply_one, g']
       prop' t y hy := by
@@ -95,7 +96,8 @@ theorem ker_bd_supset_im_jStar (f : π﹍ (n+1) X A a) :
           Function.comp_apply]
         dsimp [GenLoop.const]
         apply Subtype.eq_iff.mpr; dsimp
-        rw [g'.property _ (Cube.inclToTop.mem_boundary y)] }
+        rw [show (g' (Cube.inclToTop y) : X) = ↑a from
+          g'.property _ (Cube.inclToTop.mem_boundary y)] }
 
 /-- g'' (yₙ, (y₀, y₁, …, yₙ₋₁)) = if yₙ ≤ 1/2
       then f' (y₀, y₁, …, yₙ₋₁, 2 * yₙ)
@@ -134,7 +136,11 @@ noncomputable def ker_bd_subset_im_jStar.g''
         dsimp only at hyn ⊢; rw [hyn]
         simp only [isUnit_iff_ne_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
           IsUnit.mul_inv_cancel, Set.projIcc_right, Set.Icc.mk_one, sub_self, Set.projIcc_left,
-          Set.Icc.mk_zero, HomotopyWith.apply_zero, Function.comp_apply, coe_mk]
+          Set.Icc.mk_zero]
+        have := H.apply_zero y
+        rw [Subtype.ext_iff] at this
+        simp only [Function.comp_apply, coe_mk] at this
+        rw [this]
         congr 1 }
 
 /-- `g''` is an element of `Ω^ (Fin (n+1)) X a`, i.e., it sends the boundary to `a`. -/
@@ -156,8 +162,12 @@ noncomputable def ker_bd_subset_im_jStar.g'
         · intro hfalse; simp [Cube.splitAtLast] at hfalse
       · -- `H` maps the top face to `a`
         simp [g'', ker_bd_subset_im_jStar.g'', Cube.splitAtLast_fst_eq, hin1]
-        simp [(by norm_num : ¬((1 : ℝ) ≤ (2⁻¹ : ℝ))),
-          (by norm_num : (2 : ℝ) - (1 : ℝ) = 1), GenLoop.const]
+        have hne : ¬((1 : ℝ) ≤ (2⁻¹ : ℝ)) := by norm_num
+        simp [hne]
+        have hpr : Set.projIcc (0 : ℝ) 1 ker_bd_subset_im_jStar.g''._proof_3 (2 - 1) = 1 := by
+          rw [(by norm_num : (2 : ℝ) - 1 = 1)]; simp [Set.projIcc]
+        rw [hpr]
+        exact (Subtype.ext_iff.mp (H.apply_one (Cube.splitAtLast y).2)).trans rfl
     · by_cases hyn : y (Fin.last n) ≤ (2⁻¹ : ℝ)
       · -- `f'` maps the sides to `a`
         simp [g'', ker_bd_subset_im_jStar.g'', Cube.splitAtLast_fst_eq, hyn]
@@ -177,10 +187,10 @@ noncomputable def ker_bd_subset_im_jStar.g'
         have := H.prop' (Set.projIcc 0 1 (by norm_num) (2 * (y (Fin.last n)) - 1))
           (Cube.splitAtLast y).2 y_mem_bd
         simp only [Function.comp_apply, coe_mk, toFun_eq_coe, Homotopy.coe_toContinuousMap,
-          HomotopyWith.coe_toHomotopy, g''] at this
-        rw [this]
-        apply f'.property.right
-        exact Cube.inclToTop.mem_boundaryJar_of y_mem_bd ⟩
+          HomotopyWith.coe_toHomotopy] at this
+        have := Subtype.ext_iff.mp this
+        simp only [Function.comp_apply, coe_mk] at this
+        exact this.trans (f'.property.right _ (Cube.inclToTop.mem_boundaryJar_of y_mem_bd)) ⟩
 
 /-- G'' (t, (yₙ, (y₀, y₁, …, yₙ₋₁))) = if yₙ ≤ (1 + t) / 2
       then f' (y₀, y₁, …, yₙ₋₁, (2 / (1 + t)) * yₙ)
@@ -210,12 +220,17 @@ noncomputable def ker_bd_subset_im_jStar.G''
       · fun_prop
       · intro ⟨t, ⟨yn, y⟩⟩ hyn
         dsimp only at hyn ⊢; rw [hyn]
-        simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, div_mul_div_cancel₀']
-        rw [div_self (by linarith only [t.property.1])]
-        rw [mul_div_cancel₀ _ (by norm_num : (2 : ℝ) ≠ 0), sub_self]
-        rw [Set.projIcc_left, Set.projIcc_right, Set.Icc.mk_zero, Set.Icc.mk_one]
-        simp only [HomotopyWith.apply_zero, Function.comp_apply, coe_mk]
-        congr 1 }
+        have h1 : (2 / (1 + ↑t) * ((1 + ↑t) / 2) : ℝ) = 1 := by
+          have : (1 : ℝ) + ↑t ≠ 0 := by linarith only [t.property.1]
+          field_simp
+        have h2 : (2 * ((1 + ↑t) / 2) - (1 + ↑t) : ℝ) = 0 := by
+          have : (1 : ℝ) + ↑t ≠ 0 := by linarith only [t.property.1]
+          field_simp; ring
+        rw [h1, h2]
+        rw [Set.projIcc_left, Set.projIcc_right]
+        have := Subtype.ext_iff.mp (H.apply_zero y)
+        simp only [Function.comp_apply, coe_mk] at this
+        exact this.symm.trans (by congr 1) }
 
 /-- `Ker ∂ ⊆ Im j*` in
 `⋯ πₙ₊₁(X, a) ---j*ₙ---> πₙ₊₁(X, A, a) ---∂ₙ---> πₙ(A, a) ⋯` -/
@@ -258,7 +273,7 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n+1) X A a) :
             simp [ker_bd_subset_im_jStar.G'', hyn]
             rw [Cube.splitAtLast_fst_eq, hy] at hyn
             have t1 : t.val = 1 := by
-              apply eq_of_le_of_le t.property.2
+              apply le_antisymm t.property.2
               replace hyn := (mul_le_mul_iff_of_pos_right (by norm_num : (0 : ℝ) < 2)).mpr hyn
               rw [div_mul_cancel₀ _ (by norm_num : (2 : ℝ) ≠ 0), Set.Icc.coe_one, one_mul] at hyn
               linarith only [hyn]
@@ -306,9 +321,9 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n+1) X A a) :
                   (2 * (Cube.splitAtLast y).1.val - (1 + t))) (Cube.splitAtLast y).2 ⟨i, hi⟩
               simp only [Function.comp_apply, coe_mk, toFun_eq_coe, Homotopy.coe_toContinuousMap,
                 HomotopyWith.coe_toHomotopy] at this
-              rw [this]
-              apply f'.property.right
-              exact Cube.inclToTop.mem_boundaryJar_of ⟨i, hi⟩ }
+              have := Subtype.ext_iff.mp this
+              simp only [Function.comp_apply, coe_mk] at this
+              exact this.trans (f'.property.right _ (Cube.inclToTop.mem_boundaryJar_of ⟨i, hi⟩)) }
 
 /-- `Ker ∂ = Im j*` in
 `⋯ πₙ₊₁(X, a) ---j*ₙ---> πₙ₊₁(X, A, a) ---∂ₙ---> πₙ(A, a) ⋯` -/

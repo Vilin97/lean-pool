@@ -153,7 +153,7 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
       map_one_left y := by dsimp [Fyts, Fy01]
       prop' s y hy := by
         simp [Fyts]
-        rw [f.property y hy]
+        rw [show (f y : X) = x₀ from f.property y hy]
         exact Fyts_eq_x₀ ⟨y, hy⟩ _ _ (Or.inl <| Or.inl rfl) }
   have Fy01_Fy11 : GenLoop.Homotopic Fy01 Fy11 := Nonempty.intro
     { toFun := fun ⟨t, y⟩ ↦ Fyts t 1 (Or.inr rfl) y
@@ -175,7 +175,7 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
       map_one_left y := by dsimp [Fyts, Fy11]
       prop' t y hy := by
         simp [Fyts]
-        rw [g.property y hy]
+        rw [show (g y : X) = x₀ from g.property y hy]
         exact Fyts_eq_x₀ ⟨y, hy⟩ _ _ (Or.inl <| Or.inr rfl) }
   exact f_Fy01.trans Fy01_Fy11 |>.trans g_Fy11.symm
 
@@ -347,11 +347,13 @@ noncomputable def FundamentalGroupoid.changeBasePt (n : ℕ) : FundamentalGroupo
     apply Eq.symm
     apply Quotient.eq_iff_equiv.mpr
     apply GenLoop.ChangeBasePt.trans'  -- the key
-    change (Path.Homotopic.Quotient.comp _ _).out.Homotopic _
-    unfold Path.Homotopic.Quotient.comp
+    change (Path.Homotopic.Quotient.trans _ _).out.Homotopic _
     conv_lhs => pattern p; rw [← Quotient.out_eq p]
     conv_lhs => pattern q; rw [← Quotient.out_eq q]
-    rw [Quotient.map₂_mk]
+    have hpq : Path.Homotopic.Quotient.trans (⟦Quotient.out p⟧ : Path.Homotopic.Quotient _ _)
+        ⟦Quotient.out q⟧ = ⟦(Quotient.out p).trans (Quotient.out q)⟧ :=
+      (Path.Homotopic.Quotient.mk_trans _ _).symm
+    rw [hpq]
     change (Path.Homotopic.setoid _ _) _ _
     apply Quotient.mk_out
 
@@ -396,7 +398,7 @@ instance isIso_pointedHomOfPath (n : ℕ) (p : Path x₀ x₁) :
     change (Path.Homotopic.setoid _ _) _ _
     apply Quotient.mk_out
   rw [← this]
-  infer_instance  -- FundamentalGroupoid.isIso_changeBasePt_map
+  exact FundamentalGroupoid.isIso_changeBasePt_map ⟦p⟧
 
 lemma bijective_changeBasePt (n : ℕ) (p : Path x₀ x₁) :
     Function.Bijective (changeBasePt n p) := by
@@ -453,7 +455,7 @@ theorem inducedPointedHom_comp_pointedHomOfHomotopy_eq
       map_one_left y := by simp [gα]
       prop' t y hy := by
         simp [ContinuousMap.Homotopy.evalAt]
-        rw [α.out.prop y hy] }
+        rw [show ((Quotient.out α) y : X) = x₀ from α.out.prop y hy] }
   apply GenLoop.homotopic_of_levelHomotopy_along_homotopic_paths (F.evalAt x₀ #~ fα) L
   exact Path.Homotopic.refl _
 
@@ -462,15 +464,15 @@ lemma injective_toFun_surjective_invFun_of_homotopyEquiv (n : ℕ) (x₀ : X) (E
     Function.Surjective (inducedPointedHom n (E.toFun x₀) E.invFun).toFun := by
   have gf_ch_eq_id := inducedPointedHom_comp_pointedHomOfHomotopy_eq n x₀ E.left_inv.some
   have bgf : Function.Bijective (inducedPointedHom n x₀ (E.invFun.comp E.toFun)) := by
-    apply (isIso_iff_bijective _).mp
+    apply (Pointed.isIso_iff_bijective _).mp
     have iso_gf : IsIso (inducedPointedHom n x₀ (E.invFun.comp E.toFun)) :=
       IsIso.of_isIso_fac_right gf_ch_eq_id  -- using `isIso_inducedPointedHom_id`
     infer_instance  -- using `iso_gf` and `CategoryTheory.hom_isIso`
   have : (inducedPointedHom n x₀ (E.invFun.comp E.toFun)).toFun =
       (inducedPointedHom n _ E.invFun).toFun ∘ (inducedPointedHom n _ E.toFun).toFun := by
     rw [inducedPointedHom_comp n x₀ E.toFun E.invFun]
-    simp only [ContinuousMap.comp_apply, ContinuousMap.HomotopyEquiv.toFun_eq_coe,
-      ContinuousMap.HomotopyEquiv.coe_invFun, Pointed.Hom.comp_toFun']
+    simp only [ContinuousMap.comp_apply, ContinuousMap.HomotopyEquiv.coe_invFun,
+      Pointed.Hom.comp_toFun']
   replace bgf : Function.Bijective <|
       (inducedPointedHom n _ E.invFun).toFun ∘ (inducedPointedHom n x₀ E.toFun).toFun := by
     rw [← this]
@@ -491,6 +493,7 @@ theorem isIso_inducedPointedHom_of_isHomotopyEquiv (n : ℕ) (x₀ : X) (f : C(X
     have surj := injective_toFun_surjective_invFun_of_homotopyEquiv n
         (E.symm.invFun x₀) E.symm |>.right
     rw [(by rfl : E.symm.invFun = E.toFun)] at surj
+    rw [show E.symm.toFun (E.toFun x₀) = (E.invFun.comp E.toFun) x₀ from rfl] at surj
     rw [inducedPointedHom_eq_of_path n (E.left_inv.some.evalAt x₀) E.toFun] at surj
     have {A B C D : Type u} {f : A → B} {g : B → C} {h : C → D}
         (shgf : Function.Surjective (h ∘ g ∘ f))

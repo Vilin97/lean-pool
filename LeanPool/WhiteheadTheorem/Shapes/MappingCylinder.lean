@@ -89,11 +89,14 @@ def retr : MapCyl f ⟶ Y :=
 
 lemma domIncl_retr_eq : domIncl f ≫ retr f = f := by
   unfold domIncl retr
-  rw [Category.assoc, Limits.pushout.inr_desc, ← Category.assoc, Cyl.i₁_r₀_eq_id, Category.id_comp]
+  change Cyl.i₁ X ≫ Limits.pushout.inr f (Cyl.i₀ X) ≫ _ = f
+  rw [Limits.pushout.inr_desc, ← Category.assoc, Cyl.i₁_r₀_eq_id, Category.id_comp]
 lemma domIncl_retr_eq_assoc : domIncl f ≫ retr f ≫ h = f ≫ h := by
   rw [← Category.assoc, domIncl_retr_eq f]
 
-lemma inl_retr_eq_id : inl f ≫ retr f = 𝟙 Y := by rw [retr, Limits.pushout.inl_desc]
+lemma inl_retr_eq_id : inl f ≫ retr f = 𝟙 Y := by
+  change Limits.pushout.inl f (Cyl.i₀ X) ≫ _ = _
+  rw [retr, Limits.pushout.inl_desc]
 lemma codIncl_retr_eq_id : codIncl f ≫ retr f = 𝟙 Y := inl_retr_eq_id f
 -- alias codIncl_retr_eq_id := inl_retr_eq_id
 
@@ -141,10 +144,13 @@ def deformRetrEvalAt (t : I) : MapCyl f ⟶ MapCyl f :=
 lemma deformRetrEvalAt_zero : deformRetrEvalAt f 0 = retr f ≫ inl f := by
   simp only [deformRetrEvalAt, ContinuousMap.mulRight_zero]
   apply Limits.pushout.hom_ext
-  all_goals simp only [Limits.colimit.ι_desc, Limits.PushoutCocone.mk_pt,
-    Limits.PushoutCocone.mk_ι_app]
-  · rw [retr, Limits.pushout.inl_desc_assoc, Category.id_comp]
-  · rw [retr, Limits.pushout.inr_desc_assoc, Category.assoc, condition f, ← Category.assoc]
+  · rw [Limits.pushout.inl_desc, retr]
+    change inl f = Limits.pushout.inl f (Cyl.i₀ X) ≫ Limits.pushout.desc (𝟙 Y) (Cyl.r₀ X ≫ f) _ ≫ _
+    rw [Limits.pushout.inl_desc_assoc, Category.id_comp]
+  · rw [Limits.pushout.inr_desc, retr]
+    change ofHom ((ContinuousMap.id ↑X).prodMap (ContinuousMap.const (↑I) 0)) ≫ inr f =
+      Limits.pushout.inr f (Cyl.i₀ X) ≫ Limits.pushout.desc (𝟙 Y) (Cyl.r₀ X ≫ f) _ ≫ _
+    rw [Limits.pushout.inr_desc_assoc, Category.assoc, condition f, ← Category.assoc]
     congr
 
 lemma deformRetrEvalAt_one : deformRetrEvalAt f 1 = 𝟙 _ := by
@@ -158,7 +164,10 @@ lemma curriedDeformRetrEvalAt_eq_deformRetrEvalAt (t : I) :
     ext y
     simp only [hom_comp, ContinuousMap.comp_apply]
     change ((inl f ≫ curriedDeformRetr f) y) t = _  -- curriedDeformRetrEvalAt_hom_apply
-    rw [curriedDeformRetr, Limits.pushout.inl_desc]
+    rw [curriedDeformRetr]
+    change ((ConcreteCategory.hom (Limits.pushout.inl f (Cyl.i₀ X) ≫
+        Limits.pushout.desc (PathSpace.homToConstPaths (inl f)) _ _)) y) t = _
+    rw [Limits.pushout.inl_desc]
     simp only [PathSpace.homToConstPaths, hom_ofHom, ContinuousMap.curry_apply,
       ContinuousMap.coe_mk]
   · rw [deformRetrEvalAt, Limits.pushout.inr_desc]
@@ -166,7 +175,10 @@ lemma curriedDeformRetrEvalAt_eq_deformRetrEvalAt (t : I) :
     simp only [hom_comp, ContinuousMap.comp_apply, hom_ofHom, ContinuousMap.prodMap_apply,
       ContinuousMap.coe_id, ContinuousMap.coe_mulRight]
     change ((inr f ≫ curriedDeformRetr f) z) t = _
-    rw [curriedDeformRetr, Limits.pushout.inr_desc]
+    rw [curriedDeformRetr]
+    change ((ConcreteCategory.hom (Limits.pushout.inr f (Cyl.i₀ X) ≫
+        Limits.pushout.desc (PathSpace.homToConstPaths (inl f)) _ _)) z) t = _
+    rw [Limits.pushout.inr_desc]
     congr
 
 /-- The mapping cylinder of `f : X ⟶ Y` is homotopy equivalent to its base `Y`. -/
