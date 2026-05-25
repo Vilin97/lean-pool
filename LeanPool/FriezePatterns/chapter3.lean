@@ -452,19 +452,20 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) : ∃ (f : ℕ × ℕ → ℚ) (hf : arith_
       rhs
       rw [←hj]
     use temp
-    have h₁ : ∃ (w : ℕ × ℕ), frieze_f (fib_flute_even j) w = Nat.fib (2*j+2) := by
-      use (j+1, 0)
-      have h₃: ¬2 * j + 2 ≤ j := by omega
-      simp [frieze_f,h₃]
+    have h₁ : ∃ (w : ℕ × ℕ), frieze_f (fib_flute_even j) w = Nat.fib (2 * j + 2) := by
+      use (j + 1, 0)
+      have h₃ : ¬ 2 * j + 2 ≤ j := by omega
+      simp [frieze_f, h₃]
       unfold fib_flute_even
       by_cases h₂ : j = 0
-      simp [h₂]
-      unfold a_even; simp []
+      · simp [h₂]
+        unfold a_even
+        simp
       -- j ≠ 0
-      simp []
-      have h₄ : ¬ j ≥ 2*j +1 := by omega
-      --have h₅ : 1 + 4 * j - 2 * j = 2*j + 2 := by omega
-      unfold a_even; simp [h₄]
+      simp
+      have h₄ : ¬ j ≥ 2 * j + 1 := by omega
+      unfold a_even
+      simp [h₄]
     choose w hw using h₁
     use w
     rw [hj]
@@ -474,22 +475,23 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) : ∃ (f : ℕ × ℕ → ℚ) (hf : arith_
     let temp := fluteToFrieze (fib_flute_odd k) (by omega)
     conv at temp =>
       rhs
-      rw [←hk ]
+      rw [← hk]
     use temp
-    have h₁ : ∃ (w : ℕ × ℕ), frieze_f (fib_flute_odd k) w = Nat.fib (2*k+1) := by
-      use (k+1, 0)
-      --have h₂ : ¬ k = 0 := by omega
-      have h₃: ¬2 * k + 1 ≤ k := by omega
-      simp [frieze_f,h₃]
+    have h₁ : ∃ (w : ℕ × ℕ), frieze_f (fib_flute_odd k) w = Nat.fib (2 * k + 1) := by
+      use (k + 1, 0)
+      have h₃ : ¬ 2 * k + 1 ≤ k := by omega
+      simp [frieze_f, h₃]
       unfold fib_flute_odd
       by_cases h₂ : k = 0
-      simp [h₂]
-      unfold a_odd; simp []
+      · simp [h₂]
+        unfold a_odd
+        simp
       -- k ≠ 0
       simp [h₂]
-      have h₄ : ¬ 2*k ≤ k := by omega
-      have h₅ : 1 + 4 * k - 2 * k = 2*k + 1 := by omega
-      unfold a_odd; simp [h₂,h₄,h₅]
+      have h₄ : ¬ 2 * k ≤ k := by omega
+      have h₅ : 1 + 4 * k - 2 * k = 2 * k + 1 := by omega
+      unfold a_odd
+      simp [h₂, h₄, h₅]
     choose w hw using h₁
     use w
     rw [hk]

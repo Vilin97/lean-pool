@@ -12,19 +12,23 @@ import Mathlib.Tactic.NthRewrite
 import Mathlib.Tactic.Positivity
 ---- n-Flutes ----
 
-structure flute (n : ℕ) where -- changed class to structure so that Lean displays f.a g.a instead of flute (n+3).a flute (n+2).a
+-- changed class to structure so that Lean displays `f.a g.a` instead of
+-- `flute (n+3).a flute (n+2).a`
+structure flute (n : ℕ) where
   a : ℕ → ℕ
   pos : ∀ i, a i > 0
   hd : a 0 = 1
-  period : ∀ k, a k = a (k+(n-1))
-  div : ∀ k, a (k+1) ∣ (a k + a (k+2))
+  period : ∀ k, a k = a (k + (n - 1))
+  div : ∀ k, a (k + 1) ∣ (a k + a (k + 2))
 
-def csteFlute (n : ℕ) : Inhabited (flute n) := by -- Inhabited is probably better than Nonempty here, as we actually construct an inhabitant of flute n, so Lean lets us extract *the* inhabitant
+-- `Inhabited` is probably better than `Nonempty` here, as we actually construct an
+-- inhabitant of `flute n`, so Lean lets us extract *the* inhabitant.
+def csteFlute (n : ℕ) : Inhabited (flute n) := by
   let a : ℕ → ℕ := fun _ => 1
   have pos : ∀ i, a i > 0 := fun _ => Nat.one_pos
   have hd : a 0 = 1 := rfl
-  have period : ∀ k, a k = a (k+n-1) := fun _ => rfl
-  have div : ∀ k, a (k+1) ∣ (a k + a (k+2)) := fun _ => ⟨2, rfl⟩
+  have period : ∀ k, a k = a (k + n - 1) := fun _ => rfl
+  have div : ∀ k, a (k + 1) ∣ (a k + a (k + 2)) := fun _ => ⟨2, rfl⟩
   exact ⟨a, pos, hd, period, div⟩
 
 -- Set of all flutes of height n.
