@@ -51,7 +51,7 @@ def a_odd (k i : ℕ) : ℕ :=
 
 def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
   by_cases hk : k = 0
-  exact ⟨a_odd k 0, λ i => by simp [hk, a_odd], by simp [hk, a_odd], by simp [hk, a_odd], λ _ => by simp⟩
+  exact ⟨a_odd k 0, fun i => by simp [hk, a_odd], by simp [hk, a_odd], by simp [hk, a_odd], fun _ => by simp⟩
   have pos : ∀ i, a_odd k i > 0 := by
     intro i
     induction' i using Nat.strong_induction_on with i ih

@@ -27,7 +27,7 @@ instance [arith_fp f n] : nzPattern_n ℚ f n := {
   botBordOnes_n := arith_fp.botBordOnes_n,
   botBordZeros_n := arith_fp.botBordZeros_n,
   diamond := arith_fp.diamond,
-  non_zero := λ i m ⟨hi1, hi2⟩ => by linarith [@arith_fp.positive f n _ i m hi1 hi2]
+  non_zero := fun i m ⟨hi1, hi2⟩ => by linarith [@arith_fp.positive f n _ i m hi1 hi2]
 }
 
 def flute_f (f : ℕ × ℕ → ℚ) (n m : ℕ) [arith_fp f n] (i : ℕ) : ℕ :=        -- definition only good when n ≥ 2, as otherwise i%0 = i for all i
@@ -251,8 +251,8 @@ def frieze_f {n : ℕ} (g : flute n) : ℕ × ℕ → ℚ :=
     termination_by x => (x.2, x.1)
 
 def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g) n := by
-  have topBordZeros : ∀ m, frieze_f g (0,m) = 0 := λ m => (by simp [frieze_f])
-  have botBordZeros_n : ∀ i, ∀ m,  i ≥ n+1 → (frieze_f g (i,m) = 0) := λ i m h => by simp [frieze_f, h]
+  have topBordZeros : ∀ m, frieze_f g (0,m) = 0 := fun m => (by simp [frieze_f])
+  have botBordZeros_n : ∀ i, ∀ m,  i ≥ n+1 → (frieze_f g (i,m) = 0) := fun i m h => by simp [frieze_f, h]
   have topBordOnes : ∀ m, frieze_f g (1,m) = 1 := by
     intro m
     induction' m with m ih
@@ -304,7 +304,7 @@ def fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f g)
     have hpos : frieze_f g (i+1, m) > 0 := by linarith [positive (i+1) m (by omega) (by omega)]
     field_simp
     ring
-  have non_zero : ∀ i m, 1 ≤ i ∧ i ≤ n → frieze_f g (i,m) ≠ 0 := λ i m ⟨hi₁, hi₂⟩ => by linarith [positive i m hi₁ hi₂]
+  have non_zero : ∀ i m, 1 ≤ i ∧ i ≤ n → frieze_f g (i,m) ≠ 0 := fun i m ⟨hi₁, hi₂⟩ => by linarith [positive i m hi₁ hi₂]
   have : nzPattern_n ℚ (frieze_f g) n := by
     exact {topBordZeros, topBordOnes, botBordOnes_n, botBordZeros_n, diamond, non_zero}
   have integral: ∀ i, ∀ m, (frieze_f g (i,m)).den = 1 := by
