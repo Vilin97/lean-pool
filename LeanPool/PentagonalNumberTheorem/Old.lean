@@ -4,7 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Weiyi Wang
 -/
 
-import Mathlib
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Combinatorics.Enumerative.Partition.Basic
+import Mathlib.Data.List.Basic
+import Mathlib.Data.List.Forall2
+import Mathlib.Data.List.Range
+import Mathlib.Data.List.Sort
+import Mathlib.Data.PNat.Interval
+import Mathlib.RingTheory.PowerSeries.Basic
+import Mathlib.RingTheory.PowerSeries.WellKnown
+import Mathlib.RingTheory.PowerSeries.PiTopology
+import Mathlib.Tactic
 
 /-!
 
@@ -369,7 +379,6 @@ theorem updateLast_eq_nil_iff (l : List α) (f : α → α) :
   · intro h
     simp [h]
 
-@[simp]
 theorem getLast_updateLast (l : List α) (f : α → α) (h : l ≠ []) :
     (l.updateLast f).getLast ((List.updateLast_eq_nil_iff _ _).ne.mpr h) = f (l.getLast h) := by
   rw [List.getLast_eq_getElem]
@@ -412,7 +421,7 @@ end List
 
 /-! ## Ferrers diagram -/
 
-/-! A `FerrersDiagram n` is a representation of distinct partition of number `n`.
+/-- A `FerrersDiagram n` is a representation of distinct partition of number `n`.
 
 To represent a partition, we first sort all parts in descending order, such as
 ```
@@ -433,7 +442,6 @@ structure FerrersDiagram (n : ℕ) where
   delta_pos : delta.Forall (0 < ·)
   /-- All parts should sum back to `n`. Since we took the difference, this becomes a rolling sum. -/
   delta_sum : ((delta.zipIdx 1).map fun p ↦ p.1 * p.2).sum = n
-deriving Repr
 
 namespace FerrersDiagram
 variable {n : ℕ}
@@ -533,6 +541,7 @@ that's never the case for triangle configuration regardless which definition we 
 (except for pentagonal configuration, which we will discuss separately anyway) -/
 def diagSize (x : FerrersDiagram n) := x.delta.lengthWhile (· = 1)
 
+/-- Subtract one from the element at index `i` of `delta`. -/
 abbrev takeDiagFun (delta : List ℕ) (i : ℕ) (hi : i < delta.length) := delta.set i (delta[i] - 1)
 
 /-- The action to subtract one from the first `i + 1` parts. -/
@@ -600,6 +609,7 @@ theorem getLast_takeDiag' (hn : 0 < n) (x : FerrersDiagram n) (i : ℕ) (hi : i 
   rw [List.getElem_set]
   simp [hi]
 
+/-- Subtract `i + 1` from the last element of `delta` and append `i + 1` to the end. -/
 abbrev putLastFun (delta : List ℕ) (i : ℕ) := delta.updateLast (· - (i + 1)) ++ [i + 1]
 
 /-- The action to add a new part smaller than every other part. -/
@@ -818,6 +828,7 @@ theorem down_notNegPentagonal (hn : 0 < n) (x : FerrersDiagram n)
   simp only [Nat.add_right_cancel_iff] at this
   simp [this] at hlt
 
+/-- Drop the last element of `delta` and add its value to the new last element. -/
 abbrev takeLastFun (delta : List ℕ) (h : delta ≠ []) :=
   (delta.take (delta.length - 1)).updateLast (· + delta.getLast h)
 
@@ -889,6 +900,7 @@ theorem length_takeLast (hn : 0 < n) (x : FerrersDiagram n) :
     (x.takeLast hn).delta.length = x.delta.length - 1 := by
   simp [takeLast]
 
+/-- Add one to the element at index `i` of `delta`. -/
 abbrev putDiagFun (delta : List ℕ) (i : ℕ) (hi : i < delta.length) := delta.set i (delta[i] + 1)
 
 /-- The inverse of `takeDiag`. -/
@@ -1196,7 +1208,7 @@ theorem up_notPentagonal (hn : 0 < n) (x : FerrersDiagram n)
       simpa [takeLastFun] using x.one_lt_length hn hdown hpospen) ≤
       x.delta.length - 1 := by
     simpa using hgetlast
-  simp [takeLastFun] at hgetlast'
+  simp only [takeLastFun] at hgetlast'
   have hl : x.delta.length - 1 =
       ((List.take (x.delta.length - 1) x.delta).updateLast
       (· + x.delta.getLast (x.delta_ne_nil hn))).length := by simp
@@ -1249,7 +1261,7 @@ theorem takeLastFun_putLastFun (delta : List ℕ) (i : ℕ) (hdelta : delta ≠ 
 theorem putLastFun_takeLastFun (delta : List ℕ)
     (hdelta : delta ≠ []) (hpos : delta.Forall (0 < ·)) :
     putLastFun (takeLastFun delta (hdelta)) (delta.getLast hdelta - 1) = delta := by
-  simp [takeLastFun, putLastFun]
+  simp only [putLastFun, takeLastFun, List.updateLast_updateLast]
   have hcancel : delta.getLast hdelta - 1 + 1 = delta.getLast hdelta :=
     Nat.sub_add_cancel (Nat.one_le_of_lt (
       List.forall_iff_forall_mem.mp hpos _ (by simp)))
@@ -1623,9 +1635,18 @@ match l with
     simpa [unfoldDelta, foldDelta, (foldDelta_unfoldDelta h.2)]
   exact Nat.add_sub_of_le  h.1
 
-theorem Multiset.qind {α : Type*} {motive : Multiset α → Prop}
+end FerrersDiagram
+
+namespace Multiset
+
+theorem qind {α : Type*} {motive : Multiset α → Prop}
     (mk : ∀ (a : List α), motive a) : ∀ a, motive a :=
   Quotient.ind mk
+
+end Multiset
+
+namespace FerrersDiagram
+variable {n : ℕ}
 
 variable (n) in
 /-- Correspondence between `FerrersDiagram n` and `Nat.Partition.distincts n`,
@@ -1728,7 +1749,11 @@ theorem card_sub (hn : 0 < n) :
   rw [card_eq hn]
   simp
 
-theorem Finset.sum_range_id_mul_two' (n : ℕ) :
+end FerrersDiagram
+
+namespace Finset
+
+theorem sum_range_id_mul_two' (n : ℕ) :
     2 * (∑ i ∈ Finset.range n, (i : ℤ)) = n * (n - 1) := by
   rw [mul_comm 2]
   obtain h := Finset.sum_range_id_mul_two n
@@ -1738,6 +1763,11 @@ theorem Finset.sum_range_id_mul_two' (n : ℕ) :
   · simp [Nat.lt_one_iff.mp h]
   · push_cast [h]
     rfl
+
+end Finset
+
+namespace FerrersDiagram
+variable {n : ℕ}
 
 /-- Calculation of `n` for negative pentagonal case. -/
 theorem negpenSum {k : ℕ} (hk : 0 < k) :
@@ -1799,8 +1829,10 @@ theorem pospenSum {k : ℕ} (hk : 0 < k) :
   push_cast [hk]
   ring
 
+namespace IsPosPentagonal
+
 /-- For positive pentagonal case, `delta.length = k`. -/
-theorem IsPosPentagonal.two_n_eq (hn : 0 < n) (x : FerrersDiagram n)
+theorem two_n_eq (hn : 0 < n) (x : FerrersDiagram n)
     (hpospen : x.IsPosPentagonal hn) :
     (2 * n : ℤ) = x.delta.length * (3 * x.delta.length - 1) := by
   obtain ⟨hlength, hone⟩ := hpospen
@@ -1816,8 +1848,12 @@ theorem IsPosPentagonal.two_n_eq (hn : 0 < n) (x : FerrersDiagram n)
   rw [hrep]
   rw [pospenSum (List.length_pos_iff.mpr (x.delta_ne_nil hn))]
 
+end IsPosPentagonal
+
+namespace IsNegPentagonal
+
 /-- For negative pentagonal case, `delta.length = -k`. -/
-theorem IsNegPentagonal.two_n_eq (hn : 0 < n) (x : FerrersDiagram n)
+theorem two_n_eq (hn : 0 < n) (x : FerrersDiagram n)
     (hpospen : x.IsNegPentagonal hn) :
     (2 * n : ℤ) = (-x.delta.length) * (3 * (-x.delta.length) - 1) := by
   obtain ⟨hlength, hone⟩ := hpospen
@@ -1832,6 +1868,8 @@ theorem IsNegPentagonal.two_n_eq (hn : 0 < n) (x : FerrersDiagram n)
     simpa using hone i (by simpa using h1)
   rw [hrep]
   rw [negpenSum (List.length_pos_iff.mpr (x.delta_ne_nil hn))]
+
+end IsNegPentagonal
 
 /-- In summary, pentagonal case always gives a pentagonal number `n`. -/
 theorem pentagonal_exists_k (hn : 0 < n) (x : FerrersDiagram n)
@@ -1889,7 +1927,9 @@ theorem pentagonal_of_exists_k (hn : 0 < n) {k : ℤ} (h : 2 * n = k * (3 * k - 
       have hk : k.toNat = k := by simpa [← Int.neg_min_neg] using hpos.le
       rw [hk]
     · refine Or.inl ⟨?_, ?_⟩
-      · simp
+      · simp only [ne_eq, List.cons_ne_self, not_false_eq_true, List.getLast_append_of_ne_nil,
+          List.getLast_singleton, List.length_append, List.length_replicate, List.length_cons,
+          List.length_nil, zero_add]
         suffices k.toNat = k.toNat - 1 + 1 by simpa
         grind
       · intro i hi
