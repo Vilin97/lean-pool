@@ -52,7 +52,9 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
     simp
     have a₁ : 1 ≤ i%(n-1) + 1 := by omega
     have a₂ : i%(n-1) + 1 ≤ n :=
-        calc i%(n-1) + 1 ≤ (n - 1) + 1 := Nat.add_le_add_right (Nat.le_of_lt (Nat.mod_lt i zero_lt_n_sub_one)) 1
+        calc i%(n-1) + 1
+            ≤ (n - 1) + 1 :=
+              Nat.add_le_add_right (Nat.le_of_lt (Nat.mod_lt i zero_lt_n_sub_one)) 1
             _≤ n := by omega
 
     exact arith_fp.positive (i%(n-1) + 1) m a₁ a₂   --finish if 1 < (n-1) and i%(n-1) ≠ 0
