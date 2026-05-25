@@ -1253,3 +1253,27 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: whitehead-theorem
+    title: Whitehead's theorem for CW-complexes
+    summary: Formalizes Whitehead's theorem — a continuous map between CW-complexes that induces isomorphisms on all homotopy groups is a homotopy equivalence — including the supporting theory of CW-complexes, relative homotopy groups, the homotopy extension property, and compression of maps.
+    branch: algebraic topology
+    entry_module: LeanPool.WhiteheadTheorem
+    authors:
+      - Jiazhen Xia
+    source:
+      github_repo: jzxia/WhiteheadTheorem
+    status: verified
+    main_declarations:
+      - WhiteheadTheorem
+    main_results:
+      - declaration: WhiteheadTheorem
+        informal: Proves that a continuous map between CW-complexes inducing isomorphisms on all homotopy groups is a homotopy equivalence.
+    tags:
+      - algebraic-topology
+      - cw-complex
+      - homotopy-groups
+      - weak-homotopy-equivalence
+    msc:
+      - "55P10"
+      - "55Q05"
+      - "55U10"
