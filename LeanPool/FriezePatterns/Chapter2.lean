@@ -295,9 +295,11 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
     have h₂ : 3 + 4 * k - 2 * i = 4*k -2*i + 1 + 2 :=by omega
     have h₃ : 4 * k - 2 * i + 1 + 1 = 4 * k - 2 * i + 2 := by omega
     have h₄ : 3 + 4 * k - 2 * (i + 2) = 4 * k - 2 * i - 1 := by omega
-    rw [h₁, h₂, Nat.fib_add_two, h₃, Nat.fib_add_two,h₄,add_assoc,add_comm (Nat.fib (4 * k - 2 * i)), add_assoc, add_comm (Nat.fib (4 * k - 2 * i))]
+    rw [h₁, h₂, Nat.fib_add_two, h₃, Nat.fib_add_two, h₄, add_assoc,
+      add_comm (Nat.fib (4 * k - 2 * i)), add_assoc, add_comm (Nat.fib (4 * k - 2 * i))]
     rw [← Nat.fib_add_one]
-    have h : Nat.fib (4 * k - 2 * i + 1) + (Nat.fib (4 * k - 2 * i + 1) + Nat.fib (4 * k - 2 * i + 1)) =  Nat.fib (4 * k - 2 * i + 1)*3 := by omega
+    have h : Nat.fib (4 * k - 2 * i + 1) + (Nat.fib (4 * k - 2 * i + 1) +
+        Nat.fib (4 * k - 2 * i + 1)) = Nat.fib (4 * k - 2 * i + 1)*3 := by omega
     rw [h]
     use 3;
     have h₃ : ¬ 4*k = 2*i := by omega
@@ -623,7 +625,9 @@ lemma FluteReduction (n : ℕ) (f : flute n) : ((f.a 1 = 1) ∨ (f.a (n - 2) = 1
 theorem FluteBounded (n : ℕ) (hn : n > 0) (f : flute n) :
     ∀ i ≤ n - 1, f.a i ≤ Nat.fib n := by
   -- note the statement is false without hn
-  suffices : ∃ l, ∀ i ≤ n-1, ((i ≠ l → f.a i ≤ Nat.fib (n-2+1)) ∧ (i=l → f.a i ≤ Nat.fib n)) -- we strengthen the inductive hypothesis to avoid having to do everything twice
+  -- strengthen the inductive hypothesis to avoid having to do everything twice
+  suffices : ∃ l, ∀ i ≤ n-1,
+      ((i ≠ l → f.a i ≤ Nat.fib (n-2+1)) ∧ (i=l → f.a i ≤ Nat.fib n))
   · rcases this with ⟨l, hl⟩
     intro i hi
     match n with
