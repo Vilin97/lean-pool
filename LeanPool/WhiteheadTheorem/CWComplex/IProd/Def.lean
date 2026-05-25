@@ -216,21 +216,33 @@ def commSqSkSk (n : ℕ) :
     let isk t : X.sk (n + 1) ⟶ TopCat.of (zeroOne × (X.sk _)) := ofHom ⟨fun x ↦ ⟨t, x⟩, by fun_prop⟩
     have cv := cubeBoundary.botTopSidesCover_cover.{u} n
     have cl := cubeBoundary.botTopSidesCover_closed.{u} n
-    ext α x
-    simp only [Limits.colimit.ι_desc_assoc, Discrete.functor_obj_eq_as, Limits.Cofan.mk_pt,
-      Limits.Cofan.mk_ι_app, TopCat.hom_comp, ContinuousMap.comp_apply, Limits.ι_colimMap_assoc,
-      Discrete.natTrans_app, ContinuousMap.comp_assoc]
-    -- `attribute [reassoc] Limits.Sigma.ι_desc` or `rw [reassoc_of% Limits.Sigma.ι_desc]`
-    change _ = ((Limits.Sigma.ι (fun _ ↦ 𝔻 (n + 1)) α ≫ Limits.Sigma.desc _) ≫ _) _
-    rw [Limits.Sigma.ι_desc]
-    change ((diskPair.homeoCubePairULift (n + 1)).hom.left ≫
-        cubeBoundary.mapOfBotTopSides _ _ (IProd.cubeAtt_compatible X α) ≫
-        skInclSucc X n ) x =
-      ((diskPair.homeoCubePairULift (n + 1)).hom.left ≫
-        (cubeBoundaryIncl (n + 1)) ≫ cubeSplitAtLast.hom ≫
-        ofHom ((ContinuousMap.id I).prodMap (X.cubeInclToSk α).hom) ≫ Limits.pushout.inr .. ) x
-    congr 3
-    ext y
+    -- The underlying morphism equality follows from the universal property of the coproduct.
+    apply Limits.Sigma.hom_ext
+    intro α
+    simp only [Limits.Sigma.ι_desc_assoc, Limits.Sigma.ι_desc, Limits.Sigma.ι_map_assoc,
+      Category.assoc]
+    -- Now we need to show `attachMaps α ≫ skInclSucc X n = diskBoundaryIncl (n+1) ≫
+    -- Sigma.ι _ α ≫ sigmaDisksInclToSk X n`.
+    unfold IProd.attachMaps IProd.sigmaDisksInclToSk
+    rw [Limits.Sigma.ι_desc_assoc]
+    -- Use `Arrow.Hom.w` to move `diskBoundaryIncl` past `right`.
+    have hw : diskBoundaryIncl (n + 1) ≫ (diskPair.homeoCubePairULift (n + 1)).hom.right =
+        (diskPair.homeoCubePairULift (n + 1)).hom.left ≫ cubeBoundaryIncl (n + 1) :=
+      ((diskPair.homeoCubePairULift (n + 1)).hom.w).symm
+    simp only [← Category.assoc]
+    rw [hw]
+    -- Both sides start with `(diskPair.homeoCubePairULift (n + 1)).hom.left`. Reassociate.
+    simp only [Category.assoc]
+    -- Apply hom_ext directly to reduce to pointwise equality.
+    apply TopCat.hom_ext
+    apply ContinuousMap.ext
+    intro x'
+    set y := ((diskPair.homeoCubePairULift (n + 1)).hom.left : ∂𝔻 (n + 1) ⟶ _) x' with hy_def
+    show (cubeBoundary.mapOfBotTopSides _ _ (IProd.cubeAtt_compatible X α) ≫ skInclSucc X n) y =
+      (cubeBoundaryIncl (n + 1) ≫
+        cubeSplitAtLast.hom ≫ ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))) ≫
+        Limits.pushout.inr (l X (n + 1)) (r X (n + 1))) y
+    clear_value y; clear hy_def x'
     obtain ⟨k, hk⟩ := cubeBoundary.botTopSidesCover_cover _ y
     fin_cases k
     all_goals
@@ -240,11 +252,13 @@ def commSqSkSk (n : ℕ) :
       change _ = Limits.pushout.inr (l X (n + 1)) (r X (n + 1))
         ⟨(Cube.splitAtLast y).fst, X.cubeInclToSk α ⟨(Cube.splitAtLast y).snd⟩⟩
     iterate 2  -- bottom and top of the $(n + 1)$-cube
-      -- change (skInclSucc X n) ((cubeAttBotOrTop X α) 0 ⟨(Cube.splitAtLast y).snd⟩) = _
-      -- have : X.skIncl (n + 1) ≫ iX 0 = isk 0 ≫ l X (n + 1) := rfl
       change (X.cubeInclToSk α ≫ isk _ ≫ l X (n + 1) ≫
           Limits.pushout.inl .. ≫ skInclSucc X n ) ⟨(Cube.splitAtLast y).snd⟩ = _
-      rw [skInclSucc, Limits.pushout.inl_desc, Limits.pushout.condition]
+      rw [skInclSucc, Limits.pushout.inl_desc]
+      change ((X.cubeInclToSk α ≫ isk _) ≫
+          (l X (n + 1) ≫ Limits.pushout.inl (l X (n + 1)) (r X (n + 1))))
+            ⟨(Cube.splitAtLast y).snd⟩ = _
+      rw [Limits.pushout.condition]
       rw [Cube.splitAtLast_fst_eq, hk]; rfl
     · -- sides of the $(n + 1)$-cube
       change (Limits.pushout.inr .. ≫ skInclSucc X n)
@@ -269,8 +283,12 @@ def commSqSkSk (n : ℕ) :
       change (_ ≫ _) ≫ (X.attachCells n).isoPushout.inv =
         (_ ≫ _ ≫ _) ≫ (X.attachCells n).isoPushout.inv
       congr 1
-      rw [(X.attachCells n).attachMaps_apply_eq_ι_desc, Category.assoc]
-      rw [Limits.pushout.condition, (X.attachCells n).w_sigma_cells_assoc] ⟩
+      -- Use `w_cell'` which says `f ≫ Sigma.ι α ≫ pushout.inr = Sigma.ι α ≫ Sigma.desc ≫ pushout.inl`.
+      have hwc := (X.attachCells n).w_cell' α
+      unfold RelCWComplex.AttachGeneralizedCells.pushout_inl
+        RelCWComplex.AttachGeneralizedCells.pushout_inr at hwc
+      rw [(X.attachCells n).attachMaps_apply_eq_ι_desc]
+      exact (Category.assoc _ _ _).trans hwc.symm ⟩
 
 
 namespace pushoutSkSk
@@ -302,10 +320,11 @@ xskr |                | l'
 ```
 -/
 lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
-  ext α : 1
-  simp only [Limits.colimit.ι_desc_assoc, Discrete.functor_obj_eq_as, Limits.Cofan.mk_pt,
-    Limits.Cofan.mk_ι_app, Limits.ι_colimMap_assoc, Discrete.natTrans_app, xskl, xskr]
-  change _ = _ ≫ Limits.Sigma.ι _ α ≫ r' ..
+  apply Limits.Sigma.hom_ext
+  intro α
+  unfold IProd.xskl IProd.xskr
+  rw [Limits.Sigma.ι_desc_assoc, Limits.Sigma.ι_map_assoc]
+  change _ = diskBoundaryIncl n ≫ Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ r' ..
   ext x t
   unfold l' r'
   simp only [ContinuousMap.argSwap, TopCat.hom_comp, ContinuousMap.coe_mk,
@@ -319,9 +338,8 @@ lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
       (Limits.Sigma.ι (fun _ ↦ ∂𝔻 (n + 1)) α ≫
         Limits.Sigma.desc (IProd.attachMaps X)) xt := by
     unfold IProd.attachMaps xt
-    simp only [Arrow.mk_left, Limits.colimit.ι_desc, Limits.Cofan.mk_pt, Limits.Cofan.mk_ι_app,
-      TopCat.hom_comp, ContinuousMap.comp_apply]
-    change _ = (cubeBoundary.mapOfBotTopSides _ _ _)
+    rw [Limits.Sigma.ι_desc]
+    change _ = (cubeBoundary.mapOfBotTopSides _ _ (cubeAtt_compatible X α))
       (((diskPair.homeoCubePairULift _).inv.left ≫ (diskPair.homeoCubePairULift _).hom.left) _)
     simp only [Arrow.mk_left, Arrow.inv_hom_id_left, TopCat.hom_id, ContinuousMap.id_apply]
     have : xt_cube ∈ cubeBoundary.botTopSidesCover _ 2 := cubeBoundary.castSucc_mem_sides ..
