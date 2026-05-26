@@ -86,82 +86,82 @@ def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
         have hi₅ : i-2*k+2 = i+2-2*k := by omega
         simpa [hi₄, hi₅] using ih
       · by_cases hi₂ : i+2<k
-        have hi₃ : i+1 < k := by omega
-        have hi₄ : i < k := by omega
-        have hi₅ : ¬ 2*k ≤ i+1 := by omega
-        have hi₆ : ¬ 2*k ≤ i+2 := by omega
-        unfold a_odd; simp [hk, hi, hi₂, hi₃, hi₄, hi₅, hi₆]
-        ring_nf
-        have : 6 + i*2 = (2*i+3)+2+1 := by omega
-        rw [this, Nat.fib_add (2*i+3) 2]
-        ring_nf
-        have h :=
-          calc Nat.fib (2+i*2) + Nat.fib (3+i*2) = Nat.fib (i*2+2) + Nat.fib ((i*2+2)+1) := by
-                ring_nf
-          _ = Nat.fib ((i*2+2)+2) := by rw [←Nat.fib_add_two]
-          _ = Nat.fib (4+i*2) := by ring_nf
-        rw [h]
-        use 3; omega
-        by_cases hi₃ : i+1 < k
-        have hi₄ : ¬ 2*k ≤ i+1 := by omega
-        have hi₅ : ¬ 2*k ≤ i+2 := by omega
-        have hi₆ : i < k := by omega
-        have hi₇ : 2 * (i+1)+2 = 2*k := by omega
-        have hi₈ : 2 * i+2 = 2*k-2 := by omega
-        have hi₉ : 1+4*k-2*(i+2) = (2*k-1)+2 := by omega
-        unfold a_odd; simp [hk, hi, hi₂, hi₃, hi₄, hi₅, hi₆, hi₇, hi₈, hi₉]
-        simp [Nat.fib_add_two, ←add_assoc]
-        have : Nat.fib (2*k-2) + Nat.fib (2*k-1) = Nat.fib (2*k) := by
-          have : 2*k = (2*k-2)+2 := by omega
-          nth_rw 3 [this]
-          rw [Nat.fib_add_two]
-          congr; omega
-        rw [this]
-        have : 2*k-1+1=2*k := by omega
-        rw [this]
-        use 2; omega
-        · by_cases hi₄ : i < k
+        · have hi₃ : i+1 < k := by omega
+          have hi₄ : i < k := by omega
           have hi₅ : ¬ 2*k ≤ i+1 := by omega
-          unfold a_odd; simp [hk, hi, hi₂, hi₃, hi₄, hi₅]
-          by_cases hk₁ : k = 1
-          have hi₀ : i = 0 := by omega
-          simp [hk₁, hi₀]
-          use 1
-          unfold a_odd
-          decide
           have hi₆ : ¬ 2*k ≤ i+2 := by omega
-          have hi₇ : 1+4*k-2*(i+1) = (2*k-1)+2 := by omega
-          have hi₈ : 2*i+2 = (2*k-1)+1 := by omega
-          have hi₉ : 1+4*k-2*(i+2) = 2*k-1 := by omega
-          simp [hi₆, hi₇, hi₈, hi₉]
-          use 1; simp [Nat.fib_add_two] ; omega
-          by_cases hi₅ : 2*k ≤ i+2
-          by_cases hi₆ : 2*k ≤ i+1
-          have hi₇ : i+1-2*k = 0 := by omega
-          have hi₈ : i+2-2*k = 1 := by omega
-          unfold a_odd; simp [hk, hi, hi₄, hi₅, hi₆, hi₇, hi₈]
-          unfold a_odd; simp [hk]
-          unfold a_odd; simp [hk, hi, hi₃, hi₄, hi₅, hi₆]
-          have hi₇ : 1+4*k-2*(i+1) = 3 := by omega
-          have hi₈ : 1+4*k-2*i = 5 := by omega
-          have hi₉ : i+2-2*k = 0 := by omega
-          have hk₂ : 0<k := by omega
-          unfold a_odd
-          simp [hi₇, hi₈, hi₉, hk, hk₂]
-          use 3; simp [Nat.fib_add_two]
-          have hi₆ : ¬ 2*k ≤ i+1 := by omega
           unfold a_odd; simp [hk, hi, hi₂, hi₃, hi₄, hi₅, hi₆]
-          have hi₇ : 1+4*k-2*(i+1) = 4*k-2*i-1 := by omega
-          have hi₈ : 1+4*k-2*i = 4*k-2*i-2+2+1 := by omega
-          have hi₉ : 1+4*k-2*(i+2) = 4*k-2*i-3 := by omega
-          rw [hi₇, hi₈, hi₉, Nat.fib_add]
-          simp [Nat.fib_add_two]
-          use 3
-          rw [add_assoc, add_comm, add_assoc]
-          have hi₁₀ : 4*k-2*i-2 = (4*k-2*i-3)+1 := by omega
-          have hi₁₁ : 4*k-2*i-3+1+1 = 4*k-2*i-1 := by omega
-          rw [hi₁₀, ← Nat.fib_add_two, hi₁₁]
-          omega
+          ring_nf
+          have : 6 + i*2 = (2*i+3)+2+1 := by omega
+          rw [this, Nat.fib_add (2*i+3) 2]
+          ring_nf
+          have h :=
+            calc Nat.fib (2+i*2) + Nat.fib (3+i*2) = Nat.fib (i*2+2) + Nat.fib ((i*2+2)+1) := by
+                  ring_nf
+            _ = Nat.fib ((i*2+2)+2) := by rw [←Nat.fib_add_two]
+            _ = Nat.fib (4+i*2) := by ring_nf
+          rw [h]
+          use 3; omega
+        · by_cases hi₃ : i+1 < k
+          · have hi₄ : ¬ 2*k ≤ i+1 := by omega
+            have hi₅ : ¬ 2*k ≤ i+2 := by omega
+            have hi₆ : i < k := by omega
+            have hi₇ : 2 * (i+1)+2 = 2*k := by omega
+            have hi₈ : 2 * i+2 = 2*k-2 := by omega
+            have hi₉ : 1+4*k-2*(i+2) = (2*k-1)+2 := by omega
+            unfold a_odd; simp [hk, hi, hi₂, hi₃, hi₄, hi₅, hi₆, hi₇, hi₈, hi₉]
+            simp [Nat.fib_add_two, ←add_assoc]
+            have : Nat.fib (2*k-2) + Nat.fib (2*k-1) = Nat.fib (2*k) := by
+              have : 2*k = (2*k-2)+2 := by omega
+              nth_rw 3 [this]
+              rw [Nat.fib_add_two]
+              congr; omega
+            rw [this]
+            have : 2*k-1+1=2*k := by omega
+            rw [this]
+            use 2; omega
+          · by_cases hi₄ : i < k
+            · have hi₅ : ¬ 2*k ≤ i+1 := by omega
+              unfold a_odd; simp [hk, hi, hi₂, hi₃, hi₄, hi₅]
+              by_cases hk₁ : k = 1
+              · have hi₀ : i = 0 := by omega
+                simp [hk₁, hi₀]
+                use 1
+                unfold a_odd
+                decide
+              · have hi₆ : ¬ 2*k ≤ i+2 := by omega
+                have hi₇ : 1+4*k-2*(i+1) = (2*k-1)+2 := by omega
+                have hi₈ : 2*i+2 = (2*k-1)+1 := by omega
+                have hi₉ : 1+4*k-2*(i+2) = 2*k-1 := by omega
+                simp [hi₆, hi₇, hi₈, hi₉]
+                use 1; simp [Nat.fib_add_two] ; omega
+            · by_cases hi₅ : 2*k ≤ i+2
+              · by_cases hi₆ : 2*k ≤ i+1
+                · have hi₇ : i+1-2*k = 0 := by omega
+                  have hi₈ : i+2-2*k = 1 := by omega
+                  unfold a_odd; simp [hk, hi, hi₄, hi₅, hi₆, hi₇, hi₈]
+                  unfold a_odd; simp [hk]
+                · unfold a_odd; simp [hk, hi, hi₃, hi₄, hi₅, hi₆]
+                  have hi₇ : 1+4*k-2*(i+1) = 3 := by omega
+                  have hi₈ : 1+4*k-2*i = 5 := by omega
+                  have hi₉ : i+2-2*k = 0 := by omega
+                  have hk₂ : 0<k := by omega
+                  unfold a_odd
+                  simp [hi₇, hi₈, hi₉, hk, hk₂]
+                  use 3; simp [Nat.fib_add_two]
+              · have hi₆ : ¬ 2*k ≤ i+1 := by omega
+                unfold a_odd; simp [hk, hi, hi₂, hi₃, hi₄, hi₅, hi₆]
+                have hi₇ : 1+4*k-2*(i+1) = 4*k-2*i-1 := by omega
+                have hi₈ : 1+4*k-2*i = 4*k-2*i-2+2+1 := by omega
+                have hi₉ : 1+4*k-2*(i+2) = 4*k-2*i-3 := by omega
+                rw [hi₇, hi₈, hi₉, Nat.fib_add]
+                simp [Nat.fib_add_two]
+                use 3
+                rw [add_assoc, add_comm, add_assoc]
+                have hi₁₀ : 4*k-2*i-2 = (4*k-2*i-3)+1 := by omega
+                have hi₁₁ : 4*k-2*i-3+1+1 = 4*k-2*i-1 := by omega
+                rw [hi₁₀, ← Nat.fib_add_two, hi₁₁]
+                omega
   exact ⟨a_odd k, pos, hd, period, div⟩
 
 /-- The underlying sequence of the Fibonacci-maximal `(2k+2)`-flute. -/
