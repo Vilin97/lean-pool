@@ -131,7 +131,8 @@ lemma continuousOn_toQDisk_nonzero : ContinuousOn (toQDisk n p q) {x | x ≠ 0} 
   simp only [ne_eq, Set.coe_setOf, Set.mem_setOf_eq]
   refine continuous_uliftUp.comp <| Continuous.subtype_mk ?_ _
   refine Continuous.smul ?_ <| (PiLp.continuous_toLp q _).comp <|
-    (PiLp.continuous_ofLp p _).comp <| (continuous_uliftDown.comp continuous_subtype_val).subtype_val
+    (PiLp.continuous_ofLp p _).comp <|
+      (continuous_uliftDown.comp continuous_subtype_val).subtype_val
   apply Continuous.mul (continuous_uliftDown.comp continuous_subtype_val).subtype_val.norm
   conv_rhs => intro x; rw [inv_eq_one_div]
   apply Continuous.div continuous_const

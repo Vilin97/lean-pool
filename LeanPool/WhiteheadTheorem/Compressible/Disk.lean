@@ -296,7 +296,8 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
     simp only [Arrow.mk_right, ContinuousMap.comp_apply, ContinuousMap.coe_mk]
     change f ( (cubeBoundaryIncl (n + 1) ≫ e.inv.right) ⟨⟨y, hy⟩⟩ ) ∈ A
     change f ( (e.inv.left ≫ diskBoundaryIncl (n + 1)) ⟨⟨y, hy⟩⟩ ) ∈ A
-    change f ( diskBoundaryIncl (n + 1) <| e.inv.left ⟨⟨y, hy⟩⟩ ) ∈ A  -- CategoryTheory.Arrow.iso_w e
+    -- CategoryTheory.Arrow.iso_w e
+    change f ( diskBoundaryIncl (n + 1) <| e.inv.left ⟨⟨y, hy⟩⟩ ) ∈ A
     apply hf
   obtain ⟨a, H⟩ := Cube.homotopicWith_const_isMapOfPairs_of_unique_pi X A f' hf' hpi
   use a
@@ -324,13 +325,15 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
           ContinuousMap.HomotopyWith.coe_toHomotopy, hom_ofHom, ContinuousMap.coe_mk]
         apply H.prop' t
         change idown ((diskBoundaryIncl (n + 1) ≫ e.hom.right) x) ∈ _
-        change idown ((e.hom.left ≫ cubeBoundaryIncl (n + 1)) x) ∈ _  -- diskPair.homeoCubePairULift_comm
+        -- diskPair.homeoCubePairULift_comm
+        change idown ((e.hom.left ≫ cubeBoundaryIncl (n + 1)) x) ∈ _
         change idown (cubeBoundaryIncl (n + 1) (e.hom.left x)) ∈ ∂I^n + 1
         have : ∀ z, idown (cubeBoundaryIncl (n + 1) z) ∈ ∂I^n + 1 := by
           intro ⟨z, hz⟩
           unfold idown cubeBoundaryIncl
           simp only [hom_ofHom, ContinuousMap.coe_mk]
-          simp_all only [Subtype.forall, Arrow.mk_right, ContinuousMap.comp_assoc, f', i_d, e, iup, d_i, idown]
+          simp_all only [Subtype.forall, Arrow.mk_right, ContinuousMap.comp_assoc, f', i_d, e,
+            iup, d_i, idown]
           obtain ⟨val, property⟩ := a
           obtain ⟨val_1, property_1⟩ := t
           simp_all only [Set.mem_Icc]
@@ -508,8 +511,8 @@ theorem homotopicRel_boundary_of_unique_pi
     obtain ⟨y, hy⟩ := Set.mem_range.mp hx
     simp only [ContinuousMap.const_apply] at hy
     subst hy
-    simp_all only [ContinuousMap.coe_const, Set.mem_range, Function.const_apply, exists_const_iff, and_true,
-      Subtype.coe_prop]
+    simp_all only [ContinuousMap.coe_const, Set.mem_range, Function.const_apply, exists_const_iff,
+      and_true, Subtype.coe_prop]
   apply homotopicRel_boundary_of_homotopicWith_isMapOfPairs X A
   use g
 
@@ -634,7 +637,8 @@ theorem isCompressible_mapCyl_domIncl_of_isWeakHomotopyEquiv
   sq_hasLift := fun {F f} sq ↦ by
     have com := isCompressible_mapcyl_domInclFromTop_of_isWeakHomotopyEquiv n φ hφ
     have sq' : CommSq (f ≫ (ofHom <| MapCyl.domInclToTop φ)) (diskBoundaryIncl n)
-      (ofHom <| MapCyl.domInclFromTop φ) F := ⟨sq.w⟩  -- (domIncl f).hom = (domInclFromTop f).comp (domInclToTop f)
+      -- (domIncl f).hom = (domInclFromTop f).comp (domInclToTop f)
+      (ofHom <| MapCyl.domInclFromTop φ) F := ⟨sq.w⟩
     let l := com.sq_hasLift sq' |>.hasLift.some
     let inv : C(MapCyl.top φ, X) := toContinuousMap (MapCyl.domHomeoTop φ).symm
     use l.l ≫ ofHom inv

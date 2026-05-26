@@ -389,8 +389,8 @@ def cubeSplitAtLast {n : ℕ} : 𝕀 (n + 1) ≅ TopCat.of (I × 𝕀 n) where
     simp only [Prod.mk.eta, Homeomorph.symm_apply_apply]
   inv_hom_id := by
     ext ⟨t, ⟨y⟩⟩
-    all_goals simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk, hom_id,
-        ContinuousMap.id_apply]
+    all_goals simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
+        hom_id, ContinuousMap.id_apply]
     · congr 1
       change (Cube.splitAtLast (Cube.splitAtLast.symm _)).fst = _
       simp only [Homeomorph.apply_symm_apply]

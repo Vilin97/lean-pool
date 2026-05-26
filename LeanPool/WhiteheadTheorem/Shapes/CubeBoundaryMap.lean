@@ -137,7 +137,8 @@ lemma cubeInclToBotOrTop_mapOfBotTopSides
   simp only [hom_comp, ContinuousMap.comp_apply]
   obtain ht | ht := zeroOne.eq_zero_or_eq_one t
   all_goals subst ht
-  · have hmem : (cubeInclToBotOrTop 0) y ∈ botTopSidesCover n 0 := cubeInclToBotOrTop_mem_botOrTop 0 y
+  · have hmem : (cubeInclToBotOrTop 0) y ∈ botTopSidesCover n 0 :=
+      cubeInclToBotOrTop_mem_botOrTop 0 y
     have hlift := ContinuousMap.liftCoverClosed_coe' _ _ (mapVecOfBotTopSides_compatible f01 fs h)
       (botTopSidesCover_cover n) (botTopSidesCover_closed n) _ hmem
     change (ContinuousMap.liftCoverClosed (botTopSidesCover n) (mapVecOfBotTopSides f01 fs)
@@ -149,7 +150,8 @@ lemma cubeInclToBotOrTop_mapOfBotTopSides
     change (f01 0) ⟨(Cube.splitAtLast (Cube.splitAtLast.symm (0, y.down))).2⟩ = (f01 0) y
     rw [Homeomorph.apply_symm_apply]
     rfl
-  · have hmem : (cubeInclToBotOrTop 1) y ∈ botTopSidesCover n 1 := cubeInclToBotOrTop_mem_botOrTop 1 y
+  · have hmem : (cubeInclToBotOrTop 1) y ∈ botTopSidesCover n 1 :=
+      cubeInclToBotOrTop_mem_botOrTop 1 y
     have hlift := ContinuousMap.liftCoverClosed_coe' _ _ (mapVecOfBotTopSides_compatible f01 fs h)
       (botTopSidesCover_cover n) (botTopSidesCover_closed n) _ hmem
     change (ContinuousMap.liftCoverClosed (botTopSidesCover n) (mapVecOfBotTopSides f01 fs)

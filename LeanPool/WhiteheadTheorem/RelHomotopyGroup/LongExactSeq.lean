@@ -252,8 +252,8 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
         simp only [comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq,
           ker_bd_subset_im_jStar.G'', g', ker_bd_subset_im_jStar.g', ker_bd_subset_im_jStar.g'']
         by_cases hyn : (Cube.splitAtLast y).fst.val ≤ 1 / 2
-        repeat {simp only [Function.comp_apply, coe_mk, dite_eq_ite, Set.Icc.coe_zero, add_zero, one_div,
-          div_one, g', f']}
+        repeat {simp only [Function.comp_apply, coe_mk, dite_eq_ite, Set.Icc.coe_zero, add_zero,
+          one_div, div_one, g', f']}
       map_one_left y := by  -- G₁ = f'
         simp only [comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq,
           g', ker_bd_subset_im_jStar.G'']

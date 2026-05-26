@@ -106,7 +106,8 @@ abbrev AttachCells.pushout_inr (att : AttachCells n X X') :=
 def AttachCells.pushout_isPushout (att : AttachCells n X X') :
     IsPushout att.sigmaAttachMaps (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
       att.pushout_inl att.pushout_inr :=
-  IsPushout.of_hasPushout att.sigmaAttachMaps (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
+  IsPushout.of_hasPushout att.sigmaAttachMaps
+    (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
 
 /-- The inclusion map from `sk n` (i.e., the $(n-1)$-skeleton) to `sk (n + 1)` (i.e., the
 $n$-skeleton) of a relative CW-complex -/

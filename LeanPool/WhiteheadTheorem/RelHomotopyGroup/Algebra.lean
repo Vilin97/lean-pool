@@ -80,7 +80,8 @@ of five pointed sets, if `a` is surjective and `d` is injective, then `C = 0`.
 variable {A B C D E : Type*}
 variable [Inhabited A] [Inhabited B] [Inhabited C] [Inhabited D] [Inhabited E]
 -- variable (a : A → B) (b : B → C) (c : C → D) (d : D → E)
--- variable [pma : IsPointedMap a] [pmb : IsPointedMap b] [pmc : IsPointedMap c] [pmd : IsPointedMap d]
+-- variable [pma : IsPointedMap a] [pmb : IsPointedMap b] [pmc : IsPointedMap c]
+-- variable [pmd : IsPointedMap d]
 -- variable (a_surj : Function.Surjective a) (d_inj : Function.Injective d)
 -- variable (exb : IsExactAt a b) (exc : IsExactAt b c) (exd : IsExactAt c d)
 

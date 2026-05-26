@@ -58,8 +58,9 @@ lemma curriedH_apply_zero :
   unfold curriedH PathSpace.eval₀
   simp_all only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk]
   ext x_1 : 1
-  simp_all only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk, ContinuousMap.curry_apply,
-    ContinuousMap.prodSwap_apply, ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_zero]
+  simp_all only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
+    ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
+    ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_zero]
 
 lemma curriedH_apply_zero' :
     ∀ x, l.curriedH.hom.uncurry.argSwap.toFun (0, x) = F.hom x := by
@@ -76,8 +77,9 @@ lemma curriedH_apply_one :
   unfold curriedH PathSpace.eval₁
   simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk]
   ext x : 1
-  simp_all only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk, ContinuousMap.curry_apply,
-    ContinuousMap.prodSwap_apply, ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_one]
+  simp_all only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
+    ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
+    ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_one]
 
 lemma curriedH_apply_one' :
     ∀ x, l.curriedH.hom.uncurry.argSwap.toFun (1, x) = (l.l ≫ i).hom x := by
@@ -99,7 +101,8 @@ lemma curriedH_prop :
     ContinuousMap.prodSwap_apply, ContinuousMap.Homotopy.coe_toContinuousMap,
     ContinuousMap.HomotopyWith.coe_toHomotopy]
   have := l.H.some.prop t (ι a) (Set.mem_range_self a)
-  simp_all only [hom_comp, ContinuousMap.Homotopy.curry_apply, ContinuousMap.HomotopyWith.coe_toHomotopy]
+  simp_all only [hom_comp, ContinuousMap.Homotopy.curry_apply,
+    ContinuousMap.HomotopyWith.coe_toHomotopy]
 
 lemma curriedH_prop' :
     ∀ t, ∀ x ∈ Set.range ι, l.curriedH.hom.uncurry.argSwap (t, x) = F.hom x := by

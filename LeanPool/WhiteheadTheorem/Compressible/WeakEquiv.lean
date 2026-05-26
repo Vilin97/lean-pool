@@ -138,12 +138,13 @@ theorem CWComplex_induced_map_injective
           ((Hom.hom g₁).continuous.comp continuous_snd)
           (continuous_subtype_val.comp continuous_fst) continuous_const ?_
         intro x hx
-        simp_all only [Category.assoc, TopCat.hom_comp, ContinuousMap.comp_assoc, hom_ofHom, one_div]
+        simp_all only [Category.assoc, TopCat.hom_comp, ContinuousMap.comp_assoc, hom_ofHom,
+          one_div]
         obtain ⟨⟨val, property⟩, snd⟩ := x
         subst hx
         dsimp only
-        simp_all only [Set.mem_insert_iff, inv_eq_zero, OfNat.ofNat_ne_zero, Set.mem_singleton_iff, inv_eq_one,
-          OfNat.ofNat_ne_one, or_self] }
+        simp_all only [Set.mem_insert_iff, inv_eq_zero, OfNat.ofNat_ne_zero,
+          Set.mem_singleton_iff, inv_eq_one, OfNat.ofNat_ne_one, or_self] }
   have sq : CommSq G₀₁ X.zeroOneProdInclIProd (MapCyl.domIncl f) G := ⟨by
     ext ⟨⟨tval, tprop⟩, x⟩
     unfold G₀₁ G

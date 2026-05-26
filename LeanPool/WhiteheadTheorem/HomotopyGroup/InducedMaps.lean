@@ -195,7 +195,8 @@ namespace HomotopyGroup
 -- example (X : Under (TopCat.of PUnit)) : Discrete PUnit := X.left
 -- example (X : Under (TopCat.of PUnit)) : TopCat.{u} := X.right
 -- example (X : Under (TopCat.of PUnit)) : (TopCat.of PUnit) ⟶ X.right := X.hom
--- example (X : Under (TopCat.of PUnit)) : C((TopCat.of PUnit), X.right) := X.hom.hom -- TopCat.Hom.hom (CategoryTheory.Comma.hom X)
+-- example (X : Under (TopCat.of PUnit)) : C((TopCat.of PUnit), X.right) := X.hom.hom
+-- (TopCat.Hom.hom (CategoryTheory.Comma.hom X))
 -- example (X : Under (TopCat.of PUnit)) : X.right := X.hom.hom () -- X.hom.hom PUnit.unit
 -- example {n : ℕ} (hn : n > 0) : Nonempty (Fin n) := Fin.pos_iff_nonempty.mp hn
 

@@ -283,7 +283,8 @@ def commSqSkSk (n : ℕ) :
       change (_ ≫ _) ≫ (X.attachCells n).isoPushout.inv =
         (_ ≫ _ ≫ _) ≫ (X.attachCells n).isoPushout.inv
       congr 1
-      -- Use `w_cell'` which says `f ≫ Sigma.ι α ≫ pushout.inr = Sigma.ι α ≫ Sigma.desc ≫ pushout.inl`.
+      -- Use `w_cell'` which says
+      -- `f ≫ Sigma.ι α ≫ pushout.inr = Sigma.ι α ≫ Sigma.desc ≫ pushout.inl`.
       have hwc := (X.attachCells n).w_cell' α
       unfold RelCWComplex.AttachGeneralizedCells.pushout_inl
         RelCWComplex.AttachGeneralizedCells.pushout_inr at hwc
@@ -631,7 +632,8 @@ lemma cocone_inr (n : ℕ) (Z : Limits.PushoutCocone _ _) :
   -- The LHS is `ofHom (id I).prodMap (X.cubeInclToSk α).hom ≫ r''`.
   -- The RHS is `cubeSplitAtLast.inv ≫ (diskPair.homeoCubePairULift (n+1)).inv.right ≫
   --   Limits.Sigma.ι ... α ≫ Z.inr`.
-  -- We reduce by computing `cubeInclToSk α ≫ isoPushout.hom = Sigma.ι α ≫ pushout.inr (xskl, xskr)`.
+  -- We reduce by computing
+  -- `cubeInclToSk α ≫ isoPushout.hom = Sigma.ι α ≫ pushout.inr (xskl, xskr)`.
   have hcube : X.cubeInclToSk α ≫ (X.attachCells n).isoPushout.hom =
       (diskPair.homeoCubePairULift n).inv.right ≫ Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫
         Limits.pushout.inr (xskl X n) (xskr X n) := by
@@ -648,7 +650,9 @@ lemma cocone_inr (n : ℕ) (Z : Limits.PushoutCocone _ _) :
     ContinuousMap.coe_id, Prod.map_apply, id_eq, ContinuousMap.prodSwap_apply,
     ContinuousMap.uncurry_apply, Function.uncurry_apply_pair, Arrow.mk_right]
   -- LHS: `d' (cubeInclToSk α y) t`. By hcube, `isoPushout.hom (cubeInclToSk α y)`
-  --      equals `pushout.inr (xskl X n) (xskr X n) (Sigma.ι α ((diskPair.homeoCubePairULift n).inv.right y))`.
+  --      equals
+  --      `pushout.inr (xskl X n) (xskr X n)
+  --        (Sigma.ι α ((diskPair.homeoCubePairULift n).inv.right y))`.
   -- Use hcube ≫ pushout.desc = ... ≫ r' (i.e. inline the pushout.inr_desc step).
   have hcomp : X.cubeInclToSk α ≫ (X.attachCells n).isoPushout.hom ≫
       Limits.pushout.desc (l' X n Z) (r' X n Z) (w' X n Z) =
@@ -673,7 +677,8 @@ lemma cocone_inr (n : ℕ) (Z : Limits.PushoutCocone _ _) :
     apply congrArg
     exact hι
   rw [hfinal]
-  -- After hfinal substitution, the LHS has `right .inv ≫ right .hom = id`. Use `inv_hom_id_right_assoc`.
+  -- After hfinal substitution, the LHS has `right .inv ≫ right .hom = id`.
+  -- Use `inv_hom_id_right_assoc`.
   simp only [Arrow.inv_hom_id_right_assoc]
   simp only [Arrow.mk_right, ContinuousMap.argSwap, cubeSplitAtLast, TopCat.hom_comp,
     ContinuousMap.comp_assoc]
@@ -874,7 +879,8 @@ def pushoutSkSk (n : ℕ) :
       have hxy : (Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift n).hom)) x =
           ⟨((Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift n).hom)) x).down⟩ := rfl
       rw [hxy]
-      -- Unwrap `hom_ofHom`, evaluate the lambda's `match`, then apply `Homeomorph.apply_symm_apply`.
+      -- Unwrap `hom_ofHom`, evaluate the lambda's `match`,
+      -- then apply `Homeomorph.apply_symm_apply`.
       change _ = Prod.map id (Hom.hom (X.cubeInclToSk α))
           ((Cube.splitAtLast (Cube.splitAtLast.symm
               ⟨t, ((Hom.hom (Arrow.Hom.right
