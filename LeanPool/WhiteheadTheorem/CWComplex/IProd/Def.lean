@@ -394,7 +394,8 @@ noncomputable abbrev d' : X.sk (n + 1) ⟶ TopCat.of C(I, Z.pt) :=
 noncomputable abbrev l'' : TopCat.of (zeroOne × X.toTopCat) ⟶ Z.pt :=
   Limits.pushout.inl (l X n) (r X n) ≫ Z.inl
 /-- `r''` -/
-noncomputable abbrev r'' : TopCat.of (I × (X.sk (n + 1))) ⟶ Z.pt := ofHom (d' ..).hom.uncurry.argSwap
+noncomputable abbrev r'' : TopCat.of (I × (X.sk (n + 1))) ⟶ Z.pt :=
+  ofHom (d' ..).hom.uncurry.argSwap
 
 /--
 The following square commutes.
