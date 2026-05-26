@@ -71,7 +71,10 @@ lemma IsCompressible.of_arrow_iso_left
     (e : Arrow.mk i ≅ Arrow.mk i') (hcom : IsCompressible i j) :
     IsCompressible i' j := by
   rw [Arrow.iso_w' e]
-  exact IsCompressible.of_iso_comp_left <| IsCompressible.of_comp_iso_left hcom
+  haveI hr : IsIso (Arrow.Hom.right e.hom) := Arrow.isIso_right e.hom
+  haveI hl : IsIso (Arrow.Hom.left e.inv) := Arrow.isIso_left e.inv
+  exact IsCompressible.of_iso_comp_left (i1 := Arrow.Hom.left e.inv)
+    (IsCompressible.of_comp_iso_left (i2 := Arrow.Hom.right e.hom) hcom)
 
 /--
 If `j` is compressible w.r.t. `i`, then it is also compressible w.r.t. `∐ i`.
@@ -92,9 +95,11 @@ lemma IsCompressible.coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
   sq_hasLift := fun {F f} sq ↦ by
     have sq' c : CommSq
         (Limits.Sigma.ι (fun _ ↦ A) c ≫ f) i j
-        (Limits.Sigma.ι (fun _ ↦ X) c ≫ F) :=
-      ⟨by simp only [Category.assoc, sq.w, Limits.ι_colimMap_assoc, Discrete.functor_obj_eq_as,
-            Discrete.natTrans_app] ⟩
+        (Limits.Sigma.ι (fun _ ↦ X) c ≫ F) := by
+      refine ⟨?_⟩
+      have hmap : Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map (fun _ : cells ↦ i) =
+          i ≫ Limits.Sigma.ι (fun _ ↦ X) c := Limits.Sigma.ι_map _ _
+      rw [Category.assoc, sq.w, ← Category.assoc, hmap, Category.assoc]
     let l c := hcom.sq_hasLift (sq' c) |>.hasLift.some
     let L := Limits.Sigma.desc fun c ↦ (l c).l
     let h c := (l c).H.some.toContinuousMap.argSwap.curry
@@ -102,37 +107,51 @@ lemma IsCompressible.coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
     refine ⟨Nonempty.intro <| LiftStructUpToRelHomotopy.curriedMk L ?_ H ?_ ?_ fun t ↦ ?_⟩
     · apply Limits.Sigma.hom_ext
       intro c
-      have := (l c).fac_left
-      simp_all only [Limits.colimit.map_desc, Limits.colimit.ι_desc, Limits.Cocones.precompose_obj_pt,
-        Limits.Cofan.mk_pt, Limits.Cocones.precompose_obj_ι, NatTrans.comp_app, Discrete.functor_obj_eq_as,
-        Functor.const_obj_obj, Discrete.natTrans_app, Limits.Cofan.mk_ι_app, l, L]
+      have hfac := (l c).fac_left
+      have hmap : Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map (fun _ : cells ↦ i) =
+          i ≫ Limits.Sigma.ι (fun _ ↦ X) c := Limits.Sigma.ι_map _ _
+      change Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ ↦ i) ≫ L = _
+      rw [← Category.assoc, hmap, Category.assoc]
+      change i ≫ Limits.Sigma.ι (fun _ ↦ X) c ≫ Limits.Sigma.desc (fun c ↦ (l c).l) = _
+      rw [Limits.Sigma.ι_desc]
+      exact hfac
     · apply Limits.Sigma.hom_ext
       intro c
-      ext x
-      -- have := (l c).H.some.apply_zero x
-      simp_all only [hom_comp, ContinuousMap.comp_apply, ContinuousMap.HomotopyWith.apply_zero,
-        ContinuousMap.argSwap, ContinuousMap.coe_mk, Limits.colimit.ι_desc_assoc, Discrete.functor_obj_eq_as,
-        Limits.Cofan.mk_pt, Limits.Cofan.mk_ι_app, hom_ofHom, ContinuousMap.curry_apply,
-        ContinuousMap.prodSwap_apply, ContinuousMap.Homotopy.coe_toContinuousMap,
-        ContinuousMap.Homotopy.apply_zero, l, L, H, h]
+      have h0 := (l c).curriedH_apply_zero
+      have hιH : Limits.Sigma.ι (fun _ ↦ X) c ≫ H = (l c).curriedH := Limits.Sigma.ι_desc _ _
+      change Limits.Sigma.ι (fun _ ↦ X) c ≫ H ≫ PathSpace.eval₀ Y = _
+      rw [← Category.assoc, hιH, h0]
     · apply Limits.Sigma.hom_ext
       intro c
-      ext x
-      simp_all only [ContinuousMap.argSwap, hom_comp, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
-        Limits.colimit.ι_desc_assoc, Discrete.functor_obj_eq_as, Limits.Cofan.mk_pt, Limits.Cofan.mk_ι_app,
-        hom_ofHom, ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
-        ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_one, l, L, H, h]
+      have h1 := (l c).curriedH_apply_one
+      have hιH : Limits.Sigma.ι (fun _ ↦ X) c ≫ H = (l c).curriedH := Limits.Sigma.ι_desc _ _
+      have hιL : Limits.Sigma.ι (fun _ ↦ X) c ≫ L = (l c).l := Limits.Sigma.ι_desc _ _
+      change Limits.Sigma.ι (fun _ ↦ X) c ≫ H ≫ PathSpace.eval₁ Y =
+        Limits.Sigma.ι (fun _ ↦ X) c ≫ L ≫ j
+      rw [← Category.assoc, hιH, h1, ← Category.assoc, hιL]
     · apply Limits.Sigma.hom_ext
       intro c
-      ext a
-      have := (l c).H.some.prop t (i a) (Set.mem_range_self a)
-      simp_all only [hom_comp, ContinuousMap.comp_apply, ContinuousMap.Homotopy.curry_apply,
-        ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.argSwap, ContinuousMap.coe_mk,
-        Limits.colimit.map_desc_assoc, Limits.Cofan.mk_pt, Limits.colimit.ι_desc_assoc, Discrete.functor_obj_eq_as,
-        Limits.Cocones.precompose_obj_pt, Limits.Cocones.precompose_obj_ι, NatTrans.comp_app, Functor.const_obj_obj,
-        Discrete.natTrans_app, Limits.Cofan.mk_ι_app, Category.assoc, hom_ofHom, ContinuousMap.comp_assoc,
-        ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply, ContinuousMap.Homotopy.coe_toContinuousMap,
-        Limits.ι_colimMap_assoc, l, h, L, H]
+      have hp := (l c).curriedH_prop t
+      have hmap : Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map (fun _ : cells ↦ i) =
+          i ≫ Limits.Sigma.ι (fun _ ↦ X) c := Limits.Sigma.ι_map _ _
+      have hιH : Limits.Sigma.ι (fun _ ↦ X) c ≫ H = (l c).curriedH := Limits.Sigma.ι_desc _ _
+      change Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ ↦ i) ≫
+          H ≫ PathSpace.evalAt Y t =
+        Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ ↦ i) ≫ F
+      rw [show Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ : cells ↦ i) ≫
+            H ≫ PathSpace.evalAt Y t =
+          (Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map fun _ ↦ i) ≫ H ≫ PathSpace.evalAt Y t
+        from (Category.assoc _ _ _).symm]
+      rw [hmap]
+      rw [show (i ≫ Limits.Sigma.ι (fun _ ↦ X) c) ≫ H ≫ PathSpace.evalAt Y t =
+          i ≫ (Limits.Sigma.ι (fun _ ↦ X) c ≫ H) ≫ PathSpace.evalAt Y t by
+        rw [Category.assoc, Category.assoc]]
+      rw [hιH]
+      rw [show Limits.Sigma.ι (fun _ ↦ A) c ≫ (Limits.Sigma.map fun _ : cells ↦ i) ≫ F =
+          (Limits.Sigma.ι (fun _ ↦ A) c ≫ Limits.Sigma.map fun _ ↦ i) ≫ F
+        from (Category.assoc _ _ _).symm]
+      rw [hmap, Category.assoc]
+      exact hp
 
 /--
 Suppose the left square in the diagram below is a pushout square.
@@ -381,25 +400,33 @@ theorem IsCompressible.relCWComplex_of_diskBoundaryIncl
       Limits.colimit.desc (Functor.ofSequence X.skInclSucc) ccH
     refine ⟨Nonempty.intro <| LiftStructUpToRelHomotopy.curriedMk L ?_ H' ?_ ?_ fun t ↦ ?_⟩
     · apply Limits.colimit.ι_desc
-    any_goals
+    · -- refine_2: H' ≫ eval₀ = F₀
       apply Limits.colimit.hom_ext
       intro n
-      rw [← Category.assoc, Limits.colimit.ι_desc]
+      simp only [H']
+      refine (Limits.colimit.ι_desc_assoc ccH n _).trans ?_
       unfold ccH
       simp only [Functor.ofSequence_obj, ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk,
         Functor.const_obj_obj, homOfLE_leOfHom, Functor.const_obj_map, id_eq, hom_ofHom,
         ContinuousMap.comp_apply, ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
         ContinuousMap.Homotopy.coe_toContinuousMap, eq_mpr_eq_cast, NatTrans.ofSequence_app]
-    · change _ = X.skIncl n ≫ _
       ext x
       simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
         ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
         ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_zero]
       rfl
-    · rw [← Category.assoc, Limits.colimit.ι_desc]
-      unfold ccL
-      simp only [Functor.ofSequence_obj, Functor.const_obj_obj, homOfLE_leOfHom,
-        Functor.const_obj_map, id_eq, eq_mpr_eq_cast, NatTrans.ofSequence_app]
+    · -- refine_3: H' ≫ eval₁ = L ≫ j
+      apply Limits.colimit.hom_ext
+      intro n
+      simp only [H']
+      refine (Limits.colimit.ι_desc_assoc ccH n _).trans ?_
+      unfold ccH
+      simp only [Functor.ofSequence_obj, ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk,
+        Functor.const_obj_obj, homOfLE_leOfHom, Functor.const_obj_map, id_eq, hom_ofHom,
+        ContinuousMap.comp_apply, ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
+        ContinuousMap.Homotopy.coe_toContinuousMap, eq_mpr_eq_cast, NatTrans.ofSequence_app]
+      simp only [L]
+      refine Eq.trans ?_ (Limits.colimit.ι_desc_assoc ccL n j).symm
       ext x
       simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
         ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
@@ -407,8 +434,11 @@ theorem IsCompressible.relCWComplex_of_diskBoundaryIncl
       change (X.skIncl n ≫ (F n).F).hom _ = ((F n).f ≫ j).hom _
       congr 2
       rw [(F n).sq.w, ← Category.assoc, X.skInclSucc_skIncl_eq]
-    · nth_rw 1 [RelCWComplex.skIncl]
-      rw [← Category.assoc, Limits.colimit.ι_desc]
+    · -- refine_4: X.skIncl 0 ≫ H' ≫ evalAt Y t = X.skIncl 0 ≫ F₀
+      change Limits.colimit.ι (Functor.ofSequence X.skInclSucc) 0 ≫ H' ≫
+        PathSpace.evalAt Y t = X.skIncl 0 ≫ F₀
+      simp only [H']
+      refine (Limits.colimit.ι_desc_assoc ccH 0 _).trans ?_
       unfold ccH
       simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk, Functor.ofSequence_obj,
         Functor.const_obj_obj, homOfLE_leOfHom, Functor.const_obj_map, id_eq, hom_ofHom,
