@@ -109,7 +109,8 @@ def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
             have hi₇ : 2 * (i+1)+2 = 2*k := by omega
             have hi₈ : 2 * i+2 = 2*k-2 := by omega
             have hi₉ : 1+4*k-2*(i+2) = (2*k-1)+2 := by omega
-            unfold a_odd; simp only [hk, ↓reduceIte, ge_iff_le, hi₄, hi₃, hi₇, hi, hi₆, hi₈, hi₅, hi₂, hi₉]
+            unfold a_odd; simp only [hk, ↓reduceIte, ge_iff_le, hi₄, hi₃, hi₇, hi, hi₆, hi₈, hi₅,
+              hi₂, hi₉]
             simp only [Nat.fib_add_two, ← add_assoc]
             have : Nat.fib (2*k-2) + Nat.fib (2*k-1) = Nat.fib (2*k) := by
               have : 2*k = (2*k-2)+2 := by omega
@@ -125,8 +126,8 @@ def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
               unfold a_odd; simp only [hk, ↓reduceIte, ge_iff_le, hi₅, hi₃, hi, hi₄, hi₂]
               by_cases hk₁ : k = 1
               · have hi₀ : i = 0 := by omega
-                simp only [hk₁, mul_one, Nat.reduceAdd, hi₀, zero_add, Nat.reduceSub, mul_zero, Nat.fib_two, Std.le_refl,
-    ↓reduceIte, tsub_self]
+                simp only [hk₁, mul_one, Nat.reduceAdd, hi₀, zero_add, Nat.reduceSub, mul_zero,
+                  Nat.fib_two, Std.le_refl, ↓reduceIte, tsub_self]
                 use 1
                 unfold a_odd
                 decide
@@ -148,8 +149,8 @@ def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
                   have hi₉ : i+2-2*k = 0 := by omega
                   have hk₂ : 0<k := by omega
                   unfold a_odd
-                  simp only [hi₇, hi₈, hk, ↓reduceIte, hi₉, ge_iff_le, nonpos_iff_eq_zero, mul_eq_zero, OfNat.ofNat_ne_zero,
-    or_self, hk₂, mul_zero, zero_add, Nat.fib_two]
+                  simp only [hi₇, hi₈, hk, ↓reduceIte, hi₉, ge_iff_le, nonpos_iff_eq_zero,
+                    mul_eq_zero, OfNat.ofNat_ne_zero, or_self, hk₂, mul_zero, zero_add, Nat.fib_two]
                   use 3; simp [Nat.fib_add_two]
               · have hi₆ : ¬ 2*k ≤ i+1 := by omega
                 unfold a_odd; simp only [hk, ↓reduceIte, ge_iff_le, hi₆, hi₃, hi, hi₄, hi₅, hi₂]
@@ -157,7 +158,8 @@ def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
                 have hi₈ : 1+4*k-2*i = 4*k-2*i-2+2+1 := by omega
                 have hi₉ : 1+4*k-2*(i+2) = 4*k-2*i-3 := by omega
                 rw [hi₇, hi₈, hi₉, Nat.fib_add]
-                simp only [Nat.fib_add_two, Nat.fib_zero, zero_add, Nat.fib_one, mul_one, Nat.reduceAdd]
+                simp only [Nat.fib_add_two, Nat.fib_zero, zero_add, Nat.fib_one, mul_one,
+                  Nat.reduceAdd]
                 use 3
                 rw [add_assoc, add_comm, add_assoc]
                 have hi₁₀ : 4*k-2*i-2 = (4*k-2*i-3)+1 := by omega
@@ -247,8 +249,9 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
             · -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ pos :
               have hi₅ : i = k := by omega
               have hi₆ : ¬ 2 * k + 1 ≤ k := by omega
-              unfold a_even; simp only [hi₅, ge_iff_le, add_le_add_iff_right, lt_self_iff_false, ↓reduceIte, hi₆, lt_add_iff_pos_right,
-    zero_lt_one, add_lt_add_iff_left, Nat.not_ofNat_lt_one]
+              unfold a_even; simp only [hi₅, ge_iff_le, add_le_add_iff_right, lt_self_iff_false,
+                ↓reduceIte, hi₆, lt_add_iff_pos_right, zero_lt_one, add_lt_add_iff_left,
+                Nat.not_ofNat_lt_one]
               by_cases hk₀ : k = 0
               · -- by_cases hi/hi₂/hi₃ neg + hi₄/hk₀ pos
                 simp [hk₀]
@@ -259,7 +262,8 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
                 simp only [hi₇, ↓reduceIte]
                 by_cases hk₁ : k = 1
                 · -- by_cases hi/hi₂/hi₃ neg + hi₄/hk₁ pos + hk₀ neg
-                  simp only [hk₁, mul_one, Nat.reduceAdd, Nat.reduceMul, Nat.reduceSub, Std.le_refl, ↓reduceIte, tsub_self]
+                  simp only [hk₁, mul_one, Nat.reduceAdd, Nat.reduceMul, Nat.reduceSub,
+                    Std.le_refl, ↓reduceIte, tsub_self]
                   have f₁ : a_even k 0 = 1 := by exact hd
                   have f₃ : Nat.fib 3 = 2 := by simp [Nat.fib]
                   have f₄ : Nat.fib 4 = 3 := by simp [Nat.fib]
@@ -339,8 +343,8 @@ def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
       · unfold a_1; simp only [ge_iff_le, hi, ↓reduceIte, gt_iff_lt]
         exact ih (i-(n+1)) (by omega)
       · by_cases hi₂ : i = 0
-        · simp only [hi₂, a_1, ge_iff_le, nonpos_iff_eq_zero, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte,
-    gt_iff_lt]
+        · simp only [hi₂, a_1, ge_iff_le, nonpos_iff_eq_zero, Nat.add_eq_zero_iff, one_ne_zero,
+          and_false, ↓reduceIte, gt_iff_lt]
           exact f.pos 0
         · simp only [a_1, ge_iff_le, hi, ↓reduceIte, hi₂, gt_iff_lt]
           exact f.pos (i+1)
@@ -356,15 +360,17 @@ def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
       by_cases hi : i ≥ n+1
       · have hi₂ : n ≤ i := by omega
         have hi₃ : n ≤ i+1 := by omega
-        unfold a_1; simp only [ge_iff_le, add_le_add_iff_right, hi₂, ↓reduceIte, Nat.reduceSubDiff, hi, hi₃]
+        unfold a_1; simp only [ge_iff_le, add_le_add_iff_right, hi₂, ↓reduceIte, Nat.reduceSubDiff,
+          hi, hi₃]
         specialize ih (i-(n+1)) (by omega)
         have hi₄ : i-(n+1)+1 = i-n := by omega
         have hi₅ : i-(n+1)+2 = i+1-n := by omega
         rw [hi₄, hi₅] at ih; exact ih
       · by_cases hi₂ : i = 0
-        · unfold a_1; simp only [hi₂, zero_add, ge_iff_le, add_le_iff_nonpos_left, nonpos_iff_eq_zero, le_add_iff_nonneg_left,
-    zero_le, Nat.sub_eq_zero_of_le, one_ne_zero, ↓reduceIte, Nat.reduceAdd, Nat.add_eq_zero_iff, and_false,
-    Nat.reduceLeDiff, Nat.reduceSubDiff, OfNat.ofNat_ne_zero]
+        · unfold a_1; simp only [hi₂, zero_add, ge_iff_le, add_le_iff_nonpos_left,
+          nonpos_iff_eq_zero, le_add_iff_nonneg_left, zero_le, Nat.sub_eq_zero_of_le, one_ne_zero,
+          ↓reduceIte, Nat.reduceAdd, Nat.add_eq_zero_iff, and_false, Nat.reduceLeDiff,
+          Nat.reduceSubDiff, OfNat.ofNat_ne_zero]
           match n with
           | 0 => simp [hd]
           | 1 =>
@@ -378,7 +384,8 @@ def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
             nth_rw 3 [←this]
             simp [f.div 1]
           | n+2 =>
-            simp only [Nat.add_eq_zero_iff, OfNat.ofNat_ne_zero, and_false, ↓reduceIte, f.hd, Nat.reduceLeDiff]
+            simp only [Nat.add_eq_zero_iff, OfNat.ofNat_ne_zero, and_false, ↓reduceIte, f.hd,
+              Nat.reduceLeDiff]
             rw [←h]
             exact f.div 1
         · by_cases hi₃ : i+1 ≥ n+1
@@ -386,8 +393,9 @@ def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
             unfold a_1; simp [hi₄, hd]
           · by_cases hi₄ : i+2 ≥ n+1
             · have hi₅ : i+1 = n := by omega
-              unfold a_1; simp only [hi₅, ge_iff_le, add_le_iff_nonpos_right, nonpos_iff_eq_zero, one_ne_zero, ↓reduceIte, hi, hi₂, hi₄,
-    Nat.reduceLeDiff, Std.le_refl, Nat.sub_eq_zero_of_le]
+              unfold a_1; simp only [hi₅, ge_iff_le, add_le_iff_nonpos_right, nonpos_iff_eq_zero,
+                one_ne_zero, ↓reduceIte, hi, hi₂, hi₄, Nat.reduceLeDiff, Std.le_refl,
+                Nat.sub_eq_zero_of_le]
               match n with
               | 0 => simp [f.hd]
               | 1 =>
@@ -407,8 +415,8 @@ def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
                   rw [←this]
                 nth_rw 2 [←h]
                 exact f.div (n+2)
-            · unfold a_1; simp only [ge_iff_le, hi₃, ↓reduceIte, Nat.add_eq_zero_iff, hi₂, one_ne_zero, and_self, hi, hi₄,
-    OfNat.ofNat_ne_zero]
+            · unfold a_1; simp only [ge_iff_le, hi₃, ↓reduceIte, Nat.add_eq_zero_iff, hi₂,
+              one_ne_zero, and_self, hi, hi₄, OfNat.ofNat_ne_zero]
               exact f.div (i+1)
   exact ⟨a_1 n f, pos, hd, period, div⟩
 
@@ -442,15 +450,17 @@ def aux_2 (n : ℕ) (f : flute (n + 3)) (h : f.a (n + 1) = 1) : flute (n + 2) :=
       by_cases hi : i ≥ n+1
       · have hi₂ : n ≤ i := by omega
         have hi₃ : n ≤ i+1 := by omega
-        unfold a_2; simp only [ge_iff_le, add_le_add_iff_right, hi₂, ↓reduceIte, Nat.reduceSubDiff, hi, hi₃]
+        unfold a_2; simp only [ge_iff_le, add_le_add_iff_right, hi₂, ↓reduceIte, Nat.reduceSubDiff,
+          hi, hi₃]
         specialize ih (i-(n+1)) (by omega)
         have hi₄ : i-(n+1)+1 = i-n := by omega
         have hi₅ : i-(n+1)+2 = i+1-n := by omega
         rw [hi₄, hi₅] at ih; exact ih
       · by_cases hi₂ : i = 0
-        · unfold a_2; simp only [hi₂, zero_add, ge_iff_le, add_le_iff_nonpos_left, nonpos_iff_eq_zero, le_add_iff_nonneg_left,
-    zero_le, Nat.sub_eq_zero_of_le, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, Nat.reduceLeDiff,
-    Nat.reduceSubDiff]
+        · unfold a_2; simp only [hi₂, zero_add, ge_iff_le, add_le_iff_nonpos_left,
+          nonpos_iff_eq_zero, le_add_iff_nonneg_left, zero_le, Nat.sub_eq_zero_of_le,
+          Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, Nat.reduceLeDiff,
+          Nat.reduceSubDiff]
           match n with
           | 0 => simp [hd]
           | 1 =>
@@ -461,7 +471,8 @@ def aux_2 (n : ℕ) (f : flute (n + 3)) (h : f.a (n + 1) = 1) : flute (n + 2) :=
             nth_rw 2 [←f.hd]
             simp [f.div 0, add_comm]
           | n+2 =>
-            simp only [Nat.add_eq_zero_iff, OfNat.ofNat_ne_zero, and_false, ↓reduceIte, f.hd, Nat.reduceLeDiff]
+            simp only [Nat.add_eq_zero_iff, OfNat.ofNat_ne_zero, and_false, ↓reduceIte, f.hd,
+              Nat.reduceLeDiff]
             nth_rw 2 [←f.hd]
             exact f.div 0
         · unfold a_2; simp only [ge_iff_le, add_le_add_iff_right, Nat.reduceSubDiff, hi, ↓reduceIte]
@@ -517,7 +528,8 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
       by_cases hi : i ≥ n+1
       · have hi₂ : n ≤ i := by omega
         have hi₃ : n ≤ i+1 := by omega
-        unfold a_3; simp only [ge_iff_le, add_le_add_iff_right, hi₂, ↓reduceIte, Nat.reduceSubDiff, hi, hi₃]
+        unfold a_3; simp only [ge_iff_le, add_le_add_iff_right, hi₂, ↓reduceIte, Nat.reduceSubDiff,
+          hi, hi₃]
         specialize ih (i-(n+1)) (by omega)
         have hi₄ : i-(n+1)+1 = i-n := by omega
         have hi₅ : i-(n+1)+2 = i+1-n := by omega
@@ -530,8 +542,9 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
             have hn : ¬ n ≤ n-1 := by omega
             have hn₂ : n-1+1 = n := by omega
             have hn₃ : ¬ n+1 ≤ n-1 := by omega
-            unfold a_3; simp only [hi₃, hn₂, ge_iff_le, add_le_iff_nonpos_right, nonpos_iff_eq_zero, one_ne_zero, ↓reduceIte, hn₃,
-    tsub_le_iff_right, add_le_add_iff_right, Std.le_refl, Nat.reduceLeDiff, Nat.sub_eq_zero_of_le]
+            unfold a_3; simp only [hi₃, hn₂, ge_iff_le, add_le_iff_nonpos_right,
+              nonpos_iff_eq_zero, one_ne_zero, ↓reduceIte, hn₃, tsub_le_iff_right,
+              add_le_add_iff_right, Std.le_refl, Nat.reduceLeDiff, Nat.sub_eq_zero_of_le]
             simp only [hd]
             by_cases hn₄ : n ≤ j
             · have hn₅ : j = n := by omega
@@ -564,7 +577,8 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
                   _ = f.a (n+1) * (k-1) := by exact (Nat.mul_sub_one (f.a (n+1)) k).symm
               · simp [hn₅]
                 simpa [f.tl] using f.div n
-          · unfold a_3; simp only [ge_iff_le, add_le_add_iff_right, hi₂, ↓reduceIte, add_assoc, Nat.reduceAdd, hi, hi₃]
+          · unfold a_3; simp only [ge_iff_le, add_le_add_iff_right, hi₂, ↓reduceIte, add_assoc,
+            Nat.reduceAdd, hi, hi₃]
             by_cases hij : i+2 ≤ j
             · have hij₂ : i+1 ≤ j := by omega
               have hij₃ : i ≤ j := by omega
@@ -572,8 +586,8 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
             · by_cases hij₂ : i+1 ≤ j
               · have hij₃ : i ≤ j := by omega
                 have hij₄ : i+1 = j := by omega
-                simp only [← hij₄, Std.le_refl, ↓reduceIte, le_add_iff_nonneg_right, zero_le, add_le_add_iff_left,
-    Nat.not_ofNat_le_one]
+                simp only [← hij₄, Std.le_refl, ↓reduceIte, le_add_iff_nonneg_right, zero_le,
+                  add_le_add_iff_left, Nat.not_ofNat_le_one]
                 have key := hij₄ ▸ hj.2
                 simp only [add_assoc, Nat.reduceAdd] at key
                 rcases f.div i with ⟨k, hk⟩
@@ -583,8 +597,8 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
                   _ = f.a (i+1) * (k-1) := by exact (Nat.mul_sub_one (f.a (i+1)) k).symm
               · by_cases hij₃ : i ≤ j
                 · have hij₄ : i = j := by omega
-                  simp only [hij₄, add_le_iff_nonpos_right, nonpos_iff_eq_zero, one_ne_zero, ↓reduceIte, Std.le_refl,
-    OfNat.ofNat_ne_zero]
+                  simp only [hij₄, add_le_iff_nonpos_right, nonpos_iff_eq_zero, one_ne_zero,
+                    ↓reduceIte, Std.le_refl, OfNat.ofNat_ne_zero]
                   rcases f.div (j+1) with ⟨k, hk⟩
                   simp only [add_assoc, Nat.reduceAdd] at hk
                   use k-1
@@ -646,8 +660,8 @@ lemma FluteReduction (n : ℕ) (f : flute n) : ((f.a 1 = 1) ∨ (f.a (n - 2) = 1
   | 1 => linarith
   | 2 => linarith
   | n+3 =>
-    simp only [add_tsub_cancel_right, ne_eq, Nat.reduceSubDiff, Int.sub_pos, Nat.cast_lt, Nat.add_one_sub_one,
-    sub_neg, ge_iff_le, tsub_le_iff_right] at *
+    simp only [add_tsub_cancel_right, ne_eq, Nat.reduceSubDiff, Int.sub_pos, Nat.cast_lt,
+      Nat.add_one_sub_one, sub_neg, ge_iff_le, tsub_le_iff_right] at *
     specialize key₂ n (by omega)
     linarith
 
@@ -679,15 +693,15 @@ theorem FluteBounded (n : ℕ) (hn : n > 0) (f : flute n) :
   | 1 =>
     use 0
     intro i hi
-    simp only [Nat.lt_one_iff, gt_iff_lt, ne_eq, forall_eq, lt_self_iff_false, zero_tsub, nonpos_iff_eq_zero,
-    zero_add, Nat.fib_one, Nat.fib_zero, IsEmpty.forall_iff, zero_lt_one, tsub_self, Nat.one_le_ofNat,
-    Nat.sub_eq_zero_of_le] at *
+    simp only [Nat.lt_one_iff, gt_iff_lt, ne_eq, forall_eq, lt_self_iff_false, zero_tsub,
+      nonpos_iff_eq_zero, zero_add, Nat.fib_one, Nat.fib_zero, IsEmpty.forall_iff, zero_lt_one,
+      tsub_self, Nat.one_le_ofNat, Nat.sub_eq_zero_of_le] at *
     exact ⟨(by omega), (by simp [hi, f.hd])⟩
   | 2 =>
     use 2
     intro i hi
-    simp only [gt_iff_lt, ne_eq, Nat.ofNat_pos, Nat.add_one_sub_one, tsub_self, zero_add, Nat.fib_one,
-    Nat.fib_two] at *
+    simp only [gt_iff_lt, ne_eq, Nat.ofNat_pos, Nat.add_one_sub_one, tsub_self, zero_add,
+      Nat.fib_one, Nat.fib_two] at *
     apply And.intro _ (by omega)
     have h₀ := f.hd
     have h₁ : f.a 1 = 1 := by
@@ -700,8 +714,8 @@ theorem FluteBounded (n : ℕ) (hn : n > 0) (f : flute n) :
     | i+2 => linarith
   | n+3 =>
     have h₁ := ih (n+2) (by linarith) (by linarith)
-    simp only [gt_iff_lt, ne_eq, lt_add_iff_pos_left, add_pos_iff, Nat.ofNat_pos, or_true, Nat.add_one_sub_one,
-    add_tsub_cancel_right, Nat.reduceSubDiff] at *
+    simp only [gt_iff_lt, ne_eq, lt_add_iff_pos_left, add_pos_iff, Nat.ofNat_pos, or_true,
+      Nat.add_one_sub_one, add_tsub_cancel_right, Nat.reduceSubDiff] at *
     have hh : 0 < Nat.fib (n+2) := Nat.fib_pos.mpr (by omega)
     have hh₂ : Nat.fib (n+1) ≤ Nat.fib (n+2) := Nat.fib_mono (by omega)
     have hh₃ : Nat.fib (n+3) = Nat.fib (n+1) + Nat.fib (n+2) := Nat.fib_add_two
@@ -724,8 +738,9 @@ theorem FluteBounded (n : ℕ) (hn : n > 0) (f : flute n) :
         specialize h₁ (i+1) (by omega)
         change (¬i + 1 = l → (aux_1 n f h₂).a (i + 1) ≤ Nat.fib (n + 1)) ∧
           (i + 1 = l → (aux_1 n f h₂).a (i + 1) ≤ Nat.fib (n + 2)) at h₁
-        unfold aux_1 at h₁; dsimp only at h₁; unfold a_1 at h₁; simp only [ge_iff_le, add_le_add_iff_right, Nat.reduceSubDiff, Nat.add_eq_zero_iff, one_ne_zero, and_false,
-    ↓reduceIte] at h₁
+        unfold aux_1 at h₁; dsimp only at h₁; unfold a_1 at h₁; simp only [ge_iff_le,
+          add_le_add_iff_right, Nat.reduceSubDiff, Nat.add_eq_zero_iff, one_ne_zero, and_false,
+          ↓reduceIte] at h₁
         simp only [add_assoc, Nat.reduceAdd, ge_iff_le]
         by_cases hi₂ : n ≤ i
         · have : i = n := by omega
@@ -756,7 +771,8 @@ theorem FluteBounded (n : ℕ) (hn : n > 0) (f : flute n) :
           have hi₄ : ¬ n+1 ≤ i := by omega
           change (¬i = l → (aux_2 n f h₂).a i ≤ Nat.fib (n + 1)) ∧
             (i = l → (aux_2 n f h₂).a i ≤ Nat.fib (n + 2)) at h₁
-          unfold aux_2 at h₁; dsimp only at h₁; unfold a_2 at h₁; simp only [ge_iff_le, hi₄, ↓reduceIte] at h₁
+          unfold aux_2 at h₁; dsimp only at h₁; unfold a_2 at h₁; simp only [ge_iff_le, hi₄,
+            ↓reduceIte] at h₁
           by_cases hil : i = l
           · exact h₁.2 hil
           · have := h₁.1 hil

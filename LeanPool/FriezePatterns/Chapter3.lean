@@ -125,8 +125,8 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
           rw[i_mod_n_sub_one_eq_n_sub_three, Nat.mod_eq_of_lt (one_lt_n_sub_one)]
           rw[Nat.mod_eq_of_lt (by omega)]
           omega
-      simp only [i_plus_one_mod_n_sub_one_eq_n_sub_two, i_mod_n_sub_one_eq_n_sub_three,
-        boundary', zero_add]
+      simp only [i_plus_one_mod_n_sub_one_eq_n_sub_two, i_mod_n_sub_one_eq_n_sub_three, boundary',
+        zero_add]
       have BordOnes : f (1,m) = f (n,m) := by
           rw[@pattern_n.topBordOnes ℚ _ f n _ m]
           rw[@pattern_n.botBordOnes_n ℚ _ f n _ m]
@@ -143,7 +143,8 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
           (f (2, m + ((n - 2)))).num * (f ((n - 2) + 1,m)).num := by
         have key₁ : (f ((n - 2), m)).num + (f ((n - 2) + 1 + 1, m)).num =
             (f ((n - 2), m) + f ((n - 2) + 1 + 1, m)).num := by
-          simp only [Rat.add_num_den, arith_fp.integral n ((n - 2)) m, Nat.cast_one, one_mul, Rat.divInt_ofNat]
+          simp only [Rat.add_num_den, arith_fp.integral n ((n - 2)) m, Nat.cast_one, one_mul,
+            Rat.divInt_ofNat]
           simp only [arith_fp.integral n ((n - 2) + 1 + 1) m, Nat.cast_one, mul_one]
           rw [Rat.mkRat_one]
           norm_cast
@@ -219,7 +220,8 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
         (f (2, m + (i % (n - 1) + 1))).num * (f (i % (n - 1) + 1 + 1,m)).num := by
       have key₁ : (f (i % (n - 1) + 1, m)).num + (f (i % (n - 1) + 1 + 1 + 1, m)).num =
           (f (i % (n - 1) + 1, m) + f (i % (n - 1) + 1 + 1 + 1, m)).num := by
-        simp only [Rat.add_num_den, arith_fp.integral n (i % (n - 1) + 1) m, Nat.cast_one, one_mul, Rat.divInt_ofNat]
+        simp only [Rat.add_num_den, arith_fp.integral n (i % (n - 1) + 1) m, Nat.cast_one, one_mul,
+          Rat.divInt_ofNat]
         simp only [arith_fp.integral n (i % (n - 1) + 1 + 1 + 1) m, Nat.cast_one, mul_one]
         rw [Rat.mkRat_one]
         norm_cast
@@ -273,23 +275,24 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f 
     | zero => simp [frieze_f, hn, g.hd]
     | succ m ih =>
       have : ¬ 1 ≥ n+1 := by omega
-      unfold frieze_f; simp only [one_ne_zero, ↓reduceIte, ge_iff_le, this, Nat.add_eq_zero_iff, and_false, Nat.reduceAdd,
-    add_tsub_cancel_right, tsub_self, ih, div_one, add_eq_right, mul_eq_zero]
+      unfold frieze_f; simp only [one_ne_zero, ↓reduceIte, ge_iff_le, this, Nat.add_eq_zero_iff,
+        and_false, Nat.reduceAdd, add_tsub_cancel_right, tsub_self, ih, div_one, add_eq_right,
+        mul_eq_zero]
       right
       exact topBordZeros (m+1)
   have botBordOnes_n : ∀ m, frieze_f g (n, m) = 1 := by
     intro m
     induction m with
     | zero =>
-      simp only [frieze_f, hn, ↓reduceIte, ge_iff_le, add_le_iff_nonpos_right, nonpos_iff_eq_zero, one_ne_zero,
-    Rat.natCast_eq_one_iff]
+      simp only [frieze_f, hn, ↓reduceIte, ge_iff_le, add_le_iff_nonpos_right, nonpos_iff_eq_zero,
+        one_ne_zero, Rat.natCast_eq_one_iff]
       have := g.period 0
       simp [g.hd] at this
       exact this.symm
     | succ m ih =>
       have : ¬ n ≥ n+1 := by omega
-      unfold frieze_f; simp only [hn, ↓reduceIte, ge_iff_le, this, Nat.add_eq_zero_iff, one_ne_zero, and_false,
-    add_tsub_cancel_right, ih, div_one, add_eq_right, mul_eq_zero]
+      unfold frieze_f; simp only [hn, ↓reduceIte, ge_iff_le, this, Nat.add_eq_zero_iff,
+        one_ne_zero, and_false, add_tsub_cancel_right, ih, div_one, add_eq_right, mul_eq_zero]
       left
       exact botBordZeros_n (n+1) m (by rfl)
   have positive: ∀ i, ∀ m, 1 ≤ i → i ≤ n → frieze_f g (i,m) > 0 := by
@@ -314,8 +317,8 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f 
           · specialize ih₂ (by omega) (by omega)
             have : ¬ n ≤ i := by omega
             unfold frieze_f
-            simp +arith only [Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte,
-              ge_iff_le, add_le_add_iff_right, this, add_tsub_cancel_right, gt_iff_lt]
+            simp +arith only [Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, ge_iff_le,
+              add_le_add_iff_right, this, add_tsub_cancel_right, gt_iff_lt]
             have h₁ := ih₁ (i+1) (by omega) (by omega)
             have h₂ := ih₁ (i+2) (by omega) (by omega)
             exact div_pos (by linarith [mul_pos h₂ ih₂]) h₁
@@ -348,8 +351,9 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f 
           have hm₃ : ¬ n ≤ m := by omega
           have hm₄ : ¬ n ≤ m+1 := by omega
           have hm₅ : ¬ n+1 ≤ m := by omega
-          unfold frieze_f; simp only [hm, ↓reduceIte, ge_iff_le, hm₅, Nat.add_eq_zero_iff, OfNat.ofNat_ne_zero, and_self,
-    add_le_add_iff_right, hm₄, Nat.add_one_sub_one, one_ne_zero, hm₃, add_tsub_cancel_right]
+          unfold frieze_f; simp only [hm, ↓reduceIte, ge_iff_le, hm₅, Nat.add_eq_zero_iff,
+            OfNat.ofNat_ne_zero, and_self, add_le_add_iff_right, hm₄, Nat.add_one_sub_one,
+            one_ne_zero, hm₃, add_tsub_cancel_right]
           norm_cast
           have := g.div (m-1)
           have hm₆ : m-1+1 = m := by omega
@@ -490,8 +494,8 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) :
     have h₁ : ∃ (w : ℕ × ℕ), frieze_f (fib_flute_even j) w = Nat.fib (2 * j + 2) := by
       use (j + 1, 0)
       have h₃ : ¬ 2 * j + 2 ≤ j := by omega
-      simp only [frieze_f, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, ge_iff_le, add_le_add_iff_right,
-    h₃, add_tsub_cancel_right, Nat.cast_inj]
+      simp only [frieze_f, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, ge_iff_le,
+        add_le_add_iff_right, h₃, add_tsub_cancel_right, Nat.cast_inj]
       unfold fib_flute_even
       by_cases h₂ : j = 0
       · simp only [h₂, mul_zero, zero_add, Nat.fib_two]
@@ -516,8 +520,8 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) :
     have h₁ : ∃ (w : ℕ × ℕ), frieze_f (fib_flute_odd k) w = Nat.fib (2 * k + 1) := by
       use (k + 1, 0)
       have h₃ : ¬ 2 * k + 1 ≤ k := by omega
-      simp only [frieze_f, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, ge_iff_le, add_le_add_iff_right,
-    h₃, add_tsub_cancel_right, Nat.cast_inj]
+      simp only [frieze_f, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, ge_iff_le,
+        add_le_add_iff_right, h₃, add_tsub_cancel_right, Nat.cast_inj]
       unfold fib_flute_odd
       by_cases h₂ : k = 0
       · simp only [h₂, ↓reduceDIte, Pi.natCast_apply, Nat.cast_id, mul_zero, zero_add, Nat.fib_one]
