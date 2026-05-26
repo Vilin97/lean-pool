@@ -69,17 +69,22 @@ theorem CWComplex_induced_map_surjective
   let l := com.sq_hasLift sq |>.hasLift.some
   use l.l
   exact ContinuousMap.Homotopic.symm <| Nonempty.intro <|
-    { toContinuousMap := l.H.some.hcomp <| ContinuousMap.Homotopy.refl (MapCyl.retr f).hom
+    { toContinuousMap :=
+        ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
+          l.H.some.toHomotopy).toContinuousMap
       map_zero_left x := by
-        simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_assoc, ContinuousMap.toFun_eq_coe,
-          ContinuousMap.coe_coe, ContinuousMap.Homotopy.apply_zero, ContinuousMap.comp_apply]
+        show ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
+          l.H.some.toHomotopy) (0, x) = g.hom x
+        rw [ContinuousMap.Homotopy.comp_apply]
+        simp only [ContinuousMap.Homotopy.refl_apply, ContinuousMap.Homotopy.apply_zero]
         change (g ≫ MapCyl.codIncl f ≫ MapCyl.retr f).hom x = g.hom x
         congr 2
         rw [MapCyl.codIncl_retr_eq_id, Category.comp_id]
       map_one_left x := by
-        simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_assoc, ContinuousMap.toFun_eq_coe,
-          ContinuousMap.coe_coe, ContinuousMap.Homotopy.apply_one, ContinuousMap.comp_apply,
-          ContinuousMap.coe_mk]
+        show ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
+          l.H.some.toHomotopy) (1, x) = (l.l ≫ f).hom x
+        rw [ContinuousMap.Homotopy.comp_apply]
+        simp only [ContinuousMap.Homotopy.refl_apply, ContinuousMap.Homotopy.apply_one]
         change (l.l ≫ MapCyl.domIncl f ≫ MapCyl.retr f).hom x = (l.l ≫ f).hom x
         congr 3
         exact MapCyl.domIncl_retr_eq f }
@@ -103,17 +108,17 @@ theorem CWComplex_induced_map_injective
       (g₀ ≫ MapCyl.domIncl f ≫ MapCyl.retr f ≫ MapCyl.codIncl f).hom.Homotopic
       (g₁ ≫ MapCyl.domIncl f ≫ MapCyl.retr f ≫ MapCyl.codIncl f).hom := by
     rw [MapCyl.domIncl_retr_eq_assoc]
-    exact hg.hcomp <| ContinuousMap.Homotopic.refl (MapCyl.codIncl f).hom
+    exact (ContinuousMap.Homotopic.refl (MapCyl.codIncl f).hom).comp hg
   have hg₀ :
       (g₀ ≫ MapCyl.domIncl f ≫ MapCyl.retr f ≫ MapCyl.codIncl f).hom.Homotopic
       (g₀ ≫ MapCyl.domIncl f).hom :=
-    ContinuousMap.Homotopic.refl (g₀ ≫ MapCyl.domIncl f).hom |>.hcomp
-      (MapCyl.homotopyEquivBase f).left_inv
+    (MapCyl.homotopyEquivBase f).left_inv.comp
+      (ContinuousMap.Homotopic.refl (g₀ ≫ MapCyl.domIncl f).hom)
   have hg₁ :
       (g₁ ≫ MapCyl.domIncl f ≫ MapCyl.retr f ≫ MapCyl.codIncl f).hom.Homotopic
       (g₁ ≫ MapCyl.domIncl f).hom :=
-    ContinuousMap.Homotopic.refl (g₁ ≫ MapCyl.domIncl f).hom |>.hcomp
-      (MapCyl.homotopyEquivBase f).left_inv
+    (MapCyl.homotopyEquivBase f).left_inv.comp
+      (ContinuousMap.Homotopic.refl (g₁ ≫ MapCyl.domIncl f).hom)
   replace hg := hg₀.symm.trans hg |>.trans hg₁
   let G : TopCat.of (I × X.toTopCat) ⟶ MapCyl f := ofHom hg.some.toContinuousMap
   let G₀₁ : TopCat.of (({0, 1} : Set ℝ) × X.toTopCat) ⟶ B := ofHom
@@ -149,10 +154,14 @@ theorem CWComplex_induced_map_injective
     cases tprop with
     | inl h0 =>
         subst h0; simp only [↓reduceIte, Set.Icc.mk_zero]
-        rw [hg.some.apply_zero x]; rfl
+        change _ = (Nonempty.some hg).toContinuousMap (0, x)
+        rw [ContinuousMap.Homotopy.coe_toContinuousMap, hg.some.apply_zero x]
+        rfl
     | inr h1 =>
         subst h1; simp only [one_ne_zero, ↓reduceIte, Set.Icc.mk_one]
-        rw [hg.some.apply_one x]; rfl ⟩
+        change _ = (Nonempty.some hg).toContinuousMap (1, x)
+        rw [ContinuousMap.Homotopy.coe_toContinuousMap, hg.some.apply_one x]
+        rfl ⟩
   have com := IsCompressible.of_arrow_iso_left (CWComplex.IProd.arrowIso X) <|
     IsCompressible.relCWComplex_of_isWeakHomotopyEquiv hf X.IProd
   let l := com.sq_hasLift sq |>.hasLift.some

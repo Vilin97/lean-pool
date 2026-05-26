@@ -44,7 +44,7 @@ theorem WhiteheadTheorem (X Y : CWComplex.{u}) (f : (X : TopCat.{u}) ⟶ Y) :
   intro hf
   obtain ⟨g, hgf⟩ := hf.CWComplex_induced_map_surjective Y (𝟙 _)
   have hfgf : (f ≫ g ≫ f).hom.Homotopic f.hom :=
-    (ContinuousMap.Homotopic.refl f.hom).hcomp hgf
+    hgf.comp (ContinuousMap.Homotopic.refl f.hom)
   use
     { toFun := f.hom
       invFun := g.hom
