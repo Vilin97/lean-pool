@@ -19,13 +19,17 @@ namespace HEP
 
 -- TODO (?): rewrite using Continuous.piecewise
 
+/-- `Jar` -/
 abbrev Jar (n : ℕ) := 𝔻 n × I
 
 namespace Jar
 
+/-- `mid` -/
 def mid (n : ℕ) := {⟨ ⟨⟨x, _⟩⟩, ⟨y, _⟩ ⟩ : Jar n | ‖x‖ ≤ 1 - y / 2}
+/-- `rim` -/
 def rim (n : ℕ) := {⟨ ⟨⟨x, _⟩⟩, ⟨y, _⟩ ⟩ : Jar n | ‖x‖ ≥ 1 - y / 2}
 
+/-- `closedCover` -/
 def closedCover (n : ℕ) : Fin 2 → Set (Jar n) := ![mid n, rim n]
 
 lemma continuous_sub_div_two : Continuous fun (y : ℝ) ↦ 1 - y / 2 :=
@@ -41,6 +45,7 @@ lemma isClosed_rim (n : ℕ) : IsClosed (rim n) :=
     {⟨x, y, _⟩ : ℝ × I | x ≥ 1 - y / 2} <| isClosed_le
     (continuous_sub_div_two.comp <| continuous_subtype_val.comp continuous_snd) continuous_fst
 
+/-- `midProjToFun` -/
 noncomputable def midProjToFun (n : ℕ) : mid.{u} n → disk.{u} n := fun p ↦ ⟨{
   -- Note: pattern matching is done inside `toFun` to make `Continuous.subtype_mk` work
   val := match p with
@@ -67,6 +72,7 @@ lemma continuous_midProjToFun (n : ℕ) : Continuous (midProjToFun.{u} n) := by
     (continuous_subtype_val.comp <| continuous_uliftDown.comp <| continuous_fst.comp <|
       continuous_subtype_val)
 
+/-- `midProj` -/
 noncomputable def midProj (n : ℕ) : C(mid n, 𝔻 n) :=
   ⟨midProjToFun n, continuous_midProjToFun n⟩
 
@@ -76,6 +82,7 @@ lemma rim_fst_ne_zero (n : ℕ) : ∀ p : rim n, ‖p.val.fst.down.val‖ ≠ 0 
     change ‖x‖ ≥ 1 - y / 2 at hxy
     linarith
 
+/-- `rimProjFstToFun` -/
 noncomputable def rimProjFstToFun (n : ℕ) : rim.{u} n → diskBoundary.{u} n := fun p ↦ ⟨{
   val := match p with
     | ⟨⟨ ⟨⟨x, _⟩⟩, _ ⟩, _⟩ => (1 / ‖x‖) • x
@@ -95,9 +102,11 @@ lemma continuous_rimProjFstToFun (n : ℕ) : Continuous (rimProjFstToFun n) := b
     (continuous_subtype_val.comp <| continuous_uliftDown.comp <| continuous_fst.comp <|
       continuous_subtype_val)
 
+/-- `rimProjFst` -/
 noncomputable def rimProjFst (n : ℕ) : C(rim n, ∂𝔻 n) :=
   ⟨rimProjFstToFun n, continuous_rimProjFstToFun n⟩
 
+/-- `rimProjSndToFun` -/
 noncomputable def rimProjSndToFun (n : ℕ) : rim n → I := fun p ↦ {
   val := match p with
     | ⟨⟨ ⟨⟨x, _⟩⟩, ⟨y, _⟩ ⟩, _⟩ => (y - 2) / ‖x‖ + 2
@@ -121,12 +130,15 @@ lemma continuous_rimProjSndToFun (n : ℕ) : Continuous (rimProjSndToFun n) := b
     (continuous_norm.comp <| continuous_subtype_val.comp <| continuous_uliftDown.comp <|
       continuous_fst.comp <| continuous_subtype_val) <| rim_fst_ne_zero n
 
+/-- `rimProjSnd` -/
 noncomputable def rimProjSnd (n : ℕ) : C(rim n, I) :=
   ⟨rimProjSndToFun n, continuous_rimProjSndToFun n⟩
 
+/-- `rimProj` -/
 noncomputable def rimProj (n : ℕ) : C(rim n, ∂𝔻 n × I) :=
   ContinuousMap.prodMk (rimProjFst n) (rimProjSnd n)
 
+/-- `proj` -/
 noncomputable def proj (n : ℕ) {Y : Type*} [TopologicalSpace Y]
     (f : C(𝔻 n, Y)) (H : C(∂𝔻 n × I, Y)) : ∀ i, C(closedCover n i, Y) :=
   Fin.cons (f.comp (midProj n)) <| Fin.cons (H.comp (rimProj n)) finZeroElim
@@ -182,6 +194,7 @@ lemma closedCover_isClosed (n : ℕ) : ∀ i, IsClosed (closedCover n i) := fun 
   interval_cases i
   exacts [isClosed_mid n, isClosed_rim n]
 
+/-- `homotopyExtension` -/
 noncomputable def homotopyExtension (n : ℕ) {Y : Type*} [TopologicalSpace Y]
     (f : C(𝔻 n, Y)) (H : C(∂𝔻 n × I, Y))
     (hf : f ∘ diskBoundaryIncl n = H ∘ (·, 0)) : C(Jar n, Y) :=

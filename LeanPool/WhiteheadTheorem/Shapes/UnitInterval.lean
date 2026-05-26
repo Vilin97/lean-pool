@@ -16,6 +16,7 @@ instance continuousMul : ContinuousMul I where
       (continuous_induced_dom.comp continuous_fst)
       (continuous_induced_dom.comp continuous_snd)
 
+/-- `zeroOne` -/
 abbrev zeroOne : Set ℝ := {0, 1}
 instance : OfNat zeroOne 0 where ofNat := ⟨0, by norm_num⟩  -- typecheck `0` as an element of {0, 1}
 instance : OfNat zeroOne 1 where ofNat := ⟨1, by norm_num⟩
@@ -31,6 +32,7 @@ lemma zeroOne.eq_zero_or_eq_one (t : zeroOne) : t = 0 ∨ t = 1 := by
   · left; rfl
   · right; rfl
 
+/-- `zeroOneIncl` -/
 abbrev zeroOneIncl : C(zeroOne, I) where
   toFun := fun ⟨x, hx⟩ ↦ ⟨x, by
     simp only [Set.mem_Icc]

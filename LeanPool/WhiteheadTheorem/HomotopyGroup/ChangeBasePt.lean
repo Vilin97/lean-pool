@@ -196,10 +196,14 @@ theorem homotopic_of_levelHomotopy_along_homotopic_paths
   exact pq_pp.trans pp_0
 
 
+/-- `ChangeBasePt` -/
 structure ChangeBasePt (f₀ : Ω^ (Fin n) X x₀) (p : Path x₀ x₁) where
+  /-- `res` -/
   res : Ω^ (Fin n) X x₁
+  /-- `levelHomotopy` -/
   levelHomotopy : LevelHomotopy f₀ res p
 
+/-- `get` -/
 noncomputable def ChangeBasePt.get
     (f₀ : Ω^ (Fin n) X x₀) (p : Path x₀ x₁) : ChangeBasePt f₀ p := by
   let f₀' : C(𝕀 n, X) := (f₀.val).comp ⟨ULift.down, continuous_uliftDown⟩
@@ -234,8 +238,10 @@ noncomputable def ChangeBasePt.get
         rw [← this]
         dsimp only [ContinuousMap.coe_mk, h] }
 
+/-- `«term(_#_)»` -/
 scoped[Topology.Homotopy] notation "(" p " # " f₀ ")" =>
   GenLoop.ChangeBasePt.res (GenLoop.ChangeBasePt.get f₀ p)
+/-- `«term(_#~_)»` -/
 scoped[Topology.Homotopy] notation "(" p " #~ " f₀ ")" =>
   GenLoop.ChangeBasePt.levelHomotopy (GenLoop.ChangeBasePt.get f₀ p)
 
@@ -319,6 +325,7 @@ noncomputable def HomotopyGroup.changeBasePt (n : ℕ) (p : Path x₀ x₁) :
   apply GenLoop.homotopic_of_levelHomotopy_along_homotopic_paths Hf (L.trans Hg)
   exact Nonempty.intro <| (Path.Homotopy.reflTrans _).symm
 
+/-- `changeBasePt` -/
 noncomputable def FundamentalGroupoid.changeBasePt (n : ℕ) : FundamentalGroupoid X ⥤ Pointed where
   obj x₀ := Pointed.of (default : π_ n X x₀.as)
   map {x₀ x₁} p :=

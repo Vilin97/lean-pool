@@ -21,6 +21,7 @@ section HomotopyExtensionProperty
 -- def HomotopyExtensionProperty' {A X : TopCat.{u}} (i : A ⟶ X) (Y : TopCat.{u}) : Prop :=
 --   ∀ (f : X ⟶ Y) (h : A × I ⟶ Y), i ≫ f = (TopCat.ofHom (·, 0)) ≫ h
 
+/-- `HasHomotopyExtensionProperty` -/
 def HasHomotopyExtensionProperty {A X : Type u} [TopologicalSpace A] [TopologicalSpace X]
     (i : C(A, X)) (Y : Type u) [TopologicalSpace Y] : Prop :=
   ∀ (f : C(X, Y)) (h : C(A × I, Y)), f ∘ i = h ∘ (·, 0) →
@@ -112,6 +113,7 @@ noncomputable def app (h : X 0 ⟶ Z) (f : Limits.colimit (Functor.ofSequence i)
         have := Limits.colimit.w (Functor.ofSequence i) <| homOfLE <| Nat.le_succ <| n + 1
         simp at this; exact this ⟩⟩
 
+/-- `ofSequence_of_hasLiftingProperty` -/
 noncomputable def _root_.Limits.Cocone.ofSequence_of_hasLiftingProperty
     (h : X 0 ⟶ Z) (f : Limits.colimit (Functor.ofSequence i) ⟶ Y)
     (bigSq : CommSq h (Limits.colimit.ι (Functor.ofSequence i) 0) p f) :
@@ -170,6 +172,7 @@ instance HasLiftingProperty.of_colimit_ofSequence_zero :
 
 namespace Functor.ofSequence
 
+/-- `coconeDropFirst` -/
 noncomputable abbrev coconeDropFirst
     (cc : Limits.Cocone <| Functor.ofSequence i) :
     Limits.Cocone <| Functor.ofSequence fun n ↦ i (n + 1) where
@@ -182,6 +185,7 @@ noncomputable abbrev coconeDropFirst
           simp_all only [Functor.ofSequence_obj, Nat.succ_eq_add_one, 
             homOfLE_leOfHom, Functor.ofSequence_map_homOfLE_succ] )
 
+/-- `coconeUndropFirst` -/
 noncomputable abbrev coconeUndropFirst
     (cc' : Limits.Cocone <| Functor.ofSequence fun n ↦ i (n + 1)) :
     Limits.Cocone <| Functor.ofSequence i where
@@ -355,6 +359,7 @@ end HomotopyExtensionProperty
 
 section Cofibration
 
+/-- `IsCofibration` -/
 class IsCofibration {A X : TopCat.{u}} (i : A ⟶ X) : Prop where
   hasCurriedHEP : ∀ (Y : TopCat.{u}), HasCurriedHEP i Y
 

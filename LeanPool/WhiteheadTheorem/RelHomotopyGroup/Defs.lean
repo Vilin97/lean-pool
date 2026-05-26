@@ -83,6 +83,7 @@ def RelHomotopyGroup (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a :
   Quotient (RelGenLoop.Homotopic.setoid n X A a)
 
 -- scoped[Topology] notation "π_" => RelHomotopyGroup
+/-- `«termπ﹍»` -/
 scoped[Topology] notation "π﹍" => RelHomotopyGroup   -- U+FE4D Dashed Low Line
 
 instance RelHomotopyGroup.inhabited {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A} :
@@ -106,6 +107,7 @@ def equivPi0 : π﹍ 0 X A a ≃ π_ 0 X a :=
           prop' _ := ⟨fun y hy ↦ isEmptyElim (⟨y, hy⟩ : ∂I^0),
             fun y hy ↦ isEmptyElim (⟨y, hy⟩ : ⊔I^0) ⟩ } ⟩
 
+/-- `iStar'` -/
 def iStar' (f : Ω^ (Fin n) A a) : π_ n X a :=
   Quotient.mk _ ⟨ ⟨Subtype.val ∘ f.val, f.val.continuous_toFun.subtype_val⟩,
     by intro y hy; simp only [ContinuousMap.coe_mk, Function.comp_apply, f.property y hy] ⟩
@@ -123,6 +125,7 @@ def iStar : π_ n A a → π_ n X a :=
           rw [this]
           rfl }
 
+/-- `jStar'` -/
 def jStar' (f : Ω^ (Fin n) X a) : π﹍ n X A a :=
   Quotient.mk _ ⟨f,
     ⟨fun y hy ↦ Set.mem_of_eq_of_mem (f.property y hy) (Subtype.coe_prop a),

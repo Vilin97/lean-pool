@@ -102,6 +102,7 @@ variable [∀ z, Decidable (z ∈ Set.range g)]
 
 namespace TopCat
 
+/-- `pushoutInr'` -/
 noncomputable abbrev pushoutInr' := (pushout.inr f g).hom.restrict (Set.range g)ᶜ
 
 /--

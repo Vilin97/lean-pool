@@ -170,6 +170,7 @@ noncomputable def homeoQDisk : pDisk n p ≃ₜ pDisk n q where
   continuous_toFun := continuous_toQDisk n p q
   continuous_invFun := continuous_toQDisk n q p
 
+/-- `isoQDisk` -/
 noncomputable def isoQDisk : pDisk n p ≅ pDisk n q :=
   isoOfHomeo (homeoQDisk n p q)
 
@@ -192,6 +193,7 @@ lemma neq_zero (x : pDiskBoundary n p) : x.down.val ≠ 0 := fun xz ↦ by
     simp only [mem_sphere_iff_norm, sub_zero] at this; exact this
   exact (by norm_num : (0 : ℝ) ≠ 1) (x0.symm.trans x1)
 
+/-- `toQDiskBoundary` -/
 noncomputable def toQDiskBoundary : pDiskBoundary.{u} n p → pDiskBoundary n q
   | ⟨x, hx⟩ => ⟨ (‖x‖ * ‖WithLp.toLp q (WithLp.ofLp x)‖⁻¹) • WithLp.toLp q (WithLp.ofLp x), by
       have xnz := neq_zero.{u} n p ⟨x, hx⟩
@@ -261,6 +263,7 @@ noncomputable def homeoQDiskBoundary : pDiskBoundary n p ≃ₜ pDiskBoundary n 
   continuous_toFun := continuous_toQDiskBoundary n p q
   continuous_invFun := continuous_toQDiskBoundary n q p
 
+/-- `isoQDiskBoundary` -/
 noncomputable def isoQDiskBoundary : pDiskBoundary n p ≅ pDiskBoundary n q :=
   isoOfHomeo (homeoQDiskBoundary n p q)
 
@@ -324,6 +327,7 @@ noncomputable def diskHomeoCube (n : ℕ) : TopCat.disk.{u} n ≃ₜ (I^ Fin n) 
   (pDisk.homeoQDisk.{u, u} n 2 ∞).trans <|
     (largeCubeHomeoPDisk n).symm.trans (largeCubeHomeoCube n)
 
+/-- `largeCubeBoundaryHomeoPDiskBoundary` -/
 noncomputable def largeCubeBoundaryHomeoPDiskBoundary (n : ℕ) :
     { x : Fin n → Set.Icc (-1 : ℝ) (1 : ℝ) | ∃ i, x i = (-1 : ℝ) ∨ x i = (1 : ℝ) } ≃ₜ
       pDiskBoundary n ∞ where
@@ -369,6 +373,7 @@ noncomputable def largeCubeBoundaryHomeoPDiskBoundary (n : ℕ) :
     exact (continuous_apply i).comp <| (PiLp.continuous_ofLp ∞ _).comp <|
       continuous_uliftDown.subtype_val
 
+/-- `largeCubeBoundaryHomeoCubeBoundary` -/
 noncomputable def largeCubeBoundaryHomeoCubeBoundary (n : ℕ) :
     { x : Fin n → Set.Icc (-1 : ℝ) (1 : ℝ) | ∃ i, x i = (-1 : ℝ) ∨ x i = (1 : ℝ) } ≃ₜ
       Cube.boundary (Fin n) where
@@ -393,6 +398,7 @@ noncomputable def largeCubeBoundaryHomeoCubeBoundary (n : ℕ) :
     apply (Homeomorph.continuous_symm _).comp
     exact (continuous_apply i).comp continuous_subtype_val
 
+/-- `diskBoundaryHomeoCubeBoundary` -/
 noncomputable def diskBoundaryHomeoCubeBoundary (n : ℕ) :
     TopCat.diskBoundary.{u} n ≃ₜ Cube.boundary (Fin n) :=
   (pDiskBoundary.homeoQDiskBoundary.{u, u} n 2 ∞).trans <|
@@ -402,13 +408,16 @@ noncomputable def diskBoundaryHomeoCubeBoundary (n : ℕ) :
 
 open CategoryTheory  -- for the notation `≫`
 
+/-- `diskIsoCube` -/
 noncomputable def diskIsoCube (n : ℕ) : disk n ≅ TopCat.of (I^ Fin n) :=
   isoOfHomeo (diskHomeoCube n)
 
+/-- `diskBoundaryIsoCubeBoundary` -/
 noncomputable def diskBoundaryIsoCubeBoundary (n : ℕ) :
     diskBoundary n ≅ TopCat.of <| Cube.boundary (Fin n) :=
   isoOfHomeo (diskBoundaryHomeoCubeBoundary n)
 
+/-- `homeoCubePair` -/
 noncomputable def diskPair.homeoCubePair (n : ℕ) :
     CategoryTheory.Arrow.mk (diskBoundaryIncl n) ≅
     CategoryTheory.Arrow.mk (TopCat.ofHom (Cube.boundaryIncl n)) :=
@@ -422,17 +431,21 @@ lemma diskPair.homeoCubePair_comm (n : ℕ) :
 
 --------------------------------------------------------------------------------------
 
+/-- `diskHomeoCubeULift` -/
 noncomputable def diskHomeoCubeULift (n : ℕ) :
     disk.{u} n ≃ₜ cube.{u} n :=
   (diskHomeoCube n).trans Homeomorph.ulift.symm
 
+/-- `diskIsoCubeULift` -/
 noncomputable def diskIsoCubeULift (n : ℕ) : disk.{u} n ≅ cube.{u} n :=
   isoOfHomeo (diskHomeoCubeULift n)
 
+/-- `diskBoundaryHomeoCubeBoundaryULift` -/
 noncomputable def diskBoundaryHomeoCubeBoundaryULift (n : ℕ) :
     diskBoundary.{u} n ≃ₜ cubeBoundary.{u} n :=
   (TopCat.diskBoundaryHomeoCubeBoundary n).trans Homeomorph.ulift.symm
 
+/-- `diskBoundaryIsoCubeBoundaryULift` -/
 noncomputable def diskBoundaryIsoCubeBoundaryULift (n : ℕ) :
     diskBoundary.{u} n ≅ cubeBoundary.{u} n :=
   isoOfHomeo (diskBoundaryHomeoCubeBoundaryULift n)

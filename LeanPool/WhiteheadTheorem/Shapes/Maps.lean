@@ -83,6 +83,7 @@ lemma set_neq_zero_eq_compl_range_i₀ (X : TopCat.{u}) :
     intro a
     simp_all only [not_true_eq_false]
 
+/-- `i₁_to_compl_range_i₀` -/
 def i₁_to_compl_range_i₀ (X : TopCat.{u}) :
     C(X, (Set.range (Cyl.i₀ X)).compl) where
   toFun x := ⟨Cyl.i₁ _ x, by
@@ -181,6 +182,7 @@ abbrev eval₁ (Y : TopCat.{u}) : TopCat.of C(I, Y) ⟶ Y :=
     { toFun f := f 1
       continuous_toFun := Continuous.eval continuous_id continuous_const }
 
+/-- `evalAt` -/
 abbrev evalAt (Y : TopCat.{u}) (t : I) : TopCat.of C(I, Y) ⟶ Y :=
   ofHom
     { toFun f := f t

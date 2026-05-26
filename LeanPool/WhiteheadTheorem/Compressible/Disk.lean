@@ -341,6 +341,7 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
           exact hz
         apply this }
 
+/-- `stretchToWall` -/
 noncomputable def _root_.TopCat.Cyl.stretchToWall :
     C(I × (disk.{u} (n + 1)), I × (disk.{u} (n + 1))) := by
   let β : C((disk.{u} (n + 1)) × I, ℝ) :=

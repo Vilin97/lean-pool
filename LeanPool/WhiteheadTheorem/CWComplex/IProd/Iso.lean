@@ -72,6 +72,7 @@ namespace colimitCocone
 variable (Z : Limits.Cocone (Functor.ofSequence X.IProd.skInclSucc))
 variable (n : ℕ)
 
+/-- `r'` -/
 abbrev r' : TopCat.of (I × X.sk n) ⟶ of (I × X.toTopCat) :=
   ofHom <| (ContinuousMap.id I).prodMap (X.skIncl n).hom
 
@@ -80,6 +81,7 @@ lemma w' : l X n ≫ zeroOneProdInclIProd X = r X n ≫ r' X n := by
   all_goals simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
     ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq, ContinuousMap.coe_mk]
 
+/-- `incl` -/
 def incl : X.IProd.sk n ⟶ of (I × X.toTopCat) :=
   match n with
   | 0 => zeroOneProdInclIProd X
@@ -251,6 +253,7 @@ def colimitCocone : Limits.ColimitCocone (Functor.ofSequence X.IProd.skInclSucc)
       fac := colimitCocone.fac X
       uniq := colimitCocone.uniq X }
 
+/-- `iso` -/
 def iso : X.IProd.toTopCat ≅ TopCat.of (I × X.toTopCat) :=
   Limits.IsColimit.coconePointUniqueUpToIso
     (Limits.getColimitCocone (Functor.ofSequence X.IProd.skInclSucc)).isColimit

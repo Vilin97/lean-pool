@@ -262,6 +262,7 @@ def boundaryJarDeformRetrToBot {n : ℕ} : C(I × ⊔I^(n + 1), ⊔I^(n + 1)) :=
         exact mem_boundaryJar_iff_splitAtLast.mpr <| Or.inr this ⟩
     continuous_toFun := by fun_prop }
 
+/-- `hequivBoundaryJar` -/
 def hequivBoundaryJar {n : ℕ} : (I^ Fin n) ≃ₕ ⊔I^(n + 1) where
   toFun := inclToBoundaryJarBot
   invFun := discardLast.comp (boundaryJarIncl (n + 1))

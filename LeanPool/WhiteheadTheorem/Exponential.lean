@@ -16,10 +16,12 @@ section
 variable {X Y Y' Z : Type*}
 variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Y'] [TopologicalSpace Z]
 
-def ContinuousMap.uncurry_curry [LocallyCompactSpace Y]
+/-- `uncurry_curry` -/
+lemma ContinuousMap.uncurry_curry [LocallyCompactSpace Y]
   (f : C(X × Y, Z)) : f = f.curry.uncurry := rfl
 
-def ContinuousMap.curry_uncurry [LocallyCompactSpace Y]
+/-- `curry_uncurry` -/
+lemma ContinuousMap.curry_uncurry [LocallyCompactSpace Y]
   (f : C(X, C(Y, Z))) : f = f.uncurry.curry := rfl
 
 /-- An auxiliary lemma only used for showing the naturality of `topBinProdRightAdjExp` -/
@@ -43,6 +45,7 @@ abbrev exp (X : TopCat.{u}) : TopCat ⥤ TopCat where
   obj Y := TopCat.of C(X, Y)
   map {Y Z} f := TopCat.ofHom ⟨fun g ↦ f.hom.comp g, f.hom.continuous_postcomp⟩
 
+/-- `topBinProdRightAdjExp` -/
 noncomputable def topBinProdRightAdjExp (X : TopCat.{u}) [LocallyCompactSpace X] :
     topBinProdRight X ⊣ exp X :=
   Adjunction.mkOfHomEquiv
@@ -62,6 +65,7 @@ abbrev topBinProdRight' (X : Type u) [TopologicalSpace X] : TopCat ⥤ TopCat wh
   obj Y := TopCat.of (Y × X)
   map {Y Z} f := ofHom (f.hom.prodMap (ContinuousMap.id X))
 
+/-- `topBinProdLeft'` -/
 abbrev topBinProdLeft' (X : Type u) [TopologicalSpace X] : TopCat ⥤ TopCat where
   obj Y := TopCat.of (X × Y)
   map {Y Z} f := ofHom ((ContinuousMap.id X).prodMap f.hom)
@@ -87,6 +91,7 @@ noncomputable def topBinProdRightAdjExp'
     homEquiv_naturality_right {Y Z Z'} f g := by
       simp only [Equiv.coe_fn_mk, hom_comp]; rfl }
 
+/-- `topBinProdLeftAdjExp'` -/
 noncomputable def topBinProdLeftAdjExp'
     (X : Type u) [TopologicalSpace X] [LocallyCompactSpace X] :
     topBinProdLeft' X ⊣ exp' X :=
@@ -116,11 +121,13 @@ namespace ContinuousMap
 
 variable {A B Y : Type*} [TopologicalSpace A] [TopologicalSpace B] [TopologicalSpace Y]
 
+/-- `argSwap` -/
 @[simp]
 def argSwap : C(C(A × B, Y), C(B × A, Y)) where
   toFun f := f.comp ContinuousMap.prodSwap
   continuous_toFun := by fun_prop
 
+/-- `curriedArgSwap` -/
 def curriedArgSwap [LocallyCompactSpace A] [LocallyCompactSpace B] :
     C(C(A, C(B, Y)), C(B, C(A, Y))) where
   toFun f := ContinuousMap.curry <| argSwap <| ContinuousMap.uncurry f
@@ -131,10 +138,12 @@ def curriedArgSwap [LocallyCompactSpace A] [LocallyCompactSpace B] :
 lemma curriedArgSwap_curriedArgSwap [LocallyCompactSpace A] [LocallyCompactSpace B] :
   curriedArgSwap ∘ (curriedArgSwap (A := A) (B := B) (Y := Y)) = id := rfl
 
+/-- `curryLeft` -/
 def curryLeft (f : C(A × B, Y)) (b : B) : C(A, Y) where
   toFun a := f ⟨a, b⟩
   continuous_toFun := f.continuous.curry_left
 
+/-- `curryRight` -/
 def curryRight (f : C(A × B, Y)) (a : A) : C(B, Y) where
   toFun b := f ⟨a, b⟩
   continuous_toFun := f.continuous.curry_right

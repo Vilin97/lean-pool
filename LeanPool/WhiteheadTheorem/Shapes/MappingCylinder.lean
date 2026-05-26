@@ -32,9 +32,12 @@ def MapCyl : TopCat.{u} := Limits.pushout f (Cyl.i₀ X)
 
 namespace MapCyl
 
+/-- `inl` -/
 abbrev inl : Y ⟶ MapCyl f := Limits.pushout.inl _ _
+/-- `inr` -/
 abbrev inr : TopCat.of (X × I) ⟶ MapCyl f := Limits.pushout.inr _ _
-abbrev condition : f ≫ inl f = Cyl.i₀ X ≫ inr f := Limits.pushout.condition
+/-- `condition` -/
+lemma condition : f ≫ inl f = Cyl.i₀ X ≫ inr f := Limits.pushout.condition
 
 /-- Inclusion map from the domain `X` to the mapping cylinder of `f : X ⟶ Y` -/
 abbrev domIncl : X ⟶ MapCyl f := Cyl.i₁ X ≫ inr f
@@ -68,7 +71,9 @@ theorem isEmbedding_domIncl : Topology.IsEmbedding (domIncl f) := by
 the mapping cylinder of `f`. -/
 def domHomeoTop : X ≃ₜ top f := (isEmbedding_domIncl f).toHomeomorph
 
+/-- `domInclToTop` -/
 def domInclToTop : C(X, top f) := toContinuousMap (domHomeoTop f)
+/-- `domInclFromTop` -/
 def domInclFromTop : C(top f, MapCyl f) := ⟨Subtype.val, continuous_subtype_val⟩
 
 lemma domIncl_hom_eq_domInclFromTop_comp_domInclToTop :
@@ -120,6 +125,7 @@ def curriedDeformRetr : MapCyl f ⟶ TopCat.of C(I, MapCyl f) :=
         ContinuousMap.coe_mk, zero_mul]
       exact congr_fun (congr_arg (ContinuousMap.toFun ∘ Hom.hom) (condition f)) x )
 
+/-- `curriedDeformRetrEvalAt` -/
 def curriedDeformRetrEvalAt (t : I) : MapCyl f ⟶ MapCyl f :=
   ofHom <| (curriedDeformRetr f).hom.uncurry.curryLeft t
 

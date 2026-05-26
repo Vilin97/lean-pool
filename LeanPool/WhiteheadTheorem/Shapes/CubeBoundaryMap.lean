@@ -15,6 +15,7 @@ open unitInterval
 
 namespace TopCat.cubeBoundary
 
+/-- `botTopSidesCover` -/
 abbrev botTopSidesCover (n : ℕ) : Fin 3 → Set (∂𝕀 (n + 1)) :=
     ![botOrTop n 0, botOrTop n 1, sides n]
 
@@ -82,6 +83,7 @@ variable {n : ℕ} {Z : TopCat.{u}}
 variable (f01 : zeroOne → (cube.{u} n ⟶ Z))  -- bottom or top face of `∂𝕀 (n + 1)`
 variable (fs : TopCat.of (I × cubeBoundary.{u} n) ⟶ Z)  -- sides of `∂𝕀 (n + 1)`
 
+/-- `mapVecOfBotTopSides` -/
 def mapVecOfBotTopSides : (k : Fin 3) → C(botTopSidesCover n k, Z) :=
   let g0 : C(botOrTop.{u} n 0, Z) :=
     ⟨fun ⟨⟨y, _⟩, _⟩ ↦ f01 0 ⟨(Cube.splitAtLast y).snd⟩, by fun_prop⟩
@@ -122,6 +124,7 @@ theorem mapVecOfBotTopSides_compatible
   · exact mapVecOfBotTopSides_compatible_botOrTop _ _ h |>.left _ hyk hyj |>.symm
   · exact mapVecOfBotTopSides_compatible_botOrTop _ _ h |>.right _ hyk hyj |>.symm
 
+/-- `mapOfBotTopSides` -/
 noncomputable def mapOfBotTopSides
   (h : ∀ t y, f01 t (cubeBoundaryIncl _ y) = fs ⟨zeroOneIncl t, y⟩) :
   ∂𝕀 (n + 1) ⟶ Z := ofHom <|

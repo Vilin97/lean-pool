@@ -15,6 +15,7 @@ TODO: Use `Pointed` (the category of pointed types) in Mathlib.
 
 
 /- A pointed map from `(X, x₀)` to `(Y, y₀)` is a function `f : X → Y` such that `f x₀ = y₀`. -/
+/-- `IsPointedMap` -/
 class IsPointedMap {X Y : Type*} [Inhabited X] [Inhabited Y] (f : X → Y) : Prop where
   map_default : f default = default
 
@@ -49,8 +50,9 @@ namespace ExactSeq
 
 /- The sequence `X --f-> Y --g-> Z` of pointed sets is said to be exact at `Y`
 if `Ker g = Im f`. -/
-def IsExactAt {X Y Z : Type*} [Inhabited X] [Inhabited Y] [Inhabited Z]
-    (f : X → Y) (g : Y → Z) [IsPointedMap f] [IsPointedMap g] : Prop :=
+/-- `IsExactAt` -/
+def IsExactAt {X Y Z : Type*} [Inhabited Z]
+    (f : X → Y) (g : Y → Z) : Prop :=
   g ⁻¹' {default} = Set.range f
 
 lemma isExactAt_of_ker_supset_im_of_ker_subset_im

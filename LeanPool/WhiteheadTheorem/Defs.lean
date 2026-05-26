@@ -12,6 +12,7 @@ open scoped ContinuousMap
 
 universe u
 
+/-- `IsWeakHomotopyEquiv` -/
 def IsWeakHomotopyEquiv {X Y : Type u} [TopologicalSpace X] [TopologicalSpace Y]
     (f : C(X, Y)) : Prop :=
   Nonempty X ∧
@@ -30,6 +31,7 @@ lemma isIso_inducedPointedHom_of_isWeakHomotopyEquiv
   have := hf.right n x
   rwa [HomotopyGroup.inducedMap] at this
 
+/-- `IsHomotopyEquiv` -/
 def IsHomotopyEquiv {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
     (f : C(X, Y)) : Prop :=
   ∃ equiv : X ≃ₕ Y, equiv.toFun = f

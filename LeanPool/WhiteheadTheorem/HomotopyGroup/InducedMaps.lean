@@ -18,6 +18,7 @@ open scoped Topology Topology.Homotopy
 variable {X Y Z : Type u} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
 
 
+/-- `PointedTopCat` -/
 abbrev PointedTopCat := Under (TopCat.of PUnit)
 
 namespace PointedTopCat
@@ -83,12 +84,12 @@ lemma w {X Y : PointedTopCat.{u}} (f : X ⟶ Y) : f.right X.point = Y.point := b
   change (TopCat.Hom.hom (X.hom ≫ f.right)) _ = _
   rw [Under.w]
 
-instance _root_.TopCat.isIso_of_isHomeomorph
+lemma _root_.TopCat.isIso_of_isHomeomorph
     (f : C(X, Y)) (hf : IsHomeomorph f) : IsIso (TopCat.ofHom f) :=
   let e : TopCat.of X ≅ TopCat.of Y := TopCat.isoOfHomeo (IsHomeomorph.homeomorph f hf)
   ⟨e.inv, ⟨e.hom_inv_id, e.inv_hom_id⟩⟩
 
-instance isIso_of_isHomeomorph
+lemma isIso_of_isHomeomorph
     (f : C(X, Y)) (point : X) (hf : IsHomeomorph f) : IsIso (PointedTopCat.ofHom f point) :=
   let e : TopCat.of X ≅ TopCat.of Y := TopCat.isoOfHomeo (IsHomeomorph.homeomorph f hf)
   let E : PointedTopCat.of point ≅ PointedTopCat.of (f point) := Under.isoMk e
@@ -318,6 +319,7 @@ lemma inducedPointedHom'_eq_inducedPointedHom
     inducedPointedHom' n x₀ f = inducedPointedHom n x₀ f.hom :=
   rfl
 
+/-- `isoTarget` -/
 noncomputable abbrev inducedPointedHom.isoTarget (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
     Pointed.of (default : π_ n Y (g x₀)) ≅ Pointed.of (default : π_ n Y (f x₀)) :=
   gf ▸ Iso.refl _
@@ -339,6 +341,7 @@ lemma inducedPointedHom.rwTargetPt_eq (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf :
   unfold inducedPointedHom.rwTargetPt inducedPointedHom
   rw [PointedTopCat.Hom.rwTargetPt_eq]
 
+/-- `isoTarget` -/
 noncomputable abbrev inducedPointedHom'.isoTarget
     (n : ℕ) {X Y : TopCat.{u}} (x₀ : X) {f g : X ⟶ Y} (gf : g = f) :
     Pointed.of (default : π_ n Y (g x₀)) ≅ Pointed.of (default : π_ n Y (f x₀)) :=
@@ -363,7 +366,7 @@ lemma inducedPointedHom'.rwTargetPt_eq
   unfold inducedPointedHom'.rwTargetPt inducedPointedHom'
   rw [PointedTopCat.Hom'.rwTargetPt_eq]
 
-instance isIso_inducedPointedHom_of_isHomeomorph (n : ℕ) (x₀ : X) (f : C(X, Y))
+lemma isIso_inducedPointedHom_of_isHomeomorph (n : ℕ) (x₀ : X) (f : C(X, Y))
     (hf : IsHomeomorph f) : IsIso (inducedPointedHom n x₀ f) := by
   unfold inducedPointedHom
   have : IsIso (PointedTopCat.ofHom f x₀) := PointedTopCat.isIso_of_isHomeomorph f _ hf

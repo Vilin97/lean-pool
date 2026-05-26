@@ -22,8 +22,11 @@ namespace TopCat
 
 namespace cubeBoundaryJar
 
+/-- `bot` -/
 abbrev bot (n : ℕ) : Set (⊔𝕀 (n + 1)) := { ⟨⟨y, _⟩⟩ | y (Fin.last _) = 0 }
+/-- `sides` -/
 abbrev sides (n : ℕ) : Set (⊔𝕀 (n + 1)) := { ⟨⟨y, _⟩⟩ | ∃ i < Fin.last _, y i = 0 ∨ y i = 1 }
+/-- `botSidesCover` -/
 abbrev botSidesCover (n : ℕ) : Fin 2 → Set (⊔𝕀 (n + 1)) := ![bot n, sides n]
 
 lemma botSidesCover_cover (n : ℕ) : ∀ y : ⊔𝕀 (n + 1), ∃ k, y ∈ botSidesCover n k := by
@@ -115,6 +118,7 @@ abbrev back (n : ℕ) : Set (∂𝕀 (n + 1) × I) := { pt | pt.fst.down.val ∈
 /-- The front, left, and right surfaces of `∂𝕀 (n + 1) × I` -/
 abbrev flr (n : ℕ) : Set (∂𝕀 (n + 1) × I) := { pt | pt.fst.down.val ∈ Cube.boundaryJar (n + 1) }
 
+/-- `backFlrCover` -/
 abbrev backFlrCover (n : ℕ) : Fin 2 → Set (∂𝕀 (n + 1) × I) := ![back n, flr n]
 
 lemma backFlrCover_cover (n : ℕ) :
@@ -138,6 +142,7 @@ lemma isClosed_flr (n : ℕ) : IsClosed (flr n) := by
 lemma backFlrCover_closed (n : ℕ) : ∀ k, IsClosed (backFlrCover n k) := by
   intro k; fin_cases k; exacts [isClosed_back n, isClosed_flr n]
 
+/-- `backIsoCube` -/
 def backIsoCube (n : ℕ) : back n ≃ₜ (I^ Fin (n + 1)) where
   toFun := fun ⟨⟨⟨y, _⟩, t⟩, hy⟩ ↦ Cube.splitAtLast.symm ⟨t, (Cube.splitAtLast y).snd⟩
   invFun := fun y ↦
@@ -170,6 +175,7 @@ section jarMap
 
 open cubeBoundaryJar
 
+/-- `jarBotMap` -/
 def jarBotMap : C(bot n, Y) where
   toFun := fun ⟨⟨⟨y, _⟩⟩, hy⟩ ↦
     let y' : I^ Fin (n + 1) := Cube.splitAtLast.symm ⟨1, (Cube.splitAtLast y).snd⟩
@@ -178,6 +184,7 @@ def jarBotMap : C(bot n, Y) where
     f ⟨⟨y', ‹_›⟩⟩
   continuous_toFun := by simp only [Set.coe_setOf, Set.mem_setOf_eq]; fun_prop
 
+/-- `jarSidesMap` -/
 def jarSidesMap : C(sides n, Y) where
   toFun := fun ⟨⟨⟨y, _⟩⟩, hy⟩ ↦
     let y' : I^ Fin (n + 1) := Cube.splitAtLast.symm ⟨1, (Cube.splitAtLast y).snd⟩
@@ -189,6 +196,7 @@ def jarSidesMap : C(sides n, Y) where
     h ⟨⟨⟨y', ‹_›⟩⟩, (Cube.splitAtLast y).fst⟩
   continuous_toFun := by simp only [Set.coe_setOf, Set.mem_setOf_eq]; fun_prop
 
+/-- `botSidesCoverMapVec` -/
 def botSidesCoverMapVec : (k : Fin 2) → C(botSidesCover n k, Y) :=
   Fin.cons (jarBotMap f) <| Fin.cons (jarSidesMap h) <| finZeroElim
 
@@ -230,6 +238,7 @@ lemma botSidesCoverMapVec_compatible
   · apply botSidesCoverMapVec_compatible_01 _ _ fh
   · exact (botSidesCoverMapVec_compatible_01 _ _ fh ..).symm
 
+/-- `jarMap` -/
 noncomputable def jarMap
     (fh : f ∘ (cubeBoundaryJarInclToBoundary (n + 1)) = h ∘ fun x ↦ (x, 0)) :
     C(⊔𝕀 (n + 1), Y) :=
@@ -240,6 +249,7 @@ noncomputable def jarMap
 end jarMap
 
 
+/-- `backMap` -/
 noncomputable def backMap
     (fh : f ∘ (cubeBoundaryJarInclToBoundary (n + 1)) = h ∘ fun x ↦ (x, 0)) :
     C(back n, Y) where
@@ -250,10 +260,12 @@ noncomputable def backMap
     jarMap f h fh <| ULift.up.{u} ⟨yt', Set.range_subset_iff.mp r.r_range _⟩
   continuous_toFun := by simp only [Set.coe_setOf]; fun_prop
 
+/-- `flrMap` -/
 def flrMap : C(flr n, Y) where
   toFun := fun ⟨⟨⟨y, _⟩, t⟩, hy⟩ ↦ h ⟨⟨y, hy⟩, t⟩
   continuous_toFun := by fun_prop
 
+/-- `backFlrCoverMapVec` -/
 noncomputable def backFlrCoverMapVec
     (fh : f ∘ (cubeBoundaryJarInclToBoundary (n + 1)) = h ∘ fun x ↦ (x, 0)) :
     (k : Fin 2) → C(backFlrCover n k, Y) :=

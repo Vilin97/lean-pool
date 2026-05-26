@@ -27,10 +27,14 @@ def boundaryLid (n : ℕ) : Set (I^ Fin n) :=
   | 0 => ∅
   | _ + 1 => {y | y (Fin.last _) = 1}
 
+/-- `«term∂I^_»` -/
 scoped[Topology.Homotopy] notation "∂I^" n => Cube.boundary (Fin n)
+/-- `«term⊔I^_»` -/
 scoped[Topology.Homotopy] notation "⊔I^" n => Cube.boundaryJar n
 
+/-- `boundaryIncl` -/
 def boundaryIncl (n : ℕ) : C(∂I^n, I^ (Fin n)) := ⟨Subtype.val, continuous_subtype_val⟩
+/-- `boundaryJarIncl` -/
 def boundaryJarIncl (n : ℕ) : C(⊔I^n, I^ (Fin n)) := ⟨Subtype.val, continuous_subtype_val⟩
 
 instance isEmpty_boundary_zero : IsEmpty (∂I^0) :=
@@ -43,6 +47,7 @@ lemma boundaryJar_subset_boundary (n : ℕ) : (⊔I^n) ⊆ (∂I^n) :=
   | 0 => fun y hy ↦ isEmptyElim (⟨y, hy⟩ : ⊔I^0)
   | _ + 1 => fun _ ⟨hy1, _⟩ ↦ hy1
 
+/-- `boundaryJarInclToBoundary` -/
 def boundaryJarInclToBoundary (n : ℕ) : C(⊔I^n, ∂I^n) where
   toFun := fun ⟨y, hy⟩ ↦ ⟨y, boundaryJar_subset_boundary n hy⟩
   continuous_toFun := by fun_prop
@@ -95,6 +100,7 @@ instance uniqueBoundaryJarOne : Unique (⊔I^1) where
     · exact h0
     · exfalso; obtain ⟨k, hk⟩ := hy2 h1; exact Nat.not_succ_le_zero k hk.left
 
+/-- `homeoNeqLast` -/
 def homeoNeqLast {n : ℕ} : (I^ Fin n) ≃ₜ I^{ j : Fin (n + 1) // j ≠ Fin.last _ } :=
   Homeomorph.piCongr
     { toFun i := ⟨i.castSucc, by
@@ -346,10 +352,13 @@ end Cube
 
 namespace TopCat
 
+/-- `cube` -/
 def cube (n : ℕ) : TopCat.{u} := TopCat.of <| ULift <| I^ Fin n
 
+/-- `cubeBoundary` -/
 def cubeBoundary (n : ℕ) : TopCat.{u} := TopCat.of <| ULift <| Cube.boundary (Fin n)
 
+/-- `cubeBoundaryJar` -/
 def cubeBoundaryJar (n : ℕ) : TopCat.{u} := TopCat.of <| ULift <| Cube.boundaryJar n
 
 /-- `𝕀 n` denotes the `n`-cube (as an object in `TopCat`). -/
@@ -369,6 +378,7 @@ def cubeBoundaryIncl (n : ℕ) : cubeBoundary.{u} n ⟶ cube.{u} n :=
       continuous_toFun :=
         continuous_uliftUp.comp <| continuous_subtype_val.comp continuous_induced_dom }
 
+/-- `cubeBoundaryJarInclToBoundary` -/
 def cubeBoundaryJarInclToBoundary (n : ℕ) : cubeBoundaryJar.{u} n ⟶ cubeBoundary.{u} n :=
   ofHom
     { toFun := fun ⟨p⟩ ↦ ⟨Cube.boundaryJarInclToBoundary n p⟩
@@ -378,6 +388,7 @@ def cubeBoundaryJarInclToBoundary (n : ℕ) : cubeBoundaryJar.{u} n ⟶ cubeBoun
 lemma cubeBoundaryIncl_apply_down_eq {n : ℕ} (y : I^Fin n) (hy : y ∈ ∂I^n) :
     (cubeBoundaryIncl n ⟨⟨y, hy⟩⟩).down = y := rfl
 
+/-- `cubeSplitAtLast` -/
 def cubeSplitAtLast {n : ℕ} : 𝕀 (n + 1) ≅ TopCat.of (I × 𝕀 n) where
   hom := ofHom ⟨fun ⟨y⟩ ↦ ⟨(Cube.splitAtLast y).fst, ⟨(Cube.splitAtLast y).snd⟩⟩, by fun_prop⟩
   inv := ofHom ⟨fun ⟨t, ⟨y⟩⟩ ↦ ⟨Cube.splitAtLast.symm ⟨t, y⟩⟩, by fun_prop⟩
@@ -426,9 +437,11 @@ def cubeInclToBotOrTop {n : ℕ} (t : unitInterval.zeroOne) : 𝕀 n ⟶ ∂𝕀
         · right; simp_all only [Set.Icc.mk_one] ⟩
       continuous_toFun := by fun_prop }
 
+/-- `botOrTop` -/
 abbrev botOrTop (n : ℕ) (t : unitInterval.zeroOne) : Set (∂𝕀 (n + 1)) :=
   {⟨⟨y, _⟩⟩ | y (Fin.last _) = unitInterval.zeroOneIncl t}
 
+/-- `sides` -/
 abbrev sides (n : ℕ) : Set (∂𝕀 (n + 1)) :=
   {⟨⟨y, _⟩⟩ | ∃ i < Fin.last _, y i = 0 ∨ y i = 1}
 

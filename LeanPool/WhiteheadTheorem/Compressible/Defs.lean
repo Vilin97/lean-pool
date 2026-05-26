@@ -50,6 +50,7 @@ namespace LiftStructUpToRelHomotopy
 
 variable {sq : CommSq f ι i F} (l : LiftStructUpToRelHomotopy sq)
 
+/-- `curriedH` -/
 noncomputable def curriedH : X' ⟶ TopCat.of C(I, X) :=
   ofHom l.H.some.toContinuousMap.argSwap.curry
 
@@ -116,6 +117,7 @@ lemma curriedH_prop' :
   congr 2
   exact l.curriedH_prop t
 
+/-- `curriedMk` -/
 def curriedMk
     (l : X' ⟶ A)
     (fac_left : ι ≫ l = f)
@@ -152,6 +154,7 @@ end LiftStructUpToRelHomotopy
 
 
 
+/-- `HasLiftUpToRelHomotopy` -/
 structure HasLiftUpToRelHomotopy (sq : CommSq f ι i F) : Prop where
   hasLift : Nonempty <| LiftStructUpToRelHomotopy sq
 

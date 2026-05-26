@@ -103,7 +103,7 @@ abbrev AttachCells.pushout_inr (att : AttachCells n X X') :=
 -- Limits.pushout.inr att.sigmaAttachMaps att.sigmaDiskBoundaryIncl
 
 /-- The pushout square is a pushout. -/
-def AttachCells.pushout_isPushout (att : AttachCells n X X') :
+lemma AttachCells.pushout_isPushout (att : AttachCells n X X') :
     IsPushout att.sigmaAttachMaps (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
       att.pushout_inl att.pushout_inr :=
   IsPushout.of_hasPushout att.sigmaAttachMaps
@@ -155,8 +155,10 @@ namespace AttachGeneralizedCells
 variable {S D : TopCat.{u}} {f : S ⟶ D} {X X' : TopCat.{u}}
 variable (att : AttachGeneralizedCells f X X') (α : att.cells)
 
+/-- `pushout_inl` -/
 noncomputable abbrev pushout_inl :=
   Limits.pushout.inl (Limits.Sigma.desc att.attachMaps) (Limits.Sigma.map fun _ ↦ f)
+/-- `pushout_inr` -/
 noncomputable abbrev pushout_inr :=
   Limits.pushout.inr (Limits.Sigma.desc att.attachMaps) (Limits.Sigma.map fun _ ↦ f)
 
