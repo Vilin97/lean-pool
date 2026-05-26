@@ -818,10 +818,72 @@ def pushoutSkSk (n : ℕ) :
             cubeSplitAtLast.hom ≫
               ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))) :=
         Limits.Sigma.ι_desc _ α
-      simp only [← TopCat.comp_app]
-      rw [hsidisks]
-      simp only [TopCat.comp_app, TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
-        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq]
+      -- Evaluate the curried form on the RHS manually so the result matches the LHS.
+      change (Hom.hom d) ((Hom.hom (Limits.pushout.inr (l X (n + 1)) (r X (n + 1))))
+          (t, (Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift n).hom ≫
+            X.cubeInclToSk α)) x)) =
+        (Hom.hom d) ((Hom.hom (Limits.pushout.inr (l X (n + 1)) (r X (n + 1))))
+          ((Hom.hom (Limits.Sigma.desc fun α ↦
+              Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
+                cubeSplitAtLast.hom ≫
+                ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α)))))
+            ((Hom.hom (Limits.Sigma.ι (fun _ ↦ 𝔻 (n + 1)) α))
+              ((Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).inv))
+                ((Hom.hom TopCat.cubeSplitAtLast.inv)
+                  (ContinuousMap.prodSwap
+                    ((Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift n).hom)) x, t)))))))
+      -- Apply hsidisks pointwise via `congr` to evaluate the inner Sigma.desc ∘ Sigma.ι α.
+      congr 2
+      have hsi_pt :
+        ∀ z, (Hom.hom (Limits.Sigma.desc fun α ↦
+            Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
+              cubeSplitAtLast.hom ≫
+              ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α)))))
+            ((Hom.hom (Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 (n + 1)) α)) z) =
+            (Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
+              cubeSplitAtLast.hom ≫
+              ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))))) z := by
+        intro z
+        have h₂ : (Hom.hom (Limits.Sigma.ι (fun _ ↦ 𝔻 (n + 1)) α ≫ Limits.Sigma.desc fun α ↦
+            Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
+              cubeSplitAtLast.hom ≫
+              ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))))) z =
+            (Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
+              cubeSplitAtLast.hom ≫
+              ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))))) z := by
+          rw [hsidisks]
+          rfl
+        simpa [TopCat.hom_comp, ContinuousMap.comp_apply] using h₂
+      rw [hsi_pt]
+      -- Evaluate the remaining chain.
+      simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
+        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
+        ContinuousMap.prodSwap_apply, TopCat.cubeSplitAtLast, ContinuousMap.coe_mk]
+      -- Reduce hom.right ∘ inv.right = id pointwise via congrArg over morphism equation.
+      have hhi : ∀ z : ↑(Arrow.mk (cubeBoundaryIncl (n + 1))).right,
+          (Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom))
+            ((Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).inv)) z) = z := by
+        intro z
+        have h : (diskPair.homeoCubePairULift (n + 1)).inv.right ≫
+            (diskPair.homeoCubePairULift (n + 1)).hom.right = 𝟙 _ := Arrow.inv_hom_id_right _
+        have hh := congrArg (fun (f : (Arrow.mk (cubeBoundaryIncl (n + 1))).right ⟶
+              (Arrow.mk (cubeBoundaryIncl (n + 1))).right) => (Hom.hom f) z) h
+        simpa [TopCat.hom_comp, ContinuousMap.comp_apply] using hh
+      rw [hhi]
+      -- Express hom.right x via its ULift representation.
+      have hxy : (Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift n).hom)) x =
+          ⟨((Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift n).hom)) x).down⟩ := rfl
+      rw [hxy]
+      -- Unwrap `hom_ofHom`, evaluate the lambda's `match`, then apply `Homeomorph.apply_symm_apply`.
+      change _ = Prod.map id (Hom.hom (X.cubeInclToSk α))
+          ((Cube.splitAtLast (Cube.splitAtLast.symm
+              ⟨t, ((Hom.hom (Arrow.Hom.right
+                (diskPair.homeoCubePairULift n).hom)) x).down⟩)).1,
+            ⟨(Cube.splitAtLast (Cube.splitAtLast.symm
+              ⟨t, ((Hom.hom (Arrow.Hom.right
+                (diskPair.homeoCubePairULift n).hom)) x).down⟩)).2⟩)
+      rw [Homeomorph.apply_symm_apply]
+      rfl
 
 end IProd
 
