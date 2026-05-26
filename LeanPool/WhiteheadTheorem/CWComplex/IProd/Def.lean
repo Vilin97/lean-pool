@@ -47,7 +47,8 @@ abbrev r (n : ℕ) := ofHom <| zeroOneIncl.prodMap <| ContinuousMap.id <| X.sk n
 /-- `xskl` -/
 noncomputable abbrev xskl (n : ℕ) := Limits.Sigma.desc (X.attachCells n).attachMaps
 /-- `xskr` -/
-noncomputable abbrev xskr (n : ℕ) := Limits.Sigma.map fun (_ : (X.attachCells n).cells) ↦ diskBoundaryIncl n
+noncomputable abbrev xskr (n : ℕ) :=
+  Limits.Sigma.map fun (_ : (X.attachCells n).cells) ↦ diskBoundaryIncl n
 
 /--
 ```
@@ -158,7 +159,8 @@ lemma cubeAtt_compatible {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) 
   rw [this, Category.assoc, Limits.pushout.condition]
 
 /-- `attachMaps` -/
-noncomputable def attachMaps {n : ℕ} (α : (X.attachCells n).cells) : ∂𝔻 (n + 1) ⟶ IProd.sk X (n + 1) :=
+noncomputable def attachMaps {n : ℕ} (α : (X.attachCells n).cells) :
+    ∂𝔻 (n + 1) ⟶ IProd.sk X (n + 1) :=
   (diskPair.homeoCubePairULift (n + 1)).hom.left ≫
     cubeBoundary.mapOfBotTopSides
       (IProd.cubeAttBotOrTop X α) (IProd.cubeAttSides X α) (IProd.cubeAtt_compatible X α)
@@ -389,7 +391,8 @@ lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
 noncomputable abbrev d' : X.sk (n + 1) ⟶ TopCat.of C(I, Z.pt) :=
     (X.attachCells n).isoPushout.hom ≫ Limits.pushout.desc (l' ..) (r' ..) (w' ..)
 /-- `l''` -/
-noncomputable abbrev l'' : TopCat.of (zeroOne × X.toTopCat) ⟶ Z.pt := Limits.pushout.inl (l X n) (r X n) ≫ Z.inl
+noncomputable abbrev l'' : TopCat.of (zeroOne × X.toTopCat) ⟶ Z.pt :=
+  Limits.pushout.inl (l X n) (r X n) ≫ Z.inl
 /-- `r''` -/
 noncomputable abbrev r'' : TopCat.of (I × (X.sk (n + 1))) ⟶ Z.pt := ofHom (d' ..).hom.uncurry.argSwap
 
