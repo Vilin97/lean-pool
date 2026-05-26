@@ -44,9 +44,10 @@ lemma skInclSucc_eq_relCWComplex_skInclSucc (n : ℕ) :
   change _ = Limits.pushout.inl .. ≫ (IProd.pushoutSkSk X n).isoPushout.inv
   rw [IsPushout.inl_isoPushout_inv]
   apply Limits.pushout.hom_ext
-  all_goals simp only [Limits.colimit.ι_desc, TopCat.hom_comp, id_eq, Limits.PushoutCocone.mk_pt,
-    Limits.PushoutCocone.mk_ι_app]
-  exacts [(IProd.inl_skInclSucc X).symm, (IProd.inr_skInclSucc X).symm]
+  · simp only [Limits.pushout.inl_desc]
+    exact (IProd.inl_skInclSucc X).symm
+  · simp only [Limits.pushout.inr_desc]
+    exact (IProd.inr_skInclSucc X).symm
 
 /-- Two maps from `X.IProd.sk 0 = TopCat.of (zeroOne × X.toTopCat)`
 to `X.IProd.sk (n + 1)` are equal. -/
@@ -63,6 +64,7 @@ lemma skInclSucc_map_zero_le (n : ℕ) :
           (homOfLE (by omega : 0 ≤ n + 1)) (homOfLE (by omega : n + 1 ≤ n + 1 + 1))
       rw [this, Functor.ofSequence_map_homOfLE_succ, skInclSucc_map_zero_le n]
       rw [← IProd.inl_skInclSucc X, skInclSucc_eq_relCWComplex_skInclSucc]
+      rfl
 
 
 namespace colimitCocone
@@ -88,24 +90,33 @@ lemma naturality : X.IProd.skInclSucc n ≫ incl X (n + 1) = incl X n :=
   | 0 => by
       change _ = X.zeroOneProdInclIProd
       rw [← inl_l_r_eq_relCWComplex_skInclSucc_zero, incl]
-      ext ⟨t, x⟩
-      simp only [Nat.reduceAdd, Limits.colimit.ι_desc, Limits.PushoutCocone.mk_pt,
-        Limits.PushoutCocone.mk_ι_app, hom_ofHom]
-      change _ = x
-      rw [Limits.pushout.inl_desc]; rfl
+      exact Limits.pushout.inl_desc _ _ _
   | n + 1 => by
       rw [← skInclSucc_eq_relCWComplex_skInclSucc]
-      simp only [IProd.skInclSucc, incl]
+      change IProd.skInclSucc X n ≫ _ = _
+      simp only [incl]
       apply Limits.pushout.hom_ext
-      all_goals simp only [Limits.colimit.ι_desc_assoc, Limits.span_right,
-        Limits.PushoutCocone.mk_pt, Limits.PushoutCocone.mk_ι_app, Category.assoc,
-        Limits.colimit.ι_desc]
-      unfold r'
-      ext ⟨t, x⟩
-      all_goals simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
-        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq]
-      change (X.skInclSucc n ≫ X.skIncl (n + 1)) _ = (X.skIncl n) _
-      rw [X.skInclSucc_skIncl_eq]
+      · have hinl := IProd.inl_skInclSucc_assoc (X := X) (n := n)
+          (Limits.pushout.desc X.zeroOneProdInclIProd (r' X (n + 1)) (w' X (n + 1)))
+        refine hinl.trans ?_
+        rw [show (Limits.pushout.inl (l X n) (r X n) ≫
+            Limits.pushout.desc X.zeroOneProdInclIProd (r' X n) (w' X n) :
+              of (↑zeroOne × ↑X.toTopCat) ⟶ of (↑I × ↑X.toTopCat))
+              = X.zeroOneProdInclIProd from Limits.pushout.inl_desc _ _ _]
+        exact Limits.pushout.inl_desc _ _ _
+      · have hinr := IProd.inr_skInclSucc_assoc (X := X) (n := n)
+          (Limits.pushout.desc X.zeroOneProdInclIProd (r' X (n + 1)) (w' X (n + 1)))
+        refine hinr.trans ?_
+        change ofHom ((ContinuousMap.id (↑I : Set ℝ)).prodMap (Hom.hom (X.skInclSucc n))) ≫
+          (Limits.pushout.inr (l X (n + 1)) (r X (n + 1)) ≫
+            Limits.pushout.desc X.zeroOneProdInclIProd (r' X (n + 1)) (w' X (n + 1))) = _
+        rw [Limits.pushout.inr_desc, Limits.pushout.inr_desc]
+        unfold r'
+        ext ⟨t, x⟩
+        all_goals simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
+          ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq]
+        change (X.skInclSucc n ≫ X.skIncl (n + 1)) _ = (X.skIncl n) _
+        rw [X.skInclSucc_skIncl_eq]
 
 /-- The cocone with `X.IProd.sk 0 ⟶ X.IProd.sk 1 ⟶ ⋯` as base
 and `TopCat.of (I × X.toTopCat)` as vertex.
@@ -128,7 +139,8 @@ def IXZ : Limits.Cocone (Functor.ofSequence X.skInclSucc ⋙ topBinProdLeft' I) 
         have := Z.ι.naturality (homOfLE (n + 1).le_succ)
         simp only [Functor.ofSequence_obj, Functor.const_obj_obj, homOfLE_leOfHom,
           Functor.ofSequence_map_homOfLE_succ, Functor.const_obj_map, Category.comp_id] at this
-        rw [← this, ← skInclSucc_eq_relCWComplex_skInclSucc, inr_skInclSucc_assoc] }
+        rw [← this, ← skInclSucc_eq_relCWComplex_skInclSucc]
+        exact (IProd.inr_skInclSucc_assoc X (Z.ι.app (n + 1 + 1))).symm }
 
 /-- Functor constructed from the sequence of morphisms `I × X.sk 0 ⟶ I × X.sk 1 ⟶ ⋯` -/
 abbrev IF : ℕ ⥤ TopCat :=
@@ -160,7 +172,8 @@ lemma zeroOneProdInclIProd_desc : X.zeroOneProdInclIProd ≫ desc X Z = Z.ι.app
   ext ⟨t, x⟩
   let iIsk n : X.sk n ⟶ TopCat.of (I × X.sk n) := ofHom ⟨fun x ↦ ⟨zeroOneIncl t, x⟩, by fun_prop⟩
   let i01sk n : X.sk n ⟶ TopCat.of (zeroOne × X.sk n) := ofHom ⟨fun x ↦ ⟨t, x⟩, by fun_prop⟩
-  let iIX : X.toTopCat ⟶ TopCat.of (I × X.toTopCat) := ofHom ⟨fun x ↦ ⟨zeroOneIncl t, x⟩, by fun_prop⟩
+  let iIX : X.toTopCat ⟶ TopCat.of (I × X.toTopCat) :=
+    ofHom ⟨fun x ↦ ⟨zeroOneIncl t, x⟩, by fun_prop⟩
   let i01X : X.toTopCat ⟶ TopCat.of (zeroOne × X.toTopCat) := ofHom ⟨fun x ↦ ⟨t, x⟩, by fun_prop⟩
   obtain ht | ht := zeroOne.eq_zero_or_eq_one t
   all_goals
@@ -174,8 +187,14 @@ lemma zeroOneProdInclIProd_desc : X.zeroOneProdInclIProd ≫ desc X Z = Z.ι.app
     apply Limits.colimit.hom_ext
     intro n
     change (X.skIncl n ≫ iIX) ≫ desc X Z = X.skIncl n ≫ i01X ≫ Z.ι.app 0
-    have : X.skIncl n ≫ iIX = iIsk n ≫ (IX X).cocone.ι.app n := rfl
-    rw [this, desc, Category.assoc, Limits.IsColimit.fac]
+    have hfac : (X.skIncl n ≫ iIX) ≫ desc X Z =
+        iIsk n ≫ Limits.pushout.inr (l X n) (r X n) ≫ Z.ι.app (n + 1) := by
+      change (iIsk n ≫ (IX X).cocone.ι.app n) ≫ (IX X).isColimit.desc (IXZ X Z) =
+        iIsk n ≫ Limits.pushout.inr (l X n) (r X n) ≫ Z.ι.app (n + 1)
+      rw [Category.assoc]
+      congr 1
+      exact (IX X).isColimit.fac (IXZ X Z) n
+    rw [hfac]
     change iIsk n ≫ Limits.pushout.inr (l X n) (r X n) ≫ Z.ι.app (n + 1) = _
     replace := Z.ι.naturality (homOfLE (by omega : 0 ≤ n + 1))
     change _ = Z.ι.app 0 at this
@@ -183,9 +202,11 @@ lemma zeroOneProdInclIProd_desc : X.zeroOneProdInclIProd ≫ desc X Z = Z.ι.app
     change (_ ≫ _) ≫ Z.ι.app (n + 1) = (_ ≫ _ ≫ _) ≫ Z.ι.app (n + 1)
     congr 1
     rw [skInclSucc_map_zero_le]
-    rw [show iIsk n = i01sk n ≫ r X n by rfl]
-    rw [← Category.assoc, show X.skIncl n ≫ i01X = i01sk n ≫ l X n by rfl]
-    simp only [Category.assoc, Limits.pushout.condition]
+    have hiIsk : iIsk n = i01sk n ≫ r X n := rfl
+    have hi01X : X.skIncl n ≫ i01X = i01sk n ≫ l X n := rfl
+    change (i01sk n ≫ r X n) ≫ Limits.pushout.inr (l X n) (r X n) =
+      (i01sk n ≫ l X n) ≫ Limits.pushout.inl (l X n) (r X n)
+    rw [Category.assoc, Category.assoc, Limits.pushout.condition]
 
 lemma fac : incl X n ≫ desc X Z = Z.ι.app n :=
   match n with
@@ -197,22 +218,27 @@ lemma fac : incl X n ≫ desc X Z = Z.ι.app n :=
         have := Z.ι.naturality (homOfLE (by omega : 0 ≤ n + 1))
         change _ = Z.ι.app 0 at this
         rw [← this, skInclSucc_map_zero_le]
-      · rw [Limits.pushout.inr_desc_assoc]
-        rw [show r' X n = (IX X).cocone.ι.app n by rfl, desc, Limits.IsColimit.fac]
         rfl
+      · rw [Limits.pushout.inr_desc_assoc]
+        change (IX X).cocone.ι.app n ≫ desc X Z = _
+        rw [desc]
+        exact (IX X).isColimit.fac (IXZ X Z) n
 
 lemma uniq (d : (cocone X).pt ⟶ Z.pt) (d_fac : ∀ n, (cocone X).ι.app n ≫ d = Z.ι.app n) :
     d = colimitCocone.desc X Z := by
   apply (IX X).isColimit.hom_ext
   intro n
-  rw [desc, Limits.IsColimit.fac]
-  change _ = Limits.pushout.inr (l X n) (r X n) ≫ Z.ι.app (n + 1)
-  change ofHom ((ContinuousMap.id I).prodMap (X.skIncl n).hom) ≫ d = _
-  rw [← d_fac (n + 1), ← Category.assoc]
+  change (IX X).cocone.ι.app n ≫ d =
+    (IX X).cocone.ι.app n ≫ (IX X).isColimit.desc (IXZ X Z)
+  rw [(IX X).isColimit.fac (IXZ X Z) n]
+  change ofHom ((ContinuousMap.id I).prodMap (X.skIncl n).hom) ≫ d =
+    Limits.pushout.inr (l X n) (r X n) ≫ Z.ι.app (n + 1)
+  rw [← d_fac (n + 1)]
+  change ofHom ((ContinuousMap.id I).prodMap (X.skIncl n).hom) ≫ d =
+    (Limits.pushout.inr (l X n) (r X n) ≫ (cocone X).ι.app (n + 1)) ≫ d
   congr 1
-  unfold cocone incl
-  simp only [Functor.const_obj_obj, NatTrans.ofSequence_app, Limits.colimit.ι_desc,
-    Limits.PushoutCocone.mk_pt, Limits.PushoutCocone.mk_ι_app]
+  change _ = Limits.pushout.inr (l X n) (r X n) ≫ incl X (n + 1)
+  rw [incl, Limits.pushout.inr_desc]
 
 end colimitCocone
 
@@ -233,11 +259,16 @@ def iso : X.IProd.toTopCat ≅ TopCat.of (I × X.toTopCat) :=
 /-- The arrow `X.IProd.sk 0 ⟶ X.IProd.toTopCat` is isomorphic to `{0, 1} × X ⟶ I × X`. -/
 def arrowIso : Arrow.mk (X.IProd.skIncl 0) ≅ Arrow.mk X.zeroOneProdInclIProd :=
   Arrow.isoMk (Iso.refl _) (IProd.iso X) <| by
-    simp only [Arrow.mk_left, Arrow.mk_right, Functor.id_obj, Iso.refl_hom, Arrow.mk_hom,
-      Category.id_comp]
+    simp only [Arrow.mk_left, Arrow.mk_right, Iso.refl_hom, Arrow.mk_hom]
     rw [show X.IProd.skIncl 0 = (Limits.getColimitCocone
           (Functor.ofSequence X.IProd.skInclSucc)).cocone.ι.app 0 by rfl]
-    rw [IProd.iso, Limits.IsColimit.comp_coconePointUniqueUpToIso_hom]
+    rw [IProd.iso]
+    have h := Limits.IsColimit.comp_coconePointUniqueUpToIso_hom
+      (Limits.getColimitCocone (Functor.ofSequence X.IProd.skInclSucc)).isColimit
+      (colimitCocone X).isColimit 0
+    refine Eq.trans ?_ h.symm
+    change 𝟙 (X.IProd.sk 0) ≫ X.zeroOneProdInclIProd = (colimitCocone X).cocone.ι.app 0
+    rw [Category.id_comp]
     rfl
 
 end CWComplex.IProd
