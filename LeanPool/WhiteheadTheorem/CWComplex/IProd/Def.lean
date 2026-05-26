@@ -657,26 +657,75 @@ def pushoutSkSk (n : ℕ) :
         Limits.colimit.ι_desc, Limits.Cofan.mk_pt, Limits.Cofan.mk_ι_app, ContinuousMap.comp_apply,
         ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply]
       rw [← hdr, (by rfl : (cocone X n).inr = IProd.sigmaDisksInclToSk X n)]
-      change d ((Limits.pushout.inr (l X (n + 1)) (r X (n + 1)))
-        ⟨t, (Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ Limits.pushout.inr (xskl X n) (xskr X n) ≫
-          (X.attachCells n).isoPushout.inv) x⟩ ) =
-        d ((cubeSplitAtLast.inv ≫ (diskPair.homeoCubePairULift (n + 1)).inv.right ≫
-          Limits.Sigma.ι (fun _ ↦ 𝔻 (n + 1)) α ≫ IProd.sigmaDisksInclToSk X n )
-            ⟨t, (diskPair.homeoCubePairULift n).hom.right x⟩)
-      congr 1
+      -- Combine nested `Hom.hom` applications into a single composition.
+      simp only [← TopCat.comp_app]
+      -- Reduce the RHS `(Sigma.desc f).hom (Sigma.ι α x) t` via `Sigma.ι_desc` at morphism level.
+      have hsi : Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫
+          (Limits.Sigma.desc fun α ↦
+              Arrow.Hom.right (diskPair.homeoCubePairULift n).hom ≫
+                ofHom ((Hom.hom (sigmaDisksInclToSk X n ≫ d)).comp
+                  ((Hom.hom (Limits.Sigma.ι (fun _ ↦ 𝔻 (n + 1)) α)).comp
+                    ((Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).inv)).comp
+                      ((Hom.hom cubeSplitAtLast.inv).comp ContinuousMap.prodSwap)))).curry) =
+          Arrow.Hom.right (diskPair.homeoCubePairULift n).hom ≫
+              ofHom ((Hom.hom (sigmaDisksInclToSk X n ≫ d)).comp
+                ((Hom.hom (Limits.Sigma.ι (fun _ ↦ 𝔻 (n + 1)) α)).comp
+                  ((Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).inv)).comp
+                    ((Hom.hom cubeSplitAtLast.inv).comp ContinuousMap.prodSwap)))).curry :=
+        Limits.Sigma.ι_desc _ α
+      -- Provide the morphism-level identity for the LHS.
+      have hci : (Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫
+            Limits.pushout.inr (Limits.Sigma.desc (X.attachCells n).attachMaps)
+              (Limits.Sigma.map fun _ ↦ diskBoundaryIncl n)) ≫
+          (X.attachCells n).isoPushout.inv =
+          (diskPair.homeoCubePairULift n).hom.right ≫ X.cubeInclToSk α := by
+        have hiso : (diskPair.homeoCubePairULift n).hom.right ≫
+            (diskPair.homeoCubePairULift n).inv.right = 𝟙 _ :=
+          Arrow.hom_inv_id_right ..
+        have hrhs : (diskPair.homeoCubePairULift n).hom.right ≫ X.cubeInclToSk α =
+            ((diskPair.homeoCubePairULift n).hom.right ≫
+                (diskPair.homeoCubePairULift n).inv.right) ≫
+              Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫
+                Limits.pushout.inr (Limits.Sigma.desc (X.attachCells n).attachMaps)
+                  (Limits.Sigma.map fun _ ↦ diskBoundaryIncl n) ≫
+                  (X.attachCells n).isoPushout.inv := by
+          unfold CWComplex.cubeInclToSk
+          simp [Category.assoc]
+        rw [hrhs, hiso, Category.id_comp]
+        rfl
+      -- Rewrite both LHS and RHS to use `cubeInclToSk` as the common factor.
+      change (Hom.hom d) ((Hom.hom (Limits.pushout.inr (l X (n + 1)) (r X (n + 1))))
+          (t, ((Hom.hom ((Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫
+            Limits.pushout.inr (Limits.Sigma.desc (X.attachCells n).attachMaps)
+              (Limits.Sigma.map fun _ ↦ diskBoundaryIncl n)) ≫
+              (X.attachCells n).isoPushout.inv)) x))) =
+        ((Hom.hom (Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫
+          (Limits.Sigma.desc fun α ↦
+              Arrow.Hom.right (diskPair.homeoCubePairULift n).hom ≫
+                ofHom ((Hom.hom (sigmaDisksInclToSk X n ≫ d)).comp
+                  ((Hom.hom (Limits.Sigma.ι (fun _ ↦ 𝔻 (n + 1)) α)).comp
+                    ((Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).inv)).comp
+                      ((Hom.hom cubeSplitAtLast.inv).comp ContinuousMap.prodSwap)))).curry))) x) t
+      rw [hci, hsi]
+      -- Now both sides express the same map evaluated; reduce by unfolding `sigmaDisksInclToSk`.
+      simp only [TopCat.comp_app]
       unfold IProd.sigmaDisksInclToSk
-      change _ = (_ ≫ _ ≫ (Limits.Sigma.ι (fun _ ↦ 𝔻 (n + 1)) α ≫ Limits.Sigma.desc _) ≫ _) _
-      rw [Limits.Sigma.ι_desc]
-      simp only [TopCat.hom_comp, ContinuousMap.comp_assoc, ContinuousMap.comp_apply,
-        Arrow.mk_right, Category.assoc, Arrow.inv_hom_id_right_assoc, Iso.inv_hom_id_assoc,
-        hom_ofHom, ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq]
-      congr 2
-      change (Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ Limits.pushout.inr (xskl X n) (xskr X n) ≫
-        (X.attachCells n).isoPushout.inv) x =
-        ((diskPair.homeoCubePairULift n).hom.right ≫ X.cubeInclToSk α) x
-      congr 2
-      unfold CWComplex.cubeInclToSk
-      simp only [Arrow.mk_right, Arrow.hom_inv_id_right_assoc]
+      simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
+        ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
+        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq]
+      have hsidisks : Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 (n + 1)) α ≫
+          (Limits.Sigma.desc fun α ↦
+            Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
+              cubeSplitAtLast.hom ≫
+                ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α)))) =
+          Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
+            cubeSplitAtLast.hom ≫
+              ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))) :=
+        Limits.Sigma.ι_desc _ α
+      simp only [← TopCat.comp_app]
+      rw [hsidisks]
+      simp only [TopCat.comp_app, TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
+        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq]
 
 end IProd
 
