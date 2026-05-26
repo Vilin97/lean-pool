@@ -306,45 +306,51 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f 
     fun i m h => by simp [frieze_f, h]
   have topBordOnes : ∀ m, frieze_f g (1,m) = 1 := by
     intro m
-    induction' m with m ih
-    simp [frieze_f, hn, g.hd]
-    have : ¬ 1 ≥ n+1 := by omega
-    unfold frieze_f; simp [this, ih]
-    right
-    exact topBordZeros (m+1)
+    induction m with
+    | zero => simp [frieze_f, hn, g.hd]
+    | succ m ih =>
+      have : ¬ 1 ≥ n+1 := by omega
+      unfold frieze_f; simp [this, ih]
+      right
+      exact topBordZeros (m+1)
   have botBordOnes_n : ∀ m, frieze_f g (n, m) = 1 := by
     intro m
-    induction' m with m ih
-    simp [frieze_f, hn]
-    have := g.period 0
-    simp [g.hd] at this
-    exact this.symm
-    have : ¬ n ≥ n+1 := by omega
-    unfold frieze_f; simp [this, ih, hn]
-    left
-    exact botBordZeros_n (n+1) m (by rfl)
+    induction m with
+    | zero =>
+      simp [frieze_f, hn]
+      have := g.period 0
+      simp [g.hd] at this
+      exact this.symm
+    | succ m ih =>
+      have : ¬ n ≥ n+1 := by omega
+      unfold frieze_f; simp [this, ih, hn]
+      left
+      exact botBordZeros_n (n+1) m (by rfl)
   have positive: ∀ i, ∀ m, 1 ≤ i → i ≤ n → frieze_f g (i,m) > 0 := by
     intro i m
-    induction' m with m ih₁ generalizing i
-    intro hi₁ hi₂
-    have hi₃ : ¬ i = 0 := by omega
-    have hi₄ : ¬ i ≥ n+1 := by omega
-    unfold frieze_f; simp [hi₃, hi₄]
-    exact g.pos (i-1)
-    induction' i with i ih₂
-    omega
-    intro hi₁ hi₂
-    by_cases hi : i = 0
-    simp [hi, topBordOnes]
-    by_cases hi' : i = n-1
-    have : n-1+1 = n := by omega
-    simp [this, hi', botBordOnes_n]
-    specialize ih₂ (by omega) (by omega)
-    have : ¬ n ≤ i := by omega
-    unfold frieze_f; simp +arith [this]
-    have h₁ := ih₁ (i+1) (by omega) (by omega)
-    have h₂ := ih₁ (i+2) (by omega) (by omega)
-    exact div_pos (by linarith [mul_pos h₂ ih₂]) h₁
+    induction m generalizing i with
+    | zero =>
+      intro hi₁ hi₂
+      have hi₃ : ¬ i = 0 := by omega
+      have hi₄ : ¬ i ≥ n+1 := by omega
+      unfold frieze_f; simp [hi₃, hi₄]
+      exact g.pos (i-1)
+    | succ m ih₁ =>
+      induction i with
+      | zero => omega
+      | succ i ih₂ =>
+        intro hi₁ hi₂
+        by_cases hi : i = 0
+        · simp [hi, topBordOnes]
+        · by_cases hi' : i = n-1
+          · have : n-1+1 = n := by omega
+            simp [this, hi', botBordOnes_n]
+          · specialize ih₂ (by omega) (by omega)
+            have : ¬ n ≤ i := by omega
+            unfold frieze_f; simp +arith [this]
+            have h₁ := ih₁ (i+1) (by omega) (by omega)
+            have h₂ := ih₁ (i+2) (by omega) (by omega)
+            exact div_pos (by linarith [mul_pos h₂ ih₂]) h₁
   have diamond : ∀ i, ∀ m,  i ≤ n-1 → frieze_f g (i+1,m) * frieze_f g (i+1,m+1)-1 =
       frieze_f g (i+2,m) * frieze_f g (i,m+1) := by
     intro i m hi
@@ -363,7 +369,8 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f 
   have integral: ∀ i, ∀ m, (frieze_f g (i,m)).den = 1 := by
     have key : ∀ m, (frieze_f g (2, m)).den = 1 := by
       intro m
-      induction' m using Nat.strong_induction_on with m ih
+      induction m using Nat.strong_induction_on with
+      | _ m ih =>
       by_cases hm : m = 0
       simp [hm, frieze_f]
       norm_cast
@@ -407,24 +414,26 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f 
       suffices : ∀ i ≤ n-1, (frieze_f g (i,1)).den = 1
       · exact this (n-1) (by omega)
       intro i hi
-      induction' i using Nat.twoStepInduction with i ih₁ ih₂
-      simp [frieze_f]
-      simp [frieze_f, hn, g.hd]
-      simp +arith at ih₁ ih₂ hi
-      specialize ih₁ (by omega)
-      specialize ih₂ (by omega)
-      have := pattern_nContinuant1 ℚ (frieze_f g) n i (by omega) 1
-      rw [this]
-      have := ih (1+i) (by omega)
-      -- there should be a tactic to do the following two steps?
-      rw [Rat.sub_eq_add_neg, Rat.add_num_den, Rat.neg_den, Rat.mul_den, ih₁, ih₂, this]
-      simp; norm_cast
+      induction i using Nat.twoStepInduction with
+      | zero => simp [frieze_f]
+      | one => simp [frieze_f, hn, g.hd]
+      | more i ih₁ ih₂ =>
+        simp +arith at ih₁ ih₂ hi
+        specialize ih₁ (by omega)
+        specialize ih₂ (by omega)
+        have := pattern_nContinuant1 ℚ (frieze_f g) n i (by omega) 1
+        rw [this]
+        have := ih (1+i) (by omega)
+        -- there should be a tactic to do the following two steps?
+        rw [Rat.sub_eq_add_neg, Rat.add_num_den, Rat.neg_den, Rat.mul_den, ih₁, ih₂, this]
+        simp
       have h := translationInvariance ℚ (frieze_f g) n 2 (by omega) (m-(n+1))
       have : m-(n+1)+n+1 = m := by omega
       rw [this] at h
       exact h ▸ ih (m-(n+1)) (by omega)
     intro i
-    induction' i using Nat.strong_induction_on with i ih
+    induction i using Nat.strong_induction_on with
+    | _ i ih =>
     match i with
     | 0 => intro; simp [topBordZeros]
     | 1 => intro; simp [topBordOnes]
