@@ -818,30 +818,10 @@ def pushoutSkSk (n : ℕ) :
             cubeSplitAtLast.hom ≫
               ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))) :=
         Limits.Sigma.ι_desc _ α
-      -- The goal differs only by an unevaluated `Sigma.desc` applied to `Sigma.ι α (...)`
-      -- in the RHS curry expression. Hsidisks gives the morphism equation needed.
-      -- Use `Sigma.ι α ≫ Sigma.desc = fun α => ...` evaluated at the specific x point,
-      -- packaged via a separate lemma to avoid bound-variable shadowing in `rw`.
-      have key : ∀ (y : ↑(𝔻 (n + 1))),
-          (Hom.hom (Limits.Sigma.desc fun α ↦
-            Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
-              cubeSplitAtLast.hom ≫
-              ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α)))))
-            ((Hom.hom (Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 (n + 1)) α)) y) =
-          (Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
-            cubeSplitAtLast.hom ≫
-            ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))))) y := by
-        intro y
-        have h := hsidisks
-        have h₂ := congrArg (Hom.hom) h
-        have h₃ := congrFun (congrArg DFunLike.coe h₂) y
-        simpa using h₃
-      -- Now both sides express the same map evaluated.
-      simp only [TopCat.hom_comp, ContinuousMap.comp_apply, hom_ofHom,
-        ContinuousMap.curry_apply, ContinuousMap.argSwap, cubeSplitAtLast, ContinuousMap.coe_mk,
-        ContinuousMap.prodSwap_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
-        Prod.map_apply, id_eq, key]
-      rfl
+      simp only [← TopCat.comp_app]
+      rw [hsidisks]
+      simp only [TopCat.comp_app, TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
+        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq]
 
 end IProd
 
