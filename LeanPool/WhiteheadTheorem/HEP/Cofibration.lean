@@ -293,14 +293,16 @@ theorem HasCurriedHEP.iff_hasHomotopyExtensionProperty {A X : TopCat.{u}}
   constructor
   · intro lhep f h fac
     have sq : CommSq (ofHom h.curry) i (PathSpace.eval₀ Y) (ofHom f) := ⟨by
-      ext a; simp; change _ = (f ∘ i.hom) a; rw [fac]; simp ⟩
+      ext a; simp only [TopCat.hom_comp, ConcreteCategory.hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
+               ContinuousMap.curry_apply]; change _ = (f ∘ i.hom) a; rw [fac]; simp ⟩
     obtain ⟨H, H1, H2⟩ := (lhep.hasLift.sq_hasLift sq).exists_lift.some
     apply_fun DFunLike.coe ∘ Hom.hom at H1 H2
     simp at H1 H2
     use H.hom.uncurry -- the key
     constructor
     · rw [← H2]; ext x; simp
-    · ext ⟨a, t⟩; simp; change (h.curry a) t = _; rw [← H1]; simp
+    · ext ⟨a, t⟩; simp only [Function.comp_apply, Prod.map_apply, id_eq, ContinuousMap.uncurry_apply,
+                    Function.uncurry_apply_pair]; change (h.curry a) t = _; rw [← H1]; simp
   · intro hep
     exact ⟨⟨fun {h} {f} sq ↦ by
       have fac := congr_arg (DFunLike.coe ∘ Hom.hom) sq.w.symm -- strip down sq to functions
@@ -309,8 +311,9 @@ theorem HasCurriedHEP.iff_hasHomotopyExtensionProperty {A X : TopCat.{u}}
       obtain ⟨H, H1, H2⟩ := hep f.hom h.hom.uncurry fac
       exact ⟨Nonempty.intro {
         l := ofHom H.curry -- the key
-        fac_left := by ext a t; simp; change _ = h.hom.uncurry ⟨a, t⟩; rw [H2]; simp
-        fac_right := by ext x; simp; rw [H1]; simp } ⟩ ⟩ ⟩
+        fac_left := by ext a t; simp only [TopCat.hom_comp, ConcreteCategory.hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.curry_apply]; change _ = h.hom.uncurry ⟨a, t⟩; rw [H2]; simp
+        fac_right := by ext x; simp only [TopCat.hom_comp, ConcreteCategory.hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
+                                 ContinuousMap.curry_apply]; rw [H1]; simp } ⟩ ⟩ ⟩
 
 instance TopCat.diskBoundaryIncl_hasCurriedHEP (n : ℕ) (Y : TopCat.{u}) :
     HasCurriedHEP (diskBoundaryIncl.{u} n) Y :=
