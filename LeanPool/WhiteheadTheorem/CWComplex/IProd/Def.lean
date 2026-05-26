@@ -600,8 +600,16 @@ def pushoutSkSk (n : ℕ) :
   intro d hdl hdr
   change sk X (n + 1 + 1) ⟶ Z.pt at d
   apply Limits.pushout.hom_ext
-  · rw [Limits.pushout.inl_desc, ← inl_skInclSucc, Category.assoc]
-    rw [(by rfl : skInclSucc X n = (cocone X n).inl), hdl]
+  · rw [Limits.pushout.inl_desc]
+    have hreassoc : Limits.pushout.inl (l X n) (r X n) ≫ skInclSucc X n ≫ d =
+        Limits.pushout.inl (l X (n + 1)) (r X (n + 1)) ≫ d :=
+      inl_skInclSucc_assoc X d
+    rw [← hreassoc]
+    change Limits.pushout.inl (l X n) (r X n) ≫ (cocone X n).inl ≫ d = _
+    have : Limits.pushout.inl (l X n) (r X n) ≫ (cocone X n).inl ≫ d =
+        Limits.pushout.inl (l X n) (r X n) ≫ Z.inl :=
+      congrArg (Limits.pushout.inl (l X n) (r X n) ≫ ·) hdl
+    rw [this]
   · rw [Limits.pushout.inr_desc]
     -- The goal is to prove the equality of two maps from `I × (X.sk (n + 1)))` to `Z.pt`.
     -- Now reduce this to the equality of two maps from `X.sk (n + 1)` to `C(I, Z.pt)`.
@@ -625,8 +633,17 @@ def pushoutSkSk (n : ℕ) :
       change d ( (Limits.pushout.inr (l ..) (r ..)) (t, (X.skInclSucc n) x) ) = _
       change ((ofHom ((ContinuousMap.id I).prodMap (X.skInclSucc _).hom) ≫
         Limits.pushout.inr (l X (n + 1)) (r X (n + 1))) ≫ d) ⟨t, x⟩ = _
-      rw [← inr_skInclSucc, Category.assoc]
-      rw [(by rfl : skInclSucc X n = (cocone X n).inl), hdl]
+      have hreassoc : Limits.pushout.inr (l X n) (r X n) ≫ skInclSucc X n ≫ d =
+          (ofHom ((ContinuousMap.id I).prodMap (X.skInclSucc _).hom) ≫
+            Limits.pushout.inr (l X (n + 1)) (r X (n + 1))) ≫ d := by
+        rw [inr_skInclSucc_assoc]
+        rfl
+      rw [← hreassoc]
+      change (Limits.pushout.inr (l X n) (r X n) ≫ (cocone X n).inl ≫ d) ⟨t, x⟩ = _
+      have : Limits.pushout.inr (l X n) (r X n) ≫ (cocone X n).inl ≫ d =
+          Limits.pushout.inr (l X n) (r X n) ≫ Z.inl :=
+        congrArg (Limits.pushout.inr (l X n) (r X n) ≫ ·) hdl
+      rw [this]
       rfl
     · ext α x t
       simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_assoc, ContinuousMap.comp_apply,
