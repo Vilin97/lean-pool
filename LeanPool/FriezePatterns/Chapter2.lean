@@ -196,120 +196,119 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
     intro i
     induction i using Nat.strong_induction_on with
     | _ i ih =>
-      by_cases hi : i ≥ 2*k+1 -- by_cases hi pos
-      have hi₂ : i+1 ≥ 2*k+1 := by omega
-      have hi₃ : 2*k ≤ i+1 := by omega
-      unfold a_even; simp [hi₂, hi, hi₃]
-      have hi₄ : i+1-2*k-1 = (i-2*k-1)+1 := by omega
-      have hi₅ : i+2-2*k-1 = (i-2*k-1)+2 := by omega
-      have hi₆ : (i-2*k-1) < i := by omega
-      rw [hi₄, hi₅]
-      exact ih (i-2*k-1) hi₆
-      -- by_cases hi neg + by_cases hi₂ pos :
-      by_cases hi₂ : i+2≤k
-      have hi₃ : i+2 < k+1 := by omega
-      have hi₄ : i+1 < k+1 := by omega
-      have hi₅ : i < k+1 := by omega
-      unfold a_even; simp [hi, hi₃, hi₄, hi₅]
-      have hi₆ : ¬ 2*k ≤ i := by omega
-      have hi₇ : ¬ 2*k ≤ i+1 := by omega
-      simp [hi₆,hi₇]
-      ring_nf
-      have : 6+i*2 = (2*i+3)+2+1 := by omega
-      rw [this, Nat.fib_add (2*i+3) 2]
-      ring_nf
-      have h :=
-        calc Nat.fib (2+i*2) + Nat.fib (3+i*2) = Nat.fib (i*2+2) + Nat.fib ((i*2+2)+1) := by
-              ring_nf
-        _ = Nat.fib ((i*2+2)+2) := Nat.fib_add_two.symm
-        _ = Nat.fib (4+i*2) := by ring_nf
-      rw [h]
-      use 3; omega
-      -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ pos :
-      by_cases hi₃ : i+1 ≤ k
-      have hi₄ : ¬ i+1 ≥ 2*k+1 := by omega
-      have hi₅ : ¬ i+2 ≥ 2*k+1 := by omega
-      have hi₆ : i < k := by omega
-      have hi₇ : i < k+1 := by omega
-      have hi₈ : ¬ i+2 < k+1 := by omega
-      have hi₉ : i+1 = k := by omega
-      unfold a_even; simp [hi, hi₄, hi₅,hi₆,hi₇,hi₈]
-      ring_nf
-      have hi₁₀ : 3 + (i + 1) * 4 - (4 + i * 2) = (2 + i*2)+1 := by omega
-      rw [← hi₉, hi₁₀]
-      use 1
-      rw [← Nat.fib_add_two]
-      ring_nf
-      -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ pos :
-      by_cases hi₄ : i ≤ k
-      have hi₅ : i = k := by omega
-      have hi₆ : ¬ 2 * k + 1 ≤ k := by omega
-      unfold a_even; simp [hi₅,hi₆]
-      -- by_cases hi/hi₂/hi₃ neg + hi₄/hk₀ pos
-      by_cases hk₀ : k = 0
-      simp [hk₀]
-      have : a_even k 0 = 1 := by exact hd
-      rw [hk₀] at this
-      simp [this]
-      -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ pos + by_cases hk₀ neg
-      have hi₇ : ¬ 2 * k ≤ k := by omega
-      simp [hi₇]
-      -- by_cases hi/hi₂/hi₃ neg + hi₄/hk₁ pos + hk₀ neg
-      by_cases hk₁ : k = 1
-      simp [hk₁]
-      have f₁ : a_even k 0 = 1 := by exact hd
-      have f₃ : Nat.fib 3 = 2 := by simp [Nat.fib]
-      have f₄ : Nat.fib 4 = 3 := by simp [Nat.fib]
-      rw [hk₁] at f₁
-      rw [f₁, f₃, f₄]
-      use 2
-      -- by_cases hi/hi₂/hi₃ neg + hi₄ pos + hk₀/hk₁ neg
-      have hk₂ : 1 < k := by omega
-      have h₈ : ¬ 2 * k ≤ k + 1 := by omega
-      have h₉ : 3 + 4 * k - 2 * (k + 1) = 2*k + 1 := by omega
-      have h₁₀ : 3 + 4 * k - 2 * (k + 2) = 2*k-1 := by omega
-      simp [h₈, h₉, h₁₀]
-      rw [Nat.fib_add_two, add_comm (Nat.fib (2 * k)), add_assoc, Nat.fib_add_one]
-      use 2; omega ; omega
-      -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ neg
-      have h₅ : ¬ i+1 < k+1 := by omega
-      have h₆ : ¬ i ≥ 2*k+1 := by omega
-      have h₇ : ¬ i < k+1 := by omega
-      have h₈ : ¬ i+2 < k+1 := by omega
-      unfold a_even; simp [hi, h₅, h₇, h₈]
-      -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ neg + by_cases hi₅ pos
-      by_cases hi₅ :2*k ≤ i
-      have h₉ : i = 2*k := by omega
-      rw [h₉]; simp; rw [hd]
-      use (Nat.fib (3 + 4 * k - 2 * (2 * k)) + a_even k 1); omega
-      -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg
-      simp [hi₅]
-      -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg + by_cases hi₆ pos
-      by_cases hi₆ : 2*k ≤ i+1
-      have h₁ : i+1 = 2*k := by omega
-      rw [h₁]; simp
-      have h₂ : 3 + 4 * k - 2 * (2 * k) = 3 := by omega
-      have h₃ : 3 + 4 * k - 2 * i = 5 := by omega
-      have h₄ : i + 2 - 2 * k - 1 = 0 := by omega
-      have f₃ : Nat.fib 3 = 2 := by simp [Nat.fib]
-      have f₅ : Nat.fib 5 = 5 := by simp [Nat.fib]
-      rw [h₂,h₃,h₄,hd,f₃,f₅]
-      use 3;
-      -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg + by_cases hi₆ neg
-      simp [hi₆]
-      have h₁: 3 + 4 * k - 2 * (i + 1) = 4*k -2*i +1 := by omega
-      have h₂ : 3 + 4 * k - 2 * i = 4*k -2*i + 1 + 2 :=by omega
-      have h₃ : 4 * k - 2 * i + 1 + 1 = 4 * k - 2 * i + 2 := by omega
-      have h₄ : 3 + 4 * k - 2 * (i + 2) = 4 * k - 2 * i - 1 := by omega
-      rw [h₁, h₂, Nat.fib_add_two, h₃, Nat.fib_add_two, h₄, add_assoc,
-        add_comm (Nat.fib (4 * k - 2 * i)), add_assoc, add_comm (Nat.fib (4 * k - 2 * i))]
-      rw [← Nat.fib_add_one]
-      have h : Nat.fib (4 * k - 2 * i + 1) + (Nat.fib (4 * k - 2 * i + 1) +
-          Nat.fib (4 * k - 2 * i + 1)) = Nat.fib (4 * k - 2 * i + 1)*3 := by omega
-      rw [h]
-      use 3;
-      have h₃ : ¬ 4*k = 2*i := by omega
-      omega
+      by_cases hi : i ≥ 2*k+1
+      · -- by_cases hi pos
+        have hi₂ : i+1 ≥ 2*k+1 := by omega
+        have hi₃ : 2*k ≤ i+1 := by omega
+        unfold a_even; simp [hi₂, hi, hi₃]
+        have hi₄ : i+1-2*k-1 = (i-2*k-1)+1 := by omega
+        have hi₅ : i+2-2*k-1 = (i-2*k-1)+2 := by omega
+        have hi₆ : (i-2*k-1) < i := by omega
+        rw [hi₄, hi₅]
+        exact ih (i-2*k-1) hi₆
+      · by_cases hi₂ : i+2≤k
+        · -- by_cases hi neg + by_cases hi₂ pos :
+          have hi₃ : i+2 < k+1 := by omega
+          have hi₄ : i+1 < k+1 := by omega
+          have hi₅ : i < k+1 := by omega
+          unfold a_even; simp [hi, hi₃, hi₄, hi₅]
+          have hi₆ : ¬ 2*k ≤ i := by omega
+          have hi₇ : ¬ 2*k ≤ i+1 := by omega
+          simp [hi₆,hi₇]
+          ring_nf
+          have : 6+i*2 = (2*i+3)+2+1 := by omega
+          rw [this, Nat.fib_add (2*i+3) 2]
+          ring_nf
+          have h :=
+            calc Nat.fib (2+i*2) + Nat.fib (3+i*2) = Nat.fib (i*2+2) + Nat.fib ((i*2+2)+1) := by
+                  ring_nf
+            _ = Nat.fib ((i*2+2)+2) := Nat.fib_add_two.symm
+            _ = Nat.fib (4+i*2) := by ring_nf
+          rw [h]
+          use 3; omega
+        · by_cases hi₃ : i+1 ≤ k
+          · -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ pos :
+            have hi₄ : ¬ i+1 ≥ 2*k+1 := by omega
+            have hi₅ : ¬ i+2 ≥ 2*k+1 := by omega
+            have hi₆ : i < k := by omega
+            have hi₇ : i < k+1 := by omega
+            have hi₈ : ¬ i+2 < k+1 := by omega
+            have hi₉ : i+1 = k := by omega
+            unfold a_even; simp [hi, hi₄, hi₅,hi₆,hi₇,hi₈]
+            ring_nf
+            have hi₁₀ : 3 + (i + 1) * 4 - (4 + i * 2) = (2 + i*2)+1 := by omega
+            rw [← hi₉, hi₁₀]
+            use 1
+            rw [← Nat.fib_add_two]
+            ring_nf
+          · by_cases hi₄ : i ≤ k
+            · -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ pos :
+              have hi₅ : i = k := by omega
+              have hi₆ : ¬ 2 * k + 1 ≤ k := by omega
+              unfold a_even; simp [hi₅,hi₆]
+              by_cases hk₀ : k = 0
+              · -- by_cases hi/hi₂/hi₃ neg + hi₄/hk₀ pos
+                simp [hk₀]
+                have : a_even k 0 = 1 := by exact hd
+                rw [hk₀] at this
+                simp [this]
+              · have hi₇ : ¬ 2 * k ≤ k := by omega
+                simp [hi₇]
+                by_cases hk₁ : k = 1
+                · -- by_cases hi/hi₂/hi₃ neg + hi₄/hk₁ pos + hk₀ neg
+                  simp [hk₁]
+                  have f₁ : a_even k 0 = 1 := by exact hd
+                  have f₃ : Nat.fib 3 = 2 := by simp [Nat.fib]
+                  have f₄ : Nat.fib 4 = 3 := by simp [Nat.fib]
+                  rw [hk₁] at f₁
+                  rw [f₁, f₃, f₄]
+                  use 2
+                · -- by_cases hi/hi₂/hi₃ neg + hi₄ pos + hk₀/hk₁ neg
+                  have hk₂ : 1 < k := by omega
+                  have h₈ : ¬ 2 * k ≤ k + 1 := by omega
+                  have h₉ : 3 + 4 * k - 2 * (k + 1) = 2*k + 1 := by omega
+                  have h₁₀ : 3 + 4 * k - 2 * (k + 2) = 2*k-1 := by omega
+                  simp [h₈, h₉, h₁₀]
+                  rw [Nat.fib_add_two, add_comm (Nat.fib (2 * k)), add_assoc, Nat.fib_add_one]
+                  use 2; omega ; omega
+            · -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ neg
+              have h₅ : ¬ i+1 < k+1 := by omega
+              have h₇ : ¬ i < k+1 := by omega
+              have h₈ : ¬ i+2 < k+1 := by omega
+              unfold a_even; simp [hi, h₅, h₇, h₈]
+              by_cases hi₅ :2*k ≤ i
+              · -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ neg + hi₅ pos
+                have h₉ : i = 2*k := by omega
+                rw [h₉]; simp; rw [hd]
+                use (Nat.fib (3 + 4 * k - 2 * (2 * k)) + a_even k 1); omega
+              · -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg
+                simp [hi₅]
+                by_cases hi₆ : 2*k ≤ i+1
+                · -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg + by_cases hi₆ pos
+                  have h₁ : i+1 = 2*k := by omega
+                  rw [h₁]; simp
+                  have h₂ : 3 + 4 * k - 2 * (2 * k) = 3 := by omega
+                  have h₃ : 3 + 4 * k - 2 * i = 5 := by omega
+                  have h₄ : i + 2 - 2 * k - 1 = 0 := by omega
+                  have f₃ : Nat.fib 3 = 2 := by simp [Nat.fib]
+                  have f₅ : Nat.fib 5 = 5 := by simp [Nat.fib]
+                  rw [h₂,h₃,h₄,hd,f₃,f₅]
+                  use 3;
+                · -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg + by_cases hi₆ neg
+                  simp [hi₆]
+                  have h₁: 3 + 4 * k - 2 * (i + 1) = 4*k -2*i +1 := by omega
+                  have h₂ : 3 + 4 * k - 2 * i = 4*k -2*i + 1 + 2 :=by omega
+                  have h₃ : 4 * k - 2 * i + 1 + 1 = 4 * k - 2 * i + 2 := by omega
+                  have h₄ : 3 + 4 * k - 2 * (i + 2) = 4 * k - 2 * i - 1 := by omega
+                  rw [h₁, h₂, Nat.fib_add_two, h₃, Nat.fib_add_two, h₄, add_assoc,
+                    add_comm (Nat.fib (4 * k - 2 * i)), add_assoc, add_comm (Nat.fib (4 * k - 2 * i))]
+                  rw [← Nat.fib_add_one]
+                  have h : Nat.fib (4 * k - 2 * i + 1) + (Nat.fib (4 * k - 2 * i + 1) +
+                      Nat.fib (4 * k - 2 * i + 1)) = Nat.fib (4 * k - 2 * i + 1)*3 := by omega
+                  rw [h]
+                  use 3;
+                  have h₃ : ¬ 4*k = 2*i := by omega
+                  omega
   exact ⟨a_even k, pos, hd, period, div⟩
 
 /-- Reduction of an `(n+3)`-flute (assuming `f.a 1 = 1`) to an `(n+2)`-flute (underlying
