@@ -33,7 +33,7 @@ lemma zeroOne.eq_zero_or_eq_one (t : zeroOne) : t = 0 ∨ t = 1 := by
 
 abbrev zeroOneIncl : C(zeroOne, I) where
   toFun := fun ⟨x, hx⟩ ↦ ⟨x, by
-    simp only [Set.mem_Icc, Set.mem_insert_iff, Set.mem_singleton_iff]
+    simp only [Set.mem_Icc]
     obtain hx | hx := hx
     all_goals subst hx; norm_num ⟩
   continuous_toFun := by fun_prop

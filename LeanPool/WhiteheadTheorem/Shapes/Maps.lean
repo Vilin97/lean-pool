@@ -25,7 +25,7 @@ lemma mulRight_zero (X : Type*) [TopologicalSpace X]
     [mulOne : MulZeroClass X] [ContinuousMul X] :
     ContinuousMap.mulRight 0 = ContinuousMap.const X 0 := by
   ext x
-  simp only [coe_mulRight, id_apply]
+  simp only [coe_mulRight]
   exact mulOne.mul_zero x
 
 lemma prodMap_id_id (X Y : Type u) [TopologicalSpace X] [TopologicalSpace Y] :
@@ -143,13 +143,13 @@ noncomputable instance decidable_in_range_i₀ :
   have : z ∈ Set.range (Cyl.i₀ X) ↔ z.snd = 0 := by
     constructor
     · intro hz
-      simp_all only [ne_eq, hom_ofHom, ContinuousMap.coe_mk, Set.mem_range, not_exists]
+      simp_all only [hom_ofHom, ContinuousMap.coe_mk, Set.mem_range]
       obtain ⟨fst, snd⟩ := z
       obtain ⟨val, property⟩ := snd
       obtain ⟨w, h⟩ := hz
       simp_all only [Prod.mk.injEq]
     · intro hz
-      simp_all only [ne_eq, hom_ofHom, ContinuousMap.coe_mk, Set.mem_range, not_exists]
+      simp_all only [hom_ofHom, ContinuousMap.coe_mk, Set.mem_range]
       apply Exists.intro
       · ext : 1
         · rfl

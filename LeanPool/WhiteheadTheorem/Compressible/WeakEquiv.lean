@@ -76,7 +76,7 @@ theorem CWComplex_induced_map_surjective
         change ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
           l.H.some.toHomotopy) (0, x) = g.hom x
         rw [ContinuousMap.Homotopy.comp_apply]
-        simp only [ContinuousMap.Homotopy.refl_apply, ContinuousMap.Homotopy.apply_zero]
+        simp only [ContinuousMap.Homotopy.apply_zero]
         change (g ≫ MapCyl.codIncl f ≫ MapCyl.retr f).hom x = g.hom x
         congr 2
         rw [MapCyl.codIncl_retr_eq_id, Category.comp_id]
@@ -84,7 +84,7 @@ theorem CWComplex_induced_map_surjective
         change ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
           l.H.some.toHomotopy) (1, x) = (l.l ≫ f).hom x
         rw [ContinuousMap.Homotopy.comp_apply]
-        simp only [ContinuousMap.Homotopy.refl_apply, ContinuousMap.Homotopy.apply_one]
+        simp only [ContinuousMap.Homotopy.apply_one]
         change (l.l ≫ MapCyl.domIncl f ≫ MapCyl.retr f).hom x = (l.l ≫ f).hom x
         congr 3
         exact MapCyl.domIncl_retr_eq f }
@@ -150,7 +150,7 @@ theorem CWComplex_induced_map_injective
     unfold G₀₁ G
     simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_assoc, ContinuousMap.comp_apply,
       ContinuousMap.coe_mk, Limits.colimit.cocone_x, ContinuousMap.prodMap_apply,
-      ContinuousMap.coe_id, Prod.map_apply, id_eq, ContinuousMap.Homotopy.coe_toContinuousMap]
+      ContinuousMap.coe_id, Prod.map_apply, id_eq]
     rw [Set.mem_insert_iff, Set.mem_singleton_iff] at tprop
     cases tprop with
     | inl h0 =>

@@ -179,7 +179,7 @@ noncomputable abbrev coconeDropFirst
           simp only [Functor.ofSequence_obj, Functor.const_obj_obj, homOfLE_leOfHom,
             Functor.ofSequence_map_homOfLE_succ, Functor.const_obj_map, Category.comp_id]
           rw [← cc.w <| homOfLE <| Nat.le_succ <| n + 1]
-          simp_all only [Functor.ofSequence_obj, Nat.succ_eq_add_one, Functor.const_obj_obj,
+          simp_all only [Functor.ofSequence_obj, Nat.succ_eq_add_one, 
             homOfLE_leOfHom, Functor.ofSequence_map_homOfLE_succ] )
 
 noncomputable abbrev coconeUndropFirst

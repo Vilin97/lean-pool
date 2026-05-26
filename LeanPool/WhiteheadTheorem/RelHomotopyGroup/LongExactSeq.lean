@@ -83,16 +83,16 @@ theorem ker_bd_supset_im_jStar (f : π﹍ (n + 1) X A a) :
     { toFun := ContinuousMap.Homotopy.refl (@GenLoop.const _ A _ a).val
       continuous_toFun := ContinuousMap.continuous_toFun _
       map_zero_left y := by
-        simp only [toFun_eq_coe, Homotopy.coe_toContinuousMap, Homotopy.apply_zero,
+        simp only [Homotopy.apply_zero,
           Function.comp_apply, coe_mk]
         dsimp [GenLoop.const]
         apply Subtype.ext_iff.mpr; dsimp
         rw [show (g' (Cube.inclToTop y) : X) = ↑a from
           g'.property _ (Cube.inclToTop.mem_boundary y)]
       map_one_left y := by
-        simp only [toFun_eq_coe, Homotopy.coe_toContinuousMap, Homotopy.apply_one, g']
+        simp only [Homotopy.apply_one]
       prop' t y hy := by
-        simp only [toFun_eq_coe, Homotopy.coe_toContinuousMap, Homotopy.refl_apply, coe_mk,
+        simp only [Homotopy.refl_apply, coe_mk,
           Function.comp_apply]
         dsimp [GenLoop.const]
         apply Subtype.ext_iff.mpr; dsimp
@@ -121,7 +121,7 @@ noncomputable def ker_bd_subset_im_jStar.g''
     --   apply Continuous.if
     --   -- failed to unify `Continuous fun a ↦ if ?p a then ?f a else ?g a` with ⋯
     continuous_toFun:= by
-      simp only [one_div, Function.comp_apply, coe_mk, dite_eq_ite]
+      simp only [one_div, Function.comp_apply, dite_eq_ite]
       apply Continuous.if_le
       · refine f'.val.continuous.comp <| Cube.splitAtLast.symm.continuous.comp ?_
         refine Continuous.prodMk (Continuous.comp continuous_projIcc ?_) continuous_snd
@@ -189,7 +189,7 @@ noncomputable def ker_bd_subset_im_jStar.g'
         simp only [Function.comp_apply, coe_mk, toFun_eq_coe, Homotopy.coe_toContinuousMap,
           HomotopyWith.coe_toHomotopy] at this
         have := Subtype.ext_iff.mp this
-        simp only [Function.comp_apply, coe_mk] at this
+        simp only [] at this
         exact this.trans (f'.property.right _ (Cube.inclToTop.mem_boundaryJar_of y_mem_bd)) ⟩
 
 /-- G'' (t, (yₙ, (y₀, y₁, …, yₙ₋₁))) = if yₙ ≤ (1 + t) / 2
@@ -204,7 +204,7 @@ noncomputable def ker_bd_subset_im_jStar.G''
         ⟨Set.projIcc 0 1 (by norm_num) <| (2 / (1 + t)) * yn, y⟩
       else Subtype.val <| H ⟨Set.projIcc 0 1 (by norm_num) <| 2 * yn - (1 + t), y⟩
     continuous_toFun := by
-      simp only [Function.comp_apply, coe_mk, dite_eq_ite]
+      simp only [Function.comp_apply, dite_eq_ite]
       apply Continuous.if_le
       · refine f'.val.continuous.comp <| Cube.splitAtLast.symm.continuous.comp ?_
         refine Continuous.prodMk (Continuous.comp continuous_projIcc ?_)
@@ -253,19 +253,19 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
           ker_bd_subset_im_jStar.G'', g', ker_bd_subset_im_jStar.g', ker_bd_subset_im_jStar.g'']
         by_cases hyn : (Cube.splitAtLast y).fst.val ≤ 1 / 2
         repeat {simp only [Function.comp_apply, coe_mk, dite_eq_ite, Set.Icc.coe_zero, add_zero,
-          one_div, div_one, g', f']}
+          one_div, div_one, f']}
       map_one_left y := by  -- G₁ = f'
         simp only [comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq,
-          g', ker_bd_subset_im_jStar.G'']
+          ker_bd_subset_im_jStar.G'']
         have hyn : (Cube.splitAtLast y).fst.val ≤ 1 := (Cube.splitAtLast y).fst.property.2
         simp only [Function.comp_apply, coe_mk, dite_eq_ite, Set.Icc.coe_one, add_self_div_two,
           hyn, ↓reduceIte]
         have : (2 : ℝ) / (1 + 1) = 1 := by norm_num
-        simp only [this, one_mul, Set.projIcc_val, Prod.mk.eta, Homeomorph.symm_apply_apply, g']
+        simp only [this, one_mul, Set.projIcc_val, Prod.mk.eta, Homeomorph.symm_apply_apply]
       prop' t := by
         apply RelGenLoop.mem_of_boundaryLid_and_boundaryJar
         simp only [comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq,
-          coe_mk, g']
+          coe_mk]
         · intro y hy  -- `y` is in the top face
           simp only [Cube.boundaryLid, Set.mem_setOf_eq] at hy
           by_cases hyn : (Cube.splitAtLast y).fst.val ≤ (1 + t) / 2
@@ -278,15 +278,15 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
               rw [div_mul_cancel₀ _ (by norm_num : (2 : ℝ) ≠ 0), Set.Icc.coe_one, one_mul] at hyn
               linarith only [hyn]
             rw [t1, (by norm_num : (2 : ℝ) / (1 + 1) = 1), one_mul]
-            simp only [Set.projIcc_val, Prod.mk.eta, Homeomorph.symm_apply_apply, g']
+            simp only [Set.projIcc_val, Prod.mk.eta, Homeomorph.symm_apply_apply]
             apply f'.property.left
             use (Fin.last _); right; exact hy
           · -- `H` maps the top face into `A`
             simp only [ker_bd_subset_im_jStar.G'', Function.comp_apply, coe_mk, dite_eq_ite, hyn,
-              ↓reduceIte, Subtype.coe_prop, g']
+              ↓reduceIte, Subtype.coe_prop]
         · intro y hy -- `y` is in the `boundaryJar`
           simp only [ker_bd_subset_im_jStar.G'', Function.comp_apply, coe_mk, dite_eq_ite,
-            comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq, g']
+            comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq]
           by_cases hbot : y (Fin.last _) = 0
           · -- `f'` maps the bottom face to `a`
             rw [Cube.splitAtLast_fst_eq, hbot]
@@ -297,7 +297,7 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
             apply Cube.mem_boundaryJar_of_exists_eq_zero
             use Fin.last n
             simp only [Cube.splitAtLast, ne_eq, Homeomorph.trans_apply,
-              Homeomorph.funSplitAt_apply, Fin.natCast_eq_last, Homeomorph.coe_prodCongr,
+              Homeomorph.funSplitAt_apply, Homeomorph.coe_prodCongr,
               Homeomorph.refl_apply, Prod.map_apply, id_eq, Homeomorph.symm_trans_apply,
               Homeomorph.prodCongr_symm, Homeomorph.refl_symm, Homeomorph.symm_symm,
               Homeomorph.apply_symm_apply, Homeomorph.funSplitAt_symm_apply, ↓reduceDIte]
@@ -322,7 +322,7 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
               simp only [Function.comp_apply, coe_mk, toFun_eq_coe, Homotopy.coe_toContinuousMap,
                 HomotopyWith.coe_toHomotopy] at this
               have := Subtype.ext_iff.mp this
-              simp only [Function.comp_apply, coe_mk] at this
+              simp only [] at this
               exact this.trans (f'.property.right _ (Cube.inclToTop.mem_boundaryJar_of ⟨i, hi⟩)) }
 
 /-- `Ker ∂ = Im j*` in
@@ -355,7 +355,7 @@ theorem ker_iStar_supset_im_bd (f : π_ n A a) :
         simp only [Cube.splitAtLast, ne_eq, Homeomorph.symm_trans_apply,
           Homeomorph.prodCongr_symm, Homeomorph.refl_symm, Homeomorph.symm_symm,
           Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq,
-          Homeomorph.funSplitAt_symm_apply, Fin.natCast_eq_last, ↓reduceDIte]
+          Homeomorph.funSplitAt_symm_apply, ↓reduceDIte]
       map_one_left y := by
         simp only [comp_apply, ContinuousMap.coe_coe, Function.comp_apply, coe_mk]
         congr 1

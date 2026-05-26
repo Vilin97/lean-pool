@@ -115,7 +115,7 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
     funext ⟨y, t⟩
     simp only [ContinuousMap.coe_comp, ContinuousMap.Homotopy.coe_toContinuousMap,
       Function.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
-      ContinuousMap.coe_mk, Path.coe_toContinuousMap, Fb, Fs]
+      ContinuousMap.coe_mk, Fb, Fs]
     change H.toFun (t, ((TopCat.cubeBoundaryIncl n).hom y).down) = (Nonempty.some pnull) (0, t)
     rw [H.prop' t ((TopCat.cubeBoundaryIncl n).hom y).down y.down.property]
     rw [pnull.some.apply_zero _]
@@ -136,7 +136,7 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
       | inr ht1 => rw [ht1, p.target]
     · rw [hs]
       simp only [ContinuousMap.HomotopyWith.apply_one, Path.coe_toContinuousMap, Path.refl_apply,
-        Fb, Fs]
+        ]
   let Fyts (t s : I) (hts : (t = 0 ∨ t = 1) ∨ s = 1) : Ω^ (Fin n) X x₀ :=
     ⟨⟨fun y ↦ F ((⟨y⟩, t), s), by fun_prop⟩, fun y hy ↦ Fyts_eq_x₀ ⟨y, hy⟩ t s hts⟩
   let Fy01 := Fyts 0 1 (Or.inr rfl)

@@ -168,15 +168,15 @@ lemma pushout_inr_neq_pushout_inr_of_mem_compl_range_of_mem_range :
         Set.mem_range, not_exists, dite_eq_ite, ite_not, ContinuousMap.comp_apply, Bool.false_eq,
         pY, pZ, B]
       have : g x ∈ Set.range g := Set.mem_range_self x
-      simp only [Set.mem_range, ContinuousMap.coe_mk, this, ↓reduceIte, pZ, B, pY] )
+      simp only [Set.mem_range, ContinuousMap.coe_mk, this, ↓reduceIte] )
     intro z hz z' hz'
     have p_neq : pYZ ((pushout.inr f g) z) ≠ pYZ ((pushout.inr f g) z') := by
       change (pushout.inr f g ≫ pYZ) z ≠ (pushout.inr f g ≫ pYZ) z'
       unfold pYZ
       rw [pushout.inr_desc]
-      simp only [Set.mem_range, not_exists, dite_eq_ite, ite_not, hom_ofHom, ne_eq, pZ, B, pY]
+      simp only [Set.mem_range, not_exists, dite_eq_ite, ite_not, hom_ofHom, ne_eq, pZ, B]
       simp_all only [Set.mem_compl_iff, Set.mem_range, not_exists, ContinuousMap.coe_mk,
-        exists_false, ↓reduceIte, ULift.up.injEq, Bool.true_eq_false, not_false_eq_true, B, pZ, pY]
+        exists_false, ↓reduceIte, ULift.up.injEq, Bool.true_eq_false, not_false_eq_true, B]
     have {A B : Type u} {f : A → B} {a1 a2 : A} (h : f a1 ≠ f a2) : a1 ≠ a2 :=
       fun a ↦ h (congrArg f a)
     exact this p_neq
@@ -200,7 +200,7 @@ lemma pushout_inr_neq_pushout_inl_of_mem_compl_range :
         Set.mem_range, not_exists, dite_eq_ite, ite_not, ContinuousMap.comp_apply, Bool.false_eq,
         pY, pZ, B]
       have : g x ∈ Set.range g := Set.mem_range_self x
-      simp only [Set.mem_range, ContinuousMap.coe_mk, this, ↓reduceIte, pZ, B, pY] )
+      simp only [Set.mem_range, ContinuousMap.coe_mk, this, ↓reduceIte] )
     intro z hz y
     have p_neq : pYZ ((pushout.inr f g) z) ≠ pYZ ((pushout.inl f g) y) := by
       have hl : (pushout.inl f g ≫ pYZ).hom y = (⟨false⟩ : ULift Bool) := by
@@ -258,7 +258,7 @@ lemma isOpenMap_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
     IsOpenMap <| pushoutInr' f g := by
   intro s hs
   apply TopCat.pushout_isOpen
-  · simp only [span_left]
+  · simp only []
     have : colimit (span f g) = pushout f g := rfl
     change IsOpen <| (colimit.ι (span f g) WalkingSpan.left) ⁻¹' ((pushoutInr' f g) '' s)
     change IsOpen <| (pushout.inl f g) ⁻¹' ((pushoutInr' f g) '' s)
@@ -272,7 +272,7 @@ lemma isOpenMap_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
       convert pushout_inr_neq_pushout_inl_of_mem_compl_range f g z z.property y
     rw [this]
     exact isOpen_empty
-  · simp only [span_right]
+  · simp only []
     change IsOpen <| (pushout.inr f g) ⁻¹' ((pushoutInr' f g) '' s)
     unfold pushoutInr'
     have : (pushout.inr f g) ⁻¹' ((pushoutInr' f g) '' s) = s := by

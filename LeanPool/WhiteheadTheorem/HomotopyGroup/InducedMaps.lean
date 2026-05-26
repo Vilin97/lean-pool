@@ -103,7 +103,7 @@ lemma ofHom_comp (f : C(X, Y)) (g : C(Y, Z)) (point : X) :
 lemma ofHom'_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) (point : X) :
     ofHom' (f ≫ g) point = (ofHom' f point) ≫ (ofHom' g (f point)) := by
   unfold ofHom'
-  simp only [ContinuousMap.comp_apply, TopCat.ofHom_comp]
+  simp only []
   rfl
 
 end PointedTopCat
@@ -224,7 +224,7 @@ lemma inducedMap'_default (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
   unfold inducedMap'
   dsimp only [Quotient.map_mk]
   unfold GenLoop.const
-  simp only [inducedMap', Quotient.map_mk, GenLoop.inducedMap', ContinuousMap.comp_const]
+  simp only [GenLoop.inducedMap', ContinuousMap.comp_const]
   congr 2
   ext y
   rw [ContinuousMap.const_apply]
@@ -274,11 +274,11 @@ noncomputable def functorToPointed (n : ℕ) : PointedTopCat.{u} ⥤ Pointed.{u}
     { toFun := (functorToType n).map f
       map_point := inducedMap'_default n f }
   map_id X := by
-    simp only [Quotient.map_mk, id_eq, ContinuousMap.const_apply, eq_mpr_eq_cast, cast_eq,
+    simp only [
       CategoryTheory.Functor.map_id]
     congr
   map_comp {X Y Z} f g := by
-    simp only [Quotient.map_mk, id_eq, ContinuousMap.const_apply, eq_mpr_eq_cast, cast_eq,
+    simp only [
       Functor.map_comp]
     congr
 

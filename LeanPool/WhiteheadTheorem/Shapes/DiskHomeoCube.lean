@@ -101,7 +101,7 @@ lemma toPDisk_comp_toQDisk x : toQDisk n q p (toQDisk n p q x) = x := by
     replace hfx := congrArg ULift.down hfx
     simp only [Subtype.mk.injEq] at hfx
     congr
-    simp only [← hfx, WithLp.ofLp_smul, WithLp.toLp_smul, WithLp.ofLp_toLp]
+    simp only [← hfx, WithLp.ofLp_smul, WithLp.toLp_smul]
     simp only [norm_smul, norm_mul, norm_norm, norm_inv, mul_inv_rev, inv_inv, smul_smul]
     rw [mul_assoc ‖x‖]
     conv in ‖x‖ * _ => arg 2; equals 1 => exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx0')
@@ -221,7 +221,7 @@ lemma toPDiskBoundary_comp_toQDiskBoundary x :
     replace hfx := congrArg ULift.down hfx
     simp only [Subtype.mk.injEq] at hfx
     congr
-    simp only [← hfx, WithLp.ofLp_smul, WithLp.toLp_smul, WithLp.ofLp_toLp]
+    simp only [← hfx, WithLp.ofLp_smul, WithLp.toLp_smul]
     simp only [norm_smul, norm_mul, norm_norm, norm_inv, mul_inv_rev, inv_inv, smul_smul]
     rw [mul_assoc ‖x‖]
     conv in ‖x‖ * _ => arg 2; equals 1 => exact inv_mul_cancel₀ (norm_ne_zero_iff.mpr hx0')
@@ -331,13 +331,13 @@ noncomputable def largeCubeBoundaryHomeoPDiskBoundary (n : ℕ) :
     rw [Metric.mem_sphere, PiLp.dist_eq_iSup]
     apply le_antisymm
     · refine Real.iSup_le ?_ (by norm_num : (0 : ℝ) ≤ (1 : ℝ))
-      simp only [PiLp.zero_apply, dist_zero_right, Real.norm_eq_abs, ge_iff_le]
+      simp only [PiLp.zero_apply, dist_zero_right, Real.norm_eq_abs]
       exact fun i ↦ abs_le.mpr (x i).property
     · apply Real.le_iSup_of_exists_ge_of_finite_domain
       obtain ⟨i, hi | hi⟩ := hx
       all_goals
         use i
-        simp only [WithLp.ofLp_toLp, WithLp.ofLp_zero, PiLp.zero_apply,
+        simp only [PiLp.zero_apply,
           dist_zero_right, Real.norm_eq_abs, hi]
         norm_num ⟩⟩
   invFun := fun ⟨⟨x, hx⟩⟩ ↦

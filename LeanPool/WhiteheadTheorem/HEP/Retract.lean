@@ -97,7 +97,7 @@ lemma inclToSides_projToSides_eq_of {n : ℕ} (y : I^Fin (n + 1 + 1))
   rw [this]
   ext i
   simp [inclToSides, inclToBoundaryJarSides, splitAtLastComm, splitAtLast]
-  simp [boundaryIncl, splitAtLastComm, splitAtLast]
+  simp [boundaryIncl]
   split_ifs with hi
   rw [hi]; simp only
 
@@ -225,7 +225,7 @@ lemma deformRetrToBot_apply_bot {n : ℕ}
   simp only [ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
     ContinuousMap.coe_coe, Prod.map_apply, id_eq, ContinuousMap.coe_mk]
   unfold splitAtLast
-  simp only [ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply, Fin.natCast_eq_last,
+  simp only [ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply, 
     Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq,
     Homeomorph.symm_trans_apply, Homeomorph.prodCongr_symm, Homeomorph.refl_symm,
     Homeomorph.symm_symm, Homeomorph.apply_symm_apply, Homeomorph.funSplitAt_symm_apply,
@@ -270,7 +270,7 @@ def hequivBoundaryJar {n : ℕ} : (I^ Fin n) ≃ₕ ⊔I^(n + 1) where
     ext y i
     simp only [discardLast, boundaryJarIncl, inclToBoundaryJarBot, inclToBot, ne_eq,
       ContinuousMap.coe_mk, ContinuousMap.comp_assoc, ContinuousMap.comp_apply,
-      Homeomorph.funSplitAt_symm_apply, Fin.natCast_eq_last, ContinuousMap.id_apply]
+      Homeomorph.funSplitAt_symm_apply, ContinuousMap.id_apply]
     split
     · rename_i hi
       change i.castSucc = _ at hi
@@ -288,14 +288,14 @@ def hequivBoundaryJar {n : ℕ} : (I^ Fin n) ≃ₕ ⊔I^(n + 1) where
         simp only [ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
           ContinuousMap.coe_coe, Prod.map_apply, id_eq, ContinuousMap.coe_mk, mul_zero, ne_eq]
         unfold splitAtLast homeoNeqLast
-        simp only [ne_eq, Fin.coe_eq_castSucc, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
-          Fin.natCast_eq_last, Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply,
+        simp only [ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
+          Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply,
           id_eq, Homeomorph.symm_trans_apply, Homeomorph.prodCongr_symm, Homeomorph.refl_symm,
           Homeomorph.symm_symm, Homeomorph.apply_symm_apply, EmbeddingLike.apply_eq_iff_eq,
           Prod.mk.injEq, true_and]
         ext i
-        simp only [Homeomorph.piCongr_apply, Equiv.coe_fn_symm_mk, Fin.eta, Homeomorph.refl_apply,
-          id_eq]
+        simp only [Homeomorph.piCongr_apply, 
+          ]
         rfl
       map_one_left y := by
         unfold boundaryJarDeformRetrToBot boundaryJarIncl deformRetrToBot

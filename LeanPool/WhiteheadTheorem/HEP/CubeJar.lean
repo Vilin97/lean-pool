@@ -248,7 +248,7 @@ noncomputable def backMap
     let yt' := r.r (backIsoCube n yt)
     -- let yt'' := backIsoCube.{u}.symm yt'
     jarMap f h fh <| ULift.up.{u} ⟨yt', Set.range_subset_iff.mp r.r_range _⟩
-  continuous_toFun := by simp only [Set.coe_setOf, Set.mem_setOf_eq]; fun_prop
+  continuous_toFun := by simp only [Set.coe_setOf]; fun_prop
 
 def flrMap : C(flr n, Y) where
   toFun := fun ⟨⟨⟨y, _⟩, t⟩, hy⟩ ↦ h ⟨⟨y, hy⟩, t⟩
@@ -372,7 +372,7 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       let yt' := r.r (backIsoCube n yt_back)
       change f yb = backMap f h fh yt_back
       unfold backMap
-      simp only [Set.coe_setOf, Set.mem_setOf_eq, ContinuousMap.coe_mk]
+      simp only [Set.coe_setOf, Set.mem_setOf_eq]
       change _ = jarMap f h fh ⟨⟨yt', _⟩⟩
       replace : backIsoCube n yt_back ∈ ⊔I^ (n + 1) := by
         change Cube.splitAtLast.symm ⟨0, (Cube.splitAtLast y).snd⟩ ∈ ⊔I^ (n + 1)
@@ -431,7 +431,7 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       rw [this]
       change _ = flrMap h _
       unfold flrMap yb_t yb
-      simp only [Set.coe_setOf, Set.mem_setOf_eq, ContinuousMap.coe_mk]
+      simp only [Set.coe_setOf, Set.mem_setOf_eq]
       change f yb = h ⟨yj, 0⟩
       replace := congrFun fh yj
       simp only [Function.comp_apply] at this

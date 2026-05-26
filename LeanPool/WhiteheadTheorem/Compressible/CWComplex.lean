@@ -319,7 +319,7 @@ private lemma H_skInclSucc (n m step : ℕ) (hstep : m + step = n) :
         ContinuousMap.coe_coe, ContinuousMap.Homotopy.refl_apply, ContinuousMap.comp_apply]
       simp only [ContinuousMap.Homotopy.trans_apply, one_div]
       by_cases ht : t.val ≤ 2⁻¹
-      all_goals simp only [ht, ↓reduceDIte, hom_comp, ContinuousMap.comp_apply]
+      all_goals simp only [ht, ↓reduceDIte]
       · change (X.skInclSucc m ≫ ((X.skIncl (m + 1)) ≫ (F m).hep_l.l) ≫
             PathSpace.evalAt _ _).hom x = (X.skIncl m ≫ (F m).F).hom x
         congr 2
@@ -407,9 +407,7 @@ theorem IsCompressible.relCWComplex_of_diskBoundaryIncl
       refine (Limits.colimit.ι_desc_assoc ccH n _).trans ?_
       unfold ccH
       simp only [Functor.ofSequence_obj, ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk,
-        Functor.const_obj_obj, homOfLE_leOfHom, Functor.const_obj_map, id_eq, hom_ofHom,
-        ContinuousMap.comp_apply, ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
-        ContinuousMap.Homotopy.coe_toContinuousMap, eq_mpr_eq_cast, NatTrans.ofSequence_app]
+        NatTrans.ofSequence_app]
       ext x
       simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
         ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
@@ -422,9 +420,7 @@ theorem IsCompressible.relCWComplex_of_diskBoundaryIncl
       refine (Limits.colimit.ι_desc_assoc ccH n _).trans ?_
       unfold ccH
       simp only [Functor.ofSequence_obj, ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk,
-        Functor.const_obj_obj, homOfLE_leOfHom, Functor.const_obj_map, id_eq, hom_ofHom,
-        ContinuousMap.comp_apply, ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
-        ContinuousMap.Homotopy.coe_toContinuousMap, eq_mpr_eq_cast, NatTrans.ofSequence_app]
+        NatTrans.ofSequence_app]
       simp only [L]
       refine Eq.trans ?_ (Limits.colimit.ι_desc_assoc ccL n j).symm
       ext x
@@ -441,9 +437,7 @@ theorem IsCompressible.relCWComplex_of_diskBoundaryIncl
       refine (Limits.colimit.ι_desc_assoc ccH 0 _).trans ?_
       unfold ccH
       simp only [ContinuousMap.argSwap, hom_comp, ContinuousMap.coe_mk, Functor.ofSequence_obj,
-        Functor.const_obj_obj, homOfLE_leOfHom, Functor.const_obj_map, id_eq, hom_ofHom,
-        ContinuousMap.comp_apply, ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
-        ContinuousMap.Homotopy.coe_toContinuousMap, eq_mpr_eq_cast, NatTrans.ofSequence_app]
+        NatTrans.ofSequence_app]
       ext x
       simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
         ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,

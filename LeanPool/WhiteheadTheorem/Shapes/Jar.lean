@@ -147,7 +147,7 @@ lemma proj_compatible (n : ℕ) {Y : Type*} [TopologicalSpace Y]
       rw [mul_sub, mul_one, ← mul_comm_div, div_self (by norm_num), one_mul, one_mul] ⟩
     conv in midProj n _ => equals diskBoundaryIncl n q =>
       unfold diskBoundaryIncl midProj midProjToFun
-      simp only [Fin.isValue, ContinuousMap.coe_mk, hom_ofHom]
+      simp only [Fin.isValue, ContinuousMap.coe_mk]
       congr
     conv in rimProj n _ => equals (q, 0) =>
       unfold rimProj rimProjFst rimProjFstToFun rimProjSnd rimProjSndToFun
@@ -200,12 +200,12 @@ lemma homotopyExtension_bottom_commutes (n : ℕ) {Y : Type*} [TopologicalSpace 
     rw [zero_div, sub_zero]
     exact mem_closedBall_zero_iff.mp hx
   conv_rhs => equals (proj n f H 0) ⟨(p, 0), hp⟩ => apply ContinuousMap.liftCoverClosed_coe'
-  simp only [Int.ofNat_eq_natCast, proj, TopCat.coe_of, Fin.succ_zero_eq_one, Fin.cons_zero,
+  simp only [proj, Fin.succ_zero_eq_one, Fin.cons_zero,
     ContinuousMap.comp_apply]
   congr
   change p = midProjToFun n ⟨(p, 0), hp⟩
   obtain ⟨x, hx⟩ := p
-  simp only [Int.ofNat_eq_natCast, midProjToFun, sub_zero, ne_eq, OfNat.ofNat_ne_zero,
+  simp only [midProjToFun, sub_zero, ne_eq, OfNat.ofNat_ne_zero,
     not_false_eq_true, div_self, one_smul]
 
 -- The triangle involving the wall (i.e., `𝕊 n × I`) of the jar commutes.

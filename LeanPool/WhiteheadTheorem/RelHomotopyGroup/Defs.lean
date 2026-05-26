@@ -156,7 +156,7 @@ def bd' (f : RelGenLoop (n + 1) X A a) : π_ n A a :=
       fun y hy ↦ by
         apply Subtype.ext
         apply f.property.right _
-        simp only [Cube.inclToTop, ne_eq, ContinuousMap.coe_mk]
+        simp only [Cube.inclToTop, ContinuousMap.coe_mk]
         exact Cube.inclToTop.mem_boundaryJar_of hy ⟩
 
 /-- The boundary map $∂$ (of pointed sets) from πₙ₊₁(X, A, a) to πₙ(A, a) -/

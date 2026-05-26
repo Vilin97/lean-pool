@@ -98,13 +98,13 @@ instance uniqueBoundaryJarOne : Unique (⊔I^1) where
 def homeoNeqLast {n : ℕ} : (I^ Fin n) ≃ₜ I^{ j : Fin (n + 1) // j ≠ Fin.last _ } :=
   Homeomorph.piCongr
     { toFun i := ⟨i.castSucc, by
-        simp only [Fin.coe_eq_castSucc, Fin.natCast_eq_last, ne_eq]
+        simp only [ne_eq]
         exact Fin.lt_last_iff_ne_last.mp i.2 ⟩
       invFun i := ⟨i, by
         have := i.2
-        simp only [ne_eq, Fin.natCast_eq_last] at this
+        simp only [ne_eq] at this
         exact Fin.lt_last_iff_ne_last.mpr this ⟩
-      left_inv i := by simp only [Fin.coe_eq_castSucc, Fin.val_castSucc, Fin.eta]
+      left_inv i := by simp only [Fin.val_castSucc, Fin.eta]
       right_inv i := by simp only [ne_eq, Fin.castSucc_mk, Fin.eta, Subtype.coe_eta] }
     fun _ ↦ Homeomorph.refl _
 
@@ -120,24 +120,24 @@ def splitAtLastComm {n : ℕ} : (I^ Fin (n + 1)) ≃ₜ (I^ Fin n) × I :=
 lemma splitAtLast_fst_eq {n : ℕ} (y : I^Fin (n + 1)) :
     (splitAtLast y).fst = y (Fin.last n) := by
   simp only [splitAtLast, ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
-    Fin.natCast_eq_last, Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq]
+    Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq]
 
 lemma splitAtLastComm_snd_eq {n : ℕ} (y : I^Fin (n + 1)) :
     (splitAtLastComm y).snd = y (Fin.last n) := by
   simp only [splitAtLastComm, splitAtLast, ne_eq, Homeomorph.trans_apply,
-    Homeomorph.funSplitAt_apply, Fin.natCast_eq_last, Homeomorph.coe_prodCongr,
+    Homeomorph.funSplitAt_apply, Homeomorph.coe_prodCongr,
     Homeomorph.refl_apply, Prod.map_apply, id_eq, Homeomorph.coe_prodComm, Prod.swap_prod_mk]
 
 lemma splitAtLast_snd_eq {n : ℕ} (y : I^Fin (n + 1)) :
     (splitAtLast y).snd = (splitAtLastComm y).fst := by
   simp only [splitAtLast, ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
-    Fin.natCast_eq_last, Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq,
+    Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq,
     splitAtLastComm, Homeomorph.coe_prodComm, Prod.swap_prod_mk]
 
 lemma splitAtLast_snd_apply_eq {n : ℕ} (y : I^Fin (n + 1)) (i : Fin n) :
     (splitAtLast y).snd i = y i.castSucc := by
-  simp only [splitAtLast, ne_eq, homeoNeqLast, Fin.coe_eq_castSucc, Homeomorph.trans_apply,
-    Homeomorph.funSplitAt_apply, Fin.natCast_eq_last, Homeomorph.coe_prodCongr,
+  simp only [splitAtLast, ne_eq, homeoNeqLast, Homeomorph.trans_apply,
+    Homeomorph.funSplitAt_apply, Homeomorph.coe_prodCongr,
     Homeomorph.refl_apply, Prod.map_apply, id_eq]
   rfl
 
@@ -154,7 +154,7 @@ lemma splitAtLast_symm_apply_eq_of_neq_last {n : ℕ} (t : I) (y : I^Fin n) (i :
     Homeomorph.refl_symm, Homeomorph.symm_symm, Homeomorph.coe_prodCongr, Homeomorph.refl_apply,
     Prod.map_apply, id_eq, Homeomorph.funSplitAt_symm_apply]
   simp only [homeoNeqLast, ne_eq, Homeomorph.piCongr_apply]
-  simp_all only [Set.mem_Icc]
+  simp_all only []
   rfl
 
 /-- `y ∈ ⊔I^(n+1)` if and only if either `y` is on the bottom face,
@@ -165,7 +165,7 @@ lemma mem_boundaryJar_iff_splitAtLast {n : ℕ} {y : I^Fin (n + 1)} :
   constructor
   · intro hy
     simp only [splitAtLast, ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
-      Fin.natCast_eq_last, Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq]
+      Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq]
     by_cases h0 : y (Fin.last n) = 0
     · left; exact h0
     · right
@@ -227,7 +227,7 @@ lemma inclToTop.mem_boundary {n : ℕ} (y : I^Fin n) : inclToTop y ∈ ∂I^(n +
   right
   simp only [inclToTop, splitAtLast, ne_eq, Homeomorph.symm_trans_apply,
     Homeomorph.prodCongr_symm, Homeomorph.refl_symm, Homeomorph.symm_symm, Homeomorph.coe_prodCongr,
-    Homeomorph.refl_apply, Prod.map_apply, id_eq, Fin.natCast_eq_last, ContinuousMap.coe_mk,
+    Homeomorph.refl_apply, Prod.map_apply, id_eq, ContinuousMap.coe_mk,
     Homeomorph.funSplitAt_symm_apply, ↓reduceDIte]
 
 /-- If y is in the `boundary`, then (y, 1) is in the `boundaryJar`. -/
@@ -237,14 +237,14 @@ lemma inclToTop.mem_boundaryJar_of {n : ℕ} {y : I^Fin n}
   simp only [inclToTop, ContinuousMap.coe_mk]
   constructor
   · use Fin.last _        -- the n-th coordinate of (y, 1) is 1
-    simp only [splitAtLast, ne_eq, Fin.natCast_eq_last, Homeomorph.symm_trans_apply,
+    simp only [splitAtLast, ne_eq, Homeomorph.symm_trans_apply,
     Homeomorph.prodCongr_symm, Homeomorph.refl_symm, Homeomorph.symm_symm, Homeomorph.coe_prodCongr,
     Homeomorph.refl_apply, Prod.map_apply, id_eq, Homeomorph.funSplitAt_symm_apply, ↓reduceDIte,
     one_ne_zero, or_true]
   · intro _
     use i.castSucc         -- the i-th coordinate of (y, 1) is 0 or 1, where i < n
     constructor
-    · simp only [Fin.coe_eq_castSucc, Fin.natCast_eq_last, Fin.castSucc_lt_last]
+    · simp only [Fin.castSucc_lt_last]
     · simpa only [splitAtLast, ne_eq, homeoNeqLast, Fin.coe_eq_castSucc,
       Homeomorph.symm_trans_apply, Homeomorph.prodCongr_symm, Homeomorph.refl_symm,
       Homeomorph.symm_symm, Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq,
@@ -273,7 +273,7 @@ def inclToBot {n : ℕ} : C(I^ Fin n, I^ Fin (n + 1)) where
 lemma inclToBot.mem_boundary {n : ℕ} (y : I^Fin n) : inclToBot y ∈ ∂I^(n + 1) := by
   use Fin.last _
   left
-  simp only [inclToBot, ne_eq, Fin.natCast_eq_last, ContinuousMap.coe_mk,
+  simp only [inclToBot, ne_eq, ContinuousMap.coe_mk,
     Homeomorph.funSplitAt_symm_apply, ↓reduceDIte]
 
 /-- (y, 0) is in the `boundaryJar`. -/
@@ -383,13 +383,13 @@ def cubeSplitAtLast {n : ℕ} : 𝕀 (n + 1) ≅ TopCat.of (I × 𝕀 n) where
   inv := ofHom ⟨fun ⟨t, ⟨y⟩⟩ ↦ ⟨Cube.splitAtLast.symm ⟨t, y⟩⟩, by fun_prop⟩
   hom_inv_id := by
     ext ⟨y⟩
-    simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk, hom_id,
+    simp only [hom_comp, ContinuousMap.comp_apply, hom_id,
       ContinuousMap.id_apply]
     change ULift.up _ = _
     simp only [Prod.mk.eta, Homeomorph.symm_apply_apply]
   inv_hom_id := by
     ext ⟨t, ⟨y⟩⟩
-    all_goals simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
+    all_goals simp only [hom_comp, ContinuousMap.comp_apply, 
         hom_id, ContinuousMap.id_apply]
     · congr 1
       change (Cube.splitAtLast (Cube.splitAtLast.symm _)).fst = _
@@ -417,7 +417,7 @@ def cubeInclToBotOrTop {n : ℕ} (t : unitInterval.zeroOne) : 𝕀 n ⟶ ∂𝕀
   ofHom
     { toFun := fun ⟨y⟩ ↦ ⟨Cube.splitAtLast.symm ⟨unitInterval.zeroOneIncl t, y⟩, by
         use Fin.last _
-        simp only [Cube.splitAtLast, ne_eq, ContinuousMap.coe_mk, Fin.natCast_eq_last,
+        simp only [Cube.splitAtLast, ne_eq, ContinuousMap.coe_mk, 
           Homeomorph.symm_trans_apply, Homeomorph.prodCongr_symm, Homeomorph.refl_symm,
           Homeomorph.symm_symm, Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply,
           id_eq, Homeomorph.funSplitAt_symm_apply, ↓reduceDIte]
@@ -438,7 +438,7 @@ lemma cubeInclToBotOrTop_mem_botOrTop
   simp only [cubeInclToBotOrTop, Cube.splitAtLast, ne_eq, ContinuousMap.coe_mk,
     Homeomorph.symm_trans_apply, Homeomorph.prodCongr_symm, Homeomorph.refl_symm,
     Homeomorph.symm_symm, Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq,
-    hom_ofHom, Set.mem_setOf_eq, Homeomorph.funSplitAt_symm_apply, Fin.natCast_eq_last, ↓reduceDIte]
+    Set.mem_setOf_eq, Homeomorph.funSplitAt_symm_apply, ↓reduceDIte]
 
 /-- Given a point on the boundary of the `n`-dimensional cube,
 cast it as a point on the boundary of the `(n + 1)`-dimensional cube

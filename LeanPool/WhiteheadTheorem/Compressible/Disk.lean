@@ -154,7 +154,7 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
   have : ⇑fb' ∘ (cubeBoundaryJarInclToBoundary (n + 1)).hom = ⇑Hfj' ∘ fun x ↦ (x, 0) := by
     unfold cubeBoundaryJarInclToBoundary boundaryJarInclToBoundary
     ext y
-    simp only [ContinuousMap.coe_mk, hom_ofHom, Function.comp_apply]
+    simp only [ContinuousMap.coe_mk, Function.comp_apply]
     unfold fb' fb Hfj' ContinuousMap.argSwap
     simp only [ContinuousMap.comp_apply, ContinuousMap.coe_mk, ContinuousMap.comp_assoc,
       ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
@@ -169,7 +169,7 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
   replace : ⇑f' ∘ (cubeBoundaryIncl (n + 1)).hom = ⇑H1' ∘ fun x ↦ (x, 0) := by
     unfold cubeBoundaryIncl f' H1'
     ext ⟨y, hy⟩
-    simp only [ContinuousMap.coe_comp, ContinuousMap.coe_mk, hom_ofHom, Function.comp_apply]
+    simp only [ContinuousMap.coe_comp, ContinuousMap.coe_mk, Function.comp_apply]
     change f y = _
     have := congr_fun H1prop.left ⟨⟨y, hy⟩⟩
     simp only [Function.comp_apply] at this
@@ -185,7 +185,7 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
     · intro y hy
       simp only [ContinuousMap.coe_mk]
       have := congr_fun H2prop.right ⟨⟨y, hy⟩, 1⟩
-      simp only [cubeBoundaryIncl, hom_ofHom, Function.comp_apply, Prod.map_apply,
+      simp only [cubeBoundaryIncl, Function.comp_apply, Prod.map_apply,
         id_eq] at this
       change _ = H2 ({ down := y }, 1) at this
       rw [← this]
@@ -195,13 +195,13 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
       have hy' := boundaryJar_subset_boundary _ hy
       simp only [ContinuousMap.coe_mk]
       have := congr_fun H2prop.right ⟨⟨y, hy'⟩, 1⟩
-      simp only [cubeBoundaryIncl, hom_ofHom, Function.comp_apply, Prod.map_apply,
+      simp only [cubeBoundaryIncl, Function.comp_apply, Prod.map_apply,
         id_eq] at this
       change _ = H2 ({ down := y }, 1) at this
       rw [← this]
       replace := congr_fun H1prop.right ⟨⟨y, hy⟩, 1⟩
       simp only [cubeBoundaryJarInclToBoundary, boundaryJarInclToBoundary,
-        ContinuousMap.coe_mk, hom_ofHom, Function.comp_apply, Prod.map_apply, id_eq] at this
+        ContinuousMap.coe_mk, Function.comp_apply, Prod.map_apply, id_eq] at this
       change _ = H1 ({ down := ⟨y, hy'⟩ }, 1) at this
       unfold H1'
       simp only [ContinuousMap.comp_apply, ContinuousMap.coe_mk]
@@ -235,7 +235,7 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
           ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
           Prod.map_apply, id_eq, ContinuousMap.prodSwap_apply]
         have := congr_fun H2prop.right ⟨⟨y, hy⟩, t⟩
-        simp only [ContinuousMap.comp_apply, ContinuousMap.coe_mk, cubeBoundaryIncl, hom_ofHom,
+        simp only [ContinuousMap.comp_apply, ContinuousMap.coe_mk, cubeBoundaryIncl, 
           Function.comp_apply, Prod.map_apply, id_eq, H1'] at this
         change _ = H2 ({ down := y }, t) at this
         rw [← this]
@@ -293,7 +293,7 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
   let f' : C(I^ Fin (n + 1), X) := f.comp i_d
   have hf' : Cube.IsMapOfPairs X A f' := fun y hy ↦ by
     unfold f' i_d iup
-    simp only [Arrow.mk_right, ContinuousMap.comp_apply, ContinuousMap.coe_mk]
+    simp only [Arrow.mk_right, ContinuousMap.comp_apply]
     change f ( (cubeBoundaryIncl (n + 1) ≫ e.inv.right) ⟨⟨y, hy⟩⟩ ) ∈ A
     change f ( (e.inv.left ≫ diskBoundaryIncl (n + 1)) ⟨⟨y, hy⟩⟩ ) ∈ A
     -- CategoryTheory.Arrow.iso_w e
@@ -322,7 +322,7 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
         simp only [Arrow.mk_right, ContinuousMap.toFun_eq_coe,
           ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.comp_apply,
           ContinuousMap.Homotopy.refl_apply, ContinuousMap.comp_apply,
-          ContinuousMap.HomotopyWith.coe_toHomotopy, hom_ofHom, ContinuousMap.coe_mk]
+          ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk]
         apply H.prop' t
         change idown ((diskBoundaryIncl (n + 1) ≫ e.hom.right) x) ∈ _
         -- diskPair.homeoCubePairULift_comm
@@ -331,7 +331,7 @@ theorem homotopicWith_const_isMapOfPairs_of_unique_pi
         have : ∀ z, idown (cubeBoundaryIncl (n + 1) z) ∈ ∂I^n + 1 := by
           intro ⟨z, hz⟩
           unfold idown cubeBoundaryIncl
-          simp only [hom_ofHom, ContinuousMap.coe_mk]
+          simp only [ContinuousMap.coe_mk]
           simp_all only [Subtype.forall, Arrow.mk_right, ContinuousMap.comp_assoc, f', i_d, e,
             iup, d_i, idown]
           obtain ⟨val, property⟩ := a
@@ -484,7 +484,7 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
             ContinuousMap.coe_mk]
           obtain ⟨x, hx⟩ := x
           obtain ⟨⟨y, hy⟩, hy'⟩ := Set.mem_range.mp hy
-          simp only [diskBoundaryIncl, hom_ofHom] at hy'
+          simp only [diskBoundaryIncl] at hy'
           replace hy' := (congr_arg (Subtype.val ∘ ULift.down) hy')
           simp only [Function.comp_apply] at hy'
           have hx1 : ‖x‖ = 1 := by
@@ -537,7 +537,7 @@ theorem isCompressible_subtype_val_of_unique_pi
     refine Nonempty.intro ⟨ofHom l', ?_, ?_⟩
     · ext x
       unfold l'
-      simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk]
+      simp only [hom_comp, ContinuousMap.comp_apply]
       let x' := diskBoundaryIncl (n + 1) x
       have x'r : x' ∈ Set.range (diskBoundaryIncl (n + 1)) := Set.mem_range_self x
       have := H.some.prop' 1 x' x'r
@@ -595,14 +595,14 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
           exact u.uniq _
         map_one_left y := by
           unfold l a
-          simp only [ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_one,
+          simp only [
             ContinuousMap.coe_mk, Function.comp_apply, ContinuousMap.HomotopyWith.apply_one,
-            Subtype.coe_eta, hom_comp, hom_ofHom, ContinuousMap.comp_const,
-            ContinuousMap.const_apply]
+            Subtype.coe_eta, hom_comp, hom_ofHom, 
+            ]
           rfl
         prop' t x := by
-          simp only [Set.mem_range, IsEmpty.exists_iff, ContinuousMap.Homotopy.coe_toContinuousMap,
-            ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk, IsEmpty.forall_iff] }
+          simp only [Set.mem_range, IsEmpty.exists_iff, 
+            ContinuousMap.coe_mk, IsEmpty.forall_iff] }
 
 /-- If `φ` is a weak homotopy equivalence,
 then the inclusion map `MapCyl.domInclFromTop φ`

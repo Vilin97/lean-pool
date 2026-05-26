@@ -219,8 +219,8 @@ def commSqSkSk (n : ℕ) :
     -- The underlying morphism equality follows from the universal property of the coproduct.
     apply Limits.Sigma.hom_ext
     intro α
-    simp only [Limits.Sigma.ι_desc_assoc, Limits.Sigma.ι_desc, Limits.Sigma.ι_map_assoc,
-      Category.assoc]
+    simp only [Limits.Sigma.ι_desc_assoc, Limits.Sigma.ι_map_assoc,
+      ]
     -- Now we need to show `attachMaps α ≫ skInclSucc X n = diskBoundaryIncl (n+1) ≫
     -- Sigma.ι _ α ≫ sigmaDisksInclToSk X n`.
     unfold IProd.attachMaps IProd.sigmaDisksInclToSk
@@ -330,8 +330,8 @@ lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
   unfold l' r'
   simp only [ContinuousMap.argSwap, TopCat.hom_comp, ContinuousMap.coe_mk,
     ContinuousMap.comp_assoc, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.curry_apply,
-    ContinuousMap.prodSwap_apply, Arrow.mk_right, cubeSplitAtLast, Limits.colimit.ι_desc,
-    Limits.Cofan.mk_pt, Limits.Cofan.mk_ι_app]
+    ContinuousMap.prodSwap_apply, Arrow.mk_right, cubeSplitAtLast, 
+    ]
   let xt_cube : ∂𝕀 (n + 1) :=
     TopCat.cubeBoundary.castSucc t <| (diskPair.homeoCubePairULift n).hom.left x
   let xt : ∂𝔻 (n + 1) := (diskPair.homeoCubePairULift _).inv.left xt_cube
@@ -550,8 +550,8 @@ lemma w'' : l X (n + 1) ≫ l'' X n Z = r X (n + 1) ≫ r'' X n Z := by
       rw [hLHS]
       ext y
       simp only [Arrow.mk_right, Arrow.mk_left, TopCat.hom_comp,
-        ContinuousMap.comp_apply, ContinuousMap.argSwap, cubeSplitAtLast, hom_ofHom,
-        ContinuousMap.coe_mk, ContinuousMap.prodSwap_apply]; rfl
+        ContinuousMap.argSwap, cubeSplitAtLast, hom_ofHom,
+        ContinuousMap.coe_mk]; rfl
 
 /--
 Given a commutative square
@@ -754,9 +754,9 @@ def pushoutSkSk (n : ℕ) :
         Limits.pushout.desc (l' ..) (r' ..) (w' ..)) x t
       rw [Limits.pushout.inr_desc, r']
       simp only [Arrow.mk_right, ContinuousMap.argSwap, Limits.PushoutCocone.ι_app_right,
-        TopCat.hom_comp, ContinuousMap.comp_assoc, hom_ofHom, ContinuousMap.coe_mk,
-        Limits.colimit.ι_desc, Limits.Cofan.mk_pt, Limits.Cofan.mk_ι_app, ContinuousMap.comp_apply,
-        ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply]
+        TopCat.hom_comp, ContinuousMap.comp_assoc, ContinuousMap.coe_mk,
+        ContinuousMap.comp_apply,
+        ]
       rw [← hdr, (by rfl : (cocone X n).inr = IProd.sigmaDisksInclToSk X n)]
       -- Combine nested `Hom.hom` applications into a single composition.
       simp only [← TopCat.comp_app]
@@ -809,11 +809,10 @@ def pushoutSkSk (n : ℕ) :
                       ((Hom.hom cubeSplitAtLast.inv).comp ContinuousMap.prodSwap)))).curry))) x) t
       rw [hci, hsi]
       -- Now both sides express the same map evaluated; reduce by unfolding `sigmaDisksInclToSk`.
-      simp only [TopCat.comp_app]
+      simp only []
       unfold IProd.sigmaDisksInclToSk
-      simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
-        ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
-        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq]
+      simp only [TopCat.hom_comp, 
+        ]
       have hsidisks : Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 (n + 1)) α ≫
           (Limits.Sigma.desc fun α ↦
             Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
@@ -862,8 +861,8 @@ def pushoutSkSk (n : ℕ) :
       rw [hsi_pt]
       -- Evaluate the remaining chain.
       simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
-        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
-        ContinuousMap.prodSwap_apply, TopCat.cubeSplitAtLast, ContinuousMap.coe_mk]
+        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, 
+        ContinuousMap.prodSwap_apply, TopCat.cubeSplitAtLast]
       -- Reduce hom.right ∘ inv.right = id pointwise via congrArg over morphism equation.
       have hhi : ∀ z : ↑(Arrow.mk (cubeBoundaryIncl (n + 1))).right,
           (Hom.hom (Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom))

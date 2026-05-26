@@ -117,7 +117,7 @@ def curriedDeformRetr : MapCyl f ⟶ TopCat.of C(I, MapCyl f) :=
       simp only [PathSpace.homToConstPaths]
       ext x t
       simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.curry_apply,
-        ContinuousMap.coe_mk, Set.Icc.coe_zero, zero_mul, Set.Icc.mk_zero]
+        ContinuousMap.coe_mk, zero_mul]
       exact congr_fun (congr_arg (ContinuousMap.toFun ∘ Hom.hom) (condition f)) x )
 
 def curriedDeformRetrEvalAt (t : I) : MapCyl f ⟶ MapCyl f :=
