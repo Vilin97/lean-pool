@@ -130,7 +130,10 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
     dsimp only [Path.coe_toContinuousMap, ContinuousMap.coe_mk, Fs, Fb]
     obtain ht | hs := hts
     · have := pnull.some.prop' s t ht
-      simp at this; rw [this]
+      simp only [Path.coe_toContinuousMap, ContinuousMap.toFun_eq_coe,
+        ContinuousMap.Homotopy.coe_toContinuousMap,
+        ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this
+      rw [this]
       cases ht with
       | inl ht0 => rw [ht0, p.source]
       | inr ht1 => rw [ht1, p.target]
@@ -143,38 +146,54 @@ theorem homotopic_of_levelHomotopy_along_null_loop {f g : Ω^ (Fin n) X x₀}
   let Fy11 := Fyts 1 1 (Or.inr rfl)
   have f_Fy01 : GenLoop.Homotopic f Fy01 := Nonempty.intro
     { toFun := fun ⟨s, y⟩ ↦ Fyts 0 s (Or.inl <| Or.inl rfl) y
-      continuous_toFun := by simp [Fyts]; fun_prop
+      continuous_toFun := by
+        change Continuous fun (sy : I × (I^Fin n)) ↦ F ((⟨sy.2⟩, 0), sy.1)
+        fun_prop
       map_zero_left y := by
-        simp [Fyts]
-        have := congrFun hFb ⟨⟨y⟩, 0⟩; simp at this
-        rw [← this]
-        simp [Fb]
+        change F (({ down := y }, 0), 0) = f y
+        have h_fb := congrFun hFb (⟨y⟩, 0)
+        simp only [Function.comp_apply] at h_fb
+        change Fb (⟨y⟩, 0) = F (({ down := y }, 0), 0) at h_fb
+        rw [← h_fb]
+        change H.toContinuousMap (0, y) = f y
         exact H.apply_zero y
       map_one_left y := by dsimp [Fyts, Fy01]
       prop' s y hy := by
-        simp [Fyts]
+        change F (({ down := y }, 0), s) = f y
         rw [show (f y : X) = x₀ from f.property y hy]
         exact Fyts_eq_x₀ ⟨y, hy⟩ _ _ (Or.inl <| Or.inl rfl) }
   have Fy01_Fy11 : GenLoop.Homotopic Fy01 Fy11 := Nonempty.intro
     { toFun := fun ⟨t, y⟩ ↦ Fyts t 1 (Or.inr rfl) y
-      continuous_toFun := by simp [Fyts]; fun_prop
-      map_zero_left y := by simp [Fyts, Fy01]
-      map_one_left y := by simp [Fyts, Fy11]
+      continuous_toFun := by
+        change Continuous fun (ty : I × (I^Fin n)) ↦ F ((⟨ty.2⟩, ty.1), 1)
+        fun_prop
+      map_zero_left y := by
+        change F (({ down := y }, 0), 1) = (Fy01 : C(I^Fin n, X)) y
+        rfl
+      map_one_left y := by
+        change F (({ down := y }, 1), 1) = (Fy11 : C(I^Fin n, X)) y
+        rfl
       prop' t y hy := by
-        simp [Fyts, Fy01]
-        iterate 2 (rw [Fyts_eq_x₀ ⟨y, hy⟩ _ _ (Or.inr rfl)]) }
+        change F (({ down := y }, t), 1) = (Fy01 : C(I^Fin n, X)) y
+        change F (({ down := y }, t), 1) = F (({ down := y }, 0), 1)
+        rw [Fyts_eq_x₀ ⟨y, hy⟩ _ _ (Or.inr rfl),
+          ← Fyts_eq_x₀ ⟨y, hy⟩ 0 1 (Or.inr rfl)] }
   have g_Fy11 : GenLoop.Homotopic g Fy11 := Nonempty.intro
     { toFun := fun ⟨s, y⟩ ↦ Fyts 1 s (Or.inl <| Or.inr rfl) y
-      continuous_toFun := by simp [Fyts]; fun_prop
+      continuous_toFun := by
+        change Continuous fun (sy : I × (I^Fin n)) ↦ F ((⟨sy.2⟩, 1), sy.1)
+        fun_prop
       map_zero_left y := by
-        simp [Fyts]
-        have := congrFun hFb ⟨⟨y⟩, 1⟩; simp at this
-        rw [← this]
-        simp [Fb]
+        change F (({ down := y }, 1), 0) = g y
+        have h_fb := congrFun hFb (⟨y⟩, 1)
+        simp only [Function.comp_apply] at h_fb
+        change Fb (⟨y⟩, 1) = F (({ down := y }, 1), 0) at h_fb
+        rw [← h_fb]
+        change H.toContinuousMap (1, y) = g y
         exact H.apply_one y
       map_one_left y := by dsimp [Fyts, Fy11]
       prop' t y hy := by
-        simp [Fyts]
+        change F (({ down := y }, 1), t) = g y
         rw [show (g y : X) = x₀ from g.property y hy]
         exact Fyts_eq_x₀ ⟨y, hy⟩ _ _ (Or.inl <| Or.inr rfl) }
   exact f_Fy01.trans Fy01_Fy11 |>.trans g_Fy11.symm
@@ -465,7 +484,10 @@ theorem inducedPointedHom_comp_pointedHomOfHomotopy_eq
       map_zero_left y := by simp [fα]
       map_one_left y := by simp [gα]
       prop' t y hy := by
-        simp [ContinuousMap.Homotopy.evalAt]
+        simp only [ContinuousMap.toFun_eq_coe, ContinuousMap.comp_apply,
+          ContinuousMap.prodMap_apply, ContinuousMap.coe_id, GenLoop.coe_coe, Prod.map_apply,
+          id_eq, ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.evalAt,
+          Path.coe_mk', ContinuousMap.coe_mk]
         rw [show ((Quotient.out α) y : X) = x₀ from α.out.prop y hy] }
   apply GenLoop.homotopic_of_levelHomotopy_along_homotopic_paths (F.evalAt x₀ #~ fα) L
   exact Path.Homotopic.refl _

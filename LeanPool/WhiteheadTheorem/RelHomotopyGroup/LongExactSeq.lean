@@ -157,22 +157,32 @@ noncomputable def g'
     · rw [hin] at hi
       obtain hin0 | hin1 := hi
       · -- `f'` maps the bottom face to `a`
-        simp [g'', ker_bd_subset_im_jStar.g'', Cube.splitAtLast_fst_eq, hin0]
+        have h_le : (0 : ℝ) ≤ 1 / 2 := by norm_num
+        simp only [show g'' = ker_bd_subset_im_jStar.g'' n X A a f' hf0 from rfl,
+          ker_bd_subset_im_jStar.g'', comp_apply, ContinuousMap.coe_coe, ContinuousMap.coe_mk,
+          Cube.splitAtLast_fst_eq, hin0, dite_eq_ite, Set.Icc.coe_zero, h_le, ↓reduceIte,
+          mul_zero, Set.projIcc_left, Set.Icc.mk_zero]
         apply f'.property.right
         constructor
         · use Fin.last n; left; simp [Cube.splitAtLast]
         · intro hfalse; simp [Cube.splitAtLast] at hfalse
       · -- `H` maps the top face to `a`
-        simp [g'', ker_bd_subset_im_jStar.g'', Cube.splitAtLast_fst_eq, hin1]
-        have hne : ¬((1 : ℝ) ≤ (2⁻¹ : ℝ)) := by norm_num
-        simp [hne]
-        have hpr : Set.projIcc (0 : ℝ) 1 ker_bd_subset_im_jStar.g''._proof_3 (2 - 1) = 1 := by
-          rw [(by norm_num : (2 : ℝ) - 1 = 1)]; simp [Set.projIcc]
+        simp only [show g'' = ker_bd_subset_im_jStar.g'' n X A a f' hf0 from rfl,
+          ker_bd_subset_im_jStar.g'', comp_apply, ContinuousMap.coe_coe, ContinuousMap.coe_mk,
+          Cube.splitAtLast_fst_eq, hin1, dite_eq_ite, Set.Icc.coe_one]
+        have hne : ¬((1 : ℝ) ≤ 1 / 2) := by norm_num
+        simp only [hne, ↓reduceIte]
+        have hpr : Set.projIcc (0 : ℝ) 1 ker_bd_subset_im_jStar.g''._proof_3 (2 * 1 - 1) = 1 := by
+          rw [(by norm_num : (2 * 1 : ℝ) - 1 = 1)]; simp [Set.projIcc]
         rw [hpr]
         exact (Subtype.ext_iff.mp (H.apply_one (Cube.splitAtLast y).2)).trans rfl
     · by_cases hyn : y (Fin.last n) ≤ (2⁻¹ : ℝ)
       · -- `f'` maps the sides to `a`
-        simp [g'', ker_bd_subset_im_jStar.g'', Cube.splitAtLast_fst_eq, hyn]
+        have h_le : (y (Fin.last n) : ℝ) ≤ 1 / 2 := by
+          rw [show (1 : ℝ) / 2 = 2⁻¹ by norm_num]; exact hyn
+        simp only [show g'' = ker_bd_subset_im_jStar.g'' n X A a f' hf0 from rfl,
+          ker_bd_subset_im_jStar.g'', comp_apply, ContinuousMap.coe_coe, ContinuousMap.coe_mk,
+          Cube.splitAtLast_fst_eq, dite_eq_ite, h_le, ↓reduceIte]
         apply f'.property.right
         apply Cube.mem_boundaryJar_of_lt_last
         use i, Fin.lt_last_iff_ne_last.mpr hin
@@ -180,7 +190,11 @@ noncomputable def g'
         · left; simpa [Cube.splitAtLast, hin]
         · right; simpa [Cube.splitAtLast, hin]
       · -- `H` maps the sides to `a`
-        simp [g'', ker_bd_subset_im_jStar.g'', Cube.splitAtLast_fst_eq, hyn]
+        have h_nle : ¬ (y (Fin.last n) : ℝ) ≤ 1 / 2 := by
+          rw [show (1 : ℝ) / 2 = 2⁻¹ by norm_num]; exact hyn
+        simp only [show g'' = ker_bd_subset_im_jStar.g'' n X A a f' hf0 from rfl,
+          ker_bd_subset_im_jStar.g'', comp_apply, ContinuousMap.coe_coe, ContinuousMap.coe_mk,
+          Cube.splitAtLast_fst_eq, dite_eq_ite, h_nle, ↓reduceIte]
         have y_mem_bd : (Cube.splitAtLast y).2 ∈ ∂I^n := by
           use ⟨i, Fin.lt_last_iff_ne_last.mpr hin⟩
           obtain hi | hi := hi
@@ -274,7 +288,8 @@ theorem ker_bd_subset_im_jStar (f : π_rel (n + 1) X A a) :
           simp only [Cube.boundaryLid, Set.mem_setOf_eq] at hy
           by_cases hyn : (Cube.splitAtLast y).fst.val ≤ (1 + t) / 2
           · -- `f'` maps the top face into `A`
-            simp [ker_bd_subset_im_jStar.G'', hyn]
+            simp only [ker_bd_subset_im_jStar.G'', ContinuousMap.coe_mk, dite_eq_ite, hyn,
+              ↓reduceIte]
             rw [Cube.splitAtLast_fst_eq, hy] at hyn
             have t1 : t.val = 1 := by
               apply le_antisymm t.property.2

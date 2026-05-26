@@ -43,14 +43,17 @@ lemma inclToBot_discardLast_mem_boundary {n : ℕ} (y : I^Fin (n + 1)) :
 /-- `(y₀, y₁, …, yₙ₋₁, yₙ) ↦ (y₀, y₁, …, yₙ₋₁) ↦ (y₀, y₁, …, yₙ₋₁, 0)` does nothing if `yₙ = 0`. -/
 lemma inclToBot_discardLast_eq_of {n : ℕ} (y : I^Fin (n + 1))
     (hz : y (Fin.last n) = 0) : inclToBot (discardLast y) = y := by
-  ext i; simp [discardLast, inclToBot]
+  ext i
+  simp only [discardLast, inclToBot, ContinuousMap.coe_mk, Homeomorph.funSplitAt_symm_apply]
   split_ifs with hi
   · rw [hi, hz]
   · rfl
 
 lemma inclToBoundaryJarBot_discardLast_eq_of {n : ℕ} (y : I^Fin (n + 1))
     (hz : y (Fin.last n) = 0) : inclToBoundaryJarBot (discardLast y) = y := by
-  ext i; simp [discardLast, inclToBoundaryJarBot, inclToBot]
+  ext i
+  simp only [discardLast, inclToBoundaryJarBot, inclToBot, ContinuousMap.coe_mk,
+    Homeomorph.funSplitAt_symm_apply]
   split_ifs with hi
   · rw [hi, hz]
   · rfl
@@ -90,30 +93,42 @@ noncomputable def projToSides {n : ℕ} : (I^ Fin (n + 1 + 1)) → (∂I^(n+1)) 
 lemma inclToSides_projToSides_eq_of {n : ℕ} (y : I^Fin (n + 1 + 1))
     (hs : (splitAtLast y).snd ∈ ∂I^(n + 1)) :
     inclToSides (projToSides y) = y := by
-  simp [projToSides, Prod.map]
+  change inclToSides (projToBoundary (splitAtLastComm y).1, (splitAtLastComm y).2) = y
   rw [splitAtLast_snd_eq] at hs
-  have : projToBoundary (splitAtLastComm y).1 = ⟨(splitAtLastComm y).1, ‹_›⟩ :=
+  have h_pj : projToBoundary (splitAtLastComm y).1 = ⟨(splitAtLastComm y).1, ‹_›⟩ :=
     Subtype.ext_iff.mpr (projToBoundary_eq_of_mem_boundary _ hs)
-  rw [this]
+  rw [h_pj]
   ext i
-  simp [inclToSides, inclToBoundaryJarSides, splitAtLastComm, splitAtLast]
-  simp [boundaryIncl]
+  simp only [inclToSides, inclToBoundaryJarSides, splitAtLastComm, splitAtLast, boundaryIncl,
+    ContinuousMap.coe_mk, ContinuousMap.comp_apply, ContinuousMap.coe_coe,
+    ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
+    Function.comp_apply,
+    Homeomorph.symm_trans_apply, Homeomorph.prodCongr_symm, Homeomorph.refl_symm,
+    Homeomorph.symm_symm, Homeomorph.coe_prodCongr, Homeomorph.refl_apply,
+    Homeomorph.funSplitAt_symm_apply]
   split_ifs with hi
-  rw [hi]; simp only
+  · rw [hi]; rfl
+  · rfl
 
 lemma inclToBoundaryJarSides_projToSides_eq_of {n : ℕ} (y : I^Fin (n + 1 + 1))
     (hs : (splitAtLast y).snd ∈ ∂I^(n + 1)) :
     inclToBoundaryJarSides (projToSides y) = y := by
-  simp [projToSides, Prod.map]
+  change inclToBoundaryJarSides (projToBoundary (splitAtLastComm y).1, (splitAtLastComm y).2) = y
   rw [splitAtLast_snd_eq] at hs
-  have : projToBoundary (splitAtLastComm y).1 = ⟨(splitAtLastComm y).1, ‹_›⟩ :=
+  have h_pj : projToBoundary (splitAtLastComm y).1 = ⟨(splitAtLastComm y).1, ‹_›⟩ :=
     Subtype.ext_iff.mpr (projToBoundary_eq_of_mem_boundary _ hs)
-  rw [this]
+  rw [h_pj]
   ext i
-  simp [inclToBoundaryJarSides, splitAtLastComm, splitAtLast]
+  -- Reduce inclToBoundaryJarSides to its underlying ContinuousMap component
+  simp only [inclToBoundaryJarSides, splitAtLastComm, splitAtLast, boundaryIncl,
+    ContinuousMap.coe_mk, ContinuousMap.comp_apply, ContinuousMap.coe_coe,
+    ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
+    Homeomorph.symm_trans_apply,
+    Homeomorph.prodCongr_symm, Homeomorph.refl_symm, Homeomorph.symm_symm,
+    Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Homeomorph.funSplitAt_symm_apply]
   split_ifs with hi
-  · rw [hi]
-  · simp [boundaryIncl]
+  · rw [hi]; rfl
+  · rfl
 
 
 
@@ -164,7 +179,8 @@ noncomputable def strongDeformRetrToBoundaryJar (n : ℕ) :
   let ⟨r', r'_restrict⟩ := retrToBoundaryJar n
   { r := (boundaryJarIncl (n + 1)).comp r'
     r_range := fun y hy ↦ by
-      simp [Set.mem_range, boundaryJarIncl] at hy
+      simp only [boundaryJarIncl, ContinuousMap.coe_comp, ContinuousMap.coe_mk, Set.mem_range,
+        Function.comp_apply] at hy
       obtain ⟨z, hz⟩ := hy; rw [← hz]; simp only [Subtype.coe_prop]
     H :=
       { toFun := fun ⟨t, y⟩ ↦ fun i ↦

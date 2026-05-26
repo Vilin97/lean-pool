@@ -28,22 +28,27 @@ lemma compression_criterion_1 (f : RelGenLoop (n + 1) X A a) (g : C(I^Fin (n + 1
     { toContinuousMap := (ContinuousMap.Homotopy.refl g).comp R.H.toHomotopy
       map_zero_left y := by simp [RelGenLoop.ofHomotopyRel]
       map_one_left y := by
-        simp [RelGenLoop.const]
+        unfold RelGenLoop.const
+        simp only [id_apply, toFun_eq_coe, ContinuousMap.coe_coe, Homotopy.apply_one, comp_apply,
+          ContinuousMap.const_apply]
         have r_y_in_jar : R.r y ∈ ⊔I^(n+1) := Set.range_subset_iff.mp R.r_range y
         have r_y_in_bd : R.r y ∈ ∂I^(n+1) := Cube.boundaryJar_subset_boundary (n+1) r_y_in_jar
         rw [g_bd (R.r y) r_y_in_bd, f.property.right (R.r y) r_y_in_jar]
       prop' t := ⟨fun y hy ↦ Set.range_subset_iff.mp rg _,
         fun y hy ↦ by
           have := R.H.prop' t y hy
-          simp at this ⊢
-          rw [this, g_bd y (Cube.boundaryJar_subset_boundary (n+1) hy), f.property.right y hy] ⟩ }
+          simp only [id_apply, toFun_eq_coe, coe_mk] at this
+          change g (R.H (t, y)) = a
+          rw [show R.H (t, y) = y from this,
+            g_bd y (Cube.boundaryJar_subset_boundary (n+1) hy), f.property.right y hy] ⟩ }
 
 /-- Same as `compression_criterion_1`, except that the codomain of `g` is explicitly `A`. -/
 lemma compression_criterion_1_subtype (f : RelGenLoop (n + 1) X A a) (g : C(I^Fin (n + 1), A))
     (H : ContinuousMap.HomotopyRel f ⟨Subtype.val ∘ g, g.continuous.subtype_val⟩ (∂I^(n + 1))) :
     ⟦f⟧ = (⟦RelGenLoop.const⟧ : π_rel (n + 1) X A a) := by
   refine compression_criterion_1 n X A a f _ ?_ H
-  intro x; simp
+  intro x
+  simp only [coe_mk, Set.mem_range, Function.comp_apply, forall_exists_index]
   intro y hy; rw [← hy]; exact Subtype.coe_prop (g y)
 
 /-- If `f` represents zero in the relative homotopy group `π_rel n X A a`,

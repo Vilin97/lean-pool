@@ -109,7 +109,7 @@ noncomputable def app (h : X 0 ⟶ Z) (f : Limits.colimit (Functor.ofSequence i)
         convert (liftStruct.fac_right) using 1
         rw [← Category.assoc]; congr 1
         have := Limits.colimit.w (Functor.ofSequence i) <| homOfLE <| Nat.le_succ <| n + 1
-        simp at this; exact this ⟩⟩
+        simp only [Functor.ofSequence_map_homOfLE_succ] at this; exact this ⟩⟩
 
 /-- `ofSequence_of_hasLiftingProperty` -/
 noncomputable def _root_.Limits.Cocone.ofSequence_of_hasLiftingProperty
@@ -300,7 +300,8 @@ theorem HasCurriedHEP.iff_hasHomotopyExtensionProperty {A X : TopCat.{u}}
       change _ = (f ∘ i.hom) a; rw [fac]; simp ⟩
     obtain ⟨H, H1, H2⟩ := (lhep.hasLift.sq_hasLift sq).exists_lift.some
     apply_fun DFunLike.coe ∘ Hom.hom at H1 H2
-    simp at H1 H2
+    simp only [Function.comp_apply, TopCat.hom_comp, ContinuousMap.coe_comp,
+      ConcreteCategory.hom_ofHom, ContinuousMap.coe_mk] at H1 H2
     use H.hom.uncurry -- the key
     constructor
     · rw [← H2]; ext x; simp
@@ -312,7 +313,8 @@ theorem HasCurriedHEP.iff_hasHomotopyExtensionProperty {A X : TopCat.{u}}
     exact ⟨⟨fun {h} {f} sq ↦ by
       have fac := congr_arg (DFunLike.coe ∘ Hom.hom) sq.w.symm -- strip down sq to functions
       have : (fun f ↦ f 0) ∘ h.hom = h.hom.uncurry ∘ (·, 0) := by ext; simp
-      simp [this] at fac
+      simp only [Function.comp_apply, TopCat.hom_comp, ContinuousMap.coe_comp,
+        ConcreteCategory.hom_ofHom, ContinuousMap.coe_mk, this] at fac
       obtain ⟨H, H1, H2⟩ := hep f.hom h.hom.uncurry fac
       exact ⟨Nonempty.intro {
         l := ofHom H.curry -- the key

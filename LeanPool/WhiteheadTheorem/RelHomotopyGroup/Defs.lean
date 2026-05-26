@@ -124,7 +124,9 @@ def iStar : π_ n A a → π_ n X a :=
           ⟨Subtype.val, continuous_subtype_val⟩).comp H.some.toHomotopy
         prop' t y hy := by
           have := H.some.prop' t y hy
-          simp at this
+          simp only [GenLoop.coe_coe, ContinuousMap.toFun_eq_coe,
+            ContinuousMap.Homotopy.coe_toContinuousMap,
+            ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this
           change ((Nonempty.some H) (t, y) : X) = _
           rw [this]
           rfl }
@@ -143,12 +145,18 @@ def jStar : π_ n X a → π_rel n X A a :=
         prop' t :=
           ⟨fun y hy ↦ by
             have := H.some.prop' t y hy
-            simp at this ⊢; rw [this]
+            simp only [GenLoop.coe_coe, ContinuousMap.toFun_eq_coe,
+              ContinuousMap.Homotopy.coe_toContinuousMap,
+              ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this ⊢
+            rw [this]
             exact Set.mem_of_eq_of_mem (f.property y hy) (Subtype.coe_prop a),
           fun y hy ↦ by
             have hy' := (Cube.boundaryJar_subset_boundary n) hy
             have := H.some.prop' t y hy'
-            simp at this ⊢; rw [this]
+            simp only [GenLoop.coe_coe, ContinuousMap.toFun_eq_coe,
+              ContinuousMap.Homotopy.coe_toContinuousMap,
+              ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this ⊢
+            rw [this]
             exact f.property y hy' ⟩ }
 
 /-- Restrict `f : C(I^ Fin (n + 1), X)` to the top face
@@ -180,7 +188,10 @@ def bd : π_rel (n + 1) X A a → π_ n A a :=
       map_one_left := by simp only [ContinuousMap.Homotopy.apply_one, ContinuousMap.comp_apply,
         Function.comp_apply, ContinuousMap.coe_mk, implies_true]
       prop' t y hy := by
-        simp; rw [← H.some.map_zero_left (Cube.inclToTop y)]
+        simp only [ContinuousMap.Homotopy.comp_apply, ContinuousMap.Homotopy.refl_apply,
+          ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk, Function.comp_apply,
+          Subtype.mk.injEq]
+        rw [← H.some.map_zero_left (Cube.inclToTop y)]
         change H.some (t, Cube.inclToTop y) = H.some (0, Cube.inclToTop y)
         convert H.some.prop' t |>.right _ (Cube.inclToTop.mem_boundaryJar_of hy)
         rw [H.some.apply_zero]

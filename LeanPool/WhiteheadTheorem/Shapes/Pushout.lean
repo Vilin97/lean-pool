@@ -98,8 +98,6 @@ lemma eq_inl_or_eq_inr_of_mem_pushout (a : (pushout f g).carrier) :
 end TopCat
 
 
-variable [∀ z, Decidable (z ∈ Set.range g)]
-
 namespace TopCat
 
 /-- `pushoutInr'` -/
@@ -120,6 +118,7 @@ https://math.stackexchange.com/questions/3906319/pushout-of-injective-is-injecti
 TODO: prove this in the category of types.
 -/
 lemma injective_pushoutInr' : Function.Injective <| pushoutInr' f g := by
+  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   obtain emp | nemp := Set.eq_empty_or_nonempty (Set.range g)ᶜ
   · have : IsEmpty {z | z ∉ Set.range g} := Set.isEmpty_coe_sort.mpr emp
     apply Function.injective_of_subsingleton
@@ -153,6 +152,7 @@ lemma injective_pushoutInr' : Function.Injective <| pushoutInr' f g := by
 
 lemma pushout_inr_neq_pushout_inr_of_mem_compl_range_of_mem_range :
     ∀ z ∈ (Set.range g)ᶜ, ∀ z' ∈ Set.range g, (pushout.inr f g) z ≠ (pushout.inr f g) z' := by
+  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   obtain emp | nemp := Set.eq_empty_or_nonempty (Set.range g)ᶜ
   · have : IsEmpty {z | z ∉ Set.range g} := Set.isEmpty_coe_sort.mpr emp
     intro z hz z' hz'
@@ -185,6 +185,7 @@ lemma pushout_inr_neq_pushout_inr_of_mem_compl_range_of_mem_range :
 /-- TODO: re-use the code in `pushout_inr_neq_pushout_inr_of_mem_compl_range_of_mem_range` -/
 lemma pushout_inr_neq_pushout_inl_of_mem_compl_range :
     ∀ z ∈ (Set.range g)ᶜ, ∀ y : Y, (pushout.inr f g) z ≠ (pushout.inl f g) y := by
+  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   obtain emp | nemp := Set.eq_empty_or_nonempty (Set.range g)ᶜ
   · have : IsEmpty {z | z ∉ Set.range g} := Set.isEmpty_coe_sort.mpr emp
     intro z hz y hy
@@ -257,6 +258,7 @@ Z ---inr---> pushout f g
 -/
 lemma isOpenMap_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
     IsOpenMap <| pushoutInr' f g := by
+  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   intro s hs
   apply TopCat.pushout_isOpen
   · simp only []
@@ -299,8 +301,9 @@ Z ---inr---> pushout f g
 ```
 -/
 theorem isOpenEmbedding_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
-    Topology.IsOpenEmbedding <| pushoutInr' f g :=
-  Topology.IsOpenEmbedding.of_continuous_injective_isOpenMap
+    Topology.IsOpenEmbedding <| pushoutInr' f g := by
+  haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
+  exact Topology.IsOpenEmbedding.of_continuous_injective_isOpenMap
     (ContinuousMap.continuous _) (injective_pushoutInr' _ _) (isOpenMap_pushoutInr' _ _ hg)
 
 end TopCat
