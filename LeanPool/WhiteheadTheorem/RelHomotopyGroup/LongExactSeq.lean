@@ -71,7 +71,7 @@ theorem isExactAt_iStar_jStar :
 
 /-- `Ker ∂ ⊇ Im j*` in
 `⋯ πₙ₊₁(X, a) ---j*ₙ---> πₙ₊₁(X, A, a) ---∂ₙ---> πₙ(A, a) ⋯` -/
-theorem ker_bd_supset_im_jStar (f : π﹍ (n+1) X A a) :
+theorem ker_bd_supset_im_jStar (f : π﹍ (n + 1) X A a) :
     (∃ g, jStar (n+1) X A a g = f) → bd n X A a f = default := fun ⟨g, hgf⟩ ↦ by
   change _ = ⟦GenLoop.const⟧
   let g' := Quotient.out g
@@ -86,7 +86,7 @@ theorem ker_bd_supset_im_jStar (f : π﹍ (n+1) X A a) :
         simp only [toFun_eq_coe, Homotopy.coe_toContinuousMap, Homotopy.apply_zero,
           Function.comp_apply, coe_mk]
         dsimp [GenLoop.const]
-        apply Subtype.eq_iff.mpr; dsimp
+        apply Subtype.ext_iff.mpr; dsimp
         rw [show (g' (Cube.inclToTop y) : X) = ↑a from
           g'.property _ (Cube.inclToTop.mem_boundary y)]
       map_one_left y := by
@@ -95,7 +95,7 @@ theorem ker_bd_supset_im_jStar (f : π﹍ (n+1) X A a) :
         simp only [toFun_eq_coe, Homotopy.coe_toContinuousMap, Homotopy.refl_apply, coe_mk,
           Function.comp_apply]
         dsimp [GenLoop.const]
-        apply Subtype.eq_iff.mpr; dsimp
+        apply Subtype.ext_iff.mpr; dsimp
         rw [show (g' (Cube.inclToTop y) : X) = ↑a from
           g'.property _ (Cube.inclToTop.mem_boundary y)] }
 
@@ -234,7 +234,7 @@ noncomputable def ker_bd_subset_im_jStar.G''
 
 /-- `Ker ∂ ⊆ Im j*` in
 `⋯ πₙ₊₁(X, a) ---j*ₙ---> πₙ₊₁(X, A, a) ---∂ₙ---> πₙ(A, a) ⋯` -/
-theorem ker_bd_subset_im_jStar (f : π﹍ (n+1) X A a) :
+theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
     bd n X A a f = default → ∃ g, jStar (n+1) X A a g = f := fun hf0 ↦ by
   change _ = ⟦GenLoop.const⟧ at hf0
   let f' := Quotient.out f
@@ -410,7 +410,7 @@ theorem ker_iStar_subset_im_bd (f : π_ n A a) :
   simp only [Cube.inclToTop, coe_mk, comp_apply, ContinuousMap.coe_coe,
     Homeomorph.apply_symm_apply, Homotopy.coe_toContinuousMap, Homotopy.apply_one,
     Function.comp_apply, H]
-  apply Subtype.eq_iff.mp
+  apply Subtype.ext_iff.mp
   rfl
 
 /-- `Ker i* = Im ∂` in

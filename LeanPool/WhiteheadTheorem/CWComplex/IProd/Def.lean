@@ -298,7 +298,7 @@ Now verify that `commSqSkSk` is a pushout square.
 
 variable (n : ℕ) (Z : Limits.PushoutCocone
   (Limits.Sigma.desc (IProd.attachMaps X))
-  (Limits.Sigma.map fun _ ↦ diskBoundaryIncl (n + 1)) )
+  (Limits.Sigma.map fun _ ↦ diskBoundaryIncl (n + 1)))
 
 abbrev l' : X.sk n ⟶ TopCat.of C(I, Z.pt) :=
   ofHom (Limits.pushout.inr (l X n) (r X n) ≫ Z.inl).hom.argSwap.curry

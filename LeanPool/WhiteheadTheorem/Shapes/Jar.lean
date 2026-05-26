@@ -29,7 +29,7 @@ def rim (n : ℕ) := {⟨ ⟨⟨x, _⟩⟩, ⟨y, _⟩ ⟩ : Jar n | ‖x‖ ≥
 def closedCover (n : ℕ) : Fin 2 → Set (Jar n) := ![mid n, rim n]
 
 lemma continuous_sub_div_two : Continuous fun (y : ℝ) ↦ 1 - y / 2 :=
-  (continuous_sub_left _).comp <| continuous_mul_right _
+  (continuous_sub_left _).comp <| continuous_mul_const _
 
 lemma isClosed_mid (n : ℕ) : IsClosed (mid n) :=
   continuous_iff_isClosed.mp (continuous_uliftDown.subtype_val.norm.prodMap continuous_id)
@@ -47,7 +47,7 @@ noncomputable def midProjToFun (n : ℕ) : mid.{u} n → disk.{u} n := fun p ↦
     | ⟨⟨ ⟨⟨x, _⟩⟩, ⟨y, _⟩ ⟩, _⟩ => (2 / (2 - y)) • x,
   property := by
     obtain ⟨⟨ ⟨⟨x, _⟩⟩, ⟨y, _, _⟩ ⟩, hxy⟩ := p
-    dsimp only [Int.ofNat_eq_coe, Set.coe_setOf, Set.mem_setOf_eq]
+    dsimp only [Int.ofNat_eq_natCast, Set.coe_setOf, Set.mem_setOf_eq]
     rw [Metric.mem_closedBall]
     rw [dist_zero_right, norm_smul, norm_div, RCLike.norm_ofNat, Real.norm_eq_abs]
     have : 0 < |2 - y| := lt_of_le_of_ne (abs_nonneg _) (abs_ne_zero.mpr (by linarith)).symm
@@ -115,7 +115,7 @@ noncomputable def rimProjSndToFun (n : ℕ) : rim n → I := fun p ↦ {
 
 lemma continuous_rimProjSndToFun (n : ℕ) : Continuous (rimProjSndToFun n) := by
   refine Continuous.subtype_mk ?_ _
-  exact (continuous_add_right _).comp <| Continuous.div
+  exact (continuous_add_const _).comp <| Continuous.div
     ((continuous_sub_right _).comp <| continuous_subtype_val.comp <|
       continuous_snd.comp <| continuous_subtype_val)
     (continuous_norm.comp <| continuous_subtype_val.comp <| continuous_uliftDown.comp <|
@@ -151,7 +151,7 @@ lemma proj_compatible (n : ℕ) {Y : Type*} [TopologicalSpace Y]
       congr
     conv in rimProj n _ => equals (q, 0) =>
       unfold rimProj rimProjFst rimProjFstToFun rimProjSnd rimProjSndToFun
-      dsimp only [Int.ofNat_eq_coe, ContinuousMap.prod_eval, ContinuousMap.coe_mk]
+      dsimp only [Int.ofNat_eq_natCast, ContinuousMap.prod_eval, ContinuousMap.coe_mk]
       conv => rhs; change (q, ⟨0, by norm_num, by norm_num⟩)
       congr 2
       · congr 2
@@ -200,12 +200,12 @@ lemma homotopyExtension_bottom_commutes (n : ℕ) {Y : Type*} [TopologicalSpace 
     rw [zero_div, sub_zero]
     exact mem_closedBall_zero_iff.mp hx
   conv_rhs => equals (proj n f H 0) ⟨(p, 0), hp⟩ => apply ContinuousMap.liftCoverClosed_coe'
-  simp only [Int.ofNat_eq_coe, proj, TopCat.coe_of, Fin.succ_zero_eq_one, Fin.cons_zero,
+  simp only [Int.ofNat_eq_natCast, proj, TopCat.coe_of, Fin.succ_zero_eq_one, Fin.cons_zero,
     ContinuousMap.comp_apply]
   congr
   change p = midProjToFun n ⟨(p, 0), hp⟩
   obtain ⟨x, hx⟩ := p
-  simp only [Int.ofNat_eq_coe, midProjToFun, sub_zero, ne_eq, OfNat.ofNat_ne_zero,
+  simp only [Int.ofNat_eq_natCast, midProjToFun, sub_zero, ne_eq, OfNat.ofNat_ne_zero,
     not_false_eq_true, div_self, one_smul]
 
 -- The triangle involving the wall (i.e., `𝕊 n × I`) of the jar commutes.

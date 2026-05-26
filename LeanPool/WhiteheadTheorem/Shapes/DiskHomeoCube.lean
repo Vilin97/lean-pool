@@ -373,8 +373,8 @@ noncomputable def largeCubeBoundaryHomeoCubeBoundary (n : ℕ) :
       Cube.boundary (Fin n) where
   toFun := fun ⟨x, hx⟩ ↦ ⟨fun i ↦ iccHomeoI (-1 : ℝ) (1 : ℝ) (by norm_num) (x i), by
     obtain ⟨i, hin | hip⟩ := hx
-    · use i; left; apply Subtype.eq_iff.mpr; simp [hin]
-    · use i; right; apply Subtype.eq_iff.mpr; simp [hip] ⟩
+    · use i; left; apply Subtype.ext_iff.mpr; simp [hin]
+    · use i; right; apply Subtype.ext_iff.mpr; simp [hip] ⟩
   invFun := fun ⟨x, hx⟩ ↦ ⟨fun i ↦ (iccHomeoI (-1 : ℝ) (1 : ℝ) (by norm_num)).symm (x i), by
     obtain ⟨i, hi0 | hi1⟩ := hx
     · use i; left; simp [hi0]

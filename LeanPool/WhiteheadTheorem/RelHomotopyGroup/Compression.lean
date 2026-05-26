@@ -17,8 +17,8 @@ variable (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A)
 
 /-- For `n ≥ 1`, if `⟦f⟧ ∈ π﹍ n X A a` and `f` is homotopic rel `∂I^n` to a map `g`
 whose image is in `A`, then `f` represents zero in the relative homotopy group. -/
-lemma compression_criterion_1 (f : RelGenLoop (n + 1) X A a) (g : C(I^ Fin (n + 1), X))
-    (rg : Set.range g ⊆ A) (H : ContinuousMap.HomotopyRel f g (∂I^(n+1))) :
+lemma compression_criterion_1 (f : RelGenLoop (n + 1) X A a) (g : C(I^Fin (n + 1), X))
+    (rg : Set.range g ⊆ A) (H : ContinuousMap.HomotopyRel f g (∂I^(n + 1))) :
     ⟦f⟧ = (⟦RelGenLoop.const⟧ : π﹍ (n + 1) X A a) :=
   -- let g' : RelGenLoop n X A a := RelGenLoop.ofHomotopyRel f g H
   (RelGenLoop.ofHomotopyRel.eq f g H).trans <| Quotient.eq.mpr <| Nonempty.intro <|
@@ -39,8 +39,8 @@ lemma compression_criterion_1 (f : RelGenLoop (n + 1) X A a) (g : C(I^ Fin (n + 
           rw [this, g_bd y (Cube.boundaryJar_subset_boundary (n+1) hy), f.property.right y hy] ⟩ }
 
 /-- Same as `compression_criterion_1`, except that the codomain of `g` is explicitly `A`. -/
-lemma compression_criterion_1_subtype (f : RelGenLoop (n + 1) X A a) (g : C(I^ Fin (n + 1), A))
-    (H : ContinuousMap.HomotopyRel f ⟨Subtype.val ∘ g, g.continuous.subtype_val⟩ (∂I^(n+1))) :
+lemma compression_criterion_1_subtype (f : RelGenLoop (n + 1) X A a) (g : C(I^Fin (n + 1), A))
+    (H : ContinuousMap.HomotopyRel f ⟨Subtype.val ∘ g, g.continuous.subtype_val⟩ (∂I^(n + 1))) :
     ⟦f⟧ = (⟦RelGenLoop.const⟧ : π﹍ (n + 1) X A a) := by
   refine compression_criterion_1 n X A a f _ ?_ H
   intro x; simp

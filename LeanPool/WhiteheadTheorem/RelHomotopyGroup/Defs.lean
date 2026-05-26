@@ -36,7 +36,7 @@ abbrev Homotopic (f g : RelGenLoop n X A a) : Prop :=
 /-- For a continuous function `f` to be a `RelGenLoop`,
 it suffices to show that `f` send the top face into `A ⊆ X` and `⊔I^n` to `a ∈ A`.
 Note: this lemma does not work in dimension 0. -/
-lemma mem_of_boundaryLid_and_boundaryJar (f : C(I^ Fin n, X))
+lemma mem_of_boundaryLid_and_boundaryJar (f : C(I^Fin n, X))
     (hlid : ∀ y ∈ Cube.boundaryLid n, f y ∈ A) (hjar : ∀ y ∈ ⊔I^n, f y = a) :
     f ∈ RelGenLoop n X A a := by
   constructor
@@ -154,7 +154,7 @@ def bd' (f : RelGenLoop (n + 1) X A a) : π_ n A a :=
           refine Continuous.subtype_mk ?_ _
           exact f.val.continuous_toFun.comp Cube.inclToTop.continuous },
       fun y hy ↦ by
-        apply Subtype.eq
+        apply Subtype.ext
         apply f.property.right _
         simp only [Cube.inclToTop, ne_eq, ContinuousMap.coe_mk]
         exact Cube.inclToTop.mem_boundaryJar_of hy ⟩
@@ -220,7 +220,7 @@ variable {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
 If `g` is homotopic rel `∂I^n` to some `f : RelGenLoop n X A a`,
 then `g` itself can be regarded as a `RelGenLoop`.  -/
 def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
-    (f : RelGenLoop n X A a) (g : C(I^ Fin n, X))
+    (f : RelGenLoop n X A a) (g : C(I^Fin n, X))
     (H : ContinuousMap.HomotopyRel f g (∂I^n)) : RelGenLoop n X A a :=
   let g_bd : ∀ y ∈ ∂I^n, g y = f.val y :=  -- g maps `∂I^n` in the same way `f` does.
     fun y hy ↦ (H.map_one_left y).symm.trans (H.prop' 1 y hy)
@@ -229,7 +229,7 @@ def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
           rw [g_bd y (Cube.boundaryJar_subset_boundary n hy)];
           exact f.property.right y hy ⟩⟩
 
-lemma ofHomotopyRel.eq (f : RelGenLoop n X A a) (g : C(I^ Fin n, X))
+lemma ofHomotopyRel.eq (f : RelGenLoop n X A a) (g : C(I^Fin n, X))
     (H : ContinuousMap.HomotopyRel f g (∂I^n)) :
     ⟦f⟧ = (⟦ofHomotopyRel f g H⟧ : π﹍ n X A a) :=
   Quotient.eq.mpr <| Nonempty.intro

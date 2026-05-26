@@ -130,12 +130,12 @@ variable {n : ℕ} (X : Type u) [TopologicalSpace X] (A : Set X)
 
 /-- A continuous map from the `n`-dimensional cube to `X` is called a map of pairs to `(X, A)`
 if it sends the boundary `∂I^n` into `A`. -/
-abbrev IsMapOfPairs (f : C(I^ Fin n, X)) : Prop := ∀ y ∈ ∂I^n, f y ∈ A
+abbrev IsMapOfPairs (f : C(I^Fin n, X)) : Prop := ∀ y ∈ ∂I^n, f y ∈ A
 
 /-- For `n ≥ 1`, if `f` is a continuous map of pairs from `(I^ Fin n, ∂I^n)` to `(X, A)`,
 then it is as a map of pairs homotopic to a `RelGenLoop`. -/
 lemma exists_relGenLoop_homotopicWith_isMapOfPairs
-    (f : C(I^ Fin (n + 1), X)) (hf : IsMapOfPairs X A f) :
+    (f : C(I^Fin (n + 1), X)) (hf : IsMapOfPairs X A f) :
     ∃ a : A, ∃ g : RelGenLoop (n + 1) X A a, f.HomotopicWith g fun h ↦ IsMapOfPairs X A h := by
   let fb : C(∂I^(n + 1), A) := ⟨fun y ↦ ⟨f y, hf y y.property⟩, by fun_prop⟩
   let fj : C(⊔I^(n + 1), A) := fb.comp <| boundaryJarInclToBoundary (n + 1)
@@ -254,7 +254,7 @@ lemma homotopicWith_isMapOfPairs_of_relGenLoop_homotopic
 If `f` is a continuous map of pairs from `(I^ Fin n, ∂I^n)` to `(X, A)`,
 then it is as a map of pairs homotopic to a constant map. -/
 theorem homotopicWith_const_isMapOfPairs_of_unique_pi
-    (f : C(I^ Fin (n + 1), X)) (hf : IsMapOfPairs X A f)
+    (f : C(I^Fin (n + 1), X)) (hf : IsMapOfPairs X A f)
     (hpi : ∀ a : A, Nonempty <| Unique <| π﹍ (n + 1) X A a) :
     ∃ a : A, f.HomotopicWith (ContinuousMap.const _ a) fun h ↦ IsMapOfPairs X A h := by
   obtain ⟨a, g, H⟩ := exists_relGenLoop_homotopicWith_isMapOfPairs X A f hf
@@ -419,7 +419,7 @@ lemma _root_.TopCat.Cyl.stretchToWall_eq_zero_of_norm_eq_one
 If `f` is as a map of pairs homotopic to a map into `A`,
 then `f` is relative to `∂𝔻 n` homotopic to a map into `A`. -/
 theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
-    (f : C(disk.{u} (n + 1), X))  -- (hf : IsMapOfPairs X A f)
+    (f : C(disk.{u} (n + 1), X)) -- (hf : IsMapOfPairs X A f)
     (H : ∃ g : C(disk.{u} (n + 1), X),
       Set.range g ⊆ A ∧ f.HomotopicWith g fun h ↦ IsMapOfPairs X A h) :
     ∃ l : C(disk.{u} (n + 1), X),

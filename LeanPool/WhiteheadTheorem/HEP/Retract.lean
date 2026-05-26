@@ -36,19 +36,19 @@ lemma splitAtLastComm_inclToBot_eq {n : ℕ} :   -- (I^ Fin n) ↦ (I^ Fin n) ×
   ext x i
   repeat {simp [splitAtLastComm, splitAtLast, inclToBot]}
 
-lemma inclToBot_discardLast_mem_boundary {n : ℕ} (y : I^ Fin (n + 1)) :
+lemma inclToBot_discardLast_mem_boundary {n : ℕ} (y : I^Fin (n + 1)) :
     inclToBot (discardLast y) ∈ ∂I^(n+1) := by
   use Fin.last n; left; simp [inclToBot]
 
 /-- `(y₀, y₁, …, yₙ₋₁, yₙ) ↦ (y₀, y₁, …, yₙ₋₁) ↦ (y₀, y₁, …, yₙ₋₁, 0)` does nothing if `yₙ = 0`. -/
-lemma inclToBot_discardLast_eq_of {n : ℕ} (y : I^ Fin (n + 1))
+lemma inclToBot_discardLast_eq_of {n : ℕ} (y : I^Fin (n + 1))
     (hz : y (Fin.last n) = 0) : inclToBot (discardLast y) = y := by
   ext i; simp [discardLast, inclToBot]
   split_ifs with hi
   · rw [hi, hz]
   · rfl
 
-lemma inclToBoundaryJarBot_discardLast_eq_of {n : ℕ} (y : I^ Fin (n + 1))
+lemma inclToBoundaryJarBot_discardLast_eq_of {n : ℕ} (y : I^Fin (n + 1))
     (hz : y (Fin.last n) = 0) : inclToBoundaryJarBot (discardLast y) = y := by
   ext i; simp [discardLast, inclToBoundaryJarBot, inclToBot]
   split_ifs with hi
@@ -77,8 +77,8 @@ noncomputable def projToBoundary {n : ℕ} : (I^ Fin (n + 1)) → ∂I^(n+1) := 
     else ⟨0, ⟨0, by simp only [Pi.zero_apply, zero_ne_one, or_false]⟩⟩
 
 /-- `projToBoundary y` does nothing if `y` is already in the boundary.  -/
-lemma projToBoundary_eq_of_mem_boundary {n : ℕ} (y : I^ Fin (n + 1))
-    (hy: y ∈ ∂I^(n+1)) : projToBoundary y = y := by
+lemma projToBoundary_eq_of_mem_boundary {n : ℕ} (y : I^Fin (n + 1))
+    (hy : y ∈ ∂I^(n + 1)) : projToBoundary y = y := by
   simp only [projToBoundary, hy, ↓reduceDIte]
 
 /-- Project the $(n+2)$-dimensional cube to its sides `(∂I^(n+1)) × I`
@@ -87,13 +87,13 @@ Since `∂I^0 = ∅`, the cube shoule be at least 2-dimensional. -/
 noncomputable def projToSides {n : ℕ} : (I^ Fin (n + 1 + 1)) → (∂I^(n+1)) × I :=
   (Prod.map projToBoundary id) ∘ splitAtLastComm
 
-lemma inclToSides_projToSides_eq_of {n : ℕ} (y : I^ Fin (n + 1 + 1))
-    (hs : (splitAtLast y).snd ∈ ∂I^(n+1)) :
+lemma inclToSides_projToSides_eq_of {n : ℕ} (y : I^Fin (n + 1 + 1))
+    (hs : (splitAtLast y).snd ∈ ∂I^(n + 1)) :
     inclToSides (projToSides y) = y := by
   simp [projToSides, Prod.map]
   rw [splitAtLast_snd_eq] at hs
   have : projToBoundary (splitAtLastComm y).1 = ⟨(splitAtLastComm y).1, ‹_›⟩ :=
-    Subtype.eq_iff.mpr (projToBoundary_eq_of_mem_boundary _ hs)
+    Subtype.ext_iff.mpr (projToBoundary_eq_of_mem_boundary _ hs)
   rw [this]
   ext i
   simp [inclToSides, inclToBoundaryJarSides, splitAtLastComm, splitAtLast]
@@ -101,13 +101,13 @@ lemma inclToSides_projToSides_eq_of {n : ℕ} (y : I^ Fin (n + 1 + 1))
   split_ifs with hi
   rw [hi]; simp only
 
-lemma inclToBoundaryJarSides_projToSides_eq_of {n : ℕ} (y : I^ Fin (n + 1 + 1))
-    (hs : (splitAtLast y).snd ∈ ∂I^(n+1)) :
+lemma inclToBoundaryJarSides_projToSides_eq_of {n : ℕ} (y : I^Fin (n + 1 + 1))
+    (hs : (splitAtLast y).snd ∈ ∂I^(n + 1)) :
     inclToBoundaryJarSides (projToSides y) = y := by
   simp [projToSides, Prod.map]
   rw [splitAtLast_snd_eq] at hs
   have : projToBoundary (splitAtLastComm y).1 = ⟨(splitAtLastComm y).1, ‹_›⟩ :=
-    Subtype.eq_iff.mpr (projToBoundary_eq_of_mem_boundary _ hs)
+    Subtype.ext_iff.mpr (projToBoundary_eq_of_mem_boundary _ hs)
   rw [this]
   ext i
   simp [inclToBoundaryJarSides, splitAtLastComm, splitAtLast]
@@ -219,7 +219,7 @@ def deformRetrToBot {n : ℕ} : C(I × I^ Fin (n + 1), I^ Fin (n + 1)) :=
 /-- If `y` is in the bottom face of the cube,
 then `deformRetrToBot ⟨t, y⟩` is in the bottom face for all `t`. -/
 lemma deformRetrToBot_apply_bot {n : ℕ}
-    (t : I) {y : I^ Fin (n + 1)} (hy : y (Fin.last n) = 0) :
+    (t : I) {y : I^Fin (n + 1)} (hy : y (Fin.last n) = 0) :
     deformRetrToBot ⟨t, y⟩ (Fin.last n) = 0 := by
   unfold deformRetrToBot
   simp only [ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
@@ -236,7 +236,7 @@ lemma deformRetrToBot_apply_bot {n : ℕ}
 (the closure of the complement of the top and bottom faces of the boundary) of the cube,
 then `deformRetrToBot ⟨t, y⟩` is in the sides for all `t`. -/
 lemma deformRetrToBot_apply_sides {n : ℕ}
-    (t : I) {y : I^ Fin (n + 1)} (hy : (splitAtLast y).snd ∈ ∂I^n) :
+    (t : I) {y : I^Fin (n + 1)} (hy : (splitAtLast y).snd ∈ ∂I^n) :
     (splitAtLast (deformRetrToBot ⟨t, y⟩)).snd ∈ ∂I^n := by
   unfold deformRetrToBot
   simpa only [ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
