@@ -73,7 +73,7 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
       · have i_plus_one_odd : (i+1)%2 = 1 := by omega
         have i_plus_two_even : (i+2)%2 = 0 := by rw[Nat.add_mod_right i 2, i_even]
         simp only [n_eq_three, Nat.add_one_sub_one, Nat.add_mod_right]
-        simp [i_even, i_plus_one_odd]
+        simp only [i_plus_one_odd, Nat.reduceAdd, i_even, zero_add]
         rw[@pattern_n.topBordOnes ℚ _ f n _ m]
         simp
         have this : f (2, m) * f (2, m + 1) = 2 :=
@@ -143,7 +143,7 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
         have key₁ : (f ((n - 2), m)).num + (f ((n - 2) + 1 + 1, m)).num =
             (f ((n - 2), m) + f ((n - 2) + 1 + 1, m)).num := by
           simp only [Rat.add_num_den, arith_fp.integral n ((n - 2)) m, Nat.cast_one, one_mul, Rat.divInt_ofNat]
-          simp [arith_fp.integral n ((n - 2) + 1 + 1) m]
+          simp only [arith_fp.integral n ((n - 2) + 1 + 1) m, Nat.cast_one, mul_one]
           rw [Rat.mkRat_one]
           norm_cast
         have key₂ : (f (2, m + ((n - 2)))).num * (f ((n - 2) + 1,m)).num =
@@ -219,7 +219,7 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
       have key₁ : (f (i % (n - 1) + 1, m)).num + (f (i % (n - 1) + 1 + 1 + 1, m)).num =
           (f (i % (n - 1) + 1, m) + f (i % (n - 1) + 1 + 1 + 1, m)).num := by
         simp only [Rat.add_num_den, arith_fp.integral n (i % (n - 1) + 1) m, Nat.cast_one, one_mul, Rat.divInt_ofNat]
-        simp [arith_fp.integral n (i % (n - 1) + 1 + 1 + 1) m]
+        simp only [arith_fp.integral n (i % (n - 1) + 1 + 1 + 1) m, Nat.cast_one, mul_one]
         rw [Rat.mkRat_one]
         norm_cast
       have key₂ : (f (2, m + (i % (n - 1) + 1))).num * (f (i % (n - 1) + 1 + 1,m)).num =
@@ -491,7 +491,7 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) :
     h₃, add_tsub_cancel_right, Nat.cast_inj]
       unfold fib_flute_even
       by_cases h₂ : j = 0
-      · simp [h₂]
+      · simp only [h₂, mul_zero, zero_add, Nat.fib_two]
         unfold a_even
         simp
       -- j ≠ 0
@@ -517,11 +517,11 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) :
     h₃, add_tsub_cancel_right, Nat.cast_inj]
       unfold fib_flute_odd
       by_cases h₂ : k = 0
-      · simp [h₂]
+      · simp only [h₂, ↓reduceDIte, Pi.natCast_apply, Nat.cast_id, mul_zero, zero_add, Nat.fib_one]
         unfold a_odd
         simp
       -- k ≠ 0
-      simp [h₂]
+      simp only [h₂, ↓reduceDIte]
       have h₄ : ¬ 2 * k ≤ k := by omega
       have h₅ : 1 + 4 * k - 2 * k = 2 * k + 1 := by omega
       unfold a_odd
