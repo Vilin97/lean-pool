@@ -56,8 +56,8 @@ def a_odd (k i : ℕ) : ℕ :=
 /-- The Fibonacci-maximal `(2k+1)`-flute, built from `a_odd`. -/
 def fib_flute_odd (k : ℕ) : flute (2*k+1) := by
   by_cases hk : k = 0
-  exact ⟨a_odd k 0, fun _ => by simp [hk, a_odd], by simp [hk, a_odd],
-    by simp [hk, a_odd], fun _ => by simp⟩
+  · exact ⟨a_odd k 0, fun _ => by simp [hk, a_odd], by simp [hk, a_odd],
+      by simp [hk, a_odd], fun _ => by simp⟩
   have pos : ∀ i, a_odd k i > 0 := by
     intro i
     induction i using Nat.strong_induction_on with
@@ -270,7 +270,8 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
                   have h₁₀ : 3 + 4 * k - 2 * (k + 2) = 2*k-1 := by omega
                   simp [h₈, h₉, h₁₀]
                   rw [Nat.fib_add_two, add_comm (Nat.fib (2 * k)), add_assoc, Nat.fib_add_one]
-                  use 2; omega ; omega
+                  · use 2; omega
+                  · omega
             · -- by_cases hi neg + by_cases hi₂ neg + by_cases hi₃ neg + by_cases hi₄ neg
               have h₅ : ¬ i+1 < k+1 := by omega
               have h₇ : ¬ i < k+1 := by omega
@@ -303,12 +304,12 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
                   rw [h₁, h₂, Nat.fib_add_two, h₃, Nat.fib_add_two, h₄, add_assoc,
                     add_comm (Nat.fib (4 * k - 2 * i)), add_assoc, add_comm (Nat.fib (4 * k - 2 * i))]
                   rw [← Nat.fib_add_one]
-                  have h : Nat.fib (4 * k - 2 * i + 1) + (Nat.fib (4 * k - 2 * i + 1) +
-                      Nat.fib (4 * k - 2 * i + 1)) = Nat.fib (4 * k - 2 * i + 1)*3 := by omega
-                  rw [h]
-                  use 3;
-                  have h₃ : ¬ 4*k = 2*i := by omega
-                  omega
+                  · have h : Nat.fib (4 * k - 2 * i + 1) + (Nat.fib (4 * k - 2 * i + 1) +
+                        Nat.fib (4 * k - 2 * i + 1)) = Nat.fib (4 * k - 2 * i + 1)*3 := by omega
+                    rw [h]
+                    use 3
+                  · have h₃ : ¬ 4*k = 2*i := by omega
+                    omega
   exact ⟨a_even k, pos, hd, period, div⟩
 
 /-- Reduction of an `(n+3)`-flute (assuming `f.a 1 = 1`) to an `(n+2)`-flute (underlying
