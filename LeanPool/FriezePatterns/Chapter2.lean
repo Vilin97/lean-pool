@@ -29,7 +29,7 @@ structure flute (n : ℕ) where
 /-- The constant flute (the sequence identically equal to `1`).
 
 `Inhabited` is preferred over `Nonempty` so that we can recover the explicit witness. -/
-def csteFlute (n : ℕ) : Inhabited (flute n) := by
+@[reducible] def csteFlute (n : ℕ) : Inhabited (flute n) := by
   let a : ℕ → ℕ := fun _ => 1
   have pos : ∀ i, a i > 0 := fun _ => Nat.one_pos
   have hd : a 0 = 1 := rfl
