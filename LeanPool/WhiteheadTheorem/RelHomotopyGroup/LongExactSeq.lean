@@ -264,9 +264,9 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
         simp only [this, one_mul, Set.projIcc_val, Prod.mk.eta, Homeomorph.symm_apply_apply]
       prop' t := by
         apply RelGenLoop.mem_of_boundaryLid_and_boundaryJar
-        simp only [comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq,
-          coe_mk]
-        · intro y hy  -- `y` is in the top face
+        · simp only [comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply,
+            id_eq, coe_mk]
+          intro y hy  -- `y` is in the top face
           simp only [Cube.boundaryLid, Set.mem_setOf_eq] at hy
           by_cases hyn : (Cube.splitAtLast y).fst.val ≤ (1 + t) / 2
           · -- `f'` maps the top face into `A`
@@ -308,7 +308,8 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
               simp only [hyn, ↓reduceIte]
               apply f'.property.right
               apply Cube.mem_boundaryJar_of_lt_last
-              use i.castSucc; constructor; exact Fin.castSucc_lt_last i
+              use i.castSucc
+              refine ⟨Fin.castSucc_lt_last i, ?_⟩
               -- rw [Cube.splitAtLast_snd_apply_eq] at hi
               obtain hi0 | hi1 := hi
               · left
@@ -364,7 +365,8 @@ theorem ker_iStar_supset_im_bd (f : π_ n A a) :
         apply g'.property.right
         apply Cube.mem_boundaryJar_of_lt_last
         obtain ⟨i, hi⟩ := hy
-        use i.castSucc; constructor; exact Fin.castSucc_lt_last i
+        use i.castSucc
+        refine ⟨Fin.castSucc_lt_last i, ?_⟩
         obtain hi0 | hi1 := hi
         · left
           rwa [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ (Fin.castSucc_ne_last i)]

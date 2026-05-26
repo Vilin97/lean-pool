@@ -114,7 +114,7 @@ lemma toPDisk_comp_toQDisk x : toQDisk n q p (toQDisk n p q x) = x := by
 /-- The map `toQDisk` is continuous at `0`. -/
 lemma continuousAt_toQDisk_zero : ContinuousAt (toQDisk n p q) 0 := by
   apply continuousAt_of_locally_lipschitz (_ : 0 < (1 : ℝ)) 1
-  swap; norm_num
+  on_goal 2 => norm_num
   intro ⟨x, hx⟩ h
   rw [toQDisk_zero]
   simp only [dist_eq, ← zero_eq, dist_zero_right, one_mul] at *

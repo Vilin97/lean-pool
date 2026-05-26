@@ -100,8 +100,8 @@ lemma isClosed_range_i₀ (X : TopCat.{u}) :
     convert Cyl.set_neq_zero_eq_compl_range_i₀ X using 1
   rw [← this]
   apply isClosed_eq
-  exact continuous_snd
-  exact continuous_const
+  · exact continuous_snd
+  · exact continuous_const
 
 lemma isClosedEmbedding_i₁_to_compl_range_i₀ (X : TopCat.{u}) :
     Topology.IsClosedEmbedding (Cyl.i₁_to_compl_range_i₀ X) := by
