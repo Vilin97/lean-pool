@@ -481,23 +481,49 @@ lemma cocone_inl (n : ℕ) (Z : Limits.PushoutCocone _ _) :
     (cocone X n).inl ≫ desc X n Z = Z.inl := by
   simp only [cocone, Limits.PushoutCocone.mk_pt, Limits.PushoutCocone.mk_ι_app]
   apply Limits.pushout.hom_ext
-  · rw [desc, inl_skInclSucc_assoc, Limits.pushout.inl_desc]
-  · rw [desc, inr_skInclSucc_assoc, Limits.pushout.inr_desc]
+  · change Limits.pushout.inl (l X n) (r X n) ≫ _ ≫ _ = _
+    unfold desc
+    rw [inl_skInclSucc_assoc]
+    exact Limits.pushout.inl_desc _ _ _
+  · change Limits.pushout.inr (l X n) (r X n) ≫ _ ≫ _ = _
+    unfold desc
+    rw [inr_skInclSucc_assoc]
+    change ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.skInclSucc n))) ≫
+        Limits.pushout.inr (l X (n + 1)) (r X (n + 1)) ≫
+          Limits.pushout.desc (l'' X n Z) (r'' X n Z) (w'' X n Z) = _
+    rw [Limits.pushout.inr_desc]
     ext ⟨t, x⟩
-    unfold r'' RelCWComplex.skInclSucc RelCWComplex.AttachCells.incl
+    unfold r''
     simp only [TopCat.hom_comp, ContinuousMap.argSwap, ContinuousMap.coe_mk, ofHom_comp, hom_ofHom,
-      ContinuousMap.comp_assoc, ContinuousMap.comp_apply, ContinuousMap.prodMap_apply,
-      ContinuousMap.coe_id, ContinuousMap.coe_comp, Prod.map_apply, id_eq, Function.comp_apply,
-      ContinuousMap.prodSwap_apply, ContinuousMap.uncurry_apply, Function.uncurry_apply_pair,
-      Iso.inv_hom_id_apply]
-    change (Limits.pushout.inl (xskl X n) (xskr X n) ≫
-      (Limits.pushout.desc (l' ..) (r' ..) (w' ..)) ) x t = _
-    rw [Limits.pushout.inl_desc]; rfl
+      ContinuousMap.comp_apply, ContinuousMap.prodMap_apply,
+      ContinuousMap.coe_id, Prod.map_apply, id_eq,
+      ContinuousMap.prodSwap_apply, ContinuousMap.uncurry_apply, Function.uncurry_apply_pair]
+    have hSk : (Hom.hom (X.attachCells n).isoPushout.hom) ((Hom.hom (X.skInclSucc n)) x) =
+        (Hom.hom (Limits.pushout.inl (xskl X n) (xskr X n))) x := by
+      change (X.skInclSucc n ≫ (X.attachCells n).isoPushout.hom).hom x =
+        (Limits.pushout.inl (xskl X n) (xskr X n)).hom x
+      congr 1
+      unfold RelCWComplex.skInclSucc RelCWComplex.AttachCells.incl
+      rw [Category.assoc, Iso.inv_hom_id, Category.comp_id]
+    rw [hSk]
+    change ((Limits.pushout.inl (xskl X n) (xskr X n) ≫
+      Limits.pushout.desc (l' ..) (r' ..) (w' ..)).hom x) t = _
+    rw [Limits.pushout.inl_desc]
+    unfold l'
+    simp only [TopCat.hom_comp, ContinuousMap.argSwap, ContinuousMap.coe_mk,
+      ContinuousMap.comp_apply, ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply, hom_ofHom]
 
 lemma cocone_inr (n : ℕ) (Z : Limits.PushoutCocone _ _) :
     (cocone X n).inr ≫ desc X n Z = Z.inr := by
   simp only [cocone, Limits.PushoutCocone.mk_pt, Limits.PushoutCocone.mk_ι_app]
-  rw [sigmaDisksInclToSk, desc, Category.assoc, Limits.pushout.inr_desc]
+  unfold sigmaDisksInclToSk desc
+  rw [Category.assoc]
+  change (Limits.Sigma.desc fun α ↦
+      Arrow.Hom.right (diskPair.homeoCubePairULift (n + 1)).hom ≫
+        cubeSplitAtLast.hom ≫ ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α)))) ≫
+    Limits.pushout.inr (l X (n + 1)) (r X (n + 1)) ≫
+      Limits.pushout.desc (l'' X n Z) (r'' X n Z) (w'' X n Z) = Z.inr
+  rw [Limits.pushout.inr_desc]
   refine Limits.Sigma.hom_ext _ _ fun α ↦ ?_
   rw [← Category.assoc, Limits.Sigma.ι_desc]
   apply CategoryTheory.eq_of_comp_right_iso_eq (diskPair.homeoCubePairULift (n + 1)).inv.right
@@ -505,22 +531,57 @@ lemma cocone_inr (n : ℕ) (Z : Limits.PushoutCocone _ _) :
   apply CategoryTheory.eq_of_comp_right_iso_eq cubeSplitAtLast.inv
   change (cubeSplitAtLast.inv ≫ cubeSplitAtLast.hom) ≫ ofHom _ ≫ r'' .. = _
   rw [Iso.inv_hom_id, Category.id_comp]
+  -- Now we need to show that two morphisms `I × 𝕀 n ⟶ Z.pt` agree.
+  -- The LHS is `ofHom (id I).prodMap (X.cubeInclToSk α).hom ≫ r''`.
+  -- The RHS is `cubeSplitAtLast.inv ≫ (diskPair.homeoCubePairULift (n+1)).inv.right ≫
+  --   Limits.Sigma.ι ... α ≫ Z.inr`.
+  -- We reduce by computing `cubeInclToSk α ≫ isoPushout.hom = Sigma.ι α ≫ pushout.inr (xskl, xskr)`.
+  have hcube : X.cubeInclToSk α ≫ (X.attachCells n).isoPushout.hom =
+      (diskPair.homeoCubePairULift n).inv.right ≫ Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫
+        Limits.pushout.inr (xskl X n) (xskr X n) := by
+    unfold CWComplex.cubeInclToSk xskl xskr
+    simp only [Category.assoc, Iso.inv_hom_id, Category.comp_id]
+    rfl
+  -- Compute `Sigma.ι α ≫ r' = (diskPair.homeoCubePairULift n).hom.right ≫ ofHom (curry ...)`.
+  have hι : Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫ r' X n Z = _ :=
+    Limits.Sigma.ι_desc _ α
   ext ⟨t, y⟩
   unfold r''
   simp only [ContinuousMap.argSwap, TopCat.hom_comp, ContinuousMap.coe_mk, ofHom_comp, hom_ofHom,
     ContinuousMap.comp_assoc, ContinuousMap.comp_apply, ContinuousMap.prodMap_apply,
     ContinuousMap.coe_id, Prod.map_apply, id_eq, ContinuousMap.prodSwap_apply,
     ContinuousMap.uncurry_apply, Function.uncurry_apply_pair, Arrow.mk_right]
+  -- LHS: `d' (cubeInclToSk α y) t`. By hcube, `isoPushout.hom (cubeInclToSk α y)`
+  --      equals `pushout.inr (xskl X n) (xskr X n) (Sigma.ι α ((diskPair.homeoCubePairULift n).inv.right y))`.
+  -- Use hcube ≫ pushout.desc = ... ≫ r' (i.e. inline the pushout.inr_desc step).
+  have hcomp : X.cubeInclToSk α ≫ (X.attachCells n).isoPushout.hom ≫
+      Limits.pushout.desc (l' X n Z) (r' X n Z) (w' X n Z) =
+      (diskPair.homeoCubePairULift n).inv.right ≫
+        Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫ r' X n Z := by
+    rw [← Category.assoc, hcube]
+    change Arrow.Hom.right (diskPair.homeoCubePairULift n).inv ≫
+        Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫
+          Limits.pushout.inr (xskl X n) (xskr X n) ≫
+            Limits.pushout.desc (l' X n Z) (r' X n Z) (w' X n Z) = _
+    rw [Limits.pushout.inr_desc]
   change (X.cubeInclToSk α ≫ (X.attachCells n).isoPushout.hom ≫
     Limits.pushout.desc (l' ..) (r' ..) (w' ..)) y t = _
-  unfold CWComplex.cubeInclToSk
-  simp only [Category.assoc, Iso.inv_hom_id_assoc, Limits.pushout.inr_desc]
-  unfold r'
-  rw [Limits.Sigma.ι_desc]
-  simp only [Arrow.mk_right, ContinuousMap.argSwap, cubeSplitAtLast,
-    Limits.PushoutCocone.ι_app_right, TopCat.hom_comp, ContinuousMap.comp_assoc, hom_ofHom,
-    ContinuousMap.coe_mk, Arrow.inv_hom_id_right_assoc, ContinuousMap.curry_apply,
-    ContinuousMap.comp_apply, ContinuousMap.prodSwap_apply]
+  rw [hcomp]
+  -- Inline hι by replacing `r' X n Z` directly in the LHS using a calc-style equation.
+  have hfinal : ((diskPair.homeoCubePairULift n).inv.right ≫
+        Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) α ≫ r' X n Z) =
+      (diskPair.homeoCubePairULift n).inv.right ≫
+        ((diskPair.homeoCubePairULift n).hom.right ≫ ofHom (ContinuousMap.curry
+          (TopCat.cubeSplitAtLast.inv ≫ (diskPair.homeoCubePairULift _).inv.right ≫
+            Limits.Sigma.ι (fun _ ↦ 𝔻 _) α ≫ Z.inr).hom.argSwap)) := by
+    apply congrArg
+    exact hι
+  rw [hfinal]
+  -- After hfinal substitution, the LHS has `right .inv ≫ right .hom = id`. Use `inv_hom_id_right_assoc`.
+  simp only [Arrow.inv_hom_id_right_assoc]
+  simp only [Arrow.mk_right, ContinuousMap.argSwap, cubeSplitAtLast, TopCat.hom_comp,
+    ContinuousMap.comp_assoc]
+  rfl
 
 end pushoutSkSk  -- namespace
 
