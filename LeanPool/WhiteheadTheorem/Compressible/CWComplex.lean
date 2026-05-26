@@ -27,9 +27,11 @@ universe u
 
 namespace TopCat
 
+namespace IsCompressible
+
 /-- Suppose `j` is compressible w.r.t. `i1`, and `i2` is an isomorphism,
 then `j` is compressible w.r.t. `i1 ≫ i2`. -/
-lemma IsCompressible.of_comp_iso_left
+lemma of_comp_iso_left
     {A B Z X Y : TopCat.{u}} {i1 : A ⟶ X} {i2 : X ⟶ Z} {j : B ⟶ Y}
     (hcom1 : IsCompressible i1 j) [IsIso i2] :
     IsCompressible (i1 ≫ i2) j where
@@ -47,7 +49,7 @@ lemma IsCompressible.of_comp_iso_left
 
 /-- Suppose `i1` is an isomorphism and `j` is compressible w.r.t. `i2`,
 then `j` is compressible w.r.t. `i1 ≫ i2`. -/
-lemma IsCompressible.of_iso_comp_left
+lemma of_iso_comp_left
     {A B Z X Y : TopCat.{u}} {i1 : A ⟶ X} {i2 : X ⟶ Z} {j : B ⟶ Y}
     [IsIso i1] (hcom2 : IsCompressible i2 j) :
     IsCompressible (i1 ≫ i2) j where
@@ -66,7 +68,7 @@ lemma IsCompressible.of_iso_comp_left
 /-- Suppose `j` is compressible w.r.t. `i`,
 and `i` is isomorphic to `i'` in the arrow category,
 then `j` is compressible w.r.t. `i'`. -/
-lemma IsCompressible.of_arrow_iso_left
+lemma of_arrow_iso_left
     {A X A' X' B Y : TopCat.{u}} {i : A ⟶ X} {i' : A' ⟶ X'} {j : B ⟶ Y}
     (e : Arrow.mk i ≅ Arrow.mk i') (hcom : IsCompressible i j) :
     IsCompressible i' j := by
@@ -89,7 +91,7 @@ If `j` is compressible w.r.t. `i`, then it is also compressible w.r.t. `∐ i`.
 TODO: This lemma can be generalized to the case where
 each component function of `∐ A ⟶ ∐ X` can be different.
 -/
-lemma IsCompressible.coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
+lemma coprod {A B X Y : TopCat.{u}} {i : A ⟶ X} {j : B ⟶ Y}
     (hcom : IsCompressible i j) (cells : Type u) :
     IsCompressible (Limits.Sigma.map fun (_ : cells) ↦ i) j where
   sq_hasLift := fun {F f} sq ↦ by
@@ -165,7 +167,7 @@ A' -----φ----→ A -----f----→ B
 X' -----Φ----→ X -----F----→ Y
 ```
 -/
-lemma IsCompressible.pushout {A' A B X' X Y : TopCat.{u}}
+lemma pushout {A' A B X' X Y : TopCat.{u}}
     {ι : A' ⟶ X'} {i : A ⟶ X} {j : B ⟶ Y}
     {φ : A' ⟶ A} {Φ : X' ⟶ X} (po : IsPushout φ ι i Φ)
     (com : IsCompressible ι j) : IsCompressible i j where
@@ -196,6 +198,8 @@ lemma IsCompressible.pushout {A' A B X' X Y : TopCat.{u}}
       · rw [po.inl_desc_assoc, po.inl_desc_assoc, sq.w]; rfl
       · rw [po.inr_desc_assoc, l'.curriedH_apply_one, po.inr_desc_assoc]
     · simp only [po.inl_desc_assoc, G, H'', H', l']; rfl
+
+end IsCompressible
 
 
 namespace IsCompressible.relCWComplex
@@ -349,6 +353,8 @@ private lemma H_skInclSucc (n m step : ℕ) (hstep : m + step = n) :
 end IsCompressible.relCWComplex
 
 
+namespace IsCompressible
+
 /--
 Suppose `X` is a relative CW-complex and `j : B ⟶ Y` is a continuous map.
 If `j` is `n`-compressible for every natural number `n`,
@@ -364,7 +370,7 @@ X.sk 0 --- f₀ ---→ B
   X ----- F₀ ----→ Y
 ```
 -/
-theorem IsCompressible.relCWComplex_of_diskBoundaryIncl
+theorem relCWComplex_of_diskBoundaryIncl
     (X : RelCWComplex.{u}) {B Y : TopCat.{u}} (j : B ⟶ Y)
     (jcom : ∀ n, IsCompressible (diskBoundaryIncl n) j) :
     IsCompressible (X.skIncl 0) j where
@@ -443,5 +449,7 @@ theorem IsCompressible.relCWComplex_of_diskBoundaryIncl
         ContinuousMap.curry_apply, ContinuousMap.prodSwap_apply,
         ContinuousMap.Homotopy.coe_toContinuousMap]
       rfl
+
+end IsCompressible
 
 end TopCat

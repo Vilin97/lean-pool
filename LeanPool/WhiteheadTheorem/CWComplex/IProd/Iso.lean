@@ -23,7 +23,6 @@ universe u
 variable (X : CWComplex.{u})
 
 
-noncomputable section
 
 namespace CWComplex.IProd
 
@@ -73,7 +72,7 @@ variable (Z : Limits.Cocone (Functor.ofSequence X.IProd.skInclSucc))
 variable (n : ℕ)
 
 /-- `r'` -/
-abbrev r' : TopCat.of (I × X.sk n) ⟶ of (I × X.toTopCat) :=
+noncomputable abbrev r' : TopCat.of (I × X.sk n) ⟶ of (I × X.toTopCat) :=
   ofHom <| (ContinuousMap.id I).prodMap (X.skIncl n).hom
 
 lemma w' : l X n ≫ zeroOneProdInclIProd X = r X n ≫ r' X n := by
@@ -82,7 +81,7 @@ lemma w' : l X n ≫ zeroOneProdInclIProd X = r X n ≫ r' X n := by
     ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq, ContinuousMap.coe_mk]
 
 /-- `incl` -/
-def incl : X.IProd.sk n ⟶ of (I × X.toTopCat) :=
+noncomputable def incl : X.IProd.sk n ⟶ of (I × X.toTopCat) :=
   match n with
   | 0 => zeroOneProdInclIProd X
   | n + 1 => Limits.pushout.desc (zeroOneProdInclIProd X) (r' X n) (w' X n)
@@ -123,14 +122,14 @@ lemma naturality : X.IProd.skInclSucc n ≫ incl X (n + 1) = incl X n :=
 /-- The cocone with `X.IProd.sk 0 ⟶ X.IProd.sk 1 ⟶ ⋯` as base
 and `TopCat.of (I × X.toTopCat)` as vertex.
 This is actually a colimit cocone (see `CWComplex.IProd.colimitCocone`). -/
-def cocone : Limits.Cocone (Functor.ofSequence X.IProd.skInclSucc) :=
+noncomputable def cocone : Limits.Cocone (Functor.ofSequence X.IProd.skInclSucc) :=
   { pt := TopCat.of (I × X.toTopCat)
     ι := NatTrans.ofSequence (incl X) <| by
       convert naturality X
       simp only [Functor.ofSequence_obj, homOfLE_leOfHom, Functor.ofSequence_map_homOfLE_succ] }
 
 /-- The cocone with `I × X.sk 0 ⟶ I × X.sk 1 ⟶ ⋯` as base and `Z.pt` as vertex -/
-def IXZ : Limits.Cocone (Functor.ofSequence X.skInclSucc ⋙ topBinProdLeft' I) :=
+noncomputable def IXZ : Limits.Cocone (Functor.ofSequence X.skInclSucc ⋙ topBinProdLeft' I) :=
   { pt := Z.pt
     ι := NatTrans.ofSequence
       (fun n ↦ Limits.pushout.inr (l X n) (r X n) ≫ Z.ι.app (n + 1)) <| by
@@ -145,13 +144,13 @@ def IXZ : Limits.Cocone (Functor.ofSequence X.skInclSucc ⋙ topBinProdLeft' I) 
         exact (IProd.inr_skInclSucc_assoc X (Z.ι.app (n + 1 + 1))).symm }
 
 /-- Functor constructed from the sequence of morphisms `I × X.sk 0 ⟶ I × X.sk 1 ⟶ ⋯` -/
-abbrev IF : ℕ ⥤ TopCat :=
+noncomputable abbrev IF : ℕ ⥤ TopCat :=
   Functor.ofSequence X.skInclSucc ⋙ topBinProdLeft' I
 
 /-- The cocone with `I × X.sk 0 ⟶ I × X.sk 1 ⟶ ⋯` as base
 and `TopCat.of (I × X.toTopCat)` as vertex.
 This is actually a colimit cocone (see `IX`). -/
-def IXCocone : Limits.Cocone (IF X) :=
+noncomputable def IXCocone : Limits.Cocone (IF X) :=
   (topBinProdLeft' I).mapCocone <| Limits.colimit.cocone <| Functor.ofSequence X.skInclSucc
 
 /-- `I × X` is the colimit of `I × X.sk 0 ⟶ I × X.sk 1 ⟶ ⋯`,
@@ -162,12 +161,12 @@ lemma isColim_IXCocone : Nonempty <| Limits.IsColimit <| IXCocone X :=
       Limits.colimit.isColimit <| Functor.ofSequence X.skInclSucc
 
 /-- `IXCocone` is a colimit cocone. -/
-def IX : Limits.ColimitCocone (IF X) :=
+noncomputable def IX : Limits.ColimitCocone (IF X) :=
   { cocone := IXCocone X
     isColimit := (isColim_IXCocone X).some }
 
 /-- Note: The type is definitionally equal to `(IXCocone X).pt ⟶ Z.pt`. -/
-def desc : (cocone X).pt ⟶ Z.pt :=
+noncomputable def desc : (cocone X).pt ⟶ Z.pt :=
   (IX X).isColimit.desc (IXZ X Z)
 
 lemma zeroOneProdInclIProd_desc : X.zeroOneProdInclIProd ≫ desc X Z = Z.ι.app 0 := by
@@ -246,7 +245,7 @@ end colimitCocone
 
 
 /-- The cocone `CWComplex.IProd.colimitCocone.cocone X` is actually a colimit cocone. -/
-def colimitCocone : Limits.ColimitCocone (Functor.ofSequence X.IProd.skInclSucc) where
+noncomputable def colimitCocone : Limits.ColimitCocone (Functor.ofSequence X.IProd.skInclSucc) where
   cocone := colimitCocone.cocone X
   isColimit :=
     { desc := colimitCocone.desc X
@@ -254,13 +253,13 @@ def colimitCocone : Limits.ColimitCocone (Functor.ofSequence X.IProd.skInclSucc)
       uniq := colimitCocone.uniq X }
 
 /-- `iso` -/
-def iso : X.IProd.toTopCat ≅ TopCat.of (I × X.toTopCat) :=
+noncomputable def iso : X.IProd.toTopCat ≅ TopCat.of (I × X.toTopCat) :=
   Limits.IsColimit.coconePointUniqueUpToIso
     (Limits.getColimitCocone (Functor.ofSequence X.IProd.skInclSucc)).isColimit
     (colimitCocone X).isColimit
 
 /-- The arrow `X.IProd.sk 0 ⟶ X.IProd.toTopCat` is isomorphic to `{0, 1} × X ⟶ I × X`. -/
-def arrowIso : Arrow.mk (X.IProd.skIncl 0) ≅ Arrow.mk X.zeroOneProdInclIProd :=
+noncomputable def arrowIso : Arrow.mk (X.IProd.skIncl 0) ≅ Arrow.mk X.zeroOneProdInclIProd :=
   Arrow.isoMk (Iso.refl _) (IProd.iso X) <| by
     simp only [Arrow.mk_left, Arrow.mk_right, Iso.refl_hom, Arrow.mk_hom]
     rw [show X.IProd.skIncl 0 = (Limits.getColimitCocone
@@ -276,4 +275,3 @@ def arrowIso : Arrow.mk (X.IProd.skIncl 0) ≅ Arrow.mk X.zeroOneProdInclIProd :
 
 end CWComplex.IProd
 
-end  -- noncomputable section

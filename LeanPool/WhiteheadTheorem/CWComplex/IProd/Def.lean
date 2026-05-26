@@ -30,25 +30,24 @@ universe u
 variable (X : CWComplex.{u})
 
 
-noncomputable section
 
 namespace CWComplex
 
 /-- The inclusion map from `{0, 1} × X` to `I × X` -/
-abbrev zeroOneProdInclIProd :
+noncomputable abbrev zeroOneProdInclIProd :
     TopCat.of (zeroOne × X.toTopCat) ⟶ TopCat.of (I × X.toTopCat) :=
   ofHom <| unitInterval.zeroOneIncl.prodMap (ContinuousMap.id _)
 
 namespace IProd
 
 /-- `l` -/
-abbrev l (n : ℕ) := ofHom <| (ContinuousMap.id zeroOne).prodMap (X.skIncl n).hom
+noncomputable abbrev l (n : ℕ) := ofHom <| (ContinuousMap.id zeroOne).prodMap (X.skIncl n).hom
 /-- `r` -/
 abbrev r (n : ℕ) := ofHom <| zeroOneIncl.prodMap <| ContinuousMap.id <| X.sk n
 /-- `xskl` -/
-abbrev xskl (n : ℕ) := Limits.Sigma.desc (X.attachCells n).attachMaps
+noncomputable abbrev xskl (n : ℕ) := Limits.Sigma.desc (X.attachCells n).attachMaps
 /-- `xskr` -/
-abbrev xskr (n : ℕ) := Limits.Sigma.map fun (_ : (X.attachCells n).cells) ↦ diskBoundaryIncl n
+noncomputable abbrev xskr (n : ℕ) := Limits.Sigma.map fun (_ : (X.attachCells n).cells) ↦ diskBoundaryIncl n
 
 /--
 ```
@@ -67,7 +66,7 @@ noncomputable def sk (n : ℕ) : TopCat.{u} :=
   | n + 1 => Limits.pushout (IProd.l X n) (IProd.r X n)
 
 /-- `skZeroIsoSkOne` -/
-def skZeroIsoSkOne : CWComplex.IProd.sk X 0 ≅ CWComplex.IProd.sk X 1 :=
+noncomputable def skZeroIsoSkOne : CWComplex.IProd.sk X 0 ≅ CWComplex.IProd.sk X 1 :=
   have : IsIso <| ofHom <| zeroOneIncl.prodMap <| ContinuousMap.id <| X.sk 0 := by
     have := X.isEmpty_sk_zero
     infer_instance  -- TopCat.isIso_of_isEmpty
@@ -79,30 +78,30 @@ end IProd
 
 
 /-- `cubeInclToSk` -/
-def cubeInclToSk {n : ℕ} (α : (X.attachCells n).cells) : 𝕀 n ⟶ X.sk (n + 1) :=
+noncomputable def cubeInclToSk {n : ℕ} (α : (X.attachCells n).cells) : 𝕀 n ⟶ X.sk (n + 1) :=
   (diskPair.homeoCubePairULift n).inv.right ≫
   Limits.Sigma.ι (fun _ ↦ 𝔻 n) α ≫ Limits.pushout.inr .. ≫ (X.attachCells n).isoPushout.inv
 
 /-- `cubeIncl` -/
-def cubeIncl {n : ℕ} (α : (X.attachCells n).cells) : 𝕀 n ⟶ X :=
+noncomputable def cubeIncl {n : ℕ} (α : (X.attachCells n).cells) : 𝕀 n ⟶ X :=
   X.cubeInclToSk α ≫ X.skIncl (n + 1)
 
 /-- `cubeAtt` -/
-def cubeAtt {n : ℕ} (α : (X.attachCells n).cells) : ∂𝕀 n ⟶ X.sk n :=
+noncomputable def cubeAtt {n : ℕ} (α : (X.attachCells n).cells) : ∂𝕀 n ⟶ X.sk n :=
   (diskPair.homeoCubePairULift n).inv.left ≫ (X.attachCells n).attachMaps α
 
 
 namespace IProd
 
 /-- `cubeAttBotOrTop` -/
-def cubeAttBotOrTop {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) :
+noncomputable def cubeAttBotOrTop {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) :
     𝕀 n ⟶ IProd.sk X (n + 1) :=  -- bottom face of `∂𝕀 (n + 1)`
   X.cubeIncl α ≫
   ofHom ⟨fun x ↦ ⟨t, x⟩, by fun_prop⟩ ≫  -- X ⟶ {0, 1} × X
   Limits.pushout.inl ..
 
 /-- `cubeAttSides` -/
-def cubeAttSides {n : ℕ} (α : (X.attachCells n).cells) :
+noncomputable def cubeAttSides {n : ℕ} (α : (X.attachCells n).cells) :
     TopCat.of (I × ∂𝕀 n) ⟶ IProd.sk X (n + 1) :=  -- sides of `∂𝕀 (n + 1)`
   ofHom ((ContinuousMap.id I).prodMap (X.cubeAtt α).hom) ≫  -- of (I × ∂𝕀 n) ⟶ of (I × (X.sk n))
   Limits.pushout.inr ..
@@ -159,7 +158,7 @@ lemma cubeAtt_compatible {n : ℕ} (α : (X.attachCells n).cells) (t : zeroOne) 
   rw [this, Category.assoc, Limits.pushout.condition]
 
 /-- `attachMaps` -/
-def attachMaps {n : ℕ} (α : (X.attachCells n).cells) : ∂𝔻 (n + 1) ⟶ IProd.sk X (n + 1) :=
+noncomputable def attachMaps {n : ℕ} (α : (X.attachCells n).cells) : ∂𝔻 (n + 1) ⟶ IProd.sk X (n + 1) :=
   (diskPair.homeoCubePairULift (n + 1)).hom.left ≫
     cubeBoundary.mapOfBotTopSides
       (IProd.cubeAttBotOrTop X α) (IProd.cubeAttSides X α) (IProd.cubeAtt_compatible X α)
@@ -168,7 +167,7 @@ def attachMaps {n : ℕ} (α : (X.attachCells n).cells) : ∂𝔻 (n + 1) ⟶ IP
 Each $n$-cell of `X` corresponds to an $(n + 1)$-cell of `X.IProd`.
 The latter cell is attached to `IProd.sk X (n + 1)`, which is of dimension $n$.
 `X.IProd` has no `0`-cells. -/
-def sigmaDisksInclToSk (n : ℕ) :
+noncomputable def sigmaDisksInclToSk (n : ℕ) :
     (∐ fun (_ : (X.attachCells n).cells) ↦ 𝔻 (n + 1)) ⟶ IProd.sk X (n + 1 + 1) :=
   (Limits.Sigma.desc
     fun α ↦ (diskPair.homeoCubePairULift _).hom.right ≫ cubeSplitAtLast.hom ≫
@@ -176,7 +175,7 @@ def sigmaDisksInclToSk (n : ℕ) :
   ≫ Limits.pushout.inr ..
 
 /-- `skInclSucc` -/
-def skInclSucc (n : ℕ) : IProd.sk X (n + 1) ⟶ IProd.sk X (n + 1 + 1) :=
+noncomputable def skInclSucc (n : ℕ) : IProd.sk X (n + 1) ⟶ IProd.sk X (n + 1 + 1) :=
   let il : TopCat.of (zeroOne × X.toTopCat) ⟶ IProd.sk X (n + 1 + 1) := Limits.pushout.inl ..
   let ir : TopCat.of (I × X.sk n) ⟶ IProd.sk X (n + 1 + 1) :=
     ofHom ((ContinuousMap.id I).prodMap (X.skInclSucc _).hom) ≫ Limits.pushout.inr ..
@@ -314,10 +313,10 @@ variable (n : ℕ) (Z : Limits.PushoutCocone
   (Limits.Sigma.map fun _ ↦ diskBoundaryIncl (n + 1)))
 
 /-- `l'` -/
-abbrev l' : X.sk n ⟶ TopCat.of C(I, Z.pt) :=
+noncomputable abbrev l' : X.sk n ⟶ TopCat.of C(I, Z.pt) :=
   ofHom (Limits.pushout.inr (l X n) (r X n) ≫ Z.inl).hom.argSwap.curry
 /-- `r'` -/
-abbrev r' : (∐ fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) ⟶ TopCat.of C(I, Z.pt) :=
+noncomputable abbrev r' : (∐ fun (_ : (X.attachCells n).cells) ↦ 𝔻 n) ⟶ TopCat.of C(I, Z.pt) :=
   Limits.Sigma.desc fun α ↦
     let Zinr' : TopCat.of (I × (𝕀 n)) ⟶ Z.pt :=
       TopCat.cubeSplitAtLast.inv ≫ (diskPair.homeoCubePairULift _).inv.right ≫
@@ -344,7 +343,7 @@ lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
   unfold l' r'
   simp only [ContinuousMap.argSwap, TopCat.hom_comp, ContinuousMap.coe_mk,
     ContinuousMap.comp_assoc, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.curry_apply,
-    ContinuousMap.prodSwap_apply, Arrow.mk_right, cubeSplitAtLast, 
+    ContinuousMap.prodSwap_apply, Arrow.mk_right, cubeSplitAtLast,
     ]
   let xt_cube : ∂𝕀 (n + 1) :=
     TopCat.cubeBoundary.castSucc t <| (diskPair.homeoCubePairULift n).hom.left x
@@ -387,12 +386,12 @@ lemma w' : xskl X n ≫ l' X n Z = xskr X n ≫ r' X n Z := by
   rfl
 
 /-- `d'` -/
-abbrev d' : X.sk (n + 1) ⟶ TopCat.of C(I, Z.pt) :=
+noncomputable abbrev d' : X.sk (n + 1) ⟶ TopCat.of C(I, Z.pt) :=
     (X.attachCells n).isoPushout.hom ≫ Limits.pushout.desc (l' ..) (r' ..) (w' ..)
 /-- `l''` -/
-abbrev l'' : TopCat.of (zeroOne × X.toTopCat) ⟶ Z.pt := Limits.pushout.inl (l X n) (r X n) ≫ Z.inl
+noncomputable abbrev l'' : TopCat.of (zeroOne × X.toTopCat) ⟶ Z.pt := Limits.pushout.inl (l X n) (r X n) ≫ Z.inl
 /-- `r''` -/
-abbrev r'' : TopCat.of (I × (X.sk (n + 1))) ⟶ Z.pt := ofHom (d' ..).hom.uncurry.argSwap
+noncomputable abbrev r'' : TopCat.of (I × (X.sk (n + 1))) ⟶ Z.pt := ofHom (d' ..).hom.uncurry.argSwap
 
 /--
 The following square commutes.
@@ -581,11 +580,11 @@ Given a commutative square
 ```
 return the descending map `IProd.sk X (n + 1 + 1) ⟶ Z` out of the pushout cocone.
 -/
-abbrev desc : IProd.sk X (n + 1 + 1) ⟶ Z.pt :=
+noncomputable abbrev desc : IProd.sk X (n + 1 + 1) ⟶ Z.pt :=
   Limits.pushout.desc (l'' X n Z) (r'' X n Z) (w'' X n Z)
 
 /-- `cocone` -/
-def cocone (n : ℕ) :
+noncomputable def cocone (n : ℕ) :
     Limits.PushoutCocone
       (Limits.Sigma.desc (IProd.attachMaps X))
       (Limits.Sigma.map fun _ ↦ diskBoundaryIncl (n + 1)) :=
@@ -830,7 +829,7 @@ lemma pushoutSkSk (n : ℕ) :
       -- Now both sides express the same map evaluated; reduce by unfolding `sigmaDisksInclToSk`.
       simp only []
       unfold IProd.sigmaDisksInclToSk
-      simp only [TopCat.hom_comp, 
+      simp only [TopCat.hom_comp,
         ]
       have hsidisks : Limits.Sigma.ι (fun (_ : (X.attachCells n).cells) ↦ 𝔻 (n + 1)) α ≫
           (Limits.Sigma.desc fun α ↦
@@ -880,7 +879,7 @@ lemma pushoutSkSk (n : ℕ) :
       rw [hsi_pt]
       -- Evaluate the remaining chain.
       simp only [TopCat.hom_comp, hom_ofHom, ContinuousMap.comp_apply,
-        ContinuousMap.prodMap_apply, ContinuousMap.coe_id, 
+        ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
         ContinuousMap.prodSwap_apply, TopCat.cubeSplitAtLast]
       -- Reduce hom.right ∘ inv.right = id pointwise via congrArg over morphism equation.
       have hhi : ∀ z : ↑(Arrow.mk (cubeBoundaryIncl (n + 1))).right,
@@ -913,7 +912,7 @@ end IProd
 
 
 /-- `IProd` -/
-def IProd : RelCWComplex where
+noncomputable def IProd : RelCWComplex where
   sk := IProd.sk X
   attachCells n :=
     match n with
@@ -931,4 +930,3 @@ def IProd : RelCWComplex where
 
 end CWComplex
 
-end  -- noncomputable section

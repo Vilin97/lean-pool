@@ -24,23 +24,22 @@ variable {X Y : TopCat.{u}} (f : X ⟶ Y)
 
 namespace TopCat
 
-noncomputable section
 
 /-- The mapping cylinder of a continuous map `f : X ⟶ Y`. -/
-def MapCyl : TopCat.{u} := Limits.pushout f (Cyl.i₀ X)
+noncomputable def MapCyl : TopCat.{u} := Limits.pushout f (Cyl.i₀ X)
 
 
 namespace MapCyl
 
 /-- `inl` -/
-abbrev inl : Y ⟶ MapCyl f := Limits.pushout.inl _ _
+noncomputable abbrev inl : Y ⟶ MapCyl f := Limits.pushout.inl _ _
 /-- `inr` -/
-abbrev inr : TopCat.of (X × I) ⟶ MapCyl f := Limits.pushout.inr _ _
+noncomputable abbrev inr : TopCat.of (X × I) ⟶ MapCyl f := Limits.pushout.inr _ _
 /-- `condition` -/
 lemma condition : f ≫ inl f = Cyl.i₀ X ≫ inr f := Limits.pushout.condition
 
 /-- Inclusion map from the domain `X` to the mapping cylinder of `f : X ⟶ Y` -/
-abbrev domIncl : X ⟶ MapCyl f := Cyl.i₁ X ≫ inr f
+noncomputable abbrev domIncl : X ⟶ MapCyl f := Cyl.i₁ X ≫ inr f
 
 /-- Inclusion map from the codomain `Y` to the mapping cylinder of `f : X ⟶ Y` -/
 noncomputable alias codIncl := inl
@@ -49,7 +48,6 @@ noncomputable alias codIncl := inl
 abbrev top : Set (MapCyl f) := Set.range (domIncl f)
 
 
-section isEmbedding_domIncl
 
 lemma domIncl_hom_eq_pushoutInr'_comp :
     (domIncl f).hom = (pushoutInr' _ _).comp (Cyl.i₁_to_compl_range_i₀ X) := by
@@ -69,10 +67,10 @@ theorem isEmbedding_domIncl : Topology.IsEmbedding (domIncl f) := by
 
 /-- The domain `X` of a continuous map `f` is homeomorphic to the top surface of
 the mapping cylinder of `f`. -/
-def domHomeoTop : X ≃ₜ top f := (isEmbedding_domIncl f).toHomeomorph
+noncomputable def domHomeoTop : X ≃ₜ top f := (isEmbedding_domIncl f).toHomeomorph
 
 /-- `domInclToTop` -/
-def domInclToTop : C(X, top f) := toContinuousMap (domHomeoTop f)
+noncomputable def domInclToTop : C(X, top f) := toContinuousMap (domHomeoTop f)
 /-- `domInclFromTop` -/
 def domInclFromTop : C(top f, MapCyl f) := ⟨Subtype.val, continuous_subtype_val⟩
 
@@ -84,11 +82,10 @@ lemma domIncl_toFun_eq_domInclFromTop_comp_domInclToTop :
 lemma isHomeomorph_domInclToTop : IsHomeomorph (domInclToTop f) :=
   isHomeomorph_iff_exists_homeomorph.mpr ⟨domHomeoTop f, rfl⟩
 
-end isEmbedding_domIncl
 
 
 /-- The retraction from a mapping cylinder of `f : X ⟶ Y` to its base `Y` -/
-def retr : MapCyl f ⟶ Y :=
+noncomputable def retr : MapCyl f ⟶ Y :=
   Limits.pushout.desc (𝟙 Y) (Cyl.r₀ X ≫ f)
     (by rw [Category.comp_id, ← Category.assoc, Cyl.i₀_r₀_eq_id, Category.id_comp])
 
@@ -113,7 +110,7 @@ and is equal to uncurried form when evaluated at any `t : I`
 (see `curriedDeformRetrEvalAt_eq_deformRetrEvalAt`).
 
 Note: `s * t` uses the instance `unitInterval.continuousMul` in `Shapes/Maps.lean`. -/
-def curriedDeformRetr : MapCyl f ⟶ TopCat.of C(I, MapCyl f) :=
+noncomputable def curriedDeformRetr : MapCyl f ⟶ TopCat.of C(I, MapCyl f) :=
   Limits.pushout.desc (PathSpace.homToConstPaths (inl f))
     (ofHom <| ContinuousMap.curry
       { toFun := fun ⟨⟨x, s⟩, t⟩ ↦ (inr f).hom ⟨x, s * t⟩
@@ -126,7 +123,7 @@ def curriedDeformRetr : MapCyl f ⟶ TopCat.of C(I, MapCyl f) :=
       exact congr_fun (congr_arg (ContinuousMap.toFun ∘ Hom.hom) (condition f)) x )
 
 /-- `curriedDeformRetrEvalAt` -/
-def curriedDeformRetrEvalAt (t : I) : MapCyl f ⟶ MapCyl f :=
+noncomputable def curriedDeformRetrEvalAt (t : I) : MapCyl f ⟶ MapCyl f :=
   ofHom <| (curriedDeformRetr f).hom.uncurry.curryLeft t
 
 lemma curriedDeformRetrEvalAt_hom_apply (t : I) (z : MapCyl f) :
@@ -136,7 +133,7 @@ lemma curriedDeformRetrEvalAt_hom_apply (t : I) (z : MapCyl f) :
 /-- The homotopy (deformation retraction)
 from `retr f ≫ inl f` (when `t = 0`) to `𝟙 (MapCyl f)` (when `t = 1`),
 evaluated at `t`. -/
-def deformRetrEvalAt (t : I) : MapCyl f ⟶ MapCyl f :=
+noncomputable def deformRetrEvalAt (t : I) : MapCyl f ⟶ MapCyl f :=
   Limits.pushout.desc (inl f)
     (ofHom (ContinuousMap.id _ |>.prodMap <| ContinuousMap.mulRight t) ≫ inr f)
     -- fun ⟨x, s⟩ ↦ (inr f).hom ⟨x, s * t⟩
@@ -188,7 +185,7 @@ lemma curriedDeformRetrEvalAt_eq_deformRetrEvalAt (t : I) :
     congr
 
 /-- The mapping cylinder of `f : X ⟶ Y` is homotopy equivalent to its base `Y`. -/
-def homotopyEquivBase : MapCyl f ≃ₕ Y where
+noncomputable def homotopyEquivBase : MapCyl f ≃ₕ Y where
   toFun := (retr f).hom
   invFun := (inl f).hom
   left_inv := Nonempty.intro
@@ -217,6 +214,5 @@ theorem isHomotopyEquiv_retr : IsHomotopyEquiv (retr f).hom :=
 
 end MapCyl
 
-end -- noncomputable section
 
 end TopCat

@@ -34,20 +34,24 @@ abbrev ofHom (f : C(X, Y)) (point : X) :
     PointedTopCat.of point ⟶ PointedTopCat.of (f point) :=
   Under.homMk (TopCat.ofHom f)
 
+namespace Hom
+
 /-- Change the target point of a morphism of `PointedTopCat`
 from `g point` to `f point`, given `g = f`.  Useful to fix definitional equality. -/
-abbrev Hom.rwTargetPt {f g : C(X, Y)} (point : X) (gf : g = f) :
+abbrev rwTargetPt {f g : C(X, Y)} (point : X) (gf : g = f) :
     PointedTopCat.of point ⟶ PointedTopCat.of (f point) :=
   Under.homMk (TopCat.ofHom g)
 
-lemma Hom.toFun_rwTargetPt {f g : C(X, Y)} (point : X) (gf : g = f) :
-    (Hom.rwTargetPt point gf).right.hom.toFun = g :=
+lemma toFun_rwTargetPt {f g : C(X, Y)} (point : X) (gf : g = f) :
+    (rwTargetPt point gf).right.hom.toFun = g :=
   rfl
 
-lemma Hom.rwTargetPt_eq {f g : C(X, Y)} (point : X) (gf : g = f) :
-    Hom.rwTargetPt point gf = ofHom f point := by
+lemma rwTargetPt_eq {f g : C(X, Y)} (point : X) (gf : g = f) :
+    rwTargetPt point gf = ofHom f point := by
   ext x
   exact congr_fun (congr_arg ContinuousMap.toFun gf) x
+
+end Hom
 
 /-- Typecheck a morphism in `TopCat` as a morphism in `PointedTopCat`,
 by choosing a point in `X`. -/
@@ -55,20 +59,24 @@ abbrev ofHom' {X Y : TopCat.{u}} (f : X ⟶ Y) (point : X) :
     PointedTopCat.of point ⟶ PointedTopCat.of (f point) :=
   Under.homMk f
 
+namespace Hom'
+
 /-- Change the target point of a morphism of `PointedTopCat`
 from `g point` to `f point`, given `g = f`.  Useful to fix definitional equality. -/
-abbrev Hom'.rwTargetPt {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = f) :
+abbrev rwTargetPt {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = f) :
     PointedTopCat.of point ⟶ PointedTopCat.of (f point) :=
   Under.homMk g
 
-lemma Hom'.toFun_rwTargetPt {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = f) :
-    (Hom'.rwTargetPt point gf).right.hom.toFun = g :=
+lemma toFun_rwTargetPt {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = f) :
+    (rwTargetPt point gf).right.hom.toFun = g :=
   rfl
 
-lemma Hom'.rwTargetPt_eq {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = f) :
-    Hom'.rwTargetPt point gf = ofHom' f point := by
+lemma rwTargetPt_eq {X Y : TopCat.{u}} {f g : X ⟶ Y} (point : X) (gf : g = f) :
+    rwTargetPt point gf = ofHom' f point := by
   ext x
   exact congr_fun (congr_arg (ContinuousMap.toFun ∘ TopCat.Hom.hom) gf) x
+
+end Hom'
 
 -- instance : Coe PointedTopCat TopCat where
 --   coe X := X.right
@@ -155,20 +163,24 @@ lemma isIso_iff_bijective {A B : Type u} {a₀ : A} {b₀ : B}
 --   ext x
 --   exact congr_fun gf x
 
+namespace Hom
+
 /-- Change the target point of a `Pointed.Hom` from `g point` to `f point`, given `g = f`.
 Useful to fix definitional equality. -/
-abbrev Hom.rwTargetPt {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
+abbrev rwTargetPt {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
     of point ⟶ of (f point) :=
   ⟨g, by rw [gf]⟩
 
-lemma Hom.toFun_rwTargetPt {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
-    (Hom.rwTargetPt point gf).toFun = g :=
+lemma toFun_rwTargetPt {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
+    (rwTargetPt point gf).toFun = g :=
   rfl
 
-lemma Hom.rwTargetPt_eq {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
-    Hom.rwTargetPt point gf = ⟨f, rfl⟩ := by
+lemma rwTargetPt_eq {X Y : Type u} (point : X) {f g : X → Y} (gf : g = f) :
+    rwTargetPt point gf = ⟨f, rfl⟩ := by
   ext x
   exact congr_fun gf x
+
+end Hom
 
 end Pointed
 
@@ -236,15 +248,19 @@ abbrev inducedMap (n : ℕ) (x : X) (f : C(X, Y)) :
     π_ n X x → π_ n Y (f x) :=
   inducedMap' n (PointedTopCat.ofHom f x)
 
+namespace inducedMap
+
 /-- Change an induced map's target point from `g x` to `f x`, given `g = f`.
 Useful to fix definitional equality. -/
-abbrev inducedMap.rwTargetPt (n : ℕ) {f g : C(X, Y)} (x : X) (gf : g = f) :
+abbrev rwTargetPt (n : ℕ) {f g : C(X, Y)} (x : X) (gf : g = f) :
     π_ n X x → π_ n Y (f x) :=
   inducedMap' n (PointedTopCat.Hom.rwTargetPt x gf)
 
-lemma inducedMap.rwTargetPt_eq (n : ℕ) {f g : C(X, Y)} (x : X) (gf : g = f) :
-    inducedMap.rwTargetPt n x gf = inducedMap n x f := by
-  rw [inducedMap.rwTargetPt, PointedTopCat.Hom.rwTargetPt_eq]
+lemma rwTargetPt_eq (n : ℕ) {f g : C(X, Y)} (x : X) (gf : g = f) :
+    rwTargetPt n x gf = inducedMap n x f := by
+  rw [rwTargetPt, PointedTopCat.Hom.rwTargetPt_eq]
+
+end inducedMap
 
 /-- `π_n` is a functor sending a based topological space `(X, x₀)`
 to its `n`-th homotopy group (as a type, ignoring its group structure) based at `x₀`. -/
@@ -319,52 +335,60 @@ lemma inducedPointedHom'_eq_inducedPointedHom
     inducedPointedHom' n x₀ f = inducedPointedHom n x₀ f.hom :=
   rfl
 
+namespace inducedPointedHom
+
 /-- `isoTarget` -/
-noncomputable abbrev inducedPointedHom.isoTarget (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
+noncomputable abbrev isoTarget (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
     Pointed.of (default : π_ n Y (g x₀)) ≅ Pointed.of (default : π_ n Y (f x₀)) :=
   gf ▸ Iso.refl _
 
 /-- Change an induced pointed morphism's target point from `g x₀` to `f x₀`, given `g = f`.
 Useful to fix definitional equality. -/
-noncomputable abbrev inducedPointedHom.rwTargetPt (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
+noncomputable abbrev rwTargetPt (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
     Pointed.of (default : π_ n X x₀) ⟶ Pointed.of (default : π_ n Y (f x₀)) :=
   (functorToPointed n).map (PointedTopCat.Hom.rwTargetPt x₀ gf)
 
-lemma inducedPointedHom.toFun_rwTargetPt
+lemma toFun_rwTargetPt
      (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
-    (inducedPointedHom.rwTargetPt n x₀ gf).toFun =
+    (rwTargetPt n x₀ gf).toFun =
     inducedMap.rwTargetPt n x₀ gf := by
   rfl
 
-lemma inducedPointedHom.rwTargetPt_eq (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
-    inducedPointedHom.rwTargetPt n x₀ gf = inducedPointedHom n x₀ f := by
-  unfold inducedPointedHom.rwTargetPt inducedPointedHom
+lemma rwTargetPt_eq (n : ℕ) {f g : C(X, Y)} (x₀ : X) (gf : g = f) :
+    rwTargetPt n x₀ gf = inducedPointedHom n x₀ f := by
+  unfold rwTargetPt inducedPointedHom
   rw [PointedTopCat.Hom.rwTargetPt_eq]
 
+end inducedPointedHom
+
+namespace inducedPointedHom'
+
 /-- `isoTarget` -/
-noncomputable abbrev inducedPointedHom'.isoTarget
+noncomputable abbrev isoTarget
     (n : ℕ) {X Y : TopCat.{u}} (x₀ : X) {f g : X ⟶ Y} (gf : g = f) :
     Pointed.of (default : π_ n Y (g x₀)) ≅ Pointed.of (default : π_ n Y (f x₀)) :=
   gf ▸ Iso.refl _
 
 /-- Change an induced pointed morphism's target point from `g x₀` to `f x₀`, given `g = f`.
 Useful to fix definitional equality. -/
-noncomputable abbrev inducedPointedHom'.rwTargetPt
+noncomputable abbrev rwTargetPt
     (n : ℕ) {X Y : TopCat.{u}} (x₀ : X) {f g : X ⟶ Y} (gf : g = f) :
     Pointed.of (default : π_ n X x₀) ⟶ Pointed.of (default : π_ n Y (f x₀)) :=
   (functorToPointed n).map (PointedTopCat.Hom'.rwTargetPt x₀ gf)
 
-lemma inducedPointedHom'.toFun_rwTargetPt
+lemma toFun_rwTargetPt
     (n : ℕ) {X Y : TopCat.{u}} (x₀ : X) {f g : X ⟶ Y} (gf : g = f) :
-    (inducedPointedHom'.rwTargetPt n x₀ gf).toFun =
+    (rwTargetPt n x₀ gf).toFun =
     inducedMap.rwTargetPt n x₀ (congr_arg TopCat.Hom.hom gf) := by
   rfl
 
-lemma inducedPointedHom'.rwTargetPt_eq
+lemma rwTargetPt_eq
     (n : ℕ) {X Y : TopCat.{u}} (x₀ : X) {f g : X ⟶ Y} (gf : g = f) :
-    inducedPointedHom'.rwTargetPt n x₀ gf = inducedPointedHom' n x₀ f := by
-  unfold inducedPointedHom'.rwTargetPt inducedPointedHom'
+    rwTargetPt n x₀ gf = inducedPointedHom' n x₀ f := by
+  unfold rwTargetPt inducedPointedHom'
   rw [PointedTopCat.Hom'.rwTargetPt_eq]
+
+end inducedPointedHom'
 
 lemma isIso_inducedPointedHom_of_isHomeomorph (n : ℕ) (x₀ : X) (f : C(X, Y))
     (hf : IsHomeomorph f) : IsIso (inducedPointedHom n x₀ f) := by

@@ -15,11 +15,11 @@ namespace RelHomotopyGroup
 
 variable (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A)
 
-/-- For `n ≥ 1`, if `⟦f⟧ ∈ π﹍ n X A a` and `f` is homotopic rel `∂I^n` to a map `g`
+/-- For `n ≥ 1`, if `⟦f⟧ ∈ π_rel n X A a` and `f` is homotopic rel `∂I^n` to a map `g`
 whose image is in `A`, then `f` represents zero in the relative homotopy group. -/
 lemma compression_criterion_1 (f : RelGenLoop (n + 1) X A a) (g : C(I^Fin (n + 1), X))
     (rg : Set.range g ⊆ A) (H : ContinuousMap.HomotopyRel f g (∂I^(n + 1))) :
-    ⟦f⟧ = (⟦RelGenLoop.const⟧ : π﹍ (n + 1) X A a) :=
+    ⟦f⟧ = (⟦RelGenLoop.const⟧ : π_rel (n + 1) X A a) :=
   -- let g' : RelGenLoop n X A a := RelGenLoop.ofHomotopyRel f g H
   (RelGenLoop.ofHomotopyRel.eq f g H).trans <| Quotient.eq.mpr <| Nonempty.intro <|
     let R := Cube.strongDeformRetrToBoundaryJar n
@@ -41,15 +41,15 @@ lemma compression_criterion_1 (f : RelGenLoop (n + 1) X A a) (g : C(I^Fin (n + 1
 /-- Same as `compression_criterion_1`, except that the codomain of `g` is explicitly `A`. -/
 lemma compression_criterion_1_subtype (f : RelGenLoop (n + 1) X A a) (g : C(I^Fin (n + 1), A))
     (H : ContinuousMap.HomotopyRel f ⟨Subtype.val ∘ g, g.continuous.subtype_val⟩ (∂I^(n + 1))) :
-    ⟦f⟧ = (⟦RelGenLoop.const⟧ : π﹍ (n + 1) X A a) := by
+    ⟦f⟧ = (⟦RelGenLoop.const⟧ : π_rel (n + 1) X A a) := by
   refine compression_criterion_1 n X A a f _ ?_ H
   intro x; simp
   intro y hy; rw [← hy]; exact Subtype.coe_prop (g y)
 
-/-- If `f` represents zero in the relative homotopy group `π﹍ n X A a`,
+/-- If `f` represents zero in the relative homotopy group `π_rel n X A a`,
 then `f` is homotopic rel `∂I^n` to some map `g` whose image is in `A`. -/
 lemma compression_criterion_2
-    (f : RelGenLoop n X A a) (fz : ⟦f⟧ = (⟦RelGenLoop.const⟧ : π﹍ n X A a)) :
+    (f : RelGenLoop n X A a) (fz : ⟦f⟧ = (⟦RelGenLoop.const⟧ : π_rel n X A a)) :
     ∃ g : C(I^ Fin n, X), Set.range g ⊆ A ∧ ContinuousMap.HomotopicRel f g (∂I^n) := by
   have H : ContinuousMap.HomotopicWith .. := Quotient.eq.mp fz.symm
   -- have H_fun := H.some.toContinuousMap
@@ -97,7 +97,7 @@ lemma compression_criterion_2
 
 /-- Same as `compression_criterion_2`, except that the codomain of `g` is explicitly `A`. -/
 lemma compression_criterion_2_subtype
-    (f : RelGenLoop n X A a) (fz : ⟦f⟧ = (⟦RelGenLoop.const⟧ : π﹍ n X A a)) :
+    (f : RelGenLoop n X A a) (fz : ⟦f⟧ = (⟦RelGenLoop.const⟧ : π_rel n X A a)) :
     ∃ g : C(I^ Fin n, A), ContinuousMap.HomotopicRel f
       ⟨Subtype.val ∘ g, g.continuous.subtype_val⟩ (∂I^n) := by
   have ⟨g', ⟨hg', H'⟩⟩ := compression_criterion_2 n X A a f fz

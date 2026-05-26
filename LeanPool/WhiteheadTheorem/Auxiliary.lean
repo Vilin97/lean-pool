@@ -53,14 +53,17 @@ lemma eq_of_topCat_ofHom {A B : Type u} [TopologicalSpace A] [TopologicalSpace B
     {f g : C(A, B)} (e : TopCat.ofHom f = TopCat.ofHom g) : f = g :=
   TopCat.hom_ext_iff.mp e
 
-lemma Homotopic.of_eq (X Y : Type u) [TopologicalSpace X] [TopologicalSpace Y]
+namespace Homotopic
+
+lemma of_eq (X Y : Type u) [TopologicalSpace X] [TopologicalSpace Y]
     (f g : C(X, Y)) (hfg : f = g) : f.Homotopic g :=
   hfg ▸ ContinuousMap.Homotopic.refl f
+
+end Homotopic
 
 end ContinuousMap
 
 
-section Real.iSup
 /-!
 Auxiliary lemmas used in `largeCubeHomeoPDisk` and `largeCubeBoundaryHomeoPDiskBoundary`
 -/
@@ -116,7 +119,6 @@ lemma Real.exists_eq_of_iSup_eq_of_finite_domain {ι : Type*} {f : ι → ℝ} {
   rw [(by simp only [Set.mem_univ, ciSup_unique] : ⨆ i ∈ Set.univ, f i = ⨆ i, f i)] at this
   exact ne_of_lt this hf
 
-end Real.iSup
 
 
 -- /-- The result of embedding `i : Fin n` in `Fin (n+1)` is not equal to `n : Fin (n+1)` -/
@@ -124,7 +126,6 @@ end Real.iSup
 --   fun heq ↦ Nat.ne_of_lt i.isLt (congrArg Fin.val heq)
 
 
-section GluingLemma
 
 namespace ContinuousMap
 
@@ -164,7 +165,6 @@ theorem liftCoverClosed_coe' {i : ι} (x : α) (hx : x ∈ S i) :
 
 end ContinuousMap
 
-end GluingLemma
 
 
 

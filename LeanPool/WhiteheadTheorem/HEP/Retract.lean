@@ -116,7 +116,6 @@ lemma inclToBoundaryJarSides_projToSides_eq_of {n : ℕ} (y : I^Fin (n + 1 + 1))
   · simp [boundaryIncl]
 
 
-section strongDeformRetrToBoundaryJar
 
 /-- A  retraction from `I^n` to `⊔I^n`, for `n ≥ 1`. -/
 noncomputable def retrToBoundaryJar (n : ℕ) :
@@ -194,10 +193,8 @@ noncomputable def strongDeformRetrToBoundaryJar (n : ℕ) :
             ContinuousMap.id_apply]
           rw [r'_restrict y hy, sub_mul, sub_add_cancel, one_mul] }}
 
-end strongDeformRetrToBoundaryJar
 
 
-section instContractibleSpaceBoundaryJar
 
 open scoped ContinuousMap
 
@@ -225,7 +222,7 @@ lemma deformRetrToBot_apply_bot {n : ℕ}
   simp only [ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
     ContinuousMap.coe_coe, Prod.map_apply, id_eq, ContinuousMap.coe_mk]
   unfold splitAtLast
-  simp only [ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply, 
+  simp only [ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
     Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq,
     Homeomorph.symm_trans_apply, Homeomorph.prodCongr_symm, Homeomorph.refl_symm,
     Homeomorph.symm_symm, Homeomorph.apply_symm_apply, Homeomorph.funSplitAt_symm_apply,
@@ -295,7 +292,7 @@ def hequivBoundaryJar {n : ℕ} : (I^ Fin n) ≃ₕ ⊔I^(n + 1) where
           Homeomorph.symm_symm, Homeomorph.apply_symm_apply, EmbeddingLike.apply_eq_iff_eq,
           Prod.mk.injEq, true_and]
         ext i
-        simp only [Homeomorph.piCongr_apply, 
+        simp only [Homeomorph.piCongr_apply,
           ]
         rfl
       map_one_left y := by
@@ -325,7 +322,6 @@ instance instContractibleSpace {n : ℕ} : ContractibleSpace (I^ Fin n) := by
 instance instContractibleSpaceBoundaryJar {n : ℕ} : ContractibleSpace (boundaryJar (n + 1)) :=
   ContinuousMap.HomotopyEquiv.contractibleSpace hequivBoundaryJar.symm
 
-end instContractibleSpaceBoundaryJar
 
 
 end Cube

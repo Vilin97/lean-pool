@@ -36,9 +36,9 @@ import LeanPool.WhiteheadTheorem.Shapes.Pushout
 import LeanPool.WhiteheadTheorem.Shapes.UnitInterval
 
 /-!
-# Whitehead's theorem
+# Whitehead's theorem for CW-complexes
 
-Source: https://github.com/jzxia/WhiteheadTheorem
+Source: url:https://github.com/jzxia/WhiteheadTheorem
 Authors: Jiazhen Xia
 Status: verified
 Main declarations: `WhiteheadTheorem`

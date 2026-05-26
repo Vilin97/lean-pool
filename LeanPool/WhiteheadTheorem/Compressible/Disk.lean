@@ -23,7 +23,6 @@ open CategoryTheory TopCat
 open scoped unitInterval ContinuousMap Topology Topology.Homotopy
 
 
-section unique_pi_mapCyl
 
 universe u
 
@@ -109,9 +108,9 @@ lemma bijective_iStar_mapCyl_of_isIso
   exact hf
 
 /-- If `f` is a weak homotopy equivalence, then the relative homotopy group
-`π﹍ n (MapCyl f) (MapCyl.top f) (MapCyl.domInclToTop f x₀)` is zero for all `n ≥ 1` and `x`. -/
+`π_rel n (MapCyl f) (MapCyl.top f) (MapCyl.domInclToTop f x₀)` is zero for all `n ≥ 1` and `x`. -/
 theorem unique_pi_mapCyl_of_isWeakHomotopyEquiv (hf : IsWeakHomotopyEquiv f.hom) :
-    Nonempty <| Unique <| π﹍ (n + 1) (MapCyl f) (MapCyl.top f) (MapCyl.domInclToTop f x₀) := by
+    Nonempty <| Unique <| π_rel (n + 1) (MapCyl f) (MapCyl.top f) (MapCyl.domInclToTop f x₀) := by
   replace hf := isIso_inducedPointedHom_of_isWeakHomotopyEquiv hf
   apply unique_relHomotopyGroup_of_bijective_iStar
   intro n
@@ -120,7 +119,6 @@ theorem unique_pi_mapCyl_of_isWeakHomotopyEquiv (hf : IsWeakHomotopyEquiv f.hom)
 
 end RelHomotopyGroup
 
-end unique_pi_mapCyl
 
 
 
@@ -235,7 +233,7 @@ lemma exists_relGenLoop_homotopicWith_isMapOfPairs
           ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
           Prod.map_apply, id_eq, ContinuousMap.prodSwap_apply]
         have := congr_fun H2prop.right ⟨⟨y, hy⟩, t⟩
-        simp only [ContinuousMap.comp_apply, ContinuousMap.coe_mk, cubeBoundaryIncl, 
+        simp only [ContinuousMap.comp_apply, ContinuousMap.coe_mk, cubeBoundaryIncl,
           Function.comp_apply, Prod.map_apply, id_eq, H1'] at this
         change _ = H2 ({ down := y }, t) at this
         rw [← this]
@@ -250,12 +248,12 @@ lemma homotopicWith_isMapOfPairs_of_relGenLoop_homotopic
     { toHomotopy := fg.toHomotopy
       prop' t y hy := (fg.prop' t).left y hy }
 
-/-- Suppose `n ≥ 1` and the relative homotopy group `π﹍ n X A a` is zero for all `a : A`.
+/-- Suppose `n ≥ 1` and the relative homotopy group `π_rel n X A a` is zero for all `a : A`.
 If `f` is a continuous map of pairs from `(I^ Fin n, ∂I^n)` to `(X, A)`,
 then it is as a map of pairs homotopic to a constant map. -/
 theorem homotopicWith_const_isMapOfPairs_of_unique_pi
     (f : C(I^Fin (n + 1), X)) (hf : IsMapOfPairs X A f)
-    (hpi : ∀ a : A, Nonempty <| Unique <| π﹍ (n + 1) X A a) :
+    (hpi : ∀ a : A, Nonempty <| Unique <| π_rel (n + 1) X A a) :
     ∃ a : A, f.HomotopicWith (ContinuousMap.const _ a) fun h ↦ IsMapOfPairs X A h := by
   obtain ⟨a, g, H⟩ := exists_relGenLoop_homotopicWith_isMapOfPairs X A f hf
   have g0 := (hpi a |>.some.uniq ⟦g⟧).trans (hpi a |>.some.uniq ⟦RelGenLoop.const⟧).symm
@@ -278,12 +276,12 @@ variable {n : ℕ} (X : Type u) [TopologicalSpace X] (A : Set X)
 if it sends the boundary `∂𝔻 n` into `A`. -/
 abbrev IsMapOfPairs (f : C(𝔻 n, X)) : Prop := ∀ y : ∂𝔻 n, f (diskBoundaryIncl n y) ∈ A
 
-/-- Suppose `n ≥ 1` and the relative homotopy group `π﹍ n X A a` is zero for all `a : A`.
+/-- Suppose `n ≥ 1` and the relative homotopy group `π_rel n X A a` is zero for all `a : A`.
 If `f` is a continuous map of pairs from `(∂𝔻 n, 𝔻 n)` to `(X, A)`,
 then it is as a map of pairs homotopic to a constant map. -/
 theorem homotopicWith_const_isMapOfPairs_of_unique_pi
     (f : C(disk.{u} (n + 1), X)) (hf : IsMapOfPairs X A f)
-    (hpi : ∀ a : A, Nonempty <| Unique <| π﹍ (n + 1) X A a) :
+    (hpi : ∀ a : A, Nonempty <| Unique <| π_rel (n + 1) X A a) :
     ∃ a : A, f.HomotopicWith (ContinuousMap.const _ a) fun h ↦ IsMapOfPairs X A h := by
   let e := diskPair.homeoCubePairULift.{u} (n + 1)
   let idown : C(𝕀 (n + 1), I^ Fin (n + 1)) := ⟨ULift.down.{u}, continuous_uliftDown⟩
@@ -496,12 +494,12 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
           rw [Cyl.stretchToWall_eq_zero_of_norm_eq_one hx1]
           rw [H.apply_zero] }
 
-/-- Suppose `n ≥ 1` and the relative homotopy group `π﹍ n X A a` is zero for all `a : A`.
+/-- Suppose `n ≥ 1` and the relative homotopy group `π_rel n X A a` is zero for all `a : A`.
 If `f` is a continuous map of pairs from `(∂𝔻 n, 𝔻 n)` to `(X, A)`,
 then it is relative to `∂𝔻 n` homotopic to a map into `A`. -/
 theorem homotopicRel_boundary_of_unique_pi
     (f : C(disk.{u} (n + 1), X)) (hf : IsMapOfPairs X A f)
-    (hpi : ∀ a : A, Nonempty <| Unique <| π﹍ (n + 1) X A a) :
+    (hpi : ∀ a : A, Nonempty <| Unique <| π_rel (n + 1) X A a) :
     ∃ l : C(disk.{u} (n + 1), X),
       Set.range l ⊆ A ∧ f.HomotopicRel l (Set.range (diskBoundaryIncl _)) := by
   obtain ⟨a, H⟩ := homotopicWith_const_isMapOfPairs_of_unique_pi X A f hf hpi
@@ -517,11 +515,11 @@ theorem homotopicRel_boundary_of_unique_pi
   apply homotopicRel_boundary_of_homotopicWith_isMapOfPairs X A
   use g
 
-/-- For `n ≥ 1`, if the relative homotopy group `π﹍ (n + 1) X A a` is zero
+/-- For `n ≥ 1`, if the relative homotopy group `π_rel (n + 1) X A a` is zero
 (regardless of the basepoint `a`), then the inclusion map form `A` to `X` is `n`-compressible. -/
 theorem isCompressible_subtype_val_of_unique_pi
     (n : ℕ) (X : Type u) [TopologicalSpace X] (A : Set X)
-    (hpi : ∀ a : A, Nonempty <| Unique <| π﹍ (n + 1) X A a) :
+    (hpi : ∀ a : A, Nonempty <| Unique <| π_rel (n + 1) X A a) :
     IsCompressible (diskBoundaryIncl (n + 1))
       (ofHom ⟨Subtype.val, continuous_subtype_val⟩ : of A ⟶ of X) where
   sq_hasLift := fun {F f} sq ↦ by
@@ -598,11 +596,11 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
           unfold l a
           simp only [
             ContinuousMap.coe_mk, Function.comp_apply, ContinuousMap.HomotopyWith.apply_one,
-            Subtype.coe_eta, hom_comp, hom_ofHom, 
+            Subtype.coe_eta, hom_comp, hom_ofHom,
             ]
           rfl
         prop' t x := by
-          simp only [Set.mem_range, IsEmpty.exists_iff, 
+          simp only [Set.mem_range, IsEmpty.exists_iff,
             ContinuousMap.coe_mk, IsEmpty.forall_iff] }
 
 /-- If `φ` is a weak homotopy equivalence,
@@ -621,7 +619,7 @@ lemma isCompressible_mapcyl_domInclFromTop_of_isWeakHomotopyEquiv
         RelHomotopyGroup.bijective_iStar_mapCyl_of_isIso 0 φ x (hφ x)
       exact isCompressible_zero_subtype_val_of_bijective_iStar_zero _ _ _ hbi
   | succ n =>
-      have hpi a : Nonempty <| Unique <| π﹍ (n + 1) (MapCyl φ) (MapCyl.top φ) a := by
+      have hpi a : Nonempty <| Unique <| π_rel (n + 1) (MapCyl φ) (MapCyl.top φ) a := by
         let x := (TopCat.MapCyl.domHomeoTop φ).invFun a
         convert RelHomotopyGroup.unique_pi_mapCyl_of_isWeakHomotopyEquiv n φ x hφ
         unfold MapCyl.domInclToTop x

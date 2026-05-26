@@ -171,7 +171,6 @@ variable (f : C(∂𝕀 (n + 1), Y))
 variable (h : C(⊔𝕀 (n + 1) × I, Y))
 
 
-section jarMap
 
 open cubeBoundaryJar
 
@@ -246,7 +245,6 @@ noncomputable def jarMap
     (botSidesCoverMapVec f h) (botSidesCoverMapVec_compatible f h fh)
     (botSidesCover_cover n) (botSidesCover_closed n)
 
-end jarMap
 
 
 /-- `backMap` -/

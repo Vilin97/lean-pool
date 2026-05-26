@@ -11,7 +11,6 @@ import Mathlib.Topology.Category.TopCat.Limits.Products
 open CategoryTheory
 open scoped Topology
 
-section
 
 variable {X Y Y' Z : Type*}
 variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Y'] [TopologicalSpace Z]
@@ -29,7 +28,6 @@ lemma TopCat.exp_homEquiv_naturality_right [LocallyCompactSpace X]
     (f : C(Y', Y)) (g : C(Y, C(X, Z))) :
   (g.comp f).uncurry = g.uncurry.comp (f.prodMap (ContinuousMap.id X)) := rfl
 
-end
 
 
 namespace TopCat

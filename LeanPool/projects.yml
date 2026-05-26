@@ -1261,6 +1261,7 @@ projects:
     authors:
       - Jiazhen Xia
     source:
+      url: https://github.com/jzxia/WhiteheadTheorem
       github_repo: jzxia/WhiteheadTheorem
     status: verified
     main_declarations:

@@ -71,7 +71,7 @@ theorem isExactAt_iStar_jStar :
 
 /-- `Ker ∂ ⊇ Im j*` in
 `⋯ πₙ₊₁(X, a) ---j*ₙ---> πₙ₊₁(X, A, a) ---∂ₙ---> πₙ(A, a) ⋯` -/
-theorem ker_bd_supset_im_jStar (f : π﹍ (n + 1) X A a) :
+theorem ker_bd_supset_im_jStar (f : π_rel (n + 1) X A a) :
     (∃ g, jStar (n+1) X A a g = f) → bd n X A a f = default := fun ⟨g, hgf⟩ ↦ by
   change _ = ⟦GenLoop.const⟧
   let g' := Quotient.out g
@@ -99,10 +99,12 @@ theorem ker_bd_supset_im_jStar (f : π﹍ (n + 1) X A a) :
         rw [show (g' (Cube.inclToTop y) : X) = ↑a from
           g'.property _ (Cube.inclToTop.mem_boundary y)] }
 
+namespace ker_bd_subset_im_jStar
+
 /-- g'' (yₙ, (y₀, y₁, …, yₙ₋₁)) = if yₙ ≤ 1/2
       then f' (y₀, y₁, …, yₙ₋₁, 2 * yₙ)
       else H (2 * yₙ - 1, (y₀, y₁, …, yₙ₋₁)) -/
-noncomputable def ker_bd_subset_im_jStar.g''
+noncomputable def g''
     (f' : RelGenLoop (n + 1) X A a) (hf0 : bd' n X A a f' = ⟦GenLoop.const⟧) :
     C(I × (I^ Fin n), X) :=
   let H : HomotopyRel .. := Quotient.eq.mp hf0 |>.some
@@ -144,7 +146,7 @@ noncomputable def ker_bd_subset_im_jStar.g''
         congr 1 }
 
 /-- `g''` is an element of `Ω^ (Fin (n+1)) X a`, i.e., it sends the boundary to `a`. -/
-noncomputable def ker_bd_subset_im_jStar.g'
+noncomputable def g'
     (f' : RelGenLoop (n + 1) X A a) (hf0 : bd' n X A a f' = ⟦GenLoop.const⟧) :
     Ω^ (Fin (n+1)) X a :=
   let g'' := ker_bd_subset_im_jStar.g'' _ _ _ _ f' hf0
@@ -195,7 +197,7 @@ noncomputable def ker_bd_subset_im_jStar.g'
 /-- G'' (t, (yₙ, (y₀, y₁, …, yₙ₋₁))) = if yₙ ≤ (1 + t) / 2
       then f' (y₀, y₁, …, yₙ₋₁, (2 / (1 + t)) * yₙ)
       else H (2 * yₙ - (1 + t), (y₀, y₁, …, yₙ₋₁)) -/
-noncomputable def ker_bd_subset_im_jStar.G''
+noncomputable def G''
     (f' : RelGenLoop (n + 1) X A a) (hf0 : bd' n X A a f' = ⟦GenLoop.const⟧) :
     C(I × (I × (I^ Fin n)), X) :=
   let H : HomotopyRel .. := Quotient.eq.mp hf0 |>.some
@@ -232,9 +234,11 @@ noncomputable def ker_bd_subset_im_jStar.G''
         simp only [Function.comp_apply, coe_mk] at this
         exact this.symm.trans (by congr 1) }
 
+end ker_bd_subset_im_jStar
+
 /-- `Ker ∂ ⊆ Im j*` in
 `⋯ πₙ₊₁(X, a) ---j*ₙ---> πₙ₊₁(X, A, a) ---∂ₙ---> πₙ(A, a) ⋯` -/
-theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
+theorem ker_bd_subset_im_jStar (f : π_rel (n + 1) X A a) :
     bd n X A a f = default → ∃ g, jStar (n+1) X A a g = f := fun hf0 ↦ by
   change _ = ⟦GenLoop.const⟧ at hf0
   let f' := Quotient.out f
@@ -424,14 +428,14 @@ theorem isExactAt_bd_iStar :
 
 -- #check (RelGenLoop n X A a : Set C(I^ Fin n, X))
 -- #check (iStar n X A a : π_ n A a → π_ n X a)
--- #check (jStar n X A a : π_ n X a → π﹍ n X A a)
--- #check (jStar (n+1) X A a : π_ (n+1) X a → π﹍ (n+1) X A a)
--- #check (bd n X A a : π﹍ (n+1) X A a → π_ n A a)
+-- #check (jStar n X A a : π_ n X a → π_rel n X A a)
+-- #check (jStar (n+1) X A a : π_ (n+1) X a → π_rel (n+1) X A a)
+-- #check (bd n X A a : π_rel (n+1) X A a → π_ n A a)
 
 theorem unique_relHomotopyGroup_of_bijective_iStar
     {X : TopCat.{u}} {A : Set X} (a : A)
     (hbi : ∀ n, Function.Bijective <| iStar n X A a) :
-    ∀ n, Nonempty <| Unique <| π﹍ (n + 1) X A a :=
+    ∀ n, Nonempty <| Unique <| π_rel (n + 1) X A a :=
   fun n ↦ ExactSeq.unique_mid_of_five
     (iStar (n + 1) _ _ _)
     (jStar (n + 1) _ _ _)

@@ -270,14 +270,17 @@ noncomputable def isoQDiskBoundary : pDiskBoundary n p ≅ pDiskBoundary n q :=
 end pDiskBoundary
 
 
+namespace pDiskPair
+
 /-- Homeomorphism from the pair (pDisk n p, pDiskBoundary n p)
 to the pair (pDisk n q, pDiskBoundary n q) -/
-noncomputable def pDiskPair.homeoQDiskPair :
+noncomputable def homeoQDiskPair :
     CategoryTheory.Arrow.mk (pDiskBoundaryIncl n p) ≅
     CategoryTheory.Arrow.mk (pDiskBoundaryIncl n q) :=
   CategoryTheory.Arrow.isoMk' _ _
     (pDiskBoundary.isoQDiskBoundary n p q) (pDisk.isoQDisk n p q) rfl
 
+end pDiskPair
 
 end TopCat
 
@@ -417,17 +420,21 @@ noncomputable def diskBoundaryIsoCubeBoundary (n : ℕ) :
     diskBoundary n ≅ TopCat.of <| Cube.boundary (Fin n) :=
   isoOfHomeo (diskBoundaryHomeoCubeBoundary n)
 
+namespace diskPair
+
 /-- `homeoCubePair` -/
-noncomputable def diskPair.homeoCubePair (n : ℕ) :
+noncomputable def homeoCubePair (n : ℕ) :
     CategoryTheory.Arrow.mk (diskBoundaryIncl n) ≅
     CategoryTheory.Arrow.mk (TopCat.ofHom (Cube.boundaryIncl n)) :=
   CategoryTheory.Arrow.isoMk' _ _
     (diskBoundaryIsoCubeBoundary n) (diskIsoCube n) rfl
 
-lemma diskPair.homeoCubePair_comm (n : ℕ) :
-    (diskBoundaryIncl n) ≫ (diskPair.homeoCubePair n).hom.right =
-    (diskPair.homeoCubePair n).hom.left ≫ TopCat.ofHom (Cube.boundaryIncl n) := by
+lemma homeoCubePair_comm (n : ℕ) :
+    (diskBoundaryIncl n) ≫ (homeoCubePair n).hom.right =
+    (homeoCubePair n).hom.left ≫ TopCat.ofHom (Cube.boundaryIncl n) := by
   rfl
+
+end diskPair
 
 --------------------------------------------------------------------------------------
 
@@ -450,17 +457,21 @@ noncomputable def diskBoundaryIsoCubeBoundaryULift (n : ℕ) :
     diskBoundary.{u} n ≅ cubeBoundary.{u} n :=
   isoOfHomeo (diskBoundaryHomeoCubeBoundaryULift n)
 
+namespace diskPair
+
 /-- Homeomorphism from the pair (TopCat.disk.{u} n, TopCat.diskBoundary.{u} n)
 to the pair (TopCat.cube.{u} n, TopCat.cubeBoundary.{u} n) -/
-noncomputable def diskPair.homeoCubePairULift (n : ℕ) :
+noncomputable def homeoCubePairULift (n : ℕ) :
     CategoryTheory.Arrow.mk (diskBoundaryIncl n) ≅
     CategoryTheory.Arrow.mk (cubeBoundaryIncl n) :=
   CategoryTheory.Arrow.isoMk' _ _
     (diskBoundaryIsoCubeBoundaryULift n) (diskIsoCubeULift n) rfl
 
-lemma diskPair.homeoCubePairULift_comm (n : ℕ) :
-    (diskBoundaryIncl.{u} n) ≫ (diskPair.homeoCubePairULift.{u} n).hom.right =
-    (diskPair.homeoCubePairULift.{u} n).hom.left ≫ (cubeBoundaryIncl.{u} n) := by
+lemma homeoCubePairULift_comm (n : ℕ) :
+    (diskBoundaryIncl.{u} n) ≫ (homeoCubePairULift.{u} n).hom.right =
+    (homeoCubePairULift.{u} n).hom.left ≫ (cubeBoundaryIncl.{u} n) := by
   rfl
+
+end diskPair
 
 end TopCat

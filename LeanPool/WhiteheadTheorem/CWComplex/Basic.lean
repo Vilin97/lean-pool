@@ -29,12 +29,12 @@ This file defines (relative) CW-complexes.
 
 open CategoryTheory TopCat
 
--- universe u
+universe u
 
 namespace RelCWComplex
 
 /-- A type witnessing that `X'` is obtained from `X` by attaching generalized cells `f : S ⟶ D` -/
-structure AttachGeneralizedCells.{u} {S D : TopCat.{u}} (f : S ⟶ D) (X X' : TopCat.{u}) where
+structure AttachGeneralizedCells {S D : TopCat.{u}} (f : S ⟶ D) (X X' : TopCat.{u}) where
   /-- The index type over the generalized cells -/
   cells : Type u
   /-- An attaching map for each generalized cell -/
@@ -43,7 +43,7 @@ structure AttachGeneralizedCells.{u} {S D : TopCat.{u}} (f : S ⟶ D) (X X' : To
   isoPushout : X' ≅ Limits.pushout (Limits.Sigma.desc attachMaps) (Limits.Sigma.map fun _ ↦ f)
 
 /-- A type witnessing that `X'` is obtained from `X` by attaching `(n + 1)`-disks -/
-abbrev AttachCells.{u} (n : ℕ) := AttachGeneralizedCells.{u} (diskBoundaryIncl n)
+abbrev AttachCells (n : ℕ) := AttachGeneralizedCells.{u} (diskBoundaryIncl n)
 
 end RelCWComplex
 
@@ -60,29 +60,29 @@ structure RelCWComplex where
   attachCells (n : ℕ) : RelCWComplex.AttachCells n (sk n) (sk (n + 1))
 
 /-- A CW-complex is a relative CW-complex whose `sk 0` (i.e., $(-1)$-skeleton) is empty. -/
-structure CWComplex.{u} extends RelCWComplex.{u} where
+structure CWComplex extends RelCWComplex.{u} where
   /-- `sk 0` (i.e., the $(-1)$-skeleton) is empty. -/
   isEmpty_sk_zero : IsEmpty (sk 0)
 
 
 namespace RelCWComplex
 
-noncomputable section Topology
-
 variable {n : ℕ} {X X' : TopCat.{u}}
+
+namespace AttachCells
 
 /-- The inclusion map from `X` to `X'`, given that `X'` is obtained from `X` by attaching
 `(n + 1)`-disks -/
-def AttachCells.incl (att : AttachCells n X X') : X ⟶ X' :=
+noncomputable def incl (att : AttachCells n X X') : X ⟶ X' :=
   Limits.pushout.inl (Limits.Sigma.desc att.attachMaps)
     (Limits.Sigma.map fun _ ↦ diskBoundaryIncl n) ≫ att.isoPushout.inv
 
 /-- The top side of the pushout square -/
-abbrev AttachCells.sigmaAttachMaps (att : AttachCells n X X') :=
+noncomputable abbrev sigmaAttachMaps (att : AttachCells n X X') :=
   Limits.Sigma.desc att.attachMaps
 
 /-- The left side of the pushout square -/
-abbrev AttachCells.sigmaDiskBoundaryIncl (att : AttachCells n X X') :
+noncomputable abbrev sigmaDiskBoundaryIncl (att : AttachCells n X X') :
     (∐ fun (_ : att.cells) ↦ ∂𝔻 n) ⟶ ∐ fun (_ : att.cells) ↦ 𝔻 n :=
   Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n
 
@@ -91,32 +91,35 @@ abbrev AttachCells.sigmaDiskBoundaryIncl (att : AttachCells n X X') :
 using the abbreviation `att.sigmaDiskBoundaryIncl` results in type mismatch,
 which seems to be a universe level issue.
 So the abbreviation is temporarily replaced with the full definition.) -/
-abbrev AttachCells.pushout_inl (att : AttachCells.{u} n X X') :=
+noncomputable abbrev pushout_inl (att : AttachCells.{u} n X X') :=
   Limits.pushout.inl att.sigmaAttachMaps
     (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
 --  Limits.pushout.inl att.sigmaAttachMaps att.sigmaDiskBoundaryIncl
 
 /-- The bottom side of the pushout square -/
-abbrev AttachCells.pushout_inr (att : AttachCells n X X') :=
+noncomputable abbrev pushout_inr (att : AttachCells n X X') :=
   Limits.pushout.inr att.sigmaAttachMaps
     (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
 -- Limits.pushout.inr att.sigmaAttachMaps att.sigmaDiskBoundaryIncl
 
 /-- The pushout square is a pushout. -/
-lemma AttachCells.pushout_isPushout (att : AttachCells n X X') :
+lemma pushout_isPushout (att : AttachCells n X X') :
     IsPushout att.sigmaAttachMaps (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
       att.pushout_inl att.pushout_inr :=
   IsPushout.of_hasPushout att.sigmaAttachMaps
     (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)
 
+end AttachCells
+
 /-- The inclusion map from `sk n` (i.e., the $(n-1)$-skeleton) to `sk (n + 1)` (i.e., the
 $n$-skeleton) of a relative CW-complex -/
-def skInclSucc (X : RelCWComplex) (n : ℕ) : X.sk n ⟶ X.sk (n + 1) :=
+noncomputable def skInclSucc (X : RelCWComplex) (n : ℕ) : X.sk n ⟶ X.sk (n + 1) :=
   (X.attachCells n).incl
 
 /-- The inclusion map from `sk n` (i.e., the $(n-1)$-skeleton) to `sk m` (i.e., the
 $(m-1)$-skeleton) of a relative CW-complex -/
-def skInclToSk (X : RelCWComplex) {n : ℕ} {m : ℕ} (hnm : n ≤ m) : X.sk n ⟶ X.sk m :=
+noncomputable def skInclToSk (X : RelCWComplex) {n : ℕ} {m : ℕ} (hnm : n ≤ m) :
+    X.sk n ⟶ X.sk m :=
   (Functor.ofSequence X.skInclSucc).map (homOfLE hnm)
   -- Functor.OfSequence.map X.skInclSucc n m hnm
 
@@ -126,17 +129,17 @@ def skInclToSk (X : RelCWComplex) {n : ℕ} {m : ℕ} (hnm : n ≤ m) : X.sk n �
 --   (X.attachCells n).sigmaDiskBoundaryIncl
 
 /-- The topology on a relative CW-complex -/
-def toTopCat (X : RelCWComplex) : TopCat.{u} :=
+noncomputable def toTopCat (X : RelCWComplex) : TopCat.{u} :=
   Limits.colimit (Functor.ofSequence X.skInclSucc)
 
-instance : Coe RelCWComplex TopCat where
+noncomputable instance : Coe RelCWComplex TopCat where
   coe X := toTopCat X
 
-instance : Coe CWComplex TopCat where
+noncomputable instance : Coe CWComplex TopCat where
   coe X := toTopCat X.toRelCWComplex
 
 /-- The inclusion map from `sk n` (i.e., the $(n-1)$-skeleton of `X`) to `X` -/
-def skIncl (X : RelCWComplex.{u}) (n : ℕ) : X.sk n ⟶ X :=
+noncomputable def skIncl (X : RelCWComplex.{u}) (n : ℕ) : X.sk n ⟶ X :=
   Limits.colimit.ι (Functor.ofSequence _) n
 
 @[simp]
@@ -146,8 +149,6 @@ lemma skInclSucc_skIncl_eq (X : RelCWComplex.{u}) (n : ℕ) :
   convert Limits.colimit.w (Functor.ofSequence X.skInclSucc) <| homOfLE <| Nat.le_succ <| n
   simp only [Nat.succ_eq_add_one, homOfLE_leOfHom, Functor.ofSequence_map_homOfLE_succ]
   rfl
-
-end Topology
 
 
 namespace AttachGeneralizedCells

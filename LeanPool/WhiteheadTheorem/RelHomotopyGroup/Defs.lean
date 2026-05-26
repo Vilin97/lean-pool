@@ -46,23 +46,27 @@ lemma mem_of_boundaryLid_and_boundaryJar (f : C(I^Fin n, X))
     · exact Set.mem_of_eq_of_mem (hjar y hy) (Subtype.coe_prop a)
   · intro y hy; exact hjar y hy
 
-lemma Homotopic.refl {f : RelGenLoop n X A a} : Homotopic f f :=
+namespace Homotopic
+
+lemma refl {f : RelGenLoop n X A a} : Homotopic f f :=
   ContinuousMap.HomotopicWith.refl f.val f.property
 
-lemma Homotopic.symm {f g : RelGenLoop n X A a} (H : Homotopic f g) : Homotopic g f :=
+lemma symm {f g : RelGenLoop n X A a} (H : Homotopic f g) : Homotopic g f :=
   ContinuousMap.HomotopicWith.symm H
 
-lemma Homotopic.trans {f g h : RelGenLoop n X A a}
+lemma trans {f g h : RelGenLoop n X A a}
     (H : Homotopic f g) (G : Homotopic g h) : Homotopic f h :=
   ContinuousMap.HomotopicWith.trans H G
 
 /-- `RelGenLoop.Homotopic` is an equivalence relationship. -/
-theorem Homotopic.equiv : Equivalence (@Homotopic n X _ A a) :=
-  ⟨@Homotopic.refl n X _ A a, @Homotopic.symm n X _ A a, @Homotopic.trans n X _ A a⟩
+theorem equiv : Equivalence (@Homotopic n X _ A a) :=
+  ⟨@refl n X _ A a, @symm n X _ A a, @trans n X _ A a⟩
 
-instance Homotopic.setoid (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :
+instance setoid (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :
     Setoid (RelGenLoop n X A a) :=
-  ⟨@Homotopic n X _ A a, @Homotopic.equiv n X _ A a⟩
+  ⟨@Homotopic n X _ A a, @equiv n X _ A a⟩
+
+end Homotopic
 
 /-- The 0-dimensional relative generalized loops based at `a` are in bijection with
 the 0-dimensional generalized loops based at `a`. -/
@@ -83,8 +87,8 @@ def RelHomotopyGroup (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a :
   Quotient (RelGenLoop.Homotopic.setoid n X A a)
 
 -- scoped[Topology] notation "π_" => RelHomotopyGroup
-/-- `«termπ﹍»` -/
-scoped[Topology] notation "π﹍" => RelHomotopyGroup   -- U+FE4D Dashed Low Line
+/-- `«termπ_rel»` -/
+scoped[Topology] notation "π_rel" => RelHomotopyGroup   -- U+FE4D Dashed Low Line
 
 instance RelHomotopyGroup.inhabited {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A} :
     Inhabited (RelHomotopyGroup n X A a) :=
@@ -97,7 +101,7 @@ variable (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A)
 
 /-- The 0-th relative homotopy "group" `π₀(X, A, a)` is in bijection with
 the 0-th homotopy "group" `π₀(X, a)`. -/
-def equivPi0 : π﹍ 0 X A a ≃ π_ 0 X a :=
+def equivPi0 : π_rel 0 X A a ≃ π_ 0 X a :=
   Quotient.congr (RelGenLoop.equivGenLoop X A a) fun _ _ ↦
     ⟨ fun H ↦ Nonempty.intro
         { toHomotopy := H.some.toHomotopy
@@ -126,13 +130,13 @@ def iStar : π_ n A a → π_ n X a :=
           rfl }
 
 /-- `jStar'` -/
-def jStar' (f : Ω^ (Fin n) X a) : π﹍ n X A a :=
+def jStar' (f : Ω^ (Fin n) X a) : π_rel n X A a :=
   Quotient.mk _ ⟨f,
     ⟨fun y hy ↦ Set.mem_of_eq_of_mem (f.property y hy) (Subtype.coe_prop a),
       fun y hy ↦ f.property y <| (Cube.boundaryJar_subset_boundary n) hy ⟩ ⟩
 
 /-- The inclusion map $j_*$ (of pointed sets) from πₙ(A, a) to πₙ(X, A, a) -/
-def jStar : π_ n X a → π﹍ n X A a :=
+def jStar : π_ n X a → π_rel n X A a :=
   Quotient.lift (jStar' n X A a) fun f g H ↦
     Quotient.sound <| Nonempty.intro
       { toHomotopy := H.some.toHomotopy
@@ -163,7 +167,7 @@ def bd' (f : RelGenLoop (n + 1) X A a) : π_ n A a :=
         exact Cube.inclToTop.mem_boundaryJar_of hy ⟩
 
 /-- The boundary map $∂$ (of pointed sets) from πₙ₊₁(X, A, a) to πₙ(A, a) -/
-def bd : π﹍ (n + 1) X A a → π_ n A a :=
+def bd : π_rel (n + 1) X A a → π_ n A a :=
   Quotient.lift (bd' n X A a) fun f g H ↦ Quotient.sound <| Nonempty.intro
     { toFun ty :=
         ⟨H.some.toHomotopy.comp (ContinuousMap.Homotopy.refl Cube.inclToTop) ty,
@@ -183,7 +187,6 @@ def bd : π﹍ (n + 1) X A a → π_ n A a :=
         exact f.property.right _ (Cube.inclToTop.mem_boundaryJar_of hy) }
 
 
-section PointedSets
 /-!
 The induced maps `iStar`, `jStar`, and `bd` preserve the distinguished point,
 i.e., they map (the homotopy class of) the constant loop to the constant loop.
@@ -207,7 +210,6 @@ instance iStar_isPointedMap : IsPointedMap (iStar n X A a) := ⟨by apply iStar'
 instance jStar_isPointedMap : IsPointedMap (jStar n X A a) := ⟨by apply jStar'_const⟩
 instance bd_isPointedMap : IsPointedMap (bd n X A a) := ⟨by apply bd'_const⟩
 
-end PointedSets
 
 end RelHomotopyGroup
 
@@ -232,13 +234,17 @@ def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
           rw [g_bd y (Cube.boundaryJar_subset_boundary n hy)];
           exact f.property.right y hy ⟩⟩
 
-lemma ofHomotopyRel.eq (f : RelGenLoop n X A a) (g : C(I^Fin n, X))
+namespace ofHomotopyRel
+
+lemma eq (f : RelGenLoop n X A a) (g : C(I^Fin n, X))
     (H : ContinuousMap.HomotopyRel f g (∂I^n)) :
-    ⟦f⟧ = (⟦ofHomotopyRel f g H⟧ : π﹍ n X A a) :=
+    ⟦f⟧ = (⟦ofHomotopyRel f g H⟧ : π_rel n X A a) :=
   Quotient.eq.mpr <| Nonempty.intro
     { toHomotopy := H.toHomotopy
       prop' t := ⟨fun y hy ↦ Set.mem_of_eq_of_mem (H.prop' t y hy) (f.property.left y hy),
         fun y hy ↦ H.prop' t y (Cube.boundaryJar_subset_boundary n hy) |>.trans <|
           f.property.right y hy ⟩ }
+
+end ofHomotopyRel
 
 end RelGenLoop

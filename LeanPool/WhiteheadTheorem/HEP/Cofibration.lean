@@ -16,7 +16,6 @@ open CategoryTheory TopCat
 open scoped Topology unitInterval
 
 
-section HomotopyExtensionProperty
 
 -- def HomotopyExtensionProperty' {A X : TopCat.{u}} (i : A ⟶ X) (Y : TopCat.{u}) : Prop :=
 --   ∀ (f : X ⟶ Y) (h : A × I ⟶ Y), i ≫ f = (TopCat.ofHom (·, 0)) ≫ h
@@ -68,7 +67,6 @@ instance HasCurriedHEP.of_sigma_map {J : Type u} {A B : J → TopCat.{u}}
   ⟨by infer_instance⟩
 
 
-section HasLiftingProperty.of_colimit_ofSequence
 
 variable {C : Type u} [Category.{v, u} C] {A Z Y : C}
   {X : ℕ → C} (i : ∀ n, X n ⟶ X (n + 1))
@@ -182,7 +180,7 @@ noncomputable abbrev coconeDropFirst
           simp only [Functor.ofSequence_obj, Functor.const_obj_obj, homOfLE_leOfHom,
             Functor.ofSequence_map_homOfLE_succ, Functor.const_obj_map, Category.comp_id]
           rw [← cc.w <| homOfLE <| Nat.le_succ <| n + 1]
-          simp_all only [Functor.ofSequence_obj, Nat.succ_eq_add_one, 
+          simp_all only [Functor.ofSequence_obj, Nat.succ_eq_add_one,
             homOfLE_leOfHom, Functor.ofSequence_map_homOfLE_succ] )
 
 /-- `coconeUndropFirst` -/
@@ -282,7 +280,6 @@ instance HasLiftingProperty.of_colimit_ofSequence
         (Limits.colimit.isoColimitCocone
           (Functor.ofSequence.colimitCoconeUndropFirst i)).inv p
 
-end HasLiftingProperty.of_colimit_ofSequence
 
 
 instance HasCurriedHEP.of_colimit_ofSequence {X : ℕ → TopCat.{u}} (i : ∀ n, X n ⟶ X (n + 1))
@@ -354,10 +351,8 @@ lemma CategoryTheory.IsPushout.hasCurriedHEP {A B X Y Z : TopCat.{u}}
     HasCurriedHEP j Z where
   hasLift := by apply po.hasLiftingProperty -- uses `hep.haslift` by typeclass resolution
 
-end HomotopyExtensionProperty
 
 
-section Cofibration
 
 /-- `IsCofibration` -/
 class IsCofibration {A X : TopCat.{u}} (i : A ⟶ X) : Prop where
@@ -456,12 +451,11 @@ instance IsCofibration.prod_unitInterval {A X : TopCat.{u}}
     rw [Category.assoc, exp_PathSpace.eval₀_eq_curriedArgSwap_PathSpace.eval₀]
     rfl
 
-end Cofibration
 
 
 namespace RelCWComplex
 
-lemma HasLiftingProperty.of_comp_iso {C : Type*} [Category C] {A B B' X Y : C}
+lemma _root_.HasLiftingProperty.of_comp_iso {C : Type*} [Category C] {A B B' X Y : C}
     (i : A ⟶ B) (p : X ⟶ Y) (iso : B ≅ B')
     (h : HasLiftingProperty i p) : HasLiftingProperty (i ≫ iso.hom) p :=
   HasLiftingProperty.of_comp_left i iso.hom p

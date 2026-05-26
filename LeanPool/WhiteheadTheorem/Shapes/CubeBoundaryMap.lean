@@ -77,7 +77,6 @@ lemma splitAtLast_snd_mem_boundary_of_mem_sides {n : ℕ} {y : ∂𝕀 (n + 1)}
   simp_all only [Fin.castSucc_mk, Fin.eta]
 
 
-section mapOfBotTopSides
 
 variable {n : ℕ} {Z : TopCat.{u}}
 variable (f01 : zeroOne → (cube.{u} n ⟶ Z))  -- bottom or top face of `∂𝕀 (n + 1)`
@@ -167,6 +166,5 @@ lemma cubeInclToBotOrTop_mapOfBotTopSides
     rw [Homeomorph.apply_symm_apply]
     rfl
 
-end mapOfBotTopSides  -- section
 
 end TopCat.cubeBoundary  -- namespace

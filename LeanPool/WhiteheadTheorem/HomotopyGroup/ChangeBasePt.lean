@@ -203,8 +203,10 @@ structure ChangeBasePt (f₀ : Ω^ (Fin n) X x₀) (p : Path x₀ x₁) where
   /-- `levelHomotopy` -/
   levelHomotopy : LevelHomotopy f₀ res p
 
+namespace ChangeBasePt
+
 /-- `get` -/
-noncomputable def ChangeBasePt.get
+noncomputable def get
     (f₀ : Ω^ (Fin n) X x₀) (p : Path x₀ x₁) : ChangeBasePt f₀ p := by
   let f₀' : C(𝕀 n, X) := (f₀.val).comp ⟨ULift.down, continuous_uliftDown⟩
   let h : C((∂𝕀 n) × I, X) := ⟨fun ⟨_, t⟩ ↦ p t, by fun_prop⟩
@@ -237,6 +239,8 @@ noncomputable def ChangeBasePt.get
         dsimp only [Function.comp_apply, Prod.map_apply, id_eq] at this
         rw [← this]
         dsimp only [ContinuousMap.coe_mk, h] }
+
+end ChangeBasePt
 
 /-- `«term(_#_)»` -/
 scoped[Topology.Homotopy] notation "(" p " # " f₀ ")" =>

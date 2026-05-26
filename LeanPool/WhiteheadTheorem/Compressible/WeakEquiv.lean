@@ -31,7 +31,7 @@ namespace TopCat
 /-- If `f : B ⟶ Y` is a weak homotopy equivalence and $(X, A)$ is a relative CW-complex,
 then the inclusion map `MapCyl.domIncl φ` from `B` to the mapping cylinder of `φ`
 is compressible w.r.t. the inclusion map `A ⟶ X` from the $(-1)$-skeleton to `X`. -/
-theorem IsCompressible.relCWComplex_of_isWeakHomotopyEquiv
+theorem _root_.TopCat.IsCompressible.relCWComplex_of_isWeakHomotopyEquiv
     (hf : IsWeakHomotopyEquiv f.hom) (X : RelCWComplex) :
     IsCompressible (X.skIncl 0) (MapCyl.domIncl f) := by
   apply IsCompressible.relCWComplex_of_diskBoundaryIncl
