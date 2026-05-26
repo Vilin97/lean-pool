@@ -283,7 +283,10 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
               by_cases hi₅ :2*k ≤ i
               · -- hi/hi₂/hi₃/hi₄ neg + hi₅ pos
                 have h₉ : i = 2*k := by omega
-                rw [h₉]; simp; rw [hd]
+                rw [h₉]
+                simp only [Std.le_refl, ↓reduceIte, add_tsub_cancel_left, tsub_self,
+                  le_add_iff_nonneg_right, zero_le, Nat.add_one_sub_one]
+                rw [hd]
                 use (Nat.fib (3 + 4 * k - 2 * (2 * k)) + a_even k 1); omega
               · -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg
                 simp only [hi₅, ↓reduceIte]
@@ -451,7 +454,8 @@ def aux_2 (n : ℕ) (f : flute (n + 3)) (h : f.a (n + 1) = 1) : flute (n + 2) :=
           match n with
           | 0 => simp [hd]
           | 1 =>
-            simp; simp only [Nat.reduceAdd] at h
+            simp only [one_ne_zero, ↓reduceIte, Nat.reduceAdd, Std.le_refl, tsub_self]
+            simp only [Nat.reduceAdd] at h
             rw [hd, f.hd]
             nth_rw 2 [←h]
             nth_rw 2 [←f.hd]
@@ -547,7 +551,7 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
               by_cases hn₅ : n ≤ j+1
               · have hn₆ : j = n-1 := by omega
                 have hn₇ : n ≤ n-1+1 := by omega
-                simp [hn₆, hn₇]
+                simp only [hn₆, hn₇, ↓reduceIte]
                 have key := hn₆ ▸ hj.2
                 have hn₈ : n-1+2 = n+1 := by omega
                 simp only [hn₂, hn₈] at key

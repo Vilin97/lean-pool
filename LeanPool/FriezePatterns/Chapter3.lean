@@ -125,7 +125,8 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
           rw[i_mod_n_sub_one_eq_n_sub_three, Nat.mod_eq_of_lt (one_lt_n_sub_one)]
           rw[Nat.mod_eq_of_lt (by omega)]
           omega
-      simp [boundary',i_mod_n_sub_one_eq_n_sub_three,i_plus_one_mod_n_sub_one_eq_n_sub_two]
+      simp only [i_plus_one_mod_n_sub_one_eq_n_sub_two, i_mod_n_sub_one_eq_n_sub_three,
+        boundary', zero_add]
       have BordOnes : f (1,m) = f (n,m) := by
           rw[@pattern_n.topBordOnes ℚ _ f n _ m]
           rw[@pattern_n.botBordOnes_n ℚ _ f n _ m]
@@ -312,7 +313,9 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f 
             simp [this, hi', botBordOnes_n]
           · specialize ih₂ (by omega) (by omega)
             have : ¬ n ≤ i := by omega
-            unfold frieze_f; simp +arith [this]
+            unfold frieze_f
+            simp +arith only [Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte,
+              ge_iff_le, add_le_add_iff_right, this, add_tsub_cancel_right, gt_iff_lt]
             have h₁ := ih₁ (i+1) (by omega) (by omega)
             have h₂ := ih₁ (i+2) (by omega) (by omega)
             exact div_pos (by linarith [mul_pos h₂ ih₂]) h₁
@@ -384,7 +387,7 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f 
         | zero => simp [frieze_f]
         | one => simp [frieze_f, hn, g.hd]
         | more i ih₁ ih₂ =>
-          simp +arith at ih₁ ih₂ hi
+          simp +arith only at ih₁ ih₂ hi
           specialize ih₁ (by omega)
           specialize ih₂ (by omega)
           have := pattern_nContinuant1 ℚ (frieze_f g) n i (by omega) 1
@@ -409,7 +412,7 @@ lemma fluteToFrieze {n : ℕ} (g : flute n) (hn : n ≠ 0) : arith_fp (frieze_f 
       · intro; simp [botBordZeros_n (i+3) _ (by omega)]
       intro m
       have key₂ := pattern_nContinuant1 ℚ (frieze_f g) n (i+1) (by omega) m
-      simp +arith at key₂
+      simp +arith only at key₂
       rw [key₂]
       have h₁ : (frieze_f g (2, i+m+1)).den = 1 := by
         have := key (m+(i+1))
@@ -495,7 +498,7 @@ lemma main2 (n : ℕ) (hn : n ≠ 0) :
         unfold a_even
         simp
       -- j ≠ 0
-      simp
+      simp only
       have h₄ : ¬ j ≥ 2 * j + 1 := by omega
       unfold a_even
       simp [h₄]
