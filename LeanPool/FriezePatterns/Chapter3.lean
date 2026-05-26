@@ -73,127 +73,122 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
     unfold flute_f
 
     by_cases n_eq_two : n=2
-    simp [n_eq_two]
-    simp [Nat.mod_one]                             --finish if n=2
-
+    · simp [n_eq_two]
+      simp [Nat.mod_one]                             --finish if n=2
     by_cases n_eq_three : n=3
+    · by_cases i_even : i%2 = 0
+      · have i_plus_one_odd : (i+1)%2 = 1 := by omega
+        have i_plus_two_even : (i+2)%2 = 0 := by rw[Nat.add_mod_right i 2, i_even]
 
-    by_cases i_even : i%2 = 0
-    have i_plus_one_odd : (i+1)%2 = 1 := by omega
-    have i_plus_two_even : (i+2)%2 = 0 := by rw[Nat.add_mod_right i 2, i_even]
+        simp [n_eq_three]
+        simp [i_even, i_plus_one_odd]
+        rw[@pattern_n.topBordOnes ℚ _ f n _ m]
+        simp
+        have this : f (2, m) * f (2, m + 1) = 2 :=
+            calc f (2, m) * f (2, m + 1) = f (2, m) * f (2, m + 1) - 1 + 1 := by simp
+                  _= f (3, m)*f (1, m + 1) + 1 := by
+                    rw[@pattern_n.diamond ℚ _ f n _ 1 (m) (by omega)]
+                  _= f (3, m) * 1 + 1 := by rw[@pattern_n.topBordOnes ℚ _ f n _ (m+1)]
+                  _= f (n, m) * 1 + 1 := by rw[n_eq_three]
+                  _= 1 * 1 + 1 := by rw[@pattern_n.botBordOnes_n ℚ _ f n _ (m)]
+                  _= 2 := by ring
 
-    simp [n_eq_three]
-    simp [i_even, i_plus_one_odd]
-    rw[@pattern_n.topBordOnes ℚ _ f n _ m]
-    simp
-    have this : f (2, m) * f (2, m + 1) = 2 :=
-        calc f (2, m) * f (2, m + 1) = f (2, m) * f (2, m + 1) - 1 + 1 := by simp
-              _= f (3, m)*f (1, m + 1) + 1 := by rw[@pattern_n.diamond ℚ _ f n _ 1 (m) (by omega)]
-              _= f (3, m) * 1 + 1 := by rw[@pattern_n.topBordOnes ℚ _ f n _ (m+1)]
-              _= f (n, m) * 1 + 1 := by rw[n_eq_three]
-              _= 1 * 1 + 1 := by rw[@pattern_n.botBordOnes_n ℚ _ f n _ (m)]
-              _= 2 := by ring
+        have this.num : (f (2, m)).num * (f (2, m + 1)).num = 2 := by
+          have key : (f (2, m)).num * (f (2, m + 1)).num = (f (2, m) * f (2, m + 1)).num := by
+            simp [Rat.mul_num, arith_fp.integral n]
+          simp [key, this]
 
-    have this.num : (f (2, m)).num * (f (2, m + 1)).num = 2 := by
-      have key : (f (2, m)).num * (f (2, m + 1)).num = (f (2, m) * f (2, m + 1)).num := by
-        simp [Rat.mul_num, arith_fp.integral n]
-      simp [key, this]
+        have this.num.toNat : (f (2, m)).num.toNat * (f (2, m + 1)).num.toNat = 2 := by
+          have h₃ : 0 ≤ (f (2,m)).num := by
+            linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 m (by omega) (by omega))]
+          have h₄ : 0 ≤ (f (2,m+1)).num := by
+            linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 (m+1) (by omega) (by omega))]
+          zify; rw [Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄, this.num]
 
-    have this.num.toNat : (f (2, m)).num.toNat * (f (2, m + 1)).num.toNat = 2 := by
-      have h₃ : 0 ≤ (f (2,m)).num := by
-        linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 m (by omega) (by omega))]
-      have h₄ : 0 ≤ (f (2,m+1)).num := by
-        linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ 2 (m+1) (by omega) (by omega))]
-      zify; rw [Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄, this.num]
-
-    nth_rewrite 2 [← this.num.toNat]
-    simp                                              --finish if n=3, i_even
-
-    have i_plus_one_even : (i+1)%2 = 0 := by omega
-    simp [n_eq_three, i_plus_one_even]
-    rw[@pattern_n.topBordOnes ℚ _ f n _ m]
-    simp                                          --finish if n=3, i_odd
-
-    --now do 4 ≤ n
+        nth_rewrite 2 [← this.num.toNat]
+        simp                                              --finish if n=3, i_even
+      · have i_plus_one_even : (i+1)%2 = 0 := by omega
+        simp [n_eq_three, i_plus_one_even]
+        rw[@pattern_n.topBordOnes ℚ _ f n _ m]
+        simp                                          --finish if n=3, i_odd
+    -- now do 4 ≤ n
     have four_le_n : 4 ≤ n := by omega
     have one_lt_n_sub_one : 1 < n - 1 := by omega
     have two_lt_n_sub_one : 2 < n - 1 := by omega
 
     by_cases boundary : (i + 1) % (n - 1) = 0
-    -- finish boundary case if (i + 1) % (n - 1) = 0
-    simp[boundary, arith_fp.topBordOnes n m]
-
-
+    · -- finish boundary case if (i + 1) % (n - 1) = 0
+      simp[boundary, arith_fp.topBordOnes n m]
     by_cases boundary' : (i + 2) % (n - 1) = 0
-    -- this now makes sense as n ≥ 4
-    have i_mod_n_sub_one_eq_n_sub_three : (i) % (n - 1) = n - 3 :=
-        calc (i) % (n - 1) = (i + (n - 1)) % (n - 1) :=  by simp
-            _= (i + (n - 1) + 2 - 2) % (n - 1) := by simp
-            _= (i + 2 + (n - 1) - 2) % (n - 1) := by rw[add_right_comm]
-            _= (i + 2 + ((n - 1) - 2)) % (n - 1) := by
-                rw[Nat.add_sub_assoc (Nat.le_of_lt two_lt_n_sub_one) (i+2)]
-            _= ((i + 2) % (n - 1) + ((n - 1) - 2) % (n - 1)) % (n - 1) := by rw[Nat.add_mod]
-            _= (((n - 1) - 2) % (n - 1)) % (n - 1) := by simp [boundary']
-            _= ((n - 1) - 2) % (n - 1) := by rw[Nat.mod_mod]
-            _= (n - 3) % (n - 1) := by rw[Nat.sub_sub n 1 2]
-            _= n - 3 := by rw[Nat.mod_eq_of_lt (by omega)]
+    · -- this now makes sense as n ≥ 4
+      have i_mod_n_sub_one_eq_n_sub_three : (i) % (n - 1) = n - 3 :=
+          calc (i) % (n - 1) = (i + (n - 1)) % (n - 1) :=  by simp
+              _= (i + (n - 1) + 2 - 2) % (n - 1) := by simp
+              _= (i + 2 + (n - 1) - 2) % (n - 1) := by rw[add_right_comm]
+              _= (i + 2 + ((n - 1) - 2)) % (n - 1) := by
+                  rw[Nat.add_sub_assoc (Nat.le_of_lt two_lt_n_sub_one) (i+2)]
+              _= ((i + 2) % (n - 1) + ((n - 1) - 2) % (n - 1)) % (n - 1) := by rw[Nat.add_mod]
+              _= (((n - 1) - 2) % (n - 1)) % (n - 1) := by simp [boundary']
+              _= ((n - 1) - 2) % (n - 1) := by rw[Nat.mod_mod]
+              _= (n - 3) % (n - 1) := by rw[Nat.sub_sub n 1 2]
+              _= n - 3 := by rw[Nat.mod_eq_of_lt (by omega)]
 
-    have i_plus_one_mod_n_sub_one_eq_n_sub_two : (i + 1) % (n - 1) = n - 2 := by
-        rw[Nat.add_mod]
-        rw[i_mod_n_sub_one_eq_n_sub_three, Nat.mod_eq_of_lt (one_lt_n_sub_one)]
-        rw[Nat.mod_eq_of_lt (by omega)]
-        omega
+      have i_plus_one_mod_n_sub_one_eq_n_sub_two : (i + 1) % (n - 1) = n - 2 := by
+          rw[Nat.add_mod]
+          rw[i_mod_n_sub_one_eq_n_sub_three, Nat.mod_eq_of_lt (one_lt_n_sub_one)]
+          rw[Nat.mod_eq_of_lt (by omega)]
+          omega
 
-    simp [boundary',i_mod_n_sub_one_eq_n_sub_three,i_plus_one_mod_n_sub_one_eq_n_sub_two]
-    have BordOnes : f (1,m) = f (n,m) := by
-        rw[@pattern_n.topBordOnes ℚ _ f n _ m]
-        rw[@pattern_n.botBordOnes_n ℚ _ f n _ m]
+      simp [boundary',i_mod_n_sub_one_eq_n_sub_three,i_plus_one_mod_n_sub_one_eq_n_sub_two]
+      have BordOnes : f (1,m) = f (n,m) := by
+          rw[@pattern_n.topBordOnes ℚ _ f n _ m]
+          rw[@pattern_n.botBordOnes_n ℚ _ f n _ m]
 
-    rw[BordOnes]
-    have a₁ : n - 3 + 1 = n - 2 := by omega
-    have a₂ : n = n - 2 + 2 := by omega
-    rw[a₁]
-    nth_rewrite 3 [a₂]
+      rw[BordOnes]
+      have a₁ : n - 3 + 1 = n - 2 := by omega
+      have a₂ : n = n - 2 + 2 := by omega
+      rw[a₁]
+      nth_rewrite 3 [a₂]
 
-    have continuant3 : (f ((n-2), m)) + (f ((n-2) + 1 + 1, m)) =
-        (f (2, m + (n-2))) * (f ((n-2)+ 1,m)) := by
-      rw[pattern_nContinuant1 ℚ f n (n-2) (by omega) m]
-      simp
+      have continuant3 : (f ((n-2), m)) + (f ((n-2) + 1 + 1, m)) =
+          (f (2, m + (n-2))) * (f ((n-2)+ 1,m)) := by
+        rw[pattern_nContinuant1 ℚ f n (n-2) (by omega) m]
+        simp
 
-    have continuant3.num : (f ((n - 2), m)).num + (f ((n - 2) + 1 + 1, m)).num =
-        (f (2, m + ((n - 2)))).num * (f ((n - 2) + 1,m)).num := by
-      have key₁ : (f ((n - 2), m)).num + (f ((n - 2) + 1 + 1, m)).num =
-          (f ((n - 2), m) + f ((n - 2) + 1 + 1, m)).num := by
-        simp [Rat.add_num_den, arith_fp.integral n ((n - 2)) m]
-        simp [arith_fp.integral n ((n - 2) + 1 + 1) m]
-        rw [Rat.mkRat_one]
-        norm_cast
-      have key₂ : (f (2, m + ((n - 2)))).num * (f ((n - 2) + 1,m)).num =
-          (f (2, m + ((n - 2))) * f ((n - 2) + 1,m)).num := by
-        simp [Rat.mul_num, arith_fp.integral n 2 (m + ((n - 2))),
-          arith_fp.integral n ((n - 2) + 1) m]
-      simp [key₁, key₂, continuant3]
+      have continuant3.num : (f ((n - 2), m)).num + (f ((n - 2) + 1 + 1, m)).num =
+          (f (2, m + ((n - 2)))).num * (f ((n - 2) + 1,m)).num := by
+        have key₁ : (f ((n - 2), m)).num + (f ((n - 2) + 1 + 1, m)).num =
+            (f ((n - 2), m) + f ((n - 2) + 1 + 1, m)).num := by
+          simp [Rat.add_num_den, arith_fp.integral n ((n - 2)) m]
+          simp [arith_fp.integral n ((n - 2) + 1 + 1) m]
+          rw [Rat.mkRat_one]
+          norm_cast
+        have key₂ : (f (2, m + ((n - 2)))).num * (f ((n - 2) + 1,m)).num =
+            (f (2, m + ((n - 2))) * f ((n - 2) + 1,m)).num := by
+          simp [Rat.mul_num, arith_fp.integral n 2 (m + ((n - 2))),
+            arith_fp.integral n ((n - 2) + 1) m]
+        simp [key₁, key₂, continuant3]
 
-    have continuant3.num.toNat : (f ((n - 2), m)).num.toNat + (f ((n - 2) + 1 + 1, m)).num.toNat =
-        (f (2, m + ((n - 2)))).num.toNat * (f ((n - 2) + 1,m)).num.toNat := by
-      have h₂ : 0 ≤ (f ((n - 2), m)).num := by
-        linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ ((n - 2)) m (by omega) (by omega))]
-      have h₃ : 0 ≤ (f ((n - 2) + 1 + 1, m)).num := by
-        linarith [Rat.num_pos.mpr
-          (@arith_fp.positive f n _ ((n - 2) + 1 + 1) m (by omega) (by omega))]
-      have h₄ : 0 ≤ (f (2, m + ((n - 2)))).num := by
-        linarith [Rat.num_pos.mpr
-          (@arith_fp.positive f n _ 2 (m + ((n - 2))) (by omega) (by omega))]
-      have h₅ : 0 ≤ (f ((n - 2) + 1,m)).num := by
-        linarith [Rat.num_pos.mpr
-          (@arith_fp.positive f n _ ((n - 2) + 1) m (by omega) (by omega))]
-      zify
-      rw [Int.toNat_of_nonneg h₂, Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄,
-        Int.toNat_of_nonneg h₅, continuant3.num]
+      have continuant3.num.toNat :
+          (f ((n - 2), m)).num.toNat + (f ((n - 2) + 1 + 1, m)).num.toNat =
+          (f (2, m + ((n - 2)))).num.toNat * (f ((n - 2) + 1,m)).num.toNat := by
+        have h₂ : 0 ≤ (f ((n - 2), m)).num := by
+          linarith [Rat.num_pos.mpr (@arith_fp.positive f n _ ((n - 2)) m (by omega) (by omega))]
+        have h₃ : 0 ≤ (f ((n - 2) + 1 + 1, m)).num := by
+          linarith [Rat.num_pos.mpr
+            (@arith_fp.positive f n _ ((n - 2) + 1 + 1) m (by omega) (by omega))]
+        have h₄ : 0 ≤ (f (2, m + ((n - 2)))).num := by
+          linarith [Rat.num_pos.mpr
+            (@arith_fp.positive f n _ 2 (m + ((n - 2))) (by omega) (by omega))]
+        have h₅ : 0 ≤ (f ((n - 2) + 1,m)).num := by
+          linarith [Rat.num_pos.mpr
+            (@arith_fp.positive f n _ ((n - 2) + 1) m (by omega) (by omega))]
+        zify
+        rw [Int.toNat_of_nonneg h₂, Int.toNat_of_nonneg h₃, Int.toNat_of_nonneg h₄,
+          Int.toNat_of_nonneg h₅, continuant3.num]
 
-    -- finish boundary' case if (i + 2) % (n - 1) = 0
-    simp[continuant3.num.toNat]
-
+      -- finish boundary' case if (i + 2) % (n - 1) = 0
+      simp[continuant3.num.toNat]
     have i_plus_one_mod_n_sub_one_bd_below : 1 ≤ (i + 1) % (n - 1) := by
         rw[Nat.one_le_iff_ne_zero]
         simp[boundary]
