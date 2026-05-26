@@ -259,7 +259,7 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
                 simp only [hi₇, ↓reduceIte]
                 by_cases hk₁ : k = 1
                 · -- by_cases hi/hi₂/hi₃ neg + hi₄/hk₁ pos + hk₀ neg
-                  simp [hk₁]
+                  simp only [hk₁, mul_one, Nat.reduceAdd, Nat.reduceMul, Nat.reduceSub, Std.le_refl, ↓reduceIte, tsub_self]
                   have f₁ : a_even k 0 = 1 := by exact hd
                   have f₃ : Nat.fib 3 = 2 := by simp [Nat.fib]
                   have f₄ : Nat.fib 4 = 3 := by simp [Nat.fib]
@@ -271,7 +271,7 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
                   have h₈ : ¬ 2 * k ≤ k + 1 := by omega
                   have h₉ : 3 + 4 * k - 2 * (k + 1) = 2*k + 1 := by omega
                   have h₁₀ : 3 + 4 * k - 2 * (k + 2) = 2*k-1 := by omega
-                  simp [h₈, h₉, h₁₀]
+                  simp only [h₉, h₈, ↓reduceIte, h₁₀]
                   rw [Nat.fib_add_two, add_comm (Nat.fib (2 * k)), add_assoc, Nat.fib_add_one]
                   · use 2; omega
                   · omega
@@ -290,7 +290,7 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
                 by_cases hi₆ : 2*k ≤ i+1
                 · -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg + by_cases hi₆ pos
                   have h₁ : i+1 = 2*k := by omega
-                  rw [h₁]; simp
+                  rw [h₁]; simp only [Std.le_refl, ↓reduceIte]
                   have h₂ : 3 + 4 * k - 2 * (2 * k) = 3 := by omega
                   have h₃ : 3 + 4 * k - 2 * i = 5 := by omega
                   have h₄ : i + 2 - 2 * k - 1 = 0 := by omega
@@ -299,7 +299,7 @@ def fib_flute_even (k : ℕ) : flute (2*k+2) := by
                   rw [h₂,h₃,h₄,hd,f₃,f₅]
                   use 3;
                 · -- by_cases hi/hi₂/hi₃/hi₄/hi₅ neg + by_cases hi₆ neg
-                  simp [hi₆]
+                  simp only [hi₆, ↓reduceIte]
                   have h₁: 3 + 4 * k - 2 * (i + 1) = 4*k -2*i +1 := by omega
                   have h₂ : 3 + 4 * k - 2 * i = 4*k -2*i + 1 + 2 :=by omega
                   have h₃ : 4 * k - 2 * i + 1 + 1 = 4 * k - 2 * i + 2 := by omega
@@ -531,7 +531,7 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
             simp only [hd]
             by_cases hn₄ : n ≤ j
             · have hn₅ : j = n := by omega
-              simp [hn₅]
+              simp only [hn₅, Std.le_refl, ↓reduceIte, le_add_iff_nonneg_right, zero_le]
               have key := f.div (n-1)
               have hn₆ : n-1+2 = n+1 := by omega
               simp only [hn₂, hn₆] at key
@@ -543,7 +543,7 @@ def aux_3 (n : ℕ) (f : flute (n + 3)) (j : ℕ)
                 f.a (n-1) +1 = f.a (n-1) + (f.a n +1) - f.a n := by omega
                 _ = f.a n * k - f.a n := by rw [hk]
                 _ = f.a n * (k-1) := by exact (Nat.mul_sub_one (f.a n) k).symm
-            · simp [hn₄]
+            · simp only [hn₄, ↓reduceIte]
               by_cases hn₅ : n ≤ j+1
               · have hn₆ : j = n-1 := by omega
                 have hn₇ : n ≤ n-1+1 := by omega

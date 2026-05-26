@@ -75,7 +75,7 @@ def friezeToFlute (f : ℕ × ℕ → ℚ) (n m : ℕ) (hn : 2 ≤ n) [arith_fp 
         simp only [n_eq_three, Nat.add_one_sub_one, Nat.add_mod_right]
         simp only [i_plus_one_odd, Nat.reduceAdd, i_even, zero_add]
         rw[@pattern_n.topBordOnes ℚ _ f n _ m]
-        simp
+        simp only [Rat.num_ofNat, Int.toNat_one, Nat.reduceAdd]
         have this : f (2, m) * f (2, m + 1) = 2 :=
             calc f (2, m) * f (2, m + 1) = f (2, m) * f (2, m + 1) - 1 + 1 := by simp
                   _= f (3, m)*f (1, m + 1) + 1 := by
