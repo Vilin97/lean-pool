@@ -90,7 +90,7 @@ abbrev AttachCells.sigmaDiskBoundaryIncl (att : AttachCells n X X') :
 (TODO: after updating mathlib on 2025-03-08,
 using the abbreviation `att.sigmaDiskBoundaryIncl` results in type mismatch,
 which seems to be a universe level issue.
-So the abbreviation is temporarily replaced with the full definition.)-/
+So the abbreviation is temporarily replaced with the full definition.) -/
 abbrev AttachCells.pushout_inl (att : AttachCells.{u} n X X') :=
   Limits.pushout.inl att.sigmaAttachMaps
     (Limits.Sigma.map fun (_ : att.cells) ↦ diskBoundaryIncl n)

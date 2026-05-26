@@ -73,7 +73,7 @@ theorem CWComplex_induced_map_surjective
         ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
           l.H.some.toHomotopy).toContinuousMap
       map_zero_left x := by
-        show ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
+        change ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
           l.H.some.toHomotopy) (0, x) = g.hom x
         rw [ContinuousMap.Homotopy.comp_apply]
         simp only [ContinuousMap.Homotopy.refl_apply, ContinuousMap.Homotopy.apply_zero]
@@ -81,7 +81,7 @@ theorem CWComplex_induced_map_surjective
         congr 2
         rw [MapCyl.codIncl_retr_eq_id, Category.comp_id]
       map_one_left x := by
-        show ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
+        change ((ContinuousMap.Homotopy.refl (MapCyl.retr f).hom).comp
           l.H.some.toHomotopy) (1, x) = (l.l ≫ f).hom x
         rw [ContinuousMap.Homotopy.comp_apply]
         simp only [ContinuousMap.Homotopy.refl_apply, ContinuousMap.Homotopy.apply_one]

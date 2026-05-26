@@ -238,7 +238,7 @@ def commSqSkSk (n : ℕ) :
     apply ContinuousMap.ext
     intro x'
     set y := ((diskPair.homeoCubePairULift (n + 1)).hom.left : ∂𝔻 (n + 1) ⟶ _) x' with hy_def
-    show (cubeBoundary.mapOfBotTopSides _ _ (IProd.cubeAtt_compatible X α) ≫ skInclSucc X n) y =
+    change (cubeBoundary.mapOfBotTopSides _ _ (IProd.cubeAtt_compatible X α) ≫ skInclSucc X n) y =
       (cubeBoundaryIncl (n + 1) ≫
         cubeSplitAtLast.hom ≫ ofHom ((ContinuousMap.id ↑I).prodMap (Hom.hom (X.cubeInclToSk α))) ≫
         Limits.pushout.inr (l X (n + 1)) (r X (n + 1))) y

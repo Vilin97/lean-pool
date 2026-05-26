@@ -35,7 +35,7 @@ such that `ι ≫ l = f` and `∀ t, ι ≫ H(t, ·) = f ≫ i`.
 since `H(1, ·) = l ≫ i`.)
 
 See `TopCat.LiftStructUpToRelHomotopy.curriedMk` for a more convenient constructor.
- -/
+-/
 structure LiftStructUpToRelHomotopy (sq : CommSq f ι i F) where
   /-- The lift -/
   l : X' ⟶ A
@@ -163,7 +163,7 @@ A' -----f----→ A
 X' -----F----→ X
 ```
 has a lift, up to relative homotopy.
- -/
+-/
 structure IsCompressible (ι : A' ⟶ X') (i : A ⟶ X) : Prop where
   sq_hasLift : ∀ {F : X' ⟶ X} {f : A' ⟶ A} (sq : CommSq f ι i F), HasLiftUpToRelHomotopy sq
 

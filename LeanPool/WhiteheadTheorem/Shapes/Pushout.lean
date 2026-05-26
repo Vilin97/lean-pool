@@ -207,7 +207,7 @@ lemma pushout_inr_neq_pushout_inl_of_mem_compl_range :
         rw [pushout.inl_desc]; rfl
       have hr : (pushout.inr f g ≫ pYZ).hom z = (⟨true⟩ : ULift Bool) := by
         rw [pushout.inr_desc]
-        show (if _ : z ∉ Set.range g then (⟨true⟩ : ULift Bool) else ⟨false⟩) = ⟨true⟩
+        change (if _ : z ∉ Set.range g then (⟨true⟩ : ULift Bool) else ⟨false⟩) = ⟨true⟩
         exact dif_pos hz
       change (pushout.inr f g ≫ pYZ).hom z ≠ (pushout.inl f g ≫ pYZ).hom y
       rw [hl, hr]

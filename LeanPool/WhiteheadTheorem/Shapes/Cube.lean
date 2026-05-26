@@ -163,7 +163,7 @@ Note that `(splitAtLast y).fst` is the last (`n`-th) coordinate. -/
 lemma mem_boundaryJar_iff_splitAtLast {n : ℕ} {y : I^Fin (n + 1)} :
     y ∈ (⊔I^(n+1)) ↔ (splitAtLast y).fst = 0 ∨ (splitAtLast y).snd ∈ ∂I^n := by
   constructor
-  . intro hy
+  · intro hy
     simp only [splitAtLast, ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
       Fin.natCast_eq_last, Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq]
     by_cases h0 : y (Fin.last n) = 0
@@ -183,7 +183,7 @@ lemma mem_boundaryJar_iff_splitAtLast {n : ℕ} {y : I^Fin (n + 1)} :
         rcases h with h | h
         · left; change (homeoNeqLast.invFun _) _ = 0; simpa [homeoNeqLast]
         · right; change (homeoNeqLast.invFun _) _ = 1; simpa [homeoNeqLast]
-  . intro hy
+  · intro hy
     rcases hy with hy | ⟨i, hi⟩
     · rw [splitAtLast_fst_eq] at hy
       apply mem_boundaryJar_of_exists_eq_zero

@@ -167,7 +167,7 @@ namespace PathSpace
 
 /-- Given a path, return its source point (value at 0).
 The continuity of this function, through typeclass resolution,
-implicitly relies on the fact that `I` is locally compact.-/
+implicitly relies on the fact that `I` is locally compact. -/
 abbrev eval₀ (Y : TopCat.{u}) : TopCat.of C(I, Y) ⟶ Y :=
   ofHom
     { toFun f := f 0
@@ -175,7 +175,7 @@ abbrev eval₀ (Y : TopCat.{u}) : TopCat.of C(I, Y) ⟶ Y :=
 
 /-- Given a path, return its target point (value at 1).
 The continuity of this function, through typeclass resolution,
-implicitly relies on the fact that `I` is locally compact.-/
+implicitly relies on the fact that `I` is locally compact. -/
 abbrev eval₁ (Y : TopCat.{u}) : TopCat.of C(I, Y) ⟶ Y :=
   ofHom
     { toFun f := f 1

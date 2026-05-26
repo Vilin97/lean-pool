@@ -28,7 +28,7 @@ universe u
 namespace TopCat
 
 /-- Suppose `j` is compressible w.r.t. `i1`, and `i2` is an isomorphism,
-then `j` is compressible w.r.t. `i1 ≫ i2`.-/
+then `j` is compressible w.r.t. `i1 ≫ i2`. -/
 lemma IsCompressible.of_comp_iso_left
     {A B Z X Y : TopCat.{u}} {i1 : A ⟶ X} {i2 : X ⟶ Z} {j : B ⟶ Y}
     (hcom1 : IsCompressible i1 j) [IsIso i2] :
@@ -46,7 +46,7 @@ lemma IsCompressible.of_comp_iso_left
       simp_all only [Category.assoc, IsIso.hom_inv_id_assoc, l1, H]
 
 /-- Suppose `i1` is an isomorphism and `j` is compressible w.r.t. `i2`,
-then `j` is compressible w.r.t. `i1 ≫ i2`.-/
+then `j` is compressible w.r.t. `i1 ≫ i2`. -/
 lemma IsCompressible.of_iso_comp_left
     {A B Z X Y : TopCat.{u}} {i1 : A ⟶ X} {i2 : X ⟶ Z} {j : B ⟶ Y}
     [IsIso i1] (hcom2 : IsCompressible i2 j) :
@@ -58,14 +58,14 @@ lemma IsCompressible.of_iso_comp_left
     let L : Z ⟶ B := l2.l
     let H : Z ⟶ TopCat.of C(I, Y) := l2.curriedH
     refine ⟨Nonempty.intro <| LiftStructUpToRelHomotopy.curriedMk L ?_ H ?_ ?_ fun t ↦ ?_⟩
-    . rw [Category.assoc, l2.fac_left, IsIso.hom_inv_id_assoc]
-    . rw [l2.curriedH_apply_zero]
-    . rw [l2.curriedH_apply_one]
-    . rw [Category.assoc, l2.curriedH_prop t, Category.assoc]
+    · rw [Category.assoc, l2.fac_left, IsIso.hom_inv_id_assoc]
+    · rw [l2.curriedH_apply_zero]
+    · rw [l2.curriedH_apply_one]
+    · rw [Category.assoc, l2.curriedH_prop t, Category.assoc]
 
 /-- Suppose `j` is compressible w.r.t. `i`,
 and `i` is isomorphic to `i'` in the arrow category,
-then `j` is compressible w.r.t. `i'`.-/
+then `j` is compressible w.r.t. `i'`. -/
 lemma IsCompressible.of_arrow_iso_left
     {A X A' X' B Y : TopCat.{u}} {i : A ⟶ X} {i' : A' ⟶ X'} {j : B ⟶ Y}
     (e : Arrow.mk i ≅ Arrow.mk i') (hcom : IsCompressible i j) :

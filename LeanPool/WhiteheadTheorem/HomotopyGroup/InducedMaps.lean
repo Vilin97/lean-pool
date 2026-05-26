@@ -251,13 +251,13 @@ noncomputable def functorToType (n : ℕ) : PointedTopCat.{u} ⥤ Type u where
   map {X Y} f := TypeCat.ofHom (inducedMap' n f)
   map_id X := by
     ext α
-    show inducedMap' n (𝟙 X) α = α
+    change inducedMap' n (𝟙 X) α = α
     simp only [inducedMap']
     rw [← Quotient.out_eq α, Quotient.map_mk]
     congr 1
   map_comp {X Y Z} f g := by
     ext α
-    show inducedMap' n (f ≫ g) α = inducedMap' n g (inducedMap' n f α)
+    change inducedMap' n (f ≫ g) α = inducedMap' n g (inducedMap' n f α)
     simp only [inducedMap']
     rw [← Quotient.out_eq α]
     iterate 3 (rw [Quotient.map_mk])

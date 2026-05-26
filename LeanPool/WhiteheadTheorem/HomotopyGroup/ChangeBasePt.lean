@@ -91,7 +91,7 @@ def map (g : C(X, Y)) (L : LevelHomotopy f₀ f₁ p) :
   prop' t y hy := by
     simp only [ContinuousMap.toFun_eq_coe, ContinuousMap.Homotopy.coe_toContinuousMap, Path.map_coe,
       Function.comp_apply]
-    show ((ContinuousMap.Homotopy.refl g).comp L.toHomotopy) (t, y) = _
+    change ((ContinuousMap.Homotopy.refl g).comp L.toHomotopy) (t, y) = _
     simp only [ContinuousMap.Homotopy.comp_apply, ContinuousMap.Homotopy.refl_apply]
     congr 1
     exact L.prop' t y hy

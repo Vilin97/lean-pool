@@ -22,11 +22,11 @@ universe u v
 
 variable (n : ℕ) (p q : ℝ≥0∞) [hp : Fact (1 ≤ p)] [hq : Fact (1 ≤ q)]
 
-/-- The unit disk in `ℝⁿ` based on the `Lᵖ` norm, where `p ≥ 1`.  -/
+/-- The unit disk in `ℝⁿ` based on the `Lᵖ` norm, where `p ≥ 1`. -/
 def pDisk (n : ℕ) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] : TopCat.{u} :=
   TopCat.of <| ULift <| Metric.closedBall (0 : PiLp p fun (_ : Fin n) ↦ ℝ) 1
 
-/-- The boundary of the `pDisk`.  -/
+/-- The boundary of the `pDisk`. -/
 def pDiskBoundary (n : ℕ) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] : TopCat.{u} :=
   TopCat.of <| ULift <| Metric.sphere (0 : PiLp p fun (_ : Fin n) ↦ ℝ) 1
 

@@ -138,11 +138,11 @@ instance HasLiftingProperty.of_colimit_ofSequence_zero :
   let ccz := Limits.Cocone.ofSequence_of_hasLiftingProperty i p h f sq -- a cocone whose point is Z
   let H := Limits.colimit.desc (Functor.ofSequence i) ccz
   refine ⟨H, ?_, ?_⟩
-  · show Limits.colimit.ι (Functor.ofSequence i) 0 ≫ H = h
+  · change Limits.colimit.ι (Functor.ofSequence i) 0 ≫ H = h
     rw [show H = Limits.colimit.desc (Functor.ofSequence i) ccz from rfl,
         Limits.colimit.ι_desc]
     rfl
-  · show Limits.colimit.desc (Functor.ofSequence i) ccz ≫ p = f
+  · change Limits.colimit.desc (Functor.ofSequence i) ccz ≫ p = f
     let ccy := ccz.postcompose p   -- a cocone whose point is Y
     let cc := Limits.getColimitCocone (Functor.ofSequence i)   -- the colimit cocone
     have uniq_f : f = cc.isColimit.desc ccy := by   -- f is a morphism of cocones
@@ -160,7 +160,7 @@ instance HasLiftingProperty.of_colimit_ofSequence_zero :
       apply cc.isColimit.uniq ccy; intro n
       have hfac : cc.cocone.ι.app n ≫ Limits.colimit.desc (Functor.ofSequence i) ccz =
           ccz.ι.app n := cc.isColimit.fac ccz n
-      show cc.cocone.ι.app n ≫ Limits.colimit.desc (Functor.ofSequence i) ccz ≫ p =
+      change cc.cocone.ι.app n ≫ Limits.colimit.desc (Functor.ofSequence i) ccz ≫ p =
           ccz.ι.app n ≫ p
       rw [← Category.assoc, hfac]
       rfl

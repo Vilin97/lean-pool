@@ -266,7 +266,7 @@ theorem ker_bd_subset_im_jStar (f : π﹍ (n + 1) X A a) :
         apply RelGenLoop.mem_of_boundaryLid_and_boundaryJar
         simp only [comp_apply, prodMap_apply, coe_id, ContinuousMap.coe_coe, Prod.map_apply, id_eq,
           coe_mk, g']
-        . intro y hy  -- `y` is in the top face
+        · intro y hy  -- `y` is in the top face
           simp only [Cube.boundaryLid, Set.mem_setOf_eq] at hy
           by_cases hyn : (Cube.splitAtLast y).fst.val ≤ (1 + t) / 2
           · -- `f'` maps the top face into `A`

@@ -221,18 +221,18 @@ lemma homotopyExtension_wall_commutes (n : ℕ) {Y : Type*} [TopologicalSpace Y]
     obtain ⟨_, _⟩ := hy
     linarith
   conv_rhs => equals (proj n f H 1) ⟨⟨q, ⟨y, hy⟩⟩, hq⟩ => apply ContinuousMap.liftCoverClosed_coe'
-  show H _ = (H.comp (rimProj n)) ⟨(q, ⟨y, hy⟩), hq⟩
+  change H _ = (H.comp (rimProj n)) ⟨(q, ⟨y, hy⟩), hq⟩
   rw [ContinuousMap.comp_apply]
   have hrim : rimProj n ⟨(q, ⟨y, hy⟩), hq⟩ = (⟨x, hx⟩, ⟨y, hy⟩) := by
     apply Prod.ext
-    · show rimProjFst n _ = { down := ⟨x, hx⟩ }
+    · change rimProjFst n _ = { down := ⟨x, hx⟩ }
       apply ULift.ext
       apply Subtype.ext
-      show (1 / ‖x‖) • x = x
+      change (1 / ‖x‖) • x = x
       rw [mem_sphere_zero_iff_norm.mp hx, div_one, one_smul]
-    · show rimProjSnd n _ = (⟨y, hy⟩ : I)
+    · change rimProjSnd n _ = (⟨y, hy⟩ : I)
       apply Subtype.ext
-      show (y - 2) / ‖x‖ + 2 = y
+      change (y - 2) / ‖x‖ + 2 = y
       rw [mem_sphere_zero_iff_norm.mp hx, div_one, sub_add_cancel]
   rw [hrim]
 

@@ -212,7 +212,7 @@ lemma botSidesCoverMapVec_compatible_01
   let y' : I^ Fin (n + 1) := Cube.splitAtLast.symm ⟨1, (Cube.splitAtLast y).snd⟩
   have hsplit : (Cube.splitAtLast y).1 = 0 := by
     rw [Cube.splitAtLast_fst_eq]; exact hy0
-  show f ⟨y', _⟩ = h ⟨⟨y', _⟩, (Cube.splitAtLast y).1⟩
+  change f ⟨y', _⟩ = h ⟨⟨y', _⟩, (Cube.splitAtLast y).1⟩
   rw [hsplit]
   generalize_proofs
   have := congrFun fh ⟨y', ‹_›⟩
@@ -303,7 +303,7 @@ lemma backFlrCover_mapVec_compatible_01
     obtain ⟨i, hin, hi⟩ := hy1.right hy0
     use i, hin
     unfold backIsoCube yt
-    show Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2) i = 0 ∨
+    change Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2) i = 0 ∨
         Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2) i = 1
     rwa [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ (Fin.lt_last_iff_ne_last.mp hin)]
   replace := ContinuousMap.liftCoverClosed_coe' _ _ (botSidesCoverMapVec_compatible f h fh)
@@ -311,7 +311,7 @@ lemma backFlrCover_mapVec_compatible_01
   rw [jarMap, this]
   change jarSidesMap _ _ = _
   unfold jarSidesMap yt_jar yt backIsoCube
-  show h ({ down := ⟨Cube.splitAtLast.symm (1, (Cube.splitAtLast
+  change h ({ down := ⟨Cube.splitAtLast.symm (1, (Cube.splitAtLast
       (Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2))).2), _⟩ },
       (Cube.splitAtLast (Cube.splitAtLast.symm (t, (Cube.splitAtLast y).2))).1) =
       h ({ down := ⟨y, hy1⟩ }, t)
@@ -319,7 +319,7 @@ lemma backFlrCover_mapVec_compatible_01
   congr 2
   apply ULift.ext
   apply Subtype.ext
-  show Cube.splitAtLast.symm (1, (Cube.splitAtLast y).2) = y
+  change Cube.splitAtLast.symm (1, (Cube.splitAtLast y).2) = y
   funext i
   by_cases hin : i = Fin.last _
   · rw [hin, Cube.splitAtLast_symm_apply_last, hy0]
@@ -390,7 +390,7 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       replace : yt_jar ∈ cubeBoundaryJar.botSidesCover n 0 := by
         change _ ∈ cubeBoundaryJar.bot n
         unfold cubeBoundaryJar.bot yt_jar backIsoCube yt_back yb_t yb
-        show Cube.splitAtLast.symm (0, (Cube.splitAtLast y).2) (Fin.last n) = 0
+        change Cube.splitAtLast.symm (0, (Cube.splitAtLast y).2) (Fin.last n) = 0
         rw [Cube.splitAtLast_symm_apply_last]
       replace := ContinuousMap.liftCoverClosed_coe' _ _ (botSidesCoverMapVec_compatible f h fh)
         (cubeBoundaryJar.botSidesCover_cover n) (cubeBoundaryJar.botSidesCover_closed n) _ this
@@ -398,18 +398,18 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       rw [jarMap, this]
       change _ = jarBotMap f _
       unfold jarBotMap yt_jar yb
-      show f { down := ⟨y, _⟩ } =
+      change f { down := ⟨y, _⟩ } =
         f { down := ⟨Cube.splitAtLast.symm
           (1, (Cube.splitAtLast ((backIsoCube n) yt_back)).2), _⟩ }
       congr 2
       apply Subtype.ext
-      show y = Cube.splitAtLast.symm (1, (Cube.splitAtLast ((backIsoCube n) yt_back)).2)
+      change y = Cube.splitAtLast.symm (1, (Cube.splitAtLast ((backIsoCube n) yt_back)).2)
       funext i
       by_cases hin : i = Fin.last _
       · rw [hin, Cube.splitAtLast_symm_apply_last, hyn]
       · rw [Cube.splitAtLast_symm_apply_eq_of_neq_last _ _ _ hin]
         unfold yt_back yb_t yb backIsoCube
-        show y i = (Cube.splitAtLast (Cube.splitAtLast.symm (0, (Cube.splitAtLast y).2))).2
+        change y i = (Cube.splitAtLast (Cube.splitAtLast.symm (0, (Cube.splitAtLast y).2))).2
           ⟨i.val, ?_⟩
         rw [Homeomorph.apply_symm_apply]
         rfl

@@ -95,7 +95,7 @@ namespace RelHomotopyGroup
 variable (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A)
 
 /-- The 0-th relative homotopy "group" `π₀(X, A, a)` is in bijection with
-the 0-th homotopy "group" `π₀(X, a)`.  -/
+the 0-th homotopy "group" `π₀(X, a)`. -/
 def equivPi0 : π﹍ 0 X A a ≃ π_ 0 X a :=
   Quotient.congr (RelGenLoop.equivGenLoop X A a) fun _ _ ↦
     ⟨ fun H ↦ Nonempty.intro
@@ -119,7 +119,7 @@ def iStar : π_ n A a → π_ n X a :=
         prop' t y hy := by
           have := H.some.prop' t y hy
           simp at this
-          show ((Nonempty.some H) (t, y) : X) = _
+          change ((Nonempty.some H) (t, y) : X) = _
           rw [this]
           rfl }
 
@@ -218,7 +218,7 @@ variable {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
 
 /-- Let `g` be a continuous function from `I^ Fin n` to `X`.
 If `g` is homotopic rel `∂I^n` to some `f : RelGenLoop n X A a`,
-then `g` itself can be regarded as a `RelGenLoop`.  -/
+then `g` itself can be regarded as a `RelGenLoop`. -/
 def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
     (f : RelGenLoop n X A a) (g : C(I^Fin n, X))
     (H : ContinuousMap.HomotopyRel f g (∂I^n)) : RelGenLoop n X A a :=
