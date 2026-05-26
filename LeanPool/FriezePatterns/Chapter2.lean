@@ -346,58 +346,58 @@ def aux_1 (n : ℕ) (f : flute (n + 3)) (h : f.a 1 = 1) : flute (n + 2) := by
     induction i using Nat.strong_induction_on with
     | _ i ih =>
       by_cases hi : i ≥ n+1
-      have hi₂ : n ≤ i := by omega
-      have hi₃ : n ≤ i+1 := by omega
-      unfold a_1; simp [hi, hi₂, hi₃]
-      specialize ih (i-(n+1)) (by omega)
-      have hi₄ : i-(n+1)+1 = i-n := by omega
-      have hi₅ : i-(n+1)+2 = i+1-n := by omega
-      rw [hi₄, hi₅] at ih; exact ih
-      by_cases hi₂ : i = 0
-      unfold a_1; simp [hi₂]
-      match n with
-      | 0 => simp [hd]
-      | 1 =>
-        simp
-        rw [hd, f.hd]
-        nth_rw 1 [←h]
-        have : f.a 3 = 1 := by
-          have := f.period 0
-          simp [f.hd] at this
-          rw [←this]
-        nth_rw 3 [←this]
-        simp [f.div 1]
-      | n+2 =>
-        simp [f.hd]
-        rw [←h]
-        exact f.div 1
-      by_cases hi₃ : i+1 ≥ n+1
-      have hi₄ : i=n := by omega
-      unfold a_1; simp [hi₄, hd]
-      by_cases hi₄ : i+2 ≥ n+1
-      have hi₅ : i+1 = n := by omega
-      unfold a_1; simp [hi, hi₂, hi₄, hi₅]
-      match n with
-      | 0 => simp [f.hd]
-      | 1 =>
-        simp
-        rw [hd]
-        have : f.a 3 = 1 := by
-          have := f.period 0
-          simp [f.hd] at this
-          rw [←this]
-        nth_rw 2 [←this]
-        simp [f.div 1]
-      | n+2 =>
-        simp [hd]
-        have h : f.a (n+2+2) = 1 := by
-          have := f.period 0
-          simp [f.hd] at this
-          rw [←this]
-        nth_rw 2 [←h]
-        exact f.div (n+2)
-      unfold a_1; simp [hi, hi₂, hi₃, hi₄]
-      exact f.div (i+1)
+      · have hi₂ : n ≤ i := by omega
+        have hi₃ : n ≤ i+1 := by omega
+        unfold a_1; simp [hi, hi₂, hi₃]
+        specialize ih (i-(n+1)) (by omega)
+        have hi₄ : i-(n+1)+1 = i-n := by omega
+        have hi₅ : i-(n+1)+2 = i+1-n := by omega
+        rw [hi₄, hi₅] at ih; exact ih
+      · by_cases hi₂ : i = 0
+        · unfold a_1; simp [hi₂]
+          match n with
+          | 0 => simp [hd]
+          | 1 =>
+            simp
+            rw [hd, f.hd]
+            nth_rw 1 [←h]
+            have : f.a 3 = 1 := by
+              have := f.period 0
+              simp [f.hd] at this
+              rw [←this]
+            nth_rw 3 [←this]
+            simp [f.div 1]
+          | n+2 =>
+            simp [f.hd]
+            rw [←h]
+            exact f.div 1
+        · by_cases hi₃ : i+1 ≥ n+1
+          · have hi₄ : i=n := by omega
+            unfold a_1; simp [hi₄, hd]
+          · by_cases hi₄ : i+2 ≥ n+1
+            · have hi₅ : i+1 = n := by omega
+              unfold a_1; simp [hi, hi₂, hi₄, hi₅]
+              match n with
+              | 0 => simp [f.hd]
+              | 1 =>
+                simp
+                rw [hd]
+                have : f.a 3 = 1 := by
+                  have := f.period 0
+                  simp [f.hd] at this
+                  rw [←this]
+                nth_rw 2 [←this]
+                simp [f.div 1]
+              | n+2 =>
+                simp [hd]
+                have h : f.a (n+2+2) = 1 := by
+                  have := f.period 0
+                  simp [f.hd] at this
+                  rw [←this]
+                nth_rw 2 [←h]
+                exact f.div (n+2)
+            · unfold a_1; simp [hi, hi₂, hi₃, hi₄]
+              exact f.div (i+1)
   exact ⟨a_1 n f, pos, hd, period, div⟩
 
 /-- Reduction of an `(n+3)`-flute (assuming `f.a (n + 1) = 1`) to an `(n+2)`-flute
@@ -428,38 +428,38 @@ def aux_2 (n : ℕ) (f : flute (n + 3)) (h : f.a (n + 1) = 1) : flute (n + 2) :=
     induction i using Nat.strong_induction_on with
     | _ i ih =>
       by_cases hi : i ≥ n+1
-      have hi₂ : n ≤ i := by omega
-      have hi₃ : n ≤ i+1 := by omega
-      unfold a_2; simp [hi, hi₂, hi₃]
-      specialize ih (i-(n+1)) (by omega)
-      have hi₄ : i-(n+1)+1 = i-n := by omega
-      have hi₅ : i-(n+1)+2 = i+1-n := by omega
-      rw [hi₄, hi₅] at ih; exact ih
-      by_cases hi₂ : i = 0
-      unfold a_2; simp [hi₂]
-      match n with
-      | 0 => simp [hd]
-      | 1 =>
-        simp; simp at h
-        rw [hd, f.hd]
-        nth_rw 2 [←h]
-        nth_rw 2 [←f.hd]
-        simp [f.div 0, add_comm]
-      | n+2 =>
-        simp [f.hd]
-        nth_rw 2 [←f.hd]
-        exact f.div 0
-      unfold a_2; simp [hi]
-      by_cases hi₃ : n ≤ i
-      have hi₄ : i = n := by omega
-      simp [hi₄, hd]
-      by_cases hi₄ : n ≤ i+1
-      have hi₅ : i+1 = n := by omega
-      simp [hi₃, hi₅, hd]
-      have key := f.div i
-      rw [hi₅, ←one_add_one_eq_two, ←add_assoc, hi₅, h] at key
-      exact key
-      simp [hi₃, hi₄, f.div i]
+      · have hi₂ : n ≤ i := by omega
+        have hi₃ : n ≤ i+1 := by omega
+        unfold a_2; simp [hi, hi₂, hi₃]
+        specialize ih (i-(n+1)) (by omega)
+        have hi₄ : i-(n+1)+1 = i-n := by omega
+        have hi₅ : i-(n+1)+2 = i+1-n := by omega
+        rw [hi₄, hi₅] at ih; exact ih
+      · by_cases hi₂ : i = 0
+        · unfold a_2; simp [hi₂]
+          match n with
+          | 0 => simp [hd]
+          | 1 =>
+            simp; simp at h
+            rw [hd, f.hd]
+            nth_rw 2 [←h]
+            nth_rw 2 [←f.hd]
+            simp [f.div 0, add_comm]
+          | n+2 =>
+            simp [f.hd]
+            nth_rw 2 [←f.hd]
+            exact f.div 0
+        · unfold a_2; simp [hi]
+          by_cases hi₃ : n ≤ i
+          · have hi₄ : i = n := by omega
+            simp [hi₄, hd]
+          · by_cases hi₄ : n ≤ i+1
+            · have hi₅ : i+1 = n := by omega
+              simp [hi₃, hi₅, hd]
+              have key := f.div i
+              rw [hi₅, ←one_add_one_eq_two, ←add_assoc, hi₅, h] at key
+              exact key
+            · simp [hi₃, hi₄, f.div i]
   exact ⟨a_2 n f, pos, hd, period, div⟩
 
 /-- Reduction of an `(n+3)`-flute admitting a reducible index `i` to an `(n+2)`-flute
