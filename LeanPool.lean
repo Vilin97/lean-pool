@@ -302,6 +302,10 @@ import LeanPool.GrothendieckVanishing.PresheafFilteredColimitCore
 import LeanPool.GrothendieckVanishing.PresheafFilteredColimitGeneral
 import LeanPool.GrothendieckVanishing.TopologicalKrullDim
 import LeanPool.GrothendieckVanishing.ZeroOutside
+import LeanPool.HyperLean
+import LeanPool.HyperLean.DartPointProbZero
+import LeanPool.HyperLean.ProbabilityExamples
+import LeanPool.HyperLean.SingletonProbZero
 import LeanPool.Isoperimetric
 import LeanPool.Isoperimetric.Basic
 import LeanPool.Isoperimetric.BrunnMinkowski

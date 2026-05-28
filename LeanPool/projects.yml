@@ -1253,3 +1253,52 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: hyper-lean
+    title: hyper-lean
+    summary: Formalizes elementary probability and measure-theory facts from a hyperreal-numbers project, including uniform distributions on finite types, geometric probability on the disc, and the vanishing of continuous-measure probabilities on singletons, finite, and countable sets.
+    branch: probability
+    entry_module: LeanPool.HyperLean
+    authors:
+      - pannous
+    source:
+      url: https://github.com/pannous/hyper-lean
+      github_repo: pannous/hyper-lean
+    status: verified
+    main_declarations:
+      - fairDie_prob
+      - real_singleton_prob_zero
+      - dart_hits_point_prob_zero
+    main_results:
+      - declaration: fairDie_prob
+        informal: Proves that a fair six-sided die assigns probability 1/6 to each face.
+      - declaration: fairCoin_heads
+        informal: Proves that a fair coin assigns probability 1/2 to heads.
+      - declaration: fairCoin_tails
+        informal: Proves that a fair coin assigns probability 1/2 to tails.
+      - declaration: dart_probability
+        informal: Proves that the bullseye (radius-1 disc) covers probability 1/4 of the radius-2 dartboard.
+      - declaration: real_singleton_prob_zero
+        informal: Proves that every singleton in the reals has Lebesgue measure zero.
+      - declaration: continuous_measure_singleton_zero
+        informal: Proves that any atomless probability measure on the reals assigns measure zero to a singleton.
+      - declaration: finite_set_prob_zero
+        informal: Proves that any finite set has measure zero under an atomless measure on the reals.
+      - declaration: naturals_prob_zero
+        informal: Proves that the image of the naturals in the reals has Lebesgue measure zero.
+      - declaration: rationals_prob_zero
+        informal: Proves that the image of the rationals in the reals has Lebesgue measure zero.
+      - declaration: ae_irrational
+        informal: Proves that a uniformly random real is almost surely irrational.
+      - declaration: complex_singleton_area_zero
+        informal: Proves that every singleton in the complex plane has Lebesgue area zero.
+      - declaration: dart_hits_point_prob_zero
+        informal: Proves that hitting any specific point of a disc has conditional probability zero.
+      - declaration: dart_hits_finite_set_prob_zero
+        informal: Proves that hitting any finite set of target points in a disc has conditional probability zero.
+    tags:
+      - probability-theory
+      - measure-theory
+      - geometric-probability
+    msc:
+      - "60A05"
+      - "28A12"
