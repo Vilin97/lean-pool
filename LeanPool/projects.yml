@@ -1253,3 +1253,33 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: desargues
+    title: Projective geometry and central projection
+    summary: Formalizes, following Faure–Frölicher's Modern Projective Geometry, the axiomatic theory of projective geometries, subspaces, and central projections, and exhibits every Mathlib projectivization as a projective geometry.
+    branch: geometry
+    entry_module: LeanPool.Desargues
+    authors:
+      - Abdullah Uyu
+    source:
+      title: "Modern Projective Geometry"
+      authors:
+        - Claude-Alain Faure
+        - Alfred Frölicher
+      url: https://github.com/oneofvalts/desargues
+      github_repo: oneofvalts/desargues
+    status: verified
+    main_declarations:
+      - Basic.ProjectiveGeometry
+      - Basic.central_projection
+    main_results:
+      - declaration: Basic.ProjectiveGeometry
+        informal: Axiomatizes a projective geometry as a typeclass on a collinearity relation.
+      - declaration: Basic.cen_proj_bij
+        informal: Proves that the central projection between two lines is a bijection.
+    tags:
+      - projective-geometry
+      - incidence-geometry
+      - geometry
+    msc:
+      - "51A05"
+      - "51A30"

@@ -137,6 +137,11 @@ import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
 import LeanPool.DemazureOperatorsLean.DemazureRelations
 import LeanPool.DemazureOperatorsLean.Matsumoto
 import LeanPool.DemazureOperatorsLean.StrongExchange
+import LeanPool.Desargues
+import LeanPool.Desargues.Basic
+import LeanPool.Desargues.Morphism
+import LeanPool.Desargues.PV
+import LeanPool.Desargues.Structure
 import LeanPool.DirectedTopologyLean4
 import LeanPool.DirectedTopologyLean4.Constructions
 import LeanPool.DirectedTopologyLean4.CoverLemma
