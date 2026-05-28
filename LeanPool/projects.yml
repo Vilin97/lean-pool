@@ -1253,3 +1253,49 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: ec-tate-lean
+    title: Weierstrass models and singular points for Tate's algorithm
+    summary: Formalizes Weierstrass models of elliptic curves over a commutative ring, their b- and c-invariants and discriminant, the change-of-coordinates group action, the discriminant's membership in the Jacobian ideal, and the construction of the singular point of a singular model over a perfect field, together with the Kronecker symbol and the Kodaira type enumeration.
+    branch: number theory
+    entry_module: LeanPool.EcTateLean
+    authors:
+      - Sacha H.
+      - Sander R. Dahmen
+      - Anne Baanen
+      - Alex J. Best
+    source:
+      title: "Elliptic Curve Handbook"
+      authors:
+        - Ian Connell
+      url: "https://www.math.rug.nl/~top/ian.pdf"
+      github_repo: KisaraBlue/ec-tate-lean
+    status: verified
+    main_declarations:
+      - Model
+      - Model.Field.is_singular_point_singular_point
+    main_results:
+      - declaration: Model
+        informal: Defines a Weierstrass model of a possibly singular elliptic curve by its five a-invariants.
+      - declaration: Model.discr_identity
+        informal: Proves the identity relating the discriminant to the c-invariants, 1728 * discr = c4^3 - c6^2.
+      - declaration: Model.rst_discr
+        informal: Proves that the discriminant is invariant under the rst change-of-coordinates transformation.
+      - declaration: Model.discr_in_jacobian_ideal
+        informal: Expresses the discriminant as an explicit combination of the Weierstrass polynomial and its partial derivatives, witnessing membership in the Jacobian ideal.
+      - declaration: Model.discr_eq_zero_of_singular
+        informal: Proves that a model with a singular point has vanishing discriminant.
+      - declaration: Model.Field.is_singular_point_singular_point
+        informal: Proves that the explicitly constructed singular point of a singular model over a perfect field is indeed a singular point (Connell, Proposition 1.5.4).
+        source_ref: "Ian Connell, Elliptic Curve Handbook, February 1999, Proposition 1.5.4."
+      - declaration: Model.Field.move_singular_point_to_origin
+        informal: Proves that the change of coordinates moving the singular point places it at the origin.
+      - declaration: Kodaira
+        informal: Enumerates the Kodaira reduction types, including the extra types arising over imperfect residue fields of characteristic 2 or 3.
+    tags:
+      - number-theory
+      - elliptic-curves
+      - algebraic-geometry
+    msc:
+      - "11G05"
+      - "11G07"
+      - "14H52"

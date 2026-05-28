@@ -176,6 +176,15 @@ import LeanPool.Duality.FarkasBasic
 import LeanPool.Duality.FarkasSpecial
 import LeanPool.Duality.LinearProgramming
 import LeanPool.Duality.LinearProgrammingB
+import LeanPool.EcTateLean
+import LeanPool.EcTateLean.Algebra.CharP.Basic
+import LeanPool.EcTateLean.Algebra.EllipticCurve.AuxRingLemmas
+import LeanPool.EcTateLean.Algebra.EllipticCurve.KodairaTypes
+import LeanPool.EcTateLean.Algebra.EllipticCurve.Kronecker
+import LeanPool.EcTateLean.Algebra.EllipticCurve.Model
+import LeanPool.EcTateLean.Algebra.Ring.Basic
+import LeanPool.EcTateLean.FieldTheory.PerfectClosure
+import LeanPool.EcTateLean.Init.Data.Int.Lemmas
 import LeanPool.Erdos1196
 import LeanPool.Erdos1196.Basic
 import LeanPool.Erdos1196.FirstEntryRowTerm
