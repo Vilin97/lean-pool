@@ -10,7 +10,7 @@ import LeanPool.Desargues.PV
 import LeanPool.Desargues.Structure
 
 /-!
-# Projective geometry and central projection (toward Desargues' theorem)
+# Projective geometry and central projection
 
 Source: url:https://github.com/oneofvalts/desargues
 Authors: Abdullah Uyu
