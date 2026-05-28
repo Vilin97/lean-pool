@@ -181,9 +181,11 @@ import LeanPool.LeanCondensed.Mathlib.Condensed
 import LeanPool.LeanCondensed.Mathlib.Condensed.Adjunctions
 import LeanPool.LeanCondensed.Mathlib.Condensed.Light
 import LeanPool.LeanCondensed.Mathlib.Condensed.Light.Limits
+import LeanPool.LeanCondensed.Mathlib.Condensed.Light.Monoidal
 import LeanPool.LeanCondensed.Projects
 import LeanPool.LeanCondensed.Projects.Epi
 import LeanPool.LeanCondensed.Projects.IsLocalizedMonoidal
+import LeanPool.LeanCondensed.Projects.MonoidalLinear
 import LeanPool.LeanCondensed.Projects.PreservesCoprod
 import LeanPool.LeanCondensed.Projects.Sequence
 import LeanPool.PartialRegularity

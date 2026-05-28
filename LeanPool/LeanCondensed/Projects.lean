@@ -5,6 +5,7 @@ Authors: Dagur Asgeirsson, Jonas van der Schaaf
 -/
 import LeanPool.LeanCondensed.Projects.Epi
 import LeanPool.LeanCondensed.Projects.IsLocalizedMonoidal
+import LeanPool.LeanCondensed.Projects.MonoidalLinear
 import LeanPool.LeanCondensed.Projects.PreservesCoprod
 import LeanPool.LeanCondensed.Projects.Sequence
 

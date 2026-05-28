@@ -45,6 +45,9 @@ The supporting infrastructure includes:
   preserves finite products.
 - A monoidal equivalence between a category `D` and its localized
   monoidal counterpart `LocalizedMonoidal L W ε`.
+- Monoidal preadditive and monoidal linear structures transported from a
+  monoidal localization to its `LocalizedMonoidal` and to a category of
+  sheaves, specialized to light condensed modules.
 - Auxiliary lemmas on countable thin categories and on preservation of
   epimorphisms under retracts of natural transformations.
 
