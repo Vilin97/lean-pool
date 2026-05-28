@@ -67,82 +67,13 @@ lemma truncatedObtuseRegion_subset_box (n : ℕ) (η : ℝ) :
   have h₁ : (η * (n : ℝ) : ℝ) ≤ (p : ℝ) := h.1
   have h₂ : (η * (n : ℝ) : ℝ) ≤ (q : ℝ) := h.2.1
   have h₃ : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 := h.2.2.1
-  have h₄ : Int.gcd (Int.gcd p q) (n : ℤ) = 1 := h.2.2.2
-  constructor
-  · have h₅ : (⌈η * (n : ℝ)⌉ : ℝ) - 1 ≤ (p : ℝ) := by
-      have h₅₂ : (⌈η * (n : ℝ)⌉ : ℝ) - 1 ≤ (η * (n : ℝ)) := by
-        linarith [Int.ceil_lt_add_one (η * (n : ℝ))]
-      linarith
-    have h₆ : (p : ℝ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) := by
-      have h₆₁ : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 := h₃
-      have h₆₂ : (η * (n : ℝ)) ≤ (q : ℝ) := h₂
-      have h₆₃ : (p : ℝ) < (n : ℝ) / 2 - η * (n : ℝ) := by linarith
-      have h₆₄ : (p : ℝ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-        have h₆₅ : (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) ≤ (n : ℝ) / 2 - η * (n : ℝ) := by
-          exact Int.floor_le ((n : ℝ) / 2 - η * (n : ℝ))
-        have h₆₆ : (p : ℝ) < (n : ℝ) / 2 - η * (n : ℝ) := h₆₃
-        have h₆₇ : (p : ℝ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-          have h₆₈ : (p : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-            apply Int.le_floor.mpr
-            linarith
-          exact by
-            exact_mod_cast h₆₈
-        exact h₆₇
-      exact_mod_cast h₆₄
-    have h₇ : (⌈η * (n : ℝ)⌉ - 1 : ℤ) ≤ p := by
-      have h₇₂ : (⌈η * (n : ℝ)⌉ : ℤ) - 1 ≤ p := by
-        have h₇₅ : (⌈η * (n : ℝ)⌉ : ℤ) - 1 ≤ p := by
-          by_contra h₇₆
-          have h₇₇ : p < (⌈η * (n : ℝ)⌉ : ℤ) - 1 := by
-            linarith
-          have h₇₈ : (p : ℝ) < (⌈η * (n : ℝ)⌉ : ℝ) - 1 := by
-            exact_mod_cast h₇₇
-          linarith [Int.le_ceil (η * (n : ℝ))]
-        exact h₇₅
-      exact_mod_cast h₇₂
-    have h₈ : p ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ) := by
-      have h₈₁ : (p : ℝ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) := h₆
-      have h₈₂ : (p : ℤ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ) := by
-        exact_mod_cast h₈₁
-      exact h₈₂
-    exact ⟨h₇, h₈⟩
-  · have h₅ : (⌈η * (n : ℝ)⌉ : ℝ) - 1 ≤ (q : ℝ) := by
-      have h₅₂ : (⌈η * (n : ℝ)⌉ : ℝ) - 1 ≤ (η * (n : ℝ)) := by
-        linarith [Int.ceil_lt_add_one (η * (n : ℝ))]
-      linarith
-    have h₆ : (q : ℝ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) := by
-      have h₆₁ : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 := h₃
-      have h₆₂ : (η * (n : ℝ)) ≤ (p : ℝ) := h₁
-      have h₆₃ : (q : ℝ) < (n : ℝ) / 2 - η * (n : ℝ) := by linarith
-      have h₆₄ : (q : ℝ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-        have h₆₅ : (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) ≤ (n : ℝ) / 2 - η * (n : ℝ) := by
-          exact Int.floor_le ((n : ℝ) / 2 - η * (n : ℝ))
-        have h₆₆ : (q : ℝ) < (n : ℝ) / 2 - η * (n : ℝ) := h₆₃
-        have h₆₇ : (q : ℝ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-          have h₆₈ : (q : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-            apply Int.le_floor.mpr
-            linarith
-          exact by
-            exact_mod_cast h₆₈
-        exact h₆₇
-      exact_mod_cast h₆₄
-    have h₇ : (⌈η * (n : ℝ)⌉ - 1 : ℤ) ≤ q := by
-      have h₇₂ : (⌈η * (n : ℝ)⌉ : ℤ) - 1 ≤ q := by
-        have h₇₅ : (⌈η * (n : ℝ)⌉ : ℤ) - 1 ≤ q := by
-          by_contra h₇₆
-          have h₇₇ : q < (⌈η * (n : ℝ)⌉ : ℤ) - 1 := by
-            linarith
-          have h₇₈ : (q : ℝ) < (⌈η * (n : ℝ)⌉ : ℝ) - 1 := by
-            exact_mod_cast h₇₇
-          linarith [Int.le_ceil (η * (n : ℝ))]
-        exact h₇₅
-      exact_mod_cast h₇₂
-    have h₈ : q ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ) := by
-      have h₈₁ : (q : ℝ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) := h₆
-      have h₈₂ : (q : ℤ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ) := by
-        exact_mod_cast h₈₁
-      exact h₈₂
-    exact ⟨h₇, h₈⟩
+  have hc : ⌈η * (n : ℝ)⌉ ≤ p + 1 ∧ ⌈η * (n : ℝ)⌉ ≤ q + 1 := by
+    constructor <;> · rw [Int.ceil_le]; push_cast; linarith
+  have hp : (p : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
+    rw [Int.le_floor]; linarith
+  have hq : (q : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
+    rw [Int.le_floor]; linarith
+  exact ⟨⟨by omega, hp⟩, ⟨by omega, hq⟩⟩
 
 lemma truncatedObtuseRegion_finite (n : ℕ) (η : ℝ) :
     (truncatedObtuseRegion n η).Finite :=
@@ -1139,73 +1070,13 @@ lemma truncatedObtuseRegion_subset_box_rb (n : ℕ) (η : ℝ) :
   have h₁ : (η * (n : ℝ) : ℝ) ≤ (p : ℝ) := h.1
   have h₂ : (η * (n : ℝ) : ℝ) ≤ (q : ℝ) := h.2.1
   have h₃ : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 := h.2.2.1
-  constructor
-  · have h₅ : (⌈η * (n : ℝ)⌉ : ℝ) - 1 ≤ (p : ℝ) := by
-      have h₅₂ : (⌈η * (n : ℝ)⌉ : ℝ) - 1 ≤ (η * (n : ℝ)) := by
-        linarith [Int.ceil_lt_add_one (η * (n : ℝ))]
-      linarith
-    have h₆ : (p : ℝ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) := by
-      have h₆₃ : (p : ℝ) < (n : ℝ) / 2 - η * (n : ℝ) := by linarith
-      have h₆₇ : (p : ℝ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-        have h₆₈ : (p : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-          apply Int.le_floor.mpr
-          norm_num at h₆₃ ⊢
-          try norm_cast at h₆₃ ⊢
-          try simp_all
-          try linarith
-        exact by
-          exact_mod_cast h₆₈
-      exact_mod_cast h₆₇
-    have h₇ : (⌈η * (n : ℝ)⌉ - 1 : ℤ) ≤ p := by
-      have h₇₂ : (⌈η * (n : ℝ)⌉ : ℤ) - 1 ≤ p := by
-        have h₇₅ : (⌈η * (n : ℝ)⌉ : ℤ) - 1 ≤ p := by
-          by_contra h₇₆
-          have h₇₇ : p < (⌈η * (n : ℝ)⌉ : ℤ) - 1 := by
-            linarith
-          have h₇₈ : (p : ℝ) < (⌈η * (n : ℝ)⌉ : ℝ) - 1 := by
-            exact_mod_cast h₇₇
-          linarith [Int.le_ceil (η * (n : ℝ))]
-        exact h₇₅
-      exact_mod_cast h₇₂
-    have h₈ : p ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ) := by
-      have h₈₁ : (p : ℝ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) := h₆
-      have h₈₂ : (p : ℤ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ) := by
-        exact_mod_cast h₈₁
-      exact h₈₂
-    exact ⟨h₇, h₈⟩
-  · have h₅ : (⌈η * (n : ℝ)⌉ : ℝ) - 1 ≤ (q : ℝ) := by
-      have h₅₂ : (⌈η * (n : ℝ)⌉ : ℝ) - 1 ≤ (η * (n : ℝ)) := by
-        linarith [Int.ceil_lt_add_one (η * (n : ℝ))]
-      linarith
-    have h₆ : (q : ℝ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) := by
-      have h₆₃ : (q : ℝ) < (n : ℝ) / 2 - η * (n : ℝ) := by linarith
-      have h₆₇ : (q : ℝ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-        have h₆₈ : (q : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-          apply Int.le_floor.mpr
-          norm_num at h₆₃ ⊢
-          try norm_cast at h₆₃ ⊢
-          try simp_all
-          try linarith
-        exact by
-          exact_mod_cast h₆₈
-      exact_mod_cast h₆₇
-    have h₇ : (⌈η * (n : ℝ)⌉ - 1 : ℤ) ≤ q := by
-      have h₇₂ : (⌈η * (n : ℝ)⌉ : ℤ) - 1 ≤ q := by
-        have h₇₅ : (⌈η * (n : ℝ)⌉ : ℤ) - 1 ≤ q := by
-          by_contra h₇₆
-          have h₇₇ : q < (⌈η * (n : ℝ)⌉ : ℤ) - 1 := by
-            linarith
-          have h₇₈ : (q : ℝ) < (⌈η * (n : ℝ)⌉ : ℝ) - 1 := by
-            exact_mod_cast h₇₇
-          linarith [Int.le_ceil (η * (n : ℝ))]
-        exact h₇₅
-      exact_mod_cast h₇₂
-    have h₈ : q ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ) := by
-      have h₈₁ : (q : ℝ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℝ) := h₆
-      have h₈₂ : (q : ℤ) ≤ (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ) := by
-        exact_mod_cast h₈₁
-      exact h₈₂
-    exact ⟨h₇, h₈⟩
+  have hc : ⌈η * (n : ℝ)⌉ ≤ p + 1 ∧ ⌈η * (n : ℝ)⌉ ≤ q + 1 := by
+    constructor <;> · rw [Int.ceil_le]; push_cast; linarith
+  have hp : (p : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
+    rw [Int.le_floor]; linarith
+  have hq : (q : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
+    rw [Int.le_floor]; linarith
+  exact ⟨⟨by omega, hp⟩, ⟨by omega, hq⟩⟩
 
 lemma truncatedObtuseRegion_finite_rb (n : ℕ) (η : ℝ) :
     (truncatedObtuseRegion n η).Finite :=
@@ -1382,79 +1253,27 @@ lemma fiber_div_injOn (n d : ℕ) (hd_pos : 0 < d) (b : ℕ)
     Set.InjOn (fun x : ℤ => (x / (d : ℤ)).toNat)
       {x ∈ S | (x % (d : ℤ)).toNat = b} := by
   intro x hx y hy hxy
-  have hxS : x ∈ S := hx.1
+  have hSx : x ∈ Set.Ico (0 : ℤ) (↑n / 2) := hS_sub hx.1
+  have hSy : y ∈ Set.Ico (0 : ℤ) (↑n / 2) := hS_sub hy.1
+  have hx0 : 0 ≤ x := hSx.1
+  have hy0 : 0 ≤ y := hSy.1
   have hx_cond : (x % (d : ℤ)).toNat = b := hx.2
-  have hyS : y ∈ S := hy.1
   have hy_cond : (y % (d : ℤ)).toNat = b := hy.2
-  have hSx : x ∈ Set.Ico (0 : ℤ) (↑n / 2) := hS_sub hxS
-  have hSy : y ∈ Set.Ico (0 : ℤ) (↑n / 2) := hS_sub hyS
-  have hx0 : 0 ≤ x := by exact hSx.1
-  have hy0 : 0 ≤ y := by exact hSy.1
   have hx_div : (x / (d : ℤ)).toNat = (y / (d : ℤ)).toNat := by simpa using hxy
-  have hx_mod : (x % (d : ℤ)).toNat = (y % (d : ℤ)).toNat := by
-    linarith
-  have hx_mod_inj : x % (d : ℤ) = y % (d : ℤ) := by
-    have h₁ : 0 ≤ (x : ℤ) := by exact_mod_cast hx0
-    have h₂ : 0 ≤ (y : ℤ) := by exact_mod_cast hy0
-    have h₃ : 0 < (d : ℤ) := by exact_mod_cast hd_pos
-    have h₄ : (x % (d : ℤ)).toNat = (y % (d : ℤ)).toNat := hx_mod
-    have h₅ : 0 ≤ x % (d : ℤ) := by
-      have h₅₃ : 0 ≤ x % (d : ℤ) := by
-        apply Int.emod_nonneg; omega
-      exact h₅₃
-    have h₆ : 0 ≤ y % (d : ℤ) := by
-      have h₆₃ : 0 ≤ y % (d : ℤ) := by
-        apply Int.emod_nonneg; omega
-      exact h₆₃
-    have h₇ : x % (d : ℤ) = y % (d : ℤ) := by
-      have h₇₁ : (x % (d : ℤ)).toNat = (y % (d : ℤ)).toNat := h₄
-      have h₇₂ : (x % (d : ℤ)).toNat = (y % (d : ℤ)).toNat := h₇₁
-      have h₇₃ : x % (d : ℤ) = y % (d : ℤ) := by
-        rw [← Int.ofNat_inj] at *
-        simp_all; omega
-      exact h₇₃
-    exact h₇
-  have hx_div_inj : x / (d : ℤ) = y / (d : ℤ) := by
-    have h₁ : 0 ≤ (x : ℤ) := by exact_mod_cast hx0
-    have h₂ : 0 ≤ (y : ℤ) := by exact_mod_cast hy0
-    have h₃ : 0 < (d : ℤ) := by exact_mod_cast hd_pos
-    have h₄ : (x / (d : ℤ)).toNat = (y / (d : ℤ)).toNat := hx_div
-    have h₅ : 0 ≤ x / (d : ℤ) := by
-      have h₅₁ : 0 ≤ x := hx0
-      have h₅₃ : 0 ≤ x / (d : ℤ) := by
-        apply Int.ediv_nonneg <;> omega
-      exact h₅₃
-    have h₆ : 0 ≤ y / (d : ℤ) := by
-      have h₆₁ : 0 ≤ y := hy0
-      have h₆₃ : 0 ≤ y / (d : ℤ) := by
-        apply Int.ediv_nonneg <;> omega
-      exact h₆₃
-    have h₇ : x / (d : ℤ) = y / (d : ℤ) := by
-      have h₇₁ : (x / (d : ℤ)).toNat = (y / (d : ℤ)).toNat := hx_div
-      have h₇₂ : (x / (d : ℤ)).toNat = (y / (d : ℤ)).toNat := h₇₁
-      have h₇₃ : x / (d : ℤ) = y / (d : ℤ) := by
-        rw [← Int.ofNat_inj] at *
-        simp_all [Int.toNat_of_nonneg h₅, Int.toNat_of_nonneg h₆]
-      exact h₇₃
-    exact h₇
-  have hxy_eq : x = y := by
-    have h₁ : x / (d : ℤ) = y / (d : ℤ) := hx_div_inj
-    have h₂ : x % (d : ℤ) = y % (d : ℤ) := hx_mod_inj
-    have h₄ : x = y := by
-      have h₅ : x = (d : ℤ) * (x / (d : ℤ)) + (x % (d : ℤ)) := by
-        have h₅₁ : (d : ℤ) * (x / (d : ℤ)) + (x % (d : ℤ)) = x := by
-          have h₅₂ := Int.mul_ediv_add_emod x (d : ℤ)
-          linarith
-        linarith
-      have h₆ : y = (d : ℤ) * (y / (d : ℤ)) + (y % (d : ℤ)) := by
-        have h₆₁ : (d : ℤ) * (y / (d : ℤ)) + (y % (d : ℤ)) = y := by
-          have h₆₂ := Int.mul_ediv_add_emod y (d : ℤ)
-          linarith
-        linarith
-      rw [h₅, h₆]
-      simp [h₁, h₂]
-    exact h₄
-  exact hxy_eq
+  have h₃ : (d : ℤ) ≠ 0 := by exact_mod_cast hd_pos.ne'
+  have hd0 : (0 : ℤ) ≤ (d : ℤ) := Int.natCast_nonneg d
+  have hmod : x % (d : ℤ) = y % (d : ℤ) := by
+    have hx' := Int.toNat_of_nonneg (Int.emod_nonneg x h₃)
+    have hy' := Int.toNat_of_nonneg (Int.emod_nonneg y h₃)
+    omega
+  have hdiv : x / (d : ℤ) = y / (d : ℤ) := by
+    have hx' := Int.toNat_of_nonneg (Int.ediv_nonneg hx0 hd0)
+    have hy' := Int.toNat_of_nonneg (Int.ediv_nonneg hy0 hd0)
+    omega
+  have ex := Int.emod_add_mul_ediv x (d : ℤ)
+  have ey := Int.emod_add_mul_ediv y (d : ℤ)
+  rw [hmod, hdiv] at ex
+  omega
 
 lemma int_ediv_eq_natCast_div (n : ℤ) (m : ℕ) (_hm : 0 < m) (hn : 0 ≤ n) :
     n / (m : ℤ) = ↑(n.toNat / m) := by simp_all
@@ -2100,57 +1919,13 @@ lemma full_sum_split_zero_nonzero
 lemma sum_stdAddChar_mul_eq (n : ℕ) [NeZero n] (t : ℤ) :
     ∑ a : ZMod n, ZMod.stdAddChar (a * (t : ZMod n)) =
     if (n : ℤ) ∣ t then (n : ℂ) else 0 := by
-  have h1 : ∑ a : ZMod n, ZMod.stdAddChar (a * (t : ZMod n)) = ∑ a : ZMod n,
-    ZMod.stdAddChar (a * (t : ZMod n)) := rfl
-  rw [h1]
-  have h2 : ∑ a : ZMod n,
-    ZMod.stdAddChar (a * (t : ZMod n)) = (if (t : ZMod n) = 0 then (n : ℂ) else 0) := by
-    have h3 : ∑ a : ZMod n,
-      ZMod.stdAddChar (a * (t : ZMod n)) = (if (t : ZMod n) = 0 then (n : ℂ) else 0) := by
-      have h4 : ∑ a : ZMod n,
-        ZMod.stdAddChar (a * (t : ZMod n)) = (if (t : ZMod n) = 0 then (n : ℂ) else 0) := by
-        have h5 : ∑ a : ZMod n, ZMod.stdAddChar (a * (t : ZMod n)) = ∑ a : ZMod n,
-          ZMod.stdAddChar (a * (t : ZMod n)) := rfl
-        rw [h5]
-        have h7 : ∑ a : ZMod n,
-          ZMod.stdAddChar (a * (t : ZMod n)) = (if (t : ZMod n) = 0 then (n : ℂ) else 0) := by
-          have h8 : ∑ a : ZMod n,
-            ZMod.stdAddChar (a * (t : ZMod n)) = (if (t : ZMod n) =
-              0 then (Fintype.card (ZMod n) : ℂ) else 0) := by
-            have h9 : ∑ a : ZMod n,
-              ZMod.stdAddChar (a * (t : ZMod n)) = (if (t : ZMod n) =
-                0 then (Fintype.card (ZMod n) : ℂ) else 0) := by
-              simp_all [AddChar.sum_mulShift, ZMod.isPrimitive_stdAddChar]
-            exact h9
-          have h10 : (Fintype.card (ZMod n) : ℂ) = (n : ℂ) := by
-            simp [ZMod.card]
-          rw [h8]
-          simp_all
-        exact h7
-      exact h4
-    exact h3
+  have h2 : ∑ a : ZMod n, ZMod.stdAddChar (a * (t : ZMod n)) =
+      (if (t : ZMod n) = 0 then (n : ℂ) else 0) := by
+    simp [AddChar.sum_mulShift, ZMod.isPrimitive_stdAddChar, ZMod.card]
+  have h3 : (t : ZMod n) = 0 ↔ (n : ℤ) ∣ t :=
+    ZMod.intCast_zmod_eq_zero_iff_dvd t n
   rw [h2]
-  have h3 : (t : ZMod n) = 0 ↔ (n : ℤ) ∣ t := by
-    constructor
-    · intro h
-      have h4 : (t : ZMod n) = 0 := h
-      have h5 : (n : ℤ) ∣ t := by
-        have h6 : (t : ZMod n) = 0 := h4
-        have h7 : (t : ZMod n) = 0 := h6
-        rw [ZMod.intCast_zmod_eq_zero_iff_dvd] at h7
-        simpa using h7
-      exact h5
-    · intro h
-      have h4 : (n : ℤ) ∣ t := h
-      have h5 : (t : ZMod n) = 0 := by
-        have h6 : (n : ℤ) ∣ t := h4
-        have h7 : (t : ZMod n) = 0 := by
-          rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
-          simpa using h6
-        exact h7
-      exact h5
-  split_ifs at * <;>
-  simp_all
+  simp only [h3]
 
 lemma sum_filter_units_eq_sum_units (n : ℕ) [NeZero n] (f : ZMod n → ℂ) :
     ∑ a ∈ Finset.univ.filter (fun a : ZMod n => IsUnit a), f a =
@@ -3824,15 +3599,7 @@ lemma sum_exchange_weighted
         then ‖normalizedDFT n (intervalIndicator n mq) l‖ /
              (2 * min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))
         else 0) := by
-  have h₁ : ∑ u : (ZMod d)ˣ, (∑ k : ZMod n, ∑ l : ZMod n,
-    if k ≠ 0 ∧ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) * q : ℤ) % (d : ℤ) =
-      0 then ‖normalizedDFT n (intervalIndicator n mq) l‖ / (2 * min (ZMod.val k : ℝ) ((n : ℝ) -
-        ZMod.val k)) else 0) = ∑ k : ZMod n, ∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-          if k ≠ 0 ∧ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) * q : ℤ) % (d : ℤ) =
-            0 then ‖normalizedDFT n (intervalIndicator n mq) l‖ / (2 *
-              min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) else 0) := by
-    rw [Finset.sum_comm]
-  simp_all
+  rw [Finset.sum_comm]
 
 
 
@@ -4058,103 +3825,13 @@ lemma factor_weight_from_double_sum
         then ‖normalizedDFT n (intervalIndicator n mq) l‖
         else 0)) /
     (2 * min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) := by
-  have h₂ : (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-    (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-      q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ / (2 * min (ZMod.val k : ℝ) ((n : ℝ) -
-        ZMod.val k)) else 0))) = (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-          (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-            q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0)) / (2 *
-              min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))) := by
-    calc
-      (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-        (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-          q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ / (2 *
-            min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) else 0))) =
-          (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-            (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-              q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0) / (2 *
-                min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))) ) := by
-        apply Finset.sum_congr rfl
-        intro u _
-        apply Finset.sum_congr rfl
-        intro l _
-        split_ifs <;> simp_all [div_eq_mul_inv]
-      _ = (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-        (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-          q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0)) / (2 *
-            min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))) := by
-        apply Finset.sum_congr rfl
-        intro u _
-        have h₃ : (∑ l : ZMod n,
-          (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-            q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0) / (2 *
-              min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))) =
-              (∑ l : ZMod n,
-                (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-                  q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0)) / (2 *
-                    min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) := by
-          rw [Finset.sum_div]
-        rw [h₃]
-  have h₃ : (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-    (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-      q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0)) / (2 *
-        min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))) = (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-          (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-            q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0))) / (2 *
-              min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) := by
-    calc
-      (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-        (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-          q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0)) / (2 *
-            min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))) =
-          (∑ u : (ZMod d)ˣ, ((∑ l : ZMod n,
-            (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-              q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0)) * (1 / (2 *
-                min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))))) := by
-        apply Finset.sum_congr rfl
-        intro u _
-        have h₄ : 0 < (2 * min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) := by
-          have h₅ : 0 < (ZMod.val k : ℝ) := by
-            exact_mod_cast Nat.pos_of_ne_zero (by intro h; simp_all [ZMod.val_eq_zero])
-          have h₆ : (n : ℝ) - ZMod.val k > 0 := by
-            have h₇ : (n : ℝ) > (ZMod.val k : ℝ) := by
-              have h₈ : (n : ℕ) > ZMod.val k := by
-                have h₉ : ZMod.val k < n := ZMod.val_lt k
-                linarith
-              exact_mod_cast h₈
-            linarith
-          positivity
-        field_simp [h₄.ne']
-      _ = (∑ u : (ZMod d)ˣ, ((∑ l : ZMod n,
-        (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-          q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0)) * (1 / (2 *
-            min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))))) := by rfl
-      _ = (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-        (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-          q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0))) * (1 / (2 *
-            min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))) := by
-        simp [Finset.sum_mul]
-      _ = (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-        (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-          q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0))) / (2 *
-            min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) := by
-        field_simp
-  calc
-    (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-      (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-        q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ / (2 * min (ZMod.val k : ℝ) ((n : ℝ) -
-          ZMod.val k)) else 0))) = (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-            (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-              q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ / (2 *
-                min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) else 0))) := rfl
-    _ = (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-      (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-        q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0)) / (2 *
-          min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k))) := by rw [h₂]
-    _ = (∑ u : (ZMod d)ˣ, (∑ l : ZMod n,
-      (if ((d : ℤ) ∣ (↑(ZMod.val k) * ↑(u : ZMod d).val + ↑(ZMod.val l) *
-        q)) then ‖normalizedDFT n (intervalIndicator n mq) l‖ else 0))) / (2 *
-          min (ZMod.val k : ℝ) ((n : ℝ) - ZMod.val k)) := by rw [h₃]
+  rcases ne_or_eq k 0 with _ | hk'
+  · rw [Finset.sum_div]
+    refine Finset.sum_congr rfl (fun u _ => ?_)
+    rw [Finset.sum_div]
+    refine Finset.sum_congr rfl (fun l _ => ?_)
+    split_ifs <;> simp
+  · exact absurd hk' hk
 
 
 
@@ -5227,31 +4904,10 @@ lemma fiber_index_lt
 lemma fiber_reconstruct
     (M s n : ℕ) (hn : n % M = s) (hs_le : s ≤ n) :
     s + (n - s) / M * M = n := by
-  have h₁ : M * (n / M) + s = n := by
-    have h₁₀ : M * (n / M) + n % M = n := Nat.div_add_mod n M
-    rw [hn] at h₁₀
-    linarith
-  have h₂ : M * (n / M) = n - s := by
-    have h₂₃ : M * (n / M) = n - s := by
-      have h₂₅ : M * (n / M) = n - s := by
-        omega
-      exact h₂₅
-    exact h₂₃
-  have h₃ : M ∣ n - s := by
-    have h₃₂ : M ∣ n - s := by
-      use n / M
-      linarith
-    exact h₃₂
-  have h₄ : (n - s) / M * M = n - s := by
-    have h₄₁ : M ∣ n - s := h₃
-    have h₄₂ : (n - s) / M * M = n - s := by
-      have h₄₃ : (n - s) / M * M = n - s := by
-        apply Nat.div_mul_cancel h₄₁
-      exact h₄₃
-    exact h₄₂
-  have h₅ : s + (n - s) / M * M = n := by
-    linarith
-  exact h₅
+  have h₁ : M * (n / M) + n % M = n := Nat.div_add_mod n M
+  have h₃ : M ∣ n - s := ⟨n / M, by omega⟩
+  have h₄ : (n - s) / M * M = n - s := Nat.div_mul_cancel h₃
+  omega
 
 
 
@@ -5455,69 +5111,16 @@ lemma reduced_product_mod_ne_zero_of_coprime
     [NeZero (p ^ (α - v))]
     (s : ℕ) (hs_cop : Nat.Coprime s p) :
     (k_val / p ^ v) * s % p ^ (α - v) ≠ 0 := by
-  have h₁ : α - v ≥ 1 := by
-    omega
-  have h₃ : (k_val / p ^ v) * s % p ^ (α - v) ≠ 0 := by
-    by_contra h
-    have h₄ : (k_val / p ^ v) * s % p ^ (α - v) = 0 := by simpa using h
-    have h₅ : p ^ (α - v) ∣ (k_val / p ^ v) * s := by
-      rw [Nat.dvd_iff_mod_eq_zero]
-      exact h₄
-    have h₆ : p ∣ (k_val / p ^ v) * s := by
-      have h₇ : p ∣ p ^ (α - v) := by
-        exact dvd_pow_self p (by omega)
-      exact dvd_trans h₇ h₅
-    have h₇ : p ∣ (k_val / p ^ v) ∨ p ∣ s := by
-      have h₈ : p.Prime := hp
-      have h₉ : p ∣ (k_val / p ^ v) * s := h₆
-      exact h₈.dvd_mul.mp h₉
-    cases h₇ with
-    | inl h₈ =>
-      have h₉ : p ∣ (k_val / p ^ v) := h₈
-      have h₁₀ : p ^ (v + 1) ∣ k_val := by
-        have h₁₃ : p ^ v * (k_val / p ^ v) = k_val := by
-          have h₁₄ : p ^ v ∣ k_val := hv_val
-          have h₁₅ : p ^ v * (k_val / p ^ v) = k_val := by
-            rw [Nat.mul_div_cancel' h₁₄]
-          exact h₁₅
-        have h₁₆ : p ^ (v + 1) ∣ k_val := by
-          have h₁₇ : p ^ (v + 1) = p ^ v * p := by
-            ring_nf
-          rw [h₁₇]
-          have h₁₈ : p ^ v * p ∣ k_val := by
-            have h₁₉ : p ∣ (k_val / p ^ v) := h₉
-            have h₂₀ : ∃ m, (k_val / p ^ v) = p * m := by
-              obtain ⟨m, hm⟩ := h₁₉
-              exact ⟨m, by linarith⟩
-            obtain ⟨m, hm⟩ := h₂₀
-            have h₂₁ : p ^ v * (k_val / p ^ v) = p ^ v * (p * m) := by
-              rw [hm]
-            use m
-            linarith
-          exact h₁₈
-        exact h₁₆
-      have h₁₁ : p ^ (v + 1) ∣ k_val := h₁₀
-      exact hv_max h₁₁
-    | inr h₈ =>
-      have h₉ : p ∣ s := h₈
-      have h₁₀ : p ∣ s := h₉
-      have h₁₁ : ¬p ∣ s := by
-        have h₁₂ : Nat.Coprime s p := hs_cop
-        have h₁₃ : ¬p ∣ s := by
-          intro h₁₄
-          have h₁₅ : p ∣ s := h₁₄
-          have h₁₆ : p ∣ s.gcd p := Nat.dvd_gcd h₁₅ (by simp)
-          have h₁₇ : s.gcd p = 1 := by
-            rw [Nat.coprime_iff_gcd_eq_one] at h₁₂
-            exact h₁₂
-          rw [h₁₇] at h₁₆
-          have h₁₈ : p ∣ 1 := h₁₆
-          have h₁₉ : p ≤ 1 := Nat.le_of_dvd (by decide) h₁₈
-          have h₂₀ : p ≥ 2 := Nat.Prime.two_le hp
-          linarith
-        exact h₁₃
-      exact h₁₁ h₁₀
-  exact h₃
+  intro h
+  have h₅ : p ^ (α - v) ∣ (k_val / p ^ v) * s := Nat.dvd_of_mod_eq_zero h
+  have h₆ : p ∣ (k_val / p ^ v) * s :=
+    dvd_trans (dvd_pow_self p (by omega)) h₅
+  rcases (hp.dvd_mul).mp h₆ with h₈ | h₈
+  · have hk : p ^ v * (k_val / p ^ v) = k_val := Nat.mul_div_cancel' hv_val
+    apply hv_max
+    obtain ⟨m, hm⟩ := h₈
+    exact ⟨m, by rw [pow_succ, mul_assoc, ← hm, hk]⟩
+  · exact absurd h₈ (hp.coprime_iff_not_dvd.mp hs_cop.symm)
 
 
 
@@ -6798,84 +6401,27 @@ lemma quot_lt
     (n d : ℕ) (hd_dvd : d ∣ n) (b : ℕ) (hb_pos : 1 ≤ b) (_hb_lt : b < d)
     (v : ℕ) (hv_lt : v < n) (hv_mod : v % d = b) :
     v / d < n / d := by
-  have h_v_eq : v = d * (v / d) + b := by
-    have h₁ : v = d * (v / d) + (v % d) := by
-      have h₂ := Nat.div_add_mod v d
-      linarith
-    rw [hv_mod] at h₁
-    linarith
-  have h_n_eq : n = d * (n / d) := by
-    have h₁ : d * (n / d) = n := by
-      have h₂ : d ∣ n := hd_dvd
-      have h₃ : d * (n / d) = n := Nat.mul_div_cancel' h₂
-      exact h₃
-    linarith
-  have h_strict_ineq : d * (v / d) + 1 < d * (n / d) := by
-    have h₃ : d * (v / d) + 1 < d * (n / d) := by
-      omega
-    exact h₃
-  have h_final : v / d < n / d := by
-    by_contra! h
-    have h₂ : d * (v / d) ≥ d * (n / d) := by
-      nlinarith
-    omega
-  exact h_final
+  have h_v_eq : d * (v / d) + (v % d) = v := Nat.div_add_mod v d
+  have h_n_eq : d * (n / d) = n := Nat.mul_div_cancel' hd_dvd
+  have h_mul_lt : d * (v / d) < d * (n / d) := by omega
+  exact Nat.lt_of_mul_lt_mul_left h_mul_lt
 
 
 
 lemma nat_sub_mul_add (A B d b : ℕ) (hBA : B < A) (hbd : b < d) :
     d * A - (d * B + b) = d * (A - B - 1) + (d - b) := by
-  have h₃ : A - B - 1 + 1 = A - B := by
-    have h₃₂ : A - B - 1 + 1 = A - B := by
-      have h₃₃ : A - B - 1 + 1 = A - B := by
-        have h₃₄ : A - B - 1 + 1 = A - B := by
-          omega
-        exact h₃₄
-      exact h₃₃
-    exact h₃₂
-  have h₄ : d * A - (d * B + b) = d * (A - B - 1) + (d - b) := by
-    have h₄₁ : d * A - (d * B + b) = d * A - (d * B + b) := rfl
-    rw [h₄₁]
-    have h₄₂ : d * A - (d * B + b) = d * (A - B) - b := by
-      have h₄₃ : d * A - (d * B + b) = d * (A - B) - b := by
-        have h₄₇ : d * A - (d * B + b) = d * (A - B) - b := by
-          have h₄₈ : d * (A - B) = d * A - d * B := by
-            have h₄₉ : d * (A - B) = d * A - d * B := by
-              rw [Nat.mul_sub_left_distrib]
-            exact h₄₉
-          have h₅₀ : d * (A - B) - b = (d * A - d * B) - b := by
-            rw [h₄₈]
-          have h₅₁ : d * A - (d * B + b) = d * (A - B) - b := by
-            omega
-          exact h₅₁
-        exact h₄₇
-      exact h₄₃
-    rw [h₄₂]
-    have h₄₃ : d * (A - B) - b = d * (A - B - 1) + (d - b) := by
-      have h₄₅ : d * (A - B) - b = d * (A - B - 1) + (d - b) := by
-        have h₄₆ : d * (A - B) = d * (A - B - 1) + d := by
-          have h₄₇ : A - B - 1 + 1 = A - B := h₃
-          have h₄₈ : d * (A - B) = d * (A - B - 1 + 1) := by
-            rw [h₄₇]
-          have h₅₀ : d * (A - B) = d * (A - B - 1) + d := by
-            linarith
-          exact h₅₀
-        have h₄₇ : d * (A - B) - b = (d * (A - B - 1) + d) - b := by
-          rw [h₄₆]
-        have h₄₈ : (d * (A - B - 1) + d) - b = d * (A - B - 1) + (d - b) := by
-          have h₅₁ : (d * (A - B - 1) + d) - b = d * (A - B - 1) + (d - b) := by
-            have h₅₄ : (d * (A - B - 1) + d) - b = d * (A - B - 1) + (d - b) := by
-              have h₅₆ : (d * (A - B - 1) + d) - b = d * (A - B - 1) + (d - b) := by
-                omega
-              exact h₅₆
-            exact h₅₄
-          exact h₅₁
-        have h₄₉ : d * (A - B) - b = d * (A - B - 1) + (d - b) := by
-          omega
-        exact h₄₉
-      exact h₄₅
-    rw [h₄₃]
-  apply h₄
+  have e1 : d * (A - B) = d * A - d * B := Nat.mul_sub_left_distrib d A B
+  have e2 : d * (A - B - 1) + d = d * (A - B) := by
+    rw [← Nat.mul_succ]
+    congr 1
+    omega
+  have e3 : d * B + d ≤ d * A := by
+    have hmul : d * (B + 1) ≤ d * A := by
+      apply Nat.mul_le_mul_left
+      omega
+    rw [Nat.mul_add, Nat.mul_one] at hmul
+    exact hmul
+  omega
 
 
 
@@ -9332,82 +8878,22 @@ lemma pdivPairs_subset_prod_half (n : ℕ) (η : ℝ) (hη_pos : 0 < η) :
       Set.Icc (0 : ℤ) (n / 2 : ℤ) := by
   intro ⟨a, b⟩ h
   simp only [pdivPairs, truncatedObtuseRegion, Set.mem_setOf_eq, Set.mem_prod] at h ⊢
-  have h₁ : (η : ℝ) * (n : ℝ) ≤ (a : ℝ) := by
-    exact h.1.1
-  have h₂ : (η : ℝ) * (n : ℝ) ≤ (b : ℝ) := by
-    exact h.1.2.1
-  have h₃ : (a : ℝ) + (b : ℝ) < (n : ℝ) / 2 := by
-    exact h.1.2.2.1
-  have h₄ : Int.gcd (Int.gcd a b) (n : ℤ) = 1 := by
-    exact h.1.2.2.2
-  have h₆ : (largestPrimeFactor n : ℤ) ∣ a := by
-    exact h.2.2
-  have h₇ : 0 ≤ a := by
-    have h₇₂ : 0 ≤ (η : ℝ) * (n : ℝ) := by positivity
-    have h₇₃ : 0 ≤ (a : ℝ) := by linarith
-    exact_mod_cast h₇₃
-  have h₈ : 0 ≤ b := by
-    have h₈₂ : 0 ≤ (η : ℝ) * (n : ℝ) := by positivity
-    have h₈₃ : 0 ≤ (b : ℝ) := by linarith
-    exact_mod_cast h₈₃
-  have h₉ : (a : ℝ) + (b : ℝ) < (n : ℝ) / 2 := h₃
-  have h₁₀ : (a : ℝ) < (n : ℝ) / 2 := by
-    have h₁₀₂ : 0 ≤ (b : ℝ) := by positivity
-    linarith
-  have h₁₁ : (a : ℤ) ≤ (n / 2 : ℤ) := by
-    have h₁₁₁ : (a : ℝ) < (n : ℝ) / 2 := h₁₀
-    have h₁₁₂ : (a : ℝ) ≤ (n : ℝ) / 2 := by linarith
-    have h₁₁₃ : (a : ℤ) ≤ (n : ℕ) / 2 := by
-      have h₁₁₄ : (a : ℝ) ≤ (n : ℝ) / 2 := by linarith
-      have h₁₁₅ : (a : ℤ) ≤ (n : ℕ) / 2 := by
-        have h₁₁₆ : (a : ℝ) ≤ (n : ℝ) / 2 := by linarith
-        have h₁₁₇ : (a : ℤ) ≤ ⌊(n : ℝ) / 2⌋ := by
-          apply Int.le_floor.mpr
-          norm_num at h₁₁₆ ⊢
-          simp_all
-        have h₁₁₈ : ⌊(n : ℝ) / 2⌋ = (n : ℕ) / 2 := by
-          rw [Int.floor_eq_iff]
-          (try norm_cast);
-          (try
-            {
-              field_simp at *;
-              ring_nf at *;
-              norm_cast at *;
-              (try omega)
-            })
-        rw [h₁₁₈] at h₁₁₇
-        exact_mod_cast h₁₁₇
-      exact h₁₁₅
-    exact_mod_cast h₁₁₃
-  have h₁₂ : (b : ℤ) ≤ (n / 2 : ℤ) := by
-    have h₁₂₁ : (a : ℝ) + (b : ℝ) < (n : ℝ) / 2 := h₃
-    have h₁₂₂ : (a : ℝ) ≥ 0 := by positivity
-    have h₁₂₃ : (b : ℝ) < (n : ℝ) / 2 := by linarith
-    have h₁₂₄ : (b : ℝ) ≤ (n : ℝ) / 2 := by linarith
-    have h₁₂₅ : (b : ℤ) ≤ (n : ℕ) / 2 := by
-      have h₁₂₆ : (b : ℝ) ≤ (n : ℝ) / 2 := by linarith
-      have h₁₂₇ : (b : ℤ) ≤ ⌊(n : ℝ) / 2⌋ := by
-        apply Int.le_floor.mpr
-        norm_num at h₁₂₆ ⊢
-        simp_all
-      have h₁₂₈ : ⌊(n : ℝ) / 2⌋ = (n : ℕ) / 2 := by
-        rw [Int.floor_eq_iff]
-        (try norm_cast);
-        (try
-          {
-            field_simp at *;
-            ring_nf at *;
-            norm_cast at *;
-            (try omega)
-          })
-      rw [h₁₂₈] at h₁₂₇
-      exact_mod_cast h₁₂₇
-    exact_mod_cast h₁₂₅
-  refine ⟨?_, ?_⟩
-  · refine ⟨h₇, h₁₁, ?_⟩
-    exact h₆
-  · refine ⟨h₈, ?_⟩
-    exact h₁₂
+  have h₁ : (η : ℝ) * (n : ℝ) ≤ (a : ℝ) := h.1.1
+  have h₂ : (η : ℝ) * (n : ℝ) ≤ (b : ℝ) := h.1.2.1
+  have h₃ : (a : ℝ) + (b : ℝ) < (n : ℝ) / 2 := h.1.2.2.1
+  have h₆ : (largestPrimeFactor n : ℤ) ∣ a := h.2.2
+  have hηn : 0 ≤ (η : ℝ) * (n : ℝ) := by positivity
+  have h₇ : 0 ≤ a := by exact_mod_cast (by linarith : (0 : ℝ) ≤ (a : ℝ))
+  have h₈ : 0 ≤ b := by exact_mod_cast (by linarith : (0 : ℝ) ≤ (b : ℝ))
+  have ha2 : (2 * a : ℤ) < (n : ℤ) := by
+    have hr : (2 : ℝ) * (a : ℝ) < (n : ℝ) := by linarith
+    exact_mod_cast hr
+  have hb2 : (2 * b : ℤ) < (n : ℤ) := by
+    have hr : (2 : ℝ) * (b : ℝ) < (n : ℝ) := by linarith
+    exact_mod_cast hr
+  have h₁₁ : (a : ℤ) ≤ (n / 2 : ℤ) := by omega
+  have h₁₂ : (b : ℤ) ≤ (n / 2 : ℤ) := by omega
+  exact ⟨⟨h₇, h₁₁, h₆⟩, ⟨h₈, h₁₂⟩⟩
 
 lemma ncard_nonneg_multiples_eq (B : ℤ) (P : ℕ) (hP : 0 < P) (hB : 0 ≤ B) :
     ({x : ℤ | 0 ≤ x ∧ x ≤ B ∧ (P : ℤ) ∣ x}).ncard = B.toNat / P + 1 :=
