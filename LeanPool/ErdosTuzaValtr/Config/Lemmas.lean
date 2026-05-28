@@ -110,6 +110,11 @@ theorem head_lt_getLast {l : List α} (l_cup : C.Cup l) (p q : α) (hl : 2 ≤ l
     rw [← hq]
     exact l_sorted.2.2 x (by simp) q' (by simp)
 
+/-- Compatibility alias for the upstream theorem name. -/
+theorem head?_lt_getLast? {l : List α} (l_cup : C.Cup l) (p q : α) (hl : 2 ≤ l.length)
+    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q :=
+  head_lt_getLast l_cup p q hl hp hq
+
 end Cup
 
 namespace NCup
@@ -195,6 +200,11 @@ theorem head_lt_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p q
     (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q :=
   l_ncup.left.head_lt_getLast p q (by rw [l_ncup.right]; omega) hp hq
 
+/-- Compatibility alias for the upstream theorem name. -/
+theorem head?_lt_getLast? {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p q : α)
+    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q :=
+  head_lt_getLast l_ncup p q hp hq
+
 theorem head_le_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α) (hp : p ∈ l.head?)
     (hq : q ∈ l.getLast?) : p ≤ q := by
   have l_sorted : l.Pairwise (· < ·) := List.isChain_iff_pairwise.mp l_ncup.left.left
@@ -212,6 +222,11 @@ theorem head_le_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α)
       rw [List.pairwise_cons] at l_sorted
       apply le_of_lt
       exact l_sorted.1 q (List.mem_of_mem_getLast? hq)
+
+/-- Compatibility alias for the upstream theorem name. -/
+theorem head?_le_getLast? {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α)
+    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p ≤ q :=
+  head_le_getLast l_ncup p q hp hq
 
 end NCup
 
