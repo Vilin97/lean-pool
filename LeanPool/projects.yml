@@ -1253,3 +1253,42 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: neukirch
+    title: "Neukirch's Algebraic Number Theory: Hilbert ramification theory"
+    summary: Formalizes Hilbert's ramification theory for Galois extensions of number fields, including the fundamental identity and the decomposition and inertia groups, ported from the jjdishere/neukirch project.
+    branch: number theory
+    entry_module: LeanPool.Neukirch
+    authors:
+      - Hu Yongle
+    source:
+      url: https://github.com/jjdishere/neukirch
+      github_repo: jjdishere/neukirch
+    status: verified
+    main_declarations:
+      - NumberField.ramificationIdx_mul_inertiaDeg_of_isGalois
+    main_results:
+      - declaration: NumberField.ramificationIdx_mul_inertiaDeg_of_isGalois
+        informal: "Proves the fundamental identity g·e·f = [L : K] for a Galois extension of number fields."
+      - declaration: NumberField.finrank_eq_ramificationIdx_mul_inertiaDeg
+        informal: "Shows that when P is the unique prime over p, the degree [L : K] equals the ramification index times the inertia degree."
+      - declaration: NumberField.IsMaximal_conjugates
+        informal: Proves the Galois group acts transitively on the primes lying over a fixed prime.
+      - declaration: NumberField.DecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg
+        informal: Computes the order of the decomposition group as the product of the ramification index and inertia degree.
+      - declaration: NumberField.InertiaField_aut_equiv_ResidueField_aut
+        informal: Identifies the Galois group of the inertia field over K with the Galois group of the residue field extension.
+      - declaration: NumberField.InertiaGroup_card_eq_ramificationIdx
+        informal: Computes the order of the inertia group as the ramification index of p in L.
+      - declaration: Ideal.ramificationIdx_algebra_tower_of_eq
+        informal: Proves multiplicativity of the ramification index in a tower of Dedekind domains.
+      - declaration: Ideal.inertiaDeg_algebra_tower_of_eq
+        informal: Proves multiplicativity of the inertia degree in a tower of Dedekind domains.
+    tags:
+      - number-theory
+      - algebraic-number-theory
+      - ramification
+      - galois-theory
+    msc:
+      - "11R32"
+      - "11S15"
+      - "13B25"

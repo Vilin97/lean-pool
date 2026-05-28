@@ -338,6 +338,9 @@ import LeanPool.LowDimSolvClassification.LemmasDim3
 import LeanPool.LowDimSolvClassification.QuotientSolvable
 import LeanPool.LowDimSolvClassification.Semidirect
 import LeanPool.LowDimSolvClassification.Tactics
+import LeanPool.Neukirch
+import LeanPool.Neukirch.ExtensionOfDedekindDomains
+import LeanPool.Neukirch.HilbertRamificationTheory
 import LeanPool.OrderPQ
 import LeanPool.OrderPQ.Basic
 import LeanPool.OrderPQ.IsCyclic
