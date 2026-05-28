@@ -10,29 +10,33 @@ import LeanPool.LeanPolyABC.MasonStothers
 
 noncomputable section
 
-open scoped Polynomial Classical
+open scoped Polynomial
 
-open Polynomial
+open Polynomial UniqueFactorizationMonoid
 
-open UniqueFactorizationMonoid
+namespace LeanPolyABC
 
-variable {k : Type _} [Field k]
+variable {k : Type _} [Field k] [DecidableEq k]
 
+omit [DecidableEq k] in
+lemma ne_zero_of_natDegree_gt_0 {a : k[X]} (ha : a.natDegree > 0) : a ≠ 0 := fun h => by
+  simp only [h, natDegree_zero, gt_iff_lt, lt_self_iff_false] at ha
+
+omit [DecidableEq k] in
 /-- Davenport's theorem
 
-For any nonzero polynomial a, b ∈ k[t] with k of characteristic zero, deg(a) + 2 ≤ 2 * deg(a^3 - b^2).
+For any nonzero polynomial a, b ∈ k[t] with k of characteristic zero,
+deg(a) + 2 ≤ 2 * deg(a^3 - b^2).
 
 Proof) Apply ABC for (-a^3, b^2, a^3 - b^2).
 -/
-lemma ne_zero_of_natDegree_gt_0 {a : k[X]} (ha : a.natDegree > 0) : a ≠ 0 := λ h ↦ by
-  simp only [h, natDegree_zero, gt_iff_lt, lt_self_iff_false] at ha
-
 theorem Polynomial.davenport [CharZero k] {a b : k[X]}
     (ha : a.natDegree > 0) (hb : b.natDegree > 0) (hnz : a ^ 3 - b ^ 2 ≠ 0) :
     a.natDegree + 2 ≤ 2 * (a ^ 3 - b ^ 2).natDegree := by
-  have ha3 : -a^3 ≠ 0 := neg_ne_zero.mpr <| pow_ne_zero 3 <| ne_zero_of_natDegree_gt_0 ha
-  have hb2 : b^2 ≠ 0 := pow_ne_zero 2 <| ne_zero_of_natDegree_gt_0 hb
-  cases' abc'_char0 ha3 hb2 hnz (by ring_nf) with heq hineq
+  classical
+  have ha3 : -a ^ 3 ≠ 0 := neg_ne_zero.mpr <| pow_ne_zero 3 <| ne_zero_of_natDegree_gt_0 ha
+  have hb2 : b ^ 2 ≠ 0 := pow_ne_zero 2 <| ne_zero_of_natDegree_gt_0 hb
+  rcases Polynomial.abc'_char0 ha3 hb2 hnz (by ring_nf) with heq | hineq
   · simp only [natDegree_neg, natDegree_pow] at heq
     omega
   · rw [Nat.succ_le_iff] at hineq
@@ -40,6 +44,7 @@ theorem Polynomial.davenport [CharZero k] {a b : k[X]}
       radical_neg, Nat.ofNat_pos, radical_pow, max_lt_iff] at hineq
     nlinarith only [hineq.1, hineq.2, radical_natDegree_le a, radical_natDegree_le b]
 
+omit [DecidableEq k] in
 -- Auxiliary lemma to remove nonzero hypothesis using coprimality and a' ≠ 0.
 theorem isCoprime_nonzero_c {a b : k[X]} (h : IsCoprime a b) (ha : derivative a ≠ 0) :
     a ^ 3 - b ^ 2 ≠ 0 := by
@@ -47,18 +52,20 @@ theorem isCoprime_nonzero_c {a b : k[X]} (h : IsCoprime a b) (ha : derivative a 
   rw [sub_eq_zero] at h_eq_zero
   have hp : IsCoprime (a ^ 3) (b ^ 2) := h.pow
   rw [← h_eq_zero, isCoprime_self, isUnit_pow_iff, isUnit_iff] at hp
-  rcases hp with ⟨r, r_unit, eq_a⟩
-  rw [← eq_a] at ha; exact ha derivative_C
-  norm_num
+  · rcases hp with ⟨r, _, eq_a⟩
+    rw [← eq_a] at ha; exact ha derivative_C
+  · norm_num
 
+omit [DecidableEq k] in
 /-- Davenport's theorem for general field k of any characteristic
 
-For any coprime polynomial a, b ∈ k[t] with nonzero derivatives, deg(a) + 2 ≤ 2 * deg(a^3 - b^2).
+For any coprime polynomial a, b ∈ k[t] with nonzero derivatives,
+deg(a) + 2 ≤ 2 * deg(a^3 - b^2).
 Proof) Apply ABC for (-a^3, b^2, a^3 - b^2).
 -/
 theorem Polynomial.davenport' {a b : k[X]} (hab : IsCoprime a b) (haderiv : derivative a ≠ 0)
-    (hbderiv : derivative b ≠ 0) : a.natDegree + 2 ≤ 2 * (a ^ 3 - b ^ 2).natDegree :=
-  by
+    (hbderiv : derivative b ≠ 0) : a.natDegree + 2 ≤ 2 * (a ^ 3 - b ^ 2).natDegree := by
+  classical
   have hnz : a ^ 3 - b ^ 2 ≠ 0 := isCoprime_nonzero_c hab haderiv
   have ha : a ≠ 0 := fun ha => haderiv (ha.symm ▸ derivative_zero)
   have hb : b ≠ 0 := fun hb => hbderiv (hb.symm ▸ derivative_zero)
@@ -68,11 +75,12 @@ theorem Polynomial.davenport' {a b : k[X]} (hab : IsCoprime a b) (haderiv : deri
   have h2 : IsCoprime (b ^ 2) (a ^ 3 - b ^ 2) := by
     rwa [sub_eq_add_neg, neg_eq_neg_one_mul, IsCoprime.add_mul_right_right_iff,
       IsCoprime.pow_iff two_pos three_pos, isCoprime_comm]
-  cases'
-    abc (neg_ne_zero.mpr (pow_ne_zero 3 ha)) (pow_ne_zero 2 hb) hnz hab.pow.neg_left
-      (by rw [sub_eq_add_neg, add_add_add_comm, neg_add_self, add_neg_self, add_zero]) with
-    h h
-  · -- When we have vanishing derivatives. This condition implies 3 = 0 = 2, which is impossible for any field k.
+  rcases
+    Polynomial.abc (neg_ne_zero.mpr (pow_ne_zero 3 ha)) (pow_ne_zero 2 hb) hnz hab.pow.neg_left
+      (by rw [sub_eq_add_neg, add_add_add_comm, neg_add_cancel, add_neg_cancel, add_zero]) with
+    h | h
+  · -- When we have vanishing derivatives. This condition implies 3 = 0 = 2, which is impossible for
+    -- any field k.
     rw [derivative_neg, neg_eq_zero, derivative_pow, derivative_pow, Nat.add_one_sub_one,
       Nat.add_one_sub_one, mul_eq_zero, mul_eq_zero, mul_eq_zero, mul_eq_zero, or_iff_left haderiv,
       or_iff_left hbderiv, or_iff_left (pow_ne_zero 2 ha), or_iff_left (pow_ne_zero 1 hb)] at h
@@ -88,7 +96,10 @@ theorem Polynomial.davenport' {a b : k[X]} (hab : IsCoprime a b) (haderiv : deri
       max_add_add_right] at h
     replace h :=
       le_trans h
-        (add_le_add (add_le_add (radical_natDegree_le _) (radical_natDegree_le _)) <| radical_natDegree_le _)
+        (add_le_add (add_le_add (radical_natDegree_le _) (radical_natDegree_le _)) <|
+          radical_natDegree_le _)
     rw [max_le_iff] at h
     -- Add two inequalities and simplifying it gives the desired inequality.
     nlinarith only [add_le_add h.1 h.2]
+
+end LeanPolyABC

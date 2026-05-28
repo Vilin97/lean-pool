@@ -1266,14 +1266,14 @@ projects:
       github_repo: seewoo5/lean-poly-abc
     status: verified
     main_declarations:
-      - Polynomial.abc
-      - Polynomial.flt
+      - LeanPolyABC.Polynomial.abc
+      - LeanPolyABC.Polynomial.flt
     main_results:
-      - declaration: Polynomial.abc
+      - declaration: LeanPolyABC.Polynomial.abc
         informal: Mason–Stothers — for coprime non-constant polynomials with a+b=c, the max degree is below the degree of the radical of abc.
-      - declaration: Polynomial.flt
+      - declaration: LeanPolyABC.Polynomial.flt
         informal: The polynomial Fermat's Last Theorem — no nontrivial coprime polynomial solutions of aⁿ+bⁿ=cⁿ for n ≥ 3.
-      - declaration: Polynomial.flt_catalan
+      - declaration: LeanPolyABC.Polynomial.flt_catalan
         informal: The polynomial Fermat–Catalan inequality bounding solutions of aᵖ+bᵍ=cʳ.
     tags:
       - number-theory
