@@ -446,7 +446,7 @@ projects:
       - "11H06"
   - slug: lean-bourgain
     title: Lean Bourgain explicit constants
-    summary: Vendors the LeanAPAP-free analytical layer of the Bourgain two-source extractor formalization (constants, epsilon schedules, structural inequalities).
+    summary: Vendors the LeanAPAP-free layers of the Bourgain two-source extractor formalization (constants, epsilon schedules, structural inequalities, and the affine/projective incidence geometry of lines).
     branch: additive combinatorics
     entry_module: LeanPool.LeanBourgain
     authors:
@@ -465,8 +465,18 @@ projects:
         informal: The compounded Szemerédi-Trotter constant `ST_C` is strictly positive.
       - declaration: LeanPool.LeanBourgain.full_C_neq_zero
         informal: The doubling-dependent constant `full_C β` is never zero.
+      - declaration: LeanPool.LeanBourgain.final_theorem
+        informal: The master quantitative estimate combining the constants and epsilon schedules.
       - declaration: LeanPool.LeanBourgain.half_le_floor_of_one_le
         informal: For `a ≥ 1`, the floor satisfies `a / 2 ≤ ⌊a⌋₊`.
+      - declaration: LeanPool.LeanBourgain.point_intersect
+        informal: Two distinct points of the affine plane lie on a unique line.
+      - declaration: LeanPool.LeanBourgain.line_intersect
+        informal: Two distinct lines meet in at most one point of the affine plane.
+      - declaration: LeanPool.LeanBourgain.CS_UB
+        informal: The Cauchy-Schwarz upper bound on the number of point-line incidences.
+      - declaration: LeanPool.LeanBourgain.projective_transform
+        informal: A projective change of coordinates sending the line through two points to the line at infinity.
     tags:
       - additive-combinatorics
       - sum-product

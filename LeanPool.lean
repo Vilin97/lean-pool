@@ -174,6 +174,9 @@ import LeanPool.LatticeTriangle.Solution
 import LeanPool.LeanBourgain
 import LeanPool.LeanBourgain.Additive
 import LeanPool.LeanBourgain.Additive.Constants
+import LeanPool.LeanBourgain.Geometry
+import LeanPool.LeanBourgain.Geometry.Lines
+import LeanPool.LeanBourgain.Geometry.Projective
 import LeanPool.LeanBourgain.Incidence
 import LeanPool.LeanBourgain.Incidence.Constants
 import LeanPool.LeanBourgain.Util

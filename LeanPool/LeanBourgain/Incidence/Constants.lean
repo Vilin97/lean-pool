@@ -213,4 +213,131 @@ lemma lemma16 (β : ℝ) :
   have := ntlSGeps β
   linarith
 
+/-- The master quantitative estimate combining the constants and epsilon
+schedules: the bound driving the sum-product iteration is strictly below
+`p ^ (…)/ 2` for every prime `p` and admissible doubling parameter `β`. -/
+theorem final_theorem (β : ℝ) (h : 0 < β) (n : ℕ+) (p : ℕ) [instpprime : Fact p.Prime]
+    (h₁ : n ≤ (p ^ (2 - β) : ℝ))
+    (h₂ : SG_C₅ * (1 / 4) ≤ n ^ (ST_prime_field_eps β * 6 + SG_eps₂ β + SG_eps β)) :
+    (2 ^ 110 * (256 * n ^ (8 * ST_prime_field_eps β + 2 * SG_eps₃ β)) ^ 42) ^
+      full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) <
+    (p ^ min (β / 2 - 17 / 15 * (2 - β) * SG_eps₃ β) (β / 2 - 113 / 30 * β * SG_eps₃ β) : ℝ) / 2 :=
+  calc
+    ((2 ^ 110 * (256 * n ^ (8 * ST_prime_field_eps β + 2 * SG_eps₃ β)) ^ 42) ^
+        full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) : ℝ) =
+        (2 ^ 110 * 256 ^ 42 * (n ^ (8 * ST_prime_field_eps β + 2 * SG_eps₃ β)) ^ 42) ^
+        full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) := by
+      rw [mul_pow (256 : ℝ), ← mul_assoc]
+    _ = (2 ^ 110 * 256 ^ 42 * n ^ (1372 / 15 * SG_eps₃ β)) ^
+        full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) := by
+      have hexp : (8 * ST_prime_field_eps β + 2 * SG_eps₃ β) * (42 : ℕ) =
+          1372 / 15 * SG_eps₃ β := by
+        unfold ST_prime_field_eps ST_prime_field_eps₂ ST_prime_field_eps₃ SG_eps SG_eps₂
+        push_cast
+        ring
+      rw [← Real.rpow_mul_natCast (by positivity), hexp]
+    _ = (2 * (2 ^ 110 * 256 ^ 42) * n ^ (1372 / 15 * SG_eps₃ β) / 2) ^
+        full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) := by
+      ring_nf
+    _ = (2 * (2 ^ 110 * 256 ^ 42) * n ^ (1372 / 15 * SG_eps₃ β)) ^
+          full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) /
+        2 ^ full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) := by
+      rw [div_pow]
+    _ ≤ (2 * (2 ^ 110 * 256 ^ 42) * n ^ (1372 / 15 * SG_eps₃ β)) ^
+        full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) / 2 := by
+      gcongr
+      apply le_self_pow₀
+      · norm_num
+      · apply full_C_neq_zero
+    _ ≤ ((SG_C₅ * (1 / 4)) ^ 10 * n ^ (1372 / 15 * SG_eps₃ β)) ^
+        full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) / 2 := by
+      gcongr
+      unfold SG_C₅
+      norm_num
+    _ ≤ ((n ^ (ST_prime_field_eps β * 6 + SG_eps₂ β + SG_eps β)) ^ 10 *
+          n ^ (1372 / 15 * SG_eps₃ β)) ^
+        full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) / 2 := by
+      gcongr
+      exact h₂
+    _ = (n ^ (4606 / 45 * SG_eps₃ β)) ^
+        full_C (β / 2 - 439 / 45 * β * SG_eps₃ β) / 2 := by
+      have hexp : (ST_prime_field_eps β * 6 + SG_eps₂ β + SG_eps β) * (10 : ℕ) +
+          1372 / 15 * SG_eps₃ β = 4606 / 45 * SG_eps₃ β := by
+        unfold ST_prime_field_eps ST_prime_field_eps₂ ST_prime_field_eps₃ SG_eps SG_eps₂
+        push_cast
+        ring
+      rw [← Real.rpow_mul_natCast (by positivity), ← Real.rpow_add (by positivity), hexp]
+    _ ≤ (n ^ (4606 / 45 * SG_eps₃ β)) ^
+        full_C (β / 4) / 2 := by
+      have hbase : (1 : ℝ) ≤ (n : ℝ) ^ (4606 / 45 * SG_eps₃ β) := by
+        apply Real.one_le_rpow
+        · norm_cast
+          simp
+        · have := lemma10 β h
+          linarith
+      have harg : (1 : ℝ) / (β / 2 - 439 / 45 * β * SG_eps₃ β) ≤ 1 / (β / 4) := by
+        apply one_div_le_one_div_of_le (by linarith)
+        exact le_of_lt <| lemma11 β h
+      unfold full_C full_C₂
+      gcongr
+      · norm_num
+      · norm_num
+      · have := lemma12 β h
+        positivity
+    _ ≤ ((p ^ (2 - β)) ^ (4606 / 45 * SG_eps₃ β)) ^
+        full_C (β / 4) / 2 := by
+      gcongr
+      simp [lemma10 β h]
+    _ ≤ ((p ^ 2) ^ (4606 / 45 * SG_eps₃ β)) ^
+        full_C (β / 4) / 2 := by
+      conv =>
+        rhs
+        lhs
+        lhs
+        rw [← Real.rpow_natCast]
+      gcongr
+      · have := lemma10 β h
+        linarith
+      · exact_mod_cast instpprime.out.one_le
+      · push_cast
+        linarith
+    _ = p ^ (full_C (β / 4) * 9212 / 45 * SG_eps₃ β) / 2 := by
+      rw [← Real.rpow_natCast_mul (by positivity), ← Real.rpow_mul_natCast (by positivity)]
+      congr 2
+      push_cast
+      ring
+    _ ≤ p ^ (full_C (β / 4) * 9212 / 45 * (β * 45 / (4 * (full_C (β / 4) * 9212)))) / 2 := by
+      gcongr
+      · exact_mod_cast instpprime.out.one_le
+      · unfold SG_eps₃
+        refine (min_le_right _ _).trans (le_of_eq ?_)
+        ring
+    _ = p ^ (β / 4) / 2 := by
+      congr 2
+      unfold full_C full_C₂
+      field_simp
+    _ < (p ^ min (β / 2 - 17 / 15 * (2 - β) * SG_eps₃ β)
+          (β / 2 - 113 / 30 * β * SG_eps₃ β) : ℝ) / 2 := by
+      gcongr
+      apply Real.rpow_lt_rpow_of_exponent_lt
+      · have := instpprime.out.two_le
+        norm_cast
+      · simp only [lt_min_iff]
+        refine ⟨?_, ?_⟩
+        · suffices 17 / 15 * (2 - β) * SG_eps₃ β < β / 4 by linarith
+          calc
+            17 / 15 * (2 - β) * SG_eps₃ β < 17 / 15 * (2 - 0) * SG_eps₃ β := by
+                gcongr
+                exact pos_SGeps₃ β h
+            _ = 34 / 15 * SG_eps₃ β := by ring_nf
+            _ ≤ 34 / 15 * (15 / 136 * β) := by
+                gcongr
+                exact ntlSGeps' β
+            _ = β / 4 := by ring
+        · have := lemma11 β h
+          apply this.trans_le
+          gcongr _ - ?_ * _ * _
+          · exact lemma10 β h
+          · norm_num
+
 end LeanPool.LeanBourgain
