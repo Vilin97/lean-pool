@@ -1266,10 +1266,10 @@ projects:
       github_repo: jcpaik/erdos-tuza-valtr
     status: verified
     main_declarations:
-      - main
+      - ErdosTuzaValtr.main
       - Config.main_lemma
     main_results:
-      - declaration: main
+      - declaration: ErdosTuzaValtr.main
         informal: Proves the sharp upper bound — a general-position point set with at least C(n+2,2)+2 points contains the Erdős–Tuza–Valtr cup–cap configuration.
       - declaration: Config.main_lemma
         informal: The configuration-relative induction lemma that, with the mirror-symmetry reduction, drives the main proof.

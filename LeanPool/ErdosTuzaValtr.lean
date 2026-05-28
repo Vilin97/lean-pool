@@ -12,7 +12,7 @@ import LeanPool.ErdosTuzaValtr.All
 Source: url:https://github.com/jcpaik/erdos-tuza-valtr
 Authors: Jineon Baek
 Status: verified
-Main declarations: `main`, `Config.main_lemma`
+Main declarations: `ErdosTuzaValtr.main`, `Config.main_lemma`
 Tags: combinatorics, discrete-geometry, convex-geometry, ramsey-theory
 MSC: 52C10, 05D10
 -/

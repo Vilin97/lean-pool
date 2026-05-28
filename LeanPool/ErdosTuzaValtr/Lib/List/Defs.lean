@@ -11,31 +11,36 @@ import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
 
 variable {α : Type _}
 
--- Local notion for a list contained in a finset
+/-- Local notion for a list whose elements all lie in a finset. -/
 protected def List.In (l : List α) (S : Finset α) : Prop :=
   ∀ a : α, a ∈ l → a ∈ S
 
+/-- The image of a finset under the order-dual embedding. -/
 protected def Finset.Mirror [LinearOrder α] (S : Finset α) : Finset αᵒᵈ :=
   Finset.image OrderDual.toDual S
 
+/-- The image of a finset of order-dual elements back under `ofDual`. -/
 protected def Finset.ofMirror [LinearOrder α] (S : Finset αᵒᵈ) : Finset α :=
   Finset.image OrderDual.ofDual S
 
 namespace List
 
--- Local notion for flipping a list of elements, together with its order
-protected def Mirror [LinearOrder α] (l : List α) : List αᵒᵈ :=
+/-- Flip a list of elements together with its order, landing in the order dual. -/
+protected def Mirror (l : List α) : List αᵒᵈ :=
   (List.map OrderDual.toDual l).reverse
 
-protected def ofMirror [LinearOrder α] (l : List αᵒᵈ) : List α :=
+/-- Recover a list from its mirror in the order dual. -/
+protected def ofMirror (l : List αᵒᵈ) : List α :=
   (List.map OrderDual.ofDual l).reverse
 
 variable (R : α → α → α → Prop)
 
+/-- `Chain3 R a b l` means `R` holds for every three consecutive entries of `a :: b :: l`. -/
 inductive Chain3 : α → α → List α → Prop
   | nil {a b : α} : Chain3 a b []
   | cons : ∀ {a b c : α} {l : List α}, R a b c → Chain3 b c l → Chain3 a b (c :: l)
 
+/-- `Chain3' R l` means `R` holds for every three consecutive entries of `l`. -/
 def Chain3' : List α → Prop
   | nil => True
   | [_] => True
@@ -45,7 +50,7 @@ variable {R}
 
 @[simp]
 theorem chain3_cons {a b c : α} {l : List α} : Chain3 R a b (c :: l) ↔ R a b c ∧ Chain3 R b c l :=
-  ⟨fun p => by cases' p with _ a b c l _ n p <;> exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
+  ⟨fun p => by cases p with | cons n p => exact ⟨n, p⟩, fun ⟨n, p⟩ => p.cons n⟩
 
 @[simp]
 theorem chain3_nil {a b : α} : Chain3 R a b [] := Chain3.nil
@@ -54,8 +59,9 @@ instance decidableChain3 [DecidableRel3 R] (a b : α) (l : List α) : Decidable 
   induction l generalizing a b <;> simp only [Chain3.nil, chain3_cons] <;> infer_instance
 
 instance decidableChain3' [DecidableRel3 R] (l : List α) : Decidable (Chain3' R l) := by
-  cases' l with _ l <;> try cases' l with _ l <;> dsimp only [Chain3'] <;> infer_instance
-  rw [Chain3']
-  infer_instance
+  rcases l with _ | ⟨a, _ | ⟨b, l⟩⟩
+  · exact instDecidableTrue
+  · exact instDecidableTrue
+  · exact decidableChain3 a b l
 
 end List
