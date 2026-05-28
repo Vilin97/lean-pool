@@ -229,7 +229,7 @@ if [[ ${#URLS[@]} -gt 1 ]]; then
   printf '%s\n' "${URLS[@]:1}" | grep . \
     | xargs -P "$JOBS" -n 1 -- "$0" --run-one $($KEEP_WORKTREES && echo --keep-worktrees)
 fi
-ok "All imports finished. PRs (if any) are open as drafts."
+ok "All imports finished. PRs (if any) are open."
 
 # --- Wait for CI and summarize ----------------------------------------------
 
@@ -239,7 +239,7 @@ summarize() {
   for u in "${URLS[@]}"; do
     local slug; slug="$(slug_of "$u")"
     local pr_json pr_num pr_url ci notes=""
-    pr_json="$(gh pr list --repo "$REPO_SLUG" --head "import/$slug" --state all --json number,url,isDraft --jq '.[0] // empty' 2>/dev/null || echo "")"
+    pr_json="$(gh pr list --repo "$REPO_SLUG" --head "import/$slug" --state all --json number,url --jq '.[0] // empty' 2>/dev/null || echo "")"
     if [[ -z "$pr_json" ]]; then
       printf "%-34s %-8s %-9s %s\n" "$slug" "—" "—" "no PR (see $QUEUE_DIR/$slug-import.log)"
       continue
