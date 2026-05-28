@@ -19,8 +19,8 @@ variable {ell : G → G → G → Prop}
 -- group of permutations of three objects. (p. 27)
 theorem rel_sym_acb
   (a b c : G)
-  (l1 : ∀ a b , ell a b a)
-  (l2 : ∀ a b p q , ell a p q → ell b p q → p ≠ q → ell a b p)
+  (l1 : ∀ a b, ell a b a)
+  (l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p)
   (abc_col : ell a b c) :
     ell a c b := by
   obtain rfl | bc_neq := eq_or_ne b c
@@ -33,8 +33,8 @@ theorem rel_sym_acb
 
 theorem rel_sym_cab
   (a b c : G)
-  (l1 : ∀ a b , ell a b a)
-  (l2 : ∀ a b p q , ell a p q → ell b p q → p ≠ q → ell a b p)
+  (l1 : ∀ a b, ell a b a)
+  (l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p)
   (abc_col : ell a b c) :
     ell c a b := by
   obtain rfl | bc_neq := eq_or_ne b c
@@ -47,8 +47,8 @@ theorem rel_sym_cab
 -- Now we can easily generate the other three.
 theorem rel_sym_bca
   (a b c : G)
-  (l1 : ∀ a b , ell a b a)
-  (l2 : ∀ a b p q , ell a p q → ell b p q → p ≠ q → ell a b p)
+  (l1 : ∀ a b, ell a b a)
+  (l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p)
   (abc_col : ell a b c) :
     ell b c a := by
   apply rel_sym_cab c a b l1 l2
@@ -57,8 +57,8 @@ theorem rel_sym_bca
 
 theorem rel_sym_bac
   (a b c : G)
-  (l1 : ∀ a b , ell a b a)
-  (l2 : ∀ a b p q , ell a p q → ell b p q → p ≠ q → ell a b p)
+  (l1 : ∀ a b, ell a b a)
+  (l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p)
   (abc_col : ell a b c) :
     ell b a c := by
   apply rel_sym_cab a c b l1 l2
@@ -67,8 +67,8 @@ theorem rel_sym_bac
 
 theorem rel_sym_cba
   (a b c : G)
-  (l1 : ∀ a b , ell a b a)
-  (l2 : ∀ a b p q , ell a p q → ell b p q → p ≠ q → ell a b p)
+  (l1 : ∀ a b, ell a b a)
+  (l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p)
   (abc_col : ell a b c) :
     ell c b a := by
   apply rel_sym_cab b a c l1 l2
@@ -77,8 +77,8 @@ theorem rel_sym_cba
 
 theorem l1_l2_eq_imp_l3
   (a b c d p : G)
-  (l1 : ∀ a b , ell a b a)
-  (l2 : ∀ a b p q , ell a p q → ell b p q → p ≠ q → ell a b p)
+  (l1 : ∀ a b, ell a b a)
+  (l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p)
   (abcdp_deq : a = b ∨ a = c ∨ a = d ∨ a = p ∨ b = c ∨ b = d ∨ b = p
                ∨ c = d ∨ c = p ∨ d = p)
   (pab_col : ell p a b)
@@ -182,15 +182,17 @@ theorem l1_l2_eq_imp_l3
                   case h.right =>
                     apply rel_sym_bca p a b l1 l2 pab_col
 
--- A projective geometry is a set G together with a ternary relation
--- ℓ ⊆ G × G × G satisfying L₁, L₂ and L₃. (p. 26)
+/-- A projective geometry is a set `G` together with a ternary collinearity
+relation `ell ⊆ G × G × G` satisfying the axioms `L₁`, `L₂` and `L₃`. (p. 26) -/
 class ProjectiveGeometry
   (G : Type*)
   (ell : G → G → G → Prop) where
-  l1  : ∀ a b , ell a b a
-  l2  : ∀ a b p q , ell a p q → ell b p q → p ≠ q → ell a b p
-  l3  : ∀ a b c d p, ell p a b → ell p c d → ∃ q, ell q a c ∧ ell q b d
+  l1 : ∀ a b, ell a b a
+  l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p
+  l3 : ∀ a b c d p, ell p a b → ell p c d → ∃ q, ell q a c ∧ ell q b d
 
+/-- `rel_sym` closes a collinearity goal that follows from a hypothesis by one of
+the symmetries of the relation `ell` (any permutation of a collinear triple). -/
 syntax "rel_sym" : tactic
 
 macro_rules
@@ -206,7 +208,7 @@ variable [PG : ProjectiveGeometry G ell]
 
 theorem ncol_imp_neq
   (a b c : G)
-  (abc_ncol : ¬ ell a b c):
+  (abc_ncol : ¬ ell a b c) :
     a ≠ b ∧ a ≠ c ∧ b ≠ c := by
   constructor
   case left =>
@@ -229,9 +231,8 @@ theorem ncol_imp_neq
 
 variable [DecidableEq G]
 
--- Let G = (G, ℓ) be a projective geometry. Then the operator ⋆ : G × G →
--- Powerset(G) defined by a ⋆ b := {c ∈ G / ℓ(a, b, c)} if a ≠ b and a ⋆
--- a := {a} satisfies P₁, P₂ and P₃.
+/-- The line operator `⋆`: `star ell a b` is the line through `a` and `b`,
+defined as `{c | ell a b c}` when `a ≠ b` and as `{a}` when `a = b`. -/
 @[simp]
 def star
   (ell : G → G → G → Prop)
@@ -537,6 +538,8 @@ theorem p_9
               exact c_in_bd q_in_bd
             apply p_4 c q a c_in_qa cq_neq
 
+/-- The central projection with center `z` of a point `x` on the line `a ⋆ c`
+onto the line `b ⋆ c`: the intersection of the line `x ⋆ z` with `b ⋆ c`. -/
 def central_projection
   (a b c z : G)
   (x : star ell a c) :
@@ -625,6 +628,9 @@ theorem abc_inter_sing
     · apply PG.l1 a b
     · apply PG.l1 a c
 
+/-- The data of a non-degenerate central projection: two distinct lines through
+`c` (given by `a`, `b` not collinear with `c`) and a center `z` on `a ⋆ b`
+distinct from `a` and `b`. -/
 class CentralProjectionQuadruple
   (a b c : G)
   (z : star ell a b) where
@@ -730,11 +736,11 @@ theorem cen_proj_sing :
       exact rfl
     use ⟨y, y_in_cb⟩
     rw [y_in_inter]
-    apply eq_of_subset_of_subset
-    all_goals simp only [star, coe_setOf, mem_setOf_eq, subset_singleton_iff, mem_preimage,
-      mem_singleton_iff, Subtype.forall, Subtype.mk.injEq, imp_self, implies_true]
-    simp only [singleton_subset_iff, mem_preimage, mem_singleton_iff]
+    ext w
+    simp only [mem_preimage, mem_singleton_iff, Subtype.ext_iff]
 
+/-- The central projection as a function: the unique image point on `b ⋆ c` of
+the point `x` on `a ⋆ c` under projection from the center `z`. -/
 noncomputable def cen_proj_map :
     star ell b c :=
   Exists.choose (cen_proj_sing a b c z x)
@@ -783,7 +789,9 @@ theorem shadow_center_neq :
   rw [leg_wall_inter] at z_in_inter
   exact CPQ.bz_neq (id (Eq.symm z_in_inter))
 
+/-- The central projection `a ⋆ c → b ⋆ c` from the center `z`. -/
 noncomputable def φ := cen_proj_map a b c z
+/-- The reverse central projection `b ⋆ c → a ⋆ c` from the center `z`, inverse to `φ`. -/
 noncomputable def ψ := cen_proj_map b a c ⟨z, zp_sym⟩
 
 local notation "φ" => φ a b c z

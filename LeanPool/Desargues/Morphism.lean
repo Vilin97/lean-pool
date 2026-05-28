@@ -8,9 +8,9 @@ import LeanPool.Desargues.Basic
 
 open Basic
 
--- An isomorphism of projective geometries is a bijective map g : G₁ → G₂
--- satisfying ℓ₁(a, b, c) iff ℓ₂(ga, gb, gc). When G₁ = G₂ one says that
--- g is a collineation. (p. 27)
+/-- An isomorphism of projective geometries is a bijective map `f : G₁ → G₂`
+satisfying `ell₁ a b c ↔ ell₂ (f a) (f b) (f c)`. When `G₁ = G₂` one says that
+`f` is a collineation. (p. 27) -/
 class PG_Iso
   {G₁ : Type*}
   {G₂ : Type*}
@@ -19,5 +19,5 @@ class PG_Iso
   [ProjectiveGeometry G₁ ell₁]
   [ProjectiveGeometry G₂ ell₂]
   (f : G₁ → G₂) where
-  bij      : Function.Bijective f
+  bij : Function.Bijective f
   pres_col : ∀ (a b c : G₁), ell₁ a b c ↔ ell₂ (f a) (f b) (f c)
