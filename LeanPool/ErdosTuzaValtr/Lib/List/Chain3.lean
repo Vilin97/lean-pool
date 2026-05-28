@@ -54,7 +54,9 @@ theorem chain3'_append_cons3 {a b c : α} {l1 l2 : List α} :
       Chain3' R (l1 ++ [a, b]) ∧ R a b c ∧ Chain3' R (b :: c :: l2) :=
   by rw [chain3'_split, chain3'_cons]
 
-theorem Chain3'.left_of_append {l1 l2 : List α} (h : Chain3' R (l1 ++ l2)) : Chain3' R l1 := by
+namespace Chain3'
+
+theorem left_of_append {l1 l2 : List α} (h : Chain3' R (l1 ++ l2)) : Chain3' R l1 := by
   induction l1 with
   | nil => simp only [chain3'_nil]
   | cons a l1 ih =>
@@ -68,7 +70,7 @@ theorem Chain3'.left_of_append {l1 l2 : List α} (h : Chain3' R (l1 ++ l2)) : Ch
         rw [chain3'_cons]
         exact ⟨h.1, ih h.2⟩
 
-theorem Chain3'.right_of_append {l1 l2 : List α} (h : Chain3' R (l1 ++ l2)) : Chain3' R l2 := by
+theorem right_of_append {l1 l2 : List α} (h : Chain3' R (l1 ++ l2)) : Chain3' R l2 := by
   induction l1 generalizing l2 with
   | nil => exact h
   | cons a l1 ih =>
@@ -98,25 +100,25 @@ theorem Chain3'.right_of_append {l1 l2 : List α} (h : Chain3' R (l1 ++ l2)) : C
         rw [cons_append, cons_append, cons_append, chain3'_cons] at h
         exact h.right
 
-theorem Chain3'.infix {l₁ l : List α} (h : Chain3' R l) (h' : l₁ <:+: l) : Chain3' R l₁ := by
+theorem «infix» {l₁ l : List α} (h : Chain3' R l) (h' : l₁ <:+: l) : Chain3' R l₁ := by
   rcases h' with ⟨l₂, l₃, rfl⟩; exact h.left_of_append.right_of_append
 
-theorem Chain3'.suffix {l₁ l : List α} (h : Chain3' R l) (h' : l₁ <:+ l) : Chain3' R l₁ :=
-  h.infix h'.isInfix
+theorem suffix {l₁ l : List α} (h : Chain3' R l) (h' : l₁ <:+ l) : Chain3' R l₁ :=
+  h.«infix» h'.isInfix
 
-theorem Chain3'.prefix {l₁ l : List α} (h : Chain3' R l) (h' : l₁ <+: l) : Chain3' R l₁ :=
-  h.infix h'.isInfix
+theorem «prefix» {l₁ l : List α} (h : Chain3' R l) (h' : l₁ <+: l) : Chain3' R l₁ :=
+  h.«infix» h'.isInfix
 
-theorem Chain3'.drop {l : List α} (h : Chain3' R l) (n : ℕ) : Chain3' R (drop n l) :=
+theorem drop {l : List α} (h : Chain3' R l) (n : ℕ) : Chain3' R (List.drop n l) :=
   h.suffix (drop_suffix _ _)
 
-theorem Chain3'.dropLast {l : List α} (h : Chain3' R l) : Chain3' R l.dropLast :=
-  h.prefix l.dropLast_prefix
+theorem dropLast {l : List α} (h : Chain3' R l) : Chain3' R l.dropLast :=
+  h.«prefix» l.dropLast_prefix
 
-theorem Chain3'.take {l : List α} (h : Chain3' R l) (n : ℕ) : Chain3' R (take n l) :=
-  h.prefix (take_prefix _ _)
+theorem take {l : List α} (h : Chain3' R l) (n : ℕ) : Chain3' R (List.take n l) :=
+  h.«prefix» (take_prefix _ _)
 
-theorem Chain3'.tail {l : List α} (h : Chain3' R l) : Chain3' R l.tail := by
+theorem tail {l : List α} (h : Chain3' R l) : Chain3' R l.tail := by
   cases l with
   | nil => simp only [List.tail_nil, chain3'_nil]
   | cons a l =>
@@ -128,6 +130,8 @@ theorem Chain3'.tail {l : List α} (h : Chain3' R l) : Chain3' R l.tail := by
       | cons c l =>
         rw [chain3'_cons] at h
         exact h.right
+
+end Chain3'
 
 theorem chain3'_mirror [LinearOrder α] {l : List α} :
     Chain3' (Mirror3 R) l.Mirror ↔ Chain3' R l := by

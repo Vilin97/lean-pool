@@ -92,7 +92,7 @@ protected theorem drop {l : List α} (h : C.Cup l) (n : ℕ) : C.Cup (l.drop n) 
 protected theorem tail {l : List α} (h : C.Cup l) : C.Cup l.tail :=
   ⟨h.left.tail, h.right.tail⟩
 
-theorem head?_lt_getLast? {l : List α} (l_cup : C.Cup l) (p q : α) (hl : 2 ≤ l.length)
+theorem head_lt_getLast {l : List α} (l_cup : C.Cup l) (p q : α) (hl : 2 ≤ l.length)
     (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q := by
   cases l with
   | nil => exact absurd hp (Option.not_mem_none p)
@@ -191,11 +191,11 @@ theorem take_right_with_last {n : ℕ} {l : List α} (h : C.NCup n l) (m : ℕ) 
       rw [List.length_drop, h.right] at hlen
       omega
 
-theorem head?_lt_getLast? {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p q : α)
+theorem head_lt_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p q : α)
     (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q :=
-  l_ncup.left.head?_lt_getLast? p q (by rw [l_ncup.right]; omega) hp hq
+  l_ncup.left.head_lt_getLast p q (by rw [l_ncup.right]; omega) hp hq
 
-theorem head?_le_getLast? {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α) (hp : p ∈ l.head?)
+theorem head_le_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α) (hp : p ∈ l.head?)
     (hq : q ∈ l.getLast?) : p ≤ q := by
   have l_sorted : l.Pairwise (· < ·) := List.isChain_iff_pairwise.mp l_ncup.left.left
   cases l with
@@ -231,7 +231,7 @@ theorem ncup_is_ngon {n : ℕ} {S : Finset α} (hn : 2 ≤ n) (h : C.HasNCup n S
   rcases List.takeHead hc with ⟨x, c, eq_c⟩; subst eq_c
   clear hc
   have hxy : x < y :=
-    c_cup.head?_lt_getLast? x y (by rw [c_length]; omega) (by simp) (by simp)
+    c_cup.head_lt_getLast x y (by rw [c_length]; omega) (by simp) (by simp)
   refine ⟨[x, y], (x :: c) ++ [y], ⟨⟨?_, ?_, ?_, ?_, ?_, ?_⟩, ?_⟩, ?_, ?_⟩
   · simp
   · rw [Config.Cap]

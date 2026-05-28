@@ -145,7 +145,7 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
         exact absurd cp'_last (Option.not_mem_none p')
       rcases List.takeHead cp'_nnil with ⟨o', cp'', eq_cp'⟩
       have o'_head : o' ∈ cp'.head? := by rw [eq_cp', List.head?_cons]; rfl
-      have o'_le_p' : o' ≤ p' := cp'_cup.head?_le_getLast? o' p' o'_head cp'_last
+      have o'_le_p' : o' ≤ p' := cp'_cup.head_le_getLast o' p' o'_head cp'_last
       have o'_in_SD : o' ∈ S \ D := cp'_in_SD o' (by rw [eq_cp']; simp)
       have o'_in_S : o' ∈ S := Finset.sdiff_subset o'_in_SD
       rw [def_D] at o'_in_SD

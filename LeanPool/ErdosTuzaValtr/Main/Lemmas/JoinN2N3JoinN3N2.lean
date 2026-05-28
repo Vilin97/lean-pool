@@ -27,8 +27,8 @@ theorem Config.join_n2_n2_interweaved {S : Finset α} {n : ℕ} {c1 : List α}
   have c2_head' : x ∈ c2.head? := by rw [eq_c2, List.cons_append, List.head?_cons]; rfl
   have c1_head : p ∈ c1.head? := by rw [eq_c1, List.cons_append, List.head?_cons]; rfl
   have c2_last : r ∈ c2.getLast? := by rw [eq_c2, List.getLast?_concat]; rfl
-  have p_lt_x : p < x := c1_cup.head?_lt_getLast? p x c1_head c1_last'
-  have x_lt_r : x < r := c2_cup.head?_lt_getLast? x r c2_head' c2_last
+  have p_lt_x : p < x := c1_cup.head_lt_getLast p x c1_head c1_last'
+  have x_lt_r : x < r := c2_cup.head_lt_getLast x r c2_head' c2_last
   have x_in_S : x ∈ S := c1_in_S x (by rw [eq_c1]; simp)
   have p_in_S : p ∈ S := c1_in_S p (by rw [eq_c1]; simp)
   have r_in_S : r ∈ S := c2_in_S r (by rw [eq_c2]; simp)

@@ -47,10 +47,10 @@ theorem List.reverse_in {l : List α} {S : Finset α} : l.reverse.In S ↔ l.In 
 
 end ListIn
 
-theorem List.reverse_getLast? {l : List α} : l.reverse.getLast? = l.head? := by cases l <;> simp
+theorem List.reverse_getLast {l : List α} : l.reverse.getLast? = l.head? := by cases l <;> simp
 
-theorem List.reverse_head? {l : List α} : l.reverse.head? = l.getLast? := by
-  convert List.reverse_getLast?.symm; simp
+theorem List.reverse_head {l : List α} : l.reverse.head? = l.getLast? := by
+  convert List.reverse_getLast.symm; simp
 
 section Mirror
 
@@ -100,27 +100,27 @@ theorem List.chain'_mirror [LinearOrder α] {l : List α} :
     List.IsChain (· < ·) l.Mirror ↔ List.IsChain (· < ·) l := by
   simp_rw [List.Mirror, List.isChain_reverse, List.isChain_map, toDual_lt_toDual]
 
-theorem List.Mirror_getLast? {l : List α} : l.Mirror.getLast? = Option.map toDual l.head? := by
-  rw [List.Mirror, List.reverse_getLast?, List.head?_map]
+theorem List.Mirror_getLast {l : List α} : l.Mirror.getLast? = Option.map toDual l.head? := by
+  rw [List.Mirror, List.reverse_getLast, List.head?_map]
 
-theorem List.Mirror_head? {l : List α} : l.Mirror.head? = Option.map toDual l.getLast? := by
-  rw [List.Mirror, List.reverse_head?, List.getLast?_map]
+theorem List.Mirror_head {l : List α} : l.Mirror.head? = Option.map toDual l.getLast? := by
+  rw [List.Mirror, List.reverse_head, List.getLast?_map]
 
-theorem List.ofMirror_getLast? {l : List αᵒᵈ} :
+theorem List.ofMirror_getLast {l : List αᵒᵈ} :
     l.ofMirror.getLast? = Option.map ofDual l.head? := by
-  rw [List.ofMirror, List.reverse_getLast?, List.head?_map]
+  rw [List.ofMirror, List.reverse_getLast, List.head?_map]
 
-theorem List.ofMirror_head? {l : List αᵒᵈ} :
+theorem List.ofMirror_head {l : List αᵒᵈ} :
     l.ofMirror.head? = Option.map ofDual l.getLast? := by
-  rw [List.ofMirror, List.reverse_head?, List.getLast?_map]
+  rw [List.ofMirror, List.reverse_head, List.getLast?_map]
 
-theorem List.Mirror_mem_getLast? {a : α} {l : List α} :
+theorem List.Mirror_mem_getLast {a : α} {l : List α} :
     toDual a ∈ l.Mirror.getLast? ↔ a ∈ l.head? := by
-  rw [List.Mirror_getLast?, Option.mem_map_of_injective toDual.injective]
+  rw [List.Mirror_getLast, Option.mem_map_of_injective toDual.injective]
 
-theorem List.Mirror_mem_head? {a : α} {l : List α} :
+theorem List.Mirror_mem_head {a : α} {l : List α} :
     toDual a ∈ l.Mirror.head? ↔ a ∈ l.getLast? := by
-  rw [List.Mirror_head?, Option.mem_map_of_injective toDual.injective]
+  rw [List.Mirror_head, Option.mem_map_of_injective toDual.injective]
 
 @[simp]
 theorem List.Mirror_in [LinearOrder α] {l : List α} {S : Finset α} :

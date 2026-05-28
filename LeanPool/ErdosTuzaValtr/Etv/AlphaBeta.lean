@@ -18,7 +18,8 @@ variable {α : Type _} [LinearOrder α] {C : Config α} {S : Finset α} (l : C.L
 private theorem mem_imply_nnil {α : Type _} (a : α) {l : List α} (ha : a ∈ l) : l ≠ [] := by
   intro eq; subst eq; simp at ha
 
-namespace Config.Label
+namespace Config
+namespace Label
 
 /-- A candidate alpha-cup ending at `a`: in `S`, strictly sorted, with non-slope edges. -/
 def IsAlphaCup (a : α) (c : List α) : Prop :=
@@ -171,7 +172,8 @@ theorem add_alpha {a : α} (ha : a ∈ S) {n : ℕ} {c : List α} (c_in_S : c.In
         simp only [List.length_append, List.length_cons, List.length_nil] at alpha_eq hcl ⊢
         omega
 
-end Config.Label
+end Label
+end Config
 
 namespace Config
 

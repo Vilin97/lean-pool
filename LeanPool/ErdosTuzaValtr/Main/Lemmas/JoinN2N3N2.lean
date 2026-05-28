@@ -19,7 +19,7 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (_cap4_free : ¬C.HasNCap 4 S) {
     (sxy : ¬label.Slope x y) : ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s := by
   have x_in_S : x ∈ S := xQy_in_S x (by simp)
   have y_in_S : y ∈ S := xQy_in_S y (by simp)
-  have x_lt_y : x < y := hxQy.head?_lt_getLast? x y (by simp) (by simp)
+  have x_lt_y : x < y := hxQy.head_lt_getLast x y (by simp) (by simp)
   have hP : C.NCup (n + 1) P := by
     have := hPx.dropLast
     rwa [List.dropLast_concat] at this
@@ -72,7 +72,7 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (_cap4_free : ¬C.HasNCap 4 S) {
   have x_lt_b : x < b := (List.isChain_cons_cons.mp hxQy.left.left).1
   have y_lt_z : y < z := by
     have hyR' : C.NCup (n + 2) (y :: (R' ++ [z])) := by rw [← eq_R]; exact hyR
-    apply hyR'.head?_lt_getLast? y z (by simp)
+    apply hyR'.head_lt_getLast y z (by simp)
     rw [List.getLast?_cons_of_ne_nil (by simp), List.getLast?_append_of_ne_nil _ (by simp),
       List.getLast?_singleton]
     rfl
@@ -106,7 +106,7 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (_cap4_free : ¬C.HasNCap 4 S) {
     have hbQy : C.NCup (n + 2) (b :: Q') := by
       have := hxQy.tail
       rwa [List.tail_cons] at this
-    apply hbQy.head?_lt_getLast? b y (by simp)
+    apply hbQy.head_lt_getLast b y (by simp)
     rw [← eq_Q, List.getLast?_append_of_ne_nil _ (by simp), List.getLast?_singleton]
     rfl
   have hPa_in : (P' ++ [a]).In S := fun w hw =>
@@ -159,7 +159,7 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (_cap4_free : ¬C.HasNCap 4 S) {
       · rw [List.head?_cons]; rfl
     have w_lt_x : w < x := by
       rw [eq_P_] at hPx
-      apply hPx.head?_lt_getLast? w x (by simp)
+      apply hPx.head_lt_getLast w x (by simp)
       rw [show w :: P_ ++ [x] = (w :: P_) ++ [x] by rfl, List.getLast?_concat]
       rfl
     exact ⟨w, x, y, z, ⟨w_lt_x, le_of_lt x_lt_y, y_lt_z⟩, wy_laced, xz_laced⟩

@@ -45,7 +45,7 @@ theorem Mirror.gon {l1 l2 : List α} : C.Mirror.Gon l1.Mirror l2.Mirror ↔ C.Go
   rw [Config.Gon]; rw [Config.Gon]
   simp only [List.Mirror_length, cap, cup, and_congr_right_iff]
   intro _ _ _ _
-  rw [List.Mirror_getLast?, List.Mirror_head?, List.Mirror_getLast?, List.Mirror_head?]
+  rw [List.Mirror_getLast, List.Mirror_head, List.Mirror_getLast, List.Mirror_head]
   have t_inj : Function.Injective (⇑toDual : α → αᵒᵈ) := fun _ _ => toDual_inj.mp
   have ot_inj := Option.map_injective t_inj
   rw [ot_inj.eq_iff, ot_inj.eq_iff]; tauto

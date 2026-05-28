@@ -34,7 +34,7 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
     rw [List.getLast?_cons_of_ne_nil (by simp), List.getLast?_append_of_ne_nil _ (by simp),
       List.getLast?_singleton]
     rfl
-  have hxc : x < c := hc2'.head?_lt_getLast? x c (by simp) hc_last
+  have hxc : x < c := hc2'.head_lt_getLast x c (by simp) hc_last
   by_cases haxc : C.Cup3 a x c
   · apply ncup_is_ngon (by omega)
     refine ⟨c1 ++ [a, x, c], ⟨?_, ?_⟩, ?_⟩

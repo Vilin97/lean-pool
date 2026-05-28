@@ -27,8 +27,8 @@ theorem Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
     rw [Mirror.ncup] at hcqm
     use a, b, cp, c, cq, hcpm, hcm, hcqm
     repeat' rw [List.Mirror_in] at h
-    simp only [List.Mirror_getLast?, Option.mem_def, Option.map_eq_some_iff,
-      EmbeddingLike.apply_eq_iff_eq, exists_eq_right, List.Mirror_head?] at h
+    simp only [List.Mirror_getLast, Option.mem_def, Option.map_eq_some_iff,
+      EmbeddingLike.apply_eq_iff_eq, exists_eq_right, List.Mirror_head] at h
     rcases h with ⟨hIn, ⟨eq_ab, h⟩⟩
     rw [add_comm] at eq_ab
     refine ⟨(by tauto), eq_ab, ?_⟩
@@ -37,7 +37,7 @@ theorem Mirror.hasLaced {n : ℕ} {S : Finset α} (p q : α) :
   · intro h; rcases h with ⟨a, b, cp, c, cq, hcp, hc, hcq, h⟩
     use b, a, cq.Mirror, c.Mirror, cp.Mirror
     refine ⟨?_, ?_, ?_, ?_⟩ <;> try rw [Mirror.ncup] <;> tauto
-    repeat' rw [List.Mirror_mem_getLast?, List.Mirror_mem_head?]
+    repeat' rw [List.Mirror_mem_getLast, List.Mirror_mem_head]
     simp only [List.Mirror_in, Option.mem_def]; simp at h; rw [Nat.add_comm b a]; tauto
 
 theorem Mirror.hasInterweavedLaced {n : ℕ} {S : Finset α} (p q r s : α) :
@@ -62,10 +62,10 @@ theorem Mirror.hasJoin {a b : ℕ} {S : Finset α} : C.Mirror.HasJoin b a S.Mirr
     rw [← eq_cr] at crm_cup crm_in crm_last
     rw [Mirror.ncup] at clm_cup crm_cup
     rw [List.Mirror_in] at clm_in crm_in
-    rw [List.Mirror_mem_head?] at clm_head
-    rw [List.Mirror_mem_getLast?] at crm_last; tauto
+    rw [List.Mirror_mem_head] at clm_head
+    rw [List.Mirror_mem_getLast] at crm_last; tauto
   · intro h; rcases h with ⟨p, cl, cr, ⟨cl_cup, cl_in, cl_head⟩, ⟨cr_cup, cr_in, cr_last⟩⟩
     use toDual p, cr.Mirror, cl.Mirror
-    rw [List.Mirror_mem_getLast?, List.Mirror_mem_head?]
+    rw [List.Mirror_mem_getLast, List.Mirror_mem_head]
     simp only [List.Mirror_in, Mirror.ncup, Option.mem_def]
     tauto

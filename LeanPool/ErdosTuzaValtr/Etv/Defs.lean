@@ -17,11 +17,15 @@ def HasLaced (n : ℕ) (S : Finset α) (p q : α) : Prop :=
     (cp.In S ∧ c.In S ∧ cq.In S) ∧
       a + b = n ∧ p ∈ cp.getLast? ∧ p ∈ c.head? ∧ q ∈ c.getLast? ∧ q ∈ cq.head?
 
-theorem HasLaced.mem_ends {C : Config α} {n : ℕ} {S : Finset α} {p q : α} (h : C.HasLaced n S p q) :
+namespace HasLaced
+
+theorem mem_ends {C : Config α} {n : ℕ} {S : Finset α} {p q : α} (h : C.HasLaced n S p q) :
     p ∈ S ∧ q ∈ S :=
   by
   rcases h with ⟨-, -, -, c, -, -, -, -, ⟨-, c_in_S, -⟩, -, ⟨-, c_head, c_last, -⟩⟩
   exact ⟨c_in_S _ (List.mem_of_mem_head? c_head), c_in_S _ (List.mem_of_mem_getLast? c_last)⟩
+
+end HasLaced
 
 /-- Two interweaving laced pairs `(p, r)` and `(q, s)` with `p < q ≤ r < s`. -/
 def HasInterweavedLaced (n : ℕ) (S : Finset α) (p q r s : α) : Prop :=
