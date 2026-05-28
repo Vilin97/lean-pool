@@ -135,7 +135,8 @@ lemma open_unit_square_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ open_hull un
     have h1: y = 0
     . ext i; exact h i
     rw[h1]
-    simp[hx]
+    refine ⟨by norm_num, fun n => ?_⟩
+    simpa using hx
   -- I would prefer to define the epsilon with an infinum over i, rather than doing it explicitly,
   -- but I could not find the right api to show this infinum is bigger than zero (as it is only a infinum over a finite index)
   · use ((1/(max |y 0| |y 1|))*(1/2) )* min (min (x 0) (1- x 0)) (min (x 1) (1 - x 1))
@@ -156,8 +157,8 @@ lemma open_unit_square_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ open_hull un
     · exact mul_pos (by simp[h2]) hxbound
     · have h3: ∀ i, |-y i| <  (2*(max |y 0| |y 1|))
       · intro i
-        refine lt_mul_of_one_lt_of_le_of_pos (by norm_num) ?_ h2
-        fin_cases i <;> simp
+        have hle : |-y i| ≤ max |y 0| |y 1| := by fin_cases i <;> simp
+        linarith [hle, h2]
       have h4: ∀ i, x i ≥  (x 0 ⊓ (1 - x 0)) ⊓ (x 1 ⊓ (1 - x 1))
       · intro i; fin_cases i
         apply inf_le_of_left_le; apply inf_le_of_left_le; rfl
@@ -173,20 +174,20 @@ lemma open_unit_square_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ open_hull un
       · rw[hn]; simp[hx i]
       --for n≥ 1, the proof is as follows
       have hn4 : (n : ℝ ) ≥ 1 :=  Nat.one_le_cast.mpr ( Nat.one_le_iff_ne_zero.mpr hn)
-      have h7: (1/(n: ℝ )) ≤  1 := by exact (div_le_one₀ (gt_of_ge_of_gt hn4 (by norm_num))).mpr hn4
+      have h7: (1/(n: ℝ )) ≤  1 := by exact (div_le_one₀ (lt_of_le_of_lt' hn4 (by norm_num))).mpr hn4
       constructor
       · apply neg_lt_iff_pos_add.mp
         have h6: -((↑n)⁻¹ * ((|y 0| ⊔ |y 1|)⁻¹ * 2⁻¹ * (x 0 ⊓ (1 - x 0) ⊓ (x 1 ⊓ (1 - x 1))) * y i)) =    ((-y i) / (2*(|y 0| ⊔ |y 1|))) * (1/n)* (x 0 ⊓ (1 - x 0) ⊓ (x 1 ⊓ (1 - x 1))) := by ring
         rw[h6]
-        refine  mul_lt_of_lt_one_of_le_of_pos ?_ (h4 i) hxbound
-        refine  mul_lt_of_lt_one_of_le_of_pos ?_ (h7) (one_div_pos.mpr (gt_of_ge_of_gt hn4 (by norm_num)))
+        refine lt_of_lt_of_le (mul_lt_of_lt_one_left hxbound ?_) (h4 i)
+        refine lt_of_lt_of_le (mul_lt_of_lt_one_left (one_div_pos.mpr (lt_of_le_of_lt' hn4 (by norm_num))) ?_) (h7)
         apply Bound.div_lt_one_of_pos_of_lt h8 (lt_of_abs_lt (h3 i))
 
       · apply lt_tsub_iff_left.mp
         have h6: ((↑n)⁻¹ * ((|y 0| ⊔ |y 1|)⁻¹ * 2⁻¹ * (x 0 ⊓ (1 - x 0) ⊓ (x 1 ⊓ (1 - x 1))) * y i)) =    ((y i) / (2*(|y 0| ⊔ |y 1|))) * (1/n)* (x 0 ⊓ (1 - x 0) ⊓ (x 1 ⊓ (1 - x 1))) := by ring
         rw[h6]
-        refine  mul_lt_of_lt_one_of_le_of_pos ?_ (h5 i) hxbound
-        refine  mul_lt_of_lt_one_of_le_of_pos ?_ (h7) (one_div_pos.mpr (gt_of_ge_of_gt hn4 (by norm_num)))
+        refine lt_of_lt_of_le (mul_lt_of_lt_one_left hxbound ?_) (h5 i)
+        refine lt_of_lt_of_le (mul_lt_of_lt_one_left (one_div_pos.mpr (lt_of_le_of_lt' hn4 (by norm_num))) ?_) (h7)
         simp_rw[abs_neg] at h3
         apply Bound.div_lt_one_of_pos_of_lt h8 (lt_of_abs_lt (h3 i))
 
@@ -273,6 +274,7 @@ lemma boundary_leave_dir {x : ℝ²} (hx : x ∈ boundary unit_square) :
   · simp [segment_around_x, seg_vec, to_segment, v] at hi
     fin_cases i <;> (simp_all; linarith)
 
+open Classical in
 lemma segment_triangle_pairing_int
     (S : Finset Triangle)
     (hCover : is_disjoint_cover (closed_hull unit_square) (S : Set Triangle))
@@ -319,7 +321,8 @@ lemma segment_triangle_pairing_int
       have hΔneq : Δ' ≠ Δ := by
         by_contra hΔeq
         rw [hΔeq] at hMemΔ'
-        apply haout ((1/ (l : ℝ) * ε)) (by field_simp)
+        apply haout ((1/ (l : ℝ) * ε))
+          (mul_pos (one_div_pos.mpr (by exact_mod_cast Nat.pos_of_ne_zero hlZ)) hεPos)
         convert hMemΔ' using 2
         simp [mul_smul]
       -- Then we prove that x ∈ closed_hull Δ'
@@ -392,6 +395,7 @@ lemma segment_triangle_pairing_int
     exact hv Δ hΔ i hLx
 
 
+open Classical in
 lemma segment_triangle_pairing_boundary (S : Finset Triangle) (hCover : is_disjoint_cover (closed_hull unit_square) (S : Set Triangle))
     (hArea : ∀ Δ ∈ S, det Δ ≠ 0) (L : Segment) (hL : L 0 ≠ L 1)
     (hInt: ∀ Δ ∈ S, (open_hull Δ) ∩ (closed_hull L) = ∅)
@@ -454,15 +458,13 @@ lemma square_boundary_big_corners : ∀ i, ∀ j, ∃ k,
 
 lemma square_boundary_big_injective : square_boundary_big.Injective := by
   intro i j hij
-  have h₀ := congrFun (congrFun hij 0) 0
-  have h₁ := congrFun (congrFun hij 0) 1
+  have h₀ := congrFun hij 0
+  have h₁ := congrFun hij 1
   fin_cases i <;> fin_cases j <;> simp_all [square_boundary_big, v]
 
 lemma square_boundary_sides_nonDegen (i : Fin 4) : square_boundary_big i 0 ≠ square_boundary_big i 1 := by
   intro h_contra
-  have h₀ := congrFun h_contra 0
-  have h₁ := congrFun h_contra 1
-  fin_cases i <;> simp_all [square_boundary_big]
+  fin_cases i <;> simp_all [square_boundary_big, v]
 
 
 def boundary_line : Fin 4 → Fin 2 := fun | 0 => 0 | 1 => 1 | 2 => 0 | 3 => 1
@@ -555,14 +557,14 @@ lemma square_boundary_big_inter_seg {S : Segment} {x : ℝ²} {i : Fin 4} (hx : 
   clear hαx
   -- Unfortunately I couldn't get the simp to close it all, so there is a nonterminating simp here.
   fin_cases i <;> fin_cases j <;> simp_all
-  · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) (hS 0 1).1 (hα.1 1) (hS 1 1).1 hxi.2.2).1
-  · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) (hS 0 1).1 (hα.1 1) (hS 1 1).1 hxi.2.2).2
-  · exact (square_boundary_big_inter_seg_aux₂ hαsum (hα.1 0) (hS 0 0).2 (hα.1 1) (hS 1 0).2 hxi.2.2).1
-  · exact (square_boundary_big_inter_seg_aux₂ hαsum (hα.1 0) (hS 0 0).2 (hα.1 1) (hS 1 0).2 hxi.2.2).2
-  · exact (square_boundary_big_inter_seg_aux₂ hαsum (hα.1 0) (hS 0 1).2 (hα.1 1) (hS 1 1).2 hxi.2.2).1
-  · exact (square_boundary_big_inter_seg_aux₂ hαsum (hα.1 0) (hS 0 1).2 (hα.1 1) (hS 1 1).2 hxi.2.2).2
-  · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) (hS 0 0).1 (hα.1 1) (hS 1 0).1 hxi.2.2).1
-  · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) (hS 0 0).1 (hα.1 1) (hS 1 0).1 hxi.2.2).2
+  · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) hS.1.2.1 (hα.1 1) hS.2.2.1 hxi.2.2).1
+  · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) hS.1.2.1 (hα.1 1) hS.2.2.1 hxi.2.2).2
+  · exact (square_boundary_big_inter_seg_aux₂ hαsum (hα.1 0) hS.1.1.2 (hα.1 1) hS.2.1.2 hxi.2.2).1
+  · exact (square_boundary_big_inter_seg_aux₂ hαsum (hα.1 0) hS.1.1.2 (hα.1 1) hS.2.1.2 hxi.2.2).2
+  · exact (square_boundary_big_inter_seg_aux₂ hαsum (hα.1 0) hS.1.2.2 (hα.1 1) hS.2.2.2 hxi.2.2).1
+  · exact (square_boundary_big_inter_seg_aux₂ hαsum (hα.1 0) hS.1.2.2 (hα.1 1) hS.2.2.2 hxi.2.2).2
+  · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) hS.1.1.1 (hα.1 1) hS.2.1.1 hxi.2.2).1
+  · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) hS.1.1.1 (hα.1 1) hS.2.1.1 hxi.2.2).2
 
 lemma convex_faces  {x y p : ℝ²} (i : Fin 4) (hpiface : p ∈ closed_hull (square_boundary_big i))
 (hp : p ∈ open_hull (to_segment x y)) (hx: x ∈ closed_hull unit_square) (hy: y ∈  closed_hull unit_square) :

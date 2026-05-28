@@ -126,8 +126,8 @@ lemma valuation_bounds
   clear hb hg hr
 
   -- Non-negativity bounds
-  have x0_gt_zero : v (X 0) > 0 := gt_of_ge_of_gt hx0 zero_lt_one
-  have y1_gt_zero : v (Y 1) > 0 := gt_of_ge_of_gt hy1 zero_lt_one
+  have x0_gt_zero : v (X 0) > 0 := lt_of_le_of_lt' hx0 zero_lt_one
+  have y1_gt_zero : v (Y 1) > 0 := lt_of_le_of_lt' hy1 zero_lt_one
 
   -- v (X 0) * v (Y 1) ≥ 1
   constructor
@@ -137,7 +137,7 @@ lemma valuation_bounds
   constructor
   apply mul_lt_mul'
   exact hxx
-  exact gt_of_ge_of_gt hy1 hz0
+  exact lt_of_le_of_lt' hy1 hz0
   exact zero_le'
   exact x0_gt_zero
 
@@ -146,7 +146,7 @@ lemma valuation_bounds
   rw [mul_comm (v (X 0)) (v (Y 1))]
   apply mul_lt_mul''
   exact hyy
-  exact gt_of_ge_of_gt hx0 hz1
+  exact lt_of_le_of_lt' hx0 hz1
   exact zero_le'
   exact zero_le'
 
@@ -155,7 +155,7 @@ lemma valuation_bounds
   rw [mul_comm (v (X 0)) (v (Y 1))]
   apply mul_lt_mul'
   apply refl
-  exact gt_of_ge_of_gt hx0 hz0
+  exact lt_of_le_of_lt' hx0 hz0
   exact zero_le'
   exact y1_gt_zero
 
@@ -168,7 +168,7 @@ lemma valuation_bounds
   -- v (X 0) * v (Y 1) > v (X 0) * v (Z 1)
   apply mul_lt_mul'
   apply refl
-  exact gt_of_ge_of_gt hy1 hz1
+  exact lt_of_le_of_lt' hy1 hz1
   exact zero_le'
   exact x0_gt_zero
 
@@ -378,8 +378,8 @@ theorem no_Color_lines
   have vdet1 : v (det xyz) ≥ 1 := by
     have h_det : det xyz =
       (x 0 * y 1 + x 1 * z 0 + y 0 * z 1 - y 1 * z 0 - x 1 * y 0 - x 0 * z 1) := by
-      simp [det]
-      ring_nf
+      simp only [det, xyz, Fin.isValue, Fin.sum_univ_three]
+      ring
     rw [h_det]
     apply bounded_det
     exact hxb
@@ -392,16 +392,16 @@ theorem no_Color_lines
 
 -- We show next that the coloring of (0,0) is red, (0,1) is green and (1,0) is blue.
 
-lemma red00 : coloring v ![0,0] = Color.Red := by
+lemma red00 : coloring v !₂[0,0] = Color.Red := by
   simp [coloring, Fin.isValue, map_one, ge_iff_le]
 
-lemma green01 : coloring v ![0,1] = Color.Green := by
+lemma green01 : coloring v !₂[0,1] = Color.Green := by
   simp [coloring, Fin.isValue, map_one, ge_iff_le]
 
-lemma blue10 : coloring v ![1,0] = Color.Blue := by
+lemma blue10 : coloring v !₂[1,0] = Color.Blue := by
   simp [coloring, Fin.isValue, map_one, ge_iff_le]
 
-lemma blue11 : coloring v ![1,1] = Color.Blue := by
+lemma blue11 : coloring v !₂[1,1] = Color.Blue := by
   simp [coloring]
 
 --TODO: Show that the area of a Color triangle cannot be zero or 1/n for n odd (here we will
@@ -519,7 +519,7 @@ theorem no_odd_rainbow_triangle
   have bound3: v (det T) < 1 := by
     rw [v1]
     apply bound2
-  exact bound3.not_le bound
+  exact bound3.not_ge bound
 
 end Monsky
 end LeanPool

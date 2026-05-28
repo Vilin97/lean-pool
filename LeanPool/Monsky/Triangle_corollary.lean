@@ -9,11 +9,16 @@ import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Tactic
 import Mathlib.Order.Basic
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
+import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
+import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Dynamics.Ergodic.MeasurePreserving
 import LeanPool.Monsky.basic_definitions
 import LeanPool.Monsky.simplex_basic
 import LeanPool.Monsky.segment_triangle
 import LeanPool.Monsky.square
+
+namespace LeanPool.Monsky
 
 local notation "ℝ²" => EuclideanSpace ℝ (Fin 2)
 local notation "Triangle" => Fin 3 → ℝ²
@@ -45,7 +50,12 @@ open MeasureTheory
 
 --We start with the definition of the unit triangle
 
-def id_map : ℝ² → ℝ × ℝ := MeasurableEquiv.finTwoArrow
+/-- The measurable equivalence `ℝ² ≃ᵐ ℝ × ℝ` unfolding a Euclidean plane vector to a pair. -/
+noncomputable def id_mapEquiv : ℝ² ≃ᵐ ℝ × ℝ :=
+  (MeasurableEquiv.toLp 2 (Fin 2 → ℝ)).symm.trans MeasurableEquiv.finTwoArrow
+
+/-- The underlying function of `id_mapEquiv`. -/
+noncomputable def id_map : ℝ² → ℝ × ℝ := id_mapEquiv
 
 variable {α β : Type*} [MeasurableSpace α] [MeasurableSpace β] {μa : Measure α} {μb : Measure β} in
 theorem measure_image_equiv {f : α ≃ᵐ β} (hf : MeasurePreserving f μa μb) (s : Set α) :
@@ -53,8 +63,12 @@ theorem measure_image_equiv {f : α ≃ᵐ β} (hf : MeasurePreserving f μa μb
   simpa using hf.measure_preimage_equiv (f '' s)
 
 theorem map_pres (X : Set ℝ²) : volume X = volume (id_map '' X) :=
-  measure_image_equiv (EuclideanSpace.volume_preserving_measurableEquiv (Fin 2)
-    |>.trans (volume_preserving_finTwoArrow ℝ)) X
+  measure_image_equiv (f := id_mapEquiv)
+    ((EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp (Fin 2)).trans
+      (volume_preserving_finTwoArrow ℝ)) X
+
+/-- `id_map` sends a Euclidean plane vector to the pair of its coordinates. -/
+@[simp] lemma id_map_apply (x : ℝ²) : id_map x = (x 0, x 1) := rfl
 
 def unit_triangle : Triangle := fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1)
 lemma unit_triangle_def : unit_triangle = fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1) := by rfl
@@ -63,11 +77,11 @@ def lower : ℝ → ℝ := fun _ ↦ 0
 def upper : ℝ → ℝ := fun x ↦ 1 - x
 
 theorem unit_is_unit_in_prod : id_map '' (open_hull unit_triangle) = regionBetween lower upper (Set.Ioc 0 1) := by
-  ext x; constructor <;> unfold regionBetween open_hull open_simplex lower upper _root_.id_map unit_triangle <;> intro hx <;> simp at *
+  ext x; constructor <;> unfold regionBetween open_hull open_simplex lower upper unit_triangle <;> intro hx <;> simp at *
   · rcases hx with ⟨a, ⟨ha, ha''⟩, ha'⟩
     rw [Fin.sum_univ_three] at ha'' ha'
     rw [←ha']
-    simp at *
+    simp [Fin.sum_univ_three, v] at *
     constructor <;> constructor <;> linarith [ha 0, ha 1, ha 2]
   · use ![1 - x.1 - x.2, x.1, x.2]
     rcases hx with ⟨⟨⟩, ⟨⟩⟩
@@ -76,15 +90,15 @@ theorem unit_is_unit_in_prod : id_map '' (open_hull unit_triangle) = regionBetwe
       · intro i
         fin_cases i <;> simp <;> linarith
       · rw [Fin.sum_univ_three]
-        simp
+        simp [v]
         ring
-    · rw [Fin.sum_univ_three]
+    · simp only [Fin.sum_univ_three, v]
       simp
 
 theorem unit_in_prod_is_unit : id_map⁻¹' (regionBetween lower upper (Set.Ioc 0 1)) = open_hull unit_triangle
   := by
     apply (Set.preimage_eq_iff_eq_image ?hf).mpr ?_
-    exact MeasurableEquiv.bijective (MeasurableEquiv.finTwoArrow)
+    exact MeasurableEquiv.bijective id_mapEquiv
     rw [unit_is_unit_in_prod]
 
 --Then we have the statement that the open hull of the unit triangle has the right area, plus we add the statement that it is measurable
@@ -94,7 +108,8 @@ theorem volume_open_unit_triangle : (MeasureTheory.volume (open_hull unit_triang
     simp [upper, lower]
   have integ : IntegrableOn lower (Set.Ioc 0 1) := by unfold lower; simp
   have integ' : IntegrableOn upper (Set.Ioc 0 1) :=
-    MeasureTheory.Integrable.sub (integrable_const 1) (intervalIntegral.intervalIntegrable_id).1
+    MeasureTheory.Integrable.sub (integrable_const 1)
+      (intervalIntegral.intervalIntegrable_id (a := 0) (b := 1)).1
 
 
   suffices  ∫ (x : ℝ) in (0 : ℝ)..1, upper x = 1/2 by
@@ -228,8 +243,20 @@ theorem translation_commutes_closed {n : ℕ }(f : (Fin n → ℝ²)) (b : ℝ²
 
 -- Now we explicitly give the translation and linear map that so that the unit triangle gets mapped unto the triangle
 --First, we make explicit that our basis is the standard basis
-noncomputable def our_basis : Basis (Fin 2) ℝ ℝ² :=  PiLp.basisFun 2 ℝ (Fin 2)
+noncomputable def our_basis : Module.Basis (Fin 2) ℝ ℝ² :=  PiLp.basisFun 2 ℝ (Fin 2)
 noncomputable def our_basis_ortho : OrthonormalBasis (Fin 2) ℝ ℝ² :=   EuclideanSpace.basisFun (Fin 2) ℝ
+
+/-- The first standard orthonormal basis vector of the plane is `(1, 0)`. -/
+theorem our_basis_ortho_zero : (our_basis_ortho 0 : ℝ²) = !₂[1, 0] := by
+  change (EuclideanSpace.basisFun (Fin 2) ℝ) 0 = !₂[1, 0]
+  rw [EuclideanSpace.basisFun_apply]
+  ext j; fin_cases j <;> simp
+
+/-- The second standard orthonormal basis vector of the plane is `(0, 1)`. -/
+theorem our_basis_ortho_one : (our_basis_ortho 1 : ℝ²) = !₂[0, 1] := by
+  change (EuclideanSpace.basisFun (Fin 2) ℝ) 1 = !₂[0, 1]
+  rw [EuclideanSpace.basisFun_apply]
+  ext j; fin_cases j <;> simp
 
 --This map tells us how the basis elements should be mapped
 noncomputable def basis_transform (T: Triangle ) : (Fin 2 → ℝ²) := (fun | 0 => (T 1 - T 0) | 1 => (T 2 -T 0))
@@ -291,8 +318,8 @@ theorem volume_open_triangle ( T : Triangle ) : (MeasureTheory.volume (open_hull
   exact div_nonneg (abs_nonneg _) (by norm_num)
 
 --Now that we know the volume of open triangles, we also want to know the area of segments. For this we have a similar strategy. We first take a unit segment, and show it is a subset of the y axis which as hhas measure zero
-def unit_segment : Segment := fun | 0 => (v 0 0) | 1 => (v 1 0)
-def y_axis : Submodule ℝ ℝ² := Submodule.span ℝ (Set.range unit_segment )
+noncomputable def unit_segment : Segment := fun | 0 => (v 0 0) | 1 => (v 1 0)
+noncomputable def y_axis : Submodule ℝ ℝ² := Submodule.span ℝ (Set.range unit_segment )
 
 --And some possibly unnecessary API
 lemma unit_segment_def : unit_segment = fun | 0 => (v 0 0) | 1 => (v 1 0)  := by rfl
@@ -309,7 +336,7 @@ theorem closed_unit_segment_subset : closed_hull unit_segment ⊆ y_axis := by
   exact h1
   apply h
 
-  rw[ mem_span_range_iff_exists_fun]
+  rw[ Submodule.mem_span_range_iff_exists_fun]
   use a
 
 --And the conclusion it then must have measure zero, which can probably be a lot cleaner
@@ -317,21 +344,14 @@ theorem volume_closed_unit_segment : MeasureTheory.volume (closed_hull unit_segm
   apply MeasureTheory.measure_mono_null (closed_unit_segment_subset )
   apply MeasureTheory.Measure.addHaar_submodule
   intro h
-  have h3 : (fun | 0 => 0 | 1 => 1) ∉ y_axis
+  have h3 : !₂[(0 : ℝ), 1] ∉ y_axis
   intro h1
   rw[y_axis] at h1
-  rw[ mem_span_range_iff_exists_fun] at h1
+  rw[ Submodule.mem_span_range_iff_exists_fun] at h1
   cases' h1 with c h1
   rw[Fin.sum_univ_two, unit_segment_def] at h1
+  have h1 := congrArg (fun z => z.ofLp 1) h1
   simp at h1
-  apply congrFun at h1
-  specialize h1 1
-  dsimp at h1
-  have h2 : c 0 * 0 + c 1 * 0 = 0
-  linarith
-  rw[h2] at h1
-  apply zero_ne_one at h1
-  exact h1
   rw[h] at h3
   apply h3
   trivial
@@ -394,12 +414,13 @@ theorem box_equal_to_pare : parallelepiped our_basis_ortho = closed_hull unit_sq
         exact h1 0
       · rw [Fin.sum_univ_four]
         simp
-        ring
+        linarith
     · simp
       rw[h2, Fin.sum_univ_two, Fin.sum_univ_four]
-      simp[unit_square, our_basis_ortho]
+      simp only [unit_square]
+      rw [our_basis_ortho_zero, our_basis_ortho_one]
       ext i
-      fin_cases i <;> simp
+      fin_cases i <;> simp [v, PiLp.add_apply, PiLp.smul_apply]
 
   · rw[mem_parallelepiped_iff ,  closed_hull]
     rintro ⟨ a ,⟨ h11,h12⟩  , h2⟩
@@ -421,10 +442,10 @@ theorem box_equal_to_pare : parallelepiped our_basis_ortho = closed_hull unit_sq
                     _ ≤ a 0 + (a 3 + a 2) + a 1 := by exact le_add_of_nonneg_right (h11 1)
                     _ = a 0 + a 1 + a 2 + a 3   := by ring
     · rw[← h2]
-      simp[our_basis_ortho, Fin.sum_univ_four , unit_square]
+      simp only [Fin.sum_univ_four, Fin.sum_univ_two, unit_square]
+      rw [our_basis_ortho_zero, our_basis_ortho_one]
       ext i
-      fin_cases i <;> simp
-      linarith
+      fin_cases i <;> simp [v, PiLp.add_apply, PiLp.smul_apply] <;> ring
 
 theorem volume_box : (MeasureTheory.volume (closed_hull unit_square)).toReal = 1 := by
   rw[← box_equal_to_pare]
@@ -708,7 +729,6 @@ theorem triangle_det_sum_one (S : Finset Triangle)(hcover : is_disjoint_cover (c
   intro T _
   rw[volume_open_triangle]
   rw[sum_congr (by rfl) h]
-  simp
   rw[ENNReal.toReal_sum]
   intro a _; rw [volume_open_triangle']; simp
 
