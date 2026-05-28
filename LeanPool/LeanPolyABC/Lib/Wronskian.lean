@@ -51,7 +51,9 @@ theorem wronskian_eq_of_sum_zero {a b c : R[X]} (h : a + b + c = 0) :
 private theorem degree_ne_bot {a : R[X]} (ha : a ≠ 0) : a.degree ≠ ⊥ := by
   intro h; rw [Polynomial.degree_eq_bot] at h; exact ha h
 
-theorem wronskian.degree_lt_add {a b : R[X]} (ha : a ≠ 0) (hb : b ≠ 0) :
+namespace wronskian
+
+theorem degree_lt_add {a b : R[X]} (ha : a ≠ 0) (hb : b ≠ 0) :
     (wronskian a b).degree < a.degree + b.degree := by
   calc
     (wronskian a b).degree ≤ max (a * derivative b).degree (derivative a * b).degree :=
@@ -69,7 +71,7 @@ theorem wronskian.degree_lt_add {a b : R[X]} (ha : a ≠ 0) (hb : b ≠ 0) :
 -- Note: the following is false!
 -- Counterexample: b = a = 1 →
 -- (wronskian a b).natDegree = a.natDegree = b.natDegree = 0
-theorem wronskian.natDegree_lt_add {a b : R[X]} (hw : wronskian a b ≠ 0) :
+theorem natDegree_lt_add {a b : R[X]} (hw : wronskian a b ≠ 0) :
     (wronskian a b).natDegree < a.natDegree + b.natDegree := by
   have ha : a ≠ 0 := by intro h; subst h; rw [wronskian_zero_left] at hw; exact hw rfl
   have hb : b ≠ 0 := by intro h; subst h; rw [wronskian_zero_right] at hw; exact hw rfl
@@ -78,5 +80,7 @@ theorem wronskian.natDegree_lt_add {a b : R[X]} (hw : wronskian a b ≠ 0) :
   · exact Polynomial.degree_eq_natDegree hw
   · exact Polynomial.degree_eq_natDegree ha
   · exact Polynomial.degree_eq_natDegree hb
+
+end wronskian
 
 end LeanPolyABC

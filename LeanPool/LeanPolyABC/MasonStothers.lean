@@ -21,13 +21,17 @@ namespace LeanPolyABC
 
 variable {k : Type _} [Field k] [DecidableEq k]
 
+namespace Ne
+
 omit [DecidableEq k] in
-theorem Ne.isUnit_C {u : k} (hu : u ≠ 0) : IsUnit (C u) :=
+theorem isUnit_C {u : k} (hu : u ≠ 0) : IsUnit (C u) :=
   Polynomial.isUnit_C.mpr hu.isUnit
 
 omit [DecidableEq k] in
-theorem Ne.C_ne_zero {u : k} (hu : u ≠ 0) : C u ≠ 0 :=
+theorem C_ne_zero {u : k} (hu : u ≠ 0) : C u ≠ 0 :=
   Polynomial.C_ne_zero.mpr hu
+
+end Ne
 
 omit [DecidableEq k] in
 theorem dvd_derivative_iff {a : k[X]} : a ∣ derivative a ↔ derivative a = 0 := by
@@ -42,8 +46,10 @@ theorem dvd_derivative_iff {a : k[X]} : a ∣ derivative a ↔ derivative a = 0 
     simp only [lt_self_iff_false] at lt_self
   · intro h; rw [h]; simp
 
+namespace IsCoprime
+
 omit [DecidableEq k] in
-theorem IsCoprime.wronskian_eq_zero_iff {a b : k[X]} (hc : IsCoprime a b) :
+theorem wronskian_eq_zero_iff {a b : k[X]} (hc : IsCoprime a b) :
     wronskian a b = 0 ↔ derivative a = 0 ∧ derivative b = 0 := by
   constructor
   · intro hw
@@ -59,6 +65,8 @@ theorem IsCoprime.wronskian_eq_zero_iff {a b : k[X]} (hc : IsCoprime a b) :
     obtain ⟨hda, hdb⟩ := hdab
     rw [wronskian]
     rw [hda, hdb]; simp only [MulZeroClass.mul_zero, MulZeroClass.zero_mul, sub_self]
+
+end IsCoprime
 
 /- ABC for polynomials (Mason-Stothers theorem)
 
@@ -78,11 +86,15 @@ proof ("An Alternative Proof of Mason's Theorem"), but slightly different.
 6. Since W(a, b) = ab' - a'b = 0 and a and b are coprime, a' = 0. Similarly we have b' = c' = 0.
    `coprime_wronskian_eq_zero_const`
 -/
-protected theorem IsCoprime.divRadical {a b : k[X]} (h : IsCoprime a b) :
+namespace IsCoprime
+
+protected theorem divRadical {a b : k[X]} (h : IsCoprime a b) :
     IsCoprime (Polynomial.divRadical a) (Polynomial.divRadical b) := by
   rw [← Polynomial.hMul_radical_divRadical a] at h
   rw [← Polynomial.hMul_radical_divRadical b] at h
   exact h.of_mul_left_right.of_mul_right_right
+
+end IsCoprime
 
 private theorem abc_subcall
     {a b c w : k[X]} {hw : w ≠ 0} (wab : w = wronskian a b)
@@ -128,7 +140,9 @@ private theorem rot3_isCoprime {a b c : k[X]}
   convert IsCoprime.add_mul_left_right hab.symm 1
   rw [mul_one]
 
-theorem Polynomial.abc {a b c : k[X]}
+namespace Polynomial
+
+theorem abc {a b c : k[X]}
     (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0)
     (hab : IsCoprime a b) (hsum : a + b + c = 0) :
     (derivative a = 0 ∧ derivative b = 0 ∧ derivative c = 0) ∨
@@ -173,7 +187,7 @@ theorem Polynomial.abc {a b c : k[X]}
       apply abc_subcall wca <;> assumption
     · apply abc_subcall wab <;> assumption
 
-theorem Polynomial.abc_char0 [CharZero k] {a b c : k[X]}
+theorem abc_char0 [CharZero k] {a b c : k[X]}
     (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0)
     (hab : IsCoprime a b) (hsum : a + b + c = 0) :
     (a.natDegree = 0 ∧ b.natDegree = 0 ∧ c.natDegree = 0) ∨
@@ -183,6 +197,8 @@ theorem Polynomial.abc_char0 [CharZero k] {a b c : k[X]}
     repeat (any_goals constructor)
     all_goals (apply natDegree_eq_zero_of_derivative_eq_zero; tauto)
   · tauto
+
+end Polynomial
 
 omit [DecidableEq k] in
 theorem isUnit_iff_natDegree_eq_zero {a : k[X]} (ha : a ≠ 0) :
@@ -198,8 +214,10 @@ theorem natDegree_radical_eq_zero_iff {a : k[X]} :
   · rw [← isUnit_iff_natDegree_eq_zero ha, ← isUnit_iff_natDegree_eq_zero (radical_ne_zero _)]
     rw [radical_isUnit_iff ha]
 
+namespace Polynomial
+
 -- Variant of Mason--Stothers not requiring coprimality of `a` and `b`
-theorem Polynomial.abc'_char0 [CharZero k]
+theorem abc'_char0 [CharZero k]
     {a b c : k[X]} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hsum : a + b + c = 0) :
     (a.natDegree = 0 ∧ b.natDegree = 0 ∧ c.natDegree = 0) ∨
       Nat.max₃ a.natDegree b.natDegree c.natDegree + 1 ≤
@@ -269,5 +287,7 @@ theorem Polynomial.abc'_char0 [CharZero k]
     · exact radical_ne_zero _
     · exact radical_dvd_self _
     · exact hc'
+
+end Polynomial
 
 end LeanPolyABC

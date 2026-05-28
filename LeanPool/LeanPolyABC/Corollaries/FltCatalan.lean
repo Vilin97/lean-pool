@@ -77,8 +77,10 @@ theorem mul_eq_zero_left_iff
   rw [mul_eq_zero]
   tauto
 
+namespace Polynomial
+
 omit [DecidableEq k] in
-theorem Polynomial.flt_catalan_deriv
+theorem flt_catalan_deriv
     {p q r : ℕ} (hp : 0 < p) (hq : 0 < q) (hr : 0 < r)
     (hineq : q * r + r * p + p * q ≤ p * q * r)
     (chp : ¬ringChar k ∣ p) (chq : ¬ringChar k ∣ q) (chr : ¬ringChar k ∣ r)
@@ -132,6 +134,8 @@ theorem Polynomial.flt_catalan_deriv
     convert weighted_average_le_max₃ using 1
     ring_nf
 
+end Polynomial
+
 omit [DecidableEq k] in
 private theorem expcont {a : k[X]} (ha : a ≠ 0) (hda : derivative a = 0) (chn0 : ringChar k ≠ 0) :
     ∃ ca, ca ≠ 0 ∧ a = expand k (ringChar k) ca ∧ a.natDegree = ca.natDegree * ringChar k := by
@@ -159,8 +163,10 @@ private theorem is_coprime_of_expand {a b : k[X]} {n : ℕ} (hn : n ≠ 0) :
   obtain ⟨zz, yy⟩ := tt; rw [eq_comm, expand_eq_C (zero_lt_iff.mpr hn), eq_comm] at yy
   exact ⟨zz, yy⟩
 
+namespace Polynomial
+
 omit [DecidableEq k] in
-theorem Polynomial.flt_catalan_aux
+theorem flt_catalan_aux
     {p q r : ℕ} (hp : 0 < p) (hq : 0 < q) (hr : 0 < r)
     (hineq : q * r + r * p + p * q ≤ p * q * r)
     (chp : ¬ringChar k ∣ p) (chq : ¬ringChar k ∣ q) (chr : ¬ringChar k ∣ r)
@@ -212,7 +218,7 @@ theorem Polynomial.flt_catalan_aux
         nlinarith [hdeg, hca1, hch2]
 
 omit [DecidableEq k] in
-theorem Polynomial.flt_catalan
+theorem flt_catalan
     {p q r : ℕ} (hp : 0 < p) (hq : 0 < q) (hr : 0 < r)
     (hineq : q * r + r * p + p * q ≤ p * q * r)
     (chp : ¬ringChar k ∣ p) (chq : ¬ringChar k ∣ q) (chr : ¬ringChar k ∣ r)
@@ -234,7 +240,7 @@ theorem Polynomial.flt_catalan
 Take p = q = r = n and u = v = 1, w = -1.
 -/
 omit [DecidableEq k] in
-theorem Polynomial.flt
+theorem flt
     {n : ℕ} (hn : 3 ≤ n) (chn : ¬ringChar k ∣ n)
     {a b c : k[X]} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0)
     (hab : IsCoprime a b) (heq : a ^ n + b ^ n = c ^ n) :
@@ -250,5 +256,7 @@ theorem Polynomial.flt
   have eq_lhs : n * n + n * n + n * n = 3 * n * n := by ring_nf
   rw [eq_lhs]; rw [mul_assoc, mul_assoc]
   exact Nat.mul_le_mul_right (n * n) hn
+
+end Polynomial
 
 end LeanPolyABC
