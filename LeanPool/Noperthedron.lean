@@ -16,3 +16,5 @@ Main declarations: `LeanPool.Noperthedron.noperthedron`, `LeanPool.Noperthedron.
 Tags: convex-geometry, polyhedra, rotations
 MSC: 52B10, 52A20
 -/
+
+-- Ported to Lean v4.30 for Lean Pool.
