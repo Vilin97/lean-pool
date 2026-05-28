@@ -637,15 +637,13 @@ theorem prekopa_leindler
   have hyp_0 : ∀ {f g h : (Fin 1 → ℝ) → ENNReal}, PLConditions 1 θ f g h →
       ENNReal.ofReal ((1-θ)^(1-θ) * θ^θ)⁻¹
       * (∫⁻ (x : Fin 1 → ℝ), f x)^(1-θ) * (∫⁻ (x : Fin 1 → ℝ), g x)^θ
-      ≤ ∫⁻ (x : Fin 1 → ℝ), h x := by
-    have := hd 0
-    simp_all
+      ≤ ∫⁻ (x : Fin 1 → ℝ), h x := fun hpl => by
+    have hres := hd 0 (Nat.zero_le d) hpl
+    simpa using hres
   have hyp_d : ∀ {f g h : (Fin (d + 1) → ℝ) → ENNReal}, PLConditions (d + 1) θ f g h →
       ENNReal.ofReal ((1-θ)^((d+1)*(1-θ)) * θ^((d+1)*θ))⁻¹
       * (∫⁻ (x : Fin (d + 1) → ℝ), f x)^(1-θ) * (∫⁻ (x : Fin (d + 1) → ℝ), g x)^θ
-      ≤ ∫⁻ (x : Fin (d + 1) → ℝ), h x := by
-    have := hd d
-    simp_all
+      ≤ ∫⁻ (x : Fin (d + 1) → ℝ), h x := fun hpl => hd d (le_refl d) hpl
   -- F, G, H are f, g, h with the last coordinate marginalized out
   let F : (Fin (d + 1) → ℝ) → ENNReal := fun x1 ↦ ∫⁻ x, (fix f x1) x
   let G : (Fin (d + 1) → ℝ) → ENNReal := fun x1 ↦ ∫⁻ x, (fix g x1) x
