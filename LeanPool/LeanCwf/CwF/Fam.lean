@@ -17,7 +17,7 @@ open CategoryTheory
 
 universe u
 
--- Fam is equivalent to the arrow category of Set.
+/-- The category of families of types, realized as the arrow category of `Type u`. -/
 abbrev Fam : Type (u + 1) :=
   Arrow (Type u)
 
@@ -40,6 +40,7 @@ theorem famForIxInv (A : Type u) (B : A → Type u) :
     ixSet (mkFam.{u} A B) = A :=
   rfl
 
+/-- Convert a fiber element of `mkFam A B` over `a` to an element of `B a`. -/
 def toFam {A : Type u} {B : A → Type u} {a : A} :
     famFor (mkFam.{u} A B) a → B a
   | ⟨⟨a', b⟩, h⟩ => by
@@ -48,13 +49,15 @@ def toFam {A : Type u} {B : A → Type u} {a : A} :
       subst h'
       exact b
 
+/-- Convert an element of `B a` to a fiber element of `mkFam A B` over `a`. -/
 def fromFam {A : Type u} {B : A → Type u} {a : A} (b : B a) :
     famFor (mkFam.{u} A B) a :=
   ⟨⟨a, b⟩, by
     change (fun ab : (a : A) × B a => ab.1) ⟨a, b⟩ = a
     rfl⟩
 
-instance toFamLeftInv {A : Type u} {B : A → Type u} {a : A} :
+/-- `fromFam` is a left inverse to `toFam`. -/
+theorem toFamLeftInv {A : Type u} {B : A → Type u} {a : A} :
     Function.LeftInverse fromFam.{u} (toFam (A := A) (B := B) (a := a)) := by
   rintro ⟨⟨a', b⟩, h⟩
   have h' : a' = a := by
@@ -62,7 +65,8 @@ instance toFamLeftInv {A : Type u} {B : A → Type u} {a : A} :
   subst h'
   rfl
 
-instance toFamRightInv {A : Type u} {B : A → Type u} {a : A} :
+/-- `fromFam` is a right inverse to `toFam`. -/
+theorem toFamRightInv {A : Type u} {B : A → Type u} {a : A} :
     Function.RightInverse (fromFam.{u} (A := A) (B := B) (a := a)) toFam := by
   intro b
   rfl
@@ -120,6 +124,7 @@ def mapFam {AB₁ AB₂ : Fam} (f : AB₁ ⟶ AB₂) {a : ixSet AB₁}
     rw [← property]
     exact h⟩
 
+/-- Build a family morphism from a map on indices and a compatible map on fibers. -/
 def unmapFam {AB₁ AB₂ : Fam} (ixMap : ixSet AB₁ → ixSet AB₂)
     (famMap : {a : ixSet AB₁} → famFor AB₁ a → famFor AB₂ (ixMap a)) :
     AB₁ ⟶ AB₂ :=
@@ -139,8 +144,9 @@ theorem unmapMap {AB₁ AB₂ : Fam} (f : AB₁ ⟶ AB₂) :
   · ext x
     rfl
 
+/-- The fiber map of `unmapFam ixMap famMap` is the given fiber map. -/
 @[simp]
-def mapUnmap {AB₁ AB₂ : Fam} (ixMap : ixSet AB₁ → ixSet AB₂)
+theorem mapUnmap {AB₁ AB₂ : Fam} (ixMap : ixSet AB₁ → ixSet AB₂)
     (famMap : {a : ixSet AB₁} → famFor AB₁ a → famFor AB₂ (ixMap a))
     (a : ixSet AB₁) :
     mapFam (unmapFam ixMap famMap) (a := a) = famMap (a := a) := by
@@ -156,15 +162,17 @@ def castFam {AB : Fam} {a a' : ixSet AB} (b : famFor AB a) (eq : a = a') :
     famFor AB a' :=
   cast (by rw [eq]) b
 
+/-- Mapping along equal family morphisms agrees up to a cast on indices. -/
 @[aesop safe]
-def mapCast {AB₁ AB₂ : Fam} {a : ixSet AB₁} {f g : AB₁ ⟶ AB₂}
+theorem mapCast {AB₁ AB₂ : Fam} {a : ixSet AB₁} {f g : AB₁ ⟶ AB₂}
     (b : famFor AB₁ a) (eq : g = f) :
     mapFam f b = castFam (mapFam g b) (congrArg₂ mapIx eq (rfl : a = a)) := by
   subst eq
   rfl
 
+/-- Mapping a fiber element along the identity morphism leaves it unchanged. -/
 @[simp]
-def mapFamId {AB : Fam} {a : ixSet AB} (b : famFor AB a) : mapFam (𝟙 AB) b = b := by
+theorem mapFamId {AB : Fam} {a : ixSet AB} (b : famFor AB a) : mapFam (𝟙 AB) b = b := by
   apply Subtype.ext
   rfl
 

@@ -12,7 +12,7 @@ import LeanPool.LeanCwf.CwF
 Source: url:https://github.com/JoeyEremondi/lean-cwf
 Authors: Joseph Eremondi
 Status: verified
-Main declarations: `LeanPool.LeanCwf.CwF.CwF`, `LeanPool.LeanCwf.CwF.ext_decomp`, `LeanPool.LeanCwf.CwF.termSecEquiv`, `LeanPool.LeanCwf.CwF.StrictPreserveCwF`
+Main declarations: `LeanPool.LeanCwf.CwF.CwFStruct`, `LeanPool.LeanCwf.CwF.StrictPreserveCwF`
 Tags: category-theory, type-theory, categorical-logic
 MSC: 18N45, 03B15
 -/

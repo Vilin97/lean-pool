@@ -10,12 +10,10 @@ projects:
       url: https://github.com/JoeyEremondi/lean-cwf
     status: verified
     main_declarations:
-      - LeanPool.LeanCwf.CwF.CwF
-      - LeanPool.LeanCwf.CwF.ext_decomp
-      - LeanPool.LeanCwf.CwF.termSecEquiv
+      - LeanPool.LeanCwf.CwF.CwFStruct
       - LeanPool.LeanCwf.CwF.StrictPreserveCwF
     main_results:
-      - declaration: LeanPool.LeanCwf.CwF.CwF
+      - declaration: LeanPool.LeanCwf.CwF.CwFStruct
         informal: Defines a category with families as a category with a terminal object, type-term presheaf, context extension, and CwF laws.
       - declaration: LeanPool.LeanCwf.CwF.ext_decomp
         informal: Decomposes every morphism into an extended context as an extension by its projection and head term.

@@ -15,17 +15,17 @@ theorem heq_type_eq {a a_1 : Sort u_1} {x : a} {y : a_1}
   cases eq
   rfl
 
-theorem eq_cast_of_heq  {a a_1 : Sort u_1} {a_2 : a} {a' : a_1}
+theorem eq_cast_of_heq {a a_1 : Sort u_1} {a_2 : a} {a' : a_1}
   (heq : HEq a_2 a') : cast (heq_type_eq heq) a_2 = a' := by
   cases heq
   rfl
 
 
-theorem cast_moveR  {A B : Sort u_1} {a : A} {b : B}
+theorem cast_moveR {A B : Sort u_1} {a : A} {b : B}
   {eq : A = B} (abeq : cast eq a = b) : a = cast (by rw [eq]) b := by aesop
 
 
-theorem cast_moveL  {A B : Sort u_1} {a : A} {b : B}
+theorem cast_moveL {A B : Sort u_1} {a : A} {b : B}
   {eq : B = A} (abeq : a = cast eq b) : cast (by rw [eq]) a = b := by aesop
 
 theorem hCong {A : Type u} {B : A → Type v} {f g : (a : A) → B a} {x y : A}
@@ -44,13 +44,13 @@ theorem castSymmR {A B : Type u} {eq : B = A} {x : A} {y : B}
 theorem hCongFun {A : Type u} {B C : A → Type v} {f : (a : A) → B a} {g : (a : A) → C a}
     (x : A)
     (eq : B = C)
-    (funEq : HEq f g)  :
+    (funEq : HEq f g) :
       HEq (f x) (g x) := by aesop
 
 
 theorem hCongArg {A : Type u} {B : A → Type v} {f : (a : A) → B a}
     {x y : A}
-    (eq : x = y)  :
+    (eq : x = y) :
       HEq (f x) (f y) := by aesop
 
 
@@ -76,14 +76,14 @@ theorem hCongArg {A : Type u} {B : A → Type v} {f : (a : A) → B a}
 theorem hCongFunImplicit {A : Type u} {B C : A → Type v} {f : {a : A} → B a} {g : {a : A} → C a}
     (x : A)
     (eq : B = C)
-    (funEq : HEq @f @g)  :
+    (funEq : HEq @f @g) :
       HEq (f (a := x)) (g (a := x)) := by aesop
 
 
-theorem hCongFunSimp {A : Type u} {B C :  Type v} {f : (a : A) → B } {g : (a : A) → C }
+theorem hCongFunSimp {A : Type u} {B C : Type v} {f : (a : A) → B} {g : (a : A) → C}
     (x : A)
     (eq : B = C)
-    (funEq : HEq f g)  :
+    (funEq : HEq f g) :
       HEq (f x) (g x) := by aesop
 
 
@@ -130,20 +130,20 @@ theorem Subtype_Sigma_ext
   | mk x1 x2 => cases y with
   | mk y1 y2 =>
     fapply Sigma.ext
-    . assumption
-    . cases eq1
-      simp
-      apply Subtype.eq
-      simp at eq2
+    · assumption
+    · cases eq1
+      simp only [heq_eq_eq]
+      apply Subtype.ext
+      simp only [heq_eq_eq] at eq2
       assumption
 
-theorem Subtype_HExtEq  {A : Type u} {P Q : A -> Prop}
+theorem Subtype_HExtEq {A : Type u} {P Q : A -> Prop}
  {x : Subtype P} {y : Subtype Q}
  (eq : x.val = y.val)
  (equiv : P = Q)
  : HEq x y := by aesop
 
-theorem Subtype_HExt  {A : Type u} {P Q : A -> Prop}
+theorem Subtype_HExt {A : Type u} {P Q : A -> Prop}
  {x : Subtype P} {y : Subtype Q}
  (eq : x.val = y.val)
  (equiv : (x : A) -> P x ↔ Q x)
