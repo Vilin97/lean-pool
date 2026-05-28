@@ -302,6 +302,13 @@ import LeanPool.GrothendieckVanishing.PresheafFilteredColimitCore
 import LeanPool.GrothendieckVanishing.PresheafFilteredColimitGeneral
 import LeanPool.GrothendieckVanishing.TopologicalKrullDim
 import LeanPool.GrothendieckVanishing.ZeroOutside
+import LeanPool.Hypothesis
+import LeanPool.Hypothesis.Basic
+import LeanPool.Hypothesis.Exercise
+import LeanPool.Hypothesis.Fdistribution
+import LeanPool.Hypothesis.Regression
+import LeanPool.Hypothesis.SVM
+import LeanPool.Hypothesis.StudentT
 import LeanPool.Isoperimetric
 import LeanPool.Isoperimetric.Basic
 import LeanPool.Isoperimetric.BrunnMinkowski

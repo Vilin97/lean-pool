@@ -477,6 +477,45 @@ projects:
     msc:
       - "14F06"
       - "18F20"
+  - slug: hypothesis
+    title: Hypothesis testing
+    summary: Formalizes probability and statistics results including the Student t and chi-squared distributions, linear regression, support vector machines, and hypothesis testing.
+    branch: probability and statistics
+    entry_module: LeanPool.Hypothesis
+    authors:
+      - Bjørn Kjos-Hanssen
+    source:
+      url: https://github.com/bjoernkjoshanssen/hypothesis
+      github_repo: bjoernkjoshanssen/hypothesis
+    status: verified
+    main_declarations:
+      - t_pdf
+      - separable
+      - regression_coordinates₁
+      - derivStudent
+    main_results:
+      - declaration: t_pdf
+        informal: Defines the Student t distribution density with ν degrees of freedom.
+      - declaration: derivStudent
+        informal: Computes the derivative of the Student t density.
+      - declaration: separable
+        informal: Defines linear separability with margin for support vector machines.
+      - declaration: regression_coordinates₁
+        informal: Defines the least-squares coefficients of the simple linear regression line.
+      - declaration: welch
+        informal: Establishes the Welch-Satterthwaite degrees-of-freedom bound for a two-sample t-test.
+      - declaration: deriv_χ_zero
+        informal: Shows the only critical point of the chi-squared density is at k - 2.
+      - declaration: exercise_1_2_7
+        informal: Computes P(A ∪ B) from the inclusion-exclusion data of a Grinstead-Snell exercise.
+    tags:
+      - probability
+      - statistics
+      - hypothesis-testing
+    msc:
+      - "62F03"
+      - "62J05"
+      - "60E05"
   - slug: sensitivity
     title: "Sensitivity Conjecture: sqrt(deg) <= sensitivity"
     summary: Formalizes the quantitative Nisan-Szegedy/Huang sensitivity theorem for Boolean functions.
