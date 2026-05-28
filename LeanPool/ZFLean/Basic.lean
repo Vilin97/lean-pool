@@ -12,6 +12,9 @@ namespace ZFSet
 theorem nonempty_exists_iff {n : ZFSet} : n ≠ ∅ ↔ ∃ m, m ∈ n := by
   simp [ZFSet.ext_iff]
 
+@[simp] theorem not_nonempty_is_empty {x : ZFSet} : ¬x.Nonempty ↔ x = ∅ := by
+  rw [nonempty_def, not_exists, eq_empty]
+
 theorem subset_of_empty {x : ZFSet} (h : x ⊆ ∅) : x = ∅ := by
   ext1 z
   constructor
@@ -31,6 +34,10 @@ theorem sUnion_insert {x : ZFSet} : (⋃₀ (insert x x) : ZFSet) = x ∪ (⋃�
 
 theorem singleton_subset_mem_iff {x y : ZFSet} : {x} ⊆ y ↔ x ∈ y := by
   simp [subset_def]
+
+theorem insert_def {x y : ZFSet} : insert x y = {x} ∪ y := by
+  ext1 z
+  rw [mem_insert_iff, mem_union, mem_singleton]
 
 theorem sInter_pair {a b : ZFSet} : ⋂₀ {a, b} = a ∩ b := by
   ext1 x
@@ -109,6 +116,16 @@ theorem prod_insert {A B x : ZFSet} : A.prod (insert x B) = A.prod B ∪ A.prod 
       left
       rfl
 
+lemma prod_nonempty {x y : ZFSet} : x ≠ ∅ → y ≠ ∅ → ZFSet.prod x y ≠ ∅ := by
+  classical
+  intro hx hy h'
+  simp only [ZFSet.ext_iff, ZFSet.mem_prod, ZFSet.notMem_empty, iff_false, not_exists,
+    not_and, not_forall] at h'
+  obtain ⟨a, ha⟩ := nonempty_exists_iff.mp hx
+  obtain ⟨b, hb⟩ := nonempty_exists_iff.mp hy
+  obtain ⟨_, h'⟩ := h' (a.pair b) _ ha _ hb
+  exact h' (Eq.to_iff rfl)
+
 theorem union_empty {A : ZFSet} : A ∪ ∅ = A := by
   ext1
   simp_rw [mem_union, notMem_empty, or_false]
@@ -126,6 +143,18 @@ theorem union_comm {A B : ZFSet} : A ∪ B = B ∪ A := by
 theorem empty_union {A : ZFSet} : ∅ ∪ A = A := by
   rw [union_comm]
   exact union_empty
+
+theorem union_mono {x y z : ZFSet} : x ⊆ z → y ⊆ z → x ∪ y ⊆ z := by
+  intro hx hy a ha
+  rw [ZFSet.mem_union] at ha
+  rcases ha with _ | _
+  · exact hx ‹_›
+  · exact hy ‹_›
+
+theorem inter_mono {x y z : ZFSet} : x ⊆ z → y ⊆ z → x ∩ y ⊆ z := by
+  intro hx _ a ha
+  rw [ZFSet.mem_inter] at ha
+  exact hx ha.1
 
 theorem mem_powerset_self {x : ZFSet} : x ∈ x.powerset := mem_powerset.mpr fun _ => id
 
@@ -158,8 +187,20 @@ theorem prod_empty_right {x : ZFSet} : x.prod ∅ = ∅ := by
 @[simp]
 theorem prod_empty_left {x : ZFSet} : ZFSet.prod ∅ x = ∅ := by
   ext z; simp
+
+instance ZFSetSProdinst : SProd ZFSet ZFSet ZFSet := ⟨prod⟩
+
 /-- Imported ZFLean declaration. -/
 notation " ε " => (Classical.epsilon fun z ↦ z ∈ ·)
+
+theorem epsilon_mem {y : ZFSet} (hy : y ≠ ∅) : ε y ∈ y := by
+  exact Classical.epsilon_spec (nonempty_exists_iff.mp hy)
+
+theorem insert_mem {x y : ZFSet} (h : x ∈ y) : insert x y = y := by
+  ext1
+  rw [mem_insert_iff, or_iff_right_iff_imp]
+  rintro rfl
+  trivial
 
 theorem eq_of_subset_subset {A B : ZFSet} (hAB : A ⊆ B) (hBA : B ⊆ A) : A = B := by
   ext1 x
