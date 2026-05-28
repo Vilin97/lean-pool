@@ -77,6 +77,7 @@ https://github.com/anandijain/is_rectangular_cuboid.lean
 https://github.com/Anderssorby/LeanPlay
 https://github.com/AnirudhG07/LeanBWT-Bzip2
 https://github.com/anishrajeev/ModelTheoryFun
+https://github.com/anoma/geb
 https://github.com/AntanasKal/Advent-of-Code-2023
 https://github.com/Antoine-dSG/frieze_patterns
 https://github.com/AntoineChambert-Loir/DividedPowers4
@@ -175,11 +176,12 @@ https://github.com/CBirkbeck/FltRegulartest
 https://github.com/CBirkbeck/GLn_F_q
 https://github.com/CBirkbeck/LeanBridge
 https://github.com/CBirkbeck/LeanModularForms
-https://github.com/CBirkbeck/ModularForms_Lean4
 https://github.com/CBirkbeck/power_residue_symbols
 https://github.com/CBirkbeck/WeilConverse
+https://github.com/cboone/zhang-yeung-inequality
 https://github.com/ccodel/verus-lean
 https://github.com/cduenasnavarro/PROOF101-miniproject-cduenasnavarro
+https://github.com/cedar-policy/cedar-spec
 https://github.com/chabulhwi/tpil-solutions
 https://github.com/CharredLee/topos
 https://github.com/chasenorman/Canonical-min
@@ -229,6 +231,7 @@ https://github.com/dignissimus/Untangle
 https://github.com/djvelleman/STG4
 https://github.com/doxtor6/MerLean_FormalQualBench
 https://github.com/doxtor6/MerLean_NumberTheory
+https://github.com/dpusceddu/lean4-amm
 https://github.com/drcicero/sqlite.lean
 https://github.com/drhodes/minilib
 https://github.com/DSLstandard/Lean4-FFI-Programming-Tutorial-GLFW
@@ -239,6 +242,7 @@ https://github.com/dupuisf/aoc24
 https://github.com/dupuisf/Lean4_AoC2022
 https://github.com/dupuisf/LFTCM2024TraceClass
 https://github.com/dwrensha/math-puzzles-in-lean4
+https://github.com/dwrensha/Rupert.lean
 https://github.com/EdAyers/ProofWidgets4
 https://github.com/EdAyers/WidgetKit
 https://github.com/edegeltje/CwFTT
@@ -256,6 +260,7 @@ https://github.com/enricozb/buffon-lean
 https://github.com/enricozb/logic
 https://github.com/Eparoh/Functional_Analysis
 https://github.com/Equilibris/Shrink
+https://github.com/eric-wieser/lean-graded-rings
 https://github.com/eric-wieser/navier-stokes-misformalization
 https://github.com/ericluap/AutLinOrd
 https://github.com/ericluap/OrderedSemigroups
@@ -264,6 +269,7 @@ https://github.com/estradilua/pointwise-birkhoff
 https://github.com/extism/lean4-sdk
 https://github.com/ezhuchko/RLTL-derivatives
 https://github.com/faenuccio-teaching/M1_ENS_26
+https://github.com/felixpernegger/pibase-lean
 https://github.com/femtomc/logical_relations.lean
 https://github.com/Ferinko/LeanAStar
 https://github.com/Ferinko/LeanSha
@@ -285,6 +291,8 @@ https://github.com/fpvandoorn/LeanInRome
 https://github.com/FR-vdash-bot/Algorithm
 https://github.com/FrankieeW/QuadraticNumberFields
 https://github.com/frankvegadelgado/GoldbachConjecture
+https://github.com/fraware/lean-endkan
+https://github.com/fraware/lean-optics
 https://github.com/fraware/leanverifier
 https://github.com/FrederickPu/AutoformalizationUtils
 https://github.com/FrederickPu/pullback
@@ -340,6 +348,7 @@ https://github.com/hargoniX/nest-unit
 https://github.com/hargoniX/pfmt
 https://github.com/hargoniX/SlimCheck
 https://github.com/harmonic-ai/IMO2025
+https://github.com/hatter6822/seLe4n
 https://github.com/hediet/lean-cellular-automata
 https://github.com/HEPLean/HepLean
 https://github.com/HEPLean/PhysLean
@@ -373,6 +382,7 @@ https://github.com/IlPreteRosso/LEANearized-RadiiPolynomial
 https://github.com/imbrem/refined-ssa
 https://github.com/impermeable/waterproof-genre
 https://github.com/imran-tanrikolu/Napoleon-s-Theorem-in-Lean4
+https://github.com/inQWIRE/LeanQuantum
 https://github.com/IPDSnelting/tba-2022
 https://github.com/irunkel/HopfAlgebras
 https://github.com/ishiut/fo_zfc
@@ -397,6 +407,7 @@ https://github.com/jcpaik/erdos-tuza-valtr
 https://github.com/jeffrey-dot-li/lean-homology
 https://github.com/jeremysalwen/advent_of_lean_2022
 https://github.com/jeremysalwen/Lean4-Translate-Tactic
+https://github.com/jessealama/cslib-urm
 https://github.com/jeswr/lean_sys_test
 https://github.com/jjaassoonn/GAGA
 https://github.com/jjdishere/EG
@@ -444,6 +455,7 @@ https://github.com/katzenpost/lean-ffi
 https://github.com/kbuzzard/IISc-experiments
 https://github.com/kbuzzard/MweSkeletons
 https://github.com/kckennylau/PrimeCert
+https://github.com/kencyke/quantum-system
 https://github.com/kevinsullivan/cs2120f24
 https://github.com/Kha/do-supplement
 https://github.com/Kha/lean4export
@@ -483,6 +495,8 @@ https://github.com/kuruczgy/lean-vulkan
 https://github.com/kyleellefsen/lean_aoc_2023
 https://github.com/kyoDralliam/model-theory-topos
 https://github.com/LakshitSinghBishtTM/xLaDe
+https://github.com/lambdaclass/supertensor_lean
+https://github.com/LarsenClose/fixed-point-formalization
 https://github.com/laughinggas/padic-L-functions4
 https://github.com/lauramonk/FriedmanStrongConv
 https://github.com/lean-dojo/LeanInfer
@@ -527,9 +541,11 @@ https://github.com/lephe/lean4-hbind
 https://github.com/lephe/lean4-rewriting
 https://github.com/levzlotnik/lean4-dep-audit
 https://github.com/lf-lang/reactor-lean
+https://github.com/lfglabs-dev/verity
 https://github.com/lftcm2023/lftcm2023
 https://github.com/LiamSchilling/AutomatePolynomial
 https://github.com/linesthatinterlace/xmss
+https://github.com/Linyxus/semantic
 https://github.com/LodeVermeulen/Lean4_Bogdanovs_lemma
 https://github.com/loefflerd/ModularFormDimensions
 https://github.com/loewenheim/projective-plane
@@ -606,6 +622,7 @@ https://github.com/merely-true/merely-true
 https://github.com/MetalCreator666/WhitneyGraustein
 https://github.com/mfornet/advent-of-code-2024
 https://github.com/mfornet/project-euler-lean
+https://github.com/mgignoux/lean4-gl-coalgebras
 https://github.com/mhuisi/lean4-cli
 https://github.com/MichaelMMacLeod/formal-mergesort
 https://github.com/MichaelMMacLeod/SortingNetworkTools
@@ -627,6 +644,7 @@ https://github.com/monsterkrampe/Basic-Lean-Datastructures
 https://github.com/monsterkrampe/Leaning-In-2025
 https://github.com/monsterkrampe/proof-library
 https://github.com/morph-labs/lean-abc-true-almost-always
+https://github.com/mostlyharmfuleconometrics/lean-hansen-econometrics
 https://github.com/mpenciak/AdventOfCode
 https://github.com/mpenciak/FordhamSp2023
 https://github.com/Mr-vedant-gupta/free_will_lean
@@ -710,6 +728,8 @@ https://github.com/predictable-machines/lean4-json-schema
 https://github.com/predictable-machines/lean4-markdown
 https://github.com/prodgang/prodproofs
 https://github.com/Project-Navi/cd-formalization
+https://github.com/Project-Navi/fd-formalization
+https://github.com/Project-Navi/takens-formalization
 https://github.com/project-numina/BrascampLieb
 https://github.com/provables/sequencelib
 https://github.com/PSchwahn/IncidenceGeometry
@@ -724,6 +744,7 @@ https://github.com/ramonfmir/FFIGMP
 https://github.com/rdeager/adinkra-lean4
 https://github.com/rdevshp/c_operational_semantics_lean4
 https://github.com/reaslab/jixia
+https://github.com/reilabs/lampe
 https://github.com/requitefahrenheit/davenport-eta-cp3
 https://github.com/riccardobrasca/formally_real
 https://github.com/RichardZandi/kleene2
@@ -745,6 +766,7 @@ https://github.com/robin-carlier/SymmMonCoherence
 https://github.com/RobinPetit/graphs-in-lean
 https://github.com/roman3017/FinLin
 https://github.com/roos-j/lean-oscillatory
+https://github.com/roozbeh-mohit/IMO-Steps
 https://github.com/RoyGBivens137/Reusable
 https://github.com/Ruben-VandeVelde/eqns
 https://github.com/Ruben-VandeVelde/flt4
@@ -761,6 +783,7 @@ https://github.com/sahanwijetunga/Hyperbolic
 https://github.com/samuelborza/IsTranscendentalPi
 https://github.com/samueloettl/lean4_density
 https://github.com/SamuelSchlesinger/analysis-of-boolean-functions
+https://github.com/SamuelSchlesinger/complexitylib
 https://github.com/SamuelSchlesinger/introduction-to-modern-cryptography
 https://github.com/samvang/StoneDualityInLean
 https://github.com/sanchace/FRACTRAN
@@ -805,6 +828,7 @@ https://github.com/sinhp/groupoid_model_in_lean4
 https://github.com/sinhp/Poly
 https://github.com/sinianluoye/LeanOfRudinAnalysis
 https://github.com/sivukhin/sqlite3-lean-proofs
+https://github.com/slink/LeanLevy
 https://github.com/smorel394/AbstractSimplicialComplex
 https://github.com/smorel394/Appendix
 https://github.com/smorel394/ASC
@@ -819,6 +843,7 @@ https://github.com/soficshift/pointwise-birkhoff
 https://github.com/somombo/murder-mystery
 https://github.com/somombo/supertype
 https://github.com/somombo/try_math_exec
+https://github.com/sorrachai/GraphAlgorithms
 https://github.com/sosudo/agora-lib
 https://github.com/spitters/libcrux-lean-specs
 https://github.com/SproutSeeds/sunflower-lean
@@ -826,11 +851,13 @@ https://github.com/SReichelt/universe-abstractions
 https://github.com/srghma/lean-glob-posix
 https://github.com/ssar/euler_lean
 https://github.com/staroperator/mathematical-logic-in-lean
+https://github.com/Stavan-Jain/QECLean
 https://github.com/SteamPunkPhysics/Polyhedral-Loop-Lean
 https://github.com/SteamPunkPhysics/Primes-as-Forbidden-Harmonics
 https://github.com/SteffenReith/Crypto
 https://github.com/sterraf/ChainBounding
 https://github.com/StevenClontz/formalized-selection-games
+https://github.com/succinctlabs/sp1-lean
 https://github.com/suhr/iris-tutorial
 https://github.com/suhr/lambda
 https://github.com/suhr/polygon
@@ -839,6 +866,7 @@ https://github.com/suhr/tmath
 https://github.com/sullyj3/big_bin_repro_repo
 https://github.com/sweeneyde/1mfld
 https://github.com/T-Brick/c0deine
+https://github.com/t4ccer/misere-games
 https://github.com/taeyool/lean-flag-algebras
 https://github.com/tage64/lean_subprocess_test
 https://github.com/tangentstorm/fourcolor-lean
@@ -855,6 +883,7 @@ https://github.com/teorth/equational
 https://github.com/teorth/estimate_tools
 https://github.com/teorth/symmetric_project
 https://github.com/tghyde/math301spring2025
+https://github.com/TheDarkchip/nfp
 https://github.com/thejohncrafter/Catlib4
 https://github.com/thomaskwaring/lattice-path
 https://github.com/thomaskwaring/learning
@@ -982,5 +1011,6 @@ https://github.com/zblore/csd-lean4
 https://github.com/zeekmartin/topostability-lean4
 https://github.com/zeramorphic/lambda_calculi
 https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+https://github.com/zksecurity/simple-rbr-fri
 https://github.com/znssong/SetTheory
 https://github.com/zqy1018/compilation-vs-evalExpr
