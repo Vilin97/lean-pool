@@ -446,7 +446,7 @@ projects:
       - "11H06"
   - slug: ellipticcurve
     title: EllipticCurve
-    summary: Vendors the small-lemmas scratchpad and the corepresentable-functors infrastructure from the upstream EllipticCurve project.
+    summary: Vendors the symmetric multilinear maps, symmetric tensor powers, and corepresentable-functors infrastructure from the upstream EllipticCurve project.
     branch: algebraic geometry
     entry_module: LeanPool.EllipticCurve
     authors:
@@ -456,8 +456,13 @@ projects:
       github_repo: kckennylau/EllipticCurve
     status: verified
     main_declarations:
+      - SymmetricPower.lift
       - MultilinearMap.hom_ext
     main_results:
+      - declaration: SymmetricPower.lift
+        informal: The universal property of the symmetric tensor power, identifying linear maps out of it with symmetric multilinear maps.
+      - declaration: SymmetricMap.baseChange
+        informal: Base change of a symmetric multilinear map along an algebra, for a finite index type.
       - declaration: MultilinearMap.hom_ext
         informal: Extensionality for multilinear maps using a spanning family in each coordinate.
       - declaration: CategoryTheory.Functor.CorepresentableBy.homOfNatTrans
@@ -466,6 +471,7 @@ projects:
       - algebraic-geometry
       - elliptic-curves
       - multilinear-maps
+      - symmetric-powers
     msc:
       - "14H52"
       - "15A69"

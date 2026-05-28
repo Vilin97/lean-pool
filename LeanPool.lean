@@ -78,6 +78,9 @@ import LeanPool.EllipticCurve
 import LeanPool.EllipticCurve.CategoryTheory
 import LeanPool.EllipticCurve.CategoryTheory.EqualizerCorepresentable
 import LeanPool.EllipticCurve.Lemmas
+import LeanPool.EllipticCurve.ProjectiveSpace.TensorProduct.BaseChange
+import LeanPool.EllipticCurve.ProjectiveSpace.TensorProduct.SymmetricMap
+import LeanPool.EllipticCurve.ProjectiveSpace.TensorProduct.SymmetricPower
 import LeanPool.Erdos1196
 import LeanPool.Erdos1196.Basic
 import LeanPool.Erdos1196.FirstEntryRowTerm
