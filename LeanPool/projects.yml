@@ -1262,6 +1262,7 @@ projects:
       - Joseph Eremondi
     source:
       url: https://github.com/JoeyEremondi/lean-cwf
+      github_repo: JoeyEremondi/lean-cwf
     status: verified
     main_declarations:
       - LeanPool.LeanCwf.CwF.CwFStruct
