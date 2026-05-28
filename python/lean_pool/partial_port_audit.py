@@ -70,15 +70,17 @@ class AuditFinding:
     file_ratio: float
     loc_ratio: float
     missing_files: tuple[str, ...]
+    truncated_files: tuple[str, ...] = ()
 
     def format(self) -> str:
         """Format the finding as a concise human-readable paragraph."""
         missing = ", ".join(self.missing_files) if self.missing_files else "none"
+        truncated = ", ".join(self.truncated_files) if self.truncated_files else "none"
         return (
             f"{self.project}: imported {self.imported_files}/{self.upstream_files} "
             f"Lean files and {self.imported_loc}/{self.upstream_loc} non-comment "
             f"LOC from {self.upstream_repo}; largest unmatched upstream filenames: "
-            f"{missing}"
+            f"{missing}; matched files with large LOC gaps: {truncated}"
         )
 
 
@@ -160,9 +162,29 @@ def has_forbidden_upstream_construct(text: str) -> bool:
     )
 
 
+def normalize_name(name: str) -> str:
+    """Normalize a file or directory name for rough source/import matching."""
+    return re.sub(r"[^a-z0-9]", "", name.lower())
+
+
 def normalize_stem(path: str | Path) -> str:
     """Normalize a Lean filename stem for rough source/import matching."""
-    return re.sub(r"[^a-z0-9]", "", Path(path).stem.lower())
+    return normalize_name(Path(path).stem)
+
+
+def normalize_relative_path(path: str | Path) -> str:
+    """Normalize a project-relative Lean path for same-file comparisons.
+
+    Imported files live under ``LeanPool/<Project>/...`` while upstream files
+    usually live under the upstream root module. Dropping those leading project
+    components lets ``LeanPool/Foo/Bar/Baz.lean`` match ``Foo/Bar/Baz.lean``.
+    """
+    parts = Path(path).with_suffix("").parts
+    if len(parts) >= 3 and parts[0] == "LeanPool":
+        parts = parts[2:]
+    elif len(parts) >= 2 and parts[0] != "LeanPool":
+        parts = parts[1:]
+    return "/".join(normalize_name(part) for part in parts)
 
 
 def module_name(path: Path) -> str:
@@ -307,8 +329,27 @@ def evaluate_stats(
     missing_files = tuple(
         file.path for file in missing_upstream_files if file.loc >= large_file_cutoff
     )[:MAX_MISSING_FILES]
+    imported_by_path: dict[str, list[LeanFile]] = {}
+    for file in imported.files:
+        imported_by_path.setdefault(normalize_relative_path(file.path), []).append(file)
+    truncated_files = []
+    for file in sorted(upstream.files, key=lambda item: item.loc, reverse=True):
+        matching_imports = imported_by_path.get(normalize_relative_path(file.path), [])
+        if not matching_imports:
+            continue
+        imported_file = max(matching_imports, key=lambda item: item.loc)
+        if imported_file.loc / file.loc < cutoff:
+            truncated_files.append(f"{file.path} ({imported_file.loc}/{file.loc} LOC)")
+        if len(truncated_files) >= MAX_MISSING_FILES:
+            break
+    truncated_files_tuple = tuple(truncated_files)
     file_count_suspicious = upstream.file_count >= 3 and file_ratio < cutoff
-    if loc_ratio >= cutoff and not file_count_suspicious and not missing_files:
+    if (
+        loc_ratio >= cutoff
+        and not file_count_suspicious
+        and not missing_files
+        and not truncated_files_tuple
+    ):
         return None
     if not missing_files:
         missing_files = tuple(file.path for file in missing_upstream_files)[
@@ -324,6 +365,7 @@ def evaluate_stats(
         file_ratio=file_ratio,
         loc_ratio=loc_ratio,
         missing_files=missing_files,
+        truncated_files=truncated_files_tuple,
     )
 
 

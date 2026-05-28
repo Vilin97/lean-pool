@@ -35,13 +35,21 @@ def _write_minimal_repo(root: Path, basic_body: str = 'def hello := "world"\n') 
     )
 
 
-def _write_project_yaml(root: Path, projects: list[dict[str, str]]) -> None:
+def _write_project_yaml(root: Path, projects: list[dict[str, str | None]]) -> None:
     """Write a `projects.yml` containing the given project entries.
 
-    Each entry uses an `arxiv` source and the `[test]` tag set by default.
+    Each entry uses an `arxiv` source and the `[test]` tag set by default. A
+    `github_repo` is emitted unless the entry maps `github_repo` to `None`.
     """
     lines = ["projects:"]
     for project in projects:
+        source_lines = [
+            "    source:",
+            f'      arxiv: "{project.get("arxiv", "1234.5678")}"',
+        ]
+        github_repo = project.get("github_repo", "test-owner/test-repo")
+        if github_repo is not None:
+            source_lines.append(f"      github_repo: {github_repo}")
         lines.extend(
             [
                 f"  - slug: {project['slug']}",
@@ -50,8 +58,7 @@ def _write_project_yaml(root: Path, projects: list[dict[str, str]]) -> None:
                 f"    branch: {project.get('branch', 'test mathematics')}",
                 f"    entry_module: {project['entry_module']}",
                 "    authors: [Test Author]",
-                "    source:",
-                f'      arxiv: "{project.get("arxiv", "1234.5678")}"',
+                *source_lines,
                 f"    status: {project.get('status', 'verified')}",
                 "    main_declarations: [hello]",
                 "    main_results:",
@@ -557,3 +564,37 @@ def test_quality_check_rejects_extra_axiom_status(tmp_path: Path) -> None:
     errors = run_checks(tmp_path, skip_lean_axioms=True)
 
     assert any("invalid status" in error.message for error in errors)
+
+
+def test_quality_check_rejects_source_without_github_repo(tmp_path: Path) -> None:
+    """Every project source must name its upstream GitHub repo.
+
+    Without `source.github_repo` the partial-port audit silently skips the
+    project, so the quality check has to reject the omission instead.
+    """
+    _write_minimal_repo(tmp_path)
+    _write_project_yaml(
+        tmp_path,
+        [{"slug": "p", "entry_module": "LeanPool.Basic", "github_repo": None}],
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("github_repo" in error.message for error in errors)
+
+
+def test_quality_check_rejects_malformed_github_repo(tmp_path: Path) -> None:
+    """A `github_repo` that is not an `owner/name` slug is rejected too.
+
+    The partial-port audit's repo regex would reject the value and skip the
+    project, so the quality check must reject the same shapes.
+    """
+    _write_minimal_repo(tmp_path)
+    _write_project_yaml(
+        tmp_path,
+        [{"slug": "p", "entry_module": "LeanPool.Basic", "github_repo": "not-a-slug"}],
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("github_repo" in error.message for error in errors)

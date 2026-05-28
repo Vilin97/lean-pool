@@ -21,6 +21,11 @@ FILE_HEADERS_DOC = f"{CODE_QUALITY_URL}#7-file-headers"
 STATUS_VALUES = {"verified"}
 SOURCE_KEYS = {"arxiv", "doi", "url"}
 SOURCE_KEY_ORDER = ("arxiv", "doi", "url")
+# Kept identical to partial_port_audit.GITHUB_REPO_RE on purpose: a project is
+# auditable for partial imports only when source.github_repo matches this
+# `owner/name` shape, so the quality gate must reject exactly what the audit
+# would otherwise silently skip.
+GITHUB_REPO_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 DECLARATION_KEYWORDS = (
     "theorem",
     "lemma",
@@ -704,6 +709,15 @@ def _check_project_values(
         errors.append(_QualityError(path, 1, f"project #{index} has invalid status"))
     if not _source_is_valid(project["source"]):
         errors.append(_QualityError(path, 1, f"project #{index} has invalid source"))
+    elif not _has_github_repo(project["source"]):
+        errors.append(
+            _QualityError(
+                path,
+                1,
+                f"project #{index} source is missing a valid `github_repo` "
+                f"(`owner/name`); the partial-port audit needs it to run",
+            )
+        )
     if not _nonempty_string(project["summary"]):
         errors.append(
             _QualityError(path, 1, f"project #{index} summary must be nonempty")
@@ -772,6 +786,14 @@ def _source_is_valid(source: Any) -> bool:
     if isinstance(source, dict):
         return len(SOURCE_KEYS & set(source)) == 1
     return False
+
+
+def _has_github_repo(source: Any) -> bool:
+    """Return true when `source` carries a well-formed `github_repo` slug."""
+    if not isinstance(source, dict):
+        return False
+    repo = source.get("github_repo")
+    return isinstance(repo, str) and GITHUB_REPO_RE.fullmatch(repo) is not None
 
 
 def _nonempty_string(value: Any) -> bool:

@@ -1,0 +1,145 @@
+Lean Pool
+=========
+
+Copyright the Lean Pool contributors and the respective project authors.
+
+Lean Pool is licensed under the Apache License, Version 2.0. See the LICENSE
+file for the full license text.
+
+Lean Pool is an aggregation of third-party Lean 4 formalizations. Each project
+under LeanPool/ is the work of its original authors, who retain copyright as
+recorded in the per-file headers and in LeanPool/projects.yml. This NOTICE file
+records, for every pooled project, the upstream repository it was imported from
+and the license under which it was originally published.
+
+
+--------------------------------------------------------------------------------
+Projects originally licensed under the Apache License, Version 2.0
+--------------------------------------------------------------------------------
+
+These projects were imported from repositories already licensed under the
+Apache License, Version 2.0, and are redistributed here under the same license.
+
+  LeanPool/ABCExceptions             https://github.com/b-mehta/ABC-Exceptions
+  LeanPool/AharoniKorman             https://github.com/b-mehta/AharoniKorman
+  LeanPool/ArchonFirstProofResults   https://github.com/frenzymath/Archon-FirstProof-Results
+  LeanPool/BruhatTits                https://github.com/chrisflav/bruhat-tits
+  LeanPool/DemazureOperatorsLean     https://github.com/bolito2/DemazureOperatorsLean
+  LeanPool/Duality                   https://github.com/madvorak/duality
+  LeanPool/Erdos1196                 https://github.com/math-inc/Erdos1196
+  LeanPool/Fineqs                    https://github.com/nasqret/fineqs
+  LeanPool/FormalLearningTheory      https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+  LeanPool/FoZfc                     https://github.com/ishiut/fo_zfc
+  LeanPool/Isoperimetric             https://github.com/hojonathanho/isoperimetric
+  LeanPool/LeanBooleanfun            https://github.com/roos-j/lean-booleanfun
+  LeanPool/LeanComplexAnalysis       https://github.com/seb488/LeanComplexAnalysis
+  LeanPool/LowDimSolvClassification  https://github.com/LieLean/LowDimSolvClassification
+  LeanPool/OrderPQ                   https://github.com/wupr/order-p-q
+  LeanPool/PointwiseBirkhoff         https://github.com/lua-vr/pointwise-birkhoff
+  LeanPool/Polylean                  https://github.com/siddhartha-gadgil/Polylean
+  LeanPool/RiemannMappingTheorem     https://github.com/vbeffara/rmt4
+  LeanPool/SardMoreira               https://github.com/urkud/SardMoreira
+  LeanPool/SelbergSieve4             https://github.com/FLDutchmann/selberg-sieve4
+  LeanPool/Sensitivity               https://github.com/SamuelSchlesinger/sensitivity-conjecture
+  LeanPool/SumsThreeSquares          https://github.com/pitmonticone/SumsThreeSquares
+  LeanPool/VirasoroProject           https://github.com/kkytola/VirasoroProject
+  LeanPool/Zeta3Irrational           https://github.com/ahhwuhu/zeta_3_irrational
+
+
+--------------------------------------------------------------------------------
+Projects originally licensed under the MIT License
+--------------------------------------------------------------------------------
+
+These projects were imported from repositories licensed under the MIT License.
+The MIT License grants the right to sublicense, so these projects are
+redistributed here under the Apache License, Version 2.0. As the MIT License
+requires, the original copyright notices are preserved below, together with the
+MIT permission notice that follows them.
+
+  LeanPool/ArtinWedderburn           https://github.com/JobPetrovcic/ArtinWedderburn
+      Copyright (c) 2024 Job Petrovčič
+
+  LeanPool/DeadEnds                  https://github.com/AxiomMath/dead-ends
+      Copyright (c) 2026 Axiom Math
+
+  LeanPool/DirectedTopologyLean4     https://github.com/Dominique-Lawson/Directed-Topology-Lean-4
+      Copyright 2023 Dominique Lawson
+
+  LeanPool/FactorizationSystems      https://github.com/ivankobe/FactorizationSystems
+      Copyright (c) 2024 ivankobe
+
+  LeanPool/FelConjecture             https://github.com/axiommath/fel-polynomial
+      Copyright (c) 2026 Axiom Math
+
+  LeanPool/FormalizationOfBoundedArithmetic
+                                     https://github.com/ruplet/formalization-of-bounded-arithmetic
+      The upstream MIT LICENSE file leaves the copyright line as the unfilled
+      template text "Copyright (c) [year] [fullname]"; the repository owner of
+      record is "ruplet".
+
+  LeanPool/LatticeTriangle           https://github.com/AxiomMath/lattice-triangle
+      Copyright (c) 2026 Axiom Math
+
+  LeanPool/PartialCombinatoryAlgebras
+                                     https://github.com/andrejbauer/partial-combinatory-algebras
+      Copyright (c) 2024 Andrej Bauer
+
+  LeanPool/PartialRegularity         https://github.com/AxiomMath/partial-regularity
+      Copyright (c) 2026 Axiom Math
+
+  LeanPool/PCFTheory                 https://github.com/YnirPaz/PCF-Theory
+      The upstream MIT LICENSE file contains no copyright line; the repository
+      owner of record is "YnirPaz".
+
+  LeanPool/PolyaEnumerationTheorem   https://github.com/Luka-O/polya-enumeration-theorem
+      Copyright (c) 2024 Luka-O
+
+  LeanPool/RamanujanTauMissesPrimes  https://github.com/AxiomMath/ramanujan-tau-misses-primes
+      Copyright (c) 2026 Axiom Math
+
+  LeanPool/RlTheoryInLean            https://github.com/ShangtongZhang/rl-theory-in-lean
+      Copyright (c) 2025 Shangtong Zhang
+
+  LeanPool/Shannon1948Formalization  https://github.com/SamuelSchlesinger/shannon-1948-formalization
+      The upstream MIT LICENSE file gives the copyright line as
+      "Copyright (c) 2026" with no name; the repository owner of record is
+      "SamuelSchlesinger".
+
+  LeanPool/TwoColoringOneRound       https://github.com/suomela/2-coloring-1-round
+      Copyright (c) 2026 Jukka Suomela
+
+  MIT License -- the following permission notice applies to every project
+  listed in this section:
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+
+--------------------------------------------------------------------------------
+Projects relicensed by their original author
+--------------------------------------------------------------------------------
+
+  LeanPool/Clawristotle              https://github.com/Vilin97/Clawristotle
+  LeanPool/GrothendieckVanishing     https://github.com/Vilin97/Clawristotle
+      Originally distributed under the Creative Commons
+      Attribution-NonCommercial-ShareAlike 4.0 International license, then
+      relicensed under the Apache License, Version 2.0, by its sole author.
+
+  LeanPool/ForwardEuler              https://github.com/Vilin97/forward_euler
+      Originally distributed without a license file, then placed under the
+      Apache License, Version 2.0, by its sole author.

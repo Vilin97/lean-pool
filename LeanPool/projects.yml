@@ -1,4 +1,83 @@
 projects:
+  - slug: demazureoperatorslean
+    title: Demazure Operators and Lean
+    summary: Formalizes Demazure operators on multivariate polynomials and their nilpotence, braid, commutation, and symmetric-polynomial linearity relations, with auxiliary Coxeter-theory support including strong exchange and a conditional Matsumoto theorem.
+    branch: algebraic combinatorics
+    entry_module: LeanPool.DemazureOperatorsLean
+    authors:
+      - Óscar Álvarez Sánchez
+    source:
+      title: "Schubert cells, and the cohomology of the spaces G/P"
+      authors:
+        - I. N. Bernstein
+        - I. M. Gelfand
+        - S. I. Gelfand
+      doi: "10.1070/RM1973v028n03ABEH001549"
+      github_repo: bolito2/DemazureOperatorsLean
+    status: verified
+    main_declarations:
+      - Demazure.Dem
+      - CoxeterSystem.strongExchangeProperty
+    main_results:
+      - declaration: Demazure.Dem
+        informal: Defines the Demazure operator as a linear map over the subalgebra of symmetric polynomials.
+      - declaration: Demazure.demazure_order_two
+        informal: Proves that applying the Demazure operator twice gives zero.
+      - declaration: Demazure.demazure_commutes_adjacent
+        informal: Proves the braid relation for adjacent Demazure operators.
+      - declaration: Demazure.demazure_commutes_non_adjacent
+        informal: Proves that non-adjacent Demazure operators commute.
+      - declaration: Demazure.demazure_mul_symm
+        informal: Proves that symmetric polynomials act as scalars with respect to Demazure operators.
+      - declaration: CoxeterSystem.strongExchangeProperty
+        informal: Proves the strong exchange property for Coxeter systems.
+        source_ref: "J. E. Humphreys, Reflection Groups and Coxeter Groups, Cambridge University Press, 1990."
+      - declaration: CoxeterSystem.matsumoto_reduced
+        informal: Auxiliary theorem proving, under the extra MatsumotoCondition hypothesis, that reduced words for the same Coxeter group element are connected by braid moves.
+        source_ref: "J. E. Humphreys, Reflection Groups and Coxeter Groups, Cambridge University Press, 1990."
+    tags:
+      - algebraic-combinatorics
+      - demazure-operators
+      - polynomials
+      - representation-theory
+    msc:
+      - "05E05"
+      - "13P10"
+      - "20F55"
+  - slug: zeta_3_irrational
+    title: Beukers integral estimates for ζ(3)
+    summary: Formalizes the Beukers integral identities, denominator estimates, positivity, and upper bounds used in Apéry's theorem for ζ(3).
+    branch: analytic number theory
+    entry_module: LeanPool.Zeta3Irrational
+    authors:
+      - Junqi Liu
+      - Jujian Zhang
+    source:
+      title: A note on the irrationality of ζ(2) and ζ(3)
+      authors:
+        - Frits Beukers
+      doi: "10.1112/blms/11.3.268"
+      github_repo: ahhwuhu/zeta_3_irrational
+    status: verified
+    main_declarations:
+      - LeanPool.Zeta3Irrational.linear_int
+      - LeanPool.Zeta3Irrational.JJ_upper
+    main_results:
+      - declaration: LeanPool.Zeta3Irrational.linear_int
+        informal: Clears denominators in the Apéry integral to produce a linear form in 1 and ζ(3).
+      - declaration: LeanPool.Zeta3Irrational.JJ_pos
+        informal: Proves positivity of the transformed Beukers-Apéry integral.
+      - declaration: LeanPool.Zeta3Irrational.JJ_upper
+        informal: Bounds the Beukers-Apéry integral by a geometric factor times the ζ(3) series.
+      - declaration: LeanPool.Zeta3Irrational.zeta3_le_zeta2
+        informal: Compares the ζ(3) series with the convergent ζ(2) series.
+    tags:
+      - number-theory
+      - analysis
+      - zeta-functions
+    msc:
+      - "11M06"
+      - "11J72"
   - slug: bruhat-tits
     title: Formalisation of the Bruhat-Tits Tree
     summary: Formalizes the Bruhat-Tits tree for GL₂ over the fraction field of a discrete valuation ring.
@@ -573,35 +652,51 @@ projects:
     msc:
       - "11E25"
       - "11H06"
-  - slug: neuralnetworks
-    title: Hopfield Network Energy Descent
-    summary: Formalizes finite zero-threshold Hopfield networks, energy descent along updates, and existence of a finite update path to a fixed point.
-    branch: machine learning
-    entry_module: LeanPool.NeuralNetworks
+  - slug: formalization-of-bounded-arithmetic
+    title: Strengthened V0 Bounded Arithmetic Interfaces
+    summary: Formalizes first-order and two-sorted bounded-arithmetic model infrastructure, including arithmetic model laws and string-addition laws for strengthened bundled V0-style interfaces with propositional induction, order, cancellation, decidability, and algebraic laws assumed as fields rather than derived from a separate raw V0 class.
+    branch: mathematical logic
+    entry_module: LeanPool.FormalizationOfBoundedArithmetic
     authors:
-      - Matteo Cipollina
-      - Alok Singh
+      - ruplet
     source:
-      title: Neural networks and physical systems with emergent collective computational abilities
+      title: Logical Foundations of Proof Complexity
       authors:
-        - John J. Hopfield
-      doi: "10.1073/pnas.79.8.2554"
+        - Stephen Cook
+        - Phuong Nguyen
+      doi: "10.1017/CBO9780511676277"
+      github_repo: ruplet/formalization-of-bounded-arithmetic
     status: verified
     main_declarations:
-      - HopfieldState.energy_monotonically_decreases
-      - HopfieldState.convergence
+      - V0Model.ind_strengthened_v0
+      - str_add_assoc_strengthened_v0
     main_results:
-      - declaration: HopfieldState.energy_monotonically_decreases
-        informal: Proves that the Hopfield energy is non-increasing along every update sequence with zero thresholds.
-      - declaration: HopfieldState.convergence
-        informal: Proves that from any initial state, there exists a finite sequence of single-neuron updates reaching a fixed point.
+      - declaration: IOPENModel.add_assoc
+        informal: Proves associativity of addition in IOPEN models.
+      - declaration: IOPENModel.add_comm
+        informal: Proves commutativity of addition in IOPEN models.
+      - declaration: IDelta0Model.pred_exists
+        informal: Shows that nonzero elements in IDelta0 models have predecessors.
+      - declaration: IDelta0Model.mul_cancel_right
+        informal: Proves right cancellation for multiplication by a nonzero element in IDelta0 models.
+      - declaration: V0Model.xind
+        informal: Exposes string induction inside the strengthened bundled V0Model structure, whose fields include the comprehension and induction/order principles used downstream.
+      - declaration: V0Model.ind_strengthened_v0
+        informal: Exposes propositional induction inside the strengthened bundled V0Model structure, rather than deriving it from only the raw finite V0 axiom list.
+      - declaration: str_add_comm_strengthened_v0
+        informal: Proves commutativity of string addition in V0 extension models extending the strengthened V0Model bundle.
+      - declaration: str_add_assoc_strengthened_v0
+        informal: Proves associativity of string addition in V0 extension models extending the strengthened V0Model bundle, using the bundled propositional induction field.
+      - declaration: str_succ_assoc_strengthened_v0
+        informal: Proves that string addition associates with string successor in V0 extension models extending the strengthened V0Model bundle.
     tags:
-      - neural-networks
-      - hopfield-networks
-      - dynamical-systems
+      - logic
+      - bounded-arithmetic
+      - model-theory
+      - computational-complexity
     msc:
-      - "68T07"
-      - "37N40"
+      - "03F30"
+      - "03D15"
   - slug: polylean
     title: Polylean Unit Conjecture Counterexample
     summary: Formalizes Gardam's counterexample to Kaplansky's Unit Conjecture, including the Promislow group, group rings, torsion-freeness of the group, and the non-trivial unit in 𝔽₂[P].
@@ -1073,3 +1168,117 @@ projects:
     msc:
       - "37A30"
       - "28D05"
+  - slug: fo-zfc
+    title: First Order Language of ZF Set Theory
+    summary: Formalizes ZF set theory inside Lean's `FirstOrder.Language` framework, enabling meta-mathematical arguments such as elementary submodels.
+    branch: mathematical logic
+    entry_module: LeanPool.FoZfc
+    authors:
+      - Tetsuya Ishiu
+    source:
+      title: Set Theory
+      authors:
+        - Thomas Jech
+      url: https://doi.org/10.1007/3-540-44761-X
+      github_repo: ishiut/fo_zfc
+    status: verified
+    main_declarations:
+      - FirstOrder.ZFC.ModelZF
+      - FirstOrder.ZFC.ext_induction
+    main_results:
+      - declaration: FirstOrder.ZFC.ModelZF
+        informal: Bundles the ZF axioms (Emptyset, Pairing, Union, Powerset, Infinity, Regularity, Comprehension, Replacement) into a single model class.
+      - declaration: FirstOrder.ZFC.ext_induction
+        informal: States the principle of mathematical induction over ω externally for any bounded formula in LZFC.
+    tags:
+      - model-theory
+      - set-theory
+      - zf
+    msc:
+      - "03B10"
+      - "03E30"
+  - slug: sardmoreira
+    title: Moreira's version of Sard's theorem
+    summary: Formalizes Moreira's strengthening of Sard's theorem, bounding the Hausdorff dimension of critical-value images of C^{k+alpha} maps.
+    branch: geometric measure theory
+    entry_module: LeanPool.SardMoreira
+    authors:
+      - Yury G. Kudryashov
+    source:
+      url: https://github.com/urkud/SardMoreira
+      github_repo: urkud/SardMoreira
+      paper: http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+    status: verified
+    main_declarations:
+      - dimH_image_le_sardMoreiraBound_of_finrank_le
+    main_results:
+      - declaration: hausdorffMeasure_sardMoreiraBound_image_null_of_finrank_le
+        informal: Proves Hausdorff-measure nullity for images of points where the derivative rank is bounded by p, at Moreira's Sard bound.
+        source_ref: Moreira 2001, http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+      - declaration: dimH_image_le_sardMoreiraBound_of_finrank_le
+        informal: Converts the measure-null theorem into the headline Hausdorff-dimension upper bound for critical-value images.
+        source_ref: Moreira 2001, http://dmle.icmat.es/pdf/PUBLICACIONSMATEMATIQUES_2001_45_01_06.pdf
+    tags:
+      - analysis
+      - measure-theory
+      - sard-theorem
+      - hausdorff-measure
+    msc:
+      - "28A78"
+      - "58C25"
+  - slug: 2-coloring-1-round
+    title: 2-Coloring Cycles in One Round
+    summary: Formalizes certified upper and lower bounds for one-round randomized algorithms that 2-color cycles.
+    branch: distributed computing
+    entry_module: LeanPool.TwoColoringOneRound
+    authors:
+      - Jukka Suomela
+    source:
+      arxiv: "2603.04235"
+      github_repo: suomela/2-coloring-1-round
+    status: verified
+    main_declarations:
+      - Distributed2Coloring.pStar_ge_23879
+      - Distributed2Coloring.pStar_lt_24118
+    main_results:
+      - declaration: Distributed2Coloring.pStar_ge_23879
+        informal: Proves that every one-round classical algorithm has monochromatic-edge probability at least 0.23879.
+      - declaration: Distributed2Coloring.pStar_lt_24118
+        informal: Proves that an explicit one-round algorithm attains monochromatic-edge probability strictly below 0.24118.
+    tags:
+      - distributed-computing
+      - graph-coloring
+      - randomized-algorithms
+      - formal-verification
+    msc:
+      - "68W15"
+      - "05C15"
+  - slug: neuralnetworks
+    title: Hopfield Network Energy Descent
+    summary: Formalizes finite zero-threshold Hopfield networks, energy descent along updates, and existence of a finite update path to a fixed point.
+    branch: machine learning
+    entry_module: LeanPool.NeuralNetworks
+    authors:
+      - Matteo Cipollina
+      - Alok Singh
+    source:
+      title: Neural networks and physical systems with emergent collective computational abilities
+      authors:
+        - John J. Hopfield
+      doi: "10.1073/pnas.79.8.2554"
+    status: verified
+    main_declarations:
+      - HopfieldState.energy_monotonically_decreases
+      - HopfieldState.convergence
+    main_results:
+      - declaration: HopfieldState.energy_monotonically_decreases
+        informal: Proves that the Hopfield energy is non-increasing along every update sequence with zero thresholds.
+      - declaration: HopfieldState.convergence
+        informal: Proves that from any initial state, there exists a finite sequence of single-neuron updates reaching a fixed point.
+    tags:
+      - neural-networks
+      - hopfield-networks
+      - dynamical-systems
+    msc:
+      - "68T07"
+      - "37N40"

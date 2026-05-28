@@ -10,6 +10,7 @@ from lean_pool.partial_port_audit import (
     has_forbidden_upstream_construct,
     imported_modules,
     module_name,
+    normalize_relative_path,
     normalize_stem,
     stats_from_worktree,
 )
@@ -60,9 +61,7 @@ def test_stats_from_worktree_skips_dependents_of_unimportable_files(
     (tmp_path / "Bad.lean").write_text(
         "theorem missing : True := by sorry\n", encoding="utf-8"
     )
-    (tmp_path / "UsesBad.lean").write_text(
-        "import Bad\ndef y := 1\n", encoding="utf-8"
-    )
+    (tmp_path / "UsesBad.lean").write_text("import Bad\ndef y := 1\n", encoding="utf-8")
     (tmp_path / "UsesUsesBad.lean").write_text(
         "import UsesBad\ndef z := 1\n", encoding="utf-8"
     )
@@ -93,6 +92,13 @@ def test_normalize_stem_matches_renamed_camel_case_file() -> None:
     assert normalize_stem("Lean4/directed_van_kampen.lean") == normalize_stem(
         "LeanPool/DirectedTopologyLean4/DirectedVanKampen.lean"
     )
+
+
+def test_normalize_relative_path_drops_project_prefix() -> None:
+    """Upstream and LeanPool project roots are ignored for same-file checks."""
+    assert normalize_relative_path(
+        "Monlib/LinearAlgebra/QuantumSet/Basic.lean"
+    ) == normalize_relative_path("LeanPool/Monlib4/LinearAlgebra/QuantumSet/Basic.lean")
 
 
 def test_evaluate_stats_flags_large_loc_gap() -> None:
@@ -148,6 +154,33 @@ def test_evaluate_stats_lists_largest_missing_files_for_ratio_gap() -> None:
         "Foo/SkippedA.lean",
         "Foo/SkippedB.lean",
         "Foo/SkippedC.lean",
+    )
+
+
+def test_evaluate_stats_flags_truncated_matched_file() -> None:
+    """A same-path file with too little LOC is still suspicious."""
+    imported = LeanStats(
+        (
+            LeanFile(
+                "LeanPool/Monlib4/LinearAlgebra/QuantumSet/Basic.lean",
+                120,
+                "basic",
+            ),
+            LeanFile("LeanPool/Monlib4/Other.lean", 900, "other"),
+        )
+    )
+    upstream = LeanStats(
+        (
+            LeanFile("Monlib/LinearAlgebra/QuantumSet/Basic.lean", 1000, "basic"),
+            LeanFile("Monlib/Other.lean", 900, "other"),
+        )
+    )
+
+    finding = evaluate_stats("LeanPool.Monlib4", "owner/monlib4", imported, upstream)
+
+    assert finding is not None
+    assert finding.truncated_files == (
+        "Monlib/LinearAlgebra/QuantumSet/Basic.lean (120/1000 LOC)",
     )
 
 

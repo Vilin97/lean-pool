@@ -542,42 +542,42 @@ lemma GeometryBound.subSums
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by ring_nf), h₁.trans_eq (by ring_nf)⟩
+    exact ⟨h₂.trans_eq (by congr 2 <;> ring), h₁.trans_eq (by congr 2 <;> ring)⟩
   · have h₁ := hg.special h44 {1} {1, j} {1} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2} {1, 2, j} {1, 2} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by ring_nf), h₁.trans_eq (by ring_nf)⟩
+    exact ⟨h₂.trans_eq (by congr 2 <;> ring), h₁.trans_eq (by congr 2 <;> ring)⟩
   · have h₁ := hg.special h44 {1} {1} {1, j} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2} {1, 2} {1, 2, j} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by ring_nf), h₁.trans_eq (by ring_nf)⟩
+    exact ⟨h₂.trans_eq (by congr 2 <;> ring), h₁.trans_eq (by congr 2 <;> ring)⟩
   · have h₁ := hg.special h44 {1, j} {1, j} {1} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2, j} {1, 2, j} {1, 2} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by ring_nf), h₁.trans_eq (by ring_nf)⟩
+    exact ⟨h₂.trans_eq (by congr 2 <;> ring), h₁.trans_eq (by congr 2 <;> ring)⟩
   · have h₁ := hg.special h44 {1, j} {1} {1, j} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2, j} {1, 2} {1, 2, j} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by ring_nf), h₁.trans_eq (by ring_nf)⟩
+    exact ⟨h₂.trans_eq (by congr 2 <;> ring), h₁.trans_eq (by congr 2 <;> ring)⟩
   · have h₁ := hg.special h44 {1} {1, j} {1, j} ‹_› ‹_› ‹_›
     have h₂ := hg.special h44 {1, 2} {1, 2, j} {1, 2, j} ‹_› ‹_› ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
       one_mul, Finset.sum_singleton, Finset.mem_insert, OfNat.one_ne_ofNat, or_self, hj₂,
       Nat.cast_ofNat] at h₁ h₂
     simp only [s_apply]
-    exact ⟨h₂.trans_eq (by ring_nf), h₁.trans_eq (by ring_nf)⟩
+    exact ⟨h₂.trans_eq (by congr 2 <;> ring), h₁.trans_eq (by congr 2 <;> ring)⟩
   · have h₁ := hg.special_s h44 {1, j} ‹_›
     have h₂ := hg.special_s h44 {1, 2, j} ‹_›
     simp only [Finset.mem_singleton, hj₁, not_false_eq_true, Finset.sum_insert, Nat.cast_one,
