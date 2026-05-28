@@ -5,7 +5,7 @@ Authors: Jineon Baek
 -/
 
 import Mathlib.Order.Basic
-import Mathlib.Order.Synonym
+import Mathlib.Order.OrderDual
 
 universe u v
 
@@ -21,9 +21,11 @@ def Mirror3 {α : Type u} [LinearOrder α] {β : Sort v} (f : α → α → α �
 def DecidableRel3 {α : Sort u} (r : α → α → α → Prop) :=
   ∀ a b c : α, Decidable (r a b c)
 
+@[reducible]
 def DecidableRel.Mirror2 {α : Type u} [LinearOrder α] {r : α → α → Prop} (dec : DecidableRel r) :
     DecidableRel (Mirror2 r) := fun a b => dec (ofDual b) (ofDual a)
 
+@[reducible]
 def DecidableRel3.Mirror3 {α : Type u} [LinearOrder α] {r : α → α → α → Prop}
     (dec : DecidableRel3 r) : DecidableRel3 (Mirror3 r) := fun a b c =>
   dec (ofDual c) (ofDual b) (ofDual a)

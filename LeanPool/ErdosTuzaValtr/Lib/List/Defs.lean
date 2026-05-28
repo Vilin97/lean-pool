@@ -6,6 +6,7 @@ Authors: Jineon Baek
 
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Image
+import Mathlib.Tactic.Cases
 import LeanPool.ErdosTuzaValtr.Lib.Core.Rel3
 
 variable {α : Type _}
