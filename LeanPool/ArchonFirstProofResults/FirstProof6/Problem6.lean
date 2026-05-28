@@ -851,7 +851,8 @@ lemma good_pair_exists [Nonempty V]
           gcongr
           linarith
       _ = (3 * (n : ℝ) / 4) * (ε * (r : ℝ)) := by ring
-      _ ≤ (m : ℝ) * (ε * (r : ℝ)) := by nlinarith
+      _ ≤ (m : ℝ) * (ε * (r : ℝ)) :=
+          mul_le_mul_of_nonneg_right (by linarith) (by linarith)
       _ = (m : ℝ) * (r : ℝ) * ε := by ring
   -- Contradiction: m*r ≤ ∑ cost ≤ tr(U) + tr(U²)/gap ≤ 3n/ε < m*r
   linarith
