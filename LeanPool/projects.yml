@@ -1266,6 +1266,7 @@ projects:
       authors:
         - John J. Hopfield
       doi: "10.1073/pnas.79.8.2554"
+      github_repo: or4nge19/NeuralNetworks
     status: verified
     main_declarations:
       - HopfieldState.energy_monotonically_decreases
