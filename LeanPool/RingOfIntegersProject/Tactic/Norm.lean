@@ -155,10 +155,11 @@ def MResultClass.zero? {u : Level} {R : Q(Type u)}
 def evalNegOnePowFin {u : Level} {R : Q(Type u)} (n : Q(ℕ))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
     (instCRR : Q(CommRing «$R») := by with_reducible assumption)
-    (_h : ($instCRR).toCommSemiring =Q $instCSrR)
+    (h : ($instCRR).toCommSemiring =Q $instCSrR)
     (crr : CommRingResult m r R)
     (j : Q(Fin (Nat.succ «$n»))) :
     m (r q((-1 : $R) ^ («$j» : ℕ))) := do
+  have : ($instCRR).toCommSemiring =Q $instCSrR := h
   match ←(Nat.proveEvenOrOdd q(($j : ℕ))) with
   | .even pf => do
     MResultClass.eqTransM q(Even.neg_one_pow $pf) crr.mkOne
@@ -357,10 +358,11 @@ def evalMatrixDetDiagonal {n' : Q(ℕ)} {R : Q(Type u)}
     (s : Q(Fin $n' → $R))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
     (instCRR : Q(CommRing «$R») := by with_reducible assumption)
-    (_h : ($instCRR).toCommSemiring =Q $instCSrR)
+    (h : ($instCRR).toCommSemiring =Q $instCSrR)
     (crr : CommRingResult m r R) :
     m (r q(Matrix.det (Matrix.diagonal $s))) :=
   withTraceNode `norm.Matrix.Det (return m!"{·.emoji} determinant of: Matrix.diagonal {s}") do
+  have : ($instCRR).toCommSemiring =Q $instCSrR := h
   let res ← RoiNormNumBigop.NormNum.evalFinsetBigop
     _
     q(fun i => $s i)

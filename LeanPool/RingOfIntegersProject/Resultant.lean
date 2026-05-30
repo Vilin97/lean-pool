@@ -438,7 +438,7 @@ lemma MvPolynomial.coeff_eq_zero_of_X_dvd {m : σ →₀ ℕ} {p : MvPolynomial 
   rw [coeff_X_mul', if_neg]
   · simpa
 
-@[simp] lemma MvPolynomial.eval_snoc (t : ι → R) (v : Fin m →
+lemma MvPolynomial.eval_snoc (t : ι → R) (v : Fin m →
   MvPolynomial ι R) (x : MvPolynomial ι R) (i) :
     eval t (Fin.snoc (α := fun _ => MvPolynomial ι R) v x i) =
     Fin.snoc (α := fun _ => R) (fun i => eval t (v i)) (eval t x) i := by
@@ -1170,7 +1170,7 @@ noncomputable def resultantPolynomialRoots : MvPolynomial (ι ⊕ κ) R :=
     (∏ i, (Polynomial.X - Polynomial.C (tu (Sum.inl i)))).resultant
       (∏ i, (Polynomial.X - Polynomial.C (tu (Sum.inr i)))) := by
   simp [resultantPolynomialRoots, eval_bind₁, eval_resultantPolynomialCoeff, eval_rename,
-    Function.comp, ofVec_coeffOfRoots_one]
+    Function.comp, ofVec_coeffOfRoots_one, MvPolynomial.eval_snoc]
 
 lemma resultantPolynomialRoots_of_isEmpty_left [IsEmpty ι] [Infinite R] [IsDomain R] :
     resultantPolynomialRoots (R := R) (ι := ι) (κ := κ) = MvPolynomial.C 1 :=

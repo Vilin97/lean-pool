@@ -90,7 +90,7 @@ open Lean (MetaM Expr mkRawNatLit)
 structure RingConfig where
   /-- The characteristic of the ring. -/
   char : ℕ := 0
-  deriving Inhabited, BEq, Repr
+  deriving Inhabited, BEq
 
 /-- Parse the `config` argument to the `ring1` and `ring` tactic into a `RingConfig` structure. -/
 declare_config_elab elabRingConfig RingConfig
@@ -306,8 +306,7 @@ lemma CharP.isInt_of_mod {α : Type _} [Ring α] {n n' : ℕ} (inst : CharP α n
 /-- Given an integral expression `e : t` such that `t` is a ring of characteristic `n`,
 reduce `e` modulo `n`. -/
 partial def reduceCast (n : Q(ℕ)) (e : Q($α)) (instRing : Q(Ring $α))
-    (instCharP : Q(CharP $α $n))
-    (_ze : ℤ) (_ne : Q(ℤ)) (_pe : Q(IsInt $e $_ne)) : MetaM (NormNum.Result e) :=
+    (instCharP : Q(CharP $α $n)) : MetaM (NormNum.Result e) :=
   Tactic.ReduceModChar.normIntNumeral n e instRing instCharP
 
 /-- Given an expression `e : t` such that `t` is a ring of characteristic `n`,
@@ -317,9 +316,9 @@ partial def reduceResult? (char : ℕ) (e : Q($α)) (rα : Option (Q(Ring $α)))
     MetaM (Option (NormNum.Result e)) := do
   let some rα := rα | return none
   let some cpα := cpα | return none
-  let some ⟨ze, ne, pe⟩ := r.toInt | return none
+  let some ⟨_ze, _ne, _pe⟩ := r.toInt | return none
   try
-    return some (← reduceCast (mkRawNatLit char) e rα cpα ze ne pe)
+    return some (← reduceCast (mkRawNatLit char) e rα cpα)
   catch _ =>
     return none
 
@@ -799,7 +798,7 @@ theorem mul_pow (_ : ea₁ * b = c₁) (_ : a₂ ^ b = c₂) :
 
 In all other cases we use `evalPowProdAtom`.
 -/
-def evalPowProd (_char : ℕ) (_rα : Option (Q(Ring $α))) (_cpα : Option (Q(CharP $α $_char)))
+def evalPowProd
     (va : ExProd sα a) (vb : ExProd sℕ b) : AtomM (Result (ExProd sα) q($a ^ $b)) :=
   pure (evalPowProdAtom sα va vb)
 
@@ -865,7 +864,7 @@ partial def evalPow₁ (char : ℕ) (rα : Option (Q(Ring $α))) (cpα : Option 
     | some p => pure ⟨_, .zero, q(zero_pow (R := $α) $p)⟩
     | none => pure (evalPowAtom sα (.sum .zero) vb)
   | ExSum.add va .zero, vb => -- TODO: using `.add` here takes a while to compile?
-    let ⟨_, vc, pc⟩ ← evalPowProd sα char rα cpα va vb
+    let ⟨_, vc, pc⟩ ← evalPowProd sα va vb
     pure ⟨_, vc.toSum, q(single_pow $pc)⟩
   | va, vb =>
     if vb.coeff > 1 then
@@ -907,7 +906,6 @@ structure Cache {α : Q(Type u)} (sα : Q(CommSemiring $α)) where
   czα : Option Q(CharZero $α)
   /-- A characteristic zero ring instance on `α`, if available. -/
   cpα : Option Q(CharP $α $char)
-  deriving Repr
 
 /-- Create a new cache for `α` by doing the necessary instance searches. -/
 def mkCache {α : Q(Type u)} (sα : Q(CommSemiring $α)) (cfg : RingConfig) : MetaM (Cache sα) := do
