@@ -379,7 +379,7 @@ lemma segment_triangle_pairing_int
             exact hneq (is_cover_open_el_imp_eq hCover.2 hΔ'' hΔ' hain'' hain')
           simp only [hl, mem_insert, mem_singleton, true_or]
       · intro hΔ''; simp at hΔ''
-        cases' hΔ'' with hΔ'' hΔ'' <;> (rw [hΔ'']; simp)
+        cases' hΔ'' with hΔ'' hΔ'' <;> (rw [hΔ'']; simp only [mem_filter])
         · exact ⟨hΔ', fun _ a ↦ (side_in_boundary (hArea Δ' hΔ') i') (hLΔ' a)⟩
         · exact ⟨hΔ, fun _ a ↦ (side_in_boundary (hArea Δ hΔ) i) (hLΔ a)⟩
     · intro L hL

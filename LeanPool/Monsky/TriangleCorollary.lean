@@ -302,7 +302,10 @@ theorem volume_open_triangle' (T : Triangle) : (MeasureTheory.volume (open_hull 
   rw[linear_transform_def, basis_transform_def, our_basis_def ]
   unfold det
   repeat rw[LinearMap.toMatrix_apply]
-  simp
+  simp only [Fin.isValue, PiLp.basisFun_apply, Module.Basis.constr_apply_fintype, PiLp.basisFun_equivFun,
+    WithLp.linearEquiv_apply, AddEquiv.toEquiv_eq_coe, Equiv.toFun_as_coe, EquivLike.coe_coe, WithLp.addEquiv_apply,
+    PiLp.single_apply, ite_smul, one_smul, zero_smul, sum_ite_eq', mem_univ, ↓reduceIte, map_sub, Finsupp.coe_sub,
+    Pi.sub_apply, PiLp.basisFun_repr, one_div]
   rw[half_is_half]
   have h2 : ((0:ℝ) ≤ 2⁻¹ )
   norm_num
@@ -411,7 +414,7 @@ theorem box_equal_to_pare : parallelepiped our_basis_ortho = closed_hull unit_sq
       · rw [Fin.sum_univ_four]
         simp
         linarith
-    · simp
+    · simp only [Fin.isValue]
       rw[h2, Fin.sum_univ_two, Fin.sum_univ_four]
       simp only [unit_square]
       rw [our_basis_ortho_zero, our_basis_ortho_one]
@@ -421,7 +424,7 @@ theorem box_equal_to_pare : parallelepiped our_basis_ortho = closed_hull unit_sq
     rintro ⟨ a ,⟨ h11,h12⟩  , h2⟩
     use (fun | 0 => a 1 + a 2 | 1 => a 3 + a 2  )
     constructor
-    · simp
+    · simp only [Fin.isValue, Set.mem_Icc]
       constructor
       · intro i
         fin_cases i <;> simp <;> linarith [h11 1, h11 2, h11 3]

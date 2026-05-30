@@ -135,7 +135,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     rw[aeval_eq_sum_range, Finset.mul_sum]
     simp only [inv_pow, Algebra.mul_smul_comm]
     rw[n_eq_degree_q, _root_.map_sum]
-    simp
+    simp only [aeval_monomial]
     apply Finset.sum_congr
     · rfl
     · intro x in_Finset
@@ -289,7 +289,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     exact deg3
     simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]
     rw[← m_eq_degree_p]
-    simp
+    simp only [coeff_natDegree, leadingCoeff_eq_zero]
     have zero_lt_natDegree : 0 < m := by exact Nat.zero_lt_of_ne_zero zero_lt_m
     rw[← m_eq_degree_p] at zero_lt_natDegree
     exact ne_zero_of_natDegree_gt zero_lt_natDegree

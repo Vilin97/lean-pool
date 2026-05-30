@@ -84,7 +84,7 @@ lemma closed_hull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
 
 lemma open_pol_nonempty {n : ℕ} (hn : 0 < n) (P : Fin n → ℝ²) : Set.Nonempty (open_hull P) := by
   use ∑ i, (1/(n : ℝ)) • P i, fun _ ↦ (1/(n : ℝ))
-  exact ⟨⟨fun _ ↦ by simp [hn], by simp; exact (mul_inv_cancel₀ (by simp; linarith))⟩, by simp⟩
+  exact ⟨⟨fun _ ↦ by simp [hn], by simp only [one_div, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]; exact (mul_inv_cancel₀ (by simp; linarith))⟩, by simp⟩
 
 
 lemma open_sub_closed_simplex {n : ℕ} : open_simplex n ⊆ closed_simplex n :=
