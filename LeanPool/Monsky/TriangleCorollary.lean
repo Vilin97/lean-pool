@@ -77,7 +77,7 @@ def lower : ℝ → ℝ := fun _ ↦ 0
 def upper : ℝ → ℝ := fun x ↦ 1 - x
 
 theorem unit_is_unit_in_prod : id_map '' (open_hull unit_triangle) = regionBetween lower upper (Set.Ioc 0 1) := by
-  ext x; constructor <;> unfold regionBetween open_hull open_simplex lower upper unit_triangle <;> intro hx <;> simp at *
+  ext x; constructor <;> unfold regionBetween open_hull open_simplex lower upper unit_triangle <;> intro hx <;> simp only [id_map_apply, Fin.isValue, Set.mem_image, Set.mem_setOf_eq, exists_exists_and_eq_and, WithLp.ofLp_sum, WithLp.ofLp_smul, sum_apply, Pi.smul_apply, smul_eq_mul, Set.mem_Ioc, Set.mem_Ioo] at *
   · rcases hx with ⟨a, ⟨ha, ha''⟩, ha'⟩
     rw [Fin.sum_univ_three] at ha'' ha'
     rw [←ha']
@@ -98,8 +98,8 @@ theorem unit_is_unit_in_prod : id_map '' (open_hull unit_triangle) = regionBetwe
 theorem unit_in_prod_is_unit : id_map⁻¹' (regionBetween lower upper (Set.Ioc 0 1)) = open_hull unit_triangle
   := by
     apply (Set.preimage_eq_iff_eq_image ?hf).mpr ?_
-    exact MeasurableEquiv.bijective id_mapEquiv
-    rw [unit_is_unit_in_prod]
+    · exact MeasurableEquiv.bijective id_mapEquiv
+    · rw [unit_is_unit_in_prod]
 
 --Then we have the statement that the open hull of the unit triangle has the right area, plus we add the statement that it is measurable
 theorem volume_open_unit_triangle : (MeasureTheory.volume (open_hull unit_triangle)) = 1/2 := by
@@ -193,8 +193,8 @@ theorem closed_hull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin 
 --Again we have a similar lemma
 lemma aux_for_translation {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²} (h1 : a ∈ open_simplex n) :   ∑ i : Fin n, a i • (f i + b) =  ∑ i : Fin n, a i • f i + b := by
   rcases h1 with ⟨_, h3⟩
-  have h4: b = ∑ i : Fin n, a i • b
-  rw[← sum_smul, h3, one_smul]
+  have h4: b = ∑ i : Fin n, a i • b := by
+    rw[← sum_smul, h3, one_smul]
   nth_rewrite 2 [h4]
   rw[← sum_add_distrib]
   apply Fintype.sum_congr
@@ -218,8 +218,8 @@ theorem translation_commutes {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²) : ope
 -- And the version for the closed hull, that needs an adapted different lemma
 theorem aux_for_translation_closed {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²} (h1 : a ∈ closed_simplex n) :   ∑ i : Fin n, a i • (f i + b) =  ∑ i : Fin n, a i • f i + b := by
   rcases h1 with ⟨_, h3⟩
-  have h4: b = ∑ i : Fin n, a i • b
-  rw[← sum_smul, h3, one_smul]
+  have h4: b = ∑ i : Fin n, a i • b := by
+    rw[← sum_smul, h3, one_smul]
   nth_rewrite 2 [h4]
   rw[← sum_add_distrib]
   apply Fintype.sum_congr
@@ -277,8 +277,8 @@ theorem unit_triangle_to_triangle (T : Triangle) : Set.image (triangle_translati
   let f : (Fin 3 → ℝ²) := fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1)
   have hunit_triangle : unit_triangle = f :=by rfl
   rw[hunit_triangle, h1]
-  have h2 : open_hull (linear_transform T ∘ f )= ⇑(linear_transform T) '' open_hull f
-  exact open_hull_lin_trans (linear_transform T) f
+  have h2 : open_hull (linear_transform T ∘ f )= ⇑(linear_transform T) '' open_hull f :=
+    open_hull_lin_trans (linear_transform T) f
   rw[← h2]
   --rw[← open_hull_lin_trans (linear_transform T) f] Why doesnt this work!??
   rw[← translation_commutes]
@@ -307,8 +307,8 @@ theorem volume_open_triangle' (T : Triangle) : (MeasureTheory.volume (open_hull 
     PiLp.single_apply, ite_smul, one_smul, zero_smul, sum_ite_eq', mem_univ, ↓reduceIte, map_sub, Finsupp.coe_sub,
     Pi.sub_apply, PiLp.basisFun_repr, one_div]
   rw[half_is_half]
-  have h2 : ((0:ℝ) ≤ 2⁻¹ )
-  norm_num
+  have h2 : ((0:ℝ) ≤ 2⁻¹ ) := by
+    norm_num
   rw[← ENNReal.ofReal_mul' h2]
   ring_nf
 
@@ -331,9 +331,10 @@ theorem closed_unit_segment_subset : closed_hull unit_segment ⊆ y_axis := by
   rintro ⟨  a ,⟨ _,_⟩  , h2⟩
   rw[y_axis]
   --this is to get rid of the annoying coercion
-  have h :(x ∈ (Submodule.span ℝ (Set.range unit_segment))) →  x ∈ ↑(Submodule.span ℝ (Set.range unit_segment))
-  intro h1
-  exact h1
+  have h : (x ∈ (Submodule.span ℝ (Set.range unit_segment))) →
+      x ∈ ↑(Submodule.span ℝ (Set.range unit_segment)) := by
+    intro h1
+    exact h1
   apply h
   rw[ Submodule.mem_span_range_iff_exists_fun]
   use a
@@ -343,14 +344,14 @@ theorem volume_closed_unit_segment : MeasureTheory.volume (closed_hull unit_segm
   apply MeasureTheory.measure_mono_null (closed_unit_segment_subset )
   apply MeasureTheory.Measure.addHaar_submodule
   intro h
-  have h3 : !₂[(0 : ℝ), 1] ∉ y_axis
-  intro h1
-  rw[y_axis] at h1
-  rw[ Submodule.mem_span_range_iff_exists_fun] at h1
-  obtain ⟨c, h1⟩ := h1
-  rw[Fin.sum_univ_two, unit_segment_def] at h1
-  have h1 := congrArg (fun z => z.ofLp 1) h1
-  simp at h1
+  have h3 : !₂[(0 : ℝ), 1] ∉ y_axis := by
+    intro h1
+    rw[y_axis] at h1
+    rw[ Submodule.mem_span_range_iff_exists_fun] at h1
+    obtain ⟨c, h1⟩ := h1
+    rw[Fin.sum_univ_two, unit_segment_def] at h1
+    have h1 := congrArg (fun z => z.ofLp 1) h1
+    simp at h1
   rw[h] at h3
   apply h3
   trivial
@@ -371,8 +372,9 @@ theorem unit_segment_to_segment (L : Segment) : Set.image (segment_translation L
   let f : (Fin 2 → ℝ²) := fun | 0 => (v 0 0) | 1 => (v 1 0)
   have hunit_segment : unit_segment = f :=by rfl
   rw[hunit_segment, h1]
-  have h2 : closed_hull (linear_transform_segment L ∘ f )= ⇑(linear_transform_segment L) '' closed_hull f
-  exact closed_hull_lin_trans (linear_transform_segment L) f
+  have h2 : closed_hull (linear_transform_segment L ∘ f )
+      = ⇑(linear_transform_segment L) '' closed_hull f :=
+    closed_hull_lin_trans (linear_transform_segment L) f
   rw[← h2]
   --rw[← open_hull_lin_trans (linear_transform T) f] Why doesnt this work!??
   rw[← translation_commutes_closed]
@@ -403,14 +405,14 @@ theorem box_equal_to_pare : parallelepiped our_basis_ortho = closed_hull unit_sq
     constructor
     · constructor
       · intro i
-        fin_cases i <;> simp
+        fin_cases i <;> simp only [Fin.isValue, sub_nonneg, sup_le_iff, tsub_le_iff_right, add_le_add_iff_left, le_sup_left]
         · rw [le_sub_iff_add_le, add_sup 0]
           ring_nf
           exact le_sup_right
-        exact ⟨h0 0, h1 1⟩
-        refine ⟨h0 1, ?_⟩
-        rw [add_comm, add_le_add_iff_left]
-        exact h1 0
+        · exact ⟨h0 0, h1 1⟩
+        · refine ⟨h0 1, ?_⟩
+          rw [add_comm, add_le_add_iff_left]
+          exact h1 0
       · rw [Fin.sum_univ_four]
         simp
         linarith
@@ -430,7 +432,7 @@ theorem box_equal_to_pare : parallelepiped our_basis_ortho = closed_hull unit_sq
         fin_cases i <;> simp <;> linarith [h11 1, h11 2, h11 3]
       · intro i
         rw [Fin.sum_univ_four] at h12
-        fin_cases i <;> simp <;> apply le_trans _ (le_of_eq h12)
+        fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, Pi.one_apply, Fin.mk_one] <;> apply le_trans _ (le_of_eq h12)
         · calc
             a 1 + a 2 ≤ a 0 + (a 1 + a 2)       := by exact le_add_of_nonneg_left (h11 0)
                     _ ≤ a 0 + (a 1 + a 2) + a 3 := by exact le_add_of_nonneg_right (h11 3)
@@ -443,7 +445,13 @@ theorem box_equal_to_pare : parallelepiped our_basis_ortho = closed_hull unit_sq
       simp only [Fin.sum_univ_four, Fin.sum_univ_two, unit_square]
       rw [our_basis_ortho_zero, our_basis_ortho_one]
       ext i
-      fin_cases i <;> simp [v, PiLp.add_apply, PiLp.smul_apply] <;> ring
+      fin_cases i
+      · simp only [Fin.isValue, v, Fin.zero_eta, PiLp.add_apply, PiLp.smul_apply,
+          Matrix.cons_val_zero, smul_eq_mul, mul_zero, mul_one, zero_add, add_zero]
+      · simp only [Fin.isValue, v, Fin.mk_one, PiLp.add_apply, PiLp.smul_apply,
+          Matrix.cons_val_one, Matrix.cons_val_fin_one, smul_eq_mul, mul_zero, add_zero, mul_one,
+          zero_add]
+        ring
 
 theorem volume_box : (MeasureTheory.volume (closed_hull unit_square)).toReal = 1 := by
   rw[← box_equal_to_pare]
@@ -541,7 +549,7 @@ theorem null_meas_triangle (T : Triangle) : MeasureTheory.NullMeasurableSet (ope
     · apply abs_ne_zero.mp
       exact Ne.symm (ne_of_lt h)
     exact MeasurableSet.nullMeasurableSet (nondegen_triangle_meas T h1)
-  · simp at h
+  · simp only [gt_iff_lt, abs_pos, ne_eq, Decidable.not_not] at h
     --rw[← volume_open_triangle' T] at h
     apply MeasureTheory.NullMeasurableSet.of_null
     rw[volume_open_triangle' T, h]
@@ -568,14 +576,17 @@ theorem closed_triangle_is_union (T : Triangle) : closed_hull T = open_hull T �
       constructor
       · constructor
         · intro i
+          -- would have liked if this could have been done without fin_cases
+          -- but it did not seem to work
           fin_cases i
-          dsimp ; exact h1 1 ; exact h1 2 --would have like if this could have been done without fin_cases but it did not seem to work
+          · dsimp; exact h1 1
+          · exact h1 2
         · rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
           linarith
       · dsimp at h3
         rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
         rw[ha0] at h3 h2
-        simp at *
+        simp only [Fin.isValue, zero_smul, zero_add] at *
         exact h3
     · by_cases ha1 : a 1 = 0
       · right
@@ -587,14 +598,17 @@ theorem closed_triangle_is_union (T : Triangle) : closed_hull T = open_hull T �
         constructor
         · constructor
           · intro i
+            -- would have liked if this could have been done without fin_cases
+            -- but it did not seem to work
             fin_cases i
-            dsimp ; exact h1 2 ; exact h1 0 --would have like if this could have been done without fin_cases but it did not seem to work
+            · dsimp; exact h1 2
+            · exact h1 0
           · rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
             linarith
         · dsimp at h3
           rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
           rw[ha1] at h3 h2
-          simp at *
+          simp only [Fin.isValue, zero_smul, add_zero] at *
           rw[add_comm]
           exact h3
       · by_cases ha2 : a 2 = 0
@@ -606,14 +620,17 @@ theorem closed_triangle_is_union (T : Triangle) : closed_hull T = open_hull T �
           constructor
           · constructor
             · intro i
+              -- would have liked if this could have been done without fin_cases
+              -- but it did not seem to work
               fin_cases i
-              dsimp ; exact h1 0 ; exact h1 1 --would have like if this could have been done without fin_cases but it did not seem to work
+              · dsimp; exact h1 0
+              · exact h1 1
             · rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
               linarith
           · dsimp at h3
             rw[Fin.sum_univ_two,Fin.sum_univ_three] at *
             rw[ha2] at h3 h2
-            simp at *
+            simp only [Fin.isValue, zero_smul, add_zero] at *
             exact h3
         · left
           use a
@@ -641,18 +658,17 @@ theorem closed_triangle_is_union (T : Triangle) : closed_hull T = open_hull T �
 lemma volume_zero (A B : Set ℝ²) (h : MeasureTheory.volume B = 0) : MeasureTheory.volume (A ∪ B) = MeasureTheory.volume A := by
   symm
   apply MeasureTheory.measure_eq_measure_of_null_diff
-  exact Set.subset_union_left
-  have h1 : ((A ∪ B) \ A) ⊆ B
-  exact Set.diff_subset_iff.mpr fun ⦃a⦄ a ↦ a
-  exact MeasureTheory.measure_mono_null h1 h
+  · exact Set.subset_union_left
+  · have h1 : ((A ∪ B) \ A) ⊆ B :=
+      Set.diff_subset_iff.mpr fun ⦃a⦄ a ↦ a
+    exact MeasureTheory.measure_mono_null h1 h
 
 --This shows that the boundary (but not Pjotrs boundary) of a triangle has measure zero
 theorem all_edges_triangle_hull_area (T : Triangle) : MeasureTheory.volume (all_edges_triangle_hull T) = 0:= by
   unfold all_edges_triangle_hull
-  repeat rw[volume_zero]
+  rw [volume_zero _ _ (volume_closed_segment (Tside T 2)),
+    volume_zero _ _ (volume_closed_segment (Tside T 1))]
   exact volume_closed_segment (Tside T 0)
-  exact volume_closed_segment (Tside T 1)
-  exact volume_closed_segment (Tside T 2)
 
 --This shows that all boundaries combined also have measure zero. This proof is a lot uglier then I would like it to be, it might be due to a lack of understanding of sums and unions....
 theorem union_of_edges_zero_vol (S : Finset Triangle) : MeasureTheory.volume ( ⋃ (T ∈ S) , all_edges_triangle_hull T ) = 0 := by
@@ -665,12 +681,13 @@ theorem union_of_edges_zero_vol (S : Finset Triangle) : MeasureTheory.volume ( �
     rw[Function.onFun_apply]
     have h2 : S.restrict all_edges_triangle_hull i ∩ S.restrict all_edges_triangle_hull j ⊆ S.restrict all_edges_triangle_hull i := Set.inter_subset_left
     apply MeasureTheory.measure_mono_null h2 (all_edges_triangle_hull_area i)
-  have h4 :  ⋃ T ∈ S, all_edges_triangle_hull T= (⋃ i, (↑S : Set Triangle).restrict all_edges_triangle_hull i)
-  exact Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict all_edges_triangle_hull))
+  have h4 :  ⋃ T ∈ S, all_edges_triangle_hull T
+      = (⋃ i, (↑S : Set Triangle).restrict all_edges_triangle_hull i) :=
+    Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict all_edges_triangle_hull))
   rw[h4]
   rw[MeasureTheory.measure_iUnion₀ hd h]
-  have h5 : (fun x ↦ MeasureTheory.volume (f x))= (fun x ↦ 0)
-  · ext x
+  have h5 : (fun x ↦ MeasureTheory.volume (f x))= (fun x ↦ 0) := by
+    ext x
     unfold f
     exact all_edges_triangle_hull_area x
   rw[h5]
@@ -682,11 +699,12 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle) (hcover : is_
     : MeasureTheory.volume X = ∑  (T ∈  S), MeasureTheory.volume (open_hull T) := by
   unfold is_disjoint_cover at hcover
   rw[hcover.1]
-  have h1:  closed_hull  = (fun T ↦  open_hull T ∪ all_edges_triangle_hull T)
-  ext T X
-  rw[closed_triangle_is_union T]
-  have h2 :  ⋃ T ∈ (↑S : Set Triangle), closed_hull T= (⋃ i, (↑S : Set Triangle).restrict closed_hull i)
-  exact Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict closed_hull))
+  have h1:  closed_hull  = (fun T ↦  open_hull T ∪ all_edges_triangle_hull T) := by
+    ext T X
+    rw[closed_triangle_is_union T]
+  have h2 :  ⋃ T ∈ (↑S : Set Triangle), closed_hull T
+      = (⋃ i, (↑S : Set Triangle).restrict closed_hull i) :=
+    Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict closed_hull))
   rw[h2,  h1]
   dsimp
   rw[Set.iUnion_union_distrib ]
@@ -706,10 +724,11 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle) (hcover : is_
       specialize h6 _ i.2 _ j.2 (Subtype.coe_ne_coe.mpr hij)
       exact h6
     erw[MeasureTheory.measure_iUnion₀ hd h, tsum_fintype,]
-    simp [f]
+    simp only [SetLike.coe_sort_coe, univ_eq_attach, Set.restrict_apply, f]
     rw [Finset.sum_attach S (fun x ↦ volume (open_hullT x))]
-  · have h4 :  ⋃ T ∈ S, all_edges_triangle_hull T= (⋃ i, (↑S : Set Triangle).restrict all_edges_triangle_hull i)
-    exact Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict all_edges_triangle_hull))
+  · have h4 :  ⋃ T ∈ S, all_edges_triangle_hull T
+        = (⋃ i, (↑S : Set Triangle).restrict all_edges_triangle_hull i) :=
+      Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict all_edges_triangle_hull))
     have h5 := union_of_edges_zero_vol S
     rw[ h4] at h5
     exact h5
@@ -721,9 +740,9 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle) (hcover : is_
 theorem triangle_det_sum_one (S : Finset Triangle) (hcover : is_disjoint_cover (closed_hull unit_square) (↑S : Set Triangle)) :  ∑  (T ∈  S), |det T|/2 = 1 := by
   rw[← volume_box]
   rw[area_equal_sum_cover (closed_hull unit_square) S hcover]
-  have h: ∀ T ∈  S, |det T|/2 = (MeasureTheory.volume (open_hull T)).toReal
-  intro T _
-  rw[volume_open_triangle]
+  have h: ∀ T ∈  S, |det T|/2 = (MeasureTheory.volume (open_hull T)).toReal := by
+    intro T _
+    rw[volume_open_triangle]
   rw[sum_congr (by rfl) h]
   rw[ENNReal.toReal_sum]
   intro a _; rw [volume_open_triangle']; simp
@@ -741,9 +760,12 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
   rw[h2 T hT, ← h3, nsmul_eq_mul]
   ring_nf
   rw [mul_assoc,mul_comm,mul_assoc, IsUnit.inv_mul_cancel _, mul_one]
-  simp at h3
+  simp only [nsmul_eq_mul] at h3
   apply isUnit_iff_exists.mpr
-  use area; constructor; exact h3; rw [mul_comm]; exact h3
+  use area
+  constructor
+  · exact h3
+  · rw [mul_comm]; exact h3
 
 
 
