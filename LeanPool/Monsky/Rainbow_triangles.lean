@@ -31,6 +31,7 @@ inductive Color
 | Red
 | Green
 | Blue
+deriving DecidableEq, Fintype
 
 variable {Γ₀ : Type} [LinearOrderedCommGroupWithZero Γ₀]
 variable (v : Valuation ℝ Γ₀)

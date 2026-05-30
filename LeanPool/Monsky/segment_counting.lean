@@ -466,25 +466,39 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
       hm (filter (fun p ↦ p ∈ open_hull Sright) X).card Srightcard
       (avoiding_segment_set_sub_right hS hx.1 hx.2) rfl
     use glue_chains hcolin CL CR
-    have haux_set {A₁ A₂ A₃ A₄ : Finset (Fin 2 → ℝ²)}
-      : (A₁ ∪ A₃) ∪ (A₄ ∪ A₂) = (A₁ ∪ A₂) ∪ (A₃ ∪ A₄) := by
-      simp only [←coe_inj, coe_union]
-      tauto_set
     simp only [chain_to_big_segment_glue, segment_rfl, reverse_chain_glue,
         basic_segments_glue, true_and]
-    rw [haux_set, ← hLSegUnion, ← hRSegUnion]
+    -- Membership characterisations of the two sub-chains, derived directly from
+    -- `hLSegUnion`/`hRSegUnion`. We avoid `rw`-ing the union *term* (whose `Finset`
+    -- instance no longer matches after associativity reshuffling) and work purely
+    -- at the level of `Finset.mem_union`, which matches up to instance defeq.
+    have hLmem : ∀ L, (L ∈ to_basic_segments CL ∨ L ∈ to_basic_segments (reverse_chain CL)) ↔
+        (L ∈ basic_avoiding_segment_set X A ∧ closed_hull L ⊆ closed_hull (to_segment (S 0) x)) :=
+      fun L ↦ by rw [← Finset.mem_union, ← hLSegUnion]; simp only [Finset.mem_filter]
+    have hRmem : ∀ L, (L ∈ to_basic_segments CR ∨ L ∈ to_basic_segments (reverse_chain CR)) ↔
+        (L ∈ basic_avoiding_segment_set X A ∧ closed_hull L ⊆ closed_hull (to_segment x (S 1))) :=
+      fun L ↦ by rw [← Finset.mem_union, ← hRSegUnion]; simp only [Finset.mem_filter]
     ext L
-    simp only [Finset.mem_union, Finset.mem_filter, basic_avoiding_segment_set]
+    simp only [Finset.mem_filter, Finset.mem_union]
     constructor
     · intro ⟨h , hLS⟩
-      rcases colin_sub hcolin (by convert hLS; exact segment_rfl) (h.2 x hx.1) with hLleft | hLright
-      · left
-        exact ⟨h, hLleft⟩
-      · right
-        exact ⟨h, hLright⟩
-    · rintro (hL | hR)
-      · exact ⟨hL.1, subset_trans hL.2 (closed_hull_convex hSlefti)⟩
-      · exact ⟨hR.1, subset_trans hR.2 (closed_hull_convex hSrighti)⟩
+      rcases colin_sub hcolin (by convert hLS; exact segment_rfl)
+          ((Finset.mem_filter.mp h).2 x hx.1) with hLleft | hLright
+      · rcases (hLmem L).mpr ⟨h, hLleft⟩ with hCL | hrevCL
+        · exact Or.inl (Or.inl hCL)
+        · exact Or.inr (Or.inr hrevCL)
+      · rcases (hRmem L).mpr ⟨h, hLright⟩ with hCR | hrevCR
+        · exact Or.inl (Or.inr hCR)
+        · exact Or.inr (Or.inl hrevCR)
+    · rintro ((hCL | hCR) | (hrevCR | hrevCL))
+      · exact ⟨((hLmem L).mp (Or.inl hCL)).1,
+          subset_trans ((hLmem L).mp (Or.inl hCL)).2 (closed_hull_convex hSlefti)⟩
+      · exact ⟨((hRmem L).mp (Or.inl hCR)).1,
+          subset_trans ((hRmem L).mp (Or.inl hCR)).2 (closed_hull_convex hSrighti)⟩
+      · exact ⟨((hRmem L).mp (Or.inr hrevCR)).1,
+          subset_trans ((hRmem L).mp (Or.inr hrevCR)).2 (closed_hull_convex hSrighti)⟩
+      · exact ⟨((hLmem L).mp (Or.inr hrevCL)).1,
+          subset_trans ((hLmem L).mp (Or.inr hrevCL)).2 (closed_hull_convex hSlefti)⟩
 
 
 def two_mod_function (f : Segment → ℕ)
@@ -497,14 +511,12 @@ lemma two_mod_function_chains {f : Segment → ℕ} (hf : two_mod_function f) {u
   induction C with
   | basic         => simp only [to_basic_segments, sum_singleton]
   | join h₂ C ih  =>
-      simp [to_basic_segments]
-      rw [Finset.sum_union]
-      · simp only [sum_singleton, Nat.add_mod, ih, dvd_refl, Nat.mod_mod_of_dvd,
-            Nat.add_mod_mod, Nat.mod_add_mod]
-        simp only [dvd_refl, Nat.mod_mod_of_dvd, Nat.add_mod_mod, Nat.mod_add_mod, ←hf h₂]
-        rw [add_comm]
-      · simp only [disjoint_singleton_right]
-        exact basic_segments_colin_disjoint h₂
+      simp only [to_basic_segments]
+      rw [Finset.sum_union (by simpa only [disjoint_singleton_right] using
+        basic_segments_colin_disjoint h₂)]
+      simp only [sum_singleton, Nat.add_mod, ih, dvd_refl, Nat.mod_mod_of_dvd]
+      simp only [dvd_refl, Nat.mod_mod_of_dvd, Nat.add_mod_mod, Nat.mod_add_mod, ←hf h₂]
+      rw [add_comm]
 
 
 lemma symm_function_reverse_sum {f : Segment → ℕ} (hf : symm_fun f) {u v : ℝ²}
@@ -587,7 +599,10 @@ lemma isPurple_symm_function : symm_fun (isPurple v) := by
   unfold symm_fun
   intro S
   unfold isPurple reverse_segment
-  aesop
+  simp only [to_segment]
+  congr 1
+  rw [eq_iff_iff]
+  tauto
 
 -- The segment covered by a chain is purple if and only if an odd number of its basic
 -- segments are purple.
@@ -1192,11 +1207,12 @@ lemma unit_square_boundary_intersections (i j : Fin 4) (h_neq : i ≠ j) :
   rcases h1 with ⟨ ai,h2i , h3i⟩
   rcases h2j with ⟨h4j, h5j⟩
   rcases h2i with ⟨h4i, h5i⟩
+  simp only at h3j h3i
   have h4i1:= h4i 1; have h4i2 := h4i 2
-  have h3j0 := congrFun h3j 0; have h3j1 := congrFun h3j 1
-  have h3i0 :=  congrFun h3i 0; have h3i1 := congrFun h3i 1
+  have h3j0 := congrArg (· 0) h3j; have h3j1 := congrArg (· 1) h3j
+  have h3i0 := congrArg (· 0) h3i; have h3i1 := congrArg (· 1) h3i
   clear h4i h3i h3j hh2help
-  fin_cases i <;> fin_cases j <;> simp[p] at * <;> linarith
+  fin_cases i <;> fin_cases j <;> simp at * <;> linarith
 
 
 lemma purple_computation0 (i : Fin 4) : i ≠ 0 → isPurple v (square_boundary_big i) = 0 := by
@@ -1598,6 +1614,61 @@ lemma different_points (T : Triangle) (h_det : det T ≠ 0) (i j : Fin 3) (hneq 
   contradiction
 
 
+-- A fully computable version of `isPurple`, taking the two endpoint colours.
+-- We use `Bool` operators so that `decide` reduces even though the ambient
+-- `Classical.propDecidable` instance is active in this file.
+def purpleB (a b : Color) : ℕ :=
+  if ((a == Color.Red && b == Color.Blue) || (a == Color.Blue && b == Color.Red)) then 1 else 0
+
+-- A fully computable version of `isRainbow`, taking the three vertex colours:
+-- a triangle is rainbow exactly when its three vertices carry distinct colours.
+def rainbowB (a b c : Color) : ℕ :=
+  if (a == b || b == c || a == c) then 0 else 1
+
+-- Surjectivity of a `Fin 3 → Color` map is decided by pairwise distinctness.
+-- This isolates a small finite check from the main proof.
+lemma surj_iff_distinct (c0 c1 c2 : Color) :
+    Function.Surjective (![c0, c1, c2]) ↔ (c0 ≠ c1 ∧ c1 ≠ c2 ∧ c0 ≠ c2) := by
+  constructor
+  · intro hs
+    refine ⟨?_, ?_, ?_⟩ <;>
+    · rintro he
+      have : ¬ Function.Surjective (![c0, c1, c2]) := by revert he; revert c0 c1 c2; decide
+      exact this hs
+  · rintro ⟨h01, h12, h02⟩; revert h01 h12 h02; revert c0 c1 c2; decide
+
+-- `isPurple` expressed through the endpoint colours.
+lemma isPurple_eq_colors (S : Segment) :
+    isPurple v S = purpleB (coloring v (S 0)) (coloring v (S 1)) := by
+  unfold isPurple purpleB
+  rcases (coloring v (S 0)) <;> rcases (coloring v (S 1)) <;> decide +revert
+
+-- `isRainbow` expressed through the three vertex colours.
+lemma isRainbow_eq_colors (T : Triangle) :
+    isRainbow v T = rainbowB (coloring v (T 0)) (coloring v (T 1)) (coloring v (T 2)) := by
+  unfold isRainbow
+  have hcomp : (coloring v ∘ T) = ![coloring v (T 0), coloring v (T 1), coloring v (T 2)] := by
+    funext i; fin_cases i <;> rfl
+  rw [hcomp]
+  by_cases hs : Function.Surjective (![coloring v (T 0), coloring v (T 1), coloring v (T 2)])
+  · rw [if_pos hs]
+    obtain ⟨h01, h12, h02⟩ := (surj_iff_distinct _ _ _).mp hs
+    unfold rainbowB; revert h01 h12 h02
+    generalize coloring v (T 0) = a; generalize coloring v (T 1) = b
+    generalize coloring v (T 2) = c
+    revert a b c; decide
+  · rw [if_neg hs, surj_iff_distinct] at *
+    unfold rainbowB; revert hs
+    generalize coloring v (T 0) = a; generalize coloring v (T 1) = b
+    generalize coloring v (T 2) = c
+    revert a b c; decide
+
+-- The core counting identity, stated purely on the three vertex colours. It is a
+-- finite check over the 27 colourings, cheap under the default heartbeat budget.
+lemma rainbow_purple_color_identity (c0 c1 c2 : Color) :
+    2 * rainbowB c0 c1 c2 % 4 = 2 * (purpleB c1 c2 + purpleB c2 c0 + purpleB c0 c1) % 4 := by
+  decide +revert
+
 lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
     (non_degen : ∀ P ∈ Δ, det P ≠ 0)
     (hDisjointCover : is_disjoint_cover (closed_hull unit_square) Δ.toSet)
@@ -1712,33 +1783,17 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
   unfold triangle_boundary
   simp [Set.biUnion_univ]
   rw [Finset.sum_biUnion _, Fin.sum_univ_three]
-  · simp
-    simp [isPurple, Tside]
-    simp [isRainbow, Function.Surjective]
-    rcases color_trichotomy (coloring v (T 0)) with (hc0 | hc0 | hc0) <;>
-    rcases color_trichotomy (coloring v (T 1)) with (hc1 | hc1 | hc1) <;>
-    rcases color_trichotomy (coloring v (T 2)) with (hc2 | hc2 | hc2) <;>
-    (
-      split <;>
-      (
-      rename_i h_surj
-      simp [hc0, hc1, hc2]
-      )
-    )
-    all_goals try (have ⟨cR, hR⟩ := h_surj Color.Red)
-    all_goals try (have ⟨cB, hB⟩ := h_surj Color.Blue)
-    all_goals try (have ⟨cG, hG⟩ := h_surj Color.Green)
-    all_goals try (fin_cases cR <;> simp_all)
-    all_goals try (fin_cases cB <;> simp_all)
-    all_goals try (fin_cases cG <;> simp_all)
-    all_goals
-      refine h_surj ?_
-      intro b
-      rcases color_trichotomy b with (hb | hb | hb)
-    all_goals rw [hb]
-    all_goals try (exact ⟨0, hc0⟩)
-    all_goals try (exact ⟨1, hc1⟩)
-    all_goals try (exact ⟨2, hc2⟩)
+  · -- Reduce each side's purple count to a colour computation and apply the pure
+    -- 27-case identity, keeping every step within the default heartbeat budget.
+    simp only [Finset.sum_singleton]
+    rw [isRainbow_eq_colors v T,
+        isPurple_eq_colors v (Tside T 0), isPurple_eq_colors v (Tside T 1),
+        isPurple_eq_colors v (Tside T 2)]
+    show 2 * rainbowB (coloring v (T 0)) (coloring v (T 1)) (coloring v (T 2)) % 4
+       = 2 * (purpleB (coloring v (T 1)) (coloring v (T 2))
+            + purpleB (coloring v (T 2)) (coloring v (T 0))
+            + purpleB (coloring v (T 0)) (coloring v (T 1))) % 4
+    exact rainbow_purple_color_identity _ _ _
   · intro i _ j _ hij
     have h_diff_points01 : T 0 ≠ T 1 := different_points T (non_degen T hT) 0 1 (by decide)
     have h_diff_points02 : T 0 ≠ T 2 := different_points T (non_degen T hT) 0 2 (by decide)
@@ -1747,7 +1802,7 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
     -- Annoying
     suffices hs : ¬ Tside T j 0 = Tside T i 0
     · by_contra h_contra
-      exact hs (congrFun h_contra 0)
+      exact hs (congrFun h_contra.symm 0)
     · unfold Tside
       fin_cases i <;> fin_cases j <;> simp only [Fin.isValue, not_true_eq_false]
       all_goals try (
