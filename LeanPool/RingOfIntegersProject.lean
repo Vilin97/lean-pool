@@ -35,7 +35,7 @@ import LeanPool.RingOfIntegersProject.TimesTableAsLists
 Source: url:https://github.com/alainchmt/RingOfIntegersProject
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 Status: verified
-Main declarations: `pMaximal_of_MaximalOrderCertificateLists`, `pMaximal_of_MaximalOrderCertificateOfUnramifiedLists`
+Main declarations: `pMaximal_of_MaximalOrderCertificateLists`
 Tags: algebraic-number-theory, rings-of-integers, number-fields, formal-verification
 MSC: 11R04, 11Y40
 -/

@@ -1269,7 +1269,6 @@ projects:
     status: verified
     main_declarations:
       - pMaximal_of_MaximalOrderCertificateLists
-      - pMaximal_of_MaximalOrderCertificateOfUnramifiedLists
     main_results:
       - declaration: pMaximal_of_MaximalOrderCertificateLists
         informal: Certifies p-maximality of an order from a list-encoded maximal-order certificate.
