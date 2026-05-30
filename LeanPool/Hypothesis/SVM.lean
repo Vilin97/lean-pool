@@ -170,11 +170,11 @@ example : ¬ separable A₀ A₁ := by
 
 -- But we can transform the data to be separable:
 /-- A feature map lifting `ℝ²` into `ℝ³` that makes the XOR data separable. -/
-def φ : (Fin 2 → ℝ) → (Fin 3 → ℝ) := fun x => ![x 0,x 1, (x 0 + x 1 - 1)^2]
+def svmFeatureMap : (Fin 2 → ℝ) → (Fin 3 → ℝ) := fun x => ![x 0,x 1, (x 0 + x 1 - 1)^2]
 
-example : separable (φ '' A₀) (φ '' A₁) := by
+example : separable (svmFeatureMap '' A₀) (svmFeatureMap '' A₁) := by
   simp only [
-    separable, φ, Fin.isValue, A₀, Nat.succ_eq_add_one, Nat.reduceAdd, Set.mem_image,
+    separable, svmFeatureMap, Fin.isValue, A₀, Nat.succ_eq_add_one, Nat.reduceAdd, Set.mem_image,
     Set.mem_insert_iff, Set.mem_singleton_iff, exists_eq_or_imp, Matrix.cons_val_zero,
     Matrix.cons_val_one, Matrix.cons_val_fin_one, add_zero, zero_sub, even_two, Even.neg_pow,
     one_pow, ↓existsAndEq, add_sub_cancel_right, true_and, tsub_le_iff_right, le_neg_add_iff_add_le,

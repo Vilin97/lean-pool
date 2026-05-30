@@ -261,7 +261,7 @@ lemma studentTMax (ν : ℝ) (hν : 0 ≤ ν) :
 noncomputable def Bar {n : ℕ} : (Fin n → ℝ) → ℝ := fun X => (1 / n) * ∑ i, X i
 
 /-- The sample standard deviation. -/
-noncomputable def S {n : ℕ} : (Fin n → ℝ) → ℝ := fun X =>
+noncomputable def sampleStdDev {n : ℕ} : (Fin n → ℝ) → ℝ := fun X =>
     √(1 / (n - 1) * ∑ i, (X i - Bar X) ^ 2)
 
 
@@ -270,7 +270,7 @@ noncomputable def S {n : ℕ} : (Fin n → ℝ) → ℝ := fun X =>
 If `X i` are `iid` and `N(μ, σ^2)` then this T has the t distribution.
 -/
 noncomputable def T {μ : ℝ} {n : ℕ} : (Fin n → ℝ) → ℝ := fun X =>
-    (Bar X - μ) / (S X / √(n:ℝ))
+    (Bar X - μ) / (sampleStdDev X / √(n:ℝ))
 
 section Behrens
 /-- The pooled standard deviation estimate of two samples `X`, `Y`. -/
