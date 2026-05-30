@@ -1040,11 +1040,6 @@ import LeanPool.RingOfIntegersProject.QuotientModules
 import LeanPool.RingOfIntegersProject.Resultant
 import LeanPool.RingOfIntegersProject.Semilinear
 import LeanPool.RingOfIntegersProject.SylvesterMatrix
-import LeanPool.RingOfIntegersProject.Tactic.Norm
-import LeanPool.RingOfIntegersProject.Tactic.NormAttr
-import LeanPool.RingOfIntegersProject.Tactic.NormNumBigop
-import LeanPool.RingOfIntegersProject.Tactic.RingModChar
-import LeanPool.RingOfIntegersProject.Tactic.RingResult
 import LeanPool.RingOfIntegersProject.TimesTable.Defs
 import LeanPool.RingOfIntegersProject.TimesTableAsLists
 import LeanPool.RlTheoryInLean
