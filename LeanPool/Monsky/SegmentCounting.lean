@@ -97,7 +97,7 @@ lemma basic_segment_in_open_hull {u v : ℝ²} (C : Chain u v) {S : Segment}
   |basic         => simp only [to_basic_segments, mem_singleton] at *; rw [hS]
   |join h₂ C ih  =>
     simp only [to_basic_segments, mem_union, mem_singleton] at *
-    cases' hS with hS hS
+    rcases hS with hS | hS
     · refine subset_trans (ih hS) ?_
       apply right_open_hull_in_colin; exact h₂
     · rw [hS]
@@ -932,7 +932,7 @@ lemma triangulation_boundary_union (Δ : Finset Triangle) (hCover : is_triangula
     have hT : ∃ T ∈ Δ, closed_hull L ⊆ closed_hull T := by
      rcases segment_in_interior_aux hCover non_degen hL with ⟨T, hT⟩
      exact ⟨T, hT⟩
-    cases' hT with T hT
+    obtain ⟨T, hT⟩ := hT
     apply is_cover_sub at hCover
     calc open_hull L ⊆ closed_hull L := open_sub_closed L
         _ ⊆ closed_hull T := hT.right
@@ -1051,7 +1051,7 @@ lemma segment_sum_splitting (A : Finset Segment) (AVOID : Set ℝ²) (X : Finset
       · refine avoiding_segment_set_sub (A := AVOID) (hA ?_)
         simp_all only [ne_eq]
     · intro hL
-      cases' hL with S hS
+      obtain ⟨S, hS⟩ := hL
       constructor
       · simp_all only [mem_filter]
       · rw [mem_filter] at hS
@@ -1115,7 +1115,7 @@ lemma unit_square_boundary_decomposition (Δ : Finset Triangle) (hCovering : is_
         have ⟨T,hT, hp⟩ := hx
         rw [Set.mem_iUnion₂]
         use T, hT
-        cases' hp with hp hp
+        rcases hp with hp | hp
         · rw [hp]
           exact corner_in_closed_hull
         · cases' hp with hp hp <;> (rw [hp]; exact corner_in_closed_hull)
@@ -1217,15 +1217,15 @@ lemma open_triangle_in_open_square {Δ : Finset Triangle} {T : Triangle} (hT : T
       unfold is_triangulation at hCovering
       exact subset_trans (open_sub_closed T) (@is_cover_sub _ Δ _ (id hCovering) T hT)
   have hp : ∃ p : ℝ², p ∈ open_hull T ∧ p ∈ boundary unit_square := by
-    cases' Set.not_subset.mp h with p hp
+    obtain ⟨p, hp⟩ := Set.not_subset.mp h
     use p
     refine ⟨hp.left, ?_⟩
     unfold boundary
     rw [Set.mem_diff]
     exact ⟨by tauto, hp.right⟩
-  cases' hp with p hp
-  cases' (boundary_leave_dir hp.2) with σ hσ
-  cases' (@triangle_open_hull_open _ non_degen _ (σ • (!₂[1, 1] : ℝ²)) hp.1) with ε hε
+  obtain ⟨p, hp⟩ := hp
+  obtain ⟨σ, hσ⟩ := (boundary_leave_dir hp.2)
+  obtain ⟨ε, hε⟩ := (@triangle_open_hull_open _ non_degen _ (σ • (!₂[1, 1] : ℝ²)) hp.1)
   have h1 : p + ε • σ • (!₂[1, 1] : ℝ²) ∉ closed_hull unit_square := by
     have hrw : p + ε • σ • (!₂[1, 1] : ℝ²) = p + (σ * ε) • (!₂[1, 1] : ℝ²) := by
       module
@@ -1252,7 +1252,7 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
       constructor
       · intro hS
         simp_all only [mem_biUnion, mem_univ, mem_filter, true_and, exists_and_left]
-        cases' hS.right with j hj
+        obtain ⟨j, hj⟩ := hS.right
         have h_closed : closed_hull S ⊆ closed_hull (square_boundary_big j) := by
           exact open_sub_closed_sub _ _ hj
         suffices h2 : closed_hull (square_boundary_big j) ⊆
@@ -1305,7 +1305,7 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
       intro L hL
       unfold square_boundary_big_set at hL
       simp only [top_eq_univ, mem_biUnion, mem_univ, mem_singleton, true_and] at hL
-      cases' hL with i hi
+      obtain ⟨i, hi⟩ := hL
       rw [hi]
       exact square_boundary_segments_in_boundary i
     intro S hS
@@ -1326,8 +1326,8 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
     unfold square_boundary_big_set
     intro S L hS hL hSL
     simp_all only [top_eq_univ, mem_biUnion, mem_univ, mem_singleton, true_and]
-    cases' hS with i hi
-    cases' hL with j hj
+    obtain ⟨i, hi⟩ := hS
+    obtain ⟨j, hj⟩ := hL
     rw [hi, hj]
     have hij : i ≠ j := by
       by_contra h_contra
@@ -1642,7 +1642,7 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
     · intro h
       rw [mem_filter]
       rw [mem_biUnion] at h
-      cases' h with i hi
+      obtain ⟨i, hi⟩ := h
       constructor
       · unfold basic_segment_segments at hi
         unfold triangle_basic_boundary at hi
@@ -1727,8 +1727,8 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
     intro S L hS hL hSL
     unfold triangle_boundary at hS hL
     simp only [top_eq_univ, mem_biUnion, mem_univ, mem_singleton, true_and] at hS hL
-    cases' hS with i hi
-    cases' hL with j hj
+    obtain ⟨i, hi⟩ := hS
+    obtain ⟨j, hj⟩ := hL
     have hij : i ≠ j := by
       by_contra hij
       apply hSL

@@ -99,7 +99,7 @@ lemma segment_in_boundary_square {x : ℝ²} (hx : x ∈ boundary unit_square)
   have ⟨i, hxi⟩ := element_in_boundary_square hx
   have ⟨L,hxL,hL, hvec⟩ := hNonzero i
   have ⟨δ,hδ, hδx⟩ := seg_dir_sub hxL
-  cases' hxi with hxi hxi
+  rcases hxi with hxi | hxi
   · specialize hδx (δ * (- Real.sign ((seg_vec L) i))) (by
       simp [abs_mul, abs_of_pos hδ]
       nth_rewrite 2 [←mul_one δ]
@@ -211,7 +211,7 @@ lemma el_boundary_square_triangle_dir {x : ℝ²} (hx : x ∈ boundary unit_squa
           simp only [mem_insert, mem_singleton] at hσ hσ'
           have hσσ' : σ' = σ ∨ σ' = - σ := by
             cases' hσ with hσ hσ <;> cases' hσ' with hσ' hσ' <;> (rw [hσ, hσ']; simp)
-          cases' hσσ' with hσσ' hσσ'
+          rcases hσσ' with hσσ' | hσσ'
           · exact hσσ'.symm
           · exfalso
             specialize hδx (min δ δ') (lt_min hδ hδ') (min_le_left δ δ')
@@ -363,7 +363,7 @@ lemma segment_triangle_pairing_int
             rw [t,t',t'']
             rw [t,t'] at σneq
             tauto)
-        cases' σ''mem with h h
+        rcases σ''mem with h | h
         · have hl : Δ'' = Δ := by
             by_contra hneq
             rw [h] at hain''

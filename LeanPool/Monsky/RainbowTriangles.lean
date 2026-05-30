@@ -72,7 +72,7 @@ lemma blue_region (X : ℝ²) : (coloring v X = Color.Blue) → v (X 0) ≥ v (1
   rw [not_lt, not_lt] at h1
   rw [not_lt, not_le] at h2
   -- Split h1 into cases
-  cases' h1 with p q
+  rcases h1 with p | q
   constructor
   · apply p
   · cases' h2 with m n
@@ -81,7 +81,7 @@ lemma blue_region (X : ℝ²) : (coloring v X = Color.Blue) → v (X 0) ≥ v (1
       exact le_of_lt n
     apply le_trans q' p
   -- Split h2 into cases
-  cases' h2 with a b
+  rcases h2 with a | b
   constructor
   · apply le_trans q a
   · exact a
@@ -401,7 +401,7 @@ lemma blue11 : coloring v !₂[1,1] = Color.Blue := by
 lemma get_color_of_rainbow_triangle (T : Fin 3 → ℝ²) (rt : rainbow_triangle v T) (c : Color) :
   ∃ i : Fin 3, coloring v (T i) = c := by
   have h := rt c
-  cases' h with i hi
+  obtain ⟨i, hi⟩ := h
   exact ⟨i, hi⟩
 
 theorem bounded_det_coord_free (T : Triangle) (rt : rainbow_triangle v T) :

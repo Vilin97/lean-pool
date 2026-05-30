@@ -344,7 +344,7 @@ theorem volume_closed_unit_segment : MeasureTheory.volume (closed_hull unit_segm
   intro h1
   rw[y_axis] at h1
   rw[ Submodule.mem_span_range_iff_exists_fun] at h1
-  cases' h1 with c h1
+  obtain ⟨c, h1⟩ := h1
   rw[Fin.sum_univ_two, unit_segment_def] at h1
   have h1 := congrArg (fun z => z.ofLp 1) h1
   simp at h1

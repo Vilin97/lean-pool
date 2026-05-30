@@ -758,7 +758,7 @@ lemma seg_sub_side {T : Triangle} {L : Segment} {x : ℝ²} {i : Fin 3} (hdet : 
     · rw [←mul_smul]
       refine open_sub_closed _ (hseg' (min δ δ' * σ) ?_)
       have hσabs : |σ| = 1 := by
-        cases' (mem_insert.1 hσ) with ht ht
+        rcases (mem_insert.1 hσ) with ht | ht
         · simp only [ht, abs_neg, abs_one]
         · simp at ht
           simp only [ht, abs_one]
@@ -1542,14 +1542,14 @@ lemma closed_hull_eq_imp_eq_or_rev_seg {u v x y : ℝ²}
   cases' closed_hull_eq_imp_eq_or_rev_seg_aux h with hu hu <;>
     (
       rw [←reverse_segment_closed_hull] at h
-      cases' closed_hull_eq_imp_eq_or_rev_seg_aux h with hv hv
+      obtain ⟨hv, hv⟩ := closed_hull_eq_imp_eq_or_rev_seg_aux h
     )
   all_goals try simp_all [to_segment]
   all_goals simp_all [closed_hull_eq_imp_eq_triv (by rfl) h]
 
 lemma closed_hull_eq_imp_eq_or_rev {L₁ L₂ : Segment}
     (h : closed_hull L₁ = closed_hull L₂) : L₁ = L₂ ∨ L₁ = reverse_segment L₂ := by
-  cases' closed_hull_eq_imp_eq_or_rev_seg h with hsame hrev
+  obtain ⟨hsame, hrev⟩ := closed_hull_eq_imp_eq_or_rev_seg h
   · left
     ext i j
     fin_cases i <;> fin_cases j <;> simp_all
@@ -1851,7 +1851,7 @@ lemma seg_open_hull_infinite {L : Segment} (h : L 0 ≠ L 1) :
   refine Set.Infinite.image ?_ (Set.Ioo_infinite (by norm_num))
   intro a ha b hb heq
   rw [seg_vec, add_left_cancel_iff, ←sub_eq_zero, ←sub_smul, smul_eq_zero] at heq
-  cases' heq with this this
+  rcases heq with this | this
   · linarith
   · exfalso
     exact h ((seg_vec_zero_iff L).mp this)

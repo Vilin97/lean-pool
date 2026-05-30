@@ -256,7 +256,7 @@ lemma open_closed_hull_minus_boundary {n : ℕ} {P : Fin n → ℝ²} :
 
 lemma boundary_constant {n : ℕ} {P : ℝ²} :
     boundary (fun (_ : Fin n) ↦ P) = ∅ := by
-  cases' (ne_or_eq n 0) with hn hz
+  rcases (ne_or_eq n 0) with hn | hz
   · unfold boundary
     rw [open_hull_constant hn, closed_hull_constant hn]
     simp only [sdiff_self, Set.bot_eq_empty]
@@ -271,7 +271,7 @@ lemma boundary_constant {n : ℕ} {P : ℝ²} :
 
 lemma open_hull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
     (ho : open_hull f = {P}) : ∀ i, f i = P :=  by
-  cases' eq_or_ne 0 n with hz hn
+  rcases eq_or_ne 0 n with hz | hn
   · intro i
     subst hz
     by_contra h
