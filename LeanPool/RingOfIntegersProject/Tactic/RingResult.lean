@@ -5,6 +5,7 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
 
 import LeanPool.RingOfIntegersProject.Tactic.RingModChar
+import Mathlib.Tactic.NormNum.BigOperators
 
 open Lean Mathlib Meta Qq Tactic
 
@@ -134,25 +135,6 @@ def evalZSMul (char : ℕ) (cpR : Option (Q(CharP $R $char)))
 
 end Mathlib.Tactic.RingModChar
 
-/-- If `a = b` and we can evaluate `b`, then we can evaluate `a`. -/
-def Mathlib.Meta.NormNum.Result.eq_trans {α : Q(Type u)} {a b : Q($α)} (eq : Q($a = $b)) :
-    NormNum.Result b → NormNum.Result a
-| .isBool true proof =>
-  have a : Q(Prop) := a
-  have b : Q(Prop) := b
-  have eq : Q($a = $b) := eq
-  have proof : Q($b) := proof
-  .isTrue (x := a) q($eq ▸ $proof)
-| .isBool false proof =>
-  have a : Q(Prop) := a
-  have b : Q(Prop) := b
-  have eq : Q($a = $b) := eq
-  have proof : Q(¬ $b) := proof
- .isFalse (x := a) q($eq ▸ $proof)
-| .isNat inst lit proof => .isNat inst lit q($eq ▸ $proof)
-| .isNegNat inst lit proof => .isNegNat inst lit q($eq ▸ $proof)
-| .isNNRat inst q n d proof => .isNNRat inst q n d q($eq ▸ $proof)
-| .isNegNNRat inst q n d proof => .isNegNNRat inst q n d q($eq ▸ $proof)
 
 /-- Forget that we're evaluating `a` and instead evaluate `b`. -/
 def Mathlib.Meta.NormNum.Result.uncheckedCast {α : Q(Type u)} {a b : Q($α)} :

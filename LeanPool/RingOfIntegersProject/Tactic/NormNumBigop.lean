@@ -36,12 +36,13 @@ In particular, we can't use the plugin on sums containing variables.
    normalization?)
 -/
 
-namespace Mathlib.Meta
+namespace RoiNormNumBigop
 
 open Lean
 open Meta
 open Qq
 open NormTactic
+open Mathlib.Meta.NormNum
 
 /-- This represents the result of trying to determine whether the given expression `n : Q(ℕ)`
 is either `zero` or `succ`. -/
@@ -315,14 +316,14 @@ partial def evalFinsetProd : NormNumExt where eval {u β} e := do
   -- Have to construct this expression manually, `q(1)` doesn't parse correctly:
   let n : Q(ℕ) := .lit (.natVal 1)
   let pf : Q(IsNat (Finset.prod ∅ $f) $n) := q(@Finset.prod_empty $β $α $instCS $f)
-  let res_empty := Result.isNat _ n pf
-  let eval_f : (a : Q($α)) → MetaM (Result (q($f $a) : Q($β))) :=
-    fun a => NormNum.derive (q($f $a) : Q($β))
+  let res_empty := Mathlib.Meta.NormNum.Result.isNat _ n pf
+  let eval_f : (a : Q($α)) → MetaM (Mathlib.Meta.NormNum.Result (q($f $a) : Q($β))) :=
+    fun a => Mathlib.Meta.NormNum.derive (q($f $a) : Q($β))
 
   evalFinsetBigop q(Finset.prod) f eval_f res_empty
     (fun {a s' h} res_fa res_prod_s' => (do
       let fa : Q($β) := Expr.app f a
-      let res ← Result.mul res_fa res_prod_s' (inst := instS)
+      let res ← Mathlib.Meta.NormNum.Result.mul res_fa res_prod_s' (inst := instS)
       let eq : Q(Finset.prod (Finset.cons $a $s' $h) $f = $fa * Finset.prod $s' $f) :=
         q(Finset.prod_cons $h)
       pure <| res.eq_trans eq))
@@ -344,13 +345,13 @@ partial def evalFinsetSum : NormNumExt where eval {u β} e := do
   -- Have to construct this expression manually, `q(0)` doesn't parse correctly:
   let n : Q(ℕ) := .lit (.natVal 0)
   let pf : Q(IsNat (Finset.sum ∅ $f) $n) := q(@Finset.sum_empty $β $α $instCS $f)
-  let res_empty := Result.isNat _ n pf
-  let eval_f : (a : Q($α)) → MetaM (Result (q($f $a) : Q($β))) :=
-    fun a => NormNum.derive (q($f $a) : Q($β))
+  let res_empty := Mathlib.Meta.NormNum.Result.isNat _ n pf
+  let eval_f : (a : Q($α)) → MetaM (Mathlib.Meta.NormNum.Result (q($f $a) : Q($β))) :=
+    fun a => Mathlib.Meta.NormNum.derive (q($f $a) : Q($β))
 
   evalFinsetBigop q(Finset.sum) f eval_f res_empty (fun {a s' h} res_fa res_sum_s' ↦ do
       let fa : Q($β) := Expr.app f a
-      let res : Result _ ← Result.add res_fa res_sum_s'
+      let res : Mathlib.Meta.NormNum.Result _ ← Mathlib.Meta.NormNum.Result.add res_fa res_sum_s'
       let eq : Q(Finset.sum (Finset.cons $a $s' $h) $f = $fa + Finset.sum $s' $f) :=
         q(Finset.sum_cons $h)
       pure <| res.eq_trans eq)
@@ -358,6 +359,4 @@ partial def evalFinsetSum : NormNumExt where eval {u β} e := do
 
 end NormNum
 
-end Meta
-
-end Mathlib
+end RoiNormNumBigop

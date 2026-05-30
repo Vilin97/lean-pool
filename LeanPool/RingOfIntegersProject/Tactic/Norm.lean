@@ -13,6 +13,7 @@ import Mathlib.Util.Qq
 open Lean Mathlib Meta Qq
 open BigOperators
 open NormTactic
+open RoiNormNumBigop RoiNormNumBigop.NormNum
 
 /-- Return the function (name) and arguments of an application. -/
 def Lean.Expr.getAppFnLevelArgs (e : Expr) : Name × List Level × Array Expr :=
@@ -61,7 +62,7 @@ partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) :
     pure (.succ j (q(rfl)))
   | (`Fin.castSucc, #[_, (j : Q(Fin $n))]) => do
     have : $i =Q Fin.castSucc $j := (← assertDefEqQ _ _).down
-    match ← Nat.unifyZeroOrSucc n with
+    match ← RoiNormNumBigop.Nat.unifyZeroOrSucc n with
     | .zero _pf =>
       throwError "Fin.proveZeroOrSucc: inconsistent context: \
         {n} is zero but Fin {n} has element {j}"
@@ -76,7 +77,7 @@ partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) :
     | .zero j_pf =>
       pure (.succ k q(($j_pf ▸ congr_fun Fin.succAbove_zero $k : Fin.succAbove $j $k = _)))
     | .succ j' j_pf => do
-      match ← Nat.unifyZeroOrSucc n with
+      match ← RoiNormNumBigop.Nat.unifyZeroOrSucc n with
       | .zero _pf =>
         throwError "Fin.proveZeroOrSucc: inconsistent context: \
           {n} is zero but Fin {n} has element {k}"
@@ -105,7 +106,7 @@ partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) :
     core : {n : Q(ℕ)} → (a : Q(Fin $n)) → MetaM ((n : Q(ℕ)) × Q(Fin.val $a = $n)) :=
       fun {n} a => do
       -- TODO: we can probably do something smarter than unary recursion here
-      match ← Nat.unifyZeroOrSucc n with
+      match ← RoiNormNumBigop.Nat.unifyZeroOrSucc n with
       | .zero _pf =>
         throwError "evalFinVal: inconsistent context: \
           {n} is zero but `Fin {n}` has inhabitant {a}"
@@ -204,7 +205,7 @@ def evalMatrixDetFinApply {n' : Q(ℕ)} {R : Q(Type u)}
       m (r (α := R) q(Matrix.det $M'))) :
     m (r q(Matrix.det $M)) :=
   withTraceNode `norm.Matrix.Det (return m!"{·.emoji} determinant of: {M}") do
-  match ← Nat.unifyZeroOrSucc n' with
+  match ← RoiNormNumBigop.Nat.unifyZeroOrSucc n' with
   | .zero _pf => MResultClass.eqTransM q(Matrix.det_fin_zero) crr.mkOne
   | .succ n _pf => do
     trace[norm.Matrix.Det] "evalMatrixDetFinApply: {M}"
@@ -213,7 +214,8 @@ def evalMatrixDetFinApply {n' : Q(ℕ)} {R : Q(Type u)}
     let f : Q(Fin ($n).succ → $R) :=
       q(fun j => (-1) ^ (j : ℕ) * $M 0 j * Matrix.det ($M' j))
     let resEmpty : r q(Finset.empty.sum $f) ← MResultClass.eqTransM q(Finset.sum_empty) crr.mkZero
-    let res : r _ ← NormNum.evalFinsetBigop (α := q(Fin ($n).succ)) (β := R) q(Finset.sum) f
+    let res : r _ ← RoiNormNumBigop.NormNum.evalFinsetBigop
+      (α := q(Fin ($n).succ)) (β := R) q(Finset.sum) f
       (fun j => do
         let res ← evalDetTerm n M instCSrR instCRR h crr evalMatrix evalMatrixDet j
         MResultClass.eqTransM q(rfl) res) -- TODO: why do we need an extra `rfl`?
@@ -342,7 +344,7 @@ def evalMatrixDetDiagonal {n' : Q(ℕ)} {R : Q(Type u)}
     (crr : CommRingResult m r R) :
     m (r q(Matrix.det (Matrix.diagonal $s))) :=
   withTraceNode `norm.Matrix.Det (return m!"{·.emoji} determinant of: Matrix.diagonal {s}") do
-  let res ← NormNum.evalFinsetBigop
+  let res ← RoiNormNumBigop.NormNum.evalFinsetBigop
     _
     q(fun i => $s i)
     (fun i => do MResultClass.eqTransM q(rfl) (←normVecCons s i))
