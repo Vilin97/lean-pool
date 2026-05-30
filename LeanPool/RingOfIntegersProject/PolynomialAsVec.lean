@@ -9,9 +9,9 @@ import Mathlib.Tactic.FinCases
 
 variable {R : Type*}
 
-namespace Polynomial
-
 section Semiring
+
+namespace Polynomial
 
 variable [Semiring R]
 
@@ -137,9 +137,13 @@ lemma toVec_X_add_C (x : R) : toVec 2 (X + C x) = ![x, 1] := by
     rintro rfl
     simp at hi
 
+end Polynomial
+
 end Semiring
 
 section Ring
+
+namespace Polynomial
 
 variable [Ring R]
 
@@ -149,6 +153,6 @@ variable [Ring R]
   simp only [toVec]
   rw [sub_eq_add_neg X, ← _root_.map_one C, ← _root_.map_neg C (1 : R), coeff_X_add_C_pow]
 
-end Ring
-
 end Polynomial
+
+end Ring
