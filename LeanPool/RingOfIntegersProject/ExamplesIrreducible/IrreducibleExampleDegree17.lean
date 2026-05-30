@@ -31,8 +31,6 @@ local notation "T" => (X^17
 
 local notation "l" => [1, 0, -3, 3, 5, -7, -3, 12, -3, -11, 8, 6, -8, -1, 5, -1, -2, 1]
 
-lemma T_ofList' : T = ofList l := by norm_num; ring
-
 /-- Auxiliary declaration for the worked example. -/
 instance hp3 : Fact (Nat.Prime 3) := fact_iff.2 (by norm_num)
 /-- Auxiliary declaration for the worked example. -/
@@ -266,6 +264,8 @@ def P7P2 : CertificateIrreducibleZModOfList' 7 10 2 2 [4, 2, 5, 3, 5, 5, 3, 4, 3
  hhz := by decide
  hhn := by decide
  hgcd := by decide
+
+lemma T_ofList' : T = ofList l := by norm_num; ring
 
 /-- Auxiliary declaration for the worked example. -/
 noncomputable def C : IrreducibleCertificateIntPolynomial T l where

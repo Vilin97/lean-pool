@@ -296,9 +296,6 @@ def Table : Fin 8 → Fin 8 → List ℤ :=
 lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) :=
   by decide +kernel
 
-lemma hroot_mem : θ ∈ O := by
-  refine root_in_subalgebra_lists T l BQ ![0, 1, 0, 0, 0, 0, 0, 0] [] (by decide +kernel)
-
 /-- Auxiliary declaration for the worked example. -/
 instance hp2 : Fact (Nat.Prime 2) := fact_iff.2 (by norm_num)
 /-- Auxiliary declaration for the worked example. -/
@@ -360,6 +357,9 @@ noncomputable def D : CertificateDedekindAlmostAllLists T l [2] where
   fin_cases hp
   · exact satisfiesDedekindCriterion_of_certificate_lists T l 3 T_ofList CD3
   · exact satisfiesDedekindCriterion_of_certificate_lists T l 5 T_ofList CD5
+
+lemma hroot_mem : θ ∈ O := by
+  refine root_in_subalgebra_lists T l BQ ![0, 1, 0, 0, 0, 0, 0, 0] [] (by decide +kernel)
 
 /-- Auxiliary declaration for the worked example. -/
 noncomputable def M2 : MaximalOrderCertificateWLists 2 O Om hm where

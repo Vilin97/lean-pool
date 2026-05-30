@@ -234,9 +234,6 @@ def Table : Fin 6 → Fin 6 → List ℤ :=
 lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) :=
   by decide +kernel
 
-lemma hroot_mem : θ ∈ O := by
-  refine root_in_subalgebra_lists T l BQ ![0, 1, 0, 0, 0, 0] [] (by decide +kernel)
-
 /-- Auxiliary declaration for the worked example. -/
 instance hp449 : Fact (Nat.Prime 449) := fact_iff.2 (by norm_num)
 /-- Auxiliary declaration for the worked example. -/
@@ -397,6 +394,10 @@ noncomputable def M449 : MaximalOrderCertificateOfUnramifiedLists 449 O Om hm wh
  w_ind := ![0, 1, 2, 3, 4, 5]
  hindw := by decide +kernel
  hwFrobComp := by decide +kernel
+
+lemma hroot_mem : θ ∈ O := by
+  refine root_in_subalgebra_lists T l BQ ![0, 1, 0, 0, 0, 0] [] (by decide +kernel)
+
 /-- Auxiliary declaration for the worked example. -/
 noncomputable def M2 : MaximalOrderCertificateWLists 2 O Om hm where
  m := 2
