@@ -45,7 +45,8 @@ noncomputable def to_basic_segments {u v : ℝ²} : Chain u v → Finset Segment
     | Chain.basic              => {to_segment u v}
     | @Chain.join _ w _ _ C    => to_basic_segments C ∪ {to_segment u w}
 
-noncomputable def glue_chains {u v w : ℝ²} (hCollinear : colin u v w) : Chain u v → Chain v w → Chain u w
+noncomputable def glue_chains {u v w : ℝ²} (hCollinear : colin u v w)
+    : Chain u v → Chain v w → Chain u w
     | Chain.basic, C      => Chain.join hCollinear C
     | Chain.join h C', C  => Chain.join ⟨hCollinear.1, interior_left_trans h.2 hCollinear.2⟩ (glue_chains (sub_collinear_right hCollinear h.2) C' C)
 
@@ -321,7 +322,7 @@ lemma avoiding_segment_set_sub_right {X : Finset ℝ²} {A : Set ℝ²} {S : Seg
 --         have hbB : b ∈ boundary S := by
 --           rw [boundary, Set.mem_diff]
 --           refine ⟨hLS (corner_in_closed_hull (i := ⟨1, by omega⟩)), hb⟩
---         simp only [boundary_seg (segment_set_vertex_distinct (basic_avoiding_segment_set_sub hS)),
+-- simp only [boundary_seg (segment_set_vertex_distinct (basic_avoiding_segment_set_sub hS)),
 --             coe_image, coe_univ, Set.image_univ, Set.mem_range] at hbB haB
 --         have ⟨i, hai⟩ := haB
 --         have ⟨j, hbj⟩ := hbB
@@ -572,7 +573,8 @@ lemma isPurple_two_mod_function : two_mod_function (isPurple v) := by
   unfold two_mod_function
   intro x y z hColin
   have h := no_Color_lines (to_segment x z) v
-  --In order to use the no color lines, we need that all our points are in the closed hull, to prove this was slightly frustrating
+  -- In order to use the no color lines, we need that all our points are in the closed hull, to
+  -- prove this was slightly frustrating
   have hhelpz : z = (to_segment x z) 1  := by rfl
   have hhelpx : x = (to_segment x z) 0  := by rfl
   have hx : x ∈ closed_hull (to_segment x z) := by  nth_rewrite 2[hhelpx] ; exact corner_in_closed_hull
