@@ -30,7 +30,8 @@ local notation "θ" => Adj.root
 lemma T_ofList : ofList l = T := by
   rw [T_def]; norm_num; ring
 
--- We build the subalgebra with integral basis [1, a, 1/2*a^2, 1/4*a^3 - 1/2*a, 1/12*a^4 + 1/12*a^3 + 1/6*a^2 + 1/6*a]
+-- We build the subalgebra with integral basis [1, a, 1/2*a^2, 1/4*a^3 - 1/2*a, 1/12*a^4 + 1/12*a^3
+-- + 1/6*a^2 + 1/6*a]
 
 noncomputable def BQ : SubalgebraBuilderLists 5 ℤ  ℚ K T l where
  d :=  12
@@ -44,7 +45,11 @@ noncomputable def BQ : SubalgebraBuilderLists 5 ℤ  ℚ K T l where
 ![![0, 0, 1, 0, 0],![0, 1, 0, 2, 0],![0, -1, -1, -1, 3],![12, 7, 0, 9, 0],![4, 3, -2, 0, 11]],
 ![![0, 0, 0, 1, 0],![0, -1, -2, -1, 3],![12, 7, 0, 9, 0],![0, 2, -1, -4, 12],![40, 26, 3, 33, 5]],
 ![![0, 0, 0, 0, 1],![8, 5, 0, 7, 1],![4, 3, -2, 0, 11],![40, 26, 3, 33, 5],![32, 24, -5, 16, 44]]]
- s := ![![[], [], [], [], []],![[], [], [], [], [-12]],![[], [], [], [-18], [-6, -6]],![[], [], [-18], [0, -9], [-60, -3, -3]],![[], [-12], [-6, -6], [-60, -3, -3], [-48, -25, -2, -1]]]
+ s := ![![[], [], [], [], []],
+   ![[], [], [], [], [-12]],
+   ![[], [], [], [-18], [-6, -6]],
+   ![[], [], [-18], [0, -9], [-60, -3, -3]],
+   ![[], [-12], [-6, -6], [-60, -3, -3], [-48, -25, -2, -1]]]
  h := Adj
  honed := by decide +kernel
  hd := by norm_num
@@ -96,7 +101,8 @@ def Table : Fin 5 → Fin 5 → List ℤ :=
  ![[0, 0, 0, 1, 0], [0, -1, -2, -1, 3], [12, 7, 0, 9, 0], [0, 2, -1, -4, 12], [40, 26, 3, 33, 5]],
  ![[0, 0, 0, 0, 1], [8, 5, 0, 7, 1], [4, 3, -2, 0, 11], [40, 26, 3, 33, 5], [32, 24, -5, 16, 44]]]
 
-lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) := by decide +kernel
+lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) :=
+  by decide +kernel
 
 lemma hroot_mem : θ ∈ O := by
   refine root_in_subalgebra_lists T l BQ ![0, 1, 0, 0, 0] [] (by decide +kernel)
@@ -129,9 +135,9 @@ noncomputable def D : CertificateDedekindAlmostAllLists T l [2, 3] where
  hsub := by decide +kernel
  hp := by
   intro i; fin_cases i
-  exact hp2.out
-  exact hp3.out
-  exact hp5.out
+  · exact hp2.out
+  · exact hp3.out
+  · exact hp5.out
  a := [-44544000000, 6144000000, 3840000000, -768000000]
  b := [-7372800000, 15052800000, -2457600000, -768000000, 153600000]
  hab := by decide
@@ -211,13 +217,17 @@ noncomputable def M3 : MaximalOrderCertificateWLists 3 O Om hm where
  w1 := ![1]
  w2 := ![0, 1, 0, 0]
  a := ![![343],![93],![309],![294],![255]]
- c := ![![168, 303, -12, -150],![40, 33, 0, -18],![144, 199, -6, -102],![144, 270, -8, -132],![120, 195, -6, -98]]
+ c := ![![168, 303, -12, -150],
+   ![40, 33, 0, -18],
+   ![144, 199, -6, -102],
+   ![144, 270, -8, -132],
+   ![120, 195, -6, -98]]
  hmulw := by decide +kernel
  ac_indw := ![Sum.inl 0, Sum.inr 0, Sum.inr 1, Sum.inr 2, Sum.inr 3]
  hacindw := by decide
 
 
- instance : Fact $ (Irreducible (map (algebraMap ℤ ℚ) T)) where
+instance : Fact <| (Irreducible (map (algebraMap ℤ ℚ) T)) where
   out := (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map (T_monic)).1 T_irreducible
 
 theorem O_ringOfIntegers : O = integralClosure ℤ K := by
@@ -225,8 +235,8 @@ theorem O_ringOfIntegers : O = integralClosure ℤ K := by
   intro p hp
   by_cases hc : p ∈ [2, 3]
   · fin_cases hc
-    exact pMaximal_of_MaximalOrderCertificateWLists 2 O Om hm M2
-    exact pMaximal_of_MaximalOrderCertificateWLists 3 O Om hm M3
+    · exact pMaximal_of_MaximalOrderCertificateWLists 2 O Om hm M2
+    · exact pMaximal_of_MaximalOrderCertificateWLists 3 O Om hm M3
   · haveI : Fact (Nat.Prime p) := fact_iff.2 hp
     refine piMaximal_of_root_in_order_of_satisfiesDedekindCriterion_int Adj T_monic hm ?_ hroot_mem
      (satisfiesDedekindAlmostAllLists_of_certificate T l T_ofList [2, 3] D p hp hc)

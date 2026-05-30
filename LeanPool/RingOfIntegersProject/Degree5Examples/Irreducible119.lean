@@ -16,7 +16,7 @@ local notation "l" => [-3600, 0, -150, -75, 0, 1]
 
 lemma T_ofList' : T = ofList l := by norm_num; ring
 
-instance hp7' : Fact $ Nat.Prime 7 := fact_iff.2 (by norm_num)
+instance hp7' : Fact <| Nat.Prime 7 := fact_iff.2 (by norm_num)
 
 def P7P0 : CertificateIrreducibleZModOfList' 7 5 2 2 [5, 0, 4, 2, 0, 1] where
  m := 1
@@ -29,8 +29,16 @@ def P7P0 : CertificateIrreducibleZModOfList' 7 5 2 2 [5, 0, 4, 2, 0, 1] where
  bit := ![1, 1, 1]
  hbits := by decide
  h := ![[0, 1], [3, 0, 3, 4, 3], [5, 2, 3, 3, 2], [1, 2, 5, 0, 1], [5, 2, 3, 0, 1], [0, 1]]
- g := ![![[5, 0, 1], []],![[0, 4, 6, 4, 4, 3, 2, 6], [3, 2, 6, 1, 5, 3, 3, 6]],![[6, 5, 6, 3, 3, 4, 3, 4], [6, 5, 4, 3, 6, 4, 1, 1]],![[6, 1, 2, 3, 0, 5, 4, 1], [3, 6, 6, 3, 2, 6, 0, 1]],![[0, 4, 0, 1, 5, 2, 5, 4], [4, 2, 6, 0, 2, 0, 0, 1]]]
- h' := ![![[3, 0, 3, 4, 3], [0, 0, 0, 1], [0, 1]],![[5, 2, 3, 3, 2], [5, 4, 4, 5, 4], [3, 0, 3, 4, 3]],![[1, 2, 5, 0, 1], [4, 6, 3, 2, 4], [5, 2, 3, 3, 2]],![[5, 2, 3, 0, 1], [0, 4, 6, 2, 1], [1, 2, 5, 0, 1]],![[0, 1], [0, 0, 1, 4, 5], [5, 2, 3, 0, 1]]]
+ g := ![![[5, 0, 1], []],
+   ![[0, 4, 6, 4, 4, 3, 2, 6], [3, 2, 6, 1, 5, 3, 3, 6]],
+   ![[6, 5, 6, 3, 3, 4, 3, 4], [6, 5, 4, 3, 6, 4, 1, 1]],
+   ![[6, 1, 2, 3, 0, 5, 4, 1], [3, 6, 6, 3, 2, 6, 0, 1]],
+   ![[0, 4, 0, 1, 5, 2, 5, 4], [4, 2, 6, 0, 2, 0, 0, 1]]]
+ h' := ![![[3, 0, 3, 4, 3], [0, 0, 0, 1], [0, 1]],
+   ![[5, 2, 3, 3, 2], [5, 4, 4, 5, 4], [3, 0, 3, 4, 3]],
+   ![[1, 2, 5, 0, 1], [4, 6, 3, 2, 4], [5, 2, 3, 3, 2]],
+   ![[5, 2, 3, 0, 1], [0, 4, 6, 2, 1], [1, 2, 5, 0, 1]],
+   ![[0, 1], [0, 0, 1, 4, 5], [5, 2, 3, 0, 1]]]
  hs := by decide
  hz := by decide
  hmul := by decide
@@ -63,8 +71,9 @@ noncomputable def C : IrreducibleCertificateIntPolynomial T l where
   | 0 => ![5]
  hl := by decide
  hirr := by
-  intro i; intro j
-  fin_cases i <;> fin_cases j
+  intro i j
+  fin_cases i
+  fin_cases j
   · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P7P0
  hm := by decide
  hprod := by decide +kernel

@@ -30,7 +30,8 @@ local notation "θ" => Adj.root
 lemma T_ofList : ofList l = T := by
   rw [T_def]; norm_num; ring
 
--- We build the subalgebra with integral basis [1, a, a^2, 1/26*a^3 - 2/13*a^2 - 1/26*a + 6/13, 1/312*a^4 - 1/78*a^3 - 35/104*a^2 + 71/156*a + 1/3]
+-- We build the subalgebra with integral basis [1, a, a^2, 1/26*a^3 - 2/13*a^2 - 1/26*a + 6/13,
+-- 1/312*a^4 - 1/78*a^3 - 35/104*a^2 + 71/156*a + 1/3]
 
 noncomputable def BQ : SubalgebraBuilderLists 5 ℤ  ℚ K T l where
  d :=  312
@@ -38,13 +39,48 @@ noncomputable def BQ : SubalgebraBuilderLists 5 ℤ  ℚ K T l where
  htr := rfl
  hofL := T_ofList.symm
  hm := rfl
- B := ![![312, 0, 0, 0, 0], ![0, 312, 0, 0, 0], ![0, 0, 312, 0, 0], ![144, -12, -48, 12, 0], ![104, 142, -105, -4, 1]]
- a := ![ ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 0],![0, 0, 1, 0, 0],![0, 0, 0, 1, 0],![0, 0, 0, 0, 1]],
-![![0, 1, 0, 0, 0],![0, 0, 1, 0, 0],![-12, 1, 4, 26, 0],![-4, -5, 4, 0, 12],![4, -2, -1, -8, -4]],
-![![0, 0, 1, 0, 0],![-12, 1, 4, 26, 0],![-152, -138, 121, 104, 312],![0, -24, -1, 8, -48],![28, 51, -34, 6, -80]],
-![![0, 0, 0, 1, 0],![-4, -5, 4, 0, 12],![0, -24, -1, 8, -48],![-8, 6, 2, 13, 18],![-2, -3, 6, -10, 28]],
-![![0, 0, 0, 0, 1],![4, -2, -1, -8, -4],![28, 51, -34, 6, -80],![-2, -3, 6, -10, 28],![-1, -18, 7, -11, 6]]]
- s := ![![[], [], [], [], []],![[], [], [], [], [-312]],![[], [], [], [-3744], [1248, -312]],![[], [], [-3744], [1152, -144], [780, 96, -12]],![[], [-312], [1248, -312], [780, 96, -12], [-1274, 169, 8, -1]]]
+ B := ![![312, 0, 0, 0, 0],
+   ![0, 312, 0, 0, 0],
+   ![0, 0, 312, 0, 0],
+   ![144, -12, -48, 12, 0],
+   ![104, 142, -105, -4, 1]]
+ a :=
+   ![
+     ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 0],![0, 0, 1, 0, 0],![0, 0, 0, 1, 0],![0, 0, 0, 0, 1]],
+     ![
+       ![0, 1, 0, 0, 0],
+       ![0, 0, 1, 0, 0],
+       ![-12, 1, 4, 26, 0],
+       ![-4, -5, 4, 0, 12],
+       ![4, -2, -1, -8, -4]
+     ],
+     ![
+       ![0, 0, 1, 0, 0],
+       ![-12, 1, 4, 26, 0],
+       ![-152, -138, 121, 104, 312],
+       ![0, -24, -1, 8, -48],
+       ![28, 51, -34, 6, -80]
+     ],
+     ![
+       ![0, 0, 0, 1, 0],
+       ![-4, -5, 4, 0, 12],
+       ![0, -24, -1, 8, -48],
+       ![-8, 6, 2, 13, 18],
+       ![-2, -3, 6, -10, 28]
+     ],
+     ![
+       ![0, 0, 0, 0, 1],
+       ![4, -2, -1, -8, -4],
+       ![28, 51, -34, 6, -80],
+       ![-2, -3, 6, -10, 28],
+       ![-1, -18, 7, -11, 6]
+     ]
+   ]
+ s := ![![[], [], [], [], []],
+   ![[], [], [], [], [-312]],
+   ![[], [], [], [-3744], [1248, -312]],
+   ![[], [], [-3744], [1152, -144], [780, 96, -12]],
+   ![[], [-312], [1248, -312], [780, 96, -12], [-1274, 169, 8, -1]]]
  h := Adj
  honed := by decide +kernel
  hd := by norm_num
@@ -90,13 +126,34 @@ instance OmFinite : Module.Finite ℤ Om := Module.Finite.of_basis B'
 noncomputable def timesTableO : TimesTable (Fin 5) ℤ O :=
   timesTableOfSubalgebraBuilderLists T l BQ
 def Table : Fin 5 → Fin 5 → List ℤ :=
- ![ ![[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1]],
- ![[0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [-12, 1, 4, 26, 0], [-4, -5, 4, 0, 12], [4, -2, -1, -8, -4]],
- ![[0, 0, 1, 0, 0], [-12, 1, 4, 26, 0], [-152, -138, 121, 104, 312], [0, -24, -1, 8, -48], [28, 51, -34, 6, -80]],
- ![[0, 0, 0, 1, 0], [-4, -5, 4, 0, 12], [0, -24, -1, 8, -48], [-8, 6, 2, 13, 18], [-2, -3, 6, -10, 28]],
- ![[0, 0, 0, 0, 1], [4, -2, -1, -8, -4], [28, 51, -34, 6, -80], [-2, -3, 6, -10, 28], [-1, -18, 7, -11, 6]]]
+ ![
+   ![[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1]],
+   ![[0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [-12, 1, 4, 26, 0], [-4, -5, 4, 0, 12], [4, -2, -1, -8, -4]],
+   ![
+     [0, 0, 1, 0, 0],
+     [-12, 1, 4, 26, 0],
+     [-152, -138, 121, 104, 312],
+     [0, -24, -1, 8, -48],
+     [28, 51, -34, 6, -80]
+   ],
+   ![
+     [0, 0, 0, 1, 0],
+     [-4, -5, 4, 0, 12],
+     [0, -24, -1, 8, -48],
+     [-8, 6, 2, 13, 18],
+     [-2, -3, 6, -10, 28]
+   ],
+   ![
+     [0, 0, 0, 0, 1],
+     [4, -2, -1, -8, -4],
+     [28, 51, -34, 6, -80],
+     [-2, -3, 6, -10, 28],
+     [-1, -18, 7, -11, 6]
+   ]
+ ]
 
-lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) := by decide +kernel
+lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) :=
+  by decide +kernel
 
 lemma hroot_mem : θ ∈ O := by
   refine root_in_subalgebra_lists T l BQ ![0, 1, 0, 0, 0] [] (by decide +kernel)
@@ -130,10 +187,10 @@ noncomputable def D : CertificateDedekindAlmostAllLists T l [2, 3, 13] where
  hsub := by decide +kernel
  hp := by
   intro i; fin_cases i
-  exact hp2.out
-  exact hp3.out
-  exact hp5.out
-  exact hp13.out
+  · exact hp2.out
+  · exact hp3.out
+  · exact hp5.out
+  · exact hp13.out
  a := [772059600000000, 43462575000000, -9582300000000, -5817825000000]
  b := [626956200000000, -417925170000000, -20328165000000, 1916460000000, 1163565000000]
  hab := by decide
@@ -239,7 +296,7 @@ noncomputable def M13 : MaximalOrderCertificateOfUnramifiedLists 13 O Om hm wher
  hindw := by decide
  hwFrobComp := by decide +kernel
 
- instance : Fact $ (Irreducible (map (algebraMap ℤ ℚ) T)) where
+instance : Fact <| (Irreducible (map (algebraMap ℤ ℚ) T)) where
   out := (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map (T_monic)).1 T_irreducible
 
 theorem O_ringOfIntegers : O = integralClosure ℤ K := by
@@ -247,9 +304,9 @@ theorem O_ringOfIntegers : O = integralClosure ℤ K := by
   intro p hp
   by_cases hc : p ∈ [2, 3, 13]
   · fin_cases hc
-    exact pMaximal_of_MaximalOrderCertificateWLists 2 O Om hm M2
-    exact pMaximal_of_MaximalOrderCertificateWLists 3 O Om hm M3
-    exact pMaximal_of_MaximalOrderCertificateOfUnramifiedLists 13 O Om hm M13
+    · exact pMaximal_of_MaximalOrderCertificateWLists 2 O Om hm M2
+    · exact pMaximal_of_MaximalOrderCertificateWLists 3 O Om hm M3
+    · exact pMaximal_of_MaximalOrderCertificateOfUnramifiedLists 13 O Om hm M13
   · haveI : Fact (Nat.Prime p) := fact_iff.2 hp
     refine piMaximal_of_root_in_order_of_satisfiesDedekindCriterion_int Adj T_monic hm ?_ hroot_mem
      (satisfiesDedekindAlmostAllLists_of_certificate T l T_ofList [2, 3, 13] D p hp hc)
