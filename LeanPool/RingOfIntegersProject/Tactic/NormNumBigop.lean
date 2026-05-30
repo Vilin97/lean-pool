@@ -38,7 +38,7 @@ In particular, we can't use the plugin on sums containing variables.
 
 namespace Mathlib.Meta
 
-open Lean hiding Rat mkRat
+open Lean
 open Meta
 open Qq
 open NormTactic
@@ -107,7 +107,7 @@ match (e, e.constName, a) with
   | .succ n' _pf => pure <| (List.ProveNilOrConsResult.cons
       q(0)
       (q(List.map Nat.succ (List.range $n')))
-      (q(List.range_succ_eq_map $n'))).uncheckedCast (q(List.range ($n' + 1)) : Q(List ℕ)) s
+      (q(List.range_succ_eq_map))).uncheckedCast (q(List.range ($n' + 1)) : Q(List ℕ)) s
 | (_, `List.finRange, #[(n : Q(ℕ))]) => do
   match ← Nat.unifyZeroOrSucc n with
   | .zero _pf => do
@@ -115,7 +115,7 @@ match (e, e.constName, a) with
   | .succ n' _pf => pure <| ((List.ProveNilOrConsResult.cons
       q(0 : Fin (Nat.succ $n'))
       (q(List.map Fin.succ (List.finRange $n')))
-      (q(List.finRange_succ_eq_map $n'))).uncheckedCast
+      (q(List.finRange_succ))).uncheckedCast
         (q(List.finRange (Nat.succ $n')) : Q(List (Fin (Nat.succ $n'))))
         s)
 | (.const `List.map [v, _], _, #[β, _, f, xxs]) => do
@@ -126,7 +126,7 @@ match (e, e.constName, a) with
   | .nil pf => pure <| (.nil
     (q($pf ▸ List.map_nil) : Q(List.map $f $xxs = [])))
   | .cons x xs pf => pure <| (.cons q($f $x) q(List.map $f $xs)
-    (q($pf ▸ List.map_cons $f $x $xs) : Q(List.map $f $xxs = $f $x :: List.map $f $xs)))
+    (q($pf ▸ List.map_cons) : Q(List.map $f $xxs = $f $x :: List.map $f $xs)))
 | (_, fn, args) => throwError "List.proveNilOrCons: unsupported List expression {s} ({fn}, {args})"
 
 /-- This represents the result of trying to determine whether the given expression
@@ -154,9 +154,9 @@ def Multiset.ProveZeroOrConsResult.eq_trans {α : Q(Type u)} {s t : Q(Multiset $
 | .zero pf => .zero q(Eq.trans $eq $pf)
 | .cons a s' pf => .cons a s' q(Eq.trans $eq $pf)
 
-lemma Multiset.insert_eq_cons {α : Type _} [DecidableEq α] (a : α) (s : Multiset α) :
+lemma Multiset.insert_eq_cons {α : Type _} (a : α) (s : Multiset α) :
   insert a s = Multiset.cons a s :=
-by ext; simp
+rfl
 
 /-- Either show the expression `s : Q(Multiset α)` is Zero, or remove one element from it.
 Fails if we cannot determine which of the alternatives apply to the expression.
@@ -218,8 +218,8 @@ by ext; simp
 
 lemma Finset.range_succ_eq_cons (n' : ℕ) :
   Finset.range (Nat.succ n') =
-    Finset.cons n' (Finset.range n') Finset.not_mem_range_self :=
-by rw [Finset.range_succ, Finset.insert_eq_cons]
+    Finset.cons n' (Finset.range n') Finset.notMem_range_self :=
+by rw [Finset.range_add_one, Finset.insert_eq_cons]
 
 lemma Finset.univ_eq_elems {α : Type _} [Fintype α] (elems : Finset α)
     (complete : ∀ x : α, x ∈ elems) :
@@ -251,7 +251,7 @@ match Expr.getAppFnArgs s with
   | .succ n' _pf => pure <| ((Finset.ProveEmptyOrConsResult.cons
       n'
       (q(Finset.range $n'))
-      (q(@Finset.not_mem_range_self $n'))
+      (q(@Finset.notMem_range_self $n'))
       (q(Finset.range_succ_eq_cons $n'))).uncheckedCast
         (q(Finset.range (Nat.succ $n')) : Q(Finset ℕ))
         s)
@@ -277,16 +277,17 @@ protected lemma Finset.prod_empty {β α : Type _} [CommSemiring β] (f : α →
 
 /-- Evaluate a big operator applied to a finset by repeating `proveEmptyOrCons` until
 we exhaust all elements of the set. -/
-partial def evalFinsetBigop [Monad m] [MonadLiftT MetaM m] [MResultClass m r]
-    {α : Q(Type u)} {β : Q(Type v)}
+partial def evalFinsetBigop {v : Level} {β : Q(Type v)} {r : (e : Q($β)) → Type}
+    [Monad m] [MonadLiftT MetaM m] [MResultClass m β r]
+    {u : Level} {α : Q(Type u)}
     (op : Q(Finset $α → ($α → $β) → $β))
     (f : Q($α → $β))
     (eval_f : (a : Q($α)) → m (r (q($f $a) : Q($β))))
     (res_empty : r q($op Finset.empty $f))
     (res_cons : {a : Q($α)} -> {s' : Q(Finset $α)} -> {h : Q($a ∉ $s')} ->
-      r (α := β) q($f $a) -> r (α := β) q($op $s' $f) ->
-      m (r (α := β) q($op (Finset.cons $a $s' $h) $f))) :
-    (s : Q(Finset $α)) → m (r (α := β) q($op $s $f))
+      r q($f $a) -> r q($op $s' $f) ->
+      m (r q($op (Finset.cons $a $s' $h) $f))) :
+    (s : Q(Finset $α)) → m (r q($op $s $f))
 | s => do
   match ← Finset.proveEmptyOrCons s with
   | .empty pf => MResultClass.eqTransM q(congr_fun (congr_arg _ $pf) _) res_empty
@@ -316,13 +317,13 @@ partial def evalFinsetProd : NormNumExt where eval {u β} e := do
   let n : Q(ℕ) := .lit (.natVal 1)
   let pf : Q(IsNat (Finset.prod ∅ $f) $n) := q(@Finset.prod_empty $β $α $instCS $f)
   let res_empty := Result.isNat _ n pf
-  let eval_f : (a : Q($α)) → MetaM (Result (q($f $a) : Q($β))) := fun a => NormNum.derive (q($f $a) : Q($β))
+  let eval_f : (a : Q($α)) → MetaM (Result (q($f $a) : Q($β))) :=
+    fun a => NormNum.derive (q($f $a) : Q($β))
 
   evalFinsetBigop q(Finset.prod) f eval_f res_empty
     (fun {a s' h} res_fa res_prod_s' => (do
       let fa : Q($β) := Expr.app f a
-      let (.some res) := evalMul.core q($fa * Finset.prod $s' $f) q((. * .)) _ _ instS res_fa res_prod_s'
-        | throwError "could not evaluate product"
+      let res ← Result.mul res_fa res_prod_s' (inst := instS)
       let eq : Q(Finset.prod (Finset.cons $a $s' $h) $f = $fa * Finset.prod $s' $f) :=
         q(Finset.prod_cons $h)
       pure <| res.eq_trans eq))
@@ -345,12 +346,19 @@ partial def evalFinsetSum : NormNumExt where eval {u β} e := do
   let n : Q(ℕ) := .lit (.natVal 0)
   let pf : Q(IsNat (Finset.sum ∅ $f) $n) := q(@Finset.sum_empty $β $α $instCS $f)
   let res_empty := Result.isNat _ n pf
-  let eval_f : (a : Q($α)) → MetaM (Result (q($f $a) : Q($β))) := fun a => NormNum.derive (q($f $a) : Q($β))
+  let eval_f : (a : Q($α)) → MetaM (Result (q($f $a) : Q($β))) :=
+    fun a => NormNum.derive (q($f $a) : Q($β))
 
   evalFinsetBigop q(Finset.sum) f eval_f res_empty (fun {a s' h} res_fa res_sum_s' ↦ do
       let fa : Q($β) := Expr.app f a
-      let res : Result _ ← (evalAdd.core q($fa + Finset.sum $s' $f) q((. + .)) _ _ res_fa res_sum_s').getM
+      let res : Result _ ← Result.add res_fa res_sum_s'
       let eq : Q(Finset.sum (Finset.cons $a $s' $h) $f = $fa + Finset.sum $s' $f) :=
         q(Finset.sum_cons $h)
       pure <| res.eq_trans eq)
     s
+
+end NormNum
+
+end Meta
+
+end Mathlib
