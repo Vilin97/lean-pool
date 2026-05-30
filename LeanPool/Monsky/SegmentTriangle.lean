@@ -78,7 +78,7 @@ lemma aux_det₂ {L : ℝ²} (hL : L ≠ 0) (hi : ∃ i, L i = 0) : det₂ L (v 
   fin_cases i <;> (
     simp at hi
     simp [det₂, hi] at hz
-    fin_cases j <;> (simp_all [v])
+    fin_cases j <;> (simp_all [])
   )
 
 -- Maybe useful but not used
@@ -136,7 +136,7 @@ lemma open_segment_sub {L₁ L₂ : Segment} (hsub : ∀ i : Fin 2, L₁ i ∈ c
   have hαx₁ : x₁ ∈ open_simplex 2 := by
     constructor
     have x₁0_pos : x₁ 0 > 0 := by
-      simp [x₁, pos, pos1, pos2]
+      simp [x₁]
       by_contra h
       simp at h
       have p : α₁ 0 = 0 := by
@@ -165,7 +165,7 @@ lemma open_segment_sub {L₁ L₂ : Segment} (hsub : ∀ i : Fin 2, L₁ i ∈ c
       rw [← hL₁₁] at hL₁₀
       exact hL₁ hL₁₀
     have x₁1_pos : x₁ 1 > 0 := by
-      simp [x₁, pos, pos1, pos2]
+      simp [x₁]
       by_contra h
       simp only [Fin.isValue, not_lt] at h
       have t : α₁ 1 = 0 := by
@@ -196,12 +196,12 @@ lemma open_segment_sub {L₁ L₂ : Segment} (hsub : ∀ i : Fin 2, L₁ i ∈ c
       exact hL₁₀
     · exact fun i ↦ by
         fin_cases i
-        all_goals (simp [x₁, x₁0_pos, x₁1_pos, pos, pos1, pos2])
-    · simp only [x₁, hα.2, hα₁.2, hα₂.2]
+        all_goals (simp [x₁, x₁0_pos, x₁1_pos])
+    · simp only [x₁]
       rcases hα with ⟨_,h₂⟩
       rcases hα₁ with ⟨hα₁₁,hα₁₂⟩
       rcases hα₂ with ⟨hα₂₁,hα₂₂⟩
-      simp [← add_assoc, add_comm, ← mul_add, add_assoc]
+      simp [← add_assoc, ← mul_add, add_assoc]
       rw [Fin.sum_univ_two] at hα₁₂ hα₂₂ h₂
       calc
         α 0 * α₁ 0 + (α 1 * α₂ 0 + (α 0 * α₁ 1 + α 1 * α₂ 1)) = α 0 * (α₁ 0 + α₁ 1) + α 1 * (α₂ 0 + α₂ 1) := by ring
@@ -379,7 +379,7 @@ lemma seg_vec_co {L : Segment} {x y : ℝ²} (hx : x ∈ closed_hull L) (hy : y 
   have ⟨a₁, _, hx⟩ := hx
   have ⟨a₂, _, hy⟩ := hy
   use a₂ - a₁
-  simp [←hx, ←hy, smul_sub, sub_smul]
+  simp [←hx, ←hy, sub_smul]
 
 
 lemma open_seg_nonempty (L : Segment) : ∃ x, x ∈ open_hull L :=
@@ -541,7 +541,7 @@ lemma Tco_sum_val {T : Triangle} (hdet : det T ≠ 0) {α : Fin 3 → ℝ} (hα 
 lemma Tco_sum_self {T : Triangle} (hdet : det T ≠ 0) (x : ℝ²) :
     ∑ i, (Tco T x i) • (T i) = x := by
   apply smul_cancel hdet
-  simp [smul_sum, smul_smul, Fin.sum_univ_three, mul_div_cancel₀ _ hdet, Tco]
+  simp [smul_smul, Fin.sum_univ_three, mul_div_cancel₀ _ hdet, Tco]
   simp [sign_seg, det, Tside]
   exact PiLp.ext (fun i ↦ by fin_cases i <;> (simp; ring))
 
@@ -599,7 +599,7 @@ lemma closed_side_sub {T : Triangle} {x : ℝ²} {i : Fin 3} (hx : x ∈ closed_
     x ∈ closed_hull T := by
   refine closed_hull_convex ?_ hx
   intro j
-  fin_cases i <;> fin_cases j <;> simp [Tside, simplex_vertex_in_simplex]
+  fin_cases i <;> fin_cases j <;> simp [Tside]
 
 lemma closed_side_sub' {T : Triangle} {i : Fin 3} :
     closed_hull (Tside T i) ⊆ closed_hull T := fun _ ↦ closed_side_sub
@@ -764,7 +764,7 @@ lemma seg_sub_side {T : Triangle} {L : Segment} {x : ℝ²} {i : Fin 3} (hdet : 
           simp only [ht, abs_one]
       rw [abs_mul, hσabs, mul_one]
       refine Eq.trans_le (b := min δ δ') ?_ ?_
-      · simp_all only [abs_eq_self, le_min_iff, and_self]
+      · simp_all only [abs_eq_self, le_min_iff]
         constructor <;> linarith
       · exact min_le_right _ _
   intro y hy
@@ -1957,7 +1957,7 @@ lemma open_hull_segment_around {x y : ℝ²} {ε₁ ε₂ : ℝ} (h₁ : 0 < ε�
   use fun | 0 => ε₂ / (ε₁ + ε₂) | 1 => ε₁ / (ε₁ + ε₂)
   refine ⟨⟨?_,?_⟩ ,?_⟩
   · intro i
-    fin_cases i <;> simp_all [div_pos]
+    fin_cases i <;> simp_all []
   · rw [Fin.sum_univ_two]
     field_simp
     ring
@@ -1981,17 +1981,17 @@ lemma open_hull_segment_around_non_trivial {x y : ℝ²} {ε₁ ε₂ : ℝ}
 lemma real_number_bound_aux {n : ℕ} {f g : Fin n → ℝ}
     (h₁ : ∀ i, 0 < f i) (h₂ : ∀ ε > 0, ∃ i, ε * g i ≤ -f i) : False := by
   revert h₂
-  simp only [gt_iff_lt, imp_false, not_forall, Classical.not_imp, not_exists, not_le]
+  simp only [gt_iff_lt, imp_false, not_forall, not_exists, not_le]
   by_cases hn : n = 0
   · use 1, by linarith
     intro contra
     rw [hn] at contra
     exact Fin.elim0 contra
   · have hN : (image (fun i ↦ |g i|) univ).Nonempty := by
-      simp only [image_nonempty, univ_nonempty, univ_nonempty_iff, ←Fin.pos_iff_nonempty]
+      simp only [image_nonempty, univ_nonempty_iff, ←Fin.pos_iff_nonempty]
       exact Nat.zero_lt_of_ne_zero hn
     have hN₂ : (image (fun i ↦ f i) univ).Nonempty := by
-      simp only [image_nonempty, univ_nonempty, univ_nonempty_iff, ←Fin.pos_iff_nonempty]
+      simp only [image_nonempty, univ_nonempty_iff, ←Fin.pos_iff_nonempty]
       exact Nat.zero_lt_of_ne_zero hn
     let M := Finset.max' (Finset.image (fun i ↦ |g i|)  (univ : Finset (Fin n))) hN
     let M₂ := Finset.min' (Finset.image (fun i ↦ f i)  (univ : Finset (Fin n))) hN₂
@@ -2030,7 +2030,7 @@ lemma real_number_bound_aux {n : ℕ} {f g : Fin n → ℝ}
       by_cases hgi : 0 ≤ g i
       · refine lt_of_le_of_lt' (b := 0) ?_ ?_
         · exact (mul_nonneg_iff_of_pos_left hM₂pos).mpr hgi
-        · simp only [mul_neg, gt_iff_lt, Left.neg_neg_iff]
+        · simp only [mul_neg, Left.neg_neg_iff]
           refine mul_pos (by linarith) (h₁ i)
       · refine lt_of_le_of_lt' (b := - f i * M) ?_ ?_
         · simp_rw [←neg_le_neg_iff (a := M₂ * g i)]

@@ -370,7 +370,7 @@ theorem no_Color_lines
   have vdet1 : v (det xyz) ≥ 1 := by
     have h_det : det xyz =
       (x 0 * y 1 + x 1 * z 0 + y 0 * z 1 - y 1 * z 0 - x 1 * y 0 - x 0 * z 1) := by
-      simp only [det, xyz, Fin.isValue, Fin.sum_univ_three]
+      simp only [det, xyz, Fin.isValue]
       ring
     rw [h_det]
     apply bounded_det
@@ -385,7 +385,7 @@ theorem no_Color_lines
 -- We show next that the coloring of (0,0) is red, (0,1) is green and (1,0) is blue.
 
 lemma red00 : coloring v !₂[0,0] = Color.Red := by
-  simp [coloring, Fin.isValue, map_one, ge_iff_le]
+  simp [coloring, Fin.isValue, map_one]
 
 lemma green01 : coloring v !₂[0,1] = Color.Green := by
   simp [coloring, Fin.isValue, map_one, ge_iff_le]

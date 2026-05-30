@@ -234,9 +234,9 @@ lemma el_boundary_square_triangle_dir {x : ℝ²} (hx : x ∈ boundary unit_squa
             · unfold seg_vec at hL
               fin_cases i <;>(
                 cases' hσ with hσ hσ <;>(
-                  simp [hσ, neg_eq_zero] at hL
+                  simp [hσ] at hL
                   ring_nf at hL
-                  try simp [neg_eq_zero,v] at hL
+                  try simp [neg_eq_zero] at hL
                   linarith [lt_min hδ hδ']
                   ))
         · apply aux_det₂
@@ -588,8 +588,8 @@ lemma square_boundary_pairwise_inter {i : Fin 4} :
   ext x; rw [Set.mem_singleton_iff]
   constructor
   · intro _; ext j
-    fin_cases i <;> fin_cases j <;> simp_all [square_boundary_big, unit_square]
-  · exact fun h ↦ by fin_cases i <;> simp [h, square_boundary_big, unit_square]
+    fin_cases i <;> fin_cases j <;> simp_all [unit_square]
+  · exact fun h ↦ by fin_cases i <;> simp [h, unit_square]
 
 
 lemma square_corner_in_boundary {i : Fin 4} :

@@ -161,7 +161,7 @@ lemma fin_el_bound {n : ℕ} {x : ℝ} {s₁ s₂ : Fin n} (h₁l : x - 1 < s₁
 lemma zig_open_disjoint {n : ℕ} : disjoint_set ((zig_part_cover n) : Set Triangle) open_hull := by
   by_cases nsign : ↑n > 0
   · intro Δ₁ Δ₂ hΔ₁ hΔ₂ hΔneq
-    simp [mem_coe, zig_part_cover] at hΔ₁ hΔ₂
+    simp [zig_part_cover] at hΔ₁ hΔ₂
     have ⟨s₁,hs₁⟩ := hΔ₁
     have ⟨s₂,hs₂⟩ := hΔ₂
     rw [@Set.disjoint_right]
@@ -174,7 +174,7 @@ lemma zig_open_disjoint {n : ℕ} : disjoint_set ((zig_part_cover n) : Set Trian
     have hx₂₀ := hx₂ 0
     have hx₂₂ := hx₂ 2
     · refine hΔneq ?_
-      simp [Tco, sign_seg, set, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₂
+      simp [Tco, sign_seg, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₂
       field_simp [nsign] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₂
       rw [←hs₁, ←hs₂, fin_el_bound (x := ↑n * x.ofLp 1) (s₁ := s₁) (s₂ := s₂)
         (by linarith) (by linarith) (by linarith) (by linarith)]
@@ -185,7 +185,7 @@ lemma zig_open_disjoint {n : ℕ} : disjoint_set ((zig_part_cover n) : Set Trian
 lemma zag_open_disjoint {n : ℕ} : disjoint_set ((zag_part_cover n) : Set Triangle) open_hull := by
   by_cases nsign : ↑n > 0
   · intro Δ₁ Δ₂ hΔ₁ hΔ₂ hΔneq
-    simp [mem_coe, zag_part_cover] at hΔ₁ hΔ₂
+    simp [zag_part_cover] at hΔ₁ hΔ₂
     have ⟨s₁,hs₁⟩ := hΔ₁
     have ⟨s₂,hs₂⟩ := hΔ₂
     rw [@Set.disjoint_right]
@@ -198,7 +198,7 @@ lemma zag_open_disjoint {n : ℕ} : disjoint_set ((zag_part_cover n) : Set Trian
     have hx₂₀ := hx₂ 0
     have hx₂₂ := hx₂ 2
     · refine hΔneq ?_
-      simp [Tco, sign_seg, set, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀'] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₂
+      simp [Tco, sign_seg, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀'] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₂
       ring_nf at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₂
       field_simp [nsign] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₂
       rw [←hs₁, ←hs₂, fin_el_bound (x := x 1 * ↑n) (s₁ := s₁) (s₂ := s₂) (by linarith) (by linarith) (by linarith) (by linarith)]
@@ -214,7 +214,7 @@ lemma zig_zag_open_disjoint {n : ℕ}
     : ∀ a₁ a₂, a₁ ∈ (zig_part_cover n) → a₂ ∈ (zag_part_cover n) → Disjoint (open_hull a₁) (open_hull a₂) := by
   by_cases nsign : ↑n > 0
   · intro Δ₁ Δ₂ hΔ₁ hΔ₂
-    simp [mem_coe, zig_part_cover, zag_part_cover] at hΔ₁ hΔ₂
+    simp [zig_part_cover, zag_part_cover] at hΔ₁ hΔ₂
     have ⟨s₁,hs₁⟩ := hΔ₁
     have ⟨s₂,hs₂⟩ := hΔ₂
     rw [@Set.disjoint_right]
@@ -227,7 +227,7 @@ lemma zig_zag_open_disjoint {n : ℕ}
     have hx₂₀ := hx₂ 0
     have hx₂₁ := hx₂ 1
     have hx₂₂ := hx₂ 2
-    · simp [Tco, sign_seg, set, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀, Δ₀'] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₁ hx₂₂
+    · simp [Tco, sign_seg, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀, Δ₀'] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₁ hx₂₂
       ring_nf at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₁ hx₂₂
       field_simp [nsign] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₁ hx₂₂
       have l := fin_el_bound (x := x 1 * ↑n) (s₁ := s₁) (s₂ := s₂) (by linarith) (by linarith) (by linarith) (by linarith)
@@ -237,7 +237,7 @@ lemma zig_zag_open_disjoint {n : ℕ}
       field_simp [Nat.ne_zero_of_lt nsign]
       ring_nf; norm_num
     · simp [det, translate_triangle, scale_triangle, Δ₀, translate_vector, scale_vector, Nat.ne_zero_of_lt nsign]
-  · simp [Nat.eq_zero_of_not_pos nsign, zag_part_cover, disjoint_set]
+  · simp [Nat.eq_zero_of_not_pos nsign, zag_part_cover]
 
 
 lemma zig_zag_covers_square {n : ℕ} (hn : n ≠ 0)
@@ -265,7 +265,7 @@ lemma zig_zag_covers_square {n : ℕ} (hn : n ≠ 0)
         · rw [closed_triangle_iff]
           · intro i
             fin_cases i <;> (
-              simp [Tco, sign_seg, set, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀, Δ₀'];
+              simp [Tco, sign_seg, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀];
               field_simp [hn]
               ring_nf
               try linarith [hx 0 ]
@@ -288,7 +288,7 @@ lemma zig_zag_covers_square {n : ℕ} (hn : n ≠ 0)
         · rw [closed_triangle_iff]
           · intro i
             fin_cases i <;> (
-              simp [Tco, sign_seg, set, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀, Δ₀'];
+              simp [Tco, sign_seg, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀'];
               field_simp [hn]
               ring_nf
               try linarith [hx 0 ]
@@ -309,7 +309,7 @@ lemma zig_zag_covers_square {n : ℕ} (hn : n ≠ 0)
         · rw [closed_triangle_iff]
           · intro i
             fin_cases i <;> (
-              simp [Tco, sign_seg, set, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀, Δ₀', hx₁];
+              simp [Tco, sign_seg, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀', hx₁];
               field_simp [hn]
               ring_nf
               try linarith [hx 0]
@@ -324,7 +324,7 @@ lemma zig_zag_covers_square {n : ℕ} (hn : n ≠ 0)
       · have hs₀ := hS 0
         have hs₁ := hS 1
         have hs₂ := hS 2
-        simp [Tco, sign_seg, set, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀, Δ₀'] at hs₀ hs₁ hs₂
+        simp [Tco, sign_seg, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀] at hs₀ hs₁ hs₂
         field_simp [hn] at hs₀ hs₁ hs₂
         refine ⟨⟨hs₁, by linarith⟩, ?_, ?_⟩
         · have hnpos : (0 : ℝ) < ↑n := Nat.cast_pos'.mpr (Nat.zero_lt_of_ne_zero hn)
@@ -348,7 +348,7 @@ lemma zig_zag_covers_square {n : ℕ} (hn : n ≠ 0)
       · have hs₀ := hS 0
         have hs₁ := hS 1
         have hs₂ := hS 2
-        simp [Tco, sign_seg, set, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀, Δ₀'] at hs₀ hs₁ hs₂
+        simp [Tco, sign_seg, det, scale_triangle, translate_triangle, scale_triangle, translate_vector, Tside, scale_vector, Δ₀'] at hs₀ hs₁ hs₂
         field_simp [hn] at hs₀ hs₁ hs₂
         conv at hs₀ => ring_nf
         conv at hs₁ => ring_nf

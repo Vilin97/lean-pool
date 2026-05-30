@@ -90,7 +90,7 @@ theorem unit_is_unit_in_prod : id_map '' (open_hull unit_triangle) = regionBetwe
       · intro i
         fin_cases i <;> simp <;> linarith
       · rw [Fin.sum_univ_three]
-        simp [v]
+        simp []
         ring
     · simp only [Fin.sum_univ_three, v]
       simp

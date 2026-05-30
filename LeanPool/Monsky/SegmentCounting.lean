@@ -182,7 +182,7 @@ lemma reverse_chain_basic_segments_disjoint {u v : ℝ²} (C : Chain u v) (huv :
   | @join x y z h₂ C ih =>
       have hyz : y ≠ z := (middle_not_boundary_colin h₂).2
       have hxy : x ≠ y := (middle_not_boundary_colin h₂).1
-      simp [to_basic_segments, reverse_chain, basic_segments_glue, reverse_chain_glue]
+      simp [to_basic_segments, reverse_chain, basic_segments_glue]
       refine ⟨⟨fun h ↦ hxy (congrFun h 1), basic_segments_colin_disjoint2 h₂⟩,
         basic_segments_colin_disjoint_reverse h₂, ih hyz⟩
 
@@ -653,13 +653,13 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
 
   unfold triangulation_basic_segments at hL
   unfold basic_avoiding_segment_set at hL
-  simp only [mem_filter, mem_image, mem_product, mem_filter, mem_product, Prod.exists] at hL
+  simp only [mem_filter, mem_filter] at hL
   rcases hL with ⟨p, q⟩
   unfold avoiding_segment_set at p
-  simp only [mem_filter, mem_image, mem_product, Prod.exists] at p
+  simp only [mem_filter] at p
   rcases p with ⟨a, b⟩
   unfold segment_set at a
-  simp only [mem_image, mem_filter, mem_product, Prod.exists] at a
+  simp only [mem_image, mem_filter, Prod.exists] at a
   rcases a with ⟨c, d, e⟩
   rcases e with ⟨f, g⟩
   rcases f with ⟨m, n⟩
@@ -695,7 +695,7 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
       intro z hz
       have zT : ∃ i : Fin 3,  z = T i := by
         subst L0
-        simp_all only [mem_coe, ne_eq, Fin.isValue, true_and, Set.mem_insert_iff, Set.mem_singleton_iff]
+        simp_all only [ne_eq, Fin.isValue, true_and, Set.mem_insert_iff, Set.mem_singleton_iff]
         cases hz with
         | inl h =>
           subst h
@@ -730,7 +730,7 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
         rw [hCover]
         intro z hz
         subst L1
-        simp_all only [mem_coe, ne_eq, Fin.isValue, true_and, Set.mem_iUnion, exists_prop]
+        simp_all only [mem_coe, ne_eq, Fin.isValue, Set.mem_iUnion, exists_prop]
         apply Exists.intro
         · apply And.intro
           on_goal 2 => {exact hz
@@ -739,7 +739,7 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
       intro z hz
       have zT : ∃ i : Fin 3,  z = T i := by
         subst L1
-        simp_all only [mem_coe, ne_eq, Fin.isValue, and_true, Set.mem_insert_iff, Set.mem_singleton_iff]
+        simp_all only [ne_eq, Fin.isValue, and_true, Set.mem_insert_iff, Set.mem_singleton_iff]
         cases hz with
         | inl h =>
           subst h
@@ -938,7 +938,7 @@ lemma segment_in_interior_or_boundary {Δ : Finset Triangle} (hCover : is_triang
   · have this : ∀ x, x ∈ open_hull L → x ∉ boundary unit_square  := by
       by_contra hcontra
       have hcontra' : ∃ x, x ∈ open_hull L ∩ boundary unit_square := by
-        simp_all only [not_forall, Classical.not_imp, Decidable.not_not, Set.mem_inter_iff]
+        simp_all only [not_forall, Decidable.not_not, Set.mem_inter_iff]
         simp only [exists_prop] at hcontra
         exact hcontra
       have that : closed_hull L ⊆ boundary unit_square := by
@@ -1081,7 +1081,7 @@ lemma segment_sum_splitting (A : Finset Segment) (AVOID : Set ℝ²) (X : Finset
         simp only [basic_avoiding_segment_set, mem_filter] at hLAvoid
         exact hLAvoid.2 y hyX hopen
       · refine avoiding_segment_set_sub (A := AVOID) (hA ?_)
-        simp_all only [Subtype.forall, ne_eq, coe_mem]
+        simp_all only [ne_eq]
     · intro hL
       cases' hL with S hS
       constructor
@@ -1152,7 +1152,7 @@ lemma unit_square_boundary_decomposition (Δ : Finset Triangle) (hCovering : is_
           exact corner_in_closed_hull
         · cases' hp with hp hp <;> (rw [hp]; exact corner_in_closed_hull)
       rw [←hS]
-      fin_cases i <;> (simp only [Fin.zero_eta, Fin.isValue, to_segment])
+      fin_cases i <;> (simp only [to_segment])
       · exact hSub ha
       · exact hSub hb
   · intro hS
@@ -1771,7 +1771,7 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
   rw [h]
   rw [segment_sum_splitting (triangle_boundary T) (triangulation_avoiding_set Δ) (triangulation_points Δ) h1 h2 (isPurple v) (isPurple_two_mod_function v) (isPurple_symm_function v)]
   unfold triangle_boundary
-  simp [Set.biUnion_univ]
+  simp []
   rw [Finset.sum_biUnion _, Fin.sum_univ_three]
   · -- Reduce each side's purple count to a colour computation and apply the pure
     -- 27-case identity, keeping every step within the default heartbeat budget.
