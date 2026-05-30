@@ -13,6 +13,9 @@ import Mathlib.NumberTheory.NumberField.Basic
 import LeanPool.RingOfIntegersProject.Degree3Examples.Irreducible0
 import LeanPool.RingOfIntegersProject.DiscriminantSubalgebraBuilder
 
+namespace RoiDegree3ExamplesNF0
+open RoiDegree3ExamplesIrreducible0
+
 -- Number field with label 3.1.648.1 in the LMFDB
 
 open Polynomial Module
@@ -199,3 +202,5 @@ theorem K_discr : NumberField.discr K = -648 := by
   T_irreducible BQ O_ringOfIntegers]
   rw [T_discr]
   rfl
+
+end RoiDegree3ExamplesNF0

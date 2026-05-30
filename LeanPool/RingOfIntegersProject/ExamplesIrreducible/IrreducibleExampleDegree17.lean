@@ -8,6 +8,8 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 import LeanPool.RingOfIntegersProject.IrreduciblePolynomialZModp
 import Mathlib.Tactic.NormNum.Prime
 
+namespace RoiExamplesIrreducibleIrreducibleExampleDegree17
+
 open Polynomial
 
 local notation "T" => (X^17
@@ -299,3 +301,5 @@ noncomputable def C : IrreducibleCertificateIntPolynomial T l where
  hinter := by decide +kernel
 
 theorem irreducible_T : Irreducible T := irreducible_of_CertificateIntPolynomial _ _ C
+
+end RoiExamplesIrreducibleIrreducibleExampleDegree17

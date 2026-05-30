@@ -9,6 +9,8 @@ import LeanPool.RingOfIntegersProject.IrreduciblePolynomialZModp
 import Mathlib.Tactic.NormNum.Prime
 import LeanPool.RingOfIntegersProject.BrillhartIrreducibilityTest
 
+namespace RoiDegree8ExampleNativeDecideIrreducible0
+
 open Polynomial
 
 local notation "T" => (X^8 - X^6 + 2*X^4 + X^2 + 1 : ℤ[X])
@@ -89,3 +91,5 @@ noncomputable def C : CertificateIrreducibleIntOfPrimeDegreeAnalysis T l where
 
 theorem irreducible_T : Irreducible T :=
   irreducible_of_CertificateIrreducibleIntOfPrimeDegrees _ _ C
+
+end RoiDegree8ExampleNativeDecideIrreducible0

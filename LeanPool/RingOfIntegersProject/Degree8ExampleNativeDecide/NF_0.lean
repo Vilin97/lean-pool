@@ -12,6 +12,9 @@ import LeanPool.RingOfIntegersProject.MaximalAPI
 import Mathlib.NumberTheory.NumberField.Basic
 import LeanPool.RingOfIntegersProject.Degree8ExampleNativeDecide.Irreducible0
 
+namespace RoiDegree8ExampleNativeDecideNF0
+open RoiDegree8ExampleNativeDecideIrreducible0
+
 
 open Polynomial Module
 
@@ -513,3 +516,5 @@ theorem O_ringOfIntegers : O = integralClosure ℤ K := by
 
 
 theorem O_ringOfIntegers' : O = NumberField.RingOfIntegers K := by rw [O_ringOfIntegers]; rfl
+
+end RoiDegree8ExampleNativeDecideNF0

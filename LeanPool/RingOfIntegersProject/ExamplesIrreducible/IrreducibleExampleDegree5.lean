@@ -8,6 +8,8 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 import LeanPool.RingOfIntegersProject.IrreduciblePolynomialZModp
 import Mathlib.Tactic.NormNum.Prime
 
+namespace RoiExamplesIrreducibleIrreducibleExampleDegree5
+
 open Polynomial
 
 local notation "T" => (X^5 - 150*X^3 - 100*X^2 + 8025*X + 28260 : ℤ[X])
@@ -133,3 +135,5 @@ noncomputable def C : IrreducibleCertificateIntPolynomial T l where
  hinter := by decide +kernel
 
 theorem irreducible_T : Irreducible T := irreducible_of_CertificateIntPolynomial _ _ C
+
+end RoiExamplesIrreducibleIrreducibleExampleDegree5

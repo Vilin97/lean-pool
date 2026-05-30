@@ -12,6 +12,9 @@ import LeanPool.RingOfIntegersProject.MaximalAPI
 import Mathlib.NumberTheory.NumberField.Basic
 import LeanPool.RingOfIntegersProject.Degree5Examples.Irreducible140
 
+namespace RoiDegree5ExamplesNF140
+open RoiDegree5ExamplesIrreducible140
+
 -- Number field with label 5.1.91125000000.6 in the LMFDB
 
 open Polynomial Module
@@ -335,3 +338,4 @@ theorem O_ringOfIntegers : O = integralClosure ℤ K := by
 
 theorem O_ringOfIntegers' : O = NumberField.RingOfIntegers K := by rw [O_ringOfIntegers]; rfl
 
+end RoiDegree5ExamplesNF140

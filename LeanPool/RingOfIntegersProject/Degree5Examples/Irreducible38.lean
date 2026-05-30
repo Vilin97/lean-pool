@@ -9,6 +9,8 @@ import LeanPool.RingOfIntegersProject.IrreduciblePolynomialZModp
 import Mathlib.Tactic.NormNum.Prime
 import LeanPool.RingOfIntegersProject.BrillhartIrreducibilityTest
 
+namespace RoiDegree5ExamplesIrreducible38
+
 open Polynomial
 
 local notation "T" => (X^5 - 20*X^2 + 75*X - 72 : ℤ[X])
@@ -35,3 +37,5 @@ noncomputable def C : CertificateIrreducibleIntOfPrime T l where
  heval := by norm_num
 
 theorem irreducible_T : Irreducible T := irreducible_of_CertificateIrreducibleIntOfPrime _ _ C
+
+end RoiDegree5ExamplesIrreducible38
