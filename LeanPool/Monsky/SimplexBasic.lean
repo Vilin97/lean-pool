@@ -84,7 +84,9 @@ lemma closed_hull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
 
 lemma open_pol_nonempty {n : ℕ} (hn : 0 < n) (P : Fin n → ℝ²) : Set.Nonempty (open_hull P) := by
   use ∑ i, (1/(n : ℝ)) • P i, fun _ ↦ (1/(n : ℝ))
-  exact ⟨⟨fun _ ↦ by simp [hn], by simp only [one_div, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]; exact (mul_inv_cancel₀ (by simp; linarith))⟩, by simp⟩
+  refine ⟨⟨fun _ ↦ by simp [hn], ?_⟩, by simp⟩
+  simp only [one_div, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  exact mul_inv_cancel₀ (by simp; linarith)
 
 
 lemma open_sub_closed_simplex {n : ℕ} : open_simplex n ⊆ closed_simplex n :=
@@ -184,11 +186,13 @@ def real_to_fin_2 (x : ℝ) : (Fin 2 → ℝ) := fun | 0 => x | 1 => 1 - x
 
 lemma real_to_fin_2_closed {x : ℝ} (h₁ : 0 ≤ x) (h₂ : x ≤ 1)
     : real_to_fin_2 x ∈ closed_simplex 2 :=
-  ⟨fun i ↦ by fin_cases i <;> (simp [real_to_fin_2]; assumption), by simp [real_to_fin_2]⟩
+  ⟨fun i ↦ by fin_cases i <;> (simp only [real_to_fin_2, sub_nonneg]; assumption),
+    by simp only [real_to_fin_2, Fin.sum_univ_two, add_sub_cancel]⟩
 
 lemma real_to_fin_2_open {x : ℝ} (h₁ : 0 < x) (h₂ : x < 1)
     : real_to_fin_2 x ∈ open_simplex 2 :=
-  ⟨fun i ↦ by fin_cases i <;> (simp [real_to_fin_2]; assumption), by simp [real_to_fin_2]⟩
+  ⟨fun i ↦ by fin_cases i <;> (simp only [real_to_fin_2, sub_pos]; assumption),
+    by simp only [real_to_fin_2, Fin.sum_univ_two, add_sub_cancel]⟩
 
 
 
@@ -212,7 +216,8 @@ lemma closed_hull_convex {n₁ n₂ : ℕ} {P₁ : Fin n₁ → ℝ²} {P₂ : F
 
 
 lemma closed_hull_open_hull_com {n : ℕ} {P : Fin n → ℝ²} {x y : ℝ²}
-  (hx : x ∈ open_hull P) (hy : y ∈ closed_hull P) : (1/(2:ℝ)) • x + (1/(2:ℝ)) • y ∈ open_hull P := by
+  (hx : x ∈ open_hull P) (hy : y ∈ closed_hull P) :
+    (1/(2:ℝ)) • x + (1/(2:ℝ)) • y ∈ open_hull P := by
   have ⟨α, hα, hαx⟩ := hx
   have ⟨β, hβ, hβy⟩ := hy
   use fun i ↦ (1/(2 : ℝ)) * α i + (1/(2:ℝ)) * β i

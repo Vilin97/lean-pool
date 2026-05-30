@@ -1274,9 +1274,9 @@ projects:
       github_repo: dhyan-aranha/Monsky
     status: verified
     main_declarations:
-      - LeanPool.Monsky.Monsky
+      - LeanPool.Monsky.monsky_theorem
     main_results:
-      - declaration: LeanPool.Monsky.Monsky
+      - declaration: LeanPool.Monsky.monsky_theorem
         informal: Proves that the unit square admits a dissection into n equal-area triangles if and only if n is nonzero and even.
     tags:
       - geometry

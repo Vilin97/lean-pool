@@ -24,7 +24,7 @@ Authors: Dhyan Aranha and contributors
 Thomas Koopman, Dion Leijnse, Thijs Maessen, Maris Ozols, Jonas van der Schaaf,
 Lenny Taelman
 Status: verified
-Main declarations: `LeanPool.Monsky.Monsky`
+Main declarations: `LeanPool.Monsky.monsky_theorem`
 Tags: geometry, combinatorics, measure-theory
 MSC: 52C20, 05B45
 -/

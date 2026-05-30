@@ -17,11 +17,12 @@ local notation "Triangle" => Fin 3 → (EuclideanSpace ℝ (Fin 2))
 open BigOperators
 
 
-theorem Monsky (n : ℕ) :
+theorem monsky_theorem (n : ℕ) :
     (∃ (S : Finset Triangle),
       closed_hull unit_square = ⋃ (Δ ∈ S), closed_hull Δ ∧
       Set.PairwiseDisjoint (↑S : Set Triangle) open_hull ∧
-      (∀ Δ₁ ∈ S, ∀ Δ₂ ∈ S, MeasureTheory.volume (open_hull Δ₁) = MeasureTheory.volume (open_hull Δ₂)) ∧
+      (∀ Δ₁ ∈ S, ∀ Δ₂ ∈ S,
+        MeasureTheory.volume (open_hull Δ₁) = MeasureTheory.volume (open_hull Δ₂)) ∧
       S.card = n)
     ↔ (n ≠ 0 ∧ Even n) := by
   constructor
