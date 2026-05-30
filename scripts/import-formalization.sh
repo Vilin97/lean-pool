@@ -8,8 +8,8 @@
 #      with a detailed prompt covering the bump, vendoring, projects.yml
 #      entry, file headers, and CI checks documented in
 #      .github/CODE_QUALITY.md.
-#   4. Whatever progress the agent makes, push the branch and open a draft
-#      PR in lean-pool. Partial progress is acceptable and expected.
+#   4. Whatever progress the agent makes, push the branch and open a PR in
+#      lean-pool. Partial progress is acceptable and expected.
 #
 # Usage:
 #   scripts/import-formalization.sh <source-repo-url> [options]
@@ -207,6 +207,7 @@ case "$AGENT" in
   codex)  command -v codex >/dev/null || die "codex CLI not found in PATH." ;;
 esac
 command -v gh >/dev/null     || die "gh CLI not found in PATH; needed to open the PR."
+command -v python3 >/dev/null || die "python3 not found in PATH; needed to scan Lean diffs."
 gh auth status >/dev/null 2>&1 || die "gh is not authenticated. Run 'gh auth login' first."
 
 # Refuse to clobber an existing worktree silently.
@@ -348,7 +349,7 @@ You are an autonomous Lean engineer importing an external Lean formalization int
 Vendor the source repo's Lean content into LeanPool/${SLUG}/, bump it to lean-pool's toolchain, register it in LeanPool/projects.yml, and make the local CI checks pass.
 
 # Step-by-step
-1. Read ${SOURCE_DIR}/README.md (and the source repo's lakefile, lean-toolchain, LICENSE) to figure out: title, authors, main declarations, tags, license. If the license is incompatible with Apache-2.0 (lean-pool is Apache-2.0), STOP — write IMPORT_NOTES.md explaining (do NOT commit it; see note below).
+1. Read ${SOURCE_DIR}/README.md (and the source repo's lakefile, lean-toolchain, LICENSE) to figure out: title, authors, main declarations, tags, license. lean-pool is Apache-2.0: an Apache-2.0 upstream is redistributed directly, MIT/BSD and similar permissive upstreams are sublicensed under Apache-2.0, and copyleft (GPL/LGPL/AGPL, CC-BY-SA) is incompatible — if the upstream is copyleft, STOP and write IMPORT_NOTES.md explaining (do NOT commit it; see note below). Unless the upstream is Apache-2.0, record its provenance in IMPORT_NOTES.md under a "NOTICE entry" heading — source repo URL, upstream license, and the upstream copyright notice verbatim if present — so the maintainer can add a matching entry to the root NOTICE file after merge; NOTICE is a non-content file and cannot be committed in the import PR.
 2. Decide which .lean files to vendor. Skip examples/tests/scratch unless the formalization depends on them.
 3. Copy the chosen .lean files into LeanPool/${SLUG}/, preserving subdirectory structure. The Lean module path for vendored files becomes \`LeanPool.${SLUG_CAMEL}.…\`; suggested top-level Lean namespace is \`LeanPool.${SLUG_CAMEL}\` (existing inner namespaces from the source repo can be kept underneath).
 4. Update each vendored .lean file:
@@ -378,7 +379,7 @@ Vendor the source repo's Lean content into LeanPool/${SLUG}/, bump it to lean-po
 - The build must be warning-free (CI fails on any \`warning:\` in the log).
 
 # Stay in your lane — what you may COMMIT
-You may add or modify, AND COMMIT, ONLY: \`LeanPool.lean\` (regenerate via \`lake exe mk_all\`), files under \`LeanPool/\` (including \`LeanPool/projects.yml\`). That's it — the Content-only PR CI gate rejects a PR that touches anything else. You may *write* \`IMPORT_NOTES.md\` locally (the wrapper reads it for the PR body) but you must NOT commit it. Do NOT modify ANYTHING else at all — in particular do NOT touch \`.github/\` (CI workflows, CODE_QUALITY.md), \`python/\` (incl. \`lean_pool/quality.py\`), \`scripts/\` (incl. \`nolints-style.txt\`), \`lakefile.toml\`, \`lean-toolchain\`, \`lake-manifest.json\`, \`AGENTS.md\`, \`CLAUDE.md\`, \`README.md\`, \`CONTRIBUTING.md\`, or \`.gitignore\`. Do NOT introduce any waiver/exception/escape-hatch: no \`size-limit-ok\` comment, no entry in \`scripts/nolints-style.txt\`, no \`set_option linter.X false\`, no linter toggle in \`lakefile.toml\`, no editing of \`quality.py\` or a workflow to skip a check. If a check fails, fix the code, not the check. If a proof exceeds 200 lines, split it into lemmas; if a file exceeds 10000 lines, split it into modules. The wrapper script reverts any committed change outside that allowlist (and untracks \`IMPORT_NOTES.md\`) before opening the PR, so out-of-scope edits accomplish nothing.
+You may add or modify, AND COMMIT, ONLY: \`LeanPool.lean\` (regenerate via \`lake exe mk_all\`), files under \`LeanPool/\` (including \`LeanPool/projects.yml\`). That's it — the Content-only PR CI gate rejects a PR that touches anything else. You may *write* \`IMPORT_NOTES.md\` locally (the wrapper reads it for the PR body) but you must NOT commit it. Do NOT modify ANYTHING else at all — in particular do NOT touch \`.github/\` (CI workflows, CODE_QUALITY.md), \`python/\` (incl. \`lean_pool/quality.py\`), \`scripts/\` (incl. \`nolints-style.txt\`), \`lakefile.toml\`, \`lean-toolchain\`, \`lake-manifest.json\`, \`AGENTS.md\`, \`CLAUDE.md\`, \`README.md\`, \`CONTRIBUTING.md\`, \`LICENSE\`, \`NOTICE\`, or \`.gitignore\`. Do NOT introduce any waiver/exception/escape-hatch: no \`size-limit-ok\` comment, no entry in \`scripts/nolints-style.txt\`, no \`set_option linter.X false\`, no linter toggle in \`lakefile.toml\`, no editing of \`quality.py\` or a workflow to skip a check. If a check fails, fix the code, not the check. If a proof exceeds 200 lines, split it into lemmas; if a file exceeds 10000 lines, split it into modules. The wrapper script reverts any committed change outside that allowlist (and untracks \`IMPORT_NOTES.md\`) before opening the PR, so out-of-scope edits accomplish nothing.
 
 # Do not give up
 A partial import is a failure, not an acceptable stopping point. Bumping pain is expected — work through it: when a Mathlib declaration moved or was renamed, find the current name (grep the Mathlib source under \`.lake/packages/mathlib\`, search for nearby lemmas, check release notes); when a lemma you relied on no longer exists, prove it yourself in your own namespace; when a proof breaks under the new Mathlib, repair it; when \`simp\`/\`omega\`/\`aesop\` no longer closes a goal, find the steps that do. Excluding a file is the absolute last resort, permissible only after you have genuinely exhausted these avenues, and every exclusion must be justified in \`IMPORT_NOTES.md\` (local scratch — not committed) with the specific blocker and what you attempted. Keep iterating — many rounds if that's what it takes — until \`lake build LeanPool\` (warning-free), \`lake exe runLinter LeanPool\`, \`lake exe lint-style LeanPool\`, and the \`quality\` check are all clean. Do not stop early.
@@ -475,8 +476,12 @@ if ! git diff --quiet || ! git diff --cached --quiet || [[ -n "$(git ls-files --
   warn "Uncommitted changes detected; committing as WIP."
   git add -A
   unstage_scratch
-  git commit -m "WIP: agent partial progress on $SLUG import" \
-    -m "The wrapper script committed this on the agent's behalf because the agent left changes uncommitted (likely exited early)."
+  # After unstaging scratch files (IMPORT_NOTES.md / FAILURE.md), there may be
+  # nothing left to commit if the agent only added those. That's not an error.
+  if ! git diff --cached --quiet; then
+    git commit -m "WIP: agent partial progress on $SLUG import" \
+      -m "The wrapper script committed this on the agent's behalf because the agent left changes uncommitted (likely exited early)."
+  fi
 fi
 
 # If the agent's own commits tracked the scratch files, untrack them (keeping the
@@ -545,19 +550,151 @@ fi
 # there. That does not permit Lean escape hatches or diagnostics inside the
 # imported Lean files, so scan the committed Lean diff before opening the PR.
 FORBIDDEN_LEAN_DIFF="$(
-  git diff --unified=0 "$BASE_REF..HEAD" -- LeanPool.lean 'LeanPool/**/*.lean' \
-    | awk '
-      /^\+\+\+ b\// {
-        file = substr($0, 7)
-        next
-      }
-      /^\+[^+]/ && file ~ /\.lean$/ {
-        line = substr($0, 2)
-        if (line ~ /(^|[^[:alnum:]_])set_option([^[:alnum:]_]|$)|maxHeartbeats|synthInstance\.maxHeartbeats|#(check|print|eval|reduce|guard_msgs|lint)|(^|[^[:alnum:]_])(sorry|admit|axiom|constant|unsafe|partial|opaque)([^[:alnum:]_]|$)|@\[[:space:]]*extern/) {
-          print file ": " line
-        }
-      }
-    '
+  python3 - "$BASE_REF" <<'PY'
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+base_ref = sys.argv[1]
+forbidden = re.compile(
+    r"(?<![A-Za-z0-9_])set_option(?![A-Za-z0-9_])"
+    r"|maxHeartbeats"
+    r"|synthInstance\.maxHeartbeats"
+    r"|#(?:check|print|eval|reduce|guard_msgs|lint)"
+    r"|(?<![A-Za-z0-9_])(?:sorry|admit|axiom|constant|unsafe|partial|opaque)(?![A-Za-z0-9_])"
+    r"|@\[\s*extern"
+)
+hunk_header = re.compile(r"^@@ .* \+(\d+)(?:,(\d+))? @@")
+
+
+def strip_lean_comments_and_strings(text: str) -> str:
+    """Blank Lean comments and strings while preserving line numbers."""
+    result: list[str] = []
+    index = 0
+    block_depth = 0
+    in_line_comment = False
+    in_string = False
+    escaped = False
+
+    while index < len(text):
+        char = text[index]
+        pair = text[index : index + 2]
+
+        if in_line_comment:
+            if char == "\n":
+                in_line_comment = False
+                result.append("\n")
+            else:
+                result.append(" ")
+            index += 1
+            continue
+
+        if block_depth > 0:
+            if pair == "/-":
+                block_depth += 1
+                result.append("  ")
+                index += 2
+            elif pair == "-/":
+                block_depth -= 1
+                result.append("  ")
+                index += 2
+            else:
+                result.append("\n" if char == "\n" else " ")
+                index += 1
+            continue
+
+        if in_string:
+            result.append("\n" if char == "\n" else " ")
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            index += 1
+            continue
+
+        if pair == "--":
+            in_line_comment = True
+            result.append("  ")
+            index += 2
+        elif pair == "/-":
+            block_depth = 1
+            result.append("  ")
+            index += 2
+        elif char == '"':
+            in_string = True
+            result.append(" ")
+            index += 1
+        else:
+            result.append(char)
+            index += 1
+
+    return "".join(result)
+
+
+diff = subprocess.run(
+    [
+        "git",
+        "diff",
+        "--unified=0",
+        f"{base_ref}..HEAD",
+        "--",
+        "LeanPool.lean",
+        "LeanPool/**/*.lean",
+    ],
+    check=True,
+    stdout=subprocess.PIPE,
+    text=True,
+).stdout
+
+added_lines: dict[str, set[int]] = {}
+current_file: str | None = None
+new_line: int | None = None
+
+for raw_line in diff.splitlines():
+    if raw_line.startswith("+++ b/"):
+        current_file = raw_line[6:]
+        new_line = None
+        continue
+    if raw_line.startswith("+++ /dev/null"):
+        current_file = None
+        new_line = None
+        continue
+
+    match = hunk_header.match(raw_line)
+    if match:
+        new_line = int(match.group(1))
+        continue
+
+    if current_file is None or new_line is None:
+        continue
+
+    if raw_line.startswith("+") and not raw_line.startswith("+++"):
+        if current_file.endswith(".lean"):
+            added_lines.setdefault(current_file, set()).add(new_line)
+        new_line += 1
+    elif raw_line.startswith("-") and not raw_line.startswith("---"):
+        continue
+    elif raw_line.startswith("\\ No newline"):
+        continue
+    else:
+        new_line += 1
+
+for file_name in sorted(added_lines):
+    path = Path(file_name)
+    if not path.exists():
+        continue
+    original_lines = path.read_text().splitlines()
+    stripped_lines = strip_lean_comments_and_strings(path.read_text()).splitlines()
+    for line_number in sorted(added_lines[file_name]):
+        if line_number > len(stripped_lines):
+            continue
+        if forbidden.search(stripped_lines[line_number - 1]):
+            original = original_lines[line_number - 1] if line_number <= len(original_lines) else ""
+            print(f"{file_name}: {original}")
+PY
 )"
 
 if [[ -n "$FORBIDDEN_LEAN_DIFF" ]]; then
@@ -642,13 +779,12 @@ PR_BODY_FILE="$BUMPS_DIR/$SLUG-pr-body.md"
   echo "_Opened automatically by \`scripts/import-formalization.sh\`. Review the diff carefully before merging — the agent ran unattended._"
 } > "$PR_BODY_FILE"
 
-log "Opening draft PR against $BASE_BRANCH"
+log "Opening PR against $BASE_BRANCH"
 PR_URL="$(gh pr create \
   --base "$BASE_BRANCH" \
   --head "$BRANCH" \
   --title "$PR_TITLE" \
-  --body-file "$PR_BODY_FILE" \
-  --draft)"
+  --body-file "$PR_BODY_FILE")"
 
 ok "PR opened: $PR_URL"
 

@@ -20,10 +20,24 @@ permissions:
   contents: read
   pull-requests: write
 
+# Workflow-level concurrency applies to every run regardless of the job-level
+# `if:`, so an `issue_comment` event for a non-`/profile` comment (e.g. `/review`)
+# would otherwise enter `proof-profile-<pr>` and cancel an in-flight `/profile`
+# run before the body check could short-circuit it. Route non-matching events
+# into a unique per-run group so they can't steal the slot.
 concurrency:
   group: >-
-    proof-profile-${{ github.event.pull_request.number ||
-      github.event.issue.number || inputs.pr_number }}
+    ${{
+      (github.event_name == 'workflow_dispatch' ||
+       github.event_name == 'pull_request' ||
+       (github.event_name == 'issue_comment' &&
+        startsWith(github.event.comment.body, '/profile')))
+      && format('proof-profile-{0}',
+           github.event.pull_request.number ||
+           github.event.issue.number ||
+           inputs.pr_number)
+      || format('proof-profile-noop-{0}', github.run_id)
+    }}
   cancel-in-progress: true
 
 jobs:
@@ -121,33 +135,73 @@ jobs:
 
       - name: Build project so profile imports resolve
         if: steps.files.outputs.files != ''
-        run: ~/.elan/bin/lake build LeanPool
+        run: |
+          set -o pipefail
+          /usr/bin/time -p ~/.elan/bin/lake build LeanPool 2>&1 | tee proof-profile-build.log
 
       - name: Profile new and modified files
         if: steps.files.outputs.files != ''
         env:
           FILES: ${{ steps.files.outputs.files }}
         run: |
+          set -euo pipefail
           : > proof-profile.log
           # shellcheck disable=SC2086 # FILES is a space-separated list on purpose
           for file in $FILES; do
             {
               echo "## $file"
               # Errors here are logged but never fail the job — this is advisory.
-              ~/.elan/bin/lake env lean --profile "$file" || true
+              set +e
+              /usr/bin/time -p ~/.elan/bin/lake env lean --profile "$file"
+              status=$?
+              set -e
+              if [ "$status" -ne 0 ]; then
+                echo "error: profile command exited with status $status"
+              fi
               echo
             } >> proof-profile.log 2>&1
           done
 
+      - name: Count heartbeats for new and modified files
+        if: steps.files.outputs.files != ''
+        env:
+          FILES: ${{ steps.files.outputs.files }}
+        run: |
+          set -euo pipefail
+          : > proof-profile-heartbeats.log
+          # shellcheck disable=SC2086 # FILES is a space-separated list on purpose
+          for file in $FILES; do
+            {
+              echo "## $file"
+              # Mathlib's countHeartbeats linter reports in the same units
+              # used by `set_option maxHeartbeats`.
+              set +e
+              /usr/bin/time -p ~/.elan/bin/lake env lean \
+                -Dlinter.countHeartbeats=true \
+                "$file"
+              status=$?
+              set -e
+              if [ "$status" -ne 0 ]; then
+                echo "error: count-heartbeats command exited with status $status"
+              fi
+              echo
+            } >> proof-profile-heartbeats.log 2>&1
+          done
+
       - name: Render profile summary
         if: steps.files.outputs.files != ''
+        env:
+          BASE_SHA: ${{ steps.pr.outputs.base_sha }}
         run: |
           python3 <<'PY'
           import os
           import re
+          import subprocess
           from pathlib import Path
 
           log_path = Path("proof-profile.log")
+          heartbeat_log_path = Path("proof-profile-heartbeats.log")
+          build_log_path = Path("proof-profile-build.log")
           rendered_path = Path("proof-profile.md")
           summary_path = Path(os.environ["GITHUB_STEP_SUMMARY"])
           run_url = (
@@ -166,6 +220,87 @@ jobs:
           metric_re = re.compile(
               r"^[ \t]+(.+?)\s+([0-9]+(?:\.[0-9]+)?)\s*(ms|s)\s*$"
           )
+          built_re = re.compile(
+              r"Built\s+(?P<module>\S+)\s+"
+              r"\((?P<value>[0-9]+(?:\.[0-9]+)?)(?P<unit>ms|s)\)"
+          )
+          time_re = re.compile(r"^(real|user|sys)\s+([0-9]+(?:\.[0-9]+)?)$")
+          heartbeat_re = re.compile(
+              r"(?:'[^']+'\s+)?[Uu]sed\s+"
+              r"(?:approximately\s+)?(?P<heartbeats>[0-9]+)\s+heartbeats"
+          )
+
+          def format_ms(ms: float) -> str:
+              """Format milliseconds with the equivalent seconds."""
+
+              return f"{ms:.1f} ms (= {ms / 1000:.2f} s)"
+
+          def format_seconds(seconds: float | None) -> str:
+              """Format an optional wall-clock seconds value."""
+
+              if seconds is None:
+                  return "—"
+              return f"{seconds:.2f}"
+
+          def format_heartbeats(heartbeats: float) -> str:
+              """Format heartbeats in maxHeartbeats units."""
+
+              return f"{heartbeats:,.0f}"
+
+          def format_int(value: int) -> str:
+              """Format an integer with thousands separators."""
+
+              return f"{value:,}"
+
+          def split_sections(log_text: str) -> list[tuple[str, str]]:
+              """Split a profile log into `## <file>` sections."""
+
+              sections: list[tuple[str, str]] = []
+              name = None
+              buf: list[str] = []
+              for line in log_text.splitlines():
+                  header = re.match(r"^## (.+)$", line)
+                  if header:
+                      if name is not None:
+                          sections.append((name, "\n".join(buf).rstrip()))
+                      name = header.group(1)
+                      buf = []
+                  elif name is not None:
+                      buf.append(line)
+              if name is not None:
+                  sections.append((name, "\n".join(buf).rstrip()))
+              return sections
+
+          def changed_loc_by_file(files: list[str]) -> dict[str, int]:
+              """Count added LOC in the profiled files from the PR diff."""
+
+              base_sha = os.environ.get("BASE_SHA")
+              loc = {fname: 0 for fname in files}
+              if not base_sha or not files:
+                  return loc
+              try:
+                  output = subprocess.check_output(
+                      [
+                          "git",
+                          "diff",
+                          "--numstat",
+                          "--diff-filter=AM",
+                          f"{base_sha}...HEAD",
+                          "--",
+                          *files,
+                      ],
+                      text=True,
+                  )
+              except subprocess.CalledProcessError:
+                  return loc
+              for line in output.splitlines():
+                  parts = line.split("\t")
+                  if len(parts) < 3:
+                      continue
+                  additions, _deletions, path = parts[:3]
+                  if additions.isdigit() and path in loc:
+                      loc[path] = int(additions)
+              return loc
 
           out = ["## Proof profile (new / modified Lean files)\n\n"]
           log_text = log_path.read_text() if log_path.exists() else ""
@@ -177,68 +312,240 @@ jobs:
 
           # Split the log into one section per profiled file (delimited by
           # `## <file>` markers written by the profile loop).
-          sections: list[tuple[str, str]] = []
-          name = None
-          buf: list[str] = []
-          for line in log_text.splitlines():
-              header = re.match(r"^## (.+)$", line)
-              if header:
-                  if name is not None:
-                      sections.append((name, "\n".join(buf).rstrip()))
-                  name = header.group(1)
-                  buf = []
-              elif name is not None:
-                  buf.append(line)
-          if name is not None:
-              sections.append((name, "\n".join(buf).rstrip()))
+          sections = split_sections(log_text)
+
+          # Parse `lake build` timing up front so the wall-clock number can
+          # lead the comment — it is the single most useful answer to "how
+          # long does this PR take to compile". The per-module breakdown
+          # remains below in the "Lake build timing" section.
+          build_clock: dict[str, float] = {}
+          build_times: dict[str, float] = {}
+          if build_log_path.exists():
+              for line in build_log_path.read_text(errors="replace").splitlines():
+                  built = built_re.search(line)
+                  if built:
+                      module = built.group("module")
+                      value = float(built.group("value"))
+                      if built.group("unit") == "ms":
+                          value /= 1000
+                      build_times[module] = max(build_times.get(module, 0.0), value)
+                      continue
+                  timing = time_re.match(line.strip())
+                  if timing:
+                      build_clock[timing.group(1)] = float(timing.group(2))
+          if "real" in build_clock:
+              lead = (
+                  f"**`lake build LeanPool` wall time:** "
+                  f"**{build_clock['real']:.2f} s** "
+                  f"(= {build_clock['real'] / 60:.2f} min)"
+              )
+              if "user" in build_clock and "sys" in build_clock:
+                  lead += (
+                      f" — `user {build_clock['user']:.2f} s`, "
+                      f"`sys {build_clock['sys']:.2f} s`"
+                  )
+              out.append(lead + ".\n\n")
+              out.append(
+                  "_This is the parallel build wall clock and is the "
+                  "compile-time answer for this PR. The serial per-file "
+                  "sums below are useful for ranking slow files, not as a "
+                  "build budget._\n\n"
+              )
 
           if not sections:
               out.append("_No files profiled._\n")
           else:
               # Summary table: cumulative ms = sum over reported phases.
-              summary_rows = []
+              # Import-excluded ms keeps the current workflow's signal while
+              # separating repeated import cost from file-local elaboration.
+              profile_by_file = {}
+              phase_totals: dict[str, float] = {}
               for fname, body in sections:
                   total = 0.0
+                  import_ms = 0.0
                   phases = 0
                   errors = 0
+                  wall_seconds = None
                   for line in body.splitlines():
                       if "error:" in line:
                           errors += 1
+                          continue
+                      timing = time_re.match(line.strip())
+                      if timing and timing.group(1) == "real":
+                          wall_seconds = float(timing.group(2))
                           continue
                       m = metric_re.match(line)
                       if m:
                           value = float(m.group(2))
                           if m.group(3) == "s":
                               value *= 1000
+                          phase = m.group(1).strip()
+                          phase_totals[phase] = phase_totals.get(phase, 0.0) + value
                           total += value
+                          if phase == "import":
+                              import_ms += value
                           phases += 1
-                  summary_rows.append((fname, total, phases, errors))
-              summary_rows.sort(key=lambda r: -r[1])
-              total_ms = sum(r[1] for r in summary_rows)
-              total_phases = sum(r[2] for r in summary_rows)
-              total_errors = sum(r[3] for r in summary_rows)
-              out.append(
-                  f"**Total cumulative time:** {total_ms:.1f} ms "
-                  f"(= {total_ms / 1000:.2f} s) across {len(summary_rows)} file"
-                  f"{'' if len(summary_rows) == 1 else 's'}.\n\n"
+                  profile_by_file[fname] = {
+                      "total_ms": total,
+                      "local_ms": total - import_ms,
+                      "import_ms": import_ms,
+                      "phases": phases,
+                      "errors": errors,
+                      "wall_seconds": wall_seconds,
+                  }
+
+              heartbeat_by_file: dict[str, dict[str, float | int]] = {}
+              heartbeat_text = (
+                  heartbeat_log_path.read_text(errors="replace")
+                  if heartbeat_log_path.exists()
+                  else ""
               )
-              out.append("| File | Cumulative (ms) | Phases | Errors |\n")
-              out.append("|---|---:|---:|---:|\n")
-              for fname, total, phases, errors in summary_rows:
+              for fname, body in split_sections(heartbeat_text):
+                  heartbeats = 0.0
+                  declarations = 0
+                  errors = 0
+                  wall_seconds = None
+                  for line in body.splitlines():
+                      if "error:" in line:
+                          errors += 1
+                          continue
+                      timing = time_re.match(line.strip())
+                      if timing and timing.group(1) == "real":
+                          wall_seconds = float(timing.group(2))
+                          continue
+                      match = heartbeat_re.search(line)
+                      if match:
+                          heartbeats += float(match.group("heartbeats"))
+                          declarations += 1
+                  heartbeat_by_file[fname] = {
+                      "heartbeats": heartbeats,
+                      "declarations": declarations,
+                      "errors": errors,
+                      "wall_seconds": wall_seconds,
+                  }
+
+              all_files = sorted(set(profile_by_file) | set(heartbeat_by_file))
+              loc_by_file = changed_loc_by_file(all_files)
+              summary_rows = []
+              for fname in all_files:
+                  profile = profile_by_file.get(fname, {})
+                  heartbeat = heartbeat_by_file.get(fname, {})
+                  summary_rows.append(
+                      (
+                          fname,
+                          loc_by_file.get(fname, 0),
+                          float(heartbeat.get("heartbeats", 0.0)),
+                          heartbeat.get("wall_seconds"),
+                          float(profile.get("total_ms", 0.0)),
+                          float(profile.get("local_ms", 0.0)),
+                          float(profile.get("import_ms", 0.0)),
+                          int(profile.get("phases", 0)),
+                          int(profile.get("errors", 0))
+                          + int(heartbeat.get("errors", 0)),
+                          int(heartbeat.get("declarations", 0)),
+                      )
+                  )
+              summary_rows.sort(key=lambda r: (-r[2], r[0]))
+              total_loc = sum(r[1] for r in summary_rows)
+              total_heartbeats = sum(r[2] for r in summary_rows)
+              total_wall_seconds = sum(r[3] or 0.0 for r in summary_rows)
+              total_ms = sum(r[4] for r in summary_rows)
+              total_local_ms = sum(r[5] for r in summary_rows)
+              total_import_ms = sum(r[6] for r in summary_rows)
+              total_phases = sum(r[7] for r in summary_rows)
+              total_errors = sum(r[8] for r in summary_rows)
+              total_declarations = sum(r[9] for r in summary_rows)
+              file_count = len(summary_rows)
+              out.append(
+                  f"**Total heartbeats:** {format_heartbeats(total_heartbeats)} "
+                  f"maxHeartbeats units across {file_count} file"
+                  f"{'' if file_count == 1 else 's'} "
+                  f"({format_int(total_loc)} added LOC).\n\n"
+              )
+              out.append(
+                  f"**Sum of `lean --profile`:** {format_ms(total_ms)}. "
+                  f"**Import-excluded time:** {format_ms(total_local_ms)}.\n\n"
+              )
+              out.append(
+                  f"**Count-heartbeats wall-clock total:** {total_wall_seconds:.2f} s. "
+                  f"Repeated import cost inside `lean --profile`: "
+                  f"{format_ms(total_import_ms)}.\n\n"
+              )
+              out.append(
+                  "_Heartbeat values come from Mathlib's `linter.countHeartbeats` "
+                  "and are already in `maxHeartbeats` units._\n\n"
+              )
+              out.append(
+                  "_LOC counts added lines in the profiled Lean files from "
+                  "this PR diff._\n\n"
+              )
+              out.append(
+                  "| File | LOC | Heartbeats (maxHB) | Count wall (s) | "
+                  "`lean --profile` (s) | Without import (s) | "
+                  "Import (s) | Decls | Errors |\n"
+              )
+              out.append("|---|---:|---:|---:|---:|---:|---:|---:|---:|\n")
+              for (
+                  fname,
+                  loc,
+                  heartbeats,
+                  wall_seconds,
+                  total,
+                  local,
+                  import_ms,
+                  _phases,
+                  errors,
+                  declarations,
+              ) in summary_rows:
                   out.append(
-                      f"| `{fname}` | {total:.1f} | {phases} | {errors} |\n"
+                      f"| `{fname}` | {format_int(loc)} | "
+                      f"{format_heartbeats(heartbeats)} | "
+                      f"{format_seconds(wall_seconds)} | {total / 1000:.2f} | "
+                      f"{local / 1000:.2f} | {import_ms / 1000:.2f} | "
+                      f"{declarations} | {errors} |\n"
                   )
               # Total row in the same table so any single file's cumulative
               # time can be compared against the whole at a glance.
               out.append(
-                  f"| **Total** | **{total_ms:.1f}** "
-                  f"| **{total_phases}** | **{total_errors}** |\n"
+                  f"| **Total** | **{format_int(total_loc)}** "
+                  f"| **{format_heartbeats(total_heartbeats)}** "
+                  f"| **{total_wall_seconds:.2f}** | **{total_ms / 1000:.2f}** "
+                  f"| **{total_local_ms / 1000:.2f}** "
+                  f"| **{total_import_ms / 1000:.2f}** "
+                  f"| **{total_declarations}** | **{total_errors}** |\n"
               )
               out.append("\n")
 
+              phase_rows = sorted(phase_totals.items(), key=lambda row: -row[1])
+              out.append("### Aggregate phase totals\n\n")
+              out.append("| Phase | Time |\n")
+              out.append("|---|---:|\n")
+              for phase, ms in phase_rows[:12]:
+                  out.append(f"| `{phase}` | {format_ms(ms)} |\n")
+              out.append("\n")
+
+              changed_modules = {
+                  fname.removesuffix(".lean").replace("/", ".")
+                  for fname, *_ in summary_rows
+              }
+              changed_build_times = {
+                  module: seconds
+                  for module, seconds in build_times.items()
+                  if module in changed_modules
+              }
+              if changed_build_times:
+                  out.append("### Slowest changed modules (from `lake build`)\n\n")
+                  out.append("| Changed module | Lake time |\n")
+                  out.append("|---|---:|\n")
+                  for module, seconds in sorted(
+                      changed_build_times.items(), key=lambda row: -row[1]
+                  )[:12]:
+                      out.append(f"| `{module}` | {seconds:.2f} s |\n")
+                  out.append("\n")
+
               # Full per-file output, collapsed by default so the comment
               # stays scannable when many files are profiled.
-              out.append("<details><summary>Per-file profile output</summary>\n\n")
+              out.append("<details><summary>Per-file `lean --profile` output</summary>\n\n")
               for fname, body in sections:
                   out.append(f"#### `{fname}`\n\n")
                   out.append("```text\n")
@@ -289,5 +596,8 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: proof-profile
-          path: proof-profile.log
+          path: |
+            proof-profile.log
+            proof-profile-heartbeats.log
+            proof-profile-build.log
           if-no-files-found: ignore

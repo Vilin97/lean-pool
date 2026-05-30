@@ -1,0 +1,65 @@
+name: Partial Port Audit
+
+on:
+  pull_request:
+    paths:
+      - 'LeanPool.lean'
+      - 'LeanPool/**/*.lean'
+      - 'LeanPool/projects.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: audit (advisory)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff
+        with:
+          enable-cache: true
+
+      - name: Sync Python dependencies
+        working-directory: python
+        run: uv sync
+
+      - name: Compare imported project with upstream
+        working-directory: python
+        run: |
+          set -uo pipefail
+          # Full fetch (not --depth=1): the audit diffs base...HEAD, which needs
+          # the merge base. A shallow base fails with "no merge base" once base
+          # has advanced past the PR's fork point (e.g. on a re-run).
+          git fetch origin "${{ github.base_ref }}"
+          # The audit is advisory: it flags possible partial ports but never
+          # fails the check — flags are often false positives (test files,
+          # ToMathlib stubs, reorganised files). Findings go to the job summary.
+          set +e
+          output="$(uv run python -m lean_pool.partial_port_audit \
+            --repo .. \
+            --base-ref "origin/${{ github.base_ref }}" \
+            --head-ref HEAD 2>&1)"
+          status=$?
+          set -e
+          echo "$output"
+          if [ "$status" -eq 0 ]; then
+            {
+              echo '## ✅ Partial port audit (advisory)'
+              echo
+              echo 'No partial-import concerns detected.'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            {
+              echo '## ⚠️ Partial port audit (advisory)'
+              echo
+              echo 'Possible partial imports flagged below. This is **advisory** and does not block merge.'
+              echo
+              while IFS= read -r line; do
+                echo "    $line"
+              done <<< "$output"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi

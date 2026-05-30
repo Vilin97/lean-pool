@@ -129,8 +129,56 @@ def resolve_repo_full_name() -> str:
 
 
 def fetch_diff(pr_number: str, repo_full_name: str) -> str:
-    """Return the full unified diff for ``pr_number``, untruncated."""
-    return run_gh("pr", "diff", pr_number, "--repo", repo_full_name)
+    """Return the full unified diff for ``pr_number``, untruncated.
+
+    GitHub's pull-request diff endpoint returns HTTP 406 once a diff
+    exceeds 20,000 lines, which makes ``gh pr diff`` fail outright on
+    very large PRs. Fall back to assembling the diff from the per-file
+    ``pulls/{n}/files`` endpoint, which paginates and is not subject to
+    the same cap.
+    """
+    try:
+        return run_gh("pr", "diff", pr_number, "--repo", repo_full_name)
+    except subprocess.CalledProcessError as exc:
+        stderr = exc.stderr or ""
+        if "diff exceeded" not in stderr and "too_large" not in stderr:
+            raise
+        return _assemble_diff_from_files(pr_number, repo_full_name)
+
+
+def _assemble_diff_from_files(pr_number: str, repo_full_name: str) -> str:
+    """Reconstruct a unified diff from per-file PR patches.
+
+    Streams ``pulls/{n}/files`` through ``gh api --paginate --jq '.[]'``
+    so each file's metadata arrives as one JSON object per line, then
+    wraps each ``patch`` field with the headers that ``gh pr diff``
+    would emit (``diff --git``, ``---``, ``+++``). Files without a
+    ``patch`` field (binary, renames with no content change, etc.) are
+    emitted with a placeholder so the LLM still sees that they changed.
+    """
+    raw = run_gh(
+        "api",
+        f"repos/{repo_full_name}/pulls/{pr_number}/files",
+        "--paginate",
+        "--jq",
+        ".[]",
+    )
+    chunks: list[str] = []
+    for line in raw.splitlines():
+        if not line.strip():
+            continue
+        entry = json.loads(line)
+        filename = entry["filename"]
+        previous = entry.get("previous_filename") or filename
+        patch = entry.get("patch")
+        chunks.append(f"diff --git a/{previous} b/{filename}")
+        if patch is None:
+            chunks.append("(binary or empty patch — content omitted)")
+            continue
+        chunks.append(f"--- a/{previous}")
+        chunks.append(f"+++ b/{filename}")
+        chunks.append(patch)
+    return "\n".join(chunks) + "\n"
 
 
 def fetch_head_sha(pr_number: str, repo_full_name: str) -> str:

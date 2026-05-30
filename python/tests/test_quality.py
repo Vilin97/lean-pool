@@ -35,13 +35,21 @@ def _write_minimal_repo(root: Path, basic_body: str = 'def hello := "world"\n') 
     )
 
 
-def _write_project_yaml(root: Path, projects: list[dict[str, str]]) -> None:
+def _write_project_yaml(root: Path, projects: list[dict[str, str | None]]) -> None:
     """Write a `projects.yml` containing the given project entries.
 
-    Each entry uses an `arxiv` source and the `[test]` tag set by default.
+    Each entry uses an `arxiv` source and the `[test]` tag set by default. A
+    `github_repo` is emitted unless the entry maps `github_repo` to `None`.
     """
     lines = ["projects:"]
     for project in projects:
+        source_lines = [
+            "    source:",
+            f'      arxiv: "{project.get("arxiv", "1234.5678")}"',
+        ]
+        github_repo = project.get("github_repo", "test-owner/test-repo")
+        if github_repo is not None:
+            source_lines.append(f"      github_repo: {github_repo}")
         lines.extend(
             [
                 f"  - slug: {project['slug']}",
@@ -50,8 +58,7 @@ def _write_project_yaml(root: Path, projects: list[dict[str, str]]) -> None:
                 f"    branch: {project.get('branch', 'test mathematics')}",
                 f"    entry_module: {project['entry_module']}",
                 "    authors: [Test Author]",
-                "    source:",
-                f'      arxiv: "{project.get("arxiv", "1234.5678")}"',
+                *source_lines,
                 f"    status: {project.get('status', 'verified')}",
                 "    main_declarations: [hello]",
                 "    main_results:",
@@ -257,6 +264,55 @@ def test_quality_check_strips_root_escape_from_declaration_name(tmp_path: Path) 
     assert "Foo.bar" in names
     assert "_root_.Foo.bar" not in names
     assert "Ns.Foo.bar" not in names
+
+
+def test_quality_check_section_inside_namespace_keeps_namespace(
+    tmp_path: Path,
+) -> None:
+    """A `section ... end` nested in a `namespace` must not pop the namespace.
+
+    Regression: `end <section>` popped the enclosing namespace, so every
+    declaration after the first nested section was recorded unqualified and the
+    `#print axioms` audit then failed with `unknown constant`.
+    """
+    _write_minimal_repo(
+        tmp_path,
+        "namespace Ns\n"
+        "section A\n"
+        "theorem before : True := trivial\n"
+        "end A\n"
+        "section B\n"
+        "theorem after : True := trivial\n"
+        "end B\n"
+        "end Ns\n",
+    )
+
+    names = {declaration.name for declaration in _parse_declarations(tmp_path)}
+
+    assert "Ns.before" in names
+    assert "Ns.after" in names
+    assert "before" not in names
+    assert "after" not in names
+
+
+def test_quality_check_dotted_name_inside_namespace_is_qualified(
+    tmp_path: Path,
+) -> None:
+    """`theorem Foo.bar` inside `namespace Ns` is recorded as `Ns.Foo.bar`.
+
+    Regression: dotted declaration names skipped namespace qualification, so the
+    audit emitted `#print axioms _root_.Foo.bar` (the unqualified name) and
+    failed even though the real declaration is `Ns.Foo.bar`.
+    """
+    _write_minimal_repo(
+        tmp_path,
+        "namespace Ns\ntheorem Foo.bar : True := trivial\nend Ns\n",
+    )
+
+    names = {declaration.name for declaration in _parse_declarations(tmp_path)}
+
+    assert "Ns.Foo.bar" in names
+    assert "Foo.bar" not in names
 
 
 def test_quality_check_rejects_oversized_file(tmp_path: Path) -> None:
@@ -557,3 +613,37 @@ def test_quality_check_rejects_extra_axiom_status(tmp_path: Path) -> None:
     errors = run_checks(tmp_path, skip_lean_axioms=True)
 
     assert any("invalid status" in error.message for error in errors)
+
+
+def test_quality_check_rejects_source_without_github_repo(tmp_path: Path) -> None:
+    """Every project source must name its upstream GitHub repo.
+
+    Without `source.github_repo` the partial-port audit silently skips the
+    project, so the quality check has to reject the omission instead.
+    """
+    _write_minimal_repo(tmp_path)
+    _write_project_yaml(
+        tmp_path,
+        [{"slug": "p", "entry_module": "LeanPool.Basic", "github_repo": None}],
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("github_repo" in error.message for error in errors)
+
+
+def test_quality_check_rejects_malformed_github_repo(tmp_path: Path) -> None:
+    """A `github_repo` that is not an `owner/name` slug is rejected too.
+
+    The partial-port audit's repo regex would reject the value and skip the
+    project, so the quality check must reject the same shapes.
+    """
+    _write_minimal_repo(tmp_path)
+    _write_project_yaml(
+        tmp_path,
+        [{"slug": "p", "entry_module": "LeanPool.Basic", "github_repo": "not-a-slug"}],
+    )
+
+    errors = run_checks(tmp_path, skip_lean_axioms=True)
+
+    assert any("github_repo" in error.message for error in errors)
