@@ -33,7 +33,7 @@ lemma sign_mul_pos {a b : ℝ} (ha : 0 < a) : Real.sign (a * b) = Real.sign b :=
     · simp [(by linarith : b = 0)]
 
 lemma sign_pos' {a : ℝ} (h : Real.sign a = 1) : 0 < a := by
-  by_contra hnonpos; simp at hnonpos
+  by_contra hnonpos; simp only [not_lt] at hnonpos
   by_cases h0 : a = 0
   · rw [Real.sign_eq_zero_iff.mpr h0] at h
     linarith
@@ -41,17 +41,16 @@ lemma sign_pos' {a : ℝ} (h : Real.sign a = 1) : 0 < a := by
     linarith
 
 lemma sign_neg' {a : ℝ} (h : Real.sign a = -1) : a < 0 := by
-  by_contra hnonneg; simp at hnonneg
+  by_contra hnonneg; simp only [not_lt] at hnonneg
   by_cases h0 : a = 0
   · rw [Real.sign_eq_zero_iff.mpr h0] at h
     linarith
-  · rw [Real.sign_of_pos (lt_of_le_of_ne hnonneg ?_)] at h
+  · rw [Real.sign_of_pos (lt_of_le_of_ne hnonneg (fun a_1 ↦ h0 a_1.symm))] at h
     linarith
-    exact fun a_1 ↦ h0 (id (Eq.symm a_1)) -- very strange
 
 lemma sign_div_pos {a b : ℝ} (hb₀ : b ≠ 0) (hs : Real.sign a = Real.sign b) :
     0 < a / b := by
-  cases' Real.sign_apply_eq_of_ne_zero _ hb₀ with hbs hbs <;> rw [hbs] at hs
+  obtain hbs | hbs := Real.sign_apply_eq_of_ne_zero _ hb₀ <;> rw [hbs] at hs
   · exact div_pos_of_neg_of_neg (sign_neg' hs) (sign_neg' hbs)
   · exact div_pos (sign_pos' hs) (sign_pos' hbs)
 
@@ -117,8 +116,10 @@ lemma forall_in_swap_special {α β : Type} {P : α → β → Prop} {Q : α →
   ⟨fun h b a ha ↦ h a ha b, fun h a ha b ↦ h b a ha⟩
 
 
-lemma forall_exists_pos_swap {α : Type} [Fintype α] {P : ℝ → α → Prop}
-    (h : ∀ δ a, P δ a → ∀ δ', δ' ≤ δ → P δ' a) : (∃ δ > 0, ∀ a, P δ a) ↔ (∀ a, ∃ δ > 0, P δ a) := by
+lemma forall_exists_pos_swap {α : Type} [Finite α] {P : ℝ → α → Prop}
+    (h : ∀ δ a, P δ a → ∀ δ', δ' ≤ δ → P δ' a) :
+    (∃ δ > 0, ∀ a, P δ a) ↔ (∀ a, ∃ δ > 0, P δ a) := by
+  have : Fintype α := Fintype.ofFinite α
   constructor
   · exact fun ⟨δ,Qδ,Pδ⟩ a ↦ ⟨δ, Qδ, Pδ a⟩
   · intro ha
@@ -168,11 +169,13 @@ lemma finset_infinite_pigeonhole {α β : Type} [Infinite α] {f : α → β} {B
     cases b
     simp [f_B]
 
-lemma infinite_distinct_el {α : Type} {S : Set α} (hS : Set.Infinite S) (k : α) : ∃ a ∈ S, a ≠ k := by
+lemma infinite_distinct_el {α : Type} {S : Set α} (hS : Set.Infinite S) (k : α) :
+    ∃ a ∈ S, a ≠ k := by
   have ⟨a, haS, ha⟩ :=  Set.Infinite.exists_notMem_finset hS ({k} : Finset α)
   exact ⟨a, haS, List.ne_of_not_mem_cons ha⟩
 
-lemma infinite_imp_two_distinct_el {α : Type} {S : Set α} (hS : S.Infinite) : ∃ a ∈ S, ∃ b ∈ S, a ≠ b := by
+lemma infinite_imp_two_distinct_el {α : Type} {S : Set α} (hS : S.Infinite) :
+    ∃ a ∈ S, ∃ b ∈ S, a ≠ b := by
   have ⟨a, ha⟩ := Set.Infinite.nonempty hS
   have ⟨b, hb⟩ := infinite_distinct_el hS a
   use a, ha, b, hb.1, hb.2.symm
