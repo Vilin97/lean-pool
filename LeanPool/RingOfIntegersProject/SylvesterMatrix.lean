@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -47,7 +48,6 @@ lemma Fin.pad_of_ge (P : Fin n → R) (x : R) (i : Fin m)
   subst h
   simp
 
-@[simp]
 theorem Fin.pad_map {S : Type*} (φ : R → S) (f : Fin (n + 1) → R) (x : R) (y : S)
     (h : φ x = y) :
     Fin.pad (m := m) (φ ∘ f) y = φ ∘ (Fin.pad f x) := by
@@ -59,7 +59,9 @@ section Zero
 
 variable [Zero R]
 
-/-- `sylvesterVec P i` is the vector `P` with `i` zeros appended to the left and `m - i` zeros to the right. -/
+/-- `sylvesterVec P i` is the vector `P` with `i` zeros appended to the left and `m - i` zeros to
+  the
+right. -/
 def sylvesterVec (P : Fin (n + 1) → R) (i : Fin m) : Fin (n + m) → R :=
   vecRotate (Fin.pad P 0) ((i.castAdd _).cast (add_comm _ _))
 
@@ -87,27 +89,28 @@ lemma sylvesterVec_cast {a} (P : Fin (a + 1) → R) (i : Fin m) (j : Fin (n + m)
 lemma sylvesterVec_of_lt (P : Fin (n + 1) → R) (i : Fin m) (j : Fin (n + m))
     (h : (j : ℕ) < i) : sylvesterVec P i j = 0 := by
   rw [sylvesterVec_apply, Fin.pad_of_ge]
-  · rw [Nat.succ_le, Fin.coe_sub_iff_lt.mpr h, Fin.coe_cast, Fin.coe_castAdd, add_right_comm _ m,
+  · rw [Nat.succ_le_iff, Fin.coe_sub_iff_lt.mpr h, Fin.val_cast, Fin.val_castAdd,
+    add_right_comm _ m,
         Nat.add_sub_assoc i.prop.le, add_assoc]
     simp
 
 lemma sylvesterVec_of_ge_of_le (P : Fin (n + 1) → R) (i : Fin m) (j : Fin (n + m))
     (h₁ : (i : ℕ) ≤ j) (h₂ : (j : ℕ) - i ≤ n) :
-    sylvesterVec P i j = P ⟨(j : ℕ) - i, Nat.lt_succ.mpr h₂⟩ := by
+    sylvesterVec P i j = P ⟨(j : ℕ) - i, Nat.lt_succ_iff.mpr h₂⟩ := by
   rw [sylvesterVec_apply, Fin.pad_of_lt]
   · congr
-    rw [Fin.coe_sub_iff_le.mpr h₁, Fin.coe_cast, Fin.coe_castAdd]
-  · rwa [Nat.lt_succ, Fin.coe_sub_iff_le.mpr h₁, Fin.coe_cast, Fin.coe_castAdd]
+    rw [Fin.coe_sub_iff_le.mpr h₁, Fin.val_cast, Fin.val_castAdd]
+  · rwa [Nat.lt_succ_iff, Fin.coe_sub_iff_le.mpr h₁, Fin.val_cast, Fin.val_castAdd]
 
 lemma sylvesterVec_of_ge_of_gt (P : Fin (n + 1) → R) (i : Fin m) (j : Fin (n + m))
     (h₁ : (i : ℕ) ≤ j) (h₂ : n < (j : ℕ) - i) : sylvesterVec P i j = 0 := by
   rw [sylvesterVec_apply, Fin.pad_of_ge]
-  · rwa [Nat.succ_le, Fin.coe_sub_iff_le.mpr h₁, Fin.coe_cast, Fin.coe_castAdd]
+  · rwa [Nat.succ_le_iff, Fin.coe_sub_iff_le.mpr h₁, Fin.val_cast, Fin.val_castAdd]
 
 lemma sylvesterVec_def (P : Fin (n + 1) → R) (i : Fin m) (j : Fin (n + m)) :
   sylvesterVec P i j =
     if i ≤ (j : ℕ) then
-      if h₂ : (j : ℕ) - i ≤ n then P ⟨(j : ℕ) - i, Nat.lt_succ.mpr h₂⟩
+      if h₂ : (j : ℕ) - i ≤ n then P ⟨(j : ℕ) - i, Nat.lt_succ_iff.mpr h₂⟩
         else 0
       else 0 := by
   split_ifs with h₁ h₂
@@ -134,7 +137,7 @@ example : sylvesterVec (m := 3) ![1, 2, 3] 2 = ![0, 0, 1, 2, 3] := by decide
 
 end Zero
 
-variable [CommRing R] 
+variable [CommRing R]
 
 @[simp] lemma vecRotate_smul (a : R) (P : Fin n → R) (i) :
     vecRotate (a • P) i = a • vecRotate P i := by
@@ -156,6 +159,7 @@ lemma sylvesterVec_smul (a : R) (P : Fin (n + 1) → R) :
   ext i j
   simp only [sylvesterVec, Pi.smul_apply, Fin.pad_smul_zero, vecRotate_smul]
 
+/-- Imported declaration. -/
 def sylvesterMatrixVec (P : Fin (n + 1) → R) (Q : Fin (m + 1) → R) :
     Matrix (Fin (m + n)) (Fin (m + n)) R :=
   (Matrix.of (Fin.addCases (fun i j ↦ sylvesterVec P i (j.cast (add_comm _ _))) (sylvesterVec Q)))ᵀ
@@ -188,7 +192,8 @@ lemma sylvesterMatrixVec_one (P Q : Fin 2 → R) :
 @[simp] lemma finAddFlip_symm {m n : ℕ} :
   (finAddFlip (m := m) (n := n)).symm = finAddFlip := by ext i; simp [finAddFlip]
 
-def sylvesterMatrixVec_swap (P : Fin (n + 1) → R) (Q : Fin (m + 1) → R) :
+/-- Imported declaration. -/
+theorem sylvesterMatrixVec_swap (P : Fin (n + 1) → R) (Q : Fin (m + 1) → R) :
     sylvesterMatrixVec P Q =
       Matrix.reindex (finCongr (add_comm _ _)) finAddFlip (sylvesterMatrixVec Q P) := by
   ext i j
@@ -198,7 +203,7 @@ def sylvesterMatrixVec_swap (P : Fin (n + 1) → R) (Q : Fin (m + 1) → R) :
   · rw [Fin.addCases_left, finAddFlip_symm, finAddFlip_apply_castAdd, Fin.addCases_right,
         finCongr_symm, finCongr_apply]
   · rw [Fin.addCases_right, finAddFlip_symm, finAddFlip_apply_natAdd, Fin.addCases_left,
-        finCongr_symm, finCongr_apply, Fin.cast_trans, Fin.cast_eq_self]
+        finCongr_symm, finCongr_apply, Fin.cast_cast, Fin.cast_eq_self]
 
 @[simp]
 lemma sylvesterMatrixVec_smul (a : R) (P : Fin (n + 1) → R) (Q : Fin (m + 1) → R) :
@@ -207,7 +212,7 @@ lemma sylvesterMatrixVec_smul (a : R) (P : Fin (n + 1) → R) (Q : Fin (m + 1) �
   ext i j
   induction j using Fin.addCases <;>
     simp only [sylvesterMatrixVec, Matrix.transpose_apply, Matrix.of_apply, Fin.addCases_left,
-      Fin.addCases_right, Pi.natCast_def, one_mul, sylvesterVec_smul, Pi.smul_apply, smul_eq_mul]
+      Fin.addCases_right, one_mul, sylvesterVec_smul, Pi.smul_apply, smul_eq_mul]
 
 @[simp]
 lemma smul_sylvesterMatrixVec (a : R) (P : Fin (n + 1) → R) (Q : Fin (m + 1) → R) :
@@ -216,7 +221,7 @@ lemma smul_sylvesterMatrixVec (a : R) (P : Fin (n + 1) → R) (Q : Fin (m + 1) �
   ext i j
   induction j using Fin.addCases <;>
     simp only [sylvesterMatrixVec, Matrix.transpose_apply, Matrix.of_apply, Fin.addCases_left,
-      Fin.addCases_right, Pi.natCast_def, one_mul, sylvesterVec_smul, Pi.smul_apply, smul_eq_mul]
+      Fin.addCases_right, one_mul, sylvesterVec_smul, Pi.smul_apply, smul_eq_mul]
 
 @[simp]
 lemma sylvesterMatrixVec_zero_left (P : Fin 1 → R) (Q : Fin (n + 1) → R) :
@@ -240,12 +245,14 @@ lemma sylvesterMatrixVec_zero_right (P : Fin (m + 1) → R) (Q : Fin 1 → R) :
   rfl
 
 @[simp]
-theorem sylvesterVec_map {S : Type*} [CommRing S] (φ : R →+* S) (f : Fin (n + 1) → R) (i : Fin m) (j) :
+theorem sylvesterVec_map {S : Type*} [CommRing S] (φ : R →+* S) (f : Fin (n + 1) → R) (i : Fin m)
+    (j) :
     sylvesterVec (φ ∘ f) i j = φ (sylvesterVec f i j) := by
   rw [sylvesterVec, Fin.pad_map φ f 0 0 (map_zero φ), vecRotate_map, sylvesterVec]
 
 @[simp]
-theorem sylvesterMatrixVec_map {S : Type*} [CommRing S] (φ : R →+* S) (f : Fin (n + 1) → R) (g : Fin (m + 1) → R) :
+theorem sylvesterMatrixVec_map {S : Type*} [CommRing S] (φ : R →+* S) (f : Fin (n + 1) → R)
+    (g : Fin (m + 1) → R) :
     sylvesterMatrixVec (φ ∘ f) (φ ∘ g) = (sylvesterMatrixVec f g).map φ := by
   ext i j
   refine Fin.addCases (fun j => ?_) (fun j => ?_) j
@@ -256,8 +263,8 @@ namespace Polynomial
 
 /--
 We define the sylvester matrix for polynomials P and Q and natural numbers n and m as the
-Sylvester matrix for the lists [P.coeff 0, P.coeff 1, ... , P.coeff n] and
-[Q.coeff 0, Q.coeff 1, ... , Q.coeff m].
+Sylvester matrix for the lists [P.coeff 0, P.coeff 1, ..., P.coeff n] and
+[Q.coeff 0, Q.coeff 1, ..., Q.coeff m].
 
 Note that this is slightly different from the standard definition: the highest coefficients
 end up with the highest indices. This allows for easier working with the `sylvesterMap`,
@@ -269,8 +276,8 @@ def sylvesterMatrixAux (m n : ℕ) (P Q : R[X]) :
 
 /--
 We define the sylvester matrix for polynomials P and Q of degree n and m respectively as the
-Sylvester matrix for the lists [P.coeff 0, P.coeff 1, ... , P.coeff n] and
-[Q.coeff 0, Q.coeff 1, ... , Q.coeff m]
+Sylvester matrix for the lists [P.coeff 0, P.coeff 1, ..., P.coeff n] and
+[Q.coeff 0, Q.coeff 1, ..., Q.coeff m]
 -/
 def sylvesterMatrix (P Q : R[X]) :
     Matrix (Fin (P.natDegree + Q.natDegree)) (Fin (P.natDegree + Q.natDegree)) R :=
@@ -305,7 +312,7 @@ lemma C_sylvesterMatrix (x : R) (Q : Polynomial R) :
   split_ifs with h
   · simp [h, sylvesterVec_of_ge_of_le]
   · obtain (h | h) := lt_or_gt_of_ne h <;>
-      simp only [Fin.lt_def, Fin.coe_natAdd, natDegree_C, zero_add] at h
+      simp only [Fin.lt_def, Fin.val_natAdd, natDegree_C, zero_add] at h
     · rw [sylvesterVec_of_lt _ _ _ h]
     · rw [sylvesterVec_of_ge_of_gt _ _ _ h.le]
       simpa using h

@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -14,7 +15,7 @@ local notation "T" => (X^8 - X^6 + 2*X^4 + X^2 + 1 : ℤ[X])
 
 local notation "l" => [1, 0, 1, 0, 2, 0, -1, 0, 1]
 
-lemma T_ofList' : T = ofList l := by norm_num ; ring
+lemma T_ofList' : T = ofList l := by norm_num; ring
 
 instance hp3' : Fact $ Nat.Prime 3 := fact_iff.2 (by norm_num)
 
@@ -70,15 +71,15 @@ noncomputable def C : CertificateIrreducibleIntOfPrimeDegreeAnalysis T l where
   | 0 => ![4, 4]
  hl := by decide
  hirr := by
-  intro i ; intro j
+  intro i; intro j
   fin_cases i <;> fin_cases j
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P3P0
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P3P0
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P3P0
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P3P0
  hm := by decide
- hprod := by decide!
- hinter := by decide!
- hrhoeq := by decide!
- hrho := by decide!
+ hprod := by decide +kernel
+ hinter := by decide +kernel
+ hrhoeq := by decide +kernel
+ hrho := by decide +kernel
  hs := by norm_num
  heval := by norm_num
 

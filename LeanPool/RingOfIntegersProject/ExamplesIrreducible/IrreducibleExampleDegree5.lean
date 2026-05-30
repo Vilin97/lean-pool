@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -13,10 +14,10 @@ local notation "T" => (X^5 - 150*X^3 - 100*X^2 + 8025*X + 28260 : ℤ[X])
 
 local notation "l" => [28260, 8025, -100, -150, 0, 1]
 
-lemma T_ofList' : T = ofList l := by norm_num ; ring
+lemma T_ofList' : T = ofList l := by norm_num; ring
 
-instance hp13 : Fact $ Nat.Prime 13 := fact_iff.2 (by norm_num)
-instance hp23 : Fact $ Nat.Prime 23 := fact_iff.2 (by norm_num)
+instance hp13 : Fact (Nat.Prime 13) := fact_iff.2 (by norm_num)
+instance hp23 : Fact (Nat.Prime 23) := fact_iff.2 (by norm_num)
 
 def P13P1 : CertificateIrreducibleZModOfList' 13 4 2 3 [2, 11, 7, 1, 1] where
  m := 1
@@ -110,14 +111,14 @@ noncomputable def C : IrreducibleCertificateIntPolynomial T l where
   | 1 => ![2, 3]
  hl := by decide
  hirr := by
-  intro i ; intro j
+  intro i; intro j
   fin_cases i <;> fin_cases j
   · exact irreducible_ofList_of_linear (R := ZMod 13) _ (by decide) (by decide)
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P13P1
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P23P0
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P23P1
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P13P1
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P23P0
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P23P1
  hm := by decide
- hprod := by decide!
- hinter := by decide!
+ hprod := by decide +kernel
+ hinter := by decide +kernel
 
 theorem irreducible_T : Irreducible T := irreducible_of_CertificateIntPolynomial _ _ C

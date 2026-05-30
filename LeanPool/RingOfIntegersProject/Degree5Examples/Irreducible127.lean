@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -13,15 +14,15 @@ local notation "T" => (X^5 - 75*X^3 - 50*X^2 + 2250*X + 5820 : ℤ[X])
 
 local notation "l" => [5820, 2250, -50, -75, 0, 1]
 
-lemma T_ofList' : T = ofList l := by norm_num ; ring 
-    
+lemma T_ofList' : T = ofList l := by norm_num; ring
+
 instance hp7' : Fact $ Nat.Prime 7 := fact_iff.2 (by norm_num)
 instance hp13' : Fact $ Nat.Prime 13 := fact_iff.2 (by norm_num)
 
 def P7P0 : CertificateIrreducibleZModOfList' 7 2 2 2 [5, 4, 1] where
  m := 1
  P := ![2]
- exp := ![1] 
+ exp := ![1]
  hneq := by decide
  hP := by decide
  hlen := by decide
@@ -43,7 +44,7 @@ def P7P0 : CertificateIrreducibleZModOfList' 7 2 2 2 [5, 4, 1] where
 def P7P1 : CertificateIrreducibleZModOfList' 7 3 2 2 [2, 6, 3, 1] where
  m := 1
  P := ![3]
- exp := ![1] 
+ exp := ![1]
  hneq := by decide
  hP := by decide
  hlen := by decide
@@ -65,7 +66,7 @@ def P7P1 : CertificateIrreducibleZModOfList' 7 3 2 2 [2, 6, 3, 1] where
 def P13P1 : CertificateIrreducibleZModOfList' 13 4 2 3 [1, 0, 6, 4, 1] where
  m := 1
  P := ![2]
- exp := ![2] 
+ exp := ![2]
  hneq := by decide
  hP := by decide
  hlen := by decide
@@ -93,7 +94,7 @@ noncomputable def C : IrreducibleCertificateIntPolynomial T l where
  hnn := by decide
  hdn := by decide
  p := ![7, 13]
- hp := by 
+ hp := by
   intro i
   fin_cases i
   exact hp7'.out
@@ -101,23 +102,23 @@ noncomputable def C : IrreducibleCertificateIntPolynomial T l where
  hlc := by decide
  m := ![2, 2]
  F := fun i =>
-  match i with 
+  match i with
   | 0 => ![[5, 4, 1], [2, 6, 3, 1]]
   | 1 => ![[9, 1], [1, 0, 6, 4, 1]]
  D := fun i =>
-  match i with 
+  match i with
   | 0 => ![2, 3]
   | 1 => ![1, 4]
  hl := by decide
  hirr := by
-  intro i ; intro j
+  intro i; intro j
   fin_cases i <;> fin_cases j
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P7P0
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P7P1
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P7P0
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P7P1
   · exact irreducible_ofList_of_linear (R := ZMod 13) _ (by decide) (by decide)
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P13P1
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P13P1
  hm := by decide
- hprod := by decide!
- hinter := by decide!
+ hprod := by decide +kernel
+ hinter := by decide +kernel
 
-theorem irreducible_T : Irreducible T := irreducible_of_CertificateIntPolynomial _ _ C 
+theorem irreducible_T : Irreducible T := irreducible_of_CertificateIntPolynomial _ _ C

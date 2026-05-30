@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -341,7 +342,7 @@ partial def evalFinsetSum : NormNumExt where eval {u β} e := do
   let instCS : Q(CommSemiring $β) ← synthInstanceQ (q(CommSemiring $β)) <|>
     throwError "not a commutative semiring: {β}"
   -- Have to construct this expression manually, `q(0)` doesn't parse correctly:
-  let n : Q(ℕ) := .lit (.natVal 0) 
+  let n : Q(ℕ) := .lit (.natVal 0)
   let pf : Q(IsNat (Finset.sum ∅ $f) $n) := q(@Finset.sum_empty $β $α $instCS $f)
   let res_empty := Result.isNat _ n pf
   let eval_f : (a : Q($α)) → MetaM (Result (q($f $a) : Q($β))) := fun a => NormNum.derive (q($f $a) : Q($β))

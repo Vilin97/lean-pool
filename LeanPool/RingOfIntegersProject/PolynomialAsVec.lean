@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -15,6 +16,7 @@ section Semiring
 
 variable [Semiring R]
 
+/-- Imported declaration. -/
 noncomputable def ofVec (v : Fin m → R) : R[X] :=
   ∑ i, C (v i) * X^(i : ℕ)
 
@@ -63,6 +65,7 @@ noncomputable def ofVec (v : Fin m → R) : R[X] :=
   rw [coeff_ofVec, coeff_C_mul, coeff_ofVec]
   split_ifs <;> simp
 
+/-- Imported declaration. -/
 def toVec (n : ℕ) (P : R[X]) : Fin n → R
   | ⟨i, _⟩ => P.coeff i
 
@@ -89,7 +92,7 @@ lemma toVec_C (x : R) : toVec 1 (C x) = fun _ => x := by
   ext
   simp [toVec]
 
-@[simp] lemma toVec_X_add_C (x : R) : toVec 2 (X + C x) = ![x, 1] := by
+lemma toVec_X_add_C (x : R) : toVec 2 (X + C x) = ![x, 1] := by
   rw [toVec_add, toVec_X, toVec_C']
   ext i
   fin_cases i <;> simp
@@ -148,3 +151,5 @@ variable [Ring R]
   rw [sub_eq_add_neg X, ← _root_.map_one C, ← _root_.map_neg C (1 : R), coeff_X_add_C_pow]
 
 end Ring
+
+end Polynomial

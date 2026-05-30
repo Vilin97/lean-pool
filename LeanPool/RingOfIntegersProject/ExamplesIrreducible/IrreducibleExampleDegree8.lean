@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -14,9 +15,9 @@ local notation "T" => (X^8 - 2*X^7 + 2*X^6 + 4*X^5 - 8*X^4 + 2*X^3 + 5*X^2 - 4*X
 
 local notation "l" => [1, -4, 5, 2, -8, 4, 2, -2, 1]
 
-lemma T_ofList' : T = ofList l := by norm_num ; ring
+lemma T_ofList' : T = ofList l := by norm_num; ring
 
-instance hp2 : Fact $ Nat.Prime 2 := fact_iff.2 (by norm_num)
+instance hp2 : Fact (Nat.Prime 2) := fact_iff.2 (by norm_num)
 
 def P2P0 : CertificateIrreducibleZModOfList' 2 4 2 1 [1, 1, 0, 0, 1] where
  m := 1
@@ -70,15 +71,15 @@ noncomputable def C : CertificateIrreducibleIntOfPrimeDegreeAnalysis T l where
   | 0 => ![4, 4]
  hl := by decide
  hirr := by
-  intro i ; intro j
+  intro i; intro j
   fin_cases i <;> fin_cases j
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P2P0
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P2P0
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P2P0
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P2P0
  hm := by decide
- hprod := by decide!
- hinter := by decide!
- hrhoeq := by decide!
- hrho := by decide!
+ hprod := by decide +kernel
+ hinter := by decide +kernel
+ hrhoeq := by decide +kernel
+ hrho := by decide +kernel
  hs := by norm_num
  heval := by norm_num
 

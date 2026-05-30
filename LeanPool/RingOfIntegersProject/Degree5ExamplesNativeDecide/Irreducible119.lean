@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -13,60 +14,60 @@ local notation "T" => (X^5 - 75*X^3 - 150*X^2 - 3600 : ℤ[X])
 
 local notation "l" => [-3600, 0, -150, -75, 0, 1]
 
-lemma T_ofList' : T = ofList l := by norm_num ; ring 
-    
+lemma T_ofList' : T = ofList l := by norm_num; ring
+
 instance hp7' : Fact $ Nat.Prime 7 := fact_iff.2 (by norm_num)
 
 def P7P0 : CertificateIrreducibleZModOfList' 7 5 2 2 [5, 0, 4, 2, 0, 1] where
  m := 1
  P := ![5]
- exp := ![1] 
- hneq := by native_decide
- hP := by native_decide
- hlen := by native_decide
- htr := by native_decide
+ exp := ![1]
+ hneq := by decide +kernel
+ hP := by decide +kernel
+ hlen := by decide +kernel
+ htr := by decide +kernel
  bit := ![1, 1, 1]
- hbits := by native_decide
+ hbits := by decide +kernel
  h := ![[0, 1], [3, 0, 3, 4, 3], [5, 2, 3, 3, 2], [1, 2, 5, 0, 1], [5, 2, 3, 0, 1], [0, 1]]
  g := ![![[5, 0, 1], []],![[0, 4, 6, 4, 4, 3, 2, 6], [3, 2, 6, 1, 5, 3, 3, 6]],![[6, 5, 6, 3, 3, 4, 3, 4], [6, 5, 4, 3, 6, 4, 1, 1]],![[6, 1, 2, 3, 0, 5, 4, 1], [3, 6, 6, 3, 2, 6, 0, 1]],![[0, 4, 0, 1, 5, 2, 5, 4], [4, 2, 6, 0, 2, 0, 0, 1]]]
  h' := ![![[3, 0, 3, 4, 3], [0, 0, 0, 1], [0, 1]],![[5, 2, 3, 3, 2], [5, 4, 4, 5, 4], [3, 0, 3, 4, 3]],![[1, 2, 5, 0, 1], [4, 6, 3, 2, 4], [5, 2, 3, 3, 2]],![[5, 2, 3, 0, 1], [0, 4, 6, 2, 1], [1, 2, 5, 0, 1]],![[0, 1], [0, 0, 1, 4, 5], [5, 2, 3, 0, 1]]]
- hs := by native_decide
- hz := by native_decide
- hmul := by native_decide
+ hs := by decide +kernel
+ hz := by decide +kernel
+ hmul := by decide +kernel
  a := ![[], [4, 1, 2], [], [], []]
  b := ![[], [3, 4, 6, 4], [], [], []]
- hhz := by native_decide
- hhn := by native_decide
- hgcd := by native_decide
+ hhz := by decide +kernel
+ hhn := by decide +kernel
+ hgcd := by decide +kernel
 
 noncomputable def C : IrreducibleCertificateIntPolynomial T l where
  hpol := T_ofList'
  n := 1
  d := 5
- hprim := by native_decide
- hdeg := by native_decide
- hnn := by native_decide
- hdn := by native_decide
+ hprim := by decide +kernel
+ hdeg := by decide +kernel
+ hnn := by decide +kernel
+ hdn := by decide +kernel
  p := ![7]
- hp := by 
+ hp := by
   intro i
   fin_cases i
   exact hp7'.out
- hlc := by native_decide
+ hlc := by decide +kernel
  m := ![1]
  F := fun i =>
-  match i with 
+  match i with
   | 0 => ![[5, 0, 4, 2, 0, 1]]
  D := fun i =>
-  match i with 
+  match i with
   | 0 => ![5]
- hl := by native_decide
+ hl := by decide +kernel
  hirr := by
-  intro i ; intro j
+  intro i; intro j
   fin_cases i <;> fin_cases j
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P7P0
- hm := by native_decide
- hprod := by native_decide
- hinter := by native_decide
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P7P0
+ hm := by decide +kernel
+ hprod := by decide +kernel
+ hinter := by decide +kernel
 
-theorem irreducible_T : Irreducible T := irreducible_of_CertificateIntPolynomial _ _ C 
+theorem irreducible_T : Irreducible T := irreducible_of_CertificateIntPolynomial _ _ C

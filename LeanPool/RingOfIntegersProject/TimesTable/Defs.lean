@@ -1,15 +1,21 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
 
 import Mathlib.RingTheory.PowerBasis
+import Mathlib.LinearAlgebra.Basis.Defs
 
-open BigOperators
+open Module BigOperators
 
-structure TimesTable (ι : Type _) (R : Type _) (S : Type _) [Semiring R] [AddCommMonoid S] [Mul S] [Module R S] : Type _ where
+/-- Imported declaration. -/
+structure TimesTable (ι : Type _) (R : Type _) (S : Type _) [Semiring R] [AddCommMonoid S] [Mul S]
+    [Module R S] : Type _ where
+  /-- Imported declaration. -/
   basis : Basis ι R S
+  /-- Imported declaration. -/
   table : ι → ι → ι → R
   basis_mul_basis : ∀ i j k, basis.repr (basis i * basis j) k = table i j k
 
@@ -17,6 +23,7 @@ section add_monoid
 
 variable {ι R S : Type _} [Semiring R] [AddCommMonoid S] [Module R S] [Mul S]
 
+/-- Imported declaration. -/
 noncomputable def TimesTable.coord (t : TimesTable ι R S) (x : S) (i : ι) : R :=
 t.basis.repr x i
 
@@ -34,7 +41,8 @@ t.basis.ext_elem h
 end add_monoid
 
 section Semiring
-variable {ι R S : Type _} [Fintype ι] [CommSemiring R] [NonUnitalNonAssocSemiring S] [Module R S] [IsScalarTower R S S] [SMulCommClass R S S]
+variable {ι R S : Type _} [Fintype ι] [CommSemiring R] [NonUnitalNonAssocSemiring S] [Module R S]
+    [IsScalarTower R S S] [SMulCommClass R S S]
 
 lemma TimesTable.unfold_mul' (t : TimesTable ι R S) :
   ∀ x y k, t.basis.repr (x * y) k =
@@ -50,20 +58,18 @@ lemma TimesTable.unfold_mul (t : TimesTable ι R S) :
   ∀ x y k, t.coord (x * y) k = ∑ i : ι, ∑ j : ι, t.coord x i * t.coord y j * t.table i j k :=
 t.unfold_mul'
 
-@[simp] lemma TimesTable.mul_def (t : TimesTable ι R S) (i j k : ι)  :
+omit [Fintype ι] [IsScalarTower R S S] [SMulCommClass R S S] in
+@[simp] lemma TimesTable.mul_def (t : TimesTable ι R S) (i j k : ι) :
     t.coord (t.basis i * t.basis j) k = t.table i j k := by
-  classical
-  simp only [t.unfold_mul, t.coord_basis]
-  rw [Fintype.sum_eq_single i, Fintype.sum_eq_single j, Pi.single_eq_same, Pi.single_eq_same,
-    one_mul, one_mul] <;>
-  · intros x hx
-    simp [Pi.single_eq_of_ne hx]
+  exact t.basis_mul_basis i j k
 
 /-
-@[simp] lemma linear_equiv.map_bit0 {R M N : Type _} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N]
+@[simp] lemma linear_equiv.map_bit0 {R M N : Type _} [Semiring R] [AddCommMonoid M] [Module R M]
+  [AddCommMonoid N] [Module R N]
   (f : M ≃ₗ[R] N) (x : M) : f (bit0 x) = bit0 (f x) :=
 by { unfold bit0, simp only [_root_.map_add, finsupp.coe_add, pi.add_apply] }
-@[simp] lemma linear_equiv.map_bit1 {R M N : Type _} [Semiring R] [AddCommMonoid M] [Module R M] [AddCommMonoid N] [Module R N] [One M]
+@[simp] lemma linear_equiv.map_bit1 {R M N : Type _} [Semiring R] [AddCommMonoid M] [Module R M]
+  [AddCommMonoid N] [Module R N] [One M]
   (f : M ≃ₗ[R] N) (x : M) : f (bit1 x) = bit0 (f x) + f 1 :=
 by { unfold bit1 bit0, simp only [_root_.map_add, finsupp.coe_add, pi.add_apply] }
 -/
@@ -91,19 +97,20 @@ protected lemma coord_bit1 [One S] (t : TimesTable ι R S) (k : ι) {e₁ : S} {
   (e₁_eq : t.coord e₁ k = e₁') (one_eq : t.coord 1 k = o) (e2_eq : e₁' + e₁' = e₁2)
   (e_eq : e₁2 + o = e') :
   t.coord (bit1 e₁) k = e' :=
-by simp only [← t.basis_repr_eq,bit1, bit0, _root_.map_add, finsupp.add_apply, t.basis_repr_eq,
+by simp only [← t.basis_repr_eq, bit1, bit0, _root_.map_add, finsupp.add_apply, t.basis_repr_eq,
   e₁_eq, e2_eq, one_eq, e_eq]
 -/
 
 protected lemma coord_add (t : TimesTable ι R S) (k : ι) (e₁ e₂ : S) :
   t.coord (e₁ + e₂) k =  t.coord e₁ k + t.coord e₂ k :=
-by rw [← t.basis_repr_eq,_root_.map_add, Finsupp.add_apply, t.basis_repr_eq, t.basis_repr_eq]
+by rw [← t.basis_repr_eq, _root_.map_add, Finsupp.add_apply, t.basis_repr_eq, t.basis_repr_eq]
 
 end AddCommMonoid
 
 section NonUnitalNonAssocSemiring
 
-variable {ι R S : Type _} [Fintype ι] [CommSemiring R] [NonUnitalNonAssocSemiring S] [Module R S] [IsScalarTower R S S] [SMulCommClass R S S]
+variable {ι R S : Type _} [Fintype ι] [CommSemiring R] [NonUnitalNonAssocSemiring S] [Module R S]
+    [IsScalarTower R S S] [SMulCommClass R S S]
 
 protected lemma coord_mul (t : TimesTable ι R S) (k : ι) (e₁ e₂ : S) (e' : R)
   (eq : ∑ i : ι, ∑ j : ι, t.coord e₁ i * t.coord e₂ j * t.table i j k = e') :
@@ -163,17 +170,20 @@ end AddCommGroup
 open BigOperators Polynomial
 
 -- TODO: could generalize to infinite ι
+/-- Imported declaration. -/
+@[reducible]
 noncomputable def has_mul_of_table {ι R S : Type _} [Fintype ι] [Semiring R]
     [AddCommMonoid S] [Module R S] (b : Basis ι R S) (table : ι → ι → ι → R) :
     Mul S :=
-{ mul := λ x y => b.equivFun.symm (λ k => ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k) }
+{ mul := fun x y =>
+    b.equivFun.symm (fun k => ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k) }
 
 lemma mul_def' {ι R S : Type _} [Fintype ι] [Semiring R]
     [hS : AddCommMonoid S] [Module R S] (b : Basis ι R S) (table : ι → ι → ι → R)
     (x y : S) (k : ι) :
     b.repr (by { letI := has_mul_of_table b table; exact x * y }) k =
       ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k :=
-show b.repr (b.equivFun.symm (λ k => ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k)) k =
+show b.repr (b.equivFun.symm (fun k => ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k)) k =
   ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k
 by simp only [← b.equivFun_apply, b.equivFun.apply_symm_apply]
 
@@ -185,12 +195,13 @@ lemma mul_def_of_table {ι R S : Type _} [Fintype ι] [Semiring R]
   rw [mul_def', Fintype.sum_eq_single i, Fintype.sum_eq_single j]
   · simp
   · intros k hk
-    simp [Finsupp.single_eq_of_ne hk.symm]
+    simp [Finsupp.single_eq_of_ne hk]
   · intros k hk
-    simp [Finsupp.single_eq_of_ne hk.symm]
+    simp [Finsupp.single_eq_of_ne hk]
 
 -- TODO: could generalize to infinite ι
 -- See note [reducible non-instances]
+/-- Imported declaration. -/
 @[reducible]
 noncomputable def non_unital_non_assoc_semiring_of_table {ι R S : Type _} [Fintype ι] [Semiring R]
   [hS : AddCommMonoid S] [Module R S] (b : Basis ι R S) (table : ι → ι → ι → R) :
@@ -198,19 +209,20 @@ noncomputable def non_unital_non_assoc_semiring_of_table {ι R S : Type _} [Fint
 { hS with
   zero := 0,
   add := (·+·),
-  mul := λ x y => b.equivFun.symm (λ k => ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k),
-  zero_mul := λ x => b.ext_elem (λ k => by
+  mul := (has_mul_of_table b table).mul,
+  zero_mul := fun x => b.ext_elem (fun k => by
     rw [mul_def']
     simp only [map_zero b.repr, Finsupp.zero_apply, zero_mul, Finset.sum_const_zero]),
-  mul_zero := λ x => b.ext_elem (λ k => by
+  mul_zero := fun x => b.ext_elem (fun k => by
     rw [mul_def']
     simp only [map_zero b.repr, Finsupp.zero_apply, mul_zero, zero_mul, Finset.sum_const_zero]),
-  left_distrib := λ x y z => b.ext_elem (λ k => by
+  left_distrib := fun x y z => b.ext_elem (fun k => by
     rw [mul_def']
-    simp only [map_add b.repr, Finsupp.add_apply, mul_add, add_mul, Finset.sum_add_distrib, mul_def']),
-  right_distrib := λ x y z => b.ext_elem (λ k => by
+    simp only [map_add b.repr, Finsupp.add_apply, mul_add, add_mul, Finset.sum_add_distrib,
+      mul_def']),
+  right_distrib := fun x y z => b.ext_elem (fun k => by
     rw [mul_def']
-    simp only [map_add b.repr, Finsupp.add_apply, mul_add, add_mul, Finset.sum_add_distrib, mul_def']) }
+    simp only [map_add b.repr, Finsupp.add_apply, add_mul, Finset.sum_add_distrib, mul_def']) }
 
 end TimesTable
 
@@ -225,29 +237,29 @@ theorem PowerBasis.repr_aeval_gen_of_natDegree_lt {R S : Type _} [CommRing R] [R
     (pb : PowerBasis R S) (f : R[X]) (hf : f.natDegree < pb.dim) (k) :
     pb.basis.repr (aeval (R := R) pb.gen f) k = f.coeff (k : ℕ) := by
   simp only [aeval_eq_sum_range, map_sum, map_smul, Finsupp.coe_finset_sum, Finsupp.smul_apply,
-      Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-  rw [Finset.sum_eq_single (k : ℕ), pb.repr_gen_pow, Finsupp.single_eq_same, mul_one]
-  · simp only [Finset.mem_range]
-    intros i hi hik
-    have hip : i < pb.dim := (Nat.le_of_lt_succ hi).trans_lt hf
+      Finset.sum_apply, smul_eq_mul]
+  rw [Finset.sum_eq_single (k : ℕ)]
+  · rw [pb.repr_gen_pow _ k.isLt, Finsupp.single_eq_same, mul_one]
+  · intro i hi hik
+    have hi' : i < f.natDegree + 1 := by
+      simpa [Finset.mem_range] using hi
+    have hip : i < pb.dim := (Nat.le_of_lt_succ hi').trans_lt hf
     rw [pb.repr_gen_pow _ hip, Finsupp.single_eq_of_ne, mul_zero]
-    · rwa [ne_eq, Fin.ext_iff]
-  · simp only [Finset.mem_range]
-    intros hk
-    rw [coeff_eq_zero_of_natDegree_lt, zero_mul]
-    rwa [Nat.lt_succ, not_le] at hk
+    exact fun h => hik (congrArg Fin.val h).symm
+  · intro hk
+    have hklt : f.natDegree < (k : ℕ) := by
+      exact Nat.lt_of_not_ge (by simpa [Finset.mem_range] using hk)
+    rw [coeff_eq_zero_of_natDegree_lt hklt, zero_mul]
 
 @[simp]
 theorem PowerBasis.repr_aeval_gen {R S : Type _} [CommRing R] [Ring S] [Algebra R S]
     (pb : PowerBasis R S) (f : R[X]) (k) :
     pb.basis.repr (aeval (R := R) pb.gen f) k = (f %ₘ minpoly R pb.gen).coeff (k : ℕ) := by
-  conv_lhs => rw [← modByMonic_add_div f (minpoly.monic pb.isIntegral_gen)]
-  simp only [map_add, map_mul, minpoly.aeval, zero_mul, map_zero, add_zero]
-
+  conv_lhs => rw [← modByMonic_add_div f (minpoly R pb.gen)]
+  simp only [map_add, map_mul, minpoly.aeval, zero_mul, add_zero]
   by_cases h : f %ₘ minpoly R pb.gen = 0
   · rw [h, map_zero, map_zero, Finsupp.zero_apply, coeff_zero]
   have : Nontrivial R := Polynomial.nontrivial_iff.mp ⟨_, _, h⟩
-
   apply PowerBasis.repr_aeval_gen_of_natDegree_lt
   rw [natDegree_lt_iff_degree_lt h, ← pb.degree_minpoly]
   exact degree_modByMonic_lt _ (minpoly.monic pb.isIntegral_gen)

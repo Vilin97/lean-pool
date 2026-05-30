@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -77,7 +78,7 @@ lemma isPolynomial_ofVec_snoc {x : R} (i : ℕ) :
   simp only [Polynomial.coeff_ofVec, Fin.snoc]
   split_ifs with hi_succ hi
   · simpa using IsPolynomial.apply_const (R := R) (⟨i, hi⟩ : Fin m)
-  · have hi_eq : i = m := le_antisymm (Nat.lt_succ.mp hi_succ) (le_of_not_gt hi)
+  · have hi_eq : i = m := le_antisymm (Nat.lt_succ_iff.mp hi_succ) (le_of_not_gt hi)
     subst hi_eq
     exact IsPolynomial.const x
   · exact IsPolynomial.const 0

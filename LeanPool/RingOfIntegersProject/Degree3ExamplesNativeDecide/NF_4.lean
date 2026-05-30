@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -14,7 +15,7 @@ import LeanPool.RingOfIntegersProject.DiscriminantSubalgebraBuilder
 
 -- Number field with label 3.1.9720.2 in the LMFDB
 
-open Polynomial
+open Polynomial Module
 
 noncomputable def T : ℤ[X] := X^3 - 18*X - 48
 lemma T_def : T = X^3 - 18*X - 48 := rfl
@@ -28,7 +29,7 @@ noncomputable def Adj : IsAdjoinRoot K (map (algebraMap ℤ ℚ) T) :=
 local notation "θ" => Adj.root
 
 lemma T_ofList : ofList l = T := by
-  rw [T_def] ; norm_num ; ring
+  rw [T_def]; norm_num; ring
 
 -- We build the subalgebra with integral basis [1, a, 1/2*a^2]
 
@@ -44,12 +45,12 @@ noncomputable def BQ : SubalgebraBuilderLists 3 ℤ  ℚ K T l where
 ![![0, 0, 1],![24, 9, 0],![0, 12, 9]]]
  s := ![![[], [], []],![[], [], [-2]],![[], [-2], [0, -1]]]
  h := Adj
- honed := by native_decide
+ honed := by decide +kernel
  hd := by norm_num
- hcc := by native_decide
- hin := by native_decide
- hsymma := by native_decide
- hc_le := by native_decide
+ hcc := by decide +kernel
+ hin := by decide +kernel
+ hsymma := by decide +kernel
+ hc_le := by decide +kernel
 
 lemma T_degree : T.natDegree = 3 := (SubalgebraBuilderOfList T l BQ).hdeg
 
@@ -58,6 +59,18 @@ lemma T_monic : Monic T := by
   refine monic_ofList l rfl
 
 lemma T_irreducible : Irreducible T := irreducible_T
+
+instance : Fact <| Irreducible (map (algebraMap ℤ ℚ) T) where
+  out := (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map T_monic).1 T_irreducible
+
+instance : IsDomain K := by
+  have hmap : Irreducible (map (algebraMap ℤ ℚ) T) :=
+    (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map T_monic).1 T_irreducible
+  exact AdjoinRoot.isDomain_of_prime (Irreducible.prime hmap)
+
+instance : NoZeroSMulDivisors ℤ K := by
+  haveI : IsAddTorsionFree K := IsDomain.instIsAddTorsionFreeOfCharZero K
+  infer_instance
 
 noncomputable def Om : Subalgebra ℤ K := integralClosure ℤ K
 
@@ -80,23 +93,23 @@ def Table : Fin 3 → Fin 3 → List ℤ :=
  ![[0, 1, 0], [0, 0, 2], [24, 9, 0]],
  ![[0, 0, 1], [24, 9, 0], [0, 12, 9]]]
 
-lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) := by decide!
+lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) := by decide +kernel
 
 lemma hroot_mem : θ ∈ O := by
-  refine root_in_subalgebra_lists T l BQ ![0, 1, 0] [] (by decide!)
+  refine root_in_subalgebra_lists T l BQ ![0, 1, 0] [] (by decide +kernel)
 
-instance hp2: Fact $ Nat.Prime 2 := fact_iff.2 (by norm_num)
-instance hp3: Fact $ Nat.Prime 3 := fact_iff.2 (by norm_num)
-instance hp5: Fact $ Nat.Prime 5 := fact_iff.2 (by norm_num)
+instance hp2 : Fact (Nat.Prime 2) := fact_iff.2 (by norm_num)
+instance hp3 : Fact (Nat.Prime 3) := fact_iff.2 (by norm_num)
+instance hp5 : Fact (Nat.Prime 5) := fact_iff.2 (by norm_num)
 
-def CD3: CertificateDedekindCriterionLists l 3 where
- n :=  3
+def CD3 : CertificateDedekindCriterionLists l 3 where
+ n := 3
  a' := []
- b' :=  [1]
+ b' := [1]
  k := [1]
  f := [16, 6]
- g :=  [0, 1]
- h :=  [0, 0, 1]
+ g := [0, 1]
+ h := [0, 0, 1]
  a :=  [1]
  b :=  []
  c :=  []
@@ -105,14 +118,14 @@ def CD3: CertificateDedekindCriterionLists l 3 where
  hf := by rfl
  habc := by rfl
 
-def CD5: CertificateDedekindCriterionLists l 5 where
- n :=  2
+def CD5 : CertificateDedekindCriterionLists l 5 where
+ n := 2
  a' := [4]
- b' :=  [4, 3]
+ b' := [4, 3]
  k := [2, 1]
  f := [12, 5, 1]
- g :=  [3, 1, 1]
- h :=  [4, 1]
+ g := [3, 1, 1]
+ h := [4, 1]
  a :=  [0, 2]
  b :=  [2, 3]
  c :=  []
@@ -126,26 +139,26 @@ noncomputable def D : CertificateDedekindAlmostAllLists T l [2] where
  p := ![2, 3, 5]
  exp := ![5, 5, 1]
  pdgood := [3, 5]
- hsub := by native_decide
+ hsub := by decide +kernel
  hp := by
-  intro i ; fin_cases i
+  intro i; fin_cases i
   exact hp2.out
   exact hp3.out
   exact hp5.out
  a := [-1296, 324]
  b := [1296, 432, -108]
- hab := by native_decide
+ hab := by decide +kernel
  hd := by
   intro p hp
   fin_cases hp
-  exact satisfiesDedekindCriterion_of_certificate_lists T l 3 T_ofList CD3
-  exact satisfiesDedekindCriterion_of_certificate_lists T l 5 T_ofList CD5
+  · exact satisfiesDedekindCriterion_of_certificate_lists T l 3 T_ofList CD3
+  · exact satisfiesDedekindCriterion_of_certificate_lists T l 5 T_ofList CD5
 
 noncomputable def M2 : MaximalOrderCertificateLists 2 O Om hm where
  m := 1
  n := 2
- t :=  2
- hpos := by native_decide
+ t := 2
+ hpos := by decide +kernel
  TT := timesTableO
  B' := B'
  T := Table
@@ -153,8 +166,8 @@ noncomputable def M2 : MaximalOrderCertificateLists 2 O Om hm where
  TMod := ![![[1, 0, 0], [0, 1, 0], [0, 0, 1]],
 ![[0, 1, 0], [0, 0, 0], [0, 1, 0]],
 ![[0, 0, 1], [0, 1, 0], [0, 0, 1]]]
- hTMod := by native_decide
- hle := by native_decide
+ hTMod := by decide +kernel
+ hle := by decide +kernel
  b1 := ![![0, 1, 0]]
  b2 := ![![1, 0, 0],![0, 0, 1]]
  v := ![![0, 1, 0]]
@@ -162,45 +175,43 @@ noncomputable def M2 : MaximalOrderCertificateLists 2 O Om hm where
  wFrob := ![![1, 0, 0],![0, 0, 1]]
  v_ind := ![1]
  w_ind := ![0, 2]
- hmod1 := by native_decide
- hmod2 := by native_decide
- hindv := by native_decide
- hindw := by native_decide
- hvFrobKer := by native_decide
- hwFrobComp := by native_decide
+ hmod1 := by decide +kernel
+ hmod2 := by decide +kernel
+ hindv := by decide +kernel
+ hindw := by decide +kernel
+ hvFrobKer := by decide +kernel
+ hwFrobComp := by decide +kernel
  g := ![![0, 0, 1],![1, 0, 1],![0, 1, 0]]
  a := ![![![9]],![![10]],![![0]]]
  c := ![![![12, 0]],![![12, 0]],![![0, 1]]]
  d := ![![![0],![24]],![![0],![24]],![![2],![18]]]
  e := ![![![0, 1],![0, 9]],![![1, 1],![0, 10]],![![0, 0],![24, 0]]]
  ab_ind := ![(Sum.inl 0, Sum.inl 0),(Sum.inr 0, Sum.inr 0),(Sum.inl 0, Sum.inr 1)]
- hindab := by native_decide
- hmul1 := by native_decide
- hmul2 := by native_decide
+ hindab := by decide +kernel
+ hmul1 := by decide +kernel
+ hmul2 := by decide +kernel
 
 
- instance : Fact $ (Irreducible (map (algebraMap ℤ ℚ) T)) where
-  out :=  (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map (T_monic)).1 T_irreducible
-
-theorem O_ringOfIntegers : O = integralClosure ℤ K := by
+ theorem O_ringOfIntegers : O = integralClosure ℤ K := by
   refine eq_of_piMaximal_at_all_primes_int O Om hm ?_
   intro p hp
   by_cases hc : p ∈ [2]
   · fin_cases hc
     exact pMaximal_of_MaximalOrderCertificateLists 2 O Om hm M2
-  · haveI : Fact $ Nat.Prime p := fact_iff.2 hp
+  · haveI : Fact (Nat.Prime p) := fact_iff.2 hp
     refine piMaximal_of_root_in_order_of_satisfiesDedekindCriterion_int Adj T_monic hm ?_ hroot_mem
      (satisfiesDedekindAlmostAllLists_of_certificate T l T_ofList [2] D p hp hc)
-    rw [T_degree, rank_subalgebra_eq_card_basis Om B']
+    rw [T_degree, ← rank_subalgebra_eq_card_basis Om B']
+    rfl
 
 
-theorem  O_ringOfIntegers' : O = NumberField.RingOfIntegers K := by rw [O_ringOfIntegers] ; rfl
+theorem O_ringOfIntegers' : O = NumberField.RingOfIntegers K := by rw [O_ringOfIntegers]; rfl
 
-lemma T_discr : T.discriminant = -38880 :=  by
+lemma T_discr : T.discriminant = -38880 := by
   rw [T_monic.discriminant_def, T_degree, ← T_ofList]
   have : [-48, -18, 0, 1].derivative = [-18, 0, 3, 0] := rfl
   rw [← ofList_derivative_eq_derivative , this]
-  native_decide
+  decide +kernel
 
 theorem K_discr : NumberField.discr K = -9720 := by
   rw [discr_numberField_eq_discrSubalgebraBuilder

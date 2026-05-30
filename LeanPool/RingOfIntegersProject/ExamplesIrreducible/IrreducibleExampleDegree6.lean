@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -14,7 +15,7 @@ local notation "T" => (X^6 - X^5 - 2*X^4 + 5*X^3 + 2*X^2 - 3*X + 1 : ℤ[X])
 
 local notation "l" => [1, -3, 2, 5, -2, -1, 1]
 
-lemma T_ofList' : T = ofList l := by norm_num ; ring
+lemma T_ofList' : T = ofList l := by norm_num; ring
 
 noncomputable def C : CertificateIrreducibleIntOfPrime T l where
  hpol := T_ofList'
@@ -28,8 +29,8 @@ noncomputable def C : CertificateIrreducibleIntOfPrime T l where
  ρ := 13/4
  hPPrime := by norm_num
  hrpos := by norm_num
- hrhoeq := by decide!
- hrho := by decide!
+ hrhoeq := by decide +kernel
+ hrho := by decide +kernel
  hs := by norm_num
  heval := by norm_num
 

@@ -1,5 +1,6 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
+Sander R. Dahmen. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -14,7 +15,7 @@ local notation "T" => (X^8 - X^6 + 2*X^4 + X^2 + 1 : ℤ[X])
 
 local notation "l" => [1, 0, 1, 0, 2, 0, -1, 0, 1]
 
-lemma T_ofList' : T = ofList l := by norm_num ; ring
+lemma T_ofList' : T = ofList l := by norm_num; ring
 
 instance hp3' : Fact $ Nat.Prime 3 := fact_iff.2 (by norm_num)
 
@@ -22,28 +23,28 @@ def P3P0 : CertificateIrreducibleZModOfList' 3 4 2 1 [2, 0, 1, 0, 1] where
  m := 1
  P := ![2]
  exp := ![2]
- hneq := by  native_decide
- hP := by  native_decide
- hlen := by  native_decide
- htr := by  native_decide
+ hneq := by  decide +kernel
+ hP := by  decide +kernel
+ hlen := by  decide +kernel
+ htr := by  decide +kernel
  bit := ![1, 1]
- hbits := by  native_decide
+ hbits := by  decide +kernel
  h := ![[0, 1], [0, 0, 0, 1], [0, 2], [0, 0, 0, 2], [0, 1]]
  g := ![![[]],![[0, 2, 0, 2, 0, 1]],![[]],![[0, 1, 0, 1, 0, 2]]]
  h' := ![![[0, 0, 0, 1], [0, 1]],![[0, 2], [0, 0, 0, 1]],![[0, 0, 0, 2], [0, 2]],![[0, 1], [0, 0, 0, 2]]]
- hs := by  native_decide
- hz := by  native_decide
- hmul := by  native_decide
+ hs := by  decide +kernel
+ hz := by  decide +kernel
+ hmul := by  decide +kernel
  a := ![[], [], [2], []]
  b := ![[], [], [0, 1, 0, 1], []]
- hhz := by  native_decide
- hhn := by  native_decide
- hgcd := by  native_decide
+ hhz := by  decide +kernel
+ hhn := by  decide +kernel
+ hgcd := by  decide +kernel
 
 noncomputable def C : CertificateIrreducibleIntOfPrimeDegreeAnalysis T l where
  hpol := T_ofList'
- hdeg := by  native_decide
- hprim := by  native_decide
+ hdeg := by  decide +kernel
+ hprim := by  decide +kernel
  n := 1
  d := 4
  s := 724
@@ -53,14 +54,14 @@ noncomputable def C : CertificateIrreducibleIntOfPrimeDegreeAnalysis T l where
  ρ := 13/6
  hPPrime := by norm_num
  hrpos := by norm_num
- hnn := by  native_decide
- hdn := by  native_decide
+ hnn := by  decide +kernel
+ hdn := by  decide +kernel
  p := ![3]
  hp := by
   intro i
   fin_cases i
   exact hp3'.out
- hlc := by  native_decide
+ hlc := by  decide +kernel
  m := ![2]
  F := fun i =>
   match i with
@@ -68,17 +69,17 @@ noncomputable def C : CertificateIrreducibleIntOfPrimeDegreeAnalysis T l where
  D := fun i =>
   match i with
   | 0 => ![4, 4]
- hl := by  native_decide
+ hl := by  decide +kernel
  hirr := by
-  intro i ; intro j
+  intro i; intro j
   fin_cases i <;> fin_cases j
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P3P0
-  · dsimp ; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P3P0
- hm := by  native_decide
- hprod := by  native_decide
- hinter := by  native_decide
- hrhoeq := by  native_decide
- hrho := by  native_decide
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P3P0
+  · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P3P0
+ hm := by  decide +kernel
+ hprod := by  decide +kernel
+ hinter := by  decide +kernel
+ hrhoeq := by  decide +kernel
+ hrho := by  decide +kernel
  hs := by norm_num
  heval := by norm_num
 
