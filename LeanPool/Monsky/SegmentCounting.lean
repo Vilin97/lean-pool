@@ -646,11 +646,9 @@ noncomputable def is_triangulation (Δ : Finset Triangle) : Prop :=
 lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation Δ)
 (non_degen : ∀ P ∈ Δ, det P ≠ 0) {L : Segment} (hL : L ∈ triangulation_basic_segments Δ) :
  ∃ T ∈ Δ, closed_hull L ⊆ closed_hull T := by
-
 -- The strategy of this proof is to just verify all the conditions of seg_sub_side
 -- in the first block of code we just unravel all the hypothesis and the then
 -- every other block is just simply verifiing all hypothesis of seg_sub_side.
-
   unfold triangulation_basic_segments at hL
   unfold basic_avoiding_segment_set at hL
   simp only [mem_filter, mem_filter] at hL
@@ -667,8 +665,6 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
   have Lnonempty : ∃ (x : ℝ²), x ∈ open_hull L := by
     apply open_seg_nonempty
   rcases Lnonempty with ⟨x, hx⟩
-
-
   have convex : closed_hull L ⊆ closed_hull unit_square := by
     apply unit_square_is_convex
     simp only [Fin.zero_eta, Fin.isValue]
@@ -714,7 +710,6 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
         apply corner_in_closed_hull
       exact hL0_unit_square' zt'
     exact hL0_unit_square hL0
-
     simp only [Fin.mk_one, Fin.isValue]
     have L1 : to_segment c d 1 = L 1 := by
         rw [g]
@@ -758,23 +753,16 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
         apply corner_in_closed_hull
       exact hL1_unit_square' zt'
     exact hL1_unit_square hL1
-
-
   have xinTriangle : ∃ P ∈ Δ, x ∈ closed_hull P := by
     have xclosed : x ∈ closed_hull unit_square := by
       exact convex (open_sub_closed L hx)
     rw [hCover] at xclosed
     simp only [mem_coe, Set.mem_iUnion, exists_prop] at xclosed
     exact xclosed
-
-
   rcases xinTriangle with ⟨P, hP⟩
-
   have Pnondegen : det P ≠ 0 := by
     apply non_degen
     apply hP.1
-
-
   have xinBT : x ∈ boundary P := by
     unfold triangulation_avoiding_set at b
     simp at b
@@ -787,10 +775,7 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
       by_contra hcontra
       tauto_set
     tauto_set
-
-
   have xinTside : ∃ i : Fin 3, x ∈ open_hull (Tside P i) := by
-
     have xinclosed : ∃ i : Fin 3, x ∈ closed_hull (Tside P i) := by
         rw [boundary_is_union_sides] at xinBT
         rcases xinBT with ⟨i, hi⟩
@@ -801,19 +786,14 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
         rw [hj]
         exact hi'
         apply Pnondegen
-
     rcases xinclosed with ⟨i, hi⟩
     use i
-
     by_contra hcontra
-
     have xboundTside : x ∈ boundary (Tside P i) := by
       tauto_set
-
     have enddiff : Tside P i 0 ≠ Tside P i 1 := by
       apply nondegen_triangle_imp_nondegen_side
       exact Pnondegen
-
     have xtriangulationpt: x ∈ triangulation_points Δ := by
       unfold triangulation_points
       simp only [Fin.isValue, mem_biUnion, mem_insert, mem_singleton]
@@ -843,15 +823,9 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
         rw [Tside] at xboundTside
         simp only [Fin.isValue, Set.mem_insert_iff, Set.mem_singleton_iff] at xboundTside
         tauto
-
     apply q at xtriangulationpt
     contradiction
-
-
   rcases xinTside with ⟨i, hi⟩
-
-
-
   have dis : open_hull P ∩ closed_hull L = ∅ := by
     by_contra hcontra
     have nonemp' : Set.Nonempty (open_hull P ∩ closed_hull L) := by
@@ -863,8 +837,6 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
     simp at b
     specialize b P
     tauto_set
-
-
   have this : ∀ i : Fin 3, P i ∉ open_hull L := by
     by_contra hcontra
     simp at hcontra
@@ -896,8 +868,6 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
       rw [h3]
     apply q at hP'
     contradiction
-
-
   have fin : closed_hull L ⊆ closed_hull (Tside P i) := by
     apply seg_sub_side
     apply non_degen
@@ -906,7 +876,6 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
     exact hi
     apply dis
     exact this
-
   rcases hP with ⟨T, hT, hT'⟩
   use P
   constructor
@@ -918,7 +887,6 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
 lemma segment_in_interior_or_boundary {Δ : Finset Triangle} (hCover : is_triangulation Δ)
 (non_degen : ∀ P ∈ Δ, det P ≠ 0) {L : Segment} (hL : L ∈ triangulation_basic_segments Δ) :
   open_hull L ⊆ boundary unit_square ∨ open_hull L ⊆ open_hull unit_square := by
-
   have hclosed : closed_hull unit_square = boundary unit_square ∪ open_hull unit_square := by
     rw [← boundary_union_open_closed]
   have hT : ∃ T ∈ Δ, closed_hull L ⊆ closed_hull T := by
@@ -1969,7 +1937,6 @@ lemma split_segment_sum (Δ : Finset Triangle)
         intro _
         refine hS.1.2 ?_ ?_
         exact triangulation_points_mem hT _
-
   · rw [Finset.disjoint_iff_inter_eq_empty]
     exact triangulation_boundary_intersection Δ
 

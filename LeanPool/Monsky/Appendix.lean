@@ -301,8 +301,8 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
   exact ⟨m', pq, deg6, eq_one_div_of_mul_eq_one_right (_root_.id (Eq.symm this12)), by rfl⟩
 
 -- Any maximal subring of ℝ not containing 1/2 is a valuation ring.
-lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 /2) ∉ B)
-(h2 : ∀ (C : Subring ℝ), (B ≤ C) ∧ (1 /2) ∉ C → B = C) : ∃(D : ValuationSubring ℝ), D.toSubring = B := by
+lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
+(h2 : ∀ (C : Subring ℝ), (B ≤ C) ∧ (1 / 2) ∉ C → B = C) : ∃(D : ValuationSubring ℝ), D.toSubring = B := by
   -- We assume that B is not a valuationring
   by_contra no_vr
   have alpha_existence : ∃(α : ℝ), (α ∉ B ∧ α⁻¹ ∉ B) := by
@@ -662,7 +662,7 @@ theorem valuation_on_reals : ∃(Γ₀ : Type) (_ : LinearOrderedCommGroupWithZe
     rwa[gt_iff_lt, ← not_le, g]
 
 lemma odd_valuation (Γ₀ : Type) (_ : LinearOrderedCommGroupWithZero Γ₀) (v : Valuation ℝ Γ₀)
-(vhalf : v (1 /2)> 1) : ∀ n : ℕ, Odd n → v (1/n) = 1 := by
+(vhalf : v (1 / 2) > 1) : ∀ n : ℕ, Odd n → v (1/n) = 1 := by
 have vhalf' : v (2) < 1 := by
   rw [Valuation.map_div, Valuation.map_one] at vhalf
   refine (Valuation.val_lt_one_iff v ?_).mpr ?_

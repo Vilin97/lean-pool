@@ -525,7 +525,7 @@ lemma square_boundary_is_union_sides
 
 
 lemma square_boundary_big_inter_seg_aux₁ {a b c d : ℝ} (ha : 0 < a) (hb : 0 ≤ b) (hc : 0 < c)
-    (hd : 0 ≤ d) (habcd : a*b + c *d = 0) : b = 0 ∧ d = 0 := by
+    (hd : 0 ≤ d) (habcd : a * b + c * d = 0) : b = 0 ∧ d = 0 := by
   rw [add_eq_zero_iff_of_nonneg
       ((mul_nonneg_iff_of_pos_left ha).mpr hb) ((mul_nonneg_iff_of_pos_left hc).mpr hd)] at habcd
   exact ⟨
@@ -534,7 +534,7 @@ lemma square_boundary_big_inter_seg_aux₁ {a b c d : ℝ} (ha : 0 < a) (hb : 0 
 
 
 lemma square_boundary_big_inter_seg_aux₂ {a b c d : ℝ} (hac : a + c = 1) (ha : 0 < a) (hb : b ≤ 1)
-    (hc : 0 < c) (hd : d ≤ 1) (habcd : a*b + c *d = 1) : b = 1 ∧ d = 1 := by
+    (hc : 0 < c) (hd : d ≤ 1) (habcd : a * b + c * d = 1) : b = 1 ∧ d = 1 := by
   rw [←(sub_eq_zero), ←(sub_eq_zero (a := d)), ←neg_eq_zero, ←neg_eq_zero (a := d -1)]
   refine square_boundary_big_inter_seg_aux₁ (a := a) (c := c) ha ?_ hc ?_ ?_  <;>
   linarith

@@ -110,7 +110,6 @@ theorem volume_open_unit_triangle : (MeasureTheory.volume (open_hull unit_triang
   have integ' : IntegrableOn upper (Set.Ioc 0 1) :=
     MeasureTheory.Integrable.sub (integrable_const 1)
       (intervalIntegral.intervalIntegrable_id (a := 0) (b := 1)).1
-
   suffices  ∫ (x : ℝ) in (0 : ℝ)..1, upper x = 1/2 by
     calc
       MeasureTheory.volume (open_hull unit_triangle)
@@ -145,12 +144,12 @@ theorem area_translation (a : ℝ²) (A : Set ℝ²) :  MeasureTheory.volume (Se
   simp
 
 -- If we want to use these two theorems we need the proof that a generic triangle is given by a linear transform and the translation. For this we show that a linear transformation commutes with the open hull operation, in which we use the following lemma
-lemma lincom_commutes (L : ℝ² →ₗ[ℝ ]  ℝ²) {n : ℕ} (a : Fin n → ℝ) (f : Fin n → ℝ²) : ∑ i : Fin n, a i • L (f i)  =L (∑ i : Fin n, (a i) • (f i)) := by
+lemma lincom_commutes (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (a : Fin n → ℝ) (f : Fin n → ℝ²) : ∑ i : Fin n, a i • L (f i)  =L (∑ i : Fin n, (a i) • (f i)) := by
   rw[  map_sum L (fun i ↦  a i • f i) univ]
   apply Fintype.sum_congr
   exact fun i ↦ Eq.symm (LinearMap.CompatibleSMul.map_smul L (a i) (f i))
 
-theorem open_hull_lin_trans (L : ℝ² →ₗ[ℝ ]  ℝ²) {n : ℕ} (f : (Fin n → ℝ²)) : open_hull (L ∘ f ) = Set.image L (open_hull f) := by
+theorem open_hull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n → ℝ²)) : open_hull (L ∘ f ) = Set.image L (open_hull f) := by
   unfold open_hull
   rw[ ← Set.image_comp] -- for some reason repeat rw does not work here
   ext x
@@ -171,7 +170,7 @@ theorem open_hull_lin_trans (L : ℝ² →ₗ[ℝ ]  ℝ²) {n : ℕ} (f : (Fin 
       rw[ h3, lincom_commutes L a f, h2]
 
 --Now also for the closed version, whose proof is almost identical
-theorem closed_hull_lin_trans (L : ℝ² →ₗ[ℝ ]  ℝ²) {n : ℕ} (f : (Fin n → ℝ²)) : closed_hull (L ∘ f ) = Set.image L (closed_hull f) := by
+theorem closed_hull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n → ℝ²)) : closed_hull (L ∘ f ) = Set.image L (closed_hull f) := by
   unfold closed_hull
   rw[ ← Set.image_comp] -- for some reason repeat rw does not work here
   ext x
@@ -192,7 +191,7 @@ theorem closed_hull_lin_trans (L : ℝ² →ₗ[ℝ ]  ℝ²) {n : ℕ} (f : (Fi
       rw[ h3, lincom_commutes L a f, h2]
 
 --Again we have a similar lemma
-lemma aux_for_translation {n : ℕ}{f: Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²} (h1 : a ∈ open_simplex n) :   ∑ i : Fin n, a i • (f i + b) =  ∑ i : Fin n, a i • f i + b := by
+lemma aux_for_translation {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²} (h1 : a ∈ open_simplex n) :   ∑ i : Fin n, a i • (f i + b) =  ∑ i : Fin n, a i • f i + b := by
   rcases h1 with ⟨_, h3⟩
   have h4: b = ∑ i : Fin n, a i • b
   rw[← sum_smul, h3, one_smul]
@@ -217,7 +216,7 @@ theorem translation_commutes {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²) : ope
     exact ⟨ a, h1, by dsimp ; rwa[ aux_for_translation h1]⟩
 
 -- And the version for the closed hull, that needs an adapted different lemma
-theorem aux_for_translation_closed {n : ℕ}{f: Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²} (h1 : a ∈ closed_simplex n) :   ∑ i : Fin n, a i • (f i + b) =  ∑ i : Fin n, a i • f i + b := by
+theorem aux_for_translation_closed {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²} (h1 : a ∈ closed_simplex n) :   ∑ i : Fin n, a i • (f i + b) =  ∑ i : Fin n, a i • f i + b := by
   rcases h1 with ⟨_, h3⟩
   have h4: b = ∑ i : Fin n, a i • b
   rw[← sum_smul, h3, one_smul]
@@ -636,7 +635,7 @@ theorem closed_triangle_is_union (T : Triangle) : closed_hull T = open_hull T �
       · exact closed_side_sub hx5
 
 --This is useful lemma
-lemma volume_zero ( A B : Set ℝ²) (h : MeasureTheory.volume B = 0) : MeasureTheory.volume (A ∪ B) = MeasureTheory.volume A := by
+lemma volume_zero (A B : Set ℝ²) (h : MeasureTheory.volume B = 0) : MeasureTheory.volume (A ∪ B) = MeasureTheory.volume A := by
   symm
   apply MeasureTheory.measure_eq_measure_of_null_diff
   exact Set.subset_union_left
@@ -699,7 +698,6 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle) (hcover : is_
       unfold f open_hullT
       unfold is_disjoint_polygon_set at h6
       unfold Pairwise
-
       intro i j hij
       apply Disjoint.aedisjoint
       specialize h6 _ i.2 _ j.2 (Subtype.coe_ne_coe.mpr hij)
@@ -707,7 +705,6 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle) (hcover : is_
     erw[MeasureTheory.measure_iUnion₀ hd h, tsum_fintype,]
     simp [f]
     rw [Finset.sum_attach S (fun x ↦ volume (open_hullT x))]
-
   · have h4 :  ⋃ T ∈ S, all_edges_triangle_hull T= (⋃ i, (↑S : Set Triangle).restrict all_edges_triangle_hull i)
     exact Eq.symm (Set.iUnion_subtype (Membership.mem S) (S.restrict all_edges_triangle_hull))
     have h5 := union_of_edges_zero_vol S

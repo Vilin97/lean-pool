@@ -348,7 +348,6 @@ theorem no_Color_lines
   [locg : LinearOrderedCommGroupWithZero Γ₀]
   (v : Valuation ℝ Γ₀) :
     ∃ c : Color, ∀ P ∈ closed_hull L, coloring v P ≠ c := by
-
   by_contra h
   push Not at h
   have hr : ∃ z ∈ closed_hull L , coloring v z = Color.Red := by
