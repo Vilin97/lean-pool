@@ -52,7 +52,7 @@ lemma disjoint_aux {α β : Type} (S₁ S₂ : Set α) (f : α → Set β) (h₁
 -/
 
 /- These two triangles dissect the square and have equal area.-/
-def Δ₀  : Triangle  := fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1)
+def Δ₀ : Triangle  := fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1)
 def Δ₀' : Triangle  := fun | 0 => (v 1 0) | 1 => (v 0 1) | 2 => (v 1 1)
 
 lemma areaΔ₀ : triangle_area Δ₀ = 1 / 2 := by
@@ -148,17 +148,17 @@ lemma zag_cover_area {n : ℕ} : ∀ {Δ : Triangle}, Δ ∈ zag_part_cover n �
   rw [←hs, translate_triangle_area, scale_triangle_area, areaΔ₀']
   simp
 
-lemma fin_el_bound {n : ℕ} {x: ℝ} {s₁ s₂ : Fin n} (h₁l : x - 1 < s₁) (h₁u : s₁ < x)
-    (h₂l : x - 1 < s₂)  (h₂u : s₂ < x) : s₁ = s₂ := by
+lemma fin_el_bound {n : ℕ} {x : ℝ} {s₁ s₂ : Fin n} (h₁l : x - 1 < s₁) (h₁u : s₁ < x)
+    (h₂l : x - 1 < s₂) (h₂u : s₂ < x) : s₁ = s₂ := by
   wlog hl : s₁ ≤ s₂
   · refine (this h₂l h₂u h₁l h₁u (le_of_not_ge hl)).symm
   · refine Fin.le_antisymm_iff.mpr ⟨hl, ?_⟩
     by_contra hc
-    rw [not_le, @Fin.lt_iff_val_lt_val, @Nat.lt_iff_add_one_le,
+    rw [not_le, @Fin.lt_def, @Nat.lt_iff_add_one_le,
         ←Nat.cast_le (α := ℝ), @Nat.cast_add, @Nat.cast_one] at hc
     linarith
 
-lemma zig_open_disjoint{n : ℕ} : disjoint_set ((zig_part_cover n) : Set Triangle) open_hull := by
+lemma zig_open_disjoint {n : ℕ} : disjoint_set ((zig_part_cover n) : Set Triangle) open_hull := by
   by_cases nsign : ↑n > 0
   · intro Δ₁ Δ₂ hΔ₁ hΔ₂ hΔneq
     simp [mem_coe, zig_part_cover] at hΔ₁ hΔ₂
@@ -182,7 +182,7 @@ lemma zig_open_disjoint{n : ℕ} : disjoint_set ((zig_part_cover n) : Set Triang
     · simp [det, translate_triangle, scale_triangle, Δ₀, translate_vector, scale_vector, Nat.ne_zero_of_lt nsign]
   · simp [Nat.eq_zero_of_not_pos nsign, zig_part_cover, disjoint_set]
 
-lemma zag_open_disjoint{n : ℕ} : disjoint_set ((zag_part_cover n) : Set Triangle) open_hull := by
+lemma zag_open_disjoint {n : ℕ} : disjoint_set ((zag_part_cover n) : Set Triangle) open_hull := by
   by_cases nsign : ↑n > 0
   · intro Δ₁ Δ₂ hΔ₁ hΔ₂ hΔneq
     simp [mem_coe, zag_part_cover] at hΔ₁ hΔ₂

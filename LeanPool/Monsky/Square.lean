@@ -133,7 +133,7 @@ lemma open_unit_square_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ open_hull un
   by_cases h : ∀ i, (y  i= 0) -- this formulation was slightly easier for me
   · use 1
     have h1: y = 0
-    . ext i; exact h i
+    · ext i; exact h i
     rw[h1]
     refine ⟨by norm_num, fun n => ?_⟩
     simpa using hx
@@ -167,9 +167,7 @@ lemma open_unit_square_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ open_hull un
       · intro i; fin_cases i
         apply inf_le_of_left_le; apply inf_le_of_right_le; rfl
         apply inf_le_of_right_le; apply inf_le_of_right_le; rfl
-
       intro n i; simp only [one_div, Fin.isValue, PiLp.add_apply, PiLp.smul_apply, smul_eq_mul]
-
       by_cases hn : ( n= 0) --mathematically, n should be at least 1, but because 1/ 0 = 0, the statement still holds for n = 0, but just requires a different proof
       · rw[hn]; simp[hx i]
       --for n≥ 1, the proof is as follows
@@ -182,7 +180,6 @@ lemma open_unit_square_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ open_hull un
         refine lt_of_lt_of_le (mul_lt_of_lt_one_left hxbound ?_) (h4 i)
         refine lt_of_lt_of_le (mul_lt_of_lt_one_left (one_div_pos.mpr (lt_of_le_of_lt' hn4 (by norm_num))) ?_) (h7)
         apply Bound.div_lt_one_of_pos_of_lt h8 (lt_of_abs_lt (h3 i))
-
       · apply lt_tsub_iff_left.mp
         have h6: ((↑n)⁻¹ * ((|y 0| ⊔ |y 1|)⁻¹ * 2⁻¹ * (x 0 ⊓ (1 - x 0) ⊓ (x 1 ⊓ (1 - x 1))) * y i)) =    ((y i) / (2*(|y 0| ⊔ |y 1|))) * (1/n)* (x 0 ⊓ (1 - x 0) ⊓ (x 1 ⊓ (1 - x 1))) := by ring
         rw[h6]
@@ -196,7 +193,7 @@ lemma open_unit_square_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ open_hull un
 
 
 
-lemma el_boundary_square_triangle_dir {x : ℝ²} (hx : x ∈ boundary unit_square):
+lemma el_boundary_square_triangle_dir {x : ℝ²} (hx : x ∈ boundary unit_square) :
     ∃ σ ∈ ({-1,1} : Finset ℝ), ∀ (Δ : Triangle), (det Δ ≠ 0) →
     (closed_hull Δ ⊆ closed_hull unit_square) → (∃ i, x ∈ open_hull (Tside Δ i))
     → (∃ εΔ > 0, ∀ y, 0 < y → y ≤ εΔ → x + (σ * y) • (v 1 1) ∈ open_hull Δ) := by
@@ -280,7 +277,7 @@ lemma segment_triangle_pairing_int
     (hCover : is_disjoint_cover (closed_hull unit_square) (S : Set Triangle))
     (hArea : ∀ Δ ∈ S, det Δ ≠ 0)
     (L : Segment)
-    (hInt: ∀ Δ ∈ S, (open_hull Δ) ∩ (closed_hull L) = ∅)
+    (hInt : ∀ Δ ∈ S, (open_hull Δ) ∩ (closed_hull L) = ∅)
     (hLunit : open_hull L ⊆ open_hull unit_square)
     (hv : ∀ Δ ∈ S, ∀ i, Δ i ∉ open_hull L)
   : (S.filter (fun Δ ↦ closed_hull L ⊆ boundary Δ)).card = 2 := by
@@ -398,7 +395,7 @@ lemma segment_triangle_pairing_int
 open Classical in
 lemma segment_triangle_pairing_boundary (S : Finset Triangle) (hCover : is_disjoint_cover (closed_hull unit_square) (S : Set Triangle))
     (hArea : ∀ Δ ∈ S, det Δ ≠ 0) (L : Segment) (hL : L 0 ≠ L 1)
-    (hInt: ∀ Δ ∈ S, (open_hull Δ) ∩ (closed_hull L) = ∅)
+    (hInt : ∀ Δ ∈ S, (open_hull Δ) ∩ (closed_hull L) = ∅)
     (hLunit : open_hull L ⊆ boundary unit_square) (hv : ∀ Δ ∈ S, ∀ i, Δ i ∉ open_hull L)
   : (S.filter (fun Δ ↦ closed_hull L ⊆ boundary Δ)).card = 1 := by
   -- We first take an element from open_hull L
@@ -528,7 +525,7 @@ lemma square_boundary_is_union_sides
 
 
 lemma square_boundary_big_inter_seg_aux₁ {a b c d : ℝ} (ha : 0 < a) (hb : 0 ≤ b) (hc : 0 < c)
-    (hd : 0 ≤ d) (habcd : a*b + c*d = 0) : b = 0 ∧ d = 0 := by
+    (hd : 0 ≤ d) (habcd : a*b + c *d = 0) : b = 0 ∧ d = 0 := by
   rw [add_eq_zero_iff_of_nonneg
       ((mul_nonneg_iff_of_pos_left ha).mpr hb) ((mul_nonneg_iff_of_pos_left hc).mpr hd)] at habcd
   exact ⟨
@@ -537,7 +534,7 @@ lemma square_boundary_big_inter_seg_aux₁ {a b c d : ℝ} (ha : 0 < a) (hb : 0 
 
 
 lemma square_boundary_big_inter_seg_aux₂ {a b c d : ℝ} (hac : a + c = 1) (ha : 0 < a) (hb : b ≤ 1)
-    (hc : 0 < c) (hd : d ≤ 1) (habcd : a*b + c*d = 1) : b = 1 ∧ d = 1 := by
+    (hc : 0 < c) (hd : d ≤ 1) (habcd : a*b + c *d = 1) : b = 1 ∧ d = 1 := by
   rw [←(sub_eq_zero), ←(sub_eq_zero (a := d)), ←neg_eq_zero, ←neg_eq_zero (a := d -1)]
   refine square_boundary_big_inter_seg_aux₁ (a := a) (c := c) ha ?_ hc ?_ ?_  <;>
   linarith
@@ -566,8 +563,8 @@ lemma square_boundary_big_inter_seg {S : Segment} {x : ℝ²} {i : Fin 4} (hx : 
   · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) hS.1.1.1 (hα.1 1) hS.2.1.1 hxi.2.2).1
   · exact (square_boundary_big_inter_seg_aux₁ (hα.1 0) hS.1.1.1 (hα.1 1) hS.2.1.1 hxi.2.2).2
 
-lemma convex_faces  {x y p : ℝ²} (i : Fin 4) (hpiface : p ∈ closed_hull (square_boundary_big i))
-(hp : p ∈ open_hull (to_segment x y)) (hx: x ∈ closed_hull unit_square) (hy: y ∈  closed_hull unit_square) :
+lemma convex_faces {x y p : ℝ²} (i : Fin 4) (hpiface : p ∈ closed_hull (square_boundary_big i))
+(hp : p ∈ open_hull (to_segment x y)) (hx : x ∈ closed_hull unit_square) (hy : y ∈ closed_hull unit_square) :
 x ∈ closed_hull (square_boundary_big i) ∧ y ∈ closed_hull (square_boundary_big i) := by
   have h_inter := square_boundary_big_inter_seg hp hpiface ?_
   refine ⟨?_,?_⟩
@@ -575,8 +572,8 @@ x ∈ closed_hull (square_boundary_big i) ∧ y ∈ closed_hull (square_boundary
   · convert h_inter (corner_in_closed_hull (i := 1))
   · exact closed_hull_convex (by intro i; fin_cases i <;> assumption)
 
-lemma convex_faces'' {p : ℝ²} { L : Segment} (i : Fin 4) (hpiface : p ∈ closed_hull (square_boundary_big i))
-(hp : p ∈ open_hull L) (hx: L 0 ∈ closed_hull unit_square) (hy: L 1 ∈  closed_hull unit_square) :
+lemma convex_faces'' {p : ℝ²} {L : Segment} (i : Fin 4) (hpiface : p ∈ closed_hull (square_boundary_big i))
+(hp : p ∈ open_hull L) (hx : L 0 ∈ closed_hull unit_square) (hy : L 1 ∈ closed_hull unit_square) :
 closed_hull L ⊆ closed_hull (square_boundary_big i) := by
   apply closed_hull_convex
   intro j
@@ -618,7 +615,7 @@ lemma segment_through_corner {S : Segment} {i : Fin 4} (hx : unit_square i ∈ o
 
 lemma cover_imples_corner_in_triangle
     {S : Finset Triangle}
-    (hCover : is_cover (closed_hull unit_square) S.toSet) :
+    (hCover : is_cover (closed_hull unit_square) (↑S : Set Triangle)) :
     ∀ i, ∃ T ∈ S, ∃ j, unit_square i = T j := by
   by_contra h_contra; push Not at h_contra
   have ⟨c, hc⟩ := h_contra
@@ -630,9 +627,8 @@ lemma cover_imples_corner_in_triangle
   rw [closed_hull_constant_rev hS 0, closed_hull_constant_rev hS 1]
 
 
-lemma line_in_boundary {x : ℝ²} {L : Segment} (hL: closed_hull L ⊆ closed_hull unit_square)
-(hboundary: x ∈ open_hull L ∩ boundary unit_square) : closed_hull L ⊆ boundary unit_square := by
-
+lemma line_in_boundary {x : ℝ²} {L : Segment} (hL : closed_hull L ⊆ closed_hull unit_square)
+(hboundary : x ∈ open_hull L ∩ boundary unit_square) : closed_hull L ⊆ boundary unit_square := by
 rw [square_boundary_is_union_sides] at hboundary
 simp only [Set.mem_inter_iff, Set.mem_iUnion] at hboundary
 rcases hboundary with ⟨hx, ⟨i, h1⟩⟩

@@ -72,7 +72,7 @@ lemma is_cover_open_el_imp_eq {n : ℕ} {S : Set (Fin n → ℝ²)} (hDisj : is_
   rwa [Disjoint.inter_eq (hDisj Δ₁ hΔ₁ Δ₂ hΔ₂ hΔ₁₂)] at hx
 
 lemma cover_mem_side {S : Set Triangle} {X : Set ℝ²} (hCover : is_disjoint_cover X S)
-    (hArea : ∀ Δ ∈ S, det Δ ≠ 0) {x : ℝ²} (hx : x ∈ X) (hInt: ∀ Δ ∈ S, x ∉ (open_hull Δ))
+    (hArea : ∀ Δ ∈ S, det Δ ≠ 0) {x : ℝ²} (hx : x ∈ X) (hInt : ∀ Δ ∈ S, x ∉ (open_hull Δ))
     (hv : ∀ i, ∀ Δ ∈ S, x ≠ Δ i) : ∃ Δ ∈ S, ∃ i : Fin 3, x ∈ open_hull (Tside Δ i) := by
   rw [hCover.1, @Set.mem_iUnion₂] at hx
   have ⟨Δ, hΔ, hxΔ⟩ := hx
@@ -83,7 +83,7 @@ lemma cover_mem_side {S : Set Triangle} {X : Set ℝ²} (hCover : is_disjoint_co
 
 
 lemma no_empty_cover {n : ℕ} {S : Finset (Fin n → ℝ²)} {X : Set ℝ²}
-    (hCover : is_cover X S.toSet) (hX : Set.Nonempty X) :
+    (hCover : is_cover X (↑S : Set (Fin n → ℝ²))) (hX : Set.Nonempty X) :
     S.card > 0 := by
   by_contra hS
   apply Set.Nonempty.ne_empty hX

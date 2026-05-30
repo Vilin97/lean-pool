@@ -1313,7 +1313,6 @@ contradiction
 
 lemma colin_intersection_open_hulls_empty {u v w : ℝ²} {h : colin u v w} :
 open_hull (to_segment u v) ∩ open_hull (to_segment v w) = ∅ := by
-
 have huv : open_hull (to_segment u v) ⊆ closed_hull (to_segment u v) := by
   apply open_sub_closed
 have hvw : open_hull (to_segment v w) ⊆  (closed_hull (to_segment v w) \ {v}) := by
@@ -1472,7 +1471,6 @@ def ClosedSymSeg : Sym2 ℝ² → Set ℝ² :=
 lemma colin_sub {u v w : ℝ²} (h : colin u v w) {L : Segment}
     (hLsub : closed_hull L ⊆ closed_hull (to_segment u w)) (hLv : v ∉ open_hull L) :
     closed_hull L ⊆ closed_hull (to_segment u v) ∨ closed_hull L ⊆ closed_hull (to_segment v w) := by
-
     have hxl : ∃ x, x ∈ open_hull L := by
      apply open_pol_nonempty
      linarith
