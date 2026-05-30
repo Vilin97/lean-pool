@@ -47,7 +47,8 @@ def coloring : (X : ℝ²) → Color
 -- Namely, for a given color they return inequalities describing the region with this color.
 -- They will be of use in the proof of the lemma on the boundedness of the determinant.
 
-lemma green_region (X : ℝ²) : (coloring v X = Color.Green) → v (X 0) < v (X 1) ∧ v (X 1) ≥ v (1) := by
+lemma green_region (X : ℝ²) :
+    (coloring v X = Color.Green) → v (X 0) < v (X 1) ∧ v (X 1) ≥ v (1) := by
   intro h
   simp only [coloring, Fin.isValue, map_one, ge_iff_le] at h
   split_ifs at h with h1 h2
@@ -73,21 +74,20 @@ lemma blue_region (X : ℝ²) : (coloring v X = Color.Blue) → v (X 0) ≥ v (1
   rw [not_lt, not_le] at h2
   -- Split h1 into cases
   rcases h1 with p | q
-  constructor
-  · apply p
-  · cases' h2 with m n
-    apply m
-    have q' : v (X 1) ≤ 1 := by
-      exact le_of_lt n
-    apply le_trans q' p
+  · constructor
+    · apply p
+    · obtain m | n := h2
+      · apply m
+      · have q' : v (X 1) ≤ 1 := le_of_lt n
+        apply le_trans q' p
   -- Split h2 into cases
-  rcases h2 with a | b
-  constructor
-  · apply le_trans q a
-  · exact a
-  -- No more cases left
-  rw [← not_lt] at q
-  contradiction
+  · rcases h2 with a | b
+    · constructor
+      · apply le_trans q a
+      · exact a
+    -- No more cases left
+    · rw [← not_lt] at q
+      contradiction
 
 -- Record our definition of a rainbow triangle
 
@@ -127,42 +127,21 @@ lemma valuation_bounds
   have x0_gt_zero : v (X 0) > 0 := lt_of_le_of_lt' hx0 zero_lt_one
   have y1_gt_zero : v (Y 1) > 0 := lt_of_le_of_lt' hy1 zero_lt_one
   -- v (X 0) * v (Y 1) ≥ 1
-  constructor
-  exact Right.one_le_mul hx0 hy1
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  -- v (X 0) * v (Y 1) ≥ 1
+  · exact Right.one_le_mul hx0 hy1
   -- v (X 1) * v (Z 0) < v (X 0) * v (Y 1)
-  constructor
-  apply mul_lt_mul'
-  exact hxx
-  exact lt_of_le_of_lt' hy1 hz0
-  exact zero_le'
-  exact x0_gt_zero
+  · exact mul_lt_mul' hxx (lt_of_le_of_lt' hy1 hz0) zero_le' x0_gt_zero
   -- v (Y 0) * v (Z 1) < v (X 0) * v (Y 1)
-  constructor
-  rw [mul_comm (v (X 0)) (v (Y 1))]
-  apply mul_lt_mul''
-  exact hyy
-  exact lt_of_le_of_lt' hx0 hz1
-  exact zero_le'
-  exact zero_le'
+  · rw [mul_comm (v (X 0)) (v (Y 1))]
+    exact mul_lt_mul'' hyy (lt_of_le_of_lt' hx0 hz1) zero_le' zero_le'
   -- v (X 0) * v (Y 1) > v (Y 1) * v (Z 0)
-  constructor
-  rw [mul_comm (v (X 0)) (v (Y 1))]
-  apply mul_lt_mul'
-  apply refl
-  exact lt_of_le_of_lt' hx0 hz0
-  exact zero_le'
-  exact y1_gt_zero
+  · rw [mul_comm (v (X 0)) (v (Y 1))]
+    exact mul_lt_mul' (le_refl _) (lt_of_le_of_lt' hx0 hz0) zero_le' y1_gt_zero
   -- v (X 0) * v (Y 1) > v (X 1) * v (Y 0)
-  constructor
-  apply mul_lt_mul' hxx hyy
-  apply zero_le'
-  exact x0_gt_zero
+  · exact mul_lt_mul' hxx hyy zero_le' x0_gt_zero
   -- v (X 0) * v (Y 1) > v (X 0) * v (Z 1)
-  apply mul_lt_mul'
-  apply refl
-  exact lt_of_le_of_lt' hy1 hz1
-  exact zero_le'
-  exact x0_gt_zero
+  · exact mul_lt_mul' (le_refl _) (lt_of_le_of_lt' hy1 hz1) zero_le' x0_gt_zero
 
 -- The next definition and lemma relate things to matrices more like in the book.
 -- But they are not needed.
@@ -294,11 +273,11 @@ lemma linear_combination_det_middle {n : ℕ} {x z : ℝ²} {P : Fin n → ℝ²
   ∑ i, (α i * det (fun | 0 => x | 1 => (P i) | 2 => z)) := by
   convert linear_combination_det_last (y := x) (P := P) (x := z) hα using 1
   · convert det_perm 4
-    simp [b_sign, σ];
+    simp only [b_sign, σ, Fin.isValue, one_mul];
     congr; funext k; fin_cases k <;> rfl
   · congr; ext i; congr 1;
     convert det_perm 4
-    simp [b_sign, σ];
+    simp only [b_sign, σ, Fin.isValue, one_mul];
     congr; funext k; fin_cases k <;> rfl
 
 lemma linear_combination_det_first {n : ℕ} {y z : ℝ²} {P : Fin n → ℝ²} {α : Fin n → ℝ}
@@ -307,18 +286,19 @@ lemma linear_combination_det_first {n : ℕ} {y z : ℝ²} {P : Fin n → ℝ²}
   ∑ i, (α i * det (fun | 0 => (P i) | 1 => y | 2 => z)) := by
   convert linear_combination_det_last (y := z) (P := P) (x := y) hα using 1
   · convert det_perm 3
-    simp [b_sign, σ];
+    simp only [b_sign, σ, Fin.isValue, one_mul];
     congr; funext k; fin_cases k <;> rfl
   · congr; ext i; congr 1;
     convert det_perm 3
-    simp [b_sign, σ];
+    simp only [b_sign, σ, Fin.isValue, one_mul];
     congr; funext k; fin_cases k <;> rfl
 
 lemma linear_combination_det_last' {n : ℕ} {x y : ℝ²} {P : Fin n → ℝ²} {α : Fin n → ℝ}
     (hα : ∑ i, α i = 1) :
   det (fun | 0 => x | 1 => y | 2 => (∑ i, α i • P i)) =
   ∑ i, (α i * det (fun | 0 => x | 1 => y | 2 => (P i))) := by
-  simp [det, left_distrib, sum_add_distrib, sum_apply _, mul_sum, ←sum_mul, hα]
+  simp only [det, Fin.isValue, WithLp.ofLp_sum, WithLp.ofLp_smul, sum_apply _, Pi.smul_apply,
+    smul_eq_mul, mul_sum, left_distrib, sum_add_distrib, ← sum_mul, hα, one_mul, add_left_inj]
   congr <;> (ext; ring)
 
 lemma det_0_triangle_imp_triv {T : Triangle} (hT : det T = 0) :
@@ -372,10 +352,7 @@ theorem no_Color_lines
       simp only [det, xyz, Fin.isValue]
       ring
     rw [h_det]
-    apply bounded_det
-    exact hxb
-    exact hyg
-    exact hzr
+    exact bounded_det v x y z hxb hyg hzr
   have h3 : (0 : Γ₀) ≥ 1 := by
     rw [vdet0] at vdet1
     exact vdet1
@@ -433,7 +410,8 @@ v (det T) ≥ 1 := by
   have h1 : det T = b_sign b * det (T ∘ σ b) := by
     apply det_perm
   have h2 : det (T ∘ σ b) =
-  T x 0 * T y 1 + T x 1 * T z 0 + T y 0 * T z 1 - T y 1 * T z 0 - T x 1 * T y 0 - T x 0 * T z 1 := by
+      T x 0 * T y 1 + T x 1 * T z 0 + T y 0 * T z 1 - T y 1 * T z 0 - T x 1 * T y 0
+        - T x 0 * T z 1 := by
     simp only [Fin.isValue]
     rw [det]
     simp [hb]
@@ -495,16 +473,16 @@ theorem no_odd_rainbow_triangle
   have bound2: v (2 / n) < 1 := by
     rw [v2]
     rw [mul_one, ← inv_lt_inv₀]
-    rw [v.map_inv]
-    rw [inv_inv]
-    rw [inv_one]
-    exact vhalf
-    aesop
-    rw [← inv_pos, v.map_inv, inv_inv]
-    have obv': (0 : Γ₀) < 1 := by
-      simp
-    rw [gt_iff_lt] at vhalf
-    exact lt_trans obv' vhalf
+    · rw [v.map_inv]
+      rw [inv_inv]
+      rw [inv_one]
+      exact vhalf
+    · aesop
+    · rw [← inv_pos, v.map_inv, inv_inv]
+      have obv': (0 : Γ₀) < 1 := by
+        simp
+      rw [gt_iff_lt] at vhalf
+      exact lt_trans obv' vhalf
   have bound3: v (det T) < 1 := by
     rw [v1]
     apply bound2
