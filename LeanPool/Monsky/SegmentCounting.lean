@@ -48,7 +48,8 @@ noncomputable def to_basic_segments {u v : ℝ²} : Chain u v → Finset Segment
 noncomputable def glue_chains {u v w : ℝ²} (hCollinear : colin u v w)
     : Chain u v → Chain v w → Chain u w
     | Chain.basic, C      => Chain.join hCollinear C
-    | Chain.join h C', C  => Chain.join ⟨hCollinear.1, interior_left_trans h.2 hCollinear.2⟩ (glue_chains (sub_collinear_right hCollinear h.2) C' C)
+    | Chain.join h C', C  => Chain.join ⟨hCollinear.1, interior_left_trans h.2 hCollinear.2⟩
+        (glue_chains (sub_collinear_right hCollinear h.2) C' C)
 
 noncomputable def reverse_chain {u v : ℝ²} : Chain u v → Chain v u
     | Chain.basic           => Chain.basic
@@ -183,7 +184,8 @@ lemma reverse_chain_basic_segments_disjoint {u v : ℝ²} (C : Chain u v) (huv :
   | @join x y z h₂ C ih =>
       have hyz : y ≠ z := (middle_not_boundary_colin h₂).2
       have hxy : x ≠ y := (middle_not_boundary_colin h₂).1
-      simp only [to_basic_segments, union_singleton, reverse_chain, basic_segments_glue, disjoint_insert_right, mem_insert, not_or, disjoint_insert_left]
+      simp only [to_basic_segments, union_singleton, reverse_chain, basic_segments_glue,
+        disjoint_insert_right, mem_insert, not_or, disjoint_insert_left]
       refine ⟨⟨fun h ↦ hxy (congrFun h 1), basic_segments_colin_disjoint2 h₂⟩,
         basic_segments_colin_disjoint_reverse h₂, ih hyz⟩
 
@@ -234,7 +236,8 @@ lemma avoiding_segment_set_reverse {X : Finset ℝ²} {A : Set ℝ²} {S : Segme
   exact ⟨ segment_set_reverse hS.1, hS.2⟩
 
 lemma basic_avoiding_segment_set_reverse {X : Finset ℝ²} {A : Set ℝ²} {S : Segment}
-    (hS : S ∈ basic_avoiding_segment_set X A) : reverse_segment S ∈ basic_avoiding_segment_set X A := by
+    (hS : S ∈ basic_avoiding_segment_set X A) :
+    reverse_segment S ∈ basic_avoiding_segment_set X A := by
   simp only[basic_avoiding_segment_set, mem_filter ,reverse_segment_open_hull] at *
   exact ⟨ avoiding_segment_set_reverse hS.1, hS.2 ⟩
 
@@ -246,7 +249,9 @@ lemma avoiding_segment_set_sub_left {X : Finset ℝ²} {A : Set ℝ²} {S : Segm
   · simp only [segment_set, ne_eq, product_eq_sprod, mem_image, mem_filter, mem_product,
     Prod.exists, Fin.isValue] at *
     rcases hS with ⟨⟨ a, ⟨ b, h⟩⟩, _⟩
-    exact ⟨a, x, ⟨ ⟨h.1.1.1 , hx⟩ , (middle_not_boundary_colin ⟨h.1.2 , by rw[h.2]; exact hxS ⟩).1⟩, by rw[← h.2] ; simp only [to_segment]  ⟩
+    exact ⟨a, x, ⟨ ⟨h.1.1.1 , hx⟩ ,
+      (middle_not_boundary_colin ⟨h.1.2 , by rw[h.2]; exact hxS ⟩).1⟩,
+      by rw[← h.2] ; simp only [to_segment]  ⟩
   · refine Set.disjoint_of_subset (closed_hull_convex ?_) (fun ⦃a⦄ a ↦ a) hS.2
     intro i ; fin_cases i <;> simp only [to_segment, Fin.isValue, corner_in_closed_hull]
     exact open_sub_closed S hxS
@@ -255,7 +260,8 @@ lemma avoiding_segment_set_sub_right {X : Finset ℝ²} {A : Set ℝ²} {S : Seg
     (hS : S ∈ avoiding_segment_set X A) {x : ℝ²} (hx : x ∈ X) (hxS : x ∈ open_hull S)
     : to_segment x (S 1) ∈ avoiding_segment_set X A := by
   rw[← reverse_segment_to_segment]
-  refine avoiding_segment_set_reverse (avoiding_segment_set_sub_left (avoiding_segment_set_reverse hS) hx ?_ )
+  refine avoiding_segment_set_reverse
+    (avoiding_segment_set_sub_left (avoiding_segment_set_reverse hS) hx ?_ )
   rwa[← reverse_segment_open_hull]
 
 
@@ -397,7 +403,8 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
         apply Scard
         exact segment_set_vertex (basic_avoiding_segment_set_sub hL) i
       have hLdif := segment_set_vertex_distinct (basic_avoiding_segment_set_sub hL)
-      simp only [hSboundary, coe_image, coe_univ, Set.image_univ, Set.mem_range, Fin.exists_fin_two, Fin.isValue, Fin.forall_fin_two] at hLi
+      simp only [hSboundary, coe_image, coe_univ, Set.image_univ, Set.mem_range, Fin.exists_fin_two,
+        Fin.isValue, Fin.forall_fin_two] at hLi
       obtain ⟨h0 | h0, h1 | h1⟩ := hLi
       · exact absurd (h0 ▸ h1) hLdif
       · left
@@ -503,7 +510,8 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
 
 
 def two_mod_function (f : Segment → ℕ)
-    := ∀ {u v w}, colin u v w → (f (to_segment u v) + f (to_segment v w)) % 2 = f (to_segment u w) % 2
+    := ∀ {u v w}, colin u v w →
+      (f (to_segment u v) + f (to_segment v w)) % 2 = f (to_segment u w) % 2
 
 def symm_fun (f : Segment → ℕ) := ∀ S, f (reverse_segment S) = f S
 
@@ -543,14 +551,16 @@ lemma mod_two_mul {a b : ℕ} (h : a % 2 = b % 2) : (2 * a) % 4 = (2 * b) % 4 :=
 lemma sum_two_mod_fun_seg {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
     (hS : S ∈ avoiding_segment_set X A) {f : Segment → ℕ} (hf₁ : two_mod_function f)
     (hf₂ : symm_fun f) :
-    (∑ T ∈ (basic_avoiding_segment_set X A).filter (fun s ↦ closed_hull s ⊆ closed_hull S), f T) % 4 =
+    (∑ T ∈ (basic_avoiding_segment_set X A).filter (fun s ↦ closed_hull s ⊆ closed_hull S),
+      f T) % 4 =
     (2 * f S) % 4 := by
   have ⟨C, _, hSdecomp⟩ := segment_decomposition hS
   rw [hSdecomp, Finset.sum_union]
   · rw [symm_function_reverse_sum hf₂, ←Nat.two_mul]
     apply mod_two_mul
     convert two_mod_function_chains hf₁ C
-  · exact reverse_chain_basic_segments_disjoint _ (segment_set_vertex_distinct (avoiding_segment_set_sub hS))
+  · exact reverse_chain_basic_segments_disjoint _
+      (segment_set_vertex_distinct (avoiding_segment_set_sub hS))
 
 
 variable {Γ₀ : Type} [LinearOrderedCommGroupWithZero Γ₀]
@@ -561,7 +571,8 @@ variable (v : Valuation ℝ Γ₀)
 -- of this function over all segments, so we let it take values in ℕ
 
 noncomputable def isPurple : Segment → ℕ :=
-    fun S ↦ if ( (coloring v (S 0) = Color.Red ∧ coloring v (S 1) = Color.Blue) ∨ (coloring v (S 0) = Color.Blue ∧ coloring v (S 1) = Color.Red)) then 1 else 0
+    fun S ↦ if ( (coloring v (S 0) = Color.Red ∧ coloring v (S 1) = Color.Blue) ∨
+      (coloring v (S 0) = Color.Blue ∧ coloring v (S 1) = Color.Red)) then 1 else 0
 
 noncomputable def isRainbow : Triangle → ℕ :=
     fun T ↦ if (Function.Surjective (coloring v ∘ T)) then 1 else 0
@@ -577,9 +588,12 @@ lemma isPurple_two_mod_function : two_mod_function (isPurple v) := by
   -- prove this was slightly frustrating
   have hhelpz : z = (to_segment x z) 1  := by rfl
   have hhelpx : x = (to_segment x z) 0  := by rfl
-  have hx : x ∈ closed_hull (to_segment x z) := by  nth_rewrite 2[hhelpx] ; exact corner_in_closed_hull
-  have hz : z ∈ closed_hull (to_segment x z) := by  nth_rewrite 2[hhelpz] ; exact corner_in_closed_hull
-  have hy : y ∈ closed_hull (to_segment x z) := by  exact (open_sub_closed (to_segment x z) hColin.2)
+  have hx : x ∈ closed_hull (to_segment x z) := by
+    nth_rewrite 2[hhelpx] ; exact corner_in_closed_hull
+  have hz : z ∈ closed_hull (to_segment x z) := by
+    nth_rewrite 2[hhelpz] ; exact corner_in_closed_hull
+  have hy : y ∈ closed_hull (to_segment x z) := by
+    exact (open_sub_closed (to_segment x z) hColin.2)
   --This finishes the aux lemmas
   rcases h with ⟨ c, hnotc⟩
   have hx1 := hnotc x hx ; have hy1 := hnotc y hy ; have hz1 := hnotc z hz
@@ -982,9 +996,11 @@ lemma segment_sum_splitting (A : Finset Segment) (AVOID : Set ℝ²) (X : Finset
     (hA : A ⊆ avoiding_segment_set X AVOID)
     (hDisj : ∀ S T, S ∈ A → T ∈ A → S ≠ T → open_hull S ∩ open_hull T = ∅)
     (f : Segment → ℕ) (hfTwoMod : two_mod_function f) (hSymm : symm_fun f) :
-    (∑ S ∈ filter (fun S ↦ closed_hull S ⊆ (⋃ T ∈ A, closed_hull T)) (basic_avoiding_segment_set X AVOID), f S) % 4
+    (∑ S ∈ filter (fun S ↦ closed_hull S ⊆ (⋃ T ∈ A, closed_hull T))
+      (basic_avoiding_segment_set X AVOID), f S) % 4
     = (2 * ∑ T ∈ A, f T) % 4 := by
-  have h_disj : (↑A : Set Segment).PairwiseDisjoint (fun T ↦ (filter (fun S ↦ closed_hull S ⊆ closed_hull T) (basic_avoiding_segment_set X AVOID)))
+  have h_disj : (↑A : Set Segment).PairwiseDisjoint
+    (fun T ↦ (filter (fun S ↦ closed_hull S ⊆ closed_hull T) (basic_avoiding_segment_set X AVOID)))
       := by
     intro S hS T hT hST Y hY h
     have hDisj2 := hDisj S T hS hT hST
@@ -993,7 +1009,8 @@ lemma segment_sum_splitting (A : Finset Segment) (AVOID : Set ℝ²) (X : Finset
       intro L hL
       apply @segment_set_vertex_distinct X L
       have hY_segment_set : Y ⊆ segment_set X := by
-        calc Y ⊆ filter (fun S_1 ↦ closed_hull S_1 ⊆ closed_hull S) (basic_avoiding_segment_set X AVOID) := hY
+        calc Y ⊆ filter (fun S_1 ↦ closed_hull S_1 ⊆ closed_hull S)
+              (basic_avoiding_segment_set X AVOID) := hY
              _ ⊆ basic_avoiding_segment_set X AVOID := by exact filter_subset _ _
              _ ⊆ avoiding_segment_set X AVOID := by exact filter_subset _ _
              _ ⊆ segment_set X := by exact filter_subset _ _
@@ -1022,12 +1039,17 @@ lemma segment_sum_splitting (A : Finset Segment) (AVOID : Set ℝ²) (X : Finset
         intro a
         simp_all only [Set.mem_empty_iff_false]
       have hEmpty : open_hull L ⊆ ∅ := by
-        calc open_hull L ⊆ open_hull S ∩ open_hull T := by exact Set.subset_inter_iff.mpr ⟨(hLS L hL), (hLT L hL)⟩
-                       _ = ∅                         := by exact hDisj S T hS hT hST
+        calc open_hull L ⊆ open_hull S ∩ open_hull T := by
+                exact Set.subset_inter_iff.mpr ⟨(hLS L hL), (hLT L hL)⟩
+          _ = ∅ := by exact hDisj S T hS hT hST
       simp_all only [ne_eq, Set.subset_empty_iff]
     · tauto
-  have h_eq : filter (fun S ↦ closed_hull S ⊆ (⋃ T ∈ A, closed_hull T)) (basic_avoiding_segment_set X AVOID) =
-      Finset.disjiUnion A (fun T ↦ (filter (fun S ↦ closed_hull S ⊆ closed_hull T) (basic_avoiding_segment_set X AVOID))) h_disj
+  have h_eq : filter (fun S ↦ closed_hull S ⊆ (⋃ T ∈ A, closed_hull T))
+      (basic_avoiding_segment_set X AVOID) =
+      Finset.disjiUnion A
+        (fun T ↦ (filter (fun S ↦ closed_hull S ⊆ closed_hull T)
+          (basic_avoiding_segment_set X AVOID)))
+        h_disj
       := by
     ext L
     rw [mem_filter, Finset.mem_disjiUnion]
@@ -1055,7 +1077,9 @@ lemma segment_sum_splitting (A : Finset Segment) (AVOID : Set ℝ²) (X : Finset
           exact hS.1
         tauto_set
   rw [h_eq]
-  rw [Finset.sum_disjiUnion A (fun T ↦ (filter (fun S ↦ closed_hull S ⊆ closed_hull T) (basic_avoiding_segment_set X AVOID))) h_disj]
+  rw [Finset.sum_disjiUnion A
+    (fun T ↦ (filter (fun S ↦ closed_hull S ⊆ closed_hull T) (basic_avoiding_segment_set X AVOID)))
+    h_disj]
   rw [← ZMod.natCast_eq_natCast_iff']
   simp only [Nat.cast_sum, Nat.cast_mul, Nat.cast_ofNat, mul_sum]
   refine sum_congr rfl ?_
@@ -1074,7 +1098,8 @@ noncomputable def p (x y : ℝ) : ℝ² := !₂[x, y]
 -- def right : Segment := fun | 0 => p 1 0 | 1 => p 1 1
 
 noncomputable def square_boundary_basic (Δ : Finset Triangle) : Fin 4 → Finset Segment :=
-  fun i ↦ filter (fun S ↦ open_hull S ⊆ open_hull (square_boundary_big i)) (triangulation_boundary_basic_segments Δ)
+  fun i ↦ filter (fun S ↦ open_hull S ⊆ open_hull (square_boundary_big i))
+    (triangulation_boundary_basic_segments Δ)
 
 lemma unit_square_boundary_decomposition (Δ : Finset Triangle) (hCovering : is_triangulation Δ) :
     triangulation_boundary_basic_segments Δ =
@@ -1237,7 +1262,9 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
   -- sum mod 4 is just 2 times the value of IsPurple of the whole segment.
   unfold purple_sum
   have h : ∑ S ∈ triangulation_boundary_basic_segments Δ, isPurple v S =
-      ∑ S ∈ filter (fun S ↦ closed_hull S ⊆ (⋃ T ∈ square_boundary_big_set, closed_hull T)) (basic_avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ)), isPurple v S := by
+      ∑ S ∈ filter (fun S ↦ closed_hull S ⊆ (⋃ T ∈ square_boundary_big_set, closed_hull T))
+        (basic_avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ)),
+        isPurple v S := by
     rw [sum_congr]
     · rw [unit_square_boundary_decomposition Δ hCovering]
       unfold square_boundary_basic square_boundary_big_set triangulation_boundary_basic_segments
@@ -1260,14 +1287,17 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
       · intro hS
         simp_all only [mem_filter, mem_biUnion, mem_univ, true_and, exists_and_left]
         have hClosedSinBoundary : closed_hull S ⊆ boundary unit_square := by
-          have hBoundary : ∀ i : Fin 4, closed_hull (square_boundary_big i) ⊆ boundary unit_square := by
+          have hBoundary : ∀ i : Fin 4,
+              closed_hull (square_boundary_big i) ⊆ boundary unit_square := by
               exact square_boundary_segments_in_boundary
-          have hUnion : ⋃ T, ⋃ i, ⋃ (_ : T = square_boundary_big i), closed_hull (square_boundary_big i)
+          have hUnion : ⋃ T, ⋃ i, ⋃ (_ : T = square_boundary_big i),
+              closed_hull (square_boundary_big i)
               ⊆ boundary unit_square := by
             simp only [Set.iUnion_subset_iff]
             intro T i hT
             exact hBoundary i
-          calc closed_hull S ⊆ ⋃ T, ⋃ i, ⋃ (_ : T = square_boundary_big i), closed_hull (square_boundary_big i) := by exact hS.2
+          calc closed_hull S ⊆ ⋃ T, ⋃ i, ⋃ (_ : T = square_boundary_big i),
+                closed_hull (square_boundary_big i) := by exact hS.2
                            _ ⊆ boundary unit_square := by exact hUnion
         have hopenSinBoundary : open_hull S ⊆ boundary unit_square := by
           have hInc : open_hull S ⊆ closed_hull S := open_sub_closed S
@@ -1278,7 +1308,8 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
         apply unit_square_is_convex_open
         · exact hClosedSinBoundary
         · unfold basic_avoiding_segment_set avoiding_segment_set segment_set at hS
-          simp_all only [ne_eq, product_eq_sprod, mem_filter, mem_image, mem_product, Prod.exists, Fin.isValue]
+          simp_all only [ne_eq, product_eq_sprod, mem_filter, mem_image, mem_product, Prod.exists,
+            Fin.isValue]
           obtain ⟨w, h⟩ := hS.1.1.1
           obtain ⟨w_1, h⟩ := h
           obtain ⟨left, right_3⟩ := h
@@ -1289,14 +1320,16 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
     · intro _ _
       rfl
   rw [h]
-  have h1 : square_boundary_big_set ⊆ avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ) := by
+  have h1 : square_boundary_big_set ⊆
+      avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ) := by
     unfold avoiding_segment_set
     have h_triangle_avoiding_set : (triangulation_avoiding_set Δ) ⊆ open_hull unit_square := by
       unfold triangulation_avoiding_set
       simp only [Set.iUnion_subset_iff]
       intro T hT
       exact (open_triangle_in_open_square hT (non_degen T hT) hCovering)
-    have h_square_boundary : ∀ L ∈ square_boundary_big_set, closed_hull L ⊆ boundary unit_square := by
+    have h_square_boundary : ∀ L ∈ square_boundary_big_set,
+        closed_hull L ⊆ boundary unit_square := by
       intro L hL
       unfold square_boundary_big_set at hL
       simp only [top_eq_univ, mem_biUnion, mem_univ, mem_singleton, true_and] at hL
@@ -1317,7 +1350,8 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
       · tauto_set
       · unfold boundary
         tauto_set
-  have h2 : ∀ S L, S ∈ (square_boundary_big_set) → L ∈ (square_boundary_big_set) → S ≠ L → open_hull S ∩ open_hull L = ∅ := by
+  have h2 : ∀ S L, S ∈ (square_boundary_big_set) → L ∈ (square_boundary_big_set) → S ≠ L →
+      open_hull S ∩ open_hull L = ∅ := by
     unfold square_boundary_big_set
     intro S L hS hL hSL
     simp_all only [top_eq_univ, mem_biUnion, mem_univ, mem_singleton, true_and]
@@ -1329,7 +1363,9 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
       rw [hi, hj, h_contra] at hSL
       tauto
     exact unit_square_boundary_intersections i j hij
-  rw [segment_sum_splitting square_boundary_big_set (triangulation_avoiding_set Δ) (triangulation_points Δ) h1 h2 (isPurple v) (isPurple_two_mod_function v) (isPurple_symm_function v)]
+  rw [segment_sum_splitting square_boundary_big_set (triangulation_avoiding_set Δ)
+    (triangulation_points Δ) h1 h2 (isPurple v) (isPurple_two_mod_function v)
+    (isPurple_symm_function v)]
   unfold square_boundary_big_set
   have hTop : (⊤ : Finset (Fin 4)) = {0, 1, 2, 3} := by rfl
   have hDisjSum : (⊤ : Finset (Fin 4)).biUnion (fun i ↦ {square_boundary_big i}) =
@@ -1345,8 +1381,9 @@ theorem segment_sum_odd (Δ : Finset Triangle) (hCovering : is_triangulation Δ)
     exact hij.symm (square_boundary_big_injective heq)
   rw [hDisjSum, sum_disjiUnion]
   simp only [top_eq_univ, sum_singleton]
-  simp_all only [ne_eq, top_eq_univ, Fin.isValue, biUnion_insert, singleton_biUnion, disjiUnion_eq_biUnion,
-    mem_insert, zero_ne_one, Fin.reduceEq, mem_singleton, or_self, not_false_eq_true, sum_insert, sum_singleton]
+  simp_all only [ne_eq, top_eq_univ, Fin.isValue, biUnion_insert, singleton_biUnion,
+    disjiUnion_eq_biUnion, mem_insert, zero_ne_one, Fin.reduceEq, mem_singleton, or_self,
+    not_false_eq_true, sum_insert, sum_singleton]
   rw [purple_computation1]
   repeat rw [purple_computation0]
   · ring
@@ -1372,9 +1409,11 @@ lemma triangle_edges_disjoint (T : Triangle) (i j : Fin 3) (h : i ≠ j) (hdet :
   rw[←  mem_open_side hdet hx j] at hj
   exact Ne.symm (ne_of_lt (hj.2 i h)) hi.1
 
-lemma triangle_boundary_decomposition {Δ : Finset Triangle} {T : Triangle} (hdet : det T ≠ 0) (h : T ∈ Δ) :
+lemma triangle_boundary_decomposition {Δ : Finset Triangle} {T : Triangle} (hdet : det T ≠ 0)
+    (h : T ∈ Δ) :
     triangle_basic_boundary Δ T =
-    @Finset.biUnion (Fin 3) Segment _ ⊤ (fun i ↦ (basic_segment_segments (triangle_basic_boundary Δ T) (Tside T i)))
+    @Finset.biUnion (Fin 3) Segment _ ⊤
+      (fun i ↦ (basic_segment_segments (triangle_basic_boundary Δ T) (Tside T i)))
     := by
     ext S
     constructor
@@ -1626,7 +1665,8 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
     2 * isRainbow v T % 4 = (∑ (S ∈ triangle_basic_boundary Δ T), isPurple v S) % 4 := by
   intro T hT
   have h : triangle_basic_boundary Δ T =
-      filter (fun S ↦ closed_hull S ⊆ (⋃ L ∈ triangle_boundary T, closed_hull L)) (basic_avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ)) := by
+      filter (fun S ↦ closed_hull S ⊆ (⋃ L ∈ triangle_boundary T, closed_hull L))
+        (basic_avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ)) := by
     rw [triangle_boundary_decomposition (non_degen T hT) hT]
     unfold triangle_boundary
     ext S
@@ -1640,11 +1680,14 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
         unfold triangle_basic_boundary at hi
         unfold triangulation_basic_segments at hi
         simp_all only [ne_eq, top_eq_univ, mem_univ, mem_filter, true_and]
-      · simp_all only [ne_eq, top_eq_univ, mem_univ, true_and, mem_biUnion, mem_singleton, Set.iUnion_exists]
+      · simp_all only [ne_eq, top_eq_univ, mem_univ, true_and, mem_biUnion, mem_singleton,
+          Set.iUnion_exists]
         unfold basic_segment_segments at hi
         rw [mem_filter] at hi
-        have h1 : closed_hull S ⊆ closed_hull (Tside T i) := (open_sub_closed_sub S (Tside T i) hi.right)
-        have h2 : closed_hull (Tside T i) ⊆  ⋃ L, ⋃ i, ⋃ (_ : L = Tside T i), closed_hull (Tside T i) := by
+        have h1 : closed_hull S ⊆ closed_hull (Tside T i) :=
+          (open_sub_closed_sub S (Tside T i) hi.right)
+        have h2 : closed_hull (Tside T i) ⊆
+            ⋃ L, ⋃ i, ⋃ (_ : L = Tside T i), closed_hull (Tside T i) := by
           apply (Set.subset_iUnion_of_subset (Tside T i))
           apply (Set.subset_iUnion_of_subset i)
           simp only [Set.iUnion_true, subset_refl]
@@ -1670,7 +1713,8 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
         use i
         apply open_segment_sub' hi
         unfold basic_avoiding_segment_set avoiding_segment_set segment_set at hS1
-        simp_all only [ne_eq, product_eq_sprod, mem_filter, mem_image, mem_product, Prod.exists, Fin.isValue]
+        simp_all only [ne_eq, product_eq_sprod, mem_filter, mem_image, mem_product, Prod.exists,
+          Fin.isValue]
         obtain ⟨left, right⟩ := hS1
         obtain ⟨left, right_1⟩ := left
         obtain ⟨w, h⟩ := left
@@ -1680,7 +1724,8 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
         obtain ⟨left, right_4⟩ := left
         subst right_2
         exact right_3
-  have h1 : (triangle_boundary T) ⊆ avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ) := by
+  have h1 : (triangle_boundary T) ⊆
+      avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ) := by
     unfold triangle_boundary avoiding_segment_set
     simp only [top_eq_univ, biUnion_subset_iff_forall_subset, mem_univ, singleton_subset_iff,
       mem_filter, forall_const]
@@ -1710,11 +1755,14 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
       intro T' hT'
       by_cases hTT' : T = T'
       · rw [hTT']
-        exact Set.disjoint_of_subset (side_in_boundary (non_degen T' hT') _) (fun _ a ↦ a) boundary_open_disjoint
-      · have this := disjoint_opens_implies_disjoint_open_closed (T₁ := T) (T₂ := T') ?_ (non_degen T' hT')
+        exact Set.disjoint_of_subset (side_in_boundary (non_degen T' hT') _) (fun _ a ↦ a)
+          boundary_open_disjoint
+      · have this := disjoint_opens_implies_disjoint_open_closed (T₁ := T) (T₂ := T') ?_
+          (non_degen T' hT')
         · exact Set.disjoint_of_subset closed_side_sub' (fun ⦃a⦄ a ↦ a) this
         · exact hDisjointCover.2 _ hT _ hT' hTT'
-  have h2 : ∀ S L, S ∈ (triangle_boundary T) → L ∈ (triangle_boundary T) → S ≠ L → open_hull S ∩ open_hull L = ∅ := by
+  have h2 : ∀ S L, S ∈ (triangle_boundary T) → L ∈ (triangle_boundary T) → S ≠ L →
+      open_hull S ∩ open_hull L = ∅ := by
     intro S L hS hL hSL
     unfold triangle_boundary at hS hL
     simp only [top_eq_univ, mem_biUnion, mem_univ, mem_singleton, true_and] at hS hL
@@ -1727,7 +1775,9 @@ lemma rainbow_triangle_purple_sum {Δ : Finset Triangle}
     rw [← Set.disjoint_iff_inter_eq_empty, hi, hj]
     exact (triangle_edges_disjoint T i j hij (non_degen T hT))
   rw [h]
-  rw [segment_sum_splitting (triangle_boundary T) (triangulation_avoiding_set Δ) (triangulation_points Δ) h1 h2 (isPurple v) (isPurple_two_mod_function v) (isPurple_symm_function v)]
+  rw [segment_sum_splitting (triangle_boundary T) (triangulation_avoiding_set Δ)
+    (triangulation_points Δ) h1 h2 (isPurple v) (isPurple_two_mod_function v)
+    (isPurple_symm_function v)]
   unfold triangle_boundary
   simp only [top_eq_univ]
   rw [Finset.sum_biUnion _, Fin.sum_univ_three]
@@ -1779,7 +1829,8 @@ lemma boundary_filter_union (Δ : Finset Triangle) (T : Triangle) : T ∈ Δ →
 
 lemma boundary_filter_intersection (Δ : Finset Triangle) (T : Δ) :
     filter (fun S ↦ closed_hull S ⊆ boundary T.val) (triangulation_boundary_basic_segments Δ) ∩
-        filter (fun S ↦ closed_hull S ⊆ boundary T.val) (triangulation_interior_basic_segments Δ) = ∅ := by
+        filter (fun S ↦ closed_hull S ⊆ boundary T.val)
+          (triangulation_interior_basic_segments Δ) = ∅ := by
   ext x
   constructor
   · intro h
@@ -1787,7 +1838,8 @@ lemma boundary_filter_intersection (Δ : Finset Triangle) (T : Δ) :
     rcases h with ⟨h1, h2⟩
     rcases h1 with ⟨h1, h1'⟩
     rcases h2 with ⟨h2, h2'⟩
-    have int : triangulation_boundary_basic_segments Δ ∩ triangulation_interior_basic_segments Δ = ∅ := by
+    have int : triangulation_boundary_basic_segments Δ ∩
+        triangulation_interior_basic_segments Δ = ∅ := by
       exact triangulation_boundary_intersection Δ
     rw [← int]
     simp only [mem_inter]
@@ -1802,7 +1854,8 @@ lemma boundary_filter_intersection (Δ : Finset Triangle) (T : Δ) :
   sorry
 
 lemma interior_iff_reverse_interior (Δ : Finset Triangle) (S : Segment) :
-    S ∈ triangulation_interior_basic_segments Δ ↔ reverse_segment S ∈ triangulation_interior_basic_segments Δ := by
+    S ∈ triangulation_interior_basic_segments Δ ↔
+      reverse_segment S ∈ triangulation_interior_basic_segments Δ := by
   unfold triangulation_interior_basic_segments
   repeat rw [mem_filter]
   constructor <;> intro a <;> obtain ⟨left, right⟩ := a
@@ -1866,7 +1919,8 @@ lemma triangle_basic_boundary_indicator_rw {Δ : Finset Triangle} (T : Triangle)
 lemma open_triangle_segment (Δ : Finset Triangle) (S : Segment)
     (hS : S ∈ triangulation_basic_segments Δ) :
     ∀ T ∈ Δ, open_hull T ∩ closed_hull S = ∅ := by
-  unfold triangulation_basic_segments triangulation_avoiding_set basic_avoiding_segment_set avoiding_segment_set at hS
+  unfold triangulation_basic_segments triangulation_avoiding_set basic_avoiding_segment_set
+    avoiding_segment_set at hS
   intro T hT
   simp only [Set.disjoint_iUnion_right, mem_filter] at hS
   rw [← Set.disjoint_iff_inter_eq_empty]
@@ -1895,7 +1949,8 @@ lemma split_segment_sum (Δ : Finset Triangle)
         exact mem_of_mem_filter S hS
       · have h2 : S ∈ triangulation_basic_segments Δ := by
           unfold triangulation_boundary_basic_segments at hS
-          exact Finset.filter_subset (fun S ↦ open_hull S ⊆ boundary unit_square) (triangulation_basic_segments Δ) hS
+          exact Finset.filter_subset (fun S ↦ open_hull S ⊆ boundary unit_square)
+            (triangulation_basic_segments Δ) hS
         exact open_triangle_segment Δ S h2
       · simp only [triangulation_boundary_basic_segments, mem_filter] at hS
         exact hS.2
@@ -1913,7 +1968,8 @@ lemma split_segment_sum (Δ : Finset Triangle)
       refine segment_triangle_pairing_int Δ hDisjointCover non_degen S ?_ ?_ ?_
       · have h2 : S ∈ triangulation_basic_segments Δ := by
           unfold triangulation_interior_basic_segments at hS
-          exact Finset.filter_subset (fun S ↦ open_hull S ⊆ open_hull unit_square) (triangulation_basic_segments Δ) hS
+          exact Finset.filter_subset (fun S ↦ open_hull S ⊆ open_hull unit_square)
+            (triangulation_basic_segments Δ) hS
         exact open_triangle_segment Δ S h2
       · simp only [triangulation_interior_basic_segments, mem_filter] at hS
         exact hS.2
