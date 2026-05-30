@@ -21,26 +21,31 @@ open Finset
 /-
   The closed_hulls of the polygons cover X.
 -/
+/-- `X` equals the union of the closed hulls of the polygons in `S`. -/
 def is_cover {n : ℕ} (X : Set ℝ²) (S : Set (Fin n → ℝ²)) : Prop :=
   (X = ⋃ (P ∈ S), closed_hull P)
 
 /-
   The open_hulls of the polygons do not intersect.
 -/
+/-- The open hulls of distinct polygons in `S` are pairwise disjoint. -/
 def is_disjoint_polygon_set {n : ℕ} (S : Set (Fin n → ℝ²)) : Prop :=
     (∀ T₁ ∈ S, ∀ T₂ ∈ S, T₁ ≠ T₂ → Disjoint (open_hull T₁) (open_hull T₂))
 
 
+/-- `is_disjoint_cover X S` states that `S` covers `X` and its open hulls are pairwise disjoint. -/
 def is_disjoint_cover {n : ℕ} (X : Set ℝ²) (S : Set (Fin n → ℝ²)) : Prop :=
   is_cover X S ∧ is_disjoint_polygon_set S
 
 
 
 /- For now we use this formula as the definition of the area.-/
+/-- The area of a triangle, given by half the absolute value of its determinant. -/
 noncomputable def triangle_area (T : Triangle) : ℝ :=
   abs (det T) / 2
 
 /- -/
+/-- A disjoint cover of `X` by triangles all having the same area. -/
 def is_equal_area_cover (X : Set ℝ²) (S : Set Triangle) : Prop :=
   is_disjoint_cover X S ∧
   (∃ (area : ℝ), ∀ T, (T ∈ S) → triangle_area T = area)

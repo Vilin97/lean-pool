@@ -20,6 +20,7 @@ open Finset
 
 
 -- Shorthand for defining an element of ℝ²
+/-- The plane vector with the two given real coordinates. -/
 def v (x y : ℝ) : ℝ² := !₂[x, y]
 
 @[simp]
@@ -29,7 +30,9 @@ lemma v₁_val {x y : ℝ} : (v x y) 1 = y := by simp [v]
 
 
 -- Definition of an n-dimensional standard simplex.
+/-- The closed standard `n`-simplex of nonnegative weights summing to one. -/
 def closed_simplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 ≤ α i) ∧ ∑ i, α i = 1}
+/-- The open standard `n`-simplex of positive weights summing to one. -/
 def open_simplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 < α i) ∧ ∑ i, α i = 1}
 
 /-
@@ -40,11 +43,14 @@ def open_simplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 < α i) ∧ 
 
   Also when f i = P for all i, both the closed_hull and open_hull are {P i}.
 -/
+/-- The closed convex hull of a finite point family, via the closed simplex. -/
 def closed_hull {n : ℕ} (f : Fin n → ℝ²) : Set ℝ² := (fun α ↦ ∑ i, α i • f i) '' closed_simplex n
+/-- The open convex hull of a finite point family, via the open simplex. -/
 def open_hull {n : ℕ} (f : Fin n → ℝ²) : Set ℝ² := (fun α ↦ ∑ i, α i • f i) '' open_simplex n
 
 
 /- Corner of the standard simplex.-/
+/-- The `i`-th vertex of the standard simplex, as a weight function. -/
 def simplex_vertex {n : ℕ} (i : Fin n) : Fin n → ℝ :=
     fun j ↦ if i = j then 1 else 0
 
@@ -112,6 +118,7 @@ lemma open_hull_zero_dim (f : Fin 0 → ℝ²) : open_hull f = ∅ := by
 
 
 
+/-- The point obtained as a weighted combination of a point family. -/
 noncomputable def linear_combination {n : ℕ} (α : Fin n → ℝ) (f : Fin n → ℝ²)
     : ℝ² := ∑ i, α i • f i
 
@@ -182,6 +189,7 @@ lemma simplex_open_sub_fin2 {α : Fin 2 → ℝ} (h : α ∈ open_simplex 2) :
     ∀ i, α i = 1 - α ((fun | 0 => 1 | 1 => 0) i) :=
   simplex_closed_sub_fin2 (open_sub_closed_simplex h)
 
+/-- Encodes a real `x` as the pair of weights `(x, 1 - x)`. -/
 def real_to_fin_2 (x : ℝ) : (Fin 2 → ℝ) := fun | 0 => x | 1 => 1 - x
 
 lemma real_to_fin_2_closed {x : ℝ} (h₁ : 0 ≤ x) (h₂ : x ≤ 1)
@@ -235,6 +243,7 @@ lemma closed_hull_open_hull_com {n : ℕ} {P : Fin n → ℝ²} {x y : ℝ²}
   in the open hull.
 -/
 
+/-- The boundary of the convex hull of a point family: closed hull minus open hull. -/
 def boundary {n : ℕ} (P : Fin n → ℝ²) : Set ℝ² := (closed_hull P) \ (open_hull P)
 
 lemma boundary_sub_closed {n : ℕ} (P : Fin n → ℝ²) : boundary P ⊆ closed_hull P :=

@@ -73,10 +73,13 @@ theorem map_pres (X : Set ℝ²) : volume X = volume (id_map '' X) :=
 /-- `id_map` sends a Euclidean plane vector to the pair of its coordinates. -/
 @[simp] lemma id_map_apply (x : ℝ²) : id_map x = (x 0, x 1) := rfl
 
+/-- The unit triangle with vertices `(0,0)`, `(1,0)` and `(0,1)`. -/
 def unit_triangle : Triangle := fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1)
 lemma unit_triangle_def : unit_triangle = fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1) := by rfl
 
-def lower : ℝ → ℝ := fun _ ↦ 0
+/-- The lower boundary function (constantly zero) of the unit triangle region. -/
+def lower : ℝ → ℝ := 0
+/-- The upper boundary function `x ↦ 1 - x` of the unit triangle region. -/
 def upper : ℝ → ℝ := fun x ↦ 1 - x
 
 theorem unit_is_unit_in_prod
@@ -86,7 +89,7 @@ theorem unit_is_unit_in_prod
     unfold regionBetween open_hull open_simplex lower upper unit_triangle <;> intro hx <;>
     simp only [id_map_apply, Fin.isValue, Set.mem_image, Set.mem_setOf_eq,
       exists_exists_and_eq_and, WithLp.ofLp_sum, WithLp.ofLp_smul, sum_apply, Pi.smul_apply,
-      smul_eq_mul, Set.mem_Ioc, Set.mem_Ioo] at *
+      smul_eq_mul, Set.mem_Ioc, Set.mem_Ioo, Pi.zero_apply] at *
   · rcases hx with ⟨a, ⟨ha, ha''⟩, ha'⟩
     rw [Fin.sum_univ_three] at ha'' ha'
     rw [←ha']
@@ -117,7 +120,7 @@ theorem volume_open_unit_triangle : (MeasureTheory.volume (open_hull unit_triang
   have xyz : ∀ x ∈ Set.Ioc 0 1, lower x ≤ upper x := by
     intro x
     simp [upper, lower]
-  have integ : IntegrableOn lower (Set.Ioc 0 1) := by unfold lower; simp
+  have integ : IntegrableOn lower (Set.Ioc 0 1) := by unfold lower; exact integrableOn_zero
   have integ' : IntegrableOn upper (Set.Ioc 0 1) :=
     MeasureTheory.Integrable.sub (integrable_const 1)
       (intervalIntegral.intervalIntegrable_id (a := 0) (b := 1)).1
@@ -143,7 +146,7 @@ theorem volume_open_unit_triangle1 : (MeasureTheory.volume (open_hull unit_trian
 theorem measurable_unit_triangle : MeasurableSet (open_hull unit_triangle) := by
   rw [←unit_in_prod_is_unit]
   apply MeasurableEquiv.measurable_toFun
-  refine measurableSet_regionBetween (by unfold lower; simp) ?_ measurableSet_Ioc
+  refine measurableSet_regionBetween (by unfold lower; exact measurable_zero) ?_ measurableSet_Ioc
   exact Measurable.sub measurable_const (fun ⦃t⦄ a ↦ a)
 
 -- Now that we have this, we want to show that the areas can be nicely transformed, for which we use
@@ -154,6 +157,7 @@ theorem area_lin_map (L : ℝ² →ₗ[ℝ] ℝ²) (A : Set ℝ²) : MeasureTheo
 
 -- We have something similar for translations, but we first have to give a definition of a
 -- translation :)
+/-- Translation of the plane by a fixed vector `a`. -/
 def translation (a : ℝ²) : (ℝ² → ℝ²) := fun x ↦ x + a
 
 theorem area_translation (a : ℝ²) (A : Set ℝ²)
@@ -270,7 +274,9 @@ theorem translation_commutes_closed {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²
 -- Now we explicitly give the translation and linear map that so that the unit triangle gets mapped
 -- unto the triangle
 --First, we make explicit that our basis is the standard basis
+/-- The standard basis of the Euclidean plane used throughout. -/
 noncomputable def our_basis : Module.Basis (Fin 2) ℝ ℝ² :=  PiLp.basisFun 2 ℝ (Fin 2)
+/-- The standard orthonormal basis of the Euclidean plane. -/
 noncomputable def our_basis_ortho
     : OrthonormalBasis (Fin 2) ℝ ℝ² :=   EuclideanSpace.basisFun (Fin 2) ℝ
 
@@ -287,13 +293,16 @@ theorem our_basis_ortho_one : (our_basis_ortho 1 : ℝ²) = !₂[0, 1] := by
   ext j; fin_cases j <;> simp
 
 --This map tells us how the basis elements should be mapped
+/-- The pair of edge vectors of a triangle from its first vertex. -/
 noncomputable def basis_transform (T : Triangle)
     : (Fin 2 → ℝ²) := (fun | 0 => (T 1 - T 0) | 1 => (T 2 -T 0))
 
 --And then Lean knows how to make a linear map from this
+/-- The linear map sending the standard basis to a triangle's edge vectors. -/
 noncomputable def linear_transform (T : Triangle) := our_basis.constr ℝ (basis_transform T)
 
 --This is our translation
+/-- Translation by the first vertex of a triangle. -/
 def triangle_translation (T : Triangle) := translation (T 0)
 
 -- And then some API which I am actually not sure is required
@@ -363,7 +372,9 @@ theorem volume_open_triangle (T : Triangle)
 -- Now that we know the volume of open triangles, we also want to know the area of segments. For
 -- this we have a similar strategy. We first take a unit segment, and show it is a subset of the y
 -- axis which as hhas measure zero
+/-- The unit segment from `(0,0)` to `(0,1)`. -/
 noncomputable def unit_segment : Segment := fun | 0 => (v 0 0) | 1 => (v 1 0)
+/-- The `y`-axis as a submodule of the plane. -/
 noncomputable def y_axis : Submodule ℝ ℝ² := Submodule.span ℝ (Set.range unit_segment )
 
 --And some possibly unnecessary API
@@ -402,10 +413,13 @@ theorem volume_closed_unit_segment : MeasureTheory.volume (closed_hull unit_segm
   trivial
 
 --Now for segments we also need linear maps and translations
+/-- The edge vector of a segment together with the zero vector. -/
 noncomputable def basis_transform_segment (L : Segment)
     : (Fin 2 → ℝ²) := (fun | 0 => (L 1 - L 0) | 1 => 0)
+/-- The linear map sending the standard basis to a segment's edge vector. -/
 noncomputable def linear_transform_segment (L : Segment) :=
   our_basis.constr ℝ (basis_transform_segment L)
+/-- Translation by the first endpoint of a segment. -/
 def segment_translation (L : Segment) := translation (L 0)
 
 --Some API
@@ -546,6 +560,7 @@ theorem nondegen_triangle_lin_inv (T : Triangle) (h : det T ≠ 0)
   simp at h
 
 -- This is the same linear transformation but now in the type of invertible map
+/-- The linear equivalence given by a nondegenerate triangle's linear transform. -/
 noncomputable def bij_linear_transform (T : Triangle) (h : det T ≠ 0) :=
   (LinearMap.equivOfDetNeZero (linear_transform T) (nondegen_triangle_lin_inv T h))
 
@@ -561,6 +576,7 @@ lemma linear_transform_bij_left_inf (T : Triangle) (h : det T ≠ 0)
 
 -- This is the inverse of the original triangle translation map, and the proof that are necessary to
 -- work with it
+/-- The inverse of `triangle_translation`, translating by the negated first vertex. -/
 def inv_triangle_translation (T : Triangle) := translation ( - T 0)
 
 lemma translation_bijective (a : ℝ²) : Function.Bijective (translation a) := by
@@ -641,6 +657,7 @@ theorem null_meas_triangle (T : Triangle) : MeasureTheory.NullMeasurableSet (ope
 
 -- We show that the closed hull of these edges together with an open triangle makes a closed
 -- triangle, first the definition
+/-- The union of the closed hulls of a triangle's three sides. -/
 def all_edges_triangle_hull (T : Triangle) :=
   closed_hull (Tside T 0) ∪ closed_hull (Tside T 1) ∪ closed_hull (Tside T 2)
 

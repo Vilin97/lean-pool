@@ -27,6 +27,7 @@ open Finset
 -- function. The coloring function will take a point in ℝ² and return a color from Color (eg. Red
 -- Blue or Green).
 
+/-- The three colors used in Monsky's coloring of the plane: red, green and blue. -/
 inductive Color
 | Red
 | Green
@@ -38,6 +39,7 @@ variable (v : Valuation ℝ Γ₀)
 
 -- Now we define the coloring function as it appears in the Book.
 
+/-- Monsky's three-coloring of a point of the plane induced by a valuation `v`. -/
 def coloring : (X : ℝ²) → Color
 | X => if v (X 0) < v 1 ∧ v (X 1) < v 1 then Color.Red
   else if v (X 0) < v (X 1) ∧ v (X 1) ≥ v 1 then Color.Green
@@ -91,6 +93,7 @@ lemma blue_region (X : ℝ²) : (coloring v X = Color.Blue) → v (X 0) ≥ v (1
 
 -- Record our definition of a rainbow triangle
 
+/-- A triangle is rainbow if its three vertices receive all three colors. -/
 def rainbow_triangle (T : Fin 3 → ℝ²) : Prop := Function.Surjective (coloring v ∘ T)
 
 -- We need a few inequalities that will be used in the proof of the main lemma.
@@ -215,6 +218,7 @@ lemma Lhull_equals_Thull (L : Segment) :
     · simp [← hαx, Fin.sum_univ_three, add_smul]
 
 -- Six permutations of 3 elements
+/-- The six permutations of `Fin 3`, indexed by `Fin 6`. -/
 def σ : Fin 6 → (Fin 3 → Fin 3) := fun
   | 0 => (fun | 0 => 0 | 1 => 1 | 2 => 2)
   | 1 => (fun | 0 => 0 | 1 => 2 | 2 => 1)
@@ -224,6 +228,7 @@ def σ : Fin 6 → (Fin 3 → Fin 3) := fun
   | 5 => (fun | 0 => 2 | 1 => 1 | 2 => 0)
 
 -- Signs of these 6 permutations
+/-- The sign of the permutation `σ b`, as a value in `ℝ`. -/
 def b_sign : Fin 6 → ℝ := fun
   | 0 => 1 | 1 => -1 | 2 => -1 | 3 => 1 | 4 => 1 | 5 => -1
 

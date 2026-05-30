@@ -455,7 +455,9 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
     rw[lt_iff_not_ge] at deg
     tauto
 
+/-- The set of subrings of `ℝ` not containing `1/2`. -/
 def S := {A : Subring ℝ | (1/2) ∉ A}
+/-- The image of `ℤ` inside `ℝ` as a subring. -/
 def Z := (Int.castRingHom ℝ).range
 
 -- This lemma shows that the subring of integers in ℝ lies in the set S

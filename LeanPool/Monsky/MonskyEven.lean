@@ -24,8 +24,10 @@ open Finset
 
 
 /- This rewriting is for convenience. -/
+/-- `disjoint_set X f` states that `f` sends distinct elements of `X` to disjoint sets. -/
 def disjoint_set {α β : Type} (X : Set α) (f : α → Set β) :=
   ∀ a₁ a₂, a₁ ∈ X → a₂ ∈ X → a₁ ≠ a₂ → Disjoint (f a₁) (f a₂)
+/-- `covers X Y f` states that `Y` is the union of `f a` over `a ∈ X`. -/
 def covers {α β} (X : Set α) (Y : Set β) (f : α → Set β) := Y = ⋃ a ∈ X, f a
 
 lemma is_cover_iff (X : Set ℝ²) (S : Set Triangle)
@@ -56,7 +58,9 @@ lemma disjoint_aux {α β : Type} (S₁ S₂ : Set α) (f : α → Set β) (h₁
 -/
 
 /- These two triangles dissect the square and have equal area.-/
+/-- The lower triangle of the standard two-triangle dissection of the unit square. -/
 def Δ₀ : Triangle  := fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1)
+/-- The upper triangle of the standard two-triangle dissection of the unit square. -/
 def Δ₀' : Triangle  := fun | 0 => (v 1 0) | 1 => (v 0 1) | 2 => (v 1 1)
 
 lemma areaΔ₀ : triangle_area Δ₀ = 1 / 2 := by
@@ -70,8 +74,10 @@ lemma areaΔ₀' : triangle_area Δ₀' = 1 / 2 := by
 
 /- Elementary stuff about scaling (only in the y direction).-/
 
+/-- Scales the second coordinate of a plane vector by `a`. -/
 def scale_vector (a : ℝ) (y : ℝ²) : ℝ² := !₂[y 0, a * y 1]
 
+/-- Applies `scale_vector a` to every vertex of a triangle. -/
 def scale_triangle (a : ℝ) (T : Triangle) : Triangle := fun i ↦ scale_vector a (T i)
 
 lemma scale_triangle_det (a : ℝ) (T : Triangle) :
@@ -86,7 +92,9 @@ lemma scale_triangle_area (a : ℝ) (T : Triangle)
 
 /- Elementary stuff about translating (only in the y direction).-/
 
+/-- Translates the second coordinate of a plane vector by `a`. -/
 def translate_vector (a : ℝ) (x : ℝ²) : ℝ² := !₂[x 0, a + x 1]
+/-- Applies `translate_vector a` to every vertex of a triangle. -/
 def translate_triangle (a : ℝ) (T : Triangle) : Triangle := fun i ↦ translate_vector a (T i)
 
 lemma translate_triangle_det (a : ℝ) (T : Triangle) :
@@ -106,11 +114,13 @@ lemma translate_injective {T : Triangle} :
   assumption
 
 -- Here a different try. Just give a very explicit cover.
+/-- The `n` translated copies of the scaled lower triangle `Δ₀` covering the square. -/
 noncomputable def zig_part_cover (n : ℕ)
   := Finset.image
     (fun (s : Fin n) ↦
       translate_triangle ((s : ℝ) / (n : ℝ)) (scale_triangle (1 / (n : ℝ)) Δ₀)) univ
 
+/-- The `n` translated copies of the scaled upper triangle `Δ₀'` covering the square. -/
 noncomputable def zag_part_cover (n : ℕ)
   := Finset.image
     (fun (s : Fin n) ↦

@@ -28,29 +28,38 @@ open Finset
 /- Basic definitions. -/
 
 /- 'Determinant' of a triangle. -/
+/-- The determinant (signed area form) attached to a triangle's three vertices. -/
 def det (T : Triangle) : ℝ
   := (T 0 1 - T 1 1) * (T 2 0) + (T 1 0 - T 0 0) * (T 2 1) + ((T 0 0) * (T 1 1) - (T 1 0) * (T 0 1))
 
+/-- The `2×2` determinant of two plane vectors. -/
 def det₂ (x y : ℝ²) : ℝ := x 0 * y 1 - x 1 * y 0
 
 /- The vector pointing from the start of the segment to the end.-/
+/-- The direction vector of a segment, from its first to its second endpoint. -/
 noncomputable def seg_vec (L : Segment) : ℝ² := L 1 - L 0
 
+/-- The sign of the determinant of a triangle, as an element of `ℝ`. -/
 def sign_seg (L : Segment) (v : ℝ²) : ℝ := det (fun | 0 => L 0 | 1 => L 1 | 2 => v)
 
+/-- The segment with the two given endpoints. -/
 def to_segment (a b : ℝ²) : Segment := fun | 0 => a | 1 => b
 
+/-- The segment with its two endpoints swapped. -/
 def reverse_segment (L : Segment) : Segment := to_segment (L 1) (L 0)
 
+/-- `colin u v w` states that `v` lies strictly between the distinct points `u` and `w`. -/
 def colin (u v w : ℝ²) : Prop := u ≠ w ∧ v ∈ open_hull (to_segment u w)
 
 /- Tside i defines the 'directed' opposite side of T i.-/
+/-- The `i`-th side of a triangle, as a segment. -/
 def Tside (T : Triangle) : Fin 3 → Segment := fun
   | 0 => (fun | 0 => T 1 | 1 => T 2)
   | 1 => (fun | 0 => T 2 | 1 => T 0)
   | 2 => (fun | 0 => T 0 | 1 => T 1)
 
 /- Barycentric coordinates on triangle T. -/
+/-- The `i`-th barycentric coordinate of a point with respect to a triangle. -/
 noncomputable def Tco (T : Triangle) (x : ℝ²) : Fin 3 → ℝ :=
   fun i ↦ (sign_seg (Tside T i) x) / det T
 
@@ -58,6 +67,7 @@ noncomputable def Tco (T : Triangle) (x : ℝ²) : Fin 3 → ℝ :=
   This definition is sometimes used, but sometimes isn't.
   To do: Make this more uniform.
 -/
+/-- The opposite-side normal vector used in the barycentric coordinate formula. -/
 noncomputable def Oside (T : Triangle) (i : Fin 3) := seg_vec (Tside T i)
 
 
@@ -495,6 +505,7 @@ lemma seg_nontriv_sub {L₁ L₂ : Segment} (h : closed_hull L₁ ⊆ closed_hul
   Given two distinct i,j from Fin 3 this will return the unique element not equal to i and j.
   If i = j it returns the junk value i.
 -/
+/-- The remaining index of `Fin 3` distinct from two given indices. -/
 def last_index : Fin 3 → Fin 3 → Fin 3 := fun
   | 0 => (fun | 0 => 0 | 1 => 2 | 2 => 1)
   | 1 => (fun | 0 => 2 | 1 => 1 | 2 => 0)
@@ -1119,6 +1130,7 @@ t ∈ open_hull (to_segment u w) := by
 -- This definition is meant to help with showing that if u v w, and v w x are colinear, then so are
 -- u w x and u v x. In particular this definition gives the simplex that will be used to show that
 -- both v w are in the open hull of u x
+/-- The two-simplex used to express a point of one segment inside another. -/
 noncomputable def make_new_two_simplex (a b : Fin 2 → ℝ)
     : (Fin 2 → ℝ ):= fun | 0 => a 0/(1 - a 1 * b 0) | 1 => a 1 * b 1 /(1 - a 1 *  b 0)
 
@@ -1499,6 +1511,7 @@ lemma colin_sub_aux {u v w x : ℝ²} {L : Segment} (hc : colin u v w)
 
 --test
 
+/-- The closed hull of the segment associated to an unordered pair of points. -/
 def ClosedSymSeg : Sym2 ℝ² → Set ℝ² :=
   Sym2.lift ⟨fun a b ↦ closed_hull (to_segment a b), by
   intro _ _
@@ -1615,6 +1628,7 @@ lemma closed_hull_eq_imp_boundary_eq {L₁ L₂ : Segment}
 /- More stuff about infinite lines in ℝ²-/
 
 
+/-- The parametrization of the line through `v₁` in direction `v₂`. -/
 noncomputable def line_par (v₁ v₂ : ℝ²) : ℝ → ℝ² := fun t ↦ v₁ + t • v₂
 
 
@@ -1993,6 +2007,7 @@ lemma open_sub_closed_sub (S L : Segment) (h : open_hull S ⊆ open_hull L) :
       exact boundary_int_open_empty
 
 
+/-- A small segment centered at `x` in the direction of a given vector. -/
 noncomputable def segment_around_x (x y : ℝ²) (ε₁ ε₂ : ℝ)
     : Segment := to_segment (x + (1 * ε₁) • y) (x + (-1 * ε₂) • y)
 

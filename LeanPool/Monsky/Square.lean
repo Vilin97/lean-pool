@@ -26,6 +26,7 @@ open Finset
   Basic properties about the unit square, i.e. the square with vertices 00, 10, 11, 01.
 -/
 
+/-- The unit square as a four-vertex polygon. -/
 def unit_square : Fin 4 → ℝ² := (fun | 0 => v 0 0 | 1 => v 1 0 | 2 => v 1 1 | 3 => v 0 1)
 
 
@@ -461,12 +462,14 @@ lemma segment_triangle_pairing_boundary (S : Finset Triangle)
 
 -- Lemmas and Theorems about the square boundary
 
+/-- The `i`-th side of the unit square, as a segment. -/
 def square_boundary_big : Fin 4 → Segment := fun
   | 0 => (fun | 0 => v 0 0 | 1 => v 1 0)
   | 1 => (fun | 0 => v 1 0 | 1 => v 1 1)
   | 2 => (fun | 0 => v 1 1 | 1 => v 0 1)
   | 3 => (fun | 0 => v 0 1 | 1 => v 0 0)
 
+/-- The four sides of the unit square, as a set of segments. -/
 noncomputable def square_boundary_big_set : Finset Segment :=
    @Finset.biUnion (Fin 4) Segment _ ⊤ (fun i ↦ {square_boundary_big i})
 
@@ -491,7 +494,9 @@ lemma square_boundary_sides_nonDegen (i : Fin 4) :
   fin_cases i <;> simp_all [square_boundary_big, v]
 
 
+/-- The index of the coordinate that is constant along side `i` of the square. -/
 def boundary_line : Fin 4 → Fin 2 := fun | 0 => 0 | 1 => 1 | 2 => 0 | 3 => 1
+/-- The constant coordinate value along side `i` of the unit square. -/
 def bc : Fin 4 → ℝ := fun | 0 => 0 | 1 => 1 | 2 => 1 | 3 => 0
 
 @[simp]

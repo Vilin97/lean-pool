@@ -26,36 +26,46 @@ attribute [local instance] Classical.propDecidable
 
 
 
+/-- The set of nondegenerate segments with both endpoints in `X`. -/
 noncomputable def segment_set (X : Finset ℝ²) : Finset Segment :=
     Finset.image (fun (a,b) ↦ to_segment a b) ((Finset.product X X).filter (fun (a,b) ↦ a ≠ b))
 
+/-- The segments of `segment_set X` whose open hull avoids the set `A`. -/
 noncomputable def avoiding_segment_set (X : Finset ℝ²) (A : Set ℝ²) : Finset Segment :=
     (segment_set X).filter (fun L ↦ Disjoint (closed_hull L) (A))
 
+/-- The avoiding segments of `X` that are basic, i.e. contain no point of `X` in their interior. -/
 noncomputable def basic_avoiding_segment_set (X : Finset ℝ²) (A : Set ℝ²) : Finset Segment :=
     (avoiding_segment_set X A).filter (fun L ↦ ∀ x ∈ X, x ∉ open_hull L)
 
 
 
+/-- An inductively defined chain of collinear segments between two points. -/
 inductive Chain : ℝ² → ℝ² → Type
     | basic {u v : ℝ²}  : Chain u v
     | join {u v w : ℝ²} (hCollineair : colin u v w) (C : Chain v w) : Chain u w
 
+/-- The finite set of basic segments making up a chain. -/
 noncomputable def to_basic_segments {u v : ℝ²} : Chain u v → Finset Segment
     | Chain.basic              => {to_segment u v}
     | @Chain.join _ w _ _ C    => to_basic_segments C ∪ {to_segment u w}
 
+/-- Concatenates two chains sharing an endpoint into a single chain. -/
 noncomputable def glue_chains {u v w : ℝ²} (hCollinear : colin u v w)
     : Chain u v → Chain v w → Chain u w
     | Chain.basic, C      => Chain.join hCollinear C
     | Chain.join h C', C  => Chain.join ⟨hCollinear.1, interior_left_trans h.2 hCollinear.2⟩
         (glue_chains (sub_collinear_right hCollinear h.2) C' C)
 
+/-- Reverses the direction of a chain. -/
 noncomputable def reverse_chain {u v : ℝ²} : Chain u v → Chain v u
     | Chain.basic           => Chain.basic
     | @Chain.join _ x _ h C => glue_chains (colin_reverse h) (reverse_chain C) (@Chain.basic x u)
 
-noncomputable def chain_to_big_segment {u v : ℝ²} (_ : Chain u v) : Segment := to_segment u v
+/-- The single segment from the start to the end of a chain. -/
+noncomputable def chain_to_big_segment {u v : ℝ²} (C : Chain u v) : Segment :=
+  match C with
+  | _ => to_segment u v
 
 lemma chain_to_big_segment_join {u v w} (h : colin u v w) (C : Chain v w) :
     chain_to_big_segment (Chain.join h C) = to_segment u w := rfl
@@ -509,10 +519,12 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
           subset_trans ((hLmem L).mp (Or.inr hrevCL)).2 (closed_hull_convex hSlefti)⟩
 
 
+/-- A function on segments that is additive modulo 2 along collinear splits. -/
 def two_mod_function (f : Segment → ℕ)
     := ∀ {u v w}, colin u v w →
       (f (to_segment u v) + f (to_segment v w)) % 2 = f (to_segment u w) % 2
 
+/-- A function on segments invariant under reversing the segment. -/
 def symm_fun (f : Segment → ℕ) := ∀ S, f (reverse_segment S) = f S
 
 lemma two_mod_function_chains {f : Segment → ℕ} (hf : two_mod_function f) {u v : ℝ²}
@@ -570,10 +582,12 @@ variable (v : Valuation ℝ Γ₀)
 -- The following function determines whether a segment is purple. We want to sum the value
 -- of this function over all segments, so we let it take values in ℕ
 
+/-- Indicator (`0` or `1`) of whether a segment is purple, i.e. red-blue colored. -/
 noncomputable def isPurple : Segment → ℕ :=
     fun S ↦ if ( (coloring v (S 0) = Color.Red ∧ coloring v (S 1) = Color.Blue) ∨
       (coloring v (S 0) = Color.Blue ∧ coloring v (S 1) = Color.Red)) then 1 else 0
 
+/-- Indicator (`0` or `1`) of whether a triangle is rainbow. -/
 noncomputable def isRainbow : Triangle → ℕ :=
     fun T ↦ if (Function.Surjective (coloring v ∘ T)) then 1 else 0
 
@@ -625,12 +639,14 @@ lemma isPurple_symm_function : symm_fun (isPurple v) := by
   sorry -- can apply two_mod_function_chains
 -/
 
+/-- The finite set of all vertices appearing in a triangulation. -/
 noncomputable def triangulation_points (Δ : Finset Triangle) : Finset ℝ² :=
   Finset.biUnion Δ (fun T ↦ {T 0, T 1, T 2})
 
 
 -- This definition might be better so
 -- TODO: Change to this
+/-- The set of triangulation vertices, viewed as a set of points of the plane. -/
 noncomputable def triangulation_points₂ (Δ : Finset Triangle) : Finset ℝ² :=
   Finset.biUnion Δ (fun T ↦ (Finset.image (fun i ↦ T i) Finset.univ))
 
@@ -644,18 +660,23 @@ lemma triangulation_points_mem {Δ : Finset Triangle} {T : Triangle} (hT : T ∈
 
 
 -- The union of the interiors of the triangles of a triangulation
+/-- The union of triangle interiors that basic segments of the triangulation must avoid. -/
 noncomputable def triangulation_avoiding_set (Δ : Finset Triangle) : Set ℝ² :=
     ⋃ (T ∈ Δ), open_hull T
 
+/-- The basic avoiding segments of a triangulation. -/
 noncomputable def triangulation_basic_segments (Δ : Finset Triangle) : Finset Segment :=
   basic_avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ)
 
+/-- The basic segments lying on the boundary of the unit square. -/
 noncomputable def triangulation_boundary_basic_segments (Δ : Finset Triangle) : Finset Segment :=
   {S ∈ triangulation_basic_segments Δ | open_hull S ⊆ boundary unit_square}
 
+/-- The basic segments lying in the interior of the unit square. -/
 noncomputable def triangulation_interior_basic_segments (Δ : Finset Triangle) : Finset Segment :=
   {S ∈ triangulation_basic_segments Δ | open_hull S ⊆ open_hull unit_square}
 
+/-- `is_triangulation Δ` states that `Δ` is a disjoint cover of the unit square by triangles. -/
 noncomputable def is_triangulation (Δ : Finset Triangle) : Prop :=
   is_cover (closed_hull unit_square) (↑Δ : Set Triangle)
 
@@ -974,21 +995,26 @@ lemma triangulation_boundary_intersection (Δ : Finset Triangle) :
   simp_all only [ne_eq, Set.subset_empty_iff]
 
 
+/-- All basic segments of a triangulation, both boundary and interior. -/
 noncomputable def triangulation_all_segments (Δ : Finset Triangle) : Finset Segment :=
   avoiding_segment_set (triangulation_points Δ) (triangulation_avoiding_set Δ)
 
+/-- The total number of purple segments in a triangulation. -/
 noncomputable def purple_sum (Δ : Finset Triangle) : ℕ :=
   ∑ (S ∈ triangulation_boundary_basic_segments Δ), isPurple v S
 
+/-- The total number of rainbow triangles in a triangulation. -/
 noncomputable def rainbow_sum (Δ : Finset Triangle) : ℕ :=
   ∑ (T ∈ Δ), isRainbow v  T
 
+/-- The finite set of rainbow triangles of a triangulation. -/
 noncomputable def rainbow_triangles (Δ : Finset Triangle) : Finset Triangle :=
   {T ∈ Δ | isRainbow v T = 1}
 
 -- Given a collection of segments X and a segment S, give all elements of X with open_hull contained
 -- in open_hull S.
 
+/-- The basic segments of a segment family contained in a given side. -/
 noncomputable def basic_segment_segments (X : Finset Segment) (S : Segment) :=
   filter (fun L ↦ open_hull L ⊆ open_hull S) X
 
@@ -1090,6 +1116,7 @@ lemma segment_sum_splitting (A : Finset Segment) (AVOID : Set ℝ²) (X : Finset
 
 
 -- Shorthand for defining an element of ℝ²
+/-- Auxiliary index function used in the square boundary decomposition. -/
 noncomputable def p (x y : ℝ) : ℝ² := !₂[x, y]
 
 -- def bottom : Segment := fun | 0 => p 0 0 | 1 => p 1 0
@@ -1097,6 +1124,7 @@ noncomputable def p (x y : ℝ) : ℝ² := !₂[x, y]
 -- def left : Segment := fun | 0 => p 0 0 | 1 => p 0 1
 -- def right : Segment := fun | 0 => p 1 0 | 1 => p 1 1
 
+/-- The basic boundary segments of the unit square lying on side `i`. -/
 noncomputable def square_boundary_basic (Δ : Finset Triangle) : Fin 4 → Finset Segment :=
   fun i ↦ filter (fun S ↦ open_hull S ⊆ open_hull (square_boundary_big i))
     (triangulation_boundary_basic_segments Δ)
@@ -1396,6 +1424,7 @@ theorem segment_sum_rainbow_triangle (Δ : Finset Triangle) :
   simp only [sum_boole, Nat.cast_id, ite_eq_left_iff, zero_ne_one, imp_false, Decidable.not_not]
 
 
+/-- The basic segments of a triangulation lying on the boundary of triangle `T`. -/
 noncomputable def triangle_basic_boundary (Δ : Finset Triangle) (T : Triangle) :=
     {S ∈ triangulation_basic_segments Δ | closed_hull S ⊆ boundary T}
 
@@ -1547,6 +1576,7 @@ lemma triangle_boundary_decomposition {Δ : Finset Triangle} {T : Triangle} (hde
       apply ha.1
 
 
+/-- The three sides of a triangle `T`, as a set of segments. -/
 noncomputable def triangle_boundary (T : Triangle) := Finset.biUnion ⊤ (fun i ↦ {Tside T i})
 
 lemma color_trichotomy (c : Color) : c = Color.Red ∨ c = Color.Blue ∨ c = Color.Green := by
@@ -1606,11 +1636,13 @@ lemma different_points (T : Triangle) (h_det : det T ≠ 0) (i j : Fin 3) (hneq 
 -- A fully computable version of `isPurple`, taking the two endpoint colours.
 -- We use `Bool` operators so that `decide` reduces even though the ambient
 -- `Classical.propDecidable` instance is active in this file.
+/-- The number (`0`, `1` or `2`) of purple edges among the edges with two given colors. -/
 def purpleB (a b : Color) : ℕ :=
   if ((a == Color.Red && b == Color.Blue) || (a == Color.Blue && b == Color.Red)) then 1 else 0
 
 -- A fully computable version of `isRainbow`, taking the three vertex colours:
 -- a triangle is rainbow exactly when its three vertices carry distinct colours.
+/-- Indicator of whether the three given colors form a rainbow triangle. -/
 def rainbowB (a b c : Color) : ℕ :=
   if (a == b || b == c || a == c) then 0 else 1
 
@@ -1864,6 +1896,7 @@ lemma interior_iff_reverse_interior (Δ : Finset Triangle) (S : Segment) :
   · rw [reverse_open_hull_basic, ← reverse_segment_open_hull]
     exact ⟨left, right⟩-/
 
+/-- The open hulls of the interior basic segments of a triangulation. -/
 def triangulation_interior_basic_segments_hulls (Δ : Finset Triangle) :=
   {open_hull S | S ∈ triangulation_interior_basic_segments Δ}
 
@@ -1905,6 +1938,7 @@ theorem interior_purple_sum (Δ : Finset Triangle) :
     exact reverse_segment_involution
 
 
+/-- Indicator of whether a segment lies on the boundary of the unit square. -/
 noncomputable def boundary_indicator (T : Triangle) (S : Segment) :=
     if (closed_hull S ⊆ boundary T) then 1 else 0
 

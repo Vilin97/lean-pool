@@ -140,7 +140,8 @@ lemma forall_exists_pos_swap {α : Type} [Finite α] {P : ℝ → α → Prop}
       use 1
       norm_num
 
-def real_interval_δ {x : ℝ} (y : ℝ) (hx : 0 < x) : ∃ δ > 0, ∀ a, |a| ≤ δ → 0 < x + a * y := by
+/-- For positive `x`, there is a radius `δ > 0` within which `x + a * y` stays positive. -/
+lemma real_interval_δ {x : ℝ} (y : ℝ) (hx : 0 < x) : ∃ δ > 0, ∀ a, |a| ≤ δ → 0 < x + a * y := by
   by_cases hy : y = 0
   · exact ⟨1, by norm_num, fun a _ ↦ by rwa [hy,mul_zero,add_zero]⟩
   · have hyabs : 0 < |y| := abs_pos.mpr hy
