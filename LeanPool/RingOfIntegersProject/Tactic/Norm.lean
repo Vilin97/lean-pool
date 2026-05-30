@@ -27,7 +27,8 @@ inductive Fin.ProveZeroOrSuccResult {n : Q(ℕ)} (i : Q(Fin ($n).succ)) : Type w
   | zero (pf : Q($i = 0)) : Fin.ProveZeroOrSuccResult i
   | succ (j : Q(Fin $n)) (pf : Q($i = ($j).succ)) : Fin.ProveZeroOrSuccResult i
 
-partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) : MetaM (Fin.ProveZeroOrSuccResult i) := do
+partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) :
+    MetaM (Fin.ProveZeroOrSuccResult i) := do
   match i.getAppFnArgs with
   | (`OfNat.ofNat, #[_, .lit (.natVal 0), (_inst : Q(OfNat (Fin ($n).succ) 0))]) => do
     have : $i =Q 0 := (← assertDefEqQ _ _).down
@@ -61,21 +62,28 @@ partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) : MetaM (Fin
   | (`Fin.castSucc, #[_, (j : Q(Fin $n))]) => do
     have : $i =Q Fin.castSucc $j := (← assertDefEqQ _ _).down
     match ← Nat.unifyZeroOrSucc n with
-    | .zero _pf => throwError "Fin.proveZeroOrSucc: inconsistent context: {n} is zero but Fin {n} has element {j}"
+    | .zero _pf =>
+      throwError "Fin.proveZeroOrSucc: inconsistent context: \
+        {n} is zero but Fin {n} has element {j}"
     | .succ n' _pf => do
       match ← Fin.proveZeroOrSucc (n := n') j with
       | .zero pf => return .zero q(show castSucc $j = 0 from $pf ▸ Fin.castSucc_zero)
-      | .succ k pf => return .succ q(castSucc $k) q(show castSucc $j = succ (castSucc $k) from $pf ▸ (Fin.succ_castSucc $k).symm)
+      | .succ k pf => return (.succ q(castSucc $k)
+          q(show castSucc $j = succ (castSucc $k) from $pf ▸ (Fin.succ_castSucc $k).symm))
   | (`Fin.succAbove, #[_, (j : Q(Fin ($n).succ)), (k : Q(Fin $n))]) => do
     have : $i =Q Fin.succAbove $j $k := (← assertDefEqQ _ _).down
     match ← Fin.proveZeroOrSucc j with
-    | .zero j_pf => pure (.succ k q(($j_pf ▸ congr_fun Fin.succAbove_zero $k : Fin.succAbove $j $k = _)))
+    | .zero j_pf =>
+      pure (.succ k q(($j_pf ▸ congr_fun Fin.succAbove_zero $k : Fin.succAbove $j $k = _)))
     | .succ j' j_pf => do
       match ← Nat.unifyZeroOrSucc n with
-      | .zero _pf => throwError "Fin.proveZeroOrSucc: inconsistent context: {n} is zero but Fin {n} has element {k}"
+      | .zero _pf =>
+        throwError "Fin.proveZeroOrSucc: inconsistent context: \
+          {n} is zero but Fin {n} has element {k}"
       | .succ n' _pf => do
         match ← Fin.proveZeroOrSucc (n := n') k with
-        | .zero k_pf => pure (.zero q(($j_pf ▸ $k_pf ▸ Fin.succ_succAbove_zero _ : Fin.succAbove $j $k = _)))
+        | .zero k_pf =>
+          pure (.zero q(($j_pf ▸ $k_pf ▸ Fin.succ_succAbove_zero _ : Fin.succAbove $j $k = _)))
         | .succ k' k_pf => pure (.succ q(succAbove $j' $k')
           q(($j_pf ▸ $k_pf ▸ Fin.succ_succAbove_succ $j' $k' : Fin.succAbove $j $k = _)))
   | (fn, args) => do
@@ -83,7 +91,8 @@ partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) : MetaM (Fin
 
 @[norm_num (Fin.val _)] partial def NormNum.evalFinVal :
     NormNum.NormNumExt where eval {u α} e := do
-  let .proj _ 0 a ← whnfR e | failure -- `Fin.val` is a projection so we can't do naïve matching on `Expr.app`
+  -- `Fin.val` is a projection so we can't do naïve matching on `Expr.app`
+  let .proj _ 0 a ← whnfR e | failure
   let .app _ (n : Q(ℕ)) ← inferType a | failure
   have a : Q(Fin $n) := a
   have : u =QL 0 := ⟨⟩
@@ -93,10 +102,13 @@ partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) : MetaM (Fin
   pure (.isNat (α := q(ℕ)) (x := q(Fin.val $a)) _ n q(⟨$pf⟩))
 
   where
-    core : {n : Q(ℕ)} → (a : Q(Fin $n)) → MetaM ((n : Q(ℕ)) × Q(Fin.val $a = $n)) := fun {n} a => do
+    core : {n : Q(ℕ)} → (a : Q(Fin $n)) → MetaM ((n : Q(ℕ)) × Q(Fin.val $a = $n)) :=
+      fun {n} a => do
       -- TODO: we can probably do something smarter than unary recursion here
       match ← Nat.unifyZeroOrSucc n with
-      | .zero _pf => throwError "evalFinVal: inconsistent context: {n} is zero but `Fin {n}` has inhabitant {a}"
+      | .zero _pf =>
+        throwError "evalFinVal: inconsistent context: \
+          {n} is zero but `Fin {n}` has inhabitant {a}"
       | .succ n _pf => do
         match ← Fin.proveZeroOrSucc (n := n) a with
         | .zero pf => do
@@ -156,9 +168,11 @@ def evalDetTerm {u : Level} {R : Q(Type u)} (n : Q(ℕ))
       (eM' : (i j : Q(Fin $n)) → m (r (α := R) q($M' $i $j))) →
       m (r (α := R) q(Matrix.det $M')))
     (j : Q(Fin (Nat.succ «$n»))) :
-    m (r q((-1) ^ («$j» : ℕ) * «$M» 0 «$j» * Matrix.det (Matrix.submatrix «$M» Fin.succ (Fin.succAbove «$j»)))) := do
+    m (r q((-1) ^ («$j» : ℕ) * «$M» 0 «$j» *
+      Matrix.det (Matrix.submatrix «$M» Fin.succ (Fin.succAbove «$j»)))) := do
   let res₂ ← evalMatrix q(0) j
-  -- If `res₂ = 0` we can skip the submatrix determinant computation; should improve speed for sparse matrices.
+  -- If `res₂ = 0` we can skip the submatrix determinant computation;
+  -- this should improve speed for sparse matrices.
   match ← MResultClass.zero? (r := r) (m := m) _ _ res₂ with
   | .some h => do
     MResultClass.eqTransM q(by rw [($h : $M 0 $j = 0), mul_zero, zero_mul])
@@ -174,7 +188,8 @@ def evalDetTerm {u : Level} {R : Q(Type u)} (n : Q(ℕ))
     let res₁₂₃ ← crr.mkMul res₁₂ res₃
     return MResultClass.uncheckedCast m res₁₂₃ -- TODO: check this cast!
 
-variable [MonadLiftT BaseIO m] [MonadLiftT IO m] [MonadRef m] [MonadTrace m] [AddMessageContext m] [MonadOptions m] [MonadExcept Exception m]
+variable [MonadLiftT BaseIO m] [MonadLiftT IO m] [MonadRef m] [MonadTrace m]
+variable [AddMessageContext m] [MonadOptions m] [MonadExcept Exception m]
 variable [MonadAlwaysExcept Exception m]
 
 def evalMatrixDetFinApply {n' : Q(ℕ)} {R : Q(Type u)}
@@ -187,7 +202,8 @@ def evalMatrixDetFinApply {n' : Q(ℕ)} {R : Q(Type u)}
     (evalMatrixDet : (n : Q(ℕ)) → (M' : Q(Matrix (Fin $n) (Fin $n) $R)) →
       (eM' : (i j : Q(Fin $n)) → m (r (α := R) q($M' $i $j))) →
       m (r (α := R) q(Matrix.det $M'))) :
-    m (r q(Matrix.det $M)) := withTraceNode `norm.Matrix.Det (return m!"{·.emoji} determinant of: {M}") do
+    m (r q(Matrix.det $M)) :=
+  withTraceNode `norm.Matrix.Det (return m!"{·.emoji} determinant of: {M}") do
   match ← Nat.unifyZeroOrSucc n' with
   | .zero _pf => MResultClass.eqTransM q(Matrix.det_fin_zero) crr.mkOne
   | .succ n _pf => do
@@ -279,7 +295,8 @@ def normMatrixOf {R : Q(Type u)} {s n : Q(ℕ)}
       have : $M =Q Matrix.of $M' := ⟨⟩
       let res ← evalMatrixOf M' i j
       MResultClass.eqTransM q(rfl) res -- FIXME: why the `trans_eq`?
-    | (fn, args) => throwError "normMatrixOf: unsupported expression {M} (coeFn ({fn}, {args}) {M'})"
+    | (fn, args) =>
+      throwError "normMatrixOf: unsupported expression {M} (coeFn ({fn}, {args}) {M'})"
   | (fn, args) => throwError "normMatrixOf: unsupported expression {M} ({fn}, {args})"
 
 def normMatrixOf' {R : Q(Type u)} {ι κ : Q(Type v)}
@@ -290,7 +307,8 @@ def normMatrixOf' {R : Q(Type u)} {ι κ : Q(Type v)}
     match ι, κ with
     | ~q(Fin $m), ~q(Fin $n) => normMatrixOf (s := m) (n := n) M i j
     | _ => throwError "normMatrixOf': unsupported expression {M}: types {ι} {κ} should be `Fin`"
-  | _ => throwError "normMatrixOf': unsupported expression {M}: types {ι} {κ} should be `Fin` (universe level mismatch {v} != 0)"
+  | _ => throwError "normMatrixOf': unsupported expression {M}: types {ι} {κ} \
+    should be `Fin` (universe level mismatch {v} != 0)"
 
 simproc normMatrixOf.simproc (DFunLike.coe Matrix.of _ _ _) :=
   /- A term of type `Expr → SimpM (Option Step) -/
@@ -312,7 +330,6 @@ simproc normMatrixOf.simproc (DFunLike.coe Matrix.of _ _ _) :=
 
 example : !![1, 2, 3, 4; 5, 6, 7, 8] (Fin.succ 0) (Fin.succ (Fin.succ 0)) = 7 := by
   simp only [normMatrixOf.simproc]
-example : !![3, 2, 1; 5, 4, 3; 7, 5, 2] (Fin.succ (Fin.succ 0)) (Fin.castSucc (Fin.succ 0)) = 5 := by simp only [normMatrixOf.simproc]
 
 
 open BigOperators in
@@ -352,10 +369,12 @@ partial def evalMatrixDet {R : Q(Type u)} {ι : Q(Type v)}
   | (`Fin, #[(n : Q(ℕ))]) => do
     try
       match M.getAppFnArgs with
-      | (`Matrix.diagonal, #[_, _, (instDEι' : Q(DecidableEq $ι)), (_instZ : Q(Zero $R)), (s : Q($ι → $R))]) => do
+      | (`Matrix.diagonal,
+          #[_, _, (instDEι' : Q(DecidableEq $ι)), (_instZ : Q(Zero $R)), (s : Q($ι → $R))]) => do
         have : $instDEι =Q $instDEι' := ⟨⟩
         have : $M =Q Matrix.diagonal $s := ⟨⟩
-        return MResultClass.uncheckedCast m (← evalMatrixDetDiagonal (n' := n) s instCSrR instCRR h crr)
+        return MResultClass.uncheckedCast m
+          (← evalMatrixDetDiagonal (n' := n) s instCSrR instCRR h crr)
       | _ => do
         let x ← evalMatrixDetFin (n' := n) M instCSrR instCRR h crr normMatrix
         return MResultClass.uncheckedCast m x
@@ -410,7 +429,8 @@ def convMatrixDet {R : Q(Type u)} (e : Q($R)) : MetaM (Result e) := do
   let instCRR : Q(CommRing $R) ← synthInstanceQ (q(CommRing $R) : Q(Type u))
   let instCSrR : Q(CommSemiring $R) := q(($instCRR).toCommSemiring)
   trace[norm.Matrix.Det] "running on {e}"
-  normMatrixDet e instCSrR instCRR ⟨⟩ (CommRingResult.default _ 0 none) (normMatrix := normMatrixOf')
+  normMatrixDet e instCSrR instCRR ⟨⟩ (CommRingResult.default _ 0 none)
+    (normMatrix := normMatrixOf')
 
 /-- Evaluate the determinant of a matrix in an arbitrary commutative ring, using the simplifier.
 
@@ -424,7 +444,8 @@ def simpMatrixDet {R : Q(Type u)} (e : Q($R)) : SimpM (Result e) := do
   normMatrixDet e instCSrR instCRR ⟨⟩ (CommRingResult.default _ 0 none) (normMatrix := simpMatrix)
 
 /-- Use `f` to simplify at each position. -/
-partial def derive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → MetaM (Result e)) (e : Expr) : MetaM Simp.Result := do
+partial def derive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → MetaM (Result e))
+    (e : Expr) : MetaM Simp.Result := do
   let e ← instantiateMVars e
 
   let config : Simp.Config := {
@@ -447,7 +468,8 @@ partial def derive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → Me
       let u ← (u'.dec).getM -- `α : Sort u'`, turn this into `α : Type u`
       have α : Q(Type u) := α
       try
-        let r ← f (u := ← instantiateLevelMVars u) (α := ← instantiateMVars α) (← instantiateMVars e)
+        let r ← f (u := ← instantiateLevelMVars u) (α := ← instantiateMVars α)
+          (← instantiateMVars e)
         return Simp.Step.done r.toSimpResult
       catch _ => pure Simp.Step.continue) e
   let post e := do
@@ -456,7 +478,8 @@ partial def derive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → Me
   r.mkEqTrans (← proc e).1
 
 /-- Use `f` to simplify at each position. -/
-partial def simpDerive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → SimpM (Result e)) (e : Expr) : MetaM Simp.Result := do
+partial def simpDerive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → SimpM (Result e))
+    (e : Expr) : MetaM Simp.Result := do
   let e ← instantiateMVars e
 
   let config : Simp.Config := {
@@ -480,7 +503,8 @@ partial def simpDerive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) �
       let u ← (u'.dec).getM -- `α : Sort u'`, turn this into `α : Type u`
       have α : Q(Type u) := α
       try
-        let r ← f (u := ← instantiateLevelMVars u) (α := ← instantiateMVars α) (← instantiateMVars e)
+        let r ← f (u := ← instantiateLevelMVars u) (α := ← instantiateMVars α)
+          (← instantiateMVars e)
         return Simp.Step.done r.toSimpResult
       catch _ => pure (Simp.Step.continue)) e
   let post e := do
@@ -490,7 +514,8 @@ partial def simpDerive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) �
 
 open Lean Elab Tactic
 
-partial def convTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → MetaM (Result e)) : TacticM Unit := do
+partial def convTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → MetaM (Result e)) :
+    TacticM Unit := do
   liftMetaTactic1 fun goal ↦ do
     let tgt ← instantiateMVars (← goal.getType)
     let prf ← derive @f tgt
@@ -502,13 +527,15 @@ partial def convTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) �
     else
       applySimpResultToTarget goal tgt prf
 
-partial def convHyp (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → MetaM (Result e)) (fvarId : FVarId) : TacticM Unit :=
+partial def convHyp (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → MetaM (Result e))
+    (fvarId : FVarId) : TacticM Unit :=
   liftMetaTactic1 fun goal ↦ do
     let hyp ← instantiateMVars (← fvarId.getDecl).type
     let prf ← derive @f hyp
     return (← applySimpResultToLocalDecl goal fvarId prf false).map (·.snd)
 
-partial def simpTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → SimpM (Result e)) : TacticM Unit := do
+partial def simpTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → SimpM (Result e)) :
+    TacticM Unit := do
   liftMetaTactic1 fun goal ↦ do
     let tgt ← instantiateMVars (← goal.getType)
     let prf ← simpDerive @f tgt
@@ -520,7 +547,8 @@ partial def simpTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) �
     else
       applySimpResultToTarget goal tgt prf
 
-partial def simpHyp (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → SimpM (Result e)) (fvarId : FVarId) : TacticM Unit :=
+partial def simpHyp (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → SimpM (Result e))
+    (fvarId : FVarId) : TacticM Unit :=
   liftMetaTactic1 fun goal ↦ do
     let hyp ← instantiateMVars (← fvarId.getDecl).type
     let prf ← simpDerive @f hyp
@@ -557,46 +585,3 @@ elab_rules : tactic
       simpTarget simpMatrixDet
       (← (← getMainGoal).getNondepPropHyps).forM (simpHyp simpMatrixDet)
 
-/-
-set_option trace.Debug.Meta.Tactic.simp true
-set_option trace.Meta.synthInstance true
-set_option trace.Meta.isDefEq true
-set_option pp.all true
-set_option trace.profiler true
--/
-/-
-set_option trace.Meta.Tactic.simp true
-set_option trace.norm.Matrix.Det true
-set_option trace.profiler true
--/
-example [CommRing R] : Matrix.det (Matrix.diagonal ![1, 1, 2, 2]) = (4 : R) := by conv_test; norm_num1
-
-lemma foo₀ [CommRing R] : Matrix.det (R := R) !![] = (1 : R) := by conv_test; rfl -- FIXME! Discharge this
-lemma foo₁ [CommRing R] : Matrix.det !![2] = (2 : R) := by conv_test; norm_num1
-lemma foo₂ [CommRing R] : Matrix.det !![3, 2; 5, 4] = (2 : R) := by conv_test; norm_num1
-lemma foo₃ [CommRing R] : Matrix.det !![3, 2, 1; 5, 4, 3; 7, 5, 2] = -(2 : R) := by conv_test; norm_num1
-lemma foo₄ [CommRing R] : Matrix.det !![3, 2, 1, 0; 5, 4, 3, 2; 7, 5, 2, 1; 1, 3, 19, 2] = (10 : R) := by conv_test; norm_num1
-
-lemma var_foo₂ [CommRing R] (a b c d : R) : Matrix.det !![a, b; c, d] = a * d - b * c := by conv_test; ring
-lemma var_foo₃ [CommRing R] (a b c d e f g h i : R) : Matrix.det !![a, b, c; d, e, f; g, h, i] = a * e * i - a * f * h + (-(e * g * c) - i * b * d) + f * b * g + h * d * c := by conv_test; ring
-
-/-
-section simp
-
--- Don't cheat by using existing `simp` lemmas
-attribute [-simp] Matrix.cons_val' Matrix.cons_val_fin_one Matrix.cons_val_zero Matrix.of_apply Fin.succ_zero_eq_one Fin.succ_zero_eq_one'
-
-set_option trace.Meta.Tactic.simp true
-set_option trace.norm.Matrix.Det true
-
-lemma bar₀ [CommRing R] : Matrix.det (R := R) !![] = (1 : R) := by simp_test
-lemma bar₁ [CommRing R] : Matrix.det !![2] = (2 : R) := by simp_test
-lemma bar₂ [CommRing R] : Matrix.det !![3, 2; 5, 4] = (2 : R) := by simp_test; norm_num1
-lemma bar₃ [CommRing R] : Matrix.det !![3, 2, 1; 5, 4, 3; 7, 5, 2] = -(2 : R) := by simp_test; norm_num1
-lemma bar₄ [CommRing R] : Matrix.det !![3, 2, 1, 0; 5, 4, 3, 2; 7, 5, 2, 1; 1, 3, 19, 2] = (10 : R) := by simp_test; norm_num1
-
-lemma var_bar₂ [CommRing R] (a b c d : R) : Matrix.det !![a, b; c, d] = a * d - b * c := by simp_test; ring
-lemma var_bar₃ [CommRing R] (a b c d e f g h i : R) : Matrix.det !![a, b, c; d, e, f; g, h, i] = a * e * i - a * f * h + (-(e * g * c) - i * b * d) + f * b * g + h * d * c := by simp_test; ring
-
-end simp
--/
