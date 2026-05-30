@@ -6,7 +6,8 @@ Authors: Kenny Lau
 
 import LeanPool.EllipticCurve.Lemmas
 import LeanPool.EllipticCurve.ProjectiveSpace.TensorProduct.BaseChange
-import Mathlib.LinearAlgebra.TensorPower.Basic
+import Mathlib.Algebra.GradedMonoid
+import Mathlib.LinearAlgebra.PiTensorProduct
 import Mathlib.RingTheory.TensorProduct.Basic
 import Mathlib.Tactic.SuppressCompilation
 
@@ -37,6 +38,22 @@ suppress_compilation
 universe u u₁ u₂ v v₁ v₂ v₃ w w₁
 
 open TensorProduct Equiv SymmetricMap Function
+
+/-- Homogeneous tensor powers $M^{\otimes n}$. `⨂[R]^n M` is a shorthand for
+`⨂[R] (i : Fin n), M`.
+
+This is `Mathlib.LinearAlgebra.TensorPower.Basic.TensorPower` redefined locally, so that we can
+import `Mathlib.LinearAlgebra.PiTensorProduct` directly instead of `...TensorPower.Basic`. The
+latter pulls in `Mathlib.Algebra.DirectSum.Algebra`, whose `GradeZero` instances combine with the
+`GradedMonoid.GradeZero.smul` instance to make an unrelated, doomed
+`SMul (GL ι R) (Basis ι R M)` typeclass search in `BruhatTits` blow up over the metavariable goal
+`AddCommMonoid ?m`, exhaust its heartbeat budget, and fail the whole-library `simpNF` linter. We
+only need the abbreviation and notation here, not the graded-tensor-power algebra structure. -/
+abbrev TensorPower (R : Type*) (n : ℕ) (M : Type*) [CommSemiring R] [AddCommMonoid M]
+    [Module R M] : Type _ :=
+  ⨂[R] _ : Fin n, M
+
+@[inherit_doc] scoped[TensorProduct] notation:max "⨂[" R "]^" n:arg => TensorPower R n
 
 section CommSemiring
 
