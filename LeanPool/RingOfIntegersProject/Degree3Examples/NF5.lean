@@ -1,6 +1,5 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
-Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen et al. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -255,8 +254,7 @@ lemma T_discr : T.discriminant = -38880 := by
   rw [T_monic.discriminant_def, T_degree, ← T_ofList]
   have : [-24, 18, 0, 1].derivative = [18, 0, 3, 0] := rfl
   rw [← ofList_derivative_eq_derivative , this]
-  set_option maxRecDepth 200000 in
-  decide
+  decide +kernel
 
 
 theorem K_discr : NumberField.discr K = -9720 := by

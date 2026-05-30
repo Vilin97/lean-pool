@@ -1,6 +1,5 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
-Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen et al. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -231,14 +230,12 @@ theorem O_ringOfIntegers : O = integralClosure ℤ K := by
 
 theorem O_ringOfIntegers' : O = NumberField.RingOfIntegers K := by rw [O_ringOfIntegers]; rfl
 
-set_option maxRecDepth 2000 in
 lemma T_discr : T.discriminant = -64800 := by
   rw [T_monic.discriminant_def, T_degree, ← T_ofList]
   have : [-80, -30, 0, 1].derivative = [-30, 0, 3, 0] := rfl
   rw [← ofList_derivative_eq_derivative , this]
   decide +kernel
 
-set_option maxRecDepth 2000 in
 theorem K_discr : NumberField.discr K = -16200 := by
   rw [discr_numberField_eq_discrSubalgebraBuilder
   T_irreducible BQ O_ringOfIntegers]

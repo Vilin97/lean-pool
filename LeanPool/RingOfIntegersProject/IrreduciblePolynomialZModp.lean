@@ -1,6 +1,5 @@
 /-
-Copyright (c) 2026 Anne Baanen, Alex J. Best, Nirvana Coppola,
-Sander R. Dahmen. All rights reserved.
+Copyright (c) 2026 Anne Baanen et al. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 -/
@@ -121,9 +120,8 @@ noncomputable def algHomOfCardPow (K : Type) {n m p : ℕ} [hp : Fact <| Nat.Pri
     · exact FiniteField.splits_X_pow_card_sub_X p
     · simpa [Polynomial.map_sub, Polynomial.map_pow, map_X] using
         (FiniteField.X_pow_card_sub_X_ne_zero K Fintype.one_lt_card)
-  haveI : IsSplittingField (ZMod p) (GaloisField p m) (X ^ p ^ m - X : (ZMod p) [X]) := by
-    set_option backward.isDefEq.respectTransparency false in
-    infer_instance
+  haveI : IsSplittingField (ZMod p) (GaloisField p m) (X ^ p ^ m - X : (ZMod p) [X]) :=
+    inferInstanceAs (IsSplittingField (ZMod p) (SplittingField _) _)
   have ϕ := Polynomial.IsSplittingField.lift (GaloisField p m) (X ^ p ^ m - X : (ZMod p) [X])
     hsplits
   have : Fintype (GaloisField p m) := Fintype.ofFinite _
