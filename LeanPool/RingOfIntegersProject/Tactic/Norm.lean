@@ -21,13 +21,16 @@ def Lean.Expr.getAppFnLevelArgs (e : Expr) : Name × List Level × Array Expr :=
     | (.const _ ls) => (e.constName, ls, a)
     | _ => (e.constName, [], a)
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def Int.mkOne : Result q((1 : ℤ)) :=
   ⟨q(1), q(rfl)⟩
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 inductive Fin.ProveZeroOrSuccResult {n : Q(ℕ)} (i : Q(Fin ($n).succ)) : Type where
   | zero (pf : Q($i = 0)) : Fin.ProveZeroOrSuccResult i
   | succ (j : Q(Fin $n)) (pf : Q($i = ($j).succ)) : Fin.ProveZeroOrSuccResult i
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) :
     MetaM (Fin.ProveZeroOrSuccResult i) := do
   match i.getAppFnArgs with
@@ -90,6 +93,7 @@ partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) :
   | (fn, args) => do
     throwError "Fin.proveZeroOrSucc: unsupported expression {i} ({fn}, {args})"
 
+/-- A `norm_num` extension evaluating `Fin.val` of a concrete `Fin` element. -/
 @[norm_num (Fin.val _)] partial def NormNum.evalFinVal :
     NormNum.NormNumExt where eval {u α} e := do
   -- `Fin.val` is a projection so we can't do naïve matching on `Expr.app`
@@ -103,6 +107,7 @@ partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) :
   pure (.isNat (α := q(ℕ)) (x := q(Fin.val $a)) _ n q(⟨$pf⟩))
 
   where
+    /-- Recursively compute the numeral value of a concrete `Fin` element. -/
     core : {n : Q(ℕ)} → (a : Q(Fin $n)) → MetaM ((n : Q(ℕ)) × Q(Fin.val $a = $n)) :=
       fun {n} a => do
       -- TODO: we can probably do something smarter than unary recursion here
@@ -119,10 +124,12 @@ partial def Fin.proveZeroOrSucc {n : Q(ℕ)} (i : Q(Fin ($n).succ)) :
           let nn : Q(ℕ) := mkRawNatLit (j_n.natLit! + 1)
           pure ⟨nn, (q($pf ▸ $j_pf ▸ (Fin.val_succ $j)) : Q(Fin.val $a = $j_n + 1))⟩
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 inductive Nat.ProveEvenOrOddResult (n : Q(ℕ)) : Type where
   | even : Q(Even $n) → Nat.ProveEvenOrOddResult n
   | odd : Q(Odd $n) → Nat.ProveEvenOrOddResult n
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def Nat.proveEvenOrOdd (n : Q(ℕ)) : MetaM (Nat.ProveEvenOrOddResult n) := do
   let ⟨even?, pf⟩ ← NormNum.deriveBool q($n % 2 = 0)
   if even?
@@ -144,6 +151,7 @@ def MResultClass.zero? {u : Level} {R : Q(Type u)}
   | .defEq _h => pure <| .some q($hx)
   | .notDefEq => pure <| .none
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def evalNegOnePowFin {u : Level} {R : Q(Type u)} (n : Q(ℕ))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
     (instCRR : Q(CommRing «$R») := by with_reducible assumption)
@@ -158,6 +166,7 @@ def evalNegOnePowFin {u : Level} {R : Q(Type u)} (n : Q(ℕ))
     let neg_one ← crr.mkNeg crr.mkOne
     MResultClass.eqTransM q(Odd.neg_one_pow $pf) neg_one
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def evalDetTerm {u : Level} {R : Q(Type u)} (n : Q(ℕ))
     (M : Q(Matrix (Fin ($n).succ) (Fin ($n).succ) «$R»))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
@@ -193,6 +202,7 @@ variable [MonadLiftT BaseIO m] [MonadLiftT IO m] [MonadRef m] [MonadTrace m]
 variable [AddMessageContext m] [MonadOptions m] [MonadExcept Exception m]
 variable [MonadAlwaysExcept Exception m]
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def evalMatrixDetFinApply {n' : Q(ℕ)} {R : Q(Type u)}
     (M : Q(Matrix (Fin $n') (Fin $n') $R))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
@@ -240,6 +250,7 @@ partial def evalMatrixDetFin {n' : Q(ℕ)} {R : Q(Type u)}
 
 variable [MonadError m]
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 partial def normVecCons {R : Q(Type u)} {s : Q(ℕ)}
     (M : Q((Fin $s) → $R)) (i : Q(Fin $s)) :
     m (r (α := R) q($M $i)) := do
@@ -257,6 +268,7 @@ partial def normVecCons {R : Q(Type u)} {s : Q(ℕ)}
       MResultClass.eqTransM q($pf ▸ Matrix.cons_val_succ $hd $tl $j) res
   | (fn, args) => throwError "normVecCons: unsupported expression {M} ({fn}, {args})"
 
+/-- A `simp` procedure evaluating indexing into a `Matrix.vecCons` vector literal. -/
 simproc normVecCons.simproc (Matrix.vecCons _ _ _) :=
   /- A term of type `Expr → SimpM (Option Step) -/
   fun e => do
@@ -275,6 +287,7 @@ example : ![1, 2, 3, 4] (Fin.succ 0) = 2 := by simp only [normVecCons.simproc]
 example : ![1, 2, 3, 4] 2 = 3 := by simp only [normVecCons.simproc]
 example : ![1, 2, 3, 4] 1 = 2 := by simp only [normVecCons.simproc]
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def evalMatrixOf {R : Q(Type u)} {s n : Q(ℕ)}
     (M : Q((Fin $s) → (Fin $n) → $R)) (i : Q(Fin $s)) (j : Q(Fin $n)) :
     m (r (α := R) q(Matrix.of $M $i $j)) := do
@@ -283,6 +296,7 @@ def evalMatrixOf {R : Q(Type u)} {s n : Q(ℕ)}
   let res₂ ← normVecCons (R := R) v₁ j
   MResultClass.eqTransM q($p₁ ▸ Matrix.of_apply $M $i $j) res₂
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def normMatrixOf {R : Q(Type u)} {s n : Q(ℕ)}
     (M : Q(Matrix (Fin $s) (Fin $n) $R)) (i : Q(Fin $s)) (j : Q(Fin $n)) :
     m (r (α := R) q($M $i $j)) := do
@@ -301,6 +315,7 @@ def normMatrixOf {R : Q(Type u)} {s n : Q(ℕ)}
       throwError "normMatrixOf: unsupported expression {M} (coeFn ({fn}, {args}) {M'})"
   | (fn, args) => throwError "normMatrixOf: unsupported expression {M} ({fn}, {args})"
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def normMatrixOf' {R : Q(Type u)} {ι κ : Q(Type v)}
     (M : Q(Matrix $ι $κ $R)) (i : Q($ι)) (j : Q($κ)) :
     m (r (α := R) q($M $i $j)) := do
@@ -312,6 +327,7 @@ def normMatrixOf' {R : Q(Type u)} {ι κ : Q(Type v)}
   | _ => throwError "normMatrixOf': unsupported expression {M}: types {ι} {κ} \
     should be `Fin` (universe level mismatch {v} != 0)"
 
+/-- A `simp` procedure evaluating indexing into a `Matrix.of` matrix literal. -/
 simproc normMatrixOf.simproc (DFunLike.coe Matrix.of _ _ _) :=
   /- A term of type `Expr → SimpM (Option Step) -/
   fun e => do
@@ -336,6 +352,7 @@ example : !![1, 2, 3, 4; 5, 6, 7, 8] (Fin.succ 0) (Fin.succ (Fin.succ 0)) = 7 :=
 
 open BigOperators in
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def evalMatrixDetDiagonal {n' : Q(ℕ)} {R : Q(Type u)}
     (s : Q(Fin $n' → $R))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
@@ -356,6 +373,7 @@ def evalMatrixDetDiagonal {n' : Q(ℕ)} {R : Q(Type u)}
     q(Finset.univ)
   MResultClass.eqTransM q(Matrix.det_diagonal) res
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 partial def evalMatrixDet {R : Q(Type u)} {ι : Q(Type v)}
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
     (instCRR : Q(CommRing «$R») := by with_reducible assumption)
@@ -385,6 +403,7 @@ partial def evalMatrixDet {R : Q(Type u)} {ι : Q(Type v)}
       throw e
   | _ => throwError "expected `Fin n`, got {ι}"
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 partial def normMatrixDet {R : Q(Type u)} (e : Q($R))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
     (instCRR : Q(CommRing «$R») := by with_reducible assumption)
@@ -402,6 +421,7 @@ partial def normMatrixDet {R : Q(Type u)} (e : Q($R))
 
 variable [MonadLiftT SimpM m]
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 def _root_.Lean.Meta.Simp.Result.toMResult {α : Q(Type u)} {e : Q($α)} (res : Simp.Result) :
     m (r e) := do
   have e' : Q($α) := res.expr
@@ -413,6 +433,7 @@ def _root_.Lean.Meta.Simp.Result.toMResult {α : Q(Type u)} {e : Q($α)} (res : 
     let res' ← MResultClass.rflM (a := e')
     MResultClass.eqTransM pf res'
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 partial def simpMatrix {R : Q(Type u)} {ι κ : Q(Type v)} (M : Q(Matrix $ι $κ $R))
     (i : Q($ι)) (j : Q($κ)) :
     m (r (α := R) q($M $i $j)) := do
@@ -516,6 +537,7 @@ partial def simpDerive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) �
 
 open Lean Elab Tactic
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 partial def convTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → MetaM (Result e)) :
     TacticM Unit := do
   liftMetaTactic1 fun goal ↦ do
@@ -529,6 +551,7 @@ partial def convTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) �
     else
       applySimpResultToTarget goal tgt prf
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 partial def convHyp (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → MetaM (Result e))
     (fvarId : FVarId) : TacticM Unit :=
   liftMetaTactic1 fun goal ↦ do
@@ -536,6 +559,7 @@ partial def convHyp (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → M
     let prf ← derive @f hyp
     return (← applySimpResultToLocalDecl goal fvarId prf false).map (·.snd)
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 partial def simpTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → SimpM (Result e)) :
     TacticM Unit := do
   liftMetaTactic1 fun goal ↦ do
@@ -549,6 +573,7 @@ partial def simpTarget (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) �
     else
       applySimpResultToTarget goal tgt prf
 
+/-- Auxiliary definition for the matrix-determinant `norm`/`simp` tactic. -/
 partial def simpHyp (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → SimpM (Result e))
     (fvarId : FVarId) : TacticM Unit :=
   liftMetaTactic1 fun goal ↦ do
@@ -558,7 +583,9 @@ partial def simpHyp (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → S
 
 open Parser.Tactic Elab.Tactic
 
+/-- Normalise matrix determinants in the goal (or given location) by `conv`-rewriting. -/
 syntax (name := conv_test) "conv_test" (location)? : tactic
+/-- Normalise matrix determinants in the goal (or given location) via `simp`. -/
 syntax (name := simp_test) "simp_test" (location)? : tactic
 
 elab_rules : tactic

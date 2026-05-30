@@ -156,11 +156,17 @@ def Mathlib.Meta.NormNum.Result.uncheckedCast {α : Q(Type u)} {a b : Q($α)} :
 
 namespace NormTactic
 
+/-- A monadic interface for a family of normalisation results `r`, packaging the
+operations needed to combine and transport them through proven equalities. -/
 class MResultClass (m : Type → Type)
     (r : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → Type) where
+  /-- The reflexivity result for `a`. -/
   rflM : {α : Q(Type u)} → {a : Q($α)} → m (r a)
+  /-- Transport a result for `b` to a result for `a` along a proof that `a = b`. -/
   eqTransM : {α : Q(Type u)} → {a b : Q($α)} → (eq : Q($a = $b)) → r b → m (r a)
+  /-- Reinterpret a result for `b` as a result for `a` (type-unsafe). -/
   uncheckedCast : {α : Q(Type u)} → {a b : Q($α)} → r b → r a
+  /-- Extract the normalised value and an equality proof from a result. -/
   out : {α : Q(Type u)} → {a : Q($α)} → r a → (a' : Q($α)) × Q($a = $a')
 
 instance : MResultClass MetaM @NormNum.Result where
@@ -173,21 +179,27 @@ instance [MResultClass m r] {u : Level} {α : Q(Type u)} {e : Q($α)} :
     Inhabited (m (r e)) where
   default := MResultClass.rflM
 
+/-- A normalisation result: a normalised value together with a proof of equality. -/
 structure Result {α : Q(Type u)} (e : Q($α)) where
+  /-- The normalised value. -/
   (val : Q($α))
+  /-- A proof that `e` equals the normalised value. -/
   (pf : Q($e = $val))
 
 instance : ToString (Result e) where
   toString r := toString r.pf
 
+/-- Helper for the ring-normalisation result framework. -/
 def Result.trans_eq {α : Q(Type u)} {e e' : Q($α)} (h : Q($e = $e')) :
     Result e' → Result e
   | ⟨val, pf⟩ => ⟨val, q(Eq.trans $h $pf)⟩
 
+/-- Helper for the ring-normalisation result framework. -/
 def Result.uncheckedCast {α : Q(Type u)} {β : Q(Type v)} {e : Q($α)} {e' : Q($β)} :
     Result e → Result e'
   | ⟨val, pf⟩ => ⟨val, pf⟩
 
+/-- Helper for the ring-normalisation result framework. -/
 def Result.toSimpResult {α : Q(Type u)} {e : Q($α)} (r : Result e) : Simp.Result where
   expr := r.val
   proof? := r.pf
@@ -198,34 +210,41 @@ instance [Pure m] : MResultClass m Result where
   eqTransM eq res := pure (Result.trans_eq eq res)
   uncheckedCast := Result.uncheckedCast
 
+/-- Helper for the ring-normalisation result framework. -/
 def Result.rfl {α : Q(Type u)} (e : Q($α)) : Result e where
   val := e
   pf := q(rfl)
 
+/-- Helper for the ring-normalisation result framework. -/
 def RingResult {α : Q(Type u)} (csr : Q(CommSemiring $α)) (e : Q($α)) : Type :=
   RingModChar.Result (RingModChar.ExSum csr) e
 
+/-- Helper for the ring-normalisation result framework. -/
 def RingResult.toResult {α : Q(Type u)} {csr : Q(CommSemiring $α)} {e : Q($α)}
     (res : RingResult csr e) : Result e where
   val := res.expr -- TODO: simp using the ring_nf set?
   pf := res.proof
 
+/-- Helper for the ring-normalisation result framework. -/
 def RingResult.uncheckedCast {α : Q(Type u)} {csr : Q(CommSemiring $α)} {e e' : Q($α)}
     (res : RingResult csr e) : RingResult csr e' where
   expr := res.expr
   val := res.val
   proof := res.proof
 
+/-- Helper for the ring-normalisation result framework. -/
 def RingResult.eqTrans {α : Q(Type u)} {csr : Q(CommSemiring $α)} {e e' : Q($α)}
     (pf : Q($e' = $e))
     (res : RingResult csr e) : MetaM (RingResult csr e') := do
   return ⟨res.expr, res.val, ← (mkEqTrans pf res.proof)⟩
 
+/-- Helper for the ring-normalisation result framework. -/
 def RingResult.mkRfl {α : Q(Type u)} (csr : Q(CommSemiring $α)) (e : Q($α)) :
     AtomM (RingResult csr e) := do
   let cache ← RingModChar.mkCache _ {}
   RingModChar.eval _ cache e
 
+/-- Helper for the ring-normalisation result framework. -/
 def _root_.Lean.Meta.Simp.Result.toResult {α : Q(Type u)} {e : Q($α)} (r : Simp.Result) :
     Result e :=
   have e' : Q($α) := r.expr
@@ -233,6 +252,7 @@ def _root_.Lean.Meta.Simp.Result.toResult {α : Q(Type u)} {e : Q($α)} (r : Sim
   | none => Result.uncheckedCast ⟨e', q(rfl)⟩
   | some pf => ⟨r.expr, pf⟩
 
+/-- Helper for the ring-normalisation result framework. -/
 def _root_.Lean.Meta.Simp.Result.toRingResult {α : Q(Type u)} {csr : Q(CommSemiring $α)}
     {e : Q($α)} (r : Simp.Result) :
     AtomM (RingResult csr e) :=
@@ -242,6 +262,7 @@ def _root_.Lean.Meta.Simp.Result.toRingResult {α : Q(Type u)} {csr : Q(CommSemi
   | some pf => do
     (← RingResult.mkRfl _ r.expr).eqTrans pf
 
+/-- Helper for the ring-normalisation result framework. -/
 def _root_.NormTactic.Result.toRingResult {α : Q(Type u)} {csr : Q(CommSemiring $α)}
     {e : Q($α)} (r : Result e) : AtomM (RingResult csr e) := do
   (← RingResult.mkRfl _ r.val).eqTrans r.pf
@@ -255,25 +276,38 @@ instance {R : Q(Type u)} {instCSrR : Q(CommSemiring $R)} (e) :
     ToMessageData (RingResult instCSrR e) where
   toMessageData e := toMessageData e.expr
 
+/-- The result-building operations available over a commutative semiring `R`. -/
 structure CommSemiringResult (m : Type → Type)
     (r : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → Type)
     [MResultClass m r] (R : Q(Type u))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption) where
-  (char : ℕ) (instCPR : Option Q(CharP $R $char))
-  (mkZero : r q((0 : $R))) (mkOne : r q((1 : $R)))
+  /-- The characteristic of `R`. -/
+  (char : ℕ)
+  /-- An optional proof witnessing the characteristic of `R`. -/
+  (instCPR : Option Q(CharP $R $char))
+  /-- The result for the value `0`. -/
+  (mkZero : r q((0 : $R)))
+  /-- The result for the value `1`. -/
+  (mkOne : r q((1 : $R)))
+  /-- Build the result for a natural scalar multiple `n • b`. -/
   (mkNSMul : ∀ (n : Q(ℕ)) {b : Q($R)}, r b → m (r (α := R) q($n • $b)))
+  /-- Build the result for a sum `a + b`. -/
   (mkAdd : ∀ {a b : Q($R)}, r a → r b → m (r (α := R) q($a + $b)))
+  /-- Build the result for a product `a * b`. -/
   (mkMul : ∀ {a b : Q($R)}, r a → r b → m (r (α := R) q($a * $b)))
 
 variable {R : Q(Type u)} (instCSrR : Q(CommSemiring $R) := by with_reducible assumption)
 variable (char : ℕ) (rR : Option (Q(Ring $R))) (cpR : Option (Q(CharP $R $char)))
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.mkZero : RingResult instCSrR q((0 : $R)) :=
   ⟨q(0), .zero, q(RingModChar.cast_zero ⟨by simp⟩)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.mkOne : RingResult instCSrR q((1 : $R)) :=
   ⟨_, (RingModChar.ExProd.mkNat instCSrR 1).2.toSum, q(RingModChar.cast_pos ⟨by simp⟩)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.mkNSMul
     (n : Q(ℕ)) {b : Q($R)} (rb : RingResult instCSrR b) :
     AtomM (RingResult instCSrR q($n • $b)) := do
@@ -281,6 +315,7 @@ def CommSemiring.mkNSMul
   let r : RingResult _ _ ← RingModChar.evalNSMul instCSrR char rR cpR n'.val rb.val
   RingResult.eqTrans q(congr_arg₂ (fun x y => x • y) $n'.proof $rb.proof) r
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.mkAdd
     {a b : Q($R)} (ra : RingResult instCSrR a) (rb : RingResult instCSrR b) :
     AtomM (RingResult instCSrR q($a + $b)) := do
@@ -288,6 +323,7 @@ def CommSemiring.mkAdd
   let r ← RingModChar.evalAdd instCSrR char rR cpR ra.val rb.val
   RingResult.eqTrans q(congr_arg₂ (fun x y => x + y) $ra.proof $rb.proof) r
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.mkMul
     {a b : Q($R)} (ra : RingResult instCSrR a) (rb : RingResult instCSrR b) :
     AtomM (RingResult instCSrR q($a * $b)) := do
@@ -295,16 +331,22 @@ def CommSemiring.mkMul
   let r ← RingModChar.evalMul instCSrR char rR cpR ra.val rb.val
   RingResult.eqTrans q(congr_arg₂ (fun x y => x * y) $ra.proof $rb.proof) r
 
+/-- The result-building operations available over a commutative ring `R`,
+extending those of a commutative semiring with negation and subtraction. -/
 structure CommRingResult (m : Type → Type)
     (r : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → Type)
     [MResultClass m r] (R : Q(Type u))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
     (instCRR : Q(CommRing «$R») := by with_reducible assumption)
     extends CommSemiringResult m r R instCSrR where
+  /-- Build the result for an integer scalar multiple `n • b`. -/
   (mkZSMul : ∀ (n : Q(ℤ)) {b : Q($R)}, r b → m (r (α := R) q($n • $b)))
+  /-- Build the result for a negation `- b`. -/
   (mkNeg : ∀ {b : Q($R)}, r b → m (r (α := R) q(- $b)))
+  /-- Build the result for a difference `a - b`. -/
   (mkSub : ∀ {a b : Q($R)}, r a → r b → m (r (α := R) q($a - $b)))
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommRing.mkZSMul
     (instCRR : Q(CommRing $R) := by with_reducible assumption)
      (n : Q(ℤ)) {b : Q($R)} (rb : RingResult instCSrR b) :
@@ -315,6 +357,7 @@ def CommRing.mkZSMul
   let res ← RingResult.eqTrans q(congr_arg₂ (fun x y => x • y) $n'.proof $rb.proof) r
   pure res
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommRing.mkNeg
     (instCRR : Q(CommRing $R) := by with_reducible assumption)
     {b : Q($R)} (rb : RingResult instCSrR b) :
@@ -322,6 +365,7 @@ def CommRing.mkNeg
   let r : RingResult _ _ ← RingModChar.evalNeg instCSrR char cpR q(($instCRR).toRing) rb.val
   RingResult.eqTrans q(congr_arg (fun x => -x) $rb.proof) r
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommRing.mkSub
     (instCRR : Q(CommRing $R) := by with_reducible assumption)
     {a b : Q($R)} (ra : RingResult instCSrR a) (rb : RingResult instCSrR b) :
@@ -330,44 +374,53 @@ def CommRing.mkSub
   let r : RingResult _ _ ← RingModChar.evalSub instCSrR char cpR q(($instCRR).toRing) ra.val rb.val
   RingResult.eqTrans q(congr_arg₂ (fun x y => x - y) $ra.proof $rb.proof) r
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.Result.mkZero {R : Q(Type u)}
     (_instCRR : Q(CommSemiring $R) := by with_reducible assumption) : Result q((0 : $R)) :=
   ⟨q(0), q(rfl)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.Result.mkOne {R : Q(Type u)}
     (_instCRR : Q(CommSemiring $R) := by with_reducible assumption) : Result q((1 : $R)) :=
   ⟨q(1), q(rfl)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommRing.Result.mkNeg {R : Q(Type u)}
     (_instCRR : Q(CommRing $R) := by with_reducible assumption)
     {a : Q($R)} (ra : Result a) : Result q(-$a) :=
   ⟨q(-$(ra.val)), q($(ra.pf) ▸ rfl)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.Result.mkAdd {R : Q(Type u)}
     (_instCRR : Q(CommSemiring $R) := by with_reducible assumption)
     {a b : Q($R)} (ra : Result a) (rb : Result b) : (Result q($a + $b)) :=
   ⟨q($(ra.val) + $(rb.val)), q($(ra.pf) ▸ $(rb.pf) ▸ rfl)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommRing.Result.mkSub {R : Q(Type u)}
     (_instCRR : Q(CommRing $R) := by with_reducible assumption)
     {a b : Q($R)} (ra : Result a) (rb : Result b) : (Result q($a - $b)) :=
   ⟨q($(ra.val) - $(rb.val)), q($(ra.pf) ▸ $(rb.pf) ▸ rfl)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.Result.mkMul {R : Q(Type u)}
     (_instCRR : Q(CommSemiring $R) := by with_reducible assumption)
     {a b : Q($R)} (ra : Result a) (rb : Result b) : (Result q($a * $b)) :=
   ⟨q($(ra.val) * $(rb.val)), q($(ra.pf) ▸ $(rb.pf) ▸ rfl)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommSemiring.Result.mkNSMul {R : Q(Type u)}
     (_instCRR : Q(CommSemiring $R) := by with_reducible assumption)
     (a : Q(ℕ)) {b : Q($R)} (rb : Result b) : (Result q($a • $b)) :=
   ⟨q($a • $(rb.val)), q($(rb.pf) ▸ rfl)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommRing.Result.mkZSMul {R : Q(Type u)}
     (_instCRR : Q(CommRing $R) := by with_reducible assumption)
     (a : Q(ℤ)) {b : Q($R)} (rb : Result b) : (Result q($a • $b)) :=
   ⟨q($a • $(rb.val)), q($(rb.pf) ▸ rfl)⟩
 
+/-- Result-building operation for the ring-normalisation framework. -/
 def CommRingResult.default {m : Type → Type} [Pure m]
     (instCRR : Q(CommRing $R) := by with_reducible assumption) :
     CommRingResult m Result R where
