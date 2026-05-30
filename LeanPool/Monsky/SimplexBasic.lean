@@ -29,8 +29,8 @@ lemma v₁_val {x y : ℝ} : (v x y) 1 = y := by simp [v]
 
 
 -- Definition of an n-dimensional standard simplex.
-def closed_simplex (n : ℕ)  : Set (Fin n → ℝ) := {α | (∀ i, 0 ≤ α i) ∧ ∑ i, α i = 1}
-def open_simplex   (n : ℕ)  : Set (Fin n → ℝ) := {α | (∀ i, 0 < α i) ∧ ∑ i, α i = 1}
+def closed_simplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 ≤ α i) ∧ ∑ i, α i = 1}
+def open_simplex (n : ℕ) : Set (Fin n → ℝ) := {α | (∀ i, 0 < α i) ∧ ∑ i, α i = 1}
 
 /-
   The Fin n → ℝ² in the following definitions represents the vertices of a polygon.
@@ -41,7 +41,7 @@ def open_simplex   (n : ℕ)  : Set (Fin n → ℝ) := {α | (∀ i, 0 < α i) �
   Also when f i = P for all i, both the closed_hull and open_hull are {P i}.
 -/
 def closed_hull {n : ℕ} (f : Fin n → ℝ²) : Set ℝ² := (fun α ↦ ∑ i, α i • f i) '' closed_simplex n
-def open_hull   {n : ℕ} (f : Fin n → ℝ²) : Set ℝ² := (fun α ↦ ∑ i, α i • f i) '' open_simplex n
+def open_hull {n : ℕ} (f : Fin n → ℝ²) : Set ℝ² := (fun α ↦ ∑ i, α i • f i) '' open_simplex n
 
 
 /- Corner of the standard simplex.-/
@@ -67,7 +67,7 @@ lemma simplex_vertex_image {n : ℕ} {i : Fin n} (f : Fin n → ℝ²) :
 lemma corner_in_closed_hull {n : ℕ} {i : Fin n} {P : Fin n → ℝ²} : P i ∈ closed_hull P := by
   exact ⟨simplex_vertex i, simplex_vertex_in_simplex, by simp⟩
 
-lemma closed_hull_constant {n : ℕ} {P : ℝ²} (hn : n ≠ 0):
+lemma closed_hull_constant {n : ℕ} {P : ℝ²} (hn : n ≠ 0) :
     closed_hull (fun (_ : Fin n) ↦ P) = {P} := by
   ext _
   constructor
@@ -96,7 +96,7 @@ lemma open_sub_closed {n : ℕ} (P : Fin n → ℝ²) : open_hull P ⊆ closed_h
 lemma closed_pol_nonempty {n : ℕ} (hn : 0 < n) (P : Fin n → ℝ²) : Set.Nonempty (closed_hull P) :=
   Set.Nonempty.mono (open_sub_closed P) (open_pol_nonempty hn P)
 
-lemma open_hull_constant {n : ℕ} {P : ℝ²} (hn : n ≠ 0):
+lemma open_hull_constant {n : ℕ} {P : ℝ²} (hn : n ≠ 0) :
     open_hull (fun (_ : Fin n) ↦ P) = {P} :=
   (Set.Nonempty.subset_singleton_iff (open_pol_nonempty (Nat.zero_lt_of_ne_zero hn) _)).mp
       (subset_of_subset_of_eq (open_sub_closed _) (closed_hull_constant hn))

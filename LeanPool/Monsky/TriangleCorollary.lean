@@ -13,10 +13,10 @@ import Mathlib.MeasureTheory.Measure.Lebesgue.Integral
 import Mathlib.Analysis.SpecialFunctions.Integrability.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.Dynamics.Ergodic.MeasurePreserving
-import LeanPool.Monsky.basic_definitions
-import LeanPool.Monsky.simplex_basic
-import LeanPool.Monsky.segment_triangle
-import LeanPool.Monsky.square
+import LeanPool.Monsky.BasicDefinitions
+import LeanPool.Monsky.SimplexBasic
+import LeanPool.Monsky.SegmentTriangle
+import LeanPool.Monsky.Square
 
 namespace LeanPool.Monsky
 

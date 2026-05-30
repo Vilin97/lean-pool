@@ -7,8 +7,8 @@ Authors: Dhyan Aranha and contributors
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Tactic
 import LeanPool.Monsky.Appendix
-import LeanPool.Monsky.simplex_basic
-import LeanPool.Monsky.segment_triangle
+import LeanPool.Monsky.SimplexBasic
+import LeanPool.Monsky.SegmentTriangle
 
 namespace LeanPool.Monsky
 
@@ -108,12 +108,10 @@ lemma valuation_bounds
   v (X 0 * Y 1) > v (-(Y 1 * Z 0)) ∧
   v (X 0 * Y 1) > v (-(X 1 * Y 0)) ∧
   v (X 0 * Y 1) > v (-(X 0 * Z 1)) := by
-
   -- Get rid of all minus signs
   repeat rw [Valuation.map_neg]
   -- Apply multiplicativity of v everywhere
   repeat rw [v.map_mul]
-
   -- Trivial bounds from the coloring
   have hx0 : v (X 0) ≥ v 1 := (blue_region v X hb).1
   have hy1 : v (Y 1) ≥ v 1 := (green_region v Y hg).2
@@ -125,15 +123,12 @@ lemma valuation_bounds
   simp_all only [map_one]
   -- We won't need the coloring hypotheses anymore
   clear hb hg hr
-
   -- Non-negativity bounds
   have x0_gt_zero : v (X 0) > 0 := lt_of_le_of_lt' hx0 zero_lt_one
   have y1_gt_zero : v (Y 1) > 0 := lt_of_le_of_lt' hy1 zero_lt_one
-
   -- v (X 0) * v (Y 1) ≥ 1
   constructor
   exact Right.one_le_mul hx0 hy1
-
   -- v (X 1) * v (Z 0) < v (X 0) * v (Y 1)
   constructor
   apply mul_lt_mul'
@@ -141,7 +136,6 @@ lemma valuation_bounds
   exact lt_of_le_of_lt' hy1 hz0
   exact zero_le'
   exact x0_gt_zero
-
   -- v (Y 0) * v (Z 1) < v (X 0) * v (Y 1)
   constructor
   rw [mul_comm (v (X 0)) (v (Y 1))]
@@ -150,7 +144,6 @@ lemma valuation_bounds
   exact lt_of_le_of_lt' hx0 hz1
   exact zero_le'
   exact zero_le'
-
   -- v (X 0) * v (Y 1) > v (Y 1) * v (Z 0)
   constructor
   rw [mul_comm (v (X 0)) (v (Y 1))]
@@ -159,13 +152,11 @@ lemma valuation_bounds
   exact lt_of_le_of_lt' hx0 hz0
   exact zero_le'
   exact y1_gt_zero
-
   -- v (X 0) * v (Y 1) > v (X 1) * v (Y 0)
   constructor
   apply mul_lt_mul' hxx hyy
   apply zero_le'
   exact x0_gt_zero
-
   -- v (X 0) * v (Y 1) > v (X 0) * v (Z 1)
   apply mul_lt_mul'
   apply refl
@@ -408,15 +399,14 @@ lemma blue11 : coloring v !₂[1,1] = Color.Blue := by
 --TODO: Show that the area of a Color triangle cannot be zero or 1/n for n odd (here we will
 -- need the fact that v(1/2) > 1).
 
-lemma get_color_of_rainbow_triangle (T: Fin 3 → ℝ²) (rt: rainbow_triangle v T) (c : Color) :
+lemma get_color_of_rainbow_triangle (T : Fin 3 → ℝ²) (rt : rainbow_triangle v T) (c : Color) :
   ∃ i : Fin 3, coloring v (T i) = c := by
   have h := rt c
   cases' h with i hi
   exact ⟨i, hi⟩
 
-theorem bounded_det_coord_free (T: Triangle) (rt: rainbow_triangle v T) :
+theorem bounded_det_coord_free (T : Triangle) (rt : rainbow_triangle v T) :
 v (det T) ≥ 1 := by
-
   have hr: ∃ z : Fin 3, coloring v (T z) = Color.Red := by
     apply get_color_of_rainbow_triangle v T rt Color.Red
   have hb: ∃ x : Fin 3, coloring v (T x) = Color.Blue := by
@@ -463,10 +453,9 @@ v (det T) ≥ 1 := by
 theorem no_odd_rainbow_triangle
   (T : Fin 3 → ℝ²)
   (rt : rainbow_triangle v T)
-  (vhalf: v (1/2) > 1):
+  (vhalf : v (1 / 2) > 1) :
     ¬ ∃ (n : ℕ) (_: Odd n),
     |det T| / 2 = 1 / n := by
-
   have vodd: ∀ (n : ℕ) (_: Odd n), v (1/n) = 1 := by
     apply odd_valuation
     · apply vhalf

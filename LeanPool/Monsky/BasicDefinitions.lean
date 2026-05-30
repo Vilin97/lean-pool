@@ -6,7 +6,7 @@ Authors: Dhyan Aranha and contributors
 
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Tactic
-import LeanPool.Monsky.segment_triangle
+import LeanPool.Monsky.SegmentTriangle
 
 namespace LeanPool.Monsky
 

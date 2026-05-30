@@ -86,10 +86,10 @@ lemma real_sign_abs_le {x : ℝ} : |Real.sign x| ≤ 1 := by
 
 /- Other stuff. -/
 
-lemma mul_cancel {a b c : ℝ} (h : a ≠ 0) (h2: a * b = a * c) :
+lemma mul_cancel {a b c : ℝ} (h : a ≠ 0) (h2 : a * b = a * c) :
         b = c := by simp_all only [ne_eq, mul_eq_mul_left_iff, or_false]
 
-lemma smul_cancel {a : ℝ} {b c : ℝ²} (h₁ : a ≠ 0) (h₂: a • b = a • c)
+lemma smul_cancel {a : ℝ} {b c : ℝ²} (h₁ : a ≠ 0) (h₂ : a • b = a • c)
     : b = c := by
   refine PiLp.ext ?_
   intro i
@@ -118,7 +118,7 @@ lemma forall_in_swap_special {α β : Type} {P : α → β → Prop} {Q : α →
 
 
 lemma forall_exists_pos_swap {α : Type} [Fintype α] {P : ℝ → α → Prop}
-    (h : ∀ δ a, P δ a → ∀ δ', δ' ≤ δ → P δ' a): (∃ δ > 0, ∀ a, P δ a) ↔ (∀ a, ∃ δ > 0, P δ a) := by
+    (h : ∀ δ a, P δ a → ∀ δ', δ' ≤ δ → P δ' a) : (∃ δ > 0, ∀ a, P δ a) ↔ (∀ a, ∃ δ > 0, P δ a) := by
   constructor
   · exact fun ⟨δ,Qδ,Pδ⟩ a ↦ ⟨δ, Qδ, Pδ a⟩
   · intro ha
@@ -139,7 +139,7 @@ lemma forall_exists_pos_swap {α : Type} [Fintype α] {P : ℝ → α → Prop}
       use 1
       norm_num
 
-def real_interval_δ {x: ℝ} (y : ℝ) (hx : 0 < x) : ∃ δ > 0, ∀ a, |a| ≤ δ → 0 < x + a * y := by
+def real_interval_δ {x : ℝ} (y : ℝ) (hx : 0 < x) : ∃ δ > 0, ∀ a, |a| ≤ δ → 0 < x + a * y := by
   by_cases hy : y = 0
   · exact ⟨1, by norm_num, fun a _ ↦ by rwa [hy,mul_zero,add_zero]⟩
   · have hyabs : 0 < |y| := abs_pos.mpr hy
@@ -172,7 +172,7 @@ lemma infinite_distinct_el {α : Type} {S : Set α} (hS : Set.Infinite S) (k : �
   have ⟨a, haS, ha⟩ :=  Set.Infinite.exists_notMem_finset hS ({k} : Finset α)
   exact ⟨a, haS, List.ne_of_not_mem_cons ha⟩
 
-lemma infinite_imp_two_distinct_el  {α : Type} {S : Set α} (hS : S.Infinite) : ∃ a ∈ S, ∃ b ∈ S, a ≠ b := by
+lemma infinite_imp_two_distinct_el {α : Type} {S : Set α} (hS : S.Infinite) : ∃ a ∈ S, ∃ b ∈ S, a ≠ b := by
   have ⟨a, ha⟩ := Set.Infinite.nonempty hS
   have ⟨b, hb⟩ := infinite_distinct_el hS a
   use a, ha, b, hb.1, hb.2.symm

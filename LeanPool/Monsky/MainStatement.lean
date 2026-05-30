@@ -6,9 +6,9 @@ Authors: Dhyan Aranha and contributors
 
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Tactic
-import LeanPool.Monsky.segment_counting
-import LeanPool.Monsky.Triangle_corollary
-import LeanPool.Monsky.monsky_even
+import LeanPool.Monsky.SegmentCounting
+import LeanPool.Monsky.TriangleCorollary
+import LeanPool.Monsky.MonskyEven
 
 namespace LeanPool.Monsky
 

@@ -6,11 +6,11 @@ Authors: Dhyan Aranha and contributors
 
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Tactic
-import LeanPool.Monsky.simplex_basic
-import LeanPool.Monsky.segment_triangle
-import LeanPool.Monsky.basic_definitions
-import LeanPool.Monsky.Rainbow_triangles
-import LeanPool.Monsky.square
+import LeanPool.Monsky.SimplexBasic
+import LeanPool.Monsky.SegmentTriangle
+import LeanPool.Monsky.BasicDefinitions
+import LeanPool.Monsky.RainbowTriangles
+import LeanPool.Monsky.Square
 
 namespace LeanPool.Monsky
 
