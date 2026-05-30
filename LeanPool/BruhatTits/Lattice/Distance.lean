@@ -93,7 +93,6 @@ lemma basis_smul_def_of_isLattice {M : Submodule R (ι → K)} [IsLattice M] (g 
   smulBasis_apply_of_isLattice g b i j
 
 omit [IsDiscreteValuationRing ↥R] in
-@[simp]
 lemma basis_smul_toGL {M : Submodule R (ι → K)} [IsLattice M] (g : GL ι R)
     (b : Basis ι R M) :
     ((MulOpposite.op g) • b).toGL = b.toGL * g := by

@@ -18,12 +18,14 @@ open BigOperators
 
 namespace Polynomial
 
+namespace Multiset
+
 /--
 We can pick an order for the elements of a multiset and write its product as a `Fin`-indexed
   product.
 -/
 @[to_additive]
-lemma Multiset.prod_eq_prod_fin {M : Type*} [CommMonoid M] (s : Multiset M) :
+lemma prod_eq_prod_fin {M : Type*} [CommMonoid M] (s : Multiset M) :
     ∃ t : Fin (Multiset.card s) → M, s.prod = ∏ i, t i :=
   s.induction ⟨![], by simp⟩ (fun a s ⟨t, ih⟩ =>
     ⟨fun i => Fin.cons (α := fun _ => M) a t ⟨i, by simpa using i.prop⟩,
@@ -38,7 +40,7 @@ We can pick an order for the elements of a multiset and write its product as a `
   product.
 -/
 @[to_additive]
-lemma Multiset.prod_map_eq_prod_fin {α M : Type*} [CommMonoid M] (s : Multiset α) (f : α → M) :
+lemma prod_map_eq_prod_fin {α M : Type*} [CommMonoid M] (s : Multiset α) (f : α → M) :
     ∃ t : Fin (Multiset.card s) → α, (s.map f).prod = ∏ i, f (t i) :=
   s.induction ⟨![], by simp⟩ (fun a s ⟨t, ih⟩ =>
     ⟨fun i => Fin.cons (α := fun _ => α) a t ⟨i, by simpa using i.prop⟩,
@@ -54,17 +56,23 @@ lemma Multiset.prod_map_eq_prod_fin {α M : Type*} [CommMonoid M] (s : Multiset 
           · simp only [Fin.cons_succ, RelIso.coe_fn_toEquiv, Fin.castOrderIso_apply, Fin.val_cast,
               Fin.val_succ, ← Fin.succ_mk, Fin.is_lt])⟩)
 
-lemma Multiset.prod_toList_map {α M : Type*} [CommMonoid M] (s : Multiset α) (f : α → M) :
+lemma prod_toList_map {α M : Type*} [CommMonoid M] (s : Multiset α) (f : α → M) :
     (s.toList.map f).prod = (s.map f).prod := by
   rw [← Multiset.prod_toList]
   apply List.Perm.prod_eq (Multiset.coe_eq_coe.mp _)
   rw [Multiset.coe_toList, ← Multiset.map_coe, Multiset.coe_toList]
 
-lemma List.prod_get {α M : Type*} [CommMonoid M] (s : List α) (f : α → M) :
+end Multiset
+
+namespace List
+
+lemma prod_get {α M : Type*} [CommMonoid M] (s : List α) (f : α → M) :
     ∏ i, f (s.get i) = (s.map f).prod := by
   induction s
   · simp
   · simp [Fin.prod_univ_succ]
+
+end List
 
 theorem resultant_eq_of_splits [Infinite K] (f g : K[X]) (hf0 : f ≠ 0) (hg0 : g ≠ 0)
     (hf : f.Splits) (hg : g.Splits) :
@@ -111,16 +119,18 @@ lemma resultant_prod_X_sub_C {ι : Type*} (f : K[X]) (s : Finset ι) (u : ι →
       (-1) ^ (f.natDegree * s.card) * ∏ i ∈ s, eval (u i) f := by
   rw [resultant_swap, prod_X_sub_C_resultant, natDegree_prod_X_sub_C]
 
+namespace Fin
+
 /-- Imported declaration. -/
-def Fin.last' (n : ℕ) [NeZero n] : Fin n := Fin.rev 0
+def last' (n : ℕ) [NeZero n] : Fin n := Fin.rev 0
 
-@[simp] lemma Fin.val_last' (n : ℕ) [NeZero n] : (Fin.last' n : ℕ) = n - 1 := rfl
+@[simp] lemma val_last' (n : ℕ) [NeZero n] : (Fin.last' n : ℕ) = n - 1 := rfl
 
-lemma Fin.val_eq_card_sub_one_iff {n : ℕ} [NeZero n] {i : Fin n} :
+lemma val_eq_card_sub_one_iff {n : ℕ} [NeZero n] {i : Fin n} :
     (i : ℕ) = n - 1 ↔ i = Fin.last' n := by
   rw [Fin.ext_iff, Fin.val_last']
 
-lemma Fin.castAdd_eq_last' {m n : ℕ} [NeZero (n + m)] [NeZero n] {i : Fin n} :
+lemma castAdd_eq_last' {m n : ℕ} [NeZero (n + m)] [NeZero n] {i : Fin n} :
     Fin.castAdd m i = Fin.last' (n + m) ↔ m = 0 ∧ i = Fin.last' n := by
   constructor
   · intro h
@@ -135,10 +145,12 @@ lemma Fin.castAdd_eq_last' {m n : ℕ} [NeZero (n + m)] [NeZero n] {i : Fin n} :
     ext
     simp
 
-lemma Fin.natAdd_eq_last' {m n : ℕ} [NeZero (n + m)] [NeZero m] {i : Fin m} :
+lemma natAdd_eq_last' {m n : ℕ} [NeZero (n + m)] [NeZero m] {i : Fin m} :
     Fin.natAdd n i = Fin.last' (n + m) ↔ i = Fin.last' m := by
   rw [Fin.ext_iff, Fin.ext_iff, Fin.val_natAdd, Fin.val_last', Fin.val_last',
       add_tsub_assoc_of_le (show 1 ≤ m from bot_lt_of_lt i.2), add_left_cancel_iff]
+
+end Fin
 
 lemma sylvesterMatrix_last' (f g : R[X]) [NeZero f.natDegree] [NeZero (f.natDegree + g.natDegree)]
     (i : Fin _) :
@@ -291,18 +303,26 @@ lemma resultant_derivative_self (f : R[X]) (hf : natDegree f ≠ 0) :
   rw [mul_assoc, discriminant_def _ hf, ← mul_assoc, ← pow_add, ← two_mul, pow_mul, neg_one_pow_two,
     one_pow, one_mul]
 
-lemma Monic.discriminant_def (f : R[X]) (hf : Monic f) :
+namespace Monic
+
+lemma discriminant_def (f : R[X]) (hf : Monic f) :
   discriminant f = (-1) ^ (f.natDegree * (f.natDegree - 1) / 2) * resultant f (derivative f) := by
   by_cases hf0 : natDegree f = 0
   · simp [hf.natDegree_eq_zero.mp hf0]
   · conv_lhs => rw [← one_mul f.discriminant, ← hf.leadingCoeff, Polynomial.discriminant_def _ hf0]
 
+end Monic
+
 @[simp] lemma discriminant_X_add_C [Nontrivial R] (b : R) : discriminant (X + C b) = 1 := by
   simp [(monic_X_add_C _).discriminant_def]
 
-@[simp] lemma Fin.val_unique {n : ℕ} [Unique (Fin n)] (i : Fin n) : (i : ℕ) = 0 := by
+namespace Fin
+
+@[simp] lemma val_unique {n : ℕ} [Unique (Fin n)] (i : Fin n) : (i : ℕ) = 0 := by
   have : NeZero n := NeZero.of_pos (bot_lt_of_lt i.2)
   rw [Subsingleton.elim i 0, Fin.val_zero]
+
+end Fin
 
 omit [NoZeroSMulDivisors ℕ R] in
 @[simp] lemma discriminant_C_mul_X_add_C (a b : R) (ha : a ≠ 0) : discriminant (C a * X + C b) =
@@ -451,7 +471,9 @@ theorem discriminant_map [CharZero K] {L : Type*} [Field L] [CharZero L] (φ : K
   · apply RingHom.injective
   · rwa [natDegree_map]
 
-theorem Splits.eq_fin_prod_roots {L : Type*} [Field L] {φ : K →+* L} {f : K[X]}
+namespace Splits
+
+theorem eq_fin_prod_roots {L : Type*} [Field L] {φ : K →+* L} {f : K[X]}
     (h : Splits (f.map φ)) :
     f.map φ = C (φ f.leadingCoeff) * ∏ i : Fin (Multiset.card (roots (f.map φ))),
       (X - C ((roots (f.map φ)).toList.get (i.cast (Multiset.length_toList _).symm))) := by
@@ -463,7 +485,11 @@ theorem Splits.eq_fin_prod_roots {L : Type*} [Field L] {φ : K →+* L} {f : K[X
     refine Eq.trans ?_ (List.finset_prod_get (map φ f).roots.toList (fun x => X - C x)).symm
     exact (Multiset.prod_toList _).symm.trans (List.Perm.prod_eq (Multiset.toList_map _ _))
 
-lemma Finset.Iio_union_Ioi {α : Type*} [Fintype α] [LinearOrder α]
+end Splits
+
+namespace Finset
+
+lemma Iio_union_Ioi {α : Type*} [Fintype α] [LinearOrder α]
     [LocallyFiniteOrderBot α] [LocallyFiniteOrderTop α] [DecidableEq α] (a : α) :
     (Finset.Iio a) ∪ (Finset.Ioi a) = Finset.univ.erase a :=
   Finset.ext (fun _ =>
@@ -473,15 +499,23 @@ lemma Finset.Iio_union_Ioi {α : Type*} [Fintype α] [LinearOrder α]
       fun h => Finset.mem_union.mpr ((lt_or_gt_of_ne (Finset.mem_erase.mp h).1).imp
         Finset.mem_Iio.mpr Finset.mem_Ioi.mpr)⟩)
 
-lemma Fintype.card_subtype_congr {α : Type*} {p q : α → Prop} (e : ∀ x, p x ↔ q x)
+end Finset
+
+namespace Fintype
+
+lemma card_subtype_congr {α : Type*} {p q : α → Prop} (e : ∀ x, p x ↔ q x)
     [Fintype (Subtype p)] [Fintype (Subtype q)] :
     Fintype.card (Subtype p) = Fintype.card (Subtype q) :=
   Fintype.card_congr ((Equiv.refl _).subtypeEquiv e)
 
+end Fintype
+
+namespace Subtype
+
 -- TODO: promote me to instance?
 /-- Imported declaration. -/
 @[reducible]
-noncomputable def Subtype.fintypeOr {α : Type*} {p q : α → Prop} [Fintype (Subtype p)]
+noncomputable def fintypeOr {α : Type*} {p q : α → Prop} [Fintype (Subtype p)]
     [Fintype (Subtype q)] :
     Fintype { x // p x ∨ q x } := by
   classical
@@ -489,7 +523,11 @@ noncomputable def Subtype.fintypeOr {α : Type*} {p q : α → Prop} [Fintype (S
     (Sum.elim (fun (x : Subtype p) => ⟨x.1, Or.inl x.2⟩) (fun (x : Subtype q) => ⟨x.1, Or.inr x.2⟩))
     (fun x => x.2.casesOn (fun hx => ⟨Sum.inl ⟨x, hx⟩, rfl⟩) (fun hx => ⟨Sum.inr ⟨x, hx⟩, rfl⟩))
 
-theorem Multiset.card_subtype_mem {α : Type*} [DecidableEq α] (s : Multiset α) :
+end Subtype
+
+namespace Multiset
+
+theorem card_subtype_mem {α : Type*} [DecidableEq α] (s : Multiset α) :
     Fintype.card { x // x ∈ s } = Multiset.card s.dedup := by
   classical
   induction s using Multiset.induction
@@ -509,11 +547,15 @@ theorem Multiset.card_subtype_mem {α : Type*} [DecidableEq α] (s : Multiset α
         exact h (hpmem _ hx)
       · exact fun _ => Multiset.mem_cons
 
+end Multiset
+
 instance {K : Type*} [Field K] : IsIntegrallyClosed K :=
   (isIntegrallyClosed_iff K).mpr (fun {x} _ => ⟨x, rfl⟩)
 
+namespace Finset
+
 omit [NoZeroSMulDivisors ℕ R] in
-lemma Finset.prod_univ_prod_Iio {α : Type*} [Fintype α] [LinearOrder α]
+lemma prod_univ_prod_Iio {α : Type*} [Fintype α] [LinearOrder α]
     [LocallyFiniteOrderBot α] [LocallyFiniteOrderTop α] (f : α → R) :
     ∏ i : α, ∏ j ∈ Finset.Iio i, (f i - f j) =
       ∏ i : α, ∏ j ∈ Finset.Ioi i, (f j - f i) :=
@@ -521,33 +563,49 @@ lemma Finset.prod_univ_prod_Iio {α : Type*} [Fintype α] [LinearOrder α]
     classical
     exact Finset.prod_comm' (by simp)
 
+end Finset
+
+namespace List
+
 /-- Imported declaration. -/
 @[simps!]
-def List.equivFin {α : Type*} [DecidableEq α] {s : List α} (hs : s.Nodup) :
+def equivFin {α : Type*} [DecidableEq α] {s : List α} (hs : s.Nodup) :
     { x // x ∈ s } ≃ Fin s.length :=
   (List.Nodup.getEquiv s hs).symm
 
-@[simp] lemma Multiset.nodup_toList {α : Type*} {s : Multiset α} :
+end List
+
+namespace Multiset
+
+@[simp] lemma nodup_toList {α : Type*} {s : Multiset α} :
     s.toList.Nodup ↔ s.Nodup := by
   rw [← Multiset.coe_toList s, Multiset.coe_nodup, Multiset.coe_toList]
 
 /-- Imported declaration. -/
 @[simps!]
-noncomputable def Multiset.equivFin {α : Type*} {s : Multiset α} (hs : s.Nodup) :
+noncomputable def equivFin {α : Type*} {s : Multiset α} (hs : s.Nodup) :
     { x // x ∈ s } ≃ Fin (Multiset.card s) := by
   classical
   exact ((Equiv.refl _).subtypeEquiv (by simp)).trans
     ((List.equivFin (Multiset.nodup_toList.mpr hs)).trans
     (finCongr (by simp)))
 
-lemma Fin.sum_card_sub_one_sub_self {n : ℕ} :
+end Multiset
+
+namespace Fin
+
+lemma sum_card_sub_one_sub_self {n : ℕ} :
     ∑ i : Fin n, (n - 1 - (i : ℕ)) = n * (n - 1) / 2 := by
   obtain (⟨⟩ | n) := n
   · simp
   · simp only [← Finset.sum_range, add_tsub_cancel_right, Finset.sum_flip (f := fun x => x),
       Finset.sum_range_id]
 
-theorem Algebra.discr_of_isAdjoinRootMonic {K : Type*} [Field K] [Algebra ℚ K] {T : ℚ[X]}
+end Fin
+
+namespace Algebra
+
+theorem discr_of_isAdjoinRootMonic {K : Type*} [Field K] [Algebra ℚ K] {T : ℚ[X]}
     (f : IsAdjoinRootMonic K T) (hT : Irreducible T) :
     Algebra.discr ℚ (f.powerBasis).basis = Polynomial.discriminant T := by
   classical
@@ -610,5 +668,7 @@ theorem Algebra.discr_of_isAdjoinRootMonic {K : Type*} [Field K] [Algebra ℚ K]
           (fun x : Fin T.natDegree => (Finset.Ioi x).card) (-1 : AlgebraicClosure ℚ)]
       simp [aroots_def, Fin.card_Ioi, Fin.sum_card_sub_one_sub_self, card_roots]
       rfl
+
+end Algebra
 
 end Polynomial
