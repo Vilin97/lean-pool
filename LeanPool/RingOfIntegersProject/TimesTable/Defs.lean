@@ -18,7 +18,6 @@ structure TimesTable (ι : Type _) (R : Type _) (S : Type _) [Semiring R] [AddCo
   table : ι → ι → ι → R
   basis_mul_basis : ∀ i j k, basis.repr (basis i * basis j) k = table i j k
 
-section add_monoid
 
 variable {ι R S : Type _} [Semiring R] [AddCommMonoid S] [Module R S] [Mul S]
 
@@ -37,9 +36,7 @@ lemma TimesTable.ext (t : TimesTable ι R S) {x y : S} (h : ∀ i, t.coord x i =
   x = y :=
 t.basis.ext_elem h
 
-end add_monoid
 
-section Semiring
 variable {ι R S : Type _} [Fintype ι] [CommSemiring R] [NonUnitalNonAssocSemiring S] [Module R S]
     [IsScalarTower R S S] [SMulCommClass R S S]
 
@@ -73,11 +70,9 @@ by { unfold bit0, simp only [_root_.map_add, finsupp.coe_add, pi.add_apply] }
 by { unfold bit1 bit0, simp only [_root_.map_add, finsupp.coe_add, pi.add_apply] }
 -/
 
-end Semiring
 
 namespace TimesTable
 
-section AddCommMonoid
 
 variable {R S ι : Type _} [CommSemiring R] [AddCommMonoid S] [Module R S]
 variable [Mul S]
@@ -104,9 +99,7 @@ protected lemma coord_add (t : TimesTable ι R S) (k : ι) (e₁ e₂ : S) :
   t.coord (e₁ + e₂) k =  t.coord e₁ k + t.coord e₂ k :=
 by rw [← t.basis_repr_eq, _root_.map_add, Finsupp.add_apply, t.basis_repr_eq, t.basis_repr_eq]
 
-end AddCommMonoid
 
-section NonUnitalNonAssocSemiring
 
 variable {ι R S : Type _} [Fintype ι] [CommSemiring R] [NonUnitalNonAssocSemiring S] [Module R S]
     [IsScalarTower R S S] [SMulCommClass R S S]
@@ -122,9 +115,7 @@ protected lemma coord_repr_table
   r₁i * r₂j * tijk = e' :=
 by rw [e₁_eq, e₂_eq, t_eq, e₁e₂_eq, eq]
 
-end NonUnitalNonAssocSemiring
 
-section Semiring
 
 variable {ι R S : Type _} [CommSemiring R] [Semiring S] [Module R S]
 
@@ -150,9 +141,7 @@ protected lemma eval_pow_bit1 (t : TimesTable ι R S) (k : ι) (n : ℕ) {e₁ :
 by rw [pow_bit1, e_eq]
 -/
 
-end Semiring
 
-section AddCommGroup
 
 variable {R S ι : Type _} [CommRing R] [AddCommGroup S] [Mul S] [Module R S]
 
@@ -164,7 +153,6 @@ protected lemma coord_neg (t : TimesTable ι R S) (k : ι) (e : S) :
   t.coord (-e) k = - t.coord e k :=
 by rw [← t.basis_repr_eq, map_neg t.basis.repr, Finsupp.neg_apply, t.basis_repr_eq]
 
-end AddCommGroup
 
 open BigOperators Polynomial
 
