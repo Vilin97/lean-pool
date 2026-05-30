@@ -174,20 +174,20 @@ def Mathlib.Meta.NormNum.Result.uncheckedCast {α : Q(Type u)} {a b : Q($α)} :
 
 namespace NormTactic
 
-class MResultClass (m : Type → Type) {u : Level} (R : Q(Type u))
-    (r : (e : Q($R)) → Type) where
-  rflM : {a : Q($R)} → m (r a)
-  eqTransM : {a b : Q($R)} → (eq : Q($a = $b)) → r b → m (r a)
-  uncheckedCast : {a b : Q($R)} → r b → r a
-  out : {a : Q($R)} → r a → (a' : Q($R)) × Q($a = $a')
+class MResultClass (m : Type → Type)
+    (r : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → Type) where
+  rflM : {α : Q(Type u)} → {a : Q($α)} → m (r a)
+  eqTransM : {α : Q(Type u)} → {a b : Q($α)} → (eq : Q($a = $b)) → r b → m (r a)
+  uncheckedCast : {α : Q(Type u)} → {a b : Q($α)} → r b → r a
+  out : {α : Q(Type u)} → {a : Q($α)} → r a → (a' : Q($α)) × Q($a = $a')
 
-instance {α : Q(Type u)} : MResultClass MetaM α (fun e => NormNum.Result e) where
+instance : MResultClass MetaM @NormNum.Result where
   out res := res.toRawEq
   rflM := NormNum.derive _
   eqTransM eq res := pure (res.eq_trans eq)
   uncheckedCast res := res.uncheckedCast
 
-instance {R : Q(Type u)} {r : (e : Q($R)) → Type} [MResultClass m R r] {e : Q($R)} :
+instance [MResultClass m r] {u : Level} {α : Q(Type u)} {e : Q($α)} :
     Inhabited (m (r e)) where
   default := MResultClass.rflM
 
@@ -210,7 +210,7 @@ def Result.toSimpResult {α : Q(Type u)} {e : Q($α)} (r : Result e) : Simp.Resu
   expr := r.val
   proof? := r.pf
 
-instance {α : Q(Type u)} [Pure m] : MResultClass m α Result where
+instance [Pure m] : MResultClass m Result where
   out res := ⟨res.val, res.pf⟩
   rflM := pure ⟨_, q(rfl)⟩
   eqTransM eq res := pure (Result.trans_eq eq res)
@@ -264,13 +264,6 @@ def _root_.NormTactic.Result.toRingResult {α : Q(Type u)} {csr : Q(CommSemiring
     {e : Q($α)} (r : Result e) : AtomM (RingResult csr e) := do
   (← RingResult.mkRfl _ r.val).eqTrans r.pf
 
-instance {α : Q(Type u)} {crr : Q(CommSemiring $α)} :
-    MResultClass AtomM α (RingResult crr) where
-  out res := ⟨res.expr, res.proof⟩
-  rflM := RingResult.mkRfl crr _
-  eqTransM eq res := RingResult.eqTrans eq res
-  uncheckedCast := RingResult.uncheckedCast
-
 instance [ToMessageData a] : ToMessageData (Except Exception a) where
   toMessageData e := match e with
   | .error _ => e.emoji
@@ -280,14 +273,15 @@ instance {R : Q(Type u)} {instCSrR : Q(CommSemiring $R)} (e) :
     ToMessageData (RingResult instCSrR e) where
   toMessageData e := toMessageData e.expr
 
-structure CommSemiringResult (m : Type → Type) (R : Q(Type u))
-    (r : (e : Q($R)) → Type) [MResultClass m R r]
+structure CommSemiringResult (m : Type → Type)
+    (r : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → Type)
+    [MResultClass m r] (R : Q(Type u))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption) where
   (char : ℕ) (instCPR : Option Q(CharP $R $char))
   (mkZero : r q((0 : $R))) (mkOne : r q((1 : $R)))
-  (mkNSMul : ∀ (n : Q(ℕ)) {b : Q($R)}, r b → m (r q($n • $b)))
-  (mkAdd : ∀ {a b : Q($R)}, r a → r b → m (r q($a + $b)))
-  (mkMul : ∀ {a b : Q($R)}, r a → r b → m (r q($a * $b)))
+  (mkNSMul : ∀ (n : Q(ℕ)) {b : Q($R)}, r b → m (r (α := R) q($n • $b)))
+  (mkAdd : ∀ {a b : Q($R)}, r a → r b → m (r (α := R) q($a + $b)))
+  (mkMul : ∀ {a b : Q($R)}, r a → r b → m (r (α := R) q($a * $b)))
 
 variable {R : Q(Type u)} (instCSrR : Q(CommSemiring $R) := by with_reducible assumption)
 variable (char : ℕ) (rR : Option (Q(Ring $R))) (cpR : Option (Q(CharP $R $char)))
@@ -319,23 +313,15 @@ def CommSemiring.mkMul
   let r ← RingModChar.evalMul instCSrR char rR cpR ra.val rb.val
   RingResult.eqTrans q(congr_arg₂ (fun x y => x * y) $ra.proof $rb.proof) r
 
-def CommSemiringResult.ringResult : CommSemiringResult AtomM R (RingResult instCSrR) where
-  char := char
-  instCPR := cpR
-  mkZero := CommSemiring.mkZero
-  mkOne := CommSemiring.mkOne
-  mkNSMul := CommSemiring.mkNSMul _ char rR cpR
-  mkAdd a b := do CommSemiring.mkAdd _ char rR cpR a b
-  mkMul a b := do CommSemiring.mkMul _ char rR cpR a b
-
-structure CommRingResult (m : Type → Type) (R : Q(Type u)) (r : (e : Q($R)) → Type)
-    [MResultClass m R r]
+structure CommRingResult (m : Type → Type)
+    (r : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → Type)
+    [MResultClass m r] (R : Q(Type u))
     (instCSrR : Q(CommSemiring «$R») := by with_reducible assumption)
     (instCRR : Q(CommRing «$R») := by with_reducible assumption)
-    extends CommSemiringResult m R r instCSrR where
-  (mkZSMul : ∀ (n : Q(ℤ)) {b : Q($R)}, r b → m (r q($n • $b)))
-  (mkNeg : ∀ {b : Q($R)}, r b → m (r q(- $b)))
-  (mkSub : ∀ {a b : Q($R)}, r a → r b → m (r q($a - $b)))
+    extends CommSemiringResult m r R instCSrR where
+  (mkZSMul : ∀ (n : Q(ℤ)) {b : Q($R)}, r b → m (r (α := R) q($n • $b)))
+  (mkNeg : ∀ {b : Q($R)}, r b → m (r (α := R) q(- $b)))
+  (mkSub : ∀ {a b : Q($R)}, r a → r b → m (r (α := R) q($a - $b)))
 
 def CommRing.mkZSMul
     (instCRR : Q(CommRing $R) := by with_reducible assumption)
@@ -361,29 +347,6 @@ def CommRing.mkSub
   -- TODO: we can use the characteristic of the ring here
   let r : RingResult _ _ ← RingModChar.evalSub instCSrR char cpR q(($instCRR).toRing) ra.val rb.val
   RingResult.eqTrans q(congr_arg₂ (fun x y => x - y) $ra.proof $rb.proof) r
-
-def CommRingResult.ringResult
-    (instCRR : Q(CommRing $R) := by with_reducible assumption) :
-    CommRingResult AtomM R (RingResult instCSrR) where
-  char := char
-  instCPR := cpR
-  mkZero := CommSemiring.mkZero
-  mkOne := CommSemiring.mkOne
-  mkNSMul := CommSemiring.mkNSMul _ char (.some q(($instCRR).toRing)) cpR
-  mkAdd a b := do CommSemiring.mkAdd _ char (.some q(($instCRR).toRing)) cpR a b
-  mkMul a b := do CommSemiring.mkMul _ char (.some q(($instCRR).toRing)) cpR a b
-  mkZSMul := CommRing.mkZSMul _ char cpR _
-  mkNeg a := do CommRing.mkNeg _ char cpR _ a
-  mkSub a b := do CommRing.mkSub _ char cpR _ a b
-
-def CommSemiringResult.toCommRingResult
-    (crr : CommSemiringResult (m := AtomM) (R := R) (r := RingResult instCSrR))
-    (instCRR : Q(CommRing $R) := by with_reducible assumption) :
-    CommRingResult AtomM R (RingResult instCSrR) :=
-  { crr with
-    mkZSMul := CommRing.mkZSMul _ crr.char crr.instCPR _
-    mkNeg := fun a => do CommRing.mkNeg _ crr.char crr.instCPR _ a
-    mkSub := fun a b => do CommRing.mkSub _ crr.char crr.instCPR _ a b }
 
 def CommSemiring.Result.mkZero {R : Q(Type u)}
     (_instCRR : Q(CommSemiring $R) := by with_reducible assumption) : Result q((0 : $R)) :=
@@ -425,7 +388,7 @@ def CommRing.Result.mkZSMul {R : Q(Type u)}
 
 def CommRingResult.default {m : Type → Type} [Pure m]
     (instCRR : Q(CommRing $R) := by with_reducible assumption) :
-    CommRingResult m R Result where
+    CommRingResult m Result R where
   char := char
   instCPR := cpR
   mkZero := CommSemiring.Result.mkZero

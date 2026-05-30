@@ -277,17 +277,16 @@ protected lemma Finset.prod_empty {β α : Type _} [CommSemiring β] (f : α →
 
 /-- Evaluate a big operator applied to a finset by repeating `proveEmptyOrCons` until
 we exhaust all elements of the set. -/
-partial def evalFinsetBigop {v : Level} {β : Q(Type v)} {r : (e : Q($β)) → Type}
-    [Monad m] [MonadLiftT MetaM m] [MResultClass m β r]
-    {u : Level} {α : Q(Type u)}
+partial def evalFinsetBigop [Monad m] [MonadLiftT MetaM m] [MResultClass m r]
+    {α : Q(Type u)} {β : Q(Type v)}
     (op : Q(Finset $α → ($α → $β) → $β))
     (f : Q($α → $β))
     (eval_f : (a : Q($α)) → m (r (q($f $a) : Q($β))))
     (res_empty : r q($op Finset.empty $f))
     (res_cons : {a : Q($α)} -> {s' : Q(Finset $α)} -> {h : Q($a ∉ $s')} ->
-      r q($f $a) -> r q($op $s' $f) ->
-      m (r q($op (Finset.cons $a $s' $h) $f))) :
-    (s : Q(Finset $α)) → m (r q($op $s $f))
+      r (α := β) q($f $a) -> r (α := β) q($op $s' $f) ->
+      m (r (α := β) q($op (Finset.cons $a $s' $h) $f))) :
+    (s : Q(Finset $α)) → m (r (α := β) q($op $s $f))
 | s => do
   match ← Finset.proveEmptyOrCons s with
   | .empty pf => MResultClass.eqTransM q(congr_fun (congr_arg _ $pf) _) res_empty
