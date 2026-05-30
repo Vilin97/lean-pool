@@ -11,6 +11,8 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import LeanPool.RingOfIntegersProject.PolynomialAsVec
 import LeanPool.RingOfIntegersProject.Resultant
 
+open Polynomial
+
 variable {R : Type*} [CommRing R]
 
 /-- A polynomial function in `ι` arguments is one that can be given as evaluating a MvPolynomial. -/
@@ -25,7 +27,7 @@ lemma IsPolynomial.apply_const {ι : Type*} (i : ι) :
     IsPolynomial (fun (x : ι → R) => x i) :=
   ⟨MvPolynomial.X i, fun _ => (MvPolynomial.eval_X _).symm⟩
 
-lemma IsPolynomial.comp {ι κ : Type*} {f : (ι → R) → R} (s : ι → κ):
+lemma IsPolynomial.comp {ι κ : Type*} {f : (ι → R) → R} (s : ι → κ) :
     IsPolynomial f → IsPolynomial (fun x => f (x ∘ s)) := by
   rintro ⟨f, f_eq⟩
   exact ⟨MvPolynomial.rename s f, by simp [f_eq, MvPolynomial.eval_rename]⟩
@@ -35,7 +37,6 @@ lemma IsPolynomial.add {ι : Type*} {f g : (ι → R) → R} :
   rintro ⟨f, f_eq⟩ ⟨g, g_eq⟩
   exact ⟨f + g, by simp [f_eq, g_eq]⟩
 
-@[to_additive existing]
 lemma IsPolynomial.mul {ι : Type*} {f g : (ι → R) → R} :
     IsPolynomial f → IsPolynomial g → IsPolynomial (fun (x : ι → R) => f x * g x) := by
   rintro ⟨f, f_eq⟩ ⟨g, g_eq⟩
@@ -43,7 +44,7 @@ lemma IsPolynomial.mul {ι : Type*} {f g : (ι → R) → R} :
 
 lemma IsPolynomial.sum {m ι : Type*}
     (f : m → (ι → R) → R) (h : ∀ i, IsPolynomial (f i)) (s : Finset m) :
-    IsPolynomial (fun x => ∑ i in s, f i x) := by
+    IsPolynomial (fun x => ∑ i ∈ s, f i x) := by
   classical
   induction s using Finset.induction_on
   case empty =>
@@ -53,10 +54,9 @@ lemma IsPolynomial.sum {m ι : Type*}
     simp only [Finset.sum_insert ha]
     exact (h a).add ih
 
-@[to_additive existing]
 lemma IsPolynomial.prod {m ι : Type*}
     (f : m → (ι → R) → R) (h : ∀ i, IsPolynomial (f i)) (s : Finset m) :
-    IsPolynomial (fun x => ∏ i in s, f i x) := by
+    IsPolynomial (fun x => ∏ i ∈ s, f i x) := by
   classical
   induction s using Finset.induction_on
   case empty =>
@@ -86,7 +86,7 @@ lemma isPolynomial_ofVec_snoc {x : R} (i : ℕ) :
 lemma IsPolynomial.det {m ι : Type*} [DecidableEq m] [Fintype m]
     (f : m → m → (ι → R) → R) (h : ∀ i j, IsPolynomial (f i j)) :
     IsPolynomial (fun x => Matrix.det (Matrix.of (fun i j => f i j x))) := by
-  simp only [det_apply, of_apply, Units.smul_def, zsmul_eq_mul]
+  simp only [Matrix.det_apply, Matrix.of_apply, Units.smul_def, zsmul_eq_mul]
   apply IsPolynomial.sum
   intro σ
   exact (IsPolynomial.const (Equiv.Perm.sign σ : R)).mul (.prod _ (fun _ => h _ _) _)
@@ -121,7 +121,6 @@ lemma IsSymmPolynomial.add {ι : Type*} {f g : (ι → R) → R} :
   rintro ⟨f, f_eq⟩ ⟨g, g_eq⟩
   exact ⟨f + g, fun i => ⟨by simp [f_eq, g_eq], MvPolynomial.IsSymmetric.add (f_eq i).2 (g_eq i).2⟩⟩
 
-@[to_additive existing]
 lemma IsSymmPolynomial.mul {ι : Type*} {f g : (ι → R) → R} :
     IsSymmPolynomial f → IsSymmPolynomial g → IsSymmPolynomial (fun (x : ι → R) => f x * g x) := by
   rintro ⟨f, f_eq⟩ ⟨g, g_eq⟩
@@ -129,7 +128,7 @@ lemma IsSymmPolynomial.mul {ι : Type*} {f g : (ι → R) → R} :
 
 lemma IsSymmPolynomial.sum {m ι : Type*}
     (f : m → (ι → R) → R) (h : ∀ i, IsSymmPolynomial (f i)) (s : Finset m) :
-    IsSymmPolynomial (fun x => ∑ i in s, f i x) := by
+    IsSymmPolynomial (fun x => ∑ i ∈ s, f i x) := by
   classical
   induction s using Finset.induction_on
   case empty =>
@@ -139,10 +138,9 @@ lemma IsSymmPolynomial.sum {m ι : Type*}
     simp only [Finset.sum_insert ha]
     exact (h a).add ih
 
-@[to_additive existing]
 lemma IsSymmPolynomial.prod {m ι : Type*}
     (f : m → (ι → R) → R) (h : ∀ i, IsSymmPolynomial (f i)) (s : Finset m) :
-    IsSymmPolynomial (fun x => ∏ i in s, f i x) := by
+    IsSymmPolynomial (fun x => ∏ i ∈ s, f i x) := by
   classical
   induction s using Finset.induction_on
   case empty =>
@@ -155,7 +153,7 @@ lemma IsSymmPolynomial.prod {m ι : Type*}
 lemma IsSymmPolynomial.det {m ι : Type*} [DecidableEq m] [Fintype m]
     (f : m → m → (ι → R) → R) (h : ∀ i j, IsSymmPolynomial (f i j)) :
     IsSymmPolynomial (fun x => Matrix.det (Matrix.of (fun i j => f i j x))) := by
-  simp only [det_apply, of_apply, Units.smul_def, zsmul_eq_mul]
+  simp only [Matrix.det_apply, Matrix.of_apply, Units.smul_def, zsmul_eq_mul]
   apply IsSymmPolynomial.sum
   intro σ
   exact (IsSymmPolynomial.const (Equiv.Perm.sign σ : R)).mul (.prod _ (fun _ => h _ _) _)
@@ -204,7 +202,8 @@ Thus we need to assume the degree remains constant in terms of `x`.
 -/
 theorem IsSymmPolynomial.resultant {ι : Type*} {m n : ℕ} {f g : (ι → R) → R[X]}
     (hdegf : ∀ x, (f x).natDegree = m) (hdegg : ∀ x, (g x).natDegree = n)
-    (hf : ∀ i, IsSymmPolynomial (fun x => coeff (f x) i)) (hg : ∀ i, IsSymmPolynomial (fun x => coeff (g x) i)) :
+    (hf : ∀ i, IsSymmPolynomial (fun x => Polynomial.coeff (f x) i))
+    (hg : ∀ i, IsSymmPolynomial (fun x => Polynomial.coeff (g x) i)) :
     IsSymmPolynomial (fun x => (f x).resultant (g x)) := by
   conv =>
     congr
@@ -212,7 +211,7 @@ theorem IsSymmPolynomial.resultant {ι : Type*} {m n : ℕ} {f g : (ι → R) �
       rw [Polynomial.resultant_eq_det_sylvesterMatrix (hdegf x) (hdegg x),
           sylvesterMatrixAux, sylvesterMatrixVec]
       · skip
-  simp only [det_transpose]
+  simp only [Matrix.det_transpose]
   refine IsSymmPolynomial.det _ (fun i j => Fin.addCases (fun i => ?_) (fun i => ?_) i)
   · simp only [Fin.addCases_left]
     apply IsSymmPolynomial.sylvesterVec
@@ -223,13 +222,14 @@ theorem IsSymmPolynomial.resultant {ι : Type*} {m n : ℕ} {f g : (ι → R) �
     intro i
     apply hf
 
+variable {K : Type*} [Field K]
+
 /-- The coefficients of a polynomial are a symmetric polynomial function in its roots. -/
 lemma Polynomial.coeff_isSymmPolynomial_roots {ι : Type*} [Fintype ι] (x : K) :
     ∀ i, IsSymmPolynomial (fun t => (C x * ∏ i : ι, (X - C (t i))).coeff i) := by
   intro i
   by_cases hx0 : x = 0
   · simpa [hx0] using IsSymmPolynomial.const 0
-
   cases le_or_gt i (Fintype.card ι)
   case neg.inr h =>
     conv =>
@@ -294,7 +294,8 @@ Thus we need to assume the degree remains constant in terms of `x`.
 -/
 theorem IsPolynomial.resultant {ι κ : Type*} {m n : ℕ} {P : (ι → R) → R[X]} {Q : (κ → R) → R[X]}
     (hdegP : ∀ x, (P x).natDegree = m) (hdegQ : ∀ x, (Q x).natDegree = n)
-    (hf : ∀ i, IsPolynomial (fun x => coeff (P x) i)) (hg : ∀ i, IsPolynomial (fun x => coeff (Q x) i)) :
+    (hf : ∀ i, IsPolynomial (fun x => Polynomial.coeff (P x) i))
+    (hg : ∀ i, IsPolynomial (fun x => Polynomial.coeff (Q x) i)) :
     IsPolynomial (fun (xy : ι ⊕ κ → R) => (P (xy ∘ Sum.inl)).resultant (Q (xy ∘ Sum.inr))) := by
   conv =>
     congr
@@ -302,7 +303,7 @@ theorem IsPolynomial.resultant {ι κ : Type*} {m n : ℕ} {P : (ι → R) → R
       rw [resultant_eq_det_sylvesterMatrix (hdegP _) (hdegQ _),
           sylvesterMatrixAux, sylvesterMatrixVec]
       · skip
-  simp only [det_transpose]
+  simp only [Matrix.det_transpose]
   refine IsPolynomial.det _ (fun i j => Fin.addCases (fun i => ?_) (fun i => ?_) i)
   · simp only [Fin.addCases_left]
     exact IsPolynomial.sylvesterVec (fun i => IsPolynomial.comp _ (hg _)) _ _

@@ -25,6 +25,8 @@ lemma discriminant_f : Polynomial.discriminant f = 36 := by
   · decide +kernel
   · decide +kernel
 
-lemma root_product_f : 2 ^ (2 * (f.natDegree - 1)) * (0.5 + 1 : ℚ)^2 * 2^2 * (1 - 0.5)^2 = Polynomial.discriminant f := by
+lemma root_product_f :
+    2 ^ (2 * (f.natDegree - 1)) * (0.5 + 1 : ℚ)^2 * 2^2 * (1 - 0.5)^2 =
+      Polynomial.discriminant f := by
   rw [discriminant_f]
   decide +kernel
