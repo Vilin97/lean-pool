@@ -30,11 +30,13 @@ open Finset
 
 /-I think that the most important subpart of this corollary is to show that the volume/area
 of the triangles must add up to one. Measure theory tells us that the area of a disjoint union is
-the sum of the areas. However, in order to apply this, we first need to that both that the `true' area
+the sum of the areas. However, in order to apply this, we first need to that both that the `true'
+area
 of a triangle corresponds to the version of area in Monsky's theorem. Secondly, we need that the
 sets we work with are measurable.
 
-To show that the true area is indeed the determinant area, we start by proving that the open hull of the
+To show that the true area is indeed the determinant area, we start by proving that the open hull of
+the
  `unit triangle' has volume 1/2, where this triangle is given by
 ((0,0),(1,0)(0,1)). From this we calculate the volumes of the other triangles, using the fact that
 the volume of an object is invariant under translation and scale with the determinant of a linear
@@ -43,7 +45,8 @@ transformation.
 For the measurability we do something similar: we show that the unit triangle is measurable, then we
 show that any nondegenerate triangle is a preimage of a measurable function of the open hull of
 the unit triangle. For degenerate triangles, we use that they have measure zero, and are thus
-null-measurable, which is a weaker statement but sufficient for our result (They are actually measurable
+null-measurable, which is a weaker statement but sufficient for our result (They are actually
+measurable
 but this is probably quite annoying to show)-/
 
 open MeasureTheory
@@ -76,8 +79,14 @@ lemma unit_triangle_def : unit_triangle = fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 
 def lower : ℝ → ℝ := fun _ ↦ 0
 def upper : ℝ → ℝ := fun x ↦ 1 - x
 
-theorem unit_is_unit_in_prod : id_map '' (open_hull unit_triangle) = regionBetween lower upper (Set.Ioc 0 1) := by
-  ext x; constructor <;> unfold regionBetween open_hull open_simplex lower upper unit_triangle <;> intro hx <;> simp only [id_map_apply, Fin.isValue, Set.mem_image, Set.mem_setOf_eq, exists_exists_and_eq_and, WithLp.ofLp_sum, WithLp.ofLp_smul, sum_apply, Pi.smul_apply, smul_eq_mul, Set.mem_Ioc, Set.mem_Ioo] at *
+theorem unit_is_unit_in_prod
+    : id_map '' (open_hull unit_triangle) = regionBetween lower upper (Set.Ioc 0 1) := by
+  ext x
+  constructor <;>
+    unfold regionBetween open_hull open_simplex lower upper unit_triangle <;> intro hx <;>
+    simp only [id_map_apply, Fin.isValue, Set.mem_image, Set.mem_setOf_eq,
+      exists_exists_and_eq_and, WithLp.ofLp_sum, WithLp.ofLp_smul, sum_apply, Pi.smul_apply,
+      smul_eq_mul, Set.mem_Ioc, Set.mem_Ioo] at *
   · rcases hx with ⟨a, ⟨ha, ha''⟩, ha'⟩
     rw [Fin.sum_univ_three] at ha'' ha'
     rw [←ha']
@@ -95,13 +104,15 @@ theorem unit_is_unit_in_prod : id_map '' (open_hull unit_triangle) = regionBetwe
     · simp only [Fin.sum_univ_three, v]
       simp
 
-theorem unit_in_prod_is_unit : id_map⁻¹' (regionBetween lower upper (Set.Ioc 0 1)) = open_hull unit_triangle
+theorem unit_in_prod_is_unit
+    : id_map⁻¹' (regionBetween lower upper (Set.Ioc 0 1)) = open_hull unit_triangle
   := by
     apply (Set.preimage_eq_iff_eq_image ?hf).mpr ?_
     · exact MeasurableEquiv.bijective id_mapEquiv
     · rw [unit_is_unit_in_prod]
 
---Then we have the statement that the open hull of the unit triangle has the right area, plus we add the statement that it is measurable
+-- Then we have the statement that the open hull of the unit triangle has the right area, plus we
+-- add the statement that it is measurable
 theorem volume_open_unit_triangle : (MeasureTheory.volume (open_hull unit_triangle)) = 1/2 := by
   have xyz : ∀ x ∈ Set.Ioc 0 1, lower x ≤ upper x := by
     intro x
@@ -113,10 +124,13 @@ theorem volume_open_unit_triangle : (MeasureTheory.volume (open_hull unit_triang
   suffices  ∫ (x : ℝ) in (0 : ℝ)..1, upper x = 1/2 by
     calc
       MeasureTheory.volume (open_hull unit_triangle)
-          = MeasureTheory.volume (regionBetween lower upper (Set.Ioc 0 1 : Set ℝ))  := by rw [map_pres (open_hull unit_triangle), unit_is_unit_in_prod]
-        _ = ENNReal.ofReal (∫ (x : ℝ) in (Set.Ioc 0 1), upper x - lower x)                             := volume_regionBetween_eq_integral integ integ' measurableSet_Ioc xyz
-        _ = ENNReal.ofReal (∫ (x : ℝ) in (0 : ℝ)..1, upper x)                                          := by simp [lower, sub_zero, intervalIntegral.integral_of_le]
-        _ = 1/2                                                                                       := by rw [this, ENNReal.ofReal_div_of_pos] <;> norm_num
+          = MeasureTheory.volume (regionBetween lower upper (Set.Ioc 0 1 : Set ℝ)) := by
+            rw [map_pres (open_hull unit_triangle), unit_is_unit_in_prod]
+        _ = ENNReal.ofReal (∫ (x : ℝ) in (Set.Ioc 0 1), upper x - lower x) :=
+            volume_regionBetween_eq_integral integ integ' measurableSet_Ioc xyz
+        _ = ENNReal.ofReal (∫ (x : ℝ) in (0 : ℝ)..1, upper x) := by
+            simp [lower, sub_zero, intervalIntegral.integral_of_le]
+        _ = 1/2 := by rw [this, ENNReal.ofReal_div_of_pos] <;> norm_num
   unfold upper
   rw [intervalIntegral.integral_sub] <;> simp
   norm_num
@@ -132,24 +146,32 @@ theorem measurable_unit_triangle : MeasurableSet (open_hull unit_triangle) := by
   refine measurableSet_regionBetween (by unfold lower; simp) ?_ measurableSet_Ioc
   exact Measurable.sub measurable_const (fun ⦃t⦄ a ↦ a)
 
--- Now that we have this, we want to show that the areas can be nicely transformed, for which we use tthis theorem
-theorem area_lin_map (L : ℝ² →ₗ[ℝ] ℝ²) (A : Set ℝ²) : MeasureTheory.volume (Set.image L A) = (ENNReal.ofReal (abs ( LinearMap.det L ))) * (MeasureTheory.volume (A)) := by
+-- Now that we have this, we want to show that the areas can be nicely transformed, for which we use
+-- tthis theorem
+theorem area_lin_map (L : ℝ² →ₗ[ℝ] ℝ²) (A : Set ℝ²) : MeasureTheory.volume (Set.image L A)
+    = (ENNReal.ofReal (abs ( LinearMap.det L ))) * (MeasureTheory.volume (A)) := by
   exact MeasureTheory.Measure.addHaar_image_linearMap MeasureTheory.volume L A
 
---We have something similar for translations, but we first have to give a definition of a translation :)
+-- We have something similar for translations, but we first have to give a definition of a
+-- translation :)
 def translation (a : ℝ²) : (ℝ² → ℝ²) := fun x ↦ x + a
 
-theorem area_translation (a : ℝ²) (A : Set ℝ²) :  MeasureTheory.volume (Set.image (translation a) A) = MeasureTheory.volume (A) :=   by
+theorem area_translation (a : ℝ²) (A : Set ℝ²)
+    :  MeasureTheory.volume (Set.image (translation a) A) = MeasureTheory.volume (A) :=   by
   unfold translation
   simp
 
--- If we want to use these two theorems we need the proof that a generic triangle is given by a linear transform and the translation. For this we show that a linear transformation commutes with the open hull operation, in which we use the following lemma
-lemma lincom_commutes (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (a : Fin n → ℝ) (f : Fin n → ℝ²) : ∑ i : Fin n, a i • L (f i)  =L (∑ i : Fin n, (a i) • (f i)) := by
+-- If we want to use these two theorems we need the proof that a generic triangle is given by a
+-- linear transform and the translation. For this we show that a linear transformation commutes with
+-- the open hull operation, in which we use the following lemma
+lemma lincom_commutes (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (a : Fin n → ℝ) (f : Fin n → ℝ²)
+    : ∑ i : Fin n, a i • L (f i)  =L (∑ i : Fin n, (a i) • (f i)) := by
   rw[  map_sum L (fun i ↦  a i • f i) univ]
   apply Fintype.sum_congr
   exact fun i ↦ Eq.symm (LinearMap.CompatibleSMul.map_smul L (a i) (f i))
 
-theorem open_hull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n → ℝ²)) : open_hull (L ∘ f ) = Set.image L (open_hull f) := by
+theorem open_hull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n → ℝ²))
+    : open_hull (L ∘ f ) = Set.image L (open_hull f) := by
   unfold open_hull
   rw[ ← Set.image_comp] -- for some reason repeat rw does not work here
   ext x
@@ -170,7 +192,8 @@ theorem open_hull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n 
       rw[ h3, lincom_commutes L a f, h2]
 
 --Now also for the closed version, whose proof is almost identical
-theorem closed_hull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n → ℝ²)) : closed_hull (L ∘ f ) = Set.image L (closed_hull f) := by
+theorem closed_hull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n → ℝ²))
+    : closed_hull (L ∘ f ) = Set.image L (closed_hull f) := by
   unfold closed_hull
   rw[ ← Set.image_comp] -- for some reason repeat rw does not work here
   ext x
@@ -191,7 +214,8 @@ theorem closed_hull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin 
       rw[ h3, lincom_commutes L a f, h2]
 
 --Again we have a similar lemma
-lemma aux_for_translation {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²} (h1 : a ∈ open_simplex n) :   ∑ i : Fin n, a i • (f i + b) =  ∑ i : Fin n, a i • f i + b := by
+lemma aux_for_translation {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²}
+    (h1 : a ∈ open_simplex n) : ∑ i : Fin n, a i • (f i + b) = ∑ i : Fin n, a i • f i + b := by
   rcases h1 with ⟨_, h3⟩
   have h4: b = ∑ i : Fin n, a i • b := by
     rw[← sum_smul, h3, one_smul]
@@ -201,7 +225,8 @@ lemma aux_for_translation {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b
   exact fun i ↦ DistribSMul.smul_add (a i) (f i) b
 
 --Most of the proof of open_hull_lin_trans now gets copied
-theorem translation_commutes {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²) : open_hull ( (translation b) ∘ f) = Set.image (translation b) (open_hull f) := by
+theorem translation_commutes {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²)
+    : open_hull ( (translation b) ∘ f) = Set.image (translation b) (open_hull f) := by
   have htrans : translation b = fun x ↦ x + b := by rfl
   unfold open_hull
   rw[ ← Set.image_comp]
@@ -216,7 +241,9 @@ theorem translation_commutes {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²) : ope
     exact ⟨ a, h1, by dsimp ; rwa[ aux_for_translation h1]⟩
 
 -- And the version for the closed hull, that needs an adapted different lemma
-theorem aux_for_translation_closed {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²} (h1 : a ∈ closed_simplex n) :   ∑ i : Fin n, a i • (f i + b) =  ∑ i : Fin n, a i • f i + b := by
+theorem aux_for_translation_closed {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²}
+    (h1 : a ∈ closed_simplex n) :
+    ∑ i : Fin n, a i • (f i + b) = ∑ i : Fin n, a i • f i + b := by
   rcases h1 with ⟨_, h3⟩
   have h4: b = ∑ i : Fin n, a i • b := by
     rw[← sum_smul, h3, one_smul]
@@ -225,7 +252,8 @@ theorem aux_for_translation_closed {n : ℕ} {f : Fin n → ℝ²} {a : Fin n �
   apply Fintype.sum_congr
   exact fun i ↦ DistribSMul.smul_add (a i) (f i) b
 
-theorem translation_commutes_closed {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²) : closed_hull ( (translation b) ∘ f) = Set.image (translation b) (closed_hull f) := by
+theorem translation_commutes_closed {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²)
+    : closed_hull ( (translation b) ∘ f) = Set.image (translation b) (closed_hull f) := by
   have htrans : translation b = fun x ↦ x + b := by rfl
   unfold closed_hull
   rw[← Set.image_comp]
@@ -239,10 +267,12 @@ theorem translation_commutes_closed {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²
     dsimp at h2
     exact ⟨ a, h1, by dsimp ; rwa[ aux_for_translation_closed h1]⟩
 
--- Now we explicitly give the translation and linear map that so that the unit triangle gets mapped unto the triangle
+-- Now we explicitly give the translation and linear map that so that the unit triangle gets mapped
+-- unto the triangle
 --First, we make explicit that our basis is the standard basis
 noncomputable def our_basis : Module.Basis (Fin 2) ℝ ℝ² :=  PiLp.basisFun 2 ℝ (Fin 2)
-noncomputable def our_basis_ortho : OrthonormalBasis (Fin 2) ℝ ℝ² :=   EuclideanSpace.basisFun (Fin 2) ℝ
+noncomputable def our_basis_ortho
+    : OrthonormalBasis (Fin 2) ℝ ℝ² :=   EuclideanSpace.basisFun (Fin 2) ℝ
 
 /-- The first standard orthonormal basis vector of the plane is `(1, 0)`. -/
 theorem our_basis_ortho_zero : (our_basis_ortho 0 : ℝ²) = !₂[1, 0] := by
@@ -257,7 +287,8 @@ theorem our_basis_ortho_one : (our_basis_ortho 1 : ℝ²) = !₂[0, 1] := by
   ext j; fin_cases j <;> simp
 
 --This map tells us how the basis elements should be mapped
-noncomputable def basis_transform (T : Triangle) : (Fin 2 → ℝ²) := (fun | 0 => (T 1 - T 0) | 1 => (T 2 -T 0))
+noncomputable def basis_transform (T : Triangle)
+    : (Fin 2 → ℝ²) := (fun | 0 => (T 1 - T 0) | 1 => (T 2 -T 0))
 
 --And then Lean knows how to make a linear map from this
 noncomputable def linear_transform (T : Triangle) := our_basis.constr ℝ (basis_transform T)
@@ -267,12 +298,18 @@ def triangle_translation (T : Triangle) := translation (T 0)
 
 -- And then some API which I am actually not sure is required
 theorem our_basis_def : our_basis = PiLp.basisFun 2 ℝ (Fin 2) := by rfl
-theorem basis_transform_def (T : Triangle) : basis_transform T =  (fun | 0 => (T 1 - T 0) | 1 => (T 2 -T 0)) := by rfl
-theorem linear_transform_def (T : Triangle) : linear_transform T =  our_basis.constr ℝ (basis_transform T) := by rfl
-theorem triangle_translation_def (T : Triangle) : triangle_translation T =  translation (T 0) := by rfl
+theorem basis_transform_def (T : Triangle)
+    : basis_transform T =  (fun | 0 => (T 1 - T 0) | 1 => (T 2 -T 0)) := by rfl
+theorem linear_transform_def (T : Triangle)
+    : linear_transform T =  our_basis.constr ℝ (basis_transform T) := by rfl
+theorem triangle_translation_def (T : Triangle)
+    : triangle_translation T =  translation (T 0) := by rfl
 
---This theorem tells us that these maps indeed do the trick, for which we use translation_commutes and open_hull_lin_trans to show that it is sufficient to show that the points of the unit triangle gets mapped to the triangle (instead of the entirety of the open hull)
-theorem unit_triangle_to_triangle (T : Triangle) : Set.image (triangle_translation T) (Set.image (linear_transform T) (open_hull unit_triangle)) = open_hull T:= by
+-- This theorem tells us that these maps indeed do the trick, for which we use translation_commutes
+-- and open_hull_lin_trans to show that it is sufficient to show that the points of the unit
+-- triangle gets mapped to the triangle (instead of the entirety of the open hull)
+theorem unit_triangle_to_triangle (T : Triangle) : Set.image (triangle_translation T)
+    (Set.image (linear_transform T) (open_hull unit_triangle)) = open_hull T:= by
   have h1 : triangle_translation T = translation (T 0) := by rfl
   let f : (Fin 3 → ℝ²) := fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1)
   have hunit_triangle : unit_triangle = f :=by rfl
@@ -283,17 +320,20 @@ theorem unit_triangle_to_triangle (T : Triangle) : Set.image (triangle_translati
   --rw[← open_hull_lin_trans (linear_transform T) f] Why doesnt this work!??
   rw[← translation_commutes]
   apply congrArg
-  --This part of the proof says that the linear transformation and translation of the unit triangle give the triangle we want
+  -- This part of the proof says that the linear transformation and translation of the unit triangle
+  -- give the triangle we want
   ext i j
   fin_cases i <;> fin_cases j <;>  simp[translation, linear_transform, basis_transform,f, our_basis]
 
---We are allmost ready to show that the volume of triangles scale the way we want them to, but we just need a silly lemma first
+-- We are allmost ready to show that the volume of triangles scale the way we want them to, but we
+-- just need a silly lemma first
 lemma half_is_half : (2⁻¹ : ENNReal) = ENNReal.ofReal (2⁻¹ : ℝ ) := by
   have h1: (2:ℝ)  > 0 := by norm_num
   rw[ENNReal.ofReal_inv_of_pos h1]
   norm_num
 
-theorem volume_open_triangle' (T : Triangle) : (MeasureTheory.volume (open_hull T)) =  ENNReal.ofReal (|det (T : Triangle)|/2) := by
+theorem volume_open_triangle' (T : Triangle)
+    : (MeasureTheory.volume (open_hull T)) =  ENNReal.ofReal (|det (T : Triangle)|/2) := by
   rw[← unit_triangle_to_triangle T ,triangle_translation_def]
   rw[ area_translation, area_lin_map, volume_open_unit_triangle]
   rw[← Matrix.toLin_toMatrix our_basis our_basis  ( linear_transform T ) ]
@@ -302,22 +342,27 @@ theorem volume_open_triangle' (T : Triangle) : (MeasureTheory.volume (open_hull 
   rw[linear_transform_def, basis_transform_def, our_basis_def ]
   unfold det
   repeat rw[LinearMap.toMatrix_apply]
-  simp only [Fin.isValue, PiLp.basisFun_apply, Module.Basis.constr_apply_fintype, PiLp.basisFun_equivFun,
-    WithLp.linearEquiv_apply, AddEquiv.toEquiv_eq_coe, Equiv.toFun_as_coe, EquivLike.coe_coe, WithLp.addEquiv_apply,
-    PiLp.single_apply, ite_smul, one_smul, zero_smul, sum_ite_eq', mem_univ, ↓reduceIte, map_sub, Finsupp.coe_sub,
-    Pi.sub_apply, PiLp.basisFun_repr, one_div]
+  simp only [Fin.isValue, PiLp.basisFun_apply, Module.Basis.constr_apply_fintype,
+    PiLp.basisFun_equivFun, WithLp.linearEquiv_apply, AddEquiv.toEquiv_eq_coe, Equiv.toFun_as_coe,
+    EquivLike.coe_coe, WithLp.addEquiv_apply, PiLp.single_apply, ite_smul, one_smul, zero_smul,
+    sum_ite_eq', mem_univ, ↓reduceIte, map_sub, Finsupp.coe_sub, Pi.sub_apply, PiLp.basisFun_repr,
+    one_div]
   rw[half_is_half]
   have h2 : ((0:ℝ) ≤ 2⁻¹ ) := by
     norm_num
   rw[← ENNReal.ofReal_mul' h2]
   ring_nf
 
---One version of this statement in Real numbers, the other in ENNReal, in terms of proof efficiency these probably should not be completely seperate proofs
-theorem volume_open_triangle (T : Triangle) : (MeasureTheory.volume (open_hull T)).toReal =  (|det (T : Triangle)|/2):= by
+-- One version of this statement in Real numbers, the other in ENNReal, in terms of proof efficiency
+-- these probably should not be completely seperate proofs
+theorem volume_open_triangle (T : Triangle)
+    : (MeasureTheory.volume (open_hull T)).toReal =  (|det (T : Triangle)|/2):= by
   rw [volume_open_triangle', ENNReal.toReal_ofReal_eq_iff]
   exact div_nonneg (abs_nonneg _) (by norm_num)
 
---Now that we know the volume of open triangles, we also want to know the area of segments. For this we have a similar strategy. We first take a unit segment, and show it is a subset of the y axis which as hhas measure zero
+-- Now that we know the volume of open triangles, we also want to know the area of segments. For
+-- this we have a similar strategy. We first take a unit segment, and show it is a subset of the y
+-- axis which as hhas measure zero
 noncomputable def unit_segment : Segment := fun | 0 => (v 0 0) | 1 => (v 1 0)
 noncomputable def y_axis : Submodule ℝ ℝ² := Submodule.span ℝ (Set.range unit_segment )
 
@@ -357,17 +402,22 @@ theorem volume_closed_unit_segment : MeasureTheory.volume (closed_hull unit_segm
   trivial
 
 --Now for segments we also need linear maps and translations
-noncomputable def basis_transform_segment (L : Segment) : (Fin 2 → ℝ²) := (fun | 0 => (L 1 - L 0) | 1 => 0)
-noncomputable def linear_transform_segment (L : Segment) := our_basis.constr ℝ (basis_transform_segment L)
+noncomputable def basis_transform_segment (L : Segment)
+    : (Fin 2 → ℝ²) := (fun | 0 => (L 1 - L 0) | 1 => 0)
+noncomputable def linear_transform_segment (L : Segment) :=
+  our_basis.constr ℝ (basis_transform_segment L)
 def segment_translation (L : Segment) := translation (L 0)
 
 --Some API
-theorem basis_transform_segment_def (L : Segment) : basis_transform_segment L =  (fun | 0 => (L 1 - L 0) | 1 => 0) := by rfl
-theorem linear_transform_segment_def (L : Segment) : linear_transform_segment L =  our_basis.constr ℝ (basis_transform_segment L) := by rfl
+theorem basis_transform_segment_def (L : Segment)
+    : basis_transform_segment L =  (fun | 0 => (L 1 - L 0) | 1 => 0) := by rfl
+theorem linear_transform_segment_def (L : Segment)
+    : linear_transform_segment L =  our_basis.constr ℝ (basis_transform_segment L) := by rfl
 theorem segment_translation_def (L : Segment) : segment_translation L =  translation (L 0) := by rfl
 
 --Proving these transformations are the right ones
-theorem unit_segment_to_segment (L : Segment) : Set.image (segment_translation L) (Set.image (linear_transform_segment L) (closed_hull unit_segment)) = closed_hull L := by
+theorem unit_segment_to_segment (L : Segment) : Set.image (segment_translation L)
+    (Set.image (linear_transform_segment L) (closed_hull unit_segment)) = closed_hull L := by
   have h1 : segment_translation L = translation (L 0) := by rfl
   let f : (Fin 2 → ℝ²) := fun | 0 => (v 0 0) | 1 => (v 1 0)
   have hunit_segment : unit_segment = f :=by rfl
@@ -379,33 +429,44 @@ theorem unit_segment_to_segment (L : Segment) : Set.image (segment_translation L
   --rw[← open_hull_lin_trans (linear_transform T) f] Why doesnt this work!??
   rw[← translation_commutes_closed]
   apply congrArg
-  --This part of the proof says that the linear transformation and translation of the unit triangle give the triangle we want
+  -- This part of the proof says that the linear transformation and translation of the unit triangle
+  -- give the triangle we want
   ext i j
-  fin_cases i <;> fin_cases j <;> simp[translation, linear_transform_segment, basis_transform_segment,f, our_basis]
+  fin_cases i <;> fin_cases j <;>
+    simp[translation, linear_transform_segment, basis_transform_segment,f, our_basis]
 
 --Proving they all have zero area
 theorem volume_closed_segment (L : Segment) : (MeasureTheory.volume (closed_hull L)) = 0 := by
   rw[←  unit_segment_to_segment L ,segment_translation_def]
   rw[ area_translation, area_lin_map, volume_closed_unit_segment]
   rw[← Matrix.toLin_toMatrix our_basis our_basis  ( linear_transform_segment L ) ]
-  rw[LinearMap.det_toLin our_basis ((LinearMap.toMatrix our_basis our_basis) (linear_transform_segment L))]
+  rw[LinearMap.det_toLin our_basis
+    ((LinearMap.toMatrix our_basis our_basis) (linear_transform_segment L))]
   rw[Matrix.det_fin_two]
   rw[linear_transform_segment_def, basis_transform_segment_def, our_basis_def ]
   repeat rw[LinearMap.toMatrix_apply]
   simp
 
 
---We also in the end need that the unit square has volume 1. The unit square is equal to the square spanned by the basis vectors, which Lean knows has volume 1. This is proved here, although the prove is not finished
+-- We also in the end need that the unit square has volume 1. The unit square is equal to the square
+-- spanned by the basis vectors, which Lean knows has volume 1. This is proved here, although the
+-- prove is not finished
 theorem box_equal_to_pare : parallelepiped our_basis_ortho = closed_hull unit_square := by
   ext x
   constructor
   · rw[mem_parallelepiped_iff ,  closed_hull]
     rintro ⟨ t, ⟨ ⟨ h0,h1⟩ , h2⟩⟩
-    use (fun | 0 => 1 + 0 ⊔ (t 0 + t 1 -1) - t 0 - t 1 | 1  => t 0 - (0 ⊔ (t 0 + t 1 -1)) | 2 =>  0 ⊔ (t 0 + t 1 -1) | 3 => t 1 - ( 0 ⊔ (t 0 + t 1 -1)))
+    use (fun
+      | 0 => 1 + 0 ⊔ (t 0 + t 1 -1) - t 0 - t 1
+      | 1 => t 0 - (0 ⊔ (t 0 + t 1 -1))
+      | 2 => 0 ⊔ (t 0 + t 1 -1)
+      | 3 => t 1 - ( 0 ⊔ (t 0 + t 1 -1)))
     constructor
     · constructor
       · intro i
-        fin_cases i <;> simp only [Fin.isValue, sub_nonneg, sup_le_iff, tsub_le_iff_right, add_le_add_iff_left, le_sup_left]
+        fin_cases i <;>
+          simp only [Fin.isValue, sub_nonneg, sup_le_iff, tsub_le_iff_right,
+            add_le_add_iff_left, le_sup_left]
         · rw [le_sub_iff_add_le, add_sup 0]
           ring_nf
           exact le_sup_right
@@ -432,7 +493,9 @@ theorem box_equal_to_pare : parallelepiped our_basis_ortho = closed_hull unit_sq
         fin_cases i <;> simp <;> linarith [h11 1, h11 2, h11 3]
       · intro i
         rw [Fin.sum_univ_four] at h12
-        fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, Pi.one_apply, Fin.mk_one] <;> apply le_trans _ (le_of_eq h12)
+        fin_cases i <;>
+          simp only [Fin.zero_eta, Fin.isValue, Pi.one_apply, Fin.mk_one] <;>
+            apply le_trans _ (le_of_eq h12)
         · calc
             a 1 + a 2 ≤ a 0 + (a 1 + a 2)       := by exact le_add_of_nonneg_left (h11 0)
                     _ ≤ a 0 + (a 1 + a 2) + a 3 := by exact le_add_of_nonneg_right (h11 3)
@@ -458,10 +521,13 @@ theorem volume_box : (MeasureTheory.volume (closed_hull unit_square)).toReal = 1
   rw[OrthonormalBasis.volume_parallelepiped our_basis_ortho]
   rfl
 
---Now that we have calculated the volume, we move on to showing all this stuff is (null)measurable. For this we distinguish between the case where the triangles are degenerate or not
+-- Now that we have calculated the volume, we move on to showing all this stuff is (null)measurable.
+-- For this we distinguish between the case where the triangles are degenerate or not
 
---this is not very clean, also because this theorem is also proved earlier when translating the triangles
-theorem det_of_triangle_transform (T : Triangle) : LinearMap.det (linear_transform T) = det (T : Triangle):= by
+-- this is not very clean, also because this theorem is also proved earlier when translating the
+-- triangles
+theorem det_of_triangle_transform (T : Triangle)
+    : LinearMap.det (linear_transform T) = det (T : Triangle):= by
   rw[← Matrix.toLin_toMatrix our_basis our_basis  ( linear_transform T ) ]
   rw[LinearMap.det_toLin our_basis ((LinearMap.toMatrix our_basis our_basis) (linear_transform T))]
   rw[Matrix.det_fin_two]
@@ -472,23 +538,29 @@ theorem det_of_triangle_transform (T : Triangle) : LinearMap.det (linear_transfo
   ring_nf
 
 --The proof that the linear map corresponding to a nondegenerate triangle has nonzero determinant
-theorem nondegen_triangle_lin_inv (T : Triangle) (h : det T ≠ 0) : LinearMap.det (linear_transform T) ≠ 0 := by
+theorem nondegen_triangle_lin_inv (T : Triangle) (h : det T ≠ 0)
+    : LinearMap.det (linear_transform T) ≠ 0 := by
   intro h2
   rw[← det_of_triangle_transform] at h
   rw[h2] at h
   simp at h
 
 -- This is the same linear transformation but now in the type of invertible map
-noncomputable def bij_linear_transform (T : Triangle) (h : det T ≠ 0) := (LinearMap.equivOfDetNeZero (linear_transform T) (nondegen_triangle_lin_inv T h))
+noncomputable def bij_linear_transform (T : Triangle) (h : det T ≠ 0) :=
+  (LinearMap.equivOfDetNeZero (linear_transform T) (nondegen_triangle_lin_inv T h))
 
---These statements are basically a consequence of that the linear map, but are used in the later proof
-lemma linear_transform_bij (T : Triangle) (h : det T ≠ 0) : Function.Bijective (linear_transform T ) := by
+-- These statements are basically a consequence of that the linear map, but are used in the later
+-- proof
+lemma linear_transform_bij (T : Triangle) (h : det T ≠ 0)
+    : Function.Bijective (linear_transform T ) := by
   exact LinearEquiv.bijective (bij_linear_transform ( T : Triangle) (h : det T ≠ 0))
 
-lemma linear_transform_bij_left_inf (T : Triangle) (h : det T ≠ 0) : Function.LeftInverse (linear_transform T) ((bij_linear_transform T h).symm) := by
+lemma linear_transform_bij_left_inf (T : Triangle) (h : det T ≠ 0)
+    : Function.LeftInverse (linear_transform T) ((bij_linear_transform T h).symm) := by
   exact ((bij_linear_transform T h).symm).left_inv
 
---This is the inverse of the original triangle translation map, and the proof that are necessary to work with it
+-- This is the inverse of the original triangle translation map, and the proof that are necessary to
+-- work with it
 def inv_triangle_translation (T : Triangle) := translation ( - T 0)
 
 lemma translation_bijective (a : ℝ²) : Function.Bijective (translation a) := by
@@ -500,26 +572,34 @@ lemma translation_bijective (a : ℝ²) : Function.Bijective (translation a) := 
     use x - a
     norm_num
 
-lemma triangle_translation_bijective (T : Triangle) : Function.Bijective (triangle_translation T) := by
+lemma triangle_translation_bijective (T : Triangle)
+    : Function.Bijective (triangle_translation T) := by
   unfold triangle_translation
   exact translation_bijective (T 0)
 
-lemma inv_translation_left (T : Triangle) :  Function.LeftInverse (triangle_translation T) (inv_triangle_translation T) := by
+lemma inv_translation_left (T : Triangle)
+    :  Function.LeftInverse (triangle_translation T) (inv_triangle_translation T) := by
   intro x
   rw[inv_triangle_translation, triangle_translation, translation,translation]
   norm_num
 
 --This is unit_triangle_to_triangle in its pre-image form
-theorem pre_unit_triangle_to_triangle (T : Triangle) (h : det T ≠ 0) :  (linear_transform T) ⁻¹' ( (triangle_translation T)⁻¹'(open_hull T)) = open_hull unit_triangle:= by
+theorem pre_unit_triangle_to_triangle (T : Triangle) (h : det T ≠ 0) :
+    (linear_transform T) ⁻¹' ( (triangle_translation T)⁻¹'(open_hull T)) = open_hull unit_triangle
+    := by
   rw[Set.preimage_eq_iff_eq_image  (linear_transform_bij  T  h )]
   rw[Set.preimage_eq_iff_eq_image (triangle_translation_bijective T)]
   symm
   exact unit_triangle_to_triangle (T : Triangle)
 
---We can use then use the previous to show that the open hull of the triangle is a preimage of the open unit triangle
-theorem pre_triangle_to_unit_triangle (T : Triangle) (h : det T ≠ 0) :(inv_triangle_translation T)⁻¹'  ((bij_linear_transform T h).symm⁻¹' (open_hull unit_triangle)) = open_hull T := by
+-- We can use then use the previous to show that the open hull of the triangle is a preimage of the
+-- open unit triangle
+theorem pre_triangle_to_unit_triangle (T : Triangle) (h : det T ≠ 0) :
+    (inv_triangle_translation T)⁻¹'  ((bij_linear_transform T h).symm⁻¹' (open_hull unit_triangle))
+    = open_hull T := by
   rw[← pre_unit_triangle_to_triangle T h]
-  rw[Function.LeftInverse.preimage_preimage (linear_transform_bij_left_inf T h) (triangle_translation T ⁻¹' open_hull T)]
+  rw[Function.LeftInverse.preimage_preimage (linear_transform_bij_left_inf T h)
+    (triangle_translation T ⁻¹' open_hull T)]
   rw[Function.LeftInverse.preimage_preimage (inv_translation_left T) ]
 
 --In order to actually use this, we need that all these maps are measurable
@@ -539,7 +619,8 @@ lemma meas_inv_triangle_translation (T : Triangle) : Measurable (inv_triangle_tr
 --Then we can show that nondegenerate triangles are measurable
 theorem nondegen_triangle_meas (T : Triangle) (h : det T ≠ 0) : MeasurableSet (open_hull T) := by
   rw[← pre_triangle_to_unit_triangle T h]
-  have h1 : MeasurableSet ((bij_linear_transform T h).symm ⁻¹' open_hull unit_triangle) := measurableSet_preimage (meas_lin_map (bij_linear_transform T h).symm) measurable_unit_triangle
+  have h1 : MeasurableSet ((bij_linear_transform T h).symm ⁻¹' open_hull unit_triangle) :=
+    measurableSet_preimage (meas_lin_map (bij_linear_transform T h).symm) measurable_unit_triangle
   exact measurableSet_preimage (meas_inv_triangle_translation T) h1
 
 --As any set of measure zero is null measurable, we have then that all triangles are null measurable
@@ -558,11 +639,15 @@ theorem null_meas_triangle (T : Triangle) : MeasureTheory.NullMeasurableSet (ope
 --Now that we have also have measurability we can start the real work
 --The edge points of the triangle have already been defined with Tside
 
---We show that the closed hull of these edges together with an open triangle makes a closed triangle, first the definition
-def all_edges_triangle_hull (T : Triangle) := closed_hull (Tside T 0) ∪ closed_hull (Tside T 1) ∪ closed_hull (Tside T 2)
+-- We show that the closed hull of these edges together with an open triangle makes a closed
+-- triangle, first the definition
+def all_edges_triangle_hull (T : Triangle) :=
+  closed_hull (Tside T 0) ∪ closed_hull (Tside T 1) ∪ closed_hull (Tside T 2)
 
---then the proof (this proof is probably the ugliest I have written, with lots of ctr copy ctr paste, but it is also the last sorry I had to fill in so I don't care :))
-theorem closed_triangle_is_union (T : Triangle) : closed_hull T = open_hull T ∪ all_edges_triangle_hull T := by
+-- then the proof (this proof is probably the ugliest I have written, with lots of ctr copy ctr
+-- paste, but it is also the last sorry I had to fill in so I don't care :))
+theorem closed_triangle_is_union (T : Triangle)
+    : closed_hull T = open_hull T ∪ all_edges_triangle_hull T := by
   ext x
   constructor
   · rintro ⟨ a ,⟨ h1, h2⟩  , h3⟩
@@ -655,7 +740,8 @@ theorem closed_triangle_is_union (T : Triangle) : closed_hull T = open_hull T �
       · exact closed_side_sub hx5
 
 --This is useful lemma
-lemma volume_zero (A B : Set ℝ²) (h : MeasureTheory.volume B = 0) : MeasureTheory.volume (A ∪ B) = MeasureTheory.volume A := by
+lemma volume_zero (A B : Set ℝ²) (h : MeasureTheory.volume B = 0)
+    : MeasureTheory.volume (A ∪ B) = MeasureTheory.volume A := by
   symm
   apply MeasureTheory.measure_eq_measure_of_null_diff
   · exact Set.subset_union_left
@@ -664,14 +750,17 @@ lemma volume_zero (A B : Set ℝ²) (h : MeasureTheory.volume B = 0) : MeasureTh
     exact MeasureTheory.measure_mono_null h1 h
 
 --This shows that the boundary (but not Pjotrs boundary) of a triangle has measure zero
-theorem all_edges_triangle_hull_area (T : Triangle) : MeasureTheory.volume (all_edges_triangle_hull T) = 0:= by
+theorem all_edges_triangle_hull_area (T : Triangle)
+    : MeasureTheory.volume (all_edges_triangle_hull T) = 0:= by
   unfold all_edges_triangle_hull
   rw [volume_zero _ _ (volume_closed_segment (Tside T 2)),
     volume_zero _ _ (volume_closed_segment (Tside T 1))]
   exact volume_closed_segment (Tside T 0)
 
---This shows that all boundaries combined also have measure zero. This proof is a lot uglier then I would like it to be, it might be due to a lack of understanding of sums and unions....
-theorem union_of_edges_zero_vol (S : Finset Triangle) : MeasureTheory.volume ( ⋃ (T ∈ S) , all_edges_triangle_hull T ) = 0 := by
+-- This shows that all boundaries combined also have measure zero. This proof is a lot uglier then I
+-- would like it to be, it might be due to a lack of understanding of sums and unions....
+theorem union_of_edges_zero_vol (S : Finset Triangle)
+    : MeasureTheory.volume ( ⋃ (T ∈ S) , all_edges_triangle_hull T ) = 0 := by
   let f := Set.restrict S all_edges_triangle_hull
   have h : ∀ (i : S), MeasureTheory.NullMeasurableSet (f i)
   · intro T
@@ -679,7 +768,8 @@ theorem union_of_edges_zero_vol (S : Finset Triangle) : MeasureTheory.volume ( �
   have hd : Pairwise (Function.onFun (MeasureTheory.AEDisjoint MeasureTheory.volume) f)
   · intro i j _
     rw[Function.onFun_apply]
-    have h2 : S.restrict all_edges_triangle_hull i ∩ S.restrict all_edges_triangle_hull j ⊆ S.restrict all_edges_triangle_hull i := Set.inter_subset_left
+    have h2 : S.restrict all_edges_triangle_hull i ∩ S.restrict all_edges_triangle_hull j
+        ⊆ S.restrict all_edges_triangle_hull i := Set.inter_subset_left
     apply MeasureTheory.measure_mono_null h2 (all_edges_triangle_hull_area i)
   have h4 :  ⋃ T ∈ S, all_edges_triangle_hull T
       = (⋃ i, (↑S : Set Triangle).restrict all_edges_triangle_hull i) :=
@@ -693,9 +783,11 @@ theorem union_of_edges_zero_vol (S : Finset Triangle) : MeasureTheory.volume ( �
   rw[h5]
   exact ENNReal.tsum_eq_zero.mpr (congrFun rfl)
 
---This theorem shows that whenever you have a cover by triangles, the measure theoretic area of the triangles add up to the measure theoretic area of what they cover
+-- This theorem shows that whenever you have a cover by triangles, the measure theoretic area of the
+-- triangles add up to the measure theoretic area of what they cover
 --This proof is a bit ugly, but these sums and unions are very annoying to work with in my opinion
-theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle) (hcover : is_disjoint_cover X (↑S : Set Triangle))
+theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle)
+    (hcover : is_disjoint_cover X (↑S : Set Triangle))
     : MeasureTheory.volume X = ∑  (T ∈  S), MeasureTheory.volume (open_hull T) := by
   unfold is_disjoint_cover at hcover
   rw[hcover.1]
@@ -735,9 +827,12 @@ theorem area_equal_sum_cover (X : Set ℝ²) (S : Finset Triangle) (hcover : is_
 
 
 
---This theorem is similar to the above but specifically to the unit square (which has an area of 1) and where the measure theoretic area of the triangles replaced by their area in determinant form
+-- This theorem is similar to the above but specifically to the unit square (which has an area of 1)
+-- and where the measure theoretic area of the triangles replaced by their area in determinant form
 --This proof is even uglier then the previous
-theorem triangle_det_sum_one (S : Finset Triangle) (hcover : is_disjoint_cover (closed_hull unit_square) (↑S : Set Triangle)) :  ∑  (T ∈  S), |det T|/2 = 1 := by
+theorem triangle_det_sum_one (S : Finset Triangle)
+    (hcover : is_disjoint_cover (closed_hull unit_square) (↑S : Set Triangle)) :
+    ∑  (T ∈  S), |det T|/2 = 1 := by
   rw[← volume_box]
   rw[area_equal_sum_cover (closed_hull unit_square) S hcover]
   have h: ∀ T ∈  S, |det T|/2 = (MeasureTheory.volume (open_hull T)).toReal := by
@@ -748,7 +843,8 @@ theorem triangle_det_sum_one (S : Finset Triangle) (hcover : is_disjoint_cover (
   intro a _; rw [volume_open_triangle']; simp
 
 
---This is the statemet we have been working so hard for: whenever we have a cover of triangles of equal area, this area must be 1/|amount of triangles|
+-- This is the statemet we have been working so hard for: whenever we have a cover of triangles of
+-- equal area, this area must be 1/|amount of triangles|
 theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
   (hcover : is_equal_area_cover (closed_hull unit_square) S)
   : ∀ T ∈ S, triangle_area T = 1/ S.card := by
@@ -776,7 +872,8 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
 --(X = ⋃ (T ∈ S), closed_hull T) ∧
 -- (Set.PairwiseDisjoint S open_hull)
 
--- theorem null_measurable_segment (L : Segment): MeasureTheory.NullMeasurableSet (closed_hull L) := by
+-- theorem null_measurable_segment (L : Segment): MeasureTheory.NullMeasurableSet (closed_hull L) :=
+-- by
 --   exact MeasureTheory.NullMeasurableSet.of_null (volume_closed_segment L)
   --MeasureTheory.NullMeasurableSet.of_null
 
@@ -825,14 +922,17 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
 
 
 
---#check MeasureTheory.MeasurePreserving.map_eq (EuclideanSpace.volume_preserving_measurableEquiv (Fin 2))
+-- #check MeasureTheory.MeasurePreserving.map_eq (EuclideanSpace.volume_preserving_measurableEquiv
+-- (Fin 2))
 --#check EuclideanSpace.volume_preserving_measurableEquiv
 --#check Set.Icc point0 point1
 
 
 
--- theorem volume_closed_unit_segment : (MeasureTheory.volume (closed_hull unit_segment)).toReal = 0 := by
---   -- This first part is essentially showing 0 = (MeasureTheory.volume (Set.Icc point0 point1)).toReal
+-- theorem volume_closed_unit_segment : (MeasureTheory.volume (closed_hull unit_segment)).toReal = 0
+-- := by
+-- -- This first part is essentially showing 0 = (MeasureTheory.volume (Set.Icc point0
+-- point1)).toReal
 --   have h0 : ∏ i : (Fin 2), (point1 i - point0 i) = 0
 --   rw[ Fin.prod_univ_two]
 --   unfold point0 point1
@@ -842,14 +942,19 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
 --   intro i
 --   fin_cases i <;> dsimp <;> rw[ point0, point1] ; linarith
 --   rw[ ← Real.volume_Icc_pi_toReal h1]
---   -- Now I try to show (MeasureTheory.volume (closed_hull unit_segment)).toReal = (MeasureTheory.volume (Set.Icc point0 point1)).toReal
+-- -- Now I try to show (MeasureTheory.volume (closed_hull unit_segment)).toReal =
+-- (MeasureTheory.volume (Set.Icc point0 point1)).toReal
 --   -- But the left-hand side Measuretheory.volume is not the same as the right-hand side
---   have h2 : MeasureTheory.Measure.map (⇑(EuclideanSpace.measurableEquiv (Fin 2))) MeasureTheory.volume  (Set.Icc point0 point1) = MeasureTheory.volume (Set.Icc point0 point1)
---   rw[ MeasureTheory.MeasurePreserving.map_eq (EuclideanSpace.volume_preserving_measurableEquiv (Fin 2))]
+-- have h2 : MeasureTheory.Measure.map (⇑(EuclideanSpace.measurableEquiv (Fin 2)))
+-- MeasureTheory.volume  (Set.Icc point0 point1) = MeasureTheory.volume (Set.Icc point0 point1)
+-- rw[ MeasureTheory.MeasurePreserving.map_eq (EuclideanSpace.volume_preserving_measurableEquiv (Fin
+-- 2))]
 --   rw[ ← h2]
---   rw[ closed_unit_segment_is_box] --This is the theorem stating closed_hull unit_segment = Set.Icc point0 point1
+-- rw[ closed_unit_segment_is_box] --This is the theorem stating closed_hull unit_segment = Set.Icc
+-- point0 point1
 --   sorry
---   --rw[ MeasureTheory.MeasurePreserving.map_eq (EuclideanSpace.volume_preserving_measurableEquiv (Fin 2))]
+-- --rw[ MeasureTheory.MeasurePreserving.map_eq (EuclideanSpace.volume_preserving_measurableEquiv
+-- (Fin 2))]
 
 
 -- theorem segment_subset_affine_space (L : Segment) : closed_hull L ⊆ line[ℝ, (L 0), (L 1)] := by
@@ -864,7 +969,8 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
 --     · apply mem_vectorSpan_pair_rev.mpr
 --       use a 1
 --       rfl
---     · dsimp at * -- I thought this could done by some linarith or simp, but it seems I have to do it by hand
+-- · dsimp at * -- I thought this could done by some linarith or simp, but it seems I have to do it
+-- by hand
 --       rw[Fin.sum_univ_two] at h2 h3
 --       have h4 : L 0 = (1: ℝ ) • L 0 := Eq.symm (MulAction.one_smul (L 0))
 --       nth_rewrite 2 [h4]
@@ -873,7 +979,8 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
 --       simp
 --       exact rfl
 --       rw[h5]
---       have h6: a 1 • L 1 + -a 1 • L 0 + (a 0 • L 0 + a 1 • L 0) = a 1 • L 1 + (-a 1 • L 0 + a 0 • L 0 + a 1 • L 0)
+-- have h6: a 1 • L 1 + -a 1 • L 0 + (a 0 • L 0 + a 1 • L 0) = a 1 • L 1 + (-a 1 • L 0 + a 0 • L 0 +
+-- a 1 • L 0)
 --       rw[add_assoc]
 --       nth_rewrite 2 [← add_assoc]
 --       rfl
@@ -887,7 +994,8 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
 --   exact fun a x ↦ congrFun a x
 
 -- #check vadd_left_mem_affineSpan_pair.mp
--- theorem volume_closed_segment (L : Segment) : (MeasureTheory.volume (closed_hull L)).toReal = 0 := by
+-- theorem volume_closed_segment (L : Segment) : (MeasureTheory.volume (closed_hull L)).toReal = 0
+-- := by
 --   apply Ennreal_zero_real_zero
 --   apply MeasureTheory.measure_mono_null (segment_subset_affine_space L )
 --   apply MeasureTheory.Measure.addHaar_affineSubspace
@@ -938,7 +1046,8 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
 
 
 
--- theorem open_unit_square1_is_union : open_unit_square1 = union_of_open_triangles ∪  open_diagonal_line := by
+-- theorem open_unit_square1_is_union : open_unit_square1 = union_of_open_triangles ∪ 
+-- open_diagonal_line := by
 --   have hunit : unit_triangle = fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1) := by rfl
 --   have hdiag : diagonal_line = fun | 0 => (v 1 0) | 1 => (v 0 1) := by rfl
 --   have hflipunit: flip_unit_triangle = fun | 0 => (v 1 1) | 1 => (v 0 1) | 2 => (v 1 0) := by rfl
@@ -1033,7 +1142,8 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
 
 
 
--- theorem open_square_union_of : open_unit_square = union_of_open_triangles ∪  open_diagonal_line := by
+-- theorem open_square_union_of : open_unit_square = union_of_open_triangles ∪  open_diagonal_line
+-- := by
 --   rw[ open_unit_squares_are_same]
 --   exact open_unit_square1_is_union
 
