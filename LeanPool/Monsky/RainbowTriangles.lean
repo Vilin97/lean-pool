@@ -435,7 +435,7 @@ v (det T) ≥ 1 := by
     apply det_perm
   have h2 : det (T ∘ σ b) =
   T x 0 * T y 1 + T x 1 * T z 0 + T y 0 * T z 1 - T y 1 * T z 0 - T x 1 * T y 0 - T x 0 * T z 1 := by
-    simp
+    simp only [Fin.isValue]
     rw [det]
     simp [hb]
     ring_nf
@@ -484,7 +484,7 @@ theorem no_odd_rainbow_triangle
       rw [← obv]
       rw [inv_inv]
     rw [v3]
-    simp
+    simp only [one_div, map_inv₀, inv_inv]
     rw [← v.map_div]
     rw [← v.map_inv]
     rw [← v.map_mul]

@@ -80,12 +80,13 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
       rw[map_mul, aeval_C, algebramap b]
   have two_p_eval : (aeval α) (2 * p) = 1 := by -- (2p)(α)=1
     rw[← two_eq_constant, (constant_in_poly 2 p), p_eval]
-    simp
+    simp only [one_div]
     exact CommGroupWithZero.mul_inv_cancel 2 (Ne.symm (NeZero.ne' 2))
   have one_minus_two_v₀_eq : (aeval α) ((C (1 - 2*v₀)) * (2*p)) = (1 - 2*v₀) := by
     -- multiplying by a constant 1-2v₀ where it is seen as a polynomial of degree 0.
     rw[constant_in_poly (1 - 2*v₀) (2*p), two_p_eval]
-    simp
+    simp only [AddSubgroupClass.coe_sub, OneMemClass.coe_one, Subring.coe_mul, mul_one, sub_right_inj,
+      mul_eq_mul_right_iff, ZeroMemClass.coe_eq_zero]
     left
     rfl
   let p1 := (C (1 - 2*v₀)) * (2*p) + (C (2*v₀)) -- Define polynomial p1 = (1-2v₀)2p+2v₀
@@ -96,7 +97,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
   have this6 : p1.erase m + (monomial m (2*(1 - 2*v₀)*p.coeff m)) = p1 := by
     rw[add_comm]
     nth_rewrite 2 [← monomial_add_erase p1 m]
-    simp
+    simp only [add_left_inj]
     rw[monomial_eq_monomial_iff]
     left
     constructor
@@ -132,7 +133,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     exact h
   have this : α^n * ((aeval α⁻¹) q) = (aeval α) q1 := by
     rw[aeval_eq_sum_range, Finset.mul_sum]
-    simp
+    simp only [inv_pow, Algebra.mul_smul_comm]
     rw[n_eq_degree_q, _root_.map_sum]
     simp
     apply Finset.sum_congr
@@ -161,7 +162,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     -- (1-2v₀)α^n = 2 q'(α) where q'=q1 dropping the x^n term
     rw[← this4]
     ring_nf
-    simp
+    simp only [add_right_inj]
     rw[this2]
     ring
   have coeff_erase_neq_zero : coeff (q1.erase n) 0 = (coeff q) n := by
@@ -222,13 +223,13 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     cases' deg2 with lt eq
     · rw[Polynomial.natDegree_mul]
       nth_rewrite 2 [← tsub_add_cancel_of_le leq]
-      simp
+      simp only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_lt_add_iff_left]
       exact lt
       simp
       exact erase_neq_zero
     · rw[Polynomial.natDegree_mul]
       rw[eq]
-      simp
+      simp only [natDegree_monomial, one_ne_zero, ↓reduceIte, add_zero, tsub_lt_self_iff]
       exact ⟨Nat.zero_lt_of_ne_zero zero_lt_m, Nat.zero_lt_of_ne_zero zero_lt_n⟩
       simp
       exact erase_neq_zero
@@ -240,7 +241,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     rw[mul_assoc]
     rw[← pow_add]
     rw[Nat.add_sub_of_le leq]
-    simp
+    simp only [mul_eq_mul_right_iff, sub_right_inj, ZeroMemClass.coe_eq_zero, pow_eq_zero_iff', ne_eq]
     left
     left
     abel
@@ -286,7 +287,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     rw[mul_assoc]
     rw[natDegree_C_mul]
     exact deg3
-    simp
+    simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]
     rw[← m_eq_degree_p]
     simp
     have zero_lt_natDegree : 0 < m := by exact Nat.zero_lt_of_ne_zero zero_lt_m
@@ -457,10 +458,10 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 /2) ∉ B)
 
   have leq2 : m ≤ n := by exact Nat.le_of_not_ge leq
   have H3 : α⁻¹ ∉ B ∧ α⁻¹⁻¹ ∉ B := by
-    simp
+    simp only [inv_inv]
     exact _root_.id (And.symm H)
   have p_eval2 : (aeval α⁻¹⁻¹) p = 1/2 := by
-    simp
+    simp only [inv_inv, one_div]
     rw[← one_div]
     exact p_eval
 
