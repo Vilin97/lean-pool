@@ -239,10 +239,10 @@ theorem translation_commutes {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²)
   constructor
   · rintro ⟨ a ,h1 , h2⟩
     dsimp at h2
-    exact ⟨ a, h1, by dsimp ; rwa[← aux_for_translation h1]⟩
+    exact ⟨ a, h1, by dsimp; rwa[← aux_for_translation h1]⟩
   · rintro ⟨ a ,h1 , h2⟩
     dsimp at h2
-    exact ⟨ a, h1, by dsimp ; rwa[ aux_for_translation h1]⟩
+    exact ⟨ a, h1, by dsimp; rwa[ aux_for_translation h1]⟩
 
 -- And the version for the closed hull, that needs an adapted different lemma
 theorem aux_for_translation_closed {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b : ℝ²}
@@ -266,10 +266,10 @@ theorem translation_commutes_closed {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²
   constructor
   · rintro ⟨ a ,h1 , h2⟩
     dsimp at h2
-    exact ⟨ a, h1, by dsimp ; rwa[← aux_for_translation_closed h1]⟩
+    exact ⟨ a, h1, by dsimp; rwa[← aux_for_translation_closed h1]⟩
   · rintro ⟨ a ,h1 , h2⟩
     dsimp at h2
-    exact ⟨ a, h1, by dsimp ; rwa[ aux_for_translation_closed h1]⟩
+    exact ⟨ a, h1, by dsimp; rwa[ aux_for_translation_closed h1]⟩
 
 -- Now we explicitly give the translation and linear map that so that the unit triangle gets mapped
 -- unto the triangle
@@ -1063,7 +1063,7 @@ theorem equal_area_cover_implies_triangle_area_n (S : Finset Triangle)
 
 
 
--- theorem open_unit_square1_is_union : open_unit_square1 = union_of_open_triangles ∪ 
+-- theorem open_unit_square1_is_union : open_unit_square1 = union_of_open_triangles ∪
 -- open_diagonal_line := by
 --   have hunit : unit_triangle = fun | 0 => (v 0 0) | 1 => (v 1 0) | 2 => (v 0 1) := by rfl
 --   have hdiag : diagonal_line = fun | 0 => (v 1 0) | 1 => (v 0 1) := by rfl

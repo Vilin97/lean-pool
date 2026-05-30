@@ -261,9 +261,9 @@ lemma avoiding_segment_set_sub_left {X : Finset ℝ²} {A : Set ℝ²} {S : Segm
     rcases hS with ⟨⟨ a, ⟨ b, h⟩⟩, _⟩
     exact ⟨a, x, ⟨ ⟨h.1.1.1 , hx⟩ ,
       (middle_not_boundary_colin ⟨h.1.2 , by rw[h.2]; exact hxS ⟩).1⟩,
-      by rw[← h.2] ; simp only [to_segment]  ⟩
+      by rw[← h.2]; simp only [to_segment]  ⟩
   · refine Set.disjoint_of_subset (closed_hull_convex ?_) (fun ⦃a⦄ a ↦ a) hS.2
-    intro i ; fin_cases i <;> simp only [to_segment, Fin.isValue, corner_in_closed_hull]
+    intro i; fin_cases i <;> simp only [to_segment, Fin.isValue, corner_in_closed_hull]
     exact open_sub_closed S hxS
 
 lemma avoiding_segment_set_sub_right {X : Finset ℝ²} {A : Set ℝ²} {S : Segment}
@@ -603,14 +603,14 @@ lemma isPurple_two_mod_function : two_mod_function (isPurple v) := by
   have hhelpz : z = (to_segment x z) 1  := by rfl
   have hhelpx : x = (to_segment x z) 0  := by rfl
   have hx : x ∈ closed_hull (to_segment x z) := by
-    nth_rewrite 2[hhelpx] ; exact corner_in_closed_hull
+    nth_rewrite 2[hhelpx]; exact corner_in_closed_hull
   have hz : z ∈ closed_hull (to_segment x z) := by
-    nth_rewrite 2[hhelpz] ; exact corner_in_closed_hull
+    nth_rewrite 2[hhelpz]; exact corner_in_closed_hull
   have hy : y ∈ closed_hull (to_segment x z) := by
     exact (open_sub_closed (to_segment x z) hColin.2)
   --This finishes the aux lemmas
   rcases h with ⟨ c, hnotc⟩
-  have hx1 := hnotc x hx ; have hy1 := hnotc y hy ; have hz1 := hnotc z hz
+  have hx1 := hnotc x hx; have hy1 := hnotc y hy; have hz1 := hnotc z hz
   clear hhelpx hhelpz hx hy hz hColin hnotc
   simp only [isPurple, Fin.isValue]
   generalize hcx : coloring v x = cx at hx1
