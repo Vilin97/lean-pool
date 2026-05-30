@@ -44,7 +44,11 @@ noncomputable def BQ : SubalgebraBuilderLists 5 ℤ  ℚ K T l where
 ![![0, 0, 1, 0, 0],![0, 0, 1, 2, 0],![0, 0, 1, 0, 2],![6, 0, 2, 5, -1],![0, 6, 2, 0, 4]],
 ![![0, 0, 0, 1, 0],![0, 0, 0, -1, 1],![6, 0, 2, 5, -1],![-6, 3, -1, -5, 3],![12, -3, 7, 10, -2]],
 ![![0, 0, 0, 0, 1],![6, 0, 2, 4, 0],![0, 6, 2, 0, 4],![12, -3, 7, 10, -2],![0, 9, 7, 6, 8]]]
- s := ![![[], [], [], [], []],![[], [], [], [], [-2]],![[], [], [], [-2], [0, -2]],![[], [], [-2], [2, -1], [-4, 1, -1]],![[], [-2], [0, -2], [-4, 1, -1], [0, -3, 0, -1]]]
+ s := ![![[], [], [], [], []],
+   ![[], [], [], [], [-2]],
+   ![[], [], [], [-2], [0, -2]],
+   ![[], [], [-2], [2, -1], [-4, 1, -1]],
+   ![[], [-2], [0, -2], [-4, 1, -1], [0, -3, 0, -1]]]
  h := Adj
  honed := by decide +kernel
  hd := by norm_num
@@ -96,7 +100,8 @@ def Table : Fin 5 → Fin 5 → List ℤ :=
  ![[0, 0, 0, 1, 0], [0, 0, 0, -1, 1], [6, 0, 2, 5, -1], [-6, 3, -1, -5, 3], [12, -3, 7, 10, -2]],
  ![[0, 0, 0, 0, 1], [6, 0, 2, 4, 0], [0, 6, 2, 0, 4], [12, -3, 7, 10, -2], [0, 9, 7, 6, 8]]]
 
-lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) := by decide +kernel
+lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) :=
+  by decide +kernel
 
 lemma hroot_mem : θ ∈ O := by
   refine root_in_subalgebra_lists T l BQ ![0, 1, 0, 0, 0] [] (by decide +kernel)
@@ -145,9 +150,9 @@ noncomputable def D : CertificateDedekindAlmostAllLists T l [2] where
  hsub := by decide +kernel
  hp := by
   intro i; fin_cases i
-  exact hp2.out
-  exact hp3.out
-  exact hp5.out
+  · exact hp2.out
+  · exact hp3.out
+  · exact hp5.out
  a := [-1350000, 0, -1350000, 900000]
  b := [1080000, -270000, 360000, 270000, -180000]
  hab := by decide +kernel
@@ -196,7 +201,7 @@ noncomputable def M2 : MaximalOrderCertificateWLists 2 O Om hm where
  hacindw := by decide +kernel
 
 
- instance : Fact $ (Irreducible (map (algebraMap ℤ ℚ) T)) where
+instance : Fact <| (Irreducible (map (algebraMap ℤ ℚ) T)) where
   out := (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map (T_monic)).1 T_irreducible
 
 theorem O_ringOfIntegers : O = integralClosure ℤ K := by

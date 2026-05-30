@@ -16,8 +16,8 @@ local notation "l" => [-888, 915, -220, 0, 0, 1]
 
 lemma T_ofList' : T = ofList l := by norm_num; ring
 
-instance hp7' : Fact $ Nat.Prime 7 := fact_iff.2 (by norm_num)
-instance hp13' : Fact $ Nat.Prime 13 := fact_iff.2 (by norm_num)
+instance hp7' : Fact <| Nat.Prime 7 := fact_iff.2 (by norm_num)
+instance hp13' : Fact <| Nat.Prime 13 := fact_iff.2 (by norm_num)
 
 def P7P0 : CertificateIrreducibleZModOfList' 7 2 2 2 [2, 2, 1] where
  m := 1
@@ -53,7 +53,9 @@ def P7P1 : CertificateIrreducibleZModOfList' 7 3 2 2 [4, 2, 5, 1] where
  hbits := by decide +kernel
  h := ![[0, 1], [3, 0, 2], [6, 6, 5], [0, 1]]
  g := ![![[1, 0, 4], [1]],![[2, 1, 0, 2], [5, 3, 2, 1]],![[6, 5, 5, 3], [1, 5, 0, 6]]]
- h' := ![![[3, 0, 2], [3, 5, 2], [0, 1]],![[6, 6, 5], [0, 6, 1], [3, 0, 2]],![[0, 1], [2, 3, 4], [6, 6, 5]]]
+ h' := ![![[3, 0, 2], [3, 5, 2], [0, 1]],
+   ![[6, 6, 5], [0, 6, 1], [3, 0, 2]],
+   ![[0, 1], [2, 3, 4], [6, 6, 5]]]
  hs := by decide +kernel
  hz := by decide +kernel
  hmul := by decide +kernel
@@ -74,8 +76,14 @@ def P13P1 : CertificateIrreducibleZModOfList' 13 4 2 3 [8, 6, 10, 7, 1] where
  bit := ![1, 0, 1, 1]
  hbits := by decide +kernel
  h := ![[0, 1], [6, 6, 9, 2], [12, 3, 10, 8], [1, 3, 7, 3], [0, 1]]
- g := ![![[9, 12, 3, 1], [0, 6, 1], []],![[1, 8, 12, 4, 2, 11], [3, 4, 10], [7, 4, 5, 10, 0, 8]],![[10, 10, 1, 2, 6, 11], [4, 3, 3], [8, 7, 1, 1, 0, 5]],![[8, 0, 7, 11, 9, 12], [6, 9, 4], [0, 9, 5, 5, 0, 1]]]
- h' := ![![[6, 6, 9, 2], [0, 4, 8, 12], [0, 0, 0, 1], [0, 1]],![[12, 3, 10, 8], [5, 5, 6, 8], [4, 2, 4, 6], [6, 6, 9, 2]],![[1, 3, 7, 3], [7, 4, 12, 4], [0, 9, 3, 4], [12, 3, 10, 8]],![[0, 1], [5, 0, 0, 2], [1, 2, 6, 2], [1, 3, 7, 3]]]
+ g := ![![[9, 12, 3, 1], [0, 6, 1], []],
+   ![[1, 8, 12, 4, 2, 11], [3, 4, 10], [7, 4, 5, 10, 0, 8]],
+   ![[10, 10, 1, 2, 6, 11], [4, 3, 3], [8, 7, 1, 1, 0, 5]],
+   ![[8, 0, 7, 11, 9, 12], [6, 9, 4], [0, 9, 5, 5, 0, 1]]]
+ h' := ![![[6, 6, 9, 2], [0, 4, 8, 12], [0, 0, 0, 1], [0, 1]],
+   ![[12, 3, 10, 8], [5, 5, 6, 8], [4, 2, 4, 6], [6, 6, 9, 2]],
+   ![[1, 3, 7, 3], [7, 4, 12, 4], [0, 9, 3, 4], [12, 3, 10, 8]],
+   ![[0, 1], [5, 0, 0, 2], [1, 2, 6, 2], [1, 3, 7, 3]]]
  hs := by decide +kernel
  hz := by decide +kernel
  hmul := by decide +kernel
@@ -97,8 +105,8 @@ noncomputable def C : IrreducibleCertificateIntPolynomial T l where
  hp := by
   intro i
   fin_cases i
-  exact hp7'.out
-  exact hp13'.out
+  · exact hp7'.out
+  · exact hp13'.out
  hlc := by decide +kernel
  m := ![2, 2]
  F := fun i =>
@@ -111,11 +119,12 @@ noncomputable def C : IrreducibleCertificateIntPolynomial T l where
   | 1 => ![1, 4]
  hl := by decide +kernel
  hirr := by
-  intro i; intro j
+  intro i j
   fin_cases i <;> fin_cases j
   · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P7P0
   · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P7P1
-  · exact irreducible_ofList_of_linear (R := ZMod 13) _ (by decide +kernel) (by decide +kernel)
+  · dsimp
+    exact irreducible_ofList_of_linear (R := ZMod 13) _ (by decide +kernel) (by decide +kernel)
   · dsimp; exact irreducible_ofList_ofCertificateIrreducibleZModOfList' P13P1
  hm := by decide +kernel
  hprod := by decide +kernel
