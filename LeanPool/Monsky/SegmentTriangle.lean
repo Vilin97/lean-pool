@@ -1088,8 +1088,11 @@ t ∈ open_hull (to_segment u w) := by
       · exact corner_in_closed_hull (i := 0) (P := to_segment u w)
       · exact open_sub_closed _ hv
 
---This definition is meant to help with showing that if u v w, and v w x are colinear, then so are u w x and u v x. In particular this definition gives the simplex that will be used to show that both v w are in the open hull of u x
-noncomputable def make_new_two_simplex (a b : Fin 2 → ℝ) : (Fin 2 → ℝ ):= fun | 0 => a 0/(1 - a 1 * b 0) | 1 => a 1 * b 1 /(1 - a 1 *  b 0)
+-- This definition is meant to help with showing that if u v w, and v w x are colinear, then so are
+-- u w x and u v x. In particular this definition gives the simplex that will be used to show that
+-- both v w are in the open hull of u x
+noncomputable def make_new_two_simplex (a b : Fin 2 → ℝ)
+    : (Fin 2 → ℝ ):= fun | 0 => a 0/(1 - a 1 * b 0) | 1 => a 1 * b 1 /(1 - a 1 *  b 0)
 
 --This lemma shows that the above defined simplex is indeed a two simplex
 lemma make_new_two_simplex_lem (a b : Fin 2 → ℝ) (ha_simplex : a ∈ open_simplex 2) (hb_simplex : b ∈ open_simplex 2) : make_new_two_simplex a b ∈ open_simplex 2 := by
@@ -1107,8 +1110,11 @@ lemma make_new_two_simplex_lem (a b : Fin 2 → ℝ) (ha_simplex : a ∈ open_si
     nth_rewrite 3[← h]
     exact (add_div (a 0) (a 1 * b 1) (1 - a 1 * b 0)).symm
 
---This lemma shows that indeed v is in the open hull, using the above defined simplex. It effectively also shows the same for w, (use two_colin_in_open_hull (colin_reverse h₂) (colin_reverse h₁), with  rw[← reverse_segment_to_segment])
-lemma two_colin_in_open_hull {u v w x : ℝ²} (h₁ : colin u v w) (h₂ : colin v w x) : v ∈ open_hull (to_segment u x) := by
+-- This lemma shows that indeed v is in the open hull, using the above defined simplex. It
+-- effectively also shows the same for w, (use two_colin_in_open_hull (colin_reverse h₂)
+-- (colin_reverse h₁), with  rw[← reverse_segment_to_segment])
+lemma two_colin_in_open_hull {u v w x : ℝ²} (h₁ : colin u v w) (h₂ : colin v w x)
+    : v ∈ open_hull (to_segment u x) := by
   rcases h₁ with ⟨h_u_neq_w, ⟨ a, ha_simplex, havuw⟩  ⟩
   rcases h₂ with ⟨h_v_neq_x, ⟨ b, hb_simplex, hbwvx⟩  ⟩
   simp only [ne_eq, to_segment, Fin.sum_univ_two, Fin.isValue] at *
@@ -1132,7 +1138,8 @@ lemma two_colin_in_open_hull {u v w x : ℝ²} (h₁ : colin u v w) (h₂ : coli
     simp
     module
 
---These two lemmas show that if u v w and v w x then u v x and u w x are also colinear, starting with the latter
+-- These two lemmas show that if u v w and v w x then u v x and u w x are also colinear, starting
+-- with the latter
 lemma colin_trans_right {u v w x : ℝ²} (h₁ : colin u v w) (h₂ : colin v w x) : colin u w x := by
   have hw :=  two_colin_in_open_hull (colin_reverse h₂) (colin_reverse h₁)
   rw[← reverse_segment_to_segment , reverse_segment_open_hull] at hw
@@ -1334,7 +1341,8 @@ tauto_set
 
 
 
-lemma clopen_left {u v w : ℝ²} {h : colin u v w} : closed_hull (to_segment u w) \ closed_hull (to_segment u v)
+lemma clopen_left {u v w : ℝ²} {h : colin u v w}
+    : closed_hull (to_segment u w) \ closed_hull (to_segment u v)
 = closed_hull (to_segment v w) \ {v} := by
   ext z
   constructor
