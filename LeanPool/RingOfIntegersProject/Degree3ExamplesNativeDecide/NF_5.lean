@@ -183,10 +183,10 @@ noncomputable def M2 : MaximalOrderCertificateLists 2 O Om hm where
  hindw := by decide
  hvFrobKer := by
   intro i
-  fin_cases i <;>
-    norm_num [nPow_sq_table, table_mul_list, List.mulPointwise, List.addPointwise,
-      List.replicate,
-      instAddListOfAddMonoid_leanPool]
+  fin_cases i
+  norm_num [nPow_sq_table, table_mul_list, List.mulPointwise, List.addPointwise,
+    List.replicate,
+    instAddListOfAddMonoid_leanPool]
  hwFrobComp := by
   intro i
   fin_cases i <;>

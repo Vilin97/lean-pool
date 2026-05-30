@@ -93,7 +93,8 @@ def Table : Fin 3 → Fin 3 → List ℤ :=
  ![[0, 1, 0], [0, 0, 2], [12, -9, 0]],
  ![[0, 0, 1], [12, -9, 0], [0, 6, -9]]]
 
-lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) := by decide +kernel
+lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) :=
+  by decide +kernel
 
 lemma hroot_mem : θ ∈ O := by
   refine root_in_subalgebra_lists T l BQ ![0, 1, 0] [] (by decide +kernel)
@@ -181,18 +182,16 @@ noncomputable def M2 : MaximalOrderCertificateLists 2 O Om hm where
  hindw := by decide
  hvFrobKer := by
   intro i
-  fin_cases i;
-    norm_num [nPow_sq_table, table_mul_list, List.mulPointwise, List.addPointwise,
-      List.replicate,
-      instAddListOfAddMonoid_leanPool]
-  all_goals decide +kernel
+  fin_cases i
+  norm_num [nPow_sq_table, table_mul_list, List.mulPointwise, List.addPointwise,
+    List.replicate,
+    instAddListOfAddMonoid_leanPool]
  hwFrobComp := by
   intro i
   fin_cases i <;>
     norm_num [nPow_sq_table, table_mul_list, List.mulPointwise, List.addPointwise,
       List.replicate,
       instAddListOfAddMonoid_leanPool]
-  all_goals decide +kernel
  g := ![![0, 0, 1],![1, 0, 1],![0, 1, 0]]
  a := ![![![-9]],![![-8]],![![0]]]
  c := ![![![6, 0]],![![6, 0]],![![0, 1]]]

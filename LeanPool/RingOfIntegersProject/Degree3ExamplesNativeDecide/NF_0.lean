@@ -93,7 +93,8 @@ def Table : Fin 3 → Fin 3 → List ℤ :=
  ![[0, 1, 0], [0, 1, 2], [5, 1, -1]],
  ![[0, 0, 1], [5, 1, -1], [-5, 2, 2]]]
 
-lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) := by decide +kernel
+lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table i j) :=
+  by decide +kernel
 
 lemma hroot_mem : θ ∈ O := by
   refine root_in_subalgebra_lists T l BQ ![0, 1, 0] [] (by decide +kernel)
@@ -125,8 +126,8 @@ noncomputable def D : CertificateDedekindAlmostAllLists T l [2] where
  hsub := by decide +kernel
  hp := by
   intro i; fin_cases i
-  exact hp2.out
-  exact hp3.out
+  · exact hp2.out
+  · exact hp3.out
  a := [-270, 54]
  b := [36, 90, -18]
  hab := by decide +kernel
@@ -173,7 +174,7 @@ noncomputable def M2 : MaximalOrderCertificateLists 2 O Om hm where
  hmul2 := by decide +kernel
 
 
- theorem O_ringOfIntegers : O = integralClosure ℤ K := by
+theorem O_ringOfIntegers : O = integralClosure ℤ K := by
   refine eq_of_piMaximal_at_all_primes_int O Om hm ?_
   intro p hp
   by_cases hc : p ∈ [2]
