@@ -201,7 +201,7 @@ lemma open_segment_sub {L₁ L₂ : Segment} (hsub : ∀ i : Fin 2, L₁ i ∈ c
       rcases hα with ⟨_,h₂⟩
       rcases hα₁ with ⟨hα₁₁,hα₁₂⟩
       rcases hα₂ with ⟨hα₂₁,hα₂₂⟩
-      simp [← add_assoc, ← mul_add, add_assoc]
+      simp [add_assoc]
       rw [Fin.sum_univ_two] at hα₁₂ hα₂₂ h₂
       calc
         α 0 * α₁ 0 + (α 1 * α₂ 0 + (α 0 * α₁ 1 + α 1 * α₂ 1)) = α 0 * (α₁ 0 + α₁ 1) + α 1 * (α₂ 0 + α₂ 1) := by ring

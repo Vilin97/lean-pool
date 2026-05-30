@@ -202,10 +202,10 @@ lemma zag_open_disjoint {n : ℕ} : disjoint_set ((zag_part_cover n) : Set Trian
       ring_nf at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₂
       field_simp [nsign] at hx₁₀ hx₁₁ hx₁₂ hx₂₀ hx₂₂
       rw [←hs₁, ←hs₂, fin_el_bound (x := x 1 * ↑n) (s₁ := s₁) (s₂ := s₂) (by linarith) (by linarith) (by linarith) (by linarith)]
-    · simp [det, translate_triangle, scale_triangle, Δ₀', translate_vector, scale_vector, Nat.ne_zero_of_lt nsign]
+    · simp [det, translate_triangle, scale_triangle, Δ₀', translate_vector, scale_vector]
       field_simp [Nat.ne_zero_of_lt nsign]
       ring_nf; norm_num
-    · simp [det, translate_triangle, scale_triangle, Δ₀', translate_vector, scale_vector, Nat.ne_zero_of_lt nsign]
+    · simp [det, translate_triangle, scale_triangle, Δ₀', translate_vector, scale_vector]
       field_simp [Nat.ne_zero_of_lt nsign]
       ring_nf; norm_num
   · simp [Nat.eq_zero_of_not_pos nsign, zag_part_cover, disjoint_set]
@@ -233,7 +233,7 @@ lemma zig_zag_open_disjoint {n : ℕ}
       have l := fin_el_bound (x := x 1 * ↑n) (s₁ := s₁) (s₂ := s₂) (by linarith) (by linarith) (by linarith) (by linarith)
       rw [l] at hx₁₀ hx₁₂
       linarith
-    · simp [det, translate_triangle, scale_triangle, Δ₀', translate_vector, scale_vector, Nat.ne_zero_of_lt nsign]
+    · simp [det, translate_triangle, scale_triangle, Δ₀', translate_vector, scale_vector]
       field_simp [Nat.ne_zero_of_lt nsign]
       ring_nf; norm_num
     · simp [det, translate_triangle, scale_triangle, Δ₀, translate_vector, scale_vector, Nat.ne_zero_of_lt nsign]
