@@ -18,8 +18,10 @@ local notation "l" => [-4860, 1350, -150, 75, 0, 1]
 
 lemma T_ofList' : T = ofList l := by norm_num; ring
 
+/-- Auxiliary declaration for the worked example. -/
 instance hp11' : Fact <| Nat.Prime 11 := fact_iff.2 (by norm_num)
 
+/-- Auxiliary declaration for the worked example. -/
 def P11P0 : CertificateIrreducibleZModOfList' 11 5 2 3 [2, 8, 4, 9, 0, 1] where
  m := 1
  P := ![5]
@@ -50,6 +52,7 @@ def P11P0 : CertificateIrreducibleZModOfList' 11 5 2 3 [2, 8, 4, 9, 0, 1] where
  hhn := by decide
  hgcd := by decide
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def C : IrreducibleCertificateIntPolynomial T l where
  hpol := T_ofList'
  n := 1

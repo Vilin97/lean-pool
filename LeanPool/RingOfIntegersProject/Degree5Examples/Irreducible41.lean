@@ -19,6 +19,7 @@ local notation "l" => [160, 0, -50, -25, 0, 1]
 
 lemma T_ofList' : T = ofList l := by norm_num; ring
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def C : CertificateIrreducibleIntOfPrime T l where
  hpol := T_ofList'
  hdeg := by decide

@@ -19,8 +19,10 @@ local notation "l" => [1, 0, 1, 0, 2, 0, -1, 0, 1]
 
 lemma T_ofList' : T = ofList l := by norm_num; ring
 
+/-- Auxiliary declaration for the worked example. -/
 instance hp3' : Fact <| Nat.Prime 3 := fact_iff.2 (by norm_num)
 
+/-- Auxiliary declaration for the worked example. -/
 def P3P0 : CertificateIrreducibleZModOfList' 3 4 2 1 [2, 0, 1, 0, 1] where
  m := 1
  P := ![2]
@@ -46,6 +48,7 @@ def P3P0 : CertificateIrreducibleZModOfList' 3 4 2 1 [2, 0, 1, 0, 1] where
  hhn := by  decide +kernel
  hgcd := by  decide +kernel
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def C : CertificateIrreducibleIntOfPrimeDegreeAnalysis T l where
  hpol := T_ofList'
  hdeg := by  decide +kernel

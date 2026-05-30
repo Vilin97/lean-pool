@@ -19,12 +19,14 @@ open RoiDegree5ExamplesNativeDecideIrreducible18
 
 open Polynomial Module
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def T : ℤ[X] := X^5 - 30*X^2 - 135*X - 252
 lemma T_def : T = X^5 - 30*X^2 - 135*X - 252 := rfl
 
 local notation "K" => AdjoinRoot (map (algebraMap ℤ ℚ) T)
 local notation "l" => [-252, -135, -30, 0, 0, 1]
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def Adj : IsAdjoinRoot K (map (algebraMap ℤ ℚ) T) :=
    AdjoinRoot.isAdjoinRoot _
 
@@ -36,6 +38,7 @@ lemma T_ofList : ofList l = T := by
 -- We build the subalgebra with integral basis [1, a, a^2, 1/3*a^3, 1/246*a^4 - 3/82*a^3 + 27/82*a^2
 -- - 7/82*a + 9/41]
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def BQ : SubalgebraBuilderLists 5 ℤ  ℚ K T l where
  d :=  246
  hlen := rfl
@@ -94,34 +97,45 @@ lemma T_monic : Monic T := by
 
 lemma T_irreducible : Irreducible T := irreducible_T
 
+/-- Auxiliary declaration for the worked example. -/
 instance : Fact <| Irreducible (map (algebraMap ℤ ℚ) T) where
   out := (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map T_monic).1 T_irreducible
 
+/-- Auxiliary declaration for the worked example. -/
 instance : IsDomain K := by
   have hmap : Irreducible (map (algebraMap ℤ ℚ) T) :=
     (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map T_monic).1 T_irreducible
   exact AdjoinRoot.isDomain_of_prime (Irreducible.prime hmap)
 
+/-- Auxiliary declaration for the worked example. -/
 instance : NoZeroSMulDivisors ℤ K := by
   haveI : IsAddTorsionFree K := IsDomain.instIsAddTorsionFreeOfCharZero K
   infer_instance
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def Om : Subalgebra ℤ K := integralClosure ℤ K
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def O := subalgebraOfBuilderLists T l BQ
 
-def hm : O ≤ Om := le_integralClosure_of_basis O (basisOfBuilderLists T l BQ)
+lemma hm : O ≤ Om := le_integralClosure_of_basis O (basisOfBuilderLists T l BQ)
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def B : Basis (Fin 5) ℤ O := basisOfBuilderLists T l BQ
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def B' : Basis (Fin 5) ℤ Om :=
   Basis.reindex (AdjoinRoot.basisIntegralClosure T_monic
     (Irreducible.prime T_irreducible)) (finCongr T_degree)
 
+/-- Auxiliary declaration for the worked example. -/
 instance OmFree : Module.Free ℤ Om := Module.Free.of_basis B'
+/-- Auxiliary declaration for the worked example. -/
 instance OmFinite : Module.Finite ℤ Om := Module.Finite.of_basis B'
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def timesTableO : TimesTable (Fin 5) ℤ O :=
   timesTableOfSubalgebraBuilderLists T l BQ
+/-- Auxiliary declaration for the worked example. -/
 def Table : Fin 5 → Fin 5 → List ℤ :=
  ![
    ![[1, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1]],
@@ -155,11 +169,16 @@ lemma timesTableT_eq_Table :  ∀ i j , Table i j = List.ofFn (timesTableO.table
 lemma hroot_mem : θ ∈ O := by
   refine root_in_subalgebra_lists T l BQ ![0, 1, 0, 0, 0] [] (by decide +kernel)
 
+/-- Auxiliary declaration for the worked example. -/
 instance hp41 : Fact (Nat.Prime 41) := fact_iff.2 (by norm_num)
+/-- Auxiliary declaration for the worked example. -/
 instance hp2 : Fact (Nat.Prime 2) := fact_iff.2 (by norm_num)
+/-- Auxiliary declaration for the worked example. -/
 instance hp3 : Fact (Nat.Prime 3) := fact_iff.2 (by norm_num)
+/-- Auxiliary declaration for the worked example. -/
 instance hp5 : Fact (Nat.Prime 5) := fact_iff.2 (by norm_num)
 
+/-- Auxiliary declaration for the worked example. -/
 def CD5 : CertificateDedekindCriterionLists l 5 where
  n := 5
  a' := []
@@ -176,6 +195,7 @@ def CD5 : CertificateDedekindCriterionLists l 5 where
  hf := by rfl
  habc := by rfl
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def D : CertificateDedekindAlmostAllLists T l [41, 2, 3] where
  n := 4
  p := ![2, 3, 5, 41]
@@ -196,6 +216,7 @@ noncomputable def D : CertificateDedekindAlmostAllLists T l [41, 2, 3] where
   fin_cases hp
   · exact satisfiesDedekindCriterion_of_certificate_lists T l 5 T_ofList CD5
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def M41 : MaximalOrderCertificateOfUnramifiedLists 41 O Om hm where
  n := 5
  t := 1
@@ -220,6 +241,7 @@ noncomputable def M41 : MaximalOrderCertificateOfUnramifiedLists 41 O Om hm wher
  w_ind := ![0, 1, 2, 3, 4]
  hindw := by decide +kernel
  hwFrobComp := by decide +kernel
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def M2 : MaximalOrderCertificateWLists 2 O Om hm where
  m := 2
  n := 3
@@ -258,6 +280,7 @@ noncomputable def M2 : MaximalOrderCertificateWLists 2 O Om hm where
  ac_indw := ![Sum.inl 0, Sum.inl 1, Sum.inr 0, Sum.inr 1, Sum.inr 2]
  hacindw := by decide +kernel
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def M3 : MaximalOrderCertificateWLists 3 O Om hm where
  m := 3
  n := 2
@@ -297,6 +320,7 @@ noncomputable def M3 : MaximalOrderCertificateWLists 3 O Om hm where
  hacindw := by decide +kernel
 
 
+/-- Auxiliary declaration for the worked example. -/
 instance : Fact <| (Irreducible (map (algebraMap ℤ ℚ) T)) where
   out := (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map (T_monic)).1 T_irreducible
 

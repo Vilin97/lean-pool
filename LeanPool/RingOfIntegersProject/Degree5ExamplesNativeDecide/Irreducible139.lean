@@ -18,9 +18,12 @@ local notation "l" => [-15720, -525, -100, 0, 0, 1]
 
 lemma T_ofList' : T = ofList l := by norm_num; ring
 
+/-- Auxiliary declaration for the worked example. -/
 instance hp7' : Fact <| Nat.Prime 7 := fact_iff.2 (by norm_num)
+/-- Auxiliary declaration for the worked example. -/
 instance hp23' : Fact <| Nat.Prime 23 := fact_iff.2 (by norm_num)
 
+/-- Auxiliary declaration for the worked example. -/
 def P7P1 : CertificateIrreducibleZModOfList' 7 4 2 2 [3, 6, 2, 4, 1] where
  m := 1
  P := ![2]
@@ -49,6 +52,7 @@ def P7P1 : CertificateIrreducibleZModOfList' 7 4 2 2 [3, 6, 2, 4, 1] where
  hhn := by decide +kernel
  hgcd := by decide +kernel
 
+/-- Auxiliary declaration for the worked example. -/
 def P23P0 : CertificateIrreducibleZModOfList' 23 2 2 4 [11, 20, 1] where
  m := 1
  P := ![2]
@@ -72,6 +76,7 @@ def P23P0 : CertificateIrreducibleZModOfList' 23 2 2 4 [11, 20, 1] where
  hhn := by decide +kernel
  hgcd := by decide +kernel
 
+/-- Auxiliary declaration for the worked example. -/
 def P23P1 : CertificateIrreducibleZModOfList' 23 3 2 4 [22, 21, 3, 1] where
  m := 1
  P := ![3]
@@ -98,6 +103,7 @@ def P23P1 : CertificateIrreducibleZModOfList' 23 3 2 4 [22, 21, 3, 1] where
  hhn := by decide +kernel
  hgcd := by decide +kernel
 
+/-- Auxiliary declaration for the worked example. -/
 noncomputable def C : IrreducibleCertificateIntPolynomial T l where
  hpol := T_ofList'
  n := 2
