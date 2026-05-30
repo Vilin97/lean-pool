@@ -310,8 +310,8 @@ simproc normMatrixOf.simproc (DFunLike.coe Matrix.of _ _ _) :=
       | _ => failure
     | _ => failure
 
-example : !![1, 2, 3, 4; 5, 6, 7, 8] (Fin.succ 0) (Fin.succ (Fin.succ 0)) = 7 := by simp [normMatrixOf.simproc]
-example : !![1, 2, 3, 4; 5, 6, 7, 8] (Fin.succ 0) (Fin.succ (Fin.succ 0)) = 7 := by simp only [normMatrixOf.simproc]
+example : !![1, 2, 3, 4; 5, 6, 7, 8] (Fin.succ 0) (Fin.succ (Fin.succ 0)) = 7 := by
+  simp only [normMatrixOf.simproc]
 example : !![3, 2, 1; 5, 4, 3; 7, 5, 2] (Fin.succ (Fin.succ 0)) (Fin.castSucc (Fin.succ 0)) = 5 := by simp only [normMatrixOf.simproc]
 
 
@@ -435,12 +435,9 @@ partial def derive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) → Me
     iota := false
   }
   let congrTheorems ← Meta.getSimpCongrTheorems
-  let ctx : Simp.Context := {
-    config := config,
-    congrTheorems := congrTheorems,
-    simpTheorems := #[]
-  }
-  let discharge := Mathlib.Meta.NormNum.discharge ctx
+  let ctx : Simp.Context ← Simp.mkContext config
+    (simpTheorems := #[]) (congrTheorems := congrTheorems)
+  let discharge : Expr → SimpM (Option Expr) := Mathlib.Meta.NormNum.discharge
   let r : Simp.Result := {expr := e}
 
   let simprocs ← Simp.getSimprocs
@@ -471,12 +468,9 @@ partial def simpDerive (f : {u : Level} → {α : Q(Type u)} → (e : Q($α)) �
   }
   let congrTheorems ← Meta.getSimpCongrTheorems
   let simpTheorems ← Meta.getSimpTheorems
-  let ctx : Simp.Context := {
-    config := config,
-    congrTheorems := congrTheorems,
-    simpTheorems := #[simpTheorems],
-  }
-  let discharge := Mathlib.Meta.NormNum.discharge ctx
+  let ctx : Simp.Context ← Simp.mkContext config
+    (simpTheorems := #[simpTheorems]) (congrTheorems := congrTheorems)
+  let discharge : Expr → SimpM (Option Expr) := Mathlib.Meta.NormNum.discharge
   let r : Simp.Result := {expr := e}
 
   let simprocs ← Simp.getSimprocs
