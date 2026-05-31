@@ -109,6 +109,7 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | [bjoernkjoshanssen/hypothesis](https://github.com/bjoernkjoshanssen/hypothesis) | Probability and statistics | *none* | v4.27.0-rc1 | 5,401 | 2026-02-18 |
 | [fpvandoorn/sard](https://github.com/fpvandoorn/sard) | General Sard theorem | Apache-2.0 | v4.12.0 | 1,360 | 2024-10-07 |
 | [cboone/zhang-yeung-inequality](https://github.com/cboone/zhang-yeung-inequality) | Zhang–Yeung non-Shannon inequality | Apache-2.0 | v4.28.0-rc1 | 5,008 | 2026-04-22 |
+| [susannabertolini/PhaseRetrieval](https://github.com/susannabertolini/PhaseRetrieval) | Stable phase retrieval (Hermite–Fock) | Apache-2.0 | v4.29.0-rc6 | 60,247 | 2026-05-20 |
 
 ### Topology / differential geometry
 
