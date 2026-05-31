@@ -373,21 +373,35 @@ def _parse_declarations(root: Path) -> list[_Declaration]:
         rf"({LEAN_IDENT})(?![\w'.])"
     )
     for path in _lean_content_files(root):
-        namespace_stack: list[str] = []
+        # Track `namespace` and `section` opens together so that an
+        # `end <section>` pops the section rather than the enclosing namespace.
+        # Each entry is (is_namespace, name); only namespace entries qualify a
+        # declaration's name. Without this, a `section X .. end X` nested inside
+        # a `namespace N` would pop `N` at `end X`, leaving every following
+        # declaration mis-qualified (its `#print axioms _root_.<name>` then
+        # fails with `unknown constant`).
+        scope_stack: list[tuple[bool, str | None]] = []
         stripped = _strip_lean_comments(path.read_text())
         for line_number, line in enumerate(stripped.splitlines(), start=1):
             namespace_match = re.match(rf"^\s*namespace\s+({LEAN_IDENT})\s*$", line)
             if namespace_match:
-                namespace_stack.append(namespace_match.group(1))
+                scope_stack.append((True, namespace_match.group(1)))
+                continue
+            section_match = re.match(rf"^\s*section(?:\s+({LEAN_IDENT}))?\s*$", line)
+            if section_match:
+                scope_stack.append((False, section_match.group(1)))
                 continue
             if re.match(rf"^\s*end(?:\s+{LEAN_IDENT})?\s*$", line):
-                if namespace_stack:
-                    namespace_stack.pop()
+                if scope_stack:
+                    scope_stack.pop()
                 continue
             match = decl_pattern.match(line)
             if match and _is_private_declaration_line(line):
                 continue
             if match and not match.group(2).startswith(":"):
+                namespace_stack = [
+                    name for is_namespace, name in scope_stack if is_namespace
+                ]
                 name = _qualify_name(namespace_stack, match.group(2))
                 declarations.append(
                     _Declaration(name, path, line_number, match.group(1))
@@ -406,8 +420,11 @@ def _qualify_name(namespace_stack: list[str], name: str) -> str:
         # the enclosing namespace; strip the escape so the audit emits
         # `#print axioms _root_.Foo.bar`, not `_root_._root_.Foo.bar`.
         return name.removeprefix("_root_.")
-    if "." in name or not namespace_stack:
+    if not namespace_stack:
         return name
+    # Prepend the enclosing namespaces even when the written name is itself
+    # dotted: `theorem Foo.bar` inside `namespace N` declares `N.Foo.bar`, so
+    # the audit must look it up under the fully-qualified name, not `Foo.bar`.
     return ".".join([*namespace_stack, name])
 
 

@@ -1253,6 +1253,89 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: lean-poly-abc
+    title: Polynomial ABC (Mason–Stothers) and its corollaries
+    summary: Formalizes the Mason–Stothers theorem (the polynomial ABC theorem) and derives the polynomial Fermat's Last Theorem, the Fermat–Catalan inequality, Davenport's theorem, and a no-parametrization corollary.
+    branch: number theory
+    entry_module: LeanPool.LeanPolyABC
+    authors:
+      - Seewoo Lee
+    source:
+      title: "Formalization of Polynomial ABC and FLT"
+      url: https://github.com/seewoo5/lean-poly-abc
+      github_repo: seewoo5/lean-poly-abc
+    status: verified
+    main_declarations:
+      - LeanPolyABC.Polynomial.abc
+      - LeanPolyABC.Polynomial.flt
+    main_results:
+      - declaration: LeanPolyABC.Polynomial.abc
+        informal: Mason–Stothers — for coprime non-constant polynomials with a+b=c, the max degree is below the degree of the radical of abc.
+      - declaration: LeanPolyABC.Polynomial.flt
+        informal: The polynomial Fermat's Last Theorem — no nontrivial coprime polynomial solutions of aⁿ+bⁿ=cⁿ for n ≥ 3.
+      - declaration: LeanPolyABC.Polynomial.flt_catalan
+        informal: The polynomial Fermat–Catalan inequality bounding solutions of aᵖ+bᵍ=cʳ.
+    tags:
+      - number-theory
+      - polynomials
+      - algebra
+      - mason-stothers
+    msc:
+      - "11C08"
+      - "12E05"
+  - slug: erdos-tuza-valtr
+    title: The Erdős–Tuza–Valtr conjecture
+    summary: Formalizes the Erdős–Tuza–Valtr conjecture, a sharp refinement of the Erdős–Szekeres happy-ending theorem, proving that any general-position point set of size at least C(n+2,2)+2 contains the target cup–cap configuration.
+    branch: combinatorics
+    entry_module: LeanPool.ErdosTuzaValtr
+    authors:
+      - Jineon Baek
+    source:
+      title: "On the Erdős–Tuza–Valtr Conjecture"
+      url: https://github.com/jcpaik/erdos-tuza-valtr
+      github_repo: jcpaik/erdos-tuza-valtr
+    status: verified
+    main_declarations:
+      - ErdosTuzaValtr.main
+      - Config.main_lemma
+    main_results:
+      - declaration: ErdosTuzaValtr.main
+        informal: Proves the sharp upper bound — a general-position point set with at least C(n+2,2)+2 points contains the Erdős–Tuza–Valtr cup–cap configuration.
+      - declaration: Config.main_lemma
+        informal: The configuration-relative induction lemma that, with the mirror-symmetry reduction, drives the main proof.
+    tags:
+      - combinatorics
+      - discrete-geometry
+      - convex-geometry
+      - ramsey-theory
+    msc:
+      - "52C10"
+      - "05D10"
+  - slug: whitehead-theorem
+    title: Whitehead's theorem for CW-complexes
+    summary: Formalizes Whitehead's theorem — a continuous map between CW-complexes that induces isomorphisms on all homotopy groups is a homotopy equivalence — including the supporting theory of CW-complexes, relative homotopy groups, the homotopy extension property, and compression of maps.
+    branch: algebraic topology
+    entry_module: LeanPool.WhiteheadTheorem
+    authors:
+      - Jiazhen Xia
+    source:
+      url: https://github.com/jzxia/WhiteheadTheorem
+      github_repo: jzxia/WhiteheadTheorem
+    status: verified
+    main_declarations:
+      - WhiteheadTheorem
+    main_results:
+      - declaration: WhiteheadTheorem
+        informal: Proves that a continuous map between CW-complexes inducing isomorphisms on all homotopy groups is a homotopy equivalence.
+    tags:
+      - algebraic-topology
+      - cw-complex
+      - homotopy-groups
+      - weak-homotopy-equivalence
+    msc:
+      - "55P10"
+      - "55Q05"
+      - "55U10"
   - slug: frieze-patterns
     title: Maxima of Coxeter frieze patterns are Fibonacci numbers
     summary: Formalizes the claim that the sequence of maxima of values of (Coxeter) arithmetic frieze patterns is the Fibonacci sequence, using a correspondence between arithmetic frieze patterns and n-flutes.
