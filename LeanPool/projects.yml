@@ -1253,6 +1253,36 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: lean-poly-abc
+    title: Polynomial ABC (Mason–Stothers) and its corollaries
+    summary: Formalizes the Mason–Stothers theorem (the polynomial ABC theorem) and derives the polynomial Fermat's Last Theorem, the Fermat–Catalan inequality, Davenport's theorem, and a no-parametrization corollary.
+    branch: number theory
+    entry_module: LeanPool.LeanPolyABC
+    authors:
+      - Seewoo Lee
+    source:
+      title: "Formalization of Polynomial ABC and FLT"
+      url: https://github.com/seewoo5/lean-poly-abc
+      github_repo: seewoo5/lean-poly-abc
+    status: verified
+    main_declarations:
+      - LeanPolyABC.Polynomial.abc
+      - LeanPolyABC.Polynomial.flt
+    main_results:
+      - declaration: LeanPolyABC.Polynomial.abc
+        informal: Mason–Stothers — for coprime non-constant polynomials with a+b=c, the max degree is below the degree of the radical of abc.
+      - declaration: LeanPolyABC.Polynomial.flt
+        informal: The polynomial Fermat's Last Theorem — no nontrivial coprime polynomial solutions of aⁿ+bⁿ=cⁿ for n ≥ 3.
+      - declaration: LeanPolyABC.Polynomial.flt_catalan
+        informal: The polynomial Fermat–Catalan inequality bounding solutions of aᵖ+bᵍ=cʳ.
+    tags:
+      - number-theory
+      - polynomials
+      - algebra
+      - mason-stothers
+    msc:
+      - "11C08"
+      - "12E05"
   - slug: erdos-tuza-valtr
     title: The Erdős–Tuza–Valtr conjecture
     summary: Formalizes the Erdős–Tuza–Valtr conjecture, a sharp refinement of the Erdős–Szekeres happy-ending theorem, proving that any general-position point set of size at least C(n+2,2)+2 contains the target cup–cap configuration.
