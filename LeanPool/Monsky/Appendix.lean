@@ -52,7 +52,7 @@ lemma erase_degree_leq_n (R : Type) [CommRing R] (p : Polynomial R) (n : ℕ) (h
     have equal1 : (erase n p).toFinsupp = p.toFinsupp := by
       rw[toFinsupp_erase]
       exact equal
-    have equal2 : erase n p = p := by exact toFinsupp_inj.mp equal1
+    have equal2 : erase n p = p := toFinsupp_inj.mp equal1
     rwa[equal2]
   · -- If the degree is n
     rcases eraseLead_natDegree_lt_or_eraseLead_eq_zero p with lt2 | zero
@@ -61,6 +61,34 @@ lemma erase_degree_leq_n (R : Type) [CommRing R] (p : Polynomial R) (n : ℕ) (h
     · have def1 : p.eraseLead = p.erase p.natDegree := by rfl
       rw[← eq, ← def1, zero, eq]
       exact h1
+
+/-- For nonzero `α` and `x ≤ n`, we have `α ^ n * (α ^ x)⁻¹ = α ^ (n - x)`. -/
+lemma pow_mul_inv_pow_of_le {α : ℝ} (hα : α ≠ 0) {n x : ℕ} (h : x ≤ n) :
+    α ^ n * (α ^ x)⁻¹ = α ^ (n - x) := by
+  rw [pow_sub₀]
+  · exact hα
+  · exact h
+
+/-- The degree of `q1.erase n` is either `< n` or `0`, given `q1.natDegree ≤ n`. -/
+lemma erase_natDegree_lt_or_zero {B : Subring ℝ} {q1 : Polynomial B} {n : ℕ}
+    (deg1 : q1.natDegree ≤ n) :
+    (q1.erase n).natDegree < n ∨ (q1.erase n).natDegree = 0 := by
+  rw [le_iff_lt_or_eq] at deg1
+  rcases deg1 with lt | eq
+  · left
+    calc (erase n q1).natDegree
+        ≤ q1.natDegree := natDegree_le_natDegree (degree_erase_le q1 n)
+      _ < n            := lt
+  · rw [← eq]
+    by_cases gt_or_eq : q1.natDegree > 0
+    · left
+      calc (q1.erase q1.natDegree).natDegree
+          ≤ q1.natDegree - 1 := eraseLead_natDegree_le q1
+        _ < q1.natDegree     := Nat.sub_one_lt_of_lt gt_or_eq
+    · right
+      have eq_zero2 : q1.natDegree = 0 := Nat.eq_zero_of_not_pos gt_or_eq
+      rw [← Nat.le_zero_eq, ← eq_zero2]
+      exact eraseLead_natDegree_le_aux
 
 -- If we have polynomials p and q of degrees m and n and an α∈ ℝ such that α, α⁻¹∉ B,
 -- a subring of ℝ, p(α)=1/2 and q(α⁻¹)=1/2 then there is an m' < m such that
@@ -123,15 +151,9 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     rw[Polynomial.finset_sum_coeff, Finset.sum_range_succ',
      Nat.sub_zero, coeff_monomial_same n (q.coeff 0), rest_zero]
     ring
-  have equation (x : ℕ) (h : x ≤ n) : α ^ n * (α ^ x)⁻¹ = α^(n-x) := by
-    -- exponentiation works as expected
-    rw[pow_sub₀]
-    · intro h1
-      have zero_in_B : α ∈ B := by
-        rw[h1]
-        exact Subring.zero_mem B
-      tauto
-    · exact h
+  have hα0 : α ≠ 0 := fun h1 ↦ H.1 (h1 ▸ Subring.zero_mem B)
+  have equation (x : ℕ) (h : x ≤ n) : α ^ n * (α ^ x)⁻¹ = α^(n-x) :=
+    pow_mul_inv_pow_of_le hα0 h
   have this : α^n * ((aeval α⁻¹) q) = (aeval α) q1 := by
     rw[aeval_eq_sum_range, Finset.mul_sum]
     simp only [inv_pow, Algebra.mul_smul_comm]
@@ -189,8 +211,8 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     have zero_lt_natDegree : 0 < q.natDegree := by
       -- by assumption
       calc
-        0 < n           := by exact Nat.zero_lt_of_ne_zero zero_lt_n
-        _ = q.natDegree := by exact n_eq_degree_q.symm
+        0 < n           := Nat.zero_lt_of_ne_zero zero_lt_n
+        _ = q.natDegree := n_eq_degree_q.symm
     have q_neq_zero : q ≠ 0 := by
       exact Polynomial.ne_zero_of_natDegree_gt (zero_lt_natDegree)
     tauto
@@ -201,25 +223,8 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     calc ((monomial (n - x)) (q.coeff x)).natDegree
         ≤ n - x  := natDegree_monomial_le (q.coeff x)
       _ ≤ n      := Nat.sub_le n x
-  have deg2 : (q1.erase n).natDegree < n ∨ (q1.erase n).natDegree = 0 := by
-    -- erasing the logically axiomatic second possibility as 0 < n
-    -- leads to a problem un the cases'of the proof of deg3
-    rw[le_iff_lt_or_eq] at deg1
-    rcases deg1 with lt | eq
-    · left
-      calc (erase n q1).natDegree
-          ≤ q1.natDegree := natDegree_le_natDegree (degree_erase_le q1 n)
-        _ < n            := lt
-    · rw[← eq]
-      by_cases gt_or_eq : q1.natDegree > 0
-      · left
-        calc (q1.erase q1.natDegree).natDegree
-            ≤ q1.natDegree - 1 := eraseLead_natDegree_le q1
-          _ < q1.natDegree     := Nat.sub_one_lt_of_lt gt_or_eq
-      · right
-        have eq_zero2 : q1.natDegree = 0 := by exact Nat.eq_zero_of_not_pos gt_or_eq
-        rw[← Nat.le_zero_eq, ← eq_zero2]
-        exact eraseLead_natDegree_le_aux
+  have deg2 : (q1.erase n).natDegree < n ∨ (q1.erase n).natDegree = 0 :=
+    erase_natDegree_lt_or_zero deg1
   have deg3 : (monomial (m-n) 1 * q1.erase n).natDegree < m := by
     rcases deg2 with lt | eq
     · rw[Polynomial.natDegree_mul]
@@ -254,14 +259,12 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     · rw[eq_zero5] -- the case (1-2v₀) = 0
       simp
     · rw[natDegree_add_C, natDegree_C_mul] -- the case (1-2v₀) ≠ 0
-      · calc
-          p.natDegree = m := by exact m_eq_degree_p
-                    _ ≤ m := by exact Nat.le_refl m
+      · exact m_eq_degree_p.le
       · simp
         tauto
-  have deg5 : (((C (1 - 2*v₀)) * p + (C v₀)).erase m).natDegree < m := by
-    exact (erase_degree_leq_n B ((C (1 - 2*v₀)) * p + (C v₀)) m
-    (Nat.zero_lt_of_ne_zero zero_lt_m) deg4)
+  have deg5 : (((C (1 - 2*v₀)) * p + (C v₀)).erase m).natDegree < m :=
+    erase_degree_leq_n B ((C (1 - 2*v₀)) * p + (C v₀)) m
+      (Nat.zero_lt_of_ne_zero zero_lt_m) deg4
   -- Here we define a new polynomial which here we call pq (this is not the product of the two)
   let pq := ((C (1 - 2*v₀)) * p + (C v₀)).erase m +
   C 2 * C (p.coeff m) * (monomial (m-n) 1) * q1.erase n
@@ -292,7 +295,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     · simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]
       rw[← m_eq_degree_p]
       simp only [coeff_natDegree, leadingCoeff_eq_zero]
-      have zero_lt_natDegree : 0 < m := by exact Nat.zero_lt_of_ne_zero zero_lt_m
+      have zero_lt_natDegree : 0 < m := Nat.zero_lt_of_ne_zero zero_lt_m
       rw[← m_eq_degree_p] at zero_lt_natDegree
       exact ne_zero_of_natDegree_gt zero_lt_natDegree
   have deg6 : m' < m := by
@@ -438,7 +441,7 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
       exact WellFounded.min_le wellFounded_lt main
     rw[lt_iff_not_ge] at deg
     tauto
-  · have leq2 : m ≤ n := by exact Nat.le_of_not_ge leq
+  · have leq2 : m ≤ n := Nat.le_of_not_ge leq
     have H3 : α⁻¹ ∉ B ∧ α⁻¹⁻¹ ∉ B := by
       simp only [inv_inv]
       exact _root_.id (And.symm H)
@@ -504,11 +507,11 @@ lemma sUnion_is_ub : ∀ c ⊆ S, IsChain (· ≤ ·) c → ∃ ub ∈ S, ∀ z 
     let ub : Subring ℝ :=
       { carrier := union_of_sets,
         zero_mem' := by
-          have in_c : ∃(t : Subring ℝ), t ∈ c := by exact Set.nonempty_iff_ne_empty.mpr emp_or_not
+          have in_c : ∃(t : Subring ℝ), t ∈ c := Set.nonempty_iff_ne_empty.mpr emp_or_not
           obtain ⟨t, in_c⟩ := in_c
           exact Set.mem_sUnion.mpr ⟨t.carrier, ⟨t, in_c, by rfl⟩, t.zero_mem'⟩
         one_mem' := by
-          have in_c : ∃(t : Subring ℝ), t ∈ c := by exact Set.nonempty_iff_ne_empty.mpr emp_or_not
+          have in_c : ∃(t : Subring ℝ), t ∈ c := Set.nonempty_iff_ne_empty.mpr emp_or_not
           obtain ⟨t, in_c⟩ := in_c
           exact Set.mem_sUnion.mpr ⟨t.carrier, ⟨t, in_c, by rfl⟩, t.one_mem'⟩
         add_mem' := by
@@ -593,7 +596,7 @@ lemma sUnion_is_ub : ∀ c ⊆ S, IsChain (· ≤ ·) c → ∃ ub ∈ S, ∀ z 
       rw[Set.mem_sUnion] at half_in
       rcases half_in with ⟨t, h, g⟩
       rcases h with ⟨ringt, H2, H3⟩
-      have half_not_in_t : 1/2 ∉ t := by exact Eq.mpr_not (congrFun H3 (1 / 2)) (subset H2)
+      have half_not_in_t : 1/2 ∉ t := Eq.mpr_not (congrFun H3 (1 / 2)) (subset H2)
       tauto
     -- So ub ∈ S
     have ub_mem_S : ub ∈ S := by
