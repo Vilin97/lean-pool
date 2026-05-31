@@ -680,6 +680,25 @@ noncomputable def triangulation_interior_basic_segments (Δ : Finset Triangle) :
 noncomputable def is_triangulation (Δ : Finset Triangle) : Prop :=
   is_cover (closed_hull unit_square) (↑Δ : Set Triangle)
 
+/-- Every vertex of a triangulation lies in the closed unit square. -/
+lemma triangulation_points_subset_unit_square {Δ : Finset Triangle}
+    (hCover : is_triangulation Δ) :
+    (↑(triangulation_points Δ) : Set ℝ²) ⊆ closed_hull unit_square := by
+  unfold triangulation_points
+  simp only [Fin.isValue, coe_biUnion, mem_coe, coe_insert, coe_singleton,
+    Set.iUnion_subset_iff]
+  intro T hT z hz
+  have hTsub : closed_hull T ⊆ closed_hull unit_square := by
+    rw [hCover]
+    intro w hw
+    simp_all only [mem_coe, Fin.isValue, Set.mem_iUnion, exists_prop]
+    exact ⟨T, hT, hw⟩
+  have zT : ∃ i : Fin 3, z = T i := by
+    simp_all only [Fin.isValue, Set.mem_insert_iff, Set.mem_singleton_iff]
+    rcases hz with h | h | h <;> exact ⟨_, h⟩
+  rcases zT with ⟨i, hi⟩
+  exact hTsub (hi ▸ corner_in_closed_hull)
+
 lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation Δ)
 (non_degen : ∀ P ∈ Δ, det P ≠ 0) {L : Segment} (hL : L ∈ triangulation_basic_segments Δ) :
  ∃ T ∈ Δ, closed_hull L ⊆ closed_hull T := by
@@ -710,86 +729,14 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : is_triangulation 
       rw [to_segment] at L0
       rw [L0] at m
       have hL0 : L 0 ∈ triangulation_points Δ := m.1
-      have hL0_unit_square : (↑(triangulation_points Δ) : Set ℝ²) ⊆ closed_hull unit_square := by
-        unfold triangulation_points
-        simp only [Fin.isValue, coe_biUnion, mem_coe, coe_insert, coe_singleton,
-          Set.iUnion_subset_iff]
-        intro T hT
-        have hL0_unit_square' : closed_hull T ⊆ closed_hull unit_square := by
-          rw [hCover]
-          intro z hz
-          subst L0
-          simp_all only [mem_coe, ne_eq, Fin.isValue, true_and, Set.mem_iUnion, exists_prop]
-          apply Exists.intro
-          · apply And.intro
-            on_goal 2 => {exact hz
-            }
-            · simp_all only [Fin.isValue]
-        intro z hz
-        have zT : ∃ i : Fin 3,  z = T i := by
-          subst L0
-          simp_all only [ne_eq, Fin.isValue, true_and, Set.mem_insert_iff, Set.mem_singleton_iff]
-          cases hz with
-          | inl h =>
-            subst h
-            simp_all only [Fin.isValue, exists_apply_eq_apply']
-          | inr h_1 =>
-            cases h_1 with
-            | inl h =>
-              subst h
-              simp_all only [Fin.isValue, exists_apply_eq_apply']
-            | inr h_2 =>
-              subst h_2
-              simp_all only [Fin.isValue, exists_apply_eq_apply']
-        rcases zT with ⟨i, hi⟩
-        have zt' : z ∈ closed_hull T := by
-          rw [hi]
-          apply corner_in_closed_hull
-        exact hL0_unit_square' zt'
-      exact hL0_unit_square hL0
+      exact triangulation_points_subset_unit_square hCover hL0
     · simp only [Fin.mk_one, Fin.isValue]
       have L1 : to_segment c d 1 = L 1 := by
           rw [g]
       rw [to_segment] at L1
       rw [L1] at m
       have hL1 : L 1 ∈ triangulation_points Δ := m.2
-      have hL1_unit_square : (↑(triangulation_points Δ) : Set ℝ²) ⊆ closed_hull unit_square := by
-        unfold triangulation_points
-        simp only [Fin.isValue, coe_biUnion, mem_coe, coe_insert, coe_singleton,
-          Set.iUnion_subset_iff]
-        intro T hT
-        have hL1_unit_square' : closed_hull T ⊆ closed_hull unit_square := by
-          rw [hCover]
-          intro z hz
-          subst L1
-          simp_all only [mem_coe, ne_eq, Fin.isValue, Set.mem_iUnion, exists_prop]
-          apply Exists.intro
-          · apply And.intro
-            on_goal 2 => {exact hz
-            }
-            · simp_all only [Fin.isValue]
-        intro z hz
-        have zT : ∃ i : Fin 3,  z = T i := by
-          subst L1
-          simp_all only [ne_eq, Fin.isValue, and_true, Set.mem_insert_iff, Set.mem_singleton_iff]
-          cases hz with
-          | inl h =>
-            subst h
-            simp_all only [Fin.isValue, exists_apply_eq_apply']
-          | inr h_1 =>
-            cases h_1 with
-            | inl h =>
-              subst h
-              simp_all only [Fin.isValue, exists_apply_eq_apply']
-            | inr h_2 =>
-              subst h_2
-              simp_all only [Fin.isValue, exists_apply_eq_apply']
-        rcases zT with ⟨i, hi⟩
-        have zt' : z ∈ closed_hull T := by
-          rw [hi]
-          apply corner_in_closed_hull
-        exact hL1_unit_square' zt'
-      exact hL1_unit_square hL1
+      exact triangulation_points_subset_unit_square hCover hL1
   have xinTriangle : ∃ P ∈ Δ, x ∈ closed_hull P := by
     have xclosed : x ∈ closed_hull unit_square := by
       exact convex (open_sub_closed L hx)
