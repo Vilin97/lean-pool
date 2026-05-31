@@ -1259,13 +1259,7 @@ projects:
     branch: combinatorial geometry
     entry_module: LeanPool.Monsky
     authors:
-      - Dhyan Aranha
-      - Thomas Koopman
-      - Dion Leijnse
-      - Thijs Maessen
-      - Maris Ozols
-      - Jonas van der Schaaf
-      - Lenny Taelman
+      - Dhyan Aranha and contributors
     source:
       title: On dividing a square into triangles
       authors:

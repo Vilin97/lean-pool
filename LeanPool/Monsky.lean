@@ -20,7 +20,7 @@ import LeanPool.Monsky.Square
 # Monsky's Theorem
 
 Source: doi:10.2307/2316270
-Authors: Dhyan Aranha, Thomas Koopman, Dion Leijnse, Thijs Maessen, Maris Ozols, Jonas van der Schaaf, Lenny Taelman
+Authors: Dhyan Aranha and contributors
 Status: verified
 Main declarations: `LeanPool.Monsky.monsky_theorem`
 Tags: geometry, combinatorics, measure-theory
