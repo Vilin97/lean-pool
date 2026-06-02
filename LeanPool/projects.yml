@@ -1263,7 +1263,6 @@ projects:
     source:
       url: https://github.com/JoeyEremondi/lean-cwf
       github_repo: JoeyEremondi/lean-cwf
-      doi: "10.1007/3-540-61780-9_66"
     status: verified
     main_declarations:
       - LeanPool.LeanCwf.CwF.CwFStruct
@@ -1271,6 +1270,7 @@ projects:
     main_results:
       - declaration: LeanPool.LeanCwf.CwF.CwFStruct
         informal: Defines a category with families as a category with a terminal object, type-term presheaf, context extension, and CwF laws.
+        source_ref: "P. Dybjer, Internal Type Theory, TYPES 1995, LNCS 1158, Springer 1996, doi:10.1007/3-540-61780-9_66."
       - declaration: LeanPool.LeanCwf.CwF.ext_decomp
         informal: Decomposes every morphism into an extended context as an extension by its projection and head term.
       - declaration: LeanPool.LeanCwf.CwF.termSecEquiv
