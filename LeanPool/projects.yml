@@ -1860,3 +1860,30 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: incompleteness
+    title: Gödel's First and Second Incompleteness Theorems
+    summary: Formalizes Gödel's first and second incompleteness theorems for first-order arithmetic, building on formalized arithmetization and provability-logic infrastructure.
+    branch: mathematical logic
+    entry_module: LeanPool.Incompleteness
+    authors:
+      - Palalansoukî
+    source:
+      doi: "10.1007/BF01700692"
+      github_repo: FormalizedFormalLogic/Incompleteness
+    status: verified
+    main_declarations:
+      - LeanPool.Incompleteness.goedelFirst
+      - LeanPool.Incompleteness.goedelSecond
+    main_results:
+      - declaration: LeanPool.Incompleteness.goedelFirst
+        informal: "Proves Gödel's first incompleteness theorem: a Sigma1-sound Delta1-definable theory extending arithmetic is incomplete."
+      - declaration: LeanPool.Incompleteness.goedelSecond
+        informal: "Proves Gödel's second incompleteness theorem: such a theory cannot prove its own consistency."
+    tags:
+      - incompleteness
+      - provability
+      - first-order-arithmetic
+      - mathematical-logic
+    msc:
+      - "03F40"
+      - "03F30"
