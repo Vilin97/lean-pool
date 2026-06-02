@@ -11,6 +11,10 @@ import LeanPool.RingOfIntegersProject.MaximalAPI
 import Mathlib.NumberTheory.NumberField.Basic
 import LeanPool.RingOfIntegersProject.Degree5ExamplesNativeDecide.Irreducible49
 
+/-!
+Support declarations and worked examples for `RingOfIntegersProject`.
+-/
+
 namespace RoiDegree5ExamplesNativeDecideNF49
 open RoiDegree5ExamplesNativeDecideIrreducible49
 

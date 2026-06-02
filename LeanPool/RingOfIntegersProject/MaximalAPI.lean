@@ -215,8 +215,9 @@ variable
   (hindab : ∀ (i : Fin (m + n)), (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim ((fun j =>
     Sum.elim (a k j) (c k j))) ((fun j => Sum.elim (d k j) (e k j)))) i (abInd i).1 (abInd i).2) ≠
       0 ∧
-      (∀ j, j ≠ i → (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim ((fun j => Sum.elim (a k j) (c k j)))
-        ((fun j => Sum.elim (d k j) (e k j)))) j (abInd i).1 (abInd i).2) = 0))
+      (∀ j, j ≠ i → (algebraMap ℤ (ZMod p))
+        ((fun k => Sum.elim ((fun j => Sum.elim (a k j) (c k j)))
+          ((fun j => Sum.elim (d k j) (e k j)))) j (abInd i).1 (abInd i).2) = 0))
   (hmul1 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((B.equivFun.symm).toFun (b1 j)) =
     Finset.univ.sum (fun l => (a i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
       Finset.univ.sum (fun l => (c i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k))
@@ -397,7 +398,7 @@ lemma hmul_lists_aux (a1 : Fin m → ℤ) (a2 : Fin n → ℤ)
         simp only [zsmul_eq_mul, Int.cast_mul, Pi.intCast_def, Int.cast_id, Int.cast_natCast,
           Pi.natCast_def,
         Finset.sum_apply, Pi.mul_apply, Finset.univ_eq_empty, Finset.sum_empty,
-          Finsupp.finset_sum_apply, Finsupp.coe_smul, Pi.smul_apply,
+          Finsupp.finsetSum_apply, Finsupp.coe_smul, Pi.smul_apply,
         Finsupp.coe_equivFunOnFinite_symm, smul_eq_mul, zero_add]
     · cases n
       · rw [← (List.sum_ofFn' (Nat.succ_ne_zero _) (fun l => (a1 l) • b1 l))] at h
@@ -406,7 +407,7 @@ lemma hmul_lists_aux (a1 : Fin m → ℤ) (a2 : Fin n → ℤ)
         rw [h]
         simp only [zsmul_eq_mul, Pi.intCast_def, Int.cast_id,
           Finsupp.coe_equivFunOnFinite_symm, Finset.sum_apply, Pi.mul_apply,
-          Finsupp.coe_finset_sum, Finsupp.coe_smul, Nat.succ_eq_add_one,
+          Finsupp.coe_finsetSum, Finsupp.coe_smul, Nat.succ_eq_add_one,
           Finset.univ_eq_empty, Finset.sum_empty, add_zero]
       · rw [← (List.sum_ofFn' (Nat.succ_ne_zero _) (fun l => (a2 l * ↑p) • b2 l))] at h
         rw [← (List.sum_ofFn' (Nat.succ_ne_zero _) (fun l => (a1 l) • b1 l))] at h
@@ -416,7 +417,7 @@ lemma hmul_lists_aux (a1 : Fin m → ℤ) (a2 : Fin n → ℤ)
         simp only [zsmul_eq_mul, Pi.intCast_def, Int.cast_id, Int.cast_mul, Int.cast_natCast,
           Pi.natCast_def,
         Finsupp.coe_equivFunOnFinite_symm, Pi.add_apply, Finset.sum_apply, Pi.mul_apply,
-        Finsupp.coe_add, Finsupp.coe_finset_sum, Finsupp.coe_smul]
+        Finsupp.coe_add, Finsupp.coe_finsetSum, Finsupp.coe_smul]
   · exact LinearEquiv.injective B.repr
 
 lemma hmul_lists_aux_length (a1 : Fin m → ℤ) (a2 : Fin n → ℤ)
@@ -638,10 +639,12 @@ variable
     ((fun j => Sum.elim (d k j) (e k j)))) j (abInd i).1 (abInd i).2) = 0))
   (hmul1 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((B.equivFun.symm).toFun (b1 j)) =
     Finset.univ.sum (fun l => (a i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
-    Finset.univ.sum (fun l => (c i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
+      Finset.univ.sum
+        (fun l => (c i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
   (hmul2 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((p : ℤ) • ((B.equivFun.symm).toFun (b2 j))) =
     Finset.univ.sum (fun l => (d i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
-    Finset.univ.sum (fun l => (e i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
+      Finset.univ.sum
+        (fun l => (e i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
 
 local notation "O*" => Subalgebra.toSubmodule (AlgHom.range (Subalgebra.inclusion hm))
 

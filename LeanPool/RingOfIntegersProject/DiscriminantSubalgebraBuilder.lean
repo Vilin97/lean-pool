@@ -11,6 +11,10 @@ import Mathlib.LinearAlgebra.Basis.Defs
 import Mathlib.NumberTheory.NumberField.Basic
 import Mathlib.NumberTheory.NumberField.Discriminant.Basic
 
+/-!
+Discriminant formulas for subalgebras built from explicit bases.
+-/
+
 open Module Polynomial
 
 section Part1

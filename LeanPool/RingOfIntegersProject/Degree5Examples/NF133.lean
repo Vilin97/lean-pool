@@ -11,6 +11,10 @@ import LeanPool.RingOfIntegersProject.MaximalAPI
 import Mathlib.NumberTheory.NumberField.Basic
 import LeanPool.RingOfIntegersProject.Degree5Examples.Irreducible133
 
+/-!
+Support declarations and worked examples for `RingOfIntegersProject`.
+-/
+
 namespace RoiDegree5ExamplesNF133
 open RoiDegree5ExamplesIrreducible133
 

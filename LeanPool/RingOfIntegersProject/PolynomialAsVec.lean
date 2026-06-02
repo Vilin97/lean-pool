@@ -7,6 +7,10 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 import Mathlib.Algebra.Polynomial.BigOperators
 import Mathlib.Tactic.FinCases
 
+/-!
+Represent polynomials as fixed-length coefficient vectors.
+-/
+
 variable {R : Type*}
 
 section Semiring
@@ -21,7 +25,7 @@ noncomputable def ofVec (v : Fin m → R) : R[X] :=
 
 @[simp] lemma coeff_ofVec (v : Fin m → R) (i : ℕ) :
     (ofVec v).coeff i = if hi : i < m then v ⟨i, hi⟩ else 0 := by
-  simp only [ofVec, finset_sum_coeff]
+  simp only [ofVec, finsetSum_coeff]
   split_ifs with hi
   · simp only [coeff_C_mul, coeff_X_pow, mul_ite, mul_one, mul_zero]
     rw [Finset.sum_eq_single ⟨i, hi⟩, if_pos rfl]

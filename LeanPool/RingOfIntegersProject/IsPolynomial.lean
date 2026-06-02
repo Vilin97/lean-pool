@@ -10,6 +10,10 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import LeanPool.RingOfIntegersProject.PolynomialAsVec
 import LeanPool.RingOfIntegersProject.Resultant
 
+/-!
+Support declarations and worked examples for `RingOfIntegersProject`.
+-/
+
 open Polynomial
 
 variable {R : Type*} [CommRing R]

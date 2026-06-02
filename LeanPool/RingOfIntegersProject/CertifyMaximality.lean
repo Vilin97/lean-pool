@@ -721,9 +721,9 @@ lemma basisRadicalOfLinearIndependentKerIm_in_repr [NoZeroSMulDivisors ℤ O]
     simp_rw [← zsmul_eq_zmod_smul, ← Submodule.mkQ_apply]
     rw [← map_sum, ← map_sum, ← map_add]
     congr
-    · simp only [zsmul_eq_mul, AddSubmonoidClass.coe_finset_sum,
+    · simp only [zsmul_eq_mul, AddSubmonoidClass.coe_finsetSum,
         Submodule.coe_smul_of_tower]
-    · simp only [zsmul_eq_mul, AddSubmonoidClass.coe_finset_sum,
+    · simp only [zsmul_eq_mul, AddSubmonoidClass.coe_finsetSum,
         Submodule.coe_smul_of_tower]
   have aux4 : Finset.univ.sum (fun i => (↑(s i : ZMod p) • (⟨b i, aux1 i ⟩ mod p))) +
     Finset.univ.sum (fun j => (↑(t j : ZMod p) • (⟨ p * b' j, aux2 j ⟩ mod p))) =
@@ -768,8 +768,9 @@ lemma mulAlphaAux_map_add {α : O} {β γ : Ip} :
 
 /-- The lift of `mulAlphaAux` to a map  `Iₚ / pIₚ → Iₚ / pIₚ `· -/
 def mapMulAlpha (α : O) : (Ip mod' p) → (Ip mod' p) := by
-  refine @Quotient.lift _ _ (Submodule.quotientRel ((p : ℤ) • (⊤ : Submodule ℤ Ip))) (mulAlphaAux O p
-    α) ?_
+  refine @Quotient.lift _ _
+    (Submodule.quotientRel ((p : ℤ) • (⊤ : Submodule ℤ Ip)))
+    (mulAlphaAux O p α) ?_
   intros a b hab
   have := (@Submodule.quotientRel_def _ _ _ _ _ ((p : ℤ) • (⊤ : Submodule ℤ Ip)) a b).1 hab
   erw [Submodule.Quotient.eq ((p : ℤ)  • (⊤ : Submodule ℤ Ip))]

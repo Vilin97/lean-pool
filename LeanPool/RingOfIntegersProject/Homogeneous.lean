@@ -9,6 +9,10 @@ import Mathlib.RingTheory.MvPolynomial.Homogeneous
 import Mathlib.RingTheory.MvPolynomial.Symmetric.FundamentalTheorem
 import Mathlib.RingTheory.Polynomial.Basic
 
+/-!
+Auxiliary lemmas for homogeneous and weighted-homogeneous multivariate polynomials.
+-/
+
 variable {σ R : Type*} [CommRing R]
 
 section Preliminaries

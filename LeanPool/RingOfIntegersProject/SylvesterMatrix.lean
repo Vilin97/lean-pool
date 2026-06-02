@@ -10,6 +10,10 @@ import Mathlib.Data.ZMod.Defs
 
 import LeanPool.RingOfIntegersProject.PolynomialAsVec
 
+/-!
+Sylvester matrices built from coefficient vectors.
+-/
+
 variable {R : Type*} {m n : ℕ}
 
 open Matrix

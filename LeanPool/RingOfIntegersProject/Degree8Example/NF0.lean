@@ -11,6 +11,10 @@ import LeanPool.RingOfIntegersProject.MaximalAPI
 import Mathlib.NumberTheory.NumberField.Basic
 import LeanPool.RingOfIntegersProject.Degree8Example.Irreducible0
 
+/-!
+Worked degree-eight number field example for `RingOfIntegersProject`.
+-/
+
 namespace RoiDegree8ExampleNF0
 open RoiDegree8ExampleIrreducible0
 

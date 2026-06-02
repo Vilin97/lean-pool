@@ -10,8 +10,6 @@ import Mathlib.RingTheory.Discriminant
 import Mathlib.RingTheory.Localization.NormTrace
 import Mathlib.Algebra.GroupWithZero.Defs
 
-open Module BigOperators Polynomial
-
 /-! # Auxiliary algebra lemmas.
 
 This file contains some auxiliary lemmas mainly about subalgebras and adjoining a root.
@@ -19,6 +17,8 @@ This file contains some auxiliary lemmas mainly about subalgebras and adjoining 
 ## Note
 A similar version of some of these results can be found already in Mathlib, but here we avoid
 some assumptions, like that of some spaces being fields or integrally closed. -/
+
+open Module BigOperators Polynomial
 
 lemma IsAdjoinRoot.minpoly_root {Q K : Type*} [Field Q] [CommRing K] [Algebra Q K]
     {f : Q[X]} (A : IsAdjoinRoot K f) (hf : f ≠ 0) :

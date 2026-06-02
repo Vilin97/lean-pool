@@ -577,7 +577,7 @@ lemma Polynomial.toList'_cons (a : R) (p : Polynomial R) :
 
 /-- Sends a polynomial to a list of its coefficients (with non-zero last entry).
   The zero polynomial is sent to `[]`. -/
-def Polynomial.toList [DecidableEq R] (p : Polynomial R) := (toList' p).dropTrailingZeros
+def Polynomial.toList (p : Polynomial R) := (toList' p).dropTrailingZeros
 
 /-- `toList` is the left inverse of ofList (modulo trailing zeros). -/
 lemma toList_comp_ofList (l : List R) :
@@ -814,7 +814,7 @@ lemma ofList_eq_sum' {R : Type u} [Semiring R] [DecidableEq R]
   ext k
   by_cases hk : k < (List.ofFn f).length
   · rw [ofList_coeff _ k hk]
-    simp only [finset_sum_coeff, coeff_C_mul, coeff_X_pow, mul_ite,
+    simp only [finsetSum_coeff, coeff_C_mul, coeff_X_pow, mul_ite,
       mul_one, mul_zero]
     rw [Fintype.sum_eq_single (Fin.cast (List.length_ofFn (f := f)) ⟨k, hk⟩)]
     · simp
@@ -842,7 +842,7 @@ lemma ofList_eq_sum' {R : Type u} [Semiring R] [DecidableEq R]
         exact not_lt.1 hk
       rw [Polynomial.coeff_eq_zero_of_natDegree_lt this]
       simp only [List.length_ofFn] at hk
-      simp only [finset_sum_coeff, coeff_C_mul, coeff_X_pow, mul_ite, mul_one, mul_zero]
+      simp only [finsetSum_coeff, coeff_C_mul, coeff_X_pow, mul_ite, mul_one, mul_zero]
       rw [Fintype.sum_eq_zero]
       simp only [ite_eq_right_iff]
       intro a hk2
@@ -950,7 +950,7 @@ lemma List.expand_char {R : Type u} [CommSemiring R] [DecidableEq R] (p : ℕ) [
 
 /-- Given `l`, computes the list corresponding to the derivative of the polynomial defined by
 `l`. -/
-def List.derivative [Semiring R] : List R → List R
+def List.derivative : List R → List R
   | [] => []
   | (_ :: as) => as + (0 :: derivative as)
 
@@ -977,27 +977,27 @@ def ComputablePolynomial (R : Type*) [Semiring R] [DecidableEq R] :=
 
 variable {R : Type*} [Semiring R] [DecidableEq R]
 
-instance [AddMonoid R] : Add (ComputablePolynomial R) where
+instance : Add (ComputablePolynomial R) where
   add := fun p q =>
    ⟨(p.1 + q.1).dropTrailingZeros, dropTrailingZeros_iter (p.1 + q.1)⟩
 
-instance [Semiring R] : Mul (ComputablePolynomial R) where
+instance : Mul (ComputablePolynomial R) where
   mul := fun p q =>
    ⟨(p.1 * q.1).dropTrailingZeros, dropTrailingZeros_iter _ ⟩
 
-instance [Semiring R] : Zero (ComputablePolynomial R) where
+instance : Zero (ComputablePolynomial R) where
   zero := ⟨(0 : List R), rfl⟩
 
-instance [Semiring R] : One (ComputablePolynomial R) where
+instance : One (ComputablePolynomial R) where
   one := ⟨ (1 : List R).dropTrailingZeros, by exact dropTrailingZeros_iter 1 ⟩
 
-instance [Semiring R] : Pow (ComputablePolynomial R) ℕ where
+instance : Pow (ComputablePolynomial R) ℕ where
   pow := fun p => fun n => ⟨(p.1 ^ n).dropTrailingZeros,  dropTrailingZeros_iter _ ⟩
 
-instance [Semiring R] : NatCast (ComputablePolynomial R) where
+instance : NatCast (ComputablePolynomial R) where
   natCast := fun n => ⟨[(n : R)].dropTrailingZeros, dropTrailingZeros_iter _ ⟩
 
-instance [Semiring R] : SMul ℕ (ComputablePolynomial R) where
+instance : SMul ℕ (ComputablePolynomial R) where
   smul := fun n => fun p => (↑n * p)
 
 /-- Sends a polynomial to the corresponding computable polynomial. -/
@@ -1121,7 +1121,7 @@ lemma ofComputablePolynomial_intCast (z : ℤ) :
   simp only [ofList_singleton, map_intCast]
 
 /-- Ring instance for `ComputablePolynomial R`. -/
-noncomputable instance ComputablePolynomial.ring [Ring R] : Ring (ComputablePolynomial R) := by
+noncomputable instance ComputablePolynomial.ring : Ring (ComputablePolynomial R) := by
   refine Function.Injective.ring (ofComputablePolynomial (R := R))
     (ofComputablePolynomial_injective (R := R)) ?_?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
   · rfl
@@ -1137,7 +1137,7 @@ noncomputable instance ComputablePolynomial.ring [Ring R] : Ring (ComputablePoly
   · exact ofComputablePolynomial_intCast
 
 /-- Imported declaration. -/
-noncomputable def ofComputablePolynomialRingHom [Ring R] : ComputablePolynomial R →+* R[X] where
+noncomputable def ofComputablePolynomialRingHom : ComputablePolynomial R →+* R[X] where
   toFun := ofComputablePolynomial
   map_one' := ofComputablePolynomial_one
   map_mul' := ofComputablePolynomial_mul
@@ -1146,7 +1146,7 @@ noncomputable def ofComputablePolynomialRingHom [Ring R] : ComputablePolynomial 
 
 /- Ring isomorphism between polynomials and computable polynomials. -/
 /-- Imported declaration. -/
-noncomputable def computablePolynomialRingEquiv [Ring R] : ComputablePolynomial R ≃+* R[X] where
+noncomputable def computablePolynomialRingEquiv : ComputablePolynomial R ≃+* R[X] where
   toFun := ofComputablePolynomial
   invFun := toComputablePolynomial
   left_inv := toComputablePolynomial_comp_ofComputablePolynomial

@@ -304,13 +304,13 @@ variable {ι : Type _} [Finite ι]
     intro i
     refine Finset.single_le_sum ?_ ?_
     · intros j _
-      simp only [zero_le']
+      simp only [zero_le]
     refine Fintype.complete _
   refine ⟨r, ?_⟩
   intros x hx
   have := Basis.sum_repr bk (⟨x, hx⟩: overRing α hm)
   rw [Subtype.ext_iff] at this
-  simp only [AddSubmonoidClass.coe_finset_sum, SetLike.val_smul] at this
+  simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul] at this
   rw [← this, Finset.smul_sum]
   refine O.sum_mem ?_
   · intro i _

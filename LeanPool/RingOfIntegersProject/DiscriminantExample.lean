@@ -6,6 +6,10 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 
 import LeanPool.RingOfIntegersProject.Discriminant
 
+/-!
+Support declarations and worked examples for `RingOfIntegersProject`.
+-/
+
 open Polynomial
 
 /-- Let `f` be the polynomial `f = 2 X^3 - X^2 - 2 X + 1`. -/

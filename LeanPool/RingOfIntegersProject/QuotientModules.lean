@@ -8,7 +8,7 @@ import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.LinearAlgebra.Basis.Defs
 import Mathlib.RingTheory.Ideal.Norm.RelNorm
 
-/- !
+/-!
 
 # Index of modules over PIDs
 
@@ -248,7 +248,7 @@ lemma moduleSmithCoeff_ne_unit (N : Submodule R M) (b : Basis ι R M) (b2 : Basi
       b2 i)) with hy
     have : y.1 = x := by
       rw [← this, hy]
-      simp only [AddSubmonoidClass.coe_finset_sum, SetLike.val_smul,
+      simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul,
         smith_coeffs_property]
     rw [← this]
     exact y.2
@@ -285,7 +285,7 @@ lemma Submodule.prime_dvd_index [Finite ι] [Module.Free R M] [Module.Finite R M
       m ∉ N ∧ π • m ∈ N := by
   haveI := Fintype.ofFinite ι
   rw [Associated.dvd_iff_dvd_right (prod_moduleSmithCoeffs_associated_index N B b),
-    Prime.dvd_finset_prod_iff hp] at hdvd
+    Prime.dvd_finsetProd_iff hp] at hdvd
   obtain ⟨i, _, ⟨t, ht⟩⟩ := hdvd
   use (t • smithBasisModule N B b i)
   constructor

@@ -28,6 +28,10 @@ import LeanPool.RingOfIntegersProject.Homogeneous
 import LeanPool.RingOfIntegersProject.PolynomialsAsLists
 import LeanPool.RingOfIntegersProject.SylvesterMatrix
 
+/-!
+Resultants, Sylvester matrices, and polynomial identities used by the ring-of-integers certificates.
+-/
+
 variable {R : Type*}
 
 open Module BigOperators Polynomial Matrix
@@ -673,7 +677,10 @@ lemma zero_resultant_zero :
     roiResultant 1 Q = 1 := by
   rw [← C.map_one, C_resultant, one_pow]
 
+section Nontrivial
+
 variable [Nontrivial R]
+
 @[simp] lemma X_add_C_resultant_X_add_C (x y : R) :
     (X + C x).roiResultant (X + C y) = y - x := by
   rw [roiResultant_eq_det_sylvesterMatrix (natDegree_X_add_C _) (natDegree_X_add_C _),
@@ -698,7 +705,8 @@ lemma resultant_eq_comb (P Q : K[X]) (hPQ : 0 < P.natDegree + Q.natDegree) :
   refine ⟨b, a, ?_⟩
   simpa [Subtype.ext_iff, add_comm] using hab
 
-omit [Nontrivial R]
+end Nontrivial
+
 lemma resultant_swap (P Q : Polynomial R) :
     P.roiResultant Q = (-1) ^ (P.natDegree * Q.natDegree) * Q.roiResultant P := by
   rw [roiResultant, sylvesterMatrix, sylvesterMatrixAux, roiResultant, sylvesterMatrix,
@@ -752,7 +760,8 @@ theorem resultant_map {S : Type*} [CommRing S] {φ : R →+* S} (hφ : Function.
     · assumption
   rw [roiResultant_eq_det_sylvesterMatrix
         (natDegree_map_eq_of_injective hφ _)
-        (natDegree_map_eq_of_injective hφ _), roiResultant, sylvesterMatrixAux, toVec_map, toVec_map,
+        (natDegree_map_eq_of_injective hφ _),
+      roiResultant, sylvesterMatrixAux, toVec_map, toVec_map,
       sylvesterMatrixVec_map, ← RingHom.mapMatrix_apply, ← RingHom.map_det,
       sylvesterMatrix, sylvesterMatrixAux]
 
@@ -1067,13 +1076,14 @@ theorem det_sylvesterMatrixVec_pow_mul (c : R)
       Nat.cast_add]
   ring
 
-/-- The roiResultant as a polynomial in the coefficients is weighted homogeneous with weights `n - i`
-  for
-the `i`th coefficient. -/
+/-- The roiResultant as a polynomial in the coefficients is weighted homogeneous with weights
+`n - i` for the `i`th coefficient. -/
 lemma MvPolynomial.isWeightedHomogeneous_coeffDegree_resultantPolynomialCoeff [Infinite R]
     [IsDomain R] :
-    IsWeightedHomogeneous (Sum.elim (fun (i : Fin (m + 1)) => m - (i : ℕ)) (fun (j : Fin (n +
-      1)) => n - (j : ℕ)))
+    IsWeightedHomogeneous
+      (Sum.elim
+        (fun (i : Fin (m + 1)) => m - (i : ℕ))
+        (fun (j : Fin (n + 1)) => n - (j : ℕ)))
       (resultantPolynomialCoeff (R := R)) (m * n) :=
   isWeightedHomogeneous_iff_eval_smul_eq_pow_smul.mpr fun c f => by
     -- Note that we can't quite reuse the theorem about the roiResultant function being homogeneous,
@@ -1372,7 +1382,7 @@ lemma MvPolynomial.coeff_zero_lead_resultantPolynomialCoeff :
       ← map_pow, C_mul_monomial, mul_one, monomial_eq_monomial_iff]
   refine Or.inl ⟨?_, rfl⟩
   ext i
-  simp [Finsupp.finset_sum_apply]
+  simp [Finsupp.finsetSum_apply]
 
 lemma MvPolynomial.coeff_inl_resultantPolynomialRoots [Nonempty ι] [Nonempty κ] [Infinite R]
     [IsDomain R] :
@@ -1387,7 +1397,7 @@ lemma MvPolynomial.coeff_inl_resultantPolynomialRoots [Nonempty ι] [Nonempty κ
   rw [Finset.sum_eq_single (Finsupp.single (Sum.inl 0) _ + Finsupp.single (Sum.inr (Fin.last _)) _)]
   · have hdisj : Disjoint (fun₀ | Sum.inl (0 : Fin (Fintype.card ι + 1)) => Fintype.card κ).support
                   (fun₀ | Sum.inr (Fin.last (Fintype.card κ)) => Fintype.card ι).support := by
-      simpa [Finsupp.support_single]
+      simp [Finsupp.support_single]
     rw [coeff_zero_lead_resultantPolynomialCoeff, Finsupp.support_add_eq hdisj,
         Finset.prod_union hdisj, Finsupp.support_single _ Fintype.card_ne_zero,
         Finsupp.support_single _ Fintype.card_ne_zero]
@@ -1423,8 +1433,8 @@ lemma MvPolynomial.coeff_inl_resultantPolynomialRoots [Nonempty ι] [Nonempty κ
         neg_eq_zero, one_ne_zero, ne_eq, false_and, false_or]
       rw [Finset.sum_eq_zero]
       simp only [Finset.mem_powersetCard, Finset.subset_univ, true_and, rename_monomial,
-        Finsupp.mapDomain_finset_sum, Finsupp.mapDomain_single, coeff_monomial, DFunLike.ext_iff,
-        Finsupp.finset_sum_apply, Sum.forall,         ite_eq_right_iff, one_ne_zero, imp_false,
+        Finsupp.mapDomain_finsetSum, Finsupp.mapDomain_single, coeff_monomial, DFunLike.ext_iff,
+        Finsupp.finsetSum_apply, Sum.forall,         ite_eq_right_iff, one_ne_zero, imp_false,
           not_and, not_forall]
       intro s hs _
       obtain ⟨x, hxs⟩ : Finset.Nonempty s := Finset.card_ne_zero.mp (hs ▸ Nat.sub_ne_zero_of_lt i.2)
@@ -1479,7 +1489,7 @@ lemma MvPolynomial.coeff_inl_resultantPolynomialRoots [Nonempty ι] [Nonempty κ
     -- κ)`.
     apply coeff_eq_zero_of_totalDegree_lt
     rw [Finset.sum_subset (Finset.subset_univ _), Fintype.sum_sum_type]
-    · refine (totalDegree_finset_prod _ _).trans_lt ?_
+    · refine (totalDegree_finsetProd _ _).trans_lt ?_
       refine (Finset.sum_le_sum (fun _ _ => totalDegree_pow _ _)).trans_lt ?_
       rw [Fin.sum_univ_castSucc]
       simp only [Finsupp.equivFunOnFinite_symm_apply_apply, Sum.elim_inl, Finset.sum_const,

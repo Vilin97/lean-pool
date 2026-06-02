@@ -1004,7 +1004,7 @@ lemma irreducible_of_CertificateIrreducibleZMod' (p n t s : ℕ) [Fact <| Nat.Pr
     convert isCoprime_sub_of_isCoprime_sub_dvd_sub (aux ⟨(n / q), hmlt⟩) ?_
     · exact (C.hhz).symm
     · use (C.a ⟨(n / q), hmlt1⟩), (C.b ⟨(n / q), hmlt1⟩)
-      rw [← C.hneq, Prime.dvd_finset_prod_iff (Nat.prime_iff.mp hq)] at hqdvd
+      rw [← C.hneq, Prime.dvd_finsetProd_iff (Nat.prime_iff.mp hq)] at hqdvd
       obtain ⟨i, _, hi2⟩ := hqdvd
       simp_rw [(Nat.prime_dvd_prime_iff_eq hq (C.hP i)).1 (Nat.Prime.dvd_of_dvd_pow hq hi2)]
         at hmlt1 hmlt ⊢

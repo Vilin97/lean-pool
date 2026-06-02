@@ -12,6 +12,10 @@ import Mathlib.NumberTheory.NumberField.Basic
 import LeanPool.RingOfIntegersProject.Degree3Examples.Irreducible2
 import LeanPool.RingOfIntegersProject.DiscriminantSubalgebraBuilder
 
+/-!
+Support declarations and worked examples for `RingOfIntegersProject`.
+-/
+
 namespace RoiDegree3ExamplesNF2
 open RoiDegree3ExamplesIrreducible2
 

@@ -11,6 +11,10 @@ import LeanPool.RingOfIntegersProject.MaximalAPI
 import Mathlib.NumberTheory.NumberField.Basic
 import LeanPool.RingOfIntegersProject.Degree6Examples.Irreducible0
 
+/-!
+Worked degree-six number field example for `RingOfIntegersProject`.
+-/
+
 namespace RoiDegree6ExamplesNF0
 open RoiDegree6ExamplesIrreducible0
 

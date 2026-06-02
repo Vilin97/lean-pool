@@ -7,6 +7,10 @@ Authors: Anne Baanen, Alex J. Best, Nirvana Coppola, Sander R. Dahmen
 import Mathlib.RingTheory.PowerBasis
 import Mathlib.LinearAlgebra.Basis.Defs
 
+/-!
+Times tables and coordinate formulas for finite bases.
+-/
+
 open Module BigOperators
 
 /-- Imported declaration. -/
@@ -46,7 +50,7 @@ lemma TimesTable.unfold_mul' (t : TimesTable ι R S) :
   intros x y k
   conv_lhs => rw [← t.basis.sum_repr x, ← t.basis.sum_repr y]
   simp_rw [Finset.sum_mul, Finset.mul_sum, map_sum, smul_mul_assoc, map_smul, mul_smul_comm,
-    map_smul, smul_smul, Finsupp.coe_finset_sum, Finset.sum_apply,
+    map_smul, smul_smul, Finsupp.coe_finsetSum, Finset.sum_apply,
     Finsupp.coe_smul, ← t.basis_mul_basis]
   rfl
 
@@ -223,7 +227,7 @@ theorem PowerBasis.repr_gen_pow {R S : Type _} [CommRing R] [Ring S] [Algebra R 
 theorem PowerBasis.repr_aeval_gen_of_natDegree_lt {R S : Type _} [CommRing R] [Ring S] [Algebra R S]
     (pb : PowerBasis R S) (f : R[X]) (hf : f.natDegree < pb.dim) (k) :
     pb.basis.repr (aeval (R := R) pb.gen f) k = f.coeff (k : ℕ) := by
-  simp only [aeval_eq_sum_range, map_sum, map_smul, Finsupp.coe_finset_sum, Finsupp.smul_apply,
+  simp only [aeval_eq_sum_range, map_sum, map_smul, Finsupp.coe_finsetSum, Finsupp.smul_apply,
       Finset.sum_apply, smul_eq_mul]
   rw [Finset.sum_eq_single (k : ℕ)]
   · rw [pb.repr_gen_pow _ k.isLt, Finsupp.single_eq_same, mul_one]

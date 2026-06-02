@@ -185,7 +185,7 @@ theorem satisfiesDedekindAlmostAll_of_certificate (T : ℤ[X]) (pdbad : List ℕ
   haveI : Fact <| Nat.Prime p := fact_iff.2 hp
   by_cases hin : p  ∉ List.ofFn (C.p)
   · refine satisfiesDedekindCriterion_of_coprime_int T C.a C.b p _ C.hab ?_
-    apply Prime.not_dvd_finset_prod (Nat.Prime.prime hp)
+    apply Prime.not_dvd_finsetProd (Nat.Prime.prime hp)
     intro i hi
     by_contra hc
     rw [(Nat.prime_dvd_prime_iff_eq hp (C.hp i)).1 (Nat.Prime.dvd_of_dvd_pow hp hc),

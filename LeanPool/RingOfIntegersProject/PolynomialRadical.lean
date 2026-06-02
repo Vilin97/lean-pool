@@ -12,10 +12,6 @@ import Mathlib.RingTheory.Polynomial.GaussLemma
 import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicity
 import Mathlib.Tactic.ReduceModChar
 
-open Polynomial Finset
-
-open scoped BigOperators
-
 /-!
 # The radical part
 
@@ -29,6 +25,10 @@ of an element in a commutative ring.
 - `isRadicalPart_of_coprime_derivative_of_dvd_of_dvd_pow` : certifies the radical of a polynomial.
 - `self_isRadicalPart_of_coprime'` : gives conditions that guarantee that the
   reduction of a polynomial is its own radical. -/
+
+open Polynomial Finset
+
+open scoped BigOperators
 
 
 variable {R : Type*} [CommMonoidWithZero R]
@@ -91,7 +91,7 @@ lemma associated_isRadicalPart_of_isRadicalPart {R : Type*} [CommMonoidWithZero 
 
 /-- If `b` is the radical part of `a`, then `a` divides some power of `b`. -/
 lemma dvd_pow_of_isRadicalPart {R : Type*} [Nontrivial R] [CommMonoidWithZero R]
-    [IsCancelMulZero R] [UniqueFactorizationMonoid R] {a b : R} (hf : a ≠ 0)
+    [UniqueFactorizationMonoid R] {a b : R} (hf : a ≠ 0)
     (hr : IsRadicalPart b a) : ∃ n : ℕ, a ∣ b ^ n := by
   classical
   haveI :NormalizationMonoid R := UniqueFactorizationMonoid.normalizationMonoid
@@ -102,7 +102,7 @@ lemma dvd_pow_of_isRadicalPart {R : Type*} [Nontrivial R] [CommMonoidWithZero R]
   · intro p
     by_cases h : Multiset.count p (UniqueFactorizationMonoid.normalizedFactors a) = 0
     · rw [h]
-      simp only [zero_le']
+      simp only [zero_le]
     · simp only [Multiset.count_eq_zero, Classical.not_not] at h
       have hadvdf : p ∣ a := UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors h
       have haprime : Prime p := UniqueFactorizationMonoid.prime_of_normalized_factor p h
@@ -129,7 +129,7 @@ lemma dvd_pow_of_isRadicalPart {R : Type*} [Nontrivial R] [CommMonoidWithZero R]
 /-- If `b` is the radical part of `a`, and every prime that divides `a` also divides `c`,
   then `b` divides `c`. -/
 lemma isRadicalPart_dvd_of_prime_dvd {R : Type*} [Nontrivial R] [CommMonoidWithZero R]
-    [IsCancelMulZero R] [UniqueFactorizationMonoid R] {a b c : R}
+    [UniqueFactorizationMonoid R] {a b c : R}
     (hr : IsRadicalPart b a) (hpdvd : ∀ p : R, Prime p → p ∣ a → p ∣ c) : b ∣ c := by
   classical
   haveI :NormalizationMonoid R := UniqueFactorizationMonoid.normalizationMonoid
@@ -142,7 +142,7 @@ lemma isRadicalPart_dvd_of_prime_dvd {R : Type*} [Nontrivial R] [CommMonoidWithZ
     intro p
     by_cases hcc : Multiset.count p (UniqueFactorizationMonoid.normalizedFactors b) = 0
     · rw [hcc]
-      simp only [zero_le']
+      simp only [zero_le]
     · simp only [Multiset.count_eq_zero, Classical.not_not] at hcc
       have hadvdg : p ∣ b := UniqueFactorizationMonoid.dvd_of_mem_normalizedFactors hcc
       have haprime : Prime p := UniqueFactorizationMonoid.prime_of_normalized_factor p hcc
@@ -163,14 +163,14 @@ lemma isRadicalPart_dvd_of_prime_dvd {R : Type*} [Nontrivial R] [CommMonoidWithZ
       linarith
 
 /-- If `b` is the radical part of `a`, then `b` divides `a`. -/
-lemma isRadicalPart_dvd {R : Type*} [CommMonoidWithZero R] [IsCancelMulZero R] [Nontrivial R]
+lemma isRadicalPart_dvd {R : Type*} [CommMonoidWithZero R] [Nontrivial R]
     [UniqueFactorizationMonoid R] {a b : R}
     (hr : IsRadicalPart b a) : b ∣ a :=
   isRadicalPart_dvd_of_prime_dvd hr (c := a) (fun _ _ => (fun a => a))
 
 /-- If `b` is the radical part of `a`, and `a` divides some power of `c`, then `b` divides `c`· -/
 lemma isRadicalPart_dvd_of_dvd_pow {n : ℕ} {R : Type*} [Nontrivial R] [CommMonoidWithZero R]
-    [IsCancelMulZero R] [UniqueFactorizationMonoid R]
+    [UniqueFactorizationMonoid R]
     {a b c : R} (hr : IsRadicalPart b a) (hfdvd : a ∣ c ^ n) : b ∣ c := by
   refine isRadicalPart_dvd_of_prime_dvd hr ?_
   intro a hap hadvdf

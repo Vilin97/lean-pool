@@ -155,7 +155,7 @@ lemma ne_mul_prime (s p : ℕ) (hp : Nat.Prime p) (q r : ℤ)
       by_contra hct
       rw [hct, mul_zero] at ht
       rw [ht] at hq
-      simp only [not_lt_zero'] at hq
+      simp only [not_lt_zero] at hq
     have := Nat.mul_lt_mul_of_pos_left hr (show (t > 0) by exact Nat.zero_lt_of_ne_zero htz)
     rw [hc, ← not_le] at this
     have aux := Nat.mul_le_mul_left s (show (1 ≤ t) by exact Nat.one_le_iff_ne_zero.mpr htz)

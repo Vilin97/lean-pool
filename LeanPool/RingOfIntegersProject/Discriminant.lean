@@ -11,6 +11,10 @@ import Mathlib.RingTheory.IsAdjoinRoot
 
 import LeanPool.RingOfIntegersProject.Resultant
 
+/-!
+Discriminants of polynomials and their relation to resultants and power bases.
+-/
+
 variable {R K : Type*} [CommRing R] [Field K]
 variable {m n : ℕ}
 
@@ -203,8 +207,8 @@ lemma sylvesterMatrix_last' (f g : R[X]) [NeZero f.natDegree] [NeZero (f.natDegr
     · exact ((Nat.sub_one_lt (NeZero.ne _)).trans_le (Nat.le_add_right _ _)).ne'
 
 /--
-The discriminant of a polynomial `f` is defined as the roiResultant of `f` and its derivative `f'` up
-  to a scaling factor.
+The discriminant of a polynomial `f` is defined as the roiResultant of `f` and its
+derivative `f'`, up to a scaling factor.
 We implement the scaling factor in the definition of the "modified" Sylvester matrix.
 -/
 noncomputable def modifiedSylvesterMatrix (f : R[X]) :
@@ -265,8 +269,8 @@ lemma updateRow_smul_modifiedSylvesterMatrix [NoZeroSMulDivisors ℕ R] (f : R[X
   · simp [hi]
 
 /--
-The discriminant of a polynomial `f` is defined as the roiResultant of `f` and its derivative `f'` up
-  to a scaling factor.
+The discriminant of a polynomial `f` is defined as the roiResultant of `f` and its
+derivative `f'`, up to a scaling factor.
 -/
 noncomputable def discriminant (f : R[X]) : R :=
   (-1) ^ (f.natDegree * (f.natDegree - 1) / 2) * Matrix.det (modifiedSylvesterMatrix f)
@@ -306,7 +310,8 @@ lemma resultant_derivative_self (f : R[X]) (hf : natDegree f ≠ 0) :
 namespace Monic
 
 lemma discriminant_def (f : R[X]) (hf : Monic f) :
-  discriminant f = (-1) ^ (f.natDegree * (f.natDegree - 1) / 2) * roiResultant f (derivative f) := by
+    discriminant f =
+      (-1) ^ (f.natDegree * (f.natDegree - 1) / 2) * roiResultant f (derivative f) := by
   by_cases hf0 : natDegree f = 0
   · simp [hf.natDegree_eq_zero.mp hf0]
   · conv_lhs => rw [← one_mul f.discriminant, ← hf.leadingCoeff, Polynomial.discriminant_def _ hf0]
@@ -421,11 +426,11 @@ lemma natDegree_sum_eq {ι : Type*} {s : Finset ι} {p : ι → R[X]}
         intro h
         have := (Finset.sum_congr rfl (fun i hi => by rw [← coeff_natDegree,
           hdegs _ hi])).trans hcoeff'
-        rw [← finset_sum_coeff, ← h, coeff_natDegree, leadingCoeff_eq_zero] at this
+        rw [← finsetSum_coeff, ← h, coeff_natDegree, leadingCoeff_eq_zero] at this
         contradiction
     have : (∑ i ∈ s, p i).natDegree = n := ih hs0 hdegs hcoeff'
     rw [natDegree_add_eq_of_leadingCoeff_add_ne_zero, hdega, this, max_self]
-    · simp only [← coeff_natDegree, hdega, this, finset_sum_coeff] at hcoeff ⊢
+    · simp only [← coeff_natDegree, hdega, this, finsetSum_coeff] at hcoeff ⊢
       rwa [Finset.sum_congr rfl (fun i hi => by rw [hdegs _ hi])] at hcoeff
 
 lemma discriminant_prod_X_sub_C [CharZero K] {ι : Type*} [DecidableEq ι] (s : Finset ι)
@@ -436,7 +441,7 @@ lemma discriminant_prod_X_sub_C [CharZero K] {ι : Type*} [DecidableEq ι] (s : 
     prod_X_sub_C_resultant]
   · congr 1
     refine Finset.prod_congr rfl (fun i hi => ?_)
-    simp only [eval_finset_sum, eval_prod, eval_sub, eval_X, eval_C]
+    simp only [eval_finsetSum, eval_prod, eval_sub, eval_X, eval_C]
     refine Finset.sum_eq_single _
         (fun j _ hji => Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨hji.symm, hi⟩) (sub_self _))
         (fun h => (h hi).elim)
