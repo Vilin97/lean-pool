@@ -194,11 +194,11 @@ example : separable (svmFeatureMap '' A₀) (svmFeatureMap '' A₁) := by
 /-- The "kernel trick" means we forget about the data just map
 "without the computational burden of explicitly performing the transformation"
 -/
-def φ₀ : (Fin 2 → ℝ) → (Fin 1 → ℝ) := fun x => ![(x 0 + x 1 - 1)^2]
+def xorFeatureMap : (Fin 2 → ℝ) → (Fin 1 → ℝ) := fun x => ![(x 0 + x 1 - 1)^2]
 
-example : separable (φ₀ '' A₀) (φ₀ '' A₁) := by
+example : separable (xorFeatureMap '' A₀) (xorFeatureMap '' A₁) := by
   simp only [
-    separable, φ₀, Fin.isValue, A₀, Nat.succ_eq_add_one, Nat.reduceAdd, Set.mem_image,
+    separable, xorFeatureMap, Fin.isValue, A₀, Nat.succ_eq_add_one, Nat.reduceAdd, Set.mem_image,
     Set.mem_insert_iff, Set.mem_singleton_iff, exists_eq_or_imp, Matrix.cons_val_zero,
     Matrix.cons_val_one, Matrix.cons_val_fin_one, add_zero, zero_sub, even_two, Even.neg_pow,
     one_pow, ↓existsAndEq, add_sub_cancel_right, true_and, or_self, tsub_le_iff_right,
