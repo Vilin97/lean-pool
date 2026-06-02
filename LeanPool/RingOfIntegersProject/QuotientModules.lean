@@ -46,7 +46,7 @@ variable [IsDomain R] [IsPrincipalIdealRing R] [Fintype ι] [Fintype ι']
 
 /-- For `N` a submodule of a free and finite module `M` of the same rank,
   we extract a basis for `N` of cardinality the rank of `M`. -/
-noncomputable def Submodule.basisOfPID_of_eq_rank (N : Submodule R M) [Module.Free R M]
+noncomputable def Submodule.basisOfPIDOfEqRank (N : Submodule R M) [Module.Free R M]
     [Module.Finite R M]
     (heq : Module.rank R M = Module.rank R N) : Basis (Fin (Fintype.card
       (Module.Free.ChooseBasisIndex R M))) R N := by
@@ -59,18 +59,18 @@ noncomputable def Submodule.basisOfPID_of_eq_rank (N : Submodule R M) [Module.Fr
   exact b
 
 /-- Imported declaration. -/
-noncomputable def Submodule.indexPID_aux (N : Submodule R M) [Module.Free R M] [Module.Finite R M]
+noncomputable def Submodule.indexPIDAux (N : Submodule R M) [Module.Free R M] [Module.Finite R M]
     (heq : Module.rank R M = Module.rank R N) : R := by
   let B := Basis.reindex (Module.Free.chooseBasis R M) (Fintype.equivFin
     (Module.Free.ChooseBasisIndex R M))
-  exact ((LinearMap.toMatrix (Submodule.basisOfPID_of_eq_rank N heq) B (Submodule.subtype N)).det)
+  exact ((LinearMap.toMatrix (Submodule.basisOfPIDOfEqRank N heq) B (Submodule.subtype N)).det)
 
 /-- Auxiliary definition: for `N` a submodule of `M` of the same rank,
   the determinant of the matrix representing the inclusion map `N → M` with
   respect to some choice of bases. -/
-lemma Submodule.indexPID_aux_def (N : Submodule R M) [Module.Free R M] [Module.Finite R M]
-    (heq : Module.rank R M = Module.rank R N) : Submodule.indexPID_aux N heq =
-  (LinearMap.toMatrix (Submodule.basisOfPID_of_eq_rank N heq)
+lemma Submodule.indexPIDAux_def (N : Submodule R M) [Module.Free R M] [Module.Finite R M]
+    (heq : Module.rank R M = Module.rank R N) : Submodule.indexPIDAux N heq =
+  (LinearMap.toMatrix (Submodule.basisOfPIDOfEqRank N heq)
   (Basis.reindex (Module.Free.chooseBasis R M) (Fintype.equivFin (Module.Free.ChooseBasisIndex R
     M)))
   (Submodule.subtype N)).det := rfl
@@ -78,7 +78,7 @@ lemma Submodule.indexPID_aux_def (N : Submodule R M) [Module.Free R M] [Module.F
 /-- The index `[M : N]` of `N` in `M` as an element in `R`. -/
 noncomputable def Submodule.indexPID (N : Submodule R M) [Module.Free R M]
     [Module.Finite R M] : R :=
- if heq : Module.rank R M = Module.rank R N then (Submodule.indexPID_aux N heq) else 0
+ if heq : Module.rank R M = Module.rank R N then (Submodule.indexPIDAux N heq) else 0
 
 lemma Submodule.eq_top_of_index_isUnit (N : Submodule R M) [Module.Free R M] [Module.Finite R M]
    (hu : IsUnit (Submodule.indexPID N)) : N = ⊤ := by
@@ -90,7 +90,7 @@ lemma Submodule.eq_top_of_index_isUnit (N : Submodule R M) [Module.Free R M] [Mo
     rw [this] at hu
     simp only [isUnit_zero_iff, zero_ne_one] at hu
   unfold Submodule.indexPID at hu
-  simp only [heq, dite_true, Submodule.indexPID_aux_def] at hu
+  simp only [heq, dite_true, Submodule.indexPIDAux_def] at hu
   rw [Submodule.eq_top_iff']
   intro x
   have aux : (LinearEquiv.ofIsUnitDet hu) ((LinearEquiv.ofIsUnitDet hu).symm x) =
@@ -128,7 +128,7 @@ lemma associated_index_of_basis [Module.Free R M] [Module.Finite R M] (N : Submo
   · push Not at heq
     let B' := Basis.reindex (Module.Free.chooseBasis R M) (Fintype.equivFin
       (Module.Free.ChooseBasisIndex R M))
-    let b' := (Submodule.basisOfPID_of_eq_rank N heq)
+    let b' := (Submodule.basisOfPIDOfEqRank N heq)
     have heq' := heq
     rw [rank_eq_card_basis B, rank_eq_card_basis b' ] at heq'
     simp only [Fintype.card_fin, Nat.cast_inj] at heq'
@@ -136,7 +136,7 @@ lemma associated_index_of_basis [Module.Free R M] [Module.Finite R M] (N : Submo
     let bc := b.reindex (Basis.indexEquiv B B')
     unfold Submodule.indexPID
     simp only [heq, dite_true]
-    have : Submodule.indexPID_aux N heq =
+    have : Submodule.indexPIDAux N heq =
        (LinearMap.toMatrix b' B' (Submodule.subtype N)).det := rfl
     simp_rw [this]
     have := LinearMap.toMatrix_comp b' Bc B' (LinearMap.id) (LinearMap.comp
@@ -175,8 +175,8 @@ lemma Submodule.indexPID_dvd_of_le [Module.Free R M] [Module.Finite R M] (N₁ N
       LE.le.antisymm (by rw [heq]; exact (Submodule.finrank_mono hle)) (Submodule.finrank_le N₂)]
     let f := Submodule.inclusion hle
     let g := (Submodule.subtype N₂)
-    let b₁ := Submodule.basisOfPID_of_eq_rank N₁ heqc
-    let b₂ := Submodule.basisOfPID_of_eq_rank N₂ heq2'
+    let b₁ := Submodule.basisOfPIDOfEqRank N₁ heqc
+    let b₂ := Submodule.basisOfPIDOfEqRank N₂ heq2'
     have assoc1 := associated_index_of_basis N₁ B b₁
     rw [←(show g.comp f = Submodule.subtype N₁ by rfl)] at assoc1
     have := LinearMap.toMatrix_comp b₁ b₂ B g f

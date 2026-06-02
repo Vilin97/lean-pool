@@ -224,8 +224,8 @@ noncomputable def M2 : MaximalOrderCertificateWLists 2 O Om hm where
  v := ![![0, 1, 0, 1, 0],![0, 0, 1, 1, 0]]
  w := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 1],![0, 1, 0, 0, 0]]
  wFrob := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 1],![0, 0, 1, 0, 0]]
- v_ind := ![1, 2]
- w_ind := ![0, 1, 2]
+ vInd := ![1, 2]
+ wInd := ![0, 1, 2]
  hmod1 := by decide +kernel
  hmod2 := by decide +kernel
  hindv := by decide +kernel
@@ -238,7 +238,7 @@ noncomputable def M2 : MaximalOrderCertificateWLists 2 O Om hm where
  a := ![![27, 74],![26, 73],![2, 6],![106, -90],![36, 66]]
  c := ![![12, -18, -42],![12, -18, -42],![-13, 38, -22],![-18, 41, -46],![14, -24, -43]]
  hmulw := by decide +kernel
- ac_indw := ![Sum.inl 0, Sum.inl 1, Sum.inr 0, Sum.inr 1, Sum.inr 2]
+ acIndw := ![Sum.inl 0, Sum.inl 1, Sum.inr 0, Sum.inr 1, Sum.inr 2]
  hacindw := by decide +kernel
 
 /-- Auxiliary declaration for the worked example. -/
@@ -263,8 +263,8 @@ noncomputable def M3 : MaximalOrderCertificateWLists 3 O Om hm where
  v := ![![1, 0, 2, 0, 0],![0, 1, 0, 2, 0]]
  w := ![![1, 0, 0, 0, 0],![2, 1, 0, 0, 2],![0, 1, 0, 0, 0]]
  wFrob := ![![1, 0, 0, 0, 0],![0, 1, 2, 0, 2],![0, 0, 0, 1, 0]]
- v_ind := ![0, 1]
- w_ind := ![0, 1, 3]
+ vInd := ![0, 1]
+ wInd := ![0, 1, 3]
  hmod1 := by decide +kernel
  hmod2 := by decide +kernel
  hindv := by decide +kernel
@@ -277,7 +277,7 @@ noncomputable def M3 : MaximalOrderCertificateWLists 3 O Om hm where
  a := ![![34, -90],![276, -35],![-30, -75],![321, -144],![90, -75]]
  c := ![![-390, 141, 45],![-180, 39, -90],![-350, 132, 57],![-363, 100, -48],![-162, 51, 4]]
  hmulw := by decide +kernel
- ac_indw := ![Sum.inl 0, Sum.inl 1, Sum.inr 0, Sum.inr 1, Sum.inr 2]
+ acIndw := ![Sum.inl 0, Sum.inl 1, Sum.inr 0, Sum.inr 1, Sum.inr 2]
  hacindw := by decide +kernel
 
 

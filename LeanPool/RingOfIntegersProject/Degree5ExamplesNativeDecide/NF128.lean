@@ -249,8 +249,8 @@ noncomputable def M2 : MaximalOrderCertificateWLists 2 O Om hm where
  v := ![![0, 1, 0, 0, 0],![0, 0, 1, 0, 0],![0, 0, 0, 1, 0]]
  w := ![![1, 0, 0, 0, 0],![0, 0, 0, 0, 1]]
  wFrob := ![![1, 0, 0, 0, 0],![0, 0, 1, 1, 1]]
- v_ind := ![1, 2, 3]
- w_ind := ![0, 2]
+ vInd := ![1, 2, 3]
+ wInd := ![0, 2]
  hmod1 := by decide +kernel
  hmod2 := by decide +kernel
  hindv := by decide +kernel
@@ -263,7 +263,7 @@ noncomputable def M2 : MaximalOrderCertificateWLists 2 O Om hm where
  a := ![![713, -44, 24],![1284, -321, -48],![618, -52, 29],![194, -62, -16],![1378, -314, -54]]
  c := ![![-262, 498],![-376, 1112],![-224, 448],![-51, 180],![-414, 1161]]
  hmulw := by decide +kernel
- ac_indw := ![Sum.inl 0, Sum.inl 1, Sum.inl 2, Sum.inr 0, Sum.inr 1]
+ acIndw := ![Sum.inl 0, Sum.inl 1, Sum.inl 2, Sum.inr 0, Sum.inr 1]
  hacindw := by decide +kernel
 
 /-- Auxiliary declaration for the worked example. -/
@@ -288,8 +288,8 @@ noncomputable def M3 : MaximalOrderCertificateWLists 3 O Om hm where
  v := ![![0, 1, 1, 0, 0]]
  w := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 1],![0, 2, 0, 0, 0],![0, 0, 0, 1, 2]]
  wFrob := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 1],![0, 0, 1, 0, 0],![0, 0, 0, 1, 2]]
- v_ind := ![1]
- w_ind := ![0, 1, 2, 3]
+ vInd := ![1]
+ wInd := ![0, 1, 2, 3]
  hmod1 := by decide +kernel
  hmod2 := by decide +kernel
  hindv := by decide +kernel
@@ -306,7 +306,7 @@ noncomputable def M3 : MaximalOrderCertificateWLists 3 O Om hm where
    ![-744, 3000, -509, -129],
    ![-2184, 5868, -837, 2]]
  hmulw := by decide +kernel
- ac_indw := ![Sum.inl 0, Sum.inr 0, Sum.inr 1, Sum.inr 2, Sum.inr 3]
+ acIndw := ![Sum.inl 0, Sum.inr 0, Sum.inr 1, Sum.inr 2, Sum.inr 3]
  hacindw := by decide +kernel
 
 /-- Auxiliary declaration for the worked example. -/
@@ -327,7 +327,7 @@ noncomputable def M13 : MaximalOrderCertificateOfUnramifiedLists 13 O Om hm wher
  hle := by decide +kernel
  w := ![![1, 0, 0, 0, 0],![11, 1, 5, 2, 0],![7, 0, 3, 6, 0],![4, 0, 3, 10, 0],![11, 8, 7, 8, 12]]
  wFrob := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 0],![0, 0, 1, 0, 0],![0, 0, 0, 1, 0],![0, 0, 0, 0, 1]]
- w_ind := ![0, 1, 2, 3, 4]
+ wInd := ![0, 1, 2, 3, 4]
  hindw := by decide +kernel
  hwFrobComp := by decide +kernel
 

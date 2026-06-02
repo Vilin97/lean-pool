@@ -17,7 +17,7 @@ lemma derivative_f : derivative f = f' := by
   rw [f, f', ← ofList_derivative_eq_derivative]
   decide +kernel
 
-lemma resultant_f_f' : Polynomial.resultant f f' = -72 := by decide +kernel
+lemma resultant_f_f' : Polynomial.roiResultant f f' = -72 := by decide +kernel
 lemma discriminant_f : Polynomial.discriminant f = 36 := by
   apply mul_left_cancel₀ (show f.leadingCoeff ≠ 0 by decide)
   rw [Polynomial.discriminant_def, derivative_f]

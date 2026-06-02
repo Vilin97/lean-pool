@@ -261,8 +261,8 @@ noncomputable def M3 : MaximalOrderCertificateWLists 3 O Om hm where
  v := ![![0, 1, 2, 0, 0]]
  w := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 2],![0, 1, 0, 0, 1],![0, 0, 0, 1, 2]]
  wFrob := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 2],![0, 0, 1, 0, 1],![0, 0, 0, 1, 2]]
- v_ind := ![1]
- w_ind := ![0, 1, 2, 3]
+ vInd := ![1]
+ wInd := ![0, 1, 2, 3]
  hmod1 := by decide +kernel
  hmod2 := by decide +kernel
  hindv := by decide +kernel
@@ -279,7 +279,7 @@ noncomputable def M3 : MaximalOrderCertificateWLists 3 O Om hm where
    ![-30, 36, -29, -15],
    ![24, -24, 33, 4]]
  hmulw := by decide +kernel
- ac_indw := ![Sum.inl 0, Sum.inr 0, Sum.inr 1, Sum.inr 2, Sum.inr 3]
+ acIndw := ![Sum.inl 0, Sum.inr 0, Sum.inr 1, Sum.inr 2, Sum.inr 3]
  hacindw := by decide +kernel
 
 /-- Auxiliary declaration for the worked example. -/
@@ -300,7 +300,7 @@ noncomputable def M23 : MaximalOrderCertificateOfUnramifiedLists 23 O Om hm wher
  hle := by decide +kernel
  w := ![![1, 0, 0, 0, 0],![10, 6, 0, 22, 0],![8, 10, 11, 7, 0],![7, 7, 2, 6, 0],![13, 12, 13, 7, 1]]
  wFrob := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 0],![0, 0, 1, 0, 0],![0, 0, 0, 1, 0],![0, 0, 0, 0, 1]]
- w_ind := ![0, 1, 2, 3, 4]
+ wInd := ![0, 1, 2, 3, 4]
  hindw := by decide +kernel
  hwFrobComp := by decide +kernel
 

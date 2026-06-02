@@ -176,8 +176,8 @@ noncomputable def M3 : MaximalOrderCertificateLists 3 O Om hm where
  v := ![![0, 1, 0],![0, 0, 1]]
  w := ![![1, 0, 0]]
  wFrob := ![![1, 0, 0]]
- v_ind := ![1, 2]
- w_ind := ![0]
+ vInd := ![1, 2]
+ wInd := ![0]
  hmod1 := by decide
  hmod2 := by decide
  hindv := by decide
@@ -189,7 +189,7 @@ noncomputable def M3 : MaximalOrderCertificateLists 3 O Om hm where
  c := ![![![0],![0]],![![10],![0]],![![0],![10]]]
  d := ![![![0, 0]],![![0, 6]],![![6, 0]]]
  e := ![![![1]],![![0]],![![0]]]
- ab_ind := ![(Sum.inl 0, Sum.inl 0),(Sum.inl 1, Sum.inl 0),(Sum.inl 1, Sum.inr 0)]
+ abInd := ![(Sum.inl 0, Sum.inl 0),(Sum.inl 1, Sum.inl 0),(Sum.inl 1, Sum.inr 0)]
  hindab := by decide
  hmul1 := by decide +kernel
  hmul2 := by decide +kernel

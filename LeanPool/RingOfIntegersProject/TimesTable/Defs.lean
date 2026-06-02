@@ -159,7 +159,7 @@ open BigOperators Polynomial
 -- TODO: could generalize to infinite ι
 /-- Imported declaration. -/
 @[reducible]
-noncomputable def has_mul_of_table {ι R S : Type _} [Fintype ι] [Semiring R]
+noncomputable def hasMulOfTable {ι R S : Type _} [Fintype ι] [Semiring R]
     [AddCommMonoid S] [Module R S] (b : Basis ι R S) (table : ι → ι → ι → R) :
     Mul S :=
 { mul := fun x y =>
@@ -168,7 +168,7 @@ noncomputable def has_mul_of_table {ι R S : Type _} [Fintype ι] [Semiring R]
 lemma mul_def' {ι R S : Type _} [Fintype ι] [Semiring R]
     [hS : AddCommMonoid S] [Module R S] (b : Basis ι R S) (table : ι → ι → ι → R)
     (x y : S) (k : ι) :
-    b.repr (by { letI := has_mul_of_table b table; exact x * y }) k =
+    b.repr (by { letI := hasMulOfTable b table; exact x * y }) k =
       ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k :=
 show b.repr (b.equivFun.symm (fun k => ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k)) k =
   ∑ i, ∑ j, b.repr x i * b.repr y j * table i j k
@@ -177,7 +177,7 @@ by simp only [← b.equivFun_apply, b.equivFun.apply_symm_apply]
 lemma mul_def_of_table {ι R S : Type _} [Fintype ι] [Semiring R]
     [hS : AddCommMonoid S] [Module R S] (b : Basis ι R S) (table : ι → ι → ι → R)
     (i j k : ι) :
-    b.repr (by { letI := has_mul_of_table b table; exact b i * b j }) k = table i j k := by
+    b.repr (by { letI := hasMulOfTable b table; exact b i * b j }) k = table i j k := by
   classical
   rw [mul_def', Fintype.sum_eq_single i, Fintype.sum_eq_single j]
   · simp
@@ -190,13 +190,13 @@ lemma mul_def_of_table {ι R S : Type _} [Fintype ι] [Semiring R]
 -- See note [reducible non-instances]
 /-- Imported declaration. -/
 @[reducible]
-noncomputable def non_unital_non_assoc_semiring_of_table {ι R S : Type _} [Fintype ι] [Semiring R]
+noncomputable def nonUnitalNonAssocSemiringOfTable {ι R S : Type _} [Fintype ι] [Semiring R]
   [hS : AddCommMonoid S] [Module R S] (b : Basis ι R S) (table : ι → ι → ι → R) :
     NonUnitalNonAssocSemiring S :=
 { hS with
   zero := 0,
   add := (·+·),
-  mul := (has_mul_of_table b table).mul,
+  mul := (hasMulOfTable b table).mul,
   zero_mul := fun x => b.ext_elem (fun k => by
     rw [mul_def']
     simp only [map_zero b.repr, Finsupp.zero_apply, zero_mul, Finset.sum_const_zero]),

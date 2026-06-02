@@ -15,7 +15,7 @@ open Module Polynomial
 
 section Part1
 variable {n : ℕ} [NeZero n] {K : Type*} [Field K] [CharZero K] {T : ℤ[X]}
-{l : List ℤ}
+  {l : List ℤ}
 
 --example : Algebra ℚ K := by apply?
 

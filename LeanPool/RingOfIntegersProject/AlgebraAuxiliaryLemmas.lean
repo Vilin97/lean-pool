@@ -79,7 +79,7 @@ lemma Algebra.minpoly_fraction_field {R Q K : Type*} [CommRing R] [IsDomain R] [
 
 -- We don't use minpoly.equivAdjoin because we don't assume that `K` is a domain·
 /-- Imported declaration. -/
-noncomputable def Algebra.adjoin_isAdjoinRoot {R Q K : Type*} [CommRing R] [IsDomain R] [Field Q]
+noncomputable def Algebra.adjoinIsAdjoinRoot {R Q K : Type*} [CommRing R] [IsDomain R] [Field Q]
     [Algebra R Q] [IsFractionRing R Q] [CommRing K]
     [Algebra R K] [Algebra Q K] [IsScalarTower R Q K] (T : Polynomial R)
     (hm : Monic T) (x : K) (hmin : minpoly Q x = map (algebraMap R Q) T) :
@@ -118,12 +118,12 @@ noncomputable def Algebra.adjoin_isAdjoinRoot {R Q K : Type*} [CommRing R] [IsDo
     rw [this] at hP
     exact hP.symm
 
-lemma Algebra.adjoin_isAdjoinRoot_root {R Q K : Type*} [CommRing R] [IsDomain R] [Field Q]
+lemma Algebra.adjoinIsAdjoinRoot_root {R Q K : Type*} [CommRing R] [IsDomain R] [Field Q]
     [Algebra R Q] [IsFractionRing R Q] [CommRing K]
     [Algebra R K] [Algebra Q K] [IsScalarTower R Q K] (T : Polynomial R)
     (hm : Monic T) (x : K) (hmin : minpoly Q x = map (algebraMap R Q) T) :
-    (Algebra.adjoin_isAdjoinRoot T hm x hmin).root = x := by
-  unfold Algebra.adjoin_isAdjoinRoot
+    (Algebra.adjoinIsAdjoinRoot T hm x hmin).root = x := by
+  unfold Algebra.adjoinIsAdjoinRoot
   erw [IsAdjoinRoot.ofAlgEquiv_root, Equiv.trans_apply, AdjoinRoot.isAdjoinRoot_root_eq_root]
   unfold AdjoinRoot.root; unfold AdjoinRoot.mk
   erw [Ideal.quotientEquivAlgOfEq_mk R _  (X : R[X]), AdjoinRoot.mk_X,
@@ -131,12 +131,12 @@ lemma Algebra.adjoin_isAdjoinRoot_root {R Q K : Type*} [CommRing R] [IsDomain R]
   rw [Algebra.minpoly_fraction_field T hm x hmin]
 
 /-- Imported declaration. -/
-noncomputable def Algebra.adjoin_isAdjoinRootOfIsAdjoinRoot [CommRing R] [IsDomain R] [Field Q]
+noncomputable def Algebra.adjoinIsAdjoinRootOfIsAdjoinRoot [CommRing R] [IsDomain R] [Field Q]
     [Algebra R Q] [IsFractionRing R Q] [CommRing K] [Algebra R K] [Algebra Q K]
     [IsScalarTower R Q K]
     (T : Polynomial R) (hm : Monic T)
     (k : IsAdjoinRoot K (T.map (algebraMap R Q))) : IsAdjoinRoot (Algebra.adjoin R {k.root}) T := by
-  refine Algebra.adjoin_isAdjoinRoot (Q := Q) T hm k.root ?_
+  refine Algebra.adjoinIsAdjoinRoot (Q := Q) T hm k.root ?_
   rw [IsAdjoinRoot.minpoly_root k (Monic.ne_zero (Monic.map (algebraMap R Q) hm)),
     Monic.map _ hm, inv_one, map_one, mul_one]
 
@@ -146,7 +146,7 @@ noncomputable def Algebra.adjoinRootEquivOfRootMem [CommRing R] [IsDomain R] [Fi
     (O : Type*) [CommRing O] [Algebra R O] (T : Polynomial R) (hm : Monic T)
     (f : IsAdjoinRoot O T) (k : IsAdjoinRoot K (T.map (algebraMap R Q))) :
     O ≃ₐ[R] (Algebra.adjoin R {k.root}) := by
-  refine f.algEquiv (Algebra.adjoin_isAdjoinRoot (Q := Q) T hm k.root ?_)
+  refine f.algEquiv (Algebra.adjoinIsAdjoinRoot (Q := Q) T hm k.root ?_)
   rw [IsAdjoinRoot.minpoly_root k (Monic.ne_zero (Monic.map (algebraMap R Q) hm)),
     Monic.map _ hm, inv_one, map_one, mul_one]
 
@@ -282,12 +282,10 @@ lemma discr_eq_discr_fraction_field_powerBasis {n : ℕ} [NeZero n] [CommRing R]
   rw [discr_eq_discr_fraction_field hkdim]
   congr
   ext i
-  simp only [Subalgebra.coe_val, IsAdjoinRootMonic.powerBasis_dim,
-    IsAdjoinRootMonic.powerBasis_basis, Algebra.adjoinRootEquivOfRootMem, Basis.coe_reindex,
+  simp only [Subalgebra.coe_val, Algebra.adjoinRootEquivOfRootMem, Basis.coe_reindex,
     finCongr_symm, Function.comp_apply, finCongr_apply, Basis.map_apply,
-    IsAdjoinRootMonic.basis_apply, Fin.val_cast, AlgEquiv.toLinearEquiv_apply, map_pow,
-    IsAdjoinRoot.algEquiv_root, SubmonoidClass.coe_pow, Algebra.adjoin_isAdjoinRoot_root, B]
-  exact (IsAdjoinRootMonic.basis_apply k ((finCongr (hdegeq.trans hdeg).symm) i)).symm
+    AlgEquiv.toLinearEquiv_apply, PowerBasis.coe_basis, B]
+  simp [map_pow, IsAdjoinRoot.algEquiv_root, Algebra.adjoinIsAdjoinRoot_root]
 
 /-- Imported declaration. -/
 noncomputable def Subalgebra.algEquivOfInclusion {R M : Type _} [CommRing R] [CommRing M]

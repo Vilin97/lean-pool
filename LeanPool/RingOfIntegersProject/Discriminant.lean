@@ -76,7 +76,7 @@ end List
 
 theorem resultant_eq_of_splits [Infinite K] (f g : K[X]) (hf0 : f ≠ 0) (hg0 : g ≠ 0)
     (hf : f.Splits) (hg : g.Splits) :
-    resultant f g =
+    roiResultant f g =
       leadingCoeff f ^ g.natDegree * leadingCoeff g ^ f.natDegree *
         (f.roots.map (fun ai => (g.roots.map fun bj => (ai - bj)).prod)).prod := by
     conv_lhs =>
@@ -94,7 +94,7 @@ lemma hom_eval {S : Type*} [CommSemiring S] (f : R →+* S) (p : R[X]) (x : R) :
   rw [eval, hom_eval₂, RingHom.comp_id]
 
 lemma prod_X_sub_C_resultant {ι : Type*} (s : Finset ι) (t : ι → K) (g : K[X]) :
-    resultant (∏ i ∈ s, (X - C (t i))) g =
+    roiResultant (∏ i ∈ s, (X - C (t i))) g =
       ∏ i ∈ s, eval (t i) g := by
   by_cases hg0 : g = 0
   · simp [hg0, resultant_zero']
@@ -115,7 +115,7 @@ lemma prod_X_sub_C_resultant {ι : Type*} (s : Finset ι) (t : ι → K) (g : K[
   · exact leadingCoeff_ne_zero.mpr (map_ne_zero hg0)
 
 lemma resultant_prod_X_sub_C {ι : Type*} (f : K[X]) (s : Finset ι) (u : ι → K) :
-    resultant f (∏ i ∈ s, (X - C (u i))) =
+    roiResultant f (∏ i ∈ s, (X - C (u i))) =
       (-1) ^ (f.natDegree * s.card) * ∏ i ∈ s, eval (u i) f := by
   rw [resultant_swap, prod_X_sub_C_resultant, natDegree_prod_X_sub_C]
 
@@ -203,7 +203,7 @@ lemma sylvesterMatrix_last' (f g : R[X]) [NeZero f.natDegree] [NeZero (f.natDegr
     · exact ((Nat.sub_one_lt (NeZero.ne _)).trans_le (Nat.le_add_right _ _)).ne'
 
 /--
-The discriminant of a polynomial `f` is defined as the resultant of `f` and its derivative `f'` up
+The discriminant of a polynomial `f` is defined as the roiResultant of `f` and its derivative `f'` up
   to a scaling factor.
 We implement the scaling factor in the definition of the "modified" Sylvester matrix.
 -/
@@ -265,7 +265,7 @@ lemma updateRow_smul_modifiedSylvesterMatrix [NoZeroSMulDivisors ℕ R] (f : R[X
   · simp [hi]
 
 /--
-The discriminant of a polynomial `f` is defined as the resultant of `f` and its derivative `f'` up
+The discriminant of a polynomial `f` is defined as the roiResultant of `f` and its derivative `f'` up
   to a scaling factor.
 -/
 noncomputable def discriminant (f : R[X]) : R :=
@@ -291,14 +291,14 @@ variable [NoZeroSMulDivisors ℕ R]
 
 lemma discriminant_def (f : R[X]) (hf : natDegree f ≠ 0) :
     f.leadingCoeff * discriminant f = (-1) ^ (f.natDegree * (f.natDegree - 1) / 2) *
-      resultant f (derivative f) := by
+      roiResultant f (derivative f) := by
   have hf : 0 < natDegree f := Nat.pos_of_ne_zero hf
   have : NeZero (f.natDegree + (derivative f).natDegree) := NeZero.of_pos (by simp [hf])
-  rw [resultant, ← updateRow_smul_modifiedSylvesterMatrix, Matrix.det_updateRow_smul,
+  rw [roiResultant, ← updateRow_smul_modifiedSylvesterMatrix, Matrix.det_updateRow_smul,
       Matrix.updateRow_eq_self, discriminant, mul_left_comm]
 
 lemma resultant_derivative_self (f : R[X]) (hf : natDegree f ≠ 0) :
-    resultant f (derivative f) = (-1) ^ (f.natDegree * (f.natDegree - 1) / 2) * f.leadingCoeff *
+    roiResultant f (derivative f) = (-1) ^ (f.natDegree * (f.natDegree - 1) / 2) * f.leadingCoeff *
       discriminant f := by
   rw [mul_assoc, discriminant_def _ hf, ← mul_assoc, ← pow_add, ← two_mul, pow_mul, neg_one_pow_two,
     one_pow, one_mul]
@@ -306,7 +306,7 @@ lemma resultant_derivative_self (f : R[X]) (hf : natDegree f ≠ 0) :
 namespace Monic
 
 lemma discriminant_def (f : R[X]) (hf : Monic f) :
-  discriminant f = (-1) ^ (f.natDegree * (f.natDegree - 1) / 2) * resultant f (derivative f) := by
+  discriminant f = (-1) ^ (f.natDegree * (f.natDegree - 1) / 2) * roiResultant f (derivative f) := by
   by_cases hf0 : natDegree f = 0
   · simp [hf.natDegree_eq_zero.mp hf0]
   · conv_lhs => rw [← one_mul f.discriminant, ← hf.leadingCoeff, Polynomial.discriminant_def _ hf0]
@@ -632,12 +632,15 @@ theorem discr_of_isAdjoinRootMonic {K : Type*} [Field K] [Algebra ℚ K] {T : �
   have e_apply : ∀ i, e i f.root =
       (T.aroots (AlgebraicClosure ℚ)).toList.get (Fin.cast (by simp [card_aroots]) i) := by
     intro i
-    simp only [e, Equiv.trans_apply, finCongr_apply, PowerBasis.liftEquiv', PowerBasis.liftEquiv]
-    simp only [IsAdjoinRootMonic.powerBasis_gen, IsAdjoinRootMonic.powerBasis_dim,
-        Equiv.symm_trans_apply, Equiv.subtypeEquiv_symm, Equiv.refl_symm, Equiv.subtypeEquiv_apply,
-        Multiset.equivFin_symm_apply_coe, Fin.val_cast, Equiv.refl_apply, Equiv.coe_fn_symm_mk,
-        List.get_eq_getElem]
-    simp_rw [← f.powerBasis_gen, f.powerBasis.lift_gen, f.powerBasis_gen, f.minpoly_eq hT]
+    rw [← f.powerBasis_gen]
+    simp only [e, Equiv.trans_apply, finCongr_apply]
+    let y := (Multiset.equivFin nd_aroots').symm
+      (Fin.cast (by rw [f.powerBasis_dim, f.minpoly_eq hT, card_aroots]) i)
+    change ((PowerBasis.liftEquiv' f.powerBasis).symm y) f.powerBasis.gen = _
+    rw [← PowerBasis.liftEquiv'_apply_coe f.powerBasis
+      ((PowerBasis.liftEquiv' f.powerBasis).symm y)]
+    simp only [Equiv.apply_symm_apply]
+    simp [y, f.minpoly_eq hT]
   rw [Algebra.discr_powerBasis_eq_prod _ _ _ e]
   · conv_rhs => rw [← discriminant_map,
       Splits.eq_fin_prod_roots (IsAlgClosed.splits (k := AlgebraicClosure ℚ) _)]
@@ -650,8 +653,8 @@ theorem discr_of_isAdjoinRootMonic {K : Type*} [Field K] [Algebra ℚ K] {T : �
             (fun _ _ => rfl),
           ← Finset.Iio_union_Ioi, Finset.prod_union]
       · exact (Finset.disjoint_Ioi_Iio _).symm)]
-    simp only [IsAdjoinRootMonic.powerBasis_dim, IsAdjoinRootMonic.powerBasis_gen, pow_two,
-      Finset.prod_mul_distrib, finCongr_apply, Fin.cast_cast]
+    simp only [IsAdjoinRootMonic.powerBasis_gen, pow_two, Finset.prod_mul_distrib,
+      finCongr_apply, Fin.cast_cast]
     rw [mul_left_comm]
     congr 1
     · rw [Finset.prod_univ_prod_Iio]

@@ -162,7 +162,8 @@ end PartI
 section IntPoly
 
 variable {Q K : Type*} [Field Q] [CommRing K] [Algebra Q K]
-{R ι : Type*} [Fintype ι] [CommRing R] [Algebra R Q] [Algebra R K] [IsScalarTower R Q K]
+variable {R ι : Type*} [Fintype ι] [CommRing R] [Algebra R Q] [Algebra R K]
+  [IsScalarTower R Q K]
 
 
 variable
@@ -263,7 +264,7 @@ end IntPoly
 section LinInd
 
 variable {Q K : Type*} [Field Q] [CommRing K] [Algebra Q K]
-{R : Type*} [CommRing R] [Algebra R Q] [Algebra R K] [IsScalarTower R Q K]
+variable {R : Type*} [CommRing R] [Algebra R Q] [Algebra R K] [IsScalarTower R Q K]
 
 variable
   {n : ℕ}
@@ -272,13 +273,13 @@ variable
 lemma is_det_ne_zero_of_upper_triangular [IsDomain R] (hc : ∀ i j, j < i → c i j = 0)
   (hin : ∀ i, c i i ≠ 0) :
   c.det ≠ 0 := by
-have : Matrix.BlockTriangular c id := by
-  intro i j
-  simp only [id_eq]
-  exact hc i j
-rw [Matrix.det_of_upperTriangular this, Finset.prod_ne_zero_iff]
-simp only [Finset.mem_univ, ne_eq, forall_true_left]
-exact hin
+  have : Matrix.BlockTriangular c id := by
+    intro i j
+    simp only [id_eq]
+    exact hc i j
+  rw [Matrix.det_of_upperTriangular this, Finset.prod_ne_zero_iff]
+  simp only [Finset.mem_univ, ne_eq, forall_true_left]
+  exact hin
 
 variable
   (B : Fin n → R[X])
@@ -436,8 +437,8 @@ structure SubalgebraBuilderLists
 
 
 variable {n : ℕ} [NeZero n] {R Q K : Type*} [CommRing R] [IsDomain R]
-[Field Q] [CommRing K] [Algebra Q K] [Algebra R Q] [Algebra R K] [IsScalarTower R Q K]
-[IsFractionRing R Q]
+variable [Field Q] [CommRing K] [Algebra Q K] [Algebra R Q] [Algebra R K]
+  [IsScalarTower R Q K] [IsFractionRing R Q]
 
 /-- The subalgebra obtained from the `SubalgebraBuilder`· -/
 noncomputable def subalgebraOfBuilder
@@ -634,7 +635,7 @@ lemma OfBuilderList_discr_eq_prod_discr' :
     rw [IsAdjoinRootMonic.powerBasis_dim, hdegeq,  (SubalgebraBuilderOfList T l A).hdeg]
   rw [discr_eq_discr_fraction_field hkdim]
   let AdjM : IsAdjoinRootMonic _ T :=
-    { toIsAdjoinRoot := Algebra.adjoin_isAdjoinRootOfIsAdjoinRoot _ hMonic A.h
+    { toIsAdjoinRoot := Algebra.adjoinIsAdjoinRootOfIsAdjoinRoot _ hMonic A.h
       monic := hMonic }
   let B := AdjM.powerBasis.3
   let B' := B.reindex (finCongr (Eq.trans (IsAdjoinRootMonic.powerBasis_dim AdjM)
@@ -646,16 +647,17 @@ lemma OfBuilderList_discr_eq_prod_discr' :
     ext i
     unfold Matrix.mulVec dotProduct
     simp only [Subalgebra.coe_val, Function.comp_apply, basisOfBuilderLists_apply, map_mul,
-      Matrix.map_apply, Pi.smul_apply, smul_eq_mul, IsAdjoinRootMonic.powerBasis_dim,
-      IsAdjoinRootMonic.powerBasis_basis, Basis.coe_reindex, finCongr_symm, finCongr_apply,
-      IsAdjoinRootMonic.basis_apply, Fin.val_cast,       SubmonoidClass.coe_pow, M, B', B]
+      Matrix.map_apply, Basis.coe_reindex, finCongr_symm, finCongr_apply,
+      PowerBasis.coe_basis, Fin.val_cast, SubmonoidClass.coe_pow,
+      IsAdjoinRootMonic.powerBasis_gen, M, B', B]
     rw [ofList_eq_sum', Polynomial.map_sum, map_sum, Finset.mul_sum]
     simp only [Polynomial.map_mul, map_C, Polynomial.map_pow, map_X, map_mul, map_pow,
       IsAdjoinRoot.map_X, ← IsAdjoinRoot.algebraMap_apply]
     congr; ext j
+    simp only [Pi.smul_apply, smul_eq_mul, map_mul]
     rw [mul_assoc]
     congr
-    exact (Algebra.adjoin_isAdjoinRoot_root T hMonic A.h.root (by
+    exact (Algebra.adjoinIsAdjoinRoot_root T hMonic A.h.root (by
       rw [IsAdjoinRoot.minpoly_root A.h (Monic.ne_zero (Monic.map (algebraMap R Q) hMonic)),
         Monic.map _ hMonic, inv_one, map_one, mul_one])).symm
   have hdet : M.det = (algebraMap R Q (A.d ^ n))⁻¹ * (algebraMap R Q (∏ i, (A.B i i))) := by
@@ -672,15 +674,14 @@ lemma OfBuilderList_discr_eq_prod_discr' :
   rw [← Algebra.discr_reindex _ (((isAMK A).powerBasis).basis) (finCongr pbdim)]
   congr
   · ext i
-    simp only [Subalgebra.coe_val, IsAdjoinRootMonic.powerBasis_dim,
-      IsAdjoinRootMonic.powerBasis_basis, Basis.coe_reindex, finCongr_symm, Function.comp_apply,
-      finCongr_apply, IsAdjoinRootMonic.basis_apply,
-      Fin.val_cast, SubmonoidClass.coe_pow, isAMK, B', B]
+    simp only [Subalgebra.coe_val, Basis.coe_reindex, finCongr_symm, Function.comp_apply,
+      finCongr_apply, PowerBasis.coe_basis, Fin.val_cast, SubmonoidClass.coe_pow, B', B]
+    rw [IsAdjoinRootMonic.powerBasis_gen AdjM, IsAdjoinRootMonic.powerBasis_gen (isAMK A)]
+    rw [show (isAMK A).root = A.h.root by rfl]
     rw [show (↑AdjM.root : K) = A.h.root by
-      exact (Algebra.adjoin_isAdjoinRoot_root T hMonic A.h.root (by
+      exact (Algebra.adjoinIsAdjoinRoot_root T hMonic A.h.root (by
         rw [IsAdjoinRoot.minpoly_root A.h (Monic.ne_zero (Monic.map (algebraMap R Q) hMonic)),
           Monic.map _ hMonic, inv_one, map_one, mul_one]))]
-    exact (IsAdjoinRootMonic.basis_apply (isAMK A) ((finCongr pbdim).symm i)).symm
 
 
 /-- An expression for the discriminant over `R` of a basis for

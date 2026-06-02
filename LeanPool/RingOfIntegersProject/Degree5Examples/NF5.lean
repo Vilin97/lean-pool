@@ -251,7 +251,7 @@ noncomputable def M2 : MaximalOrderCertificateOfUnramifiedLists 2 O Om hm where
  hle := by decide
  w := ![![1, 0, 0, 0, 0],![0, 0, 1, 0, 0],![0, 1, 0, 0, 0],![0, 0, 0, 1, 0],![1, 1, 1, 1, 1]]
  wFrob := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 0],![0, 0, 1, 0, 0],![0, 0, 0, 1, 0],![0, 0, 0, 0, 1]]
- w_ind := ![0, 1, 2, 3, 4]
+ wInd := ![0, 1, 2, 3, 4]
  hindw := by decide
  hwFrobComp := by decide +kernel
 /-- Auxiliary declaration for the worked example. -/
@@ -272,7 +272,7 @@ noncomputable def M11 : MaximalOrderCertificateOfUnramifiedLists 11 O Om hm wher
  hle := by decide
  w := ![![1, 0, 0, 0, 0],![8, 6, 10, 6, 0],![0, 0, 1, 0, 0],![9, 7, 3, 5, 0],![5, 7, 0, 6, 10]]
  wFrob := ![![1, 0, 0, 0, 0],![0, 1, 0, 0, 0],![0, 0, 1, 0, 0],![0, 0, 0, 1, 0],![0, 0, 0, 0, 1]]
- w_ind := ![0, 1, 2, 3, 4]
+ wInd := ![0, 1, 2, 3, 4]
  hindw := by decide
  hwFrobComp := by decide +kernel
 

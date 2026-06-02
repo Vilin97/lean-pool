@@ -198,8 +198,8 @@ noncomputable def M2 : MaximalOrderCertificateLists 2 O Om hm where
  v := ![![0, 1, 0]]
  w := ![![1, 0, 0],![0, 0, 1]]
  wFrob := ![![1, 0, 0],![0, 0, 1]]
- v_ind := ![1]
- w_ind := ![0, 2]
+ vInd := ![1]
+ wInd := ![0, 2]
  hmod1 := by decide
  hmod2 := by decide
  hindv := by decide
@@ -207,21 +207,21 @@ noncomputable def M2 : MaximalOrderCertificateLists 2 O Om hm where
  hvFrobKer := by
   intro i
   fin_cases i
-  norm_num [nPow_sq_table, table_mul_list, List.mulPointwise, List.addPointwise,
+  norm_num [nPowSqTable, tableMulList, List.mulPointwise, List.addPointwise,
     List.replicate,
-    instAddListOfAddMonoid_leanPool]
+    instAddListOfAddMonoidLeanPool]
  hwFrobComp := by
   intro i
   fin_cases i <;>
-    norm_num [nPow_sq_table, table_mul_list, List.mulPointwise, List.addPointwise,
+    norm_num [nPowSqTable, tableMulList, List.mulPointwise, List.addPointwise,
       List.replicate,
-      instAddListOfAddMonoid_leanPool]
+      instAddListOfAddMonoidLeanPool]
  g := ![![0, 0, 1],![1, 0, 1],![0, 1, 0]]
  a := ![![![-9]],![![-8]],![![0]]]
  c := ![![![6, 0]],![![6, 0]],![![0, 1]]]
  d := ![![![0],![12]],![![0],![12]],![![2],![-18]]]
  e := ![![![0, 1],![0, -9]],![![1, 1],![0, -8]],![![0, 0],![12, 0]]]
- ab_ind := ![(Sum.inl 0, Sum.inl 0),(Sum.inr 0, Sum.inr 0),(Sum.inl 0, Sum.inr 1)]
+ abInd := ![(Sum.inl 0, Sum.inl 0),(Sum.inr 0, Sum.inr 0),(Sum.inl 0, Sum.inr 1)]
  hindab := by decide
  hmul1 := by decide
  hmul2 := by decide

@@ -35,15 +35,15 @@ section Proofs
 variable {p t : ℕ} [Fact <| Nat.Prime p] {O : Type*} [CommRing O] (B : Basis (Fin (m + n)) ℤ O)
 
 lemma v_linearIndependent {k : ℕ} (v : Fin k → (Fin (m + n) → (ZMod p)))
-    (v_ind : Fin k → Fin (m + n))
-  (hindv : ∀ i, v i (v_ind i) ≠ 0 ∧ (∀ j, j ≠ i → v j (v_ind i) = 0)) :
-    LinearIndependent (ZMod p) (fun (i : Fin k) => ((basis_zmodp_algebra O p
+    (vInd : Fin k → Fin (m + n))
+  (hindv : ∀ i, v i (vInd i) ≠ 0 ∧ (∀ j, j ≠ i → v j (vInd i) = 0)) :
+    LinearIndependent (ZMod p) (fun (i : Fin k) => ((basisZmodpAlgebra O p
       B).equivFun.symm).toFun (v i)) := by
   rw [LinearEquiv.toFun_eq_coe]
   simp_rw [Basis.equivFun_symm_eq_repr_symm']
-  refine linearIndependent_of_repr_diag (basis_zmodp_algebra O p B) _ ?_
+  refine linearIndependent_of_repr_diag (basisZmodpAlgebra O p B) _ ?_
   intro i
-  use (v_ind i)
+  use (vInd i)
   constructor
   · simp only [Basis.repr_symm_apply, Basis.repr_linearCombination,
     Finsupp.coe_equivFunOnFinite_symm,
@@ -63,32 +63,32 @@ local notation I "mod'''" p => Submodule.map (quotientMkToSemilinear O O p)
   (Submodule.restrictScalars ℤ I)
 
 lemma wFrob_linearIndependent [Nontrivial O] [Module.Free ℤ O]
-    (w : Fin n → (Fin (m + n) → (ZMod p))) (w_ind : Fin n → Fin (m + n))
+    (w : Fin n → (Fin (m + n) → (ZMod p))) (wInd : Fin n → Fin (m + n))
     (wFrob : Fin n → (Fin (m + n) → (ZMod p)))
-    (hindw : ∀ i, wFrob i (w_ind i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (w_ind i) = 0))
-    (hwFrobComp : ∀ j, (((basis_zmodp_algebra O p B).equivFun.symm).toFun (w j)) ^ (p ^ t) =
-      (((basis_zmodp_algebra O p B).equivFun.symm).toFun (wFrob j))) :
+    (hindw : ∀ i, wFrob i (wInd i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (wInd i) = 0))
+    (hwFrobComp : ∀ j, (((basisZmodpAlgebra O p B).equivFun.symm).toFun (w j)) ^ (p ^ t) =
+      (((basisZmodpAlgebra O p B).equivFun.symm).toFun (wFrob j))) :
   LinearIndependent (ZMod p) (((Frob R p) ^ t : R →ₗ[ZMod p] R) ∘
-    (fun j => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (w j))) := by
-  have : (((Frob R p) ^ t : R →ₗ[ZMod p] R) ∘ (fun j => ((basis_zmodp_algebra O p
+    (fun j => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (w j))) := by
+  have : (((Frob R p) ^ t : R →ₗ[ZMod p] R) ∘ (fun j => ((basisZmodpAlgebra O p
     B).equivFun.symm).toFun (w j))) =
-    (fun j => (((basis_zmodp_algebra O p B).equivFun.symm).toFun (wFrob j))) := by
+    (fun j => (((basisZmodpAlgebra O p B).equivFun.symm).toFun (wFrob j))) := by
     ext j
     simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearEquiv.coe_coe,
       Function.comp_apply]
     erw [iter_Frob, hwFrobComp j]
     rfl
   simp_rw [this]
-  exact v_linearIndependent B wFrob w_ind hindw
+  exact v_linearIndependent B wFrob wInd hindw
 
 
 lemma v_is_reduced_mod {k : ℕ} (b1 : Fin k → (Fin (m + n) → ℤ))
     (v : Fin k → (Fin (m + n) → (ZMod p)))
     (hmod1 : ∀ i, (algebraMap ℤ (ZMod p)) ∘ (b1 i) = v i) :
-    ∀ i, ((fun j => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (v j)) i =
+    ∀ i, ((fun j => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (v j)) i =
       (fun j => (((B.equivFun.symm).toFun) (b1 j))) i mod'' p) := by
   intro i
-  apply LinearEquiv.injective (basis_zmodp_algebra O p B).repr
+  apply LinearEquiv.injective (basisZmodpAlgebra O p B).repr
   ext s
   rw [← basis_zmodp_repr_eq_zmodp_basis_repr O p B (((B.equivFun.symm).toFun) (b1 i))]
   simp_rw [LinearEquiv.toFun_eq_coe, Basis.equivFun_symm_eq_repr_symm']
@@ -101,9 +101,9 @@ variable [Nontrivial O] [NoZeroSMulDivisors ℤ O] [Module.Free ℤ O]
 
 omit [NoZeroSMulDivisors ℤ O] in
 lemma v_in_Frob_ker {k : ℕ} (v : Fin k → (Fin (m + n) → (ZMod p)))
-  (hvFrobKer : ∀ i, (((basis_zmodp_algebra O p B).equivFun.symm).toFun (v i)) ^ (p ^ t) = 0) :
+  (hvFrobKer : ∀ i, (((basisZmodpAlgebra O p B).equivFun.symm).toFun (v i)) ^ (p ^ t) = 0) :
   ∀ (i : Fin k), (((Frob R p) ^ t) ((fun j =>
-    ((basis_zmodp_algebra O p B).equivFun.symm).toFun (v j)) i) = 0) := by
+    ((basisZmodpAlgebra O p B).equivFun.symm).toFun (v j)) i) = 0) := by
   intro i
   rw [iter_Frob]
   exact hvFrobKer i
@@ -116,10 +116,10 @@ lemma rad_eq_smul_top_of_CertificateOfUnramified
   (n t : ℕ) (B : Basis (Fin (0 + n)) ℤ O)
   (hle : n ≤ p ^ t) (w : Fin n → (Fin (0 + n) → (ZMod p)))
   (wFrob : Fin n → (Fin (0 + n) → (ZMod p)))
-  (w_ind : Fin n → Fin (0 + n))
-  (hindw : ∀ i, wFrob i (w_ind i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (w_ind i) = 0))
-  (hwFrobComp : ∀ j, (((basis_zmodp_algebra O p B).equivFun.symm).toFun (w j)) ^ (p ^ t) =
-    (((basis_zmodp_algebra O p B).equivFun.symm).toFun (wFrob j)))
+  (wInd : Fin n → Fin (0 + n))
+  (hindw : ∀ i, wFrob i (wInd i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (wInd i) = 0))
+  (hwFrobComp : ∀ j, (((basisZmodpAlgebra O p B).equivFun.symm).toFun (w j)) ^ (p ^ t) =
+    (((basisZmodpAlgebra O p B).equivFun.symm).toFun (wFrob j)))
  : Ip = (p : O) • (⊤ : Submodule O O) := by
   refine le_antisymm ?_ (Ideal.le_radical)
   intro x hx
@@ -128,8 +128,8 @@ lemma rad_eq_smul_top_of_CertificateOfUnramified
   have aux := (radical_eq_kernel_iter_frob_aux O p n t Bc hle (Ideal.Quotient.mk _ x)).1 ⟨x, ⟨hx,
     rfl⟩⟩
   rw [← iter_Frob, ← LinearMap.mem_ker,
-  kernel_eq_bot_of_linearIndependent_im (basis_zmodp_algebra O p Bc) _ _
-    (wFrob_linearIndependent B w w_ind wFrob hindw hwFrobComp)] at aux
+  kernel_eq_bot_of_linearIndependent_im (basisZmodpAlgebra O p Bc) _ _
+    (wFrob_linearIndependent B w wInd wFrob hindw hwFrobComp)] at aux
   simp only [Submodule.mem_bot] at aux
   exact Ideal.Quotient.eq_zero_iff_mem.1 aux
 
@@ -140,36 +140,36 @@ lemma zsmul_p_aux {a : O} : (p : ℤ) • a = p * a := by
   norm_cast
 
 variable
-[Nonempty (Fin m ⊕ Fin n)]
-(hle : m + n ≤ p ^ t)
-(b1 : Fin m → (Fin (m + n) → ℤ))
-(b2 : Fin n → (Fin (m + n) → ℤ))
-(v : Fin m → (Fin (m + n) → (ZMod p)))
-(w : Fin n → (Fin (m + n) → (ZMod p)))
-(wFrob : Fin n → (Fin (m + n) → (ZMod p)))
-(v_ind : Fin m → Fin (m + n))
-(w_ind : Fin n → Fin (m + n))
-(hmod1 : ∀ i, (algebraMap ℤ (ZMod p)) ∘ (b1 i) = v i)
-(hmod2 : ∀ j, (algebraMap ℤ (ZMod p)) ∘ (b2 j) = w j)
-(hindv : ∀ i, v i (v_ind i) ≠ 0 ∧ (∀ j, j ≠ i → v j (v_ind i) = 0))
-(hindw : ∀ i, wFrob i (w_ind i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (w_ind i) = 0))
-(hvFrobKer : ∀ i, (((basis_zmodp_algebra O p B).equivFun.symm).toFun (v i)) ^ (p ^ t) = 0)
-(hwFrobComp : ∀ j, (((basis_zmodp_algebra O p B).equivFun.symm).toFun (w j)) ^ (p ^ t) =
-  (((basis_zmodp_algebra O p B).equivFun.symm).toFun (wFrob j)))
-    -- Proof that wFrob is the image of w under the Frobenius map.
+  [Nonempty (Fin m ⊕ Fin n)]
+  (hle : m + n ≤ p ^ t)
+  (b1 : Fin m → (Fin (m + n) → ℤ))
+  (b2 : Fin n → (Fin (m + n) → ℤ))
+  (v : Fin m → (Fin (m + n) → (ZMod p)))
+  (w : Fin n → (Fin (m + n) → (ZMod p)))
+  (wFrob : Fin n → (Fin (m + n) → (ZMod p)))
+  (vInd : Fin m → Fin (m + n))
+  (wInd : Fin n → Fin (m + n))
+  (hmod1 : ∀ i, (algebraMap ℤ (ZMod p)) ∘ (b1 i) = v i)
+  (hmod2 : ∀ j, (algebraMap ℤ (ZMod p)) ∘ (b2 j) = w j)
+  (hindv : ∀ i, v i (vInd i) ≠ 0 ∧ (∀ j, j ≠ i → v j (vInd i) = 0))
+  (hindw : ∀ i, wFrob i (wInd i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (wInd i) = 0))
+  (hvFrobKer : ∀ i, (((basisZmodpAlgebra O p B).equivFun.symm).toFun (v i)) ^ (p ^ t) = 0)
+  (hwFrobComp : ∀ j, (((basisZmodpAlgebra O p B).equivFun.symm).toFun (w j)) ^ (p ^ t) =
+    (((basisZmodpAlgebra O p B).equivFun.symm).toFun (wFrob j)))
+  -- Proof that wFrob is the image of w under the Frobenius map.
 
 
 /-- Imported declaration. -/
 noncomputable def BasisRadMod : Basis (Fin m ⊕ Fin n) (ZMod p) (Ip mod' p) := by
   let b1' := (fun j => (((B.equivFun.symm).toFun) (b1 j)))
   let b2' := (fun j => (((B.equivFun.symm).toFun) (b2 j)))
-  let v' := (fun i => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (v i))
-  let w' := (fun i => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (w i))
-  refine basis_radical_of_linear_independent_ker_im O p b1' b2' v' w' ?_ ?_ ?_ ?_ ?_ hle B
+  let v' := (fun i => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (v i))
+  let w' := (fun i => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (w i))
+  refine basisRadicalOfLinearIndependentKerIm O p b1' b2' v' w' ?_ ?_ ?_ ?_ ?_ hle B
   · exact v_is_reduced_mod B b1 v hmod1
   · exact v_is_reduced_mod B b2 w hmod2
-  · exact v_linearIndependent B v v_ind hindv
-  · exact wFrob_linearIndependent B w w_ind wFrob hindw hwFrobComp
+  · exact v_linearIndependent B v vInd hindv
+  · exact wFrob_linearIndependent B w wInd wFrob hindw hwFrobComp
   · exact v_in_Frob_ker B v hvFrobKer
 
 
@@ -179,18 +179,18 @@ lemma aux_in_Ip (k : Fin m ⊕ Fin n) :
     (fun j => ((B.equivFun.symm).toFun) (b2 j))) k ∈ Ip := by
   let b1' := (fun j => (((B.equivFun.symm).toFun) (b1 j)))
   let b2' := (fun j => (((B.equivFun.symm).toFun) (b2 j)))
-  let v' := (fun i => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (v i))
-  let w' := (fun i => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (w i))
-  refine basis_radical_of_linear_independent_ker_im_def_in_Ip O p b1' b2' v' w' ?_ ?_ ?_ ?_ hle B k
+  let v' := (fun i => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (v i))
+  let w' := (fun i => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (w i))
+  refine basisRadicalOfLinearIndependentKerIm_def_in_Ip O p b1' b2' v' w' ?_ ?_ ?_ ?_ hle B k
   · exact v_is_reduced_mod B b1 v hmod1
-  · exact v_linearIndependent B v v_ind hindv
-  · exact wFrob_linearIndependent B w w_ind wFrob hindw hwFrobComp
+  · exact v_linearIndependent B v vInd hindv
+  · exact wFrob_linearIndependent B w wInd wFrob hindw hwFrobComp
   · exact v_in_Frob_ker B v hvFrobKer
 
 
-local notation "B'" => BasisRadMod B hle b1 b2 v w wFrob v_ind w_ind hmod1 hmod2 hindv hindw
+local notation "B'" => BasisRadMod B hle b1 b2 v w wFrob vInd wInd hmod1 hmod2 hindv hindw
   hvFrobKer hwFrobComp
-local notation "InAux" k => aux_in_Ip B hle b1 b2 v w wFrob v_ind w_ind hmod1 hindv hindw hvFrobKer
+local notation "InAux" k => aux_in_Ip B hle b1 b2 v w wFrob vInd wInd hmod1 hindv hindw hvFrobKer
   hwFrobComp k
 
 lemma BasisRadMod_apply (k : Fin m ⊕ Fin n) : B' k =
@@ -198,64 +198,64 @@ lemma BasisRadMod_apply (k : Fin m ⊕ Fin n) : B' k =
   (↑(p : Fin n → O)  * (fun j => ((B.equivFun.symm).toFun) (b2 j))) k, InAux k⟩ : Ip) mod p := by
   let b1' := (fun j => (((B.equivFun.symm).toFun) (b1 j)))
   let b2' := (fun j => (((B.equivFun.symm).toFun) (b2 j)))
-  let v' := (fun i => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (v i))
-  let w' := (fun i => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (w i))
-  refine basis_radical_of_linear_independent_ker_im_app O p b1' b2' v' w' ?_ ?_ _ _ ?_ hle B k
+  let v' := (fun i => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (v i))
+  let w' := (fun i => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (w i))
+  refine basisRadicalOfLinearIndependentKerIm_app O p b1' b2' v' w' ?_ ?_ _ _ ?_ hle B k
   · exact v_is_reduced_mod B b1 v hmod1
   · exact v_is_reduced_mod B b2 w hmod2
 
 variable
--- Linear idependence by looking at the matrices of `n` endomorphisms
-(g : Fin (m + n) → (Fin (m + n) → ℤ))
-(a : Fin (m + n) → Fin m → (Fin m → ℤ))
-(c : Fin (m + n) → Fin m → (Fin n → ℤ))
-(d : Fin (m + n) → Fin n → (Fin m → ℤ))
-(e : Fin (m + n) → Fin n → (Fin n → ℤ))
-(ab_ind : Fin (m + n) → ((Fin m ⊕ Fin n) × (Fin m ⊕ Fin n)))
-(hindab : ∀ (i : Fin (m + n)), (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim ((fun j =>
-  Sum.elim (a k j) (c k j))) ((fun j => Sum.elim (d k j) (e k j)))) i (ab_ind i).1 (ab_ind i).2) ≠
-    0 ∧
-    (∀ j, j ≠ i → (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim ((fun j => Sum.elim (a k j) (c k j)))
-      ((fun j => Sum.elim (d k j) (e k j)))) j (ab_ind i).1 (ab_ind i).2) = 0))
-(hmul1 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((B.equivFun.symm).toFun (b1 j)) =
-  Finset.univ.sum (fun l => (a i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
-    Finset.univ.sum (fun l => (c i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k))
-      l))))
-(hmul2 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((p : ℤ) • ((B.equivFun.symm).toFun (b2 j))) =
-  Finset.univ.sum (fun l => (d i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
-    Finset.univ.sum (fun l => (e i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k))
-      l))))
+  -- Linear idependence by looking at the matrices of `n` endomorphisms
+  (g : Fin (m + n) → (Fin (m + n) → ℤ))
+  (a : Fin (m + n) → Fin m → (Fin m → ℤ))
+  (c : Fin (m + n) → Fin m → (Fin n → ℤ))
+  (d : Fin (m + n) → Fin n → (Fin m → ℤ))
+  (e : Fin (m + n) → Fin n → (Fin n → ℤ))
+  (abInd : Fin (m + n) → ((Fin m ⊕ Fin n) × (Fin m ⊕ Fin n)))
+  (hindab : ∀ (i : Fin (m + n)), (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim ((fun j =>
+    Sum.elim (a k j) (c k j))) ((fun j => Sum.elim (d k j) (e k j)))) i (abInd i).1 (abInd i).2) ≠
+      0 ∧
+      (∀ j, j ≠ i → (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim ((fun j => Sum.elim (a k j) (c k j)))
+        ((fun j => Sum.elim (d k j) (e k j)))) j (abInd i).1 (abInd i).2) = 0))
+  (hmul1 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((B.equivFun.symm).toFun (b1 j)) =
+    Finset.univ.sum (fun l => (a i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
+      Finset.univ.sum (fun l => (c i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k))
+        l))))
+  (hmul2 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((p : ℤ) • ((B.equivFun.symm).toFun (b2 j))) =
+    Finset.univ.sum (fun l => (d i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
+      Finset.univ.sum (fun l => (e i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k))
+        l))))
 
-include B g b1 b2 hle v w wFrob v_ind w_ind hmod1 hmod2 hindv hindw hvFrobKer hwFrobComp hindab
+include B g b1 b2 hle v w wFrob vInd wInd hmod1 hmod2 hindv hindw hvFrobKer hwFrobComp hindab
   hmul1 hmul2 in
-/-- Given the certifying data, the map `map_to_end_lin` has trivial kernel· -/
-lemma ker_map_eq_bot_of_data : LinearMap.ker (map_to_end_lin O p) = ⊥ := by
+/-- Given the certifying data, the map `mapToEndLin` has trivial kernel· -/
+lemma ker_map_eq_bot_of_data : LinearMap.ker (mapToEndLin O p) = ⊥ := by
   let g' := (fun i => (B.equivFun.symm).toFun (g i))
   let q := Sum.elim (fun i => ((B.equivFun.symm).toFun) (b1 i)) (↑(p : Fin n →
     O)  * (fun j => ((B.equivFun.symm).toFun) (b2 j)))
-  let BMod := BasisRadMod B hle b1 b2 v w wFrob v_ind w_ind hmod1 hmod2 hindv hindw hvFrobKer
+  let BMod := BasisRadMod B hle b1 b2 v w wFrob vInd wInd hmod1 hmod2 hindv hindw hvFrobKer
     hwFrobComp
-  convert ker_map_to_end_lin_eq_bot_of_mul_ne_zero' O p g' q (basis_zmodp_algebra O p B) BMod ?_ ?_
+  convert ker_mapToEndLin_eq_bot_of_mul_ne_zero' O p g' q (basisZmodpAlgebra O p B) BMod ?_ ?_
     ?_
-  · exact aux_in_Ip B hle b1 b2 v w wFrob v_ind w_ind hmod1 hindv hindw hvFrobKer hwFrobComp
+  · exact aux_in_Ip B hle b1 b2 v w wFrob vInd wInd hmod1 hindv hindw hvFrobKer hwFrobComp
   · exact
-      BasisRadMod_apply B hle b1 b2 v w wFrob v_ind w_ind hmod1 hmod2 hindv hindw hvFrobKer
+      BasisRadMod_apply B hle b1 b2 v w wFrob vInd wInd hmod1 hmod2 hindv hindw hvFrobKer
         hwFrobComp
   · intro i
     specialize hindab i
-    use (ab_ind i).1, (ab_ind i).2
-    cases h : (ab_ind i).1
+    use (abInd i).1, (abInd i).2
+    cases h : (abInd i).1
     · simp_rw [h] at hindab
       simp only [g', q]
       dsimp at hindab ⊢
       simp_rw [← LinearEquiv.toFun_eq_coe, hmul1, zsmul_p_aux]
       constructor
       · simp only [BMod, BasisRadMod]
-        erw [← basis_radical_of_linear_independent_ker_im_in_repr]
+        erw [← basisRadicalOfLinearIndependentKerIm_in_repr]
         convert hindab.1
       · intro l hl
         simp only [BMod, BasisRadMod]
-        erw [← basis_radical_of_linear_independent_ker_im_in_repr]
+        erw [← basisRadicalOfLinearIndependentKerIm_in_repr]
         convert hindab.2 l hl
     · simp_rw [h] at hindab
       simp only [g', q]
@@ -263,31 +263,31 @@ lemma ker_map_eq_bot_of_data : LinearMap.ker (map_to_end_lin O p) = ⊥ := by
       simp_rw [← LinearEquiv.toFun_eq_coe, ← zsmul_p_aux, hmul2, zsmul_p_aux]
       constructor
       · simp only [BMod, BasisRadMod]
-        erw [← basis_radical_of_linear_independent_ker_im_in_repr]
+        erw [← basisRadicalOfLinearIndependentKerIm_in_repr]
         convert hindab.1
       · intro l hl
         simp only [BMod, BasisRadMod]
-        erw [← basis_radical_of_linear_independent_ker_im_in_repr]
+        erw [← basisRadicalOfLinearIndependentKerIm_in_repr]
         convert hindab.2 l hl
 
 
 -- Linear independence by evaluating `n` endomorphisms at a single witness.
 
-include B b1 b2 hle v w wFrob v_ind w_ind hmod1 hindv hindw hvFrobKer hwFrobComp in
+include B b1 b2 hle v w wFrob vInd wInd hmod1 hindv hindw hvFrobKer hwFrobComp in
 lemma sum_in_Ip (wit1 : Fin m → ℤ) (wit2 : Fin n → ℤ) : Finset.univ.sum
     (fun l => (wit1 l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
     Finset.univ.sum (fun l => (wit2 l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l)))
       ∈ Ip := by
   let b1' := (fun j => (((B.equivFun.symm).toFun) (b1 j)))
   let b2' := (fun j => (((B.equivFun.symm).toFun) (b2 j)))
-  let v' := (fun i => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (v i))
-  let w' := (fun i => ((basis_zmodp_algebra O p B).equivFun.symm).toFun (w i))
+  let v' := (fun i => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (v i))
+  let w' := (fun i => ((basisZmodpAlgebra O p B).equivFun.symm).toFun (w i))
   simp_rw [zsmul_p_aux]
-  refine basis_radical_of_linear_independent_ker_im_in_Ip O p b1' b2' v' w' ?_ ?_ ?_ ?_ hle B wit1
+  refine basisRadicalOfLinearIndependentKerIm_in_Ip O p b1' b2' v' w' ?_ ?_ ?_ ?_ hle B wit1
     wit2
   · exact v_is_reduced_mod B b1 v hmod1
-  · exact v_linearIndependent B v v_ind hindv
-  · exact wFrob_linearIndependent B w w_ind wFrob hindw hwFrobComp
+  · exact v_linearIndependent B v vInd hindv
+  · exact wFrob_linearIndependent B w wInd wFrob hindw hwFrobComp
   · exact v_in_Frob_ker B v hvFrobKer
 
 variable
@@ -300,29 +300,29 @@ variable
   Finset.univ.sum (fun l => (wit2 l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l)))) =
   Finset.univ.sum (fun l => (aw i l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
   Finset.univ.sum (fun l => (cw i l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
-  (ac_indw : Fin (m + n) → (Fin m ⊕ Fin n))
-  (hacindw : ∀ i, ((algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => aw i j) (fun j => cw i j)) (ac_indw
+  (acIndw : Fin (m + n) → (Fin m ⊕ Fin n))
+  (hacindw : ∀ i, ((algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => aw i j) (fun j => cw i j)) (acIndw
     i)) ≠ 0 ∧
-      ∀ k, k ≠ i → (algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => aw k j) (fun j => cw k j)) (ac_indw
+      ∀ k, k ≠ i → (algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => aw k j) (fun j => cw k j)) (acIndw
         i)) = 0))
 
 
-include B g b1 b2 hle v w wFrob v_ind w_ind hmod1 hmod2 hindv hindw hvFrobKer hwFrobComp wit1 wit2
+include B g b1 b2 hle v w wFrob vInd wInd hmod1 hmod2 hindv hindw hvFrobKer hwFrobComp wit1 wit2
   hacindw hmulw in
-/-- Given the certifying data, the map `map_to_end_lin` has trivial endomorphism· -/
-lemma ker_map_eq_bot_of_data_witness : LinearMap.ker (map_to_end_lin O p) = ⊥ := by
+/-- Given the certifying data, the map `mapToEndLin` has trivial endomorphism· -/
+lemma ker_map_eq_bot_of_data_witness : LinearMap.ker (mapToEndLin O p) = ⊥ := by
   let g' := (fun i => (B.equivFun.symm).toFun (g i))
   let wit := Finset.univ.sum (fun l => (wit1 l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
     Finset.univ.sum (fun l => (wit2 l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l)))
-  let BMod := BasisRadMod B hle b1 b2 v w wFrob v_ind w_ind hmod1 hmod2 hindv hindw hvFrobKer
+  let BMod := BasisRadMod B hle b1 b2 v w wFrob vInd wInd hmod1 hmod2 hindv hindw hvFrobKer
     hwFrobComp
-  convert ker_map_to_end_lin_eq_bot_of_mul_ne_zero_of_single_eval O p g' wit ?_
-    (basis_zmodp_algebra O p B) BMod ?_
+  convert ker_mapToEndLin_eq_bot_of_mul_ne_zero_of_single_eval O p g' wit ?_
+    (basisZmodpAlgebra O p B) BMod ?_
   swap
   · intro i
     specialize hacindw i
-    use (ac_indw i)
-    cases h : (ac_indw i)
+    use (acIndw i)
+    cases h : (acIndw i)
     · simp_rw [h] at hacindw
       simp only [g']
       dsimp at hacindw ⊢
@@ -330,10 +330,10 @@ lemma ker_map_eq_bot_of_data_witness : LinearMap.ker (map_to_end_lin O p) = ⊥ 
       simp_rw [← LinearEquiv.toFun_eq_coe, hmulw, zsmul_p_aux]
       simp only [BMod, BasisRadMod]
       constructor
-      · erw [← basis_radical_of_linear_independent_ker_im_in_repr]
+      · erw [← basisRadicalOfLinearIndependentKerIm_in_repr]
         exact hacindw.1
       · intro k hk
-        erw [← basis_radical_of_linear_independent_ker_im_in_repr]
+        erw [← basisRadicalOfLinearIndependentKerIm_in_repr]
         exact hacindw.2 k hk
     · simp_rw [h] at hacindw
       simp only [g']
@@ -342,12 +342,12 @@ lemma ker_map_eq_bot_of_data_witness : LinearMap.ker (map_to_end_lin O p) = ⊥ 
       simp_rw [← LinearEquiv.toFun_eq_coe, hmulw, zsmul_p_aux]
       simp only [BMod, BasisRadMod]
       constructor
-      · erw [← basis_radical_of_linear_independent_ker_im_in_repr]
+      · erw [← basisRadicalOfLinearIndependentKerIm_in_repr]
         exact hacindw.1
       · intro k hk
-        erw [← basis_radical_of_linear_independent_ker_im_in_repr]
+        erw [← basisRadicalOfLinearIndependentKerIm_in_repr]
         exact hacindw.2 k hk
-  · exact sum_in_Ip B hle b1 b2 v w wFrob v_ind w_ind hmod1 hindv hindw
+  · exact sum_in_Ip B hle b1 b2 v w wFrob vInd wInd hmod1 hindv hindw
       hvFrobKer hwFrobComp wit1 wit2
 
 
@@ -461,18 +461,18 @@ omit hp [Nontrivial O] [NoZeroSMulDivisors ℤ O] [Module.Free ℤ O] in
 lemma hmul1_lists (a : Fin (m + n) → Fin m → (Fin m → ℤ))
     (c : Fin (m + n) → Fin m → (Fin n → ℤ))
     (i : Fin (m + n)) (j : Fin m)
-    (h : table_mul_list T (List.ofFn (g i)) (List.ofFn (b1 j)) =
+    (h : tableMulList T (List.ofFn (g i)) (List.ofFn (b1 j)) =
     List.sum (List.ofFn (fun l => List.mulPointwise (a i j l) (List.ofFn (b1 l)))) +
       List.sum (List.ofFn (fun l => List.mulPointwise ((c i j l) * p) (List.ofFn (b2 l))))) :
   (B.equivFun.symm).toFun (g i) * ((B.equivFun.symm).toFun (b1 j)) =
   Finset.univ.sum (fun l => (a i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
     Finset.univ.sum (fun l => (c i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k))
       l))) := by
-  let c' := FnOfList (m + n) (table_mul_list' T' (List.ofFn (g i)) (List.ofFn (b1 j)))
-    (table_mul_list_length T' _ _)
-  have hc' : List.ofFn c' = table_mul_list' T' (List.ofFn (g i)) (List.ofFn (b1 j)) := by rw
+  let c' := FnOfList (m + n) (tableMulList' T' (List.ofFn (g i)) (List.ofFn (b1 j)))
+    (tableMulList_length T' _ _)
+  have hc' : List.ofFn c' = tableMulList' T' (List.ofFn (g i)) (List.ofFn (b1 j)) := by rw
     [listOfFn_of_FnOfList]
-  erw [table_mul_list_eq_mul T' B _ _ _ basisMulBasis hc' ]
+  erw [tableMulList_eq_mul T' B _ _ _ basisMulBasis hc' ]
   rw [← table_mul_eq_table_mul' T' T heq, h] at hc'
   exact hmul_lists_aux B b1 b2 _ _ c' hc'
 
@@ -481,22 +481,22 @@ omit hp [Nontrivial O] [NoZeroSMulDivisors ℤ O] [Module.Free ℤ O] in
 lemma hmul2_lists (d : Fin (m + n) → Fin n → (Fin m → ℤ))
     (e : Fin (m + n) → Fin n → (Fin n → ℤ))
     (i : Fin (m + n)) (j : Fin n)
-    (h : table_mul_list T (List.ofFn (g i)) (List.mulPointwise p (List.ofFn (b2 j))) =
+    (h : tableMulList T (List.ofFn (g i)) (List.mulPointwise p (List.ofFn (b2 j))) =
     List.sum (List.ofFn (fun l => List.mulPointwise (d i j l) (List.ofFn (b1 l)))) +
       List.sum (List.ofFn (fun l => List.mulPointwise ((e i j l) * p) (List.ofFn (b2 l))))) :
   (B.equivFun.symm).toFun (g i) * ((p : ℤ) • ((B.equivFun.symm).toFun (b2 j))) =
   Finset.univ.sum (fun l => (d i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
     Finset.univ.sum (fun l => (e i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k))
       l))) := by
-  let c' := FnOfList (m + n) (table_mul_list' T' (List.ofFn (g i)) (List.mulPointwise p (List.ofFn
-    (b2 j)))) (table_mul_list_length T' _ _)
-  have hc' : List.ofFn c' = table_mul_list' T' (List.ofFn (g i)) (List.mulPointwise p (List.ofFn
+  let c' := FnOfList (m + n) (tableMulList' T' (List.ofFn (g i)) (List.mulPointwise p (List.ofFn
+    (b2 j)))) (tableMulList_length T' _ _)
+  have hc' : List.ofFn c' = tableMulList' T' (List.ofFn (g i)) (List.mulPointwise p (List.ofFn
     (b2 j))) := by rw [listOfFn_of_FnOfList]
   have hcc := hc'
   rw [List.mulPointwise_ofFn] at hc'
   dsimp
   rw [← map_smul]
-  erw [table_mul_list_eq_mul T' B _ _ _ basisMulBasis hc' ]
+  erw [tableMulList_eq_mul T' B _ _ _ basisMulBasis hc' ]
   rw [← table_mul_eq_table_mul' T' T heq, h] at hcc
   exact hmul_lists_aux B b1 b2 _ _ c' hcc
 
@@ -505,7 +505,7 @@ omit hp [Nontrivial O] [NoZeroSMulDivisors ℤ O] [Module.Free ℤ O] in
 lemma hmul_lists_witness (wit1 : Fin m → ℤ) (wit2 : Fin n → ℤ)
   (aw : Fin (m + n) → (Fin m → ℤ)) (cw : Fin (m + n) → (Fin n → ℤ))
   (i : Fin (m + n))
-  (h : table_mul_list T (List.ofFn (g i)) (List.sum (List.ofFn (fun l => List.mulPointwise (wit1 l)
+  (h : tableMulList T (List.ofFn (g i)) (List.sum (List.ofFn (fun l => List.mulPointwise (wit1 l)
     (List.ofFn (b1 l)))) +
     List.sum (List.ofFn (fun l => List.mulPointwise ((wit2 l) * p) (List.ofFn (b2 l))))) =
     List.sum (List.ofFn (fun l => List.mulPointwise ((aw i) l) (List.ofFn (b1 l)))) +
@@ -517,11 +517,11 @@ lemma hmul_lists_witness (wit1 : Fin m → ℤ) (wit2 : Fin n → ℤ)
     Finset.univ.sum (fun l => (aw i l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
     Finset.univ.sum (fun l => (cw i l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l)))
       := by
-  let c' := FnOfList (m + n) (table_mul_list' T' (List.ofFn (g i)) ((List.sum (List.ofFn (fun l =>
+  let c' := FnOfList (m + n) (tableMulList' T' (List.ofFn (g i)) ((List.sum (List.ofFn (fun l =>
     List.mulPointwise (wit1 l) (List.ofFn (b1 l)))) +
     List.sum (List.ofFn (fun l => List.mulPointwise ((wit2 l) *
-      p) (List.ofFn (b2 l))))))) (table_mul_list_length T' _ _)
-  have hc' : List.ofFn c' = table_mul_list' T' (List.ofFn (g i)) ((List.sum (List.ofFn (fun l =>
+      p) (List.ofFn (b2 l))))))) (tableMulList_length T' _ _)
+  have hc' : List.ofFn c' = tableMulList' T' (List.ofFn (g i)) ((List.sum (List.ofFn (fun l =>
     List.mulPointwise (wit1 l) (List.ofFn (b1 l)))) +
     List.sum (List.ofFn (fun l => List.mulPointwise ((wit2 l) *
       p) (List.ofFn (b2 l)))))) := by rw [listOfFn_of_FnOfList]
@@ -536,7 +536,7 @@ lemma hmul_lists_witness (wit1 : Fin m → ℤ) (wit2 : Fin n → ℤ)
   have hcc' := hc'
   rw [← hc''] at hc'
   rw [← table_mul_eq_table_mul' T' T heq, h] at hcc'
-  erw [← hmul_lists_aux B b1 b2 _ _ _  hc'', table_mul_list_eq_mul T' B _ _ _ basisMulBasis hc']
+  erw [← hmul_lists_aux B b1 b2 _ _ _  hc'', tableMulList_eq_mul T' B _ _ _ basisMulBasis hc']
   exact hmul_lists_aux B b1 b2 _ _ c' hcc'
 
 variable
@@ -546,8 +546,8 @@ variable
 include basisMulBasis in
 omit [Nontrivial O] [NoZeroSMulDivisors ℤ O] [Module.Free ℤ O] in
 lemma basisModMulbasisMod : ∀ i j k,
-  (basis_zmodp_algebra O p B).repr (((basis_zmodp_algebra O p B) i) *
-    ((basis_zmodp_algebra O p B) j)) k =
+  (basisZmodpAlgebra O p B).repr (((basisZmodpAlgebra O p B) i) *
+    ((basisZmodpAlgebra O p B) j)) k =
   (fun i j k => (algebraMap ℤ (ZMod p) ((T' i j k)))) i j k:= by
   intro i j k
   erw [basis_zmodp_repr_mul_eq_zmodp_basis_repr_mul O p B i j k,
@@ -569,12 +569,12 @@ variable
 include hTMod heq basisMulBasis in
 omit [Nontrivial O] [NoZeroSMulDivisors ℤ O] [Module.Free ℤ O] in
 lemma hvFrobKer_lists (i : Fin m)
-  (h : nPow_sq_table TMod (List.ofFn (v i)) (p ^ t) = List.replicate (m + n) 0) :
-   (((basis_zmodp_algebra O p B).equivFun.symm) (v i)) ^ (p ^ t) = 0 := by
+  (h : nPowSqTable TMod (List.ofFn (v i)) (p ^ t) = List.replicate (m + n) 0) :
+   (((basisZmodpAlgebra O p B).equivFun.symm) (v i)) ^ (p ^ t) = 0 := by
    set l := fun (_ : Fin (m + n)) => (0 : ZMod p) with hld
    have hl : List.ofFn l = List.replicate (m + n) 0 := List.ofFn_const _ _
    rw [← h] at hl
-   rw [table_nPow_sq_table_eq_pow _ TMod ((basis_zmodp_algebra O p B)) (v i) (basisModMulbasisMod B
+   rw [table_nPowSqTable_eq_pow _ TMod ((basisZmodpAlgebra O p B)) (v i) (basisModMulbasisMod B
      T' basisMulBasis)
     (THeqMod T' T heq TMod hTMod) _ (Nat.pow_pos (n := t) (Nat.Prime.pos (hp.out))) l hl]
    rw [hld]
@@ -583,10 +583,10 @@ lemma hvFrobKer_lists (i : Fin m)
 include hTMod heq basisMulBasis in
 omit [Nontrivial O] [NoZeroSMulDivisors ℤ O] [Module.Free ℤ O] in
 lemma hwFrobComp_lists (j : Fin n)
-  (h : nPow_sq_table TMod (List.ofFn (w j)) (p ^ t) = List.ofFn (wFrob j)) :
-  (((basis_zmodp_algebra O p B).equivFun.symm) (w j)) ^ (p ^ t) =
-  (((basis_zmodp_algebra O p B).equivFun.symm) (wFrob j)) := by
-  rw [table_nPow_sq_table_eq_pow _ TMod ((basis_zmodp_algebra O p B)) (w j) (basisModMulbasisMod B
+  (h : nPowSqTable TMod (List.ofFn (w j)) (p ^ t) = List.ofFn (wFrob j)) :
+  (((basisZmodpAlgebra O p B).equivFun.symm) (w j)) ^ (p ^ t) =
+  (((basisZmodpAlgebra O p B).equivFun.symm) (wFrob j)) := by
+  rw [table_nPowSqTable_eq_pow _ TMod ((basisZmodpAlgebra O p B)) (w j) (basisModMulbasisMod B
     T' basisMulBasis)
     (THeqMod T' T heq TMod hTMod) _ (Nat.pow_pos (n := t) (Nat.Prime.pos (hp.out))) (wFrob j)
       h.symm]
@@ -604,49 +604,49 @@ instance subalgebraNoZeroSMulDivisorsInt {K : Type*} [CommRing K] [NoZeroSMulDiv
 /- This collection of data proves that `O` is `p`-maximal· -/
 
 variable
-{K : Type*} [CommRing K] [NoZeroSMulDivisors ℤ K]
-(O : Subalgebra ℤ K) (p : ℕ) [hpI : Fact <| Nat.Prime p]
-{Om : Subalgebra ℤ K} (hm : O ≤ Om) {n m : ℕ}
-(B : Basis (Fin (m + n)) ℤ O)
-(B' : Basis (Fin (m + n)) ℤ Om)
-(hpos : 0 < m + n)
-(hle : m + n ≤ p ^ t)
-(b1 : Fin m → (Fin (m + n) → ℤ))
-(b2 : Fin n → (Fin (m + n) → ℤ))
-(v : Fin m → (Fin (m + n) → (ZMod p)))
-(w : Fin n → (Fin (m + n) → (ZMod p)))
-(wFrob : Fin n → (Fin (m + n) → (ZMod p)))
-(v_ind : Fin m → Fin (m + n))
-(w_ind : Fin n → Fin (m + n))
-(hmod1 : ∀ i, (algebraMap ℤ (ZMod p)) ∘ (b1 i) = v i)
-(hmod2 : ∀ j, (algebraMap ℤ (ZMod p)) ∘ (b2 j) = w j)
-(hindv : ∀ i, v i (v_ind i) ≠ 0 ∧ (∀ j, j ≠ i → v j (v_ind i) = 0))
-(hindw : ∀ i, wFrob i (w_ind i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (w_ind i) = 0))
-(hvFrobKer : ∀ i, (((basis_zmodp_algebra O p B).equivFun.symm).toFun (v i)) ^ (p ^ t) = 0)
-(hwFrobComp : ∀ j, (((basis_zmodp_algebra O p B).equivFun.symm).toFun (w j)) ^ (p ^ t) =
-  (((basis_zmodp_algebra O p B).equivFun.symm).toFun (wFrob j)))
-(g : Fin (m + n) → (Fin (m + n) → ℤ))
-(a : Fin (m + n) → Fin m → (Fin m → ℤ))
-(c : Fin (m + n) → Fin m → (Fin n → ℤ))
-(d : Fin (m + n) → Fin n → (Fin m → ℤ))
-(e : Fin (m + n) → Fin n → (Fin n → ℤ))
-(ab_ind : Fin (m + n) → ((Fin m ⊕ Fin n) × (Fin m ⊕ Fin n)))
-(hindab : ∀ (i : Fin (m + n)), (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim
-  ((fun j => Sum.elim (a k j) (c k j))) ((fun j => Sum.elim (d k j) (e k j)))) i
-  (ab_ind i).1 (ab_ind i).2) ≠ 0 ∧ (∀ j, j ≠ i → (algebraMap ℤ (ZMod p))
-  ((fun k => Sum.elim ((fun j => Sum.elim (a k j) (c k j)))
-  ((fun j => Sum.elim (d k j) (e k j)))) j (ab_ind i).1 (ab_ind i).2) = 0))
-(hmul1 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((B.equivFun.symm).toFun (b1 j)) =
-  Finset.univ.sum (fun l => (a i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
-  Finset.univ.sum (fun l => (c i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
-(hmul2 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((p : ℤ) • ((B.equivFun.symm).toFun (b2 j))) =
-  Finset.univ.sum (fun l => (d i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
-  Finset.univ.sum (fun l => (e i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
+  {K : Type*} [CommRing K] [NoZeroSMulDivisors ℤ K]
+  (O : Subalgebra ℤ K) (p : ℕ) [hpI : Fact <| Nat.Prime p]
+  {Om : Subalgebra ℤ K} (hm : O ≤ Om) {n m : ℕ}
+  (B : Basis (Fin (m + n)) ℤ O)
+  (B' : Basis (Fin (m + n)) ℤ Om)
+  (hpos : 0 < m + n)
+  (hle : m + n ≤ p ^ t)
+  (b1 : Fin m → (Fin (m + n) → ℤ))
+  (b2 : Fin n → (Fin (m + n) → ℤ))
+  (v : Fin m → (Fin (m + n) → (ZMod p)))
+  (w : Fin n → (Fin (m + n) → (ZMod p)))
+  (wFrob : Fin n → (Fin (m + n) → (ZMod p)))
+  (vInd : Fin m → Fin (m + n))
+  (wInd : Fin n → Fin (m + n))
+  (hmod1 : ∀ i, (algebraMap ℤ (ZMod p)) ∘ (b1 i) = v i)
+  (hmod2 : ∀ j, (algebraMap ℤ (ZMod p)) ∘ (b2 j) = w j)
+  (hindv : ∀ i, v i (vInd i) ≠ 0 ∧ (∀ j, j ≠ i → v j (vInd i) = 0))
+  (hindw : ∀ i, wFrob i (wInd i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (wInd i) = 0))
+  (hvFrobKer : ∀ i, (((basisZmodpAlgebra O p B).equivFun.symm).toFun (v i)) ^ (p ^ t) = 0)
+  (hwFrobComp : ∀ j, (((basisZmodpAlgebra O p B).equivFun.symm).toFun (w j)) ^ (p ^ t) =
+    (((basisZmodpAlgebra O p B).equivFun.symm).toFun (wFrob j)))
+  (g : Fin (m + n) → (Fin (m + n) → ℤ))
+  (a : Fin (m + n) → Fin m → (Fin m → ℤ))
+  (c : Fin (m + n) → Fin m → (Fin n → ℤ))
+  (d : Fin (m + n) → Fin n → (Fin m → ℤ))
+  (e : Fin (m + n) → Fin n → (Fin n → ℤ))
+  (abInd : Fin (m + n) → ((Fin m ⊕ Fin n) × (Fin m ⊕ Fin n)))
+  (hindab : ∀ (i : Fin (m + n)), (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim
+    ((fun j => Sum.elim (a k j) (c k j))) ((fun j => Sum.elim (d k j) (e k j)))) i
+    (abInd i).1 (abInd i).2) ≠ 0 ∧ (∀ j, j ≠ i → (algebraMap ℤ (ZMod p))
+    ((fun k => Sum.elim ((fun j => Sum.elim (a k j) (c k j)))
+    ((fun j => Sum.elim (d k j) (e k j)))) j (abInd i).1 (abInd i).2) = 0))
+  (hmul1 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((B.equivFun.symm).toFun (b1 j)) =
+    Finset.univ.sum (fun l => (a i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
+    Finset.univ.sum (fun l => (c i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
+  (hmul2 : ∀ i j, (B.equivFun.symm).toFun (g i) * ((p : ℤ) • ((B.equivFun.symm).toFun (b2 j))) =
+    Finset.univ.sum (fun l => (d i j l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
+    Finset.univ.sum (fun l => (e i j l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
 
 local notation "O*" => Subalgebra.toSubmodule (AlgHom.range (Subalgebra.inclusion hm))
 
-include hpos B hpI B' hle b1 b2 v w wFrob v_ind w_ind hmod1 hmod2 hindv hindw hvFrobKer hwFrobComp
-  g a c d e ab_ind hindab hmul1 hmul2
+include hpos B hpI B' hle b1 b2 v w wFrob vInd wInd hmod1 hmod2 hindv hindw hvFrobKer hwFrobComp
+  g a c d e abInd hindab hmul1 hmul2
 lemma pMaximal_of_data [Module.Free ℤ Om] [Module.Finite ℤ Om] : piMaximal (p : ℤ)  O* := by
   haveI := nonempty_sum_of_pos hpos
   haveI := Module.Free.of_basis B
@@ -658,31 +658,31 @@ lemma pMaximal_of_data [Module.Free ℤ Om] [Module.Finite ℤ Om] : piMaximal (
   refine order_piMaximal_of_order_eq_multiplierRing hm (Nat.prime_iff_prime_int.mp hpI.out) ?_ ?_
   · rw [rank_eq_card_basis B, rank_eq_card_basis B']
   · rw [this]
-    refine mult_ring_eq_ring_of_trivial_ker_map_to_end_lin O p ?_
+    refine mult_ring_eq_ring_of_trivial_ker_mapToEndLin O p ?_
     exact
-      ker_map_eq_bot_of_data B hle b1 b2 v w wFrob v_ind w_ind hmod1 hmod2 hindv hindw hvFrobKer
-        hwFrobComp g a c d e ab_ind hindab hmul1 hmul2
+      ker_map_eq_bot_of_data B hle b1 b2 v w wFrob vInd wInd hmod1 hmod2 hindv hindw hvFrobKer
+        hwFrobComp g a c d e abInd hindab hmul1 hmul2
 
 
 variable
-(wit1 : Fin m → ℤ)
-(wit2 : Fin n → ℤ)
-(aw : Fin (m + n) → (Fin m → ℤ))
-(cw : Fin (m + n) → (Fin n → ℤ))
-(hmulw : ∀ i, (B.equivFun.symm).toFun (g i) * (Finset.univ.sum (fun l => (wit1 l) • ((fun k =>
-  (B.equivFun.symm).toFun (b1 k)) l)) +
-    Finset.univ.sum (fun l => (wit2 l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k))
-      l)))) =
-  Finset.univ.sum (fun l => (aw i l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
-  Finset.univ.sum (fun l => (cw i l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
-(ac_indw : Fin (m + n) → (Fin m ⊕ Fin n))
-(hacindw : ∀ i, ((algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => aw i j) (fun j => cw i j)) (ac_indw
-  i)) ≠ 0 ∧
-      ∀ k, k ≠ i → (algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => aw k j) (fun j => cw k j)) (ac_indw
-        i)) = 0))
+  (wit1 : Fin m → ℤ)
+  (wit2 : Fin n → ℤ)
+  (aw : Fin (m + n) → (Fin m → ℤ))
+  (cw : Fin (m + n) → (Fin n → ℤ))
+  (hmulw : ∀ i, (B.equivFun.symm).toFun (g i) * (Finset.univ.sum (fun l => (wit1 l) • ((fun k =>
+    (B.equivFun.symm).toFun (b1 k)) l)) +
+      Finset.univ.sum (fun l => (wit2 l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k))
+        l)))) =
+    Finset.univ.sum (fun l => (aw i l) • ((fun k => (B.equivFun.symm).toFun (b1 k)) l)) +
+    Finset.univ.sum (fun l => (cw i l) • ((p : ℤ) • ((fun k => (B.equivFun.symm).toFun (b2 k)) l))))
+  (acIndw : Fin (m + n) → (Fin m ⊕ Fin n))
+  (hacindw : ∀ i, ((algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => aw i j) (fun j => cw i j)) (acIndw
+    i)) ≠ 0 ∧
+        ∀ k, k ≠ i → (algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => aw k j) (fun j => cw k j)) (acIndw
+          i)) = 0))
 
-include wit1 wit2 aw cw hmulw ac_indw hacindw in
-omit hindab hmul1 hmul2 a c d e ab_ind in
+include wit1 wit2 aw cw hmulw acIndw hacindw in
+omit hindab hmul1 hmul2 a c d e abInd in
 lemma pMaximal_of_data_witness [Module.Free ℤ Om] [Module.Finite ℤ Om] : piMaximal (p : ℤ)  O* := by
   haveI := nonempty_sum_of_pos hpos
   haveI := Module.Free.of_basis B
@@ -694,9 +694,9 @@ lemma pMaximal_of_data_witness [Module.Free ℤ Om] [Module.Finite ℤ Om] : piM
   refine order_piMaximal_of_order_eq_multiplierRing hm (Nat.prime_iff_prime_int.mp hpI.out) ?_ ?_
   · rw [rank_eq_card_basis B, rank_eq_card_basis B']
   · rw [this]
-    refine mult_ring_eq_ring_of_trivial_ker_map_to_end_lin O p ?_
-    exact ker_map_eq_bot_of_data_witness B hle b1 b2 v w wFrob v_ind w_ind hmod1 hmod2 hindv hindw
-      hvFrobKer hwFrobComp g wit1 wit2 aw cw hmulw ac_indw hacindw
+    refine mult_ring_eq_ring_of_trivial_ker_mapToEndLin O p ?_
+    exact ker_map_eq_bot_of_data_witness B hle b1 b2 v w wFrob vInd wInd hmod1 hmod2 hindv hindw
+      hvFrobKer hwFrobComp g wit1 wit2 aw cw hmulw acIndw hacindw
 
 end Data
 
@@ -727,14 +727,14 @@ and `n ^ 2` identities in `O` :
 - `w` : Coordinates for elements that are mapped by the iterated Frobenius map to a basis for the
   image.
 - `wFrob` : Coordinates of the image of `w` under the iterated Frobenius map.
-- `v_ind` : Indices of `v` to check for linear independence.
-- `w_ind` : Indices of `wFrob` to check for linear independence.
+- `vInd` : Indices of `v` to check for linear independence.
+- `wInd` : Indices of `wFrob` to check for linear independence.
 - `g` : A list of coordinates of elements in `O`.
 - `a` : The coefficients of the `b1ᵢ's` in the expansion of `gᵢ * b1ⱼ`
 - `c` : The coefficients of the `(p * b2ᵢ)'s` in the expansion of `gᵢ * b1`ⱼ
 - `d` : The coefficients of the `b1ᵢ's` in the expansion of `gᵢ * (p * b2ⱼ)`
 - `e` : The coefficients of the `(p * b2ᵢ)'s` in the expansion of `gᵢ * (p * b2ⱼ)`
-- `ab_ind` : indices to check for linear independence of
+- `abInd` : indices to check for linear independence of
   the matrices representing endomorphisms of `Iₚ/pIₚ` -/
 structure MaximalOrderCertificateLists {K : Type*} [CommRing K] [NoZeroSMulDivisors ℤ K]
   (p : ℕ) [hpI : Fact <| Nat.Prime p] (O : Subalgebra ℤ K) (Om : Subalgebra ℤ K) (hm : O ≤ Om) where
@@ -767,15 +767,15 @@ structure MaximalOrderCertificateLists {K : Type*} [CommRing K] [NoZeroSMulDivis
   /-- Imported declaration. -/
   wFrob : Fin n → (Fin (m + n) → (ZMod p))
   /-- Imported declaration. -/
-  v_ind : Fin m → Fin (m + n)
+  vInd : Fin m → Fin (m + n)
   /-- Imported declaration. -/
-  w_ind : Fin n → Fin (m + n)
+  wInd : Fin n → Fin (m + n)
   hmod1 : ∀ i, (algebraMap ℤ (ZMod p)) ∘ (b1 i) = v i
   hmod2 : ∀ j, (algebraMap ℤ (ZMod p)) ∘ (b2 j) = w j
-  hindv : ∀ i, v i (v_ind i) ≠ 0 ∧ (∀ j, j ≠ i → v j (v_ind i) = 0)
-  hindw : ∀ i, wFrob i (w_ind i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (w_ind i) = 0)
-  hvFrobKer : ∀ i, nPow_sq_table TMod (List.ofFn (v i)) (p ^ t) = List.replicate (m + n) 0
-  hwFrobComp : ∀ j, nPow_sq_table TMod (List.ofFn (w j)) (p ^ t) = List.ofFn (wFrob j)
+  hindv : ∀ i, v i (vInd i) ≠ 0 ∧ (∀ j, j ≠ i → v j (vInd i) = 0)
+  hindw : ∀ i, wFrob i (wInd i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (wInd i) = 0)
+  hvFrobKer : ∀ i, nPowSqTable TMod (List.ofFn (v i)) (p ^ t) = List.replicate (m + n) 0
+  hwFrobComp : ∀ j, nPowSqTable TMod (List.ofFn (w j)) (p ^ t) = List.ofFn (wFrob j)
   /-- Imported declaration. -/
   g : Fin (m + n) → (Fin (m + n) → ℤ)
   /-- Imported declaration. -/
@@ -787,16 +787,16 @@ structure MaximalOrderCertificateLists {K : Type*} [CommRing K] [NoZeroSMulDivis
   /-- Imported declaration. -/
   e : Fin (m + n) → Fin n → (Fin n → ℤ)
   /-- Imported declaration. -/
-  ab_ind : Fin (m + n) → ((Fin m ⊕ Fin n) × (Fin m ⊕ Fin n))
+  abInd : Fin (m + n) → ((Fin m ⊕ Fin n) × (Fin m ⊕ Fin n))
   hindab : ∀ (i : Fin (m + n)), (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim ((fun j => Sum.elim (a
-    k j) (c k j))) ((fun j => Sum.elim (d k j) (e k j)))) i (ab_ind i).1 (ab_ind i).2)≠ 0
+    k j) (c k j))) ((fun j => Sum.elim (d k j) (e k j)))) i (abInd i).1 (abInd i).2)≠ 0
     ∧ (∀ j, j ≠ i → (algebraMap ℤ (ZMod p)) ((fun k => Sum.elim ((fun j => Sum.elim (a k j) (c k
-      j))) ((fun j => Sum.elim (d k j) (e k j)))) j (ab_ind i).1 (ab_ind i).2) = 0)
-  hmul1 : ∀ i j, table_mul_list T (List.ofFn (g i)) (List.ofFn (b1 j)) =
+      j))) ((fun j => Sum.elim (d k j) (e k j)))) j (abInd i).1 (abInd i).2) = 0)
+  hmul1 : ∀ i j, tableMulList T (List.ofFn (g i)) (List.ofFn (b1 j)) =
     List.sum (List.ofFn (fun l => List.mulPointwise (a i j l) (List.ofFn (b1 l)))) +
       List.sum (List.ofFn (fun l => List.mulPointwise ((c i j l) * p) (List.ofFn (b2 l))))
   hmul2 : ∀ i j,
-    table_mul_list T (List.ofFn (g i)) (List.mulPointwise p (List.ofFn (b2 j))) =
+    tableMulList T (List.ofFn (g i)) (List.mulPointwise p (List.ofFn (b2 j))) =
     List.sum (List.ofFn (fun l => List.mulPointwise (d i j l) (List.ofFn (b1 l)))) +
       List.sum (List.ofFn (fun l => List.mulPointwise ((e i j l) * p) (List.ofFn (b2 l))))
 
@@ -825,9 +825,9 @@ structure MaximalOrderCertificateOfUnramifiedLists {K : Type*} [CommRing K] [NoZ
   /-- Imported declaration. -/
   wFrob : Fin n → (Fin (0 + n) → (ZMod p))
   /-- Imported declaration. -/
-  w_ind : Fin n → Fin (0 + n)
-  hindw : ∀ i, wFrob i (w_ind i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (w_ind i) = 0)
-  hwFrobComp : ∀ j, nPow_sq_table TMod (List.ofFn (w j)) (p ^ t) = List.ofFn (wFrob j)
+  wInd : Fin n → Fin (0 + n)
+  hindw : ∀ i, wFrob i (wInd i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (wInd i) = 0)
+  hwFrobComp : ∀ j, nPowSqTable TMod (List.ofFn (w j)) (p ^ t) = List.ofFn (wFrob j)
 
 /-- We get a proof of the `p`-maximality of `O` from a term of type
    `MaximalOrderCertificateOfUnramifiedLists` -/
@@ -844,9 +844,9 @@ theorem pMaximal_of_MaximalOrderCertificateOfUnramifiedLists [Module.Free ℤ Om
     simp only [zero_add, Fintype.card_fin]
   · have : (algebraMap ℤ O p) = (p : O) := by norm_num
     rw [this]
-    refine mult_ring_eq_ring_of_trivial_ker_map_to_end_lin O p ?_
-    refine ker_map_to_end_lin_eq_bot_of_rad_eq_smul O p ?_
-    refine rad_eq_smul_top_of_CertificateOfUnramified C.n C.t C.TT.basis C.hle C.w C.wFrob C.w_ind
+    refine mult_ring_eq_ring_of_trivial_ker_mapToEndLin O p ?_
+    refine ker_mapToEndLin_eq_bot_of_rad_eq_smul O p ?_
+    refine rad_eq_smul_top_of_CertificateOfUnramified C.n C.t C.TT.basis C.hle C.w C.wFrob C.wInd
       C.hindw ?_
     intro j
     exact
@@ -858,9 +858,9 @@ theorem pMaximal_of_MaximalOrderCertificateOfUnramifiedLists [Module.Free ℤ Om
 theorem pMaximal_of_MaximalOrderCertificateLists [Module.Free ℤ Om] [Module.Finite ℤ Om]
   (C : MaximalOrderCertificateLists p O Om hm) :
   piMaximal (p : ℤ) O* := by
-  refine pMaximal_of_data O p hm C.TT.basis C.B' C.hpos C.hle C.b1 C.b2 C.v C.w C.wFrob C.v_ind
-    C.w_ind C.hmod1 C.hmod2 C.hindv C.hindw ?_ ?_ C.g C.a C.c C.d
-    C.e C.ab_ind C.hindab ?_ ?_
+  refine pMaximal_of_data O p hm C.TT.basis C.B' C.hpos C.hle C.b1 C.b2 C.v C.w C.wFrob C.vInd
+    C.wInd C.hmod1 C.hmod2 C.hindv C.hindw ?_ ?_ C.g C.a C.c C.d
+    C.e C.abInd C.hindab ?_ ?_
   · exact fun i =>
       hvFrobKer_lists C.TT.basis C.TT.table C.T C.heq C.TT.basis_mul_basis C.TMod
         C.hTMod C.v _ (C.hvFrobKer i)
@@ -882,7 +882,7 @@ theorem pMaximal_of_MaximalOrderCertificateLists [Module.Free ℤ Om] [Module.Fi
   for evaluation· The new components are:
   - `w1` : the coefficients of the `b1ᵢ's` in the expansion of the witness
   - `w2` : the coefficients of the `(p * b2ᵢ)'s` in the expansion of the witness
-  - `ac_indw` : the coefficients to check for linear independence -/
+  - `acIndw` : the coefficients to check for linear independence -/
 structure MaximalOrderCertificateWLists {K : Type*} [CommRing K] [CommRing K]
     [NoZeroSMulDivisors ℤ K]
   (p : ℕ) [hpI : Fact <| Nat.Prime p] (O : Subalgebra ℤ K) (Om : Subalgebra ℤ K) (hm : O ≤ Om) where
@@ -915,15 +915,15 @@ structure MaximalOrderCertificateWLists {K : Type*} [CommRing K] [CommRing K]
   /-- Imported declaration. -/
   wFrob : Fin n → (Fin (m + n) → (ZMod p))
   /-- Imported declaration. -/
-  v_ind : Fin m → Fin (m + n)
+  vInd : Fin m → Fin (m + n)
   /-- Imported declaration. -/
-  w_ind : Fin n → Fin (m + n)
+  wInd : Fin n → Fin (m + n)
   hmod1 : ∀ i, (algebraMap ℤ (ZMod p)) ∘ (b1 i) = v i
   hmod2 : ∀ j, (algebraMap ℤ (ZMod p)) ∘ (b2 j) = w j
-  hindv : ∀ i, v i (v_ind i) ≠ 0 ∧ (∀ j, j ≠ i → v j (v_ind i) = 0)
-  hindw : ∀ i, wFrob i (w_ind i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (w_ind i) = 0)
-  hvFrobKer : ∀ i, nPow_sq_table TMod (List.ofFn (v i)) (p ^ t) = List.replicate (m + n) 0
-  hwFrobComp : ∀ j, nPow_sq_table TMod (List.ofFn (w j)) (p ^ t) = List.ofFn (wFrob j)
+  hindv : ∀ i, v i (vInd i) ≠ 0 ∧ (∀ j, j ≠ i → v j (vInd i) = 0)
+  hindw : ∀ i, wFrob i (wInd i) ≠ 0 ∧ (∀ j, j ≠ i → wFrob j (wInd i) = 0)
+  hvFrobKer : ∀ i, nPowSqTable TMod (List.ofFn (v i)) (p ^ t) = List.replicate (m + n) 0
+  hwFrobComp : ∀ j, nPowSqTable TMod (List.ofFn (w j)) (p ^ t) = List.ofFn (wFrob j)
   /-- Imported declaration. -/
   g : Fin (m + n) → (Fin (m + n) → ℤ)
   /-- Imported declaration. -/
@@ -934,16 +934,16 @@ structure MaximalOrderCertificateWLists {K : Type*} [CommRing K] [CommRing K]
   a : Fin (m + n) → (Fin m → ℤ)
   /-- Imported declaration. -/
   c : Fin (m + n) → (Fin n → ℤ)
-  hmulw : ∀ i,  table_mul_list T (List.ofFn (g i)) (List.sum (List.ofFn (fun l => List.mulPointwise
+  hmulw : ∀ i,  tableMulList T (List.ofFn (g i)) (List.sum (List.ofFn (fun l => List.mulPointwise
     (w1 l) (List.ofFn (b1 l)))) +
     List.sum (List.ofFn (fun l => List.mulPointwise ((w2 l) * p) (List.ofFn (b2 l))))) =
     List.sum (List.ofFn (fun l => List.mulPointwise ((a i) l) (List.ofFn (b1 l)))) +
     List.sum (List.ofFn (fun l => List.mulPointwise (((c i) l) * p) (List.ofFn (b2 l))))
   /-- Imported declaration. -/
-  ac_indw : Fin (m + n) → (Fin m ⊕ Fin n)
-  hacindw : ∀ i, ((algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => a i j) (fun j => c i j)) (ac_indw
+  acIndw : Fin (m + n) → (Fin m ⊕ Fin n)
+  hacindw : ∀ i, ((algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => a i j) (fun j => c i j)) (acIndw
     i)) ≠ 0 ∧
-        ∀ k, k ≠ i → (algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => a k j) (fun j => c k j)) (ac_indw
+        ∀ k, k ≠ i → (algebraMap ℤ (ZMod p)) ((Sum.elim (fun j => a k j) (fun j => c k j)) (acIndw
           i)) = 0)
 
 
@@ -953,8 +953,8 @@ theorem pMaximal_of_MaximalOrderCertificateWLists [Module.Free ℤ Om] [Module.F
   (C : MaximalOrderCertificateWLists p O Om hm) :
   piMaximal (p : ℤ) O* := by
   refine pMaximal_of_data_witness O p hm C.TT.basis C.B' C.hpos C.hle C.b1 C.b2 C.v C.w C.wFrob
-    C.v_ind C.w_ind
-    C.hmod1 C.hmod2 C.hindv C.hindw ?_ ?_ C.g C.w1 C.w2 C.a C.c ?_ C.ac_indw C.hacindw
+    C.vInd C.wInd
+    C.hmod1 C.hmod2 C.hindv C.hindw ?_ ?_ C.g C.w1 C.w2 C.a C.c ?_ C.acIndw C.hacindw
   · exact fun i =>
       hvFrobKer_lists C.TT.basis C.TT.table C.T C.heq C.TT.basis_mul_basis C.TMod
         C.hTMod C.v _ (C.hvFrobKer i)

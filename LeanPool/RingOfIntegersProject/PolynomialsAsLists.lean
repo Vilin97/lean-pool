@@ -318,33 +318,33 @@ lemma dropTrailingZeros_eq_dropTrailingZeros'
 
 /- For lists, we define an addition, multiplication and other operations. -/
 
-instance [AddMonoid R] : Add (List R) where
+instance instAddListOfAddMonoidLeanPool [AddMonoid R] : Add (List R) where
   add := fun l₁ l₂ => l₁.addPointwise l₂
 
-instance [AddGroup R] : Neg (List R) where
+instance instNegListOfAddGroupLeanPool [AddGroup R] : Neg (List R) where
   neg := List.neg
 
-instance [AddGroup R] : Sub (List R) where
+instance instSubListOfAddGroupLeanPool [AddGroup R] : Sub (List R) where
   sub := fun l₁ l₂ => l₁.addPointwise (l₂.neg)
 
-instance [Semiring R] : Mul (List R) where
+instance instMulListOfSemiringLeanPool [Semiring R] : Mul (List R) where
   mul := fun l₁ l₂ => l₁.convolve l₂
 
-instance [One R] : One (List R) where
+instance instOneListLeanPool [One R] : One (List R) where
   one := [1]
 
-instance : Zero (List R) where
+instance instZeroListLeanPool : Zero (List R) where
   zero := []
 
 lemma zero_def : (0 : List R) = [] := rfl
 
-instance [Semiring R] : NatPow (List R)  where
+instance instNatPowListOfSemiringLeanPool [Semiring R] : NatPow (List R)  where
   pow := fun l => fun n => npowRec n l
 
-instance [Semiring R] : NatCast (List  R) where
+instance instNatCastListOfSemiringLeanPool [Semiring R] : NatCast (List  R) where
   natCast := fun n => [(n : R)]
 
-instance [Semiring R] : AddZeroClass (List R) where
+instance instAddZeroClassListOfSemiringLeanPool [Semiring R] : AddZeroClass (List R) where
   zero_add := addPointwise_nil_left
   add_zero := addPointwise_nil_right
 
@@ -700,9 +700,12 @@ lemma List.self_eq_dropTrailingZeros_append_zero {R : Type*} [DecidableEq R] [Ze
         decide_eq_false_iff_not, h, ↓reduceIte, nil_append]
       use (a :: as).length
       push Not at h
-      simp only [h, replicate, cons.injEq, true_and]
+      simp only [h]
       rw [List.eq_replicate_length]
-      exact h.2
+      intro b hb
+      rcases List.mem_cons.mp hb with hb | hb
+      · exact hb
+      · exact h.2 b hb
 
 lemma ofList_eq_zero {R : Type u} [Semiring R] [DecidableEq R]
     (l : List R) (h : ofList l = 0) : ∃ (n : ℕ), l = List.replicate n 0 := by

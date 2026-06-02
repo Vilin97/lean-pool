@@ -145,10 +145,6 @@ section Weight
   · simp
   · simp [add_mul]
 
-@[simp] lemma Finsupp.degree_mapDomain {σ τ : Type*} (f : σ → τ) (d : σ →₀ ℕ) :
-    degree (Finsupp.mapDomain f d) = degree d :=
-  Finsupp.sum_mapDomain_index (h := fun _ x => x) (fun _ => rfl) (fun _ _ _ => rfl)
-
 end Weight
 
 section MvPolynomial
@@ -239,7 +235,6 @@ theorem MvPolynomial.coeff_aeval_X_pow_mul {σ : Type*} {w : σ → ℕ} {j : σ
       symm
       simpa using (Nat.add_eq_zero_iff.mp (DFunLike.congr_fun hd i).symm).1
   case monomial_add a b p _ _ ih =>
-    simp only at *
     rw [map_add, coeff_add, coeff_add, ih]
     congr 1
     rw [aeval_X_pow_mul_monomial, coeff_monomial d]
@@ -282,7 +277,6 @@ theorem MvPolynomial.coeff_aeval_X_mul {σ : Type*} {j : σ} (p : MvPolynomial �
       symm
       simpa using (Nat.add_eq_zero_iff.mp (DFunLike.congr_fun hd i).symm).1
   case monomial_add a b p _ _ ih =>
-    simp only at *
     rw [map_add, coeff_add, coeff_add, ih]
     congr 1
     rw [aeval_X_mul_monomial, coeff_monomial d]
@@ -412,7 +406,6 @@ theorem MvPolynomial.coeff_aeval_X_pow_mul' {σ : Type*} {w : σ → ℕ} {j : �
     · rintro rfl
       simp at hdeg
   case neg.monomial_add a b p _ _ ih =>
-    simp only at *
     rw [map_add, coeff_add, ih, add_zero, aeval_X_pow_mul_monomial, coeff_monomial, if_neg]
     rintro rfl
     refine hdeg ⟨?_, ?_⟩
@@ -446,7 +439,6 @@ theorem MvPolynomial.coeff_aeval_X_mul' {σ : Type*} {j : σ} (p : MvPolynomial 
     · rintro rfl
       simp at hdeg
   case neg.monomial_add a b p _ _ ih =>
-    simp only at *
     rw [map_add, coeff_add, ih, add_zero, aeval_X_mul_monomial, coeff_monomial, if_neg]
     rintro rfl
     simp [← two_mul] at hdeg
@@ -593,7 +585,7 @@ lemma MvPolynomial.totalDegree_eq_zero_iff_exists_C {σ : Type*} {P : MvPolynomi
       rw [coeff_C, if_neg (Ne.symm hx), coeff_eq_zero_of_totalDegree_lt]
       · obtain ⟨i, hi⟩ := Finsupp.ne_iff.mp hx
         rw [hdeg]
-        refine Finset.sum_pos' (fun _ _ => zero_le _)
+        refine Finset.sum_pos' (fun _ _ => Nat.zero_le _)
           ⟨i, Finsupp.mem_support_iff.mpr hi, Nat.pos_of_ne_zero hi⟩
   · rintro ⟨x, rfl⟩
     exact totalDegree_C _
@@ -836,7 +828,6 @@ theorem MvPolynomial.isWeightedHomogeneous_iff_comp_smul_eq_pow_smul' {σ : Type
       · rwa [eq_comm, Finsupp.single_eq_zero]
   case monomial_add x a p hx ha ih_r ih_l =>
     -- simp? [rename_monomial, aeval_monomial] at *
-    simp only at *
     simp only [Finsupp.mem_support_iff, ne_eq, Decidable.not_not] at hx
     have disj : Disjoint ((monomial x) a).support (support p) := by simpa [support_monomial, ha]
     constructor
@@ -968,7 +959,6 @@ theorem MvPolynomial.isHomogeneous_iff_comp_smul_eq_pow_smul' {σ : Type*} {p : 
       rwa [coeff_C, mul_comm, coeff_C_mul, coeff_X_pow, if_pos rfl, if_neg, mul_one] at h
       · rwa [eq_comm, Finsupp.single_eq_zero]
   case monomial_add x a p hx ha ih_r ih_l =>
-    simp only at *
     simp only [Finsupp.mem_support_iff, ne_eq, Decidable.not_not] at hx
     have disj : Disjoint ((monomial x) a).support (support p) := by simpa [support_monomial, ha]
     constructor
@@ -1244,11 +1234,10 @@ lemma MvPolynomial.IsWeightedHomogeneous.bind₁ {σ τ : Type*} {w₁ : σ → 
     · simpa using isWeightedHomogeneous_zero _ _ _
     · simpa using isWeightedHomogeneous_C _ a
   case monomial_add a b f ha hb ih_r ih_l =>
-    simp only at *
     rw [map_add]
     have : Disjoint ((monomial a) b).support (support f) := by
       classical
-      simpa [support_monomial, hb] using ha
+      simpa [support_monomial, hb] using (notMem_support_iff.mp ha)
     exact (ih_l (isWeightedHomogeneous_left_of_add_of_disjoint hP this)).add
       (ih_r (MvPolynomial.isWeightedHomogeneous_right_of_add_of_disjoint hP this))
   case mul_X p i ih =>

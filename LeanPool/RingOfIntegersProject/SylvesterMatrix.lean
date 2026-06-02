@@ -297,7 +297,7 @@ lemma sylvesterMatrix_C (P : Polynomial R) (x : R) :
   · obtain (h | h) := lt_or_gt_of_ne h
     · rw [sylvesterVec_of_lt _ _ _ h]
     · rw [sylvesterVec_of_ge_of_gt _ _ _ h.le]
-      simpa using h
+      simpa [Fin.lt_def, natDegree_C] using h
 
 lemma C_sylvesterMatrix (x : R) (Q : Polynomial R) :
     (C x).sylvesterMatrix Q = diagonal (fun _ => x) := by

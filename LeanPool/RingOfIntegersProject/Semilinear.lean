@@ -16,7 +16,7 @@ This files includes some results on semilinear maps and bases mapped through the
 ## Main results:
 - `LinearIndependent.mapₛₗ` : linearly independent vectors mapped through a semilinear map
   remain linearly independent if they are disjoint with the kernel of such map.
-- `Basis.comp_semilinear` : the reduction of a bases is a bases for the quotient.
+- `Basis.compSemilinear` : the reduction of a bases is a bases for the quotient.
 - `basisSubmoduleModOfBasisMod` : For `pO ≤ I ≤ O`, A basis for `I/pI` constructed from `I/pO`. -/
 
 open Module
@@ -145,7 +145,7 @@ theorem LinearIndependent.mapₛₗ' {τ : Type*} {v : ι → M} (b : Basis τ R
 /-- If we have a basis on an `R`-module `M`,
 and we take the quotient of `R` and `M` by "the same thing" `p`,
 then we get an `R/p`-basis of `M/p`· -/
-noncomputable def Basis.comp_semilinear {ι R S M N : Type*} [CommRing R] [CommRing S]
+noncomputable def Basis.compSemilinear {ι R S M N : Type*} [CommRing R] [CommRing S]
     [AddCommGroup M] [AddCommGroup N] [Module R M] [Module S N]
     (g : R →+* S) (g' : ZeroHom S R) (hg : Function.RightInverse g' g) [RingHomSurjective g]
     (f : M →ₛₗ[g] N) (f' : N → M) (hf : Function.RightInverse f' f)
@@ -158,24 +158,24 @@ noncomputable def Basis.comp_semilinear {ι R S M N : Type*} [CommRing R] [CommR
         exact hf.surjective })
 
 variable [RingHomSurjective g]
-lemma Basis.comp_semilinear_def (b : Basis ι R M)
+lemma Basis.compSemilinear_def (b : Basis ι R M)
     (h : LinearMap.ker f ≤ RingHom.ker g • ⊤) (i : ι) :
-    (Basis.comp_semilinear g g' hg f f' hf b h) i = f (b i) := by
+    (Basis.compSemilinear g g' hg f f' hf b h) i = f (b i) := by
   erw [Basis.mk_apply]
   rfl
 
-lemma Basis.comp_semilinear_repr
+lemma Basis.compSemilinear_repr
     (b : Basis ι R M)
     (h : LinearMap.ker f ≤ RingHom.ker g • ⊤) (x : M) :
-    g ∘ (b.repr x) = (Basis.comp_semilinear g g' hg f f' hf b h).repr (f x) := by
+    g ∘ (b.repr x) = (Basis.compSemilinear g g' hg f f' hf b h).repr (f x) := by
   let v : ι →₀ S := Finsupp.mapRange g (RingHom.map_zero g) (b.repr x)
   have : v = g ∘ (b.repr x) := rfl
-  rw [← this, ← Basis.repr_linearCombination (Basis.comp_semilinear g g' hg f f' hf b h) v]
-  suffices f x = Finsupp.linearCombination S (comp_semilinear g g' hg f f' hf b h) v by rw [this]
+  rw [← this, ← Basis.repr_linearCombination (Basis.compSemilinear g g' hg f f' hf b h) v]
+  suffices f x = Finsupp.linearCombination S (compSemilinear g g' hg f f' hf b h) v by rw [this]
   erw [← Basis.linearCombination_repr b x, Finsupp.linearCombination_apply,
     Finsupp.linearCombination_apply, map_sum]
-  simp only [LinearMap.map_smulₛₗ, ← Basis.comp_semilinear_def g g' hg f f' hf b h]
-  rw [Basis.ext_elem_iff (Basis.comp_semilinear g g' hg f f' hf b h)]
+  simp only [LinearMap.map_smulₛₗ, ← Basis.compSemilinear_def g g' hg f f' hf b h]
+  rw [Basis.ext_elem_iff (Basis.compSemilinear g g' hg f f' hf b h)]
   intro i
   unfold Finsupp.sum
   simp only [map_sum, map_smul, Basis.repr_self, Finsupp.smul_single, smul_eq_mul, mul_one]
@@ -296,5 +296,5 @@ noncomputable def basisSubmoduleModOfBasisMod {R S M N J : Type _} {n m : ℕ} {
     · exact hcl_z _
     · exact hcr_z _
   refine basisOfLinearIndependentOfCardEqFinrank hi ?_
-  rw [Module.finrank_eq_card_basis (Basis.comp_semilinear g g' hg h h' hh b4 hker2)]
+  rw [Module.finrank_eq_card_basis (Basis.compSemilinear g g' hg h h' hh b4 hker2)]
   simp only [Fintype.card_sum, Fintype.card_fin, add_comm]

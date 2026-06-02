@@ -18,13 +18,13 @@ multiplication on lists of length `n` (seen as coordinates of an element) with r
 this times table. We also define efficient exponentiation.
 
 ## Main Definitions:
-- `table_mul_list'` : multiplication of lists with respect to a times table.
-- `nPow_sq_table` : exponentiation of lists with respect to a times table.
+- `tableMulList'` : multiplication of lists with respect to a times table.
+- `nPowSqTable` : exponentiation of lists with respect to a times table.
 
 ## Main results.
-- `table_mul_list_eq_mul` : in an algebra with times table `T`, this
+- `tableMulList_eq_mul` : in an algebra with times table `T`, this
   multiplication on lists corresponds to multiplication in the algebra.
-- `table_nPow_sq_table_eq_pow` : in an algebra with times table `T`,
+- `table_nPowSqTable_eq_pow` : in an algebra with times table `T`,
   exponentiation on lists corresponds to exponentiation in the algebra.
 
 -/
@@ -53,16 +53,16 @@ variable (T : Fin n → Fin n → Fin n → R)
 /-- This is the multiplication based on a times table `T`,
   given by `(aᵢ) * (bᵢ) = ∑ᵢ∑ⱼ aᵢ * bⱼ • Tᵢⱼ`.
   We allow lists of different lengths, filling out with zeros if the indices are out of range. -/
-def table_mul_list' (a b : List R) : List R :=
+def tableMulList' (a b : List R) : List R :=
   List.sum (List.ofFn (fun i => List.sum (List.ofFn
     (fun j => List.mulPointwise ((List.getD a i 0) * (List.getD b j 0))  (List.ofFn (T i j))))))
 
-lemma table_mul_list_length (a b : List R) : (table_mul_list' T a b).length = n := by
+lemma tableMulList_length (a b : List R) : (tableMulList' T a b).length = n := by
   by_cases hn : n = 0
-  · unfold table_mul_list'
+  · unfold tableMulList'
     simp only [hn, List.ofFn_zero]
     rfl
-  · unfold table_mul_list'
+  · unfold tableMulList'
     refine list_sum_length (R := R) hn _ ?_
     · intro i
       refine list_sum_length (R := R) hn _ ?_
@@ -96,10 +96,10 @@ lemma FnOfList_sum_ofFn {m : ℕ} (f : Fin m → (Fin n → R)) (c : Fin n → R
     · exact h
     · simp only [ne_eq, Nat.succ_ne_zero, not_false_eq_true]
 
-lemma List.table_mul_list_ofFn (hn : n ≠ 0) (a b : Fin n → R) :
+lemma List.tableMulList_ofFn (hn : n ≠ 0) (a b : Fin n → R) :
     List.ofFn (∑ i, (∑ j, (a i * b j) • T i j)) =
-    table_mul_list' T (List.ofFn a) (List.ofFn b) := by
-  unfold table_mul_list'
+    tableMulList' T (List.ofFn a) (List.ofFn b) := by
+  unfold tableMulList'
   simp_rw [List.mulPointwise_ofFn, ← List.sum_ofFn' hn, List.ofFn_inj]
   congr
   ext i k
@@ -112,8 +112,8 @@ lemma List.table_mul_list_ofFn (hn : n ≠ 0) (a b : Fin n → R) :
   · rw [List.getD_eq_getElem _ _ (lt_of_lt_of_eq j.2 (List.length_ofFn (f := b)).symm)]
     simp only [List.getElem_ofFn, Fin.eta]
 
-lemma FnOfList_table_mul_list_eq_sum_sum (a b c : Fin n → R)
-    (hc : List.ofFn c = table_mul_list' T (List.ofFn a) (List.ofFn b)) :
+lemma FnOfList_tableMulList_eq_sum_sum (a b c : Fin n → R)
+    (hc : List.ofFn c = tableMulList' T (List.ofFn a) (List.ofFn b)) :
     c = ∑ i, (∑ j, (a i * b j) • T i j) := by
   match n with
   | 0 =>
@@ -121,7 +121,7 @@ lemma FnOfList_table_mul_list_eq_sum_sum (a b c : Fin n → R)
     ext i
     exact Fin.elim0 i
   | Nat.succ n =>
-    rw [← List.table_mul_list_ofFn T (Nat.succ_ne_zero n), List.ofFn_inj] at hc
+    rw [← List.tableMulList_ofFn T (Nat.succ_ne_zero n), List.ofFn_inj] at hc
     exact hc
 
 lemma table_add_list_eq_add {S : Type*} [AddCommMonoid S] [Module R S] [Mul S]
@@ -137,13 +137,13 @@ lemma table_mulPointwise_eq_smul
 
 /-- Multiplication of lists with coordinates
   corresponds to multiplication in the algebra with times table `T`. -/
-lemma table_mul_list_eq_mul
+lemma tableMulList_eq_mul
     {S : Type*} [NonUnitalNonAssocSemiring S] [Module R S] [SMulCommClass R S S] [IsScalarTower R S
       S] (B : Basis (Fin n) R S) (a b c : Fin n → R)
     (basisMulBasis : ∀ i j k, B.repr (B i * B j) k = T i j k)
-    (hc : List.ofFn c = table_mul_list' T (List.ofFn a) (List.ofFn b)) :
+    (hc : List.ofFn c = tableMulList' T (List.ofFn a) (List.ofFn b)) :
     (B.equivFun.symm a) * (B.equivFun.symm b) = (B.equivFun.symm c) := by
-  rw [FnOfList_table_mul_list_eq_sum_sum T a b c hc]
+  rw [FnOfList_tableMulList_eq_sum_sum T a b c hc]
   simp only [    Basis.equivFun_symm_apply, map_sum, LinearMapClass.map_smul]
   rw [Finset.sum_mul_sum _ _ _ _]
   simp_rw [smul_mul_smul_comm]
@@ -153,62 +153,62 @@ lemma table_mul_list_eq_mul
     simp_rw [basisMulBasis]
   simp_rw [this]
 
-/-- A version of `table_mul_list'` in which the entries of the times table
+/-- A version of `tableMulList'` in which the entries of the times table
   are given by lists instead of vectors `Fin n → R`. This performs better. -/
-def table_mul_list (T : Fin n → Fin n → List R) (a : List R) (b : List R) :=
+def tableMulList (T : Fin n → Fin n → List R) (a : List R) (b : List R) :=
   List.sum (List.ofFn (fun i => List.sum (List.ofFn
   (fun j => List.mulPointwise ((List.getD a i 0) * (List.getD b j 0))  (T i j)))))
 
 
 lemma table_mul_eq_table_mul' (T' : Fin n → Fin n → Fin n → R) (T : Fin n → Fin n → List R)
-    (h : ∀ i j, T i j = List.ofFn (T' i j)) : table_mul_list T a b = table_mul_list' T' a b := by
-  unfold table_mul_list' table_mul_list
+    (h : ∀ i j, T i j = List.ofFn (T' i j)) : tableMulList T a b = tableMulList' T' a b := by
+  unfold tableMulList' tableMulList
   simp_rw [h]
 
 /-- Exponentiation by squaring given a times table `T`. -/
-def nPow_sq_table (T : Fin n → Fin n → List R) (a : List R) (m : ℕ) : List R :=
+def nPowSqTable (T : Fin n → Fin n → List R) (a : List R) (m : ℕ) : List R :=
   match m with
   | 0 => 1
   | 1 => a
   | Nat.succ k =>
-    if h : k % 2 = 0 then table_mul_list T a (table_mul_list T (nPow_sq_table T a (k / 2))
-      (nPow_sq_table T a (k / 2)))
-    else table_mul_list T (nPow_sq_table T a ((Nat.succ k) / 2))
-      (nPow_sq_table T a ((Nat.succ k) / 2))
+    if h : k % 2 = 0 then tableMulList T a (tableMulList T (nPowSqTable T a (k / 2))
+      (nPowSqTable T a (k / 2)))
+    else tableMulList T (nPowSqTable T a ((Nat.succ k) / 2))
+      (nPowSqTable T a ((Nat.succ k) / 2))
 
-lemma nPow_sq_table_length (T' : Fin n → Fin n → Fin n → R) (T : Fin n → Fin n → List R)
+lemma nPowSqTable_length (T' : Fin n → Fin n → Fin n → R) (T : Fin n → Fin n → List R)
     (a : List R) (m : ℕ) (hm : 0 < m) (heq : ∀ i j,
       T i j = List.ofFn (T' i j)) (ha : a.length = n) :
-    (nPow_sq_table T a m).length = n := by
+    (nPowSqTable T a m).length = n := by
   match m with
   | 0 => contradiction
   | Nat.succ m =>
   · by_cases h : m = 0
     · rw [h]
-      have heq : nPow_sq_table T a (Nat.succ 0) = a := by
-        unfold nPow_sq_table
+      have heq : nPowSqTable T a (Nat.succ 0) = a := by
+        unfold nPowSqTable
         rfl
       rw [heq, ha]
     · by_cases hp : m % 2 = 0
-      · have heq' : nPow_sq_table T a (Nat.succ m) =
-          table_mul_list T a
-            (table_mul_list T (nPow_sq_table T a (m / 2)) (nPow_sq_table T a (m / 2))) := by
-            simp only [nPow_sq_table, hp, reduceDIte]
-        rw [heq', table_mul_eq_table_mul' T' T heq, table_mul_list_length]
-      · have heq' : nPow_sq_table T a (Nat.succ m) =
-          table_mul_list T (nPow_sq_table T a ((Nat.succ m) / 2))
-            (nPow_sq_table T a ((Nat.succ m) / 2)) := by
-            simp only [nPow_sq_table, hp, ↓reduceDIte]
-        rw [heq', table_mul_eq_table_mul' T' T heq, table_mul_list_length]
+      · have heq' : nPowSqTable T a (Nat.succ m) =
+          tableMulList T a
+            (tableMulList T (nPowSqTable T a (m / 2)) (nPowSqTable T a (m / 2))) := by
+            simp only [nPowSqTable, hp, reduceDIte]
+        rw [heq', table_mul_eq_table_mul' T' T heq, tableMulList_length]
+      · have heq' : nPowSqTable T a (Nat.succ m) =
+          tableMulList T (nPowSqTable T a ((Nat.succ m) / 2))
+            (nPowSqTable T a ((Nat.succ m) / 2)) := by
+            simp only [nPowSqTable, hp, ↓reduceDIte]
+        rw [heq', table_mul_eq_table_mul' T' T heq, tableMulList_length]
 
 /-- Exponentiation of lists with coordinates
   corresponds to exponentiation in the algebra with times table `T`. -/
-lemma table_nPow_sq_table_eq_pow {S : Type*} [Semiring S] [Module R S] [SMulCommClass R S S]
+lemma table_nPowSqTable_eq_pow {S : Type*} [Semiring S] [Module R S] [SMulCommClass R S S]
     [IsScalarTower R S S] (T' : Fin n → Fin n → Fin n → R) (T : Fin n → Fin n → List R)
     (B : Basis (Fin n) R S) (a : Fin n → R)
     (basisMulBasis : ∀ i j k, B.repr (B i * B j) k = T' i j k)
     (heq : ∀ i j, T i j = List.ofFn (T' i j)) (m : ℕ) (hmp : 0 < m) (c : Fin n → R)
-    (hc : List.ofFn c = nPow_sq_table T (List.ofFn a) m) :
+    (hc : List.ofFn c = nPowSqTable T (List.ofFn a) m) :
     (B.equivFun.symm a) ^ m = (B.equivFun.symm c) := by
   revert c
   have nataux : ∀ n, n % 2 = 0 → (n / 2) + (n / 2) = n := by
@@ -223,51 +223,51 @@ lemma table_nPow_sq_table_eq_pow {S : Type*} [Semiring S] [Module R S] [SMulComm
     by_cases h : m = 0
     · simp_rw [h]
       intro c hc
-      have heq : nPow_sq_table T (List.ofFn a) (Nat.succ 0) = List.ofFn a := by
-        unfold nPow_sq_table
+      have heq : nPowSqTable T (List.ofFn a) (Nat.succ 0) = List.ofFn a := by
+        unfold nPowSqTable
         rfl
       rw [heq, List.ofFn_inj] at hc
       rw [hc, pow_one]
     · intro c hc
       by_cases hp : m % 2 = 0
-      · have heq' : nPow_sq_table T (List.ofFn a) (Nat.succ m) =
-        table_mul_list T (List.ofFn a) (table_mul_list T (nPow_sq_table T (List.ofFn a) (m / 2))
-          (nPow_sq_table T (List.ofFn a) (m / 2))) := by
-          simp only [nPow_sq_table, hp, ↓reduceDIte]
+      · have heq' : nPowSqTable T (List.ofFn a) (Nat.succ m) =
+        tableMulList T (List.ofFn a) (tableMulList T (nPowSqTable T (List.ofFn a) (m / 2))
+          (nPowSqTable T (List.ofFn a) (m / 2))) := by
+          simp only [nPowSqTable, hp, ↓reduceDIte]
         rw [heq', table_mul_eq_table_mul' _ _ heq, table_mul_eq_table_mul' _ _ heq, ] at hc
-        let d := FnOfList n (nPow_sq_table T (List.ofFn a) (m / 2))
-          (nPow_sq_table_length T' T (List.ofFn a) (m / 2)
+        let d := FnOfList n (nPowSqTable T (List.ofFn a) (m / 2))
+          (nPowSqTable_length T' T (List.ofFn a) (m / 2)
             (Nat.div_pos (nataux2 m h hp) (Nat.ofNat_pos)) heq
             (List.length_ofFn (f := a)))
-        have auxd: List.ofFn d = nPow_sq_table T (List.ofFn a) (m / 2) := by
+        have auxd: List.ofFn d = nPowSqTable T (List.ofFn a) (m / 2) := by
           rw [listOfFn_of_FnOfList]
-        let e := FnOfList n (table_mul_list' T'  (nPow_sq_table T (List.ofFn a) (m / 2))
-          (nPow_sq_table T (List.ofFn a) (m / 2))) (table_mul_list_length _ _ _)
-        have auxe : List.ofFn e = (table_mul_list' T'
-          (nPow_sq_table T (List.ofFn a) (m / 2))  (nPow_sq_table T (List.ofFn a) (m / 2))) := by
+        let e := FnOfList n (tableMulList' T'  (nPowSqTable T (List.ofFn a) (m / 2))
+          (nPowSqTable T (List.ofFn a) (m / 2))) (tableMulList_length _ _ _)
+        have auxe : List.ofFn e = (tableMulList' T'
+          (nPowSqTable T (List.ofFn a) (m / 2))  (nPowSqTable T (List.ofFn a) (m / 2))) := by
           rw [listOfFn_of_FnOfList]
         simp_rw [← auxe] at hc
         rw [← auxd] at auxe
-        rw [← table_mul_list_eq_mul T' B a e c basisMulBasis hc,
-          ← table_mul_list_eq_mul T' B _ _ _ basisMulBasis auxe,
+        rw [← tableMulList_eq_mul T' B a e c basisMulBasis hc,
+          ← tableMulList_eq_mul T' B _ _ _ basisMulBasis auxe,
           ← hm (m / 2) (Nat.div_le_self _ _) (Nat.div_pos (nataux2 m h hp) (Nat.ofNat_pos)) d auxd,
             ← pow_add, ← pow_succ', nataux m hp]
-      · have heq' : nPow_sq_table T (List.ofFn a) (Nat.succ m) =
-        table_mul_list T (nPow_sq_table T (List.ofFn a)
-          ((Nat.succ m) / 2)) (nPow_sq_table T (List.ofFn a) ((Nat.succ m) / 2)) := by
-          simp only [nPow_sq_table, hp, ↓reduceDIte]
+      · have heq' : nPowSqTable T (List.ofFn a) (Nat.succ m) =
+        tableMulList T (nPowSqTable T (List.ofFn a)
+          ((Nat.succ m) / 2)) (nPowSqTable T (List.ofFn a) ((Nat.succ m) / 2)) := by
+          simp only [nPowSqTable, hp, ↓reduceDIte]
         rw [heq',  table_mul_eq_table_mul' _ _ heq] at hc
         have hpSucc : (Nat.succ m) % 2 = 0 := by
           rw [Nat.succ_eq_add_one, Nat.succ_mod_two_eq_zero_iff, ← Nat.mod_two_ne_zero]
           exact hp
-        let d := FnOfList n (nPow_sq_table T (List.ofFn a) (Nat.succ m / 2))
-          (nPow_sq_table_length T' T (List.ofFn a) (Nat.succ m / 2) (Nat.div_pos
+        let d := FnOfList n (nPowSqTable T (List.ofFn a) (Nat.succ m / 2))
+          (nPowSqTable_length T' T (List.ofFn a) (Nat.succ m / 2) (Nat.div_pos
             (nataux2 (Nat.succ m) (Nat.succ_ne_zero m) hpSucc) (Nat.ofNat_pos))
             heq (List.length_ofFn (f := a)))
-        have auxd : List.ofFn d = nPow_sq_table T (List.ofFn a) (Nat.succ m / 2) := by
+        have auxd : List.ofFn d = nPowSqTable T (List.ofFn a) (Nat.succ m / 2) := by
           rw [listOfFn_of_FnOfList]
         rw [← auxd] at hc
-        rw [← table_mul_list_eq_mul T' B _ _ _ basisMulBasis hc,  ← hm (Nat.succ m / 2)
+        rw [← tableMulList_eq_mul T' B _ _ _ basisMulBasis hc,  ← hm (Nat.succ m / 2)
           (by exact Nat.lt_succ_iff.1 (Nat.div_lt_self (n := Nat.succ m)
           (Nat.zero_lt_succ _) (Nat.one_lt_ofNat)))
           (Nat.div_pos (nataux2 (Nat.succ m) (Nat.succ_ne_zero m) hpSucc) (Nat.ofNat_pos)) d auxd,

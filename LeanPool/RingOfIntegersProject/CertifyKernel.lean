@@ -84,7 +84,7 @@ noncomputable def basisKernelOfLinearIndependentKerIm {B : Type*} [DivisionRing 
       rw [hs]
       rfl
     have hlin2' : LinearIndependent R ((LinearMap.range f).subtype ∘ s) := by
-      simpa [hwd] using hlin2
+      simpa only [hwd] using hlin2
     exact ((LinearMap.linearIndependent_iff ((LinearMap.range f).subtype)
       (Submodule.ker_subtype _)).1 hlin2')
   have hwd : (LinearMap.ker f).subtype ∘ w = v := by
@@ -94,7 +94,7 @@ noncomputable def basisKernelOfLinearIndependentKerIm {B : Type*} [DivisionRing 
     rw [hw]
   refine Basis.mk (v := w) ?_ ?_
   · have hlin1' : LinearIndependent R ((LinearMap.ker f).subtype ∘ w) := by
-      simpa [hwd] using hlin1
+      simpa only [hwd] using hlin1
     exact ((LinearMap.linearIndependent_iff ((LinearMap.ker f).subtype)
       (Submodule.ker_subtype _)).1 hlin1')
   · haveI : FiniteDimensional R A := Module.Basis.finiteDimensional_of_finite b
@@ -289,5 +289,5 @@ lemma ker_eq_bot_of_linearMap_to_linearMaps_eval {B C : Type*} [AddCommGroup B] 
   (f : A →ₗ[R] (B →ₗ[R] C)) (b : Basis τ₁ R A) (b' : Basis τ₂ R C) (v : τ₁ → A)
   (β : B) (hi : ∀ (i : τ₁), (∃ (j : τ₂), b'.repr (((f ∘ v) i) β) j ≠ 0 ∧
     (∀ (k : τ₁), k ≠ i → b'.repr (((f ∘ v) k) β) j = 0))) : LinearMap.ker f = ⊥ := by
-refine kernel_eq_bot_of_linearIndependent_im b f v ?_
-exact linearIndependent_of_linearIndependent_eval_repr (fun i => (f ∘ v) i) β b' hi
+  refine kernel_eq_bot_of_linearIndependent_im b f v ?_
+  exact linearIndependent_of_linearIndependent_eval_repr (fun i => (f ∘ v) i) β b' hi

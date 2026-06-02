@@ -193,21 +193,21 @@ theorem IsSymmPolynomial.sylvesterVec {ι : Type*} {m n : ℕ} {f : (ι → R) �
       simp only [sylvesterVec_of_ge_of_gt _ _ _ h₁ h₂]
       apply IsSymmPolynomial.const
 
-/-- If the coefficients of `f` and `g` are given by polynomial functions, so is their resultant.
+/-- If the coefficients of `f` and `g` are given by polynomial functions, so is their roiResultant.
 
 Note that we have to be a bit tricky here: a priori the degree of `f x` and `g x` can change
 as a function of `x`, so suddenly we could get a completely different Sylvester matrix.
 Thus we need to assume the degree remains constant in terms of `x`.
 -/
-theorem IsSymmPolynomial.resultant {ι : Type*} {m n : ℕ} {f g : (ι → R) → R[X]}
+theorem IsSymmPolynomial.roiResultant {ι : Type*} {m n : ℕ} {f g : (ι → R) → R[X]}
     (hdegf : ∀ x, (f x).natDegree = m) (hdegg : ∀ x, (g x).natDegree = n)
     (hf : ∀ i, IsSymmPolynomial (fun x => Polynomial.coeff (f x) i))
     (hg : ∀ i, IsSymmPolynomial (fun x => Polynomial.coeff (g x) i)) :
-    IsSymmPolynomial (fun x => (f x).resultant (g x)) := by
+    IsSymmPolynomial (fun x => (f x).roiResultant (g x)) := by
   conv =>
     congr
     · ext x
-      rw [Polynomial.resultant_eq_det_sylvesterMatrix (hdegf x) (hdegg x),
+      rw [Polynomial.roiResultant_eq_det_sylvesterMatrix (hdegf x) (hdegg x),
           sylvesterMatrixAux, sylvesterMatrixVec]
       · skip
   simp only [Matrix.det_transpose]
@@ -250,10 +250,10 @@ lemma Polynomial.coeff_isSymmPolynomial_roots {ι : Type*} [Fintype ι] (x : K) 
     · simp_rw [roots_C_mul_prod_X_sub_C' _ _ hx0, natDegree_C_mul_prod_X_sub_C _ _ hx0]
       apply IsSymmPolynomial.esymm
 
-/-- The resultant of a polynomial is a symmetric polynomial function in its roots. -/
-lemma Polynomial.resultant_isSymmPolynomial_left {ι : Type*} [Fintype ι]
+/-- The roiResultant of a polynomial is a symmetric polynomial function in its roots. -/
+lemma Polynomial.roiResultant_isSymmPolynomial_left {ι : Type*} [Fintype ι]
     (Q : K[X]) (x : K) :
-    IsSymmPolynomial (fun t => (C x * ∏ i : ι, (X - C (t i))).resultant Q) := by
+    IsSymmPolynomial (fun t => (C x * ∏ i : ι, (X - C (t i))).roiResultant Q) := by
   by_cases hx0 : x = 0
   · simp only [hx0, map_zero, zero_mul]
     by_cases hQ0 : Q.natDegree = 0
@@ -262,16 +262,16 @@ lemma Polynomial.resultant_isSymmPolynomial_left {ι : Type*} [Fintype ι]
       apply IsSymmPolynomial.const
     simp_rw [zero_resultant _ hQ0]
     apply IsSymmPolynomial.const
-  refine IsSymmPolynomial.resultant (m := Fintype.card ι) ?_ (fun _ => rfl)
+  refine IsSymmPolynomial.roiResultant (m := Fintype.card ι) ?_ (fun _ => rfl)
       (Polynomial.coeff_isSymmPolynomial_roots x)
       (fun i => IsSymmPolynomial.const _)
   · intro tu
     simp [hx0]
 
-/-- The resultant of a polynomial is a symmetric polynomial function in its roots. -/
-lemma Polynomial.resultant_isSymmPolynomial_right {ι : Type*} [Fintype ι]
+/-- The roiResultant of a polynomial is a symmetric polynomial function in its roots. -/
+lemma Polynomial.roiResultant_isSymmPolynomial_right {ι : Type*} [Fintype ι]
     (P : K[X]) (x : K) :
-    IsSymmPolynomial (fun t => P.resultant (C x * ∏ i : ι, (X - C (t i)))) := by
+    IsSymmPolynomial (fun t => P.roiResultant (C x * ∏ i : ι, (X - C (t i)))) := by
   by_cases hx0 : x = 0
   · simp only [hx0, map_zero, zero_mul]
     by_cases hP0 : P.natDegree = 0
@@ -281,25 +281,25 @@ lemma Polynomial.resultant_isSymmPolynomial_right {ι : Type*} [Fintype ι]
     simp_rw [resultant_zero _ hP0]
     apply IsSymmPolynomial.const
   simp_rw [resultant_swap P]
-  refine .mul ?_ (Polynomial.resultant_isSymmPolynomial_left _ _)
+  refine .mul ?_ (Polynomial.roiResultant_isSymmPolynomial_left _ _)
   convert IsSymmPolynomial.const (ι := ι) ((-1) ^ (P.natDegree * Fintype.card ι) : K)
   · simp [hx0]
 
-/-- If the coefficients of `P` and `Q` are given by polynomial functions, so is their resultant.
+/-- If the coefficients of `P` and `Q` are given by polynomial functions, so is their roiResultant.
 
 Note that we have to be a bit tricky here: a priori the degree of `P x` and `Q x` can change
 as a function of `x`, so suddenly we could get a completely different Sylvester matrix.
 Thus we need to assume the degree remains constant in terms of `x`.
 -/
-theorem IsPolynomial.resultant {ι κ : Type*} {m n : ℕ} {P : (ι → R) → R[X]} {Q : (κ → R) → R[X]}
+theorem IsPolynomial.roiResultant {ι κ : Type*} {m n : ℕ} {P : (ι → R) → R[X]} {Q : (κ → R) → R[X]}
     (hdegP : ∀ x, (P x).natDegree = m) (hdegQ : ∀ x, (Q x).natDegree = n)
     (hf : ∀ i, IsPolynomial (fun x => Polynomial.coeff (P x) i))
     (hg : ∀ i, IsPolynomial (fun x => Polynomial.coeff (Q x) i)) :
-    IsPolynomial (fun (xy : ι ⊕ κ → R) => (P (xy ∘ Sum.inl)).resultant (Q (xy ∘ Sum.inr))) := by
+    IsPolynomial (fun (xy : ι ⊕ κ → R) => (P (xy ∘ Sum.inl)).roiResultant (Q (xy ∘ Sum.inr))) := by
   conv =>
     congr
     · ext xy
-      rw [resultant_eq_det_sylvesterMatrix (hdegP _) (hdegQ _),
+      rw [roiResultant_eq_det_sylvesterMatrix (hdegP _) (hdegQ _),
           sylvesterMatrixAux, sylvesterMatrixVec]
       · skip
   simp only [Matrix.det_transpose]
@@ -309,11 +309,11 @@ theorem IsPolynomial.resultant {ι κ : Type*} {m n : ℕ} {P : (ι → R) → R
   · simp only [Fin.addCases_right]
     exact IsPolynomial.sylvesterVec (fun i => IsPolynomial.comp _ (hf _)) _ _
 
-/-- The resultant of two polynomials is a polynomial function in their roots. -/
-lemma Polynomial.resultant_isPolynomial_roots {ι κ : Type*} [Fintype ι] [Fintype κ]
+/-- The roiResultant of two polynomials is a polynomial function in their roots. -/
+lemma Polynomial.roiResultant_isPolynomial_roots {ι κ : Type*} [Fintype ι] [Fintype κ]
     (x y : K) :
     IsPolynomial (fun tu =>
-      (C x * ∏ i : ι, (X - C (tu (Sum.inl i)))).resultant
+      (C x * ∏ i : ι, (X - C (tu (Sum.inl i)))).roiResultant
       (C y * ∏ i : κ, (X - C (tu (Sum.inr i))))) := by
   by_cases hx0 : x = 0
   · by_cases hy0 : y = 0
@@ -331,7 +331,7 @@ lemma Polynomial.resultant_isPolynomial_roots {ι κ : Type*} [Fintype ι] [Fint
     rw [hy0, map_zero, zero_mul, resultant_zero]
     · rw [natDegree_C_mul_prod_X_sub_C _ _ hx0]
       exact Fintype.card_pos.ne'
-  exact IsPolynomial.resultant
+  exact IsPolynomial.roiResultant
     (P := fun t => C x * ∏ i : ι, (X - C (t i)))
     (Q := fun u => C y * ∏ i : κ, (X - C (u i)))
     (fun _ => natDegree_C_mul_prod_X_sub_C _ _ hx0)

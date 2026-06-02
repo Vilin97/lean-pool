@@ -319,7 +319,7 @@ variable {ι : Type _} [Finite ι]
     exact hmb i
 
 -- Shortcut instance that avoids a slow path via `IsScalarTower O O O → SMul O O`
-instance : Pow (Ideal R) ℕ := inferInstanceAs (Pow (Submodule R R) ℕ)
+instance instPowIdealNatLeanPool : Pow (Ideal R) ℕ := inferInstanceAs (Pow (Submodule R R) ℕ)
 
 /-- If `Oₐ` is the over ring of `O` in `Om` with respect to `α`, `Iₐ ` is the radical of `αO`,
  and `Om` is a finite free `R`-module, then there is `n ∈ ℕ` such that `Oₐ ⬝ (Iₐ ^ n) ⊆ O `. -/
@@ -364,14 +364,12 @@ lemma exists_radical_pow_not_in_order {O : Subalgebra R K} {Om : Subalgebra R K}
   have := exists_min_nat_prop_true m (fun n => ∀ (x : K) (y : O), x ∈ overRing α hm →
     y ∈ (Ideal.span ({(algebraMap R O α)} : Set O)).radical^(n) → x * y ∈ O) ?_ hm'
   swap
-  · dsimp
-    push Not
+  · push Not
     use hn.choose
     use 1
     simp only [pow_zero, Ideal.one_eq_top, Submodule.mem_top, OneMemClass.coe_one, mul_one,
       true_and]
     exact hn.choose_spec
-  push Not at this
   push Not at this
   exact this
 
@@ -471,7 +469,7 @@ lemma overRing_piMaximal [Module.Free R Om] [Module.Finite R Om]
   have heq' : Module.rank R (Subalgebra.toSubmodule Op) = Module.rank R Om := by
     rw [← LinearEquiv.rank_eq (Subalgebra.linearEquivOfInclusion _ _ (overRing_le (π : R) hm))]
     exact hle
-  let b := Submodule.basisOfPID_of_eq_rank (Subalgebra.toSubmodule Op) heq'.symm
+  let b := Submodule.basisOfPIDOfEqRank (Subalgebra.toSubmodule Op) heq'.symm
   unfold piMaximal
   by_contra hdvd
   obtain ⟨⟨mk, hmk⟩, hm1, hm2⟩ := Submodule.prime_dvd_index _ hp B b hdvd
@@ -1120,7 +1118,7 @@ lemma piMaximal_of_root_in_subalgebra_of_satisfiesDedekindCriterion
     apply Algebra.adjoin_le
     simp only [Set.singleton_subset_iff, SetLike.mem_coe]
     exact hroot
-  have j : IsAdjoinRoot (Algebra.adjoin R {θ}) T := Algebra.adjoin_isAdjoinRoot T hm θ hminpoly
+  have j : IsAdjoinRoot (Algebra.adjoin R {θ}) T := Algebra.adjoinIsAdjoinRoot T hm θ hminpoly
   exact piMaximal_of_gt_adjoinRoot_of_satisfiesDedekindCriterion hp hm
     (Algebra.adjoin R {θ}) O q hqsurj hqker Om j hmc' hmc heqr hd
 
