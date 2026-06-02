@@ -18,7 +18,6 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Topology.MetricSpace.ProperSpace
 import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.Topology.UniformSpace.Cauchy
-import Mathlib.Topology.MetricSpace.Bounded
 import Mathlib.Topology.Bornology.Basic
 import Mathlib.Topology.Sequences
 import Mathlib.Analysis.Normed.Lp.WithLp
@@ -26,6 +25,10 @@ import Mathlib.Analysis.Normed.Lp.PiLp
 
 import Mathlib.NumberTheory.FrobeniusNumber
 import LeanPool.RlTheoryInLean.Data.Matrix.Mul
+
+/-!
+# LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
+-/
 
 open Finset NNReal WithLp Matrix PiLp Nat ContractingWith Metric Bornology Filter Function
 open scoped BigOperators
@@ -74,7 +77,7 @@ instance : IsClosed (Simplex S) := by
     simpa [Set.setOf_forall] using isClosed_iInter hcl
   have h2 : IsClosed {f : l1Space | (∑ s, f.ofLp s) = 1} := by
     have hsum : Continuous (fun f : l1Space => ∑ s, f.ofLp s) := by
-      apply continuous_finset_sum
+      apply continuous_finsetSum
       intro s _
       exact (continuous_apply s).comp (PiLp.continuous_ofLp 1 _)
     have htarget : IsClosed ({x : ℝ | x = 1} : Set ℝ) := by simp
@@ -151,7 +154,7 @@ instance svec_mul_smat_is_svec
       refine sum_nonneg ?_
       intro i _
       exact mul_nonneg (hμ.nonneg i) ((hP i).nonneg j)
-    simpa [Matrix.vecMul] using this
+    simpa [Matrix.vecMul, dotProduct] using this
   case rowsum =>
     simp only [Matrix.vecMul, dotProduct]
     rw [sum_comm]
@@ -232,14 +235,14 @@ class Irreducible (P : Matrix S S ℝ) [RowStochastic P] where
   irreducible : ∀ i j, ∃ n : ℕ, 0 < (P ^ n) i j
 
 /-- The set of positive return times for state i -/
-noncomputable def return_times (P : Matrix S S ℝ) (i : S)
+noncomputable def returnTimes (P : Matrix S S ℝ) (i : S)
   : Set ℕ := {n : ℕ | 1 ≤ n ∧ 0 < (P ^ n) i i}
 
 /-- Return times are closed under addition (used via AddSubmonoid.closure) -/
 lemma return_times_add_mem (P : Matrix S S ℝ) [RowStochastic P] (i : S)
-    {a b : ℕ} (ha : a ∈ return_times P i) (hb : b ∈ return_times P i) :
-    a + b ∈ return_times P i := by
-  simp only [return_times, Set.mem_setOf_eq] at ha hb ⊢
+    {a b : ℕ} (ha : a ∈ returnTimes P i) (hb : b ∈ returnTimes P i) :
+    a + b ∈ returnTimes P i := by
+  simp only [returnTimes, Set.mem_setOf_eq] at ha hb ⊢
   obtain ⟨ha1, ha2⟩ := ha
   obtain ⟨hb1, hb2⟩ := hb
   constructor
@@ -250,13 +253,13 @@ lemma return_times_add_mem (P : Matrix S S ℝ) [RowStochastic P] (i : S)
 
 /-- A stochastic matrix is aperiodic if for each state, the GCD of return times is 1 -/
 class Aperiodic (P : Matrix S S ℝ) [RowStochastic P] where
-  aperiodic : ∀ i, Nat.setGcd (return_times P i) = 1
+  aperiodic : ∀ i, Nat.setGcd (returnTimes P i) = 1
 
 theorem eventually_positive [Nonempty S] (P : Matrix S S ℝ) [RowStochastic P]
   [Irreducible P] [Aperiodic P] :
   ∃ N, ∀ n i j, N ≤ n → 0 < (P ^ n) i j := by
-  have h_ni : ∀ i, ∃ n₀, ∀ n, n₀ ≤ n → n ∈ return_times P i ∨ n = 0 := fun i => by
-    have hcl : ∀ x, x ∈ AddSubmonoid.closure (return_times P i) → x ∈ return_times P i ∨ x = 0 := by
+  have h_ni : ∀ i, ∃ n₀, ∀ n, n₀ ≤ n → n ∈ returnTimes P i ∨ n = 0 := fun i => by
+    have hcl : ∀ x, x ∈ AddSubmonoid.closure (returnTimes P i) → x ∈ returnTimes P i ∨ x = 0 := by
       intro x hx; induction hx using AddSubmonoid.closure_induction with
       | mem _ hy => exact Or.inl hy
       | zero => exact Or.inr rfl
@@ -264,7 +267,7 @@ theorem eventually_positive [Nonempty S] (P : Matrix S S ℝ) [RowStochastic P]
         rcases iha with ha | ha0 <;> rcases ihb with hb | hb0
         · exact Or.inl (return_times_add_mem P i ha hb)
         all_goals simp_all
-    obtain ⟨n₀, hn₀⟩ := Nat.exists_mem_closure_of_ge (return_times P i)
+    obtain ⟨n₀, hn₀⟩ := Nat.exists_mem_closure_of_ge (returnTimes P i)
     refine ⟨n₀, fun n hn => ?_⟩
     rcases eq_or_ne n 0 with rfl | hn0; · exact Or.inr rfl
     rcases hcl n (hn₀ n hn (by simp [Aperiodic.aperiodic (P := P) i])) with h | h
@@ -309,10 +312,9 @@ theorem smat_minorizable_with_large_pow
     have : ij ∈ Finset.univ (α := S × S) := by simp
     have := inf'_le (f := δij) this
     exact this
-  have hδrange : 0 < δ ∧ δ ≤ 1:= by
+  have hδrange : 0 < δ ∧ δ ≤ 1 := by
     obtain ⟨ij, hij, hijinf⟩ := exists_mem_eq_inf' this δij
     have hδdef : δ = δij ij := by unfold δ; simp [hijinf]
-    unfold δij at this
     have := hnij ij
     constructor
     case left => linarith
@@ -429,7 +431,7 @@ theorem smat_pow_nonexpansive_in_l1 [DecidableEq S] (Q : Matrix S S ℝ) [RowSto
     exact this.trans ih
 
 /-- The affine action of a stochastic matrix on the probability simplex. -/
-def smat_as_operator (P : Matrix S S ℝ) [RowStochastic P] :
+def smatAsOperator (P : Matrix S S ℝ) [RowStochastic P] :
   ↑(Simplex S) → ↑(Simplex S) :=
   fun μ => ⟨WithLp.toLp 1 (μ.val.ofLp ᵥ* P), by
     exact svec_mul_smat_is_svec μ.val.ofLp P
@@ -437,21 +439,21 @@ def smat_as_operator (P : Matrix S S ℝ) [RowStochastic P] :
 
 lemma smat_as_operator_iter [DecidableEq S]
   (P : Matrix S S ℝ) [RowStochastic P] (n : ℕ)
-  : (smat_as_operator P)^[n] = fun μ => ⟨WithLp.toLp 1 (μ.val.ofLp ᵥ* (P ^ n)), by
+  : (smatAsOperator P)^[n] = fun μ => ⟨WithLp.toLp 1 (μ.val.ofLp ᵥ* (P ^ n)), by
     exact svec_mul_smat_is_svec μ.val.ofLp (P ^ n)
   ⟩ := by
   induction n with
   | zero => funext μ; simp only [Function.iterate_zero, id_eq, pow_zero, Matrix.vecMul_one]
   | succ n ih =>
     funext μ
-    simp only [Function.iterate_succ, Function.comp_apply, ih, smat_as_operator]
+    simp only [Function.iterate_succ, Function.comp_apply, ih, smatAsOperator]
     congr 1
     simp only [Matrix.vecMul_vecMul]
     rw [(pow_succ' P n).symm]
 
 theorem smat_contraction_in_simplex
   (P : Matrix S S ℝ) [RowStochastic P] [DoeblinMinorization P] :
-    ∃ K, 0 < K ∧ ContractingWith K (smat_as_operator P)
+    ∃ K, 0 < K ∧ ContractingWith K (smatAsOperator P)
   := by
     have hP := (inferInstance : RowStochastic P).stochastic
     obtain ⟨ε, ν, hεpos, hεlt1, hν, h_minorization⟩
@@ -498,7 +500,7 @@ theorem smat_contraction_in_simplex
     case hK =>
       unfold ContractingWith
       unfold LipschitzWith
-      unfold smat_as_operator
+      unfold smatAsOperator
       refine ⟨?hKlt1, ?hLip⟩
       case hLip =>
         intro x y
@@ -547,7 +549,7 @@ theorem smat_contraction_in_simplex
             have hLipQ := @smat_nonexpansive_in_l1 S _ Q hQ x.val.ofLp y.val.ofLp
             exact mul_le_mul_right hLipQ K
         calc
-          edist (smat_as_operator P x) (smat_as_operator P y)
+          edist (smatAsOperator P x) (smatAsOperator P y)
         _ = edist (WithLp.toLp 1 (x.val.ofLp ᵥ* P)) (WithLp.toLp 1 (y.val.ofLp ᵥ* P)) := rfl
         _ = ‖WithLp.toLp 1 (x.val.ofLp ᵥ* P - y.val.ofLp ᵥ* P)‖₊ := by
             rw [edist_nndist]
@@ -617,7 +619,7 @@ theorem pos_of_stationary
 
 
 /-- The Cesaro average of the first `n + 1` iterates of a stochastic vector. -/
-noncomputable def cesaro_average
+noncomputable def cesaroAverage
   (x₀ : S → ℝ)
   (P : Matrix S S ℝ) (n : ℕ)
   : S → ℝ :=
@@ -626,13 +628,13 @@ noncomputable def cesaro_average
 lemma cesaro_average_is_svec
   (x₀ : S → ℝ) [StochasticVec x₀]
   (P : Matrix S S ℝ) [RowStochastic P] (n : ℕ)
-  : StochasticVec (cesaro_average x₀ P n) := by
+  : StochasticVec (cesaroAverage x₀ P n) := by
   constructor
   case nonneg =>
     intro i
-    have hval : (cesaro_average x₀ P n) i
+    have hval : (cesaroAverage x₀ P n) i
         = (n + 1 : ℝ)⁻¹ * ∑ k ∈ Finset.range (n + 1), (x₀ ᵥ* (P ^ k)) i := by
-      simp only [cesaro_average, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
+      simp only [cesaroAverage, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
     rw [hval]
     apply mul_nonneg
     · exact inv_nonneg.mpr (by linarith)
@@ -640,10 +642,10 @@ lemma cesaro_average_is_svec
       intro k _
       exact (svec_mul_smat_is_svec x₀ (P ^ k)).nonneg i
   case rowsum =>
-    have hval : ∀ i, (cesaro_average x₀ P n) i
+    have hval : ∀ i, (cesaroAverage x₀ P n) i
         = (n + 1 : ℝ)⁻¹ * ∑ k ∈ Finset.range (n + 1), (x₀ ᵥ* (P ^ k)) i := by
       intro i
-      simp only [cesaro_average, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
+      simp only [cesaroAverage, Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
     rw [Finset.sum_congr rfl (fun i _ => hval i), ← mul_sum, Finset.sum_comm]
     have hsum : ∑ k ∈ Finset.range (n + 1), ∑ i, (x₀ ᵥ* (P ^ k)) i = n + 1 := by
       calc ∑ k ∈ Finset.range (n + 1), ∑ i, (x₀ ᵥ* (P ^ k)) i
@@ -658,9 +660,9 @@ lemma cesaro_average_is_svec
 
 lemma cesaro_average_almost_invariant
   (x₀ : S → ℝ) [StochasticVec x₀] (P : Matrix S S ℝ) [RowStochastic P]
-  : ∀ n, ‖WithLp.toLp 1 ((cesaro_average x₀ P n) ᵥ* P - cesaro_average x₀ P n)‖ ≤ 2 / (n + 1)  := by
+  : ∀ n, ‖WithLp.toLp 1 ((cesaroAverage x₀ P n) ᵥ* P - cesaroAverage x₀ P n)‖ ≤ 2 / (n + 1)  := by
     intro n
-    unfold cesaro_average
+    unfold cesaroAverage
     have hn : 0 < (n : ℝ) + 1 := by linarith
     have hstep : ∀ k, (x₀ ᵥ* P ^ k) ᵥ* P - x₀ ᵥ* P ^ k =
                       x₀ ᵥ* P ^ (k + 1) - x₀ ᵥ* P ^ k := by
@@ -716,18 +718,18 @@ lemma cesaro_average_almost_invariant
 variable [Nonempty S]
 
 /-- The uniform probability distribution on a nonempty finite type. -/
-noncomputable abbrev uniform_distribution : S → ℝ :=
+noncomputable abbrev uniformDistribution : S → ℝ :=
   Function.const S (1 / Fintype.card S)
 
-instance : StochasticVec (S := S) uniform_distribution := by
+instance : StochasticVec (S := S) uniformDistribution := by
   constructor
-  case nonneg => intro s; simp [uniform_distribution]
+  case nonneg => intro s; simp [uniformDistribution]
   case rowsum =>
-    simp [uniform_distribution, Finset.sum_const, Finset.card_univ]
+    simp [uniformDistribution, Finset.sum_const, Finset.card_univ]
 
 instance : Nonempty ↑(Simplex S) := by
-  refine ⟨⟨WithLp.toLp 1 uniform_distribution, ?_⟩⟩
-  change StochasticVec (WithLp.toLp 1 uniform_distribution).ofLp
+  refine ⟨⟨WithLp.toLp 1 uniformDistribution, ?_⟩⟩
+  change StochasticVec (WithLp.toLp 1 uniformDistribution).ofLp
   rw [WithLp.ofLp_toLp]
   infer_instance
 
@@ -735,12 +737,12 @@ omit [DecidableEq S] in
 theorem stationary_distribution_exists (P : Matrix S S ℝ) [RowStochastic P]
   : ∃ μ : S → ℝ, StochasticVec μ ∧ Stationary μ P := by
   classical
-  let x₀ := uniform_distribution (S := S)
-  let xn : ℕ → l1Space S := fun n => WithLp.toLp 1 (cesaro_average x₀ P n)
+  let x₀ := uniformDistribution (S := S)
+  let xn : ℕ → l1Space S := fun n => WithLp.toLp 1 (cesaroAverage x₀ P n)
   have hs := simples_is_compact (S := S)
   have hx : ∀ n, xn n ∈ (Simplex S) := by
     intro n
-    change StochasticVec (WithLp.toLp 1 (cesaro_average x₀ P n)).ofLp
+    change StochasticVec (WithLp.toLp 1 (cesaroAverage x₀ P n)).ofLp
     rw [WithLp.ofLp_toLp]
     exact cesaro_average_is_svec x₀ P n
   obtain ⟨μ, hμ, hstationary⟩ := IsCompact.tendsto_subseq hs hx
@@ -822,14 +824,14 @@ theorem stationary_distribution_uniquely_exists
     intro ν hν
     obtain ⟨hν, hνstationary⟩ := hν
     obtain ⟨N, _, hN⟩ := smat_minorizable_with_large_pow P
-    let f := smat_as_operator (P ^ N)
+    let f := smatAsOperator (P ^ N)
     obtain ⟨K, _, hf⟩ := smat_contraction_in_simplex (P ^ N)
     have : IsFixedPt f ⟨WithLp.toLp 1 μ, hμ⟩ := by
-      simp only [IsFixedPt, f, smat_as_operator, Subtype.mk.injEq]
+      simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
       exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary μ P N).stationary
     have hμfixed := fixedPoint_unique hf this
     have : IsFixedPt f ⟨WithLp.toLp 1 ν, hν⟩ := by
-      simp only [IsFixedPt, f, smat_as_operator, Subtype.mk.injEq]
+      simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
       exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary ν P N).stationary
     have hνfixed := fixedPoint_unique hf this
     have := hνfixed.trans hμfixed.symm
@@ -850,10 +852,10 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
   obtain ⟨μ, hμ, hμstationary⟩ := stationary_distribution_exists P
   obtain ⟨N, hNge1, hN⟩ := smat_minorizable_with_large_pow P
   have hNpos : 0 < N := by linarith
-  let f := smat_as_operator (P ^ N)
+  let f := smatAsOperator (P ^ N)
   obtain ⟨K, hKpos, hf⟩ := smat_contraction_in_simplex (P ^ N)
   have : IsFixedPt f ⟨WithLp.toLp 1 μ, hμ⟩ := by
-    simp only [IsFixedPt, f, smat_as_operator, Subtype.mk.injEq]
+    simp only [IsFixedPt, f, smatAsOperator, Subtype.mk.injEq]
     exact (WithLp.toLp_injective 1).eq_iff.mpr (multi_step_stationary μ P N).stationary
   have hμfixed := fixedPoint_unique hf this
   have hKle1 := NNReal.coe_le_coe.mpr hf.1.le
@@ -880,7 +882,7 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
     have hrate := apriori_dist_iterate_fixedPoint_le hf
       ⟨WithLp.toLp 1 x₀, hx₀⟩ (n / N)
     rw [←hμfixed] at hrate
-    simp only [smat_as_operator] at hrate
+    simp only [smatAsOperator] at hrate
     rw [smat_as_operator_iter (P ^ N) (n / N)] at hrate
     calc
         toReal ‖WithLp.toLp 1 (x₀ ᵥ* P ^ n - μ)‖₁
@@ -906,8 +908,10 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
             simp only [h1, h2]
           _ = 2 := by ring
         gcongr
-        case hc => linarith
-        case hab.hbc => exact_mod_cast this
+        case hbc =>
+          have hthis : (↑‖toLp 1 (x₀ - x₀ ᵥ* P ^ N)‖₊ : ℝ) ≤ 2 := by
+            exact_mod_cast this
+          linarith
       _ ≤ 2 * K ^ (((n : ℝ) / N) - 1) / (1 - K) := by
         set z : ℕ := n / N
         set z' : ℝ := (n : ℝ) / N
@@ -932,7 +936,6 @@ instance (P : Matrix S S ℝ) [RowStochastic P] [Aperiodic P] [Irreducible P]
             apply Or.inr; refine ⟨hKpos, hKle1, this.le⟩)
           exact_mod_cast this
         gcongr
-        case hc => linarith
       _ = (2 / K / (1 - K)) * (K ^ (1 / (N : ℝ))) ^ n := by
         have hKne : (K : ℝ) ≠ 0 := by exact_mod_cast hKpos.ne'
         have hsub : (K : ℝ) ^ ((n : ℝ) / N - 1) = (K : ℝ) ^ ((n : ℝ) / N) / K :=

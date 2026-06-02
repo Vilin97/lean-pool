@@ -105,7 +105,7 @@ def restrict (E : Club Ϟ) : (α : S) → Club α := fun α ↦
   if h : IsAcc α.1 E then
     ⟨(f α).1 ∩ E,
       IsClub.inter (hS α α.2 ▸ hκ) (f α).2 <| IsClub.isClub_of_isAcc (hSub α.2) E.2 h⟩
-  else univ_club isSuccLimit_of_mem_S
+  else univClub isSuccLimit_of_mem_S
 
 /-- The sequence of clubs `E_α` obtained by repeatedly choosing a club not guessed by the
 current restriction of `f`. -/
@@ -206,7 +206,7 @@ theorem exists_isClubGuessing_of_cof_uncountable {Ϟ : Ordinal} {κ : Cardinal} 
   · exact ClubGuessing.Assumptions.contradiction
   · intro f hf
     let g : (α : S) → (Club α) := fun α ↦ if hα : α.1 ∈ (Iio Ϟ) then (f ⟨α.1, ⟨α.2, hα⟩⟩) else
-      univ_club (one_lt_cof_iff.mp (one_lt_aleph0.trans_le (hS α α.2 ▸ hκ).le))
+      univClub (one_lt_cof_iff.mp (one_lt_aleph0.trans_le (hS α α.2 ▸ hκ).le))
     refine h g fun C ↦ ?_
     obtain ⟨δ, hδ⟩ := hf ⟨C.1 ∩ Iio Ϟ, C.2.inter_Iio⟩
     use ⟨δ.1, δ.2.1⟩

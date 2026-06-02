@@ -10,8 +10,8 @@ import LeanPool.BruhatTits.Lattice.Distance
 import LeanPool.BruhatTits.Lattice.Quotient
 import LeanPool.BruhatTits.Lattice.Transvect
 
-open Module
-
 /-!
 # Lattices
 -/
+
+open Module

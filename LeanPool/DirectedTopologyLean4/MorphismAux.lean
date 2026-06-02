@@ -6,6 +6,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 import Mathlib.CategoryTheory.EqToHom
 import Mathlib.CategoryTheory.Category.Cat
 
+/-!
+# LeanPool.DirectedTopologyLean4.MorphismAux
+-/
+
 /-
   This file contains auxiliary equalities of objects morphisms in a category.
   These are used in the proof of the Van Kampen Theorem in directed_van_kampen.lean

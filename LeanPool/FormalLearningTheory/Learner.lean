@@ -7,3 +7,9 @@ import LeanPool.FormalLearningTheory.Learner.Core
 import LeanPool.FormalLearningTheory.Learner.Properties
 import LeanPool.FormalLearningTheory.Learner.Active
 import LeanPool.FormalLearningTheory.Learner.Bayesian
+
+/-!
+# LeanPool.FormalLearningTheory.Learner
+
+Imported Lean Pool material for `LeanPool.FormalLearningTheory.Learner`.
+-/

@@ -10,6 +10,9 @@ import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import LeanPool.Duality.FarkasBartl
 
+/-!
+# LeanPool.Duality.FarkasBasic
+-/
 
 /- Let's move from linear maps to matrices, which give more familiar
 (albeit less general) formulations of the theorems of alternative. -/
@@ -142,12 +145,11 @@ theorem inequalityFarkas (A : Matrix I J F) (b : I → F) :
     refine ⟨y, ?_, hby⟩
     intro k
     cases k with
-    | inl i => simpa [A', Matrix.neg_mulVec] using
-      dotProduct_nonneg_of_nonneg (Matrix.zero_le_one_elem · i) hy
+    | inl i => exact dotProduct_nonneg_of_nonneg (Matrix.zero_le_one_elem · i) hy
     | inr j => apply hAy
   · intro ⟨y, hAy, hby⟩
-    have h1Ay : 0 ≤ (Matrix.fromRows (1 : Matrix I I F) Aᵀ *ᵥ y)
-    · intro k
+    have h1Ay : 0 ≤ (Matrix.fromRows (1 : Matrix I I F) Aᵀ *ᵥ y) := by
+      intro k
       simp only [A', Matrix.transpose_fromCols, Matrix.transpose_one] at hAy
       apply hAy
     refine ⟨y, fun i : I => ?_, fun j : J => h1Ay (Sum.inr j), hby⟩

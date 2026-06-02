@@ -11,6 +11,10 @@ import Mathlib.ModelTheory.LanguageMap
 import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
 import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
+-/
+
 universe u v u'
 
 namespace FirstOrder
@@ -77,7 +81,7 @@ class HasLen (α : Type u) (β : Type v) where
   mul := Functions.apply₂ .mul
 
 /-- Predicate interface for values that are either numbers or strings. -/
-class HasTypes_is (α : Type*) where
+class HasTypesIs (α : Type*) where
   /-- The value is a number. -/
   int : α -> Prop
   /-- The value is a string. -/

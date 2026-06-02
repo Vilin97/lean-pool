@@ -7,6 +7,10 @@ import Mathlib.Algebra.Lie.Solvable
 import Mathlib.Algebra.Lie.Quotient
 import Mathlib.Algebra.Lie.Nilpotent
 
+/-!
+# LeanPool.LowDimSolvClassification.QuotientSolvable
+-/
+
 namespace LieIdeal
 
 variable {R L : Type*} [CommRing R] [LieRing L] [LieAlgebra R L]

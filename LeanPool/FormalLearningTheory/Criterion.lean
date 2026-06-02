@@ -7,3 +7,9 @@ import LeanPool.FormalLearningTheory.Criterion.Gold
 import LeanPool.FormalLearningTheory.Criterion.PAC
 import LeanPool.FormalLearningTheory.Criterion.Online
 import LeanPool.FormalLearningTheory.Criterion.Extended
+
+/-!
+# LeanPool.FormalLearningTheory.Criterion
+
+Imported Lean Pool material for `LeanPool.FormalLearningTheory.Criterion`.
+-/

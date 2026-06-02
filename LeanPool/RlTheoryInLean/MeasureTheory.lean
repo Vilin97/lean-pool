@@ -5,10 +5,7 @@ Authors: Shangtong Zhang
 -/
 
 import LeanPool.RlTheoryInLean.MeasureTheory.Function
-import LeanPool.RlTheoryInLean.MeasureTheory.Function
 import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace
-import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace
-import LeanPool.RlTheoryInLean.MeasureTheory.Measure
 import LeanPool.RlTheoryInLean.MeasureTheory.Measure
 
 /-!

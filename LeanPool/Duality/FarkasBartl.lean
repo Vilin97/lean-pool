@@ -8,8 +8,11 @@ import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.BigOperators.GroupWithZero.Action
 import Mathlib.Algebra.Module.Pi
 import Mathlib.Tactic.Abel
-import Mathlib.Tactic.Have
 import LeanPool.Duality.Common
+
+/-!
+# LeanPool.Duality.FarkasBartl
+-/
 
 private def withoutLastMap {m : ℕ} {R W : Type*} [Semiring R] [AddCommMonoid W] [Module R W]
     (A : W →ₗ[R] Fin m.succ → R) :
@@ -68,8 +71,9 @@ private lemma filter_yielding_singleton_attach_sum {m : ℕ} {R V : Type*} [Semi
     (f : Fin m.succ → R) (v : V) :
     ∑ j ∈ (Finset.univ.filter (fun i : Fin m.succ => ¬(i.val < m))).attach, f j.val • v =
     f ⟨m, m.lt_add_one⟩ • v := by
-  have singlet : Finset.univ.filter (fun i : Fin m.succ => ¬(i.val < m)) = {⟨m, m.lt_add_one⟩}
-  · rw [Finset.ext_iff]
+  have singlet : Finset.univ.filter (fun i : Fin m.succ => ¬(i.val < m)) =
+      {⟨m, m.lt_add_one⟩} := by
+    rw [Finset.ext_iff]
     intro i
     constructor <;> rw [Finset.mem_singleton, Finset.mem_filter] <;> intro hi
     · have him := hi.right
@@ -138,8 +142,8 @@ lemma industepFarkasBartl {m : ℕ} [DivisionRing R] [LinearOrder R] [IsStrictOr
     obtain ⟨y', hay', hby'⟩ := is_easy
     let M : Fin m.succ := ⟨m, lt_add_one m⟩ -- the last (new) index
     let y : W := (A y' M)⁻¹ • y' -- rescaled `y'`
-    have hAy' : A y' M < 0
-    · by_contra! contr
+    have hAy' : A y' M < 0 := by
+      by_contra! contr
       exact (
         (hAb y' (fun i : Fin m.succ =>
           if hi : i.val < m then
@@ -150,14 +154,14 @@ lemma industepFarkasBartl {m : ℕ} [DivisionRing R] [LinearOrder R] [IsStrictOr
             (impossible_index hi hiM).elim
         )).trans_lt hby'
       ).false
-    have hAy : A y M = 1
-    · convert inv_mul_cancel₀ hAy'.ne
+    have hAy : A y M = 1 := by
+      convert inv_mul_cancel₀ hAy'.ne
       simp [y]
-    have hAA : ∀ w : W, A (w - (A w M • y)) M = 0
-    · intro w
+    have hAA : ∀ w : W, A (w - (A w M • y)) M = 0 := by
+      intro w
       simp [hAy]
-    have hbA : ∀ w : W, 0 ≤ withoutLastMap A (w - (A w M • y)) → 0 ≤ b (w - (A w M • y))
-    · intro w hw
+    have hbA : ∀ w : W, 0 ≤ withoutLastMap A (w - (A w M • y)) → 0 ≤ b (w - (A w M • y)) := by
+      intro w hw
       apply hAb
       intro i
       if hi : i.val < m then
@@ -168,8 +172,8 @@ lemma industepFarkasBartl {m : ℕ} [DivisionRing R] [LinearOrder R] [IsStrictOr
         exfalso
         exact impossible_index hi hiM
     have hbAb : ∀ w : W,
-        0 ≤ (withoutLastMap A - (A · M • withoutLastMap A y)) w → 0 ≤ (b - (A · M • b y)) w
-    · simpa using hbA
+        0 ≤ (withoutLastMap A - (A · M • withoutLastMap A y)) w → 0 ≤ (b - (A · M • b y)) w := by
+      simpa using hbA
     obtain ⟨x', hx', hxb'⟩ := ih (auxLinMaps A y) (auxLinMap A b y) hbAb
     use (fun i : Fin m.succ =>
       if hi : i.val < m then x' ⟨i.val, hi⟩ else b y - ∑ i : Fin m, withoutLastMap A y i • x' i)
@@ -179,19 +183,19 @@ lemma industepFarkasBartl {m : ℕ} [DivisionRing R] [LinearOrder R] [IsStrictOr
         clear * - hi hx'
         aesop
       else
-        have hAy'' : (A y' M)⁻¹ ≤ 0
-        · exact (inv_lt_zero.mpr hAy').le
-        have hay : withoutLastMap A y ≤ 0
-        · simpa [y] using smul_nonpos_of_nonpos_of_nonneg hAy'' hay'
-        have hby : 0 ≤ b y
-        · simpa [y] using smul_nonneg_of_nonpos_of_nonpos hAy'' hby'.le
+        have hAy'' : (A y' M)⁻¹ ≤ 0 := by
+          exact (inv_lt_zero.mpr hAy').le
+        have hay : withoutLastMap A y ≤ 0 := by
+          simpa [y] using smul_nonpos_of_nonpos_of_nonneg hAy'' hay'
+        have hby : 0 ≤ b y := by
+          simpa [y] using smul_nonneg_of_nonpos_of_nonpos hAy'' hby'.le
         simpa [hi] using
           (Finset.sum_nonpos
             (fun i : Fin m => ↓(smul_nonpos_of_nonpos_of_nonneg (hay i) (hx' i)))).trans hby
     · intro w
       have haAa : ∑ i : Fin m, (withoutLastMap A w i - A w M * withoutLastMap A y i) • x' i =
-          b w - A w M • b y
-      · simpa using hxb' w
+          b w - A w M • b y := by
+        simpa [auxLinMaps, auxLinMap, smul_eq_mul] using hxb' w
       rw [←add_eq_of_eq_sub haAa]
       simp_rw [smul_dite]
       rw [Finset.sum_dite]

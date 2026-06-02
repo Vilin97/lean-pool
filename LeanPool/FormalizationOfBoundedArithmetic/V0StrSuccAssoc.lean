@@ -5,6 +5,10 @@ Authors: ruplet
 -/
 import LeanPool.FormalizationOfBoundedArithmetic.V0
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.V0StrSuccAssoc
+-/
+
 -- This file proves:
 -- ∀ {X Y : str}, X + succ Y = succ (X + Y)
 -- However, the proof was done using leanstral and is very verbose
@@ -13,22 +17,22 @@ import LeanPool.FormalizationOfBoundedArithmetic.V0
 variable {num str : Type} [M : V0ExtModel num str]
 open V0ExtModel V0Model BASICModel
 open FirstOrder Language
-open HasTypes_is
+open HasTypesIs
 open HasEmptySet
 open HasLen
 open HasSucc
 
-namespace Xor'
+namespace Xor
 
-lemma true1 {P Q R : Prop} : P -> (Xor' (Xor' P Q) R <-> ¬ Xor' Q R) := by
-  unfold Xor'
+lemma true1 {P Q R : Prop} : P -> (Xor (Xor P Q) R <-> ¬ Xor Q R) := by
+  unfold Xor
   tauto
 
-lemma true2 {P Q R : Prop} : Q -> (Xor' (Xor' P Q) R <-> ¬ Xor' P R) := by
-  unfold Xor'
+lemma true2 {P Q R : Prop} : Q -> (Xor (Xor P Q) R <-> ¬ Xor P R) := by
+  unfold Xor
   tauto
 
-end Xor'
+end Xor
 
 lemma len_le_len_succ : ∀ {X : str}, (len X : num) ≤ len (succ X) := by
   intro X
@@ -187,7 +191,7 @@ lemma lsb_not_succ : ∀ {X : str}, 0 ∈ X <-> 0 ∉ (succ X) := by
     apply h
     rw [ax_succ]
     constructor
-    · exact zero_le (len X)
+    · exact zero_le
     · right
       constructor
       · exact h0
@@ -373,7 +377,7 @@ lemma prefix_zero_contradiction_of_not_carry_of_all_lt_mem :
   rw [ax_add]
   constructor
   · exact lt_trans h_contr_lt h_i_lt
-  · rw [Xor'.true2 (h_all_lt_mem_Y contr h_contr_lt)]
+  · rw [Xor.true2 (h_all_lt_mem_Y contr h_contr_lt)]
     rw [not_xor]
     rw [<- not_iff_not, iff_true_left]
     · exact h_Carry_prefix_zero contr h_contr_lt
@@ -808,7 +812,7 @@ lemma add_succ_of_succ_add_of_mem_add :
   rcases hxor with
     ⟨h_X, h_notY, h_notC⟩ | ⟨h_notX, h_Y, h_notC⟩ |
     ⟨h_notX, h_notY, h_C⟩ | ⟨h_X, h_Y, h_C⟩
-  · rw [Xor'.true1 h_X]
+  · rw [Xor.true1 h_X]
     rw [not_xor]
     constructor
     · intro h_SY

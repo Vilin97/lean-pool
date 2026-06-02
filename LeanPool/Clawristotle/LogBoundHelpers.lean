@@ -10,6 +10,10 @@ import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Topology.Order.Compact
 
+/-!
+# LeanPool.Clawristotle.LogBoundHelpers
+-/
+
 open ContinuousLinearMap Real Set VML
 
 -- ============================================================================
@@ -102,33 +106,33 @@ lemma log_f_zero_bound (f : Torus3 → (Fin 3 → ℝ) → ℝ)
   have h_comp : IsCompact (univ : Set Torus3) := isCompact_univ
   have h_ne : (univ : Set Torus3).Nonempty := univ_nonempty
   -- Extreme value theorem
-  obtain ⟨x_min, _, h_min⟩ := h_comp.exists_isMinOn h_ne h_log_cont.continuousOn
-  obtain ⟨x_max, _, h_max⟩ := h_comp.exists_isMaxOn h_ne h_log_cont.continuousOn
-  use |Real.log (f x_min 0)| + |Real.log (f x_max 0)| + 1
+  obtain ⟨xMin, _, h_min⟩ := h_comp.exists_isMinOn h_ne h_log_cont.continuousOn
+  obtain ⟨xMax, _, h_max⟩ := h_comp.exists_isMaxOn h_ne h_log_cont.continuousOn
+  use |Real.log (f xMin 0)| + |Real.log (f xMax 0)| + 1
   constructor
   · positivity
   · intro x
-    have h1 : Real.log (f x_min 0) ≤ Real.log (f x 0) := h_min (mem_univ x)
-    have h2 : Real.log (f x 0) ≤ Real.log (f x_max 0) := h_max (mem_univ x)
-    have h3 : |Real.log (f x 0)| ≤ max |Real.log (f x_min 0)| |Real.log (f x_max 0)| := by
+    have h1 : Real.log (f xMin 0) ≤ Real.log (f x 0) := h_min (mem_univ x)
+    have h2 : Real.log (f x 0) ≤ Real.log (f xMax 0) := h_max (mem_univ x)
+    have h3 : |Real.log (f x 0)| ≤ max |Real.log (f xMin 0)| |Real.log (f xMax 0)| := by
       rw [abs_le]
       constructor
-      · have h_neg : -Real.log (f x 0) ≤ max |Real.log (f x_min 0)| |Real.log (f x_max 0)| := by
-          calc -Real.log (f x 0) ≤ -Real.log (f x_min 0) := neg_le_neg h1
-            _ ≤ |Real.log (f x_min 0)| := neg_le_abs (Real.log (f x_min 0))
-            _ ≤ max |Real.log (f x_min 0)| |Real.log (f x_max 0)| := le_max_left _ _
+      · have h_neg : -Real.log (f x 0) ≤ max |Real.log (f xMin 0)| |Real.log (f xMax 0)| := by
+          calc -Real.log (f x 0) ≤ -Real.log (f xMin 0) := neg_le_neg h1
+            _ ≤ |Real.log (f xMin 0)| := neg_le_abs (Real.log (f xMin 0))
+            _ ≤ max |Real.log (f xMin 0)| |Real.log (f xMax 0)| := le_max_left _ _
         exact neg_le.mp h_neg
-      · calc Real.log (f x 0) ≤ Real.log (f x_max 0) := h2
-          _ ≤ |Real.log (f x_max 0)| := le_abs_self _
-          _ ≤ max |Real.log (f x_min 0)| |Real.log (f x_max 0)| := le_max_right _ _
+      · calc Real.log (f x 0) ≤ Real.log (f xMax 0) := h2
+          _ ≤ |Real.log (f xMax 0)| := le_abs_self _
+          _ ≤ max |Real.log (f xMin 0)| |Real.log (f xMax 0)| := le_max_right _ _
     apply le_trans h3
-    have h_max_le : max |Real.log (f x_min 0)| |Real.log (f x_max 0)| ≤
-        |Real.log (f x_min 0)| + |Real.log (f x_max 0)| :=
+    have h_max_le : max |Real.log (f xMin 0)| |Real.log (f xMax 0)| ≤
+        |Real.log (f xMin 0)| + |Real.log (f xMax 0)| :=
       max_le_add_of_nonneg (abs_nonneg _) (abs_nonneg _)
-    calc max |Real.log (f x_min 0)| |Real.log (f x_max 0)|
-        ≤ |Real.log (f x_min 0)| + |Real.log (f x_max 0)| :=
+    calc max |Real.log (f xMin 0)| |Real.log (f xMax 0)|
+        ≤ |Real.log (f xMin 0)| + |Real.log (f xMax 0)| :=
           h_max_le
-      _ ≤ |Real.log (f x_min 0)| + |Real.log (f x_max 0)| + 1 := by linarith
+      _ ≤ |Real.log (f xMin 0)| + |Real.log (f xMax 0)| + 1 := by linarith
 
 lemma log_bound_from_grad (f : Torus3 → (Fin 3 → ℝ) → ℝ)
     (hf_pos : ∀ x v, 0 < f x v)

@@ -5,6 +5,12 @@ Authors: Arend Mellendijk
 -/
 import Aesop
 
+/-!
+# LeanPool.SelbergSieve4.Tactic.AesopInit
+
+Imported Lean Pool material for `LeanPool.SelbergSieve4.Tactic.AesopInit`.
+-/
+
 declare_aesop_rule_sets [Divisibility]
 
 -- declare_aesop_rule_sets [IsMultiplicative]

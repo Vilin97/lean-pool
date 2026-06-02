@@ -11,7 +11,7 @@ import LeanPool.ABCExceptions.Section4
 /-!
 # Exceptional Set in the abc Conjecture
 
-Source: url:https://arxiv.org/abs/2410.12234
+Source: arxiv:2410.12234
 Authors: Bhavik Mehta, Arend Mellendijk
 Status: verified
 Main declarations: `abcConjecture_iff_countTriples`, `thm_4_point_3`

@@ -18,6 +18,10 @@ import Mathlib.Tactic.Finiteness.Attr
 import Mathlib.Tactic.SetLike
 import Mathlib.Util.CompileInductive
 
+/-!
+# LeanPool.Zeta3Irrational.Integral
+-/
+
 namespace LeanPool.Zeta3Irrational
 
 open scoped Nat
@@ -40,7 +44,7 @@ noncomputable abbrev J (r s : ℕ) : ℝ :=
   -(x.1 * x.2).log / (1 - x.1 * x.2) * x.1 ^ r * x.2 ^ s
 
 /-- The extended nonnegative version of `J`. -/
-noncomputable abbrev J_ENN (r s : ℕ) : ENNReal :=
+noncomputable abbrev JENN (r s : ℕ) : ENNReal :=
   ∫⁻ (x : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
   ENNReal.ofReal (- (x.1 * x.2).log / (1 - x.1 * x.2) * x.1 ^ r * x.2 ^ s)
 
@@ -484,7 +488,7 @@ lemma JENN_eq_triple_aux (x : ℝ × ℝ) (hx : x ∈ Set.Ioo 0 1 ×ˢ Set.Ioo 0
     · simp only [sub_nonneg]
       apply mul_le_one₀ (by linarith) (by linarith) (by linarith)
 
-lemma JENN_eq_triple (r s : ℕ) : J_ENN r s =
+lemma JENN_eq_triple (r s : ℕ) : JENN r s =
     ∫⁻ (x : ℝ × ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
     ENNReal.ofReal (1 / (1 - (1 - x.2.1 * x.2.2) * x.1) * x.2.1 ^ r * x.2.2 ^ s) := by
   symm
@@ -710,12 +714,12 @@ lemma J_ENN_rs_eq_tsum_aux_intergal (r s k : ℕ) :
   · rw [MeasureTheory.Measure.prod_restrict, ← MeasureTheory.Measure.volume_eq_prod]
     exact AEMeasurable_aux'
 
-lemma J_ENN_rs_eq_tsum (r s : ℕ) : J_ENN r s = ∑' (k : ℕ), ENNReal.ofReal
+lemma J_ENN_rs_eq_tsum (r s : ℕ) : JENN r s = ∑' (k : ℕ), ENNReal.ofReal
     (1 / ((k + r + 1) ^ 2 * (k + s + 1)) + 1 / ((k + r + 1) * (k + s + 1) ^ 2)) := by
   calc
   _ = ∫⁻ (x : ℝ × ℝ) in Set.Ioo 0 1 ×ˢ Set.Ioo 0 1,
     ∑' (k : ℕ), ENNReal.ofReal (- (x.1 * x.2).log * x.1 ^ (k + r) * x.2 ^ (k + s)) := by
-    rw [J_ENN, ← MeasureTheory.lintegral_indicator (by measurability),
+    rw [JENN, ← MeasureTheory.lintegral_indicator (by measurability),
         ← MeasureTheory.lintegral_indicator (by measurability)]
     congr
     ext y
@@ -757,10 +761,10 @@ lemma J_ENN_rs_eq_tsum (r s : ℕ) : J_ENN r s = ∑' (k : ℕ), ENNReal.ofReal
     (1 / ((k + r + 1) ^ 2 * (k + s + 1)) + 1 / ((k + r + 1) * (k + s + 1) ^ 2)) := by
     simp_rw [J_ENN_rs_eq_tsum_aux_intergal r s]
 
-lemma J_ENN_rr (r : ℕ) : J_ENN r r = ENNReal.ofReal
+lemma J_ENN_rr (r : ℕ) : JENN r r = ENNReal.ofReal
     (2 * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 -
       2 * ∑ m ∈ Finset.Icc 1 r, 1 / (m : ℝ) ^ 3) := by
-  have h : J_ENN r r = ∑' (k : ℕ), ENNReal.ofReal (2 / ((k + r + 1) ^ 3)) := by
+  have h : JENN r r = ∑' (k : ℕ), ENNReal.ofReal (2 / ((k + r + 1) ^ 3)) := by
     rw [J_ENN_rs_eq_tsum r r]
     congr
     ext k
@@ -783,7 +787,7 @@ lemma J_ENN_rr (r : ℕ) : J_ENN r r = ENNReal.ofReal
       · congr 1
         have h1 := Finset.sum_Ico_eq_sum_range (m := 1) (n := r + 1)
           (f := fun k => 1 / (k : ℝ) ^ 3)
-        simpa [Nat.cast_add, Nat.cast_one, add_comm] using h1.symm
+        simpa [Nat_Ico_succ_right, Nat.cast_add, Nat.cast_one, add_comm] using h1.symm
   rw [← h1, ENNReal.ofReal_tsum_of_nonneg]
   · intro n
     positivity
@@ -815,7 +819,7 @@ lemma integrableOn_J_rr (r : ℕ) : MeasureTheory.IntegrableOn
     (fun x ↦ -Real.log (x.1 * x.2) / (1 - x.1 * x.2) * x.1 ^ r * x.2 ^ r)
     (Set.Ioo 0 1 ×ˢ Set.Ioo 0 1) MeasureTheory.volume := by
   have h := J_ENN_rr r
-  simp only [J_ENN] at h
+  simp only [JENN] at h
   rw [MeasureTheory.IntegrableOn, MeasureTheory.Integrable]
   constructor
   · apply AEMeasurable.aestronglyMeasurable
@@ -858,7 +862,7 @@ theorem J_rr (r : ℕ) :
       2 * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 -
         2 * ∑ m ∈ Finset.Icc 1 r, 1 / (m : ℝ) ^ 3 := by
   have h := J_ENN_rr r
-  simp only [J_ENN] at h
+  simp only [JENN] at h
   rw [J, MeasureTheory.integral_eq_lintegral_of_nonneg_ae, h, ENNReal.toReal_ofReal_eq_iff]
   · simp only [sub_nonneg]
     have hsum_eq : (∑ m ∈ Finset.Icc 1 r, 1 / (m : ℝ) ^ 3) =
@@ -896,7 +900,7 @@ theorem J_rr (r : ℕ) :
         · apply Measurable.pow measurable_fst measurable_const
       · apply Measurable.pow measurable_snd measurable_const
 
-theorem zeta_3 : J 0 0 = 2 * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 := by
+theorem zeta3 : J 0 0 = 2 * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 := by
   simp only [J_rr, one_div, zero_lt_one, Finset.Icc_eq_empty_of_lt, Finset.sum_empty, mul_zero,
     sub_zero]
 
@@ -920,7 +924,7 @@ lemma summable_aux (r : ℕ) : Summable fun (b : ℕ) ↦ 1 / ((b : ℝ) + r + 1
   norm_num
 
 lemma J_ENN_rs (r s : ℕ) (h : r > s) :
-    J_ENN r s = ENNReal.ofReal ((∑ k ∈ Finset.Ioc s r, 1 / (k : ℝ) ^ 2) / (r - s)) := by
+    JENN r s = ENNReal.ofReal ((∑ k ∈ Finset.Ioc s r, 1 / (k : ℝ) ^ 2) / (r - s)) := by
   calc
   _ = ∑' (k : ℕ),
       ENNReal.ofReal
@@ -1006,7 +1010,7 @@ lemma integrableOn_J_rs' (r s : ℕ) (h : r > s) : MeasureTheory.IntegrableOn
     (fun x ↦ -Real.log (x.1 * x.2) / (1 - x.1 * x.2) * x.1 ^ r * x.2 ^ s)
     (Set.Ioo 0 1 ×ˢ Set.Ioo 0 1) MeasureTheory.volume := by
   have h₀ := J_ENN_rs r s h
-  simp only [J_ENN] at h₀
+  simp only [JENN] at h₀
   rw [MeasureTheory.IntegrableOn, MeasureTheory.Integrable]
   constructor
   · apply AEMeasurable.aestronglyMeasurable
@@ -1047,7 +1051,7 @@ lemma integrableOn_J_rs' (r s : ℕ) (h : r > s) : MeasureTheory.IntegrableOn
 lemma J_rs' (r s : ℕ) (h : r > s) :
     J r s = (∑ k ∈ Finset.Ioc s r, 1 / (k : ℝ) ^ 2) / (r - s) := by
   have h₀ := J_ENN_rs r s h
-  simp only [J_ENN] at h₀
+  simp only [JENN] at h₀
   rw [J, MeasureTheory.integral_eq_lintegral_of_nonneg_ae, h₀, ENNReal.toReal_ofReal_eq_iff]
   · rw [sum_div]
     apply sum_nonneg
@@ -1076,7 +1080,7 @@ lemma J_rs' (r s : ℕ) (h : r > s) :
         · apply Measurable.pow measurable_fst measurable_const
       · apply Measurable.pow measurable_snd measurable_const
 
-lemma J_ENN_rs_symm (r s : ℕ) : J_ENN r s = J_ENN s r := by
+lemma J_ENN_rs_symm (r s : ℕ) : JENN r s = JENN s r := by
   simp only [J_ENN_rs_eq_tsum, add_comm, mul_comm]
 
 lemma integrableOn_J_rs (r s : ℕ) : MeasureTheory.IntegrableOn
@@ -1127,12 +1131,12 @@ lemma integrableOn_J_rs (r s : ℕ) : MeasureTheory.IntegrableOn
           · simp only [hx, ↓reduceIte]
         have h₀ := J_ENN_rs s r h2
         rw [J_ENN_rs_symm s r] at h₀
-        simp only [J_ENN] at h₀
+        simp only [JENN] at h₀
         rw [h1, h₀]
         simp only [one_div, ENNReal.ofReal_lt_top]
 
-lemma J_eq_toReal_J_ENN (r s : ℕ) : J r s = (J_ENN r s).toReal := by
-  rw [J, J_ENN, MeasureTheory.integral_eq_lintegral_of_nonneg_ae]
+lemma J_eq_toReal_J_ENN (r s : ℕ) : J r s = (JENN r s).toReal := by
+  rw [J, JENN, MeasureTheory.integral_eq_lintegral_of_nonneg_ae]
   · apply MeasureTheory.ae_nonneg_restrict_of_forall_setIntegral_nonneg_inter
     · exact integrableOn_J_rs r s
     · rintro x hx -

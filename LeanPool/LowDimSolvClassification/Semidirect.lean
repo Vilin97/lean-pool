@@ -7,6 +7,10 @@ import Mathlib.Algebra.Lie.Derivation.Basic
 import LeanPool.LowDimSolvClassification.GeneralResults
 import LeanPool.LowDimSolvClassification.Tactics
 
+/-!
+# LeanPool.LowDimSolvClassification.Semidirect
+-/
+
 section lie_semidirect
 
 variable {K : Type*} (L J : Type*) [CommRing K] [LieRing L] [LieRing J] [LieAlgebra K L]
@@ -197,7 +201,7 @@ def leftSubalgebra : LieSubalgebra K (L ⋉[φ] J) := LieHom.range inl
 def rightIdeal : LieIdeal K (L ⋉[φ] J) := LieHom.ker fst
 
 /-- TODO. -/
-def rightIdeal_equiv_right : rightIdeal φ ≃ₗ⁅K⁆ J := {
+def rightIdealEquivRight : rightIdeal φ ≃ₗ⁅K⁆ J := {
   toFun := fun x ↦ x.val.2
   map_add' := fun ⟨_, _⟩ ⟨_, _⟩ ↦ by simp only [AddMemClass.mk_add_mk, add_right]
   map_smul' := fun _ ⟨_, _⟩ ↦ by simp only [SetLike.mk_smul_mk, smul_right, RingHom.id_apply]
@@ -245,9 +249,9 @@ theorem isAlmostAbelian {φ : K →ₗ⁅K⁆ LieDerivation K L L} [IsLieAbelian
     [StrongRankCondition K] [Module.Free K L] [Module.Finite K L] :
     LieAlgebra.IsAlmostAbelian K (K ⋉[φ] L) := by
   refine ⟨rightIdeal φ, ?_, ?_⟩
-  · exact (rightIdeal_equiv_right φ).injective.isLieAbelian (by assumption)
+  · exact (rightIdealEquivRight φ).injective.isLieAbelian (by assumption)
   · rw [finrank_eq, Module.finrank_self,
-      LinearEquiv.finrank_eq (rightIdeal_equiv_right φ).toLinearEquiv, add_comm]
+      LinearEquiv.finrank_eq (rightIdealEquivRight φ).toLinearEquiv, add_comm]
 
 end LieSemidirectProduct
 
@@ -261,14 +265,14 @@ section lie_direct
 
 variable {K L J : Type*} [CommRing K] [LieRing L] [LieRing J] [LieAlgebra K L] [LieAlgebra K J]
 
-instance : Bracket (L × J) (L × J) := {
+instance instBracketProdLeanPool : Bracket (L × J) (L × J) := {
   bracket := fun a b ↦ ⟨⁅a.1, b.1⁆, ⁅a.2, b.2⁆⟩
 }
 
 lemma Prod.bracket_def (a b : L × J) :
     ⁅a, b⁆ = ⟨⁅a.1, b.1⁆, ⁅a.2, b.2⁆⟩ := rfl
 
-instance : LieRing (L × J) := {
+instance instLieRingProdLeanPool : LieRing (L × J) := {
   (inferInstance : AddCommGroup (L × J)) with
   add_lie := fun _ _ _ ↦ by simp only [Prod.bracket_def, Prod.fst_add, add_lie, Prod.snd_add,
     Prod.mk_add_mk]
@@ -279,7 +283,7 @@ instance : LieRing (L × J) := {
     sub_add_cancel]
 }
 
-instance : LieAlgebra K (L × J) := {
+instance instLieAlgebraProdLeanPool : LieAlgebra K (L × J) := {
   lie_smul := fun _ _ _ ↦ by simp only [Prod.bracket_def, Prod.smul_fst, lie_smul, Prod.smul_snd,
     Prod.smul_mk]
 }
@@ -342,7 +346,7 @@ def LieHom.snd : L × J →ₗ⁅K⁆ J := {
 def leftIdeal : LieIdeal K (L × J) := LieHom.ker (LieHom.snd K L J)
 
 /-- TODO. -/
-def leftIdeal_equiv_left : leftIdeal K L J ≃ₗ⁅K⁆ L := {
+def leftIdealEquivLeft : leftIdeal K L J ≃ₗ⁅K⁆ L := {
   toFun := fun x ↦ x.val.1
   map_add' := fun ⟨_, _⟩ ⟨_, _⟩ ↦ by simp only [AddMemClass.mk_add_mk, Prod.fst_add]
   map_smul' := fun _ ⟨_, _⟩ ↦ by simp only [SetLike.mk_smul_mk, Prod.smul_fst,
@@ -366,7 +370,7 @@ def leftIdeal_equiv_left : leftIdeal K L J ≃ₗ⁅K⁆ L := {
 def rightIdeal : LieIdeal K (L × J) := LieHom.ker (LieHom.fst K L J)
 
 /-- TODO. -/
-def rightIdeal_equiv_right : rightIdeal K L J ≃ₗ⁅K⁆ J := {
+def rightIdealEquivRight : rightIdeal K L J ≃ₗ⁅K⁆ J := {
   toFun := fun x ↦ x.val.2
   map_add' := fun ⟨_, _⟩ ⟨_, _⟩ ↦ by simp only [AddMemClass.mk_add_mk, Prod.snd_add]
   map_smul' := fun _ ⟨_, _⟩ ↦ by simp only [SetLike.mk_smul_mk, Prod.smul_snd,

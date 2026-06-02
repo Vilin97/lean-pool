@@ -10,6 +10,10 @@ import Mathlib.Tactic.FinCases
 import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
 import LeanPool.FormalizationOfBoundedArithmetic.Register
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
+-/
+
 /-- Names used for displayed free variables in formulas. -/
 inductive FvName | x | y | z | X
 
@@ -54,7 +58,8 @@ inductive Vars4 : FvName -> FvName -> FvName -> FvName -> Type
   fv := .fv2
 @[delta0_simps] instance (n1 n2 n3 n4 : FvName) : HasVar n3 (Vars4 n1 n2 n3 n4) where
   fv := .fv3
-@[delta0_simps] instance (n1 n2 n3 n4 : FvName) : HasVar n4 (Vars4 n1 n2 n3 n4) where
+@[delta0_simps] instance instHasVarVars43 (n1 n2 n3 n4 : FvName) :
+    HasVar n4 (Vars4 n1 n2 n3 n4) where
   fv := .fv4
 
 
@@ -223,7 +228,7 @@ def FirstOrder.Language.Formula.display4
   }
 
 /-- Reassociate displayed variables from `x | (y,z)` to `(x,y) | z`. -/
-def FirstOrder.Language.Formula.display_swapleft
+def FirstOrder.Language.Formula.displaySwapleft
   {n1 n2 n3 : FvName}
   (phi : L.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
   : L.Formula (Vars2 n1 n2 ⊕ Vars1 n3)
@@ -252,7 +257,7 @@ def FirstOrder.Language.Formula.display_swapleft
   }
 
 /-- Reassociate displayed variables from `x | (y,z)` to `(x | y) | z`. -/
-def FirstOrder.Language.Formula.display_swapleft'
+def FirstOrder.Language.Formula.displaySwapleft'
   {n1 n2 n3 : FvName}
   (phi : L.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
   : L.Formula ((Vars1 n1 ⊕ Vars1 n2) ⊕ Vars1 n3)
@@ -285,7 +290,7 @@ private lemma displayedVariablesDelimiter2 : True := by
 
 -- Vars2 .x .y -> Vars2 .y .x
 /-- Swap the two variables in a two-variable displayed formula. -/
-def FirstOrder.Language.Formula.rotate_21
+def FirstOrder.Language.Formula.rotate21
   {n1 n2 : FvName}
   (phi : L.Formula (Vars2 n1 n2))
   : L.Formula (Vars2 n2 n1)
@@ -305,7 +310,7 @@ def FirstOrder.Language.Formula.rotate_21
 
 -- Vars3 .x .y .z -> Vars3 .y .x. .z
 /-- Swap the first two variables in a three-variable displayed formula. -/
-def FirstOrder.Language.Formula.rotate_213
+def FirstOrder.Language.Formula.rotate213
   (n1 n2 n3 : FvName)
   (phi : L.Formula (Vars3 n1 n2 n3))
   : L.Formula (Vars3 n2 n1 n3)
@@ -327,7 +332,7 @@ def FirstOrder.Language.Formula.rotate_213
 
 -- Vars3 .x .y .z -> Vars3 .y .x. .z
 /-- Rotate the variables in a three-variable displayed formula. -/
-def FirstOrder.Language.Formula.rotate_231
+def FirstOrder.Language.Formula.rotate231
   (n1 n2 n3 : FvName)
   (phi : L.Formula (Vars3 n1 n2 n3))
   : L.Formula (Vars3 n3 n1 n2)

@@ -5,7 +5,7 @@ Authors: YnirPaz
 -/
 
 import Mathlib.SetTheory.Ordinal.Arithmetic
-import Mathlib.SetTheory.Cardinal.Cofinality
+import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
 import Mathlib.Order.SuccPred.Limit
 
 /-!
@@ -38,7 +38,7 @@ theorem succ_Iio {α : Type*} [PartialOrder α] [SuccOrder α] {a : α} (h : IsS
 
 /-- The order isomorphism between ℕ and the first ω ordinals. -/
 @[simps! apply]
-def relIso_nat_omega0 : ℕ ≃o Iio ω where
+def relIsoNatOmega0 : ℕ ≃o Iio ω where
   toFun n := ⟨n, natCast_lt_omega0 n⟩
   invFun n := Classical.choose (lt_omega0.1 n.2)
   left_inv n := by
@@ -48,17 +48,17 @@ def relIso_nat_omega0 : ℕ ≃o Iio ω where
   map_rel_iff' := by simp
 
 @[simp]
-theorem relIso_nat_omega0_coe_symm_apply (o : Iio ω) : relIso_nat_omega0.symm o = o.1 := by
+theorem relIso_nat_omega0_coe_symm_apply (o : Iio ω) : relIsoNatOmega0.symm o = o.1 := by
   obtain ⟨o, h⟩ := o
   rcases lt_omega0.mp h with ⟨n, hn⟩
   simp_rw [hn]
-  exact congrArg Nat.cast <| relIso_nat_omega0.symm_apply_apply n
+  exact congrArg Nat.cast <| relIsoNatOmega0.symm_apply_apply n
 
 theorem strictMono_of_succ_lt_omega0 {α : Type*} [Preorder α] (f : Iio ω → α)
     (hf : ∀ i, f i < f (succ i)) : StrictMono f := by
   have mono := strictMono_nat_of_lt_succ fun n ↦
     (succ_Iio isSuccLimit_omega0.isSuccPrelimit) ▸ hf ⟨n, natCast_lt_omega0 n⟩
-  convert mono.comp relIso_nat_omega0.symm.strictMono
+  convert mono.comp relIsoNatOmega0.symm.strictMono
   ext
   simp
 
@@ -109,7 +109,7 @@ def boundedLimitRec' {l : Ordinal} (lLim : IsSuccLimit l) {motive : Iio l → So
   obtain ⟨o, ho⟩ := o
   induction o using limitRecOn with
   | zero => exact zero
-  | succ o IH =>
+  | add_one o IH =>
     have ho' : o < l := (lt_succ o).trans ho
     exact succAux ⟨o, ho'⟩ (IH ho')
   | limit o ho' IH => exact limit ⟨o, ho⟩ ho' fun a ha ↦ IH a.1 ha (ha.trans (c := l) ho)
@@ -123,10 +123,12 @@ theorem boundedLimitRec'_zero {l} (lLim : IsSuccLimit l) {motive} (H₁ H₂ H�
 theorem boundedLimitRec'_succ {l} (lLim : IsSuccLimit l) {motive} (o H₁ H₂ H₃) :
     @boundedLimitRec' l lLim motive ⟨Order.succ o.1, lLim.succ_lt o.2⟩ H₁ H₂ H₃ = H₂ o
     (@boundedLimitRec' l lLim motive o H₁ H₂ H₃) := by
-  unfold boundedLimitRec'
-  dsimp
-  rw [limitRecOn_succ]
-  rfl
+    unfold boundedLimitRec'
+    dsimp
+    change limitRecOn (motive := fun p ↦ (hp : p < l) → motive ⟨p, hp⟩)
+      (o.1 + 1) _ _ _ _ = _
+    rw [limitRecOn_add_one]
+    rfl
 
 /-- There doesn't exist a chain of subsets of `S` of length longer than `#S`. -/
 theorem not_exists_ssubset_chain_lift {α : Type u} {S : Set α} {ℓ : Ordinal.{v}}

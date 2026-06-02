@@ -6,11 +6,18 @@ Authors: Jukka Suomela
 
 import Mathlib.Data.Fin.Tuple.Embedding
 import Mathlib.Data.Fintype.CardEmbedding
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.TwoColoringOneRound.LowerBound.Defs
-
-namespace Distributed2Coloring.LowerBound
 
 /-!
 Reusable lemmas for counting edges with coordinate-wise constraints relative to a threshold `two`.
@@ -18,6 +25,9 @@ Reusable lemmas for counting edges with coordinate-wise constraints relative to 
 These are used in auxiliary “sanity check” and “upper bound” files to avoid repeating large
 case-bashy equivalence proofs.
 -/
+
+namespace Distributed2Coloring.LowerBound
+
 
 namespace EdgePatterns
 

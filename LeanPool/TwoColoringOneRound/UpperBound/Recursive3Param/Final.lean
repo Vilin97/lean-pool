@@ -5,16 +5,16 @@ Authors: Jukka Suomela
 -/
 
 import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Regions
-import Mathlib.Tactic
-
-namespace Distributed2Coloring
-
-open MeasureTheory
-open scoped unitInterval ENNReal
-
-namespace UpperBound
-namespace Recursive3Param
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 /-!
 ## Final upper bound for the 3-parameter recursive algorithm
 
@@ -24,6 +24,15 @@ This file combines the four `b`-regions computed in
 `ClassicalAlgorithm.p recursive3ParamAlg`, and derives the numerical bound
 `ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
 -/
+
+namespace Distributed2Coloring
+
+open MeasureTheory
+open scoped unitInterval ENNReal
+
+namespace UpperBound
+namespace Recursive3Param
+
 
 lemma p_recursive3ParamAlg_eq :
     ClassicalAlgorithm.p recursive3ParamAlg = ENNReal.ofReal (94835 / 393216 : ℝ) := by

@@ -7,8 +7,6 @@ Authors: Jukka Suomela
 import LeanPool.TwoColoringOneRound.LowerBound.Defs
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
 
-namespace Distributed2Coloring.LowerBound
-
 /-!
 # Public interface: the `n = 1_000_000` lower bound
 
@@ -36,6 +34,9 @@ The main claim proved in this project is:
 It states that for `n = 1_000_000`, every coloring has monochromatic-edge fraction at least
 `23879/100000 = 0.23879`.
 -/
+
+namespace Distributed2Coloring.LowerBound
+
 
 namespace N1000000Interface
 

@@ -6,14 +6,15 @@ Authors: Judith Ludwig, Christian Merten
 import LeanPool.BruhatTits.Graph.Edges
 import Mathlib.Combinatorics.SimpleGraph.Connectivity.Connected
 
-open Module
-
 /-!
 # Definition of the Bruhat-Tits graph
 
 In this file we define the Bruhat-Tits graph as a simple graph and show it is connected.
 
 -/
+
+open Module
+
 
 suppress_compilation
 

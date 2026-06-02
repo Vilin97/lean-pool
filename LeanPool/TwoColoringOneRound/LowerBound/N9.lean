@@ -7,11 +7,17 @@ Authors: Jukka Suomela
 import Mathlib.Data.Fintype.CardEmbedding
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Logic.Equiv.Fin.Rotate
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.TwoColoringOneRound.LowerBound.Defs
-
-namespace Distributed2Coloring.LowerBound
 
 /-!
 ## Warm-up: `n = 9` gives `> 20%`
@@ -24,6 +30,9 @@ This file proves a small “warm-up” theorem matching the report:
 
 All proofs are kernel-checked (no `native_decide`).
 -/
+
+namespace Distributed2Coloring.LowerBound
+
 
 namespace N9
 
@@ -121,13 +130,13 @@ private lemma exists_mono_edge_in_cycle (f : Coloring9) (t : Emb5) :
     cycle5_has_adjacent_equal b0 b1 b2 b3 b4
   rcases hb with h01 | h12 | h23 | h34 | h40
   · refine ⟨0, (monochromatic_edgeAt_iff (f := f) (t := t) (k := 0)).2 ?_⟩
-    simpa [b0, b1] using h01
+    simpa [b0, b1, next] using h01
   · refine ⟨1, (monochromatic_edgeAt_iff (f := f) (t := t) (k := 1)).2 ?_⟩
-    simpa [b1, b2] using h12
+    simpa [b1, b2, next] using h12
   · refine ⟨2, (monochromatic_edgeAt_iff (f := f) (t := t) (k := 2)).2 ?_⟩
-    simpa [b2, b3] using h23
+    simpa [b2, b3, next] using h23
   · refine ⟨3, (monochromatic_edgeAt_iff (f := f) (t := t) (k := 3)).2 ?_⟩
-    simpa [b3, b4] using h34
+    simpa [b3, b4, next] using h34
   · refine ⟨4, (monochromatic_edgeAt_iff (f := f) (t := t) (k := 4)).2 ?_⟩
     simpa [b4, b0, next] using h40
 
@@ -168,8 +177,9 @@ private lemma card_extra (e : Edge n) : Fintype.card (Extra e) = 5 := by
   have hr : Fintype.card (Set.range (edgeEmb e)) = 4 := by
     simpa using (Fintype.card_range (f := edgeEmb e))
   -- `|Sym9| = 9` and `|range(edgeEmb e)| = 4`.
-  simpa [Extra, Sym9, Sym, hr, Fintype.card_fin] using
-    (Fintype.card_compl_set (s := Set.range (edgeEmb e)))
+  have h := Fintype.card_compl_set (s := Set.range (edgeEmb e))
+  norm_num [Extra, Sym9, Sym, hr, Fintype.card_fin] at h ⊢
+  exact h
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev EdgeExtraK : Type := {q : Edge n × (Sym9 × Fin 5) // q.2.1 ∈ Extra q.1}

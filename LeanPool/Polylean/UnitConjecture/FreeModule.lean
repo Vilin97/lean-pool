@@ -7,8 +7,6 @@ Authors: Siddhartha Gadgil, Anand Rao
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Group.Defs
 
-namespace LeanPool.Polylean
-
 /-!
 # Free modules
 
@@ -26,6 +24,9 @@ The free module (`FreeModule`) is then defined as the corresponding quotient of 
 We also give an alternative description via moves, which is more convenient for universal
 properties.
 -/
+
+namespace LeanPool.Polylean
+
 
 variable {R : Type _} [Ring R] [DecidableEq R]
 
@@ -390,7 +391,7 @@ theorem eqlquot_of_beq_support (s₁ s₂ : FormalSum R X)
 /--
 Boolean equality for the quotient via lifting
 -/
-def beq_quot : (x₁ x₂ : R[X]) → Bool := by
+def beqQuot : (x₁ x₂ : R[X]) → Bool := by
   apply Quotient.lift₂
     (fun (s₁ s₂ : FormalSum R X) => decide (@Eq (R[X]) ⟦s₁⟧ ⟦s₂⟧))
   intro a₁ b₁ a₂ b₂ eqv₁ eqv₂
@@ -401,9 +402,9 @@ def beq_quot : (x₁ x₂ : R[X]) → Bool := by
 /--
 Boolean equality for the quotient is equality.
 -/
-lemma eq_of_beq_true : ∀ x₁ x₂ : R[X], x₁.beq_quot x₂ = true → x₁ = x₂ := by
+lemma eq_of_beq_true : ∀ x₁ x₂ : R[X], x₁.beqQuot x₂ = true → x₁ = x₂ := by
   apply Quotient.ind₂
-    (motive := fun (x₁ x₂ : R[X]) => x₁.beq_quot x₂ = true → x₁ = x₂)
+    (motive := fun (x₁ x₂ : R[X]) => x₁.beqQuot x₂ = true → x₁ = x₂)
   intro s₁ s₂ eqv
   let eql := of_decide_eq_true eqv
   assumption
@@ -412,9 +413,9 @@ lemma eq_of_beq_true : ∀ x₁ x₂ : R[X], x₁.beq_quot x₂ = true → x₁ 
 Boolean inequality for the quotient is inequality.
 -/
 lemma neq_of_beq_false :
-    ∀ x₁ x₂ : R[X], x₁.beq_quot x₂ = false → Not (x₁ = x₂) := by
+    ∀ x₁ x₂ : R[X], x₁.beqQuot x₂ = false → Not (x₁ = x₂) := by
   apply Quotient.ind₂
-    (motive := fun (x₁ x₂ : R[X]) => x₁.beq_quot x₂ = false → Not (x₁ = x₂))
+    (motive := fun (x₁ x₂ : R[X]) => x₁.beqQuot x₂ = false → Not (x₁ = x₂))
   intro s₁ s₂ neqv
   let neql := of_decide_eq_false neqv
   assumption
@@ -423,7 +424,7 @@ lemma neq_of_beq_false :
 Decidable equality for the free module.
 -/
 @[reducible, instance] def decEq (x₁ x₂ : R[X]) : Decidable (x₁ = x₂) := by
-  match p : x₁.beq_quot x₂ with
+  match p : x₁.beqQuot x₂ with
   | true =>
     apply Decidable.isTrue
     apply FreeModule.eq_of_beq_true

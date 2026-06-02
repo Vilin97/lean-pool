@@ -7,6 +7,10 @@ Authors: Siddhartha Gadgil, Anand Rao
 import Std.Data.HashMap
 import LeanPool.Polylean.ConjInvLength.LengthBound
 
+/-!
+# LeanPool.Polylean.ConjInvLength.Length
+-/
+
 namespace LeanPool.Polylean
 open Letter
 

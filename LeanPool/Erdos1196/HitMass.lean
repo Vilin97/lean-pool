@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Math Inc.
+Authors: Math Inc
 -/
 import LeanPool.Erdos1196.Markov
 import Mathlib.Topology.Algebra.InfiniteSum.ENNReal
@@ -213,7 +213,8 @@ private lemma summable_transitionTailSummand (Y m : ℕ) (hm : 1 ≤ m) :
   refine (hsN.subtype {q : ℕ | q ∉ Finset.range N}).congr ?_
   intro q
   have hq : N ≤ q := by
-    simpa [Finset.mem_range, not_lt] using q.2
+    have hq' : (q : ℕ) ∉ Finset.range N := q.property
+    exact not_lt.mp (by simpa [Finset.mem_range] using hq')
   have hYq : Y ≤ q := le_trans hN_ge_Y hq
   simp [hq, hYq]
 

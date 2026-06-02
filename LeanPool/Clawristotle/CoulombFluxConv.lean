@@ -452,7 +452,7 @@ lemma coulomb_flux_differentiable
     -- Step 2: expand mulVec as dot product
     simp only [mulVec, dotProduct]
     -- Step 3: exchange sum and integral (need each summand integrable)
-    rw [integral_finset_sum _ (fun j _ => by
+    rw [integral_finsetSum _ (fun j _ => by
       have : (fun w => landauMatrix coulombKernel (v - w) i j *
           (f w • vGrad f v - f v • vGrad f w) j) =
         (fun w => fderiv ℝ f v (Pi.single j 1) * (landauMatrix coulombKernel (v - w) i j * f w) -
@@ -518,7 +518,7 @@ lemma coulomb_flux_eq_decomposed
   rw [eval_integral (fun k =>
     (landau_flux_integrable_coulomb f hf_pos hf_smooth hf_schwartz v).eval k) i]
   simp only [mulVec, dotProduct]
-  rw [integral_finset_sum _ (fun j _ => by
+  rw [integral_finsetSum _ (fun j _ => by
     have : (fun w => landauMatrix coulombKernel (v - w) i j *
         (f w • vGrad f v - f v • vGrad f w) j) =
       (fun w => fderiv ℝ f v (Pi.single j 1) * (landauMatrix coulombKernel (v - w) i j * f w) -
