@@ -266,6 +266,55 @@ def test_quality_check_strips_root_escape_from_declaration_name(tmp_path: Path) 
     assert "Ns.Foo.bar" not in names
 
 
+def test_quality_check_section_inside_namespace_keeps_namespace(
+    tmp_path: Path,
+) -> None:
+    """A `section ... end` nested in a `namespace` must not pop the namespace.
+
+    Regression: `end <section>` popped the enclosing namespace, so every
+    declaration after the first nested section was recorded unqualified and the
+    `#print axioms` audit then failed with `unknown constant`.
+    """
+    _write_minimal_repo(
+        tmp_path,
+        "namespace Ns\n"
+        "section A\n"
+        "theorem before : True := trivial\n"
+        "end A\n"
+        "section B\n"
+        "theorem after : True := trivial\n"
+        "end B\n"
+        "end Ns\n",
+    )
+
+    names = {declaration.name for declaration in _parse_declarations(tmp_path)}
+
+    assert "Ns.before" in names
+    assert "Ns.after" in names
+    assert "before" not in names
+    assert "after" not in names
+
+
+def test_quality_check_dotted_name_inside_namespace_is_qualified(
+    tmp_path: Path,
+) -> None:
+    """`theorem Foo.bar` inside `namespace Ns` is recorded as `Ns.Foo.bar`.
+
+    Regression: dotted declaration names skipped namespace qualification, so the
+    audit emitted `#print axioms _root_.Foo.bar` (the unqualified name) and
+    failed even though the real declaration is `Ns.Foo.bar`.
+    """
+    _write_minimal_repo(
+        tmp_path,
+        "namespace Ns\ntheorem Foo.bar : True := trivial\nend Ns\n",
+    )
+
+    names = {declaration.name for declaration in _parse_declarations(tmp_path)}
+
+    assert "Ns.Foo.bar" in names
+    assert "Foo.bar" not in names
+
+
 def test_quality_check_rejects_oversized_file(tmp_path: Path) -> None:
     """Files over the 10000-line cap fail; there is no waiver."""
     _write_minimal_repo(tmp_path)
@@ -351,6 +400,12 @@ def test_write_project_card_replaces_existing_card(tmp_path: Path) -> None:
     )
     assert "Source: doi:10.0/x.y" in text
     assert "Source: arxiv:1234.5678" not in text
+
+
+def test_project_card_lists_all_source_identifiers() -> None:
+    """A project with several source keys renders them all, in arxiv/doi/url order."""
+    project = {**_PROJECT_FIXTURE, "source": {"doi": "10.0/x.y", "arxiv": "1234.5678"}}
+    assert "Source: arxiv:1234.5678, doi:10.0/x.y" in _project_card(project)
 
 
 def test_write_project_card_moves_misplaced_card(tmp_path: Path) -> None:

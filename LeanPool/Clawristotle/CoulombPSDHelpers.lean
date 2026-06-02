@@ -409,7 +409,7 @@ lemma fubini_double_aestronglyMeasurable
       · apply ((Measurable.ite measurableSet_Iic measurable_const
           (measurable_id.pow measurable_const)) : Measurable coulombKernel).comp
         simp only [eucNorm, normSq, dotProduct]
-        exact (continuous_sqrt.comp (continuous_finset_sum _ fun k _ =>
+        exact (continuous_sqrt.comp (continuous_finsetSum _ fun k _ =>
           ((continuous_apply k).comp (continuous_fst.sub continuous_snd)).mul
           ((continuous_apply k).comp (continuous_fst.sub continuous_snd)))).measurable
       · simp only [innerLandauMatrix_apply]
@@ -417,7 +417,7 @@ lemma fubini_double_aestronglyMeasurable
         apply Continuous.sub
         · by_cases h : i = j
           · simp only [h, ↓reduceIte, normSq, dotProduct]
-            exact continuous_finset_sum _ fun k _ =>
+            exact continuous_finsetSum _ fun k _ =>
               ((continuous_apply k).comp (continuous_fst.sub continuous_snd)).mul
               ((continuous_apply k).comp (continuous_fst.sub continuous_snd))
           · simp only [h, ↓reduceIte]

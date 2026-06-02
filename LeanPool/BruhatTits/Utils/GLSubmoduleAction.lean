@@ -5,6 +5,10 @@ Authors: Judith Ludwig, Christian Merten
 -/
 import LeanPool.BruhatTits.Utils.Matrix
 
+/-!
+# LeanPool.BruhatTits.Utils.GLSubmoduleAction
+-/
+
 open Module
 
 variable {K : Type*} [Field K]

@@ -10,8 +10,6 @@ import Mathlib.Combinatorics.SimpleGraph.Acyclic
 import Mathlib.Combinatorics.SimpleGraph.Metric
 import LeanPool.BruhatTits.Utils.GraphAction
 
-open Module
-
 /-!
 # Definition and Surjectivity of Laplacian
 
@@ -20,6 +18,9 @@ We show that if `X` is a tree, with the property that each vertex has at least t
 finitely many neighbours, then the Laplacian is surjective.
 
 -/
+
+open Module
+
 
 suppress_compilation
 
@@ -820,7 +821,7 @@ instance arrowDistribMulAction [AddMonoid B] : DistribMulAction G (A → B) wher
 end «ArrowAction»
 
 /- Act trivially on `Rˣ`. -/
-instance : SMul G Rˣ where
+instance instSMulUnitsLeanPool : SMul G Rˣ where
   smul _ x := x
 
 omit [Group G] in

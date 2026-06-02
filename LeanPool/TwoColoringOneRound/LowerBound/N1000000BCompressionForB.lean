@@ -4,8 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
 
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixSymmDecompose
@@ -16,6 +24,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
+
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionForB
+-/
 
 namespace Distributed2Coloring.LowerBound
 
@@ -134,16 +146,12 @@ private lemma sum_A_over_baseOrbit_eq_N {k : DirIdx} (u : BaseOrbit k) (a d : Di
   have hsum_filter :
       (∑ v : BaseOrbit a, (if p v then (1 : Q) else 0)) = ((Finset.univ.filter p).card : Q) := by
     -- Turn the `Fintype` sum into a `Finset` sum and rewrite by filtering.
-    change (Finset.univ.sum (fun v : BaseOrbit a => if p v then (1 : Q) else 0)) =
-        ((Finset.univ.filter p).card : Q)
     -- Rewrite the sum of indicators as a sum over the filtered set.
     have hFilter :
         (Finset.univ.sum (fun v : BaseOrbit a => if p v then (1 : Q) else 0)) =
           ∑ v ∈ (Finset.univ : Finset (BaseOrbit a)) with p v, (1 : Q) := by
       -- `Finset.sum_filter` gives `∑ v ∈ univ with p v, 1 = ∑ v ∈ univ, if p v then 1 else 0`.
       -- We use the symmetric orientation, and `change` to avoid `simp` recursion.
-      change (∑ v ∈ (Finset.univ : Finset (BaseOrbit a)), if p v then (1 : Q) else 0) =
-          ∑ v ∈ (Finset.univ : Finset (BaseOrbit a)) with p v, (1 : Q)
       exact
         (Finset.sum_filter (s := (Finset.univ : Finset (BaseOrbit a))) (p := p)
           (f := fun _v : BaseOrbit a => (1 : Q))).symm
@@ -284,8 +292,6 @@ theorem congr_A_eq_compBasis (r : Block) (d : DirIdx) :
     classical
     -- Unfold the `Fintype` sum to a `Finset` sum and factor out the constants using
     -- `Finset.sum_mul` and `Finset.mul_sum`.
-    change (Finset.univ.sum (fun v : BaseOrbit a => bVal r p k * (A d) u.1 v.1 * bVal r q a))
-        = bVal r p k * (Finset.univ.sum (fun v : BaseOrbit a => (A d) u.1 v.1)) * bVal r q a
     have hRight :
         Finset.univ.sum (fun v : BaseOrbit a => bVal r p k * (A d) u.1 v.1 * bVal r q a)
           =
@@ -341,9 +347,6 @@ theorem congr_A_eq_compBasis (r : Block) (d : DirIdx) :
     intro k
     classical
     -- Turn the `u`-sum into a `Finset` sum and use `Finset.sum_const`.
-    change (Finset.univ.sum (fun _u : BaseOrbit k => (∑ a : DirIdx,
-      bVal r p k * (N k a d : Q) * bVal r q a)))
-        = (baseTypeCount k : Q) * (∑ a : DirIdx, bVal r p k * (N k a d : Q) * bVal r q a)
     -- `univ.card = card (BaseOrbit k)`, and `card (BaseOrbit k) = baseTypeCount k`.
     have hcardNat : (Finset.univ : Finset (BaseOrbit k)).card = baseTypeCount k := by
       -- `Fintype.card` is definitionally `Finset.univ.card`.

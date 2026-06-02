@@ -6,6 +6,12 @@ Authors: Siddhartha Gadgil, Anand Rao
 
 import Aesop
 
+/-!
+# LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
+
+Imported Lean Pool material for `LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets`.
+-/
+
 namespace LeanPool.Polylean
 
 declare_aesop_rule_sets [AutAction]

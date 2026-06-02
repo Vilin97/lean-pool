@@ -20,7 +20,7 @@ import LeanPool.ArtinWedderburn.ArtinWedderburnTheorem
 /-!
 # Artin-Wedderburn Theorem
 
-Source: url:https://doi.org/10.1007/978-1-4419-8616-0
+Source: arxiv:2405.04588, doi:10.1007/978-1-4419-8616-0
 Authors: Matevz Miščič, Maša Žaucer, Job Petrovčič
 Status: verified
 Main declarations: `LeanPool.ArtinWedderburn.ArtinWedderburnForPrime`

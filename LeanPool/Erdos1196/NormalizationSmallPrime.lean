@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Math Inc.
+Authors: Math Inc
 -/
 import LeanPool.Erdos1196.NormalizationCore
 import Mathlib.Order.Filter.AtTopBot.Field
@@ -172,7 +172,8 @@ lemma sum_range_smallPrimeTail_le_two_inv_log {x q N : ℕ} (hx : 3 ≤ x) (hq :
       2 / Real.log (x : ℝ) := by
   let M := x ⌈/⌉ q
   have hxq : x ≤ q * M := by
-    simpa [M, Nat.mul_comm] using le_smul_ceilDiv hq
+    change x ≤ q • M
+    exact le_smul_ceilDiv hq
   have hx_log_pos : 0 < Real.log (x : ℝ) := by
     exact Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 3) hx))
   have hMq_ge_x : (x : ℝ) ≤ (M : ℝ) * q := by

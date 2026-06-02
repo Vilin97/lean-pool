@@ -6,6 +6,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 import Mathlib.CategoryTheory.Category.Cat
 import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Basic
 
+/-!
+# LeanPool.DirectedTopologyLean4.PushoutAlternative
+-/
+
 /-
   This file contains an alternative way for proving a commutative square in a category is a pushout.
 -/

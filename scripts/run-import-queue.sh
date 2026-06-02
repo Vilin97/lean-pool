@@ -6,8 +6,7 @@
 # Usage:
 #   scripts/run-import-queue.sh [options] [url ...]
 #
-# With no urls, uses the built-in default list (the 10 in
-# candidates/import-queue.md).
+# With no urls, uses the built-in default list (DEFAULT_URLS below).
 #
 # Options:
 #   --jobs N           How many imports to run at once (default 2).
@@ -62,8 +61,7 @@ AGENT="${LEAN_POOL_AGENT:-claude}"
 REPO_SLUG="$(git -C "$LEAN_POOL_ROOT" remote get-url origin 2>/dev/null \
   | sed -E 's#(git@github.com:|https://github.com/)##; s#\.git$##' || echo "")"
 
-# Default queue — keep in sync with candidates/import-queue.md (ordered by
-# ascending import risk: smallest toolchain jump first).
+# Default queue (ordered by ascending import risk: smallest toolchain jump first).
 DEFAULT_URLS=(
   https://github.com/math-inc/Erdos1196
   https://github.com/pitmonticone/SumsThreeSquares

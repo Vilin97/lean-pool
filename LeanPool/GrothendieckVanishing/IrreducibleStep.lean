@@ -10,6 +10,7 @@ import LeanPool.GrothendieckVanishing.FinitelyGeneratedVanishing
 import LeanPool.GrothendieckVanishing.FlasqueVanishing
 import LeanPool.GrothendieckVanishing.TopologicalKrullDim
 import LeanPool.GrothendieckVanishing.ZeroOutside
+import Mathlib.GroupTheory.Archimedean
 
 /-!
 # Irreducible positive-dimensional vanishing
@@ -85,7 +86,11 @@ theorem sHom_stalk_bijective_at
       (TopCat.Sheaf.zeroOutsideInt.generator U)) = R.germ U x hxU s := by
     change T.map (TopCat.Sheaf.zeroOutsideInt.sHomVal hRsh s) _ = _
     rw [TopCat.Presheaf.stalkFunctor_map_germ_apply]
-    simpa using congrArg (R.germ U x hxU) h_sHom_app
+    change ConcreteCategory.hom (R.germ U x hxU)
+        ((ConcreteCategory.hom ((TopCat.Sheaf.zeroOutsideInt.sHomVal hRsh s).app (op U)))
+          (TopCat.Sheaf.zeroOutsideInt.generator U)) =
+      ConcreteCategory.hom (R.germ U x hxU) s
+    exact congrArg (R.germ U x hxU) h_sHom_app
   have h_surj : Function.Surjective sHom_x := by
     intro a; obtain ⟨k, hk⟩ := hgen a
     refine ⟨k • (TopCat.Sheaf.zeroOutsideInt U).presheaf.germ U x hxU
@@ -156,7 +161,10 @@ theorem exists_nonzero_stalk_in_V
     refine ⟨?_⟩
     intro A B
     rfl
-  simpa using Functor.map_isZero
+  change IsZero
+    (((TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
+      (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj U).obj Rsh))
+  exact Functor.map_isZero
     (TopCat.Sheaf.forget AddCommGrpCat.{u} X ⋙
       (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj U) hRsh_zero
 
@@ -222,7 +230,7 @@ theorem exists_section_generating_stalks
   let d : ℤ := Nat.find hP
   obtain ⟨hd_nat_pos, x₀, hx₀V, ⟨a₁, ha₁⟩, _⟩ := Nat.find_spec hP
   have hd_pos : 0 < d := Int.ofNat_lt.mpr hd_nat_pos
-  obtain ⟨W₀, hx₀W₀, s₀, hs₀⟩ := Presheaf.germ_exist R x₀ a₁
+  obtain ⟨W₀, hx₀W₀, s₀, hs₀⟩ := R.exists_germ_eq a₁
   let V₁ := W₀ ⊓ V
   have hV₁V : V₁ ≤ V := inf_le_right
   set s₁ := ConcreteCategory.hom (R.map (homOfLE (inf_le_left : V₁ ≤ W₀)).op) s₀
@@ -379,8 +387,9 @@ theorem closedComplementVanishing
   let Csh : TopCat.Sheaf AddCommGrpCat.{u} X := ⟨C, hC⟩
   set Y := (V : Set X)ᶜ
   have hYcl : IsClosed Y := V.2.isClosed_compl
-  have hY_dim_lt_top : topologicalKrullDim Y < ⊤ :=
-    topologicalKrullDim_lt_top_of_lt_nat (by simpa [gt_iff_lt] using hn)
+  have hY_dim_lt_top : topologicalKrullDim Y < ⊤ := by
+    change topologicalKrullDim (Set.compl (V : Set X)) < ⊤
+    exact topologicalKrullDim_lt_top_of_lt_nat (by simpa [gt_iff_lt] using hn)
   have hY_dim_lt : topologicalKrullDim Y < topologicalKrullDim X :=
     topologicalKrullDim_lt_of_isIrreducible_of_isClosed hYcl
       (Set.compl_ne_univ.mpr (Set.nonempty_iff_ne_empty.mpr (Opens.coe_eq_empty.not.mpr hV)))
@@ -393,6 +402,9 @@ theorem closedComplementVanishing
     exact sheaf_isZero_of_zero_stalks X S.X₁.property (fun x a ↦ by
       by_cases hxY : x ∈ Y
       · haveI : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
+          change IsIso
+            ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
+              ((ConcreteCategory.hom (TopCat.closedIncl hYcl)) ⟨x, hxY⟩)).map S.g.hom)
           simpa [S, closedImmersionSES, closedIncl, Csh] using
             (TopCat.closedIncl_unit_stalk_isIso (C := AddCommGrpCat.{u})
               (hs := hYcl) Csh ⟨x, hxY⟩)
@@ -405,8 +417,8 @@ theorem closedComplementVanishing
     (by
       simpa [S] using sheafH_subsingleton_of_isZero hSX₁_zero n)
     (by
-      simpa [closedIncl, Csh, CY] using
-        ih (TopCat.of Y) n (G := CY.obj) CY.property hY_dim_lt hn)
+      change Subsingleton (Sheaf.H { obj := CY.obj, property := CY.property } n)
+      exact ih (TopCat.of Y) n (G := CY.obj) CY.property hY_dim_lt hn)
 
 /-- **Step 5** (Hartshorne III.2.7): given vanishing of the cokernel of
     `openHom(V ≤ ⊤)` at degree `m`, deduce vanishing of `zeroOutsideInt V` at
@@ -516,7 +528,9 @@ theorem subsheaf_zeroOutsideInt_vanishing
           (f := jsh) (x := x) (hf := (hj_stalk x hxV').2) b)
     exact subsingleton_sheafH_of_shortExact_middle jsh m
       (zeroOutsideInt_cohomology_vanishing V' hV'ne ih m hm)
-      (by simpa [C] using hC)
+      (by
+        change Subsingleton (Sheaf.H C m)
+        exact hC)
 
 /-- **Steps 3C + 4 + LES** (Hartshorne III.2.7): any locally surjective image of
     `zeroOutsideInt V` has vanishing cohomology in degree `m > dim X`. Uses third-term LES with
@@ -538,7 +552,8 @@ theorem epiImage_zeroOutsideInt_vanishing_of_locallySurjective
         (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) := ObjectProperty.homMk f
     have hEpiBot : Epi fshBot := by
       rw [← TopCat.Sheaf.isLocallySurjective_iff_epi fshBot]
-      simpa using hf
+      change TopCat.Presheaf.IsLocallySurjective f
+      exact hf
     have hZero : IsZero ((⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)) :=
       @IsZero.of_epi _ _ _ _ _ fshBot hEpiBot (isZero_zeroOutsideInt_bot X)
     simpa using sheafH_subsingleton_of_isZero hZero m
@@ -552,7 +567,9 @@ theorem epiImage_zeroOutsideInt_vanishing_of_locallySurjective
         (Sheaf.Hom.mono_iff_presheaf_mono
           (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u})
           (kernel.ι fsh)).1 hMonoKernel
-      simpa [fsh] using
+      change Subsingleton (Sheaf.H
+        { obj := (kernel fsh).obj, property := (kernel fsh).property } (m + 1))
+      exact
         @subsheaf_zeroOutsideInt_vanishing X _ _ V (kernel fsh).obj
           (kernel fsh).property (kernel.ι fsh).hom
           (inferInstanceAs (Mono (kernel.ι fsh).hom)) ih (m + 1)
@@ -594,4 +611,6 @@ theorem irreducible_pos_vanishing
   exact subsingleton_sheafH_of_closedImmersion_middle
     (Z := Z) (hZ := hZ_closed) Fsh n
     (by simpa [S] using hKer)
-    (by simpa [i, Fsh, FZ] using ih (TopCat.of Z) n (G := FZ.obj) FZ.property hZ_dim hn_Z)
+    (by
+      change Subsingleton (Sheaf.H { obj := FZ.obj, property := FZ.property } n)
+      exact ih (TopCat.of Z) n (G := FZ.obj) FZ.property hZ_dim hn_Z)

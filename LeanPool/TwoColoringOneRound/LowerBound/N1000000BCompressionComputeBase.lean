@@ -4,13 +4,28 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
 
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
+import Mathlib.Algebra.BigOperators.Field
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
+
+/-!
+Algebraic cancellation lemma used to keep integer cross-multiplication checks from ballooning:
+we replace a term `(s : ℚ) / (D : ℚ)` by the reduced fraction obtained by cancelling
+`g = gcd(|s|, D)`.
+-/
 
 namespace Distributed2Coloring.LowerBound
 
@@ -73,11 +88,6 @@ private theorem D_pos : 0 < N1000000Data.D := by
 private theorem DQ_ne_zero : (N1000000Data.D : Q) ≠ 0 := by
   exact_mod_cast (Nat.ne_of_gt D_pos)
 
-/-!
-Algebraic cancellation lemma used to keep integer cross-multiplication checks from ballooning:
-we replace a term `(s : ℚ) / (D : ℚ)` by the reduced fraction obtained by cancelling
-`g = gcd(|s|, D)`.
--/
 theorem div_by_D_eq_div_by_div_gcd (s : Int) :
     let g : Nat := Nat.gcd s.natAbs D
     (s : Q) / (D : Q) = ((s / (g : Int)) : Q) / ((D / g : Nat) : Q) := by
@@ -188,7 +198,7 @@ theorem compBasis_entry_eq_div (r : Block) (d : DirIdx) (p q : Fin 3) :
       ac_rfl
     have hx' : x * (↑(basisDen r) * (↑(basisDen r))⁻¹) = x := by
       simp [hb]
-    simpa [x] using hx.trans hx'
+    simpa [x, div_eq_mul_inv] using hx.trans hx'
   have hsum :
       (Finset.univ.sum fun k : DirIdx =>
         Finset.univ.sum fun a : DirIdx =>

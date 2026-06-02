@@ -11,6 +11,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000WedderburnData
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000RelaxationPsdSoundness

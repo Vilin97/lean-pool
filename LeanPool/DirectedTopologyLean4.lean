@@ -35,7 +35,7 @@ import LeanPool.DirectedTopologyLean4.UnitIntervalAux
 /-!
 # Directed Topology in Lean 4
 
-Source: url:https://github.com/Dominique-Lawson/Directed-Topology-Lean-4
+Source: arxiv:2312.06506, doi:10.4230/LIPIcs.ITP.2024.8
 Authors: Dominique Lawson, Henning Basold, Peter Bruin
 Status: verified
 Main declarations: `DirectedSpace`, `Dipath`, `DirectedVanKampen.directed_van_kampen`

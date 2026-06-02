@@ -6,6 +6,10 @@ Authors: ruplet
 
 import LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.SimpRules
+-/
+
 attribute [delta0_simps]
   Sum.elim_inl
   Sum.elim_inr

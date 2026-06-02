@@ -7,7 +7,20 @@ name: PR Separation Guard
 #   - LeanPool/projects.yml
 # A PR may touch only content files, or only non-content files (.github/,
 # python/, scripts/, docs, lakefile.toml, lean-toolchain, etc.). Mixing both
-# categories fails this gate.
+# categories fails this gate, except for Lean/lake version-bump metadata.
+#
+# Version-bump exemption: a Lean/Mathlib bump is inherently both content
+# (LeanPool/**/*.lean API repairs) and infra (toolchain + manifest), and
+# neither half builds without the other, so it cannot satisfy the split. A PR
+# may therefore carry content alongside ONLY these bump files:
+#   - lean-toolchain
+#   - lake-manifest.json
+#   - lakefile.toml
+#   - docbuild/lean-toolchain
+#   - docbuild/lake-manifest.json
+#   - docbuild/lakefile.toml
+#   - .github/workflows/content-pr-guard.yml
+# Any other non-content file alongside content still fails the gate.
 
 on:
   pull_request:
@@ -54,11 +67,35 @@ jobs:
           non_content="$(printf '%s\n' "$files" | { grep -vE "$content_re" || true; })"
 
           if [ -n "$content" ] && [ -n "$non_content" ]; then
+            bump_metadata_re='^(lean-toolchain|lakefile\.toml|lake-manifest\.json|docbuild/(lean-toolchain|lakefile\.toml|lake-manifest\.json)|\.github/workflows/content-pr-guard\.yml)$'
+            non_bump_metadata="$(printf '%s\n' "$non_content" | { grep -vE "$bump_metadata_re" || true; })"
+            bump_metadata="$(printf '%s\n' "$non_content" | { grep -E "$bump_metadata_re" || true; })"
+
+            if [ -n "$bump_metadata" ] && [ -z "$non_bump_metadata" ]; then
+              echo "✓ Content plus Lean/lake version-bump metadata."
+              echo "Allowed bump metadata files:"
+              while IFS= read -r f; do
+                [ -n "$f" ] || continue
+                echo "  - $f"
+              done <<< "$bump_metadata"
+              exit 0
+            fi
+
             echo "::error::This PR mixes content and non-content changes."
             echo "Content files may be changed only in content-only PRs:"
             echo "  - LeanPool.lean"
             echo "  - LeanPool/**/*.lean"
             echo "  - LeanPool/projects.yml"
+            echo "(Exception: a version bump may also touch lean-toolchain,"
+            echo " lake-manifest.json, and lakefile.toml.)"
+            echo
+            echo "Lean/lake bump PRs may additionally change only:"
+            echo "  - lean-toolchain"
+            echo "  - lakefile.toml"
+            echo "  - lake-manifest.json"
+            echo "  - docbuild/lean-toolchain"
+            echo "  - docbuild/lakefile.toml"
+            echo "  - docbuild/lake-manifest.json"
             echo
             echo "Content files in this PR:"
             while IFS= read -r f; do
@@ -71,10 +108,12 @@ jobs:
               [ -n "$f" ] || continue
               echo "  - $f"
               echo "::error file=$f::mixed with LeanPool content; split content and non-content changes into separate PRs"
-            done <<< "$non_content"
+            done <<< "$non_bump_metadata"
             exit 1
           fi
-          if [ -n "$content" ]; then
+          if [ -n "$content" ] && [ -n "$non_content" ]; then
+            echo "✓ Version-bump PR: content alongside toolchain/manifest only."
+          elif [ -n "$content" ]; then
             echo "✓ Content-only PR."
           else
             echo "✓ Non-content-only PR."

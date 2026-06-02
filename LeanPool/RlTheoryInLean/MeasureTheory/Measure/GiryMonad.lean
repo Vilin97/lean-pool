@@ -10,6 +10,10 @@ import Mathlib.MeasureTheory.Function.L1Space.Integrable
 import Mathlib.Probability.Process.Filtration
 import Mathlib.Topology.Bornology.Basic
 
+/-!
+# LeanPool.RlTheoryInLean.MeasureTheory.Measure.GiryMonad
+-/
+
 open MeasureTheory MeasureTheory.Measure  ProbabilityTheory Finset NNReal ENNReal Preorder Filter
 
 namespace MeasureTheory.Measure

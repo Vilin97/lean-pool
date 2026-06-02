@@ -102,48 +102,48 @@ lemma _root_.VirasoroProject.virasoroTri_lower :
 
 open VirasoroAlgebra in
 /-- The basis of the Cartan part of the Virasoro triangular decomposition. -/
-noncomputable def _root_.VirasoroProject.virasoroTri_cartan_basis :
+noncomputable def _root_.VirasoroProject.virasoroTriCartanBasis :
     Basis ({none, some 0} : Set (Option ℤ)) 𝕜 (virasoroTri 𝕜).cartan :=
-  TriangularDecomposition.ofBasis.basis_part (VirasoroAlgebra.basisLC 𝕜) indexTri
+  TriangularDecomposition.ofBasis.basisPart (VirasoroAlgebra.basisLC 𝕜) indexTri
     pairwise_disjoint_indexTri iUnion_indexTri 0
 
 /-- The highest weight of Virasoro algebra determined by the central charge `c` (`C`-eigenvalue)
 and conformal weight `h` (`L₀`-eigenvalue). -/
 noncomputable def _root_.VirasoroProject.VirasoroAlgebra.hw (c h : 𝕜) :
     (virasoroTri 𝕜).cartan →ₗ[𝕜] 𝕜 :=
-  (virasoroTri_cartan_basis 𝕜).constr (M' := 𝕜) 𝕜 (fun i ↦ if i.val = none then c else h)
+  (virasoroTriCartanBasis 𝕜).constr (M' := 𝕜) 𝕜 (fun i ↦ if i.val = none then c else h)
 
 /-- The Virasoro generator `C` as an element of the Cartan subalgebra. -/
-noncomputable def _root_.VirasoroProject.virasoroTri_cgen : (virasoroTri 𝕜).part 0 :=
+noncomputable def _root_.VirasoroProject.virasoroTriCgen : (virasoroTri 𝕜).part 0 :=
   ⟨.cgen 𝕜, Submodule.mem_span_of_mem (by simp [indexTri])⟩
 
 /-- The Virasoro generator `L₀` as an element of the Cartan subalgebra. -/
-noncomputable def _root_.VirasoroProject.virasoroTri_lzero : (virasoroTri 𝕜).part 0 :=
+noncomputable def _root_.VirasoroProject.virasoroTriLzero : (virasoroTri 𝕜).part 0 :=
   ⟨.lgen 𝕜 0, Submodule.mem_span_of_mem (by simp [indexTri])⟩
 
 @[simp] lemma _root_.VirasoroProject.virasoroTri_cgen_val :
-    (virasoroTri_cgen 𝕜).val = .cgen 𝕜 :=
+    (virasoroTriCgen 𝕜).val = .cgen 𝕜 :=
   rfl
 
 @[simp] lemma _root_.VirasoroProject.virasoroTri_lzero_val :
-    (virasoroTri_lzero 𝕜).val = .lgen 𝕜 0 :=
+    (virasoroTriLzero 𝕜).val = .lgen 𝕜 0 :=
   rfl
 
 open VirasoroAlgebra in
 lemma _root_.VirasoroProject.virasoroTri_cartan_basis_none_eq_cgen :
-    (virasoroTri_cartan_basis 𝕜) ⟨none, Set.mem_insert none {some 0}⟩ = virasoroTri_cgen 𝕜 := by
+    (virasoroTriCartanBasis 𝕜) ⟨none, Set.mem_insert none {some 0}⟩ = virasoroTriCgen 𝕜 := by
   ext
-  simp only [virasoroTri_cartan_basis, TriangularDecomposition.ofBasis.basis_part, indexTri,
+  simp only [virasoroTriCartanBasis, TriangularDecomposition.ofBasis.basisPart, indexTri,
              virasoroTri_cgen_val]
   convert (basisLC 𝕜).basis_submodule_span_apply {none, some 0} ⟨none, Set.mem_insert none {some 0}⟩
   simp
 
 open VirasoroAlgebra in
 lemma _root_.VirasoroProject.virasoroTri_cartan_basis_some_eq_lzero :
-    (virasoroTri_cartan_basis 𝕜) ⟨some 0, by exact Set.mem_insert_of_mem none rfl⟩
-      = virasoroTri_lzero 𝕜 := by
+    (virasoroTriCartanBasis 𝕜) ⟨some 0, by exact Set.mem_insert_of_mem none rfl⟩
+      = virasoroTriLzero 𝕜 := by
   ext
-  simp only [virasoroTri_cartan_basis, TriangularDecomposition.ofBasis.basis_part, indexTri,
+  simp only [virasoroTriCartanBasis, TriangularDecomposition.ofBasis.basisPart, indexTri,
              virasoroTri_lzero_val]
   convert (basisLC 𝕜).basis_submodule_span_apply {none, some 0}
           ⟨some 0, Set.mem_insert_of_mem none rfl⟩
@@ -164,7 +164,7 @@ lemma _root_.VirasoroProject.virasoroTri_lgen_pos_mem_upper {n : ℤ} (n_pos : 0
   exact (Set.mem_image ..).mpr ⟨n, ⟨n_pos, rfl⟩⟩
 
 lemma _root_.VirasoroProject.VirasoroAlgebra.hw_apply_cgen (c h : 𝕜) :
-    VirasoroAlgebra.hw 𝕜 c h (virasoroTri_cgen 𝕜) = c := by
+    VirasoroAlgebra.hw 𝕜 c h (virasoroTriCgen 𝕜) = c := by
   rw [← virasoroTri_cartan_basis_none_eq_cgen]
   simp only [VirasoroAlgebra.hw, Basis.constr_apply_fintype]
   simp only [Basis.equivFun_self, smul_eq_mul, mul_ite, ite_mul, one_mul, zero_mul]
@@ -175,7 +175,7 @@ lemma _root_.VirasoroProject.VirasoroAlgebra.hw_apply_cgen (c h : 𝕜) :
   · simp
 
 lemma _root_.VirasoroProject.VirasoroAlgebra.hw_apply_lzero (c h : 𝕜) :
-    VirasoroAlgebra.hw 𝕜 c h (virasoroTri_lzero 𝕜) = h := by
+    VirasoroAlgebra.hw 𝕜 c h (virasoroTriLzero 𝕜) = h := by
   rw [← virasoroTri_cartan_basis_some_eq_lzero]
   simp only [VirasoroAlgebra.hw, Basis.constr_apply_fintype]
   simp only [Basis.equivFun_self, smul_eq_mul, mul_ite, ite_mul, one_mul, zero_mul]

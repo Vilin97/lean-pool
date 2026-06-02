@@ -246,19 +246,14 @@ private lemma box3_ftc_slice_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3) (hF 
             rotate_left
             · exact fun j => if j = i then 1 else 0
             · intro j
-              split_ifs <;>
-                simp_all only [zero_le_one, Set.uIcc_of_le, Set.mem_Icc,
-                  Fin.insertNth_apply_same, hasFDerivAt_iff_isLittleO_nhds_zero,
-                  add_sub_cancel_left, ContinuousLinearMap.one_apply, sub_self,
-                  Asymptotics.isLittleO_const_left, true_or, ContinuousLinearMap.zero_apply,
-                  sub_zero]
-              simp_all only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd]
               fin_cases i <;> fin_cases j <;>
-                simp_all only [Fin.zero_eta, Fin.isValue, not_true_eq_false, Fin.mk_one,
-                  one_ne_zero, not_false_eq_true, Fin.succAboveCases, Nat.reduceAdd, ↓reduceDIte,
-                  Fin.not_lt_zero, Fin.pred_one, sub_self, Asymptotics.isLittleO_const_left,
-                  true_or, Fin.reduceFinMk, Fin.reduceEq, Fin.reducePred, zero_ne_one,
-                  Fin.lt_one_iff, Fin.castPred_zero, Fin.reduceLT, Fin.castPred_one]
+                first
+                | change HasFDerivAt (fun x : ℝ => x) 1 x
+                  fun_prop
+                | change HasFDerivAt (fun x : ℝ => z 0) 0 x
+                  fun_prop
+                | change HasFDerivAt (fun x : ℝ => z 1) 0 x
+                  fun_prop
             · simp only [ContinuousLinearMap.comp_apply]
               congr 1
               ext j
@@ -470,7 +465,7 @@ theorem torus_hHarmonic_const (φ : Torus3 → ℝ)
   have hsum_zero : ∑ i : Fin 3, ∫ x : Torus3, torusGradX φ x i * torusGradX φ x i = 0 := by
     simp_rw [hIBP_i]
     rw [Finset.sum_neg_distrib, neg_eq_zero,
-      ← integral_finset_sum _ (fun i _ => hint i)]
+      ← integral_finsetSum _ (fun i _ => hint i)]
     simp_rw [← Finset.mul_sum]
     simp_rw [show ∀ x, ∑ i : Fin 3, torusGradX (fun y => torusGradX φ y i) x i =
         torusDivX (torusGradX φ) x from fun _ => rfl, hharmonic, mul_zero, integral_zero]
