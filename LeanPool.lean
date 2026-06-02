@@ -339,14 +339,10 @@ import LeanPool.LowDimSolvClassification.QuotientSolvable
 import LeanPool.LowDimSolvClassification.Semidirect
 import LeanPool.LowDimSolvClassification.Tactics
 import LeanPool.NeuralNetworks
-import LeanPool.NeuralNetworks.Float.Foundation.Basic
 import LeanPool.NeuralNetworks.Hopfield
 import LeanPool.NeuralNetworks.Hopfield.Basic
 import LeanPool.NeuralNetworks.Hopfield.Convergence
 import LeanPool.NeuralNetworks.Hopfield.Energy
-import LeanPool.NeuralNetworks.NN.ContinuousDynamics
-import LeanPool.NeuralNetworks.NN.NN
-import LeanPool.NeuralNetworks.NN.NNQuiver
 import LeanPool.OrderPQ
 import LeanPool.OrderPQ.Basic
 import LeanPool.OrderPQ.IsCyclic

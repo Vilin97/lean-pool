@@ -7,10 +7,6 @@ Authors: Matteo Cipollina
 import LeanPool.NeuralNetworks.Hopfield.Basic
 import LeanPool.NeuralNetworks.Hopfield.Energy
 import LeanPool.NeuralNetworks.Hopfield.Convergence
-import LeanPool.NeuralNetworks.NN.NN
-import LeanPool.NeuralNetworks.NN.NNQuiver
-import LeanPool.NeuralNetworks.NN.ContinuousDynamics
-import LeanPool.NeuralNetworks.Float.Foundation.Basic
 
 /-!
 # Hopfield Network Energy Descent
@@ -35,16 +31,13 @@ symmetric zero-diagonal weight matrices, the usual quadratic energy, energy
 descent under zero-threshold updates, and existence of a finite single-neuron
 update path from any initial state to a fixed point.
 
-Alongside the Hopfield core, this entry also imports the supporting
-neural-network infrastructure: differentiable parameterized lenses and
-composition blocks with their Riesz/adjoint backward maps (`NN`), a
-quiver-based account of feed-forward architectures, layerings, and truncated
-path-weight sums (`NNQuiver`), an abstract theory of dynamical systems over a
-time monoid (`ContinuousDynamics`), and ordered-field foundations for
-floating-point error analysis (`Float.Foundation.Basic`).
+This entry is limited to the Hopfield core. The upstream neural-network
+infrastructure (differentiable parameterized lenses and composition blocks,
+quiver-based feed-forward architectures, abstract dynamical systems over a time
+monoid, and floating-point ordered-field foundations), the GPT-2 and
+constructive-real material, and the sorry-bearing files (asymmetric/biased
+Hopfield variants, stochastic updates, SciLean bindings) are outside the scope
+of this entry.
 
 The Lean code is imported from <https://github.com/or4nge19/NeuralNetworks>.
-The upstream GPT-2 and constructive-real material, and the sorry-bearing
-files (asymmetric/biased Hopfield variants, stochastic updates, SciLean
-bindings), are outside the scope of this entry.
 -/
