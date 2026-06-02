@@ -10,6 +10,10 @@ import Mathlib.MeasureTheory.Measure.MeasureSpaceDef
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Probability.Kernel.Defs
 
+/-!
+# LeanPool.RlTheoryInLean.Defs
+-/
+
 open MeasureTheory ProbabilityTheory Filter
 
 lemma Tendsto.filter_congr

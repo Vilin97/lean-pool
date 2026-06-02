@@ -9,7 +9,7 @@ import LeanPool.AharoniKorman.Counterexample
 /-!
 # Disproof of the Aharoni-Korman Conjecture
 
-Source: url:https://github.com/b-mehta/AharoniKorman
+Source: arxiv:2411.16844, doi:10.1007/BF00383948
 Authors: Bhavik Mehta
 Status: verified
 Main declarations: `LeanPool.AharoniKorman.aharoni_korman_false`

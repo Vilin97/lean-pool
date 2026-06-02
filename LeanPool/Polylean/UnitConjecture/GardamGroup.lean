@@ -4,15 +4,23 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
 
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import Mathlib.Algebra.Group.Prod
+import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Algebra.Group.Hom.Basic
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.Fin.Basic
 import LeanPool.Polylean.UnitConjecture.MetabelianGroup
 import LeanPool.Polylean.UnitConjecture.AddFreeGroup
-
-namespace LeanPool.Polylean
 
 /-!
 ## The construction of the group `P`
@@ -22,6 +30,9 @@ We construct the group `P` (the *Promislow* or *Hantzsche–Wendt* group) as a M
 This is done via the cocycle construction, using the explicit action and cocycle described in
 Section 3.1 of Giles Gardam's paper (https: //arxiv.org/abs/2102.11818).
 -/
+
+namespace LeanPool.Polylean
+
 
 /-!
 ### The components of the group `P`
@@ -139,7 +150,7 @@ def cocycle : Q → Q → K
 
 /-- A verification that the `cocycle` function indeed satisfies the cocycle condition.
   This check is performed fully automatically using previously defined decision procedures. -/
-instance P_cocycle : Cocycle cocycle :=
+instance PCocycle : Cocycle cocycle :=
   { α := action
     autAct := inferInstance
     cocycle_zero := rfl
@@ -192,11 +203,10 @@ theorem kernel_pow (k : K) (n : ℕ) : ((k, Q.e) : P) ^ n = (n • k, Q.e) := by
       change ((k, Q.e) : P) ^ n * (k, Q.e) = ((n + 1) • k, Q.e)
       rw [ih]
       rw [P.mul]
-      simp only [nsmul_eq_mul, AddMonoidHom.coe_prodMap, AddMonoidHom.coe_id,
-        Prod.map_id, id_eq, add_zero, Nat.cast_add, Nat.cast_one, Prod.mk.injEq,
-        add_eq_left]
+      simp only [AddMonoidHom.coe_prodMap, AddMonoidHom.coe_id, Prod.map_id, id_eq,
+        Prod.mk.injEq, add_eq_left]
       constructor
-      · ext <;> ring_nf
+      · ext <;> simp [cocycle] <;> ring_nf
       · rfl
 
 end P

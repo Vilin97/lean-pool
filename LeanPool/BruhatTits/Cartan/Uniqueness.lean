@@ -8,8 +8,6 @@ import LeanPool.BruhatTits.Utils.Misc
 import Mathlib.Data.Fin.Tuple.Sort
 import Mathlib.GroupTheory.DoubleCoset
 
-open Module
-
 /-!
 # Uniqueness of the Cartan decomposition
 
@@ -27,6 +25,9 @@ as a disjoint union of double cosets `GL₂(R) * diag * GL₂(R)` where `diag` i
 completeness, this is stated as `iUnion₂_doset_cartanDiag_eq_univ` and
 `disjoint_doset_cartanDiag_of_ne` below.
 -/
+
+open Module
+
 
 variable {K : Type*} [Field K]
 variable {R : Subring K}

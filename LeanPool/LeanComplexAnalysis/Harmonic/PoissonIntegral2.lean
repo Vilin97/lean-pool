@@ -153,7 +153,6 @@ lemma cauchy_integral_formula_scaled_disc {E : Type*} [NormedAddCommGroup E]
     rw [← mul_assoc I I⁻¹, mul_inv_cancel₀ I_ne_zero, one_mul]
     ring_nf
   rw [this, Complex.real_smul, mul_smul]
-  exact (algebraMap_smul ℂ _ _).symm
 
 /-- If `f` is `ℂ`-differentiable on a disc centered at zero, then
 `ζ ↦ (star z / (I * (R ^ 2 - star z * ζ))) • f (r * ζ)` is differentiable at `w`
@@ -442,7 +441,7 @@ theorem poisson_integral_of_harmonicOn_disc_continuousOn_closedDisc
       (R ^ 2 - ‖z‖ ^ 2) / ‖R * exp (t * I) - z‖ ^ 2 * u (R * exp (t * I)) := by
   let r : ℕ → ℝ := fun n => 1 - 1 / (n + 2)
   -- We approximate `1` by a sequence `rₙ` in `(0,1)`.
-  obtain ⟨hr, hr_lim⟩ := seq_tendsto_to_one_in_unit_interval_aux
+  obtain ⟨hr, hr_lim⟩ := seq_tendsto_to_oneIn_unit_interval_aux
   have h_poisson (n : ℕ) := poisson_integral_of_harmonicOn_scaled_disc hu (hr n) hz
   have hu_lim := tendsto_integral_prod_of_continuousOn_circle_closedDisc (pos_of_mem_ball hz) hc
                  (poisson_ker_continousOn_circle hz) hr hr_lim
@@ -465,7 +464,7 @@ theorem poisson_integral_of_diffContOnCl_disc
     f z = (1 / (2 * π)) • ∫ t in 0..(2 * π),
       ((R ^ 2 - ‖z‖ ^ 2) / ‖R * exp (t * I) - z‖ ^ 2) • f (R * exp (t * I)) := by
   let r : ℕ → ℝ := fun n => 1 - 1 / (n + 2)
-  obtain ⟨hr, hr_lim⟩ := seq_tendsto_to_one_in_unit_interval_aux
+  obtain ⟨hr, hr_lim⟩ := seq_tendsto_to_oneIn_unit_interval_aux
   have h_poisson (n : ℕ) :=
       poisson_integral_of_differentiableOn_scaled_disc hf.differentiableOn (hr n) hz
   have hc := DiffContOnCl.continuousOn_ball hf

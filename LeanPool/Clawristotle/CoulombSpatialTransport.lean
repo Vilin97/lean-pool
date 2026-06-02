@@ -5,6 +5,10 @@ Authors: Vasily Ilin
 -/
 import LeanPool.Clawristotle.CoulombForceTransport
 
+/-!
+# LeanPool.Clawristotle.CoulombSpatialTransport
+-/
+
 /-\!
 # Spatial Transport: Measurability, Joint Integrability, and Continuity
 

@@ -69,7 +69,10 @@ theorem reducible_vanishing
         by_cases hxZ : x ∈ Z
         · -- closedIncl_unit_stalk_isIso: iso on stalks at z ∈ Z
           haveI : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
-            simpa [S] using
+            change IsIso
+              ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u}
+                ((ConcreteCategory.hom (TopCat.closedIncl hZ_closed)) ⟨x, hxZ⟩)).map S.g.hom)
+            simpa [S, closedImmersionSES] using
               (TopCat.closedIncl_unit_stalk_isIso (C := AddCommGrpCat.{u})
                 (hs := hZ_closed) Gsh ⟨x, hxZ⟩)
           exact stalk_zero_of_ses_g_iso S hSE x inferInstance a

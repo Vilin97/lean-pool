@@ -1,0 +1,48 @@
+# This file lets GitHub render a "Cite this repository" button and lets
+# reference managers (Zotero, etc.) import a citation. Schema docs:
+# https://citation-file-format.github.io/
+cff-version: 1.2.0
+title: "Lean Pool"
+message: >-
+  If you use Lean Pool, please cite it using the metadata in this file.
+  If you build on a specific formalization in the pool, please also cite
+  that project's original authors and source, which are recorded in
+  LeanPool/projects.yml, the NOTICE file, and the per-file headers.
+type: software
+authors:
+  - given-names: Vasily
+    family-names: Ilin
+  - given-names: Justin
+    family-names: Asher
+abstract: >-
+  Lean Pool is a curated archive of Lean 4 formalizations that fall
+  outside Mathlib's scope. It sits between Mathlib's high-bar human
+  review and "anything that compiles": projects are admitted via
+  deterministic linters (no sorry/admit, no extra axioms, no
+  unsafe/partial) and LLM review, and are kept building against the
+  latest Mathlib. The goal is an arXiv-style index of formal-mathematics
+  developments that would otherwise bit-rot in abandoned repositories.
+keywords:
+  - Lean
+  - Lean 4
+  - Mathlib
+  - formal mathematics
+  - formal proof
+  - theorem proving
+  - interactive theorem proving
+license: Apache-2.0
+repository-code: "https://github.com/Vilin97/lean-pool"
+url: "https://vilin97.github.io/lean-pool/"
+version: 0.1.0
+date-released: "2026-06-02"
+
+# The concept DOI always resolves to the latest release; the version DOI is
+# specific to v0.1.0. On each new tagged release, update the version entry.
+doi: 10.5281/zenodo.20513444
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.20513444
+    description: Concept DOI resolving to the latest Lean Pool release.
+  - type: doi
+    value: 10.5281/zenodo.20513445
+    description: DOI for the v0.1.0 release.

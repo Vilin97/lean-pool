@@ -11,8 +11,6 @@ import Mathlib.LinearAlgebra.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.IsDiag
 import Mathlib.LinearAlgebra.Matrix.Transvection
 
-open Module
-
 /-!
 
 # The Cartan Decomposition of GL(n,K) for K a discretely valued field
@@ -36,6 +34,9 @@ This is inspired by the file https://leanprover-community.github.io/mathlib4_doc
 
 -/
 
+open Module
+
+
 -- Let R be a valuation ring and K its field of fractions
 variable {K : Type*} [Field K]
 variable {R : Subring K} [ValuationRing R] [IsFractionRing R K]
@@ -48,9 +49,9 @@ attribute [-simp] Subring.coe_subtype
 right has maximal valuation. -/
 lemma exists_normalization0 {k : ℕ+} (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K) :
     ∃ (k₁ k₂ : GL (Fin k ⊕ Unit) R),
-    v ((k₁.val * g * k₂.val) (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v := by
+    v ((k₁.val * g * k₂.val) (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v := by
   -- the maximal element is in row `p.1` and column `p.2`
-  let p := g.coeffs_sup_at v
+  let p := g.coeffsSupAt v
   -- swap `i`-th row with last row and `j`-th col with last col
   refine ⟨.swap R (Sum.inr ()) p.1, .swap R (Sum.inr ()) p.2, ?_⟩
   simp only [Matrix.GeneralLinearGroup.val_swap, Matrix.map_swap, Matrix.mul_swap_apply_left,
@@ -61,15 +62,15 @@ lemma exists_normalization0 {k : ℕ+} (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ U
 right has maximal valuation and the maximal valuation is unchanged. -/
 lemma exists_normalization0' {k : ℕ+} (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K) :
     ∃ (k₁ k₂ : GL (Fin k ⊕ Unit) R),
-    v ((k₁.val * g * k₂.val) (Sum.inr ()) (Sum.inr ())) = (k₁.val * g * k₂.val).coeffs_sup v
-    ∧ (k₁.val * g * k₂.val).coeffs_sup v = g.coeffs_sup v := by
+    v ((k₁.val * g * k₂.val) (Sum.inr ()) (Sum.inr ())) = (k₁.val * g * k₂.val).coeffsSup v
+    ∧ (k₁.val * g * k₂.val).coeffsSup v = g.coeffsSup v := by
   -- the maximal element is in row `p.1` and column `p.2`
-  let p := g.coeffs_sup_at v
+  let p := g.coeffsSupAt v
   -- swap `i`-th row with last row and `j`-th col with last col
   let k₁ := Matrix.GeneralLinearGroup.swap R (Sum.inr ()) p.1
   let k₂ := Matrix.GeneralLinearGroup.swap R (Sum.inr ()) p.2
   have hv : v ((k₁.val * g * k₂.val) (Sum.inr ()) (Sum.inr ())) =
-      (k₁.val * g * k₂.val).coeffs_sup v := by
+      (k₁.val * g * k₂.val).coeffsSup v := by
     simp only [Matrix.GeneralLinearGroup.val_swap, Matrix.map_swap, Matrix.mul_swap_apply_left,
       Matrix.swap_mul_apply_left, Matrix.coeffs_sup_mul_swap, Matrix.coeffs_sup_swap_mul, k₁, p, k₂]
     rw [← Matrix.coeffs_sup_at_sup]
@@ -80,10 +81,10 @@ lemma exists_normalization0' {k : ℕ+} (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ 
     rw [← Matrix.coeffs_sup_at_sup]
 
 /-- The maximal valuation of the coefficients of any element of `GL (Fin k) K` is non-zero. -/
-lemma sup_val_non_zero {k : ℕ+} (g : GL (Fin k) K) : g.val.coeffs_sup v ≠ 0 := by
+lemma sup_val_non_zero {k : ℕ+} (g : GL (Fin k) K) : g.val.coeffsSup v ≠ 0 := by
   intro h
   have hzero (i j : Fin k) : g i j = 0 := by
-    have h2 : v (g i j) ≤ g.val.coeffs_sup v := Matrix.coeff_le_coeffs_sup v g.val i j
+    have h2 : v (g i j) ≤ g.val.coeffsSup v := Matrix.coeff_le_coeffs_sup v g.val i j
     simpa [h] using h2
   apply Units.ne_zero g
   ext i j
@@ -98,7 +99,7 @@ noncomputable section
 /-- The element of `R` used to eliminate the last row and column of `g` if
 the coefficient in the bottom-right has maximal valuation. -/
 def multFactor (g : Matrix (Fin k ⊕ Unit) (Fin l ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin l) : R :=
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin l) : R :=
   letI := Classical.typeDecidableEq K
   let x : K := g (Sum.inr ()) (Sum.inl j)
   have hvxvg : v x ≤ v (g (Sum.inr ()) (Sum.inr ())) := by
@@ -109,12 +110,12 @@ def multFactor (g : Matrix (Fin k ⊕ Unit) (Fin l ⊕ Unit) K)
     simp only [mem_subring_iff_integer, neg_mul, Valuation.map_neg, _root_.map_mul, map_inv₀]
     have hnz : v (g (Sum.inr ()) (Sum.inr ())) ≠ 0 := (Valuation.ne_zero_iff v).mpr hn
     rw [← div_eq_mul_inv]
-    exact div_le_one_of_le₀ hvxvg zero_le'
+    exact div_le_one_of_le₀ hvxvg zero_le
   if hn : g (Sum.inr ()) (Sum.inr ()) = 0 then 0
   else ⟨- x * (g (Sum.inr ()) (Sum.inr ()))⁻¹, hmem hn⟩
 
 lemma multFactor_mul (g : Matrix (Fin k ⊕ Unit) (Fin l ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin l) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin l) :
     g (Sum.inr ()) (Sum.inl j) + multFactor g h j * g (Sum.inr ()) (Sum.inr ()) = 0 := by
   simp only [multFactor, neg_mul]
   split
@@ -127,12 +128,12 @@ lemma multFactor_mul (g : Matrix (Fin k ⊕ Unit) (Fin l ⊕ Unit) K)
 /-- The transvection struct in `R` for the transvection eliminating the `j`-th entry in the last
 row of `g`, where the bottom-right element of `g` has maximal valuation. -/
 def rowEliminationTransvection (g : Matrix (Fin k ⊕ Unit) (Fin l ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin l) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin l) :
     TransvectionStruct (Fin l ⊕ Unit) R :=
   ⟨Sum.inr (), Sum.inl j, Sum.inr_ne_inl, multFactor g h j⟩
 
 lemma rowEliminationTransvection_mul_same (g : Matrix (Fin l ⊕ Unit) (Fin l ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin l) (a : Fin l ⊕ Unit) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin l) (a : Fin l ⊕ Unit) :
     (g * (rowEliminationTransvection g h j).toMatrix.map R.subtype) a (Sum.inl j)
       = g a (Sum.inl j) + multFactor g h j * g a (Sum.inr ()) := by
   simp only [rowEliminationTransvection, TransvectionStruct.toMatrix_mk,
@@ -140,7 +141,7 @@ lemma rowEliminationTransvection_mul_same (g : Matrix (Fin l ⊕ Unit) (Fin l �
   rfl
 
 lemma rowEliminationTransvection_mul_neq {g : Matrix (Fin l ⊕ Unit) (Fin l ⊕ Unit) K}
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin l) (a b : Fin l ⊕ Unit)
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin l) (a b : Fin l ⊕ Unit)
     (hb : b ≠ Sum.inl j) :
     (g * (rowEliminationTransvection g h j).toMatrix) a b = g a b := by
   simp only [rowEliminationTransvection, TransvectionStruct.toMatrix_mk, map_transvection]
@@ -150,16 +151,16 @@ lemma rowEliminationTransvection_mul_neq {g : Matrix (Fin l ⊕ Unit) (Fin l ⊕
 /-- Multiplying on the right with `rowEliminationTransvection` kills all elements in the first row
 but the first. -/
 lemma rowEliminationTransvection_mul (g : Matrix (Fin l ⊕ Unit) (Fin l ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin l) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin l) :
     (g * (rowEliminationTransvection g h j).toMatrix) (Sum.inr ()) (Sum.inl j) = 0 := by
   simp only [rowEliminationTransvection, TransvectionStruct.toMatrix_mk, map_transvection,
     mul_transvection_apply_same]
   exact multFactor_mul g h j
 
 lemma rowEliminationTransvection_mul_coeffs_sup' (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k) (c : R) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k) (c : R) :
     v ((g * transvection (Sum.inr ()) (Sum.inl j) (c : K)) (Sum.inr ()) (Sum.inr ())) =
-      (g * transvection (Sum.inr ()) (Sum.inl j) (c : K)).coeffs_sup v := by
+      (g * transvection (Sum.inr ()) (Sum.inl j) (c : K)).coeffsSup v := by
   apply le_antisymm
   · apply Matrix.coeff_le_coeffs_sup
   · apply Matrix.coeffs_sup_le
@@ -188,9 +189,9 @@ lemma rowEliminationTransvection_mul_coeffs_sup' (g : Matrix (Fin k ⊕ Unit) (F
 /-- After multiplying on the right with `rowEliminationTransvection`, the maximal valuation
 of the coefficients does not change. -/
 lemma rowEliminationTransvection_mul_coeffs_sup (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k) :
-    g.coeffs_sup v =
-      (g * (rowEliminationTransvection g h j).toMatrix).coeffs_sup v := by
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k) :
+    g.coeffsSup v =
+      (g * (rowEliminationTransvection g h j).toMatrix).coeffsSup v := by
   apply le_antisymm
   · rw [← h, ← rowEliminationTransvection_mul_neq h j _ _ Sum.inr_ne_inl]
     apply Matrix.coeff_le_coeffs_sup
@@ -215,27 +216,27 @@ lemma rowEliminationTransvection_mul_coeffs_sup (g : Matrix (Fin k ⊕ Unit) (Fi
 
 /-- The row transvections used to eliminate the last row away from the diagonal. -/
 def rowEliminationList (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
     List (Matrix.TransvectionStruct (Fin k ⊕ Unit) R) :=
   List.ofFn (fun j : Fin k ↦ rowEliminationTransvection g h j)
 
 /-- The matrix form of `rowEliminationList`. -/
 def rowEliminationListMatrix (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
     List (Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K) :=
   List.ofFn (fun j : Fin k ↦ (rowEliminationTransvection g h j).toMatrix)
 
 attribute [-simp] Fin.natCast_eq_last Fin.coe_eq_castSucc
 
 lemma rowEliminationList_get (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (n : Fin k) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (n : Fin k) :
     (rowEliminationListMatrix g h)[n]? =
       (some <| transvection (Sum.inr ()) (Sum.inl n) (multFactor g h n)) := by
   simp [rowEliminationListMatrix, rowEliminationTransvection]
 
 lemma mul_rowEliminationListMatrix_prod_apply_lastCol_aux
     (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k ⊕ Unit)
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k ⊕ Unit)
     {r : ℕ} (hr : r ≤ k) :
     (g * ((rowEliminationListMatrix g h).take r).prod) j (Sum.inr ()) = g j (Sum.inr ()) := by
   induction r with
@@ -250,7 +251,7 @@ lemma mul_rowEliminationListMatrix_prod_apply_lastCol_aux
     exact Sum.inr_ne_inl
 
 lemma mul_rowEliminationListMatrix_prod_apply_lastCol (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k ⊕ Unit) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k ⊕ Unit) :
     (g * (rowEliminationListMatrix g h).prod) j (Sum.inr ()) = g j (Sum.inr ()) := by
   have hl : (rowEliminationListMatrix g h).length = k := by simp [rowEliminationListMatrix]
   rw [← List.take_length (l := rowEliminationListMatrix g h), hl]
@@ -258,7 +259,7 @@ lemma mul_rowEliminationListMatrix_prod_apply_lastCol (g : Matrix (Fin k ⊕ Uni
 
 lemma mul_rowEliminationListMatrix_prod_apply_aux
     (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k) (r : ℕ)
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k) (r : ℕ)
     (hrk : r ≤ k) :
     (g * ((rowEliminationListMatrix g h).take r).prod) (Sum.inr ()) (Sum.inl j) =
       if r ≤ j then g (Sum.inr ()) (Sum.inl j) else 0 := by
@@ -295,7 +296,7 @@ lemma mul_rowEliminationListMatrix_prod_apply_aux
       · simpa using (Ne.symm he)
 
 lemma mul_rowEliminationListMatrix_prod_apply (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k) :
     (g * ((rowEliminationListMatrix g h).prod)) (Sum.inr ()) (Sum.inl j) = 0 := by
   have hl : (rowEliminationListMatrix g h).length = k := by simp [rowEliminationListMatrix]
   rw [← List.take_length (l := rowEliminationListMatrix g h), hl]
@@ -304,11 +305,11 @@ lemma mul_rowEliminationListMatrix_prod_apply (g : Matrix (Fin k ⊕ Unit) (Fin 
 
 /-- The product of row transvections eliminating the last row away from the diagonal. -/
 def rowEliminator (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) : GL (Fin k ⊕ Unit) R :=
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) : GL (Fin k ⊕ Unit) R :=
   (List.map (fun t ↦ TransvectionStruct.toGL t) (rowEliminationList g h)).prod
 
 lemma mul_rowEliminator_lastRow (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k) :
     (g * (rowEliminator g h).val) (Sum.inr ()) (Sum.inl j) = 0 := by
   dsimp only [rowEliminator]
   rw [← map_listProd_toGL]
@@ -316,7 +317,7 @@ lemma mul_rowEliminator_lastRow (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
   apply mul_rowEliminationListMatrix_prod_apply g h j
 
 lemma mul_rowEliminator_lastCol (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k ⊕ Unit) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k ⊕ Unit) :
     (g * (rowEliminator g h).val) j (Sum.inr ()) = g j (Sum.inr ()) := by
   dsimp only [rowEliminator]
   rw [← map_listProd_toGL]
@@ -325,30 +326,30 @@ lemma mul_rowEliminator_lastCol (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
 
 /-- The column eliminator, defined by transposing and applying the row eliminator. -/
 def colEliminator (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
     GL (Fin k ⊕ Unit) R :=
-  have : v (g.transpose (Sum.inr ()) (Sum.inr ())) = g.transpose.coeffs_sup v := by
+  have : v (g.transpose (Sum.inr ()) (Sum.inr ())) = g.transpose.coeffsSup v := by
     simpa [coeffs_sup_transpose]
   GL.transpose <| rowEliminator g.transpose this
 
 lemma colEliminator_mul_lastCol (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr k) (Sum.inr k)) = g.coeffs_sup v) (j : Fin k) :
+    (h : v (g (Sum.inr k) (Sum.inr k)) = g.coeffsSup v) (j : Fin k) :
     ((colEliminator g h).val * g) (Sum.inl j) (Sum.inr ()) = 0 := by
   rw [← transpose_apply (((colEliminator g h).val.map R.subtype) * g) (Sum.inr ()) (Sum.inl j),
     Matrix.transpose_mul]
   apply mul_rowEliminator_lastRow
 
 lemma colEliminator_mul_lastRow (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k ⊕ Unit) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k ⊕ Unit) :
     ((colEliminator g h).val * g) (Sum.inr ()) j = g (Sum.inr ()) j := by
   rw [← transpose_apply (((colEliminator g h).val.map R.subtype) * g) j (Sum.inr ()),
     Matrix.transpose_mul]
   apply mul_rowEliminator_lastCol
 
 lemma mul_rowEliminationListMatrix_coeffs_sup_aux (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (r : ℕ) (hrk : r ≤ k) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (r : ℕ) (hrk : r ≤ k) :
     v ((g * ((rowEliminationListMatrix g h).take r).prod) (Sum.inr ()) (Sum.inr ()))
-      = (g * ((rowEliminationListMatrix g h).take r).prod).coeffs_sup v := by
+      = (g * ((rowEliminationListMatrix g h).take r).prod).coeffsSup v := by
   induction r with
   | zero =>
     simpa
@@ -363,26 +364,26 @@ lemma mul_rowEliminationListMatrix_coeffs_sup_aux (g : Matrix (Fin k ⊕ Unit) (
     omega
 
 lemma mul_rowEliminationListMatrix_coeffs_sup (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
     v ((g * (rowEliminationListMatrix g h).prod) (Sum.inr ()) (Sum.inr ()))
-      = (g * (rowEliminationListMatrix g h).prod).coeffs_sup v := by
+      = (g * (rowEliminationListMatrix g h).prod).coeffsSup v := by
   have hl : (rowEliminationListMatrix g h).length = k := by simp [rowEliminationListMatrix]
   rw [← List.take_length (l := rowEliminationListMatrix g h), hl]
   rw [mul_rowEliminationListMatrix_coeffs_sup_aux g h k le_rfl]
 
 lemma mul_rowEliminator_coeffs_sup (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
     v ((g * (rowEliminator g h).val) (Sum.inr ()) (Sum.inr ()))
-      = (g * (rowEliminator g h).val).coeffs_sup v := by
+      = (g * (rowEliminator g h).val).coeffsSup v := by
   dsimp only [rowEliminator]
   rw [← map_listProd_toGL]
   simp only [rowEliminationList, List.map_ofFn]
   apply mul_rowEliminationListMatrix_coeffs_sup
 
 lemma colEliminator_mul_coeffs_sup (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
     v (((colEliminator g h).val * g) (Sum.inr ()) (Sum.inr ()))
-      = ((colEliminator g h).val * g).coeffs_sup v := by
+      = ((colEliminator g h).val * g).coeffsSup v := by
   simp only [colEliminator, GL.val_transpose]
   rw [← transpose_apply
     (((rowEliminator g.transpose _).val).transpose.map ⇑R.subtype * g) (Sum.inr ()) (Sum.inr ())]
@@ -393,7 +394,7 @@ lemma colEliminator_mul_coeffs_sup (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit)
   apply mul_rowEliminator_coeffs_sup
 
 lemma rowEliminator_colEliminator (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
     rowEliminator (((colEliminator g h).val : Matrix _ _ K) * g)
       (colEliminator_mul_coeffs_sup g h) =
       rowEliminator g h := by
@@ -402,7 +403,7 @@ lemma rowEliminator_colEliminator (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) 
     colEliminator_mul_lastRow]
 
 lemma colEliminator_rowEliminator (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
     colEliminator (g * (↑(rowEliminator g h).val : Matrix _ _ K))
       (mul_rowEliminator_coeffs_sup g h) =
       colEliminator g h := by
@@ -411,27 +412,27 @@ lemma colEliminator_rowEliminator (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) 
   apply rowEliminator_colEliminator
 
 lemma colEliminator_mul_rowEliminator_lastRow (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k) :
     ((colEliminator g h).val * g * (rowEliminator g h).val) (Sum.inr ()) (Sum.inl j) = 0 := by
   rw [← rowEliminator_colEliminator]
   apply mul_rowEliminator_lastRow
 
 lemma colEliminator_mul_rowEliminator_lastCol (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) (j : Fin k) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) (j : Fin k) :
     ((colEliminator g h).val * g * (rowEliminator g h).val) (Sum.inl j) (Sum.inr ()) = 0 := by
   rw [← colEliminator_rowEliminator, mul_assoc]
   apply colEliminator_mul_lastCol
 
 lemma colEliminator_mul_rowEliminator_last_last (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
     ((colEliminator g h).val * g * (rowEliminator g h).val) (Sum.inr ()) (Sum.inr ()) =
       g (Sum.inr ()) (Sum.inr ()) := by
   rw [← colEliminator_rowEliminator, mul_assoc, colEliminator_mul_lastRow,
     mul_rowEliminator_lastCol]
 
 lemma colEliminator_mul_rowEliminator_coeffs_sup (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
-    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v) :
-    ((colEliminator g h).val * g * (rowEliminator g h).val).coeffs_sup v = g.coeffs_sup v := by
+    (h : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v) :
+    ((colEliminator g h).val * g * (rowEliminator g h).val).coeffsSup v = g.coeffsSup v := by
   rwa [← rowEliminator_colEliminator, ← mul_rowEliminator_coeffs_sup, mul_rowEliminator_lastCol,
     colEliminator_mul_lastRow]
 
@@ -439,16 +440,16 @@ lemma colEliminator_mul_rowEliminator_coeffs_sup (g : Matrix (Fin k ⊕ Unit) (F
 the bottom-right coefficient has maximal valuation. -/
 structure IsNormalBlock (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K) : Prop where
   isTwoBlockDiagonal : IsTwoBlockDiagonal g
-  monotone : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v
+  monotone : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v
 
 
 lemma exists_trafo_isNormalBlock (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K) :
     ∃ (k₁ k₂ : GL (Fin k ⊕ Unit) R),
     IsNormalBlock (R := R) ((k₁.val : Matrix _ _ K) * g * (k₂.val : Matrix _ _ K)) ∧
-      ((k₁.val : Matrix _ _ K) * g * (k₂.val : Matrix _ _ K)).coeffs_sup v = g.coeffs_sup v := by
+      ((k₁.val : Matrix _ _ K) * g * (k₂.val : Matrix _ _ K)).coeffsSup v = g.coeffsSup v := by
   obtain ⟨a, b, hagb, hagbv⟩ := exists_normalization0' (R := R) g
   let g' : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K := a.val * g * b.val
-  have hg' : v (g' (Sum.inr ()) (Sum.inr ())) = g'.coeffs_sup v := hagb
+  have hg' : v (g' (Sum.inr ()) (Sum.inr ())) = g'.coeffsSup v := hagb
   let k₁ := colEliminator g' hg' * a
   let k₂ := b * rowEliminator g' hg'
   use k₁
@@ -474,7 +475,7 @@ lemma exists_trafo_isNormalBlock (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K
     convert_to
       v (((colEliminator g' hg').val * g' * (rowEliminator g' hg').val) (Sum.inr ())
         (Sum.inr ())) =
-        ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val).coeffs_sup v
+        ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val).coeffsSup v
     · simp only [g']
       group
     · simp only [g']
@@ -482,8 +483,8 @@ lemma exists_trafo_isNormalBlock (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K
     · rw [colEliminator_mul_rowEliminator_coeffs_sup]
       rwa [colEliminator_mul_rowEliminator_last_last]
   · simp only [Units.val_mul, Matrix.map_mul, k₁, k₂]
-    convert_to ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val).coeffs_sup v =
-        g.coeffs_sup v
+    convert_to ((colEliminator g' hg').val * g' * (rowEliminator g' hg').val).coeffsSup v =
+        g.coeffsSup v
     · simp only [g']
       group
     · rw [colEliminator_mul_rowEliminator_coeffs_sup]
@@ -499,13 +500,13 @@ structure IsMonotoneDiag {n : Type*} [Fintype n] [Preorder n] (g : Matrix n n K)
 structure IsBlockMonotoneDiag (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K) : Prop where
   isDiag : IsDiag g
   monotone : Monotone (fun (j : Fin k) ↦ v (g (Sum.inl j) (Sum.inl j)))
-  max_bot_right : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffs_sup v
+  max_bot_right : v (g (Sum.inr ()) (Sum.inr ())) = g.coeffsSup v
 
 lemma monotone_of_isBlockMonotoneDiag (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
     (hb : IsBlockMonotoneDiag (R := R) g) :
-    Monotone fun j ↦ v (g (Fin.succ_equiv_unit k j) (Fin.succ_equiv_unit k j)) := by
+    Monotone fun j ↦ v (g (Fin.succEquivUnit k j) (Fin.succEquivUnit k j)) := by
   intro i j hij
-  simp only [Fin.succ_equiv_unit_apply]
+  simp only [Fin.succEquivUnit_apply]
   split_ifs
   · apply hb.monotone
     simpa
@@ -517,10 +518,10 @@ lemma monotone_of_isBlockMonotoneDiag (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Un
 lemma exists_trafo_isDiag_induction_step (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K)
     (ih : ∀ (h : Matrix (Fin k) (Fin k) K), ∃ (k₁ k₂ : GL (Fin k) R),
       IsMonotoneDiag (R := R) ((k₁.val : Matrix _ _ K) * h * (k₂.val : Matrix _ _ K)) ∧
-      ((k₁.val : Matrix _ _ K) * h * (k₂.val : Matrix _ _ K)).coeffs_sup v = h.coeffs_sup v) :
+      ((k₁.val : Matrix _ _ K) * h * (k₂.val : Matrix _ _ K)).coeffsSup v = h.coeffsSup v) :
     ∃ (k₁ k₂ : GL (Fin k ⊕ Unit) R),
     IsBlockMonotoneDiag (R := R) ((k₁.val : Matrix _ _ K) * g * (k₂.val : Matrix _ _ K)) ∧
-      ((k₁.val : Matrix _ _ K) * g * (k₂.val : Matrix _ _ K)).coeffs_sup v = g.coeffs_sup v := by
+      ((k₁.val : Matrix _ _ K) * g * (k₂.val : Matrix _ _ K)).coeffsSup v = g.coeffsSup v := by
   obtain ⟨h₁, h₂, hh, hvc⟩ := exists_trafo_isNormalBlock (R := R) g
   let g' : Matrix (Fin k ⊕ Unit) (Fin k ⊕ Unit) K :=
     (h₁.val : Matrix _ _ K) * g * (h₂.val : Matrix _ _ K)
@@ -537,7 +538,7 @@ lemma exists_trafo_isDiag_induction_step (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕
       hh.isTwoBlockDiagonal.right, toBlocks_fromBlocks₂₁, toBlocks_fromBlocks₂₂, true_and, g', h]
     rfl
   convert_to IsBlockMonotoneDiag (R := R) ((l₁'.val : Matrix _ _ K) * g' * (l₂'.val : Matrix _ _ K))
-    ∧ ((l₁'.val : Matrix _ _ K) * g' * (l₂'.val : Matrix _ _ K)).coeffs_sup v = g.coeffs_sup v
+    ∧ ((l₁'.val : Matrix _ _ K) * g' * (l₂'.val : Matrix _ _ K)).coeffsSup v = g.coeffsSup v
   · simp only [g']
     group
   · simp only [g']
@@ -566,7 +567,7 @@ lemma exists_trafo_isDiag_induction_step (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕
         _root_.map_one, Matrix.map_one, Matrix.mul_one, one_mul, zero_add, mul_one,
         fromBlocks_apply₂₂]
       simp only [g', hh.monotone, coeffs_sup_fromBlocks, coeffs_sup_zero]
-      simp only [zero_le', sup_of_le_left]
+      simp only [zero_le, sup_of_le_left]
       rw [hv, coeffs_sup_unique (n := Unit)]
       simp only [hh.monotone, coeffs_sup_toBlock₁₁_le_coeffs_sup, sup_of_le_right, h, g']
     · simp only [GL.val_diagonalBlocks, Units.val_one, l₁', l₂']
@@ -578,7 +579,7 @@ lemma exists_trafo_isDiag_induction_step (g : Matrix (Fin k ⊕ Unit) (Fin k ⊕
 lemma exists_trafo_isDiag (g : Matrix (Fin k) (Fin k) K) :
     ∃ (k₁ k₂ : GL (Fin k) R),
     IsMonotoneDiag (n := Fin k) (R := R) (k₁.val * g * k₂.val) ∧
-    (k₁.val * g * k₂.val).coeffs_sup v = g.coeffs_sup v := by
+    (k₁.val * g * k₂.val).coeffsSup v = g.coeffsSup v := by
   induction k using PNat.recOn with
   | one =>
       refine ⟨1, 1, ?_⟩
@@ -589,7 +590,7 @@ lemma exists_trafo_isDiag (g : Matrix (Fin k) (Fin k) K) :
       simp only [Units.val_one]
       rw [Matrix.map_one, one_mul, mul_one] <;> rfl
   | succ n ih =>
-      let e : Fin (n + 1) ≃ Fin n ⊕ Unit := Fin.succ_equiv_unit n
+      let e : Fin (n + 1) ≃ Fin n ⊕ Unit := Fin.succEquivUnit n
       let g' : Matrix (Fin n ⊕ Unit) (Fin n ⊕ Unit) K :=
         Matrix.reindex e e g
       obtain ⟨k₁', k₂', hk, hc⟩ := exists_trafo_isDiag_induction_step g' ih
@@ -598,8 +599,8 @@ lemma exists_trafo_isDiag (g : Matrix (Fin k) (Fin k) K) :
       convert_to IsMonotoneDiag (n := Fin (n + 1)) (R := R)
           (Matrix.reindex e.symm e.symm (k₁'.val * g' * k₂'.val)) ∧
           (Matrix.reindex e.symm e.symm
-            ((k₁'.val : Matrix _ _ K) * g' * (k₂'.val : Matrix _ _ K))).coeffs_sup v
-            = g.coeffs_sup v
+            ((k₁'.val : Matrix _ _ K) * g' * (k₂'.val : Matrix _ _ K))).coeffsSup v
+            = g.coeffsSup v
       · simp only [PNat.add_coe, PNat.val_ofNat, GL.val_reindex, reindex_apply, Equiv.symm_symm, g']
         rw [Matrix.submatrix_mul _ _ e e e e.bijective]
         rw [Matrix.submatrix_mul _ _ e e e e.bijective]
@@ -733,7 +734,7 @@ lemma conj_cartanDiag_one_zero {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K
     rw [Subring.coe_eq_zero_iff] at hzero
     exact hϖ.ne_zero hzero
   rw [zpow_sub₀ hzero]
-  ring
+  ring_nf
   left
   trivial
 
@@ -747,7 +748,7 @@ lemma conj_cartanDiag_zero_one {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K
     rw [Subring.coe_eq_zero_iff] at hzero
     exact hϖ.ne_zero hzero
   rw [zpow_sub₀ hzero]
-  ring
+  ring_nf
   left
   trivial
 

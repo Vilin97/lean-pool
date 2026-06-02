@@ -10,6 +10,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000MuLinear
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000Bound
@@ -58,7 +62,7 @@ theorem dualObjective_ge_target :
   have h :=
     (div_le_div_iff₀ (a := (-26121 : Q)) (b := (50000 : Q))
         (c := ((N1000000Data.dualObjectiveD2 : Int) : Q)) (d := ((D : Q) * (D : Q))) hb hd).2 hCross
-  simpa [mul_assoc, mul_comm, mul_left_comm] using h
+  simpa [N1000000Data.dualObjectiveD2, mul_assoc, mul_comm, mul_left_comm] using h
 
 theorem monoFraction_ge_23879_of_psd (f : Coloring n)
     (hpsd : ∀ r : Block, (S (xFromColoring f) r).PosSemidef) :

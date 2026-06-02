@@ -7,8 +7,6 @@ Authors: Jukka Suomela
 import LeanPool.TwoColoringOneRound.LowerBound.Defs
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 
-namespace Distributed2Coloring.LowerBound
-
 /-!
 This file will host the Lean-level encoding of the exact rational certificate and the
 main theorem for `n = 10^6`.
@@ -19,6 +17,9 @@ Planned approach (to be implemented):
 * prove dual feasibility and evaluate the dual objective exactly,
 * translate the resulting edge-correlation bound into a monochromatic-edge bound.
 -/
+
+namespace Distributed2Coloring.LowerBound
+
 
 namespace N1000000
 
@@ -50,7 +51,7 @@ def c (i : Nat) : Int :=
   if i = edgeVar then 1 else 0
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def stationarityLHS_D2 (i : Nat) : Int :=
+def stationarityLHSD2 (i : Nat) : Int :=
   -- `linNumD i` represents the numerator over `D`; multiply by `D` to put it over `D^2`.
   (linNumD i) * (D : Int) - psdNumD2 i
 
@@ -72,7 +73,7 @@ theorem dualObjective_ok : dualObjectiveComputedD2 = dualObjectiveD2 := by
 def stationarityOK : Bool :=
   let D2 : Int := (D : Int) * (D : Int)
   (List.range numVars).all fun i =>
-    decide (stationarityLHS_D2 i = -(c i) * D2)
+    decide (stationarityLHSD2 i = -(c i) * D2)
 
 theorem stationarityOK_true : stationarityOK = true := by
   decide

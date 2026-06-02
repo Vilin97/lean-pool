@@ -6,6 +6,10 @@ Authors: Judith Ludwig, Christian Merten
 
 import Mathlib.Order.Hom.Basic
 
+/-!
+# LeanPool.BruhatTits.Utils.Order
+-/
+
 variable {α β : Type*} [PartialOrder α] [PartialOrder β] (f : α ≃o β)
 
 lemma OrderIso.map_top_iff [OrderTop α] [OrderTop β] (x : α) :

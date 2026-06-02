@@ -12,3 +12,9 @@ import LeanPool.DeadEnds.PrimeTail
 import LeanPool.DeadEnds.RelevantPrimes
 import LeanPool.DeadEnds.TailEstimates
 import LeanPool.DeadEnds.InclusionExclusion
+
+/-!
+# LeanPool.DeadEnds.Solution
+
+Imported Lean Pool material for `LeanPool.DeadEnds.Solution`.
+-/

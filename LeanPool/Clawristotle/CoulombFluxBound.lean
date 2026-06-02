@@ -73,7 +73,7 @@ private lemma coulomb_flux_component_pointwise_le
         integral_mono_of_nonneg (Filter.Eventually.of_forall fun w => abs_nonneg _)
           (by
             simp_rw [Finset.mul_sum]
-            refine integrable_finset_sum _ fun j _ => ?_
+            refine integrable_finsetSum _ fun j _ => ?_
             have h_uj_int : Integrable (fun w => ‖v - w‖⁻¹ * (u w j)) := by
               have h_f := inv_norm_schwartz_integrable g hg_decay
                 hg_smooth.continuous.aestronglyMeasurable v
@@ -157,18 +157,18 @@ private lemma coulomb_flux_component_pointwise_le
                   (inv_nonneg.mpr (norm_nonneg _))
                   (Finset.sum_nonneg fun j _ => abs_nonneg _))
                 ((h_f_abs.const_mul _).add
-                  ((integrable_finset_sum _ fun j _ => h_dj_abs j).const_mul _))
+                  ((integrable_finsetSum _ fun j _ => h_dj_abs j).const_mul _))
                 (Filter.Eventually.of_forall h_pw2)
           _ ≤ (∑ j, |vGrad g v j|) * M₀ +
               |g v| * (M₁ + M₂ + M₃) := by
               rw [integral_add (h_f_abs.const_mul _)
-                ((integrable_finset_sum _ fun j _ => h_dj_abs j).const_mul _),
+                ((integrable_finsetSum _ fun j _ => h_dj_abs j).const_mul _),
                 integral_const_mul, integral_const_mul]
               apply add_le_add
               · exact mul_le_mul_of_nonneg_left (hM₀ v)
                   (Finset.sum_nonneg fun j _ => abs_nonneg _)
               · apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
-                rw [integral_finset_sum _ fun j _ => h_dj_abs j]
+                rw [integral_finsetSum _ fun j _ => h_dj_abs j]
                 simp only [Fin.sum_univ_three]
                 linarith [hM₁ v, hM₂ v, hM₃ v]
           _ ≤ 3 * ‖iteratedFDeriv ℝ 1 g v‖ * M₀ +
@@ -205,7 +205,7 @@ lemma flux_times_log_integrable_coulomb
   -- Uniform Newtonian bounds
   obtain ⟨M₀, hM₀, hM₀_bound⟩ := newtonian_schwartz_uniform_bound (fun w => f x w)
     (fun N => by obtain ⟨C, hC, hb⟩ := hf_decay N; exact ⟨C, hC, fun w => by
-      show |(fun w => f x w) w| * _ ≤ C; exact hb w⟩)
+      change |(fun w => f x w) w| * _ ≤ C; exact hb w⟩)
     (hf_smooth_v x).continuous.aestronglyMeasurable
   have hMj : ∀ j : Fin 3, ∃ M > 0, ∀ v,
       ∫ w, ‖v - w‖⁻¹ * |fderiv ℝ (f x) w (Pi.single j 1)| ≤ M := by
@@ -396,7 +396,7 @@ lemma coulomb_flux_component_bound
       (∑ j : Fin 3, |vGrad g v j|) * (‖v - w‖⁻¹ * |g w|) +
       g v * ∑ j : Fin 3, (‖v - w‖⁻¹ * |vGrad g w j|)) :=
     ((h_f_abs v).const_mul _).add
-      ((integrable_finset_sum _ fun j _ => h_dj_abs j v).const_mul _)
+      ((integrable_finsetSum _ fun j _ => h_dj_abs j v).const_mul _)
   calc |∫ w, (landauMatrix coulombKernel (v - w) *ᵥ u w) i|
       ≤ ∫ w, |(landauMatrix coulombKernel (v - w) *ᵥ u w) i| :=
         abs_integral_le_integral_abs
@@ -407,9 +407,9 @@ lemma coulomb_flux_component_bound
           (Filter.Eventually.of_forall fun w => le_trans (h_pw w) (h_pw2 w))
     _ ≤ (∑ j : Fin 3, |vGrad g v j|) * M₀ + g v * M_df := by
         rw [integral_add ((h_f_abs v).const_mul _)
-          ((integrable_finset_sum _ fun j _ => h_dj_abs j v).const_mul _),
+          ((integrable_finsetSum _ fun j _ => h_dj_abs j v).const_mul _),
           integral_const_mul, integral_const_mul,
-          integral_finset_sum _ fun j _ => h_dj_abs j v]
+          integral_finsetSum _ fun j _ => h_dj_abs j v]
         apply add_le_add
         · exact mul_le_mul_of_nonneg_left (hM₀_bound v)
             (Finset.sum_nonneg fun j _ => abs_nonneg _)

@@ -7,6 +7,10 @@ Authors: Siddhartha Gadgil, Anand Rao
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Algebra.Group.Defs
 
+/-!
+# LeanPool.Polylean.Complexes.GraphPaths
+-/
+
 namespace LeanPool.Polylean
 
 /-- A graph with directed edges, distinguished null edge, and edge reversal. -/
@@ -344,7 +348,7 @@ theorem homotopy_inverse {G : Graph V E} {x y : V}
       induction h with
         | consht x => simp[inverse, homotopy_rfl]
         | cancel ex ex' p t₁ t₂ t₃ =>
-          simpa [inverse, mult_assoc] using
+          simpa [inverse, mult_assoc, multiply] using
             induct_homotopy_inverse_cancel (G.bar ex') (G.bar ex) (inverse p)
               (by rw[← t₃]; rw[bar_involution ex]; apply t₁)
               (by rw[← t₃]; rw[(bar_involution ex)]; apply t₂)
@@ -355,7 +359,7 @@ theorem homotopy_inverse {G : Graph V E} {x y : V}
           let k :=
             induct_homotopy_inverse_mult (inverse s₁) (inverse s₂) (G.bar ex) t₂
               (term_bar_equals_init t₁) c
-          simpa [homotopy, inverse] using k
+          simpa [homotopy, inverse, basicpath] using k
   let k₂ := Quot.lift func g
   rw [h₁, h₂]
   exact congrArg k₂ h₀
@@ -391,7 +395,7 @@ theorem homotopy_right_mult {G : Graph V E} {x y z : V}
 
 
 /-- defines multiplication of homotopy class with a path to its left -/
-def homotopy_left_multiplication {G : Graph V E} {x y z : V}
+def homotopyLeftMultiplication {G : Graph V E} {x y z : V}
     (p₁ : EdgePath G x y) : ht G y z →  ht G x z := by
   let func : EdgePath G y z → ht G x z := by
     intro p
@@ -406,18 +410,18 @@ def homotopy_left_multiplication {G : Graph V E} {x y z : V}
 /-- proves that the multiplication defined above equals homotopy class of multiplied paths -/
 theorem homotopy_left_multiplication_class {G : Graph V E} {x y z : V}
     (p₁ : EdgePath G x y) (p₂ : EdgePath G y z) :
-    homotopy_left_multiplication p₁ (htclass p₂) = htclass (multiply p₁ p₂) := by
-  simp[htclass, homotopy_left_multiplication]
+    homotopyLeftMultiplication p₁ (htclass p₂) = htclass (multiply p₁ p₂) := by
+  simp[htclass, homotopyLeftMultiplication]
 
 
 /-- defines multiplication of homotopy -/
-def homotopy_multiplication : ht G x y → ht G y z → ht G x z := by
+def homotopyMultiplication : ht G x y → ht G y z → ht G x z := by
   intro p₁ p₂
-  let func (p : EdgePath G x y) : ht G x z := homotopy_left_multiplication p p₂
+  let func (p : EdgePath G x y) : ht G x z := homotopyLeftMultiplication p p₂
   have g : (q₁ q₂ : EdgePath G x y) → basicht q₁ q₂ → func q₁ = func q₂  := by
       intro q₁ q₂ h
       let crop (p : ht G y z) : Prop :=
-        homotopy_left_multiplication q₁ p = homotopy_left_multiplication q₂ p
+        homotopyLeftMultiplication q₁ p = homotopyLeftMultiplication q₂ p
       have g' : (p : ht G y z) → crop p := by
         intro p
         have g'' : (p' : EdgePath G y z) → crop (htclass p') := by
@@ -434,7 +438,7 @@ def homotopy_multiplication : ht G x y → ht G y z → ht G x z := by
 
 
 /-- Multiplication of homotopy classes of composable edge paths. -/
-infixl: 65 " # " => homotopy_multiplication
+infixl: 65 " # " => homotopyMultiplication
 
 
 /-- proves that # is associative up to multiplication by a pair of paths and one homotopy class -/
@@ -444,17 +448,17 @@ theorem homotopy_mult_path_path_assoc {G : Graph V E} {w x y z : V}
   apply Quot.ind
   intro b
   change
-    homotopy_left_multiplication (multiply p q) (Quot.mk basicht b) =
-      homotopy_left_multiplication p (homotopy_left_multiplication q (Quot.mk basicht b))
+    homotopyLeftMultiplication (multiply p q) (Quot.mk basicht b) =
+      homotopyLeftMultiplication p (homotopyLeftMultiplication q (Quot.mk basicht b))
   have p₁ :
-      homotopy_left_multiplication (multiply p q) (Quot.mk basicht b) =
+      homotopyLeftMultiplication (multiply p q) (Quot.mk basicht b) =
         htclass (multiply (multiply p q) b) := by
     rfl
   have p₂ :
-      homotopy_left_multiplication q (Quot.mk basicht b) = htclass (multiply q b) := by
+      homotopyLeftMultiplication q (Quot.mk basicht b) = htclass (multiply q b) := by
     rfl
   have p₃ :
-      homotopy_left_multiplication p (homotopy_left_multiplication q (Quot.mk basicht b)) =
+      homotopyLeftMultiplication p (homotopyLeftMultiplication q (Quot.mk basicht b)) =
         htclass (multiply p (multiply q b)) := by
     rw[p₂]
     rfl
@@ -536,11 +540,11 @@ theorem homotopy_reducePath [DecidableEq V] [DecidableEq E] {G : Graph V E} {x y
 
 
 
-instance ht_mul {G : Graph V E} {x : V} : Mul (ht G x x) where
-  mul : ht G x x → ht G x x → ht G x x := fun a b => homotopy_multiplication a b
+instance htMul {G : Graph V E} {x : V} : Mul (ht G x x) where
+  mul : ht G x x → ht G x x → ht G x x := fun a b => homotopyMultiplication a b
 
 --defines the identity homotopy class
-instance ht_one {G : Graph V E} {x : V} : One (ht G x x) where
+instance htOne {G : Graph V E} {x : V} : One (ht G x x) where
   one : ht G x x := htclass (single x)
 
 /-- proves that multiplication of homotopy classes is associative -/
@@ -552,39 +556,39 @@ theorem ht_mult_assoc {G : Graph V E} {x : V} (a b c : ht G x x) :
 
 /-- proves that the identity homotopy class is the right multiplicative identity -/
 theorem ht_right_identity {G : Graph V E} {x : V} :
-    (a₀ : ht G x x) → ht_mul.mul a₀ (@ht_one V E G x).one = a₀ := by
+    (a₀ : ht G x x) → htMul.mul a₀ (@htOne V E G x).one = a₀ := by
   have k (b : EdgePath G x x) :
-      homotopy_multiplication (htclass b) (htclass (single x)) = htclass b := by
+      homotopyMultiplication (htclass b) (htclass (single x)) = htclass b := by
     let l := mult_const b ▸ homotopy_left_multiplication_class b (single x)
     have :
         (htclass b) # (htclass (single x)) =
-          homotopy_left_multiplication b (htclass (single x)) := by
+          homotopyLeftMultiplication b (htclass (single x)) := by
       rfl
     apply Eq.trans this l
   have k₂ (b : EdgePath G x x) :
-      ht_mul.mul (htclass b) (@ht_one V E G x).one = htclass b := by
+      htMul.mul (htclass b) (@htOne V E G x).one = htclass b := by
     apply k
   apply Quot.ind
   apply k₂
 
 /-- proves that the identity homotopy class is the left multiplicative identity -/
 theorem ht_left_identity {G : Graph V E} {x : V} :
-    (a₀ : ht G x x) → ht_mul.mul (@ht_one V E G x).one a₀ = a₀ := by
+    (a₀ : ht G x x) → htMul.mul (@htOne V E G x).one a₀ = a₀ := by
   have k (b : EdgePath G x x) :
-      homotopy_multiplication (htclass (single x)) (htclass b) = htclass b := by
+      homotopyMultiplication (htclass (single x)) (htclass b) = htclass b := by
     exact homotopy_left_multiplication_class (single x) b
   have k₂ (b : EdgePath G x x) :
-      ht_mul.mul (@ht_one V E G x).one (htclass b) = htclass b := by
+      htMul.mul (@htOne V E G x).one (htclass b) = htclass b := by
     apply k
   apply Quot.ind
   apply k₂
 
-instance ht_semigroup {G : Graph V E} {x : V} : Semigroup (ht G x x) where
-  mul := (@ht_mul V E G x).mul
+instance htSemigroup {G : Graph V E} {x : V} : Semigroup (ht G x x) where
+  mul := (@htMul V E G x).mul
   mul_assoc := by apply ht_mult_assoc
 
 /-- The monoid structure on loops at a vertex modulo homotopy. -/
-@[reducible] def ht_monoid (G : Graph V E) (x : V) : Monoid (ht G x x) where
+@[reducible] def htMonoid (G : Graph V E) (x : V) : Monoid (ht G x x) where
   mul := (· # ·)
   mul_assoc := ht_mult_assoc
   one := htclass (single x)

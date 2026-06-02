@@ -11,8 +11,21 @@ import Mathlib.Analysis.Calculus.ContDiff.FaaDiBruno
 import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 import Mathlib.Analysis.Normed.Module.Multilinear.Basic
 import Mathlib.Analysis.Normed.Module.Multilinear.Curry
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.SardMoreira.ToMathlib.ContinuousLinearMap
+
+/-!
+# LeanPool.SardMoreira.ContDiff
+-/
 
 open scoped unitInterval Topology NNReal
 open Function Asymptotics Filter Set
@@ -102,8 +115,11 @@ theorem compAlongOrderedFinpartition_sub_compAlongOrderedFinpartition_isBigO
     c.norm_compAlongOrderedFinpartition_sub_compAlongOrderedFinpartition_le ..) ?_
   refine .add ?_ ?_
   · simp only [← isBigO_one_iff ℝ, ← isBigO_pi] at *
-    have H := ((hq₁_bdd.prod_left hq₂_bdd).norm_left.pow (c.length - 1)).mul hqB.norm_left
-    simpa [mul_assoc] using hp_bdd.norm_left.mul <| H.const_mul_left c.length
+    have hqB_pi : (fun x ↦ q₁ x - q₂ x) =O[l] B := by
+      simpa [Pi.sub_apply] using hqB
+    have H := ((hq₁_bdd.prod_left hq₂_bdd).norm_left.pow (c.length - 1)).mul
+      hqB_pi.norm_left
+    simpa [mul_assoc, Pi.sub_apply] using hp_bdd.norm_left.mul <| H.const_mul_left c.length
   · have H₂ : ∀ i, (q₂ · i) =O[l] (1 : α → ℝ) := fun i ↦ (hq₂_bdd i).isBigO_one ℝ
     simpa using hpB.norm_left.mul <| .finsetProd fun i _ ↦ (H₂ i).norm_left
 
@@ -195,7 +211,7 @@ theorem OpenPartialHomeomorph.iteratedFDeriv_symm_eq_rec [CompleteSpace E]
     rcases hf' with ⟨f', hf'⟩
     replace hf' : HasFDerivAt f (f' : E →L[𝕜] F) (f.symm y) :=
       hf' ▸ (hf.of_le hi |>.differentiableAt <| mod_cast hi₀.ne').hasFDerivAt
-    have H₁ : f.source ∈ 𝓝 (f.symm y) := f.open_source.mem_nhds <| f.symm_mapsTo hy
+    have H₁ : f.source ∈ 𝓝 (f.symm y) := f.open_source.mem_nhds <| f.mapsTo_symm hy
     have H₂ : ContDiffAt 𝕜 n f.symm (f (f.symm y)) := by
       rw [f.rightInvOn hy]
       exact f.contDiffAt_symm hy hf' hf
@@ -212,16 +228,17 @@ theorem OpenPartialHomeomorph.iteratedFDeriv_symm_eq_rec [CompleteSpace E]
       FormalMultilinearSeries.compAlongOrderedFinpartition]
     rw [Fintype.sum_eq_add_sum_compl (OrderedFinpartition.atomic i), Finset.compl_singleton]
     ext v
-    simp +unfoldPartialApp only [OrderedFinpartition.atomic_length,
-      OrderedFinpartition.atomic_partSize, Finset.mem_univ, Finset.sum_erase_eq_sub,
+    simp +unfoldPartialApp only [Finset.mem_univ, Finset.sum_erase_eq_sub,
       add_sub_cancel, sub_sub_cancel,
       ContinuousMultilinearMap.compContinuousLinearMap_apply,
       OrderedFinpartition.compAlongOrderFinpartition_apply,
       OrderedFinpartition.applyOrderedFinpartition, ftaylorSeries,
-      iteratedFDeriv_one_eq, hf'.fderiv, (f.hasFDerivAt_symm hy hf').fderiv,
+      (f.hasFDerivAt_symm hy hf').fderiv,
       Function.comp_def, OrderedFinpartition.atomic_emb]
     refine congrArg (iteratedFDeriv 𝕜 i (↑f.symm) y) (funext fun m ↦ ?_)
-    exact (f'.apply_symm_apply _).symm
+    rw [show (OrderedFinpartition.atomic i).partSize m = 1 by
+      simp [OrderedFinpartition.atomic_partSize]]
+    simp [iteratedFDeriv_one_eq, hf'.fderiv]
 
 theorem OpenPartialHomeomorph.iteratedFDeriv_symm_eq_taylorLeftInv [CompleteSpace E]
     (f : OpenPartialHomeomorph E F) {y : F} (hy : y ∈ f.target) (hf : ContDiffAt 𝕜 n f (f.symm y))

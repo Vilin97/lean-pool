@@ -9,8 +9,16 @@ import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.LinearAlgebra.Dimension.RankNullity
 import Mathlib.Data.Set.Card
 import Mathlib.FieldTheory.Finite.Basic
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 /-!
 # FinEqs main file
 
@@ -347,7 +355,7 @@ private lemma exists_lift_of_subset_span_image {K V W : Type*} [Field K]
   · calc
       (Set.range v).ncard = (v '' Set.univ).ncard := by rw [Set.image_univ]
       _ ≤ (Set.univ : Set U).ncard := Set.ncard_image_le
-      _ = U.ncard := by simpa using (Set.ncard_coe U)
+      _ = U.ncard := by simp
       _ ≤ n := hU_card
   · rintro x ⟨y, rfl⟩
     exact hvspan y

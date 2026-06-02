@@ -373,13 +373,13 @@ instance (priority := 75) MeasurableConceptClass.ofKrappWirth
 /-! ## Separation Interface (Open Questions) -/
 
 /-- OPEN: Does finite VC + measurable hypotheses imply WellBehavedVC? -/
-def WellBehavedVC_automatic : Prop :=
+def WellBehavedVCAutomatic : Prop :=
   ∀ (X : Type) [MeasurableSpace X] (C : ConceptClass X Bool),
     MeasurableHypotheses X C → VCDim X C < ⊤ → WellBehavedVC X C
 
 /-- OPEN: Does WellBehavedVC (NullMeasurable events) separate from
     KrappWirthWellBehaved (measurable maps)? -/
-def KrappWirth_separation : Prop :=
+def KrappWirthSeparation : Prop :=
   ∃ (X : Type) (_ : MeasurableSpace X) (C : ConceptClass X Bool),
     MeasurableHypotheses X C ∧ WellBehavedVC X C ∧ ¬ KrappWirthWellBehaved X C
 

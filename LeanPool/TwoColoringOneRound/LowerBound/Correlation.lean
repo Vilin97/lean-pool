@@ -5,6 +5,11 @@ Authors: Jukka Suomela
 -/
 
 import LeanPool.TwoColoringOneRound.LowerBound.Defs
+import Mathlib.Data.Finite.Perm
+
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.Correlation
+-/
 
 namespace Distributed2Coloring.LowerBound
 

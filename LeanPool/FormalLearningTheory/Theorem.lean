@@ -7,3 +7,9 @@ import LeanPool.FormalLearningTheory.Theorem.Gold
 import LeanPool.FormalLearningTheory.Theorem.PAC
 import LeanPool.FormalLearningTheory.Theorem.Online
 import LeanPool.FormalLearningTheory.Theorem.Separation
+
+/-!
+# LeanPool.FormalLearningTheory.Theorem
+
+Imported Lean Pool material for `LeanPool.FormalLearningTheory.Theorem`.
+-/

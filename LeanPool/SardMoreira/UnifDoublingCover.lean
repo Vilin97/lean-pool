@@ -7,7 +7,19 @@ Authors: Yury G. Kudryashov
 import Mathlib.MeasureTheory.Covering.Besicovitch
 import Mathlib.MeasureTheory.Covering.LiminfLimsup
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
+/-!
+# LeanPool.SardMoreira.UnifDoublingCover
+-/
 
 open MeasureTheory Measure Metric Set
 

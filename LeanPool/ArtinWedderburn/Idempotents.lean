@@ -95,7 +95,7 @@ def HasMatrixUnits (R : Type*) [Ring R] (n : ℕ) : Prop :=
     (∀ i j k l, es i j * es k l = (if j = k then es i l else 0))
 
 /-- Kronecker delta valued in `R`: equal to `1` when `i = j` and `0` otherwise. -/
-def kronecker_delta (n : ℕ) (i j : Fin n) : R := if i = j then 1 else 0
+def kroneckerDelta (n : ℕ) (i j : Fin n) : R := if i = j then 1 else 0
 
 /-- Two elements are pairwise orthogonal when both of their products vanish. -/
 def PairwiseOrthogonal (a b : R) : Prop := a * b = 0 ∧ b * a = 0
@@ -107,9 +107,9 @@ theorem OrtIdem_imply_MatUnits {n : ℕ} (hn : 0 < n)
     (ort : (∀ i j : Fin n, i ≠ j → PairwiseOrthogonal (diag_es i) (diag_es j)))
     (sum_eq_one : ∑ i, diag_es i = 1)
     (row_es : Fin n → R)
-    (row_in : ∀ i : Fin n, row_es i ∈ both_mul (diag_es ⟨0, hn⟩) (diag_es i))
+    (row_in : ∀ i : Fin n, row_es i ∈ bothMul (diag_es ⟨0, hn⟩) (diag_es i))
     (col_es : Fin n → R)
-    (col_in : ∀ i : Fin n, col_es i ∈ both_mul (diag_es i) (diag_es ⟨0, hn⟩))
+    (col_in : ∀ i : Fin n, col_es i ∈ bothMul (diag_es i) (diag_es ⟨0, hn⟩))
     (comp1 : ∀ i, row_es i * col_es i = diag_es ⟨0, hn⟩)
     (comp2 : ∀ i, col_es i * row_es i = diag_es i) : HasMatrixUnits R n := by
   refine ⟨fun i j => (col_es i) * (row_es j), ?_, ?_⟩
@@ -144,7 +144,7 @@ lemma eRf_nonzero (h : IsPrimeRing R) (e f : R) (he : e ≠ 0) (hf : f ≠ 0) :
     ∃ (a : R), e * a * f ≠ 0 := by
   by_contra ha
   push Not at ha
-  have eRf_zero : both_mul e f = {0} := by
+  have eRf_zero : bothMul e f = {0} := by
     ext x
     constructor
     · intro ⟨r, hr⟩
@@ -160,9 +160,9 @@ lemma eRf_nonzero (h : IsPrimeRing R) (e f : R) (he : e ≠ 0) (hf : f ≠ 0) :
   | inl h => exact he h
   | inr h => exact hf h
 
--- multiplication with e and f preserves both_mul e f
+-- multiplication with e and f preserves bothMul e f
 lemma both_mul_e_f (idem_e : IsIdempotentElem e) (idem_f : IsIdempotentElem f) :
-    ∀ x ∈ both_mul e f, e * x = x ∧ x * f = x := by
+    ∀ x ∈ bothMul e f, e * x = x ∧ x * f = x := by
   rintro x ⟨y, hy⟩
   have he : e * x = x := by
     calc _ = (e * e) * y * f := by rw [hy]; noncomm_ring
@@ -174,31 +174,31 @@ lemma both_mul_e_f (idem_e : IsIdempotentElem e) (idem_f : IsIdempotentElem f) :
       _ = x := Eq.symm hy
   exact ⟨he, hf⟩
 
--- both_mul is closed for addition
+-- bothMul is closed for addition
 lemma both_mul_add :
-    ∀ (x y : R), x ∈ both_mul e f → y ∈ both_mul e f → x + y ∈ both_mul e f := by
+    ∀ (x y : R), x ∈ bothMul e f → y ∈ bothMul e f → x + y ∈ bothMul e f := by
   intro x y ⟨a, ha⟩ ⟨b, hb⟩
   use (a + b)
   rw [ha, hb]
   noncomm_ring
 
--- both_mul is closed for multiplication
-lemma both_mul_neg : ∀ (x : R), x ∈ both_mul e f → -x ∈ both_mul e f := by
+-- bothMul is closed for multiplication
+lemma both_mul_neg : ∀ (x : R), x ∈ bothMul e f → -x ∈ bothMul e f := by
   intro x ⟨a, ha⟩
   use -a
   rw [ha]
   noncomm_ring
 
--- both_mul is closed for additive inverses
+-- bothMul is closed for additive inverses
 lemma both_mul_sub :
-    ∀ (x y : R), x ∈ both_mul e f → y ∈ both_mul e f → x - y ∈ both_mul e f := by
+    ∀ (x y : R), x ∈ bothMul e f → y ∈ bothMul e f → x - y ∈ bothMul e f := by
   intro x y ⟨a, ha⟩ ⟨b, hb⟩
   use (a - b)
   rw [ha, hb]
   noncomm_ring
 
 lemma both_mul_mul :
-    ∀ (x y : R), x ∈ both_mul e f → y ∈ both_mul f e → x * y ∈ both_mul e e := by
+    ∀ (x y : R), x ∈ bothMul e f → y ∈ bothMul f e → x * y ∈ bothMul e e := by
   intro x y ⟨a, ha⟩ ⟨b, hb⟩
   use (a * f * f * b)
   rw [ha, hb]
@@ -206,13 +206,13 @@ lemma both_mul_mul :
 
 /-- Witnesses for the "nice idempotents" property: elements `u ∈ eRf`, `v ∈ fRe`
 with `u * v = e` and `v * u = f`. -/
-structure two_nice_idempotents (e f : R) where
+structure twoNiceIdempotents (e f : R) where
   /-- The element of `eRf` whose product with `v` recovers `e`. -/
   u : R
   /-- The element of `fRe` whose product with `u` recovers `f`. -/
   v : R
-  u_mem : u ∈ both_mul e f
-  v_mem : v ∈ both_mul f e
+  u_mem : u ∈ bothMul e f
+  v_mem : v ∈ bothMul f e
   u_mul_v : u * v = e
   v_mul_u : v * u = f
 
@@ -221,7 +221,7 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
     (idem_e : IsIdempotentElem e) (idem_f : IsIdempotentElem f)
     (heRe : IsDivisionRing (CornerSubring idem_e))
     (hfRf : IsDivisionRing (CornerSubring idem_f)) :
-    ∃ u v : R, u ∈ both_mul e f ∧ v ∈ both_mul f e ∧ u * v = e ∧ v * u = f := by
+    ∃ u v : R, u ∈ bothMul e f ∧ v ∈ bothMul f e ∧ u * v = e ∧ v * u = f := by
   have he : e ≠ 0 := corner_ring_division_e_nonzero idem_e heRe
   have hf : f ≠ 0 := corner_ring_division_e_nonzero idem_f hfRf
   have ha : ∃ (a : R), e * a * f ≠ 0 := eRf_nonzero h e f he hf
@@ -253,7 +253,7 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
   have y_val_eq : y.val = e * c * e := hc
   let v := f * (b * e * c) * e
   let u := e * a * f
-  have hv_mem : v ∈ both_mul f e := ⟨b * e * c, rfl⟩
+  have hv_mem : v ∈ bothMul f e := ⟨b * e * c, rfl⟩
   have uv_calc : u * v = e := by
     change e * a * f * (f * (b * e * c) * e) = e
     have h1 : e * a * f * (f * (b * e * c) * e) = e * a * (f * f) * b * e * c * e := by
@@ -271,8 +271,8 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
       _ = e := hxy
   refine ⟨u, v, ?_, hv_mem, uv_calc, ?_⟩
   · exact ⟨a, rfl⟩
-  · have hu : u ∈ both_mul e f := ⟨a, rfl⟩
-    have hv : v ∈ both_mul f e := hv_mem
+  · have hu : u ∈ bothMul e f := ⟨a, rfl⟩
+    have hv : v ∈ bothMul f e := hv_mem
     have fv_eq_v : f * v = (v : R) := (both_mul_e_f idem_f idem_e v hv).1
     have ve_eq_v : v * e = v := (both_mul_e_f idem_f idem_e v hv).2
     have uv_eq_e : u * v = e := uv_calc
@@ -308,12 +308,12 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
         _ = 0 := by rw [v_eq_zero]; noncomm_ring
     exact he e_eq_zero
 
-/-- Packaging of `lemma_2_19` as a `two_nice_idempotents` structure. -/
+/-- Packaging of `lemma_2_19` as a `twoNiceIdempotents` structure. -/
 noncomputable
-def lemma_2_19' (h : IsPrimeRing R) (e f : R)
+def lemma219' (h : IsPrimeRing R) (e f : R)
     (idem_e : IsIdempotentElem e) (idem_f : IsIdempotentElem f)
     (heRe : IsDivisionRing (CornerSubring idem_e))
-    (hfRf : IsDivisionRing (CornerSubring idem_f)) : two_nice_idempotents e f := by
+    (hfRf : IsDivisionRing (CornerSubring idem_f)) : twoNiceIdempotents e f := by
   have h := lemma_2_19 h e f idem_e idem_f heRe hfRf
   choose u v hu hv h1 h2 using h
   exact
@@ -325,7 +325,7 @@ def lemma_2_19' (h : IsPrimeRing R) (e f : R)
       v_mul_u := h2 }
 
 theorem f_in_corner_othogonal (e f : R) (idem_e : IsIdempotentElem e)
-    (f_mem : f ∈ both_mul (1 - e) (1 - e)) : IsOrthogonal e f := by
+    (f_mem : f ∈ bothMul (1 - e) (1 - e)) : IsOrthogonal e f := by
   obtain ⟨x, hx⟩ := f_mem
   refine ⟨?_, ?_⟩
   · rw [hx]
@@ -439,7 +439,7 @@ structure OrtIdemDiv (R : Type*) [Ring R] extends OrtIdem R where
 
 -- A ring, isomorphic to OrtIdem ring, is itself OrtIdem
 /-- Transport an `OrtIdem R` along a ring isomorphism `φ : R ≃+* R'`. -/
-def isomorphic_OrtIdem (R' : Type*) [Ring R'] (φ : R ≃+* R') (hoi : OrtIdem R) : OrtIdem R' :=
+def isomorphicOrtIdem (R' : Type*) [Ring R'] (φ : R ≃+* R') (hoi : OrtIdem R) : OrtIdem R' :=
   { n := hoi.n,
     f := fun i => φ (hoi.f i),
     h := fun i => iso_idem_to_idem R' φ (hoi.f i) (hoi.h i)
@@ -455,7 +455,7 @@ def isomorphic_OrtIdem (R' : Type*) [Ring R'] (φ : R ≃+* R') (hoi : OrtIdem R
 -- canonical isomorphism between corner rings
 /-- A ring isomorphism `φ : R ≃+* R'` induces a ring isomorphism between the corner rings
 of an idempotent and of its image under `φ`. -/
-def ring_iso_to_corner_iso (R' : Type*) [Ring R'] (φ : R ≃+* R') (e : R)
+def ringIsoToCornerIso (R' : Type*) [Ring R'] (φ : R ≃+* R') (e : R)
     (idem_e : IsIdempotentElem e) :
     CornerSubring idem_e ≃+* CornerSubring (iso_idem_to_idem R' φ e idem_e) :=
   { toFun := fun x => ⟨φ x.val, by
@@ -482,13 +482,13 @@ def ring_iso_to_corner_iso (R' : Type*) [Ring R'] (φ : R ≃+* R') (e : R)
 
 -- A ring, isomorphic to OrtIdemDiv ring, is itself OrtIdemDiv
 /-- Transport an `OrtIdemDiv R` along a ring isomorphism `φ : R ≃+* R'`. -/
-def isomorphic_OrtIdemDiv {R' : Type*} [Ring R'] (φ : R ≃+* R') (hoi : OrtIdemDiv R) :
+def isomorphicOrtIdemDiv {R' : Type*} [Ring R'] (φ : R ≃+* R') (hoi : OrtIdemDiv R) :
     OrtIdemDiv R' :=
-  { toOrtIdem := isomorphic_OrtIdem R' φ hoi.toOrtIdem,
+  { toOrtIdem := isomorphicOrtIdem R' φ hoi.toOrtIdem,
     div := fun i => by
       let ψ : (CornerSubring (hoi.h i)) ≃+*
-        (CornerSubring ((isomorphic_OrtIdem R' φ hoi.toOrtIdem).h i)) :=
-        ring_iso_to_corner_iso R' φ (hoi.f i) (hoi.h i)
+        (CornerSubring ((isomorphicOrtIdem R' φ hoi.toOrtIdem).h i)) :=
+        ringIsoToCornerIso R' φ (hoi.f i) (hoi.h i)
       apply isomorphic_ring_div ψ (hoi.div i) }
 
 end LeanPool.ArtinWedderburn

@@ -7,6 +7,10 @@ Authors: Jukka Suomela
 import LeanPool.TwoColoringOneRound.LowerBound.Defs
 import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.LocalRule
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace LocalRule

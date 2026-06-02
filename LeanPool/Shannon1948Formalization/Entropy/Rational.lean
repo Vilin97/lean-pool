@@ -69,6 +69,9 @@ lemma grouping_on_rational_counts
   have hident :
       relabelProb e (composeProb p q) = uniformPNat ⟨N, hN⟩ := by
     simpa [q] using relabel_compose_rational_eq_uniform p n hpos N hN hp e
+  have hrelab' : H (uniformPNat ⟨N, hN⟩) = H (composeProb p q) := by
+    rw [← hident]
+    exact hrelab
   have hsumA :
       (∑ a, p a * H (q a))
         = ∑ a, p a * Apos H ⟨n a, hpos a⟩ := by
@@ -77,7 +80,7 @@ lemma grouping_on_rational_counts
     rfl
   calc
     Apos H ⟨N, hN⟩ = H (composeProb p q) := by
-      simpa [Apos, hident] using hrelab
+      simpa [Apos] using hrelab'
     _ = H p + ∑ a, p a * H (q a) := hgroup
     _ = H p + ∑ a, p a * Apos H ⟨n a, hpos a⟩ := by rw [hsumA]
 
@@ -186,7 +189,7 @@ instance : ∀ b : Bool, Fintype (workedFib b)
 def workedQ : (b : Bool) → ProbDist (workedFib b)
   | true => by
       change ProbDist (Fin 1)
-      simpa using (uniformPNat (1 : ℕ+))
+      exact (uniformPNat ⟨1, by norm_num⟩ : ProbDist (Fin 1))
   | false => by
       change ProbDist (Fin 2)
       refine ⟨fun i : Fin 2 => if i = 0 then (2 : ℝ) / 3 else (1 : ℝ) / 3, ?_⟩
@@ -228,7 +231,7 @@ theorem worked_grouping_identity
     (hH : ShannonEntropyAxioms H) :
     H workedCompose = H workedP + (1 / 2 : ℝ) * H (workedQ false) := by
   have hqTrue_zero : H (workedQ true) = 0 := by
-    simpa [workedQ, workedFib, Apos] using Apos_one_zero H hH
+    exact Apos_one_zero H hH
   have hsum :
       (∑ b : Bool, workedP b * H (workedQ b))
         = (1 / 2 : ℝ) * H (workedQ false) := by

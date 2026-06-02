@@ -6,6 +6,10 @@ Authors: Yury G. Kudryashov
 
 import Mathlib.Data.ENNReal.Basic
 
+/-!
+# LeanPool.SardMoreira.ToMathlib.PR32993
+-/
+
 open ENNReal
 
 protected theorem ENNReal.div_right_comm {a b c : ℝ≥0∞} : a / b / c = a / c / b := by

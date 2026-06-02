@@ -1053,7 +1053,7 @@ theorem finite_exchangeability_bound
             exact (MeasureTheory.lintegral_indicator_one₀
               (hS0.preimage (hT g).quasiMeasurePreserving)).symm
       _ = ∫⁻ z, ∑ g : G, I g z ∂ν := by
-            exact (MeasureTheory.lintegral_finset_sum' Finset.univ hI_ae).symm
+            exact (MeasureTheory.lintegral_finsetSum' Finset.univ hI_ae).symm
       _ ≤ ∫⁻ _z, B * (Fintype.card G : ENNReal) ∂ν := by
             exact MeasureTheory.lintegral_mono_ae (Filter.Eventually.of_forall hpointwise)
       _ = B * (Fintype.card G : ENNReal) := by
@@ -2602,7 +2602,7 @@ theorem vcdim_finite_imp_uc' (X : Type u) [MeasurableSpace X]
     intro D hD c m hm
     by_cases hδ1 : 1 ≤ δ
     · have : ENNReal.ofReal (1 - δ) = 0 := ENNReal.ofReal_eq_zero.mpr (by linarith)
-      rw [this]; exact zero_le _
+      rw [this]; exact zero_le
     · push Not at hδ1
       have hm_pos : 0 < m := Nat.lt_of_lt_of_le (by omega) hm
       -- Measurability: for any two measurable Bool-valued functions, {x | f x ≠ g x} is measurable
@@ -2785,7 +2785,7 @@ theorem vcdim_finite_imp_uc' (X : Type u) [MeasurableSpace X]
     intro D hD c m hm
     by_cases hδ1 : 1 ≤ δ
     · have : ENNReal.ofReal (1 - δ) = 0 := ENNReal.ofReal_eq_zero.mpr (by linarith)
-      rw [this]; exact zero_le _
+      rw [this]; exact zero_le
     · push Not at hδ1
       have hm_pos : 0 < m := by
         have h1 : (0 : ℝ) < (16 * Real.exp 1 * (↑v + 1) / ε ^ 2) ^ (v + 1) / δ :=

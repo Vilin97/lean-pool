@@ -4,7 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Pietro Monticone, Abel Doñate Muñoz
 -/
 import LeanPool.SumsThreeSquares.MinkowskiConvex
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormNum.LegendreSymbol
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import Mathlib.NumberTheory.LegendreSymbol.QuadraticReciprocity
 import Mathlib.NumberTheory.LegendreSymbol.JacobiSymbol
 import Mathlib.NumberTheory.SumTwoSquares
@@ -215,7 +225,9 @@ lemma jacobi_neg_m_q (m : ℕ) (q : ℕ) (hm_mod : m % 8 = 3) (hq_mod : q % 4 = 
     rw [jacobiSym.neg _ (Nat.odd_iff.mpr (by omega)), ZMod.χ₄_nat_one_mod_four hq_mod, one_mul]
     exact jacobiSym.quadratic_reciprocity_one_mod_four' (Nat.odd_iff.mpr (by omega)) hq_mod
   rw [h_jacobi_neg_mq, h_jacobi_qm, jacobiSym.mod_right]
-  · norm_num [hm_mod]
+  · norm_num only [Int.natAbs]
+    rw [hm_mod]
+    norm_num [jacobiSym]
   · exact Nat.odd_iff.mpr (by omega)
 
 /-
@@ -263,7 +275,8 @@ lemma exists_t (m : ℕ) (q : ℕ) (hm_sq : Squarefree m) (hm_mod : m % 8 = 3)
           ne_eq, ← ZMod.intCast_eq_intCast_iff, Int.cast_pow, Int.cast_neg,
           Int.cast_mul, Int.cast_ofNat, Int.cast_natCast]
         specialize h_jacobi p hp.2.1 hp.1
-        simp_all? +decide [Nat.primeFactorsList_prime hp.1]
+        simp_all +decide only [Nat.primeFactorsList_prime hp.1, List.pmap_cons, List.pmap_nil,
+          List.prod_cons, List.prod_nil, mul_one]
         rw [legendreSym.eq_one_iff] at h_jacobi
         · obtain ⟨x, hx⟩ := h_jacobi
           use x.val
@@ -352,15 +365,15 @@ lemma exists_t (m : ℕ) (q : ℕ) (hm_sq : Squarefree m) (hm_mod : m % 8 = 3)
         (by aesop_cat)
 
 /-- The linear map `M` of the geometry-of-numbers argument. -/
-noncomputable def linear_map_M (m q : ℕ) (t b : ℤ) :
+noncomputable def linearMapM (m q : ℕ) (t b : ℤ) :
     (Fin 3 → ℝ) →ₗ[ℝ] (Fin 3 → ℝ) :=
   Matrix.toLin' (![![2 * t * q, t * b, m],
       ![(Real.sqrt (2 * q)), b / (Real.sqrt (2 * q)), 0],
       ![0, Real.sqrt m / Real.sqrt (2 * q), 0]] : Matrix (Fin 3) (Fin 3) ℝ)
 
 lemma det_linear_map_M (m q : ℕ) (t b : ℤ) (_hm : 0 < m) (hq : 0 < q) :
-    LinearMap.det (linear_map_M m q t b) = m * Real.sqrt m := by
-  unfold linear_map_M
+    LinearMap.det (linearMapM m q t b) = m * Real.sqrt m := by
+  unfold linearMapM
   simp +decide only [Nat.ofNat_nonneg, Real.sqrt_mul, LinearMap.det_toLin',
     Matrix.det_fin_three, Fin.isValue, Matrix.cons_val', Matrix.cons_val_zero,
     Matrix.cons_val_fin_one, Matrix.cons_val_one, Matrix.cons_val, mul_zero, zero_mul,
@@ -368,22 +381,22 @@ lemma det_linear_map_M (m q : ℕ) (t b : ℤ) (_hm : 0 < m) (hq : 0 < q) :
   rw [mul_assoc, mul_div_cancel₀ _ (by positivity)]
 
 lemma det_linear_map_M_ne_zero (m q : ℕ) (t b : ℤ) (hm : 0 < m) (hq : 0 < q) :
-    LinearMap.det (linear_map_M m q t b) ≠ 0 := by
+    LinearMap.det (linearMapM m q t b) ≠ 0 := by
   rw [det_linear_map_M m q t b hm hq]
   positivity
 
 /-- The linear map `M` reinterpreted on `EuclideanSpace ℝ (Fin 3)`. -/
-noncomputable abbrev linear_map_M_euclidean (m q : ℕ) (t b : ℤ) :
+noncomputable abbrev linearMapMEuclidean (m q : ℕ) (t b : ℤ) :
     (EuclideanSpace ℝ (Fin 3)) →ₗ[ℝ] (EuclideanSpace ℝ (Fin 3)) :=
   (EuclideanSpace.equiv (Fin 3) ℝ).symm.toLinearMap ∘ₗ
-    (linear_map_M m q t b) ∘ₗ (EuclideanSpace.equiv (Fin 3) ℝ).toLinearMap
+    (linearMapM m q t b) ∘ₗ (EuclideanSpace.equiv (Fin 3) ℝ).toLinearMap
 
 lemma det_linear_map_M_euclidean (m q : ℕ) (t b : ℤ) (hm : 0 < m) (hq : 0 < q) :
-    LinearMap.det (linear_map_M_euclidean m q t b) = m * Real.sqrt m := by
-  have hrw : linear_map_M_euclidean m q t b =
+    LinearMap.det (linearMapMEuclidean m q t b) = m * Real.sqrt m := by
+  have hrw : linearMapMEuclidean m q t b =
       ((EuclideanSpace.equiv (Fin 3) ℝ).symm.toLinearEquiv :
         (Fin 3 → ℝ) ≃ₗ[ℝ] EuclideanSpace ℝ (Fin 3)).toLinearMap ∘ₗ
-        (linear_map_M m q t b) ∘ₗ
+        (linearMapM m q t b) ∘ₗ
         ((EuclideanSpace.equiv (Fin 3) ℝ).symm.toLinearEquiv.symm).toLinearMap := rfl
   rw [hrw, LinearMap.det_conj]
   exact det_linear_map_M m q t b hm hq
@@ -393,18 +406,18 @@ The volume of the preimage of the ball is $\frac{4}{3}\pi (2m)^{3/2} / m^{3/2}$.
 -/
 lemma vol_preimage_ball_euclidean (m q : ℕ) (t b : ℤ) (hm : 0 < m) (hq : 0 < q) :
     MeasureTheory.volume
-        ((linear_map_M_euclidean m q t b) ⁻¹'
+        ((linearMapMEuclidean m q t b) ⁻¹'
           (Metric.ball (0 : EuclideanSpace ℝ (Fin 3)) (Real.sqrt (2 * m)))) =
       ENNReal.ofReal
         ((4 / 3) * Real.pi * (2 * m) ^ (3 / 2 : ℝ) / (m * Real.sqrt m)) := by
   -- The volume of the preimage is $\text{vol}(B(0, \sqrt{2m})) / |\det M|$.
   have h_volume :
       (MeasureTheory.volume
-          ((⇑(linear_map_M_euclidean m q t b)) ⁻¹'
+          ((⇑(linearMapMEuclidean m q t b)) ⁻¹'
             (Metric.ball 0 (Real.sqrt (2 * ↑m))))) =
         (MeasureTheory.volume
           (Metric.ball (0 : EuclideanSpace ℝ (Fin 3)) (Real.sqrt (2 * ↑m)))) /
-        ENNReal.ofReal (abs (LinearMap.det (linear_map_M_euclidean m q t b))) := by
+        ENNReal.ofReal (abs (LinearMap.det (linearMapMEuclidean m q t b))) := by
     have h_volume_image :
         ∀ {L : (EuclideanSpace ℝ (Fin 3)) →ₗ[ℝ] (EuclideanSpace ℝ (Fin 3))},
           LinearMap.det L ≠ 0 →
@@ -433,7 +446,7 @@ lemma vol_preimage_ball_euclidean (m q : ℕ) (t b : ℤ) (hm : 0 < m) (hq : 0 <
     rw [← ENNReal.ofReal_mul (by positivity)]
     ring_nf
   -- The determinant of the linear map is $m^{3/2}$.
-  have h_det : abs (LinearMap.det (linear_map_M_euclidean m q t b)) = m * Real.sqrt m := by
+  have h_det : abs (LinearMap.det (linearMapMEuclidean m q t b)) = m * Real.sqrt m := by
     convert congr_arg abs (det_linear_map_M_euclidean m q t b hm hq) using 1
     rw [abs_of_nonneg (by positivity)]
   rw [h_volume, h_ball_volume, h_det, ENNReal.ofReal_div_of_pos]
@@ -478,7 +491,7 @@ private lemma exists_lattice_xyz_lt_two_m (m q : ℕ) (t b : ℤ) (hm : 0 < m) (
     let T := Real.sqrt m / Real.sqrt (2 * q) * y
     R^2 + S^2 + T^2 < 2 * m := by
   let B := Metric.ball (0 : EuclideanSpace ℝ (Fin 3)) (Real.sqrt (2 * m))
-  let S_pre := (linear_map_M_euclidean m q t b) ⁻¹' B
+  let S_pre := (linearMapMEuclidean m q t b) ⁻¹' B
   have h_symm : ∀ x ∈ S_pre, -x ∈ S_pre := by
     intro x hx
     unfold S_pre B at hx ⊢
@@ -523,7 +536,7 @@ private lemma exists_lattice_xyz_lt_two_m (m q : ℕ) (t b : ℤ) (hm : 0 < m) (
   · contrapose! hx0
     ext i
     fin_cases i <;> aesop
-  · convert (show (‖linear_map_M_euclidean m q t b x‖ ^ 2 : ℝ) < 2 * m from ?_)
+  · convert (show (‖linearMapMEuclidean m q t b x‖ ^ 2 : ℝ) < 2 * m from ?_)
       using 1 <;> norm_num [EuclideanSpace.norm_eq, Fin.sum_univ_three]
     all_goals ring_nf
     all_goals
@@ -531,12 +544,12 @@ private lemma exists_lattice_xyz_lt_two_m (m q : ℕ) (t b : ℤ) (hm : 0 < m) (
         dist_zero_right, map_neg, norm_neg, implies_true, ne_eq, Fin.isValue,
         Real.sq_sqrt, Nat.cast_nonneg, inv_pow, S_pre, B]
     · have h_expand :
-          (linear_map_M_euclidean m q t b x) 0 = 2 * t * q * x 0 + t * b * x 1 +
+          (linearMapMEuclidean m q t b x) 0 = 2 * t * q * x 0 + t * b * x 1 +
             m * x 2 ∧
-        (linear_map_M_euclidean m q t b x) 1 =
+        (linearMapMEuclidean m q t b x) 1 =
           Real.sqrt (2 * q) * x 0 + b / Real.sqrt (2 * q) * x 1 ∧
-        (linear_map_M_euclidean m q t b x) 2 = Real.sqrt m / Real.sqrt (2 * q) * x 1 := by
-        unfold linear_map_M_euclidean
+        (linearMapMEuclidean m q t b x) 2 = Real.sqrt m / Real.sqrt (2 * q) * x 1 := by
+        unfold linearMapMEuclidean
         norm_num [Fin.sum_univ_three]
         ring_nf
         erw [Matrix.toLin'_apply]
@@ -552,8 +565,8 @@ private lemma exists_lattice_xyz_lt_two_m (m q : ℕ) (t b : ℤ) (hm : 0 < m) (
             ring_nf
             aesop (simp_config := { decide := Bool.true })
       rw [Real.sq_sqrt <| by positivity]
-      have heq : ∀ i, (linear_map_M m q t b) ((EuclideanSpace.equiv (Fin 3) ℝ) x) i =
-          ((linear_map_M_euclidean m q t b) x).ofLp i := fun _ => rfl
+      have heq : ∀ i, (linearMapM m q t b) ((EuclideanSpace.equiv (Fin 3) ℝ) x) i =
+          ((linearMapMEuclidean m q t b) x).ofLp i := fun _ => rfl
       simp only [heq]
       rw [h_expand.1, h_expand.2.1, h_expand.2.2]
       ring_nf
@@ -935,7 +948,8 @@ lemma p_mod4_eq1_of_dvd_v_not_dvd_m (p : ℕ) (q : ℤ) (b h x y v R m : ℤ)
     haveI := Fact.mk hp
     simp_all +decide only [ne_eq, Nat.not_even_iff_odd, ← ZMod.intCast_eq_intCast_iff,
       Int.cast_pow, jacobiSym]
-    simp? +decide [Nat.primeFactorsList_prime hp]
+    simp +decide only [Nat.primeFactorsList_prime hp, List.pmap_cons, List.pmap_nil, List.prod_cons,
+      List.prod_nil, mul_one]
     haveI := Fact.mk hp
     rw [legendreSym.eq_one_iff]
     · aesop
@@ -946,8 +960,10 @@ lemma p_mod4_eq1_of_dvd_v_not_dvd_m (p : ℕ) (q : ℤ) (b h x y v R m : ℤ)
         exact Int.modEq_iff_dvd.mpr ⟨-4 * h * hpq.choose, by
           linear_combination -hbqm - 4 * h * hpq.choose_spec⟩
       haveI := Fact.mk hp
-      simp_all? +decide [← ZMod.intCast_eq_intCast_iff, jacobiSym]
-      simp_all? +decide [Nat.primeFactorsList_prime hp]
+      simp_all +decide only [jacobiSym, ← ZMod.intCast_eq_intCast_iff, Int.cast_pow,
+        Int.cast_neg]
+      simp_all +decide only [Nat.primeFactorsList_prime hp, List.pmap_cons, List.pmap_nil,
+        List.prod_cons, List.prod_nil, mul_one]
       rw [legendreSym.eq_one_iff] at *
       · exact ⟨b, by simpa [sq] using hb_sq_mod_p.symm⟩
       · rwa [← ZMod.intCast_zmod_eq_zero_iff_dvd] at hpm
@@ -994,7 +1010,7 @@ lemma p_mod4_of_dvd_v_dvd_m (p : ℕ) (q : ℕ) (b h x y : ℤ) (R v : ℤ) (m :
     have hp_2qx_by : (p : ℤ) ∣ ((2 * q * x + b * y) ^ 2 + m * y ^ 2) := by
       convert hpv.mul_left (4 * q) using 1
       rw [hv]
-      linear_combination' hbqm * y ^ 2
+      linear_combination hbqm * y ^ 2
     haveI := Fact.mk hp
     simp_all +decide [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     obtain ⟨k, hk⟩ := hpm
@@ -1006,10 +1022,10 @@ lemma p_mod4_of_dvd_v_dvd_m (p : ℕ) (q : ℕ) (b h x y : ℤ) (R v : ℤ) (m :
         simp_all +decide only [Int.reduceNeg, neg_mul, Int.modEq_iff_dvd]
         obtain ⟨a, ha⟩ := hp_R
         obtain ⟨b', hb'⟩ := hp_2qx_by
-        simp_all? +decide [← eq_sub_iff_add_eq', ← mul_assoc]
+        simp_all +decide only [← eq_sub_iff_add_eq', ← mul_assoc]
         exact ⟨a ^ 2 * 2 * q, by nlinarith⟩
       have h_div_p : (4 * q * v : ℤ) ≡ (2 * q * x + b * y) ^ 2 + m * y ^ 2 [ZMOD p ^ 2] := by
-        exact Int.modEq_of_dvd ⟨0, by rw [hv]; linear_combination' hbqm * y ^ 2⟩
+        exact Int.modEq_of_dvd ⟨0, by rw [hv]; linear_combination hbqm * y ^ 2⟩
       have h_div_p : (m : ℤ) * y ^ 2 ≡ (m : ℤ) * (2 * q) [ZMOD p ^ 2] := by
         simp_all +decide only [Int.reduceNeg, neg_mul, Int.ModEq]
         rw [Int.emod_eq_emod_iff_emod_sub_eq_zero] at *
@@ -1028,7 +1044,8 @@ lemma p_mod4_of_dvd_v_dvd_m (p : ℕ) (q : ℕ) (b h x y : ℤ) (R v : ℤ) (m :
     simp_all +decide only [jacobiSym, Int.reduceNeg, neg_mul,
       ← ZMod.intCast_eq_intCast_iff, Int.cast_pow, Int.cast_mul, Int.cast_ofNat,
       Int.cast_natCast]
-    simp_all? +decide [Nat.primeFactorsList_prime hp]
+    simp_all +decide only [Nat.primeFactorsList_prime hp, List.pmap_cons, List.pmap_nil,
+      List.prod_cons, List.prod_nil, mul_one]
     rw [legendreSym.eq_one_iff]
     · exact ⟨y, by simpa [sq, ← ZMod.intCast_eq_intCast_iff] using h_y_sq_mod_p.symm⟩
     · intro H
@@ -1065,7 +1082,7 @@ lemma even_padicVal_of_mod4_eq3 (p : ℕ) (q : ℕ) (b h x y : ℤ) (R : ℤ) (v
         simp_all +decide only [Int.reduceNeg, neg_mul, Nat.not_even_iff_odd,
           imp_false, Nat.not_odd_iff_even, ne_eq, hv_pos.ne', not_false_eq_true,
           padicValNat.mul]
-        simp_all? [← hv_def]
+        simp_all only [← hv_def, padicValInt.of_nat]
         rw [padicValNat.eq_zero_of_not_dvd] <;> simp_all +decide [Nat.prime_dvd_prime_iff_eq]
     · rw [padicValNat.eq_zero_of_not_dvd] <;> norm_num
       exact fun h => hpv <| Int.natCast_dvd_natCast.mpr <| hp.dvd_mul.mp h |> Or.resolve_left <| by
@@ -1094,7 +1111,11 @@ theorem blueprint_case_mod8_eq3 (m : ℕ) (hm_sq : Squarefree m) (hm_pos : 0 < m
     exists_R_v_of_mod8_eq3 m hm_sq hm_pos hm_mod
   have h2v := two_v_sum_two_squares q b h x y R v m hm_sq hv_pos hv_def hbqm hRv hjac
   have habc : ∃ a b c : ℤ, (m : ℤ) = a ^ 2 + b ^ 2 + c ^ 2 := by
-    grind +qlia
+    obtain ⟨A, B, hAB⟩ := h2v
+    refine ⟨R, A, B, ?_⟩
+    have hAB_int : (2 * v : ℤ) = (A : ℤ) ^ 2 + (B : ℤ) ^ 2 := by
+      exact_mod_cast hAB
+    nlinarith [hRv, hAB_int]
   obtain ⟨a, b, c, habc⟩ := habc
   refine ⟨a.natAbs, b.natAbs, c.natAbs, ?_⟩
   apply Int.ofNat.inj

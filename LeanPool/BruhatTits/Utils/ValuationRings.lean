@@ -7,6 +7,10 @@ import LeanPool.BruhatTits.Utils.Misc
 import Mathlib.RingTheory.DiscreteValuationRing.Basic
 import Mathlib.RingTheory.Valuation.ValuationRing
 
+/-!
+# LeanPool.BruhatTits.Utils.ValuationRings
+-/
+
 open Module
 
 section

@@ -5,6 +5,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 import Mathlib.Topology.Connected.PathConnected
 
+/-!
+# LeanPool.DirectedTopologyLean4.DirectedSpace
+-/
+
 /-
   # Definition of directed spaces
   This file defines the directed space, an extension of a topological space where

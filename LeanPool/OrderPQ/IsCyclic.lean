@@ -7,6 +7,10 @@ import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import LeanPool.OrderPQ.MonoidHom
 import LeanPool.OrderPQ.TorsionBy
 
+/-!
+# LeanPool.OrderPQ.IsCyclic
+-/
+
 section MulEquiv
 namespace IsCyclic
 
@@ -43,8 +47,9 @@ variable {α : Type*} [Group α] [IsCyclic α]
 @[to_additive]
 lemma card_orderOf_dvd_eq [Fintype α] {d : ℕ} (hd : d ∣ Fintype.card α) :
     (Finset.univ.filter fun (a : α) => orderOf a ∣ d).card = d := by
-  have (a : α) (ha : a ∈ Finset.univ.filter fun (a : α) => orderOf a ∣ d) : orderOf a ∈ d.divisors
-  · refine Nat.mem_divisors.mpr ⟨?_, ?_⟩
+  have (a : α) (ha : a ∈ Finset.univ.filter fun (a : α) => orderOf a ∣ d) :
+      orderOf a ∈ d.divisors := by
+    refine Nat.mem_divisors.mpr ⟨?_, ?_⟩
     · exact Finset.mem_filter.mp ha |>.2
     · exact ne_zero_of_dvd_ne_zero Fintype.card_ne_zero hd
   rw [Finset.card_eq_sum_card_fiberwise this]
@@ -56,8 +61,9 @@ lemma card_orderOf_dvd_eq [Fintype α] {d : ℕ} (hd : d ∣ Fintype.card α) :
   exact and_iff_right_iff_imp.mpr fun h => h ▸ hx
 
 /-- A cyclic group is a commutative group. -/
-@[to_additive /-- A cyclic additive group is a commutative additive group. -/]
-local instance : CommGroup α := IsCyclic.commGroup
+@[to_additive
+  /-- A cyclic additive group is a commutative additive group. -/]
+local instance instCommGroupLeanPool : CommGroup α := IsCyclic.commGroup
 
 @[to_additive]
 lemma card_torsionBy' [Finite α] {d : ℕ} (hd : d ∣ Nat.card α) :
@@ -107,9 +113,9 @@ lemma isCyclic_prod_iff_coprime_card
     use x1, x2, h1 ▸ h2 ▸ Prod.orderOf_mk
   · have ha := orderOf_dvd_natCard a
     have hb := orderOf_dvd_natCard b
-    have : (Nat.card G1 / orderOf a) * (Nat.card G2 / orderOf b) * Nat.gcd (orderOf a) (orderOf b)
-      = 1
-    · rw [Prod.orderOf_mk, Nat.lcm, ← Nat.mul_div_cancel' ha, ← Nat.mul_div_cancel' hb] at h
+    have : (Nat.card G1 / orderOf a) * (Nat.card G2 / orderOf b) *
+        Nat.gcd (orderOf a) (orderOf b) = 1 := by
+      rw [Prod.orderOf_mk, Nat.lcm, ← Nat.mul_div_cancel' ha, ← Nat.mul_div_cancel' hb] at h
       replace h := Nat.eq_mul_of_div_eq_left
         (Nat.dvd_trans (Nat.gcd_dvd_left ..) (Nat.dvd_mul_right ..)) h
       rw [← Nat.mul_right_inj <| Nat.pos_iff_ne_zero.mp (orderOf_pos b),

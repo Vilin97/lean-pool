@@ -52,12 +52,14 @@ jobs:
             .lake/build
             docbuild/.lake/build
           key: Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-${{ github.sha }}
-          # PR doc builds never deploy (Pages steps are main-only), so they
-          # restore the latest main cache and build incrementally. main keeps
-          # the exact key incl. LeanPool.lean so a project-add fully rebuilds.
+          # The doc tree builds incrementally per module, so unchanged Mathlib
+          # modules are reused from cache and only changed/new modules re-render.
+          # Both PR and main fall back to the latest doc cache and build only the
+          # delta, so adding a project no longer triggers a full Mathlib re-render
+          # on main (the previous exact-key-only behaviour cost ~4h per merge).
           restore-keys: |
             Docs-Lake-${{ runner.os }}-${{ hashFiles('lake-manifest.json', 'docbuild/lake-manifest.json', 'LeanPool.lean') }}-
-            ${{ github.event_name == 'pull_request' && format('Docs-Lake-{0}-', runner.os) || 'Docs-Lake-main-uses-exact-key-only' }}
+            Docs-Lake-${{ runner.os }}-
 
       - name: Install Lean
         uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9

@@ -17,7 +17,7 @@ Gibbs inequality and concavity of `negMulLog`.
 
 1. `entropyNat_eq_zero_iff` — `H(p) = 0` iff `p` is deterministic
 2. `entropyNat_eq_log_card_iff` — `H(p) = log |α|` iff `p` is uniform
-3. `entropyNat_joint_le_add` — subadditivity: `H(X,Y) ≤ H(X) + H(Y)`
+3. `entropyNat_jointLe_add` — subadditivity: `H(X,Y) ≤ H(X) + H(Y)`
 4. `entropyNat_doublyStochastic_le` — Schur-concavity: doubly stochastic averaging
 5. `condEntropy_le_entropyNat` — conditioning reduces entropy: `H_X(Y) ≤ H(Y)`
 6. `condEntropy_nonneg` — conditional entropy is nonnegative
@@ -158,7 +158,7 @@ theorem entropyNat_eq_log_card_iff {α : Type} [Fintype α] [Nonempty α]
 The proof applies `gibbs_inequality` with `q = prodDist (marginalFst p) (marginalSnd p)`,
 i.e., the product of marginals. The Gibbs sum telescopes to
 `H(X,Y) - H(X) - H(Y) ≤ 0`. -/
-theorem entropyNat_joint_le_add {α β : Type} [Fintype α] [Fintype β]
+theorem entropyNat_jointLe_add {α β : Type} [Fintype α] [Fintype β]
     (p : ProbDist (α × β)) :
     entropyNat p ≤ entropyNat (marginalFst p) + entropyNat (marginalSnd p) := by
   let q := prodDist (marginalFst p) (marginalSnd p)
@@ -286,7 +286,7 @@ theorem condEntropy_le_entropyNat {α β : Type} [Fintype α] [Fintype β]
     (p : ProbDist (α × β)) :
     condEntropy p ≤ entropyNat (marginalSnd p) :=
   le_of_add_le_add_left (a := entropyNat (marginalFst p))
-    ((chain_rule p).symm ▸ entropyNat_joint_le_add p)
+    ((chain_rule p).symm ▸ entropyNat_jointLe_add p)
 
 end
 

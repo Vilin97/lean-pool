@@ -28,7 +28,7 @@ lemma val_mul_subring (S : NonUnitalSubring R) (a b : S) : (a * b : S) = a.val *
 -- unital subring B of R that has the same elements as A, then A is isomorphic to B
 /-- A non-unital subring `A` of `S ⊆ R` is isomorphic to any non-unital subring `B` of `R`
 whose carrier matches the image of `A` under `S.val`. -/
-def non_unital_subring_eq
+def nonUnitalSubringEq
     {S : NonUnitalSubring R}
     [Ring S]
     (ha : ∀ x y : ↥S, (x + y : ↥S) = x.val + y.val)
@@ -92,31 +92,31 @@ theorem double_corner_set_eq :
     rw [mul_assoc, mul_assoc, heff, ← mul_assoc, ← mul_assoc, ← hffe]
 
 -- auxiliary lemma since there is a problem with direct application
-/-- Specialisation of `non_unital_subring_eq` to the corner subrings of `f` and `f.val`,
+/-- Specialisation of `nonUnitalSubringEq` to the corner subrings of `f` and `f.val`,
 isolated to work around an elaboration issue with direct application. -/
-def corner_ring_eq_lemma
+def cornerRingEqLemma
     (h : (Subtype.val '' (CornerSubringNonUnital f).carrier) =
       (CornerSubringNonUnital (f : R)).carrier) :
     CornerSubringNonUnital f ≃+* CornerSubringNonUnital (f : R) :=
-  @non_unital_subring_eq R _ (CornerSubring idem_e) _ (by simp) (by simp)
+  @nonUnitalSubringEq R _ (CornerSubring idem_e) _ (by simp) (by simp)
     (CornerSubringNonUnital f) (CornerSubringNonUnital (f : R)) h
 
 -- what we wanted to prove
 /-- The non-unital corner subring of `f` inside the corner ring `eRe` is isomorphic to the
 non-unital corner subring of `f.val` inside `R`. -/
-def corner_ring_non_unital_eq : CornerSubringNonUnital f ≃+* CornerSubringNonUnital (f : R) := by
-  apply corner_ring_eq_lemma
+def cornerRingNonUnitalEq : CornerSubringNonUnital f ≃+* CornerSubringNonUnital (f : R) := by
+  apply cornerRingEqLemma
   apply double_corner_set_eq
 
 variable {f : CornerSubring idem_e}
 variable (idem_f : IsIdempotentElem f)
 
 -- another auxiliary lemma for easier application
-/-- Unital variant of `corner_ring_non_unital_eq`: the corner subring of `f` inside `eRe` is
+/-- Unital variant of `cornerRingNonUnitalEq`: the corner subring of `f` inside `eRe` is
 isomorphic to the corner subring of `f.val` in `R`. -/
-def corner_ring_unital_eq :
+def cornerRingUnitalEq :
     CornerSubring idem_f ≃+* CornerSubring (e_idem_to_e_val_idem idem_f) := by
   unfold CornerSubring
-  apply corner_ring_non_unital_eq
+  apply cornerRingNonUnitalEq
 
 end LeanPool.ArtinWedderburn

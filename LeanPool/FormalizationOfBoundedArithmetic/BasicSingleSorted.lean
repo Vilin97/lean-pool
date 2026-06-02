@@ -7,6 +7,10 @@ Authors: ruplet
 import Mathlib.ModelTheory.Semantics
 import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
+-/
+
 open FirstOrder FirstOrder.Language
 
 universe u
@@ -64,7 +68,7 @@ def natToM : Nat -> M
 | 1 => 1
 | n + 1 => natToM n + 1
 
-instance (n) : OfNat M n where
+instance instOfNatLeanPool (n) : OfNat M n where
   ofNat := natToM n
 
 /-- Pairing function used to encode two numbers as one number. -/

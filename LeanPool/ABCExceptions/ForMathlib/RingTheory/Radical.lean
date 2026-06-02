@@ -11,6 +11,10 @@ import Mathlib.RingTheory.Coprime.Lemmas
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.UniqueFactorizationDomain.Nat
 
+/-!
+# LeanPool.ABCExceptions.ForMathlib.RingTheory.Radical
+-/
+
 namespace UniqueFactorizationMonoid
 
 open Qq Lean Mathlib.Meta Finset
