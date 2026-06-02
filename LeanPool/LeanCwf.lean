@@ -36,4 +36,11 @@ Imported from <https://github.com/JoeyEremondi/lean-cwf>. Upstream is
 BSD-3-Clause-licensed; redistributed here under Apache-2.0 as part of Lean
 Pool. The source package has no pinned `lean-toolchain` in this clone; it was
 ported to Lean Pool's `leanprover/lean4:v4.30.0-rc2` toolchain.
+
+## References
+
+The notion of a category with families is due to P. Dybjer, *Internal Type
+Theory* (TYPES 1995, LNCS 1158, Springer 1996, doi:10.1007/3-540-61780-9_66);
+see also M. Hofmann, *Syntax and Semantics of Dependent Types* (1997). The CwF
+laws and the term/section equivalence formalised here follow that account.
 -/

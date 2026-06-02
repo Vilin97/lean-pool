@@ -1263,6 +1263,7 @@ projects:
     source:
       url: https://github.com/JoeyEremondi/lean-cwf
       github_repo: JoeyEremondi/lean-cwf
+      doi: "10.1007/3-540-61780-9_66"
     status: verified
     main_declarations:
       - LeanPool.LeanCwf.CwF.CwFStruct
