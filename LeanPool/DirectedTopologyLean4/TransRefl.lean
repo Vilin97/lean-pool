@@ -6,15 +6,19 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.Basic
 import LeanPool.DirectedTopologyLean4.DirectedHomotopy
 
-/-
-  Auxiliary lemmas for the refl_trans and trans_refl definitions in directed_path_homotopy.lean.
-  These two are definitions are dihomotopies related to a `p : Dipath x₀ x₁`:
-    refl_trans : from `(refl x₀).trans p` to `p`
-    trans_refl : from `p` to `p.trans (refl x₁)`
+/-!
+# LeanPool.DirectedTopologyLean4.TransRefl
+-/
 
-  Those for trans_refl can be based on the auxiliary lemmas found in
+/-
+  Auxiliary lemmas for the reflTrans and transRefl definitions in directed_path_homotopy.lean.
+  These two are definitions are dihomotopies related to a `p : Dipath x₀ x₁`:
+    reflTrans : from `(refl x₀).trans p` to `p`
+    transRefl : from `p` to `p.trans (refl x₁)`
+
+  Those for transRefl can be based on the auxiliary lemmas found in
   algebraic_topology.fundamental_groupoid.basic.
-  They use symmetry for refl_trans which is not possible in the directed case, so we have to define
+  They use symmetry for reflTrans which is not possible in the directed case, so we have to define
   them manually.
 -/
 

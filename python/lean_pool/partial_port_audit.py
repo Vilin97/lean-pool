@@ -334,6 +334,8 @@ def evaluate_stats(
         imported_by_path.setdefault(normalize_relative_path(file.path), []).append(file)
     truncated_files = []
     for file in sorted(upstream.files, key=lambda item: item.loc, reverse=True):
+        if file.loc == 0:
+            continue
         matching_imports = imported_by_path.get(normalize_relative_path(file.path), [])
         if not matching_imports:
             continue

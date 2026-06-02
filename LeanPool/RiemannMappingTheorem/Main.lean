@@ -8,6 +8,10 @@ import LeanPool.RiemannMappingTheorem.Etape2
 import LeanPool.RiemannMappingTheorem.HasSqrt
 import LeanPool.RiemannMappingTheorem.Montel
 
+/-!
+# LeanPool.RiemannMappingTheorem.Main
+-/
+
 open UniformConvergence Topology Filter Set Metric Function
 
 variable {ι : Type*} {l : Filter ι} {U : Set ℂ} {z₀ : ℂ}
@@ -74,12 +78,12 @@ theorem main [good_domain U] : ∃ f ∈ 𝓘 U, f '' U = ball (0 : ℂ) 1 := by
   rw [isMaxOn_iff] at hfg
   contrapose! hfg
   obtain ⟨g, hg⟩ := step_2 U hz₀ ⟨f, hf.1.1, h5.2, mapsTo_iff_image_subset.2 h10⟩ hfg
-  exact ⟨g.to_fun, 𝓘_subset_𝓙 ⟨⟨g.is_diff, g.maps_to.mono_right ball_subset_closedBall⟩, g.is_inj⟩,
+  exact ⟨g.toFun, 𝓘_subset_𝓙 ⟨⟨g.is_diff, g.maps_to.mono_right ball_subset_closedBall⟩, g.is_inj⟩,
     hg⟩
 
-theorem RMT (h1 : IsOpen U) (h2 : IsConnected U) (h3 : U ≠ univ) (h4 : has_primitives U) :
+theorem RMT (h1 : IsOpen U) (h2 : IsConnected U) (h3 : U ≠ univ) (h4 : hasPrimitives U) :
     ∃ f : ℂ → ℂ, (DifferentiableOn ℂ f U) ∧ (InjOn f U) ∧ (f '' U = ball 0 1) := by
   have : good_domain U :=
-    ⟨h1, h2.1, h2.2, h3, (h4.has_logs h1 h2.isPreconnected).has_sqrt⟩
+    ⟨h1, h2.1, h2.2, h3, (h4.hasLogs h1 h2.isPreconnected).hasSqrt⟩
   obtain ⟨f, hf : f ∈ 𝓘 U, hfU⟩ := main (U := U)
   exact ⟨f, hf.1.1, hf.2, hfU⟩

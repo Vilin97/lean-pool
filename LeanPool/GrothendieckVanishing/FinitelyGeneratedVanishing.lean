@@ -20,7 +20,7 @@ underlies the irreducible positive-dimensional case of Grothendieck vanishing.
 ## Main definitions
 
 * `finsetGenFunctor` — the filtered diagram of finitely generated subsheaves.
-* `finsetGenCocone`, `finsetGenCocone_isColimit` — exhibits `K` as the colimit.
+* `finsetGenCocone`, `finsetGenCoconeIsColimit` — exhibits `K` as the colimit.
 
 ## Main results
 
@@ -30,7 +30,7 @@ underlies the irreducible positive-dimensional case of Grothendieck vanishing.
   generated subsheaves to vanishing for the epi-images of `zeroOutsideInt V`.
 * `directLimit_cohomology_vanishing` — composes both above into the headline reduction.
 
-The `isFlasque_filtered_colimit` and `sheafH_preserves_filtered_colimits` building blocks
+The `isFlasque_filtered_colimit` and `sheafHPreservesFilteredColimits` building blocks
 live in the `PresheafFilteredColimit` modules.
 -/
 
@@ -72,12 +72,17 @@ noncomputable def finsetGenCocone :
   Cocone.mk (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)
     { app := fun S ↦ Limits.image.ι (TopCat.Presheaf.finsetGeneratorMap hK S)
       naturality := fun S S' h ↦ by
-        simp [finsetGenFunctor, TopCat.Presheaf.finsetImageInclGen_comp_ι] }
+        change TopCat.Presheaf.finsetImageInclGen hK h.le ≫
+            Limits.image.ι (TopCat.Presheaf.finsetGeneratorMap hK S') =
+          Limits.image.ι (TopCat.Presheaf.finsetGeneratorMap hK S) ≫
+            𝟙 (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X)
+        rw [TopCat.Presheaf.finsetImageInclGen_comp_ι]
+        exact (Category.comp_id _).symm }
 
 /-- The cocone is a colimit: `K` is the filtered colimit of its finitely generated subsheaves.
     Proof: the canonical map `colim → K` is mono (by AB5 + mono transitions) and epi
     (since `allSectionMap K` factors through it), hence an isomorphism. -/
-noncomputable def finsetGenCocone_isColimit :
+noncomputable def finsetGenCoconeIsColimit :
     IsColimit (finsetGenCocone hK) := by
   -- Show the comparison map colim → K is an iso, then transport IsColimit
   let d := colimit.desc (finsetGenFunctor hK) (finsetGenCocone hK)
@@ -90,7 +95,11 @@ noncomputable def finsetGenCocone_isColimit :
       show Mono (Limits.image.ι (TopCat.Presheaf.finsetGeneratorMap hK j)) from inferInstance
     haveI := NatTrans.mono_of_mono_app (finsetGenCocone hK).ι
     exact colim.map_mono' (finsetGenCocone hK).ι (colimit.isColimit _)
-      (isColimitConstCocone _ _) d (fun j ↦ by simp [d, finsetGenCocone, constCocone])
+      (isColimitConstCocone _ _) d (fun j ↦ by
+        change colimit.ι (finsetGenFunctor hK) j ≫
+            colimit.desc (finsetGenFunctor hK) (finsetGenCocone hK) =
+          (finsetGenCocone hK).ι.app j
+        exact colimit.ι_desc (finsetGenCocone hK) j)
   -- desc is epi: allSectionMap K factors through desc
   have hd_epi : Epi d := by
     let g : (∐ fun σ : TopCat.Presheaf.SectionIndex K ↦ TopCat.Sheaf.zeroOutsideInt σ.1) ⟶
@@ -148,22 +157,23 @@ theorem cohomology_vanishing_of_finitelyGenerated_vanishing
     refine Functor.isZero _ ?_
     intro S
     haveI : Subsingleton (Sheaf.H (TopCat.Presheaf.finsetGeneratedSheaf hK S) m) := hfg S
-    simpa [finsetGenFunctor, sheafCohomologyFunctor] using
-      (AddCommGrpCat.isZero_of_subsingleton
-        (AddCommGrpCat.of (Sheaf.H (TopCat.Presheaf.finsetGeneratedSheaf hK S) m)))
+    change IsZero
+      (AddCommGrpCat.of (Sheaf.H (TopCat.Presheaf.finsetGeneratedSheaf hK S) m))
+    exact AddCommGrpCat.isZero_of_subsingleton
+      (AddCommGrpCat.of (Sheaf.H (TopCat.Presheaf.finsetGeneratedSheaf hK S) m))
   have hZeroColim :
       IsZero (colimit (finsetGenFunctor hK ⋙ sheafCohomologyFunctor X m)) :=
     (colimit.isColimit _).isZero_pt hZeroDiagram
   have hZeroTarget :
       IsZero (AddCommGrpCat.of
         (Sheaf.H (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m)) := by
-    simpa [finsetGenCocone] using
-      IsZero.of_iso hZeroColim
-        (sheafH_preserves_filtered_colimits
-          (Y' := finsetGenFunctor hK)
-          (c' := finsetGenCocone hK)
-          (hc' := finsetGenCocone_isColimit hK)
-          m).symm
+    change IsZero (AddCommGrpCat.of (Sheaf.H (finsetGenCocone hK).pt m))
+    exact IsZero.of_iso hZeroColim
+      (sheafHPreservesFilteredColimits
+        (Y' := finsetGenFunctor hK)
+        (c' := finsetGenCocone hK)
+        (hc' := finsetGenCoconeIsColimit hK)
+        m).symm
   simpa using AddCommGrpCat.subsingleton_of_isZero hZeroTarget
 
 section FinsetGenerated

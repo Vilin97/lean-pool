@@ -267,9 +267,9 @@ theorem empiricalMeasureError_eq_empiricalError (X : Type u) [MeasurableSpace X]
   -- Step 2: Unfold RHS
   unfold EmpiricalError
   rw [if_neg hm']
-  -- Step 3: smul_apply and finset_sum_apply to distribute measure evaluation
+  -- Step 3: smul_apply and finsetSum_apply to distribute measure evaluation
   rw [MeasureTheory.Measure.smul_apply,
-      MeasureTheory.Measure.finset_sum_apply]
+      MeasureTheory.Measure.finsetSum_apply]
   -- Step 4: Evaluate each Dirac measure using MeasurableSingletonClass
   simp only [MeasureTheory.Measure.dirac_apply]
   -- Step 5: Expand indicator on the disagreement set
@@ -1334,11 +1334,9 @@ lemma nfl_counting_core {X : Type u} {C : ConceptClass X Bool} {T : Finset X}
     intro xs
     have hbound := per_sample_labeling_bound m (by rwa [hd_card]) xs
       (fun f t => (L.learn (fun i => ((↑(xs i) : X), f (xs i)))) (↑t))
-      (fun f f' hff' => by
-        ext t
-        change (L.learn (fun i => ((↑(xs i) : X), f (xs i)))) (↑t) =
-          (L.learn (fun i => ((↑(xs i) : X), f' (xs i)))) (↑t)
-        congr 1; funext i; exact Prod.ext rfl (hff' i))
+        (fun f f' hff' => by
+          ext t
+          congr 1; funext i; exact Prod.ext rfl (hff' i))
     rwa [hd_card] at hbound
   -- Step 2: By contradiction + pigeonhole to find f₀.
   -- The goal is ∃ f₀ c₀, c₀ ∈ C ∧ c₀|_T = f₀ ∧ 2 * count ≤ card.
@@ -1551,8 +1549,8 @@ theorem nfl_core (X : Type u) [MeasurableSpace X] [Fintype X]
         calc hfin.toFinset.card
             ≤ (Finset.image xs Finset.univ).card :=
               Finset.card_le_card (fun x hx => by
-                simpa only [Set.Finite.mem_toFinset, Finset.mem_image, Finset.mem_univ,
-                  true_and] using hx)
+                simpa only [Set.Finite.mem_toFinset, Set.mem_range, Finset.mem_image,
+                  Finset.mem_univ, true_and] using hx)
           _ ≤ Fintype.card (Fin m) := Finset.card_image_le
           _ = m := Fintype.card_fin m
       -- (1/n) * |range| <= m/n <= 1 / 2

@@ -115,7 +115,9 @@ lemma Finsupp.image_lift (R : Type*) [Semiring R] {M : Type*} [AddCommMonoid M] 
     {X : Type*} (f : X → M) : LinearMap.range (lift M R X f) = .span R (Set.range f) := by
   refine le_antisymm (LinearMap.range_le_iff_comap.2 <| eq_top_iff'.2 fun c ↦ ?_)
     (span_le.2 <| Set.range_subset_iff.2 fun x ↦ ⟨single x 1, by simp⟩)
-  simpa using sum_mem fun c hc ↦ smul_mem _ _ (subset_span <| Set.mem_range_self c)
+  change c.sum (fun x r ↦ r • f x) ∈ span R (Set.range f)
+  rw [Finsupp.sum]
+  exact sum_mem fun c hc ↦ smul_mem _ _ (subset_span <| Set.mem_range_self c)
 
 lemma Finsupp.lift_surjective_iff (R : Type*) [Semiring R]
     {M : Type*} [AddCommMonoid M] [Module R M] {X : Type*} (f : X → M) :

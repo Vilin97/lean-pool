@@ -70,15 +70,15 @@ lemma vGrad_exp_quadratic (a : ℝ) (b : Fin 3 → ℝ) (c : ℝ) :
   · norm_num [ dotProduct ]
     fun_prop (disch := norm_num)
 
-/-- Gaussian normalization: if f(v) = exp(a₀ + c₀|v|²) with c₀ < 0 and ∫f = ρ_ion,
-    then f = equilibriumMaxwellian ρ_ion T with T = -1/(2c₀).
+/-- Gaussian normalization: if f(v) = exp(a₀ + c₀|v|²) with c₀ < 0 and ∫f = ρIon,
+    then f = equilibriumMaxwellian ρIon T with T = -1/(2c₀).
     Proved by Aristotle (project 1236b757). -/
 lemma gaussian_normalization_maxwellian
-    (ρ_ion a₀ c₀ : ℝ) (_hρ : 0 < ρ_ion) (hc₀ : c₀ < 0)
+    (ρIon a₀ c₀ : ℝ) (_hρ : 0 < ρIon) (hc₀ : c₀ < 0)
     (f : (Fin 3 → ℝ) → ℝ)
     (hf : ∀ v, f v = Real.exp (a₀ + c₀ * normSq v))
-    (hf_int : ∫ v : Fin 3 → ℝ, f v = ρ_ion) :
-    ∀ v, f v = equilibriumMaxwellian ρ_ion (-1 / (2 * c₀)) v := by
+    (hf_int : ∫ v : Fin 3 → ℝ, f v = ρIon) :
+    ∀ v, f v = equilibriumMaxwellian ρIon (-1 / (2 * c₀)) v := by
   -- Proved by Aristotle (project 1236b757), adapted to standard Mathlib generalize_proofs.
   have h_m_int : ∫ v : Fin 3 → ℝ,
       Real.exp (c₀ * (normSq v)) = (Real.pi / (-c₀)) ^ ((3 : ℝ) / 2) := by
@@ -434,28 +434,28 @@ lemma cubic_coeff_zero (a : Fin 3 → ℝ) (h : ∀ v, dotProduct v a * normSq v
   fin_cases j <;> simp_all [VML.normSq]
 
 /-- Gap 15: Maximum principle for the Poisson–Boltzmann equation on T³.
-    If T∞ Δ(log n) = n - ρ_ion with T∞ > 0 and n > 0, then n ≡ ρ_ion.
-    At the maximum of n: Δ(log n) ≤ 0 → n ≤ ρ_ion.
-    At the minimum: Δ(log n) ≥ 0 → n ≥ ρ_ion.
+    If T∞ Δ(log n) = n - ρIon with T∞ > 0 and n > 0, then n ≡ ρIon.
+    At the maximum of n: Δ(log n) ≤ 0 → n ≤ ρIon.
+    At the minimum: Δ(log n) ≥ 0 → n ≥ ρIon.
     Reference: Proof of Lemma 21 (lem:density_constant). -/
 lemma poisson_boltzmann_max_principle
     (X : Type*) [Nonempty X]
-    (n : X → ℝ) (ρ_ion T_infty : ℝ)
+    (n : X → ℝ) (ρIon T_infty : ℝ)
     (laplacian : (X → ℝ) → X → ℝ)
-    (_hn_pos : ∀ x, 0 < n x) (hT : 0 < T_infty) (_hρ : 0 < ρ_ion)
-    -- PB equation: T∞ Δ(log n) = n - ρ_ion
-    (hPB : ∀ x, T_infty * laplacian (Real.log ∘ n) x = n x - ρ_ion)
+    (_hn_pos : ∀ x, 0 < n x) (hT : 0 < T_infty) (_hρ : 0 < ρIon)
+    -- PB equation: T∞ Δ(log n) = n - ρIon
+    (hPB : ∀ x, T_infty * laplacian (Real.log ∘ n) x = n x - ρIon)
     -- Maximum principle: n attains its max and min (compactness)
-    (x_max : X) (hmax : ∀ x, n x ≤ n x_max)
-    (x_min : X) (hmin : ∀ x, n x_min ≤ n x)
+    (xMax : X) (hmax : ∀ x, n x ≤ n xMax)
+    (xMin : X) (hmin : ∀ x, n xMin ≤ n x)
     -- At a maximum of n, Δ(log n) ≤ 0 (second derivative test)
-    (hmax_lapl : laplacian (Real.log ∘ n) x_max ≤ 0)
+    (hmax_lapl : laplacian (Real.log ∘ n) xMax ≤ 0)
     -- At a minimum of n, Δ(log n) ≥ 0
-    (hmin_lapl : 0 ≤ laplacian (Real.log ∘ n) x_min) :
-    ∀ x, n x = ρ_ion := by
+    (hmin_lapl : 0 ≤ laplacian (Real.log ∘ n) xMin) :
+    ∀ x, n x = ρIon := by
   -- Proved by Aristotle (Harmonic)
-  have h_eq : n x_max = ρ_ion ∧ n x_min = ρ_ion := by
-    constructor <;> nlinarith [hPB x_max, hPB x_min, hmax x_min, hmin x_max]
+  have h_eq : n xMax = ρIon ∧ n xMin = ρIon := by
+    constructor <;> nlinarith [hPB xMax, hPB xMin, hmax xMin, hmin xMax]
   exact fun x => le_antisymm (by linarith [hmax x]) (by linarith [hmin x])
 
 /-- If `f` equals a Gaussian `exp(a₀ + b·v + c₀|v|²)`, then the first moment

@@ -10,8 +10,21 @@ import Mathlib.MeasureTheory.Measure.Hausdorff
 import Mathlib.MeasureTheory.Measure.Doubling
 import Mathlib.Topology.EMetricSpace.Paracompact
 import Mathlib.Topology.MetricSpace.Pseudo.Defs
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.SardMoreira.ToMathlib.PR33114
+
+/-!
+# LeanPool.SardMoreira.WithRPowDist
+-/
 
 open scoped ENNReal NNReal Filter Uniformity Topology
 open Function
@@ -26,11 +39,11 @@ variable [MeasurableSpace X]
 
 instance : MeasurableSpace (WithRPowDist X α hα₀ hα₁) := .comap WithRPowDist.val ‹_›
 
-@[fun_prop, measurability]
+@[fun_prop]
 theorem measurable_val : Measurable (val : WithRPowDist X α hα₀ hα₁ → X) :=
   comap_measurable _
 
-@[fun_prop, measurability]
+@[fun_prop]
 theorem measurable_mk : Measurable (mk : X → WithRPowDist X α hα₀ hα₁) :=
   .of_comap_le <| by
     rw [instMeasurableSpace, MeasurableSpace.comap_comp, val_comp_mk, MeasurableSpace.comap_id]

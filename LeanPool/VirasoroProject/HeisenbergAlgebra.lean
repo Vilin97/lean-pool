@@ -131,7 +131,7 @@ noncomputable def _root_.VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycle :
   toBilin := heisenbergCocycleBilin 𝕜
   self' X := by
     apply self_eq_neg.mp
-    simpa only [LinearMap.neg_apply, LinearMap.coe_mk, AddHom.coe_mk]
+    simpa only [LinearMap.neg_apply, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.flip_apply]
       using LinearMap.congr_fun₂ (heisenbergCocycleBilin_eq_neg_flip 𝕜) X X
   leibniz' X Y Z := by
     simp only [lie_def, map_zero, LinearMap.zero_apply, (lie_skew X Z).symm, neg_zero, add_zero]

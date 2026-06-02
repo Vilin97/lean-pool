@@ -14,7 +14,16 @@ import Mathlib.Topology.ContinuousMap.SecondCountableSpace
 import Mathlib.Topology.ContinuousMap.CompactlySupported
 import Mathlib.RingTheory.FractionalIdeal.Basic
 import Mathlib.NumberTheory.Real.Irrational
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.LeanComplexAnalysis.Harmonic.PoissonIntegral
 import LeanPool.LeanComplexAnalysis.Harmonic.Positive.HerglotzRieszUnique
 
@@ -279,15 +288,15 @@ theorem HerglotzRiesz_realPos (μ : ProbabilityMeasure (sphere (0 : ℂ) 1)) :
 /-- `u` is the real part of `p`. -/
 abbrev u (p : ℂ → ℂ) (z : ℂ) : ℝ := (p z).re
 
-/-- `u_n` is `u` scaled by `r n`. -/
-abbrev u_n (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ) (z : ℂ) : ℝ := u p (r n * z)
+/-- `uN` is `u` scaled by `r n`. -/
+abbrev uN (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ) (z : ℂ) : ℝ := u p (r n * z)
 
 /-- TODO. -/
-abbrev C_unit_circle := C(↥(sphere (0 : ℂ) 1), ℝ)
+abbrev CUnitCircle := C(↥(sphere (0 : ℂ) 1), ℝ)
 
 /-- The Poisson kernel function for a fixed z in the unit disc, viewed as a
 continuous function on the unit circle. -/
-noncomputable def poisson_kernel_func (z : ℂ) (hz : z ∈ ball 0 1) : C_unit_circle :=
+noncomputable def poissonKernelFunc (z : ℂ) (hz : z ∈ ball 0 1) : CUnitCircle :=
   ⟨fun w => ((w : ℂ) + z) / ((w : ℂ) - z) |> Complex.re, by
     have h_denom_ne_zero : ∀ w : sphere (0 : ℂ) 1, w - z ≠ 0 := by
       intro w hw; simp_all [sub_eq_zero]
@@ -303,17 +312,17 @@ lemma circleMap_mem_unit_circle (t : ℝ) : circleMap 0 1 t ∈ sphere (0 : ℂ)
   apply circleMap_mem_sphere
   norm_num
 
-/-- The value of the functional `Λ_n` on `C_unit_circle`. -/
-noncomputable def Λ_n_val (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ) (f : C_unit_circle) : ℝ :=
+/-- The value of the functional `ΛN` on `CUnitCircle`. -/
+noncomputable def ΛNVal (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ) (f : CUnitCircle) : ℝ :=
   (1 / (2 * π)) * ∫ t in 0..2*π, f ⟨
-    circleMap 0 1 t, circleMap_mem_unit_circle t⟩ * u_n p r n (circleMap 0 1 t)
+    circleMap 0 1 t, circleMap_mem_unit_circle t⟩ * uN p r n (circleMap 0 1 t)
 
-/-- The linear map `Λ_n_linear`. -/
-noncomputable def Λ_n_linear (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
-    (h : Continuous (u_n p r n ∘ circleMap 0 1)) : C_unit_circle →ₗ[ℝ] ℝ where
-  toFun f := Λ_n_val p r n f
+/-- The linear map `ΛNLinear`. -/
+noncomputable def ΛNLinear (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
+    (h : Continuous (uN p r n ∘ circleMap 0 1)) : CUnitCircle →ₗ[ℝ] ℝ where
+  toFun f := ΛNVal p r n f
   map_add' f g := by
-    unfold Λ_n_val
+    unfold ΛNVal
     simp only [one_div, mul_inv_rev, ContinuousMap.add_apply, add_mul]
     rw [← mul_add, intervalIntegral.integral_add]
     · apply_rules [Continuous.intervalIntegrable]
@@ -321,27 +330,27 @@ noncomputable def Λ_n_linear (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
     · apply_rules [Continuous.intervalIntegrable]
       exact Continuous.mul (g.continuous.comp <| by continuity) h
   map_smul' c f := by
-    unfold Λ_n_val
+    unfold ΛNVal
     simp [mul_assoc, mul_left_comm, ← intervalIntegral.integral_const_mul]
 
-/-- The bound `Λ_n_bound` for the functional `Λ_n`, defined as
-1/2π ∫ t in 0..2*π  |u_n(e^{it})| dt. -/
-noncomputable def Λ_n_bound (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ) : ℝ :=
-  (1 / (2 * π)) * ∫ t in 0..2*π, |u_n p r n (circleMap 0 1 t)|
+/-- The bound `ΛNBound` for the functional `ΛN`, defined as
+1/2π ∫ t in 0..2*π  |uN(e^{it})| dt. -/
+noncomputable def ΛNBound (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ) : ℝ :=
+  (1 / (2 * π)) * ∫ t in 0..2*π, |uN p r n (circleMap 0 1 t)|
 
 /-- TODO. -/
-noncomputable def Λ_n (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
-    (h : Continuous (u_n p r n ∘ circleMap 0 1)) : C_unit_circle →L[ℝ] ℝ :=
-  LinearMap.mkContinuous (Λ_n_linear p r n h) (Λ_n_bound p r n) (by
-  have h_integral_bound : ∀ f : C_unit_circle, |∫ t in (0 : ℝ)..2 * π, f ⟨
-    circleMap 0 1 t, circleMap_mem_unit_circle t⟩ * u_n p r n (circleMap 0 1 t)| ≤
-      ∫ t in (0 : ℝ)..2 * π, |u_n p r n (circleMap 0 1 t)| * ‖f‖ := by
+noncomputable def ΛN (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
+    (h : Continuous (uN p r n ∘ circleMap 0 1)) : CUnitCircle →L[ℝ] ℝ :=
+  LinearMap.mkContinuous (ΛNLinear p r n h) (ΛNBound p r n) (by
+  have h_integral_bound : ∀ f : CUnitCircle, |∫ t in (0 : ℝ)..2 * π, f ⟨
+    circleMap 0 1 t, circleMap_mem_unit_circle t⟩ * uN p r n (circleMap 0 1 t)| ≤
+      ∫ t in (0 : ℝ)..2 * π, |uN p r n (circleMap 0 1 t)| * ‖f‖ := by
     intros f
     have h_integral_bound : |∫ t in (0 : ℝ)..2 * π, f ⟨
-      circleMap 0 1 t, circleMap_mem_unit_circle t⟩ * u_n p r n (circleMap 0 1 t)| ≤
+      circleMap 0 1 t, circleMap_mem_unit_circle t⟩ * uN p r n (circleMap 0 1 t)| ≤
         ∫ t in (0 : ℝ)..2 * π, |f ⟨circleMap 0 1 t, circleMap_mem_unit_circle t⟩ *
-          u_n p r n (circleMap 0 1 t)| := by
-      simpa only [intervalIntegral.integral_of_le Real.two_pi_pos.le] using
+          uN p r n (circleMap 0 1 t)| := by
+      simpa only [intervalIntegral.integral_of_le Real.two_pi_pos.le, Real.norm_eq_abs] using
         norm_integral_le_integral_norm (_ : ℝ → ℝ)
     refine le_trans h_integral_bound (
       intervalIntegral.integral_mono_on ?_ ?_ ?_ ?_)
@@ -353,23 +362,23 @@ noncomputable def Λ_n (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
     · simp only [mem_Icc, abs_mul, and_imp]
       exact fun x _ _ => by rw [mul_comm]; exact mul_le_mul_of_nonneg_left (
         ContinuousMap.norm_coe_le_norm f _) (abs_nonneg _)
-  unfold Λ_n_linear Λ_n_bound
+  unfold ΛNLinear ΛNBound
   simp only [mul_comm, intervalIntegral.integral_mul_const, LinearMap.coe_mk, AddHom.coe_mk,
     norm_eq_abs, div_eq_inv_mul, mul_inv_rev, mul_left_comm, one_mul, mul_assoc]
     at h_integral_bound ⊢
-  unfold Λ_n_val; intro f; convert mul_le_mul_of_nonneg_left (h_integral_bound f) (
+  unfold ΛNVal; intro f; convert mul_le_mul_of_nonneg_left (h_integral_bound f) (
     by positivity : 0 ≤ (1 : ℝ) / (2 * π)) using 1; focus ring_nf
   · norm_num [mul_assoc, mul_comm, mul_left_comm, abs_mul, abs_inv, abs_of_nonneg, Real.pi_pos.le]
   · ring)
 
 /-- TODO. -/
-abbrev C_unit_circleDual := C_unit_circle →L[ℝ] ℝ
+abbrev CUnitCircleDual := CUnitCircle →L[ℝ] ℝ
 
 /-- TODO. -/
-def K : Set C_unit_circleDual := {Λ | ∀ f : C_unit_circle, ‖f‖ < 1 → |Λ f| ≤ 1}
+def K : Set CUnitCircleDual := {Λ | ∀ f : CUnitCircle, ‖f‖ < 1 → |Λ f| ≤ 1}
 
 /-- TODO. -/
-def K_weak : Set (WeakDual ℝ C_unit_circle) := K
+def KWeak : Set (WeakDual ℝ CUnitCircle) := K
 
 /-- The complex Poisson kernel is integrable on the unit circle
 with respect to any finite measure. -/
@@ -394,16 +403,16 @@ lemma complex_kernel_integrable (μ : Measure (sphere (0 : ℂ) 1))
 the integral of the Herglotz–Riesz kernel. -/
 lemma integral_poisson_eq_re_integral (μ : Measure (sphere (0 : ℂ) 1))
     [IsFiniteMeasure μ] (z : ℂ) (hz : z ∈ ball 0 1) :
-    ∫ w, (poisson_kernel_func z hz) w ∂μ = (∫ w : sphere (0 : ℂ) 1,
+    ∫ w, (poissonKernelFunc z hz) w ∂μ = (∫ w : sphere (0 : ℂ) 1,
       ((w : ℂ) + z) / ((w : ℂ) - z) ∂μ).re := by
   convert (integral_re _)
   any_goals tauto
   · exact rfl
   · convert complex_kernel_integrable μ z hz using 1
 
-/-- `u_n p` is positive on the unit circle when `p` takes value in the right half-plane`. -/
+/-- `uN p` is positive on the unit circle when `p` takes value in the right half-plane`. -/
 lemma u_n_pos (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ) (hp : MapsTo p (ball (0 : ℂ) 1) {w : ℂ | 0 < w.re})
-    (hr : r n ∈ Ioo 0 1) (z : ℂ) (hz : z ∈ sphere 0 1) : 0 < u_n p r n z := by
+    (hr : r n ∈ Ioo 0 1) (z : ℂ) (hz : z ∈ sphere 0 1) : 0 < uN p r n z := by
   have h_rnz_in_D : (r n : ℂ) * z ∈ ball 0 1 := by
     simp only [mem_ball, dist_zero_right, Complex.norm_mul, norm_real, norm_eq_abs]
     have hz_norm : ‖z‖ = 1 := by exact mem_sphere_zero_iff_norm.mp hz
@@ -413,12 +422,12 @@ lemma u_n_pos (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ) (hp : MapsTo p (ball
   simp_all only [mem_ball, dist_zero_right, Complex.norm_mul, norm_real,
     Real.norm_eq_abs]
 
-/-- The mean value property for `u_n p` at 0. -/
+/-- The mean value property for `uN p` at 0. -/
 lemma u_n_mean_value (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
     (hp_analytic : AnalyticOn ℂ p (ball (0 : ℂ) 1))
     (hp0 : p 0 = 1)
     (hr : r n ∈ Ioo 0 1) :
-    (1 / (2 * π)) * ∫ t in 0..2*π, u_n p r n (circleMap 0 1 t) = 1 := by
+    (1 / (2 * π)) * ∫ t in 0..2*π, uN p r n (circleMap 0 1 t) = 1 := by
   have h_mean_value_property : (1 / (2 * π)) * ∫ t in (0)..2 * π,
     p (r n * circleMap 0 1 t) = p 0 := by
     have h_analytic : AnalyticOn ℂ (fun z => p (r n * z)) (closedBall (0 : ℂ) 1) := by
@@ -471,11 +480,11 @@ lemma u_n_mean_value (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
       linarith [hr.2]
   simp_all only [mem_Ioo, one_div, mul_inv_rev, one_re]
 
-/-- `u_n p r n` composed with `circleMap` is continuous. -/
+/-- `uN p r n` composed with `circleMap` is continuous. -/
 lemma u_n_continuous (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
     (hp_analytic : AnalyticOn ℂ p (ball (0 : ℂ) 1))
     (hr : r n ∈ Ioo 0 1) :
-    Continuous (u_n p r n ∘ circleMap 0 1) := by
+    Continuous (uN p r n ∘ circleMap 0 1) := by
   have h_cont : Continuous (fun t => p (r n * circleMap 0 1 t)) := by
     refine hp_analytic.continuousOn.comp_continuous ?_ ?_
     · continuity
@@ -534,62 +543,62 @@ lemma poisson_formula_of_harmonicOn_scaled_unitDisc_re_kernel
             (exp (t * I)) z (by rw [norm_exp_ofReal_mul_I])).symm
 
 /-- The value of `u` at `r_n * z` is equal to the functional
-`Λ_n` applied to the Poisson kernel at `z`. -/
+`ΛN` applied to the Poisson kernel at `z`. -/
 lemma u_approx_eq_Lambda (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
     (hp_analytic : AnalyticOn ℂ p (ball (0 : ℂ) 1))
     (hr : r n ∈ Ioo 0 1)
     (z : ℂ) (hz : z ∈ ball 0 1) :
-    u p (r n * z) = Λ_n_val p r n (poisson_kernel_func z hz) := by
+    u p (r n * z) = ΛNVal p r n (poissonKernelFunc z hz) := by
   have : HarmonicOnNhd (u p) (ball (0 : ℂ) 1) := by
     refine harmonic_of_analytic_real (u p) p hp_analytic ?_
     simp [u]
   convert poisson_formula_of_harmonicOn_scaled_unitDisc_re_kernel this hr hz using 1
-  unfold poisson_kernel_func Λ_n_val; norm_num [circleMap]
+  unfold poissonKernelFunc ΛNVal; norm_num [circleMap]
 
-lemma K_eq_polar : K_weak = WeakDual.polar ℝ (ball (0 : C_unit_circle) 1) := by
+lemma K_eq_polar : KWeak = WeakDual.polar ℝ (ball (0 : CUnitCircle) 1) := by
   ext Λ
-  simp only [K_weak, K, WeakDual.polar, ball, dist_eq_norm, sub_zero, mem_preimage]
+  simp only [KWeak, K, WeakDual.polar, ball, dist_eq_norm, sub_zero, mem_preimage]
   constructor
   · intro h f hf; apply h; simp only [mem_setOf_eq] at hf; exact hf
   · intro h f hf; apply h; simp only [mem_setOf_eq]; exact hf
 
 /-- We apply the Banach-Alaoglu theorem to show that `K` is compact in the weak* topology. -/
-lemma K_weak_compact : CompactSpace K_weak := by
+lemma K_weak_compact : CompactSpace KWeak := by
   rw [K_eq_polar]
-  have h_nhds : ball (0 : C_unit_circle) 1 ∈ 𝓝 0 := by
+  have h_nhds : ball (0 : CUnitCircle) 1 ∈ 𝓝 0 := by
     rw [Metric.mem_nhds_iff]
     use 1
     simp
-  have h_compact : IsCompact (WeakDual.polar ℝ (ball (0 : C_unit_circle) 1)) :=
+  have h_compact : IsCompact (WeakDual.polar ℝ (ball (0 : CUnitCircle) 1)) :=
     WeakDual.isCompact_polar ℝ h_nhds
   rw [isCompact_iff_compactSpace] at h_compact
   exact h_compact
 
-/-- As a separable space, `C_unit_circle` contains a dense sequence `dense_seq`. -/
-noncomputable def dense_seq : ℕ → C_unit_circle := TopologicalSpace.denseSeq C_unit_circle
+/-- As a separable space, `CUnitCircle` contains a dense sequence `denseSeq`. -/
+noncomputable def denseSeq : ℕ → CUnitCircle := TopologicalSpace.denseSeq CUnitCircle
 
 /-- TODO. -/
-noncomputable def embed (Λ : WeakDual ℝ C_unit_circle) : ℕ → ℝ := fun n => Λ (dense_seq n)
+noncomputable def embed (Λ : WeakDual ℝ CUnitCircle) : ℕ → ℝ := fun n => Λ (denseSeq n)
 
 lemma embed_continuous : Continuous embed := by
   apply continuous_pi
   intro n
-  exact (WeakBilin.eval_continuous (topDualPairing ℝ C_unit_circle) (dense_seq n))
+  exact (WeakBilin.eval_continuous (topDualPairing ℝ CUnitCircle) (denseSeq n))
 
 lemma embed_injective : Function.Injective embed := by
   intro Λ Λ' h_eq
-  have h_eval : ∀ f : C_unit_circle, Λ f = Λ' f := by
-    have h_dense : ∀ f : C_unit_circle, ∃ (
-      f_n : ℕ → C_unit_circle), (∀ n, f_n n ∈ Set.range dense_seq) ∧
+  have h_eval : ∀ f : CUnitCircle, Λ f = Λ' f := by
+    have h_dense : ∀ f : CUnitCircle, ∃ (
+      f_n : ℕ → CUnitCircle), (∀ n, f_n n ∈ Set.range denseSeq) ∧
         Filter.Tendsto f_n Filter.atTop (nhds f) := by
       intro f
-      obtain ⟨f_n, hf_n⟩ : ∃ (f_n : ℕ → C_unit_circle),
-        (∀ n, f_n n ∈ Set.range dense_seq) ∧ Filter.Tendsto f_n Filter.atTop (nhds f) := by
-        have h_dense : Dense (Set.range dense_seq) := by
+      obtain ⟨f_n, hf_n⟩ : ∃ (f_n : ℕ → CUnitCircle),
+        (∀ n, f_n n ∈ Set.range denseSeq) ∧ Filter.Tendsto f_n Filter.atTop (nhds f) := by
+        have h_dense : Dense (Set.range denseSeq) := by
           exact TopologicalSpace.denseRange_denseSeq _
         exact mem_closure_iff_seq_limit.mp (h_dense f)
       exact ⟨f_n, hf_n⟩
-    have h_cont : ∀ f : C_unit_circle, ∀ (f_n : ℕ → C_unit_circle),
+    have h_cont : ∀ f : CUnitCircle, ∀ (f_n : ℕ → CUnitCircle),
       Filter.Tendsto f_n Filter.atTop (nhds f) → Filter.Tendsto (
         fun n => Λ (f_n n)) Filter.atTop (nhds (Λ f)) ∧
           Filter.Tendsto (fun n => Λ' (f_n n)) Filter.atTop (nhds (Λ' f)) := by
@@ -599,7 +608,7 @@ lemma embed_injective : Function.Injective embed := by
     obtain ⟨f_n, hf_n_range, hf_n_conv⟩ := h_dense f
     have h_eq_seq : ∀ n, Λ (f_n n) = Λ' (f_n n) := by
       intro n
-      obtain ⟨m, hm⟩ : ∃ m, f_n n = dense_seq m := by
+      obtain ⟨m, hm⟩ : ∃ m, f_n n = denseSeq m := by
         simpa [eq_comm] using hf_n_range n
       replace h_eq := congr_fun h_eq m
       simp_all only [mem_range]
@@ -608,16 +617,16 @@ lemma embed_injective : Function.Injective embed := by
       by simpa only [h_eq_seq] using h_cont f f_n hf_n_conv |>.2)
   apply ContinuousLinearMap.ext; intro f; exact h_eval f
 
-/-- The metrizability of the space `K_weak`. -/
-lemma K_weak_metrizable : TopologicalSpace.MetrizableSpace (Subtype K_weak) := by
-  let embed_K : K_weak → (ℕ → ℝ) := fun Λ => embed Λ.val
+/-- The metrizability of the space `KWeak`. -/
+lemma K_weak_metrizable : TopologicalSpace.MetrizableSpace (Subtype KWeak) := by
+  let embed_K : KWeak → (ℕ → ℝ) := fun Λ => embed Λ.val
   have h_cont : Continuous embed_K := embed_continuous.comp continuous_subtype_val
   have h_inj : Function.Injective embed_K := by
     intro Λ₁ Λ₂ h
     apply Subtype.ext
     apply embed_injective
     exact h
-  have h_compact : CompactSpace K_weak := K_weak_compact
+  have h_compact : CompactSpace KWeak := K_weak_compact
   have h_t2 : T2Space (ℕ → ℝ) := inferInstance
   have h_closed_embedding : IsClosedEmbedding embed_K :=
     Continuous.isClosedEmbedding h_cont h_inj
@@ -630,20 +639,20 @@ lemma norm_lambda_leq_one (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
     (hp0 : p 0 = 1)
     (hp_map : MapsTo p (ball (0 : ℂ) 1) {w : ℂ | 0 < w.re})
     (hr : r n ∈ Ioo 0 1) :
-    let Λ := Λ_n p r n (u_n_continuous p r n hp_analytic hr)
-    ∀ f : C_unit_circle, ‖f‖ < 1 → |Λ f| ≤ 1 := by
+    let Λ := ΛN p r n (u_n_continuous p r n hp_analytic hr)
+    ∀ f : CUnitCircle, ‖f‖ < 1 → |Λ f| ≤ 1 := by
   intros Λ f hf
   have h_abs : |Λ f| ≤ (1 / (2 * π)) * ∫ t in (0 : ℝ)..2 * π,
-    |u_n p r n (circleMap 0 1 t)| := by
-    have h_abs : |Λ_n_val p r n f| ≤ (1 / (2 * π)) * ∫ t in (0 : ℝ)..2 * π,
-      |u_n p r n (circleMap 0 1 t)| := by
-      have h_abs : |Λ_n_val p r n f| ≤ (1 / (2 * π)) * ∫ t in (0 : ℝ)..2 * π,
-        |f ⟨circleMap 0 1 t, circleMap_mem_unit_circle t⟩| * |u_n p r n (circleMap 0 1 t)| := by
-        rw [Λ_n_val]
+    |uN p r n (circleMap 0 1 t)| := by
+    have h_abs : |ΛNVal p r n f| ≤ (1 / (2 * π)) * ∫ t in (0 : ℝ)..2 * π,
+      |uN p r n (circleMap 0 1 t)| := by
+      have h_abs : |ΛNVal p r n f| ≤ (1 / (2 * π)) * ∫ t in (0 : ℝ)..2 * π,
+        |f ⟨circleMap 0 1 t, circleMap_mem_unit_circle t⟩| * |uN p r n (circleMap 0 1 t)| := by
+        rw [ΛNVal]
         norm_num [← abs_mul]
         rw [abs_mul, abs_of_nonneg (by positivity)]
         gcongr
-        simpa only [intervalIntegral.integral_of_le Real.two_pi_pos.le] using
+        simpa only [intervalIntegral.integral_of_le Real.two_pi_pos.le, Real.norm_eq_abs] using
           norm_integral_le_integral_norm (_ : ℝ → ℝ)
       refine le_trans h_abs (mul_le_mul_of_nonneg_left (
         intervalIntegral.integral_mono_on ?_ ?_ ?_ ?_) (by positivity))
@@ -657,32 +666,33 @@ lemma norm_lambda_leq_one (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
           by simpa using f.norm_coe_le_norm ⟨
             circleMap 0 1 t, circleMap_mem_unit_circle t⟩ |> le_trans <| le_of_lt hf)
     exact h_abs
-  have h_abs_eq : ∫ t in (0 : ℝ)..2 * π, |u_n p r n (circleMap 0 1 t)| =
-    ∫ t in (0 : ℝ)..2 * π, u_n p r n (circleMap 0 1 t) := by
+  have h_abs_eq : ∫ t in (0 : ℝ)..2 * π, |uN p r n (circleMap 0 1 t)| =
+    ∫ t in (0 : ℝ)..2 * π, uN p r n (circleMap 0 1 t) := by
     refine intervalIntegral.integral_congr fun t ht => abs_of_nonneg ?_
     apply le_of_lt; exact u_n_pos p r n hp_map hr (circleMap 0 1 t) (circleMap_mem_unit_circle t)
   have := u_n_mean_value p r n hp_analytic hp0 hr
   simp_all only [one_div, mul_inv_rev, ge_iff_le, Λ]
 
-/-- The space `K_weak` is sequentially compact. -/
-lemma K_weak_seq_compact : SeqCompactSpace (Subtype K_weak) := by
-  have h₁ : CompactSpace (Subtype K_weak) := K_weak_compact
-  have h₂ : TopologicalSpace.MetrizableSpace (Subtype K_weak) := K_weak_metrizable
+/-- The space `KWeak` is sequentially compact. -/
+lemma K_weak_seq_compact : SeqCompactSpace (Subtype KWeak) := by
+  have h₁ : CompactSpace (Subtype KWeak) := K_weak_compact
+  have h₂ : TopologicalSpace.MetrizableSpace (Subtype KWeak) := K_weak_metrizable
   exact FirstCountableTopology.seq_compact_of_compact
 
-/-- The sequence of functionals `Λ_n`. -/
-noncomputable def Λ_seq (p : ℂ → ℂ) (r : ℕ → ℝ) (hp_analytic : AnalyticOn ℂ p (ball (0 : ℂ) 1))
-    (hr : ∀ n, r n ∈ Ioo 0 1) (n : ℕ) : WeakDual ℝ C_unit_circle :=
-  Λ_n p r n (u_n_continuous p r n hp_analytic (hr n))
+/-- The sequence of functionals `ΛN`. -/
+noncomputable def ΛSeq (p : ℂ → ℂ) (r : ℕ → ℝ) (hp_analytic : AnalyticOn ℂ p (ball (0 : ℂ) 1))
+    (hr : ∀ n, r n ∈ Ioo 0 1) (n : ℕ) : WeakDual ℝ CUnitCircle :=
+  ΛN p r n (u_n_continuous p r n hp_analytic (hr n))
 
-/-- The sequence `Λ_seq` is in `K_weak`. -/
+/-- The sequence `ΛSeq` is in `KWeak`. -/
 lemma Λ_seq_mem_K (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
     (hp_analytic : AnalyticOn ℂ p (ball (0 : ℂ) 1))
     (hp0 : p 0 = 1)
     (hp_map : MapsTo p (ball (0 : ℂ) 1) {w : ℂ | 0 < w.re})
     (hr : ∀ k, r k ∈ Ioo 0 1) :
-    Λ_seq p r hp_analytic hr n ∈ K_weak := by
-  exact fun f hf => by simpa using norm_lambda_leq_one p r n hp_analytic hp0 hp_map (hr n) f hf
+      ΛSeq p r hp_analytic hr n ∈ KWeak := by
+    exact fun f hf => by
+      simpa [ΛSeq] using norm_lambda_leq_one p r n hp_analytic hp0 hp_map (hr n) f hf
 
 /-- There exists a subsequence Λ_{n_k} converging to some Λ in the weak* topology. -/
 lemma Λ_seq_converging_subsequence (p : ℂ → ℂ) (r : ℕ → ℝ)
@@ -690,20 +700,20 @@ lemma Λ_seq_converging_subsequence (p : ℂ → ℂ) (r : ℕ → ℝ)
     (hp0 : p 0 = 1)
     (hp_map : MapsTo p (ball (0 : ℂ) 1) {w : ℂ | 0 < w.re})
     (hr : ∀ n, r n ∈ Ioo 0 1) :
-    ∃ (phi : ℕ → ℕ) (Λ : WeakDual ℝ C_unit_circle), StrictMono phi ∧
-    ∀ f : C_unit_circle, Filter.Tendsto (fun k => (Λ_seq p r hp_analytic hr (phi k)) f)
+    ∃ (phi : ℕ → ℕ) (Λ : WeakDual ℝ CUnitCircle), StrictMono phi ∧
+    ∀ f : CUnitCircle, Filter.Tendsto (fun k => (ΛSeq p r hp_analytic hr (phi k)) f)
      Filter.atTop (nhds (Λ f)) := by
-  have h_seq_in_K : ∀ n, Λ_seq p r hp_analytic hr n ∈ K_weak := by
+  have h_seq_in_K : ∀ n, ΛSeq p r hp_analytic hr n ∈ KWeak := by
     exact fun n ↦ Λ_seq_mem_K p r n hp_analytic hp0 hp_map hr
-  obtain ⟨phi, hphi⟩ : ∃ phi : ℕ → ℕ, StrictMono phi ∧ ∃ Λ : WeakDual ℝ C_unit_circle,
-    Filter.Tendsto (fun k => Λ_seq p r hp_analytic hr (phi k)) Filter.atTop (nhds Λ) := by
+  obtain ⟨phi, hphi⟩ : ∃ phi : ℕ → ℕ, StrictMono phi ∧ ∃ Λ : WeakDual ℝ CUnitCircle,
+    Filter.Tendsto (fun k => ΛSeq p r hp_analytic hr (phi k)) Filter.atTop (nhds Λ) := by
     have := K_weak_seq_compact
-    obtain ⟨Λ, hΛ⟩ : ∃ Λ : Subtype K_weak, ∃ phi : ℕ → ℕ, StrictMono phi ∧
-      Filter.Tendsto (fun k => ⟨Λ_seq p r hp_analytic hr (phi k), h_seq_in_K (phi k)⟩ : ℕ →
-        Subtype K_weak) Filter.atTop (nhds Λ) := by
+    obtain ⟨Λ, hΛ⟩ : ∃ Λ : Subtype KWeak, ∃ phi : ℕ → ℕ, StrictMono phi ∧
+      Filter.Tendsto (fun k => ⟨ΛSeq p r hp_analytic hr (phi k), h_seq_in_K (phi k)⟩ : ℕ →
+        Subtype KWeak) Filter.atTop (nhds Λ) := by
       have := this.1
       have := this (fun n => Set.mem_univ (
-        ⟨Λ_seq p r hp_analytic hr n, h_seq_in_K n⟩ : Subtype K_weak));
+        ⟨ΛSeq p r hp_analytic hr n, h_seq_in_K n⟩ : Subtype KWeak));
       simp_all only [mem_univ, true_and, Subtype.exists]
       obtain ⟨w, h⟩ := this
       obtain ⟨w_1, h⟩ := h
@@ -720,30 +730,30 @@ lemma Λ_seq_converging_subsequence (p : ℂ → ℂ) (r : ℕ → ℝ)
   obtain ⟨Λ, hΛ⟩ := hphi.2
   refine ⟨phi, Λ, hphi.1, ?_⟩
   intro f
-  have h_eval_cont : Continuous (fun Λ : WeakDual ℝ C_unit_circle => Λ f) := by
+  have h_eval_cont : Continuous (fun Λ : WeakDual ℝ CUnitCircle => Λ f) := by
     exact WeakDual.eval_continuous f
   exact h_eval_cont.continuousAt.tendsto.comp hΛ
 
-/-- Each Λ_n is a positive functional. -/
+/-- Each ΛN is a positive functional. -/
 lemma Λ_n_nonneg (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
     (hp_analytic : AnalyticOn ℂ p (ball (0 : ℂ) 1))
     (hp_map : MapsTo p (ball (0 : ℂ) 1) {w : ℂ | 0 < w.re})
     (hr : r n ∈ Ioo 0 1) :
-    let Λ := Λ_n p r n (u_n_continuous p r n hp_analytic hr)
-    ∀ f : C_unit_circle, 0 ≤ f → 0 ≤ Λ f := by
+    let Λ := ΛN p r n (u_n_continuous p r n hp_analytic hr)
+    ∀ f : CUnitCircle, 0 ≤ f → 0 ≤ Λ f := by
   intro Λ f hf_nonneg
   have h_prod_nonneg : ∀ t ∈ Set.Icc 0 (2 * π),
-      0 ≤ f (⟨circleMap 0 1 t, circleMap_mem_unit_circle t⟩) * u_n p r n (circleMap 0 1 t) := by
+      0 ≤ f (⟨circleMap 0 1 t, circleMap_mem_unit_circle t⟩) * uN p r n (circleMap 0 1 t) := by
     exact fun t ht => mul_nonneg (hf_nonneg _) (le_of_lt (u_n_pos p r n hp_map hr _ (
       circleMap_mem_unit_circle t)))
   refine mul_nonneg (by positivity) (
     intervalIntegral.integral_nonneg (by positivity) fun t ht => h_prod_nonneg t ht)
 
 /-- We apply the Riesz–Markov–Kakutani representation theorem for `Λ` to obtain the measure `μ`. -/
-lemma riesz_rep (Λ : WeakDual ℝ C_unit_circle)
-    (h_pos : ∀ f : C_unit_circle, 0 ≤ f → 0 ≤ Λ f) :
+lemma riesz_rep (Λ : WeakDual ℝ CUnitCircle)
+    (h_pos : ∀ f : CUnitCircle, 0 ≤ f → 0 ≤ Λ f) :
     ∃ μ : Measure (sphere (0 : ℂ) 1), IsFiniteMeasure μ ∧
-    ∀ f : C_unit_circle, Λ f = ∫ z, f z ∂μ := by
+    ∀ f : CUnitCircle, Λ f = ∫ z, f z ∂μ := by
   have h_ext : ∃ (Λ_c : CompactlySupportedContinuousMap (sphere (0 : ℂ) 1) ℝ →ₚ[ℝ] ℝ),
     ∀ (f : CompactlySupportedContinuousMap (sphere (0 : ℂ) 1) ℝ),
       Λ_c f = Λ (ContinuousMap.mk (fun z : sphere (0 : ℂ) 1 => f z)) := by
@@ -785,8 +795,8 @@ lemma convergence_sub_seq_functionals (p : ℂ → ℂ) (r : ℕ → ℝ)
     (hp_map : MapsTo p (ball (0 : ℂ) 1) {w : ℂ | 0 < w.re})
     (hr : ∀ n, r n ∈ Ioo 0 1) :
     ∃ (μ : ProbabilityMeasure (sphere (0 : ℂ) 1)) (phi : ℕ → ℕ),
-      StrictMono phi ∧ ∀ f : C_unit_circle, 0 ≤ f →
-        Filter.Tendsto (fun k => (Λ_seq p r hp_analytic hr (phi k)) f)
+      StrictMono phi ∧ ∀ f : CUnitCircle, 0 ≤ f →
+        Filter.Tendsto (fun k => (ΛSeq p r hp_analytic hr (phi k)) f)
           Filter.atTop (nhds (∫ z, f z ∂μ)) := by
   have := Λ_seq_converging_subsequence p r hp_analytic hp0 hp_map hr
   obtain ⟨phi, Λ, hphi, hΛ⟩ := this
@@ -796,13 +806,13 @@ lemma convergence_sub_seq_functionals (p : ℂ → ℂ) (r : ℕ → ℝ)
     exact le_of_tendsto_of_tendsto' tendsto_const_nhds hΛ fun k =>
      Λ_n_nonneg p r (phi k) hp_analytic hp_map (hr (phi k)) f hf_nonneg)
   have h_prob : IsProbabilityMeasure μ := by
-    have h_const : Λ (1 : C_unit_circle) = 1 := by
+    have h_const : Λ (1 : CUnitCircle) = 1 := by
       convert tendsto_nhds_unique (hΛ 1) _
       convert tendsto_const_nhds.congr' _
       filter_upwards [Filter.eventually_gt_atTop 0] with k hk
       convert Eq.symm (u_n_mean_value p r (phi k) hp_analytic hp0 (hr (phi k))) using 1
-      unfold Λ_seq; unfold Λ_n; unfold Λ_n_linear; norm_num
-      unfold Λ_n_val; norm_num; ring_nf
+      unfold ΛSeq; unfold ΛN; unfold ΛNLinear; norm_num
+      unfold ΛNVal; norm_num; ring_nf
       exact congr_arg₂ _ (congr_arg₂ _ rfl (by norm_num)) rfl
     have h : μ Set.univ = 1 := by
       rw [← ENNReal.toReal_eq_one_iff]
@@ -812,11 +822,12 @@ lemma convergence_sub_seq_functionals (p : ℂ → ℂ) (r : ℕ → ℝ)
     exact ⟨by simpa using h⟩
   use ⟨μ, h_prob⟩
   use phi
-  exact ⟨hphi, fun f hf => by simpa only [hμ.2] using hΛ f⟩
+  exact ⟨hphi, fun f hf => by
+    simpa only [hμ.2, ProbabilityMeasure.coe_mk] using hΛ f⟩
 
 /-- The value of `u` at `z` is equal to the real part of the integral
 of the Herglotz–Riesz kernel against the measure `μ`, under hypothesis of
-weak* convergence of `Λ_seq`. -/
+weak* convergence of `ΛSeq`. -/
 lemma u_eq_limit_Lambda (p : ℂ → ℂ) (r : ℕ → ℝ)
     (hp_analytic : AnalyticOn ℂ p (ball (0 : ℂ) 1))
     (hr : ∀ n, r n ∈ Ioo 0 1)
@@ -824,14 +835,14 @@ lemma u_eq_limit_Lambda (p : ℂ → ℂ) (r : ℕ → ℝ)
     (μ : ProbabilityMeasure (sphere (0 : ℂ) 1))
     (phi : ℕ → ℕ)
     (hphi_strict_mono : StrictMono phi)
-    (hΛ_tendsto : ∀ f : C_unit_circle,
-      Filter.Tendsto (fun k => (Λ_seq p r hp_analytic hr (phi k)) f)
+    (hΛ_tendsto : ∀ f : CUnitCircle,
+      Filter.Tendsto (fun k => (ΛSeq p r hp_analytic hr (phi k)) f)
         Filter.atTop (nhds (∫ z, f z ∂μ)))
     (z : ℂ) (hz : z ∈ ball 0 1) :
     u p z = (∫ w : sphere (0 : ℂ) 1, ((w : ℂ) + z) / ((w : ℂ) - z) ∂μ).re := by
   have h_lambda_limit : Filter.Tendsto (fun k => u p (r (phi k) * z)) Filter.atTop (
-    nhds (∫ w, (poisson_kernel_func z hz w) ∂μ)) := by
-    convert hΛ_tendsto (poisson_kernel_func z hz) using 1
+    nhds (∫ w, (poissonKernelFunc z hz w) ∂μ)) := by
+    convert hΛ_tendsto (poissonKernelFunc z hz) using 1
     exact funext fun k => u_approx_eq_Lambda p r (phi k) hp_analytic (hr (phi k)) z hz
   have h_u_limit : Filter.Tendsto (fun k =>
     u p (r (phi k) * z)) Filter.atTop (nhds (u p z)) := by
@@ -957,7 +968,7 @@ lemma analytic_unique_of_real_part
       simp only [mem_ball, dist_zero_right, mem_Icc, and_imp] at *
       have := h_ftc 0 1; rw [intervalIntegral.integral_congr fun t ht => h_ftc_step t (
         by simp at ht; linarith) (
-          by simp at ht; linarith)] at this; simp at this; linear_combination' this.symm
+          by simp at ht; linarith)] at this; simp at this; linear_combination this.symm
     exact h_ftc
   exact fun z hz => sub_eq_zero.mp (h_const z hz |> Eq.trans <| h_zero)
 
@@ -1000,7 +1011,7 @@ theorem HerglotzRiesz_representation_existence (p : ℂ → ℂ)
              · push Not at h
                simp [max_eq_right (le_of_lt h), max_eq_left (by linarith : 0 ≤ -f x)]⟩
       convert Filter.Tendsto.sub (hΛ_tendsto f_pos hf_pos) (hΛ_tendsto f_neg hf_neg) using 1
-      · ext n; rw [hf]; exact (Λ_seq p r hp_analytic hr (phi n)).map_sub f_pos f_neg
+      · ext n; rw [hf]; exact (ΛSeq p r hp_analytic hr (phi n)).map_sub f_pos f_neg
       rw [← integral_sub]
       · congr 1; rw [hf]; rfl
       · exact (map_continuous f_pos).integrable_of_hasCompactSupport
@@ -1135,10 +1146,8 @@ theorem HerglotzRiesz_representation_harmonic
                 rw [norm_div]
                 have hx : ‖(x : ℂ)‖ = 1 := by exact mem_sphere_zero_iff_norm.mp x.2
                 gcongr
-                · exact sub_pos_of_lt (by simpa using hz')
-                · exact le_trans (norm_add_le _ _) (by linarith[hz', hx])
-                · have := norm_sub_norm_le (x : ℂ) z
-                  exact le_trans (sub_le_sub_right (show ‖ (x : ℂ)‖ ≥ 1 from by simp) _) this
+                · exact le_trans (norm_add_le _ _) (by linarith [hz', hx])
+                · simpa [hx] using norm_sub_norm_le (x : ℂ) z
             exact (integral_re h_integrable) ▸ rfl
           rw [hg_real_part']
           refine integral_congr_ae ?_

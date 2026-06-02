@@ -4,12 +4,19 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Gadgil, Anand Rao
 -/
 
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import Mathlib.Algebra.Group.Action.Defs
 import Mathlib.Algebra.Group.Hom.Defs
 import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
-
-namespace LeanPool.Polylean
 
 /-!
 ## Cocycles and Group actions by automorphisms
@@ -23,6 +30,9 @@ Metabelian construction.
   automorphisms. This is also done as a typeclass with the function as an explicit
   argument and the action as a field of the structure.
 -/
+
+namespace LeanPool.Polylean
+
 
 /-!
 ### Actions by automorphisms

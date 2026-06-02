@@ -213,7 +213,7 @@ theorem dist_path_le (hh : 0 < h) {T : ℝ}
     (fun t ht => dist_deriv_le hv hvt hM hh ht.1)
     hsol hsol' (fun _ _ => (dist_self _).le)
     (by simp [piecewiseLinear, point, hsol₀]) t ht
-  simpa using this
+  simpa [path] using this
 
 /-- The Euler method converges to the true solution as `h → 0⁺`. -/
 theorem tendsto_path {T : ℝ}
@@ -223,9 +223,10 @@ theorem tendsto_path {T : ℝ}
     ∀ t ∈ Icc t₀ T, Tendsto (fun δ => path v δ t₀ y₀ t)
       (nhdsWithin 0 (Ioi 0)) (nhds (sol t)) := fun t ht =>
   tendsto_iff_dist_tendsto_zero.mpr (squeeze_zero_norm'
-    (by have := fun x (hx : (0 : ℝ) < x) =>
-          dist_path_le hv hvt hM hx hsol hsol' hsol₀ t ht
-        simpa using eventually_of_mem self_mem_nhdsWithin this)
+    (by
+      filter_upwards [self_mem_nhdsWithin] with x hx
+      simpa [Function.comp_def, Real.norm_eq_abs, abs_of_nonneg dist_nonneg] using
+        dist_path_le hv hvt hM hx hsol hsol' hsol₀ t ht)
     (tendsto_nhdsWithin_of_tendsto_nhds <|
       Continuous.tendsto' ((gronwallBound_continuous_ε 0 K (t - t₀)).comp
         (continuous_id.mul continuous_const)) 0 0 (by simp [gronwallBound_ε0_δ0])))

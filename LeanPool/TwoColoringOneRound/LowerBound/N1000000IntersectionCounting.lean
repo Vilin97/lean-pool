@@ -12,6 +12,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000IntersectionCounting
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000IntersectionCounting
@@ -53,9 +57,8 @@ noncomputable instance (a d : DirIdx) : Fintype (FreeCoord a d) := by
 theorem card_freeCoord (a d : DirIdx) :
     Fintype.card (FreeCoord a d) = freeCoords (maskAt a) (maskAt d) := by
   classical
-  simpa [FreeCoord, freeCoords] using
-    (Fintype.card_subtype (α := Fin 3)
-      (p := fun j : Fin 3 => colMatch (maskAt a) j = none ∧ rowMatch (maskAt d) j = none))
+  exact Fintype.card_subtype
+    (fun j : Fin 3 => colMatch (maskAt a) j = none ∧ rowMatch (maskAt d) j = none)
 
 private noncomputable def freeSyms {k : DirIdx} (u : BaseOrbit k) : Finset SymN :=
   (Finset.univ : Finset (FreeCol k)).image (fun j => u.1.1 j.1)
@@ -100,8 +103,7 @@ private lemma card_usedSet {k : DirIdx} (u : BaseOrbit k) :
     -- `freeSyms.card = card FreeCol = freeCols`.
     have hCardFreeCol : Fintype.card (FreeCol k) = freeCols (maskAt k) := by
       classical
-      simpa [FreeCol, freeCols] using
-        (Fintype.card_subtype (α := Fin 3) (p := fun j : Fin 3 => colMatch (maskAt k) j = none))
+      exact Fintype.card_subtype (fun j : Fin 3 => colMatch (maskAt k) j = none)
     simpa [card_freeSyms (k := k) u] using hCardFreeCol
   calc
     (baseSet ∪ freeSyms (k := k) u).card

@@ -5,6 +5,10 @@ Authors: Judith Ludwig, Christian Merten
 -/
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
 
+/-!
+# LeanPool.BruhatTits.Utils.RingHom
+-/
+
 open Module
 
 variable {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S)
@@ -13,7 +17,6 @@ variable {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S)
 -- all in Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs.lean
 -- for some reason `Units.map f.mapMatrix` does not work.
 /-- Map an element of `GL` along a ring homomorphism. -/
-@[simp]
 def GL.map {α : Type*} [DecidableEq α] [Fintype α] (g : GL α R) : GL α S where
   val := f.mapMatrix g
   inv := f.mapMatrix g.inv
@@ -23,21 +26,26 @@ def GL.map {α : Type*} [DecidableEq α] [Fintype α] (g : GL α R) : GL α S wh
 
 variable {α : Type*} [DecidableEq α] [Fintype α]
 
+@[simp]
+lemma GL.val_map (g : GL α R) : (GL.map f g).val = f.mapMatrix g.val := by
+  rfl
+
+@[simp]
 lemma GL.map_apply (i j : α) (g : GL α R) : GL.map f g i j = f (g i j) := by
-  simp
+  rfl
 --this is called Matrix.GeneralLinearGroup.map_apply and similarly for the ones below
 
 lemma GL.map_one : GL.map f (1 : GL α R) = 1 := by
-  ext
-  simp
+  ext i j
+  simp [GL.map, Matrix.one_apply]
 
 lemma GL.map_mul (g h : GL α R) : GL.map f (g * h) = GL.map f g * GL.map f h := by
-  ext
-  simp
+  ext i j
+  simp [GL.map, Matrix.mul_apply]
 
 lemma GL.map_inv (g : GL α R) : GL.map f g⁻¹ = (GL.map f g)⁻¹ := by
-  ext
-  simp
+  ext i j
+  rfl
 
 lemma GL.map_det (g : GL α R) : Matrix.GeneralLinearGroup.det (GL.map f g) =
     Units.map f (Matrix.GeneralLinearGroup.det g) := by
@@ -95,11 +103,13 @@ lemma GL.mem_range_map_iff {f : R →+* S} (hf : Function.Injective f)
 variable {K : Type*} [CommRing K] (R : Subring K)
 
 /-- Coerce matrices over `R` to matrices over `K`. -/
-instance {α β : Type*} : CoeHead (Matrix α β R) (Matrix α β K) where
+instance instCoeHeadMatrixSubtypeMemSubringLeanPool {α β : Type*} :
+    CoeHead (Matrix α β R) (Matrix α β K) where
   coe g := g.map R.subtype
 
 /-- Coerce invertible matrices over `R` to matrices over `K`. -/
-instance {α : Type*} [DecidableEq α] [Fintype α] : CoeHead (GL α R) (GL α K) where
+instance instCoeHeadGeneralLinearGroupSubtypeMemSubringLeanPool
+    {α : Type*} [DecidableEq α] [Fintype α] : CoeHead (GL α R) (GL α K) where
   coe g := GL.map R.subtype g
 
 --the following lemmas are used in CartanUniqueness.lean

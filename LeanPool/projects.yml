@@ -1043,11 +1043,11 @@ projects:
       github_repo: ivankobe/FactorizationSystems
     status: verified
     main_declarations:
-      - CategoryTheory.FactorizationSystem_characterization
+      - CategoryTheory.FactorizationSystemCharacterization
     main_results:
       - declaration: CategoryTheory.FactorizationSystem
         informal: Defines factorization systems on a category with specified left and right classes.
-      - declaration: CategoryTheory.FactorizationSystem_characterization
+      - declaration: CategoryTheory.FactorizationSystemCharacterization
         informal: Constructs a factorization system from repleteness, weak factorizations, and orthogonality.
       - declaration: CategoryTheory.orthogonal
         informal: Defines orthogonality of two morphisms by existence and uniqueness of diagonal fillers.
@@ -1286,3 +1286,602 @@ projects:
       - "14H52"
       - "15A69"
       - "18A40"
+  - slug: lean-poly-abc
+    title: Polynomial ABC (Mason–Stothers) and its corollaries
+    summary: Formalizes the Mason–Stothers theorem (the polynomial ABC theorem) and derives the polynomial Fermat's Last Theorem, the Fermat–Catalan inequality, Davenport's theorem, and a no-parametrization corollary.
+    branch: number theory
+    entry_module: LeanPool.LeanPolyABC
+    authors:
+      - Seewoo Lee
+    source:
+      title: "Formalization of Polynomial ABC and FLT"
+      url: https://github.com/seewoo5/lean-poly-abc
+      github_repo: seewoo5/lean-poly-abc
+    status: verified
+    main_declarations:
+      - LeanPolyABC.Polynomial.abc
+      - LeanPolyABC.Polynomial.flt
+    main_results:
+      - declaration: LeanPolyABC.Polynomial.abc
+        informal: Mason–Stothers — for coprime non-constant polynomials with a+b=c, the max degree is below the degree of the radical of abc.
+      - declaration: LeanPolyABC.Polynomial.flt
+        informal: The polynomial Fermat's Last Theorem — no nontrivial coprime polynomial solutions of aⁿ+bⁿ=cⁿ for n ≥ 3.
+      - declaration: LeanPolyABC.Polynomial.flt_catalan
+        informal: The polynomial Fermat–Catalan inequality bounding solutions of aᵖ+bᵍ=cʳ.
+    tags:
+      - number-theory
+      - polynomials
+      - algebra
+      - mason-stothers
+    msc:
+      - "11C08"
+      - "12E05"
+  - slug: erdos-tuza-valtr
+    title: The Erdős–Tuza–Valtr conjecture
+    summary: Formalizes the Erdős–Tuza–Valtr conjecture, a sharp refinement of the Erdős–Szekeres happy-ending theorem, proving that any general-position point set of size at least C(n+2,2)+2 contains the target cup–cap configuration.
+    branch: combinatorics
+    entry_module: LeanPool.ErdosTuzaValtr
+    authors:
+      - Jineon Baek
+    source:
+      title: "On the Erdős–Tuza–Valtr Conjecture"
+      url: https://github.com/jcpaik/erdos-tuza-valtr
+      github_repo: jcpaik/erdos-tuza-valtr
+    status: verified
+    main_declarations:
+      - ErdosTuzaValtr.main
+      - Config.main_lemma
+    main_results:
+      - declaration: ErdosTuzaValtr.main
+        informal: Proves the sharp upper bound — a general-position point set with at least C(n+2,2)+2 points contains the Erdős–Tuza–Valtr cup–cap configuration.
+      - declaration: Config.main_lemma
+        informal: The configuration-relative induction lemma that, with the mirror-symmetry reduction, drives the main proof.
+    tags:
+      - combinatorics
+      - discrete-geometry
+      - convex-geometry
+      - ramsey-theory
+    msc:
+      - "52C10"
+      - "05D10"
+  - slug: whitehead-theorem
+    title: Whitehead's theorem for CW-complexes
+    summary: Formalizes Whitehead's theorem — a continuous map between CW-complexes that induces isomorphisms on all homotopy groups is a homotopy equivalence — including the supporting theory of CW-complexes, relative homotopy groups, the homotopy extension property, and compression of maps.
+    branch: algebraic topology
+    entry_module: LeanPool.WhiteheadTheorem
+    authors:
+      - Jiazhen Xia
+    source:
+      url: https://github.com/jzxia/WhiteheadTheorem
+      github_repo: jzxia/WhiteheadTheorem
+    status: verified
+    main_declarations:
+      - WhiteheadTheorem
+    main_results:
+      - declaration: WhiteheadTheorem
+        informal: Proves that a continuous map between CW-complexes inducing isomorphisms on all homotopy groups is a homotopy equivalence.
+    tags:
+      - algebraic-topology
+      - cw-complex
+      - homotopy-groups
+      - weak-homotopy-equivalence
+    msc:
+      - "55P10"
+      - "55Q05"
+      - "55U10"
+  - slug: frieze-patterns
+    title: Maxima of Coxeter frieze patterns are Fibonacci numbers
+    summary: Formalizes the claim that the sequence of maxima of values of (Coxeter) arithmetic frieze patterns is the Fibonacci sequence, using a correspondence between arithmetic frieze patterns and n-flutes.
+    branch: combinatorics
+    entry_module: LeanPool.FriezePatterns
+    authors:
+      - Antoine de Saint-Germain
+    source:
+      title: "On upper bounds in frieze patterns"
+      authors:
+        - Antoine de Saint-Germain
+      arxiv: "2407.16717"
+      github_repo: Antoine-dSG/frieze_patterns
+    status: verified
+    main_declarations:
+      - main3
+      - FluteBounded
+      - glideSymm
+      - translationInvariance
+    main_results:
+      - declaration: main3
+        informal: Proves that the maximum value of an arithmetic frieze pattern of width n is exactly the n-th Fibonacci number, and that this bound is attained.
+      - declaration: FluteBounded
+        informal: Proves that every entry of an n-flute is bounded above by the n-th Fibonacci number.
+      - declaration: glideSymm
+        informal: Proves the glide-reflection symmetry of Coxeter frieze patterns.
+      - declaration: translationInvariance
+        informal: Proves the (n+1)-periodicity (horizontal translation invariance) of Coxeter frieze patterns.
+    tags:
+      - combinatorics
+      - frieze-patterns
+      - fibonacci
+      - coxeter
+    msc:
+      - "05E15"
+      - "11B39"
+      - "13F60"
+
+  - slug: pentagonal-number-theorem
+    title: Euler's pentagonal number theorem
+    summary: Formalizes Euler's pentagonal number theorem as a generating-function identity for power series and for real/complex numbers, with a partition-recurrence corollary and a self-contained Franklin-style combinatorial proof.
+    branch: number theory
+    entry_module: LeanPool.PentagonalNumberTheorem
+    authors:
+      - Weiyi Wang
+    source:
+      url: https://en.wikipedia.org/wiki/Pentagonal_number_theorem
+      github_repo: wwylele/PentagonalNumberTheorem
+    status: verified
+    main_declarations:
+      - pentagonalNumberTheorem_powerSeries
+      - Nat.Partition.sum_partition
+    main_results:
+      - declaration: pentagonalNumberTheorem_powerSeries
+        informal: Proves Euler's pentagonal number theorem as a formal power series identity ∏(1-xⁿ) = Σ(-1)ᵏ x^(k(3k-1)/2).
+      - declaration: pentagonalNumberTheorem_complex
+        informal: Proves the analytic version of the pentagonal number theorem for real or complex numbers of norm less than one.
+      - declaration: Nat.Partition.sum_partition
+        informal: Derives Euler's pentagonal recurrence for the partition function from the pentagonal number theorem.
+    tags:
+      - number-theory
+      - combinatorics
+      - partitions
+      - power-series
+      - pentagonal-number-theorem
+    msc:
+      - "11P81"
+      - "05A17"
+  - slug: neukirch
+    title: "Neukirch's Algebraic Number Theory: Hilbert ramification theory"
+    summary: Formalizes Hilbert's ramification theory for Galois extensions of number fields, including the fundamental identity and the decomposition and inertia groups, ported from the jjdishere/neukirch project.
+    branch: number theory
+    entry_module: LeanPool.Neukirch
+    authors:
+      - Hu Yongle
+    source:
+      url: https://github.com/jjdishere/neukirch
+      github_repo: jjdishere/neukirch
+    status: verified
+    main_declarations:
+      - NumberField.ramificationIdx_mul_inertiaDegOfIsGalois
+    main_results:
+      - declaration: NumberField.ramificationIdx_mul_inertiaDegOfIsGalois
+        informal: "Proves the fundamental identity g·e·f = [L : K] for a Galois extension of number fields."
+      - declaration: NumberField.finrank_eq_ramificationIdx_mul_inertiaDeg
+        informal: "Shows that when P is the unique prime over p, the degree [L : K] equals the ramification index times the inertia degree."
+      - declaration: NumberField.IsMaximal_conjugates
+        informal: Proves the Galois group acts transitively on the primes lying over a fixed prime.
+      - declaration: NumberField.DecompositionGroup_card_eq_ramificationIdx_mul_inertiaDeg
+        informal: Computes the order of the decomposition group as the product of the ramification index and inertia degree.
+      - declaration: NumberField.InertiaFieldAutEquivResidueFieldAut
+        informal: Identifies the Galois group of the inertia field over K with the Galois group of the residue field extension.
+      - declaration: NumberField.InertiaGroup_card_eq_ramificationIdx
+        informal: Computes the order of the inertia group as the ramification index of p in L.
+      - declaration: Ideal.ramificationIdx_algebra_tower_of_eq
+        informal: Proves multiplicativity of the ramification index in a tower of Dedekind domains.
+      - declaration: Ideal.inertiaDeg_algebra_tower_of_eq
+        informal: Proves multiplicativity of the inertia degree in a tower of Dedekind domains.
+    tags:
+      - number-theory
+      - algebraic-number-theory
+      - ramification
+      - galois-theory
+    msc:
+      - "11R32"
+      - "11S15"
+      - "13B25"
+  - slug: ec-tate-lean
+    title: Weierstrass models and singular points for Tate's algorithm
+    summary: Formalizes Weierstrass models of elliptic curves over a commutative ring, their b- and c-invariants and discriminant, the change-of-coordinates group action, the discriminant's membership in the Jacobian ideal, and the construction of the singular point of a singular model over a perfect field, together with the Kronecker symbol and the Kodaira type enumeration.
+    branch: number theory
+    entry_module: LeanPool.EcTateLean
+    authors:
+      - Sacha H.
+      - Sander R. Dahmen
+      - Anne Baanen
+      - Alex J. Best
+    source:
+      title: "Elliptic Curve Handbook"
+      authors:
+        - Ian Connell
+      url: "https://www.math.rug.nl/~top/ian.pdf"
+      github_repo: KisaraBlue/ec-tate-lean
+    status: verified
+    main_declarations:
+      - Model
+      - Model.Field.isSingularPoint_singularPoint
+    main_results:
+      - declaration: Model
+        informal: Defines a Weierstrass model of a possibly singular elliptic curve by its five a-invariants.
+      - declaration: Model.discr_identity
+        informal: Proves the identity relating the discriminant to the c-invariants, 1728 * discr = c4^3 - c6^2.
+      - declaration: Model.rst_discr
+        informal: Proves that the discriminant is invariant under the rst change-of-coordinates transformation.
+      - declaration: Model.discr_in_jacobian_ideal
+        informal: Expresses the discriminant as an explicit combination of the Weierstrass polynomial and its partial derivatives, witnessing membership in the Jacobian ideal.
+      - declaration: Model.discr_eq_zero_of_singular
+        informal: Proves that a model with a singular point has vanishing discriminant.
+      - declaration: Model.Field.isSingularPoint_singularPoint
+        informal: Proves that the explicitly constructed singular point of a singular model over a perfect field is indeed a singular point (Connell, Proposition 1.5.4).
+        source_ref: "Ian Connell, Elliptic Curve Handbook, February 1999, Proposition 1.5.4."
+      - declaration: Model.Field.move_singular_point_to_origin
+        informal: Proves that the change of coordinates moving the singular point places it at the origin.
+      - declaration: Kodaira
+        informal: Enumerates the Kodaira reduction types, including the extra types arising over imperfect residue fields of characteristic 2 or 3.
+    tags:
+      - number-theory
+      - elliptic-curves
+      - algebraic-geometry
+    msc:
+      - "11G05"
+      - "11G07"
+      - "14H52"
+  - slug: monsky
+    title: Monsky's Theorem
+    summary: Formalizes Monsky's theorem that a square can be dissected into n triangles of equal area if and only if n is nonzero and even, via a 2-adic valuation, a three-coloring of the unit square, and a rainbow-triangle argument.
+    branch: combinatorial geometry
+    entry_module: LeanPool.Monsky
+    authors:
+      - Dhyan Aranha
+      - contributors
+    source:
+      title: On dividing a square into triangles
+      authors:
+        - Paul Monsky
+      doi: "10.2307/2316270"
+      github_repo: dhyan-aranha/Monsky
+    status: verified
+    main_declarations:
+      - LeanPool.Monsky.monsky_theorem
+    main_results:
+      - declaration: LeanPool.Monsky.monsky_theorem
+        informal: Proves that the unit square admits a dissection into n equal-area triangles if and only if n is nonzero and even.
+    tags:
+      - geometry
+      - combinatorics
+      - measure-theory
+    msc:
+      - "52C20"
+      - "05B45"
+  - slug: rupert
+    title: The Rupert Problem for convex polyhedra
+    summary: Formalizes the Rupert property for the cube, the regular tetrahedron, and the triakis tetrahedron, exhibiting for each an explicit straight-through hole admitting a congruent copy.
+    branch: convex geometry
+    entry_module: LeanPool.Rupert
+    authors:
+      - David Renshaw
+    source:
+      url: https://github.com/dwrensha/Rupert.lean
+      github_repo: dwrensha/Rupert.lean
+    status: verified
+    main_declarations:
+      - Cube.rupert
+      - Tetrahedron.rupert
+      - TriakisTetrahedron.rupert
+    main_results:
+      - declaration: Cube.rupert
+        informal: Proves that the cube has the Rupert property.
+      - declaration: Tetrahedron.rupert
+        informal: Proves that the regular tetrahedron has the Rupert property.
+      - declaration: TriakisTetrahedron.rupert
+        informal: Proves that the triakis tetrahedron has the Rupert property.
+    tags:
+      - convex-geometry
+      - polyhedra
+      - rupert-problem
+    msc:
+      - "52B10"
+      - "52A15"
+  - slug: zflean
+    title: ZFLean
+    summary: Develops a practical ZFC set-theory framework with von Neumann naturals, integers, rationals, functions, embeddings, isomorphisms, booleans, and sums.
+    branch: set theory
+    entry_module: LeanPool.ZFLean
+    authors:
+      - Vincent Trélat
+    source:
+      title: Set Theory
+      authors:
+        - Thomas Jech
+      url: https://doi.org/10.1007/3-540-44761-X
+      github_repo: VTrelat/ZFLean
+    status: verified
+    main_declarations:
+      - ZFSet.isIso_of_biembedding
+      - ZFSet.ZFNat.induction
+      - ZFSet.ZFInt.induction
+    main_results:
+      - declaration: ZFSet.isIso_of_biembedding
+        informal: Proves a Cantor-Bernstein theorem for ZF sets.
+      - declaration: ZFSet.ZFNat.induction
+        informal: Provides induction for the von Neumann natural numbers.
+      - declaration: ZFSet.ZFInt.induction
+        informal: Provides induction for the quotient construction of ZF integers.
+    tags:
+      - set-theory
+      - zfc
+      - foundations
+    msc:
+      - "03E30"
+      - "03B35"
+  - slug: semicirclelaw
+    title: Wigner Semicircle Distribution
+    summary: Defines the real Wigner semicircle distribution, its normalized density, affine transformations, and finite-moment integrability.
+    branch: probability theory
+    entry_module: LeanPool.SemicircleLaw
+    authors:
+      - FredRaj3
+    source:
+      url: https://www.math.ucsd.edu/~tkemp/247A.Notes.pdf
+      github_repo: FredRaj3/SemicircleLaw
+    status: verified
+    main_declarations:
+      - LeanPool.SemicircleLaw.integral_semicirclePDFReal_eq_one
+    main_results:
+      - declaration: LeanPool.SemicircleLaw.semicirclePDFReal
+        informal: Defines the real-valued density of the semicircle distribution with mean μ and variance v.
+      - declaration: LeanPool.SemicircleLaw.semicirclePDF
+        informal: Defines the ℝ≥0∞-valued density of the semicircle distribution.
+      - declaration: LeanPool.SemicircleLaw.integral_semicirclePDFReal_eq_one
+        informal: Proves that the real-valued semicircle density integrates to one for nonzero variance.
+      - declaration: LeanPool.SemicircleLaw.semicircleReal
+        informal: Defines the semicircle measure on ℝ, equal to a Dirac mass when the variance is zero.
+      - declaration: LeanPool.SemicircleLaw.semicircleReal_map_add_const
+        informal: Shows that translating a semicircle measure translates its mean parameter.
+      - declaration: LeanPool.SemicircleLaw.semicircleReal_map_const_mul
+        informal: Shows that scaling by a nonzero constant scales the mean and variance parameters.
+      - declaration: LeanPool.SemicircleLaw.memLp_id_semicircleReal
+        informal: Shows that the identity has all finite Lp moments under a semicircle distribution.
+    tags:
+      - probability
+      - random-matrix-theory
+      - distributions
+    msc:
+      - "60B20"
+      - "60E05"
+  - slug: monlib4
+    title: Monlib4 Operator-Algebra and Quantum-Set Core
+    summary: Formalizes monlib4's finite matrix-algebra inner-automorphism theorem, unitary inner automorphisms, star-preserving linear maps, the structural core of quantum sets, the core Schur-product definition of quantum graphs, and a self-contained digit-sum divisibility theorem.
+    branch: operator algebras and quantum graph theory
+    entry_module: LeanPool.Monlib4
+    authors:
+      - Monica Omar
+    source:
+      doi: 10.4169/amer.math.monthly.124.10.966
+      github_repo: themathqueen/monlib4
+    status: verified
+    main_declarations:
+      - Matrix.aut_mat_inner
+      - QuantumSet
+      - schurMul
+      - QuantumGraph
+    main_results:
+      - declaration: Matrix.automorphism_matrix_inner
+        informal: Shows that any automorphism of a finite nontrivial matrix algebra is implemented by an invertible intertwining matrix.
+      - declaration: Matrix.aut_mat_inner
+        informal: Packages matrix-algebra automorphisms as inner automorphisms induced by a linear equivalence of the underlying coordinate space.
+      - declaration: Matrix.aut_mat_inner'
+        informal: Packages matrix-algebra automorphisms as conjugation by an element of `GL n 𝕜`.
+      - declaration: Matrix.aut_mat_inner_trace_preserving
+        informal: Proves that automorphisms of finite matrix algebras preserve trace.
+      - declaration: Matrix.innerAut
+        informal: Defines the linear map induced by conjugation with a unitary matrix.
+      - declaration: Matrix.innerAut_apply_trace_eq
+        informal: Proves that unitary inner automorphisms preserve matrix trace.
+      - declaration: Matrix.innerAut.spectrum_eq
+        informal: Proves that unitary inner automorphisms preserve the spectrum of the associated linear operator.
+      - declaration: LinearMap.IsReal
+        informal: Defines star-preserving, or real, function-like maps.
+      - declaration: LinearMap.real
+        informal: Defines the star-conjugate involution on linear maps.
+      - declaration: QuantumSet
+        informal: Defines the monlib4 quantum-set structure with modular automorphisms and a fixed orthonormal basis.
+      - declaration: Complex.quantumSet
+        informal: Instantiates the complex numbers as the base quantum set.
+      - declaration: schurMul
+        informal: Defines the Schur product of linear maps using multiplication, tensoring, and coalgebra comultiplication.
+      - declaration: QuantumGraph
+        informal: Defines quantum graphs as Schur-idempotent endomorphisms.
+      - declaration: QuantumGraph.Real
+        informal: Defines real quantum graphs as Schur-idempotent, star-preserving endomorphisms.
+      - declaration: nat_repr_mod_eq_sum_repr_mod
+        informal: Proves that the value represented by digits in base `a + 1` has the same remainder modulo `a` as the sum of those digits.
+      - declaration: nat_dvd_repr_iff_nat_dvd_sum_repr
+        informal: Proves the generalized digit-sum divisibility criterion for base `a + 1` modulo `a`.
+    tags:
+      - linear-algebra
+      - operator-algebras
+      - quantum-sets
+      - quantum-graphs
+      - representation-theory
+    msc:
+      - "15A69"
+      - "16W20"
+  - slug: brauergroup_new
+    title: Brauer Group Core
+    summary: Formalizes central simple algebra infrastructure, Wedderburn-Artin structure theorems, and finite-field triviality for Brauer groups.
+    branch: ring theory
+    entry_module: LeanPool.BrauerGroupNew
+    authors:
+      - Yunzhou Xie
+      - Yichen Feng
+      - Jujian Zhang
+      - Yael Dillies
+    source:
+      title: Central Simple Algebras and Galois Cohomology
+      authors:
+        - Philippe Gille
+        - Tamás Szamuely
+      url: https://doi.org/10.1017/9781107359419
+      github_repo: Whysoserioushah/BrauerGroup_new
+    status: verified
+    main_declarations:
+      - BrauerGroup.BruaerGroup
+      - BrauerGroupHom.Br
+      - WedderburnArtin
+    main_results:
+      - declaration: BrauerGroup.BruaerGroup
+        informal: Constructs the Brauer group of a field from Brauer equivalence classes of central simple algebras.
+      - declaration: BrauerGroupHom.Br
+        informal: Constructs the Brauer group functor from fields to commutative groups via scalar extension.
+      - declaration: WedderburnArtin
+        informal: Proves a Wedderburn-Artin decomposition for simple Artinian rings as matrix algebras over division rings.
+      - declaration: trivialBrauer
+        informal: Proves that every element of the Brauer group of a finite field is trivial.
+      - declaration: WedderburnArtin_algebra_version
+        informal: Gives an algebra equivalence form of Wedderburn-Artin for finite-dimensional central simple algebras.
+      - declaration: IsCentralSimple.TensorProduct.simple
+        informal: Proves simplicity of tensor products of central simple algebras over a field.
+      - declaration: IsCentralSimple.TensorProduct.isCentral
+        informal: Proves centrality of tensor products of central algebras over a field.
+      - declaration: CSA_implies_CSA
+        informal: Shows that the division algebra factor in a matrix presentation of a central simple algebra is central over the base field.
+    tags:
+      - algebra
+      - ring-theory
+      - central-simple-algebras
+      - brauer-groups
+    msc:
+      - "16K20"
+      - "16K50"
+      - "16S35"
+  - slug: zhang-yeung-inequality
+    title: The Zhang-Yeung non-Shannon information inequality
+    summary: Formalizes the Zhang-Yeung inequality, the first known non-Shannon-type entropy inequality, together with its dual and averaged forms derived through the copy lemma.
+    branch: information theory
+    entry_module: LeanPool.ZhangYeungInequality
+    authors:
+      - Christopher Boone
+    source:
+      doi: "10.1109/18.681320"
+      github_repo: cboone/zhang-yeung-inequality
+    status: verified
+    main_declarations:
+      - ZhangYeung.zhangYeung
+    main_results:
+      - declaration: ZhangYeung.zhangYeung
+        informal: Proves the Zhang-Yeung non-Shannon-type information inequality for four discrete random variables.
+      - declaration: ZhangYeung.zhangYeung_dual
+        informal: Proves the dual form of the Zhang-Yeung inequality.
+      - declaration: ZhangYeung.zhangYeung_averaged
+        informal: Proves the averaged symmetric form of the Zhang-Yeung inequality.
+    tags:
+      - information-theory
+      - entropy
+      - non-shannon-inequality
+    msc:
+      - "94A17"
+      - "94A15"
+  - slug: apportionment
+    title: Apportionmentlib
+    summary: "Formalizes apportionment rules and proves the Balinski-Young impossibility theorem: no anonymous quota rule can be population-monotone."
+    branch: social choice theory
+    entry_module: LeanPool.Apportionment
+    authors:
+      - Michał Dobranowski
+    source:
+      url: https://github.com/mdbrnowski/Apportionmentlib
+      github_repo: mdbrnowski/apportionmentlib
+    status: verified
+    main_declarations:
+      - Apportionment.balinski_young
+    main_results:
+      - declaration: Apportionment.balinski_young
+        informal: Proves that no anonymous quota apportionment rule can satisfy population monotonicity.
+    tags:
+      - social-choice-theory
+      - combinatorics
+    msc:
+      - "91B12"
+      - "91B14"
+  - slug: anderson-conjecture
+    title: "The Anderson Conjecture: A Weakly Quasi-Complete Ring Need Not Be Quasi-Complete"
+    summary: Formalizes a counterexample to Anderson's question, constructing a weakly quasi-complete Noetherian local ring that is not quasi-complete via the Jensen-Heitmann-Loepp transfinite construction.
+    branch: algebra
+    entry_module: LeanPool.AndersonConjecture
+    authors:
+      - FrenzyMath
+    source:
+      url: "https://github.com/frenzymath/Anderson-Conjecture"
+      github_repo: frenzymath/Anderson-Conjecture
+    status: verified
+    main_declarations:
+      - anderson_main_theorem
+    main_results:
+      - declaration: anderson_main_theorem
+        informal: Proves that there exists a weakly quasi-complete Noetherian local ring that is not quasi-complete.
+    tags:
+      - commutative-algebra
+      - ring-theory
+    msc:
+      - "13B35"
+      - "13H10"
+  - slug: quasi-borel-spaces
+    title: Quasi-Borel Spaces
+    summary: Formalizes quasi-Borel spaces and quasi-Borel pre-domains, a category for higher-order probability theory.
+    branch: probability theory
+    entry_module: LeanPool.QuasiBorelSpaces
+    authors:
+      - Anthony Vandikas
+      - Kiarash Sotoudeh
+    source:
+      url: https://github.com/YellPika/quasi-borel-spaces
+      github_repo: YellPika/quasi-borel-spaces
+    status: verified
+    main_declarations:
+      - QuasiBorelSpace
+      - OmegaQuasiBorelSpace
+      - QuasiBorelSpace.ProbabilityMeasure
+    main_results:
+      - declaration: QuasiBorelSpace
+        informal: Defines a quasi-Borel space as a type with a set of random variables closed under constants, measurable precomposition, and gluing.
+      - declaration: QuasiBorelSpace.IsHom
+        informal: Defines morphisms of quasi-Borel spaces as maps that preserve random variables under precomposition.
+      - declaration: OmegaQuasiBorelSpace
+        informal: Combines the quasi-Borel and ω-complete partial order structures with the compatibility axiom of Vakar-Kammar-Staton.
+      - declaration: QuasiBorelSpace.ProbabilityMeasure
+        informal: Defines the probability-measure monad on quasi-Borel spaces by quotienting pre-probability measures by integral equivalence.
+    tags:
+      - probability
+      - category-theory
+      - measure-theory
+      - denotational-semantics
+    msc:
+      - "60A05"
+      - "18C50"
+      - "68Q55"
+  - slug: leanmodularforms
+    title: Modular forms and the generalized residue theorem
+    summary: Formalizes the Hungerbühler-Wasem generalized residue theorem for Cauchy principal value integrals through poles and applies it to the valence formula for modular forms on the modular group.
+    branch: complex analysis
+    entry_module: LeanPool.LeanModularForms
+    authors:
+      - Chris Birkbeck
+    source:
+      arxiv: "1808.00997"
+      github_repo: CBirkbeck/LeanModularForms
+    status: verified
+    main_declarations:
+      - generalizedResidueTheorem
+      - valence_formula_textbook_orbit_finsum
+    main_results:
+      - declaration: generalizedResidueTheorem
+        informal: Proves the Hungerbühler-Wasem generalized residue theorem for piecewise-C1 curves through poles.
+      - declaration: generalizedResidueTheorem_simplePoles
+        informal: Specializes the generalized residue theorem to the simple-pole case.
+      - declaration: valence_formula_textbook_orbit_finsum
+        informal: Proves the valence formula for modular forms on the modular group.
+    tags:
+      - modular-forms
+      - complex-analysis
+      - residue-theorem
+      - valence-formula
+    msc:
+      - "11F11"
+      - "30E20"

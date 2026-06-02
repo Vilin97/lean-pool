@@ -13,6 +13,10 @@ import Mathlib.CategoryTheory.Types.Epimorphisms
 import Mathlib.CategoryTheory.Types.Monomorphisms
 import LeanPool.FactorizationSystems.Basic
 
+/-!
+# LeanPool.FactorizationSystems.Examples
+-/
+
 namespace CategoryTheory
 universe u v
 variable {C : Type u} [Category.{v} C]
@@ -30,7 +34,7 @@ lemma isIsoIsEpi : {X Y : C} → (f : X ⟶ Y) →
 
 
 /- Iso ⊆ Epi -/
-lemma epimorphismsContainsIsos : contains_isos (MorphismProperty.epimorphisms C) := by
+lemma epimorphismsContainsIsos : containsIsos (MorphismProperty.epimorphisms C) := by
     intro X Y isof
     exact isIsoIsEpi isof.hom (Iso.isIso_hom isof)
 
@@ -51,7 +55,7 @@ lemma isIsoIsMono : {X Y : C} → (f : X ⟶ Y) →
     exact {right_cancellation := by exact (IsIso.mono_of_iso f).right_cancellation}
 
 /- Mono ⊆ Iso -/
-lemma monomorphismsContainsIsos : contains_isos (MorphismProperty.monomorphisms C) := by
+lemma monomorphismsContainsIsos : containsIsos (MorphismProperty.monomorphisms C) := by
     intro X Y isof
     exact isIsoIsMono isof.hom (Iso.isIso_hom isof)
 
@@ -66,28 +70,28 @@ lemma monomorphismsClosedUnderComp : is_closed_comp (MorphismProperty.monomorphi
 
 /- The image of a function of sets -/
 /-- Imported FactorizationSystems declaration. -/
-def image_set {X Y : Type u} (f : X ⟶ Y) : Type u := {y : Y // ∃ x : X , f x = y}
+def imageSet {X Y : Type u} (f : X ⟶ Y) : Type u := {y : Y // ∃ x : X , f x = y}
 
 /- Left map of the image factorization of a map -/
 /-- Imported FactorizationSystems declaration. -/
-def left_map_set {X Y : Type u} (f : X ⟶ Y) : X ⟶ image_set f :=
+def leftMapSet {X Y : Type u} (f : X ⟶ Y) : X ⟶ imageSet f :=
   TypeCat.ofHom fun x => ⟨f x, ⟨x, rfl⟩⟩
 
 /- Right map of the image factorization of a map -/
 /-- Imported FactorizationSystems declaration. -/
-def right_map_set {X Y : Type u} (f : X ⟶ Y) : image_set f ⟶ Y :=
+def rightMapSet {X Y : Type u} (f : X ⟶ Y) : imageSet f ⟶ Y :=
   TypeCat.ofHom fun y => y.1
 
 /- The image factorization of a map -/
 lemma factorization_set {X Y : Type u} (f : X ⟶ Y) :
-    left_map_set f ≫ right_map_set f = f := by
+    leftMapSet f ≫ rightMapSet f = f := by
   ext x
   rfl
 
 /- The left map of the image factorization of a map is epi -/
 lemma left_map_in_left_class_set {X Y : Type u} (f : X ⟶ Y) :
-    MorphismProperty.epimorphisms _ (left_map_set f) := by
-  apply (epi_iff_surjective (left_map_set f)).mpr
+    MorphismProperty.epimorphisms _ (leftMapSet f) := by
+  apply (epi_iff_surjective (leftMapSet f)).mpr
   rintro ⟨fx, ⟨x, hx⟩⟩
   use x
   apply Subtype.ext
@@ -95,8 +99,8 @@ lemma left_map_in_left_class_set {X Y : Type u} (f : X ⟶ Y) :
 
 /- The right map of the image factorization of a map is mono -/
 lemma right_map_in_right_class_set {X Y : Type u} (f : X ⟶ Y) :
-    MorphismProperty.monomorphisms _ (right_map_set f) := by
-  apply (mono_iff_injective (right_map_set f)).mpr
+    MorphismProperty.monomorphisms _ (rightMapSet f) := by
+  apply (mono_iff_injective (rightMapSet f)).mpr
   intro x y h
   apply Subtype.ext
   exact h
@@ -105,8 +109,8 @@ lemma right_map_in_right_class_set {X Y : Type u} (f : X ⟶ Y) :
 is a unique way solve the corresponding lifting problem -/
 lemma factorization_iso_set_hom' {X Y : Type u} (f : X ⟶ Y) (im : Type u)
     (left : X ⟶ im) (_ : MorphismProperty.epimorphisms _ left) (right : im ⟶ Y)
-    (q : MorphismProperty.monomorphisms _ right) (fact : left ≫ right = f) (y : image_set f) :
-    ∃! y' : im, right y' = (right_map_set f) y := by
+    (q : MorphismProperty.monomorphisms _ right) (fact : left ≫ right = f) (y : imageSet f) :
+    ∃! y' : im, right y' = (rightMapSet f) y := by
   let ⟨fx, P⟩ := y
   have injectiveRight : Function.Injective right := by
     exact (mono_iff_injective right).mp q
@@ -123,9 +127,9 @@ lemma factorization_iso_set_hom' {X Y : Type u} (f : X ⟶ Y) (im : Type u)
 /- A (unique) way of solving the lifting problem, i.e. a diagonal filler -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def factorization_iso_set_hom : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) →
+def factorizationIsoSetHom : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) →
     (left : X ⟶ im) → (MorphismProperty.epimorphisms _ left) → (right : im ⟶ Y) →
-    (MorphismProperty.monomorphisms _ right) → (fact : left ≫ right = f) → image_set f ⟶ im := by
+    (MorphismProperty.monomorphisms _ right) → (fact : left ≫ right = f) → imageSet f ⟶ im := by
   intro X Y f im left p right q fact
   exact TypeCat.ofHom fun y => (factorization_iso_set_hom' f im left p right q fact y).choose
 
@@ -133,7 +137,7 @@ def factorization_iso_set_hom : {X Y : Type u} → (f : X ⟶ Y) → (im : Type 
 lemma factorization_iso_set_hom_comm_right : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) →
     (left : X ⟶ im) → (p : MorphismProperty.epimorphisms _ left) → (right : im ⟶ Y) →
     (q : MorphismProperty.monomorphisms _ right) → (fact : left ≫ right = f) →
-    factorization_iso_set_hom f im left p right q fact ≫ right = right_map_set f := by
+    factorizationIsoSetHom f im left p right q fact ≫ right = rightMapSet f := by
   intro X Y f im left p right q fact
   ext y
   exact (Exists.choose_spec (factorization_iso_set_hom' f im left p right q fact y)).left
@@ -142,22 +146,22 @@ lemma factorization_iso_set_hom_comm_right : {X Y : Type u} → (f : X ⟶ Y) �
 lemma factorization_iso_set_hom_comm_left : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) →
     (left : X ⟶ im) → (p : MorphismProperty.epimorphisms _ left) → (right : im ⟶ Y) →
     (q : MorphismProperty.monomorphisms _ right) → (fact : left ≫ right = f) →
-    left_map_set f ≫ factorization_iso_set_hom f im left p right q fact = left := by
+    leftMapSet f ≫ factorizationIsoSetHom f im left p right q fact = left := by
   intro X Y f im left p right q fact
   apply q.right_cancellation
-  let i := factorization_iso_set_hom f im left p right q fact
+  let i := factorizationIsoSetHom f im left p right q fact
   calc
-    (left_map_set f ≫ i) ≫ right = left_map_set f ≫ (i ≫ right) := by simp
-    _ = left_map_set f ≫ right_map_set f :=
+    (leftMapSet f ≫ i) ≫ right = leftMapSet f ≫ (i ≫ right) := by simp
+    _ = leftMapSet f ≫ rightMapSet f :=
       by rw [factorization_iso_set_hom_comm_right f im left p right q fact]
     _ = f := factorization_set f
     _ = left ≫ right := by rw [←fact]
 
 /- The inverse of the solution to the lifting problem -/
 /-- Imported FactorizationSystems declaration. -/
-def factorization_iso_set_inv : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) → (left : X ⟶ im) →
+def factorizationIsoSetInv : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) → (left : X ⟶ im) →
     (MorphismProperty.epimorphisms _ left) → (right : im ⟶ Y) →
-    (fact : left ≫ right = f) → im ⟶ image_set f := by
+    (fact : left ≫ right = f) → im ⟶ imageSet f := by
   intro X Y f im left p right fact
   exact TypeCat.ofHom fun y =>
   have existence : ∃ x : X, f x = right y := by
@@ -176,7 +180,7 @@ def factorization_iso_set_inv : {X Y : Type u} → (f : X ⟶ Y) → (im : Type 
 lemma factorization_iso_set_inv_comm_right : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) →
     (left : X ⟶ im) → (p : MorphismProperty.epimorphisms _ left) → (right : im ⟶ Y) →
     (fact : left ≫ right = f) →
-    factorization_iso_set_inv f im left p right fact ≫ right_map_set f = right := by
+    factorizationIsoSetInv f im left p right fact ≫ rightMapSet f = right := by
   intro X Y f im left p right fact
   ext y
   rfl
@@ -185,25 +189,25 @@ lemma factorization_iso_set_inv_comm_right : {X Y : Type u} → (f : X ⟶ Y) �
 lemma factorization_iso_set_inv_comm_left : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) →
     (left : X ⟶ im) → (p : MorphismProperty.epimorphisms _ left) → (right : im ⟶ Y) →
     (fact : left ≫ right = f) →
-    left ≫ factorization_iso_set_inv f im left p right fact = left_map_set f := by
+    left ≫ factorizationIsoSetInv f im left p right fact = leftMapSet f := by
   intro X Y f im left p right fact
   ext x
   apply Subtype.ext
-  simpa using congrArg (fun h : X ⟶ Y => h x) fact
+  exact congrArg (fun h : X ⟶ Y => h x) fact
 
 /- The factorization isomorphism -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def factorization_iso_set : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) → (left : X ⟶ im) →
+def factorizationIsoSet : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) → (left : X ⟶ im) →
     (MorphismProperty.epimorphisms _ left) → (right : im ⟶ Y) →
     (MorphismProperty.monomorphisms _ right) → (left ≫ right = f) →
-    Σ' i : image_set f ≅ im,
-      left_map_set  f ≫ i.hom = left ∧ i.hom ≫ right = right_map_set f := by
+    Σ' i : imageSet f ≅ im,
+      leftMapSet  f ≫ i.hom = left ∧ i.hom ≫ right = rightMapSet f := by
   intro X Y f im left p right q fact
   exact {
     fst := by exact {
-      hom := factorization_iso_set_hom f im left p right q fact
-      inv := factorization_iso_set_inv f im left p right fact
+      hom := factorizationIsoSetHom f im left p right q fact
+      inv := factorizationIsoSetInv f im left p right fact
       hom_inv_id := by
         ext y
         apply Subtype.ext
@@ -213,7 +217,7 @@ def factorization_iso_set : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) �
         apply (mono_iff_injective right).mp q
         exact (Exists.choose_spec
           (factorization_iso_set_hom' f im left p right q fact
-            (factorization_iso_set_inv f im left p right fact y))).left
+            (factorizationIsoSetInv f im left p right fact y))).left
     }
     snd := by exact {
       left := factorization_iso_set_hom_comm_left f im left p right q fact
@@ -225,17 +229,17 @@ def factorization_iso_set : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) �
 lemma factorization_iso_is_unique_set : {X Y : Type u} → (f : X ⟶ Y) → (im : Type u) →
     (left : X ⟶ im) → (p : MorphismProperty.epimorphisms _ left) → (right : im ⟶ Y) →
     (q : MorphismProperty.monomorphisms _ right) → (fact : left ≫ right = f) →
-    (i : image_set f ≅ im) → (left_map_set f ≫ i.hom = left) →
-    (_ : i.hom ≫ right = right_map_set f) →
-    i = (factorization_iso_set f im left p right q fact).fst := by
+    (i : imageSet f ≅ im) → (leftMapSet f ≫ i.hom = left) →
+    (_ : i.hom ≫ right = rightMapSet f) →
+    i = (factorizationIsoSet f im left p right q fact).fst := by
   intro X Y f im left p right q fact i comm_left _
-  let hom := factorization_iso_set_hom f im left p right q fact
+  let hom := factorizationIsoSetHom f im left p right q fact
   let hom' := i.hom
   apply Iso.ext
   apply (left_map_in_left_class_set f).left_cancellation
   calc
-    left_map_set f ≫ hom' = left := comm_left
-    _ = left_map_set f ≫ hom := by rw [factorization_iso_set_hom_comm_left]
+    leftMapSet f ≫ hom' = left := comm_left
+    _ = leftMapSet f ≫ hom := by rw [factorization_iso_set_hom_comm_left]
 
 /- The (Epi,Mono) factorization system on Set -/
 /-- Imported FactorizationSystems declaration. -/
@@ -246,13 +250,13 @@ def EpiMonoSet : FactorizationSystem
   contains_isos_right_class := monomorphismsContainsIsos
   is_closed_comp_left_class := epimorphismsClosedUnderComp
   is_closed_comp_right_class := monomorphismsClosedUnderComp
-  image := image_set
-  left_map := left_map_set
-  right_map := right_map_set
+  image := imageSet
+  leftMap := leftMapSet
+  rightMap := rightMapSet
   factorization := factorization_set
   left_map_in_left_class := left_map_in_left_class_set
   right_map_in_right_class := right_map_in_right_class_set
-  factorization_iso := factorization_iso_set
+  factorizationIso := factorizationIsoSet
   factorization_iso_is_unique := factorization_iso_is_unique_set }
 
 end CategoryTheory

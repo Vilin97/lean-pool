@@ -8,8 +8,6 @@ import LeanPool.BruhatTits.Lattice.Quotient
 import LeanPool.BruhatTits.Utils.GLSubmoduleAction
 import LeanPool.BruhatTits.Utils.List
 
-open Module
-
 /-!
 # The edges of the Bruhat-Tits graph
 
@@ -38,6 +36,9 @@ sense of `inv`, is one.
   chain by the action of `GL₂(K)`.
 
 -/
+
+open Module
+
 
 suppress_compilation
 

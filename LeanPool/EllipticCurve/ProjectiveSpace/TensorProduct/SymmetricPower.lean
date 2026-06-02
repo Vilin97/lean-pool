@@ -199,6 +199,7 @@ variable {R M n} in
   obtain ⟨x, rfl⟩ := AddCon.mk'_surjective x
   obtain ⟨x, rfl⟩ := AddCon.mk'_surjective x
   refine FreeAddMonoid.inductionOn x zero (fun ⟨r, x⟩ ↦ ?_) fun _ _ ↦ add _ _
+  change C ((mk R M n) (PiTensorProduct.tprodCoeff R r x))
   simpa [tprod, ← map_smul, ← PiTensorProduct.tprodCoeff_eq_smul_tprod] using smul_tprod r x
 
 variable {R M n} in
@@ -363,7 +364,7 @@ end simp_lemmas
 namespace SymmetricPower
 
 /-- The `0`ᵗʰ symmetric power of `M` is canonically isomorphic to the base ring `R`. -/
-@[simps!] def zero_equiv : Sym[R]^0 M ≃ₗ[R] R where
+@[simps!] def zeroEquiv : Sym[R]^0 M ≃ₗ[R] R where
   __ := lift R M R 0 ((ofIsEmpty R M R (Fin 0)).symm 1)
   invFun r := r • tprod R ![]
   left_inv x := by
@@ -374,7 +375,7 @@ namespace SymmetricPower
   right_inv r := by simp
 
 /-- The `1`ˢᵗ symmetric power of `M` is canonically isomorphic to `M` itself. -/
-@[simps!] def one_equiv : Sym[R]^1 M ≃ₗ[R] M where
+@[simps!] def oneEquiv : Sym[R]^1 M ≃ₗ[R] M where
   __ := lift R M M 1 ((ofSubsingleton R M M 0).symm 1)
   invFun m := tprod R ![m]
   left_inv x := by

@@ -50,7 +50,6 @@ lemma torusGradX_aestronglyMeasurable
         (x₀ + (0 : ℝ) • (Pi.single i (1 : ℝ) : Fin 3 → ℝ)) := by
       rw [h_eq]; exact hF_diff.hasFDerivAt
     have hline : HasDerivAt (fun t : ℝ => F (x₀ + t • ei)) (fderiv ℝ F x₀ ei) 0 := by
-      change HasDerivAt (fun t => F (x₀ + t • ei)) (fderiv ℝ F x₀ ei) 0
       convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1
     have htendsto_inv : Filter.Tendsto (fun n : ℕ => ((↑n + 1 : ℝ))⁻¹) Filter.atTop
         (nhdsWithin 0 (Set.Ioi 0)) :=
@@ -89,7 +88,7 @@ lemma spatial_transport_integrable
       ext v
       simp only [dotProduct, Fin.sum_univ_three]
       ring
-    rw [heq]; exact integrable_finset_sum _ fun i _ => h i
+    rw [heq]; exact integrable_finsetSum _ fun i _ => h i
   intro i
   obtain ⟨Ci, hCi, hGi⟩ := hSchwartz.hGradDecay (K_log + 6) i
   apply (inverse_poly_integrable (Ci * (|C_log| + 1))).mono'
@@ -218,7 +217,7 @@ lemma force_transport_integrable_coulomb
     ext v
     simp only [dotProduct, vGrad, Fin.sum_univ_three]
     ring
-  rw [heq]; exact integrable_finset_sum _ fun i _ =>
+  rw [heq]; exact integrable_finsetSum _ fun i _ =>
     force_fderiv_log_component_integrable E B hf_pos hf_smooth hSchwartz C_log K_log hLB x i
 
 

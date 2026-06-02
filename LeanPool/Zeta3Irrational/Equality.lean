@@ -6,6 +6,10 @@ Authors: Junqi Liu, Jujian Zhang
 
 import LeanPool.Zeta3Irrational.Integral
 
+/-!
+# LeanPool.Zeta3Irrational.Equality
+-/
+
 namespace LeanPool.Zeta3Irrational
 
 open scoped Nat

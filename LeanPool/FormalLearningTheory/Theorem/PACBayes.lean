@@ -259,7 +259,7 @@ theorem pac_bayes_all_hypotheses {X : Type u} [MeasurableSpace X]
         linarith
       rw [h_empty]
       simp only [MeasureTheory.measure_empty]
-      exact zero_le _
+      exact zero_le
   -- Union bound + ∑ P(h)·δ = δ
   have h_compl_bound : μ Goodᶜ ≤ ENNReal.ofReal δ := by
     calc μ Goodᶜ

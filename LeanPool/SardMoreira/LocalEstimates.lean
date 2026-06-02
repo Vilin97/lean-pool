@@ -11,6 +11,10 @@ import LeanPool.SardMoreira.LebesgueDensity
 import LeanPool.SardMoreira.ContDiff
 import LeanPool.SardMoreira.ToMathlib.PR32186
 
+/-!
+# LeanPool.SardMoreira.LocalEstimates
+-/
+
 open scoped Topology NNReal ENNReal unitInterval
 open Asymptotics Filter MeasureTheory AffineMap Set Metric
 

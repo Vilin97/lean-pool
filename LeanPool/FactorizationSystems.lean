@@ -16,7 +16,7 @@ import LeanPool.FactorizationSystems.Characterization
 Source: url:https://emilyriehl.github.io/files/context.pdf
 Authors: Ivan Kobe
 Status: verified
-Main declarations: `CategoryTheory.FactorizationSystem_characterization`
+Main declarations: `CategoryTheory.FactorizationSystemCharacterization`
 Tags: category-theory, factorization-systems, orthogonality
 MSC: 18A32, 18A40
 -/

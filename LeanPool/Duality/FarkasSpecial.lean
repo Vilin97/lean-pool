@@ -6,6 +6,9 @@ Authors: Martin Dvorak
 import LeanPool.Duality.ExtendedFields
 import LeanPool.Duality.FarkasBasic
 
+/-!
+# LeanPool.Duality.FarkasSpecial
+-/
 
 section notation_EF
 
@@ -359,8 +362,8 @@ private lemma extendedFarkas.fwd_solution {A : Matrix I J F∞} {b : I → F∞}
   · intro j where_top
     push Not at where_top
     obtain ⟨t, ht⟩ := where_top
-    have hxj : x j = 0
-    · obtain ⟨e, he⟩ : ∃ e : F, b t = e :=
+    have hxj : x j = 0 := by
+      obtain ⟨e, he⟩ : ∃ e : F, b t = e :=
         match hbt : b t.val with
         | (f : F) => ⟨_, rfl⟩
         | ⊥ => (hbot ⟨t, hbt⟩).elim
@@ -429,39 +432,39 @@ private lemma extendedFarkas.fwd_witness {A : Matrix I J F∞} {b : I → F∞}
   constructor
   · intro i'
     exact (y i'.val).property
-  have h0 : ∀ i : I, ¬ (b i ≠ ⊤ ∧ ∀ j : J, A i j ≠ ⊥) → y i = 0
-  · intro i i_not_I'
+  have h0 : ∀ i : I, ¬ (b i ≠ ⊤ ∧ ∀ j : J, A i j ≠ ⊥) → y i = 0 := by
+    intro i i_not_I'
     by_contra contr
-    have hyi : 0 < y i
-    · cases lt_or_eq_of_le (y i).property with
+    have hyi : 0 < y i := by
+      cases lt_or_eq_of_le (y i).property with
       | inl hpos =>
-        exact hpos
+          exact hpos
       | inr h0 =>
-        exfalso
-        apply contr
-        ext
-        exact h0.symm
+          exfalso
+          apply contr
+          ext
+          exact h0.symm
     if bi_top : b i = ⊤ then
-      have impos : b ᵥ⬝ y = ⊤
-      · push Not at hbot
+      have impos : b ᵥ⬝ y = ⊤ := by
+        push Not at hbot
         exact no_bot_has_top_dotWeig_pos hbot bi_top y hyi
       rw [impos] at sharpine
       exact not_top_lt sharpine
     else
       push Not at i_not_I'
       obtain ⟨j, Aij_eq_bot⟩ := i_not_I' bi_top
-      have htop : ((-Aᵀ) j) ᵥ⬝ y = ⊤
-      · refine no_bot_has_top_dotWeig_pos ?_ (by simpa using Aij_eq_bot) y hyi
+      have htop : ((-Aᵀ) j) ᵥ⬝ y = ⊤ := by
+        refine no_bot_has_top_dotWeig_pos ?_ (by simpa using Aij_eq_bot) y hyi
         intro k hk
         exact hAj ⟨j, ⟨i, Aij_eq_bot⟩, ⟨k, by simpa using hk⟩⟩
       have ineqality : ((-Aᵀ) j) ᵥ⬝ y ≤ 0 := ineqalities j
       rw [htop, top_le_iff] at ineqality
       exact EF.zero_neq_top ineqality
   constructor
-  · have hnb : ∀ i : I, ¬ (b i ≠ ⊤ ∧ ∀ j : J, A i j ≠ ⊥) → ∀ j : J, (-Aᵀ) j i ≠ ⊥
-    · intro i i_not_I' j contr
-      have btop : ∃ j : J, A i j = ⊤
-      · use j
+  · have hnb : ∀ i : I, ¬ (b i ≠ ⊤ ∧ ∀ j : J, A i j ≠ ⊥) → ∀ j : J, (-Aᵀ) j i ≠ ⊥ := by
+      intro i i_not_I' j contr
+      have btop : ∃ j : J, A i j = ⊤ := by
+        use j
         simpa using contr
       refine hAi ⟨i, ?_, btop⟩
       push Not at i_not_I'
