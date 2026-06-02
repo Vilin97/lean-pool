@@ -1270,6 +1270,7 @@ projects:
     main_results:
       - declaration: RamanujanNagell
         informal: Proves that the integer solutions of x^2 + 7 = 2^n are exactly (x, n) = (+/-1, 3), (+/-3, 4), (+/-5, 5), (+/-11, 7), (+/-181, 15).
+        source_ref: "T. Nagell, The Diophantine equation x^2 + 7 = 2^n, Ark. Mat. 4 (1961), 185-187; L. J. Mordell, Diophantine Equations, Academic Press, 1969, Ch. 20."
     tags:
       - number-theory
       - diophantine-equations

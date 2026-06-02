@@ -12,15 +12,17 @@ open Polynomial NumberField QuadraticAlgebra RingOfIntegers Algebra Nat Ideal
 /-!
 # The Ramanujan-Nagell equation
 
-Stuff
+Classifies the integer solutions of `x² + 7 = 2ⁿ` through the arithmetic of the
+ring of integers `ℤ[θ]` of `ℚ(√-7)`, which has class number one. The file builds
+the conjugate-factor factorization, the coprimality of the factors, and the
+unit/sign analysis that together pin down the five solutions.
 
 -/
 
 /--
-Summary
+Outline of the uniqueness argument formalized below.
 
-PROVIDED SOLUTION
-We begin by applying `main_factorisation_lemma` below. The relationship between
+We apply `main_factorisation_lemma` below. The relationship between
 `m` here and `n` there is `m = n - 2`. We then have the factorization
 ((x + √-7)/2) * ((x - √-7)/2) = 2^m = ((1 + √-7)/2)^m * ((1 - √-7)/2)^m,
 written in Lean as
@@ -42,7 +44,7 @@ these equations gives the cases stated in the lemma. The relevant results
 about unique factorization and UFDs can be found in the NumberTheory and
 RingTheory folders of mathlib.
 -/
-/- Exercise 1: The conjugate factors (x ± √-7)/2 lie in R (since x is odd) and
+/- Conjugate factors: the elements (x ± √-7)/2 lie in R (since x is odd) and
     their product equals (x²+7)/4 = 2^m = θ^m · (1-θ)^m. The division by 4 is
     deliberate: it makes the difference of the factors equal to √-7 = 2θ-1 (rather
     than 2√-7), which simplifies the coprimality argument. -/
@@ -115,7 +117,7 @@ lemma factors_in_R_with_product (x : ℤ) (m : ℕ) (hm_ge : m ≥ 3)
     change ((k : K) + ω) - ((k : K) + (1 - ω)) = 2 * (ω : K) - 1
     ring
 
-/-- Exercise 2: The conjugate factors are coprime in R. The only prime factors of 2
+/-- Coprimality: the conjugate factors are coprime in R. The only prime factors of 2
     in R are θ and θ' (since 2 = θ·θ' by `two_factorisation_R`). If either
     divided both α and β, it would divide their difference 2θ-1 = √(-7), but
     N(√-7) = 7 is not divisible by N(θ) = 2 or N(θ') = 2. -/
@@ -378,7 +380,7 @@ lemma factor_not_unit_right (α β : R) (m : ℕ)
     rw [him_lhs, him_rhs] at h_im
     exact absurd h_im (by norm_num)
 
-/-- Exercise 4: From α = ±θ^m or α = ±θ'^m, use the product relation to determine β,
+/-- Unit/sign analysis: from α = ±θ^m or α = ±θ'^m, use the product relation to determine β,
     then take the difference α - β = 2θ-1 to eliminate x and obtain the conclusion. -/
 lemma eliminate_x_conclude (α β : R) (m : ℕ)
     (h_diff : (↑α : K) - ↑β = 2 * (↑θ : K) - 1)
