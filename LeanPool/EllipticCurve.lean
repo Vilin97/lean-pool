@@ -30,6 +30,12 @@ general definition of elliptic curves over schemes, building up symmetric
 powers, Grassmannians, the Proj of a graded algebra, and the big Zariski site on
 the opposite category of commutative rings.
 
+This Lean Pool project does **not** itself define an elliptic curve or prove an
+elliptic-curve theorem. Its verified, headline content is the symmetric
+multilinear map and symmetric tensor power algebra listed below, vendored from
+that upstream effort; the module name reflects the upstream package rather than
+the scope of the imported mathematics.
+
 Much of that infrastructure has since been upstreamed to Mathlib in a
 *generalized* form (`SymmetricPower` over an arbitrary index type, the graded
 homomorphism hierarchy `GradedFunLike`/`GradedRingHom`/`GradedAlgHom`,
@@ -68,4 +74,13 @@ them against the new APIs is out of scope for this import.
 
 Imported from <https://github.com/kckennylau/EllipticCurve> (originally on
 Lean v4.25.0-rc2) and ported to Lean Pool's v4.30.0-rc2 / Mathlib v4.30.0-rc2.
+
+## References
+
+The symmetric tensor power `Sⁿ M`, its universal property identifying linear
+maps out of it with symmetric multilinear maps, base change, and the graded
+commutative algebra structure are standard multilinear algebra; see N. Bourbaki,
+*Algebra I, Chapters 1-3*, Springer, 1989, Chapter III, §6 (Symmetric algebras),
+and D. Eisenbud, *Commutative Algebra with a View Toward Algebraic Geometry*,
+GTM 150, Springer, 1995, Appendix A2.3.
 -/

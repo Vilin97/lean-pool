@@ -1270,6 +1270,7 @@ projects:
     main_results:
       - declaration: SymmetricPower.lift
         informal: The universal property of the symmetric tensor power, identifying linear maps out of it with symmetric multilinear maps.
+        source_ref: "N. Bourbaki, Algebra I, Chapters 1-3, Springer, 1989, Ch. III, §6 (Symmetric algebras)."
       - declaration: SymmetricMap.baseChange
         informal: Base change of a symmetric multilinear map along an algebra, for a finite index type.
       - declaration: MultilinearMap.hom_ext
