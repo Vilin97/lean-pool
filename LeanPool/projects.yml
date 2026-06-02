@@ -1852,3 +1852,32 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: root-system
+    title: Explicit construction of classical root systems
+    summary: Constructs the root pairings of classical type (Aₙ, BCₙ) explicitly — from signed intervals and from a dot-product space — and proves the pairing and reflection identities exhibiting them as Mathlib `RootPairing`s.
+    branch: representation theory
+    entry_module: LeanPool.RootSystem
+    authors:
+      - Antoine de Saint Germain
+      - Ambrose Tang
+    source:
+      url: https://antoine-dsg.github.io/root_system/
+      github_repo: Antoine-dSG/root_system
+    status: verified
+    main_declarations:
+      - An.rootPairing
+      - BCn.rootPairing
+    main_results:
+      - declaration: An.rootPairing
+        informal: Constructs the type Aₙ root system as a Mathlib RootPairing over the integers from signed intervals on Fin n.
+        source_ref: "N. Bourbaki, Lie Groups and Lie Algebras, Chapters 4-6, Springer, 2002; J. E. Humphreys, Introduction to Lie Algebras and Representation Theory, GTM 9, Springer, 1972, Ch. III."
+      - declaration: BCn.rootPairing
+        informal: Constructs the type BCₙ root pairing from the standard dot-product space via a symmetric nondegenerate form.
+    tags:
+      - representation-theory
+      - root-systems
+      - lie-theory
+      - combinatorics
+    msc:
+      - "17B22"
+      - "20F55"
