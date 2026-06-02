@@ -268,9 +268,9 @@ noncomputable def sampleStdDev {n : ℕ} : (Fin n → ℝ) → ℝ := fun X =>
 
 
 /-- The function underlying the t distribution.
-If `X i` are `iid` and `N(μ, σ^2)` then this T has the t distribution.
+If `X i` are `iid` and `N(μ, σ^2)`, then this statistic has the t distribution.
 -/
-noncomputable def T {μ : ℝ} {n : ℕ} : (Fin n → ℝ) → ℝ := fun X =>
+noncomputable def studentTStatistic {μ : ℝ} {n : ℕ} : (Fin n → ℝ) → ℝ := fun X =>
     (Bar X - μ) / (sampleStdDev X / √(n:ℝ))
 
 section Behrens
