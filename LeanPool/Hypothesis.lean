@@ -16,7 +16,7 @@ import LeanPool.Hypothesis.StudentT
 Source: url:https://github.com/bjoernkjoshanssen/hypothesis
 Authors: Bjørn Kjos-Hanssen
 Status: verified
-Main declarations: `t_pdf`, `separable`, `regression_coordinates₁`, `derivStudent`
+Main declarations: `tPdf`, `separable`, `regressionCoordinates₁`, `derivStudent`
 Tags: probability, statistics, hypothesis-testing
 MSC: 62F03, 62J05, 60E05
 -/

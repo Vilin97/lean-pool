@@ -46,7 +46,7 @@ def Kvec₁ {n : ℕ} {R : Type*} [RCLike R] (x : Fin n → R) :=
 
 /-- Given points `(x i, y i)`, obtain the coordinates `[c, d]` such that
 `y = c x + d` is the best fit regression line. -/
-noncomputable def regression_coordinates₁ {n : ℕ} {R : Type*} [RCLike R] (x y : Fin n → R)
+noncomputable def regressionCoordinates₁ {n : ℕ} {R : Type*} [RCLike R] (x y : Fin n → R)
     (lin_indep : LinearIndependent R (Kvec₁ x)) :
     Fin 2 → R := fun i => ((Module.Basis.mk lin_indep (topsub₁ _)).repr
       ⟨Submodule.starProjection (K₁ x) (WithLp.toLp 2 y),
@@ -220,7 +220,7 @@ lemma matrix_algebra {n t o w : ℕ} {R : Type*} [RCLike R]
 noncomputable def hat {m : ℕ} (x y : Fin m → ℝ) (h : LinearIndependent ℝ (Kvec₁ x)) : Fin m → ℝ :=
     by
   intro i
-  let c := regression_coordinates₁ x y h
+  let c := regressionCoordinates₁ x y h
   exact c 0 * x i + c 1
 
 /-- The value "y bar". -/
@@ -369,7 +369,6 @@ lemma diagonalSq {m : ℕ} (x : Fin m → ℝ)
             · intro z
               use ⟨![z,x_1], by simp⟩
               simp) (by simp) (by simp)
-    simp only [Fin.isValue] at this
     rw [← this]
     change
      (@Finset.sum (Fin 2 → Fin m) ℝ _ {x_2 | x_2 1 = x_1} fun x_2 ↦ x (x_2 0) ^ 2) =
@@ -558,7 +557,6 @@ lemma offDiagonalSq {m : ℕ} (x : Fin m → ℝ) :
               use ⟨![z,z], by simp⟩
               simp) (by simp) (by simp only [
               Fin.isValue, Finset.mem_univ, forall_const, Subtype.forall];intro a ha;rw [ha])
-    simp only [Fin.isValue] at this
     rw [← this]
     rw [Finset.sum_subtype]
     intro σ
@@ -867,7 +865,7 @@ def Kvec₂ {n : ℕ} (x₀ x₁ : Fin n → ℝ) := ![
   (⟨WithLp.toLp 2 fun _ => 1, h1K₂ x₀ x₁⟩ : K₂ x₀ x₁)]
 
 /-- The multivariate (two-predictor) least-squares regression coordinates. -/
-noncomputable def regression_coordinates₂ {n : ℕ} (x₀ x₁ y : Fin n → ℝ)
+noncomputable def regressionCoordinates₂ {n : ℕ} (x₀ x₁ y : Fin n → ℝ)
     (lin_indep : LinearIndependent ℝ (Kvec₂ x₀ x₁)) :
     Fin 3 → ℝ := fun i => ((Module.Basis.mk lin_indep (topsub₂ _ _)).repr
       ⟨Submodule.starProjection (K₂ x₀ x₁) (WithLp.toLp 2 y),

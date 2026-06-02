@@ -9,7 +9,7 @@ import Mathlib.Data.Real.Sign
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
 import Mathlib.Data.ENNReal.Basic
 
-import Mathlib.Data.Real.Sqrt
+import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Log.Base
@@ -28,7 +28,7 @@ import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
 # Exercises from Grinstead and Snell
 -/
 
-namespace exercise_1_2_4
+namespace Exercise124
 
 /-- "Heads", encoded as `true`. -/
 def H := true
@@ -176,7 +176,7 @@ lemma part_3 :
 
 
 
-end exercise_1_2_4
+end Exercise124
 
 -- inductive omega
 -- | a : omega

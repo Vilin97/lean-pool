@@ -19,7 +19,7 @@ import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 open Real
 /-- The probability density function for the Student t distribution with `ν` degrees of freedom.
 -/
-noncomputable def t_pdf (ν : ℝ) : ℝ → ℝ := fun x =>
+noncomputable def tPdf (ν : ℝ) : ℝ → ℝ := fun x =>
 ((Gamma ((ν + 1) / 2)) / (√(π * ν) * Gamma (ν/2))) *  (1 + x^2/ν) ^ (- ((ν + 1) / 2))
 
 
@@ -78,13 +78,13 @@ lemma tHelper {ν : ℝ} (hν : 0 ≤ ν) (x : ℝ) : 0 < 1 + x ^ 2 / ν := by
           positivity
 
 /-- The messy formula for the derivative of Student's `t`. -/
-lemma derivStudent {ν : ℝ} (hν : 0 ≤ ν) : deriv (t_pdf ν) =
+lemma derivStudent {ν : ℝ} (hν : 0 ≤ ν) : deriv (tPdf ν) =
     fun x => ((Gamma ((ν + 1) / 2)) / (√(π * ν) * Gamma (ν/2)))
            * ((- ((ν + 1) / 2)) * (1 + x^2/ν) ^ (- ((ν + 3) / 2))
            * (2*x/ν)) := by
   ext x
   have h₀ :  1 + x ^ 2 / ν ≠ 0 := ne_of_gt <| tHelper hν _
-  unfold t_pdf
+  unfold tPdf
   rw [deriv_const_mul]
   · congr
     simp only [neg_mul]
@@ -119,7 +119,7 @@ lemma derivStudent {ν : ℝ} (hν : 0 ≤ ν) : deriv (t_pdf ν) =
     · exact differentiableAt_const _
 
 -- /-- The messy formula for the derivative of Student's `t`. -/
--- lemma derivStudent₂ {ν : ℝ} (hν : 0 < ν) : deriv (deriv (t_pdf ν)) =
+-- lemma derivStudent₂ {ν : ℝ} (hν : 0 < ν) : deriv (deriv (tPdf ν)) =
 --     fun x => ((Gamma ((ν + 1) / 2)) / (√(π * ν) * Gamma (ν/2)))
 --            * (2*x/ν)) +
 --            ((Gamma ((ν + 1) / 2)) / (√(π * ν) * Gamma (ν/2)))
@@ -138,7 +138,7 @@ lemma derivStudent {ν : ℝ} (hν : 0 ≤ ν) : deriv (t_pdf ν) =
 
 /-- The only place the derivative of Student's `t` is 0 is 0. -/
 lemma derivStudent' (x ν : ℝ) (hν : 0 < ν) :
-    deriv (t_pdf ν) x = 0 ↔ x = 0 := by
+    deriv (tPdf ν) x = 0 ↔ x = 0 := by
   constructor
   · intro h
     rw [derivStudent (by linarith)] at h
@@ -159,7 +159,7 @@ lemma derivStudent' (x ν : ℝ) (hν : 0 < ν) :
           · apply mul_nonneg pi_nonneg
             linarith
         | inr h =>
-          exfalso;simp only at h
+          exfalso
           revert h
           simp only [imp_false]
           refine Gamma_ne_zero ?_
@@ -186,8 +186,8 @@ lemma derivStudent' (x ν : ℝ) (hν : 0 < ν) :
 
 
 /-- The Student t distribution with one df is the Cauchy distribution. -/
-lemma t_pdf_one (x : ℝ) : t_pdf 1 x = 1 / (π * (1 + x^2)) := by
-  unfold t_pdf
+lemma t_pdf_one (x : ℝ) : tPdf 1 x = 1 / (π * (1 + x^2)) := by
+  unfold tPdf
   simp only [add_self_div_two, Gamma_one, mul_one, one_div, mul_inv_rev, div_one]
   have : Gamma 2⁻¹ = √π := by simpa using Real.Gamma_nat_add_half 0
   rw [this]
@@ -199,8 +199,8 @@ lemma t_pdf_one (x : ℝ) : t_pdf 1 x = 1 / (π * (1 + x^2)) := by
     refine sq_sqrt pi_nonneg
 
 /-- The t distribution pdf has an everywhere-positive pdf. -/
-lemma t_pdf_pos (x ν : ℝ) (hν : ν > 0) : t_pdf ν x > 0 := by
-  simp only [t_pdf, gt_iff_lt]
+lemma t_pdf_pos (x ν : ℝ) (hν : ν > 0) : tPdf ν x > 0 := by
+  simp only [tPdf, gt_iff_lt]
   refine mul_pos ?_ ?_
   · refine div_pos ?_ ?_
     · exact Gamma_pos_of_pos (by linarith)
@@ -211,24 +211,25 @@ lemma t_pdf_pos (x ν : ℝ) (hν : ν > 0) : t_pdf ν x > 0 := by
     apply tHelper <| le_of_lt hν
 
 /-- The pdf of the Student `t` distribution with 2 degrees of freedom. -/
-  lemma studentT2Pdf (x : ℝ) : t_pdf 2 x = (1 / (2 * √2)) * (1 + x^2/2) ^ (- (3:ℝ)/2) := by
+  lemma studentT2Pdf (x : ℝ) : tPdf 2 x = (1 / (2 * √2)) * (1 + x^2/2) ^ (- (3:ℝ)/2) := by
   simp only [
-    t_pdf, Nat.ofNat_nonneg, sqrt_mul', ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, div_self,
+    tPdf, Nat.ofNat_nonneg, sqrt_mul', ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, div_self,
     Gamma_one, mul_one, one_div, mul_inv_rev]
   rw [show Gamma ((2+1)/2) = Gamma (1 + 2⁻¹) by ring_nf]
   have := Real.Gamma_nat_add_half 1
-  simp only [Nat.cast_one, one_div, Nat.doubleFactorial, one_mul, pow_one] at this
+  simp only [Nat.cast_one, one_div, pow_one] at this
   rw [this]
   ring_nf
   have : √π * (√π)⁻¹ = 1 :=
     mul_inv_cancel₀ fun h => pi_ne_zero <| (sqrt_eq_zero pi_nonneg).mp h
+  norm_num [Nat.doubleFactorial]
   rw [this]
-  simp
+  norm_num
 
-lemma studentTSymmetric (x ν : ℝ) : t_pdf ν x = t_pdf ν (-x) := by
-  simp [t_pdf]
+lemma studentTSymmetric (x ν : ℝ) : tPdf ν x = tPdf ν (-x) := by
+  simp [tPdf]
 
-lemma studentTMode (x ν : ℝ) (hν : 0 ≤ ν) : t_pdf ν x ≤ t_pdf ν 0 := by
+lemma studentTMode (x ν : ℝ) (hν : 0 ≤ ν) : tPdf ν x ≤ tPdf ν 0 := by
   refine mul_le_mul ?_ ?_ ?_ ?_
   · simp
   · apply Real.rpow_le_rpow_of_nonpos
@@ -243,7 +244,7 @@ lemma studentTMode (x ν : ℝ) (hν : 0 ≤ ν) : t_pdf ν x ≤ t_pdf ν 0 := 
   · apply div_nonneg <;> positivity
 
 lemma studentTMax (ν : ℝ) (hν : 0 ≤ ν) :
-  IsLocalMax (t_pdf ν) 0 := by
+  IsLocalMax (tPdf ν) 0 := by
   rw [IsLocalMax, IsMaxFilter]
   refine eventually_nhds_iff.mpr ?_
   use Set.univ
@@ -342,7 +343,7 @@ example {Ω : Type*} (X : Fin 2 → (Ω → ℝ)) (μX : ℝ)
 
 
 /-- The Welch–Satterthwaite effective degrees of freedom for a two-sample t-test. -/
-noncomputable def welch_df (s₁ s₂ n₁ n₂ ν₁ ν₂ : ℝ) :=
+noncomputable def welchDf (s₁ s₂ n₁ n₂ ν₁ ν₂ : ℝ) :=
   (s₁^2/n₁ + s₂^2/n₂)^2 / ((s₁^4/(n₁^2 * ν₁)) + (s₂^4/(n₂^2 * ν₂)))
 
 -- Now let us check the Welch test df lower bound on page 67.
@@ -351,8 +352,8 @@ lemma welch₀ {s₁ s₂ n₁ n₂ ν₁ ν₂ : ℝ}
   (hn₁ : 0 < n₁) (hn₂ : 0 < n₂)
   (hν₁ : 0 < ν₁) (hν₂ : 0 < ν₂)
   (h : ν₁ ≤ ν₂) :
-  welch_df s₁ s₂ n₁ n₂ ν₁ ν₂ ≥ min ν₁ ν₂ := by
-    unfold welch_df
+  welchDf s₁ s₂ n₁ n₂ ν₁ ν₂ ≥ min ν₁ ν₂ := by
+    unfold welchDf
     have : min ν₁ ν₂ = ν₁ := min_eq_left h
     rw [this]
     suffices  (s₁ ^ 2 / n₁ + s₂ ^ 2 / n₂) ^ 2
@@ -402,11 +403,11 @@ lemma welch₀ {s₁ s₂ n₁ n₂ ν₁ ν₂ : ℝ}
               · linarith
             · linarith
 
-/-- The welch_df lower bound when s₁ or s₂ is 0. -/
+/-- The welchDf lower bound when s₁ or s₂ is 0. -/
 lemma welch' {s₁ s₂ n₁ n₂ ν₁ ν₂ : ℝ}
   (hs₁ : 0 = s₁) (hs₂ : 0 < s₂) (hn₂ : 0 < n₂) :
-  welch_df s₁ s₂ n₁ n₂ ν₁ ν₂ ≥ min ν₁ ν₂ := by
-  unfold welch_df
+  welchDf s₁ s₂ n₁ n₂ ν₁ ν₂ ≥ min ν₁ ν₂ := by
+  unfold welchDf
   rw [← hs₁]
   simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, zero_div, zero_add, ge_iff_le]
   have :  (s₂ ^ 2 / n₂) ^ 2 = s₂ ^ 4 / (n₂^2) := by
@@ -435,8 +436,8 @@ lemma welch {s₁ s₂ n₁ n₂ ν₁ ν₂ : ℝ}
   (hs₁ : 0 ≤ s₁) (hs₂ : 0 < s₂)
   (hn₁ : 0 < n₁) (hn₂ : 0 < n₂)
   (hν₁ : 0 < ν₁) (hν₂ : 0 < ν₂) :
-  welch_df s₁ s₂ n₁ n₂ ν₁ ν₂ ≥ min ν₁ ν₂ := by
-  unfold welch_df
+  welchDf s₁ s₂ n₁ n₂ ν₁ ν₂ ≥ min ν₁ ν₂ := by
+  unfold welchDf
   have : 0 = s₁ ∨ 0 < s₁ := Or.symm (Decidable.lt_or_eq_of_le hs₁)
   cases this with
   | inl h => apply welch' <;> tauto
@@ -446,7 +447,7 @@ lemma welch {s₁ s₂ n₁ n₂ ν₁ ν₂ : ℝ}
   | inl h => apply welch₀ <;> tauto
   | inr h =>
     have := @welch₀ s₂ s₁ n₂ n₁ ν₂ ν₁ hs₂ hs₁ hn₂ hn₁ hν₂ hν₁ h
-    unfold welch_df at this
+    unfold welchDf at this
     convert this using 1
     · nth_rw 1 [add_comm]
       nth_rw 2 [add_comm]
@@ -465,9 +466,9 @@ lemma howell {s₁ s₂ n₁ n₂ ν₁ ν₂ : ℝ}
     (hs₁ : 0 < s₁) (hs₂ : 0 < s₂)
     (hn₁ : 0 < n₁ - 1) (hn₂ : 0 < n₂ - 1)
     (hνn₁ : ν₁ = n₁ - 1) (hνn₂ : ν₂ = n₂ - 1) :
-    welch_df s₁ s₂ n₁ n₂ ν₁ ν₂ ≤ ν₁ + ν₂ := by
+    welchDf s₁ s₂ n₁ n₂ ν₁ ν₂ ≤ ν₁ + ν₂ := by
     rw [hνn₁, hνn₂]
-    unfold welch_df
+    unfold welchDf
     suffices (s₁ ^ 2 / n₁ + s₂ ^ 2 / n₂) ^ 2
         ≤ (s₁ ^ 4 / (n₁ ^ 2 * (n₁ - 1)) + s₂ ^ 4 / (n₂ ^ 2 * (n₂ - 1))) * (n₁ - 1 + (n₂ - 1)) by
       generalize (s₁ ^ 2 / n₁ + s₂ ^ 2 / n₂) ^ 2 = A at *
@@ -554,7 +555,7 @@ lemma claimFromBook {s₁ s₂ n ν₁ ν₂ : ℝ}
     (hs₁ : 0 < s₁) (hs₂ : 0 < s₂)
     (hνn₁ : ν₁ = n - 1) (hνn₂ : ν₂ = n - 1)
     (h₂₀₂₅ : n = 2) :
-    welch_df s₁ s₂ n n ν₁ ν₂ ≤ (min ν₁ ν₂) + 1 := by
+    welchDf s₁ s₂ n n ν₁ ν₂ ≤ (min ν₁ ν₂) + 1 := by
   subst hνn₁ hνn₂ h₂₀₂₅
   have := @howell s₁ s₂ 2 2 1 1 hs₁ hs₂
    (by linarith) (by linarith)
@@ -577,25 +578,25 @@ noncomputable def χ2pdf (k : ℝ) : ℝ → ℝ := fun x =>
 /-- A "junk theorem" about the χ² distribution with 0,
 or more generally any integer of the form -2k, degrees of freedom. -/
 example (x : ℝ) (k : ℕ) : χ2pdf (- 2 * k) x = 0 := by
-unfold χ2pdf cχ
-simp only [neg_mul, mul_inv_rev, mul_eq_zero, inv_eq_zero, exp_ne_zero, or_false]
-left
-left
-refine (Gamma_eq_zero_iff (-(2 * ↑k) / 2)).mpr ?_
-use k
-show @Eq ℝ (-(2 * ↑k) / 2) (-↑k)
-suffices @Eq ℝ ((2 * ↑k) / 2) (↑k) by linarith
-simp
+  unfold χ2pdf cχ
+  simp only [neg_mul, mul_inv_rev, mul_eq_zero, inv_eq_zero, exp_ne_zero, or_false]
+  left
+  left
+  refine (Gamma_eq_zero_iff (-(2 * ↑k) / 2)).mpr ?_
+  use k
+  show @Eq ℝ (-(2 * ↑k) / 2) (-↑k)
+  suffices @Eq ℝ ((2 * ↑k) / 2) (↑k) by linarith
+  simp
 
 /-- The exponential distribution with parameter `λ` (written `μ`).
 We do not enforce `x≥0` here.
 -/
-noncomputable def exponential_pdf (μ : ℝ) : ℝ → ℝ := fun x => μ * rexp (- μ * x)
+noncomputable def exponentialPdf (μ : ℝ) : ℝ → ℝ := fun x => μ * rexp (- μ * x)
 
 /-- The χ² distribution with 2 degrees of freedom is
 the exponential distribution with parameter `λ = 2⁻¹`. -/
-lemma χ2_exponential (x : ℝ) : χ2pdf 2 x = exponential_pdf (2⁻¹) x := by
-  simp [χ2pdf, cχ, exponential_pdf]
+lemma χ2_exponential (x : ℝ) : χ2pdf 2 x = exponentialPdf (2⁻¹) x := by
+  simp [χ2pdf, cχ, exponentialPdf]
   ring_nf
 
 lemma auxχ (k x : ℝ) (hx : x ≠ 0) :
@@ -720,7 +721,6 @@ theorem deriv_χ_zero {x k : ℝ} (hk₀ : 0 < k) (hx : 0 < x) (h : deriv (χ2pd
       revert this
       simp
     | inr h₁ =>
-      simp at h₁
       linarith
   · simp only [mul_eq_zero, exp_ne_zero, false_or] at h₀
     cases h₀ with
@@ -730,7 +730,6 @@ theorem deriv_χ_zero {x k : ℝ} (hk₀ : 0 < k) (hx : 0 < x) (h : deriv (χ2pd
       · linarith
       · tauto
     | inr h₁ =>
-      simp at h₁
       linarith
 
 /-- The χ² distribution with `0 < k ≤ 2` df has no critical point. -/
@@ -768,12 +767,16 @@ lemma eventually_of_punctured {a b : ℝ} (hb : a ≠ b) {P : ℝ → Prop} (h�
   fun i => MeasurableSpace.comap (fun v => v i) Bool.instMeasurableSpace
 
 /-- The fair coin as a probability mass function on `Bool`. -/
-noncomputable def fairCoin : PMF Bool := PMF.bernoulli (1/2) (by simp)
+noncomputable def fairCoin : PMF Bool := by
+  refine PMF.ofFintype (fun _ => 1 / 2) ?_
+  simpa using ENNReal.mul_inv_cancel (a := (2 : ENNReal)) (by norm_num) (by norm_num)
 
 /-- The fair-coin measure on `Bool`. -/
 noncomputable def μ : MeasureTheory.Measure Bool := fairCoin.toMeasure
 
-example : μ {true} = 1/2 := by unfold μ fairCoin PMF.bernoulli;simp
+example : μ {true} = 1/2 := by
+  unfold μ fairCoin
+  simp
 
 /-- The product of two fair-coin measures on `Fin 2 → Bool`. -/
 noncomputable def μ' : MeasureTheory.Measure (Fin 2 → Bool) := MeasureTheory.Measure.pi <| fun _ =>
@@ -868,7 +871,8 @@ lemma basic_ν (b c : Bool) : ν {![b,c]} = (1/2) * (1/2) := by
 --   sorry
 
 example : μ {true} = 1/2 := by
-  simp [μ, fairCoin]
+  unfold μ fairCoin
+  simp
 
 /-- As a first steps towards understanding σ-algebras in Lean,
 and thereby indepdendence of random variables,
@@ -988,10 +992,9 @@ lemma realIndependenceGENERAL {n : ℕ} (m : Measure ℝ) [IsProbabilityMeasure 
     (μ := MeasureTheory.Measure.pi (fun _ => m)) := by
     have := @ProbabilityTheory.iIndepFun_pi (Fin n) _ (fun _ => ℝ) (by
         intro i
-        simp only
         exact measurableSpace) (fun _ => m) (fun _ => (by (expose_names; exact inst)))
             (fun _ => ℝ) _ (by intro i r;exact r) (by
-                intro i;simp only;exact aemeasurable_id')
+                intro i;exact aemeasurable_id')
     exact this
     -- rw [ProbabilityTheory.iIndepFun_iff]
     -- intro t T h

@@ -490,18 +490,18 @@ projects:
       github_repo: bjoernkjoshanssen/hypothesis
     status: verified
     main_declarations:
-      - t_pdf
+      - tPdf
       - separable
-      - regression_coordinates₁
+      - regressionCoordinates₁
       - derivStudent
     main_results:
-      - declaration: t_pdf
+      - declaration: tPdf
         informal: Defines the Student t distribution density with ν degrees of freedom.
       - declaration: derivStudent
         informal: Computes the derivative of the Student t density.
       - declaration: separable
         informal: Defines linear separability with margin for support vector machines.
-      - declaration: regression_coordinates₁
+      - declaration: regressionCoordinates₁
         informal: Defines the least-squares coefficients of the simple linear regression line.
       - declaration: welch
         informal: Establishes the Welch-Satterthwaite degrees-of-freedom bound for a two-sample t-test.
