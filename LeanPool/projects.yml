@@ -1852,3 +1852,44 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: phaseretrieval
+    title: Stable phase retrieval for Hermite-Fock expansions
+    summary: Formalizes stable phase retrieval for finite Hermite-Fock polynomials and their Gaussian L2 closure in d complex dimensions, together with the quantitative one-dimensional Fock-space local stability estimate that underlies it.
+    branch: analysis
+    entry_module: LeanPool.PhaseRetrieval
+    authors:
+      - Susanna Bertolini
+      - Jaume de Dios Pont
+    source:
+      title: "Stable phase retrieval for Hermite-Fock expansions"
+      authors:
+        - Susanna Bertolini
+        - Jaume de Dios Pont
+      url: https://github.com/susannabertolini/PhaseRetrieval
+      github_repo: susannabertolini/PhaseRetrieval
+    status: verified
+    main_declarations:
+      - DimdPolyShowcaseChallenge.stable_phase_retrieval
+    main_results:
+      - declaration: DimdPolyShowcaseChallenge.stable_phase_retrieval
+        informal: Proves stable phase retrieval for the Gaussian L2 closure of finite d-dimensional Hermite-Fock polynomials at a fixed level, giving a uniform stability constant bounding the phase-aligned L2 distance by the L2 distance of magnitudes.
+        source_ref: "R. Balan, P. Casazza, D. Edidin, On signal reconstruction without phase, Appl. Comput. Harmon. Anal. 20 (2006), 345-356, doi:10.1016/j.acha.2005.07.001."
+      - declaration: FockSPR.orthogonalReduction_exists_phase
+        informal: Proves the phase-aligned one-dimensional Fock-space local stability estimate, producing a unit phase for which the L2 distance to one is controlled by the magnitude defect.
+      - declaration: FockSPR.orthogonalReduction_core
+        informal: Proves the quantitative centered core estimate bounding the Gaussian Fock norm of a polynomial with small norm by the magnitude defect against one.
+      - declaration: FockSPR.LocalFockSPR
+        informal: Proves the local Fock-space stable phase retrieval coercivity estimate for centered polynomials.
+      - declaration: DimdPolyShowcaseChallenge.HermitePoly
+        informal: Defines the normalized one-variable complex Hermite-Fock basis polynomial.
+      - declaration: DimdPolyShowcaseChallenge.TrueHermiteFunctions
+        informal: Defines the Gaussian L2 closure of finite Hermite-Fock polynomials at a fixed level.
+    tags:
+      - phase-retrieval
+      - hermite-fock
+      - gaussian-measure
+      - complex-analysis
+    msc:
+      - "42C05"
+      - "46E22"
+      - "94A12"
