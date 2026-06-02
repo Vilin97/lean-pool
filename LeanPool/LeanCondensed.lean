@@ -22,8 +22,10 @@ MSC: 18N99, 18F20
 ## Mathematical overview
 
 `LeanCondensed` collects formalised condensed-mathematics results due to
-Dustin Clausen and Peter Scholze. The vendored subset consists of the
-sorry-free, port-stable fragment of the upstream development.
+Dustin Clausen and Peter Scholze, following Scholze's *Lectures on
+Condensed Mathematics* (Bonn, 2019) and the theory of *light condensed
+sets* introduced by Clausen and Scholze. The vendored subset consists of
+the sorry-free, port-stable fragment of the upstream development.
 
 The headline result, `LightCondensed.PSequence_exact`, exhibits the short
 complex

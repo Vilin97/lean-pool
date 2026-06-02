@@ -1264,6 +1264,7 @@ projects:
     source:
       url: https://github.com/dagurtomas/LeanCondensed
       github_repo: dagurtomas/LeanCondensed
+      paper: https://www.math.uni-bonn.de/people/scholze/Condensed.pdf
     status: verified
     main_declarations:
       - LightCondensed.PSequence_exact
