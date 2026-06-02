@@ -9,6 +9,10 @@ import Mathlib.Tactic.Ring
 import Mathlib.Util.AtomM
 import Mathlib.Algebra.Lie.Basic
 
+/-!
+# LeanPool.LowDimSolvClassification.Tactics
+-/
+
 open Lean hiding Module
 open Meta Elab Qq Mathlib.Tactic List
 
@@ -104,18 +108,18 @@ def cons (p : R × V M) (l : NF R M) : NF R M := p :: l
 infixl:100 " ::ᵣ " => cons
 
 /-- TODO. -/
-def eval [Add M] [Zero M] [SMul R M] [LieRing M] (l : NF R M) : M :=
+def eval [SMul R M] [LieRing M] (l : NF R M) : M :=
   (l.map (fun (⟨r, x⟩ : R × V M) ↦ r • v x)).sum
 
-@[simp] theorem eval_cons [AddMonoid M] [SMul R M] [LieRing M] (p : R × V M) (l : NF R M) :
+@[simp] theorem eval_cons [SMul R M] [LieRing M] (p : R × V M) (l : NF R M) :
     (p ::ᵣ l).eval = p.1 • v p.2 + l.eval := by
   unfold eval cons
   rw [List.map_cons]
   rw [List.sum_cons]
 
-theorem atom_eq_eval [AddMonoid M] [LieRing M] (x : M) : x = NF.eval [(1,
+theorem atom_eq_eval [LieRing M] (x : M) : x = NF.eval [(1,
   Sum.inl x)] := by simp [eval, v]
-theorem atom_eq_evalD [AddMonoid M] [LieRing M] (x y : M) : ⁅x,y⁆ = NF.eval ((1,
+theorem atom_eq_evalD [LieRing M] (x y : M) : ⁅x,y⁆ = NF.eval ((1,
   Sum.inr ⟨x,y⟩) ::ᵣ []) := by
   simp only [eval, v]
   dsimp!
@@ -154,7 +158,7 @@ theorem add_eq_eval₃ [Semiring R] [LieRing M] [Module R M] {a₁ : R × V M} (
   congr! 2
   rw [add_comm]
 
-theorem add_eq_eval {R₁ R₂ : Type*} [AddCommMonoid M] [LieRing M] [Semiring R] [Module R M]
+theorem add_eq_eval {R₁ R₂ : Type*} [LieRing M] [Semiring R] [Module R M]
     [Semiring R₁]
     [Module R₁ M] [Semiring R₂] [Module R₂ M] {l₁ l₂ l : NF R M} {l₁' : NF R₁ M} {l₂' : NF R₂ M}
     {x₁ x₂ : M} (hx₁ : x₁ = l₁'.eval) (hx₂ : x₂ = l₂'.eval) (h₁ : l₁.eval = l₁'.eval)
@@ -271,9 +275,9 @@ variable (R)
 
 /-- TODO. -/
 def algebraMap [CommSemiring S] [Semiring R] [Algebra S R] (l : NF S M) : NF R M :=
-  l.map (fun ⟨s, x⟩ ↦ (_root_.algebraMap S R s, x))
+  l.map (fun ⟨s, x⟩ ↦ (Algebra.algebraMap S R s, x))
 
-theorem eval_algebraMap [CommSemiring S] [Semiring R] [Algebra S R] [AddMonoid M] [LieRing M]
+theorem eval_algebraMap [CommSemiring S] [Semiring R] [Algebra S R] [LieRing M]
     [SMul S M]
     [MulAction R M] [IsScalarTower S R M] (l : NF S M) :
     (l.algebraMap R).eval = l.eval := by
@@ -585,7 +589,7 @@ end Mathlib.Tactic.LieSolver
 
 /-- `simplify_lie`: unfold Lie-bracket bilinearity and reduce the goal to scalar equalities
 using `match_scalars_lie`, then attempt to close each by `ring`. -/
-macro "simplify_lie" : tactic => `(tactic| {
+macro (name := tacticSimplifyLie) "simplify_lie" : tactic => `(tactic| {
   try simp only [lie_add, add_lie, lie_smul, smul_lie, lie_neg, neg_lie, sub_lie, lie_sub]
   match_scalars_lie <;> try ring})
 

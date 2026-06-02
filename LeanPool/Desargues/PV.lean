@@ -11,6 +11,13 @@ import Mathlib.LinearAlgebra.Dimension.OrzechProperty
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import LeanPool.Desargues.Basic
 
+/-!
+# Projectivizations as projective geometries
+
+Proves that Mathlib projectivizations satisfy the projective-geometry axioms
+for the dependence-based collinearity relation.
+-/
+
 open Finset Set Submodule FiniteDimensional Projectivization
 open scoped LinearAlgebra.Projectivization
 

@@ -6,6 +6,10 @@ Authors: Shangtong Zhang
 import Mathlib.Analysis.Normed.Group.Basic
 import Mathlib.Algebra.Order.Ring.Basic
 
+/-!
+# LeanPool.RlTheoryInLean.Analysis.Normed.Group.Basic
+-/
+
 variable {E : Type*} [SeminormedAddGroup E]
 
 lemma norm_add_sq_le_norm_sq_add_norm_sq (x y : E) :

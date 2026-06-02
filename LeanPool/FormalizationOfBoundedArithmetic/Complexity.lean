@@ -13,6 +13,10 @@ import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
 import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
 import LeanPool.FormalizationOfBoundedArithmetic.Register
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.Complexity
+-/
+
 open FirstOrder Language
 
 universe u
@@ -578,48 +582,48 @@ by
   apply relabelEquiv
 
 @[delta0_simps]
-nonrec theorem display_swapleft {n1 n2 n3 : FvName}
+nonrec theorem displaySwapleft {n1 n2 n3 : FvName}
   (phi : zambella.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
   :
-  phi.display_swapleft.IsSigma0B <-> phi.IsSigma0B :=
+  phi.displaySwapleft.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold display_swapleft
+  unfold displaySwapleft
   apply relabelEquiv
 
 @[delta0_simps]
-nonrec theorem display_swapleft' {n1 n2 n3 : FvName}
+nonrec theorem displaySwapleft' {n1 n2 n3 : FvName}
   (phi : zambella.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
   :
-  phi.display_swapleft'.IsSigma0B <-> phi.IsSigma0B :=
+  phi.displaySwapleft'.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold display_swapleft'
+  unfold displaySwapleft'
   apply relabelEquiv
 
 @[delta0_simps]
-nonrec theorem rotate_21 {n1 n2 : FvName}
+nonrec theorem rotate21 {n1 n2 : FvName}
   (phi : zambella.Formula (Vars2 n1 n2))
   :
-  phi.rotate_21.IsSigma0B <-> phi.IsSigma0B :=
+  phi.rotate21.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold rotate_21
+  unfold rotate21
   apply relabelEquiv
 
 @[delta0_simps]
-nonrec theorem rotate_213 {n1 n2 n3 : FvName}
+nonrec theorem rotate213 {n1 n2 n3 : FvName}
   (phi : zambella.Formula (Vars3 n1 n2 n3))
   :
-  phi.rotate_213.IsSigma0B <-> phi.IsSigma0B :=
+  phi.rotate213.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold rotate_213
+  unfold rotate213
   apply relabelEquiv
 
 @[delta0_simps]
-nonrec theorem rotate_231 {n1 n2 n3 : FvName}
+nonrec theorem rotate231 {n1 n2 n3 : FvName}
   (phi : zambella.Formula (Vars3 n1 n2 n3))
   :
-  phi.rotate_231.IsSigma0B <-> phi.IsSigma0B :=
+  phi.rotate231.IsSigma0B <-> phi.IsSigma0B :=
 by
-  unfold rotate_231
+  unfold rotate231
   apply relabelEquiv
 
 @[delta0_simps]
@@ -634,10 +638,10 @@ by
 end Sigma0B
 
 /-- Simplify complexity side conditions in a hypothesis. -/
-syntax (name := simp_complexity) "simp_complexity" " at " (ppSpace ident)? : tactic
+syntax (name := simpComplexity) "simpComplexity" " at " (ppSpace ident)? : tactic
 
 macro_rules
-| `(tactic| simp_complexity at $h:ident) =>
+| `(tactic| simpComplexity at $h:ident) =>
   `(tactic|
   conv at $h =>
     conv =>

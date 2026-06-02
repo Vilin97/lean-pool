@@ -12,6 +12,10 @@ import LeanPool.FormalizationOfBoundedArithmetic.DisplayedVariables
 import LeanPool.FormalizationOfBoundedArithmetic.Syntax
 import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.Order
+-/
+
 namespace FirstOrder.Language.Formula
 
 open Language BoundedFormula

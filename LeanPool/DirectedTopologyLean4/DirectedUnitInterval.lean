@@ -5,6 +5,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 import LeanPool.DirectedTopologyLean4.Constructions
 
+/-!
+# LeanPool.DirectedTopologyLean4.DirectedUnitInterval
+-/
+
 /-
   This file contains the definition of the directed unit interval.
   The directedness is induced by the preorder it inherits from ℝ.

@@ -7,6 +7,10 @@ import Mathlib.Analysis.Complex.Schwarz
 import LeanPool.RiemannMappingTheorem.Defs
 import LeanPool.RiemannMappingTheorem.ToMathlib
 
+/-!
+# LeanPool.RiemannMappingTheorem.Etape2
+-/
+
 open Complex ComplexConjugate Set Metric Topology Filter
 
 variable {z u z₀ : ℂ} (U : Set ℂ) [good_domain U]
@@ -27,22 +31,22 @@ lemma normSq_sub_normSq :
   simp [← ofReal_inj, normSq_eq_conj_mul_self]
   ring
 
-/-- The Möbius transformation `pre_φ u z = (z - u) / (1 - z·ū)` underlying
+/-- The Möbius transformation `preΦ u z = (z - u) / (1 - z·ū)` underlying
 the disk automorphism `φ`. Maps `𝔻` to itself when `u ∈ 𝔻`. -/
-noncomputable def pre_φ (u z : ℂ) : ℂ := (z - u) / (1 - z * conj u)
+noncomputable def preΦ (u z : ℂ) : ℂ := (z - u) / (1 - z * conj u)
 
-lemma pre_φ_inv (hu : u ∈ 𝔻) : LeftInvOn (pre_φ (-u)) (pre_φ u) 𝔻 := by
+lemma pre_φ_inv (hu : u ∈ 𝔻) : LeftInvOn (preΦ (-u)) (preΦ u) 𝔻 := by
   rintro z hz
   have := one_sub_mul_conj_ne_zero hu hz
   have := one_sub_mul_conj_add_mul_conj_ne_zero (z := z) hu
-  simp [field, pre_φ]
+  simp [field, preΦ]
   ring
 
 /-- The disk automorphism `φ u : 𝔻 → 𝔻` packaged as an `embedding`.
-Equals `pre_φ u` and sends `u ↦ 0`. -/
+Equals `preΦ u` and sends `u ↦ 0`. -/
 noncomputable def φ (hu : u ∈ 𝔻) : embedding 𝔻 𝔻 :=
 {
-  to_fun := fun z => (z - u) / (1 - z * conj u),
+  toFun := fun z => (z - u) / (1 - z * conj u),
   is_diff := (differentiableOn_id.sub (differentiableOn_const u)).div
     ((differentiableOn_const 1).sub (differentiableOn_id.mul (differentiableOn_const _)))
     (fun _ => one_sub_mul_conj_ne_zero hu),

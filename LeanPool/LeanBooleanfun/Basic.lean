@@ -73,7 +73,6 @@ lemma sum_translate (a : Fin n → Fin 2) : ∑ x, f x = ∑ x, f (x + a) := by
       rw [add_assoc, add_self_eq_zero, add_zero]
   · simp
   · intro i _
-    change f i = f (i + a + a)
     rw [add_assoc, add_self_eq_zero, add_zero]
 
 /-- The expectation of a Boolean function is its average value with respect to the uniform
@@ -316,18 +315,18 @@ theorem walsh_orthonormal : Orthonormal (ι := Finset (Fin n)) ℝ χ :=
   ⟨walsh_norm_one, @walsh_orthogonal _⟩
 
 /-- Basis of Walsh characters on `BooleanFunc n`. -/
-abbrev walsh_basis : Basis (ι := Finset (Fin n)) ℝ (BooleanFunc n) :=
+abbrev walshBasis : Basis (ι := Finset (Fin n)) ℝ (BooleanFunc n) :=
   basisOfOrthonormalOfCardEqFinrank (v := χ) walsh_orthonormal (by simp)
 
 /-- Orthonormal basis of Walsh characters on `BooleanFunc n`. -/
-abbrev walsh_orthonormal_basis : OrthonormalBasis (ι := Finset (Fin n)) ℝ (BooleanFunc n) :=
+abbrev walshOrthonormalBasis : OrthonormalBasis (ι := Finset (Fin n)) ℝ (BooleanFunc n) :=
   Basis.toOrthonormalBasis (basisOfOrthonormalOfCardEqFinrank (v := χ) walsh_orthonormal (by simp))
     (by simp [walsh_orthonormal])
 
 /-- Walsh-Fourier expansion : Every Boolean function is equal to a linear combination of Walsh
 characters. -/
 theorem walsh_fourier (f : BooleanFunc n) : f = ∑ S : Finset (Fin n), (𝓕 f S) • χ S := by
-  convert (OrthonormalBasis.sum_repr' walsh_orthonormal_basis f).symm <;> simp; rfl
+  convert (OrthonormalBasis.sum_repr' walshOrthonormalBasis f).symm <;> simp; rfl
 
 lemma fourier_walsh : 𝓕 (χ S) S' = oneOn (S' = S) := walsh_inner_eq
 
@@ -607,16 +606,16 @@ lemma multiplier_walsh {m : ℕ → ℝ} {S : Finset (Fin n)} :
   simp
 
 /-- The noise operator defined via Fourier expansion. See Prop. 2.47 in [odonnell2014]. -/
-abbrev noise_operator (ρ : ℝ) : BooleanFunc n →ₗ[ℝ] BooleanFunc n := multiplier (ρ^·)
+abbrev noiseOperator (ρ : ℝ) : BooleanFunc n →ₗ[ℝ] BooleanFunc n := multiplier (ρ^·)
 
 /-- Noise stability -/
-abbrev noise_stability (ρ : ℝ) (f : BooleanFunc n) := ⟪f, noise_operator ρ f⟫
+abbrev noiseStability (ρ : ℝ) (f : BooleanFunc n) := ⟪f, noiseOperator ρ f⟫
 
 lemma noise_stability_eq_sum_fourier {ρ : ℝ} :
-    noise_stability ρ f = ∑ S, ρ^(S.card) * |𝓕 f S|^2 := by
-  unfold noise_stability
+    noiseStability ρ f = ∑ S, ρ^(S.card) * |𝓕 f S|^2 := by
+  unfold noiseStability
   nth_rewrite 1 [walsh_fourier f]
-  simp only [noise_operator, multiplier, LinearMap.coe_mk, AddHom.coe_mk]
+  simp only [noiseOperator, multiplier, LinearMap.coe_mk, AddHom.coe_mk]
   rewrite [sum_inner]
   conv => enter [1, 2, S]; rw [inner_smul_left, inner_sum];
           enter [2, 2, S']; rw [inner_smul_right, inner_smul_right, walsh_inner_eq]

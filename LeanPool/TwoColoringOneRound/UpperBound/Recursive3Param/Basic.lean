@@ -8,6 +8,14 @@ import LeanPool.TwoColoringOneRound.Definitions
 import Mathlib.MeasureTheory.Constructions.UnitInterval
 import Mathlib.MeasureTheory.MeasurableSpace.Constructions
 
+/-!
+The “three-parameter recursive cutoff” construction (a radius-1 factor-of-i.i.d. triple rule).
+
+This file defines the explicit rule (as a `ClassicalAlgorithm`) for a convenient rational choice of
+parameters `(t, t1, t2)`. Later files will prove the quantitative bound
+`ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
+-/
+
 namespace Distributed2Coloring
 
 open MeasureTheory
@@ -16,13 +24,6 @@ open scoped unitInterval
 namespace UpperBound
 namespace Recursive3Param
 
-/-!
-The “three-parameter recursive cutoff” construction (a radius-1 factor-of-i.i.d. triple rule).
-
-This file defines the explicit rule (as a `ClassicalAlgorithm`) for a convenient rational choice of
-parameters `(t, t1, t2)`. Later files will prove the quantitative bound
-`ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
--/
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def t : Rand :=
@@ -227,7 +228,9 @@ lemma z0_mem_Icc (x y : Rand) : z0 x y ∈ Set.Icc (0 : ℝ) 1 := by
     · by_cases hx_lt : (x : ℝ) ∈ Set.Iio (t2 : ℝ)
       · simp [z0, hsq, hy_lt, hx_lt, ht]
       · simp [z0, hsq, hy_lt, hx_lt, ht2]
-  · simpa only [z0, hsq] using zBase_mem_Icc x y
+  · unfold z0
+    rw [if_neg hsq]
+    exact zBase_mem_Icc x y
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def z0I (x y : Rand) : Rand :=

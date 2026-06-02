@@ -18,7 +18,7 @@ import LeanPool.Polylean.ConjInvLength.WordTree
 /-!
 # Polylean Unit Conjecture Counterexample
 
-Source: url:https://github.com/siddhartha-gadgil/Polylean
+Source: arxiv:2102.11818, doi:10.4007/annals.2021.194.3.9
 Authors: Siddhartha Gadgil, Anand Rao
 Status: verified
 Main declarations: `LeanPool.Polylean.P.torsionFree`, `LeanPool.Polylean.Gardam.GardamTheorem`

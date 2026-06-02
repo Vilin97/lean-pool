@@ -5,7 +5,6 @@ Authors: Shangtong Zhang
 -/
 
 import LeanPool.RlTheoryInLean.Analysis.Normed
-import LeanPool.RlTheoryInLean.Analysis.Normed
 
 /-!
 # Analysis

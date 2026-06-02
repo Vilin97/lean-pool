@@ -6,6 +6,13 @@ Authors: Abdullah Uyu
 
 import LeanPool.Desargues.Basic
 
+/-!
+# Subspaces and subgeometries
+
+Defines subspaces of an axiomatic projective geometry and the induced
+projective subgeometry structure on a closed subset.
+-/
+
 open Set
 open Basic
 

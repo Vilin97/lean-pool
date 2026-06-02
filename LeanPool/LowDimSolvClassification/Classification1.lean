@@ -15,6 +15,10 @@ import Mathlib.Algebra.Field.Defs
 import LeanPool.LowDimSolvClassification.GeneralResults
 import LeanPool.LowDimSolvClassification.InstancesLowDim
 
+/-!
+# LeanPool.LowDimSolvClassification.Classification1
+-/
+
 open Module
 open Submodule
 namespace LieAlgebra
@@ -49,7 +53,10 @@ theorem classification (h : Module.finrank K L = 1) :
     right_inv := fun _ => by simp
     map_add' := by simp
     map_smul' := by simp
-    map_lie' := by simp [Bracket.bracket, mul_comm]
+    map_lie' := by
+      intro x y
+      rw [trivial_lie_zero L L x y]
+      simp [Bracket.bracket, mul_comm]
   })
 
 end classification_dim_1

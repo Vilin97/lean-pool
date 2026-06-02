@@ -12,6 +12,10 @@ import Mathlib.Algebra.Order.Field.Basic
 import Mathlib.Algebra.Order.Field.GeomSum
 import LeanPool.SelbergSieve4.Selberg
 
+/-!
+# LeanPool.SelbergSieve4.Applications.PrimeCountingUpperBound
+-/
+
 open scoped Nat Nat.Prime ArithmeticFunction.zeta ArithmeticFunction.Moebius
 open scoped ArithmeticFunction.omega BigOperators
 
@@ -160,8 +164,8 @@ theorem prime_subset (N : ℕ) (y : ℝ) :
 theorem pi_le_siftedSum (N : ℕ) (y : ℝ) (hy : 1 ≤ y) :
     π N ≤ (primeSieve N y hy).siftedSum + y := by
   trans ((primeSieve N y hy).siftedSum + Nat.floor y)
-  · have : (Finset.Icc 1 (Nat.floor y)).card = Nat.floor y
-    · rw [Nat.card_Icc]; norm_num
+  · have : (Finset.Icc 1 (Nat.floor y)).card = Nat.floor y := by
+      rw [Nat.card_Icc]; norm_num
     rw [primeSieve_siftedSum_eq, ←this]
     unfold Nat.primeCounting
     unfold Nat.primeCounting'
@@ -260,8 +264,8 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
   let i : (a : _) → (ha : a ∈ Finset.pi d.primeFactors fun p => Finset.Icc 1 M) → ℕ :=
     fun a _ => ∏ p ∈ d.primeFactors.attach, p.1 ^ (a p p.2)
   have hfact_i : ∀ a ha,
-      ∀ p, Nat.factorization (i a ha) p = if hp : p ∈ d.primeFactors then a p hp else 0
-  · intro a ha p
+      ∀ p, Nat.factorization (i a ha) p = if hp : p ∈ d.primeFactors then a p hp else 0 := by
+    intro a ha p
     by_cases hp : p ∈ d.primeFactors
     · rw [dif_pos hp, Nat.factorization_prod, Finset.sum_apply',
         Finset.sum_eq_single ⟨p, hp⟩, Nat.factorization_pow, Finsupp.smul_apply,
@@ -295,13 +299,13 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
         · apply Nat.Prime.dvd_of_dvd_pow hpp hp_dvd_pow
         · apply Nat.dvd_of_mem_primeFactors hq
   have hi_ne_zero : ∀ (a : _) (ha : a ∈ Finset.pi d.primeFactors fun _p => Finset.Icc 1 M),
-      i a ha ≠ 0
-  · intro a ha
+      i a ha ≠ 0 := by
+    intro a ha
     erw [Finset.prod_ne_zero_iff]
     exact fun p _ => pow_ne_zero _ (ne_of_gt (Nat.pos_of_mem_primeFactors p.property))
   have hi : ∀ (a : _) (ha : a ∈ Finset.pi d.primeFactors fun _p => Finset.Icc 1 M),
-      i a ha ∈ (d ^ M).divisors.filter (d ∣ ·)
-  · intro a ha
+      i a ha ∈ (d ^ M).divisors.filter (d ∣ ·) := by
+    intro a ha
     rw [Finset.mem_filter, Nat.mem_divisors,
       ← Nat.factorization_le_iff_dvd hd.ne_zero (hi_ne_zero a ha),
       ←Nat.factorization_le_iff_dvd (hi_ne_zero a ha) (pow_ne_zero _ hd.ne_zero)]
@@ -330,8 +334,8 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
       simp_rw [Finset.mem_pi, Finset.mem_Icc] at ha
       exact (ha p hp).1
   have h : ∀ (a : _) (ha : a ∈ Finset.pi d.primeFactors fun _p => Finset.Icc 1 M),
-      ∏ p ∈ d.primeFactors.attach, f (p.1 ^ (a p p.2)) = f (i a ha)
-  · intro a ha
+      ∏ p ∈ d.primeFactors.attach, f (p.1 ^ (a p p.2)) = f (i a ha) := by
+    intro a ha
     apply symm
     apply hf.isMultiplicative.map_prod
     intro x _ y _ hxy
@@ -342,17 +346,19 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
     rw [Nat.Prime.coprime_iff_not_dvd hxp]
     rw [Nat.prime_dvd_prime_iff_eq hxp (Nat.prime_of_mem_primeFactors y.2)]
     exact fun hc => hxy (Subtype.ext hc)
-  have i_inj : ∀ a ha b hb, i a ha = i b hb → a = b
-  · intro a ha b hb hiab
+  have i_inj : ∀ a ha b hb, i a ha = i b hb → a = b := by
+    intro a ha b hb hiab
     apply_fun Nat.factorization at hiab
     ext p hp
     obtain hiabp := DFunLike.ext_iff.mp hiab p
     rw [hfact_i a ha, hfact_i b hb, dif_pos hp, dif_pos hp] at hiabp
     exact hiabp
-  have i_surj : ∀ (b : ℕ), b ∈ (d^M).divisors.filter (d ∣ ·) → ∃ a ha, i a ha = b
-  · intro b hb
-    have h : (fun p _ => (Nat.factorization b) p) ∈ Finset.pi d.primeFactors fun p => Finset.Icc 1 M
-    · rw [Finset.mem_pi]; intro p hp
+  have i_surj : ∀ (b : ℕ), b ∈ (d^M).divisors.filter (d ∣ ·) → ∃ a ha, i a ha = b := by
+    intro b hb
+    have h : (fun p _ => (Nat.factorization b) p) ∈
+        Finset.pi d.primeFactors fun p => Finset.Icc 1 M := by
+      rw [Finset.mem_pi]
+      intro p hp
       rw [Finset.mem_Icc]
       rw [Finset.mem_filter] at hb
       have hb_ne_zero : b ≠ 0 := ne_of_gt <| Nat.pos_of_mem_divisors hb.1
@@ -364,8 +370,8 @@ theorem prod_factors_sum_pow_compMult (M : ℕ) (hM : M ≠ 0)
         trans Nat.factorization (d^M) p
         · exact (Nat.factorization_le_iff_dvd hb_ne_zero hb.left.right).mpr hb.left.left p
         rw [Nat.factorization_pow, Finsupp.smul_apply, smul_eq_mul]
-        have : d.factorization p ≤ 1
-        · apply hd.natFactorization_le_one
+        have : d.factorization p ≤ 1 := by
+          apply hd.natFactorization_le_one
         exact (mul_le_iff_le_one_right (Nat.pos_of_ne_zero hM)).mpr this
     use (fun p _ => Nat.factorization b p)
     use h
@@ -413,9 +419,9 @@ lemma nat_squarefree_dvd_pow (a b N : ℕ) (ha : Squarefree a) (hab : a ∣ b ^ 
       exact (ha.natFactorization_le_one p).trans
         ((hp.dvd_iff_one_le_factorization hb).mp hp_b)
     · rw [Nat.factorization_eq_zero_of_not_dvd hpa]
-      exact zero_le _
+      exact zero_le
   · rw [Nat.factorization_eq_zero_of_not_prime a hp]
-    exact zero_le _
+    exact zero_le
 
 theorem selbergBoundingSum_ge_sum_div (s : SelbergSieve)
     (hP : ∀ p : ℕ, p.Prime → (p : ℝ) ≤ s.level → p ∣ s.prodPrimes)
@@ -446,8 +452,8 @@ theorem selbergBoundingSum_ge_sum_div (s : SelbergSieve)
   rw [← Finset.sum_biUnion]
   · apply Finset.sum_le_sum_of_subset_of_nonneg
     · intro m hm
-      have hprod_pos : 0 < (∏ p ∈ m.primeFactors, p)
-      · apply Finset.prod_pos
+      have hprod_pos : 0 < (∏ p ∈ m.primeFactors, p) := by
+        apply Finset.prod_pos
         intro p hp
         exact Nat.pos_of_mem_primeFactors hp
       have hprod_ne_zero : (∏ p ∈ m.primeFactors, p) ^ ⌊s.level⌋₊ ≠ 0 :=
@@ -455,8 +461,8 @@ theorem selbergBoundingSum_ge_sum_div (s : SelbergSieve)
       rw [Finset.mem_biUnion]
       simp_rw [Finset.mem_filter, Nat.mem_divisors]
       rw [Finset.mem_Icc, Nat.le_floor_iff (Real.sqrt_nonneg s.level)] at hm
-      have hm_ne_zero : m ≠ 0
-      · exact ne_of_gt <| Nat.succ_le_iff.mp hm.1
+      have hm_ne_zero : m ≠ 0 := by
+        exact ne_of_gt <| Nat.succ_le_iff.mp hm.1
       use ∏ p ∈ m.primeFactors, p
       constructor
       · constructor
@@ -486,7 +492,7 @@ theorem selbergBoundingSum_ge_sum_div (s : SelbergSieve)
             · intro p
               have hy_mul_prod_nonneg :
                   0 ≤ ⌊s.level⌋₊ * (Nat.factorization (∏ p ∈ m.primeFactors, p)) p :=
-                zero_le _
+                zero_le
               trans (Nat.factorization m) p * 1
               · rw [mul_one]
               trans ⌊s.level⌋₊ * Nat.factorization (∏ p ∈ m.primeFactors, p) p
@@ -523,14 +529,14 @@ theorem selbergBoundingSum_ge_sum_div (s : SelbergSieve)
     specialize hti hx
     specialize htj hx
     simp_rw [Finset.mem_coe, Finset.mem_filter, Nat.mem_divisors] at *
-    have h : ∀ i j {n}, i ∣ s.prodPrimes → i ∣ x → x ∣ j ^ n → i ∣ j
-    · intro i j n hiP hix hij
+    have h : ∀ i j {n}, i ∣ s.prodPrimes → i ∣ x → x ∣ j ^ n → i ∣ j := by
+      intro i j n hiP hix hij
       apply nat_squarefree_dvd_pow i j n (s.squarefree_of_dvd_prodPrimes hiP)
       exact Trans.trans hix hij
-    have hidvdj : i ∣ j
-    · apply h i j hi.1.1 hti.2 htj.1.1
-    have hjdvdi : j ∣ i
-    · apply h j i hj.1.1 htj.2 hti.1.1
+    have hidvdj : i ∣ j := by
+      apply h i j hi.1.1 hti.2 htj.1.1
+    have hjdvdi : j ∣ i := by
+      apply h j i hj.1.1 htj.2 hti.1.1
     exact hij <| Nat.dvd_antisymm hidvdj hjdvdi
 
 theorem boundingSum_ge_sum (s : SelbergSieve) (hnu : s.nu = (ζ : ArithmeticFunction ℝ).pdiv .id)
@@ -601,7 +607,6 @@ theorem card_range_filter_dvd (N d : ℕ) (hd : d ≠ 0) :
         (by exact_mod_cast hk.1 : (k : ℝ) < N)
         (by norm_cast; exact Nat.pos_of_ne_zero hd)
   · intro k hk
-    dsimp only
     rw [Finset.mem_filter, Finset.mem_range]
     rw [Nat.lt_ceil, lt_div_iff₀ (by norm_cast; exact Nat.pos_of_ne_zero hd : (0 : ℝ) < d),
       mul_comm] at hk
@@ -634,8 +639,8 @@ theorem primeSieve_abs_rem_eq (N : ℕ) (y : ℝ) (hy : 1 ≤ y) (d : ℕ) (hd :
   · apply le_sub_right_of_add_le
     trans ((N + 1) / ↑d)
     · rw [add_comm, add_div]
-      have : 0 ≤ 1/(d:ℝ)
-      · norm_num
+      have : 0 ≤ 1/(d:ℝ) := by
+        norm_num
       linarith
     simpa [Nat.cast_add, Nat.cast_one] using Nat.le_ceil (((N + 1 : ℕ) : ℝ) / d)
   · apply sub_left_le_of_le_add
@@ -649,8 +654,8 @@ theorem primeSieve_abs_rem_eq (N : ℕ) (y : ℝ) (hy : 1 ≤ y) (d : ℕ) (hd :
           (div_nonneg (by norm_cast; norm_num) (by norm_num) :
             0 ≤ ((↑N + 1) / (d : ℝ)))
       simpa [add_comm, add_left_comm, add_assoc] using add_le_add_right hfloor 1
-    have : 1 / (d : ℝ) ≤ 1
-    · rw [one_div]
+    have : 1 / (d : ℝ) ≤ 1 := by
+      rw [one_div]
       apply inv_le_one_of_one_le₀
       norm_cast
       linarith [Nat.pos_of_ne_zero hd]
@@ -699,8 +704,8 @@ theorem pi_le_of_y (N : ℕ) (y : ℝ) (hy_lt : 1 < y) :
   suffices Sieve.siftedSum (primeSieve N y hy).toSieve ≤
       2 * N / Real.log y + 2 * y * (1 + Real.log y) ^ 3 by
     push_cast at *
-    have : y * (1 : ℝ) ≤ y * (1 + Real.log y) ^ 3
-    · have hy_nonneg : 0 ≤ y := by linarith
+    have : y * (1 : ℝ) ≤ y * (1 + Real.log y) ^ 3 := by
+      have hy_nonneg : 0 ≤ y := by linarith
       have hbase : (1 : ℝ) ≤ 1 + Real.log y := by linarith [Real.log_nonneg hy]
       have hpow : (1 : ℝ) ≤ (1 + Real.log y)^3 := one_le_pow₀ hbase
       have hdiff : (0 : ℝ) ≤ y * ((1 + Real.log y)^3 - 1) :=
@@ -787,8 +792,8 @@ theorem pi_le_id_div_log_of_eps (N : ℕ) (ε : ℝ) (_hε_pos : ε > 0) (hε : 
   by_cases hN_one : N = 1
   · rw [hN_one, primeCounting_one]
     norm_num
-  · have : 1 < (N : ℝ) ^ (1 - ε)
-    · apply Real.one_lt_rpow
+  · have : 1 < (N : ℝ) ^ (1 - ε) := by
+      apply Real.one_lt_rpow
       · norm_cast
         rw [Nat.one_lt_iff_ne_zero_and_ne_one]
         exact ⟨hN, hN_one⟩
@@ -883,11 +888,11 @@ theorem _lemma1 :
   apply Asymptotics.IsBigO.const_mul_left
   trans (fun N : ℕ => (N : ℝ) ^ (1 / 2 : ℝ) * (N : ℝ) ^ (1 / 4 : ℝ))
   · have h0 : (fun N : ℕ => (N : ℝ) ^ (1 / 2 : ℝ)) =O[Filter.atTop]
-        (fun N : ℕ => (N : ℝ) ^ (1 / 2 : ℝ))
-    · apply Asymptotics.isBigO_refl
+        (fun N : ℕ => (N : ℝ) ^ (1 / 2 : ℝ)) := by
+      apply Asymptotics.isBigO_refl
     have h1 : (fun N : ℕ => (1 + 1 / 2 * Real.log N) ^ 3) =O[Filter.atTop]
-        (fun N : ℕ => (N : ℝ) ^ (1 / 4 : ℝ))
-    · trans (fun N : ℕ => ((N : ℝ) ^ (1 / 12 : ℝ)) ^ 3)
+        (fun N : ℕ => (N : ℝ) ^ (1 / 4 : ℝ)) := by
+      trans (fun N : ℕ => ((N : ℝ) ^ (1 / 12 : ℝ)) ^ 3)
       · apply Asymptotics.IsBigO.pow
         apply _lemma7
       · simp_rw [← Real.rpow_natCast]

@@ -69,7 +69,7 @@ step lives in the proof of that reduction, not in the construction itself. -/
 noncomputable def boostLearner
     {X : Type u}
     (k : ℕ) (L : Fin k → BatchLearner X Bool) : BatchLearner X Bool :=
-  combineLearner k (fun _ v => majority_vote k v) L
+  combineLearner k (fun _ v => majorityVote k v) L
 
 /-- Boosting preserves measurability. Majority vote is a measurable Boolean function of
 finitely many inputs, so `boostLearner` inherits measurability via
@@ -80,8 +80,8 @@ theorem measurableBatchLearner_boost
     (hL : ∀ i, MeasurableBatchLearner X (L i)) :
     MeasurableBatchLearner X (boostLearner k L) := by
   apply measurableBatchLearner_combine
-  · show Measurable (fun p : X × (Fin k → Bool) => majority_vote k p.2)
-    have : Measurable (fun v : Fin k → Bool => majority_vote k v) := measurable_of_finite _
+  · show Measurable (fun p : X × (Fin k → Bool) => majorityVote k p.2)
+    have : Measurable (fun v : Fin k → Bool => majorityVote k v) := measurable_of_finite _
     exact this.comp measurable_snd
   · exact hL
 

@@ -8,6 +8,10 @@ import Mathlib.ModelTheory.Order
 
 import LeanPool.FormalizationOfBoundedArithmetic.Register
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
+-/
+
 universe u v
 
 namespace FirstOrder

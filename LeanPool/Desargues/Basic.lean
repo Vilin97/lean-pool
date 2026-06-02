@@ -6,6 +6,13 @@ Authors: Abdullah Uyu
 
 import Mathlib.Data.Set.Card
 
+/-!
+# Basic projective geometry
+
+Defines the projective-geometry axioms, the line operator, and central
+projection between lines in an axiomatic projective geometry.
+-/
+
 open Set
 
 namespace Basic
@@ -191,12 +198,12 @@ class ProjectiveGeometry
   l2 : ∀ a b p q, ell a p q → ell b p q → p ≠ q → ell a b p
   l3 : ∀ a b c d p, ell p a b → ell p c d → ∃ q, ell q a c ∧ ell q b d
 
-/-- `rel_sym` closes a collinearity goal that follows from a hypothesis by one of
+/-- `relSym` closes a collinearity goal that follows from a hypothesis by one of
 the symmetries of the relation `ell` (any permutation of a collinear triple). -/
-syntax "rel_sym" : tactic
+syntax "relSym" : tactic
 
 macro_rules
-| `(tactic| rel_sym) => `(tactic| first
+| `(tactic| relSym) => `(tactic| first
   | assumption
   | apply rel_sym_acb _ _ _ ProjectiveGeometry.l1 ProjectiveGeometry.l2 <;> assumption
   | apply rel_sym_cab _ _ _ ProjectiveGeometry.l1 ProjectiveGeometry.l2 <;> assumption
@@ -272,7 +279,7 @@ theorem star_imp_ell
     case inr.isTrue eq => apply yz_neq at eq; contradiction
     case inr.isFalse _ =>
       simp only [mem_setOf_eq] at x_in_yz
-      rel_sym
+      relSym
 
 theorem p_3
   (a b c d p : G)
@@ -292,7 +299,7 @@ theorem p_3
           apply ac_neq at eq
           contradiction
         case left.isFalse neq =>
-          rel_sym
+          relSym
       · intro _
         apply PG.l1 b d
     rw [inter_empty] at b_in_inter
@@ -331,12 +338,12 @@ theorem p_3
       apply rel_sym_acb a c b PG.l1 PG.l2
       apply PG.l2 a c b p
       · exact abp_col
-      · rel_sym
+      · relSym
       · exact bp_neq
     have q_ex :
         ∃ q, ell q a c ∧ ell q b d := by
       apply PG.l3 a b c d p
-      · rel_sym
+      · relSym
       · exact pcd_col
     match q_ex with
     | ⟨q, qac_col, qbd_col⟩ =>
@@ -349,12 +356,12 @@ theorem p_3
           case left.isTrue ac_eq =>
             contradiction
           case left.isFalse _ =>
-            rel_sym
+            relSym
         · split
           case right.isTrue bd_eq =>
             contradiction
           case right.isFalse _ =>
-            rel_sym
+            relSym
       rw [inter_empty] at q_in_inter
       exact q_in_inter
 
@@ -398,7 +405,7 @@ theorem p_5
           simp only [mem_setOf_eq]
           split
           · contradiction
-          · rel_sym
+          · relSym
             -- apply rel_sym_bca p b c PG.l1 PG.l2 c_in_ab
       · obtain rfl | pc_neq := eq_or_ne p c
         · unfold star
@@ -540,7 +547,7 @@ theorem p_9
 
 /-- The central projection with center `z` of a point `x` on the line `a ⋆ c`
 onto the line `b ⋆ c`: the intersection of the line `x ⋆ z` with `b ⋆ c`. -/
-def central_projection
+def centralProjection
   (a b c z : G)
   (x : star ell a c) :
     Set (star ell b c) :=
@@ -617,7 +624,7 @@ theorem abc_inter_sing
                 apply PG.l1 c a
               · exact b_in_ab
             apply abc_ncol
-            rel_sym
+            relSym
       simp only [ne_eq, Decidable.not_not] at ax_neq_neq
       exact id (Eq.symm ax_neq_neq)
   · intro x x_in_a; simp only [mem_singleton_iff] at x_in_a; rw [x_in_a]
@@ -654,7 +661,7 @@ instance cpq_symmetry :
   abc_ncol := by
     intro bac_col
     apply CPQ.abc_ncol
-    rel_sym
+    relSym
   az_neq := by exact CentralProjectionQuadruple.bz_neq c
   bz_neq := by exact CentralProjectionQuadruple.az_neq c
 
@@ -676,7 +683,7 @@ theorem nin_wall :
     intro bca_col
     have abc_col :
         ell a b c := by
-      rel_sym
+      relSym
     exact CPQ.abc_ncol abc_col
   have inter_eq_b := by apply abc_inter_sing b c a bca_ncol
   intro z_in_cb
@@ -710,7 +717,7 @@ theorem shadow_exists :
   · apply elbow_center_neq
 
 theorem cen_proj_sing :
-    ∃ y, central_projection a b c z x = {y} := by
+    ∃ y, centralProjection a b c z x = {y} := by
   have z_nin_ac :
       z.val ∉ star ell a c := by apply nin_arm
   have z_nin_cb :
@@ -718,7 +725,7 @@ theorem cen_proj_sing :
   -- (x ⋆ z) ∩ (b ⋆ c) ≠ ∅ by P₃
   have nempty :
       star ell x.val z ∩ star ell c b ≠ ∅ := by apply shadow_exists
-  unfold central_projection
+  unfold centralProjection
   rw [p_6 b c]
   have xz_neq_cb :
       star ell x z ≠ star ell c b := by
@@ -741,27 +748,27 @@ theorem cen_proj_sing :
 
 /-- The central projection as a function: the unique image point on `b ⋆ c` of
 the point `x` on `a ⋆ c` under projection from the center `z`. -/
-noncomputable def cen_proj_map :
+noncomputable def cenProjMap :
     star ell b c :=
   Exists.choose (cen_proj_sing a b c z x)
 
 theorem cen_proj_map_property :
-    cen_proj_map a b c z x ∈ Subtype.val ⁻¹' star ell x z := by
+    cenProjMap a b c z x ∈ Subtype.val ⁻¹' star ell x z := by
   have cpm_property := by
     apply Exists.choose_spec (cen_proj_sing a b c z x)
-  unfold cen_proj_map
+  unfold cenProjMap
   rw [<- singleton_subset_iff]
   rw [<- cpm_property]
-  unfold central_projection
+  unfold centralProjection
   simp only [preimage_inter, inter_subset_left]
 
 theorem cen_proj_arg_col :
-    ell (cen_proj_map a b c z x) x z := by
+    ell (cenProjMap a b c z x) x z := by
   apply star_imp_ell
   apply cen_proj_map_property
 
 theorem shadow_in_light :
-    (cen_proj_map a b c z x).val ∈ star ell x z := by
+    (cenProjMap a b c z x).val ∈ star ell x z := by
   have xz_neq := elbow_center_neq (x := x) (z := z)
   simp only [star, mem_setOf_eq]
   split
@@ -769,18 +776,18 @@ theorem shadow_in_light :
     exact False.elim (xz_neq xz_eq)
   next xz_neq =>
     have col := cen_proj_arg_col (a := a) (b := b) (c := c) (z := z) (x := x)
-    rel_sym
+    relSym
 
 theorem shadow_center_neq :
-    (cen_proj_map a b c z x).val ≠ z.val := by
-  set y := cen_proj_map a b c z x
+    (cenProjMap a b c z x).val ≠ z.val := by
+  set y := cenProjMap a b c z x
   intro yz_eq
   have leg_wall_inter :
       star ell b a ∩ star ell b c = {b} := by
     apply abc_inter_sing b a c
     intro bac_col
     apply CPQ.abc_ncol
-    rel_sym
+    relSym
   have y_in_ab := y.property
   have z_in_ab := z.property
   rw [<- p_6 a b] at leg_wall_inter
@@ -790,9 +797,9 @@ theorem shadow_center_neq :
   exact CPQ.bz_neq (id (Eq.symm z_in_inter))
 
 /-- The central projection `a ⋆ c → b ⋆ c` from the center `z`. -/
-noncomputable def φ := cen_proj_map a b c z
+noncomputable def φ := cenProjMap a b c z
 /-- The reverse central projection `b ⋆ c → a ⋆ c` from the center `z`, inverse to `φ`. -/
-noncomputable def ψ := cen_proj_map b a c ⟨z, zp_sym⟩
+noncomputable def ψ := cenProjMap b a c ⟨z, zp_sym⟩
 
 local notation "φ" => φ a b c z
 local notation "ψ" => ψ a b c z
@@ -804,7 +811,7 @@ theorem cen_proj_left :
   have y_in_xz : y.val ∈ star ell x z := by exact shadow_in_light a b c z x
   have ac_yz_inter_sing := by apply cen_proj_sing b a c ⟨z, zp_sym⟩ y
   have yz_neq : y.val ≠ z := by exact shadow_center_neq a b c z x
-  unfold central_projection at ac_yz_inter_sing
+  unfold centralProjection at ac_yz_inter_sing
   cases ac_yz_inter_sing with
   | intro yy yy_sing =>
     simp only [preimage] at yy_sing
@@ -815,7 +822,7 @@ theorem cen_proj_left :
       next yz_eq => exact False.elim (yz_neq yz_eq)
       next _ =>
         have yxz_col : ell y x z := by apply cen_proj_arg_col
-        rel_sym
+        relSym
     have ψy_in_yy : ψ y ∈ ({yy} : Set _)  := by
       rw [<- yy_sing]
       simp only [star, coe_setOf, mem_setOf_eq, mem_inter_iff, Subtype.coe_prop, and_true]
@@ -823,7 +830,7 @@ theorem cen_proj_left :
       next yz_eq => exact False.elim (yz_neq yz_eq)
       next _ =>
         have _ := by apply cen_proj_arg_col b a c ⟨z, zp_sym⟩ y
-        rel_sym
+        relSym
     have x_eq_yy : x = yy := by exact x_in_yy
     have ψy_eq_yy : ψ y = yy := by exact ψy_in_yy
     rw [<- x_eq_yy] at ψy_eq_yy
@@ -852,7 +859,7 @@ theorem φa_eq_b :
     apply abc_inter_sing (ell := ell ) b a c
     intro bac_col
     apply CPQ.abc_ncol
-    rel_sym
+    relSym
   rw [p_6 b a] at b_inter
   have φa_in_ab := by apply shadow_in_light a b c z ⟨a, a_in_ac⟩
   have az_eq_ab := by
@@ -876,13 +883,13 @@ theorem φc_eq_c :
         have abc_neq := by apply ncol_imp_neq a b c CPQ.abc_ncol
         match abc_neq with
         | ⟨_, _, bc_neq⟩ => exact False.elim (bc_neq bc_eq)
-      next _ => rel_sym
+      next _ => relSym
     have z_in_ba : z.val ∈ star ell b a := by rw [p_6]; exact z.property
     have b_inter := by
       apply abc_inter_sing (ell := ell ) b a c
       intro bac_col
       apply CPQ.abc_ncol
-      rel_sym
+      relSym
     have z_in_inter : z.val ∈ star ell b a ∩ star ell b c := by
       constructor <;> assumption
     rw [b_inter] at z_in_inter

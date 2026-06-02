@@ -47,18 +47,22 @@ lemma inverse_poly_integrable (C : ℝ) :
         gcongr
         nlinarith [norm_nonneg v]
       have h_integrable2 :
-          IntegrableOn (fun v : Fin 3 → ℝ => (1 + ‖v‖ ^ 2)⁻¹ ^ 2)
+        IntegrableOn (fun v : Fin 3 → ℝ => (1 + ‖v‖ ^ 2)⁻¹ ^ 2)
             (Set.univ : Set (Fin 3 → ℝ)) := by
         have := @integrable_rpow_neg_one_add_norm_sq
         specialize @this (Fin 3 → ℝ) _ _ _ _ _ (MeasureSpace.volume) _ 4; norm_num at this
-        simpa [add_comm] using this
+        rw [integrableOn_univ]
+        convert this using 1
+        ext v
+        rw [inv_pow]
+        rfl
       refine h_integrable2.mono' ?_ ?_
       · exact Measurable.aestronglyMeasurable (by measurability)
       · filter_upwards [] with v
         rw [Real.norm_of_nonneg (by positivity)]
         exact hpw v
     rwa [integrableOn_univ] at h_integrable
-  simpa using h_integrable.const_mul C
+  simpa [div_eq_mul_inv] using h_integrable.const_mul C
 
 /-- Schwartz decay implies integrability. -/
 lemma _root_.VML.UniformSchwartzDecay.integrable {f : Torus3 → (Fin 3 → ℝ) → ℝ}
@@ -118,7 +122,7 @@ lemma integrable_one_add_norm_pow_mul
     simp [add_comm (1 : ℝ), add_pow, mul_comm,
       Finset.mul_sum _ _ _]
   simp_rw [h_binom]
-  exact MeasureTheory.integrable_finset_sum _ fun k _ => by
+  exact MeasureTheory.integrable_finsetSum _ fun k _ => by
     simpa only [mul_assoc] using MeasureTheory.Integrable.const_mul (hφ k) _
 
 /-- If ‖v‖^k * |φ(v)| is integrable for every k, and ‖g(v)‖ ≤ C*(1+‖v‖)^K*|φ(v)|,

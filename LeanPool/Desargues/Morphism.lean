@@ -6,6 +6,13 @@ Authors: Abdullah Uyu
 
 import LeanPool.Desargues.Basic
 
+/-!
+# Morphisms of projective geometries
+
+Defines isomorphisms of projective geometries as bijections preserving the
+collinearity relation.
+-/
+
 open Basic
 
 /-- An isomorphism of projective geometries is a bijective map `f : G₁ → G₂`

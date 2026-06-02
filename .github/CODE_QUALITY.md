@@ -34,7 +34,7 @@ Current checks:
 - project entries have required fields: `slug`, `title`, `entry_module`, `authors`, `source`, `status`, `main_declarations`, and `tags`
 - project entries also carry documentation metadata: `summary`, `branch`, `main_results`, and `msc`
 - project `status` is `verified`
-- project `source` includes exactly one recognized primary source key among `arxiv`, `doi`, and `url`
+- project `source` includes at least one recognized primary source key among `arxiv`, `doi`, and `url` (more than one is fine)
 - project authors, main declarations, and tags are nonempty string lists
 - project summaries and branches are nonempty strings, MSC codes are a nonempty string list, and `main_results` is a nonempty list of `declaration` / `informal` entries
 - project `main_results[*].declaration` values include every `main_declarations` entry, so compact project cards and richer documentation metadata cannot drift
@@ -56,7 +56,7 @@ Content files are:
 - `LeanPool/**/*.lean`
 - `LeanPool/projects.yml`
 
-A PR may touch only content files or only non-content files. Mixing these categories fails CI. Branch protection to require this check before merge is future work.
+A PR may touch only content files or only non-content files. Mixing these categories fails CI, except that a Lean/Mathlib version bump may pair content with the toolchain, manifest, lakefile, their `docbuild/` equivalents, and this workflow. Branch protection to require this check before merge is future work.
 
 ### 4. Python CI
 

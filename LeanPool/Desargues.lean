@@ -15,7 +15,7 @@ import LeanPool.Desargues.Structure
 Source: url:https://github.com/oneofvalts/desargues
 Authors: Abdullah Uyu
 Status: verified
-Main declarations: `Basic.ProjectiveGeometry`, `Basic.central_projection`
+Main declarations: `Basic.ProjectiveGeometry`, `Basic.centralProjection`
 Tags: projective-geometry, incidence-geometry, geometry
 MSC: 51A05, 51A30
 -/
@@ -29,7 +29,7 @@ framework in which Desargues' theorem is proved.
 
 - `Basic.ProjectiveGeometry`: the projective-geometry axioms as a typeclass on a
   collinearity relation.
-- `Basic.central_projection` and `Basic.cen_proj_bij`: the central projection
+- `Basic.centralProjection` and `Basic.cen_proj_bij`: the central projection
   map between lines and the proof that it is a bijection.
 - `Structure.Subspace` / `Structure.ProjectiveSubgeometry`: subspaces and
   subgeometries; `PV` exhibits every Mathlib `Projectivization` as a

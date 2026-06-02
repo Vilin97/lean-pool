@@ -14,6 +14,10 @@ import Mathlib.Probability.Process.Filtration
 import Mathlib.Logic.Function.Defs
 import Mathlib.Probability.ProbabilityMassFunction.Basic
 
+/-!
+# LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
+-/
+
 open MeasureTheory MeasureTheory.Measure Filtration ProbabilityTheory.Kernel ProbabilityTheory
 open Finset NNReal ENNReal Preorder Function
 

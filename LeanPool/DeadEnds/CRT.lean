@@ -6,6 +6,10 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 
 import LeanPool.DeadEnds.Basic
 
+/-!
+# LeanPool.DeadEnds.CRT
+-/
+
 namespace LeanPool.DeadEnds
 
 /-- The modulus M = ∏_{p ∈ S} p² -/
