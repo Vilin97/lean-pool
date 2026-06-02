@@ -17,7 +17,7 @@ class Struct {S : Sort u} (Q : Quiver.{u, vq} S) (G : Groupoid.{u, vg} S) where
   /-- Map each generating quiver edge into the generated groupoid. -/
   map : {X Y : S} → Q.hom X Y → G.hom X Y
   /-- Extend a quiver pre-functor out of the basis to a groupoid functor. -/
-  induced_map : {S' : Sort u} → {G' : Groupoid.{u, vg} S'} →
+  inducedMap : {S' : Sort u} → {G' : Groupoid.{u, vg} S'} →
       Quiver.PreFunctor Q G'.toQuiver → Groupoid.Functor G G'
 
 /-- The inclusion of a quiver into a groupoid generated freely by it. -/
@@ -34,7 +34,7 @@ class FreeGroupoid {S : Sort u} (Q : Quiver.{u, vq} S) (G : Groupoid.{u, vg} S) 
   induced_extends : {S' : Sort u} → {G' : Groupoid.{u, vg} S'} →
       (φ : Quiver.PreFunctor Q G'.toQuiver) →
         Quiver.PreFunctor.comp (_root_.LeanPool.Polylean.FreeGroupoid.ι Q G)
-          (induced_map φ).toPreFunctor = φ
+          (inducedMap φ).toPreFunctor = φ
   induced_unique : {S' : Sort u} → {G' : Groupoid.{u, vg} S'} →
       (Φ Ψ : Groupoid.Functor G G') →
         Quiver.PreFunctor.comp (_root_.LeanPool.Polylean.FreeGroupoid.ι Q G) Φ.toPreFunctor =

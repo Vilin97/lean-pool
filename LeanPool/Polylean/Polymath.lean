@@ -10,6 +10,10 @@ import LeanPool.Polylean.ConjInvLength.LengthNode
 import LeanPool.Polylean.ConjInvLength.MemoLength
 import LeanPool.Polylean.ConjInvLength.ProvedBound
 
+/-!
+# Demonstration executable for Polylean length computations
+-/
+
 namespace LeanPool.Polylean
 
 open Letter

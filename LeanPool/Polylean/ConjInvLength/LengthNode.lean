@@ -7,6 +7,10 @@ Authors: Siddhartha Gadgil, Anand Rao
 import LeanPool.Polylean.ConjInvLength.Length
 import Std.Data.HashMap
 
+/-!
+# Cached proof nodes for conjugacy-invariant length bounds
+-/
+
 namespace LeanPool.Polylean
 
 /-- A node recording which inequality or equality was used to derive a word-length bound. -/
