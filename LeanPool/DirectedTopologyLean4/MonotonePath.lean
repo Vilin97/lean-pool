@@ -6,6 +6,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 import Mathlib.Topology.Connected.PathConnected
 import Mathlib.Topology.Homotopy.Basic
 
+/-!
+# LeanPool.DirectedTopologyLean4.MonotonePath
+-/
+
 /-
   This file contains lemmas about monotone paths in a preordered topological space
 -/

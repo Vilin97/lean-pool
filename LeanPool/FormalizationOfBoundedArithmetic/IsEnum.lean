@@ -13,6 +13,10 @@ import Mathlib.Data.Finite.Defs
 import Mathlib.Data.List.Nodup
 import Mathlib.Data.List.OfFn
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.IsEnum
+-/
+
 open Lean Elab Parser Term Command
 
 universe u

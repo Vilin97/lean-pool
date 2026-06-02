@@ -9,6 +9,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000ZData
 import Mathlib.Data.Rat.Star
 import Mathlib.LinearAlgebra.Matrix.PosDef
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000Z
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000Z
@@ -200,7 +204,7 @@ theorem Z_posSemidef (r : Block) : (Z r).PosSemidef := by
     have :
         ((L r) * Matrix.diagonal (Dvec r) * (Matrix.conjTranspose (L r))).PosSemidef :=
       Matrix.PosSemidef.mul_mul_conjTranspose_same (A := Matrix.diagonal (Dvec r)) hD (B := L r)
-    simpa [Matrix.conjTranspose] using this
+    convert this using 1
   simpa [Z_eq_LDL r] using hLDL
 
 theorem trace_mul_nonneg_of_Z_posSemidef {r : Block} {S : Matrix (Fin 3) (Fin 3) Q}
@@ -212,7 +216,7 @@ theorem trace_mul_nonneg_of_Z_posSemidef {r : Block} {S : Matrix (Fin 3) (Fin 3)
     have :
         ((Matrix.conjTranspose (L r)) * S * (L r)).PosSemidef :=
       Matrix.PosSemidef.conjTranspose_mul_mul_same (A := S) hS (B := L r)
-    simpa [Matrix.conjTranspose] using this
+    convert this using 1
   have hTrace :
       ((Z r) * S).trace =
         (Matrix.diagonal (Dvec r) * ((Matrix.transpose (L r)) * S * (L r))).trace := by

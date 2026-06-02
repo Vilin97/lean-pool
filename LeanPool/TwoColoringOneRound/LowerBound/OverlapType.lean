@@ -4,10 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
 
-import Mathlib.Tactic
-
-namespace Distributed2Coloring.LowerBound
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 /-!
 Overlap types for ordered pairs of vertices can be encoded as `3×3` partial permutation matrices.
 We represent such a matrix as a `Nat` bitmask with 9 bits in row-major order.
@@ -15,6 +21,9 @@ We represent such a matrix as a `Nat` bitmask with 9 bits in row-major order.
 This file provides the core combinatorial operations needed to compute the orbital-algebra structure
 constants for fixed `n` (eventually instantiated to `n = 10^6`).
 -/
+
+namespace Distributed2Coloring.LowerBound
+
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev Mask := Nat

@@ -15,8 +15,8 @@ import LeanPool.BruhatTits.Utils.RingHom
 import LeanPool.BruhatTits.Utils.Subring
 import LeanPool.BruhatTits.Utils.ValuationRings
 
-open Module
-
 /-!
 # Auxiliary lemmas
 -/
+
+open Module

@@ -7,13 +7,19 @@ Authors: Jukka Suomela
 import Mathlib.Data.Fintype.CardEmbedding
 import Mathlib.Data.Fintype.Sum
 import Mathlib.RingTheory.Polynomial.Pochhammer
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.TwoColoringOneRound.LowerBound.Defs
 import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
 import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
-
-namespace Distributed2Coloring.LowerBound
 
 /-!
 ## Upper bounds (explicit colorings)
@@ -29,6 +35,9 @@ The coloring used here is the simple rounding-based local rule from the report:
 * round each symbol `a : Fin n` to a bit `r(a)` depending on whether `a < n/2`;
 * apply a fixed local rule `g` to the rounded bits.
 -/
+
+namespace Distributed2Coloring.LowerBound
+
 
 namespace UpperBound
 
@@ -101,8 +110,7 @@ private lemma card_edge0000 : Fintype.card Edge0000 = 24 := by
   classical
   have h :
       Fintype.card Edge0000 = (Fintype.card Small9).descFactorial 4 := by
-    simpa [Edge0000, pat0000, Small9, EdgePatterns.Small] using
-      (EdgePatterns.card_pat0000 (n := n) (two := two9))
+    exact EdgePatterns.card_pat0000 (n := n) (two := two9)
   have hnum : (Fintype.card Small9).descFactorial 4 = 24 := by
     calc
       (Fintype.card Small9).descFactorial 4 = (4 : Nat).descFactorial 4 := by
@@ -114,8 +122,7 @@ private lemma card_edge1111 : Fintype.card Edge1111 = 120 := by
   classical
   have h :
       Fintype.card Edge1111 = (Fintype.card Big9).descFactorial 4 := by
-    simpa [Edge1111, pat1111, Big9, EdgePatterns.Big] using
-      (EdgePatterns.card_pat1111 (n := n) (two := two9))
+    exact EdgePatterns.card_pat1111 (n := n) (two := two9)
   have hnum : (Fintype.card Big9).descFactorial 4 = 120 := by
     have hBig : Fintype.card Big9 = 5 := card_Big9
     rw [hBig]
@@ -127,8 +134,7 @@ private lemma card_edge1001 : Fintype.card Edge1001 = 240 := by
   have h :
       Fintype.card Edge1001 =
         (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 := by
-    simpa [Edge1001, pat1001, Big9, Small9, EdgePatterns.Big, EdgePatterns.Small] using
-      (EdgePatterns.card_pat1001 (n := n) (two := two9))
+    exact EdgePatterns.card_pat1001 (n := n) (two := two9)
   have hnum :
       (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 = 240 := by
     have hBig : Fintype.card Big9 = 5 := card_Big9
@@ -142,8 +148,7 @@ private lemma card_edge0110 : Fintype.card Edge0110 = 240 := by
   have h :
       Fintype.card Edge0110 =
         (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 := by
-    simpa [Edge0110, pat0110, Big9, Small9, EdgePatterns.Big, EdgePatterns.Small] using
-      (EdgePatterns.card_pat0110 (n := n) (two := two9))
+    exact EdgePatterns.card_pat0110 (n := n) (two := two9)
   have hnum :
       (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 = 240 := by
     have hBig : Fintype.card Big9 = 5 := card_Big9
@@ -272,9 +277,9 @@ abbrev two (n : Nat) (hn : 5 ≤ n) : Sym n :=
   ⟨n / 2, Nat.div_lt_self (lt_of_lt_of_le (by decide : 0 < 5) hn) (by decide : 1 < 2)⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-abbrev Small (n : Nat) (hn : 5 ≤ n) : Type := Set.Iio (two n hn)
+abbrev Small (n : Nat) (hn : 5 ≤ n) : Type := EdgePatterns.Small (two := two n hn)
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-abbrev Big (n : Nat) (hn : 5 ≤ n) : Type := Set.Ici (two n hn)
+abbrev Big (n : Nat) (hn : 5 ≤ n) : Type := EdgePatterns.Big (two := two n hn)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def round (n : Nat) (hn : 5 ≤ n) (a : Sym n) : Bool :=
@@ -313,17 +318,29 @@ private abbrev Edge1111 : Type := {e : Edge n // pat1111 (n := n) hn e}
 private abbrev Edge1001 : Type := {e : Edge n // pat1001 (n := n) hn e}
 private abbrev Edge0110 : Type := {e : Edge n // pat0110 (n := n) hn e}
 
+private lemma cardEdgePatternsSmall :
+    @Fintype.card (EdgePatterns.Small (two := two n hn)) (Subtype.fintype _) =
+      @Fintype.card (Small (n := n) hn) (Set.instFintypeIio (two n hn)) := by
+  exact @Fintype.card_congr (EdgePatterns.Small (two := two n hn)) (Small (n := n) hn)
+    (Subtype.fintype _) (Set.instFintypeIio (two n hn)) (Equiv.refl _)
+
+private lemma cardEdgePatternsBig :
+    @Fintype.card (EdgePatterns.Big (two := two n hn)) (Subtype.fintype _) =
+      @Fintype.card (Big (n := n) hn) (Set.instFintypeIci (two n hn)) := by
+  exact @Fintype.card_congr (EdgePatterns.Big (two := two n hn)) (Big (n := n) hn)
+    (Subtype.fintype _) (Set.instFintypeIci (two n hn)) (Equiv.refl _)
+
 private lemma card_edge0000 :
     Fintype.card (Edge0000 (n := n) hn) = (Fintype.card (Small (n := n) hn)).descFactorial 4 := by
   classical
-  simpa [Edge0000, pat0000, Small, EdgePatterns.Small] using
-    (EdgePatterns.card_pat0000 (n := n) (two := two n hn))
+  refine Eq.trans (EdgePatterns.card_pat0000 (n := n) (two := two n hn)) ?_
+  exact congrArg (fun k : Nat => k.descFactorial 4) (cardEdgePatternsSmall (n := n) hn)
 
 private lemma card_edge1111 :
     Fintype.card (Edge1111 (n := n) hn) = (Fintype.card (Big (n := n) hn)).descFactorial 4 := by
   classical
-  simpa [Edge1111, pat1111, Big, EdgePatterns.Big] using
-    (EdgePatterns.card_pat1111 (n := n) (two := two n hn))
+  refine Eq.trans (EdgePatterns.card_pat1111 (n := n) (two := two n hn)) ?_
+  exact congrArg (fun k : Nat => k.descFactorial 4) (cardEdgePatternsBig (n := n) hn)
 
 private lemma card_edge1001 :
     Fintype.card (Edge1001 (n := n) hn)
@@ -331,10 +348,8 @@ private lemma card_edge1001 :
       (Fintype.card (Big (n := n) hn)).descFactorial 2 *
         (Fintype.card (Small (n := n) hn)).descFactorial 2 := by
   classical
-  simpa
-      [Edge1001, pat1001, Big, Small, EdgePatterns.Big, EdgePatterns.Small]
-    using
-    (EdgePatterns.card_pat1001 (n := n) (two := two n hn))
+  refine Eq.trans (EdgePatterns.card_pat1001 (n := n) (two := two n hn)) ?_
+  rw [cardEdgePatternsBig (n := n) hn, cardEdgePatternsSmall (n := n) hn]
 
 private lemma card_edge0110 :
     Fintype.card (Edge0110 (n := n) hn)
@@ -342,10 +357,8 @@ private lemma card_edge0110 :
       (Fintype.card (Big (n := n) hn)).descFactorial 2 *
         (Fintype.card (Small (n := n) hn)).descFactorial 2 := by
   classical
-  simpa
-      [Edge0110, pat0110, Big, Small, EdgePatterns.Big, EdgePatterns.Small]
-    using
-    (EdgePatterns.card_pat0110 (n := n) (two := two n hn))
+  refine Eq.trans (EdgePatterns.card_pat0110 (n := n) (two := two n hn)) ?_
+  rw [cardEdgePatternsBig (n := n) hn, cardEdgePatternsSmall (n := n) hn]
 
 private lemma edgeCount_eq_descFactorial : edgeCount n = n.descFactorial 4 := by
   classical

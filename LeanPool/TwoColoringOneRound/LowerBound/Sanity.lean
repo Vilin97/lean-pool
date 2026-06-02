@@ -12,8 +12,6 @@ import LeanPool.TwoColoringOneRound.LowerBound.Defs
 import LeanPool.TwoColoringOneRound.LowerBound.EdgePatterns
 import LeanPool.TwoColoringOneRound.LowerBound.LocalRule
 
-namespace Distributed2Coloring.LowerBound
-
 /-!
 Small “sanity checks” intended to validate that the Lean definitions in `Defs.lean` match the
 intended combinatorial model.
@@ -21,6 +19,9 @@ intended combinatorial model.
 This file proves, in a fully kernel-checked way, that for `n = 5` there is an explicit coloring
 with monochromatic edge fraction exactly `1/5`.
 -/
+
+namespace Distributed2Coloring.LowerBound
+
 
 namespace Sanity
 
@@ -56,10 +57,10 @@ abbrev f5 : Coloring 5 :=
   fun v => g (round5 (Vertex.a v)) (round5 (Vertex.b v)) (round5 (Vertex.c v))
 
 lemma card_Small5 : Fintype.card Small5 = 2 := by
-  simp [Small5, two5]
+  norm_num [Small5, two5]
 
 lemma card_Big5 : Fintype.card Big5 = 3 := by
-  simp [Big5, two5]
+  norm_num [Big5, two5]
 
 private lemma not_all_small (e : Edge 5) : ¬ (∀ i : Fin 4, e.1 i < two5) := by
   classical
@@ -135,8 +136,7 @@ private lemma card_pat1001 : Fintype.card {e : Edge 5 // pat1001 e} = 12 := by
   have h :
       Fintype.card {e : Edge 5 // pat1001 e}
         = (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 := by
-    simpa [pat1001, EdgePatterns.Pat1001, Big5, Small5, EdgePatterns.Big, EdgePatterns.Small] using
-      (EdgePatterns.card_pat1001 (n := 5) (two := two5))
+    exact EdgePatterns.card_pat1001 (n := 5) (two := two5)
   have hnum : (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 = 12 := by
     rw [card_Big5, card_Small5]
     decide
@@ -147,8 +147,7 @@ private lemma card_pat0110 : Fintype.card {e : Edge 5 // pat0110 e} = 12 := by
   have h :
       Fintype.card {e : Edge 5 // pat0110 e}
         = (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 := by
-    simpa [pat0110, EdgePatterns.Pat0110, Big5, Small5, EdgePatterns.Big, EdgePatterns.Small] using
-      (EdgePatterns.card_pat0110 (n := 5) (two := two5))
+    exact EdgePatterns.card_pat0110 (n := 5) (two := two5)
   have hnum : (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 = 12 := by
     rw [card_Big5, card_Small5]
     decide

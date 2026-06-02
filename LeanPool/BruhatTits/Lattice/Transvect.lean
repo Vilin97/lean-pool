@@ -8,8 +8,6 @@ import Mathlib.LinearAlgebra.TensorProduct.RightExactness
 import LeanPool.BruhatTits.Lattice.Construction
 import LeanPool.BruhatTits.Utils.LinearAlgebra
 
-open Module
-
 /-!
 # Transvection automorphisms and their action on lattices
 
@@ -33,6 +31,9 @@ We call the basis representing this automorphism the unipotent matrix associated
   spanned by `(ϖ ^ k • b₀, b₁)` is invariant under the action of `b.unipotent (ϖ ^ n * x)` if
   `n ≥ k`.
 -/
+
+open Module
+
 
 variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
 

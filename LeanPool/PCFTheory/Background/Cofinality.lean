@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: YnirPaz
 -/
 
-import Mathlib.SetTheory.Cardinal.Cofinality
+import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
 import LeanPool.PCFTheory.Background.Ordinal
 
 /-!

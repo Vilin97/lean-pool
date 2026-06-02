@@ -8,8 +8,16 @@ import Mathlib.Analysis.Normed.Group.FunctionSeries
 import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Topology.ContinuousMap.StoneWeierstrass
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 /-!
 # Uniqueness of the Herglotz–Riesz measure
 
@@ -220,7 +228,7 @@ lemma measure_eq_of_moments (μ₁ μ₂ : Measure (sphere (0 : ℂ) 1))
       obtain ⟨c, rfl⟩ := hf
       simp_rw [Finsupp.sum, ContinuousMap.coe_sum, ContinuousMap.coe_smul,
         ContinuousMap.coe_mk, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-      rw [integral_finset_sum, integral_finset_sum]
+      rw [integral_finsetSum, integral_finsetSum]
       · refine Finset.sum_congr rfl (fun i _ => ?_)
         rw [show (∫ (a : ↑(sphere 0 1)), c i * (↑a : ℂ) ^ i ∂μ₁) =
               c i * ∫ (a : ↑(sphere 0 1)), (↑a : ℂ) ^ i ∂μ₁ from
@@ -459,7 +467,7 @@ theorem HerglotzRiesz_representation_uniqueness
       have hz' : z ∈ ball 0 1 := by
         rw [Metric.mem_ball, dist_eq]
         simp [hz]
-      linear_combination' h z hz' / 2 - h_integral_expansion1 / 2 + h_integral_expansion2 / 2
+      linear_combination h z hz' / 2 - h_integral_expansion1 / 2 + h_integral_expansion2 / 2
     have h_bounds : ∀ n : ℕ, ‖∫ x : sphere (0 : ℂ) 1, star (x.val ^ (n + 1)) ∂μ₁‖ ≤ 1 ∧
                              ‖∫ x : sphere (0 : ℂ) 1, star (x.val ^ (n + 1)) ∂μ₂‖ ≤ 1 := by
       intro n

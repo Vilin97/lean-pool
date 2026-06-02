@@ -7,6 +7,10 @@ import LeanPool.DirectedTopologyLean4.Constructions
 import Mathlib.CategoryTheory.ConcreteCategory.Basic
 import Mathlib.CategoryTheory.Elementwise
 
+/-!
+# LeanPool.DirectedTopologyLean4.DTop
+-/
+
 /-
   This file contains the definition of `dTopCat`, the category of directed spaces.
   The structure of this file is based on the approach for the undirected version in Mathlib:
@@ -101,7 +105,7 @@ lemma ofHom_comp {X Y Z : Type u} [DirectedSpace X] [DirectedSpace Y] [DirectedS
     (f : D(X,Y)) (g : D(Y,Z)) :
     ofHom (g.comp f) = ofHom f ≫ ofHom g := rfl
 
-instance subspace_coe {X : dTopCat} : CoeTC (Set X) dTopCat := ⟨fun s => dTopCat.of s⟩
+instance subspaceCoe {X : dTopCat} : CoeTC (Set X) dTopCat := ⟨fun s => dTopCat.of s⟩
 
 /-- The inclusion of a directed subspace into its ambient space. -/
 def DirectedSubtypeHom {X : dTopCat} (Y : Set X) : (dTopCat.of Y) ⟶ X :=

@@ -7,6 +7,10 @@ Authors: Yury G. Kudryashov
 import Mathlib.Topology.Order.LowerUpperTopology
 import Mathlib.Topology.Semicontinuity.Basic
 
+/-!
+# LeanPool.SardMoreira.UpperLowerSemicontinuous
+-/
+
 open Set Filter Function TopologicalSpace
 
 namespace Topology

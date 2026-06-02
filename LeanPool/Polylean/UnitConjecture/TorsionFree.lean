@@ -5,11 +5,6 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 
 import LeanPool.Polylean.UnitConjecture.GardamGroup
-namespace LeanPool.Polylean
-
-open scoped P
-
--- import Mathlib.Algebra.GroupPower.Basic
 
 /-!
 ## Torsion-freeness of `P`
@@ -29,6 +24,13 @@ Roughly, the steps are as follows (further details can be found in the correspon
    then it also satisfies `(g ^ 2) ^ n = (1 : G)`.
 5. Together, these statements show that `P` is torsion-free.
 -/
+
+namespace LeanPool.Polylean
+
+open scoped P
+
+-- import Mathlib.Algebra.GroupPower.Basic
+
 
 /-!
 ### Torsion-free groups
@@ -78,18 +80,21 @@ open P
 /-- A proof that the function `sq` indeed takes an element of `P` to its square in `K`. -/
 @[aesop norm apply (rule_sets := [P]), simp]
 theorem sq_square : ∀ g : P, g * g = (P.sq g, .e)
-  | ((p, q, r), .e) => by
-      refine (P.mul (p, q, r) (p, q, r) Q.e Q.e).trans ?_
-      simp [P.sq, Q.e, action, cocycle]
-  | ((p, q, r), .a) => by
-      refine (P.mul (p, q, r) (p, q, r) Q.a Q.a).trans ?_
-      simp [P.sq, Q.e, Q.a, action, cocycle]
-  | ((p, q, r), .b) => by
-      refine (P.mul (p, q, r) (p, q, r) Q.b Q.b).trans ?_
-      simp [P.sq, Q.e, Q.b, action, cocycle]
-  | ((p, q, r), .c) => by
-      refine (P.mul (p, q, r) (p, q, r) Q.c Q.c).trans ?_
-      simp [P.sq, Q.e, Q.c, action, cocycle]
+    | ((p, q, r), .e) => by
+        refine (P.mul (p, q, r) (p, q, r) Q.e Q.e).trans ?_
+        simp [P.sq, Q.e, action, cocycle]
+    | ((p, q, r), .a) => by
+        refine (P.mul (p, q, r) (p, q, r) Q.a Q.a).trans ?_
+        rw [show cocycle Q.a Q.a = K.x by rfl]
+        simp [P.sq, Q.e, Q.a, K.x, action]
+    | ((p, q, r), .b) => by
+        refine (P.mul (p, q, r) (p, q, r) Q.b Q.b).trans ?_
+        rw [show cocycle Q.b Q.b = K.y by rfl]
+        simp [P.sq, Q.e, Q.b, K.y, action]
+    | ((p, q, r), .c) => by
+        refine (P.mul (p, q, r) (p, q, r) Q.c Q.c).trans ?_
+        rw [show cocycle Q.c Q.c = K.z by rfl]
+        simp [P.sq, Q.e, Q.c, K.z, action]
 
 /-! ### **Step 2:** Proving that `K` (= `ℤ³`) is torsion-free. -/
 

@@ -12,6 +12,10 @@ import Mathlib.Data.Nat.Factorization.LCM
 import Mathlib.Data.Real.StarOrdered
 import Mathlib.NumberTheory.PrimeCounting
 
+/-!
+# LeanPool.Zeta3Irrational.D
+-/
+
 namespace LeanPool.Zeta3Irrational
 
 open scoped Nat
@@ -277,7 +281,7 @@ theorem d_eq_prod_pow' (n : ℕ) :
     rw [d_primeFactors _ (by aesop)]
     refine Finset.prod_congr ?_ ?_
     · ext p
-      constructor <;> intro hp <;> simp only at hp ⊢
+      constructor <;> intro hp
       · rw [Finset.mem_sup] at hp
         obtain ⟨m, H, h⟩ := hp
         simp only [Finset.mem_Icc] at H

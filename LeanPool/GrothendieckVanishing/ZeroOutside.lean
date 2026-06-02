@@ -80,7 +80,7 @@ lemma zeroOutside_le {W : Opens X} (h : W ≤ U) :
   simp [zeroOutside, h]
 
 /-- `zeroOutside ⊤ F ≅ F`: zero-outside on the whole space is the identity. -/
-def zeroOutside_top_iso : zeroOutside (⊤ : Opens X) F ≅ F :=
+def zeroOutsideTopIso : zeroOutside (⊤ : Opens X) F ≅ F :=
   NatIso.ofComponents
     (fun W ↦ eqToIso (zeroOutside_le (le_top : unop W ≤ ⊤)))
     (fun {W Y} i ↦ by simp [zeroOutside, le_top])
@@ -89,7 +89,7 @@ variable {V : Opens X} (h : V ≤ U)
 
 open Classical in
 /-- The canonical inclusion `zeroOutside V F ⟶ zeroOutside U F` for `V ≤ U`. -/
-def zeroOutside_openHom : zeroOutside V F ⟶ zeroOutside U F where
+def zeroOutsideOpenHom : zeroOutside V F ⟶ zeroOutside U F where
   app W := if hW : (unop W) ≤ V then
       eqToHom (by rw [zeroOutside_le hW, zeroOutside_le (le_trans hW h)])
     else (zeroOutside_isZero (F := F) hW).to_ _
@@ -102,15 +102,15 @@ def zeroOutside_openHom : zeroOutside V F ⟶ zeroOutside U F where
     · apply (zeroOutside_isZero (F := F) hWV).eq_of_src
 
 /-- The canonical inclusion of zero-outside presheaves is a monomorphism. -/
-instance zeroOutside_hom_mono [HasPullbacks C] : Mono (zeroOutside_openHom (F := F) h) := by
-  change @Mono ((Opens X)ᵒᵖ ⥤ C) _ (zeroOutside V F) (zeroOutside U F) (zeroOutside_openHom h)
+instance zeroOutside_hom_mono [HasPullbacks C] : Mono (zeroOutsideOpenHom (F := F) h) := by
+  change @Mono ((Opens X)ᵒᵖ ⥤ C) _ (zeroOutside V F) (zeroOutside U F) (zeroOutsideOpenHom h)
   rw [NatTrans.mono_iff_mono_app]
   intro W; by_cases hWV : (unop W) ≤ V
   · have hWU : unop W ≤ U := le_trans hWV h
-    simp [zeroOutside_openHom, hWV, IsIso.mono_of_iso]
-  · simp [zeroOutside_openHom, hWV, zeroOutside_isZero (F := F) hWV, IsZero.mono]
+    simp [zeroOutsideOpenHom, hWV, IsIso.mono_of_iso]
+  · simp [zeroOutsideOpenHom, hWV, zeroOutside_isZero (F := F) hWV, IsZero.mono]
 
-/-- The presheaf stalk map of `zeroOutside_openHom h` at `x ∈ V` is surjective:
+/-- The presheaf stalk map of `zeroOutsideOpenHom h` at `x ∈ V` is surjective:
     any germ in the larger zero-outside presheaf can be lifted by restricting to `W ∩ V ≤ V`
     where the presheaf map is `eqToHom` (identity). -/
 theorem _root_.zeroOutside_openHom_stalk_surj
@@ -118,30 +118,30 @@ theorem _root_.zeroOutside_openHom_stalk_surj
     {V U : Opens X} (h : V ≤ U) (x : X) (hx : x ∈ V) :
     Function.Surjective (ConcreteCategory.hom
       ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
-        (TopCat.Presheaf.zeroOutside_openHom (F := F) h))) := by
+        (TopCat.Presheaf.zeroOutsideOpenHom (F := F) h))) := by
   intro g
-  obtain ⟨W, hxW, s, rfl⟩ := (F.zeroOutside U).germ_exist x g
+  obtain ⟨W, hxW, s, rfl⟩ := (F.zeroOutside U).exists_germ_eq g
   set WV := W ⊓ V
   have hWV_le_V : WV ≤ V := inf_le_right
   have hWV_le_W : WV ≤ W := inf_le_left
   have hxWV : x ∈ WV := ⟨hxW, hx⟩
-  have happ_iso : IsIso ((TopCat.Presheaf.zeroOutside_openHom (F := F) h).app (op WV)) := by
-    simp only [TopCat.Presheaf.zeroOutside_openHom, hWV_le_V, ↓reduceDIte]
+  have happ_iso : IsIso ((TopCat.Presheaf.zeroOutsideOpenHom (F := F) h).app (op WV)) := by
+    simp only [TopCat.Presheaf.zeroOutsideOpenHom, hWV_le_V, ↓reduceDIte]
     infer_instance
   let s_res := ConcreteCategory.hom ((F.zeroOutside U).map (homOfLE hWV_le_W).op) s
   have h_bij := ConcreteCategory.bijective_of_isIso
-    ((TopCat.Presheaf.zeroOutside_openHom (F := F) h).app (op WV))
+    ((TopCat.Presheaf.zeroOutsideOpenHom (F := F) h).app (op WV))
   obtain ⟨t, ht⟩ := h_bij.2 s_res
   refine ⟨(F.zeroOutside V).germ WV x hxWV t, ?_⟩
   rw [TopCat.Presheaf.stalkFunctor_map_germ_apply]
   change (F.zeroOutside U).germ WV x hxWV
-      ((TopCat.Presheaf.zeroOutside_openHom (F := F) h).app (op WV) t) =
+      ((TopCat.Presheaf.zeroOutsideOpenHom (F := F) h).app (op WV) t) =
     (F.zeroOutside U).germ W x hxW s
   rw [ht]
   simp only [s_res]
   convert ((F.zeroOutside U).germ_res_apply (homOfLE hWV_le_W) x hxWV s) using 1
 
-/-- The sheaf stalk map of `sheafifyMap (zeroOutside_openHom h)` at `x ∈ V` is surjective.
+/-- The sheaf stalk map of `sheafifyMap (zeroOutsideOpenHom h)` at `x ∈ V` is surjective.
     Transfers presheaf stalk surjectivity via `toSheafify_naturality` and
     the fact that `stalk(toSheafify)` is an isomorphism. -/
 theorem _root_.sheafifyMap_zeroOutside_openHom_stalk_surj
@@ -150,9 +150,9 @@ theorem _root_.sheafifyMap_zeroOutside_openHom_stalk_surj
     Function.Surjective (ConcreteCategory.hom
       ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map
         (sheafifyMap (Opens.grothendieckTopology (T := X))
-          (TopCat.Presheaf.zeroOutside_openHom (F := F) h)))) := by
+          (TopCat.Presheaf.zeroOutsideOpenHom (F := F) h)))) := by
   let J := Opens.grothendieckTopology (T := X)
-  let φ := TopCat.Presheaf.zeroOutside_openHom (F := F) h
+  let φ := TopCat.Presheaf.zeroOutsideOpenHom (F := F) h
   let T := TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x
   let ηV := CategoryTheory.toSheafify J (F.zeroOutside V)
   let ηU := CategoryTheory.toSheafify J (F.zeroOutside U)
@@ -255,13 +255,19 @@ theorem sHom_app_generator {F : Presheaf AddCommGrpCat.{u} X} (s : F.obj (op U))
 theorem resGen_eqToHom_eq_one
     {X : TopCat.{u}} (V : Opens X) {W : Opens X} (hWV : W ≤ V)
     (hObjW : (constZ.zeroOutside V).obj (op W) = AddCommGrpCat.of (ULift ℤ)) :
-    (AddCommGrpCat.Hom.hom (eqToHom hObjW))
-      (ConcreteCategory.hom ((constZ.zeroOutside V).map (homOfLE hWV).op)
-        (generator V)) = (1 : ULift ℤ) := by
+      (AddCommGrpCat.Hom.hom (eqToHom hObjW))
+        (ConcreteCategory.hom ((constZ.zeroOutside V).map (homOfLE hWV).op)
+          (generator V)) = (1 : ULift ℤ) := by
   unfold generator
   have hmap : (constZ.zeroOutside V).map (homOfLE hWV).op =
       eqToHom (by simp [TopCat.Presheaf.zeroOutside, constZ, hWV]) := by
-    simp [TopCat.Presheaf.zeroOutside, hWV, constZ]
+    dsimp [TopCat.Presheaf.zeroOutside, constZ]
+    rw [dif_pos (le_rfl : V ≤ V)]
+    change eqToHom _ ≫ eqToHom
+      (rfl : AddCommGrpCat.of (ULift ℤ) = AddCommGrpCat.of (ULift ℤ)) ≫
+      eqToHom _ = eqToHom _
+    rw [eqToHom_trans_assoc]
+    simp [eqToHom_trans]
   rw [hmap]
   simp [← ConcreteCategory.comp_apply, eqToHom_trans]
 
@@ -273,7 +279,7 @@ theorem presheaf_stalk_zeroOutside_eq_zsmul_generator
       (constZ.zeroOutside V)) :
     ∃ n : ℤ,
       a = n • ((constZ.zeroOutside V).germ V x hx (generator V)) := by
-  obtain ⟨W, hxW, s, rfl⟩ := (constZ.zeroOutside V).germ_exist x a
+  obtain ⟨W, hxW, s, rfl⟩ := (constZ.zeroOutside V).exists_germ_eq a
   by_cases hWV : W ≤ V
   · have hObjW : (TopCat.Presheaf.zeroOutside V constZ).obj (op W) =
         AddCommGrpCat.of (ULift ℤ) := by
@@ -326,17 +332,17 @@ variable {U}
 @[simps]
 def openHom {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U) :
     zeroOutsideInt V ⟶ zeroOutsideInt U where
-  hom := sheafifyMap _ (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h)
+  hom := sheafifyMap _ (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h)
 
 instance {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U) : Mono (openHom h) := by
   let J := Opens.grothendieckTopology (T := X)
   haveI : @Mono ((Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u}) _
       (Presheaf.constZ.zeroOutside V) (Presheaf.constZ.zeroOutside U)
-      (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h) := by
-    change Mono (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h)
+      (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h) := by
+    change Mono (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h)
     infer_instance
   change Mono ((presheafToSheaf J AddCommGrpCat).map
-    (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h))
+    (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h))
   apply Functor.map_mono
 
 /-- Presheaf morphism out of `zeroOutsideInt U` induced by a section of a sheaf over `U`. -/
@@ -366,7 +372,7 @@ theorem openHom_val_app_generator {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U)
     (zeroOutsideInt U).obj.map (homOfLE h).op (generator U) := by
   delta generator
   have hpresheaf :
-      (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h).app (op V)
+      (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h).app (op V)
           (Presheaf.zeroOutside.generator V) =
         (Presheaf.constZ.zeroOutside U).map (homOfLE h).op
           (Presheaf.zeroOutside.generator U) := by
@@ -379,21 +385,21 @@ theorem openHom_val_app_generator {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U)
     apply (ConcreteCategory.bijective_of_isIso (eqToHom hObjV)).1
     have hright := Presheaf.zeroOutside.resGen_eqToHom_eq_one U h hObjV
     rw [hright]
-    have hopen : (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h).app (op V) =
+    have hopen : (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h).app (op V) =
         eqToHom (by rw [hObjSource, hObjV]) := by
-      simp [Presheaf.zeroOutside_openHom]
+      simp [Presheaf.zeroOutsideOpenHom]
     rw [hopen]
     unfold Presheaf.zeroOutside.generator
     simp [← ConcreteCategory.comp_apply, eqToHom_trans]
   erw [openHom_hom,
     ← ConcreteCategory.comp_apply
       ((CategoryTheory.toSheafify _ (Presheaf.constZ.zeroOutside V)).app (op V))
-      ((CategoryTheory.sheafifyMap _ (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h)).app
+      ((CategoryTheory.sheafifyMap _ (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h)).app
         (op V)),
     ← NatTrans.comp_app (CategoryTheory.toSheafify _ (Presheaf.constZ.zeroOutside V))
-      (CategoryTheory.sheafifyMap _ (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h)),
+      (CategoryTheory.sheafifyMap _ (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h)),
     ← CategoryTheory.toSheafify_naturality _
-      (Presheaf.zeroOutside_openHom (F := Presheaf.constZ) h),
+      (Presheaf.zeroOutsideOpenHom (F := Presheaf.constZ) h),
     NatTrans.comp_app, ConcreteCategory.comp_apply,
     ← (CategoryTheory.toSheafify _ (Presheaf.constZ.zeroOutside U)).naturality_apply
       (homOfLE h).op (Presheaf.zeroOutside.generator U)]
@@ -416,7 +422,7 @@ theorem _root_.stalk_zeroOutsideInt_zero_outside
   let T := TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x
   haveI : IsIso (T.map (toSheafify J P)) := stalkFunctor_map_iso_toSheafify P x
   obtain ⟨q, rfl⟩ := (ConcreteCategory.bijective_of_isIso (T.map (toSheafify J P))).2 a
-  obtain ⟨W, hxW, s, rfl⟩ := P.germ_exist x q
+  obtain ⟨W, hxW, s, rfl⟩ := P.exists_germ_eq q
   haveI := AddCommGrpCat.subsingleton_of_isZero
     (TopCat.Presheaf.zeroOutside_isZero (F := TopCat.Presheaf.constZ) (fun h ↦ hx (h hxW)))
   rw [show s = 0 from Subsingleton.eq_zero s, map_zero]
@@ -487,7 +493,8 @@ theorem _root_.zsmul_generator_injective
           = n • (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (P.germ V x hx gen_P) :=
             map_zsmul (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) n _
       _ = m • (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (P.germ V x hx gen_P) := by
-            simpa [hgen_eq] using h
+            rw [hgen_eq]
+            exact h
       _ = (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) (m • P.germ V x hx gen_P) :=
             (map_zsmul (AddCommGrpCat.Hom.hom (T.map (toSheafify J P))) m _).symm
   obtain ⟨W, hxW, iU, iV, hEq⟩ := P.germ_eq x hx hx _ _ h'

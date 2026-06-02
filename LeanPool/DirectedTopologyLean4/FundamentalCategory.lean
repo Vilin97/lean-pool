@@ -8,6 +8,10 @@ import Mathlib.CategoryTheory.Category.Cat
 import LeanPool.DirectedTopologyLean4.DirectedPathHomotopy
 import Mathlib.AlgebraicTopology.FundamentalGroupoid.Basic
 
+/-!
+# LeanPool.DirectedTopologyLean4.FundamentalCategory
+-/
+
 /-
   This file contains the definition of the fundamental category of a directed space.
   We follow the structure of the undirected version found at:
@@ -153,12 +157,12 @@ instance : CategoryTheory.Category (FundamentalCategory X) where
   id_comp {x _} f :=
     Quotient.inductionOn f fun a =>
       show ⟦(Dipath.refl x.as).trans a⟧ = ⟦a⟧ from
-        Quotient.sound (Relation.EqvGen.rel _ _ ⟨Dipath.Dihomotopy.refl_trans a⟩)
+        Quotient.sound (Relation.EqvGen.rel _ _ ⟨Dipath.Dihomotopy.reflTrans a⟩)
   comp_id {_ y} f :=
     Quotient.inductionOn f fun a =>
       show ⟦a.trans (Dipath.refl y.as)⟧ = ⟦a⟧ from
         Quotient.sound (Relation.EqvGen.symm _ _
-          (Relation.EqvGen.rel _ _ ⟨Dipath.Dihomotopy.trans_refl a⟩))
+          (Relation.EqvGen.rel _ _ ⟨Dipath.Dihomotopy.transRefl a⟩))
   assoc {_ _ _ _} f g h :=
     Quotient.inductionOn₃ f g h fun p q r =>
       show ⟦(p.trans q).trans r⟧ = ⟦p.trans (q.trans r)⟧ from

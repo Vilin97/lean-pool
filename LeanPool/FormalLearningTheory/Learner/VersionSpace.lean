@@ -45,7 +45,7 @@ def IsSampleConsistent {X : Type u} (h : Concept X Bool) {m : ℕ} (S : Fin m �
   ∀ i, h (S i).1 = (S i).2
 
 /-- Decidability of consistency (finite conjunction of Bool equality). -/
-instance isSampleConsistent_decidable
+instance isSampleConsistentDecidable
     {X : Type u} (h : Concept X Bool) {m : ℕ} (S : Fin m → X × Bool) :
     Decidable (IsSampleConsistent h S) :=
   Fintype.decidableForallFintype

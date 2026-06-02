@@ -102,7 +102,7 @@ lemma landau_flux_integrable_coulomb
           (coulomb_landauMatrix_entry_le_pi _ _ _ hw) (abs_nonneg _)
   exact integrable_pi_iff.mpr fun i => by
     simp only [mulVec, dotProduct]
-    exact integrable_finset_sum Finset.univ fun j _ => by
+    exact integrable_finsetSum Finset.univ fun j _ => by
       convert h_comp i j using 2 with w
 
 -- ============================================================================
@@ -165,7 +165,7 @@ lemma flux_component_aestronglyMeasurable
       apply ((Measurable.ite measurableSet_Iic measurable_const
         (measurable_id.pow measurable_const)) : Measurable coulombKernel).comp
       simp only [eucNorm, normSq, dotProduct]
-      exact (continuous_sqrt.comp (continuous_finset_sum _ fun k _ =>
+      exact (continuous_sqrt.comp (continuous_finsetSum _ fun k _ =>
         ((continuous_apply k).comp (continuous_fst.sub continuous_snd)).mul
         ((continuous_apply k).comp (continuous_fst.sub continuous_snd)))).measurable
     · -- innerLandauMatrix (p.1-p.2) i j is continuous
@@ -174,7 +174,7 @@ lemma flux_component_aestronglyMeasurable
       apply Continuous.sub
       · by_cases h : i = j
         · simp only [h, ↓reduceIte, normSq, dotProduct]
-          exact continuous_finset_sum _ fun k _ =>
+          exact continuous_finsetSum _ fun k _ =>
             ((continuous_apply k).comp (continuous_fst.sub continuous_snd)).mul
             ((continuous_apply k).comp (continuous_fst.sub continuous_snd))
         · simp only [h, ↓reduceIte]

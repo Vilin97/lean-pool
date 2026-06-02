@@ -8,6 +8,14 @@ import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Basic
 import Mathlib.MeasureTheory.Integral.Marginal
 import Mathlib.MeasureTheory.Integral.Lebesgue.Add
 
+/-!
+Computation of `ClassicalAlgorithm.p` for `recursive3ParamAlg`.
+
+This file will prove that the 3-parameter recursive cutoff algorithm from
+`Distributed2Coloring/UpperBound/Recursive3Param.lean` satisfies
+`ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
+-/
+
 namespace Distributed2Coloring
 
 open MeasureTheory
@@ -16,13 +24,6 @@ open scoped unitInterval
 namespace UpperBound
 namespace Recursive3Param
 
-/-!
-Computation of `ClassicalAlgorithm.p` for `recursive3ParamAlg`.
-
-This file will prove that the 3-parameter recursive cutoff algorithm from
-`Distributed2Coloring/UpperBound/Recursive3Param.lean` satisfies
-`ClassicalAlgorithm.p recursive3ParamAlg < 24118/100000`.
--/
 
 open scoped ENNReal
 
@@ -48,9 +49,12 @@ lemma p_eq_lintegral_pInd :
   classical
   unfold ClassicalAlgorithm.p
   symm
-  simpa [pInd] using
-    (MeasureTheory.lintegral_indicator_one (μ := (volume : Measure (Samples 4)))
-      (ClassicalAlgorithm.measurableSet_pEvent recursive3ParamAlg))
+  change
+    (∫⁻ x : Samples 4, E.indicator (fun _ => (1 : ℝ≥0∞)) x
+        ∂(volume : Measure (Samples 4))) =
+      volume E
+  exact MeasureTheory.lintegral_indicator_one (μ := (volume : Measure (Samples 4)))
+    (ClassicalAlgorithm.measurableSet_pEvent recursive3ParamAlg)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def dSlice (x : Samples 4) : Set Rand :=
@@ -72,7 +76,7 @@ lemma dSlice_eq (x : Samples 4) :
   by_cases hc : (x 2 : ℝ) < z0 (x 0) (x 1)
   · have hc' : x 2 < z0I (x 0) (x 1) := by
       -- `z0I` is a subtype wrapper of `z0`.
-      simpa [z0I] using hc
+      exact_mod_cast hc
     have hL : d ∈ dSlice x ↔ (d : ℝ) < z0 (x 1) (x 2) := by
       simp [dSlice, E, ClassicalAlgorithm.pEvent, recursive3ParamAlg, g, hc]
     have hR :
@@ -89,7 +93,7 @@ lemma dSlice_eq (x : Samples 4) :
               else Set.Ici (z0I (x 1) (x 2))) :=
         hR.symm
   · have hc' : ¬ x 2 < z0I (x 0) (x 1) := by
-      simpa [z0I] using hc
+      exact_mod_cast hc
     have hL : d ∈ dSlice x ↔ z0 (x 1) (x 2) ≤ (d : ℝ) := by
       simp [dSlice, E, ClassicalAlgorithm.pEvent, recursive3ParamAlg, g, hc, not_lt]
     have hR :
@@ -228,7 +232,9 @@ lemma measurableSet_aSlice (b c : Rand) : MeasurableSet (aSlice b c) := by
   have mPair : Measurable fun a : Rand => ((c : ℝ), z0 a b) := by
     have mc : Measurable fun _a : Rand => (c : ℝ) := measurable_const
     have mb : Measurable fun a : Rand => (a, b) := measurable_id.prodMk measurable_const
-    have mz : Measurable fun a : Rand => z0 a b := by simpa using mz0.comp mb
+    have mz : Measurable fun a : Rand => z0 a b := by
+      change Measurable (fun a : Rand => (fun ab : Rand × Rand => z0 ab.1 ab.2) (a, b))
+      exact mz0.comp mb
     exact mc.prodMk mz
   have hopen : IsOpen {p : ℝ × ℝ | p.1 < p.2} := isOpen_lt continuous_fst continuous_snd
   have hmeas : MeasurableSet ({p : ℝ × ℝ | p.1 < p.2} : Set (ℝ × ℝ)) := hopen.measurableSet

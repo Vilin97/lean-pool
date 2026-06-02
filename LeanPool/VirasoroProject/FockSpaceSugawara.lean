@@ -16,7 +16,7 @@ construction.
 
 ## Main definitions
 
-* `sugawaraRepresentation_of_module_uea_heisenbergAlgebra`: A variant of the Sugawara construction
+* `sugawaraRepresentationOfModuleUeaHeisenbergAlgebra`: A variant of the Sugawara construction
   where the hypothesis is that the space is a module over the universal enveloping algebra of
   the Heisenberg algebra with local truncation condition.
 * `ChargedFockSpace.sugawaraRepresentation`: The representation of Virasoro algebra with
@@ -89,7 +89,7 @@ open HeisenbergAlgebra Filter in
 On a module over the universal enveloping algebra of the Heisenberg algebra in which the Heisenberg
 algebra acts locally truncatedly (and the central element `k` acts as `1`), we get a representation
 of the Virasoro algebra with central charge `c = 1` by the Sugawara construction. -/
-noncomputable def sugawaraRepresentation_of_module_uea_heisenbergAlgebra
+noncomputable def sugawaraRepresentationOfModuleUeaHeisenbergAlgebra
     (htrunc : ∀ (v : V), ∀ᶠ (k : ℤ) in atTop, ιUEA 𝕜 (jgen 𝕜 k) • v = 0)
     (hc : ∀ (v : V), (ιUEA 𝕜 (kgen 𝕜)) • v = v) :
     LieAlgebra.Representation 𝕜 𝕜 (VirasoroAlgebra 𝕜)
@@ -107,7 +107,7 @@ lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_lgen_apply
     (htrunc : ∀ (v : V), ∀ᶠ (k : ℤ) in atTop, ιUEA 𝕜 (jgen 𝕜 k) • v = 0)
     (hc : ∀ (v : V), ιUEA 𝕜 (kgen 𝕜) • v = v)
     (n : ℤ) (v : ModuleOfModuleAlgebra 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V) :
-    sugawaraRepresentation_of_module_uea_heisenbergAlgebra 𝕜 htrunc hc (.lgen 𝕜 n) v =
+    sugawaraRepresentationOfModuleUeaHeisenbergAlgebra 𝕜 htrunc hc (.lgen 𝕜 n) v =
       (2 : 𝕜)⁻¹ • ModuleOfModuleAlgebra.mkAddHom 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V (
           ((∑ᶠ k ≥ 0, ιUEA 𝕜 (jgen 𝕜 (n-k)) • ιUEA 𝕜 (jgen 𝕜 k)
                       • ModuleOfModuleAlgebra.unMkAddHom 𝕜 _ V v)
@@ -122,11 +122,11 @@ lemma sugawaraRepresentation_of_module_uea_heisenbergAlgebra_cgen_apply
     (htrunc : ∀ (v : V), ∀ᶠ (k : ℤ) in atTop, ιUEA 𝕜 (jgen 𝕜 k) • v = 0)
     (hc : ∀ (v : V), ιUEA 𝕜 (kgen 𝕜) • v = v)
     (v : ModuleOfModuleAlgebra 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V) :
-    sugawaraRepresentation_of_module_uea_heisenbergAlgebra 𝕜 htrunc hc (.cgen 𝕜) v = v := by
+    sugawaraRepresentationOfModuleUeaHeisenbergAlgebra 𝕜 htrunc hc (.cgen 𝕜) v = v := by
   have key := sugawaraRepresentation_cgen _
     ((fun v ↦ htrunc ((ModuleOfModuleAlgebra.unMkAddHom 𝕜 (𝓤 𝕜 (HeisenbergAlgebra 𝕜)) V) v)))
     (commutator_lsmul_jgen_of_module_uea_heisenbergAlgebra 𝕜 hc)
-  simpa using congr_arg (fun A ↦ A v) key
+  simpa [sugawaraRepresentationOfModuleUeaHeisenbergAlgebra] using congr_arg (fun A ↦ A v) key
 
 end auxiliary
 
@@ -137,7 +137,7 @@ namespace ChargedFockSpace
 -/
 noncomputable def _root_.VirasoroProject.ChargedFockSpace.sugawaraRepresentation (α : 𝕜) :
     LieAlgebra.Representation 𝕜 𝕜 (VirasoroAlgebra 𝕜) (ChargedFockSpace 𝕜 α) :=
-  sugawaraRepresentation_of_module_uea_heisenbergAlgebra 𝕜 (V := ChargedFockSpace 𝕜 α)
+  sugawaraRepresentationOfModuleUeaHeisenbergAlgebra 𝕜 (V := ChargedFockSpace 𝕜 α)
       (fun _ ↦ eventually_jgen_smul_eq_zero ..) (fun _ ↦ ChargedFockSpace.kgen_smul ..)
 
 open HeisenbergAlgebra in
@@ -205,6 +205,9 @@ lemma _root_.VirasoroProject.ChargedFockSpace.sugawaraRepresentation_lgen_pos_ap
 @[simp] lemma _root_.VirasoroProject.ChargedFockSpace.sugawaraRepresentation_cgen_apply
     (α : 𝕜) (v : ChargedFockSpace 𝕜 α) :
     sugawaraRepresentation 𝕜 α (.cgen 𝕜) v = v := by
+  change (sugawaraRepresentationOfModuleUeaHeisenbergAlgebra 𝕜
+    (fun x ↦ eventually_jgen_smul_eq_zero 𝕜 α x)
+    (fun x ↦ ChargedFockSpace.kgen_smul 𝕜 α x) (.cgen 𝕜)) v = v
   simpa using sugawaraRepresentation_of_module_uea_heisenbergAlgebra_cgen_apply ..
 
 noncomputable instance _root_.VirasoroProject.ChargedFockSpace.instModuleUEAVirasoroAlgebra
