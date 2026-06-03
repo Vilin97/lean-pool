@@ -10,7 +10,19 @@ import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.MeasureTheory.Constructions.Pi
 import Mathlib.MeasureTheory.Constructions.UnitInterval
 import Mathlib.Order.Interval.Set.Disjoint
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
+/-!
+# LeanPool.TwoColoringOneRound.SimpleBounds
+-/
 
 namespace Distributed2Coloring
 
@@ -62,7 +74,11 @@ noncomputable def simpleUpperAlg : ClassicalAlgorithm where
       measurable_threshold.comp (measurable_fst.comp measurable_snd)
     have h2 : Measurable fun abc : Rand × Rand × Rand => threshold abc.2.2 :=
       measurable_threshold.comp (measurable_snd.comp measurable_snd)
-    simpa using measurable_g.comp (h0.prodMk (h1.prodMk h2))
+    exact show Measurable
+        ((fun t : Color × Color × Color => g t.1 t.2.1 t.2.2) ∘
+          fun abc : Rand × Rand × Rand =>
+            (threshold abc.1, threshold abc.2.1, threshold abc.2.2)) from
+      measurable_g.comp (h0.prodMk (h1.prodMk h2))
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def side (b : Color) : Set Rand :=
@@ -313,7 +329,8 @@ lemma measurable_nodeColor (alg : ClassicalAlgorithm) (i : Fin 5) :
         Samples 5 → Rand × Rand × Rand) :=
     (measurable_pi_apply (i - 1)).prodMk
       ((measurable_pi_apply i).prodMk (measurable_pi_apply (i + 1)))
-  simpa [nodeColor] using alg.measurable_f.comp htriple
+  exact show Measurable (alg.f ∘ fun x : Samples 5 => (x (i - 1), x i, x (i + 1))) from
+    alg.measurable_f.comp htriple
 
 lemma measurableSet_edgeEvent (alg : ClassicalAlgorithm) (i : Fin 5) :
     MeasurableSet (edgeEvent alg i) := by

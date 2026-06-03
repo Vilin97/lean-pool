@@ -6,6 +6,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 import LeanPool.DirectedTopologyLean4.Dipath
 import LeanPool.DirectedTopologyLean4.DTop
 
+/-!
+# LeanPool.DirectedTopologyLean4.Interpolate
+-/
+
 /-
   This file contains definitions about interpolating points in the directed unit interval
   and contains conditions about when interpolating gives directed maps.
@@ -48,12 +52,12 @@ lemma interp_const_le_of_le_of_le {a b T₀ T₁ : I} (hab : a ≤ b) (hT : T₀
   nlinarith
 
 /-- The continuous map `t ↦ (1 - t) * a + t * b` interpolating between `a` and `b` in `I`. -/
-def interpolate_const (a b : I) : C(I, I) where
+def interpolateConst (a b : I) : C(I, I) where
   toFun := fun t => ⟨_, interp_mem_I t a b⟩
 
-/-- The directed-map version of `interpolate_const` when `a ≤ b`. -/
-def directed_interpolate_const {a b : I} (h : a ≤ b) : D(I,I) where
-  toContinuousMap := interpolate_const a b
+/-- The directed-map version of `interpolateConst` when `a ≤ b`. -/
+def directedInterpolateConst {a b : I} (h : a ≤ b) : D(I,I) where
+  toContinuousMap := interpolateConst a b
   directed_toFun := fun _ _ _ hγ _ _ hxy => interp_const_le_of_le_of_le h (hγ hxy)
 
 variable (f g : C(I, I))

@@ -11,8 +11,21 @@ import Mathlib.MeasureTheory.Covering.VitaliFamily
 import Mathlib.MeasureTheory.Measure.Doubling
 import Mathlib.MeasureTheory.Measure.Hausdorff
 import Mathlib.MeasureTheory.OuterMeasure.Basic
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.SardMoreira.UnifDoublingCover
+
+/-!
+# LeanPool.SardMoreira.OuterMeasureDeriv
+-/
 
 namespace MeasureTheory.Measure
 
@@ -223,7 +236,8 @@ lemma outerMeasure_null_of_forall_le_mul_ae_null {μ : Measure α} [SigmaFinite 
         simpa [hx.2.out] using h x hx.1
       _ = 0 := zero_mul _
   · set t := s \ {x | C x = 0}
-    have hμt : μ t = 0 := by simpa [t, ae_iff] using hC
+    have hμt : μ t = 0 := by
+      simpa [t, ae_iff, Set.diff_eq, Set.compl_setOf, Set.inter_def, Set.mem_setOf_eq] using hC
     calc
       ν t = ν (⋃ n : ℕ, {x ∈ t | C x ≤ n}) := by
         congr with x

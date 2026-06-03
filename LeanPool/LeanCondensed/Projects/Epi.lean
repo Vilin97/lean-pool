@@ -128,7 +128,7 @@ lemma regularLift_unique {X Y : LightProfinite} (π : X ⟶ Y) [EffectiveEpi π]
   exact Epi.left_cancellation _ _ hm
 
 /-- The `regular` cofork is a colimit. -/
-noncomputable abbrev regular_IsColimit {X Y : LightProfinite} (π : X ⟶ Y)
+noncomputable abbrev regularIsColimit {X Y : LightProfinite} (π : X ⟶ Y)
     [EffectiveEpi π] : IsColimit (regular π) :=
   Cofork.IsColimit.mk _ (regularLift π) (regularLift_comp π) (regularLift_unique π)
 
@@ -137,7 +137,7 @@ in `LightCondSet`. -/
 noncomputable def explicitRegularIsColimit {X Y : LightProfinite} (π : X ⟶ Y) [hepi : Epi π] :
     IsColimit (regular π) := by
   rw [LightProfinite.epi_iff_surjective, ← LightProfinite.effectiveEpi_iff_surjective] at hepi
-  exact regular_IsColimit π
+  exact regularIsColimit π
 
 noncomputable instance {X Y : LightProfinite} (π : X ⟶ Y) [EffectiveEpi π] :
     IsRegularEpi (lightProfiniteToLightCondSet.map π) := ⟨⟨{
@@ -147,7 +147,7 @@ noncomputable instance {X Y : LightProfinite} (π : X ⟶ Y) [EffectiveEpi π] :
   w := by
     rw [← lightProfiniteToLightCondSet.map_comp, ← lightProfiniteToLightCondSet.map_comp,
       CompHausLike.pullback.condition]
-  isColimit := regular_IsColimit π }⟩⟩
+  isColimit := regularIsColimit π }⟩⟩
 
 instance : lightProfiniteToLightCondSet.PreservesEffectiveEpis where
   preserves _ _ := inferInstance

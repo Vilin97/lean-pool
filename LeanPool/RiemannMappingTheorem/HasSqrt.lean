@@ -5,24 +5,28 @@ Authors: Vincent Beffara
 -/
 import LeanPool.RiemannMappingTheorem.Cindex
 
+/-!
+# LeanPool.RiemannMappingTheorem.HasSqrt
+-/
+
 open Set Complex Metric Topology
 
 variable {z z₀ : ℂ} {U : Set ℂ}
 
-/-- `has_sqrt U` : every nowhere-zero holomorphic function on `U` has a
+/-- `hasSqrt U` : every nowhere-zero holomorphic function on `U` has a
 holomorphic square root there. -/
-def has_sqrt (U : Set ℂ) : Prop :=
+def hasSqrt (U : Set ℂ) : Prop :=
   ∀ (f : ℂ → ℂ), (∀ z ∈ U, f z ≠ 0) → DifferentiableOn ℂ f U →
   ∃ g, DifferentiableOn ℂ g U ∧ EqOn f (g ^ 2) U
 
-/-- `has_primitives U` : every holomorphic function on `U` has a
+/-- `hasPrimitives U` : every holomorphic function on `U` has a
 holomorphic primitive there. -/
-def has_primitives (U : Set ℂ) : Prop :=
+def hasPrimitives (U : Set ℂ) : Prop :=
   ∀ f : ℂ → ℂ, DifferentiableOn ℂ f U → ∃ g : ℂ → ℂ, DifferentiableOn ℂ g U ∧ EqOn (deriv g) f U
 
-/-- `has_logs U` : every nowhere-zero holomorphic function on `U` has a
+/-- `hasLogs U` : every nowhere-zero holomorphic function on `U` has a
 holomorphic logarithm there. -/
-def has_logs (U : Set ℂ) : Prop :=
+def hasLogs (U : Set ℂ) : Prop :=
   ∀ f : ℂ → ℂ, DifferentiableOn ℂ f U → (∀ z ∈ U, f z ≠ 0) →
   ∃ g : ℂ → ℂ, DifferentiableOn ℂ g U ∧ EqOn f (exp ∘ g) U
 
@@ -62,15 +66,15 @@ lemma EqOn_of_EqOn_deriv {f g : ℂ → ℂ} (hU : IsOpen U) (hU' : IsPreconnect
     rfl
   exact EqOn_zero_of_deriv_eq_zero hU hU' (hf.sub hg) h2 hz₀ (by simp [hfgz₀]) hz
 
-lemma has_logs.has_sqrt (h : has_logs U) : has_sqrt U := by
+lemma hasLogs.hasSqrt (h : hasLogs U) : hasSqrt U := by
   rintro f hfz hf
   obtain ⟨l, hl, hlf⟩ := h f hf hfz
   refine ⟨fun z => exp (l z / 2), differentiable_exp.comp_differentiableOn (hl.div_const _),
     fun z hz => ?_⟩
   simpa [pow_two, ← exp_add] using hlf hz
 
-lemma has_primitives.has_logs (hp : has_primitives U) (hU : IsOpen U) (hU' : IsPreconnected U) :
-    has_logs U := by
+lemma hasPrimitives.hasLogs (hp : hasPrimitives U) (hU : IsOpen U) (hU' : IsPreconnected U) :
+    hasLogs U := by
   by_cases h : U = ∅
   case pos => exact fun f => by simp [h, DifferentiableOn]
   case neg =>

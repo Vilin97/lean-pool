@@ -118,7 +118,6 @@ lemma tail_sum_antitone (y y' : ℕ) (h : y ≤ y') :
   · intro ⟨a, ha⟩ ⟨b, hb⟩ hab
     have : a = b := by
       have := congrArg Subtype.val hab
-      simp only at this
       exact this
     exact Subtype.ext this
   · intro c _

@@ -7,6 +7,8 @@ import LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
 import LeanPool.DirectedTopologyLean4.Fraction
 import LeanPool.DirectedTopologyLean4.FractionEqualities
 
+/-! ### General -/
+
 /-
   This file contains many lemmas about relations that the parts of a split path satisfy.
 -/
@@ -26,7 +28,6 @@ namespace SplitProperties
 --TODO: Rework some of these statement to make them more general: that should make proving the
 -- specfic versions easier.
 
-/-! ### General -/
 
 lemma firstPart_cast {x₀' x₁' : X} (γ : Dipath x₀ x₁) (hx₀ : x₀' = x₀) (hx₁ : x₁' = x₁) (T : I) :
   (FirstPart (γ.cast hx₀ hx₁) T) = (FirstPart γ T).cast hx₀ rfl := rfl

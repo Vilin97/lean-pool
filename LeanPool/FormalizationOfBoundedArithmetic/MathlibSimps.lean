@@ -18,6 +18,10 @@ import Mathlib.ModelTheory.Complexity
 
 import LeanPool.FormalizationOfBoundedArithmetic.Register
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.MathlibSimps
+-/
+
 open Lean Elab Command
 
 /-- Add existing Mathlib model-theory simp lemmas to the local `delta0_simps` simp set. -/

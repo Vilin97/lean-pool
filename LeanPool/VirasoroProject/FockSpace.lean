@@ -119,45 +119,45 @@ lemma _root_.VirasoroProject.heisenbergTri_lower :
 
 open HeisenbergAlgebra in
 /-- The basis of the Cartan part of the Heisenberg triangular decomposition. -/
-noncomputable def _root_.VirasoroProject.heisenbergTri_cartan_basis :
+noncomputable def _root_.VirasoroProject.heisenbergTriCartanBasis :
     Basis ({none, some 0} : Set (Option ℤ)) 𝕜 (heisenbergTri 𝕜).cartan :=
-  TriangularDecomposition.ofBasis.basis_part (HeisenbergAlgebra.basisJK 𝕜) indexTri
+  TriangularDecomposition.ofBasis.basisPart (HeisenbergAlgebra.basisJK 𝕜) indexTri
     pairwise_disjoint_indexTri iUnion_indexTri 0
 
 /-- The highest weight of Heisenberg algebra determined by charge `α` (`J₀`-eigenvalue).
 The `K`-eigenvalue is by convention normalized to `1` by default. -/
 noncomputable def _root_.VirasoroProject.HeisenbergAlgebra.hw (α : 𝕜) :
     (heisenbergTri 𝕜).cartan →ₗ[𝕜] 𝕜 :=
-  (heisenbergTri_cartan_basis 𝕜).constr (M' := 𝕜) 𝕜 (fun i ↦ if i.val = none then 1 else α)
+  (heisenbergTriCartanBasis 𝕜).constr (M' := 𝕜) 𝕜 (fun i ↦ if i.val = none then 1 else α)
 
 /-- The Heisenberg generator `K` as an element of the Cartan subalgebra. -/
-noncomputable def _root_.VirasoroProject.heisenbergTri_kgen : (heisenbergTri 𝕜).part 0 :=
+noncomputable def _root_.VirasoroProject.heisenbergTriKgen : (heisenbergTri 𝕜).part 0 :=
   ⟨.kgen 𝕜, Submodule.mem_span_of_mem (by simp [indexTri])⟩
 
 /-- The Heisenberg generator `J₀` as an element of the Cartan subalgebra. -/
-noncomputable def _root_.VirasoroProject.heisenbergTri_jzero : (heisenbergTri 𝕜).part 0 :=
+noncomputable def _root_.VirasoroProject.heisenbergTriJzero : (heisenbergTri 𝕜).part 0 :=
   ⟨.jgen 𝕜 0, Submodule.mem_span_of_mem (by simp [indexTri])⟩
 
 @[simp] lemma _root_.VirasoroProject.heisenbergTri_kgen_val
-    : (heisenbergTri_kgen 𝕜).val = .kgen 𝕜 := rfl
+    : (heisenbergTriKgen 𝕜).val = .kgen 𝕜 := rfl
 @[simp] lemma _root_.VirasoroProject.heisenbergTri_jzero_val
-    : (heisenbergTri_jzero 𝕜).val = .jgen 𝕜 0 := rfl
+    : (heisenbergTriJzero 𝕜).val = .jgen 𝕜 0 := rfl
 
 open HeisenbergAlgebra in
 lemma _root_.VirasoroProject.heisenbergTri_cartan_basis_none_eq_kgen :
-    (heisenbergTri_cartan_basis 𝕜) ⟨none, Set.mem_insert none {some 0}⟩ = heisenbergTri_kgen 𝕜 := by
+    (heisenbergTriCartanBasis 𝕜) ⟨none, Set.mem_insert none {some 0}⟩ = heisenbergTriKgen 𝕜 := by
   ext
-  simp only [heisenbergTri_cartan_basis, TriangularDecomposition.ofBasis.basis_part, indexTri,
+  simp only [heisenbergTriCartanBasis, TriangularDecomposition.ofBasis.basisPart, indexTri,
              heisenbergTri_kgen_val]
   convert (basisJK 𝕜).basis_submodule_span_apply {none, some 0} ⟨none, Set.mem_insert none {some 0}⟩
   simp
 
 open HeisenbergAlgebra in
 lemma _root_.VirasoroProject.heisenbergTri_cartan_basis_some_eq_jzero :
-    (heisenbergTri_cartan_basis 𝕜) ⟨some 0, by exact Set.mem_insert_of_mem none rfl⟩
-      = heisenbergTri_jzero 𝕜 := by
+    (heisenbergTriCartanBasis 𝕜) ⟨some 0, by exact Set.mem_insert_of_mem none rfl⟩
+      = heisenbergTriJzero 𝕜 := by
   ext
-  simp only [heisenbergTri_cartan_basis, TriangularDecomposition.ofBasis.basis_part, indexTri,
+  simp only [heisenbergTriCartanBasis, TriangularDecomposition.ofBasis.basisPart, indexTri,
              heisenbergTri_jzero_val]
   convert (basisJK 𝕜).basis_submodule_span_apply {none, some 0}
           ⟨some 0, Set.mem_insert_of_mem none rfl⟩
@@ -178,7 +178,7 @@ lemma _root_.VirasoroProject.heisenbergTri_jgen_pos_mem_upper {n : ℤ} (n_pos :
   exact (Set.mem_image ..).mpr ⟨n, ⟨n_pos, rfl⟩⟩
 
 lemma _root_.VirasoroProject.HeisenbergAlgebra.hw_apply_kgen (α : 𝕜) :
-    HeisenbergAlgebra.hw 𝕜 α (heisenbergTri_kgen 𝕜) = 1 := by
+    HeisenbergAlgebra.hw 𝕜 α (heisenbergTriKgen 𝕜) = 1 := by
   rw [← heisenbergTri_cartan_basis_none_eq_kgen]
   simp only [HeisenbergAlgebra.hw, Basis.constr_apply_fintype]
   simp only [Basis.equivFun_self, smul_eq_mul, mul_ite, ite_mul, one_mul, zero_mul]
@@ -189,7 +189,7 @@ lemma _root_.VirasoroProject.HeisenbergAlgebra.hw_apply_kgen (α : 𝕜) :
   · simp
 
 lemma _root_.VirasoroProject.HeisenbergAlgebra.hw_apply_jzero (α : 𝕜) :
-    HeisenbergAlgebra.hw 𝕜 α (heisenbergTri_jzero 𝕜) = α := by
+    HeisenbergAlgebra.hw 𝕜 α (heisenbergTriJzero 𝕜) = α := by
   rw [← heisenbergTri_cartan_basis_some_eq_jzero]
   simp only [HeisenbergAlgebra.hw, Basis.constr_apply_fintype]
   simp only [Basis.equivFun_self, smul_eq_mul, mul_ite, ite_mul, one_mul, zero_mul]
@@ -229,7 +229,7 @@ lemma _root_.VirasoroProject.ChargedFockSpace.kgen_vacuum (α : 𝕜) :
       ChargedFockSpace.vacuum 𝕜 α := by
   have key := TriangularDecomposition.VermaHW.cartan_smul_hwVec
           (HeisenbergAlgebra.hw 𝕜 α) (H := .kgen 𝕜) (heisenbergTri_kgen_mem_cartan 𝕜)
-  rw [← heisenbergTri_kgen, HeisenbergAlgebra.hw_apply_kgen, one_smul] at key
+  rw [← heisenbergTriKgen, HeisenbergAlgebra.hw_apply_kgen, one_smul] at key
   convert key
 
 /-- `J₀ • v = α • v` for all `v` in `ChargedFockSpace 𝕜 α` -/
@@ -257,7 +257,7 @@ instance (α : 𝕜) : HasCharge 𝕜 (ChargedFockSpace 𝕜 α) α :=
   ⟨fun v ↦ ChargedFockSpace.jgen_zero_smul 𝕜 α v⟩
 
 open Filter in
-lemma _root_.VirasoroProject.HeisenbergAlgebra.uea_eventually_commute_jgen
+lemma _root_.VirasoroProject.HeisenbergAlgebra.ueaEventually_commute_jgen
     (a : 𝓤 𝕜 (HeisenbergAlgebra 𝕜)) :
     ∀ᶠ k in atTop, Commute (ιUEA 𝕜 (HeisenbergAlgebra.jgen 𝕜 k)) a := by
   apply UniversalEnvelopingAlgebra.induction 𝕜 _
@@ -305,7 +305,7 @@ lemma _root_.VirasoroProject.ChargedFockSpace.eventually_jgen_smul_eq_zero
       {ChargedFockSpace.vacuum 𝕜 α} := by
     simp [ChargedFockSpace.vacuum_cyclic 𝕜 α]
   obtain ⟨a, hav⟩ := Submodule.mem_span_singleton.mp aux
-  filter_upwards [HeisenbergAlgebra.uea_eventually_commute_jgen _ a, Ioi_mem_atTop 0] with
+  filter_upwards [HeisenbergAlgebra.ueaEventually_commute_jgen _ a, Ioi_mem_atTop 0] with
     k hk k_pos
   -- `calcify`?
   rw [← hav, ← mul_smul]

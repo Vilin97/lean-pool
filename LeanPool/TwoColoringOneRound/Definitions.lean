@@ -81,11 +81,11 @@ lemma measurable_sndTriple :
 
 lemma measurable_nodeColor₀ (alg : ClassicalAlgorithm) :
     Measurable fun x : Samples 4 => alg.f (x 0, x 1, x 2) := by
-  simpa using alg.measurable_f.comp measurable_fstTriple
+  simpa [Function.comp_def] using alg.measurable_f.comp measurable_fstTriple
 
 lemma measurable_nodeColor₁ (alg : ClassicalAlgorithm) :
     Measurable fun x : Samples 4 => alg.f (x 1, x 2, x 3) := by
-  simpa using alg.measurable_f.comp measurable_sndTriple
+  simpa [Function.comp_def] using alg.measurable_f.comp measurable_sndTriple
 
 lemma measurableSet_pEvent (alg : ClassicalAlgorithm) : MeasurableSet (pEvent alg) := by
   classical

@@ -5,6 +5,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 import LeanPool.DirectedTopologyLean4.DirectedSpace
 
+/-!
+# LeanPool.DirectedTopologyLean4.DirectedMap
+-/
+
 /-
   # Definition of directed maps
   This file defines the directed map between two directed spaces `X` and `Y` :

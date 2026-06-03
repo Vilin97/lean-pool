@@ -7,6 +7,10 @@ Authors: Junqi Liu, Jujian Zhang
 import LeanPool.Zeta3Irrational.Integral
 import LeanPool.Zeta3Irrational.D
 
+/-!
+# LeanPool.Zeta3Irrational.LinearForm
+-/
+
 namespace LeanPool.Zeta3Irrational
 
 open scoped Nat
@@ -21,7 +25,7 @@ lemma J_rr_linear (r : ℕ) :
       J r r = 2 * ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 -
         a / (d (Finset.Icc 1 r)) ^ 3 := by
   if h : r = 0 then
-    rw [h, zeta_3]; use 0; simp
+    rw [h, zeta3]; use 0; simp
   else
     rw [J_rr]
     simp only [sub_right_inj]
@@ -122,7 +126,7 @@ lemma multi_integral_sum_comm (c : ℕ → ℤ) :
       -(x.1 * x.2).log / (1 - x.1 * x.2) * ↑(c x_1) * x.1 ^ x_1 *
         ↑(c x_2) * x.2 ^ x_2 := by
       congr! 1 with a _
-      rw [← MeasureTheory.integral_finset_sum]
+      rw [← MeasureTheory.integral_finsetSum]
       intro i _
       have h :
           (fun (x : ℝ × ℝ) ↦ -Real.log (x.1 * x.2) / (1 - x.1 * x.2) *
@@ -137,9 +141,9 @@ lemma multi_integral_sum_comm (c : ℕ → ℤ) :
       ∑ x_1 ∈ Finset.range (n + 1), ∑ x_2 ∈ Finset.range (n + 1),
       -(x.1 * x.2).log / (1 - x.1 * x.2) * ↑(c x_1) * x.1 ^ x_1 *
         ↑(c x_2) * x.2 ^ x_2 := by
-      rw [← MeasureTheory.integral_finset_sum]
+      rw [← MeasureTheory.integral_finsetSum]
       intro i _
-      apply MeasureTheory.integrable_finset_sum
+      apply MeasureTheory.integrable_finsetSum
       intro j _
       have h :
           (fun (x : ℝ × ℝ) ↦ -Real.log (x.1 * x.2) / (1 - x.1 * x.2) *

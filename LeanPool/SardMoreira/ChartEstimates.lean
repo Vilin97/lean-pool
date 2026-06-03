@@ -7,6 +7,10 @@ Authors: Yury G. Kudryashov
 import Mathlib.MeasureTheory.Measure.Hausdorff
 import LeanPool.SardMoreira.Chart
 
+/-!
+# LeanPool.SardMoreira.ChartEstimates
+-/
+
 open scoped unitInterval Topology NNReal
 open Asymptotics Filter Set Metric Function MeasureTheory Measure
 

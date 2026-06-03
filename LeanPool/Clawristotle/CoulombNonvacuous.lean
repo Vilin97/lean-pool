@@ -337,10 +337,10 @@ lemma integral_equilibriumMaxwellian (ρ T : ℝ) (hT : 0 < T) :
     - (8) hGradBound: ∂eM/∂vᵢ = -(vᵢ/T)·eM, bound |vᵢ| ≤ 1+‖v‖  ✓
     - (9) hVlasov: A(z)·z = 0 (projection annihilation) ⇒ integrand vanishes  ✓
     - (10) hAmpere: ∇×0 = 0, ∫ vᵢ eM dv = 0 by odd symmetry  ✓
-    - (11) hGauss: ∇·0 = 0 = ∫eM - ρ_ion (simp closes)  ✓
+    - (11) hGauss: ∇·0 = 0 = ∫eM - ρIon (simp closes)  ✓
     - (12) hDivB: ∇·0 = 0  ✓ -/
-theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
-    (_hν : 0 < ν) (hT : 0 < T) (hρ_ion : 0 < ρ_ion) :
+theorem CoulombConcreteTheorem42_nonvacuous (ν T ρIon : ℝ)
+    (_hν : 0 < ν) (hT : 0 < T) (hρ_ion : 0 < ρIon) :
     ∃ (f : Torus3 → (Fin 3 → ℝ) → ℝ) (E B : Torus3 → Fin 3 → ℝ),
     (∀ x v, 0 < f x v) ∧                                                  -- (3)
     (∀ x, ContDiff ℝ 3 (f x)) ∧                                           -- (4)
@@ -353,11 +353,11 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
       dotProduct (E x + cross v (B x)) (vGrad (f x) v) =
       ν * LandauOperator coulombKernel (f x) v) ∧                         -- (9)
     (∀ x, torusCurlX B x = fun i => ∫ v, v i * f x v) ∧                  -- (10)
-    (∀ x, torusDivX E x = (∫ v, f x v) - ρ_ion) ∧                        -- (11)
+    (∀ x, torusDivX E x = (∫ v, f x v) - ρIon) ∧                        -- (11)
     (∀ x, torusDivX B x = 0) := by                                        -- (12)
-  refine ⟨fun _ => equilibriumMaxwellian ρ_ion T,
+  refine ⟨fun _ => equilibriumMaxwellian ρIon T,
          fun _ => 0, fun _ => 0,
-         fun _ v => equilibriumMaxwellian_pos ρ_ion T hρ_ion hT v,  -- (3) ✓
+         fun _ v => equilibriumMaxwellian_pos ρIon T hρ_ion hT v,  -- (3) ✓
          ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   -- (4) hf_smooth_v: equilibriumMaxwellian is C^∞
   · intro _
@@ -382,41 +382,41 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
     · -- hDecay: ‖iteratedFDeriv ℝ k eM v‖ * (1+‖v‖)^N ≤ C
       intro N k hk_le
       obtain ⟨C, hC, hbound⟩ :=
-        equilibriumMaxwellian_schwartz_decay ρ_ion T hρ_ion hT N k
+        equilibriumMaxwellian_schwartz_decay ρIon T hρ_ion hT N k
       exact ⟨C, hC, fun _ v => hbound v⟩
     · -- hGradDecay: spatial gradient of constant function is 0
       intro N i
       refine ⟨1, one_pos, fun x v => ?_⟩
       simp only [torusGradX, periodicLift]
-      have : (fun y => equilibriumMaxwellian ρ_ion T v) ∘ torusMk =
-          fun _ => equilibriumMaxwellian ρ_ion T v := by ext; rfl
+      have : (fun y => equilibriumMaxwellian ρIon T v) ∘ torusMk =
+          fun _ => equilibriumMaxwellian ρIon T v := by ext; rfl
       rw [this]; simp
   -- (8) hGradBound: |∂eM/∂vᵢ| = |vᵢ/T| · eM ≤ (1+‖v‖)/T · eM
   · refine ⟨1 / T, 1, fun _ v i => ?_⟩
-    rw [fderiv_equilibriumMaxwellian ρ_ion T hT v i]
-    have hpos := equilibriumMaxwellian_pos ρ_ion T hρ_ion hT v
+    rw [fderiv_equilibriumMaxwellian ρIon T hT v i]
+    have hpos := equilibriumMaxwellian_pos ρIon T hρ_ion hT v
     rw [abs_mul, abs_neg, abs_div, abs_of_pos hT, abs_of_pos hpos, pow_one]
     have hvi : |v i| ≤ 1 + ‖v‖ :=
       le_trans (norm_le_pi_norm v i) (le_add_of_nonneg_left (by norm_num))
-    calc |v i| / T * equilibriumMaxwellian ρ_ion T v
-        ≤ (1 + ‖v‖) / T * equilibriumMaxwellian ρ_ion T v := by
+    calc |v i| / T * equilibriumMaxwellian ρIon T v
+        ≤ (1 + ‖v‖) / T * equilibriumMaxwellian ρIon T v := by
           apply mul_le_mul_of_nonneg_right
           · exact div_le_div_of_nonneg_right hvi hT.le
           · exact hpos.le
-      _ = 1 / T * (1 + ‖v‖) * equilibriumMaxwellian ρ_ion T v := by ring
+      _ = 1 / T * (1 + ‖v‖) * equilibriumMaxwellian ρIon T v := by ring
   -- (9) hVlasov: Vlasov equation (Maxwellian in kernel of Landau operator)
   · intro x v
     -- Spatial gradient of constant is 0
     have hgrad_zero : ∀ i : Fin 3,
-        torusGradX (fun y => equilibriumMaxwellian ρ_ion T v) x i = 0 := by
+        torusGradX (fun y => equilibriumMaxwellian ρIon T v) x i = 0 := by
       intro i; simp only [torusGradX, periodicLift]
-      have : (fun y => equilibriumMaxwellian ρ_ion T v) ∘ torusMk =
-          fun _ => equilibriumMaxwellian ρ_ion T v := by ext; rfl
+      have : (fun y => equilibriumMaxwellian ρIon T v) ∘ torusMk =
+          fun _ => equilibriumMaxwellian ρIon T v := by ext; rfl
       rw [this]; simp
     -- LandauOperator eM v = 0 because integrand vanishes
-    suffices h : LandauOperator coulombKernel (equilibriumMaxwellian ρ_ion T) v = 0 by
+    suffices h : LandauOperator coulombKernel (equilibriumMaxwellian ρIon T) v = 0 by
       have hd : v ⬝ᵥ (fun i => torusGradX (fun y =>
-          equilibriumMaxwellian ρ_ion T v) x i) = 0 := by
+          equilibriumMaxwellian ρIon T v) x i) = 0 := by
         simp only [dotProduct, hgrad_zero, mul_zero, Finset.sum_const_zero]
       simp only [hd, h, mul_zero, zero_add]
       unfold cross; simp [dotProduct, vGrad, Fin.sum_univ_three, mul_zero,
@@ -426,23 +426,23 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
     unfold LandauOperator vDiv
     -- Show the flux function is identically 0
     have hflux_zero : ∀ v', (∫ w, mulVec (landauMatrix coulombKernel (v' - w))
-        (equilibriumMaxwellian ρ_ion T w • vGrad (equilibriumMaxwellian ρ_ion T) v' -
-         equilibriumMaxwellian ρ_ion T v' • vGrad (equilibriumMaxwellian ρ_ion T) w)) = 0 := by
+        (equilibriumMaxwellian ρIon T w • vGrad (equilibriumMaxwellian ρIon T) v' -
+         equilibriumMaxwellian ρIon T v' • vGrad (equilibriumMaxwellian ρIon T) w)) = 0 := by
       intro v'
       -- Show integrand is 0 pointwise
       have h_integrand : ∀ w, mulVec (landauMatrix coulombKernel (v' - w))
-          (equilibriumMaxwellian ρ_ion T w • vGrad (equilibriumMaxwellian ρ_ion T) v' -
-           equilibriumMaxwellian ρ_ion T v' • vGrad (equilibriumMaxwellian ρ_ion T) w) = 0 := by
+          (equilibriumMaxwellian ρIon T w • vGrad (equilibriumMaxwellian ρIon T) v' -
+           equilibriumMaxwellian ρIon T v' • vGrad (equilibriumMaxwellian ρIon T) w) = 0 := by
         intro w
         -- The bracket vector = (-eM(v')*eM(w)/T) • (v' - w)
-        have hbracket : equilibriumMaxwellian ρ_ion T w • vGrad (equilibriumMaxwellian ρ_ion T) v' -
-            equilibriumMaxwellian ρ_ion T v' • vGrad (equilibriumMaxwellian ρ_ion T) w =
-            (-(equilibriumMaxwellian ρ_ion T v' * equilibriumMaxwellian ρ_ion T w / T)) •
+        have hbracket : equilibriumMaxwellian ρIon T w • vGrad (equilibriumMaxwellian ρIon T) v' -
+            equilibriumMaxwellian ρIon T v' • vGrad (equilibriumMaxwellian ρIon T) w =
+            (-(equilibriumMaxwellian ρIon T v' * equilibriumMaxwellian ρIon T w / T)) •
               (v' - w) := by
           ext i
           simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul, vGrad,
-            fderiv_equilibriumMaxwellian ρ_ion T hT v' i,
-            fderiv_equilibriumMaxwellian ρ_ion T hT w i]
+            fderiv_equilibriumMaxwellian ρIon T hT v' i,
+            fderiv_equilibriumMaxwellian ρIon T hT w i]
           ring
         rw [hbracket, Matrix.mulVec_smul, landauMatrix_mulVec_self, smul_zero]
       simp [h_integrand]
@@ -466,7 +466,7 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
       simp
     simp only [hzero, sub_self]
     -- ∫ vᵢ * eM = 0 by odd symmetry of Gaussian
-    have hint := integral_coord_mul_equilibriumMaxwellian_eq_zero ρ_ion T i
+    have hint := integral_coord_mul_equilibriumMaxwellian_eq_zero ρIon T i
     fin_cases i <;> simp_all [Matrix.cons_val_zero, Matrix.cons_val_one]
   -- (11) hGauss: Gauss's law
   · intro x
@@ -480,8 +480,8 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
           (fun _ => (0 : ℝ)) from by ext; simp]
       simp
     simp only [hzero, Finset.sum_const_zero]
-    -- ∫ eM(v) dv = ρ_ion (Gaussian normalization)
-    linarith [integral_equilibriumMaxwellian ρ_ion T hT]
+    -- ∫ eM(v) dv = ρIon (Gaussian normalization)
+    linarith [integral_equilibriumMaxwellian ρIon T hT]
   -- (12) hDivB: divergence of B = 0
   · intro x
     simp only [torusDivX, periodicLift]
@@ -504,25 +504,25 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρ_ion : ℝ)
 
     This closes the loop: the theorem is non-vacuous AND the conclusion
     actually holds for a concrete physical configuration. -/
-theorem CoulombConcreteTheorem42_roundtrip (ν T ρ_ion : ℝ)
-    (hν : 0 < ν) (hT : 0 < T) (hρ_ion : 0 < ρ_ion) :
+theorem CoulombConcreteTheorem42_roundtrip (ν T ρIon : ℝ)
+    (hν : 0 < ν) (hT : 0 < T) (hρ_ion : 0 < ρIon) :
     ∃ (f : Torus3 → (Fin 3 → ℝ) → ℝ) (E B : Torus3 → Fin 3 → ℝ),
     ∃ (T_eq : ℝ) (B₀ : Fin 3 → ℝ), 0 < T_eq ∧
-    (∀ x v, f x v = equilibriumMaxwellian ρ_ion T_eq v) ∧
+    (∀ x v, f x v = equilibriumMaxwellian ρIon T_eq v) ∧
     (∀ x, E x = 0) ∧
     (∀ x, B x = B₀) ∧
     (∀ T', 0 < T' →
-      (∀ v, equilibriumMaxwellian ρ_ion T' v =
-        equilibriumMaxwellian ρ_ion T_eq v) →
+      (∀ v, equilibriumMaxwellian ρIon T' v =
+        equilibriumMaxwellian ρIon T_eq v) →
       T' = T_eq) := by
   obtain ⟨f, E, B, hf_pos, hf_sv, hf_sx, hB_s, hSch, hGrad,
          hVlasov, hAmpere, hGauss, hDivB⟩ :=
-    CoulombConcreteTheorem42_nonvacuous ν T ρ_ion hν hT hρ_ion
+    CoulombConcreteTheorem42_nonvacuous ν T ρIon hν hT hρ_ion
   obtain ⟨T_eq, B₀, hT_pos, hf_eq, hE_zero, hB_const⟩ :=
-    CoulombConcreteTheorem42 f E B ν ρ_ion hν hρ_ion hf_pos hf_sv hf_sx
+    CoulombConcreteTheorem42 f E B ν ρIon hν hρ_ion hf_pos hf_sv hf_sx
       hB_s hSch hGrad hVlasov hAmpere hGauss hDivB
   exact ⟨f, E, B, T_eq, B₀, hT_pos, hf_eq, hE_zero, hB_const,
     fun T' hT' h_eq =>
-      equilibriumMaxwellian_T_injective ρ_ion T' T_eq hρ_ion hT' hT_pos h_eq⟩
+      equilibriumMaxwellian_T_injective ρIon T' T_eq hρ_ion hT' hT_pos h_eq⟩
 
 end VML

@@ -71,7 +71,7 @@ theorem realize_is_funct_formula [ModelSets V] {n : ℕ} (s : ℕ → V)
     (xs : Fin n → V) (ϕ : LZFC.BoundedFormula ℕ n) :
     (intIsFunctFormula ϕ).Realize s xs ↔ ExtIsFunctFormula s xs ϕ := by
   unfold intIsFunctFormula ExtIsFunctFormula RelByFormula
-  simp [realize_liftAt']
+  simp [realize_liftAt', realize_fixedSnoc_makeTsN_2]
 
 /-- Make a formula for fv 1 is the image of fv 0 under the relation defined by ϕ. -/
 def intIsImage {n : ℕ} (ϕ : LZFC.BoundedFormula ℕ n) :
@@ -105,7 +105,7 @@ theorem realize_is_image [ModelSets V] {n : ℕ} (s : ℕ → V) (xs : Fin n →
     (ϕ : LZFC.BoundedFormula ℕ n) (a b : V) : (intIsImage ϕ).Realize
     (replaceInitialValues s ![a, b]) xs ↔ ExtIsImage s xs ϕ a b := by
   unfold intIsImage ExtIsImage
-  simp [realize_liftAt']
+  simp [realize_liftAt', realize_fixedSnoc_makeTsN_2]
 
 /-- Model with the Replacement schema. -/
 class ModelReplacement (V : Type u) extends ModelSets V where
@@ -128,7 +128,7 @@ theorem ext_replacement [ModelReplacement V] {n : ℕ} (s : ℕ → V)
   rw [snoc_conv, snoc_conv] at h_b
   use b
   rw [BoundedFormula.realize_replaceFV, realize_liftAt'] at h_b
-  · simpa using h_b
+  · simpa [realize_fixedSnoc_makeTsN_2] using h_b
   · omega
   · omega
 
@@ -151,7 +151,18 @@ theorem int_test [ModelPR V] (s : ℕ → V) (xs : Fin 0 → V) :
     (∀'∃'((intIsImage intIsSingleton).liftAndReplaceFV 2 0
     ![bv'' 0, bv'' 1])).Realize s xs := by
   suffices h : ∀ (a : V), ∃ (b : V), ExtIsImage s xs intIsSingleton a b by
-    simpa [realize_liftAt'] using h
+    suffices h' :
+        ∀ (a : V), ∃ (b : V),
+          ExtIsImage s (fixedSnoc (fixedSnoc xs a) b ∘ fun i => i.addNat 2)
+            intIsSingleton a b by
+      simpa [realize_liftAt', realize_fixedSnoc_makeTsN_2] using h'
+    intro a
+    obtain ⟨b, hb⟩ := h a
+    refine ⟨b, ?_⟩
+    have hxs : (fixedSnoc (fixedSnoc xs a) b ∘ fun i : Fin 0 => i.addNat 2) = xs := by
+      funext i
+      exact Fin.elim0 i
+    simpa [hxs] using hb
   intro a
   exact ext_test s xs a
 

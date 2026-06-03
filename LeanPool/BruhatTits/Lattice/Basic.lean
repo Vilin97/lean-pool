@@ -6,9 +6,8 @@ Authors: Judith Ludwig, Christian Merten
 import LeanPool.BruhatTits.Utils.Matrix
 import LeanPool.BruhatTits.Utils.Misc
 import Mathlib.LinearAlgebra.Dimension.Localization
+import Mathlib.LinearAlgebra.FreeModule.PID
 import Mathlib.Algebra.Group.Action.Pointwise.Set.Finite
-
-open Module
 
 /-!
 # Definition of lattices
@@ -19,6 +18,9 @@ if `M` is finitely generated and it spans `ι → K` as a `K`-module.
 If `R` is a principal ideal domain, any lattice is a free `R`-module of rank cardinality of `ι`.
 
 -/
+
+open Module
+
 
 variable {K : Type*} [Field K] {R : Subring K}
 
@@ -128,7 +130,7 @@ lemma top_le_submodule_span_of_isLattice {κ : Type*} [Finite κ]
     rw [Submodule.mem_span_range_iff_exists_fun] at hv
     obtain ⟨c, hc⟩ := hv
     apply congrArg Subtype.val at hc
-    simp only [AddSubmonoidClass.coe_finset_sum, SetLike.val_smul] at hc
+    simp only [AddSubmonoidClass.coe_finsetSum, SetLike.val_smul] at hc
     rw [← hc]
     apply Submodule.sum_smul_mem
     intro i _

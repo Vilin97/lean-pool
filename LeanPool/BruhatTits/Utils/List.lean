@@ -7,6 +7,10 @@ Authors: Judith Ludwig, Christian Merten
 import Batteries.Data.List.Basic
 import Mathlib.Logic.Function.Basic
 
+/-!
+# LeanPool.BruhatTits.Utils.List
+-/
+
 theorem List.zipWith₃_map {α α' β β' γ γ' δ : Type*} (f : α' → β' → γ' → δ)
     (fa : α → α') (fb : β → β') (fc : γ → γ')
     (la : List α) (lb : List β) (lc : List γ) :

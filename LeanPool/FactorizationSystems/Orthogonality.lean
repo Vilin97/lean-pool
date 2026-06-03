@@ -14,6 +14,10 @@ import Mathlib.CategoryTheory.Iso
 import Mathlib.CategoryTheory.Types.Basic
 import Mathlib.CategoryTheory.Limits.Shapes.BinaryProducts
 
+/-!
+# LeanPool.FactorizationSystems.Orthogonality
+-/
+
 /-
 Given two morphisms l: A ⟶ B and r: X ⟶ Y in a category C, we say that l is left orthogonal to r
 or that r is right orthogonal to l, if for every commuting square of the form
@@ -50,7 +54,7 @@ structure square (A B X Y : C) where
 
 /- The sort of commuting squares in a category C with specified vertical maps -/
 /-- Imported FactorizationSystems declaration. -/
-structure square_completion {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) where
+structure squareCompletion {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) where
   /-- The top horizontal morphism. -/
   top : A ⟶ X
   /-- The bottom horizontal morphism. -/
@@ -59,12 +63,12 @@ structure square_completion {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) where
   comm : l ≫ bot = top ≫ r := by aesop_cat
 
 /-- Imported FactorizationSystems declaration. -/
-infixl:75 " □ " => square_completion
+infixl:75 " □ " => squareCompletion
 
 /- Forgetting the specification of vertical maps -/
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
-def square_of_square_completion
+def squareOfSquareCompletion
     {A B X Y : C} {l : A ⟶ B} {r : X ⟶ Y} (S' : l □ r) :
     square A B X Y where
   left := l
@@ -77,7 +81,7 @@ variable {A B X Y : C} (f : A ⟶ B) (g : X ⟶ Y)
 
 /- The sort of diagonal fillers of a square with specified vertical maps -/
 /-- Imported FactorizationSystems declaration. -/
-structure diagonal_filler
+structure diagonalFiller
     {A B X Y : C} {f : A ⟶ B} {g : X ⟶ Y} (S : f □ g) where
   /-- The diagonal morphism. -/
   map : B ⟶ X
@@ -90,10 +94,10 @@ structure diagonal_filler
 /-- Imported FactorizationSystems declaration. -/
 structure orthogonal {A B X Y : C} (f : A ⟶ B) (g : X ⟶ Y) where
   /-- A chosen diagonal filler for every square. -/
-  diagonal : (S : f □ g) → diagonal_filler S
+  diagonal : (S : f □ g) → diagonalFiller S
   /-- The chosen diagonal filler is unique. -/
   diagonal_unique :
-    (S : f □ g) → (d : diagonal_filler S) → (d' : diagonal_filler S) → d.map = d'.map
+    (S : f □ g) → (d : diagonalFiller S) → (d' : diagonalFiller S) → d.map = d'.map
 
 /- We now start working towards an alternative characterization of orthogonality: morphisms l and r
 are orthogonal iff the commuting square
@@ -111,41 +115,41 @@ are orthogonal iff the commuting square
 
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
-def hom_square_left : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → ((B ⟶ X) ⟶ (A ⟶ X)) :=
+def homSquareLeft : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → ((B ⟶ X) ⟶ (A ⟶ X)) :=
   fun l r =>
     let _keep := r
     TypeCat.ofHom fun f => l ≫ f
 
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
-def hom_square_right : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → ((B ⟶ Y) ⟶ (A ⟶ Y)) :=
+def homSquareRight : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → ((B ⟶ Y) ⟶ (A ⟶ Y)) :=
   fun l r =>
     let _keep := r
     TypeCat.ofHom fun f => l ≫ f
 
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
-def hom_square_top : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → ((B ⟶ X) ⟶ (B ⟶ Y)) :=
+def homSquareTop : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → ((B ⟶ X) ⟶ (B ⟶ Y)) :=
   fun l r =>
     let _keep := l
     TypeCat.ofHom fun f => f ≫ r
 
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
-def hom_square_bot : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → ((A ⟶ X) ⟶ (A ⟶ Y)) :=
+def homSquareBot : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → ((A ⟶ X) ⟶ (A ⟶ Y)) :=
   fun l r =>
     let _keep := l
     TypeCat.ofHom fun f => f ≫ r
 
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
-def hom_square : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) →
+def homSquare : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) →
     square (B ⟶ X) (A ⟶ X) (B ⟶ Y) (A ⟶ Y) := fun l r =>
   {
-    left := hom_square_left l r
-    right := hom_square_right l r
-    top := hom_square_top l r
-    bot := hom_square_bot l r
+    left := homSquareLeft l r
+    right := homSquareRight l r
+    top := homSquareTop l r
+    bot := homSquareBot l r
     comm := by
       ext f
       exact Category.assoc l f r
@@ -153,146 +157,146 @@ def hom_square : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) →
 
 /- The canonical pullback of the cospan given by the right and bottom maps in the hom square -/
 /-- Imported FactorizationSystems declaration. -/
-def hom_cospan_pullback : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → Type v := by
+def homCospanPullback : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → Type v := by
   intro A B X Y l r
-  exact Limits.pullback (hom_square_right l r) (hom_square_bot l r)
+  exact Limits.pullback (homSquareRight l r) (homSquareBot l r)
 
 /- The associated pullback cone -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_cospan_pullback_cone : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) →
-    Limits.PullbackCone (hom_square_right l r) (hom_square_bot l r) := by
+def homCospanPullbackCone : {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) →
+    Limits.PullbackCone (homSquareRight l r) (homSquareBot l r) := by
   intro A B X Y l r
-  exact Limits.pullback.cone (hom_square_right l r) (hom_square_bot l r)
+  exact Limits.pullback.cone (homSquareRight l r) (homSquareBot l r)
 
 
 /- The first projection of the hom pullback -/
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
 noncomputable
-def hom_cospan_pullback_fst {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    (hom_cospan_pullback l r) ⟶ (B ⟶ Y) :=
-  Limits.pullback.fst (hom_square_right l r) (hom_square_bot l r)
+def homCospanPullbackFst {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
+    (homCospanPullback l r) ⟶ (B ⟶ Y) :=
+  Limits.pullback.fst (homSquareRight l r) (homSquareBot l r)
 
 /- The second projection of the hom pullback -/
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
 noncomputable
-def hom_cospan_pullback_snd {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    (hom_cospan_pullback l r) ⟶ (A ⟶ X) :=
-  Limits.pullback.snd (hom_square_right l r) (hom_square_bot l r)
+def homCospanPullbackSnd {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
+    (homCospanPullback l r) ⟶ (A ⟶ X) :=
+  Limits.pullback.snd (homSquareRight l r) (homSquareBot l r)
 
 /- The universal property of the hom pullback -/
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
 noncomputable
-def hom_cospan_pullback_lift {W : Type v} {A B X Y : C}
+def homCospanPullbackLift {W : Type v} {A B X Y : C}
     (l : A ⟶ B) (r : X ⟶ Y) (φ : W ⟶ (B ⟶ Y)) (ψ : W ⟶ (A ⟶ X))
-    (comm : φ ≫ (hom_square_right l r) = ψ ≫ (hom_square_bot l r) := by aesop_cat) :
-    W ⟶ hom_cospan_pullback l r :=
+    (comm : φ ≫ (homSquareRight l r) = ψ ≫ (homSquareBot l r) := by aesop_cat) :
+    W ⟶ homCospanPullback l r :=
   Limits.pullback.lift φ ψ comm
 
 omit HasPullbacks in
 lemma hom_cospan_pullback_lift_fst {W : Type v} {A B X Y : C}
     (l : A ⟶ B) (r : X ⟶ Y) (φ : W ⟶ (B ⟶ Y)) (ψ : W ⟶ (A ⟶ X))
-    (comm : φ ≫ (hom_square_right l r) = ψ ≫ (hom_square_bot l r) := by aesop_cat) :
-    hom_cospan_pullback_lift l r φ ψ comm ≫ hom_cospan_pullback_fst l r = φ :=
+    (comm : φ ≫ (homSquareRight l r) = ψ ≫ (homSquareBot l r) := by aesop_cat) :
+    homCospanPullbackLift l r φ ψ comm ≫ homCospanPullbackFst l r = φ :=
   Limits.pullback.lift_fst φ ψ comm
 
 omit HasPullbacks in
 lemma hom_cospan_pullback_lift_snd {W : Type v} {A B X Y : C}
     (l : A ⟶ B) (r : X ⟶ Y) (φ : W ⟶ (B ⟶ Y)) (ψ : W ⟶ (A ⟶ X))
-    (comm : φ ≫ (hom_square_right l r) = ψ ≫ (hom_square_bot l r) := by aesop_cat) :
-    hom_cospan_pullback_lift l r φ ψ comm ≫ hom_cospan_pullback_snd l r = ψ :=
+    (comm : φ ≫ (homSquareRight l r) = ψ ≫ (homSquareBot l r) := by aesop_cat) :
+    homCospanPullbackLift l r φ ψ comm ≫ homCospanPullbackSnd l r = ψ :=
   Limits.pullback.lift_snd φ ψ comm
 
 /- The hom pullback square is in particular commutative -/
 omit HasPullbacks in
 lemma hom_cospan_pullback_condition {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    (hom_cospan_pullback_fst l r) ≫ (hom_square_right l r) =
-    (hom_cospan_pullback_snd l r) ≫ (hom_square_bot l r) :=
+    (homCospanPullbackFst l r) ≫ (homSquareRight l r) =
+    (homCospanPullbackSnd l r) ≫ (homSquareBot l r) :=
   Limits.pullback.condition
 
 /- The property of a commuting square being Cartesian -/
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
-def is_cartesian_square {A B X Y : C} (S : square A B X Y) : Prop :=
+def isCartesianSquare {A B X Y : C} (S : square A B X Y) : Prop :=
   IsIso (Limits.pullback.lift S.top S.left (by rw [S.comm]))
 
 /- The second characterization of orthogonality via the hom square in Set -/
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
-def hom_orthogonal {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : Prop :=
-  is_cartesian_square (hom_square l r)
+def homOrthogonal {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : Prop :=
+  isCartesianSquare (homSquare l r)
 
 /- We construct a map from Hom(B,X) into the pullback
 of the hom square via the universal mapping property -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def diagonals_hom_cospan_pullback_top {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
+def diagonalsHomCospanPullbackTop {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
     (B ⟶ X) ⟶ (A ⟶ X) :=
   let _keep := r
   TypeCat.ofHom fun f => l ≫ f
 
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def diagonals_hom_cospan_pullback_bot {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
+def diagonalsHomCospanPullbackBot {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
     (B ⟶ X) ⟶ (B ⟶ Y) :=
   let _keep := l
   TypeCat.ofHom fun f => f ≫ r
 
 omit HasPullbacks in
 lemma diagonals_hom_cospan_pullback_lift_comm {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    (diagonals_hom_cospan_pullback_bot l r) ≫ (hom_square_right l r) =
-    (diagonals_hom_cospan_pullback_top l r) ≫ (hom_square_bot l r) := by
+    (diagonalsHomCospanPullbackBot l r) ≫ (homSquareRight l r) =
+    (diagonalsHomCospanPullbackTop l r) ≫ (homSquareBot l r) := by
   ext d
   calc
-    (diagonals_hom_cospan_pullback_bot l r ≫ hom_square_right l r) d = l ≫ (d ≫ r) := rfl
+    (diagonalsHomCospanPullbackBot l r ≫ homSquareRight l r) d = l ≫ (d ≫ r) := rfl
     _ = (l ≫ d) ≫ r := (Category.assoc l d r).symm
-    _ = (diagonals_hom_cospan_pullback_top l r ≫ hom_square_bot l r) d := rfl
+    _ = (diagonalsHomCospanPullbackTop l r ≫ homSquareBot l r) d := rfl
 
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def diagonals_hom_cospan_pullback_lift {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    (B ⟶ X) ⟶ hom_cospan_pullback l r :=
-  hom_cospan_pullback_lift l r
-    (diagonals_hom_cospan_pullback_bot l r)
-    (diagonals_hom_cospan_pullback_top l r)
+def diagonalsHomCospanPullbackLift {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
+    (B ⟶ X) ⟶ homCospanPullback l r :=
+  homCospanPullbackLift l r
+    (diagonalsHomCospanPullbackBot l r)
+    (diagonalsHomCospanPullbackTop l r)
     (diagonals_hom_cospan_pullback_lift_comm l r)
 
 omit HasPullbacks in
 lemma diagonals_hom_cospan_pullback_lift_fst {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    diagonals_hom_cospan_pullback_lift l r ≫ hom_cospan_pullback_fst l r =
-    (diagonals_hom_cospan_pullback_bot l r) :=
+    diagonalsHomCospanPullbackLift l r ≫ homCospanPullbackFst l r =
+    (diagonalsHomCospanPullbackBot l r) :=
   Limits.pullback.lift_fst
-    (diagonals_hom_cospan_pullback_bot l r)
-    (diagonals_hom_cospan_pullback_top l r)
+    (diagonalsHomCospanPullbackBot l r)
+    (diagonalsHomCospanPullbackTop l r)
     (diagonals_hom_cospan_pullback_lift_comm l r)
 
 omit HasPullbacks in
 lemma diagonals_hom_cospan_pullback_lift_snd {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    diagonals_hom_cospan_pullback_lift l r ≫ hom_cospan_pullback_snd l r =
-    (diagonals_hom_cospan_pullback_top l r) :=
+    diagonalsHomCospanPullbackLift l r ≫ homCospanPullbackSnd l r =
+    (diagonalsHomCospanPullbackTop l r) :=
   Limits.pullback.lift_snd
-    (diagonals_hom_cospan_pullback_bot l r)
-    (diagonals_hom_cospan_pullback_top l r)
+    (diagonalsHomCospanPullbackBot l r)
+    (diagonalsHomCospanPullbackTop l r)
     (diagonals_hom_cospan_pullback_lift_comm l r)
 
 /- Given an element in the pullback of the hom
 square in Set, we construct a commuting square in C -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_cospan_pullback_to_square_completion
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (x : hom_cospan_pullback l r) :
+def homCospanPullbackToSquareCompletion
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (x : homCospanPullback l r) :
     l □ r := by
-  let x'  := (hom_cospan_pullback_fst l r) x
-  let x'' := (hom_cospan_pullback_snd l r)  x
+  let x'  := (homCospanPullbackFst l r) x
+  let x'' := (homCospanPullbackSnd l r)  x
   have S : l □ r := {
       top := x''
       bot := x'
       comm := by
         simpa [x', x''] using congrArg
-          (fun h : hom_cospan_pullback l r ⟶ (A ⟶ Y) => h x)
+          (fun h : homCospanPullback l r ⟶ (A ⟶ Y) => h x)
           (hom_cospan_pullback_condition l r)
   }
   exact S
@@ -301,84 +305,84 @@ def hom_cospan_pullback_to_square_completion
 element in the pullback of the hom square a diagonal filler of this square -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_cospan_pullback_to_diagonal_filler
+def homCospanPullbackToDiagonalFiller
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : orthogonal l r)
-    (x : Limits.pullback (hom_square_right l r) (hom_square_bot l r)) :
-    diagonal_filler (hom_cospan_pullback_to_square_completion l r x) := by
+    (x : Limits.pullback (homSquareRight l r) (homSquareBot l r)) :
+    diagonalFiller (homCospanPullbackToSquareCompletion l r x) := by
   let ⟨d,S⟩ := h
-  exact d (hom_cospan_pullback_to_square_completion l r x)
+  exact d (homCospanPullbackToSquareCompletion l r x)
 
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_cospan_pullback_to_diagonal_filler_map
+def homCospanPullbackToDiagonalFillerMap
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : orthogonal l r) :
-    (Limits.pullback (hom_square_right l r) (hom_square_bot l r)) ⟶ (B ⟶ X) :=
-  TypeCat.ofHom fun x => (hom_cospan_pullback_to_diagonal_filler l r h x).map
+    (Limits.pullback (homSquareRight l r) (homSquareBot l r)) ⟶ (B ⟶ X) :=
+  TypeCat.ofHom fun x => (homCospanPullbackToDiagonalFiller l r h x).map
 
 omit HasPullbacks in
 lemma hom_cospan_pullback_to_diagonal_filler_map_comm_top
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : orthogonal l r)
-    (x : Limits.pullback (hom_square_right l r) (hom_square_bot l r)) :
-    l ≫ (hom_cospan_pullback_to_diagonal_filler_map l r h x) =
-    (hom_cospan_pullback_to_square_completion l r x).top :=
-  (hom_cospan_pullback_to_diagonal_filler l r h x).comm_top
+    (x : Limits.pullback (homSquareRight l r) (homSquareBot l r)) :
+    l ≫ (homCospanPullbackToDiagonalFillerMap l r h x) =
+    (homCospanPullbackToSquareCompletion l r x).top :=
+  (homCospanPullbackToDiagonalFiller l r h x).comm_top
 
 omit HasPullbacks in
 lemma hom_cospan_pullback_to_diagonal_filler_map_comm_bot
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : orthogonal l r)
-    (x : Limits.pullback (hom_square_right l r) (hom_square_bot l r)) :
-    (hom_cospan_pullback_to_diagonal_filler_map l r h x) ≫ r =
-    (hom_cospan_pullback_to_square_completion l r x).bot :=
-  (hom_cospan_pullback_to_diagonal_filler l r h x).comm_bot
+    (x : Limits.pullback (homSquareRight l r) (homSquareBot l r)) :
+    (homCospanPullbackToDiagonalFillerMap l r h x) ≫ r =
+    (homCospanPullbackToSquareCompletion l r x).bot :=
+  (homCospanPullbackToDiagonalFiller l r h x).comm_bot
 
 omit HasPullbacks
 
 /- If morphisms l and r in C are orthogonal, then the hom square is cartesian -/
 omit HasPullbacks in
 lemma orthogonal_implies_hom_orthogonal :
-    {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → (orthogonal l r) → (hom_orthogonal l r) := by
+    {A B X Y : C} → (l : A ⟶ B) → (r : X ⟶ Y) → (orthogonal l r) → (homOrthogonal l r) := by
   intro A B X Y l r ⟨d,u⟩
-  unfold hom_orthogonal
-  unfold is_cartesian_square
-  use hom_cospan_pullback_to_diagonal_filler_map l r ⟨d,u⟩
+  unfold homOrthogonal
+  unfold isCartesianSquare
+  use homCospanPullbackToDiagonalFillerMap l r ⟨d,u⟩
   constructor
   · ext δ
     simp only [TypeCat.Fun.toFun_apply, comp_apply, id_apply]
-    let i := hom_cospan_pullback_to_diagonal_filler_map l r ⟨d,u⟩
+    let i := homCospanPullbackToDiagonalFillerMap l r ⟨d,u⟩
     let homSquareComm :
-        (hom_square l r).top ≫ (hom_square l r).right =
-          (hom_square l r).left ≫ (hom_square l r).bot := by
-      rw [(hom_square l r).comm]
+        (homSquare l r).top ≫ (homSquare l r).right =
+          (homSquare l r).left ≫ (homSquare l r).bot := by
+      rw [(homSquare l r).comm]
     let j := Limits.pullback.lift
-      (hom_square l r).top (hom_square l r).left homSquareComm
+      (homSquare l r).top (homSquare l r).left homSquareComm
     let S : l □ r := { top := l ≫ δ , bot := δ ≫ r }
-    let Δ : diagonal_filler S := {
+    let Δ : diagonalFiller S := {
       map := δ
       comm_top := by aesop_cat
       comm_bot := by aesop_cat
     }
     let comm_snd :=  Limits.pullback.lift_snd
-      (hom_square l r).top (hom_square l r).left homSquareComm
+      (homSquare l r).top (homSquare l r).left homSquareComm
     let comm_fst :=  Limits.pullback.lift_fst
-      (hom_square l r).top (hom_square l r).left homSquareComm
-    let Δ' : diagonal_filler S := {
+      (homSquare l r).top (homSquare l r).left homSquareComm
+    let Δ' : diagonalFiller S := {
       map := i (j δ)
       comm_top := by calc
-        l ≫ i (j δ) = (hom_cospan_pullback_to_square_completion l r (j δ)).top :=
+        l ≫ i (j δ) = (homCospanPullbackToSquareCompletion l r (j δ)).top :=
           hom_cospan_pullback_to_diagonal_filler_map_comm_top l r ⟨d,u⟩ (j δ)
-        _ = Limits.pullback.snd (hom_square_right l r) (hom_square_bot l r) (j δ) := by aesop_cat
-        _ = (Limits.pullback.lift (hom_square l r).top (hom_square l r).left
+        _ = Limits.pullback.snd (homSquareRight l r) (homSquareBot l r) (j δ) := by aesop_cat
+        _ = (Limits.pullback.lift (homSquare l r).top (homSquare l r).left
             homSquareComm ≫
-            Limits.pullback.snd (hom_square l r).right (hom_square l r).bot) δ := by rfl
-        _ = (hom_square l r).left δ := by rw [comm_snd]
+            Limits.pullback.snd (homSquare l r).right (homSquare l r).bot) δ := by rfl
+        _ = (homSquare l r).left δ := by rw [comm_snd]
       comm_bot := by calc
-        i (j δ) ≫ r = (hom_cospan_pullback_to_square_completion l r (j δ)).bot :=
+        i (j δ) ≫ r = (homCospanPullbackToSquareCompletion l r (j δ)).bot :=
           hom_cospan_pullback_to_diagonal_filler_map_comm_bot l r ⟨d,u⟩ (j δ)
-        _ = Limits.pullback.fst (hom_square_right l r) (hom_square_bot l r) (j δ) := by aesop_cat
-        _ = (Limits.pullback.lift (hom_square l r).top (hom_square l r).left
+        _ = Limits.pullback.fst (homSquareRight l r) (homSquareBot l r) (j δ) := by aesop_cat
+        _ = (Limits.pullback.lift (homSquare l r).top (homSquare l r).left
             homSquareComm ≫
-            Limits.pullback.fst (hom_square l r).right (hom_square l r).bot) δ := by rfl
-        _ = (hom_square l r).top δ := by rw [comm_fst]
+            Limits.pullback.fst (homSquare l r).right (homSquare l r).bot) δ := by rfl
+        _ = (homSquare l r).top δ := by rw [comm_fst]
       }
     calc
       i (j δ) = Δ'.map := by rfl
@@ -387,20 +391,20 @@ lemma orthogonal_implies_hom_orthogonal :
   · apply Limits.pullback.hom_ext
     · rw [Category.assoc, Limits.pullback.lift_fst]
       ext x
-      let g := Limits.pullback.fst (hom_square l r).right (hom_square l r).bot x
-      let δ := hom_cospan_pullback_to_diagonal_filler_map l r ⟨d,u⟩
+      let g := Limits.pullback.fst (homSquare l r).right (homSquare l r).bot x
+      let δ := homCospanPullbackToDiagonalFillerMap l r ⟨d,u⟩
       calc
-        (δ ≫ (hom_square l r).top) x = (δ x) ≫ r := rfl
-        _ = (hom_cospan_pullback_to_square_completion l r x).bot :=
+        (δ ≫ (homSquare l r).top) x = (δ x) ≫ r := rfl
+        _ = (homCospanPullbackToSquareCompletion l r x).bot :=
           hom_cospan_pullback_to_diagonal_filler_map_comm_bot l r ⟨d,u⟩ x
         _ = g := by rfl
     · rw [Category.assoc, Limits.pullback.lift_snd]
       ext x
-      let f := Limits.pullback.snd (hom_square l r).right (hom_square l r).bot x
-      let δ := hom_cospan_pullback_to_diagonal_filler_map l r ⟨d,u⟩
+      let f := Limits.pullback.snd (homSquare l r).right (homSquare l r).bot x
+      let δ := homCospanPullbackToDiagonalFillerMap l r ⟨d,u⟩
       calc
-        (δ ≫ (hom_square l r).left) x = l ≫ (δ x) := rfl
-        _ = (hom_cospan_pullback_to_square_completion l r x).top :=
+        (δ ≫ (homSquare l r).left) x = l ≫ (δ x) := rfl
+        _ = (homCospanPullbackToSquareCompletion l r x).top :=
           hom_cospan_pullback_to_diagonal_filler_map_comm_top l r ⟨d,u⟩ x
         _ = f := by rfl
 
@@ -409,251 +413,251 @@ lemma orthogonal_implies_hom_orthogonal :
 /- The cone associated to the pullback of the hom square -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_pullback_cone
+def homPullbackCone
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    Limits.PullbackCone (hom_square l r).right (hom_square l r).bot :=
-  Limits.pullback.cone (hom_square l r).right (hom_square l r).bot
+    Limits.PullbackCone (homSquare l r).right (homSquare l r).bot :=
+  Limits.pullback.cone (homSquare l r).right (homSquare l r).bot
 
 /- The proof that this cone is a limit cone-/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_pullback_cone_isLimit
+def homPullbackConeIsLimit
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    Limits.IsLimit (hom_pullback_cone l r) :=
-  Limits.pullback.isLimit (hom_square l r).right (hom_square l r).bot
+    Limits.IsLimit (homPullbackCone l r) :=
+  Limits.pullback.isLimit (homSquare l r).right (homSquare l r).bot
 
 /- The components of this limit cone-/
 
 /-- Imported FactorizationSystems declaration. -/
-def hom_pullback_cone_point {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : Type v :=
-  (hom_pullback_cone l r).pt
+def homPullbackConePoint {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : Type v :=
+  (homPullbackCone l r).pt
 
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_pullback_fst
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : hom_pullback_cone_point l r ⟶ (B ⟶ Y) :=
-  Limits.pullback.fst (hom_square l r).right (hom_square l r).bot
+def homPullbackFst
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : homPullbackConePoint l r ⟶ (B ⟶ Y) :=
+  Limits.pullback.fst (homSquare l r).right (homSquare l r).bot
 
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_pullback_snd
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : hom_pullback_cone_point l r ⟶ (A ⟶ X) :=
-  Limits.pullback.snd (hom_square l r).right (hom_square l r).bot
+def homPullbackSnd
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : homPullbackConePoint l r ⟶ (A ⟶ X) :=
+  Limits.pullback.snd (homSquare l r).right (homSquare l r).bot
 
 /- We construct a cone over the same cospan with apex Hom(B,X) -/
 
 omit HasPullbacks in
 lemma diagonals_comm {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    (hom_square l r).top ≫ (hom_square l r).right = (hom_square l r).left ≫ (hom_square l r).bot
-    := by rw [(hom_square l r).comm]
+    (homSquare l r).top ≫ (homSquare l r).right = (homSquare l r).left ≫ (homSquare l r).bot
+    := by rw [(homSquare l r).comm]
 
 /-- Imported FactorizationSystems declaration. -/
-def diagonals_cone
+def diagonalsCone
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    Limits.PullbackCone (hom_square l r).right (hom_square l r).bot :=
-  Limits.PullbackCone.mk (hom_square l r).top (hom_square l r).left (diagonals_comm l r)
+    Limits.PullbackCone (homSquare l r).right (homSquare l r).bot :=
+  Limits.PullbackCone.mk (homSquare l r).top (homSquare l r).left (diagonals_comm l r)
 
 /-- Imported FactorizationSystems declaration. -/
-def diagonals_cone_point
+def diagonalsConePoint
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : Type v :=
-  (diagonals_cone l r).pt
+  (diagonalsCone l r).pt
 
 /-- Imported FactorizationSystems declaration. -/
-def diagonals_cone_fst
+def diagonalsConeFst
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    diagonals_cone_point l r ⟶ (B ⟶ Y) :=
-  Limits.PullbackCone.fst (diagonals_cone l r)
+    diagonalsConePoint l r ⟶ (B ⟶ Y) :=
+  Limits.PullbackCone.fst (diagonalsCone l r)
 
 /-- Imported FactorizationSystems declaration. -/
-def diagonals_cone_snd
+def diagonalsConeSnd
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    diagonals_cone_point l r ⟶ (A ⟶ X) :=
-  Limits.PullbackCone.snd (diagonals_cone l r)
+    diagonalsConePoint l r ⟶ (A ⟶ X) :=
+  Limits.PullbackCone.snd (diagonalsCone l r)
 
 /- The map from Hom(B,X) into the canonical pullback -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def diagonals_hom_cospan_lift
+def diagonalsHomCospanLift
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    diagonals_cone_point l r ⟶ hom_pullback_cone_point l r :=
-  (hom_pullback_cone_isLimit l r).lift (diagonals_cone l r)
+    diagonalsConePoint l r ⟶ homPullbackConePoint l r :=
+  (homPullbackConeIsLimit l r).lift (diagonalsCone l r)
 
 omit HasPullbacks in
 lemma diagonals_hom_cospan_lift_fst
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    diagonals_hom_cospan_lift l r ≫ hom_pullback_fst l r = (hom_square l r).top :=
-  (hom_pullback_cone_isLimit l r).fac (diagonals_cone l r) Limits.WalkingCospan.left
+    diagonalsHomCospanLift l r ≫ homPullbackFst l r = (homSquare l r).top :=
+  (homPullbackConeIsLimit l r).fac (diagonalsCone l r) Limits.WalkingCospan.left
 
 omit HasPullbacks in
 lemma diagonals_hom_cospan_lift_snd
     {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) :
-    diagonals_hom_cospan_lift l r ≫ hom_pullback_snd l r = (hom_square l r).left :=
-  (hom_pullback_cone_isLimit l r).fac (diagonals_cone l r) Limits.WalkingCospan.right
+    diagonalsHomCospanLift l r ≫ homPullbackSnd l r = (homSquare l r).left :=
+  (homPullbackConeIsLimit l r).fac (diagonalsCone l r) Limits.WalkingCospan.right
 
 /- An auxiliary definition of orthogonality that behaves much better -/
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
-def hom_orthogonal_aux {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : Prop :=
-  IsIso (diagonals_hom_cospan_lift l r)
+def homOrthogonalAux {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) : Prop :=
+  IsIso (diagonalsHomCospanLift l r)
 
 omit HasPullbacks in
 lemma hom_orthogonal_implies_hom_orthogonal_aux
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal l r) :
-    hom_orthogonal l r := h
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonal l r) :
+    homOrthogonal l r := h
 
 omit HasPullbacks in
 lemma hom_orthogonal_aux_implies_hom_orthogonal
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-    hom_orthogonal l r := h
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+    homOrthogonal l r := h
 
 /- The isomorphism from Hom(B,X) into the canonical pullback -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_orthogonal_aux_hom {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-      (B ⟶ X) ⟶ (hom_cospan_pullback l r) :=
-  (asIso (diagonals_hom_cospan_lift l r)).hom
+def homOrthogonalAuxHom {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+      (B ⟶ X) ⟶ (homCospanPullback l r) :=
+  (asIso (diagonalsHomCospanLift l r)).hom
 
 /-The inverse of the isomorphism from Hom(B,X) into the canonical pullback -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_orthogonal_aux_inv {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-    (hom_cospan_pullback l r) ⟶ (B ⟶ X) :=
-  (asIso (diagonals_hom_cospan_lift l r)).inv
+def homOrthogonalAuxInv {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+    (homCospanPullback l r) ⟶ (B ⟶ X) :=
+  (asIso (diagonalsHomCospanLift l r)).inv
 
 omit HasPullbacks in
 lemma hom_orthogonal_aux_hom_inv_id
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-    (hom_orthogonal_aux_hom l r h) ≫ (hom_orthogonal_aux_inv l r h) = 𝟙 (B ⟶ X) :=
-  (asIso (diagonals_hom_cospan_lift l r)).hom_inv_id
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+    (homOrthogonalAuxHom l r h) ≫ (homOrthogonalAuxInv l r h) = 𝟙 (B ⟶ X) :=
+  (asIso (diagonalsHomCospanLift l r)).hom_inv_id
 
 omit HasPullbacks in
 lemma hom_orthogonal_aux_inv_hom_id
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-    (hom_orthogonal_aux_inv l r h) ≫ (hom_orthogonal_aux_hom l r h) =
-    𝟙 (hom_cospan_pullback l r) :=
-  (asIso (diagonals_hom_cospan_lift l r)).inv_hom_id
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+    (homOrthogonalAuxInv l r h) ≫ (homOrthogonalAuxHom l r h) =
+    𝟙 (homCospanPullback l r) :=
+  (asIso (diagonalsHomCospanLift l r)).inv_hom_id
 
 /- We now prove that the cone with apex Hom(B,X) is a limit cone -/
 
 /-- Imported FactorizationSystems declaration. -/
 @[reducible]
 noncomputable
-def hom_orthogonal_aux_lift
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-    ∀ s : Limits.PullbackCone (hom_square l r).right (hom_square l r).bot,
-    s.pt ⟶ diagonals_cone_point l r := by
+def homOrthogonalAuxLift
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+    ∀ s : Limits.PullbackCone (homSquare l r).right (homSquare l r).bot,
+    s.pt ⟶ diagonalsConePoint l r := by
   intro s
-  let lift : s.pt ⟶ hom_pullback_cone_point l r
-    := (Limits.pullback.isLimit (hom_square l r).right (hom_square l r).bot).lift s
-  exact lift ≫ hom_orthogonal_aux_inv l r h
+  let lift : s.pt ⟶ homPullbackConePoint l r
+    := (Limits.pullback.isLimit (homSquare l r).right (homSquare l r).bot).lift s
+  exact lift ≫ homOrthogonalAuxInv l r h
 
 lemma hom_orthogonal_aux_fac_left
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-    ∀ s : Limits.PullbackCone (hom_square l r).right (hom_square l r).bot,
-    hom_orthogonal_aux_lift l r h s ≫ diagonals_cone_fst l r = s.fst := by
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+    ∀ s : Limits.PullbackCone (homSquare l r).right (homSquare l r).bot,
+    homOrthogonalAuxLift l r h s ≫ diagonalsConeFst l r = s.fst := by
   intro s
-  let lift : s.pt ⟶ hom_pullback_cone_point l r :=
-    (Limits.pullback.isLimit (hom_square l r).right (hom_square l r).bot).lift s
+  let lift : s.pt ⟶ homPullbackConePoint l r :=
+    (Limits.pullback.isLimit (homSquare l r).right (homSquare l r).bot).lift s
   calc
-    hom_orthogonal_aux_lift l r h s ≫ diagonals_cone_fst l r =
-    lift ≫ (hom_orthogonal_aux_inv l r h ≫ diagonals_cone_fst l r) := by rfl
-    _ = lift ≫ hom_cospan_pullback_fst l r := by
+    homOrthogonalAuxLift l r h s ≫ diagonalsConeFst l r =
+    lift ≫ (homOrthogonalAuxInv l r h ≫ diagonalsConeFst l r) := by rfl
+    _ = lift ≫ homCospanPullbackFst l r := by
       have triangle_comm :
-        (diagonals_hom_cospan_pullback_lift l r) ≫ hom_cospan_pullback_fst l r =
-        (hom_square l r).top := diagonals_hom_cospan_pullback_lift_fst l r
+        (diagonalsHomCospanPullbackLift l r) ≫ homCospanPullbackFst l r =
+        (homSquare l r).top := diagonals_hom_cospan_pullback_lift_fst l r
       apply whisker_eq lift
       calc
-        hom_orthogonal_aux_inv l r h ≫ (hom_square l r).top =
-        hom_orthogonal_aux_inv l r h ≫
-          ((diagonals_hom_cospan_pullback_lift l r) ≫ hom_cospan_pullback_fst l r) :=
+        homOrthogonalAuxInv l r h ≫ (homSquare l r).top =
+        homOrthogonalAuxInv l r h ≫
+          ((diagonalsHomCospanPullbackLift l r) ≫ homCospanPullbackFst l r) :=
           by rw [triangle_comm]
-        _ = (hom_orthogonal_aux_inv l r h ≫ diagonals_hom_cospan_pullback_lift l r) ≫
-          hom_cospan_pullback_fst l r := by aesop_cat
-        _ = (hom_orthogonal_aux_inv l r h ≫ hom_orthogonal_aux_hom l r h) ≫
-          hom_cospan_pullback_fst l r := by rfl
-        _ = hom_cospan_pullback_fst l r := by rw [hom_orthogonal_aux_inv_hom_id l r h]; simp
-    _ = s.fst := (hom_pullback_cone_isLimit l r).fac s Limits.WalkingCospan.left
+        _ = (homOrthogonalAuxInv l r h ≫ diagonalsHomCospanPullbackLift l r) ≫
+          homCospanPullbackFst l r := by aesop_cat
+        _ = (homOrthogonalAuxInv l r h ≫ homOrthogonalAuxHom l r h) ≫
+          homCospanPullbackFst l r := by rfl
+        _ = homCospanPullbackFst l r := by rw [hom_orthogonal_aux_inv_hom_id l r h]; simp
+    _ = s.fst := (homPullbackConeIsLimit l r).fac s Limits.WalkingCospan.left
 
 lemma hom_orthogonal_aux_fac_right
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-    ∀ s : Limits.PullbackCone (hom_square l r).right (hom_square l r).bot,
-    hom_orthogonal_aux_lift l r h s ≫ diagonals_cone_snd l r = s.snd := by
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+    ∀ s : Limits.PullbackCone (homSquare l r).right (homSquare l r).bot,
+    homOrthogonalAuxLift l r h s ≫ diagonalsConeSnd l r = s.snd := by
   intro s
-  let lift : s.pt ⟶ (hom_cospan_pullback l r) :=
-    (Limits.pullback.isLimit (hom_square l r).right (hom_square l r).bot).lift s
+  let lift : s.pt ⟶ (homCospanPullback l r) :=
+    (Limits.pullback.isLimit (homSquare l r).right (homSquare l r).bot).lift s
   calc
-    hom_orthogonal_aux_lift l r h s ≫ diagonals_cone_snd l r =
-    lift ≫ (hom_orthogonal_aux_inv l r h ≫ diagonals_cone_snd l r) := by rfl
-    _ = lift ≫ hom_cospan_pullback_snd l r := by
+    homOrthogonalAuxLift l r h s ≫ diagonalsConeSnd l r =
+    lift ≫ (homOrthogonalAuxInv l r h ≫ diagonalsConeSnd l r) := by rfl
+    _ = lift ≫ homCospanPullbackSnd l r := by
       have triangle_comm :
-        (diagonals_hom_cospan_pullback_lift l r) ≫ hom_cospan_pullback_snd l r =
-        (hom_square l r).left := diagonals_hom_cospan_pullback_lift_snd l r
+        (diagonalsHomCospanPullbackLift l r) ≫ homCospanPullbackSnd l r =
+        (homSquare l r).left := diagonals_hom_cospan_pullback_lift_snd l r
       apply whisker_eq lift
       calc
-        hom_orthogonal_aux_inv l r h ≫ (hom_square l r).left =
-        hom_orthogonal_aux_inv l r h ≫
-          (diagonals_hom_cospan_pullback_lift l r ≫ hom_cospan_pullback_snd l r) :=
+        homOrthogonalAuxInv l r h ≫ (homSquare l r).left =
+        homOrthogonalAuxInv l r h ≫
+          (diagonalsHomCospanPullbackLift l r ≫ homCospanPullbackSnd l r) :=
           by rw [triangle_comm]
-        _ = (hom_orthogonal_aux_inv l r h ≫ hom_orthogonal_aux_hom l r h) ≫
-          hom_cospan_pullback_snd l r := by rfl
-        _ = hom_cospan_pullback_snd l r := by rw [hom_orthogonal_aux_inv_hom_id l r]; simp
-    _ = s.snd := (hom_pullback_cone_isLimit l r).fac s Limits.WalkingCospan.right
+        _ = (homOrthogonalAuxInv l r h ≫ homOrthogonalAuxHom l r h) ≫
+          homCospanPullbackSnd l r := by rfl
+        _ = homCospanPullbackSnd l r := by rw [hom_orthogonal_aux_inv_hom_id l r]; simp
+    _ = s.snd := (homPullbackConeIsLimit l r).fac s Limits.WalkingCospan.right
 
 lemma hom_orthogonal_aux_uniq
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-    (∀ (s : Limits.PullbackCone (hom_square l r).right (hom_square l r).bot) (m : s.pt ⟶ B ⟶ X),
-      m ≫ (hom_square l r).top = s.fst →
-      m ≫ (hom_square l r).left = s.snd →
-      m = hom_orthogonal_aux_lift l r h s) := by
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+    (∀ (s : Limits.PullbackCone (homSquare l r).right (homSquare l r).bot) (m : s.pt ⟶ B ⟶ X),
+      m ≫ (homSquare l r).top = s.fst →
+      m ≫ (homSquare l r).left = s.snd →
+      m = homOrthogonalAuxLift l r h s) := by
   intro s m comm₁ comm₂
-  unfold hom_orthogonal_aux_lift
-  let lift : s.pt ⟶ hom_pullback_cone_point l r :=
-    (hom_pullback_cone_isLimit l r).lift s
+  unfold homOrthogonalAuxLift
+  let lift : s.pt ⟶ homPullbackConePoint l r :=
+    (homPullbackConeIsLimit l r).lift s
   have comm₁' :
-      (m ≫ hom_orthogonal_aux_hom l r h) ≫ hom_pullback_fst l r =
-      lift ≫ hom_pullback_fst l r := by
+      (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackFst l r =
+      lift ≫ homPullbackFst l r := by
     calc
-      (m ≫ hom_orthogonal_aux_hom l r h) ≫ hom_pullback_fst l r =
-          m ≫ (hom_orthogonal_aux_hom l r h ≫ hom_pullback_fst l r) := by
+      (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackFst l r =
+          m ≫ (homOrthogonalAuxHom l r h ≫ homPullbackFst l r) := by
         rw [Category.assoc]
-      _ = m ≫ (hom_square l r).top := by
+      _ = m ≫ (homSquare l r).top := by
         apply whisker_eq m
         exact diagonals_hom_cospan_lift_fst l r
       _ = s.fst := comm₁
-      _ = lift ≫ hom_pullback_fst l r := by
-        simpa [lift, hom_pullback_fst] using
-          ((hom_pullback_cone_isLimit l r).fac s Limits.WalkingCospan.left).symm
+      _ = lift ≫ homPullbackFst l r := by
+        convert
+          ((homPullbackConeIsLimit l r).fac s Limits.WalkingCospan.left).symm
   have comm₂' :
-      (m ≫ hom_orthogonal_aux_hom l r h) ≫ hom_pullback_snd l r =
-      lift ≫ hom_pullback_snd l r := by
+      (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackSnd l r =
+      lift ≫ homPullbackSnd l r := by
     calc
-      (m ≫ hom_orthogonal_aux_hom l r h) ≫ hom_pullback_snd l r =
-          m ≫ (hom_orthogonal_aux_hom l r h ≫ hom_pullback_snd l r) := by
+      (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackSnd l r =
+          m ≫ (homOrthogonalAuxHom l r h ≫ homPullbackSnd l r) := by
         rw [Category.assoc]
-      _ = m ≫ (hom_square l r).left := by
+      _ = m ≫ (homSquare l r).left := by
         apply whisker_eq m
         exact diagonals_hom_cospan_lift_snd l r
       _ = s.snd := comm₂
-      _ = lift ≫ hom_pullback_snd l r := by
-        simpa [lift, hom_pullback_snd] using
-          ((hom_pullback_cone_isLimit l r).fac s Limits.WalkingCospan.right).symm
-  have whee : m ≫ hom_orthogonal_aux_hom l r h = (hom_pullback_cone_isLimit l r).lift s :=
+      _ = lift ≫ homPullbackSnd l r := by
+        convert
+          ((homPullbackConeIsLimit l r).fac s Limits.WalkingCospan.right).symm
+  have whee : m ≫ homOrthogonalAuxHom l r h = (homPullbackConeIsLimit l r).lift s :=
     Limits.pullback.hom_ext comm₁' comm₂'
   calc
-    m = m ≫ (hom_orthogonal_aux_hom l r h ≫ hom_orthogonal_aux_inv l r h) := by
+    m = m ≫ (homOrthogonalAuxHom l r h ≫ homOrthogonalAuxInv l r h) := by
       rw [hom_orthogonal_aux_hom_inv_id l r h, Category.comp_id]
-    _ = (m ≫ hom_orthogonal_aux_hom l r h) ≫ hom_orthogonal_aux_inv l r h := by rfl
-    _ = (hom_pullback_cone_isLimit l r).lift s ≫ hom_orthogonal_aux_inv l r h := by
-      exact congrArg (fun q => q ≫ hom_orthogonal_aux_inv l r h) whee
+    _ = (m ≫ homOrthogonalAuxHom l r h) ≫ homOrthogonalAuxInv l r h := by rfl
+    _ = (homPullbackConeIsLimit l r).lift s ≫ homOrthogonalAuxInv l r h := by
+      exact congrArg (fun q => q ≫ homOrthogonalAuxInv l r h) whee
 
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_orthogonal_aux_implies_is_pullback_diagonals
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) :
-    Limits.IsLimit (diagonals_cone l r) :=
+def homOrthogonalAuxImpliesIsPullbackDiagonals
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) :
+    Limits.IsLimit (diagonalsCone l r) :=
   Limits.PullbackCone.IsLimit.mk
     (diagonals_comm l r)
-    (hom_orthogonal_aux_lift l r h)
+    (homOrthogonalAuxLift l r h)
     (hom_orthogonal_aux_fac_left l r h)
     (hom_orthogonal_aux_fac_right l r h)
     (hom_orthogonal_aux_uniq l r h)
@@ -662,115 +666,118 @@ def hom_orthogonal_aux_implies_is_pullback_diagonals
 hom-cospan in Set with apex the terminal object -/
 
 /-- Imported FactorizationSystems declaration. -/
-def square_completion_cone_snd {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (S : l □ r)
+def squareCompletionConeSnd {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (S : l □ r)
     : PUnit ⟶ (A ⟶ X) :=
   TypeCat.ofHom fun _ => S.top
 
 /-- Imported FactorizationSystems declaration. -/
-def square_completion_cone_fst {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (S : l □ r)
+def squareCompletionConeFst {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (S : l □ r)
     : PUnit ⟶ (B ⟶ Y) :=
   TypeCat.ofHom fun _ => S.bot
 
 omit HasPullbacks in
 lemma square_completion_cone_comm {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (S : l □ r) :
-    square_completion_cone_fst l r S ≫ (hom_square l r).right =
-    square_completion_cone_snd l r S ≫ (hom_square l r).bot := by
+    squareCompletionConeFst l r S ≫ (homSquare l r).right =
+    squareCompletionConeSnd l r S ≫ (homSquare l r).bot := by
   ext _
   exact S.comm
 
 /-- Imported FactorizationSystems declaration. -/
-def square_completion_cone {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (S : l □ r) :
-    Limits.PullbackCone (hom_square l r).right (hom_square l r).bot :=
+def squareCompletionCone {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (S : l □ r) :
+    Limits.PullbackCone (homSquare l r).right (homSquare l r).bot :=
   Limits.PullbackCone.mk
-    (square_completion_cone_fst l r S)
-    (square_completion_cone_snd l r S)
+    (squareCompletionConeFst l r S)
+    (squareCompletionConeSnd l r S)
     (square_completion_cone_comm l r S)
 
 /- Given a diagonal filler of a square S, we construct a map in Set
 from the terminal object into the apex Hom(B,X) of the pullback cone -/
 /-- Imported FactorizationSystems declaration. -/
-def diagonal_filler_to_pullback
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (S : l □ r) (δ : diagonal_filler S) :
-    PUnit ⟶ diagonals_cone_point l r :=
+def diagonalFillerToPullback
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (S : l □ r) (δ : diagonalFiller S) :
+    PUnit ⟶ diagonalsConePoint l r :=
   TypeCat.ofHom fun _ => δ.map
 
 /- If the hom square is cartesian, then l and r are orthogonal -/
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def is_hom_orthogonal_aux_implies_is_orthogonal
-    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : hom_orthogonal_aux l r) : orthogonal l r where
+def isHomOrthogonalAuxImpliesIsOrthogonal
+    {A B X Y : C} (l : A ⟶ B) (r : X ⟶ Y) (h : homOrthogonalAux l r) : orthogonal l r where
   diagonal := by
     intro S
     exact {
-      map := (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-        (square_completion_cone l r S) PUnit.unit
+      map := (homOrthogonalAuxImpliesIsPullbackDiagonals l r h).lift
+        (squareCompletionCone l r S) PUnit.unit
       comm_top := by
-        have comm : (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-            (square_completion_cone l r S) ≫
-            (hom_square l r).left =
-            square_completion_cone_snd l r S :=
-          (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).fac
-          (square_completion_cone l r S) Limits.WalkingCospan.right
+        have comm : (homOrthogonalAuxImpliesIsPullbackDiagonals l r h).lift
+            (squareCompletionCone l r S) ≫
+            (homSquare l r).left =
+            squareCompletionConeSnd l r S :=
+          (homOrthogonalAuxImpliesIsPullbackDiagonals l r h).fac
+          (squareCompletionCone l r S) Limits.WalkingCospan.right
         calc
-          l ≫ ((hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-          (square_completion_cone l r S) PUnit.unit) =
-          ((hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-          (square_completion_cone l r S) ≫ (hom_square l r).left) PUnit.unit := by rfl
-          _ = square_completion_cone_snd l r S PUnit.unit := by
+          l ≫ ((homOrthogonalAuxImpliesIsPullbackDiagonals l r h).lift
+          (squareCompletionCone l r S) PUnit.unit) =
+          ((homOrthogonalAuxImpliesIsPullbackDiagonals l r h).lift
+          (squareCompletionCone l r S) ≫ (homSquare l r).left) PUnit.unit := by rfl
+          _ = squareCompletionConeSnd l r S PUnit.unit := by
             exact congrArg (fun f : PUnit ⟶ (A ⟶ X) => f PUnit.unit) comm
           _ = S.top := by rfl
       comm_bot := by
-        have comm : (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-            (square_completion_cone l r S) ≫
-            (hom_square l r).top =
-            square_completion_cone_fst l r S :=
-          (hom_orthogonal_aux_implies_is_pullback_diagonals l r h).fac
-          (square_completion_cone l r S) Limits.WalkingCospan.left
+        have comm : (homOrthogonalAuxImpliesIsPullbackDiagonals l r h).lift
+            (squareCompletionCone l r S) ≫
+            (homSquare l r).top =
+            squareCompletionConeFst l r S :=
+          (homOrthogonalAuxImpliesIsPullbackDiagonals l r h).fac
+          (squareCompletionCone l r S) Limits.WalkingCospan.left
         calc
-          ((hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-          (square_completion_cone l r S) PUnit.unit) ≫ r =
-          ((hom_orthogonal_aux_implies_is_pullback_diagonals l r h).lift
-          (square_completion_cone l r S) ≫ (hom_square l r).top) PUnit.unit := by rfl
-          _ = square_completion_cone_fst l r S PUnit.unit := by
+          ((homOrthogonalAuxImpliesIsPullbackDiagonals l r h).lift
+          (squareCompletionCone l r S) PUnit.unit) ≫ r =
+          ((homOrthogonalAuxImpliesIsPullbackDiagonals l r h).lift
+          (squareCompletionCone l r S) ≫ (homSquare l r).top) PUnit.unit := by rfl
+          _ = squareCompletionConeFst l r S PUnit.unit := by
             exact congrArg (fun f : PUnit ⟶ (B ⟶ Y) => f PUnit.unit) comm
           _ = S.bot := by rfl
     }
   diagonal_unique := by
     intro S d d'
     have comm₁ :
-        (diagonal_filler_to_pullback l r S d) ≫ diagonals_cone_fst l r =
-        (diagonal_filler_to_pullback l r S d') ≫ diagonals_cone_fst l r:= by
+        (diagonalFillerToPullback l r S d) ≫ diagonalsConeFst l r =
+        (diagonalFillerToPullback l r S d') ≫ diagonalsConeFst l r:= by
       apply (homOfElement_eq_iff
-        ((diagonal_filler_to_pullback l r S d ≫ diagonals_cone_fst l r) PUnit.unit)
-        ((diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_fst l r) PUnit.unit)).mpr
+        ((diagonalFillerToPullback l r S d ≫ diagonalsConeFst l r) PUnit.unit)
+        ((diagonalFillerToPullback l r S d' ≫ diagonalsConeFst l r) PUnit.unit)).mpr
       calc
-        (diagonal_filler_to_pullback l r S d ≫ diagonals_cone_fst l r) PUnit.unit =
+        (diagonalFillerToPullback l r S d ≫ diagonalsConeFst l r) PUnit.unit =
         d.map ≫ r:= by rfl
         _ = S.bot := by rw [d.comm_bot]
         _ = d'.map ≫ r := by rw [d'.comm_bot]
-        _ = (diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_fst l r) PUnit.unit := by rfl
+        _ = (diagonalFillerToPullback l r S d' ≫ diagonalsConeFst l r) PUnit.unit := by rfl
     have comm₂ :
-        (diagonal_filler_to_pullback l r S d) ≫ diagonals_cone_snd l r =
-        (diagonal_filler_to_pullback l r S d') ≫ diagonals_cone_snd l r:= by
+        (diagonalFillerToPullback l r S d) ≫ diagonalsConeSnd l r =
+        (diagonalFillerToPullback l r S d') ≫ diagonalsConeSnd l r:= by
       apply (homOfElement_eq_iff
-        ((diagonal_filler_to_pullback l r S d ≫ diagonals_cone_snd l r) PUnit.unit)
-        ((diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_snd l r) PUnit.unit)).mpr
+        ((diagonalFillerToPullback l r S d ≫ diagonalsConeSnd l r) PUnit.unit)
+        ((diagonalFillerToPullback l r S d' ≫ diagonalsConeSnd l r) PUnit.unit)).mpr
       calc
-        (diagonal_filler_to_pullback l r S d ≫ diagonals_cone_snd l r) PUnit.unit =
+        (diagonalFillerToPullback l r S d ≫ diagonalsConeSnd l r) PUnit.unit =
         l ≫ d.map:= by rfl
         _ = S.top := by rw [d.comm_top]
         _ = l ≫ d'.map := by rw [d'.comm_top]
-        _ = (diagonal_filler_to_pullback l r S d' ≫ diagonals_cone_snd l r) PUnit.unit := by rfl
+        _ = (diagonalFillerToPullback l r S d' ≫ diagonalsConeSnd l r) PUnit.unit := by rfl
     have unique := Limits.PullbackCone.IsLimit.hom_ext
-      (hom_orthogonal_aux_implies_is_pullback_diagonals l r h) comm₁ comm₂
-    simpa [diagonal_filler_to_pullback] using
-      congrArg (fun f : PUnit ⟶ diagonals_cone_point l r => f PUnit.unit) unique
+      (homOrthogonalAuxImpliesIsPullbackDiagonals l r h) comm₁ comm₂
+    have unique' :
+        (diagonalFillerToPullback l r S d : PUnit ⟶ (B ⟶ X)) =
+          diagonalFillerToPullback l r S d' := by
+      simpa [diagonalFillerToPullback, diagonalsConePoint, diagonalsCone] using unique
+    exact congrArg (fun f : PUnit ⟶ (B ⟶ X) => f PUnit.unit) unique'
 
 /-- Imported FactorizationSystems declaration. -/
 noncomputable
-def hom_orthogonal_implies_orthogonal
-    {A B X Y : C} {l : A ⟶ B} {r : X ⟶ Y} (h : hom_orthogonal l r) : orthogonal l r :=
-    is_hom_orthogonal_aux_implies_is_orthogonal l r
+def homOrthogonalImpliesOrthogonal
+    {A B X Y : C} {l : A ⟶ B} {r : X ⟶ Y} (h : homOrthogonal l r) : orthogonal l r :=
+    isHomOrthogonalAuxImpliesIsOrthogonal l r
       ( hom_orthogonal_implies_hom_orthogonal_aux l r h)
 
 end CategoryTheory

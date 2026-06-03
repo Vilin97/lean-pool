@@ -9,6 +9,10 @@ import Mathlib.Data.Rat.Star
 
 import LeanPool.TwoColoringOneRound.LowerBound.Correlation
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace Correlation
@@ -27,9 +31,8 @@ noncomputable def corrAvgMatrix {n : Nat} (f : Coloring n) :
 
 theorem corrMatrix_posSemidef {n : Nat} (f : Coloring n) : (corrMatrix f).PosSemidef := by
   -- `corrMatrix f = vecMulVec a (star a)` where `a u = spin (f u)`.
-  simpa [corrMatrix, corr, Matrix.vecMulVec] using
-    (Matrix.posSemidef_vecMulVec_self_star (R := Correlation.Q) (n := Vertex n)
-      (a := fun u => spin (f u)))
+  convert (Matrix.posSemidef_vecMulVec_self_star (R := Correlation.Q) (n := Vertex n)
+    (a := fun u => spin (f u))) using 1
 
 theorem corrAvgMatrix_posSemidef {n : Nat} (f : Coloring n) : (corrAvgMatrix f).PosSemidef := by
   classical
@@ -41,9 +44,8 @@ theorem corrAvgMatrix_posSemidef {n : Nat} (f : Coloring n) : (corrAvgMatrix f).
     have hterm : ∀ σ ∈ (Finset.univ : Finset G), (corrMat σ).PosSemidef := by
       intro σ _hσ
       -- again rank-1 PSD
-      simpa [corrMat, corr, Matrix.vecMulVec] using
-        (Matrix.posSemidef_vecMulVec_self_star (R := Correlation.Q) (n := Vertex n)
-          (a := fun u => spin (f (σ • u))))
+      convert (Matrix.posSemidef_vecMulVec_self_star (R := Correlation.Q) (n := Vertex n)
+        (a := fun u => spin (f (σ • u)))) using 1
     -- `Matrix.posSemidef_sum` is stated for a finset-indexed sum.
     have hsum' := Matrix.posSemidef_sum (s := (Finset.univ : Finset G)) (x := corrMat) hterm
     simpa [corrMat] using hsum'

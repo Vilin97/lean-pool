@@ -15,7 +15,7 @@ that two central extensions are isomorphic if the corresponding cocycles differ 
 
 * `LieTwoCocycle.CentralExtension`: The central extension of a Lie algebra 𝓰 by an abelian Lie
   algebra 𝓪 defined by a 2-cocycle γ ∈ H²(𝓰,𝓪).
-* `LieTwoCocycle.CentralExtension.equiv_of_lieTwoCoboundary`: An isomorphism between the central
+* `LieTwoCocycle.CentralExtension.equivOfLieTwoCoboundary`: An isomorphism between the central
   extensions defined by two 2-cocycles which differ by a coboundary.
 
 ## Main statements
@@ -98,15 +98,24 @@ def bracket : γ.CentralExtension
   toFun := fun ⟨X,_⟩ ↦ {
     toFun := fun ⟨Y,_⟩ ↦ ⟨⁅X,Y⁆, γ X Y⟩
     map_add' := by intros; simp_all only [lie_add, map_add]; rfl
-    map_smul' := by intros; simp_all only [lie_smul, map_smul, id_apply]; rfl }
+    map_smul' := by
+      rintro m ⟨Y, _⟩
+      ext
+      · change ⁅X, m • Y⁆ = m • ⁅X, Y⁆
+        exact lie_smul m X Y
+      · change (γ X) (m • Y) = m • (γ X) Y
+        exact map_smul (γ X) m Y }
   map_add' := by
     intros
     simp_all only [add_lie, map_add, LinearMap.add_apply]
     rfl
   map_smul' := by
-    intros
-    simp_all only [smul_lie, map_smul, LinearMap.smul_apply, id_apply]
-    rfl
+    rintro m ⟨X, _⟩
+    ext ⟨Y, _⟩
+    · change ⁅m • X, Y⁆ = m • ⁅X, Y⁆
+      exact smul_lie m X Y
+    · change (γ (m • X)) Y = m • (γ X) Y
+      exact congrArg (fun f => f Y) (map_smul γ m X)
 
 @[simp] lemma bracket_apply (Z W : γ.CentralExtension) :
     γ.bracket Z W = ⟨⁅Z.fst, W.fst⁆, γ Z.fst W.fst⟩ := rfl
@@ -229,15 +238,15 @@ lemma hom_of_coboundary_add (γ₁ γ₂ γ₃ : LieTwoCocycle 𝕜 𝓰 𝓪)
 
 /-- A Lie algebra isomorphism between two central extensions determined by cocycles
 which differ by a coboundary. -/
-noncomputable def equiv_of_lieTwoCoboundary {γ' : LieTwoCocycle 𝕜 𝓰 𝓪}
+noncomputable def equivOfLieTwoCoboundary {γ' : LieTwoCocycle 𝕜 𝓰 𝓪}
     (h : γ' - γ ∈ LieTwoCoboundary 𝕜 𝓰 𝓪) :
     (γ.CentralExtension) ≃ₗ⁅𝕜⁆ (γ'.CentralExtension) :=
   let β := h.choose
   have obs : γ + β.bdry = γ' := by
-    change γ + LieOneCochain_bdryHom _ _ _ h.choose = γ'; simp [h.choose_spec]
+    change γ + LieOneCochainBdryHom _ _ _ h.choose = γ'; simp [h.choose_spec]
   have obs' : γ' + -β.bdry = γ := by
-    change γ' - LieOneCochain_bdryHom _ _ _ h.choose = γ; simp [h.choose_spec]
-  LieEquiv.mk_of_comp_eq_id
+    change γ' - LieOneCochainBdryHom _ _ _ h.choose = γ; simp [h.choose_spec]
+  LieEquiv.mkOfCompEqId
       (f := (LieTwoCocycle.CentralExtension.congr obs).toLieHom.comp <| β.bdryHom γ)
       (g := (LieTwoCocycle.CentralExtension.congr obs').toLieHom.comp <| (-β).bdryHom γ')
       (by

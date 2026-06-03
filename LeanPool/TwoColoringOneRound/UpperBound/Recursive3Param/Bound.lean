@@ -7,6 +7,13 @@ Authors: Jukka Suomela
 import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Value
 import Mathlib.MeasureTheory.Integral.Prod
 
+/-!
+## Final bound for the 3-parameter recursive algorithm
+
+This file completes the computation of `ClassicalAlgorithm.p recursive3ParamAlg` and derives the
+numerical upper bound `p < 24118/100000`.
+-/
+
 namespace Distributed2Coloring
 
 open MeasureTheory
@@ -15,12 +22,6 @@ open scoped unitInterval
 namespace UpperBound
 namespace Recursive3Param
 
-/-!
-## Final bound for the 3-parameter recursive algorithm
-
-This file completes the computation of `ClassicalAlgorithm.p recursive3ParamAlg` and derives the
-numerical upper bound `p < 24118/100000`.
--/
 
 open scoped ENNReal
 

@@ -11,6 +11,10 @@ import LeanPool.FormalizationOfBoundedArithmetic.Complexity
 import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
 import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.IDelta0
+-/
+
 open FirstOrder Language BoundedFormula
 
 /-- Models of open induction extended with induction for delta-zero formulas. -/
@@ -57,7 +61,7 @@ by
       rw [IsOpen.not]
       constructor; constructor
   )
-  simp_induction at ind
+  simpInduction at ind
   apply ind ?base ?step <;> clear ind ind1 ind2
   · simp only [IsEmpty.forall_iff]
   · intro a hind h
@@ -107,7 +111,7 @@ by
       · constructor; constructor
     · constructor; constructor; constructor
   )
-  simp_induction at ind
+  simpInduction at ind
   intro x y
   apply ex_of_bdEx
   apply ind ?base ?step <;> clear ind1 ind2 ind3 ind
@@ -119,7 +123,8 @@ by
         _ = 0 + z := (zero_add z).symm
     · rw [idelta0.add_comm]
       left
-      rw [B3]
+      change z + 0 = z
+      exact B3 z
   · intro L hind R
     by_cases h_R_zero : R = 0
     · exists (L + 1)
@@ -127,16 +132,19 @@ by
       · exact B8
       · right
         rw [h_R_zero]
-        rw [idelta0.zero_add]
-        rfl
+        change 0 + (L + 1) = L + 1
+        exact zero_add (L + 1)
     · obtain ⟨pred_R, h_pred_R_le, h_pred_R_eq⟩ := pred_exists h_R_zero
       specialize hind pred_R
       obtain ⟨symdiff_pred, h_symdiff_pred_le, h_symdiff_pred_eq⟩ := hind
+      change symdiff_pred ≤ L + pred_R at h_symdiff_pred_le
       exists symdiff_pred
       cases h_symdiff_pred_eq with
       | inl h_LR =>
+        change L + symdiff_pred = pred_R at h_LR
         constructor
-        · rw [h_pred_R_eq, <- h_LR]
+        · change symdiff_pred ≤ (L + 1) + R
+          rw [h_pred_R_eq, <- h_LR]
           conv =>
             rhs;
             rw [idelta0.add_comm]
@@ -146,14 +154,17 @@ by
           rw [idelta0.add_assoc]
           apply B8
         · left
+          change (L + 1) + symdiff_pred = R
           rw [h_pred_R_eq]
           rw [idelta0.add_assoc]
           conv => lhs; rhs; rw [idelta0.add_comm]
           rw [<- idelta0.add_assoc]
           congr
       | inr h_RL =>
+        change pred_R + symdiff_pred = L at h_RL
         constructor
-        · rw [<- h_RL]
+        · change symdiff_pred ≤ (L + 1) + R
+          rw [<- h_RL]
           conv => rhs; left; left; rw [idelta0.add_comm]
           conv =>
             rhs
@@ -165,11 +176,11 @@ by
           conv => rhs; rw [idelta0.add_assoc]; rw [idelta0.add_assoc]
           apply B8
         · right
+          change R + symdiff_pred = L + 1
           rw [<- h_RL]
           rw [h_pred_R_eq]
           conv => lhs; rw [idelta0.add_assoc]; rhs; rw [idelta0.add_comm]
           rw [idelta0.add_assoc]
-          rfl
 
 -- D3. x ≤ y ↔ ∃ z, x + z = y
 theorem le_iff_exists_add :
@@ -525,13 +536,15 @@ by
     · constructor; constructor; constructor
   )
   unfold ind1 at ind
-  simp_induction at ind
+  simpInduction at ind
   apply ind ?base ?step <;> clear ind ind1
   · intro y z hyz_z
     obtain ⟨hyz, hz⟩ := hyz_z
     by_cases hy : y = 0
     · exact hy.symm
     · rcases pred_exists hy with ⟨yp, _, hyp_eq⟩
+      change 0 * z = y * z at hyz
+      change z ≠ 0 at hz
       rcases pred_exists hz with ⟨zp, _, hzp_eq⟩
       rw [hyp_eq, hzp_eq] at hyz
       exfalso
@@ -545,6 +558,9 @@ by
       exact (B1 (x := (yp + 1) * zp + yp)) (rhs_succ.symm.trans hyz_zero.symm)
   · intro y hind x z hass_hz
     obtain ⟨hass, hz⟩ := hass_hz
+    change (y + 1) * z = x * z at hass
+    change z ≠ 0 at hz
+    change ∀ x z : M, (y * z = x * z ∧ z ≠ 0) → y = x at hind
     -- hind tells us that we can right-cancel
     -- multiplication by `a_1` if the other factor at RHS is `a`
 
@@ -567,9 +583,9 @@ by
         y * z + z = y * z + 1 * z := by rw [one_mul z]
         _ = xp * z + 1 * z := hass
         _ = xp * z + z := by rw [one_mul z]
+    change y + 1 = x
     rw [hxp_eq]
     rw [hind xp z ⟨hass_cancel, hz⟩]
-    rfl
 
 
 end IDelta0Model

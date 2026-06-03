@@ -16,6 +16,10 @@ import Mathlib.Algebra.Lie.Submodule
 import Mathlib.Algebra.Lie.Ideal
 import Mathlib.Algebra.Lie.Nilpotent
 
+/-!
+# LeanPool.LowDimSolvClassification.GeneralResults
+-/
+
 ---possible generalizations to commutative rings instead of fields
 
 section linalg
@@ -95,17 +99,17 @@ theorem LinearIndependent.iff_in_submodule {S : Type*} (N : Submodule K L) {f : 
 
 /-- A function into a submodule `N` defined by specifying a function into the ambient
     space with range in `N`. -/
-def Submodule.map_into_subtype {S : Type*} (N : Submodule K L) (f : S → L) (hr : Set.range f ⊆ N) :
+def Submodule.mapIntoSubtype {S : Type*} (N : Submodule K L) (f : S → L) (hr : Set.range f ⊆ N) :
     S → N := fun x ↦ ⟨f x, hr (Set.mem_range_self x)⟩
 
 /-- A function with range in a given subset gives rise to a function to the corresponding subtype.
 -/
-def Set.map_into_subtype {α β : Type*} (s : Set β) (f : α → β) (hr : Set.range f ⊆ s) :
+def Set.mapIntoSubtype {α β : Type*} (s : Set β) (f : α → β) (hr : Set.range f ⊆ s) :
     α → s := Subtype.coind f fun x => hr ⟨x, rfl⟩
 
 theorem Set.map_into_subtype_apply {α β : Type*} (s : Set β) (f : α →
     β) (hr : Set.range f ⊆ s) (a : α) :
-    Set.map_into_subtype s f hr a = f a := by
+    Set.mapIntoSubtype s f hr a = f a := by
   rfl
 
 /-- A linear independent set which is a subset of a submodule `N` gives a linear independent set in
@@ -114,33 +118,33 @@ the module `N`.
 theorem Submodule.linearIndependent_from_ambient
     {S : Type*} (N : Submodule K L) (f : S → L) (hs : LinearIndependent K f)
         (hr : Set.range f ⊆ N) :
-    LinearIndependent K (Set.map_into_subtype N f hr) := by
+    LinearIndependent K (Set.mapIntoSubtype N f hr) := by
   rw [linearIndependent_iff'] at *
   intro l hl sum i hi
   apply hs l hl
-  · unfold Set.map_into_subtype Subtype.coind at sum
+  · unfold Set.mapIntoSubtype Subtype.coind at sum
     simp only [SetLike.coe_sort_coe, SetLike.mk_smul_mk] at sum
     apply_fun (fun (x :  ↥N) ↦ x.val) at sum
-    simp only [AddSubmonoidClass.coe_finset_sum, ZeroMemClass.coe_zero] at sum
+    simp only [AddSubmonoidClass.coe_finsetSum, ZeroMemClass.coe_zero] at sum
     exact sum
   · exact hi
 
 /-- extends linear independent set -/
-noncomputable def LinearIndependent.extend_fin_succ_fun {n : ℕ} {l : Fin n → L}
+noncomputable def LinearIndependent.extendFinSuccFun {n : ℕ} {l : Fin n → L}
     (hs : LinearIndependent K l)
     (ht : n + 1 ≤ Module.finrank K L) : Fin (n + 1) → L :=
   Fin.cons (Classical.choose (exists_linearIndependent_cons_of_lt_finrank hs ht)) l
 
 /-- the previous extension gives a linearly independent set adding the new element as 0th element
 of the new set -/
-theorem LinearIndependent.extend_fin_succ {n : ℕ} {l : Fin n → L}
+theorem LinearIndependent.extendFinSucc {n : ℕ} {l : Fin n → L}
     (hs : LinearIndependent K l)
     (ht : n + 1 ≤ Module.finrank K L) :
-    LinearIndependent K (LinearIndependent.extend_fin_succ_fun hs ht) ∧
-      ∀ (i : Fin n), (LinearIndependent.extend_fin_succ_fun hs ht) (i.succ) = l i := by
+    LinearIndependent K (LinearIndependent.extendFinSuccFun hs ht) ∧
+      ∀ (i : Fin n), (LinearIndependent.extendFinSuccFun hs ht) (i.succ) = l i := by
     refine ⟨?_, fun i => ?_⟩
     · exact Classical.choose_spec (exists_linearIndependent_cons_of_lt_finrank hs ht)
-    · simp [LinearIndependent.extend_fin_succ_fun, Fin.cons_succ]
+    · simp [LinearIndependent.extendFinSuccFun, Fin.cons_succ]
 
 /-- extends a l.i. set of n elements to a n+k set, adding the new elements at the beggining -/
 theorem LinearIndependent.extend_fin {n k : ℕ} {l : Fin n → L}
@@ -155,53 +159,52 @@ theorem LinearIndependent.extend_fin {n k : ℕ} {l : Fin n → L}
       have le : n + k ≤ Module.finrank K L := by
         exact Nat.le_of_succ_le ht
       let ⟨b, bI, bH⟩ := ih le
-      let ⟨b'I,b'H⟩ := LinearIndependent.extend_fin_succ bI ht
-      use (LinearIndependent.extend_fin_succ_fun bI ht)
+      let ⟨b'I,b'H⟩ := LinearIndependent.extendFinSucc bI ht
+      use (LinearIndependent.extendFinSuccFun bI ht)
       constructor
       · assumption
       · intro i
-        simp only at *
         rw [← bH]
         specialize b'H (i.addNat k)
         assumption
 
 /-- extends a li set of n elements to a basis of n+1 elements (dim space = n+1) -/
-noncomputable def Basis.extend_fin_succ {n : ℕ} {l : Fin n → L}
+noncomputable def Basis.extendFinSucc {n : ℕ} {l : Fin n → L}
     (hs : LinearIndependent K l)
     (ht : Module.finrank K L = n + 1) : Basis (Fin (n + 1)) K L :=
   basisOfLinearIndependentOfCardEqFinrank
-    (LinearIndependent.extend_fin_succ hs (Nat.le_of_eq ht.symm)).1
+    (LinearIndependent.extendFinSucc hs (Nat.le_of_eq ht.symm)).1
     (by rw [← ht]; simp)
 
-/-- The underlying function of `Basis.extend_fin_succ` is the extended family. -/
+/-- The underlying function of `Basis.extendFinSucc` is the extended family. -/
 theorem Basis.coe_extend_fin_succ {n : ℕ} {l : Fin n → L}
     (hs : LinearIndependent K l)
     (ht : Module.finrank K L = n + 1) :
-    ⇑(Basis.extend_fin_succ hs ht) =
-      LinearIndependent.extend_fin_succ_fun hs (Nat.le_of_eq ht.symm) := by
-  simp [Basis.extend_fin_succ, coe_basisOfLinearIndependentOfCardEqFinrank]
+    ⇑(Basis.extendFinSucc hs ht) =
+      LinearIndependent.extendFinSuccFun hs (Nat.le_of_eq ht.symm) := by
+  simp [Basis.extendFinSucc, coe_basisOfLinearIndependentOfCardEqFinrank]
 
-/-- states that Basis.extend_fin_succ adds an element at the 0th place -/
+/-- states that Basis.extendFinSucc adds an element at the 0th place -/
 theorem Basis.extend_fin_succ_tail_eq {n : ℕ} {l : Fin n → L}
     (hs : LinearIndependent K l)
     (ht : Module.finrank K L = n + 1) :
-    Fin.tail ⇑(Basis.extend_fin_succ hs ht) = l := by
+    Fin.tail ⇑(Basis.extendFinSucc hs ht) = l := by
   rw [Basis.coe_extend_fin_succ]
   funext i
-  simp [LinearIndependent.extend_fin_succ_fun, Fin.tail]
+  simp [LinearIndependent.extendFinSuccFun, Fin.tail]
 
 /-- the new zeroth element is not contained in the span of l -/
 theorem Basis.extend_fin_succ_head_not_in_span {n : ℕ} {l : Fin n → L}
     (hs : LinearIndependent K l)
     (ht : Module.finrank K L = n + 1) :
-    ⇑(Basis.extend_fin_succ hs ht) 0 ∉ Submodule.span K (Set.range l) := by
+    ⇑(Basis.extendFinSucc hs ht) 0 ∉ Submodule.span K (Set.range l) := by
   intro h
   have h₁ : Module.finrank K (Submodule.span K (Set.range l)) = n := by
     rw [finrank_span_eq_card hs, Fintype.card_fin]
   have h₂ : Submodule.span K (Set.range l) = ⊤ := by
     apply le_antisymm
     · apply le_top
-    · rw [← Basis.span_eq (Basis.extend_fin_succ hs ht)]
+    · rw [← Basis.span_eq (Basis.extendFinSucc hs ht)]
       rw [Submodule.span_le]
       rw [Fin.range_fin_succ]
       intro x hx
@@ -640,7 +643,7 @@ theorem finrank_commutator_le_one_of_lie_basis {n : ℕ} (B : Basis (Fin n) K L)
   by_cases hX: X = 0
   · rw [hX, span_zero_singleton, ← eq_bot_iff, LieSubmodule.toSubmodule_eq_bot] at h''
     rw [h'']
-    refine le_trans ?_ (zero_le 1)
+    refine le_trans ?_ (Nat.zero_le 1)
     rw [le_zero_iff]
     apply finrank_bot
   · apply Submodule.finrank_mono at h''
@@ -883,23 +886,23 @@ theorem LieEquiv.commutator_map (e : L ≃ₗ⁅K⁆ L') : LieIdeal.map e
   exact LieIdeal.derivedSeries_map_eq 1 (LieEquiv.surjective e)
 
 /-- An equivalence of Lie algebras induces an equivalence of commutator subalgebras. -/
-def LieEquiv.commutator_equiv
+def LieEquiv.commutatorEquiv
     (e : L ≃ₗ⁅K⁆ L') : LieAlgebra.commutator K L ≃ₗ⁅K⁆ LieAlgebra.commutator K L' := by
   apply LieEquiv.ofIdeals e (LieAlgebra.commutator K L) (LieAlgebra.commutator K L')
   exact LieEquiv.commutator_map e
 
 theorem LieEquiv.commutator_equiv_apply (e : L ≃ₗ⁅K⁆ L') (x : L)
     (hx : x ∈ LieAlgebra.commutator K L) :
-    LieEquiv.commutator_equiv e ⟨x, hx⟩ = ⟨e x, LieEquiv.commutator_map e ▸ LieIdeal.mem_map hx ⟩ :=
+    LieEquiv.commutatorEquiv e ⟨x, hx⟩ = ⟨e x, LieEquiv.commutator_map e ▸ LieIdeal.mem_map hx ⟩ :=
   rfl
 
 theorem LieEquiv.commutator_equiv_symm (e : L ≃ₗ⁅K⁆ L') :
-    e.commutator_equiv.symm = e.symm.commutator_equiv :=
+    e.commutatorEquiv.symm = e.symm.commutatorEquiv :=
   rfl
 
 theorem LieAlgebra.dim_commutator_eq_of_lieEquiv (e : L ≃ₗ⁅K⁆ L') :
     Module.finrank K (LieAlgebra.commutator K L) = Module.finrank K (LieAlgebra.commutator K L') :=
-  LinearEquiv.finrank_eq (LieEquiv.commutator_equiv e).toLinearEquiv
+  LinearEquiv.finrank_eq (LieEquiv.commutatorEquiv e).toLinearEquiv
 
 /-- Under an equivalence of Lie algebras, the center is mapped to the center. -/
 theorem LieEquiv.center_map (e : L ≃ₗ⁅K⁆ L') : LieIdeal.map e

@@ -11,6 +11,10 @@ import Mathlib.LinearAlgebra.Matrix.IsDiag
 import Mathlib.LinearAlgebra.Matrix.Swap
 import Mathlib.LinearAlgebra.Matrix.Block
 
+/-!
+# LeanPool.BruhatTits.Utils.Matrix
+-/
+
 open Module
 
 open BigOperators
@@ -144,16 +148,16 @@ variable [Finite n] [Finite m] [Finite n'] [Finite m'] [Nonempty n] [Nonempty m]
   [Nonempty n'] [Nonempty m']
 
 /-- The supremum of the coefficients. -/
-noncomputable def coeffs_sup (g : Matrix n m R) : Γ₀ :=
+noncomputable def coeffsSup (g : Matrix n m R) : Γ₀ :=
   Finset.sup' (finite_coeffs g).toFinset (by simpa using coeffs_nonempty g) v
 
 lemma coeff_le_coeffs_sup (g : Matrix n m R)
-    (i : n) (j : m) : v (g i j) ≤ g.coeffs_sup v :=
+    (i : n) (j : m) : v (g i j) ≤ g.coeffsSup v :=
   Finset.le_sup' _ (by simpa using mem_coeffs g i j)
 
 lemma coeffs_sup_le {g : Matrix n m R} {a : Γ₀}
     (h : ∀ (i : n) (j : m), v (g i j) ≤ a) :
-    g.coeffs_sup v ≤ a := by
+    g.coeffsSup v ≤ a := by
   apply Finset.sup'_le
   intro b hb
   simp only [coeffs, Set.Finite.mem_toFinset, Set.mem_image2, Set.mem_univ, true_and] at hb
@@ -161,12 +165,12 @@ lemma coeffs_sup_le {g : Matrix n m R} {a : Γ₀}
   exact h i j
 
 lemma coeffs_sup_exists_repr (g : Matrix n m R) :
-    ∃ p : n × m, v (g p.1 p.2) = g.coeffs_sup v := by
-  simp only [coeffs_sup]
+    ∃ p : n × m, v (g p.1 p.2) = g.coeffsSup v := by
+  simp only [coeffsSup]
   by_contra h
   simp only [Prod.exists, not_exists] at h
-  have : g.coeffs_sup v < g.coeffs_sup v := by
-    simp only [coeffs_sup, Finset.sup'_lt_iff]
+  have : g.coeffsSup v < g.coeffsSup v := by
+    simp only [coeffsSup, Finset.sup'_lt_iff]
     intro a ha
     simp only [coeffs, Set.Finite.mem_toFinset, Set.mem_image2, Set.mem_univ, true_and] at ha
     obtain ⟨i, j, rfl⟩ := ha
@@ -174,24 +178,24 @@ lemma coeffs_sup_exists_repr (g : Matrix n m R) :
   simp_all
 
 /-- A matrix position where the coefficient supremum is attained. -/
-noncomputable def coeffs_sup_at (g : Matrix n m R) : n × m :=
+noncomputable def coeffsSupAt (g : Matrix n m R) : n × m :=
   (g.coeffs_sup_exists_repr v).choose
 
 lemma coeffs_sup_at_sup (g : Matrix n m R) :
-    v (g (g.coeffs_sup_at v).1 (g.coeffs_sup_at v).2) = g.coeffs_sup v :=
+    v (g (g.coeffsSupAt v).1 (g.coeffsSupAt v).2) = g.coeffsSup v :=
   (g.coeffs_sup_exists_repr v).choose_spec
 
 /-- The supremum of the coefficients is invariant under transposition. -/
 lemma coeffs_sup_transpose (g : Matrix n m R) :
-    g.transpose.coeffs_sup v = g.coeffs_sup v := by
-  simp only [coeffs_sup, transpose_coeffs]
+    g.transpose.coeffsSup v = g.coeffsSup v := by
+  simp only [coeffsSup, transpose_coeffs]
 
 lemma coeffs_sup_fromBlocks (A : Matrix n n' R) (B : Matrix n m R)
     (C : Matrix m' n' R) (D : Matrix m' m R) :
-    (A.fromBlocks B C D).coeffs_sup v =
-      A.coeffs_sup v ⊔ B.coeffs_sup v ⊔ C.coeffs_sup v ⊔ D.coeffs_sup v := by
+    (A.fromBlocks B C D).coeffsSup v =
+      A.coeffsSup v ⊔ B.coeffsSup v ⊔ C.coeffsSup v ⊔ D.coeffsSup v := by
   classical
-  simp only [coeffs_sup, ← Finset.sup'_union, coeffs_fromBlocks]
+  simp only [coeffsSup, ← Finset.sup'_union, coeffs_fromBlocks]
   congr
   ext
   simp
@@ -247,13 +251,13 @@ lemma swap_mul_coeffs (g : Matrix m m R) (i j : m) :
 omit [Fintype n] in
 @[simp]
 lemma coeffs_sup_mul_swap [Nonempty m] (g : Matrix m m R) (i j : m) :
-    (g * swap R i j).coeffs_sup v = g.coeffs_sup v := by
-  simp only [coeffs_sup, mul_swap_coeffs]
+    (g * swap R i j).coeffsSup v = g.coeffsSup v := by
+  simp only [coeffsSup, mul_swap_coeffs]
 
 @[simp]
 lemma coeffs_sup_swap_mul [Nonempty m] (g : Matrix m m R) (i j : m) :
-    (swap R i j * g).coeffs_sup v = g.coeffs_sup v := by
-  simp only [coeffs_sup, swap_mul_coeffs]
+    (swap R i j * g).coeffsSup v = g.coeffsSup v := by
+  simp only [coeffsSup, swap_mul_coeffs]
 
 end «Fintype»
 
@@ -265,17 +269,17 @@ variable [DecidableEq n'] [DecidableEq m']
 omit [DecidableEq n'] [DecidableEq m'] in
 lemma coeffs_sup_reindex [Nonempty n] [Nonempty m] [Nonempty n'] [Nonempty m']
     (g : Matrix n m R) (e : n ≃ n') (f : m ≃ m') :
-    (reindex e f g).coeffs_sup v = g.coeffs_sup v := by
+    (reindex e f g).coeffsSup v = g.coeffsSup v := by
   letI : Fintype n := Fintype.ofFinite n
   letI : Fintype m := Fintype.ofFinite m
   letI : Fintype n' := Fintype.ofFinite n'
   letI : Fintype m' := Fintype.ofFinite m'
-  simp only [coeffs_sup, coeffs_reindex]
+  simp only [coeffsSup, coeffs_reindex]
 
 omit [DecidableEq n'] [DecidableEq m'] in
 lemma coeffs_sup_toBlock₁₁_le_coeffs_sup [Nonempty n] [Nonempty m']
     (g : Matrix (n ⊕ n') (m' ⊕ m) R) :
-    g.toBlocks₁₁.coeffs_sup v ≤ g.coeffs_sup v := by
+    g.toBlocks₁₁.coeffsSup v ≤ g.coeffsSup v := by
   letI : Fintype n := Fintype.ofFinite n
   letI : Fintype m := Fintype.ofFinite m
   letI : Fintype n' := Fintype.ofFinite n'
@@ -285,14 +289,14 @@ lemma coeffs_sup_toBlock₁₁_le_coeffs_sup [Nonempty n] [Nonempty m']
   apply coeff_le_coeffs_sup
 
 lemma coeffs_sup_zero [Nonempty n] [Nonempty m] :
-    (0 : Matrix n m R).coeffs_sup v = 0 := by
+    (0 : Matrix n m R).coeffsSup v = 0 := by
   letI : Fintype n := Fintype.ofFinite n
   letI : Fintype m := Fintype.ofFinite m
-  simp [coeffs_sup, coeffs_zero, map_zero]
+  simp [coeffsSup, coeffs_zero, map_zero]
 
-lemma coeffs_sup_one [Nonempty n] [DecidableEq n] : (1 : Matrix n n R).coeffs_sup v = 1 := by
+lemma coeffs_sup_one [Nonempty n] [DecidableEq n] : (1 : Matrix n n R).coeffsSup v = 1 := by
   letI : Fintype n := Fintype.ofFinite n
-  simp only [coeffs_sup]
+  simp only [coeffsSup]
   apply le_antisymm
   · simp only [Finset.sup'_le_iff]
     intro b hb
@@ -304,9 +308,9 @@ lemma coeffs_sup_one [Nonempty n] [DecidableEq n] : (1 : Matrix n n R).coeffs_su
     simpa using one_mem_coeffs_one
 
 lemma coeffs_sup_unique [Unique n] (g : Matrix n n R) :
-    g.coeffs_sup v = v (g default default) := by
+    g.coeffsSup v = v (g default default) := by
   letI : Fintype n := Fintype.ofFinite n
-  simp [coeffs_sup, coeffs_unique]
+  simp [coeffsSup, coeffs_unique]
 
 end «FiniteLemmas»
 
@@ -324,7 +328,7 @@ def _root_.Matrix.TransvectionStruct.toGL (t : TransvectionStruct n R) : GL n R 
   inv_val := t.inv_mul
 
 /-- The transpose of an invertible matrix as an element of `GL`. -/
-@[simps]
+@[simps val]
 def _root_.Matrix.GL.transpose (g : GL n R) : GL n R where
   val := g.val.transpose
   inv := g.inv.transpose
@@ -335,13 +339,21 @@ def _root_.Matrix.GL.transpose (g : GL n R) : GL n R where
     rw [← Matrix.transpose_mul]
     simp
 
+lemma _root_.Matrix.GL.val_inv_transpose (g : GL n R) :
+    ↑(Matrix.GL.transpose g)⁻¹ = g.inv.transpose :=
+  rfl
+
 /-- A diagonal matrix with unit diagonal entries as an element of `GL`. -/
-@[simps]
+@[simps val]
 def _root_.Matrix.GL.diagonal (g : n → Rˣ) : GL n R where
   val := Matrix.diagonal (fun j ↦ g j)
   inv := Matrix.diagonal (fun j ↦ (g j).inv)
   val_inv := by simp
   inv_val := by simp
+
+lemma _root_.Matrix.GL.val_inv_diagonal (g : n → Rˣ) :
+    ↑(Matrix.GL.diagonal g)⁻¹ = Matrix.diagonal (fun j ↦ (g j).inv) :=
+  rfl
 
 lemma _root_.Matrix.GL.diagonal_det (g : n → Rˣ) :
     GeneralLinearGroup.det (GL.diagonal g) = ∏ i : n, g i := by
@@ -351,7 +363,7 @@ lemma _root_.Matrix.GL.diagonal_det (g : n → Rˣ) :
 variable [DecidableEq m] [Fintype m]
 
 /-- The block diagonal sum of two general linear matrices. -/
-@[simps]
+@[simps val]
 def _root_.Matrix.GL.diagonalBlocks (g : GL n R) (h : GL m R) : GL (n ⊕ m) R where
   val := Matrix.fromBlocks g 0 0 h
   inv := Matrix.fromBlocks g.inv 0 0 h.inv
@@ -362,13 +374,21 @@ def _root_.Matrix.GL.diagonalBlocks (g : GL n R) (h : GL m R) : GL (n ⊕ m) R w
     rw [Matrix.fromBlocks_multiply]
     simp
 
+lemma _root_.Matrix.GL.val_inv_diagonalBlocks (g : GL n R) (h : GL m R) :
+    ↑(Matrix.GL.diagonalBlocks g h)⁻¹ = Matrix.fromBlocks g.inv 0 0 h.inv :=
+  rfl
+
 /-- Reindex the rows and columns of an element of `GL` along an equivalence. -/
-@[simps]
+@[simps val]
 def _root_.Matrix.GL.reindex (e : n ≃ m) (g : GL n R) : GL m R where
   val := Matrix.reindex e e g
   inv := Matrix.reindex e e g.inv
   val_inv := by simp
   inv_val := by simp
+
+lemma _root_.Matrix.GL.val_inv_reindex (e : n ≃ m) (g : GL n R) :
+    ↑(Matrix.GL.reindex e g)⁻¹ = Matrix.reindex e e g.inv :=
+  rfl
 
 lemma _root_.Matrix.GL.conj_diagonal_apply {ι : Type*} [Fintype ι]
     [DecidableEq ι] (d : ι → Rˣ) (g : GL ι R) (i j : ι) :
@@ -493,7 +513,8 @@ lemma mem_toSubmodule (g : GL ι K) (x : ι → K) :
 end «Basis»
 
 /-- Invertible matrices over `K` act on `R`-submodules of `ι → K`. -/
-instance : SMul (GL ι K) (Submodule R (ι → K)) where
+instance instSMulSubmoduleSubtypeMemSubringForallLeanPool :
+    SMul (GL ι K) (Submodule R (ι → K)) where
   smul g M := Submodule.map ((toLin g).val : (ι → K) →ₗ[R] ι → K) M
 
 lemma smul_def (g : GL ι K) (M : Submodule R (ι → K)) :
@@ -516,7 +537,8 @@ lemma diagonal_smul (f : ι → Kˣ) (M : Submodule R (ι → K)) (hf : ∀ i j,
   simp [mem_smul, Set.mem_smul_set, Units.smul_def]
 
 /-- Invertible matrices over `K` act on `R`-submodules of `ι → K`. -/
-instance : MulAction (GL ι K) (Submodule R (ι → K)) where
+instance instMulActionSubmoduleSubtypeMemSubringForallLeanPool :
+    MulAction (GL ι K) (Submodule R (ι → K)) where
   one_smul M := by
     rw [smul_def]
     ext
@@ -547,7 +569,8 @@ noncomputable def smulBasis {R M : Type*} [CommRing R] [AddCommMonoid M] [Module
     (b : Basis ι R M) : Basis ι R M :=
   b.map (toLinearEquivOfBasis b g)
 
-noncomputable instance (M : Submodule R (ι → K)) : SMul (GL ι R)ᵐᵒᵖ (Basis ι R M) where
+noncomputable instance instSMulMulOppositeSubtypeMemSubringBasisForallSubmoduleLeanPool
+    (M : Submodule R (ι → K)) : SMul (GL ι R)ᵐᵒᵖ (Basis ι R M) where
   smul := fun ⟨g⟩ b ↦ smulBasis g b
 
 lemma basis_smul_def {M : Submodule R (ι → K)} (g : GL ι R) (b : Basis ι R M) :

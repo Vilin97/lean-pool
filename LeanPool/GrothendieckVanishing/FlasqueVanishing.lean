@@ -71,8 +71,7 @@ lemma sections_exact_of_shortExact {X : TopCat.{u}}
     @ShortComplex.Exact.map_of_mono_of_preservesKernel _ _ _ _ _ _ S _
       hS.exact sectV hzero hhomology hS.mono_f
       (PreservesLimitsOfShape.preservesLimit (F := sectV) (K := parallelPair S.g 0))
-  simpa [complex, sectV] using
-    (ShortComplex.ab_exact_iff complex).mp hexact x hx
+  exact (ShortComplex.ab_exact_iff complex).mp hexact x hx
 
 private lemma presheaf_map_eq {X : TopCat.{u}}
     (F : (Opens X)ᵒᵖ ⥤ AddCommGrpCat.{u})
@@ -174,7 +173,7 @@ private abbrev underMk {X : TopCat.{u}} {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
   StructuredArrow.mk (S := ⟨op U, s⟩)
     (T := (Functor.whiskerRight g.hom (CategoryTheory.forget AddCommGrpCat.{u})).mapElements)
     (Y := ⟨op V, t⟩)
-    (CategoryOfElements.homMk _ _ (homOfLE hVU).op (by simpa using ht.symm))
+    (CategoryOfElements.homMk _ _ (homOfLE hVU).op (by exact ht.symm))
 
 private lemma chain_isCompatible_of_chain {X : TopCat.{u}}
     {F G : TopCat.Sheaf AddCommGrpCat.{u} X}
@@ -232,12 +231,13 @@ private lemma exists_glued_lift_upper_bound {X : TopCat.{u}}
     apply map_glued_eq_of_local_eq g (fun j ↦ le_trans (le_iSup cV j) hVsup_le) ht_gl
     intro j
     have hmap := CategoryOfElements.map_snd (T j).hom
-    simpa [cV, cs] using hmap.symm
+    exact hmap.symm
   let y := underMk g s t_gl hVsup_le hgt
   refine ⟨y, rfl, fun i ↦ ?_⟩
   exact Nonempty.intro (StructuredArrow.homMk
     (CategoryOfElements.homMk _ _ (homOfLE (le_iSup cV i)).op (by
-      simpa [y, cV, cs] using ht_gl i))
+      change ConcreteCategory.hom (F.obj.map (homOfLE (le_iSup cV i)).op) t_gl = cs i
+      exact ht_gl i))
     (by cat_disch))
 
 /-! ### Structured-arrow Zorn setup for partial lifts -/
@@ -266,7 +266,7 @@ private lemma under_extend_by_one_open {X : TopCat.{u}}
   have ht₀ : ConcreteCategory.hom (S.g.hom.app (op V₀)) t₀ =
       ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s := by
     have hmap := CategoryOfElements.map_snd t.hom
-    simpa [V₀, t₀] using hmap.symm
+    exact hmap.symm
   obtain ⟨t'', hgt'', hcompat_patch⟩ :=
     exists_patch_of_shortExact hS hX₁_epi hV₀U hWU ht₀ ht'
   let T : Bool → PartialLift S.g s
@@ -275,7 +275,10 @@ private lemma under_extend_by_one_open {X : TopCat.{u}}
   have hcompat_glue : TopCat.Presheaf.IsCompatible S.X₂.obj
       (fun b ↦ (T b).right.1.unop) (fun b ↦ (T b).right.2) := by
     apply bool_isCompatible_of_false_true_eq S.X₂.obj
-    simpa [T, V₀, t₀] using hcompat_patch
+    change
+      ConcreteCategory.hom (S.X₂.obj.map (homOfLE (inf_le_right : V₀ ⊓ W ≤ W)).op) t'' =
+        ConcreteCategory.hom (S.X₂.obj.map (homOfLE (inf_le_left : V₀ ⊓ W ≤ V₀)).op) t₀
+    exact hcompat_patch
   obtain ⟨y, hy_open, hy⟩ := exists_glued_lift_upper_bound S.g s T hcompat_glue
   refine ⟨y, hy false, ?_⟩
   rw [hy_open]
@@ -311,7 +314,7 @@ theorem epi_app_of_shortExact_of_epi_restrictions {X : TopCat.{u}}
   have ht₀ : ConcreteCategory.hom (S.g.hom.app (op V₀)) t₀ =
       ConcreteCategory.hom (S.X₃.obj.map (homOfLE hV₀U).op) s := by
     have hmap := CategoryOfElements.map_snd t.hom
-    simpa [V₀, t₀] using hmap.symm
+    exact hmap.symm
   have hUleV₀ : U ≤ V₀ := by
     by_contra hnot
     have hlt : V₀ < U := lt_of_le_not_ge hV₀U hnot

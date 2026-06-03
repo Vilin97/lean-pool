@@ -6,8 +6,6 @@ Authors: Judith Ludwig, Christian Merten
 import LeanPool.BruhatTits.Graph.Graph
 import LeanPool.BruhatTits.Utils.GraphAction
 
-open Module
-
 /-!
 # Group actions on the Bruhat-Tits graph
 
@@ -25,6 +23,9 @@ In this file we equip the Bruhat-Tits graph with group actions of `GL₂(K)` and
   the subgroup of `GL₂(R)` that is upper triangular modulo `ϖ ^ n`.
 
 -/
+
+open Module
+
 
 -- Let R be a discrete valuation ring and K its field of fractions
 variable {K : Type*} [Field K]
@@ -310,14 +311,16 @@ lemma mem_stabilizer_twist_iff_mem {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 
     refine ⟨?_, ?_⟩
     · have := hk 0 1
       simp only [Fin.isValue, conj_cartanDiag_zero_one, Matrix.GeneralLinearGroup.map_apply,
-        Subring.subtype_apply, Matrix.map_apply] at this
+        Subring.subtype_apply] at this
+      change ϖ.val ^ (f 1 - f 0) * (GL.map R.subtype g : GL (Fin 2) K) 0 1 ∈ R
       rw [← this, zpow_sub₀ hne, zpow_sub₀ hne]
       ring_nf
       field_simp [zpow_ne_zero]
       exact (k 0 1).property
     · have := hk 1 0
       simp only [Fin.isValue, conj_cartanDiag_one_zero, Matrix.GeneralLinearGroup.map_apply,
-        Subring.subtype_apply, Matrix.map_apply] at this
+        Subring.subtype_apply] at this
+      change ϖ.val ^ (f 0 - f 1) * (GL.map R.subtype g : GL (Fin 2) K) 1 0 ∈ R
       rw [← this, zpow_sub₀ hne, zpow_sub₀ hne]
       ring_nf
       field_simp [zpow_ne_zero]

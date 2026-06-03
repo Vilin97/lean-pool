@@ -6,6 +6,9 @@ Authors: Martin Dvorak
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Order.Group.Defs
 
+/-!
+# LeanPool.Duality.Common
+-/
 
 section finset_sums
 variable {α β : Type*}

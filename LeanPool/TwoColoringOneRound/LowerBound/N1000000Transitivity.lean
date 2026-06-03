@@ -14,6 +14,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000Transitivity
@@ -146,12 +150,12 @@ theorem exists_perm_fixing_base_of_baseOrbit (k : DirIdx) (w w' : BaseOrbit k) :
     refine
       { toFun := fun x => ⟨x.1, by
             change ¬ x.1 < cutoff
-            exact not_lt.2 (by simpa [cutoff] using x.2)⟩
+            exact not_lt.2 x.2⟩
         invFun := fun x => ⟨x.1, by
             have hx : x.1 ∉ baseSet := x.2
             have hx' : ¬ x.1 < cutoff := by
               simpa [baseSet] using hx
-            simpa [cutoff] using (not_lt.1 hx')⟩
+            exact show (3 : Nat) ≤ x.1 from not_lt.1 hx'⟩
         left_inv := by intro x; rfl
         right_inv := by intro x; rfl }
   let m : Nat := Fintype.card (FreeCol k)
@@ -197,10 +201,10 @@ theorem exists_perm_fixing_base_of_baseOrbit (k : DirIdx) (w w' : BaseOrbit k) :
           have := congrArg
             (fun t : Fin m ↪ SubMulAction.ofFixingSubgroup G baseSet => t i) hτ
           simpa [x, y, e, i, jf, Function.Embedding.trans_apply] using this
-        have : τ.1 (w.1.1 j) = w'.1.1 j := by
-          simpa [keyEmb, availEquiv, Function.Embedding.trans_apply] using
-            congrArg Subtype.val hτ_apply
-        simpa using this
+        have : τ • w.1.1 j = w'.1.1 j := by
+          exact congrArg Subtype.val hτ_apply
+        change τ • w.1.1 j = w'.1.1 j
+        exact this
     | some i =>
         have hi : colMatch (maskAt k) j = some i := by simp [hcol]
         have hw : w.1.1 j = baseVertex.1 i := base_eq_of_colMatch (u := w) (j := j) (i := i) hi
@@ -256,7 +260,9 @@ theorem exists_perm_of_dirMask_eq {u v u' v' : V} (h : dirMask u v = dirMask u' 
         have : σ2 • u' = baseVertex := hσ2
         -- act by `σ2.symm` on both sides
         have : u' = σ2.symm • baseVertex := by
-          simpa [smul_smul] using congrArg (fun t => σ2.symm • t) this
+          rw [← this]
+          symm
+          exact inv_smul_smul σ2 u'
         simpa using this.symm
   · -- on `v`
     have hτw' : τ • w = w' := by
@@ -267,8 +273,8 @@ theorem exists_perm_of_dirMask_eq {u v u' v' : V} (h : dirMask u v = dirMask u' 
       _ = σ2.symm • (τ • w) := by rfl
       _ = σ2.symm • w' := by simp [hτw']
       _ = v' := by
-        -- `w' = σ2 • v'`
-        simp [w', smul_smul]
+        change σ2.symm • (σ2 • v') = v'
+        exact inv_smul_smul σ2 v'
 
 theorem corrAvg_eq_of_dirMask_eq (f : Coloring n) {u v u' v' : V}
     (h : dirMask u v = dirMask u' v') : corrAvg f u v = corrAvg f u' v' := by

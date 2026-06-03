@@ -6,10 +6,16 @@ Authors: Judith Ludwig, Christian Merten
 import Mathlib.Combinatorics.SimpleGraph.Basic
 import Mathlib.Combinatorics.SimpleGraph.Acyclic
 import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
-import Mathlib.Tactic
-
-open Module
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 /-!
 # Definition of Graph Action
 
@@ -21,6 +27,9 @@ on the vertices of `X` that preserves the adjacency relation.
 We show that a graph action induces an action on the edges.
 
 -/
+
+open Module
+
 
 variable {V : Type*}
 

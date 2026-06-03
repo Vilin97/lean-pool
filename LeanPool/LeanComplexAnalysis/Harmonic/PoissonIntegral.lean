@@ -147,7 +147,6 @@ lemma cauchy_integral_formula_on_scaled_unitDisc {E : Type*} [NormedAddCommGroup
     rw [← mul_assoc I I⁻¹, mul_inv_cancel₀ I_ne_zero, one_mul]
     ring_nf
   rw [this, Complex.real_smul, mul_smul]
-  exact (algebraMap_smul ℂ _ _).symm
 
 /-- If `f` is analytic on the unit disc, then
 `ζ ↦ (star z / (I * (1 - star z * ζ))) • f (r * ζ)`
@@ -383,7 +382,7 @@ theorem poisson_kernel_continousOn_circle {z : ℂ} (hz : z ∈ ball 0 1) :
   exact (lt_self_iff_false 1).mp hz
 
 /-- The sequence `r_n = 1 - 1 / (n + 2)` is in (0,1) and tends to `1` as `n → ∞`. -/
-lemma seq_tendsto_to_one_in_unit_interval_aux :
+lemma seq_tendsto_to_oneIn_unit_interval_aux :
     let r : ℕ → ℝ := fun n => 1 - 1 / (n + 2)
     (∀ n, r n ∈ Ioo 0 1) ∧ Tendsto r atTop (𝓝 1) := by
   let r : ℕ → ℝ := fun n => 1 - 1 / (n + 2)
@@ -419,7 +418,7 @@ theorem poisson_integral_of_harmonicOn_unitDisc_continuousOn_closedUnitDisc
     u z = (1 / (2 * π)) * ∫ t in 0..(2 * π),
       (1 - ‖z‖ ^ 2) / ‖(exp (t * I)) - z‖ ^ 2 * u (exp (t * I)) := by
   let r : ℕ → ℝ := fun n => 1 - 1 / (n + 2)
-  obtain ⟨hr, hr_lim⟩ := seq_tendsto_to_one_in_unit_interval_aux
+  obtain ⟨hr, hr_lim⟩ := seq_tendsto_to_oneIn_unit_interval_aux
   have h_poisson (n : ℕ) := poisson_formula_of_harmonicOn_scaled_unitDisc hu (hr n) hz
   have hu_lim := tendsto_integral_prod_of_continuousOn_unitCircle_closedUnitDisc hc
                  (poisson_kernel_continousOn_circle hz) hr hr_lim
@@ -441,7 +440,7 @@ theorem poisson_integral_of_analyticOn_unitDisc_continuousOn_closedUnitDisc
     f z = (1 / (2 * π)) • ∫ t in 0..(2 * π),
       ((1 - ‖z‖ ^ 2) / ‖exp (t * I) - z‖ ^ 2) • f (exp (t * I)) := by
   let r : ℕ → ℝ := fun n => 1 - 1 / (n + 2)
-  obtain ⟨hr, hr_lim⟩ := seq_tendsto_to_one_in_unit_interval_aux
+  obtain ⟨hr, hr_lim⟩ := seq_tendsto_to_oneIn_unit_interval_aux
   have h_poisson (n : ℕ) := poisson_formula_of_analyticOn_scaled_unitDisc hf (hr n) hz
   have hu_lim : Tendsto (fun n => (f (r n * z))) atTop (𝓝 ((1 / (2 * π)) • ∫ t in 0..2 * π,
       ((1 - ‖z‖ ^ 2) / ‖(exp (t * I)) - z‖ ^ 2) • f (exp (t * I)))) := by
