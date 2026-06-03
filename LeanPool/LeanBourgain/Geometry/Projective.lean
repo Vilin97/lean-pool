@@ -13,7 +13,7 @@ import LeanPool.LeanBourgain.Geometry.Lines
 
 For two distinct affine points `p` and `q`, there is a linear automorphism of the
 projective space `α × α × α` sending the line through `p` and `q` to the line at
-infinity (`projective_transform`). This is the key change of coordinates used to
+infinity (`projectiveTransform`). This is the key change of coordinates used to
 reduce incidence estimates for general lines to the grid case.
 -/
 
@@ -25,12 +25,12 @@ variable {α : Type*} [Field α]
 
 /-- A linear automorphism of `α × α × α` sending the line through two distinct
 points `p` and `q` to the line at infinity. -/
-noncomputable def projective_transform (p q : α × α) (h : p ≠ q) :
+noncomputable def projectiveTransform (p q : α × α) (h : p ≠ q) :
     (α × α × α) ≃ₗ[α] (α × α × α) := by
   let l := Submodule.pair p q
   let inf := Submodule.infinity α
-  have b₁ := Submodule.pair_basis p q h
-  have b₂ := Submodule.infinity_basis α
+  have b₁ := Submodule.pairBasis p q h
+  have b₂ := Submodule.infinityBasis α
   have f : l ≃ₗ[α] inf := b₁.repr.trans b₂.repr.symm
   let l' := Classical.choose (Submodule.exists_isCompl l)
   have l'p : IsCompl l l' := Classical.choose_spec _
@@ -57,9 +57,9 @@ noncomputable def projective_transform (p q : α × α) (h : p ≠ q) :
   exact f'₁.symm ≪≫ₗ (LinearEquiv.prodCongr f f') ≪≫ₗ f'₂
 
 lemma project_p (p q : α × α) (h : p ≠ q) :
-    (projective_transform p q h) ⟨p.1, p.2, 1⟩ = ⟨1, 0, 0⟩ := by
+    (projectiveTransform p q h) ⟨p.1, p.2, 1⟩ = ⟨1, 0, 0⟩ := by
   let p' : Submodule.pair p q := ⟨⟨p.1, p.2, 1⟩, mem_span1 p q⟩
-  simp only [projective_transform, LinearEquiv.trans_apply, LinearEquiv.prodCongr_apply]
+  simp only [projectiveTransform, LinearEquiv.trans_apply, LinearEquiv.prodCongr_apply]
   rw [(Submodule.prodEquivOfIsCompl_symm_apply_snd_eq_zero ..).mpr (mem_span1 p q)]
   have : (⟨p.1, p.2, 1⟩ : (α × α × α)) = ↑p' := by simp [p']
   rw [this, Submodule.prodEquivOfIsCompl_symm_apply_left]
@@ -69,9 +69,9 @@ lemma project_p (p q : α × α) (h : p ≠ q) :
   simp [infinity_first]
 
 lemma project_q (p q : α × α) (h : p ≠ q) :
-    (projective_transform p q h) ⟨q.1, q.2, 1⟩ = ⟨0, 1, 0⟩ := by
+    (projectiveTransform p q h) ⟨q.1, q.2, 1⟩ = ⟨0, 1, 0⟩ := by
   let q' : Submodule.pair p q := ⟨(q.1, q.2, 1), mem_span2 p q⟩
-  simp only [projective_transform, LinearEquiv.trans_apply, LinearEquiv.prodCongr_apply]
+  simp only [projectiveTransform, LinearEquiv.trans_apply, LinearEquiv.prodCongr_apply]
   rw [(Submodule.prodEquivOfIsCompl_symm_apply_snd_eq_zero ..).mpr (mem_span2 p q)]
   have : (⟨q.1, q.2, 1⟩ : (α × α × α)) = ↑q' := by simp [q']
   rw [this, Submodule.prodEquivOfIsCompl_symm_apply_left]
@@ -82,7 +82,7 @@ lemma project_q (p q : α × α) (h : p ≠ q) :
 
 lemma of_line (p q : α × α) (h : p ≠ q) (x : α × α × α)
     (h₂ : x ∈ (Submodule.pair p q : Set _)) :
-    (projective_transform p q h) x ∈ (Submodule.infinity α : Set _) := by
+    (projectiveTransform p q h) x ∈ (Submodule.infinity α : Set _) := by
   rw [infinity_mem]
   rw [SetLike.mem_coe, Submodule.pair, Submodule.mem_span_pair] at h₂
   have ⟨a, b, h₂⟩ := h₂
@@ -93,7 +93,7 @@ lemma of_line (p q : α × α) (h : p ≠ q) (x : α × α × α)
 
 lemma of_infinity (p q : α × α) (h : p ≠ q) (x : α × α × α)
     (h₂ : x ∈ (Submodule.infinity α : Set _)) :
-    (projective_transform p q h).symm x ∈ (Submodule.pair p q : Set _) := by
+    (projectiveTransform p q h).symm x ∈ (Submodule.pair p q : Set _) := by
   rw [infinity_mem] at h₂
   rw [SetLike.mem_coe, Submodule.pair, Submodule.mem_span_pair]
   exists x.1, x.2.1
@@ -104,7 +104,7 @@ lemma of_infinity (p q : α × α) (h : p ≠ q) (x : α × α × α)
   refine ⟨?_, ?_, ?_⟩ <;> simp [h₂]
 
 lemma non_erasing (p q x : α × α) (h : p ≠ q) (h₂ : ¬x ∈ Line.of p q h) :
-    ((projective_transform p q h) ⟨x.1, x.2, 1⟩).2.2 ≠ 0 := by
+    ((projectiveTransform p q h) ⟨x.1, x.2, 1⟩).2.2 ≠ 0 := by
   intro nh
   rw [← infinity_mem] at nh
   suffices x ∈ Line.of p q h by contradiction

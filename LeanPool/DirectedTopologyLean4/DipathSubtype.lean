@@ -5,6 +5,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 import LeanPool.DirectedTopologyLean4.FundamentalCategory
 
+/-!
+# LeanPool.DirectedTopologyLean4.DipathSubtype
+-/
+
 /-
   This file contains properties of dipaths contained in directed subspaces of a directed space.
   In particular, properties about their equivalence classes in the fundamental category.

@@ -52,16 +52,16 @@ lemma pairwise_disjoint_indexTri :
 
 lemma iUnion_indexTri :
     ⋃ ε, indexTri ε = Set.univ := by
-  · simp only [indexTri, Set.iUnion_eq_univ_iff]
-    intro i
-    match i with
-    | none => refine ⟨0, by decide⟩
-    | some n =>
-      by_cases hn0 : n = 0
-      · refine ⟨0, by simp [hn0]⟩
-      by_cases n_pos : 0 < n
-      · refine ⟨1, by simp [n_pos]⟩
-      · have n_neg : n < 0 := by grind
-        refine ⟨-1, by simp [n_neg]⟩
+  simp only [indexTri, Set.iUnion_eq_univ_iff]
+  intro i
+  match i with
+  | none => refine ⟨0, by decide⟩
+  | some n =>
+    by_cases hn0 : n = 0
+    · refine ⟨0, by simp [hn0]⟩
+    by_cases n_pos : 0 < n
+    · refine ⟨1, by simp [n_pos]⟩
+    · have n_neg : n < 0 := by grind
+      refine ⟨-1, by simp [n_neg]⟩
 
 end VirasoroProject

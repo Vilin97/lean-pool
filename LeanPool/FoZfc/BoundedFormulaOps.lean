@@ -301,10 +301,10 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
     let xs1 (k : Fin (_n+1+n')) : V := (fixedSnoc xs a) (Fin.cast h_bar_n k)
     let ih1 := ih xs1
     have h1 : (mapTermRel (fun x t ↦ Term.liftAt n' m t) (fun x ↦ id)
-        (fun x ↦ castLE (liftAt._proof_1 n' x : x + 1 + n' ≤ x + n' + 1)) f).Realize
-        s xs1 ↔ (castLE (liftAt._proof_1 n' _n : _n + 1 + n' ≤ _n + n' + 1)
+        (fun x ↦ castLE (by omega : x + 1 + n' ≤ x + n' + 1)) f).Realize
+        s xs1 ↔ (castLE (by omega : _n + 1 + n' ≤ _n + n' + 1)
         (mapTermRel (fun x t ↦ Term.liftAt n' m t) (fun x ↦ id)
-        (fun x ↦ castLE (liftAt._proof_1 n' x : x + 1 + n' ≤ x + n' + 1)) f)).Realize
+        (fun x ↦ castLE (by omega : x + 1 + n' ≤ x + n' + 1)) f)).Realize
         s (fixedSnoc xs a) := by
       rw [realize_castLE_of_eq (h := h_bar_n)]
       have h1_1 : (fixedSnoc xs a ∘ Fin.cast h_bar_n) = xs1 := by

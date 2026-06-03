@@ -16,7 +16,7 @@ import LeanPool.Sensitivity.Consequences
 /-!
 # Sensitivity Conjecture: sqrt(deg) <= sensitivity
 
-Source: url:https://github.com/SamuelSchlesinger/sensitivity-conjecture
+Source: arxiv:1907.00847
 Authors: Samuel Schlesinger
 Status: verified
 Main declarations: `LeanPoolSensitivity.sensitivity_ge_sqrt_degree`

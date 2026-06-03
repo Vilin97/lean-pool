@@ -9,6 +9,10 @@ import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 import LeanPool.SardMoreira.ContDiffMoreiraHolder
 import LeanPool.SardMoreira.LinearAlgebra
 
+/-!
+# LeanPool.SardMoreira.ImplicitFunction
+-/
+
 noncomputable section
 
 open scoped Topology unitInterval

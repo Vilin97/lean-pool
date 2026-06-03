@@ -5,6 +5,10 @@ Authors: Vasily Ilin
 -/
 import LeanPool.Clawristotle.Section3Helpers
 
+/-!
+# LeanPool.Clawristotle.Section3Helpers2
+-/
+
 open MeasureTheory Matrix Finset BigOperators Real
 
 noncomputable section

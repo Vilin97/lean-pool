@@ -98,7 +98,7 @@ namespace Submodule
 
 /-- A basis of the span of two distinct affine points, given by their projective
 lifts. -/
-noncomputable def pair_basis (i j : α × α) (h : i ≠ j) :
+noncomputable def pairBasis (i j : α × α) (h : i ≠ j) :
     Basis (Fin 2) α (Submodule.pair i j) := by
   have := Basis.span
     (R := α)
@@ -114,22 +114,22 @@ noncomputable def pair_basis (i j : α × α) (h : i ≠ j) :
 end Submodule
 
 lemma repr_pair_basis_first' (i j : α × α) (h : i ≠ j) :
-    (Submodule.pair_basis i j h) 0 = ⟨⟨i.1, i.2, 1⟩, mem_span1 i j⟩ := by
+    (Submodule.pairBasis i j h) 0 = ⟨⟨i.1, i.2, 1⟩, mem_span1 i j⟩ := by
   apply Subtype.ext
-  simp [Submodule.pair_basis, Basis.span_apply]
+  simp [Submodule.pairBasis, Basis.span_apply]
 
 lemma repr_pair_basis_first (i j : α × α) (h : i ≠ j) :
-    (Submodule.pair_basis i j h).repr ⟨⟨i.1, i.2, 1⟩, mem_span1 i j⟩ = Finsupp.single 0 1 := by
+    (Submodule.pairBasis i j h).repr ⟨⟨i.1, i.2, 1⟩, mem_span1 i j⟩ = Finsupp.single 0 1 := by
   rw [← repr_pair_basis_first' i j h]
   rw [Basis.repr_self]
 
 lemma repr_pair_basis_second' (i j : α × α) (h : i ≠ j) :
-    (Submodule.pair_basis i j h) 1 = ⟨⟨j.1, j.2, 1⟩, mem_span2 i j⟩ := by
+    (Submodule.pairBasis i j h) 1 = ⟨⟨j.1, j.2, 1⟩, mem_span2 i j⟩ := by
   apply Subtype.ext
-  simp [Submodule.pair_basis, Basis.span_apply]
+  simp [Submodule.pairBasis, Basis.span_apply]
 
 lemma repr_pair_basis_second (i j : α × α) (h : i ≠ j) :
-    (Submodule.pair_basis i j h).repr ⟨⟨j.1, j.2, 1⟩, mem_span2 i j⟩ = Finsupp.single 1 1 := by
+    (Submodule.pairBasis i j h).repr ⟨⟨j.1, j.2, 1⟩, mem_span2 i j⟩ = Finsupp.single 1 1 := by
   rw [← repr_pair_basis_second' i j h]
   rw [Basis.repr_self]
 
@@ -137,7 +137,7 @@ namespace Line
 
 /-- The line through two distinct affine points. -/
 def of (i j : α × α) (h : i ≠ j) : Line α := ⟨Submodule.pair i j, by
-    rw [finrank_eq_nat_card_basis <| Submodule.pair_basis i j h]
+    rw [finrank_eq_nat_card_basis <| Submodule.pairBasis i j h]
     simp⟩
 
 end Line
@@ -149,7 +149,7 @@ def infinity (α : Type*) [Field α] :=
   Submodule.span α (M := α × α × α) {⟨1, 0, 0⟩, ⟨0, 1, 0⟩}
 
 /-- A basis of the line at infinity. -/
-noncomputable def infinity_basis (α : Type*) [Field α] :
+noncomputable def infinityBasis (α : Type*) [Field α] :
     Basis (Fin 2) α (Submodule.infinity α) := by
   have := Basis.span
     (R := α)
@@ -182,22 +182,22 @@ lemma infinity_mem (x : α × α × α) : x ∈ (Submodule.infinity α : Set _) 
 lemma infinity_mem_first : ((1, 0, 0) : α × α × α) ∈ (Submodule.infinity α : Set _) := by
   rw [infinity_mem]
 
-lemma infinity_first : Submodule.infinity_basis α 0 = ⟨⟨1, 0, 0⟩, infinity_mem_first⟩ := by
+lemma infinity_first : Submodule.infinityBasis α 0 = ⟨⟨1, 0, 0⟩, infinity_mem_first⟩ := by
   apply Subtype.ext
-  simp [Submodule.infinity_basis, Basis.span_apply]
+  simp [Submodule.infinityBasis, Basis.span_apply]
 
 lemma infinity_mem_second : ((0, 1, 0) : α × α × α) ∈ (Submodule.infinity α : Set _) := by
   rw [infinity_mem]
 
-lemma infinity_second : Submodule.infinity_basis α 1 = ⟨⟨0, 1, 0⟩, infinity_mem_second⟩ := by
+lemma infinity_second : Submodule.infinityBasis α 1 = ⟨⟨0, 1, 0⟩, infinity_mem_second⟩ := by
   apply Subtype.ext
-  simp [Submodule.infinity_basis, Basis.span_apply]
+  simp [Submodule.infinityBasis, Basis.span_apply]
 
 namespace Line
 
 /-- The line at infinity, as an element of `Line α`. -/
 def infinity (α) [Field α] : Line α := ⟨Submodule.infinity α, by
-    rw [finrank_eq_nat_card_basis <| Submodule.infinity_basis α]
+    rw [finrank_eq_nat_card_basis <| Submodule.infinityBasis α]
     simp⟩
 
 end Line
@@ -342,13 +342,13 @@ theorem vert_constant (l : Line α) (x y : α × α) (h : x ∈ l) (h₂ : y ∈
     · constructor <;> assumption
 
 /-- The line `{(x, y) : y = a * x + b}`. -/
-def of_equation (a b : α) : Line α := Line.of (0, b) (1, a + b) (by simp)
+def ofEquation (a b : α) : Line α := Line.of (0, b) (1, a + b) (by simp)
 
 end Line
 
 theorem mem_of_equation_iff (a b : α) (x : α × α) :
-    x ∈ Line.of_equation a b ↔ a * x.1 + b = x.2 := by
-  unfold Line.of_equation Line.of Submodule.pair
+    x ∈ Line.ofEquation a b ↔ a * x.1 + b = x.2 := by
+  unfold Line.ofEquation Line.of Submodule.pair
   conv =>
     lhs
     apply propext Submodule.mem_span_pair
@@ -366,7 +366,7 @@ theorem mem_of_equation_iff (a b : α) (x : α × α) :
 namespace Line
 
 theorem uncurry_of_equation_injective :
-    Function.Injective (Function.uncurry (Line.of_equation (α := α))) := by
+    Function.Injective (Function.uncurry (Line.ofEquation (α := α))) := by
   rintro ⟨a1, a2⟩ ⟨b1, b2⟩ h
   simp only [Function.uncurry] at h
   have t1 := congr((0, a2) ∈ $h)

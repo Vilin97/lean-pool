@@ -5,6 +5,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 import Mathlib.Topology.Connected.PathConnected
 
+/-!
+# LeanPool.DirectedTopologyLean4.Fraction
+-/
+
 open scoped unitInterval
 noncomputable section
 

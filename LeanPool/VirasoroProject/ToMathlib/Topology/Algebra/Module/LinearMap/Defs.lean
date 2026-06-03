@@ -7,6 +7,10 @@ import Mathlib.Algebra.BigOperators.Finprod
 import Mathlib.Algebra.Module.LinearMap.Defs
 import LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
 
+/-!
+# LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.Module.LinearMap.Defs
+-/
+
 section
 
 -- NOTE: Should be in Mathlib! But Generalize to semilinear maps first...

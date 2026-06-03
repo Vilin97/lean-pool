@@ -39,7 +39,7 @@ namespace VML
     in VelocityDecayConditions (the singularity cancels in the quadratic form).
 
     **Hypotheses** (12 total):
-    - 2 physical parameters (ν > 0, ρ_ion > 0)
+    - 2 physical parameters (ν > 0, ρIon > 0)
     - 1 strict positivity (f > 0)
     - 3 smoothness (f smooth in v and x, B smooth)
     - 2 decay (uniform C² velocity decay; polynomial score bound)
@@ -73,10 +73,10 @@ theorem CoulombConcreteTheorem42
     -- === Physical state at steady state ===
     (f : Torus3 → (Fin 3 → ℝ) → ℝ)
     (E B : Torus3 → Fin 3 → ℝ)
-    (ν ρ_ion : ℝ)
+    (ν ρIon : ℝ)
     -- === Physical parameters ===
     (hν : 0 < ν)                                -- (1)
-    (hρ_ion : 0 < ρ_ion)                        -- (2)
+    (hρ_ion : 0 < ρIon)                        -- (2)
     (hf_pos : ∀ x v, 0 < f x v)                -- (3)
     -- === Smoothness ===
     (hf_smooth_v : ∀ x, ContDiff ℝ 3 (f x))                             -- (4)
@@ -97,12 +97,12 @@ theorem CoulombConcreteTheorem42
       ν * LandauOperator coulombKernel (f x) v)  -- (9)
     -- === Steady-state Maxwell equations ===
     (hAmpere : ∀ x, torusCurlX B x = fun i => ∫ v, v i * f x v)       -- (10)
-    (hGauss : ∀ x, torusDivX E x = (∫ v, f x v) - ρ_ion)              -- (11)
+    (hGauss : ∀ x, torusDivX E x = (∫ v, f x v) - ρIon)              -- (11)
     (hDivB : ∀ x, torusDivX B x = 0)             -- (12)
     :
     -- === Conclusion ===
     ∃ (T_eq : ℝ) (B₀ : Fin 3 → ℝ), 0 < T_eq ∧
-    (∀ x v, f x v = equilibriumMaxwellian ρ_ion T_eq v) ∧
+    (∀ x v, f x v = equilibriumMaxwellian ρIon T_eq v) ∧
     (∀ x, E x = 0) ∧
     (∀ x, B x = B₀) := by
   -- Extract gradient bound components (used in multiple fields)
@@ -139,7 +139,7 @@ theorem CoulombConcreteTheorem42
     hFubini_inner := by
       intro x v
       simp only [dotProduct]
-      exact integrable_finset_sum _ fun i _ =>
+      exact integrable_finsetSum _ fun i _ =>
         ((integrable_pi_iff.mp (hFluxInt x v) i).const_mul _)
     hFubini_outer := by
       intro x
@@ -152,7 +152,7 @@ theorem CoulombConcreteTheorem42
             (f x w • vGrad (f x) v - f x v • vGrad (f x) w)) := by
         intro v
         simp only [dotProduct]
-        rw [integral_finset_sum _ (fun i _ => ((hFluxInt x v).eval i).const_mul _)]
+        rw [integral_finsetSum _ (fun i _ => ((hFluxInt x v).eval i).const_mul _)]
         congr 1; ext i
         rw [eval_integral (fun i => (hFluxInt x v).eval i), integral_const_mul]
       simp_rw [h_eq]
@@ -210,7 +210,7 @@ theorem CoulombConcreteTheorem42
       entropy_dissipation_continuous_coulomb f E B ν hν hf_pos hf_smooth_v hf_smooth_x
         hSchwartz hLogBound hVlasov
   }
-  exact Theorem42 f E B coulombKernel ν ρ_ion
+  exact Theorem42 f E B coulombKernel ν ρIon
     hν hρ_ion coulombKernel_pos hf_pos
     (fun x => (hf_smooth_v x).of_le
       (by exact_mod_cast (by decide : 2 + 1 ≤ 3)))
@@ -225,8 +225,8 @@ theorem CoulombConcreteTheorem42
     Note: T_eq is uniquely determined *by the state f itself* via injectivity, but the overall
     theorem classifies a family of steady states parameterized by T > 0 and B₀ ∈ ℝ³. -/
 theorem CoulombConcreteTheorem42_classify_T
-    (f : Torus3 → (Fin 3 → ℝ) → ℝ) (E B : Torus3 → Fin 3 → ℝ) (ν ρ_ion : ℝ)
-    (hν : 0 < ν) (hρ_ion : 0 < ρ_ion) (hf_pos : ∀ x v, 0 < f x v)
+    (f : Torus3 → (Fin 3 → ℝ) → ℝ) (E B : Torus3 → Fin 3 → ℝ) (ν ρIon : ℝ)
+    (hν : 0 < ν) (hρ_ion : 0 < ρIon) (hf_pos : ∀ x v, 0 < f x v)
     (hf_smooth_v : ∀ x, ContDiff ℝ 3 (f x))
     (hf_smooth_x : ∀ v, ContDiff ℝ 2 (periodicLift (fun x => f x v)))
     (hB_smooth : ∀ i, ContDiff ℝ 2 (periodicLift (fun x => B x i)))
@@ -238,17 +238,17 @@ theorem CoulombConcreteTheorem42_classify_T
       dotProduct (E x + cross v (B x)) (vGrad (f x) v) =
       ν * LandauOperator coulombKernel (f x) v)
     (hAmpere : ∀ x, torusCurlX B x = fun i => ∫ v, v i * f x v)
-    (hGauss : ∀ x, torusDivX E x = (∫ v, f x v) - ρ_ion)
+    (hGauss : ∀ x, torusDivX E x = (∫ v, f x v) - ρIon)
     (hDivB : ∀ x, torusDivX B x = 0) :
     ∃ (T_eq : ℝ) (B₀ : Fin 3 → ℝ), 0 < T_eq ∧
-    (∀ x v, f x v = equilibriumMaxwellian ρ_ion T_eq v) ∧
+    (∀ x v, f x v = equilibriumMaxwellian ρIon T_eq v) ∧
     (∀ x, E x = 0) ∧ (∀ x, B x = B₀) ∧
-    (∀ T', 0 < T' → (∀ v, equilibriumMaxwellian ρ_ion T' v = equilibriumMaxwellian ρ_ion T_eq v) →
+    (∀ T', 0 < T' → (∀ v, equilibriumMaxwellian ρIon T' v = equilibriumMaxwellian ρIon T_eq v) →
       T' = T_eq) := by
   obtain ⟨T_eq, B₀, hT_pos, hf_eq, hE_zero, hB_const⟩ :=
-    CoulombConcreteTheorem42 f E B ν ρ_ion hν hρ_ion hf_pos hf_smooth_v hf_smooth_x hB_smooth
+    CoulombConcreteTheorem42 f E B ν ρIon hν hρ_ion hf_pos hf_smooth_v hf_smooth_x hB_smooth
       hSchwartz hGradBound hVlasov hAmpere hGauss hDivB
   exact ⟨T_eq, B₀, hT_pos, hf_eq, hE_zero, hB_const,
-    fun T' hT' h_eq => equilibriumMaxwellian_T_injective ρ_ion T' T_eq hρ_ion hT' hT_pos h_eq⟩
+    fun T' hT' h_eq => equilibriumMaxwellian_T_injective ρIon T' T_eq hρ_ion hT' hT_pos h_eq⟩
 
 end VML

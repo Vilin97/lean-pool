@@ -28,17 +28,17 @@ and the prime-field Szemerédi-Trotter theorem (BKT04), culminating in
 `bourgain_extractor_final`: for every prime `p ≠ 2` and positive integer `m`,
 the function `f(x, y) = (xy + x² y² mod p) mod m` is a two-source extractor with
 explicit min-entropy and error parameters expressed in terms of the
-sum-product and incidence schedules `SG_eps`, `ST_prime_field_eps`, the
-numeric constants `SG_C₅, …, ST_C`, and the doubling-dependent `full_C` factor.
+sum-product and incidence schedules `sgEps`, `stPrimeFieldEps`, the
+numeric constants `sgC₅, …, stC`, and the doubling-dependent `fullC` factor.
 
 The Lean Pool vendoring captures the LeanAPAP-free layers of the proof:
 
 * `LeanPool.LeanBourgain.Util` — generic floor/min/sum-card lemmas used
   throughout the proof.
 * `LeanPool.LeanBourgain.Additive.Constants` — the doubling-dependent constant
-  `full_C β` driving the sum-product iterations.
+  `fullC β` driving the sum-product iterations.
 * `LeanPool.LeanBourgain.Incidence.Constants` — the explicit constants
-  `SG_C₅, SG_C₄, …, ST_C` and epsilon schedules `SG_eps_i`,
+  `sgC₅, sgC₄, …, stC` and epsilon schedules `SG_eps_i`,
   `ST_prime_field_eps_i`, together with the structural inequalities
   (`lemma1`–`lemma16`, `ntlSGeps`, `ntlSGeps'`, `full_C_neq_zero`,
   `pos_ST_prime_field_eps`, `one_le_SG_C₃`, `one_le_ST_C₃`, `ST_C_pos`) and the
@@ -50,7 +50,7 @@ The Lean Pool vendoring captures the LeanAPAP-free layers of the proof:
   lines meet in at most one point (`line_intersect`), and the Cauchy-Schwarz
   upper bound `CS_UB` on the number of point-line incidences.
 * `LeanPool.LeanBourgain.Geometry.Projective` — the change of coordinates
-  `projective_transform` sending the line through two points to the line at
+  `projectiveTransform` sending the line through two points to the line at
   infinity, used to reduce general incidence bounds to the grid case.
 
 ## Provenance

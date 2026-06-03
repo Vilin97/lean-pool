@@ -4,8 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luka Opravš
 -/
 import Mathlib.GroupTheory.Perm.Cycle.Type
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 /-!
 # Pólya's enumeration theorem
 
@@ -65,7 +73,8 @@ instance MulActionColorings : MulAction G (X → Y) where
     inference of `Fintype (Quotient (MulAction.orbitRel G (X → Y)))` and guarantees that the
     number of distinct colorings can be computed when `X`, `Y` and `G` are finite and `X` and `Y`
     have decidable equalities. -/
-instance [Fintype X] [DecidableEq Y] [Fintype G] :
+instance instDecidableRelForallEquivOfDecidableEqOfFintypeLeanPool
+    [Fintype X] [DecidableEq Y] [Fintype G] :
     DecidableRel (@HasEquiv.Equiv (X → Y)
       (@instHasEquivOfSetoid (X → Y) (MulAction.orbitRel G (X → Y)))) :=
   fun f₁ f₂ ↦
@@ -97,7 +106,8 @@ abbrev CyclesOfGroup {G : Type v} [Group G] [MulAction G X] (g : G) : Type u :=
     arbitrary elements of `X` and arbitrary permutation of `X` if the elements are in the same
     cycle of the permutation. This instance enables inference of `Fintype` and `DecidableEq` for
     `CyclesOfGroup` when `X` is finite and has decidable equality. -/
-instance {f : Equiv.Perm X} [Fintype X] [DecidableEq X] :
+instance instDecidableRelEquivOfFintypeOfDecidableEqLeanPool
+    {f : Equiv.Perm X} [Fintype X] [DecidableEq X] :
     DecidableRel (@HasEquiv.Equiv X
       (@instHasEquivOfSetoid X (Equiv.Perm.SameCycle.setoid f))) :=
   Equiv.Perm.instDecidableRelSameCycle f
@@ -169,7 +179,6 @@ lemma f_mem_fixedBy_iff_forall_eq_to_eq (g : G) (f : X → Y) :
     apply hyp
     apply Quotient.sound
     refine ⟨1, ?_⟩
-    change ((MulAction.toPerm g) ^ (1 : ℤ)) (g⁻¹ • x) = x
     rw [zpow_one]
     change g • (g⁻¹ • x) = x
     rw [← mul_smul, mul_inv_cancel, one_smul]
@@ -178,7 +187,7 @@ lemma f_mem_fixedBy_iff_forall_eq_to_eq (g : G) (f : X → Y) :
     that are fixed by `g` map all elements of a cycle of `g` to the same color by lemma
     `f_mem_fixedBy_iff_forall_eq_to_eq`. We can transform each such coloring to a coloring of
     cycles of `g` by coloring each cycle with the color of its elements. -/
-def cycle_coloring_of_fixedBy_coloring (g : G) (f : MulAction.fixedBy (X → Y) g) :
+def cycleColoringOfFixedByColoring (g : G) (f : MulAction.fixedBy (X → Y) g) :
     (CyclesOfGroup X g) → Y :=
   Quotient.lift f (by
     intro a b hab
@@ -187,7 +196,7 @@ def cycle_coloring_of_fixedBy_coloring (g : G) (f : MulAction.fixedBy (X → Y) 
 /-- A function that maps a coloring of cycles to a coloring in fixed points of `g`. We color each
     element with the color of its cycle. The resulting function is in fixed points of `g` because
     `g⁻¹ • x` and `x` are in the same cycle of `g`. -/
-def fixedBy_coloring_of_cycle_coloring (g : G) (f : (CyclesOfGroup X g) → Y) :
+def fixedByColoringOfCycleColoring (g : G) (f : (CyclesOfGroup X g) → Y) :
     MulAction.fixedBy (X → Y) g :=
   ⟨fun x ↦ f ⟦x⟧,
   by
@@ -196,16 +205,15 @@ def fixedBy_coloring_of_cycle_coloring (g : G) (f : (CyclesOfGroup X g) → Y) :
     apply congrArg
     apply Quotient.sound
     refine ⟨1, ?_⟩
-    change ((MulAction.toPerm g) ^ (1 : ℤ)) (g⁻¹ • x) = x
     rw [zpow_one]
     change g • (g⁻¹ • x) = x
     rw [← mul_smul, mul_inv_cancel, one_smul]⟩
 
-/-- Functions `cycle_coloring_of_fixedBy_coloring` and `fixedBy_coloring_of_cycle_coloring` are
+/-- Functions `cycleColoringOfFixedByColoring` and `fixedByColoringOfCycleColoring` are
     inverses and form a bijection. -/
-def equiv_of_fixedBy_coloring_of_cycle_coloring (g : G) :
+def equivOfFixedByColoringOfCycleColoring (g : G) :
     (CyclesOfGroup X g → Y) ≃ (MulAction.fixedBy (X → Y) g) :=
-  ⟨fixedBy_coloring_of_cycle_coloring g, cycle_coloring_of_fixedBy_coloring g,
+  ⟨fixedByColoringOfCycleColoring g, cycleColoringOfFixedByColoring g,
   by
     intro f
     ext x
@@ -228,7 +236,7 @@ lemma forall_card_pow_numCyclesOfGroup_eq_card_fixedBy [Fintype Y]
   unfold numCyclesOfGroup
   rw [← @Fintype.card_fun]
   apply Fintype.card_congr
-  exact equiv_of_fixedBy_coloring_of_cycle_coloring g
+  exact equivOfFixedByColoringOfCycleColoring g
 
 variable (X : Type u) (Y : Type v) (G : Type w) [Group G] [MulAction G X] [Fintype Y] [Fintype G]
     [Fintype (Quotient (MulAction.orbitRel G (X → Y)))]

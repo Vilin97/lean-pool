@@ -15,7 +15,7 @@ import LeanPool.Duality.LinearProgrammingB
 /-!
 # Duality theory in linear optimization and its extensions
 
-Source: arxiv:2409.08119
+Source: arxiv:2409.08119, doi:10.46298/afm.14253
 Authors: Martin Dvorak
 Status: verified
 Main declarations: `extendedFarkas`, `StandardLP.strongDuality`

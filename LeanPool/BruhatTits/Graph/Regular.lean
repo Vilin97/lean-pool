@@ -7,8 +7,6 @@ import Mathlib.LinearAlgebra.Projectivization.Cardinality
 import Mathlib.RingTheory.DiscreteValuationRing.Basic
 import LeanPool.BruhatTits.Graph.Tree
 
-open Module
-
 /-!
 # Proof that the Bruhat-Tits tree is regular
 
@@ -23,6 +21,9 @@ vertex has the same finite number of neighbours. Furthermore we show that this n
 - `BruhatTits.btgraph_regular` : The Bruhat-Tits Tree is `q + 1`-regular, where `q` is the
   cardinality of `R ⧸ 𝓂 R`.
 -/
+
+open Module
+
 
 suppress_compilation
 

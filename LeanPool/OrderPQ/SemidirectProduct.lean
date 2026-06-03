@@ -7,8 +7,11 @@ import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.GroupTheory.GroupAction.ConjAct
 import Mathlib.Algebra.Group.Subgroup.Pointwise
-import Mathlib.Tactic.Have
 import Mathlib.Tactic.Group
+
+/-!
+# LeanPool.OrderPQ.SemidirectProduct
+-/
 
 variable {N₁ N₂ H₁ H₂ : Type*} [Group N₁] [Group N₂] [Group H₁] [Group H₂]
 
@@ -18,8 +21,8 @@ lemma Subgroup.comm_of_normal_and_inf_eq_bot
     (N H : Subgroup G) (hN : Subgroup.Normal N) (hH : Subgroup.Normal H)
     (inf_eq_bot : N ⊓ H = ⊥) (n : N) (h : H) :
     (n : G) * (h : G) = (h : G) * (n : G) := by
-  have : (n : G) * h * (n⁻¹ : G) * (h : G)⁻¹ ∈ N ⊓ H
-  · refine mem_inf.mpr ⟨?_, ?_⟩
+  have : (n : G) * h * (n⁻¹ : G) * (h : G)⁻¹ ∈ N ⊓ H := by
+    refine mem_inf.mpr ⟨?_, ?_⟩
     · convert mul_mem (SetLike.coe_mem n) (hN.conj_mem _ (inv_mem (SetLike.coe_mem n)) h) using 1
       group
     · exact mul_mem (hH.conj_mem _ (SetLike.coe_mem _) _) (inv_mem (SetLike.coe_mem _))
@@ -99,7 +102,7 @@ noncomputable def mulEquivProd
     (inf_eq_bot : N ⊓ H = ⊥) (sup_eq_top : N ⊔ H = ⊤) :
     G ≃* N × H := by
   refine MulEquiv.trans (mulEquivSemidirectProduct hN inf_eq_bot sup_eq_top rfl) ?_
-  have : MulAut.conjNormal.restrict H = (1 : H →* MulAut N)
-  · ext
+  have : MulAut.conjNormal.restrict H = (1 : H →* MulAut N) := by
+    ext
     simp [← Subgroup.comm_of_normal_and_inf_eq_bot N H hN hH inf_eq_bot]
   exact this ▸ SemidirectProduct.mulEquivProd

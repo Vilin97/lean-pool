@@ -9,6 +9,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000Bound
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000RelaxationPsdSoundness
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000Main
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000

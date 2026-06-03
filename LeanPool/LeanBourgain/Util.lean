@@ -3,8 +3,10 @@ Copyright (c) 2026 Command Master. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Command Master
 -/
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
 import Mathlib.Data.Finset.Card
-import Mathlib.Data.Real.Archimedean
+import Mathlib.Tactic.GCongr
+import Mathlib.Tactic.Linarith
 
 /-!
 # Utility lemmas for the Lean Bourgain extractor formalization

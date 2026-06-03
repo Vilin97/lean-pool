@@ -7,6 +7,10 @@ import LeanPool.DirectedTopologyLean4.DirectedUnitInterval
 import LeanPool.DirectedTopologyLean4.UnitIntervalAux
 import LeanPool.DirectedTopologyLean4.Fraction
 
+/-!
+# LeanPool.DirectedTopologyLean4.Dipath
+-/
+
 /-
   This file contains the definition of a dipath in a directed space:
   A path between two points paired with the proof that it is a dipath.
@@ -63,13 +67,13 @@ protected lemma Dipath.ext : ∀ {γ₁ γ₂ : Dipath x y}, (γ₁ : I → X) =
 namespace Dipath
 
 /-- Promote a path with a proof of directedness into a dipath. -/
-def of_isDipath {γ : Path x y} (hγ : IsDipath γ) : Dipath x y := {
+def ofIsDipath {γ : Path x y} (hγ : IsDipath γ) : Dipath x y := {
   toPath := γ,
   dipath_toPath := hγ,
 }
 
 /-- An directed map from I to a directed space can be turned into a dipath -/
-def of_directedMap (f : D(I,X)) : Dipath (f 0) (f 1) where
+def ofDirectedMap (f : D(I,X)) : Dipath (f 0) (f 1) where
   toFun := f
   continuous_toFun := f.continuous_toFun
   source' := rfl
@@ -237,7 +241,7 @@ lemma cast_image (γ : Dipath x y) {x' y'} (hx : x' = x) (hy : y' = y) (a b : �
   (γ.cast hx hy).extend '' Icc a b = γ.extend '' Icc a b := rfl
 
 lemma dipath_of_directed_map_of_to_dimap (γ : Dipath x y) :
-  Dipath.of_directedMap (γ.toDirectedMap) = γ.cast γ.source' γ.target' := by {ext t; rfl }
+  Dipath.ofDirectedMap (γ.toDirectedMap) = γ.cast γ.source' γ.target' := by {ext t; rfl }
 
 /-! ### Reparametrising a path -/
 
@@ -284,7 +288,7 @@ Path.range_reparam γ.toPath f.continuous_toFun hf₀ hf₁
 variable {Y : Type*} [DirectedSpace Y] {x₀ x₁ : X} {y₀ y₁ : Y}
 
 /-- Two dipaths together form a dipath in the product space -/
-def dipath_product (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath y₀ y₁) : Dipath (x₀, y₀) (x₁, y₁) where
+def dipathProduct (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath y₀ y₁) : Dipath (x₀, y₀) (x₁, y₁) where
   toFun := fun t => (γ₁ t, γ₂ t)
   source' := by simp
   target' := by simp
@@ -295,13 +299,13 @@ def dipath_product (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath y₀ y₁) : Dipat
 
 /-- Given a directed path in a product space, we can project it to its first coordinate to
 obtain a directed path -/
-def of_product_fst (γ : Dipath (x₀, y₀) (x₁, y₁)) : Dipath x₀ x₁ where
+def ofProductFst (γ : Dipath (x₀, y₀) (x₁, y₁)) : Dipath x₀ x₁ where
   toPath := γ.toPath.map continuous_fst
   dipath_toPath := γ.dipath_toPath.1
 
 /-- Given a directed path in a product space, we can project it to its second coordinate to
 obtain a directed path -/
-def of_product_snd (γ : Dipath (x₀, y₀) (x₁, y₁)) : Dipath y₀ y₁ where
+def ofProductSnd (γ : Dipath (x₀, y₀) (x₁, y₁)) : Dipath y₀ y₁ where
   toPath := γ.toPath.map continuous_snd
   dipath_toPath := γ.dipath_toPath.2
 

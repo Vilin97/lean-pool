@@ -4,13 +4,27 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
 
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
+import Mathlib.Data.Matrix.Basic
 import LeanPool.TwoColoringOneRound.LowerBound.Correlation
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
+
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
+-/
 
 namespace Distributed2Coloring.LowerBound
 

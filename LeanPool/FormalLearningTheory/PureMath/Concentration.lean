@@ -115,7 +115,7 @@ lemma chebyshev_majority_bound
   -- Step 11: E[S] ≥ 2k/3 (S = fun ω => ∑ j, X j ω)
   have hES : ∫ ω, S ω ∂μ ≥ 2 * ↑k / 3 := by
     change ∫ ω, (∑ j : Fin k, X j ω) ∂μ ≥ _
-    rw [integral_finset_sum univ (fun j _ => hX_int j)]
+    rw [integral_finsetSum univ (fun j _ => hX_int j)]
     calc ∑ j : Fin k, ∫ ω, X j ω ∂μ
         ≥ ∑ _j : Fin k, (2 : ℝ) / 3 := sum_le_sum (fun j _ => hEX j)
       _ = ↑k * (2 / 3) := by rw [sum_const]; simp [nsmul_eq_mul]
@@ -123,7 +123,7 @@ lemma chebyshev_majority_bound
   -- Step 12: MemLp S 2 μ
   have hS_memLp : MemLp S 2 μ := by
     change MemLp (fun ω => ∑ j : Fin k, X j ω) 2 μ
-    have h := memLp_finset_sum univ (fun j (_ : j ∈ univ) => hX_memLp j)
+    have h := memLp_finsetSum univ (fun j (_ : j ∈ univ) => hX_memLp j)
     convert h using 1
   -- Step 13: Var[S] ≤ k/4
   have hvar_S_fn : ProbabilityTheory.variance S μ ≤ ↑k / 4 := by

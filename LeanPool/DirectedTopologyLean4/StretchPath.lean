@@ -7,6 +7,10 @@ import LeanPool.DirectedTopologyLean4.Dipath
 import LeanPool.DirectedTopologyLean4.DTop
 import LeanPool.DirectedTopologyLean4.UnitIntervalAux
 
+/-!
+# LeanPool.DirectedTopologyLean4.StretchPath
+-/
+
 /-
   This file contains definitions about stretching a (directed) path in `I` in two ways:
     If its image is contained in `[0, 1/2]`, it can be stretched upwards
@@ -28,7 +32,7 @@ lemma double_mem_I_of_bounded {t₀ t₁ : I} (t : I) (γ : Dipath t₀ t₁) (h
 
 /-- Stretch a path whose image lies in `[0, 1/2]` to a path on the full unit interval by doubling
 all parameter values. -/
-def stretch_up_path {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤ (2⁻¹ : ℝ)) : Path
+def stretchUpPath {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤ (2⁻¹ : ℝ)) : Path
   (⟨2 * ↑t₀, by { rw [←γ.source']; exact double_mem_I_of_bounded 0 γ ht₁ }⟩ : I)
   ⟨2 * ↑t₁, double_mem_I ht₁⟩ where
     toFun := fun t => ⟨2 * (γ t), double_mem_I_of_bounded t γ ht₁⟩
@@ -36,19 +40,19 @@ def stretch_up_path {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤
     target' := by simp
 
 lemma isDipath_stretch_up {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤ (2⁻¹ : ℝ)) :
-  IsDipath (stretch_up_path γ ht₁) := by
+  IsDipath (stretchUpPath γ ht₁) := by
   intros x y hxy
-  unfold stretch_up_path
+  unfold stretchUpPath
   simp only [Path.coe_mk', ContinuousMap.coe_mk, Subtype.mk_le_mk, Nat.ofNat_pos,
     mul_le_mul_iff_right₀, Subtype.coe_le_coe]
   exact γ.dipath_toPath hxy
 
 /-- The dipath obtained by stretching a dipath whose image lies in `[0, 1/2]` to the full unit
 interval. -/
-def stretch_up {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤ (2⁻¹ : ℝ)) : Dipath
+def stretchUp {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₁ : ↑t₁ ≤ (2⁻¹ : ℝ)) : Dipath
   (⟨2 * ↑t₀, by { rw [←γ.source']; exact double_mem_I_of_bounded 0 γ ht₁ }⟩ : I)
   ⟨2 * ↑t₁, double_mem_I ht₁⟩ where
-    toPath := stretch_up_path γ ht₁
+    toPath := stretchUpPath γ ht₁
     dipath_toPath := isDipath_stretch_up γ ht₁
 
 /-### Stretching a path that only lives in the second half of the unit interval downwards -/
@@ -59,7 +63,7 @@ lemma double_sub_one_mem_I_of_bounded {t₀ t₁ : I} (t : I) (γ : Dipath t₀ 
 
 /-- Stretch a path whose image lies in `[1/2, 1]` to a path on the full unit interval by mapping
 each parameter `s` to `2s - 1`. -/
-def stretch_down_path {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) : Path
+def stretchDownPath {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) : Path
   (⟨2 * ↑t₀ - 1, double_sub_one_mem_I ht₀⟩ : I)
   ⟨2 * ↑t₁ - 1, by { rw [←γ.target']; exact double_sub_one_mem_I_of_bounded 1 γ ht₀ }⟩ where
     toFun := fun t => ⟨2 * (γ t) - 1, double_sub_one_mem_I_of_bounded t γ ht₀⟩
@@ -67,19 +71,19 @@ def stretch_down_path {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ :
     target' := by simp
 
 lemma isDipath_stretch_down {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) :
-  IsDipath (stretch_down_path γ ht₀) := by
+  IsDipath (stretchDownPath γ ht₀) := by
   intros x y hxy
-  unfold stretch_down_path
+  unfold stretchDownPath
   simp only [Path.coe_mk', ContinuousMap.coe_mk, Subtype.mk_le_mk, tsub_le_iff_right,
     sub_add_cancel, Nat.ofNat_pos, mul_le_mul_iff_right₀, Subtype.coe_le_coe]
   exact γ.dipath_toPath hxy
 
 /-- The dipath obtained by stretching a dipath whose image lies in `[1/2, 1]` to the full unit
 interval. -/
-def stretch_down {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) : Dipath
+def stretchDown {t₀ t₁ : I} (γ : Dipath t₀ t₁) (ht₀ : (2⁻¹ : ℝ) ≤ ↑t₀) : Dipath
   (⟨2 * ↑t₀ - 1, double_sub_one_mem_I ht₀⟩ : I)
   ⟨2 * ↑t₁ - 1, by { rw [←γ.target']; exact double_sub_one_mem_I_of_bounded 1 γ ht₀ }⟩ where
-    toPath := stretch_down_path γ ht₀
+    toPath := stretchDownPath γ ht₀
     dipath_toPath := isDipath_stretch_down γ ht₀
 
 end Dipath

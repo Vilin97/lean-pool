@@ -22,28 +22,44 @@ Apache License, Version 2.0, and are redistributed here under the same license.
 
   LeanPool/ABCExceptions             https://github.com/b-mehta/ABC-Exceptions
   LeanPool/AharoniKorman             https://github.com/b-mehta/AharoniKorman
+  LeanPool/AndersonConjecture        https://github.com/frenzymath/Anderson-Conjecture
+  LeanPool/Apportionment             https://github.com/mdbrnowski/apportionmentlib
   LeanPool/ArchonFirstProofResults   https://github.com/frenzymath/Archon-FirstProof-Results
+  LeanPool/BrauerGroupNew            https://github.com/Whysoserioushah/BrauerGroup_new
   LeanPool/BruhatTits                https://github.com/chrisflav/bruhat-tits
   LeanPool/DemazureOperatorsLean     https://github.com/bolito2/DemazureOperatorsLean
   LeanPool/Duality                   https://github.com/madvorak/duality
+  LeanPool/EcTateLean                https://github.com/KisaraBlue/ec-tate-lean
   LeanPool/Erdos1196                 https://github.com/math-inc/Erdos1196
+  LeanPool/ErdosTuzaValtr            https://github.com/jcpaik/erdos-tuza-valtr
   LeanPool/Fineqs                    https://github.com/nasqret/fineqs
   LeanPool/FormalLearningTheory      https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
   LeanPool/FoZfc                     https://github.com/ishiut/fo_zfc
+  LeanPool/FriezePatterns            https://github.com/Antoine-dSG/frieze_patterns
   LeanPool/Isoperimetric             https://github.com/hojonathanho/isoperimetric
   LeanPool/LeanBooleanfun            https://github.com/roos-j/lean-booleanfun
   LeanPool/LeanComplexAnalysis       https://github.com/seb488/LeanComplexAnalysis
+  LeanPool/LeanModularForms          https://github.com/CBirkbeck/LeanModularForms
+  LeanPool/LeanPolyABC               https://github.com/seewoo5/lean-poly-abc
   LeanPool/LowDimSolvClassification  https://github.com/LieLean/LowDimSolvClassification
+  LeanPool/Monsky                    https://github.com/dhyan-aranha/Monsky
+  LeanPool/Monlib4                   https://github.com/themathqueen/monlib4
+  LeanPool/Neukirch                  https://github.com/jjdishere/neukirch
   LeanPool/OrderPQ                   https://github.com/wupr/order-p-q
+  LeanPool/PentagonalNumberTheorem   https://github.com/wwylele/PentagonalNumberTheorem
   LeanPool/PointwiseBirkhoff         https://github.com/lua-vr/pointwise-birkhoff
   LeanPool/Polylean                  https://github.com/siddhartha-gadgil/Polylean
   LeanPool/RiemannMappingTheorem     https://github.com/vbeffara/rmt4
+  LeanPool/Rupert                    https://github.com/dwrensha/Rupert.lean
   LeanPool/SardMoreira               https://github.com/urkud/SardMoreira
   LeanPool/SelbergSieve4             https://github.com/FLDutchmann/selberg-sieve4
   LeanPool/Sensitivity               https://github.com/SamuelSchlesinger/sensitivity-conjecture
   LeanPool/SumsThreeSquares          https://github.com/pitmonticone/SumsThreeSquares
   LeanPool/VirasoroProject           https://github.com/kkytola/VirasoroProject
+  LeanPool/WhiteheadTheorem          https://github.com/jzxia/WhiteheadTheorem
+  LeanPool/ZFLean                    https://github.com/VTrelat/ZFLean
   LeanPool/Zeta3Irrational           https://github.com/ahhwuhu/zeta_3_irrational
+  LeanPool/ZhangYeungInequality      https://github.com/cboone/zhang-yeung-inequality
 
 
 --------------------------------------------------------------------------------
@@ -94,11 +110,17 @@ MIT permission notice that follows them.
   LeanPool/PolyaEnumerationTheorem   https://github.com/Luka-O/polya-enumeration-theorem
       Copyright (c) 2024 Luka-O
 
+  LeanPool/QuasiBorelSpaces          https://github.com/YellPika/quasi-borel-spaces
+      Copyright (c) 2025 Anthony Vandikas, Kiarash Sotoudeh
+
   LeanPool/RamanujanTauMissesPrimes  https://github.com/AxiomMath/ramanujan-tau-misses-primes
       Copyright (c) 2026 Axiom Math
 
   LeanPool/RlTheoryInLean            https://github.com/ShangtongZhang/rl-theory-in-lean
       Copyright (c) 2025 Shangtong Zhang
+
+  LeanPool/SemicircleLaw             https://github.com/FredRaj3/SemicircleLaw
+      Copyright (c) 2025 FredRaj3
 
   LeanPool/Shannon1948Formalization  https://github.com/SamuelSchlesinger/shannon-1948-formalization
       The upstream MIT LICENSE file gives the copyright line as

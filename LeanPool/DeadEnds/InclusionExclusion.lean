@@ -6,9 +6,10 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 
 import LeanPool.DeadEnds.TailEstimates
 
+/-! ## Helper lemmas for inclusion-exclusion -/
+
 namespace LeanPool.DeadEnds
 
-/-! ## Helper lemmas for inclusion-exclusion -/
 
 /-- Indicator function for squarefree: returns 1 if squarefree, 0 otherwise -/
 noncomputable def sqfreeIndicator (n : ℕ) : ℝ := if Squarefree n then 1 else 0
@@ -199,7 +200,7 @@ lemma alternating_sum_tendsto (b : ℕ) (_hb : 2 ≤ b)
         ((-1 : ℝ) ^ T.card) * ((countJointSquarefree b T X : ℝ) / (X : ℝ)))
       Filter.atTop (nhds (explicitDensityFormula b)) := by
   unfold explicitDensityFormula
-  apply tendsto_finset_sum
+  apply tendsto_finsetSum
   intro T hT
   exact (h_tendsto T hT).const_mul _
 

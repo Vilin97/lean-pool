@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Math Inc.
+Authors: Math Inc
 -/
 import LeanPool.Erdos1196.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.InvLog

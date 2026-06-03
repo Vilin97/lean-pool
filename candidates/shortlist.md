@@ -55,12 +55,12 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 
 | Repo | Theorem / topic | License | Lean | LOC | Updated |
 | --- | --- | --- | --- | ---: | --- |
-| [seewoo5/lean-poly-abc](https://github.com/seewoo5/lean-poly-abc) | Mason–Stothers (polynomial ABC) | *none* | v4.9.0-rc2 | 1,290 | 2026-03-04 |
+| [seewoo5/lean-poly-abc](https://github.com/seewoo5/lean-poly-abc) | Mason–Stothers (polynomial ABC) | Apache-2.0 | v4.9.0-rc2 | 1,290 | 2026-03-04 |
 | [alainchmt/RingOfIntegersProject](https://github.com/alainchmt/RingOfIntegersProject) | Certifying rings of integers in number fields | Apache-2.0 | v4.14.0-rc2 | 93,799 | 2026-03-20 |
 | [Command-Master/lean-bourgain](https://github.com/Command-Master/lean-bourgain) | Bourgain's pseudorandomness | Apache-2.0 | v4.7.0 | 7,322 | 2024-11-05 |
-| [BarinderBanwait/ramanujan_nagell](https://github.com/BarinderBanwait/ramanujan_nagell) | Ramanujan–Nagell theorem | *none* | v4.26.0-rc2 | 3,571 | 2026-04-08 |
-| [jjdishere/neukirch](https://github.com/jjdishere/neukirch) | Neukirch ANT formalisation | *none* | v4.5.0-rc1 | 4,756 | 2024-12-03 |
-| [KisaraBlue/ec-tate-lean](https://github.com/KisaraBlue/ec-tate-lean) | Elliptic curves, Tate's algorithm | *none* | nightly-2023-08-19 | 7,786 | 2024-05-26 |
+| [BarinderBanwait/ramanujan_nagell](https://github.com/BarinderBanwait/ramanujan_nagell) | Ramanujan–Nagell theorem | Apache-2.0 | v4.26.0-rc2 | 3,571 | 2026-04-08 |
+| [jjdishere/neukirch](https://github.com/jjdishere/neukirch) | Neukirch ANT formalisation | Apache-2.0 | v4.5.0-rc1 | 4,756 | 2024-12-03 |
+| [KisaraBlue/ec-tate-lean](https://github.com/KisaraBlue/ec-tate-lean) | Elliptic curves, Tate's algorithm | Apache-2.0 | nightly-2023-08-19 | 7,786 | 2024-05-26 |
 | [kckennylau/EllipticCurve](https://github.com/kckennylau/EllipticCurve) | Elliptic curve over schemes | Apache-2.0 | v4.25.0-rc2 | 7,309 | 2025-11-04 |
 | [mariainesdff/ostrowski2024](https://github.com/mariainesdff/ostrowski2024) | Ostrowski's theorem | *none* | v4.26.0-rc2 | 2,507 | 2025-12-14 |
 | [pitmonticone/QuadraticIntegers](https://github.com/pitmonticone/QuadraticIntegers) | Ring of integers in quadratic fields | Apache-2.0 | v4.24.0 | 2,126 | 2026-03-09 |
@@ -76,6 +76,7 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | [xyzw12345/CohenMacaulay](https://github.com/xyzw12345/CohenMacaulay) | Cohen–Macaulay rings | *none* | v4.19.0-rc2 | 2,083 | 2025-05-01 |
 | [AntoineChambert-Loir/Jordan4](https://github.com/AntoineChambert-Loir/Jordan4) | Jordan's theorem on permutation groups | *none* | v4.16.0 | 13,660 | 2025-09-13 |
 | [AlexBrodbelt/DicksonsClassificationTheorem](https://github.com/AlexBrodbelt/DicksonsClassificationTheorem) | Dickson's classification theorem | *none* | v4.24.0 | 5,831 | 2026-01-08 |
+| [Antoine-dSG/root_system](https://github.com/Antoine-dSG/root_system) | Root systems (type A) | Apache-2.0 | v4.30.0-rc2 | 506 | 2026-05-24 |
 
 ### Algebraic geometry
 
@@ -91,12 +92,12 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 
 | Repo | Theorem / topic | License | Lean | LOC | Updated |
 | --- | --- | --- | --- | ---: | --- |
-| [Antoine-dSG/frieze_patterns](https://github.com/Antoine-dSG/frieze_patterns) | Coxeter's frieze patterns | *none* | v4.10.0-rc2 | 1,440 | 2025-03-18 |
-| [ro-gut/turan3](https://github.com/ro-gut/turan3) | Turán's theorem (3rd proof, "from THE BOOK") | *none* | v4.24.0-rc1 | 2,836 | 2025-09-24 |
+| [Antoine-dSG/frieze_patterns](https://github.com/Antoine-dSG/frieze_patterns) | Coxeter's frieze patterns | Apache-2.0 | v4.10.0-rc2 | 1,440 | 2025-03-18 |
+| [ro-gut/turan3](https://github.com/ro-gut/turan3) | Turán's theorem (3rd proof, "from THE BOOK") | Apache-2.0 | v4.24.0-rc1 | 2,836 | 2025-09-24 |
 | [aroheebhoja/vizing](https://github.com/aroheebhoja/vizing) | Vizing's theorem (Misra–Gries) | *none* | v4.21.0-rc3 | 3,752 | 2026-03-27 |
 | [b-mehta/HighlyAbundant](https://github.com/b-mehta/HighlyAbundant) | Highly abundant numbers (MO/501066) | *none* | v4.24.0-rc1 | 12,957 | 2025-12-19 |
-| [jcpaik/erdos-tuza-valtr](https://github.com/jcpaik/erdos-tuza-valtr) | Erdős–Tuza–Valtr conjecture | *none* | v4.13.0-rc3 | 2,302 | 2024-11-09 |
-| [NickAdfor/polynomial-method-restricted-sums](https://github.com/NickAdfor/The-polynomial-method-and-restricted-sums-of-congruence-classes) | Polynomial method, restricted sumsets | *none* | v4.27.0-rc1 | 4,149 | 2026-03-13 |
+| [jcpaik/erdos-tuza-valtr](https://github.com/jcpaik/erdos-tuza-valtr) | Erdős–Tuza–Valtr conjecture | Apache-2.0 | v4.13.0-rc3 | 2,302 | 2024-11-09 |
+| [NickAdfor/polynomial-method-restricted-sums](https://github.com/NickAdfor/The-polynomial-method-and-restricted-sums-of-congruence-classes) | Polynomial method, restricted sumsets | Apache-2.0 | v4.27.0-rc1 | 4,149 | 2026-03-13 |
 | [badly-drawn-wizards/noperthedron](https://github.com/badly-drawn-wizards/noperthedron) | Convex polyhedron without Rupert property | Apache-2.0 | v4.25.0-rc2 | 1,105 | 2026-02-15 |
 | [dwrensha/Rupert.lean](https://github.com/dwrensha/Rupert.lean) | The Rupert problem for convex polyhedra | Apache-2.0 | v4.28.0 | 1,713 | 2026-04-05 |
 
@@ -106,7 +107,7 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | --- | --- | --- | --- | ---: | --- |
 | [YellPika/quasi-borel-spaces](https://github.com/YellPika/quasi-borel-spaces) | Quasi-Borel spaces | MIT | v4.28.0-rc1 | 8,626 | 2026-04-10 |
 | [FredRaj3/SemicircleLaw](https://github.com/FredRaj3/SemicircleLaw) | Wigner's semicircle law | MIT | v4.24.0 | 3,174 | 2026-04-11 |
-| [bjoernkjoshanssen/hypothesis](https://github.com/bjoernkjoshanssen/hypothesis) | Probability and statistics | *none* | v4.27.0-rc1 | 5,401 | 2026-02-18 |
+| [bjoernkjoshanssen/hypothesis](https://github.com/bjoernkjoshanssen/hypothesis) | Probability and statistics | Apache-2.0 | v4.27.0-rc1 | 5,401 | 2026-02-18 |
 | [fpvandoorn/sard](https://github.com/fpvandoorn/sard) | General Sard theorem | Apache-2.0 | v4.12.0 | 1,360 | 2024-10-07 |
 | [cboone/zhang-yeung-inequality](https://github.com/cboone/zhang-yeung-inequality) | Zhang–Yeung non-Shannon inequality | Apache-2.0 | v4.28.0-rc1 | 5,008 | 2026-04-22 |
 | [susannabertolini/PhaseRetrieval](https://github.com/susannabertolini/PhaseRetrieval) | Stable phase retrieval (Hermite–Fock) | Apache-2.0 | v4.29.0-rc6 | 60,247 | 2026-05-20 |
@@ -116,8 +117,8 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | Repo | Theorem / topic | License | Lean | LOC | Updated |
 | --- | --- | --- | --- | ---: | --- |
 | [dhyan-aranha/Monsky](https://github.com/dhyan-aranha/Monsky) | Monsky's theorem (UvA Lean community) | Apache-2.0 | v4.16.0-rc2 | 8,137 | 2025-10-30 |
-| [Jun2M/Main-theorem-of-polytopes](https://github.com/Jun2M/Main-theorem-of-polytopes) | Main theorem of polytopes | *none* | v4.7.0-rc2 | 2,293 | 2024-05-22 |
-| [jzxia/WhiteheadTheorem](https://github.com/jzxia/WhiteheadTheorem) | Whitehead theorem (homotopy groups) | *none* | v4.21.0-rc3 | 7,984 | 2026-03-12 |
+| [Jun2M/Main-theorem-of-polytopes](https://github.com/Jun2M/Main-theorem-of-polytopes) | Main theorem of polytopes | Apache-2.0 | v4.7.0-rc2 | 2,293 | 2024-05-22 |
+| [jzxia/WhiteheadTheorem](https://github.com/jzxia/WhiteheadTheorem) | Whitehead theorem (homotopy groups) | Apache-2.0 | v4.21.0-rc3 | 7,984 | 2026-03-12 |
 | [unhyperbolic/hyperbolicGeometryInLean](https://github.com/unhyperbolic/hyperbolicGeometryInLean) | Hyperbolic geometry | *none* | nightly-2023-06-20 | 933 | 2025-11-07 |
 | [adri326/rubin-lean4](https://github.com/adri326/rubin-lean4) | Rubin's theorem | *none* | v4.5.0-rc1 | 9,198 | 2024-03-29 |
 
@@ -128,7 +129,7 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | [kyoDralliam/model-theory-topos](https://github.com/kyoDralliam/model-theory-topos) | First-order model theory in a topos | *none* | v4.22.0-rc3 | 9,409 | 2026-01-29 |
 | [sinhp/LeanFibredCategories](https://github.com/sinhp/LeanFibredCategories) | Fibred categories | Apache-2.0 | v4.4.0-rc1 | 3,574 | 2026-04-15 |
 | [JoeyEremondi/lean-cwf](https://github.com/JoeyEremondi/lean-cwf) | Categories with Families | BSD-3-Clause | n/a | 5,346 | 2025-02-18 |
-| [mckoen/quasicategory](https://github.com/mckoen/quasicategory) | Quasi-categories | *none* | v4.18.0-rc1 | 11,675 | 2025-10-25 |
+| [mckoen/quasicategory](https://github.com/mckoen/quasicategory) | Quasi-categories | Apache-2.0 | v4.18.0-rc1 | 11,675 | 2025-10-25 |
 | [themathqueen/monlib4](https://github.com/themathqueen/monlib4) | Non-commutative graph theory | Apache-2.0 | v4.21.0-rc3 | 31,853 | 2026-01-06 |
 
 ### Logic / set theory / foundations
@@ -143,7 +144,8 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 
 | Repo | Theorem / topic | License | Lean | LOC | Updated |
 | --- | --- | --- | --- | ---: | --- |
-| [tannerduve/computability](https://github.com/tannerduve/computability) | Oracle computability, Turing degrees | *none* | v4.24.0 | 3,035 | 2026-02-05 |
+| [tannerduve/computability](https://github.com/tannerduve/computability) | Oracle computability, Turing degrees | Apache-2.0 | v4.24.0 | 3,035 | 2026-02-05 |
+| [SamuelSchlesinger/circuit-complexity](https://github.com/SamuelSchlesinger/circuit-complexity) | Boolean circuit complexity | Apache-2.0 | v4.29.0-rc4 | 7,756 | 2026-05-29 |
 
 ### ML / statistics research
 
@@ -166,8 +168,8 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | [Timeroot/lean-descartes-signs](https://github.com/Timeroot/lean-descartes-signs) | Descartes' rule of signs | *none* | v4.3.0-rc2 | 1,475 | 2025-09-04 |
 | [harfe/fixed-point-theorems-lean4](https://github.com/harfe/fixed-point-theorems-lean4) | Brouwer + Kakutani fixed-point theorems | *none* | v4.21.0-rc3 | 3,257 | 2026-03-04 |
 | [LodeVermeulen/Lean4_Bogdanovs_lemma](https://github.com/LodeVermeulen/Lean4_Bogdanovs_lemma) | Bogdanov's lemma | *none* | v4.8.0-rc1 | 1,209 | 2024-07-03 |
-| [oneofvalts/desargues](https://github.com/oneofvalts/desargues) | Desargues's theorem | *none* | n/a | 1,221 | 2025-07-14 |
-| [wwylele/PentagonalNumberTheorem](https://github.com/wwylele/PentagonalNumberTheorem) | Euler's pentagonal number theorem | *none* | v4.26.0-rc2 | 2,856 | 2025-12-15 |
+| [oneofvalts/desargues](https://github.com/oneofvalts/desargues) | Desargues's theorem | Apache-2.0 | n/a | 1,221 | 2025-07-14 |
+| [wwylele/PentagonalNumberTheorem](https://github.com/wwylele/PentagonalNumberTheorem) | Euler's pentagonal number theorem | Apache-2.0 | v4.26.0-rc2 | 2,856 | 2025-12-15 |
 | [ADedecker/ProperAction](https://github.com/ADedecker/ProperAction) | Proper actions | *none* | v4.7.0-rc2 | 908 | 2024-05-14 |
 | [AntoineChambert-Loir/Sion4](https://github.com/AntoineChambert-Loir/Sion4) | Sion's minimax theorem | *none* | v4.21.0-rc3 | 3,319 | 2025-09-26 |
 | [SReichelt/universe-abstractions](https://github.com/SReichelt/universe-abstractions) | Mathematical universes | *none* | nightly-2022-01-14 | 19,432 | 2024-04-08 |

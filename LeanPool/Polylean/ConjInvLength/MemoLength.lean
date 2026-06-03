@@ -7,6 +7,10 @@ Authors: Siddhartha Gadgil, Anand Rao
 import Std.Data.HashMap
 import LeanPool.Polylean.ConjInvLength.LengthBound
 
+/-!
+# LeanPool.Polylean.ConjInvLength.MemoLength
+-/
+
 namespace LeanPool.Polylean
 
 /-- Cache for memoized word lengths. -/

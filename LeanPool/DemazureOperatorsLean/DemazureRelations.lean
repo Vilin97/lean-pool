@@ -8,6 +8,10 @@ import LeanPool.DemazureOperatorsLean.Demazure
 import LeanPool.DemazureOperatorsLean.DemazureAux
 import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
 
+/-!
+# LeanPool.DemazureOperatorsLean.DemazureRelations
+-/
+
 noncomputable section
 open MvPolynomial
 
@@ -90,8 +94,8 @@ lemma demazure_mul_symm (i : Fin n) (g f : MvPolynomial (Fin (n + 1)) ℂ)
   rw[← demazure_definitions_equivalent]
   have : IsSymmetric (mk' g) := by
     dsimp [IsSymmetric]
-    use (to_frac g)
-    dsimp [to_frac]
+    use (toFrac g)
+    dsimp [toFrac]
     exact ⟨rfl, h, MvPolynomial.IsSymmetric.one⟩
   exact demaux_mul_symm i (mk' g) (mk' f) this
 
