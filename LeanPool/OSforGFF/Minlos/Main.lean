@@ -70,7 +70,7 @@ theorem minlos_theorem {E : Type*} [AddCommGroup E] [Module ℝ E]
   -- This gives us ν : Measure (E → ℝ), a probability measure on the algebraic dual
   let ν := marginalProjectiveLimit Φ h_continuous h_positive_definite h_normalized
   have hν_prob : IsProbabilityMeasure ν :=
-    marginalProjectiveLimit_isProbability Φ h_continuous h_positive_definite h_normalized
+    marginalProjectiveLimitIsProbability Φ h_continuous h_positive_definite h_normalized
   -- Step 2: The CF of ν equals Φ (hence is continuous)
   have hν_proj := marginalProjectiveLimit_isProjectiveLimit Φ h_continuous
     h_positive_definite h_normalized
@@ -132,7 +132,7 @@ theorem minlos_theorem {E : Type*} [AddCommGroup E] [Module ℝ E]
       Complex.exp (Complex.I * ↑(∑ i, s i * y ⟨x i, hx_mem i⟩))
     have hg_cont : Continuous g :=
       Complex.continuous_exp.comp (continuous_const.mul (continuous_ofReal.comp
-        (continuous_finset_sum _ (fun i _ => continuous_const.mul (continuous_apply _)))))
+        (continuous_finsetSum _ (fun i _ => continuous_const.mul (continuous_apply _)))))
     -- Step 1: Factor through J.restrict and use projective limit
     change ∫ ω, g (J.restrict ω) ∂ν = Φ (∑ i, s i • x i)
     rw [← integral_map (Finset.measurable_restrict J).aemeasurable

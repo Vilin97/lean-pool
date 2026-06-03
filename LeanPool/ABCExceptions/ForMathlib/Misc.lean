@@ -11,6 +11,10 @@ import Mathlib.Algebra.Order.Interval.Finset.SuccPred
 import Mathlib.Data.Nat.SuccPred
 import Mathlib.Data.Finset.Powerset
 
+/-!
+# LeanPool.ABCExceptions.ForMathlib.Misc
+-/
+
 noncomputable section
 
 open Set
@@ -56,13 +60,16 @@ theorem Finset.prod_Icc_succ_bot {M : Type*} [CommMonoid M] {a b : ℕ}
   simp
 
 lemma Finset.finite_subsets (s : Finset ℕ) : {a | a ⊆ s}.Finite := by
-  simpa using s.powerset.finite_toSet
+  rw [show {a : Finset ℕ | a ⊆ s} = (s.powerset : Set (Finset ℕ)) by
+    ext a
+    simp]
+  exact s.powerset.finite_toSet
 
 @[to_additive]
 lemma prod_Icc_eq_prod_range_mul_prod_Icc {α : Type*} [CommMonoid α] {f : ℕ → α} {t : ℕ}
     (ht : t ≤ d + 1) :
     ∏ i ≤ d, f i = (∏ i ∈ Finset.range t, f i) * ∏ i ∈ Finset.Icc t d, f i := by
-  rw [Nat.Iic_eq_Icc, ← Finset.Ico_union_Icc_eq_Icc' (zero_le _) ht, Nat.Ico_zero_eq_range,
+  rw [Nat.Iic_eq_Icc, ← Finset.Ico_union_Icc_eq_Icc' (Nat.zero_le t) ht, Nat.Ico_zero_eq_range,
     Finset.prod_union]
   simp +contextual [Finset.disjoint_left]
 

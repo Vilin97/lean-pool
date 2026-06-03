@@ -6,6 +6,13 @@ Authors: Jukka Suomela
 
 import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.Bound
 
+/-!
+## Remaining region computations for the 3-parameter recursive algorithm
+
+This file computes the contributions to `ClassicalAlgorithm.p recursive3ParamAlg` coming from the
+`b < t1` and `t1 ≤ b < t2` regions.
+-/
+
 namespace Distributed2Coloring
 
 open MeasureTheory
@@ -14,12 +21,6 @@ open scoped unitInterval ENNReal
 namespace UpperBound
 namespace Recursive3Param
 
-/-!
-## Remaining region computations for the 3-parameter recursive algorithm
-
-This file computes the contributions to `ClassicalAlgorithm.p recursive3ParamAlg` coming from the
-`b < t1` and `t1 ≤ b < t2` regions.
--/
 
 lemma gCt_eq_affine (c : Rand) :
     gCt c =

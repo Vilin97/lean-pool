@@ -7,6 +7,10 @@ Authors: Óscar Álvarez Sánchez
 import LeanPool.DemazureOperatorsLean.StrongExchange
 import Init.Data.List.Erase
 
+/-!
+# LeanPool.DemazureOperatorsLean.Matsumoto
+-/
+
 namespace CoxeterSystem
 noncomputable section
 
@@ -14,7 +18,7 @@ variable {B : Type}
 variable {W : Type} [Group W]
 variable {M : CoxeterMatrix B} (cs : CoxeterSystem M W)
 
-instance : DecidableEq W := Classical.typeDecidableEq W
+instance instDecidableEqMatsumotoLeanPool : DecidableEq W := Classical.typeDecidableEq W
 
 local prefix:100 "s" => cs.simple
 local prefix:100 "π" => cs.wordProd
@@ -48,7 +52,7 @@ inductive CoxeterMove (cs : CoxeterSystem M W) where
 | braid : cs.BraidMove → cs.CoxeterMove
 
 /-- Apply a nil move to a word. -/
-def apply_nilMove (nm : cs.NilMove) (l : List B) : List B :=
+def applyNilMove (nm : cs.NilMove) (l : List B) : List B :=
   match nm with
   | NilMove.mk i p =>
     match p with
@@ -60,10 +64,10 @@ def apply_nilMove (nm : cs.NilMove) (l : List B) : List B :=
     | p + 1 =>
       match l with
       | [] => []
-      | h::t => h :: apply_nilMove (NilMove.mk i p) t
+      | h::t => h :: applyNilMove (NilMove.mk i p) t
 
 /-- Apply a braid move to a word. -/
-def apply_braidMove (bm : cs.BraidMove) (l : List B) : List B :=
+def applyBraidMove (bm : cs.BraidMove) (l : List B) : List B :=
   match bm with
   | BraidMove.mk i j p =>
     match p with
@@ -75,19 +79,19 @@ def apply_braidMove (bm : cs.BraidMove) (l : List B) : List B :=
     | p + 1 =>
       match l with
       | [] => []
-      | h::t => h :: apply_braidMove (BraidMove.mk i j p) t
+      | h::t => h :: applyBraidMove (BraidMove.mk i j p) t
 
 /-- Apply either kind of Coxeter move to a word. -/
-def apply_coxeterMove (cm : cs.CoxeterMove) (l : List B) : List B :=
+def applyCoxeterMove (cm : cs.CoxeterMove) (l : List B) : List B :=
   match cm with
-  | CoxeterMove.nil nm => cs.apply_nilMove nm l
-  | CoxeterMove.braid bm => cs.apply_braidMove bm l
+  | CoxeterMove.nil nm => cs.applyNilMove nm l
+  | CoxeterMove.braid bm => cs.applyBraidMove bm l
 
-theorem nilMove_wordProd (nm : cs.NilMove) (l : List B) : π (cs.apply_nilMove nm l) = π l := by
+theorem nilMove_wordProd (nm : cs.NilMove) (l : List B) : π (cs.applyNilMove nm l) = π l := by
   rcases nm with ⟨i, p⟩
   match p with
   | 0 =>
-    rw[apply_nilMove]
+    rw[applyNilMove]
     by_cases h : l.take 2 = [i, i]
     · rw [if_pos h]
       have h' : l = l.take 2 ++ l.drop 2 := by simp
@@ -102,17 +106,17 @@ theorem nilMove_wordProd (nm : cs.NilMove) (l : List B) : π (cs.apply_nilMove n
     · rw [if_neg h]
   | p + 1 =>
     match l with
-    | [] => simp[apply_nilMove]
+    | [] => simp[applyNilMove]
     | h::t =>
-      simp only [apply_nilMove, wordProd_cons]
+      simp only [applyNilMove, wordProd_cons]
       rw[nilMove_wordProd (NilMove.mk i p) t]
 
 theorem braidMove_wordProd (bm : cs.BraidMove) (l : List B) :
-    π (cs.apply_braidMove bm l) = π l := by
+    π (cs.applyBraidMove bm l) = π l := by
   rcases bm with ⟨i, j, p⟩
   match p with
     | 0 =>
-      rw[apply_braidMove]
+      rw[applyBraidMove]
       by_cases h : List.take (M.M i j) l = braidWord M i j
       · rw [if_pos h]
         have h' : l = l.take (M.M i j) ++ l.drop (M.M i j) := by simp
@@ -123,34 +127,34 @@ theorem braidMove_wordProd (bm : cs.BraidMove) (l : List B) :
       · rw [if_neg h]
     | p + 1 =>
       match l with
-      | [] => simp[apply_braidMove]
+      | [] => simp[applyBraidMove]
       | h::t =>
-        simp only [apply_braidMove, wordProd_cons]
+        simp only [applyBraidMove, wordProd_cons]
         rw[braidMove_wordProd (BraidMove.mk i j p) t]
 
 theorem coxeterMove_wordProd (cm : cs.CoxeterMove) (l : List B) :
-    π (cs.apply_coxeterMove cm l) = π l := by
+    π (cs.applyCoxeterMove cm l) = π l := by
   cases cm with
   | nil nm => exact cs.nilMove_wordProd nm l
   | braid bm => exact cs.braidMove_wordProd bm l
 
 /-- Apply a list of Coxeter moves to a word from right to left. -/
-def apply_coxeterMove_sequence (cms : List (cs.CoxeterMove)) (l : List B) : List B :=
-  List.foldr (cs.apply_coxeterMove) l cms
+def applyCoxeterMoveSequence (cms : List (cs.CoxeterMove)) (l : List B) : List B :=
+  List.foldr (cs.applyCoxeterMove) l cms
 
 example (nm : cs.NilMove) : cs.CoxeterMove := CoxeterMove.nil nm
 
 /-- Apply a sequence of braid moves to a word. -/
-def apply_braidMoveSequence (bms : List (cs.BraidMove)) (l : List B) : List B :=
+def applyBraidMoveSequence (bms : List (cs.BraidMove)) (l : List B) : List B :=
   match bms with
   | [] => l
-  | bm :: bms' => cs.apply_braidMove bm (apply_braidMoveSequence bms' l)
+  | bm :: bms' => cs.applyBraidMove bm (applyBraidMoveSequence bms' l)
 
 lemma apply_braidMoveSequence_cons (bm : cs.BraidMove) (bms : List (cs.BraidMove))
     (l : List B) :
-    cs.apply_braidMoveSequence (bm :: bms) l =
-      cs.apply_braidMove bm (cs.apply_braidMoveSequence bms l) := by
-  simp[apply_braidMoveSequence]
+    cs.applyBraidMoveSequence (bm :: bms) l =
+      cs.applyBraidMove bm (cs.applyBraidMoveSequence bms l) := by
+  simp[applyBraidMoveSequence]
 
 lemma cons_of_length_succ {α : Type} (l : List α) {p : ℕ} (h : l.length = p + 1) :
   ∃ (a : α) (t : List α), l = a :: t ∧ t.length = p := by
@@ -161,23 +165,23 @@ lemma cons_of_length_succ {α : Type} (l : List α) {p : ℕ} (h : l.length = p 
     simp at h
     use a, t
 /-- Shift a braid move one position to the right. -/
-def shift_braidMove (bm : cs.BraidMove) : cs.BraidMove :=
+def shiftBraidMove (bm : cs.BraidMove) : cs.BraidMove :=
   match bm with
   | BraidMove.mk i j p => BraidMove.mk i j (p + 1)
 
 lemma braidMove_cons (bm : cs.BraidMove) (l : List B) (a : B) :
-  a :: cs.apply_braidMove bm l = cs.apply_braidMove (cs.shift_braidMove bm) (a :: l) := by
+  a :: cs.applyBraidMove bm l = cs.applyBraidMove (cs.shiftBraidMove bm) (a :: l) := by
   rcases bm with ⟨i, j, p⟩
-  simp[shift_braidMove, apply_braidMove]
+  simp[shiftBraidMove, applyBraidMove]
 
 lemma braidMoveSequence_cons (bms : List (cs.BraidMove)) (l : List B) (a : B) :
-    a :: cs.apply_braidMoveSequence bms l =
-      cs.apply_braidMoveSequence (List.map cs.shift_braidMove bms) (a :: l) := by
+    a :: cs.applyBraidMoveSequence bms l =
+      cs.applyBraidMoveSequence (List.map cs.shiftBraidMove bms) (a :: l) := by
   induction bms with
     | nil =>
-       simp[apply_braidMoveSequence]
+       simp[applyBraidMoveSequence]
     | cons bm bms ih =>
-      rw[apply_braidMoveSequence]
+      rw[applyBraidMoveSequence]
       rw[cs.braidMove_cons bm]
       rw[ih]
       simp[apply_braidMoveSequence_cons]
@@ -450,17 +454,17 @@ lemma prefix_braidWord [MatsumotoCondition cs] (l l' : List B) (i j : B)
   · exact htr
 
 theorem apply_braidMove_sequence_append (bms bms' : List (cs.BraidMove)) (l : List B) :
-    cs.apply_braidMoveSequence (bms ++ bms') l =
-      cs.apply_braidMoveSequence bms (cs.apply_braidMoveSequence bms' l) := by
+    cs.applyBraidMoveSequence (bms ++ bms') l =
+      cs.applyBraidMoveSequence bms (cs.applyBraidMoveSequence bms' l) := by
   induction bms with
   | nil => rfl
   | cons bm bms ih =>
     rw [List.cons_append, apply_braidMoveSequence_cons, apply_braidMoveSequence_cons, ih]
 
 theorem concatenate_braidMove_sequences (l l' l'' : List B)
-    (h : ∃ bms : List (cs.BraidMove), cs.apply_braidMoveSequence bms l = l')
-    (h' : ∃ bms' : List (cs.BraidMove), cs.apply_braidMoveSequence bms' l' = l'') :
-    ∃ bms'' : List (cs.BraidMove), cs.apply_braidMoveSequence bms'' l = l'' := by
+    (h : ∃ bms : List (cs.BraidMove), cs.applyBraidMoveSequence bms l = l')
+    (h' : ∃ bms' : List (cs.BraidMove), cs.applyBraidMoveSequence bms' l' = l'') :
+    ∃ bms'' : List (cs.BraidMove), cs.applyBraidMoveSequence bms'' l = l'' := by
   rcases h with ⟨bms, hbms⟩
   rcases h' with ⟨bms', hbms'⟩
   use bms' ++ bms
@@ -495,8 +499,8 @@ lemma matsumoto_reduced_inductionStep_of_firstLetterEq (p : ℕ) (l_t l'_t : Lis
           cs.IsReduced l →
             cs.IsReduced l' →
               cs.wordProd l = cs.wordProd l' →
-                ∃ bms, cs.apply_braidMoveSequence bms l = l') :
-    ∃ bms, cs.apply_braidMoveSequence bms (i :: l_t) = i :: l'_t := by
+                ∃ bms, cs.applyBraidMoveSequence bms l = l') :
+    ∃ bms, cs.applyBraidMoveSequence bms (i :: l_t) = i :: l'_t := by
   have htr : cs.IsReduced l_t := cs.isReduced_cons i l_t l_reduced
   have htr' : cs.IsReduced l'_t := cs.isReduced_cons i l'_t l'_reduced
   have h_prod : π l_t = π l'_t := by
@@ -506,12 +510,12 @@ lemma matsumoto_reduced_inductionStep_of_firstLetterEq (p : ℕ) (l_t l'_t : Lis
   apply (List.cons_inj_right i).mpr at ih'
   rw[← ih']
   rw[braidMoveSequence_cons]
-  use (List.map cs.shift_braidMove bms)
+  use (List.map cs.shiftBraidMove bms)
 
 theorem matsumoto_reduced_aux [MatsumotoCondition cs] (p : ℕ) (l l' : List B)
 (len_l_eq_p : l.length = p) (len_l'_eq_p : l'.length = p)
 (l_reduced : cs.IsReduced l) (l'_reduced : cs.IsReduced l') (h_eq : π l = π l') :
-  ∃ bms : List (cs.BraidMove), cs.apply_braidMoveSequence bms l = l' := by
+  ∃ bms : List (cs.BraidMove), cs.applyBraidMoveSequence bms l = l' := by
   revert l l'
   induction p with
   | zero =>
@@ -570,9 +574,9 @@ theorem matsumoto_reduced_aux [MatsumotoCondition cs] (p : ℕ) (l l' : List B)
             (braidWord M i j ++ b_tail) (j :: l'_t)
           · use [BraidMove.mk j i 0]
             rw[apply_braidMoveSequence_cons]
-            change cs.apply_braidMove (BraidMove.mk j i 0) (braidWord M j i ++ b_tail) =
+            change cs.applyBraidMove (BraidMove.mk j i 0) (braidWord M j i ++ b_tail) =
               braidWord M i j ++ b_tail
-            rw[apply_braidMove]
+            rw[applyBraidMove]
             have htake :
                 List.take (M j i) (braidWord M j i ++ b_tail) = braidWord M j i := by
               rw[← length_alternatingWord j i (M j i)]
@@ -642,9 +646,9 @@ theorem matsumoto_reduced_aux [MatsumotoCondition cs] (p : ℕ) (l l' : List B)
             exact hb
           rcases ih l_t (alternatingWord i j m ++ b_tail) len_l_t_eq_p b_len_p
             i_tail_reduced aword_is_reduced i_tail_eq_aword with ⟨bms, ih'⟩
-          use (List.map cs.shift_braidMove bms)
+          use (List.map cs.shiftBraidMove bms)
           rw[← braidMoveSequence_cons]
-          suffices cs.apply_braidMoveSequence bms l_t = (alternatingWord i j m ++ b_tail)
+          suffices cs.applyBraidMoveSequence bms l_t = (alternatingWord i j m ++ b_tail)
             from by
               rw[this]
               rw[← b_word_cons]
@@ -653,9 +657,9 @@ theorem matsumoto_reduced_aux [MatsumotoCondition cs] (p : ℕ) (l l' : List B)
             (braidWord M j i ++ b_tail) (j :: l'_t)
           · use [BraidMove.mk i j 0]
             rw[apply_braidMoveSequence_cons]
-            change cs.apply_braidMove (BraidMove.mk i j 0) (braidWord M i j ++ b_tail) =
+            change cs.applyBraidMove (BraidMove.mk i j 0) (braidWord M i j ++ b_tail) =
               braidWord M j i ++ b_tail
-            rw[apply_braidMove]
+            rw[applyBraidMove]
             have htake :
                 List.take (M i j) (braidWord M i j ++ b_tail) = braidWord M i j := by
               rw[← length_alternatingWord i j (M i j)]
@@ -704,17 +708,17 @@ theorem matsumoto_reduced_aux [MatsumotoCondition cs] (p : ℕ) (l l' : List B)
               exact Eq.symm hb'
             rcases ih (alternatingWord j i m ++ b_tail) l'_t b_len_p len_l'_t_eq_p
               aword_is_reduced j_tail_reduced j_tail_eq_aword with ⟨bms, ih'⟩
-            use (List.map cs.shift_braidMove bms)
+            use (List.map cs.shiftBraidMove bms)
             rw[b_word_cons]
             rw[← braidMoveSequence_cons]
-            suffices cs.apply_braidMoveSequence bms (alternatingWord j i m ++ b_tail) = l'_t
+            suffices cs.applyBraidMoveSequence bms (alternatingWord j i m ++ b_tail) = l'_t
               from by
                 rw[this]
             exact ih'
 
 theorem matsumoto_reduced [MatsumotoCondition cs] (l l' : List B)
 (hr : cs.IsReduced l) (hr' : cs.IsReduced l') (h : π l = π l') :
-  ∃ bms : List (cs.BraidMove), cs.apply_braidMoveSequence bms l = l' := by
+  ∃ bms : List (cs.BraidMove), cs.applyBraidMoveSequence bms l = l' := by
   apply cs.matsumoto_reduced_aux (l.length) l l' rfl _ hr hr' h
   calc
       l'.length = len (π l') := by

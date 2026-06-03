@@ -804,7 +804,7 @@ private lemma partial_sum_mul_hermite_integrable (f : SchwartzMap ℝ ℝ) (N m 
     Integrable (fun x => (∑ n ∈ Finset.range N,
       hermiteCoeff1D n f * hermiteFunction n x) * hermiteFunction m x) volume := by
   simp_rw [Finset.sum_mul]
-  apply integrable_finset_sum
+  apply integrable_finsetSum
   intro n _
   exact ((hermite_mul_hermite_integrable n m).const_mul _).congr
     (by filter_upwards with x; ring)
@@ -815,7 +815,7 @@ private lemma partial_sum_inner_hermite (f : SchwartzMap ℝ ℝ) (N m : ℕ) (h
       hermiteCoeff1D n f * hermiteFunction n x) * hermiteFunction m x =
     hermiteCoeff1D m f := by
   simp_rw [Finset.sum_mul]
-  rw [integral_finset_sum _ (fun n _ => by
+  rw [integral_finsetSum _ (fun n _ => by
     exact ((hermite_mul_hermite_integrable n m).const_mul _).congr
       (by filter_upwards with x; ring))]
   simp_rw [show ∀ n, (fun x => hermiteCoeff1D n f * hermiteFunction n x * hermiteFunction m x) =
@@ -836,7 +836,7 @@ private lemma partial_sum_l2_norm_sq (f : SchwartzMap ℝ ℝ) (N : ℕ) :
         ((∑ n ∈ Finset.range N, hermiteCoeff1D n f * hermiteFunction n x) *
           hermiteFunction m x) := by
     congr 1; ext x; simp only [sq, Finset.mul_sum]; congr 1; ext m; ring
-  rw [h1, integral_finset_sum _ (fun m _ =>
+  rw [h1, integral_finsetSum _ (fun m _ =>
     (partial_sum_mul_hermite_integrable f N m).const_mul _)]
   simp_rw [integral_const_mul]
   apply Finset.sum_congr rfl
@@ -849,7 +849,7 @@ private lemma cross_term_integral (f : SchwartzMap ℝ ℝ) (N : ℕ) :
       hermiteCoeff1D n f * hermiteFunction n x) =
     ∑ n ∈ Finset.range N, hermiteCoeff1D n f ^ 2 := by
   simp_rw [Finset.mul_sum]
-  rw [integral_finset_sum _ (fun n _ =>
+  rw [integral_finsetSum _ (fun n _ =>
     ((schwartz_mul_hermite_integrable f n).const_mul (hermiteCoeff1D n f)).congr
       (by filter_upwards with x; ring))]
   congr 1; ext n
@@ -868,7 +868,7 @@ private lemma bessel_identity (f : SchwartzMap ℝ ℝ) (N : ℕ) :
     ((f.memLp 2 volume).integrable_mul (f.memLp 2 volume)).congr
       (by filter_upwards with x; change f x * f x = f x ^ 2; ring)
   have hint_S_memLp : MemLp S 2 volume := by
-    apply memLp_finset_sum; intro n _; exact (hermiteFunction_memLp n).const_mul _
+    apply memLp_finsetSum; intro n _; exact (hermiteFunction_memLp n).const_mul _
   have hint_fS : Integrable (fun x => f x * S x) volume :=
     (f.memLp 2 volume).integrable_mul hint_S_memLp
   have hint_S2 : Integrable (fun x => (S x) ^ 2) volume :=
@@ -967,7 +967,7 @@ private lemma hermite_series_memLp (f : SchwartzMap ℝ ℝ) :
     ∑ n ∈ Finset.range N, hermiteCoeff1D n f * hermiteFunction n x with hS_def
   -- Partial sums are in L²
   have hS_memLp : ∀ N, MemLp (S N) 2 volume := fun N => by
-    apply memLp_finset_sum; intro n _; exact (hermiteFunction_memLp n).const_mul _
+    apply memLp_finsetSum; intro n _; exact (hermiteFunction_memLp n).const_mul _
   -- Partial sums converge pointwise to the tsum
   have hS_tendsto : ∀ x, Filter.Tendsto (fun N => S N x) Filter.atTop
       (nhds (∑' n, hermiteCoeff1D n f * hermiteFunction n x)) := fun x =>
@@ -1090,7 +1090,7 @@ private lemma integral_tsum_mul_hermite (f : SchwartzMap ℝ ℝ) (m : ℕ) :
         -- We have ∫ ‖ψₙ * ψₘ‖ = ∫ |ψₙ * ψₘ| ≤ 1
         calc ∫⁻ a, ↑‖hermiteFunction n a * hermiteFunction m a‖₊
             = ∫⁻ a, ENNReal.ofReal ‖hermiteFunction n a * hermiteFunction m a‖ := by
-              congr 1; ext a; exact (ofReal_norm_eq_enorm _).symm
+              congr 1; ext a; exact (ofReal_norm _).symm
           _ = ENNReal.ofReal (∫ a, ‖hermiteFunction n a * hermiteFunction m a‖) := by
               exact (ofReal_integral_eq_lintegral_ofReal hint.norm
                 (Filter.Eventually.of_forall (fun _ => norm_nonneg _))).symm
@@ -1170,7 +1170,7 @@ private lemma parseval_identity (f : SchwartzMap ℝ ℝ) :
     have hS_sq_int : ∀ N, Integrable (fun x => (S N x) ^ 2) volume := by
       intro N
       have hSmemLp : MemLp (S N) 2 volume := by
-        apply memLp_finset_sum; intro n _; exact (hermiteFunction_memLp n).const_mul _
+        apply memLp_finsetSum; intro n _; exact (hermiteFunction_memLp n).const_mul _
       exact (hSmemLp.integrable_mul hSmemLp).congr
         (by filter_upwards with x; change S N x * S N x = S N x ^ 2; ring)
     have hT_sq_aesm : AEStronglyMeasurable (fun x => (T x) ^ 2) volume :=

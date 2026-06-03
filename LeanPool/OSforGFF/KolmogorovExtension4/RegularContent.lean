@@ -7,6 +7,12 @@ Authors: Rémy Degenne, Peter Pfaffelhuber
 import LeanPool.OSforGFF.KolmogorovExtension4.CompactSystem
 import Mathlib.MeasureTheory.Measure.AddContent
 
+/-!
+# Regular Contents
+
+Regularity lemmas for additive contents used in the Kolmogorov extension construction.
+-/
+
 open scoped ENNReal
 
 namespace MeasureTheory

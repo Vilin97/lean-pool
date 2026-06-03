@@ -14,6 +14,10 @@ import LeanPool.SelbergSieve4.AuxResults
 import LeanPool.SelbergSieve4.Tactic.AesopDiv
 import LeanPool.SelbergSieve4.UpperBoundSieve
 
+/-!
+# LeanPool.SelbergSieve4.SieveLemmas
+-/
+
 noncomputable section
 
 open scoped BigOperators ArithmeticFunction.zeta ArithmeticFunction.Moebius ArithmeticFunction.omega
@@ -154,13 +158,13 @@ theorem nu_lt_self_of_dvd_prodPrimes : ∀ d : ℕ, d ∣ P → d ≠ 1 → ν d
     ν d = ∏ p ∈ d.primeFactors, ν p :=
       eq_comm.mp (prod_factors_of_mult ν s.nu_mult hd_sq)
     _ < ∏ p ∈ d.primeFactors, 1 := by
-      have hd_ne_zero : d ≠ 0 := by aesop_div
+      have hd_ne_zero : d ≠ 0 := by aesopDiv
       apply prod_lt_prod_of_nonempty
       · intro p hp
         simp only [mem_primeFactors] at hp
-        apply s.nu_pos_of_prime p (by aesop) (by aesop_div)
+        apply s.nu_pos_of_prime p (by aesop) (by aesopDiv)
       · intro p hpd; rw [mem_primeFactors_of_ne_zero hd_ne_zero] at hpd
-        apply s.nu_lt_one_of_prime p hpd.left (by aesop_div)
+        apply s.nu_lt_one_of_prime p hpd.left (by aesopDiv)
       · apply primeDivisors_nonempty _ <| (two_le_iff d).mpr ⟨hd_ne_zero, hd_ne_one⟩
     _ = 1 := by
       simp

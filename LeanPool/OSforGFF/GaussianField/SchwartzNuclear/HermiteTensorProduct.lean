@@ -222,7 +222,7 @@ private noncomputable def toRapidDecay1DCLM : SchwartzMap ℝ ℝ →L[ℝ] Rapi
 /-- T2Space instance for Schwartz maps.
 Derived from T1Space via topological group structure.
 -/
-noncomputable instance schwartzMap_T2Space : T2Space (SchwartzMap ℝ ℝ) := by
+noncomputable instance schwartzMapT2Space : T2Space (SchwartzMap ℝ ℝ) := by
   haveI : T1Space (SchwartzMap ℝ ℝ) :=
     WithSeminorms.T1_of_separating (schwartz_withSeminorms ℝ ℝ ℝ) fun f hf =>
       by
@@ -1122,7 +1122,7 @@ lemma hermiteCoeffNd_eq_hermiteCoeff1D
 
 /-! ### Analytical Axioms for Multi-Dimensional Hermite Analysis
 
-The definitions `schwartz_slice`, `schwartz_partial_hermiteCoeff`,
+The definitions `schwartzSlice`, `schwartzPartialHermiteCoeff`,
 `euclideanSnoc`, `euclideanInit` and associated lemmas live in
 `SchwartzSlicing.lean` (imported above).
 
@@ -1177,7 +1177,7 @@ private lemma hermiteCoeffNd_fubini (d : ℕ)
     (α : MultiIndex (d + 2)) :
     hermiteCoeffNd (d + 2) α f =
       hermiteCoeffNd (d + 1) (fun i => α (Fin.castSucc i))
-        (schwartz_partial_hermiteCoeff d f (α (Fin.last (d + 1)))) := by
+        (schwartzPartialHermiteCoeff d f (α (Fin.last (d + 1)))) := by
   unfold hermiteCoeffNd
   rw [integral_euclidean_snoc d _ (schwartz_mul_hermiteBasisNd_integrable (d + 2) f α)]
   congr 1
@@ -1201,7 +1201,7 @@ private lemma hermiteCoeffNd_fubini (d : ℕ)
   congr 1
 
 -- Seminorm control of partial Hermite coefficients with 1D decay (was axiom A4).
--- Each Schwartz seminorm of schwartz_partial_hermiteCoeff d f n (as a function of d+1
+-- Each Schwartz seminorm of schwartzPartialHermiteCoeff d f n (as a function of d+1
 -- variables) decays rapidly in n: multiplied by (1+n)^k for any k, it is controlled
 -- by finitely many (d+2)-variable Schwartz seminorms of f.
 --
@@ -1211,7 +1211,7 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound (d : ℕ) (k' l' : �
     ∃ (C : ℝ) (q' : Finset (ℕ × ℕ)), 0 < C ∧
       ∀ (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ) (n : ℕ),
         SchwartzMap.seminorm ℝ k' l'
-          (schwartz_partial_hermiteCoeff d f n) * (1 + (n : ℝ)) ^ k ≤
+          (schwartzPartialHermiteCoeff d f n) * (1 + (n : ℝ)) ^ k ≤
           C * q'.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 2))) ℝ) f := by
   -- Step 1: Get 1D Hermite coefficient decay bound
   obtain ⟨C₁, q₁_raw, hC₁, h1decay⟩ := hermiteCoeff1D_decay k
@@ -1223,7 +1223,7 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound (d : ℕ) (k' l' : �
         (y : EuclideanSpace ℝ (Fin (d + 1)))
         (v : Fin l' → EuclideanSpace ℝ (Fin (d + 1))),
         ‖y‖ ^ k' * schwartzSeminormFamily ℝ ℝ ℝ idx
-          (schwartz_slice_partial d f l' y v) ≤
+          (schwartzSlicePartial d f l' y v) ≤
           C_i * (∏ i, ‖v i‖) *
             q_i.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 2))) ℝ) f := by
     intro ⟨a, b⟩
@@ -1237,7 +1237,7 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound (d : ℕ) (k' l' : �
     lt_of_lt_of_le (hC_pos hne.choose) (Finset.le_sup' C_fn hne.choose_spec)
   have hC₂_pos : 0 < C₂ := mul_pos hC₁ hC_max_pos
   refine ⟨C₂, q₂, hC₂_pos, fun f n => ?_⟩
-  set g := schwartz_partial_hermiteCoeff d f n
+  set g := schwartzPartialHermiteCoeff d f n
   set S_f := q₂.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 2))) ℝ) f
   have hSf_nonneg : 0 ≤ S_f := apply_nonneg _ _
   have hc : 0 < (1 + (n : ℝ)) ^ k := by positivity
@@ -1275,7 +1275,7 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound (d : ℕ) (k' l' : �
     -- Connect to 1D via schwartz_partial_hermiteCoeff_iteratedFDeriv
     have h_comm := schwartz_partial_hermiteCoeff_iteratedFDeriv d f n l' y v
     rw [h_comm]
-    set slice := schwartz_slice_partial d f l' y v
+    set slice := schwartzSlicePartial d f l' y v
     -- Apply 1D decay bound
     have h_decay := h1decay slice n
     -- Chain: c * |hermiteCoeff1D n slice| * (1+n)^k
@@ -1335,7 +1335,7 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound'
     ∃ (C : ℝ) (q' : Finset (ℕ × ℕ)), 0 < C ∧
       ∀ (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ) (n : ℕ),
         q.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 1))) ℝ)
-          (schwartz_partial_hermiteCoeff d f n) * (1 + (n : ℝ)) ^ k ≤
+          (schwartzPartialHermiteCoeff d f n) * (1 + (n : ℝ)) ^ k ≤
           C * q'.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 2))) ℝ) f := by
   by_cases hq : q = ∅
   · exact ⟨1, ∅, one_pos, fun f n => by simp [hq, zero_mul]⟩
@@ -1343,7 +1343,7 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound'
     have h_single : ∀ idx : ℕ × ℕ, ∃ (C : ℝ) (q' : Finset (ℕ × ℕ)), 0 < C ∧
         ∀ (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ) (n : ℕ),
           schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 1))) ℝ idx
-            (schwartz_partial_hermiteCoeff d f n) * (1 + (n : ℝ)) ^ k ≤
+            (schwartzPartialHermiteCoeff d f n) * (1 + (n : ℝ)) ^ k ≤
             C * q'.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 2))) ℝ) f := by
       intro ⟨k', l'⟩
       exact schwartz_partial_hermiteCoeff_seminorm_bound d k' l' k
@@ -1359,11 +1359,11 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound'
     -- Each p_i(g_n) ≤ B / (1+n)^k (by dividing the per-seminorm bound)
     have h_each : ∀ idx ∈ q,
         schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 1))) ℝ idx
-          (schwartz_partial_hermiteCoeff d f n) ≤ B / (1 + (n : ℝ)) ^ k := by
+          (schwartzPartialHermiteCoeff d f n) ≤ B / (1 + (n : ℝ)) ^ k := by
       intro idx hidx
       rw [le_div_iff₀ hc]
       calc schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 1))) ℝ idx
-              (schwartz_partial_hermiteCoeff d f n) * (1 + (n : ℝ)) ^ k
+              (schwartzPartialHermiteCoeff d f n) * (1 + (n : ℝ)) ^ k
           ≤ C_fn idx * (q'_fn idx).sup
               (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 2))) ℝ) f :=
             h_bnd idx f n
@@ -1379,7 +1379,7 @@ private lemma schwartz_partial_hermiteCoeff_seminorm_bound'
     have h_sup := Seminorm.finset_sup_apply_le
       (div_nonneg (mul_nonneg hCM.le (apply_nonneg _ _)) hc.le) h_each
     calc q.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 1))) ℝ)
-            (schwartz_partial_hermiteCoeff d f n) * (1 + (n : ℝ)) ^ k
+            (schwartzPartialHermiteCoeff d f n) * (1 + (n : ℝ)) ^ k
         ≤ B / (1 + (n : ℝ)) ^ k * (1 + (n : ℝ)) ^ k :=
           mul_le_mul_of_nonneg_right h_sup hc.le
       _ = B := div_mul_cancel₀ B (ne_of_gt hc)
@@ -1403,7 +1403,7 @@ private lemma hermiteCoeffNd_injective_succ (d' : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d' + 2))) ℝ)
     (h : ∀ α : MultiIndex (d' + 2), hermiteCoeffNd (d' + 2) α f = 0) : f = 0 := by
   -- Step 1: Fubini shows all partial coefficients vanish
-  have h_partial : ∀ n, schwartz_partial_hermiteCoeff d' f n = 0 := by
+  have h_partial : ∀ n, schwartzPartialHermiteCoeff d' f n = 0 := by
     intro n
     apply ih
     intro β
@@ -1413,21 +1413,21 @@ private lemma hermiteCoeffNd_injective_succ (d' : ℕ)
     convert this.symm using 1
     congr 1; funext i; simp [Fin.snoc_castSucc]
   -- Step 2: All 1D slices are zero (by 1D completeness)
-  have h_slice : ∀ y, schwartz_slice d' f y = 0 := by
+  have h_slice : ∀ y, schwartzSlice d' f y = 0 := by
     intro y
-    have h_coeff : ∀ n, hermiteCoeff1D n (schwartz_slice d' f y) = 0 := by
+    have h_coeff : ∀ n, hermiteCoeff1D n (schwartzSlice d' f y) = 0 := by
       intro n
       rw [← schwartz_partial_hermiteCoeff_eq_1D]
       exact congr_fun (congrArg SchwartzMap.toFun (h_partial n)) y
-    have hs' := schwartz_hermite_hasSum (schwartz_slice d' f y)
-    have heq : (fun n => hermiteCoeff1D n (schwartz_slice d' f y) •
+    have hs' := schwartz_hermite_hasSum (schwartzSlice d' f y)
+    have heq : (fun n => hermiteCoeff1D n (schwartzSlice d' f y) •
         schwartzHermiteBasis1D n) = fun _ => 0 := by
       ext n; simp [h_coeff n]
     rw [heq] at hs'
     exact hs'.unique hasSum_zero
   -- Step 3: f is zero everywhere
   ext x
-  have h_zero : ∀ y t, (schwartz_slice d' f y) t = 0 := by
+  have h_zero : ∀ y t, (schwartzSlice d' f y) t = 0 := by
     intro y t
     exact congr_fun (congrArg SchwartzMap.toFun (h_slice y)) t
   have h_val := h_zero (euclideanInit (d' + 1) x) (x (Fin.last (d' + 1)))
@@ -1560,7 +1560,7 @@ private lemma hermiteCoeffNd_decay (d' : ℕ) (k : ℝ) :
       rw [hermiteCoeffNd_fubini d'' f α]
       set α_rest : MultiIndex (d'' + 1) := fun i => α (Fin.castSucc i)
       set n := α (Fin.last (d'' + 1))
-      set g := schwartz_partial_hermiteCoeff d'' f n
+      set g := schwartzPartialHermiteCoeff d'' f n
       -- |α| ≥ |α_rest|, and k < 0, so (1+|α|)^k ≤ (1+|α_rest|)^k
       have h_abs_rest_le : (MultiIndex.abs α_rest : ℝ) ≤ MultiIndex.abs α := by
         exact_mod_cast show MultiIndex.abs α_rest ≤ MultiIndex.abs α from by
@@ -1595,7 +1595,7 @@ private lemma hermiteCoeffNd_decay (d' : ℕ) (k : ℝ) :
       rw [hermiteCoeffNd_fubini d'' f α]
       set α_rest : MultiIndex (d'' + 1) := fun i => α (Fin.castSucc i)
       set n := α (Fin.last (d'' + 1))
-      set g := schwartz_partial_hermiteCoeff d'' f n
+      set g := schwartzPartialHermiteCoeff d'' f n
       -- Key: |α| = |α_rest| + n, and (1+a+b)^k ≤ ((1+a)(1+b))^k for k ≥ 0
       have h_abs_eq : (MultiIndex.abs α : ℕ) =
           MultiIndex.abs α_rest + n := by

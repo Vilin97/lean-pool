@@ -11,6 +11,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.Correlation
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000Objective
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000Objective
@@ -254,7 +258,7 @@ private lemma avg_corrEmb_eq_avg_over_all_embeddings (f : Coloring n) (b : Emb4)
         =
         ((Fintype.card (MulAction.stabilizer G b) : Q) * (∑ x : Emb4, corrEmb f x)) /
           ((Fintype.card Emb4 : Q) * (Fintype.card (MulAction.stabilizer G b) : Q)) := by
-          simp [hsumG, hsumOrbit, hcardG]
+          rw [hsumG, hsumOrbit, hcardG]
     _ = (∑ x : Emb4, corrEmb f x) / (Fintype.card Emb4 : Q) := by
           field_simp [hcardEmb4_ne, hcardStab_ne, mul_assoc, mul_left_comm, mul_comm]
 
@@ -271,7 +275,7 @@ private lemma avg_corrEmb_eq_avg_corrEdge (f : Coloring n) :
   calc
     (∑ x : Emb4, corrEmb f x) / (Fintype.card Emb4 : Q)
         = (∑ e : Edge n, corrEdge f e) / (Fintype.card Emb4 : Q) := by
-            simp [hsum]
+            rw [hsum]
     _ = (∑ e : Edge n, corrEdge f e) / (edgeCount n : Q) := by
             rw [hcard]
 

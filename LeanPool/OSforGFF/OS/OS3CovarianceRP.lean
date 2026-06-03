@@ -45,7 +45,7 @@ avoids non-convergent pointwise integrals.
 -/
 
 /-- The reflection positivity inner product using the distributional bilinear form:
-    ⟨Θf, f⟩_C = freeCovarianceℂ_bilinear m (star f) f
+    ⟨Θf, f⟩_C = freeCovarianceℂBilinear m (star f) f
              = ∫∫ conj(f(Θx)) * C(x,y) * f(y) dx dy
 
     The star operation on TestFunctionℂ is defined as:
@@ -55,7 +55,7 @@ avoids non-convergent pointwise integrals.
     for Schwartz test functions.
 -/
 noncomputable def rpInnerProduct (m : ℝ) (f : TestFunctionℂ) : ℂ :=
-  freeCovarianceℂ_bilinear m (star f) f
+  freeCovarianceℂBilinear m (star f) f
 
 /-! ## Direct Proof of Reflection Positivity
 
@@ -81,8 +81,8 @@ lemma timeReflection_involutive : Function.Involutive timeReflection :=
 noncomputable def spatialDot (k_spatial x_spatial : SpatialCoords) : ℝ :=
   ∑ i, k_spatial i * x_spatial i
 
-/-- The `freeCovarianceℂ_bilinear` declaration. -/
-noncomputable def freeCovarianceℂ_bilinear (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
+/-- The `freeCovarianceℂBilinear` declaration. -/
+noncomputable def freeCovarianceℂBilinear (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
   ∫ x, ∫ y, (f x) * (_root_.freeCovariance m x y) * (g y)
 
 /-- The `weightedLaplaceFourier` declaration. -/
@@ -93,7 +93,7 @@ noncomputable def weightedLaplaceFourier (m : ℝ) (f : TestFunctionℂ) (k_sp :
 
 /-- Reflection-positivity quadratic form used in the direct proof namespace. -/
 noncomputable def rpInnerProduct (m : ℝ) (f : TestFunctionℂ) : ℂ :=
-  freeCovarianceℂ_bilinear m (star f) f
+  freeCovarianceℂBilinear m (star f) f
 
 /-! ## Part 2: Change of Variables -/
 
@@ -107,7 +107,7 @@ theorem rpInnerProduct_eq_bessel_reflected (f : TestFunctionℂ) :
     rpInnerProduct m f =
       ∫ x : SpaceTime, ∫ y : SpaceTime,
         (starRingEnd ℂ (f x)) * (_root_.freeCovariance m (timeReflection x) y : ℂ) * f y := by
-  unfold rpInnerProduct freeCovarianceℂ_bilinear
+  unfold rpInnerProduct freeCovarianceℂBilinear
   have h_star : ∀ x, (star f) x = starRingEnd ℂ (f (timeReflection x)) := star_apply f
   simp_rw [h_star]
   have h_mp := QFT.timeReflection_measurePreserving
@@ -404,7 +404,7 @@ lemma rpInnerProduct_eq_rpProof (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     rpInnerProduct m f = RPProof.rpInnerProduct m f := by
   -- Both sides expand to the same integral using freeCovariance (Bessel)
   unfold rpInnerProduct RPProof.rpInnerProduct
-  unfold freeCovarianceℂ_bilinear RPProof.freeCovarianceℂ_bilinear
+  unfold freeCovarianceℂBilinear RPProof.freeCovarianceℂBilinear
   rfl
 
 /-- **Main Reflection Positivity Theorem** (Bilinear Form)
@@ -448,7 +448,7 @@ lemma star_toComplex_eq_compTimeReflection (f : TestFunction) :
 -/
 lemma rpInnerProduct_toComplex_eq (m : ℝ) (f : TestFunction) :
     rpInnerProduct m (toComplex f) =
-      freeCovarianceℂ_bilinear m (compTimeReflection (toComplex f)) (toComplex f) := by
+      freeCovarianceℂBilinear m (compTimeReflection (toComplex f)) (toComplex f) := by
   unfold rpInnerProduct
   rw [star_toComplex_eq_compTimeReflection]
 

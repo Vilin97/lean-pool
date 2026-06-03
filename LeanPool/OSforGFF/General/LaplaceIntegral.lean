@@ -172,7 +172,7 @@ theorem glasser_integrable (c : ℝ) (_hc : 0 < c) :
     have h_gauss_int : IntegrableOn (fun u => exp (2*c) * exp (-u^2)) (Ioi 1) := by
       have h1 : IntegrableOn (fun u => exp (-u^2)) (Ioi 0) := by
         simpa using integrableOn_Ioi_exp_neg_mul_sq_iff.mpr one_pos
-      simpa [smul_eq_mul] using (h1.mono_set (Ioi_subset_Ioi one_pos.le)).smul (exp (2*c))
+      exact (h1.mono_set (Ioi_subset_Ioi one_pos.le)).const_mul (exp (2*c))
     have h_contOn : ContinuousOn (fun u : ℝ => exp (-(c/u - u)^2)) (Ioi 1) := by
       apply Real.continuous_exp.comp_continuousOn
       apply ContinuousOn.neg; apply ContinuousOn.pow
@@ -288,7 +288,7 @@ theorem glasser_weighted_integrable (c : ℝ) (hc : 0 < c) :
     have h_dom_int : IntegrableOn (fun u => c * exp (2*c) * exp (-u^2)) (Ioi 1) := by
       have h1 : IntegrableOn (fun u => exp (-u^2)) (Ioi 0) := by
         simpa using integrableOn_Ioi_exp_neg_mul_sq_iff.mpr one_pos
-      simpa using (h1.mono_set (Ioi_subset_Ioi one_pos.le)).const_mul (c * exp (2*c))
+      exact (h1.mono_set (Ioi_subset_Ioi one_pos.le)).const_mul (c * exp (2*c))
     have h_contOn : ContinuousOn (fun u : ℝ => (c/u^2) * exp (-(c/u - u)^2)) (Ioi 1) := by
       apply ContinuousOn.mul
       · exact continuousOn_const.div (continuousOn_pow 2) (fun x hx => pow_ne_zero 2 (ne_of_gt

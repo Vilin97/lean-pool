@@ -39,23 +39,23 @@ variable (m : ℝ) [Fact (0 < m)]
 
 /-- The Euclidean action satisfies (g • f)(x) = f(g⁻¹ • x). -/
 lemma euclidean_action_apply (g : E) (f : TestFunctionℂ) (x : SpaceTime) :
-    euclidean_action g f x = f (euclidean_pullback g x) := by
-  unfold euclidean_action
+    euclideanAction g f x = f (euclideanPullback g x) := by
+  unfold euclideanAction
   simp only [SchwartzMap.compCLM_apply]
   rfl
 
-/-- The Euclidean pullback satisfies euclidean_pullback g x = g⁻¹ • x = act g⁻¹ x. -/
+/-- The Euclidean pullback satisfies euclideanPullback g x = g⁻¹ • x = act g⁻¹ x. -/
 lemma euclidean_pullback_eq_inv_act (g : E) (x : SpaceTime) :
-    euclidean_pullback g x = act g⁻¹ x := rfl
+    euclideanPullback g x = act g⁻¹ x := rfl
 
-/-- Composing pullbacks: euclidean_pullback g (act g y) = y. -/
+/-- Composing pullbacks: euclideanPullback g (act g y) = y. -/
 lemma euclidean_pullback_act (g : E) (y : SpaceTime) :
-    euclidean_pullback g (act g y) = y := by
+    euclideanPullback g (act g y) = y := by
   simp only [euclidean_pullback_eq_inv_act, act_inv_general]
 
-/-- The forward composition: act g (euclidean_pullback g x) = x. -/
+/-- The forward composition: act g (euclideanPullback g x) = x. -/
 lemma act_euclidean_pullback (g : E) (x : SpaceTime) :
-    act g (euclidean_pullback g x) = x := by
+    act g (euclideanPullback g x) = x := by
   simp only [euclidean_pullback_eq_inv_act]
   simpa using act_inv_general (g := g⁻¹) x
 
@@ -105,14 +105,14 @@ omit [Fact (0 < m)] in
     Need to carefully apply integral_prod and MeasurePreserving.prod to complete.
 -/
 theorem freeCovarianceℂ_bilinear_euclidean_invariant (g : E) (f h : TestFunctionℂ) :
-    freeCovarianceℂ_bilinear m (euclidean_action g f) (euclidean_action g h) =
-    freeCovarianceℂ_bilinear m f h := by
-  unfold freeCovarianceℂ_bilinear
+    freeCovarianceℂBilinear m (euclideanAction g f) (euclideanAction g h) =
+    freeCovarianceℂBilinear m f h := by
+  unfold freeCovarianceℂBilinear
   simp only [euclidean_action_apply]
   -- Goal: ∫∫ f(g⁻¹•x) C(x,y) h(g⁻¹•y) dx dy = ∫∫ f(u) C(u,v) h(v) du dv
   -- Step 1: Rewrite C(x,y) using the identity x = g•(g⁻¹•x)
   have h_rewrite : ∀ x y, freeCovariance m x y =
-      freeCovariance m (act g (euclidean_pullback g x)) (act g (euclidean_pullback g y)) := by
+      freeCovariance m (act g (euclideanPullback g x)) (act g (euclideanPullback g y)) := by
     intro x y
     simp only [act_euclidean_pullback]
   -- Step 2: Apply freeCovariance_euclidean_invariant
@@ -146,11 +146,11 @@ theorem freeCovarianceℂ_bilinear_euclidean_invariant (g : E) (f h : TestFuncti
     This removes the `h_euc` hypothesis from the master theorem.
 -/
 theorem CovarianceEuclideanInvariantℂ_μ_GFF :
-    CovarianceEuclideanInvariantℂ (μ_GFF m) := by
+    CovarianceEuclideanInvariantℂ (muGFF m) := by
   intro g f h
-  -- Reduce SchwingerFunctionℂ₂ to freeCovarianceℂ_bilinear via the Gaussian structure
-  -- μ_GFF m = gaussianFreeField_free m
-  simp only [μ_GFF]
+  -- Reduce SchwingerFunctionℂ₂ to freeCovarianceℂBilinear via the Gaussian structure
+  -- muGFF m = gaussianFreeFieldFree m
+  simp only [muGFF]
   rw [gff_two_point_equals_covarianceℂ_free, gff_two_point_equals_covarianceℂ_free]
   exact freeCovarianceℂ_bilinear_euclidean_invariant m g f h
 

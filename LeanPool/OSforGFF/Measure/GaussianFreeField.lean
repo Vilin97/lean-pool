@@ -25,10 +25,10 @@ import LeanPool.OSforGFF.Schwinger.Defs
 /-!
 # Gaussian Free Field Assembly
 
-Defines μ_GFF m as a ProbabilityMeasure and proves two OS axioms for general Gaussian measures:
+Defines muGFF m as a ProbabilityMeasure and proves two OS axioms for general Gaussian measures:
 
 - OS0 (alternative via quadratic form): Z[∑ᵢ zᵢJᵢ] = exp(−½ ∑ᵢⱼ zᵢzⱼ⟨Jᵢ,CJⱼ⟩) is entire
-  (the primary OS0 proof via Hartogs is in `OS.OS0_Analyticity`)
+  (the primary OS0 proof via Hartogs is in `OS.os0Analyticity`)
 - OS2 (Euclidean invariance): Z[gf] = Z[f] when covariance is E(4)-invariant
 -/
 
@@ -42,13 +42,13 @@ open Finset
 
 variable {E : Type*} [AddCommMonoid E] [Module ℂ E]
 
-/-! ### OS0_alt Namespace
+/-! ### OS0Alt Namespace
 
 Alternative proof of OS0 for Gaussian measures via the explicit quadratic form expansion.
-The main proof used by `OS.Master` is in `OS.OS0_Analyticity` (holomorphic integral theorem).
+The main proof used by `OS.Master` is in `OS.os0Analyticity` (holomorphic integral theorem).
 -/
 
-namespace OS0_alt
+namespace OS0Alt
 
 /-- Helper lemma for bilinear expansion with finite sums -/
 lemma bilin_sum_sum {E : Type*} [AddCommMonoid E] [Module ℂ E]
@@ -65,26 +65,26 @@ lemma bilin_sum_sum {E : Type*} [AddCommMonoid E] [Module ℂ E]
   -- Rearrange multiplication: z x * (z i * B ...) = z i * z x * B ...
   congr 1; ext i; ring
 
-end OS0_alt
+end OS0Alt
 
 /-- Assumption: The complex covariance is continuous bilinear -/
 def CovarianceContinuous (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (J K : TestFunctionℂ), Continuous (fun z : ℂ =>
     SchwingerFunctionℂ₂ dμ_config (z • J) K)
 
-/-! ## OS0: Analyticity for Gaussian Measures (OLD PROOF - in OS0_alt namespace)
+/-! ## OS0: Analyticity for Gaussian Measures (OLD PROOF - in OS0Alt namespace)
 
 The key insight is that for Gaussian measures, the generating functional
 Z[∑ᵢ zᵢJᵢ] = exp(-½⟨∑ᵢ zᵢJᵢ, C(∑ⱼ zⱼJ⟩) = exp(-½ ∑ᵢⱼ zᵢzⱼ⟨Jᵢ, CJ⟩)
 is the exponential of a polynomial in the complex variables zᵢ, hence entire.
 
-Note: The primary proof is in `OSforGFF.OS.OS0_Analyticity`.
+Note: The primary proof is in `OSforGFF.OS.os0Analyticity`.
 -/
 
-namespace OS0_alt
+namespace OS0Alt
 
-/-- The `GJcov_bilin` declaration. -/
-def GJcov_bilin (dμ_config : ProbabilityMeasure FieldConfiguration)
+/-- The `gjCovBilin` declaration. -/
+def gjCovBilin (dμ_config : ProbabilityMeasure FieldConfiguration)
   (h_bilinear : CovarianceBilinear dμ_config) : LinearMap.BilinMap ℂ TestFunctionℂ ℂ :=
   LinearMap.mk₂ ℂ
     (fun x y => SchwingerFunctionℂ₂ dμ_config x y)
@@ -107,7 +107,7 @@ theorem gaussian_satisfies_OS0
   (dμ_config : ProbabilityMeasure FieldConfiguration)
   (h_gaussian : isGaussianGJ dμ_config)
   (h_bilinear : CovarianceBilinear dμ_config)
-  : OS0_Analyticity dμ_config := by
+  : os0Analyticity dμ_config := by
   intro n J
   -- Extract the Gaussian form: Z[f] = exp(-½⟨f, Cf⟩)
   have h_form : ∀ (f : TestFunctionℂ),
@@ -126,7 +126,7 @@ theorem gaussian_satisfies_OS0
   apply AnalyticOn.mul
   · exact analyticOn_const
   · -- Show the quadratic form is analytic by expanding via bilinearity
-    let B := GJcov_bilin dμ_config h_bilinear
+    let B := gjCovBilin dμ_config h_bilinear
     -- Expand quadratic form: ⟨∑ᵢ zᵢJᵢ, C(∑ⱼ zⱼJ⟩) = ∑ᵢⱼ zᵢzⱼ⟨Jᵢ, CJ⟩
     have h_expansion : (fun z : Fin n → ℂ => SchwingerFunctionℂ₂ dμ_config (∑ i, z i • J i) (∑ i,
       z i • J i)) =
@@ -186,7 +186,7 @@ theorem gaussian_satisfies_OS0
     -- Convert from AnalyticOnNhd to AnalyticOn
     exact h_sum_analytic.analyticOn
 
-end OS0_alt
+end OS0Alt
 
 /-! ## OS2: Euclidean Invariance for Translation-Invariant Gaussian Measures
 
@@ -198,20 +198,20 @@ differences of spacetime points.
 /-- Assumption: The covariance is invariant under Euclidean transformations -/
 def CovarianceEuclideanInvariant (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (g : QFT.E) (f h : TestFunction),
-    SchwingerFunction₂ dμ_config (QFT.euclidean_action_real g f) (QFT.euclidean_action_real g h) =
+    SchwingerFunction₂ dμ_config (QFT.euclideanActionReal g f) (QFT.euclideanActionReal g h) =
     SchwingerFunction₂ dμ_config f h
 
 /-- Assumption: The complex covariance is invariant under Euclidean transformations -/
 def CovarianceEuclideanInvariantℂ (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (g : QFT.E) (f h : TestFunctionℂ),
-    SchwingerFunctionℂ₂ dμ_config (QFT.euclidean_action g f) (QFT.euclidean_action g h) =
+    SchwingerFunctionℂ₂ dμ_config (QFT.euclideanAction g f) (QFT.euclideanAction g h) =
     SchwingerFunctionℂ₂ dμ_config f h
 
 theorem gaussian_satisfies_OS2
   (dμ_config : ProbabilityMeasure FieldConfiguration)
   (h_gaussian : isGaussianGJ dμ_config)
   (h_euclidean_invariant : CovarianceEuclideanInvariantℂ dμ_config)
-  : OS2_EuclideanInvariance dμ_config := by
+  : os2EuclideanInvariance dμ_config := by
   -- For Gaussian measures: Z[f] = exp(-½⟨f, Cf⟩)
   -- If C commutes with Euclidean transformations g, then:
   -- Z[gf] = exp(-½⟨gf, C(gf)⟩) = exp(-½⟨f, Cf⟩) = Z[f]
@@ -219,7 +219,7 @@ theorem gaussian_satisfies_OS2
   -- Extract Gaussian form for both Z[f] and Z[gf]
   have h_form := h_gaussian.2
   -- Apply Gaussian form to both sides
-  rw [h_form f, h_form (QFT.euclidean_action g f)]
+  rw [h_form f, h_form (QFT.euclideanAction g f)]
   -- Show the exponents are equal: ⟨gf, C(gf)⟩ = ⟨f, Cf⟩
   -- This follows directly from Euclidean invariance of the complex covariance
   congr 2
@@ -238,7 +238,7 @@ To complete these proofs, we need to:
 
 3. **Prove key lemmas:**
    - Schwartz map composition with smooth transformations
-   - Properties of the bilinear form `distributionPairingℂ_real`
+   - Properties of the bilinear form `distributionPairingℂReal`
    - Continuity and analyticity of exponential functionals
 
 4. **Mathematical insights implemented:**

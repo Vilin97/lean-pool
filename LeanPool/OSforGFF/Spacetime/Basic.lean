@@ -18,7 +18,7 @@ Core type definitions for the formalization:
 - `SpaceTime` = EuclideanSpace ℝ (Fin 4), the Euclidean 4-space ℝ⁴
 - `TestFunction` / `TestFunctionℂ` = real/complex Schwartz functions on ℝ⁴
 - `FieldConfiguration` = tempered distributions S'(ℝ⁴) (WeakDual of Schwartz space)
-- `distributionPairing` / `distributionPairingℂ_real` = ⟨ω, f⟩ pairings
+- `distributionPairing` / `distributionPairingℂReal` = ⟨ω, f⟩ pairings
 - `GJGeneratingFunctional` = Z[J] = ∫ exp(i⟨ω, J⟩) dμ(ω)
 -/
 
@@ -151,7 +151,7 @@ def GJGeneratingFunctional (dμ_config : ProbabilityMeasure FieldConfiguration)
     continuous linear map.
     This factors out the common pattern for extracting real/imaginary parts.
 -/
-def schwartz_comp_clm (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) : TestFunction :=
+def schwartzCompCLM (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) : TestFunction :=
   SchwartzMap.mk (fun x => L (f x)) (by
     -- L is a continuous linear map, hence smooth
     exact ContDiff.comp L.contDiff f.smooth'
@@ -183,45 +183,45 @@ def schwartz_comp_clm (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) : TestFuncti
 
 omit [SigmaFinite μ]
 
-/-- Evaluate `schwartz_comp_clm` pointwise. -/
+/-- Evaluate `schwartzCompCLM` pointwise. -/
 @[simp] lemma schwartz_comp_clm_apply (f : TestFunctionℂ) (L : ℂ →L[ℝ] ℝ) (x : SpaceTime) :
-  (schwartz_comp_clm f L) x = L (f x) := rfl
+  (schwartzCompCLM f L) x = L (f x) := rfl
 
 /-- Decompose a complex test function into its real and imaginary parts as real test functions.
     This is more efficient than separate extraction functions.
 -/
-def complex_testfunction_decompose (f : TestFunctionℂ) : TestFunction × TestFunction :=
-  (schwartz_comp_clm f Complex.reCLM, schwartz_comp_clm f Complex.imCLM)
+def complexTestFunctionDecompose (f : TestFunctionℂ) : TestFunction × TestFunction :=
+  (schwartzCompCLM f Complex.reCLM, schwartzCompCLM f Complex.imCLM)
 
 /-- First component of the decomposition evaluates to the real part pointwise. -/
 @[simp] lemma complex_testfunction_decompose_fst_apply
   (f : TestFunctionℂ) (x : SpaceTime) :
-  (complex_testfunction_decompose f).1 x = (f x).re := by
-  simp [complex_testfunction_decompose]
+  (complexTestFunctionDecompose f).1 x = (f x).re := by
+  simp [complexTestFunctionDecompose]
 
 /-- Second component of the decomposition evaluates to the imaginary part pointwise. -/
 @[simp] lemma complex_testfunction_decompose_snd_apply
   (f : TestFunctionℂ) (x : SpaceTime) :
-  (complex_testfunction_decompose f).2 x = (f x).im := by
-  simp [complex_testfunction_decompose]
+  (complexTestFunctionDecompose f).2 x = (f x).im := by
+  simp [complexTestFunctionDecompose]
 
 /-- Coerced-to-ℂ version (useful for complex-side algebra). -/
 lemma complex_testfunction_decompose_fst_apply_coe
   (f : TestFunctionℂ) (x : SpaceTime) :
-  ((complex_testfunction_decompose f).1 x : ℂ) = ((f x).re : ℂ) := by
-  simp [complex_testfunction_decompose]
+  ((complexTestFunctionDecompose f).1 x : ℂ) = ((f x).re : ℂ) := by
+  simp [complexTestFunctionDecompose]
 
 /-- Coerced-to-ℂ version (useful for complex-side algebra). -/
 lemma complex_testfunction_decompose_snd_apply_coe
   (f : TestFunctionℂ) (x : SpaceTime) :
-  ((complex_testfunction_decompose f).2 x : ℂ) = ((f x).im : ℂ) := by
-  simp [complex_testfunction_decompose]
+  ((complexTestFunctionDecompose f).2 x : ℂ) = ((f x).im : ℂ) := by
+  simp [complexTestFunctionDecompose]
 
 /-- Recomposition at a point via the decomposition. -/
 lemma complex_testfunction_decompose_recompose
   (f : TestFunctionℂ) (x : SpaceTime) :
-  f x = ((complex_testfunction_decompose f).1 x : ℂ)
-          + Complex.I * ((complex_testfunction_decompose f).2 x : ℂ) := by
+  f x = ((complexTestFunctionDecompose f).1 x : ℂ)
+          + Complex.I * ((complexTestFunctionDecompose f).2 x : ℂ) := by
   -- Reduce to the standard identity z = re z + i im z
   have h1 : f x = (Complex.re (f x) : ℂ) + (Complex.im (f x) : ℂ) * Complex.I :=
     (Complex.re_add_im (f x)).symm
@@ -234,16 +234,16 @@ lemma complex_testfunction_decompose_recompose
     We extend the pairing by treating the complex test function as f(x) = f_re(x) + i*f_im(x)
     and defining ⟨ω, f⟩ = ⟨ω, f_re⟩ + i*⟨ω, f_im⟩
 -/
-def distributionPairingℂ_real (ω : FieldConfiguration) (f : TestFunctionℂ) : ℂ :=
+def distributionPairingℂReal (ω : FieldConfiguration) (f : TestFunctionℂ) : ℂ :=
   -- Extract real and imaginary parts using our efficient decomposition
-  let ⟨f_re, f_im⟩ := complex_testfunction_decompose f
+  let ⟨f_re, f_im⟩ := complexTestFunctionDecompose f
   -- Pair with the real field configuration and combine
   (ω f_re : ℂ) + Complex.I * (ω f_im : ℂ)
 
 /-- Complex version of the generating functional -/
 def GJGeneratingFunctionalℂ (dμ_config : ProbabilityMeasure FieldConfiguration)
   (J : TestFunctionℂ) : ℂ :=
-  ∫ ω, Complex.exp (Complex.I * (distributionPairingℂ_real ω J)) ∂dμ_config.toMeasure
+  ∫ ω, Complex.exp (Complex.I * (distributionPairingℂReal ω J)) ∂dμ_config.toMeasure
 
 /-- The mean field in the Glimm-Jaffe framework -/
 def GJMean (dμ_config : ProbabilityMeasure FieldConfiguration)
@@ -263,8 +263,8 @@ def spatialPart (x : SpaceTime) : SpatialCoords :=
   (EuclideanSpace.equiv (Fin (STDimension - 1)) ℝ).symm
     (fun i => x ⟨i.val + 1, by simp [STDimension]; omega⟩)
 
-/-- The energy function E(k) = √(‖k‖² + m²) on spatial momentum space -/
-def E (m : ℝ) (k : SpatialCoords) : ℝ :=
+/-- The energy function `spatialEnergy m k = √(‖k‖² + m²)` on spatial momentum space. -/
+def spatialEnergy (m : ℝ) (k : SpatialCoords) : ℝ :=
   Real.sqrt (‖k‖^2 + m^2)
 
 end

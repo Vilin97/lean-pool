@@ -12,8 +12,8 @@ import LeanPool.BruhatTits.Graph.Regular
 import LeanPool.BruhatTits.Graph.Tree
 import LeanPool.BruhatTits.Graph.Vertices
 
-open Module
-
 /-!
 # Bruhat-Tits graph
 -/
+
+open Module

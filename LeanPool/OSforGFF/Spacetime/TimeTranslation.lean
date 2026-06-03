@@ -157,7 +157,7 @@ lemma timeShift_hasTemperateGrowth (s : ℝ) : Function.HasTemperateGrowth (time
       ext x v
       have h : timeShift s = fun u => u + timeShiftConst s := funext (timeShift_eq_add_const s)
       rw [h]
-      simp only [fderiv_add_const, fderiv_id', ContinuousLinearMap.id_apply]
+      simp only [fderiv_add_const, fderiv_fun_id, ContinuousLinearMap.id_apply]
     rw [h_eq]
     exact Function.HasTemperateGrowth.const _
   -- timeShift is differentiable

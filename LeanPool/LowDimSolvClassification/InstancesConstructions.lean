@@ -14,6 +14,10 @@ import Mathlib.LinearAlgebra.Trace
 import LeanPool.LowDimSolvClassification.Semidirect
 import LeanPool.LowDimSolvClassification.GeneralResults
 
+/-!
+# LeanPool.LowDimSolvClassification.InstancesConstructions
+-/
+
 open Module
 open Submodule
 
@@ -29,11 +33,11 @@ def mkAbelian (K : Type*) [CommRing K] (V : Type*) [AddCommGroup V] [Module K V]
 
 variable (K : Type*) [CommRing K] (V : Type*) [AddCommGroup V] [Module K V]
 
-instance [Module K V] : Bracket (mkAbelian K V) (mkAbelian K V) := {
+instance : Bracket (mkAbelian K V) (mkAbelian K V) := {
   bracket := fun _ _ ↦ (0 : V)
 }
 
-instance [Module K V] : LieRing (mkAbelian K V) := {
+instance : LieRing (mkAbelian K V) := {
   (inferInstance : AddCommGroup V) with
   add_lie := fun _ _ _ ↦ show (0 : V) = 0 + 0 by rw [add_zero]
   lie_add := fun _ _ _ ↦ show (0 : V) = 0 + 0 by rw [add_zero]
@@ -41,12 +45,12 @@ instance [Module K V] : LieRing (mkAbelian K V) := {
   leibniz_lie := fun _ _ _ ↦ show (0 : V) = 0 + 0 by rw [add_zero]
 }
 
-instance [Module K V] : LieAlgebra K (mkAbelian K V) := {
+instance : LieAlgebra K (mkAbelian K V) := {
   (inferInstance : Module K V) with
   lie_smul := fun _ _ _ ↦ show (0 : V) = (_ : K) • (0 : V) by rw [smul_zero]
 }
 
-instance [Module K V] : IsLieAbelian (mkAbelian K V) :=
+instance : IsLieAbelian (mkAbelian K V) :=
   ⟨fun _ _ ↦ rfl⟩
 
 end mkAbelian

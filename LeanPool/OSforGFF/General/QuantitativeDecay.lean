@@ -71,7 +71,7 @@ This follows from SchwartzMap.one_add_le_sup_seminorm_apply:
 
 Taking n = 0 and rearranging gives ‖f(x)‖ ≤ C * (1 + ‖x‖)^{-k}.
 -/
-def schwartz_has_polynomial_decay (f : SchwartzMap E ℂ) (k : ℕ) :
+def schwartzHasPolynomialDecay (f : SchwartzMap E ℂ) (k : ℕ) :
     PolynomialDecayBound f (k : ℝ) := by
   -- Use SchwartzMap.one_add_le_sup_seminorm_apply with m = (k, 0)
   have h := SchwartzMap.one_add_le_sup_seminorm_apply (𝕜 := ℂ) (m := (k, 0))
@@ -104,11 +104,11 @@ def schwartz_has_polynomial_decay (f : SchwartzMap E ℂ) (k : ℕ) :
         linarith
 
 /-- Schwartz functions have polynomial decay at any real rate (via ceiling). -/
-def schwartz_has_polynomial_decay_real (f : SchwartzMap E ℂ) (N : ℝ) (_hN : N > 0) :
+def schwartzHasPolynomialDecayReal (f : SchwartzMap E ℂ) (N : ℝ) (_hN : N > 0) :
     PolynomialDecayBound f N := by
   let _ := _hN
   -- Use the natural number version with k = ⌈N⌉
-  obtain ⟨C, hC_pos, hbound⟩ := schwartz_has_polynomial_decay f (⌈N⌉₊)
+  obtain ⟨C, hC_pos, hbound⟩ := schwartzHasPolynomialDecay f (⌈N⌉₊)
   refine ⟨C, hC_pos, fun x => ?_⟩
   have h1 : 1 ≤ 1 + ‖x‖ := le_add_of_nonneg_right (norm_nonneg x)
   calc ‖f x‖
@@ -163,7 +163,7 @@ lemma exp_decay_implies_polynomial_decay (m α : ℝ) (hm : m > 0) (hα : α > 0
           nlinarith
 
 /-- Exponential decay of norms implies polynomial decay bounds. -/
-def norm_exp_decay_implies_polynomial_decay {F : Type*} [NormedAddCommGroup F]
+def normExpDecayImpliesPolynomialDecay {F : Type*} [NormedAddCommGroup F]
     (g : E → F) (m C_exp R₀ : ℝ) (hm : m > 0) (hC_exp : C_exp > 0) (hR₀ : R₀ > 0)
     (hg_decay : ∀ z : E, ‖z‖ ≥ R₀ → ‖g z‖ ≤ C_exp * Real.exp (-m * ‖z‖))
     (hg_bdd : ∃ M : ℝ, ∀ z : E, ‖g z‖ ≤ M)  -- g is globally bounded
@@ -431,7 +431,7 @@ private lemma convolution_polynomial_decay_exists
 
 /-- If two integrable functions have polynomial decay of order `N > dim E`, then their convolution
 has polynomial decay of the same order. -/
-def convolution_polynomial_decay
+def convolutionPolynomialDecay
     {u v : E → ℂ} {N : ℝ} (hN_dim : N > Module.finrank ℝ E)
     (hu_decay : PolynomialDecayBound u N)
     (hv_decay : PolynomialDecayBound v N)
@@ -456,7 +456,7 @@ private lemma convolution_compactSupport_decay_exists (f : SchwartzMap E ℂ) (K
   -- For |y| large, x-y ∈ supp(K_sing) implies x ∈ closedBall y R₀
   -- So only x near y contribute, and for large y, f(x) is small for all such x
   -- Use Schwartz decay
-  obtain ⟨C_f, hC_f_pos, hf_bound⟩ := schwartz_has_polynomial_decay f N
+  obtain ⟨C_f, hC_f_pos, hf_bound⟩ := schwartzHasPolynomialDecay f N
   -- K_sing is integrable (compact support + locally integrable)
   have hK_sing_int : Integrable (kernelSingular K R₀) volume := by
     unfold kernelSingular
@@ -615,7 +615,7 @@ private lemma convolution_compactSupport_decay_exists (f : SchwartzMap E ℂ) (K
 
 /-- Convolution of a Schwartz function with the compactly supported singular kernel part has
 polynomial decay. -/
-def convolution_compactSupport_decay (f : SchwartzMap E ℂ) (K : E → ℝ) (R₀ : ℝ)
+def convolutionCompactSupportDecay (f : SchwartzMap E ℂ) (K : E → ℝ) (R₀ : ℝ)
     (hR₀ : R₀ > 0) (hK_loc : LocallyIntegrable K volume)
     (N : ℕ) (_hN : N > 0) :
     PolynomialDecayBound (fun y => ∫ x, f x * (kernelSingular K R₀ (x - y) : ℂ)) (N : ℝ) :=
@@ -635,12 +635,12 @@ private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E �
   refine ⟨?_, trivial⟩
   -- K_tail has exponential decay → polynomial decay (from exp_decay_implies_polynomial_decay)
   -- f has polynomial decay (Schwartz)
-  -- Apply convolution_polynomial_decay
+  -- Apply convolutionPolynomialDecay
   -- First show K_tail : E → ℂ (via ofReal) has polynomial decay
   have hK_tail_poly : PolynomialDecayBound (fun z => (kernelTail K R₀ z : ℂ)) N := by
     let M := Classical.choose hK_bdd
     have hM : ∀ z : E, |kernelTail K R₀ z| ≤ M := Classical.choose_spec hK_bdd
-    apply norm_exp_decay_implies_polynomial_decay (fun z => (kernelTail K R₀ z : ℂ))
+    apply normExpDecayImpliesPolynomialDecay (fun z => (kernelTail K R₀ z : ℂ))
       m C_K R₀ hm hC_K hR₀
     · intro z hz
       rw [Complex.norm_real]
@@ -665,7 +665,7 @@ private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E �
     · exact ⟨M, fun z => by rw [Complex.norm_real]; exact hM z⟩
     · exact hN
   -- f has polynomial decay
-  have hf_poly := schwartz_has_polynomial_decay_real f N hN
+  have hf_poly := schwartzHasPolynomialDecayReal f N hN
   -- Key observation: ∫ f(x) K_tail(x - y) dx = ∫ f(x) Ktilde(y - x) dx
   -- where Ktilde(z) = K_tail(-z). This is the standard convolution (f ⋆ Ktilde)(y).
   -- Define Ktilde (reflected K_tail)
@@ -733,8 +733,8 @@ private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E �
     simp only [K_refl]
     congr 1
     rw [neg_sub]
-  -- Apply convolution_polynomial_decay
-  have h_conv := convolution_polynomial_decay hN_dim hf_poly hK_refl_poly hf_int hK_refl_int
+  -- Apply convolutionPolynomialDecay
+  have h_conv := convolutionPolynomialDecay hN_dim hf_poly hK_refl_poly hf_int hK_refl_int
   -- Transfer the bound
   obtain ⟨C_conv, hC_conv_pos, h_conv_bound⟩ := h_conv
   refine ⟨C_conv, hC_conv_pos, ?_⟩
@@ -744,7 +744,7 @@ private lemma convolution_expDecay_polynomial_decay_exists (f : SchwartzMap E �
 
 /-- Convolution of a Schwartz function with the exponentially decaying kernel tail has polynomial
 decay at any rate above the dimension. -/
-def convolution_expDecay_polynomial_decay (f : SchwartzMap E ℂ) (K : E → ℝ)
+def convolutionExpDecayPolynomialDecay (f : SchwartzMap E ℂ) (K : E → ℝ)
     (R₀ m C_K : ℝ) (hR₀ : R₀ > 0) (hm : m > 0) (hC_K : C_K > 0)
     (hK_loc : LocallyIntegrable K volume)
     (hK_decay : ∀ z : E, ‖z‖ ≥ R₀ → |K z| ≤ C_K * Real.exp (-m * ‖z‖))
@@ -768,7 +768,7 @@ The proof structure:
 1. Decompose K = K_sing + K_tail
 2. Show H(y) = ∫ f(x) K(x-y) dx = H_sing(y) + H_tail(y) has polynomial decay
 3. The integral I(a) = ∫ H(y) g(y-a) dy = (H ⋆ gtilde)(a) where gtilde(z) = g(-z)
-4. Apply convolution_polynomial_decay to get the result
+4. Apply convolutionPolynomialDecay to get the result
 -/
 theorem schwartz_bilinear_translation_decay_polynomial_proof
     (f g : SchwartzMap E ℂ)
@@ -810,13 +810,13 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
       exact le_of_lt (lt_max_of_lt_right one_pos)
   -- Step 4: Build H(y) = ∫ f(x) K(x-y) dx and show it has polynomial decay
   -- For the full proof, we need:
-  -- 1. H_sing has polynomial decay (convolution_compactSupport_decay)
-  -- 2. H_tail has polynomial decay (convolution_expDecay_polynomial_decay)
+  -- 1. H_sing has polynomial decay (convolutionCompactSupportDecay)
+  -- 2. H_tail has polynomial decay (convolutionExpDecayPolynomialDecay)
   -- 3. H = H_sing + H_tail has polynomial decay
-  -- 4. The double integral = ∫ H(y) g(y-a) dy has polynomial decay (convolution_polynomial_decay)
+  -- 4. The double integral = ∫ H(y) g(y-a) dy has polynomial decay (convolutionPolynomialDecay)
   -- Get the polynomial decay bounds
-  have hf_poly := schwartz_has_polynomial_decay_real f N hN_pos
-  have hg_poly := schwartz_has_polynomial_decay_real g N hN_pos
+  have hf_poly := schwartzHasPolynomialDecayReal f N hN_pos
+  have hg_poly := schwartzHasPolynomialDecayReal g N hN_pos
   -- Extract constants from the decay bounds
   obtain ⟨C_f, hC_f_pos, hf_bound⟩ := hf_poly
   obtain ⟨C_g, hC_g_pos, hg_bound⟩ := hg_poly
@@ -824,10 +824,10 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
   -- We use kernel decomposition: K = K_sing + K_tail
   -- H = H_sing + H_tail where each has polynomial decay
   -- H_sing has polynomial decay (compactly supported kernel)
-  have hH_sing := convolution_compactSupport_decay f K R₀ hR₀ hK_loc
+  have hH_sing := convolutionCompactSupportDecay f K R₀ hR₀ hK_loc
     (⌈N⌉₊) (Nat.ceil_pos.mpr hN_pos)
   -- H_tail has polynomial decay (exponentially decaying kernel)
-  have hH_tail := convolution_expDecay_polynomial_decay f K R₀ m C_K hR₀ hm hC_K hK_loc
+  have hH_tail := convolutionExpDecayPolynomialDecay f K R₀ m C_K hR₀ hm hC_K hK_loc
     hK_decay hK_tail_bdd N hN_gt_d hN_pos
   -- Step 6: The double integral ∫∫ f(x) K(x-y) g(y-a) dx dy = ∫ H(y) g(y-a) dy
   -- where H(y) = ∫ f(x) K(x-y) dx = H_sing(y) + H_tail(y)
@@ -836,7 +836,7 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
   -- The full proof requires:
   -- 1. Showing H = H_sing + H_tail has polynomial decay
   -- 2. Showing the double integral equals ∫ H(y) g(y-a) dy
-  -- 3. Applying convolution_polynomial_decay to H and g
+  -- 3. Applying convolutionPolynomialDecay to H and g
   -- 4. Converting from order N to order α (since N > α)
   -- Extract the decay bounds
   obtain ⟨C_Hsing, hC_Hsing_pos, hHsing_bound⟩ := hH_sing
@@ -849,7 +849,7 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
   -- Combined H bound constant
   have hC_H : C_Hsing + C_Htail > 0 := by positivity
   -- ============================================================
-  -- RESTRUCTURED: Build H and apply convolution_polynomial_decay
+  -- RESTRUCTURED: Build H and apply convolutionPolynomialDecay
   -- BEFORE introducing the existential constant
   -- ============================================================
   -- Define H(y) = ∫ f(x) K(x-y) dx
@@ -978,9 +978,9 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
       exact le_trans hbound (le_of_eq h_eq)
     exact Integrable.mono' h_bound_int hH_meas hH_bound_ae
   -- ============================================================
-  -- Apply convolution_polynomial_decay to get C_conv
+  -- Apply convolutionPolynomialDecay to get C_conv
   -- ============================================================
-  have h_conv_decay := convolution_polynomial_decay hN_gt_d hH_decay hg_flip_decay hH_int
+  have h_conv_decay := convolutionPolynomialDecay hN_gt_d hH_decay hg_flip_decay hH_int
     hg_flip_int
   obtain ⟨C_conv, hC_conv_pos, h_conv_bound⟩ := h_conv_decay
   -- ============================================================
@@ -992,7 +992,7 @@ theorem schwartz_bilinear_translation_decay_polynomial_proof
   · intro a
     have h_one_plus_pos : 0 < 1 + ‖a‖ := by positivity
     have h_base_ge_one : 1 ≤ 1 + ‖a‖ := by linarith [norm_nonneg a]
-    -- The bound from convolution_polynomial_decay gives us:
+    -- The bound from convolutionPolynomialDecay gives us:
     -- ‖∫ H(y) g_flip(a-y) dy‖ ≤ C_conv / (1 + ‖a‖)^N ≤ C_conv * (1 + ‖a‖)^(-α)
     have h_conv_to_goal : ‖∫ y, H y * g_flip (a - y)‖ ≤ C_conv * (1 + ‖a‖)^(-α) := by
       calc ‖∫ y, H y * g_flip (a - y)‖ ≤ C_conv / (1 + ‖a‖)^N := h_conv_bound a

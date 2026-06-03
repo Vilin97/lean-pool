@@ -95,7 +95,7 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
     (Bogachev, "Gaussian Measures", Thm 3.6.1), so using it directly
     avoids needing to prove that difficult direction.
 -/
-instance : MeasurableSpace (WeakDual ℝ E) :=
+instance instMeasurableSpaceWeakDualRealLeanPool : MeasurableSpace (WeakDual ℝ E) :=
   ⨆ (f : E), (borel ℝ).comap (fun l : WeakDual ℝ E => (l : E →L[ℝ] ℝ) f)
 
 /-- Each evaluation map `l ↦ l(f)` is measurable w.r.t. the cylinder σ-algebra. -/

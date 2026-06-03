@@ -29,7 +29,7 @@ and their pairings with field configurations.
 - `ω_im_decompose_linear`: ω-linearity of imaginary component under complex operations
 
 **Pairing Linearity:**
-- `pairing_linear_combo`: Key result showing distributionPairingℂ_real is ℂ-linear
+- `pairing_linear_combo`: Key result showing distributionPairingℂReal is ℂ-linear
   in the test function argument
 
 These results are essential for proving bilinearity of Schwinger functions
@@ -66,18 +66,18 @@ private lemma im_of_complex_combination (a b : ℂ) (u v : ℂ) :
 -/
 lemma ω_re_decompose_linear
   (ω : FieldConfiguration) (f g : TestFunctionℂ) (t s : ℂ) :
-  ω ((complex_testfunction_decompose (t • f + s • g)).1)
-    = t.re * ω ((complex_testfunction_decompose f).1)
-      - t.im * ω ((complex_testfunction_decompose f).2)
-      + s.re * ω ((complex_testfunction_decompose g).1)
-      - s.im * ω ((complex_testfunction_decompose g).2) := by
+  ω ((complexTestFunctionDecompose (t • f + s • g)).1)
+    = t.re * ω ((complexTestFunctionDecompose f).1)
+      - t.im * ω ((complexTestFunctionDecompose f).2)
+      + s.re * ω ((complexTestFunctionDecompose g).1)
+      - s.im * ω ((complexTestFunctionDecompose g).2) := by
   -- First, identify the real-part test function of t•f + s•g as a linear combination
   have h_sum_re_eq :
-      (complex_testfunction_decompose (t • f + s • g)).1
-        = t.re • (complex_testfunction_decompose f).1
-          - t.im • (complex_testfunction_decompose f).2
-          + s.re • (complex_testfunction_decompose g).1
-          - s.im • (complex_testfunction_decompose g).2 := by
+      (complexTestFunctionDecompose (t • f + s • g)).1
+        = t.re • (complexTestFunctionDecompose f).1
+          - t.im • (complexTestFunctionDecompose f).2
+          + s.re • (complexTestFunctionDecompose g).1
+          - s.im • (complexTestFunctionDecompose g).2 := by
     ext x
     -- Rewrite to Complex.re/Complex.im and use algebra on ℂ
     change Complex.reCLM ((t • f + s • g) x)
@@ -102,18 +102,18 @@ lemma ω_re_decompose_linear
 -/
 lemma ω_im_decompose_linear
   (ω : FieldConfiguration) (f g : TestFunctionℂ) (t s : ℂ) :
-  ω ((complex_testfunction_decompose (t • f + s • g)).2)
-    = t.re * ω ((complex_testfunction_decompose f).2)
-      + t.im * ω ((complex_testfunction_decompose f).1)
-      + s.re * ω ((complex_testfunction_decompose g).2)
-      + s.im * ω ((complex_testfunction_decompose g).1) := by
+  ω ((complexTestFunctionDecompose (t • f + s • g)).2)
+    = t.re * ω ((complexTestFunctionDecompose f).2)
+      + t.im * ω ((complexTestFunctionDecompose f).1)
+      + s.re * ω ((complexTestFunctionDecompose g).2)
+      + s.im * ω ((complexTestFunctionDecompose g).1) := by
   -- Identify the imaginary-part test function of t•f + s•g as a linear combination
   have h_sum_im_eq :
-      (complex_testfunction_decompose (t • f + s • g)).2
-        = t.re • (complex_testfunction_decompose f).2
-          + t.im • (complex_testfunction_decompose f).1
-          + s.re • (complex_testfunction_decompose g).2
-          + s.im • (complex_testfunction_decompose g).1 := by
+      (complexTestFunctionDecompose (t • f + s • g)).2
+        = t.re • (complexTestFunctionDecompose f).2
+          + t.im • (complexTestFunctionDecompose f).1
+          + s.re • (complexTestFunctionDecompose g).2
+          + s.im • (complexTestFunctionDecompose g).1 := by
     ext x
     -- Rewrite to Complex.im/Complex.re and use algebra on ℂ
     change Complex.imCLM ((t • f + s • g) x)
@@ -136,29 +136,29 @@ lemma ω_im_decompose_linear
 /-- Linearity of the complex pairing in the test-function argument. -/
 lemma pairing_linear_combo
   (ω : FieldConfiguration) (f g : TestFunctionℂ) (t s : ℂ) :
-  distributionPairingℂ_real ω (t • f + s • g)
-    = t * distributionPairingℂ_real ω f + s * distributionPairingℂ_real ω g := by
+  distributionPairingℂReal ω (t • f + s • g)
+    = t * distributionPairingℂReal ω f + s * distributionPairingℂReal ω g := by
   classical
   apply Complex.ext
   · -- Real parts
     -- Expand both sides to re/imag pieces
-    simp only [distributionPairingℂ_real, add_re, mul_re]
-    -- Goal is now: ω ((complex_testfunction_decompose (t•f+s•g)).1)
+    simp only [distributionPairingℂReal, add_re, mul_re]
+    -- Goal is now: ω ((complexTestFunctionDecompose (t•f+s•g)).1)
     --              = (t * ((ω (..f..).1 + i ω (..f..).2)) + s * ((ω (..g..).1 + i ω (..g..).2))).re
     -- Use algebraic identity on the RHS
     have hre_rhs :
-        (t * ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω
-           ((complex_testfunction_decompose f).2) : ℂ))
-            + s * ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω
-              ((complex_testfunction_decompose g).2) : ℂ))).re
-          = t.re * ω ((complex_testfunction_decompose f).1)
-              - t.im * ω ((complex_testfunction_decompose f).2)
-              + s.re * ω ((complex_testfunction_decompose g).1)
-              - s.im * ω ((complex_testfunction_decompose g).2) := by
+        (t * ((ω ((complexTestFunctionDecompose f).1) : ℂ) + I * (ω
+           ((complexTestFunctionDecompose f).2) : ℂ))
+            + s * ((ω ((complexTestFunctionDecompose g).1) : ℂ) + I * (ω
+              ((complexTestFunctionDecompose g).2) : ℂ))).re
+          = t.re * ω ((complexTestFunctionDecompose f).1)
+              - t.im * ω ((complexTestFunctionDecompose f).2)
+              + s.re * ω ((complexTestFunctionDecompose g).1)
+              - s.im * ω ((complexTestFunctionDecompose g).2) := by
       simpa using re_of_complex_combination t s
-        ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω ((complex_testfunction_decompose
+        ((ω ((complexTestFunctionDecompose f).1) : ℂ) + I * (ω ((complexTestFunctionDecompose
             f).2) : ℂ))
-        ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω ((complex_testfunction_decompose
+        ((ω ((complexTestFunctionDecompose g).1) : ℂ) + I * (ω ((complexTestFunctionDecompose
             g).2) : ℂ))
     -- Use ω-linearity identity on the LHS
     have hre := ω_re_decompose_linear ω f g t s
@@ -166,20 +166,20 @@ lemma pairing_linear_combo
     simpa [hre_rhs, add_comm, add_left_comm, add_assoc, sub_eq_add_neg]
       using hre
   · -- Imag parts
-    simp only [distributionPairingℂ_real, add_im, mul_im]
+    simp only [distributionPairingℂReal, add_im, mul_im]
     have him_rhs :
-        (t * ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω
-           ((complex_testfunction_decompose f).2) : ℂ))
-            + s * ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω
-              ((complex_testfunction_decompose g).2) : ℂ))).im
-          = t.re * ω ((complex_testfunction_decompose f).2)
-              + t.im * ω ((complex_testfunction_decompose f).1)
-              + s.re * ω ((complex_testfunction_decompose g).2)
-              + s.im * ω ((complex_testfunction_decompose g).1) := by
+        (t * ((ω ((complexTestFunctionDecompose f).1) : ℂ) + I * (ω
+           ((complexTestFunctionDecompose f).2) : ℂ))
+            + s * ((ω ((complexTestFunctionDecompose g).1) : ℂ) + I * (ω
+              ((complexTestFunctionDecompose g).2) : ℂ))).im
+          = t.re * ω ((complexTestFunctionDecompose f).2)
+              + t.im * ω ((complexTestFunctionDecompose f).1)
+              + s.re * ω ((complexTestFunctionDecompose g).2)
+              + s.im * ω ((complexTestFunctionDecompose g).1) := by
       simpa using im_of_complex_combination t s
-        ((ω ((complex_testfunction_decompose f).1) : ℂ) + I * (ω ((complex_testfunction_decompose
+        ((ω ((complexTestFunctionDecompose f).1) : ℂ) + I * (ω ((complexTestFunctionDecompose
             f).2) : ℂ))
-        ((ω ((complex_testfunction_decompose g).1) : ℂ) + I * (ω ((complex_testfunction_decompose
+        ((ω ((complexTestFunctionDecompose g).1) : ℂ) + I * (ω ((complexTestFunctionDecompose
             g).2) : ℂ))
     have him := ω_im_decompose_linear ω f g t s
     simpa [him_rhs, add_comm, add_left_comm, add_assoc]
@@ -253,14 +253,14 @@ def toComplex (f : TestFunction) : TestFunctionℂ :=
   rfl
 
 @[simp] lemma complex_testfunction_decompose_toComplex_fst (f : TestFunction) :
-  (complex_testfunction_decompose (toComplex f)).1 = f := by
+  (complexTestFunctionDecompose (toComplex f)).1 = f := by
   ext x
-  simp [complex_testfunction_decompose, toComplex_apply]
+  simp [complexTestFunctionDecompose, toComplex_apply]
 
 @[simp] lemma complex_testfunction_decompose_toComplex_snd (f : TestFunction) :
-  (complex_testfunction_decompose (toComplex f)).2 = 0 := by
+  (complexTestFunctionDecompose (toComplex f)).2 = 0 := by
   ext x
-  simp [complex_testfunction_decompose, toComplex_apply]
+  simp [complexTestFunctionDecompose, toComplex_apply]
 
 @[simp] lemma toComplex_add (f g : TestFunction) :
   toComplex (f + g) = toComplex f + toComplex g := by
@@ -302,8 +302,8 @@ noncomputable def toComplexCLM : TestFunction →L[ℝ] TestFunctionℂ :=
 
 @[simp] lemma distributionPairingℂ_real_toComplex
   (ω : FieldConfiguration) (f : TestFunction) :
-  distributionPairingℂ_real ω (toComplex f) = distributionPairing ω f := by
-  simp [distributionPairingℂ_real, distributionPairing]
+  distributionPairingℂReal ω (toComplex f) = distributionPairing ω f := by
+  simp [distributionPairingℂReal, distributionPairing]
 
 variable (dμ_config : ProbabilityMeasure FieldConfiguration)
 
@@ -381,19 +381,19 @@ noncomputable def conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace �
     - conj(f)_re = f_re and conj(f)_im = -f_im
 -/
 lemma distributionPairingℂ_real_conj (ω : FieldConfiguration) (f : TestFunctionℂ) :
-    starRingEnd ℂ (distributionPairingℂ_real ω f) = distributionPairingℂ_real ω (conjSchwartz f) :=
+    starRingEnd ℂ (distributionPairingℂReal ω f) = distributionPairingℂReal ω (conjSchwartz f) :=
       by
-  -- Expand distributionPairingℂ_real in terms of real and imaginary parts
-  simp only [distributionPairingℂ_real]
+  -- Expand distributionPairingℂReal in terms of real and imaginary parts
+  simp only [distributionPairingℂReal]
   -- For the conjugate side, we need to show conj(f)_re = f_re and conj(f)_im = -f_im
-  have h_conj_re : (complex_testfunction_decompose (conjSchwartz f)).1 =
-      (complex_testfunction_decompose f).1 := by
+  have h_conj_re : (complexTestFunctionDecompose (conjSchwartz f)).1 =
+      (complexTestFunctionDecompose f).1 := by
     ext x
     simp only [complex_testfunction_decompose_fst_apply]
     change (starRingEnd ℂ (f x)).re = (f x).re
     exact Complex.conj_re (f x)
-  have h_conj_im : (complex_testfunction_decompose (conjSchwartz f)).2 =
-      -(complex_testfunction_decompose f).2 := by
+  have h_conj_im : (complexTestFunctionDecompose (conjSchwartz f)).2 =
+      -(complexTestFunctionDecompose f).2 := by
     ext x
     simp only [complex_testfunction_decompose_snd_apply, SchwartzMap.neg_apply]
     change (starRingEnd ℂ (f x)).im = -(f x).im

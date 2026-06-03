@@ -39,14 +39,14 @@ focusing on integrability, Schwartz function properties, and L² embeddings.
 **Complex Embeddings:**
 - `Complex.ofRealCLM_isometry`: Real→Complex embedding is isometric
 - `Complex.ofRealCLM_continuous_compLp`: Continuous lifting to Lp spaces
-- `embedding_real_to_complex`: Canonical ℝ→ℂ embedding for Lp functions
+- `embeddingRealToComplex`: Canonical ℝ→ℂ embedding for Lp functions
 
 **Schwartz→L² Embedding:**
 - `schwartzToL2`: Embedding Schwartz functions into L² space
 - `schwartzToL2'`: Alternative embedding for EuclideanSpace types
 
 **L∞·L² Multiplication:**
-- `linfty_mul_L2_CLM`: Continuous bilinear map L∞ × L² → L²
+- `linftyMulL2CLM`: Continuous bilinear map L∞ × L² → L²
 - `linfty_mul_L2_CLM_norm_bound`: Norm bound ‖f · g‖₂ ≤ ‖f‖∞ · ‖g‖₂
 
 **Integrability Results:**
@@ -80,7 +80,7 @@ noncomputable section
 /-! ## Proven theorems in this file
 
 The following L∞ × L² multiplication theorems are fully proven (2025-12-13):
-- `linfty_mul_L2_CLM` (line ~607): L∞ × L² → L² bounded linear operator
+- `linftyMulL2CLM` (line ~607): L∞ × L² → L² bounded linear operator
 - `linfty_mul_L2_CLM_spec` (line ~639): pointwise specification (g·f)(x) = g(x)·f(x) a.e.
 - `linfty_mul_L2_CLM_norm_bound` (line ~650): operator norm bound ‖T_g f‖ ≤ C·‖f‖
 -/
@@ -116,10 +116,12 @@ lemma SchwartzMap.hasTemperateGrowth_general
 variable {α : Type*} [MeasurableSpace α] {μ : Measure α}
 
 -- Add measurable space instances for Lp spaces
-instance [MeasurableSpace α] (μ : Measure α) : MeasurableSpace (Lp ℝ 2 μ) := borel _
-instance [MeasurableSpace α] (μ : Measure α) : BorelSpace (Lp ℝ 2 μ) := ⟨rfl⟩
-instance [MeasurableSpace α] (μ : Measure α) : MeasurableSpace (Lp ℂ 2 μ) := borel _
-instance [MeasurableSpace α] (μ : Measure α) : BorelSpace (Lp ℂ 2 μ) := ⟨rfl⟩
+instance instMeasurableSpaceLpRealTwoLeanPool (μ : Measure α) : MeasurableSpace (Lp ℝ 2 μ) :=
+  borel _
+instance instBorelSpaceLpRealTwoLeanPool (μ : Measure α) : BorelSpace (Lp ℝ 2 μ) := ⟨rfl⟩
+instance instMeasurableSpaceLpComplexTwoLeanPool (μ : Measure α) : MeasurableSpace (Lp ℂ 2 μ) :=
+  borel _
+instance instBorelSpaceLpComplexTwoLeanPool (μ : Measure α) : BorelSpace (Lp ℂ 2 μ) := ⟨rfl⟩
 
 -- Check if Complex.ofRealCLM is an isometry
 lemma Complex.ofRealCLM_isometry : Isometry (Complex.ofRealCLM : ℝ →L[ℝ] ℂ) := by
@@ -141,7 +143,7 @@ lemma Complex.ofRealCLM_continuous_compLp {α : Type*} [MeasurableSpace α] {μ 
 Compose an Lp function with a continuous linear map.
 This should be the canonical way to lift real Lp functions to complex Lp functions.
 -/
-noncomputable def composed_function {α : Type*} [MeasurableSpace α] {μ : Measure α}
+noncomputable def composedFunction {α : Type*} [MeasurableSpace α] {μ : Measure α}
     (f : Lp ℝ 2 μ) (A : ℝ →L[ℝ] ℂ) : Lp ℂ 2 μ :=
   A.compLp f
 
@@ -153,9 +155,9 @@ example {α : Type*} [MeasurableSpace α] {μ : Measure α}
 /--
 Embedding from real Lp functions to complex Lp functions using the canonical embedding ℝ → ℂ.
 -/
-noncomputable def embedding_real_to_complex {α : Type*} [MeasurableSpace α] {μ : Measure α}
+noncomputable def embeddingRealToComplex {α : Type*} [MeasurableSpace α] {μ : Measure α}
     (φ : Lp ℝ 2 μ) : Lp ℂ 2 μ :=
-  composed_function φ (Complex.ofRealCLM)
+  composedFunction φ (Complex.ofRealCLM)
 
 section LiftMeasure
 variable {α : Type*} [MeasurableSpace α] {μ : Measure α}
@@ -164,14 +166,14 @@ variable {α : Type*} [MeasurableSpace α] {μ : Measure α}
 Lifts a probability measure from the space of real Lp functions to the space of
 complex Lp functions, with support on the real subspace.
 -/
-noncomputable def liftMeasure_real_to_complex
+noncomputable def liftMeasureRealToComplex
     (dμ_real : ProbabilityMeasure (Lp ℝ 2 μ)) :
     ProbabilityMeasure (Lp ℂ 2 μ) :=
   let dμ_complex_measure : Measure (Lp ℂ 2 μ) :=
-    Measure.map embedding_real_to_complex dμ_real
-  have h_ae : AEMeasurable embedding_real_to_complex dμ_real := by
+    Measure.map embeddingRealToComplex dμ_real
+  have h_ae : AEMeasurable embeddingRealToComplex dμ_real := by
     apply Continuous.aemeasurable
-    unfold embedding_real_to_complex composed_function
+    unfold embeddingRealToComplex composedFunction
     have :
         Continuous
           (fun φ : Lp ℝ 2 μ => Complex.ofRealCLM.compLp φ : Lp ℝ 2 μ → Lp ℂ 2 μ) :=
@@ -245,13 +247,13 @@ Proof method (2025-12-13):
 - Hölder's inequality via `MemLp.mul` with HolderTriple ∞ 2 2
 
 These theorems are used to construct specific multiplication operators
-(e.g., momentumWeightSqrt_mul_CLM) without repeating technical details.
+(e.g., momentumWeightSqrtMulCLM) without repeating technical details.
 -/
 
 /-- Given a measurable function `g` that is essentially bounded by `C`,
     multiplication by `g` defines a bounded linear operator on `L²`.
 -/
-noncomputable def linfty_mul_L2_CLM {μ : Measure α}
+noncomputable def linftyMulL2CLM {μ : Measure α}
     (g : α → ℂ) (hg_meas : Measurable g) (C : ℝ)
     (hg_bound : ∀ᵐ x ∂μ, ‖g x‖ ≤ C) :
     Lp ℂ 2 μ →L[ℂ] Lp ℂ 2 μ :=
@@ -263,8 +265,8 @@ lemma linfty_mul_L2_CLM_spec {μ : Measure α}
     (g : α → ℂ) (hg_meas : Measurable g) (C : ℝ)
     (hg_bound : ∀ᵐ x ∂μ, ‖g x‖ ≤ C)
     (f : Lp ℂ 2 μ) :
-    (linfty_mul_L2_CLM g hg_meas C hg_bound f) =ᵐ[μ] fun x => g x * f x := by
-  simp only [linfty_mul_L2_CLM, ContinuousLinearMap.holderL_apply_apply]
+    (linftyMulL2CLM g hg_meas C hg_bound f) =ᵐ[μ] fun x => g x * f x := by
+  simp only [linftyMulL2CLM, ContinuousLinearMap.holderL_apply_apply]
   have hg_mem := memLp_top_of_bound hg_meas.aestronglyMeasurable C hg_bound
   filter_upwards [hg_mem.coeFn_toLp,
     (ContinuousLinearMap.mul ℂ ℂ).coeFn_holder (r := 2) hg_mem.toLp f] with x hg h
@@ -277,7 +279,7 @@ theorem linfty_mul_L2_CLM_norm_bound {μ : Measure α}
     (g : α → ℂ) (hg_meas : Measurable g) (C : ℝ) (hC : 0 ≤ C)
     (hg_bound : ∀ᵐ x ∂μ, ‖g x‖ ≤ C)
     (f : Lp ℂ 2 μ) :
-    ‖linfty_mul_L2_CLM g hg_meas C hg_bound f‖ ≤ C * ‖f‖ := by
+    ‖linftyMulL2CLM g hg_meas C hg_bound f‖ ≤ C * ‖f‖ := by
   have hg_mem := memLp_top_of_bound hg_meas.aestronglyMeasurable C hg_bound
   calc
     _ ≤ ‖(ContinuousLinearMap.mul ℂ ℂ)‖ * ‖hg_mem.toLp‖ * ‖f‖ := by
@@ -1038,7 +1040,6 @@ theorem double_mollifier_convergence
       rw [← MeasureTheory.integral_add_right_eq_self (fun x => ψ (x - a) * g x) a]
       simp only [add_sub_cancel_right]
       rw [← MeasureTheory.integral_neg_eq_self]
-      dsimp
       congr 1; ext x
       dsimp [ψ]
       rw [(φ i).normed_neg, add_comm (-x) a, sub_eq_add_neg]

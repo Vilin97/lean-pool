@@ -15,6 +15,12 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 import LeanPool.OSforGFF.General.FunctionalAnalysis
 import LeanPool.OSforGFF.Spacetime.Basic
 
+/-!
+## SpaceTime-specialized version
+
+For SpaceTime = EuclideanSpace ℝ (Fin 4), the time coordinate is accessed via `x 0`.
+This specialized version matches the signature needed in OS3_MixedRepInfra.lean.
+-/
 
 open MeasureTheory SchwartzMap Real Set Metric
 open scoped ENNReal
@@ -24,12 +30,6 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 namespace SchwartzLinearBound
 
 end SchwartzLinearBound
-
-/-! ## SpaceTime-specialized version
-
-For SpaceTime = EuclideanSpace ℝ (Fin 4), the time coordinate is accessed via `x 0`.
-This specialized version matches the signature needed in OS3_MixedRepInfra.lean.
--/
 
 section SpaceTime
 

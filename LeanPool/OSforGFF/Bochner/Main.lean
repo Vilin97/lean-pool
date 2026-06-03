@@ -148,11 +148,11 @@ lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
         _ = ∑ i, ∫ x, ∑ j, (starRingEnd ℂ) (c i) * c j *
               cexp (↑⟪x, t i - t j⟫_ℝ * I) ∂μ := by
             congr 1; ext i
-            exact (integral_finset_sum _ (fun j _ => hterm_int i j)).symm
+            exact (integral_finsetSum _ (fun j _ => hterm_int i j)).symm
         _ = ∫ x, ∑ i, ∑ j, (starRingEnd ℂ) (c i) * c j *
               cexp (↑⟪x, t i - t j⟫_ℝ * I) ∂μ := by
-            exact (integral_finset_sum _ (fun i _ =>
-              integrable_finset_sum _ (fun j _ => hterm_int i j))).symm
+            exact (integral_finsetSum _ (fun i _ =>
+              integrable_finsetSum _ (fun j _ => hterm_int i j))).symm
         _ = ∫ x, ↑(normSq (∑ k, c k * cexp (↑(-⟪x, t k⟫_ℝ) * I))) ∂μ := by
             congr 1; ext x
             -- Algebraic identity: ∑ᵢ∑ⱼ cbarᵢcⱼe^{i⟨x,tᵢ-tⱼ⟩} = ↑(normSq(∑ cₖe^{-i⟨x,tₖ⟩}))
@@ -242,11 +242,11 @@ lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite 
         _ = ∑ i, ∫ x, ∑ j, (starRingEnd ℂ) (c i) * c j * φ (t i - t j) *
               cexp (↑⟪x, t i - t j⟫_ℝ * I) ∂μ := by
             congr 1; ext i
-            exact (integral_finset_sum _ (fun j _ => hterm_int i j)).symm
+            exact (integral_finsetSum _ (fun j _ => hterm_int i j)).symm
         _ = ∫ x, ∑ i, ∑ j, (starRingEnd ℂ) (c i) * c j * φ (t i - t j) *
               cexp (↑⟪x, t i - t j⟫_ℝ * I) ∂μ := by
-            exact (integral_finset_sum _ (fun i _ =>
-              integrable_finset_sum _ (fun j _ => hterm_int i j))).symm
+            exact (integral_finsetSum _ (fun i _ =>
+              integrable_finsetSum _ (fun j _ => hterm_int i j))).symm
     -- Step B: Algebraic identity — absorb exponentials into modified coefficients
     -- For each x: cbarᵢcⱼφ(dᵢⱼ)e^{i⟨x,dᵢⱼ⟩} = conj(cᵢe^{-i⟨x,tᵢ⟩})(cⱼe^{-i⟨x,tⱼ⟩})φ(dᵢⱼ)
     -- Exponential splitting: exp(i⟨x,tᵢ-tⱼ⟩) = conj(exp(-i⟨x,tᵢ⟩)) * exp(-i⟨x,tⱼ⟩)
@@ -280,8 +280,8 @@ lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite 
         (c j * cexp (-(↑⟪x, t j⟫_ℝ) * I)) * φ (t i - t j)) =
         (fun x => ∑ i, ∑ j, (starRingEnd ℂ) (c i) * c j * φ (t i - t j) *
         cexp (↑⟪x, t i - t j⟫_ℝ * I)) from funext (fun x => (halg x).symm)]
-      exact integrable_finset_sum _ (fun i _ =>
-        integrable_finset_sum _ (fun j _ => hterm_int i j))
+      exact integrable_finsetSum _ (fun i _ =>
+        integrable_finsetSum _ (fun j _ => hterm_int i j))
     -- Pull .re inside the integral using reCLM
     have hre_swap := Complex.reCLM.integral_comp_comm hint_sum
     change ∫ x, Complex.re (∑ i, ∑ j, (starRingEnd ℂ) (c i * cexp (-(↑⟪x, t i⟫_ℝ) * I)) *
@@ -1106,7 +1106,7 @@ theorem gaussianRegularize_measures_tight (φ : V → ℂ)
   intro y
   -- Need: Tendsto (fun r ↦ ⨆ μ ∈ S, μ {x | r < ‖⟪y, x⟫_ℝ‖}) atTop (𝓝 0)
   -- Show via tendsto_order: for all a > 0, eventually the iSup < a
-  refine tendsto_order.mpr ⟨fun a ha => absurd ha (not_lt.mpr (zero_le a)), fun a ha => ?_⟩
+  refine tendsto_order.mpr ⟨fun a ha => absurd ha (not_lt.mpr zero_le), fun a ha => ?_⟩
   -- Given a > 0 in ENNReal, need: ∀ᶠ r in atTop, ⨆ μ ∈ S, μ {x | r < ‖⟪y,x⟫_ℝ‖} < a
   -- Step 1: Get a real δ > 0 with ENNReal.ofReal δ < a
   obtain ⟨δ, hδ_pos, hδ_lt⟩ : ∃ δ : ℝ, 0 < δ ∧ ENNReal.ofReal δ < a := by

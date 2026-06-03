@@ -33,7 +33,6 @@ import Mathlib.Tactic.Choose
 import Mathlib.Tactic.SimpRw
 import Mathlib.Tactic.SuppressCompilation
 import Mathlib.Tactic.Use
-import Mathlib.Tactic.Have
 import Mathlib.Tactic.Set
 import Mathlib.Tactic.Polyrith
 import Mathlib.Tactic.SplitIfs
@@ -53,7 +52,7 @@ import LeanPool.OSforGFF.OS.Axioms
 /-!
 # OS4 — Shared Infrastructure
 
-Shared lemmas for OS4_Clustering and OS4_Ergodicity:
+Shared lemmas for os4Clustering and OS4Ergodicity:
 
 - Time translation duality: ⟨T_s ω, g⟩ = ⟨ω, T_{−s} g⟩
 - GFF MGF formula: 𝔼[e^{⟨ω,f⟩}] = exp(½ S₂(f,f)) and its time-translation invariance
@@ -95,16 +94,16 @@ export TimeTranslation (
 
 /-- Time translation commutes with real part extraction for complex Schwartz functions. -/
 lemma timeTranslationSchwartzℂ_decompose_fst (s : ℝ) (g : TestFunctionℂ) :
-    (complex_testfunction_decompose (timeTranslationSchwartzℂ s g)).1 =
-    timeTranslationSchwartz s (complex_testfunction_decompose g).1 := by
+    (complexTestFunctionDecompose (timeTranslationSchwartzℂ s g)).1 =
+    timeTranslationSchwartz s (complexTestFunctionDecompose g).1 := by
   ext x
   simp only [complex_testfunction_decompose_fst_apply, timeTranslationSchwartz_apply,
     timeTranslationSchwartzℂ_apply]
 
 /-- Time translation commutes with imaginary part extraction for complex Schwartz functions. -/
 lemma timeTranslationSchwartzℂ_decompose_snd (s : ℝ) (g : TestFunctionℂ) :
-    (complex_testfunction_decompose (timeTranslationSchwartzℂ s g)).2 =
-    timeTranslationSchwartz s (complex_testfunction_decompose g).2 := by
+    (complexTestFunctionDecompose (timeTranslationSchwartzℂ s g)).2 =
+    timeTranslationSchwartz s (complexTestFunctionDecompose g).2 := by
   ext x
   simp only [complex_testfunction_decompose_snd_apply, timeTranslationSchwartz_apply,
     timeTranslationSchwartzℂ_apply]
@@ -114,13 +113,13 @@ lemma timeTranslationSchwartzℂ_decompose_snd (s : ℝ) (g : TestFunctionℂ) :
 -/
 lemma timeTranslationDistribution_pairingℂ (s : ℝ) (ω : FieldConfiguration)
     (g : TestFunctionℂ) :
-    distributionPairingℂ_real (timeTranslationDistribution s ω) g =
-    distributionPairingℂ_real ω (timeTranslationSchwartzℂ (-s) g) := by
-  simp only [distributionPairingℂ_real]
-  set g_re := (complex_testfunction_decompose g).1
-  set g_im := (complex_testfunction_decompose g).2
-  set g'_re := (complex_testfunction_decompose (timeTranslationSchwartzℂ (-s) g)).1
-  set g'_im := (complex_testfunction_decompose (timeTranslationSchwartzℂ (-s) g)).2
+    distributionPairingℂReal (timeTranslationDistribution s ω) g =
+    distributionPairingℂReal ω (timeTranslationSchwartzℂ (-s) g) := by
+  simp only [distributionPairingℂReal]
+  set g_re := (complexTestFunctionDecompose g).1
+  set g_im := (complexTestFunctionDecompose g).2
+  set g'_re := (complexTestFunctionDecompose (timeTranslationSchwartzℂ (-s) g)).1
+  set g'_im := (complexTestFunctionDecompose (timeTranslationSchwartzℂ (-s) g)).2
   have h_re : g'_re = timeTranslationSchwartz (-s) g_re := timeTranslationSchwartzℂ_decompose_fst
     (-s) g
   have h_im : g'_im = timeTranslationSchwartz (-s) g_im := timeTranslationSchwartzℂ_decompose_snd
@@ -133,18 +132,18 @@ lemma timeTranslationDistribution_pairingℂ (s : ℝ) (ω : FieldConfiguration)
 /-- s ↦ ⟨T_s ω, g⟩_ℂ is continuous. Uses the proved `continuous_timeTranslationSchwartz`. -/
 lemma continuous_distributionPairingℂ_timeTranslation (ω : FieldConfiguration)
     (g : TestFunctionℂ) :
-    Continuous (fun s => distributionPairingℂ_real (timeTranslationDistribution s ω) g) := by
-  have h_eq : (fun s => distributionPairingℂ_real (timeTranslationDistribution s ω) g)
-      = (fun s => distributionPairingℂ_real ω (timeTranslationSchwartzℂ (-s) g)) := by
+    Continuous (fun s => distributionPairingℂReal (timeTranslationDistribution s ω) g) := by
+  have h_eq : (fun s => distributionPairingℂReal (timeTranslationDistribution s ω) g)
+      = (fun s => distributionPairingℂReal ω (timeTranslationSchwartzℂ (-s) g)) := by
     ext s
     exact timeTranslationDistribution_pairingℂ s ω g
   rw [h_eq]
-  simp only [distributionPairingℂ_real]
-  set g_re := (complex_testfunction_decompose g).1 with hg_re
-  set g_im := (complex_testfunction_decompose g).2 with hg_im
-  have h_decomp_re : ∀ s, (complex_testfunction_decompose (timeTranslationSchwartzℂ (-s) g)).1
+  simp only [distributionPairingℂReal]
+  set g_re := (complexTestFunctionDecompose g).1 with hg_re
+  set g_im := (complexTestFunctionDecompose g).2 with hg_im
+  have h_decomp_re : ∀ s, (complexTestFunctionDecompose (timeTranslationSchwartzℂ (-s) g)).1
       = timeTranslationSchwartz (-s) g_re := fun s => timeTranslationSchwartzℂ_decompose_fst (-s) g
-  have h_decomp_im : ∀ s, (complex_testfunction_decompose (timeTranslationSchwartzℂ (-s) g)).2
+  have h_decomp_im : ∀ s, (complexTestFunctionDecompose (timeTranslationSchwartzℂ (-s) g)).2
       = timeTranslationSchwartz (-s) g_im := fun s => timeTranslationSchwartzℂ_decompose_snd (-s) g
   simp only [h_decomp_re, h_decomp_im]
   apply Continuous.add
@@ -167,7 +166,7 @@ def timeTranslationE (t : ℝ) : QFT.E := ⟨1, -timeShiftConst t⟩
 
 /-- The Euclidean action of timeTranslationE equals timeTranslationSchwartzℂ. -/
 lemma euclidean_action_timeTranslationE (t : ℝ) (f : TestFunctionℂ) :
-    QFT.euclidean_action (timeTranslationE t) f = timeTranslationSchwartzℂ t f := by
+    QFT.euclideanAction (timeTranslationE t) f = timeTranslationSchwartzℂ t f := by
   ext x
   simp only [QFT.euclidean_action_apply, QFT.euclidean_pullback_eq_inv_act]
   simp only [timeTranslationE, QFT.act]
@@ -185,8 +184,8 @@ lemma euclidean_action_timeTranslationE (t : ℝ) (f : TestFunctionℂ) :
 /-- The GFF covariance is invariant under simultaneous time translation. -/
 lemma freeCovarianceℂ_bilinear_timeTranslation_invariant (m : ℝ) [Fact (0 < m)] (t : ℝ)
     (f g : TestFunctionℂ) :
-    freeCovarianceℂ_bilinear m (timeTranslationSchwartzℂ t f) (timeTranslationSchwartzℂ t g) =
-    freeCovarianceℂ_bilinear m f g := by
+    freeCovarianceℂBilinear m (timeTranslationSchwartzℂ t f) (timeTranslationSchwartzℂ t g) =
+    freeCovarianceℂBilinear m f g := by
   rw [← euclidean_action_timeTranslationE t f, ← euclidean_action_timeTranslationE t g]
   exact QFT.freeCovarianceℂ_bilinear_euclidean_invariant m (timeTranslationE t) f g
 
@@ -196,18 +195,18 @@ lemma freeCovarianceℂ_bilinear_timeTranslation_invariant (m : ℝ) [Fact (0 < 
     This follows from the characteristic function formula via substitution J → (-I)•J.
 -/
 lemma gff_mgf_formula (m : ℝ) [Fact (0 < m)] (J : TestFunctionℂ) :
-    (∫ ω, Complex.exp (distributionPairingℂ_real ω J) ∂(gaussianFreeField_free m).toMeasure) =
-    Complex.exp ((1/2 : ℂ) * freeCovarianceℂ_bilinear m J J) := by
+    (∫ ω, Complex.exp (distributionPairingℂReal ω J) ∂(gaussianFreeFieldFree m).toMeasure) =
+    Complex.exp ((1/2 : ℂ) * freeCovarianceℂBilinear m J J) := by
   let negI : ℂ := -Complex.I
-  have h_to_cf : (∫ ω, Complex.exp (distributionPairingℂ_real ω J)
-      ∂(gaussianFreeField_free m).toMeasure) =
-      GJGeneratingFunctionalℂ (gaussianFreeField_free m) (negI • J) := by
+  have h_to_cf : (∫ ω, Complex.exp (distributionPairingℂReal ω J)
+      ∂(gaussianFreeFieldFree m).toMeasure) =
+      GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) (negI • J) := by
     unfold GJGeneratingFunctionalℂ
     congr 1
     ext ω
     congr 1
-    have h_lin : distributionPairingℂ_real ω (negI • J) =
-        negI * distributionPairingℂ_real ω J := by
+    have h_lin : distributionPairingℂReal ω (negI • J) =
+        negI * distributionPairingℂReal ω J := by
       have := pairing_linear_combo ω J 0 negI 0
       simpa using this
     rw [h_lin]
@@ -215,8 +214,8 @@ lemma gff_mgf_formula (m : ℝ) [Fact (0 < m)] (J : TestFunctionℂ) :
     ring_nf
     simp [Complex.I_sq]
   rw [h_to_cf, GFFIsGaussian.gff_complex_characteristic_OS0 m]
-  have h_cov : freeCovarianceℂ_bilinear m (negI • J) (negI • J) =
-      -freeCovarianceℂ_bilinear m J J := by
+  have h_cov : freeCovarianceℂBilinear m (negI • J) (negI • J) =
+      -freeCovarianceℂBilinear m J J := by
     rw [freeCovarianceℂ_bilinear_smul_left, freeCovarianceℂ_bilinear_smul_right]
     simp only [negI]
     ring_nf
@@ -226,10 +225,10 @@ lemma gff_mgf_formula (m : ℝ) [Fact (0 < m)] (J : TestFunctionℂ) :
 
 /-- The GFF generating function is invariant under time translation. -/
 lemma gff_generating_time_invariant (m : ℝ) [Fact (0 < m)] (s : ℝ) (f : TestFunctionℂ) :
-    ∫ ω, Complex.exp (distributionPairingℂ_real ω (timeTranslationSchwartzℂ s f))
-      ∂(gaussianFreeField_free m).toMeasure =
-    ∫ ω, Complex.exp (distributionPairingℂ_real ω f)
-      ∂(gaussianFreeField_free m).toMeasure := by
+    ∫ ω, Complex.exp (distributionPairingℂReal ω (timeTranslationSchwartzℂ s f))
+      ∂(gaussianFreeFieldFree m).toMeasure =
+    ∫ ω, Complex.exp (distributionPairingℂReal ω f)
+      ∂(gaussianFreeFieldFree m).toMeasure := by
   rw [gff_mgf_formula, gff_mgf_formula]
   rw [freeCovarianceℂ_bilinear_timeTranslation_invariant m s f f]
 
@@ -240,21 +239,21 @@ lemma gff_generating_time_invariant (m : ℝ) [Fact (0 < m)] (s : ℝ) (f : Test
     This follows from the GFF being Gaussian.
 -/
 lemma gff_joint_mgf_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
-    (∫ ω, Complex.exp (distributionPairingℂ_real ω f + distributionPairingℂ_real ω g)
-      ∂(gaussianFreeField_free m).toMeasure) =
-    (∫ ω, Complex.exp (distributionPairingℂ_real ω f) ∂(gaussianFreeField_free m).toMeasure) *
-    (∫ ω, Complex.exp (distributionPairingℂ_real ω g) ∂(gaussianFreeField_free m).toMeasure) *
-    Complex.exp (SchwingerFunctionℂ₂ (gaussianFreeField_free m) f g) := by
-  have h_pairing_add : ∀ ω, distributionPairingℂ_real ω f + distributionPairingℂ_real ω g =
-      distributionPairingℂ_real ω (f + g) := by
+    (∫ ω, Complex.exp (distributionPairingℂReal ω f + distributionPairingℂReal ω g)
+      ∂(gaussianFreeFieldFree m).toMeasure) =
+    (∫ ω, Complex.exp (distributionPairingℂReal ω f) ∂(gaussianFreeFieldFree m).toMeasure) *
+    (∫ ω, Complex.exp (distributionPairingℂReal ω g) ∂(gaussianFreeFieldFree m).toMeasure) *
+    Complex.exp (SchwingerFunctionℂ₂ (gaussianFreeFieldFree m) f g) := by
+  have h_pairing_add : ∀ ω, distributionPairingℂReal ω f + distributionPairingℂReal ω g =
+      distributionPairingℂReal ω (f + g) := by
     intro ω
     have := pairing_linear_combo ω f g 1 1
     simp at this
     exact this.symm
-  have h_lhs : (∫ ω, Complex.exp (distributionPairingℂ_real ω f + distributionPairingℂ_real ω g)
-      ∂(gaussianFreeField_free m).toMeasure) =
-      (∫ ω, Complex.exp (distributionPairingℂ_real ω (f + g))
-      ∂(gaussianFreeField_free m).toMeasure) := by
+  have h_lhs : (∫ ω, Complex.exp (distributionPairingℂReal ω f + distributionPairingℂReal ω g)
+      ∂(gaussianFreeFieldFree m).toMeasure) =
+      (∫ ω, Complex.exp (distributionPairingℂReal ω (f + g))
+      ∂(gaussianFreeFieldFree m).toMeasure) := by
     congr 1; ext ω; rw [h_pairing_add]
   rw [h_lhs]
   rw [gff_mgf_formula, gff_mgf_formula, gff_mgf_formula]
@@ -263,7 +262,7 @@ lemma gff_joint_mgf_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunction�
       freeCovarianceℂ_bilinear_add_right]
   rw [← Complex.exp_add, ← Complex.exp_add]
   congr 1
-  have h_sym : freeCovarianceℂ_bilinear m g f = freeCovarianceℂ_bilinear m f g :=
+  have h_sym : freeCovarianceℂBilinear m g f = freeCovarianceℂBilinear m f g :=
     freeCovarianceℂ_bilinear_symm m g f
   rw [h_sym]
   ring

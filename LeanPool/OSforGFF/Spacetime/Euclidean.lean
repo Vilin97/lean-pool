@@ -232,7 +232,8 @@ lemma measurePreserving_act (g : E) :
   have trans : MeasurePreserving (fun x : SpaceTime => x + g.t) μ μ := by
     refine ⟨(continuous_id.add continuous_const).measurable, ?_⟩
     simpa using map_add_right_eq_self μ g.t
-  simpa [act, Function.comp] using trans.comp rot
+  change MeasurePreserving ((fun x : SpaceTime => x + g.t) ∘ fun x : SpaceTime => g.R x) μ μ
+  exact trans.comp rot
 
 -- Helper functions for temperate growth (adapted from OS2.lean)
 open Function
@@ -241,7 +242,8 @@ private lemma contDiff_act_inv (g : E) :
     ContDiff ℝ ⊤ (act g⁻¹) := by
   have h₁ : ContDiff ℝ ⊤ (fun x : SpaceTime => g⁻¹.R x) := g⁻¹.R.contDiff
   have h₂ : ContDiff ℝ ⊤ (fun _ : SpaceTime => g⁻¹.t) := contDiff_const
-  simpa [act, add_comm] using h₁.add h₂
+  change ContDiff ℝ ⊤ (fun x : SpaceTime => g⁻¹.R x + g⁻¹.t)
+  exact h₁.add h₂
 
 private lemma fderiv_linear_add_const (L : SpaceTime →L[ℝ] SpaceTime) (c : SpaceTime) (x :
   SpaceTime) :
@@ -282,7 +284,7 @@ private def act_inv_poly_bound (g : E) :
 
     UNIFIED EUCLIDEAN ACTION FRAMEWORK
 
-    This section demonstrates how the same geometric transformation (euclidean_pullback)
+    This section demonstrates how the same geometric transformation (euclideanPullback)
     can be used to define Euclidean actions on both test functions and L² functions:
 
     1. **Common foundation**: All actions are based on the pullback map x ↦ g⁻¹ • x
@@ -300,14 +302,14 @@ private def act_inv_poly_bound (g : E) :
     This is the geometric transformation x ↦ g⁻¹ • x that underlies
     all Euclidean actions on function spaces.
 -/
-noncomputable def euclidean_pullback (g : E) : SpaceTime → SpaceTime := act g⁻¹
+noncomputable def euclideanPullback (g : E) : SpaceTime → SpaceTime := act g⁻¹
 
 /-- The Euclidean pullback map has temperate growth (needed for Schwartz space actions). -/
 lemma euclidean_pullback_temperate_growth (g : E) :
-    Function.HasTemperateGrowth (euclidean_pullback g) := by
+    Function.HasTemperateGrowth (euclideanPullback g) := by
   -- The map x ↦ g⁻¹.R x + g⁻¹.t is affine (linear isometry + translation)
   -- Use the complete implementation from OS2.lean's helper_htg
-  unfold euclidean_pullback
+  unfold euclideanPullback
   obtain ⟨k, C, hbound⟩ := act_inv_poly_bound g
   exact Function.HasTemperateGrowth.of_fderiv
     (fderiv_has_temperate_growth g)
@@ -316,12 +318,12 @@ lemma euclidean_pullback_temperate_growth (g : E) :
 
 /-- The Euclidean pullback map satisfies polynomial growth bounds. -/
 lemma euclidean_pullback_polynomial_bounds (g : E) :
-    ∃ (k : ℕ) (C : ℝ), ∀ (x : SpaceTime), ‖x‖ ≤ C * (1 + ‖euclidean_pullback g x‖) ^ k := by
-  -- Since euclidean_pullback g x = g⁻¹.R x + g⁻¹.t and g⁻¹.R is an isometry:
+    ∃ (k : ℕ) (C : ℝ), ∀ (x : SpaceTime), ‖x‖ ≤ C * (1 + ‖euclideanPullback g x‖) ^ k := by
+  -- Since euclideanPullback g x = g⁻¹.R x + g⁻¹.t and g⁻¹.R is an isometry:
   -- This follows the pattern from hg_up_nat in OS2.lean
   use 1, (1 + ‖g⁻¹.t‖)
   intro x
-  simp only [pow_one, euclidean_pullback, act]
+  simp only [pow_one, euclideanPullback, act]
   have h_iso : ‖g⁻¹.R x‖ = ‖x‖ := g⁻¹.R.norm_map x
   rw [← h_iso]
   have h_ineq : ‖g⁻¹.R x‖ ≤ ‖g⁻¹.R x + g⁻¹.t‖ + ‖g⁻¹.t‖ := norm_le_add_norm_add _ _
@@ -338,16 +340,16 @@ lemma euclidean_pullback_polynomial_bounds (g : E) :
     This is the standard pullback action: to evaluate the transformed function
     at x, we evaluate the original function at the inverse-transformed point.
 -/
-noncomputable def euclidean_action (g : E) (f : TestFunctionℂ) : TestFunctionℂ :=
+noncomputable def euclideanAction (g : E) (f : TestFunctionℂ) : TestFunctionℂ :=
   SchwartzMap.compCLM (𝕜 := ℂ)
     (hg := euclidean_pullback_temperate_growth g)
     (hg_upper := euclidean_pullback_polynomial_bounds g) f
 
 /-- Action of Euclidean group on real test functions via pullback.
     For g ∈ E and f ∈ TestFunction, define (g • f)(x) = f(g⁻¹ • x).
-    This is the real version of euclidean_action for TestFunction = SchwartzMap SpaceTime ℝ.
+    This is the real version of euclideanAction for TestFunction = SchwartzMap SpaceTime ℝ.
 -/
-noncomputable def euclidean_action_real (g : E) (f : TestFunction) : TestFunction :=
+noncomputable def euclideanActionReal (g : E) (f : TestFunction) : TestFunction :=
   SchwartzMap.compCLM (𝕜 := ℝ)
     (hg := euclidean_pullback_temperate_growth g)
     (hg_upper := euclidean_pullback_polynomial_bounds g) f
@@ -356,9 +358,9 @@ noncomputable def euclidean_action_real (g : E) (f : TestFunction) : TestFunctio
     This is the key unifying lemma that works specifically for the spacetime measure μ.
 -/
 lemma euclidean_action_unified_basis (g : E) :
-    MeasurePreserving (euclidean_pullback g) (μ : Measure SpaceTime) μ := by
+    MeasurePreserving (euclideanPullback g) (μ : Measure SpaceTime) μ := by
   -- This is just measurePreserving_act applied to g⁻¹
-  unfold euclidean_pullback
+  unfold euclideanPullback
   exact measurePreserving_act g⁻¹
 
 /-- Action of Euclidean group on L² functions via pullback.
@@ -367,17 +369,17 @@ lemma euclidean_action_unified_basis (g : E) :
     but leverages measure preservation instead of temperate growth bounds.
     Specialized for SpaceTime with Lebesgue measure.
 -/
-noncomputable def euclidean_action_L2 (g : E)
+noncomputable def euclideanActionL2 (g : E)
     (f : Lp ℂ 2 (μ : Measure SpaceTime)) : Lp ℂ 2 μ :=
   -- Use Lp.compMeasurePreserving for measure-preserving transformations
-  have h_meas_pres : MeasurePreserving (euclidean_pullback g) μ μ :=
+  have h_meas_pres : MeasurePreserving (euclideanPullback g) μ μ :=
     euclidean_action_unified_basis g
-  Lp.compMeasurePreserving (p := 2) (euclidean_pullback g) h_meas_pres f
+  Lp.compMeasurePreserving (p := 2) (euclideanPullback g) h_meas_pres f
 
 /-- The Euclidean action as a continuous linear map on test functions.
     This leverages the Schwartz space structure and temperate growth bounds.
 -/
-noncomputable def euclidean_action_CLM (g : E) : TestFunctionℂ →L[ℂ] TestFunctionℂ :=
+noncomputable def euclideanActionCLM (g : E) : TestFunctionℂ →L[ℂ] TestFunctionℂ :=
   SchwartzMap.compCLM (𝕜 := ℂ)
     (hg := euclidean_pullback_temperate_growth g)
     (hg_upper := euclidean_pullback_polynomial_bounds g)
@@ -385,15 +387,15 @@ noncomputable def euclidean_action_CLM (g : E) : TestFunctionℂ →L[ℂ] TestF
 /-- Both actions are instances of the same abstract pattern. -/
 lemma euclidean_actions_unified (g : E) :
     (∃ (T_test : TestFunctionℂ →L[ℂ] TestFunctionℂ),
-       ∀ f, euclidean_action g f = T_test f) ∧
+       ∀ f, euclideanAction g f = T_test f) ∧
     (∃ (T_L2 : Lp ℂ 2 μ → Lp ℂ 2 μ),
-       ∀ f, euclidean_action_L2 g f = T_L2 f) := by
+       ∀ f, euclideanActionL2 g f = T_L2 f) := by
   constructor
-  · use euclidean_action_CLM g
+  · use euclideanActionCLM g
     intro f
-    rfl  -- by definition of euclidean_action
-  · use euclidean_action_L2 g
+    rfl  -- by definition of euclideanAction
+  · use euclideanActionL2 g
     intro f
-    rfl  -- by definition of euclidean_action_L2
+    rfl  -- by definition of euclideanActionL2
 
 end QFT

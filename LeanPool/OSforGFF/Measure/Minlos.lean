@@ -159,7 +159,7 @@ variable {E : Type*} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E]
 /-- For Gaussian measures, the characteristic functional has the special form
     Φ(f) = exp(-½⟨f, Cf⟩) where C is a nuclear covariance operator.
 -/
-def gaussian_characteristic_functional
+def gaussianCharacteristicFunctional
   (covariance_form : E → E → ℝ) (f : E) : ℂ :=
   Complex.exp (-(1/2 : ℂ) * (covariance_form f f))
 
@@ -176,15 +176,15 @@ theorem minlos_gaussian_construction
   (h_zero : covariance_form 0 0 = 0)
   (h_continuous : Continuous (fun f => covariance_form f f))
   : ∃ μ : ProbabilityMeasure (WeakDual ℝ E),
-    (∀ f : E, gaussian_characteristic_functional covariance_form f =
+    (∀ f : E, gaussianCharacteristicFunctional covariance_form f =
               ∫ ω, Complex.exp (I * (ω f)) ∂μ.toMeasure) := by
-  have h_cf_cont : Continuous (gaussian_characteristic_functional covariance_form) := by
+  have h_cf_cont : Continuous (gaussianCharacteristicFunctional covariance_form) := by
     exact continuous_exp.comp (continuous_const.mul (continuous_ofReal.comp h_continuous))
   have h_cf_pd := gaussian_positive_definite_bochner T covariance_form h_eq h_symm
-  have h_cf_norm : gaussian_characteristic_functional covariance_form 0 = 1 := by
-    simp [gaussian_characteristic_functional, h_zero]
+  have h_cf_norm : gaussianCharacteristicFunctional covariance_form 0 = 1 := by
+    simp [gaussianCharacteristicFunctional, h_zero]
   obtain ⟨μ, hchar, _⟩ := minlos_theorem
-    (gaussian_characteristic_functional covariance_form)
+    (gaussianCharacteristicFunctional covariance_form)
     h_cf_cont h_cf_pd h_cf_norm
   exact ⟨μ, hchar⟩
 
@@ -202,7 +202,7 @@ theorem gaussian_measure_characteristic_functional
   (h_continuous : Continuous (fun f => covariance_form f f))
   : ∃ μ : ProbabilityMeasure (WeakDual ℝ E),
     (∀ f : E, ∫ ω, Complex.exp (I * (ω f)) ∂μ.toMeasure =
-              gaussian_characteristic_functional covariance_form f) := by
+              gaussianCharacteristicFunctional covariance_form f) := by
   obtain ⟨μ,
     hchar⟩ := minlos_gaussian_construction T covariance_form h_eq h_symm h_zero h_continuous
   exact ⟨μ, fun f => (hchar f).symm⟩
@@ -230,22 +230,22 @@ theorem minlos_gaussian_uniqueness
 theorem gaussian_measure_symmetry
   [IsHilbertNuclear E] [SeparableSpace E] [Nonempty E]
   (covariance_form : E → E → ℝ)
-  (h_cf_cont : Continuous (gaussian_characteristic_functional covariance_form))
-  (h_cf_pd : IsPositiveDefinite (gaussian_characteristic_functional covariance_form))
-  (h_cf_norm : gaussian_characteristic_functional covariance_form 0 = 1)
+  (h_cf_cont : Continuous (gaussianCharacteristicFunctional covariance_form))
+  (h_cf_pd : IsPositiveDefinite (gaussianCharacteristicFunctional covariance_form))
+  (h_cf_norm : gaussianCharacteristicFunctional covariance_form 0 = 1)
   (μ : ProbabilityMeasure (WeakDual ℝ E))
   (h_char : ∀ f : E, ∫ ω, Complex.exp (I * (ω f)) ∂μ.toMeasure =
-                     gaussian_characteristic_functional covariance_form f)
+                     gaussianCharacteristicFunctional covariance_form f)
   (g : E →L[ℝ] E)
   (h_covar_symm : ∀ f : E, covariance_form (g f) (g f) = covariance_form f f)
   (μ_push : ProbabilityMeasure (WeakDual ℝ E))
   (h_push_char : ∀ f : E, ∫ ω, Complex.exp (I * (ω f)) ∂μ_push.toMeasure =
                           ∫ ω, Complex.exp (I * (ω (g f))) ∂μ.toMeasure)
   : μ_push = μ := by
-  have h_Φ_symm : ∀ f, gaussian_characteristic_functional covariance_form (g f) =
-                       gaussian_characteristic_functional covariance_form f := by
+  have h_Φ_symm : ∀ f, gaussianCharacteristicFunctional covariance_form (g f) =
+                       gaussianCharacteristicFunctional covariance_form f := by
     intro f
-    simp only [gaussian_characteristic_functional, h_covar_symm]
+    simp only [gaussianCharacteristicFunctional, h_covar_symm]
   exact minlos_uniqueness h_cf_cont h_cf_pd h_cf_norm
     (fun f => by rw [h_push_char, h_char (g f), h_Φ_symm]) h_char
 

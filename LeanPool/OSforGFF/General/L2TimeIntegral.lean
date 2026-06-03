@@ -4,7 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
-/-
+import Mathlib.MeasureTheory.Integral.Prod
+import Mathlib.MeasureTheory.Integral.Bochner.Set
+import Mathlib.MeasureTheory.Function.L2Space
+import Mathlib.MeasureTheory.Integral.MeanInequalities
+import Mathlib.MeasureTheory.Function.LocallyIntegrable
+import Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic
+import Mathlib.Analysis.Normed.Field.Basic
+import Mathlib.MeasureTheory.Group.Integral
+import Mathlib.MeasureTheory.Measure.Haar.Unique
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+import Mathlib.MeasureTheory.Integral.IntegrableOn
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+
+/-!
 # L² Bounds for Time Integrals
 
 This file proves L² bounds on time averages and parametric integrals.
@@ -33,20 +46,6 @@ The key tools are:
 - Billingsley "Probability and Measure", Ch. 7
 - Folland "Real Analysis", Thm. 2.37 (Fubini-Tonelli)
 -/
-
-import Mathlib.MeasureTheory.Integral.Prod
-import Mathlib.MeasureTheory.Integral.Bochner.Set
-import Mathlib.MeasureTheory.Function.L2Space
-import Mathlib.MeasureTheory.Integral.MeanInequalities
-import Mathlib.MeasureTheory.Function.LocallyIntegrable
-import Mathlib.MeasureTheory.Function.StronglyMeasurable.Basic
-import Mathlib.Analysis.Normed.Field.Basic
-import Mathlib.MeasureTheory.Group.Integral
-import Mathlib.MeasureTheory.Measure.Haar.Unique
-import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
-import Mathlib.MeasureTheory.Integral.IntegrableOn
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-
 
 open MeasureTheory Set Filter
 open scoped ENNReal NNReal Topology

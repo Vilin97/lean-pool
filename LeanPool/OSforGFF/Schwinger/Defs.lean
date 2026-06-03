@@ -89,7 +89,7 @@ lemma schwinger_vanishes_centered (dμ_config : ProbabilityMeasure FieldConfigur
 /-- Complex version of Schwinger functions for complex test functions -/
 def SchwingerFunctionℂ (dμ_config : ProbabilityMeasure FieldConfiguration) (n : ℕ)
   (f : Fin n → TestFunctionℂ) : ℂ :=
-  ∫ ω, (∏ i, distributionPairingℂ_real ω (f i)) ∂dμ_config.toMeasure
+  ∫ ω, (∏ i, distributionPairingℂReal ω (f i)) ∂dμ_config.toMeasure
 
 /-- The complex 2-point Schwinger function for complex test functions.
     This is the natural extension of SchwingerFunction₂ to complex test functions.
@@ -116,26 +116,26 @@ def CovarianceBilinear (dμ_config : ProbabilityMeasure FieldConfiguration) : Pr
 lemma CovarianceBilinear_of_integrable
   (dμ_config : ProbabilityMeasure FieldConfiguration)
   (h_int : ∀ (φ ψ : TestFunctionℂ),
-    Integrable (fun ω => distributionPairingℂ_real ω φ * distributionPairingℂ_real ω ψ)
+    Integrable (fun ω => distributionPairingℂReal ω φ * distributionPairingℂReal ω ψ)
       dμ_config.toMeasure) :
   CovarianceBilinear dμ_config := by
   classical
   intro c φ₁ φ₂ ψ
   -- Abbreviations for the integrands
-  let u₁ : FieldConfiguration → ℂ := fun ω => distributionPairingℂ_real ω φ₁
-  let u₂ : FieldConfiguration → ℂ := fun ω => distributionPairingℂ_real ω φ₂
-  let v  : FieldConfiguration → ℂ := fun ω => distributionPairingℂ_real ω ψ
+  let u₁ : FieldConfiguration → ℂ := fun ω => distributionPairingℂReal ω φ₁
+  let u₂ : FieldConfiguration → ℂ := fun ω => distributionPairingℂReal ω φ₂
+  let v  : FieldConfiguration → ℂ := fun ω => distributionPairingℂReal ω ψ
   have hint₁ : Integrable (fun ω => u₁ ω * v ω) dμ_config.toMeasure := by simpa using h_int φ₁ ψ
   have hint₂ : Integrable (fun ω => u₂ ω * v ω) dμ_config.toMeasure := by simpa using h_int φ₂ ψ
   have hint₃ : Integrable (fun ω => u₁ ω * u₂ ω) dμ_config.toMeasure := by simpa using h_int φ₁ φ₂
   -- 1) Scalar multiplication in the first argument
   have h_smul_left_integrand :
-      (fun ω => distributionPairingℂ_real ω (c • φ₁) * distributionPairingℂ_real ω ψ)
+      (fun ω => distributionPairingℂReal ω (c • φ₁) * distributionPairingℂReal ω ψ)
       = (fun ω => c • (u₁ ω * v ω)) := by
     funext ω
     have h := pairing_linear_combo ω φ₁ (0 : TestFunctionℂ) c 0
     -- dp ω (c•φ₁) = c * dp ω φ₁
-    have h' : distributionPairingℂ_real ω (c • φ₁) = c * distributionPairingℂ_real ω φ₁ := by
+    have h' : distributionPairingℂReal ω (c • φ₁) = c * distributionPairingℂReal ω φ₁ := by
       simpa using h
     -- Multiply by the second factor and reassociate
     rw [h']
@@ -150,7 +150,7 @@ lemma CovarianceBilinear_of_integrable
         (f := fun ω => u₁ ω * v ω) c)
     calc
       SchwingerFunctionℂ₂ dμ_config (c • φ₁) ψ
-          = ∫ ω, distributionPairingℂ_real ω (c • φ₁) * distributionPairingℂ_real ω ψ
+          = ∫ ω, distributionPairingℂReal ω (c • φ₁) * distributionPairingℂReal ω ψ
             ∂dμ_config.toMeasure := by
             simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, Fin.prod_univ_two]
       _ = ∫ ω, c • (u₁ ω * v ω) ∂dμ_config.toMeasure := by
@@ -162,12 +162,12 @@ lemma CovarianceBilinear_of_integrable
             rw [smul_eq_mul]
   -- 2) Additivity in the first argument
   have h_add_left_integrand :
-      (fun ω => distributionPairingℂ_real ω (φ₁ + φ₂) * distributionPairingℂ_real ω ψ)
+      (fun ω => distributionPairingℂReal ω (φ₁ + φ₂) * distributionPairingℂReal ω ψ)
       = (fun ω => u₁ ω * v ω + u₂ ω * v ω) := by
     funext ω
     have h := pairing_linear_combo ω φ₁ φ₂ (1 : ℂ) (1 : ℂ)
-    have h' : distributionPairingℂ_real ω (φ₁ + φ₂)
-              = distributionPairingℂ_real ω φ₁ + distributionPairingℂ_real ω φ₂ := by
+    have h' : distributionPairingℂReal ω (φ₁ + φ₂)
+              = distributionPairingℂReal ω φ₁ + distributionPairingℂReal ω φ₂ := by
       simpa using h
     rw [h']
     ring
@@ -187,11 +187,11 @@ lemma CovarianceBilinear_of_integrable
               Matrix.cons_val_zero]
   -- 3) Scalar multiplication in the second argument
   have h_smul_right_integrand :
-      (fun ω => distributionPairingℂ_real ω φ₁ * distributionPairingℂ_real ω (c • ψ))
+      (fun ω => distributionPairingℂReal ω φ₁ * distributionPairingℂReal ω (c • ψ))
       = (fun ω => c • (u₁ ω * v ω)) := by
     funext ω
     have h := pairing_linear_combo ω ψ (0 : TestFunctionℂ) c 0
-    have h' : distributionPairingℂ_real ω (c • ψ) = c * distributionPairingℂ_real ω ψ := by
+    have h' : distributionPairingℂReal ω (c • ψ) = c * distributionPairingℂReal ω ψ := by
       simpa using h
     rw [h']
     simp [u₁, v, smul_eq_mul]
@@ -204,7 +204,7 @@ lemma CovarianceBilinear_of_integrable
         (f := fun ω => u₁ ω * v ω) c)
     calc
       SchwingerFunctionℂ₂ dμ_config φ₁ (c • ψ)
-          = ∫ ω, distributionPairingℂ_real ω φ₁ * distributionPairingℂ_real ω (c • ψ)
+          = ∫ ω, distributionPairingℂReal ω φ₁ * distributionPairingℂReal ω (c • ψ)
             ∂dμ_config.toMeasure := by
             simp [SchwingerFunctionℂ₂, SchwingerFunctionℂ, Fin.prod_univ_two]
       _ = ∫ ω, c • (u₁ ω * v ω) ∂dμ_config.toMeasure := by
@@ -216,12 +216,12 @@ lemma CovarianceBilinear_of_integrable
             rw [smul_eq_mul]
   -- 4) Additivity in the second argument
   have h_add_right_integrand :
-      (fun ω => distributionPairingℂ_real ω φ₁ * distributionPairingℂ_real ω (ψ + φ₂))
+      (fun ω => distributionPairingℂReal ω φ₁ * distributionPairingℂReal ω (ψ + φ₂))
       = (fun ω => u₁ ω * v ω + u₁ ω * u₂ ω) := by
     funext ω
     have h := pairing_linear_combo ω ψ φ₂ (1 : ℂ) (1 : ℂ)
-    have h' : distributionPairingℂ_real ω (ψ + φ₂)
-              = distributionPairingℂ_real ω ψ + distributionPairingℂ_real ω φ₂ := by
+    have h' : distributionPairingℂReal ω (ψ + φ₂)
+              = distributionPairingℂReal ω ψ + distributionPairingℂReal ω φ₂ := by
       simpa using h
     rw [h']
     ring
@@ -271,7 +271,7 @@ def IsGaussianMeasure (dμ : ProbabilityMeasure FieldConfiguration) : Prop :=
 open BigOperators MeasureTheory Complex
 
 noncomputable section
-namespace AQFT_exponential_series
+namespace AQFTExponentialSeries
 
 variable {FieldConfiguration TestFunction : Type} -- (only to appease editors)
 -- (We actually use the ones from your file; no new structures introduced.)
@@ -313,7 +313,7 @@ private lemma expIPartial_tendsto (x : ℝ) :
               (fun n => (Complex.I : ℂ) ^ n * (x : ℂ) ^ n / (n.factorial : ℂ))) := by
     funext N; simp [expIPartial]
   -- Final: tendsto of our partial sums
-  simpa [hsum_def] using htend.comp hshift
+  simpa [hsum_def, Function.comp_def] using htend.comp hshift
 
 private lemma expIPartial_norm_le (x : ℝ) (N : ℕ) :
   ‖expIPartial N x‖ ≤ Real.exp (|x|) := by
@@ -387,7 +387,7 @@ private lemma schwinger_eq_integral_pow
   -- Rewrite under the integral using the pointwise identity
   simp [hω]
 
-end AQFT_exponential_series
+end AQFTExponentialSeries
 
 /-! ## Basic Distribution Framework
 

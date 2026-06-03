@@ -87,7 +87,7 @@ lemma measurePreserving_pick4 {n : ℕ} (emb : Fin 4 ↪ Fin n) :
         (volume :
           Measure ((∀ i : { j // p j }, Rand) × ∀ i : { j // ¬ p j }, Rand))
         (volume : Measure (∀ i : { j // p j }, Rand)) := by
-    simpa using
+    simpa [MeasureSpace.volume] using
       (MeasureTheory.measurePreserving_fst
         (μ := (volume : Measure (∀ i : { j // p j }, Rand)))
         (ν := (volume : Measure (∀ i : { j // ¬ p j }, Rand))))
@@ -251,7 +251,7 @@ lemma lintegral_monoCount_eq_edgeCount_mul_p {n : ℕ} (hn : 4 ≤ n) (alg : Cla
           (volume : Measure (Samples n)) (edgeEvent alg e)) := by
       -- Swap `lintegral` and finite sum, and evaluate each term as a set measure.
       have hswap :=
-        (MeasureTheory.lintegral_finset_sum (μ := (volume : Measure (Samples n)))
+        (MeasureTheory.lintegral_finsetSum (μ := (volume : Measure (Samples n)))
           (s := (Finset.univ : Finset (LowerBound.Edge n)))
           (f := fun e S => (edgeEvent alg e).indicator (fun _ => (1 : ENNReal)) S)
           (by intro e _he; exact hmeas e))

@@ -186,8 +186,8 @@ lemma mul (hpd : IsPositiveDefinite φ) {ψ : α → ℂ} (hψ : IsPositiveDefin
   · intro x
     rw [map_mul, hpd.hermitian x, hψ.hermitian x]
   · intro m x c
-    let A : Matrix (Fin m) (Fin m) ℂ := fun i j => φ (x i - x j)
-    let B : Matrix (Fin m) (Fin m) ℂ := fun i j => ψ (x i - x j)
+    let A : Matrix (Fin m) (Fin m) ℂ := Matrix.of fun i j => φ (x i - x j)
+    let B : Matrix (Fin m) (Fin m) ℂ := Matrix.of fun i j => ψ (x i - x j)
     let e : Fin m → Fin m × Fin m := fun i => (i, i)
     have hA : A.PosSemidef := by
       simpa [A] using kernelMatrix_posSemidef hpd x

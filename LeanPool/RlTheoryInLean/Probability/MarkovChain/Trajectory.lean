@@ -18,6 +18,10 @@ import LeanPool.RlTheoryInLean.MeasureTheory.MeasurableSpace.Constructions
 import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
 
+/-!
+# LeanPool.RlTheoryInLean.Probability.MarkovChain.Trajectory
+-/
+
 open RLTheory
 open MeasureTheory MeasureTheory.Measure Filtration
 open ProbabilityTheory.Kernel
@@ -34,7 +38,7 @@ universe u
 variable {S : Type u} [MeasurableSpace S]
 
 /-- Comap a homogeneous kernel along the latest state in a finite history. -/
-noncomputable def kernel_comap_trivial
+noncomputable def kernelComapTrivial
   (κ : Kernel S S) (n : ℕ) :
   Kernel (Iic n → S) S := by
   let g : (Iic n → S) → S :=
@@ -43,7 +47,7 @@ noncomputable def kernel_comap_trivial
   exact κ.comap g hg
 
 /-- Expand a homogeneous Markov-chain kernel to act on finite trajectory prefixes. -/
-noncomputable def expand_kernel
+noncomputable def expandKernel
   (M : HomMarkovChainSpec S) :
   ∀ n : ℕ, Kernel (Iic n → S) S := by
     intro n
@@ -53,24 +57,24 @@ noncomputable def expand_kernel
     exact M.kernel.comap g hg
 
 instance (M : HomMarkovChainSpec S) :
-  ∀ n, IsMarkovKernel (expand_kernel M n) := by
+  ∀ n, IsMarkovKernel (expandKernel M n) := by
   intro n
   have := M.markov_kernel
-  unfold expand_kernel
+  unfold expandKernel
   apply IsMarkovKernel.comap
 
 /-- The trajectory law started from a fixed length-zero prefix. -/
-noncomputable def traj_prob₀
+noncomputable def trajProb₀
   (M : HomMarkovChainSpec S) (x₀ : Iic 0 → S)
   : ProbabilityMeasure (ℕ → S) := by
-  let κ := traj (X := fun _ : ℕ => S) (expand_kernel M) 0
+  let κ := traj (X := fun _ : ℕ => S) (expandKernel M) 0
   let prob := κ x₀
   exact ⟨prob, inferInstance⟩
 
 /-- The trajectory law obtained by first sampling the initial state. -/
-noncomputable def traj_prob
+noncomputable def trajProb
   (M : HomMarkovChainSpec S) : ProbabilityMeasure (ℕ → S) := by
-  let κ := traj (X := fun _ : ℕ => S) (expand_kernel M) 0
+  let κ := traj (X := fun _ : ℕ => S) (expandKernel M) 0
   let f : S → (Iic 0 → S) := fun s => (fun _ : Iic 0 => s)
   have hf : Measurable f := by
     apply measurable_pi_iff.mpr

@@ -1554,7 +1554,7 @@ private lemma integral_f_xpow_gaussian_zero
         ∑ i ∈ Finset.range (R.natDegree + 1),
           R.coeff i * ∫ x, f x * (x ^ i * Real.exp (-(x ^ 2 / 2))) := by
       simp_rw [hR_eval, Finset.mul_sum]
-      rw [integral_finset_sum _ (fun i _ => ?_)]
+      rw [integral_finsetSum _ (fun i _ => ?_)]
       · congr 1; ext i
         rw [show (fun x => f x * (R.coeff i * (x ^ i * Real.exp (-(x ^ 2 / 2))))) =
           fun x => R.coeff i * (f x * (x ^ i * Real.exp (-(x ^ 2 / 2)))) from by ext x; ring,
@@ -1808,7 +1808,7 @@ private lemma fourierIntegral_f_mul_gaussian_eq_zero
     intro N
     change ∫ x, expPartialSum (z x) N * g_ℂ x = 0
     simp only [expPartialSum, Finset.sum_mul]
-    rw [integral_finset_sum _ (fun k _ => h_summand_int k)]
+    rw [integral_finsetSum _ (fun k _ => h_summand_int k)]
     apply Finset.sum_eq_zero
     intro k _
     rw [h_summand_eq]

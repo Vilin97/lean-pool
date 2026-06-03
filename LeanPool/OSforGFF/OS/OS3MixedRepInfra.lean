@@ -552,7 +552,8 @@ lemma schwinger_bound_integrand_integral_xy (s : ℝ) (hs : 0 < s)
   calc
     ∫ p : SpaceTime × SpaceTime, G p
         = ∫ x : SpaceTime, ∫ y : SpaceTime, G (x, y) := by
-            simpa using h_prod
+            rw [Measure.volume_eq_prod]
+            exact h_prod
     _ = ∫ x : SpaceTime, ‖f x‖ * Cf * Real.exp (-s * m^2) := by
           refine integral_congr_ae ?_
           filter_upwards with x
@@ -797,12 +798,12 @@ theorem integrable_s_inv_sq_exp_neg_inv_s {a : ℝ} (ha : 0 < a) :
     1. Linear vanishing of f at t=0 giving s^(3/2) scaling (offsetting s^(-2) divergence).
     2. Exponential decay in mass and momentum.
 -/
-def dominate_G (C : ℝ) (m : ℝ) (p : ℝ × SpatialCoords) : ℝ :=
+def dominateG (C : ℝ) (m : ℝ) (p : ℝ × SpatialCoords) : ℝ :=
   if p.1 > 0 then
     C * p.1 ^ (3 / 2 : ℝ) * Real.exp (-p.1 * (‖p.2‖^2 + m^2))
   else 0
 
-/-- Theoretically proven integrability of `dominate_G`.
+/-- Theoretically proven integrability of `dominateG`.
 
     Integrable on (0, ∞) × ℝ³ because:
     ∫ exp(-s|k|²) dk = (π/s)^(3/2).
@@ -810,16 +811,16 @@ def dominate_G (C : ℝ) (m : ℝ) (p : ℝ × SpatialCoords) : ℝ :=
     The latter converges for m > 0.
 -/
 theorem integrable_dominate_G (C : ℝ) (m : ℝ) [Fact (0 < m)] :
-    Integrable (dominate_G C m) ((volume.restrict (Set.Ioi 0)).prod volume) := by
+    Integrable (dominateG C m) ((volume.restrict (Set.Ioi 0)).prod volume) := by
   have hm : 0 < m := Fact.out
   let μ : Measure (ℝ × SpatialCoords) := (volume.restrict (Set.Ioi 0)).prod volume
   -- Core function G₀(s,k) = s^(3/2) * exp(-s(|k|² + m²)) for s > 0, else 0
   let G₀ : ℝ × SpatialCoords → ℝ := fun p =>
     if p.1 > 0 then p.1 ^ (3/2 : ℝ) * Real.exp (-p.1 * (‖p.2‖^2 + m^2)) else 0
-  -- dominate_G = C * G₀
-  have hG_eq : dominate_G C m = fun p => C * G₀ p := by
+  -- dominateG = C * G₀
+  have hG_eq : dominateG C m = fun p => C * G₀ p := by
     ext p
-    simp only [dominate_G, G₀]
+    simp only [dominateG, G₀]
     split_ifs with hp <;> ring
   rw [hG_eq]
   -- G₀ is measurable
@@ -1312,7 +1313,7 @@ lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
     ∫∫_{x₀,y₀>0} x₀·y₀·√(π/s)·exp(-(x₀+y₀)²/(4s)) dx₀ dy₀ = (4/3)√π · s^{3/2}
 
     This is the key bound relating linear vanishing of f at t=0 to the s^{3/2} scaling in
-    dominate_G.
+    dominateG.
 
     **Proof** (following user's verification):
     Let J be the integral. Change variables: u = x₀ + y₀.
@@ -2236,19 +2237,12 @@ lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
   let G : SpaceTime × SpaceTime → ℝ := fun p =>
     ‖f p.1‖ * ‖f p.2‖ * c₁ * Real.exp (-(p.1 0 + p.2 0)^2 / (4 * s)) * c₂
   have hG_meas : AEStronglyMeasurable G (volume.prod volume) := by
-    have h_f1 : AEStronglyMeasurable (fun p : SpaceTime × SpaceTime => ‖f p.1‖)
-        (volume.prod volume) :=
-      (SchwartzMap.continuous f).comp continuous_fst |>.aestronglyMeasurable.norm
-    have h_f2 : AEStronglyMeasurable (fun p : SpaceTime × SpaceTime => ‖f p.2‖)
-        (volume.prod volume) :=
-      (SchwartzMap.continuous f).comp continuous_snd |>.aestronglyMeasurable.norm
-    have h_c1 : AEStronglyMeasurable (fun _ : SpaceTime × SpaceTime => c₁)
-        (volume.prod volume) := aestronglyMeasurable_const
-    have h_c2 : AEStronglyMeasurable (fun _ : SpaceTime × SpaceTime => c₂)
-        (volume.prod volume) := aestronglyMeasurable_const
-    have h_exp : AEStronglyMeasurable
-        (fun p : SpaceTime × SpaceTime => Real.exp (-(p.1 0 + p.2 0)^2 / (4 * s)))
-        (volume.prod volume) := by
+    have h_f1 : Continuous (fun p : SpaceTime × SpaceTime => ‖f p.1‖) :=
+      ((SchwartzMap.continuous f).comp continuous_fst).norm
+    have h_f2 : Continuous (fun p : SpaceTime × SpaceTime => ‖f p.2‖) :=
+      ((SchwartzMap.continuous f).comp continuous_snd).norm
+    have h_exp : Continuous
+        (fun p : SpaceTime × SpaceTime => Real.exp (-(p.1 0 + p.2 0)^2 / (4 * s))) := by
       have h0 : Continuous (fun p : SpaceTime × SpaceTime => p.1 0 + p.2 0) := by
         have h1 : Continuous (fun p : SpaceTime × SpaceTime => (p.1) 0) :=
           (PiLp.continuous_apply 2 (fun _ : Fin STDimension => ℝ) (0 : Fin STDimension)).comp
@@ -2264,9 +2258,11 @@ lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
       have h4 : Continuous (fun p : SpaceTime × SpaceTime => Real.exp (-(p.1 0 + p.2 0)^2 * (1 / (4
         * s)))) :=
         (Real.continuous_exp.comp h3)
-      simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using h4.aestronglyMeasurable
-    simpa [G, mul_assoc, mul_left_comm, mul_comm] using
-      ((((h_f1.mul h_f2).mul h_c1).mul h_exp).mul h_c2)
+      simpa [div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc] using h4
+    have hG_cont : Continuous G := by
+      dsimp [G]
+      exact ((((h_f1.mul h_f2).mul continuous_const).mul h_exp).mul continuous_const)
+    exact hG_cont.aestronglyMeasurable
   have hG_int : Integrable G (volume.prod volume) := by
     -- Bound by |c₁ c₂| * ‖f p.1‖ * ‖f p.2‖ using exp ≤ 1.
     have h_bound : ∀ p, ‖G p‖ ≤ (|c₁| * |c₂|) * (‖f p.1‖ * ‖f p.2‖) := by
@@ -2325,7 +2321,7 @@ lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
     For f vanishing at t ≤ 0 with |f(x)| ≤ C·x₀, we have:
     |F(s, k_sp)| ≤ C² · (4/3)√π · s^{3/2} · exp(-s(‖k_sp‖² + m²))
 
-    The constant 100 in dominate_G provides ample room for the (4/3)√π ≈ 2.36 factor.
+    The constant 100 in dominateG provides ample room for the (4/3)√π ≈ 2.36 factor.
 
     **Proof sketch:**
     1. From `schwartz_vanishing_linear_bound`: |f(x)| ≤ C·x₀ for x₀ > 0
@@ -2725,7 +2721,7 @@ theorem fubini_s_ksp_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
     -- F_norm_bound_via_linear_vanishing
     -- Get the constant C_bound from the linear vanishing bound
     obtain ⟨C_bound, hC_pos, h_F_bound⟩ := F_norm_bound_via_linear_vanishing m f hf_supp
-    let G := dominate_G C_bound m
+    let G := dominateG C_bound m
     -- Note: We omit exp(-t_min²/(4s)) for simplicity; the mass term suffices for large s,
     -- and the full argument needs the UV regulator for small s.
     -- Step 3: Show G is integrable
@@ -2744,16 +2740,16 @@ theorem fubini_s_ksp_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
         have hs' : 0 < s := hs
         -- Apply F_norm_bound_via_linear_vanishing with the obtained constant
         have h_bound := h_F_bound s hs' k_sp
-        -- dominate_G equals C * s^(3/2) * exp(-s*(‖k‖² + m²)) for s > 0
-        simp only [G, dominate_G, hs', ↓reduceIte]
+        -- dominateG equals C * s^(3/2) * exp(-s*(‖k‖² + m²)) for s > 0
+        simp only [G, dominateG, hs', ↓reduceIte]
         exact h_bound
       · -- Measurability: {p | ‖F p‖ ≤ G p} is measurable
         apply measurableSet_le
         · -- ‖F‖ is measurable
           exact Measurable.norm <| (fubini_s_ksp_integrand_stronglyMeasurable m
             f).integral_prod_right.integral_prod_right.measurable
-        · -- G = dominate_G C_bound m is measurable
-          -- dominate_G is a product of measurable functions with an if-statement
+        · -- G = dominateG C_bound m is measurable
+          -- dominateG is a product of measurable functions with an if-statement
           apply Measurable.ite
           · exact measurableSet_lt measurable_const measurable_fst
           · apply Measurable.mul
@@ -2791,11 +2787,11 @@ lemma schwartz_norm_prod_integrable (f : TestFunctionℂ) :
   exact hf1.mul_prod hf2
 
 /-- Bound function for s_xy_swap. -/
-def s_xy_swap_bound (f : TestFunctionℂ) (m : ℝ) (p : ℝ × SpaceTime × SpaceTime) : ℝ :=
+def sXYSwapBound (f : TestFunctionℂ) (m : ℝ) (p : ℝ × SpaceTime × SpaceTime) : ℝ :=
   Real.sqrt (π / p.1) * ‖f p.2.1‖ * ‖f p.2.2‖ * Real.exp (-p.1 * m^2)
 
 lemma s_xy_swap_bound_integrable (f : TestFunctionℂ) (m : ℝ) [Fact (0 < m)] :
-    Integrable (s_xy_swap_bound f m)
+    Integrable (sXYSwapBound f m)
       ((volume.restrict (Set.Ioi 0)).prod (volume.prod volume)) := by
   let g_s : ℝ → ℝ := fun s => Real.sqrt π * s ^ (-(1:ℝ)/2) * Real.exp (-m^2 * s)
   let g_xy : SpaceTime × SpaceTime → ℝ := fun p => ‖f p.1‖ * ‖f p.2‖
@@ -2819,11 +2815,11 @@ lemma s_xy_swap_bound_integrable (f : TestFunctionℂ) (m : ℝ) [Fact (0 < m)] 
   have h_xy : Integrable g_xy (volume.prod volume) := schwartz_norm_prod_integrable f
   -- 3. Product integrability using Integrable.mul_prod
   have h_prod := h_s.mul_prod h_xy
-  -- 4. Convert to s_xy_swap_bound via AE equality
+  -- 4. Convert to sXYSwapBound via AE equality
   apply Integrable.congr h_prod
-  -- Need: g_s(s) * g_xy(x,y) = s_xy_swap_bound f m (s, x, y) a.e.
+  -- Need: g_s(s) * g_xy(x,y) = sXYSwapBound f m (s, x, y) a.e.
   filter_upwards with ⟨s, x, y⟩
-  dsimp only [s_xy_swap_bound, g_s, g_xy]
+  dsimp only [sXYSwapBound, g_s, g_xy]
   -- Algebraically: √π * s^{-1/2} * exp(-m²s) * |f x| * |f y| = √(π/s) * |f x| * |f y| * exp(-s*m²)
   by_cases hs : 0 < s
   · -- Key identity: √(π/s) = √π * s^{-1/2} for s > 0
@@ -2922,7 +2918,7 @@ private lemma fubini_s_xy_swap_integrable (m : ℝ) [Fact (0 < m)]
           h⟩ : Fin STDimension)
       have h_sum : Continuous (fun p : ℝ × SpaceTime × SpaceTime =>
           ∑ i, k_sp i * (spatialPart p.2.1 - spatialPart p.2.2) i) := by
-        apply continuous_finset_sum
+        apply continuous_finsetSum
         intro i _
         have hv_i : Continuous (fun (p : ℝ × SpaceTime × SpaceTime) =>
             (spatialPart p.2.1 - spatialPart p.2.2) i) :=
@@ -2952,7 +2948,7 @@ private lemma fubini_s_xy_swap_integrable (m : ℝ) [Fact (0 < m)]
       simp only [MeasureTheory.Measure.restrict_apply measurableSet_Iic,
         Set.Iic_inter_Ioi, Set.Ioc_self, MeasureTheory.measure_empty, zero_mul]
     filter_upwards [h_ae] with ⟨s, x, y⟩ hs
-    dsimp only [s_xy_swap_bound]
+    dsimp only [sXYSwapBound]
     have h_star : ‖star (f x)‖ = ‖f x‖ := norm_star _
     have h_sqrt : ‖(Real.sqrt (π / s) : ℂ)‖ = Real.sqrt (π / s) := by
       simp only [Complex.norm_real]
@@ -3087,7 +3083,7 @@ theorem fubini_s_xy_swap (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) (k_sp : 
                   apply Continuous.mul continuous_const
                   apply continuous_ofReal.comp
                   unfold spatialDot
-                  apply continuous_finset_sum
+                  apply continuous_finsetSum
                   intro i _
                   have hv_i : Continuous (fun (xy : SpaceTime × SpaceTime) =>
                       (spatialPart xy.1 - spatialPart xy.2) i) :=
@@ -3297,7 +3293,7 @@ lemma fubini_ksp_xy_full_integrand_integrable (s : ℝ) (hs : 0 < s) (f : TestFu
       apply continuous_ofReal.comp
       -- spatialDot k_sp v = Σ i, k_sp i * v i is continuous in both arguments
       unfold spatialDot
-      apply continuous_finset_sum
+      apply continuous_finsetSum
       intro i _
       have hk_i : Continuous (fun (p : SpatialCoords × SpaceTime × SpaceTime) => p.1 i) :=
         (PiLp.continuous_apply 2 (fun _ : Fin (STDimension - 1) => ℝ) i).comp continuous_fst
@@ -3394,7 +3390,7 @@ private lemma fubini_ksp_xy_inner_integrable (s : ℝ) (hs : 0 < s)
         apply Continuous.mul continuous_const
         apply continuous_ofReal.comp
         unfold spatialDot
-        apply continuous_finset_sum
+        apply continuous_finsetSum
         intro i _
         have hk_i : Continuous (fun (p : SpaceTime × SpatialCoords) => p.2 i) :=
           (PiLp.continuous_apply 2 (fun _ : Fin (STDimension - 1) => ℝ) i).comp continuous_snd
@@ -3577,7 +3573,7 @@ theorem fubini_ksp_xy_swap (s : ℝ) (hs : 0 < s) (f : TestFunctionℂ) :
           apply Continuous.mul continuous_const
           apply continuous_ofReal.comp
           unfold spatialDot
-          apply continuous_finset_sum
+          apply continuous_finsetSum
           intro i _
           have hk_i : Continuous (fun p : (SpaceTime × SpatialCoords) × SpaceTime => p.1.2 i) :=
             (PiLp.continuous_apply 2 (fun _ : Fin (STDimension - 1) => ℝ) i).comp

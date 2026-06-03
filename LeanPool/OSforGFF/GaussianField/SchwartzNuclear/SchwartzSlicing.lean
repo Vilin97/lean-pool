@@ -18,8 +18,8 @@ constructions used in the multi-dimensional Hermite expansion proof.
 
 - `euclideanSnoc d y t` : embed `(y, t)` into `EuclideanSpace ℝ (Fin (d+1))`
 - `euclideanInit d x` : project to the first `d` coordinates
-- `schwartz_slice d f y` : fix first `d+1` coordinates of `f ∈ S(ℝ^{d+2})`, get `S(ℝ)`
-- `schwartz_partial_hermiteCoeff d f n` : integrate out last coordinate against
+- `schwartzSlice d f y` : fix first `d+1` coordinates of `f ∈ S(ℝ^{d+2})`, get `S(ℝ)`
+- `schwartzPartialHermiteCoeff d f n` : integrate out last coordinate against
   the `n`-th Hermite function, get `S(ℝ^{d+1})`
 
 ## Sorry inventory
@@ -183,7 +183,7 @@ private lemma euclideanSnoc_norm_ge_right (d : ℕ)
 /-- Restrict `f ∈ S(ℝ^{d+2})` to the hyperplane `{x | x_rest = y}`,
 giving a Schwartz function of the last coordinate.
 -/
-noncomputable def schwartz_slice (d : ℕ)
+noncomputable def schwartzSlice (d : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ)
     (y : EuclideanSpace ℝ (Fin (d + 1))) :
     SchwartzMap ℝ ℝ where
@@ -513,7 +513,8 @@ private lemma contDiff_parametric_hermiteCoeff (d : ℕ)
     (fun m => by -- hι_bound: ‖D^m_y[f(ι(·,t))](y)‖ ≤ C uniformly in y,t
       exact ⟨f.seminorm ℝ 0 m, fun y t => by
         have := schwartz_slice_y_le_seminorm d f t 0 m y
-        simpa using this⟩)
+        simpa only [pow_zero, one_mul, schwartz_slice_y, compCLMOfAntilipschitz_apply,
+          Function.comp_def] using this⟩)
 
 /-- Smoothness of the partial Hermite coefficient: the function
 `y ↦ ∫ f(y,t) ψ_n(t) dt` is `C^∞` in `y`.
@@ -521,7 +522,7 @@ private lemma contDiff_parametric_hermiteCoeff (d : ℕ)
 private lemma schwartz_partial_hermiteCoeff_smooth (d : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ)
     (n : ℕ) :
-    ContDiff ℝ ∞ (fun y => hermiteCoeff1D n (schwartz_slice d f y)) :=
+    ContDiff ℝ ∞ (fun y => hermiteCoeff1D n (schwartzSlice d f y)) :=
   (contDiff_parametric_hermiteCoeff d f n).1
 
 /-- Schwartz decay of the partial Hermite coefficient: for all `k, m`,
@@ -536,7 +537,7 @@ private lemma schwartz_partial_hermiteCoeff_decay (d : ℕ)
     (n : ℕ) (k m : ℕ) :
     ∃ C : ℝ, ∀ y : EuclideanSpace ℝ (Fin (d + 1)),
       ‖y‖ ^ k * ‖iteratedFDeriv ℝ m
-        (fun y' => hermiteCoeff1D n (schwartz_slice d f y')) y‖ ≤ C := by
+        (fun y' => hermiteCoeff1D n (schwartzSlice d f y')) y‖ ≤ C := by
   -- The proof uses:
   -- 1. contDiff_parametric_hermiteCoeff to commute iteratedFDeriv with the integral
   -- 2. The constant hermiteFunction n t factors out of iteratedFDeriv in y
@@ -588,11 +589,11 @@ private lemma schwartz_partial_hermiteCoeff_decay (d : ℕ)
 /-- Integrate out the last coordinate of `f` against the `n`-th Hermite
 function, giving a Schwartz function of the remaining `d + 1` coordinates.
 -/
-noncomputable def schwartz_partial_hermiteCoeff (d : ℕ)
+noncomputable def schwartzPartialHermiteCoeff (d : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ)
     (n : ℕ) :
     SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ where
-  toFun y := hermiteCoeff1D n (schwartz_slice d f y)
+  toFun y := hermiteCoeff1D n (schwartzSlice d f y)
   smooth' := schwartz_partial_hermiteCoeff_smooth d f n
   decay' := schwartz_partial_hermiteCoeff_decay d f n
 
@@ -600,14 +601,14 @@ noncomputable def schwartz_partial_hermiteCoeff (d : ℕ)
 lemma schwartz_partial_hermiteCoeff_eq_1D (d : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ)
     (n : ℕ) (y : EuclideanSpace ℝ (Fin (d + 1))) :
-    schwartz_partial_hermiteCoeff d f n y =
-      hermiteCoeff1D n (schwartz_slice d f y) := rfl
+    schwartzPartialHermiteCoeff d f n y =
+      hermiteCoeff1D n (schwartzSlice d f y) := rfl
 
 -- A3c: Slice evaluation (definitionally true)
 lemma schwartz_slice_eq (d : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ)
     (y : EuclideanSpace ℝ (Fin (d + 1))) (t : ℝ) :
-    schwartz_slice d f y t = f (euclideanSnoc (d + 1) y t) := rfl
+    schwartzSlice d f y t = f (euclideanSnoc (d + 1) y t) := rfl
 
 /-- Fubini theorem for EuclideanSpace slicing.
 Isolates the measure equivalence between ℝ^{d+2} and ℝ^{d+1} × ℝ.
@@ -721,7 +722,7 @@ private lemma euclideanSnoc_t_contDiff (d : ℕ)
 of a slice along vectors `v`. Used for the "scalarization" step: reduce the operator norm
 of `D^{l'} g_n(y)` to pointwise evaluations that can be bounded via 1D Hermite decay.
 -/
-noncomputable def schwartz_slice_partial (d : ℕ)
+noncomputable def schwartzSlicePartial (d : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ) (l' : ℕ)
     (y : EuclideanSpace ℝ (Fin (d + 1)))
     (v : Fin l' → EuclideanSpace ℝ (Fin (d + 1))) :
@@ -849,7 +850,7 @@ noncomputable def schwartz_slice_partial (d : ℕ)
       _ ≤ C_w * f.seminorm ℝ k (b + l') := by
           gcongr; exact SchwartzMap.le_seminorm ℝ k (b + l') f _
 
-/-- The iterated Fréchet derivative of `schwartz_partial_hermiteCoeff d f n` evaluated
+/-- The iterated Fréchet derivative of `schwartzPartialHermiteCoeff d f n` evaluated
 at `y` along vectors `v` equals the 1D Hermite coefficient of the corresponding
 slice partial function. This is the key "commutation" lemma that connects the
 multi-d seminorm to a 1D quantity.
@@ -858,8 +859,8 @@ lemma schwartz_partial_hermiteCoeff_iteratedFDeriv (d : ℕ)
     (f : SchwartzMap (EuclideanSpace ℝ (Fin (d + 2))) ℝ) (n l' : ℕ)
     (y : EuclideanSpace ℝ (Fin (d + 1)))
     (v : Fin l' → EuclideanSpace ℝ (Fin (d + 1))) :
-    iteratedFDeriv ℝ l' (schwartz_partial_hermiteCoeff d f n) y v =
-      hermiteCoeff1D n (schwartz_slice_partial d f l' y v) := by
+    iteratedFDeriv ℝ l' (schwartzPartialHermiteCoeff d f n) y v =
+      hermiteCoeff1D n (schwartzSlicePartial d f l' y v) := by
   -- Step 1: Commute iteratedFDeriv with the integral
   obtain ⟨_, h_comm⟩ := contDiff_parametric_hermiteCoeff d f n
   change (iteratedFDeriv ℝ l' (fun y' =>
@@ -868,7 +869,7 @@ lemma schwartz_partial_hermiteCoeff_iteratedFDeriv (d : ℕ)
   -- Step 2: Factor hermiteFunction n t out of iteratedFDeriv and evaluate at v
   have h_factor_v : ∀ t, (iteratedFDeriv ℝ l'
       (fun y' => f (euclideanSnoc (d + 1) y' t) * hermiteFunction n t) y) v =
-      schwartz_slice_partial d f l' y v t * hermiteFunction n t := by
+      schwartzSlicePartial d f l' y v t * hermiteFunction n t := by
     intro t
     have h_eq : (fun y' => f (euclideanSnoc (d + 1) y' t) * hermiteFunction n t) =
         (fun y' => hermiteFunction n t • (schwartz_slice_y d f t) y') := by
@@ -993,14 +994,14 @@ private lemma schwartz_slice_partial_pointwise_bound (d : ℕ)
     (y : EuclideanSpace ℝ (Fin (d + 1)))
     (v : Fin l' → EuclideanSpace ℝ (Fin (d + 1))) (k a b : ℕ) (t : ℝ) :
     ‖y‖ ^ k * (‖t‖ ^ a * ‖iteratedFDeriv ℝ b
-      (↑(schwartz_slice_partial d f l' y v)) t‖) ≤
+      (↑(schwartzSlicePartial d f l' y v)) t‖) ≤
       ‖ContinuousMultilinearMap.apply ℝ
         (fun _ : Fin l' => EuclideanSpace ℝ (Fin (d + 2))) ℝ
         (fun i => euclideanSnoc_linearCLM d (v i))‖ *
       f.seminorm ℝ (k + a) (b + l') := by
   set L := euclideanSnoc_linearCLM d
   set w : Fin l' → EuclideanSpace ℝ (Fin (d + 2)) := fun i => L (v i)
-  set g := schwartz_slice_partial d f l' y v
+  set g := schwartzSlicePartial d f l' y v
   set G : EuclideanSpace ℝ (Fin (d + 2)) → ℝ := fun z =>
     (iteratedFDeriv ℝ l' (↑f : _ → ℝ) z) w
   -- Step 1: Chain rule bound on b-th t-derivative
@@ -1099,7 +1100,7 @@ private lemma schwartz_slice_partial_pointwise_bound (d : ℕ)
         gcongr; exact SchwartzMap.le_seminorm ℝ (k + a) (b + l') f _
 
 /-- Seminorm bound for the slice partial function: the 1D Schwartz seminorm of
-`schwartz_slice_partial d f l' y v`, weighted by `‖y‖^k'`, is bounded by a product
+`schwartzSlicePartial d f l' y v`, weighted by `‖y‖^k'`, is bounded by a product
 of `∏ ‖v_i‖` and finitely many higher-dimensional seminorms of `f`.
 -/
 lemma schwartz_slice_partial_seminorm_bound (d : ℕ) (k' l' a b : ℕ) :
@@ -1108,13 +1109,13 @@ lemma schwartz_slice_partial_seminorm_bound (d : ℕ) (k' l' a b : ℕ) :
         (y : EuclideanSpace ℝ (Fin (d + 1)))
         (v : Fin l' → EuclideanSpace ℝ (Fin (d + 1))),
         ‖y‖ ^ k' * schwartzSeminormFamily ℝ ℝ ℝ (a, b)
-          (schwartz_slice_partial d f l' y v) ≤
+          (schwartzSlicePartial d f l' y v) ≤
           C * (∏ i, ‖v i‖) *
             q'.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d + 2))) ℝ) f
     := by
   refine ⟨1, {(k' + a, b + l')}, one_pos, fun f y v => ?_⟩
   simp only [Finset.sup_singleton, one_mul]
-  set g := schwartz_slice_partial d f l' y v
+  set g := schwartzSlicePartial d f l' y v
   set L := euclideanSnoc_linearCLM d
   set w : Fin l' → EuclideanSpace ℝ (Fin (d + 2)) := fun i => L (v i)
   -- The apply norm is bounded by ∏ ‖w_i‖ ≤ ∏ ‖v_i‖

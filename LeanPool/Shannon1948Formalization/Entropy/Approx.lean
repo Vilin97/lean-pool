@@ -284,7 +284,8 @@ lemma tendsto_approxProb_apply
   have hsub :
       Tendsto (fun N : ℕ => approxProb p N a - p a) atTop (𝓝 (0 : ℝ)) := by
     rw [tendsto_zero_iff_abs_tendsto_zero]
-    simpa using habs_tendsto
+    change Tendsto (fun N : ℕ => |approxProb p N a - p a|) atTop (𝓝 (0 : ℝ))
+    exact habs_tendsto
   have hsub' :
       Tendsto (fun N : ℕ => approxProb p N a - p a) atTop (𝓝 (p a - p a)) := by
     simpa using hsub

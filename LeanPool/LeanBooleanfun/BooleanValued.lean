@@ -55,7 +55,7 @@ lemma eq_neg_one_of_ne_one (h' : f x ≠ 1) : f x = -1 :=
 lemma eq_one_of_ne_neg_one (h' : f x ≠ -1) : f x = 1 :=
   or_iff_not_imp_right.mp (hbv.one_or_neg_one x) h'
 
-instance neg_boolean_valued [hbv : BooleanValued f] : BooleanValued (-f) where
+instance neg_boolean_valued : BooleanValued (-f) where
   one_or_neg_one := by
     intro x; rw [Pi.neg_apply, neg_inj, neg_eq_iff_eq_neg, or_comm]; exact hbv.one_or_neg_one _
 

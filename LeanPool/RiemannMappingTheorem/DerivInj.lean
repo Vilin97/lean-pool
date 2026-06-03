@@ -5,6 +5,10 @@ Authors: Vincent Beffara
 -/
 import LeanPool.RiemannMappingTheorem.Hurwitz
 
+/-!
+# LeanPool.RiemannMappingTheorem.DerivInj
+-/
+
 open Complex Metric circleIntegral Topology Filter Set
 
 variable {ι α β : Type*} {U : Set ℂ} {c z₀ : ℂ} {r : ℝ} {f g : ℂ → ℂ}
@@ -80,8 +84,14 @@ lemma two_le_order_of_deriv_eq_zero {g : ℂ → ℂ} {p : FormalMultilinearSeri
     (hgp : HasFPowerSeriesAt g p z₀) (hp : p ≠ 0) (hg : g z₀ = 0) (hg' : deriv g z₀ = 0) :
     2 ≤ p.order := by
   classical
-  have h1 : p.coeff 1 = 0 := by simpa only [hg'] using hgp.deriv.symm
-  have h2 : p 0 = 0 := by ext1; simpa only [hg] using hgp.coeff_zero _
+  have h1 : p.coeff 1 = 0 := by
+    rw [FormalMultilinearSeries.coeff]
+    change (p 1) (fun _ => (1 : ℂ)) = 0
+    simpa only [hg'] using hgp.deriv.symm
+  have h2 : p 0 = 0 := by
+    ext1
+    change (p 0) (fun _ => (1 : ℂ)) = 0
+    simpa only [hg] using hgp.coeff_zero (fun _ => (1 : ℂ))
   have h3 : p 1 = 0 := by ext1; simp [h1]
   rw [FormalMultilinearSeries.order_eq_find' hp, Nat.le_find_iff]
   intro n hn
@@ -96,7 +106,9 @@ lemma tendsto_uniformly_on_add_const :
     TendstoUniformlyOn (fun (ε z : ℂ) => g z + ε) g (𝓝[≠] 0) U := by
   have : Tendsto id (𝓝[≠] (0 : ℂ)) (𝓝 0) := nhdsWithin_le_nhds
   have : TendstoUniformlyOn (fun (ε _ : ℂ) => ε) 0 (𝓝[≠] 0) U := this.tendstoUniformlyOn_const U
-  simpa using tendsto_uniformly_on_const.add this
+  convert tendsto_uniformly_on_const.add this using 2
+  · ext ε
+    simp
 
 lemma deriv_ne_zero_of_inj_aux {g : ℂ → ℂ} (hU : IsOpen U) (hg : DifferentiableOn ℂ g U)
     (hi : InjOn g U) (hz₀ : z₀ ∈ U) (hgz₀ : g z₀ = 0) :

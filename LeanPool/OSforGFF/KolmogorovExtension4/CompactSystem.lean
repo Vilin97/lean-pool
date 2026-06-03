@@ -8,6 +8,12 @@ import Mathlib.MeasureTheory.Constructions.ClosedCompactCylinders
 import Mathlib.Topology.Compactness.CompactSystem
 import Mathlib.Topology.IsClosedRestrict
 
+/-!
+# Compact Systems
+
+Auxiliary compact-system lemmas for the Kolmogorov extension construction.
+-/
+
 open Set MeasureTheory
 
 section definition

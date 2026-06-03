@@ -18,7 +18,7 @@ the GFF measure is **strictly non-degenerate**:
 
 1. The square-root propagator embedding `T : S(ℝ⁴) → L²` is injective.
 2. The smeared covariance `C(f,f) > 0` for every nonzero test function `f`.
-3. Every field pairing `⟨ω,f⟩` has strictly positive variance under `μ_GFF`.
+3. Every field pairing `⟨ω,f⟩` has strictly positive variance under `muGFF`.
 4. The pointwise kernel `C(x,y) → +∞` as `x → y` (UV divergence).
 
 ## Proof strategy
@@ -38,7 +38,7 @@ Injectivity of T follows from:
 - `embeddingMap_injective` : the square-root propagator embedding is injective
 - `freeCovarianceFormR_strictPos` : `C(f,f) > 0` for `f ≠ 0`
 - `gaussianFreeField_variance_pos` : `Var[⟨ω,f⟩] > 0` for `f ≠ 0`
-- `gaussianFreeField_not_dirac` : `μ_GFF ≠ δ₀`
+- `gaussianFreeField_not_dirac` : `muGFF ≠ δ₀`
 - `besselK1_tendsto_atTop_at_zero` : `K₁(z) → +∞` as `z → 0⁺`
 - `freeCovariance_tendsto_atTop` : `C(x,y) → +∞` as `x → y`
 
@@ -129,7 +129,7 @@ theorem sqrtPropagatorMap_eq_zero_iff (m : ℝ) [Fact (0 < m)] (f : TestFunction
       intro k
       have := h k
       unfold sqrtPropagatorMap at this
-      have hw_pos : (momentumWeightSqrt_mathlib m k : ℂ) ≠ 0 := by
+      have hw_pos : (momentumWeightSqrtMathlib m k : ℂ) ≠ 0 := by
         simp only [Complex.ofReal_ne_zero]
         exact ne_of_gt (momentumWeightSqrt_mathlib_pos m k)
       exact (mul_eq_zero.mp this).resolve_right hw_pos
@@ -217,7 +217,7 @@ theorem freeCovarianceFormR_strictPos (m : ℝ) [Fact (0 < m)]
 -/
 theorem gaussianFreeField_variance_pos (m : ℝ) [Fact (0 < m)]
     (f : TestFunction) (hf : f ≠ 0) :
-    0 < ∫ ω, (distributionPairingCLM f ω) ^ 2 ∂(μ_GFF m).toMeasure := by
+    0 < ∫ ω, (distributionPairingCLM f ω) ^ 2 ∂(muGFF m).toMeasure := by
   rw [gff_second_moment_eq_covariance]
   exact freeCovarianceFormR_strictPos m f hf
 
@@ -230,7 +230,7 @@ theorem gaussianFreeField_variance_pos (m : ℝ) [Fact (0 < m)]
 -/
 theorem gaussianFreeField_not_dirac (m : ℝ) [Fact (0 < m)] :
     ∃ f : TestFunction, f ≠ 0 ∧
-      0 < ∫ ω, (distributionPairingCLM f ω) ^ 2 ∂(μ_GFF m).toMeasure := by
+      0 < ∫ ω, (distributionPairingCLM f ω) ^ 2 ∂(muGFF m).toMeasure := by
   -- Schwartz space on ℝ⁴ is nontrivial: exhibit a nonzero element.
   -- This uses the existence of smooth compactly-supported bump functions.
   have ⟨f, hf⟩ : ∃ f : TestFunction, f ≠ 0 := by

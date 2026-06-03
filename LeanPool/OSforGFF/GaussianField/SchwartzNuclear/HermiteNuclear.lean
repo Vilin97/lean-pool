@@ -15,7 +15,7 @@ isomorphism `SchwartzMap D ℝ ≃L[ℝ] RapidDecaySeq` constructed in
 
 ## Main result
 
-- `schwartz_dyninMityaginSpace`: the `DyninMityaginSpace` instance for Schwartz space
+- `schwartzDyninMityaginSpace`: the `DyninMityaginSpace` instance for Schwartz space
   on any nontrivial finite-dimensional real normed space.
 -/
 
@@ -36,7 +36,7 @@ basis/coefficient system derived from the topological isomorphism
 Proved via the topological isomorphism `SchwartzMap D ℝ ≃L[ℝ] RapidDecaySeq`
 constructed from multi-dimensional Hermite analysis.
 -/
-noncomputable instance schwartz_dyninMityaginSpace [Nontrivial D] :
+noncomputable instance schwartzDyninMityaginSpace [Nontrivial D] :
     DyninMityaginSpace (SchwartzMap D ℝ) :=
   DyninMityaginSpace.ofRapidDecayEquiv
     (fun (kl : ℕ × ℕ) => SchwartzMap.seminorm ℝ kl.1 kl.2)
@@ -47,7 +47,7 @@ noncomputable instance schwartz_dyninMityaginSpace [Nontrivial D] :
 `schwartzRapidDecayEquiv1D` directly, avoiding the `toEuclidean` detour.
 This is preferred by instance resolution since `ℝ` is more specific than `D`.
 -/
-noncomputable instance schwartz_dyninMityaginSpace_1D :
+noncomputable instance schwartzDyninMityaginSpace1D :
     DyninMityaginSpace (SchwartzMap ℝ ℝ) :=
   DyninMityaginSpace.ofRapidDecayEquiv
     (fun (kl : ℕ × ℕ) => SchwartzMap.seminorm ℝ kl.1 kl.2)
@@ -55,7 +55,7 @@ noncomputable instance schwartz_dyninMityaginSpace_1D :
     schwartzRapidDecayEquiv1D
 
 /-- `HasBiorthogonalBasis` for `SchwartzMap ℝ ℝ` from the Hermite basis. -/
-noncomputable instance schwartz_hasBiorthogonalBasis_1D :
+noncomputable instance schwartzHasBiorthogonalBasis1D :
     DyninMityaginSpace.HasBiorthogonalBasis (SchwartzMap ℝ ℝ) :=
   DyninMityaginSpace.ofRapidDecayEquiv_hasBiorthogonalBasis
     (fun (kl : ℕ × ℕ) => SchwartzMap.seminorm ℝ kl.1 kl.2)
@@ -67,7 +67,7 @@ using `schwartzRapidDecayEquivNd` directly, avoiding the `toEuclidean` detour.
 This ensures that `DyninMityaginSpace.coeff` produces the Hermite coefficients from the
 standard multi-index encoding, matching the basis used by `schwartzPeelOff`.
 -/
-noncomputable instance schwartz_dyninMityaginSpace_euclidean (d : ℕ) :
+noncomputable instance schwartzDyninMityaginSpaceEuclidean (d : ℕ) :
     DyninMityaginSpace (SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ) :=
   DyninMityaginSpace.ofRapidDecayEquiv
     (fun (kl : ℕ × ℕ) => SchwartzMap.seminorm ℝ kl.1 kl.2)
@@ -84,7 +84,7 @@ noncomputable instance schwartz_dyninMityaginSpace_euclidean (d : ℕ) :
 /-- `RapidDecaySeq` is separable: the countable set `{basisVec m | m ∈ ℕ}` spans a dense
     subspace (every element is the limit of finite linear combinations by `hasSum_basisVec`).
 -/
-instance rapidDecaySeq_separableSpace : SeparableSpace RapidDecaySeq := by
+instance rapidDecaySeqSeparableSpace : SeparableSpace RapidDecaySeq := by
   rw [← TopologicalSpace.isSeparable_univ_iff]
   have h_dense : (Submodule.span ℝ (Set.range RapidDecaySeq.basisVec)).topologicalClosure = ⊤ := by
     rw [eq_top_iff]
@@ -106,7 +106,7 @@ instance rapidDecaySeq_separableSpace : SeparableSpace RapidDecaySeq := by
     since `RapidDecaySeq` is separable (countable Hermite basis spans a dense subspace),
     and a CLE is a homeomorphism, Schwartz space is separable.
 -/
-instance schwartz_separableSpace [Nontrivial D] :
+instance schwartzSeparableSpace [Nontrivial D] :
     SeparableSpace (SchwartzMap D ℝ) := by
   rw [← TopologicalSpace.isSeparable_univ_iff]
   have h_range : Set.range (schwartzRapidDecayEquiv D).symm = Set.univ :=

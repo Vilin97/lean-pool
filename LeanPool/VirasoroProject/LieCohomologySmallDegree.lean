@@ -250,7 +250,7 @@ instance : Module 𝕜 (LieTwoCocycle 𝕜 𝓰 𝓪) where
   add_smul c c' γ := by ext1; simpa using Module.add_smul c c' γ.toBilin
   zero_smul γ := by ext1; simp
 
-instance [LieAlgebra 𝕜 𝓰] [AddCommGroup 𝓪] [Module 𝕜 𝓪] :
+instance :
     AddCommGroup (LieTwoCocycle 𝕜 𝓰 𝓪) where
   zero_add γ := AddZeroClass.zero_add γ
   add_zero γ := AddZeroClass.add_zero γ
@@ -318,7 +318,7 @@ def _root_.VirasoroProject.LieOneCochain.bdry (β : LieOneCochain 𝕜 𝓰 𝓪
 variable (𝕜 𝓰 𝓪)
 
 /-- The `∂` as a linear map from Lie algebra 1-cochains to Lie algebra 2-cocycles. -/
-def _root_.VirasoroProject.LieOneCochain_bdryHom
+def _root_.VirasoroProject.LieOneCochainBdryHom
     : LieOneCochain 𝕜 𝓰 𝓪 →ₗ[𝕜] LieTwoCocycle 𝕜 𝓰 𝓪 where
   toFun β := β.bdry
   map_add' _ _ := rfl
@@ -326,14 +326,14 @@ def _root_.VirasoroProject.LieOneCochain_bdryHom
 
 @[simp] lemma _root_.VirasoroProject.LieOneCochain.neg_bdry
     (β : LieOneCochain 𝕜 𝓰 𝓪) : (-β).bdry = -β.bdry := by
-  change LieOneCochain_bdryHom 𝕜 𝓰 𝓪 (-β) = -LieOneCochain_bdryHom 𝕜 𝓰 𝓪 β
+  change LieOneCochainBdryHom 𝕜 𝓰 𝓪 (-β) = -LieOneCochainBdryHom 𝕜 𝓰 𝓪 β
   simp
 
 lemma _root_.VirasoroProject.LieOneCochain.bdry_apply (β : LieOneCochain 𝕜 𝓰 𝓪) (X Y : 𝓰) :
     β.bdry X Y = β (⁅X, Y⁆) := rfl
 
 /-- Lie algebra 2-coboundaries as a vector space. -/
-abbrev _root_.VirasoroProject.LieTwoCoboundary := LinearMap.range (LieOneCochain_bdryHom 𝕜 𝓰 𝓪)
+abbrev _root_.VirasoroProject.LieTwoCoboundary := LinearMap.range (LieOneCochainBdryHom 𝕜 𝓰 𝓪)
 
 end LieTwoCoboundary -- section
 
@@ -387,9 +387,9 @@ lemma _root_.VirasoroProject.LieTwoCocycle.cohomologyClass_add_bdry
 lemma _root_.VirasoroProject.LieTwoCocycle.exists_eq_bdry
     (γ : LieTwoCocycle 𝕜 𝓰 𝓪) (hγ : γ.cohomologyClass = 0) :
     ∃ β : LieOneCochain 𝕜 𝓰 𝓪, γ = β.bdry := by
-  simp_rw [@Eq.comm (LieTwoCocycle 𝕜 𝓰 𝓪) γ _]
-  simpa using (Submodule.Quotient.eq _).mp <|
-    show γ.cohomologyClass = LieTwoCocycle.cohomologyClass 0 by rw [hγ]; rfl
+  rw [LieTwoCocycle.cohomologyClass, LieTwoCocycle.toLieTwoCohomology] at hγ
+  obtain ⟨β, hβ⟩ := LinearMap.mem_range.mp ((Submodule.Quotient.mk_eq_zero _).mp hγ)
+  exact ⟨β, hβ.symm⟩
 
 end LieTwoCocycle -- namespace
 
@@ -405,7 +405,7 @@ variable {𝕜 𝓰 𝓪}
 lemma _root_.VirasoroProject.LieOneCochain.bdry_apply_eq_zero_of_isLieAbelian
     (β : LieOneCochain 𝕜 𝓰 𝓪) (X Y : 𝓰) :
     β.bdry X Y = 0 := by
-  simp [LieOneCochain.bdry_apply]
+  simpa [LieOneCochain.bdry_apply] using congrArg β (trivial_lie_zero 𝓰 𝓰 X Y)
 
 variable (𝕜 𝓰 𝓪)
 

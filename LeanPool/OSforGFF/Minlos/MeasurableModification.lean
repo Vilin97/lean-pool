@@ -210,7 +210,7 @@ private lemma extensionFun_eq (d : ℕ → E) (hd : DenseRange d)
       refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
       change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
       simp_rw [map_sum, Finset.sum_apply]
-      exact continuous_finset_sum _ (fun i _ => hp_top.continuous_seminorm i)
+      exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
     refine ⟨{x | (s.sup p) (x - d n) < ε / ((C : ℝ) + 1)},
       isOpen_lt (h_cont_sp.comp (continuous_sub_right _)) continuous_const,
       by simp only [Set.mem_setOf_eq, sub_self, map_zero]; exact div_pos hε hCε, ?_⟩
@@ -258,7 +258,7 @@ private lemma extensionFun_continuous (d : ℕ → E) (hd : DenseRange d)
     refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
     change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
     simp_rw [map_sum, Finset.sum_apply]
-    exact continuous_finset_sum _ (fun i _ => hp_top.continuous_seminorm i)
+    exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
   -- Image filter is Cauchy in ℝ, hence convergent by completeness
   have h_cauchy : Cauchy (Filter.map ω (nhdsWithin x (Set.range d))) := by
     haveI : (nhdsWithin x (Set.range d)).NeBot :=
@@ -319,7 +319,7 @@ private lemma extensionFun_map_add (d : ℕ → E) (hd : DenseRange d)
     refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
     change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
     simp_rw [map_sum, Finset.sum_apply]
-    exact continuous_finset_sum _ (fun i _ => hp_top.continuous_seminorm i)
+    exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
   -- g(d m + d n) = g(d m) + g(d n) via ℚ-linearity + extendFrom_eq
   have hg_add_dense : ∀ m n, g (d m + d n) = g (d m) + g (d n) := by
     intro m n
@@ -442,7 +442,7 @@ private lemma extensionFun_map_smul (d : ℕ → E) (hd : DenseRange d)
         refine Seminorm.continuous_of_le ?_ (Seminorm.finset_sup_le_sum p s)
         change Continuous (fun x => Seminorm.coeFnAddMonoidHom ℝ E (∑ i ∈ s, p i) x)
         simp_rw [map_sum, Finset.sum_apply]
-        exact continuous_finset_sum _ (fun i _ => hp_top.continuous_seminorm i)
+        exact continuous_finsetSum _ (fun i _ => hp_top.continuous_seminorm i)
       refine ⟨{x | (s.sup p) (x - (q : ℝ) • d n) < ε / ((C : ℝ) + 1)},
         isOpen_lt (h_cont_sp.comp (continuous_sub_right _)) continuous_const,
         by simp [sub_self, map_zero, div_pos hε hCε], ?_⟩

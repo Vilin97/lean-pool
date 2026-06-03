@@ -52,7 +52,7 @@ theorem marginalCF_continuous {E : Type*} [AddCommGroup E] [Module ℝ E]
     (Φ : E → ℂ) {n : ℕ} (f : Fin n → E)
     (hΦ : Continuous Φ) : Continuous (marginalCF Φ f) := by
   apply hΦ.comp
-  apply continuous_finset_sum
+  apply continuous_finsetSum
   intro i _
   exact (EuclideanSpace.proj i).continuous.smul continuous_const
 

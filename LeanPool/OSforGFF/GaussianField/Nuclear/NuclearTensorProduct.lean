@@ -292,7 +292,7 @@ instance instCompleteSpace :
       have h_sum_lim : Filter.Tendsto
           (fun n => ∑ m ∈ s, |(u n).val m| * (1 + (m : ℝ)) ^ k)
           Filter.atTop (nhds (∑ m ∈ s, |a m| * (1 + (m : ℝ)) ^ k)) := by
-        apply tendsto_finset_sum
+        apply tendsto_finsetSum
         intro m _
         exact (Filter.Tendsto.abs (ha m)).mul tendsto_const_nhds
       -- Each partial sum ≤ seminorm k (u n) ≤ B
@@ -333,7 +333,7 @@ instance instCompleteSpace :
   have h_lim : Filter.Tendsto
       (fun j => ∑ m ∈ s, |(u n).val m - (u j).val m| * (1 + (m : ℝ)) ^ k)
       Filter.atTop (nhds (∑ m ∈ s, |(u n).val m - a m| * (1 + (m : ℝ)) ^ k)) := by
-    apply tendsto_finset_sum
+    apply tendsto_finsetSum
     intro m _
     exact ((tendsto_const_nhds.sub (ha m)).abs).mul tendsto_const_nhds
   apply le_of_tendsto h_lim
@@ -470,7 +470,7 @@ theorem rapidDecay_expansion (φ : RapidDecaySeq →L[ℝ] ℝ) (a : RapidDecayS
   exact h'.tsum_eq.symm
 
 /-- `RapidDecaySeq` is T1: if `a ≠ 0`, the 0-th seminorm `∑ |a_m| > 0`. -/
-instance rapidDecay_t1Space : T1Space RapidDecaySeq :=
+instance rapidDecayT1Space : T1Space RapidDecaySeq :=
   rapidDecay_withSeminorms.T1_of_separating fun a ha => by
     refine ⟨0, ?_⟩
     -- rapidDecaySeminorm 0 a = ∑' m, |a.val m| * 1 = ∑' m, |a.val m|
@@ -491,7 +491,7 @@ instance rapidDecay_t1Space : T1Space RapidDecaySeq :=
       exact abs_eq_zero.mp (le_antisymm hle (abs_nonneg _))
     ext m; exact hcomp m
 
-instance rapidDecay_dyninMityaginSpace : DyninMityaginSpace RapidDecaySeq where
+instance rapidDecayDyninMityaginSpace : DyninMityaginSpace RapidDecaySeq where
   ι := ℕ
   p := rapidDecaySeminorm
   h_with := rapidDecay_withSeminorms
@@ -509,7 +509,7 @@ instance rapidDecay_dyninMityaginSpace : DyninMityaginSpace RapidDecaySeq where
     exact (a.rapid_decay k).le_tsum m
       (fun j _ => mul_nonneg (abs_nonneg _) (weight_nonneg j k))⟩
 
-instance rapidDecay_hasBiorthogonalBasis :
+instance rapidDecayHasBiorthogonalBasis :
     DyninMityaginSpace.HasBiorthogonalBasis RapidDecaySeq where
   coeff_basis n m := by
     change (basisVec m).val n = if n = m then 1 else 0
@@ -704,7 +704,7 @@ instance : ContinuousSMul ℝ (NuclearTensorProduct E₁ E₂) :=
 
 /-- The nuclear tensor product is a nuclear space. -/
 instance dyninMityaginSpace : DyninMityaginSpace (NuclearTensorProduct E₁ E₂) :=
-  RapidDecaySeq.rapidDecay_dyninMityaginSpace
+  RapidDecaySeq.rapidDecayDyninMityaginSpace
 
 /-- Map from product basis indices to the Cantor-paired linear index. -/
 def fromPairIndex (n m : ℕ) : ℕ := Nat.pair n m
@@ -996,7 +996,7 @@ def pureLin : E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] NuclearTensorProduct E₁ E₂ w
 /-- For fixed `e₁`, the map `e₂ ↦ pure e₁ e₂` is a continuous linear map.
 Continuity follows from the seminorm bound via `continuous_of_isBounded`.
 -/
-def pureCLM_right (e₁ : E₁) : E₂ →L[ℝ] NuclearTensorProduct E₁ E₂ where
+def pureCLMRight (e₁ : E₁) : E₂ →L[ℝ] NuclearTensorProduct E₁ E₂ where
   toLinearMap := pureLin e₁
   cont := by
     apply WithSeminorms.continuous_of_isBounded
@@ -1088,7 +1088,7 @@ theorem pure_continuous :
           linarith [NNReal.coe_nonneg C]
   · -- Continuity of f x at 0 for each x
     intro e₁
-    exact (pureCLM_right e₁).continuous.continuousAt
+    exact (pureCLMRight e₁).continuous.continuousAt
   · -- Continuity of f · y at 0 for each y
     intro e₂
     exact (pure_continuous_left e₂).continuousAt
@@ -1392,13 +1392,6 @@ end Lift
 
 /-! ### Bilinear evaluation: tensor product of functionals -/
 
-section Eval
-
-variable [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁]
-    [IsTopologicalAddGroup E₁] [ContinuousSMul ℝ E₁] [DyninMityaginSpace E₁]
-    [AddCommGroup E₂] [Module ℝ E₂] [TopologicalSpace E₂]
-    [IsTopologicalAddGroup E₂] [ContinuousSMul ℝ E₂] [DyninMityaginSpace E₂]
-
 /-- The bilinear multiplication form `(x, y) ↦ x * y` as a bilinear map ℝ →ₗ ℝ →ₗ ℝ. -/
 private def mulBilin : ℝ →ₗ[ℝ] ℝ →ₗ[ℝ] ℝ where
   toFun x :=
@@ -1408,14 +1401,17 @@ private def mulBilin : ℝ →ₗ[ℝ] ℝ →ₗ[ℝ] ℝ where
   map_add' x₁ x₂ := by ext; simp [add_mul]
   map_smul' r x := by ext; simp [mul_assoc]
 
+section Eval
+
 /-- Compose the multiplication bilinear form with CLMs on each factor. -/
 private def compBilin (φ₁ : E₁ →L[ℝ] ℝ) (φ₂ : E₂ →L[ℝ] ℝ) :
     E₁ →ₗ[ℝ] E₂ →ₗ[ℝ] ℝ :=
   (mulBilin.comp φ₁.toLinearMap).compl₂ φ₂.toLinearMap
 
+omit [IsTopologicalAddGroup E₁] [ContinuousSMul ℝ E₁]
+    [IsTopologicalAddGroup E₂] [ContinuousSMul ℝ E₂]
+    [DyninMityaginSpace E₁] [DyninMityaginSpace E₂] in
 @[simp] private theorem compBilin_apply
-    {E₁ : Type*} [AddCommGroup E₁] [Module ℝ E₁] [TopologicalSpace E₁]
-    {E₂ : Type*} [AddCommGroup E₂] [Module ℝ E₂] [TopologicalSpace E₂]
     (φ₁ : E₁ →L[ℝ] ℝ) (φ₂ : E₂ →L[ℝ] ℝ)
     (e₁ : E₁) (e₂ : E₂) :
     compBilin φ₁ φ₂ e₁ e₂ = φ₁ e₁ * φ₂ e₂ := rfl
@@ -1452,11 +1448,17 @@ def _root_.GaussianField.NuclearTensorProduct.evalCLM
     simp only [compBilin_apply]
     rw [Real.norm_eq_abs, abs_mul]
     have h₁ : |φ₁ e₁| ≤ C₁ * (s₁.sup DyninMityaginSpace.p) e₁ := by
-      have := hle₁ e₁
-      simpa only [ge_iff_le] using this
+      have h₁' := hle₁ e₁
+      simp only [Seminorm.comp_apply, coe_normSeminorm, ContinuousLinearMap.coe_coe,
+        Real.norm_eq_abs] at h₁'
+      change |φ₁ e₁| ≤ C₁ * (s₁.sup DyninMityaginSpace.p) e₁ at h₁'
+      exact h₁'
     have h₂ : |φ₂ e₂| ≤ C₂ * (s₂.sup DyninMityaginSpace.p) e₂ := by
-      have := hle₂ e₂
-      simpa only [ge_iff_le] using this
+      have h₂' := hle₂ e₂
+      simp only [Seminorm.comp_apply, coe_normSeminorm, ContinuousLinearMap.coe_coe,
+        Real.norm_eq_abs] at h₂'
+      change |φ₂ e₂| ≤ C₂ * (s₂.sup DyninMityaginSpace.p) e₂ at h₂'
+      exact h₂'
     calc |φ₁ e₁| * |φ₂ e₂|
         ≤ (↑C₁ * (s₁.sup DyninMityaginSpace.p) e₁) *
           (↑C₂ * (s₂.sup DyninMityaginSpace.p) e₂) :=

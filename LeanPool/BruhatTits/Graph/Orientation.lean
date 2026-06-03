@@ -6,8 +6,6 @@ Authors: Judith Ludwig, Christian Merten
 import LeanPool.BruhatTits.Graph.GroupAction
 import Mathlib.Algebra.Ring.Int.Parity
 
-open Module
-
 /-!
 # Orientation on the Bruhat-Tits tree
 
@@ -30,6 +28,9 @@ While the GL₂ action is transitive, the SL₂ action preserves the orientation
 evenness of vertices (see `BruhatTits.isEven_specialLinearGroup_smul_iff`).
 
 -/
+
+open Module
+
 
 suppress_compilation
 

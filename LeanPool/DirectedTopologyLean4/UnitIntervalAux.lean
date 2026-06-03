@@ -5,6 +5,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 import Mathlib.Topology.Connected.PathConnected
 
+/-!
+# LeanPool.DirectedTopologyLean4.UnitIntervalAux
+-/
+
 /-
   This file contains lemmas about
   * elements being contained in the unit interval.
@@ -53,14 +57,14 @@ lemma half_mem_I : (2⁻¹ : ℝ) ∈ I :=
 ⟨inv_nonneg.mpr zero_le_two, inv_le_one_of_one_le₀ one_le_two⟩
 
 /-- The midpoint `1/2` of the unit interval. -/
-abbrev half_I : I := ⟨(2⁻¹ : ℝ), half_mem_I⟩
+abbrev halfI : I := ⟨(2⁻¹ : ℝ), half_mem_I⟩
 
 lemma has_T_half {t₀ t₁ : I} (γ : Path t₀ t₁) (ht₀ : ↑t₀ < (2⁻¹ : ℝ)) (ht₁ : ↑t₁ > (2⁻¹ : ℝ)) :
-  ∃ (T : I),  0 < T ∧ T < 1 ∧ (γ T) = half_I := by
-  have : γ.toFun 0 ≤ half_I := by rw [γ.source']; exact Subtype.coe_le_coe.mp (le_of_lt ht₀)
-  have h₀ : ∃ (t : I), γ t ≤ half_I := ⟨0, this⟩
-  have : half_I ≤ γ.toFun 1 := by rw [γ.target']; exact Subtype.coe_le_coe.mp (le_of_lt ht₁)
-  have h₁ : ∃ (t : I), half_I ≤ γ t := ⟨1, this⟩
+  ∃ (T : I),  0 < T ∧ T < 1 ∧ (γ T) = halfI := by
+  have : γ.toFun 0 ≤ halfI := by rw [γ.source']; exact Subtype.coe_le_coe.mp (le_of_lt ht₀)
+  have h₀ : ∃ (t : I), γ t ≤ halfI := ⟨0, this⟩
+  have : halfI ≤ γ.toFun 1 := by rw [γ.target']; exact Subtype.coe_le_coe.mp (le_of_lt ht₁)
+  have h₁ : ∃ (t : I), halfI ≤ γ t := ⟨1, this⟩
   have hy := Set.mem_range.mp (mem_range_of_exists_le_of_exists_ge γ.continuous_toFun h₀ h₁)
   obtain ⟨T, hT⟩ := hy
   use T
@@ -76,7 +80,7 @@ lemma has_T_half {t₀ t₁ : I} (γ : Path t₀ t₁) (ht₀ : ↑t₀ < (2⁻�
     apply lt_irrefl (t₁ : ℝ)
     calc (t₁ : ℝ)
       _ = (γ 1 : ℝ) := Subtype.coe_inj.mpr γ.target'.symm
-      _ = half_I    := Subtype.coe_inj.mpr hT
+      _ = halfI    := Subtype.coe_inj.mpr hT
       _ < ↑t₁       := ht₁
   exact ⟨lt_iff_le_and_ne.mpr ⟨T.2.1, hT₀⟩, lt_iff_le_and_ne.mpr ⟨T.2.2, hT₁⟩, hT⟩
 end

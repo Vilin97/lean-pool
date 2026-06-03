@@ -110,7 +110,7 @@ private theorem sum_boolToSign_cancel {m : ℕ} (i : Fin m) (f : SignVector m �
 private theorem rademacher_cross_cancel {m : ℕ} (i j : Fin m) (hij : i ≠ j) :
     ∑ σ : SignVector m, boolToSign (σ i) * boolToSign (σ j) = 0 := by
   exact sum_boolToSign_cancel i (fun σ => boolToSign (σ j))
-    (fun σ σ' h => by simp only; rw [h j hij.symm])
+    (fun σ σ' h => by rw [h j hij.symm])
 
 /-- Rademacher diagonal: Σ_σ boolToSign(σ i)² = |SignVector m| = 2^m. -/
 private theorem rademacher_diagonal {m : ℕ} (i : Fin m) :
@@ -798,7 +798,7 @@ private theorem ncard_restrictions_le_sum_choose_set {X : Type u}
         apply Finset.sum_le_sum_of_subset
         exact Finset.Iic_subset_Iic.mpr h4
     _ = ∑ k ∈ Finset.range (d + 1), S.card.choose k := by
-        congr 1; ext x; simp [Finset.mem_Iic, Finset.mem_range]
+        rw [Nat.range_succ_eq_Iic]
 
 /-- Growth function of a Set-based concept class is bounded by the Sauer-Shelah sum. -/
 private theorem growth_function_le_sum_choose_set {X : Type u}
@@ -1366,13 +1366,13 @@ private theorem uniform_injective_tuple_measure_half
           _ ≤ ↑n := Nat.cast_le.mpr (by nlinarith [h2mm_le_n])
       calc (↑(m * m) : ENNReal) * (1 / ↑n)
           ≤ (↑n / 2) * (1 / ↑n) :=
-            mul_le_mul_of_nonneg_right h_key (zero_le _)
+            mul_le_mul_of_nonneg_right h_key (by positivity)
         _ = 1 / 2 := by
             rw [one_div (↑n : ENNReal)]
             rw [div_eq_mul_inv, mul_assoc, mul_comm (2 : ENNReal)⁻¹ (↑n)⁻¹,
                 ← mul_assoc, ENNReal.mul_inv_cancel hn_ne hn_nt, one_mul, inv_eq_one_div]
     exact (hBc_le.trans (mul_le_mul_of_nonneg_right
-      (Nat.cast_le.mpr hpairs_card) (zero_le _))).trans hmm_le
+      (Nat.cast_le.mpr hpairs_card) (by positivity))).trans hmm_le
   have hB_le_one : μ_sub B ≤ 1 :=
     (MeasureTheory.measure_mono (Set.subset_univ B)).trans (le_of_eq MeasureTheory.measure_univ)
   have hcompl := MeasureTheory.prob_compl_eq_one_sub hB_meas (μ := μ_sub)

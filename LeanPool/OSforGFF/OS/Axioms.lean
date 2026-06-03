@@ -23,7 +23,6 @@ import Mathlib.Tactic.Choose
 import Mathlib.Tactic.SimpRw
 import Mathlib.Tactic.SuppressCompilation
 import Mathlib.Tactic.Use
-import Mathlib.Tactic.Have
 import Mathlib.Tactic.Set
 import Mathlib.Tactic.Polyrith
 import Mathlib.Tactic.SplitIfs
@@ -39,7 +38,7 @@ import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 import Mathlib.Analysis.Calculus.BumpFunction.Convolution
 
-import Mathlib.Topology.Algebra.Module.LinearMapPiProd
+import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.PiProd
 
 import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 import Mathlib.MeasureTheory.Measure.Haar.OfBasis
@@ -74,11 +73,11 @@ import LeanPool.OSforGFF.Schwinger.TwoPoint
 The four OS axioms characterizing Euclidean field theories that admit analytic
 continuation to relativistic QFTs:
 
-- **OS-0**: `OS0_Analyticity` - Complex analyticity of generating functionals
-- **OS-1**: `OS1_Regularity` - Exponential bounds and temperedness
-- **OS-2**: `OS2_EuclideanInvariance` - Euclidean group invariance
-- **OS-3**: `OS3_ReflectionPositivity` - Reflection positivity (multiple formulations)
-- **OS-4**: `OS4_Ergodicity` - Ergodicity and clustering properties
+- **OS-0**: `os0Analyticity` - Complex analyticity of generating functionals
+- **OS-1**: `os1Regularity` - Exponential bounds and temperedness
+- **OS-2**: `os2EuclideanInvariance` - Euclidean group invariance
+- **OS-3**: `os3ReflectionPositivity` - Reflection positivity (multiple formulations)
+- **OS-4**: `OS4Ergodicity` - Ergodicity and clustering properties
 
 Following Glimm-Jaffe formulation using probability measures on field configurations.
 Glimm and Jaffe, Quantum Physics, pp. 89-90
@@ -92,7 +91,7 @@ noncomputable section
 open scoped MeasureTheory Complex BigOperators SchwartzMap
 
 /-- OS0 (Analyticity): The generating functional is analytic in the test functions. -/
-def OS0_Analyticity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+def os0Analyticity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (J : Fin n → TestFunctionℂ),
     AnalyticOn ℂ (fun z : Fin n → ℂ =>
       GJGeneratingFunctionalℂ dμ_config (∑ i, z i • J i)) Set.univ
@@ -102,7 +101,7 @@ def TwoPointIntegrable (dμ_config : ProbabilityMeasure FieldConfiguration) : Pr
   LocallyIntegrable (fun x => SchwingerTwoPointFunction dμ_config x) volume
 
 /-- OS1 (Regularity): The complex generating functional satisfies exponential bounds. -/
-def OS1_Regularity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+def os1Regularity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∃ (p : ℝ) (c : ℝ), 1 ≤ p ∧ p ≤ 2 ∧ c > 0 ∧
     (∀ (f : TestFunctionℂ),
       ‖GJGeneratingFunctionalℂ dμ_config f‖ ≤
@@ -110,10 +109,10 @@ def OS1_Regularity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :
     (p = 2 → TwoPointIntegrable dμ_config)
 
 /-- OS2 (Euclidean Invariance): The measure is invariant under Euclidean transformations. -/
-def OS2_EuclideanInvariance (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+def os2EuclideanInvariance (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (g : QFT.E) (f : TestFunctionℂ),
     GJGeneratingFunctionalℂ dμ_config f =
-    GJGeneratingFunctionalℂ dμ_config (QFT.euclidean_action g f)
+    GJGeneratingFunctionalℂ dμ_config (QFT.euclideanAction g f)
 
 /-- OS3 (Reflection Positivity): The generating functional defines a positive semi-definite
     Hermitian form on positive-time test functions.  This is the standard complex formulation
@@ -127,20 +126,20 @@ def OS2_EuclideanInvariance (dμ_config : ProbabilityMeasure FieldConfiguration)
 
     For real positive-time test functions embedded via `toComplex`, `star = compTimeReflection`
     (see `star_toComplex_eq_compTimeReflection`), so this reduces to
-    `OS3_ReflectionPositivity_real`.
+    `os3ReflectionPositivityReal`.
 -/
-def OS3_ReflectionPositivity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+def os3ReflectionPositivity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (f : Fin n → PositiveTimeTestFunctionℂ) (c : Fin n → ℂ),
     0 ≤ (∑ i, ∑ j, starRingEnd ℂ (c i) * c j *
       GJGeneratingFunctionalℂ dμ_config
         ((f i).val - star ((f j).val))).re
 
 /-- Real formulation of OS3 reflection positivity using real-valued positive-time
-    test functions and real coefficients.  This is equivalent to `OS3_ReflectionPositivity`
+    test functions and real coefficients.  This is equivalent to `os3ReflectionPositivity`
     for measures where the generating functional is real on real test functions
     (in particular for Gaussian measures).
 -/
-def OS3_ReflectionPositivity_real (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+def os3ReflectionPositivityReal (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (f : Fin n → PositiveTimeTestFunction) (c : Fin n → ℝ),
     let reflection_matrix := fun i j : Fin n =>
       GJGeneratingFunctional dμ_config
@@ -163,7 +162,7 @@ def OS3_ReflectionPositivity_real (dμ_config : ProbabilityMeasure FieldConfigur
     positive definiteness of the covariance. The complex extension follows from
     analyticity (OS0) and regularity (OS1).
 -/
-def OS4_Clustering (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+def os4Clustering (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (f g : TestFunction) (ε : ℝ), ε > 0 → ∃ (R : ℝ), R > 0 ∧ ∀ (a : SpaceTime),
     ‖a‖ > R →
     ‖GJGeneratingFunctional dμ_config (f + g.translate a) -
@@ -176,11 +175,11 @@ def OS4_Clustering (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :
 
     This is the standard ergodicity formulation from Glimm-Jaffe.
 -/
-def OS4_Ergodicity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+def OS4Ergodicity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (z : Fin n → ℂ) (f : Fin n → TestFunctionℂ),
     let μ := dμ_config.toMeasure
     let A : FieldConfiguration → ℂ := fun ω =>
-      ∑ j, z j * Complex.exp (distributionPairingℂ_real ω (f j))
+      ∑ j, z j * Complex.exp (distributionPairingℂReal ω (f j))
     Filter.Tendsto
       (fun T : ℝ =>
         ∫ ω, ‖(1 / T) * ∫ s in Set.Icc (0 : ℝ) T,
@@ -198,16 +197,16 @@ def OS4_Ergodicity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :
     polynomial decay rate. For the GFF in 4D spacetime (d=3 spatial dimensions),
     the natural rate is α = 2d = 6 from the mass gap.
 -/
-def OS4_PolynomialClustering (dμ_config : ProbabilityMeasure FieldConfiguration)
+def os4PolynomialClustering (dμ_config : ProbabilityMeasure FieldConfiguration)
     (α : ℝ) (_hα : α > 0) : Prop :=
   let _ := _hα
   ∀ (f g : TestFunctionℂ), ∃ (c : ℝ), c ≥ 0 ∧
     let μ := dμ_config.toMeasure
     ∀ s : ℝ, s ≥ 0 →
-      ‖∫ ω, Complex.exp (distributionPairingℂ_real ω f +
-            distributionPairingℂ_real (TimeTranslation.timeTranslationDistribution s ω) g) ∂μ
-        - (∫ ω, Complex.exp (distributionPairingℂ_real ω f) ∂μ) *
-          (∫ ω, Complex.exp (distributionPairingℂ_real ω g) ∂μ)‖
+      ‖∫ ω, Complex.exp (distributionPairingℂReal ω f +
+            distributionPairingℂReal (TimeTranslation.timeTranslationDistribution s ω) g) ∂μ
+        - (∫ ω, Complex.exp (distributionPairingℂReal ω f) ∂μ) *
+          (∫ ω, Complex.exp (distributionPairingℂReal ω g) ∂μ)‖
       ≤ c * (1 + s)^(-α)
 
 /-! ## Bundled Axiom Conjunction -/
@@ -216,9 +215,9 @@ def OS4_PolynomialClustering (dμ_config : ProbabilityMeasure FieldConfiguration
     This bundles OS0 through OS4 (clustering and ergodicity) into a single predicate.
 -/
 structure SatisfiesAllOS (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop where
-  os0 : OS0_Analyticity dμ_config
-  os1 : OS1_Regularity dμ_config
-  os2 : OS2_EuclideanInvariance dμ_config
-  os3 : OS3_ReflectionPositivity dμ_config
-  os4_clustering : OS4_Clustering dμ_config
-  os4_ergodicity : OS4_Ergodicity dμ_config
+  os0 : os0Analyticity dμ_config
+  os1 : os1Regularity dμ_config
+  os2 : os2EuclideanInvariance dμ_config
+  os3 : os3ReflectionPositivity dμ_config
+  os4_clustering : os4Clustering dμ_config
+  os4_ergodicity : OS4Ergodicity dμ_config

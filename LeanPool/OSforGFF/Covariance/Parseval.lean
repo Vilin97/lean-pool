@@ -99,15 +99,15 @@ So the correct Parseval identity using Mathlib's FT should have propagator `1/(4
 NOT `1/(‖p‖² + m²)`.
 
 The lemma `parseval_covariance_schwartz` now correctly uses
-`freePropagatorMomentum_mathlib m k = 1/((2π)²‖k‖² + m²)` with Mathlib's `fourierTransformCLM`.
+`freePropagatorMomentumMathlib m k = 1/((2π)²‖k‖² + m²)` with Mathlib's `fourierTransformCLM`.
 -/
 
 /-- The relationship between physics and Mathlib propagators under rescaling.
-    `freePropagatorMomentum_mathlib` is defined in Covariance.Momentum.
+    `freePropagatorMomentumMathlib` is defined in Covariance.Momentum.
 -/
 lemma freePropagatorMomentum_rescale (m : ℝ) (k : SpaceTime) :
-    freePropagatorMomentum m ((2 * Real.pi) • k) = freePropagatorMomentum_mathlib m k := by
-  simp only [freePropagatorMomentum, freePropagatorMomentum_mathlib]
+    freePropagatorMomentum m ((2 * Real.pi) • k) = freePropagatorMomentumMathlib m k := by
+  simp only [freePropagatorMomentum, freePropagatorMomentumMathlib]
   congr 1
   simp only [norm_smul, Real.norm_eq_abs, abs_of_pos Real.two_pi_pos]
   ring
@@ -147,11 +147,11 @@ noncomputable def physicsFourierTransform (f : TestFunctionℂ) (k : SpaceTime) 
     The regulator exp(-α‖k‖²) ensures absolute convergence.
 -/
 lemma freeCovariance_regulated_eq_complex_integral (α : ℝ) (m : ℝ) (x y : SpaceTime) :
-    (freeCovariance_regulated α m x y : ℂ) =
+    (freeCovarianceRegulated α m x y : ℂ) =
     ∫ k, ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / fourierNormalization STDimension :
       ℝ) : ℂ) *
       Complex.exp (-Complex.I * ((@inner ℝ SpaceTime _ k (x - y) : ℝ) : ℂ)) ∂volume := by
-  simp only [freeCovariance_regulated, fourierNormalization]
+  simp only [freeCovarianceRegulated, fourierNormalization]
   -- The integral is real (im = 0), so ↑(I.re) = I
   set f : SpaceTime → ℂ := fun k => ↑(Real.exp (-α * ‖k‖ ^ 2) * freePropagatorMomentum m k /
     (2 * Real.pi) ^ STDimension) * Complex.exp (-Complex.I * ↑⟪k, x - y⟫_ℝ)
@@ -405,7 +405,7 @@ lemma integrand_rescale (α : ℝ) (m : ℝ) (f : TestFunctionℂ) (p : SpaceTim
     Real.exp (-α * ‖(2 * Real.pi) • p‖^2) * freePropagatorMomentum m ((2 * Real.pi) • p) /
       (2 * Real.pi) ^ STDimension * ‖physicsFT f ((2 * Real.pi) • p)‖^2
     = Real.exp (-α * (2 * Real.pi)^2 * ‖p‖^2) *
-      ‖(SchwartzMap.fourierTransformCLM ℂ f) p‖^2 * freePropagatorMomentum_mathlib m p /
+      ‖(SchwartzMap.fourierTransformCLM ℂ f) p‖^2 * freePropagatorMomentumMathlib m p /
       (2 * Real.pi) ^ STDimension := by
   have h2pi_pos : (0 : ℝ) < 2 * Real.pi := by positivity
   have h2pi_nonneg : (0 : ℝ) ≤ 2 * Real.pi := le_of_lt h2pi_pos
@@ -420,7 +420,7 @@ lemma change_of_variables_momentum (α : ℝ) (m : ℝ) (f : TestFunctionℂ) :
     ∫ k, Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension *
         ‖physicsFT f k‖^2 ∂volume
     = ∫ p, Real.exp (-α * (2 * Real.pi)^2 * ‖p‖^2) *
-        ‖(SchwartzMap.fourierTransformCLM ℂ f) p‖^2 * freePropagatorMomentum_mathlib m p ∂volume :=
+        ‖(SchwartzMap.fourierTransformCLM ℂ f) p‖^2 * freePropagatorMomentumMathlib m p ∂volume :=
           by
   have h2pi_pos : (0 : ℝ) < 2 * Real.pi := by positivity
   have h2pi_ne : (2 * Real.pi : ℝ) ≠ 0 := ne_of_gt h2pi_pos
@@ -439,13 +439,13 @@ lemma change_of_variables_momentum (α : ℝ) (m : ℝ) (f : TestFunctionℂ) :
   rw [h_rearranged]
   have h_integrand : ∀ p, g ((2 * Real.pi) • p) =
       Real.exp (-α * (2 * Real.pi)^2 * ‖p‖^2) *
-      ‖(SchwartzMap.fourierTransformCLM ℂ f) p‖^2 * freePropagatorMomentum_mathlib m p /
+      ‖(SchwartzMap.fourierTransformCLM ℂ f) p‖^2 * freePropagatorMomentumMathlib m p /
       (2 * Real.pi) ^ STDimension := fun p => integrand_rescale α m f p
   have h_int_eq : ∫ (p : SpaceTime),
       Real.exp (-α * ‖(2 * Real.pi) • p‖ ^ 2) * freePropagatorMomentum m ((2 * Real.pi) • p) /
         (2 * Real.pi) ^ STDimension * ‖physicsFT f ((2 * Real.pi) • p)‖ ^ 2 =
       ∫ p, Real.exp (-α * (2 * Real.pi)^2 * ‖p‖^2) *
-        ‖(SchwartzMap.fourierTransformCLM ℂ f) p‖^2 * freePropagatorMomentum_mathlib m p /
+        ‖(SchwartzMap.fourierTransformCLM ℂ f) p‖^2 * freePropagatorMomentumMathlib m p /
         (2 * Real.pi) ^ STDimension := by
     congr 1; ext p; exact h_integrand p
   rw [h_int_eq]
@@ -459,7 +459,7 @@ lemma change_of_variables_momentum (α : ℝ) (m : ℝ) (f : TestFunctionℂ) :
 lemma regulated_fubini_factorization (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f :
   TestFunctionℂ) :
     (∫ x, ∫ y,
-      f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
+      f x * (freeCovarianceRegulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
     = (∫ k,
       ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℝ) : ℂ) *
         (∫ x, f x * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x⟫_ℝ) ∂volume) *
@@ -468,13 +468,13 @@ lemma regulated_fubini_factorization (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (
   have h_int := regulated_triple_integrable α hα m f
   let amplitude : SpaceTime → ℂ := fun k =>
     ((Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension : ℝ) : ℂ)
-  have h_expand : ∀ x y, (freeCovariance_regulated α m x y : ℂ) =
+  have h_expand : ∀ x y, (freeCovarianceRegulated α m x y : ℂ) =
       ∫ k, amplitude k * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x - y⟫_ℝ) := by
     intro x y
     rw [freeCovariance_regulated_eq_complex_integral]
     simp only [fourierNormalization, amplitude]
   have h_lhs_triple : (∫ x, ∫ y,
-    f x * (freeCovariance_regulated α m x y : ℂ) * starRingEnd ℂ (f y)) =
+    f x * (freeCovarianceRegulated α m x y : ℂ) * starRingEnd ℂ (f y)) =
       ∫ x, ∫ y, ∫ k, f x * amplitude k * Complex.exp (-Complex.I * Complex.ofReal ⟪k, x - y⟫_ℝ) *
         starRingEnd ℂ (f y) := by
     congr 1
@@ -606,7 +606,7 @@ lemma factorized_to_physicsFT_norm_sq (α : ℝ) (m : ℝ) (f : TestFunctionℂ)
     to the momentum-space integral. The regulator exp(-α‖k‖²) ensures absolute convergence.
 
     The proof proceeds by:
-    1. Expanding freeCovariance_regulated as a Fourier integral
+    1. Expanding freeCovarianceRegulated as a Fourier integral
     2. Applying Fubini (justified by regulated_triple_integrable)
     3. Factoring the phase using phase_factorization
     4. Recognizing the x and y integrals as Fourier transforms
@@ -615,9 +615,9 @@ lemma factorized_to_physicsFT_norm_sq (α : ℝ) (m : ℝ) (f : TestFunctionℂ)
 theorem parseval_covariance_schwartz_regulated (α : ℝ) (hα : 0 < α) (m : ℝ) [Fact (0 < m)] (f :
   TestFunctionℂ) :
     (∫ x, ∫ y,
-      f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
+      f x * (freeCovarianceRegulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re
     = ∫ k, Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
-      freePropagatorMomentum_mathlib m k ∂volume := by
+      freePropagatorMomentumMathlib m k ∂volume := by
   -- Step 1: Apply Fubini and phase factorization
   rw [regulated_fubini_factorization α hα m f]
   -- Step 2: Simplify to integral of |physics FT|²
@@ -627,8 +627,8 @@ theorem parseval_covariance_schwartz_regulated (α : ℝ) (hα : 0 < α) (m : �
 
 /-- Continuity of the mathlib propagator. -/
 lemma continuous_freePropagatorMomentum_mathlib (m : ℝ) [Fact (0 < m)] :
-    Continuous fun k => freePropagatorMomentum_mathlib m k := by
-  unfold freePropagatorMomentum_mathlib
+    Continuous fun k => freePropagatorMomentumMathlib m k := by
+  unfold freePropagatorMomentumMathlib
   have hdenom_cont : Continuous fun k : SpaceTime => (2 * Real.pi)^2 * ‖k‖^2 + m^2 :=
     Continuous.add (continuous_const.mul (continuous_norm.pow 2)) continuous_const
   refine Continuous.div continuous_const hdenom_cont ?h_ne
@@ -639,29 +639,29 @@ lemma continuous_freePropagatorMomentum_mathlib (m : ℝ) [Fact (0 < m)] :
 /-- The integrand ‖f̂(k)‖² * P(k) is integrable for Schwartz f. -/
 lemma integrable_schwartz_propagator_mathlib (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     Integrable (fun k => ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
-      freePropagatorMomentum_mathlib m k) volume := by
+      freePropagatorMomentumMathlib m k) volume := by
   -- The Fourier transform squared is integrable (Schwartz → L²)
   have hF_sq_int : Integrable (fun k => ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2) volume :=
     schwartz_L2_integrable (SchwartzMap.fourierTransformCLM ℂ f)
   -- The propagator is bounded by 1/m²
-  have h_bound : ∀ k, freePropagatorMomentum_mathlib m k ≤ 1 / m^2 := fun k => by
-    unfold freePropagatorMomentum_mathlib
+  have h_bound : ∀ k, freePropagatorMomentumMathlib m k ≤ 1 / m^2 := fun k => by
+    unfold freePropagatorMomentumMathlib
     have hmpos : 0 < m := Fact.out
     have hm2pos : 0 < m^2 := sq_pos_of_pos hmpos
     have hden : m^2 ≤ (2 * Real.pi)^2 * ‖k‖^2 + m^2 := by linarith [sq_nonneg (2 * Real.pi * ‖k‖)]
     exact one_div_le_one_div_of_le hm2pos hden
   have h_nonneg : ∀ k, 0 ≤ ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
-      freePropagatorMomentum_mathlib m k := fun k =>
+      freePropagatorMomentumMathlib m k := fun k =>
     mul_nonneg (sq_nonneg _) (freePropagatorMomentum_mathlib_nonneg m Fact.out k)
   have h_meas : AEStronglyMeasurable (fun k => ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
-      freePropagatorMomentum_mathlib m k) volume := by
+      freePropagatorMomentumMathlib m k) volume := by
     apply AEStronglyMeasurable.mul
     · exact (SchwartzMap.continuous _).norm.pow 2 |>.aestronglyMeasurable
     · exact (continuous_freePropagatorMomentum_mathlib m).aestronglyMeasurable
   refine Integrable.mono' (hF_sq_int.const_mul (1 / m^2)) h_meas ?_
   filter_upwards with k
   rw [Real.norm_of_nonneg (h_nonneg k)]
-  calc ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k
+  calc ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentumMathlib m k
       ≤ ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * (1 / m^2) := by
         apply mul_le_mul_of_nonneg_left (h_bound k) (sq_nonneg _)
     _ = 1 / m^2 * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 := by ring
@@ -676,26 +676,26 @@ lemma integrable_schwartz_propagator_mathlib (m : ℝ) [Fact (0 < m)] (f : TestF
 theorem parseval_covariance_schwartz_correct (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     Filter.Tendsto
       (fun α => (∫ x, ∫ y,
-        f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re)
+        f x * (freeCovarianceRegulated α m x y : ℂ) * (starRingEnd ℂ (f y)) ∂volume ∂volume).re)
       (nhdsWithin 0 (Set.Ioi 0))
       (nhds (∫ k,
-        ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k ∂volume))
+        ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentumMathlib m k ∂volume))
           := by
   -- Use the regulated Parseval identity to rewrite
-  have h_eq : ∀ α > 0, (∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) *
+  have h_eq : ∀ α > 0, (∫ x, ∫ y, f x * (freeCovarianceRegulated α m x y : ℂ) *
       (starRingEnd ℂ (f y)) ∂volume ∂volume).re =
       ∫ k, Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
-        freePropagatorMomentum_mathlib m k ∂volume := fun α hα =>
+        freePropagatorMomentumMathlib m k ∂volume := fun α hα =>
     parseval_covariance_schwartz_regulated α hα m f
   -- Define the dominating function
   let g : SpaceTime → ℝ := fun k => ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
-    freePropagatorMomentum_mathlib m k
+    freePropagatorMomentumMathlib m k
   have hg_int : Integrable g volume := integrable_schwartz_propagator_mathlib m f
   -- The key step: show the regulated momentum integral converges to the unregulated one
   have h_tendsto : Filter.Tendsto
       (fun α => ∫ k,
         Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
-        freePropagatorMomentum_mathlib m k ∂volume)
+        freePropagatorMomentumMathlib m k ∂volume)
       (nhdsWithin 0 (Set.Ioi 0))
       (nhds (∫ k, g k ∂volume)) := by
     -- Apply dominated convergence
@@ -709,14 +709,14 @@ theorem parseval_covariance_schwartz_correct (m : ℝ) [Fact (0 < m)] (f : TestF
         (SchwartzMap.continuous _).norm.pow 2
       have h_prod_cont : Continuous fun k : SpaceTime =>
           Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
-          freePropagatorMomentum_mathlib m k :=
+          freePropagatorMomentumMathlib m k :=
         (h_exp_cont.mul h_sq_cont).mul (continuous_freePropagatorMomentum_mathlib m)
       exact h_prod_cont.aestronglyMeasurable
     · -- 2. Pointwise bound: |exp(-α c ‖k‖²) * g(k)| ≤ g(k) for α > 0
       filter_upwards [self_mem_nhdsWithin] with α (hα : 0 < α)
       filter_upwards with k
       have h_prod_nonneg : 0 ≤ Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) *
-          ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k :=
+          ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentumMathlib m k :=
         mul_nonneg (mul_nonneg (Real.exp_nonneg _) (sq_nonneg _))
           (freePropagatorMomentum_mathlib_nonneg m Fact.out k)
       rw [Real.norm_of_nonneg h_prod_nonneg]
@@ -726,8 +726,8 @@ theorem parseval_covariance_schwartz_correct (m : ℝ) [Fact (0 < m)] (f : TestF
         linarith
       have h_prop_nonneg := freePropagatorMomentum_mathlib_nonneg m Fact.out k
       calc Real.exp (-α * (2 * Real.pi)^2 * ‖k‖^2) * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 *
-            freePropagatorMomentum_mathlib m k
-          ≤ 1 * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentum_mathlib m k :=
+            freePropagatorMomentumMathlib m k
+          ≤ 1 * ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentumMathlib m k :=
             by
             gcongr
         _ = g k := by simp only [one_mul]; rfl
@@ -769,14 +769,14 @@ theorem parseval_covariance_schwartz_correct (m : ℝ) [Fact (0 < m)] (f : TestF
 -/
 theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     Filter.Tendsto
-      (fun α => ∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (g y)))
+      (fun α => ∫ x, ∫ y, f x * (freeCovarianceRegulated α m x y : ℂ) * (starRingEnd ℂ (g y)))
       (nhdsWithin 0 (Set.Ioi 0))
       (nhds (∫ x, ∫ y, f x * (freeCovariance m x y : ℂ) * (starRingEnd ℂ (g y)))) := by
   -- **Proof Strategy:** DCT on the product space SpaceTime × SpaceTime.
   have hm : 0 < m := Fact.out
   -- Define the integrands on product space
   let F : ℝ → SpaceTime × SpaceTime → ℂ := fun α p =>
-    f p.1 * (freeCovariance_regulated α m p.1 p.2 : ℂ) * starRingEnd ℂ (g p.2)
+    f p.1 * (freeCovarianceRegulated α m p.1 p.2 : ℂ) * starRingEnd ℂ (g p.2)
   let F_limit : SpaceTime × SpaceTime → ℂ := fun p =>
     f p.1 * (freeCovariance m p.1 p.2 : ℂ) * starRingEnd ℂ (g p.2)
   -- Define the dominating function (scaled Bessel form)
@@ -867,8 +867,8 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
       hα_pos (le_of_lt hα_lt1)
     -- ‖F α p‖ = ‖f(x)‖ × |C_reg| × ‖g(y)‖
     simp only [F, bound]
-    calc ‖f p.1 * (freeCovariance_regulated α m p.1 p.2 : ℂ) * starRingEnd ℂ (g p.2)‖
-        = ‖f p.1‖ * |freeCovariance_regulated α m p.1 p.2| * ‖g p.2‖ := by
+    calc ‖f p.1 * (freeCovarianceRegulated α m p.1 p.2 : ℂ) * starRingEnd ℂ (g p.2)‖
+        = ‖f p.1‖ * |freeCovarianceRegulated α m p.1 p.2| * ‖g p.2‖ := by
           rw [norm_mul, norm_mul, Complex.norm_real, Real.norm_eq_abs, RCLike.norm_conj]
       _ ≤ ‖f p.1‖ * (Real.exp (m^2) * freeCovariance m p.1 p.2) * ‖g p.2‖ := by
           apply mul_le_mul_of_nonneg_right
@@ -911,14 +911,14 @@ theorem bilinear_covariance_regulated_tendstoℂ (m : ℝ) [Fact (0 < m)] (f g :
   -- These are routine measure theory facts that follow from ‖conj z‖ = ‖z‖.
   have h_fubini_reg : ∀ᶠ α in nhdsWithin 0 (Set.Ioi 0),
       ∫ p, F α p ∂(volume.prod volume) =
-        ∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * starRingEnd ℂ (g y) := by
+        ∫ x, ∫ y, f x * (freeCovarianceRegulated α m x y : ℂ) * starRingEnd ℂ (g y) := by
     filter_upwards [self_mem_nhdsWithin] with α hα
     -- Integrability of F α follows from the non-conjugate version (norms are equal)
     have h_int := freeCovariance_regulated_bilinear_integrable α (Set.mem_Ioi.mp hα) m f g
     -- The function F α differs from f*C*g only by conjugation of g, which preserves norms
     -- Transfer integrability using norm equality ‖conj z‖ = ‖z‖
     have h_norm_eq : ∀ p : SpaceTime × SpaceTime,
-        ‖f p.1 * (freeCovariance_regulated α m p.1 p.2 : ℂ) * g p.2‖ = ‖F α p‖ := fun p => by
+        ‖f p.1 * (freeCovarianceRegulated α m p.1 p.2 : ℂ) * g p.2‖ = ‖F α p‖ := fun p => by
       simp only [F, norm_mul, RCLike.norm_conj]
     have hF_meas : AEStronglyMeasurable (F α) (volume.prod volume) := by
       simp only [F]
@@ -963,7 +963,7 @@ This is a direct corollary of `bilinear_covariance_regulated_tendstoℂ` with g 
 -/
 theorem bilinear_covariance_regulated_tendsto_self (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     Filter.Tendsto
-      (fun α => ∫ x, ∫ y, f x * (freeCovariance_regulated α m x y : ℂ) * (starRingEnd ℂ (f y)))
+      (fun α => ∫ x, ∫ y, f x * (freeCovarianceRegulated α m x y : ℂ) * (starRingEnd ℂ (f y)))
       (nhdsWithin 0 (Set.Ioi 0))
       (nhds (∫ x, ∫ y, f x * (freeCovariance m x y : ℂ) * (starRingEnd ℂ (f y)))) :=
   bilinear_covariance_regulated_tendstoℂ m f f
@@ -985,7 +985,7 @@ open scoped InnerProductSpace
     This is the distributional formulation: the double integral is well-defined
     for Schwartz test functions due to the L¹ integrability of the Bessel kernel.
 -/
-noncomputable def freeCovarianceℂ_bilinear (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
+noncomputable def freeCovarianceℂBilinear (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
   ∫ x, ∫ y, (f x) * (freeCovariance m x y) * (g y)
 
 end GlobalBilinearDefs

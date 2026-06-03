@@ -85,7 +85,7 @@ end Bridge
 3. bridge: `NuclearSpace → IsNuclear` (norm = abs for ℝ)
 4. bochner: `isHilbertNuclear_of_nuclear` (Pietsch → Hilbert-Schmidt embeddings)
 -/
-noncomputable instance schwartz_isHilbertNuclear {E : Type*}
+noncomputable instance schwartzIsHilbertNuclear {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [Nontrivial E] :
     IsHilbertNuclear (SchwartzMap E ℝ) := by
   -- Step 1: Get NuclearSpace from DyninMityaginSpace (gaussian-field)
@@ -102,7 +102,7 @@ noncomputable instance schwartz_isHilbertNuclear {E : Type*}
   exact isHilbertNuclear_of_nuclear hIN q₀ hq₀ hq₀_cont
 
 /-- Schwartz space is separable, proved via Hermite analysis (gaussian-field). -/
-noncomputable instance schwartz_separableSpace {E : Type*}
+noncomputable instance schwartzSeparableSpace {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [Nontrivial E] :
     SeparableSpace (SchwartzMap E ℝ) :=
-  GaussianField.schwartz_separableSpace
+  GaussianField.schwartzSeparableSpace

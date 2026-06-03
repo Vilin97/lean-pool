@@ -75,12 +75,12 @@ def marginalFamily (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
   fun J => (marginalMeasure Φ hΦ_cont hΦ_pd hΦ_norm J).toMeasure.map
     (finsetPiMeasEquiv J).symm
 
-instance marginalFamily_isFiniteMeasure (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
+instance marginalFamilyIsFiniteMeasure (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     (hΦ_pd : IsPositiveDefinite Φ) (hΦ_norm : Φ 0 = 1) (J : Finset E) :
     IsFiniteMeasure (marginalFamily Φ hΦ_cont hΦ_pd hΦ_norm J) :=
   Measure.isFiniteMeasure_map _ _
 
-instance marginalFamily_isProbabilityMeasure (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
+instance marginalFamilyIsProbabilityMeasure (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     (hΦ_pd : IsPositiveDefinite Φ) (hΦ_norm : Φ 0 = 1) (J : Finset E) :
     IsProbabilityMeasure (marginalFamily Φ hΦ_cont hΦ_pd hΦ_norm J) :=
   Measure.isProbabilityMeasure_map (finsetPiMeasEquiv J).symm.measurable.aemeasurable
@@ -255,11 +255,11 @@ def marginalProjectiveLimit (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     (marginalFamily Φ hΦ_cont hΦ_pd hΦ_norm)
     (marginalFamily_isProjective Φ hΦ_cont hΦ_pd hΦ_norm)
 
-instance marginalProjectiveLimit_isProbability (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
+instance marginalProjectiveLimitIsProbability (Φ : E → ℂ) (hΦ_cont : Continuous Φ)
     (hΦ_pd : IsPositiveDefinite Φ) (hΦ_norm : Φ 0 = 1) [Nonempty E] :
     IsProbabilityMeasure (marginalProjectiveLimit Φ hΦ_cont hΦ_pd hΦ_norm) := by
   unfold marginalProjectiveLimit
-  exact isProbabilityMeasure_projectiveLimit
+  exact isProbabilityMeasureProjectiveLimit
     (marginalFamily_isProjective Φ hΦ_cont hΦ_pd hΦ_norm)
 
 /-- The projective limit projects correctly onto each finite-dimensional marginal. -/

@@ -17,13 +17,13 @@ import LeanPool.OSforGFF.OS.OS4Ergodicity
 
 Assembles OS0–OS4 into `gaussianFreeField_satisfies_all_OS_axioms`:
 
-- OS0 (Analyticity): Hartogs + Fernique — `OS.OS0_Analyticity`
-- OS1 (Regularity): Plancherel + momentum bound — `OS.OS1_Regularity`
+- OS0 (Analyticity): Hartogs + Fernique — `OS.os0Analyticity`
+- OS1 (Regularity): Plancherel + momentum bound — `OS.os1Regularity`
 - OS2 (Euclidean Invariance): C depends on |x−y| — `OS.OS2_Invariance`
 - OS3 (Reflection Positivity): Schwinger parametrization + Schur–Hadamard —
-`OS.OS3_ReflectionPositivity`
-- OS4 (Clustering): Gaussian factorization + convolution decay — `OS.OS4_Clustering`
-- OS4 (Ergodicity): polynomial clustering α=6 → L² convergence — `OS.OS4_Ergodicity`
+`OS.os3ReflectionPositivity`
+- OS4 (Clustering): Gaussian factorization + convolution decay — `OS.os4Clustering`
+- OS4 (Ergodicity): polynomial clustering α=6 → L² convergence — `OS.OS4Ergodicity`
 
 Unconditional theorem: only requires m > 0.
 -/
@@ -48,13 +48,13 @@ formulation)
 This is an unconditional theorem with no assumptions beyond m > 0.
 -/
 theorem gaussianFreeField_satisfies_all_OS_axioms (m : ℝ) [Fact (0 < m)] :
-    SatisfiesAllOS (μ_GFF m) where
+    SatisfiesAllOS (muGFF m) where
   -- OS0 from the holomorphic integral theorem (differentiation under the integral)
   os0 := QFT.gaussianFreeField_satisfies_OS0 m
   -- OS1 from the free field theorem using Fourier/momentum space methods
   os1 := gaussianFreeField_satisfies_OS1_revised m
   -- OS2 from Euclidean invariance of free covariance
-  os2 := gaussian_satisfies_OS2 (μ_GFF m)
+  os2 := gaussian_satisfies_OS2 (muGFF m)
     (by exact isGaussianGJ_gaussianFreeField_free m)
     (QFT.CovarianceEuclideanInvariantℂ_μ_GFF m)
   -- OS3 from the Schur-Hadamard argument (complex star formulation)
@@ -62,7 +62,7 @@ theorem gaussianFreeField_satisfies_all_OS_axioms (m : ℝ) [Fact (0 < m)] :
   -- OS4 Clustering (Gaussian factorization and covariance decay)
   os4_clustering := QFT.gaussianFreeField_satisfies_OS4 m
   -- OS4 Ergodicity: polynomial clustering (α=6) implies ergodicity
-  os4_ergodicity := OS4_Ergodicity.OS4_PolynomialClustering_implies_OS4_Ergodicity m
+  os4_ergodicity := OS4Ergodicity.OS4_PolynomialClustering_implies_OS4_Ergodicity m
     (QFT.gaussianFreeField_satisfies_OS4_PolynomialClustering m 6 (by norm_num))
 
 end

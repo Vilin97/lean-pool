@@ -9,6 +9,12 @@ import Mathlib.MeasureTheory.Constructions.ProjectiveFamilyContent
 import Mathlib.MeasureTheory.Measure.RegularityCompacts
 import Mathlib.MeasureTheory.OuterMeasure.OfAddContent
 
+/-!
+# Kolmogorov Extension
+
+Auxiliary statements for constructing measures from projective finite-dimensional marginals.
+-/
+
 open Set
 
 open scoped ENNReal
@@ -30,7 +36,7 @@ theorem exists_compact
   by_cases hPA : P J A = 0
   · refine ⟨∅, isCompact_empty, isClosed_empty, empty_subset _, ?_⟩
     rw [diff_empty, hPA]
-    exact zero_le ε
+    exact zero_le
   have h : P J A - ε < P J A := ENNReal.sub_lt_self (measure_ne_top _ _) hPA hε.ne'
   obtain ⟨K, hKA, ⟨hK_compact, hK_closed⟩, h_lt⟩ := hP_inner J hA (P J A - ε) h
   refine ⟨K, hK_compact, hK_closed, hKA, ?_⟩
@@ -151,11 +157,11 @@ theorem _root_.MeasureTheory.isProjectiveLimit_projectiveLimit (hP : IsProjectiv
     projectiveFamilyContent_congr hP (_ ⁻¹' _) rfl hs]
   exact generateFrom_measurableCylinders.symm
 
-instance _root_.MeasureTheory.isFiniteMeasure_projectiveLimit (hP : IsProjectiveMeasureFamily P) :
+instance _root_.MeasureTheory.isFiniteMeasureProjectiveLimit (hP : IsProjectiveMeasureFamily P) :
     IsFiniteMeasure (projectiveLimit P hP) :=
   IsProjectiveLimit.isFiniteMeasure (isProjectiveLimit_projectiveLimit hP)
 
-instance _root_.MeasureTheory.isProbabilityMeasure_projectiveLimit [hι : Nonempty ι]
+instance _root_.MeasureTheory.isProbabilityMeasureProjectiveLimit [hι : Nonempty ι]
     {P : ∀ J : Finset ι, Measure (Π j : J, α j)} [∀ i, IsProbabilityMeasure (P i)]
     (hP : IsProjectiveMeasureFamily P) : IsProbabilityMeasure (projectiveLimit P hP) := by
   constructor

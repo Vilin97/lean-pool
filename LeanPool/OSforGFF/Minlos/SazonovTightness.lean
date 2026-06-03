@@ -18,9 +18,6 @@ import Mathlib.Analysis.InnerProductSpace.Positive
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.MeasureTheory.Function.SpecialFunctions.RCLike
 
-open MeasureTheory Complex Filter Topology Set InnerProductSpace Function
-open scoped Real FourierTransform
-
 /-! # Sazonov Tightness
 
 This module establishes that Sazonov-continuous characteristic functions
@@ -38,6 +35,9 @@ spectral decomposition, and Chebyshev inequalities.
 - `sazonov_tight_marginals`: Sazonov CF continuity implies tight marginals
 - `sazonov_tight_marginals_apply`: Explicit tightness bound via Gaussian averaging
 -/
+
+open MeasureTheory Complex Filter Topology Set InnerProductSpace Function
+open scoped Real FourierTransform
 
 noncomputable section
 
@@ -463,7 +463,8 @@ private lemma tendsto_exp_slope' (A : ℝ) :
     have h1 : HasDerivAt (fun t => rexp (t * A)) A 0 := by
       have := (Real.hasDerivAt_exp (0 * A)).comp (0 : ℝ)
         ((hasDerivAt_id (0 : ℝ)).mul_const A)
-      simpa [zero_mul, Real.exp_zero] using this
+      change HasDerivAt (fun t : ℝ => rexp (t * A)) A 0
+      simpa [zero_mul, Real.exp_zero, Function.comp_def] using this
     have h2 : HasDerivAt (fun _ : ℝ => (1 : ℝ)) 0 0 := hasDerivAt_const 0 1
     convert h1.sub h2 using 1; simp
   have := hd.tendsto_slope_zero_right
@@ -607,7 +608,7 @@ theorem gaussian_quadForm_integral_le
   have hint_eq : ∫ x, gaussDensity σ x * quadForm S x =
       ∑ i, ev i * ∫ x, gaussDensity σ x * (@inner ℝ V _ (b i) x) ^ 2 := by
     simp_rw [hqf, Finset.mul_sum]
-    rw [integral_finset_sum]
+    rw [integral_finsetSum]
     · congr 1; ext i; rw [← integral_const_mul]; congr 1; ext x; ring
     · intro i _
       exact (gaussDensity_mul_inner_sq_integrable' σ hσ (b i)).const_mul (ev i) |>.congr

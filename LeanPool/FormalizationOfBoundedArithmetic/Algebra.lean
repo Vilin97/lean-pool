@@ -9,6 +9,10 @@ import Mathlib.Algebra.Regular.Defs
 import LeanPool.FormalizationOfBoundedArithmetic.IOPEN
 import LeanPool.FormalizationOfBoundedArithmetic.IDelta0
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.Algebra
+-/
+
 -- INSTANCES!
 
 universe u v
@@ -31,17 +35,17 @@ instance : IsRightCancelAdd M where
     simp only
     apply add_cancel_right.mp
 
-instance : MulZeroClass M where
+instance instMulZeroClassLeanPool : MulZeroClass M where
   zero_mul := zero_mul
   mul_zero := by apply B5
 
-instance : CommMonoid M where
+instance instCommMonoidLeanPool : CommMonoid M where
   mul_assoc := mul_assoc
   one_mul := one_mul
   mul_one := mul_one
   mul_comm := mul_comm
 
-instance : AddCommMonoid M where
+instance instAddCommMonoidLeanPool : AddCommMonoid M where
   add_assoc := add_assoc
   zero_add := zero_add
   add_zero := by
@@ -49,7 +53,7 @@ instance : AddCommMonoid M where
   nsmul := nsmulRec
   add_comm := add_comm
 
-instance : Semiring M where
+instance instSemiringLeanPool : Semiring M where
   left_distrib := by
     exact IOPENModel.mul_add
   right_distrib := by
@@ -74,7 +78,7 @@ instance : IsOrderedMonoid M where
   mul_le_mul_left := fun a b h c ↦ by
     exact idelta0.le_mul_right h
 
-instance : AddCommMonoid M where
+instance instAddCommMonoidLeanPool' : AddCommMonoid M where
 
 
 instance : IsOrderedRing M where
@@ -87,7 +91,7 @@ instance : IsOrderedRing M where
     intro c h_zero_c a b hab
     exact idelta0.le_mul_right hab
 
-instance : CommSemiring M where
+instance instCommSemiringLeanPool : CommSemiring M where
 
 instance : IsLeftCancelAdd M where
   add_left_cancel x := by

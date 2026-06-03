@@ -6,8 +6,7 @@ Authors: Judith Ludwig, Christian Merten
 import LeanPool.BruhatTits.Lattice.Transvect
 import LeanPool.BruhatTits.Utils.LinearAlgebra
 import Mathlib.LinearAlgebra.TensorProduct.RightExactness
-
-open Module
+import Mathlib.RingTheory.LocalRing.ResidueField.Basic
 
 /-!
 # The `R ⧸ ϖ R`-vector space `L ⧸ ϖ L`
@@ -29,6 +28,9 @@ the two-dimensional `R ⧸ ϖ R`-vector space `L ⧸ ϖ L`.
   `ϖ L` and `L``.
 
 -/
+
+open Module
+
 
 suppress_compilation
 
@@ -59,7 +61,8 @@ instance (L : Lattice R) : Module (ResidueField R) L.quotient :=
     Module (R ⧸ maximalIdeal R) (L.M ⧸ (maximalIdeal R • ⊤ : Submodule R L.M))
 
 
-instance (priority := 9999999) : SMul (↥R) (↥R ⧸ maximalIdeal ↥R) :=
+instance (priority := 9999999) instSMulSubtypeMemSubringQuotientIdealMaximalIdealLeanPool :
+    SMul (↥R) (↥R ⧸ maximalIdeal ↥R) :=
   Submodule.Quotient.instSMul (maximalIdeal ↥R)
 
 instance (priority := 9999999) (L : Lattice R) :
@@ -192,7 +195,7 @@ lemma _root_.Module.Basis.unipotentResidue_mk [IsFractionRing R K]
         (Submodule.Quotient.mk
           (p := (maximalIdeal R • ⊤ : Submodule R (b.toLattice (R := R)).M)) (b' i)) =
           b.toQuotient' (R := R) i := by
-      simpa [b'] using (b.toQuotient'_apply (R := R) i).symm
+      convert (b.toQuotient'_apply (R := R) i).symm using 1
     rw [hq]
     match i with
     | 0 =>
@@ -603,8 +606,7 @@ lemma mapIntermediate_unipotent_smul (b : Basis (Fin 2) K (Fin 2 → K)) (x : R)
     refine ⟨Submodule.Quotient.mk ⟨m, hmL⟩, ?_, ?_⟩
     · rw [Lattice.mem_mapIntermediate]
       refine ⟨⟨m, hmL⟩, hm, rfl⟩
-    · simpa [Lattice.toQuotient] using
-        Basis.unipotentResidue_mk (R := R) b x (⟨m, hmL⟩ : b.toSubmodule (R := R))
+    · convert Basis.unipotentResidue_mk (R := R) b x (⟨m, hmL⟩ : b.toSubmodule (R := R)) using 1
   · rw [Submodule.map_le_iff_le_comap]
     intro y hy
     rw [(b.toLattice (R := R)).mem_mapIntermediate] at hy
