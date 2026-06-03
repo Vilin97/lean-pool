@@ -19,6 +19,10 @@ import Mathlib.Topology.Bornology.Basic
 
 import LeanPool.RlTheoryInLean.MeasureTheory.Measure.Prod
 
+/-!
+# LeanPool.RlTheoryInLean.Probability.Kernel.Composition.MapComap
+-/
+
 open MeasureTheory MeasureTheory.Measure Filtration ProbabilityTheory.Kernel ProbabilityTheory
 open Finset Bornology NNReal ENNReal Preorder Filter
 
@@ -28,7 +32,7 @@ variable {α β γ : Type*}
 variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
 
 /-- Comap a kernel along the last coordinate of a finite trajectory prefix. -/
-noncomputable def comap_last
+noncomputable def comapLast
   (κ : Kernel α α) (n : ℕ) :
   Kernel (Iic n → α) α := by
   let g : (Iic n → α) → α :=
@@ -36,7 +40,7 @@ noncomputable def comap_last
   have hg : Measurable g := by apply measurable_pi_apply
   exact κ.comap g hg
 
-lemma prod_map_fst
+lemma prodMap_fst
 (κ : Kernel α β) [IsSFiniteKernel κ] (η : Kernel α γ) [IsMarkovKernel η] :
 (κ.prod η).map Prod.fst = κ := by
   ext a s hs
@@ -47,7 +51,7 @@ lemma prod_map_fst
   · exact hs
   · measurability
 
-lemma prod_map_snd
+lemma prodMap_snd
   (κ : Kernel α β) [IsMarkovKernel κ] (η : Kernel α γ) [IsSFiniteKernel η] :
   (κ.prod η).map Prod.snd = η := by
   ext a s hs

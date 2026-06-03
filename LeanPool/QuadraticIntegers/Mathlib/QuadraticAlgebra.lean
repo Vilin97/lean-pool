@@ -6,6 +6,12 @@ Authors: Riccardo Brasca, Pietro Monticone
 
 import Mathlib.Algebra.QuadraticAlgebra.Basic
 
+/-!
+# Quadratic Algebra Base Change
+
+Base-change algebra instances for Mathlib quadratic algebras.
+-/
+
 namespace LeanPool
 namespace QuadraticIntegers
 namespace Mathlib

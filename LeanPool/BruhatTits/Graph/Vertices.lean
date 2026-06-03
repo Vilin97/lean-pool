@@ -6,8 +6,6 @@ Authors: Judith Ludwig, Christian Merten
 import LeanPool.BruhatTits.Lattice.Distance
 import LeanPool.BruhatTits.Lattice.Construction
 
-open Module
-
 /-!
 # Definition of vertices
 
@@ -29,6 +27,9 @@ is later used to define the edge relations on the Bruhat-Tits graph (see `Bruhat
   deduce that the Bruhat-Tits graph is connected.
 
 -/
+
+open Module
+
 namespace BruhatTits
 
 variable {K : Type*} [Field K] (R : Subring K) [IsDiscreteValuationRing R]
@@ -77,8 +78,9 @@ lemma exists_repr_inv_of_fixed (M : Lattice R) (y : Vertices R) :
   let L' : Lattice R := (Units.mk0 ϖ.val hϖ') ^ (- f 1) • L
   let bL' : Basis (Fin 2) R L'.M := mulBasisScalar ((Units.mk0 ϖ.val hϖ') ^ (-f 1)) bL
   refine ⟨ϖ, hϖ, L', bM, bL', ?_, ?_, ?_⟩
-  · exact Quotient.sound (by
-      simpa [L'] using Lattice.smul_isSimilar R L ((Units.mk0 ϖ.val hϖ') ^ (-f 1)))
+  · exact Quotient.sound (show Lattice.IsSimilar R L' L from by
+      simpa [L', zpow_neg] using
+        Lattice.smul_isSimilar R L ((Units.mk0 ϖ.val hϖ') ^ (-f 1)))
   · simp only [bL']
     rw [mulBasisScalar_apply, Units.val_zpow_eq_zpow_val, Units.val_mk0,
       inv_mk, hrep, smul_smul, ← zpow_add₀ hϖ', neg_add_eq_sub, hdiff, R.smul_def, R.coe_pow,

@@ -8,6 +8,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 import LeanPool.TwoColoringOneRound.LowerBound.Certificate
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Z
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000WeakDuality
@@ -265,7 +269,7 @@ private theorem stationarity (i : Var) :
     (if i.1 = edgeVar then (1 : Q) else 0) + muCoeff i - zCoeff i = 0 := by
   classical
   -- Integer stationarity is checked coordinatewise; convert and rewrite the coefficients.
-  have hInt : stationarityLHS_D2 i.1 = -(c i.1) * ((D : Int) * (D : Int)) := by
+  have hInt : stationarityLHSD2 i.1 = -(c i.1) * ((D : Int) * (D : Int)) := by
     fin_cases i <;> decide
   have hDne : (D : Q) ≠ 0 := by
     exact_mod_cast (show (D : Nat) ≠ 0 by decide)
@@ -273,8 +277,8 @@ private theorem stationarity (i : Var) :
   have hQ :
       ((linNumD i.1 : Q) * (D : Q) - (psdNumD2 i.1 : Q)) =
         (-(c i.1) : Q) * ((D : Q) * (D : Q)) := by
-    simpa [stationarityLHS_D2] using (show
-      (stationarityLHS_D2 i.1 : Q) =
+    simpa [stationarityLHSD2] using (show
+      (stationarityLHSD2 i.1 : Q) =
         (-(c i.1) * ((D : Int) * (D : Int)) : Q) by
       exact_mod_cast hInt)
   have hc : (-(c i.1) : Q) = if i.1 = edgeVar then (-1 : Q) else 0 := by

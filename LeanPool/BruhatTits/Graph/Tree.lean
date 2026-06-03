@@ -5,8 +5,6 @@ Authors: Judith Ludwig, Christian Merten
 -/
 import LeanPool.BruhatTits.Graph.GroupAction
 
-open Module
-
 /-!
 # Proof that the Bruhat-Tits graph is a tree
 
@@ -27,6 +25,9 @@ The strategy for proving acyclicity is as follows:
   `3 > 0 = inv x x`, so no circles exist.
 
 -/
+
+open Module
+
 
 namespace BruhatTits
 
@@ -166,7 +167,7 @@ lemma length_eq_inv_of_isStandard {x y : Vertices R} {p : BTgraph.Walk x y} (h :
       intro hnil
       exact hl.ne_nil (List.map_eq_nil_iff.mp hnil)
     have hlast_eq := List.getLast_congr hmap_ne_nil p.support_ne_nil hleq
-    simpa [List.getLast_map] using (hlast_eq.trans p.getLast_support).symm
+    simpa [Vertices, List.getLast_map] using (hlast_eq.trans p.getLast_support).symm
   subst this
   assumption
 

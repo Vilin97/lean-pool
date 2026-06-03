@@ -4,8 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
 
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntGoal
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock0
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock1
@@ -14,6 +22,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntB
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock4
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock5
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiIntBlock6
+
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionComputeSiInt
+-/
 
 namespace Distributed2Coloring.LowerBound
 

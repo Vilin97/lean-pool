@@ -666,7 +666,7 @@ private def mkIncidenceScheme
   let InfoTy : Type := IncidenceInfo T K
   exact {
     Info := InfoTy
-    info_finite := inferInstance
+    infoFinite := inferInstance
     compress := fun {m} S => compressCore S
     reconstruct := reconstructCore
     kernelSize := K
@@ -686,7 +686,7 @@ private lemma sum_indicator_eq_card_filter
 private lemma majority_vote_eq_of_agree_gt_half
     {T : ℕ} (hT : 0 < T) (votes : Fin T → Bool) (y : Bool)
     (hmajor : ((∑ t : Fin T, if votes t = y then (1 : ℝ) else 0) / T) > (1 / 2 : ℝ)) :
-    majority_vote T votes = y := by
+    majorityVote T votes = y := by
   have hTreal : (0 : ℝ) < T := by exact_mod_cast hT
   by_cases hy : y
   · subst hy
@@ -697,7 +697,7 @@ private lemma majority_vote_eq_of_agree_gt_half
       linarith
     have hgt_nat : 2 * (Finset.univ.filter (fun t => votes t = true)).card > T := by
       exact_mod_cast hgt_real
-    simp [majority_vote, hgt_nat]
+    simp [majorityVote, hgt_nat]
   · have hyf : y = false := by cases y <;> simp_all
     subst hyf
     have hgt_false_real : (2 * (Finset.univ.filter (fun t => votes t = false)).card : ℝ) > T := by
@@ -716,7 +716,7 @@ private lemma majority_vote_eq_of_agree_gt_half
     have hnot_true_majority :
         ¬ 2 * (Finset.univ.filter (fun t => votes t = true)).card > T := by
       intro htrue; omega
-    simp [majority_vote, hnot_true_majority]
+    simp [majorityVote, hnot_true_majority]
 
 /-- The actual final closure helper. Packages the majority-vote construction.
     If decoded hypotheses agree with reference hypotheses on sample points,
@@ -745,16 +745,16 @@ private def mkIncidenceSchemeOfMajority
   classical
   refine mkIncidenceScheme (X := X) (C := C) T K
     compressCore
-    (fun Z info x => majority_vote T (fun t => blockHyp Z info t x))
+    (fun Z info x => majorityVote T (fun t => blockHyp Z info t x))
     hsmall hsub ?_
   intro m S hreal i
   have hcongr :
-      majority_vote T (fun t => blockHyp (compressCore S).1 (compressCore S).2 t (S i).1)
-        = majority_vote T (fun t => rowHyp S hreal t (S i).1) := by
+      majorityVote T (fun t => blockHyp (compressCore S).1 (compressCore S).2 t (S i).1)
+        = majorityVote T (fun t => rowHyp S hreal t (S i).1) := by
     congr 1; funext t; exact hagree S hreal i t
   calc
-    majority_vote T (fun t => blockHyp (compressCore S).1 (compressCore S).2 t (S i).1)
-        = majority_vote T (fun t => rowHyp S hreal t (S i).1) := hcongr
+    majorityVote T (fun t => blockHyp (compressCore S).1 (compressCore S).2 t (S i).1)
+        = majorityVote T (fun t => rowHyp S hreal t (S i).1) := hcongr
     _ = (S i).2 :=
       majority_vote_eq_of_agree_gt_half hT
         (fun t => rowHyp S hreal t (S i).1)
@@ -1143,7 +1143,7 @@ theorem vcdim_finite_imp_compression_with_info
     refine ⟨1, ?_, ?_⟩
     · exact {
         Info := PUnit
-        info_finite := inferInstance
+        infoFinite := inferInstance
         compress := fun _ => (∅, PUnit.unit)
         reconstruct := fun _ _ _ => false
         kernelSize := 0
@@ -1238,7 +1238,7 @@ theorem compression_with_info_imp_vcdim_finite
       exact_mod_cast Nat.le_of_lt_succ (Nat.lt_succ_of_lt (h_neg S hS))
     exact absurd h_top (ne_of_lt (lt_of_le_of_lt this (WithTop.coe_lt_top _)))
   set K := cs.kernelSize with hK_def
-  set I := @Fintype.card cs.Info cs.info_finite with hI_def
+  set I := @Fintype.card cs.Info cs.infoFinite with hI_def
   set s := K + I with hs_def
   set N := 2 * (s + 1) * (s + 1) with hN_def
   obtain ⟨T₀, hT₀_shatt, hT₀_card⟩ := h_large N
@@ -1266,7 +1266,7 @@ theorem compression_with_info_imp_vcdim_finite
   -- Target: (kernel subsets of T×Bool with card ≤ K) × Info
   set A := T ×ˢ (Finset.univ : Finset Bool) with hA_def
   set target := (A.powerset.filter (fun S => S.card ≤ K)) ×ˢ
-    (@Finset.univ cs.Info cs.info_finite) with htarget_def
+    (@Finset.univ cs.Info cs.infoFinite) with htarget_def
   have h_maps_to : ∀ f : Fin n → Bool, (cs.compress ∘ mkSample) f ∈ target := by
     intro f
     simp only [Function.comp, htarget_def, Finset.mem_product, Finset.mem_filter,

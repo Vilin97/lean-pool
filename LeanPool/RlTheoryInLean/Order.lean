@@ -5,7 +5,6 @@ Authors: Shangtong Zhang
 -/
 
 import LeanPool.RlTheoryInLean.Order.Filter
-import LeanPool.RlTheoryInLean.Order.Filter
 
 /-!
 # Order

@@ -15,6 +15,10 @@ import LeanPool.LowDimSolvClassification.InstancesLowDim
 import LeanPool.LowDimSolvClassification.GeneralResults
 import LeanPool.LowDimSolvClassification.Classification1
 
+/-!
+# LeanPool.LowDimSolvClassification.Classification2
+-/
+
 open Module
 open Submodule
 namespace LieAlgebra
@@ -172,7 +176,7 @@ theorem not_iso : IsEmpty (Affine K ≃ₗ⁅K⁆ Abelian K) := by
             simp [Affine.bracket, e₂]
             rfl
           _ = 0 := by
-            simp [iso.map_lie]
+            simp [iso.map_lie, trivial_lie_zero]
   have : iso.symm 0 = 0 := iso.symm.map_zero
   apply_fun (fun x => (iso.symm x) 1) at Hf
   simp [LieEquiv.symm_apply_apply, this] at Hf

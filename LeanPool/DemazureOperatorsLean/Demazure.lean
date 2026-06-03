@@ -20,6 +20,9 @@ import Mathlib.RingTheory.MvPolynomial.Basic
 
 import Mathlib.Data.Finsupp.Defs
 
+/-!
+# LeanPool.DemazureOperatorsLean.Demazure
+-/
 
 noncomputable section
 open MvPolynomial
@@ -323,7 +326,7 @@ lemma demazure_map_smul (i : Fin n) : ∀ (r : ℂ) (p : MvPolynomial (Fin (n + 
   apply congr_arg
   nth_rewrite 2 [← MvPolynomial.finSuccEquiv_comp_C_eq_C]
   simp only [RingHom.comp, Nat.succ_eq_add_one, RingHom.coe_coe, RingHom.coe_mk,
-    MonoidHom.coe_mk, OneHom.coe_mk, Function.comp_apply]
+    MonoidHom.coe_mk, OneHom.coe_mk]
   rw[← map_mul (AlgEquiv.symm (MvPolynomial.finSuccEquiv ℂ n))]
   apply congr_arg
   apply (poly_mul_cancel (demazure_denominator_ne_zero i)).mpr

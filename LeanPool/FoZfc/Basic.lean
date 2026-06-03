@@ -50,7 +50,7 @@ universe u v
 
 /-- Relation symbols for LSet. -/
 inductive LSetRel : ℕ → Type
-| is_elt_of : LSetRel 2
+| isEltOf : LSetRel 2
 deriving DecidableEq
 
 -- Instead of defining Relations n for each n,
@@ -70,8 +70,8 @@ namespace ZFC
 
 variable {V : Type u} [Language.LZFC.Structure V]
 
-/-- The version of is_elt_of with the type LSet.Relations 2. -/
-def is_elt_of_two : Language.LZFC.Relations 2 := LSetRel.is_elt_of
+/-- The version of isEltOf with the type LSet.Relations 2. -/
+def isEltOfTwo : Language.LZFC.Relations 2 := LSetRel.isEltOf
 
 -- Language.BoundedFormula.falsum is the bot.
 /-- The formula ⊥ -/
@@ -79,22 +79,22 @@ def ϕbot : Language.LZFC.Formula  ℕ:= Language.BoundedFormula.falsum
 
 /-- Make an atomic formula t1 ∈ t2. -/
 def ϕelt {n : ℕ} (t₁ t₂ : Language.LZFC.Term (ℕ ⊕ Fin n)) :=
-  Language.Relations.boundedFormula₂ is_elt_of_two t₁ t₂
+  Language.Relations.boundedFormula₂ isEltOfTwo t₁ t₂
 
 -- I added ' to distinguish the outside and inside ∈
 @[inherit_doc] scoped[FirstOrder] infixl : 120 " ∈' " => FirstOrder.ZFC.ϕelt
 
 /-- Make an atomic formula t1 ∉ t2. -/
-def ϕnot_elt {n : ℕ} (t₁ t₂ : Language.LZFC.Term (ℕ ⊕ Fin n)) :=
-  ∼(Language.Relations.boundedFormula₂ is_elt_of_two t₁ t₂)
+def ϕnotElt {n : ℕ} (t₁ t₂ : Language.LZFC.Term (ℕ ⊕ Fin n)) :=
+  ∼(Language.Relations.boundedFormula₂ isEltOfTwo t₁ t₂)
 
-@[inherit_doc] scoped[FirstOrder] infixl : 120 " ∉' " => FirstOrder.ZFC.ϕnot_elt
+@[inherit_doc] scoped[FirstOrder] infixl : 120 " ∉' " => FirstOrder.ZFC.ϕnotElt
 
 /-- The negation of the equality of two terms as a bounded formula. -/
-def int_not_equal {n : ℕ} (t₁ t₂ : Language.LZFC.Term (ℕ ⊕ Fin n)) :=
+def intNotEqual {n : ℕ} (t₁ t₂ : Language.LZFC.Term (ℕ ⊕ Fin n)) :=
     ∼(FirstOrder.Language.Term.bdEqual t₁ t₂)
 
-@[inherit_doc] scoped[FirstOrder] infixl: 88 " ≠' " => FirstOrder.ZFC.int_not_equal
+@[inherit_doc] scoped[FirstOrder] infixl: 88 " ≠' " => FirstOrder.ZFC.intNotEqual
 
 /-- Make a free variable in LSet. -/
 def fv (n : ℕ) (k : ℕ) : Language.LZFC.Term (ℕ ⊕ Fin n) := Language.Term.var (Sum.inl k)
@@ -105,20 +105,20 @@ def bv (n : ℕ) (k : Fin n) : Language.LZFC.Term (ℕ ⊕ Fin n) := Language.Te
 /-- Model of set theory. -/
 class ModelSets (V : Type u) extends LZFC.Structure V, Inhabited V where
   /-- The external membership relation interpreting the language's ∈ symbol. -/
-  is_elt_of : V → V → Prop
+  isEltOf : V → V → Prop
   /-- The external relation matches the language's `RelMap`. -/
-  interpret_is_elt_of : ∀ {a b : V}, is_elt_of a b ↔ RelMap is_elt_of_two ![a, b]
+  interpret_is_elt_of : ∀ {a b : V}, isEltOf a b ↔ RelMap isEltOfTwo ![a, b]
   /-- Extensionality: sets with the same elements are equal. -/
-  extensionality : ∀ {a b : V}, (∀(z : V), (is_elt_of z a) ↔ is_elt_of z b) → a = b
+  extensionality : ∀ {a b : V}, (∀(z : V), (isEltOf z a) ↔ isEltOf z b) → a = b
 
 variable {V : Type u}
 
-/-- The negation of `ModelSets.is_elt_of`. -/
-def not_is_elt_of [ModelSets V] (a b : V) : Prop :=
-  ¬ (ModelSets.is_elt_of a b)
+/-- The negation of `ModelSets.isEltOf`. -/
+def notIsEltOf [ModelSets V] (a b : V) : Prop :=
+  ¬ (ModelSets.isEltOf a b)
 
-@[inherit_doc ModelSets.is_elt_of] infix : 120 " ∈ " => ModelSets.is_elt_of
-@[inherit_doc not_is_elt_of] infix : 120 " ∉ " => not_is_elt_of
+@[inherit_doc ModelSets.isEltOf] infix : 120 " ∈ " => ModelSets.isEltOf
+@[inherit_doc notIsEltOf] infix : 120 " ∉ " => notIsEltOf
 
 /-- Realize a free varaible. -/
 @[simp]
@@ -153,7 +153,7 @@ theorem realize_neq [ModelSets V] {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
     {t₁ t₂ : LZFC.Term (ℕ ⊕ Fin n)} :
     (t₁≠'t₂).Realize s xs ↔
       Term.realize (Sum.elim s xs) t₁ ≠ Term.realize (Sum.elim s xs) t₂ := by
-  unfold int_not_equal
+  unfold intNotEqual
   simp
 
 /-- Make a free variable in LSet with n implicit. -/

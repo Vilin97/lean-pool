@@ -10,9 +10,13 @@ Authors: ruplet
 -- Please see V0.lean for the manually written foundations.
 import LeanPool.FormalizationOfBoundedArithmetic.V0
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.V0StrAddComm
+-/
+
 variable {num str : Type} [M : V0ExtModel num str]
 open FirstOrder Language
-open HasTypes_is
+open HasTypesIs
 open HasEmptySet
 open HasLen
 open HasSucc
@@ -38,7 +42,7 @@ lemma carry_comm : ∀ {X Y : str}, ∀ {i : num}, Carry i X Y ↔ Carry i Y X :
     · exact Or.inl hjX
 
 lemma mem_add_iff_xor : ∀ {X Y : str}, ∀ {i : num},
-    i ∈ X + Y ↔ Xor' (Xor' (i ∈ X) (i ∈ Y)) (Carry i X Y) := by
+    i ∈ X + Y ↔ Xor (Xor (i ∈ X) (i ∈ Y)) (Carry i X Y) := by
   intro X Y i
   constructor
   · intro h
@@ -62,7 +66,7 @@ theorem str_add_comm : ∀ {X Y : str}, X + Y = Y + X := by
   rw [mem_add_iff_xor (X := X) (Y := Y) (i := i)]
   rw [mem_add_iff_xor (X := Y) (Y := X) (i := i)]
   rw [carry_comm (X := X) (Y := Y) (i := i)]
-  unfold Xor'
+  unfold Xor
   tauto
 
 /-- Named alias emphasizing that this theorem is conditional on the strengthened V0 extension. -/

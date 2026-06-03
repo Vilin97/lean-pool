@@ -8,6 +8,11 @@ import LeanPool.DirectedTopologyLean4.DihomotopyCover
 import LeanPool.DirectedTopologyLean4.PushoutAlternative
 import LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
 import LeanPool.DirectedTopologyLean4.MorphismAux
+
+/-!
+# LeanPool.DirectedTopologyLean4.DirectedVanKampen
+-/
+
 /-
   This file contains the directed version of the Van Kampen Theorem.
   The statement is as follows:
@@ -50,7 +55,7 @@ local notation "j₁" => dTopCat.DirectedSubtypeHom X₁
 -- j₂ : X₂ ⟶ X
 local notation "j₂" => dTopCat.DirectedSubtypeHom X₂
 namespace PushoutFunctor
-open Dipath Dipath.covered Dipath.covered_partwise
+open Dipath Dipath.covered Dipath.coveredPartwise
 variable {x y : X} {C : CategoryTheory.Cat.{u, u}}
 variable (F₁ : (dπₓ (dTopCat.of X₁) ⥤ C)) (F₂ : (dπₓ (dTopCat.of X₂) ⥤ C))
 variable (h_comm : (dπₘ (dTopCat.DirectedSubsetHom <|
@@ -378,32 +383,32 @@ lemma functorOnHomOfCovered_dihomotopic {x y : X} {γ γ' : Dipath x y} {F : Dih
 -/
 /-- Recursive map on paths split into finitely many covered pieces. -/
 def FunctorOnHomOfCoveredPartwiseAux {n : ℕ} :
-    ∀ (x y : X) (γ : Dipath x y) (_ : covered_partwise hX γ n),
+    ∀ (x y : X) (γ : Dipath x y) (_ : coveredPartwise hX γ n),
       F_obj ⟨x⟩ ⟶ F_obj ⟨y⟩ :=
   Nat.recOn n
     (fun _ _ _ hγ => F₀ hγ)
     (fun _ ih _ _ _ hγ => (F₀ hγ.1) ≫ (ih _ _ _ hγ.2))
 /-- Map assigned to a path equipped with a proof that it is piecewise covered. -/
 abbrev FunctorOnHomOfCoveredPartwise {n : ℕ} {x y : X} {γ : Dipath x y}
-    (hγ : covered_partwise hX γ n) :=
+    (hγ : coveredPartwise hX γ n) :=
   FunctorOnHomOfCoveredPartwiseAux hX h_comm x y γ hγ
 local notation "Fₙ" => FunctorOnHomOfCoveredPartwise hX h_comm
 lemma functorOnHomOfCoveredPartwise_apply_0 {x y : X} {γ : Dipath x y}
-    (hγ : covered_partwise hX γ 0) :
+    (hγ : coveredPartwise hX γ 0) :
     Fₙ hγ = F₀ hγ := rfl
 lemma functorOnHomOfCoveredPartwise_apply_succ {n : ℕ} {x y : X}
-    {γ : Dipath x y} (hγ : covered_partwise hX γ n.succ) :
+    {γ : Dipath x y} (hγ : coveredPartwise hX γ n.succ) :
     Fₙ hγ = (F₀ hγ.left) ≫ (Fₙ hγ.right) := rfl
 lemma functorOnHomOfCoveredPartwise_equal {n : ℕ} {γ₁ γ₂ : Dipath x y} (h : γ₁ = γ₂)
-  (hγ₁ : covered_partwise hX γ₁ n) (hγ₂ : covered_partwise hX γ₂ n) :
+  (hγ₁ : coveredPartwise hX γ₁ n) (hγ₂ : coveredPartwise hX γ₂ n) :
     Fₙ hγ₁ = Fₙ hγ₂ := by subst_vars; rfl
 lemma functorOnHomOfCoveredPartwise_equal' {n m : ℕ} {γ₁ γ₂ : Dipath x y}
     (h₁ : γ₁ = γ₂)
-  (h₂ : n = m) (hγ₁ : covered_partwise hX γ₁ n) (hγ₂ : covered_partwise hX γ₂ m) :
+  (h₂ : n = m) (hγ₁ : coveredPartwise hX γ₁ n) (hγ₂ : coveredPartwise hX γ₂ m) :
     Fₙ hγ₁ = Fₙ hγ₂ := by subst_vars; rfl
 lemma functorOnHomOfCoveredPartwise_heq_of_ext {n m : ℕ} {x y x' y' : X}
     {γ : Dipath x y} {γ' : Dipath x' y'} (h : ∀ t, γ t = γ' t) (hn : n = m)
-    (hγ : covered_partwise hX γ n) (hγ' : covered_partwise hX γ' m) :
+    (hγ : coveredPartwise hX γ n) (hγ' : coveredPartwise hX γ' m) :
     Fₙ hγ ≍ Fₙ hγ' := by
   have hx : x = x' := by simpa using h 0
   have hy : y = y' := by simpa using h 1
@@ -417,10 +422,10 @@ lemma functorOnHomOfCoveredPartwise_heq_of_ext {n m : ℕ} {x y x' y' : X}
   rfl
 lemma functorOnHomOfCoveredPartwise_cast_params {n m : ℕ} {γ₁ γ₂ : Dipath x y}
     (h₁ : γ₁ = γ₂)
-  (h₂ : n = m) (hγ₁ : covered_partwise hX γ₁ n) :
+  (h₂ : n = m) (hγ₁ : coveredPartwise hX γ₁ n) :
     Fₙ hγ₁ = Fₙ (covered_partwise_of_equal hX h₁ h₂ hγ₁) := by subst_vars; rfl
 lemma functorOnHomOfCoveredPartwise_cast {x y x' y' : X} {n : ℕ} {γ : Dipath x y}
-  (hγ : covered_partwise hX γ n) (hx : x' = x) (hy : y' = y) :
+  (hγ : coveredPartwise hX γ n) (hx : x' = x) (hy : y' = y) :
     Fₙ ((covered_partwise_cast_iff hX γ hx hy).mp hγ) =
       (eqToHom (by rw [hx])) ≫ (Fₙ hγ) ≫ (eqToHom (by rw [hy])) := by
   subst_vars
@@ -428,7 +433,7 @@ lemma functorOnHomOfCoveredPartwise_cast {x y x' y' : X} {n : ℕ} {γ : Dipath 
   apply functorOnHomOfCoveredPartwise_equal
   rfl
 lemma functorOnHomOfCoveredPartwise_cast_left {x y x' : X} {n : ℕ} {γ : Dipath x y}
-  (hγ : covered_partwise hX γ n) (hx : x' = x) :
+  (hγ : coveredPartwise hX γ n) (hx : x' = x) :
     Fₙ ((covered_partwise_cast_iff hX γ hx rfl).mp hγ) =
       (eqToHom (by rw [hx])) ≫ (Fₙ hγ) := by
   subst_vars
@@ -436,7 +441,7 @@ lemma functorOnHomOfCoveredPartwise_cast_left {x y x' : X} {n : ℕ} {γ : Dipat
   apply functorOnHomOfCoveredPartwise_equal
   rfl
 lemma functorOnHomOfCoveredPartwise_cast_right {x y y' : X} {n : ℕ} {γ : Dipath x y}
-    (hγ : covered_partwise hX γ n) (hy : y' = y) :
+    (hγ : coveredPartwise hX γ n) (hy : y' = y) :
     Fₙ ((covered_partwise_cast_iff hX γ rfl hy).mp hγ) =
       (Fₙ hγ) ≫ (eqToHom (by rw [hy])) := by
   subst_vars
@@ -468,7 +473,7 @@ two restrictions and composing gives `Fₙ γ`.
 -/
 lemma functorOnHomOfCoveredPartwise_split {n : ℕ} :
     Π {d : ℕ} (hdn : n > d) {x y : X} {γ : Dipath x y}
-      (hγ : covered_partwise hX γ n),
+      (hγ : coveredPartwise hX γ n),
     Fₙ hγ = Fₙ (covered_partwise_first_part_d hX (Nat.succ_lt_succ hdn) hγ) ≫
           Fₙ (covered_partwise_second_part_d hX (Nat.succ_lt_succ hdn) hγ) := by
   induction n
@@ -517,7 +522,7 @@ to `k * (n + 1)` parts is the composition of covering the first part in
 `k` parts and the second part in `k * n` parts.
 -/
 lemma functorOnHomOfCoveredPartwise_refine_apply (n k : ℕ) {x y : X}
-    {γ : Dipath x y} (hγ : covered_partwise hX γ n.succ) :
+    {γ : Dipath x y} (hγ : coveredPartwise hX γ n.succ) :
     Fₙ (covered_partwise_refine hX n.succ k hγ) =
       (Fₙ <| covered_partwise_of_covered k hγ.left) ≫
         (Fₙ <| covered_partwise_refine hX n k hγ.right) := by
@@ -545,7 +550,7 @@ lemma functorOnHomOfCoveredPartwise_refine_apply (n k : ℕ) {x y : X}
     · simp only [add_tsub_cancel_right, Nat.succ_eq_add_one]
       rw [Nat.succ_mul, Nat.sub_right_comm, Nat.add_sub_cancel]
 lemma functorOnHomOfCoveredPartwise_refine {n : ℕ} (k : ℕ) :
-    Π {x y : X} {γ : Dipath x y} (hγ_n : covered_partwise hX γ n),
+    Π {x y : X} {γ : Dipath x y} (hγ_n : coveredPartwise hX γ n),
       Fₙ hγ_n = Fₙ (covered_partwise_refine hX n k hγ_n) := by
   induction n
   case zero => apply functorOnHomOfCoveredPartwise_refine_of_covered
@@ -557,7 +562,7 @@ lemma functorOnHomOfCoveredPartwise_refine {n : ℕ} (k : ℕ) :
     rw [ih hγ.right]
     rfl
 lemma functorOnHomOfCoveredPartwise_apply_right_side {x y : X} {γ : Dipath x y}
-    {n : ℕ} (hγ : covered_partwise hX γ n.succ) :
+    {n : ℕ} (hγ : coveredPartwise hX γ n.succ) :
     Fₙ hγ = Fₙ (covered_partwise_first_part_end_split hX hγ) ≫
             F₀ (covered_second_part_end_split hX hγ) := by
   rw [functorOnHomOfCoveredPartwise_split hX h_comm (Nat.lt_succ_self n)]
@@ -565,7 +570,7 @@ lemma functorOnHomOfCoveredPartwise_apply_right_side {x y : X} {γ : Dipath x y}
   rw [functorOnHomOfCoveredPartwise_apply_0]
 lemma functorOnHomOfCoveredPartwise_trans_case_0 {x y z : X}
     {γ₁ : Dipath x y} {γ₂ : Dipath y z}
-  (hγ₁ : covered_partwise hX γ₁ 0) (hγ₂ : covered_partwise hX γ₂ 0) :
+  (hγ₁ : coveredPartwise hX γ₁ 0) (hγ₂ : coveredPartwise hX γ₂ 0) :
     Fₙ (covered_partwise_trans hγ₁ hγ₂) = (Fₙ hγ₁) ≫ (Fₙ hγ₂) := by
   rw [functorOnHomOfCoveredPartwise_apply_0]
   rw [functorOnHomOfCoveredPartwise_apply_0]
@@ -580,7 +585,7 @@ lemma functorOnHomOfCoveredPartwise_trans_case_0 {x y z : X}
   simp
 lemma functorOnHomOfCoveredPartwise_trans {n : ℕ} :
     Π {x y z : X} {γ₁ : Dipath x y} {γ₂ : Dipath y z}
-      (hγ₁ : covered_partwise hX γ₁ n) (hγ₂ : covered_partwise hX γ₂ n),
+      (hγ₁ : coveredPartwise hX γ₁ n) (hγ₂ : coveredPartwise hX γ₂ n),
       Fₙ (covered_partwise_trans hγ₁ hγ₂) = (Fₙ hγ₁) ≫ (Fₙ hγ₂) := by
   induction n
   case zero =>
@@ -622,15 +627,17 @@ lemma functorOnHomOfCoveredPartwise_trans {n : ℕ} :
       · apply functorOnHomOfCoveredPartwise_heq_of_ext hX h_comm
         focus
           intro t
-          simpa [Dipath.cast_apply] using
-            SplitProperties.trans_first_part_of_second_part γ₁ γ₂ n t
+          rw [SplitProperties.firstPart_cast]
+          simp only [Dipath.cast_apply]
+          exact SplitProperties.trans_first_part_of_second_part γ₁ γ₂ n t
         simp
       · apply functorOnHomOfCovered_heq_of_ext hX h_comm
         intro t
-        simpa [Dipath.cast_apply] using
-          SplitProperties.trans_second_part_second_part γ₁ γ₂ n t
+        rw [SplitProperties.secondPart_cast]
+        simp only [Dipath.cast_apply]
+        exact SplitProperties.trans_second_part_second_part γ₁ γ₂ n t
 lemma functorOnHomOfCoveredPartwise_unique {n m : ℕ} {γ : Dipath x y}
-  (hγ_n : covered_partwise hX γ n) (hγ_m : covered_partwise hX γ m) :
+  (hγ_n : coveredPartwise hX γ n) (hγ_m : coveredPartwise hX γ m) :
     Fₙ hγ_n = Fₙ hγ_m := by
   rw [functorOnHomOfCoveredPartwise_refine hX h_comm m hγ_n]
   rw [functorOnHomOfCoveredPartwise_refine hX h_comm n hγ_m]
@@ -645,10 +652,10 @@ def FunctorOnHomAux (γ : Dipath x y) : F_obj ⟨x⟩ ⟶ F_obj ⟨y⟩ :=
   Fₙ (Classical.choose_spec (has_subpaths hX X₁_open X₂_open γ))
 local notation "Fh_aux" => FunctorOnHomAux hX X₁_open X₂_open h_comm
 
-lemma functorOnHomAux_apply {n : ℕ} {γ : Dipath x y} (hγ : covered_partwise hX γ n) :
+lemma functorOnHomAux_apply {n : ℕ} {γ : Dipath x y} (hγ : coveredPartwise hX γ n) :
     Fh_aux γ = Fₙ hγ := functorOnHomOfCoveredPartwise_unique hX h_comm _ _
 lemma functorOnHomAux_refl {x : X} : Fh_aux (Dipath.refl x) = 𝟙 (F_obj ⟨x⟩) := by
-  have : covered_partwise hX (Dipath.refl x) 0 := covered_refl x hX
+  have : coveredPartwise hX (Dipath.refl x) 0 := covered_refl x hX
   rw [functorOnHomAux_apply _ _ _ _ this]
   rw [functorOnHomOfCoveredPartwise_apply_0]
   apply functorOnHomOfCovered_refl
@@ -683,15 +690,15 @@ lemma functorOnHomAux_trans {x y z : X} (γ₁ : Dipath x y) (γ₂ : Dipath y z
   cases has_subpaths hX X₁_open X₂_open γ₁
   cases has_subpaths hX X₁_open X₂_open γ₂
   rename_i n hn m hm
-  have hn' : covered_partwise hX γ₁ ((n + 1) * (m + 1) - 1) := covered_partwise_refine hX n m hn
-  have hm' : covered_partwise hX γ₂ ((n + 1) * (m + 1) - 1) :=
+  have hn' : coveredPartwise hX γ₁ ((n + 1) * (m + 1) - 1) := covered_partwise_refine hX n m hn
+  have hm' : coveredPartwise hX γ₂ ((n + 1) * (m + 1) - 1) :=
     (mul_comm (m + 1) _) ▸ covered_partwise_refine hX m n hm
   rw [functorOnHomAux_apply hX X₁_open X₂_open h_comm hn']
   rw [functorOnHomAux_apply hX X₁_open X₂_open h_comm hm']
   rw [functorOnHomAux_apply hX X₁_open X₂_open h_comm (covered_partwise_trans hn' hm')]
   rw [functorOnHomOfCoveredPartwise_trans]
 lemma functorOnHomAux_split_of_covered_partwise {x y : X} {γ : Dipath x y}
-    {n : ℕ} (hγ : covered_partwise hX γ n.succ) :
+    {n : ℕ} (hγ : coveredPartwise hX γ n.succ) :
     Fh_aux γ =
       Fh_aux (SplitDipath.FirstPart γ
         (Fraction (Nat.succ_pos _) (Nat.succ_le_succ (Nat.zero_le n.succ)))) ≫
@@ -701,25 +708,25 @@ lemma functorOnHomAux_split_of_covered_partwise {x y : X} {γ : Dipath x y}
   rw [functorOnHomAux_apply hX _ _ h_comm hγ]
   rw [functorOnHomOfCoveredPartwise_apply_succ hX h_comm hγ]
   --Rewrite R.H.S.
-  have : covered_partwise hX (SplitDipath.FirstPart γ _) 0 := hγ.left
+  have : coveredPartwise hX (SplitDipath.FirstPart γ _) 0 := hγ.left
   rw [functorOnHomAux_apply hX _ _ h_comm this]
   rw [functorOnHomOfCoveredPartwise_apply_0]
   rw [functorOnHomAux_apply hX _ _ h_comm hγ.right]
 lemma functorOnHomAux_of_covered_dihomotopic {x y : X} {γ γ' : Dipath x y} {F : Dihomotopy γ γ'}
   (hF : Dipath.Dihomotopy.covered hX F) :
     Fh_aux γ = Fh_aux γ' := by
-  have : covered_partwise hX γ 0 := Dipath.Dihomotopy.covered_left_of_covered hF
+  have : coveredPartwise hX γ 0 := Dipath.Dihomotopy.covered_left_of_covered hF
   rw [functorOnHomAux_apply _ _ _ _ this]
   rw [functorOnHomOfCoveredPartwise_apply_0]
-  have : covered_partwise hX γ' 0 := Dipath.Dihomotopy.covered_right_of_covered hF
+  have : coveredPartwise hX γ' 0 := Dipath.Dihomotopy.covered_right_of_covered hF
   rw [functorOnHomAux_apply _ _ _ _ this]
   rw [functorOnHomOfCoveredPartwise_apply_0]
   exact functorOnHomOfCovered_dihomotopic hX h_comm hF
 lemma functorOnHomAux_of_homotopic_dimaps_0 {f g : D(I,X)} {H : DirectedMap.Dihomotopy f g}
   (hcov : DirectedMap.Dihomotopy.coveredPartwise hX H 0 0) :
-    Fh_aux (Dipath.of_directedMap f) ≫ Fh_aux (H.eval_at_right 1) =
-    Fh_aux (H.eval_at_right 0) ≫ Fh_aux (Dipath.of_directedMap g) := by
-  let Γ := DihomToPathDihom.dihom_to_path_dihom H
+    Fh_aux (Dipath.ofDirectedMap f) ≫ Fh_aux (H.evalAtRight 1) =
+    Fh_aux (H.evalAtRight 0) ≫ Fh_aux (Dipath.ofDirectedMap g) := by
+  let Γ := DihomToPathDihom.dihomToPathDihom H
   have Γ_cov : Dipath.Dihomotopy.covered hX Γ := by
     unfold Dipath.Dihomotopy.covered
     cases DirectedMap.Dihomotopy.covered_of_coveredPartwise hcov
@@ -729,46 +736,46 @@ lemma functorOnHomAux_of_homotopic_dimaps_0 {f g : D(I,X)} {H : DirectedMap.Diho
     case inr h =>
       right
       exact subset_trans (DihomToPathDihom.dihom_to_path_dihom_range _) h
-  calc Fh_aux (Dipath.of_directedMap f) ≫ Fh_aux (H.eval_at_right 1)
-    _ = (𝟙 (F_obj ⟨f 0⟩) ≫ Fh_aux (of_directedMap f)) ≫ Fh_aux (H.eval_at_right 1)
+  calc Fh_aux (Dipath.ofDirectedMap f) ≫ Fh_aux (H.evalAtRight 1)
+    _ = (𝟙 (F_obj ⟨f 0⟩) ≫ Fh_aux (ofDirectedMap f)) ≫ Fh_aux (H.evalAtRight 1)
           := by rw [Category.id_comp]
-    _ = (Fh_aux (Dipath.refl (f 0)) ≫ Fh_aux (of_directedMap f)) ≫ Fh_aux (H.eval_at_right 1)
+    _ = (Fh_aux (Dipath.refl (f 0)) ≫ Fh_aux (ofDirectedMap f)) ≫ Fh_aux (H.evalAtRight 1)
           := by rw [functorOnHomAux_refl]
-    _ = Fh_aux ((Dipath.refl (f 0)).trans (of_directedMap f)) ≫ Fh_aux (H.eval_at_right 1)
+    _ = Fh_aux ((Dipath.refl (f 0)).trans (ofDirectedMap f)) ≫ Fh_aux (H.evalAtRight 1)
           := by rw [functorOnHomAux_trans]
-    _ = Fh_aux (((Dipath.refl (f 0)).trans (of_directedMap f)).trans (H.eval_at_right 1))
+    _ = Fh_aux (((Dipath.refl (f 0)).trans (ofDirectedMap f)).trans (H.evalAtRight 1))
           := by rw [←functorOnHomAux_trans]
-    _ = Fh_aux (((H.eval_at_right 0).trans (of_directedMap g)).trans (refl (g 1)))
+    _ = Fh_aux (((H.evalAtRight 0).trans (ofDirectedMap g)).trans (refl (g 1)))
           := functorOnHomAux_of_covered_dihomotopic hX X₁_open X₂_open h_comm Γ_cov
-    _ = Fh_aux ((H.eval_at_right 0).trans (of_directedMap g)) ≫ Fh_aux (refl (g 1))
+    _ = Fh_aux ((H.evalAtRight 0).trans (ofDirectedMap g)) ≫ Fh_aux (refl (g 1))
           := by rw [functorOnHomAux_trans]
-    _ = Fh_aux ((H.eval_at_right 0).trans (of_directedMap g)) ≫ 𝟙 (F_obj ⟨g 1⟩)
+    _ = Fh_aux ((H.evalAtRight 0).trans (ofDirectedMap g)) ≫ 𝟙 (F_obj ⟨g 1⟩)
           := by rw [functorOnHomAux_refl]
-    _ = Fh_aux ((H.eval_at_right 0).trans (of_directedMap g))
+    _ = Fh_aux ((H.evalAtRight 0).trans (ofDirectedMap g))
           := by rw [Category.comp_id]
-    _ = Fh_aux (H.eval_at_right 0) ≫ Fh_aux (Dipath.of_directedMap g)
+    _ = Fh_aux (H.evalAtRight 0) ≫ Fh_aux (Dipath.ofDirectedMap g)
           := by rw [functorOnHomAux_trans]
 lemma functorOnHomAux_of_homotopic_dimaps {m : ℕ} :
     Π {f g : D(I,X)} {H : DirectedMap.Dihomotopy f g}
       (_ : DirectedMap.Dihomotopy.coveredPartwise hX H 0 m),
-      Fh_aux (Dipath.of_directedMap f) ≫ Fh_aux (H.eval_at_right 1) =
-      Fh_aux (H.eval_at_right 0) ≫ Fh_aux (Dipath.of_directedMap g) := by
+      Fh_aux (Dipath.ofDirectedMap f) ≫ Fh_aux (H.evalAtRight 1) =
+      Fh_aux (H.evalAtRight 0) ≫ Fh_aux (Dipath.ofDirectedMap g) := by
   induction m
   case zero => exact fun hcov => functorOnHomAux_of_homotopic_dimaps_0 _ _ _ _ hcov
   case succ m ih =>
     intro f g H hcov
-    have f_cov : covered_partwise hX (Dipath.of_directedMap f) m.succ :=
+    have f_cov : coveredPartwise hX (Dipath.ofDirectedMap f) m.succ :=
       DirectedMap.Dihomotopy.path_covered_partiwse_of_dihomotopy_coveredPartwise_left hcov
-    have g_cov : covered_partwise hX (Dipath.of_directedMap g) m.succ :=
+    have g_cov : coveredPartwise hX (Dipath.ofDirectedMap g) m.succ :=
       DirectedMap.Dihomotopy.path_covered_partiwse_of_dihomotopy_coveredPartwise_right hcov
     -- Split at 1/(m.succ + 1)
     let T := Fraction.ofPos (Nat.succ_pos m.succ)
-    let f₁ := (SplitDipath.FirstPart (Dipath.of_directedMap f) T)
-    let f₂ := (SplitDipath.SecondPart (Dipath.of_directedMap f) T)
-    let g₁ := (SplitDipath.FirstPart (Dipath.of_directedMap g) T)
-    let g₂ := (SplitDipath.SecondPart (Dipath.of_directedMap g) T)
-    have h₁ : Fh_aux f₂ ≫ Fh_aux (H.eval_at_right 1) =
-        Fh_aux (H.eval_at_right T) ≫ Fh_aux g₂ := by
+    let f₁ := (SplitDipath.FirstPart (Dipath.ofDirectedMap f) T)
+    let f₂ := (SplitDipath.SecondPart (Dipath.ofDirectedMap f) T)
+    let g₁ := (SplitDipath.FirstPart (Dipath.ofDirectedMap g) T)
+    let g₂ := (SplitDipath.SecondPart (Dipath.ofDirectedMap g) T)
+    have h₁ : Fh_aux f₂ ≫ Fh_aux (H.evalAtRight 1) =
+        Fh_aux (H.evalAtRight T) ≫ Fh_aux g₂ := by
       have := ih (DirectedMap.Dihomotopy.coveredPartwise_second_hpart hcov)
       rw [SplitDihomotopy.sph_eval_0] at this
       rw [SplitDihomotopy.sph_eval_1] at this
@@ -778,54 +785,50 @@ lemma functorOnHomAux_of_homotopic_dimaps {m : ℕ} :
       · simp [T]
       · apply heq_comp
         · apply congrArg F_obj
-          change (⟨(of_directedMap f) T⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.SecondPart (of_directedMap f)
+          change (⟨(ofDirectedMap f) T⟩ : FundamentalCategory X) =
+            ⟨(SplitDipath.SecondPart (ofDirectedMap f)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 0⟩
           ext
-          simp [T, Dipath.of_directedMap]
+          simp [T, Dipath.ofDirectedMap]
         · apply congrArg F_obj
           change (⟨f 1⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.SecondPart (of_directedMap f)
+            ⟨(SplitDipath.SecondPart (ofDirectedMap f)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 1⟩
           ext
-          simp [Dipath.of_directedMap]
+          simp [Dipath.ofDirectedMap]
         · apply congrArg F_obj
           change (⟨g 1⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.SecondPart (of_directedMap g)
+            ⟨(SplitDipath.SecondPart (ofDirectedMap g)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 1⟩
           ext
-          simp [Dipath.of_directedMap]
-        · simpa [f₂, T] using (functorOnHomAux_cast_heq hX X₁_open X₂_open h_comm
-            (SplitDipath.SecondPart (Dipath.of_directedMap f)
-              (Fraction.ofPos (Nat.succ_pos m.succ))) _ _).symm
+          simp [Dipath.ofDirectedMap]
+        · exact (functorOnHomAux_cast_heq hX X₁_open X₂_open h_comm f₂ _ _).symm
         · simpa using (functorOnHomAux_cast_heq hX X₁_open X₂_open h_comm
-            (H.eval_at_right 1) _ _).symm
+            (H.evalAtRight 1) _ _).symm
       · apply heq_comp
         · apply congrArg F_obj
           change (⟨f T⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.SecondPart (of_directedMap f)
+            ⟨(SplitDipath.SecondPart (ofDirectedMap f)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 0⟩
           ext
-          simp [T, Dipath.of_directedMap]
+          simp [T, Dipath.ofDirectedMap]
         · apply congrArg F_obj
           change (⟨g T⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.SecondPart (of_directedMap g)
+            ⟨(SplitDipath.SecondPart (ofDirectedMap g)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 0⟩
           ext
-          simp [T, Dipath.of_directedMap]
+          simp [T, Dipath.ofDirectedMap]
         · apply congrArg F_obj
           change (⟨g 1⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.SecondPart (of_directedMap g)
+            ⟨(SplitDipath.SecondPart (ofDirectedMap g)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 1⟩
           ext
-          simp [Dipath.of_directedMap]
+          simp [Dipath.ofDirectedMap]
         · simpa [T] using (functorOnHomAux_cast_heq hX X₁_open X₂_open h_comm
-            (H.eval_at_right (Fraction.ofPos (Nat.succ_pos m.succ))) _ _).symm
-        · simpa [g₂, T] using (functorOnHomAux_cast_heq hX X₁_open X₂_open h_comm
-            (SplitDipath.SecondPart (Dipath.of_directedMap g)
-              (Fraction.ofPos (Nat.succ_pos m.succ))) _ _).symm
-    have h₂ : Fh_aux f₁ ≫ Fh_aux (H.eval_at_right T) =
-        Fh_aux (H.eval_at_right 0) ≫ Fh_aux g₁ := by
+            (H.evalAtRight (Fraction.ofPos (Nat.succ_pos m.succ))) _ _).symm
+        · exact (functorOnHomAux_cast_heq hX X₁_open X₂_open h_comm g₂ _ _).symm
+    have h₂ : Fh_aux f₁ ≫ Fh_aux (H.evalAtRight T) =
+        Fh_aux (H.evalAtRight 0) ≫ Fh_aux g₁ := by
       have := functorOnHomAux_of_homotopic_dimaps_0 hX X₁_open X₂_open h_comm
             (DirectedMap.Dihomotopy.coveredPartwise_first_hpart hcov)
       rw [SplitDihomotopy.fph_eval_0] at this
@@ -833,100 +836,100 @@ lemma functorOnHomAux_of_homotopic_dimaps {m : ℕ} :
       rw [Dipath.dipath_of_directed_map_of_to_dimap] at this
       rw [Dipath.dipath_of_directed_map_of_to_dimap] at this
       convert this using 1
-      · simp [T, Dipath.of_directedMap]
+      · simp [T, Dipath.ofDirectedMap]
       · apply heq_comp
         · apply congrArg F_obj
           change (⟨f 0⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.FirstPart (of_directedMap f)
+            ⟨(SplitDipath.FirstPart (ofDirectedMap f)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 0⟩
           ext
-          simp [Dipath.of_directedMap]
+          simp [Dipath.ofDirectedMap]
         · apply congrArg F_obj
           change (⟨f T⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.FirstPart (of_directedMap f)
+            ⟨(SplitDipath.FirstPart (ofDirectedMap f)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 1⟩
           ext
-          simp [T, Dipath.of_directedMap]
+          simp [T, Dipath.ofDirectedMap]
         · apply congrArg F_obj
           change (⟨g T⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.FirstPart (of_directedMap g)
+            ⟨(SplitDipath.FirstPart (ofDirectedMap g)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 1⟩
           ext
-          simp [T, Dipath.of_directedMap]
+          simp [T, Dipath.ofDirectedMap]
         · apply functorOnHomAux_heq_of_ext hX X₁_open X₂_open h_comm
           intro t
-          change (SplitDipath.FirstPart (Dipath.of_directedMap f)
+          change (SplitDipath.FirstPart (Dipath.ofDirectedMap f)
             (Fraction.ofPos (Nat.succ_pos m.succ))) t =
-            ((SplitDipath.FirstPart (Dipath.of_directedMap f)
+            ((SplitDipath.FirstPart (Dipath.ofDirectedMap f)
               (Fraction.ofPos (Nat.succ_pos m.succ))).cast _ _) t
           rw [Dipath.cast_apply]
         · apply functorOnHomAux_heq_of_ext hX X₁_open X₂_open h_comm
           intro t
-          change (H.eval_at_right (Fraction.ofPos (Nat.succ_pos m.succ))) t =
-            ((H.eval_at_right (Fraction.ofPos (Nat.succ_pos m.succ))).cast _ _) t
+          change (H.evalAtRight (Fraction.ofPos (Nat.succ_pos m.succ))) t =
+            ((H.evalAtRight (Fraction.ofPos (Nat.succ_pos m.succ))).cast _ _) t
           rw [Dipath.cast_apply]
       · apply heq_comp
         · apply congrArg F_obj
           change (⟨f 0⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.FirstPart (of_directedMap f)
+            ⟨(SplitDipath.FirstPart (ofDirectedMap f)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 0⟩
           ext
-          simp [Dipath.of_directedMap]
+          simp [Dipath.ofDirectedMap]
         · apply congrArg F_obj
           change (⟨g 0⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.FirstPart (of_directedMap g)
+            ⟨(SplitDipath.FirstPart (ofDirectedMap g)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 0⟩
           ext
-          simp [Dipath.of_directedMap]
+          simp [Dipath.ofDirectedMap]
         · apply congrArg F_obj
           change (⟨g T⟩ : FundamentalCategory X) =
-            ⟨(SplitDipath.FirstPart (of_directedMap g)
+            ⟨(SplitDipath.FirstPart (ofDirectedMap g)
               (Fraction.ofPos (Nat.succ_pos m.succ))).toDirectedMap 1⟩
           ext
-          simp [T, Dipath.of_directedMap]
+          simp [T, Dipath.ofDirectedMap]
         · apply functorOnHomAux_heq_of_ext hX X₁_open X₂_open h_comm
           intro t
-          change (H.eval_at_right 0) t = ((H.eval_at_right 0).cast _ _) t
+          change (H.evalAtRight 0) t = ((H.evalAtRight 0).cast _ _) t
           rw [Dipath.cast_apply]
         · apply functorOnHomAux_heq_of_ext hX X₁_open X₂_open h_comm
           intro t
-          change (SplitDipath.FirstPart (Dipath.of_directedMap g)
+          change (SplitDipath.FirstPart (Dipath.ofDirectedMap g)
             (Fraction.ofPos (Nat.succ_pos m.succ))) t =
-            ((SplitDipath.FirstPart (Dipath.of_directedMap g)
+            ((SplitDipath.FirstPart (Dipath.ofDirectedMap g)
               (Fraction.ofPos (Nat.succ_pos m.succ))).cast _ _) t
           rw [Dipath.cast_apply]
-    calc Fh_aux (Dipath.of_directedMap f) ≫ Fh_aux (H.eval_at_right 1)
-      _ = (Fh_aux f₁ ≫ Fh_aux f₂) ≫ Fh_aux (H.eval_at_right 1)
+    calc Fh_aux (Dipath.ofDirectedMap f) ≫ Fh_aux (H.evalAtRight 1)
+      _ = (Fh_aux f₁ ≫ Fh_aux f₂) ≫ Fh_aux (H.evalAtRight 1)
             := by rw [functorOnHomAux_split_of_covered_partwise _ _ _ _ f_cov]
-      _ = Fh_aux f₁ ≫ (Fh_aux f₂ ≫ Fh_aux (H.eval_at_right 1))
+      _ = Fh_aux f₁ ≫ (Fh_aux f₂ ≫ Fh_aux (H.evalAtRight 1))
             := by rw [Category.assoc]
-      _ = Fh_aux f₁ ≫ (Fh_aux (H.eval_at_right T) ≫ Fh_aux g₂)
-            := by simpa only [Category.assoc] using congrArg (fun q => Fh_aux f₁ ≫ q) h₁
-      _ = (Fh_aux f₁ ≫ Fh_aux (H.eval_at_right T)) ≫ Fh_aux g₂
+      _ = Fh_aux f₁ ≫ (Fh_aux (H.evalAtRight T) ≫ Fh_aux g₂)
+            := by exact congrArg (fun q => Fh_aux f₁ ≫ q) h₁
+      _ = (Fh_aux f₁ ≫ Fh_aux (H.evalAtRight T)) ≫ Fh_aux g₂
             := by rw [Category.assoc]
-      _ = (Fh_aux (H.eval_at_right 0) ≫ Fh_aux g₁) ≫ Fh_aux g₂
+      _ = (Fh_aux (H.evalAtRight 0) ≫ Fh_aux g₁) ≫ Fh_aux g₂
             := by exact congrArg (fun q => q ≫ Fh_aux g₂) h₂
-      _ = Fh_aux (H.eval_at_right 0) ≫ (Fh_aux g₁ ≫ Fh_aux g₂)
+      _ = Fh_aux (H.evalAtRight 0) ≫ (Fh_aux g₁ ≫ Fh_aux g₂)
             := by rw [Category.assoc]
-      _ = Fh_aux (H.eval_at_right 0) ≫ Fh_aux (Dipath.of_directedMap g)
+      _ = Fh_aux (H.evalAtRight 0) ≫ Fh_aux (Dipath.ofDirectedMap g)
             := by rw [functorOnHomAux_split_of_covered_partwise _ _ _ _ g_cov]
 lemma functorOnHomAux_of_covered_dihomotopic_zero_m {m : ℕ} {x y : X} {γ γ' : Dipath x y}
   (h : Dipath.Dihomotopy.dihomotopicCovered hX γ γ' 0 m) :
     Fh_aux γ = Fh_aux γ' := by
   cases h
   rename_i G HG
-  have h₁ : Fh_aux ((G.eval_at_right 0)) = (eqToHom (by simp)) ≫
+  have h₁ : Fh_aux ((G.evalAtRight 0)) = (eqToHom (by simp)) ≫
             (𝟙 (F_obj ⟨x⟩)) ≫ (eqToHom (by simp)) := by
-      have : G.eval_at_right 0 = (Dipath.refl x).cast γ.source γ'.source := by
+      have : G.evalAtRight 0 = (Dipath.refl x).cast γ.source γ'.source := by
         ext t
         change G (t, 0) = x
         simp
       rw [this]
       erw [functorOnHomAux_cast hX X₁_open X₂_open h_comm]
       rw [functorOnHomAux_refl]
-  have h₂ : Fh_aux ((G.eval_at_right 1)) = (eqToHom (by simp)) ≫
+  have h₂ : Fh_aux ((G.evalAtRight 1)) = (eqToHom (by simp)) ≫
             (𝟙 (F_obj ⟨y⟩)) ≫ (eqToHom (by simp)) := by
-      have : G.eval_at_right 1 = (Dipath.refl y).cast γ.target γ'.target := by
+      have : G.evalAtRight 1 = (Dipath.refl y).cast γ.target γ'.target := by
         ext t
         change G (t, 1) = y
         simp
@@ -1024,7 +1027,7 @@ lemma functor_comp_left_dipath {x y : X₁} (γ : Dipath x y) : F_hom ((dπₘ j
   change Fh_aux (γ.map (DirectedSubtypeInclusion X₁)) = _
   have h₁ : range (γ.map (DirectedSubtypeInclusion X₁)) ⊆ X₁ :=
     range_dipath_map_inclusion γ
-  have h₂ : covered_partwise hX (γ.map (DirectedSubtypeInclusion X₁)) 0 := Or.inl h₁
+  have h₂ : coveredPartwise hX (γ.map (DirectedSubtypeInclusion X₁)) 0 := Or.inl h₁
   rw [functorOnHomAux_apply hX X₁_open X₂_open h_comm h₂]
   rw [functorOnHomOfCoveredPartwise_apply_0]
   rw [functorOnHomOfCovered_apply_left' hX h_comm h₁]
@@ -1039,7 +1042,7 @@ lemma functor_comp_left : (dπₘ j₁) ⋙ F = F₁ := by
     exact functor_comp_left_object hX X₁_open X₂_open h_comm x.as
   · intros x y f
     rw [←Quotient.out_eq f]
-    simpa using functor_comp_left_dipath hX X₁_open X₂_open h_comm f.out
+    exact functor_comp_left_dipath hX X₁_open X₂_open h_comm f.out
 lemma functor_comp_right_object (x : X₂) :
     (F).obj ((dπₘ j₂).obj ⟨x⟩) = F₂.obj ⟨x⟩ := by
   change F_obj ⟨j₂ _⟩ = _
@@ -1056,7 +1059,7 @@ lemma functor_comp_right_dipath {x y : X₂} (γ : Dipath x y) :
   change Fh_aux (γ.map (DirectedSubtypeInclusion X₂)) = _
   have h₁ : range (γ.map (DirectedSubtypeInclusion X₂)) ⊆ X₂ :=
     range_dipath_map_inclusion γ
-  have h₂ : covered_partwise hX (γ.map (DirectedSubtypeInclusion X₂)) 0 := Or.inr h₁
+  have h₂ : coveredPartwise hX (γ.map (DirectedSubtypeInclusion X₂)) 0 := Or.inr h₁
   rw [functorOnHomAux_apply hX X₁_open X₂_open h_comm h₂]
   rw [functorOnHomOfCoveredPartwise_apply_0]
   rw [functorOnHomOfCovered_apply_right' hX h_comm h₁]
@@ -1070,7 +1073,7 @@ lemma functor_comp_right : (dπₘ j₂) ⋙ F = F₂ := by
     exact functor_comp_right_object hX X₁_open X₂_open h_comm x.as
   · intros x y f
     rw [←Quotient.out_eq f]
-    simpa using functor_comp_right_dipath hX X₁_open X₂_open h_comm f.out
+    exact functor_comp_right_dipath hX X₁_open X₂_open h_comm f.out
 lemma functor_uniq_aux_obj (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ F' = F₁)
     (h₂ : (dπₘ j₂) ⋙ F' = F₂) (x : X) :
     F'.obj ⟨x⟩ = (F).obj ⟨x⟩ := by
@@ -1097,7 +1100,7 @@ lemma functor_uniq_of_covered (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ 
       (eqToHom (functor_uniq_aux_obj hX X₁_open X₂_open h_comm F' h₁ h₂ y).symm) := by
   rw [functorHom_def]
   rw [functorOnHom_apply]
-  have : covered_partwise hX γ 0 := hγ
+  have : coveredPartwise hX γ 0 := hγ
   rw [functorOnHomAux_apply _ _ _ _ this]
   rw [functorOnHomOfCoveredPartwise_apply_0 _ _ this]
   cases hγ
@@ -1119,7 +1122,7 @@ lemma functor_uniq_of_covered (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ 
     rfl
 lemma functor_uniq_aux_map (F' : (dπₓ X) ⥤ C) (h₁ : (dπₘ j₁) ⋙ F' = F₁)
     (h₂ : (dπₘ j₂) ⋙ F' = F₂) {n : ℕ} :
-    Π {x y : X} {γ : Dipath x y} (_ : covered_partwise hX γ n), F'.map ⟦γ⟧ =
+    Π {x y : X} {γ : Dipath x y} (_ : coveredPartwise hX γ n), F'.map ⟦γ⟧ =
       (eqToHom (functor_uniq_aux_obj hX X₁_open X₂_open h_comm F' h₁ h₂ x)) ≫
         (F).map ⟦γ⟧
         ≫ (eqToHom (functor_uniq_aux_obj hX X₁_open X₂_open h_comm F' h₁ h₂ y).symm) := by

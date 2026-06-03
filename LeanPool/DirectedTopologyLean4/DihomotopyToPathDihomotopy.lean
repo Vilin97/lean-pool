@@ -6,6 +6,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 import LeanPool.DirectedTopologyLean4.FundamentalCategory
 import LeanPool.DirectedTopologyLean4.DihomotopyFlip
 
+/-!
+# LeanPool.DirectedTopologyLean4.DihomotopyToPathDihomotopy
+-/
+
 /-
   This file contains the construction of the following statement:
 
@@ -17,9 +21,9 @@ import LeanPool.DirectedTopologyLean4.DihomotopyFlip
    |             |
    A----- f -----B
   Then there is a path-dihomotopy between the paths
-    A --refl A--> A --f--> B --F.eval_at_right 1--> D
+    A --refl A--> A --f--> B --F.evalAtRight 1--> D
   and
-    A --F.eval_at_right 0--> C --g--> D --refl D--> D
+    A --F.evalAtRight 0--> C --g--> D --refl D--> D
 -/
 
 universe u
@@ -120,9 +124,9 @@ namespace DihomToPathDihom
 variable {X : dTopCat} {f g : D(I,X)}
 
 /-- Reinterpret a dihomotopy between directed maps `f g : D(I, X)` as a dihomotopy between the
-associated dipaths `Dipath.of_directedMap f` and `Dipath.of_directedMap g`. -/
-def dihom_to_dihom_of_paths (F : Dihomotopy f g) :
-    Dihomotopy (Dipath.of_directedMap f).toDirectedMap (Dipath.of_directedMap g).toDirectedMap where
+associated dipaths `Dipath.ofDirectedMap f` and `Dipath.ofDirectedMap g`. -/
+def dihomToDihomOfPaths (F : Dihomotopy f g) :
+    Dihomotopy (Dipath.ofDirectedMap f).toDirectedMap (Dipath.ofDirectedMap g).toDirectedMap where
   toDirectedMap := F.toDirectedMap
   map_zero_left := fun x => by rw [F.map_zero_left]; rfl
   map_one_left := fun x => by rw [F.map_one_left]; rfl
@@ -135,19 +139,19 @@ def dihom_to_dihom_of_paths (F : Dihomotopy f g) :
     |             |
     A----- f -----B
   Then there is a path-dihomotopy between the paths
-    A --refl A--> A --f--> B --F.eval_at_right 1--> D
+    A --refl A--> A --f--> B --F.evalAtRight 1--> D
   and
-    A --F.eval_at_right 0--> C --g--> D --refl D--> D
+    A --F.evalAtRight 0--> C --g--> D --refl D--> D
 -/
-def dihom_to_path_dihom (F : Dihomotopy f g) : Dipath.Dihomotopy
-    (((Dipath.refl (f 0)).trans (Dipath.of_directedMap f)).trans (F.eval_at_right 1))
-    (((F.eval_at_right 0).trans (Dipath.of_directedMap g)).trans (Dipath.refl (g 1))) where
+def dihomToPathDihom (F : Dihomotopy f g) : Dipath.Dihomotopy
+    (((Dipath.refl (f 0)).trans (Dipath.ofDirectedMap f)).trans (F.evalAtRight 1))
+    (((F.evalAtRight 0).trans (Dipath.ofDirectedMap g)).trans (Dipath.refl (g 1))) where
   toDihomotopy :=
       Dihomotopy.hcomp'
       (
       Dihomotopy.hcomp'
-        (DirectedMap.Dihomotopy.SourceToPath (F.eval_at_right 0))
-        (dihom_to_dihom_of_paths F)
+        (DirectedMap.Dihomotopy.SourceToPath (F.evalAtRight 0))
+        (dihomToDihomOfPaths F)
         (by
           ext s
           change F ((min s 1), 0) = F (s, 0)
@@ -155,7 +159,7 @@ def dihom_to_path_dihom (F : Dihomotopy f g) : Dipath.Dihomotopy
           exact s.2.2
         )
       )
-      (DirectedMap.Dihomotopy.PathToTarget (F.eval_at_right 1))
+      (DirectedMap.Dihomotopy.PathToTarget (F.evalAtRight 1))
       (
         by
           ext s
@@ -190,11 +194,11 @@ def dihom_to_path_dihom (F : Dihomotopy f g) : Dipath.Dihomotopy
 
 
 lemma dihom_to_path_dihom_range (F : Dihomotopy f g) :
-    Set.range (dihom_to_path_dihom F) ⊆ Set.range F := by
-  unfold dihom_to_path_dihom
-  let A := DirectedMap.Dihomotopy.SourceToPath (F.eval_at_right 0)
-  let B := dihom_to_dihom_of_paths F
-  let C := DirectedMap.Dihomotopy.PathToTarget (F.eval_at_right 1)
+    Set.range (dihomToPathDihom F) ⊆ Set.range F := by
+  unfold dihomToPathDihom
+  let A := DirectedMap.Dihomotopy.SourceToPath (F.evalAtRight 0)
+  let B := dihomToDihomOfPaths F
+  let C := DirectedMap.Dihomotopy.PathToTarget (F.evalAtRight 1)
   have hA : Set.range A ⊆ Set.range F := by
     dsimp [A]
     rw [DirectedMap.Dihomotopy.sourceToPath_range]

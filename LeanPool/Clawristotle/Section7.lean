@@ -30,15 +30,15 @@ lemma poisson_boltzmann_algebraic
     (gradX : (X → ℝ) → X → (Fin 3 → ℝ))
     (divX : (X → (Fin 3 → ℝ)) → X → ℝ)
     (E : X → (Fin 3 → ℝ))
-    (ρ : X → ℝ) (ρ_ion : ℝ)
+    (ρ : X → ℝ) (ρIon : ℝ)
     (a₀ : X → ℝ) (c₀ : ℝ)
     (_hc₀ : c₀ < 0)
     (hForce : ∀ x, gradX a₀ x = (-2 * c₀) • E x)
     (hGradLogRho : ∀ x, gradX (Real.log ∘ ρ) x = gradX a₀ x)
-    (hGauss : ∀ x, divX E x = ρ x - ρ_ion)
+    (hGauss : ∀ x, divX E x = ρ x - ρIon)
     (hDivLinear : ∀ (α : ℝ) (G : X → Fin 3 → ℝ),
       ∀ x, divX (fun y => α • G y) x = α * divX G x) :
-    ∀ x, (-1 / (2 * c₀)) * divX (gradX (Real.log ∘ ρ)) x = ρ x - ρ_ion := by
+    ∀ x, (-1 / (2 * c₀)) * divX (gradX (Real.log ∘ ρ)) x = ρ x - ρIon := by
   intro x
   have h_eq : gradX (Real.log ∘ ρ) = fun y => (-2 * c₀) • E y :=
     funext fun y => (hGradLogRho y).trans (hForce y)
@@ -63,8 +63,8 @@ theorem electric_field_zero {X : Type*} [FlatTorus3 X] (ss : VMLSteadyState X) :
   have hGradA := ss.hGradA_zero hb0 ss.hDensityConst x
   have hfb := ss.hForceBalance x
   rw [hb0, cross_zero_left, add_zero] at hfb
-  -- hfb : gradX a_loc x = -(2 * c₀) • E x
-  -- hGradA : gradX a_loc x = 0
+  -- hfb : gradX aLoc x = -(2 * c₀) • E x
+  -- hGradA : gradX aLoc x = 0
   rw [hGradA] at hfb
   -- hfb : 0 = -(2 * c₀) • E x
   have hne : -(2 * ss.c₀) ≠ (0 : ℝ) := by nlinarith [ss.hc₀_neg]
@@ -75,7 +75,7 @@ theorem electric_field_zero {X : Type*} [FlatTorus3 X] (ss : VMLSteadyState X) :
     its maximum. (Extreme value theorem.) -/
 lemma continuous_attains_max {X : Type*} [TopologicalSpace X] [CompactSpace X] [Nonempty X]
     (g : X → ℝ) (hg : Continuous g) :
-    ∃ x_max : X, ∀ x, g x ≤ g x_max := by
+    ∃ xMax : X, ∀ x, g x ≤ g xMax := by
   obtain ⟨x, _, hx⟩ := isCompact_univ.exists_isMaxOn Set.univ_nonempty hg.continuousOn
   exact ⟨x, fun y => hx (Set.mem_univ y)⟩
 
@@ -83,14 +83,14 @@ lemma continuous_attains_max {X : Type*} [TopologicalSpace X] [CompactSpace X] [
     its minimum. (Extreme value theorem.) -/
 lemma continuous_attains_min {X : Type*} [TopologicalSpace X] [CompactSpace X] [Nonempty X]
     (g : X → ℝ) (hg : Continuous g) :
-    ∃ x_min : X, ∀ x, g x_min ≤ g x := by
+    ∃ xMin : X, ∀ x, g xMin ≤ g x := by
   obtain ⟨x, _, hx⟩ := isCompact_univ.exists_isMinOn Set.univ_nonempty hg.continuousOn
   exact ⟨x, fun y => hx (Set.mem_univ y)⟩
 
 /-- Poisson-Boltzmann equation from the Vlasov equation (isotropic case).
     When f is locally Maxwellian with b₀ = 0 (zero drift) and spatially constant c₀,
     the force balance gives gradX(a₀) = -(2c₀)E, and since a₀ = log ρ + const
-    (by the Gaussian integral), we get T∞ Δ(log ρ) = ρ − ρ_ion via Gauss's law.
+    (by the Gaussian integral), we get T∞ Δ(log ρ) = ρ − ρIon via Gauss's law.
     Reference: Lemma 20 (lem:poisson_boltzmann) in H-theorem-formal.tex. -/
 private lemma dot_cross_self_zero (v B : Fin 3 → ℝ) :
     dotProduct v (cross v B) = 0 := by
@@ -102,13 +102,13 @@ lemma poisson_boltzmann_from_vlasov
     {X : Type*} [FlatTorus3 X]
     (f : X → (Fin 3 → ℝ) → ℝ) (E B : X → (Fin 3 → ℝ))
     (Ψ : ℝ → ℝ) (ν : ℝ)
-    (ρ : X → ℝ) (ρ_ion : ℝ)
+    (ρ : X → ℝ) (ρIon : ℝ)
     (_hf_pos : ∀ x v, 0 < f x v)
     (_hf_smooth : ∀ x, ContDiff ℝ 3 (f x))
     (_hf_int : ∀ x, Integrable (f x))
     (_hΨ : ∀ r, 0 < Ψ r)
     (_hρ_def : ∀ x, ρ x = ∫ v, f x v)
-    (_hGauss : ∀ x, FlatTorus3.divX E x = ρ x - ρ_ion)
+    (_hGauss : ∀ x, FlatTorus3.divX E x = ρ x - ρIon)
     (_hDiff_fv : ∀ v, FlatTorus3.IsSpatiallySmooth 2 (fun x => f x v))
     (_hVlasov : ∀ x v,
       dotProduct v (FlatTorus3.gradX (fun y => f y v) x) +
@@ -118,7 +118,7 @@ lemma poisson_boltzmann_from_vlasov
     -- Isotropic case: b₀ = 0, so f(x,v) = exp(a₀(x) + c₀|v|²)
     (∀ x, ∃ a₀, ∀ v, f x v = Real.exp (a₀ + c₀ * normSq v)) →
     ∀ x, (-1 / (2 * c₀)) * FlatTorus3.divX (FlatTorus3.gradX (Real.log ∘ ρ)) x =
-      ρ x - ρ_ion := by
+      ρ x - ρIon := by
   intro c₀ hc₀ hform
   -- Define a₀ : X → ℝ from the existential
   let a₀ : X → ℝ := fun x => (hform x).choose
@@ -225,7 +225,7 @@ lemma poisson_boltzmann_from_vlasov
     -- gradX(log ∘ ρ) = gradX(a₀ + const) = gradX(a₀) by hGradAddConst
     rw [hlog_eq, FlatTorus3.hGradAddConst _ (FlatTorus3.hDiff_of_le _ (by decide) ha₀_diff)]
   -- Step 7: Apply poisson_boltzmann_algebraic
-  exact poisson_boltzmann_algebraic FlatTorus3.gradX FlatTorus3.divX E ρ ρ_ion
+  exact poisson_boltzmann_algebraic FlatTorus3.gradX FlatTorus3.divX E ρ ρIon
     a₀ c₀ hc₀ hForce hGradLogRho _hGauss FlatTorus3.hDivLinear
 
 end VML

@@ -34,25 +34,24 @@ theorem ArtinWedderburnForPrime {R : Type u} [Ring R] [h_nontriv : Nontrivial R]
       Nonempty (R ≃+* Matrix (Fin n) (Fin n) D) := by
   have top_acc : Acc (fun x y => x < y) (⊤ : Ideal R) :=
     IsWellFounded.apply (fun x y ↦ x < y) ⊤
-  have top_nice := acc_ideal_nice h_prime h_artinian ⊤ top_acc
+  have top_nice := accIdealNice h_prime h_artinian ⊤ top_acc
   have top_idem : IdemIdeal (⊤ : Ideal R) := by
     refine ⟨1, IsIdempotentElem.one, ?_⟩
     exact Eq.symm Ideal.span_singleton_one
-  unfold OrtIdem at *
   have R_ort_idem : OrtIdemDiv R := by
     specialize top_nice top_idem 1 IsIdempotentElem.one (Eq.symm Ideal.span_singleton_one)
-    apply isomorphic_OrtIdemDiv iso_corner_one
+    apply isomorphicOrtIdemDiv isoCornerOne
     exact top_nice
   have n_pos : 0 < R_ort_idem.n := nontrivial_ortidem_n_pos R h_nontriv R_ort_idem
   let ⟨mu, h⟩ := lemma_2_20' R h_prime R_ort_idem n_pos
   refine ⟨R_ort_idem.n, (CornerSubring (R_ort_idem.h ⟨0, n_pos⟩)),
-    (IsDivisionRing_to_DivisionRing (R_ort_idem.div ⟨0, n_pos⟩)), ?_⟩
+    (IsDivisionRingToDivisionRing (R_ort_idem.div ⟨0, n_pos⟩)), ?_⟩
   apply Nonempty.intro
-  have iso := ring_with_matrix_units_isomorphic_to_matrix_ring R R_ort_idem.n n_pos mu
-  unfold e00_cornerring at iso
+  have iso := ringWithMatrixUnitsIsomorphicToMatrixRing R R_ort_idem.n n_pos mu
+  unfold e00Cornerring at iso
   unfold CornerSubring at iso ⊢
   apply iso.trans
-  apply equal_el_iso_matrix_rings
+  apply equalElIsoMatrixRings
   · unfold IsIdempotentElem
     exact mu.mul_ij_kl_eq_kron_delta_jk_mul_es_il ⟨0, n_pos⟩ ⟨0, n_pos⟩ ⟨0, n_pos⟩ ⟨0, n_pos⟩
   · exact R_ort_idem.h ⟨0, n_pos⟩

@@ -147,37 +147,74 @@ def abstr (x : Γ) : Expr Γ A → Expr Γ A
 lemma df_abstr (x : Γ) (e : Expr Γ A) : defined (abstr x e) := by
   intro η
   induction e
-  case K => simp [eval, abstr]
-  case S => simp [eval, abstr]
-  case elm => simp [eval, abstr]
+  case K =>
+    dsimp [abstr, eval, HasDot.dot]
+    exact PCA.df_K₁ PCA.df_K₀
+  case S =>
+    dsimp [abstr, eval, HasDot.dot]
+    exact PCA.df_K₁ PCA.df_S₀
+  case elm a =>
+    dsimp [abstr, eval, HasDot.dot]
+    exact PCA.df_K₁ (by simp)
   case var y =>
-    cases (decEq y x)
-    case isFalse h => simp [abstr, eval, h]
-    case isTrue h => simp [abstr, eval, h]
-  case app e₁ e₂ ih₁ ih₂ => simp [eval, abstr, ih₁, ih₂]
+    by_cases h : y = x
+    · subst h
+      simp only [abstr, if_true]
+      dsimp [eval, HasDot.dot]
+      exact PCA.df_S₂ (A := A) (u := (PCA.K : Part A)) (v := (PCA.K : Part A))
+        PCA.df_K₀ PCA.df_K₀
+    · simp only [abstr, h, if_false, eval, HasDot.dot]
+      exact PCA.df_K₁ (A := A) (u := Part.some (η y)) (Part.some_dom _)
+  case app e₁ e₂ ih₁ ih₂ =>
+    dsimp [abstr, eval, HasDot.dot]
+    exact PCA.df_S₂ ih₁ ih₂
 
 /-- `eval_abstr e` behaves like abstraction in the extra variable.
     This is known as *combinatory completeness*. -/
 lemma eval_abstr (x : Γ) (e : Expr Γ A) (a : A) (η : Γ → A) :
     eval η (abstr x e ⬝ .elm a) = eval (override x a η) e := by
   induction e
-  case K => simp [eq_K, eval, abstr]
-  case S => simp [eq_K, eval, abstr]
-  case elm => simp [eq_K, eval, abstr]
+  case K =>
+    dsimp [abstr, eval, HasDot.dot]
+    exact PCA.eq_K (PCA.K : Part A) (Part.some a) PCA.df_K₀ (by simp)
+  case S =>
+    dsimp [abstr, eval, HasDot.dot]
+    exact PCA.eq_K (PCA.S : Part A) (Part.some a) PCA.df_S₀ (by simp)
+  case elm b =>
+    dsimp [abstr, eval, HasDot.dot]
+    exact PCA.eq_K (Part.some b) (Part.some a) (by simp) (by simp)
   case var y =>
-    cases (decEq y x)
-    case isFalse h => simp [eq_K, eval, abstr, override, h]
-    case isTrue h => simp [eq_S, eq_K, eval, abstr, override, h]
+    by_cases h : y = x
+    · subst h
+      simp only [abstr, if_true]
+      dsimp [eval, override, HasDot.dot]
+      simp only [if_true]
+      change PCA.S ⬝ PCA.K ⬝ PCA.K ⬝ Part.some a = Part.some a
+      rw [PCA.eq_S (PCA.K : Part A) (PCA.K : Part A) (Part.some a)
+        PCA.df_K₀ PCA.df_K₀ (Part.some_dom _)]
+      exact PCA.eq_K (Part.some a) (PCA.K ⬝ Part.some a) (by simp)
+        (PCA.df_K₁ (A := A) (u := Part.some a) (Part.some_dom _))
+    · simp only [abstr, h, if_false, eval, override, HasDot.dot]
+      exact PCA.eq_K (Part.some (η y)) (Part.some a) (Part.some_dom _) (Part.some_dom _)
   case app e₁ e₂ ih₁ ih₂ =>
-    simp [eval] at ih₁
-    simp [eval] at ih₂
-    simp [eq_S, abstr, eval, df_abstr x _ η, ih₁, ih₂]
+    dsimp [abstr, eval, HasDot.dot]
+    change PCA.S ⬝ eval η (abstr x e₁) ⬝ eval η (abstr x e₂) ⬝ Part.some a =
+      eval (override x a η) e₁ ⬝ eval (override x a η) e₂
+    rw [PCA.eq_S (eval η (abstr x e₁)) (eval η (abstr x e₂)) (Part.some a)
+      (df_abstr x e₁ η) (df_abstr x e₂ η) (Part.some_dom _)]
+    have ih₁' : eval η (abstr x e₁) ⬝ Part.some a = eval (override x a η) e₁ := by
+      simpa [eval, HasDot.dot] using ih₁
+    have ih₂' : eval η (abstr x e₂) ⬝ Part.some a = eval (override x a η) e₂ := by
+      simpa [eval, HasDot.dot] using ih₂
+    rw [ih₁', ih₂']
 
 /-- Like `eval_abstr` but with the application on the outside of `eval`. -/
 lemma eval_abstr_app (η : Γ → A) (x : Γ) (e : Expr Γ A) (u : Part A) (hu : u ⇓) :
     eval η (abstr x e) ⬝ u = eval (override x (u.get hu) η) e := by
   calc
-    _ = eval η (abstr x e ⬝ .elm (u.get hu)) := by simp [eval]
+    _ = eval η (abstr x e ⬝ .elm (u.get hu)) := by
+      dsimp [eval, HasDot.dot]
+      rw [Part.some_get hu]
     _ = eval (override x (u.get hu) η) e := by apply eval_abstr
 
 @[simp]
@@ -191,7 +228,9 @@ lemma eval_override (η : Γ → A) (x : Γ) (a : A) (e : Expr Γ A) :
     cases (decEq y x)
     case isFalse p => simp [eval, subst, p]
     case isTrue p => simp [eval, subst, p]
-  case app e₁ e₂ ih₁ ih₂ => simp [eval, subst, ih₁, ih₂]
+  case app e₁ e₂ ih₁ ih₂ =>
+    dsimp [eval, subst, HasDot.dot]
+    rw [ih₁, ih₂]
 
 /-- Compile an expression to a partial element, substituting
     the default value for any variables occurring in e. -/
@@ -202,16 +241,16 @@ def compile (e : Expr Γ A) : Part A :=
 /-- Evaluate an expression under the assumption that it is closed.
     Return `inl x` if variable `x` is encountered, otherwise `inr u`
     where `u` is the partial element so obtained. -/
-def eval_closed : Expr Γ A → Sum Γ (Part A)
+def evalClosed : Expr Γ A → Sum Γ (Part A)
   | .K => .inr K
   | .S => .inr S
   | .elm a => .inr (.some a)
   | .var x => .inl x
   | .app e₁ e₂ =>
-    match eval_closed e₁ with
+    match evalClosed e₁ with
     | .inl x => .inl x
     | .inr a₁ =>
-      match eval_closed e₂ with
+      match evalClosed e₂ with
       | .inl x => .inl x
       | .inr a₂ => .inr (a₁ ⬝ a₂)
 

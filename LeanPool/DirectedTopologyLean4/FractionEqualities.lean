@@ -5,6 +5,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 import LeanPool.DirectedTopologyLean4.Fraction
 
+/-!
+# LeanPool.DirectedTopologyLean4.FractionEqualities
+-/
+
 namespace FractionEqualities
 
 lemma one_sub_inverse_of_add_one {n : ℝ} (hn : n + 1 ≠ 0) :

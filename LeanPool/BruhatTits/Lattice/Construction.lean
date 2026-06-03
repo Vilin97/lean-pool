@@ -6,8 +6,6 @@ Authors: Judith Ludwig, Christian Merten
 import LeanPool.BruhatTits.Lattice.Basic
 import LeanPool.BruhatTits.Utils.ValuationRings
 
-open Module
-
 /-!
 # Basic constructions and operations on lattices
 
@@ -34,6 +32,9 @@ Most constructions work for an arbitrary subring `R` of a field `K`.
   for natural exponents. Generally, try to bring all lattices in the context in the form
   of `b.twist hϖ f` for fixed `b` and varying `f`, in order to simplify calculations.
 -/
+
+open Module
+
 
 suppress_compilation
 
@@ -413,7 +414,7 @@ variable [DecidableEq ι] [Fintype ι]
 def smulGL (g : GL ι K) (b : Basis ι K (ι → K)) : Basis ι K (ι → K) :=
   b.map (g.toLin.toLinearEquiv)
 
-instance : SMul (GL ι K) (Basis ι K (ι → K)) where
+instance instSMulGeneralLinearGroupForallLeanPool : SMul (GL ι K) (Basis ι K (ι → K)) where
   smul g b := smulGL g b
 
 lemma smulGL_def (g : GL ι K) (b : Basis ι K (ι → K)) :
@@ -481,7 +482,7 @@ variable [Fintype ι]
 /-- Scalar multiplication of units of `K` on bases of `ι → K` by twisting. -/
 def smul' (a : Kˣ) (b : Basis ι K (ι → K)) : Basis ι K (ι → K) := b.twist' (fun _ ↦ a)
 
-instance : SMul Kˣ (Basis ι K (ι → K)) where
+instance instSMulUnitsForallLeanPool : SMul Kˣ (Basis ι K (ι → K)) where
   smul := smul'
 
 lemma smul'_def (a : Kˣ) (b : Basis ι K (ι → K)) : a • b = b.twist' (fun _ ↦ a) := rfl
@@ -788,7 +789,7 @@ lemma IsLattice.of_le_of_isLattice_right [IsDiscreteValuationRing R] (L : Submod
   rw [maximalIdeal_smul_eq_uniformizer_smul _ hϖ] at h₂
   have hϖ' : ϖ.val ≠ 0 := by simpa using hϖ.ne_zero
   replace h₂ : Units.mk0 ϖ.val hϖ' • L ≤ M := by
-    simpa [Subring.smul_def, Units.smul_def] using h₂
+    exact h₂
   apply IsLattice.of_le_of_isLattice h₂ h₁
 
 end

@@ -8,7 +8,21 @@ import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Basic
 import Mathlib.LinearAlgebra.TensorProduct.Pi
 import Mathlib.LinearAlgebra.TensorProduct.Quotient
-import Mathlib.Tactic
+import Mathlib.Algebra.Module.Torsion.Basic
+import Mathlib.RingTheory.Ideal.Quotient.Operations
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
+/-!
+# LeanPool.BruhatTits.Utils.LinearAlgebra
+-/
 
 open Module
 
@@ -176,11 +190,13 @@ section
 
 variable {R M : Type*} [Semiring R] [AddCommMonoid M] [Module R M]
 
-instance (p : Submodule R M) : OrderTop { p' : Submodule R M // p ≤ p' } where
+instance instOrderTopSubtypeSubmoduleLeLeanPool (p : Submodule R M) :
+    OrderTop { p' : Submodule R M // p ≤ p' } where
   top := ⟨⊤, le_top⟩
   le_top _ _ _ := trivial
 
-instance (p : Submodule R M) : OrderBot { p' : Submodule R M // p ≤ p' } where
+instance instOrderBotSubtypeSubmoduleLeLeanPool (p : Submodule R M) :
+    OrderBot { p' : Submodule R M // p ≤ p' } where
   bot := ⟨p, le_rfl⟩
   bot_le p' _ hx := p'.property hx
 
@@ -200,7 +216,6 @@ lemma lt_of_ne_top (p : Submodule R M) {p' : Submodule R p}
     absurd h
     rw [eq_top_iff]
     rintro x -
-    simp
     have : x.val ∈ Submodule.map p.subtype q := by
       rw [hc]
       exact x.property

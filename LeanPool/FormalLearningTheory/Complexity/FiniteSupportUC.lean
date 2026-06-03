@@ -375,10 +375,10 @@ theorem finite_support_vc_approx
           _ ≤ ∑' i, Measure.pi (fun _ => D) {xs | xs i ∉ Set.range Sum.inl} :=
               MeasureTheory.measure_iUnion_le _
           _ = 0 := ENNReal.tsum_eq_zero.mpr hzero
-      exact le_antisymm hle (zero_le _)
+      exact le_antisymm hle zero_le
     have hinter_pos : 0 < Measure.pi (fun _ => D) (badᶜ ∩ allInl) := by
       by_contra h; push Not at h
-      have h0 := le_antisymm h (zero_le _)
+      have h0 := le_antisymm h zero_le
       have : Measure.pi (fun _ => D) badᶜ
           ≤ Measure.pi (fun _ => D) (badᶜ ∩ allInl) +
             Measure.pi (fun _ => D) allInlᶜ := by

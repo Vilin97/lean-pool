@@ -9,6 +9,10 @@ import Mathlib.Algebra.Module.Torsion.Free
 import Mathlib.Algebra.Module.Torsion.Field
 import Mathlib.Algebra.Field.Basic
 
+/-!
+# LeanPool.VirasoroProject.ToMathlib.LinearAlgebra.Basis.FinsumRepr
+-/
+
 lemma smul_support_subset_left {R M ι : Type*} [Semiring R]
     [AddCommGroup M] [Module R M] (v : ι → M) (cf : ι → R) :
     (fun i ↦ cf i • v i).support ⊆ cf.support := by
@@ -23,11 +27,12 @@ lemma finsum_mem_span {ι R V : Type*} [Semiring R] [AddCommMonoid V] [Module R 
     ∑ᶠ i, cfs i • vs i ∈ Submodule.span R (Set.range vs) := by
   by_cases h : {i | cfs i • vs i ≠ 0}.Finite
   · let s : Finset ι := h.toFinset
-    rw [finsum_eq_finset_sum_of_support_subset (s := s) _ (fun i hi ↦ by simpa [s] using hi)]
+    rw [finsum_eq_finsetSum_of_support_subset (s := s) _ (fun i hi ↦ by simpa [s] using hi)]
     apply Submodule.sum_smul_mem
     exact fun i his ↦ Submodule.mem_span_of_mem (Set.mem_range_self i)
   · suffices junk : ∑ᶠ i, cfs i • vs i = 0 by simp [junk]
-    simpa using finsum_mem_eq_zero_of_infinite (s := Set.univ) (by simpa using h)
+    simpa [Function.support] using finsum_mem_eq_zero_of_infinite (s := Set.univ)
+      (by simpa [Function.support] using h)
 
 -- TODO: Golf.
 lemma finsum_mem_mem_span {ι R V : Type*}
@@ -36,7 +41,7 @@ lemma finsum_mem_mem_span {ι R V : Type*}
     ∑ᶠ i ∈ s, cfs i • vs i ∈ Submodule.span R (vs '' s) := by
   by_cases h : {i | cfs i • vs i ≠ 0 ∧ i ∈ s}.Finite
   · let t : Finset ι := h.toFinset
-    rw [finsum_eq_finset_sum_of_support_subset (s := t) _ ?_]
+    rw [finsum_eq_finsetSum_of_support_subset (s := t) _ ?_]
     · classical
       have aux : ∑ i ∈ t, ∑ᶠ (_ : i ∈ s), cfs i • vs i = ∑ i ∈ t.filter s, cfs i • vs i  := by
         rw [Finset.sum_filter]
@@ -55,7 +60,8 @@ lemma finsum_mem_mem_span {ι R V : Type*}
       · by_contra con
         simp [con] at hi
   · suffices junk : ∑ᶠ i ∈ s, cfs i • vs i = 0 by simp [junk]
-    exact finsum_mem_eq_zero_of_infinite (by simpa [and_comm] using h)
+    exact finsum_mem_eq_zero_of_infinite (by simpa [Function.support, Set.inter_comm,
+      Set.setOf_and] using h)
 
 namespace Module.Basis
 
@@ -89,7 +95,7 @@ lemma finsum_repr_smul_basis {R M ι : Type*} [Semiring R] [Nontrivial R] [IsCan
   rw [map_sum]
   simp only [map_smul, Basis.repr_self, Finsupp.smul_single, smul_eq_mul, mul_one]
   ext i
-  simp only [Finsupp.coe_finset_sum, Finset.sum_apply]
+  simp only [Finsupp.coe_finsetSum, Finset.sum_apply]
   rw [Finset.sum_eq_single i]
   · simp
   · intro j _ j_ne_i
@@ -135,7 +141,7 @@ lemma repr_finsum_mem_eq_ite {R M ι : Type*} [Semiring R] [Nontrivial R] [IsCan
   by_cases hi : i ∈ I <;> simp [hi, aux i]
 
 /-- The basis on the span of a subset of a basis, indexed by that subset. -/
-  noncomputable def basis_submodule_span {R M ι : Type*}
+  noncomputable def basisSubmoduleSpan {R M ι : Type*}
     [Semiring R] [Nontrivial R] [IsCancelMulZero R]
     [AddCommGroup M] [Module R M] [Module.IsTorsionFree R M] (B : Basis ι R M) (I : Set ι) :
     Basis I R (Submodule.span R (B '' I)) :=
@@ -196,8 +202,8 @@ lemma repr_finsum_mem_eq_ite {R M ι : Type*} [Semiring R] [Nontrivial R] [IsCan
     [Semiring R] [Nontrivial R] [IsCancelMulZero R]
     [AddCommGroup M] [Module R M] [Module.IsTorsionFree R M]
     (B : Basis ι R M) (I : Set ι) (i : I) :
-    B.basis_submodule_span I i = B i.val := by
-  simp only [Basis.basis_submodule_span, LinearMap.coe_mk, AddHom.coe_mk, Basis.coe_ofRepr,
+    B.basisSubmoduleSpan I i = B i.val := by
+  simp only [Basis.basisSubmoduleSpan, LinearMap.coe_mk, AddHom.coe_mk, Basis.coe_ofRepr,
              LinearEquiv.coe_symm_mk]
   rw [finsum_eq_single _ i (fun j hj ↦ by simp [hj.symm])]
   simp

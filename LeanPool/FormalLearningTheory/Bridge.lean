@@ -542,7 +542,7 @@ theorem vcdim_to_ordinal_vcdim (X : Type u)
     simp only [withTopNatToOrdinal]
     rw [Ordinal.omega0_le]
     intro m
-    obtain ⟨S, hS_lt⟩ := (iSup_eq_top _).mp (show VCDim X C = ⊤ from hv)
+    obtain ⟨S, hS_lt⟩ := iSup_eq_top.mp (show VCDim X C = ⊤ from hv)
       (↑m) (WithTop.coe_lt_top m)
     have hS_shat : Shatters X C S := by
       by_contra hns
