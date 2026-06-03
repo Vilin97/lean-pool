@@ -18,7 +18,13 @@ import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Set.Basic
-import Mathlib.Tactic
+import Mathlib.LinearAlgebra.Trace
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.Ring
+import Lean.Elab.Tactic.Omega
 
 /-!
 # Noperthedron
@@ -51,7 +57,7 @@ theorem comp_image {R A B C : Type*} [Semiring R] [AddCommMonoid A] [Module R A]
 
 /-- The matrix of the counterclockwise rotation of the plane by angle `α`. -/
 @[simp]
-def rot2_mat (α : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+def rot2Mat (α : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   Matrix.of fun
     | 0, 0 => Real.cos α
     | 0, 1 => -Real.sin α
@@ -61,7 +67,7 @@ def rot2_mat (α : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 /-- The additive character sending an angle to the corresponding planar rotation. -/
 @[simp]
 def rot2 : AddChar ℝ (ℝ² →L[ℝ] ℝ²) where
-  toFun α := (rot2_mat α).toEuclideanLin.toContinuousLinearMap
+  toFun α := (rot2Mat α).toEuclideanLin.toContinuousLinearMap
   map_zero_eq_one' := by
     ext v i
     fin_cases i <;> simp [Matrix.toLpLin_apply, Matrix.mulVec]
@@ -69,7 +75,7 @@ def rot2 : AddChar ℝ (ℝ² →L[ℝ] ℝ²) where
     intro α β
     ext v i
     fin_cases i <;>
-      simp [Matrix.toLpLin_apply, Matrix.mulVec_eq_sum, rot2_mat, cos_add, sin_add] <;>
+      simp [Matrix.toLpLin_apply, Matrix.mulVec_eq_sum, rot2Mat, cos_add, sin_add] <;>
       ring_nf
 
 theorem rot2_180 : rot2 π = -1 := by
@@ -101,7 +107,7 @@ theorem rot2_k360 {k : ℤ} : rot2 (k * (2 * π)) = 1 := by
 
 /-- The matrix of rotation about the `x`-axis by angle `α`. -/
 @[simp]
-def rot3x_mat (α : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+def rot3xMat (α : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   Matrix.of fun
     | 0, 0 => 1
     | 0, 1 => 0
@@ -116,7 +122,7 @@ def rot3x_mat (α : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
 /-- The additive character of rotations about the `x`-axis. -/
 @[simp]
 def rot3x : AddChar ℝ (ℝ³ →L[ℝ] ℝ³) where
-  toFun α := (rot3x_mat α).toEuclideanLin.toContinuousLinearMap
+  toFun α := (rot3xMat α).toEuclideanLin.toContinuousLinearMap
   map_zero_eq_one' := by
     ext v i
     fin_cases i <;>
@@ -124,13 +130,13 @@ def rot3x : AddChar ℝ (ℝ³ →L[ℝ] ℝ³) where
   map_add_eq_mul' α β := by
     ext v i
     fin_cases i <;>
-      simp [rot3x_mat, cos_add, sin_add, ContinuousLinearMap.mul_def,
+      simp [rot3xMat, cos_add, sin_add, ContinuousLinearMap.mul_def,
         Matrix.toLpLin_apply, Matrix.mulVec_eq_sum, Fin.sum_univ_three] <;>
       ring_nf
 
 /-- The matrix of rotation about the `y`-axis by angle `α`. -/
 @[simp]
-def rot3y_mat (α : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+def rot3yMat (α : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   Matrix.of fun
     | 0, 0 => Real.cos α
     | 0, 1 => 0
@@ -145,7 +151,7 @@ def rot3y_mat (α : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
 /-- The additive character of rotations about the `y`-axis. -/
 @[simps]
 def rot3y : AddChar ℝ (ℝ³ →L[ℝ] ℝ³) where
-  toFun α := (rot3y_mat α).toEuclideanLin.toContinuousLinearMap
+  toFun α := (rot3yMat α).toEuclideanLin.toContinuousLinearMap
   map_zero_eq_one' := by
     ext v i
     fin_cases i <;>
@@ -153,13 +159,13 @@ def rot3y : AddChar ℝ (ℝ³ →L[ℝ] ℝ³) where
   map_add_eq_mul' α β := by
     ext v i
     fin_cases i <;>
-      simp [rot3y_mat, cos_add, sin_add, ContinuousLinearMap.mul_def,
+      simp [rot3yMat, cos_add, sin_add, ContinuousLinearMap.mul_def,
         Matrix.toLpLin_apply, Matrix.mulVec_eq_sum, Fin.sum_univ_three] <;>
       ring_nf
 
 /-- The matrix of rotation about the `z`-axis by angle `α`. -/
 @[simp]
-def rot3z_mat (α : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+def rot3zMat (α : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   Matrix.of fun
     | 0, 0 => Real.cos α
     | 0, 1 => -Real.sin α
@@ -174,7 +180,7 @@ def rot3z_mat (α : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
 /-- The additive character of rotations about the `z`-axis. -/
 @[simps]
 def rot3z : AddChar ℝ (ℝ³ →L[ℝ] ℝ³) where
-  toFun α := (rot3z_mat α).toEuclideanLin.toContinuousLinearMap
+  toFun α := (rot3zMat α).toEuclideanLin.toContinuousLinearMap
   map_zero_eq_one' := by
     ext v i
     fin_cases i <;>
@@ -182,15 +188,15 @@ def rot3z : AddChar ℝ (ℝ³ →L[ℝ] ℝ³) where
   map_add_eq_mul' α β := by
     ext v i
     fin_cases i <;>
-      simp [rot3z_mat, cos_add, sin_add, ContinuousLinearMap.mul_def,
+      simp [rot3zMat, cos_add, sin_add, ContinuousLinearMap.mul_def,
         Matrix.toLpLin_apply, Matrix.mulVec_eq_sum, Fin.sum_univ_three] <;>
       ring_nf
 
 /-- Selects the coordinate-axis rotation matrix for a three-dimensional axis index. -/
-def rot3_mat : Fin 3 → ℝ → Matrix (Fin 3) (Fin 3) ℝ
-  | 0 => rot3x_mat
-  | 1 => rot3y_mat
-  | 2 => rot3z_mat
+def rot3Mat : Fin 3 → ℝ → Matrix (Fin 3) (Fin 3) ℝ
+  | 0 => rot3xMat
+  | 1 => rot3yMat
+  | 2 => rot3zMat
 
 /-- Selects the coordinate-axis rotation additive character for a three-dimensional axis index. -/
 def rot3 : Fin 3 → AddChar ℝ (ℝ³ →L[ℝ] ℝ³)
@@ -199,8 +205,8 @@ def rot3 : Fin 3 → AddChar ℝ (ℝ³ →L[ℝ] ℝ³)
   | 2 => rot3z
 
 theorem rot3_eq_rot3_mat_toEuclideanLin :
-    rot3 d θ = (rot3_mat d θ).toEuclideanLin := by
-  fin_cases d <;> simp [rot3, rot3_mat]
+    rot3 d θ = (rot3Mat d θ).toEuclideanLin := by
+  fin_cases d <;> simp [rot3, rot3Mat]
 
 @[simp]
 theorem rot3_360 : rot3 d (2 * π) = 1 := by
@@ -237,7 +243,7 @@ def unit3 (θ φ : ℝ) : ℝ³ :=
 
 /-- The matrix for projection to the `xy`-plane followed by a right angle rotation. -/
 @[simp]
-def proj_xy_r90_mat : Matrix (Fin 2) (Fin 3) ℝ :=
+def projXYR90Mat : Matrix (Fin 2) (Fin 3) ℝ :=
   Matrix.of fun
     | 0, 0 => 0
     | 0, 1 => 1
@@ -248,12 +254,12 @@ def proj_xy_r90_mat : Matrix (Fin 2) (Fin 3) ℝ :=
 
 /-- Projection to the `xy`-plane followed by a right angle rotation. -/
 @[simp]
-def proj_xy_r90 : ℝ³ →L[ℝ] ℝ² :=
-  proj_xy_r90_mat.toEuclideanLin.toContinuousLinearMap
+def projXYR90 : ℝ³ →L[ℝ] ℝ² :=
+  projXYR90Mat.toEuclideanLin.toContinuousLinearMap
 
 /-- The matrix of reflection across the `x`-axis in the plane. -/
 @[simp]
-def flip_y_mat : Matrix (Fin 2) (Fin 2) ℝ :=
+def flipYMat : Matrix (Fin 2) (Fin 2) ℝ :=
   Matrix.of fun
     | 0, 0 => 1
     | 0, 1 => 0
@@ -262,17 +268,17 @@ def flip_y_mat : Matrix (Fin 2) (Fin 2) ℝ :=
 
 /-- Reflection across the `x`-axis in the plane. -/
 @[simp]
-def flip_y : ℝ² →L[ℝ] ℝ² :=
-  flip_y_mat.toEuclideanLin.toContinuousLinearMap
+def flipY : ℝ² →L[ℝ] ℝ² :=
+  flipYMat.toEuclideanLin.toContinuousLinearMap
 
 /-- Projection after first orienting a three-dimensional body by angles `θ` and `φ`. -/
 @[simp]
-def proj_rot (θ φ : ℝ) : ℝ³ →L[ℝ] ℝ² :=
-  proj_xy_r90 ∘L rot3 1 φ ∘L rot3 2 (-θ)
+def projRot (θ φ : ℝ) : ℝ³ →L[ℝ] ℝ² :=
+  projXYR90 ∘L rot3 1 φ ∘L rot3 2 (-θ)
 
 theorem rot_proj_rot :
-    rot2 α ∘L proj_rot θ φ =
-      proj_xy_r90 ∘L rot3 2 α ∘L rot3 1 φ ∘L rot3 2 (-θ) := by
+    rot2 α ∘L projRot θ φ =
+      projXYR90 ∘L rot3 2 α ∘L rot3 1 φ ∘L rot3 2 (-θ) := by
   ext v i
   fin_cases i <;>
     simp [rot3, Matrix.toLpLin_apply, Matrix.mulVec_eq_sum, Fin.sum_univ_two,
@@ -280,15 +286,15 @@ theorem rot_proj_rot :
     ring
 
 /-- A set is in convex position if no point lies in the convex hull of the others. -/
-def convex_position (𝕜 V : Type) [PartialOrder 𝕜] [Semiring 𝕜]
+def convexPosition (𝕜 V : Type) [PartialOrder 𝕜] [Semiring 𝕜]
     [AddCommMonoid V] [Module 𝕜 V] (P : Set V) : Prop :=
   ∀ p ∈ P, p ∉ convexHull 𝕜 (P \ Set.singleton p)
 
 /-- A projection-interior formulation of Rupert's property for a set in space. -/
 def rupert' (P : Set ℝ³) : Prop :=
   ∃ α θ₁ φ₁ θ₂ φ₂ : ℝ,
-    (rot2 α ∘L proj_rot θ₁ φ₁) '' P ⊆
-      interior (convexHull ℝ (proj_rot θ₂ φ₂ '' P))
+    (rot2 α ∘L projRot θ₁ φ₁) '' P ⊆
+      interior (convexHull ℝ (projRot θ₂ φ₂ '' P))
 
 /-- The first generating point of the noperthedron seed. -/
 def C₁ : ℝ³ :=
@@ -303,26 +309,26 @@ def C₃ : ℝ³ :=
   !₂[8193990033e-10, 5298215096e-10, 1230614493e-10]
 
 /-- The three generating points used to define the symmetric noperthedron set. -/
-def noperthedron_seed : Finset ℝ³ :=
+def noperthedronSeed : Finset ℝ³ :=
   {C₁, C₂, C₃}
 
 @[simp]
 theorem mem_noperthedron_seed (p : ℝ³) :
-    p ∈ noperthedron_seed ↔ p = C₁ ∨ p = C₂ ∨ p = C₃ := by
-  unfold noperthedron_seed
+    p ∈ noperthedronSeed ↔ p = C₁ ∨ p = C₂ ∨ p = C₃ := by
+  unfold noperthedronSeed
   grind only [= Finset.mem_insert, = Set.mem_singleton_iff, = Finset.insert_eq_of_mem,
     = Finset.mem_singleton, cases Or]
 
 /-- The finite symmetric point configuration used in the noperthedron construction. -/
 def noperthedron : Finset ℝ³ :=
-  (({1, -1} : Finset ℤ) ×ˢ Finset.range 15 ×ˢ noperthedron_seed).image
+  (({1, -1} : Finset ℤ) ×ˢ Finset.range 15 ×ˢ noperthedronSeed).image
     fun (s, (k, p)) => (s • rot3 2 (k * 15⁻¹ * (2 * π))) p
 
 theorem mem_noperthedron' (p : ℝ³) :
     p ∈ noperthedron ↔
       ∃ (s : ℤ) (k : ℕ) (q : ℝ³),
         s ∈ ({1, -1} : Finset ℤ) ∧
-          k < 15 ∧ q ∈ noperthedron_seed ∧
+          k < 15 ∧ q ∈ noperthedronSeed ∧
             p = (s • rot3 2 (k * 15⁻¹ * (2 * π))) q := by
   unfold noperthedron
   simp only [Int.reduceNeg, Finset.mem_image, Finset.mem_product, Finset.mem_insert,
@@ -338,7 +344,7 @@ theorem mem_noperthedron (p : ℝ³) :
     p ∈ noperthedron ↔
       ∃ (s : ℤ) (k : ℤ) (q : ℝ³),
         s ∈ ({1, -1} : Finset ℤ) ∧
-          q ∈ noperthedron_seed ∧
+          q ∈ noperthedronSeed ∧
             p = (s • rot3 2 (k * 15⁻¹ * (2 * π))) q := by
   rw [mem_noperthedron']
   constructor
@@ -380,22 +386,22 @@ theorem noperthedron_point_symmetric {p : ℝ³} :
   rcases s_in with rfl | rfl <;> simp [q_in]
 
 theorem lemma7_1 :
-    (proj_rot (θ + 2 / 15 * π) φ) '' noperthedron = proj_rot θ φ '' noperthedron := by
+    (projRot (θ + 2 / 15 * π) φ) '' noperthedron = projRot θ φ '' noperthedron := by
   ext p
   simp only [Set.mem_image, SetLike.mem_coe, mem_noperthedron, mem_noperthedron_seed,
-    ↓existsAndEq, and_true, and_or_left, or_and_right, exists_or, proj_rot]
+    ↓existsAndEq, and_true, and_or_left, or_and_right, exists_or, projRot]
   have h (p : ℝ³) (s : ℤ) a b := calc
-    (proj_xy_r90 ∘L rot3 1 φ ∘L rot3 2 a) ((s • rot3 2 b) p) = _ := by
+    (projXYR90 ∘L rot3 1 φ ∘L rot3 2 a) ((s • rot3 2 b) p) = _ := by
       rfl
-    _ = (proj_xy_r90 ∘L rot3 1 φ ∘L rot3 2 a ∘L (s • rot3 2 b)) p := by
+    _ = (projXYR90 ∘L rot3 1 φ ∘L rot3 2 a ∘L (s • rot3 2 b)) p := by
       simp only [ContinuousLinearMap.comp_apply]
-    _ = s • (proj_xy_r90 ∘L rot3 1 φ ∘L rot3 2 a ∘L rot3 2 b) p := by
+    _ = s • (projXYR90 ∘L rot3 1 φ ∘L rot3 2 a ∘L rot3 2 b) p := by
       simp only [ContinuousLinearMap.comp_smul, ContinuousLinearMap.smul_apply]
-    _ = s • (proj_xy_r90 ∘L rot3 1 φ ∘L (rot3 2 a ∘L rot3 2 b)) p := by
+    _ = s • (projXYR90 ∘L rot3 1 φ ∘L (rot3 2 a ∘L rot3 2 b)) p := by
       simp
-    _ = s • (proj_xy_r90 ∘L rot3 1 φ ∘L rot3 2 (a + b)) p := by
+    _ = s • (projXYR90 ∘L rot3 1 φ ∘L rot3 2 (a + b)) p := by
       simp [AddChar.map_add_eq_mul]
-    _ = (proj_xy_r90 ∘L rot3 1 φ ∘L (s • rot3 2 (a + b))) p := by
+    _ = (projXYR90 ∘L rot3 1 φ ∘L (s • rot3 2 (a + b))) p := by
       simp only [ContinuousLinearMap.comp_smul, ContinuousLinearMap.smul_apply]
   constructor <;> rintro (h | h | h) <;> rcases h with ⟨s, k, ⟨s_in, rfl⟩⟩
   · left
@@ -440,8 +446,8 @@ theorem lemma7_1 :
     trivial
 
 theorem lemma7_2 :
-    (rot2 (α + π) ∘L proj_rot θ φ) '' noperthedron =
-      (rot2 α ∘L proj_rot θ φ) '' noperthedron := by
+    (rot2 (α + π) ∘L projRot θ φ) '' noperthedron =
+      (rot2 α ∘L projRot θ φ) '' noperthedron := by
   ext p
   constructor <;> rintro ⟨q, q_in, rfl⟩ <;> use -q
   · constructor
@@ -458,14 +464,14 @@ theorem lemma7_2 :
         ContinuousLinearMap.comp_id, neg_neg]
 
 theorem lemma7_3_1 :
-    flip_y ∘L proj_rot θ φ =
-      (-proj_rot (θ + π * 15⁻¹) (π - φ)) ∘L rot3 2 (π * 16 * 15⁻¹) := by
+    flipY ∘L projRot θ φ =
+      (-projRot (θ + π * 15⁻¹) (π - φ)) ∘L rot3 2 (π * 16 * 15⁻¹) := by
   ext v i
   have h : π * 16 * 15⁻¹ = π * 15⁻¹ + π := by ring
   have hpyth : (sin (π * 15⁻¹)) ^ 2 + (cos (π * 15⁻¹)) ^ 2 = 1 := Real.sin_sq_add_cos_sq _
   fin_cases i <;>
-    simp only [flip_y, flip_y_mat, proj_rot, proj_xy_r90, proj_xy_r90_mat, rot3, rot3y_apply,
-      rot3y_mat, rot3z_apply, rot3z_mat, cos_neg, sin_neg, neg_neg, ContinuousLinearMap.coe_comp',
+    simp only [flipY, flipYMat, projRot, projXYR90, projXYR90Mat, rot3, rot3y_apply,
+      rot3yMat, rot3z_apply, rot3zMat, cos_neg, sin_neg, neg_neg, ContinuousLinearMap.coe_comp',
       LinearMap.coe_toContinuousLinearMap', Function.comp_apply, Matrix.toLpLin_apply,
       Matrix.mulVec_eq_sum, op_smul_eq_smul, Fin.sum_univ_three, Fin.isValue, WithLp.toLp_add,
       WithLp.toLp_smul, WithLp.ofLp_add, WithLp.ofLp_smul, Pi.add_apply, Pi.smul_apply,
@@ -525,18 +531,18 @@ theorem lemma7_3_2 :
     exact ⟨⟨by omega, q_in⟩, trivial⟩
 
 theorem lemma7_3 :
-    (flip_y ∘L proj_rot θ φ) '' noperthedron =
-      proj_rot (θ + π * 15⁻¹) (π - φ) '' noperthedron := by
+    (flipY ∘L projRot θ φ) '' noperthedron =
+      projRot (θ + π * 15⁻¹) (π - φ) '' noperthedron := by
   simp only [lemma7_3_1]
-  have h : (-proj_rot (θ + π * 15⁻¹) (π - φ)) ∘L (rot3 2 (π * 16 * 15⁻¹)) =
-      (proj_rot (θ + π * 15⁻¹) (π - φ)) ∘L (-rot3 2 (π * 16 * 15⁻¹)) := by simp
+  have h : (-projRot (θ + π * 15⁻¹) (π - φ)) ∘L (rot3 2 (π * 16 * 15⁻¹)) =
+      (projRot (θ + π * 15⁻¹) (π - φ)) ∘L (-rot3 2 (π * 16 * 15⁻¹)) := by simp
   simp only [h, comp_image, lemma7_3_2]
 
 theorem lemma9_rot2 : ‖rot2 α‖ = 1 := by
   apply ContinuousLinearMap.opNorm_eq_of_bounds
   · simp
   · intro x
-    simp only [rot2, rot2_mat, AddChar.coe_mk, LinearMap.coe_toContinuousLinearMap',
+    simp only [rot2, rot2Mat, AddChar.coe_mk, LinearMap.coe_toContinuousLinearMap',
       Matrix.toLpLin_apply, Matrix.mulVec_eq_sum, op_smul_eq_smul,
       Fin.sum_univ_two, Fin.isValue, WithLp.toLp_add, WithLp.toLp_smul, ENNReal.toReal_ofNat,
       Nat.ofNat_pos, PiLp.norm_eq_sum, PiLp.add_apply, PiLp.smul_apply,
@@ -567,7 +573,7 @@ theorem lemma9 : ‖rot3 d α‖ = 1 := by
     · apply ContinuousLinearMap.opNorm_eq_of_bounds
       · simp
       · intro x
-        simp only [rot3, rot3x, rot3y, rot3z, rot3x_mat, rot3y_mat, rot3z_mat, AddChar.coe_mk,
+        simp only [rot3, rot3x, rot3y, rot3z, rot3xMat, rot3yMat, rot3zMat, AddChar.coe_mk,
           LinearMap.coe_toContinuousLinearMap', Matrix.toLpLin_apply, Matrix.mulVec_eq_sum,
           op_smul_eq_smul, Fin.sum_univ_three, Fin.isValue, WithLp.toLp_add,
           WithLp.toLp_smul, ENNReal.toReal_ofNat, Nat.ofNat_pos, PiLp.norm_eq_sum, PiLp.add_apply,
@@ -601,11 +607,11 @@ theorem lemma9 : ‖rot3 d α‖ = 1 := by
           _ ≤ N * ‖!₂[(1 : ℝ), 0, 0]‖ := by assumption
           _ = N := by simp [PiLp.norm_eq_sum, Fin.sum_univ_three]
 
-theorem norm_proj_xy_r90_eq_one : ‖proj_xy_r90‖ = 1 := by
+theorem norm_proj_xy_r90_eq_one : ‖projXYR90‖ = 1 := by
   apply ContinuousLinearMap.opNorm_eq_of_bounds
   · simp
   · intro x
-    simp only [proj_xy_r90, proj_xy_r90_mat, LinearMap.coe_toContinuousLinearMap',
+    simp only [projXYR90, projXYR90Mat, LinearMap.coe_toContinuousLinearMap',
       Matrix.toLpLin_apply, Matrix.mulVec_eq_sum, op_smul_eq_smul,
       Fin.sum_univ_three, Fin.isValue, WithLp.toLp_add, WithLp.toLp_smul, ENNReal.toReal_ofNat,
       Nat.ofNat_pos, PiLp.norm_eq_sum, PiLp.add_apply, PiLp.smul_apply,
@@ -620,27 +626,27 @@ theorem norm_proj_xy_r90_eq_one : ‖proj_xy_r90‖ = 1 := by
   · intro N N_nonneg h
     specialize h !₂[1, 0, 0]
     calc
-      1 = ‖proj_xy_r90 !₂[1, 0, 0]‖ := by
+      1 = ‖projXYR90 !₂[1, 0, 0]‖ := by
             simp [Matrix.mulVec_eq_sum, Fin.sum_univ_three, PiLp.norm_eq_sum]
       _ ≤ N * ‖!₂[(1 : ℝ), 0, 0]‖ := by assumption
       _ = N := by simp [Fin.sum_univ_three, PiLp.norm_eq_sum]
 
-theorem lemma9_proj_rot : ‖proj_rot θ φ‖ = 1 := by
+theorem lemma9_proj_rot : ‖projRot θ φ‖ = 1 := by
   apply ContinuousLinearMap.opNorm_eq_of_bounds
   · simp
   · intro x
-    simp only [proj_rot]
+    simp only [projRot]
     calc
-      ‖(proj_xy_r90 ∘L rot3 1 φ ∘L rot3 2 (-θ)) x‖ = _ := by rfl
-      _ ≤ ‖proj_xy_r90 ∘L rot3 1 φ ∘L rot3 2 (-θ)‖ * ‖x‖ := by
+      ‖(projXYR90 ∘L rot3 1 φ ∘L rot3 2 (-θ)) x‖ = _ := by rfl
+      _ ≤ ‖projXYR90 ∘L rot3 1 φ ∘L rot3 2 (-θ)‖ * ‖x‖ := by
             apply ContinuousLinearMap.le_opNorm
-      _ ≤ (‖proj_xy_r90‖ * ‖rot3 1 φ‖ * ‖rot3 2 (-θ)‖) * ‖x‖ := by
+      _ ≤ (‖projXYR90‖ * ‖rot3 1 φ‖ * ‖rot3 2 (-θ)‖) * ‖x‖ := by
             apply mul_le_mul_of_nonneg_right
             · calc
-                ‖proj_xy_r90 ∘L rot3 1 φ ∘L rot3 2 (-θ)‖ = _ := by rfl
-                _ ≤ ‖proj_xy_r90‖ * ‖rot3 1 φ ∘L rot3 2 (-θ)‖ := by
+                ‖projXYR90 ∘L rot3 1 φ ∘L rot3 2 (-θ)‖ = _ := by rfl
+                _ ≤ ‖projXYR90‖ * ‖rot3 1 φ ∘L rot3 2 (-θ)‖ := by
                       apply ContinuousLinearMap.opNorm_comp_le
-                _ ≤ ‖proj_xy_r90‖ * ‖rot3 1 φ‖ * ‖rot3 2 (-θ)‖ := by
+                _ ≤ ‖projXYR90‖ * ‖rot3 1 φ‖ * ‖rot3 2 (-θ)‖ := by
                       rw [mul_assoc]
                       apply mul_le_mul_of_nonneg_left
                       · apply ContinuousLinearMap.opNorm_comp_le
@@ -651,9 +657,9 @@ theorem lemma9_proj_rot : ‖proj_rot θ φ‖ = 1 := by
     specialize h !₂[-sin θ, cos θ, 0]
     calc
       1 = ((sin θ ^ 2 + cos θ ^ 2) ^ 2) ^ (2 : ℝ)⁻¹ := by simp [Real.sin_sq_add_cos_sq]
-      _ = ‖(proj_rot θ φ) !₂[-sin θ, cos θ, 0]‖ := by
-            simp only [rot3, proj_rot, proj_xy_r90, proj_xy_r90_mat, rot3y_apply, rot3y_mat,
-              rot3z_apply, rot3z_mat, cos_neg, sin_neg, neg_neg, ContinuousLinearMap.coe_comp',
+      _ = ‖(projRot θ φ) !₂[-sin θ, cos θ, 0]‖ := by
+            simp only [rot3, projRot, projXYR90, projXYR90Mat, rot3y_apply, rot3yMat,
+              rot3z_apply, rot3zMat, cos_neg, sin_neg, neg_neg, ContinuousLinearMap.coe_comp',
               LinearMap.coe_toContinuousLinearMap', Function.comp_apply, Matrix.toLpLin_toLp,
               Matrix.toLin'_apply, Matrix.mulVec_eq_sum, op_smul_eq_smul, Fin.sum_univ_three,
               Fin.isValue, Matrix.cons_val_zero, neg_smul, Matrix.cons_val_one, Matrix.cons_val,
@@ -669,7 +675,7 @@ theorem lemma9_proj_rot : ‖proj_rot θ φ‖ = 1 := by
 
 theorem dist_rot2_apply :
     ‖(rot2 α - rot2 α') v‖ = 2 * |sin ((α - α') / 2)| * ‖v‖ := by
-  simp only [rot2, rot2_mat, AddChar.coe_mk, ContinuousLinearMap.coe_sub',
+  simp only [rot2, rot2Mat, AddChar.coe_mk, ContinuousLinearMap.coe_sub',
     LinearMap.coe_toContinuousLinearMap', Pi.sub_apply, Matrix.toLpLin_apply,
     Matrix.mulVec_eq_sum, op_smul_eq_smul, Fin.sum_univ_two, Fin.isValue,
     WithLp.toLp_add, WithLp.toLp_smul, ENNReal.toReal_ofNat, Nat.ofNat_pos, PiLp.norm_eq_sum,
@@ -713,7 +719,7 @@ theorem dist_rot3_apply :
     | 2, 1 => 0
     | 2, 2 => 1
   fin_cases d <;>
-    · simp only [rot3, rot3x, rot3y, rot3z, rot3x_mat, rot3y_mat, rot3z_mat, AddChar.coe_mk,
+    · simp only [rot3, rot3x, rot3y, rot3z, rot3xMat, rot3yMat, rot3zMat, AddChar.coe_mk,
         ContinuousLinearMap.coe_sub', LinearMap.coe_toContinuousLinearMap', Pi.sub_apply,
         Matrix.toLpLin_apply, Matrix.mulVec_eq_sum, op_smul_eq_smul,
         Fin.sum_univ_three, Fin.isValue, WithLp.toLp_add, WithLp.toLp_smul, ENNReal.toReal_ofNat,
@@ -833,15 +839,15 @@ theorem lemma11_1_4 :
   simp only [neg_div, cos_neg]
 
 /-- The auxiliary function `sin x - x * cos x`, used in convexity estimates. -/
-def sin_sub_mul_cos (x : ℝ) : ℝ := sin x - x * cos x
+def sinSubMulCos (x : ℝ) : ℝ := sin x - x * cos x
 
-theorem sin_sub_mul_cos_monotone_on : MonotoneOn sin_sub_mul_cos (Set.Icc 0 π) := by
+theorem sin_sub_mul_cos_monotone_on : MonotoneOn sinSubMulCos (Set.Icc 0 π) := by
   apply monotoneOn_of_deriv_nonneg
   · apply convex_Icc
   · apply Continuous.continuousOn
-    unfold sin_sub_mul_cos
+    unfold sinSubMulCos
     continuity
-  · unfold sin_sub_mul_cos
+  · unfold sinSubMulCos
     simp only [interior_Icc]
     apply DifferentiableOn.sub
     · apply Differentiable.differentiableOn
@@ -853,7 +859,7 @@ theorem sin_sub_mul_cos_monotone_on : MonotoneOn sin_sub_mul_cos (Set.Icc 0 π) 
         simp
   · simp only [interior_Icc]
     intro x x_in
-    unfold sin_sub_mul_cos
+    unfold sinSubMulCos
     simp only [differentiableAt_sin, differentiableAt_fun_id, differentiableAt_cos,
       DifferentiableAt.fun_mul, deriv_fun_sub, Real.deriv_sin, deriv_fun_mul, deriv_id'', one_mul,
       deriv_cos', mul_neg, sub_add_cancel_left, neg_neg]
@@ -862,12 +868,12 @@ theorem sin_sub_mul_cos_monotone_on : MonotoneOn sin_sub_mul_cos (Set.Icc 0 π) 
     rcases x_in with ⟨x_pos, x_lt⟩
     apply mul_nonneg <;> linarith
 
-theorem sin_sub_mul_cos_nonneg : x ∈ Set.Icc 0 π → 0 ≤ sin_sub_mul_cos x := by
+theorem sin_sub_mul_cos_nonneg : x ∈ Set.Icc 0 π → 0 ≤ sinSubMulCos x := by
   simp only [Set.mem_Icc, and_imp]
   intro x_nonneg x_le
   calc
-    0 = sin_sub_mul_cos 0 := by simp [sin_sub_mul_cos]
-    _ ≤ sin_sub_mul_cos x := by
+    0 = sinSubMulCos 0 := by simp [sinSubMulCos]
+    _ ≤ sinSubMulCos x := by
           apply sin_sub_mul_cos_monotone_on <;>
             (try simp only [Set.mem_Icc, le_refl, true_and]) <;> grind
 
@@ -1073,28 +1079,28 @@ theorem tr_rot3_rot3 :
     d ≠ d' → tr (rot3 d α ∘L rot3 d' β) = cos α + cos β + cos α * cos β := by
   intro d_ne_d'
   calc tr (rot3 d α ∘L rot3 d' β)
-    _ = tr ((rot3_mat d α).toEuclideanLin.toContinuousLinearMap ∘L
-        (rot3_mat d' β).toEuclideanLin.toContinuousLinearMap) := by
+    _ = tr ((rot3Mat d α).toEuclideanLin.toContinuousLinearMap ∘L
+        (rot3Mat d' β).toEuclideanLin.toContinuousLinearMap) := by
           simp [rot3_eq_rot3_mat_toEuclideanLin]
-    _ = tr ((rot3_mat d α * rot3_mat d' β).toEuclideanLin) := by
+    _ = tr ((rot3Mat d α * rot3Mat d' β).toEuclideanLin) := by
           simp [Matrix.toLpLin_eq_toLin, Matrix.toLin_mul (v₁ := ?a) (v₂ := ?a) (v₃ := ?a)]
-    _ = Matrix.trace (rot3_mat d α * rot3_mat d' β) := by
+    _ = Matrix.trace (rot3Mat d α * rot3Mat d' β) := by
           simp only [Matrix.toLpLin_eq_toLin, Matrix.trace_toLin_eq]
     _ = cos α + cos β + cos α * cos β := by
           fin_cases d <;> fin_cases d' <;>
             · try contradiction
-              try simp only [rot3_mat, rot3x_mat, rot3y_mat, rot3z_mat, Matrix.trace,
+              try simp only [rot3Mat, rot3xMat, rot3yMat, rot3zMat, Matrix.trace,
                 Matrix.diag_apply, Matrix.mul_apply, Matrix.of_apply, Fin.sum_univ_three]
               try ring_nf
 
 theorem tr_rot3z : tr (rot3z α) = 1 + 2 * cos α := by
-  have h : (rot3z α : ℝ³ →L[ℝ] ℝ³) = (rot3z_mat α).toEuclideanLin.toContinuousLinearMap := rfl
+  have h : (rot3z α : ℝ³ →L[ℝ] ℝ³) = (rot3zMat α).toEuclideanLin.toContinuousLinearMap := rfl
   calc tr (rot3z α)
-    _ = LinearMap.trace ℝ ℝ³ ((rot3z_mat α).toEuclideanLin) := by rw [h]; rfl
-    _ = Matrix.trace (rot3z_mat α) := by
+    _ = LinearMap.trace ℝ ℝ³ ((rot3zMat α).toEuclideanLin) := by rw [h]; rfl
+    _ = Matrix.trace (rot3zMat α) := by
           simp only [Matrix.toLpLin_eq_toLin, Matrix.trace_toLin_eq]
     _ = 1 + 2 * cos α := by
-          simp [Matrix.trace, rot3z_mat, Fin.sum_univ_three]
+          simp [Matrix.trace, rot3zMat, Fin.sum_univ_three]
           ring_nf
 
 theorem lemma12_2 :

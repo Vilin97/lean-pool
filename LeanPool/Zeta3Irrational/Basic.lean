@@ -14,6 +14,10 @@ import LeanPool.Zeta3Irrational.Bound
 import LeanPool.Zeta3Irrational.LegendrePoly
 import LeanPool.Zeta3Irrational.LinearForm
 
+/-!
+# LeanPool.Zeta3Irrational.Basic
+-/
+
 namespace LeanPool.Zeta3Irrational
 
 open scoped Nat
@@ -46,7 +50,7 @@ theorem linear_int (n : ℕ) : ∃ a b : ℕ → ℤ,
         ∑' n : ℕ , 1 / ((n : ℝ) + 1) ^ 3 := by
   delta fun1 JJ
   obtain ⟨c, hc⟩ := shiftedLegendre_eq_int_poly n
-  simp_rw [hc, Polynomial.eval_finset_sum, mul_assoc, Finset.sum_mul_sum, Finset.mul_sum]
+  simp_rw [hc, Polynomial.eval_finsetSum, mul_assoc, Finset.sum_mul_sum, Finset.mul_sum]
   simp only [eval_mul, eval_intCast, eval_pow, eval_X]
   simp_rw [← mul_assoc, multi_integral_sum_comm, multi_integral_mul_const]
   simp only [Finset.mul_sum]
@@ -214,7 +218,7 @@ lemma integrableOn_JJ' (n : ℕ) : MeasureTheory.Integrable (fun (x : ℝ × ℝ
 lemma shiftedLegendre_bound (n : ℕ) (x : ℝ) (hx : 0 < x ∧ x < 1) :
   |eval x (shiftedLegendre n)| ≤
     ∑ x_1 ∈ Finset.range (n + 1), (n.choose x_1 : ℝ) * ((n + x_1).choose n) := by
-  simp only [shiftedLegendre_eq_sum, map_pow, map_neg, map_one, eval_finset_sum,
+  simp only [shiftedLegendre_eq_sum, map_pow, map_neg, map_one, eval_finsetSum,
     eval_mul, eval_pow, eval_neg, eval_one, eval_natCast, eval_X]
   have := Finset.abs_sum_le_sum_abs
     (f := fun y => (-1) ^ y * ↑(n.choose y) * ↑((n + y).choose n) * x ^ y)
@@ -482,13 +486,13 @@ lemma eq1_integrableOn_aux1 (n : ℕ) (z : ℝ) (hz : z ∈ Set.Ioo 0 1) :
     · simp only [shiftedLegendre_eq_sum, map_pow, map_neg, map_one]
       apply ContinuousOn.mul
       · apply ContinuousOn.mul
-        · simp only [eval_finset_sum, eval_mul, eval_pow, eval_neg, eval_one, eval_natCast, eval_X]
-          apply continuousOn_finset_sum
+        · simp only [eval_finsetSum, eval_mul, eval_pow, eval_neg, eval_one, eval_natCast, eval_X]
+          apply continuousOn_finsetSum
           intro i _
           apply ContinuousOn.mul continuousOn_const
           apply ContinuousOn.pow continuousOn_fst
-        · simp only [eval_finset_sum, eval_mul, eval_pow, eval_neg, eval_one, eval_natCast, eval_X]
-          apply continuousOn_finset_sum
+        · simp only [eval_finsetSum, eval_mul, eval_pow, eval_neg, eval_one, eval_natCast, eval_X]
+          apply continuousOn_finsetSum
           intro i _
           apply ContinuousOn.mul continuousOn_const
           apply ContinuousOn.pow continuousOn_snd
@@ -523,9 +527,9 @@ lemma eq1_integrableOn_aux2 (n : ℕ) (z : ℝ) (hz : z ∈ Set.Ioo 0 1) :
       apply ContinuousOn.div
       · apply ContinuousOn.mul
         · apply ContinuousOn.mul
-          · simp only [eval_finset_sum, eval_mul, eval_pow, eval_neg, eval_one,
+          · simp only [eval_finsetSum, eval_mul, eval_pow, eval_neg, eval_one,
               eval_natCast, eval_X]
-            apply continuousOn_finset_sum
+            apply continuousOn_finsetSum
             intro i _
             apply ContinuousOn.mul continuousOn_const
             apply ContinuousOn.pow continuousOn_fst
@@ -795,9 +799,9 @@ lemma eq3_integrableOn_aux (n : ℕ) (z : ℝ) (hz : z ∈ Set.Ioo 0 1) :
     · simp only [shiftedLegendre_eq_sum, map_pow, map_neg, map_one]
       apply ContinuousOn.div
       · apply ContinuousOn.mul
-        · simp only [eval_finset_sum, eval_mul, eval_pow, eval_neg, eval_one,
+        · simp only [eval_finsetSum, eval_mul, eval_pow, eval_neg, eval_one,
             eval_natCast, eval_X]
-          apply continuousOn_finset_sum
+          apply continuousOn_finsetSum
           intro i _
           apply ContinuousOn.mul continuousOn_const
           apply ContinuousOn.pow continuousOn_fst
@@ -1076,7 +1080,7 @@ lemma Summable_of_zeta_two' : Summable (fun (n : ℕ) ↦ 1 / ((n : ℝ) + 1) ^ 
   simp only [f]
   exact h
 
-lemma zeta_3_pos : 0 < ∑' (n : ℕ), 1 / ((n : ℝ) + 1) ^ 3 := by
+lemma zeta3_pos : 0 < ∑' (n : ℕ), 1 / ((n : ℝ) + 1) ^ 3 := by
   apply Summable.tsum_pos (g := fun n : ℕ => 1 / ((n : ℝ) + 1) ^ 3) (i := 1)
   · apply summable_of_sum_range_le (c := Real.pi ^ 2 / 6)
     · intro _
@@ -1122,7 +1126,7 @@ theorem JJ_upper (n : ℕ) :
       · exact JJENN_upper n
     · rw [ENNReal.toReal_ofReal]
       apply mul_nonneg (by norm_num)
-      linarith [zeta_3_pos]
+      linarith [zeta3_pos]
   · apply MeasureTheory.ae_nonneg_restrict_of_forall_setIntegral_nonneg_inter
     · rw [MeasureTheory.IntegrableOn]
       exact integrableOn_JJ' n

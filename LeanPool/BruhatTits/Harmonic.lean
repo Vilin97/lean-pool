@@ -7,8 +7,8 @@ Authors: Judith Ludwig, Christian Merten
 import LeanPool.BruhatTits.Harmonic.Application
 import LeanPool.BruhatTits.Harmonic.Basic
 
-open Module
-
 /-!
 # Harmonic cochains
 -/
+
+open Module

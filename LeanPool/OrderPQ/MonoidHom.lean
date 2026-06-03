@@ -6,7 +6,20 @@ Authors: Scott Harper, Peiran Wu
 import Mathlib.Algebra.Group.Hom.Defs
 import Mathlib.Algebra.Group.Subgroup.Basic
 import Mathlib.GroupTheory.OrderOfElement
-import Mathlib.Tactic
+import Mathlib.Data.ZMod.QuotientGroup
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
+/-!
+# LeanPool.OrderPQ.MonoidHom
+-/
 
 lemma Set.nat_card_range_of_injective {α β : Type*} (f : α → β) (hf : Function.Injective f) :
     Nat.card (range f) = Nat.card α :=

@@ -133,10 +133,10 @@ lemma _root_.VML.IsMaxwellian.contDiff (hM : IsMaxwellian f) : ContDiff ℝ ⊤ 
     exact ContDiff.sum fun i _ => (contDiff_apply ℝ ℝ i).mul (contDiff_apply ℝ ℝ i)
   exact (contDiff_const.add hDot).add (contDiff_const.mul hNorm)
 
-/-- The equilibrium Maxwellian (zero drift, density = ρ_ion):
-    f∞(v) = ρ_ion/(2πT∞)^(3/2) · exp(-|v|²/(2T∞)) -/
-def equilibriumMaxwellian (ρ_ion T : ℝ) (v : Fin 3 → ℝ) : ℝ :=
-  ρ_ion / (2 * π * T) ^ ((3 : ℝ) / 2) *
+/-- The equilibrium Maxwellian (zero drift, density = ρIon):
+    f∞(v) = ρIon/(2πT∞)^(3/2) · exp(-|v|²/(2T∞)) -/
+def equilibriumMaxwellian (ρIon T : ℝ) (v : Fin 3 → ℝ) : ℝ :=
+  ρIon / (2 * π * T) ^ ((3 : ℝ) / 2) *
     Real.exp (-(normSq v) / (2 * T))
 
 /-- The equilibrium Maxwellian is a Maxwellian (i.e., satisfies `IsMaxwellian`).
@@ -232,8 +232,8 @@ lemma velocity_ibp
       ∑ i : Fin 3, F v i * fderiv ℝ g v (Pi.single i 1) := by
     ext v; simp only [dotProduct, vGrad, Fin.sum_univ_three]
   rw [lhs_eq, rhs_eq,
-      integral_finset_sum _ (fun i _ => h_int_df_g i),
-      integral_finset_sum _ (fun i _ => h_int_f_dg i)]
+      integral_finsetSum _ (fun i _ => h_int_df_g i),
+      integral_finsetSum _ (fun i _ => h_int_f_dg i)]
   simp only [Fin.sum_univ_three, hi]; ring
 
 -- ============================================================================

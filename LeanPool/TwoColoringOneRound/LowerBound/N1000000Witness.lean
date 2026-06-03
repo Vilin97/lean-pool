@@ -6,6 +6,10 @@ Authors: Jukka Suomela
 
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000Witness

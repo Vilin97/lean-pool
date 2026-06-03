@@ -7,6 +7,10 @@ Authors: Yury G. Kudryashov
 import Mathlib.Analysis.Normed.Group.Basic
 import Mathlib.MeasureTheory.Measure.Typeclasses.SFinite
 
+/-!
+# LeanPool.SardMoreira.MeasureComap
+-/
+
 open scoped ENNReal NNReal Set.Notation Pointwise
 open MeasureTheory Filter Set Function Metric Topology
 

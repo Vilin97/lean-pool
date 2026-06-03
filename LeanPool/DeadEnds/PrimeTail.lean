@@ -16,7 +16,6 @@ lemma gt_sup_imp_not_mem (s : Finset Nat.Primes) (q : Nat.Primes) (hq : (q : ℕ
     q ∉ s := by
   intro hq_mem
   have h := Finset.le_sup (f := fun x : Nat.Primes => (x : ℕ)) hq_mem
-  simp only at h
   omega
 
 lemma tsum_primes_gt_le_tsum_compl (f : Nat.Primes → ℝ) (hf : ∀ p, 0 ≤ f p) (hsum : Summable f)

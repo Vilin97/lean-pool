@@ -7,14 +7,15 @@ import LeanPool.BruhatTits.Graph.Orientation
 import LeanPool.BruhatTits.Graph.Regular
 import LeanPool.BruhatTits.Harmonic.Basic
 
-open Module
-
 /-!
 # Surjectivity of the Bruhat-Tits Laplacian
 
 In this file we show that the Laplacian of the Bruhat-Tits tree is surjective.
 
 -/
+
+open Module
+
 
 open IsLocalRing
 

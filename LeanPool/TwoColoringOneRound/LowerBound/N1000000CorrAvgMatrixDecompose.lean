@@ -4,8 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
 
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.TwoColoringOneRound.LowerBound.CorrAvgMatrix
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000AvailFrom
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
@@ -13,6 +21,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Transitivity
+
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
+-/
 
 namespace Distributed2Coloring.LowerBound
 

@@ -7,6 +7,10 @@ Authors: Junqi Liu, Jujian Zhang
 import Mathlib.Analysis.RCLike.Basic
 import Mathlib.Data.Real.StarOrdered
 
+/-!
+# LeanPool.Zeta3Irrational.Bound
+-/
+
 namespace LeanPool.Zeta3Irrational
 
 open scoped Nat

@@ -240,7 +240,7 @@ lemma _root_.VirasoroProject.VermaModule.isVermaModule (η : ι → A × 𝕜) :
 
 /-- Uniqueness up to isomorphism of a Verma module, phrased as the construction of an
 isomorphism between two modules that satisfy the characteristic predicate `IsVermaModule`. -/
-noncomputable def _root_.VirasoroProject.IsVermaModule.equiv_of_isVermaModule
+noncomputable def _root_.VirasoroProject.IsVermaModule.equivOfIsVermaModule
     (η : ι → A × 𝕜) (M₁ M₂ : Type u)
     (hwv₁ : M₁) (hwv₂ : M₂)
     [AddCommGroup M₁] [Module A M₁] [AddCommGroup M₂] [Module A M₂]

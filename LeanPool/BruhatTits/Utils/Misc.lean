@@ -4,7 +4,23 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Judith Ludwig, Christian Merten
 -/
 import Mathlib.RingTheory.Valuation.Basic
-import Mathlib.Tactic
+import Mathlib.LinearAlgebra.StdBasis
+import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+import Mathlib.RingTheory.LocalRing.Defs
+import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
+/-!
+# LeanPool.BruhatTits.Utils.Misc
+-/
 
 open Module
 
@@ -85,11 +101,11 @@ theorem IsLocalRing.exists_isUnit_of_isUnit_sum {ι R : Type*} [CommRing R] [IsL
     {s : Finset ι} {f : ι → R} (h : IsUnit (∑ i ∈ s, f i)) : ∃ i ∈ s, IsUnit (f i) := by
   contrapose! h
   simp_rw [← mem_nonunits_iff, ← IsLocalRing.mem_maximalIdeal] at h ⊢
-  exact Ideal.sum_mem (maximalIdeal R) h
+  exact (maximalIdeal R).sum_mem h
 
 /-- `Fin (n + 1)` is equivalent to `Fin n ⊕ Unit`. -/
 @[simps]
-def Fin.succ_equiv_unit (n : ℕ) : Fin (n + 1) ≃ Fin n ⊕ Unit where
+def Fin.succEquivUnit (n : ℕ) : Fin (n + 1) ≃ Fin n ⊕ Unit where
   toFun j := if h : (j : ℕ) < n then Sum.inl ⟨j, h⟩ else Sum.inr ()
   invFun := Sum.elim (fun j ↦ j.castSucc) (fun _ ↦ Fin.last n)
   left_inv j := by

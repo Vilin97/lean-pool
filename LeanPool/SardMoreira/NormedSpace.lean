@@ -6,6 +6,10 @@ Authors: Yury G. Kudryashov
 
 import Mathlib.Analysis.Normed.Module.Basic
 
+/-!
+# LeanPool.SardMoreira.NormedSpace
+-/
+
 namespace NNReal
 
 variable {E : Type*} [SeminormedAddCommGroup E] [NormedSpace ℝ E]

@@ -5,6 +5,10 @@ Authors: Kalle Kytölä
 -/
 import Mathlib.Algebra.Lie.Basic
 
+/-!
+# LeanPool.VirasoroProject.ToMathlib.Algebra.Lie.Basic
+-/
+
 universe u
 variable (𝕜 : Type*) [CommRing 𝕜]
 variable (𝓰 : Type u) [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
@@ -22,7 +26,7 @@ def LieAlgebra.bracketHom : 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓰 where
 lemma LieAlgebra.bracketHom_apply {X Y : 𝓰} : LieAlgebra.bracketHom 𝕜 𝓰 X Y = ⁅X, Y⁆ := rfl
 
 /-- Construct an isomorphism of Lie algebras from a pair of inverse Lie algebra homomorphisms. -/
-def LieEquiv.mk_of_comp_eq_id {R : Type*} {L L' : Type*} [CommRing R]
+def LieEquiv.mkOfCompEqId {R : Type*} {L L' : Type*} [CommRing R]
     [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L']
     {f : L →ₗ⁅R⁆ L'} {g : L' →ₗ⁅R⁆ L}
     (leftInv : g.comp f = LieHom.id) (rightInv : f.comp g = LieHom.id) :

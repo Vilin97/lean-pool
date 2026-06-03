@@ -16,6 +16,10 @@ import LeanPool.RlTheoryInLean.Defs
 import LeanPool.RlTheoryInLean.Order.Filter.Basic
 import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space.Integrable
 
+/-!
+# LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation.Basic
+-/
+
 open Filter ProbabilityTheory
 open scoped RealInnerProductSpace
 
@@ -74,7 +78,7 @@ theorem condExp_inner
   rw [heq]
   calc μ[∑ i, (fun ω => (f ω).ofLp i) * (fun ω => (g ω).ofLp i) | m]
       =ᵐ[μ] ∑ i, μ[(fun ω => (f ω).ofLp i) * (fun ω => (g ω).ofLp i) | m] :=
-        condExp_finset_sum (fun i _ => hfgInt i) m
+        condExp_finsetSum (fun i _ => hfgInt i) m
     _ =ᵐ[μ] ∑ i, (fun ω => (f ω).ofLp i) * μ[fun ω => (g ω).ofLp i | m] :=
         EventuallyEq.finset_sum fun i _ =>
           condExp_mul_of_aestronglyMeasurable_left (hf i) (hfgInt i) (hgiInt i)

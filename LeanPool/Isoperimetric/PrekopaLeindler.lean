@@ -564,8 +564,8 @@ lemma lintegral_fix_eq_lmarginal {d : ℕ}
   simp_all only [Pi.default_def, eq_rec_constant, Fin.default_eq_zero, Fin.isValue, dite_eq_ite,
     Function.comp_apply]
   congr; ext; congr; ext i; split
-  case e_f.h.e_a.h.isTrue => simp_all
-  case e_f.h.e_a.h.isFalse h => simp [Fin.val_lt_last h]
+  case e_f.isTrue => simp_all
+  case e_f.isFalse h => simp [Fin.val_lt_last h]
 
 /-- Iterated integral of `fix f` recovers the integral of `f`. -/
 lemma lintegral_fix_lintegral_eq_lintegral

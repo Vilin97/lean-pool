@@ -6,6 +6,10 @@ Authors: Siddhartha Gadgil, Anand Rao
 
 import LeanPool.Polylean.ConjInvLength.ProvedBound
 
+/-!
+# LeanPool.Polylean.ConjInvLength.WordTree
+-/
+
 namespace LeanPool.Polylean
 
 /-- A proof tree witnessing an upper bound for a word length. -/

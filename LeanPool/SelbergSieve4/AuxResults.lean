@@ -14,7 +14,6 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import Mathlib.NumberTheory.ArithmeticFunction.Zeta
---import SelbergSieve.AesopDiv
 import LeanPool.SelbergSieve4.ForMathlib
 import LeanPool.SelbergSieve4.ForArithmeticFunction
 import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
@@ -22,6 +21,11 @@ import Mathlib.Analysis.SpecialFunctions.NonIntegrable
 import Mathlib.Data.Nat.Prime.Basic
 import LeanPool.SelbergSieve4.Tactic.Multiplicativity
 
+/-!
+# LeanPool.SelbergSieve4.AuxResults
+-/
+
+--import SelbergSieve.AesopDiv
 noncomputable section
 
 local macro_rules | `($x ^ $y)   => `(HPow.hPow $x $y)
@@ -151,7 +155,7 @@ theorem inv_sub_antitoneOn_gt {R : Type*} [Field R] [LinearOrder R] [IsStrictOrd
   refine antitoneOn_iff_forall_lt.mpr ?_
   intro a ha b hb hab
   rw [Set.mem_Ioi] at ha hb
-  gcongr; linarith
+  gcongr
 
 theorem inv_sub_antitoneOn_Icc {R : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R]
     (a b c : R) (ha : c < a) :
@@ -218,7 +222,7 @@ theorem sum_inv_le_log_real (y : ℝ) (hy : 1 ≤ y) :
   · norm_cast; apply Nat.lt_of_succ_le; apply le_floor; norm_cast
   · apply floor_le; linarith
 
-theorem nat_le_prod {f : ι → ℕ} {s : Finset ι} {i : ι} (hi : i ∈ s)
+theorem natLe_prod {f : ι → ℕ} {s : Finset ι} {i : ι} (hi : i ∈ s)
     (hf : ∀ i ∈ s, f i ≠ 0) :
     f i ≤ ∏ j ∈ s, f j := by
   classical
@@ -232,8 +236,8 @@ theorem sum_pow_cardDistinctFactors_div_self_le_log_pow {P k : ℕ} (x : ℝ) (h
     (hP : Squarefree P) :
     (∑ d ∈ P.divisors, if d ≤ x then (k:ℝ) ^ (ω d) / (d : ℝ) else (0 : ℝ))
     ≤ (1 + Real.log x) ^ k := by
-  have hx_pos : 0 < x
-  · linarith
+  have hx_pos : 0 < x := by
+    linarith
   calc
     _ = ∑ d ∈ P.divisors,
           ∑ a ∈ Fintype.piFinset fun _i : Fin k => P.divisors,
