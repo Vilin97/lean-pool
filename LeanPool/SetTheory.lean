@@ -8,14 +8,18 @@ import LeanPool.SetTheory.KunenInconsistency
 /-!
 # The Kunen inconsistency theorem
 
-A Lean 4 formalization of elementary embeddings of models of ZF set theory,
-culminating in the Kunen inconsistency theorem: there is no nontrivial
-elementary embedding from the universe of sets into itself.
-
 Source: url:https://github.com/znssong/SetTheory
 Authors: Shuhao Song
 Status: verified
-Main declarations: `SetTheory.kunen_inconsistency_V`, `SetTheory.kunen_inconsistency_vonNeumann`
+Main declarations: `SetTheory.kunen_inconsistency_V`, `NontrivialElementaryEmbedding`
 Tags: set-theory, large-cardinals, elementary-embedding, kunen-inconsistency, model-theory
-MSC: 03E55
+MSC: 03E55, 03C90
+-/
+
+/-!
+## Overview
+
+A Lean 4 formalization of elementary embeddings of models of ZF set theory,
+culminating in the Kunen inconsistency theorem: there is no nontrivial elementary
+embedding from the universe of sets into itself.
 -/

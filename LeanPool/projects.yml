@@ -1913,8 +1913,6 @@ projects:
     status: verified
     main_declarations:
       - SetTheory.kunen_inconsistency_V
-      - SetTheory.kunen_inconsistency_vonNeumann
-      - SetTheory.crit
       - NontrivialElementaryEmbedding
     main_results:
       - declaration: SetTheory.kunen_inconsistency_V
