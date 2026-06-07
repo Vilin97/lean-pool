@@ -13,6 +13,7 @@ import LeanPool.Circuitlib.Circuit.Category.Sequential
 Source: url:https://github.com/matthunz/circuitlib
 Authors: Matt Hunzinger
 Status: verified
-Main declarations: `Circuit.CircuitCategory`, `Circuit.BelnapLevel`, `Circuit.CombinationalCircuit`, `Circuit.CombinationalCircuit.adder`, `Circuit.SequentialCircuitCategory`
+Main declarations: `Circuit.CircuitCategory`, `Circuit.BelnapLevel`, `Circuit.CombinationalCircuit`
 Tags: circuits, hardware, category-theory, combinational, sequential
+MSC: 18M05, 68Q60, 94C11
 -/

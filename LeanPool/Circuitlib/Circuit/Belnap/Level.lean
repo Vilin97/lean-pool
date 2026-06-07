@@ -8,8 +8,6 @@ module
 
 public import Mathlib.Order.WithBotTop
 
-@[expose] public section
-
 /-! # Belnap levels
 
 ## References
@@ -19,8 +17,12 @@ public import Mathlib.Order.WithBotTop
 
 -/
 
+@[expose] public section
+
 namespace Circuit
 
+/-- The Belnap four-valued logic lattice on `Bool`, with a bottom (no information) and a
+top (conflicting information) adjoined. -/
 def BelnapLevel := WithBotTop Bool
 
 namespace BelnapLevel
@@ -34,14 +36,15 @@ instance : Bot BelnapLevel where
 instance : Top BelnapLevel where
   top := .some .none
 
-@[inline, simp]
+/-- The information ordering on Belnap levels: `⊥` is below everything, everything is below `⊤`,
+and the two classical values are only related to themselves. -/
+@[inline]
 def le : BelnapLevel → BelnapLevel → Prop
   | ⊥, _ => true
   | _, ⊤ => true
   | .some (.some x), .some (.some y) => x == y
   | _, _ => false
 
-@[simp]
 lemma le_refl : ∀ (a : BelnapLevel), a.le a := by
   intro a
   cases a with
@@ -51,7 +54,6 @@ lemma le_refl : ∀ (a : BelnapLevel), a.le a := by
     | top => trivial
     | coe b => cases b <;> trivial
 
-@[simp]
 lemma le_trans : ∀ (a b c : BelnapLevel), a.le b → b.le c → a.le c := by
   intro a b c hab hbc
   cases a with
@@ -59,32 +61,31 @@ lemma le_trans : ∀ (a b c : BelnapLevel), a.le b → b.le c → a.le c := by
   | some a => cases a with
     | top =>
       cases b with
-      | none => simp_all
+      | none => simp_all [le]
       | some b => cases b with
         | top => exact hbc
-        | coe bv => cases bv <;> simp_all
+        | coe bv => cases bv <;> simp_all [le]
     | coe av => cases c with
       | none =>
         cases b with
-        | none => cases av <;> simp_all
+        | none => cases av <;> simp_all [le]
         | some b => cases b with
-          | top => simp_all
-          | coe bv => cases bv <;> simp_all
+          | top => simp_all [le]
+          | coe bv => cases bv <;> simp_all [le]
       | some c => cases c with
         | top => trivial
         | coe cv =>
           cases b with
-          | none => cases av <;> simp_all
+          | none => cases av <;> simp_all [le]
           | some b => cases b with
-            | top => cases cv <;> simp_all
-            | coe bv => cases av <;> cases bv <;> cases cv <;> simp_all
+            | top => cases cv <;> simp_all [le]
+            | coe bv => cases av <;> cases bv <;> cases cv <;> simp_all [le]
 
 instance : Preorder BelnapLevel where
   le
   le_refl
   le_trans
 
-@[simp]
 lemma le_antisymm : ∀ (a b : BelnapLevel), a ≤ b → b ≤ a → a = b := by
   intro a b hab hba
   cases a with
@@ -106,7 +107,7 @@ lemma le_antisymm : ∀ (a b : BelnapLevel), a ≤ b → b ≤ a → a = b := by
         | top => cases hba
         | coe bv => cases av <;> cases bv <;> first | rfl | cases hab
 
-@[simp]
+/-- The join (least upper bound) on Belnap levels in the information order. -/
 def sup : BelnapLevel → BelnapLevel → BelnapLevel
   | .none, x => x
   | x, .none => x
@@ -114,8 +115,7 @@ def sup : BelnapLevel → BelnapLevel → BelnapLevel
   | _, .some .none => .some .none
   | .some (.some x), .some (.some y) => if x == y then .some (.some x) else .some .none
 
-@[simp]
-def le_sup_left : ∀ (a b : BelnapLevel), a ≤ a.sup b:= by
+lemma le_sup_left : ∀ (a b : BelnapLevel), a ≤ a.sup b:= by
   intro a b
   cases a with
   | none => trivial
@@ -133,7 +133,6 @@ def le_sup_left : ∀ (a b : BelnapLevel), a ≤ a.sup b:= by
         | top => trivial
         | coe bv => cases av <;> cases bv <;> trivial
 
-@[simp]
 lemma le_sup_right : ∀ (a b : BelnapLevel), b ≤ a.sup b := by
   intro a b
   cases a with
@@ -152,7 +151,6 @@ lemma le_sup_right : ∀ (a b : BelnapLevel), b ≤ a.sup b := by
         | top => trivial
         | coe bv => cases av <;> cases bv <;> trivial
 
-@[simp]
 lemma sup_le : ∀ (a b c : BelnapLevel), a ≤ c → b ≤ c → a.sup b ≤ c  := by
   intro a b c hac hbc
   cases a with

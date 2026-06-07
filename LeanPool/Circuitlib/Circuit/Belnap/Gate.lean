@@ -9,8 +9,6 @@ module
 public import LeanPool.Circuitlib.Circuit.Belnap.Basic
 public import LeanPool.Circuitlib.Circuit.Gate
 
-@[expose] public section
-
 /-! # Belnap gates
 
 ## References
@@ -20,8 +18,11 @@ public import LeanPool.Circuitlib.Circuit.Gate
 
 -/
 
+@[expose] public section
+
 namespace Circuit
 
+/-- The gate set for Belnap circuits: the logical AND, OR and NOT gates. -/
 inductive BelnapGate
   | and
   | or

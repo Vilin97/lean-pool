@@ -1888,8 +1888,6 @@ projects:
       - Circuit.CircuitCategory
       - Circuit.BelnapLevel
       - Circuit.CombinationalCircuit
-      - Circuit.CombinationalCircuit.adder
-      - Circuit.SequentialCircuitCategory
     main_results:
       - declaration: Circuit.CircuitCategory
         informal: A typeclass packaging the generating morphisms (gates, wire stub/drop/fork/join) of a monoidal category of circuits over a gate set.
@@ -1907,3 +1905,7 @@ projects:
       - category-theory
       - combinational
       - sequential
+    msc:
+      - "18M05"
+      - "68Q60"
+      - "94C11"

@@ -9,8 +9,6 @@ module
 public import Mathlib.Data.Nat.Notation
 public import Mathlib.Order.Defs.PartialOrder
 
-@[expose] public section
-
 /-! # Wires
 
 ## References
@@ -19,8 +17,11 @@ public import Mathlib.Order.Defs.PartialOrder
 
 -/
 
+@[expose] public section
+
 namespace Circuit
 
+/-- A bundle of `I` wires, each carrying a value of type `V`. -/
 def Wires (V : Type u) (I : ℕ) := Vector V I
 
 instance [Preorder V] : Preorder (Wires V I) where

@@ -9,8 +9,6 @@ module
 public import LeanPool.Circuitlib.Circuit.Gate
 public import Mathlib.CategoryTheory.Category.Basic
 
-@[expose] public section
-
 /-! # Circuit category
 
 ## References
@@ -18,6 +16,8 @@ public import Mathlib.CategoryTheory.Category.Basic
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
+
+@[expose] public section
 
 namespace Circuit
 

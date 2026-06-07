@@ -10,8 +10,6 @@ public import LeanPool.Circuitlib.Circuit.Category.Basic
 public import LeanPool.Circuitlib.Circuit.Belnap.Gate
 public import Mathlib.CategoryTheory.Monoidal.Category
 
-@[expose] public section
-
 /-! # Circuits
 
 ## References
@@ -20,6 +18,8 @@ public import Mathlib.CategoryTheory.Monoidal.Category
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
+
+@[expose] public section
 
 namespace Circuit
 
@@ -35,16 +35,21 @@ variable
   [MonoidalCategory C]
   [CircuitCategory BelnapLevel BelnapGate C]
 
+/-- The AND gate as a circuit morphism. -/
 abbrev and : (ofNat 2 : C) ⟶ 1 := CircuitCategory.gate BelnapGate.and
 
+/-- The OR gate as a circuit morphism. -/
 abbrev or : (ofNat 2 : C) ⟶ 1 := CircuitCategory.gate BelnapGate.or
 
+/-- The NOT gate as a circuit morphism. -/
 abbrev not : (ofNat 1 : C) ⟶ 1 := CircuitCategory.gate BelnapGate.not
 
 open MonoidalCategory
 
+/-- The NAND gate, built as AND followed by NOT. -/
 abbrev nand : (ofNat 2 : C) ⟶ 1 := and ≫ not
 
+/-- The NOR gate, built as OR followed by NOT. -/
 abbrev nor : (ofNat 2 : C) ⟶ 1 := or ≫ not
 
 end Circuit
