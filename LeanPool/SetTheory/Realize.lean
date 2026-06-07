@@ -938,7 +938,9 @@ def runIfNotFound (names : List Name) (f : Name → BuildFormulaM Unit) : BuildF
   for name in names do
     checkSorry name
 
-def realizeAttrAdd (attrDeclName : Name) (_ : Syntax) (_ : AttributeKind) : AttrM Unit := do
+/-- Build all the `Formula.Realize` companion declarations for the decl `attrDeclName`
+tagged with `@[realize]`. -/
+def realizeAttrAdd (attrDeclName : Name) : AttrM Unit := do
   let name := removeNameSuffix attrDeclName
   let go : BuildFormulaM Unit := do
     init
@@ -959,5 +961,5 @@ initialize
     name            := `realize
     descr           := "Automatically build `Formula.Realize` theorems"
     applicationTime := .afterCompilation
-    add             := BuildFormula.realizeAttrAdd
+    add             := fun declName _ _ => BuildFormula.realizeAttrAdd declName
   }
