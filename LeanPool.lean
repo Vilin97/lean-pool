@@ -479,6 +479,15 @@ import LeanPool.Isoperimetric.Isoperimetric
 import LeanPool.Isoperimetric.PrekopaLeindler
 import LeanPool.LatticeTriangle
 import LeanPool.LatticeTriangle.Solution
+import LeanPool.Lean4Itree
+import LeanPool.Lean4Itree.ITree
+import LeanPool.Lean4Itree.ITree.Basic
+import LeanPool.Lean4Itree.ITree.EffectAlgebra
+import LeanPool.Lean4Itree.ITree.Monad
+import LeanPool.Lean4Itree.ITree.Utils
+import LeanPool.Lean4Itree.Paco
+import LeanPool.Lean4Itree.Paco.Paco
+import LeanPool.Lean4Itree.Paco.PacoDefs
 import LeanPool.LeanBooleanfun
 import LeanPool.LeanBooleanfun.Arrow
 import LeanPool.LeanBooleanfun.AuxLemmas
