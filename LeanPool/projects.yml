@@ -1900,3 +1900,43 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: leanlj
+    title: "LeanLJ: a verified Lennard-Jones potential and energy framework"
+    summary: Formalizes the Lennard-Jones pair potential, its derivatives and continuity, the long-range correction integral, and minimum-image-distance bookkeeping under periodic boundary conditions, providing a verified core for molecular-simulation energy calculations.
+    branch: molecular physics
+    entry_module: LeanPool.LeanLJ
+    authors:
+      - Colin Jones
+    source:
+      arxiv: "2505.09095"
+      url: "https://github.com/ATOMSLab/LeanLJ"
+      github_repo: ATOMSLab/LeanLJ
+    status: verified
+    main_declarations:
+      - LeanLJ.long_range_correction_equality
+      - LeanLJ.Lj_eq
+      - LeanLJ.ljp_differentiable
+      - LeanLJ.ljp_continuous_closed_domain
+      - minImageDistance_real_self
+      - pairs_length_eq
+    main_results:
+      - declaration: LeanLJ.long_range_correction_equality
+        informal: Evaluates the Lennard-Jones long-range correction integral in closed form as the standard analytic tail expression.
+      - declaration: LeanLJ.Lj_eq
+        informal: Proves that two formulations of the truncated Lennard-Jones potential agree.
+      - declaration: LeanLJ.ljp_differentiable
+        informal: Proves that the truncated Lennard-Jones potential is differentiable on its interior domain and computes its derivative.
+      - declaration: LeanLJ.ljp_continuous_closed_domain
+        informal: Proves that the truncated Lennard-Jones potential is continuous on the closed interaction domain.
+      - declaration: minImageDistance_real_self
+        informal: Proves that the minimum-image distance of a configuration to itself is zero.
+      - declaration: pairs_length_eq
+        informal: Proves that the enumerated unordered index pairs of n atoms number n choose 2.
+    tags:
+      - physics
+      - molecular-dynamics
+      - lennard-jones
+      - formal-verification
+    msc:
+      - "82-08"
+      - "70F10"
