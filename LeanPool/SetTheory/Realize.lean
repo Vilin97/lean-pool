@@ -11,7 +11,7 @@ import LeanPool.SetTheory.SimpAttr
 /-!
 # Realization machinery for the ZF first-order language
 
-This module sets up the first-order language `𝓛_ZF` of ZF set theory with a single
+This module sets up the first-order language `𝓛ZF` of ZF set theory with a single
 membership relation, together with notation and metaprogramming infrastructure for
 building and realizing bounded formulas in models of ZF.
 -/
@@ -24,7 +24,7 @@ inductive memRel : ℕ → Type
 
 open FirstOrder in
 /-- The first-order language of ZF set theory, with a single binary membership relation. -/
-def 𝓛_ZF : FirstOrder.Language := ⟨fun _ => Empty, memRel⟩
+def 𝓛ZF : FirstOrder.Language := ⟨fun _ => Empty, memRel⟩
 deriving IsRelational
 
 namespace FirstOrder.Language.BoundedFormula
@@ -89,7 +89,7 @@ attribute [realize_simps]
   realize_exUnique realize_ofFunc Term.realize_var Function.comp
 
 scoped[FirstOrder] prefix:arg "#" => Term.var ∘ Sum.inl
-scoped[FirstOrder] infix:88 " ∈' " => Relations.boundedFormula₂ (L := 𝓛_ZF) memRel.mem
+scoped[FirstOrder] infix:88 " ∈' " => Relations.boundedFormula₂ (L := 𝓛ZF) memRel.mem
 
 declare_syntax_cat label
 syntax "#" num : label
@@ -114,31 +114,31 @@ section ZFStructure
 
 open FirstOrder Language Structure
 
-abbrev ZFFormula (n : ℕ) := 𝓛_ZF.Formula (Fin n)
-abbrev ZFStructure M := 𝓛_ZF.Structure M
+abbrev ZFFormula (n : ℕ) := 𝓛ZF.Formula (Fin n)
+abbrev ZFStructure M := 𝓛ZF.Structure M
 
 variable {M N : Type*} [sM : ZFStructure M] [sN : ZFStructure N]
 
 instance (priority := high) instMembershipZFStructure : Membership M M where
   mem x y := sM.RelMap memRel.mem ![y, x]
 
-instance : HasSubset M where
+instance instHasSubsetM : HasSubset M where
   Subset x y := ∀ ⦃z⦄, z ∈ x → z ∈ y
 
 class ElementaryEmbeddingClass
     (F : Type*) (M N : outParam Type*)
     [ZFStructure M] [ZFStructure N] [FunLike F M N] : Prop where
-  map_formula : ∀ (f : F) ⦃n⦄ (φ : 𝓛_ZF.Formula (Fin n)) (x : Fin n → M),
+  map_formula : ∀ (f : F) ⦃n⦄ (φ : 𝓛ZF.Formula (Fin n)) (x : Fin n → M),
     φ.Realize (f ∘ x) ↔ φ.Realize x
 
-instance : ElementaryEmbeddingClass (M ↪ₑ[𝓛_ZF] N) M N where
+instance : ElementaryEmbeddingClass (M ↪ₑ[𝓛ZF] N) M N where
   map_formula := fun j => j.map_formula'
 
 lemma Fin.two_def {α} (x : Fin 2 → α) : x = ![x 0, x 1] := by
   ext i; fin_cases i <;> simp
 
 @[realize_simps] lemma relMap_mem_iff_membership {v : Fin 2 → M} :
-    RelMap (L := 𝓛_ZF) memRel.mem v ↔ v 0 ∈ v 1 := by
+    RelMap (L := 𝓛ZF) memRel.mem v ↔ v 0 ∈ v 1 := by
   conv_lhs => rw [Fin.two_def v]
   rfl
 
@@ -149,7 +149,7 @@ def EqEmptyN (n : ℕ) : ZFFormula (n + 1) := ∀' ∼(&0 ∈' #(Fin.last n))
 
 variable {n} [HasEmpty M]
 
-noncomputable instance (priority := low) : EmptyCollection M where
+noncomputable instance (priority := low) instEmptyCollectionM : EmptyCollection M where
   emptyCollection := HasEmpty.exists_empty.choose
 
 @[realize_simps] lemma EqEmptyN.realize_iff {v : Fin (n + 1) → M} :

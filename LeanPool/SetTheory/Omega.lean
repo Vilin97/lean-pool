@@ -63,7 +63,7 @@ namespace SetTheory
 
 def ωₛ := Ordinal.toZFSet ω
 
-instance : NatCast M where
+instance instNatCastM : NatCast M where
   natCast (n : ℕ) := by
     split_vonNeumann hM
     · refine ⟨Ordinal.toZFSet n, ?_⟩
@@ -71,7 +71,7 @@ instance : NatCast M where
       exact natCast_lt_of_isSuccLimit hμ _
     · exact ↓(Ordinal.toZFSet n)
 
-instance {n} : OfNat M n where
+instance instOfNatM {n} : OfNat M n where
   ofNat := (n : M)
 
 @[toZFSet_simps] lemma NatCast.natCast.toZFSet {n : ℕ} : ⇓(n : M) = Ordinal.toZFSet n := by

@@ -344,7 +344,7 @@ theorem kunen_inconsistency_vonNeumann
       conv at h => enter [n]; rw [← hβ, toOrdinal.le_iff_le]
       simpa [upperBounds]
 
-theorem kunen_inconsistency_V (j : V ↪ₑ[𝓛_ZF] V) : j = .refl .. := by
+theorem kunen_inconsistency_V (j : V ↪ₑ[𝓛ZF] V) : j = .refl .. := by
   by_contra! hj
   let j' : NontrivialElementaryEmbedding V := ⟨j, hj⟩
   set! κ : ℕ → V := fun n => j'^[n] (crit j') with hκ

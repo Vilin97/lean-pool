@@ -19,7 +19,7 @@ open FirstOrder Language Function Ordinal SetTheory
 variable {M M₀} [ZFStructure M] [ZFStructure M₀]
 
 variable (M) in
-class NontrivialElementaryEmbedding extends M ↪ₑ[𝓛_ZF] M where
+class NontrivialElementaryEmbedding extends M ↪ₑ[𝓛ZF] M where
   nontrivial' : toElementaryEmbedding ≠ .refl ..
 
 namespace NontrivialElementaryEmbedding

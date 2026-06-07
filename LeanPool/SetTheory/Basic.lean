@@ -89,12 +89,12 @@ prefix:max "⇓" => toZFSet
 
 instance : ToV ZFSet.{0} := ⟨fun x => ⟨x⟩⟩
 
-instance structureZFSet {A : ZFSet.{0}} : 𝓛_ZF.Structure A where
+instance structureZFSet {A : ZFSet.{0}} : 𝓛ZF.Structure A where
   RelMap | .mem => fun x => (x 0).1 ∈ (x 1).1
 
 lemma mem_inside_ZFSet {A : ZFSet} {x y : A} : x ∈ y ↔ x.1 ∈ y.1 := Iff.rfl
 
-instance structureV : 𝓛_ZF.Structure V where
+instance structureV : 𝓛ZF.Structure V where
   RelMap | .mem => fun x => (x 0).1 ∈ (x 1).1
 
 @[class] inductive IsVonNeumann (α) [s : ZFStructure α]
@@ -237,7 +237,7 @@ instance instSetLike : SetLike M M where
     simp only [Set.ext_iff, Set.mem_setOf_eq] at eq
     exact ext eq
 
-instance : PartialOrder M := PartialOrder.ofSetLike M M
+instance instPartialOrderM : PartialOrder M := PartialOrder.ofSetLike M M
 
 lemma le_def {x y : M} : x ≤ y ↔ x ⊆ y := Iff.rfl
 lemma le_iff {x y : M} : x ≤ y ↔ ∀ ⦃z : M⦄, z ∈ x → z ∈ y := Iff.rfl
@@ -383,7 +383,7 @@ lemma LT.lt.realize_iff {v : Fin 2 → M} : formula.Realize v ↔ v 0 < v 1 := b
   simp [LT.lt.formula, Formula.Realize, realize_simps, Fin.snoc, lt_iff_le_and_ne]
   tauto
 
-instance : Singleton M M where singleton := SetTheory.singleton
+instance instSingletonMM : Singleton M M where singleton := SetTheory.singleton
 @[simp] lemma Singleton.singleton.spec (x y : M) : y ∈ ({x} : M) ↔ y = x :=
   SetTheory.singleton.spec ..
 lemma Singleton.singleton.eq_iff (x y : M) : ({x} : M) = y ↔ ∀ z, z ∈ y ↔ z = x :=
@@ -394,7 +394,7 @@ def Singleton.singleton.formula := SetTheory.singleton.formula
 @[realize] lemma Singleton.singleton.eu (x : M) : IsSet {y | y = x} :=
   SetTheory.singleton.eu x
 
-instance : Insert M M where insert := SetTheory.insert
+instance instInsertMM : Insert M M where insert := SetTheory.insert
 @[simp] lemma Insert.insert.spec (x y z : M) : z ∈ insert x y ↔ z = x ∨ z ∈ y :=
   SetTheory.insert.spec ..
 lemma Insert.insert.eq_iff (x y z : M) : Insert.insert x y = z ↔ ∀ w, w ∈ z ↔ w = x ∨ w ∈ y :=
@@ -548,7 +548,7 @@ lemma trcl_sub {x y : M} (hx : IsTransitive y) (sub : x ⊆ y) : trcl x ⊆ y :=
 
 end SetTheory
 
-instance : Union M where union := SetTheory.union
+instance instUnionM : Union M where union := SetTheory.union
 @[simp] lemma Union.union.spec (x y z : M) : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y := SetTheory.union.spec ..
 lemma Union.union.eq_iff (x y z : M) : x ∪ y = z ↔ ∀ w, w ∈ z ↔ w ∈ x ∨ w ∈ y :=
   SetTheory.union.eq_iff ..
@@ -558,7 +558,7 @@ def Union.union.formula := SetTheory.union.formula
 @[realize] lemma Union.union.eu (x y : M) : IsSet {z | z ∈ x ∨ z ∈ y} :=
   SetTheory.union.eu x y
 
-instance : Inter M where inter := SetTheory.inter
+instance instInterM : Inter M where inter := SetTheory.inter
 @[simp] lemma Inter.inter.spec (x y z : M) : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y := SetTheory.inter.spec ..
 lemma Inter.inter.eq_iff (x y z : M) : x ∩ y = z ↔ ∀ w, w ∈ z ↔ w ∈ x ∧ w ∈ y :=
   SetTheory.inter.eq_iff ..
@@ -581,10 +581,10 @@ namespace SetTheory
     using Union.union.spec ↓x ↓y
 
 open Classical in
-instance : InfSet M where
+instance instInfSetM : InfSet M where
   sInf s := if hs : s.Nonempty then separate hs.some fun x => ∀ t ∈ s, x ∈ t else ∅
 
-instance : ConditionallyCompleteLattice M :=
+instance instConditionallyCompleteLatticeM : ConditionallyCompleteLattice M :=
   conditionallyCompleteLatticeOfsInf M
     (fun x y => by use x ∪ y; simp [le_iff]; tauto)
     (fun x y => by use ∅; simp [toZFSet_simps])
@@ -594,7 +594,7 @@ instance : ConditionallyCompleteLattice M :=
       simpa only [isGLB_iff, Set.mem_setOf_eq, mem_separate_iff, and_iff_right_iff_imp]
         using fun y hy => hy _ hs.some_mem)
 
-instance : OrderBot M where
+instance instOrderBotM : OrderBot M where
   bot := ∅
   bot_le := by simp [le_iff]
 
