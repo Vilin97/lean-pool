@@ -6,25 +6,40 @@ Authors: György Kurucz
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.List.OfFn
 
+/-!
+# Safety-liveness decomposition
+
+We prove that every linear-time property decomposes as the intersection of a
+safety property and a liveness property, following Alpern and Schneider.
+-/
+
 namespace SafetyLivenessDecomposition
 
 -- Theorem statement based on:
 -- Alpern, Bowen; Schneider, Fred B. Recognizing safety and liveness
 -- https://doi.org/10.1016/0020-0190(85)90056-0
 
+/-- An infinite word over the alphabet `T`, modelled as a function from positions
+to letters. -/
 abbrev InfWord T := ℕ → T
+/-- A finite word over the alphabet `T`, modelled as a list of letters. -/
 abbrev FinWord T := List T
 
+/-- Concatenate a finite word `a` in front of an infinite word `b`. -/
 def FinWord.append {T} (a : FinWord T) (b : InfWord T) : InfWord T :=
   fun i =>
     if _ : i < a.length then a[i]
     else b (i - a.length)
 
+/-- The length-`k` prefix of an infinite word `w`, as a finite word. -/
 def InfWord.slice {T} (w : InfWord T) (k : ℕ) : FinWord T :=
   List.ofFn (fun (i : Fin k) => w i)
 
+/-- A linear-time property: a set of infinite words. -/
 abbrev Property T := Set (InfWord T)
 
+/-- A property is a *safety* property when every word outside it has a finite bad
+prefix: no extension of that prefix lies in the property. -/
 def SafetyProp {T} (P : Property T) :=
   ∀ (σ : InfWord T),
   σ ∉ P →
@@ -32,6 +47,8 @@ def SafetyProp {T} (P : Property T) :=
   ∀ (β : InfWord T),
   (σ.slice i).append β ∉ P
 
+/-- A property is a *liveness* property when every finite word can be extended to
+an infinite word lying in the property. -/
 def LivenessProp {T} (P : Property T) :=
   ∀ (α : FinWord T),
   ∃ (β : InfWord T),

@@ -8,8 +8,19 @@ import Mathlib.Data.Set.Operations
 import Mathlib.Data.Set.Insert
 import Mathlib.Order.SetNotation
 
-import LeanPool.LeanModelChecking.LTL_NBW_Statement
+import LeanPool.LeanModelChecking.LTLNBWStatement
 
+/-!
+# Negation normal form for Linear Temporal Logic
+
+We define negation normal form (NNF) formulas, their language, and a translation
+`LTL.toNNF` from `LTL` formulas to equivalent NNF formulas. The main result
+`LTL.exists_equiv_nnf` shows every `LTL` formula has an equivalent NNF formula.
+-/
+
+/-- Linear temporal logic formulas in negation normal form over atomic
+propositions `AP`: negation is pushed to the atoms (`atom`/`not_atom`), and the
+temporal operators are `next`, `until`, and the dual `release`. -/
 inductive NNF (AP : Type) where
 | atom (p : AP)
 | not_atom (p : AP)
@@ -20,6 +31,8 @@ inductive NNF (AP : Type) where
 | release (f g : NNF AP)
 deriving DecidableEq
 
+/-- The language of an NNF formula: the predicate on infinite words `w` that holds
+exactly when `w` satisfies `f` at position `0`. -/
 def NNF.language {AP} (f : NNF AP) (w : Nat → Letter AP) : Prop :=
   match f with
   | .atom p => p ∈ w 0
@@ -27,8 +40,10 @@ def NNF.language {AP} (f : NNF AP) (w : Nat → Letter AP) : Prop :=
   | .and f g => NNF.language f w ∧ NNF.language g w
   | .or f g => NNF.language f w ∨ NNF.language g w
   | .next f => NNF.language f (fun j => w (j + 1))
-  | .until f g => ∃ i, NNF.language g (fun j => w (j + i)) ∧ ∀ k < i, NNF.language f (fun j => w (j + k))
-  | .release f g => ∀ i, NNF.language g (fun j => w (j + i)) ∨ ∃ k < i, NNF.language f (fun j => w (j + k))
+  | .until f g =>
+    ∃ i, NNF.language g (fun j => w (j + i)) ∧ ∀ k < i, NNF.language f (fun j => w (j + k))
+  | .release f g =>
+    ∀ i, NNF.language g (fun j => w (j + i)) ∨ ∃ k < i, NNF.language f (fun j => w (j + k))
 
 -- Code below here mostly written by GPT-5-Codex
 
@@ -63,7 +78,10 @@ lemma not_exists_until_iff_forall {P Q : Nat → Prop} :
 
 namespace LTL
 
-def toNNFCore : Bool → LTL AP → NNF AP
+/-- Translate an `LTL` formula to an NNF formula, optionally negated: the Boolean
+flag, when `true`, requests the NNF of the negation of the formula, allowing
+negation to be pushed down to the atoms recursively. -/
+def toNNFCore {AP} : Bool → LTL AP → NNF AP
   | false, .atom p => .atom p
   | true, .atom p => .not_atom p
   | false, .not f => toNNFCore true f
@@ -75,11 +93,13 @@ def toNNFCore : Bool → LTL AP → NNF AP
   | false, .until f g => .until (toNNFCore false f) (toNNFCore false g)
   | true, .until f g => .release (toNNFCore true f) (toNNFCore true g)
 
-def toNNF (f : LTL AP) : NNF AP := toNNFCore false f
+/-- The NNF formula equivalent to the `LTL` formula `f`. -/
+def toNNF {AP} (f : LTL AP) : NNF AP := toNNFCore false f
 
-def toNNFNeg (f : LTL AP) : NNF AP := toNNFCore true f
+/-- The NNF formula equivalent to the negation of the `LTL` formula `f`. -/
+def toNNFNeg {AP} (f : LTL AP) : NNF AP := toNNFCore true f
 
-lemma toNNFCore_sound (f : LTL AP) :
+lemma toNNFCore_sound {AP} (f : LTL AP) :
     (∀ w, LTL.language f w ↔ NNF.language (toNNF f) w) ∧
       (∀ w, ¬ LTL.language f w ↔ NNF.language (toNNFNeg f) w) := by
   induction f with
@@ -132,6 +152,7 @@ lemma toNNFCore_sound (f : LTL AP) :
 end LTL
 
 -- Theorem statement written by hand
-theorem LTL.exists_equiv_nnf {AP} (ψ : LTL AP) : ∃ (nnf : NNF AP), ψ.language = nnf.language := by
+theorem LTL.exists_equiv_nnf {AP} (ψ : LTL AP) :
+    ∃ (nnf : NNF AP), ψ.language = nnf.language := by
   refine ⟨LTL.toNNF ψ, funext ?_⟩
   simpa using (toNNFCore_sound ψ).1

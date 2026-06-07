@@ -6,6 +6,14 @@ Authors: György Kurucz
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.Finite.Defs
 
+/-!
+# Linear Temporal Logic and Büchi automata
+
+We define the syntax and language of Linear Temporal Logic (`LTL`) formulas and
+of nondeterministic Büchi automata (`NBW`), and state the theorem that every
+`LTL` formula has an equivalent `NBW`.
+-/
+
 /-- A Linear Temporal Logic formula. -/
 inductive LTL (AP : Type) where
 | atom (p : AP)
@@ -51,5 +59,7 @@ defined as a predicate over a word. -/
 def NBW.language {S} (A : NBW S) (w : ℕ → S) :=
   ∃ p, A.run p w ∧ ∀ i, ∃ j ≥ i, p j ∈ A.F
 
-def for_any_LTL_formula_exists_an_equivalent_NBW_statement :=
+/-- The statement that every Linear Temporal Logic formula has an equivalent
+nondeterministic Büchi automaton, packaged as a proposition so it can be reused. -/
+def forAnyLTLFormulaExistsAnEquivalentNBWStatement :=
   ∀ {AP} (φ : LTL AP), ∃ (A : NBW (Letter AP)), φ.language = A.language

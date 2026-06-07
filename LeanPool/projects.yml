@@ -1888,7 +1888,6 @@ projects:
       - for_any_LTL_formula_exists_an_equivalent_NBW
       - LTL
       - NBW
-      - SafetyLivenessDecomposition.safety_liveness_decomposition
     main_results:
       - declaration: for_any_LTL_formula_exists_an_equivalent_NBW
         informal: For any linear temporal logic formula there exists an equivalent nondeterministic Büchi automaton accepting the same language.
