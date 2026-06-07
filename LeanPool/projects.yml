@@ -1900,3 +1900,40 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: lean-subst
+    title: De Bruijn substitution framework (lean-subst)
+    summary: An Autosubst-inspired framework for De Bruijn substitution over non-indexed syntax, proving the convergent substitution-calculus rewriting laws and using them to derive abstract metatheory such as confluence and strong normalization.
+    branch: type theory
+    entry_module: LeanPool.LeanSubst
+    authors:
+      - Andrew Marmaduke
+    source:
+      url: "https://github.com/amarmaduke/lean-subst"
+      github_repo: amarmaduke/lean-subst
+    status: verified
+    main_declarations:
+      - LeanSubst.Subst.compose
+      - LeanSubst.Ren.apply_compose
+      - LeanSubst.Star.confluence
+      - LeanSubst.Conv.star_equiv
+      - LeanSubst.SN.wellfounded
+    main_results:
+      - declaration: LeanSubst.Subst.compose
+        informal: Defines composition of De Bruijn substitutions over non-indexed syntax.
+      - declaration: LeanSubst.Ren.apply_compose
+        informal: States that applying two renamings in sequence equals applying their composition.
+      - declaration: LeanSubst.Star.confluence
+        informal: Proves confluence of the reflexive-transitive closure of a reduction relation that has the triangle property.
+      - declaration: LeanSubst.Conv.star_equiv
+        informal: Characterizes the conversion relation as joinability via the reflexive-transitive closure under confluence.
+      - declaration: LeanSubst.SN.wellfounded
+        informal: Shows that strong normalization of every term yields well-foundedness of the flipped reduction relation.
+    tags:
+      - type-theory
+      - de-bruijn
+      - substitution
+      - autosubst
+      - rewriting
+    msc:
+      - "03B40"
+      - "68N18"

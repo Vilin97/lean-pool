@@ -696,6 +696,15 @@ import LeanPool.LeanPolyABC.Lib.Max3
 import LeanPool.LeanPolyABC.Lib.Radical
 import LeanPool.LeanPolyABC.Lib.Wronskian
 import LeanPool.LeanPolyABC.MasonStothers
+import LeanPool.LeanSubst
+import LeanPool.LeanSubst.HetRen
+import LeanPool.LeanSubst.Laws
+import LeanPool.LeanSubst.List
+import LeanPool.LeanSubst.Normal
+import LeanPool.LeanSubst.Option
+import LeanPool.LeanSubst.Reduction
+import LeanPool.LeanSubst.Ren
+import LeanPool.LeanSubst.Subst
 import LeanPool.LowDimSolvClassification
 import LeanPool.LowDimSolvClassification.Classification1
 import LeanPool.LowDimSolvClassification.Classification2
