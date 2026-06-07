@@ -1873,3 +1873,39 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: lentil
+    title: 'Lentil: Temporal Logic of Actions in Lean 4'
+    summary: A shallow embedding of Leslie Lamport's Temporal Logic of Actions (TLA) in Lean 4, with the temporal modalities, standard propositional and temporal proof rules, weak-fairness and leads-to reasoning, and an interactive proof mode for TLA judgments.
+    branch: temporal logic
+    entry_module: LeanPool.Lentil
+    authors:
+      - Qiyuan Zhao
+    source:
+      url: "https://github.com/verse-lab/Lentil"
+      github_repo: verse-lab/Lentil
+    status: verified
+    main_declarations:
+      - TLA.always
+      - TLA.eventually
+      - TLA.always_induction
+      - TLA.wf1
+      - TLA.wf_as_leads_to
+      - TLA.leads_to_trans
+    main_results:
+      - declaration: TLA.always
+        informal: Defines the TLA "always" (box) temporal modality, asserting a predicate holds on every suffix of an execution.
+      - declaration: TLA.eventually
+        informal: Defines the TLA "eventually" (diamond) temporal modality, asserting a predicate holds on some suffix of an execution.
+      - declaration: TLA.always_induction
+        informal: The always-induction rule, equating `□ p` with `p` together with `□ (p → ◯ p)`.
+      - declaration: TLA.wf1
+        informal: The WF1 weak-fairness proof rule deriving a leads-to property from a next-state action under weak fairness.
+      - declaration: TLA.wf_as_leads_to
+        informal: Characterizes weak fairness of an action as a leads-to property between its enabledness and its occurrence.
+      - declaration: TLA.leads_to_trans
+        informal: Transitivity of the leads-to relation.
+    tags:
+      - temporal-logic
+      - tla
+      - formal-verification
+      - proof-mode
