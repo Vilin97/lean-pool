@@ -356,6 +356,16 @@ import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N2
 import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3JoinN3N2
 import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2
 import LeanPool.ErdosTuzaValtr.Main.Main
+import LeanPool.EventStructures
+import LeanPool.EventStructures.Basic
+import LeanPool.EventStructures.Computation
+import LeanPool.EventStructures.Configuration
+import LeanPool.EventStructures.FinitePoset
+import LeanPool.EventStructures.Log
+import LeanPool.EventStructures.Path
+import LeanPool.EventStructures.Replay
+import LeanPool.EventStructures.Rollback
+import LeanPool.EventStructures.Trace
 import LeanPool.FactorizationSystems
 import LeanPool.FactorizationSystems.Basic
 import LeanPool.FactorizationSystems.Characterization

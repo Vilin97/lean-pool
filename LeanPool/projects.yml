@@ -1900,3 +1900,39 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: event-structures
+    title: Event Structures and Causal-Consistent Reversibility
+    summary: Formalizes event structures with binary conflict, their configurations, computations, the trace monoid, and causal-consistent reversibility, proving correctness, uniqueness, and causal-safety of rollback and replay operations.
+    branch: concurrency theory
+    entry_module: LeanPool.EventStructures
+    authors:
+      - Vikraman Choudhury
+    source:
+      url: "https://github.com/vikraman/event-structures"
+      github_repo: vikraman/event-structures
+    status: verified
+    main_declarations:
+      - EventStructure
+      - Conf
+      - Rollback.rollback_correctness_finite
+      - Rollback.rollback_causal_safety
+      - Replay.minReplay_unique
+      - TraceMonoid
+    main_results:
+      - declaration: EventStructure
+        informal: Defines an event structure as a partially ordered set of events with an irreflexive symmetric conflict relation.
+      - declaration: Conf
+        informal: Defines a configuration as a conflict-free, downward-closed set of events.
+      - declaration: Rollback.rollback_correctness_finite
+        informal: Proves that the original configuration is reachable from the rollback of an event when the configuration is finitely representable.
+      - declaration: Rollback.rollback_causal_safety
+        informal: Proves causal safety of rollback - events causally after the rolled-back event are removed.
+      - declaration: Replay.minReplay_unique
+        informal: Proves uniqueness of the minimal replay reconstructing a configuration compatible with a given log.
+      - declaration: TraceMonoid
+        informal: Defines the trace monoid as lists of events quotiented by trace equivalence.
+    tags:
+      - concurrency
+      - order-theory
+      - reversible-computation
+      - event-structures
