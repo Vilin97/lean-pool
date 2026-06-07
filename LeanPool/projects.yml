@@ -1914,10 +1914,8 @@ projects:
     main_declarations:
       - EventStructure
       - Conf
-      - Rollback.rollback_correctness_finite
       - Rollback.rollback_causal_safety
-      - Replay.minReplay_unique
-      - TraceMonoid
+      - Trace.TraceMonoid
     main_results:
       - declaration: EventStructure
         informal: Defines an event structure as a partially ordered set of events with an irreflexive symmetric conflict relation.
@@ -1929,10 +1927,13 @@ projects:
         informal: Proves causal safety of rollback - events causally after the rolled-back event are removed.
       - declaration: Replay.minReplay_unique
         informal: Proves uniqueness of the minimal replay reconstructing a configuration compatible with a given log.
-      - declaration: TraceMonoid
+      - declaration: Trace.TraceMonoid
         informal: Defines the trace monoid as lists of events quotiented by trace equivalence.
     tags:
       - concurrency
       - order-theory
       - reversible-computation
       - event-structures
+    msc:
+      - "68Q85"
+      - "06A06"

@@ -10,6 +10,16 @@ import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Set.Finite.Basic
 import Mathlib.Data.Set.Card
 
+/-!
+# Rollback
+
+This module formalises rollback of an event on a configuration: a maximal
+sub-configuration omitting the chosen event. It shows the canonical rollback
+(removing the future of the event) is the unique rollback, proves redoability
+and causal safety, and—given a finite representation—correctness (the original
+configuration is reachable from the rollback) and minimality.
+-/
+
 variable (es : EventStructure)
 
 namespace Rollback
@@ -93,7 +103,7 @@ def rollbackFuture (c : Conf es) (e : es.Event) : Conf es :=
     (@rollbackFuture es c e).1 = c.1 \ es.future e :=
   rfl
 
-@[simp] lemma rollbackFuture_mem {c : Conf es} {e : es.Event} {x : es.Event} :
+lemma rollbackFuture_mem {c : Conf es} {e : es.Event} {x : es.Event} :
     x ∈ (@rollbackFuture es c e).1 ↔ x ∈ c.1 ∧ x ∉ es.future e :=
   Iff.rfl
 
@@ -263,16 +273,17 @@ lemma rollback_correctness_finite [DecidableEventStructure es] {c : Conf es} {e 
     (cF : Finset es.Event) (hcF : ∀ x, x ∈ cF ↔ x ∈ c.1) :
     Nonempty (Path es (@rollbackFuture es c e) c) := by
   obtain ⟨⟨t, hExec⟩⟩ := execList_exists_finite (es := es) cF hcF
-  exact ⟨Path.execList_to_path (es := es) hExec⟩
+  exact ⟨Path.execListToPath (es := es) hExec⟩
 
 /-- Minimality of Rollback - Any path from a redo-candidate configuration `c'` to `c` is at
     least as long as the number of events in `c` causally after `e`. -/
-lemma rollback_minimality [DecidableEq es.Event] {c : Conf es} {e : es.Event}
+lemma rollback_minimality {c : Conf es} {e : es.Event}
     {c' : Conf es} (_hredo : c'.1 ⊢ e) (hsafe : ∀ x ∈ c'.1, x ∉ es.future e)
     (p' : Path es c' c) :
     (c.1 ∩ es.future e).ncard ≤ Path.length es p' := by
+  classical
   have hexec : Path.ExecList es c' (Path.trace es p') c :=
-    Path.execList_of_path es p'
+    Path.execListOfPath es p'
   have htgt : c.1 = c'.1 ∪ {x | x ∈ Path.trace es p'} :=
     Path.execList_target_eq_union es hexec
   have hsub_set : c.1 ∩ es.future e ⊆ ↑(Path.trace es p').toFinset := by

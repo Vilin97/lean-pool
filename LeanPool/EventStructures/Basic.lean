@@ -5,10 +5,22 @@ Authors: Vikraman Choudhury
 -/
 import Mathlib.Order.Basic
 
+/-!
+# Event structures
+
+This module defines `EventStructure`: a set of events equipped with a causal
+partial order and an irreflexive, symmetric binary conflict relation, together
+with the derived consistency, concurrency, minimal-conflict and past/future
+notions used throughout the development, and decidability data for events.
+-/
+
 /-- An event structure with binary conflict. -/
 structure EventStructure where
+  /-- The type of events. -/
   Event : Type*
+  /-- The causal partial order on events. -/
   [poEvent : PartialOrder Event]
+  /-- The binary conflict relation on events. -/
   conflict : Event → Event → Prop
   conflict_irrefl : ∀ e, ¬ conflict e e
   conflict_symm : Symmetric conflict
@@ -28,7 +40,7 @@ local infixl:50 " # " => es.conflict
 def consistent (e₁ e₂ : es.Event) : Prop := ¬ (e₁ # e₂)
 
 /-- Consistency is reflexive. -/
-lemma consistent_refl : Reflexive es.consistent := es.conflict_irrefl
+lemma consistent_refl : ∀ e, es.consistent e e := es.conflict_irrefl
 
 /-- Consistency is symmetric. -/
 lemma consistent_symm : Symmetric es.consistent :=
@@ -97,7 +109,7 @@ class DecidableEventStructure (es : EventStructure) where
   decEq : DecidableEq es.Event
   decLt : DecidableRel ((· < ·) : es.Event → es.Event → Prop)
 
-attribute [instance] DecidableEventStructure.decEq DecidableEventStructure.decLt
+attribute [reducible, instance] DecidableEventStructure.decEq DecidableEventStructure.decLt
 
 instance EventStructure.decLe (es : EventStructure) [DecidableEventStructure es] :
     DecidableRel ((· ≤ ·) : es.Event → es.Event → Prop) := fun a b =>

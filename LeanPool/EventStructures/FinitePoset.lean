@@ -6,6 +6,14 @@ Authors: Vikraman Choudhury
 import Mathlib.Data.Finset.Basic
 import Mathlib.Order.WellFounded
 
+/-!
+# Minimal elements of finite posets
+
+Auxiliary lemmas used by the rollback development: every nonempty finite subset
+of a partial order with well-founded strict order (or, constructively, of any
+partial order) has a minimal element.
+-/
+
 /-- Classical: A non-empty finite subset of a well-founded partial order has a minimal element. -/
 lemma Finset.exists_minimal_of_nonempty {α : Type*} [PartialOrder α] [WellFoundedLT α]
     (T : Finset α) (hne : T.Nonempty) :
@@ -20,17 +28,17 @@ lemma Finset.exists_minimal_of_nonempty {α : Type*} [PartialOrder α] [WellFoun
   intro z ih hz
   by_cases hmin : ∀ y ∈ T, y < z → False
   · exact ⟨z, hz, hmin, le_rfl⟩
-  · push_neg at hmin
+  · push Not at hmin
     obtain ⟨y, hyT, hy_lt, _⟩ := hmin
     obtain ⟨m, hmT, hmmin, hm_le⟩ := ih y hy_lt hyT
     exact ⟨m, hmT, hmmin, le_trans hm_le (le_of_lt hy_lt)⟩
 
 /-- Constructive: every nonempty finite subset of a
     decidable strict order has a minimal element (no well-foundedness needed). -/
-lemma Finset.exists_minimal_dec {α : Type*} [PartialOrder α] [DecidableEq α]
-    [DecidableRel ((· < ·) : α → α → Prop)]
+lemma Finset.exists_minimal_dec {α : Type*} [PartialOrder α]
     (T : Finset α) (hne : T.Nonempty) :
     ∃ x ∈ T, ∀ y ∈ T, ¬ y < x := by
+  classical
   induction T using Finset.induction_on with
   | empty => exact absurd rfl hne.ne_empty
   | @insert a S haS ih =>

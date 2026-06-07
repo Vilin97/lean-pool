@@ -9,6 +9,15 @@ import LeanPool.EventStructures.Computation
 import LeanPool.EventStructures.Log
 import LeanPool.EventStructures.Trace
 
+/-!
+# Replay
+
+This module defines minimal and maximal replays of a log, the minimum and
+maximum replay sets, and proves that the minimum (resp. maximum) replay set is
+the smallest (resp. largest) configuration compatible with a log, together with
+existence and uniqueness of minimal and maximal replays.
+-/
+
 variable (es : EventStructure)
 open EventStructure
 open Configuration
@@ -24,13 +33,11 @@ def conf (σ : Computations es) : Conf es := σ.1
 
 /-- A computation is a minimal replay of a log if it's compatible (σ ⊨ l) and
     its configuration is a subset of all other compatible computations. -/
-@[simp]
 def isMinReplay (l : Set es.Event) (σ : Computations es) : Prop :=
   σ ⊨ l ∧ ∀ σ' : Computations es, σ' ⊨ l → (conf es σ).1 ⊆ (conf es σ').1
 
 /-- A computation is a maximal replay of a log if it's compatible (σ ⊨ l) and
     all other compatible computations' configurations are subsets of it. -/
-@[simp]
 def isMaxReplay (l : Set es.Event) (σ : Computations es) : Prop :=
   σ ⊨ l ∧ ∀ σ' : Computations es, σ' ⊨ l → (conf es σ').1 ⊆ (conf es σ).1
 

@@ -10,6 +10,15 @@ import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Data.Setoid.Basic
 import Mathlib.Data.Nat.Find
 
+/-!
+# Paths in the configuration graph
+
+This module defines edges and paths in the configuration graph of an event
+structure, their composition, traces and lengths, the minimal path length, the
+quotient of paths by trace equivalence (asynchronous paths), and the resulting
+(synchronous and asynchronous) path categories.
+-/
+
 variable (es : EventStructure)
 open EventStructure
 open Configuration
@@ -20,8 +29,11 @@ local infix:50 " ⊢ " => enables es
 /-- An edge in the configuration graph of an event structure:
     from configuration c₁ to configuration c₂ by adding event e. -/
 structure Edge (c₁ c₂ : Conf es) where
+  /-- The event added along this edge. -/
   event : es.Event
+  /-- The source configuration enables the added event. -/
   conf₁_enables : (c₁.val) ⊢ event
+  /-- The target configuration is the source configuration extended by the event. -/
   conf₂_equals : c₂.val = (c₁.val ∪ {event})
 
 /-- A path in the configuration graph of an event structure. -/
@@ -32,15 +44,15 @@ inductive Path : Conf es → Conf es → Type _
 namespace Path
 
 /-- Identity path. -/
-def path_id (c : Conf es) : Path es c c :=
+def pathId (c : Conf es) : Path es c c :=
   Path.refl
 
 /-- Composition of paths. -/
-def path_comp {c₁ c₂ c₃ : Conf es} (h₁₂ : Path es c₁ c₂) (h₂₃ : Path es c₂ c₃) :
+def pathComp {c₁ c₂ c₃ : Conf es} (h₁₂ : Path es c₁ c₂) (h₂₃ : Path es c₂ c₃) :
     Path es c₁ c₃ :=
   match h₁₂ with
   | refl => h₂₃
-  | step hEdge hPath => Path.step hEdge (path_comp hPath h₂₃)
+  | step hEdge hPath => Path.step hEdge (pathComp hPath h₂₃)
 
 /-- Next configuration after executing an enabled event. -/
 def nextConf (c : Conf es) (e : es.Event) (h : c.val ⊢ e) : Conf es :=
@@ -56,25 +68,25 @@ inductive ExecList : Conf es → List es.Event → Conf es → Type _
 
 /-- Left identity law: composing with the identity path on the right. -/
 lemma path_comp_id {c₁ c₂ : Conf es} (h : Path es c₁ c₂) :
-    path_comp es h (path_id es c₂) = h := by
+    pathComp es h (pathId es c₂) = h := by
   induction h with
   | refl => rfl
   | step hEdge hPath ih =>
-    simp only [path_comp, path_id] at ih ⊢
+    simp only [pathComp, pathId] at ih ⊢
     rw [ih]
 
 /-- Right identity law: composing with the identity path on the left. -/
 lemma path_id_comp {c₁ c₂ : Conf es} (h : Path es c₁ c₂) :
-    path_comp es (path_id es c₁) h = h := rfl
+    pathComp es (pathId es c₁) h = h := rfl
 
 /-- Associativity law: composition of paths is associative. -/
 lemma path_comp_assoc {c₁ c₂ c₃ c₄ : Conf es}
     (h₁₂ : Path es c₁ c₂) (h₂₃ : Path es c₂ c₃) (h₃₄ : Path es c₃ c₄) :
-    path_comp es (path_comp es h₁₂ h₂₃) h₃₄ = path_comp es h₁₂ (path_comp es h₂₃ h₃₄) := by
+    pathComp es (pathComp es h₁₂ h₂₃) h₃₄ = pathComp es h₁₂ (pathComp es h₂₃ h₃₄) := by
   induction h₁₂ with
   | refl => rfl
   | step hEdge hPath ih =>
-    simp only [path_comp]
+    simp only [pathComp]
     rw [ih]
 
 /-- Trace of the path -/
@@ -96,7 +108,7 @@ def length {c₁ c₂ : Conf es} (hPath : Path es c₁ c₂) : Nat :=
   simp [length, trace]
 
 /-- Build a path from an executable list. -/
-def execList_to_path {c₁ c₂ : Conf es} {t : List es.Event} (h : ExecList es c₁ t c₂) :
+def execListToPath {c₁ c₂ : Conf es} {t : List es.Event} (h : ExecList es c₁ t c₂) :
     Path es c₁ c₂ :=
   match h with
   | ExecList.nil c => Path.refl
@@ -105,17 +117,17 @@ def execList_to_path {c₁ c₂ : Conf es} {t : List es.Event} (h : ExecList es 
         { event := e
           conf₁_enables := h
           conf₂_equals := rfl }
-        (execList_to_path hnext)
+        (execListToPath hnext)
 
 @[simp] lemma execList_trace {c₁ c₂ : Conf es} {t : List es.Event}
-    (h : ExecList es c₁ t c₂) : trace es (execList_to_path (es:=es) h) = t := by
+    (h : ExecList es c₁ t c₂) : trace es (execListToPath (es:=es) h) = t := by
   induction h with
   | nil c => rfl
   | cons e h hnext ih =>
-      simp [execList_to_path, trace, ih]
+      simp [execListToPath, trace, ih]
 
 @[simp] lemma execList_length {c₁ c₂ : Conf es} {t : List es.Event}
-    (h : ExecList es c₁ t c₂) : length es (execList_to_path (es:=es) h) = t.length := by
+    (h : ExecList es c₁ t c₂) : length es (execListToPath (es:=es) h) = t.length := by
   simp [length, execList_trace (es:=es) h]
 
 /-- Target configuration from an exec list is the source plus the list's events. -/
@@ -133,7 +145,7 @@ lemma execList_target_eq_union {c₁ c₂ : Conf es} {t : List es.Event}
 
 /-- Lift an exec list from a smaller configuration to a larger one,
     assuming monotone enabling under subset. -/
-noncomputable def execList_lift {c_small c_large c_target : Conf es} {t : List es.Event}
+noncomputable def execListLift {c_small c_large c_target : Conf es} {t : List es.Event}
     (hsub : c_small.1 ⊆ c_large.1)
     (hmono : ∀ {c₁ c₂ : Conf es} {e : es.Event}, c₁.1 ⊆ c₂.1 → c₁.1 ⊢ e → c₂.1 ⊢ e)
     (h : ExecList es c_small t c_target) :
@@ -176,13 +188,13 @@ lemma minPathLength_le {c₁ c₂ : Conf es} (h : Nonempty (Path es c₁ c₂)) 
     minPathLength (es := es) h ≤ length es p := by
   classical
   simpa [minPathLength] using (Nat.find_min' (H := pathLengthExists (es := es) h) ⟨p, rfl⟩)
-/-- The trace of an execList_to_path is exactly the original list. -/
+/-- The trace of an execListToPath is exactly the original list. -/
 lemma execList_to_path_trace {c₁ c₂ : Conf es} {t : List es.Event}
     (h : ExecList es c₁ t c₂) :
-    trace es (execList_to_path (es := es) h) = t :=
+    trace es (execListToPath (es := es) h) = t :=
   execList_trace (es := es) h
 /-- Extract an executable list from a path. -/
-def execList_of_path {c₁ c₂ : Conf es} (p : Path es c₁ c₂) : ExecList es c₁ (trace es p) c₂ :=
+def execListOfPath {c₁ c₂ : Conf es} (p : Path es c₁ c₂) : ExecList es c₁ (trace es p) c₂ :=
   match p with
   | Path.refl => ExecList.nil _
   | Path.step (c₁:=c₁) (c₂:=c₂) (c₃:=c₃) hEdge hPath =>
@@ -191,7 +203,7 @@ def execList_of_path {c₁ c₂ : Conf es} (p : Path es c₁ c₂) : ExecList es
         simpa [nextConf] using hEdge.conf₂_equals.symm
       have hnext : ExecList es (nextConf es c₁ hEdge.event hEdge.conf₁_enables)
           (trace es hPath) c₃ := by
-        simpa [hconf] using execList_of_path hPath
+        simpa [hconf] using execListOfPath hPath
       ExecList.cons hEdge.event hEdge.conf₁_enables hnext
 
 /-- Notation for trace equivalence. -/
@@ -209,7 +221,7 @@ def PathEquiv {c₁ c₂ : Conf es} (p₁ p₂ : Path es c₁ c₂) : Prop :=
 local infixr:60 " ≈ₚ " => PathEquiv es
 
 /-- Path equivalence is reflexive. -/
-lemma pathEquiv_refl {c₁ c₂ : Conf es} : Reflexive (@PathEquiv es c₁ c₂) :=
+lemma pathEquiv_refl {c₁ c₂ : Conf es} : ∀ p, @PathEquiv es c₁ c₂ p p :=
   (pathSetoid es c₁ c₂).iseqv.refl
 
 /-- Path equivalence is symmetric. -/
@@ -217,22 +229,23 @@ lemma pathEquiv_symm {c₁ c₂ : Conf es} : Symmetric (@PathEquiv es c₁ c₂)
   fun _ _ => (pathSetoid es c₁ c₂).iseqv.symm
 
 /-- Path equivalence is transitive. -/
-lemma pathEquiv_trans {c₁ c₂ : Conf es} : Transitive (@PathEquiv es c₁ c₂) :=
+lemma pathEquiv_trans {c₁ c₂ : Conf es} : ∀ ⦃p₁ p₂ p₃⦄,
+    @PathEquiv es c₁ c₂ p₁ p₂ → @PathEquiv es c₁ c₂ p₂ p₃ → @PathEquiv es c₁ c₂ p₁ p₃ :=
   fun _ _ _ => (pathSetoid es c₁ c₂).iseqv.trans
 
 /-- Path equivalence is an equivalence relation. -/
-instance pathEquivEquivalence (c₁ c₂ : Conf es) : Equivalence (@PathEquiv es c₁ c₂) where
+lemma pathEquivEquivalence (c₁ c₂ : Conf es) : Equivalence (@PathEquiv es c₁ c₂) where
   refl := pathEquiv_refl es
   symm := @pathEquiv_symm es c₁ c₂
   trans := @pathEquiv_trans es c₁ c₂
 
 /-- Trace of path composition is concatenation of traces. -/
 lemma trace_comp {c₁ c₂ c₃ : Conf es} (p₁₂ : Path es c₁ c₂) (p₂₃ : Path es c₂ c₃) :
-    trace es (path_comp es p₁₂ p₂₃) = trace es p₁₂ ++ trace es p₂₃ := by
+    trace es (pathComp es p₁₂ p₂₃) = trace es p₁₂ ++ trace es p₂₃ := by
   induction p₁₂ with
   | refl => rfl
   | step hEdge hPath ih =>
-    simp only [path_comp, trace, ih]
+    simp only [pathComp, trace, ih]
     rw [List.cons_append]
 
 /-- Asynchronous path: paths quotiented by path equivalence. -/
@@ -246,32 +259,32 @@ def mk {c₁ c₂ : Conf es} (p : Path es c₁ c₂) : Async es c₁ c₂ :=
   Quotient.mk (pathSetoid es c₁ c₂) p
 
 /-- Identity asynchronous path. -/
-def async_path_id (c : Conf es) : Async es c c :=
-  mk es (Path.path_id es c)
+def asyncPathId (c : Conf es) : Async es c c :=
+  mk es (Path.pathId es c)
 
 /-- Composition of asynchronous paths. -/
-def async_path_comp {c₁ c₂ c₃ : Conf es}
+def asyncPathComp {c₁ c₂ c₃ : Conf es}
     (p₁₂ : Async es c₁ c₂) (p₂₃ : Async es c₂ c₃) : Async es c₁ c₃ :=
   Quotient.lift₂
-    (fun p₁₂ p₂₃ => mk es (Path.path_comp es p₁₂ p₂₃))
+    (fun p₁₂ p₂₃ => mk es (Path.pathComp es p₁₂ p₂₃))
     (fun a₁ b₁ a₂ b₂ ha hb => Quotient.sound <| by
-      calc Path.trace es (Path.path_comp es a₁ b₁)
+      calc Path.trace es (Path.pathComp es a₁ b₁)
           = Path.trace es a₁ ++ Path.trace es b₁ := Path.trace_comp es a₁ b₁
         _ = Path.trace es a₂ ++ Path.trace es b₂ := by rw [ha, hb]
-        _ = Path.trace es (Path.path_comp es a₂ b₂) := (Path.trace_comp es a₂ b₂).symm)
+        _ = Path.trace es (Path.pathComp es a₂ b₂) := (Path.trace_comp es a₂ b₂).symm)
     p₁₂ p₂₃
 
 /-- Left identity law for asynchronous path composition. -/
 lemma async_path_id_comp {c₁ c₂ : Conf es} (p : Async es c₁ c₂) :
-    async_path_comp es (async_path_id es c₁) p = p := by
+    asyncPathComp es (asyncPathId es c₁) p = p := by
   induction p using Quotient.ind
   rfl
 
 /-- Right identity law for asynchronous path composition. -/
 lemma async_path_comp_id {c₁ c₂ : Conf es} (p : Async es c₁ c₂) :
-    async_path_comp es p (async_path_id es c₂) = p := by
+    asyncPathComp es p (asyncPathId es c₂) = p := by
   induction p using Quotient.ind
-  unfold async_path_comp async_path_id mk Path.path_id
+  unfold asyncPathComp asyncPathId mk Path.pathId
   simp only [Quotient.lift₂_mk]
   congr 1
   exact Path.path_comp_id es _
@@ -279,12 +292,12 @@ lemma async_path_comp_id {c₁ c₂ : Conf es} (p : Async es c₁ c₂) :
 /-- Associativity law for asynchronous path composition. -/
 lemma assoc {c₁ c₂ c₃ c₄ : Conf es}
     (p₁₂ : Async es c₁ c₂) (p₂₃ : Async es c₂ c₃) (p₃₄ : Async es c₃ c₄) :
-    async_path_comp es (async_path_comp es p₁₂ p₂₃) p₃₄ =
-    async_path_comp es p₁₂ (async_path_comp es p₂₃ p₃₄) := by
+    asyncPathComp es (asyncPathComp es p₁₂ p₂₃) p₃₄ =
+    asyncPathComp es p₁₂ (asyncPathComp es p₂₃ p₃₄) := by
   induction p₁₂ using Quotient.ind
   induction p₂₃ using Quotient.ind
   induction p₃₄ using Quotient.ind
-  simp only [async_path_comp, Quotient.lift₂_mk]
+  simp only [asyncPathComp, Quotient.lift₂_mk]
   apply Quotient.sound
   rw [Path.path_comp_assoc]
 
@@ -333,8 +346,8 @@ end Path
 /-- The path category of an event structure. -/
 instance pathCategory : CategoryTheory.Category (Conf es) where
   Hom := Path es
-  id := Path.path_id es
-  comp := Path.path_comp es
+  id := Path.pathId es
+  comp := Path.pathComp es
   id_comp := Path.path_id_comp es
   comp_id := Path.path_comp_id es
   assoc := Path.path_comp_assoc es
@@ -342,8 +355,8 @@ instance pathCategory : CategoryTheory.Category (Conf es) where
 /-- The asynchronous path category of an event structure. -/
 instance asyncPathCategory : CategoryTheory.Category (Conf es) where
   Hom := Path.Async es
-  id := Path.Async.async_path_id es
-  comp := Path.Async.async_path_comp es
+  id := Path.Async.asyncPathId es
+  comp := Path.Async.asyncPathComp es
   id_comp := Path.Async.async_path_id_comp es
   comp_id := Path.Async.async_path_comp_id es
   assoc := Path.Async.assoc es

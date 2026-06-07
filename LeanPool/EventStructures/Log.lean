@@ -7,6 +7,14 @@ import LeanPool.EventStructures.Basic
 import LeanPool.EventStructures.Configuration
 import LeanPool.EventStructures.Computation
 
+/-!
+# Logs and compatibility
+
+This module defines logged events and the log of a configuration (events that
+have a minimal conflict with some event outside the configuration), and the
+notion of a computation being compatible with a log.
+-/
+
 variable (es : EventStructure)
 open EventStructure
 open Configuration
@@ -97,7 +105,7 @@ def CompatibleComputations.val {l : Set es.Event} (σ : CompatibleComputations e
   σ.1
 
 /-- Extract the compatibility proof. -/
-def CompatibleComputations.compatible {l : Set es.Event} (σ : CompatibleComputations es l) :
+lemma CompatibleComputations.compatible {l : Set es.Event} (σ : CompatibleComputations es l) :
     σ.val ⊨ l :=
   σ.2
 

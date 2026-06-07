@@ -8,6 +8,15 @@ import LeanPool.EventStructures.Path
 import LeanPool.EventStructures.Trace
 import Mathlib.Logic.Function.Basic
 
+/-!
+# Computations
+
+A computation to a configuration is an asynchronous path from the empty
+configuration to it. This module defines computations, the type of reachable
+configurations, and linearisations, and relates computations to the
+configurations they reach.
+-/
+
 variable (es : EventStructure)
 open EventStructure
 open Configuration
@@ -54,10 +63,10 @@ lemma computation_is_linearisation {c : Conf es} (comp : Computation es c) :
 def ReachableConf : Type _ := {c : Conf es // Nonempty (Computation es c)}
 
 /-- Every computation targets a reachable configuration. -/
-def computation_to_reachable : Computations es → ReachableConf es :=
+def computationToReachable : Computations es → ReachableConf es :=
   fun p => ⟨p.1, ⟨p.2⟩⟩
 
 /-- The map from computations to reachable configurations is surjective. -/
 lemma computation_to_reachable_surjective :
-    Function.Surjective (computation_to_reachable es) :=
+    Function.Surjective (computationToReachable es) :=
   fun ⟨c, ⟨comp⟩⟩ => ⟨⟨c, comp⟩, rfl⟩

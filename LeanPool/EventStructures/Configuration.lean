@@ -6,6 +6,15 @@ Authors: Vikraman Choudhury
 import LeanPool.EventStructures.Basic
 import Mathlib.Data.Finset.Basic
 
+/-!
+# Configurations
+
+A configuration of an event structure is a conflict-free, downward-closed set of
+events. This module defines configurations (and their finite variant), the
+enabling relation between a configuration and an event, and proves that enabling
+an event extends a configuration.
+-/
+
 variable (es : EventStructure)
 
 /-- A set of events is a configuration if it is conflict-free and downward closed. -/
