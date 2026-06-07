@@ -1873,3 +1873,44 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: redhill
+    title: Improved Lower Bounds for Strong n-Conjectures
+    summary: Formalizes the disproof of Ramaekers's conjecture, constructing tuple families whose abc-style quality stays bounded above 1, and proves Browkin-Brzezinski lower bounds on the quality of the n-conjecture tuples.
+    branch: number theory
+    entry_module: LeanPool.Redhill
+    authors:
+      - Jeremy Tan
+    source:
+      title: "Improved Lower Bounds for Strong n-Conjectures"
+      authors:
+        - Rupert Hölzl
+        - Sören Kleine
+        - Frank Stephan
+      doi: "10.1017/S1446788725000084"
+      github_repo: Parcly-Taxel/Redhill
+    status: verified
+    main_declarations:
+      - RamaekersConjecture
+      - not_ramaekersConjecture_ge_six
+      - not_ramaekersConjecture_odd_ge_five
+      - not_ramaekersConjecture_five
+      - le_quality_nConjectureTuples
+    main_results:
+      - declaration: RamaekersConjecture
+        informal: Defines Ramaekers's conjecture for fixed n as the statement that the quality of the relevant tuple set equals 1.
+      - declaration: not_ramaekersConjecture_ge_six
+        informal: Proves Ramaekers's conjecture fails for every n at least 6 (the general case, Theorem 1.14).
+      - declaration: not_ramaekersConjecture_odd_ge_five
+        informal: Proves Ramaekers's conjecture fails for every odd n at least 5 (the odd case via Pell equations, Theorem 1.13).
+      - declaration: not_ramaekersConjecture_five
+        informal: Proves Ramaekers's conjecture fails for n equal to 5 (the Konyagin prelude bound).
+      - declaration: le_quality_nConjectureTuples
+        informal: Proves the Browkin-Brzezinski 1994 lower bound 2n-5 on the quality of the n-conjecture tuples (Theorem 1.3).
+    tags:
+      - number-theory
+      - abc-conjecture
+      - n-conjecture
+      - ramaekers-conjecture
+    msc:
+      - "11A41"
+      - "11D75"
