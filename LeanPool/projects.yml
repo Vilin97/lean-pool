@@ -1900,3 +1900,40 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: mriscx
+    title: MRiscX
+    summary: A certified RISC-V interpreter that lets RISC-V assembly programs be written and verified in Lean via Hoare logic, with proved Hoare rules, per-instruction specifications, custom elaborators and tactics, and a complete One-Time-Pad correctness proof.
+    branch: program verification
+    entry_module: LeanPool.MRiscX
+    authors:
+      - Julius Marx
+    source:
+      url: "https://github.com/JulsDE/MRiscX"
+      github_repo: JulsDE/MRiscX
+    status: verified
+    main_declarations:
+      - hoare_triple_up
+      - S_SEQ
+      - PRE_STR
+      - POST_WEAK
+      - specification_LoadImmediate
+      - proof_otp
+    main_results:
+      - declaration: hoare_triple_up
+        informal: Defines the MRiscX Hoare triple, asserting that from any state satisfying the precondition the code reaches a successor state satisfying the postcondition while respecting the line whitelist and blacklist.
+      - declaration: S_SEQ
+        informal: Proves the sequencing Hoare rule, peeling off the last instruction of a code block.
+      - declaration: PRE_STR
+        informal: Proves the precondition-strengthening rule for MRiscX Hoare triples.
+      - declaration: POST_WEAK
+        informal: Proves the postcondition-weakening rule for MRiscX Hoare triples.
+      - declaration: specification_LoadImmediate
+        informal: Proves the per-instruction Hoare specification of the load-immediate instruction.
+      - declaration: proof_otp
+        informal: Proves the full correctness of a One-Time-Pad implementation written in MRiscX assembly.
+    tags:
+      - hoare-logic
+      - program-verification
+      - risc-v
+      - assembly
+      - formal-methods
