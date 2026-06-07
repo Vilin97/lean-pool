@@ -1076,6 +1076,15 @@ import LeanPool.Sensitivity.Main
 import LeanPool.Sensitivity.Multilinear
 import LeanPool.Sensitivity.Parity
 import LeanPool.Sensitivity.Subcube
+import LeanPool.SetTheory
+import LeanPool.SetTheory.Basic
+import LeanPool.SetTheory.ElementaryEmbedding
+import LeanPool.SetTheory.KunenInconsistency
+import LeanPool.SetTheory.Omega
+import LeanPool.SetTheory.OrderTheory
+import LeanPool.SetTheory.Ordinals
+import LeanPool.SetTheory.Realize
+import LeanPool.SetTheory.SimpAttr
 import LeanPool.Shannon1948Formalization
 import LeanPool.Shannon1948Formalization.Entropy
 import LeanPool.Shannon1948Formalization.Entropy.Approx

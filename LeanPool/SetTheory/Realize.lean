@@ -1,0 +1,874 @@
+/-
+Copyright (c) 2026 Shuhao Song. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Shuhao Song
+-/
+import Mathlib.ModelTheory.ElementaryMaps
+import Mathlib.ModelTheory.Semantics
+import Mathlib.Tactic.FinCases
+import LeanPool.SetTheory.SimpAttr
+
+
+open Lean Parser Elab Term Meta Qq Std FirstOrder.Language
+
+inductive memRel : ℕ → Type
+  | mem : memRel 2
+  deriving DecidableEq
+
+namespace FirstOrder.Language.BoundedFormula
+
+open Language
+
+variable {α n} {L : Language} {M} [L.Structure M] (v : α → M) (w : Fin n → M)
+
+lemma realize_isFormula (φ : L.BoundedFormula α 0) (w : Fin 0 → M) :
+    φ.Realize v w ↔ Formula.Realize φ v := by
+  simp only [Formula.Realize]
+  convert Iff.rfl
+
+protected def exUnique (φ : L.BoundedFormula α (n + 1)) : L.BoundedFormula α n :=
+  ∃' (φ ⊓ ∀' (φ.liftAt 1 n ⟹ &(Fin.last (n + 1)) =' &((Fin.last n).castSucc)))
+
+protected def ite (φ ψ χ: L.BoundedFormula α n) : L.BoundedFormula α n :=
+  (φ ⊓ ψ) ⊔ (∼φ ⊓ χ)
+
+theorem realize_ite (φ ψ χ : L.BoundedFormula α n) :
+    (φ.ite ψ χ).Realize v w ↔
+      (φ.Realize v w ∧ ψ.Realize v w) ∨ (¬φ.Realize v w ∧ χ.Realize v w) := by
+  simp [BoundedFormula.ite]
+
+theorem realize_exUnique (φ : L.BoundedFormula α (n + 1)) :
+    φ.exUnique.Realize v w ↔ ∃! a : M, φ.Realize v (Fin.snoc w a) := by
+  have (x y : M) : Fin.snoc (Fin.snoc w x) y ∘
+      (fun i : Fin (n + 1) => if (i : ℕ) < n then i.castSucc else i.succ)
+      = Fin.snoc w y := by
+    ext i
+    simp only [Function.comp_apply]
+    split_ifs with hi
+    · simp [Fin.snoc, hi, _root_.le_of_lt hi]
+    · replace hi := Decidable.not_imp_symm Fin.val_lt_last hi
+      simp [hi]
+  simp [BoundedFormula.exUnique, realize_liftAt_one, ExistsUnique, this]
+
+variable {k} (φ : L.Formula (Fin (k + 1)))
+
+class _root_.FormulaToFunction (f : outParam ((Fin k → M) → M)) where
+  realize_iff_fn {v : Fin (k + 1) → M} :
+      φ.Realize v ↔ f (v ∘ Fin.castSucc) = v (.last k) := by
+    simp only [Fin.reduceCastSucc, Fin.reduceLast, Nat.reduceAdd,
+      realize_simps, implies_true]
+
+variable (vars : Fin k → α ⊕ Fin n) (ψ : L.BoundedFormula α (n + 1))
+
+def ofFunc := ∃' (BoundedFormula.relabel (k := 0)
+  (Fin.snoc (Sum.map id Fin.castSucc ∘ vars) (.inr (.last n))) φ ⊓ ψ)
+
+lemma realize_ofFunc {f} [FormulaToFunction φ f] :
+    (ofFunc φ vars ψ).Realize v w ↔
+    ψ.Realize v (Fin.snoc w (f (Sum.elim v w ∘ vars))) := by
+  simp (unfoldPartialApp := true) [
+    ofFunc, realize_isFormula, FormulaToFunction.realize_iff_fn,
+    Function.comp, Sum.elim_map
+  ]
+
+attribute [realize_simps]
+  realize_all realize_ex realize_bot realize_top realize_not realize_inf realize_sup
+  realize_imp realize_iff realize_rel₂ realize_bdEqual realize_relabel realize_ite
+  realize_exUnique realize_ofFunc Term.realize_var Function.comp
+
+scoped[FirstOrder] prefix:arg "#" => Term.var ∘ Sum.inl
+scoped[FirstOrder] infix:88 " ∈' " => Relations.boundedFormula₂ (L := 𝓛_ZF) memRel.mem
+
+declare_syntax_cat label
+syntax "#" num : label
+syntax "&" num : label
+syntax "value_of_labels(" label,* ")" : term
+syntax term "@(" label,* ")" : term
+macro_rules
+  | `($f:ident@($labels:label,*)) =>
+    `(BoundedFormula.relabel
+      value_of_labels($labels,*) $(mkIdent (f.getId ++ `formula)) (k := 0))
+  | `(value_of_labels(#$n, $labels,*)) =>
+    `(Matrix.vecCons (Sum.inl $n) value_of_labels($labels,*))
+  | `(value_of_labels(&$n, $labels,*)) =>
+    `(Matrix.vecCons (Sum.inr $n) value_of_labels($labels,*))
+  | `(value_of_labels(#$n)) => `(Matrix.vecCons (Sum.inl $n) ![])
+  | `(value_of_labels(&$n)) => `(Matrix.vecCons (Sum.inr $n) ![])
+  | `(value_of_labels()) => `(Matrix.vecEmpty)
+
+end FirstOrder.Language.BoundedFormula
+
+section ZFStructure
+
+open FirstOrder Language Structure
+
+def 𝓛_ZF : Language := ⟨fun _ => Empty, memRel⟩
+deriving IsRelational
+
+abbrev ZFFormula (n : ℕ) := 𝓛_ZF.Formula (Fin n)
+abbrev ZFStructure M := 𝓛_ZF.Structure M
+
+variable {M N : Type*} [sM : ZFStructure M] [sN : ZFStructure N]
+
+instance instMembershipZFStructure : Membership M M where
+  mem x y := sM.RelMap memRel.mem ![y, x]
+
+instance : HasSubset M where
+  Subset x y := ∀ ⦃z⦄, z ∈ x → z ∈ y
+
+class ElementaryEmbeddingClass
+    (F : Type*) (M N : outParam Type*)
+    [ZFStructure M] [ZFStructure N] [FunLike F M N] : Prop where
+  map_formula : ∀ (f : F) ⦃n⦄ (φ : 𝓛_ZF.Formula (Fin n)) (x : Fin n → M),
+    φ.Realize (f ∘ x) ↔ φ.Realize x
+
+instance : ElementaryEmbeddingClass (M ↪ₑ[𝓛_ZF] N) M N where
+  map_formula := fun j => j.map_formula'
+
+lemma Fin.two_def {α} (x : Fin 2 → α) : x = ![x 0, x 1] := by
+  ext i; fin_cases i <;> simp
+
+@[realize_simps] lemma relMap_mem_iff_membership {v : Fin 2 → M} :
+    RelMap (L := 𝓛_ZF) memRel.mem v ↔ v 0 ∈ v 1 := by
+  conv_lhs => rw [Fin.two_def v]
+  rfl
+
+class HasEmpty (M) [ZFStructure M] where
+  exists_empty : ∃! x : M, ∀ y, y ∉ x
+
+def EqEmptyN (n : ℕ) : ZFFormula (n + 1) := ∀' ∼(&0 ∈' #(Fin.last n))
+
+variable {n} [HasEmpty M]
+
+noncomputable instance (priority := low) : EmptyCollection M where
+  emptyCollection := HasEmpty.exists_empty.choose
+
+@[realize_simps] lemma EqEmptyN.realize_iff {v : Fin (n + 1) → M} :
+    (EqEmptyN n).Realize v ↔ ∅ = v (Fin.last n) := by
+  simp only [EqEmptyN, Formula.Realize, realize_simps]
+  rw [iff_comm]
+  exact HasEmpty.exists_empty.choose_eq_iff
+
+end ZFStructure
+
+namespace EncodeExpr
+
+inductive WeakLevel where
+  | a : WeakLevel
+  | b : WeakLevel → WeakLevel
+  | c : WeakLevel → WeakLevel → WeakLevel
+  | d : WeakLevel → WeakLevel → WeakLevel
+  | e : String → WeakLevel
+deriving FromJson, ToJson, Inhabited, Repr
+
+inductive WeakBinderInfo where
+  | a | b | c | d
+deriving FromJson, ToJson, Inhabited, Repr
+
+inductive WeakExprItem where
+  | a : Nat → WeakExprItem
+  | b : WeakLevel → WeakExprItem
+  | c : Nat → List WeakLevel → WeakExprItem
+  | d : Nat → Nat → WeakExprItem
+  | e : Nat → Nat → Nat → Nat → WeakExprItem
+  | f : Nat → Nat → Nat → Nat → WeakExprItem
+  | g : Nat → Nat → Nat → Nat → Bool → WeakExprItem
+  | h : Nat → WeakExprItem
+  | i : String → WeakExprItem
+  | j : Nat → Nat → Nat → WeakExprItem
+deriving FromJson, ToJson, Inhabited, Repr
+
+def _root_.Lean.Level.toWeakLevel : Level → WeakLevel
+  | .zero => .a
+  | .succ u => .b u.toWeakLevel
+  | .max u v => .c u.toWeakLevel v.toWeakLevel
+  | .imax u v => .d u.toWeakLevel v.toWeakLevel
+  | .param name => .e name.toString
+  | .mvar _ => default
+
+def WeakLevel.toLevel : WeakLevel → Level
+  | .a => .zero
+  | .b u => .succ u.toLevel
+  | .c u v => .max u.toLevel v.toLevel
+  | .d u v => .imax u.toLevel v.toLevel
+  | .e name => .param name.toName
+
+def _root_.Lean.BinderInfo.toNat : BinderInfo → Nat
+  | .default => 0
+  | .implicit => 1
+  | .strictImplicit => 2
+  | .instImplicit => 3
+
+def _root_.Nat.toBinderInfo : Nat → BinderInfo
+  | 0 => .default
+  | 1 => .implicit
+  | 2 => .strictImplicit
+  | 3 => .instImplicit
+  | _ => .default
+
+unsafe structure WeakExprState where
+  hashExpr : PtrMap Expr Nat := mkPtrMap
+  hashName : HashMap Name Nat := {}
+  arrayExpr : Array WeakExprItem := #[]
+  arrayName : Array String := #[]
+
+abbrev WeakExpr := Array WeakExprItem × Array String
+unsafe abbrev M := OptionT (StateM WeakExprState)
+
+unsafe def add (e : Expr) (i : WeakExprItem) : M Nat := do
+  modify fun s => { s with
+    hashExpr := s.hashExpr.insert e s.hashExpr.size,
+    arrayExpr := s.arrayExpr.push i
+  }
+  return (← get).arrayExpr.size - 1
+
+unsafe def addName (name : Name) : M Nat := do
+  if let some n := (← get).hashName.get? name then return n
+  modify fun s => { s with
+    hashName := s.hashName.insert name s.hashName.size,
+    arrayName := s.arrayName.push name.toString
+  }
+  return (← get).arrayName.size - 1
+
+unsafe def toWeakExprAux (e : Expr) : M Nat := do
+  if let some n := (← get).hashExpr.get? ⟨e⟩ then return n
+  match e with
+  | .bvar n => add e (.a n)
+  | .fvar _ => failure
+  | .mvar _ => failure
+  | .sort u => add e (.b u.toWeakLevel)
+  | .const name levels => add e (.c (← addName name) (levels.map (·.toWeakLevel)))
+  | .app s t => do add e (.d (← toWeakExprAux s) (← toWeakExprAux t))
+  | .lam name type body info => do
+    add e (.e (← addName name) (← toWeakExprAux type) (← toWeakExprAux body) info.toNat)
+  | .forallE name type body info => do
+    add e (.f (← addName name) (← toWeakExprAux type) (← toWeakExprAux body) info.toNat)
+  | .letE name type value body nondep => do
+    add e (.g (← addName name) (← toWeakExprAux type) (← toWeakExprAux value)
+      (← toWeakExprAux body) nondep)
+  | .lit (.natVal n) => add e (.h n)
+  | .lit (.strVal str) => add e (.i str)
+  | .mdata _ e => toWeakExprAux e
+  | .proj name idx struct => do add e (.j (← addName name) idx (← toWeakExprAux struct))
+
+def _root_.Lean.Expr.toWeakExpr (e : Expr) : WeakExpr := unsafe (
+  let result := ((toWeakExprAux e).run {}).2
+  (result.arrayExpr, result.arrayName)
+)
+
+def WeakExpr.toExpr (e : WeakExpr) : Expr := Id.run do
+  let (xs, names) := (e.1, e.2.map (·.toName))
+  let mut es : Array Expr := #[]
+  for i in *...xs.size do
+    let value : Expr :=
+      match xs[i]! with
+      | .a n => .bvar n
+      | .b u => .sort u.toLevel
+      | .c name u => .const names[name]! (u.map (·.toLevel))
+      | .d s t => .app es[s]! es[t]!
+      | .e name type body info => .lam names[name]! es[type]! es[body]! info.toBinderInfo
+      | .f name type body info => .forallE names[name]! es[type]! es[body]! info.toBinderInfo
+      | .g name type value body nondep => .letE names[name]! es[type]! es[value]! es[body]! nondep
+      | .h n => mkNatLit n
+      | .i str => mkStrLit str
+      | .j name idx struct => .proj names[name]! idx es[struct]!
+    es := es.push value
+  return es[es.size - 1]!
+
+elab "headBeta(" t:term ")" : term => do
+  let result ← elabTerm t none
+  return result.headBeta
+
+elab "expr(" e:strLit ")" : term => do
+  let e := ((Json.parse e.getString) >>= fromJson? : Except _ WeakExpr).toOption.get!.toExpr
+  let levels := (collectLevelParams {} e).params.toList
+  let mvars ← mkFreshLevelMVars levels.length
+  return e.instantiateLevelParams levels mvars
+
+def _root_.Lean.Expr.toSyntax'
+    {m} [Monad m] [MonadRef m] [MonadQuotation m] (e : Expr) : m Term := do
+  let strLit := Syntax.mkStrLit (toString (toJson (e.toWeakExpr)))
+  `(expr($strLit))
+
+end EncodeExpr
+
+inductive VariableParam where
+  | freeVariable (binderInfo : BinderInfo)
+  | hypothesis (t : Term)
+deriving Inhabited
+
+namespace VariableParam
+
+def isFreeVariable : VariableParam → Bool
+  | freeVariable _ => true
+  | _ => false
+
+def isHypothesis : VariableParam → Bool
+  | hypothesis _ => true
+  | _ => false
+
+def toTerm : VariableParam → Term
+  | hypothesis t => t
+  | _ => default
+
+end VariableParam
+
+abbrev VariableParams := Array VariableParam
+
+namespace VariableParams
+
+variable (ps : VariableParams)
+
+def numFreeVariables : Nat := ps.countP (·.isFreeVariable)
+def numHypotheses : Nat := ps.countP (·.isHypothesis)
+
+def freeVarsBefore (n : Nat) : Nat := Id.run do
+  if n >= ps.numHypotheses then return 0
+  let mut (i, j) := (0, 0)
+  for p in ps do
+    if p.isFreeVariable then
+      i := i + 1
+    else
+      if j == n then break
+      j := j + 1
+  return i
+
+end VariableParams
+
+structure BuildFormulaState where
+  attrDeclName : Name
+  hasEmptyInstance? : Bool := false
+  classParams : Array Term := #[]
+  variableParams : VariableParams := #[]
+  variableType : Expr := default
+  localVars : Array Expr := #[]
+  termIntermediates : Array (Name × Array Nat) := #[]
+
+abbrev BuildFormulaM := StateT BuildFormulaState MetaM
+
+namespace BuildFormula
+
+def removeNameSuffix (name : Name) : Name :=
+  name.eraseSuffix? `eu <|>
+  name.eraseSuffix? `formula <|>
+  name.eraseSuffix? `realize_iff <|>
+  name.eraseSuffix? `instFormulaToFunction <|>
+  name.eraseSuffix? `to_realize <|>
+  name.eraseSuffix? `elementarity |>.getD name
+
+def attrDeclName : BuildFormulaM Name := do
+  return (← get).attrDeclName
+
+def name : BuildFormulaM Name := do
+  return removeNameSuffix (← get).attrDeclName
+
+def isFunction : BuildFormulaM Bool := do
+  return (← getEnv).contains ((← name) ++ `eu)
+
+def isRealizeIffStage : BuildFormulaM Bool := do
+  return (← attrDeclName).lastComponentAsString == "realize_iff"
+
+def hasEmptyInstance? : BuildFormulaM Bool := do
+  return (← get).hasEmptyInstance?
+
+def classParams : BuildFormulaM (Array Term) := do
+  return (← get).classParams
+
+def variableParams : BuildFormulaM VariableParams := do
+  return (← get).variableParams
+
+def getHypothesis (i : Nat) : BuildFormulaM Term := do
+  return ((← variableParams).filter (·.isHypothesis))[i]!.toTerm
+
+def freeVarsBefore (i : Nat) : BuildFormulaM Nat := do
+  return (← variableParams).freeVarsBefore i
+
+def numFreeVars (adjust? := false) : BuildFormulaM Nat := do
+  return (← get).variableParams.numFreeVariables +
+    if adjust? && (← isFunction) then 1 else 0
+
+def numHypotheses : BuildFormulaM Nat := do
+  return (← get).variableParams.numHypotheses
+
+def numAllVars : BuildFormulaM Nat := do
+  return 2 + (← classParams).size + (← variableParams).size
+
+def variableType : BuildFormulaM Expr := do
+  return (← get).variableType
+
+def localVars : BuildFormulaM (Array Expr) := do
+  return (← get).localVars
+
+def termIntermediates : BuildFormulaM (Array (Name × Array Nat)) := do
+  return (← get).termIntermediates
+
+def addIntermediate (name : Name) (args : Array Nat) : BuildFormulaM Nat := do
+  let xs ← termIntermediates
+  modify fun s => { s with termIntermediates := xs.push (name, args) }
+  return (← localVars).size + xs.size
+
+def clearIntermediates : BuildFormulaM Unit := do
+  modify fun s => { s with termIntermediates := #[] }
+
+def findVar (e : Expr) : BuildFormulaM Nat := do
+  match (← localVars).findIdx? (· == e) with
+  | some n => return n
+  | none => throwError m!"Can't find variable {e} in {← localVars}"
+
+def getIndexSeq (extraBinders : Nat) (idx : Array Nat) : BuildFormulaM Expr := do
+  let n₀ ← numFreeVars true
+  let α ← `(Fin $(Syntax.mkNatLit n₀))
+  let β ← `(Fin $(Syntax.mkNatLit ((← localVars).size + extraBinders - n₀)))
+  let indexSyntax ← idx.mapM fun n => do
+    let (op, i) := if n < n₀ then (`Sum.inl, n) else (`Sum.inr, n - n₀)
+    let stx ← `($(mkIdent op) $(Syntax.mkNatLit i))
+    return stx
+  let mut stx ← `(Matrix.vecEmpty (α := $α ⊕ $β))
+  for i in indexSyntax.reverse do
+    stx ← `(Matrix.vecCons $i $stx)
+  (elabTermAndSynthesize stx none).run'
+
+def withNewVars {α} (vars : Array Expr) (f : BuildFormulaM α) : BuildFormulaM α := do
+  let oldVars ← localVars
+  modify fun s => { s with localVars := oldVars ++ vars }
+  try f
+  finally modify fun s => { s with localVars := oldVars }
+
+def throwTranslateError {α} (e : Expr) : BuildFormulaM α := do
+  throwError m!"Can't translate to formula: {e}, variables: {← localVars}"
+
+def decomposeApp (e : Expr) : BuildFormulaM (Name × Array Expr) := do
+  let t ← variableType
+  let mut (.const name _, args) := (e.getAppFn, e.getAppArgs) | throwTranslateError e
+  let formulaName := name ++ `formula
+  unless (← getEnv).contains formulaName do
+    throwError "Formula {formulaName} not found"
+  return (formulaName, ← args.filterM fun e => do isDefEq (← inferType e) t)
+
+partial def goTerm (e : Expr) : BuildFormulaM Nat := do
+  match e with
+  | .app .. =>
+    let (name, args) ← decomposeApp e
+    addIntermediate name (← args.mapM goTerm)
+  | .fvar .. => findVar e
+  | _ => throwTranslateError e
+
+partial def go (e : Expr) : BuildFormulaM Expr := do
+  match e with
+  | .forallE name type body info =>
+    let newExpr : Expr := .lam name type body info
+    let sort ← inferType type
+    match sort.sortLevel! with
+    | 0 => mkAppM ``BoundedFormula.imp #[← go type, ← go body]
+    | _ => mkAppM ``BoundedFormula.all #[← go newExpr]
+  | .lam .. => lambdaTelescope e fun newVars e' => withNewVars newVars (go e')
+  | .app .. =>
+    match_expr e with
+    | Exists _ P => mkAppM ``BoundedFormula.ex #[← go P]
+    | ExistsUnique _ P => do mkAppM ``BoundedFormula.exUnique #[← go P]
+    | And p q => mkAppM ``min #[← go p, ← go q]
+    | Or p q => mkAppM ``max #[← go p, ← go q]
+    | Not p => mkAppM ``BoundedFormula.not #[← go p]
+    | Iff p q => mkAppM ``BoundedFormula.iff #[← go p, ← go q]
+    | _ =>
+      let (name, args) ← decomposeApp e
+      let argsIdx ← args.mapM goTerm
+      let mut formula ← mkAppOptM ``BoundedFormula.relabel #[
+        none, none, none, none, ← getIndexSeq (← termIntermediates).size argsIdx,
+        toExpr 0, mkConst name
+      ]
+      for ((name, idx), i) in (← termIntermediates).zipIdx.reverse do
+        formula ← mkAppM ``BoundedFormula.ofFunc #[mkConst name, ← getIndexSeq i idx, formula]
+      clearIntermediates
+      return formula
+  | _ => throwTranslateError e
+
+def checkSorry (name : Name) : BuildFormulaM Unit := do
+  match (← getEnv).findAsync? name false with
+  | some const => do
+    let reportError (const : ConstantInfo) : CoreM Unit := do
+      if const.toDeclaration!.hasSorry then
+        throwError m!"Definition {name} has sorry"
+    let cancelTk ← IO.CancelToken.new
+    let checkAct ← Core.wrapAsyncAsSnapshot reportError cancelTk
+    let t ← BaseIO.mapTask checkAct const.constInfo
+    Core.logSnapshotTask {
+      stx? := none, reportingRange := .skip, task := t, cancelTk? := cancelTk
+    }
+  | none => throwError m!"Definition {name} not found"
+
+def addDeclSimple (name : Name) (type value : Expr) : BuildFormulaM Unit := do
+  let value ← instantiateMVars value
+  let env ← getEnv
+  let result ← Closure.mkValueTypeClosure type value false
+  let hints := ReducibilityHints.regular (getMaxHeight env value + 1)
+  let decl := Declaration.defnDecl (mkDefinitionValEx
+    name result.levelParams.toList result.type result.value
+    hints DefinitionSafety.safe [name]
+  )
+  addDecl decl
+  warnIfUsesSorry decl
+  enableRealizationsForConst name
+
+def explicitize : Expr → Nat → Expr
+  | .lam name type body _, n + 1 => .lam name type (explicitize body n) .default
+  | e, _ => e
+
+def mkLambdaFVarsExplicit (xs : Array Expr) (e : Expr) : BuildFormulaM Expr := do
+  let e' ← mkLambdaFVars xs e
+  if e'.hasFVar || e'.hasMVar then
+    throwError "{e'} depends on variables not in {xs}"
+  return explicitize e' xs.size
+
+def init : BuildFormulaM Unit := do
+  let constInfo := (← getEnv).find? (← attrDeclName) |>.get!
+  forallTelescopeReducing constInfo.type fun vars _ => do
+    unless vars.size ≥ 2 do
+      throwError m!"Variable list {vars} doesn't starts with `\{M} [ZFStructure M] ...`"
+    let variableType := vars[0]!
+    let mut classVars : Array Expr := #[]
+    let mut classParams : Array Term := #[]
+    let mut freeVars : Array Expr := #[]
+    let mut variableParams : VariableParams := #[]
+    let hasEmpty ← mkAppOptM ``HasEmpty #[vars[0]!, vars[1]!]
+    for i in 2...vars.size do
+      let type ← inferType vars[i]!
+      if (← vars[i]!.fvarId!.getBinderInfo) == .instImplicit then
+        if freeVars.size != 0 then
+          throwError m!"Free variables must occur after all instance parameters"
+        classVars := classVars.push vars[i]!
+        classParams := classParams.push <|
+          ← (← mkLambdaFVarsExplicit vars[*...2] type).toSyntax'
+        if (← isDefEq type hasEmpty) then
+          modify fun s => { s with hasEmptyInstance? := true}
+      else
+        if ← isRealizeIffStage then continue
+        if ← isDefEq type variableType then
+          freeVars := freeVars.push vars[i]!
+          variableParams := variableParams.push <| .freeVariable <| vars[i]!.binderInfo
+        else
+          unless (← isFunction) do
+            throwError "Only function definitions allow hypotheses"
+          variableParams := variableParams.push <| .hypothesis
+            (← (← mkLambdaFVarsExplicit (vars[*...2] ++ classVars ++ freeVars) type).toSyntax')
+    if ← isRealizeIffStage then
+      let formulaType := ((← getEnv).find? ((← name) ++ `formula)).get!.type
+      let_expr ZFFormula n := formulaType | throwError "Formula must be of `ZFFormula` type"
+      let numFreeVars ← unsafe ((evalExpr Nat q(Nat) n).run')
+      modify fun s => { s with
+        classParams, variableParams := .replicate numFreeVars (.freeVariable .default)
+      }
+    else
+      modify fun s => { s with
+        classParams, variableParams
+      }
+
+def simpFormulaPre (e : Expr) : BuildFormulaM Expr := do
+  let some ext ← getSimpExtension? `formula_builder_pre | failure
+  let ctx ← Simp.mkContext {} #[← ext.getTheorems]
+  return (← simp e ctx).1.expr
+
+def simpFormula (e : Expr) : BuildFormulaM Expr := do
+  let some ext ← getSimpExtension? `formula_builder | failure
+  let ctx ← Simp.mkContext {} #[← ext.getTheorems]
+  return (← simp e ctx).1.expr
+
+def definitionProp : BuildFormulaM Expr := do
+  if ← isFunction then
+    let constInfo := (← getEnv).find? ((← name) ++ `eu) |>.get!
+    forallTelescopeReducing (← simpFormulaPre constInfo.type) fun vars type => do
+      match_expr type with
+      | ExistsUnique _ P => mkLambdaFVars vars P
+      | _ => throwError m!"Function definition should has type with form `∃!, ...`"
+  else
+    let definition := ((← getEnv).find? (← name)).get!
+    let some value := definition.value?
+      | throwError m!"Definition {← name} doesn't have value"
+    simpFormulaPre value
+
+def buildFormula (formulaName : Name) : BuildFormulaM Unit := do
+  let isFunction ← isFunction
+  let formula ← lambdaTelescope (← definitionProp) fun vars value => do
+    let varsInDecl := if isFunction then vars.pop else vars
+    let variableParams ← variableParams
+    let freeVarsInDecl := varsInDecl.drop (varsInDecl.size - variableParams.size)
+      |>.zipIdx
+      |>.filter (fun (_, i) => variableParams[i]!.isFreeVariable)
+      |>.map (·.1)
+    let formulaVars := if isFunction then freeVarsInDecl ++ #[vars.back!] else freeVarsInDecl
+    modify fun s => { s with
+      variableType := vars[0]!
+      localVars := formulaVars
+    }
+    let mut formula ← go (← simpFormula value)
+    for i in (*...(← numHypotheses)).toArray.reverse do
+      let e ← (elabTermAndSynthesize (← getHypothesis i) none).run'
+      let e := e.beta <|
+        vars[*...2 + (← classParams).size] ++ formulaVars[*...(← freeVarsBefore i)]
+      formula ← mkAppM ``BoundedFormula.ite #[
+        ← go (← simpFormula e), formula, ← mkAppM ``EqEmptyN #[toExpr (← numFreeVars)]
+      ]
+    return formula
+  addDeclSimple formulaName (← mkAppM ``ZFFormula #[toExpr (← numFreeVars true)]) formula
+  applyAttributes formulaName #[{name := `irreducible}] |>.run'
+
+def prefixIdents (typeLetter := "M") : Array Ident :=
+  #[mkIdent typeLetter.toName, mkIdent ("s" ++ typeLetter).toName]
+
+def classIdents (typeLetter := "M") : BuildFormulaM (Array Ident) := do
+  return (*...(← classParams).size).toArray.map
+    fun i => mkIdent ("c" ++ typeLetter ++ (i + 1).toSubscriptString).toName
+
+def varIdents (adjust? := false) (varLetter := "x") : BuildFormulaM (Array Ident) := do
+  return (Array.range (← numFreeVars adjust?)).map
+    fun i => mkIdent (Name.mkStr1 (varLetter ++ (i + 1).toSubscriptString))
+
+def hypothesisIdents (hypothesisLetter := "h") : BuildFormulaM (Array Ident) := do
+  return (Array.range (← numHypotheses)).map
+    fun i => mkIdent (Name.mkStr1 (hypothesisLetter ++ (i + 1).toSubscriptString))
+
+def identsBefore (i : Nat) (typeLetter := "M") (varLetter := "x") :
+    BuildFormulaM (Array Ident) := do
+  return prefixIdents typeLetter ++ (← classIdents typeLetter) ++
+    (← varIdents false varLetter)[*...i]
+
+def allIdentsWithHypotheses
+    (typeLetter := "M") (varLetter := "x") (hypothesisLetter := "h") :
+    BuildFormulaM (Array Ident) := do
+  let vars ← varIdents false varLetter
+  let hypotheses ← hypothesisIdents hypothesisLetter
+  let mut result := prefixIdents typeLetter ++ (← classIdents typeLetter)
+  let mut (i, j) := (0, 0)
+  for p in (← variableParams) do
+    match p with
+    | .freeVariable _ => result := result.push vars[i]!; i := i + 1
+    | .hypothesis _ => result := result.push hypotheses[j]!; j := j + 1
+  return result
+
+def classParamBinders (typeLetter : String := "M") :
+    BuildFormulaM (TSyntaxArray ``bracketedBinder) := do
+  let typeIdent := mkIdent typeLetter.toName
+  let structIdent := mkIdent ("s" ++ typeLetter).toName
+  return #[
+    ← `(bracketedBinder | {$typeIdent : Type _}),
+    ← `(bracketedBinder | [$structIdent : ZFStructure $typeIdent])
+  ] ++ (
+  ← if (← isFunction) && !(← hasEmptyInstance?) then
+      return #[← `(bracketedBinder | [HasEmpty $typeIdent])]
+    else
+      return #[]
+  ) ++ (
+  ← ((← classParams).zip (← classIdents typeLetter)).mapM
+      fun (cls, id) => `(bracketedBinder | [$id : headBeta($cls $typeIdent $structIdent)])
+  )
+
+def mkBinders (adjust? := false) (typeLetter : String := "M") (varLetter : String := "x") :
+    BuildFormulaM (TSyntaxArray ``bracketedBinder) := do
+  let typeIdent := mkIdent typeLetter.toName
+  (← varIdents adjust? varLetter).mapM fun var => `(bracketedBinder | ($var : $typeIdent))
+
+def mkTermApp (x : Term) (xs : Array Term) : BuildFormulaM Term :=
+  `(headBeta($(Syntax.mkApp x xs)))
+
+def mkParam (i : Nat) (typeLetter : String := "M") (varLetter : String := "x") :
+    BuildFormulaM Term := do
+  mkTermApp (← getHypothesis i) (← identsBefore (← freeVarsBefore i) typeLetter varLetter)
+
+def mkBindersWithHypotheses
+    (typeLetter : String := "M") (varLetter : String := "x") (hypothesisLetter := "h") :
+    BuildFormulaM (TSyntaxArray ``bracketedBinder) := do
+  let typeIdent := mkIdent typeLetter.toName
+  let vars ← varIdents false varLetter
+  let hypotheses ← hypothesisIdents hypothesisLetter
+  let mut result := #[]
+  let mut (i, j) := (0, 0)
+  for p in (← variableParams) do
+    match p with
+    | .freeVariable info =>
+      let v := vars[i]!
+      result := result.push <| ← do
+        match info with
+        | .default => `(bracketedBinder | ($v : $typeIdent))
+        | .implicit => `(bracketedBinder | {$v : $typeIdent})
+        | .strictImplicit => `(bracketedBinder | ⦃$v : $typeIdent⦄)
+        | .instImplicit => `(bracketedBinder | [$v : $typeIdent])
+      i := i + 1
+    | .hypothesis _ =>
+      let param ← mkParam j typeLetter varLetter
+      result := result.push <| ← `(bracketedBinder | ($(hypotheses[j]!) : $param))
+      j := j + 1
+  return result
+
+def mkIdent' (name : Name) : Ident := mkIdent (`_root_ ++ name)
+
+def buildFunction (funcName : Name) : BuildFormulaM Unit := do
+  let funcIdent := mkIdent' funcName
+  let euIdent := mkIdent' ((← name) ++ `eu)
+  let specIdent := mkIdent' ((← name) ++ `spec)
+  let eqIffIdent := mkIdent' ((← name) ++ `eq_iff)
+  let hyps ← hypothesisIdents "h"
+  let euApply := Syntax.mkApp (← `(@$euIdent)) (← allIdentsWithHypotheses)
+  let mut value ← `(Exists.choose $euApply)
+  for i in (*...(← numHypotheses)).toArray.reverse do
+    let param ← mkParam i
+    value ← `(if $(hyps[i]!):ident : $param then $value else ∅)
+  let fnApply := Syntax.mkApp funcIdent (← varIdents)
+  let statement ← (explicitize (← definitionProp) ((← numAllVars) + 1)).toSyntax'
+  let vars : Array Term ← allIdentsWithHypotheses
+  let specStatement ← mkTermApp statement (vars.push fnApply)
+  let eqIffStatement ← mkTermApp statement (vars.push (mkIdent `v))
+  let classParamBinders ← classParamBinders
+  let mkBinders ← mkBinders
+  let mkBindersWithHypotheses ← mkBindersWithHypotheses
+  let cmd ← `(
+  open Classical in
+  noncomputable def $funcIdent $classParamBinders* $mkBinders* : M :=
+    $value
+  lemma $specIdent $classParamBinders* $mkBindersWithHypotheses* :
+      $specStatement := by
+    simpa only [$funcIdent:term, *, ↓reduceDIte] using $(euApply).choose_spec.1
+  lemma $eqIffIdent $classParamBinders* $mkBindersWithHypotheses* (v : M) :
+      $fnApply = v ↔ $eqIffStatement := by
+    simpa only [$funcIdent:term, *, ↓reduceDIte] using $(euApply).choose_eq_iff
+  )
+  liftCommandElabM (Command.elabCommand cmd)
+
+def realizedTerm (typeLetter := "M") : BuildFormulaM Term := do
+  let realizedIdent := mkIdent' (← name)
+  if (← numFreeVars) == 0 then
+    let n ← forallTelescopeReducing
+      ((← getEnv).find? (← name) |>.get! |>.type)
+      fun vars _ => pure vars.size
+    return Syntax.mkApp (← `(@$realizedIdent)) <|
+      #[(mkIdent typeLetter.toName : Term)] ++ Array.replicate (n - 1) (← `(_))
+  else
+    `($realizedIdent)
+
+def buildRealizeIff (thmName : Name) : BuildFormulaM Unit := do
+  let realizedIdent := mkIdent' (← name)
+  let formulaIdent := mkIdent' ((← name) ++ `formula)
+  let thmIdent := mkIdent' thmName
+  let mut realizedApplyV ← realizedTerm
+  for i in *...(← numFreeVars) do
+    realizedApplyV ← `($realizedApplyV (v $(Syntax.mkNatLit i)))
+  let mut realizedApplyV' := realizedApplyV
+  if ← isFunction then
+    realizedApplyV' ← `($realizedApplyV = v $(Syntax.mkNatLit (← numFreeVars)))
+  let nVars := Syntax.mkNatLit (← numFreeVars true)
+  let cmd ← `(
+  @[realize_simps] lemma $thmIdent
+      $(← classParamBinders)* (v : Fin $nVars → M) :
+      FirstOrder.Language.Formula.Realize $formulaIdent v ↔ $realizedApplyV' := by
+    simp only [$formulaIdent:term, $realizedIdent:term, formula_builder_pre, formula_builder,
+      FirstOrder.Language.Formula.Realize, ExistsUnique.choose_eq_iff, dite_eq_iff, exists_prop]
+    simp (config := {unfoldPartialApp := true}) only [realize_simps]
+    simp (config := {unfoldPartialApp := true, decide := true}) only [
+      realize_simps, FirstOrder.Language.BoundedFormula.realize_isFormula,
+      Fin.isValue, Fin.reduceLast, Matrix.cons_val, Sum.elim_inl, Sum.elim_inr,
+      Fin.snoc, reduceDIte, cast_eq
+    ]
+  )
+  liftCommandElabM (Command.elabCommand cmd)
+
+def buildInstFormulaToFunction (instName : Name) := do
+  let formulaIdent := mkIdent' ((← name) ++ `formula)
+  let instIdent := mkIdent' instName
+  let mut realizedApplyV : Term ← realizedTerm
+  for i in *...(← numFreeVars) do
+    realizedApplyV ← `($realizedApplyV (v $(Syntax.mkNatLit i)))
+  let nVars := Syntax.mkNatLit (← numFreeVars)
+  let cmd ← `(
+  instance $instIdent:ident $(← classParamBinders)* :
+    FormulaToFunction $formulaIdent (fun v : Fin $nVars → M => $realizedApplyV) where
+  )
+  liftCommandElabM (Command.elabCommand cmd)
+
+def mkVarVec (typeLetter := "M") (varLetter : String := "x") : BuildFormulaM Term := do
+  let vars ← varIdents true varLetter
+  let mut varVec ← `(@Matrix.vecEmpty $(mkIdent typeLetter.toName))
+  for var in vars.reverse do
+    varVec ← `(Matrix.vecCons $var $varVec)
+  return varVec
+
+def buildToRealize (toRealizeName : Name) : BuildFormulaM Unit := do
+  let formulaIdent := mkIdent' ((← name) ++ `formula)
+  let toRealizeIdent := mkIdent' toRealizeName
+  let vars ← varIdents true
+  let mut applyX := Syntax.mkApp (← realizedTerm) vars[*...(← numFreeVars)]
+  if ← isFunction then
+    applyX ← `($applyX = $(vars[← numFreeVars]!))
+  let cmd ← `(
+  lemma $toRealizeIdent $((← classParamBinders) ++ (← mkBinders true))* :
+      $applyX ↔ FirstOrder.Language.Formula.Realize $formulaIdent $(← mkVarVec) := by
+    simp only [realize_simps, Matrix.cons_val, *]
+  )
+  liftCommandElabM (Command.elabCommand cmd)
+
+def buildElementarity (elementarityName : Name) : BuildFormulaM Unit := do
+  let formulaIdent := mkIdent' ((← name) ++ `formula)
+  let toRealizeIdent := mkIdent' ((← name) ++ `to_realize)
+  let elementarityIdent := mkIdent' elementarityName
+  let vars ← varIdents
+  let mut applyJX ← realizedTerm "N"
+  let mut applyX ← realizedTerm "M"
+  for var in vars do
+    applyJX ← `($applyJX (j $var))
+    applyX ← `($applyX $var)
+  let cmd ← do
+    if ← isFunction then
+      let mut varVecSnocApply ← `(Matrix.vecCons $applyX Matrix.vecEmpty)
+      for var in vars.reverse do
+        varVecSnocApply ← `(Matrix.vecCons $var $varVecSnocApply)
+      `(
+      @[elementary_simps] lemma $elementarityIdent
+          $((← classParamBinders "M") ++ (← classParamBinders "N") ++ (← mkBinders false "M"))*
+          {F : Type*} [FunLike F M N] [ElementaryEmbeddingClass F M N] (j : F) :
+          $applyJX = j ($applyX) := by
+        simp only [$toRealizeIdent:term]
+        convert_to FirstOrder.Language.Formula.Realize $formulaIdent (j ∘ $varVecSnocApply)
+          using 1
+        · ext1 i; fin_cases i <;> rfl
+        · simp only [ElementaryEmbeddingClass.map_formula j, ← $toRealizeIdent:term]
+      attribute [elementary_simps_rev ←] $elementarityIdent
+      )
+    else
+      `(
+      @[elementary_simps] lemma $elementarityIdent
+          $((← classParamBinders "M") ++ (← classParamBinders "N") ++ (← mkBinders false "M"))*
+          {F : Type*} [FunLike F M N] [ElementaryEmbeddingClass F M N] (j : F) :
+          $applyJX ↔ $applyX := by
+        simp only [$toRealizeIdent:term]
+        convert ElementaryEmbeddingClass.map_formula j $formulaIdent $(← mkVarVec) using 2
+        ext1 i; fin_cases i <;> rfl
+      attribute [elementary_simps_rev ←] $elementarityIdent
+      )
+  liftCommandElabM (Command.elabCommand cmd)
+
+def runIfNotFound (names : List Name) (f : Name → BuildFormulaM Unit) : BuildFormulaM Unit := do
+  if (← getEnv).contains names[0]! then return else f names[0]!
+  for name in names do
+    checkSorry name
+
+def realizeAttrAdd (attrDeclName : Name) (_ : Syntax) (_ : AttributeKind) : AttrM Unit := do
+  let name := removeNameSuffix attrDeclName
+  let go : BuildFormulaM Unit := do
+    init
+    if (← isFunction) then
+      runIfNotFound [name, name ++ `spec, name ++ `eq_iff] buildFunction
+    runIfNotFound [name ++ `formula] buildFormula
+    runIfNotFound [name ++ `realize_iff] buildRealizeIff
+    if (← isFunction) then
+      runIfNotFound [name ++ `instFormulaToFunction] buildInstFormulaToFunction
+    runIfNotFound [name ++ `to_realize] buildToRealize
+    runIfNotFound [name ++ `elementarity] buildElementarity
+  go.run' { attrDeclName } |>.run'
+
+end BuildFormula
+
+initialize
+  registerBuiltinAttribute {
+    name            := `realize
+    descr           := "Automatically build `Formula.Realize` theorems"
+    applicationTime := .afterCompilation
+    add             := BuildFormula.realizeAttrAdd
+  }

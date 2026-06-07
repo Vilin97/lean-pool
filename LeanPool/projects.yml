@@ -1900,3 +1900,37 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: settheory
+    title: The Kunen inconsistency theorem
+    summary: Formalizes elementary embeddings of models of ZF set theory and proves the Kunen inconsistency theorem, that there is no nontrivial elementary embedding of the set-theoretic universe into itself.
+    branch: set theory
+    entry_module: LeanPool.SetTheory
+    authors:
+      - Shuhao Song
+    source:
+      url: "https://github.com/znssong/SetTheory"
+      github_repo: znssong/SetTheory
+    status: verified
+    main_declarations:
+      - SetTheory.kunen_inconsistency_V
+      - SetTheory.kunen_inconsistency_vonNeumann
+      - SetTheory.crit
+      - NontrivialElementaryEmbedding
+    main_results:
+      - declaration: SetTheory.kunen_inconsistency_V
+        informal: Proves the Kunen inconsistency theorem, that every elementary embedding of the von Neumann universe V into itself is the identity.
+      - declaration: SetTheory.kunen_inconsistency_vonNeumann
+        informal: Proves the Kunen inconsistency theorem for von Neumann levels V_μ at a successor-limit ordinal, computing the supremum of the critical-point iterates.
+      - declaration: SetTheory.crit
+        informal: Defines the critical point of a nontrivial elementary embedding as the least ordinal it moves.
+      - declaration: NontrivialElementaryEmbedding
+        informal: Defines a nontrivial elementary embedding of a model of ZF into itself.
+    tags:
+      - set-theory
+      - large-cardinals
+      - elementary-embedding
+      - kunen-inconsistency
+      - model-theory
+    msc:
+      - "03E55"
+      - "03C90"
