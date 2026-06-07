@@ -10,18 +10,23 @@ import Mathlib.Data.Vector3
 /-! # --------------------Start Vector3 Utilities---------------------------- -/
 /-! # ----------------------------------------------------------------------- -/
 
-instance {n : Nat} [Fin2.IsLT 0 n] : OfNat (ULift (Fin2 n)) 0 := ⟨.up <| .ofNat' 0⟩
+instance instOfNatULiftFin2Zero {n : Nat} [Fin2.IsLT 0 n] : OfNat (ULift (Fin2 n)) 0 :=
+  ⟨.up <| .ofNat' 0⟩
 
-instance {n : Nat} [Fin2.IsLT 1 n] : OfNat (ULift (Fin2 n)) 1 := ⟨.up <| .ofNat' 1⟩
+instance instOfNatULiftFin2One {n : Nat} [Fin2.IsLT 1 n] : OfNat (ULift (Fin2 n)) 1 :=
+  ⟨.up <| .ofNat' 1⟩
 
+/-- The empty eliminator out of `ULift (Fin2 0)`: a lifted `Fin2 0` has no inhabitant. -/
 def elim0 {α : Sort u} (i : ULift (Fin2 0)) : α :=
   i.down.elim0 (C := fun _ => α)
 
+/-- The constant function `ULift (Fin2 1) → α` returning `v` at the unique index. -/
 def fin1Const {α} (v : α) :=
   fun (i : ULift (Fin2 1)) =>
     match i.down with | .ofNat' 0 => v
 
 open Vector3 in
+/-- The function `ULift (Fin2 2) → α` returning `x` at index `0` and `y` at index `1`. -/
 def fin2Const {α} (x y : α) :=
   fun (i : ULift (Fin2 2)) => [x, y] i.down
 
@@ -54,7 +59,7 @@ theorem PFunctor.M.unfold_corec'_left.{uA, uB, u} {P : PFunctor.{uA, uB}} {α : 
   (h_eq : ∀ l, F (.inl l) = ⟨l.dest.1, Sum.inl ∘ l.dest.2⟩) :
   ∀ l, PFunctor.M.corec F (.inl l) = l := by
   intros
-  apply PFunctor.M.bisim (λ t1 t2 => t1 = PFunctor.M.corec _ (Sum.inl t2)) _ _ _ rfl
+  apply PFunctor.M.bisim (fun t1 t2 => t1 = PFunctor.M.corec _ (Sum.inl t2)) _ _ _ rfl
   intros t1 t2 h; subst h
   simp only [PFunctor.M.dest_corec, PFunctor.map, h_eq]
   have ⟨a, g⟩ := t2.dest
@@ -71,7 +76,8 @@ theorem PFunctor.M.unfold_corec'.{uA, uB, u} {P : PFunctor.{uA, uB}} {α : Type 
     | .inr r => .corec' F r⟩ := by
   conv =>
     lhs
-    simp only [PFunctor.M.corec', PFunctor.M.corec₁, PFunctor.M.corec_def, PFunctor.map, Sum.bind, Function.id_comp]
+    simp only [PFunctor.M.corec', PFunctor.M.corec₁, PFunctor.M.corec_def, PFunctor.map,
+      Sum.bind, Function.id_comp]
   match F (@Sum.inr P.M α) x with
   | .inl v =>
     simp only

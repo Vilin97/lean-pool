@@ -1916,9 +1916,6 @@ projects:
       - ITree
       - ITree.IEq
       - ITree.ieq_iff_eq
-      - ITree.bind_assoc
-      - ITree.iter
-      - ITree.interp
       - plfp_acc
     main_results:
       - declaration: ITree
@@ -1941,3 +1938,7 @@ projects:
       - monads
       - qpf
       - semantics
+    msc:
+      - "68Q55"
+      - "18C50"
+      - "68N18"

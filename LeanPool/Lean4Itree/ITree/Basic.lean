@@ -7,18 +7,35 @@ import Mathlib.Data.QPF.Univariate.Basic
 import Mathlib.Data.Vector3
 import LeanPool.Lean4Itree.ITree.Utils
 
+/-!
+# Coinductive interaction trees
+
+This module defines the coinductive interaction tree `ITree` as the final
+coalgebra (`PFunctor.M`) of the interaction-tree polynomial functor, together
+with its constructors (`ret`, `tau`, `vis`), the dependent matcher `dMatchOn`,
+injectivity lemmas for the constructors, and the bisimulation equality `IEq`
+that is proven to coincide with propositional equality (`ieq_iff_eq`).
+-/
+
+/-- The node shapes of an interaction tree: a returned value, a silent `tau`
+step, or a visible effect `vis`. This is the `A`-component of the polynomial
+functor whose `M`-type is `ITree`. -/
 inductive ITree.shape.{u1, v, u2} (ε : Type u1 → Type v) (ρ : Type u2)
   : Type (max (max (u1 + 1) u2) v)
   | ret (v : ρ)
   | tau
   | vis (α : Type u1) (e : ε α)
 
+/-- The arity (`B`-component) of each interaction-tree node shape: a `ret` node
+has no children, a `tau` node has one, and a `vis α e` node has one child per
+inhabitant of the response type `α`. -/
 def ITree.children.{u1, v, u2} {ε : Type u1 → Type v} {ρ : Type u2}
   : ITree.shape ε ρ → Type u1
   | .ret _   => ULift (Fin2 0)
   | .tau     => ULift (Fin2 1)
   | .vis α _ => α
 
+/-- The interaction-tree polynomial functor, packaging `shape` and `children`. -/
 def ITree.P.{u1, v, u2} (ε : Type u1 → Type v) (ρ : Type u2) : PFunctor :=
   ⟨ITree.shape.{u1, v, u2} ε ρ, ITree.children.{u1, v, u2}⟩
 
@@ -35,12 +52,15 @@ coinductive ITree (ε : Type → Type) (ρ : Type)
 def ITree.{u1, v, u2} (ε : Type u1 → Type v) (ρ : Type u2) :=
   (ITree.P ε ρ).M
 
+/-- A continuation tree: a function from `α` into interaction trees, i.e. a
+Kleisli arrow for the `ITree` monad. -/
 abbrev KTree.{u1, v, u2} (ε : Type u1 → Type v) (α : Type u1) (β : Type u2) :=
   α → ITree ε β
 
 namespace ITree
 
-instance {ε ρ} : OfNat ((P ε ρ).B shape.tau) 0 := ⟨.up <| .ofNat' 0⟩
+instance instOfNatChildrenTauZero {ε ρ} : OfNat ((P ε ρ).B shape.tau) 0 :=
+  ⟨.up <| .ofNat' 0⟩
 
 section
 variable {ε : Type u1 → Type v} {ρ : Type u2}
@@ -49,14 +69,18 @@ variable {ε : Type u1 → Type v} {ρ : Type u2}
 section
 variable {X : Type u}
 
+/-- One layer of a `ret` node in the polynomial functor: returns the value `v`. -/
 @[simp]
 def ret' (v : ρ) : P ε ρ X :=
   .mk (.ret v) elim0
 
+/-- One layer of a `tau` node in the polynomial functor: a single silent child `t`. -/
 @[simp]
 def tau' (t : X) : P ε ρ X :=
   .mk .tau (fin1Const t)
 
+/-- One layer of a `vis` node in the polynomial functor: an effect `e` with
+continuation `k` indexed by the response type. -/
 @[simp]
 def vis' {α : Type u1} (e : ε α) (k : α → X) : P ε ρ X :=
   .mk (.vis α e) (k ·)
@@ -65,25 +89,30 @@ end
 
 /- Type Constructors -/
 
+/-- The interaction tree that immediately returns the value `v`. -/
 @[match_pattern, simp]
 def ret (v : ρ) : ITree ε ρ :=
   .mk <| ret' v
 
+/-- The interaction tree that takes one silent `tau` step into `t`. -/
 @[match_pattern, simp]
 def tau (t : ITree ε ρ) : ITree ε ρ :=
   .mk <| tau' t
 
+/-- The interaction tree that takes `n` silent `tau` steps into `t`. -/
 def tauN (n : Nat) (t : ITree ε ρ) : ITree ε ρ :=
   match n with
   | 0     => t
   | n + 1 => tau (tauN n t)
 
+/-- The interaction tree that performs the effect `e` and continues with `k`. -/
 @[match_pattern, simp]
 def vis {α : Type u1} (e : ε α) (k : α → ITree ε ρ) : ITree ε ρ :=
   .mk <| vis' e k
 
+/-- The interaction tree that performs the single effect `e` and returns its response. -/
 def trigger {α : Type u1} (e : ε α) : ITree ε α :=
-  vis e (λ x => ret x)
+  vis e (fun x => ret x)
 
 /- Injectivity of the constructors -/
 theorem ret_inj {x y} (h : @ret ε ρ x = ret y) : x = y := by
@@ -108,9 +137,7 @@ theorem vis_inj {ε α ρ}
   · exact eq_of_heq (shape.vis.inj this.left).right
   · have := eq_of_heq this.right
     funext x
-    have := congr (a₁ := x) this rfl
-    simp only at this
-    exact this
+    exact congr (a₁ := x) this rfl
 
 theorem tau_inj {ε ρ} {t1 t2 : ITree ε ρ} (h : tau t1 = tau t2) : t1 = t2 := by
   simp only [tau, tau'] at h
@@ -134,12 +161,8 @@ def dMatchOn {motive : ITree ε ρ → Sort u} (x : ITree ε ρ)
   | ⟨.tau, c⟩ =>
     tau (c 0) (by
       simp only [ITree.tau, tau']
-      trans
-      symm; apply PFunctor.M.mk_dest
-      congr
-      rw [hm]
-      congr
-      symm; apply fin1Const_fin0
+      rw [← PFunctor.M.mk_dest x, hm]
+      exact congrArg _ (congrArg _ fin1Const_fin0.symm)
     )
   | ⟨.vis α e, k⟩ =>
     vis α e k (by
@@ -175,15 +198,22 @@ theorem infTau_eq : @infTau ε ρ = tau infTau := by
   match i with
   | 0 => rfl
 
+/-- A coinduction state for traversing interaction trees: either a whole tree
+(`ct`) or a continuation tree (`kt`). -/
 inductive State (ε : Type u1 → Type v1) (ρ : Type u2)
 | ct     : ITree ε ρ   → State ε ρ
 | kt {α} : KTree ε α ρ → State ε ρ
 
+/-- Notation `C[ t ]` for the tree state `State.ct t`. -/
 notation:150 "C[ " t " ]" => State.ct t
+/-- Notation `K[ t ]` for the continuation-tree state `State.kt t`. -/
 notation:150 "K[ " t " ]" => State.kt t
+/-- Notation `K[ α | t ]` for the continuation-tree state `State.kt t` with
+explicit index type `α`. -/
 notation:151 "K[ " α' " | " t " ]" => State.kt (α := α') t
 
-macro "simp_itree_basic" : tactic => `(tactic|(
+/-- Simplify basic interaction-tree constructors and `PFunctor.M.dest_mk`. -/
+macro "simpItreeBasic" : tactic => `(tactic|(
   simp only [
     ret', vis', tau',
     ret , vis , tau ,
@@ -191,7 +221,9 @@ macro "simp_itree_basic" : tactic => `(tactic|(
   ]
 ))
 
-macro "subst_itree_inj " h:term : tactic => `(tactic|(
+/-- Substitute the injectivity consequence of an equality `h` between
+interaction-tree constructors. -/
+macro "substItreeInj " h:term : tactic => `(tactic|(
   first
   | have hv := ret_inj $h
     subst hv
@@ -211,11 +243,11 @@ macro "itree_elim " h:term : tactic => `(tactic|(
 ))
 
 /--
-`prove_unfold_lemma` tries to finish a proof of an unfolding lemma defined by `corec'`
+`proveUnfoldLemma` tries to finish a proof of an unfolding lemma defined by `corec'`
 Note you have to first unfold `corec'` in the appropriate places,
 possibly by some combination of `conv` and `rw [PFunctor.M.unfold_corec']`.
 -/
-macro "prove_unfold_lemma" : tactic => `(tactic|(
+macro "proveUnfoldLemma" : tactic => `(tactic|(
   (try simp only [dest_ret, dest_vis, dest_tau]) <;>
   (try simp only [vis, vis', tau, tau']) <;>
   (congr; try funext i) <;>
@@ -227,6 +259,9 @@ macro "prove_unfold_lemma" : tactic => `(tactic|(
     | .up (.ofNat' 0) => rfl
 ))
 
+/-- One unfolding of the bisimulation functor: two interaction trees agree at
+the top constructor, with their immediate subtrees related by `sim`. The
+bisimulation equality `IEq` is the fixed point of `IEqF`. -/
 @[grind]
 inductive IEqF (sim : ITree ε ρ → ITree ε ρ → Prop) : ITree ε ρ → ITree ε ρ → Prop
 | ret v : IEqF sim (ret v) (ret v)
@@ -238,15 +273,9 @@ lemma IEqF_inv (sim : ITree ε ρ → ITree ε ρ → Prop) t1 t2 (h : IEqF sim 
   (∃ α, ∃ e : ε α, ∃ k1, ∃ k2, (∀ a : α, sim (k1 a) (k2 a)) ∧ t1 = vis e k1 ∧ t2 = vis e k2) ∨
   (∃ t1', ∃ t2', sim t1' t2' ∧ t1 = tau t1' ∧ t2 = tau t2') := by
   cases h
-  · left
-    repeat (on_goal 1 => apply Exists.intro)
-    exact ⟨rfl, rfl⟩
-  · right; left
-    repeat (on_goal 1 => apply Exists.intro)
-    rename_i h; exact ⟨h, ⟨rfl, rfl⟩⟩
-  · right; right
-    repeat (on_goal 1 => apply Exists.intro)
-    rename_i h; exact ⟨h, ⟨rfl, rfl⟩⟩
+  · exact Or.inl ⟨_, rfl, rfl⟩
+  · next h => exact Or.inr <| Or.inl ⟨_, _, _, _, h, rfl, rfl⟩
+  · next h => exact Or.inr <| Or.inr ⟨_, _, h, rfl, rfl⟩
 
 theorem IEqF_monotone sim sim' (hsim : ∀ (t1 t2 : ITree ε ρ), sim t1 t2 → sim' t1 t2) :
   ∀ t1 t2, IEqF sim t1 t2 → IEqF sim' t1 t2 := by
@@ -263,14 +292,14 @@ def IEq (t1 t2 : ITree ε ρ) : Prop :=
 theorem ieq_iff_eq (t1 t2 : ITree ε ρ) : IEq t1 t2 ↔ t1 = t2 := by
   constructor
   · intro h
-    apply PFunctor.M.bisim (λ t1 t2 => IEq t1 t2) <;> try assumption
+    apply PFunctor.M.bisim (fun t1 t2 => IEq t1 t2) <;> try assumption
     intro t1; apply ITree.dMatchOn (x := t1)
     <;> (
       intros; rename_i h1 t2 heq
       simp only [IEq] at heq
       cases heq <;> itree_elim h1
-      subst_itree_inj h1
-      simp_itree_basic
+      substItreeInj h1
+      simpItreeBasic
       try grind [fin1Const]
     )
     rename_i v

@@ -7,3 +7,12 @@ import LeanPool.Lean4Itree.ITree.Basic
 import LeanPool.Lean4Itree.ITree.EffectAlgebra
 import LeanPool.Lean4Itree.ITree.Monad
 import LeanPool.Lean4Itree.ITree.Utils
+
+/-!
+# Interaction trees
+
+Aggregator module re-exporting the interaction-tree development: the core
+coinductive definition and bisimulation (`Basic`), supporting utilities
+(`Utils`), the monad structure (`Monad`), and the effect algebra and
+interpretation combinators (`EffectAlgebra`).
+-/

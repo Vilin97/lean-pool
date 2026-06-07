@@ -5,8 +5,12 @@ Authors: Paul Mure, Joonhyup Lee
 -/
 import LeanPool.Lean4Itree.Paco.PacoDefs
 
-namespace Lean.Order.CompleteLattice
+/-!
+# Paco notations
 
-notation "⊤ₚ" => top -- avoid clashing with Mathlib
-
-end Lean.Order.CompleteLattice
+Re-exports the parameterized-coinduction definitions and tactics from
+`PacoDefs`. The lattice notations `⊤ₚ` (top) and `⊓ₚ` (meet) used by the Paco
+development are declared there with a `ₚ` suffix to avoid clashing with the
+`Lean.Order` complete-lattice notations (`⊤`, `⊓`) that Lean core now brings
+into scope.
+-/
