@@ -356,6 +356,9 @@ import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N2
 import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3JoinN3N2
 import LeanPool.ErdosTuzaValtr.Main.Lemmas.JoinN2N3N2
 import LeanPool.ErdosTuzaValtr.Main.Main
+import LeanPool.FLT3
+import LeanPool.FLT3.Cyclo
+import LeanPool.FLT3.FLT3
 import LeanPool.FactorizationSystems
 import LeanPool.FactorizationSystems.Basic
 import LeanPool.FactorizationSystems.Characterization
