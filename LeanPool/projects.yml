@@ -1873,3 +1873,37 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: circuitlib
+    title: "circuitlib: a circuit verification library for Lean 4"
+    summary: Formalizes digital logic circuits as a monoidal category over Belnap four-valued logic, defining combinational and sequential circuit categories together with verified gates and arithmetic circuits.
+    branch: circuit verification
+    entry_module: LeanPool.Circuitlib
+    authors:
+      - Matt Hunzinger
+    source:
+      url: "https://github.com/matthunz/circuitlib"
+      github_repo: matthunz/circuitlib
+    status: verified
+    main_declarations:
+      - Circuit.CircuitCategory
+      - Circuit.BelnapLevel
+      - Circuit.CombinationalCircuit
+      - Circuit.CombinationalCircuit.adder
+      - Circuit.SequentialCircuitCategory
+    main_results:
+      - declaration: Circuit.CircuitCategory
+        informal: A typeclass packaging the generating morphisms (gates, wire stub/drop/fork/join) of a monoidal category of circuits over a gate set.
+      - declaration: Circuit.BelnapLevel
+        informal: The Belnap four-valued logic lattice (bottom, false, true, top) used as the wire value semantics.
+      - declaration: Circuit.CombinationalCircuit
+        informal: The combinational circuit category over Belnap levels and Belnap gates, with monotone wire-functions as morphisms.
+      - declaration: Circuit.CombinationalCircuit.adder
+        informal: A full-adder circuit built from half adders, proven to compute the correct sum and carry bits.
+      - declaration: Circuit.SequentialCircuitCategory
+        informal: The category of sequential circuits whose morphisms are causal, monotone stream functions.
+    tags:
+      - circuits
+      - hardware
+      - category-theory
+      - combinational
+      - sequential
