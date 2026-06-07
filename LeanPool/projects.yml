@@ -1873,3 +1873,39 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: leansieve
+    title: A formally verified prime number sieve
+    summary: Formalizes natural-number sieves as collections of arithmetic sequences and proves the generic correctness of a prime sieve, instantiated as a concrete sieve-of-Eratosthenes-style prime generator.
+    branch: number theory
+    entry_module: LeanPool.Leansieve
+    authors:
+      - tangentstorm
+    source:
+      url: "https://github.com/tangentstorm/leansieve"
+      github_repo: tangentstorm/leansieve
+    status: verified
+    main_declarations:
+      - hs_suffice
+      - c_prime
+      - no_skipped_prime
+      - RakeSieve.init
+      - RakeSieve.next
+    main_results:
+      - declaration: hs_suffice
+        informal: Proves that each step of a generic prime sieve produces a prime strictly greater than the previous one with no prime skipped in between, i.e. the next consecutive prime.
+      - declaration: c_prime
+        informal: Proves that the candidate value produced at each sieve step is prime.
+      - declaration: no_skipped_prime
+        informal: Proves that no prime lies strictly between the current prime and the next candidate produced by the sieve.
+      - declaration: RakeSieve.init
+        informal: Constructs the initial RakeSieve state representing the numbers coprime to 2 with current prime 2 and candidate 3.
+      - declaration: RakeSieve.next
+        informal: Advances a RakeSieve by sifting out multiples of the current prime, yielding the next sieve state.
+    tags:
+      - prime-sieve
+      - number-theory
+      - arithmetic-sequences
+      - eratosthenes
+    msc:
+      - "11A41"
+      - "11N35"
