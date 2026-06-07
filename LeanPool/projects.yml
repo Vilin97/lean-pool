@@ -1900,3 +1900,47 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: special-numbers
+    title: Special Numbers
+    summary: Formalizes Eulerian numbers, Euclid numbers, and Sylvester's sequence from Chapter 6 of Concrete Mathematics, including their recurrences, coprimality, monotonicity, and explicit doubly-exponential closed forms.
+    branch: integer sequences
+    entry_module: LeanPool.SpecialNumbers
+    authors:
+      - Walter Moreira
+      - Joe Stubbs
+    source:
+      title: "Concrete Mathematics: A Foundation for Computer Science"
+      authors:
+        - Ronald L. Graham
+        - Donald E. Knuth
+        - Oren Patashnik
+      url: "https://github.com/provables/special-numbers"
+      github_repo: provables/special-numbers
+    status: verified
+    main_declarations:
+      - sylvester
+      - sylvester_coprime
+      - sylvester_eq_floor_constant_pow
+      - Euclid.euclid_coprime
+      - Euclid.euclid_eq_floor_constant_pow
+      - eulerian
+    main_results:
+      - declaration: sylvester
+        informal: Defines Sylvester's sequence by the recurrence e(n+1) = e(n) * (e(n) - 1) + 1.
+      - declaration: sylvester_coprime
+        informal: Shows distinct terms of Sylvester's sequence are coprime.
+      - declaration: sylvester_eq_floor_constant_pow
+        informal: Gives the explicit closed form for Sylvester's sequence as a floor of a doubly-exponential power of a constant.
+      - declaration: Euclid.euclid_coprime
+        informal: Shows distinct Euclid numbers are coprime.
+      - declaration: Euclid.euclid_eq_floor_constant_pow
+        informal: Gives the explicit closed form for the Euclid numbers as a floor of a doubly-exponential power of a constant.
+      - declaration: eulerian
+        informal: Defines the Eulerian numbers via their triangular recurrence, counting permutations by number of ascents.
+    tags:
+      - number-theory
+      - combinatorics
+      - integer-sequences
+    msc:
+      - "11B73"
+      - "11B83"

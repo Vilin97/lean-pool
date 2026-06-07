@@ -1087,6 +1087,10 @@ import LeanPool.Shannon1948Formalization.Entropy.Joint
 import LeanPool.Shannon1948Formalization.Entropy.Properties
 import LeanPool.Shannon1948Formalization.Entropy.Rational
 import LeanPool.Shannon1948Formalization.Entropy.Uniform
+import LeanPool.SpecialNumbers
+import LeanPool.SpecialNumbers.Euclidian
+import LeanPool.SpecialNumbers.Eulerian
+import LeanPool.SpecialNumbers.Sylvester
 import LeanPool.SumsThreeSquares
 import LeanPool.SumsThreeSquares.MinkowskiConvex
 import LeanPool.SumsThreeSquares.SumThreeSquares

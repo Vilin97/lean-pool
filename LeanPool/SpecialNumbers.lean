@@ -1,0 +1,39 @@
+/-
+Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Walter Moreira, Joe Stubbs
+-/
+import LeanPool.SpecialNumbers.Eulerian
+import LeanPool.SpecialNumbers.Euclidian
+import LeanPool.SpecialNumbers.Sylvester
+
+/-!
+# Special Numbers
+
+Source: url:https://github.com/provables/special-numbers
+Authors: Walter Moreira, Joe Stubbs
+Status: verified
+Main declarations: `sylvester`, `sylvester_coprime`, `sylvester_eq_floor_constant_pow`, `Euclid.euclid_coprime`, `Euclid.euclid_eq_floor_constant_pow`, `eulerian`
+Tags: number-theory, combinatorics, integer-sequences
+MSC: 11B73, 11B83
+-/
+
+/-!
+## Mathematical overview
+
+This project formalizes material from Chapter 6 ("Special Numbers") of Knuth,
+Graham, and Patashnik's *Concrete Mathematics*, together with closely related
+integer sequences.
+
+`Eulerian` defines the Eulerian numbers `eulerian n k`, which count the
+permutations of `{1, …, n}` with exactly `k` ascents, and proves their boundary
+values and the triangular recurrence.
+
+`Euclidian` studies the Euclid numbers `Euclid.euclid` (`Euclid.euclid_coprime`,
+`Euclid.euclid_strictMono`) and derives the explicit floor formula
+`Euclid.euclid_eq_floor_constant_pow` in terms of a doubly-exponential constant.
+
+`Sylvester` develops Sylvester's sequence `sylvester` with its product
+recurrence, strict monotonicity, pairwise coprimality (`sylvester_coprime`), and
+the explicit closed form `sylvester_eq_floor_constant_pow`.
+-/
