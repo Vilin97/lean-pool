@@ -1267,7 +1267,7 @@ projects:
     authors:
       - Command Master
     source:
-      url: https://github.com/Command-Master/lean-bourgain
+      doi: "10.1142/S1793042105000108"
       github_repo: Command-Master/lean-bourgain
     status: verified
     main_declarations:

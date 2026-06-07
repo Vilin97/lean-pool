@@ -12,7 +12,7 @@ import LeanPool.LeanBourgain.Util
 /-!
 # Lean Bourgain explicit constants
 
-Source: url:https://github.com/Command-Master/lean-bourgain
+Source: doi:10.1142/S1793042105000108
 Authors: Command Master
 Status: verified
 Main declarations: `LeanPool.LeanBourgain.pos_ST_prime_field_eps`, `LeanPool.LeanBourgain.ST_C_pos`
