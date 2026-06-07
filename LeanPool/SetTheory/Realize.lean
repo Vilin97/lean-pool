@@ -215,23 +215,45 @@ def _root_.Nat.toBinderInfo : Nat → BinderInfo
   | 3 => .instImplicit
   | _ => .default
 
-unsafe structure WeakExprState where
-  hashExpr : PtrMap Expr Nat := mkPtrMap
+/-- The numeric encoding of binder information round-trips back to the original. -/
+theorem _root_.Lean.BinderInfo.toNat_toBinderInfo (bi : BinderInfo) :
+    bi.toNat.toBinderInfo = bi := by
+  cases bi <;> rfl
+
+/-- The numeric `BinderInfo` encoding is injective on the four valid binder kinds. -/
+theorem _root_.Lean.BinderInfo.toNat_injective {bi bj : BinderInfo}
+    (h : bi.toNat = bj.toNat) : bi = bj := by
+  rw [← bi.toNat_toBinderInfo, ← bj.toNat_toBinderInfo, h]
+
+/-- Mutable state threaded through expression serialization: deduplicating maps from
+subexpressions and names to their indices, together with the output arrays. -/
+structure WeakExprState where
+  /-- Cache from already-serialized subexpressions to their indices. -/
+  hashExpr : HashMap Expr Nat := {}
+  /-- Cache from already-serialized names to their indices. -/
   hashName : HashMap Name Nat := {}
+  /-- The serialized expression items, indexed in insertion order. -/
   arrayExpr : Array WeakExprItem := #[]
+  /-- The serialized name strings, indexed in insertion order. -/
   arrayName : Array String := #[]
 
+/-- A serialized closed expression: the array of expression items together with the
+array of referenced name strings. -/
 abbrev WeakExpr := Array WeakExprItem × Array String
-unsafe abbrev M := OptionT (StateM WeakExprState)
 
-unsafe def add (e : Expr) (i : WeakExprItem) : M Nat := do
+/-- The serialization monad: a state monad over `WeakExprState` with failure. -/
+abbrev SerializeM := OptionT (StateM WeakExprState)
+
+/-- Append a new serialized item for `e`, recording its index in the cache. -/
+def add (e : Expr) (i : WeakExprItem) : SerializeM Nat := do
   modify fun s => { s with
     hashExpr := s.hashExpr.insert e s.hashExpr.size,
     arrayExpr := s.arrayExpr.push i
   }
   return (← get).arrayExpr.size - 1
 
-unsafe def addName (name : Name) : M Nat := do
+/-- Serialize a name, returning the index of its (deduplicated) string. -/
+def addName (name : Name) : SerializeM Nat := do
   if let some n := (← get).hashName.get? name then return n
   modify fun s => { s with
     hashName := s.hashName.insert name s.hashName.size,
@@ -239,8 +261,9 @@ unsafe def addName (name : Name) : M Nat := do
   }
   return (← get).arrayName.size - 1
 
-unsafe def toWeakExprAux (e : Expr) : M Nat := do
-  if let some n := (← get).hashExpr.get? ⟨e⟩ then return n
+/-- Recursively serialize an expression into the state, returning its index. -/
+def toWeakExprAux (e : Expr) : SerializeM Nat := do
+  if let some n := (← get).hashExpr.get? e then return n
   match e with
   | .bvar n => add e (.a n)
   | .fvar _ => failure
@@ -260,10 +283,10 @@ unsafe def toWeakExprAux (e : Expr) : M Nat := do
   | .mdata _ e => toWeakExprAux e
   | .proj name idx struct => do add e (.j (← addName name) idx (← toWeakExprAux struct))
 
-def _root_.Lean.Expr.toWeakExpr (e : Expr) : WeakExpr := unsafe (
+/-- Serialize a closed expression into its `WeakExpr` representation. -/
+def _root_.Lean.Expr.toWeakExpr (e : Expr) : WeakExpr :=
   let result := ((toWeakExprAux e).run {}).2
   (result.arrayExpr, result.arrayName)
-)
 
 def WeakExpr.toExpr (e : WeakExpr) : Expr := Id.run do
   let (xs, names) := (e.1, e.2.map (·.toName))
@@ -320,6 +343,11 @@ def toTerm : VariableParam → Term
   | hypothesis t => t
   | _ => default
 
+/-- A variable parameter is a free variable exactly when it is not a hypothesis. -/
+theorem isFreeVariable_eq_not_isHypothesis (p : VariableParam) :
+    p.isFreeVariable = !p.isHypothesis := by
+  cases p <;> rfl
+
 end VariableParam
 
 abbrev VariableParams := Array VariableParam
@@ -364,6 +392,9 @@ def removeNameSuffix (name : Name) : Name :=
   name.eraseSuffix? `instFormulaToFunction <|>
   name.eraseSuffix? `to_realize <|>
   name.eraseSuffix? `elementarity |>.getD name
+
+/-- Stripping the recognized suffixes from the anonymous name leaves it unchanged. -/
+theorem removeNameSuffix_anonymous : removeNameSuffix .anonymous = .anonymous := rfl
 
 def attrDeclName : BuildFormulaM Name := do
   return (← get).attrDeclName
@@ -443,6 +474,9 @@ def withNewVars {α} (vars : Array Expr) (f : BuildFormulaM α) : BuildFormulaM 
   try f
   finally modify fun s => { s with localVars := oldVars }
 
+/-- The empty parameter list contributes no free variables. -/
+theorem numFreeVariables_empty : VariableParams.numFreeVariables #[] = 0 := rfl
+
 def throwTranslateError {α} (e : Expr) : BuildFormulaM α := do
   throwError m!"Can't translate to formula: {e}, variables: {← localVars}"
 
@@ -454,43 +488,53 @@ def decomposeApp (e : Expr) : BuildFormulaM (Name × Array Expr) := do
     throwError "Formula {formulaName} not found"
   return (formulaName, ← args.filterM fun e => do isDefEq (← inferType e) t)
 
-partial def goTerm (e : Expr) : BuildFormulaM Nat := do
-  match e with
-  | .app .. =>
-    let (name, args) ← decomposeApp e
-    addIntermediate name (← args.mapM goTerm)
-  | .fvar .. => findVar e
-  | _ => throwTranslateError e
-
-partial def go (e : Expr) : BuildFormulaM Expr := do
-  match e with
-  | .forallE name type body info =>
-    let newExpr : Expr := .lam name type body info
-    let sort ← inferType type
-    match sort.sortLevel! with
-    | 0 => mkAppM ``BoundedFormula.imp #[← go type, ← go body]
-    | _ => mkAppM ``BoundedFormula.all #[← go newExpr]
-  | .lam .. => lambdaTelescope e fun newVars e' => withNewVars newVars (go e')
-  | .app .. =>
-    match_expr e with
-    | Exists _ P => mkAppM ``BoundedFormula.ex #[← go P]
-    | ExistsUnique _ P => do mkAppM ``BoundedFormula.exUnique #[← go P]
-    | And p q => mkAppM ``min #[← go p, ← go q]
-    | Or p q => mkAppM ``max #[← go p, ← go q]
-    | Not p => mkAppM ``BoundedFormula.not #[← go p]
-    | Iff p q => mkAppM ``BoundedFormula.iff #[← go p, ← go q]
-    | _ =>
+/-- Translate a term-level subexpression into an intermediate index, using `fuel` to
+bound the recursion (any fuel at least the expression depth suffices). -/
+def goTerm (fuel : Nat) (e : Expr) : BuildFormulaM Nat := do
+  match fuel with
+  | 0 => throwTranslateError e
+  | fuel + 1 =>
+    match e with
+    | .app .. =>
       let (name, args) ← decomposeApp e
-      let argsIdx ← args.mapM goTerm
-      let mut formula ← mkAppOptM ``BoundedFormula.relabel #[
-        none, none, none, none, ← getIndexSeq (← termIntermediates).size argsIdx,
-        toExpr 0, mkConst name
-      ]
-      for ((name, idx), i) in (← termIntermediates).zipIdx.reverse do
-        formula ← mkAppM ``BoundedFormula.ofFunc #[mkConst name, ← getIndexSeq i idx, formula]
-      clearIntermediates
-      return formula
-  | _ => throwTranslateError e
+      addIntermediate name (← args.mapM (goTerm fuel))
+    | .fvar .. => findVar e
+    | _ => throwTranslateError e
+
+/-- Translate a proposition into a `BoundedFormula`, using `fuel` to bound the
+recursion (any fuel at least the expression depth suffices). -/
+def go (fuel : Nat) (e : Expr) : BuildFormulaM Expr := do
+  match fuel with
+  | 0 => throwTranslateError e
+  | fuel + 1 =>
+    match e with
+    | .forallE name type body info =>
+      let newExpr : Expr := .lam name type body info
+      let sort ← inferType type
+      match sort.sortLevel! with
+      | 0 => mkAppM ``BoundedFormula.imp #[← go fuel type, ← go fuel body]
+      | _ => mkAppM ``BoundedFormula.all #[← go fuel newExpr]
+    | .lam .. => lambdaTelescope e fun newVars e' => withNewVars newVars (go fuel e')
+    | .app .. =>
+      match_expr e with
+      | Exists _ P => mkAppM ``BoundedFormula.ex #[← go fuel P]
+      | ExistsUnique _ P => do mkAppM ``BoundedFormula.exUnique #[← go fuel P]
+      | And p q => mkAppM ``min #[← go fuel p, ← go fuel q]
+      | Or p q => mkAppM ``max #[← go fuel p, ← go fuel q]
+      | Not p => mkAppM ``BoundedFormula.not #[← go fuel p]
+      | Iff p q => mkAppM ``BoundedFormula.iff #[← go fuel p, ← go fuel q]
+      | _ =>
+        let (name, args) ← decomposeApp e
+        let argsIdx ← args.mapM (goTerm fuel)
+        let mut formula ← mkAppOptM ``BoundedFormula.relabel #[
+          none, none, none, none, ← getIndexSeq (← termIntermediates).size argsIdx,
+          toExpr 0, mkConst name
+        ]
+        for ((name, idx), i) in (← termIntermediates).zipIdx.reverse do
+          formula ← mkAppM ``BoundedFormula.ofFunc #[mkConst name, ← getIndexSeq i idx, formula]
+        clearIntermediates
+        return formula
+    | _ => throwTranslateError e
 
 def checkSorry (name : Name) : BuildFormulaM Unit := do
   match (← getEnv).findAsync? name false with
@@ -563,7 +607,8 @@ def init : BuildFormulaM Unit := do
     if ← isRealizeIffStage then
       let formulaType := ((← getEnv).find? ((← name) ++ `formula)).get!.type
       let_expr ZFFormula n := formulaType | throwError "Formula must be of `ZFFormula` type"
-      let numFreeVars ← unsafe ((evalExpr Nat q(Nat) n).run')
+      let some numFreeVars ← (Lean.Meta.evalNat (← whnf n)).run
+        | throwError "Formula index is not a literal natural number"
       modify fun s => { s with
         classParams, variableParams := .replicate numFreeVars (.freeVariable .default)
       }
@@ -609,13 +654,15 @@ def buildFormula (formulaName : Name) : BuildFormulaM Unit := do
       variableType := vars[0]!
       localVars := formulaVars
     }
-    let mut formula ← go (← simpFormula value)
+    let value ← simpFormula value
+    let mut formula ← go (value.approxDepth.toNat + 1) value
     for i in (*...(← numHypotheses)).toArray.reverse do
       let e ← (elabTermAndSynthesize (← getHypothesis i) none).run'
       let e := e.beta <|
         vars[*...2 + (← classParams).size] ++ formulaVars[*...(← freeVarsBefore i)]
+      let e ← simpFormula e
       formula ← mkAppM ``BoundedFormula.ite #[
-        ← go (← simpFormula e), formula, ← mkAppM ``EqEmptyN #[toExpr (← numFreeVars)]
+        ← go (e.approxDepth.toNat + 1) e, formula, ← mkAppM ``EqEmptyN #[toExpr (← numFreeVars)]
       ]
     return formula
   addDeclSimple formulaName (← mkAppM ``ZFFormula #[toExpr (← numFreeVars true)]) formula
@@ -623,6 +670,9 @@ def buildFormula (formulaName : Name) : BuildFormulaM Unit := do
 
 def prefixIdents (typeLetter := "M") : Array Ident :=
   #[mkIdent typeLetter.toName, mkIdent ("s" ++ typeLetter).toName]
+
+/-- The prefix identifiers are exactly the carrier type and its structure instance. -/
+theorem prefixIdents_size (typeLetter : String) : (prefixIdents typeLetter).size = 2 := rfl
 
 def classIdents (typeLetter := "M") : BuildFormulaM (Array Ident) := do
   return (*...(← classParams).size).toArray.map
