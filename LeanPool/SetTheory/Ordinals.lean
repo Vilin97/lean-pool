@@ -7,6 +7,13 @@ import LeanPool.SetTheory.Basic
 import LeanPool.SetTheory.OrderTheory
 import Mathlib.Tactic.Cases
 
+/-!
+# Ordinals in models of ZF
+
+This module develops the theory of ordinals inside a von Neumann model of ZF, including
+their order structure and the correspondence with Mathlib's `Ordinal` type.
+-/
+
 noncomputable section
 
 open Function Order Ordinal SetTheory ZFSet
@@ -65,9 +72,8 @@ lemma rank_ordinal {α : M} (hα : IsOrdinal α) : rank α = α := by
   exact hα.toZFSet_rank_eq
 
 @[simp] lemma isOrdinal_rank {α : M} : IsOrdinal (rank α) := by
-  split_vonNeumann hM
-  · simp [ZFSet.isOrdinal_toZFSet, toZFSet_simps]
-  · simpa only [IsOrdinal.toZFSet, toZFSet_rank] using isOrdinal_toZFSet _
+  rw [IsOrdinal.toZFSet, toZFSet_rank]
+  exact isOrdinal_toZFSet _
 
 lemma IsOrdinal.mem {α β : M} (hx : IsOrdinal α) (hy : β ∈ α) : IsOrdinal β := by
   simp only [toZFSet_simps] at *
@@ -81,11 +87,14 @@ lemma IsOrdinal.not_le_iff {α β : M} (hα : IsOrdinal α) (hβ : IsOrdinal β)
   simp (config := {contextual := true}) only [← IsOrdinal.mem_iff_lt, toZFSet_simps]
   exact fun hα hβ => hα.not_subset_iff_mem hβ
 
+lemma rank_enoughTransitive {x : M} : rank (enoughTransitive x).1 = rank x := by
+  rw [ToZFSet.eq, toZFSet_rank, toZFSet_rank, toZFSet_enoughTransitive, ZFSet.rank_vonNeumann]
+
 lemma rank_trcl {x : M} : rank (trcl x) = rank x := by
   apply le_antisymm
   · transitivity rank (enoughTransitive x).1
     · exact rank_mono (trcl_sub (enoughTransitive x).2.1 (enoughTransitive x).2.2)
-    · split_vonNeumann hM <;> simp [enoughTransitive, toZFSet_simps]
+    · exact rank_enoughTransitive.le
   · exact rank_mono sub_trcl
 
 lemma rank_singleton {x : M} : rank {x} = succ (rank x) := by
@@ -125,9 +134,10 @@ theorem rank_induction {p : M → Prop}
   set α := (⇓x).rank with hx
   clear_value α
   revert x
-  induction' α using WellFoundedLT.induction with α ih
-  refine fun x hx => h x (fun y hy => ih (⇓y).rank (hx ▸ ?_) _ rfl)
-  simpa only [toZFSet_simps, toZFSet_rank, toZFSet_strictMono.lt_iff_lt] using hy
+  induction α using WellFoundedLT.induction with
+  | _ α ih =>
+    refine fun x hx => h x (fun y hy => ih (⇓y).rank (hx ▸ ?_) _ rfl)
+    simpa only [toZFSet_simps, toZFSet_rank, toZFSet_strictMono.lt_iff_lt] using hy
 
 lemma rankAux_eq_rank {x : M} : rankAux x = rank x := by
   rw [rankAux.eq_iff]
@@ -137,27 +147,28 @@ lemma rankAux_eq_rank {x : M} : rankAux x = rank x := by
     simp [this, apply_funcToSet, rankFunc]
   · simp only [lowerBounds, IsRankFunction, Set.mem_setOf_eq, forall_exists_index, and_imp]
     rintro x f ord_val dom_trans hx preserve_mem ⟨_⟩
-    induction' x using rank_induction with x ind
-    intro α hα
-    have ord_α := isOrdinal_rank.mem hα
-    have ord_f_x := ord_val.2 _ (apply_mem_Ran ord_val.1 hx)
-    erw [ord_α.mem_iff_lt ord_f_x]
-    have ord_α_ZFSet := ord_α
-    erw [ord_α.mem_iff_lt isOrdinal_rank] at hα
-    simp only [toZFSet_simps] at hα ord_α_ZFSet
-    rw [← ord_α_ZFSet.toZFSet_rank_eq, toZFSet_strictMono.lt_iff_lt, lt_rank_iff] at hα
-    clear ord_α_ZFSet
-    rcases hα with ⟨y, hy, le₁⟩
-    obtain ⟨y, ⟨_⟩⟩ := exists_toZFSet_of_mem hy
-    rw [← ToZFSet.mem] at hy
-    rw [← toZFSet_strictMono.le_iff_le, ← toZFSet_rank, ← toZFSet_rank, ← ToZFSet.le] at le₁
-    have y_in_Dom := dom_trans hx hy
-    have le₂ := ind _ (rank_mem hy) y_in_Dom
-    have lt₃ := preserve_mem _ y_in_Dom _ hx hy
-    have ord_f_y := ord_val.2 _ (apply_mem_Ran ord_val.1 y_in_Dom)
-    rw [rank_ordinal ord_α] at le₁
-    replace lt₃ := ord_f_x.lt_of_mem lt₃
-    exact Trans.trans (Trans.trans le₁ le₂) lt₃
+    induction x using rank_induction with
+    | _ x ind =>
+      intro α hα
+      have ord_α := isOrdinal_rank.mem hα
+      have ord_f_x := ord_val.2 _ (apply_mem_Ran ord_val.1 hx)
+      erw [ord_α.mem_iff_lt ord_f_x]
+      have ord_α_ZFSet := ord_α
+      erw [ord_α.mem_iff_lt isOrdinal_rank] at hα
+      simp only [toZFSet_simps] at hα ord_α_ZFSet
+      rw [← ord_α_ZFSet.toZFSet_rank_eq, toZFSet_strictMono.lt_iff_lt, lt_rank_iff] at hα
+      clear ord_α_ZFSet
+      rcases hα with ⟨y, hy, le₁⟩
+      obtain ⟨y, ⟨_⟩⟩ := exists_toZFSet_of_mem hy
+      rw [← ToZFSet.mem] at hy
+      rw [← toZFSet_strictMono.le_iff_le, ← toZFSet_rank, ← toZFSet_rank, ← ToZFSet.le] at le₁
+      have y_in_Dom := dom_trans hx hy
+      have le₂ := ind _ (rank_mem hy) y_in_Dom
+      have lt₃ := preserve_mem _ y_in_Dom _ hx hy
+      have ord_f_y := ord_val.2 _ (apply_mem_Ran ord_val.1 y_in_Dom)
+      rw [rank_ordinal ord_α] at le₁
+      replace lt₃ := ord_f_x.lt_of_mem lt₃
+      exact Trans.trans (Trans.trans le₁ le₂) lt₃
 
 open Classical in
 instance : LinearOrder (Ordinals M) where
@@ -232,7 +243,8 @@ lemma exists_toOrdinal_eq {α : Ordinal.{0}} (hα : α < maxOrdinal M) :
       simp [toZFSet_simps]
   · refine ⟨⟨↓α.toZFSet, by simp [toZFSet_simps, isOrdinal_toZFSet]⟩, ?_⟩
     apply toZFSet_injective
-    simp [toZFSet_simps]
+    rw [toZFSet_toOrdinal]
+    exact ToZFSet.toZFSet_V
 
 lemma toOrdinal_lt {α : Ordinals M} : toOrdinal α < maxOrdinal M := by
   split_vonNeumann hM
@@ -245,6 +257,7 @@ instance comOrdinals : ContinuousOrderMapBounded (Subtype.val : Ordinals M → M
   preimage_Iic_closed := by
     intro x S hsub hne hbdd α hα
     have ord_α := (sSup S).2.mem hα
+    change α ∈ (sSup S).1 at hα
     rw [ord_α.mem_iff_lt (sSup S).2, show α = (⟨α, ord_α⟩ : Ordinals M).1 from rfl,
       Subtype.coe_lt_coe, lt_csSup_iff hbdd hne] at hα
     rcases hα with ⟨s, hs, lt⟩

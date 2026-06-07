@@ -6,6 +6,14 @@ Authors: Shuhao Song
 import LeanPool.SetTheory.Realize
 import Mathlib.SetTheory.ZFC.VonNeumann
 
+/-!
+# Basic theory of models of ZF set theory
+
+This module develops the order-theoretic and membership structure on models of ZF,
+including the von Neumann hierarchy and foundational lemmas used throughout the Kunen
+inconsistency development.
+-/
+
 noncomputable section
 
 variable {M N M₀ : Type _} [ZFStructure M] [ZFStructure N] [ZFStructure M₀]
@@ -105,11 +113,16 @@ open SetTheory
 
 variable [hM : IsVonNeumann M] [hN : IsVonNeumann N] [hM₀ : IsVonNeumannWithOmega M₀]
 
-macro "split_vonNeumann" h:ident : tactic =>
-  `(tactic | (rcases $h:ident with ⟨μ, hμ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; haveI _ := Fact.mk hμ))
+macro "split_vonNeumann" h:ident : tactic => do
+  let μ := Lean.mkIdent `μ
+  let hμ := Lean.mkIdent `hμ
+  `(tactic | (rcases $h:ident with ⟨$μ, $hμ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; haveI _ := Fact.mk $hμ))
 
-macro "split_vonNeumann_omega" h:ident : tactic =>
-  `(tactic | (rcases $h:ident with ⟨μ, hμ, omega_lt_μ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; haveI _ := Fact.mk hμ))
+macro "split_vonNeumann_omega" h:ident : tactic => do
+  let μ := Lean.mkIdent `μ
+  let hμ := Lean.mkIdent `hμ
+  let omega_lt_μ := Lean.mkIdent `omega_lt_μ
+  `(tactic | (rcases $h:ident with ⟨$μ, $hμ, $omega_lt_μ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; haveI _ := Fact.mk $hμ))
 
 namespace SetTheory
 
@@ -195,7 +208,7 @@ namespace ToZFSet
 @[toZFSet_simps] lemma eq {x y : M} : x = y ↔ ⇓x = ⇓y := by
   split_vonNeumann hM
   · exact Subtype.ext_iff
-  · cases x; cases y; simp [toZFSet_simps]
+  · cases x; cases y; exact Iff.of_eq (V.mk.injEq _ _)
 
 @[toZFSet_simps] lemma ne {x y : M} : x ≠ y ↔ ⇓x ≠ ⇓y := eq.not
 
@@ -378,7 +391,8 @@ lemma Singleton.singleton.eq_iff (x y : M) : ({x} : M) = y ↔ ∀ z, z ∈ y �
 def Singleton.singleton.formula := SetTheory.singleton.formula
 @[realize_simps] lemma Singleton.singleton.realize_iff (v : Fin 2 → M) :
     formula.Realize v ↔ {v 0} = v 1 := SetTheory.singleton.realize_iff v
-@[realize] def Singleton.singleton.eu := @SetTheory.singleton.eu
+@[realize] lemma Singleton.singleton.eu (x : M) : IsSet {y | y = x} :=
+  SetTheory.singleton.eu x
 
 instance : Insert M M where insert := SetTheory.insert
 @[simp] lemma Insert.insert.spec (x y z : M) : z ∈ insert x y ↔ z = x ∨ z ∈ y :=
@@ -388,7 +402,8 @@ lemma Insert.insert.eq_iff (x y z : M) : Insert.insert x y = z ↔ ∀ w, w ∈ 
 def Insert.insert.formula := SetTheory.insert.formula
 @[realize_simps] lemma Insert.insert.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ insert (v 0) (v 1) = v 2 := SetTheory.insert.realize_iff v
-@[realize] def Insert.insert.eu := @SetTheory.insert.eu
+@[realize] lemma Insert.insert.eu (x y : M) : IsSet {z | z = x ∨ z ∈ y} :=
+  SetTheory.insert.eu x y
 
 end FirstOrder
 
@@ -438,7 +453,7 @@ def ExistsUniqueAt {α : Type*} (x : α) (p : α → Prop) := p x ∧ ∀ y, p y
   exact ⟨
     fun | ⟨is_bound, greatest⟩, y => ⟨
       fun y t ht => is_bound ht y,
-      fun hy => greatest (a := {y}) (by simpa [le_iff]) (by simp)
+      fun hy => greatest (a := {y}) (by simpa [le_iff]) (Singleton.singleton.spec y y |>.mpr rfl)
     ⟩,
     fun h => ⟨
       fun t ht z hz => (h _).mp hz _ ht,
@@ -493,6 +508,10 @@ def enoughTransitive (x : M) : {y : M // IsTransitive y ∧ x ⊆ y} := by
     simpa only [IsTransitive.toZFSet, toZFSet_simps]
       using ⟨isTransitive_vonNeumann _, subset_vonNeumann.mpr le_rfl⟩
 
+lemma toZFSet_enoughTransitive {x : M} : ⇓(enoughTransitive x).1 = V_ (⇓x).rank := by
+  unfold enoughTransitive
+  split_vonNeumann hM <;> rfl
+
 @[realize] lemma trcl.eu (x : M) :
     ∃! y : M, IsGLB {t | IsTransitive t ∧ x ⊆ t} y := by
   simpa only [exists_minimal] using (enoughTransitive x).exists_of_subtype
@@ -500,7 +519,7 @@ def enoughTransitive (x : M) : {y : M // IsTransitive y ∧ x ⊆ y} := by
 lemma mem_trcl_iff {x y : M} : y ∈ trcl x ↔ ∀ t : M, IsTransitive t ∧ x ⊆ t → y ∈ t := by
   revert y
   change ∀ y : M, _
-  simpa only [isGLB_iff] using trcl.spec x
+  simpa only [isGLB_iff, Set.mem_setOf_eq] using trcl.spec x
 
 lemma isTransitive_trcl {x : M} : IsTransitive (trcl x) := by
   intro y hy z hz
@@ -536,7 +555,8 @@ lemma Union.union.eq_iff (x y z : M) : x ∪ y = z ↔ ∀ w, w ∈ z ↔ w ∈ 
 def Union.union.formula := SetTheory.union.formula
 @[realize_simps] lemma Union.union.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ v 0 ∪ v 1 = v 2 := SetTheory.union.realize_iff v
-@[realize] def Union.union.eu := @SetTheory.union.eu
+@[realize] lemma Union.union.eu (x y : M) : IsSet {z | z ∈ x ∨ z ∈ y} :=
+  SetTheory.union.eu x y
 
 instance : Inter M where inter := SetTheory.inter
 @[simp] lemma Inter.inter.spec (x y z : M) : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y := SetTheory.inter.spec ..
@@ -545,7 +565,8 @@ lemma Inter.inter.eq_iff (x y z : M) : x ∩ y = z ↔ ∀ w, w ∈ z ↔ w ∈ 
 def Inter.inter.formula := SetTheory.inter.formula
 @[realize_simps] lemma Inter.inter.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ v 0 ∩ v 1 = v 2 := SetTheory.inter.realize_iff v
-@[realize] def Inter.inter.eu := @SetTheory.inter.eu
+@[realize] lemma Inter.inter.eu (x y : M) : IsSet {z | z ∈ x ∧ z ∈ y} :=
+  SetTheory.inter.eu x y
 
 namespace SetTheory
 
@@ -707,7 +728,8 @@ def funcToSet {A B : M} (f : A → B) : M :=
 @[simp] lemma dom_funcToSet {A B : M} {f : A → B} : Dom (funcToSet f) = A := by
   simp only [Dom.eq_iff]
   refine fun x => ⟨fun hx => ⟨(f ⟨x, hx⟩).1, ?_⟩, fun | ⟨y, hy⟩ => ?_⟩
-  · simp [funcToSet, hx]
+  · simp only [funcToSet, mem_separate_iff, Pairs.spec, fst_pair, snd_pair]
+    exact ⟨⟨isPair_pair, hx, (f ⟨x, hx⟩).2⟩, hx, trivial⟩
   · simp only [funcToSet, mem_separate_iff, Pairs.spec, fst_pair, snd_pair] at hy
     exact hy.2.1
 
@@ -717,7 +739,7 @@ lemma mem_Ran_funcToSet_iff {A B : M} {f : A → B} :
   intro y
   congr! 2 with x
   exact and_iff_right_iff_imp.mpr
-    fun | ⟨hx, eq⟩ => ⟨by simp, hx, by simp [← eq]⟩
+    fun | ⟨hx, eq⟩ => ⟨isPair_pair, hx, eq ▸ (f ⟨x, hx⟩).2⟩
 
 lemma ran_funcToSet_sub {A B : M} {f : A → B} : Ran (funcToSet f) ⊆ B := by
   simp only [Subset, mem_Ran_funcToSet_iff]
@@ -738,7 +760,8 @@ def setToFunc {A B : M} (f : (Func A B : M)) : A → B := by
 lemma apply_funcToSet {A B : M} (f : A → B) {x : M} (hx : x ∈ A) :
     apply (funcToSet f) x = (f ⟨x, hx⟩).1 := by
   rw [funcToSet, apply.eq_iff]
-  · simp [hx]
+  · simp only [mem_separate_iff, Pairs.spec, fst_pair, snd_pair]
+    exact ⟨⟨isPair_pair, hx, (f ⟨x, hx⟩).2⟩, hx, trivial⟩
   · exact isFunc_funcToSet
   · simpa [Dom.spec, hx] using ⟨_, (f ⟨x, hx⟩).2, rfl⟩
 
@@ -754,7 +777,8 @@ lemma setToFunc_funcToSet {A B : M} {f : A → B} :
 lemma funcToSet_setToFunc {A B : M} (f : (Func A B : M)) : funcToSet (setToFunc f) = f.1 := by
   ext x
   have hf := f.2
-  simp only [funcToSet, setToFunc, mem_separate_iff, Func.spec] at hf ⊢
+  erw [Func.spec] at hf
+  simp only [funcToSet, setToFunc, mem_separate_iff] at ⊢
   refine ⟨fun | ⟨hx, hfst, hsnd⟩ => ?_, fun hx => ?_⟩
   · rw [Pairs.spec] at hx
     rwa [apply.eq_iff _ _ hf.1 (hf.2.1.symm ▸ hfst), pair_eta hx.1] at hsnd
@@ -810,12 +834,15 @@ lemma ext_func {f g : M} (hf : IsFunc f) (hg : IsFunc g)
 
 @[simp] lemma isInjective_funcToSet {A B : M} {f : A → B} :
     IsInjective (funcToSet f) ↔ Injective f := by
-  simp +contextual [IsInjective, Injective, apply_funcToSet]
+  simp +contextual only [IsInjective, isFunc_funcToSet, true_and, dom_funcToSet, Injective,
+    Subtype.forall, Subtype.mk.injEq, apply_funcToSet, Subtype.coe_inj]
+  exact Iff.rfl
 
 lemma nonempty_iff (x : M) : Nonempty x ↔ x ≠ ∅ := by
   simp only [nonempty_subtype, ne_eq]
-  rw [eq_comm]
-  simp [EmptyCollection.emptyCollection.eq_iff]
+  rw [eq_comm, EmptyCollection.emptyCollection.eq_iff]
+  simp only [not_forall, not_not]
+  exact Iff.rfl
 
 @[realize] def cardLE (x y : M) := ∃ f ∈ Func x y, IsInjective f
 @[realize] def cardEq (x y : M) := ∃ f ∈ Func x y, IsInjective f ∧ Ran f = y
@@ -867,11 +894,12 @@ lemma iUnion_funcToSet {A B : M} {f : A → B} : iUnion (funcToSet f) = ⨆ x : 
   rw [iUnion.eq_iff]
   intro x
   erw [mem_sSup_iff]
-  · simp only [Set.mem_range, Subtype.exists, mem_Ran_funcToSet_iff]
+  · simp only [Set.mem_range, Subtype.exists, mem_Ran_funcToSet_iff]; rfl
   · refine ⟨iUnion (funcToSet f), ?_⟩
     intro x
     simp only [Set.mem_range, Subtype.exists, forall_exists_index]
-    rintro x hx ⟨_⟩ y hy
-    simpa [iUnion.spec, mem_Ran_funcToSet_iff] using ⟨x, hx, hy⟩
+    rintro x hx rfl y hy
+    erw [iUnion.spec]
+    exact ⟨_, (mem_Ran_funcToSet_iff _).mpr ⟨x, hx, rfl⟩, hy⟩
 
 end SetTheory

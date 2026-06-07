@@ -5,6 +5,13 @@ Authors: Shuhao Song
 -/
 import LeanPool.SetTheory.Omega
 
+/-!
+# Elementary embeddings of models of ZF
+
+This module defines nontrivial elementary embeddings of a model of ZF into itself, their
+critical points, and the basic properties of the iterates of the critical point.
+-/
+
 noncomputable section
 
 open FirstOrder Language Function Ordinal SetTheory
@@ -40,7 +47,7 @@ lemma nontrivial : ∃ x : M, j x ≠ x := by
   have := j.nontrivial'
   contrapose! this
   ext x
-  simpa using this x
+  exact this x
 
 end NontrivialElementaryEmbedding
 
@@ -54,15 +61,18 @@ variable {F} [FunLike F M M] [ElementaryEmbeddingClass F M M] {j : F}
     {F₀} [FunLike F₀ M₀ M₀] [ElementaryEmbeddingClass F₀ M₀ M₀] {j₀ : F₀}
 
 lemma IsOrdinal.le_j {α} (ord_α : IsOrdinal α) : α ≤ j α := by
-  induction' α using rank_induction with α ind
-  intro β hβ
-  have ord_β := ord_α.mem hβ
-  specialize ind β
-  rw [rank_ordinal ord_α, rank_ordinal ord_β, ← ord_β.mem_iff_lt ord_α] at ind
-  specialize ind hβ ord_β
-  rw [ord_β.mem_iff_lt (by simpa only [elementary_simps])]
-  rw [ord_β.mem_iff_lt ord_α] at hβ
-  exact lt_of_le_of_lt ind (by simpa only [elementary_simps])
+  induction α using rank_induction with
+  | _ α ind =>
+    intro β hβ
+    have ord_β := ord_α.mem hβ
+    specialize ind β
+    rw [rank_ordinal ord_α, rank_ordinal ord_β, ← ord_β.mem_iff_lt ord_α] at ind
+    specialize ind hβ ord_β
+    change β ∈ j α
+    rw [ord_β.mem_iff_lt (by simpa only [elementary_simps])]
+    change β ∈ α at hβ
+    rw [ord_β.mem_iff_lt ord_α] at hβ
+    exact lt_of_le_of_lt ind (by simpa only [elementary_simps])
 
 lemma j_natCast (n : ℕ) : j (n : M) = (n : M) := by
   induction n with
@@ -82,14 +92,15 @@ lemma crit_exists : ∃ α, IsOrdinal α ∧ j α ≠ α := by
   have hj := j.nontrivial
   contrapose! hj
   intro x
-  induction' x using rank_induction with x ind
-  ext1 y
-  refine ⟨fun hy => ?_, fun hy => ?_⟩
-  · have := rankAux.elementarity x j
-    simp only [rankAux_eq_rank] at this
-    have := ind _ (hj _ isOrdinal_rank ▸ this ▸ rank_mem hy)
-    rwa [← this, Membership.mem.elementarity] at hy
-  · rwa [← ind _ (rank_mem hy), Membership.mem.elementarity]
+  induction x using rank_induction with
+  | _ x ind =>
+    ext1 y
+    refine ⟨fun hy => ?_, fun hy => ?_⟩
+    · have := rankAux.elementarity x j
+      simp only [rankAux_eq_rank] at this
+      have := ind _ (hj _ isOrdinal_rank ▸ this ▸ rank_mem hy)
+      rwa [← this, Membership.mem.elementarity] at hy
+    · rwa [← ind _ (rank_mem hy), Membership.mem.elementarity]
 
 variable (j) in
 def crit : M := sInf {α : M | j α ≠ α ∧ IsOrdinal α}
@@ -167,6 +178,7 @@ lemma isStrongLimit_crit : IsStrongLimit (crit j) := by
     intro ⟨x, hx⟩
     simp only [apply_funcToSet_rev, eq]
     have : j x = x := by
+      change x ∈ 𝓟 α at hx
       simp only [powerset.spec] at hx
       have hj_x : j x ⊆ α := by rw [← j_eq_of_mem_crit hα]; simpa only [elementary_simps]
       refine ext_of_subset hj_x hx fun β hβ => ?_
@@ -213,7 +225,7 @@ lemma isStrongLimit_crit_iter (n : ℕ) : IsStrongLimit (j^[n] (crit j)) := by
   | succ n ih => simpa only [iterate_succ_apply', elementary_simps]
 
 variable (j) in
-def hasOmegaOfNontrivialSelfEmbedding : IsVonNeumannWithOmega M := by
+@[reducible] def hasOmegaOfNontrivialSelfEmbedding : IsVonNeumannWithOmega M := by
   split_vonNeumann hM
   · suffices ω < μ from .vonNeumann μ hμ this rfl
     by_contra! μ_le_omega

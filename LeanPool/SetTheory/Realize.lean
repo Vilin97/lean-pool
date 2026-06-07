@@ -8,12 +8,24 @@ import Mathlib.ModelTheory.Semantics
 import Mathlib.Tactic.FinCases
 import LeanPool.SetTheory.SimpAttr
 
+/-!
+# Realization machinery for the ZF first-order language
+
+This module sets up the first-order language `𝓛_ZF` of ZF set theory with a single
+membership relation, together with notation and metaprogramming infrastructure for
+building and realizing bounded formulas in models of ZF.
+-/
 
 open Lean Parser Elab Term Meta Qq Std FirstOrder.Language
 
 inductive memRel : ℕ → Type
   | mem : memRel 2
   deriving DecidableEq
+
+open FirstOrder in
+/-- The first-order language of ZF set theory, with a single binary membership relation. -/
+def 𝓛_ZF : FirstOrder.Language := ⟨fun _ => Empty, memRel⟩
+deriving IsRelational
 
 namespace FirstOrder.Language.BoundedFormula
 
@@ -29,7 +41,7 @@ lemma realize_isFormula (φ : L.BoundedFormula α 0) (w : Fin 0 → M) :
 protected def exUnique (φ : L.BoundedFormula α (n + 1)) : L.BoundedFormula α n :=
   ∃' (φ ⊓ ∀' (φ.liftAt 1 n ⟹ &(Fin.last (n + 1)) =' &((Fin.last n).castSucc)))
 
-protected def ite (φ ψ χ: L.BoundedFormula α n) : L.BoundedFormula α n :=
+protected def ite (φ ψ χ : L.BoundedFormula α n) : L.BoundedFormula α n :=
   (φ ⊓ ψ) ⊔ (∼φ ⊓ χ)
 
 theorem realize_ite (φ ψ χ : L.BoundedFormula α n) :
@@ -102,15 +114,12 @@ section ZFStructure
 
 open FirstOrder Language Structure
 
-def 𝓛_ZF : Language := ⟨fun _ => Empty, memRel⟩
-deriving IsRelational
-
 abbrev ZFFormula (n : ℕ) := 𝓛_ZF.Formula (Fin n)
 abbrev ZFStructure M := 𝓛_ZF.Structure M
 
 variable {M N : Type*} [sM : ZFStructure M] [sN : ZFStructure N]
 
-instance instMembershipZFStructure : Membership M M where
+instance (priority := high) instMembershipZFStructure : Membership M M where
   mem x y := sM.RelMap memRel.mem ![y, x]
 
 instance : HasSubset M where
@@ -286,7 +295,7 @@ elab "expr(" e:strLit ")" : term => do
   return e.instantiateLevelParams levels mvars
 
 def _root_.Lean.Expr.toSyntax'
-    {m} [Monad m] [MonadRef m] [MonadQuotation m] (e : Expr) : m Term := do
+    {m} [Monad m] [MonadQuotation m] (e : Expr) : m Term := do
   let strLit := Syntax.mkStrLit (toString (toJson (e.toWeakExpr)))
   `(expr($strLit))
 
@@ -651,10 +660,10 @@ def classParamBinders (typeLetter : String := "M") :
   let structIdent := mkIdent ("s" ++ typeLetter).toName
   return #[
     ← `(bracketedBinder | {$typeIdent : Type _}),
-    ← `(bracketedBinder | [$structIdent : ZFStructure $typeIdent])
+    ← `(bracketedBinder | [$structIdent : $(mkCIdent ``ZFStructure) $typeIdent])
   ] ++ (
   ← if (← isFunction) && !(← hasEmptyInstance?) then
-      return #[← `(bracketedBinder | [HasEmpty $typeIdent])]
+      return #[← `(bracketedBinder | [$(mkCIdent ``HasEmpty) $typeIdent])]
     else
       return #[]
   ) ++ (
@@ -716,20 +725,34 @@ def buildFunction (funcName : Name) : BuildFormulaM Unit := do
   let statement ← (explicitize (← definitionProp) ((← numAllVars) + 1)).toSyntax'
   let vars : Array Term ← allIdentsWithHypotheses
   let specStatement ← mkTermApp statement (vars.push fnApply)
-  let eqIffStatement ← mkTermApp statement (vars.push (mkIdent `v))
+  let identV := mkIdent `v
+  let eqIffStatement ← mkTermApp statement (vars.push identV)
   let classParamBinders ← classParamBinders
   let mkBinders ← mkBinders
   let mkBindersWithHypotheses ← mkBindersWithHypotheses
+  let identM := mkIdent `M
+  -- When the function definition carries hypotheses, its body is a nested `dite`, so the
+  -- proof must unfold the function and reduce the `dite` before applying `choose_spec`.
+  -- Without hypotheses the body is a bare `Exists.choose`, defeq to the goal, so `exact`
+  -- suffices (and `simp only` on the function would otherwise make no progress and fail).
+  let specProof ← if (← numHypotheses) == 0 then
+      `(tactic| exact $(euApply).choose_spec.1)
+    else
+      `(tactic| simpa only [$funcIdent:term, *, ↓reduceDIte] using $(euApply).choose_spec.1)
+  let eqIffProof ← if (← numHypotheses) == 0 then
+      `(tactic| exact $(euApply).choose_eq_iff)
+    else
+      `(tactic| simpa only [$funcIdent:term, *, ↓reduceDIte] using $(euApply).choose_eq_iff)
   let cmd ← `(
   open Classical in
-  noncomputable def $funcIdent $classParamBinders* $mkBinders* : M :=
+  noncomputable def $funcIdent $classParamBinders* $mkBinders* : $identM :=
     $value
   lemma $specIdent $classParamBinders* $mkBindersWithHypotheses* :
       $specStatement := by
-    simpa only [$funcIdent:term, *, ↓reduceDIte] using $(euApply).choose_spec.1
-  lemma $eqIffIdent $classParamBinders* $mkBindersWithHypotheses* (v : M) :
-      $fnApply = v ↔ $eqIffStatement := by
-    simpa only [$funcIdent:term, *, ↓reduceDIte] using $(euApply).choose_eq_iff
+    $specProof:tactic
+  lemma $eqIffIdent $classParamBinders* $mkBindersWithHypotheses* ($identV : $identM) :
+      $fnApply = $identV ↔ $eqIffStatement := by
+    $eqIffProof:tactic
   )
   liftCommandElabM (Command.elabCommand cmd)
 
@@ -755,9 +778,10 @@ def buildRealizeIff (thmName : Name) : BuildFormulaM Unit := do
   if ← isFunction then
     realizedApplyV' ← `($realizedApplyV = v $(Syntax.mkNatLit (← numFreeVars)))
   let nVars := Syntax.mkNatLit (← numFreeVars true)
+  let identM := mkIdent `M
   let cmd ← `(
   @[realize_simps] lemma $thmIdent
-      $(← classParamBinders)* (v : Fin $nVars → M) :
+      $(← classParamBinders)* (v : Fin $nVars → $identM) :
       FirstOrder.Language.Formula.Realize $formulaIdent v ↔ $realizedApplyV' := by
     simp only [$formulaIdent:term, $realizedIdent:term, formula_builder_pre, formula_builder,
       FirstOrder.Language.Formula.Realize, ExistsUnique.choose_eq_iff, dite_eq_iff, exists_prop]
@@ -777,17 +801,18 @@ def buildInstFormulaToFunction (instName : Name) := do
   for i in *...(← numFreeVars) do
     realizedApplyV ← `($realizedApplyV (v $(Syntax.mkNatLit i)))
   let nVars := Syntax.mkNatLit (← numFreeVars)
+  let identM := mkIdent `M
   let cmd ← `(
   instance $instIdent:ident $(← classParamBinders)* :
-    FormulaToFunction $formulaIdent (fun v : Fin $nVars → M => $realizedApplyV) where
+    FormulaToFunction $formulaIdent (fun v : Fin $nVars → $identM => $realizedApplyV) where
   )
   liftCommandElabM (Command.elabCommand cmd)
 
 def mkVarVec (typeLetter := "M") (varLetter : String := "x") : BuildFormulaM Term := do
   let vars ← varIdents true varLetter
-  let mut varVec ← `(@Matrix.vecEmpty $(mkIdent typeLetter.toName))
+  let mut varVec ← `(@$(mkCIdent ``Matrix.vecEmpty) $(mkIdent typeLetter.toName))
   for var in vars.reverse do
-    varVec ← `(Matrix.vecCons $var $varVec)
+    varVec ← `($(mkCIdent ``Matrix.vecCons) $var $varVec)
   return varVec
 
 def buildToRealize (toRealizeName : Name) : BuildFormulaM Unit := do
@@ -799,7 +824,7 @@ def buildToRealize (toRealizeName : Name) : BuildFormulaM Unit := do
     applyX ← `($applyX = $(vars[← numFreeVars]!))
   let cmd ← `(
   lemma $toRealizeIdent $((← classParamBinders) ++ (← mkBinders true))* :
-      $applyX ↔ FirstOrder.Language.Formula.Realize $formulaIdent $(← mkVarVec) := by
+      $applyX ↔ $(mkCIdent ``FirstOrder.Language.Formula.Realize) $formulaIdent $(← mkVarVec) := by
     simp only [realize_simps, Matrix.cons_val, *]
   )
   liftCommandElabM (Command.elabCommand cmd)
@@ -809,36 +834,50 @@ def buildElementarity (elementarityName : Name) : BuildFormulaM Unit := do
   let toRealizeIdent := mkIdent' ((← name) ++ `to_realize)
   let elementarityIdent := mkIdent' elementarityName
   let vars ← varIdents
+  let identM := mkIdent `M
+  let identN := mkIdent `N
+  let identF := mkIdent `F
+  let identJ := mkIdent `j
+  let funLike := mkCIdent ``FunLike
+  let eecClass := mkCIdent ``ElementaryEmbeddingClass
+  let mapFormula := mkCIdent ``ElementaryEmbeddingClass.map_formula
+  let vecCons := mkCIdent ``Matrix.vecCons
+  let vecEmpty := mkCIdent ``Matrix.vecEmpty
+  let realizeFn := mkCIdent ``FirstOrder.Language.Formula.Realize
   let mut applyJX ← realizedTerm "N"
   let mut applyX ← realizedTerm "M"
   for var in vars do
-    applyJX ← `($applyJX (j $var))
+    applyJX ← `($applyJX ($identJ $var))
     applyX ← `($applyX $var)
   let cmd ← do
     if ← isFunction then
-      let mut varVecSnocApply ← `(Matrix.vecCons $applyX Matrix.vecEmpty)
+      let mut varVecSnocApply ← `($vecCons $applyX $vecEmpty)
       for var in vars.reverse do
-        varVecSnocApply ← `(Matrix.vecCons $var $varVecSnocApply)
+        varVecSnocApply ← `($vecCons $var $varVecSnocApply)
+      let convertTarget ← `($realizeFn $formulaIdent ($identJ ∘ $varVecSnocApply))
+      let mapFormulaApp ← `($mapFormula $identJ)
       `(
       @[elementary_simps] lemma $elementarityIdent
           $((← classParamBinders "M") ++ (← classParamBinders "N") ++ (← mkBinders false "M"))*
-          {F : Type*} [FunLike F M N] [ElementaryEmbeddingClass F M N] (j : F) :
-          $applyJX = j ($applyX) := by
+          {$identF : Type*} [$funLike $identF $identM $identN]
+          [$eecClass $identF $identM $identN] ($identJ : $identF) :
+          $applyJX = $identJ ($applyX) := by
         simp only [$toRealizeIdent:term]
-        convert_to FirstOrder.Language.Formula.Realize $formulaIdent (j ∘ $varVecSnocApply)
-          using 1
+        convert_to ($convertTarget) using 1
         · ext1 i; fin_cases i <;> rfl
-        · simp only [ElementaryEmbeddingClass.map_formula j, ← $toRealizeIdent:term]
+        · simp only [$mapFormulaApp:term, ← $toRealizeIdent:term]
       attribute [elementary_simps_rev ←] $elementarityIdent
       )
     else
+      let convertTerm ← `($mapFormula $identJ $formulaIdent $(← mkVarVec))
       `(
       @[elementary_simps] lemma $elementarityIdent
           $((← classParamBinders "M") ++ (← classParamBinders "N") ++ (← mkBinders false "M"))*
-          {F : Type*} [FunLike F M N] [ElementaryEmbeddingClass F M N] (j : F) :
+          {$identF : Type*} [$funLike $identF $identM $identN]
+          [$eecClass $identF $identM $identN] ($identJ : $identF) :
           $applyJX ↔ $applyX := by
         simp only [$toRealizeIdent:term]
-        convert ElementaryEmbeddingClass.map_formula j $formulaIdent $(← mkVarVec) using 2
+        convert ($convertTerm) using 2
         ext1 i; fin_cases i <;> rfl
       attribute [elementary_simps_rev ←] $elementarityIdent
       )

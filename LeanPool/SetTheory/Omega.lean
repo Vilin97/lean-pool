@@ -5,6 +5,13 @@ Authors: Shuhao Song
 -/
 import LeanPool.SetTheory.Ordinals
 
+/-!
+# The first infinite ordinal in models of ZF
+
+This module develops the theory of `ω` and the natural numbers inside a von Neumann model
+of ZF, providing the infinitary tools needed for the Kunen inconsistency argument.
+-/
+
 noncomputable section
 
 open SetTheory Ordinal Cardinal ZFSet Function
@@ -79,7 +86,7 @@ lemma natCast_succ {n : ℕ} : ((n + 1 : ℕ) : M) = succ (n : M) := by
   simp [toZFSet_simps]
 
 lemma toZFSet_nat_mem_ωₛ {n : ℕ} : Ordinal.toZFSet n ∈ ωₛ := by
-  simpa only [ωₛ] using toZFSet_mem_toZFSet_iff.mpr <| nat_lt_omega0 _
+  simpa only [ωₛ] using toZFSet_mem_toZFSet_iff.mpr <| natCast_lt_omega0 _
 
 lemma eq_natCast_of_mem_ωₛ {α} (hα : α ∈ ωₛ) : ∃ n : ℕ, α = Ordinal.toZFSet n := by
   have ord_α := (isOrdinal_toZFSet _).mem hα
@@ -97,7 +104,7 @@ lemma wf_rev_of_lt_ωₛ {α} (hα : α ∈ ωₛ) : IsWellFounded α (fun x y =
   refine @Finite.wellFounded_of_trans_of_irrefl _ ?_  _ ?_ ?_
   · obtain ⟨n, ⟨_⟩⟩ := eq_natCast_of_mem_ωₛ hα
     erw [← mk_lt_aleph0_iff, cardinalMk_coe_sort]
-    simp only [card_toZFSet, lift_lt_aleph0, card_lt_aleph0, nat_lt_omega0]
+    simp only [card_toZFSet, lift_lt_aleph0, card_lt_aleph0, natCast_lt_omega0]
   · have ord_α := (isOrdinal_toZFSet _).mem hα
     refine ⟨fun x y z hy hz => ?_⟩
     simp only [mem_inside_ZFSet] at *
@@ -130,9 +137,14 @@ lemma memOmega_natCast {n : ℕ} : MemOmega (n : M) := by
   rw [isSet_iff]
   split_vonNeumann_omega hM₀
   · refine ⟨⟨ωₛ, by simpa [ωₛ, mem_vonNeumann]⟩, ?_⟩
-    simp [toZFSet_simps]
+    intro y hy
+    rw [Set.mem_setOf_eq, MemOmega.toZFSet] at hy
+    rwa [ToZFSet.mem, ToZFSet.toZFSet_vonNeumann]
   · refine ⟨↓ωₛ, ?_⟩
-    simp [toZFSet_simps]
+    intro y hy
+    rw [Set.mem_setOf_eq, MemOmega.toZFSet] at hy
+    rw [ToZFSet.mem, ToZFSet.toV_ZFSet, ToZFSet.toZFSet_V]
+    exact hy
 
 @[simp] lemma natCast_mem_ωₘ {n : ℕ} : (n : M₀) ∈ (ωₘ : M₀) := by
   simp only [ωₘ.spec, memOmega_natCast]
@@ -152,7 +164,8 @@ lemma memOmega_natCast {n : ℕ} : MemOmega (n : M) := by
   simpa [ZFSet.ext_iff, toZFSet_simps] using this
 
 @[simp] lemma isOrdinal_ωₘ : IsOrdinal (ωₘ : M₀) := by
-  simpa [toZFSet_simps] using isOrdinal_toZFSet _
+  rw [IsOrdinal.toZFSet, ωₘ.toZFSet, ωₛ]
+  exact isOrdinal_toZFSet _
 
 def omegaEquiv : (ωₘ : M₀) ≃ ℕ :=
   Equiv.symm <| Equiv.ofBijective (fun n => ⟨Nat.cast n, natCast_mem_ωₘ⟩) <| by
@@ -161,7 +174,8 @@ def omegaEquiv : (ωₘ : M₀) ≃ ℕ :=
     refine ⟨fun m n eq => ?_, fun α hα => ?_⟩
     · apply_fun (·.card.toNat) at eq
       simpa using eq
-    · simpa only [eq_comm] using eq_natCast_of_mem_ωₛ hα
+    · replace hα : ⇓α ∈ ωₛ := MemOmega.toZFSet _ |>.mp (ωₘ.spec _ |>.mp hα)
+      simpa only [eq_comm] using eq_natCast_of_mem_ωₛ hα
 
 instance {n : ℕ} : OfNat (Ordinals M) n where
   ofNat := ⟨(n : M), memOmega_natCast.1⟩

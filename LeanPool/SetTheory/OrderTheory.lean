@@ -5,6 +5,13 @@ Authors: Shuhao Song
 -/
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
+/-!
+# Order-theoretic preliminaries
+
+This module collects order-theoretic lemmas about infima and suprema in conditionally
+complete lattices, in particular closure under bounded infima and suprema.
+-/
+
 open Function OrderDual Set
 
 variable {α β : Type*} [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β]
@@ -59,7 +66,7 @@ lemma map_sSup' (hne : s.Nonempty) (hbdd : BddAbove s) : f (sSup s) = sSup (f ''
 lemma map_sSup (hne : s.Nonempty) (hbdd : BddAbove s) : f (sSup s) = ⨆ x : s, f x :=
   map_sInf (toDual ∘ f ∘ ofDual) hne hbdd
 
-lemma map_iInf (hbdd : BddBelow (range g)): f (⨅ i, g i) = ⨅ i, f (g i) := by
+lemma map_iInf (hbdd : BddBelow (range g)) : f (⨅ i, g i) = ⨅ i, f (g i) := by
   erw [← sInf_range, ← sInf_range,
     map_sInf' f (Set.range_nonempty_iff_nonempty.mpr (by infer_instance)) hbdd, range_comp]
 

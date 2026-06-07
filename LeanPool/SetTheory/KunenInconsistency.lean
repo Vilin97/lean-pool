@@ -5,11 +5,21 @@ Authors: Shuhao Song
 -/
 import LeanPool.SetTheory.ElementaryEmbedding
 
+/-!
+# The Kunen inconsistency theorem
+
+This module proves the Kunen inconsistency theorem: there is no nontrivial elementary
+embedding of the universe of sets into itself.
+-/
+
 noncomputable section
 
 open Function Cardinal
 
 namespace SetTheory
+
+private lemma mk_Iio_ToType_lt {c : Cardinal} (i : c.ord.ToType) : #(Set.Iio i) < c := by
+  simpa using mk_Iio_lt i
 
 @[realize] def IsOmegaJonssonFunc {M₀} [ZFStructure M₀] [IsVonNeumannWithOmega M₀] (f κ : M₀) :=
   f ∈ Func (Func ωₘ κ) κ ∧ ∀ X ⊆ κ, cardEq X κ → ∀ α ∈ κ, ∃ s ∈ Func ωₘ X, apply f s = α
@@ -104,10 +114,12 @@ lemma card_κωEquinumerousSubsets_le : #κωEquinumerousSubsets ≤ #↥κω ^ 
   conv_rhs =>
     rw [← Cardinal.lift_id'.{0, 1} (#_), ← Cardinal.lift_aleph0.{1, 0}, ← mk_nat, ← mk_arrow]
   rw [Cardinal.le_def]
-  refine ⟨⟨fun | ⟨X, hX⟩, n => i (⟨X ∩ κ n, by simp⟩ : (𝓟 (κ n) : M)), ?_⟩⟩
+  have hsub : ∀ (X : M) n, X ∩ κ n ∈ (𝓟 (κ n) : M) := fun X n => by
+    simp only [powerset.spec, Subset, Inter.inter.spec]; tauto
+  refine ⟨⟨fun | ⟨X, hX⟩, n => i (⟨X ∩ κ n, hsub X n⟩ : (𝓟 (κ n) : M)), ?_⟩⟩
   intro ⟨X, hX⟩ ⟨Y, hY⟩ eq
   simp only [funext_iff, EmbeddingLike.apply_eq_iff_eq, Subtype.ext_iff] at eq
-  rw [Subtype.mk_eq_mk]
+  apply Subtype.ext
   refine ext_of_subset hX.1 hY.1 fun x hx => ?_
   obtain ⟨n, hn⟩ := exists_lt_κ hx
   simp only [SetTheory.ext_iff, Inter.inter.spec, and_congr_left_iff] at eq
@@ -131,7 +143,7 @@ def s (α : ν.ToType) : ℕ → κω := by
   · ext x; simp
   · apply diff_nonempty_of_mk_lt_mk
     refine lt_of_le_of_lt mk_range_le ?_
-    refine lt_of_lt_of_le (mk_Iio_ord_toType _) ?_
+    refine lt_of_lt_of_le (mk_Iio_ToType_lt _) ?_
     have equivType : {x : ℕ → κω | ∀ n, ↑(x n) ∈ X α} ≃ (ℕ → X α) := {
       toFun := fun | ⟨x, hx⟩, n => ⟨x n, hx n⟩,
       invFun := fun | x => ⟨fun n => ⟨↑(x n), X_subset_κω _ (x n).2⟩, fun n => (x n).2⟩,
@@ -176,7 +188,7 @@ lemma funcToSet_subset {A B C : M} {f : A → B} (hsub : B ⊆ C) :
   revert fst_mem f_apply_eq
   simp only [fst_pair, snd_pair]
   rintro hx (⟨_⟩ : (f ⟨x, hx⟩).1 = y)
-  simp only [(f ⟨x, hx⟩).2, hsub (f ⟨x, hx⟩).2]
+  exact ⟨fun _ => hsub (f ⟨x, hx⟩).2, fun _ => (f ⟨x, hx⟩).2⟩
 
 lemma funcToSet_mem_Func_of_subset {A B C : M} {f : A → B} (hsub : B ⊆ C) :
     funcToSet f ∈ Func A C := by
@@ -257,12 +269,17 @@ def H : M := separate κω (fun x => x ∈ Set.range j)
 lemma coeSort_H_iff : (H : Sort _) = j '' (κω : Set M) := by
   congr 1
   ext x
-  simp only [H, Set.mem_range, mem_coe, mem_separate_iff, Set.mem_image]
-  refine ⟨fun | ⟨hx, y, eq⟩ => ?_, fun | ⟨y, hy, eq⟩ => ?_⟩
-  · rw [← eq, ← j_κω, Membership.mem.elementarity] at hx
+  have hsep : x ∈ H ↔ x ∈ κω ∧ x ∈ Set.range ⇑j := mem_separate_iff x
+  rw [Set.mem_image]
+  constructor
+  · intro hxH
+    obtain ⟨hx, y, eq⟩ := hsep.mp hxH
+    rw [← eq, ← j_κω, Membership.mem.elementarity] at hx
     exact ⟨y, hx, eq⟩
-  · rw [← eq, ← j_κω, Membership.mem.elementarity]
-    exact ⟨hy, _, rfl⟩
+  · rintro ⟨y, hy, eq⟩
+    refine hsep.mpr ⟨?_, y, eq⟩
+    rw [← eq, ← j_κω, Membership.mem.elementarity]
+    exact hy
 
 lemma crit_in_range_j_f : ∃ x ∈ Func ωₘ H, apply (j fSet) x = κ 0 := by
   have : IsOmegaJonssonFunc (j fSet) (j κω) := by
@@ -276,8 +293,7 @@ lemma crit_not_in_range_j_f : ∀ x ∈ Func ωₘ H, apply (j fSet) x ≠ κ 0 
   rw [forall_func]
   intro f
   have (n : (ωₘ : M)) : ∃ α : κω, j α = f n := by
-    have := (f n).2
-    simp only [H, mem_separate_iff] at this
+    have := (mem_separate_iff _).mp (f n).2
     rcases this with ⟨hf, α, hα⟩
     refine ⟨⟨α, ?_⟩, hα⟩
     rwa [← hα, ← j_κω, Membership.mem.elementarity] at hf
