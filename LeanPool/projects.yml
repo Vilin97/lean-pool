@@ -1890,10 +1890,7 @@ projects:
       github_repo: Parcly-Taxel/Redhill
     status: verified
     main_declarations:
-      - RamaekersConjecture
       - not_ramaekersConjecture_ge_six
-      - not_ramaekersConjecture_odd_ge_five
-      - not_ramaekersConjecture_five
       - le_quality_nConjectureTuples
     main_results:
       - declaration: RamaekersConjecture

@@ -24,14 +24,12 @@ import LeanPool.Redhill.ToMathlib.NatAbs
 import LeanPool.Redhill.ToMathlib.NatSumProd
 
 /-!
-# Improved lower bounds for strong n-conjectures (disproof of Ramaekers's conjecture)
+# Improved Lower Bounds for Strong n-Conjectures
 
 Source: doi:10.1017/S1446788725000084
 Authors: Jeremy Tan
 Status: verified
-Main declarations: `RamaekersConjecture`, `not_ramaekersConjecture_ge_six`,
-`not_ramaekersConjecture_odd_ge_five`, `not_ramaekersConjecture_five`,
-`le_quality_nConjectureTuples`
-Tags: number-theory, abc-conjecture, n-conjecture, ramaekers-conjecture, radical
+Main declarations: `not_ramaekersConjecture_ge_six`, `le_quality_nConjectureTuples`
+Tags: number-theory, abc-conjecture, n-conjecture, ramaekers-conjecture
 MSC: 11A41, 11D75
 -/

@@ -203,8 +203,8 @@ lemma tupReduce_tup {c₁ : n + 2 = n + 5 - #(univ.map redEmb1)} :
     have : complRank (univ.map redEmb1) c₁ = castAdd 3 := by
       refine (orderEmbOfFin_unique _ (fun i ↦ ?_) ?_).symm
       · simp_rw [mem_compl, mem_map, mem_univ, true_and, redEmb1, Function.Embedding.coeFn_mk,
-          not_exists, natAdd_natAdd, cast_eq_self, ← Fin.val_inj]
-        grind
+          not_exists, natAdd_natAdd, cast_eq_self, ← Fin.val_inj, val_natAdd, val_castAdd]
+        omega
       · exact (castAddOrderEmb _).strictMono
     simp_rw [lastCases_castSucc, this, tup, vwTup]
     cases i using addCases with
