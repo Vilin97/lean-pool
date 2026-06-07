@@ -252,6 +252,17 @@ import LeanPool.Clawristotle.TorusIntegration
 import LeanPool.Clawristotle.VMLInputDerive
 import LeanPool.Clawristotle.VMLStructures
 import LeanPool.Clawristotle.VelocityDecayInstance
+import LeanPool.ComputableReal
+import LeanPool.ComputableReal.ComputableRSeq
+import LeanPool.ComputableReal.ComputableReal
+import LeanPool.ComputableReal.IsComputable
+import LeanPool.ComputableReal.IsComputableC
+import LeanPool.ComputableReal.SpecialFunctions
+import LeanPool.ComputableReal.SpecialFunctions.Basic
+import LeanPool.ComputableReal.SpecialFunctions.Exp
+import LeanPool.ComputableReal.SpecialFunctions.Pi
+import LeanPool.ComputableReal.SpecialFunctions.Sqrt
+import LeanPool.ComputableReal.aux_lemmas
 import LeanPool.DeadEnds
 import LeanPool.DeadEnds.Basic
 import LeanPool.DeadEnds.CRT
