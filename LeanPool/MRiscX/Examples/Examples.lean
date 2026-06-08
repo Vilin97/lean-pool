@@ -307,16 +307,15 @@ example (r₀ r₁ p : UInt64) :
     · applySpec specification_LoadImmediate (pc := 0) (dst := r₀) (val := p)
     · applySpec specification_LoadImmediate (pc := 1) (dst := r₁) (val := 0)
       -- TODO automate this:
-      have : (r₁ ↦ 0; (2 ↦ 291; s.registers)).get r₀ = p := by assumption
-      · rw [t_update_neq] at this
-        rw [t_update_neq] at this
-        exact this
-        apply Ne.symm
-        exact h₂
-        apply Ne.symm
+      · have : (r₁ ↦ 0; (2 ↦ 291; s.registers)).get r₀ = p := by assumption
+        rw [t_update_neq, t_update_neq] at this
+        · exact this
+        · apply Ne.symm
+          exact h₂
+        · apply Ne.symm
+          assumption
+      · rw [t_update_neq, t_update_eq]
         assumption
-      rw [t_update_neq, t_update_eq]
-      assumption
       -- /:
   · applySpec specification_LoadAddress (dst := 2) (pc := 2) (addr := 291)
 

@@ -147,7 +147,7 @@ theorem proof_otp : ∀ (p k c l: UInt64),
         (L_b := {n : UInt64 | n ≤ 4} ∪ {n | n > 13})
         (L_b' :=  {n:UInt64 | n ≠ 4} \ {14})
         (l := 4)
-      simp;
+      · simp
       · simp
       · simpSetEq
       · rw [Set.subset_def]
@@ -344,13 +344,7 @@ theorem proof_otp : ∀ (p k c l: UInt64),
                 Decidable.not_not, forall_exists_index, and_imp]
               intros s' h_ex h_fo h_ter h_pc
               exists s'
-              repeat constructor -- <;> try assumption
-              exact h_ex
-              constructor
-              intros i h_i
-              specialize h_fo i h_i
-              exact ⟨h_fo, h_ter⟩
-              exact h_pc
+              exact ⟨h_ex, fun i h_i => ⟨h_fo i h_i, h_ter⟩, h_pc⟩
         apply this
         clear this
         apply specification_JumpEqZero_true (label := "finish") (newPc := 14)
@@ -388,7 +382,7 @@ theorem proof_otp : ∀ (p k c l: UInt64),
       · exact h_pc
       · rcases pre with ⟨h_cond, h_temp, h_terminated⟩
         constructor
-        exact h_cond
+        · exact h_cond
         · constructor
           · exact h_terminated
           · rcases h_temp with ⟨h_I, _⟩
