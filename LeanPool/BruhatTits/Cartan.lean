@@ -7,8 +7,8 @@ Authors: Judith Ludwig, Christian Merten
 import LeanPool.BruhatTits.Cartan.Existence
 import LeanPool.BruhatTits.Cartan.Uniqueness
 
-open Module
-
 /-!
 # Cartan decomposition
 -/
+
+open Module

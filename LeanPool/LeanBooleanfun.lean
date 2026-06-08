@@ -3,6 +3,7 @@ Copyright (c) 2024 Joris Roos. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joris Roos
 -/
+
 import LeanPool.LeanBooleanfun.AuxLemmas
 import LeanPool.LeanBooleanfun.ToMathlib
 import LeanPool.LeanBooleanfun.Basic
@@ -12,7 +13,7 @@ import LeanPool.LeanBooleanfun.Arrow
 /-!
 # Analysis of Boolean functions in Lean
 
-Source: url:https://github.com/roos-j/lean-booleanfun
+Source: arxiv:2105.10386, doi:10.1017/CBO9781139814782
 Authors: Joris Roos
 Status: verified
 Main declarations: `LeanPool.LeanBooleanfun.BooleanFun.BV.dictator_of_condorcet_and_unanimous`

@@ -184,6 +184,24 @@ def test_evaluate_stats_flags_truncated_matched_file() -> None:
     )
 
 
+def test_evaluate_stats_ignores_zero_loc_files_for_truncation() -> None:
+    """Empty upstream files do not cause a divide-by-zero during comparison."""
+    imported = LeanStats(
+        (
+            LeanFile("LeanPool/Foo/Empty.lean", 0, "empty"),
+            LeanFile("LeanPool/Foo/Main.lean", 1000, "main"),
+        )
+    )
+    upstream = LeanStats(
+        (
+            LeanFile("Foo/Empty.lean", 0, "empty"),
+            LeanFile("Foo/Main.lean", 1000, "main"),
+        )
+    )
+
+    assert evaluate_stats("LeanPool.Foo", "owner/foo", imported, upstream) is None
+
+
 def test_evaluate_stats_accepts_close_import() -> None:
     """A near-complete import passes the tolerance check."""
     imported = LeanStats((LeanFile("LeanPool/Foo/Main.lean", 920, "main"),))

@@ -10,3 +10,9 @@ import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import Mathlib.NumberTheory.ArithmeticFunction.Zeta
 import Mathlib.Data.Real.Basic
 import LeanPool.SelbergSieve4.Tactic.Multiplicativity
+
+/-!
+# LeanPool.SelbergSieve4.ForArithmeticFunction
+
+Imported Lean Pool material for `LeanPool.SelbergSieve4.ForArithmeticFunction`.
+-/

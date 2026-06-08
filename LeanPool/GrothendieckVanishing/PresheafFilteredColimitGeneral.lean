@@ -275,6 +275,9 @@ theorem filtered_colimit_exists_compatible_representatives
       dsimp [compatAfter]
       have hf0 : ConcreteCategory.hom ((P.map f).app (op Wkl)) left0 =
           ConcreteCategory.hom ((P.map f).app (op Wkl)) right0 := by
+        change
+          ConcreteCategory.hom (((P ⋙ ev Wkl) ⋙ forget AddCommGrpCat).map f) left0 =
+            ConcreteCategory.hom (((P ⋙ ev Wkl) ⋙ forget AddCommGrpCat).map f) right0
         simpa only [left0, right0, Wkl] using hf
       have hleft : ConcreteCategory.hom ((P.map f).app (op Wkl)) left0 =
           ConcreteCategory.hom ((P.obj j').map (Opens.infLELeft (U k.1) (U l.1)).op)

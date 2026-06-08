@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Math Inc.
+Authors: Math Inc
 -/
 
 import LeanPool.Erdos1196.Basic
@@ -15,7 +15,7 @@ import LeanPool.Erdos1196.FormalConjecturesErdos1196
 /-!
 # Primitive Sets Above x (Erdos Problem 1196)
 
-Source: url:https://github.com/math-inc/Erdos1196
+Source: arxiv:2605.00301
 Authors: Math Inc.
 Status: verified
 Main declarations: `PrimitiveSetsAboveX.mainTheorem`, `Erdos1196.erdos_1196`

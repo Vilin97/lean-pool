@@ -130,8 +130,7 @@ lemma prime_sq_bound_from_N_dvd (b X N : ℕ) (hb : 2 ≤ b) (q : Nat.Primes)
   have hq''' : (q : ℕ) < Nat.sqrt (b * X + b) + 1 := by
     have h₁ : (q : ℕ) ^ 2 ≤ b * X + b := hq''
     have h₂ : Nat.sqrt (b * X + b) ≥ q := by
-      apply Nat.le_sqrt.mpr;
-      (try norm_cast at h₁ ⊢);
+      apply Nat.le_sqrt.mpr
       nlinarith [Nat.Prime.two_le q.prop]
     have h₃ : (q : ℕ) < Nat.sqrt (b * X + b) + 1 := by
       omega

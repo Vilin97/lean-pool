@@ -12,6 +12,10 @@ import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import Mathlib.NumberTheory.ArithmeticFunction.Zeta
 
+/-!
+# LeanPool.SelbergSieve4.Tactic.AesopDiv
+-/
+
 namespace Sieve
 open Finset
 
@@ -24,14 +28,14 @@ theorem myDvd_iff (a b : ℕ) : MyDvd a b ↔ a ∣ b := by
   exact Iff.rfl
 
 /-- Run `aesop` using the local divisibility rule set with simplification disabled. -/
-macro (name := aesop_div) "aesop_div" c:Aesop.tactic_clause* : tactic =>
+macro (name := aesopDiv) "aesopDiv" c:Aesop.tactic_clause* : tactic =>
 `(tactic|
   aesop $c*
     (config := { enableSimp := false })
     (rule_sets := [$(Lean.mkIdent `Divisibility):ident]))
 
 /-- Run `aesop?` using the local divisibility rule set with simplification disabled. -/
-macro (name := aesop_div?) "aesop_div?" c:Aesop.tactic_clause* : tactic =>
+macro (name := aesopDiv?) "aesopDiv?" c:Aesop.tactic_clause* : tactic =>
 `(tactic|
   aesop? $c*
     (config := { enableSimp := false })

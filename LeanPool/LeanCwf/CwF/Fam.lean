@@ -11,6 +11,13 @@ import Mathlib.CategoryTheory.Functor.Basic
 import Mathlib.CategoryTheory.Types.Basic
 import Mathlib.Data.Opposite
 
+/-!
+# Families of types
+
+Defines the arrow-category model of indexed families used for CwF types and
+terms.
+-/
+
 namespace LeanPool.LeanCwf
 
 open CategoryTheory
@@ -45,7 +52,8 @@ def toFam {A : Type u} {B : A → Type u} {a : A} :
     famFor (mkFam.{u} A B) a → B a
   | ⟨⟨a', b⟩, h⟩ => by
       have h' : a' = a := by
-        simpa [mkFam] using h
+        change a' = a at h
+        exact h
       subst h'
       exact b
 
@@ -61,7 +69,8 @@ theorem toFamLeftInv {A : Type u} {B : A → Type u} {a : A} :
     Function.LeftInverse fromFam.{u} (toFam (A := A) (B := B) (a := a)) := by
   rintro ⟨⟨a', b⟩, h⟩
   have h' : a' = a := by
-    simpa [mkFam] using h
+    change a' = a at h
+    exact h
   subst h'
   rfl
 

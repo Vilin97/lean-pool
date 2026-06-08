@@ -11,9 +11,22 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Topology.MetricSpace.Holder
 import Mathlib.Topology.UnitInterval
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.SardMoreira.ContDiff
 import LeanPool.SardMoreira.ContinuousMultilinearMap
+
+/-!
+# LeanPool.SardMoreira.ContDiffMoreiraHolder
+-/
 
 open scoped unitInterval Topology NNReal
 open Asymptotics Filter Set
@@ -92,8 +105,12 @@ theorem of_contDiffOn_holderWith {f : E → F} {s : Set E} {k : ℕ} {α : I} {a
     ContDiffMoreiraHolderAt k α f a where
   contDiffAt := hf.contDiffAt hs
   isBigO := .of_bound C <| mem_of_superset hs fun x hx ↦ by
-    simpa [Real.abs_rpow_of_nonneg, ← dist_eq_norm, dist_nonneg]
-      using hd.dist_le hx (mem_of_mem_nhds hs)
+    have hdist := hd.dist_le hx (mem_of_mem_nhds hs)
+    have hdist' :
+        dist (iteratedFDeriv ℝ k f x) (iteratedFDeriv ℝ k f a) ≤
+          (C : ℝ) * dist x a ^ (α : ℝ) := by
+      convert hdist using 2
+    simpa [Real.abs_rpow_of_nonneg, ← dist_eq_norm, dist_nonneg] using hdist'
 
 theorem fst {k : ℕ} {α : I} {a : E × F} : ContDiffMoreiraHolderAt k α Prod.fst a :=
   contDiffAt_fst.contDiffMoreiraHolderAt (WithTop.coe_lt_top _) α
@@ -217,8 +234,8 @@ protected theorem iteratedFDeriv {f : E → F} {a : E} {k l m : ℕ} {α : I}
     -- TODO: why `simp` fails to apply the lemma? Does it fail to unify some instances?
     -- Does it happen on the latest Mathlib?
     simp +unfoldPartialApp only [iteratedFDeriv_succ_eq_comp_left]
-    convert (ihm hl).fderiv le_rfl using 0
-    convert LinearIsometryEquiv.contDiffMoreiraHolderAt_left_comp _
+    exact (LinearIsometryEquiv.contDiffMoreiraHolderAt_left_comp
+      (continuousMultilinearCurryLeftEquiv ℝ (fun x ↦ E) F).symm).mpr ((ihm hl).fderiv le_rfl)
 
 theorem congr_eventuallyEq {f g : E → F} {a : E} {k : ℕ} {α : I}
     (hf : ContDiffMoreiraHolderAt k α f a) (hfg : f =ᶠ[𝓝 a] g) :
@@ -251,7 +268,7 @@ theorem OpenPartialHomeomorph.contDiffMoreiraHolderAt_symm [CompleteSpace E] {k 
           have : (· - f.symm a) =O[𝓝 (f.symm a)] (f · - f (f.symm a)) :=
             (hf'.hasFDerivAt.isTheta_sub
               hf'.choose.toHomeomorph.isInducing).symm.isBigO
-          simpa using this.comp_tendsto <| f.continuousAt_symm ha
+          simpa [Function.comp_def] using this.comp_tendsto <| f.continuousAt_symm ha
         _ =ᶠ[𝓝 a] fun x ↦ ‖x - a‖ := by
           filter_upwards [f.eventually_right_inverse ha] with x hx
           simp [hx, ha]
@@ -284,7 +301,7 @@ theorem OpenPartialHomeomorph.contDiffMoreiraHolderAt_symm [CompleteSpace E] {k 
             .of_norm_left <| by simp [iteratedFDeriv_one_eq, ← map_sub, isBigO_refl]
           _ =O[𝓝 a] fun x ↦ fderiv ℝ f (f.symm x) - fderiv ℝ f (f.symm a) := hfderiv_isBigO
           _ =O[𝓝 a] fun x ↦ ‖f.symm x - f.symm a‖ ^ (α : ℝ) := by
-            simpa [iteratedFDeriv_one_eq, ← map_sub]
+            simpa [iteratedFDeriv_one_eq, ← map_sub, Function.comp_def]
               using hf.isBigO.comp_tendsto (f.continuousAt_symm ha) |>.norm_left
           _ =O[𝓝 a] fun x ↦ ‖x - a‖ ^ (α : ℝ) := hsymm_rpow_isBigO
       · calc
@@ -302,7 +319,7 @@ theorem OpenPartialHomeomorph.contDiffMoreiraHolderAt_symm [CompleteSpace E] {k 
                       (fun _ ↦ fderiv ℝ f.symm a) := by
             rw [← f.symm.symm_map_nhds_eq ha, f.symm_symm, eventuallyEq_map]
             filter_upwards [hf.contDiffAt.eventually (by simp),
-              f.open_source.mem_nhds (f.symm_mapsTo ha), hinv]
+              f.open_source.mem_nhds (OpenPartialHomeomorph.mapsTo_symm f ha), hinv]
               with x hx hfx hinv
             simp only [Function.comp_apply]
             rw [f.iteratedFDeriv_symm_eq_rec ha hf.contDiffAt le_rfl (fun _ ↦ hf'),

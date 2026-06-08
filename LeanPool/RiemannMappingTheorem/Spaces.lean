@@ -7,6 +7,10 @@ import Mathlib.Analysis.Complex.LocallyUniformLimit
 import Mathlib.Analysis.Complex.OpenMapping
 import LeanPool.RiemannMappingTheorem.Defs
 
+/-!
+# LeanPool.RiemannMappingTheorem.Spaces
+-/
+
 open Topology Filter Set Function UniformConvergence Metric
 
 variable {U : Set ℂ} {Q : Set ℂ → Set ℂ} {ι : Type*} {l : Filter ι}
@@ -87,7 +91,7 @@ lemma 𝓘_nonempty [good_domain U] : (𝓘 U).Nonempty := by
   have f_inj : Injective f := fun _ _ h => sub_left_inj.mp h
   have f_hol : DifferentiableOn ℂ f U := differentiableOn_id.sub (differentiableOn_const u)
   have f_noz : ∀ ⦃z : ℂ⦄, z ∈ U → f z ≠ 0 := fun z hz f0 => hu (sub_eq_zero.mp f0 ▸ hz)
-  obtain ⟨g, g_hol, g_sqf⟩ := good_domain.has_sqrt f f_noz f_hol
+  obtain ⟨g, g_hol, g_sqf⟩ := good_domain.hasSqrt f f_noz f_hol
   obtain ⟨z₀, hz₀⟩ := (good_domain.is_nonempty : U.Nonempty)
   have gU_nhd : g '' U ∈ 𝓝 (g z₀) := by
     have e1 : U ∈ 𝓝 z₀ := good_domain.is_open.mem_nhds hz₀
@@ -106,7 +110,7 @@ lemma 𝓘_nonempty [good_domain U] : (𝓘 U).Nonempty := by
     simp [EventuallyEq.deriv_eq h] at dg_nonzero
   obtain ⟨r, r_pos, hr⟩ := Metric.mem_nhds_iff.mp gU_nhd
   let gg : embedding U ((closedBall (- g z₀) (r / 2))ᶜ) :=
-  { to_fun := g,
+  { toFun := g,
     is_diff := g_hol,
     is_inj := fun z₁ hz₁ z₂ hz₂ hgz => f_inj (by simp [g_sqf _, hz₁, hz₂, hgz]),
     maps_to := fun z hz hgz => by
@@ -116,7 +120,7 @@ lemma 𝓘_nonempty [good_domain U] : (𝓘 U).Nonempty := by
       have hzz' : z = z' := f_inj (by simp [g_sqf hz, g_sqf hz', hgz'])
       simpa [hzz', CharZero.neg_eq_self_iff, g_sqf hz'] using hgz'.symm }
   let ggg := (embedding.inv _ (by linarith)).comp gg
-  refine ⟨ggg.to_fun, ⟨ggg.is_diff, ?_⟩, ggg.is_inj⟩
+  refine ⟨ggg.toFun, ⟨ggg.is_diff, ?_⟩, ggg.is_inj⟩
   exact fun z hz => ball_subset_closedBall (ggg.maps_to hz)
 
 /-- `𝓙 U` : the closure of `𝓘 U` in the compact-open topology — holomorphic

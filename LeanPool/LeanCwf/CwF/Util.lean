@@ -8,6 +8,13 @@ import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.CategoryTheory.Iso
 import Mathlib.CategoryTheory.Types.Basic
 
+/-!
+# Heterogeneous equality utilities
+
+Auxiliary cast and heterogeneous-congruence lemmas used by the CwF
+development.
+-/
+
 namespace LeanPool.LeanCwf
 
 theorem heq_type_eq {a a_1 : Sort u_1} {x : a} {y : a_1}

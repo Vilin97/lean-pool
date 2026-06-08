@@ -4,14 +4,31 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jukka Suomela
 -/
 
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import LeanPool.TwoColoringOneRound.LowerBound.OverlapType
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000BCompressionCompute
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000CorrAvgMatrixDecompose
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000MaskComplete
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
+
+/-!
+This file rewrites `corrAvgMatrix` into the symmetric orbital basis:
+
+`corrAvgMatrix = A id + ∑ i, xFromColoring i • ASymm (varOrbit i)`.
+
+The key bookkeeping is a tiny (34-element) map from directed indices to the unique variable whose
+transpose-orbit contains it (with `idDirIdx` handled separately).
+-/
 
 namespace Distributed2Coloring.LowerBound
 
@@ -41,14 +58,6 @@ abbrev Var := N1000000WeakDuality.Var
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev DirIdx := N1000000StructureConstants.DirIdx
 
-/-!
-This file rewrites `corrAvgMatrix` into the symmetric orbital basis:
-
-`corrAvgMatrix = A id + ∑ i, xFromColoring i • ASymm (varOrbit i)`.
-
-The key bookkeeping is a tiny (34-element) map from directed indices to the unique variable whose
-transpose-orbit contains it (with `idDirIdx` handled separately).
--/
 
 private theorem maskAt_invDir_testBit (d : DirIdx) (i j : Fin 3) :
     (maskAt (invDir d)).testBit (i.1 * 3 + j.1) = (maskAt d).testBit (j.1 * 3 + i.1) := by

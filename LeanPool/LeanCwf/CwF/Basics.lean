@@ -13,6 +13,13 @@ import Mathlib.Logic.Unique
 
 import LeanPool.LeanCwf.CwF.Util
 
+/-!
+# Basic CwF structures
+
+Defines type-term presheaves, context comprehension, CwF laws, and the empty
+context.
+-/
+
 namespace LeanPool.LeanCwf
 
 open CategoryTheory

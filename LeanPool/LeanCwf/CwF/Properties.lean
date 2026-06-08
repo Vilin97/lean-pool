@@ -8,7 +8,6 @@ import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.CategoryTheory.Types.Basic
 import Mathlib.Combinatorics.Quiver.Basic
 import Mathlib.CategoryTheory.Functor.Basic
-import Mathlib.CategoryTheory.Functor.Basic
 import Mathlib.CategoryTheory.Comma.Over.Basic
 import Mathlib.CategoryTheory.Comma.StructuredArrow.Basic
 import Mathlib.CategoryTheory.Comma.Basic
@@ -25,6 +24,13 @@ import LeanPool.LeanCwf.CwF.Fam
 import LeanPool.LeanCwf.CwF.Basics
 
 -- import CwF.Util.ULift
+
+/-!
+# Basic CwF consequences
+
+Collects elementary equivalences and transport lemmas following from the CwF
+structure laws.
+-/
 
 namespace LeanPool.LeanCwf
 
@@ -445,14 +451,15 @@ abbrev tyToSlice {Γ : C} (T : Ty Γ) : Over Γ :=
 /-- A section of the display map gives a slice morphism from the identity object. -/
 def secToSliceArrow {Γ : C} {T : Ty Γ} (sec : pSec T)
   : (Over.mk (𝟙 Γ) ⟶ tyToSlice T) :=
-    Over.homMk (SplitEpi.section_ sec)
+    Over.homMk sec.section_ (by
+      change sec.section_ ≫ p_ T = 𝟙 Γ
+      exact sec.id)
 
 /-- A slice morphism from the identity object gives a section of the display map. -/
 def sliceArrowToSection {Γ : C} {T : Ty Γ} (sliceArr : Over.mk (𝟙 Γ) ⟶ tyToSlice T)
-  : pSec T := SplitEpi.mk (sliceArr.left)
-    (by have pf := Over.w sliceArr
-        simp_all [tyToSlice]
-        )
+  : pSec T := SplitEpi.mk sliceArr.left (by
+    change sliceArr.left ≫ p_ T = 𝟙 Γ
+    exact Over.w sliceArr)
 
 
 /-- The head term carved out by a morphism into an extended context. -/
@@ -470,35 +477,40 @@ def termFromSlice {Γ Δ : C} {T : Ty Δ}
   (sliceArr : (Over.mk f) ⟶ tyToSlice T)
   : Tm (T⦃f⦄) :=
     castTm (extHead sliceArr.left) (by
-  have pf := Over.w sliceArr
-  simp_all)
+      have pf : sliceArr.left ≫ p_ T = f := by
+        exact Over.w sliceArr
+      change T⦃f⦄ = T⦃sliceArr.left ≫ p_ T⦄
+      rw [pf]
+      rfl)
 
 /-- Turn a term of `T⦃f⦄` into the corresponding slice morphism. -/
 def termToSlice {Γ Δ : C} {T : Ty Δ}
   (f : Γ ⟶ Δ) (t : Tm (T⦃f⦄))
-  : ( (Over.mk f) ⟶ tyToSlice T) := by
-  fapply Over.homMk
-  · simp_all only [Over.mk_left]
-    exact ⟪f , t⟫
-  · simp_all
+  : ( (Over.mk f) ⟶ tyToSlice T) :=
+  Over.homMk ⟪f , t⟫ (by
+    change ⟪f , t⟫ ≫ p_ T = f
+    exact CwFProp.ext_p)
 
 theorem termToFromSlice {Γ Δ : C} {T : Ty Δ}
   (f : Γ ⟶ Δ)
   (sliceArr : (Over.mk f) ⟶ tyToSlice T)
   : termToSlice f (termFromSlice f sliceArr) = sliceArr := by
   apply Over.OverMorphism.ext
-  simp only [Over.mk_left, termToSlice, termFromSlice, id_eq, Over.homMk_left]
+  simp only [termToSlice, termFromSlice, Over.homMk_left]
   apply (fun x => Eq.trans x (Eq.symm (headTmEq _)))
   rw [ext_inj]
   fconstructor
   · symm
     apply Over.w sliceArr
-  · simp_all
+  · rfl
 
 theorem termFromToSlice {Γ Δ : C} {T : Ty Δ}
   (f : Γ ⟶ Δ) (t : Tm (T⦃f⦄))
   : termFromSlice f (termToSlice f t) = t := by
-    simp [termFromSlice, termToSlice, extHead]
+  change castTm (extHead ⟪f, t⟫) (by rw [CwFProp.ext_p]) = t
+  dsimp [extHead]
+  apply Subtype.ext
+  simpa only [castTm_val] using congrArg Subtype.val (CwFProp.ext_v (f := f) (t := t))
 
 /-- Terms of `T⦃f⦄` are equivalent to slice morphisms `Over.mk f ⟶ tyToSlice T`. -/
 def termSliceEquiv {Γ Δ : C} {T : Ty Δ}
@@ -522,10 +534,8 @@ theorem overExt {Γ : C} {f g : Over Γ}
 
 /-- The slice morphism induced by precomposing with `g`. -/
 def termSliceSub {Γ Δ Ξ : C} (f : Δ ⟶ Γ) (g : Ξ ⟶ Δ)
-  : Over.mk (g ≫ f) ⟶ Over.mk f := by
-    apply Over.homMk _ _ <;> simp only [Over.mk_left]
-    · apply g
-    · rfl
+  : Over.mk (g ≫ f) ⟶ Over.mk f :=
+  Over.homMk g (by rfl)
 
 /-- The term-slice equivalence is compatible with substitution. -/
 theorem termSliceEquivSymmSub {Γ Δ Ξ : C} (f : Δ ⟶ Γ) (g : Ξ ⟶ Δ) (T : Ty Γ)
@@ -534,7 +544,14 @@ theorem termSliceEquivSymmSub {Γ Δ Ξ : C} (f : Δ ⟶ Γ) (g : Ξ ⟶ Δ) (T 
   simp only [termSliceEquiv, Equiv.coe_fn_symm_mk]
   dsimp [termFromSlice]
   dsimp only [extHead]
-  repeat rw [castCast] <;> aesop_cat
+  apply Subtype.ext
+  simp only [castTm_val, tmSub_val]
+  let h : Δ ⟶ Γ▹T := θ.left
+  change
+    ((TmTy.tmTyFam.map g.op).left) (((TmTy.tmTyFam.map h.op).left) (v_ T).val) =
+      ((TmTy.tmTyFam.map (g ≫ h).op).left) (v_ T).val
+  rw [show (g ≫ h).op = h.op ≫ g.op from rfl, TmTy.tmTyFam.map_comp]
+  rfl
 
 
 
@@ -543,9 +560,7 @@ def termSliceEquiv' {Δ : C} {T : Ty Δ}
   {f : Over Δ}
   : Tm T⦃f.hom⦄ ≃ (f ⟶ tyToSlice T) := by
   let ff := f.hom
-  simp only at ff
   let ret := @termSliceEquiv _ _ _ f.left Δ T ff
-  simp only at ret
   apply Equiv.trans ret
   apply Equiv.cast
   apply congrArg (fun x => x ⟶ _)

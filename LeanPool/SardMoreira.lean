@@ -29,7 +29,7 @@ import LeanPool.SardMoreira.WithRPowDist
 /-!
 # Moreira's version of Sard's theorem
 
-Source: url:https://github.com/urkud/SardMoreira
+Source: doi:10.5565/PUBLMAT_45101_06
 Authors: Yury G. Kudryashov
 Status: verified
 Main declarations: `dimH_image_le_sardMoreiraBound_of_finrank_le`

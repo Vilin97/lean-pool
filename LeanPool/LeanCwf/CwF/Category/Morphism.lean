@@ -22,6 +22,13 @@ import LeanPool.LeanCwf.CwF.Basics
 import LeanPool.LeanCwf.CwF.Properties
 import LeanPool.LeanCwf.CwF.Util
 
+/-!
+# CwF morphisms
+
+Defines type-term morphisms, strict preservation of CwF structure, and the
+category of bundled CwFs.
+-/
+
 namespace LeanPool.LeanCwf
 
 open CategoryTheory
@@ -128,7 +135,7 @@ theorem MapTmCommut {C D : CwFCat} {F : TmTyMorphism C D}
     let mapnat_Tt := hCongFun t (by rw [nat]) mapnat_T
     let mapnat_eq := Eq.symm (eq_cast_of_heq mapnat_Tt)
     eapply Eq.trans mapnat_eq
-    simp only [comp_obj, op_obj, Functor.comp_map, op_map, Quiver.Hom.unop_op', mapFamComp]
+    simp only [Functor.comp_map, mapFamComp]
     apply Subtype.ext
     aesop_cat
 
@@ -231,6 +238,9 @@ theorem extPreserve (C D : CwFCat) {F : TmTyMorphism C D} [pres : IsoPreserveCwF
 /-- A type-term morphism that preserves context comprehension strictly (on the
 nose), as needed to organize CwFs into a category. -/
 class StrictPreserveCwF {C D : CwFCat} (F : TmTyMorphism C D) : Prop where
+  /-- The empty context is preserved on the nose. -/
+  emptyPreserve :
+    MapCtx F (CwFStruct.empty (C := C.Ctx)) = CwFStruct.empty (C := D.Ctx) := by aesop_cat
   /-- The image of an extended context equals the extension of the image. -/
   snocPreserve:
     {Γ : C.Ctx}
@@ -258,6 +268,7 @@ instance strictIsoPreserve {C D : CwFCat} (F : TmTyMorphism C D) [StrictPreserve
   vPreserve := vPreserveStrict
 
 theorem preserveId {C : CwFCat} : StrictPreserveCwF ⟨Functor.id C, NatTrans.id _⟩ where
+  emptyPreserve := rfl
   snocPreserve := rfl
   pPreserveStrict := by
     intro Γ T
@@ -297,6 +308,10 @@ theorem MapTm_TmTyComp {C D E : CwFCat} (F : TmTyMorphism C D) (G : TmTyMorphism
 theorem preserveComp {C D E : CwFCat} {F : TmTyMorphism C D} {G : TmTyMorphism D E}
     [Fpres : StrictPreserveCwF F] [Gpres : StrictPreserveCwF G]
   : StrictPreserveCwF (tmTyComp F G) where
+  emptyPreserve := by
+    simp only [MapCtxComp]
+    rw [Fpres.emptyPreserve, Gpres.emptyPreserve]
+
   snocPreserve := by
     intros
     simp only [MapCtxComp]

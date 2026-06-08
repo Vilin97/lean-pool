@@ -176,7 +176,7 @@ private def goodBlockEvent
     (k n : ℕ) (j : Fin k) : Set (Fin (k * n) → X) :=
   { ω : Fin (k * n) → X |
       D { x : X |
-          L.learn (fun i => (block_extract k n ω j i, c (block_extract k n ω j i))) x ≠ c x }
+          L.learn (fun i => (blockExtract k n ω j i, c (blockExtract k n ω j i))) x ≠ c x }
         ≤ ENNReal.ofReal (rate n) }
 
 /-- T2: goodBlockEvent is measurable for each block index j. -/
@@ -217,9 +217,9 @@ private lemma goodBlockEvent_measurable
           D { x : X | L.learn (fun i => (xs i, c (xs i))) x ≠ c x }
             ≤ ENNReal.ofReal (rate n) } :=
     h_meas_fn measurableSet_Iic
-  -- goodBlockEvent is the preimage of A under block_extract
+  -- goodBlockEvent is the preimage of A under blockExtract
   have hpre : goodBlockEvent L D c rate k n j =
-      (fun ω : Fin (k * n) → X => block_extract k n ω j) ⁻¹'
+      (fun ω : Fin (k * n) → X => blockExtract k n ω j) ⁻¹'
         { xs : Fin n → X |
             D { x : X | L.learn (fun i => (xs i, c (xs i))) x ≠ c x }
               ≤ ENNReal.ofReal (rate n) } := by
@@ -274,7 +274,7 @@ private lemma map_block_extract_eq_pi
     {X : Type u} [MeasurableSpace X]
     (k n : ℕ) (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D] (j : Fin k) :
     (MeasureTheory.Measure.pi (fun _ : Fin (k * n) => D)).map
-      (fun ω : Fin (k * n) → X => block_extract k n ω j)
+      (fun ω : Fin (k * n) → X => blockExtract k n ω j)
       =
     MeasureTheory.Measure.pi (fun _ : Fin n => D) := by
   open MeasureTheory MeasureTheory.Measure ProbabilityTheory Equiv in
@@ -282,10 +282,10 @@ private lemma map_block_extract_eq_pi
   set pcl := MeasurableEquiv.piCongrLeft (fun _ : Fin k × Fin n => X) finProdFinEquiv.symm
   set cur := MeasurableEquiv.curry (Fin k) (Fin n) X
   set e : (Fin (k * n) → X) ≃ᵐ (Fin k → Fin n → X) := pcl.trans cur
-  -- block_extract = e pointwise
-  have he : ∀ ω, block_extract k n ω j = e ω j := by
+  -- blockExtract = e pointwise
+  have he : ∀ ω, blockExtract k n ω j = e ω j := by
     intro ω; ext i
-    simp only [block_extract, e, MeasurableEquiv.trans_apply, pcl, cur]
+    simp only [blockExtract, e, MeasurableEquiv.trans_apply, pcl, cur]
     simp [MeasurableEquiv.piCongrLeft, piCongrLeft_apply, MeasurableEquiv.curry,
       Function.curry]
   set μ := Measure.pi (fun _ : Fin (k * n) => D)
@@ -310,9 +310,9 @@ private lemma map_block_extract_eq_pi
     have : (e : (Fin (k * n) → X) → (Fin k → Fin n → X)) = cur ∘ pcl := rfl
     rw [this, ← map_map cur.measurable pcl.measurable, hpcl.map_eq, hcur]
   -- Factor through e and project
-  have hcomp : (fun ω => block_extract k n ω j) = (fun f => f j) ∘ (e : (Fin (k * n) → X) → _) := by
+  have hcomp : (fun ω => blockExtract k n ω j) = (fun f => f j) ∘ (e : (Fin (k * n) → X) → _) := by
     ext ω i; exact congrFun (he ω) i
-  calc μ.map (fun ω => block_extract k n ω j)
+  calc μ.map (fun ω => blockExtract k n ω j)
       = μ.map ((fun f => f j) ∘ (e : (Fin (k * n) → X) → _)) := by rw [hcomp]
     _ = (Measure.pi D').map (fun f => f j) := by
           rw [← map_map (measurable_pi_apply j) e.measurable, hmap_e]
@@ -336,13 +336,13 @@ private lemma iIndepSet_goodBlockEvents
           ≤ ENNReal.ofReal (rate n) }
   have hA : MeasurableSet A := measurableSet_goodBlock_A L D c hc_meas rate n
   have hpre : ∀ j : Fin k, goodBlockEvent L D c rate k n j =
-      (fun ω : Fin (k * n) → X => block_extract k n ω j) ⁻¹' A := by
+      (fun ω : Fin (k * n) → X => blockExtract k n ω j) ⁻¹' A := by
     intro j; ext ω; rfl
   -- Step 2: Convert iIndepSet to iIndep, then bridge from iIndepFun
   rw [ProbabilityTheory.iIndepSet_iff_iIndep]
   apply ProbabilityTheory.iIndep_of_iIndep_of_le
       ((ProbabilityTheory.iIndepFun_iff_iIndep _ _ _).1 (iIndepFun_block_extract k n D))
-  -- Step 3: Show generateFrom {goodBlockEvent j} ≤ comap (block_extract · j) _
+  -- Step 3: Show generateFrom {goodBlockEvent j} ≤ comap (blockExtract · j) _
   intro j
   apply MeasurableSpace.generateFrom_le
   intro s hs
@@ -371,13 +371,13 @@ private lemma goodBlockEvent_prob_ge_two_thirds
       (goodBlockEvent L D c rate k n j)
       ≥ ENNReal.ofReal (2 / 3) := by
   have hL_meas : LearnEvalMeasurable L := MeasurableBatchLearner.eval_measurable
-  -- Step 1: Express goodBlockEvent as preimage of the "good training set" A under block_extract
+  -- Step 1: Express goodBlockEvent as preimage of the "good training set" A under blockExtract
   let A : Set (Fin n → X) :=
     { xs : Fin n → X |
         D { x : X | L.learn (fun i => (xs i, c (xs i))) x ≠ c x }
           ≤ ENNReal.ofReal (rate n) }
   have hpre : goodBlockEvent L D c rate k n j =
-      (fun ω : Fin (k * n) → X => block_extract k n ω j) ⁻¹' A := by
+      (fun ω : Fin (k * n) → X => blockExtract k n ω j) ⁻¹' A := by
     ext ω; rfl
   -- Step 2: Push forward via map_block_extract_eq_pi
   have hA : MeasurableSet A := measurableSet_goodBlock_A L D c hc_meas rate n
@@ -460,7 +460,7 @@ private lemma chebyshev_seven_twelfths_bound
   -- Step 11: E[S] ≥ 2k/3 (S = fun ω => ∑ j, X j ω)
   have hES : ∫ ω, S ω ∂μ ≥ 2 * ↑k / 3 := by
     change ∫ ω, (∑ j : Fin k, X j ω) ∂μ ≥ _
-    rw [integral_finset_sum univ (fun j _ => hX_int j)]
+    rw [integral_finsetSum univ (fun j _ => hX_int j)]
     calc ∑ j : Fin k, ∫ ω, X j ω ∂μ
         ≥ ∑ _j : Fin k, (2 : ℝ) / 3 := sum_le_sum (fun j _ => hEX j)
       _ = ↑k * (2 / 3) := by rw [sum_const]; simp [nsmul_eq_mul]
@@ -468,7 +468,7 @@ private lemma chebyshev_seven_twelfths_bound
   -- Step 12: MemLp S 2 μ
   have hS_memLp : MemLp S 2 μ := by
     change MemLp (fun ω => ∑ j : Fin k, X j ω) 2 μ
-    have h := memLp_finset_sum univ (fun j (_ : j ∈ univ) => hX_memLp j)
+    have h := memLp_finsetSum univ (fun j (_ : j ∈ univ) => hX_memLp j)
     convert h using 1
   -- Step 13: Var[S] ≤ k/4
   have hvar_S_fn : ProbabilityTheory.variance S μ ≤ ↑k / 4 := by
@@ -699,7 +699,7 @@ private lemma majority_error_le_seven_rate_of_good_fraction
     calc
       ∫⁻ x, G x ∂D
           = ∑ j ∈ good, ∫⁻ x, (bad j).indicator (fun _ => (2 : ENNReal)) x ∂D := by
-              exact lintegral_finset_sum' good hsum_ae
+              exact lintegral_finsetSum' good hsum_ae
       _ ≤ ∑ j ∈ good, ENNReal.ofReal (2 * ρ) := by
             apply Finset.sum_le_sum
             intro j hj
@@ -757,25 +757,25 @@ private lemma boosted_sample_error_le_of_good_blocks
     D {x : X |
         boosted_majority k
           (fun j => L.learn
-            (fun i => (block_extract k n ω j i, c (block_extract k n ω j i))) x) ≠ c x}
+            (fun i => (blockExtract k n ω j i, c (blockExtract k n ω j i))) x) ≠ c x}
       ≤ ENNReal.ofReal (7 * max (rate n) 0) := by
   have hL_meas : LearnEvalMeasurable L := MeasurableBatchLearner.eval_measurable
   classical
   let hs : Fin k → Concept X Bool := fun j =>
-    L.learn (fun i => (block_extract k n ω j i, c (block_extract k n ω j i)))
+    L.learn (fun i => (blockExtract k n ω j i, c (blockExtract k n ω j i)))
   let good : Finset (Fin k) :=
     Finset.univ.filter (fun j => ω ∈ goodBlockEvent L D c rate k n j)
   have hhs_meas : ∀ j : Fin k, Measurable (hs j) := by
     intro j
     haveI : MeasurableBatchLearner X L := ⟨hL_meas⟩
     exact learn_measurable_fixed L
-      (fun i => (block_extract k n ω j i, c (block_extract k n ω j i)))
+      (fun i => (blockExtract k n ω j i, c (blockExtract k n ω j i)))
   have hgooderr :
       ∀ j ∈ good, D {x : X | hs j x ≠ c x} ≤ ENNReal.ofReal (max (rate n) 0) := by
     intro j hj
     have hj' :
         D {x : X |
-            L.learn (fun i => (block_extract k n ω j i, c (block_extract k n ω j i))) x ≠ c x}
+            L.learn (fun i => (blockExtract k n ω j i, c (blockExtract k n ω j i))) x ≠ c x}
           ≤ ENNReal.ofReal (rate n) := by
       simpa [good, goodBlockEvent] using hj
     exact le_trans hj' (ENNReal.ofReal_le_ofReal (le_max_left _ _))
@@ -806,7 +806,7 @@ private lemma boosted_sample_error_le_of_good_blocks
       majority D-error ≤ k · rate(n) < k/kmin · ε ≤ ε via union bound.
 
     The measure-theoretic proof uses:
-    (a) block_extract : (Fin (k*n) → X) → Fin k → (Fin n → X)
+    (a) blockExtract : (Fin (k*n) → X) → Fin k → (Fin n → X)
     (b) iIndepFun for block extractions under product measure D^(k*n)
     (c) chebyshev_majority_bound for i.i.d. Bernoulli(≥2 / 3) events
     (d) block extraction marginal = D^n
@@ -946,8 +946,8 @@ private theorem boost_two_thirds_to_pac (X : Type u) [MeasurableSpace X]
   have hlearn_unfold : ∀ (ω : Fin ((n + 1) * n) → X) (x : X),
       L'.learn (fun i => (ω i, c (ω i))) x =
       boosted_majority (n + 1) (fun j =>
-        L.learn (fun i => (block_extract (n + 1) n ω j i,
-                           c (block_extract (n + 1) n ω j i))) x) := by
+        L.learn (fun i => (blockExtract (n + 1) n ω j i,
+                           c (blockExtract (n + 1) n ω j i))) x) := by
     intro ω x
     simp only [L']
     have hblk_ne' : ¬ ((n + 1) * n / (((n + 1) * n).sqrt + 1) = 0) := hblk_ne
@@ -966,7 +966,7 @@ private theorem boost_two_thirds_to_pac (X : Type u) [MeasurableSpace X]
     intro j
     -- j : Fin(sqrt+1), need:
     --   L.learn (fun i:Fin(blk) => (ω ⟨j*blk+i, _⟩, c(...))) x
-    -- = L.learn (fun i:Fin(n) => (block_extract (n+1) n ω ⟨j, _⟩ i, c(...))) x
+    -- = L.learn (fun i:Fin(n) => (blockExtract (n+1) n ω ⟨j, _⟩ i, c(...))) x
     -- Use the same helper pattern for the inner Fin cast
     -- Apply the same pattern for the inner Fin type cast (Fin blk → Fin n)
     -- We need: L.learn S₁ x = L.learn S₂ x where S₁ : Fin(blk) → ... and S₂ : Fin(n) → ...
@@ -976,7 +976,7 @@ private theorem boost_two_thirds_to_pac (X : Type u) [MeasurableSpace X]
       intros m m' hm S S' hS; subst hm; exact congrArg (L.learn · x) (funext hS)
     apply hlearn_cast hblk'
     intro ⟨i, hi⟩
-    simp only [block_extract, finProdFinEquiv, Equiv.coe_fn_mk, hblk']
+    simp only [blockExtract, finProdFinEquiv, Equiv.coe_fn_mk, hblk']
     -- Goal: (ω ⟨j*n+i, _⟩, c (ω ⟨j*n+i, _⟩)) = (ω ⟨i+n*j, _⟩, c (ω ⟨i+n*j, _⟩))
     -- The Fin values have the same .val (j*n+i = i+n*j by ring)
     -- So the Fins are equal by proof irrelevance, and hence the pairs are equal
@@ -985,8 +985,8 @@ private theorem boost_two_thirds_to_pac (X : Type u) [MeasurableSpace X]
   have herr_set_eq : ∀ (ω : Fin ((n + 1) * n) → X),
       {x | L'.learn (fun i => (ω i, c (ω i))) x ≠ c x} =
       {x | boosted_majority (n + 1) (fun j =>
-        L.learn (fun i => (block_extract (n + 1) n ω j i,
-                           c (block_extract (n + 1) n ω j i))) x) ≠ c x} := by
+        L.learn (fun i => (blockExtract (n + 1) n ω j i,
+                           c (blockExtract (n + 1) n ω j i))) x) ≠ c x} := by
     intro ω; ext x; simp [hlearn_unfold ω x]
   -- Step 3f: Subset
   have hsub : {ω | 7 * (n + 1) ≤ 12 *

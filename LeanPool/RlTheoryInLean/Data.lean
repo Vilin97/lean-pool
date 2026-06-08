@@ -5,7 +5,6 @@ Authors: Shangtong Zhang
 -/
 
 import LeanPool.RlTheoryInLean.Data.Matrix
-import LeanPool.RlTheoryInLean.Data.Matrix
 
 /-!
 # Data

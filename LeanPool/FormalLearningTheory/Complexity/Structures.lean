@@ -219,13 +219,13 @@ The paper's definition: κ : LC(∞) → LC(k) × I where I is a finite set.
 
     The current `CompressionScheme` is strictly stronger: it requires
     reconstruction from the compressed Finset alone (no side information).
-    See `Open_NoInfoCompressionStrengthening` for that conjecture. -/
+    See `OpenNoInfoCompressionStrengthening` for that conjecture. -/
 structure CompressionSchemeWithInfo
     (X : Type u) (Y : Type v) (C : ConceptClass X Y) where
   /-- The side information type -/
   Info : Type*
   /-- Side information is finite -/
-  info_finite : Fintype Info
+  infoFinite : Fintype Info
   /-- Compression: extract ≤ kernelSize labeled examples + side information -/
   compress : {m : ℕ} → (Fin m → X × Y) → Finset (X × Y) × Info
   /-- Reconstruction: produce hypothesis from compressed subset AND side information -/
@@ -245,7 +245,7 @@ structure CompressionSchemeWithInfo
     ∀ i : Fin m,
       reconstruct (compress S).1 (compress S).2 (S i).1 = (S i).2
 
-attribute [instance] CompressionSchemeWithInfo.info_finite
+attribute [instance] CompressionSchemeWithInfo.infoFinite
 
 /-- Total size of a compression scheme with side information:
     kernel size + number of side information states.
@@ -262,7 +262,7 @@ def CompressionScheme.toWithInfo
     {X : Type u} {Y : Type v} {C : ConceptClass X Y}
     (cs : CompressionScheme X Y C) : CompressionSchemeWithInfo X Y C where
   Info := PUnit
-  info_finite := inferInstance
+  infoFinite := inferInstance
   compress := fun S => (cs.compress S, PUnit.unit)
   reconstruct := fun Z _ => cs.reconstruct Z
   kernelSize := cs.size
@@ -273,7 +273,7 @@ def CompressionScheme.toWithInfo
 /-- OPEN CONJECTURE: Does finite VC dimension imply compression WITHOUT side information?
     This is strictly stronger than the Moran-Yehudayoff theorem.
     The O(d) version is the Littlestone-Warmuth / Floyd-Warmuth conjecture (open since 1986). -/
-def Open_NoInfoCompressionStrengthening : Prop :=
+def OpenNoInfoCompressionStrengthening : Prop :=
   ∀ (X : Type*) (C : ConceptClass X Bool),
     VCDim X C < ⊤ →
     ∃ (k : ℕ) (cs : CompressionScheme X Bool C), cs.size = k

@@ -6,6 +6,10 @@ Authors: Arend Mellendijk
 
 import Mathlib.Algebra.Order.Antidiag.Nat
 
+/-!
+# LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
+-/
+
 open scoped ArithmeticFunction.omega
 
 namespace Nat

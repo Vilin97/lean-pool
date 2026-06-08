@@ -5,6 +5,10 @@ Authors: Arend Mellendijk
 -/
 import LeanPool.SelbergSieve4.SieveLemmas
 
+/-!
+# LeanPool.SelbergSieve4.Selberg
+-/
+
 noncomputable section
 
 open scoped BigOperators Sieve ArithmeticFunction.Moebius ArithmeticFunction.omega
@@ -32,7 +36,6 @@ local notation3 "y" => SelbergSieve.level s
 local notation3 "hy" => SelbergSieve.one_le_level s
 
 /-- Selberg bounding sum over divisors below the square-root level. -/
-@[simp]
 def selbergBoundingSum : ℝ :=
   ∑ l ∈ divisors P, if l ^ 2 ≤ y then g l else 0
 local notation3 "S" => SelbergSieve.selbergBoundingSum s
@@ -140,17 +143,17 @@ lemma sum_mul_subst (k n : ℕ) {f : ℕ → ℝ} (h : ∀ l, l ∣ n → ¬ k �
     · intro m hmn hmlk
       apply if_neg; revert hmlk; contrapose!; intro hlkm
       rw [hlkm, mul_comm, Nat.mul_div_cancel]
-      aesop_div
+      aesopDiv
     · contrapose!; intro _
       rw [mem_divisors]
       exact ⟨Trans.trans (Nat.div_dvd_of_dvd hkl) (dvd_of_mem_divisors hl), hn⟩
   · rw [sum_comm, sum_congr rfl]; intro m _
     split_ifs with hdvd
     · rw [←Aux.sum_intro]
-      aesop_div
+      aesopDiv
     · apply sum_eq_zero; intro l hl
       apply if_neg;
-      aesop_div
+      aesopDiv
 
 --Important facts about the selberg weights
 theorem selbergWeights_eq_dvds_sum (d : ℕ) :
@@ -306,7 +309,7 @@ private lemma _helper {k m d : ℕ} (hkd : k ∣ d) (hk : k ∈ divisors P)
     constructor
     · exact h.2.2
     · rcases hkd with ⟨r, hr⟩
-      rw [hr, Nat.gcd_mul_left, eq_comm, mul_eq_left₀ (by aesop_div)] at h
+      rw [hr, Nat.gcd_mul_left, eq_comm, mul_eq_left₀ (by aesopDiv)] at h
       rw [hr, coprime_comm, Nat.coprime_mul_iff_left]
       constructor
       · apply coprime_of_squarefree_mul <| Squarefree.squarefree_of_dvd h.1 s.prodPrimes_squarefree
@@ -318,7 +321,7 @@ private lemma _helper {k m d : ℕ} (hkd : k ∣ d) (hk : k ∈ divisors P)
       · exact dvd_of_mem_divisors hk
       · exact dvd_of_mem_divisors hm
     constructor
-    · exact eq_gcd_mul_of_dvd_of_coprime hkd h.2 (by aesop_div)
+    · exact eq_gcd_mul_of_dvd_of_coprime hkd h.2 (by aesopDiv)
     · exact h.1
 
 theorem selbergBoundingSum_ge {d : ℕ} (hdP : d ∣ P) :
@@ -401,11 +404,11 @@ theorem selberg_bound_weights (d : ℕ) : |γ d| ≤ 1 := by
   by_cases hdP : d ∣ P
   swap
   · rw [s.selbergWeights_eq_zero_of_not_dvd hdP]; simp only [zero_le_one, abs_zero]
-  have : 1*S ≥ γ d * ↑(μ d) * S
-  · rw[one_mul]
+  have : 1*S ≥ γ d * ↑(μ d) * S := by
+    rw[one_mul]
     exact s.selbergBoundingSum_ge hdP
-  replace this : γ d * μ d ≤ 1
-  · apply le_of_mul_le_mul_of_pos_right this (s.selbergBoundingSum_pos)
+  replace this : γ d * μ d ≤ 1 := by
+    apply le_of_mul_le_mul_of_pos_right this (s.selbergBoundingSum_pos)
   convert this using 1
   rw [← abs_of_nonneg <| s.selbergWeights_mul_mu_nonneg d hdP,
     abs_mul, ←Int.cast_abs, abs_moebius_eq_one_of_squarefree <|
@@ -436,8 +439,7 @@ theorem selberg_bound_muPlus (n : ℕ) (hn : n ∈ divisors P) :
         (s.selberg_bound_weights d2)
     · rw [if_neg h, if_neg h]
   · rw [← Finset.sum_product']
-  · dsimp only []
-    rw [← sum_filter, Finset.sum_const, nsmul_one]
+  · rw [← sum_filter, Finset.sum_const, nsmul_one]
   · rw [← Nat.card_pair_lcm_eq (s.squarefree_of_mem_divisors_prodPrimes hn)]
     congr; ext; rw[eq_comm]
   norm_num

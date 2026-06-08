@@ -5,6 +5,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 import LeanPool.DirectedTopologyLean4.DirectedPathHomotopy
 
+/-!
+# LeanPool.DirectedTopologyLean4.SplitDihomotopy
+-/
+
 /-
   This file contains the definitions of splitting a (dipath)
       dihomotopy both vertically and horizontally.
@@ -52,7 +56,7 @@ variable {X : dTopCat}
 /-- For any `T: I`, we have the directed map `I → I` given by `t ↦ t * T`.
 This is an interpolation from 0 to T
 -/
-abbrev DirectedFst (T : I) : D(I,I) := directed_interpolate_const (unitIAux.zero_le T)
+abbrev DirectedFst (T : I) : D(I,I) := directedInterpolateConst (unitIAux.zero_le T)
 
 @[simp]
 lemma directedFst_apply (T t : I) : DirectedFst T t = ⟨_, unitInterval.mul_mem T.2 t.2⟩ := by
@@ -64,7 +68,7 @@ lemma directedFst_apply (T t : I) : DirectedFst T t = ⟨_, unitInterval.mul_mem
 /-- For any `T : I` we have the directed map `I → I` given by `t ↦ (1 - t) * T + t`.
 This is an interpolation from T to 1
 -/
-abbrev DirectedSnd (T : I) : D(I,I) := directed_interpolate_const (unitIAux.le_one T)
+abbrev DirectedSnd (T : I) : D(I,I) := directedInterpolateConst (unitIAux.le_one T)
 
 @[simp]
 lemma directedSnd_apply (T t : I) : DirectedSnd T t = ⟨_, interp_left_mem_I T t⟩ := by
@@ -78,7 +82,7 @@ def FirstPartVerticallyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipa
     (T : I) :
     Dipath.Dihomotopy γ₁ (F.eval T) where
   toDirectedMap
-      := F.toDirectedMap.comp (DirectedMap.prod_map_mk' (DirectedFst T) (DirectedMap.id I))
+      := F.toDirectedMap.comp (DirectedMap.prodMapMk' (DirectedFst T) (DirectedMap.id I))
   map_zero_left := fun x => by change F (DirectedFst T 0, x) = γ₁ x; simp
   map_one_left := fun x => by change F (DirectedFst T 1, x) = F (T, x); simp
   prop' := fun t z hz => F.prop' _ z hz
@@ -95,7 +99,7 @@ def SecondPartVerticallyDihomotopy {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dip
     (T : I) :
     Dipath.Dihomotopy (F.eval T) γ₂ where
   toDirectedMap
-      := F.toDirectedMap.comp (DirectedMap.prod_map_mk' (DirectedSnd T) (DirectedMap.id I))
+      := F.toDirectedMap.comp (DirectedMap.prodMapMk' (DirectedSnd T) (DirectedMap.id I))
 
   map_zero_left := fun x => by change F (DirectedSnd T 0, x) = F (T, x); simp
   map_one_left := fun x => by change F (DirectedSnd T 1, x) = γ₂ x; simp
@@ -113,16 +117,16 @@ lemma spv_apply {x y : X} {γ₁ γ₂ : Dipath x y} (F : Dipath.Dihomotopy γ�
 /-- The first part of a dihomotopy split horizontally at `T`: a dihomotopy between the first parts
 of `f` and `g` as dipaths. -/
 def FirstPartHorizontallyDihomotopy {f g : D(I,X)} (F : Dihomotopy f g) (T : I) :
-    Dihomotopy (SplitDipath.FirstPart (Dipath.of_directedMap f) T).toDirectedMap
-               (SplitDipath.FirstPart (Dipath.of_directedMap g) T).toDirectedMap where
+    Dihomotopy (SplitDipath.FirstPart (Dipath.ofDirectedMap f) T).toDirectedMap
+               (SplitDipath.FirstPart (Dipath.ofDirectedMap g) T).toDirectedMap where
   toDirectedMap
-      := F.toDirectedMap.comp (DirectedMap.prod_map_mk' (DirectedMap.id I) (DirectedFst T))
+      := F.toDirectedMap.comp (DirectedMap.prodMapMk' (DirectedMap.id I) (DirectedFst T))
   map_zero_left := fun x => by
-    change F (0, DirectedFst T x) = SplitDipath.FirstPart (Dipath.of_directedMap f) T x
+    change F (0, DirectedFst T x) = SplitDipath.FirstPart (Dipath.ofDirectedMap f) T x
     simp
     rfl
   map_one_left := fun x => by
-    change F (1, DirectedFst T x) = SplitDipath.FirstPart (Dipath.of_directedMap g) T x
+    change F (1, DirectedFst T x) = SplitDipath.FirstPart (Dipath.ofDirectedMap g) T x
     simp
     rfl
 
@@ -136,16 +140,16 @@ lemma fph_apply {f g : D(I,X)} (F : Dihomotopy f g) (T s t : I) :
 /-- The second part of a dihomotopy split horizontally at `T`: a dihomotopy between the second
 parts of `f` and `g` as dipaths. -/
 def SecondPartHorizontallyDihomotopy {f g : D(I,X)} (F : Dihomotopy f g) (T : I) :
-    Dihomotopy (SplitDipath.SecondPart (Dipath.of_directedMap f) T).toDirectedMap
-               (SplitDipath.SecondPart (Dipath.of_directedMap g) T).toDirectedMap where
+    Dihomotopy (SplitDipath.SecondPart (Dipath.ofDirectedMap f) T).toDirectedMap
+               (SplitDipath.SecondPart (Dipath.ofDirectedMap g) T).toDirectedMap where
   toDirectedMap
-      := F.toDirectedMap.comp (DirectedMap.prod_map_mk' (DirectedMap.id I) (DirectedSnd T))
+      := F.toDirectedMap.comp (DirectedMap.prodMapMk' (DirectedMap.id I) (DirectedSnd T))
   map_zero_left := fun x => by
-    change F (0, DirectedSnd T x) = SplitDipath.SecondPart (Dipath.of_directedMap f) T x
+    change F (0, DirectedSnd T x) = SplitDipath.SecondPart (Dipath.ofDirectedMap f) T x
     simp
     rfl
   map_one_left := fun x => by
-    change F (1, DirectedSnd T x) = SplitDipath.SecondPart (Dipath.of_directedMap g) T x
+    change F (1, DirectedSnd T x) = SplitDipath.SecondPart (Dipath.ofDirectedMap g) T x
     simp
     rfl
 
@@ -155,28 +159,28 @@ lemma sph_apply {f g : D(I,X)} (F : Dihomotopy f g) (T s t : I) :
   rw [directedSnd_apply]
 
 lemma fph_eval_0 {f g : D(I,X)} (F : Dihomotopy f g) (T : I) :
-    (FirstPartHorizontallyDihomotopy F T).eval_at_right 0 = (F.eval_at_right 0).cast (by simp)
+    (FirstPartHorizontallyDihomotopy F T).evalAtRight 0 = (F.evalAtRight 0).cast (by simp)
         (by simp) := by
   ext t
   change F (t, DirectedFst T 0) = F (t, 0)
   simp
 
 lemma fph_eval_1 {f g : D(I,X)} (F : Dihomotopy f g) (T : I) :
-    (FirstPartHorizontallyDihomotopy F T).eval_at_right 1 =
-      (F.eval_at_right T).cast (by { simp; rfl }) (by { simp; rfl }) := by
+    (FirstPartHorizontallyDihomotopy F T).evalAtRight 1 =
+      (F.evalAtRight T).cast (by { simp; rfl }) (by { simp; rfl }) := by
   ext t
   change F (t, DirectedFst T 1) = F (t, T)
   simp
 
 lemma sph_eval_0 {f g : D(I,X)} (F : Dihomotopy f g) (T : I) :
-    (SecondPartHorizontallyDihomotopy F T).eval_at_right 0 =
-      (F.eval_at_right T).cast (by { simp; rfl }) (by { simp; rfl }) := by
+    (SecondPartHorizontallyDihomotopy F T).evalAtRight 0 =
+      (F.evalAtRight T).cast (by { simp; rfl }) (by { simp; rfl }) := by
   ext t
   change F (t, DirectedSnd T 0) = F (t, T)
   simp
 
 lemma sph_eval_1 {f g : D(I,X)} (F : Dihomotopy f g) (T : I) :
-    (SecondPartHorizontallyDihomotopy F T).eval_at_right 1 = (F.eval_at_right 1).cast (by simp)
+    (SecondPartHorizontallyDihomotopy F T).evalAtRight 1 = (F.evalAtRight 1).cast (by simp)
         (by simp) := by
   ext t
   change F (t, DirectedSnd T 1) = F (t, 1)

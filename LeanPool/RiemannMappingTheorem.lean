@@ -9,7 +9,7 @@ import LeanPool.RiemannMappingTheorem.Main
 /-!
 # Riemann Mapping Theorem
 
-Source: url:https://github.com/vbeffara/rMT4
+Source: url:https://github.com/vbeffara/RMT4
 Authors: Vincent Beffara
 Status: verified
 Main declarations: `RMT`, `main`, `montel`, `hurwitz`
@@ -41,6 +41,6 @@ The headline theorems are:
 
 ## Provenance
 
-Imported from <https://github.com/vbeffara/rMT4>. Upstream contains no `sorry`s.
+Imported from <https://github.com/vbeffara/RMT4>. Upstream contains no `sorry`s.
 Ported from Lean v4.26.0 to Lean Pool's v4.30.0-rc2.
 -/

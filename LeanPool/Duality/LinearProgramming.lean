@@ -6,6 +6,9 @@ Authors: Martin Dvorak
 import Mathlib.Tactic.Linarith
 import LeanPool.Duality.FarkasSpecial
 
+/-!
+# LeanPool.Duality.LinearProgramming
+-/
 
 /-- Linear program over `F∞` in the standard form (i.e.,
     a system of linear inequalities with nonnegative variables).
@@ -230,13 +233,13 @@ lemma ValidELP.weakDuality_of_no_bot [Fintype I] [Fintype J]
   · use Sum.elim y 1
     constructor
     · rw [Matrix.transpose_fromRows, Matrix.fromCols_neg, Matrix.fromCols_mulWeig_sumElim]
-      have hle0 : (-P.Aᵀ) ₘ* y + (-P.c) ≤ 0
-      · rwa [EF.vec_sub_nonpos_iff]
+      have hle0 : (-P.Aᵀ) ₘ* y + (-P.c) ≤ 0 := by
+        rwa [EF.vec_sub_nonpos_iff]
       convert hle0
       ext
       simp [Matrix.mulWeig, dotWeig, EF.one_smul]
-    · have hlt0 : P.b ᵥ⬝ y + P.c ᵥ⬝ x < 0
-      · push Not at contr
+    · have hlt0 : P.b ᵥ⬝ y + P.c ᵥ⬝ x < 0 := by
+        push Not at contr
         rwa [add_comm]
       rw [sumElim_dotWeig_sumElim]
       have h1 : (↓(P.c ᵥ⬝ x) : Unit → F∞) ᵥ⬝ (1 : Unit → F≥0) = P.c ᵥ⬝ x := by
@@ -409,8 +412,8 @@ lemma EF.add_smul (k l : F≥0) (r : F∞) :
     if k_eq_0 : k = 0 then
       rw [k_eq_0, EF.zero_smul_nonbot top_ne_bot, zero_add, zero_add]
     else
-      have k_pos : 0 < k
-      · exact pos_of_NN_not_zero k_eq_0
+      have k_pos : 0 < k := by
+        exact pos_of_NN_not_zero k_eq_0
       rw [EF.pos_smul_top (add_pos_of_pos_of_nonneg k_pos l.property)]
       rw [EF.pos_smul_top k_pos]
       if l_eq_0 : l = 0 then
@@ -455,15 +458,15 @@ lemma EF.mul_smul (k l : F≥0) (r : F∞) :
       rw [l_eq_0, EF.zero_smul_nonbot top_ne_bot, mul_zero, EF.zero_smul_nonbot top_ne_bot,
         smul_zero]
     else
-      have l_pos : 0 < l
-      · apply lt_of_le_of_ne l.property
+      have l_pos : 0 < l := by
+        apply lt_of_le_of_ne l.property
         exact l_eq_0 ∘ eq_zero_of_zero_eq_val
       rw [EF.pos_smul_top l_pos]
       if k_eq_0 : k = 0 then
         rw [k_eq_0, EF.zero_smul_nonbot top_ne_bot, zero_mul, EF.zero_smul_nonbot top_ne_bot]
       else
-        have c_pos : 0 < k
-        · exact pos_of_NN_not_zero k_eq_0
+        have c_pos : 0 < k := by
+          exact pos_of_NN_not_zero k_eq_0
         rw [EF.pos_smul_top c_pos, EF.pos_smul_top (mul_pos c_pos l_pos)]
   | (f : F) =>
     change toE ((k * l) * f) = toE (k * (l * f))
@@ -631,8 +634,8 @@ lemma ValidELP.unbounded_of_feasible_of_neg (P : ValidELP I J F) (hP : P.IsFeasi
         exact (hx₀.trans_le le_top).false
       | (d : F) =>
         rw [hcx₀] at hx₀
-        have coef_pos : 0 < (s - e) / d
-        · apply div_pos_of_neg_of_neg
+        have coef_pos : 0 < (s - e) / d := by
+          apply div_pos_of_neg_of_neg
           · rwa [sub_neg, ←EF.coe_lt_coe_iff]
           · rwa [←EF.coe_neg']
         let k : F≥0 := ⟨((s - e) / d), coef_pos.le⟩
@@ -648,10 +651,10 @@ lemma ValidELP.unbounded_of_feasible_of_neg (P : ValidELP I J F) (hP : P.IsFeasi
           | (bᵢ : F) =>
             specialize hAx₀ i
             rw [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hi] at hAx₀
-            have zeros : (P.A ₘ* x₀) i + (0 : F∞) ≤ 0
-            · convert hAx₀
-              change 0 = 0 • -(toE bᵢ)
-              rw [←EF.coe_neg, EF.zero_smul_coe]
+            have zeros : (P.A ₘ* x₀) i + (0 : F∞) ≤ 0 := by
+              convert hAx₀
+              · change 0 = 0 • -(toE bᵢ)
+                rw [←EF.coe_neg, EF.zero_smul_coe]
             rw [add_zero] at zeros
             rw [Matrix.mulWeig_add, Matrix.mulWeig_smul k_pos, Pi.add_apply]
             apply add_le_of_le_of_nonpos
@@ -736,8 +739,8 @@ lemma ValidELP.unbounded_of_feasible_of_infeasible (P : ValidELP I J F)
       apply bot_le
     | (f : F) =>
       change hbi to P.b i = toE f
-      have hf : -(toE f) ≠ (⊥ : F∞)
-      · rw [←EF.coe_neg]
+      have hf : -(toE f) ≠ (⊥ : F∞) := by
+        rw [←EF.coe_neg]
         apply EF.coe_neq_bot
       rw [Pi.add_apply, Pi.smul_apply, Pi.neg_apply, hbi, EF.zero_smul_nonbot hf, add_zero]
       exact hAx ⟨i, hbi ▸ EF.coe_neq_top f⟩
@@ -844,30 +847,30 @@ private lemma ValidELP.strongDuality_aux_caseY (P : ValidELP I J F)
   set x := (Y ∘ Sum.inl) ∘ Sum.inr
   set y := (Y ∘ Sum.inl) ∘ Sum.inl
   set z := (Y ∘ Sum.inr) 0
-  have hAyx : Sum.elim (-P.Aᵀ ₘ* y) (P.A ₘ* x) + z • (-Sum.elim P.c P.b) ≤ 0
-  · convert hAY
+  have hAyx : Sum.elim (-P.Aᵀ ₘ* y) (P.A ₘ* x) + z • (-Sum.elim P.c P.b) ≤ 0 := by
+    convert hAY
     ext
     simp [Matrix.replicateCol, Matrix.mulWeig, dotWeig, z]
   have hAyx' :
-      Sum.elim (-P.Aᵀ ₘ* y) (P.A ₘ* x) + Sum.elim (z • (-P.c)) (z • (-P.b)) ≤ 0
-  · convert hAyx
+      Sum.elim (-P.Aᵀ ₘ* y) (P.A ₘ* x) + Sum.elim (z • (-P.c)) (z • (-P.b)) ≤ 0 := by
+    convert hAyx
     aesop
   clear hAY hAyx
   rw [←Sum.elim_add_add, Sum.elim_nonpos_iff] at hAyx'
   obtain ⟨hy, hx⟩ := hAyx'
   rw [sumElim_dotWeig_sumElim, zero_dotWeig, add_zero, sumElim_dotWeig_sumElim] at hbc
-  have z_pos : 0 < z
-  · by_contra contr
-    have z_eq_0 : z = 0
-    · push Not at contr
+  have z_pos : 0 < z := by
+    by_contra contr
+    have z_eq_0 : z = 0 := by
+      push Not at contr
       exact nonpos_iff_eq_zero.→ contr
     rw [z_eq_0] at hx hy
     clear contr z_eq_0 z
     if hxc : P.c ᵥ⬝ x < 0 then
       exact P.infeasible_of_unbounded (P.unbounded_of_feasible_of_neg hP hxc hx) hQ
     else
-      have hyb : P.b ᵥ⬝ y < 0
-      · push Not at hxc
+      have hyb : P.b ᵥ⬝ y < 0 := by
+        push Not at hxc
         by_contra! contr
         exact (hbc.trans_le (add_nonneg contr hxc)).false
       exact P.dualize.infeasible_of_unbounded
@@ -900,8 +903,8 @@ private lemma ValidELP.strongDuality_aux_caseY (P : ValidELP I J F)
       rw [hcx, hby] at hbc
       exact (hbc.trans EF.zero_lt_top).false
     | (q : F) =>
-      have z_inv_pos : 0 < z⁻¹
-      · exact inv_pos_of_pos z_pos
+      have z_inv_pos : 0 < z⁻¹ := by
+        exact inv_pos_of_pos z_pos
       refine ⟨z⁻¹ * p, z⁻¹ * q, ⟨z⁻¹ • x, ?_, ?_⟩, ⟨z⁻¹ • y, ?_, ?_⟩, ?_⟩
       · rwa [
           ←EF.vec_smul_le_smul_left z_inv_pos, smul_zero,
@@ -920,8 +923,8 @@ private lemma ValidELP.strongDuality_aux_caseY (P : ValidELP I J F)
         rfl
       rw [hcx, hby] at hbc
       rw [←mul_add]
-      have hpq : p + q < 0
-      · rwa [←EF.coe_lt_coe_iff, add_comm]
+      have hpq : p + q < 0 := by
+        rwa [←EF.coe_lt_coe_iff, add_comm]
       exact mul_nonpos_of_nonneg_of_nonpos z_inv_pos.le hpq.le
 
 lemma ValidELP.strongDuality_aux (P : ValidELP I J F)
@@ -1036,11 +1039,11 @@ lemma ValidELP.strongDuality_of_both_feasible (P : ValidELP I J F)
     (hP : P.IsFeasible) (hQ : P.dualize.IsFeasible) :
     ∃ r : F, P.Reaches (toE (-r)) ∧ P.dualize.Reaches (toE r) := by
   obtain ⟨p, q, hp, hq, hpq⟩ := P.strongDuality_aux hP hQ
-  have h0pq : 0 ≤ p + q
-  · rw [←EF.coe_le_coe_iff, EF.coe_add, EF.coe_zero]
+  have h0pq : 0 ≤ p + q := by
+    rw [←EF.coe_le_coe_iff, EF.coe_add, EF.coe_zero]
     exact P.weakDuality hp hq
-  have hqp : -q = p
-  · rw [neg_eq_iff_add_eq_zero, add_comm]
+  have hqp : -q = p := by
+    rw [neg_eq_iff_add_eq_zero, add_comm]
     exact le_antisymm hpq h0pq
   exact ⟨q, hqp ▸ hp, hq⟩
 
@@ -1061,13 +1064,13 @@ lemma ExtendedLP.optimum_unique [Fintype J] {P : ExtendedLP I J F} {r s : F}
 lemma ExtendedLP.optimum_eq_of_reaches_bounded [Fintype J] {P : ExtendedLP I J F} {r : F}
     (reaches : P.Reaches (toE r)) (bounded : P.IsBoundedBy r) :
     P.optimum = some r := by
-  have hP : P.IsFeasible
-  · obtain ⟨x, hx⟩ := reaches
+  have hP : P.IsFeasible := by
+    obtain ⟨x, hx⟩ := reaches
     exact ⟨toE r, ⟨x, hx⟩, EF.coe_neq_top r⟩
-  have hPP : ∃ r : F, P.Reaches (toE r) ∧ P.IsBoundedBy r
-  · use r
-  have hPb : ¬P.IsUnbounded
-  · exact (· ⟨r, bounded⟩)
+  have hPP : ∃ r : F, P.Reaches (toE r) ∧ P.IsBoundedBy r := by
+    use r
+  have hPb : ¬P.IsUnbounded := by
+    exact (· ⟨r, bounded⟩)
   have hopt : P.optimum = some (toE hPP.choose) := by
     unfold ExtendedLP.optimum
     rw [if_neg (not_not.mpr hP), if_neg hPb, dif_pos hPP]
@@ -1102,8 +1105,8 @@ lemma ValidELP.strongDuality_of_prim_feasible (P : ValidELP I J F) (hP : P.IsFea
     OppositesOpt P.optimum P.dualize.optimum := by
   if hQ : P.dualize.IsFeasible then
     obtain ⟨r, hPr, hQr⟩ := P.strongDuality_of_both_feasible hP hQ
-    have hPopt : P.optimum = some (toE (-r))
-    · apply ExtendedLP.optimum_eq_of_reaches_bounded hPr
+    have hPopt : P.optimum = some (toE (-r)) := by
+      apply ExtendedLP.optimum_eq_of_reaches_bounded hPr
       intro p hPp
       have Pwd := P.weakDuality hPp hQr
       match p with
@@ -1113,8 +1116,8 @@ lemma ValidELP.strongDuality_of_prim_feasible (P : ValidELP I J F) (hP : P.IsFea
         rw [←EF.coe_add, ←EF.coe_zero] at Pwd
         rw [EF.coe_le_coe_iff] at Pwd ⊢
         rwa [neg_le_iff_add_nonneg]
-    have hQopt : P.dualize.optimum = some (toE r)
-    · apply ExtendedLP.optimum_eq_of_reaches_bounded hQr
+    have hQopt : P.dualize.optimum = some (toE r) := by
+      apply ExtendedLP.optimum_eq_of_reaches_bounded hQr
       intro q hQq
       have Qwd := P.weakDuality hPr hQq
       match q with
@@ -1127,11 +1130,11 @@ lemma ValidELP.strongDuality_of_prim_feasible (P : ValidELP I J F) (hP : P.IsFea
     rewrite [hPopt, hQopt]
     rfl
   else
-    have hPopt : P.optimum = some ⊥
-    · simp only [ExtendedLP.optimum, hP, P.unbounded_of_feasible_of_infeasible hP hQ]
+    have hPopt : P.optimum = some ⊥ := by
+      simp only [ExtendedLP.optimum, hP, P.unbounded_of_feasible_of_infeasible hP hQ]
       rfl
-    have hQopt : P.dualize.optimum = some ⊤
-    · simp only [ExtendedLP.optimum, hQ]
+    have hQopt : P.dualize.optimum = some ⊤ := by
+      simp only [ExtendedLP.optimum, hQ]
       rfl
     rw [hPopt, hQopt]
     exact EF.neg_top

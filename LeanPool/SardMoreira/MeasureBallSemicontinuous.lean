@@ -10,6 +10,10 @@ import Mathlib.MeasureTheory.Constructions.BorelSpace.Order
 import Mathlib.MeasureTheory.Measure.OpenPos
 import Mathlib.Topology.Order.LowerUpperTopology
 
+/-!
+# LeanPool.SardMoreira.MeasureBallSemicontinuous
+-/
+
 open MeasureTheory Topology Filter Set Metric
 open scoped NNReal
 

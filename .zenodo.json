@@ -1,0 +1,27 @@
+{
+  "title": "Lean Pool",
+  "description": "Lean Pool is a curated archive of Lean 4 formalizations that fall outside Mathlib's scope. It sits between Mathlib's high-bar human review and \"anything that compiles\": projects are admitted via deterministic linters (no sorry/admit, no extra axioms, no unsafe/partial) and LLM review, and are kept building against the latest Mathlib. The goal is an arXiv-style index of formal-mathematics developments that would otherwise bit-rot in abandoned repositories. Individual pooled projects remain the work of their original authors, recorded in LeanPool/projects.yml, the NOTICE file, and the per-file headers.",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "Apache-2.0",
+  "creators": [
+    { "name": "Ilin, Vasily" },
+    { "name": "Asher, Justin" }
+  ],
+  "keywords": [
+    "Lean",
+    "Lean 4",
+    "Mathlib",
+    "formal mathematics",
+    "formal proof",
+    "theorem proving",
+    "interactive theorem proving"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/Vilin97/lean-pool",
+      "scheme": "url"
+    }
+  ]
+}

@@ -6,6 +6,10 @@ Authors: Kalle Kytölä
 import Mathlib.Topology.Algebra.InfiniteSum.Basic
 import LeanPool.VirasoroProject.ToMathlib.Topology.Order
 
+/-!
+# LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.InfiniteSum.Basic
+-/
+
 section
 
 open Filter

@@ -7,6 +7,10 @@ Authors: Óscar Álvarez Sánchez
 import LeanPool.DemazureOperatorsLean.Demazure
 import LeanPool.DemazureOperatorsLean.DemazureAux
 
+/-!
+# LeanPool.DemazureOperatorsLean.DemazureAuxRelations
+-/
+
 noncomputable section
 namespace Demazure
 

@@ -83,7 +83,7 @@ def _root_.VirasoroProject.LieTwoCocycle.CentralExtension.emb
   toFun := fun A ↦ ⟨0, A⟩
   map_add' A₁ A₂ := by simp [add_def]
   map_smul' c A := by simp [smul_def]
-  map_lie' := by intro A₁ A₂; simp [lie_def]
+  map_lie' := by intro A₁ A₂; ext <;> simp [lie_def, trivial_lie_zero]
 
 /-- If `𝓮` is the (central) extension of `𝓰` by `𝓪` defined by a 2-cocycle `γ ∈ Z²(𝓰,𝓪)`,
 then `LieTwoCocycle.CentralExtension.proj` gives the corresponding projection `𝓮 ⟶ 𝓰`. -/
@@ -119,7 +119,9 @@ lemma _root_.VirasoroProject.LieTwoCocycle.CentralExtension.mem_ker_proj_iff
   rw [LieHom.mem_ker]
   refine ⟨?_, ?_⟩
   · intro h; simpa [proj]
-  · intro h; simpa only [proj, LieHom.coe_mk] using h
+  · intro h
+    cases Z
+    simpa only [proj, LieHom.coe_mk] using h
 
 lemma _root_.VirasoroProject.LieTwoCocycle.CentralExtension.range_emb_eq_ker_proj [IsLieAbelian 𝓪] :
     (LieTwoCocycle.CentralExtension.emb γ).range = (LieTwoCocycle.CentralExtension.proj γ).ker := by
@@ -187,7 +189,7 @@ extending Lie algebras. -/
 noncomputable def _root_.VirasoroProject.LieAlgebra.IsExtension.basis
     {ιA ιG : Type u'} (basA : Basis ιA 𝕜 𝓪) (basG : Basis ιG 𝕜 𝓰) :
     Basis (ιA ⊕ ιG) 𝕜 𝓮 :=
-  ses_basis basA basG (LieSubmodule.mk_eq_bot_iff.mp ex.ker_eq_bot)
+  sesBasis basA basG (LieSubmodule.mk_eq_bot_iff.mp ex.ker_eq_bot)
     (congr_arg LieSubalgebra.toSubmodule ex.exact) hσ
 
 @[simp] lemma _root_.VirasoroProject.LieAlgebra.IsExtension.basis_eq_of_left
