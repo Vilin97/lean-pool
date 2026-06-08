@@ -12,7 +12,7 @@ import LeanPool.Turan3.Turans3rdProof
 Source: url:https://github.com/ro-gut/turan3
 Authors: Rodrigo Gutierrez, Yves Jäckle
 Status: verified
-Main declarations: `turans`, `finale_bound`, `Better_forms_clique`, `Enhance_total_weight_stricinc`
+Main declarations: `Turan3.turans`, `Turan3.finale_bound`, `Turan3.Better_forms_clique`
 Tags: graph-theory, combinatorics, turan-theorem, extremal-graph-theory
 MSC: 05C35
 -/

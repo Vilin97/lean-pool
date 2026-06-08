@@ -2157,18 +2157,17 @@ projects:
       github_repo: ro-gut/turan3
     status: verified
     main_declarations:
-      - turans
-      - finale_bound
-      - Better_forms_clique
-      - Enhance_total_weight_stricinc
+      - Turan3.turans
+      - Turan3.finale_bound
+      - Turan3.Better_forms_clique
     main_results:
-      - declaration: turans
+      - declaration: Turan3.turans
         informal: Turán's theorem — a p-clique-free simple graph on n vertices has at most (1/2)(1 - 1/(p-1)) n² edges.
-      - declaration: finale_bound
+      - declaration: Turan3.finale_bound
         informal: For any weight distribution on a p-clique-free graph, the total edge weight is at most ((p-1)(p-2)/2)·(1/(p-1))², the bound used to derive the edge count.
-      - declaration: Better_forms_clique
+      - declaration: Turan3.Better_forms_clique
         informal: Starting from any weight function, the minimal-support weight-non-decreasing improvement has support that forms a clique.
-      - declaration: Enhance_total_weight_stricinc
+      - declaration: Turan3.Enhance_total_weight_stricinc
         informal: Equalizing weights between a maximum- and minimum-weight vertex in the clique support strictly increases the total edge weight.
     tags:
       - graph-theory
