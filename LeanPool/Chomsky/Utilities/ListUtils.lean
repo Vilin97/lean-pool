@@ -211,7 +211,7 @@ def nTimes (l : List α) (n : ℕ) : List α :=
   (replicate n l).flatten
 
 /-- Notation for repeated list concatenation. -/
-infixl:100 " ^^ " => nTimes
+scoped infixl:100 " ^^ " => nTimes
 
 end joining
 

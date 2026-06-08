@@ -14,24 +14,24 @@ Basic definitions for the Chomsky-hierarchy formalization: symbols of a formal g
 -/
 
 
-section notations
+namespace Chomsky
 
 /-- The left-to-right direction of `↔`. -/
-postfix:max ".→" => Iff.mp
+scoped postfix:max ".→" => Iff.mp
 
 /-- The right-to-left direction of `↔`. -/
-postfix:max ".←" => Iff.mpr
+scoped postfix:max ".←" => Iff.mpr
 
 /-- The "left" or "top" variant. -/
-prefix:max "◄" => Sum.inl
+scoped prefix:max "◄" => Sum.inl
 
 /-- The "right" or "bottom" variant. -/
-prefix:max "▶" => Sum.inr
+scoped prefix:max "▶" => Sum.inr
 
 /-- Writing `↓t` is slightly more general than writing `Function.const _ t`. -/
-notation:max "↓"t:arg => (fun _ => t)
+scoped notation:max "↓"t:arg => (fun _ => t)
 
-end notations
+end Chomsky
 
 
 section unexpanders

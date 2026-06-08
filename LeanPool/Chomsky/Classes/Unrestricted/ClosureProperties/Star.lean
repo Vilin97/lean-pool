@@ -12,6 +12,8 @@ import LeanPool.Chomsky.Classes.Unrestricted.ClosureProperties.Concatenation
 Closure of general-grammar languages under the Kleene star.
 -/
 
+open scoped Chomsky
+
 
 -- new nonterminal type
 private abbrev nn (N : Type) : Type :=

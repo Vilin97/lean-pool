@@ -13,6 +13,8 @@ import LeanPool.Chomsky.Utilities.ListUtils
 Closure of general-grammar languages under reversal.
 -/
 
+open scoped Chomsky
+
 
 variable {T : Type}
 

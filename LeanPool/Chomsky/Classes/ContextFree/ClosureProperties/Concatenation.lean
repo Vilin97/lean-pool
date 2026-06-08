@@ -12,6 +12,8 @@ import LeanPool.Chomsky.Classes.Unrestricted.ClosureProperties.Concatenation
 Closure of context-free languages under concatenation.
 -/
 
+open scoped Chomsky
+
 variable {T : Type}
 
 private def wrapCFR₁ {N₁ : Type} (N₂ : Type) (r : N₁ × List (Symbol T N₁)) :

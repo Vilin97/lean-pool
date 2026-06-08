@@ -13,6 +13,8 @@ import Mathlib.Tactic.Linarith
 Closure of general-grammar languages under union.
 -/
 
+open scoped Chomsky
+
 
 variable {T : Type}
 

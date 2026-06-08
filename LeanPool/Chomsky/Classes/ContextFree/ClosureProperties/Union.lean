@@ -12,6 +12,8 @@ import LeanPool.Chomsky.Classes.Unrestricted.ClosureProperties.Union
 Closure of context-free languages under union.
 -/
 
+open scoped Chomsky
+
 variable {T : Type}
 
 private def liftCFR₁ {N₁ : Type} (N₂ : Type) (r : N₁ × List (Symbol T N₁)) :

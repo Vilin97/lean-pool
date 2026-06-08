@@ -13,6 +13,8 @@ import Mathlib.Tactic.Linarith
 Closure of general-grammar languages under concatenation.
 -/
 
+open scoped Chomsky
+
 
 section list_technicalities
 
