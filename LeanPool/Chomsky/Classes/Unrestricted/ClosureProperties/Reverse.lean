@@ -38,32 +38,25 @@ private lemma derives_reversed {g : Grammar T} {v : List (Symbol T g.nt)}
 by
   induction hgv with
   | refl =>
-    simp only [List.reverse_singleton]
+    show g.Derives _ (List.reverse [Symbol.nonterminal (reversalGrammar g).initial])
+    rw [List.reverse_singleton]
     apply gr_deri_self
   | tail _ orig ih =>
     apply gr_deri_of_deri_tran ih
+    rw [show (reversalGrammar g).Transforms = Grammar.Transforms (T := T)
+      ⟨g.nt, g.initial, g.rules.map reversalGrule⟩ from rfl] at orig
     rcases orig with ⟨r, rin, x, y, bef, aft⟩
-    change r ∈ g.rules.map _ at rin
     rw [List.mem_map] at rin
     rcases rin with ⟨r₀, rin₀, r_from_r₀⟩
+    subst r_from_r₀
     use r₀, rin₀, y.reverse, x.reverse
-    constructor
-    · have rid₁ : r₀.inputL = r.inputR.reverse := by
-        rw [←r_from_r₀]
-        simp [reversalGrule, List.reverse_reverse]
-      have rid₂ : [Symbol.nonterminal r₀.inputN] = [Symbol.nonterminal r.inputN].reverse := by
-        rw [←r_from_r₀]
-        simp [reversalGrule]
-      have rid₃ : r₀.inputR = r.inputL.reverse := by
-        rw [←r_from_r₀]
-        simp [reversalGrule, List.reverse_reverse]
-      rw [rid₁, rid₂, rid₃, ←List.reverse_append_append, ←List.reverse_append_append, ←List.append_assoc, ←List.append_assoc]
-      congr
-    · have snd_from_r : r₀.output = r.output.reverse := by
-        rw [←r_from_r₀]
-        simp [reversalGrule, List.reverse_reverse]
-      rw [snd_from_r, ←List.reverse_append_append]
-      exact congr_arg List.reverse aft
+    refine ⟨?_, ?_⟩
+    · rw [bef]
+      simp only [reversalGrule]
+      simp [List.reverse_append, List.reverse_reverse, List.append_assoc]
+    · rw [aft]
+      simp only [reversalGrule]
+      simp [List.reverse_append, List.reverse_reverse, List.append_assoc]
 
 private lemma reversed_word_in_original_language {g : Grammar T} {w : List T}
     (hwg : w ∈ (reversalGrammar g).language) :
@@ -71,7 +64,9 @@ private lemma reversed_word_in_original_language {g : Grammar T} {w : List T}
 by
   unfold Grammar.language at *
   have almost_done := derives_reversed hwg
-  rwa [←List.map_reverse] at almost_done
+  show g.Derives [Symbol.nonterminal g.initial] (w.reverse.map Symbol.terminal)
+  rw [List.map_reverse]
+  exact almost_done
 
 
 /-- The class of grammar-generated languages is closed under reversal. -/
