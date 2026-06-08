@@ -377,7 +377,7 @@ theorem proof_otp : ∀ (p k c l: UInt64),
             constructor
             · rw [h_code']
               simp [p_update_eq]
-            · simp at h_term
+            · simp only [Bool.not_eq_true] at h_term
               exact ⟨h_reg_3, h_term⟩
       · ext a
         simp

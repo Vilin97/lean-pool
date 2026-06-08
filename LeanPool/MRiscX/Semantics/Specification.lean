@@ -519,7 +519,7 @@ theorem specification_JumpEq_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
       MState.incPc_increments_pc, MState.getRegisterAt_def, beq_iff_eq, h_curr, h_cond]
     rw [← h_pc, h_terminated]
     simp only [and_true]
-    simp [ h_terminated] at pre
+    simp [h_terminated] at pre
     exact pre
 
 
