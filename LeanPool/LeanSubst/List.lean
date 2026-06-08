@@ -60,46 +60,46 @@ where
 
 /-- Look up the `n`-th element of a context list, substituting all binders crossed. -/
 @[simp, grind =]
-def List.dep_subst_get [SubstMap S T] (σ : Subst T) : List S -> Nat -> Option S
+def List.depSubstGet [SubstMap S T] (σ : Subst T) : List S -> Nat -> Option S
 | .nil, _ => none
 | .cons h _, 0 => return h[σ:_]
-| .cons _ t, n + 1 => (dep_subst_get σ t n)[σ:_]
+| .cons _ t, n + 1 => (depSubstGet σ t n)[σ:_]
 
-/-- Homogeneous variant of `List.dep_subst_get` (the `S = T` case). -/
-abbrev List.dep_subst_get1 [SubstMap S S] (σ : Subst S) : List S -> Nat -> Option S :=
-  dep_subst_get σ
+/-- Homogeneous variant of `List.depSubstGet` (the `S = T` case). -/
+abbrev List.depSubstGet1 [SubstMap S S] (σ : Subst S) : List S -> Nat -> Option S :=
+  depSubstGet σ
 
-/-- Notation `t[x|σ : T]` for `List.dep_subst_get` over `T`. -/
+/-- Notation `t[x|σ : T]` for `List.depSubstGet` over `T`. -/
 macro:max t:term noWs "[" x:term "|" σ:term  ":" T:term "]" : term =>
-  `(List.dep_subst_get (T := $T) $σ $t $x)
+  `(List.depSubstGet (T := $T) $σ $t $x)
 
-/-- Notation `t[x|σ]` for the homogeneous `List.dep_subst_get1`. -/
+/-- Notation `t[x|σ]` for the homogeneous `List.depSubstGet1`. -/
 macro:max t:term noWs "[" x:term "|" σ:term "]" : term =>
-  `(List.dep_subst_get1 $σ $t $x)
+  `(List.depSubstGet1 $σ $t $x)
 
-/-- Pretty-printer that displays `List.dep_subst_get1 σ t x` as `t[x|σ]`. -/
-@[app_unexpander List.dep_subst_get1]
-def unexpand_list_dep_subst_get1 : Lean.PrettyPrinter.Unexpander
+/-- Pretty-printer that displays `List.depSubstGet1 σ t x` as `t[x|σ]`. -/
+@[app_unexpander List.depSubstGet1]
+def unexpandListDepSubstGet1 : Lean.PrettyPrinter.Unexpander
 | `($_ $σ $t $x) => `($t[$x|$σ])
 | _ => throw ()
 
-/-- Pretty-printer that displays `List.dep_subst_get σ t x` as `t[x|σ : _]`. -/
+/-- Pretty-printer that displays `List.depSubstGet σ t x` as `t[x|σ : _]`. -/
 @[app_unexpander smap]
-def unexpand_list_dep_subst_get : Lean.PrettyPrinter.Unexpander
+def unexpandListDepSubstGet : Lean.PrettyPrinter.Unexpander
 | `($_ $σ $t $x) => `($t[$x|$σ : _])
 | `($_ (T := $T) $σ $t $x) => `($t[$x|$σ : $T])
 | _ => throw ()
 
 @[simp, grind =]
-theorem List.dep_subst_get_zero [SubstMap S T] {σ : Subst T} {A : S} {Γ : List S}
+theorem List.depSubstGetZero [SubstMap S T] {σ : Subst T} {A : S} {Γ : List S}
   : (A::Γ)[0|σ:_] = A[σ:_]
 := by
-  simp [dep_subst_get]
+  simp [depSubstGet]
 
 @[simp, grind =]
-theorem List.dep_subst_get_succ [SubstMap S T] {σ : Subst T} {A : S} {Γ : List S} {x}
+theorem List.depSubstGetSucc [SubstMap S T] {σ : Subst T} {A : S} {Γ : List S} {x}
   : (A::Γ)[x + 1|σ:_] = Γ[x|σ:_][σ:_]
 := by
-  simp [dep_subst_get]
+  simp [depSubstGet]
 
 end LeanSubst

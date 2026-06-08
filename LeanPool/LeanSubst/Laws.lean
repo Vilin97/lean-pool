@@ -561,14 +561,14 @@ namespace LeanSubst
       rw [rewrite_lift_compose_k1]
 
   /-- Tactic that discharges a `SubstMapId.apply_id` obligation by induction on the term. -/
-  macro "subst_solve_id" : tactic => `(tactic| {
+  macro "substSolveId" : tactic => `(tactic| {
     intro t; induction t
     any_goals solve | simp +instances [*]
     all_goals try simp at *; simp  +instances [*]; grind
   })
 
   /-- Tactic that discharges a `SubstMapStable.apply_stable` obligation by induction on the term. -/
-  macro "subst_solve_stable" : tactic => `(tactic| {
+  macro "substSolveStable" : tactic => `(tactic| {
     intro r σ h
     funext; case _ t =>
     induction t generalizing r σ
@@ -578,7 +578,7 @@ namespace LeanSubst
   })
 
   /-- Tactic that discharges a `SubstMapCompose.apply_compose` obligation by induction on the term. -/
-  macro "subst_solve_compose" : tactic => `(tactic| {
+  macro "substSolveCompose" : tactic => `(tactic| {
     intro s σ τ
     induction s generalizing σ τ
     any_goals solve | simp +instances [*]

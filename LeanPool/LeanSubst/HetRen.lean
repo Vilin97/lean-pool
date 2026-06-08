@@ -61,9 +61,9 @@ namespace LeanSubst
   /-- Notation `t⟨r⟩` for applying heterogeneous renaming `r` to `t`. -/
   macro:max t:term noWs "⟨" r:term "⟩" : term => `(hrmap $r $t)
   /-- Notation `a :: r` for `HetRen.cons`. -/
-  infixr:67 (name := HetRen.cons_notation) " :: " => HetRen.cons
+  infixr:67 (name := HetRen.consNotation) " :: " => HetRen.cons
   /-- Notation `r1 ∘ r2` for `HetRen.compose`. -/
-  infixr:85 (name := HetRen.compose_notation) " ∘ " => HetRen.compose
+  infixr:85 (name := HetRen.composeNotation) " ∘ " => HetRen.compose
 
   /-- Pretty-printer that displays `hrmap r t` as `t⟨r⟩`. -/
   @[app_unexpander hrmap]

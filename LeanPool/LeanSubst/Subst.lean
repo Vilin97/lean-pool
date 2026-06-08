@@ -135,9 +135,9 @@ namespace LeanSubst
   /-- Notation `t[σ : T]` for applying a substitution `σ` over `T` to `t`. -/
   macro:max t:term noWs "[" σ:term ":" T:term "]" : term => `(smap (T := $T) $σ $t)
   /-- Notation `a :: σ` for `Subst.cons`. -/
-  infixr:67 (name := Subst.cons_notation) " :: " => Subst.cons
+  infixr:67 (name := Subst.consNotation) " :: " => Subst.cons
   /-- Notation `σ ∘ τ` for `Subst.compose`. -/
-  infixr:85 (name := Subst.compose_notation) " ∘ " => Subst.compose
+  infixr:85 (name := Subst.composeNotation) " ∘ " => Subst.compose
   /-- Notation `σ ◾ τ` for `Subst.hcompose`. -/
   infixr:85 " ◾ " => Subst.hcompose
 

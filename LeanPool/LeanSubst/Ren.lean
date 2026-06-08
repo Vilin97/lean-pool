@@ -53,9 +53,9 @@ namespace LeanSubst
   /-- Notation `t⟨r⟩` for applying renaming `r` to value `t`. -/
   macro:max t:term noWs "⟨" r:term "⟩" : term => `(rmap $r $t)
   /-- Notation `a :: r` for `Ren.cons`. -/
-  infixr:67 (name := Ren.cons_notation) " :: " => Ren.cons
+  infixr:67 (name := Ren.consNotation) " :: " => Ren.cons
   /-- Notation `r1 ∘ r2` for `Ren.compose`. -/
-  infixr:85 (name := Ren.compose_notation) " ∘ " => Ren.compose
+  infixr:85 (name := Ren.composeNotation) " ∘ " => Ren.compose
 
   /-- Pretty-printer that displays `rmap r t` as `t⟨r⟩`. -/
   @[app_unexpander rmap]
