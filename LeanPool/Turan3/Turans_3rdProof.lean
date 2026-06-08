@@ -144,7 +144,7 @@ omit [DecidableEq α] in
 lemma exists_better_distribution_min_support (W : FunToMax G) :
   ∃ better : FunToMax G,
     (∀ i, W.w i = 0 → better.w i = 0) ∧ -- support is included∈that of W
-    (((Finset.univ : Finset α).filter (fun i => better.w i > 0)).card = (m G W)) ∧ -- support has size m
+    (((Finset.univ : Finset α).filter (fun i => better.w i > 0)).card = (m G W)) ∧
     (W.fw ≤ better.fw) -- has better weights
     := Nat.find_spec (exists_better_distribution G W)
 
@@ -204,7 +204,8 @@ def Improve (W : FunToMax G) (loose gain : α) (h_neq : gain ≠ loose) : FunToM
     have h_sum : ∑ x ∈ univ, W.w x = (W.w gain + W.w loose) + ∑ x ∈ S, W.w x := by
       rw[←Finset.sum_add_sum_compl (filter (fun x => x = gain ∨ x = loose) univ), Finset.filter_or,
           Finset.sum_union]
-      · have gain_filter : filter (fun x => x = gain) univ = {gain} := by ext x; simp[Finset.mem_filter, Finset.mem_univ]
+      · have gain_filter : filter (fun x => x = gain) univ = {gain} := by
+          ext x; simp [Finset.mem_filter, Finset.mem_univ]
         have loose_filter : filter (fun x => x = loose) univ = {loose} := by
           ext x; simp[Finset.mem_filter, Finset.mem_univ]
         rw[gain_filter, loose_filter, Finset.sum_singleton, Finset.sum_singleton]
@@ -254,7 +255,8 @@ lemma gain_edge_decomp (W : FunToMax G) (gain : α)
   have help := (Sym2.other_spec (helper_gain_mem _ _ he))
   apply @Eq.ndrec _ (s(gain, Sym2.Mem.other (helper_gain_mem G s(x, y) he))) (fun X =>
     Quot.liftOn X (fun pair => W.w pair.1 * W.w pair.2)
-      (by intro x y h; cases h <;> simp [mul_comm]) = W.w gain * W.w (Sym2.Mem.other (helper_gain_mem G s(x, y) he))
+      (by intro x y h; cases h <;> simp [mul_comm])
+        = W.w gain * W.w (Sym2.Mem.other (helper_gain_mem G s(x, y) he))
     ) _ s(x,y) help
   rw [Quot.liftOn_mk]
 
@@ -1180,8 +1182,10 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
     rw [Quot.liftOn_mk]
     rw [if_neg (show ¬ a = loose by intro con ; rw [Q,← con] at h_lt ; apply lt_irrefl _ h_lt)]
     rw [if_pos Q.symm]
-    rw [if_neg (show ¬ b = loose by intro con ;rw [Q,← con] at abnot ; apply abnot ; apply Sym2.eq_swap)]
-    rw [if_neg (show ¬ b = gain by intro con ;rw [← Q,← con] at abAdj ; apply G.ne_of_adj abAdj ; rfl)]
+    rw [if_neg (show ¬ b = loose by
+      intro con; rw [Q,← con] at abnot ; apply abnot ; apply Sym2.eq_swap)]
+    rw [if_neg (show ¬ b = gain by
+      intro con; rw [← Q,← con] at abAdj ; apply G.ne_of_adj abAdj ; rfl)]
     rw [add_mul]
     have tec : Sym2.Mem.other (helper_gain_mem G s(a, b) (small_helpI G (in_sdiff_left hab))) = b :=
         by
@@ -1203,7 +1207,8 @@ lemma Enhance_gain_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w
     rw [if_neg (show ¬ b = loose by intro con ; rw [Q,← con] at h_lt ; apply lt_irrefl _ h_lt)]
     rw [if_pos Q.symm]
     rw [if_neg (show ¬ a = loose by intro con ;rw [Q,← con] at abnot ; apply abnot ; rfl)]
-    rw [if_neg (show ¬ a = gain by intro con ;rw [← Q,← con] at abAdj ; apply G.ne_of_adj abAdj ; rfl)]
+    rw [if_neg (show ¬ a = gain by
+      intro con; rw [← Q,← con] at abAdj ; apply G.ne_of_adj abAdj ; rfl)]
     rw [mul_add]
     have tec : Sym2.Mem.other (helper_gain_mem G s(a, b) (small_helpI G (in_sdiff_left hab))) = a :=
         by
@@ -1911,7 +1916,9 @@ def exists_uniform_clique (W : FunToMax G) :=
     ∃ better : FunToMax G,
       (∀ i, W.w i = 0 ↔ better.w i = 0) ∧
       (G.IsClique ((Finset.univ : Finset α).filter (fun i => better.w i > 0))) ∧
-      (((Finset.univ : Finset α).filter (fun i => better.w i = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)).card = m) ∧ -- number of weights being 1/k is m
+      (((Finset.univ : Finset α).filter
+        (fun i => better.w i = 1 / ((Finset.univ : Finset α).filter
+          (fun i => W.w i > 0)).card)).card = m) ∧
       (W.fw ≤ better.fw))
 
 
@@ -1919,7 +1926,8 @@ open scoped Classical in
 /--
 Using `exists_uniform_clique`, computes the largest number m for which there exists a weight
 function (with support contained in that of W)
-whose support forms a clique, has improved total edge weight, and has exactly m vertices with weight 1/k (support size). -/
+whose support forms a clique, has improved total edge weight, and has exactly m vertices
+with weight 1/k (support size). -/
 noncomputable
 def max_uniform_support (W : FunToMax G) :=
   Nat.findGreatest (exists_uniform_clique G W)
@@ -1939,7 +1947,9 @@ lemma exists_best_uniform (W : FunToMax G)
     ∃ better : FunToMax G,
       (∀ i, W.w i = 0 ↔ better.w i = 0) ∧
       (G.IsClique ((Finset.univ : Finset α).filter (fun i => better.w i > 0))) ∧
-      (((Finset.univ : Finset α).filter (fun i => better.w i = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)).card = m) ∧ -- number of weights being 1/k is m
+      (((Finset.univ : Finset α).filter
+        (fun i => better.w i = 1 / ((Finset.univ : Finset α).filter
+          (fun i => W.w i > 0)).card)).card = m) ∧
       (W.fw ≤ better.fw))
       (max_uniform_support G W)
     :=
@@ -1980,7 +1990,8 @@ lemma exists_best_uniform (W : FunToMax G)
 /--
 UniformBetter gives a new weight function (via exists_best_uniform) with the same support, clique
 structure, and improved edge weight.
-In later lemmas (UniformBetter_constant_support), we prove that this distribution is in fact uniform on the support. -/
+In later lemmas (UniformBetter_constant_support), we prove that this distribution is in fact
+uniform on the support. -/
 noncomputable
 def UniformBetter (W : FunToMax G)
     (hW : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) : FunToMax G :=
@@ -2037,7 +2048,8 @@ lemma FunToMax.supp_nonempty (W : FunToMax G) :
 /-- Defines the maximun weight value among vertices -/
 noncomputable
 def FunToMax.max_weight (W : FunToMax G) :=
-  Finset.max' (Finset.image W.w ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) (by rw [image_nonempty] ; exact FunToMax.supp_nonempty G W)
+  Finset.max' (Finset.image W.w ((Finset.univ : Finset α).filter (fun i => W.w i > 0)))
+    (by rw [image_nonempty] ; exact FunToMax.supp_nonempty G W)
 
 omit [DecidableEq α] [DecidableRel G.Adj] in
 /-- Specifies that there exists a vertex in the support attaining the maximum weight -/
@@ -2063,7 +2075,8 @@ lemma FunToMax.argmax_weight (W : FunToMax G) : W.w (W.argmax G) = W.max_weight 
 /-- Defines the min. weight among vertices with positive weight -/
 noncomputable
 def FunToMax.min_weight (W : FunToMax G) :=
-  Finset.min' (Finset.image W.w ((Finset.univ : Finset α).filter (fun i => W.w i > 0))) (by rw [image_nonempty] ; exact FunToMax.supp_nonempty G W)
+  Finset.min' (Finset.image W.w ((Finset.univ : Finset α).filter (fun i => W.w i > 0)))
+    (by rw [image_nonempty] ; exact FunToMax.supp_nonempty G W)
 
 omit [DecidableEq α] [DecidableRel G.Adj] in
 /-- Specifies that there exists a vertex in the support that attains the minimun weight. -/
@@ -2384,7 +2397,8 @@ lemma arg_help {W : FunToMax G} (h_con : W.w (W.argmin G) < W.w (W.argmax G)) : 
 
 /--
 Defines `Enhanced` weight function : transfering weight from the argmax vertex `loose` to the argmin
-vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount defined `the_`. -/
+vertex `gain`, using the previous in Section 2 defined function `Enhance` by the amount
+defined `the_`. -/
 noncomputable
 def Enhanced (W : FunToMax G)
   (h_con : W.w (W.argmin G) < W.w (W.argmax G)) :=
@@ -2455,7 +2469,8 @@ omit [DecidableRel G.Adj] in
 Shows that the number of vertices with weight equal to 1/|support| increases after `Enhanced`
 -/
 lemma Enhanced_inc_uniform_count (W : FunToMax G) (h_con : W.w (W.argmin G) < W.w (W.argmax G)) :
-  let OneOverKSize (X : FunToMax G) := ((Finset.univ : Finset α).filter (fun i => X.w i = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)).card ;
+  let OneOverKSize (X : FunToMax G) := ((Finset.univ : Finset α).filter
+    (fun i => X.w i = 1 / ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card)).card ;
   OneOverKSize (Enhanced G W h_con) > OneOverKSize W := by
   intro OneOverKSize
   let denom := ((Finset.univ : Finset α).filter (fun i => W.w i > 0)).card
@@ -2596,7 +2611,8 @@ lemma UniformBetter_constant_support (W : FunToMax G)
         exact this⟩))
     · clear ohoh
       dsimp [exists_uniform_clique]
-      use (Enhanced G (UniformBetter G W hW) (by rw [@FunToMax.argmin_weight, @FunToMax.argmax_weight]; exact h_con))
+      use (Enhanced G (UniformBetter G W hW)
+        (by rw [@FunToMax.argmin_weight, @FunToMax.argmax_weight]; exact h_con))
       let eW : FunToMax G := UniformBetter G W hW
       let loose : α := FunToMax.argmax G eW
       let gain  : α := FunToMax.argmin G eW
