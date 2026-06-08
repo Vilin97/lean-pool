@@ -487,7 +487,6 @@ theorem dec_otp : ∀ (p k c l : UInt64),
         grind
       specialize h_I i this
       exact h_I
-
       repeat (constructor <;> try assumption)
       · grind only
       · repeat (constructor <;> try assumption)

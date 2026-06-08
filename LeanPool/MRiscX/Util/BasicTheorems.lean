@@ -68,8 +68,7 @@ theorem Nat.add_gt_zero_gt_zero : ∀ (n m: ℕ) ,
   rw [Nat.add_comm]
   apply Nat.gt_of_not_le
   simp only [le_zero_eq, Nat.add_eq_zero_iff, not_and]
-  intros _
-  intros neq
+  intro _ neq
   rw [neq] at h
   contradiction
 
@@ -136,8 +135,7 @@ theorem Nat.size_sub_lt_size : ∀ (x l s: Nat),
 
 theorem UInt64.gt_zero_neq_zero : ∀ (u:UInt64),
   u > 0 → u ≠ 0 := by
-  intros u h
-  intros neq
+  intro u h neq
   rw [neq] at h
   contradiction
 
@@ -226,8 +224,7 @@ theorem UInt64.add_sub_assoc : ∀ (p l x : UInt64),
 theorem UInt64.add_right_ne_of_lt : ∀ (n i l : UInt64),
   i < l →
   n + l ≠ n + i := by
-  intros n i l h_iLtl
-  intros neq
+  intro n i l h_iLtl neq
   rw [UInt64.add_cancel_left_iff] at neq
   rw [neq] at h_iLtl
   apply UInt64.lt_asymm

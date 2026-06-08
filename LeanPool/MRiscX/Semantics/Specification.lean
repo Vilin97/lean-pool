@@ -465,7 +465,6 @@ theorem specification_JumpEq_true (P : Assertion) (pc newPc reg1 reg2 : UInt64) 
       unfold MState.runOneStep MState.jump MState.jif' MState.jump
       rw [h_terminated]
       simp [h_curr, h_label, h_cond]
-
       zero_lt_ne_zero
   case right =>
     simp only [MState.get_label_from_code, Bool.not_eq_true, ne_eq, Set.mem_setOf_eq,
