@@ -459,193 +459,29 @@ lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
          else W.w pair.1 * W.w pair.2)
       _ e =
     Quot.lift (fun pair => W.w pair.1 * W.w pair.2) _ e)
-  intro x y he_diff
-  dsimp
-  have h_edge : s(x,y) ∈ G.edgeFinset := by
-    rw[Finset.mem_sdiff] at he_diff
-    exact he_diff.1
-  /- Case: y = loose -/
-  by_cases h_y_loose : y = loose
-  have h_y_in : y ∈ s(x,y) := by
-    simp[h_y_loose]
-  have h_loose : loose ∈ s(x,y) := by
-    rw[← h_y_loose]
-    exact h_y_in
-  have h_inc : s(x,y) ∈ G.incidenceFinset loose := by
-    rw[mem_incidenceFinset]
-    rw[h_y_loose]
-    rw[mk'_mem_incidenceSet_iff]
-    constructor
-    · rw[edge_mem_iff]
-      rw[h_y_loose] at h_edge
-      use s(x, loose)
-      constructor
-      · rw [mem_edgeFinset] at h_edge
-        exact h_edge
-      · rfl
-    · exact Or.inr rfl
-  · exfalso
+  · intro x y he_diff
+    dsimp
+    have h_edge : s(x,y) ∈ G.edgeFinset := by
+      rw[Finset.mem_sdiff] at he_diff
+      exact he_diff.1
     rw [Finset.mem_sdiff] at he_diff
-    have h_not_in_affectedEdges : s(x,y) ∉ affectedEdges := he_diff.2
-    have h_affectedEdges_eq : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
-      apply Finset.ext
-      intro e
-      simp only [Finset.mem_union, SimpleGraph.incidenceFinset]
-      apply Iff.intro
-      · intro h
-        have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
-          Finset.mem_disjUnion.mp h
-        cases h_union with
-        | inl h_gain => exact Or.inl h_gain
-        | inr h_loose => exact Or.inr h_loose
-      · intro h_disj
-        cases h_disj with
-        | inl h_gain =>
-            rw [Finset.mem_disjUnion]; left; exact h_gain
-        | inr h_loose =>
-            rw [Finset.mem_disjUnion]; right; exact h_loose
-    have h_in_affectedEdges : s(x,y) ∈ affectedEdges := by
-      rw[h_affectedEdges_eq]
-      apply Finset.mem_union_right
-      exact h_inc
-    contradiction
-  /- Case: y = gain -/
-  by_cases h_y_gain : y = gain
-  have h_y_in : y ∈ s(x,y) := by
-    simp[h_y_gain]
-  have h_gain : gain ∈ s(x,y) := by
-    rw[← h_y_gain]
-    exact h_y_in
-  have h_inc : s(x,y) ∈ G.incidenceFinset gain := by
-    rw[mem_incidenceFinset]
-    rw[h_y_gain]
-    rw[mk'_mem_incidenceSet_iff]
-    constructor
-    · rw[edge_mem_iff]
-      rw[h_y_gain] at h_edge
-      use s(x, gain)
-      constructor
-      · rw [mem_edgeFinset] at h_edge
-        exact h_edge
-      · rfl
-    · exact Or.inr rfl
-  · exfalso
-    rw [Finset.mem_sdiff] at he_diff
-    have h_not_in_affectedEdges : s(x,y) ∉ affectedEdges := he_diff.2
-    have h_affectedEdges_eq : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
-      apply Finset.ext
-      intro e
-      simp only [Finset.mem_union, SimpleGraph.incidenceFinset]
-      apply Iff.intro
-      · intro h
-        have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
-          Finset.mem_disjUnion.mp h
-        cases h_union with
-        | inl h_gain => exact Or.inl h_gain
-        | inr h_loose => exact Or.inr h_loose
-      · intro h_disj
-        cases h_disj with
-        | inl h_gain =>
-            rw [Finset.mem_disjUnion]; left; exact h_gain
-        | inr h_loose =>
-            rw [Finset.mem_disjUnion]; right; exact h_loose
-    have h_in_affectedEdges : s(x,y) ∈ affectedEdges := by
-      rw[h_affectedEdges_eq]
-      apply Finset.mem_union_left
-      exact h_inc
-    contradiction
-  /- Case: x = loose -/
-  by_cases h_x_loose : x = loose
-  · have h_x_in : x ∈ s(x,y) := by
-      simp[h_x_loose]
-    have h_loose : loose ∈ s(x,y) := by
-      rw[← h_x_loose]
-      exact h_x_in
-    have h_inc : s(x,y) ∈ G.incidenceFinset loose := by
-      rw[mem_incidenceFinset]
-      rw[h_x_loose]
-      rw[mk'_mem_incidenceSet_iff]
-      constructor
-      · rw[edge_mem_iff]
-        rw[h_x_loose] at h_edge
-        use s(loose, y)
-        constructor
-        · rw [mem_edgeFinset] at h_edge
-          exact h_edge
-        · rfl
-      · exact Or.inl rfl
-    · exfalso
-      rw [Finset.mem_sdiff] at he_diff
-      have h_not_in_affectedEdges : s(x,y) ∉ affectedEdges := he_diff.2
-      have h_affectedEdges_eq : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
-        apply Finset.ext
-        intro e
-        simp only [Finset.mem_union, SimpleGraph.incidenceFinset]
-        apply Iff.intro
-        · intro h
-          have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
-            Finset.mem_disjUnion.mp h
-          cases h_union with
-          | inl h_gain => exact Or.inl h_gain
-          | inr h_loose => exact Or.inr h_loose
-        · intro h_disj
-          cases h_disj with
-          | inl h_gain =>
-              rw [Finset.mem_disjUnion]; left; exact h_gain
-          | inr h_loose =>
-              rw [Finset.mem_disjUnion]; right; exact h_loose
-      have h_in_affectedEdges : s(x,y) ∈ affectedEdges := by
-        rw[h_affectedEdges_eq]
-        apply Finset.mem_union_right
-        exact h_inc
-      contradiction
-  /- Case: x = gain -/
-  by_cases h_x_gain : x = gain
-  · have h_x_in : x ∈ s(x,y) := by
-      simp[h_x_gain]
-    have h_gain : gain ∈ s(x,y) := by
-      rw[← h_x_gain]
-      exact h_x_in
-    have h_inc : s(x,y) ∈ G.incidenceFinset gain := by
-      rw[mem_incidenceFinset]
-      rw[h_x_gain]
-      rw[mk'_mem_incidenceSet_iff]
-      constructor
-      · rw[edge_mem_iff]
-        rw[h_x_gain] at h_edge
-        use s(gain, y)
-        constructor
-        · rw [mem_edgeFinset] at h_edge
-          exact h_edge
-        · rfl
-      · exact Or.inl rfl
-    exfalso
-    rw [Finset.mem_sdiff] at he_diff
-    have h_not_in_affectedEdges : s(x,y) ∉ affectedEdges := he_diff.2
-    have h_affectedEdges_eq : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose := by
-      apply Finset.ext
-      intro e
-      simp only [Finset.mem_union, SimpleGraph.incidenceFinset]
-      apply Iff.intro
-      · intro h
-        have h_union : e ∈ G.incidenceFinset gain ∨ e ∈ G.incidenceFinset loose :=
-          Finset.mem_disjUnion.mp h
-        cases h_union with
-        | inl h_gain => exact Or.inl h_gain
-        | inr h_loose => exact Or.inr h_loose
-      · intro h_disj
-        cases h_disj with
-        | inl h_gain =>
-            rw [Finset.mem_disjUnion]; left; exact h_gain
-        | inr h_loose =>
-            rw [Finset.mem_disjUnion]; right; exact h_loose
-    have h_in_affectedEdges : s(x,y) ∈ affectedEdges := by
-      rw[h_affectedEdges_eq]
-      apply Finset.mem_union_left
-      exact h_inc
-    contradiction
-  simp [if_neg h_y_loose, if_neg h_y_gain, if_neg h_x_loose, if_neg h_x_gain]
-  exact he
+    have h_affectedEdges_eq : affectedEdges = G.incidenceFinset gain ∪ G.incidenceFinset loose :=
+      Finset.disjUnion_eq_union _ _ _
+    have h_not_in : s(x,y) ∉ G.incidenceFinset gain ∧ s(x,y) ∉ G.incidenceFinset loose := by
+      have h := he_diff.2
+      rw [h_affectedEdges_eq, Finset.mem_union] at h
+      exact ⟨fun hg => h (Or.inl hg), fun hl => h (Or.inr hl)⟩
+    have key : ∀ v : α, v ∈ s(x, y) → s(x, y) ∈ G.incidenceFinset v := by
+      intro v hv
+      rw [mem_incidenceFinset, SimpleGraph.mk'_mem_incidenceSet_iff]
+      refine ⟨by rw [← SimpleGraph.mem_edgeSet, ← mem_edgeFinset]; exact h_edge, ?_⟩
+      rwa [Sym2.mem_iff] at hv
+    have h_x_loose : x ≠ loose := fun h => h_not_in.2 (key loose (h ▸ Sym2.mem_mk_left x y))
+    have h_x_gain : x ≠ gain := fun h => h_not_in.1 (key gain (h ▸ Sym2.mem_mk_left x y))
+    have h_y_loose : y ≠ loose := fun h => h_not_in.2 (key loose (h ▸ Sym2.mem_mk_right x y))
+    have h_y_gain : y ≠ gain := fun h => h_not_in.1 (key gain (h ▸ Sym2.mem_mk_right x y))
+    simp only [if_neg h_y_loose, if_neg h_y_gain, if_neg h_x_loose, if_neg h_x_gain]
+  · exact he
 
 /-- Assumption h mirrors the assumption s_1 ≤ s_2 in the informal proof.
 This lemma shows that the total edge weight does not decrease under `Improve`, using the previous lemmas:
