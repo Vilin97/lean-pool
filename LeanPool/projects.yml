@@ -1914,9 +1914,6 @@ projects:
     main_declarations:
       - hoare_triple_up
       - S_SEQ
-      - PRE_STR
-      - POST_WEAK
-      - specification_LoadImmediate
       - proof_otp
     main_results:
       - declaration: hoare_triple_up
@@ -1937,3 +1934,5 @@ projects:
       - risc-v
       - assembly
       - formal-methods
+    msc:
+      - 68Q60

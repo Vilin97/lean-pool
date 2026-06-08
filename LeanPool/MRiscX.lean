@@ -9,6 +9,17 @@ import LeanPool.MRiscX.Examples.OtpProof
 import LeanPool.MRiscX.Examples.SingleProofsOTP
 
 /-!
+# MRiscX
+
+Source: url:https://github.com/JulsDE/MRiscX
+Authors: Julius Marx
+Status: verified
+Main declarations: `hoare_triple_up`, `S_SEQ`, `proof_otp`
+Tags: hoare-logic, program-verification, risc-v, assembly, formal-methods
+MSC: 68Q60
+-/
+
+/-!
 # MRiscX: a certified RISC-V interpreter with Hoare logic in Lean
 
 MRiscX provides an environment for verifying RISC-V assembly code in Lean using
@@ -19,11 +30,4 @@ per-instruction specifications, and custom elaborators, delaborators, and tactic
 that let assembly programs and Hoare triples be written and proved directly in Lean.
 A complete worked correctness proof of a One-Time-Pad implementation (`proof_otp`)
 demonstrates the framework end to end.
-
-Source: url:https://github.com/JulsDE/MRiscX
-Authors: Julius Marx
-Status: verified
-Main declarations: `hoare_triple_up`, `S_SEQ`, `PRE_STR`, `POST_WEAK`,
-`specification_LoadImmediate`, `proof_otp`
-Tags: hoare-logic, program-verification, risc-v, assembly, formal-methods
 -/
