@@ -12,7 +12,7 @@ import LeanPool.LeanModelChecking.SafetyLivenessDecomposition
 Source: url:https://github.com/kuruczgy/lean-model-checking
 Authors: György Kurucz
 Status: verified
-Main declarations: `for_any_LTL_formula_exists_an_equivalent_NBW`, `LTL`, `NBW`
+Main declarations: `LeanModelChecking.for_any_LTL_formula_exists_an_equivalent_NBW`
 Tags: model-checking, linear-temporal-logic, buchi-automaton, safety-liveness, omega-automata
 MSC: 68Q60, 03B44, 68Q45
 -/

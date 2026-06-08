@@ -18,6 +18,8 @@ Miyano–Hayashi breakpoint construction (`ABW.toNBW`), and prove
 `ABW.toNBW.lang_eq`.
 -/
 
+namespace LeanModelChecking
+
 /-- The nondeterministic Büchi automaton obtained from an alternating one `A` by
 the Miyano–Hayashi breakpoint construction: states are pairs `(X, W)` of a current
 set `X` and an "obligation" set `W` of states still owing a visit to `A.F`. -/
@@ -322,3 +324,5 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
 theorem ABW.toNBW.lang_eq {S Q} (A : ABW S Q) [Finite Q] : A.language = (ABW.toNBW A).language := by
   funext; apply propext
   exact ⟨ABW.toNBW.lang_sup, ABW.toNBW.lang_sub⟩
+
+end LeanModelChecking

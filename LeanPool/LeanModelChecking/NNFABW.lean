@@ -16,15 +16,23 @@ We construct, for every negation normal form formula, an alternating Büchi
 automaton (`ABW`) accepting the same language, establishing `exists_ABW_lang_for_LTL`.
 -/
 
-theorem subtype_val_injective {α} {P : α → Prop} :
-    @Function.Injective (Subtype P) α Subtype.val := by simp
+namespace LeanModelChecking
 
 /-- The subtype `{ x // x ≤ v }` of elements bounded above by `v`. -/
 abbrev Iic {α} [LE α] (v : α) := { x // x ≤ v }
 
-/-- The inclusion of `Iic x` into `Iic y` induced by a bound `x ≤ y`. -/
-abbrev Subtype.embedLe {α} [Preorder α] {x y : α} (hle : x ≤ y) : Iic x
-    → Iic y := fun v => ⟨v.val, v.prop.trans hle⟩
+end LeanModelChecking
+
+/-- The inclusion of `LeanModelChecking.Iic x` into `LeanModelChecking.Iic y`
+induced by a bound `x ≤ y`. Lives in the `Subtype` namespace so that dot notation
+`v.embedLe hle` works on subtype elements. -/
+abbrev Subtype.embedLe {α} [Preorder α] {x y : α} (hle : x ≤ y) : LeanModelChecking.Iic x
+    → LeanModelChecking.Iic y := fun v => ⟨v.val, v.prop.trans hle⟩
+
+namespace LeanModelChecking
+
+theorem subtype_val_injective {α} {P : α → Prop} :
+    @Function.Injective (Subtype P) α Subtype.val := by simp
 
 theorem antitone_nat_eventually_constant
   {f : ℕ → ℕ} (hf : Antitone f)
@@ -1780,3 +1788,5 @@ theorem exists_ABW_lang_for_LTL {AP} (f : LTL AP) :
   have q_fin : Finite { q // q ≤ nnf } := by classical apply sub_finite
   exists _, q_fin, nnf.toABW
   rw [eqv, NNF.toABW_lang]
+
+end LeanModelChecking

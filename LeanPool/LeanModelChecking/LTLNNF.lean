@@ -18,6 +18,8 @@ We define negation normal form (NNF) formulas, their language, and a translation
 `LTL.exists_equiv_nnf` shows every `LTL` formula has an equivalent NNF formula.
 -/
 
+namespace LeanModelChecking
+
 /-- Linear temporal logic formulas in negation normal form over atomic
 propositions `AP`: negation is pushed to the atoms (`atom`/`not_atom`), and the
 temporal operators are `next`, `until`, and the dual `release`. -/
@@ -156,3 +158,5 @@ theorem LTL.exists_equiv_nnf {AP} (ψ : LTL AP) :
     ∃ (nnf : NNF AP), ψ.language = nnf.language := by
   refine ⟨LTL.toNNF ψ, funext ?_⟩
   simpa using (toNNFCore_sound ψ).1
+
+end LeanModelChecking

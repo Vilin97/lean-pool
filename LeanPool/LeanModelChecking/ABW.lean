@@ -12,6 +12,8 @@ We define positive Boolean formulas (`PositiveBool`), alternating Büchi automat
 (`ABW`), their run DAGs (`RunDAG`), and the language they accept.
 -/
 
+namespace LeanModelChecking
+
 /-- A positive Boolean formula over a set of atoms `Q`: a formula built from
 atoms, `true`, `false`, conjunction, and disjunction (no negation). -/
 inductive PositiveBool (Q : Type) where
@@ -81,3 +83,5 @@ def RunDAG.accepting {S Q} {A : ABW S Q} {w : ℕ → S} (G : RunDAG A w) :=
 /-- The automaton `A` accepts the word `w` when it admits an accepting run DAG. -/
 def ABW.language {S Q} (A : ABW S Q) (w : Nat → S) :=
   ∃ (G : RunDAG A w), G.accepting
+
+end LeanModelChecking

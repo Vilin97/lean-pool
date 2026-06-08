@@ -14,6 +14,8 @@ of nondeterministic Büchi automata (`NBW`), and state the theorem that every
 `LTL` formula has an equivalent `NBW`.
 -/
 
+namespace LeanModelChecking
+
 /-- A Linear Temporal Logic formula. -/
 inductive LTL (AP : Type) where
 | atom (p : AP)
@@ -63,3 +65,5 @@ def NBW.language {S} (A : NBW S) (w : ℕ → S) :=
 nondeterministic Büchi automaton, packaged as a proposition so it can be reused. -/
 def forAnyLTLFormulaExistsAnEquivalentNBWStatement :=
   ∀ {AP} (φ : LTL AP), ∃ (A : NBW (Letter AP)), φ.language = A.language
+
+end LeanModelChecking

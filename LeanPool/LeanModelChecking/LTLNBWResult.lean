@@ -16,6 +16,8 @@ linear temporal logic formula there is an equivalent nondeterministic Büchi
 automaton accepting the same language.
 -/
 
+namespace LeanModelChecking
+
 theorem for_any_LTL_formula_exists_an_equivalent_NBW :
     forAnyLTLFormulaExistsAnEquivalentNBWStatement := by
   unfold forAnyLTLFormulaExistsAnEquivalentNBWStatement
@@ -24,3 +26,5 @@ theorem for_any_LTL_formula_exists_an_equivalent_NBW :
   exists A.toNBW
   rw [lang_eq]
   rw [ABW.toNBW.lang_eq]
+
+end LeanModelChecking

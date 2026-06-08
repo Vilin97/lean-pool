@@ -1885,15 +1885,13 @@ projects:
       github_repo: kuruczgy/lean-model-checking
     status: verified
     main_declarations:
-      - for_any_LTL_formula_exists_an_equivalent_NBW
-      - LTL
-      - NBW
+      - LeanModelChecking.for_any_LTL_formula_exists_an_equivalent_NBW
     main_results:
-      - declaration: for_any_LTL_formula_exists_an_equivalent_NBW
+      - declaration: LeanModelChecking.for_any_LTL_formula_exists_an_equivalent_NBW
         informal: For any linear temporal logic formula there exists an equivalent nondeterministic Büchi automaton accepting the same language.
-      - declaration: LTL
+      - declaration: LeanModelChecking.LTL
         informal: The syntax of linear temporal logic formulas over a set of atomic propositions.
-      - declaration: NBW
+      - declaration: LeanModelChecking.NBW
         informal: A nondeterministic Büchi automaton over a given alphabet of letters.
       - declaration: SafetyLivenessDecomposition.safety_liveness_decomposition
         informal: Every linear-time property is the intersection of a safety property and a liveness property.
