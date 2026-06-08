@@ -14,6 +14,8 @@ This module equips `ITree` with its functor and monad operations (`map`, `bind`,
 `bind_assoc`, using the parameterized-coinduction (Paco) tactics.
 -/
 
+namespace Lean4Itree
+
 namespace ITree
 
 /- Functor Instance -/
@@ -200,3 +202,5 @@ instance : LawfulMonad (ITree ε) where
   bind_assoc := bind_assoc
 
 end ITree
+
+end Lean4Itree

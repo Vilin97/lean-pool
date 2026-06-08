@@ -69,6 +69,8 @@ theorem meet_assoc [CompleteLattice α] (x y z : α) : x ⊓ₚ y ⊓ₚ z = x �
 
 end Lean.Order.CompleteLattice
 
+namespace Lean4Itree
+
 open Lean.Order PartialOrder CompleteLattice
 
 -- note that we don't require monotonicity for f
@@ -191,6 +193,8 @@ open Lean Lean.Elab
 private inductive paco_mark : Prop
 | mk_paco_mark
 
+end Lean4Itree
+
 /-- introduce a new fact, given the witness for that fact -/
 def Lean.MVarId.introFact (mvarId : MVarId) (fact : Expr) : MetaM MVarId :=
   mvarId.withContext do
@@ -207,6 +211,10 @@ def Lean.MVarId.introFactWithNewGoal (mvarId : MVarId) (factType : Expr) : MetaM
     let p ← Meta.mkFreshExprSyntheticOpaqueMVar factType
     let (_, mvarIdNew) ← MVarId.intro1P $ ← mvarId.assert Name.anonymous factType p
     return (p.mvarId!, mvarIdNew)
+
+namespace Lean4Itree
+
+open Lean Lean.Elab
 
 /-- Initialise a parameterized-coinduction proof: mark the context and unfold the
 goal's `lfp_monotone` fixed point so the Paco combinators can act on it. -/

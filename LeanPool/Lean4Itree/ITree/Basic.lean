@@ -17,6 +17,8 @@ injectivity lemmas for the constructors, and the bisimulation equality `IEq`
 that is proven to coincide with propositional equality (`ieq_iff_eq`).
 -/
 
+namespace Lean4Itree
+
 /-- The node shapes of an interaction tree: a returned value, a silent `tau`
 step, or a visible effect `vis`. This is the `A`-component of the polynomial
 functor whose `M`-type is `ITree`. -/
@@ -318,3 +320,5 @@ theorem ieq_rfl {sim} {hsim : ∀ t1 t2, IEq t1 t2 → sim t1 t2} (t : ITree ε 
 end
 
 end ITree
+
+end Lean4Itree

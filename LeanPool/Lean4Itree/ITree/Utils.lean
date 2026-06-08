@@ -10,6 +10,8 @@ import Mathlib.Data.Vector3
 /-! # --------------------Start Vector3 Utilities---------------------------- -/
 /-! # ----------------------------------------------------------------------- -/
 
+namespace Lean4Itree
+
 instance instOfNatULiftFin2Zero {n : Nat} [Fin2.IsLT 0 n] : OfNat (ULift (Fin2 n)) 0 :=
   ⟨.up <| .ofNat' 0⟩
 
@@ -95,6 +97,8 @@ theorem PFunctor.M.unfold_corec'.{uA, uB, u} {P : PFunctor.{uA, uB}} {α : Type 
       apply unfold_corec'_left _ (fun _ => rfl)
     | .inr r =>
       simp only [PFunctor.M.corec', PFunctor.M.corec₁, PFunctor.map, Sum.bind, Function.id_comp]
+
+end Lean4Itree
 
 /-! # ----------------------------------------------------------------------- -/
 /-! # --------------------End PFunctor Utilities--------------------------- -/

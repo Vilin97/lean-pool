@@ -1913,24 +1913,23 @@ projects:
       github_repo: mit-plv/lean4-itree
     status: verified
     main_declarations:
-      - ITree
-      - ITree.IEq
-      - ITree.ieq_iff_eq
-      - plfp_acc
+      - Lean4Itree.ITree
+      - Lean4Itree.ITree.ieq_iff_eq
+      - Lean4Itree.plfp_acc
     main_results:
-      - declaration: ITree
+      - declaration: Lean4Itree.ITree
         informal: Defines the coinductive interaction tree as the final coalgebra (M-type) of the interaction-tree polynomial functor.
-      - declaration: ITree.IEq
+      - declaration: Lean4Itree.ITree.IEq
         informal: Defines bisimulation equality between interaction trees as a coinductive fixed point.
-      - declaration: ITree.ieq_iff_eq
+      - declaration: Lean4Itree.ITree.ieq_iff_eq
         informal: Proves that bisimulation equality of interaction trees coincides with propositional equality.
-      - declaration: ITree.bind_assoc
+      - declaration: Lean4Itree.ITree.bind_assoc
         informal: Proves associativity of monadic bind for interaction trees, part of the LawfulMonad instance.
-      - declaration: ITree.iter
+      - declaration: Lean4Itree.ITree.iter
         informal: Defines the iteration combinator producing an interaction tree from a step function.
-      - declaration: ITree.interp
+      - declaration: Lean4Itree.ITree.interp
         informal: Defines interpretation of an interaction tree against an effect handler into an arbitrary iterable monad.
-      - declaration: plfp_acc
+      - declaration: Lean4Itree.plfp_acc
         informal: Proves the accumulation principle for the parameterized least fixed point underlying the Paco coinduction library.
     tags:
       - coinduction

@@ -12,7 +12,7 @@ import LeanPool.Lean4Itree.Paco
 Source: url:https://github.com/mit-plv/lean4-itree
 Authors: Paul Mure, Joonhyup Lee
 Status: verified
-Main declarations: `ITree`, `ITree.IEq`, `ITree.ieq_iff_eq`, `plfp_acc`
+Main declarations: `Lean4Itree.ITree`, `Lean4Itree.ITree.ieq_iff_eq`, `Lean4Itree.plfp_acc`
 Tags: coinduction, interaction-trees, monads, qpf, semantics
 MSC: 68Q55, 18C50, 68N18
 -/

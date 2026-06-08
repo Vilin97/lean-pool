@@ -15,11 +15,13 @@ and sum effects (`VoidE`, `SumE`), the `MonadIter` class of iterable monads, the
 against an effect handler into an arbitrary iterable monad.
 -/
 
+namespace Lean4Itree
+
 /-- A natural transformation between effect families: a uniform map `ε1 α → ε2 α`. -/
 abbrev naturalTransformation (ε1 : Type u → Type v1) (ε2 : Type u → Type v2) :=
   ∀ {α : Type u}, ε1 α → ε2 α
 /-- Notation `ε1 ⟶ ε2` for a natural transformation between effect families. -/
-infixr:50 " ⟶ " => naturalTransformation
+scoped infixr:50 " ⟶ " => naturalTransformation
 
 /-- The empty effect family, with no operations. -/
 inductive VoidE : Type u → Type v
@@ -114,3 +116,5 @@ def interp {ε : Type → Type} {m : Type 1 → Type 1} {ρ : Type} [Monad m] [M
   ) t
 
 end ITree
+
+end Lean4Itree
