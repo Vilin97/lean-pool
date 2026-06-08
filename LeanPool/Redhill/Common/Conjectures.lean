@@ -3,17 +3,15 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
-module
 
-public import LeanPool.Redhill.Common.PairwiseCoprime
-public import LeanPool.Redhill.Common.Quality
-public import LeanPool.Redhill.Common.SubsumCondition
+import LeanPool.Redhill.Common.PairwiseCoprime
+import LeanPool.Redhill.Common.Quality
+import LeanPool.Redhill.Common.SubsumCondition
 
 /-!
 # Definitions of the tuple sets and conjectures considered in the paper
 -/
 
-@[expose] public section
 
 open Finset
 

@@ -3,12 +3,11 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
-module
 
 import Mathlib.Algebra.Order.Archimedean.Basic
-public import LeanPool.Redhill.Common.MaxAbs
-public import LeanPool.Redhill.General.Defs
-public import LeanPool.Redhill.ToMathlib.NatAbs
+import LeanPool.Redhill.Common.MaxAbs
+import LeanPool.Redhill.General.Defs
+import LeanPool.Redhill.ToMathlib.NatAbs
 
 /-!
 # Subsum condition for the general case
@@ -249,7 +248,7 @@ lemma X_le_natAbs_redEmb1 {b₁ b₂ b₃ b₄ : SignType} (hb : b₁ ≠ b₂ �
 
 end Inequalities
 
-public lemma eventually_X_gt (K : Finset ℕ → ℕ) : ∀ᶠ h in Filter.atTop, K F < X F h := by
+lemma eventually_X_gt (K : Finset ℕ → ℕ) : ∀ᶠ h in Filter.atTop, K F < X F h := by
   rw [Filter.eventually_atTop]
   obtain ⟨n, hn⟩ : ∃ n, K F < (Y F + 1) ^ n := add_one_pow_unbounded_of_pos _ (by grind [Y_pos])
   refine ⟨n, fun h hh ↦ hn.trans_le ?_⟩
@@ -297,7 +296,7 @@ lemma tupReduce_tup {c₁ : n + 2 = n + 6 - #(univ.map redEmb1)} :
       rw [castAdd_natAdd, cast_eq_self, addCases_right, castSucc_natAdd, addCases_right]
       fin_cases i <;> rfl
 
-public theorem strongSSC_tup : ∀ᶠ h in Filter.atTop, StrongSSC (tup n F h) := by
+theorem strongSSC_tup : ∀ᶠ h in Filter.atTop, StrongSSC (tup n F h) := by
   filter_upwards [isSubsumBlock_redEmb1 (n := n) (F := F)] with h hh
   have c : n + 2 = n + 6 - #(univ.map (redEmb1 (n := n))) := by simp
   apply hh.strongSSC_tupReduce c
@@ -307,7 +306,7 @@ public theorem strongSSC_tup : ∀ᶠ h in Filter.atTop, StrongSSC (tup n F h) :
   · rw [pow_succ' _ 5, ← mul_assoc]
     exact Nat.mul_le_mul_right _ (by lia)
 
-public lemma maxAbs_tup : ∀ᶠ h in Filter.atTop, maxAbs (tup n F h) = (X F h + Y F) ^ 5 := by
+lemma maxAbs_tup : ∀ᶠ h in Filter.atTop, maxAbs (tup n F h) = (X F h + Y F) ^ 5 := by
   filter_upwards [eventually_X_gt (F := F) (tailK n)] with h hh
   have na5 : (tup n F h (natAdd n 5)).natAbs = (X F h + Y F) ^ 5 := by
     rw [tup_natAdd_five, Int.natAbs_neg, Int.natAbs_pow]

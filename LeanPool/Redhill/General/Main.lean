@@ -3,18 +3,16 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
-module
 
-public import Mathlib.RingTheory.Radical.NatInt
-public import LeanPool.Redhill.Common.Conjectures
-public import LeanPool.Redhill.General.Coprime
-public import LeanPool.Redhill.General.Subsum
+import Mathlib.RingTheory.Radical.NatInt
+import LeanPool.Redhill.Common.Conjectures
+import LeanPool.Redhill.General.Coprime
+import LeanPool.Redhill.General.Subsum
 
 /-!
 # The general case (Theorem 1.14)
 -/
 
-public section
 
 namespace GeneralCase
 

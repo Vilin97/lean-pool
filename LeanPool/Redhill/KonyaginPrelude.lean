@@ -3,17 +3,15 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
-module
 
-public import Mathlib.Analysis.SpecialFunctions.Pow.Real
-public import Mathlib.RingTheory.Radical.NatInt
-public import LeanPool.Redhill.Common.Conjectures
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.RingTheory.Radical.NatInt
+import LeanPool.Redhill.Common.Conjectures
 
 /-!
 # The "warm-up" result (Theorem 2.1)
 -/
 
-public section
 
 namespace KonyaginPrelude
 

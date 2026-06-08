@@ -3,17 +3,15 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
-module
 
-public import LeanPool.Redhill.Odd.Pell
-public import LeanPool.Redhill.Odd.Subsum
-public import LeanPool.Redhill.Common.Conjectures
+import LeanPool.Redhill.Odd.Pell
+import LeanPool.Redhill.Odd.Subsum
+import LeanPool.Redhill.Common.Conjectures
 
 /-!
 # The odd case (Theorem 1.13)
 -/
 
-public section
 
 namespace OddCase
 

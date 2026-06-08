@@ -3,11 +3,10 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
-module
 
 import Mathlib.Order.Filter.Finite
-public import LeanPool.Redhill.Common.PairwiseCoprime
-public import LeanPool.Redhill.General.Defs
+import LeanPool.Redhill.Common.PairwiseCoprime
+import LeanPool.Redhill.General.Defs
 
 /-!
 # Coprimality proof for the general case
@@ -401,7 +400,7 @@ lemma isCoprime_castAdd_natAdd {i : Fin n} {j : Fin 6} :
       _ ≤ 2 * Y F ^ 1 := by grind [Y_pos]
       _ ≤ _ := by gcongr <;> grind [Y_pos]
 
-public theorem pairwiseCoprime_tup : ∀ᶠ h in atTop, PairwiseCoprime (tup n F h) := by
+theorem pairwiseCoprime_tup : ∀ᶠ h in atTop, PairwiseCoprime (tup n F h) := by
   have cp₂' := @isCoprime_castAdd_natAdd n F
   have cp₃' (i j) (hij : i < j) := @isCoprime_natAdd_natAdd n F _ _ hij
   simp_rw [← eventually_all] at cp₂' cp₃'

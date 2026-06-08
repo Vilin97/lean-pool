@@ -3,15 +3,13 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
-module
 
-public import Mathlib.RingTheory.Radical.NatInt
+import Mathlib.RingTheory.Radical.NatInt
 
 /-!
 # Pell equation for the odd case
 -/
 
-public section
 
 namespace OddCase
 

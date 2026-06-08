@@ -3,13 +3,12 @@ Copyright (c) 2026 Jeremy Tan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Tan
 -/
-module
 
 import Mathlib.Tactic.Zify
-public import LeanPool.Redhill.Common.MaxAbs
-public import LeanPool.Redhill.Odd.Defs
-public import LeanPool.Redhill.ToMathlib.NatAbs
-public import LeanPool.Redhill.ToMathlib.NatSumProd
+import LeanPool.Redhill.Common.MaxAbs
+import LeanPool.Redhill.Odd.Defs
+import LeanPool.Redhill.ToMathlib.NatAbs
+import LeanPool.Redhill.ToMathlib.NatSumProd
 
 /-!
 # Subsum condition for the odd case
@@ -213,14 +212,14 @@ lemma tupReduce_tup {c₁ : n + 2 = n + 5 - #(univ.map redEmb1)} :
       rw [castAdd_natAdd, cast_eq_self, addCases_right, castSucc_natAdd, addCases_right]
       fin_cases i <;> rfl
 
-public theorem strongSSC_tup (hx : Y n F ≤ x.natAbs) : StrongSSC (tup n F x) := by
+theorem strongSSC_tup (hx : Y n F ≤ x.natAbs) : StrongSSC (tup n F x) := by
   have c : n + 2 = n + 5 - #(univ.map (redEmb1 (n := n))) := by simp
   apply (isSubsumBlock_redEmb1 hx).strongSSC_tupReduce c
   rw [tupReduce_tup]
   exact strongSSC_vwTup (by decide) (le_max_left ..) (le_max_left ..)
 
 /-- When `Y n F ≤ x`, the maximum absolute value is `(x + 1) ^ 5`. -/
-public lemma maxAbs_tup {x : ℕ} (hx : Y n F ≤ x) : maxAbs (tup n F x) = (x + 1) ^ 5 := by
+lemma maxAbs_tup {x : ℕ} (hx : Y n F ≤ x) : maxAbs (tup n F x) = (x + 1) ^ 5 := by
   have na4 : (tup n F x (natAdd n 4)).natAbs = (x + 1) ^ 5 := by
     rw [tup_natAdd_four, Int.natAbs_neg, Int.natAbs_pow]
     lia
