@@ -1963,12 +1963,12 @@ projects:
       github_repo: gdncc/cryptography
     status: verified
     main_declarations:
-      - Cryptography.SHA3_256
+      - Cryptography.SHA3.sha256
       - Cryptography.HashFunction.hashData
     main_results:
-      - declaration: Cryptography.SHA3_256
+      - declaration: Cryptography.SHA3.sha256
         informal: Defines the SHA3-256 hash function as a Keccak sponge with capacity 64, padding delimiter 0x06, and 32-byte output.
-      - declaration: Cryptography.SHA3_512
+      - declaration: Cryptography.SHA3.sha512
         informal: Defines the SHA3-512 hash function as a Keccak sponge with capacity 128, padding delimiter 0x06, and 64-byte output.
       - declaration: Cryptography.SHAKE128
         informal: Defines the SHAKE128 extendable-output function as a Keccak sponge with capacity 32 and padding delimiter 0x1f.

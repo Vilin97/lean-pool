@@ -13,7 +13,7 @@ import LeanPool.Cryptography.Data.HexString
 Source: url:https://github.com/gdncc/cryptography
 Authors: Gerald Doussot
 Status: verified
-Main declarations: `Cryptography.SHA3_256`, `Cryptography.HashFunction.hashData`
+Main declarations: `Cryptography.SHA3.sha256`, `Cryptography.HashFunction.hashData`
 Tags: cryptography, sha-3, keccak, hash-functions
 MSC: 94A60, 68P25
 -/

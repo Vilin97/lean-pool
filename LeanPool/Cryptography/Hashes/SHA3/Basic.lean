@@ -26,10 +26,10 @@ architecture, which is what Lean4 currently supports.
 It operates on Lean `ByteArray` input for now, and returns `ByteArray`
 output.
 
-`SHA3_224`, `SHA3_256`, `SHA3_384`, `SHA3_512`, `SHAKE128`, `SHAKE256`
-are just namespaces, defined using macros, and which contain the
-relevant API implementations such as `update()`, `final()`,
-`squeeze()`, etc.
+The SHA-3 instances are exposed as `SHA3.sha224`, `SHA3.sha256`, `SHA3.sha384`,
+and `SHA3.sha512`; the SHAKE instances are exposed as `SHAKE128` and `SHAKE256`.
+They support the relevant API operations such as `update()`, `final()`, and
+`squeeze()` through dot notation.
 
 ## Tags
 
@@ -444,17 +444,21 @@ end XOF
 
 -- Implement our hash, and xof functions
 
+namespace SHA3
+
 /-- The SHA3-224 hash function: capacity 56, padding delimiter `0x06`, 28-byte output. -/
-def SHA3_224 : HashFunction := HashFunction.ofParams 56 0x06 28
+def sha224 : HashFunction := HashFunction.ofParams 56 0x06 28
 
 /-- The SHA3-256 hash function: capacity 64, padding delimiter `0x06`, 32-byte output. -/
-def SHA3_256 : HashFunction := HashFunction.ofParams 64 0x06 32
+def sha256 : HashFunction := HashFunction.ofParams 64 0x06 32
 
 /-- The SHA3-384 hash function: capacity 96, padding delimiter `0x06`, 48-byte output. -/
-def SHA3_384 : HashFunction := HashFunction.ofParams 96 0x06 48
+def sha384 : HashFunction := HashFunction.ofParams 96 0x06 48
 
 /-- The SHA3-512 hash function: capacity 128, padding delimiter `0x06`, 64-byte output. -/
-def SHA3_512 : HashFunction := HashFunction.ofParams 128 0x06 64
+def sha512 : HashFunction := HashFunction.ofParams 128 0x06 64
+
+end SHA3
 
 /-- The SHAKE128 extendable-output function: capacity 32, padding delimiter `0x1f`. -/
 def SHAKE128 : XOF := HashFunction.ofParams 32 0x1f 32
