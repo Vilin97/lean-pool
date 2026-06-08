@@ -40,7 +40,7 @@ instance [Preorder α] : Preorder (Stream α) where
   le_trans _ _ _ h₁ h₂ i := le_trans (h₁ i) (h₂ i)
 
 /-- Map a function over a stream pointwise. -/
-abbrev Stream.map.{u, v} {α : Type u} {β : Type v} : (α → β) → Stream α → Stream β := Stream'.map
+abbrev Stream.map {α : Type*} {β : Type*} : (α → β) → Stream α → Stream β := Stream'.map
 
 @[simp]
 lemma Stream'.map_apply (f : α → β) (s : Stream' α) (t : ℕ) :
