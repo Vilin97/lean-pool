@@ -86,7 +86,7 @@ def hasNestedLambdaBody (e : Expr) : Bool :=
 
 /-
 Delaborate Assertions, considering nested lambda functions for applying e.G.
-Axiom of assignment (⦃⦃x[r] = v⦄ ⟦x[r] ← v ; pc++⟧⦄)
+Axiom of assignment (⦃⦃x[r] = v⦄ ⟦x[r] ← v; pc++⟧⦄)
 -/
 open Delaborator SubExpr in
 def mkAssertionAtN
@@ -168,7 +168,7 @@ def IncPcUnexpander : Unexpander
     if isOnlyStateIdent s then
       `(hoare_assignment_chain | pc++)
     else
-      `(hoare_assignment_chain | pc++ ; $s:term)
+      `(hoare_assignment_chain | pc++; $s:term)
   | _ => throw Unit.unit
 
 
@@ -179,7 +179,7 @@ def AddRegUnexpander : Unexpander
     if isOnlyStateIdent s then
       `(hoare_assignment_chain | x[$r] ← $vTerm)
     else
-      `(hoare_assignment_chain | x[$r] ← $vTerm ; $s:term)
+      `(hoare_assignment_chain | x[$r] ← $vTerm; $s:term)
   | _ => throw Unit.unit
 
 @[app_unexpander MState.addMemory]
@@ -188,5 +188,5 @@ def AddMemUnexpander : Unexpander
     if isOnlyStateIdent s then
       `(hoare_assignment_chain | mem[$rTerm] ← $vTerm)
     else
-      `(hoare_assignment_chain | mem[$rTerm] ← $vTerm ; $s:term)
+      `(hoare_assignment_chain | mem[$rTerm] ← $vTerm; $s:term)
   | _ => throw Unit.unit

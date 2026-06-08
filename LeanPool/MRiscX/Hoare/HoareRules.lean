@@ -44,7 +44,7 @@ theorem BL_SUBSET : ∀ (code : Code) (P Q : Assertion) (l: UInt64) (L_w L_b L :
   rcases H with ⟨s', ⟨H1, H2, H3⟩⟩
   exists s'
   constructor
-  · apply weak_with_less_BL_weakens ; exact H1
+  · apply weak_with_less_BL_weakens; exact H1
   · constructor
     · exact H2
     · apply Set.notMem_subset
@@ -283,7 +283,7 @@ theorem POST_WEAK : ∀(c : Code) (P Q1 Q2 : Assertion) (L_w L_b : Set UInt64) (
   specialize H HInter HEmpty s HCode pre H_pc
   rcases H with ⟨s', ⟨P1, P2, P3⟩⟩
   exists s'
-  constructor ; try assumption
+  constructor; try assumption
   · constructor <;> try assumption
     · apply HTaut
       · unfold weak at P1

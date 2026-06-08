@@ -182,14 +182,14 @@ namespace MState
 
 @[simp] theorem addRegister_unfold (ms : MState) : ∀ (i1 i2:UInt64),
   ms.addRegister i1 i2 = {ms with registers :=
-    ((i1) ↦ i2 ; ms.registers)} := by
+    ((i1) ↦ i2; ms.registers)} := by
   intros i1 i2
   unfold MState.addRegister
   simp
 
 @[simp] theorem addMemory_unfold (ms : MState) : ∀ (i1 i2:UInt64),
   ms.addMemory i1 i2 = {ms with memory :=
-    ((i1) ↦ i2 ; ms.memory)} := by
+    ((i1) ↦ i2; ms.memory)} := by
   intros i1 i2
   unfold MState.addMemory
   simp
@@ -569,7 +569,7 @@ theorem run_n_plus_m_intersect : ∀ (s s' : MState) (m m' : Nat) (L_w L_b L_w' 
           not_or] at h_safe1
         rcases h_safe1 with ⟨_, h_safe1_r⟩
         constructor
-        · apply Set.notMem_subset (a:= (s.runNSteps n'').pc) (s := L_w') (t := L_b) ; repeat assumption
+        · apply Set.notMem_subset (a:= (s.runNSteps n'').pc) (s := L_w') (t := L_b); repeat assumption
         · exact h_safe1_r
       intros h_in
       exact h_safe1_NinLw' (Set.mem_of_mem_inter_left h_in)

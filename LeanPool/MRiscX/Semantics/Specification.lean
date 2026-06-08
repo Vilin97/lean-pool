@@ -153,7 +153,7 @@ theorem specification_AddImmediate (P : Assertion) (pc dst regAddend val : UInt6
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪addi x dst, x regAddend, val;⟫
-    ⦃P ⟦x[dst] ← (x[regAddend] + val) ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← (x[regAddend] + val); pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -164,7 +164,7 @@ theorem specification_Increment (P : Assertion) (pc dst : UInt64) (L : Set UInt6
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪inc x dst;⟫
-    ⦃P ⟦x[dst] ← (x[dst] + 1) ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← (x[dst] + 1); pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -176,7 +176,7 @@ theorem specification_AddRegister (P : Assertion) (pc dst regAddend1 regAddend2 
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪add x dst, x regAddend1, x regAddend2;⟫
-    ⦃P ⟦x[dst] ← (x[regAddend1] + x[regAddend2]) ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← (x[regAddend1] + x[regAddend2]); pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -188,7 +188,7 @@ theorem specification_SubImmediate (P : Assertion) (pc dst regMinuend subtrahend
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪subi x dst, x regMinuend, subtrahend;⟫
-    ⦃P ⟦x[dst] ← (x[regMinuend] - subtrahend) ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← (x[regMinuend] - subtrahend); pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -199,7 +199,7 @@ theorem specification_Decrement (P : Assertion) (pc dst : UInt64) (L : Set UInt6
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪dec x dst;⟫
-    ⦃P ⟦x[dst] ← (x[dst] - 1) ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← (x[dst] - 1); pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -211,7 +211,7 @@ theorem specification_SubRegister (P : Assertion) (pc dst regMinuend regSubtrahe
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪sub x dst, x regMinuend, x regSubtrahend;⟫
-    ⦃P ⟦x[dst] ← (x[regMinuend] - x[regSubtrahend]) ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← (x[regMinuend] - x[regSubtrahend]); pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -223,7 +223,7 @@ theorem specification_XorImmediate (P : Assertion) (pc dst reg val : UInt64) (L 
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪xori x dst, x reg, val;⟫
-    ⦃P ⟦x[dst] ← (x[reg] ^^^ val) ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← (x[reg] ^^^ val); pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -267,7 +267,7 @@ theorem specification_XOR (P : Assertion) (pc dst reg1 reg2 : UInt64) (L : Set U
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪xor x dst, x reg1, x reg2;⟫
-    ⦃P ⟦x[dst] ← (x[reg1] ^^^ x[reg2]) ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← (x[reg1] ^^^ x[reg2]); pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -311,7 +311,7 @@ theorem specification_LoadWordImmediate (P : Assertion) (pc dst addr : UInt64) (
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪lw x dst, addr;⟫
-    ⦃P ⟦x[dst] ← mem[addr] ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← mem[addr]; pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -323,7 +323,7 @@ theorem specification_LoadWordReg (P : Assertion) (pc dst regWithAddr : UInt64) 
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪lw x dst, x regWithAddr;⟫
-    ⦃P ⟦x[dst] ← mem[x[regWithAddr]] ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦x[dst] ← mem[x[regWithAddr]]; pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -336,7 +336,7 @@ theorem specification_StoreWordImmediate (P : Assertion) (pc regWithAddr regWith
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪sw x regWithValue, x regWithAddr;⟫
-    ⦃P ⟦mem[x[regWithAddr]] ← x[regWithValue] ; pc++⟧ ∧ ¬⸨terminated⸩⦄
+    ⦃P ⟦mem[x[regWithAddr]] ← x[regWithValue]; pc++⟧ ∧ ¬⸨terminated⸩⦄
     pc ↦ ⟨{pc+1} | L⟩
     ⦃P ⟦⟧ ∧ ¬⸨terminated⸩⦄
   end
@@ -368,7 +368,7 @@ theorem specification_Jump (P : Assertion) (pc newPc : UInt64) (label : String) 
     intros _
     exists 1
     apply And.intro; simp
-    · constructor ; simp
+    · constructor; simp
       simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq,
         Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not,
         not_and_self, imp_false, not_and]
@@ -410,7 +410,7 @@ theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String)
     intros _
     exists 1
     apply And.intro; simp
-    · constructor ; simp
+    · constructor; simp
       simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq,
         Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not,
         not_and_self, imp_false, not_and]
@@ -456,7 +456,7 @@ theorem specification_JumpEq_true (P : Assertion) (pc newPc reg1 reg2 : UInt64) 
     intros _
     exists 1
     apply And.intro; simp
-    · constructor ; simp
+    · constructor; simp
       simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq,
         Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not,
         not_and_self, imp_false, not_and]
@@ -493,7 +493,7 @@ theorem specification_JumpEq_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
   simp only [
     Bool.not_eq_true] at h_terminated
   simp only [
-    MState.getRegisterAt_def, 
+    MState.getRegisterAt_def,
     ne_eq] at h_cond
   simp only [MState.currInstruction_unfold] at h_curr
   exists state.runOneStep
@@ -504,7 +504,7 @@ theorem specification_JumpEq_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
     exists 1
     apply And.intro; simp
     · repeat (constructor <;> try simp)
-    -- . constructor ; simp
+    -- . constructor; simp
       · simp [<- MState.run_one_step_eq_run_n_1]
         unfold MState.runOneStep  MState.jif' MState.jump
         rw [h_terminated, ← h_pc]
@@ -593,7 +593,7 @@ theorem specification_JumpGt_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
     exists 1
     apply And.intro; simp
     · repeat (constructor <;> try simp)
-    -- . constructor ; simp
+    -- . constructor; simp
       · simp [<- MState.run_one_step_eq_run_n_1]
         unfold MState.runOneStep  MState.jif' MState.jump
         rw [h_terminated, ← h_pc]
@@ -644,7 +644,7 @@ theorem specification_JumpLe_false (P : Assertion) (pc reg1 reg2 : UInt64) (s : 
   simp only [
     Bool.not_eq_true] at h_terminated
   simp only [
-    MState.getRegisterAt_def, 
+    MState.getRegisterAt_def,
     gt_iff_lt] at h_cond
   simp only [MState.currInstruction_unfold] at h_curr
   simp only [

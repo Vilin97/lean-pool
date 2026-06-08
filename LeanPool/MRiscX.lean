@@ -6,7 +6,7 @@ Authors: Julius Marx
 import LeanPool.MRiscX.Basic
 import LeanPool.MRiscX.Examples.Examples
 import LeanPool.MRiscX.Examples.OtpProof
-import LeanPool.MRiscX.Examples.singleProofsOTP
+import LeanPool.MRiscX.Examples.SingleProofsOTP
 
 /-!
 # MRiscX: a certified RISC-V interpreter with Hoare logic in Lean

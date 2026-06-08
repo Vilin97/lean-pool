@@ -307,7 +307,7 @@ example (r₀ r₁ p : UInt64) :
     · apply_spec specification_LoadImmediate (pc := 0) (dst := r₀) (val := p)
     · apply_spec specification_LoadImmediate (pc := 1) (dst := r₁) (val := 0)
       -- TODO automate this:
-      have : (r₁ ↦ 0 ; (2 ↦ 291 ; s.registers)).get r₀ = p := by assumption
+      have : (r₁ ↦ 0; (2 ↦ 291; s.registers)).get r₀ = p := by assumption
       · rw [t_update_neq] at this
         rw [t_update_neq] at this
         exact this

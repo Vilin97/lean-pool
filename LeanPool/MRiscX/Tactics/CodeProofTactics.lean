@@ -290,7 +290,7 @@ elab "sapply_s_seq'''"  &"R" &" := "  R:term &", "
 
 elab "cleanup_goals_after_spec" : tactic => do
   -- evalTactic (← `(tactic | first
-  --                         | simp_set_eq ; simp
+  --                         | simp_set_eq; simp
   --                         | simp  ))
   -- evalTactic (← `(tactic | simp ))
   -- evalTactic (← `(tactic | simp ))
@@ -371,10 +371,10 @@ elab "apply_spec" spec:term : tactic => do
 
 elab "apply_spec'" name:(ident) : tactic => do
   evalTactic (← `(tactic | first
-                          | (apply_spec_scd_goal $name ; cleanup_after_automation)
-                          | apply_spec_frst_goal $name ; cleanup_after_automation))
+                          | (apply_spec_scd_goal $name; cleanup_after_automation)
+                          | apply_spec_frst_goal $name; cleanup_after_automation))
 
 elab "apply_spec''" : tactic => do
   evalTactic (← `(tactic | first
-                          | (apply_spec_scd_goal ; cleanup_after_automation)
-                          | apply_spec_frst_goal ; cleanup_after_automation))
+                          | (apply_spec_scd_goal; cleanup_after_automation)
+                          | apply_spec_frst_goal; cleanup_after_automation))

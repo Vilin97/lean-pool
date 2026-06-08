@@ -43,7 +43,7 @@ namespace MState
     {ms with registers := r}
 
   def addRegister (ms:MState) (i:UInt64) (v:UInt64): MState :=
-    {ms with registers := (i ↦ v ; ms.registers)}
+    {ms with registers := (i ↦ v; ms.registers)}
 
   def getRegisterAt (ms:MState) (i:UInt64) : UInt64 :=
     ms.registers.get (i)
@@ -52,7 +52,7 @@ namespace MState
     {ms with memory := m}
 
   def addMemory (ms:MState) (i:UInt64) (v:UInt64) : MState :=
-    {ms with memory := (i ↦ v ; ms.memory)}
+    {ms with memory := (i ↦ v; ms.memory)}
 
   def getMemoryAt (ms:MState) (i:UInt64) : UInt64 :=
     ms.memory.get (i)

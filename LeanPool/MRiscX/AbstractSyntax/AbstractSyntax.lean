@@ -114,18 +114,18 @@ namespace Code
   def addMultipleLabels (m : Code) (l : List (String × UInt64)) : Code :=
   match l with
   | [] => m
-  | h :: t => addMultipleLabels {m with labels := p(h.1 ↦ h.2 ; m.labels)} t
+  | h :: t => addMultipleLabels {m with labels := p(h.1 ↦ h.2; m.labels)} t
 
   def addCMap (m : Code) (id : InstructionIndex) (v : Instr) : Code :=
-    {m with instructionMap := (id ↦ v ; m.instructionMap)}
+    {m with instructionMap := (id ↦ v; m.instructionMap)}
 
   def addLabels (m : Code) (id : String) (v : UInt64) : Code :=
-    {m with labels := p(id ↦ v ; m.labels)}
+    {m with labels := p(id ↦ v; m.labels)}
 
   def addMaps (m : Code) (id_c : InstructionIndex) (v_c : Instr) (id_l : String)
       (v_l : UInt64) : Code :=
-    {m with instructionMap := (id_c ↦ v_c ; m.instructionMap), labels :=
-    p(id_l ↦ v_l ; m.labels)}
+    {m with instructionMap := (id_c ↦ v_c; m.instructionMap), labels :=
+    p(id_l ↦ v_l; m.labels)}
 
   def setMaps (m : Code) (c : InstructionMap) (l : LabelMap) :=
     {m with instructionMap := c, labels := l}
@@ -148,7 +148,7 @@ def Registers := TMap Register UInt64
 /--
 RegisterMap with default value 0
 
-R := {r_1 ↦ w_1, … , r_k ↦ w_k ; 0}
+R := {r_1 ↦ w_1, … , r_k ↦ w_k; 0}
 -/
 def EmptyRegisters : Registers := TMap.empty 0
 
@@ -163,6 +163,6 @@ def Memory := TMap MemoryAddress UInt64
 /--
 MemoryMap with default value 0
 
-M := {m_1 ↦ w_1, … , m_k ↦ w_k ; 0}
+M := {m_1 ↦ w_1, … , m_k ↦ w_k; 0}
 -/
 def EmptyMemory : Memory := TMap.empty 0

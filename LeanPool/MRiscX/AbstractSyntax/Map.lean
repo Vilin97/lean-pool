@@ -77,7 +77,7 @@ namespace TMap
   def toStringAux {α : Type} {β : Type} [ToString α][ToString β] (t : TMap α β) : String :=
     match t with
     | TMap.empty d => s!"{d}"
-    | TMap.put k v t' => s!"{k} ↦ {v} ; " ++ t'.toStringAux ++ ""
+    | TMap.put k v t' => s!"{k} ↦ {v}; " ++ t'.toStringAux ++ ""
 
   def toString {α : Type} {β : Type} [ToString α][ToString β] (t : TMap α β) : String :=
     let s := toStringAux t
@@ -88,7 +88,7 @@ instance {α β} [ToString α] [ToString β]: Repr (TMap (α : Type) (β :Type))
   reprPrec t _ := t.toString
 
 
-notation:60 "(" k " ↦ "v" ; "m")" => TMap.put k v m
+notation:60 "(" k " ↦ "v"; "m")" => TMap.put k v m
 
 
 /--
@@ -129,7 +129,7 @@ namespace PMap
   def toStringAux {α : Type} {β : Type} [ToString α][ToString β] (p : PMap α β) : String :=
     match p with
     | PMap.empty => s!"()"
-    | PMap.put k v p' => s!"{k} ↦ {v} ; " ++ p'.toStringAux ++ ""
+    | PMap.put k v p' => s!"{k} ↦ {v}; " ++ p'.toStringAux ++ ""
 
   def toString {α : Type} {β : Type} [ToString α][ToString β] (p : PMap α β) : String :=
     let s := toStringAux p
@@ -141,7 +141,7 @@ instance {α β} [ToString α] [ToString β]: Repr (PMap (α : Type) (β :Type))
   reprPrec p _ := p.toString
 
 
-notation:60 "p("k" ↦ "v" ; "m")" => PMap.put k v m
+notation:60 "p("k" ↦ "v"; "m")" => PMap.put k v m
 
 
 /--
@@ -152,7 +152,7 @@ corresponding value [v].
 @[simp]
 theorem t_update_eq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
     (t : TMap α β) (k : α) (v : β),
-  (k ↦ v ; t).get k = v
+  (k ↦ v; t).get k = v
   := by
   intros α β t k v ct
   unfold TMap.get
@@ -166,12 +166,12 @@ as when we would just search [t] for [k'].
 @[simp]
 theorem t_update_neq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
     (t : TMap α β) (k k' : α) (v : β),
-  k ≠ k' → (k ↦ v ; t).get k' = t.get k'
+  k ≠ k' → (k ↦ v; t).get k' = t.get k'
   := by
   intros α β HBEq HLawfulBEq t k k' v HNeq
   simp at HNeq
   unfold TMap.get
-  cases t ; simp
+  cases t; simp
   · cases HEq: (k' == k); simp at HEq
     · simp
       unfold TMap.get
@@ -197,7 +197,7 @@ corresponding value [v].
 @[simp]
 theorem p_update_eq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
     (p : PMap α β) (k : α) (v : β),
-  p(k ↦ v ; p).get k = v
+  p(k ↦ v; p).get k = v
   := by
   intros α β p k v ct
   unfold PMap.get
@@ -211,12 +211,12 @@ as when we would just search [t] for [k'].
 @[simp]
 theorem p_update_neq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
     (p : PMap α β) (k k' : α) (v : β),
-  k ≠ k' → p(k ↦ v ; p).get k' = p.get k'
+  k ≠ k' → p(k ↦ v; p).get k' = p.get k'
   := by
   intros α β HBEq HLawfulBEq p k k' v HNeq
   simp at HNeq
   unfold PMap.get
-  cases p ; simp
+  cases p; simp
   · cases HEq: (k' == k); simp at HEq
     · simp
       unfold PMap.get

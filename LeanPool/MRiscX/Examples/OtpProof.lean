@@ -9,7 +9,7 @@ import LeanPool.MRiscX.Delab.DelabCode
 import LeanPool.MRiscX.Elab.HoareElaborator
 import LeanPool.MRiscX.Hoare.HoareRules
 import LeanPool.MRiscX.Util.BasicTheorems
-import LeanPool.MRiscX.Examples.singleProofsOTP
+import LeanPool.MRiscX.Examples.SingleProofsOTP
 import Mathlib.Tactic.NthRewrite
 
 /-!

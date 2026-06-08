@@ -45,8 +45,8 @@ syntax &"pc" &" ← " term: hoare_assignment
 
 syntax "⟦⟧" : hoare_assignment_term
 syntax hoare_assignment : hoare_assignment_chain
-syntax hoare_assignment &" ; " hoare_assignment : hoare_assignment_chain
-syntax hoare_assignment &" ; " hoare_assignment_chain : hoare_assignment_chain
-syntax hoare_assignment &" ; " term : hoare_assignment_chain
+syntax hoare_assignment &"; " hoare_assignment : hoare_assignment_chain
+syntax hoare_assignment &"; " hoare_assignment_chain : hoare_assignment_chain
+syntax hoare_assignment &"; " term : hoare_assignment_chain
 
 syntax "⟦" hoare_assignment_chain "⟧" : hoare_assignment_term

@@ -177,10 +177,10 @@ partial def termToInstrMap (t: TSyntax `term) : UnexpandM SyntaxInstrMap := do
   | `(TMap.empty $_) =>
     return (TMap.empty (←`(mriscx_Instr | PANIC!
     )))
-  | `((UInt64.ofNat $k:num ↦ $v ; $m)) =>
-    return ((UInt64.ofNat k.getNat) ↦ (←termToInstr v) ; (←termToInstrMap m))
-  | `(($k:num ↦ $v ; $m)) =>
-    return ((UInt64.ofNat k.getNat) ↦ (←termToInstr v) ; (←termToInstrMap m))
+  | `((UInt64.ofNat $k:num ↦ $v; $m)) =>
+    return ((UInt64.ofNat k.getNat) ↦ (←termToInstr v); (←termToInstrMap m))
+  | `(($k:num ↦ $v; $m)) =>
+    return ((UInt64.ofNat k.getNat) ↦ (←termToInstr v); (←termToInstrMap m))
   | _ => return TMap.empty (⟨t⟩)
 
 
@@ -190,9 +190,9 @@ partial def termToLabelMap (t: TSyntax `term) : LabelMap :=
   | `(EmptyLabels) => PMap.empty
   | `(PMap.put $k:str $v:num $m) =>
     PMap.put (k.getString) (UInt64.ofNat v.getNat) (termToLabelMap m)
-  | `(p($k:str ↦ UInt64.ofNat $v:num ; $m)) =>
+  | `(p($k:str ↦ UInt64.ofNat $v:num; $m)) =>
     PMap.put (k.getString) (UInt64.ofNat v.getNat) (termToLabelMap m)
-  | `(p($k:str ↦ $v:num ; $m)) =>
+  | `(p($k:str ↦ $v:num; $m)) =>
     PMap.put (k.getString) (UInt64.ofNat v.getNat) (termToLabelMap m)
   | _ => EmptyLabels
 

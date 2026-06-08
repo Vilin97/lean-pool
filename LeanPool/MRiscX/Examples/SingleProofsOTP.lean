@@ -12,7 +12,7 @@ import LeanPool.MRiscX.Util.BasicTheorems
 import LeanPool.MRiscX.Tactics.CodeProofTactics
 
 /-!
-# singleProofsOTP
+# SingleProofsOTP
 
 This module provides the per-instruction lemmas of the One-Time-Pad proof.
 -/
@@ -258,7 +258,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
               exact h_pk
               exact h_kc
             exact this
-      · repeat (constructor ; try assumption)
+      · repeat (constructor; try assumption)
         · rw [h_x0, h_x5, h_x0]
           rw [t_update_neq]
           rw [h_x2, h_x3]

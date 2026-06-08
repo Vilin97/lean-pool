@@ -92,9 +92,9 @@ partial def getHoareAssignmentArray (stx: TSyntax `hoare_assignment_chain)
   match stx with
   | `(hoare_assignment_chain | $t:hoare_assignment) =>
     return curArr.push t
-  | `(hoare_assignment_chain | $t1:hoare_assignment ; $t2:hoare_assignment) =>
+  | `(hoare_assignment_chain | $t1:hoare_assignment; $t2:hoare_assignment) =>
     return (curArr.push t1).push t2
-  | `(hoare_assignment_chain | $t:hoare_assignment ; $s:hoare_assignment_chain) =>
+  | `(hoare_assignment_chain | $t:hoare_assignment; $s:hoare_assignment_chain) =>
     return ←(getHoareAssignmentArray s (curArr.push t))
   | _ => throwError s!"hoare assignment {stx} term not known!"
 

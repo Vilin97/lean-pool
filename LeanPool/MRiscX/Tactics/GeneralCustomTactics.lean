@@ -36,4 +36,4 @@ elab "apply_to_last_goal" t:tacticSeq : tactic => do
 
 /- A small tactic to prove `∀ (n' : ℕ), 0 < n' → ¬n' = 0`-/
 macro "zero_lt_ne_zero" : tactic =>
-  `(tactic | try (intros n' h ; intro h_eq ; rw [h_eq] at h); simp at h)
+  `(tactic | try (intros n' h; intro h_eq; rw [h_eq] at h); simp at h)
