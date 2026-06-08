@@ -258,7 +258,7 @@ by
   rw [Language.mem_mul] at hwgg
   rcases hwgg with ⟨u, hu, v, hv, hw⟩
   unfold Grammar.language at *
-  show (bigGrammar g₁ g₂).Derives _ _
+  change (bigGrammar g₁ g₂).Derives _ _
   apply gr_deri_of_tran_deri first_transformation
   rw [←hw, List.map_append]
   apply
@@ -848,7 +848,7 @@ by
     clear * - ih_concat bef h_y_v_len
     have as_positive : u.length + ((r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 + (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length) ≤ x.length := by
       by_contra contra
-      push_neg at contra
+      push Not at contra
       rw [bef] at ih_concat
       clear bef
       repeat rw [←List.append_assoc] at ih_concat
@@ -876,7 +876,7 @@ by
           (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++
             r₁.inputR.map (wrapSymbol₁ g₂.nt)).length =
           u.length + r₁.inputL.length + 1 + r₁.inputR.length := by
-        show (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
+        change (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
             [(Symbol.nonterminal ◩(some ◩r₁.inputN) : nst T g₁.nt g₂.nt)] ++
             r₁.inputR.map (wrapSymbol₁ g₂.nt)).length = _
         simp only [List.append_assoc, List.length_append, List.length_map, List.length_cons,
@@ -955,7 +955,7 @@ by
           conv at clash_copy => congr; rfl; rw [List.getElem_append_left h1' (h' := by rw [List.length_append]; omega)]
           rw [List.getElem_map, List.getElem_map] at clash_copy
           exact correspondingSymbols_never₂ clash_copy
-        · push_neg at h1
+        · push Not at h1
           have ris_third_is_nil : r₁.inputR.map (wrapSymbol₁ g₂.nt) = [] := by
             rwa [←List.length_eq_zero_iff, ←Nat.lt_one_iff]
           have inequality_m0 :
@@ -982,7 +982,7 @@ by
                       have hsing : (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
                           [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length =
                           u.length + r₁.inputL.length + 1 := by
-                        show (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
+                        change (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
                             [(Symbol.nonterminal ◩(some ◩r₁.inputN) : nst T g₁.nt g₂.nt)]).length = _
                         simp only [List.append_assoc, List.length_append, List.length_map,
                           List.length_cons, List.length_nil, List.singleton_append]
@@ -1035,7 +1035,7 @@ by
           [Symbol.nonterminal ◩(some ◩r₁.inputN)] := by
         apply List.take_of_length_le
         clear * - critical
-        show 1 ≤ x.length - (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt)).length
+        change 1 ≤ x.length - (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt)).length
         rw [List.length_append]
         have weakened : (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 ≤ x.length - u.length := by
           omega
@@ -1050,7 +1050,7 @@ by
         apply List.take_of_length_le
         clear * - critical
         rw [List.length_append, List.length_append]
-        show (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length ≤ x.length - (u.length + (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1)
+        change (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length ≤ x.length - (u.length + (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1)
         omega
       have chunk5 :
         v.take
@@ -1063,7 +1063,7 @@ by
         have rearrange_sum_of_four : ∀ a b c d : ℕ, a + b + c + d = a + (b + c + d) := by
           omega
         rw [rearrange_sum_of_four]
-        show x.length - (u.length + m) = x.length - u.length - m
+        change x.length - (u.length + m) = x.length - u.length - m
         clear * -
         omega
       rw [chunk2, chunk3, chunk4, chunk5] at x_equiv
@@ -1304,7 +1304,7 @@ by
   have the_part := correspondingStrings_take y.length reverse_concat
   apply correspondingStrings_of_reverse
   have len_sum : y.length + (x.length - u.length - m) = v.length := by
-    show
+    change
       y.length + (x.length - u.length - (
           (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 + (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length)
         ) =
@@ -1867,7 +1867,7 @@ by
           exact List.getElem?_eq_none_iff.← hiy
         · exact List.getElem?_eq_none_iff.← hiy
         rfl
-      push_neg at hiy
+      push Not at hiy
       rw [←List.take_append_drop (x.map (wrapSymbol₁ g₂.nt)).length (w.map Symbol.terminal)] at concat_xy
       have equivalent_second_parts :
         correspondingStrings

@@ -201,7 +201,7 @@ by
     dsimp only at aft
     rw [aft] at deri
     left
-    show g₁.Derives _ _
+    change g₁.Derives _ _
     have sinked := sink_deri lg₁ deri
     clear * - sinked
     specialize sinked (by
@@ -217,7 +217,7 @@ by
     dsimp only at aft
     rw [aft] at deri
     right
-    show g₂.Derives _ _
+    change g₂.Derives _ _
     have sinked := sink_deri lg₂ deri
     clear * - sinked
     specialize sinked (by

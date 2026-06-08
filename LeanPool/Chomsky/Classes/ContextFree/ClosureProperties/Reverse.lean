@@ -35,7 +35,7 @@ private lemma derives_reversed {g : CFG T} {v : List (Symbol T g.nt)}
 by
   induction hgv with
   | refl =>
-      show g.Derives _ (List.reverse [Symbol.nonterminal g.reverse.initial])
+      change g.Derives _ (List.reverse [Symbol.nonterminal g.reverse.initial])
       rw [List.reverse_singleton]
       apply cf_deri_self
   | tail _ orig ih =>
@@ -58,7 +58,7 @@ private lemma reversed_word_in_original_language {g : CFG T} {w : List T}
   w.reverse ∈ g.language :=
 by
   unfold CFG.language at *
-  show g.Derives [Symbol.nonterminal g.initial] (w.reverse.map Symbol.terminal)
+  change g.Derives [Symbol.nonterminal g.initial] (w.reverse.map Symbol.terminal)
   rw [List.map_reverse]
   exact derives_reversed hgw
 

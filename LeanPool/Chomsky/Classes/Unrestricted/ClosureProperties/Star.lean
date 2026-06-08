@@ -125,7 +125,7 @@ by
           use [], []
           constructor <;> rfl
         rw [List.nil_append, List.append_nil]
-        show g.star.Derives [Z, S, H] _
+        change g.star.Derives [Z, S, H] _
         have ih_plus := gr_deri_append ([S, H] : List (Symbol T g.star.nt)) ih.left
         apply gr_deri_of_deri_deri ih_plus
         have hgSv : g.star.Derives [S] (v.map Symbol.terminal) := by
@@ -259,7 +259,7 @@ by
       apply gr_deri_append
       rw [split_ldw, List.map_append, List.flatten_append, ←List.append_assoc]
       apply gr_deri_append
-      rw [wlk_succ, List.take_succ, List.map_append, List.flatten_append, List.append_assoc, List.append_assoc]
+      rw [wlk_succ, List.take_add_one, List.map_append, List.flatten_append, List.append_assoc, List.append_assoc]
       apply gr_append_deri
       clear * - terminals lt_wl
       specialize terminals (w.get ⟨w.length - k.succ, lt_wl⟩) (w.get_mem ⟨w.length - k.succ, lt_wl⟩)
@@ -316,7 +316,7 @@ by
               · rewrite [←List.map_take, List.take_one_drop_eq_of_lt_length small]
                 rfl
               · simp
-          · rw [List.take_succ, List.map_append]
+          · rw [List.take_add_one, List.map_append]
             simp [*]
       convert scan_segment (w[w.length - k.succ]'lt_wl).length (by rfl) using 2
       · rw [List.take_length]
@@ -340,7 +340,7 @@ end easy_direction
 section hard_direction
 
 lemma zero_of_not_ge_one {n : ℕ} (not_pos : ¬n ≥ 1) : n = 0 := by
-  push_neg at not_pos
+  push Not at not_pos
   rwa [Nat.lt_one_iff] at not_pos
 
 lemma length_ge_one_of_not_nil {α : Type _} {l : List α} (lnn : l ≠ []) : l.length ≥ 1 := by
@@ -507,12 +507,12 @@ by
         ((r₀.inputR.map wrapSym).reverse ++ [Symbol.nonterminal ◩r₀.inputN] ++ (r₀.inputL.map wrapSym).reverse ++ u.reverse)[0]? := by
       convert hlast
       rw [List.map_map]
-      show
+      change
         some H =
         ((x.map (List.map wrapSym)).map (· ++ [H] |>.reverse)).reverse.flatten[0]?
       simp_rw [List.reverse_append]
       rw [List.map_map]
-      show
+      change
         some H =
         (x.map (fun l : List (Symbol T g.nt) => [H].reverse ++ (l.map wrapSym).reverse)).reverse.flatten[0]?
       rw [←List.map_reverse]
@@ -581,9 +581,9 @@ by
       rw [←List.map_drop, inside_wrap, List.countIn_singleton_eq (@H T g.nt)]
     have counted_Hs : x.length = (m + 0) + (1 + (x.length - m'.succ)) := by
       convert count_Hs using 3
-      · show x.length = (x.map (·.map wrapSym ++ [H] |>.countIn H)).sum
+      · change x.length = (x.map (·.map wrapSym ++ [H] |>.countIn H)).sum
         simp [List.countIn_append, inside_one]
-      · show m = ((x.map (·.map wrapSym ++ [H] |>.countIn H)).take m).sum
+      · change m = ((x.map (·.map wrapSym ++ [H] |>.countIn H)).take m).sum
         simp [List.countIn_append, inside_one, Nat.le_of_succ_le mxl]
       · rw [List.take_append_of_le_length, inside_take]
         apply Nat.le_of_lt_succ
@@ -591,7 +591,7 @@ by
       · rw [List.drop_append_of_le_length, List.countIn_append, inside_drop]
         apply Nat.le_of_lt_succ
         simpa using klt'
-      · show x.length - m'.succ = ((x.map (·.map wrapSym ++ [H] |>.countIn H)).drop m'.succ).sum
+      · change x.length - m'.succ = ((x.map (·.map wrapSym ++ [H] |>.countIn H)).drop m'.succ).sum
         simp [List.countIn_append, inside_one]
     omega
   constructor
@@ -1277,7 +1277,7 @@ by
         apply List.mem_append_left
         apply List.mem_singleton_self
       · rw [false_iff, List.mem_append]
-        push_neg
+        push Not
         constructor <;> unfold H at * <;> aesop
     | cons e l' =>
       rw [hl] at brtt
@@ -1290,7 +1290,7 @@ by
         apply List.mem_singleton_self
       · rw [false_iff]
         rw [List.mem_append]
-        push_neg
+        push Not
         constructor <;> unfold H at * <;> aesop
 
 private lemma case_3_false_of_wbr_eq_urz {g : Grammar T} {r₀ : Grule T g.nt} {w : List (List T)}
@@ -1824,7 +1824,7 @@ by
     convert imposs.symm
     · simp [Z]
     · rw [false_iff]
-      push_neg
+      push Not
       constructor
       · apply map_wrap_never_contains_Z
       · exact Z_neq_R
@@ -1841,7 +1841,7 @@ by
       convert imposs.symm
       · simp [Z]
       · rw [false_iff]
-        push_neg
+        push Not
         constructor
         · apply map_wrap_never_contains_Z
         · exact Z_neq_R

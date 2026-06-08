@@ -44,7 +44,7 @@ end functions_lift_sink
 section lifting_conditions
 
 structure LiftedGrammar (T : Type) where
-  g₀: Grammar T
+  g₀ : Grammar T
   g : Grammar T
   liftNt : g₀.nt → g.nt
   sinkNt : g.nt → Option g₀.nt
@@ -177,7 +177,7 @@ by
     convert sink_bef <;> rw [←preimage] <;> unfold liftRule <;> dsimp only <;> clear * - correct_inverse
     · unfold liftString
       rw [List.filterMap_map, correct_inverse, List.filterMap_some]
-    · show
+    · change
         [Symbol.nonterminal r₀.inputN] =
         List.filterMap (sinkSymbol G.sinkNt) (List.map (liftSymbol G.liftNt) [Symbol.nonterminal r₀.inputN])
       rw [List.filterMap_map, correct_inverse, List.filterMap_some]

@@ -44,7 +44,7 @@ private lemma derives_reversed {g : Grammar T} {v : List (Symbol T g.nt)}
 by
   induction hgv with
   | refl =>
-    show g.Derives _ (List.reverse [Symbol.nonterminal (reversalGrammar g).initial])
+    change g.Derives _ (List.reverse [Symbol.nonterminal (reversalGrammar g).initial])
     rw [List.reverse_singleton]
     apply gr_deri_self
   | tail _ orig ih =>
@@ -70,7 +70,7 @@ private lemma reversed_word_in_original_language {g : Grammar T} {w : List T}
 by
   unfold Grammar.language at *
   have almost_done := derives_reversed hwg
-  show g.Derives [Symbol.nonterminal g.initial] (w.reverse.map Symbol.terminal)
+  change g.Derives [Symbol.nonterminal g.initial] (w.reverse.map Symbol.terminal)
   rw [List.map_reverse]
   exact almost_done
 
