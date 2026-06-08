@@ -1885,24 +1885,24 @@ projects:
       github_repo: gdncc/cryptography
     status: verified
     main_declarations:
-      - SHA3_256
-      - SHA3_512
-      - SHAKE128
-      - SHAKE256
-      - HashFunction.hashData
+      - Cryptography.SHA3_256
+      - Cryptography.HashFunction.hashData
     main_results:
-      - declaration: SHA3_256
+      - declaration: Cryptography.SHA3_256
         informal: Defines the SHA3-256 hash function as a Keccak sponge with capacity 64, padding delimiter 0x06, and 32-byte output.
-      - declaration: SHA3_512
+      - declaration: Cryptography.SHA3_512
         informal: Defines the SHA3-512 hash function as a Keccak sponge with capacity 128, padding delimiter 0x06, and 64-byte output.
-      - declaration: SHAKE128
+      - declaration: Cryptography.SHAKE128
         informal: Defines the SHAKE128 extendable-output function as a Keccak sponge with capacity 32 and padding delimiter 0x1f.
-      - declaration: SHAKE256
+      - declaration: Cryptography.SHAKE256
         informal: Defines the SHAKE256 extendable-output function as a Keccak sponge with capacity 64 and padding delimiter 0x1f.
-      - declaration: HashFunction.hashData
+      - declaration: Cryptography.HashFunction.hashData
         informal: The one-shot hashing API that absorbs a ByteArray input and squeezes the configured number of output bytes.
     tags:
       - cryptography
       - sha-3
       - keccak
       - hash-functions
+    msc:
+      - "94A60"
+      - "68P25"

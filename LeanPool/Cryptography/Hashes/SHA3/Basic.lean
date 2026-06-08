@@ -36,6 +36,8 @@ relevant API implementations such as `update()`, `final()`,
 SHA-3 Keccak SHA3-224 SHA3-256 SHA3-384 SHA3-512 XOF SHAKE128 SHAKE256
 -/
 
+namespace Cryptography
+
 private def roundConstants : Array UInt64 :=
   #[0x0000000000000001, 0x0000000000008082, 0x800000000000808a,
     0x8000000080008000, 0x000000000000808b, 0x0000000080000001,
@@ -79,8 +81,11 @@ private abbrev Capacity := Fin 129
 
 /-- Sponge function, defined by its capacity, padding, and output bit length -/
 structure HashFunction where private ofParams ::
+  /-- The sponge capacity in bytes; the rate is derived as `200 - capacity`. -/
   capacity : Capacity
+  /-- The domain-separation padding delimiter byte (`0x06` for SHA-3, `0x1f` for SHAKE). -/
   paddingDelimiter : Nat
+  /-- The fixed number of output bits produced by the hash function. -/
   outputBitsLen : Nat
 
 private inductive SpongeState where
@@ -119,7 +124,8 @@ private abbrev FixedBuffer := {val : ByteArray // val.size =  KeccakPPermutation
 @[simp] theorem FixedBufferSize (fb : FixedBuffer):  fb.val.size = KeccakPPermutationSize := by exact fb.2
 
 @[always_inline,inline] private def mkFixedBuffer : FixedBuffer  :=
-    ⟨ ByteArray.mk (Array.replicate KeccakPPermutationSize 0), by trivial ⟩
+    ⟨ ByteArray.mk (Array.replicate KeccakPPermutationSize 0),
+      by simp [KeccakPPermutationSize, ByteArray.size, Array.size_replicate] ⟩
 
 -- theorem `size_set` from: https://github.com/leanprover-community/batteries/blob/ad3ba5ff13913874b80146b54d0a4e5b9b739451/Batteries/Data/ByteArray.lean#L51
 /-
@@ -133,7 +139,7 @@ Authors: François G. Dorais
 
 @[always_inline,inline] private def fixedBufferModify (fb : FixedBuffer) (i : Fin fb.val.size) (elem: UInt8) : FixedBuffer :=
   let val := fb.val.set i  elem
-  ⟨val, by rw [size_set] ; exact fb.2   ⟩
+  ⟨val, by rw [size_set]; exact fb.2⟩
 
 instance : GetElem (FixedBuffer) Nat UInt8 (λ fb i ↦ i < fb.val.size ) where
   getElem fb idx h :=  fb.val[idx]
@@ -161,7 +167,8 @@ private def mkKeccakCBase (hf : HashFunction) : KeccakC hf :=
 private def AbsorbingKeccakC (hf : HashFunction) : Type := {keccak : KeccakC hf // keccak.state = SpongeState.absorbing}
 private def SqueezingKeccakC (hf : HashFunction) : Type := {keccak : KeccakC hf // keccak.state = SpongeState.squeezing}
 
--- Our sponge can only be instantiated as absorbing
+/-- Instantiate a fresh sponge context for a hash function; it always starts in
+the absorbing state. -/
 def HashFunction.mk (hf : HashFunction) : {keccak : KeccakC hf // keccak.state = SpongeState.absorbing}  :=
   let base := {mkKeccakCBase hf with state := SpongeState.absorbing}
   ⟨base, rfl⟩
@@ -303,6 +310,15 @@ instance {hf : HashFunction} : Absorb (AbsorbingKeccakC hf) ByteArray where
 private class Squeeze (α : Type) (β : Type) (γ : outParam Type) where
   squeeze : α  → β → γ
 
+-- A block index `i` taken from the rate window `[0, (rate + 7) / 8)` is a valid
+-- lane index into the 25-lane state, since the rate never exceeds the permutation
+-- size of 200 bytes (so `(rate + 7) / 8 ≤ 25`).
+theorem squeezeIndexBound {cap : Capacity} (rate : RateValue cap) (i : Nat)
+    (h : i < (rate.val + 7) / 8) : i < 25 := by
+  have := rate.isLt
+  unfold KeccakPPermutationSize at *
+  omega
+
 -- As a learning exercise, we don't copy the whole state to a fixed size buffer and output that buffer on request
 -- This necessitates generating output directly from a sliding window over the state array.
 private def squeezeAbsorbedInput {hf : HashFunction} (k : SqueezingKeccakC hf) (len : Nat) : SqueezingKeccakC hf × ByteArray := Id.run do
@@ -328,7 +344,7 @@ private def squeezeAbsorbedInput {hf : HashFunction} (k : SqueezingKeccakC hf) (
 
     for hi : i in [startingBlock: (k.val.rate + 7) / 8] do
       have phi : i < (k.val.rate + 7) / 8 :=  hi.2.1
-      output := output.append $ storeUInt64 (k.val.A[i]'(by unfold KeccakPPermutationSize at phi; omega ))
+      output := output.append $ storeUInt64 (k.val.A[i]'(squeezeIndexBound k.val.rate i phi))
 
     updatedOutputBytesLen := updatedOutputBytesLen - (k.val.rate - k.val.lastReadPos)
 
@@ -338,7 +354,7 @@ private def squeezeAbsorbedInput {hf : HashFunction} (k : SqueezingKeccakC hf) (
   if updatedOutputBytesLen > 0 then
     for hi : i in [ startingBlock : (newLastReadPos + 7) / 8] do
       have phi : i <  (newLastReadPos + 7) / 8 :=  hi.2.1
-      output := output.append $ storeUInt64 (k.val.A[i]'(by unfold KeccakPPermutationSize at phi; omega  ))
+      output := output.append $ storeUInt64 (k.val.A[i]'(squeezeIndexBound newLastReadPos i phi))
 
     k := ⟨{k.val with lastReadPos := ⟨ newLastReadPos, by omega⟩}, k.property⟩
 
@@ -388,28 +404,38 @@ private instance {hf : HashFunction}  : Squeeze (AbsorbingKeccakC hf) Nat (Id (S
 
 namespace HashFunction
 
+/-- Finalize an absorbing sponge: pad the buffered input and squeeze out the
+configured number of output bytes. -/
 def final {hf : HashFunction} (s : AbsorbingKeccakC hf) : ByteArray  :=
   (Squeeze.squeeze s s.val.outputBytesLen).2
 
+/-- Absorb more input bytes into the running sponge state. -/
 def update {hf : HashFunction} (s : AbsorbingKeccakC hf) (bs : ByteArray)  :=
   Absorb.absorb s bs
 
+/-- One-shot hashing: absorb the whole input and squeeze the configured output. -/
 def hashData {hf : HashFunction} (bs : ByteArray) : ByteArray :=
   let k : AbsorbingKeccakC hf := hf.mk
   (Squeeze.squeeze (Absorb.absorb k bs) k.val.outputBytesLen).2
 
 end HashFunction
 
+/-- An extendable-output function (XOF), modelled as a `HashFunction` whose output
+length is requested at squeeze time rather than fixed in advance. -/
 def XOF := HashFunction
 
 namespace XOF
 
+/-- Transition an absorbing XOF sponge into the squeezing state without producing
+any output. -/
 def toSqueezing {xof : XOF} (k : AbsorbingKeccakC xof) : SqueezingKeccakC xof :=
   (Squeeze.squeeze k 0).1
 
+/-- Absorb more input bytes into a XOF sponge. -/
 nonrec def absorb {xof : XOF} (s : AbsorbingKeccakC xof) (bs : ByteArray) : AbsorbingKeccakC xof :=
   absorb s bs
 
+/-- Squeeze `l` output bytes from a XOF sponge. -/
 def squeeze {xof : XOF} {α : Type} [Squeeze α Nat ((SqueezingKeccakC xof) × ByteArray)]
     (k : α) (l : Nat) : ((SqueezingKeccakC xof) × ByteArray)  :=
   Squeeze.squeeze k l
@@ -417,9 +443,23 @@ def squeeze {xof : XOF} {α : Type} [Squeeze α Nat ((SqueezingKeccakC xof) × B
 end XOF
 
 -- Implement our hash, and xof functions
+
+/-- The SHA3-224 hash function: capacity 56, padding delimiter `0x06`, 28-byte output. -/
 def SHA3_224 : HashFunction := HashFunction.ofParams 56 0x06 28
+
+/-- The SHA3-256 hash function: capacity 64, padding delimiter `0x06`, 32-byte output. -/
 def SHA3_256 : HashFunction := HashFunction.ofParams 64 0x06 32
+
+/-- The SHA3-384 hash function: capacity 96, padding delimiter `0x06`, 48-byte output. -/
 def SHA3_384 : HashFunction := HashFunction.ofParams 96 0x06 48
+
+/-- The SHA3-512 hash function: capacity 128, padding delimiter `0x06`, 64-byte output. -/
 def SHA3_512 : HashFunction := HashFunction.ofParams 128 0x06 64
+
+/-- The SHAKE128 extendable-output function: capacity 32, padding delimiter `0x1f`. -/
 def SHAKE128 : XOF := HashFunction.ofParams 32 0x1f 32
+
+/-- The SHAKE256 extendable-output function: capacity 64, padding delimiter `0x1f`. -/
 def SHAKE256 : XOF := HashFunction.ofParams 64 0x1f 64
+
+end Cryptography
