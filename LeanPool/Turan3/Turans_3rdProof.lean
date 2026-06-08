@@ -443,7 +443,7 @@ lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
   ∑ e∈(G.edgeFinset \ affectedEdges), vp (Improve G W loose gain h_neq).w e
   = ∑ e∈(G.edgeFinset \ affectedEdges), vp W.w e := by
   intro affectedEdges
-  simp [vp, Quot.liftOn]
+  simp only [vp, Quot.liftOn, Improve_w_eq, mul_ite, mul_zero, ite_mul, zero_mul]
   apply Finset.sum_congr rfl
   intro e he
   apply @Sym2.inductionOn α (fun e => e ∈ G.edgeFinset \ affectedEdges →
@@ -1740,7 +1740,7 @@ lemma Enhance_edge_gainloose_increase (W : FunToMax G) (loose gain : α) (h_lt :
   (ε : NNReal) (epos : 0 < ε) (elt : ε < W.w loose - W.w gain) (_h_supp : W.w loose > 0 ∧ W.w gain > 0) :
   vp (Enhance G W loose gain h_lt ε epos elt).w s(loose,gain) > vp W.w s(loose,gain)  := by
   simp only [vp, Quot.liftOn, gt_iff_lt]
-  simp [Enhance]
+  simp only [Enhance, ↓reduceIte, mul_ite]
   rw [if_neg h_neq]
   ring_nf
   rw [mul_tsub]
@@ -2069,7 +2069,7 @@ lemma FunToMax.sum_eq_sum_supp (W : FunToMax G) :
     Finset.univ.filter (fun i => W.w i > 0) ∪ Finset.univ.filter (fun i => ¬ (W.w i > 0)) := by
     ext v
     simp only [mem_univ, gt_iff_lt, not_lt, nonpos_iff_eq_zero, mem_union, mem_filter, true_and, true_iff]
-    simp[or_comm]
+    simp only [or_comm]
     by_cases h : W.w v > 0
     · exact Or.inr h
     · exact Or.inl (NNReal.eq_zero_of_ne_pos h)
