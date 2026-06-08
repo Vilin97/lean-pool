@@ -351,7 +351,7 @@ Requires:
       - If ¬C s, use the given exit triple to get Q directly.
   - Apply C (V s) to your original starting state s.
 -/
-theorem S_LOOP {α : Type} [Preorder α] [LT α] [WellFoundedLT α] :
+theorem S_LOOP {α : Type} [Preorder α] [WellFoundedLT α] :
     ∀ (Q C I : Assertion) (code : Code) (l : UInt64)
     (L_w L_b : Set UInt64) (V : MState → α),
   l ∉ L_w →
