@@ -133,9 +133,9 @@ syntax "⊤" : tlafml
 /-- The `⊥` TLA formula. -/
 syntax "⊥" : tlafml
 /-- Unary heading operators on TLA formulas (`¬`, `□`, `◇`, `◯`). -/
-syntax tlafml_heading_op := "¬" <|> "□" <|> "◇" <|> "◯"
+syntax tlafmlHeadingOp := "¬" <|> "□" <|> "◇" <|> "◯"
 /-- Apply a unary heading operator to a TLA formula. -/
-syntax:max tlafml_heading_op tlafml:40 : tlafml
+syntax:max tlafmlHeadingOp tlafml:40 : tlafml
 /-- The `Enabled a` TLA formula. -/
 syntax:max "Enabled" term:40 : tlafml
 -- HMM why `syntax:arg ... ...:max` does not work, when we need multiple layers like `□ ◇ p`?
@@ -163,9 +163,9 @@ open Batteries.ExtendedBinder in
 syntax "∃ " extBinder ", " tlafml:51 : tlafml
 
 /-- Big-operator heads (`⋀`, `⋁`) for TLA formulas. -/
-syntax tlafml_bigop := "⋀ " <|> "⋁ "
+syntax tlafmlBigop := "⋀ " <|> "⋁ "
 /-- Big conjunction/disjunction of a TLA formula over a collection. -/
-syntax tlafml_bigop binderIdent " ∈ " term ", " tlafml : tlafml
+syntax tlafmlBigop binderIdent " ∈ " term ", " tlafml : tlafml
 
 /-- Elaborate a TLA formula into a term. -/
 syntax "[tlafml|" tlafml "]" : term
@@ -177,12 +177,12 @@ macro_rules
   | `([tlafml| ⟨ $t:term ⟩ ]) => `(TLA.actionPred $t)
   | `([tlafml| ⊤ ]) => `(TLA.tlaTrue)
   | `([tlafml| ⊥ ]) => `(TLA.tlaFalse)
-  | `([tlafml| $op:tlafml_heading_op $f:tlafml ]) => do
+  | `([tlafml| $op:tlafmlHeadingOp $f:tlafml ]) => do
     let opterm ← match op with
-      | `(tlafml_heading_op|¬) => `(TLA.tlaNot)
-      | `(tlafml_heading_op|□) => `(TLA.always)
-      | `(tlafml_heading_op|◇) => `(TLA.eventually)
-      | `(tlafml_heading_op|◯) => `(TLA.later)
+      | `(tlafmlHeadingOp|¬) => `(TLA.tlaNot)
+      | `(tlafmlHeadingOp|□) => `(TLA.always)
+      | `(tlafmlHeadingOp|◇) => `(TLA.eventually)
+      | `(tlafmlHeadingOp|◯) => `(TLA.later)
       | _ => Macro.throwUnsupported
     `($opterm [tlafml| $f ])
   | `([tlafml| Enabled $t:term ]) => `(TLA.tlaEnabled $t)
@@ -194,11 +194,11 @@ macro_rules
   | `([tlafml| ∀ $x:ident : $t, $f:tlafml]) => `(TLA.tlaForall fun $x:ident : $t => [tlafml| $f ])
   | `([tlafml| ∃ $x:ident, $f:tlafml]) => `(TLA.tlaExists fun $x:ident => [tlafml| $f ])
   | `([tlafml| ∃ $x:ident : $t, $f:tlafml]) => `(TLA.tlaExists fun $x:ident : $t => [tlafml| $f ])
-  | `([tlafml| $op:tlafml_bigop $x:binderIdent ∈ $l:term, $f:tlafml]) =>
+  | `([tlafml| $op:tlafmlBigop $x:binderIdent ∈ $l:term, $f:tlafml]) =>
     -- HMM why the `⟨x.raw⟩` coercion does not work here, so that we have to define `binderIdentToFunBinder`?
     match op with
-    | `(tlafml_bigop|⋀ ) => do `(TLA.tlaBigwedge (fun $(← binderIdentToFunBinder x) => [tlafml| $f ]) $l)
-    | `(tlafml_bigop|⋁ ) => do `(TLA.tlaBigvee (fun $(← binderIdentToFunBinder x) => [tlafml| $f ]) $l)
+    | `(tlafmlBigop|⋀ ) => do `(TLA.tlaBigwedge (fun $(← binderIdentToFunBinder x) => [tlafml| $f ]) $l)
+    | `(tlafmlBigop|⋁ ) => do `(TLA.tlaBigvee (fun $(← binderIdentToFunBinder x) => [tlafml| $f ]) $l)
     | _ => Macro.throwUnsupported
   | `([tlafml| $t:term ]) => `($t)
 
