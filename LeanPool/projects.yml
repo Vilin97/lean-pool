@@ -1914,9 +1914,7 @@ projects:
     status: verified
     main_declarations:
       - CF_subclass_GG
-      - CF_of_CF_u_CF
       - CF_of_CF_c_CF
-      - CF_of_reverse_CF
       - GG_of_GG_u_GG
       - GG_of_star_GG
     main_results:
