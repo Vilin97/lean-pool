@@ -26,8 +26,8 @@ private lemma filterMap_sinkSymbol_terminals {N N₀ : Type} (f : N → Option N
 
 def unionGrammar (g₁ g₂ : Grammar T) : Grammar T :=
   Grammar.mk (Option (g₁.nt ⊕ g₂.nt)) none (
-    ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ :: (
-    ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ :: (
+    ⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩ :: (
+    ⟨[], none, [], [Symbol.nonterminal (some ▶g₂.initial)]⟩ :: (
     g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
     g₂.rules.map (liftRule (some ∘ Sum.inr)))))
 
@@ -41,20 +41,20 @@ lemma unionGrammar_initial : (unionGrammar g₁ g₂).initial = none :=
 @[simp]
 lemma unionGrammar_rules :
     (unionGrammar g₁ g₂).rules =
-      ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
-      ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
+      ⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩ ::
+      ⟨[], none, [], [Symbol.nonterminal (some ▶g₂.initial)]⟩ ::
       (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++ g₂.rules.map (liftRule (some ∘ Sum.inr))) :=
   rfl
 
 private def oN₁_of_N : (unionGrammar g₁ g₂).nt → Option g₁.nt
   | none => none
-  | some ◩n => some n
-  | some ◪_ => none
+  | some ◄n => some n
+  | some ▶_ => none
 
 private def oN₂_of_N : (unionGrammar g₁ g₂).nt → Option g₂.nt
   | none => none
-  | some ◩_ => none
-  | some ◪n => some n
+  | some ◄_ => none
+  | some ▶n => some n
 
 
 def lg₁ : LiftedGrammar T :=
@@ -88,8 +88,8 @@ def lg₁ : LiftedGrammar T :=
     (by
       rintro r ⟨rin, n₁, rnt⟩
       rw [show (unionGrammar g₁ g₂).rules =
-        ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
-        ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
+        ⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩ ::
+        ⟨[], none, [], [Symbol.nonterminal (some ▶g₂.initial)]⟩ ::
         (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
           g₂.rules.map (liftRule (some ∘ Sum.inr))) from rfl] at rin
       rw [List.mem_cons, List.mem_cons] at rin
@@ -140,8 +140,8 @@ def lg₂ : LiftedGrammar T :=
     (by
       rintro r ⟨rin, n₁, rnt⟩
       rw [show (unionGrammar g₁ g₂).rules =
-        ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
-        ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
+        ⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩ ::
+        ⟨[], none, [], [Symbol.nonterminal (some ▶g₂.initial)]⟩ ::
         (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
           g₂.rules.map (liftRule (some ∘ Sum.inr))) from rfl] at rin
       rw [List.mem_cons, List.mem_cons] at rin
@@ -247,7 +247,7 @@ lemma in_union_of_in_L₁ {w : List T} (hwg : w ∈ g₁.language) :
 by
   unfold Grammar.language at hwg ⊢
   apply gr_deri_of_tran_deri
-  · refine ⟨⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩, ?_, [], [], rfl, rfl⟩
+  · refine ⟨⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩, ?_, [], [], rfl, rfl⟩
     apply List.mem_cons_self
   convert lift_deri lg₁ hwg
   symm
@@ -257,7 +257,7 @@ lemma in_union_of_in_L₂ {w : List T} (hwg : w ∈ g₂.language) :
   w ∈ (unionGrammar g₁ g₂).language :=
 by
   apply gr_deri_of_tran_deri
-  · refine ⟨⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩, ?_, [], [], rfl, rfl⟩
+  · refine ⟨⟨[], none, [], [Symbol.nonterminal (some ▶g₂.initial)]⟩, ?_, [], [], rfl, rfl⟩
     apply List.mem_cons_of_mem
     apply List.mem_cons_self
   convert lift_deri lg₂ hwg

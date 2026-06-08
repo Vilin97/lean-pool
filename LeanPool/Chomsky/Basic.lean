@@ -23,10 +23,10 @@ postfix:max ".→" => Iff.mp
 postfix:max ".←" => Iff.mpr
 
 /-- The "left" or "top" variant. -/
-prefix:max "◩" => Sum.inl
+prefix:max "◄" => Sum.inl
 
 /-- The "right" or "bottom" variant. -/
-prefix:max "◪" => Sum.inr
+prefix:max "▶" => Sum.inr
 
 /-- Writing `↓t` is slightly more general than writing `Function.const _ t`. -/
 notation:max "↓"t:arg => (fun _ => t)

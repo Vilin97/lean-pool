@@ -16,25 +16,25 @@ variable {T : Type}
 
 private def wrapCFR₁ {N₁ : Type} (N₂ : Type) (r : N₁ × List (Symbol T N₁)) :
   nnn T N₁ N₂ × List (nst T N₁ N₂) :=
-⟨◩(some ◩r.fst), r.snd.map (wrapSymbol₁ N₂)⟩
+⟨◄(some ◄r.fst), r.snd.map (wrapSymbol₁ N₂)⟩
 
 private def wrapCFR₂ (N₁ : Type) {N₂ : Type} (r : N₂ × List (Symbol T N₂)) :
   nnn T N₁ N₂ × List (nst T N₁ N₂) :=
-⟨◩(some ◪r.fst), r.snd.map (wrapSymbol₂ N₁)⟩
+⟨◄(some ▶r.fst), r.snd.map (wrapSymbol₂ N₁)⟩
 
 private def CFG.terminalsRules₁ (g : CFG T) (N₂ : Type) :
   List (nnn T g.nt N₂ × List (nst T g.nt N₂)) :=
-(allUsedTerminals g.toGeneral).map (fun t : T => ⟨◪◩t, [Symbol.terminal t]⟩)
+(allUsedTerminals g.toGeneral).map (fun t : T => ⟨▶◄t, [Symbol.terminal t]⟩)
 
 private def CFG.terminalsRules₂ (g : CFG T) (N₁ : Type) :
   List (nnn T N₁ g.nt × List (nst T N₁ g.nt)) :=
-(allUsedTerminals g.toGeneral).map (fun t : T => ⟨◪◪t, [Symbol.terminal t]⟩)
+(allUsedTerminals g.toGeneral).map (fun t : T => ⟨▶▶t, [Symbol.terminal t]⟩)
 
 private def bigCFG (g₁ g₂ : CFG T) : CFG T :=
-  CFG.mk (nnn T g₁.nt g₂.nt) ◩none (
-    ⟨◩none, [
-      Symbol.nonterminal ◩(some ◩g₁.initial),
-      Symbol.nonterminal ◩(some ◪g₂.initial)]
+  CFG.mk (nnn T g₁.nt g₂.nt) ◄none (
+    ⟨◄none, [
+      Symbol.nonterminal ◄(some ◄g₁.initial),
+      Symbol.nonterminal ◄(some ▶g₂.initial)]
     ⟩ :: ((
       g₁.rules.map (wrapCFR₁ g₂.nt) ++
       g₂.rules.map (wrapCFR₂ g₁.nt)

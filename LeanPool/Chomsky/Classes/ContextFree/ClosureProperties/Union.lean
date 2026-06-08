@@ -16,16 +16,16 @@ variable {T : Type}
 
 private def liftCFR₁ {N₁ : Type} (N₂ : Type) (r : N₁ × List (Symbol T N₁)) :
   Option (N₁ ⊕ N₂) × List (Symbol T (Option (N₁ ⊕ N₂))) :=
-⟨some ◩r.fst, liftString (Option.some ∘ Sum.inl) r.snd⟩
+⟨some ◄r.fst, liftString (Option.some ∘ Sum.inl) r.snd⟩
 
 private def liftCFR₂ (N₁ : Type) {N₂ : Type} (r : N₂ × List (Symbol T N₂)) :
   Option (N₁ ⊕ N₂) × List (Symbol T (Option (N₁ ⊕ N₂))) :=
-⟨some ◪r.fst, liftString (Option.some ∘ Sum.inr) r.snd⟩
+⟨some ▶r.fst, liftString (Option.some ∘ Sum.inr) r.snd⟩
 
 private def unionCFG (g₁ g₂ : CFG T) : CFG T :=
   CFG.mk (Option (g₁.nt ⊕ g₂.nt)) none (
-    (none, [Symbol.nonterminal (some ◩g₁.initial)]) :: (
-    (none, [Symbol.nonterminal (some ◪g₂.initial)]) :: (
+    (none, [Symbol.nonterminal (some ◄g₁.initial)]) :: (
+    (none, [Symbol.nonterminal (some ▶g₂.initial)]) :: (
     g₁.rules.map (liftCFR₁ g₂.nt) ++
     g₂.rules.map (liftCFR₂ g₁.nt))))
 
