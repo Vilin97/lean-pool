@@ -1029,7 +1029,8 @@ by
       rw [cat] at bef
       have u_nil := u_nil_when_RH bef
       rw [u_nil, List.nil_append] at bef ⊢
-      rw [←List.append_inj_right bef (by rfl), List.map_cons, List.map_cons, List.flatten, ←List.append_assoc, ←List.append_assoc]
+      rw [←List.append_inj_right bef (by rfl), List.map_cons, List.map_cons, List.flatten]
+      simp only [List.append_assoc, List.append_eq]
   · cases hx : x with
     | nil =>
       right; right; left
@@ -1048,7 +1049,9 @@ by
       rw [u_nil, List.nil_append] at bef
       have v_eq := (List.append_inj_right bef (by rfl)).symm
       rw [u_nil, List.nil_append, v_eq, RH_nil, List.nil_append, hx, List.map_cons, List.map_cons,
-          List.flatten, List.append_assoc, List.append_flatten_map_append, ←List.append_assoc] at aft
+          List.flatten] at aft
+      simp only [List.append_eq, ←List.append_assoc] at aft
+      rw [List.append_assoc, List.append_flatten_map_append, ←List.append_assoc] at aft
       constructor
       · use x₀.map wrapSym ++ ((L.map (List.map wrapSym)).map ([H] ++ ·)).flatten
       rw [List.append_assoc, ←List.append_flatten_map_append] at aft
