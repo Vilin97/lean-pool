@@ -7,27 +7,38 @@ import LeanPool.ComputableReal.ComputableReal
 import Mathlib.Analysis.RCLike.Basic
 import Mathlib.Tactic.Peel
 
-/- Type class stating that `x:ℝ` has a ComputableℝSeq, i.e. that x is a computable number. Like
-`Decidable`, it carries data with it - even though (classically) we could prove that ever proposition
-is decidable, and every real is computable. -/
+/-!
+# The `IsComputable` typeclass
+
+`IsComputable x` witnesses that the real number `x` carries a `ComputableℝSeq`, i.e. that `x` is
+a computable number. Closure instances (for arithmetic, powers, scalar multiples) and `Decidable`
+instances for comparisons are provided, along with a tool for lifting continuous functions defined
+by locally-uniformly converging rational approximations.
+-/
+
+/-- Type class stating that `x : ℝ` has a `ComputableℝSeq`, i.e. that `x` is a computable number.
+Like `Decidable`, it carries data with it - even though (classically) we could prove that every
+proposition is decidable, and every real is computable. -/
 class IsComputable (x : ℝ) : Type where
+    /-- A computable sequence representing `x`. -/
     seq : ComputableℝSeq
+    /-- The sequence converges to `x`. -/
     prop : seq.val = x
 
 namespace IsComputable
 
 /-- Turns one `IsComputable` into another one, given a proof that they're equal. This is directly
 analogous to `decidable_of_iff`, as a way to avoid `Eq.rec` on data-carrying instances. -/
-def lift_eq {x y : ℝ} (h : x = y) :
+@[reducible] def lift_eq {x y : ℝ} (h : x = y) :
     IsComputable x → IsComputable y :=
   fun ⟨sx, hsx⟩ ↦ ⟨sx, h ▸ hsx⟩
 
-def lift (fr : ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq)
+@[reducible] def lift (fr : ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq)
     (h : ∀ a, (fs a).val = fr a.val) :
     IsComputable x → IsComputable (fr x) :=
   fun ⟨sx, hsx⟩ ↦ ⟨fs sx, hsx ▸ h sx⟩
 
-def lift₂ (fr : ℝ → ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq)
+@[reducible] def lift₂ (fr : ℝ → ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq)
     (h : ∀a b, (fs a b).val = fr a.val b.val) :
     IsComputable x → IsComputable y → IsComputable (fr x y) :=
   fun ⟨sx, hsx⟩ ⟨sy, hsy⟩ ↦ ⟨fs sx sy, hsx ▸ hsy ▸ h sx sy⟩
@@ -60,7 +71,7 @@ instance instComputableOfNatAtLeastTwo : (n : ℕ) → [n.AtLeastTwo] → IsComp
 instance instComputableNeg (x : ℝ) [hx : IsComputable x] : IsComputable (-x) :=
   lift _ (- ·) ComputableℝSeq.val_neg hx
 
-instance instComputableInv (x : ℝ) [hx : IsComputable x] : IsComputable (x⁻¹) :=
+noncomputable instance instComputableInv (x : ℝ) [hx : IsComputable x] : IsComputable (x⁻¹) :=
   lift _ (·⁻¹) ComputableℝSeq.val_inv hx
 
 instance instComputableAdd [hx : IsComputable x] [hy : IsComputable y] : IsComputable (x + y) :=
@@ -72,7 +83,7 @@ instance instComputableSub [hx : IsComputable x] [hy : IsComputable y] : IsCompu
 instance instComputableMul [hx : IsComputable x] [hy : IsComputable y] : IsComputable (x * y) :=
   lift₂ _ (· * ·) ComputableℝSeq.val_mul hx hy
 
-instance instComputableDiv [hx : IsComputable x] [hy : IsComputable y] : IsComputable (x / y) :=
+noncomputable instance instComputableDiv [hx : IsComputable x] [hy : IsComputable y] : IsComputable (x / y) :=
   lift₂ _ (· / ·) ComputableℝSeq.val_div hx hy
 
 instance instComputableNatPow [hx : IsComputable x] (n : ℕ) : IsComputable (x ^ n) := by
@@ -87,14 +98,14 @@ instance instComputableNatPow [hx : IsComputable x] (n : ℕ) : IsComputable (x 
   · rw [pow_succ]
     infer_instance
 
-instance instComputableZPow [hx : IsComputable x] (z : ℤ) : IsComputable (x ^ z) := by
+noncomputable instance instComputableZPow [hx : IsComputable x] (z : ℤ) : IsComputable (x ^ z) := by
   cases z
   · rw [Int.ofNat_eq_coe, zpow_natCast]
     infer_instance
   · simp only [zpow_negSucc]
     infer_instance
 
-instance instComputableNSMul [hx : IsComputable x] (n : ℕ) : IsComputable (n • x) :=
+noncomputable instance instComputableNSMul [hx : IsComputable x] (n : ℕ) : IsComputable (n • x) :=
   lift _ (n • ·) (by
     --TODO move to a ComputableℝSeq lemma
     intro a
@@ -104,41 +115,37 @@ instance instComputableNSMul [hx : IsComputable x] (n : ℕ) : IsComputable (n �
       simp [ih, succ_nsmul, add_mul]
     ) hx
 
-instance instComputableZSMul [hx : IsComputable x] (z : ℤ) : IsComputable (z • x) := by
+noncomputable instance instComputableZSMul [hx : IsComputable x] (z : ℤ) : IsComputable (z • x) := by
   rw [zsmul_eq_mul]
   infer_instance
 
-instance instComputableQSMul [hx : IsComputable x] (q : ℚ) : IsComputable (q • x) := by
+noncomputable instance instComputableQSMul [hx : IsComputable x] (q : ℚ) : IsComputable (q • x) := by
   change IsComputable (_ * _)
   infer_instance
 
 /-- When expressions involve that happen to be `IsComputable`, we can get a decidability
 instance by lifting them to a comparison on the `ComputableℝSeq`s, where comparison is
 computable. -/
-instance instDecidableLE [hx : IsComputable x] [hy : IsComputable y] : Decidable (x ≤ y) :=
+noncomputable instance instDecidableLE [hx : IsComputable x] [hy : IsComputable y] : Decidable (x ≤ y) :=
   decidable_of_decidable_of_iff (p := Computableℝ.mk hx.seq ≤ Computableℝ.mk hy.seq) (by
     simp only [← Computableℝ.le_iff_le, Computableℝ.val_mk_eq_val, hx.prop, hy.prop]
   )
 
-instance instDecidableEq [hx : IsComputable x] [hy : IsComputable y] : Decidable (x = y) :=
+noncomputable instance instDecidableEq [hx : IsComputable x] [hy : IsComputable y] : Decidable (x = y) :=
   decidable_of_decidable_of_iff (p := (Computableℝ.mk hx.seq = Computableℝ.mk hy.seq)) (by
     simp only [← Computableℝ.eq_iff_eq_val, Computableℝ.val_mk_eq_val, hx.prop, hy.prop]
   )
 
-instance instDecidableLT [hx : IsComputable x] [hy : IsComputable y] : Decidable (x < y) :=
+noncomputable instance instDecidableLT [hx : IsComputable x] [hy : IsComputable y] : Decidable (x < y) :=
   decidable_of_decidable_of_iff (p := Computableℝ.mk hx.seq < Computableℝ.mk hy.seq) (by
     simp only [← Computableℝ.lt_iff_lt, Computableℝ.val_mk_eq_val, hx.prop, hy.prop]
   )
 
-instance instDecidableLE_val (x y : ComputableℝSeq) : Decidable (x.val ≤ y.val) :=
+noncomputable instance instDecidableLE_val (x y : ComputableℝSeq) : Decidable (x.val ≤ y.val) :=
   @instDecidableLE x.val y.val ⟨x, rfl⟩ ⟨y,rfl⟩
 
-instance instDecidableLT_val (x y : ComputableℝSeq) : Decidable (x.val < y.val) :=
+noncomputable instance instDecidableLT_val (x y : ComputableℝSeq) : Decidable (x.val < y.val) :=
   @instDecidableLT x.val y.val ⟨x, rfl⟩ ⟨y,rfl⟩
-
-example : ((3 : ℝ) + (5 : ℕ)) / 100 < (3 : ℚ) * (5 + (1 / 5)^2 - 1) ∧
-    (5:ℕ) = ((1:ℝ) + (2:ℚ)^2) := by
-  native_decide
 
 end IsComputable
 
@@ -199,7 +206,7 @@ theorem Real_mk_of_TendstoLocallyUniformly' (fImpl : ℕ → ℚ → ℚ) (f : �
 
   calc |↑(fImpl j (x j)) - f (Real.mk ⟨x, hx⟩)| =
     |(↑(fImpl j (x j)) - f ↑(x j)) + (f ↑(x j) - f (Real.mk ⟨x, hx⟩))| := by congr; ring_nf
-    _ ≤ |(↑(fImpl j (x j)) - f ↑(x j))| + |(f ↑(x j) - f (Real.mk ⟨x, hx⟩))| := abs_add _ _
+    _ ≤ |(↑(fImpl j (x j)) - f ↑(x j))| + |(f ↑(x j) - f (Real.mk ⟨x, hx⟩))| := abs_add_le _ _
     _ < ε := by rw [abs_sub_comm]; linarith
 
 open scoped QInterval

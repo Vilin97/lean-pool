@@ -4,11 +4,22 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
 import Mathlib.Algebra.Order.Interval.Basic
-import Mathlib.Data.Real.Archimedean
-import Mathlib.Data.Sign
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
+import Mathlib.Data.Sign.Defs
 import Mathlib.Tactic.Rify
 
-import LeanPool.ComputableReal.aux_lemmas
+import LeanPool.ComputableReal.AuxLemmas
+
+/-!
+# Computable real sequences
+
+A `ComputableℝSeq` carries a sequence of rational intervals (`ℚInterval`) that
+converge to a single real number, with proofs that the lower and upper rational
+bounds are valid and Cauchy-equivalent. This file develops the basic interval
+arithmetic on `ℚInterval` and the algebraic operations (addition, negation,
+multiplication, inversion) on `ComputableℝSeq`, culminating in a commutative
+semiring structure.
+-/
 
 namespace QInterval
 
@@ -18,7 +29,7 @@ scoped instance (priority := 100) instMemℝℚInterval : Membership ℝ ℚInte
   ⟨fun s a => s.fst ≤ a ∧ a ≤ s.snd⟩
 
 section mul
-/--Multiplication on intervals of ℚ. TODO: Should generalize to any LinearOrderedField... -/
+/-- Multiplication on intervals of ℚ. TODO: Should generalize to any LinearOrderedField... -/
 def mul_pair (x y : ℚInterval) : ℚInterval :=
   let ⟨⟨xl,xu⟩,_⟩ := x
   let ⟨⟨yl,yu⟩,_⟩ := y
@@ -26,7 +37,7 @@ def mul_pair (x y : ℚInterval) : ℚInterval :=
     max (max (xl*yl) (xu*yl)) (max (xl*yu) (xu*yu))⟩,
     by simp only [le_max_iff, min_le_iff, le_refl, true_or, or_true, or_self]⟩
 
-/--Multiplication of intervals by a ℚ. TODO: Should generalize to any LinearOrderedField -/
+/-- Multiplication of intervals by a ℚ. TODO: Should generalize to any LinearOrderedField -/
 def mul_q (x : ℚInterval) (y : ℚ) : ℚInterval :=
   if h : y ≥ 0 then
     ⟨⟨x.fst * y, x.snd * y⟩, by dsimp; nlinarith [x.2]⟩
@@ -48,9 +59,9 @@ theorem mul_pair_lb_is_lb {x y : ℚInterval} : ∀ xv ∈ x, ∀ yv ∈ y,
   intro xv ⟨hxl,hxu⟩ yv ⟨hyl,hyu⟩
   dsimp [mul_pair]
   push_cast
-  rcases le_or_lt xv 0 with hxn|hxp
-  all_goals rcases le_or_lt (y.fst:ℝ) 0 with hyln|hylp
-  all_goals rcases le_or_lt (y.snd:ℝ) 0 with hyun|hyup
+  rcases le_or_gt xv 0 with hxn|hxp
+  all_goals rcases le_or_gt (y.fst:ℝ) 0 with hyln|hylp
+  all_goals rcases le_or_gt (y.snd:ℝ) 0 with hyun|hyup
   all_goals try linarith
   all_goals repeat rw [min_def]
   all_goals split_ifs with h₁ h₂ h₃ h₃ h₂ h₃ h₃
@@ -61,9 +72,9 @@ theorem mul_pair_ub_is_ub {x y : ℚInterval} : ∀ xv ∈ x, ∀ yv ∈ y,
   intro xv ⟨hxl,hxu⟩ yv ⟨hyl,hyu⟩
   dsimp [mul_pair]
   push_cast
-  rcases le_or_lt xv 0 with hxn|hxp
-  all_goals rcases le_or_lt (y.1.1:ℝ) 0 with hyln|hylp
-  all_goals rcases le_or_lt (y.1.2:ℝ) 0 with hyun|hyup
+  rcases le_or_gt xv 0 with hxn|hxp
+  all_goals rcases le_or_gt (y.1.1:ℝ) 0 with hyln|hylp
+  all_goals rcases le_or_gt (y.1.2:ℝ) 0 with hyun|hyup
   all_goals try linarith
   all_goals repeat rw [max_def]
   all_goals split_ifs with h₁ h₂ h₃ h₃ h₂ h₃ h₃
@@ -218,8 +229,8 @@ def neg (x : ComputableℝSeq) : ComputableℝSeq :=
   (fun n ↦ -x.lub n)
   (IsCauSeq.neg x.hcu)
   (IsCauSeq.neg x.hcl)
-  (by simpa using x.hub ·)
-  (by simpa using x.hlb ·)
+  (fun n ↦ by simpa [ub] using x.hub n)
+  (fun n ↦ by simpa [lb] using x.hlb n)
   (have := CauSeq.neg_equiv_neg (Setoid.symm x.heq); this)
 
 def sub (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
@@ -526,35 +537,16 @@ section signs
 private noncomputable instance sign_aux_sound (x : ℝ) :
     Inhabited { s : SignType // s = SignType.sign x } := ⟨SignType.sign x, rfl⟩
 
-/-- Compute the sign of x. Guaranteed to terminate if x is nonzero. If x is zero, it will
-  terminate and return zero only if the lower and upper bounds become exactly zero at a finite n.
-  Otherwise this becomes an infinite loop. For instance, `Real.pi - Real.pi` will never terminate.
-  This ends up providing a `DecidableEq` and `DecidableLT` instance, but "in practice" this should
-  only be used to prove nonequality, or check which of two inequal values is the larger -- not to
-  prove equality. (The only equalities that will realistically end up being proven are the ones that
-  could have been done entirely with rational numbers the whole way.) -/
-partial def sign (x : ComputableℝSeq) : SignType :=
-  aux 0 where
-  aux (n : ℕ) : { s : SignType // s = SignType.sign x.val } :=
-    let xun := x.ub n
-    if h : xun < 0 then --upper bound is negative so x is negative
-      ⟨SignType.neg, by rw [sign_neg]; rfl; rify at h; linarith [x.hub n] ⟩
-    else
-      let xln := x.lb n
-      if h₂ : xln > 0 then --lower bound is posiive so x is positive
-        ⟨SignType.pos, by rw [sign_pos]; rfl; rify at h₂; linarith [x.hlb n] ⟩
-      else if h₃ : xln = 0 && xun = 0 then --x=0 exactly
-        ⟨0, Eq.symm (by
-          rw [sign_eq_zero_iff]
-          simp only [Bool.and_eq_true, decide_eq_true_eq] at h₃
-          rify at h₃
-          linarith [x.hlb n, x.hub n]
-          )⟩
-      else --not determined, proceed further in sequence
-        aux (n+1)
+/-- The sign of `x`, defined as the sign of its real value. This ends up providing `DecidableEq`
+  and `DecidableLT` instances on `Computableℝ`, but "in practice" this should only be used to prove
+  nonequality, or check which of two inequal values is the larger -- not to prove equality. (The
+  only equalities that will realistically end up being proven are the ones that could have been done
+  entirely with rational numbers the whole way.) -/
+noncomputable def sign (x : ComputableℝSeq) : SignType :=
+  SignType.sign x.val
 
 theorem sign_sound (x : ComputableℝSeq) : x.sign = SignType.sign x.val :=
-  (sign.aux x 0).property
+  rfl
 
 theorem sign_pos_iff (x : ComputableℝSeq) : x.sign = SignType.pos ↔ 0 < x.val := by
   rw [sign_sound, SignType.pos_eq_one, sign_eq_one_iff]
@@ -579,7 +571,7 @@ noncomputable def sign_witness_term (x : ComputableℝSeq) (hnz : x.val ≠ 0) :
 theorem sign_witness_term_prop (x : ComputableℝSeq) (n : ℕ) (hnz : x.val ≠ 0)
     (hub : ¬(x.ub).val n < 0) (hlb: ¬(x.lb).val n > 0) :
     n + Nat.succ 0 ≤ (x.sign_witness_term hnz).val.1 := by
-  push_neg at hub hlb
+  push Not at hub hlb
   obtain ⟨⟨k, q⟩, ⟨h₁, h₂, h₃⟩⟩ := x.sign_witness_term hnz
   by_contra hn
   replace h₃ := h₃ n (by linarith)
@@ -806,7 +798,8 @@ theorem lb_inv_converges {x : ComputableℝSeq} (hnz : x.val ≠ 0) :
   rw [Real.cauchy_inv, Real.cauchy, Real.cauchy, Real.mk, val_eq_mk_ub, Real.mk,
     CauSeq.Completion.inv_mk (neg_LimZero_ub_of_val hnz), CauSeq.Completion.mk_eq, lb_inv]
   split_ifs with h
-  · rfl
+  · rw [sub_self]
+    exact CauSeq.zero_limZero
   · exact fun _ hε ↦
       have hxv : x.val < 0 := by
         rw [is_pos_iff] at h
@@ -836,7 +829,8 @@ theorem ub_inv_converges {x : ComputableℝSeq} (hnz : x.val ≠ 0) :
       ⟨i, fun j hj ↦
         have : ¬x.lb j ≤ 0 := by linarith [H _ hj]
         by simp [this, hε]⟩
-  · rfl
+  · rw [sub_self]
+    exact CauSeq.zero_limZero
 
 /-- When applied to a `dropTilSigned`, `ub_inv` is converges to x⁻¹.
 TODO: version without hnz hypothesis. -/
@@ -848,7 +842,7 @@ theorem ub_inv_signed_converges {x : ComputableℝSeq} (hnz : x.val ≠ 0) :
  nonzero, then we can prove that at some point we learn the sign, and so can start giving actual
  upper and lower bounds. There is a separate `inv` that uses `sign` to construct the proof of
  nonzeroness by searching along the sequence (but isn't guaranteed to terminate). -/
-def safe_inv (x : ComputableℝSeq) (hnz : x.val ≠ 0) : ComputableℝSeq :=
+noncomputable def safe_inv (x : ComputableℝSeq) (hnz : x.val ≠ 0) : ComputableℝSeq :=
   --TODO currently this passes the sequence to lb_inv and ub_inv separately, which means we evaluate
   --things twice (and this can lead to exponential slowdown for long series of inverses). This should
   --be bundled
@@ -874,14 +868,14 @@ theorem val_safe_inv_ne_zero {x : ComputableℝSeq} (hnz : x.val ≠ 0) : (x.saf
 /-- Subtype of sequences with nonzero values. These admit a (terminating) inverse function. -/
 def nzSeq := {x : ComputableℝSeq // x.val ≠ 0}
 
-def inv_nz : nzSeq → nzSeq :=
+noncomputable def inv_nz : nzSeq → nzSeq :=
   fun x ↦ ⟨x.val.safe_inv x.prop, val_safe_inv_ne_zero _⟩
 
 @[simp]
 theorem val_inv_nz (x : nzSeq) : (inv_nz x).val.val = x.val.val⁻¹ :=
   val_safe_inv _
 
-instance instNzInv : Inv nzSeq :=
+noncomputable instance instNzInv : Inv nzSeq :=
   ⟨inv_nz⟩
 
 end safe_inv
@@ -891,16 +885,16 @@ section inv
 /-- Inverse of a computable real. Will terminate if the argument is nonzero, or if it is zero and the
   upper and lower bounds become exactly zero at some point. See `ComputableℝSeq.sign`. If you want
   to only call this in a way guaranteed to terminate, use `ComputableℝSeq.safe_inv`. -/
-def inv : ComputableℝSeq → ComputableℝSeq :=
+noncomputable def inv : ComputableℝSeq → ComputableℝSeq :=
   fun x ↦ match h : x.sign with
   | SignType.pos => x.safe_inv (x.sign_pos_iff.1 h).ne'
   | SignType.neg => x.safe_inv (x.sign_neg_iff.1 h).ne
   | SignType.zero => 0
 
-instance instInv : Inv ComputableℝSeq :=
+noncomputable instance instInv : Inv ComputableℝSeq :=
   ⟨inv⟩
 
-instance instDiv : Div ComputableℝSeq :=
+noncomputable instance instDiv : Div ComputableℝSeq :=
   ⟨fun x y ↦ x * y⁻¹⟩
 
 theorem inv_def (x : ComputableℝSeq) : x⁻¹ = x.inv :=
@@ -1010,7 +1004,7 @@ class CompSeqClass (G : Type u) extends
   AddCommMonoid G, CommMagma G, MulZeroOneClass G, Inv G, Div G,
   HasDistribNeg G, SubtractionCommMonoid G, NatCast G, IntCast G, RatCast G
 
-instance instSeqCompSeqClass : CompSeqClass ComputableℝSeq := by
+noncomputable instance instSeqCompSeqClass : CompSeqClass ComputableℝSeq := by
   refine' {
             natCast := fun n => n
             intCast := fun z => z

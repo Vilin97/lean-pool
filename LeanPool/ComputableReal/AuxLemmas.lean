@@ -3,19 +3,24 @@ Copyright (c) 2026 Alex Meiburg. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
-import Mathlib.Data.Real.Archimedean
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
 
---============
---silly lemmas
-theorem abs_ite_le [inst : LinearOrderedAddCommGroup α] (x : α) :
+/-!
+# Auxiliary lemmas
+
+Small helper lemmas about `CauSeq` suprema/infima and about Cauchy sequences
+converging to a real number, used in the construction of computable reals.
+-/
+
+theorem abs_ite_le [AddCommGroup α] [LinearOrder α] [IsOrderedAddMonoid α] (x : α) :
     abs x = if 0 ≤ x then x else -x := by
-  split_ifs <;> simp_all
+  split_ifs <;> simp_all only [abs_eq_self, not_le, abs_eq_neg_self]
   next h =>
     exact LT.lt.le h
 
 namespace CauSeq
 
-variable [LinearOrderedField α] {a b : CauSeq α abs}
+variable [Field α] [LinearOrder α] [IsStrictOrderedRing α] {a b : CauSeq α abs}
 
 theorem sup_equiv_of_equivs (ha : a ≈ c) (hb : b ≈ c) : a ⊔ b ≈ c := by
   intro n hn

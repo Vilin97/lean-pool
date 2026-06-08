@@ -5,6 +5,15 @@ Authors: Alex Meiburg
 -/
 import LeanPool.ComputableReal.ComputableRSeq
 
+/-!
+# Computable reals
+
+`Computableℝ` is the quotient of `ComputableℝSeq` by the equivalence relation of
+converging to the same real value. This file equips it with its commutative ring,
+field, and linear order structures, so that it forms an ordered field whose
+comparisons are decidable.
+-/
+
 /-- Computable reals, defined as the quotient of ComputableℝSeq sequences -- sequences with
   Cauchy sequences of lower and upper bounds that converge to the same value -- by the equivalence
   relation of having the same converged value. This is similar to how reals are quotients of Cauchy
@@ -157,6 +166,8 @@ instance instCommRing : CommRing Computableℝ := by
             npow := npowRec --todo faster instances
             nsmul := nsmulRec
             zsmul := zsmulRec
+            natCast_succ := _
+            sub_eq_add_neg := _
             .. }
   all_goals
     intros
@@ -195,14 +206,14 @@ private def nz_quot_equiv := Equiv.subtypeQuotientEquivQuotientSubtype
     (fun _ _ ↦ Iff.rfl)
 
 /-- Auxiliary inverse definition that operates on the nonzero Computableℝ values. -/
-def safe_inv' : { x : Computableℝ // x ≠ 0 } → { x : Computableℝ // x ≠ 0 } :=
+noncomputable def safe_inv' : { x : Computableℝ // x ≠ 0 } → { x : Computableℝ // x ≠ 0 } :=
   fun v ↦ nz_quot_equiv.invFun <| Quotient.map _ fun x y h₁ ↦ by
     change (ComputableℝSeq.inv_nz x).val.val = (ComputableℝSeq.inv_nz y).val.val
     rw [ComputableℝSeq.val_inv_nz x, ComputableℝSeq.val_inv_nz y, h₁]
   (nz_quot_equiv.toFun v)
 
 /-- Inverse of a nonzero Computableℝ, safe (terminating) as long as x is nonzero. -/
-irreducible_def safe_inv (hnz : x ≠ 0) : Computableℝ := safe_inv' ⟨x, hnz⟩
+noncomputable irreducible_def safe_inv (hnz : x ≠ 0) : Computableℝ := safe_inv' ⟨x, hnz⟩
 
 @[simp]
 theorem safe_inv_val (hnz : x ≠ 0) : (x.safe_inv hnz).val = x.val⁻¹ := by
@@ -223,7 +234,7 @@ end safe_inv
 
 section field
 
-instance instComputableInv : Inv Computableℝ :=
+noncomputable instance instComputableInv : Inv Computableℝ :=
   ⟨mapℝ' (·⁻¹) ⟨(·⁻¹), ComputableℝSeq.val_inv⟩⟩
 
 @[simp]
@@ -234,7 +245,7 @@ theorem inv_val : (x⁻¹).val = (x.val)⁻¹ := by
 
 example : True := ⟨⟩
 
-instance instField : Field Computableℝ := { instCommRing with
+noncomputable instance instField : Field Computableℝ := { instCommRing with
   qsmul := _
   nnqsmul := _
   exists_pair_ne := ⟨0, 1, by
@@ -299,33 +310,44 @@ theorem le_iff_le : x.val ≤ y.val ↔ x ≤ y := by
   rw [ComputableℝSeq.sign_sound, SignType.zero_eq_zero, sign_nonneg_iff]
   rw [ComputableℝSeq.val_sub, sub_nonneg]
 
-instance instDecidableLE : DecidableRel (fun (x y : Computableℝ) ↦ x ≤ y) :=
+noncomputable instance instDecidableLE : DecidableRel (fun (x y : Computableℝ) ↦ x ≤ y) :=
   fun a b ↦ by
     change Decidable (le a b)
     rw [le]
     infer_instance
 
 --TODO: add a faster `min` and `max` that don't require sign computation.
-instance instLinearOrderedField : LinearOrderedField Computableℝ := by
-  refine' { instField, instLT, instLE with
-      decidableLE := inferInstance
-      le_refl := _
-      le_trans := _
-      le_antisymm := _
-      add_le_add_left := _
-      zero_le_one := _
-      mul_pos := _
-      le_total := _
-      lt_iff_le_not_le := _
-    }
-  all_goals
-    intros
-    simp only [← le_iff_le, ← lt_iff_lt, ← eq_iff_eq_val, val_add, val_mul, val_zero, val_one] at *
-    first
-    | linarith (config := {splitNe := true})
-    | apply mul_pos ‹_› ‹_›
-    | apply le_total
-    | apply lt_iff_le_not_le
+noncomputable instance instPartialOrder : PartialOrder Computableℝ where
+  le := (· ≤ ·)
+  lt := (· < ·)
+  le_refl a := by simp only [← le_iff_le]; exact le_refl _
+  le_trans a b c hab hbc := by
+    simp only [← le_iff_le] at *; linarith
+  le_antisymm a b hab hba := by
+    rw [← eq_iff_eq_val]; simp only [← le_iff_le] at *; linarith
+  lt_iff_le_not_ge a b := by
+    simp only [← le_iff_le, ← lt_iff_lt]; exact lt_iff_le_not_ge
+
+noncomputable instance instLinearOrder : LinearOrder Computableℝ where
+  toPartialOrder := instPartialOrder
+  toDecidableLE := inferInstance
+  le_total a b := by
+    simp only [← le_iff_le]; exact le_total _ _
+
+instance instIsOrderedAddMonoid : IsOrderedAddMonoid Computableℝ where
+  add_le_add_left a b hab c := by
+    simp only [← le_iff_le, val_add] at *
+    linarith
+
+instance instZeroLEOneClass : ZeroLEOneClass Computableℝ where
+  zero_le_one := by
+    simp only [← le_iff_le, val_zero, val_one]
+    exact zero_le_one
+
+instance instIsStrictOrderedRing : IsStrictOrderedRing Computableℝ :=
+  .of_mul_pos fun a b ha hb => by
+    simp only [← lt_iff_lt, val_mul, val_zero] at *
+    exact mul_pos ha hb
 
 end ordered
 

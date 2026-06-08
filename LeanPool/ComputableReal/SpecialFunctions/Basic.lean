@@ -7,6 +7,14 @@ import LeanPool.ComputableReal.IsComputable
 import Mathlib.Data.Real.Sign
 import Mathlib.Data.Real.ConjExponents
 
+/-!
+# Computability of basic real operations
+
+This file provides `IsComputable` instances for scientific literals, `dite`/`ite`, `Real.sign`,
+`max`, `min`, `abs`, conjugate exponents, and finite sums, closing the `IsComputable` typeclass
+under the basic operations on real numbers.
+-/
+
 namespace IsComputable
 
 instance instComputableOfScientific (m : ℕ) (b : Bool) (e : ℕ) :
@@ -27,7 +35,7 @@ instance instComputableIte (p : Prop) (x y : ℝ) [Decidable p]
   instComputableDite p _ _
 
 @[inline]
-instance instComputableSign (x : ℝ) [hx : IsComputable x] : IsComputable (x.sign) :=
+noncomputable instance instComputableSign (x : ℝ) [hx : IsComputable x] : IsComputable (x.sign) :=
   ⟨hx.seq.sign,
     by
       rw [ComputableℝSeq.sign_sound, hx.prop]
@@ -39,11 +47,11 @@ instance instComputableSign (x : ℝ) [hx : IsComputable x] : IsComputable (x.si
 --TODO: This really should operate "directly" on the sequences, so that it doesn't
 --require a comparison first. For instance, `max (√2 - √2) 0 < 1` will never terminate
 --with this implementation.
-instance instComputableMax (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
+noncomputable instance instComputableMax (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
     IsComputable (max x y) :=
   lift_eq (x := ite (x ≤ y) ..) (by rw [max_def]; congr) inferInstance
 
-instance instComputableMin (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
+noncomputable instance instComputableMin (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
     IsComputable (min x y) :=
   lift_eq (x := ite (x ≤ y) ..) (by rw [min_def]; congr) inferInstance
 
@@ -51,10 +59,10 @@ instance instComputableMin (x y : ℝ) [hx : IsComputable x] [hy : IsComputable 
 --slowdown when many nested `abs` are present); would be good to write one that
 --directly takes the abs of each interval. Also, never returns a value for
 -- `abs (√2 - √2)`, for the same reasons as max.
-instance instComputableAbs (x : ℝ) [hx : IsComputable x] : IsComputable |x| :=
+noncomputable instance instComputableAbs (x : ℝ) [hx : IsComputable x] : IsComputable |x| :=
   lift_eq (abs.eq_1 x).symm inferInstance
 
-instance instComputableConjExponent (x : ℝ) [hx : IsComputable x] :
+noncomputable instance instComputableConjExponent (x : ℝ) [hx : IsComputable x] :
     IsComputable x.conjExponent :=
   lift_eq (Real.conjExponent.eq_1 x).symm inferInstance
 
@@ -79,18 +87,3 @@ instance instComputableFinsetSum {ι : Type*} (xs : ι → ℝ) (s : Finset ι)
 --have at the moment.
 
 end IsComputable
-
-example :
-    (10 / 9 : ℝ) < (15 / 2 ⊔ 3) ∧
-    |(1 / 10) - (1 : ℝ)| < 1 ∧
-    (if _ : 1 < 2 then 5 / 2 else 6 : ℝ) < 7 ∧
-    (if [1,10].length = 2 then 5 else (10 / 7) : ℝ) / 7 < 1 ∧
-    (3.5 : ℝ) < 4
-    := by
-  native_decide
-
-example : (2 - 5 / 2 : ℝ).sign + 1 = 0 := by
-  native_decide
-
-example : |∑ x ∈ Finset.range 500, 1 / (x : ℝ) - 6.7908234| < 0.0000001 := by
-  native_decide

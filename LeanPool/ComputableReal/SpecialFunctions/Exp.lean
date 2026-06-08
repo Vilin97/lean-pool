@@ -4,9 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
 import LeanPool.ComputableReal.IsComputable
-import Mathlib.Data.Complex.Exponential
+import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+
+/-!
+# Computable exponential
+
+Rational lower and upper bounds for `Real.exp` are built from truncated Taylor series
+(`exp_lb`/`exp_ub`), shown to converge, and packaged into a `ComputableℝSeq.exp`. This yields
+`IsComputable` instances for `Real.exp`, `Real.sinh`, `Real.cosh`, and `Real.tanh`.
+-/
 
 namespace ComputableℝSeq
 namespace Exp
@@ -71,18 +79,24 @@ lemma List_foldr_eq_finset_sum (x : ℚ) (n : ℕ) :
       rw [this]
       ring
     field_simp
-    ring_nf
 
 theorem exp_lb₀_pos {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 0 < exp_lb₀ x n := by
   rw [exp_lb₀, List_foldr_eq_finset_sum, Finset.range_add_one']
   rw [Finset.sum_insert (by simp)]
-  positivity
+  have ha : (0 : ℚ) ≤ x / ↑⌈x⌉.toNat := div_nonneg hx (by positivity)
+  apply pow_pos
+  apply add_pos_of_pos_of_nonneg
+  · positivity
+  · exact Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg ha _) (by positivity)
 
 theorem exp_lb₀_ge_one {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 1 ≤ exp_lb₀ x n := by
   rw [exp_lb₀, List_foldr_eq_finset_sum, Finset.range_add_one']
   rw [Finset.sum_insert (by simp)]
   apply one_le_pow₀
-  simpa using by positivity
+  have ha : (0 : ℚ) ≤ x / ↑⌈x⌉.toNat := div_nonneg hx (by positivity)
+  have hsum : (0 : ℚ) ≤ ∑ i ∈ Finset.range n, (x / ↑⌈x⌉.toNat) ^ (i + 1) / ↑(i + 1).factorial :=
+    Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg ha _) (by positivity)
+  simpa using hsum
 
 theorem exp_lb₀_le_exp {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : exp_lb₀ x n ≤ Real.exp x := by
   rw [exp_lb₀, List_foldr_eq_finset_sum]
@@ -93,9 +107,10 @@ theorem exp_lb₀_le_exp {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : exp_lb₀ x n ≤ 
       rwa [Nat.ne_zero_iff_zero_lt, Int.lt_toNat, Int.lt_ceil]
   rw [he]
   push_cast
-  apply pow_le_pow_left₀ (by positivity)
+  have ha : (0 : ℝ) ≤ ↑x / ↑⌈x⌉.toNat := div_nonneg (by exact_mod_cast hx) (by positivity)
+  apply pow_le_pow_left₀ (Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg ha _) (by positivity))
   apply_mod_cast Real.sum_le_exp_of_nonneg
-  positivity
+  exact_mod_cast div_nonneg hx (by positivity)
 
 theorem exp_ub₀_ge_exp (x : ℚ) (n : ℕ) (hx : 0 ≤ x) : Real.exp x ≤ exp_ub₀ x n := by
   rw [exp_ub₀, List_foldr_eq_finset_sum]
@@ -165,23 +180,31 @@ theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
     simp
   clear hx; rename_i hx
 
+  have hceil : 0 < ⌈x⌉ := Int.lt_ceil.mpr (by exact_mod_cast hx)
+  have hxc : (0 : ℚ) < ↑⌈x⌉.toNat := by
+    exact_mod_cast Int.pos_iff_toNat_pos.mp hceil
+  have hxd : (0 : ℚ) < x / ↑⌈x⌉.toNat := div_pos hx hxc
+
   set y := ∑ i ∈ Finset.range (n + 1), (x / ↑⌈x⌉.toNat) ^ i / ↑i.factorial with hdy
-  set z := 2 * (x / ↑⌈x⌉.toNat) ^ (n + 1) / ↑(n + 1).factorial
+  set z := 2 * (x / ↑⌈x⌉.toNat) ^ (n + 1) / ↑(n + 1).factorial with hdz
 
-
-  have hy : y ≠ 0 := by
-    apply ne_of_gt
+  have hy_pos : 0 < y := by
     rw [hdy, Finset.range_add_one', Finset.sum_insert (by simp)]
-    positivity
+    apply add_pos_of_pos_of_nonneg
+    · positivity
+    · exact Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg hxd.le _) (by positivity)
+  have hy : y ≠ 0 := ne_of_gt hy_pos
   conv_lhs =>
     equals (y ^ ⌈x⌉.toNat * ((1 + z / y)^⌈x⌉.toNat - 1) : ℝ) =>
       rw [mul_sub, mul_one, ← mul_pow, mul_add, mul_one, mul_div_cancel₀]
       · norm_cast
       · norm_cast
 
-  have hxn : 0 < ↑⌈x⌉.toNat := by simpa
-  have hz : 0 < z := by positivity
-  have hzy₀ : 0 < z / y := by positivity
+  have hxn : 0 < ↑⌈x⌉.toNat := by exact_mod_cast hxc
+  have hz : 0 < z := by
+    rw [hdz]
+    exact div_pos (mul_pos (by norm_num) (pow_pos hxd _)) (by positivity)
+  have hzy₀ : 0 < z / y := div_pos hz hy_pos
   have hy₂ : y ^ ⌈x⌉.toNat ≤ Real.exp x := by
     have := exp_lb₀_le_exp n hx.le
     rw [exp_lb₀, List_foldr_eq_finset_sum] at this
@@ -190,14 +213,15 @@ theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
   have hzy₁ : z / y ≤ 2 * (x / ↑⌈x⌉.toNat) / n.factorial := by
     trans z
     · apply div_le_self hz.le
-      rw [hdy, Finset.range_add_one']
-      simp
-      positivity
+      rw [hdy, Finset.range_add_one', Finset.sum_insert (by simp)]
+      simp only [pow_zero, Nat.factorial_zero, Nat.cast_one, div_one, le_add_iff_nonneg_right]
+      exact Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg hxd.le _) (by positivity)
     · unfold z
       refine div_le_div₀ (by positivity) ?_ (by positivity) ?_
-      · simp only [pow_succ, Nat.ofNat_pos, mul_le_mul_left]
-        refine mul_le_of_le_one_left (by positivity) ?_
-        apply pow_le_one₀ (by positivity)
+      · rw [pow_succ]
+        gcongr 2 * ?_
+        refine mul_le_of_le_one_left hxd.le ?_
+        apply pow_le_one₀ hxd.le
         rw [div_le_one₀ (by positivity)]
         refine (Int.le_ceil x).trans ?_
         exact_mod_cast Int.self_le_toNat ⌈x⌉
@@ -272,11 +296,12 @@ theorem exp_ub_sub_exp_lb_of_neg {x : ℚ} (n : ℕ) (hx : x < 0) :
   have hu₂ : 0 < exp_ub₀ x n := by rify at hl₁ ⊢; linarith
   have hlu := exp_ub₀_sub_exp_lb₀ n hx.le
 
+  have hlb' : (exp_lb₀ x n : ℝ) ≠ 0 := by positivity
+  have hub' : (exp_ub₀ x n : ℝ) ≠ 0 := by positivity
   conv_lhs =>
     equals (exp_ub₀ x n - exp_lb₀ x n : ℝ) / (exp_ub₀ x n * exp_lb₀ x n) =>
-      field_simp
-      left
-      ring_nf
+      rw [Rat.cast_inv, Rat.cast_inv, inv_sub_inv hlb' hub',
+        _root_.mul_comm (exp_lb₀ x n : ℝ) (exp_ub₀ x n : ℝ)]
 
   rw [div_le_iff₀ (by positivity)]
   refine hlu.trans ?_
@@ -442,7 +467,7 @@ theorem TLUW_lb_ub :
 
 end Exp
 
-def exp : ComputableℝSeq → ComputableℝSeq :=
+noncomputable def exp : ComputableℝSeq → ComputableℝSeq :=
   of_TendstoLocallyUniformly_Continuous Real.continuous_exp
   (fun n q ↦ ⟨⟨Exp.exp_lb q.fst n, Exp.exp_ub q.snd n⟩,
     Rat.cast_le.mp <|
@@ -463,17 +488,17 @@ end ComputableℝSeq
 
 namespace IsComputable
 
-instance instComputableExp (x : ℝ) [hx : IsComputable x] : IsComputable (Real.exp x) :=
+noncomputable instance instComputableExp (x : ℝ) [hx : IsComputable x] : IsComputable (Real.exp x) :=
   lift Real.exp ComputableℝSeq.exp
     (by apply ComputableℝSeq.val_of_TendstoLocallyUniformly_Continuous) hx
 
-instance instComputableSinh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.sinh x) :=
+noncomputable instance instComputableSinh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.sinh x) :=
   lift_eq (Real.sinh_eq x).symm inferInstance
 
-instance instComputableCosh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.cosh x) :=
+noncomputable instance instComputableCosh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.cosh x) :=
   lift_eq (Real.cosh_eq x).symm inferInstance
 
-instance instComputableTanh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.tanh x) :=
+noncomputable instance instComputableTanh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.tanh x) :=
   lift_eq (Real.tanh_eq_sinh_div_cosh x).symm inferInstance
 
 end IsComputable

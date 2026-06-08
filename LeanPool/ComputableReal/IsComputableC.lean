@@ -7,16 +7,21 @@ import LeanPool.ComputableReal.IsComputable
 import LeanPool.ComputableReal.SpecialFunctions.Sqrt
 import Mathlib.Analysis.InnerProductSpace.Basic
 
-/- Type class stating that `x:ℂ` has a ComputableℝSeq for its real and imaginary parts.
-Note that we can't define this as `IsComputable x.re`+`IsComputable x.im`, because then
-(if `x` is a noncomputable expression), this will be a noncomputable expression. -/
--- class IsComputableℂ (x : ℂ) : Type where
---     re : ComputableℝSeq
---     im : ComputableℝSeq
---     -- prop_re : re.val = x.re
---     -- prop_im : im.val = x.im]
+/-!
+# Computability of complex numbers
+
+`IsComputableℂ x` packages `IsComputable` witnesses for the real and imaginary parts of a complex
+number `x`, and is closed under the field operations, powers, conjugation, norm and inner product.
+This also provides `DecidableEq` and (with `ComplexOrder`) `Decidable` comparison instances.
+-/
+
+/-- Type class stating that `x : ℂ` has a `ComputableℝSeq` for its real and imaginary parts.
+Note that we can't define this as `IsComputable x.re` + `IsComputable x.im`, because then
+(if `x` is a noncomputable expression) this will be a noncomputable expression. -/
 class IsComputableℂ (x : ℂ) : Type where
+    /-- A computability witness for the real part. -/
     re : IsComputable x.re
+    /-- A computability witness for the imaginary part. -/
     im : IsComputable x.im
 
 namespace IsComputableℂ
@@ -25,7 +30,7 @@ open ComplexConjugate
 
 /-- Turns one `IsComputableℂ` into another one, given a proof that they're equal. This is directly
 analogous to `decidable_of_iff`, as a way to avoid `Eq.rec` on data-carrying instances. -/
-def lift_eq {x y : ℂ} (h : x = y) [hx : IsComputableℂ x] : IsComputableℂ y :=
+@[reducible] def lift_eq {x y : ℂ} (h : x = y) [hx : IsComputableℂ x] : IsComputableℂ y :=
   ⟨hx.1.lift_eq (congrArg _ h), hx.2.lift_eq (congrArg _ h)⟩
 
 --We'll need some version of this once we want nontrivial functions, like exp/sin.
@@ -105,7 +110,8 @@ instance instComputableMul : IsComputableℂ (x * y) :=
   let _ := hy.1;
   let _ := hx.2;
   let _ := hy.2;
-  ⟨inferInstanceAs (IsComputable (_ - _)), inferInstanceAs (IsComputable (_ + _))⟩
+  ⟨IsComputable.lift_eq (Complex.mul_re x y).symm inferInstance,
+   IsComputable.lift_eq (Complex.mul_im x y).symm inferInstance⟩
 
 instance instComputableNatPow (n : ℕ) : IsComputableℂ (x ^ n) := by
   /- TODO do this by exponentation by squaring -/
@@ -121,26 +127,26 @@ is defeq to `x.re * x.re + x.im * x.im`. But doing that naively means we evaluat
 and `x.im` each twice. If (when?) we get a faster implementation of natpow, this will
 be more efficient.
 -/
-instance instComputableNormSq : IsComputable (Complex.normSq x) :=
+noncomputable instance instComputableNormSq : IsComputable (Complex.normSq x) :=
   .lift_eq (x := x.re ^ 2 + x.im ^ 2) (by rw [Complex.normSq, pow_two, pow_two]; rfl)
     inferInstance
 
 instance instComputableStar : IsComputableℂ (conj x) :=
   ⟨hx.1, let _ := hx.2; inferInstanceAs (IsComputable (-x.im))⟩
 
-instance instComputableInv : IsComputableℂ (x⁻¹) :=
+noncomputable instance instComputableInv : IsComputableℂ (x⁻¹) :=
   ⟨let _ := hx.1; .lift_eq (Complex.inv_re x).symm inferInstance,
   let _ := hx.2; .lift_eq (Complex.inv_im x).symm inferInstance⟩
 
-instance instComputableDiv : IsComputableℂ (x / y) :=
+noncomputable instance instComputableDiv : IsComputableℂ (x / y) :=
   inferInstanceAs (IsComputableℂ (_ * _))
 
-instance instComputableZPow (z : ℤ) : IsComputableℂ (x ^ z) :=
+noncomputable instance instComputableZPow (z : ℤ) : IsComputableℂ (x ^ z) :=
   z.casesOn
     (fun a ↦ inferInstanceAs (IsComputableℂ (x ^ a)))
     (fun a ↦ inferInstanceAs (IsComputableℂ (x ^ a.succ)⁻¹))
 
-instance instComputableNSMul (n : ℕ) : IsComputableℂ (n • x) :=
+noncomputable instance instComputableNSMul (n : ℕ) : IsComputableℂ (n • x) :=
    ⟨let _ := hx.1; .lift_eq (Complex.re_nsmul n x).symm inferInstance,
   let _ := hx.2; .lift_eq (Complex.im_nsmul n x).symm inferInstance⟩
 
@@ -149,7 +155,7 @@ attribute [-instance] Complex.instNormedAddCommGroup in
 attribute [-instance] Complex.instNormedField in
 attribute [-instance] Complex.instDenselyNormedField in
 attribute [-instance] Complex.instRCLike in
-instance instComputableZSMul (z : ℤ) : IsComputableℂ (z • x) :=
+noncomputable instance instComputableZSMul (z : ℤ) : IsComputableℂ (z • x) :=
    ⟨let _ := hx.1; .lift_eq (Complex.re_zsmul z x).symm inferInstance,
   let _ := hx.2; .lift_eq (Complex.im_zsmul z x).symm inferInstance⟩
 
@@ -160,13 +166,14 @@ noncomputable instance instComputableQSMul (q : ℚ) : IsComputableℂ (q • x)
   --  ⟨let _ := hx.1; .lift_eq (Complex.re_qsmul q x).symm inferInstance,
   -- let _ := hx.2; .lift_eq (Complex.im_qsmul q x).symm inferInstance⟩
 
-instance instComputableInner : IsComputable (inner x y) :=
-  inferInstanceAs (IsComputable (Complex.re (conj x * y)))
+noncomputable instance instComputableInner : IsComputable (inner ℝ x y) :=
+  IsComputable.lift_eq (Complex.inner x y).symm
+    (inferInstanceAs (IsComputable (Complex.re (y * conj x))))
 
-instance instComputableNorm : IsComputable ‖x‖ :=
+noncomputable instance instComputableNorm : IsComputable ‖x‖ :=
   inferInstanceAs (IsComputable (√(Complex.normSq x)))
 
-instance instComputableNNNorm : IsComputable ‖x‖₊ :=
+noncomputable instance instComputableNNNorm : IsComputable ‖x‖₊ :=
   instComputableNorm x
 
 /-
@@ -175,20 +182,14 @@ compute a series for Complex.normSq. Otherwise `Real.sqrt 2 + I` and `Real.sqrt 
 will never be comparable, because comparing the real parts will never terminate; but
 comparing the the norm of their difference will eventually be lower bounded.
 -/
-instance instDecidableEq : Decidable (x = y) :=
+noncomputable instance instDecidableEq : Decidable (x = y) :=
   decidable_of_decidable_of_iff (p := Complex.normSq (x - y) = 0)
     (by rw [Complex.normSq_eq_zero, sub_eq_zero])
 
 open ComplexOrder in
-instance instDecidableLE : Decidable (x ≤ y) :=
+noncomputable instance instDecidableLE : Decidable (x ≤ y) :=
   inferInstanceAs (Decidable (_ ∧ _))
 
 open ComplexOrder in
-instance instDecidableLT : Decidable (x < y) :=
+noncomputable instance instDecidableLT : Decidable (x < y) :=
   inferInstanceAs (Decidable (_ ∧ _))
-
-example : (1 + Complex.I) * (1 - Complex.I : ℂ) = 2 := by
-  native_decide
-
-example : ‖Complex.I‖ ≠ (1 / 2) := by
-  native_decide

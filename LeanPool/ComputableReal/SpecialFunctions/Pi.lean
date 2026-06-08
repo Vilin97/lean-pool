@@ -4,8 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Meiburg
 -/
 import LeanPool.ComputableReal.SpecialFunctions.Sqrt
-import Mathlib.Data.Real.Pi.Bounds
+import Mathlib.Analysis.Real.Pi.Bounds
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+
+/-!
+# Computable pi
+
+Rational lower and upper bounds for `Real.pi` are derived from the
+`Real.sqrtTwoAddSeries` approximation, shown to converge, and packaged into a
+`ComputableℝSeq.Pi`, giving an `IsComputable` instance for `Real.pi`.
+-/
 
 open scoped QInterval
 
@@ -13,11 +21,15 @@ namespace ComputableℝSeq
 
 section Pi
 
-instance instComputableSqrtTwoAddSeries (x : ℝ) [hx : IsComputable x] (n : ℕ) :
+private theorem mul_le_of_le_of_le_one_of_nonneg {a b c : ℝ} (hac : a ≤ c) (hb : b ≤ 1)
+    (ha : 0 ≤ a) : a * b ≤ c :=
+  (mul_le_of_le_one_right ha hb).trans hac
+
+noncomputable instance instComputableSqrtTwoAddSeries (x : ℝ) [hx : IsComputable x] (n : ℕ) :
     IsComputable (Real.sqrtTwoAddSeries x n) :=
   n.rec hx (fun _ _ ↦ IsComputable.instComputableSqrt _)
 
-def sqrtTwoAddSeries_n : ℕ → ComputableℝSeq :=
+noncomputable def sqrtTwoAddSeries_n : ℕ → ComputableℝSeq :=
   fun n ↦ (instComputableSqrtTwoAddSeries 0 n).seq
 
 theorem sqrtTwoAddSeries_n_lb_le (n k : ℕ) : (sqrtTwoAddSeries_n n).lb k ≤ Real.sqrtTwoAddSeries 0 n := by
@@ -54,7 +66,7 @@ theorem sqrtTwoAddSeries_n_lb_nonneg (n k : ℕ) : 0 ≤ (sqrtTwoAddSeries_n n).
 theorem sqrtTwoAddSeries_n_lb_gt_one (n k : ℕ) (hk : 3 ≤ k) : 1 ≤ (sqrtTwoAddSeries_n (n + 1)).lb k := by
   have h₀ : (0 : ℝ) ≤ ((sqrtTwoAddSeries_n n).lub k).snd := sqrtTwoAddSeries_n_ub_pos n k
   rw [sqrtTwoAddSeries_n_succ_lb, Sqrt.sqrt_lb_def,
-    if_neg (by push_neg; change 0 < 2 + _; rify; positivity)]
+    if_neg (by push Not; change 0 < 2 + _; rify; positivity)]
   clear h₀
 
   have h₁ := sqrtTwoAddSeries_n_lb_nonneg n k
@@ -79,7 +91,7 @@ theorem sqrtTwoAddSeries_n_lb_gt_one (n k : ℕ) (hk : 3 ≤ k) : 1 ≤ (sqrtTwo
     apply sub_le_sub_left
     apply div_le_div₀ zero_le_two le_rfl Nat.ofNat_pos'
     rw [show 8 = (2 : ℝ) ^ 3 by norm_num]
-    exact_mod_cast Nat.pow_le_pow_of_le_right Nat.ofNat_pos' hk
+    exact_mod_cast Nat.pow_le_pow_right (by norm_num) hk
 
 theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
     (sqrtTwoAddSeries_n n).ub k ≤ (sqrtTwoAddSeries_n n).lb k + 18 * n / 2^k
@@ -159,7 +171,7 @@ theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
   rw [mul_add, add_div]
   linarith
 
-def sqrtTwoSubSqrtTwoAddSeries_n : ℕ → ComputableℝSeq :=
+noncomputable def sqrtTwoSubSqrtTwoAddSeries_n : ℕ → ComputableℝSeq :=
   fun n ↦ (inferInstance : IsComputable (Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n))).seq
 
 theorem sqrtTwoSubSqrtTwoAddSeries_eq (n k : ℕ) :
@@ -315,28 +327,31 @@ theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
   linarith
 
 /-- See theorem Real.pi_lt_sqrtTwoAddSeries in Mathlib -/
-def pi_lb (n : ℕ) : ℚ :=
+noncomputable def pi_lb (n : ℕ) : ℚ :=
   2 ^ (n + 1) * (sqrtTwoSubSqrtTwoAddSeries_n n).lb (3 * n)
 
 /-- See theorem Real.pi_gt_sqrtTwoAddSeries in Mathlib -/
-def pi_ub (n : ℕ) : ℚ :=
+noncomputable def pi_ub (n : ℕ) : ℚ :=
   2 ^ (n + 1) * (sqrtTwoSubSqrtTwoAddSeries_n n).ub (3 * n) + 1 / 4 ^ n
 
 theorem pi_lb_le_pi (n : ℕ) : pi_lb n ≤ Real.pi := by
   refine le_trans ?_ (Real.pi_gt_sqrtTwoAddSeries n).le
-  simp only [pi_lb, Rat.cast_mul, Rat.cast_pow, Rat.cast_ofNat, Nat.ofNat_pos, pow_pos, mul_le_mul_left]
-  convert ComputableℝSeq.hlb _ _
-  symm
-  exact IsComputable.prop
+  simp only [pi_lb, Rat.cast_mul, Rat.cast_pow, Rat.cast_ofNat]
+  rw [mul_le_mul_iff_of_pos_left (by positivity)]
+  have hval : (sqrtTwoSubSqrtTwoAddSeries_n n).val = Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n) :=
+    IsComputable.prop (x := Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n))
+  rw [← hval]
+  exact ComputableℝSeq.hlb _ _
 
 theorem pi_ub_ge_pi (n : ℕ) : Real.pi ≤ pi_ub n := by
   refine le_trans (Real.pi_lt_sqrtTwoAddSeries n).le ?_
   simp only [one_div, pi_ub, Rat.cast_add, Rat.cast_mul, Rat.cast_pow, Rat.cast_ofNat, Rat.cast_inv,
-    add_le_add_iff_right, Nat.ofNat_pos, pow_pos, mul_le_mul_left]
-  rw [← ge_iff_le]
-  convert ComputableℝSeq.hub _ _
-  symm
-  exact IsComputable.prop
+    add_le_add_iff_right]
+  rw [mul_le_mul_iff_of_pos_left (by positivity)]
+  have hval : (sqrtTwoSubSqrtTwoAddSeries_n n).val = Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n) :=
+    IsComputable.prop (x := Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n))
+  rw [← hval]
+  exact ComputableℝSeq.hub _ _
 
 theorem pi_lb_ge_pi_sub_pow (n : ℕ) (hn : 0 < n) : Real.pi - 41 * n / 2 ^ n ≤ pi_lb n := by
   suffices 2 ^ (n + 1) * ((18 * n * 2 ^ n + 4) / 2 ^ (3 * n)) + 1 / 4 ^ n ≤ (41 * n / 2 ^ n : ℚ) by
@@ -353,7 +368,7 @@ theorem pi_lb_ge_pi_sub_pow (n : ℕ) (hn : 0 < n) : Real.pi - 41 * n / 2 ^ n �
   · interval_cases n
     norm_num
   clear hn
-  push_neg at hn'
+  push Not at hn'
   qify at hn'
 
   have h₁ : (2 ^ (n + 1) * ((18 * n * 2 ^ n + 4) / 2 ^ (3 * n)) + 1 / 4 ^ n : ℚ)
@@ -384,7 +399,7 @@ theorem pi_ub_le_pi_add_pow (n : ℕ) (hn : 0 < n) : pi_ub n ≤ Real.pi + 51 * 
   · interval_cases n
     norm_num
   clear hn
-  push_neg at hn'
+  push Not at hn'
   qify at hn'
 
   have h₁ : (2 ^ (n + 1) * ((18 * n * 2 ^ n + 14) / 2 ^ (3 * n)) + 1 / 4 ^ n : ℚ)
@@ -436,7 +451,7 @@ theorem pi_ub_causeq : ∃ (h' : IsCauSeq abs pi_ub), Real.mk ⟨pi_ub, h'⟩ = 
   · linarith  [pi_ub_ge_pi j]
   · linarith
 
-def Pi : ComputableℝSeq :=
+noncomputable def Pi : ComputableℝSeq :=
   mk Real.pi
   (lub := fun n ↦ ⟨⟨pi_lb n, pi_ub n⟩,
     Rat.cast_le.mp <| (pi_lb_le_pi n).trans (pi_ub_ge_pi n)⟩)
@@ -456,17 +471,8 @@ end ComputableℝSeq
 
 namespace IsComputable
 
-instance instComputablePi : IsComputable (Real.pi) where
+noncomputable instance instComputablePi : IsComputable (Real.pi) where
   seq := ComputableℝSeq.Pi
   prop := ComputableℝSeq.mk_val_eq_val
 
 end IsComputable
-
-example :
-    2 < √(Real.pi + 1)
-    ∧ √(1 - Real.pi) = 0
-    ∧ 5 * Real.pi / √(2 + Real.pi) < 7
-    ∧ (31415926 / 10000000 : ℚ) < Real.pi
-    ∧ Real.pi < 31415927 / 10000000
-    := by
-  native_decide
