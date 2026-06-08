@@ -213,7 +213,8 @@ theorem proof_otp : ∀ (p k c l: UInt64),
                 sapply_s_seq''
                 ⦃(x[3] > 0 ∧ (∀ (i : UInt64), i < l - x[3] →
                     mem[c + i] = mem[p + i] ^^^ mem[k + i])
-                    ∧ x[0] = (p + (l - (x[3]))) ∧ x[1] = (k + (l - (x[3]))) ∧ x[2] = (c + (l - x[3]))
+                    ∧ x[0] = (p + (l - (x[3]))) ∧ x[1] = (k + (l - (x[3]))) ∧
+                      x[2] = (c + (l - x[3]))
                     ∧ x[3] ≤ l
                     ∧ x[5] = mem[x[0]] ∧ x[6] = mem[x[1]] ∧ x[7] = x[5] ^^^ x[6]
                     ∧ x[3] = x
@@ -225,7 +226,8 @@ theorem proof_otp : ∀ (p k c l: UInt64),
                   sapply_s_seq''
                   ⦃(x[3] > 0 ∧ (∀ (i : UInt64), i < l - x[3] →
                     mem[c + i] = mem[p + i] ^^^ mem[k + i])
-                    ∧ x[0] = (p + (l - (x[3]))) ∧ x[1] = (k + (l - (x[3]))) ∧ x[2] = (c + (l - x[3]))
+                    ∧ x[0] = (p + (l - (x[3]))) ∧ x[1] = (k + (l - (x[3]))) ∧
+                      x[2] = (c + (l - x[3]))
                     ∧ x[3] ≤ l
                     ∧ x[5] = mem[x[0]] ∧ x[6] = mem[x[1]]
                     ∧ x[3] = x
@@ -236,7 +238,8 @@ theorem proof_otp : ∀ (p k c l: UInt64),
                     sapply_s_seq''
                     ⦃(x[3] > 0 ∧ (∀ (i : UInt64), i < l - x[3] →
                       mem[c + i] = mem[p + i] ^^^ mem[k + i])
-                      ∧ x[0] = (p + (l - (x[3]))) ∧ x[1] = (k + (l - (x[3]))) ∧ x[2] = (c + (l - x[3]))
+                      ∧ x[0] = (p + (l - (x[3]))) ∧ x[1] = (k + (l - (x[3]))) ∧
+                        x[2] = (c + (l - x[3]))
                       ∧ x[3] ≤ l
                       ∧ x[5] = mem[x[0]]
                       ∧ x[3] = x
@@ -247,7 +250,8 @@ theorem proof_otp : ∀ (p k c l: UInt64),
                       sapply_s_seq''
                       ⦃(x[3] > 0 ∧ (∀ (i : UInt64), i < l - x[3] →
                         mem[c + i] = mem[p + i] ^^^ mem[k + i])
-                        ∧ x[0] = (p + (l - (x[3]))) ∧ x[1] = (k + (l - (x[3]))) ∧ x[2] = (c + (l - x[3]))
+                        ∧ x[0] = (p + (l - (x[3]))) ∧ x[1] = (k + (l - (x[3]))) ∧
+                          x[2] = (c + (l - x[3]))
                         ∧ x[3] ≤ l
                         ∧ x[3] = x
                         ∧ I_pre p k c l) ∧ ¬⸨terminated⸩ = true ⦄ , {5} , {6},

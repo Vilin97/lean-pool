@@ -184,7 +184,8 @@ theorem sw_otp : ∀ (p k c l : UInt64),
     ¬⸨terminated⸩ = true⦄ := by
     unfold otp_code
     intros p k c l
-    rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
+    rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6,
+      h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     have: ({9} : Set UInt64)  = {8 + 1}  := by
       simp
     rw [this]
@@ -195,7 +196,8 @@ theorem sw_otp : ∀ (p k c l : UInt64),
     · simp
     · simp_currInstr
     · assumption
-    · simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addMemory_unfold, gt_iff_lt, MState.getMemoryAt_def, Bool.not_eq_true]
+    · simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addMemory_unfold,
+      gt_iff_lt, MState.getMemoryAt_def, Bool.not_eq_true]
       simp only [
         MState.getMemoryAt_def, MState.getRegisterAt_def,
         ne_eq, Bool.not_eq_true,
@@ -308,7 +310,8 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     unfold otp_code
     intros p k c l
     unfold hoare_triple_up
-    rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
+    rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6,
+      h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
     have: ({10} : Set UInt64)  = {9 + 1}  := by
       simp
@@ -363,7 +366,8 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
       simp
     rw [this]
     unfold hoare_triple_up
-    rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
+    rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6,
+      h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
     apply specification_Increment (dst := 1)
     · simp
@@ -508,15 +512,18 @@ theorem j_otp : ∀ (p k c l : UInt64),
   {n | (n ≠ 4)} \ {14}⟩
   ⦃x[3] < x ∧
       (((∀ i < l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
-            x[0] = p + (l - x[3]) ∧ x[1] = k + (l - x[3]) ∧ x[2] = c + (l - x[3]) ∧ x[3] ≤ l ∧ I_pre' p k c l) ∧
+            x[0] = p + (l - x[3]) ∧ x[1] = k + (l - x[3]) ∧ x[2] = c + (l - x[3]) ∧ x[3] ≤ l ∧
+              I_pre' p k c l) ∧
           ¬⸨terminated⸩ = true) ∧
         ⸨pc⸩ = 4⦄ := by
   unfold otp_code
   intros p k c l
   unfold hoare_triple_up
-  rintro h_inter h_empty s h_code h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
+  rintro h_inter h_empty s h_code h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7,
+    h_x3, h_I_pre'⟩, h_terminated⟩
   -- rw [← s_code]
-  apply BL_TO_WL (L_w := {4}) (l := 13) (P := ⦃((∀ i < l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
+  apply BL_TO_WL (L_w := {4}) (l := 13) (P := ⦃((∀ i < l - x[3],
+    mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
       x[0] = p + (l - x[3]) ∧
         x[1] = k + (l - x[3]) ∧
           x[2] = c + (l - x[3]) ∧
@@ -529,7 +536,8 @@ theorem j_otp : ∀ (p k c l : UInt64),
   · simp
   · simp
   · unfold hoare_triple_up
-    rintro h_inter h_empty s h_code' h_pc ⟨⟨h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
+    rintro h_inter h_empty s h_code' h_pc ⟨⟨h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7,
+      h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
     have: (∃ s',
         weak s s' {4} {n | (n ≠ 4)} s.code ∧
@@ -539,7 +547,8 @@ theorem j_otp : ∀ (p k c l : UInt64),
                         st.getMemoryAt (c + i) = st.getMemoryAt (p + i) ^^^ st.getMemoryAt (k + i)) ∧
                           st.getRegisterAt 0 = p + (l - st.getRegisterAt 3) ∧
                             st.getRegisterAt 1 = k + (l - st.getRegisterAt 3) ∧
-                              st.getRegisterAt 2 = c + (l - st.getRegisterAt 3) ∧ st.getRegisterAt 3 ≤ l ∧ I_pre' p k c l) ∧
+                              st.getRegisterAt 2 = c + (l - st.getRegisterAt 3) ∧
+                                st.getRegisterAt 3 ≤ l ∧ I_pre' p k c l) ∧
                     ¬st.terminated = true ∧ st.pc = 4)
               s' ∧
             s'.pc ∉ {n | (n ≠ 4)}) →
@@ -551,7 +560,8 @@ theorem j_otp : ∀ (p k c l : UInt64),
                           st.getMemoryAt (c + i) = st.getMemoryAt (p + i) ^^^ st.getMemoryAt (k + i)) ∧
                         st.getRegisterAt 0 = p + (l - st.getRegisterAt 3) ∧
                           st.getRegisterAt 1 = k + (l - st.getRegisterAt 3) ∧
-                            st.getRegisterAt 2 = c + (l - st.getRegisterAt 3) ∧ st.getRegisterAt 3 ≤ l ∧ I_pre' p k c l) ∧
+                            st.getRegisterAt 2 = c + (l - st.getRegisterAt 3) ∧
+                              st.getRegisterAt 3 ≤ l ∧ I_pre' p k c l) ∧
                       ¬st.terminated = true) ∧
                     st.pc = 4)
               s' ∧
@@ -601,7 +611,8 @@ theorem beqz_otp : ∀ (p k c l : UInt64),
   intros p k c l
   -- apply_spec specification_JumpEqZero_false (l := 4) (r := 3) (label := "finish")
   unfold hoare_triple_up
-  rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LeL, h_x3, h_I_pre'⟩, h_terminated⟩
+  rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LeL, h_x3, h_I_pre'⟩,
+    h_terminated⟩
   rw [←h_code']
   have: ({n | n ≤ 4} ∪ {n | n > 5}) = {n:UInt64| n ≠ 4 + 1} := by
     ext a
