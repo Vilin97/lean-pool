@@ -15,6 +15,12 @@ import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
 
 import Mathlib.Data.Set.Basic
 
+/-!
+# ApplySpec
+
+This module provides the tactic applying per-instruction specifications.
+-/
+
 open Lean Meta Elab Parser Tactic Syntax Term
 
 
@@ -25,7 +31,6 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
       if n.getId != specName then
         throwError s!"Specification {n.getId} does not match instruction {i}"
     return tac
-
   let handleJump (trueName falseName : Name) (trueTac falseTac : TSyntax `tactic)
         (instrName : String)
       : TacticM (TSyntax `tactic) := do
@@ -35,34 +40,27 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
       else throwError s!"Specification {n.getId} does not match instruction {instrName}"
     else
       return (←`(tactic | first | $trueTac:tactic | $falseTac:tactic))
-
-
   match i with
   | Instr.LoadAddress dst addr =>
     check `specification_LoadAddress (←`(tactic | apply specification_LoadAddress (pc := $(mkNumLit s!"{pc}"))
                                                         (dst := $(mkNumLit s!"{dst}"))
                                                         (addr := $(mkNumLit s!"{addr}"))))
-
   | Instr.LoadImmediate dst val =>
     check `specification_LoadImmediate (←`(tactic | apply specification_LoadImmediate (pc := $(mkNumLit s!"{pc}"))
                                                           (dst := $(mkNumLit s!"{dst}"))
                                                           (val := $(mkNumLit s!"{val}"))))
-
   | Instr.CopyRegister dst src =>
     check `specification_CopyRegister (←`(tactic | apply specification_CopyRegister  (pc := $(mkNumLit s!"{pc}"))
                                                           (dst := $(mkNumLit s!"{dst}"))
                                                           (src := $(mkNumLit s!"{src}"))))
-
   | Instr.AddImmediate dst reg val =>
     check `specification_AddImmediate (←`(tactic | apply specification_AddImmediate  (pc := $(mkNumLit s!"{pc}"))
                                                           (dst := $(mkNumLit s!"{dst}"))
                                                           (regAddend := $(mkNumLit s!"{reg}"))
                                                           (val := $(mkNumLit s!"{val}"))))
-
   | Instr.Increment dst =>
     check `specification_Increment (←`(tactic | apply specification_Increment (pc := $(mkNumLit s!"{pc}"))
                                                       (dst := $(mkNumLit s!"{dst}"))))
-
   | Instr.AddRegister dst regAddend1 regAddend2 =>
     check `specification_AddRegister (←`(tactic | apply specification_AddRegister (pc := $(mkNumLit s!"{pc}"))
                                                         (dst := $(mkNumLit s!"{dst}"))
@@ -70,58 +68,48 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
                                                           $(mkNumLit s!"{regAddend1}"))
                                                         (regAddend2 :=
                                                           $(mkNumLit s!"{regAddend2}"))))
-
   | Instr.SubImmediate dst reg imm =>
     check `specification_SubImmediate (←`(tactic | apply specification_SubImmediate  (pc := $(mkNumLit s!"{pc}"))
                                                           (dst := $(mkNumLit s!"{dst}"))
                                                           (regMinuend := $(mkNumLit s!"{reg}"))
                                                           (subtrahend := $(mkNumLit s!"{imm}"))))
-
   | Instr.Decrement r =>
     check `specification_Decrement (←`(tactic | apply specification_Decrement (pc := $(mkNumLit s!"{pc}"))
                                                       (dst := $(mkNumLit s!"{r}"))))
-
   | Instr.SubRegister dst regMinuend regSubtrahend =>
     check `specification_SubRegister (←`(tactic | apply specification_SubRegister (pc := $(mkNumLit s!"{pc}"))
                                                         (dst := $(mkNumLit s!"{dst}"))
                                                         (regMinuend := $(mkNumLit s!"{regMinuend}"))
                                                         (regSubtrahend :=
                                                           $(mkNumLit s!"{regSubtrahend}"))))
-
   | Instr.XorImmediate dst reg val =>
     check `specification_XorImmediate (←`(tactic | apply specification_XorImmediate (pc := $(mkNumLit s!"{pc}"))
                                                              (dst := $(mkNumLit s!"{dst}"))
                                                              (reg := $(mkNumLit s!"{reg}"))
                                                              (val := $(mkNumLit s!"{val}"))))
-
   | Instr.XOR dst reg1 reg2 =>
     check `specification_XOR (←`(tactic | apply specification_XOR (pc := $(mkNumLit s!"{pc}"))
                                                 (dst := $(mkNumLit s!"{dst}"))
                                                 (reg1 := $(mkNumLit s!"{reg1}"))
                                                 (reg2 := $(mkNumLit s!"{reg2}"))))
-
   | Instr.LoadWordImmediate dst addr =>
     check `specification_LoadWordImmediate (←`(tactic | apply specification_LoadWordImmediate (pc := $(mkNumLit s!"{pc}"))
                                                              (dst := $(mkNumLit s!"{dst}"))
                                                              (addr := $(mkNumLit s!"{addr}"))))
-
   | Instr.LoadWordReg dst regWithAddr =>
     check `specification_LoadWordReg (←`(tactic | apply specification_LoadWordReg (pc := $(mkNumLit s!"{pc}"))
                                                         (dst := $(mkNumLit s!"{dst}"))
                                                         (regWithAddr :=
                                                           $(mkNumLit s!"{regWithAddr}"))))
-
   | Instr.StoreWord regWithValue regWithAddr =>
     check `specification_StoreWord (←`(tactic | apply specification_StoreWord (pc := $(mkNumLit s!"{pc}"))
                                                       (regWithValue :=
                                                         $(mkNumLit s!"{regWithValue}"))
                                                       (regWithAddr :=
                                                         $(mkNumLit s!"{regWithAddr}"))))
-
   | Instr.Jump lbl =>
     check `specification_Jump (←`(tactic | apply specification_Jump (pc := $(mkNumLit s!"{pc}"))
                                                    (label := $(mkStrLit lbl))))
-
   | Instr.JumpEq reg1 reg2 lbl =>
     handleJump `specification_JumpEq_true `specification_JumpEq_false
       (←`(tactic | apply specification_JumpEq_true (pc := $(mkNumLit s!"{pc}"))
@@ -133,7 +121,6 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
                                                         (r2 := $(mkNumLit s!"{reg2}"))
                                                         (label := $(mkStrLit lbl))))
       "JumpEq"
-
   | Instr.JumpNeq reg1 reg2 lbl =>
     handleJump `specification_JumpNeq_true `specification_JumpNeq_false
       (←`(tactic | apply specification_JumpNeq_true (pc := $(mkNumLit s!"{pc}"))
@@ -145,7 +132,6 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
                                                         (r2 := $(mkNumLit s!"{reg2}"))
                                                         (label := $(mkStrLit lbl))))
       "JumpNeq"
-
   | Instr.JumpGt reg1 reg2 lbl =>
     handleJump `specification_JumpGt_true `specification_JumpGt_false
       (←`(tactic | apply specification_JumpGt_true (pc := $(mkNumLit s!"{pc}"))
@@ -157,7 +143,6 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
                                                         (r2 := $(mkNumLit s!"{reg2}"))
                                                         (label := $(mkStrLit lbl))))
       "JumpGt"
-
   | Instr.JumpLe reg1 reg2 lbl =>
     handleJump `specification_JumpLe_true `specification_JumpLe_false
       (←`(tactic | apply specification_JumpLe_true (pc := $(mkNumLit s!"{pc}"))
@@ -169,7 +154,6 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
                                                         (r2 := $(mkNumLit s!"{reg2}"))
                                                         (label := $(mkStrLit lbl))))
       "JumpLe"
-
   | Instr.JumpEqZero reg lbl =>
     handleJump `specification_JumpEqZero_true `specification_JumpEqZero_false
       (←`(tactic | apply specification_JumpEqZero_true (pc := $(mkNumLit s!"{pc}"))
@@ -181,7 +165,6 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
                                                         (lbl := $(mkNumLit s!"{lbl}"))
                                                         ))
       "JumpEqZero"
-
   | Instr.JumpNeqZero reg lbl =>
     handleJump `specification_JumpNeqZero_true `specification_JumpNeqZero_false
       (←`(tactic | apply specification_JumpNeqZero_true (pc := $(mkNumLit s!"{pc}"))
@@ -193,7 +176,6 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
                                                         (lbl := $(mkNumLit s!"{lbl}"))
                                                         ))
       "JumpNeqZero"
-
   | Instr.Panic =>
     throwError "Cannot apply a specification for the instruction `Panic`"
 
@@ -233,36 +215,27 @@ elab "apply_spec_frst_goal" name?:(Lean.Parser.ident)? : tactic => do
   ))
   Lean.Elab.Tactic.withMainContext do
     let ctx ← Lean.MonadLCtx.getLCtx
-
     let pcAs ← Meta.whnf (← findHypTypeM ctx `h_pc)
     let pcExpr := pcAs.getAppArgs[2]!
     let pc ← getUInt64FromExpr pcExpr
-
     let instr ← getInstrAtPc ctx pc
-
-
     evalTactic (← `(tactic | rw [← $(mkIdent `h_code')]))
     evalTactic (← `(tactic | split_condis in $(mkIdent `user_precondition)))
-
     runSpecAndSolve instr pc name?
 
 
 elab "apply_spec_scd_goal" name?:(Lean.Parser.ident)? : tactic => do
-
   -- First phase: determine how we obtain pc
   let pcFromHyp ← Lean.Elab.Tactic.withMainContext do
     let ctx ← Lean.MonadLCtx.getLCtx
     return ((← findHypTypeM? ctx `h_code') == none)
-
   -- If the code was not introduced, introduce it now
   if pcFromHyp then
     evalTactic (← `(tactic | prepare_second_seq))
-
   -- After introducing new stuff into the hypotheses, we need to update the
   -- context
   Lean.Elab.Tactic.withMainContext do
     let ctx ← Lean.MonadLCtx.getLCtx
-
     let pc ←
       -- If we had to introduce the hypotheses' ourlelves, there is only one
       -- h_pc, which we can just extract and parse
@@ -286,10 +259,7 @@ elab "apply_spec_scd_goal" name?:(Lean.Parser.ident)? : tactic => do
         -- rest of the lemma and prepare everything for the application etc.
         evalTactic (← `(tactic | prepare_second_seq))
         pure pc
-
     let instr ← getInstrAtPc ctx pc
-
     evalTactic (← `(tactic | intros $(mkIdent `user_precondition)))
     evalTactic (← `(tactic | split_condis in $(mkIdent `user_precondition)))
-
     runSpecAndSolve instr pc name?

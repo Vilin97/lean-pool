@@ -8,6 +8,12 @@ import LeanPool.MRiscX.Tactics.SpecificationTactics
 import LeanPool.MRiscX.Elab.HoareElaborator
 import LeanPool.MRiscX.Elab.CodeElaborator
 import LeanPool.MRiscX.Delab.DelabHoare
+
+/-!
+# Specification
+
+This module provides the per-instruction Hoare specifications.
+-/
 open Lean Elab Tactic
 
 /-
@@ -336,7 +342,7 @@ theorem specification_Jump (P : Assertion) (pc newPc : UInt64) (label : String) 
     intros _
     exists 1
     apply And.intro; simp
-    . constructor ; simp
+    · constructor ; simp
       simp
       simp [<- MState.run_one_step_eq_run_n_1]
       unfold MState.runOneStep MState.jump
@@ -375,7 +381,7 @@ theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String)
     intros _
     exists 1
     apply And.intro; simp
-    . constructor ; simp
+    · constructor ; simp
       simp
       simp [<- MState.run_one_step_eq_run_n_1]
       unfold MState.runOneStep MState.jump
@@ -417,7 +423,7 @@ theorem specification_JumpEq_true (P : Assertion) (pc newPc reg1 reg2: UInt64) (
     intros _
     exists 1
     apply And.intro; simp
-    . constructor ; simp
+    · constructor ; simp
       simp
       simp [<- MState.run_one_step_eq_run_n_1]
       unfold MState.runOneStep MState.jump MState.jif' MState.jump
@@ -458,13 +464,13 @@ theorem specification_JumpEq_false (P : Assertion) (pc reg1 reg2: UInt64) (s : S
     intros _
     exists 1
     apply And.intro; simp
-    . repeat (constructor <;> try simp)
+    · repeat (constructor <;> try simp)
     -- . constructor ; simp
-      . simp [<- MState.run_one_step_eq_run_n_1]
+      · simp [<- MState.run_one_step_eq_run_n_1]
         unfold MState.runOneStep  MState.jif' MState.jump
         rw [h_terminated, ← h_pc]
         simp [h_curr, h_cond]
-      . zero_lt_ne_zero
+      · zero_lt_ne_zero
   case right =>
     simp [- MState.run_one_step_eq_run_n_1]
     unfold MState.runOneStep MState.jif' MState.jump
@@ -544,15 +550,15 @@ theorem specification_JumpGt_false (P : Assertion) (pc reg1 reg2: UInt64) (s : S
     intros _
     exists 1
     apply And.intro; simp
-    . repeat (constructor <;> try simp)
+    · repeat (constructor <;> try simp)
     -- . constructor ; simp
-      . simp [<- MState.run_one_step_eq_run_n_1]
+      · simp [<- MState.run_one_step_eq_run_n_1]
         unfold MState.runOneStep  MState.jif' MState.jump
         rw [h_terminated, ← h_pc]
         simp [h_curr]
         simp only [h_cond_false]
         simp
-      . zero_lt_ne_zero
+      · zero_lt_ne_zero
   case right =>
     simp [-MState.run_one_step_eq_run_n_1]
     unfold MState.runOneStep MState.jif' MState.jump
@@ -604,12 +610,12 @@ theorem specification_JumpLe_false (P : Assertion) (pc reg1 reg2: UInt64) (s : S
     intros _
     exists 1
     apply And.intro; simp
-    . repeat (constructor <;> try simp)
-      . simp [<- MState.run_one_step_eq_run_n_1]
+    · repeat (constructor <;> try simp)
+      · simp [<- MState.run_one_step_eq_run_n_1]
         unfold MState.runOneStep MState.jif' MState.jump
         rw [h_terminated, ←h_pc]
         simp [h_curr, h_cond]
-      . zero_lt_ne_zero
+      · zero_lt_ne_zero
   case right =>
     simp [- MState.run_one_step_eq_run_n_1]
     unfold MState.runOneStep MState.jif' MState.jump

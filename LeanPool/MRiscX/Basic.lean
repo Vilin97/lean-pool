@@ -10,3 +10,9 @@ import LeanPool.MRiscX.Elab.HoareElaborator
 import LeanPool.MRiscX.Hoare.HoareRules
 import LeanPool.MRiscX.Util.BasicTheorems
 import LeanPool.MRiscX.Tactics.CodeProofTactics
+
+/-!
+# Basic
+
+This module provides the top-level entry point gathering the MRiscX modules.
+-/

@@ -6,6 +6,12 @@ Authors: Julius Marx
 import LeanPool.MRiscX.Hoare.HoareCore
 import LeanPool.MRiscX.Parser.HoareSyntax
 import LeanPool.MRiscX.Elab.HandleNumOrIdent
+
+/-!
+# DelabHoare
+
+This module provides delaborators for MRiscX Hoare triples.
+-/
 open Lean PrettyPrinter SubExpr Expr Nat Elab
 
 /-
@@ -72,7 +78,7 @@ def stateFnsDelab : Delab := whenNotPPOption getPPExplicit <| withMDataExpr do
     do throwError "This Expression is not known for delaboration"
 
 
-def hasNestedLambdaBody (e:Expr) : Bool :=
+def hasNestedLambdaBody (e : Expr) : Bool :=
   if e.isLambda then
     e.bindingBody!.getAppFn.isLambda
   else
@@ -86,9 +92,8 @@ open Delaborator SubExpr in
 def mkAssertionAtN
     (n : Nat)
     (stName : Name)
-    (withAnnotatedBody: Delab → Delab)
+    (withAnnotatedBody : Delab → Delab)
     : DelabM Term := do
-
     let synOld ← withNaryArg n <| do
       let e ← getExpr
       if e.isLambda then
@@ -99,15 +104,12 @@ def mkAssertionAtN
           withAnnotatedBody delab
       else
         delab
-
     let stateSyn? : Option Term ← withNaryArg n <| do
       if hasNestedLambdaBody (←getExpr) then
         some <$> withBindingBody' stName pure (fun _ =>
           withNaryArg 0 delab)
       else
         return none
-
-
     match stateSyn? with
     | none   => pure synOld
     | some t => `(⦃$synOld⦄ ⟦$t⟧)
@@ -123,41 +125,31 @@ open Delaborator SubExpr in
 def hoareTripleDelab : Delab :=
   whenPPOption getPPNotation <| whenNotPPOption getPPExplicit <| withOverApp 6 do
     let stName ← Core.mkFreshUserName `st
-
     let withAnnotatedBody (d : Delab) : Delab :=
       withBindingBody' stName pure fun _ => do
         let e := annotateStateFns (← getExpr)
         withTheReader SubExpr (fun s => { s with expr := e }) d
-
     let preSyn ← mkAssertionAtN 0 stName withAnnotatedBody
     let postSyn ← mkAssertionAtN 1 stName withAnnotatedBody
-
     let lSyn ← withNaryArg 2 <| delab
     let L_wSyn ← withNaryArg 3 <| delab
     let L_bSyn ← withNaryArg 4 <| delab
     let cSyn ← withNaryArg 5 <| delab
-
-
-
     match termToMriscx_syntax? cSyn with
     | none => pure ()
     | some c =>
       return ←hoare_termToTerm (←`(hoare_term | $c:mriscx_syntax
         ⦃$preSyn⦄ $lSyn ↦ ⟨$L_wSyn | $L_bSyn⟩ ⦃$postSyn⦄))
-
     match termToIdent? cSyn with
     | none => pure ()
     | some c => return ←hoare_termToTerm (←`(hoare_term | $c:ident
         ⦃$preSyn⦄ $lSyn ↦ ⟨$L_wSyn | $L_bSyn⟩ ⦃$postSyn⦄))
-
     match extractStringFromTerm? cSyn with
     | none => pure ()
     | some c => return ←hoare_termToTerm (←`(hoare_term | $c:ident
         ⦃$preSyn⦄ $lSyn ↦ ⟨$L_wSyn | $L_bSyn⟩ ⦃$postSyn⦄))
-
     logInfo s!"A problem occurred while delaborating {cSyn} was not of Expr Type ident
     or mriscx_syntax but it has type {cSyn.raw.getKind}, falling back to delab without code"
-
     hoare_termToTerm (←`(hoare_term | $(mkIdent `c?):ident
     ⦃$preSyn⦄ $lSyn ↦ ⟨$L_wSyn | $L_bSyn⟩ ⦃$postSyn⦄))
 

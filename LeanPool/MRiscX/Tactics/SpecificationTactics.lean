@@ -7,6 +7,12 @@ import LeanPool.MRiscX.Tactics.GeneralCustomTactics
 import LeanPool.MRiscX.AbstractSyntax.Instr
 import LeanPool.MRiscX.AbstractSyntax.MState
 
+/-!
+# SpecificationTactics
+
+This module provides tactics proving the per-instruction specifications.
+-/
+
 open Lean Elab Tactic
 
 /- The proof for most specifications of instructions -/
@@ -66,13 +72,13 @@ elab "simp_jump_spec_false" : tactic => do
       intros _
       exists 1
       apply And.intro; simp
-      . repeat (constructor <;> try simp)
-        . simp [← $(mkIdent `MState.run_one_step_eq_run_n_1)]
+      · repeat (constructor <;> try simp)
+        · simp [← $(mkIdent `MState.run_one_step_eq_run_n_1)]
           unfold $(mkIdent `MState.runOneStep) $(mkIdent `MState.jif') $(mkIdent `MState.jif)
             $(mkIdent `MState.jump)
           rw [h_terminated, ← h_pc]
           simp [h_curr, h_cond]
-        . zero_lt_ne_zero
+        · zero_lt_ne_zero
   ))
   evalTactic (← `(tactic|
     case right =>
@@ -108,13 +114,13 @@ elab "simp_jump_spec_true" : tactic => do
     intros _
     exists 1
     apply And.intro; simp
-    . repeat (constructor <;> try simp)
-      . simp [← $(mkIdent `MState.run_one_step_eq_run_n_1)]
+    · repeat (constructor <;> try simp)
+      · simp [← $(mkIdent `MState.run_one_step_eq_run_n_1)]
         unfold $(mkIdent `MState.runOneStep) $(mkIdent `MState.jif') $(mkIdent `MState.jif)
           $(mkIdent `MState.jump)
         rw [h_terminated]
         simp [h_curr, h_label, h_cond]
-      . zero_lt_ne_zero
+      · zero_lt_ne_zero
   ))
   evalTactic (← `(tactic|
     case right =>

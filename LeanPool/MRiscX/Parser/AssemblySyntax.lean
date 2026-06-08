@@ -4,6 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
 import Lean
+
+/-!
+# AssemblySyntax
+
+This module provides the parser/grammar for MRiscX assembly syntax.
+-/
 open Lean Parser
 /-
 In this file, we extend Lean by introducing a new term. This term allows

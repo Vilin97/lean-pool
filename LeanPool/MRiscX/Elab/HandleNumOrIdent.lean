@@ -5,6 +5,12 @@ Authors: Julius Marx
 -/
 import LeanPool.MRiscX.Parser.AssemblySyntax
 import Lean
+
+/-!
+# HandleNumOrIdent
+
+This module provides elaboration helpers for numeric/identifier operands.
+-/
 open Nat Lean PrettyPrinter Expr Meta Elab
 
 /-
@@ -17,7 +23,7 @@ def mkUintOfNat (n:UInt64):= Expr.app (.const `OfNat.ofNat []) (mkNatLit n.toNat
 
 def mkUInt64Lit (n : UInt64) : Expr :=
   mkApp3
-    (mkConst ``OfNat.ofNat [levelZero])
+    (mkConst ``OfNat.ofNat [Level.zero])
     (mkConst ``UInt64)
     (mkRawNatLit n.toNat)
     (mkApp (mkConst ``UInt64.instOfNat) (mkRawNatLit n.toNat))

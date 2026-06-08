@@ -4,6 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
 import Lean
+
+/-!
+# TacticUtil
+
+This module provides small utilities shared by the MRiscX tactics.
+-/
 open Lean Meta
 
 def findHypTypeM? (ctx : LocalContext) (n : Name) : MetaM (Option Expr) :=

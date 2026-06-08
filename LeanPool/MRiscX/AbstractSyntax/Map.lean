@@ -172,18 +172,18 @@ theorem t_update_neq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
   simp at HNeq
   unfold TMap.get
   cases t ; simp
-  . cases HEq: (k' == k); simp at HEq
-    . simp
+  · cases HEq: (k' == k); simp at HEq
+    · simp
       unfold TMap.get
       rfl
-    . simp at HEq
+    · simp at HEq
       rw[HEq] at HNeq
       exfalso
       apply HNeq
       rfl
-  . cases HEq: (k' == k); simp at HEq
-    . rfl
-    . simp at HEq
+  · cases HEq: (k' == k); simp at HEq
+    · rfl
+    · simp at HEq
       rw[HEq] at HNeq
       exfalso
       apply HNeq
@@ -217,18 +217,18 @@ theorem p_update_neq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
   simp at HNeq
   unfold PMap.get
   cases p ; simp
-  . cases HEq: (k' == k); simp at HEq
-    . simp
+  · cases HEq: (k' == k); simp at HEq
+    · simp
       unfold PMap.get
       rfl
-    . simp at HEq
+    · simp at HEq
       rw[HEq] at HNeq
       exfalso
       apply HNeq
       rfl
-  . cases HEq: (k' == k); simp at HEq
-    . rfl
-    . simp at HEq
+  · cases HEq: (k' == k); simp at HEq
+    · rfl
+    · simp at HEq
       rw[HEq] at HNeq
       exfalso
       apply HNeq

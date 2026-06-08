@@ -7,6 +7,12 @@ import LeanPool.MRiscX.Hoare.HoareCore
 import LeanPool.MRiscX.Elab.CodeElaborator
 import LeanPool.MRiscX.Parser.HoareSyntax
 
+/-!
+# HoareElaborator
+
+This module provides the elaborator for MRiscX Hoare-triple syntax.
+-/
+
 
 open Lean Meta Elab
 
@@ -63,7 +69,7 @@ def mriscxSyntaxToTerm (stx : Array (TSyntax `mriscx_label)) : TermElabM (TSynta
 /--
 Some utility function which casts `TSyntax mriscx_label` to `TSyntax term`
 -/
-def mriscxSpecToTerm (stx: (TSyntax  `mriscx_Instr)) : TermElabM (TSyntax `term) := do
+def mriscxSpecToTerm (stx : (TSyntax `mriscx_Instr)) : TermElabM (TSyntax `term) := do
   let newStx : (TSyntax `term) ←`(⟪$stx⟫)
   return ←`($newStx)
 
@@ -97,7 +103,6 @@ elab t:hoare_term : term => do
     let evaluatedLw := ⟨(←replaceLabels L_w labels)⟩
     let evaluatedLb := ⟨(←replaceLabels L_b labels)⟩
     let evaluatedL := ⟨(←replaceLabels l labels)⟩
-
     match syn with
     | `(mriscx_syntax | mriscx
       $labelsSyn:mriscx_label*
@@ -119,7 +124,6 @@ elab id:ident withPosition(linebreak ppDedent(ppLine))
   let evaluatedLw := ⟨(←replaceLabelsWithIdent L_w id)⟩
   let evaluatedLb := ⟨(←replaceLabelsWithIdent L_b id)⟩
   let evaluatedL := ⟨(←replaceLabelsWithIdent l id)⟩
-
   return ←Lean.Elab.Term.elabTerm
       (←`($(mkIdent ``hoare_triple_up) $translatedP $translatedQ $evaluatedL $evaluatedLw
           $evaluatedLb $id)) none
@@ -134,14 +138,12 @@ elab codeTerm:term withPosition(linebreak ppDedent(ppLine))
   let e ← Lean.Elab.Term.elabTerm codeTerm none
   let ty ← Lean.Meta.inferType e
   let ty ← Meta.whnf ty
-
   if (ty.isAppOf `Code) then
     let translatedP ← elabHoareTerm P
     let translatedQ ← elabHoareTerm Q
     let evaluatedLw := ⟨(←replaceLabelsWithCodeExpr L_w e)⟩
     let evaluatedLb := ⟨(←replaceLabelsWithCodeExpr L_b e)⟩
     let evaluatedL := ⟨(←replaceLabelsWithCodeExpr l e)⟩
-
     return ←Lean.Elab.Term.elabTerm
         (←`($(mkIdent ``hoare_triple_up) $translatedP $translatedQ $evaluatedL $evaluatedLw
             $evaluatedLb $codeTerm)) none

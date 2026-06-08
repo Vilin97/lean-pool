@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
 import LeanPool.MRiscX.Parser.AssemblySyntax
-/-
+/-!
 Syntax for hoare terms
 -/
 declare_syntax_cat hoare_term

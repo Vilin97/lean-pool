@@ -8,6 +8,12 @@ import Lean
 import LeanPool.MRiscX.Elab.HandleExpr
 import LeanPool.MRiscX.Hoare.HoareCore
 
+/-!
+# HelpCodeProofTactics
+
+This module provides auxiliary helpers for the MRiscX code-proof tactics.
+-/
+
 open Lean Elab Parser Tactic RCases
 
 

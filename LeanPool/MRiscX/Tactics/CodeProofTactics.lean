@@ -16,6 +16,12 @@ import LeanPool.MRiscX.Tactics.GeneralCustomTactics
 
 import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
 
+/-!
+# CodeProofTactics
+
+This module provides tactics for discharging MRiscX code-proof goals.
+-/
+
 open Lean Meta Elab Parser Tactic RCases
 
 /-
@@ -49,10 +55,10 @@ will be generated.
 -/
 elab &"auto_seq" : tactic => do
   evalTactic (← `(tactic | peel_last_instr <;> try assumption))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | apply_to_last_goal simp_set_eq))
 
 
@@ -86,10 +92,10 @@ elab "sapply_s_seq" &"P" &" := " P:term &", "
       : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := $P) (R := $R) (L_w := $L_w)
                             (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | apply_to_last_goal simp_set_eq ))
 
 /--
@@ -126,10 +132,10 @@ elab "sapply_s_seq''" R:term &", "
                       L_b':term : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := _) (R := $R) (L_w := $L_w)
                             (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
 
 -- TODO make this more robust
 /--
@@ -155,10 +161,10 @@ elab "sapply_s_seq''"
       : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := _) (R := $R) (L_w := $L_w)
                             (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
 
 
 /--
@@ -185,10 +191,10 @@ during the process. Those side goals generally are goals about the set provided
       : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := $P) (R := $R) (L_w := $L_w)
                             (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
 
 
 /--
@@ -240,10 +246,10 @@ elab "sapply_s_seq'''"  &"P" &" := " P:term &", "
       : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := $P) (R := $R) (L_w := $L_w)
                             (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
-  evalTactic (← `(tactic | . simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
+  evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | apply_to_last_goal simp_set_eq ))
 
 /--

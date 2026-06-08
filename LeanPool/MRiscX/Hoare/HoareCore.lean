@@ -12,7 +12,7 @@ import Mathlib.Data.Set.Basic
 import Mathlib.Data.Set.BooleanAlgebra
 
 
-/-
+/-!
 Hoare core
 
 This file introduces Hoare logic into the MRiscX programming language.
@@ -64,7 +64,6 @@ state whose program counter lies in `L_w`. Additionally, the relation guarantees
 intermediate state between `s` and `s'` has a program counter in `L_w`.
 
 With the help of this relation, unambiguous statements can be made about the flow of the program.
-
 -/
 def weak (s s' : MState) (L_w L_b : Set UInt64) (c : Code) : Prop :=
   s.code = c →
@@ -100,7 +99,7 @@ Essentially the same as the `hoare_triple_up`, but instead of inspecting a whole
 this relation only focusses on the instruction which is executed next. This can be used to
 reason about single instructions in order to define their specification.
 -/
-def hoare_triple_up_1 (P Q : Assertion) (l:UInt64) (L_w L_b : Set UInt64) (i : Instr)
+def hoare_triple_up_1 (P Q : Assertion) (l : UInt64) (L_w L_b : Set UInt64) (i : Instr)
 :=
   L_w ∩ L_b = ∅ →
   L_w ≠ ∅ →

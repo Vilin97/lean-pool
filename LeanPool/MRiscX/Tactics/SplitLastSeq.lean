@@ -11,6 +11,12 @@ import LeanPool.MRiscX.Elab.HandleNumOrIdent
 import LeanPool.MRiscX.Elab.HandleExpr
 import LeanPool.MRiscX.Tactics.TacticUtil
 import Mathlib.Data.Set.Basic
+
+/-!
+# SplitLastSeq
+
+This module provides a tactic splitting the last instruction off a code sequence.
+-/
 open Lean Meta Elab Parser Tactic
 
 
@@ -24,8 +30,6 @@ def extractL_w'AndL_b'' (e : Expr) : MetaM (Expr × Expr) := do
       let L_w' ← (Meta.whnf <| L_w')
       let L_b'' ← (Meta.whnf <| body.getArg! 1)
       let L_b'' ← (Meta.whnf <| L_b'')
-
-
       return (L_w', L_b'')
   throwError "Expected Expr to be of type 'Eq' "
 
@@ -44,7 +48,7 @@ def extractQ (arr : PersistentArray (Option LocalDecl)) : MetaM (Expr) := do
 
 def incPcExpr (state : Expr) : Expr := Expr.app (.const `MState.incPc []) (state)
 
-def getStateExpr (state?: Option Expr) : Expr :=
+def getStateExpr (state? : Option Expr) : Expr :=
   match state? with
   | some state =>
     state
@@ -52,7 +56,7 @@ def getStateExpr (state?: Option Expr) : Expr :=
     (.bvar 0)
 
 
-def getExprOfInstForR (instr : Instr) (oldState : Expr): MetaM Expr := do
+def getExprOfInstForR (instr : Instr) (oldState : Expr) : MetaM Expr := do
   match instr with
   | Instr.LoadAddress r v
   | Instr.LoadImmediate r v =>
@@ -72,13 +76,11 @@ def getExprOfInstrForRFromExpr (instr : Expr) (oldState : Expr) : MetaM Expr := 
   then
     let r := e.getArg! 0
     let v := e.getArg! 1
-
     return mkAppN (.const `MState.addRegister [])
       #[(incPcExpr oldState), r, v]
   else if instr.isAppOfArity' `Instr.StoreWord 2 then
     let r := e.getArg! 0
     let d := e.getArg! 1
-
     return mkAppN (.const `MState.addMemory [])
       #[(incPcExpr oldState), r, d]
   else
@@ -88,21 +90,21 @@ def getExprOfInstrForRFromExpr (instr : Expr) (oldState : Expr) : MetaM Expr := 
 
 
 def typeSetUInt64 : Expr :=
-  mkApp (.const `Set [levelZero]) (.const `UInt64 [])
+  mkApp (.const `Set [Level.zero]) (.const `UInt64 [])
 
 
 def mkSingletonOf (n : UInt64) : Expr :=
-  let instSing := mkAppN (.const ``Set.instSingletonSet [levelZero]) #[(.const `UInt64 [])]
-  let set := mkApp (.const `Set [levelZero]) (mkConst `UInt64)
-  mkAppN (.const ``Singleton.singleton [levelZero, levelZero])
+  let instSing := mkAppN (.const ``Set.instSingletonSet [Level.zero]) #[(.const `UInt64 [])]
+  let set := mkApp (.const `Set [Level.zero]) (mkConst `UInt64)
+  mkAppN (.const ``Singleton.singleton [Level.zero, Level.zero])
     #[(mkConst `UInt64), set, instSing, mkUInt64Lit n]
 
 
 def getNeSet (n : UInt64) : Expr :=
-  let lam := Expr.lam `n (.const `UInt64 []) (mkAppN (.const `Ne [levelOne])
+  let lam := Expr.lam `n (.const `UInt64 []) (mkAppN (.const `Ne [Level.one])
       #[(Expr.const `UInt64 []), (.bvar 0), mkUInt64Lit n])
     BinderInfo.default
-  mkAppN (.const `setOf [levelZero]) #[(mkConst `UInt64), lam]
+  mkAppN (.const `setOf [Level.zero]) #[(mkConst `UInt64), lam]
 
 
 
@@ -111,7 +113,6 @@ def calcRExprDefault (Q: Expr) (lastInstrExpr : Expr): MetaM Expr := do
   if !hasOneLam then
     throwError s!"Expected postcondition Q {Q} to be a λ-expression"
   let hasScdLam := Q.bindingBody!.getAppFn.isLambda
-
   let mstateInferredOld := ← match hasScdLam with
                 | true => do
                   match Q.bindingBody!.getArg? 1 with
@@ -120,15 +121,12 @@ def calcRExprDefault (Q: Expr) (lastInstrExpr : Expr): MetaM Expr := do
                   | none => throwError "Expected Q with 2 λ-expressions to have 2 arguments"
                 | false =>
                   return (.bvar 0)
-
   let qBody := ←match hasScdLam with
               | true => do
                 return Q.bindingBody!.getAppFn
               | false => do
                 return Q
-
   let assignmentToAdd ← getExprOfInstrForRFromExpr lastInstrExpr mstateInferredOld
-
   return Expr.lam `st (.const `MState []) (mkApp qBody assignmentToAdd)
     BinderInfo.default
 
@@ -139,35 +137,27 @@ elab "peel_last_instr" : tactic => do
   let oGoalType ← originalGoal.getType
   evalTactic (←`(tactic | intros $(mkIdent `h_L_w'_inter_L_b'') _ $(mkIdent `s)
                             $(mkIdent `h_code') $(mkIdent `h_pc) $(mkIdent `P)))
-
   Lean.Elab.Tactic.withMainContext do
     let goal ← Lean.Elab.Tactic.getMainGoal
     let f ← Meta.whnf <| ←goal.getType
     let currentQ := ((f.getArg! 1).bindingBody!.getAppArgs[1]!.getArg! 0).getAppFn
-
     let ctx ← Lean.MonadLCtx.getLCtx
     let P := oGoalType.getArg! 0
     let pcAsExpr := oGoalType.getArg! 2
-
     let L_w'_expr := oGoalType.getArg! 3
     let L_b''_expr  := oGoalType.getArg! 4
     let L_b_expr ← mkAppM ``Union.union #[L_b''_expr, L_w'_expr]
-
     let codeEqExpr ← Meta.whnf (←findHypTypeM ctx `h_code')
     let codeExpr := codeEqExpr.getArg! 2
-
     let L_w' ← parseSingletonExpr L_w'_expr
     let L_w_expr := mkSingletonOf (L_w' - 1)
     let L_b'asExpr := getNeSet L_w'
-
     let instrToSplit ← getInstrFromCodeExpr codeExpr (L_w' - 1)
-
     let newR ← calcRExprDefault currentQ instrToSplit
     let preMVar ← mkFreshExprMVar (some typeSetUInt64)
     let mut s_seq := mkAppN (mkConst `S_SEQ [])
       #[preMVar, P, newR, currentQ, codeExpr, pcAsExpr, L_w_expr, L_b_expr,
         L_w'_expr, L_b'asExpr]
-
     let mva ← goal.apply s_seq (term? := some m!"`{s_seq}`")
     Term.synthesizeSyntheticMVarsNoPostponing
     replaceMainGoal mva

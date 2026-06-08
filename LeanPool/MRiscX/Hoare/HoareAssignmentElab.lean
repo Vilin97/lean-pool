@@ -6,6 +6,12 @@ Authors: Julius Marx
 import Lean
 import LeanPool.MRiscX.Elab.HandleNumOrIdent
 import LeanPool.MRiscX.Parser.HoareSyntax
+
+/-!
+# HoareAssignmentElab
+
+This module provides elaboration of MRiscX Hoare assignment chains.
+-/
 open Lean Elab
 
 /-

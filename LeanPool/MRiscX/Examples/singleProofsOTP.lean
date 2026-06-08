@@ -10,6 +10,12 @@ import LeanPool.MRiscX.Elab.HoareElaborator
 import LeanPool.MRiscX.Hoare.HoareRules
 import LeanPool.MRiscX.Util.BasicTheorems
 import LeanPool.MRiscX.Tactics.CodeProofTactics
+
+/-!
+# singleProofsOTP
+
+This module provides the per-instruction lemmas of the One-Time-Pad proof.
+-/
 -- import Mathlib.Algebra.Order.Sub.Unbundled.Basic
 
 open Lean Elab Parser Meta Tactic
@@ -69,7 +75,7 @@ theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
   intros p k c l i x h_I hlx hxLeL
   unfold I_pre' at h_I
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
-  simp
+  simp only [ne_eq]
   by_contra neq
   have : k + i < c + (l - x) := by
       apply UInt64.add_lt_add
@@ -77,13 +83,13 @@ theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
       apply Nat.lt_of_le_of_lt
 
       change c.toNat + (l - x).toNat ≤ c.toNat + l.toNat
-      simp
+      simp only [Nat.add_le_add_iff_left]
       rw [UInt64.toNat_sub_of_le]
-      . rw [←Nat.add_le_add_iff_right (n := x.toNat)]
+      · rw [←Nat.add_le_add_iff_right (n := x.toNat)]
         simp
-      . exact hxLeL
-      . exact h_noOverfl
-  . rw [neq] at this
+      · exact hxLeL
+      · exact h_noOverfl
+  · rw [neq] at this
     apply UInt64.lt_asymm <;> try assumption
 
 
@@ -96,7 +102,7 @@ theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
   intros p k c l i x h_I hlx hxLeL
   unfold I_pre' at h_I
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
-  simp
+  simp only [ne_eq]
   by_contra neq
   have h_pc : p < c := by
     apply UInt64.lt_trans (b := k)
@@ -108,13 +114,13 @@ theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
     apply Nat.lt_of_le_of_lt
 
     change c.toNat + (l - x).toNat ≤ c.toNat + l.toNat
-    simp
+    simp only [Nat.add_le_add_iff_left]
     rw [UInt64.toNat_sub_of_le]
-    . rw [←Nat.add_le_add_iff_right (n := x.toNat)]
+    · rw [←Nat.add_le_add_iff_right (n := x.toNat)]
       simp
-    . exact hxLeL
-    . exact h_noOverfl
-  . rw [neq] at this
+    · exact hxLeL
+    · exact h_noOverfl
+  · rw [neq] at this
     apply UInt64.lt_irrefl (a := p+i)
     exact this
 
@@ -128,8 +134,8 @@ theorem help_I_pre''''' : ∀ (p k c l i x: UInt64),
   intros p k c l i x h_I hlx hxLeL
   unfold I_pre' at h_I
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
-  simp
-  push_neg
+  simp only [ne_eq, UInt64.add_right_inj]
+  push Not
   grind only
 
 
@@ -189,53 +195,52 @@ theorem sw_otp : ∀ (p k c l : UInt64),
     rw [this]
     rw [←h_code']
     apply specification_StoreWordImmediate (regWithAddr := 2) (regWithValue := 7)
-    . simp
-    . simp
-    . simp
-    . simp_currInstr
-    . assumption
-    . simp
-      simp at *
+    · simp
+    · simp
+    · simp
+    · simp_currInstr
+    · assumption
+    · simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addMemory_unfold, gt_iff_lt, MState.getMemoryAt_def, Bool.not_eq_true]
+      simp only [
+        MState.getMemoryAt_def, MState.getRegisterAt_def,
+        ne_eq, Bool.not_eq_true,
+        gt_iff_lt] at *
       repeat (constructor <;> try assumption)
-      .
-        rw [h_x7, h_x5, h_x6, h_x0, h_x2, h_x1, h_x3]
+      · rw [h_x7, h_x5, h_x6, h_x0, h_x2, h_x1, h_x3]
         intros i h_i
         cases UInt64.lt_or_eq_of_le h_i with
         | inl v =>
-          simp at v
           rw [t_update_neq]
-          . rw [t_update_neq]
-            . rw [t_update_neq]
+          · rw [t_update_neq]
+            · rw [t_update_neq]
               rw [←h_x3] at h_i
               rw [←h_x3] at v
               apply h_I
-              . exact v
-              . apply help_I_pre''' (p := p)
+              · exact v
+              · apply help_I_pre''' (p := p)
                 exact h_I_pre'
                 exact v
                 rw [←h_x3]
                 exact h_x3LtL
-            . apply help_I_pre'''' p k c l i x
+            · apply help_I_pre'''' p k c l i x
               exact h_I_pre'
               exact v
               rw [←h_x3]
               exact h_x3LtL
-          . apply help_I_pre''''' (p:=p) (k:=k) <;> try assumption
+          · apply help_I_pre''''' (p:=p) (k:=k) <;> try assumption
             rw [←h_x3]
             exact h_x3LtL
         | inr v =>
-          simp at v
           rw [h_x3] at h_x0 h_x1 h_x2
           rw [v]
           rw [←h_x0, ←h_x1, ←h_x2, ←h_x5, ←h_x6]
-          simp
+          simp only [t_update_eq]
           rw [←h_x7]
           rw [t_update_neq]
-          .
-            rw [t_update_neq]
-            . rw [←h_x5, ←h_x6]
+          · rw [t_update_neq]
+            · rw [←h_x5, ←h_x6]
               exact h_x7
-            . rw [h_x2, h_x1]
+            · rw [h_x2, h_x1]
               simp
               intros neq
               unfold I_pre' at h_I_pre'
@@ -243,7 +248,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
               rw [←neq] at h_kc
               apply UInt64.lt_irrefl c
               exact h_kc
-          . rw [h_x0, h_x2]
+          · rw [h_x0, h_x2]
             unfold I_pre' at h_I_pre'
             rcases h_I_pre' with ⟨h_pk, h_kc, _⟩
             simp
@@ -256,33 +261,29 @@ theorem sw_otp : ∀ (p k c l : UInt64),
               exact h_pk
               exact h_kc
             exact this
-      .
-        repeat (constructor ; try assumption)
-        .
-          rw [h_x0, h_x5, h_x0]
+      · repeat (constructor ; try assumption)
+        · rw [h_x0, h_x5, h_x0]
           rw [t_update_neq]
           rw [h_x2, h_x3]
           intros neq
-          simp at neq
+          simp only [UInt64.add_left_inj] at neq
           unfold I_pre' at h_I_pre'
           rcases h_I_pre' with ⟨pk, kc, _⟩
           rw [neq] at kc
           apply UInt64.lt_asymm (pk)
           exact kc
-        . constructor
-          .
-            rw [h_x2, h_x3]
+        · constructor
+          · rw [h_x2, h_x3]
             rw [t_update_neq]
             exact h_x6
             rw [h_x1, h_x3]
-            simp
+            simp only [ne_eq, UInt64.add_left_inj]
             intros neq
             unfold I_pre' at h_I_pre'
             rcases h_I_pre' with ⟨pk, kc, _⟩
             rw [←neq] at kc
             apply UInt64.lt_irrefl c kc
-          .
-            repeat (constructor <;> try assumption)
+          · repeat (constructor <;> try assumption)
 
 
 
@@ -318,19 +319,18 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
       simp
     rw [this]
     apply specification_Increment (dst := 0)
-    . simp
-    . simp
-    . simp
-    . simp_currInstr
-    . exact h_pc
-    .
-      repeat (constructor <;> try assumption)
+    · simp
+    · simp
+    · simp
+    · simp_currInstr
+    · exact h_pc
+    · repeat (constructor <;> try assumption)
       simp
       simp at *
       rw [h_x0, h_x3]
       grind
       repeat (constructor <;> try assumption)
-      simp
+      simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addRegister_unfold, ne_eq, not_false_eq_true, t_update_neq, t_update_eq, UInt64.add_sub_cancel, MState.getMemoryAt_def]
       exact h_x5
       repeat (constructor <;> try assumption)
 
@@ -369,16 +369,15 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
     rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
     apply specification_Increment (dst := 1)
-    . simp
-    . simp
-    . simp
-    . simp
+    · simp
+    · simp
+    · simp
+    · simp only [MState.currInstruction_unfold]
       rw [h_code', h_pc]
       unfold otp_code
       simp
-    . exact h_pc
-    .
-      simp at *
+    · exact h_pc
+    · simp at *
       repeat (constructor <;> try assumption)
       -- . rw [h_x1, h_x3]
       --   . simp at *
@@ -426,13 +425,12 @@ theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
       simp
     rw [this]
     apply specification_Increment (dst := 2)
-    . simp
-    . simp
-    . simp
-    . simp_currInstr
-    . exact h_pc
-    .
-      simp at *
+    · simp
+    · simp
+    · simp
+    · simp_currInstr
+    · exact h_pc
+    · simp at *
       repeat (constructor <;> try assumption)
       -- . rw [h_x1, h_x3]
       --   . simp at *
@@ -476,13 +474,12 @@ theorem dec_otp : ∀ (p k c l : UInt64),
       simp
     rw [this]
     apply specification_Decrement (dst := 3)
-    . simp
-    . simp
-    . simp
-    . simp_currInstr
-    . exact h_pc
-    .
-      simp at *
+    · simp
+    · simp
+    · simp
+    · simp_currInstr
+    · exact h_pc
+    · simp at *
       repeat (constructor <;> try assumption)
       -- . rw [h_x1, h_x3]
       --   . simp at *
@@ -494,8 +491,8 @@ theorem dec_otp : ∀ (p k c l : UInt64),
 
 
       repeat (constructor <;> try assumption)
-      . grind only
-      . repeat (constructor <;> try assumption)
+      · grind only
+      · repeat (constructor <;> try assumption)
         rw [←h_x3]
         grind
 
@@ -532,10 +529,10 @@ theorem j_otp : ∀ (p k c l : UInt64),
                 x[6] = mem[x[1] - 1] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] < x ∧ I_pre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄)
     <;> try assumption
-  . simp
-  . simp
-  . simp
-  . unfold hoare_triple_up
+  · simp
+  · simp
+  · simp
+  · unfold hoare_triple_up
     rintro h_inter h_empty s h_code' h_pc ⟨⟨h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
     have: (∃ s',
@@ -565,27 +562,29 @@ theorem j_otp : ∀ (p k c l : UInt64),
             s'.pc ∉ {n | (n ≠ 4)}) := by
             intros h
             rcases h with ⟨s', ⟨h_weak, pre⟩⟩
-            simp at pre
+            simp only [
+              MState.getMemoryAt_def, MState.getRegisterAt_def,
+              ne_eq,
+              Bool.not_eq_true, Set.mem_setOf_eq, Decidable.not_not] at pre
             rcases pre with ⟨⟨⟨h_var, h_I⟩, h_terminated, _⟩, _⟩
-            simp
+            simp only [ne_eq, MState.getRegisterAt_def, MState.getMemoryAt_def, Bool.not_eq_true, Set.mem_setOf_eq, Decidable.not_not]
             simp at h_weak
             exists s'
     apply this
     clear this
 
     apply specification_Jump' (pc := 13) (newPc := 4) (label := ".loop")
-    . simp
-    . simp
-    . simp
-    . simp_currInstr
-    . assumption
-    .
-      repeat (constructor <;> try assumption)
+    · simp
+    · simp
+    · simp
+    · simp_currInstr
+    · assumption
+    · repeat (constructor <;> try assumption)
       unfold MState.getLabelAt
       rw [h_code']
       simp
 
-  . (repeat constructor <;> try assumption)
+  · (repeat constructor <;> try assumption)
 
 
 theorem beqz_otp: ∀ (p k c l : UInt64),
@@ -611,9 +610,9 @@ theorem beqz_otp: ∀ (p k c l : UInt64),
   rw [←h_code']
   have: ({n | n ≤ 4} ∪ {n | n > 5}) = {n:UInt64| n ≠ 4 + 1} := by
     ext a
-    simp
+    simp only [gt_iff_lt, Set.mem_union, Set.mem_setOf_eq, UInt64.reduceAdd, ne_eq]
     apply Iff.intro
-    . intros h
+    · intros h
       cases h with
       | inl v =>
         intros neq
@@ -623,12 +622,12 @@ theorem beqz_otp: ∀ (p k c l : UInt64),
         intros neq
         rw [neq] at v
         contradiction
-    . intros h
-      push_neg at h
+    · intros h
+      push Not at h
 
       -- rw [←UInt64.lt_toNat_iff]
       by_contra h'
-      push_neg at h'
+      push Not at h'
       simp at h'
       rcases h' with ⟨h_1, h_2⟩
       have h_eq : a = 5 := by
@@ -641,11 +640,11 @@ theorem beqz_otp: ∀ (p k c l : UInt64),
 
   rw [this]
   apply specification_JumpEqZero_false (pc := 4) (reg := 3) (label := "finish")
-  . simp
-  . simp
-  . simp
-  . simp_currInstr
-  . assumption
-  . repeat (constructor <;> try assumption)
+  · simp
+  · simp
+  · simp
+  · simp_currInstr
+  · assumption
+  · repeat (constructor <;> try assumption)
     apply UInt64.gt_zero_neq_zero
     exact h_cond

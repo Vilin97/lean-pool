@@ -6,7 +6,7 @@ Authors: Julius Marx
 import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 
 
-/-
+/-!
 Everything is now brought together in a single structure called MState, which represents
 the machine's MState This structure holds the memory, registers, the code, a program counter (PC),
 and a termination flag. The program counter points to the next instruction to be executed,

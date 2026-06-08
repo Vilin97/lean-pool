@@ -7,6 +7,12 @@ import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 import LeanPool.MRiscX.Parser.AssemblySyntax
 import LeanPool.MRiscX.Elab.CodeElaborator
 import LeanPool.MRiscX.AbstractSyntax.Instr
+
+/-!
+# DelabCode
+
+This module provides delaborators rendering MRiscX `Code` back to assembly syntax.
+-/
 open Lean PrettyPrinter Delaborator SubExpr Expr Nat
 
 /-

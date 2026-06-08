@@ -8,7 +8,7 @@ import LeanPool.MRiscX.Delab.DelabCode
 import LeanPool.MRiscX.Semantics.MsTheory
 import LeanPool.MRiscX.Util.BasicTheorems
 
-/-
+/-!
 This file contains some minor lemmas to ease the prove in the "main" file "HoareRules".
 Also, those lemmas can be used to deepen the understanding of the weak function.
 -/
@@ -56,7 +56,7 @@ theorem weak_L_w_with_L_from_L_b : ∀ (s s' : MState) (L_w L_b L : Set UInt64) 
 
 
 -- Function which might come in handy for proving s-loop
-def weak_loop (s: MState) (l : UInt64) (C I : Assertion) :=
+def weak_loop (s : MState) (l : UInt64) (C I : Assertion) :=
   ∃(n:ℕ), 0 < n → (s.runNSteps n).pc = l ∧
   (∀ (n' : ℕ), 0 < n' ∧ n' < n →
   (s.runNSteps n').pc = l →

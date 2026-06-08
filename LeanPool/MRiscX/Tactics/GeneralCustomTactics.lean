@@ -7,6 +7,12 @@ import Lean
 import Mathlib.Tactic.Push
 import Mathlib.Data.Set.Basic
 
+/-!
+# GeneralCustomTactics
+
+This module provides general-purpose custom tactics for MRiscX.
+-/
+
 open Lean Elab Tactic Meta
 
 /-
@@ -24,10 +30,8 @@ elab "apply_to_last_goal" t:tacticSeq : tactic => do
     match goals.getLast? with
     | some goal =>
       Lean.Elab.Tactic.setGoals ([goal] ++ goals.extract 0 (goals.length - 1))
-
     | none => throwError "No goals found while trying to apply {t} to the last goal"
-
-  evalTactic (← `(tactic | . $t ))
+  evalTactic (← `(tactic | · $t ))
 
 
 /- A small tactic to prove `∀ (n' : ℕ), 0 < n' → ¬n' = 0`-/

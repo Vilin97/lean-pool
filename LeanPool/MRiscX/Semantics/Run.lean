@@ -6,6 +6,12 @@ Authors: Julius Marx
 import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 import LeanPool.MRiscX.AbstractSyntax.MState
 
+/-!
+# Run
+
+This module provides the operational `run` semantics of MRiscX.
+-/
+
 open Nat
 
 /-

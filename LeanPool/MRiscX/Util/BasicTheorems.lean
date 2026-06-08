@@ -8,20 +8,20 @@ import Mathlib.Tactic.NthRewrite
 import Mathlib.Algebra.Order.Sub.Unbundled.Basic
 import Mathlib.Data.Nat.ModEq
 
-/-
+/-!
 This file contains a list of theorems required during the implementation of this dsl
 and the creation of the proof for the otp example.
 Some of them might actually already exists in the mathlib but
 i had trouble finding them.
 -/
 
-theorem excluded_middle_implication: ∀ (P Q C : Prop),
+theorem excluded_middle_implication : ∀ (P Q C : Prop),
   (P ∧ Q → C) ∧ (P ∧ ¬Q → C) →
   P →
   C
   := by
   intros P Q C
-  simp
+  simp only [and_imp]
   intros H1 H2 HP
   specialize H1 HP
   specialize H2 HP
@@ -29,8 +29,8 @@ theorem excluded_middle_implication: ∀ (P Q C : Prop),
     simp
   apply H
   constructor
-  . exact H1
-  . exact H2
+  · exact H1
+  · exact H2
 
 
 theorem Nat.mod_succ_eq {a b m : ℕ} : a % m = b % m ↔ (a + 1) % m = (b + 1) % m := by
@@ -54,9 +54,9 @@ theorem Nat.gt_zero_le_one : ∀ (n : ℕ),
   (0 < n) ↔ 1 ≤ n := by
   intros n
   apply Iff.intro
-  . intros h
+  · intros h
     apply Nat.succ_le_of_lt h
-  . intros h
+  · intros h
     apply Nat.succ_le_of_lt h
 
 
@@ -67,7 +67,7 @@ theorem Nat.add_gt_zero_gt_zero : ∀ (n m: ℕ) ,
   intros n m h
   rw [Nat.add_comm]
   apply Nat.gt_of_not_le
-  simp
+  simp only [le_zero_eq, Nat.add_eq_zero_iff, not_and]
   intros _
   intros neq
   rw [neq] at h
@@ -88,11 +88,11 @@ theorem Nat.add_gt_zero : ∀ (n m : Nat),
 
 
 
-theorem Nat.gt_and_neq_succ_gt_succ: ∀ (n m : ℕ), n < m → m ≠ n + 1 → n + 1 < m := by
+theorem Nat.gt_and_neq_succ_gt_succ : ∀ (n m : ℕ), n < m → m ≠ n + 1 → n + 1 < m := by
   intros n m h₁ h₂
   grind
 
-theorem Nat.lt_add_cancel_right: ∀ (n m k: ℕ),
+theorem Nat.lt_add_cancel_right : ∀ (n m k: ℕ),
   n + k < m + k ↔ n < m
   := by
   simp
@@ -105,13 +105,13 @@ theorem Nat.lt_sub_left : ∀ (a b c : ℕ),
   intros a b c BLtA ALtBC
   rw [← Nat.lt_add_cancel_right (k := b)]
   rw [Nat.sub_add_cancel]
-  . rw [Nat.add_comm]
+  · rw [Nat.add_comm]
     exact ALtBC
-  . apply Nat.le_of_lt
+  · apply Nat.le_of_lt
     exact BLtA
 
 
-theorem Nat.size_sub_lt_size: ∀ (x l s: Nat),
+theorem Nat.size_sub_lt_size : ∀ (x l s: Nat),
   l < s →
   x ≤ l →
   x ≥ 1 →
@@ -134,7 +134,7 @@ theorem Nat.size_sub_lt_size: ∀ (x l s: Nat),
   exact hl
 
 
-theorem UInt64.gt_zero_neq_zero: ∀ (u:UInt64),
+theorem UInt64.gt_zero_neq_zero : ∀ (u:UInt64),
   u > 0 → u ≠ 0 := by
   intros u h
   intros neq
@@ -144,29 +144,29 @@ theorem UInt64.gt_zero_neq_zero: ∀ (u:UInt64),
 theorem UInt64.lt_zero : ∀ (u:UInt64), u < 0 ↔ False := by
   intro u
   apply Iff.intro
-  . intros h
+  · intros h
     cases u with
     | ofBitVec s => cases h
-  . intros h
+  · intros h
     contradiction
 
 
-theorem UInt64.lt_toNat_iff: ∀ (u i : UInt64),
+theorem UInt64.lt_toNat_iff : ∀ (u i : UInt64),
   u.toNat < i.toNat ↔ u < i := by
   intros u i
   apply Iff.intro
-  . intros h
+  · intros h
     exact h
-  . intros h
+  · intros h
     exact h
 
-theorem UInt64.le_toNat_iff: ∀ (u i : UInt64),
+theorem UInt64.le_toNat_iff : ∀ (u i : UInt64),
   u.toNat ≤ i.toNat ↔ u ≤ i := by
   intros u i
   apply Iff.intro
-  . intros h
+  · intros h
     exact h
-  . intros h
+  · intros h
     exact h
 
 theorem UInt64.add_lt_add : ∀ (n m k c : UInt64),
@@ -197,21 +197,21 @@ theorem UInt64.add_cancel_right_iff : ∀ (u i k : UInt64),
   u + k = i + k ↔ u = i := by
   intros u i k
   apply Iff.intro
-  . intros h
+  · intros h
     simp at h
     (repeat assumption)
-  . intros h
+  · intros h
     rw [h]
 
 theorem UInt64.add_cancel_left_iff : ∀ (u i k: UInt64),
   k + u = k + i ↔ u = i := by
   intros u i k
   apply Iff.intro
-  . intros h
+  · intros h
     rw [←UInt64.add_cancel_right_iff (k := k), UInt64.add_comm]
     nth_rewrite 2 [UInt64.add_comm]
     exact h
-  . intros h
+  · intros h
     rw [h]
 
 
@@ -244,14 +244,17 @@ instance : Preorder UInt64 where
   lt_iff_le_not_ge := by
     intros a b
     constructor
-    . intros h
-      simp
+    · intros h
+      simp only [UInt64.not_le]
       constructor
-      . apply UInt64.le_of_lt h
-      . exact h
-    . simp
+      · apply UInt64.le_of_lt h
+      · exact h
+    · simp
 
 
 instance : WellFoundedLT UInt64 where
   wf := by
-    simpa using (measure (fun x : UInt64 => x.toNat)).wf
+    apply Subrelation.wf (r := InvImage (· < ·) UInt64.toNat)
+    · intro a b h
+      exact UInt64.lt_iff_toNat_lt_toNat.mp h
+    · exact InvImage.wf _ wellFounded_lt

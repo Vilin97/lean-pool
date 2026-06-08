@@ -9,6 +9,12 @@ import LeanPool.MRiscX.AbstractSyntax.Instr
 import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 import LeanPool.MRiscX.Elab.HandleNumOrIdent
 import Lean
+
+/-!
+# CodeElaborator
+
+This module provides the elaborator turning MRiscX assembly syntax into `Code`.
+-/
 open Lean.Elab Command Term
 open Nat
 open Lean Lean.Expr Lean.Meta Lean.Parser

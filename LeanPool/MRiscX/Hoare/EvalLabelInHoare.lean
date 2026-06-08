@@ -5,6 +5,12 @@ Authors: Julius Marx
 -/
 import LeanPool.MRiscX.AbstractSyntax.AbstractSyntax
 import LeanPool.MRiscX.Elab.HandleExpr
+
+/-!
+# EvalLabelInHoare
+
+This module provides label resolution inside MRiscX Hoare syntax.
+-/
 open Lean Elab
 
 /-

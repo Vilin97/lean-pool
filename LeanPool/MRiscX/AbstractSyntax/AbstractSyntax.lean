@@ -7,6 +7,12 @@ import LeanPool.MRiscX.AbstractSyntax.Map
 import LeanPool.MRiscX.AbstractSyntax.Instr
 import LeanPool.MRiscX.Parser.AssemblySyntax
 import Lean
+
+/-!
+# AbstractSyntax
+
+This module provides core abstract-syntax types of the MRiscX assembly language.
+-/
 open Nat
 open Lean Lean.Elab
 /--
