@@ -880,16 +880,13 @@ by
   rw [List.append_nil] at ass
   exfalso
   by_cases hdR : d = R
-  · rw [H] at ass
-    classical
-    have imposs := congr_arg (·.countIn R) ass
+  · classical
+    have imposs := congr_arg (·.countIn (@R T g.nt)) ass
     have long_zero :
         (((x.map (List.map wrapSym)).map (· ++ [H])).flatten).countIn (@R T g.nt) = 0 :=
       zero_Rs_in_the_long_part
-    rw [hdR] at imposs
-    simp [List.countIn_append, List.countIn_cons, List.countIn_nil, R, H,
-      long_zero] at imposs
-    omega
+    rw [hdR, List.countIn_append, long_zero] at imposs
+    simp [List.countIn_append, List.countIn_cons, List.countIn_nil, R, H] at imposs
   · simp_all
 
 private lemma case_2_match_rule {g : Grammar T} {r₀ : Grule T g.nt}
