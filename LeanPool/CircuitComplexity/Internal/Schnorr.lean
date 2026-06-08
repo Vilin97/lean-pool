@@ -439,51 +439,6 @@ theorem evalD_elimGateD {N s : Nat} (d : CircDesc N (s + 1))
   have : ¬(N + s - 1 < N + g.val) := by omega
   simp only [this, ite_false]; ext; simp; omega
 
-/-! ## XOR needs ≥ 3 gates -/
-
-/-- XOR on N ≥ 2 inputs cannot be computed by a circuit with ≤ 2 gates. -/
-private theorem xor_needs_three_gates {N s : Nat} (hN : 2 ≤ N) (hs : 0 < s) (hs2 : s ≤ 2) :
-    ∀ (d : CircDesc N s) (comp : Bool),
-    ¬(∀ x : BitString N, evalD hs d x = comp.xor (xorBool N x)) := by
-  by_cases hN4 : N ≤ 4
-  · have hs1 : 1 ≤ s := by omega
-    interval_cases N <;> interval_cases s <;> (native_decide +revert)
-  · -- N ≥ 5, s ≤ 2: counting argument
-    intro d comp heval
-    -- Every input is essential → referenced by some gate
-    have hess : ∀ a : Fin N, ∃ g : Fin s,
-        (d g).2.1.1.val = a.val ∨ (d g).2.1.2.val = a.val := by
-      intro a
-      exact evalD_essential_means_referenced d hs a
-        ⟨fun _ => false, by
-          rw [heval, heval, xorBool_flip]
-          cases comp <;> cases xorBool N _ <;> simp [Bool.xor]⟩
-    -- Map each input to its value; the image has N elements
-    -- but refs (wire-input values across all gates) has ≤ 2s ≤ 4 elements
-    let refs : Finset Nat := Finset.univ.biUnion fun g : Fin s =>
-      {(d g).2.1.1.val, (d g).2.1.2.val}
-    have hcard : refs.card ≤ 2 * s := by
-      calc refs.card
-          ≤ ∑ g : Fin s, ({(d g).2.1.1.val, (d g).2.1.2.val} : Finset Nat).card :=
-            Finset.card_biUnion_le
-        _ ≤ ∑ _ : Fin s, 2 := Finset.sum_le_sum fun g _ => by
-            apply le_trans (Finset.card_insert_le _ _)
-            simp [Finset.card_singleton]
-        _ = 2 * s := by simp [Finset.sum_const, mul_comm]
-    have hess_mem : ∀ a : Fin N, (a : Nat) ∈ refs := by
-      intro a
-      obtain ⟨g, hg⟩ := hess a
-      exact Finset.mem_biUnion.mpr ⟨g, Finset.mem_univ _, by
-        rcases hg with h | h <;> simp [Finset.mem_insert, Finset.mem_singleton, h]⟩
-    have : N ≤ refs.card := by
-      calc N = ((Finset.univ : Finset (Fin N)).image Fin.val).card := by
-              rw [Finset.card_image_of_injective _ Fin.val_injective, Finset.card_fin]
-        _ ≤ refs.card := Finset.card_le_card fun x hx => by
-            simp only [Finset.mem_image, Finset.mem_univ, true_and] at hx
-            obtain ⟨a, _, rfl⟩ := hx
-            exact hess_mem a
-    omega
-
 /-! ## Restriction eliminates two gates -/
 
 /-- The last gate of a circuit computing XOR cannot directly read any input.
@@ -670,6 +625,244 @@ private theorem wireValD_at_gate {N s : Nat} (d : CircDesc N s) (x : BitString N
   simp only [show ¬(N + g.val < N) from by omega, dite_false] at h
   rw [show (⟨N + g.val - N, _⟩ : Fin s) = g from by ext; simp] at h
   exact h
+
+/-- The output (last) gate of an essential XOR circuit (`N ≥ 2`) reads no primary
+    input directly: both of its wires have index `≥ N`. -/
+private theorem lastGateNoInput {N s : Nat} (d : CircDesc N s) (hs : 0 < s) (hN : 2 ≤ N)
+    (comp : Bool) (heval : ∀ x, evalD hs d x = comp.xor (xorBool N x)) :
+    N ≤ (d ⟨s - 1, by omega⟩).2.1.1.val ∧ N ≤ (d ⟨s - 1, by omega⟩).2.1.2.val := by
+  set g : Fin s := ⟨s - 1, by omega⟩ with hg_def
+  have hessential : ∀ (a : Fin N) (x : BitString N),
+      evalD hs d x ≠ evalD hs d (Function.update x a (!x a)) := by
+    intro a x; rw [heval, heval, xorBool_flip]
+    cases comp <;> cases xorBool N x <;> simp [Bool.xor]
+  have houtput : ∀ x, evalD hs d x = wireValD d x ⟨N + g.val, by omega⟩ := by
+    intro x; simp only [evalD]; congr 1; ext; simp only [hg_def]; omega
+  -- If gate g's first wire reads input a, fixing a to the killing value makes g constant.
+  have killw1 : ∀ (a : Fin N), (d g).2.1.1.val = a.val →
+      ∀ y : BitString N, y a = (d g).2.2.1.xor (!(d g).1) →
+      wireValD d y ⟨N + g.val, by omega⟩ = !(d g).1 := by
+    intro a hw1 y hya
+    have ha_lt : (d g).2.1.1.val < N + g.val := by have := a.isLt; omega
+    have hval : wireValD d y ⟨(d g).2.1.1.val, (d g).2.1.1.isLt⟩ = y a := by
+      rw [wireValD]; simp only [show (d g).2.1.1.val < N from by have := a.isLt; omega, dite_true]
+      congr 1; exact Fin.ext hw1
+    rw [wireValD_at_gate]
+    simp only [ha_lt, ite_true, hval, hya]
+    have hlit : (d g).2.2.1.xor ((d g).2.2.1.xor (!(d g).1)) = !(d g).1 := by
+      cases (d g).2.2.1 <;> cases (d g).1 <;> rfl
+    rw [hlit]; cases (d g).1 <;> simp
+  have killw2 : ∀ (a : Fin N), (d g).2.1.2.val = a.val →
+      ∀ y : BitString N, y a = (d g).2.2.2.xor (!(d g).1) →
+      wireValD d y ⟨N + g.val, by omega⟩ = !(d g).1 := by
+    intro a hw2 y hya
+    have ha_lt : (d g).2.1.2.val < N + g.val := by have := a.isLt; omega
+    have hval : wireValD d y ⟨(d g).2.1.2.val, (d g).2.1.2.isLt⟩ = y a := by
+      rw [wireValD]; simp only [show (d g).2.1.2.val < N from by have := a.isLt; omega, dite_true]
+      congr 1; exact Fin.ext hw2
+    rw [wireValD_at_gate]
+    simp only [ha_lt, ite_true, hval, hya]
+    have hlit : (d g).2.2.2.xor ((d g).2.2.2.xor (!(d g).1)) = !(d g).1 := by
+      cases (d g).2.2.2 <;> cases (d g).1 <;> rfl
+    rw [hlit]; cases (d g).1 <;> simp
+  have dom : ∀ (a : Fin N),
+      (d g).2.1.1.val = a.val ∨ (d g).2.1.2.val = a.val → False := by
+    intro a hga
+    obtain ⟨b, hba⟩ : ∃ b : Fin N, b ≠ a := by
+      rcases Nat.lt_or_ge a.val 1 with h | h
+      · exact ⟨⟨1, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
+      · exact ⟨⟨0, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
+    rcases hga with hw1 | hw2
+    · set kv : Bool := (d g).2.2.1.xor (!(d g).1) with hkv
+      set x₀ : BitString N := Function.update (fun _ => false) a kv with hx₀
+      apply hessential b x₀
+      have hxa : x₀ a = kv := Function.update_self ..
+      have hxa' : (Function.update x₀ b (!x₀ b)) a = kv := by
+        rw [Function.update_of_ne (fun he => hba he.symm), hxa]
+      rw [houtput, houtput, killw1 a hw1 x₀ hxa, killw1 a hw1 _ hxa']
+    · set kv : Bool := (d g).2.2.2.xor (!(d g).1) with hkv
+      set x₀ : BitString N := Function.update (fun _ => false) a kv with hx₀
+      apply hessential b x₀
+      have hxa : x₀ a = kv := Function.update_self ..
+      have hxa' : (Function.update x₀ b (!x₀ b)) a = kv := by
+        rw [Function.update_of_ne (fun he => hba he.symm), hxa]
+      rw [houtput, houtput, killw2 a hw2 x₀ hxa, killw2 a hw2 _ hxa']
+  refine ⟨?_, ?_⟩
+  · by_contra h; push Not at h
+    exact dom ⟨(d g).2.1.1.val, by omega⟩ (.inl rfl)
+  · by_contra h; push Not at h
+    exact dom ⟨(d g).2.1.2.val, by omega⟩ (.inr rfl)
+
+/-! ## XOR needs ≥ 3 gates -/
+
+/-- If gate `gg`'s first wire reads primary input `a`, setting `a` to the gate's
+    first-wire killing value forces gate `gg`'s output to the constant `!(d gg).1`. -/
+private theorem gateConstW1 {N s : Nat} (d : CircDesc N s) (gg : Fin s) (a : Fin N)
+    (hw : (d gg).2.1.1.val = a.val) (y : BitString N)
+    (hya : y a = (d gg).2.2.1.xor (!(d gg).1)) :
+    wireValD d y ⟨N + gg.val, by omega⟩ = !(d gg).1 := by
+  rw [wireValD_at_gate]
+  have ha_lt : (d gg).2.1.1.val < N + gg.val := by have := a.isLt; omega
+  have hval : wireValD d y ⟨(d gg).2.1.1.val, (d gg).2.1.1.isLt⟩ = y a := by
+    rw [wireValD]; simp only [show (d gg).2.1.1.val < N from by have := a.isLt; omega, dite_true]
+    congr 1; exact Fin.ext hw
+  simp only [ha_lt, ite_true, hval, hya]
+  have hlit : (d gg).2.2.1.xor ((d gg).2.2.1.xor (!(d gg).1)) = !(d gg).1 := by
+    cases (d gg).2.2.1 <;> cases (d gg).1 <;> rfl
+  rw [hlit]; cases (d gg).1 <;> simp
+
+/-- If gate `gg`'s second wire reads primary input `a`, setting `a` to the gate's
+    second-wire killing value forces gate `gg`'s output to the constant `!(d gg).1`. -/
+private theorem gateConstW2 {N s : Nat} (d : CircDesc N s) (gg : Fin s) (a : Fin N)
+    (hw : (d gg).2.1.2.val = a.val) (y : BitString N)
+    (hya : y a = (d gg).2.2.2.xor (!(d gg).1)) :
+    wireValD d y ⟨N + gg.val, by omega⟩ = !(d gg).1 := by
+  rw [wireValD_at_gate]
+  have ha_lt : (d gg).2.1.2.val < N + gg.val := by have := a.isLt; omega
+  have hval : wireValD d y ⟨(d gg).2.1.2.val, (d gg).2.1.2.isLt⟩ = y a := by
+    rw [wireValD]; simp only [show (d gg).2.1.2.val < N from by have := a.isLt; omega, dite_true]
+    congr 1; exact Fin.ext hw
+  simp only [ha_lt, ite_true, hval, hya]
+  have hlit : (d gg).2.2.2.xor ((d gg).2.2.2.xor (!(d gg).1)) = !(d gg).1 := by
+    cases (d gg).2.2.2 <;> cases (d gg).1 <;> rfl
+  rw [hlit]; cases (d gg).1 <;> simp
+
+/-- XOR on `N ≥ 2` inputs cannot be computed by a circuit with `≤ 2` gates. -/
+private theorem xor_needs_three_gates {N s : Nat} (hN : 2 ≤ N) (hs : 0 < s) (hs2 : s ≤ 2) :
+    ∀ (d : CircDesc N s) (comp : Bool),
+    ¬(∀ x : BitString N, evalD hs d x = comp.xor (xorBool N x)) := by
+  intro d comp heval
+  have hessential : ∀ (a : Fin N) (x : BitString N),
+      evalD hs d x ≠ evalD hs d (Function.update x a (!x a)) := by
+    intro a x; rw [heval, heval, xorBool_flip]
+    cases comp <;> cases xorBool N x <;> simp [Bool.xor]
+  have notConst : ∀ (c : Bool), ¬(∀ x, evalD hs d x = c) := fun c hc =>
+    hessential ⟨0, by omega⟩ (fun _ => false) ((hc _).trans (hc _).symm)
+  by_cases hcount : 2 * s < N
+  · have hess : ∀ a : Fin N, ∃ g : Fin s,
+        (d g).2.1.1.val = a.val ∨ (d g).2.1.2.val = a.val := fun a =>
+      evalD_essential_means_referenced d hs a ⟨fun _ => false, hessential a _⟩
+    let refs : Finset Nat := Finset.univ.biUnion fun g : Fin s =>
+      {(d g).2.1.1.val, (d g).2.1.2.val}
+    have hcard : refs.card ≤ 2 * s := by
+      calc refs.card
+          ≤ ∑ g : Fin s, ({(d g).2.1.1.val, (d g).2.1.2.val} : Finset Nat).card :=
+            Finset.card_biUnion_le
+        _ ≤ ∑ _ : Fin s, 2 := Finset.sum_le_sum fun g _ => by
+            apply le_trans (Finset.card_insert_le _ _); simp [Finset.card_singleton]
+        _ = 2 * s := by simp [Finset.sum_const, mul_comm]
+    have hNle : N ≤ refs.card := by
+      calc N = ((Finset.univ : Finset (Fin N)).image Fin.val).card := by
+              rw [Finset.card_image_of_injective _ Fin.val_injective, Finset.card_fin]
+        _ ≤ refs.card := Finset.card_le_card fun x hx => by
+            simp only [Finset.mem_image, Finset.mem_univ, true_and] at hx
+            obtain ⟨a, _, rfl⟩ := hx
+            obtain ⟨g, hg⟩ := hess a
+            exact Finset.mem_biUnion.mpr ⟨g, Finset.mem_univ _, by
+              rcases hg with h | h <;> simp [Finset.mem_insert, Finset.mem_singleton, h]⟩
+    omega
+  · push Not at hcount
+    obtain ⟨hout1, hout2⟩ := lastGateNoInput d hs hN comp heval
+    have houtput : ∀ x, evalD hs d x = wireValD d x ⟨N + (s - 1), by omega⟩ := by
+      intro x; simp only [evalD]; congr 1; ext; simp; omega
+    interval_cases s
+    · -- s = 1: the output gate reads no input, so its value is constant.
+      have hb1 : N ≤ (d ⟨0, by omega⟩).2.1.1.val := hout1
+      have hb2 : N ≤ (d ⟨0, by omega⟩).2.1.2.val := hout2
+      apply notConst (if (d ⟨0, by omega⟩).1 then
+          ((d ⟨0, by omega⟩).2.2.1.xor false) && ((d ⟨0, by omega⟩).2.2.2.xor false)
+        else ((d ⟨0, by omega⟩).2.2.1.xor false) || ((d ⟨0, by omega⟩).2.2.2.xor false))
+      intro x
+      rw [houtput, show (⟨N + (1 - 1), by omega⟩ : Fin (N + 1))
+            = ⟨N + (⟨0, by omega⟩ : Fin 1).val, by omega⟩ from rfl,
+        wireValD_at_gate d x ⟨0, by omega⟩]
+      simp only [Nat.add_zero,
+        show ¬((d ⟨0, by omega⟩).2.1.1.val < N) from by omega,
+        show ¬((d ⟨0, by omega⟩).2.1.2.val < N) from by omega, ite_false]
+    · -- s = 2: the output gate (gate 1) depends only on gate 0.
+      have hout1 : N ≤ (d ⟨1, by omega⟩).2.1.1.val := hout1
+      have hout2 : N ≤ (d ⟨1, by omega⟩).2.1.2.val := hout2
+      have gate1dep : ∀ y₁ y₂ : BitString N,
+          wireValD d y₁ ⟨N, by omega⟩ = wireValD d y₂ ⟨N, by omega⟩ →
+          wireValD d y₁ ⟨N + 1, by omega⟩ = wireValD d y₂ ⟨N + 1, by omega⟩ := by
+        intro y₁ y₂ hg0
+        rw [show (⟨N + 1, by omega⟩ : Fin (N + 2)) = ⟨N + (⟨1, by omega⟩ : Fin 2).val, by omega⟩
+          from rfl, wireValD_at_gate d y₁ ⟨1, by omega⟩, wireValD_at_gate d y₂ ⟨1, by omega⟩]
+        have key : ∀ (w : Fin (N + 2)), N ≤ w.val →
+            (if w.val < N + 1 then wireValD d y₁ ⟨w.val, w.isLt⟩ else false) =
+            (if w.val < N + 1 then wireValD d y₂ ⟨w.val, w.isLt⟩ else false) := by
+          intro w hw
+          by_cases hlt : w.val < N + 1
+          · have hwN : w.val = N := le_antisymm (Nat.lt_succ_iff.mp hlt) hw
+            simp only [hlt, ite_true]
+            rw [show (⟨w.val, w.isLt⟩ : Fin (N + 2)) = ⟨N, by omega⟩ from Fin.ext hwN]
+            exact hg0
+          · simp only [hlt, ite_false]
+        rw [key (d ⟨1, by omega⟩).2.1.1 hout1, key (d ⟨1, by omega⟩).2.1.2 hout2]
+      -- gate 0's value, when its input-wire (if any) is fixed, is independent of inputs.
+      suffices hg0const : ∃ c : Bool, ∀ x, evalD hs d x = c by
+        obtain ⟨c, hc⟩ := hg0const; exact notConst c hc
+      by_cases hg0in : ∃ a : Fin N,
+          (d ⟨0, by omega⟩).2.1.1.val = a.val ∨ (d ⟨0, by omega⟩).2.1.2.val = a.val
+      · -- gate 0 reads input a: fix a to gate-0 killing value → contradiction (not used here);
+        -- instead show evalD is constant under that restriction, contradicting essentiality.
+        exfalso
+        obtain ⟨a, ha⟩ := hg0in
+        obtain ⟨b, hba⟩ : ∃ b : Fin N, b ≠ a := by
+          rcases Nat.lt_or_ge a.val 1 with h | h
+          · exact ⟨⟨1, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
+          · exact ⟨⟨0, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
+        rcases ha with ha1 | ha2
+        · set kv : Bool := (d ⟨0, by omega⟩).2.2.1.xor (!(d ⟨0, by omega⟩).1) with hkv
+          set x₀ : BitString N := Function.update (fun _ => false) a kv with hx₀
+          apply hessential b x₀
+          have hk : ∀ y : BitString N, y a = kv →
+              wireValD d y ⟨N, by omega⟩ = !(d ⟨0, by omega⟩).1 := by
+            intro y hya
+            have := gateConstW1 d ⟨0, by omega⟩ a ha1 y (by rw [hya, hkv])
+            rwa [show (⟨N + (0 : Nat), by omega⟩ : Fin (N + 2)) = ⟨N, by omega⟩ from rfl]
+              at this
+          rw [houtput, houtput]
+          exact gate1dep _ _ ((hk x₀ (Function.update_self ..)).trans
+            (hk (Function.update x₀ b (!x₀ b))
+              (by rw [Function.update_of_ne (fun he => hba he.symm)];
+                  exact Function.update_self ..)).symm)
+        · set kv : Bool := (d ⟨0, by omega⟩).2.2.2.xor (!(d ⟨0, by omega⟩).1) with hkv
+          set x₀ : BitString N := Function.update (fun _ => false) a kv with hx₀
+          apply hessential b x₀
+          have hk : ∀ y : BitString N, y a = kv →
+              wireValD d y ⟨N, by omega⟩ = !(d ⟨0, by omega⟩).1 := by
+            intro y hya
+            have := gateConstW2 d ⟨0, by omega⟩ a ha2 y (by rw [hya, hkv])
+            rwa [show (⟨N + (0 : Nat), by omega⟩ : Fin (N + 2)) = ⟨N, by omega⟩ from rfl]
+              at this
+          rw [houtput, houtput]
+          exact gate1dep _ _ ((hk x₀ (Function.update_self ..)).trans
+            (hk (Function.update x₀ b (!x₀ b))
+              (by rw [Function.update_of_ne (fun he => hba he.symm)];
+                  exact Function.update_self ..)).symm)
+      · -- gate 0 reads no input → gate 0 (and hence evalD) is constant.
+        push Not at hg0in
+        have hge1 : N ≤ (d ⟨0, by omega⟩).2.1.1.val := by
+          by_contra hlt; push Not at hlt
+          exact (hg0in ⟨(d ⟨0, by omega⟩).2.1.1.val, hlt⟩).1 rfl
+        have hge2 : N ≤ (d ⟨0, by omega⟩).2.1.2.val := by
+          by_contra hlt; push Not at hlt
+          exact (hg0in ⟨(d ⟨0, by omega⟩).2.1.2.val, hlt⟩).2 rfl
+        -- gate 0 has no input wire, so its value is the same constant for any input.
+        have hg0const : ∀ y : BitString N,
+            wireValD d y ⟨N, by omega⟩ = wireValD d (fun _ => false) ⟨N, by omega⟩ := by
+          intro y
+          rw [show (⟨N, by omega⟩ : Fin (N + 2)) = ⟨N + (⟨0, by omega⟩ : Fin 2).val, by omega⟩
+            from rfl, wireValD_at_gate d y ⟨0, by omega⟩,
+            wireValD_at_gate d (fun _ => false) ⟨0, by omega⟩]
+          simp only [Nat.add_zero,
+            show ¬((d ⟨0, by omega⟩).2.1.1.val < N) from by omega,
+            show ¬((d ⟨0, by omega⟩).2.1.2.val < N) from by omega, ite_false]
+        refine ⟨wireValD d (fun _ => false) ⟨N + 1, by omega⟩, fun x => ?_⟩
+        rw [houtput]
+        exact gate1dep _ _ (hg0const x)
+
 
 /-- Killing lemma for first wire: if wire 1 reads input 0 and its negation flag
     kills the gate (i.e., `n₁ ⊕ b = !(d g).1`), the gate output is constant. -/
