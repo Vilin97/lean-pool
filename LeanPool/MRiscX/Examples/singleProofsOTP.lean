@@ -323,8 +323,6 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · simp_currInstr
     · exact h_pc
     · repeat (constructor <;> try assumption)
-      simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addRegister_unfold,
-        t_update_eq]
       simp at *
       rw [h_x0, h_x3]
       grind
