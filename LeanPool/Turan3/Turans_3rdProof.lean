@@ -466,24 +466,24 @@ lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
     exact he_diff.1
   /- Case: y = loose -/
   by_cases h_y_loose : y = loose
-  have h_y_in : y ∈ s(x,y) := by
-    simp[h_y_loose]
-  have h_loose : loose ∈ s(x,y) := by
-    rw[← h_y_loose]
-    exact h_y_in
-  have h_inc : s(x,y) ∈ G.incidenceFinset loose := by
-    rw[mem_incidenceFinset]
-    rw[h_y_loose]
-    rw[mk'_mem_incidenceSet_iff]
-    constructor
-    · rw[edge_mem_iff]
-      rw[h_y_loose] at h_edge
-      use s(x, loose)
+  · have h_y_in : y ∈ s(x,y) := by
+      simp[h_y_loose]
+    have h_loose : loose ∈ s(x,y) := by
+      rw[← h_y_loose]
+      exact h_y_in
+    have h_inc : s(x,y) ∈ G.incidenceFinset loose := by
+      rw[mem_incidenceFinset]
+      rw[h_y_loose]
+      rw[mk'_mem_incidenceSet_iff]
       constructor
-      · rw [mem_edgeFinset] at h_edge
-        exact h_edge
-      · rfl
-    · exact Or.inr rfl
+      · rw[edge_mem_iff]
+        rw[h_y_loose] at h_edge
+        use s(x, loose)
+        constructor
+        · rw [mem_edgeFinset] at h_edge
+          exact h_edge
+        · rfl
+      · exact Or.inr rfl
   · exfalso
     rw [Finset.mem_sdiff] at he_diff
     have h_not_in_affectedEdges : s(x,y) ∉ affectedEdges := he_diff.2
@@ -511,24 +511,24 @@ lemma Improve_unchanged_edge_sum (W : FunToMax G) (loose gain : α)
     contradiction
   /- Case: y = gain -/
   by_cases h_y_gain : y = gain
-  have h_y_in : y ∈ s(x,y) := by
-    simp[h_y_gain]
-  have h_gain : gain ∈ s(x,y) := by
-    rw[← h_y_gain]
-    exact h_y_in
-  have h_inc : s(x,y) ∈ G.incidenceFinset gain := by
-    rw[mem_incidenceFinset]
-    rw[h_y_gain]
-    rw[mk'_mem_incidenceSet_iff]
-    constructor
-    · rw[edge_mem_iff]
-      rw[h_y_gain] at h_edge
-      use s(x, gain)
+  · have h_y_in : y ∈ s(x,y) := by
+      simp[h_y_gain]
+    have h_gain : gain ∈ s(x,y) := by
+      rw[← h_y_gain]
+      exact h_y_in
+    have h_inc : s(x,y) ∈ G.incidenceFinset gain := by
+      rw[mem_incidenceFinset]
+      rw[h_y_gain]
+      rw[mk'_mem_incidenceSet_iff]
       constructor
-      · rw [mem_edgeFinset] at h_edge
-        exact h_edge
-      · rfl
-    · exact Or.inr rfl
+      · rw[edge_mem_iff]
+        rw[h_y_gain] at h_edge
+        use s(x, gain)
+        constructor
+        · rw [mem_edgeFinset] at h_edge
+          exact h_edge
+        · rfl
+      · exact Or.inr rfl
   · exfalso
     rw [Finset.mem_sdiff] at he_diff
     have h_not_in_affectedEdges : s(x,y) ∉ affectedEdges := he_diff.2
@@ -1773,7 +1773,8 @@ lemma Enhance_support_edges_same (W : FunToMax G) (loose gain : α) (h_lt : W.w 
     apply @Sym2.inductionOn α (fun x => Sym2.inSupport G W x ↔ Sym2.inSupport G (Enhance G W loose gain h_lt ε epos elt) x) x
     intro a b
     rw [Sym2.inSupport_explicit, Sym2.inSupport_explicit, ← Enhance_support_unchanged, ← Enhance_support_unchanged]
-    exact h_supp.2 ; exact h_supp.2
+    · exact h_supp.2
+    · exact h_supp.2
   simp_all only [gt_iff_lt]
 
 /-- Combining previous lemmas, shows that the total edge weight increases or remains the same under `Enhance`.
@@ -2474,7 +2475,6 @@ lemma UniformBetter_constant_support (W : FunToMax G)
     have ohoh := @Nat.findGreatest_is_greatest (#(filter (fun i ↦ (Enhanced G (UniformBetter G W hW) _).w i = 1 / ↑(#(filter (fun i ↦ (UniformBetter G W hW).w i > 0) univ)))
       univ)) _ _ _ problem
     apply ohoh
-    clear ohoh
     · simp_rw [UniformBetter_support_equiv G W hW]
       apply card_le_card
       intro x xdef
@@ -2602,9 +2602,9 @@ lemma clique_size (W : FunToMax G)
   · rintro ⟨⟨a, b⟩, ⟨⟨a1, ha⟩, ⟨a2, hb⟩, hab⟩, hsym⟩
     have h_adj : G.Adj a b := hW (Finset.mem_filter.mpr ⟨a1, ha⟩) (Finset.mem_filter.mpr ⟨a2, hb⟩) hab
     rcases Sym2.eq_iff.mp hsym with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
-    exact ⟨h_adj, ha, hb⟩
-    rw [← hsym]
-    exact ⟨h_adj, hb, ha⟩
+    · exact ⟨h_adj, ha, hb⟩
+    · rw [← hsym]
+      exact ⟨h_adj, hb, ha⟩
 
 /-- Computation. -/
 lemma computation (k : Nat) (hk : 0 < k) :
@@ -2849,7 +2849,7 @@ theorem turans [Inhabited α] {p : ℕ} (h0 : p ≥ 2) (h1 : G.CliqueFree p) :
   have := finale_bound G h0 h1 (UnivFun G)
   have c := computation (p-1)
   rw [UnivFun_weight] at this
-  rw [Nat.cast_sub, Nat.cast_one] at c
+  rw [Nat.cast_sub (by omega : (1 : ℕ) ≤ p), Nat.cast_one] at c
   rw [← c]
   nth_rewrite 1 [one_div] at this
   rw [inv_pow] at this
