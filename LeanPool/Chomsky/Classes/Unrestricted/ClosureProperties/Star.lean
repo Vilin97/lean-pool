@@ -189,7 +189,7 @@ by
                           rw [List.mem_map] at rin
                           rcases rin with ⟨t, tin, r_of_tg⟩
                           rw [←r_of_tg] at nrn
-                          simp [wrapGr, liftRule] at nrn)
+                          simp at nrn)
           convert_to G.g.Derives [Symbol.nonterminal ◩g.initial] (liftString G.liftNt (v.map Symbol.terminal))
           · symm
             apply List.map_map
@@ -524,7 +524,7 @@ by
       · exfalso
         exact xrnn hx
       rw [List.map_cons, List.flatten]
-      simp [List.getElem?_append, H]
+      simp [H]
     rw [←List.map_reverse] at hH
     cases hr₀ : r₀.inputR.reverse
     · rw [hr₀] at hH
@@ -554,7 +554,7 @@ by
   use m, (x.get ⟨m, mxl⟩).take k, (x.get ⟨m', mxl'⟩).drop k'
   have hyp_u := congr_arg (List.take u.length) hypp
   rw [List.append_assoc, List.take_left, init_ul] at hyp_u
-  simp only [List.map_map, List.get_eq_getElem, Function.comp_apply] at hyp_u
+  simp only [List.map_map, List.get_eq_getElem] at hyp_u
   rw [List.getElem_map] at hyp_u
   have hyp_v :=
     congr_arg
@@ -676,10 +676,10 @@ by
       have imposs := List.head_eq_of_cons_eq hyp
       cases d
       · unfold wrapSym at imposs
-        simp [liftSymbol, Z, H, R, S] at imposs
+        simp [liftSymbol, Z] at imposs
       · unfold wrapSym at imposs
         have inr_eq_inl := Symbol.nonterminal.inj imposs
-        simp [liftSymbol, Z, H, R, S] at inr_eq_inl
+        simp at inr_eq_inl
   have hypr := congr_arg List.tail hyp
   rw [List.tail] at hypr
   repeat rw [List.append_assoc] at hypr
@@ -925,9 +925,9 @@ by
       rw [hrL, List.map_cons] at hyp
       have imposs := List.head_eq_of_cons_eq hyp
       cases d
-      · simp [wrapSym, liftSymbol, Z, H, R, S] at imposs
+      · simp [wrapSym, liftSymbol, R] at imposs
       · have inr_eq_inl := Symbol.nonterminal.inj imposs
-        simp [wrapSym, liftSymbol, Z, H, R, S] at inr_eq_inl
+        simp at inr_eq_inl
   have hypt := congr_arg List.tail hyp
   rw [List.tail] at hypt
   repeat rw [List.append_assoc] at hypt
@@ -946,10 +946,10 @@ by
       have imposs := List.head_eq_of_cons_eq hypt
       cases d
       · unfold wrapSym at imposs
-        simp [liftSymbol, Z, H, R, S] at imposs
+        simp [liftSymbol, H] at imposs
       · unfold wrapSym at imposs
         have inr_eq_inl := Symbol.nonterminal.inj imposs
-        simp [liftSymbol, Z, H, R, S] at inr_eq_inl
+        simp at inr_eq_inl
   have hyptt := congr_arg List.tail hypt
   rw [List.tail, List.tail_append_of_ne_nil utnn] at hyptt
   repeat rw [←List.append_assoc] at hyptt
@@ -1056,7 +1056,7 @@ by
       have v_eq := (List.append_inj_right bef (by rfl)).symm
       rw [u_nil, List.nil_append, v_eq, RH_nil, List.nil_append, hx, List.map_cons, List.map_cons,
           List.flatten] at aft
-      simp only [List.append_eq, ←List.append_assoc] at aft
+      simp only [List.append_eq] at aft
       rw [List.append_assoc, List.append_flatten_map_append, ←List.append_assoc] at aft
       constructor
       · use x₀.map wrapSym ++ ((L.map (List.map wrapSym)).map ([H] ++ ·)).flatten
@@ -1435,7 +1435,7 @@ by
           · apply map_wrap_never_contains_H
           · apply H_not_in_rule_input
         constructor
-        · simp only [List.getElem?_cons_zero, List.getElem?_eq_getElem, Option.some.injEq]
+        · simp only [List.getElem?_cons_zero, Option.some.injEq]
           convert_to x₀ =
               x₀.take (r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR).length ++
               x₀.drop (r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR).length
@@ -1482,7 +1482,7 @@ by
       have v'_eq : v' = (γ.map wrapSym).drop (u.length - (w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++ [@R T g.nt]).length) ++ [H] := by
         rw [v'_is_suffix, List.drop_append_of_le_length]
         have left_lengths := congr_arg List.length left_half
-        simp only [List.length_append, List.length_drop, List.length_singleton] at left_lengths ⊢
+        simp only [List.length_append, List.length_singleton] at left_lengths ⊢
         omega
       right
       use (γ.take (u.length - (w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++ [@R T g.nt]).length))
@@ -1537,7 +1537,7 @@ by
           simp at lt_v'len v'_lengths ⊢
           omega
         · have left_lengths := congr_arg List.length left_half
-          simp only [List.length_append, List.length_drop, List.length_singleton] at left_lengths ⊢
+          simp only [List.length_append, List.length_singleton] at left_lengths ⊢
           omega
         · exact le_of_le_of_eq lt_v'len.le (congr_arg List.length v'_is_suffix)
 
@@ -1569,10 +1569,10 @@ by
     rcases contr with ((((hZw | hZβ) | hZR) | hZγ) | hZH) | hZx
     · rw [List.mem_map] at hZw
       obtain ⟨s, -, imposs⟩ := hZw
-      simp [Z, wrapSym, liftSymbol] at imposs
+      simp [Z] at imposs
     · rw [List.mem_map] at hZβ
       obtain ⟨s, -, imposs⟩ := hZβ
-      simp [Z, wrapSym, liftSymbol] at imposs
+      simp [Z] at imposs
     · rw [List.mem_singleton] at hZR
       exact Z_neq_R hZR
     · rw [List.mem_map] at hZγ
@@ -1984,7 +1984,7 @@ by
                 | cons d l =>
                   rw [hr₀] at ru_eq
                   have imposs := List.head_eq_of_cons_eq ru_eq
-                  cases d <;> simp [wrapSym, liftSymbol, Z, H, R, S] at imposs
+                  cases d <;> simp [liftSymbol] at imposs
             | inr hbs =>
               rcases hbs with ⟨y, w_eq, v_eq⟩
               have u_from_w : u = (w.map wrapSym).take u.length := by
@@ -2172,7 +2172,7 @@ by
                     rw [List.mem_map] at hZr
                     rcases hZr with ⟨s, -, imposs⟩
                     cases s
-                    · simp [Z, R, wrapSym, liftSymbol] at imposs
+                    · simp [Z, liftSymbol] at imposs
                     · simp [liftSymbol, Z] at imposs
                 | inr hZv =>
                   apply no_Z
@@ -2200,7 +2200,7 @@ by
                     rw [List.mem_map] at hRr
                     rcases hRr with ⟨s, -, imposs⟩
                     cases s
-                    · simp [Z, R, wrapSym, liftSymbol] at imposs
+                    · simp [R, liftSymbol] at imposs
                     · simp [liftSymbol, R] at imposs
                 | inr hRv =>
                   apply no_R

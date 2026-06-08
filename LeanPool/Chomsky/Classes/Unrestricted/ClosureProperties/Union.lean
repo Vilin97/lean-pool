@@ -106,7 +106,7 @@ def lg₁ : LiftedGrammar T :=
         rcases List.mem_map.mp rin₂ with ⟨r₂, r₂_in, r₂_lift⟩
         rw [←r₂_lift] at rnt
         have rnti := Option.some.inj rnt
-        simp only [Sum.inl.injEq, reduceCtorEq] at rnti
+        simp only [reduceCtorEq] at rnti
     )
 
 def lg₂ : LiftedGrammar T :=
@@ -157,7 +157,7 @@ def lg₂ : LiftedGrammar T :=
         rcases List.mem_map.mp rin₁ with ⟨r₁, r₁_in, r₁_lift⟩
         rw [←r₁_lift] at rnt
         have rnti := Option.some.inj rnt
-        simp only [Sum.inl.injEq, reduceCtorEq] at rnti
+        simp only [reduceCtorEq] at rnti
       · exact List.mem_map.mp rin₂
     )
 

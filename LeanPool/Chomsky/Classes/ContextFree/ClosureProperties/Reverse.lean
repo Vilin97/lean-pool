@@ -49,7 +49,7 @@ by
       subst r_from_r₀
       refine ⟨r₀, rin₀, y.reverse, x.reverse, ?_, ?_⟩
       · rw [bef]
-        simp [List.reverse_append, List.append_assoc, List.reverse_reverse]
+        simp [List.reverse_append, List.append_assoc]
       · rw [aft]
         simp [List.reverse_append, List.append_assoc, List.reverse_reverse]
 

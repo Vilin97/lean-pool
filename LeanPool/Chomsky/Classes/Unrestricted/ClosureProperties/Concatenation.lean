@@ -880,7 +880,7 @@ by
             [(Symbol.nonterminal ◩(some ◩r₁.inputN) : nst T g₁.nt g₂.nt)] ++
             r₁.inputR.map (wrapSymbol₁ g₂.nt)).length = _
         simp only [List.append_assoc, List.length_append, List.length_map, List.length_cons,
-          List.length_nil, List.singleton_append]
+          List.singleton_append]
         omega
       have equal_total_len' :
           (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length =
@@ -888,7 +888,7 @@ by
         rw [equal_total_len]
         dsimp only
         simp only [List.append_assoc, List.length_append, List.length_map, List.length_cons,
-          List.length_nil, List.singleton_append]
+          List.singleton_append]
         omega
       have contra' : x.length < u.length + (r₁.inputL.length + 1 + r₁.inputR.length) := by
         simpa only [List.length_map] using contra
@@ -985,7 +985,7 @@ by
                         change (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
                             [(Symbol.nonterminal ◩(some ◩r₁.inputN) : nst T g₁.nt g₂.nt)]).length = _
                         simp only [List.append_assoc, List.length_append, List.length_map,
-                          List.length_cons, List.length_nil, List.singleton_append]
+                          List.length_cons, List.length_nil]
                         omega
                       rw [hsing, List.length_map, List.length_map]
                       omega))
@@ -1377,7 +1377,7 @@ by
       rw [List.length_map]
       exact ul_lt_xl
     simp_rw [List.getElem_append, ul_lt_xlm] at ulth
-    simp [List.getElem_append] at ulth
+    simp at ulth
     split at ulth
     · exact correspondingSymbols_never₁ ulth
     · change correspondingSymbols (wrapSymbol₁ g₂.nt x[u.length]) (wrapSymbol₂ g₁.nt (Symbol.nonterminal r₂.inputN)) at ulth
