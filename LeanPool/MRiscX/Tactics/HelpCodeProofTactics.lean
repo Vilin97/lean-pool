@@ -54,7 +54,7 @@ def RCasesPatt.alts' (ref : Syntax) : List/-Σ-/ RCasesPatt →RCasesPatt
   | ps  => RCasesPatt.alts ref ps
 
 /-- Parses a `Syntax` into the `RCasesPatt` type used by the `RCases` tactic. -/
-partial def RCasesPatt.parse (stx : Syntax) : MetaM RCasesPatt :=
+def RCasesPatt.parse (stx : Syntax) : MetaM RCasesPatt :=
   match stx with
   | `(rcasesPatMed| $ps:rcasesPat|*) =>
     return RCasesPatt.alts' stx (← ps.getElems.toList.mapM (parse ·.raw))

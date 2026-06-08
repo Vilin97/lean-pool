@@ -51,7 +51,7 @@ This function is similar to expandCDot?.
 It traverses the given syntax and searches for patterns to replace the keywords
 defined as syntax terminals with the actual functions calls
 -/
-partial def replaceKeywords (stx : Term) (curState : TSyntax `term) : TermElabM Syntax := do
+def replaceKeywords (stx : Term) (curState : TSyntax `term) : TermElabM Syntax := do
   go stx
 where
   /--
@@ -87,7 +87,7 @@ where
 /-
 Seperate all the assignemnts within the ⟦⟧ and store in one array
 -/
-partial def getHoareAssignmentArray (stx: TSyntax `hoare_assignment_chain)
+def getHoareAssignmentArray (stx: TSyntax `hoare_assignment_chain)
     (curArr: Array (TSyntax `hoare_assignment)): TermElabM (Array (TSyntax `hoare_assignment)) := do
   match stx with
   | `(hoare_assignment_chain | $t:hoare_assignment) =>
@@ -125,7 +125,7 @@ def foldTermArray (element: TSyntax `hoare_assignment) (curTerm: TSyntax `term) 
 /-
 Construct the final lambda term
 -/
-partial def generateHoareAssignmentSyntax (stx: TSyntax `hoare_assignment_chain): TermElabM (Syntax)
+def generateHoareAssignmentSyntax (stx: TSyntax `hoare_assignment_chain): TermElabM (Syntax)
     := do
   let termArray ← getHoareAssignmentArray stx #[]
   let result ← termArray.foldrM foldTermArray (←`($(mkIdent `st)))

@@ -172,29 +172,54 @@ def termToInstr (t: TSyntax `term) : UnexpandM (TSyntax `mriscx_Instr) := do
   | _ => return ←`(mriscx_Instr | PANIC!
   )
 
-partial def termToInstrMap (t: TSyntax `term) : UnexpandM SyntaxInstrMap := do
+/-- The total number of nodes in a syntax tree, an upper bound on its depth. -/
+private def termSyntaxSize : Syntax → Nat
+  | .node _ _ args => 1 + args.foldl (fun acc s => acc + termSyntaxSize s) 0
+  | _ => 1
+
+/-- Fuel-bounded core of `termToInstrMap`; `fuel` bounds the syntax-tree recursion. -/
+private def termToInstrMapAux (fuel : Nat) (t : TSyntax `term) :
+    UnexpandM SyntaxInstrMap := do
   match t with
   | `(TMap.empty $_) =>
     return (TMap.empty (←`(mriscx_Instr | PANIC!
     )))
   | `((UInt64.ofNat $k:num ↦ $v; $m)) =>
-    return ((UInt64.ofNat k.getNat) ↦ (←termToInstr v); (←termToInstrMap m))
+    match fuel with
+    | fuel + 1 => return ((UInt64.ofNat k.getNat) ↦ (←termToInstr v); (←termToInstrMapAux fuel m))
+    | 0 => return TMap.empty (⟨t⟩)
   | `(($k:num ↦ $v; $m)) =>
-    return ((UInt64.ofNat k.getNat) ↦ (←termToInstr v); (←termToInstrMap m))
+    match fuel with
+    | fuel + 1 => return ((UInt64.ofNat k.getNat) ↦ (←termToInstr v); (←termToInstrMapAux fuel m))
+    | 0 => return TMap.empty (⟨t⟩)
   | _ => return TMap.empty (⟨t⟩)
 
+/-- Reconstruct a `SyntaxInstrMap` from its term representation `t`. -/
+def termToInstrMap (t: TSyntax `term) : UnexpandM SyntaxInstrMap :=
+  termToInstrMapAux (termSyntaxSize t) t
 
-partial def termToLabelMap (t: TSyntax `term) : LabelMap :=
+/-- Fuel-bounded core of `termToLabelMap`; `fuel` bounds the syntax-tree recursion. -/
+private def termToLabelMapAux (fuel : Nat) (t : TSyntax `term) : LabelMap :=
   match t with
   | `(PMap.empty) => PMap.empty
   | `(EmptyLabels) => PMap.empty
   | `(PMap.put $k:str $v:num $m) =>
-    PMap.put (k.getString) (UInt64.ofNat v.getNat) (termToLabelMap m)
+    match fuel with
+    | fuel + 1 => PMap.put (k.getString) (UInt64.ofNat v.getNat) (termToLabelMapAux fuel m)
+    | 0 => EmptyLabels
   | `(p($k:str ↦ UInt64.ofNat $v:num; $m)) =>
-    PMap.put (k.getString) (UInt64.ofNat v.getNat) (termToLabelMap m)
+    match fuel with
+    | fuel + 1 => PMap.put (k.getString) (UInt64.ofNat v.getNat) (termToLabelMapAux fuel m)
+    | 0 => EmptyLabels
   | `(p($k:str ↦ $v:num; $m)) =>
-    PMap.put (k.getString) (UInt64.ofNat v.getNat) (termToLabelMap m)
+    match fuel with
+    | fuel + 1 => PMap.put (k.getString) (UInt64.ofNat v.getNat) (termToLabelMapAux fuel m)
+    | 0 => EmptyLabels
   | _ => EmptyLabels
+
+/-- Reconstruct a `LabelMap` from its term representation `t`. -/
+def termToLabelMap (t: TSyntax `term) : LabelMap :=
+  termToLabelMapAux (termSyntaxSize t) t
 
 
 

@@ -29,7 +29,7 @@ macro  a₁:term " ∧∧ " a₂:term : term => do
 macro "∼" a:ident : term =>
   `(Assertion.Not $a)
 
-partial def processHoareTerm (stx : Term) : TermElabM Syntax := do
+def processHoareTerm (stx : Term) : TermElabM Syntax := do
   withFreshMacroScope do
     let mut newStx ← (go stx)
     return newStx
@@ -46,7 +46,7 @@ where
 
 
 
-partial def elabHoareTerm (stx : Term) : TermElabM (Term) := do
+def elabHoareTerm (stx : Term) : TermElabM (Term) := do
   let newStx ← processHoareTerm stx
   let stIdent := mkIdent `st
   return ←`(fun $stIdent : MState => ($(⟨newStx⟩)))

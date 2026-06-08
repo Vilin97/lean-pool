@@ -17,6 +17,16 @@ open Lean Meta Elab
 This file contains some utility functions when working with expressions
 -/
 
+/-- The number of sub-expressions in `e`, an upper bound on its recursion depth. -/
+private def exprDepthBound : Expr → Nat
+  | .app f a => 1 + exprDepthBound f + exprDepthBound a
+  | .lam _ t b _ => 1 + exprDepthBound t + exprDepthBound b
+  | .forallE _ t b _ => 1 + exprDepthBound t + exprDepthBound b
+  | .letE _ t v b _ => 1 + exprDepthBound t + exprDepthBound v + exprDepthBound b
+  | .mdata _ b => 1 + exprDepthBound b
+  | .proj _ _ b => 1 + exprDepthBound b
+  | _ => 1
+
 def unwrapWhileCreateLabelmap (e? : Option Expr) (labelmap: Expr) : MetaM Expr :=
   match e? with
   | some arg => pure arg
@@ -24,7 +34,7 @@ def unwrapWhileCreateLabelmap (e? : Option Expr) (labelmap: Expr) : MetaM Expr :
     from expr {labelmap}"
 
 
-partial def getUInt64FromExpr (e : Expr) : MetaM UInt64 := do
+def getUInt64FromExpr (e : Expr) : MetaM UInt64 := do
   let e ← Meta.whnf e
   if e.isAppOfArity ``UInt64 1 then
     let val ← Meta.whnf <| e.getArg! 0
@@ -61,14 +71,15 @@ partial def getUInt64FromExpr (e : Expr) : MetaM UInt64 := do
     throwError "Not a UInt64 Expression"
 
 
-partial def getStrFromExpr (e : Expr) : MetaM String := do
+def getStrFromExpr (e : Expr) : MetaM String := do
   let e ← Meta.whnf e
   match e with
   | Expr.lit (Literal.strVal s) => return s
   | _ => throwError "Expected a string literal"
 
 
-partial def getLabelMapFromMapExpr (e : Expr): MetaM LabelMap := do
+/-- Fuel-bounded core of `getLabelMapFromMapExpr`; `fuel` bounds the recursion. -/
+private def getLabelMapFromMapExprAux (fuel : Nat) (e : Expr) : MetaM LabelMap := do
   let e ← Meta.whnf e
   if e.isAppOfArity ``PMap.empty 2 then
     return PMap.empty
@@ -77,12 +88,18 @@ partial def getLabelMapFromMapExpr (e : Expr): MetaM LabelMap := do
     let labelName ← getStrFromExpr labelNameExpr
     let val ← Meta.whnf <| e.getArg! 3
     let n ← getUInt64FromExpr val
-    return PMap.put labelName n (←getLabelMapFromMapExpr (e.getArg! 4))
+    match fuel with
+    | fuel + 1 => return PMap.put labelName n (←getLabelMapFromMapExprAux fuel (e.getArg! 4))
+    | 0 => throwError "Ran out of fuel while reading a partial map"
   else
     throwError s!"{e} is not a partial map"
 
+/-- Reflect a `PMap` value from its `Expr` representation `e`. -/
+def getLabelMapFromMapExpr (e : Expr) : MetaM LabelMap :=
+  getLabelMapFromMapExprAux (exprDepthBound e) e
 
-partial def getLabelMapFromCodeExpr (e : Expr): MetaM LabelMap := do
+
+def getLabelMapFromCodeExpr (e : Expr): MetaM LabelMap := do
   let e ← Meta.whnf e
   if e.isAppOfArity ``Code.mk 2 then
     let labelMapExpr ← Meta.whnf <| e.getArg! 2
@@ -96,8 +113,10 @@ Recursively search through a TMap Expr to find the Instr at the given line numbe
 
 This helper function navigates through the nested TMap.put structure to locate
 the instruction at the specified program counter position.
+The `fuel` argument bounds the recursion over the expression.
 -/
-private partial def getInstrExprFromMapExpr (mapExpr : Expr) (pc : UInt64) : MetaM Expr := do
+private def getInstrExprFromMapExprAux (fuel : Nat) (mapExpr : Expr) (pc : UInt64) :
+    MetaM Expr := do
   let mapExpr ← Meta.whnf mapExpr
   if mapExpr.isAppOfArity ``TMap.empty 3 then
     -- Return the panic instruction (default)
@@ -110,9 +129,15 @@ private partial def getInstrExprFromMapExpr (mapExpr : Expr) (pc : UInt64) : Met
       return ← Meta.whnf <| mapExpr.getArg! 3
     else
       -- Continue searching in the rest of the map
-      return ← getInstrExprFromMapExpr (mapExpr.getArg! 4) pc
+      match fuel with
+      | fuel + 1 => return ← getInstrExprFromMapExprAux fuel (mapExpr.getArg! 4) pc
+      | 0 => throwError "Ran out of fuel while searching a TMap expression"
   else
     throwError s!"Expected a TMap expression, got {mapExpr}"
+
+/-- Look up the instruction expression at line `pc` in the map expression `mapExpr`. -/
+private def getInstrExprFromMapExpr (mapExpr : Expr) (pc : UInt64) : MetaM Expr :=
+  getInstrExprFromMapExprAux (exprDepthBound mapExpr) mapExpr pc
 
 
 /--
@@ -223,7 +248,8 @@ def getInstrFromExpr (e : Expr) : MetaM Instr := do
     return Instr.JumpNeqZero reg label
   return Instr.Panic
 
-partial def getInstrMapFromExpr (e : Expr) : MetaM InstructionMap := do
+/-- Fuel-bounded core of `getInstrMapFromExpr`; `fuel` bounds the recursion. -/
+private def getInstrMapFromExprAux (fuel : Nat) (e : Expr) : MetaM InstructionMap := do
   let e ← Meta.whnf e
   if e.isAppOfArity ``TMap.empty 3 then
     return TMap.empty Instr.Panic
@@ -231,9 +257,15 @@ partial def getInstrMapFromExpr (e : Expr) : MetaM InstructionMap := do
     let line ← getUInt64FromExpr <| ← Meta.whnf <| e.getArg! 2
     let instr_expr ← Meta.whnf <| e.getArg! 3
     let instr ← getInstrFromExpr instr_expr
-    return TMap.put line instr (←getInstrMapFromExpr (e.getArg! 4))
+    match fuel with
+    | fuel + 1 => return TMap.put line instr (←getInstrMapFromExprAux fuel (e.getArg! 4))
+    | 0 => throwError "Ran out of fuel while reading a TMap expression"
   else
     throwError s!"{e} is not a partial map"
+
+/-- Reflect an `InstructionMap` value from its `Expr` representation `e`. -/
+def getInstrMapFromExpr (e : Expr) : MetaM InstructionMap :=
+  getInstrMapFromExprAux (exprDepthBound e) e
 
 
 def getInstrMapFromCodeExpr (e : Expr) : MetaM InstructionMap := do
@@ -258,7 +290,7 @@ private def getLambdaBody (e : Expr) (fuel : Nat) : MetaM Expr := do
 /--
 Return the actual binding body from a lambda function.
 -/
-partial def getCodeExprFromLambda (e : Expr) : MetaM Expr := do
+def getCodeExprFromLambda (e : Expr) : MetaM Expr := do
   let e ← Meta.whnf e
   let ty ← inferType e
   if !e.isLambda then
@@ -268,28 +300,35 @@ partial def getCodeExprFromLambda (e : Expr) : MetaM Expr := do
   let FUEL := 100
   return ←getLambdaBody e FUEL
 
-/- a function to split conjunction and disjunction into its parts -/
-partial def splitConjDisj (declType : Expr) : MetaM (TSyntax `rcasesPat) := do
+/-- Fuel-bounded core of `splitConjDisj`; `fuel` bounds the recursion. -/
+private def splitConjDisjAux (fuel : Nat) (declType : Expr) :
+    MetaM (TSyntax `rcasesPat) := do
   let e ← Meta.whnf declType
-  if e.isAppOfArity `Or 2 then
-    let left ← splitConjDisj (←Meta.whnf <| e.getArg! 0)
-    let right ← splitConjDisj (←Meta.whnf <| e.getArg! 1)
-    return (←`(rcasesPat | ($left | $right)))
-  if e.isAppOfArity `And 2 then
-    let left ← splitConjDisj (←Meta.whnf <| e.getArg! 0)
-    let right ← splitConjDisj (←Meta.whnf <| e.getArg! 1)
-    return (←`(rcasesPat | ⟨$left , $right⟩))
-  if e.isFVar then
-    return (←`(rcasesPat | _))
-  if e.isArrow then
-    let arr? := e.arrow?
-    match arr? with
-    | some (_, _) =>
+  match fuel with
+  | fuel + 1 =>
+    if e.isAppOfArity `Or 2 then
+      let left ← splitConjDisjAux fuel (←Meta.whnf <| e.getArg! 0)
+      let right ← splitConjDisjAux fuel (←Meta.whnf <| e.getArg! 1)
+      return (←`(rcasesPat | ($left | $right)))
+    if e.isAppOfArity `And 2 then
+      let left ← splitConjDisjAux fuel (←Meta.whnf <| e.getArg! 0)
+      let right ← splitConjDisjAux fuel (←Meta.whnf <| e.getArg! 1)
+      return (←`(rcasesPat | ⟨$left , $right⟩))
+    if e.isFVar then
       return (←`(rcasesPat | _))
-    | none =>
-      throwError s!"{e} is an implication but theres missing an expr"
+    if e.isArrow then
+      let arr? := e.arrow?
+      match arr? with
+      | some (_, _) =>
+        return (←`(rcasesPat | _))
+      | none =>
+        throwError s!"{e} is an implication but theres missing an expr"
+    return (←`(rcasesPat | _))
+  | 0 => return (←`(rcasesPat | _))
 
-  return (←`(rcasesPat | _))
+/-- Split a conjunction/disjunction type `declType` into a matching `rcases` pattern. -/
+def splitConjDisj (declType : Expr) : MetaM (TSyntax `rcasesPat) :=
+  splitConjDisjAux (exprDepthBound declType) declType
 
 
 def parseSingletonExpr (e : Expr) : MetaM (UInt64) := do

@@ -215,7 +215,7 @@ def getInstructionExprArr (seq: TSyntaxArray `mriscx_Instr): TermElabM (Array Ex
   return expressions
 
 /- create an tupel which holds a label and the corresponding instructions -/
-partial def getLabelInstrArr (t: TSyntax `mriscx_label): TermElabM (String × (Array Expr)) := do
+def getLabelInstrArr (t: TSyntax `mriscx_label): TermElabM (String × (Array Expr)) := do
   match t with
   | `(mriscx_label | $name:ident : $seq:mriscx_Instr*
     ) => do
@@ -227,7 +227,7 @@ partial def getLabelInstrArr (t: TSyntax `mriscx_label): TermElabM (String × (A
   | _ => throwError ("Expected Label")
 
 
-partial def getLabelMapFromSyntax (syn : TSyntax `mriscx_syntax): TermElabM LabelMap := do
+def getLabelMapFromSyntax (syn : TSyntax `mriscx_syntax): TermElabM LabelMap := do
   match syn with
   | `(mriscx_syntax | mriscx
                         $lblSyn:mriscx_label*
@@ -249,7 +249,7 @@ partial def getLabelMapFromSyntax (syn : TSyntax `mriscx_syntax): TermElabM Labe
   | _ => throwError "Expected mriscx_syntax while parsing labelMap from syntax"
 
 
-partial def getCodeFromSyntax (syn: TSyntax `mriscx_syntax): TermElabM Expr := do
+def getCodeFromSyntax (syn: TSyntax `mriscx_syntax): TermElabM Expr := do
   match syn with
   | `(mriscx_syntax | mriscx
     $lblSyn:mriscx_label*
