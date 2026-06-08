@@ -1884,26 +1884,20 @@ projects:
       - Omar Haddad
       - David Lowry-Duda
       - Lorenzo Luccioli
-      - Pietro Monticone
-      - Alexis Saurin
-      - Florent Schaffhauser
     source:
       url: "https://github.com/riccardobrasca/FLT3"
       github_repo: riccardobrasca/FLT3
     status: verified
     main_declarations:
-      - fermatLastTheoremThree
-      - FermatLastTheoremForThreeGen.Solution.x_eq_unit_mul_cube
-      - FermatLastTheoremForThreeGen.Solution.by_kummer
-      - IsCyclotomicExtension.Rat.Three.cube_sub_one
+      - FLT3.fermatLastTheoremThree
     main_results:
-      - declaration: fermatLastTheoremThree
+      - declaration: FLT3.fermatLastTheoremThree
         informal: Fermat's Last Theorem for exponent 3, that for all nonzero naturals a, b, c one has a^3 + b^3 ≠ c^3.
-      - declaration: FermatLastTheoremForThreeGen.Solution.x_eq_unit_mul_cube
+      - declaration: FLT3.FermatLastTheoremForThreeGen.Solution.x_eq_unit_mul_cube
         informal: Shows that x equals a unit times a cube, the key consequence of coprimality used in the descent.
-      - declaration: FermatLastTheoremForThreeGen.Solution.by_kummer
+      - declaration: FLT3.FermatLastTheoremForThreeGen.Solution.by_kummer
         informal: The Kummer step constraining the auxiliary unit to be ±1.
-      - declaration: IsCyclotomicExtension.Rat.Three.cube_sub_one
+      - declaration: FLT3.IsCyclotomicExtension.Rat.Three.cube_sub_one
         informal: Factors x^3 - 1 as (x - 1)(x - η)(x - η^2) over the cube roots of unity.
     tags:
       - number-theory
