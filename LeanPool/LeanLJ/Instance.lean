@@ -3,10 +3,22 @@ Copyright (c) 2026 Colin Jones. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Colin Jones
 -/
-import Mathlib.Tactic
+import Mathlib.Data.Rat.Sqrt
+import Mathlib.Analysis.Real.Sqrt
+
+/-!
+# A `RealLike` typeclass for generic numeric backends
+
+This file introduces the `HasSqrt`, `HasRound` and `RealLike` typeclasses together with
+instances for `Float`, `Int` and the standard ordered fields, so that the Lennard-Jones
+functions can be stated uniformly over any numeric type that supports the needed operations.
+-/
+
 namespace LeanLJ
 
+/-- Numeric types equipped with a square-root operation. -/
 class HasSqrt (α : Type) where
+  /-- The square root of an element. -/
   sqrt : α → α
 
 instance : HasSqrt Float where
@@ -25,24 +37,40 @@ noncomputable instance : HasSqrt ℝ where
   sqrt := Real.sqrt
 
 
+/-- Numeric types equipped with a rounding operation (round to nearest). -/
 class HasRound (α : Type) where
+  /-- Round an element to the nearest integral value of the same type. -/
   pround : α → α
 
 instance : HasRound Float where
   pround := Float.round
 
+/-- A lightweight interface bundling the field-like operations used by the Lennard-Jones
+functions, so they can be evaluated over `Float`, `Int`, `ℝ`, etc. -/
 class RealLike (α : Type) extends HasRound α, HasSqrt α where
+  /-- Addition. -/
   add : α → α → α
+  /-- Subtraction. -/
   sub : α → α → α
+  /-- Multiplication. -/
   mul : α → α → α
+  /-- Division. -/
   div : α → α → α
+  /-- Negation. -/
   neg : α → α
+  /-- Natural-number power. -/
   pow : α → Nat → α
+  /-- Less-than-or-equal comparison as a `Bool`. -/
   le : α → α → Bool
+  /-- Strict-less-than comparison as a `Bool`. -/
   lt : α → α → Bool
+  /-- The additive identity. -/
   zero : α
+  /-- The multiplicative identity. -/
   one : α
+  /-- Coercion from a natural number. -/
   ofNat : Nat → α
+  /-- Coercion from an integer. -/
   ofInt : Int → α
 
 instance {α : Type} [RealLike α] : Add α where
@@ -63,10 +91,11 @@ instance {α : Type} [RealLike α] : Neg α where
 instance {α : Type} [RealLike α] : Pow α Nat where
   pow := RealLike.pow
 
--- Helper functions for comparison that return Bool
+/-- Helper that compares two `RealLike` elements with `≤`, returning a `Bool`. -/
 def compLe {α : Type} [RealLike α] (a b : α) : Bool :=
   RealLike.le a b
 
+/-- Helper that compares two `RealLike` elements with `<`, returning a `Bool`. -/
 def compLt {α : Type} [RealLike α] (a b : α) : Bool :=
   RealLike.lt a b
 
@@ -128,8 +157,8 @@ instance {α : Type} [RealLike α] : LT α where
   lt a b := RealLike.lt a b = true
 
 
--- Define LT instance for ComputableReal
-instance {α : Type} [RealLike α] : DecidableRel (@LT.lt α _) :=
+/-- Decidability of `<` on a `RealLike` type, via its `Bool`-valued comparison. -/
+instance instDecidableRelLt {α : Type} [RealLike α] : DecidableRel (@LT.lt α _) :=
   fun a b =>
     if h : RealLike.lt a b = true then
       isTrue h
@@ -141,8 +170,8 @@ instance {α : Type} [RealLike α] : DecidableRel (@LT.lt α _) :=
 instance {α : Type} [RealLike α] : LE α where
   le a b := RealLike.le a b = true
 
--- Define DecidableRel instance for LE.le
-instance {α : Type} [RealLike α] : DecidableRel (@LE.le α _) :=
+/-- Decidability of `≤` on a `RealLike` type, via its `Bool`-valued comparison. -/
+instance instDecidableRelLe {α : Type} [RealLike α] : DecidableRel (@LE.le α _) :=
   fun a b =>
     if h : RealLike.le a b = true then
       isTrue h

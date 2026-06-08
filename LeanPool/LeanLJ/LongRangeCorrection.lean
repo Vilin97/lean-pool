@@ -3,16 +3,25 @@ Copyright (c) 2026 Colin Jones. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Colin Jones
 -/
-import Mathlib.Tactic
+import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
+import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 import LeanPool.LeanLJ.Instance
 import LeanPool.LeanLJ.Function
+
+/-!
+# The Lennard-Jones long-range correction integral
+
+This file evaluates the Lennard-Jones long-range correction integral over `(rc, ∞)` in
+closed form, matching the standard analytic tail expression `uLRCReal`.
+-/
+
 open LeanLJ
 
 open Real MeasureTheory
 namespace LeanLJ
 
 
-theorem long_range_correction_equality  (rc ρ ε σ : ℝ) (hr : 0 < rc) :
+theorem long_range_correction_equality (rc ρ ε σ : ℝ) (hr : 0 < rc) :
     (2 * π * ρ) * ∫ (r : ℝ) in Set.Ioi rc, 4 * ε * (r ^ 2 * (((σ / r) ^ 12) -
     ((σ / r) ^ 6))) = (8 * π * ρ * ε) * ((1/9) * (σ ^ 12 / rc ^ 9) -
     (1/3) * (σ ^ 6 / rc ^ 3)) := by
@@ -79,8 +88,10 @@ theorem long_range_correction_equality  (rc ρ ε σ : ℝ) (hr : 0 < rc) :
         _ = ((1/9) * (σ ^ 12 / rc ^ 9) - (1/3) * (σ ^ 6 / rc ^ 3)) := by
               congr <;> norm_cast
 
-theorem long_range_correction_equality' (rc ρ ε σ : ℝ)  (hr : 0 < rc) :
+theorem long_range_correction_equality' (rc ρ ε σ : ℝ) (hr : 0 < rc) :
     (2 * π * ρ) * ∫ (r : ℝ) in Set.Ioi rc, 4 * ε * (r ^ 2 * (((σ / r) ^ 12) -
-    ((σ / r) ^ 6))) = U_LRC_Real ρ ε σ rc  := by
-  rw [U_LRC_Real]
-  exact long_range_correction_equality  rc ρ ε σ hr
+    ((σ / r) ^ 6))) = uLRCReal ρ ε σ rc := by
+  rw [uLRCReal]
+  exact long_range_correction_equality rc ρ ε σ hr
+
+end LeanLJ

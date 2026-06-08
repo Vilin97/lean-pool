@@ -1915,10 +1915,6 @@ projects:
     main_declarations:
       - LeanLJ.long_range_correction_equality
       - LeanLJ.Lj_eq
-      - LeanLJ.ljp_differentiable
-      - LeanLJ.ljp_continuous_closed_domain
-      - minImageDistance_real_self
-      - pairs_length_eq
     main_results:
       - declaration: LeanLJ.long_range_correction_equality
         informal: Evaluates the Lennard-Jones long-range correction integral in closed form as the standard analytic tail expression.
@@ -1928,9 +1924,9 @@ projects:
         informal: Proves that the truncated Lennard-Jones potential is differentiable on its interior domain and computes its derivative.
       - declaration: LeanLJ.ljp_continuous_closed_domain
         informal: Proves that the truncated Lennard-Jones potential is continuous on the closed interaction domain.
-      - declaration: minImageDistance_real_self
+      - declaration: LeanLJ.minImageDistance_real_self
         informal: Proves that the minimum-image distance of a configuration to itself is zero.
-      - declaration: pairs_length_eq
+      - declaration: LeanLJ.pairs_length_eq
         informal: Proves that the enumerated unordered index pairs of n atoms number n choose 2.
     tags:
       - physics

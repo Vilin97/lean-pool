@@ -501,10 +501,10 @@ import LeanPool.LeanLJ
 import LeanPool.LeanLJ.CSVParser
 import LeanPool.LeanLJ.Function
 import LeanPool.LeanLJ.Instance
-import LeanPool.LeanLJ.Lennard_Jones_proof
+import LeanPool.LeanLJ.LennardJonesProof
 import LeanPool.LeanLJ.LongRangeCorrection
-import LeanPool.LeanLJ.MinImageDistance_PeriodicBC
-import LeanPool.LeanLJ.Pairs_Proof
+import LeanPool.LeanLJ.MinImageDistancePeriodicBC
+import LeanPool.LeanLJ.PairsProof
 import LeanPool.LeanModularForms
 import LeanPool.LeanModularForms.ContourIntegral.CrossingLimit
 import LeanPool.LeanModularForms.ContourIntegral.PVSplit

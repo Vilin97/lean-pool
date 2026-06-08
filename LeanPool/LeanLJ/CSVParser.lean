@@ -5,17 +5,21 @@ Authors: Colin Jones
 -/
 import Lean
 
-namespace LeanLJ
-
 /-!
-  ## CSV Parser for Atomic Positions and User Input
+# CSV parser for atomic positions and user input
+
+This file provides a small CSV/`Float` parsing layer used to read atomic positions and
+simulation parameters from text input.
 -/
 
+namespace LeanLJ
+
+/-- Parse a string such as `"-1.25"` into a `Float`, returning `none` on malformed input. -/
 def parseFloat? (s : String) : Option Float := Id.run do
-  let s := s.trim
+  let s := s.trimAscii.toString
   if s.isEmpty then return none
   let isNeg := s.startsWith "-"
-  let s := if isNeg then s.drop 1 else s
+  let s := if isNeg then (s.drop 1).toString else s
   if s.isEmpty then return none
   let parts := s.splitOn "."
   match parts with
@@ -32,11 +36,13 @@ def parseFloat? (s : String) : Option Float := Id.run do
     return if isNeg then some (-val) else some val
   | _ => return none
 
+/-- Parse a string into a `Float`, defaulting to `0.0` on malformed input. -/
 def stringToFloat (s : String) : Float :=
   match parseFloat? s with
   | some f => f
   | none => 0.0
 
+/-- Parse a comma-separated line `"x,y,z"` into a 3-vector of `Float`s. -/
 def parseLineToFin3 (line : String) : Option (Fin 3 → Float) :=
   match line.splitOn "," with
   | [x, y, z] =>
@@ -49,12 +55,15 @@ def parseLineToFin3 (line : String) : Option (Fin 3 → Float) :=
       | _ => 0.0)
   | _ => none
 
+/-- Parse an array of CSV lines into a list of 3-vectors, skipping malformed lines. -/
 def parseCSVToFin3 (lines : Array String) : List (Fin 3 → Float) :=
   lines.foldl (fun acc line =>
     match parseLineToFin3 line with
     | some vec => vec :: acc
     | none => acc) [] |>.reverse
 
+/-- Interactively read a single positive `Float` from standard input, re-prompting on
+invalid input. -/
 def readSinglePositiveFloat (prompt : String) : IO Float := do
   let stdout ← IO.getStdout
   let stdin ← IO.getStdin
@@ -62,7 +71,7 @@ def readSinglePositiveFloat (prompt : String) : IO Float := do
   let mut value := 0.0
   while !validInput do
     stdout.putStrLn prompt
-    let input := (← stdin.getLine).trim
+    let input := (← stdin.getLine).trimAscii.toString
     let parsed := stringToFloat input
     if parsed > 0 && !input.contains ',' then
       validInput := true
@@ -71,6 +80,8 @@ def readSinglePositiveFloat (prompt : String) : IO Float := do
       stdout.putStrLn "Invalid input. Please enter a single positive float value."
   return value
 
+/-- Interactively read three comma-separated positive `Float`s describing a box length,
+re-prompting on invalid input. -/
 def readBoxLength (prompt : String) : IO (Fin 3 → Float) := do
   let stdout ← IO.getStdout
   let stdin ← IO.getStdin
@@ -78,7 +89,7 @@ def readBoxLength (prompt : String) : IO (Fin 3 → Float) := do
   let mut boxLength : Fin 3 → Float := fun _ => 0.0
   while !validInput do
     stdout.putStrLn prompt
-    let input := (← stdin.getLine).trim
+    let input := (← stdin.getLine).trimAscii.toString
     let parts := input.splitOn ","
     if parts.length == 3 then
       let parsed := parts.map stringToFloat
