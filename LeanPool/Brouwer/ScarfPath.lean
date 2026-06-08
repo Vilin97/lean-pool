@@ -21,6 +21,8 @@ is the combinatorial heart of the path-following proof of Scarf's lemma.
 attribute [local instance] Classical.propDecidable
 open Finset
 
+namespace Brouwer
+
 noncomputable section
 
 namespace IndexedLOrder
@@ -857,3 +859,5 @@ theorem GiComponentStructure_holds (c : T → I) (i : I) :
 end IndexedLOrder
 
 end
+
+end Brouwer

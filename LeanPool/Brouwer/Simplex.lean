@@ -20,6 +20,8 @@ when reasoning about mixed strategies, including the key inequality
 
 /- We use `MixedStrategy` to denote a mixed strategy over a finite type. -/
 
+namespace Brouwer
+
 variable (α : Type*) [Fintype α] [DecidableEq α]
 
 namespace stdSimplex
@@ -64,7 +66,7 @@ noncomputable instance SInhabitedOfInhabited [DecidableEq α] [Inhabited α] :
   default := pure (default : α)
 
 open scoped Classical in
-noncomputable instance SNonempty_of_Inhabited {α : Type*} [Fintype α]
+noncomputable instance SNonemptyOfInhabited {α : Type*} [Fintype α]
     [Inhabited α] : Nonempty (stdSimplex k α) :=
   Nonempty.intro (default : stdSimplex k α)
 
@@ -109,3 +111,5 @@ end stdSimplex
 
 /-- The standard simplex over `α` with real coefficients, used as mixed strategies. -/
 abbrev MixedStrategy := stdSimplex ℝ α
+
+end Brouwer

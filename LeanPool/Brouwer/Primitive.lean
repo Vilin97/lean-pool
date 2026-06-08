@@ -17,6 +17,7 @@ primitive-set picture used by the path-following termination argument.
 attribute [local instance] Classical.propDecidable
 open Finset
 
+namespace Brouwer
 
 noncomputable section
 
@@ -2403,3 +2404,5 @@ theorem coordinatePrimitive_erase_replacement_mainLemma
 end IndexedLOrder
 
 end
+
+end Brouwer

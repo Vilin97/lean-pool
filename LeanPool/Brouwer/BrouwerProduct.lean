@@ -16,7 +16,9 @@ is obtained from the single-simplex theorem.
 
 open Filter
 
-section Brouwer.ProductRetraction
+namespace Brouwer
+
+section ProductRetraction
 variable {I : Type*} [Fintype I] [DecidableEq I] [Inhabited I] [LinearOrder I] (card : I → ℕ+)
 
 /-- Total number of coordinates: the sum of `card i` over all `i`. -/
@@ -637,7 +639,7 @@ theorem Brouwer_Product [Finite I]
     embedFromProduct card ∘ f ∘ projectToProduct card
   have hf_lifted : Continuous f_lifted := by
     exact Continuous.comp (embed_continuous card) (Continuous.comp hf (project_continuous card))
-  obtain ⟨x_big, hx_big⟩ := Brouwer f_lifted hf_lifted
+  obtain ⟨x_big, hx_big⟩ := brouwerFixedPoint f_lifted hf_lifted
   let x_prod := projectToProduct card x_big
   use x_prod
   have : f x_prod = f (projectToProduct card x_big) := rfl
@@ -646,4 +648,6 @@ theorem Brouwer_Product [Finite I]
     simp [f_lifted, project_embed_id]
   rw [this, hx_big]
 
-end Brouwer.ProductRetraction
+end ProductRetraction
+
+end Brouwer

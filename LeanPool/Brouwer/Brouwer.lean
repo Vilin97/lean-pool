@@ -32,6 +32,8 @@ resulting colorful points produces a fixed point.
 
 attribute [local instance] Classical.propDecidable
 
+namespace Brouwer
+
 section
 /-- A dependent product of finite, indexed by finite, is a finite. -/
 instance Pi.Lex.finite {α : Type*} {β : α → Type*} [Finite α]
@@ -789,7 +791,9 @@ theorem f_coords_ge_z_coords (f : stdSimplex ℝ (Fin n) → stdSimplex ℝ (Fin
       exact le_of_tendsto_of_tendsto y_seq_φ_coord_converges f_y_seq_φ_coord_converges
           (Eventually.of_forall (fun l' => h_ineq (φ l')))
 
-theorem Brouwer (hf : Continuous f) : ∃ x , f x = x := by
+/-- Brouwer's fixed-point theorem on the standard simplex: every continuous
+self-map of the standard simplex has a fixed point. -/
+theorem brouwerFixedPoint (hf : Continuous f) : ∃ x , f x = x := by
   let z := (hpkg f).1.1
   let C := (gpkg f).1.1
   let φ := (hpkg f).1.2
@@ -872,5 +876,9 @@ theorem Brouwer (hf : Continuous f) : ∃ x , f x = x := by
   · change (f z).1 i_1 = z.1 i_1
     rw [f_coords_outside_C_zero i_1 hi, coords_outside_C_zero i_1 hi]
 
+
+end Brouwer
+
+end
 
 end Brouwer

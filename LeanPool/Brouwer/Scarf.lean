@@ -38,6 +38,8 @@ machinery used in the parity (door-counting) argument that culminates in
 colorful room.
 -/
 
+namespace Brouwer
+
 section fiberlemma
 
 open Finset
@@ -2741,7 +2743,7 @@ lemma parity_lemma {a b c d : ℕ} (h1 : Odd a) (h2 : Even b) (h3 : Even d) (h4 
   exact Nat.not_odd_iff_even.2 evencd oddab
 
 
-theorem _root_.Finset.card_filter_filter_neg {α : Type*} (s : Finset α) (p : α → Prop)
+theorem card_filter_filter_neg {α : Type*} (s : Finset α) (p : α → Prop)
     [DecidablePred p]
  : s.card  = (Finset.filter p s).card + (Finset.filter (fun (a : α) => ¬p a) s).card :=
   by
@@ -2752,8 +2754,8 @@ lemma typed_colorful_room_odd (i : I) : Odd (Finset.filter (fun (x: (Finset T× 
     × Finset T × Finset I) =>  isColorful c x.2.1 x.2.2) (dbcountingset c i)).card
 := by
   let s:= dbcountingset c i
-  have cardeq' := Finset.card_filter_filter_neg s (fun x => isOutsideDoor x.1.1 x.1.2)
-  have cardeq := Finset.card_filter_filter_neg s (fun x => isColorful c x.2.1 x.2.2)
+  have cardeq' := card_filter_filter_neg s (fun x => isOutsideDoor x.1.1 x.1.2)
+  have cardeq := card_filter_filter_neg s (fun x => isColorful c x.2.1 x.2.2)
   apply parity_lemma (dbcount_outside_door_odd c i) (dbcount_internal_door_even c i)
       (dbcount_NCroom c i)
   rw [<-cardeq',<-cardeq]
@@ -2773,3 +2775,5 @@ theorem Scarf : (IST.colorful c).Nonempty := by
 end Scarf
 
 end IndexedLOrder
+
+end Brouwer

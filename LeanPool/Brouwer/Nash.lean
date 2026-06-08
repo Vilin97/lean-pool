@@ -20,6 +20,8 @@ attribute [local instance] Classical.propDecidable
 open BigOperators
 open Function
 
+namespace Brouwer
+
 noncomputable section
 
 /-
@@ -199,7 +201,7 @@ def mixedNashEquilibrium {G : FinGame} (x : G.mixedS) :=
 
 end FinGame
 
-section Brouwer.mixedGame
+section mixedGame
 variable {G : FinGame}
 
 
@@ -297,7 +299,9 @@ variable {G : FinGame}
 
 
 
-theorem Brouwer.mixedGame (f : G.mixedS → G.mixedS) (hf : Continuous f) : ∃ x : G.mixedS,
+/-- Brouwer's fixed-point theorem transported to the space of mixed strategy
+profiles of a finite game. -/
+theorem mixedGameFixedPoint (f : G.mixedS → G.mixedS) (hf : Continuous f) : ∃ x : G.mixedS,
     f x = x := by
   classical
   let n : ℕ := Fintype.card G.I
@@ -381,7 +385,7 @@ theorem Brouwer.mixedGame (f : G.mixedS → G.mixedS) (hf : Continuous f) : ∃ 
     _   = φ_inv (f' w) := rfl
     _   = φ_inv w := by simp [hw]
 
-end Brouwer.mixedGame
+end mixedGame
 
 section mixedNashEquilibrium
 variable (G : FinGame)
@@ -520,7 +524,7 @@ lemma nash_map_cont : Continuous <| nashMap G :=
 
 
 theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
-  obtain ⟨σ, hs⟩ := Brouwer.mixedGame (nashMap G)  (nash_map_cont G)
+  obtain ⟨σ, hs⟩ := mixedGameFixedPoint (nashMap G)  (nash_map_cont G)
   use σ
   intro i y
   by_cases H : ∀ t, G.mixedG i σ  ≥ G.mixedG i (update σ i (stdSimplex.pure t))
@@ -632,3 +636,7 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
 }
 
 end mixedNashEquilibrium
+
+end
+
+end Brouwer

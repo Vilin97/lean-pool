@@ -13,7 +13,7 @@ import LeanPool.Brouwer.Primitive
 Source: doi:10.1073/pnas.36.1.48, url:https://github.com/math-xmum/Brouwer
 Authors: Math_XMUM
 Status: verified
-Main declarations: `ExistsNashEq`, `Brouwer`, `Brouwer_Product`, `IndexedLOrder.Scarf`, `FinGame`
+Main declarations: `Brouwer.ExistsNashEq`, `Brouwer.IndexedLOrder.Scarf`
 Tags: game-theory, nash-equilibrium, brouwer-fixed-point, scarf-lemma, simplex
 MSC: 91A06, 91A10, 47H10
 -/
