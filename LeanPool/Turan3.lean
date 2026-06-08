@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rodrigo Gutierrez, Yves Jäckle
 -/
 
-import LeanPool.Turan3.Turans_3rdProof
+import LeanPool.Turan3.Turans3rdProof
 
 /-!
 # Turán's theorem (the "Book" weighting proof)
