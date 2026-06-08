@@ -306,6 +306,13 @@ import LeanPool.Clawristotle.TorusIntegration
 import LeanPool.Clawristotle.VMLInputDerive
 import LeanPool.Clawristotle.VMLStructures
 import LeanPool.Clawristotle.VelocityDecayInstance
+import LeanPool.Computability
+import LeanPool.Computability.ArithHierarchy
+import LeanPool.Computability.AutGrp
+import LeanPool.Computability.Encoding
+import LeanPool.Computability.Jump
+import LeanPool.Computability.Oracle
+import LeanPool.Computability.TuringDegree
 import LeanPool.DeadEnds
 import LeanPool.DeadEnds.Basic
 import LeanPool.DeadEnds.CRT

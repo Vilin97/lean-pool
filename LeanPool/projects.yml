@@ -2144,3 +2144,44 @@ projects:
     msc:
       - "11A41"
       - "11Y11"
+  - slug: computability
+    title: Oracle Computability and Turing Degrees
+    summary: Formalizes oracle-relative computability via partial recursive functions, Turing reducibility and the Turing degrees as an upper semilattice, a Gödel numbering with a universal oracle machine, the jump operator, and the arithmetical hierarchy.
+    branch: computability theory
+    entry_module: LeanPool.Computability
+    authors:
+      - Tanner Duve
+      - Elan Roth
+    source:
+      url: "https://github.com/tannerduve/computability"
+      github_repo: tannerduve/computability
+    status: verified
+    main_declarations:
+      - RecursiveIn
+      - exists_code_rel
+      - TuringReducible
+      - TuringDegree
+      - jump_recIn
+      - TuringDegree.instSemilatticeSup
+    main_results:
+      - declaration: RecursiveIn
+        informal: "The inductive relation `RecursiveIn O f` stating that `f : ℕ →. ℕ` is partial recursive relative to a set of oracle functions `O`."
+      - declaration: exists_code_rel
+        informal: Universality of the oracle evaluator `evalo`, that is, `RecursiveIn (Set.range g) f` holds iff there is a code `c` with `evalo g c = f`.
+      - declaration: TuringReducible
+        informal: "`f` is Turing reducible to `g` (`f ≤ᵀ g`) when `f` is recursive in the singleton oracle set `{g}`."
+      - declaration: TuringDegree
+        informal: The type of Turing degrees, the antisymmetrization of partial functions under Turing reducibility.
+      - declaration: jump_recIn
+        informal: The original function is Turing reducible to its jump, `f ≤ᵀ f⌜`.
+      - declaration: TuringDegree.instSemilatticeSup
+        informal: The Turing degrees form an upper semilattice with the Turing join as supremum.
+    tags:
+      - computability
+      - oracle-computability
+      - turing-degrees
+      - recursion-theory
+      - arithmetical-hierarchy
+    msc:
+      - "03D30"
+      - "03D28"
