@@ -158,8 +158,7 @@ by
   rcases hggw₂ with ⟨i, ⟨r, rin, u, v, bef, aft⟩, deri⟩
   have uv_nil : u = [] ∧ v = [] := by
     have bef_len := congr_arg List.length bef
-    simp only [List.length_append, List.length_singleton, List.length_cons,
-      List.length_nil] at bef_len
+    simp only [List.length_append, List.length_cons, List.length_nil] at bef_len
     exact ⟨List.length_eq_zero_iff.mp (by omega), List.length_eq_zero_iff.mp (by omega)⟩
   rw [uv_nil.left, List.nil_append, uv_nil.right, List.append_nil] at bef aft
   have same_nt : (unionGrammar g₁ g₂).initial = r.inputN := by
