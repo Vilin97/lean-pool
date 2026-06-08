@@ -470,7 +470,6 @@ lemma leftUnitor_eq
   Nat.zero_add X.obj
 
 omit [Preorder V] in
-@[simp]
 lemma rightUnitor_eq
     (X : SequentialCircuitCategory V G) :
     X.obj + (tensorUnit (V:=V) (G:=G)).obj = X.obj :=
@@ -690,7 +689,6 @@ lemma braiding_sub
   omega
 
 omit [Preorder V] in
-@[simp]
 lemma braiding_get_ge
     {X Y : SequentialCircuitCategory V G}
     {j : Fin X.obj} :

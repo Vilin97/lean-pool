@@ -410,7 +410,6 @@ lemma leftUnitor_eq
   Nat.zero_add X.obj
 
 omit [SemilatticeSup V] in
-@[simp]
 lemma rightUnitor_eq
     (X : CombinationalCircuitCategory V G) :
     X.obj + (tensorUnit (V:=V) (G:=G)).obj = X.obj :=
@@ -633,7 +632,6 @@ lemma braiding_sub
   omega
 
 omit [SemilatticeSup V] in
-@[simp]
 lemma braiding_get_ge
     {X Y : CombinationalCircuitCategory V G}
     {j : Fin X.obj} :
