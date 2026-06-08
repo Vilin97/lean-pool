@@ -14,8 +14,11 @@ Definition of context-free grammars and their derivation relation.
 
 /-- Context-free grammar that generates words over the alphabet `T` (a type of terminals). -/
 structure CFG (T : Type) where
+  /-- The type of nonterminals. -/
   nt : Type                              -- type of nonterminals
+  /-- The initial nonterminal symbol. -/
   initial : nt                           -- initial symbol
+  /-- The rewrite rules of the context-free grammar. -/
   rules : List (nt × List (Symbol T nt)) -- rewrite rules
 
 variable {T : Type}

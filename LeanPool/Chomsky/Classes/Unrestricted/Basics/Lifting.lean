@@ -17,20 +17,25 @@ section functions_lift_sink
 
 variable {N N₀ T : Type}
 
+/-- Lift a symbol along a nonterminal embedding. -/
 def liftSymbol (f : N₀ → N) : Symbol T N₀ → Symbol T N
   | Symbol.terminal t => Symbol.terminal t
   | Symbol.nonterminal n => Symbol.nonterminal (f n)
 
+/-- Sink a symbol along a nonterminal projection. -/
 def sinkSymbol (f : N → Option N₀) : Symbol T N → Option (Symbol T N₀)
   | Symbol.terminal t => some (Symbol.terminal t)
   | Symbol.nonterminal n => Option.map Symbol.nonterminal (f n)
 
+/-- Lift a string of symbols along a nonterminal embedding. -/
 def liftString (f : N₀ → N) : List (Symbol T N₀) → List (Symbol T N) :=
   List.map (liftSymbol f)
 
+/-- Sink a string of symbols along a nonterminal projection. -/
 def sinkString (f : N → Option N₀) : List (Symbol T N) → List (Symbol T N₀) :=
   List.filterMap (sinkSymbol f)
 
+/-- Lift a rewrite rule along a nonterminal embedding. -/
 def liftRule (f : N₀ → N) : Grule T N₀ → Grule T N :=
   fun r : Grule T N₀ => Grule.mk
     (liftString f r.inputL)
@@ -43,10 +48,15 @@ end functions_lift_sink
 
 section lifting_conditions
 
+/-- A grammar together with an embedding of another grammar's nonterminals into it. -/
 structure LiftedGrammar (T : Type) where
+  /-- The smaller grammar being embedded. -/
   g₀ : Grammar T
+  /-- The larger grammar. -/
   g : Grammar T
+  /-- The embedding of nonterminals from the smaller into the larger grammar. -/
   liftNt : g₀.nt → g.nt
+  /-- The partial inverse of the nonterminal embedding. -/
   sinkNt : g.nt → Option g₀.nt
   lift_inj : liftNt.Injective
   sink_inj : ∀ x y : g.nt, sinkNt x = sinkNt y → x = y ∨ sinkNt x = none
@@ -101,10 +111,12 @@ by
   | refl => exact gr_deri_self
   | tail _ orig ih => exact gr_deri_of_deri_tran ih (lift_tran orig)
 
+/-- Predicate selecting symbols that lie in the image of the embedding. -/
 def GoodLetter {G : LiftedGrammar T} : Symbol T G.g.nt → Prop
   | Symbol.terminal _ => True
   | Symbol.nonterminal n => ∃ n₀ : G.g₀.nt, G.sinkNt n = n₀
 
+/-- Predicate selecting strings all of whose symbols are good. -/
 def GoodString {G : LiftedGrammar T} (s : List (Symbol T G.g.nt)) : Prop :=
   ∀ a ∈ s, GoodLetter a
 

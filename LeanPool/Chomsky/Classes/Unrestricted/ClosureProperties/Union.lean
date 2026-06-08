@@ -24,6 +24,7 @@ private lemma filterMap_sinkSymbol_terminals {N N₀ : Type} (f : N → Option N
     rw [List.map_cons, List.map_cons, List.filterMap_cons]
     rw [show sinkSymbol f (Symbol.terminal h) = some (Symbol.terminal h) from rfl, ← ih]
 
+/-- The grammar generating the union of two languages. -/
 def unionGrammar (g₁ g₂ : Grammar T) : Grammar T :=
   Grammar.mk (Option (g₁.nt ⊕ g₂.nt)) none (
     ⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩ :: (
@@ -57,6 +58,7 @@ private def oN₂_of_N : (unionGrammar g₁ g₂).nt → Option g₂.nt
   | some ▶n => some n
 
 
+/-- The lifted-grammar witness for the first component. -/
 def lg₁ : LiftedGrammar T :=
   LiftedGrammar.mk
     g₁
@@ -109,6 +111,7 @@ def lg₁ : LiftedGrammar T :=
         simp only [reduceCtorEq] at rnti
     )
 
+/-- The lifted-grammar witness for the second component. -/
 def lg₂ : LiftedGrammar T :=
   LiftedGrammar.mk
     g₂

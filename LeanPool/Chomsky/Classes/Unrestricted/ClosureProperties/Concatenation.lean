@@ -73,10 +73,12 @@ end list_technicalities
 
 
 -- new nonterminal type
+/-- The nonterminal type of the concatenation grammar. -/
 abbrev nnn (T N₁ N₂ : Type) : Type :=
   Option (N₁ ⊕ N₂) ⊕ (T ⊕ T)
 
 -- new symbol type
+/-- The symbol type of the concatenation grammar. -/
 abbrev nst (T N₁ N₂ : Type) : Type :=
   Symbol T (nnn T N₁ N₂)
 
@@ -84,14 +86,17 @@ variable {T : Type}
 
 section the_construction
 
+/-- Embed a symbol of the first grammar into the concatenation grammar. -/
 def wrapSymbol₁ {N₁ : Type} (N₂ : Type) : Symbol T N₁ → nst T N₁ N₂
   | Symbol.terminal t => Symbol.nonterminal ▶◄t
   | Symbol.nonterminal n => Symbol.nonterminal ◄(some ◄n)
 
+/-- Embed a symbol of the second grammar into the concatenation grammar. -/
 def wrapSymbol₂ {N₂ : Type} (N₁ : Type) : Symbol T N₂ → nst T N₁ N₂
   | Symbol.terminal t => Symbol.nonterminal ▶▶t
   | Symbol.nonterminal n => Symbol.nonterminal ◄(some ▶n)
 
+/-- Embed a rule of the first grammar into the concatenation grammar. -/
 def wrapGrule₁ {N₁ : Type} (N₂ : Type) (r : Grule T N₁) : Grule T (nnn T N₁ N₂) :=
   Grule.mk
     (r.inputL.map (wrapSymbol₁ N₂))
@@ -99,6 +104,7 @@ def wrapGrule₁ {N₁ : Type} (N₂ : Type) (r : Grule T N₁) : Grule T (nnn T
     (r.inputR.map (wrapSymbol₁ N₂))
     (r.output.map (wrapSymbol₁ N₂))
 
+/-- Embed a rule of the second grammar into the concatenation grammar. -/
 def wrapGrule₂ {N₂ : Type} (N₁ : Type) (r : Grule T N₂) : Grule T (nnn T N₁ N₂) :=
   Grule.mk
     (r.inputL.map (wrapSymbol₂ N₁))
@@ -106,14 +112,17 @@ def wrapGrule₂ {N₂ : Type} (N₁ : Type) (r : Grule T N₂) : Grule T (nnn T
     (r.inputR.map (wrapSymbol₂ N₁))
     (r.output.map (wrapSymbol₂ N₁))
 
+/-- Terminal-scanning rules for the first grammar. -/
 def rulesForTerminals₁ (N₂ : Type) (g : Grammar T) : List (Grule T (nnn T g.nt N₂)) :=
   (allUsedTerminals g).map (fun t : T => Grule.mk [] ▶◄t [] [Symbol.terminal t])
 
+/-- Terminal-scanning rules for the second grammar. -/
 def rulesForTerminals₂ (N₁ : Type) (g : Grammar T) : List (Grule T (nnn T N₁ g.nt)) :=
   (allUsedTerminals g).map (fun t : T => Grule.mk [] ▶▶t [] [Symbol.terminal t])
 
 
 -- grammar for concatenation of `g₁.language` with `g₂.language`
+/-- The grammar generating the concatenation of two languages. -/
 @[reducible] def bigGrammar (g₁ g₂ : Grammar T) : Grammar T :=
   Grammar.mk (nnn T g₁.nt g₂.nt) ◄none (
     Grule.mk [] ◄none [] [

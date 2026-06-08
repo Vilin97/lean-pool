@@ -13,8 +13,10 @@ Operations on formal languages used throughout the development.
 
 variable {T : Type}
 
+/-- The image of a language under a bijection on the alphabet. -/
 def Language.bijemap {T' : Type} (L : Language T) (π : Equiv T T') : Language T' :=
   (·.map π.invFun ∈ L)
 
+/-- The image of a language under a permutation of the alphabet. -/
 def Language.permute (L : Language T) (π : Equiv.Perm T) : Language T :=
   L.bijemap π

@@ -205,9 +205,11 @@ by
   rw [append_assoc] at near_result
   exact append_cancel_left near_result
 
+/-- Concatenate `n` copies of a list. -/
 def nTimes (l : List α) (n : ℕ) : List α :=
   (replicate n l).flatten
 
+/-- Notation for repeated list concatenation. -/
 infixl:100 " ^^ " => nTimes
 
 end joining
@@ -228,6 +230,7 @@ variable [DecidableEq α]
 
 section counting
 
+/-- Count the occurrences of an element in a list. -/
 def countIn (l : List α) (a : α) : ℕ :=
   sum (map (if · = a then 1 else 0) l)
 

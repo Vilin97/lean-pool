@@ -36,23 +36,27 @@ end notations
 
 section unexpanders
 
+/-- Pretty-print `List.map f l` using dot notation `l.map f`. -/
 @[app_unexpander List.map]
-def List.map_unexpand : Lean.PrettyPrinter.Unexpander
+def List.mapUnexpand : Lean.PrettyPrinter.Unexpander
   | `($_ $f $l) => `($(l).$(Lean.mkIdent `map) $f)
   | _ => throw ()
 
+/-- Pretty-print `List.filterMap f l` using dot notation `l.filterMap f`. -/
 @[app_unexpander List.filterMap]
-def List.filterMap_unexpand : Lean.PrettyPrinter.Unexpander
+def List.filterMapUnexpand : Lean.PrettyPrinter.Unexpander
   | `($_ $f $l) => `($(l).$(Lean.mkIdent `filterMap) $f)
   | _ => throw ()
 
+/-- Pretty-print `List.take n l` using dot notation `l.take n`. -/
 @[app_unexpander List.take]
-def List.take_unexpand : Lean.PrettyPrinter.Unexpander
+def List.takeUnexpand : Lean.PrettyPrinter.Unexpander
   | `($_ $n $l) => `($(l).$(Lean.mkIdent `take) $n)
   | _ => throw ()
 
+/-- Pretty-print `List.drop n l` using dot notation `l.drop n`. -/
 @[app_unexpander List.drop]
-def List.drop_unexpand : Lean.PrettyPrinter.Unexpander
+def List.dropUnexpand : Lean.PrettyPrinter.Unexpander
   | `($_ $n $l) => `($(l).$(Lean.mkIdent `drop) $n)
   | _ => throw ()
 

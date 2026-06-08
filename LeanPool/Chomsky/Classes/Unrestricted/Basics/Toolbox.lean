@@ -76,9 +76,11 @@ by
     constructor <;> simp only [List.append_assoc]
 
 
+/-- Extract the terminal carried by a symbol, if any. -/
 def asTerminal {N : Type} : Symbol T N → Option T
   | Symbol.terminal t => some t
   | Symbol.nonterminal _ => none
 
+/-- The list of terminals occurring in a grammar's rules. -/
 def allUsedTerminals (g : Grammar T) : List T :=
   (g.rules.map Grule.output).flatten.filterMap asTerminal

@@ -14,6 +14,7 @@ Context-free languages are included in the class of general-grammar languages.
 
 variable {T : Type}
 
+/-- The general grammar corresponding to a context-free grammar. -/
 def CFG.toGeneral (g : CFG T) : Grammar T :=
   Grammar.mk g.nt g.initial (g.rules.map (fun r : g.nt × List (Symbol T g.nt) => Grule.mk [] r.fst [] r.snd))
 

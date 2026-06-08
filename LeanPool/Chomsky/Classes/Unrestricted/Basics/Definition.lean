@@ -15,16 +15,23 @@ Definition of general (unrestricted) grammars and their derivation relation.
 
 /-- Rewrite rule for a grammar without any restrictions. -/
 structure Grule (T N : Type) where
+  /-- The part of the left-hand side to the left of the rewritten nonterminal. -/
   inputL : List (Symbol T N)
+  /-- The nonterminal rewritten by this rule. -/
   inputN : N
+  /-- The part of the left-hand side to the right of the rewritten nonterminal. -/
   inputR : List (Symbol T N)
+  /-- The string the rule rewrites the matched portion to. -/
   output : List (Symbol T N)
 
 /-- Grammar (unrestricted) that generates words over the alphabet `T` (a type of terminals). -/
 structure Grammar (T : Type) where
-  nt : Type                 -- type of nonterminals
-  initial : nt              -- initial symbol
-  rules : List (Grule T nt) -- rewrite rules
+  /-- The type of nonterminals. -/
+  nt : Type
+  /-- The initial nonterminal symbol. -/
+  initial : nt
+  /-- The rewrite rules of the grammar. -/
+  rules : List (Grule T nt)
 
 variable {T : Type}
 
