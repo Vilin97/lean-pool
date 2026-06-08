@@ -1265,6 +1265,60 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: a-formalization-of-borel-determinacy-in-lean
+    title: A formalization of Borel determinacy in Lean
+    summary: Formalizes Martin's theorem that every Borel Gale-Stewart game is determined.
+    branch: descriptive set theory
+    entry_module: LeanPool.AFormalizationOfBorelDeterminacyInLean
+    authors:
+      - Sven Manthe
+    source:
+      arxiv: "2502.03432"
+      github_repo: sven-manthe/A-formalization-of-Borel-determinacy-in-Lean
+    status: verified
+    main_declarations:
+      - GaleStewartGame.borel_determinacy
+      - GaleStewartGame.Games.borel_determinacy
+    main_results:
+      - declaration: GaleStewartGame.borel_determinacy
+        informal: Proves that every Borel Gale-Stewart game on a nonempty discrete alphabet is determined.
+      - declaration: GaleStewartGame.Games.borel_determinacy
+        informal: Proves Borel determinacy for the bundled game representation used in the formalization.
+    tags:
+      - descriptive-set-theory
+      - game-theory
+      - determinacy
+    msc:
+      - "03E15"
+      - "54H05"
+      - "91A44"
+  - slug: main-theorem-of-polytopes
+    title: The main theorem of polytopes
+    summary: Formalizes the Minkowski–Weyl theorem — the equivalence between V-polytopes (convex hulls of finite point sets) and bounded H-polytopes (finite intersections of half-spaces) in a finite-dimensional real vector space.
+    branch: convex geometry
+    entry_module: LeanPool.Polytopes
+    authors:
+      - Jun Kwon
+    source:
+      title: "Main theorem of polytopes"
+      url: https://github.com/Jun2M/Main-theorem-of-polytopes
+      github_repo: Jun2M/Main-theorem-of-polytopes
+    status: verified
+    main_declarations:
+      - MainTheoremOfPolytopes
+    main_results:
+      - declaration: MainTheoremOfPolytopes
+        informal: The Minkowski–Weyl theorem — a set is a V-polytope iff it is a bounded H-polytope.
+        source_ref: "G. M. Ziegler, Lectures on Polytopes, GTM 152, Springer, 1995, Theorem 1.1."
+      - declaration: Vpolytope_of_Hpolytope
+        informal: Every bounded H-polytope (finite intersection of half-spaces) is the convex hull of a finite point set.
+    tags:
+      - convex-geometry
+      - discrete-geometry
+      - polytopes
+    msc:
+      - "52B11"
+      - "52A20"
   - slug: lean-poly-abc
     title: Polynomial ABC (Mason–Stothers) and its corollaries
     summary: Formalizes the Mason–Stothers theorem (the polynomial ABC theorem) and derives the polynomial Fermat's Last Theorem, the Fermat–Catalan inequality, Davenport's theorem, and a no-parametrization corollary.
@@ -1843,6 +1897,30 @@ projects:
       - "60A05"
       - "18C50"
       - "68Q55"
+  - slug: lean4-gl-coalgebras
+    title: Craig Interpolation for Gödel-Löb logic via coalgebraic proofs
+    summary: Formalizes a proof-theoretic Craig interpolation theorem for Gödel-Löb provability logic, built on a coalgebraic notion of circular proof.
+    branch: provability logic
+    entry_module: LeanPool.Lean4GlCoalgebras
+    authors:
+      - Madeleine Gignoux
+    source:
+      doi: "10.1134/S0081543811060198"
+      github_repo: mgignoux/lean4-gl-coalgebras
+    status: verified
+    main_declarations:
+      - Lean4GlCoalgebras.interpolation
+    main_results:
+      - declaration: Lean4GlCoalgebras.interpolation
+        informal: Proves the Craig interpolation theorem for Gödel-Löb provability logic.
+    tags:
+      - modal-logic
+      - provability-logic
+      - craig-interpolation
+      - proof-theory
+    msc:
+      - "03B45"
+      - "03F45"
   - slug: leanmodularforms
     title: Modular forms and the generalized residue theorem
     summary: Formalizes the Hungerbühler-Wasem generalized residue theorem for Cauchy principal value integrals through poles and applies it to the valence formula for modular forms on the modular group.
@@ -1906,3 +1984,158 @@ projects:
     msc:
       - "94A60"
       - "68P25"
+  - slug: flean
+    title: "Flean: Floating-Point Numbers in Lean"
+    summary: Formalizes a configurable model of floating-point numbers in Lean 4, including normal and subnormal representations, conversions between rationals and floats, round-trip correctness, and rounding error bounds.
+    branch: numerical analysis
+    entry_module: LeanPool.Flean
+    authors:
+      - Joseph McKinsey
+    source:
+      doi: "10.1109/IEEESTD.2019.8766229"
+      url: "https://github.com/josephmckinsey/flean"
+      github_repo: josephmckinsey/flean
+    status: verified
+    msc:
+      - "65G50"
+      - "65G30"
+      - "68V20"
+    main_declarations:
+      - Flean.Float
+      - toFloat
+      - toRat
+      - to_float_to_rat
+      - roundf_close
+    main_results:
+      - declaration: Flean.Float
+        informal: Defines the floating-point number type parameterized by a precision and exponent configuration, with normal, subnormal, infinite, and NaN cases.
+      - declaration: toFloat
+        informal: Rounds a rational number to the nearest representable floating-point value under a given rounding mode.
+      - declaration: toRat
+        informal: Interprets a floating-point value as the exact rational number it represents.
+      - declaration: to_float_to_rat
+        informal: Proves the round-trip identity that converting a finite nonzero float to a rational and back recovers the original float.
+      - declaration: roundf_close
+        informal: Bounds the distance between a rational and its rounded floating-point representation.
+    tags:
+      - floating-point
+      - numerical-analysis
+      - ieee-754
+      - rounding
+  - slug: istranscendentalpi
+    title: The transcendence of π
+    summary: Formalizes a self-contained proof, following Niven's 1939 argument, that the real and complex number π is transcendental over the rationals.
+    branch: number theory
+    entry_module: LeanPool.IsTranscendentalPi
+    authors:
+      - James Huang
+      - Samuël Borza
+    source:
+      url: "https://github.com/samuelborza/IsTranscendentalPi"
+      github_repo: samuelborza/IsTranscendentalPi
+    status: verified
+    main_declarations:
+      - IsTranscendentalPi
+      - IsTranscendentalPiReal
+    main_results:
+      - declaration: IsTranscendentalPi
+        informal: Proves that the complex number π is transcendental over ℚ.
+      - declaration: IsTranscendentalPiReal
+        informal: Proves that the real number π is transcendental over ℚ.
+      - declaration: isAlgebraic_I_mul_pi_of_isAlgebraic_pi
+        informal: Shows that if π is algebraic over ℚ then so is iπ.
+      - declaration: exists_monic_rat_poly_aeval_Ipi_eq_zero
+        informal: Produces a monic rational polynomial vanishing at iπ when iπ is algebraic.
+    tags:
+      - transcendence
+      - pi
+      - number-theory
+      - niven
+    msc:
+      - "11A41"
+  - slug: brouwer
+    title: Existence of Nash equilibria via Brouwer's fixed-point theorem
+    summary: Formalizes Scarf's combinatorial lemma, derives Brouwer's fixed-point theorem on a simplex and on finite products of simplices, and uses it to prove the existence of a mixed Nash equilibrium in every finite game.
+    branch: game theory
+    entry_module: LeanPool.Brouwer
+    authors:
+      - Math_XMUM
+    source:
+      doi: "10.1073/pnas.36.1.48"
+      url: "https://github.com/math-xmum/Brouwer"
+      github_repo: math-xmum/Brouwer
+    status: verified
+    main_declarations:
+      - ExistsNashEq
+      - Brouwer
+      - Brouwer_Product
+      - IndexedLOrder.Scarf
+      - FinGame
+    main_results:
+      - declaration: ExistsNashEq
+        informal: Every finite game has a mixed Nash equilibrium.
+        source_ref: "J. Nash, Equilibrium Points in N-Person Games, Proceedings of the National Academy of Sciences 36(1):48-49, 1950, doi:10.1073/pnas.36.1.48."
+      - declaration: Brouwer
+        informal: Every continuous self-map of a standard simplex has a fixed point.
+        source_ref: "H. Scarf, The Approximation of Fixed Points of a Continuous Mapping, SIAM Journal on Applied Mathematics 15(5):1328-1343, 1967, doi:10.1137/0115116."
+      - declaration: Brouwer_Product
+        informal: Every continuous self-map of a finite product of simplices has a fixed point.
+        source_ref: "H. Scarf, The Approximation of Fixed Points of a Continuous Mapping, SIAM Journal on Applied Mathematics 15(5):1328-1343, 1967, doi:10.1137/0115116."
+      - declaration: IndexedLOrder.Scarf
+        informal: Scarf's combinatorial lemma producing a colorful simplex.
+        source_ref: "H. Scarf, The Approximation of Fixed Points of a Continuous Mapping, SIAM Journal on Applied Mathematics 15(5):1328-1343, 1967, doi:10.1137/0115116."
+      - declaration: FinGame
+        informal: The structure of a finite game with finitely many players and finite pure strategy sets.
+        source_ref: "J. Nash, Equilibrium Points in N-Person Games, Proceedings of the National Academy of Sciences 36(1):48-49, 1950, doi:10.1073/pnas.36.1.48."
+      - declaration: FinGame.mixedNashEquilibrium
+        informal: The predicate that a mixed strategy profile is a Nash equilibrium.
+        source_ref: "J. Nash, Equilibrium Points in N-Person Games, Proceedings of the National Academy of Sciences 36(1):48-49, 1950, doi:10.1073/pnas.36.1.48."
+    tags:
+      - game-theory
+      - nash-equilibrium
+      - brouwer-fixed-point
+      - scarf-lemma
+      - simplex
+    msc:
+      - "91A06"
+      - "91A10"
+      - "47H10"
+  - slug: primecert
+    title: Formally verified primality certificates
+    summary: Implements Pocklington's primality test and the cube-root Brillhart-Lehmer-Selfridge variant in Lean 4, with custom metaprogramming to produce compact, kernel-checkable primality certificates.
+    branch: primality certificates
+    entry_module: LeanPool.PrimeCert
+    authors:
+      - Kenny Lau
+      - Bhavik Mehta
+    source:
+      doi: "10.1090/S0025-5718-1975-0384673-1"
+      url: "https://github.com/b-mehta/PrimeCert"
+      github_repo: b-mehta/PrimeCert
+    status: verified
+    main_declarations:
+      - pocklington_test
+      - PrimeCert.pocklington3_test
+      - wieferich_mirimanoff
+    main_results:
+      - declaration: pocklington_test
+        informal: "The core Pocklington divisor theorem: every prime factor of N is congruent to 1 modulo a fully factored divisor F of N - 1, given pseudo-primitive roots for each prime factor of F."
+        source_ref: "H. C. Pocklington, The Determination of the Prime or Composite Nature of Large Numbers by Fermat's Theorem, Proceedings of the Cambridge Philosophical Society 18:29-30, 1914."
+      - declaration: pocklington_certify
+        informal: Certifies that N is prime when a fully factored divisor F of N - 1 exceeds the square root of N and the Pocklington primitive-root predicate holds for a single root.
+        source_ref: "H. C. Pocklington, The Determination of the Prime or Composite Nature of Large Numbers by Fermat's Theorem, Proceedings of the Cambridge Philosophical Society 18:29-30, 1914."
+      - declaration: PrimeCert.pocklington3_test
+        informal: The cube-root (Brillhart-Lehmer-Selfridge) variant of the Pocklington test, requiring only a divisor F of N - 1 exceeding the cube root of N together with a sieve and a non-square certificate.
+        source_ref: "J. Brillhart, D. H. Lehmer, and J. L. Selfridge, New Primality Criteria and Factorizations of 2^m ± 1, Mathematics of Computation 29(130):620-647, 1975, doi:10.1090/S0025-5718-1975-0384673-1."
+      - declaration: wieferich_mirimanoff
+        informal: No prime below 6000 is simultaneously a Wieferich prime and a Mirimanoff prime.
+        source_ref: "J. Brillhart, D. H. Lehmer, and J. L. Selfridge, New Primality Criteria and Factorizations of 2^m ± 1, Mathematics of Computation 29(130):620-647, 1975, doi:10.1090/S0025-5718-1975-0384673-1."
+    tags:
+      - number-theory
+      - primality-testing
+      - pocklington
+      - primality-certificate
+      - metaprogramming
+    msc:
+      - "11A41"
+      - "11Y11"
