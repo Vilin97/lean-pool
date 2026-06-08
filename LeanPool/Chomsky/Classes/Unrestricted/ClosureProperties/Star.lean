@@ -883,18 +883,13 @@ by
   · rw [H] at ass
     classical
     have imposs := congr_arg (·.countIn R) ass
-    simp only [List.countIn_append, List.countIn_cons, List.countIn_nil, hdR, ite_true] at imposs
-    have h0 : 0 = if Symbol.nonterminal ◪1 = @R T g.nt then 1 else 0 := by
-      rfl
-    have one_imposs : 1 + (0 + 0) + 0 = 1 + l.countIn R + (1 + 0) + (0 + 0) + v.countIn R := by
-      convert imposs
-      · convert h0
-      · symm
-        apply zero_Rs_in_the_long_part
-      · simp [R]
-      · convert h0
-    clear * - one_imposs
-    linarith
+    have long_zero :
+        (((x.map (List.map wrapSym)).map (· ++ [H])).flatten).countIn (@R T g.nt) = 0 :=
+      zero_Rs_in_the_long_part
+    rw [hdR] at imposs
+    simp [List.countIn_append, List.countIn_cons, List.countIn_nil, R, H,
+      long_zero] at imposs
+    omega
   · simp_all
 
 private lemma case_2_match_rule {g : Grammar T} {r₀ : Grule T g.nt}
@@ -1368,9 +1363,11 @@ by
     rw [List.append_assoc _ (γ.map wrapSym)] at left_half
     have v'_from_left := congr_arg (List.drop u.length) left_half
     simp only [List.drop_left'] at v'_from_left
-    have le_u_len : (w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++ [@R T g.nt]).length ≤ u.length := by
+    have le_u_len : (w.flatten.map (@Symbol.terminal T (nn g.nt)) ++
+        β.map (@Symbol.terminal T (nn g.nt)) ++ [@R T g.nt]).length ≤ u.length := by
       by_contra! contr
-      have contr' : u.length ≤ (w.flatten.map Symbol.terminal ++ β.map Symbol.terminal).length := by
+      have contr' : u.length ≤ (w.flatten.map (@Symbol.terminal T (nn g.nt)) ++
+          β.map (@Symbol.terminal T (nn g.nt))).length := by
         simp only [List.length_append] at contr ⊢
         rw [List.length_singleton] at contr
         exact Nat.le_of_lt_succ contr
@@ -2116,10 +2113,10 @@ by
                 have rev := congr_arg List.reverse bef
                 clear * - rev
                 repeat rw [List.reverse_append] at rev
-                rw [←List.map_reverse _ r₀.inputR, List.reverse_singleton] at rev
+                rw [←List.map_reverse, List.reverse_singleton] at rev
                 cases hr₀ : r₀.inputR.reverse with
                 | nil =>
-                  have H_eq_N : H = Symbol.nonterminal ◩r₀.inputN := by
+                  have H_eq_N : (H : ns T g.nt) = Symbol.nonterminal ◩r₀.inputN := by
                     rw [hr₀] at rev
                     simp at rev
                     exact rev.left
@@ -2128,12 +2125,12 @@ by
                   simp at inr_eq_inl
                 | cons d l =>
                   rw [hr₀, List.map_cons] at rev
-                  have H_is : H = wrapSym d := by
+                  have H_is : (H : ns T g.nt) = wrapSym d := by
                     simp at rev
                     exact rev.left
                   unfold H at H_is
                   cases d <;> unfold wrapSym at H_is
-                  · simp at H_is
+                  · simp [liftSymbol] at H_is
                   · simp [liftSymbol] at H_is
               have bef_rev := congr_arg List.reverse bef
               repeat rw [List.reverse_append] at bef_rev
