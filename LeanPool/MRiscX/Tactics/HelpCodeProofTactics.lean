@@ -43,7 +43,8 @@ elab "prepare_second_seq": tactic => do
   evalTactic (← `(tactic | intros $(mkIdent `l') $(mkIdent `h_l') ))
   evalTactic (← `(tactic | rw [($(mkIdent `h_l'))] ))
   evalTactic (← `(tactic | unfold hoare_triple_up))
-  evalTactic (← `(tactic | intros $(mkIdent `h_inter) $(mkIdent `h_empty) $(mkIdent `s) $(mkIdent `h_code') $(mkIdent `h_pc) ))
+  evalTactic (← `(tactic | intros $(mkIdent `h_inter) $(mkIdent `h_empty) $(mkIdent `s)
+    $(mkIdent `h_code') $(mkIdent `h_pc) ))
   evalTactic (← `(tactic | rw [←($(mkIdent `h_code'))] ))
 
 

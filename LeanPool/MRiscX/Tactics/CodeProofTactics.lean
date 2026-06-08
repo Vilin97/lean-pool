@@ -91,7 +91,7 @@ elab "sapply_s_seq" &"P" &" := " P:term &", "
                     &"L_B'" &" := "  L_b':term
       : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := $P) (R := $R) (L_w := $L_w)
-                            (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
+      (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
   evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | · simp ))
@@ -160,7 +160,7 @@ elab "sapply_s_seq''"
                       &"L_B'" &" := "  L_b':term
       : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := _) (R := $R) (L_w := $L_w)
-                            (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
+      (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
   evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | · simp ))
@@ -190,7 +190,7 @@ during the process. Those side goals generally are goals about the set provided
                       &"L_B'" &" := "  L_b':term
       : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := $P) (R := $R) (L_w := $L_w)
-                            (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
+      (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
   evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | · simp ))
@@ -215,7 +215,7 @@ elab "sapply_s_seq_plain"  &"P" &" := " P:term &", "
                         &"L_B'" &" := "  L_b':term
       : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := $P) (R := $R) (L_w := $L_w)
-                            (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
+      (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
 
 
 elab "sapply_s_seq_plain"  &"R" &" := "  R:term &", "
@@ -245,7 +245,7 @@ elab "sapply_s_seq'''"  &"P" &" := " P:term &", "
                         &"L_B'" &" := "  L_b':term
       : tactic => do
   evalTactic (← `(tactic | apply $(mkIdent `S_SEQ) (P := $P) (R := $R) (L_w := $L_w)
-                            (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
+      (L_w' := $L_w') (L_b := $L_b) (L_b' := $L_b') <;> try assumption <;> try simp_set_eq))
   evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | · simp ))
   evalTactic (← `(tactic | · simp ))
@@ -330,7 +330,8 @@ elab "apply_spec_and_cleanup" spec:term : tactic => do
 /- apply specification for the 'first goal' of S_SEQ. This is only possible, when the goal has
 been modified to a point where the first goal of S_SEQ is only one execution step -/
 elab "apply_spec_default" spec:term : tactic => do
-  evalTactic (← `(tactic | intros $(mkIdent `h_inter) $(mkIdent `h_empty) $(mkIdent `s) $(mkIdent `h_code') $(mkIdent `h_pc) $(mkIdent `user_precondition)))
+  evalTactic (← `(tactic | intros $(mkIdent `h_inter) $(mkIdent `h_empty) $(mkIdent `s)
+    $(mkIdent `h_code') $(mkIdent `h_pc) $(mkIdent `user_precondition)))
   evalTactic (← `(tactic | rw [← $(mkIdent `h_code')] ))
   evalTactic (← `(tactic | split_condis in $(mkIdent `user_precondition) ))
   evalTactic (← `(tactic | repeat (apply $spec)))

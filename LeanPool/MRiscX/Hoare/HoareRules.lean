@@ -192,7 +192,8 @@ of the first triple is equal to the precondition of the second triple.
 This rule lets you apply S_SEQ with any form of `L_{B''}` but asks for
 a proof of `L_{B''} = L_B ∩ L_{B'}`
 -/
-theorem S_SEQ {L_b'' : Set UInt64} : ∀(P R Q : Assertion) (c : Code) (l : UInt64) (L_w L_b L_w' L_b' : Set UInt64),
+theorem S_SEQ {L_b'' : Set UInt64} :
+    ∀(P R Q : Assertion) (c : Code) (l : UInt64) (L_w L_b L_w' L_b' : Set UInt64),
   L_w ∩ L_b = ∅ →
   L_w ≠ ∅ →
   L_w' ∩ L_b' = ∅ →

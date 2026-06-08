@@ -149,7 +149,8 @@ theorem specification_CopyRegister (P : Assertion) (pc dst src : UInt64) (L : Se
   := by
   hoare_simp_specification
 
-theorem specification_AddImmediate (P : Assertion) (pc dst regAddend val : UInt64) (L : Set UInt64) :
+theorem specification_AddImmediate (P : Assertion) (pc dst regAddend val : UInt64)
+    (L : Set UInt64) :
   L = {n : UInt64 | n ≠ pc + 1} →
   hoare
     ⟪addi x dst, x regAddend, val;⟫

@@ -542,7 +542,8 @@ theorem j_otp : ∀ (p k c l : UInt64),
           (fun st ↦
                 (st.getRegisterAt 3 < x ∧
                       (∀ i < l - st.getRegisterAt 3,
-                        st.getMemoryAt (c + i) = st.getMemoryAt (p + i) ^^^ st.getMemoryAt (k + i)) ∧
+                        st.getMemoryAt (c + i) = st.getMemoryAt (p + i)
+                          ^^^ st.getMemoryAt (k + i)) ∧
                           st.getRegisterAt 0 = p + (l - st.getRegisterAt 3) ∧
                             st.getRegisterAt 1 = k + (l - st.getRegisterAt 3) ∧
                               st.getRegisterAt 2 = c + (l - st.getRegisterAt 3) ∧
@@ -555,7 +556,8 @@ theorem j_otp : ∀ (p k c l : UInt64),
           (fun st ↦
                 st.getRegisterAt 3 < x ∧
                   (((∀ i < l - st.getRegisterAt 3,
-                          st.getMemoryAt (c + i) = st.getMemoryAt (p + i) ^^^ st.getMemoryAt (k + i)) ∧
+                          st.getMemoryAt (c + i) = st.getMemoryAt (p + i)
+                            ^^^ st.getMemoryAt (k + i)) ∧
                         st.getRegisterAt 0 = p + (l - st.getRegisterAt 3) ∧
                           st.getRegisterAt 1 = k + (l - st.getRegisterAt 3) ∧
                             st.getRegisterAt 2 = c + (l - st.getRegisterAt 3) ∧

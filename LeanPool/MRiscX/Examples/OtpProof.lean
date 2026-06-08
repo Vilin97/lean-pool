@@ -262,7 +262,8 @@ theorem proof_otp : ∀ (p k c l: UInt64),
                       · simp_set_eq
                     · apply_spec specification_LoadWordReg (pc := 6) (dst := 6) (regWithAddr := 1)
                     · simp_set_eq
-                  · have: @singleton UInt64 (Set UInt64) Set.instSingletonSet 8  = @singleton UInt64 (Set UInt64) Set.instSingletonSet (7 + 1)  := by
+                  · have : @singleton UInt64 (Set UInt64) Set.instSingletonSet 8
+                        = @singleton UInt64 (Set UInt64) Set.instSingletonSet (7 + 1) := by
                       simp
                     rw [this]
                     apply_spec specification_XOR (dst := 7) (reg1 := 5) (reg2 := 6)
@@ -322,7 +323,8 @@ theorem proof_otp : ∀ (p k c l: UInt64),
               weak s s' {14} {n | n ≠ 14} s.code ∧
                 (fun st =>
                       (∀ i < l,
-                        st.getMemoryAt (c + i) = st.getMemoryAt (p + i) ^^^ st.getMemoryAt (k + i)) ∧
+                        st.getMemoryAt (c + i) = st.getMemoryAt (p + i)
+                          ^^^ st.getMemoryAt (k + i)) ∧
                           ¬st.terminated = true)
                     s' ∧
                   s'.pc ∉ {n | n ≠ 14})
@@ -331,7 +333,8 @@ theorem proof_otp : ∀ (p k c l: UInt64),
                 weak s s' {14} {n | n ≠ 14} s.code ∧
                   (fun st =>
                         ∀ i < l,
-                          st.getMemoryAt (c + i) = st.getMemoryAt (p + i) ^^^ st.getMemoryAt (k + i) ∧
+                          st.getMemoryAt (c + i) = st.getMemoryAt (p + i)
+                            ^^^ st.getMemoryAt (k + i) ∧
                             ¬st.terminated = true)
                       s' ∧
                     s'.pc ∉ {n | n ≠ 14} := by

@@ -207,7 +207,8 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
 
 
 
-private def runSpecAndSolve (instr : Instr) (pc : UInt64) (name? : Option Ident := none) : TacticM Unit := do
+private def runSpecAndSolve (instr : Instr) (pc : UInt64) (name? : Option Ident := none) :
+    TacticM Unit := do
   evalTactic (← getSpecTacFromInstr instr pc name?)
   -- evalTactic (← `(tactic | try simp))
   -- evalTactic (← `(tactic | try simp))
