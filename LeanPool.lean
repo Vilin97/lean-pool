@@ -1195,6 +1195,8 @@ import LeanPool.SyntheticEuclid4.Axioms
 import LeanPool.SyntheticEuclid4.PermTactics
 import LeanPool.SyntheticEuclid4.SyntheticEuclid4
 import LeanPool.SyntheticEuclid4.Tactics
+import LeanPool.Turan3
+import LeanPool.Turan3.Turans_3rdProof
 import LeanPool.TwoColoringOneRound
 import LeanPool.TwoColoringOneRound.API
 import LeanPool.TwoColoringOneRound.Definitions
