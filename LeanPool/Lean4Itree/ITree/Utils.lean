@@ -56,7 +56,9 @@ theorem fin1Const_fin0 : fin1Const (c 0) = c := by
 /-! # --------------------Start PFunctor Utilities--------------------------- -/
 /-! # ----------------------------------------------------------------------- -/
 
-theorem PFunctor.M.unfold_corec'_left.{uA, uB, u} {P : PFunctor.{uA, uB}} {α : Type u}
+universe uA uB u
+
+theorem PFunctor.M.unfold_corec'_left {P : PFunctor.{uA, uB}} {α : Type u}
   (F : P.M ⊕ α → P (P.M ⊕ α))
   (h_eq : ∀ l, F (.inl l) = ⟨l.dest.1, Sum.inl ∘ l.dest.2⟩) :
   ∀ l, PFunctor.M.corec F (.inl l) = l := by
@@ -67,7 +69,7 @@ theorem PFunctor.M.unfold_corec'_left.{uA, uB, u} {P : PFunctor.{uA, uB}} {α : 
   have ⟨a, g⟩ := t2.dest
   exact ⟨_, _, _, rfl, rfl, fun _ => rfl⟩
 
-theorem PFunctor.M.unfold_corec'.{uA, uB, u} {P : PFunctor.{uA, uB}} {α : Type u}
+theorem PFunctor.M.unfold_corec' {P : PFunctor.{uA, uB}} {α : Type u}
   (F : ∀ {X : Type (max u uA uB)}, (α → X) → α → P.M ⊕ P X) (x : α) :
   .corec' F x =
   match F (@Sum.inr P.M α) x with

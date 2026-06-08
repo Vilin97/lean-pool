@@ -63,7 +63,7 @@ class MonadIter (m : Type u → Type v) where
   iter : {ρ ι : Type u} → (ι → m (IterState ι ρ)) → ι → m ρ
 
 /-- `StateT` lifts `MonadIter` by threading the state through each iteration step. -/
-instance instMonadIterStateT.{u} {σ : Type u} {m : Type u → Type u} [Monad m] [MI : MonadIter m] :
+instance instMonadIterStateT {σ : Type u} {m : Type u → Type u} [Monad m] [MI : MonadIter m] :
     MonadIter (StateT σ m) where
   iter step i s :=
     MonadIter.iter (fun (i, s) =>

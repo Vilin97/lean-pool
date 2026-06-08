@@ -5,6 +5,7 @@ Authors: Paul Mure, Joonhyup Lee
 -/
 import LeanPool.Lean4Itree.ITree.Basic
 import LeanPool.Lean4Itree.Paco.PacoDefs
+import LeanPool.Lean4Itree.Paco.PacoTactics
 
 /-!
 # Monad structure on interaction trees

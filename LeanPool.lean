@@ -488,6 +488,7 @@ import LeanPool.Lean4Itree.ITree.Utils
 import LeanPool.Lean4Itree.Paco
 import LeanPool.Lean4Itree.Paco.Paco
 import LeanPool.Lean4Itree.Paco.PacoDefs
+import LeanPool.Lean4Itree.Paco.PacoTactics
 import LeanPool.LeanBooleanfun
 import LeanPool.LeanBooleanfun.Arrow
 import LeanPool.LeanBooleanfun.AuxLemmas
