@@ -266,7 +266,9 @@ by
       simp only [List.cons_append, List.nil_append, Nat.succ_eq_add_one]
       have hw : 0 < w.length := by
         linarith
-      simp [hw]
+      simp only [tsub_lt_self_iff, hw, add_pos_iff, zero_lt_one, or_true, and_self, getElem?_pos,
+        Option.toList_some, List.map_cons, List.map_nil, List.flatten_cons, List.flatten_nil,
+        List.append_nil]
       apply gr_deri_of_tran_deri
       · use g.star.rules[2]'(by simp [Grammar.star]), List.getElem_mem (by simp [Grammar.star]), [],
             (w[w.length - k.succ]'lt_wl).map Symbol.terminal, rfl
@@ -596,7 +598,12 @@ by
     omega
   constructor
   · convert hyp_u.symm using 1
-    simp_all
+    simp_all only [ne_eq, List.map_map, List.append_assoc, List.cons_append, List.nil_append,
+      List.length_append, List.length_map, List.length_cons, List.get_eq_getElem, List.getElem_map,
+      Function.comp_apply, List.length_nil, zero_add, List.take_left', List.length_flatten,
+      List.map_take, List.length_take, add_lt_add_iff_left, add_lt_add_iff_right,
+      lt_add_iff_pos_right, Nat.succ_eq_add_one, List.append_cancel_left_eq, List.left_eq_take_iff,
+      List.cons_ne_self, false_or, Nat.add_left_cancel_iff]
     exact Nat.le_of_lt_succ klt
   constructor
   · have x_eq : x = x.take m ++ [x[m]'mxl] ++ x.drop m.succ := by
