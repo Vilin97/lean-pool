@@ -12,14 +12,23 @@ import Mathlib.Algebra.Field.Defs
 import Mathlib.Algebra.Ring.Rat
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
+/-!
+# Actions of spin point group elements
+
+This module defines how an `SPGElement` acts on magnetic (axial) and electric
+(polar) vectors in `Vec3`.
+-/
+
 namespace SPG
 
-def magnetic_action (g : SPGElement) (v : Vec3) : Vec3 :=
+/-- Action of a spin point group element on a magnetic (axial) vector. -/
+def magneticAction (g : SPGElement) (v : Vec3) : Vec3 :=
   let detR := Matrix.det g.spatial
   let rotated := Matrix.mulVec g.spatial v
   Matrix.mulVec g.spin (detR • rotated)
 
-def electric_action (g : SPGElement) (v : Vec3) : Vec3 :=
+/-- Action of a spin point group element on an electric (polar) vector. -/
+def electricAction (g : SPGElement) (v : Vec3) : Vec3 :=
   Matrix.mulVec g.spatial v
 
 end SPG

@@ -9,3 +9,11 @@ import LeanPool.SPG.Physics.Hamiltonian.Spin
 import LeanPool.SPG.Physics.Hamiltonian.Ham
 import LeanPool.SPG.Physics.Hamiltonian.LinearAlgebra
 import LeanPool.SPG.Physics.Hamiltonian.Invariants
+
+/-!
+# k·p Hamiltonian analysis
+
+This module aggregates the spin point group k·p Hamiltonian machinery:
+polynomials, spin components, Hamiltonian terms, the rational linear algebra
+helpers, and the symmetry-allowed invariant enumeration.
+-/

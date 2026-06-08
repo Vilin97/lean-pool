@@ -6,14 +6,23 @@ Authors: Yizhou Tong
 import LeanPool.SPG.Algebra.Actions
 import LeanPool.SPG.Physics.Hamiltonian.Spin
 
+/-!
+# Residual group under an electric field
+
+This module computes the residual subgroup of a spin point group that fixes a
+uniform electric-field direction, extracts the sign of the `σz` spin component
+under each element, and uses it to decide whether a Gamma-point Zeeman-type
+term is symmetry-forbidden.
+-/
+
 namespace SPG.Physics
 
 open SPG
 open SPG.Physics.Hamiltonian
 
 /-- Residual subgroup under a fixed (uniform) electric-field direction `e` (polar vector). -/
-def residual_group (group_elements : List SPGElement) (e : Vec3) : List SPGElement :=
-  group_elements.filter (fun g => decide (electric_action g e = e))
+def residualGroup (group_elements : List SPGElement) (e : Vec3) : List SPGElement :=
+  group_elements.filter (fun g => decide (electricAction g e = e))
 
 /--
 Extract the sign factor `s(g) ∈ {+1,-1}` of `σz` under the minimal collinear assumption:
@@ -21,8 +30,8 @@ Extract the sign factor `s(g) ∈ {+1,-1}` of `σz` under the minimal collinear 
 
 Returns `none` when `σz` is mixed into `σx/σy`, meaning the minimal `σz`-only closure fails.
 -/
-def sigmaZ_sign? (g : SPGElement) : Option Int :=
-  let v := act_on_spin g .z
+def sigmaZSign? (g : SPGElement) : Option Int :=
+  let v := actOnSpin g .z
   if v 0 = 0 then
     if v 1 = 0 then
       if v 2 = 1 then some 1
@@ -35,10 +44,10 @@ def sigmaZ_sign? (g : SPGElement) : Option Int :=
 Residual-group criterion for forbidding a Gamma-point Zeeman-type term `g(E) σz`:
 if the residual group contains any element with `s(g) = -1`, then the term is symmetry-forbidden.
 -/
-def forbids_gamma_zeeman_by_s (group_elements : List SPGElement) (e : Vec3) : Bool :=
-  let gE := residual_group group_elements e
+def forbidsGammaZeemanByS (group_elements : List SPGElement) (e : Vec3) : Bool :=
+  let gE := residualGroup group_elements e
   gE.any (fun g =>
-    match sigmaZ_sign? g with
+    match sigmaZSign? g with
     | some (-1) => true
     | _ => false
   )

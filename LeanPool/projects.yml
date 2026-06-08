@@ -1885,21 +1885,18 @@ projects:
       github_repo: tsurumi-yizhou/SPG
     status: verified
     main_declarations:
-      - SPG.Algebra.generate_group
-      - SPG.Physics.get_mpg
-      - SPG.Physics.allows_z_polarization
-      - SPG.Physics.Hamiltonian.isInvariantHam
-      - SPG.Physics.Hamiltonian.find_invariants
+      - SPG.Algebra.generateGroup
+      - SPG.Physics.getMpg
     main_results:
-      - declaration: SPG.Algebra.generate_group
+      - declaration: SPG.Algebra.generateGroup
         informal: Generates the closure of a list of spin point group elements under multiplication by fixed-point iteration.
-      - declaration: SPG.Physics.get_mpg
+      - declaration: SPG.Physics.getMpg
         informal: Computes the magnetic point group fixing a given magnetic order-parameter orientation.
-      - declaration: SPG.Physics.allows_z_polarization
+      - declaration: SPG.Physics.allowsZPolarization
         informal: Decides whether a magnetic point group permits a nonzero electric polarization along the z axis.
       - declaration: SPG.Physics.Hamiltonian.isInvariantHam
         informal: Decides whether a k-p Hamiltonian term is invariant under every element of a spin point group.
-      - declaration: SPG.Physics.Hamiltonian.find_invariants
+      - declaration: SPG.Physics.Hamiltonian.findInvariants
         informal: Enumerates the low-order polynomial and spin terms that form symmetry-allowed Hamiltonian invariants of a group.
     tags:
       - spin-point-groups

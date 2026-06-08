@@ -5,12 +5,21 @@ Authors: Yizhou Tong
 -/
 import Mathlib.Data.Matrix.Basic
 
+/-!
+# Spin operation matrices
+
+This module provides the rational `3 × 3` matrices for the spin identity and
+spin reversal (time-reversal) operations.
+-/
+
 namespace SPG.Geometry.SpinOps
 
-def spin_I : Matrix (Fin 3) (Fin 3) ℚ :=
+/-- Spin I. -/
+def spinI : Matrix (Fin 3) (Fin 3) ℚ :=
   1
 
-def spin_neg_I : Matrix (Fin 3) (Fin 3) ℚ :=
+/-- Spin Neg I. -/
+def spinNegI : Matrix (Fin 3) (Fin 3) ℚ :=
   -1
 
 end SPG.Geometry.SpinOps

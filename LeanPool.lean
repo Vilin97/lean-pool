@@ -1016,7 +1016,7 @@ import LeanPool.SPG
 import LeanPool.SPG.Algebra.Actions
 import LeanPool.SPG.Algebra.Basic
 import LeanPool.SPG.Algebra.Group
-import LeanPool.SPG.Data.ICE_Notation
+import LeanPool.SPG.Data.ICENotation
 import LeanPool.SPG.Data.MagneticGroups
 import LeanPool.SPG.Data.Tetragonal
 import LeanPool.SPG.Geometry.SpatialOps
