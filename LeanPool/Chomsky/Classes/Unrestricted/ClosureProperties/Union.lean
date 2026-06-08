@@ -158,10 +158,9 @@ by
   rcases hggw₂ with ⟨i, ⟨r, rin, u, v, bef, aft⟩, deri⟩
   have uv_nil : u = [] ∧ v = [] := by
     have bef_len := congr_arg List.length bef
-    rw [List.length_singleton] at bef_len
-    repeat rw [List.length_append] at bef_len
-    have hsing : [Symbol.nonterminal r.inputN].length = 1 := rfl
-    refine ⟨List.length_eq_zero_iff.mp (by omega), List.length_eq_zero_iff.mp (by omega)⟩
+    simp only [List.length_append, List.length_singleton, List.length_cons,
+      List.length_nil] at bef_len
+    exact ⟨List.length_eq_zero_iff.mp (by omega), List.length_eq_zero_iff.mp (by omega)⟩
   rw [uv_nil.left, List.nil_append, uv_nil.right, List.append_nil] at bef aft
   have same_nt : (unionGrammar g₁ g₂).initial = r.inputN := by
     clear * - bef
