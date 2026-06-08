@@ -522,7 +522,7 @@ by
         intro xr_nil
         rw [List.reverse_eq_iff] at xr_nil
         exact xnn xr_nil
-      cases' hx : x.reverse with d l
+      rcases hx : x.reverse with _ | ⟨d, l⟩
       · exfalso
         exact xrnn hx
       rw [List.map_cons, List.flatten]
@@ -674,7 +674,7 @@ by
   have unn : u ≠ [] := by
     by_contra u_nil
     rw [u_nil, List.nil_append] at hyp
-    cases' hr₀ : r₀.inputL with d l
+    rcases hr₀ : r₀.inputL with _ | ⟨d, l⟩
     · rw [hr₀, List.map_nil, List.nil_append] at hyp
       have imposs := List.head_eq_of_cons_eq hyp
       have inr_eq_inl := Symbol.nonterminal.inj imposs
@@ -695,7 +695,7 @@ by
   rcases cases_1_and_2_and_3a_match_aux is_x_nil hypr with ⟨m, u₁, v₁, u_eq, xm_eq, v_eq⟩
   use m, u₁, v₁
   constructor
-  · cases' u with d l
+  · rcases u with _ | ⟨d, l⟩
     · exfalso
       exact unn rfl
     have headZ : d = Z := by
@@ -750,7 +750,7 @@ by
       have ul_pos : 0 < u.length := by
         rwa [pos_iff_ne_zero]
       have bef_tail := congr_arg List.tail bef
-      cases' u with d l
+      rcases u with _ | ⟨d, l⟩
       · rw [List.length] at ul_pos
         exact Nat.lt_irrefl 0 ul_pos
       · have Z_in_tail : Z ∈ l ++ [Symbol.nonterminal ▶0] ++ v := by
@@ -780,7 +780,7 @@ by
         have ul_pos : 0 < u.length := by
           rwa [pos_iff_ne_zero]
         have bef_tail := congr_arg List.tail bef
-        cases' u with d l
+        rcases u with _ | ⟨d, l⟩
         · rw [List.length] at ul_pos
           exact Nat.lt_irrefl 0 ul_pos
         · have Z_in_tail : Z ∈ l ++ [Symbol.nonterminal ▶0] ++ v := by
@@ -888,7 +888,7 @@ private lemma u_nil_when_RH {g : Grammar T} {x : List (List (Symbol T g.nt))} {u
       u ++ [] ++ [Symbol.nonterminal ▶2] ++ [H] ++ v) :
   u = [] :=
 by
-  cases' u with d l
+  rcases u with _ | ⟨d, l⟩
   · rfl
   rw [List.append_nil] at ass
   exfalso
@@ -963,7 +963,7 @@ by
   rcases cases_1_and_2_and_3a_match_aux is_x_nil hyptt with ⟨m, u₁, v₁, u_eq, xm_eq, v_eq⟩
   use m, u₁, v₁
   constructor
-  · cases' u with d l
+  · rcases u with _ | ⟨d, l⟩
     · exfalso
       exact unn rfl
     have headR : d = R := by
@@ -1016,7 +1016,7 @@ by
       left; right; right
       rewrite [List.mem_singleton]
       rfl
-  · cases' x with x₀ L
+  · rcases x with _ | ⟨x₀, L⟩
     · right; right; right; left
       have empty_string : u = [] ∧ v = [] := by
         rw [RH_R, cat] at bef
@@ -1121,7 +1121,7 @@ by
     dsimp only at bef
     rw [List.append_nil] at bef
     have u_nil : u = [] := by
-      cases' u with d l
+      rcases u with _ | ⟨d, l⟩
       · rfl
       exfalso
       rw [cat] at bef
@@ -1658,7 +1658,7 @@ by
           rw [cat] at bef
           have gamma_nil_here := case_3_gamma_nil bef
           rw [←List.reverse_reverse x] at *
-          cases' hx : x.reverse with xₘ L
+          rcases hx : x.reverse with _ | ⟨xₘ, L⟩
           · right; left
             rw [gamma_nil_here, List.map_nil, List.append_nil] at bef
             rw [hx, List.reverse_nil, List.map_nil, List.map_nil, List.flatten, List.append_nil] at bef
@@ -2293,7 +2293,7 @@ by
     cases' result with result result
     · exfalso
       rcases result with ⟨x, -, contr⟩
-      cases' w with d l
+      rcases w with _ | ⟨d, l⟩
       · tauto
       rw [List.map_cons] at contr
       have terminal_eq_Z : Symbol.terminal d = Z := List.head_eq_of_cons_eq contr
@@ -2301,7 +2301,7 @@ by
     cases' result with result result
     · exfalso
       rcases result with ⟨x, -, contr⟩
-      cases' w with d l
+      rcases w with _ | ⟨d, l⟩
       · tauto
       rw [List.map_cons] at contr
       have terminal_eq_R : Symbol.terminal d = R := List.head_eq_of_cons_eq contr
