@@ -50,8 +50,8 @@ theorem help_I_pre' : ∀ (p k c l: UInt64),
   rw [UInt64.add_cancel_right_iff] at heq
   rw [heq] at h_kc
   apply UInt64.lt_asymm (a := p) (b := k)
-  exact h_pk
-  exact h_kc
+  · exact h_pk
+  · exact h_kc
 
 theorem help_I_pre'' : ∀ (p k c l: UInt64),
   iPre' p k c l →
@@ -80,15 +80,15 @@ theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
   by_contra neq
   have : k + i < c + (l - x) := by
       apply UInt64.add_lt_add
-      exact ⟨h_kc, hlx⟩
-      apply Nat.lt_of_le_of_lt
-      change c.toNat + (l - x).toNat ≤ c.toNat + l.toNat
-      simp only [Nat.add_le_add_iff_left]
-      rw [UInt64.toNat_sub_of_le]
-      · rw [←Nat.add_le_add_iff_right (n := x.toNat)]
-        simp
-      · exact hxLeL
-      · exact h_noOverfl
+      · exact ⟨h_kc, hlx⟩
+      · apply Nat.lt_of_le_of_lt
+        change c.toNat + (l - x).toNat ≤ c.toNat + l.toNat
+        simp only [Nat.add_le_add_iff_left]
+        rw [UInt64.toNat_sub_of_le]
+        · rw [←Nat.add_le_add_iff_right (n := x.toNat)]
+          simp
+        · exact hxLeL
+        · exact h_noOverfl
   · rw [neq] at this
     apply UInt64.lt_asymm <;> try assumption
 
@@ -106,19 +106,19 @@ theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
   by_contra neq
   have h_pc : p < c := by
     apply UInt64.lt_trans (b := k)
-    exact h_pk
-    exact h_kc
+    · exact h_pk
+    · exact h_kc
   have : p + i < c + (l - x) := by
     apply UInt64.add_lt_add
-    exact ⟨h_pc, hlx⟩
-    apply Nat.lt_of_le_of_lt
-    change c.toNat + (l - x).toNat ≤ c.toNat + l.toNat
-    simp only [Nat.add_le_add_iff_left]
-    rw [UInt64.toNat_sub_of_le]
-    · rw [←Nat.add_le_add_iff_right (n := x.toNat)]
-      simp
-    · exact hxLeL
-    · exact h_noOverfl
+    · exact ⟨h_pc, hlx⟩
+    · apply Nat.lt_of_le_of_lt
+      change c.toNat + (l - x).toNat ≤ c.toNat + l.toNat
+      simp only [Nat.add_le_add_iff_left]
+      rw [UInt64.toNat_sub_of_le]
+      · rw [←Nat.add_le_add_iff_right (n := x.toNat)]
+        simp
+      · exact hxLeL
+      · exact h_noOverfl
   · rw [neq] at this
     apply UInt64.lt_irrefl (a := p+i)
     exact this
@@ -219,15 +219,15 @@ theorem sw_otp : ∀ (p k c l : UInt64),
               apply h_I
               · exact v
               · apply help_I_pre''' (p := p)
-                exact h_I_pre'
-                exact v
-                rw [←h_x3]
-                exact h_x3LtL
+                · exact h_I_pre'
+                · exact v
+                · rw [←h_x3]
+                  exact h_x3LtL
             · apply help_I_pre'''' p k c l i x
-              exact h_I_pre'
-              exact v
-              rw [←h_x3]
-              exact h_x3LtL
+              · exact h_I_pre'
+              · exact v
+              · rw [←h_x3]
+                exact h_x3LtL
           · apply help_I_pre''''' (p:=p) (k:=k) <;> try assumption
             rw [←h_x3]
             exact h_x3LtL
