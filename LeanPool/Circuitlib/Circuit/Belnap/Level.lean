@@ -4,9 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Hunzinger
 -/
 
-module
-
-public import Mathlib.Order.WithBotTop
+import Mathlib.Order.WithBotTop
 
 /-! # Belnap levels
 
@@ -16,8 +14,6 @@ public import Mathlib.Order.WithBotTop
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
-
-@[expose] public section
 
 namespace Circuit
 

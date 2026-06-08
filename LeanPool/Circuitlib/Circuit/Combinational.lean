@@ -4,10 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Hunzinger
 -/
 
-module
-
-public import LeanPool.Circuitlib.Circuit.Category.Combinational
-public import LeanPool.Circuitlib.Circuit.Basic
+import LeanPool.Circuitlib.Circuit.Category.Combinational
+import LeanPool.Circuitlib.Circuit.Basic
 
 /-! # Combinational circuits
 
@@ -17,8 +15,6 @@ public import LeanPool.Circuitlib.Circuit.Basic
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
-
-@[expose] public section
 
 namespace Circuit
 

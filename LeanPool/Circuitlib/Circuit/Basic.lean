@@ -4,11 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matt Hunzinger
 -/
 
-module
-
-public import LeanPool.Circuitlib.Circuit.Category.Basic
-public import LeanPool.Circuitlib.Circuit.Belnap.Gate
-public import Mathlib.CategoryTheory.Monoidal.Category
+import LeanPool.Circuitlib.Circuit.Category.Basic
+import LeanPool.Circuitlib.Circuit.Belnap.Gate
+import Mathlib.CategoryTheory.Monoidal.Category
 
 /-! # Circuits
 
@@ -18,8 +16,6 @@ public import Mathlib.CategoryTheory.Monoidal.Category
 * [Ghica, Kaye, and Sprunger, *A Complete Theory of Sequential Digital Circuits*][Ghica2025]
 
 -/
-
-@[expose] public section
 
 namespace Circuit
 
