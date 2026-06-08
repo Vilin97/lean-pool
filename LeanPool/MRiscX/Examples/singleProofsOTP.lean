@@ -46,7 +46,6 @@ theorem help_I_pre' : ∀ (p k c l: UInt64),
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
   by_contra heq
   rw [UInt64.add_cancel_right_iff] at heq
-
   rw [heq] at h_kc
   apply UInt64.lt_asymm (a := p) (b := k)
   exact h_pk
@@ -81,7 +80,6 @@ theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
       apply UInt64.add_lt_add
       exact ⟨h_kc, hlx⟩
       apply Nat.lt_of_le_of_lt
-
       change c.toNat + (l - x).toNat ≤ c.toNat + l.toNat
       simp only [Nat.add_le_add_iff_left]
       rw [UInt64.toNat_sub_of_le]
@@ -112,7 +110,6 @@ theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
     apply UInt64.add_lt_add
     exact ⟨h_pc, hlx⟩
     apply Nat.lt_of_le_of_lt
-
     change c.toNat + (l - x).toNat ≤ c.toNat + l.toNat
     simp only [Nat.add_le_add_iff_left]
     rw [UInt64.toNat_sub_of_le]
@@ -146,7 +143,6 @@ def otp_code (p k c l : UInt64) :=
           la x 1, k
           la x 2, c
           li x 3, l
-
       .loop:
           beqz x 3, finish
           lw x 5, x 0
@@ -158,7 +154,6 @@ def otp_code (p k c l : UInt64) :=
           inc x 2
           dec x 3
           j .loop
-
       finish:
     end
 
@@ -325,12 +320,14 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · simp_currInstr
     · exact h_pc
     · repeat (constructor <;> try assumption)
-      simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addRegister_unfold, t_update_eq]
+      simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addRegister_unfold,
+        t_update_eq]
       simp at *
       rw [h_x0, h_x3]
       grind
       repeat (constructor <;> try assumption)
-      simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addRegister_unfold, t_update_eq, UInt64.add_sub_cancel, MState.getMemoryAt_def]
+      simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addRegister_unfold,
+        t_update_eq, UInt64.add_sub_cancel, MState.getMemoryAt_def]
       exact h_x5
       repeat (constructor <;> try assumption)
 
@@ -489,7 +486,6 @@ theorem dec_otp : ∀ (p k c l : UInt64),
       specialize h_I i this
       exact h_I
 
-
       repeat (constructor <;> try assumption)
       · grind only
       · repeat (constructor <;> try assumption)
@@ -567,12 +563,12 @@ theorem j_otp : ∀ (p k c l : UInt64),
               ne_eq,
               Bool.not_eq_true, Set.mem_setOf_eq, Decidable.not_not] at pre
             rcases pre with ⟨⟨⟨h_var, h_I⟩, h_terminated, _⟩, _⟩
-            simp only [ne_eq, MState.getRegisterAt_def, MState.getMemoryAt_def, Bool.not_eq_true, Set.mem_setOf_eq, Decidable.not_not]
+            simp only [ne_eq, MState.getRegisterAt_def, MState.getMemoryAt_def, Bool.not_eq_true,
+              Set.mem_setOf_eq, Decidable.not_not]
             simp at h_weak
             exists s'
     apply this
     clear this
-
     apply specification_Jump' (pc := 13) (newPc := 4) (label := ".loop")
     · simp
     · simp
@@ -583,11 +579,10 @@ theorem j_otp : ∀ (p k c l : UInt64),
       unfold MState.getLabelAt
       rw [h_code']
       simp
-
   · (repeat constructor <;> try assumption)
 
 
-theorem beqz_otp: ∀ (p k c l : UInt64),
+theorem beqz_otp : ∀ (p k c l : UInt64),
   (otp_code p k c l)
   ⦃(x[3] > 0 ∧
       (∀ i < l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
@@ -624,7 +619,6 @@ theorem beqz_otp: ∀ (p k c l : UInt64),
         contradiction
     · intros h
       push Not at h
-
       -- rw [←UInt64.lt_toNat_iff]
       by_contra h'
       push Not at h'
@@ -637,7 +631,6 @@ theorem beqz_otp: ∀ (p k c l : UInt64),
         grind
       rw [h_eq] at h
       contradiction
-
   rw [this]
   apply specification_JumpEqZero_false (pc := 4) (reg := 3) (label := "finish")
   · simp

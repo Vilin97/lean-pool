@@ -104,7 +104,6 @@ theorem proof_otp : ∀ (p k c l: UInt64),
     rw [h_l']
     unfold hoare_triple_up
     intros h_inter h_empty s s_code h_pc pre
-
     apply S_LOOP
       (C := ⦃x[3] > 0⦄)
       (I := ⦃((∀(i : UInt64), i < l - x[3] -> mem[c + i] = mem[p + i] ^^^ mem[k + i])
@@ -117,7 +116,6 @@ theorem proof_otp : ∀ (p k c l: UInt64),
       (l := 4)
       (L_w := {14})
       (L_b := {n | n ≠ 14} \ ({n:UInt64 | n ≥ 4} ∩ {n:UInt64 | n < 14}) )
-
     · simp
     · simp
     · unfold hoare_triple_up
@@ -298,7 +296,6 @@ theorem proof_otp : ∀ (p k c l: UInt64),
           rfl
         rw [neq] at hmem
         contradiction
-
       · exact h_code'
       · exact h_pc
       · rcases h_terminated with ⟨h_i, h_x0, h_x1, h_x2, h_x3, h_I_pre⟩
@@ -314,7 +311,6 @@ theorem proof_otp : ∀ (p k c l: UInt64),
       · simp
       · -- apply_spec specification_JumpEqZero_true (s := "finish") (newPc := 14)
         --   (pc := 4) (r := 3)
-
         intros h_inter h_empty s h_code' h_pc pre'
         rw [←h_code']
         have:
@@ -335,7 +331,8 @@ theorem proof_otp : ∀ (p k c l: UInt64),
                             ¬st.terminated = true)
                       s' ∧
                     s'.pc ∉ {n | n ≠ 14} := by
-              simp only [ne_eq, MState.getMemoryAt_def, Bool.not_eq_true, Set.mem_setOf_eq, Decidable.not_not, forall_exists_index, and_imp]
+              simp only [ne_eq, MState.getMemoryAt_def, Bool.not_eq_true, Set.mem_setOf_eq,
+                Decidable.not_not, forall_exists_index, and_imp]
               intros s' h_ex h_fo h_ter h_pc
               exists s'
               repeat constructor -- <;> try assumption
@@ -401,7 +398,8 @@ theorem proof_otp : ∀ (p k c l: UInt64),
         · intros i h_i'
           simp at h_i'
         · unfold I_pre
-          simp only [MState.getRegisterAt_def, UInt64.sub_self, UInt64.add_zero, Std.le_refl, true_and]
+          simp only [MState.getRegisterAt_def, UInt64.sub_self, UInt64.add_zero, Std.le_refl,
+            true_and]
           have : l ≤ l := by
             simp
           exact ⟨h_x0, h_x1, h_x2, h_noOverlap⟩

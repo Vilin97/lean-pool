@@ -360,7 +360,9 @@ namespace MState
   cases ms.terminated
   case true => simp
   case false =>
-    simp only [Bool.false_eq_true, ↓reduceIte, currInstruction_unfold, addRegister_unfold, incPc_increments_pc, getRegisterAt_def, getMemoryAt_def, addMemory_unfold, gt_iff_lt, ne_eq, decide_not]
+    simp only [Bool.false_eq_true, ↓reduceIte, currInstruction_unfold, addRegister_unfold,
+      incPc_increments_pc, getRegisterAt_def, getMemoryAt_def, addMemory_unfold, gt_iff_lt, ne_eq,
+      decide_not]
     cases TMap.get ms.code.instructionMap ms.pc <;> simp
     case Jump s =>
       unfold MState.jump
