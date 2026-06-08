@@ -53,20 +53,32 @@ def RCasesPatt.alts' (ref : Syntax) : List/-Σ-/ RCasesPatt →RCasesPatt
   | [p] => p
   | ps  => RCasesPatt.alts ref ps
 
+/-- The total number of nodes in a syntax tree, an upper bound on its depth. -/
+private def patternSyntaxSize : Syntax → Nat
+  | .node _ _ args => 1 + args.foldl (fun acc s => acc + patternSyntaxSize s) 0
+  | _ => 1
+
+/-- Fuel-bounded core of `RCasesPatt.parse`; `fuel` bounds the recursion. -/
+private def RCasesPatt.parseAux (fuel : Nat) (stx : Syntax) : MetaM RCasesPatt :=
+  match fuel with
+  | 0 => throwUnsupportedSyntax
+  | fuel + 1 =>
+    match stx with
+    | `(rcasesPatMed| $ps:rcasesPat|*) =>
+      return RCasesPatt.alts' stx (← ps.getElems.toList.mapM (parseAux fuel ·.raw))
+    | `(rcasesPatLo| $pat:rcasesPatMed : $t:term) => return .typed stx (← parseAux fuel pat) t
+    | `(rcasesPatLo| $pat:rcasesPatMed) => parseAux fuel pat
+    | `(rcasesPat| _) => return .one stx `_
+    | `(rcasesPat| $h:ident) => return .one h h.getId
+    | `(rcasesPat| -) => return .clear stx
+    | `(rcasesPat| @$pat) => return .explicit stx (← parseAux fuel pat)
+    | `(rcasesPat| ⟨$ps,*⟩) => return .tuple stx (← ps.getElems.toList.mapM (parseAux fuel ·.raw))
+    | `(rcasesPat| ($pat)) => return .paren stx (← parseAux fuel pat)
+    | _ => throwUnsupportedSyntax
+
 /-- Parses a `Syntax` into the `RCasesPatt` type used by the `RCases` tactic. -/
 def RCasesPatt.parse (stx : Syntax) : MetaM RCasesPatt :=
-  match stx with
-  | `(rcasesPatMed| $ps:rcasesPat|*) =>
-    return RCasesPatt.alts' stx (← ps.getElems.toList.mapM (parse ·.raw))
-  | `(rcasesPatLo| $pat:rcasesPatMed : $t:term) => return .typed stx (← parse pat) t
-  | `(rcasesPatLo| $pat:rcasesPatMed) => parse pat
-  | `(rcasesPat| _) => return .one stx `_
-  | `(rcasesPat| $h:ident) => return .one h h.getId
-  | `(rcasesPat| -) => return .clear stx
-  | `(rcasesPat| @$pat) => return .explicit stx (← parse pat)
-  | `(rcasesPat| ⟨$ps,*⟩) => return .tuple stx (← ps.getElems.toList.mapM (parse ·.raw))
-  | `(rcasesPat| ($pat)) => return .paren stx (← parse pat)
-  | _ => throwUnsupportedSyntax
+  RCasesPatt.parseAux (patternSyntaxSize stx) stx
 
 
 
