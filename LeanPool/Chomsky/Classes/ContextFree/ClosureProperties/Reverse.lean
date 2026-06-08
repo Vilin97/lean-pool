@@ -29,36 +29,30 @@ private lemma derives_reversed {g : CFG T} {v : List (Symbol T g.nt)}
 by
   induction hgv with
   | refl =>
+      show g.Derives _ (List.reverse [Symbol.nonterminal g.reverse.initial])
       rw [List.reverse_singleton]
       apply cf_deri_self
   | tail _ orig ih =>
       apply cf_deri_of_deri_tran ih
+      rw [show g.reverse.Transforms = CFG.Transforms (T := T)
+        ⟨g.nt, g.initial, g.rules.map (fun r : g.nt × List (Symbol T g.nt) =>
+          (r.fst, r.snd.reverse))⟩ from rfl] at orig
       rcases orig with ⟨r, rin, x, y, bef, aft⟩
-      change r ∈ g.rules.map (fun r : g.nt × List (Symbol T g.nt) => (r.fst, r.snd.reverse)) at rin
       rw [List.mem_map] at rin
       rcases rin with ⟨r₀, rin₀, r_from_r₀⟩
-      use r₀
-      constructor
-      · exact rin₀
-      use y.reverse
-      use x.reverse
-      constructor
-      · rw [←List.reverse_singleton, ←List.reverse_append_append]
-        have fst_from_r : r₀.fst = r.fst := by
-          rw [←r_from_r₀]
-        rw [fst_from_r]
-        exact congr_arg List.reverse bef
-      · have snd_from_r : r₀.snd = r.snd.reverse := by
-          rw [←r_from_r₀, List.reverse_reverse]
-        rw [snd_from_r, ←List.reverse_append_append]
-        exact congr_arg List.reverse aft
+      subst r_from_r₀
+      refine ⟨r₀, rin₀, y.reverse, x.reverse, ?_, ?_⟩
+      · rw [bef]
+        simp [List.reverse_append, List.append_assoc, List.reverse_reverse]
+      · rw [aft]
+        simp [List.reverse_append, List.append_assoc, List.reverse_reverse]
 
 private lemma reversed_word_in_original_language {g : CFG T} {w : List T}
     (hgw : w ∈ g.reverse.language) :
   w.reverse ∈ g.language :=
 by
   unfold CFG.language at *
-  rw [Set.mem_setOf_eq] at *
+  show g.Derives [Symbol.nonterminal g.initial] (w.reverse.map Symbol.terminal)
   rw [List.map_reverse]
   exact derives_reversed hgw
 

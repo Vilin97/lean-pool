@@ -45,23 +45,8 @@ def lg₁ : LiftedGrammar T :=
     )
     (by
       intro x y hyp
-      cases' x with x'
-      · right
-        rfl
-      cases' x' with x''; swap
-      · right
-        rfl
-      cases' y with y'
-      · rw [hyp]
-        right
-        rfl
-      cases' y' with y''; swap
-      · tauto
-      left
-      simp only [oN₁_of_N, Option.some.injEq] at hyp
-      apply congr_arg
-      apply congr_arg
-      exact hyp
+      rcases x with _ | (x' | x') <;> rcases y with _ | (y' | y') <;>
+        simp_all [oN₁_of_N]
     )
     (by
       intro
@@ -72,25 +57,30 @@ def lg₁ : LiftedGrammar T :=
       apply List.mem_cons_of_mem
       apply List.mem_cons_of_mem
       apply List.mem_append_left
-      rw [List.mem_map]
-      use r
+      exact List.mem_map.mpr ⟨r, hyp, rfl⟩
     )
     (by
       rintro r ⟨rin, n₁, rnt⟩
-      simp only [unionGrammar, List.mem_cons, List.mem_append, List.mem_map] at rin
-      rcases rin with req₁ | req₂ | rin₁ | rin₂
+      rw [show (unionGrammar g₁ g₂).rules =
+        ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
+        ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
+        (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
+          g₂.rules.map (liftRule (some ∘ Sum.inr))) from rfl] at rin
+      rw [List.mem_cons, List.mem_cons] at rin
+      obtain req₁ | req₂ | rin₃ := rin
+      on_goal 3 => obtain rin₁ | rin₂ := List.mem_append.mp rin₃
       · exfalso
         rw [req₁] at rnt
-        exact Option.noConfusion rnt
+        exact absurd rnt (Option.some_ne_none _)
       · exfalso
         rw [req₂] at rnt
-        exact Option.noConfusion rnt
-      · exact rin₁
+        exact absurd rnt (Option.some_ne_none _)
+      · exact List.mem_map.mp rin₁
       · exfalso
-        rcases rin₂ with ⟨r₂, r₂_in, r₂_lift⟩
+        rcases List.mem_map.mp rin₂ with ⟨r₂, r₂_in, r₂_lift⟩
         rw [←r₂_lift] at rnt
         have rnti := Option.some.inj rnt
-        exact Sum.noConfusion rnti
+        simp only [Sum.inl.injEq, reduceCtorEq] at rnti
     )
 
 def lg₂ : LiftedGrammar T :=
@@ -107,23 +97,8 @@ def lg₂ : LiftedGrammar T :=
     )
     (by
       intro x y hyp
-      cases' x with x'
-      · right
-        rfl
-      cases' x' with _ x''
-      · right
-        rfl
-      cases' y with y'
-      · rw [hyp]
-        right
-        rfl
-      cases' y' with _ y''
-      · tauto
-      left
-      simp only [oN₂_of_N, Option.some.injEq] at hyp
-      apply congr_arg
-      apply congr_arg
-      exact hyp
+      rcases x with _ | (x' | x') <;> rcases y with _ | (y' | y') <;>
+        simp_all [oN₂_of_N]
     )
     (by
       intro
@@ -134,25 +109,30 @@ def lg₂ : LiftedGrammar T :=
       apply List.mem_cons_of_mem
       apply List.mem_cons_of_mem
       apply List.mem_append_right
-      rw [List.mem_map]
-      use r
+      exact List.mem_map.mpr ⟨r, hyp, rfl⟩
     )
     (by
       rintro r ⟨rin, n₁, rnt⟩
-      simp only [unionGrammar, List.mem_cons, List.mem_append, List.mem_map] at rin
-      rcases rin with req₁ | req₂ | rin₁ | rin₂
+      rw [show (unionGrammar g₁ g₂).rules =
+        ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
+        ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
+        (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
+          g₂.rules.map (liftRule (some ∘ Sum.inr))) from rfl] at rin
+      rw [List.mem_cons, List.mem_cons] at rin
+      obtain req₁ | req₂ | rin₃ := rin
+      on_goal 3 => obtain rin₁ | rin₂ := List.mem_append.mp rin₃
       · exfalso
         rw [req₁] at rnt
-        exact Option.noConfusion rnt
+        exact absurd rnt (Option.some_ne_none _)
       · exfalso
         rw [req₂] at rnt
-        exact Option.noConfusion rnt
+        exact absurd rnt (Option.some_ne_none _)
       · exfalso
-        rcases rin₁ with ⟨r₁, r₁_in, r₁_lift⟩
+        rcases List.mem_map.mp rin₁ with ⟨r₁, r₁_in, r₁_lift⟩
         rw [←r₁_lift] at rnt
         have rnti := Option.some.inj rnt
-        exact Sum.noConfusion rnti
-      · exact rin₂
+        simp only [Sum.inl.injEq, reduceCtorEq] at rnti
+      · exact List.mem_map.mp rin₂
     )
 
 
@@ -161,15 +141,13 @@ lemma in_L₁_or_L₂_of_in_union {w : List T}
   w ∈ g₁.language ∨ w ∈ g₂.language :=
 by
   unfold Grammar.language at hwgg ⊢
-  rw [Set.mem_setOf_eq] at hwgg ⊢
-  rw [Set.mem_setOf_eq]
   have hggw := gr_eq_or_tran_deri_of_deri hwgg
   clear hwgg
-  cases' hggw with hggw₁ hggw₂
+  rcases hggw with hggw₁ | hggw₂
   · exfalso
     have zeroth := congr_arg (·[0]?) hggw₁
     cases w
-    · exact Option.noConfusion zeroth
+    · simp at zeroth
     · simp at zeroth
   rcases hggw₂ with ⟨i, ⟨r, rin, u, v, bef, aft⟩, deri⟩
   have uv_nil : u = [] ∧ v = [] := by
@@ -196,8 +174,14 @@ by
       rw [List.length_eq_zero_iff] at rl_first rl_third
       rwa [rl_first, rl_third] at bef
     exact Symbol.nonterminal.inj (List.head_eq_of_cons_eq elemeq)
-  simp only [unionGrammar, List.mem_cons, List.mem_append, List.mem_map] at rin
-  rcases rin with req₁ | req₂ | rin₁ | rin₂
+  rw [show (unionGrammar g₁ g₂).rules =
+    ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
+    ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
+    (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
+      g₂.rules.map (liftRule (some ∘ Sum.inr))) from rfl,
+    List.mem_cons, List.mem_cons] at rin
+  obtain req₁ | req₂ | rin₃ := rin
+  on_goal 3 => obtain rin₁ | rin₂ := List.mem_append.mp rin₃
   · rw [req₁] at aft
     dsimp only at aft
     rw [aft] at deri
@@ -229,7 +213,7 @@ by
     convert_to w.map Symbol.terminal = w.filterMap (Option.some ∘ Symbol.terminal)
     rw [←List.filterMap_map, List.filterMap_some]
   · suffices True = False by contradiction
-    rcases rin₁ with ⟨r₁, -, r_of_r₁⟩
+    rcases List.mem_map.mp rin₁ with ⟨r₁, -, r_of_r₁⟩
     convert
       congr_arg
         (Symbol.nonterminal (liftRule (Option.some ∘ Sum.inl) r₁).inputN ∈ ·)
@@ -241,7 +225,7 @@ by
     · rw [List.mem_singleton, Symbol.nonterminal.injEq]
       simp [liftRule, unionGrammar]
   · suffices True = False by contradiction
-    rcases rin₂ with ⟨r₂, -, r_of_r₂⟩
+    rcases List.mem_map.mp rin₂ with ⟨r₂, -, r_of_r₂⟩
     convert
       congr_arg
         (Symbol.nonterminal (liftRule (Option.some ∘ Sum.inr) r₂).inputN ∈ ·)
@@ -257,7 +241,6 @@ lemma in_union_of_in_L₁ {w : List T} (hwg : w ∈ g₁.language) :
   w ∈ (unionGrammar g₁ g₂).language :=
 by
   unfold Grammar.language at hwg ⊢
-  rw [Set.mem_setOf_eq] at hwg ⊢
   apply gr_deri_of_tran_deri
   · refine ⟨⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩, ?_, [], [], rfl, rfl⟩
     apply List.mem_cons_self
