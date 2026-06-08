@@ -19,6 +19,7 @@ open FirstOrder Language Function Ordinal SetTheory
 variable {M M₀} [ZFStructure M] [ZFStructure M₀]
 
 variable (M) in
+/-- The `NontrivialElementaryEmbedding` type. -/
 class NontrivialElementaryEmbedding extends M ↪ₑ[𝓛ZF] M where
   nontrivial' : toElementaryEmbedding ≠ .refl ..
 
@@ -103,6 +104,7 @@ lemma crit_exists : ∃ α, IsOrdinal α ∧ j α ≠ α := by
     · rwa [← ind _ (rank_mem hy), Membership.mem.elementarity]
 
 variable (j) in
+/-- The `crit` declaration. -/
 def crit : M := sInf {α : M | j α ≠ α ∧ IsOrdinal α}
 
 lemma crit_eq_ordinal_sInf : crit j = (sInf {α : Ordinals M | j α ≠ α}).1 := by
@@ -225,6 +227,7 @@ lemma isStrongLimit_crit_iter (n : ℕ) : IsStrongLimit (j^[n] (crit j)) := by
   | succ n ih => simpa only [iterate_succ_apply', elementary_simps]
 
 variable (j) in
+/-- The `hasOmegaOfNontrivialSelfEmbedding` declaration. -/
 @[reducible] def hasOmegaOfNontrivialSelfEmbedding : IsVonNeumannWithOmega M := by
   split_vonNeumann hM
   · suffices ω < μ from .vonNeumann μ hμ this rfl

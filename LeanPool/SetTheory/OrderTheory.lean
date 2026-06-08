@@ -16,7 +16,9 @@ open Function OrderDual Set
 
 variable {α β : Type*} [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β]
 
+/-- The `sInfClosed` declaration. -/
 def sInfClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddBelow s → sInf s ∈ S
+/-- The `sSupClosed` declaration. -/
 def sSupClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddAbove s → sSup s ∈ S
 
 lemma sInfClosed_top : sInfClosed (⊤ : Set α) := by simp [sInfClosed]
@@ -26,11 +28,13 @@ lemma sSupClosed_top : sSupClosed (⊤ : Set α) := by simp [sSupClosed]
 lemma sSupClosed_Iic (x : α) : sSupClosed (Iic x) := fun _ hsub hne _ => csSup_le hne hsub
 lemma sSupClosed_bot : sSupClosed (⊥ : Set α) := by simp [sSupClosed]
 
+/-- The `ContinuousOrderMap` type. -/
 class ContinuousOrderMap (f : α → β) where
   monotone : Monotone f
   preimage_Ici_closed : ∀ x, sInfClosed (f ⁻¹' (Ici x))
   preimage_Iic_closed : ∀ x, sSupClosed (f ⁻¹' (Iic x))
 
+/-- The `ContinuousOrderMapBounded` type. -/
 class ContinuousOrderMapBounded (f : α → β) extends ContinuousOrderMap f where
   bounded_preimage_Ici : ∀ y, BddBelow (f ⁻¹' (Ici y))
   bounded_preimage_Iic : ∀ y, BddAbove (f ⁻¹' (Iic y))

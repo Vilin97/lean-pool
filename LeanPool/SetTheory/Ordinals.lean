@@ -22,8 +22,11 @@ variable {M} [ZFStructure M] [hM : IsVonNeumann M]
 
 namespace SetTheory
 
+/-- The `IsOrdinal` declaration. -/
 @[realize] def IsOrdinal (x : M) := IsTransitive x ∧ ∀ y ∈ x, IsTransitive y
+/-- The `IsStrongLimit` declaration. -/
 @[realize] def IsStrongLimit (κ : M) := IsOrdinal κ ∧ ∀ α ∈ κ, cardLT (𝓟 α) κ
+/-- The `IsOrdinalValuedFunc` declaration. -/
 @[realize] def IsOrdinalValuedFunc (f : M) := IsFunc f ∧ ∀ x ∈ Ran f, IsOrdinal x
 
 @[toV_simps] lemma IsOrdinal.toV (α : M) : IsOrdinal ↓α ↔ IsOrdinal α := by
@@ -48,8 +51,10 @@ lemma IsOrdinal.mem_iff_lt {x y : M} (hx : IsOrdinal x) (hy : IsOrdinal y) :
   simpa only [toZFSet_simps] using fun hx hy => hx.mem_iff_lt hy
 
 variable (M) in
+/-- The `Ordinals` declaration. -/
 abbrev Ordinals := {x : M // IsOrdinal x}
 
+/-- The `rank` declaration. -/
 def rank (x : M) : M := by
   split_vonNeumann hM
   · refine ⟨(⇓x).rank.toZFSet, ?_⟩
@@ -100,6 +105,7 @@ lemma rank_trcl {x : M} : rank (trcl x) = rank x := by
 lemma rank_singleton {x : M} : rank {x} = succ (rank x) := by
   simp [toZFSet_simps]
 
+/-- The `rankFunc` declaration. -/
 def rankFunc (x : M) : ((trcl {x}) : M) → (succ (rank x) : M) := by
   refine fun | ⟨y, hy⟩ => ⟨rank y, ?_⟩
   erw [IsOrdinal.mem_iff_lt (by simp)
@@ -107,6 +113,7 @@ def rankFunc (x : M) : ((trcl {x}) : M) → (succ (rank x) : M) := by
   replace hy := rank_mem hy
   rwa [rank_trcl, rank_singleton] at hy
 
+/-- The `IsRankFunction` declaration. -/
 @[realize] def IsRankFunction (x : M) (f : M) :=
   IsOrdinalValuedFunc f ∧ IsTransitive (Dom f) ∧ x ∈ Dom f ∧ PreserveMem f
 
@@ -204,12 +211,13 @@ instance : OrderBot (Ordinals M) where
 instance : ConditionallyCompleteLinearOrderBot (Ordinals M) :=
   WellFoundedLT.conditionallyCompleteLinearOrderBot _
 
-@[simp] lemma sSup_empty_ordinals : sSup (∅ : Set (Ordinals M)) = ⊥ := by
+lemma sSup_empty_ordinals : sSup (∅ : Set (Ordinals M)) = ⊥ := by
   simp
 
 @[simp] lemma sInf_empty_ordinals : sInf (∅ : Set (Ordinals M)) = ⊥ := by
   simp [sInf]
 
+/-- The `toOrdinal` declaration. -/
 def toOrdinal : Ordinals M ↪o Ordinal.{0} where
   toFun α := (⇓α.1).rank
   map_rel_iff' := by
@@ -220,6 +228,7 @@ def toOrdinal : Ordinals M ↪o Ordinal.{0} where
       using fun α hα β hβ => (hα.rank_inj hβ).mp
 
 variable (M) in
+/-- The `maxOrdinal` declaration. -/
 def maxOrdinal : WithTop Ordinal.{0} := by
   split_vonNeumann hM
   · exact .some μ

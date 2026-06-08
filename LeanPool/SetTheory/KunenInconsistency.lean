@@ -21,13 +21,19 @@ namespace SetTheory
 private lemma mk_Iio_ToType_lt {c : Cardinal} (i : c.ord.ToType) : #(Set.Iio i) < c := by
   simpa using mk_Iio_lt i
 
+/-- The `IsOmegaJonssonFunc` declaration. -/
 @[realize] def IsOmegaJonssonFunc {M₀} [ZFStructure M₀] [IsVonNeumannWithOmega M₀] (f κ : M₀) :=
   f ∈ Func (Func ωₘ κ) κ ∧ ∀ X ⊆ κ, cardEq X κ → ∀ α ∈ κ, ∃ s ∈ Func ωₘ X, apply f s = α
 
+/-- The `KunenBoundParams` type. -/
 class KunenBoundParams where
+  /-- The `M` declaration. -/
   M : Type 1
+  /-- The `structureM` declaration. -/
   structureM : ZFStructure M
+  /-- The `isVonNeumann` declaration. -/
   isVonNeumann : IsVonNeumann M
+  /-- The `j` declaration. -/
   j : NontrivialElementaryEmbedding M
   bddAbove_crit_iter : BddAbove (Set.range (j^[·] (crit j)))
 
@@ -40,12 +46,19 @@ open KunenBoundParams
 instance : ZFStructure M := structureM
 instance : IsVonNeumannWithOmega M := hasOmegaOfNontrivialSelfEmbedding (hM := isVonNeumann) j
 
+/-- The `κ` declaration. -/
 def κ n := j^[n] (crit j)
+/-- The `κω` declaration. -/
 def κω : M := ⨆ n : ℕ, κ n
+/-- The `κωEquinumerousSubsets` declaration. -/
 def κωEquinumerousSubsets := {x : M // x ⊆ κω ∧ #x = #κω}
+/-- The `ν` declaration. -/
 def ν := (#(κω × κωEquinumerousSubsets)).ord
+/-- The `γX` declaration. -/
 def γX : ν.ToType ≃ κω × κωEquinumerousSubsets := Cardinal.eq.mp (mk_ord_toType _) |>.some
+/-- The `γ` declaration. -/
 def γ (α : ν.ToType) : M := (γX α).1.1
+/-- The `X` declaration. -/
 def X (α : ν.ToType) : M := (γX α).2.1
 
 lemma γ_mem_κω (α : ν.ToType) : γ α ∈ κω := (γX α).1.2
@@ -56,6 +69,7 @@ lemma card_ωₘ : #(ωₘ : M) = ℵ₀ := by
   have := (omegaEquiv (M₀ := M)).lift_cardinal_eq
   rwa [mk_nat, Cardinal.lift_id', lift_aleph0] at this
 
+/-- The `injSubset` declaration. -/
 def injSubset {A B : M} (hsub : A ⊆ B) : A ↪ B := {
   toFun := fun | ⟨x, hx⟩ => ⟨x, hsub hx⟩,
   inj' := by simp [Injective]
@@ -89,6 +103,7 @@ lemma κ_le_κω (n : ℕ) : κ n ≤ κω := le_csSup bddAbove_crit_iter ⟨n, 
 lemma aleph0_le_κω : ℵ₀ ≤ #κω := by
   simpa only [← card_ωₘ, κω] using card_le_of_sub (le_trans ωₘ_le_crit (κ_le_κω 0))
 
+/-- The `i` declaration. -/
 def i {n} : (𝓟 (κ n) : M) ↪ κω :=
   Nonempty.some <| show Nonempty ((𝓟 (κ n) : M) ↪ κω) by
     rw [← Cardinal.le_def]
@@ -136,6 +151,7 @@ instance : Nonempty κω := by
 instance : Nonempty κωEquinumerousSubsets := ⟨κω, subset_refl _, rfl⟩
 instance : Nonempty (ν.ToType) := by simp [ν]
 
+/-- The `s` declaration. -/
 def s (α : ν.ToType) : ℕ → κω := by
   have s' (β : Set.Iio α) : ℕ → κω := s β.1
   suffices {x : ℕ → κω | (∀ n, ↑(x n) ∈ X α) ∧ ∀ β, s' β ≠ x}.Nonempty from this.some
@@ -173,7 +189,9 @@ lemma s_mem_X : ∀ α n, (s α n).1 ∈ X α := by
   generalize_proofs hα
   exact hα.some_mem.1 n
 
+/-- The `f` declaration. -/
 def f (x : ℕ → κω) : κω := ⟨γ (s.invFun x), γ_mem_κω _⟩
+/-- The `fSet` declaration. -/
 def fSet : M := funcToSet fun x => f (setToFunc x ∘ omegaEquiv.symm)
 
 lemma fSet_mem : fSet ∈ Func (Func ωₘ κω) κω :=
@@ -224,7 +242,9 @@ lemma is_omega_jonsson_fSet : IsOmegaJonssonFunc fSet κω := by
   obtain ⟨α, ⟨_⟩, ⟨_⟩⟩ := exists_γ_and_X_eq α_lt_κω H_sub_κω card_eq
   exact ⟨fun n => ⟨s α n, s_mem_X α n⟩, f_s_eq_γ⟩
 
+/-- The `κFunc` declaration. -/
 def κFunc (n : ℕ) : κω := ⟨κ n, κ_mem_κω _⟩
+/-- The `κFuncSet` declaration. -/
 def κFuncSet := funcToSet (κFunc ∘ omegaEquiv)
 
 lemma iUnion_κ_funcSet_eq : iUnion κFuncSet = κω := by
@@ -264,6 +284,7 @@ lemma j_κω : j κω = κω := by
     · exact le_trans (le_of_lt (crit_iter_lt_succ 0)) (le_csSup bdd_κ_comp_succ ⟨0, rfl⟩)
     · simp [Set.range_nonempty]
 
+/-- The `H` declaration. -/
 def H : M := separate κω (fun x => x ∈ Set.range j)
 
 lemma coeSort_H_iff : (H : Sort _) = j '' (κω : Set M) := by

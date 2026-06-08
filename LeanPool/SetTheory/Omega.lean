@@ -19,6 +19,7 @@ open SetTheory Ordinal Cardinal ZFSet Function
 variable {M M₀} [ZFStructure M] [ZFStructure M₀]
     [hM : IsVonNeumann M] [hM₀ : IsVonNeumannWithOmega M₀]
 
+/-- The `toZFSet` declaration. -/
 def Set.toZFSet {A : ZFSet} (B : Set A) : ZFSet :=
   ZFSet.sep (fun x => ∃ hx : x ∈ A, ⟨x, hx⟩ ∈ B) A
 
@@ -28,7 +29,9 @@ def Set.toZFSet {A : ZFSet} (B : Set A) : ZFSet :=
 
 namespace SetTheory
 
+/-- The `IsWellFoundedRevMem` declaration. -/
 @[realize] def IsWellFoundedRevMem (x : M) := ∀ S ∈ 𝓟 x, S ≠ ∅ → ∃ y ∈ S, ∀ z ∈ S, y ∉ z
+/-- The `MemOmega` declaration. -/
 @[realize] def MemOmega (x : M) := IsOrdinal x ∧ IsWellFoundedRevMem x
 @[toV_simps] lemma IsWellFoundedRevMem.toV (x : M) :
     IsWellFoundedRevMem ↓x ↔ IsWellFoundedRevMem x := by
@@ -61,6 +64,7 @@ namespace SetTheory
     enter [2, 1, z]
     erw [and_iff_right_of_imp (@hy z)]
 
+/-- The `ωₛ` declaration. -/
 def ωₛ := Ordinal.toZFSet ω
 
 instance instNatCastM : NatCast M where
@@ -167,6 +171,7 @@ lemma memOmega_natCast {n : ℕ} : MemOmega (n : M) := by
   rw [IsOrdinal.toZFSet, ωₘ.toZFSet, ωₛ]
   exact isOrdinal_toZFSet _
 
+/-- The `omegaEquiv` declaration. -/
 def omegaEquiv : (ωₘ : M₀) ≃ ℕ :=
   Equiv.symm <| Equiv.ofBijective (fun n => ⟨Nat.cast n, natCast_mem_ωₘ⟩) <| by
     simp only [Bijective, Injective, Surjective, toZFSet_simps, Subtype.forall,

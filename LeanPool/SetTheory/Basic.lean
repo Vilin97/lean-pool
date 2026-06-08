@@ -32,21 +32,25 @@ open FirstOrder Language
 
 variable {v₁ : Fin 1 → M} {v₂ : Fin 2 → M}
 
+/-- The `formula` declaration. -/
 def Membership.mem.formula : ZFFormula 2 := #1 ∈' #0
 @[realize_simps, realize]
 lemma Membership.mem.realize_iff : formula.Realize v₂ ↔ v₂ 1 ∈ v₂ 0 := by
   simp [formula, Formula.Realize, realize_simps]
 
+/-- The `formula` declaration. -/
 def Ne.formula : ZFFormula 2 := ∼(#0 =' #1)
 @[realize_simps, realize]
 lemma Ne.realize_iff : formula.Realize v₂ ↔ v₂ 0 ≠ v₂ 1 := by
   simp [formula, Formula.Realize]
 
+/-- The `formula` declaration. -/
 def Eq.formula : ZFFormula 2 := #0 =' #1
 @[realize_simps, realize]
 lemma Eq.realize_iff : formula.Realize v₂ ↔ v₂ 0 = v₂ 1 := by
   simp [formula, Formula.Realize, realize_simps]
 
+/-- The `formula` declaration. -/
 def HasSubset.Subset.formula : ZFFormula 2 := ∀' (&0 ∈' #0 ⟹ &0 ∈' #1)
 @[realize_simps, realize]
 lemma HasSubset.Subset.realize_iff : formula.Realize v₂ ↔ v₂ 0 ⊆ v₂ 1 := by
@@ -61,6 +65,7 @@ variable [HasEmpty M]
 lemma EmptyCollection.emptyCollection.eq_iff (x : M) : (∅ : M) = x ↔ ∀ y, y ∉ x :=
   HasEmpty.exists_empty.choose_eq_iff
 
+/-- The `formula` declaration. -/
 def EmptyCollection.emptyCollection.formula : ZFFormula 1 := EqEmptyN 0
 
 @[realize_simps] lemma EmptyCollection.emptyCollection.realize_iff :
@@ -74,17 +79,25 @@ end FirstOrder
 
 namespace SetTheory
 
-structure V where val : ZFSet.{0}
+/-- The von Neumann universe `V` carrier, wrapping a ground-model `ZFSet`. -/
+structure V where
+  /-- The underlying `ZFSet` of an element of `V`. -/
+  val : ZFSet.{0}
 
 @[ext] lemma V.ext (x y : V) : x.val = y.val → x = y := by cases x; cases y; simp
 
+/-- The `ToV` type. -/
 class ToV (α : Type*) where
+  /-- The `toV` declaration. -/
   toV : α → V
 open ToV
 
+/-- The `toZFSet` declaration. -/
 def toZFSet {α} [ToV α] (x : α) : ZFSet.{0} := (toV x).val
 
+/-- The `↓_` notation. -/
 prefix:max "↓" => toV
+/-- The `⇓_` notation. -/
 prefix:max "⇓" => toZFSet
 
 instance : ToV ZFSet.{0} := ⟨fun x => ⟨x⟩⟩
@@ -97,11 +110,13 @@ lemma mem_inside_ZFSet {A : ZFSet} {x y : A} : x ∈ y ↔ x.1 ∈ y.1 := Iff.rf
 instance structureV : 𝓛ZF.Structure V where
   RelMap | .mem => fun x => (x 0).1 ∈ (x 1).1
 
+/-- The `IsVonNeumann` type. -/
 @[class] inductive IsVonNeumann (α) [s : ZFStructure α]
   | vonNeumann (μ) (hμ : IsSuccLimit μ) (eq : Sigma.mk α s = ⟨V_ μ, structureZFSet⟩)
   | V (eq : Sigma.mk α s = ⟨V, structureV⟩)
 
 open Ordinal in
+/-- The `IsVonNeumannWithOmega` type. -/
 @[class] inductive IsVonNeumannWithOmega (α) [s : ZFStructure α]
   | vonNeumann (μ) (hμ : IsSuccLimit μ)
     (omega_lt_μ : ω < μ) (eq : Sigma.mk α s = ⟨V_ μ, structureZFSet⟩)
@@ -113,11 +128,15 @@ open SetTheory
 
 variable [hM : IsVonNeumann M] [hN : IsVonNeumann N] [hM₀ : IsVonNeumannWithOmega M₀]
 
+/-- Case-split on the proof `h : IsVonNeumann M`, introducing `μ` and `hμ` in the
+successor-limit case and discharging the `V` case, then registering the limit fact. -/
 macro "split_vonNeumann" h:ident : tactic => do
   let μ := Lean.mkIdent `μ
   let hμ := Lean.mkIdent `hμ
   `(tactic | (rcases $h:ident with ⟨$μ, $hμ, ⟨_⟩⟩ | ⟨⟨_⟩⟩; haveI _ := Fact.mk $hμ))
 
+/-- Like `split_vonNeumann`, but for `IsVonNeumannWithOmega M`, additionally
+introducing the hypothesis `omega_lt_μ` that `ω < μ`. -/
 macro "split_vonNeumann_omega" h:ident : tactic => do
   let μ := Lean.mkIdent `μ
   let hμ := Lean.mkIdent `hμ
@@ -254,6 +273,7 @@ lemma lt_iff_le_and_exists {x y : M} : x < y ↔ x ≤ y ∧ ∃ z ∈ y, z ∉ 
   simp only [lt_iff_le_and_ne, toZFSet_simps]
 
 attribute [formula_builder_pre, formula_builder] Set.mem_setOf_eq
+/-- The `IsSet` declaration. -/
 @[formula_builder_pre] def IsSet (C : Set M) := ∃! x : M, ∀ y, y ∈ x ↔ y ∈ C
 
 lemma isSet_iff_exists_set {C : Set M} : IsSet C ↔ ∃ x : M, ∀ y, y ∈ x ↔ y ∈ C := by
@@ -278,6 +298,7 @@ lemma exists_separate (x : M) (p : M → Prop) : IsSet {y | y ∈ x ∧ p y} := 
     simpa only [toZFSet_simps] using fun x p =>
       ⟨ZFSet.sep (fun x => p (↓x)) x, fun _ => ZFSet.mem_sep⟩
 
+/-- The `separate` declaration. -/
 def separate (x : M) (p : M → Prop) := (exists_separate x p).choose
 
 @[simp] lemma mem_separate_iff {x : M} {p : M → Prop} : ∀ z, z ∈ separate x p ↔ z ∈ x ∧ p z :=
@@ -334,6 +355,7 @@ lemma mem_vonNeumann_union {μ} {x y : ZFSet} (hx : x ∈ V_ μ) (hy : y ∈ V_ 
     simpa only [toZFSet_simps] using fun x => ⟨x.powerset, by simp⟩
 
 attribute [simp] powerset.spec
+/-- The `𝓟_` declaration. -/
 prefix:max "𝓟 " => powerset
 
 @[toV_simps] lemma powerset.toV (x : M) : 𝓟 ↓x = ↓(𝓟 x) := by
@@ -371,12 +393,14 @@ section FirstOrder
 
 open FirstOrder Language
 
+/-- The `formula` declaration. -/
 def LE.le.formula : ZFFormula 2 := ∀' (&0 ∈' #0 ⟹ &1 ∈' #1)
 @[realize_simps, realize]
 lemma LE.le.realize_iff {v : Fin 2 → M} : formula.Realize v ↔ v 0 ≤ v 1 := by
   simp [LE.le.formula, Formula.Realize, realize_simps, Fin.snoc]
   tauto
 
+/-- The `formula` declaration. -/
 def LT.lt.formula : ZFFormula 2 := ∀' (&0 ∈' #0 ⟹ &1 ∈' #1) ⊓ ∼(#0 =' #1)
 @[realize_simps, realize]
 lemma LT.lt.realize_iff {v : Fin 2 → M} : formula.Realize v ↔ v 0 < v 1 := by
@@ -388,6 +412,7 @@ instance instSingletonMM : Singleton M M where singleton := SetTheory.singleton
   SetTheory.singleton.spec ..
 lemma Singleton.singleton.eq_iff (x y : M) : ({x} : M) = y ↔ ∀ z, z ∈ y ↔ z = x :=
   SetTheory.singleton.eq_iff ..
+/-- The `formula` declaration. -/
 def Singleton.singleton.formula := SetTheory.singleton.formula
 @[realize_simps] lemma Singleton.singleton.realize_iff (v : Fin 2 → M) :
     formula.Realize v ↔ {v 0} = v 1 := SetTheory.singleton.realize_iff v
@@ -399,6 +424,7 @@ instance instInsertMM : Insert M M where insert := SetTheory.insert
   SetTheory.insert.spec ..
 lemma Insert.insert.eq_iff (x y z : M) : Insert.insert x y = z ↔ ∀ w, w ∈ z ↔ w = x ∨ w ∈ y :=
   SetTheory.insert.eq_iff ..
+/-- The `formula` declaration. -/
 def Insert.insert.formula := SetTheory.insert.formula
 @[realize_simps] lemma Insert.insert.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ insert (v 0) (v 1) = v 2 := SetTheory.insert.realize_iff v
@@ -445,6 +471,7 @@ lemma exists_toV_of_mem {x : M} {y : V} (hy : y ∈ ↓x) : ∃ z : M, ↓z = y 
   simpa only [ZFSet.ext_iff, mem_insert_iff, insert.toV, toZFSet_simps]
     using Insert.insert.spec ↓x ↓y
 
+/-- The `ExistsUniqueAt` declaration. -/
 def ExistsUniqueAt {α : Type*} (x : α) (p : α → Prop) := p x ∧ ∀ y, p y → y = x
 
 @[formula_builder] lemma isGLB_iff {C : Set M} {x : M} :
@@ -490,6 +517,7 @@ lemma exists_minimal {p : M → Prop} : (∃! x, IsGLB {x | p x} x) ↔ ∃ x : 
     simp [h, not_mem_self] at hx
   · refine ⟨_, fun y hy => hy _ ht⟩
 
+/-- The `IsTransitive` declaration. -/
 @[realize] def IsTransitive (X : M) := ∀ ⦃x⦄, x ∈ X → x ⊆ X
 
 @[toV_simps] lemma IsTransitive.toV (α : M) : IsTransitive ↓α ↔ IsTransitive α := by
@@ -499,6 +527,7 @@ lemma exists_minimal {p : M → Prop} : (∃! x, IsGLB {x | p x} x) ↔ ∃ x : 
   convert (IsTransitive.toV α).symm using 1
   simp only [IsTransitive, ZFSet.IsTransitive, toZFSet_simps]
 
+/-- The `enoughTransitive` declaration. -/
 def enoughTransitive (x : M) : {y : M // IsTransitive y ∧ x ⊆ y} := by
   split_vonNeumann hM
   · refine ⟨⟨V_ x.1.rank, vonNeumann_mem_of_lt (mem_vonNeumann.mp x.2)⟩, ?_⟩
@@ -552,6 +581,7 @@ instance instUnionM : Union M where union := SetTheory.union
 @[simp] lemma Union.union.spec (x y z : M) : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y := SetTheory.union.spec ..
 lemma Union.union.eq_iff (x y z : M) : x ∪ y = z ↔ ∀ w, w ∈ z ↔ w ∈ x ∨ w ∈ y :=
   SetTheory.union.eq_iff ..
+/-- The `formula` declaration. -/
 def Union.union.formula := SetTheory.union.formula
 @[realize_simps] lemma Union.union.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ v 0 ∪ v 1 = v 2 := SetTheory.union.realize_iff v
@@ -562,6 +592,7 @@ instance instInterM : Inter M where inter := SetTheory.inter
 @[simp] lemma Inter.inter.spec (x y z : M) : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y := SetTheory.inter.spec ..
 lemma Inter.inter.eq_iff (x y z : M) : x ∩ y = z ↔ ∀ w, w ∈ z ↔ w ∈ x ∧ w ∈ y :=
   SetTheory.inter.eq_iff ..
+/-- The `formula` declaration. -/
 def Inter.inter.formula := SetTheory.inter.formula
 @[realize_simps] lemma Inter.inter.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ v 0 ∩ v 1 = v 2 := SetTheory.inter.realize_iff v
@@ -612,8 +643,10 @@ instance instOrderBotM : OrderBot M where
   ] using ⟨by tauto, α, by simp, mem_irrefl _⟩
 
 @[realize] lemma pair.eu (x y : M) : ∃! z, z = ({{x}, {x, y}} : M) := by simp
+/-- The `⸨_,_⸩` notation. -/
 notation "⸨"a ", " b "⸩" => pair a b
 
+/-- The `IsPair` declaration. -/
 @[realize] def IsPair (z : M) := ∃ x, ∃ y, z = ⸨x, y⸩
 
 @[simp] lemma isPair_pair {x y : M} : IsPair ⸨x, y⸩ := by simp [IsPair]
@@ -672,7 +705,9 @@ lemma unordered_pair_mem_pair (x y : M) : {x, y} ∈ ⸨x, y⸩ := by simp [pair
 
 attribute [simp] Pairs.spec
 
+/-- The `IsRelation` declaration. -/
 @[realize] def IsRelation (r : M) := ∀ ⦃x⦄, x ∈ r → IsPair x
+/-- The `IsFunc` declaration. -/
 @[realize] def IsFunc (f : M) := IsRelation f ∧ ∀ ⦃x y z⦄, ⸨x, y⸩ ∈ f → ⸨x, z⸩ ∈ f → y = z
 
 @[realize] lemma Dom.eu (f : M) : IsSet {x | ∃ y, ⸨x, y⸩ ∈ f} := by
@@ -711,8 +746,10 @@ lemma func_sub_pairs {A B f : M} (hf : IsFunc f ∧ Dom f = A ∧ Ran f ⊆ B) :
   rcases hx with ⟨y, hy⟩
   exact ⟨y, hy, fun z hz => (hf.2 hy hz).symm⟩
 
+/-- The `PreserveMem` declaration. -/
 @[realize] def PreserveMem (f : M) := ∀ x ∈ Dom f, ∀ y ∈ Dom f, x ∈ y → apply f x ∈ apply f y
 
+/-- The `funcToSet` declaration. -/
 def funcToSet {A B : M} (f : A → B) : M :=
   separate (Pairs A B) fun x => ∃ hx : fst x ∈ A, (f ⟨fst x, hx⟩).1 = snd x
 
@@ -752,6 +789,7 @@ lemma funcToSet_mem_Func {A B : M} (f : A → B) : funcToSet f ∈ Func A B := b
 lemma apply_mem_Ran {f x : M} (hf : IsFunc f) (hx : x ∈ Dom f) : apply f x ∈ Ran f := by
   simpa only [Ran.spec] using ⟨_, apply.spec f x hf hx⟩
 
+/-- The `setToFunc` declaration. -/
 def setToFunc {A B : M} (f : (Func A B : M)) : A → B := by
   have hf := f.2
   erw [Func.spec] at hf
@@ -789,6 +827,7 @@ lemma funcToSet_setToFunc {A B : M} (f : (Func A B : M)) : funcToSet (setToFunc 
     have fst_mem_A := hf.2.1 ▸ fst_mem_dom
     simp only [fst_mem_A, apply.eq_iff _ _ hf.1 fst_mem_dom, eta, hx, and_true]
 
+/-- The `funcEquiv` declaration. -/
 def funcEquiv {A B : M} : (Func A B : M) ≃ (A → B) where
   toFun f := setToFunc f
   invFun f := ⟨funcToSet f, funcToSet_mem_Func f⟩
@@ -829,6 +868,7 @@ lemma ext_func {f g : M} (hf : IsFunc f) (hg : IsFunc g)
 @[simp] lemma sInf_empty : sInf (∅ : Set M) = ∅ := by
   simp [sInf]
 
+/-- The `IsInjective` declaration. -/
 @[realize] def IsInjective (f : M) :=
   IsFunc f ∧ ∀ x ∈ Dom f, ∀ y ∈ Dom f, apply f x = apply f y → x = y
 
@@ -844,8 +884,11 @@ lemma nonempty_iff (x : M) : Nonempty x ↔ x ≠ ∅ := by
   simp only [not_forall, not_not]
   exact Iff.rfl
 
+/-- The `cardLE` declaration. -/
 @[realize] def cardLE (x y : M) := ∃ f ∈ Func x y, IsInjective f
+/-- The `cardEq` declaration. -/
 @[realize] def cardEq (x y : M) := ∃ f ∈ Func x y, IsInjective f ∧ Ran f = y
+/-- The `cardLT` declaration. -/
 @[realize] def cardLT (x y : M) := cardLE x y ∧ ¬cardEq x y
 
 lemma cardLE_iff (x y : M) : cardLE x y ↔ #x ≤ #y := by
