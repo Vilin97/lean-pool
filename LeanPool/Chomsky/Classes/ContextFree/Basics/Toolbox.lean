@@ -46,22 +46,24 @@ lemma cf_append_deri {w₁ w₂ : List (Symbol T g.nt)}
     (pᵣ : List (Symbol T g.nt)) (hgww : g.Derives w₁ w₂) :
   g.Derives (pᵣ ++ w₁) (pᵣ ++ w₂) :=
 by
-  induction' hgww with a b _ hgab ih
-  · apply cf_deri_self
-  apply cf_deri_of_deri_tran ih
-  rcases hgab with ⟨r, r_in, v, w, bef, aft⟩
-  use r, r_in, pᵣ ++ v, w
-  rw [bef, aft]
-  constructor <;> simp only [List.append_assoc]
+  induction hgww with
+  | refl => apply cf_deri_self
+  | tail _ hgab ih =>
+    apply cf_deri_of_deri_tran ih
+    rcases hgab with ⟨r, r_in, v, w, bef, aft⟩
+    use r, r_in, pᵣ ++ v, w
+    rw [bef, aft]
+    constructor <;> simp only [List.append_assoc]
 
 lemma cf_deri_append {w₁ w₂ : List (Symbol T g.nt)}
     (pₒ : List (Symbol T g.nt)) (hgww : g.Derives w₁ w₂) :
   g.Derives (w₁ ++ pₒ) (w₂ ++ pₒ) :=
 by
-  induction' hgww with a b _ hgab ih
-  · apply cf_deri_self
-  apply cf_deri_of_deri_tran ih
-  rcases hgab with ⟨r, r_in, v, w, bef, aft⟩
-  use r, r_in, v, w ++ pₒ
-  rw [bef, aft]
-  constructor <;> simp only [List.append_assoc]
+  induction hgww with
+  | refl => apply cf_deri_self
+  | tail _ hgab ih =>
+    apply cf_deri_of_deri_tran ih
+    rcases hgab with ⟨r, r_in, v, w, bef, aft⟩
+    use r, r_in, v, w ++ pₒ
+    rw [bef, aft]
+    constructor <;> simp only [List.append_assoc]

@@ -14,15 +14,20 @@ def CFG.toGeneral (g : CFG T) : Grammar T :=
 private lemma CFG.tran_iff_toGeneral_tran (g : CFG T) (w₁ w₂ : List (Symbol T g.nt)) :
   g.Transforms w₁ w₂ ↔ g.toGeneral.Transforms w₁ w₂ :=
 by
-  constructor <;> intro ⟨r, rin, u, v, bef, aft⟩
-  · use ⟨[], r.fst, [], r.snd⟩, (by erw [List.mem_map]; use r), u, v
-    simp [bef, aft]
-  · erw [List.mem_map] at rin
-    obtain ⟨r₀, hgr₀, hrr₀⟩ := rin
-    use r₀, hgr₀, u, v
-    rw [←hrr₀] at bef aft
-    rw [bef, aft]
-    simp
+  have key : g.toGeneral.Transforms w₁ w₂ ↔
+      ∃ rr : Grule T g.nt, rr ∈ g.toGeneral.rules ∧ ∃ uu vv,
+        w₁ = uu ++ rr.inputL ++ [Symbol.nonterminal rr.inputN] ++ rr.inputR ++ vv ∧
+          w₂ = uu ++ rr.output ++ vv := Iff.rfl
+  rw [key]
+  constructor
+  · intro ⟨r, rin, u, v, bef, aft⟩
+    exact ⟨Grule.mk [] r.fst [] r.snd, List.mem_map.mpr ⟨r, rin, rfl⟩, u, v,
+      by rw [bef]; simp, by rw [aft]⟩
+  · intro ⟨r, rin, u, v, bef, aft⟩
+    obtain ⟨r₀, hgr₀, hrr₀⟩ := List.mem_map.mp rin
+    refine ⟨r₀, hgr₀, u, v, ?_, ?_⟩
+    · rw [bef, ← hrr₀]; simp
+    · rw [aft, ← hrr₀]
 
 private lemma CFG.deri_iff_toGeneral_deri (g : CFG T) (w₁ w₂ : List (Symbol T g.nt)) :
   g.Derives w₁ w₂ ↔ g.toGeneral.Derives w₁ w₂ :=

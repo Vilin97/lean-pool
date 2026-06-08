@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvořák
 -/
 import Mathlib.Logic.Relation
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Cases
 
 
 section notations

@@ -73,7 +73,7 @@ by
     cases r with
     | two_two A B C D =>
       dsimp only at hruv
-      cases' hruv with bef aft
+      obtain ⟨bef, aft⟩ := hruv
       constructor
       · simp only [grule_of_kurodaRule, List.append_nil, List.append_assoc, List.singleton_append]
         rw [←List.append_assoc]
@@ -82,7 +82,7 @@ by
         exact aft
     | one_two A B C =>
       dsimp only at hruv
-      cases' hruv with bef aft
+      obtain ⟨bef, aft⟩ := hruv
       constructor
       · simp only [grule_of_kurodaRule, List.append_nil]
         exact bef
@@ -90,14 +90,14 @@ by
         exact aft
     | one_one A t =>
       dsimp only at hruv
-      cases' hruv with bef aft
+      obtain ⟨bef, aft⟩ := hruv
       constructor
       · simp only [grule_of_kurodaRule, List.append_nil]
         exact bef
       · simp only [grule_of_kurodaRule]
         exact aft
     | one_nil A =>
-      cases' hruv with bef aft
+      obtain ⟨bef, aft⟩ := hruv
       constructor
       · simp only [grule_of_kurodaRule, List.append_nil]
         exact bef
@@ -115,7 +115,7 @@ by
       dsimp only at hr₀ ⊢
       rw [←hr₀] at hruv
       dsimp only at hruv
-      cases' hruv with bef aft
+      obtain ⟨bef, aft⟩ := hruv
       constructor
       · simp only [List.append_nil, List.append_assoc, List.singleton_append] at bef
         rw [←List.append_assoc] at bef
@@ -129,7 +129,7 @@ by
       dsimp only at hr₀ ⊢
       rw [←hr₀] at hruv
       dsimp only at hruv
-      cases' hruv with bef aft
+      obtain ⟨bef, aft⟩ := hruv
       constructor
       · simp only [List.append_nil] at bef
         exact bef
@@ -142,7 +142,7 @@ by
       dsimp only at hr₀ ⊢
       rw [←hr₀] at hruv
       dsimp only at hruv
-      cases' hruv with bef aft
+      obtain ⟨bef, aft⟩ := hruv
       constructor
       · simp only [List.append_nil] at bef
         exact bef
@@ -155,7 +155,7 @@ by
       dsimp only at hr₀ ⊢
       rw [←hr₀] at hruv
       dsimp only at hruv
-      cases' hruv with bef aft
+      obtain ⟨bef, aft⟩ := hruv
       constructor
       · simp only [List.append_nil] at bef
         exact bef

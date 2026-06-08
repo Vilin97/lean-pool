@@ -55,16 +55,16 @@ private lemma lifted_grammar_inverse {T : Type} {G : LiftedGrammar T} {x : G.g.n
     (hGxn₀ : G.sinkNt x = some n₀) :
   (Option.map G.liftNt (G.sinkNt x) = x) :=
 by
-  rw [hGxn₀, Option.map_some']
+  rw [hGxn₀, Option.map_some]
   apply congr_arg
   symm
   by_contra x_neq
   have inje := G.sink_inj x (G.liftNt n₀)
   rw [G.sinkNt_liftNt] at inje
-  cases' inje hGxn₀ with case_valu case_none
+  rcases inje hGxn₀ with case_valu | case_none
   · exact x_neq case_valu
   rw [hGxn₀] at case_none
-  exact Option.noConfusion case_none
+  exact absurd case_none (Option.some_ne_none n₀)
 
 end lifting_conditions
 
@@ -82,16 +82,18 @@ match hGww with
     G.corresponding_rules r rin,
     liftString G.liftNt u,
     liftString G.liftNt v,
-    by simpa [liftString] using congr_arg (liftString G.liftNt) bef,
-    by simpa [liftString] using congr_arg (liftString G.liftNt) aft⟩
+    by simpa [liftString, liftRule, liftSymbol, List.map_append] using
+      congr_arg (liftString G.liftNt) bef,
+    by simpa [liftString, liftRule, liftSymbol, List.map_append] using
+      congr_arg (liftString G.liftNt) aft⟩
 
 lemma lift_deri (G : LiftedGrammar T) {w₁ w₂ : List (Symbol T G.g₀.nt)}
     (hGww : G.g₀.Derives w₁ w₂) :
   G.g.Derives (liftString G.liftNt w₁) (liftString G.liftNt w₂) :=
 by
-  induction' hGww with u v _ orig ih
-  · exact gr_deri_self
-  · exact gr_deri_of_deri_tran ih (lift_tran orig)
+  induction hGww with
+  | refl => exact gr_deri_self
+  | tail _ orig ih => exact gr_deri_of_deri_tran ih (lift_tran orig)
 
 def GoodLetter {G : LiftedGrammar T} : Symbol T G.g.nt → Prop
   | Symbol.terminal _ => True
@@ -109,15 +111,15 @@ by
       constructor
       · exact rin
       rw [bef] at hw₁
-      obtain ⟨n₀, hn₀⟩ : GoodLetter (Symbol.nonterminal r.inputN)
-      · apply hw₁ (Symbol.nonterminal r.inputN)
+      obtain ⟨n₀, hn₀⟩ : GoodLetter (Symbol.nonterminal r.inputN) := by
+        apply hw₁ (Symbol.nonterminal r.inputN)
         apply List.mem_append_left
         apply List.mem_append_left
         apply List.mem_append_right
         rw [List.mem_singleton]
       use n₀
       have almost := congr_arg (Option.map G.liftNt) hn₀
-      rw [lifted_grammar_inverse hn₀, Option.map_some'] at almost
+      rw [lifted_grammar_inverse hn₀, Option.map_some] at almost
       apply Option.some_injective
       exact almost.symm
     )
@@ -141,21 +143,22 @@ by
     rw [List.mem_map] at a_in_ros
     rcases a_in_ros with ⟨s, -, a_from_s⟩
     rw [←a_from_s]
-    cases' s with s' s''
-    · exfalso
+    cases s with
+    | terminal s' =>
+      exfalso
       clear * - a_from_s
-      unfold liftSymbol at a_from_s
-      exact Symbol.noConfusion a_from_s
-    simp [liftSymbol, GoodLetter]
-    use s''
-    exact G.sinkNt_liftNt s''
+      simp [liftSymbol] at a_from_s
+    | nonterminal s'' =>
+      simp [liftSymbol, GoodLetter]
+      use s''
+      exact G.sinkNt_liftNt s''
   use r₀
   constructor
   · exact pre_in
   use sinkString G.sinkNt u
   use sinkString G.sinkNt v
-  have correct_inverse : sinkSymbol G.sinkNt ∘ liftSymbol G.liftNt = @Option.some (Symbol T G.g₀.nt)
-  · ext1 x
+  have correct_inverse : sinkSymbol G.sinkNt ∘ liftSymbol G.liftNt = @Option.some (Symbol T G.g₀.nt) := by
+    ext1 x
     cases x
     · rfl
     rewrite [Function.comp_apply, liftSymbol, sinkSymbol, G.sinkNt_liftNt]
@@ -187,10 +190,11 @@ private lemma sink_deri_aux {G : LiftedGrammar T} {w₁ w₂ : List (Symbol T G.
     (hGww : G.g.Derives w₁ w₂) (hw₁ : GoodString w₁) :
   G.g₀.Derives (sinkString G.sinkNt w₁) (sinkString G.sinkNt w₂) ∧ GoodString w₂ :=
 by
-  induction' hGww with u v _ orig ih
-  · exact ⟨gr_deri_self, hw₁⟩
-  have both := sink_tran orig ih.right
-  exact ⟨gr_deri_of_deri_tran ih.left both.left, both.right⟩
+  induction hGww with
+  | refl => exact ⟨gr_deri_self, hw₁⟩
+  | tail _ orig ih =>
+    have both := sink_tran orig ih.right
+    exact ⟨gr_deri_of_deri_tran ih.left both.left, both.right⟩
 
 lemma sink_deri (G : LiftedGrammar T) {w₁ w₂ : List (Symbol T G.g.nt)}
     (hGww : G.g.Derives w₁ w₂) (hw₁ : GoodString w₁) :

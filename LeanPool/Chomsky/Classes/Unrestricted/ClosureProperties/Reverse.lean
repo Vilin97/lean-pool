@@ -36,35 +36,34 @@ private lemma derives_reversed {g : Grammar T} {v : List (Symbol T g.nt)}
     (hgv : (reversalGrammar g).Derives [Symbol.nonterminal (reversalGrammar g).initial] v) :
   g.Derives [Symbol.nonterminal g.initial] v.reverse :=
 by
-  induction' hgv with u w _ orig ih
-  · rw [List.reverse_singleton]
+  induction hgv with
+  | refl =>
+    simp only [List.reverse_singleton]
     apply gr_deri_self
-  apply gr_deri_of_deri_tran ih
-  rcases orig with ⟨r, rin, x, y, bef, aft⟩
-  change r ∈ g.rules.map _ at rin
-  rw [List.mem_map] at rin
-  rcases rin with ⟨r₀, rin₀, r_from_r₀⟩
-  use r₀, rin₀, y.reverse, x.reverse
-  constructor
-  · have rid₁ : r₀.inputL = r.inputR.reverse
-    · rw [←r_from_r₀]
-      unfold reversalGrule
-      rw [List.reverse_reverse]
-    have rid₂ : [Symbol.nonterminal r₀.inputN] = [Symbol.nonterminal r.inputN].reverse
-    · rewrite [←r_from_r₀, @List.reverse_singleton]
-      rfl
-    have rid₃ : r₀.inputR = r.inputL.reverse
-    · rw [←r_from_r₀]
-      unfold reversalGrule
-      rw [List.reverse_reverse]
-    rw [rid₁, rid₂, rid₃, ←List.reverse_append_append, ←List.reverse_append_append, ←List.append_assoc, ←List.append_assoc]
-    congr
-  · have snd_from_r : r₀.output = r.output.reverse
-    · rw [←r_from_r₀]
-      unfold reversalGrule
-      rw [List.reverse_reverse]
-    rw [snd_from_r, ←List.reverse_append_append]
-    exact congr_arg List.reverse aft
+  | tail _ orig ih =>
+    apply gr_deri_of_deri_tran ih
+    rcases orig with ⟨r, rin, x, y, bef, aft⟩
+    change r ∈ g.rules.map _ at rin
+    rw [List.mem_map] at rin
+    rcases rin with ⟨r₀, rin₀, r_from_r₀⟩
+    use r₀, rin₀, y.reverse, x.reverse
+    constructor
+    · have rid₁ : r₀.inputL = r.inputR.reverse := by
+        rw [←r_from_r₀]
+        simp [reversalGrule, List.reverse_reverse]
+      have rid₂ : [Symbol.nonterminal r₀.inputN] = [Symbol.nonterminal r.inputN].reverse := by
+        rw [←r_from_r₀]
+        simp [reversalGrule]
+      have rid₃ : r₀.inputR = r.inputL.reverse := by
+        rw [←r_from_r₀]
+        simp [reversalGrule, List.reverse_reverse]
+      rw [rid₁, rid₂, rid₃, ←List.reverse_append_append, ←List.reverse_append_append, ←List.append_assoc, ←List.append_assoc]
+      congr
+    · have snd_from_r : r₀.output = r.output.reverse := by
+        rw [←r_from_r₀]
+        simp [reversalGrule, List.reverse_reverse]
+      rw [snd_from_r, ←List.reverse_append_append]
+      exact congr_arg List.reverse aft
 
 private lemma reversed_word_in_original_language {g : Grammar T} {w : List T}
     (hwg : w ∈ (reversalGrammar g).language) :
@@ -84,8 +83,8 @@ by
   apply Set.eq_of_subset_of_subset ↓reversed_word_in_original_language
   intro w hwL
   change w.reverse ∈ g.language at hwL
-  obtain ⟨g₀, pre_reversal⟩ : ∃ g₀ : Grammar T, g = reversalGrammar g₀
-  · use reversalGrammar g
+  obtain ⟨g₀, pre_reversal⟩ : ∃ g₀ : Grammar T, g = reversalGrammar g₀ := by
+    use reversalGrammar g
     rw [dual_of_reversalGrammar]
   rw [pre_reversal] at hwL ⊢
   have finished_up_to_reverses := reversed_word_in_original_language hwL

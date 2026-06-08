@@ -172,8 +172,8 @@ by
     · exact Option.noConfusion zeroth
     · simp at zeroth
   rcases hggw₂ with ⟨i, ⟨r, rin, u, v, bef, aft⟩, deri⟩
-  have uv_nil : u = [] ∧ v = []
-  · have bef_len := congr_arg List.length bef
+  have uv_nil : u = [] ∧ v = [] := by
+    have bef_len := congr_arg List.length bef
     clear * - bef_len
     rw [List.length_singleton] at bef_len
     repeat rw [List.length_append] at bef_len
@@ -182,16 +182,16 @@ by
     · rw [←List.length_eq_zero_iff]
       linarith
   rw [uv_nil.left, List.nil_append, uv_nil.right, List.append_nil] at bef aft
-  have same_nt : (unionGrammar g₁ g₂).initial = r.inputN
-  · clear * - bef
-    have elemeq : [Symbol.nonterminal (unionGrammar g₁ g₂).initial] = [Symbol.nonterminal r.inputN]
-    · have bef_len := congr_arg List.length bef
+  have same_nt : (unionGrammar g₁ g₂).initial = r.inputN := by
+    clear * - bef
+    have elemeq : [Symbol.nonterminal (unionGrammar g₁ g₂).initial] = [Symbol.nonterminal r.inputN] := by
+      have bef_len := congr_arg List.length bef
       rw [List.length_append_append, List.length_singleton, List.length_singleton] at bef_len
-      have rl_first : r.inputL.length = 0
-      · clear * - bef_len
+      have rl_first : r.inputL.length = 0 := by
+        clear * - bef_len
         linarith
-      have rl_third : r.inputR.length = 0
-      · clear * - bef_len
+      have rl_third : r.inputR.length = 0 := by
+        clear * - bef_len
         linarith
       rw [List.length_eq_zero_iff] at rl_first rl_third
       rwa [rl_first, rl_third] at bef

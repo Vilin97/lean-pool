@@ -28,13 +28,21 @@ private def myGram : Grammar Ter := ⟨Non, ._A, [myRule]⟩
 private def myGran : Grammar Ter := ⟨Non, ._A, [myRulf]⟩
 
 example (u v : List (Symbol Ter Non)) : myGram.Transforms u v ↔ myGran.Transforms u v := by
-  constructor
-   <;> intro ⟨r, rin, p, q, bef, aft⟩
-  · simp [myGram] at rin
-    simp only [rin, myRule] at bef aft
-    use myRulf, List.mem_of_mem_head? rfl, p, q
-    simp [bef, aft, myRulf, A, B]
-  · simp [myGran] at rin
-    simp only [rin, myRulf] at bef aft
-    use myRule, List.mem_of_mem_head? rfl, p, q
-    simp [bef, aft, myRule, A, B]
+  have e1 : myGram.Transforms u v ↔ ∃ p q : List (Symbol Ter Non),
+      u = p ++ [A, x, y] ++ [Symbol.nonterminal Non._B] ++ [] ++ q ∧ v = p ++ [y, B, x] ++ q := by
+    constructor
+    · intro ⟨r, rin, p, q, bef, aft⟩
+      obtain rfl : r = myRule := List.mem_singleton.mp (show r ∈ [myRule] from rin)
+      exact ⟨p, q, bef, aft⟩
+    · intro ⟨p, q, bef, aft⟩
+      exact ⟨myRule, List.mem_of_mem_head? rfl, p, q, bef, aft⟩
+  have e2 : myGran.Transforms u v ↔ ∃ p q : List (Symbol Ter Non),
+      u = p ++ [] ++ [Symbol.nonterminal Non._A] ++ [x, y, B] ++ q ∧ v = p ++ [y, B, x] ++ q := by
+    constructor
+    · intro ⟨r, rin, p, q, bef, aft⟩
+      obtain rfl : r = myRulf := List.mem_singleton.mp (show r ∈ [myRulf] from rin)
+      exact ⟨p, q, bef, aft⟩
+    · intro ⟨p, q, bef, aft⟩
+      exact ⟨myRulf, List.mem_of_mem_head? rfl, p, q, bef, aft⟩
+  rw [e1, e2]
+  constructor <;> rintro ⟨p, q, bef, aft⟩ <;> exact ⟨p, q, by simp_all [A, B, x, y], aft⟩

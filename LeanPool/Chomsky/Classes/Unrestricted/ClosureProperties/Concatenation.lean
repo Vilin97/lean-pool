@@ -125,26 +125,28 @@ lemma grammar_generates_only_legit_terminals {g : Grammar T} {w : List (Symbol T
     (s : Symbol T g.nt) (hsw : s ∈ w) :
   (∃ r : Grule T g.nt, r ∈ g.rules ∧ s ∈ r.output) ∨ (s = Symbol.nonterminal g.initial) :=
 by
-  induction' hgw with x y _ orig ih
-  · rw [List.mem_singleton] at hsw
-    right
-    exact hsw
-  rcases orig with ⟨r, rin, u, v, bef, aft⟩
-  rw [aft, List.mem_append, List.mem_append] at hsw
-  cases' hsw with hsw' s_in_v
-  cases' hsw' with s_in_u s_in_out
-  · apply ih
-    rw [bef]
-    repeat
-      rw [List.mem_append]
-      left
-    exact s_in_u
-  · left
-    use r
-  · apply ih
-    rw [bef, List.mem_append]
-    right
-    exact s_in_v
+  induction hgw with
+  | refl =>
+      rw [List.mem_singleton] at hsw
+      right
+      exact hsw
+  | tail _ orig ih =>
+      rcases orig with ⟨r, rin, u, v, bef, aft⟩
+      rw [aft, List.mem_append, List.mem_append] at hsw
+      cases' hsw with hsw' s_in_v
+      cases' hsw' with s_in_u s_in_out
+      · apply ih
+        rw [bef]
+        repeat
+          rw [List.mem_append]
+          left
+        exact s_in_u
+      · left
+        use r
+      · apply ih
+        rw [bef, List.mem_append]
+        right
+        exact s_in_v
 
 private lemma first_transformation {g₁ g₂ : Grammar T} :
   (bigGrammar g₁ g₂).Transforms
@@ -166,28 +168,30 @@ private lemma substitute_terminals {g₁ g₂ : Grammar T} {s : T → T ⊕ T} {
     (w.map (Symbol.nonterminal ∘ Sum.inr ∘ s))
     (w.map Symbol.terminal) :=
 by
-  induction' w with d l ih
-  · apply gr_deri_self
-  rw [List.map_cons, List.map_cons, ←List.singleton_append, ←List.singleton_append]
-  have step_head :
-    (bigGrammar g₁ g₂).Transforms
-      ([(Symbol.nonterminal ∘ Sum.inr ∘ s) d] ++ l.map (Symbol.nonterminal ∘ Sum.inr ∘ s))
-      ([Symbol.terminal d] ++ l.map (Symbol.nonterminal ∘ Sum.inr ∘ s))
-  · use Grule.mk [] ◪(s d) [] [Symbol.terminal d]
-    constructor
-    · change _ ∈ List.cons _ _
-      apply List.mem_cons_of_mem
-      apply List.mem_append_right
-      apply rule_for_each_terminal
-      apply List.mem_cons_self
-    use [], l.map (Symbol.nonterminal ∘ Sum.inr ∘ s)
-    constructor <;> rfl
-  apply gr_deri_of_tran_deri step_head
-  apply gr_append_deri
-  apply ih
-  · intro t tin
-    apply rule_for_each_terminal t
-    exact List.mem_cons_of_mem d tin
+  induction w with
+  | nil =>
+      apply gr_deri_self
+  | cons d l ih =>
+      rw [List.map_cons, List.map_cons, ←List.singleton_append, ←List.singleton_append]
+      have step_head :
+        (bigGrammar g₁ g₂).Transforms
+          ([(Symbol.nonterminal ∘ Sum.inr ∘ s) d] ++ l.map (Symbol.nonterminal ∘ Sum.inr ∘ s))
+          ([Symbol.terminal d] ++ l.map (Symbol.nonterminal ∘ Sum.inr ∘ s)) := by
+        use Grule.mk [] ◪(s d) [] [Symbol.terminal d]
+        constructor
+        · change _ ∈ List.cons _ _
+          apply List.mem_cons_of_mem
+          apply List.mem_append_right
+          apply rule_for_each_terminal
+          apply List.mem_cons_self
+        use [], l.map (Symbol.nonterminal ∘ Sum.inr ∘ s)
+        constructor <;> rfl
+      apply gr_deri_of_tran_deri step_head
+      apply gr_append_deri
+      apply ih
+      · intro t tin
+        apply rule_for_each_terminal t
+        exact List.mem_cons_of_mem d tin
 
 lemma in_big_of_in_concatenated {g₁ g₂ : Grammar T} {w : List T}
     (hwgg : w ∈ g₁.language * g₂.language) :
@@ -215,38 +219,40 @@ by
           g₁.Derives [Symbol.nonterminal g₁.initial] w →
             (bigGrammar g₁ g₂).Derives
               [Symbol.nonterminal ◩(some ◩g₁.initial)]
-              (w.map (wrapSymbol₁ g₂.nt))
-      · clear * -
+              (w.map (wrapSymbol₁ g₂.nt)) := by
+        clear * -
         intro w deri₁
-        induction' deri₁ with x y _ orig ih
-        · apply gr_deri_self
-        apply gr_deri_of_deri_tran ih
-        clear * - orig
-        rcases orig with ⟨r, rin, u, v, bef, aft⟩
-        use wrapGrule₁ g₂.nt r
-        constructor
-        · dsimp [bigGrammar]
-          apply List.mem_cons_of_mem
-          apply List.mem_append_left
-          apply List.mem_append_left
-          rw [List.mem_map]
-          use r
-        use u.map (wrapSymbol₁ g₂.nt)
-        use v.map (wrapSymbol₁ g₂.nt)
-        constructor
-        · convert congr_arg (List.map (wrapSymbol₁ g₂.nt)) bef
-          rewrite [List.map_append_append, List.map_append_append]
-          rfl
-        · convert congr_arg (List.map (wrapSymbol₁ g₂.nt)) aft
-          rewrite [List.map_append_append]
-          rfl
+        induction deri₁ with
+        | refl =>
+            apply gr_deri_self
+        | tail _ orig ih =>
+            apply gr_deri_of_deri_tran ih
+            clear * - orig
+            rcases orig with ⟨r, rin, u, v, bef, aft⟩
+            use wrapGrule₁ g₂.nt r
+            constructor
+            · dsimp [bigGrammar]
+              apply List.mem_cons_of_mem
+              apply List.mem_append_left
+              apply List.mem_append_left
+              rw [List.mem_map]
+              use r
+            use u.map (wrapSymbol₁ g₂.nt)
+            use v.map (wrapSymbol₁ g₂.nt)
+            constructor
+            · convert congr_arg (List.map (wrapSymbol₁ g₂.nt)) bef
+              rewrite [List.map_append_append, List.map_append_append]
+              rfl
+            · convert congr_arg (List.map (wrapSymbol₁ g₂.nt)) aft
+              rewrite [List.map_append_append]
+              rfl
       have upgraded := upgrade_deri₁ _ hu
       rw [List.map_map] at upgraded
       exact upgraded
     · have legit_terminals₁ :
         ∀ t ∈ u, ∃ r : Grule T g₁.nt,
-          r ∈ g₁.rules ∧ Symbol.terminal t ∈ r.output
-      · intro t tin
+          r ∈ g₁.rules ∧ Symbol.terminal t ∈ r.output := by
+        intro t tin
         have legit := grammar_generates_only_legit_terminals hu (Symbol.terminal t) (by
           rw [List.mem_map]
           use t)
@@ -284,40 +290,42 @@ by
           g₂.Derives [Symbol.nonterminal g₂.initial] w →
             (bigGrammar g₁ g₂).Derives
               [Symbol.nonterminal ◩(some ◪g₂.initial)]
-              (w.map (wrapSymbol₂ g₁.nt))
-      · clear * -
+              (w.map (wrapSymbol₂ g₁.nt)) := by
+        clear * -
         intro w deri₁
-        induction' deri₁ with x y _ orig ih
-        · apply gr_deri_self
-        apply gr_deri_of_deri_tran ih
-        clear * - orig
-        rcases orig with ⟨r, rin, u, v, bef, aft⟩
-        use wrapGrule₂ g₁.nt r
-        constructor
-        · change
-            wrapGrule₂ g₁.nt r ∈
-              _ :: g₁.rules.map (wrapGrule₁ g₂.nt) ++ g₂.rules.map (wrapGrule₂ g₁.nt) ++ _
-          apply List.mem_cons_of_mem
-          apply List.mem_append_left
-          apply List.mem_append_right
-          rw [List.mem_map]
-          use r
-        use u.map (wrapSymbol₂ g₁.nt)
-        use v.map (wrapSymbol₂ g₁.nt)
-        constructor
-        · convert congr_arg (List.map (wrapSymbol₂ g₁.nt)) bef
-          rewrite [List.map_append_append, List.map_append_append]
-          rfl
-        · convert congr_arg (List.map (wrapSymbol₂ g₁.nt)) aft
-          rewrite [List.map_append_append]
-          rfl
+        induction deri₁ with
+        | refl =>
+            apply gr_deri_self
+        | tail _ orig ih =>
+            apply gr_deri_of_deri_tran ih
+            clear * - orig
+            rcases orig with ⟨r, rin, u, v, bef, aft⟩
+            use wrapGrule₂ g₁.nt r
+            constructor
+            · change
+                wrapGrule₂ g₁.nt r ∈
+                  _ :: g₁.rules.map (wrapGrule₁ g₂.nt) ++ g₂.rules.map (wrapGrule₂ g₁.nt) ++ _
+              apply List.mem_cons_of_mem
+              apply List.mem_append_left
+              apply List.mem_append_right
+              rw [List.mem_map]
+              use r
+            use u.map (wrapSymbol₂ g₁.nt)
+            use v.map (wrapSymbol₂ g₁.nt)
+            constructor
+            · convert congr_arg (List.map (wrapSymbol₂ g₁.nt)) bef
+              rewrite [List.map_append_append, List.map_append_append]
+              rfl
+            · convert congr_arg (List.map (wrapSymbol₂ g₁.nt)) aft
+              rewrite [List.map_append_append]
+              rfl
       have upgraded := upgrade_deri₂ _ hv
       rw [List.map_map] at upgraded
       exact upgraded
     · have legit_terminals₂ :
         ∀ t ∈ v, ∃ r : Grule T g₂.nt,
-          r ∈ g₂.rules ∧ Symbol.terminal t ∈ r.output
-      · intro t tin
+          r ∈ g₂.rules ∧ Symbol.terminal t ∈ r.output := by
+        intro t tin
         have legit := grammar_generates_only_legit_terminals hv (Symbol.terminal t) (by
           rw [List.mem_map]
           use t)
@@ -753,14 +761,14 @@ by
   rcases rin with ⟨r₁, rin₁, wrap_r₁_eq_r⟩
   simp [wrapGrule₁] at *
   rw [←List.singleton_append] at bef
-  have h_y_v_len : y ≠ [] → 0 < v.length
-  · intro ynn
+  have h_y_v_len : y ≠ [] → 0 < v.length := by
+    intro ynn
     rw [List.length_pos_iff_ne_nil]
     intro v_nil
     rw [v_nil, List.append_nil] at bef aft
     rw [bef, ←wrap_r₁_eq_r] at ih_concat
-    have y_nil : y = []
-    · have ih_concat_rev := correspondingStrings_reverse ih_concat
+    have y_nil : y = [] := by
+      have ih_concat_rev := correspondingStrings_reverse ih_concat
       simp [←List.map_reverse] at ih_concat_rev
       cases hy : y.reverse with
       | nil =>
@@ -774,8 +782,8 @@ by
         | nil =>
           rw [hr₁, List.map_nil, List.nil_append] at ih_concat_rev
           rw [correspondingStrings_cons] at ih_concat_rev
-          have imposs :  correspondingSymbols (wrapSymbol₂ g₁.nt d) (wrapSymbol₁ g₂.nt (Symbol.nonterminal r₁.inputN))
-          · exact ih_concat_rev.left
+          have imposs :  correspondingSymbols (wrapSymbol₂ g₁.nt d) (wrapSymbol₁ g₂.nt (Symbol.nonterminal r₁.inputN)) := by
+            exact ih_concat_rev.left
           exact correspondingSymbols_never₂ imposs
         | cons d' l' =>
           rw [hr₁, List.map_cons, List.cons_append] at ih_concat_rev
@@ -785,18 +793,18 @@ by
   let m : ℕ := (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 + (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length
   let b' : List (nst T g₁.nt g₂.nt) := u ++ r₁.output.map (wrapSymbol₁ g₂.nt) ++ v.take (x.length - u.length - m)
   use b'.filterMap unwrapSymbol₁
-  have critical : (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 + (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length ≤ x.length - u.length
-  · rw [←wrap_r₁_eq_r] at bef
+  have critical : (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 + (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length ≤ x.length - u.length := by
+    rw [←wrap_r₁_eq_r] at bef
     clear * - ih_concat bef h_y_v_len
-    have as_positive : u.length + ((r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 + (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length) ≤ x.length
-    · by_contra contra
+    have as_positive : u.length + ((r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 + (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length) ≤ x.length := by
+      by_contra contra
       push_neg at contra
       rw [bef] at ih_concat
       clear bef
       repeat rw [←List.append_assoc] at ih_concat
       have len_pos : (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++ r₁.inputR.map (wrapSymbol₁ g₂.nt)
-          ).length > 0
-      · repeat rw [List.length_append]
+          ).length > 0 := by
+        repeat rw [List.length_append]
         rw [List.length_singleton]
         clear * -
         linarith
@@ -805,26 +813,26 @@ by
         (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++
           r₁.inputR.map (wrapSymbol₁ g₂.nt)).length - 1 <
         (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++
-          r₁.inputR.map (wrapSymbol₁ g₂.nt)).length
-      · omega
+          r₁.inputR.map (wrapSymbol₁ g₂.nt)).length := by
+        omega
       have inequality_cat :
         (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++
           r₁.inputR.map (wrapSymbol₁ g₂.nt)).length - 1 <
         (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++
-          r₁.inputR.map (wrapSymbol₁ g₂.nt) ++ v).length
-      · rw [List.length_append _ v]
+          r₁.inputR.map (wrapSymbol₁ g₂.nt) ++ v).length := by
+        rw [List.length_append _ v]
         omega
       have inequality_map :
         (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++
           r₁.inputR.map (wrapSymbol₁ g₂.nt)).length - 1 <
-        (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length
-      · rw [equal_total_len]
+        (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length := by
+        rw [equal_total_len]
         simp_all
       have inequality_map_opp :
         (x.map (wrapSymbol₁ g₂.nt)).length ≤
         (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++
-          r₁.inputR.map (wrapSymbol₁ g₂.nt)).length - 1
-      · apply Nat.le_pred_of_lt
+          r₁.inputR.map (wrapSymbol₁ g₂.nt)).length - 1 := by
+        apply Nat.le_pred_of_lt
         repeat rw [List.length_append]
         simpa [←add_assoc] using contra
       have clash := correspondingStrings_getElem inequality_map inequality_cat ih_concat
@@ -839,23 +847,23 @@ by
       · by_cases h1 : (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length ≥ 1
         · rw [List.getElem_append_right] at clash ; swap
           · rw [List.length_append _ (r₁.inputR.map (wrapSymbol₁ g₂.nt))]
-            have trivi_ineq : ∀ m k : ℕ, k ≥ 1 → m ≤ m + k - 1
-            · clear * -
+            have trivi_ineq : ∀ m k : ℕ, k ≥ 1 → m ≤ m + k - 1 := by
+              clear * -
               omega
             exact trivi_ineq (u ++ _ ++ [_]).length _ h1
-          have h1' : (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length - 1 < (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length
-          · omega
+          have h1' : (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length - 1 < (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length := by
+            omega
           have index :
             (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++ r₁.inputR.map (wrapSymbol₁ g₂.nt)).length -
               1 - (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length =
-            (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length - 1
-          · simp
+            (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length - 1 := by
+            simp
             omega
-          have y_len : 0 < y.length
-          · simp at equal_total_len contra
+          have y_len : 0 < y.length := by
+            simp at equal_total_len contra
             omega
-          have v_len : 0 < v.length
-          · apply h_y_v_len
+          have v_len : 0 < v.length := by
+            apply h_y_v_len
             exact List.ne_nil_of_length_pos y_len
           have clash_copy :
             correspondingSymbols
@@ -866,19 +874,19 @@ by
               ((r₁.inputR.map (wrapSymbol₁ g₂.nt) ++
                   v)[(u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++ r₁.inputR.map (wrapSymbol₁ g₂.nt)).length
                       - 1 - (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length
-                  ]'(by simp; omega))
-          · exact clash
+                  ]'(by simp; omega)) := by
+            exact clash
           simp_rw [index] at clash_copy
           conv at clash_copy => congr; rfl; rw [List.getElem_append_left h1' (h' := by rw [List.length_append]; omega)]
           rw [List.getElem_map, List.getElem_map] at clash_copy
           exact correspondingSymbols_never₂ clash_copy
         · push_neg at h1
-          have ris_third_is_nil : r₁.inputR.map (wrapSymbol₁ g₂.nt) = []
-          · rwa [←List.length_eq_zero_iff, ←Nat.lt_one_iff]
+          have ris_third_is_nil : r₁.inputR.map (wrapSymbol₁ g₂.nt) = [] := by
+            rwa [←List.length_eq_zero_iff, ←Nat.lt_one_iff]
           have inequality_m0 :
             (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length - 1 <
-            (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length
-          · rwa [ris_third_is_nil, List.append_nil] at inequality_m1
+            (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length := by
+            rwa [ris_third_is_nil, List.append_nil] at inequality_m1
           simp_rw [ris_third_is_nil] at clash
           simp only [List.append_nil] at clash
           rw [List.getElem_append] at clash
@@ -889,8 +897,8 @@ by
                     (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length
                        - 1 - (x.map (wrapSymbol₁ g₂.nt)).length
                     ]'_)
-                (Symbol.nonterminal ◩(some ◩r₁.inputN))
-            · convert clash
+                (Symbol.nonterminal ◩(some ◩r₁.inputN)) := by
+              convert clash
               simp
             change correspondingSymbols _ (wrapSymbol₁ g₂.nt (Symbol.nonterminal r₁.inputN)) at clash'
             rw [List.getElem_map] at clash'
@@ -908,8 +916,8 @@ by
         correspondingStrings
           (x.map (wrapSymbol₁ g₂.nt))
           ((u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++ r₁.inputR.map (wrapSymbol₁ g₂.nt) ++
-            v).take x.length)
-      · rw [bef] at ih_concat
+            v).take x.length) := by
+        rw [bef] at ih_concat
         clear * - ih_concat wrap_r₁_eq_r
         rw [←List.append_assoc _ _ v] at ih_concat
         rw [←List.append_assoc _ _ v] at ih_concat
@@ -921,36 +929,36 @@ by
         · rw [←List.length_map, List.take_left]
         · rw [←wrap_r₁_eq_r]
       clear * - x_equiv critical
-      have ul_le_xl : u.length ≤ x.length
-      · clear * - critical
-        have stupid_le : u.length + 1 ≤ x.length
-        · omega
+      have ul_le_xl : u.length ≤ x.length := by
+        clear * - critical
+        have stupid_le : u.length + 1 ≤ x.length := by
+          omega
         exact Nat.le_of_succ_le stupid_le
       repeat rw [List.take_append_eq_append_take] at x_equiv
       rw [List.take_of_length_le ul_le_xl] at x_equiv
       repeat rw [List.append_assoc]
-      have chunk2 : (r₁.inputL.map (wrapSymbol₁ g₂.nt)).take (x.length - u.length) = r₁.inputL.map (wrapSymbol₁ g₂.nt)
-      · apply List.take_of_length_le
+      have chunk2 : (r₁.inputL.map (wrapSymbol₁ g₂.nt)).take (x.length - u.length) = r₁.inputL.map (wrapSymbol₁ g₂.nt) := by
+        apply List.take_of_length_le
         clear * - critical
         omega
       have chunk3 :
           [@Symbol.nonterminal T (nnn T g₁.nt g₂.nt) ◩(some ◩r₁.inputN)].take (x.length - (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt)).length) =
-          [Symbol.nonterminal ◩(some ◩r₁.inputN)]
-      · apply List.take_of_length_le
+          [Symbol.nonterminal ◩(some ◩r₁.inputN)] := by
+        apply List.take_of_length_le
         clear * - critical
         show 1 ≤ x.length - (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt)).length
         rw [List.length_append]
-        have weakened : (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 ≤ x.length - u.length
-        · omega
-        have goal_as_le_sub_sub : 1 ≤ x.length - u.length - (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length
-        · omega
+        have weakened : (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 ≤ x.length - u.length := by
+          omega
+        have goal_as_le_sub_sub : 1 ≤ x.length - u.length - (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length := by
+          omega
         rw [tsub_add_eq_tsub_tsub]
         exact goal_as_le_sub_sub
       have chunk4 :
         (r₁.inputR.map (wrapSymbol₁ g₂.nt)).take
           (x.length - (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length) =
-        r₁.inputR.map (wrapSymbol₁ g₂.nt)
-      · apply List.take_of_length_le
+        r₁.inputR.map (wrapSymbol₁ g₂.nt) := by
+        apply List.take_of_length_le
         clear * - critical
         rw [List.length_append_append]
         show (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length ≤ x.length - (u.length + (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1)
@@ -959,12 +967,12 @@ by
         v.take
           (x.length - (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++
             r₁.inputR.map (wrapSymbol₁ g₂.nt)).length) =
-          v.take (x.length - u.length - m)
-      · repeat rw [List.length_append]
+          v.take (x.length - u.length - m) := by
+        repeat rw [List.length_append]
         apply congr_arg₂; swap
         · rfl
-        have rearrange_sum_of_four : ∀ a b c d : ℕ, a + b + c + d = a + (b + c + d)
-        · omega
+        have rearrange_sum_of_four : ∀ a b c d : ℕ, a + b + c + d = a + (b + c + d) := by
+          omega
         rw [rearrange_sum_of_four]
         show x.length - (u.length + m) = x.length - u.length - m
         clear * -
@@ -997,32 +1005,32 @@ by
       rw [List.drop_left] at equiv_segment_2
       rw [List.take_left] at equiv_segment_1
       rw [List.take_take] at equiv_segment_1
-      have equiv_sgmnt_1 : correspondingStrings ((x.map (wrapSymbol₁ g₂.nt)).take u.length) u
-      · simpa using equiv_segment_1
+      have equiv_sgmnt_1 : correspondingStrings ((x.map (wrapSymbol₁ g₂.nt)).take u.length) u := by
+        simpa using equiv_segment_1
       have equiv_sgmnt_2 :
         correspondingStrings
           ((((x.map (wrapSymbol₁ g₂.nt)).take (u.length + r₁.inputL.length))).drop u.length)
-          (r₁.inputL.map (wrapSymbol₁ g₂.nt))
-      · simpa using equiv_segment_2
+          (r₁.inputL.map (wrapSymbol₁ g₂.nt)) := by
+        simpa using equiv_segment_2
       have equiv_sgmnt_3 :
         correspondingStrings
           (((x.map (wrapSymbol₁ g₂.nt)).take (u.length + (r₁.inputL.length + 1))).drop (u.length + r₁.inputL.length))
-          [Symbol.nonterminal ◩(some ◩r₁.inputN)]
-      · simpa using equiv_segment_3
+          [Symbol.nonterminal ◩(some ◩r₁.inputN)] := by
+        simpa using equiv_segment_3
       have equiv_sgmnt_4 :
         correspondingStrings
           (((x.map (wrapSymbol₁ g₂.nt)).take (u.length + (r₁.inputL.length + (r₁.inputR.length + 1)))).drop
             (u.length + (r₁.inputL.length + 1)))
-          (r₁.inputR.map (wrapSymbol₁ g₂.nt))
-      · simpa using equiv_segment_4
+          (r₁.inputR.map (wrapSymbol₁ g₂.nt)) := by
+        simpa using equiv_segment_4
       have equiv_sgmnt_5 :
         correspondingStrings
           ((x.map (wrapSymbol₁ g₂.nt)).drop (u.length + (r₁.inputL.length + (r₁.inputR.length + 1))))
-          (v.take (x.length - u.length - m))
-      · simpa using equiv_segment_5
+          (v.take (x.length - u.length - m)) := by
+        simpa using equiv_segment_5
       clear equiv_segment_1 equiv_segment_2 equiv_segment_3 equiv_segment_4 equiv_segment_5
-      have segment_1_eqi : correspondingStrings ((x.take u.length).map (wrapSymbol₁ g₂.nt)) u
-      · convert equiv_sgmnt_1
+      have segment_1_eqi : correspondingStrings ((x.take u.length).map (wrapSymbol₁ g₂.nt)) u := by
+        convert equiv_sgmnt_1
         rw [List.map_take]
       have segment_1_equ := (filterMap_unwrap_of_correspondingStrings₁ segment_1_eqi).symm
       rw [←List.take_append_drop u.length x]
@@ -1032,8 +1040,8 @@ by
       have segment_2_eqi :
         correspondingStrings
           (((x.drop u.length).take r₁.inputL.length).map (wrapSymbol₁ g₂.nt))
-          (r₁.inputL.map (wrapSymbol₁ g₂.nt))
-      · convert equiv_sgmnt_2
+          (r₁.inputL.map (wrapSymbol₁ g₂.nt)) := by
+        convert equiv_sgmnt_2
         rw [List.map_take, List.map_drop, List.drop_take]
         simp
       have segment_2_equ := (filterMap_unwrap_of_correspondingStrings₁ segment_2_eqi).symm
@@ -1046,8 +1054,8 @@ by
       have segment_3_eqi :
         correspondingStrings
           (((x.drop (r₁.inputL.length + u.length)).take 1).map (wrapSymbol₁ g₂.nt))
-          ([Symbol.nonterminal r₁.inputN].map (wrapSymbol₁ g₂.nt))
-      · convert equiv_sgmnt_3
+          ([Symbol.nonterminal r₁.inputN].map (wrapSymbol₁ g₂.nt)) := by
+        convert equiv_sgmnt_3
         rw [List.map_take, List.map_drop, ←add_assoc, List.drop_take, add_comm]
         simp
       have segment_3_equ := (filterMap_unwrap_of_correspondingStrings₁ segment_3_eqi).symm
@@ -1060,16 +1068,16 @@ by
       have segment_4_eqi :
         correspondingStrings
           (((x.drop (1 + (r₁.inputL.length + u.length))).take r₁.inputR.length).map (wrapSymbol₁ g₂.nt))
-          (r₁.inputR.map (wrapSymbol₁ g₂.nt))
-      · convert equiv_sgmnt_4
+          (r₁.inputR.map (wrapSymbol₁ g₂.nt)) := by
+        convert equiv_sgmnt_4
         rw [List.map_take]
         rw [List.map_drop]
         have sum_rearrange : u.length + (r₁.inputL.length + (r₁.inputR.length + 1)) =
-            u.length + (r₁.inputL.length + 1) + r₁.inputR.length
-        · linarith
+            u.length + (r₁.inputL.length + 1) + r₁.inputR.length := by
+          linarith
         rw [sum_rearrange, List.drop_take]
-        have small_sum_rearr :  1 + (r₁.inputL.length + u.length) = u.length + (r₁.inputL.length + 1)
-        · linarith
+        have small_sum_rearr :  1 + (r₁.inputL.length + u.length) = u.length + (r₁.inputL.length + 1) := by
+          linarith
         rw [small_sum_rearr]
         congr
         omega
@@ -1089,41 +1097,41 @@ by
             (min 1 (x.length - (r₁.inputL.length + u.length)) +
               (min r₁.inputR.length (x.length - (1 + (r₁.inputL.length + u.length))) +
                 (x.length - (r₁.inputR.length + (1 + (r₁.inputL.length + u.length))))))) =
-          x.length
-      · have add_mirror : r₁.inputR.length + 1 + r₁.inputL.length = r₁.inputL.length + 1 + r₁.inputR.length
-        · ring
+          x.length := by
+        have add_mirror : r₁.inputR.length + 1 + r₁.inputL.length = r₁.inputL.length + 1 + r₁.inputR.length := by
+          ring
         rw [List.length_map, List.length_map, ←add_mirror] at critical
-        have min1 : min u.length x.length = u.length
-        · apply min_eq_left
+        have min1 : min u.length x.length = u.length := by
+          apply min_eq_left
           exact ul_le_xl
-        have min2 : min r₁.inputL.length (x.length - u.length) = r₁.inputL.length
-        · clear * - critical
+        have min2 : min r₁.inputL.length (x.length - u.length) = r₁.inputL.length := by
+          clear * - critical
           apply min_eq_left
           apply le_trans _ critical
           apply le_add_self
-        have min3 : min 1 (x.length - (r₁.inputL.length + u.length)) = 1
-        · clear * - critical
+        have min3 : min 1 (x.length - (r₁.inputL.length + u.length)) = 1 := by
+          clear * - critical
           apply min_eq_left
           omega
-        have min4 : min r₁.inputR.length (x.length - (1 + (r₁.inputL.length + u.length))) = r₁.inputR.length
-        · clear * - critical
+        have min4 : min r₁.inputR.length (x.length - (1 + (r₁.inputL.length + u.length))) = r₁.inputR.length := by
+          clear * - critical
           apply min_eq_left
           omega
         rw [min1, min2, min3, min4]
         rw [le_tsub_iff_right ul_le_xl] at critical
         clear * - critical add_mirror
         repeat rw [←add_assoc]
-        have sum_eq_sum : u.length + r₁.inputL.length + 1 + r₁.inputR.length = r₁.inputR.length + 1 + r₁.inputL.length + u.length
-        · rw [add_mirror, add_assoc, add_assoc, add_comm, ←add_assoc _ 1 _]
+        have sum_eq_sum : u.length + r₁.inputL.length + 1 + r₁.inputR.length = r₁.inputR.length + 1 + r₁.inputL.length + u.length := by
+          rw [add_mirror, add_assoc, add_assoc, add_comm, ←add_assoc _ 1 _]
         rw [sum_eq_sum]
         exact Nat.add_sub_of_le critical
-      have porting_adjustment : 1 + (r₁.inputL.length + u.length) + r₁.inputR.length = r₁.inputR.length + (1 + (r₁.inputL.length + u.length))
-      · ring
+      have porting_adjustment : 1 + (r₁.inputL.length + u.length) + r₁.inputR.length = r₁.inputR.length + (1 + (r₁.inputL.length + u.length)) := by
+        ring
       rw [porting_adjustment, sum_of_min_lengths]
       clear * - equiv_sgmnt_5
       have another_rearranging : r₁.inputR.length + (1 + (r₁.inputL.length + u.length)) =
-          u.length + (r₁.inputL.length + (r₁.inputR.length + 1))
-      · ring
+          u.length + (r₁.inputL.length + (r₁.inputR.length + 1)) := by
+        ring
       rw [another_rearranging]
       rw [←List.map_drop] at equiv_sgmnt_5
       symm
@@ -1137,8 +1145,8 @@ by
   apply correspondingStrings_append
   · have part_for_u := correspondingStrings_take u.length ih_concat
     rw [List.take_left] at part_for_u
-    have trivi : u.length ≤ (x.map (wrapSymbol₁ g₂.nt)).length
-    · clear * - critical
+    have trivi : u.length ≤ (x.map (wrapSymbol₁ g₂.nt)).length := by
+      clear * - critical
       rw [List.length_map]
       omega
     rw [List.take_append_of_le_length trivi] at part_for_u
@@ -1166,8 +1174,8 @@ by
     rw [List.length_map]
     rw [List.take_append_eq_append_take]
     rw [List.drop_append_eq_append_drop]
-    have tul_lt : (u.take x.length).length ≤ u.length + m
-    · rw [List.length_take]
+    have tul_lt : (u.take x.length).length ≤ u.length + m := by
+      rw [List.length_take]
       calc
         min x.length u.length ≤ u.length := min_le_right _ _
         _ ≤ u.length + m := le_self_add
@@ -1182,10 +1190,10 @@ by
       (r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
               [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++
             r₁.inputR.map (wrapSymbol₁ g₂.nt)).length =
-        m
-    · rw [List.length_append_append, List.length_singleton]
-    have u_is_shorter : min x.length u.length = u.length
-    · apply min_eq_right
+        m := by
+      rw [List.length_append_append, List.length_singleton]
+    have u_is_shorter : min x.length u.length = u.length := by
+      apply min_eq_right
       clear * - critical
       omega
     rw [List.drop_eq_nil_of_le]; swap
@@ -1194,8 +1202,8 @@ by
         min (x.length - u.length) m ≤ m := min_le_right _ _
         _ ≤ u.length + m - u.length := le_add_tsub_swap
     rw [List.nil_append, List.length_take, List.length_take, ←wrap_r₁_eq_r, rul_inp_len]
-    have zero_dropping : u.length + m - min x.length u.length - min (x.length - u.length) m = 0
-    · have middle_cannot_exceed : min (x.length - u.length) m = m := min_eq_right critical
+    have zero_dropping : u.length + m - min x.length u.length - min (x.length - u.length) m = 0 := by
+      have middle_cannot_exceed : min (x.length - u.length) m = m := min_eq_right critical
       rw [u_is_shorter, middle_cannot_exceed]
       clear * -
       omega
@@ -1206,8 +1214,8 @@ by
   repeat rw [List.reverse_append] at reverse_concat
   have the_part := correspondingStrings_take y.length reverse_concat
   apply correspondingStrings_of_reverse
-  have len_sum : y.length + (x.length - u.length - m) = v.length
-  · show
+  have len_sum : y.length + (x.length - u.length - m) = v.length := by
+    show
       y.length + (x.length - u.length - (
           (r₁.inputL.map (wrapSymbol₁ g₂.nt)).length + 1 + (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length)
         ) =
@@ -1270,14 +1278,14 @@ by
   have total_len := correspondingStrings_length ih_concat
   repeat rw [List.length_append] at total_len
   repeat rw [List.length_map] at total_len
-  have matched_right : u.length ≥ x.length
-  · by_contra! ul_lt_xl
-    have ul_lt_ihls : u.length < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length
-    · rw [List.length_append, List.length_map, List.length_map]
+  have matched_right : u.length ≥ x.length := by
+    by_contra! ul_lt_xl
+    have ul_lt_ihls : u.length < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length := by
+      rw [List.length_append, List.length_map, List.length_map]
       exact Nat.lt_add_right _ ul_lt_xl
     have ulth := correspondingStrings_getElem ul_lt_ihls (by simp) ih_concat
-    have ul_lt_xlm : u.length < (x.map (wrapSymbol₁ g₂.nt)).length
-    · rw [List.length_map]
+    have ul_lt_xlm : u.length < (x.map (wrapSymbol₁ g₂.nt)).length := by
+      rw [List.length_map]
       exact ul_lt_xl
     simp_rw [List.getElem_append, ul_lt_xlm] at ulth
     simp [List.getElem_append] at ulth
@@ -1304,16 +1312,16 @@ by
       rw [List.drop_left] at rest1
       rw [←List.take_append_drop ((u.drop x.length).filterMap unwrapSymbol₂).length y]
       rw [←List.map_take] at seg1
-      have min_uxy : min (u.length - x.length) y.length = u.length - x.length
-      · rw [min_eq_left]
+      have min_uxy : min (u.length - x.length) y.length = u.length - x.length := by
+        rw [min_eq_left]
         clear * - total_len
         omega
-      have tuxy : y.take (y.take (u.length - x.length)).length = y.take (u.length - x.length)
-      · rw [List.length_take, min_uxy]
+      have tuxy : y.take (y.take (u.length - x.length)).length = y.take (u.length - x.length) := by
+        rw [List.length_take, min_uxy]
       have fmu1 := filterMap_unwrap_of_correspondingStrings₂ seg1
       rw [List.length_map] at fmu1
-      have fml : ((u.drop x.length).filterMap unwrapSymbol₂).length = (u.drop x.length).length
-      · rw [List.length_take, min_uxy] at tuxy
+      have fml : ((u.drop x.length).filterMap unwrapSymbol₂).length = (u.drop x.length).length := by
+        rw [List.length_take, min_uxy] at tuxy
         rw [congr_arg List.length fmu1, List.length_drop, congr_arg List.length tuxy, List.length_take]
         exact min_uxy
       apply congr_arg₂
@@ -1370,8 +1378,8 @@ by
       have tak := correspondingStrings_take v.reverse.length rev
       rw [List.take_left] at tak
       have rtr := correspondingStrings_reverse tak
-      have nec : v.reverse.length ≤ (y.map (wrapSymbol₂ g₁.nt)).reverse.length
-      · clear * - matched_right total_len
+      have nec : v.reverse.length ≤ (y.map (wrapSymbol₂ g₁.nt)).reverse.length := by
+        clear * - matched_right total_len
         rw [List.length_reverse, List.length_reverse, List.length_map]
         linarith
       rw [List.reverse_reverse, List.reverse_append, List.take_append_of_le_length nec, List.reverse_take, List.reverse_reverse, ←List.map_drop] at rtr
@@ -1381,14 +1389,14 @@ by
       · have almost := correspondingStrings_take x.length ih_concat
         rw [List.take_append_of_le_length matched_right] at almost
         convert almost
-        have xl_eq : x.length = (x.map (wrapSymbol₁ g₂.nt)).length
-        · rw [List.length_map]
+        have xl_eq : x.length = (x.map (wrapSymbol₁ g₂.nt)).length := by
+          rw [List.length_map]
         rw [xl_eq, List.take_left]
       · rw [List.take_append_drop]
         apply correspondingStrings_after_wrap_unwrap_self₂
         have tdc := correspondingStrings_drop x.length (correspondingStrings_take u.length ih_concat)
-        have ul_eq : u.length = x.length + (u.length - x.length)
-        · rw [←Nat.add_sub_assoc matched_right, add_comm, Nat.add_sub_assoc (by rfl), Nat.sub_self, add_zero]
+        have ul_eq : u.length = x.length + (u.length - x.length) := by
+          rw [←Nat.add_sub_assoc matched_right, add_comm, Nat.add_sub_assoc (by rfl), Nat.sub_self, add_zero]
         rw [List.take_left, ul_eq, List.drop_take, List.drop_left' (List.length_map ..), ←List.map_take] at tdc
         exact ⟨_, tdc⟩
 
@@ -1404,257 +1412,259 @@ private lemma big_induction {g₁ g₂ : Grammar T} {w : List (nst T g₁.nt g�
       (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))
       w  :=
 by
-  induction' hggw with a b _ orig ih
-  · use [Symbol.nonterminal g₁.initial], [Symbol.nonterminal g₂.initial]
-    constructor
-    · apply gr_deri_self
-    constructor
-    · apply gr_deri_self
-    simp only [wrapSymbol₁, wrapSymbol₂, List.map_singleton, List.singleton_append]
-    rw [correspondingStrings_cons]
-    constructor
-    · rfl
-    rw [correspondingStrings_cons]
-    constructor
-    · rfl
-    exact correspondingStrings_nil
-  rcases ih with ⟨x, y, ih_x, ih_y, ih_concat⟩
-  rcases orig with ⟨r, rin, u, v, bef, aft⟩
-  simp only [bigGrammar, List.mem_cons, List.mem_append, or_assoc] at rin
-  rcases rin with rinit | rin₁ | rin₂ | rte₁ | rte₂
-  · exfalso
-    rw [rinit] at bef
-    clear * - ih_concat bef
-    simp only [List.append_nil] at bef
-    rw [bef] at ih_concat
-    have same_lengths := correspondingStrings_length ih_concat
-    clear bef
-    have ulen₁ : u.length < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length
-    · rw [List.length_append _ v, List.length_append u, List.length_singleton] at same_lengths
-      clear * - same_lengths
-      linarith
-    rw [List.append_assoc] at ih_concat
-    have eqi_symb := correspondingStrings_getElem ulen₁ ?_ ih_concat ; swap
-    · rw [List.length_append, List.length_append, List.length_singleton]
-      clear * -
-      linarith
-    have eq_none : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ulen₁ = Symbol.nonterminal ◩none
-    · simp at eqi_symb
-      cases hxyu : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length] with
-      | terminal t =>
-        exfalso
-        simp_all [correspondingSymbols]
-      | nonterminal s =>
-        cases s with
-        | inl sₒ =>
-          cases sₒ with
-          | none => rfl
-          | some => simp_all [correspondingSymbols]
-        | inr sₜ => simp_all [correspondingSymbols]
-    have impossible_in : Symbol.nonterminal ◩none ∈ x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)
-    · rw [List.mem_iff_getElem]
-      use u.length
-      use ulen₁
-      exact eq_none
-    rw [List.mem_append] at impossible_in
-    cases impossible_in with
-    | inl hinx =>
-      rw [List.mem_map] at hinx
-      rcases hinx with ⟨s, -, contradic⟩
-      clear * - contradic
-      cases s
-      · have imposs := Symbol.nonterminal.inj contradic
-        exact Sum.noConfusion imposs
-      · have impos := Sum.inl.inj (Symbol.nonterminal.inj contradic)
-        exact Option.noConfusion impos
-    | inr hiny =>
-      rw [List.mem_map] at hiny
-      rcases hiny with ⟨s, -, contradic⟩
-      clear * - contradic
-      cases s
-      · have imposs := Symbol.nonterminal.inj contradic
-        exact Sum.noConfusion imposs
-      · have impos := Sum.inl.inj (Symbol.nonterminal.inj contradic)
-        exact Option.noConfusion impos
-  · cases' induction_step_for_lifted_rule_from_g₁ rin₁ bef aft ih_x ih_y ih_concat with x' pros
-    exact ⟨x', y, pros⟩
-  · use x
-    exact induction_step_for_lifted_rule_from_g₂ rin₂ bef aft ih_x ih_y ih_concat
-  · use x, y, ih_x, ih_y
-    unfold rulesForTerminals₁ at rte₁
-    rw [List.mem_map] at rte₁
-    rcases rte₁ with ⟨t, -, eq_r⟩
-    rw [←eq_r] at bef aft
-    clear eq_r r
-    dsimp only at bef aft
-    have xy_split_u : x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt) =
-        (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length ++
-        (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length
-    · symm
-      apply List.take_append_drop
-    rw [xy_split_u, aft]
-    have part_for_u := correspondingStrings_take u.length ih_concat
-    rw [List.append_assoc]
-    apply correspondingStrings_append
-    · convert part_for_u
-      convert (congr_arg (List.take u.length) bef).symm
-      simp
-    · rw [bef, List.append_nil, List.append_nil] at ih_concat
-      have ul_lt_len_um : u.length < (u ++ [Symbol.nonterminal ◪◩t]).length
-      · rw [List.length_append, List.length_singleton]
-        apply lt_add_one
-      have ul_lt_len_umv : u.length < (u ++ [Symbol.nonterminal ◪◩t] ++ v).length
-      · rw [List.length_append]
-        apply lt_of_lt_of_le ul_lt_len_um
-        apply le_self_add
-      have ul_lt_len_xy : u.length < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length
-      · rw [correspondingStrings_length ih_concat]
-        simp
-      have middle_nt := correspondingStrings_getElem ul_lt_len_xy ul_lt_len_umv ih_concat
-      have middle_nt_elem :
-        correspondingSymbols
-          ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy)
-          (Symbol.nonterminal ◪◩t)
-      · convert middle_nt
-        simp
-      have xy_split_nt : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length =
-          ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length).take 1 ++
-          ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length).drop 1
-      · symm
-        apply List.take_append_drop
-      rw [xy_split_nt]
-      apply correspondingStrings_append; swap
-      · rw [List.drop_drop]
-        have part_for_v := correspondingStrings_drop u.length.succ ih_concat
-        convert part_for_v
-        have correct_len : 1 + u.length = (u ++ [Symbol.nonterminal ◪◩t]).length
-        · rw [add_comm, List.length_append, List.length_singleton]
-        simp
-      · convert_to
-          correspondingStrings
-            [(x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy]
-            [Symbol.terminal t]
-        · apply List.take_one_drop_eq_of_lt_length
-        clear * - middle_nt_elem
-        apply correspondingStrings_singleton
-        cases hxul : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy with
-        | terminal =>
-          exfalso
-          unfold correspondingSymbols at middle_nt_elem
-          aesop
-        | nonterminal s =>
-          rw [hxul] at middle_nt_elem
-          cases hs : s with
-          | inl sₒ =>
-            rw [hs] at middle_nt_elem
-            cases sₒ with
-            | none =>
-              exact middle_nt_elem
-            | some sₙ =>
-              cases sₙ with
-              | inl s₁ =>
-                unfold correspondingSymbols at middle_nt_elem ⊢
-                aesop
-              | inr s₂ =>
-                unfold correspondingSymbols at middle_nt_elem ⊢
-                aesop
-          | inr sₜ =>
-            rw [hs] at middle_nt_elem
-            cases sₜ with
-            | inl s₁ =>
-              unfold correspondingSymbols at middle_nt_elem ⊢
-              aesop
-            | inr s₂ =>
-              unfold correspondingSymbols at middle_nt_elem ⊢
-              aesop
-  · use x, y, ih_x, ih_y
-    unfold rulesForTerminals₂ at rte₂
-    rw [List.mem_map] at rte₂
-    rcases rte₂ with ⟨t, -, eq_r⟩
-    rw [←eq_r] at bef aft
-    clear eq_r r
-    dsimp only at bef aft
-    have xy_split_u : x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt) =
-        (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length.succ ++
-        (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length.succ
-    · symm
-      apply List.take_append_drop
-    rw [xy_split_u, aft]
-    have part_for_v := correspondingStrings_drop u.length.succ ih_concat
-    apply correspondingStrings_append
-    · rw [bef, List.append_nil, List.append_nil] at ih_concat
-      have ul_lt_len_um : u.length < (u ++ [Symbol.nonterminal ◪◪t]).length
-      · rw [List.length_append]
-        rw [List.length_singleton]
-        apply lt_add_one
-      have ul_lt_len_umv : u.length < (u ++ [Symbol.nonterminal ◪◪t] ++ v).length
-      · rw [List.length_append]
-        apply lt_of_lt_of_le ul_lt_len_um
-        apply le_self_add
-      have ul_lt_len_xy : u.length < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length
-      · have same_len := correspondingStrings_length ih_concat
-        rw [same_len]
-        exact ul_lt_len_umv
-      have middle_nt := correspondingStrings_getElem ul_lt_len_xy ul_lt_len_umv ih_concat
-      have middle_nt_elem :
-        correspondingSymbols
-          ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy)
-          (Symbol.nonterminal ◪◪t)
-      · convert middle_nt
-        simp
-      have xy_split_nt : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length.succ =
-          ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length.succ).take u.length ++
-          ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length.succ).drop u.length
-      · symm
-        apply List.take_append_drop
-      rw [xy_split_nt]
-      apply correspondingStrings_append
-      · rw [List.take_take]
+  induction hggw with
+  | refl =>
+      use [Symbol.nonterminal g₁.initial], [Symbol.nonterminal g₂.initial]
+      constructor
+      · apply gr_deri_self
+      constructor
+      · apply gr_deri_self
+      simp only [wrapSymbol₁, wrapSymbol₂, List.map_singleton, List.singleton_append]
+      rw [correspondingStrings_cons]
+      constructor
+      · rfl
+      rw [correspondingStrings_cons]
+      constructor
+      · rfl
+      exact correspondingStrings_nil
+  | tail _ orig ih =>
+      rcases ih with ⟨x, y, ih_x, ih_y, ih_concat⟩
+      rcases orig with ⟨r, rin, u, v, bef, aft⟩
+      simp only [bigGrammar, List.mem_cons, List.mem_append, or_assoc] at rin
+      rcases rin with rinit | rin₁ | rin₂ | rte₁ | rte₂
+      · exfalso
+        rw [rinit] at bef
+        clear * - ih_concat bef
+        simp only [List.append_nil] at bef
+        rw [bef] at ih_concat
+        have same_lengths := correspondingStrings_length ih_concat
+        clear bef
+        have ulen₁ : u.length < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length := by
+          rw [List.length_append _ v, List.length_append u, List.length_singleton] at same_lengths
+          clear * - same_lengths
+          linarith
+        rw [List.append_assoc] at ih_concat
+        have eqi_symb := correspondingStrings_getElem ulen₁ ?_ ih_concat ; swap
+        · rw [List.length_append, List.length_append, List.length_singleton]
+          clear * -
+          linarith
+        have eq_none : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ulen₁ = Symbol.nonterminal ◩none := by
+          simp at eqi_symb
+          cases hxyu : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length] with
+          | terminal t =>
+            exfalso
+            simp_all [correspondingSymbols]
+          | nonterminal s =>
+            cases s with
+            | inl sₒ =>
+              cases sₒ with
+              | none => rfl
+              | some => simp_all [correspondingSymbols]
+            | inr sₜ => simp_all [correspondingSymbols]
+        have impossible_in : Symbol.nonterminal ◩none ∈ x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt) := by
+          rw [List.mem_iff_getElem]
+          use u.length
+          use ulen₁
+          exact eq_none
+        rw [List.mem_append] at impossible_in
+        cases impossible_in with
+        | inl hinx =>
+          rw [List.mem_map] at hinx
+          rcases hinx with ⟨s, -, contradic⟩
+          clear * - contradic
+          cases s
+          · have imposs := Symbol.nonterminal.inj contradic
+            exact Sum.noConfusion imposs
+          · have impos := Sum.inl.inj (Symbol.nonterminal.inj contradic)
+            exact Option.noConfusion impos
+        | inr hiny =>
+          rw [List.mem_map] at hiny
+          rcases hiny with ⟨s, -, contradic⟩
+          clear * - contradic
+          cases s
+          · have imposs := Symbol.nonterminal.inj contradic
+            exact Sum.noConfusion imposs
+          · have impos := Sum.inl.inj (Symbol.nonterminal.inj contradic)
+            exact Option.noConfusion impos
+      · cases' induction_step_for_lifted_rule_from_g₁ rin₁ bef aft ih_x ih_y ih_concat with x' pros
+        exact ⟨x', y, pros⟩
+      · use x
+        exact induction_step_for_lifted_rule_from_g₂ rin₂ bef aft ih_x ih_y ih_concat
+      · use x, y, ih_x, ih_y
+        unfold rulesForTerminals₁ at rte₁
+        rw [List.mem_map] at rte₁
+        rcases rte₁ with ⟨t, -, eq_r⟩
+        rw [←eq_r] at bef aft
+        clear eq_r r
+        dsimp only at bef aft
+        have xy_split_u : x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt) =
+            (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length ++
+            (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length := by
+          symm
+          apply List.take_append_drop
+        rw [xy_split_u, aft]
         have part_for_u := correspondingStrings_take u.length ih_concat
-        convert part_for_u
-        · apply min_eq_left
-          apply Nat.le_succ
-        rw [List.append_assoc, List.take_left]
-      · convert_to
-          correspondingStrings
-            [(x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy]
-            [Symbol.terminal t]
-        · apply list_drop_take_succ
-        clear * - middle_nt_elem
-        apply correspondingStrings_singleton
-        cases hxul : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy with
-        | terminal =>
-          exfalso
-          unfold correspondingSymbols at middle_nt_elem
-          aesop
-        | nonterminal s =>
-          rw [hxul] at middle_nt_elem
-          cases hs : s with
-          | inl sₒ =>
-            rw [hs] at middle_nt_elem
-            cases sₒ with
-            | none =>
-              exact middle_nt_elem
-            | some sₙ =>
-              cases sₙ with
-              | inl s₁ =>
-                unfold correspondingSymbols at middle_nt_elem ⊢
-                aesop
-              | inr s₂ =>
-                unfold correspondingSymbols at middle_nt_elem ⊢
-                aesop
-          | inr sₜ =>
-            rw [hs] at middle_nt_elem
-            cases sₜ with
-            | inl s₁ =>
-              unfold correspondingSymbols at middle_nt_elem ⊢
+        rw [List.append_assoc]
+        apply correspondingStrings_append
+        · convert part_for_u
+          convert (congr_arg (List.take u.length) bef).symm
+          simp
+        · rw [bef, List.append_nil, List.append_nil] at ih_concat
+          have ul_lt_len_um : u.length < (u ++ [Symbol.nonterminal ◪◩t]).length := by
+            rw [List.length_append, List.length_singleton]
+            apply lt_add_one
+          have ul_lt_len_umv : u.length < (u ++ [Symbol.nonterminal ◪◩t] ++ v).length := by
+            rw [List.length_append]
+            apply lt_of_lt_of_le ul_lt_len_um
+            apply le_self_add
+          have ul_lt_len_xy : u.length < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length := by
+            rw [correspondingStrings_length ih_concat]
+            simp
+          have middle_nt := correspondingStrings_getElem ul_lt_len_xy ul_lt_len_umv ih_concat
+          have middle_nt_elem :
+            correspondingSymbols
+              ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy)
+              (Symbol.nonterminal ◪◩t) := by
+            convert middle_nt
+            simp
+          have xy_split_nt : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length =
+              ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length).take 1 ++
+              ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length).drop 1 := by
+            symm
+            apply List.take_append_drop
+          rw [xy_split_nt]
+          apply correspondingStrings_append; swap
+          · rw [List.drop_drop]
+            have part_for_v := correspondingStrings_drop u.length.succ ih_concat
+            convert part_for_v
+            have correct_len : 1 + u.length = (u ++ [Symbol.nonterminal ◪◩t]).length := by
+              rw [add_comm, List.length_append, List.length_singleton]
+            simp
+          · convert_to
+              correspondingStrings
+                [(x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy]
+                [Symbol.terminal t]
+            · apply List.take_one_drop_eq_of_lt_length
+            clear * - middle_nt_elem
+            apply correspondingStrings_singleton
+            cases hxul : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy with
+            | terminal =>
+              exfalso
+              unfold correspondingSymbols at middle_nt_elem
               aesop
-            | inr s₂ =>
-              unfold correspondingSymbols at middle_nt_elem ⊢
+            | nonterminal s =>
+              rw [hxul] at middle_nt_elem
+              cases hs : s with
+              | inl sₒ =>
+                rw [hs] at middle_nt_elem
+                cases sₒ with
+                | none =>
+                  exact middle_nt_elem
+                | some sₙ =>
+                  cases sₙ with
+                  | inl s₁ =>
+                    unfold correspondingSymbols at middle_nt_elem ⊢
+                    aesop
+                  | inr s₂ =>
+                    unfold correspondingSymbols at middle_nt_elem ⊢
+                    aesop
+              | inr sₜ =>
+                rw [hs] at middle_nt_elem
+                cases sₜ with
+                | inl s₁ =>
+                  unfold correspondingSymbols at middle_nt_elem ⊢
+                  aesop
+                | inr s₂ =>
+                  unfold correspondingSymbols at middle_nt_elem ⊢
+                  aesop
+      · use x, y, ih_x, ih_y
+        unfold rulesForTerminals₂ at rte₂
+        rw [List.mem_map] at rte₂
+        rcases rte₂ with ⟨t, -, eq_r⟩
+        rw [←eq_r] at bef aft
+        clear eq_r r
+        dsimp only at bef aft
+        have xy_split_u : x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt) =
+            (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length.succ ++
+            (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).drop u.length.succ := by
+          symm
+          apply List.take_append_drop
+        rw [xy_split_u, aft]
+        have part_for_v := correspondingStrings_drop u.length.succ ih_concat
+        apply correspondingStrings_append
+        · rw [bef, List.append_nil, List.append_nil] at ih_concat
+          have ul_lt_len_um : u.length < (u ++ [Symbol.nonterminal ◪◪t]).length := by
+            rw [List.length_append]
+            rw [List.length_singleton]
+            apply lt_add_one
+          have ul_lt_len_umv : u.length < (u ++ [Symbol.nonterminal ◪◪t] ++ v).length := by
+            rw [List.length_append]
+            apply lt_of_lt_of_le ul_lt_len_um
+            apply le_self_add
+          have ul_lt_len_xy : u.length < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length := by
+            have same_len := correspondingStrings_length ih_concat
+            rw [same_len]
+            exact ul_lt_len_umv
+          have middle_nt := correspondingStrings_getElem ul_lt_len_xy ul_lt_len_umv ih_concat
+          have middle_nt_elem :
+            correspondingSymbols
+              ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy)
+              (Symbol.nonterminal ◪◪t) := by
+            convert middle_nt
+            simp
+          have xy_split_nt : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length.succ =
+              ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length.succ).take u.length ++
+              ((x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).take u.length.succ).drop u.length := by
+            symm
+            apply List.take_append_drop
+          rw [xy_split_nt]
+          apply correspondingStrings_append
+          · rw [List.take_take]
+            have part_for_u := correspondingStrings_take u.length ih_concat
+            convert part_for_u
+            · apply min_eq_left
+              apply Nat.le_succ
+            rw [List.append_assoc, List.take_left]
+          · convert_to
+              correspondingStrings
+                [(x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy]
+                [Symbol.terminal t]
+            · apply list_drop_take_succ
+            clear * - middle_nt_elem
+            apply correspondingStrings_singleton
+            cases hxul : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy with
+            | terminal =>
+              exfalso
+              unfold correspondingSymbols at middle_nt_elem
               aesop
-    · convert part_for_v using 1
-      convert (congr_arg (List.drop u.length.succ) bef).symm
-      simp
+            | nonterminal s =>
+              rw [hxul] at middle_nt_elem
+              cases hs : s with
+              | inl sₒ =>
+                rw [hs] at middle_nt_elem
+                cases sₒ with
+                | none =>
+                  exact middle_nt_elem
+                | some sₙ =>
+                  cases sₙ with
+                  | inl s₁ =>
+                    unfold correspondingSymbols at middle_nt_elem ⊢
+                    aesop
+                  | inr s₂ =>
+                    unfold correspondingSymbols at middle_nt_elem ⊢
+                    aesop
+              | inr sₜ =>
+                rw [hs] at middle_nt_elem
+                cases sₜ with
+                | inl s₁ =>
+                  unfold correspondingSymbols at middle_nt_elem ⊢
+                  aesop
+                | inr s₂ =>
+                  unfold correspondingSymbols at middle_nt_elem ⊢
+                  aesop
+        · convert part_for_v using 1
+          convert (congr_arg (List.drop u.length.succ) bef).symm
+          simp
 
 lemma in_concatenated_of_in_big {g₁ g₂ : Grammar T} {w : List T}
     (hwgg : w ∈ (bigGrammar g₁ g₂).language) :
@@ -1675,27 +1685,27 @@ by
   rcases case_step with ⟨w₁, hyp_tran, hyp_deri⟩
   have w₁eq : w₁ =
       [Symbol.nonterminal ◩(some ◩g₁.initial),
-       Symbol.nonterminal ◩(some ◪g₂.initial)]
-  · clear * - hyp_tran
+       Symbol.nonterminal ◩(some ◪g₂.initial)] := by
+    clear * - hyp_tran
     -- only the first rule is applicable
     rcases hyp_tran with ⟨r, rin, u, v, bef, aft⟩
     have bef_len := congr_arg List.length bef
     rw [List.length_append_append, List.length_append_append,
         List.length_singleton, List.length_singleton] at bef_len
-    have u_nil : u = []
-    · clear * - bef_len
+    have u_nil : u = [] := by
+      clear * - bef_len
       rw [←List.length_eq_zero_iff]
       linarith
-    have v_nil : v = []
-    · clear * - bef_len
+    have v_nil : v = [] := by
+      clear * - bef_len
       rw [←List.length_eq_zero_iff]
       linarith
-    have rif_nil : r.inputL = []
-    · clear * - bef_len
+    have rif_nil : r.inputL = [] := by
+      clear * - bef_len
       rw [←List.length_eq_zero_iff]
       linarith
-    have nt_match : Symbol.nonterminal (bigGrammar g₁ g₂).initial = Symbol.nonterminal r.inputN
-    · have bef_fst := congr_arg (·[0]?) bef
+    have nt_match : Symbol.nonterminal (bigGrammar g₁ g₂).initial = Symbol.nonterminal r.inputN := by
+      have bef_fst := congr_arg (·[0]?) bef
       rw [u_nil, rif_nil] at bef_fst
       rw [←Option.some_inj]
       exact bef_fst
@@ -1752,14 +1762,14 @@ by
     apply List.ext_getElem
     · simpa using Nat.le.intro xylen
     intros i iltwl iltxl
-    have i_lt_lenl : i < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length
-    · rw [List.length_append, List.length_map]
+    have i_lt_lenl : i < (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt)).length := by
+      rw [List.length_append, List.length_map]
       exact Nat.lt_add_right (y.map (wrapSymbol₂ g₁.nt)).length iltxl
-    have i_lt_lenr : i < (w.map Symbol.terminal).length
-    · simp_all
+    have i_lt_lenr : i < (w.map Symbol.terminal).length := by
+      simp_all
     have equivalent_ith := correspondingStrings_getElem i_lt_lenl i_lt_lenr concat_xy
-    have hxyg₂ : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[i]'i_lt_lenl = wrapSymbol₁ g₂.nt (x[i]'iltxl)
-    · simp_all
+    have hxyg₂ : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[i]'i_lt_lenl = wrapSymbol₁ g₂.nt (x[i]'iltxl) := by
+      simp_all
     rw [hxyg₂, List.getElem_map] at equivalent_ith
     aesop (add simp nnn) (add simp wrapSymbol₁) (add simp correspondingSymbols)
   use w.drop x.length
@@ -1771,12 +1781,12 @@ by
     clear deri_y
     have xylen := correspondingStrings_length concat_xy
     rw [List.length_append] at xylen
-    have remaining : (w.drop x.length).map Symbol.terminal = y
-    · ext1 i
+    have remaining : (w.drop x.length).map Symbol.terminal = y := by
+      ext1 i
       by_cases hiy : i ≥ y.length
       · convert_to none = none
-        · have ylen : y.length = ((w.drop x.length).map (@Symbol.terminal T g₂.nt)).length
-          · clear * - xylen
+        · have ylen : y.length = ((w.drop x.length).map (@Symbol.terminal T g₂.nt)).length := by
+            clear * - xylen
             rw [List.length_map, List.length_drop]
             simp at xylen
             exact Nat.eq_sub_of_add_eq' xylen
@@ -1789,27 +1799,27 @@ by
       have equivalent_second_parts :
         correspondingStrings
           (y.map (wrapSymbol₂ g₁.nt))
-          ((w.map Symbol.terminal).drop (x.map (wrapSymbol₁ g₂.nt)).length)
-      · convert correspondingStrings_drop (x.map (wrapSymbol₁ g₂.nt)).length concat_xy
+          ((w.map Symbol.terminal).drop (x.map (wrapSymbol₁ g₂.nt)).length) := by
+        convert correspondingStrings_drop (x.map (wrapSymbol₁ g₂.nt)).length concat_xy
         · rw [List.drop_left]
         · rw [List.take_append_drop]
-      have i_lt_len_lwy : i < (y.map (wrapSymbol₂ g₁.nt)).length
-      · rw [List.length_map]
+      have i_lt_len_lwy : i < (y.map (wrapSymbol₂ g₁.nt)).length := by
+        rw [List.length_map]
         exact hiy
       have i_lt_len_dxw : i < ((w.map Symbol.terminal).drop x.length).length
       swap
-      have i_lt_len_mtw : i < ((w.drop x.length).map Symbol.terminal).length
-      · convert i_lt_len_dxw
+      have i_lt_len_mtw : i < ((w.drop x.length).map Symbol.terminal).length := by
+        convert i_lt_len_dxw
         apply List.map_drop
-      have goal_as_ith_drop : y[i]'hiy = (List.drop x.length (w.map Symbol.terminal))[i]'i_lt_len_dxw
-      · have xli_lt_len_w : x.length + i < w.length
-        · apply Nat.add_lt_of_lt_sub'
+      have goal_as_ith_drop : y[i]'hiy = (List.drop x.length (w.map Symbol.terminal))[i]'i_lt_len_dxw := by
+        have xli_lt_len_w : x.length + i < w.length := by
+          apply Nat.add_lt_of_lt_sub'
           simpa using i_lt_len_dxw
         have eqiv_symb := correspondingStrings_getElem i_lt_len_lwy (by simpa using i_lt_len_dxw) equivalent_second_parts
         simp only [correspondingSymbols] at eqiv_symb
         split at eqiv_symb <;> aesop (add simp nnn) (add simp wrapSymbol₂)
-      have goal_as_some_ith : some (y[i]'hiy) = some (((w.drop x.length).map Symbol.terminal)[i]'i_lt_len_mtw)
-      · rw [goal_as_ith_drop]
+      have goal_as_some_ith : some (y[i]'hiy) = some (((w.drop x.length).map Symbol.terminal)[i]'i_lt_len_mtw) := by
+        rw [goal_as_ith_drop]
         congr
         symm
         apply List.map_drop
