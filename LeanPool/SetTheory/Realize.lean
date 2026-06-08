@@ -458,8 +458,8 @@ def isFunction : BuildFormulaM Bool := do
 def isRealizeIffStage : BuildFormulaM Bool := do
   return (← attrDeclName).lastComponentAsString == "realize_iff"
 
-/-- The `hasEmptyInstance?` declaration. -/
-def hasEmptyInstance? : BuildFormulaM Bool := do
+/-- The `hasEmptyInstanceState` declaration. -/
+def hasEmptyInstanceState : BuildFormulaM Bool := do
   return (← get).hasEmptyInstance?
 
 /-- The `classParams` declaration. -/
@@ -798,7 +798,7 @@ def classParamBinders (typeLetter : String := "M") :
     ← `(bracketedBinder | {$typeIdent : Type _}),
     ← `(bracketedBinder | [$structIdent : $(mkCIdent ``ZFStructure) $typeIdent])
   ] ++ (
-  ← if (← isFunction) && (← numHypotheses) > 0 && !(← hasEmptyInstance?) then
+  ← if (← isFunction) && (← numHypotheses) > 0 && !(← hasEmptyInstanceState) then
       return #[← `(bracketedBinder | [$(mkCIdent ``HasEmpty) $typeIdent])]
     else
       return #[]
