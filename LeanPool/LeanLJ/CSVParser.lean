@@ -15,7 +15,7 @@ simulation parameters from text input.
 namespace LeanLJ
 
 /-- Parse a string such as `"-1.25"` into a `Float`, returning `none` on malformed input. -/
-def parseFloat? (s : String) : Option Float := Id.run do
+def parseFloatOpt (s : String) : Option Float := Id.run do
   let s := s.trimAscii.toString
   if s.isEmpty then return none
   let isNeg := s.startsWith "-"
@@ -38,7 +38,7 @@ def parseFloat? (s : String) : Option Float := Id.run do
 
 /-- Parse a string into a `Float`, defaulting to `0.0` on malformed input. -/
 def stringToFloat (s : String) : Float :=
-  match parseFloat? s with
+  match parseFloatOpt s with
   | some f => f
   | none => 0.0
 
