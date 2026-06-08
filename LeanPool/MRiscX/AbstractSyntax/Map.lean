@@ -45,6 +45,7 @@ namespace TMap
     | TMap.put k' v t => if k == k' then v else TMap.get t k
 
 
+  /-- Accumulate the keys of a `TMap` onto `list`, used by `getKeys`. -/
   def getKeysAux {α : Type} {β : Type} [BEq α] [LawfulBEq α] (map : TMap α β) (list : List α)
       : List α :=
     match map with
@@ -57,11 +58,13 @@ namespace TMap
   def getKeys {α : Type} {β : Type} [BEq α] [LawfulBEq α] (map : TMap α β) : List α :=
     (map.getKeysAux [])
 
+  /-- The most recently inserted key of a `TMap`, if any. -/
   def getLastKey {α : Type} {β : Type} [BEq α] [LawfulBEq α] (map : TMap α β) : Option α :=
     match map.getKeys.reverse with
     | List.cons v _ => some v
     | _ => none
 
+  /-- Accumulate the values of a `TMap` onto `list`, used by `getValues`. -/
   def getValuesAux {α : Type} {β : Type} [BEq α] [LawfulBEq α] (map: TMap α β) (list : List β)
       : List β :=
     match map with
@@ -74,11 +77,13 @@ namespace TMap
   def getValues {α : Type} {β : Type} [BEq α] [LawfulBEq α] (map : TMap α β) : List β :=
     (map.getValuesAux [])
 
+  /-- Render the bindings of a `TMap` as a `; `-separated string, used by `toString`. -/
   def toStringAux {α : Type} {β : Type} [ToString α][ToString β] (t : TMap α β) : String :=
     match t with
     | TMap.empty d => s!"{d}"
     | TMap.put k v t' => s!"{k} ↦ {v}; " ++ t'.toStringAux ++ ""
 
+  /-- Render a `TMap` as a parenthesised string of its bindings. -/
   def toString {α : Type} {β : Type} [ToString α][ToString β] (t : TMap α β) : String :=
     let s := toStringAux t
     "(" ++ s ++ ")"
@@ -88,6 +93,7 @@ instance {α β} [ToString α] [ToString β]: Repr (TMap (α : Type) (β :Type))
   reprPrec t _ := t.toString
 
 
+/-- Notation `(k ↦ v; m)` for inserting the binding `k ↦ v` into the total map `m`. -/
 notation:60 "(" k " ↦ "v"; "m")" => TMap.put k v m
 
 
@@ -117,20 +123,24 @@ namespace PMap
     | PMap.empty => none
     | PMap.put k' v t => if k == k' then some v else PMap.get t k
 
+  /-- Accumulate the keys of a `PMap` onto `list`, used by `getKeys`. -/
   def getKeysAux {α : Type} {β : Type} [BEq α] [LawfulBEq α] (map : PMap α β) (list : List α)
       : List α :=
     match map with
     | PMap.empty => list
     | PMap.put k _ t => t.getKeysAux (k :: list)
 
+  /-- Get all keys of a `PMap` as a list. -/
   def getKeys {α : Type} {β : Type} [BEq α] [LawfulBEq α] (map : PMap α β) : List α :=
     (map.getKeysAux [])
 
+  /-- Render the bindings of a `PMap` as a `; `-separated string, used by `toString`. -/
   def toStringAux {α : Type} {β : Type} [ToString α][ToString β] (p : PMap α β) : String :=
     match p with
     | PMap.empty => s!"()"
     | PMap.put k v p' => s!"{k} ↦ {v}; " ++ p'.toStringAux ++ ""
 
+  /-- Render a `PMap` as a parenthesised string of its bindings. -/
   def toString {α : Type} {β : Type} [ToString α][ToString β] (p : PMap α β) : String :=
     let s := toStringAux p
     "p(" ++ s ++ ")"
@@ -141,6 +151,7 @@ instance {α β} [ToString α] [ToString β]: Repr (PMap (α : Type) (β :Type))
   reprPrec p _ := p.toString
 
 
+/-- Notation `p(k ↦ v; m)` for inserting the binding `k ↦ v` into the partial map `m`. -/
 notation:60 "p("k" ↦ "v"; "m")" => PMap.put k v m
 
 

@@ -23,22 +23,25 @@ the paper of lundberg et al.. Some exceptions had to be made since "[]" are alre
 widely known as lists.
 -/
 
+/-- Notation `a₁ ∧∧ a₂` for the conjunction `Assertion.And a₁ a₂` of two assertions. -/
 macro  a₁:term " ∧∧ " a₂:term : term => do
   `(Assertion.And $a₁ $a₂)
 
+/-- Notation `∼a` for the negation `Assertion.Not a` of an assertion. -/
 macro "∼" a:ident : term =>
   `(Assertion.Not $a)
 
+/-- Preprocess a parsed Hoare condition, expanding assignment chains and binding
+the implicit state identifier `st`. -/
 def processHoareTerm (stx : Term) : TermElabM Syntax := do
   withFreshMacroScope do
     let mut newStx ← (go stx)
     return newStx
 where
-  /-
-    Differentiate between hoare assignment and usual term in pre and post condition.
-  -/
+  /-- Differentiate between a Hoare assignment and an ordinary term in a
+  pre- or post-condition. -/
   go : Syntax → TermElabM Syntax
-  | _stx@`(hoare_assignment_term | ⟦$h:hoare_assignment_chain⟧) => do
+  | _stx@`(hoareAssignmentTerm | ⟦$h:hoareAssignmentChain⟧) => do
     return ←generateHoareAssignmentSyntax h
   | _stx@`($t:term) => do
     let mut newStx ← replaceKeywords t (←`($(mkIdent `st)))
@@ -46,30 +49,32 @@ where
 
 
 
+/-- Elaborate a Hoare condition into the `MState → _` predicate it denotes. -/
 def elabHoareTerm (stx : Term) : TermElabM (Term) := do
   let newStx ← processHoareTerm stx
   let stIdent := mkIdent `st
   return ←`(fun $stIdent : MState => ($(⟨newStx⟩)))
 
 
+/-- Notation `⦃t⦄` elaborating a Hoare condition into its state predicate. -/
 elab "⦃" t:term "⦄" : term => do
   let newTOpt ← elabHoareTerm t
   return ← Lean.Elab.Term.elabTerm (←`($newTOpt)) (some (.const ``String []))
 
 
 /--
-Some utility function which casts an `Array TSyntax mriscx_label` to `TSyntax term`
+Some utility function which casts an `Array TSyntax mriscxLabel` to `TSyntax term`
 -/
-def mriscxSyntaxToTerm (stx : Array (TSyntax `mriscx_label)) : TermElabM (TSyntax `term) := do
+def mriscxSyntaxToTerm (stx : Array (TSyntax `mriscxLabel)) : TermElabM (TSyntax `term) := do
   let newStx : (TSyntax `term) := ←`(mriscx
                                       $stx*
                                      end)
   return newStx
 
 /--
-Some utility function which casts `TSyntax mriscx_label` to `TSyntax term`
+Some utility function which casts `TSyntax mriscxLabel` to `TSyntax term`
 -/
-def mriscxSpecToTerm (stx : (TSyntax `mriscx_Instr)) : TermElabM (TSyntax `term) := do
+def mriscxSpecToTerm (stx : (TSyntax `mriscxInstr)) : TermElabM (TSyntax `term) := do
   let newStx : (TSyntax `term) ←`(⟪$stx⟫)
   return ←`($newStx)
 
@@ -77,25 +82,25 @@ def mriscxSpecToTerm (stx : (TSyntax `mriscx_Instr)) : TermElabM (TSyntax `term)
 /--
 Hoare-triples for specifications with only one instruction
 -/
-elab "hoare" syn:mriscx_spec linebreak
+elab "hoare" syn:mriscxSpec linebreak
       "⦃" P:term "⦄" l:term "↦" "⟨" L_w:term "|" L_b:term "⟩" "⦃" Q:term "⦄"
       "end" : term => do
   let translatedP ← elabHoareTerm P
   let translatedQ ← elabHoareTerm Q
   match syn with
-  | `(mriscx_spec | ⟪$i:mriscx_Instr⟫) => do
+  | `(mriscxSpec | ⟪$i:mriscxInstr⟫) => do
     let synAsTerm ← mriscxSpecToTerm i
     return ←Lean.Elab.Term.elabTerm
         (←`($(mkIdent ``hoare_triple_up_1) $translatedP $translatedQ $l $L_w $L_b $synAsTerm)) none
-  | _ => throwError "Expected syntax of type mriscx_spec with ⟪⟫ braces!"
+  | _ => throwError "Expected syntax of type mriscxSpec with ⟪⟫ braces!"
 
 
 /--
 Regular Hoare-triple with concrete MRiscX syntax before the actual triple
 -/
-elab t:hoare_term : term => do
+elab t:hoareTerm : term => do
   match t with
-  | `(hoare_term | $syn:mriscx_syntax
+  | `(hoareTerm | $syn:mriscxSyntax
     ⦃ $P:term ⦄ $l:term ↦ ⟨ $L_w:term | $L_b:term ⟩ ⦃ $Q:term ⦄) =>
     let translatedP ← elabHoareTerm P
     let translatedQ ← elabHoareTerm Q
@@ -104,11 +109,11 @@ elab t:hoare_term : term => do
     let evaluatedLb := ⟨(←replaceLabels L_b labels)⟩
     let evaluatedL := ⟨(←replaceLabels l labels)⟩
     match syn with
-    | `(mriscx_syntax | mriscx
-      $labelsSyn:mriscx_label*
+    | `(mriscxSyntax | mriscx
+      $labelsSyn:mriscxLabel*
       end) => do
       let mriscxSyntaxAsTerm ← mriscxSyntaxToTerm labelsSyn
-      return ←Lean.Elab.Term.elabTerm (←`($(mkIdent ``hoare_triple_up) $translatedP $translatedQ
+      return ←Lean.Elab.Term.elabTerm (←`($(mkIdent ``hoareTripleUp) $translatedP $translatedQ
         $evaluatedL $evaluatedLw $evaluatedLb $mriscxSyntaxAsTerm)) none
     | _ => throwError "expected mriscx syntax while elaborating hoare term"
   | _ => throwError "failure"
@@ -125,7 +130,7 @@ elab id:ident withPosition(linebreak ppDedent(ppLine))
   let evaluatedLb := ⟨(←replaceLabelsWithIdent L_b id)⟩
   let evaluatedL := ⟨(←replaceLabelsWithIdent l id)⟩
   return ←Lean.Elab.Term.elabTerm
-      (←`($(mkIdent ``hoare_triple_up) $translatedP $translatedQ $evaluatedL $evaluatedLw
+      (←`($(mkIdent ``hoareTripleUp) $translatedP $translatedQ $evaluatedL $evaluatedLw
           $evaluatedLb $id)) none
 
 
@@ -145,7 +150,7 @@ elab codeTerm:term withPosition(linebreak ppDedent(ppLine))
     let evaluatedLb := ⟨(←replaceLabelsWithCodeExpr L_b e)⟩
     let evaluatedL := ⟨(←replaceLabelsWithCodeExpr l e)⟩
     return ←Lean.Elab.Term.elabTerm
-        (←`($(mkIdent ``hoare_triple_up) $translatedP $translatedQ $evaluatedL $evaluatedLw
+        (←`($(mkIdent ``hoareTripleUp) $translatedP $translatedQ $evaluatedL $evaluatedLw
             $evaluatedLb $codeTerm)) none
   else throwError  m!"Application type mismatch: The argument
   {codeTerm}
@@ -162,14 +167,15 @@ elab id:ident withPosition(linebreak ppDedent(ppLine))
     "⦃" P:term "⦄" l:term "↦" "⟨" L_w:term "|" L_b:term "⟩" "⦃" Q:term "⦄"
     : term => do
   return ←Lean.Elab.Term.elabTerm
-    (←`($(mkIdent ``hoare_triple_up) $P $Q $l $L_w $L_b $id)) none
+    (←`($(mkIdent ``hoareTripleUp) $P $Q $l $L_w $L_b $id)) none
 
 
 /--
 Elab of hoare assignment
 -/
-elab "⟦"stx:hoare_assignment_chain"⟧" : term => do
+elab "⟦"stx:hoareAssignmentChain"⟧" : term => do
   return ←Lean.Elab.Term.elabTerm (← generateHoareAssignmentSyntax stx) none
 
+/-- Notation `⟦⟧` for the identity assignment, denoting the unchanged state `st`. -/
 elab "⟦⟧" : term => do
   return ←Lean.Elab.Term.elabTerm (← `($(mkIdent `st))) none

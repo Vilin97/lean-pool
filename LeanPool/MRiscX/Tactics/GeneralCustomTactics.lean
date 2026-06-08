@@ -20,11 +20,13 @@ This file contains some custom tactics which are used several times wihthin all 
 this project.
 -/
 
-elab "simp_set_eq" : tactic => do
+/-- Simplify using the available set-equality hypotheses. -/
+elab "simpSetEq" : tactic => do
   evalTactic (← `(tactic | (ext; simp; grind)))
 
 
-elab "apply_to_last_goal" t:tacticSeq : tactic => do
+/-- Run the given tactic sequence on the last goal only. -/
+elab "applyToLastGoal" t:tacticSeq : tactic => do
   Lean.Elab.Tactic.withMainContext do
     let goals : List Lean.MVarId ← Lean.Elab.Tactic.getGoals
     match goals.getLast? with
@@ -35,5 +37,6 @@ elab "apply_to_last_goal" t:tacticSeq : tactic => do
 
 
 /- A small tactic to prove `∀ (n' : ℕ), 0 < n' → ¬n' = 0`-/
-macro "zero_lt_ne_zero" : tactic =>
+/-- Discharge a `0 < n` goal by rewriting it as `n ≠ 0`. -/
+macro "zeroLtNeZero" : tactic =>
   `(tactic | try (intros n' h; intro h_eq; rw [h_eq] at h); simp at h)

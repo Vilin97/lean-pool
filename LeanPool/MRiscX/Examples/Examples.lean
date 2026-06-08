@@ -71,19 +71,19 @@ example (p k c l : UInt64) :
   /- Too peel off the last instruction in order to be able to inspect that individually, we
     apply s_apply_seq''', a custom tactic which applies the rule `S-SEQ` and automatically
     solves some trivial goals. -/
-  sapply_s_seq P := ⦃¬⸨terminated⸩⦄ ,
+  sapplySSeq P := ⦃¬⸨terminated⸩⦄ ,
                   R := ⦃(x[0] = p ∧ x[1] = k ∧ x[2] = c) ∧ ¬⸨terminated⸩⦄,
                   L_W := {3},
                   L_W' := {4},
                   L_B := ({n:UInt64| n > 3} ∪ {0}),
                   L_B' := ({n:UInt64| n ≠ 4})
-  · sapply_s_seq P := ⦃¬⸨terminated⸩⦄,
+  · sapplySSeq P := ⦃¬⸨terminated⸩⦄,
                     R := ⦃(x[0] = p ∧ x[1] = k) ∧ ¬⸨terminated⸩⦄,
                     L_W := {2},
                     L_W' := {3},
                     L_B := ({n:UInt64| n > 2} ∪ {0}),
                     L_B' := ({n:UInt64| n ≠ 3})
-    · sapply_s_seq -- P := ⦃¬⸨terminated⸩⦄ → can be omitted
+    · sapplySSeq -- P := ⦃¬⸨terminated⸩⦄ → can be omitted
                       R := ⦃(x[0] = p) ∧ ¬⸨terminated⸩⦄,
                       L_W := {1},
                       L_W' := {2},
@@ -92,19 +92,20 @@ example (p k c l : UInt64) :
       /- At this point, every instruction was isolated. Now we just have to show
         the correctness of each single instruction.
         We can do this, by applying the specification of the instruction respectively.
-        For this, the tactic apply_spec can be used. This custom tactic applies the
+        For this, the tactic applySpec can be used. This custom tactic applies the
         specification and handles the generated goals.
         To apply the specification, we have to provide some values.
           l := The line the programcounter currently points to.
           r := The register which is being modified.
           v := The value we want to load into the register.
         The parameters differ to each specification.1 -/
-      · apply_spec specification_LoadAddress (pc := 0) (dst := 0) (addr := p)
-      · apply_spec specification_LoadAddress (pc := 1) (dst := 1) (addr := k)
-    · apply_spec specification_LoadAddress (pc := 2) (dst := 2) (addr := c)
-  · apply_spec specification_LoadImmediate (pc := 3) (dst := 3) (val := l)
+      · applySpec specification_LoadAddress (pc := 0) (dst := 0) (addr := p)
+      · applySpec specification_LoadAddress (pc := 1) (dst := 1) (addr := k)
+    · applySpec specification_LoadAddress (pc := 2) (dst := 2) (addr := c)
+  · applySpec specification_LoadImmediate (pc := 3) (dst := 3) (val := l)
 
-/- A function to avoid repetition while writing the hoare-triples -/
+/-- Whether four register indices are pairwise distinct; a convenience predicate
+used to avoid repetition while writing the example Hoare triples. -/
 def pairwiseDistinct (r₁ r₂ r₃ r₄ : UInt64) :=
   r₁ ≠ r₂
   ∧ r₁ ≠ r₃
@@ -132,7 +133,7 @@ example (r₁ r₂ r₃ r₄ : UInt64) (p k c l : UInt64) :
     ⦃((x[r₁] = p ∧ x[r₂] = k ∧ x[r₃] = c ∧ x[r₄] = l))
       ∧ ¬⸨terminated⸩⦄
   := by
-  sapply_s_seq
+  sapplySSeq
                   R := ⦃(x[r₁] = p ∧ x[r₂] = k ∧ x[r₃] = c
                         ∧ pairwiseDistinct r₁ r₂ r₃ r₄)
                         ∧ ¬⸨terminated⸩⦄,
@@ -140,7 +141,7 @@ example (r₁ r₂ r₃ r₄ : UInt64) (p k c l : UInt64) :
                   L_W' := {4},
                   L_B := ({n:UInt64| n > 3} ∪ {0}),
                   L_B' := ({n:UInt64| n ≠ 4})
-  · sapply_s_seq
+  · sapplySSeq
                     R := ⦃(x[r₁] = p ∧ x[r₂] = k
                           ∧ pairwiseDistinct r₁ r₂ r₃ r₄)
                           ∧ ¬⸨terminated⸩⦄,
@@ -148,7 +149,7 @@ example (r₁ r₂ r₃ r₄ : UInt64) (p k c l : UInt64) :
                     L_W' := {3},
                     L_B := ({n:UInt64| n > 2} ∪ {0}),
                     L_B' := ({n:UInt64| n ≠ 3})
-    · sapply_s_seq
+    · sapplySSeq
                       R := ⦃(x[r₁] = p
                             ∧ pairwiseDistinct r₁ r₂ r₃ r₄)
                             ∧ ¬⸨terminated⸩⦄,
@@ -156,10 +157,10 @@ example (r₁ r₂ r₃ r₄ : UInt64) (p k c l : UInt64) :
                       L_W' := {2},
                       L_B := ({n:UInt64| n ≠ 1}),
                       L_B' := ({n:UInt64| n ≠ 2})
-      · apply_spec specification_LoadAddress (pc := 0) (dst := r₁) (addr := p)
-      · apply_spec specification_LoadAddress (pc := 1) (dst := r₂) (addr := k)
-    · apply_spec specification_LoadAddress (pc := 2) (dst := r₃) (addr := c)
-  · apply_spec specification_LoadImmediate (pc := 3) (dst := r₄) (val := l)
+      · applySpec specification_LoadAddress (pc := 0) (dst := r₁) (addr := p)
+      · applySpec specification_LoadAddress (pc := 1) (dst := r₂) (addr := k)
+    · applySpec specification_LoadAddress (pc := 2) (dst := r₃) (addr := c)
+  · applySpec specification_LoadImmediate (pc := 3) (dst := r₄) (val := l)
 
 
 example :
@@ -176,7 +177,7 @@ example :
   /-
   apply s_seq with automatically solve set equality
   -/
-  sapply_s_seq  P := _ ,
+  sapplySSeq  P := _ ,
                   R := ⦃(x[0] = 2 ∧ x[1] = 0 ∧ x[4] = 123) ∧ ¬⸨terminated⸩⦄,
                   L_W := {2},
                   L_W' := {3},
@@ -185,15 +186,15 @@ example :
     /-
     apply s_seq without automatically solve set equality
     -/
-  · sapply_s_seq''  R := ⦃(x[0] = 2 ∧ x[4] = 123) ∧ ¬⸨terminated⸩⦄,
+  · sapplySSeq''  R := ⦃(x[0] = 2 ∧ x[4] = 123) ∧ ¬⸨terminated⸩⦄,
                     L_W := {1},
                     L_W' := {2},
                     L_B := ({n:UInt64| n ≠ 1}),
                     L_B' := ({n:UInt64| n ≠ 2})
-    · apply_spec''
-    · apply_spec''
-    · simp_set_eq
-  · apply_spec''
+    · applySpec''
+    · applySpec''
+    · simpSetEq
+  · applySpec''
 
 
 
@@ -211,7 +212,7 @@ example :
   /-
   apply s_seq with automatically solve set equality
   -/
-  sapply_s_seq  P := _ ,
+  sapplySSeq  P := _ ,
                   R := ⦃(x[0] = 2 ∧ x[1] = 0 ∧ x[4] = 123) ∧ ¬⸨terminated⸩⦄,
                   L_W := {2},
                   L_W' := {3},
@@ -220,20 +221,19 @@ example :
     /-
     apply s_seq without automatically solve set equality
     -/
-  · sapply_s_seq''  R := ⦃(x[0] = 2 ∧ x[4] = 123) ∧ ¬⸨terminated⸩⦄,
+  · sapplySSeq''  R := ⦃(x[0] = 2 ∧ x[4] = 123) ∧ ¬⸨terminated⸩⦄,
                     L_W := {1},
                     L_W' := {2},
                     L_B := ({n:UInt64| n ≠ 1}),
                     L_B' := ({n:UInt64| n ≠ 2})
-    · apply_spec''
-    · apply_spec specification_LoadImmediate (pc := 1) (dst := 1) (val := 0)
-    · simp_set_eq
-  · apply_spec specification_LoadAddress (pc := 2) (dst := 2) (addr := 0x123)
+    · applySpec''
+    · applySpec specification_LoadImmediate (pc := 1) (dst := 1) (val := 0)
+    · simpSetEq
+  · applySpec specification_LoadAddress (pc := 2) (dst := 2) (addr := 0x123)
 
 
-/-
-Use of identifiers of type `Code` in hoare-triple
--/
+/-- An example program of type `Code`, used to demonstrate referring to a named
+`Code` value inside a Hoare triple. -/
 def code : Code :=
     mriscx
       first:  li x 0, 2
@@ -249,26 +249,26 @@ example :
   := by
   -- Identifier needs to be unfolded
   unfold code
-  sapply_s_seq
+  sapplySSeq
                   R := ⦃(x[0] = 2 ∧ x[1] = 0 ) ∧ ¬⸨terminated⸩⦄,
                   L_W := {2},
                   L_W' := {3},
                   L_B := ({n:UInt64| n > 2} ∪ {0}),
                   L_B' := ({n:UInt64| n ≠ 3})
-  · sapply_s_seq
+  · sapplySSeq
                     R := ⦃(x[0] = 2) ∧ ¬⸨terminated⸩⦄,
                     L_W := {1},
                     L_W' := {2},
                     L_B := ({n:UInt64| n ≠ 1}),
                     L_B' := ({n:UInt64| n ≠ 2})
-    · apply_spec''
-    · apply_spec''
-  · apply_spec' specification_LoadAddress
+    · applySpec''
+    · applySpec''
+  · applySpec' specification_LoadAddress
 
 
 
 /--
-Usage of auto_seq
+Usage of autoSeq
 -/
 example :
     code
@@ -277,16 +277,16 @@ example :
     ⦃(x[0] = 2 ∧ x[1] = 0 ∧ x[2] = 0x123) ∧ ¬⸨terminated⸩⦄
   := by
   unfold code
-  -- use tactic `auto_seq` which automatically applies S_SEQ and calcs missing values
-  auto_seq
-  · auto_seq
-    · apply_spec''
-    · apply_spec''
-  · apply_spec''
+  -- use tactic `autoSeq` which automatically applies S_SEQ and calcs missing values
+  autoSeq
+  · autoSeq
+    · applySpec''
+    · applySpec''
+  · applySpec''
 
 
 /--
-Usage of auto_seq with variables
+Usage of autoSeq with variables
 -/
 example (r₀ r₁ p : UInt64) :
     r₀ ≠ r₁ →
@@ -302,10 +302,10 @@ example (r₀ r₁ p : UInt64) :
     ⦃(x[r₀] = p ∧ x[r₁] = 0 ∧ x[2] = 0x123) ∧ ¬⸨terminated⸩⦄
   := by
   intros h₁ h₂ h₃
-  auto_seq
-  · auto_seq
-    · apply_spec specification_LoadImmediate (pc := 0) (dst := r₀) (val := p)
-    · apply_spec specification_LoadImmediate (pc := 1) (dst := r₁) (val := 0)
+  autoSeq
+  · autoSeq
+    · applySpec specification_LoadImmediate (pc := 0) (dst := r₀) (val := p)
+    · applySpec specification_LoadImmediate (pc := 1) (dst := r₁) (val := 0)
       -- TODO automate this:
       have : (r₁ ↦ 0; (2 ↦ 291; s.registers)).get r₀ = p := by assumption
       · rw [t_update_neq] at this
@@ -318,7 +318,7 @@ example (r₀ r₁ p : UInt64) :
       rw [t_update_neq, t_update_eq]
       assumption
       -- /:
-  · apply_spec specification_LoadAddress (dst := 2) (pc := 2) (addr := 291)
+  · applySpec specification_LoadAddress (dst := 2) (pc := 2) (addr := 291)
 
 
 example :
@@ -336,7 +336,7 @@ example :
     x[2] = x[0] ^^^ x[1] ∧ x[3] = 0x321 ∧ mem[x[3]] = x[2]) ∧
     ¬⸨terminated⸩⦄
 := by
-  sapply_s_seq
+  sapplySSeq
                 -- P := P ,
                 R := ⦃(x[0] = 6 ∧ x[1] = 123
                       ∧ x[2] = x[0] ^^^ x[1]
@@ -346,7 +346,7 @@ example :
                 L_W' := {5},
                 L_B := ({n:UInt64| n > 4} ∪ {0}),
                 L_B' := ({n:UInt64| n ≠ 5})
-  · sapply_s_seq
+  · sapplySSeq
                     -- P := P ,
                     R := ⦃(x[0] = 6 ∧ x[1] = 123
                           ∧ x[2] = x[0] ^^^ x[1])
@@ -355,7 +355,7 @@ example :
                     L_W' := {4},
                     L_B := ({n:UInt64| n > 3} ∪ {0}),
                     L_B' := ({n:UInt64| n ≠ 4})
-    · sapply_s_seq
+    · sapplySSeq
                       -- P := P,
                       R := ⦃(x[0] = 6
                             ∧ x[1] = 123)
@@ -364,15 +364,15 @@ example :
                       L_W' := {3},
                       L_B := ({n:UInt64| n > 2} ∪ {0}),
                       L_B' := ({n:UInt64| n ≠ 3})
-      · sapply_s_seq
+      · sapplySSeq
                         -- P := P,
                         R := ⦃(x[0] = 6) ∧ ¬⸨terminated⸩⦄,
                         L_W := {1},
                         L_W' := {2},
                         L_B := ({n:UInt64| n ≠ 1}),
                         L_B' := ({n:UInt64| n ≠ 2})
-        · apply_spec specification_LoadImmediate (pc := 0) (dst := 0) (val := 6)
-        · apply_spec specification_LoadImmediate (pc := 1) (dst := 1) (val := 123)
-      · apply_spec specification_XOR (pc := 2) (dst := 2) (reg1 := 0) (reg2 := 1)
-    · apply_spec specification_LoadAddress (pc := 3) (dst := 3) (addr := 0x321)
-  · apply_spec specification_StoreWordImmediate (pc := 4) (regWithValue := 2) (regWithAddr := 3)
+        · applySpec specification_LoadImmediate (pc := 0) (dst := 0) (val := 6)
+        · applySpec specification_LoadImmediate (pc := 1) (dst := 1) (val := 123)
+      · applySpec specification_XOR (pc := 2) (dst := 2) (reg1 := 0) (reg2 := 1)
+    · applySpec specification_LoadAddress (pc := 3) (dst := 3) (addr := 0x321)
+  · applySpec specification_StoreWordImmediate (pc := 4) (regWithValue := 2) (regWithAddr := 3)

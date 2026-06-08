@@ -32,9 +32,12 @@ assertions, we define Hoare triples, which make claims about the
 state before and after the execution of a command.
 This can be used to perform a structured proof later.
 -/
+/-- An assertion is a predicate on machine states. -/
 abbrev Assertion : Type := MState → Prop
 
+/-- Conjunction of two assertions, holding when both hold. -/
 def Assertion.And (P Q : Assertion) : Assertion := fun st => (P st) ∧ (Q st)
+/-- Negation of an assertion, holding when the assertion does not. -/
 def Assertion.Not (P : Assertion) : Assertion := fun st => ¬(P st)
 
 
@@ -75,7 +78,7 @@ def weak (s s' : MState) (L_w L_b : Set UInt64) (c : Code) : Prop :=
 /--
 Inspired by the `judgement of L_{as}` in the paper Lundberg et al. (2020).
 
-Suppose, that `L_w ∩ L_b = ∅` and `L_w ≠ ∅` hold, then the `hoare_triple_up` means:
+Suppose, that `L_w ∩ L_b = ∅` and `L_w ≠ ∅` hold, then the `hoareTripleUp` means:
 
 For all states `s` in which both `P(s)` and `I(s)` are satisfied and whose
 program counter points to `l`,
@@ -83,7 +86,7 @@ there exists a successor state `s'` for which both the relation
 `weak(s, L_w ∪ L_b, s')` and `Q(s')`, `I(s')` and `s'.pc ∉ L_w`
 are satisfied.
 -/
-def hoare_triple_up (P Q : Assertion) (l : UInt64) (L_w L_b : Set UInt64)
+def hoareTripleUp (P Q : Assertion) (l : UInt64) (L_w L_b : Set UInt64)
   (c : Code)
 :=
   L_w ∩ L_b = ∅ →
@@ -95,7 +98,7 @@ def hoare_triple_up (P Q : Assertion) (l : UInt64) (L_w L_b : Set UInt64)
 
 
 /--
-Essentially the same as the `hoare_triple_up`, but instead of inspecting a whole code segment,
+Essentially the same as the `hoareTripleUp`, but instead of inspecting a whole code segment,
 this relation only focusses on the instruction which is executed next. This can be used to
 reason about single instructions in order to define their specification.
 -/

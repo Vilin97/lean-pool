@@ -20,7 +20,8 @@ This module provides a tactic splitting the last instruction off a code sequence
 open Lean Meta Elab Parser Tactic
 
 
-def extractL_w'AndL_b'' (e : Expr) : MetaM (Expr × Expr) := do
+/-- Extract the written and branched address sets `L_w'` and `L_b''` from an equality expression. -/
+def extractLwAndLb (e : Expr) : MetaM (Expr × Expr) := do
   let whnf ← Meta.whnf e
   if whnf.isAppOf `Eq then
     let lam ← (Meta.whnf <| whnf.getArg! 1)
@@ -33,6 +34,7 @@ def extractL_w'AndL_b'' (e : Expr) : MetaM (Expr × Expr) := do
       return (L_w', L_b'')
   throwError "Expected Expr to be of type 'Eq' "
 
+/-- Find the postcondition `Q` of the Hoare triple among the hypotheses `arr`. -/
 def extractQ (arr : PersistentArray (Option LocalDecl)) : MetaM (Expr) := do
   if arr.size == 0 then
     throwError "Could not find a declaration in hypothesis"
@@ -40,14 +42,16 @@ def extractQ (arr : PersistentArray (Option LocalDecl)) : MetaM (Expr) := do
     match decl with
     | some l =>
       let type := l.type
-      if type.isAppOfArity `hoare_triple_up 6 then
+      if type.isAppOfArity `hoareTripleUp 6 then
         return type.getArg! 1
     | _  => pure ()
-  throwError "Could not find a term of hoare_triple_up"
+  throwError "Could not find a term of hoareTripleUp"
 
 
+/-- Build the `Expr` `MState.incPc state`. -/
 def incPcExpr (state : Expr) : Expr := Expr.app (.const `MState.incPc []) (state)
 
+/-- The given state expression, or the bound state identifier `st` if none is supplied. -/
 def getStateExpr (state? : Option Expr) : Expr :=
   match state? with
   | some state =>
@@ -56,6 +60,7 @@ def getStateExpr (state? : Option Expr) : Expr :=
     (.bvar 0)
 
 
+/-- Build the `Expr` describing how instruction `instr` updates `oldState`. -/
 def getExprOfInstForR (instr : Instr) (oldState : Expr) : MetaM Expr := do
   match instr with
   | Instr.LoadAddress r v
@@ -69,6 +74,7 @@ def getExprOfInstForR (instr : Instr) (oldState : Expr) : MetaM Expr := do
       for this feature"
 
 
+/-- Build the `Expr` describing how the reflected instruction `instr` updates `oldState`. -/
 def getExprOfInstrForRFromExpr (instr : Expr) (oldState : Expr) : MetaM Expr := do
   let e ← Meta.whnf instr
   if (e.isAppOfArity' `Instr.LoadImmediate 2
@@ -89,10 +95,12 @@ def getExprOfInstrForRFromExpr (instr : Expr) (oldState : Expr) : MetaM Expr := 
 
 
 
+/-- The `Expr` of the type `Set UInt64`. -/
 def typeSetUInt64 : Expr :=
   mkApp (.const `Set [Level.zero]) (.const `UInt64 [])
 
 
+/-- Build the `Expr` of the singleton set `{n}` of `UInt64`. -/
 def mkSingletonOf (n : UInt64) : Expr :=
   let instSing := mkAppN (.const ``Set.instSingletonSet [Level.zero]) #[(.const `UInt64 [])]
   let set := mkApp (.const `Set [Level.zero]) (mkConst `UInt64)
@@ -100,6 +108,7 @@ def mkSingletonOf (n : UInt64) : Expr :=
     #[(mkConst `UInt64), set, instSing, mkUInt64Lit n]
 
 
+/-- Build the `Expr` of the set of `UInt64` values not equal to `n`. -/
 def getNeSet (n : UInt64) : Expr :=
   let lam := Expr.lam `n (.const `UInt64 []) (mkAppN (.const `Ne [Level.one])
       #[(Expr.const `UInt64 []), (.bvar 0), mkUInt64Lit n])
@@ -108,6 +117,7 @@ def getNeSet (n : UInt64) : Expr :=
 
 
 
+/-- Build the default written-register relation expression for the last instruction. -/
 def calcRExprDefault (Q: Expr) (lastInstrExpr : Expr): MetaM Expr := do
   let hasOneLam := Q.isLambda
   if !hasOneLam then
@@ -132,7 +142,8 @@ def calcRExprDefault (Q: Expr) (lastInstrExpr : Expr): MetaM Expr := do
 
 
 
-elab "peel_last_instr" : tactic => do
+/-- Peel the last instruction off the current code sequence. -/
+elab "peelLastInstr" : tactic => do
   let originalGoal ← getMainGoal
   let oGoalType ← originalGoal.getType
   evalTactic (←`(tactic | intros $(mkIdent `h_L_w'_inter_L_b'') _ $(mkIdent `s)

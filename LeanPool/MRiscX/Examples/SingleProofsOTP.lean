@@ -26,7 +26,9 @@ the implementation in `OtpProof.lean`. This was done because the compiler
 in the very long proof took quite a while on every change.
 -/
 
-def I_pre' (p k c l : UInt64) :=
+/-- The precondition shared by the per-instruction One-Time-Pad proofs,
+constraining the plaintext `p`, key `k`, ciphertext `c`, and length `l` addresses. -/
+def iPre' (p k c l : UInt64) :=
   p < k ∧ k < c ∧
   c.toNat + l.toNat < UInt64.size ∧
   (p + l - 1 < k ∧ k + l - 1 < c)
@@ -35,14 +37,14 @@ def I_pre' (p k c l : UInt64) :=
 
 
 /-
-Some reasoning about I_pre
+Some reasoning about iPre
 -/
 theorem help_I_pre' : ∀ (p k c l: UInt64),
-  I_pre' p k c l →
+  iPre' p k c l →
   -- (h_x : 0 < x),
   c + (l - x) ≠ p + (l - x) := by
   intros p k c l h_I
-  unfold I_pre' at h_I
+  unfold iPre' at h_I
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
   by_contra heq
   rw [UInt64.add_cancel_right_iff] at heq
@@ -52,11 +54,11 @@ theorem help_I_pre' : ∀ (p k c l: UInt64),
   exact h_kc
 
 theorem help_I_pre'' : ∀ (p k c l: UInt64),
-  I_pre' p k c l →
+  iPre' p k c l →
   -- (h_x : 0 < x),
   c + (l - x) ≠ k + (l - x) := by
   intros p k c l h_I
-  unfold I_pre' at h_I
+  unfold iPre' at h_I
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
   by_contra heq
   rw [UInt64.add_cancel_right_iff] at heq
@@ -66,13 +68,13 @@ theorem help_I_pre'' : ∀ (p k c l: UInt64),
 
 
 theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
-  I_pre' p k c l →
+  iPre' p k c l →
   i < (l - x) →
   x ≤ l →
   -- (h_x : 0 < x),
   (c + (l - x) ≠ k + i) := by
   intros p k c l i x h_I hlx hxLeL
-  unfold I_pre' at h_I
+  unfold iPre' at h_I
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
   simp only [ne_eq]
   by_contra neq
@@ -92,13 +94,13 @@ theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
 
 
 theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
-  I_pre' p k c l →
+  iPre' p k c l →
   i < (l - x) →
   x ≤ l →
   -- (h_x : 0 < x),
   (c + (l - x) ≠ p + i) := by
   intros p k c l i x h_I hlx hxLeL
-  unfold I_pre' at h_I
+  unfold iPre' at h_I
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
   simp only [ne_eq]
   by_contra neq
@@ -124,19 +126,21 @@ theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
 
 
 theorem help_I_pre''''' : ∀ (p k c l i x: UInt64),
-  I_pre' p k c l →
+  iPre' p k c l →
   i.toNat < (l - x).toNat →
   x ≤ l →
   (c + (l - x) ≠ c + i) := by
   intros p k c l i x h_I hlx hxLeL
-  unfold I_pre' at h_I
+  unfold iPre' at h_I
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
   simp only [ne_eq, UInt64.add_right_inj]
   push Not
   grind only
 
 
-def otp_code (p k c l : UInt64) :=
+/-- The One-Time-Pad program, parameterised by the plaintext `p`, key `k`,
+ciphertext `c`, and length `l` memory addresses. -/
+def otpCode (p k c l : UInt64) :=
     mriscx
       main:
           la x 0, p
@@ -159,7 +163,7 @@ def otp_code (p k c l : UInt64) :=
 
 
 theorem sw_otp : ∀ (p k c l : UInt64),
-  (otp_code p k c l)
+  (otpCode p k c l)
   ⦃(x[3] > 0
     ∧ (∀ i < l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i])
     ∧ x[0] = p + (l - x[3])
@@ -170,7 +174,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
     ∧ x[6] = mem[x[1]]
     ∧ x[7] = x[5] ^^^ x[6]
     ∧ x[3] = x
-    ∧ I_pre' p k c l)
+    ∧ iPre' p k c l)
     ∧ ¬⸨terminated⸩ = true⦄
   8 ↦ ⟨{9} | {n | (n ≠ 9)}⟩
   ⦃(x[3] > 0 ∧
@@ -180,9 +184,9 @@ theorem sw_otp : ∀ (p k c l : UInt64),
             x[2] = c + (l - x[3]) ∧
              x[3] ≤ l ∧
               x[5] = mem[x[0]] ∧ x[6] = mem[x[1]] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] = x
-              ∧ I_pre' p k c l) ∧
+              ∧ iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄ := by
-    unfold otp_code
+    unfold otpCode
     intros p k c l
     rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6,
       h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
@@ -194,7 +198,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
     · simp
     · simp
     · simp
-    · simp_currInstr
+    · simpCurrInstr
     · assumption
     · simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addMemory_unfold,
       gt_iff_lt, MState.getMemoryAt_def, Bool.not_eq_true]
@@ -240,13 +244,13 @@ theorem sw_otp : ∀ (p k c l : UInt64),
             · rw [h_x2, h_x1]
               simp only [ne_eq, UInt64.add_left_inj]
               intros neq
-              unfold I_pre' at h_I_pre'
+              unfold iPre' at h_I_pre'
               rcases h_I_pre' with ⟨_, h_kc, _⟩
               rw [←neq] at h_kc
               apply UInt64.lt_irrefl c
               exact h_kc
           · rw [h_x0, h_x2]
-            unfold I_pre' at h_I_pre'
+            unfold iPre' at h_I_pre'
             rcases h_I_pre' with ⟨h_pk, h_kc, _⟩
             simp only [ne_eq, UInt64.add_left_inj]
             intros neq
@@ -264,7 +268,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
           rw [h_x2, h_x3]
           intros neq
           simp only [UInt64.add_left_inj] at neq
-          unfold I_pre' at h_I_pre'
+          unfold iPre' at h_I_pre'
           rcases h_I_pre' with ⟨pk, kc, _⟩
           rw [neq] at kc
           apply UInt64.lt_asymm (pk)
@@ -276,7 +280,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
             rw [h_x1, h_x3]
             simp only [ne_eq, UInt64.add_left_inj]
             intros neq
-            unfold I_pre' at h_I_pre'
+            unfold iPre' at h_I_pre'
             rcases h_I_pre' with ⟨pk, kc, _⟩
             rw [←neq] at kc
             apply UInt64.lt_irrefl c kc
@@ -286,7 +290,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
 
 
 theorem inc_otp_0 : ∀ (p k c l : UInt64),
-  (otp_code p k c l)
+  (otpCode p k c l)
   ⦃(x[3] > 0 ∧
     (∀ i ≤ l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
       x[0] = p + (l - x[3]) ∧
@@ -294,7 +298,7 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
           x[2] = c + (l - x[3]) ∧
             x[3] ≤ l ∧
               x[5] = mem[x[0]] ∧
-                x[6] = mem[x[1]] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧ I_pre' p k c l) ∧
+                x[6] = mem[x[1]] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧ iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄
   9 ↦ ⟨{10} | {n | (n ≠ 10)}⟩
   ⦃(x[3] > 0 ∧
@@ -305,11 +309,11 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
             x[3] ≤ l ∧
               x[5] = mem[x[0] - 1] ∧
                 x[6] = mem[x[1]] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧
-                I_pre' p k c l) ∧
+                iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄ := by
-    unfold otp_code
+    unfold otpCode
     intros p k c l
-    unfold hoare_triple_up
+    unfold hoareTripleUp
     rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6,
       h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
@@ -320,7 +324,7 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · simp
     · simp
     · simp
-    · simp_currInstr
+    · simpCurrInstr
     · exact h_pc
     · repeat (constructor <;> try assumption)
       simp at *
@@ -335,7 +339,7 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
 
 
 theorem inc_otp_1 : ∀ (p k c l : UInt64),
-  (otp_code p k c l)
+  (otpCode p k c l)
   ⦃(x[3] > 0 ∧
       (∀ i ≤ l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
         x[0] = p + (l - (x[3] - 1)) ∧
@@ -344,7 +348,7 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
               x[3] ≤ l ∧
                 x[5] = mem[x[0] - 1] ∧
                   x[6] = mem[x[1]] ∧
-                  x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧ I_pre' p k c l) ∧
+                  x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧ iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄
   10 ↦ ⟨{11} | {n | (n ≠ 11)}⟩
   ⦃(x[3] > 0 ∧
@@ -356,14 +360,14 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
                 x[5] = mem[x[0] - 1] ∧
                   x[6] = mem[x[1] - 1] ∧
                   x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧
-                  I_pre' p k c l) ∧
+                  iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄
     := by
     intros p k c l
     have: ({11}: Set UInt64)  = {10 + 1}  := by
       simp
     rw [this]
-    unfold hoare_triple_up
+    unfold hoareTripleUp
     rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6,
       h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
@@ -373,7 +377,7 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
     · simp
     · simp only [MState.currInstruction_unfold]
       rw [h_code', h_pc]
-      unfold otp_code
+      unfold otpCode
       simp
     · exact h_pc
     · simp at *
@@ -390,7 +394,7 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
       repeat (constructor <;> try assumption)
 
 theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
-(otp_code p k c l)
+(otpCode p k c l)
 ⦃(x[3] > 0 ∧
       (∀ i ≤ l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
         x[0] = p + (l - (x[3] - 1)) ∧
@@ -399,7 +403,7 @@ theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
               x[3] ≤ l ∧
                 x[5] = mem[x[0] - 1] ∧
                   x[6] = mem[x[1] - 1] ∧
-                  x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧ I_pre' p k c l) ∧
+                  x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧ iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄
   11 ↦ ⟨{12} | {n | (n ≠ 12)}⟩
   ⦃(x[3] > 0 ∧
@@ -411,12 +415,12 @@ theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
                 x[5] = mem[x[0] - 1] ∧
                   x[6] = mem[x[1] - 1] ∧
                   x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧
-                  I_pre' p k c l) ∧
+                  iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄
     := by
-    unfold otp_code
+    unfold otpCode
     intros p k c l
-    unfold hoare_triple_up
+    unfold hoareTripleUp
     rintro h_inter h_empty s h_code' h_pc
       ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
@@ -427,7 +431,7 @@ theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
     · simp
     · simp
     · simp
-    · simp_currInstr
+    · simpCurrInstr
     · exact h_pc
     · simp at *
       repeat (constructor <;> try assumption)
@@ -444,7 +448,7 @@ theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
 
 
 theorem dec_otp : ∀ (p k c l : UInt64),
-  (otp_code p k c l)
+  (otpCode p k c l)
   ⦃(x[3] > 0 ∧
       (∀ i ≤ l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
         x[0] = p + (l - (x[3] - 1)) ∧
@@ -452,7 +456,7 @@ theorem dec_otp : ∀ (p k c l : UInt64),
             x[2] = c + (l - (x[3] - 1)) ∧
               x[3] ≤ l ∧
                 x[5] = mem[x[0] - 1] ∧
-                  x[6] = mem[x[1] - 1] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧ I_pre' p k c l) ∧
+                  x[6] = mem[x[1] - 1] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] = x ∧ iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄
   12 ↦ ⟨{13} | {n | (n ≠ 12 + 1)}⟩
   ⦃((∀ i < l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
@@ -461,11 +465,11 @@ theorem dec_otp : ∀ (p k c l : UInt64),
           x[2] = c + (l - x[3]) ∧
             x[3] ≤ l ∧
               x[5] = mem[x[0] - 1] ∧
-                x[6] = mem[x[1] - 1] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] < x ∧ I_pre' p k c l) ∧
+                x[6] = mem[x[1] - 1] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] < x ∧ iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄ := by
-    unfold otp_code
+    unfold otpCode
     intros p k c l
-    unfold hoare_triple_up
+    unfold hoareTripleUp
     rintro h_inter h_empty s h_code' h_pc
       ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
@@ -476,7 +480,7 @@ theorem dec_otp : ∀ (p k c l : UInt64),
     · simp
     · simp
     · simp
-    · simp_currInstr
+    · simpCurrInstr
     · exact h_pc
     · simp at *
       repeat (constructor <;> try assumption)
@@ -496,26 +500,26 @@ theorem dec_otp : ∀ (p k c l : UInt64),
 
 
 theorem j_otp : ∀ (p k c l : UInt64),
-(otp_code p k c l)
+(otpCode p k c l)
 ⦃((∀ i < l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
       x[0] = p + (l - x[3]) ∧
         x[1] = k + (l - x[3]) ∧
           x[2] = c + (l - x[3]) ∧
             x[3] ≤ l ∧
               x[5] = mem[x[0] - 1] ∧
-                x[6] = mem[x[1] - 1] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] < x ∧ I_pre' p k c l) ∧
+                x[6] = mem[x[1] - 1] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] < x ∧ iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄
   13 ↦ ⟨{4} ∪ {14} |
   {n | (n ≠ 4)} \ {14}⟩
   ⦃x[3] < x ∧
       (((∀ i < l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
             x[0] = p + (l - x[3]) ∧ x[1] = k + (l - x[3]) ∧ x[2] = c + (l - x[3]) ∧ x[3] ≤ l ∧
-              I_pre' p k c l) ∧
+              iPre' p k c l) ∧
           ¬⸨terminated⸩ = true) ∧
         ⸨pc⸩ = 4⦄ := by
-  unfold otp_code
+  unfold otpCode
   intros p k c l
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   rintro h_inter h_empty s h_code h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7,
     h_x3, h_I_pre'⟩, h_terminated⟩
   -- rw [← s_code]
@@ -526,13 +530,13 @@ theorem j_otp : ∀ (p k c l : UInt64),
           x[2] = c + (l - x[3]) ∧
             x[3] ≤ l ∧
               x[5] = mem[x[0] - 1] ∧
-                x[6] = mem[x[1] - 1] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] < x ∧ I_pre' p k c l) ∧
+                x[6] = mem[x[1] - 1] ∧ x[7] = x[5] ^^^ x[6] ∧ x[3] < x ∧ iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄)
     <;> try assumption
   · simp
   · simp
   · simp
-  · unfold hoare_triple_up
+  · unfold hoareTripleUp
     rintro h_inter h_empty s h_code' h_pc ⟨⟨h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7,
       h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
@@ -546,7 +550,7 @@ theorem j_otp : ∀ (p k c l : UInt64),
                           st.getRegisterAt 0 = p + (l - st.getRegisterAt 3) ∧
                             st.getRegisterAt 1 = k + (l - st.getRegisterAt 3) ∧
                               st.getRegisterAt 2 = c + (l - st.getRegisterAt 3) ∧
-                                st.getRegisterAt 3 ≤ l ∧ I_pre' p k c l) ∧
+                                st.getRegisterAt 3 ≤ l ∧ iPre' p k c l) ∧
                     ¬st.terminated = true ∧ st.pc = 4)
               s' ∧
             s'.pc ∉ {n | (n ≠ 4)}) →
@@ -560,7 +564,7 @@ theorem j_otp : ∀ (p k c l : UInt64),
                         st.getRegisterAt 0 = p + (l - st.getRegisterAt 3) ∧
                           st.getRegisterAt 1 = k + (l - st.getRegisterAt 3) ∧
                             st.getRegisterAt 2 = c + (l - st.getRegisterAt 3) ∧
-                              st.getRegisterAt 3 ≤ l ∧ I_pre' p k c l) ∧
+                              st.getRegisterAt 3 ≤ l ∧ iPre' p k c l) ∧
                       ¬st.terminated = true) ∧
                     st.pc = 4)
               s' ∧
@@ -582,7 +586,7 @@ theorem j_otp : ∀ (p k c l : UInt64),
     · simp
     · simp
     · simp
-    · simp_currInstr
+    · simpCurrInstr
     · assumption
     · repeat (constructor <;> try assumption)
       unfold MState.getLabelAt
@@ -592,24 +596,24 @@ theorem j_otp : ∀ (p k c l : UInt64),
 
 
 theorem beqz_otp : ∀ (p k c l : UInt64),
-  (otp_code p k c l)
+  (otpCode p k c l)
   ⦃(x[3] > 0 ∧
       (∀ i < l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
         x[0] = p + (l - x[3]) ∧ x[1] = k + (l - x[3]) ∧
           x[2] = c + (l - x[3]) ∧ x[3] ≤ l ∧ x[3] = x ∧
-            I_pre' p k c l) ∧
+            iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄
   4 ↦ ⟨{5} | {n | n ≤ 4} ∪ {n | n > 5}⟩
   ⦃(x[3] > 0 ∧
       (∀ i < l - x[3], mem[c + i] = mem[p + i] ^^^ mem[k + i]) ∧
         x[0] = p + (l - x[3]) ∧
           x[1] = k + (l - x[3]) ∧
-            x[2] = c + (l - x[3]) ∧ x[3] ≤ l ∧ x[3] = x ∧ I_pre' p k c l) ∧
+            x[2] = c + (l - x[3]) ∧ x[3] ≤ l ∧ x[3] = x ∧ iPre' p k c l) ∧
     ¬⸨terminated⸩ = true⦄ := by
-  unfold otp_code
+  unfold otpCode
   intros p k c l
-  -- apply_spec specification_JumpEqZero_false (l := 4) (r := 3) (label := "finish")
-  unfold hoare_triple_up
+  -- applySpec specification_JumpEqZero_false (l := 4) (r := 3) (label := "finish")
+  unfold hoareTripleUp
   rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LeL, h_x3, h_I_pre'⟩,
     h_terminated⟩
   rw [←h_code']
@@ -646,7 +650,7 @@ theorem beqz_otp : ∀ (p k c l : UInt64),
   · simp
   · simp
   · simp
-  · simp_currInstr
+  · simpCurrInstr
   · assumption
   · repeat (constructor <;> try assumption)
     apply UInt64.gt_zero_neq_zero

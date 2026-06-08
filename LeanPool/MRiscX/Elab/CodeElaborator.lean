@@ -33,170 +33,171 @@ Finally, we generate a constant expression representing the instruction,
 along with the associated variables, and push this into the "expression"
 array.
 -/
-def getInstrExpr (t: TSyntax `mriscx_Instr): TermElabM Expr := do
+/-- Elaborate a single parsed instruction into the `Expr` of its `Instr` value. -/
+def getInstrExpr (t: TSyntax `mriscxInstr): TermElabM Expr := do
   match t with
-    | `(mriscx_Instr | la x$r:mriscx_num_or_ident, $addr:mriscx_num_or_ident
+    | `(mriscxInstr | la x$r:mriscxNumOrIdent, $addr:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | la x$r:mriscx_num_or_ident, $addr:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | la x$r:mriscxNumOrIdent, $addr:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[r, addr]
       return (mkAppN (.const `Instr.LoadAddress []) #[exprs[0]!, exprs[1]!])
-    | `(mriscx_Instr | li x$r:mriscx_num_or_ident, $v:mriscx_num_or_ident
+    | `(mriscxInstr | li x$r:mriscxNumOrIdent, $v:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | li x$r:mriscx_num_or_ident, $v:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | li x$r:mriscxNumOrIdent, $v:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[r, v]
       return (mkAppN (.const `Instr.LoadImmediate []) #[exprs[0]!, exprs[1]!])
-    | `(mriscx_Instr | mv x$r:mriscx_num_or_ident, x$v:mriscx_num_or_ident
+    | `(mriscxInstr | mv x$r:mriscxNumOrIdent, x$v:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | mv x$r:mriscx_num_or_ident, x$v:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | mv x$r:mriscxNumOrIdent, x$v:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[r, v]
       return (mkAppN (.const `Instr.CopyRegister []) #[exprs[0]!, exprs[1]!])
-    | `(mriscx_Instr | addi x$dst:mriscx_num_or_ident, x$reg:mriscx_num_or_ident,
-                        $i:mriscx_num_or_ident
+    | `(mriscxInstr | addi x$dst:mriscxNumOrIdent, x$reg:mriscxNumOrIdent,
+                        $i:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | addi x$dst:mriscx_num_or_ident, x$reg:mriscx_num_or_ident,
-                        $i:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | addi x$dst:mriscxNumOrIdent, x$reg:mriscxNumOrIdent,
+                        $i:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[dst, reg, i]
       return (mkAppN (.const `Instr.AddImmediate []) #[exprs[0]!, exprs[1]!, exprs[2]!])
-    | `(mriscx_Instr | inc x$dst:mriscx_num_or_ident
+    | `(mriscxInstr | inc x$dst:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | inc x$dst:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | inc x$dst:mriscxNumOrIdent;) =>
       let expr ← parseMriscxNumOrIdent dst
       return (mkAppN (.const `Instr.Increment []) #[expr])
-    | `(mriscx_Instr | add x$dst:mriscx_num_or_ident, x$reg1:mriscx_num_or_ident,
-                        x$reg2:mriscx_num_or_ident
+    | `(mriscxInstr | add x$dst:mriscxNumOrIdent, x$reg1:mriscxNumOrIdent,
+                        x$reg2:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | add x$dst:mriscx_num_or_ident, x$reg1:mriscx_num_or_ident,
-                        x$reg2:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | add x$dst:mriscxNumOrIdent, x$reg1:mriscxNumOrIdent,
+                        x$reg2:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[dst, reg1, reg2]
       return (mkAppN (.const `Instr.AddRegister []) #[exprs[0]!, exprs[1]!, exprs[2]!])
-    | `(mriscx_Instr | subi x$dst:mriscx_num_or_ident, x$reg:mriscx_num_or_ident,
-                        $i:mriscx_num_or_ident
+    | `(mriscxInstr | subi x$dst:mriscxNumOrIdent, x$reg:mriscxNumOrIdent,
+                        $i:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | subi x$dst:mriscx_num_or_ident, x$reg:mriscx_num_or_ident,
-                        $i:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | subi x$dst:mriscxNumOrIdent, x$reg:mriscxNumOrIdent,
+                        $i:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[dst, reg, i]
       return (mkAppN (.const `Instr.SubImmediate []) #[exprs[0]!, exprs[1]!, exprs[2]!])
-    | `(mriscx_Instr | dec x$reg:mriscx_num_or_ident
+    | `(mriscxInstr | dec x$reg:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | dec x$reg:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | dec x$reg:mriscxNumOrIdent;) =>
       let expr ← parseMriscxNumOrIdent reg
       return (mkAppN (.const `Instr.Decrement []) #[expr])
-    | `(mriscx_Instr | sub x$dst:mriscx_num_or_ident, x$reg1:mriscx_num_or_ident,
-                        x$reg2:mriscx_num_or_ident
+    | `(mriscxInstr | sub x$dst:mriscxNumOrIdent, x$reg1:mriscxNumOrIdent,
+                        x$reg2:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | sub x$dst:mriscx_num_or_ident, x$reg1:mriscx_num_or_ident,
-                        x$reg2:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | sub x$dst:mriscxNumOrIdent, x$reg1:mriscxNumOrIdent,
+                        x$reg2:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[dst, reg1, reg2]
       return (mkAppN (.const `Instr.SubRegister []) #[exprs[0]!, exprs[1]!, exprs[2]!])
-    | `(mriscx_Instr | xori x$dst:mriscx_num_or_ident, x$reg:mriscx_num_or_ident,
-                        $i:mriscx_num_or_ident
+    | `(mriscxInstr | xori x$dst:mriscxNumOrIdent, x$reg:mriscxNumOrIdent,
+                        $i:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | xori x$dst:mriscx_num_or_ident, x$reg:mriscx_num_or_ident,
-                        $i:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | xori x$dst:mriscxNumOrIdent, x$reg:mriscxNumOrIdent,
+                        $i:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[dst, reg, i]
 
       return (mkAppN (.const `Instr.XorImmediate []) #[exprs[0]!, exprs[1]!, exprs[2]!])
-    | `(mriscx_Instr | xor x$dst:mriscx_num_or_ident, x$reg1:mriscx_num_or_ident,
-                        x$reg2:mriscx_num_or_ident
+    | `(mriscxInstr | xor x$dst:mriscxNumOrIdent, x$reg1:mriscxNumOrIdent,
+                        x$reg2:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | xor x$dst:mriscx_num_or_ident, x$reg1:mriscx_num_or_ident,
-                        x$reg2:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | xor x$dst:mriscxNumOrIdent, x$reg1:mriscxNumOrIdent,
+                        x$reg2:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[dst, reg1, reg2]
       return (mkAppN (.const `Instr.XOR []) #[exprs[0]!, exprs[1]!, exprs[2]!])
-    | `(mriscx_Instr | lw x$dst:mriscx_num_or_ident, $addr:mriscx_num_or_ident
+    | `(mriscxInstr | lw x$dst:mriscxNumOrIdent, $addr:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | lw x$dst:mriscx_num_or_ident, $addr:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | lw x$dst:mriscxNumOrIdent, $addr:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[dst, addr]
       return (mkAppN (.const `Instr.LoadWordImmediate []) #[exprs[0]!, exprs[1]!])
-    | `(mriscx_Instr | lw x$dst:mriscx_num_or_ident, x$addr:mriscx_num_or_ident
+    | `(mriscxInstr | lw x$dst:mriscxNumOrIdent, x$addr:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | lw x$dst:mriscx_num_or_ident, x$addr:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | lw x$dst:mriscxNumOrIdent, x$addr:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[dst, addr]
       return (mkAppN (.const `Instr.LoadWordReg []) #[exprs[0]!, exprs[1]!])
-    | `(mriscx_Instr | sw x$reg:mriscx_num_or_ident, x$dst:mriscx_num_or_ident
+    | `(mriscxInstr | sw x$reg:mriscxNumOrIdent, x$dst:mriscxNumOrIdent
     )
-    | `(mriscx_Instr | sw x$reg:mriscx_num_or_ident, x$dst:mriscx_num_or_ident;) =>
+    | `(mriscxInstr | sw x$reg:mriscxNumOrIdent, x$dst:mriscxNumOrIdent;) =>
       let exprs ← parseMriscxNumOrIdentArray #[reg, dst]
       return (mkAppN (.const `Instr.StoreWord []) #[exprs[0]!, exprs[1]!])
-    | `(mriscx_Instr | j $lbl:ident
+    | `(mriscxInstr | j $lbl:ident
     )
-    | `(mriscx_Instr | j $lbl:ident;) =>
+    | `(mriscxInstr | j $lbl:ident;) =>
       let expr ← parseLabelname lbl false
       return(mkAppN (.const `Instr.Jump []) #[expr])
-    | `(mriscx_Instr | j .$lbl:ident
+    | `(mriscxInstr | j .$lbl:ident
     )
-    | `(mriscx_Instr | j .$lbl:ident;) =>
+    | `(mriscxInstr | j .$lbl:ident;) =>
       let expr ← parseLabelname lbl true
       return(mkAppN (.const `Instr.Jump []) #[expr])
-    | `(mriscx_Instr | beq x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, $lbl:ident
+    | `(mriscxInstr | beq x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, $lbl:ident
     )
-    | `(mriscx_Instr | beq x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, $lbl:ident;) =>
+    | `(mriscxInstr | beq x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, $lbl:ident;) =>
       let exprs ← parseMriscxNumOrIdentArray #[reg1, reg2]
       let lblExpr ← parseLabelname lbl false
       return (mkAppN (.const `Instr.JumpEq []) #[exprs[0]!, exprs[1]!, lblExpr])
-    | `(mriscx_Instr | beq x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, .$lbl:ident
+    | `(mriscxInstr | beq x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, .$lbl:ident
     )
-    | `(mriscx_Instr | beq x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, .$lbl:ident;) =>
+    | `(mriscxInstr | beq x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, .$lbl:ident;) =>
       let exprs ← parseMriscxNumOrIdentArray #[reg1, reg2]
       let lblExpr ← parseLabelname lbl true
       return (mkAppN (.const `Instr.JumpEq []) #[exprs[0]!, exprs[1]!, lblExpr])
-    | `(mriscx_Instr | bne x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, $lbl:ident
+    | `(mriscxInstr | bne x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, $lbl:ident
     )
-    | `(mriscx_Instr | bne x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, $lbl:ident;) =>
+    | `(mriscxInstr | bne x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, $lbl:ident;) =>
       let exprs ← parseMriscxNumOrIdentArray #[reg1, reg2]
       let lblExpr ← parseLabelname lbl false
       return (mkAppN (.const `Instr.JumpNeq []) #[exprs[0]!, exprs[1]!, lblExpr])
-    | `(mriscx_Instr | bne x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, .$lbl:ident
+    | `(mriscxInstr | bne x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, .$lbl:ident
     )
-    | `(mriscx_Instr | bne x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, .$lbl:ident;) =>
+    | `(mriscxInstr | bne x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, .$lbl:ident;) =>
       let exprs ← parseMriscxNumOrIdentArray #[reg1, reg2]
       let lblExpr ← parseLabelname lbl true
       return (mkAppN (.const `Instr.JumpNeq []) #[exprs[0]!, exprs[1]!, lblExpr])
-    | `(mriscx_Instr | bgt x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, $lbl:ident
+    | `(mriscxInstr | bgt x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, $lbl:ident
     )
-    | `(mriscx_Instr | bgt x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, $lbl:ident;) =>
+    | `(mriscxInstr | bgt x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, $lbl:ident;) =>
       let exprs ← parseMriscxNumOrIdentArray #[reg1, reg2]
       let lblExpr ← parseLabelname lbl false
       return (mkAppN (.const `Instr.JumpGt []) #[exprs[0]!, exprs[1]!, lblExpr])
-    | `(mriscx_Instr | bgt x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, .$lbl:ident
+    | `(mriscxInstr | bgt x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, .$lbl:ident
     )
-    | `(mriscx_Instr | bgt x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, .$lbl:ident;) =>
+    | `(mriscxInstr | bgt x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, .$lbl:ident;) =>
       let exprs ← parseMriscxNumOrIdentArray #[reg1, reg2]
       let lblExpr ← parseLabelname lbl true
       return (mkAppN (.const `Instr.JumpGt []) #[exprs[0]!, exprs[1]!, lblExpr])
-    | `(mriscx_Instr | ble x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, $lbl:ident
+    | `(mriscxInstr | ble x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, $lbl:ident
     )
-    | `(mriscx_Instr | ble x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, $lbl:ident;) =>
+    | `(mriscxInstr | ble x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, $lbl:ident;) =>
       let exprs ← parseMriscxNumOrIdentArray #[reg1, reg2]
       let lblExpr ← parseLabelname lbl false
       return (mkAppN (.const `Instr.JumpLe []) #[exprs[0]!, exprs[1]!, lblExpr])
-    | `(mriscx_Instr | ble x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, .$lbl:ident
+    | `(mriscxInstr | ble x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, .$lbl:ident
     )
-    | `(mriscx_Instr | ble x$reg1:mriscx_num_or_ident, x$reg2:mriscx_num_or_ident, .$lbl:ident;) =>
+    | `(mriscxInstr | ble x$reg1:mriscxNumOrIdent, x$reg2:mriscxNumOrIdent, .$lbl:ident;) =>
       let exprs ← parseMriscxNumOrIdentArray #[reg1, reg2]
       let lblExpr ← parseLabelname lbl true
       return (mkAppN (.const `Instr.JumpLe []) #[exprs[0]!, exprs[1]!, lblExpr])
-    | `(mriscx_Instr | beqz x$reg:mriscx_num_or_ident, $lbl:ident
+    | `(mriscxInstr | beqz x$reg:mriscxNumOrIdent, $lbl:ident
     )
-    | `(mriscx_Instr | beqz x$reg:mriscx_num_or_ident, $lbl:ident;)  =>
+    | `(mriscxInstr | beqz x$reg:mriscxNumOrIdent, $lbl:ident;)  =>
       let regExpr ← parseMriscxNumOrIdent reg
       let lblExpr ← parseLabelname lbl false
       return (mkAppN (.const `Instr.JumpEqZero []) #[regExpr, lblExpr])
-    | `(mriscx_Instr | beqz x$reg:mriscx_num_or_ident, .$lbl:ident
+    | `(mriscxInstr | beqz x$reg:mriscxNumOrIdent, .$lbl:ident
     )
-    | `(mriscx_Instr | beqz x$reg:mriscx_num_or_ident, .$lbl:ident;) =>
+    | `(mriscxInstr | beqz x$reg:mriscxNumOrIdent, .$lbl:ident;) =>
       let regExpr ← parseMriscxNumOrIdent reg
       let lblExpr ← parseLabelname lbl true
       return (mkAppN (.const `Instr.JumpEqZero []) #[regExpr, lblExpr])
-    | `(mriscx_Instr | bnez x$reg:mriscx_num_or_ident, $lbl:ident
+    | `(mriscxInstr | bnez x$reg:mriscxNumOrIdent, $lbl:ident
     )
-    | `(mriscx_Instr | bnez x$reg:mriscx_num_or_ident, $lbl:ident;) =>
+    | `(mriscxInstr | bnez x$reg:mriscxNumOrIdent, $lbl:ident;) =>
       let regExpr ← parseMriscxNumOrIdent reg
       let lblExpr ← parseLabelname lbl false
       return (mkAppN (.const `Instr.JumpNeqZero []) #[regExpr, lblExpr])
-    | `(mriscx_Instr | bnez x$reg:mriscx_num_or_ident, .$lbl:ident
+    | `(mriscxInstr | bnez x$reg:mriscxNumOrIdent, .$lbl:ident
     )
-    | `(mriscx_Instr | bnez x$reg:mriscx_num_or_ident, .$lbl:ident;) =>
+    | `(mriscxInstr | bnez x$reg:mriscxNumOrIdent, .$lbl:ident;) =>
       let regExpr ← parseMriscxNumOrIdent reg
       let lblExpr ← parseLabelname lbl true
       return (mkAppN (.const `Instr.JumpNeqZero []) #[regExpr, lblExpr])
@@ -207,30 +208,32 @@ def getInstrExpr (t: TSyntax `mriscx_Instr): TermElabM Expr := do
 Iterate through the array of instructions and converting them
 into expressions with the help of the functions previously defined.
 -/
-def getInstructionExprArr (seq: TSyntaxArray `mriscx_Instr): TermElabM (Array Expr) := do
+/-- Elaborate an array of parsed instructions into an array of `Instr` expressions. -/
+def getInstructionExprArr (seq: TSyntaxArray `mriscxInstr): TermElabM (Array Expr) := do
   let mut expressions := #[]
   for entry in seq do
     expressions := expressions.push (←getInstrExpr entry)
 
   return expressions
 
-/- create an tupel which holds a label and the corresponding instructions -/
-def getLabelInstrArr (t: TSyntax `mriscx_label): TermElabM (String × (Array Expr)) := do
+/-- Create a tuple holding a label and the expressions of its instructions. -/
+def getLabelInstrArr (t: TSyntax `mriscxLabel): TermElabM (String × (Array Expr)) := do
   match t with
-  | `(mriscx_label | $name:ident : $seq:mriscx_Instr*
+  | `(mriscxLabel | $name:ident : $seq:mriscxInstr*
     ) => do
       return (name.getId.getString!, (←getInstructionExprArr seq))
-  | `(mriscx_label | .$name:ident : $seq:mriscx_Instr*
+  | `(mriscxLabel | .$name:ident : $seq:mriscxInstr*
     ) => do
       return ("." ++ name.getId.getString!, (←getInstructionExprArr seq))
 
   | _ => throwError ("Expected Label")
 
 
-def getLabelMapFromSyntax (syn : TSyntax `mriscx_syntax): TermElabM LabelMap := do
+/-- Build the `LabelMap` of an assembly block by assigning each label its index. -/
+def getLabelMapFromSyntax (syn : TSyntax `mriscxSyntax): TermElabM LabelMap := do
   match syn with
-  | `(mriscx_syntax | mriscx
-                        $lblSyn:mriscx_label*
+  | `(mriscxSyntax | mriscx
+                        $lblSyn:mriscxLabel*
                       end) => do
     let mut counter := 0
     let mut labelInstrArr := #[]
@@ -246,13 +249,14 @@ def getLabelMapFromSyntax (syn : TSyntax `mriscx_syntax): TermElabM LabelMap := 
         counter := counter + 1
 
     return labelMap
-  | _ => throwError "Expected mriscx_syntax while parsing labelMap from syntax"
+  | _ => throwError "Expected mriscxSyntax while parsing labelMap from syntax"
 
 
-def getCodeFromSyntax (syn: TSyntax `mriscx_syntax): TermElabM Expr := do
+/-- Elaborate a full `mriscx ... end` block into the `Expr` of its `Code` value. -/
+def getCodeFromSyntax (syn: TSyntax `mriscxSyntax): TermElabM Expr := do
   match syn with
-  | `(mriscx_syntax | mriscx
-    $lblSyn:mriscx_label*
+  | `(mriscxSyntax | mriscx
+    $lblSyn:mriscxLabel*
     end) =>
     /-
     First, we define an array holding a pair of a String and another array.
@@ -304,7 +308,7 @@ we wish to elaborate. In this case, we trigger the elaboration as soon as
 the mriscx keyword is encountered.
 Next, we expect an indefinite number of mriscx_labels—ranging from zero
 to an arbitrary amount. The new term is concluded with the keyword end.
-As defined earlier, the mriscx_label syntax consists of a label name
+As defined earlier, the mriscxLabel syntax consists of a label name
 (an ident), followed by a colon and our custom instructions. For example:
 
 label1: li x0, 12
@@ -319,7 +323,8 @@ Simultaneously, we can generate the "infoLogoration," a visual representation
 of the syntax tree. This infoLogoration should closely resemble the original
 source code as written by the user, ensuring clarity and ease of understanding.
 -/
-elab syn:mriscx_syntax : term => do
+/-- Term elaborator turning a `mriscx ... end` assembly block into its `Code` value. -/
+elab syn:mriscxSyntax : term => do
   return ←getCodeFromSyntax syn
 
 
@@ -356,8 +361,10 @@ of the previous elaborator extension, focused solely on individual
 instructions.
 -/
 
-elab s:mriscx_spec : term => do
+/-- Term elaborator turning a single bracketed instruction specification `⟪i⟫`
+into the `Expr` of its `Instr` value. -/
+elab s:mriscxSpec : term => do
   match s with
-  | `(mriscx_spec | ⟪$entry:mriscx_Instr⟫) => do
+  | `(mriscxSpec | ⟪$entry:mriscxInstr⟫) => do
     return (←getInstrExpr entry)
   | _ => throwError "expexted an mriscx instruction"

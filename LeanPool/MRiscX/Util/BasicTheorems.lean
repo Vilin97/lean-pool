@@ -118,19 +118,17 @@ theorem Nat.size_sub_lt_size : ∀ (x l s: Nat),
   intros x l s hl hx h1
   have x_sub_l : l - x < l := by
     apply Nat.sub_lt
-    apply Nat.lt_of_lt_of_le
-    change 0 < x
-    apply Nat.lt_of_succ_le h1
-    exact hx
-    apply Nat.lt_of_succ_le h1
+    · apply Nat.lt_of_lt_of_le
+      · apply Nat.lt_of_succ_le h1
+      · exact hx
+    · apply Nat.lt_of_succ_le h1
 
   have s_sub_l' : l - x + 1 ≤ l := by
     rw [Nat.lt_iff_add_one_le] at x_sub_l
     exact x_sub_l
   apply Nat.lt_of_le_of_lt
-  change l - x + 1 ≤ l
-  exact s_sub_l'
-  exact hl
+  · exact s_sub_l'
+  · exact hl
 
 
 theorem UInt64.gt_zero_neq_zero : ∀ (u:UInt64),
@@ -183,9 +181,8 @@ theorem UInt64.add_lt_add : ∀ (n m k c : UInt64),
     rw [UInt64.toNat_add]
     apply Nat.mod_eq_of_lt
     apply Nat.lt_trans
-    change n.toNat + k.toNat < m.toNat + c.toNat
-    exact hfin
-    exact hsum
+    · exact hfin
+    · exact hsum
   rw [←UInt64.lt_toNat_iff, mcNat, nkNat]
   exact hfin
 
@@ -228,12 +225,12 @@ theorem UInt64.add_right_ne_of_lt : ∀ (n i l : UInt64),
   rw [UInt64.add_cancel_left_iff] at neq
   rw [neq] at h_iLtl
   apply UInt64.lt_asymm
-  assumption
-  exact h_iLtl
+  · assumption
+  · exact h_iLtl
 
 
 
-instance : Preorder UInt64 where
+instance instPreorderUInt64LeanPool : Preorder UInt64 where
   le := (· ≤ ·)
   lt := (· < ·)
   le_refl := by simp

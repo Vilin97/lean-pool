@@ -7,46 +7,70 @@ import LeanPool.MRiscX.Parser.AssemblySyntax
 /-!
 Syntax for hoare terms
 -/
-declare_syntax_cat hoare_term
+/-- Syntax category for a full MRiscX Hoare triple together with its program. -/
+declare_syntax_cat hoareTerm
 
-syntax mriscx_syntax withPosition(linebreak ppDedent(ppLine))
-    "⦃" term "⦄ " term " ↦ " "⟨" term " | " term "⟩" "⦃" term "⦄" : hoare_term
+/-- A Hoare triple written with concrete `mriscx ... end` assembly before the triple. -/
+syntax mriscxSyntax withPosition(linebreak ppDedent(ppLine))
+    "⦃" term "⦄ " term " ↦ " "⟨" term " | " term "⟩" "⦃" term "⦄" : hoareTerm
 
+/-- A Hoare triple written with a named `Code` identifier before the triple. -/
 syntax ident withPosition(linebreak ppDedent(ppLine))
-    "⦃" term "⦄ " term " ↦ " "⟨" term " | " term "⟩" "⦃" term "⦄" : hoare_term
+    "⦃" term "⦄ " term " ↦ " "⟨" term " | " term "⟩" "⦃" term "⦄" : hoareTerm
 
+/-- Notation `⦃P⦄` for a Hoare assertion on the machine state. -/
 syntax "⦃" term "⦄" : term
 
 -- General Hoare Syntax
-syntax "x[" mriscx_num_or_ident "]" : term
+/-- Notation `x[r]` for the value of register `r` in the current state. -/
+syntax "x[" mriscxNumOrIdent "]" : term
+/-- Notation `mem[a]` for the value at memory address `a` in the current state. -/
 syntax "mem[" term "]" : term
+/-- Notation `labels[l]` for the target index of label `l` in the current state. -/
 syntax "labels[" ident "]" : term
+/-- Notation `labels[.l]` for the target index of a dotted label `l`. -/
 syntax "labels[" &"." ident "]" : term
 /--
 To avoid parsing errors we decided to
 put these double parenthesis around these tokens
 -/
 syntax "⸨pc⸩" : term
+/-- Notation `⸨terminated⸩` for the termination flag of the current state. -/
 syntax "⸨terminated⸩": term
 
 
 
 -- Hoare Assignment syntax
-declare_syntax_cat hoare_assignment (behavior := both)
-declare_syntax_cat hoare_assignment_chain
-declare_syntax_cat hoare_assignment_term
+/-- Syntax category for a single state assignment in a Hoare postcondition. -/
+declare_syntax_cat hoareAssignment (behavior := both)
+/-- Syntax category for a chain of state assignments separated by `;`. -/
+declare_syntax_cat hoareAssignmentChain
+/-- Syntax category for a bracketed Hoare assignment block `⟦ ... ⟧`. -/
+declare_syntax_cat hoareAssignmentTerm
 
-syntax "x[" mriscx_num_or_ident "]" &" ← " term : hoare_assignment
-syntax "x[" mriscx_num_or_ident "]" &" <- " term : hoare_assignment
-syntax "mem[" term &"]" &" ← " term : hoare_assignment
-syntax "mem[" term &"]" &" <- " term : hoare_assignment
-syntax &"pc" &"++" : hoare_assignment
-syntax &"pc" &" ← " term: hoare_assignment
+/-- Assignment `x[r] ← v` setting register `r` to `v`. -/
+syntax "x[" mriscxNumOrIdent "]" &" ← " term : hoareAssignment
+/-- Assignment `x[r] <- v`, an ASCII variant of `x[r] ← v`. -/
+syntax "x[" mriscxNumOrIdent "]" &" <- " term : hoareAssignment
+/-- Assignment `mem[a] ← v` setting memory address `a` to `v`. -/
+syntax "mem[" term &"]" &" ← " term : hoareAssignment
+/-- Assignment `mem[a] <- v`, an ASCII variant of `mem[a] ← v`. -/
+syntax "mem[" term &"]" &" <- " term : hoareAssignment
+/-- Assignment `pc++` incrementing the program counter. -/
+syntax &"pc" &"++" : hoareAssignment
+/-- Assignment `pc ← l` setting the program counter to `l`. -/
+syntax &"pc" &" ← " term: hoareAssignment
 
-syntax "⟦⟧" : hoare_assignment_term
-syntax hoare_assignment : hoare_assignment_chain
-syntax hoare_assignment &"; " hoare_assignment : hoare_assignment_chain
-syntax hoare_assignment &"; " hoare_assignment_chain : hoare_assignment_chain
-syntax hoare_assignment &"; " term : hoare_assignment_chain
+/-- The empty assignment block `⟦⟧`, denoting the unchanged state. -/
+syntax "⟦⟧" : hoareAssignmentTerm
+/-- A single assignment, viewed as a one-element assignment chain. -/
+syntax hoareAssignment : hoareAssignmentChain
+/-- Two assignments composed with `;`. -/
+syntax hoareAssignment &"; " hoareAssignment : hoareAssignmentChain
+/-- An assignment followed by a further assignment chain, composed with `;`. -/
+syntax hoareAssignment &"; " hoareAssignmentChain : hoareAssignmentChain
+/-- An assignment followed by a base-case term, composed with `;`. -/
+syntax hoareAssignment &"; " term : hoareAssignmentChain
 
-syntax "⟦" hoare_assignment_chain "⟧" : hoare_assignment_term
+/-- A bracketed assignment block `⟦ ... ⟧` denoting the resulting state update. -/
+syntax "⟦" hoareAssignmentChain "⟧" : hoareAssignmentTerm

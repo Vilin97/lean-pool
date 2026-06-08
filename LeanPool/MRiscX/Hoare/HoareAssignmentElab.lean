@@ -64,7 +64,7 @@ private def replaceKeywordsAux (fuel : Nat) (curState : TSyntax `term) :
     Syntax → TermElabM Syntax
   | _stx@`(⸨terminated⸩) =>
     return ←`(term | $(mkIdent `MState.terminated) ($curState))
-  | _stx@`(x[$r:mriscx_num_or_ident]) => do
+  | _stx@`(x[$r:mriscxNumOrIdent]) => do
     let newR ← parseMriscxNumOrIdentToTerm r
     return ←`(term | $(mkIdent `MState.getRegisterAt) ($curState) $newR)
   | _stx@`(mem[$t:term]) => do
@@ -97,53 +97,56 @@ def replaceKeywords (stx : Term) (curState : TSyntax `term) : TermElabM Syntax :
 Seperate all the assignemnts within the ⟦⟧ and store in one array
 -/
 /-- Fuel-bounded core of `getHoareAssignmentArray`; `fuel` bounds the recursion. -/
-private def getHoareAssignmentArrayAux (fuel : Nat) (stx : TSyntax `hoare_assignment_chain)
-    (curArr : Array (TSyntax `hoare_assignment)) :
-    TermElabM (Array (TSyntax `hoare_assignment)) := do
+private def getHoareAssignmentArrayAux (fuel : Nat) (stx : TSyntax `hoareAssignmentChain)
+    (curArr : Array (TSyntax `hoareAssignment)) :
+    TermElabM (Array (TSyntax `hoareAssignment)) := do
   match stx with
-  | `(hoare_assignment_chain | $t:hoare_assignment) =>
+  | `(hoareAssignmentChain | $t:hoareAssignment) =>
     return curArr.push t
-  | `(hoare_assignment_chain | $t1:hoare_assignment; $t2:hoare_assignment) =>
+  | `(hoareAssignmentChain | $t1:hoareAssignment; $t2:hoareAssignment) =>
     return (curArr.push t1).push t2
-  | `(hoare_assignment_chain | $t:hoare_assignment; $s:hoare_assignment_chain) =>
+  | `(hoareAssignmentChain | $t:hoareAssignment; $s:hoareAssignmentChain) =>
     match fuel with
     | fuel + 1 => return ←(getHoareAssignmentArrayAux fuel s (curArr.push t))
     | 0 => throwError "Ran out of fuel while reading a hoare assignment chain"
   | _ => throwError s!"hoare assignment {stx} term not known!"
 
 /-- Collect every assignment in the `⟦⟧` chain `stx` into a single array. -/
-def getHoareAssignmentArray (stx: TSyntax `hoare_assignment_chain)
-    (curArr: Array (TSyntax `hoare_assignment)): TermElabM (Array (TSyntax `hoare_assignment)) :=
+def getHoareAssignmentArray (stx: TSyntax `hoareAssignmentChain)
+    (curArr: Array (TSyntax `hoareAssignment)): TermElabM (Array (TSyntax `hoareAssignment)) :=
   getHoareAssignmentArrayAux (assignmentSyntaxSize stx) stx curArr
 
 /-
 Parse the TSyntax to the actual function calls
 -/
-def foldTermArray (element: TSyntax `hoare_assignment) (curTerm: TSyntax `term) :
+/-- Fold a single Hoare assignment onto the accumulated state-update term,
+turning it into the corresponding `MState` mutation. -/
+def foldTermArray (element: TSyntax `hoareAssignment) (curTerm: TSyntax `term) :
     TermElabM (TSyntax `term) := do
   match element with
-  | `(hoare_assignment | x[$r:mriscx_num_or_ident] ← $t:term)
-  | `(hoare_assignment | x[$r:mriscx_num_or_ident] <- $t:term) => do
+  | `(hoareAssignment | x[$r:mriscxNumOrIdent] ← $t:term)
+  | `(hoareAssignment | x[$r:mriscxNumOrIdent] <- $t:term) => do
     let newR ← parseMriscxNumOrIdentToTerm r
     let newT := ⟨←replaceKeywords t curTerm⟩
     -- let newV := ← parseMriscxNumOrIdentToTerm v
     return ←`(term | $(mkIdent `MState.addRegister) ($curTerm) $newR $newT)
-  | `(hoare_assignment | mem[$m:term] ← $t:term)
-  | `(hoare_assignment | mem[$m:term] <- $t:term) => do
+  | `(hoareAssignment | mem[$m:term] ← $t:term)
+  | `(hoareAssignment | mem[$m:term] <- $t:term) => do
     let newM := ⟨←replaceKeywords m curTerm⟩
     let newT := ⟨←replaceKeywords t curTerm⟩
     -- let newV := ← parseMriscxNumOrIdentToTerm v
     return ←`(term | $(mkIdent `MState.addMemory) ($curTerm) $newM $newT)
-  | `(hoare_assignment | pc++) =>
+  | `(hoareAssignment | pc++) =>
     return ←`(term | $(mkIdent `MState.incPc) ($curTerm))
-  | `(hoare_assignment | pc ← $i:term) => do
+  | `(hoareAssignment | pc ← $i:term) => do
     return ←`(term | $(mkIdent `MState.setPc) ($curTerm) $i)
   | _ => throwError s!"{element}"
 
 /-
 Construct the final lambda term
 -/
-def generateHoareAssignmentSyntax (stx: TSyntax `hoare_assignment_chain): TermElabM (Syntax)
+/-- Construct the final state-update lambda term from a chain of Hoare assignments. -/
+def generateHoareAssignmentSyntax (stx: TSyntax `hoareAssignmentChain): TermElabM (Syntax)
     := do
   let termArray ← getHoareAssignmentArray stx #[]
   let result ← termArray.foldrM foldTermArray (←`($(mkIdent `st)))

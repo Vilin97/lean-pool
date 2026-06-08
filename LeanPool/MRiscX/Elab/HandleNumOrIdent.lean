@@ -16,11 +16,14 @@ open Nat Lean PrettyPrinter Expr Meta Elab
 /-
 Next, we introduce utility functions to streamline the conversion of syntax into an Expr.
 -/
+/-- Build the `Expr` `UInt64.ofNat n` from a `Nat`. -/
 def mkUIntOfNat (n:Nat):= Expr.app (.const `UInt64.ofNat []) (mkNatLit n)
 
+/-- Build the `Expr` of the numeral denoting the `UInt64` `n`. -/
 def mkUintOfNat (n:UInt64):= Expr.app (.const `OfNat.ofNat []) (mkNatLit n.toNat)
 
 
+/-- Build the `Expr` of the `UInt64` literal `n`. -/
 def mkUInt64Lit (n : UInt64) : Expr :=
   mkApp3
     (mkConst ``OfNat.ofNat [Level.zero])
@@ -28,11 +31,12 @@ def mkUInt64Lit (n : UInt64) : Expr :=
     (mkRawNatLit n.toNat)
     (mkApp (mkConst ``UInt64.instOfNat) (mkRawNatLit n.toNat))
 
+/-- Elaborate a `num`-or-`ident` syntax node into the term it denotes. -/
 def parseMriscxNumOrIdentToTerm (s : Syntax) : TermElabM Term := do
   match s with
-  | `(mriscx_num_or_ident | $a:num) =>
+  | `(mriscxNumOrIdent | $a:num) =>
       return a
-  | `(mriscx_num_or_ident | $a:ident) => do
+  | `(mriscxNumOrIdent | $a:ident) => do
       if let some decl := (← getLCtx).findFromUserName? a.getId then
         if ← isDefEq decl.type (mkConst ``UInt64) then
           return a
@@ -42,9 +46,10 @@ def parseMriscxNumOrIdentToTerm (s : Syntax) : TermElabM Term := do
         throwError s!"Identifier {a} not found in context"
   | _ => throwError "Unexpected syntax"
 
-def parseTermToMriscxNumOrIdent (s : TSyntax `term) : TSyntax `mriscx_num_or_ident :=
+/-- Reinterpret a term as `mriscxNumOrIdent` syntax. -/
+def parseTermToMriscxNumOrIdent (s : TSyntax `term) : TSyntax `mriscxNumOrIdent :=
   match s with
-  | `(mriscx_num_or_ident | $a:mriscx_num_or_ident) =>
+  | `(mriscxNumOrIdent | $a:mriscxNumOrIdent) =>
       a
   -- | _ => throwError "Unexpected syntax"
 
@@ -67,9 +72,9 @@ lifted afterwards.
 -/
 def parseMriscxNumOrIdent (s : Syntax) : TermElabM Expr := do
   match s with
-  | `(mriscx_num_or_ident | $a:num) =>
+  | `(mriscxNumOrIdent | $a:num) =>
       return mkUIntOfNat a.getNat
-  | `(mriscx_num_or_ident | $a:ident) => do
+  | `(mriscxNumOrIdent | $a:ident) => do
       if let some decl := (← getLCtx).findFromUserName? a.getId then
         if ← isDefEq decl.type (mkConst ``UInt64) then
           return decl.toExpr
@@ -95,6 +100,7 @@ require the following functions, which check if the given ident is a
 variable in the local context. If it is, the functions returns ident
 as a variable and if it is not, they return ident as a string respectively.
 -/
+/-- Elaborate a label identifier into its string `Expr`, honouring the leading-dot form. -/
 def parseLabelname (s : TSyntax `ident) (withDot : Bool) : TermElabM Expr := do
   if let some decl := (← getLCtx).findFromUserName? s.getId then
       return decl.toExpr
@@ -104,6 +110,7 @@ def parseLabelname (s : TSyntax `ident) (withDot : Bool) : TermElabM Expr := do
 
 
 
+/-- Turn a label identifier into the term naming its target, honouring the leading-dot form. -/
 def checkIfVariableToTerm (t : TSyntax `ident) (identWithDot : Bool) : TermElabM Term := do
   if let some _ := (← getLCtx).findFromUserName? t.getId then
     return t
@@ -112,10 +119,11 @@ def checkIfVariableToTerm (t : TSyntax `ident) (identWithDot : Bool) : TermElabM
 
   return (← `(term| $(quote t.getId.getString!)))
 
-def numOrIdentToSyntax (t:TSyntax `term) : UnexpandM (TSyntax `mriscx_num_or_ident) := do
+/-- Unexpand a term back into `mriscxNumOrIdent` surface syntax. -/
+def numOrIdentToSyntax (t:TSyntax `term) : UnexpandM (TSyntax `mriscxNumOrIdent) := do
   match t with
-  | `(UInt64.ofNat $n:num) => return ←`(mriscx_num_or_ident | $n:num)
+  | `(UInt64.ofNat $n:num) => return ←`(mriscxNumOrIdent | $n:num)
   | `($n:num) =>
-    return ←`(mriscx_num_or_ident | $n:num)
-  | `($i:ident) => return ←`(mriscx_num_or_ident | $i:ident)
+    return ←`(mriscxNumOrIdent | $n:num)
+  | `($i:ident) => return ←`(mriscxNumOrIdent | $i:ident)
   | _ => throw ()

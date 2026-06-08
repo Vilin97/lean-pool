@@ -16,7 +16,8 @@ This module provides tactics proving the per-instruction specifications.
 open Lean Elab Tactic
 
 /- The proof for most specifications of instructions -/
-elab "hoare_simp_specification" : tactic => do
+/-- Unfold and simplify the Hoare specification in the goal. -/
+elab "hoareSimpSpecification" : tactic => do
   evalTactic (← `(tactic| intro Hl))
   evalTactic (← `(tactic| rw [Hl]))
   evalTactic (← `(tactic| unfold $(mkIdent `hoare_triple_up_1)))
@@ -36,7 +37,7 @@ elab "hoare_simp_specification" : tactic => do
         unfold $(mkIdent `MState.runOneStep)
         rw [h_terminated, ←h_pc, HCurr]
         simp
-        zero_lt_ne_zero
+        zeroLtNeZero
   ))
   evalTactic (← `(tactic|
     case right =>
@@ -56,7 +57,8 @@ elab "hoare_simp_specification" : tactic => do
 
 /- The proof of correctness for the specification of conditional jump instruction when the condition
 is false -/
-elab "simp_jump_spec_false" : tactic => do
+/-- Simplify a jump specification whose branch condition is false. -/
+elab "simpJumpSpecFalse" : tactic => do
   evalTactic (← `(tactic| intro HL))
   evalTactic (← `(tactic| rw [HL]))
   evalTactic (← `(tactic| unfold $(mkIdent `hoare_triple_up_1)))
@@ -78,7 +80,7 @@ elab "simp_jump_spec_false" : tactic => do
             $(mkIdent `MState.jump)
           rw [h_terminated, ← h_pc]
           simp [h_curr, h_cond]
-        · zero_lt_ne_zero
+        · zeroLtNeZero
   ))
   evalTactic (← `(tactic|
     case right =>
@@ -97,7 +99,8 @@ elab "simp_jump_spec_false" : tactic => do
 
 /- The proof of correctness for the specification of conditional jump instruction when the condition
 is true -/
-elab "simp_jump_spec_true" : tactic => do
+/-- Simplify a jump specification whose branch condition is true. -/
+elab "simpJumpSpecTrue" : tactic => do
   evalTactic (← `(tactic| intro HL))
   evalTactic (← `(tactic| rw [HL]))
   evalTactic (← `(tactic| unfold $(mkIdent `hoare_triple_up_1)))
@@ -120,7 +123,7 @@ elab "simp_jump_spec_true" : tactic => do
           $(mkIdent `MState.jump)
         rw [h_terminated]
         simp [h_curr, h_label, h_cond]
-      · zero_lt_ne_zero
+      · zeroLtNeZero
   ))
   evalTactic (← `(tactic|
     case right =>
@@ -135,8 +138,9 @@ elab "simp_jump_spec_true" : tactic => do
 
 
 
-elab "simp_jump_spec" : tactic => do
+/-- Simplify a jump specification in the goal. -/
+elab "simpJumpSpec" : tactic => do
   evalTactic (← `(tactic | first
-                          | simp_jump_spec_false
-                          | simp_jump_spec_true)
+                          | simpJumpSpecFalse
+                          | simpJumpSpecTrue)
   )

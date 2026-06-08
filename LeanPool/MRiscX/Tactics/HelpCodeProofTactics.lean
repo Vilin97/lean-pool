@@ -22,13 +22,14 @@ open Lean Elab Parser Tactic RCases
 Tries to solve a `s.currInstr = instr` goal. Requires the s.cdoe and s.pc being introduced
 as `h_code'` and `h_pc` respectively as hypothesis
 -/
-elab "simp_currInstr" : tactic => do
+elab "simpCurrInstr" : tactic => do
   evalTactic (← `(tactic| try simp))
   evalTactic (← `(tactic| rw [($(mkIdent `h_code')), ($(mkIdent `h_pc))]))
   evalTactic (← `(tactic| simp [t_update_neq, t_update_eq]))
 
 /- Tries to solve goals where `(pmap).get r = some label`.-/
-elab "simp_t_update" : tactic => do
+/-- Simplify total-map updates appearing in the goal. -/
+elab "simpTUpdate" : tactic => do
   evalTactic (← `( tactic | repeat (first | rw [t_update_eq] | rw [t_update_neq]
                             <;> try (apply Ne.symm; try assumption))
                             <;> try assumption))
@@ -38,18 +39,19 @@ elab "simp_t_update" : tactic => do
 
 
 /- This tactic prpares the second proofgoal after applying S_SEQ. It introduces the
-parameters and unfolds `hoare_triple_up`-/
-elab "prepare_second_seq": tactic => do
+parameters and unfolds `hoareTripleUp`-/
+/-- Prepare the goal for the second branch of a sequencing proof. -/
+elab "prepareSecondSeq": tactic => do
   evalTactic (← `(tactic | intros $(mkIdent `l') $(mkIdent `h_l') ))
   evalTactic (← `(tactic | rw [($(mkIdent `h_l'))] ))
-  evalTactic (← `(tactic | unfold hoare_triple_up))
+  evalTactic (← `(tactic | unfold hoareTripleUp))
   evalTactic (← `(tactic | intros $(mkIdent `h_inter) $(mkIdent `h_empty) $(mkIdent `s)
     $(mkIdent `h_code') $(mkIdent `h_pc) ))
   evalTactic (← `(tactic | rw [←($(mkIdent `h_code'))] ))
 
 
-/- To be able to split conjunction and disjunction in hypothesis, the next two functions are
-required. Those functions are from Lean.Elab.Tactic.RCases -/
+/-- Collapse a list of `rcases` alternatives into a single pattern, using the lone
+pattern directly when there is exactly one. Adapted from `Lean.Elab.Tactic.RCases`. -/
 def RCasesPatt.alts' (ref : Syntax) : List/-Σ-/ RCasesPatt →RCasesPatt
   | [p] => p
   | ps  => RCasesPatt.alts ref ps
@@ -86,7 +88,8 @@ def RCasesPatt.parse (stx : Syntax) : MetaM RCasesPatt :=
 
 
 /- a tactic which puts conjunction and disjunction in a precondition into its parts. -/
-elab "split_condis" &" in " h:ident : tactic => do
+/-- Split the conjunctions and disjunctions in the given hypothesis. -/
+elab "splitCondis" &" in " h:ident : tactic => do
   Lean.Elab.Tactic.withMainContext do
     let goal ← Lean.Elab.Tactic.getMainGoal
     let ctx ← Lean.MonadLCtx.getLCtx
@@ -103,5 +106,5 @@ elab "split_condis" &" in " h:ident : tactic => do
       let g ← getMainGoal
       g.withContext do replaceMainGoal (← RCases.rcases tgts e g)
     | none =>
-      Lean.Meta.throwTacticEx `split_condis goal
+      Lean.Meta.throwTacticEx `splitCondis goal
         (m!"failure")

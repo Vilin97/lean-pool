@@ -36,7 +36,7 @@ theorem BL_SUBSET : ∀ (code : Code) (P Q : Assertion) (l: UInt64) (L_w L_b L :
   ⦃P⦄ l ↦ ⟨L_w | L_b \ L⟩⦃Q⦄
 := by
   intros c P Q l L_w L_b L T
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   intros H _ h_LwEmpty s HCode pre H_pc
   have L_b_sub : L_b \ L ⊆ L_b := by
     apply Set.diff_subset
@@ -65,7 +65,7 @@ theorem BL_TO_WL : ∀ (code : Code) (P Q : Assertion) (l : UInt64) (L_w L_b L :
   ⦃P⦄ l ↦ ⟨L_w ∪ L | L_b \ L⟩⦃Q⦄
   := by
   intros c P Q l L_w L_b L TSub TInter TEmpty
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   intros H _ _ s HCode pre H_pc
   specialize H  TInter TEmpty s HCode pre H_pc
   rcases H with ⟨s', ⟨H1, H2, H3⟩⟩
@@ -95,7 +95,7 @@ theorem WL_TO_BL : ∀ (c : Code) (P Q : Assertion) (l : UInt64) (L_w L_b L : Se
   ⦃P⦄ l ↦ ⟨L_w \ L | L_b ∪ L⟩⦃Q⦄
   := by
   intros c P Q l L_w L_b L HLSubL_w HSPost TInter TEmpty
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   intros H _ _ s HCode  pre H_pc
   specialize H TInter TEmpty s HCode  pre H_pc
   rcases H with ⟨s', ⟨H1, H2, H3⟩⟩
@@ -108,26 +108,26 @@ theorem WL_TO_BL : ∀ (c : Code) (P Q : Assertion) (l : UInt64) (L_w L_b L : Se
   · intros _
     exists n'
     try repeat (constructor <;> try assumption)
-    apply HSPost
-    exact H2
-    intros n'' Hn''
-    specialize H4' n'' Hn''
-    apply MState.runNSteps_diff <;> try assumption
-    simp only [Set.union_subset_iff, Set.diff_subset_iff, Set.subset_union_right, true_and]
-    constructor
-    · intros hx h
-      apply Set.mem_union_right
-      exact Set.mem_union_left L_b h
-    · intros hx h
-      apply Set.mem_union_left
-      apply HLSubL_w.left h
-  · constructor
-    exact H2
-    simp only [Set.mem_union, not_or]
-    constructor
-    · exact H3
     · apply HSPost
       exact H2
+    · intros n'' Hn''
+      specialize H4' n'' Hn''
+      apply MState.runNSteps_diff <;> try assumption
+      simp only [Set.union_subset_iff, Set.diff_subset_iff, Set.subset_union_right, true_and]
+      constructor
+      · intros hx h
+        apply Set.mem_union_right
+        exact Set.mem_union_left L_b h
+      · intros hx h
+        apply Set.mem_union_left
+        apply HLSubL_w.left h
+  · constructor
+    · exact H2
+    · simp only [Set.mem_union, not_or]
+      constructor
+      · exact H3
+      · apply HSPost
+        exact H2
 
 
 
@@ -149,7 +149,7 @@ theorem S_SEQ' : ∀(P R Q : Assertion) (c : Code) (l : UInt64) (L_w L_b L_w' L_
   ⦃P⦄ l ↦ ⟨L_w' | L_b ∩ L_b'⟩ ⦃Q⦄
   := by
   intros P R Q c l L_w L_b L_w' L_b' TInter TEmpty TInter' T
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   intros HFirst HSecond _ h_empty' s HCode H_pc pre
   specialize HFirst TInter TEmpty s HCode H_pc pre
   rcases HFirst with ⟨s', ⟨HFirstWeak, HFirstPost, HFirstPc⟩⟩
@@ -208,7 +208,7 @@ theorem S_SEQ {L_b'' : Set UInt64} :
   ⦃P⦄ l ↦ ⟨L_w' | L_b''⟩ ⦃Q⦄
   := by
   intros P R Q c l L_w L_b L_w' L_b' TInter TEmpty TInter' T
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   intros HFirst HSecond def_L_b'' _ h_empty' s HCode H_pc pre
   specialize HFirst TInter TEmpty s HCode H_pc pre
   rcases HFirst with ⟨s', ⟨HFirstWeak, HFirstPost, HFirstPc⟩⟩
@@ -258,7 +258,7 @@ theorem PRE_STR : ∀(c : Code) (P1 P2 Q : Assertion) (L_w L_b : Set UInt64) (l 
   ⦃P2⦄ l ↦ ⟨L_w | L_b⟩ ⦃Q⦄
   := by
   intros c P1 P2 Q L_w L_b l HTaut
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   intros H HInter HEmpty s HCode H_pc pre
   apply H HInter <;> try assumption
   specialize HTaut s HCode
@@ -279,7 +279,7 @@ theorem POST_WEAK : ∀(c : Code) (P Q1 Q2 : Assertion) (L_w L_b : Set UInt64) (
   ⦃P⦄ l ↦ ⟨L_w | L_b⟩ ⦃Q2⦄
   := by
   intros c P Q1 Q2 L_w L_b l
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   intros HTaut H HInter HEmpty  s HCode pre H_pc
   specialize H HInter HEmpty s HCode pre H_pc
   rcases H with ⟨s', ⟨P1, P2, P3⟩⟩
@@ -314,7 +314,7 @@ theorem S_COND : ∀ (c : Code) (P C Q : Assertion) (l : UInt64)
   ⦃P⦄ l ↦ ⟨L_w | L_b⟩ ⦃Q⦄
   := by
   intros c P C Q l L_w L_b
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   intros h_RunCondTrue h_RunCondFalse h_LwInterLb h_LwNotEmpty s h_code h_pc pre
   specialize h_RunCondTrue h_LwInterLb h_LwNotEmpty s h_code
   specialize h_RunCondFalse h_LwInterLb h_LwNotEmpty s h_code
@@ -367,7 +367,7 @@ theorem S_LOOP {α : Type} [Preorder α] [WellFoundedLT α] :
   ⦃I⦄ l ↦ ⟨L_w | L_b⟩ ⦃Q⦄
   := by
   intros Q C I code l L_w L_b V h_l_not_mem_Lw h_l_not_mem_Lb h_true h_false
-  unfold hoare_triple_up
+  unfold hoareTripleUp
   intros h_inter h_nonempty s h_code h_pc hI
   have h_inter' : ({l} ∪ L_w) ∩ L_b = ∅ := by
     rw [Set.union_inter_distrib_right]

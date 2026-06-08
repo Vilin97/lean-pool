@@ -212,7 +212,7 @@ private def runSpecAndSolve (instr : Instr) (pc : UInt64) (name? : Option Ident 
   evalTactic (← getSpecTacFromInstr instr pc name?)
   -- evalTactic (← `(tactic | try simp))
   -- evalTactic (← `(tactic | try simp))
-  -- evalTactic (← `(tactic | try simp_currInstr))
+  -- evalTactic (← `(tactic | try simpCurrInstr))
   -- evalTactic (← `(tactic | try exact $(mkIdent `h_pc)))
   -- evalTactic (← `(tactic | try simp at *))
   -- evalTactic (← `(tactic | try repeat (constructor <;> try assumption)))
@@ -228,7 +228,8 @@ private def getInstrAtPc (ctx : Lean.LocalContext) (pc : UInt64) :
 
 
 
-elab "apply_spec_frst_goal" name?:(Lean.Parser.ident)? : tactic => do
+/-- Apply an instruction specification to the first generated goal. -/
+elab "applySpecFrstGoal" name?:(Lean.Parser.ident)? : tactic => do
   -- Since the pc in the first goal is (probably) always 0, we can
   -- just introduce everything and go through everything and, get
   -- the pc from the hypotheses `h_pc = n ` and apply the specification
@@ -247,18 +248,19 @@ elab "apply_spec_frst_goal" name?:(Lean.Parser.ident)? : tactic => do
     let pc ← getUInt64FromExpr pcExpr
     let instr ← getInstrAtPc ctx pc
     evalTactic (← `(tactic | rw [← $(mkIdent `h_code')]))
-    evalTactic (← `(tactic | split_condis in $(mkIdent `user_precondition)))
+    evalTactic (← `(tactic | splitCondis in $(mkIdent `user_precondition)))
     runSpecAndSolve instr pc name?
 
 
-elab "apply_spec_scd_goal" name?:(Lean.Parser.ident)? : tactic => do
+/-- Apply an instruction specification to the second generated goal. -/
+elab "applySpecScdGoal" name?:(Lean.Parser.ident)? : tactic => do
   -- First phase: determine how we obtain pc
   let pcFromHyp ← Lean.Elab.Tactic.withMainContext do
     let ctx ← Lean.MonadLCtx.getLCtx
     return ((← findHypTypeM? ctx `h_code') == none)
   -- If the code was not introduced, introduce it now
   if pcFromHyp then
-    evalTactic (← `(tactic | prepare_second_seq))
+    evalTactic (← `(tactic | prepareSecondSeq))
   -- After introducing new stuff into the hypotheses, we need to update the
   -- context
   Lean.Elab.Tactic.withMainContext do
@@ -284,9 +286,9 @@ elab "apply_spec_scd_goal" name?:(Lean.Parser.ident)? : tactic => do
         let pc ← parseSingletonExpr lExpr
         -- After obtaining the value of pc, we need to introduce the
         -- rest of the lemma and prepare everything for the application etc.
-        evalTactic (← `(tactic | prepare_second_seq))
+        evalTactic (← `(tactic | prepareSecondSeq))
         pure pc
     let instr ← getInstrAtPc ctx pc
     evalTactic (← `(tactic | intros $(mkIdent `user_precondition)))
-    evalTactic (← `(tactic | split_condis in $(mkIdent `user_precondition)))
+    evalTactic (← `(tactic | splitCondis in $(mkIdent `user_precondition)))
     runSpecAndSolve instr pc name?

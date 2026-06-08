@@ -14,7 +14,7 @@ import LeanPool.MRiscX.Examples.SingleProofsOTP
 Source: url:https://github.com/JulsDE/MRiscX
 Authors: Julius Marx
 Status: verified
-Main declarations: `hoare_triple_up`, `S_SEQ`, `proof_otp`
+Main declarations: `hoareTripleUp`, `S_SEQ`, `proof_otp`
 Tags: hoare-logic, program-verification, risc-v, assembly, formal-methods
 MSC: 68Q60
 -/
@@ -24,7 +24,7 @@ MSC: 68Q60
 
 MRiscX provides an environment for verifying RISC-V assembly code in Lean using
 Hoare logic. It defines an abstract syntax and operational semantics for a
-RISC-V-like assembly language, a Hoare-logic specification layer (`hoare_triple_up`),
+RISC-V-like assembly language, a Hoare-logic specification layer (`hoareTripleUp`),
 proved Hoare rules (sequencing, strengthening, weakening, conditionals),
 per-instruction specifications, and custom elaborators, delaborators, and tactics
 that let assembly programs and Hoare triples be written and proved directly in Lean.

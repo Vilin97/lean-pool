@@ -280,6 +280,7 @@ instance : ToString Instr where
     | Instr.Panic => "Panic!"
 
 namespace Instr
+  /-- Boolean equality of instructions, defined via their string rendering. -/
   def beq (i j : Instr) : Bool :=
     match toString i, toString j with
     | s , s' => s == s'

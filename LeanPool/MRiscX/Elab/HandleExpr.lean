@@ -27,6 +27,7 @@ private def exprDepthBound : Expr → Nat
   | .proj _ _ b => 1 + exprDepthBound b
   | _ => 1
 
+/-- Fold the optional label expression `e?` into the running `labelmap` expression. -/
 def unwrapWhileCreateLabelmap (e? : Option Expr) (labelmap: Expr) : MetaM Expr :=
   match e? with
   | some arg => pure arg
@@ -34,6 +35,7 @@ def unwrapWhileCreateLabelmap (e? : Option Expr) (labelmap: Expr) : MetaM Expr :
     from expr {labelmap}"
 
 
+/-- Evaluate an `Expr` to the `UInt64` it denotes. -/
 def getUInt64FromExpr (e : Expr) : MetaM UInt64 := do
   let e ← Meta.whnf e
   if e.isAppOfArity ``UInt64 1 then
@@ -71,6 +73,7 @@ def getUInt64FromExpr (e : Expr) : MetaM UInt64 := do
     throwError "Not a UInt64 Expression"
 
 
+/-- Evaluate an `Expr` to the `String` it denotes. -/
 def getStrFromExpr (e : Expr) : MetaM String := do
   let e ← Meta.whnf e
   match e with
@@ -99,6 +102,7 @@ def getLabelMapFromMapExpr (e : Expr) : MetaM LabelMap :=
   getLabelMapFromMapExprAux (exprDepthBound e) e
 
 
+/-- Reflect the `LabelMap` value out of an `Expr` of type `Code`. -/
 def getLabelMapFromCodeExpr (e : Expr): MetaM LabelMap := do
   let e ← Meta.whnf e
   if e.isAppOfArity ``Code.mk 2 then
@@ -155,32 +159,38 @@ def getInstrFromCodeExpr (codeExpr : Expr) (pc : UInt64) : MetaM Expr := do
     throwError "Expected an Expr of type Code"
 
 
+/-- Interpret the first `n` arguments as `UInt64` values, throwing otherwise. -/
 def getArgsAsUIntsOrThrow (args : Array Expr) (n : Nat) : MetaM (List UInt64) := do
   if args.size < n then
     throwError "Expected at least {n} arguments, got {args.size}"
   (List.range n).mapM fun i => getUInt64FromExpr (args[i]!)
 
+/-- Interpret two argument expressions as a pair of `UInt64` values. -/
 def getTwoUIntFromExprValidated (args : Array Expr) : MetaM (UInt64 × UInt64) := do
   if args.size < 2 then
     throwError "Expected at least 2 arguments, got {args.size}"
   return (←getUInt64FromExpr args[0]!, ←getUInt64FromExpr args[1]!)
 
+/-- Interpret three argument expressions as a triple of `UInt64` values. -/
 def getThreeUIntFromExprValidated (args : Array Expr) : MetaM (UInt64 × UInt64 × UInt64) := do
   if args.size < 3 then
     throwError "Expected at least 3 arguments, got {args.size}"
   return (←getUInt64FromExpr args[0]!, ←getUInt64FromExpr args[1]!, ←getUInt64FromExpr args[2]!)
 
+/-- Interpret two argument expressions as a `UInt64` and a `String`. -/
 def getUIntStringFromExprValidated (args : Array Expr) : MetaM (UInt64 × String) := do
   if args.size < 2 then
     throwError "Expected at least 2 arguments, got {args.size}"
   return (←getUInt64FromExpr args[0]!, ←getStrFromExpr args[1]!)
 
+/-- Interpret three argument expressions as two `UInt64` values and a `String`. -/
 def getTwoUIntOneStringFromExprValidated (args : Array Expr) :
     MetaM (UInt64 × UInt64 × String) := do
   if args.size < 3 then
     throwError "Expected at least 3 arguments, got {args.size}"
   return (←getUInt64FromExpr args[0]!, ←getUInt64FromExpr args[1]!, ←getStrFromExpr args[2]!)
 
+/-- Reflect the `Instr` value out of an `Expr`. -/
 def getInstrFromExpr (e : Expr) : MetaM Instr := do
   let e ← Meta.whnf e
   if e.isAppOfArity ``Instr.LoadAddress 2 then
@@ -268,6 +278,7 @@ def getInstrMapFromExpr (e : Expr) : MetaM InstructionMap :=
   getInstrMapFromExprAux (exprDepthBound e) e
 
 
+/-- Reflect the `InstructionMap` value out of an `Expr` of type `Code`. -/
 def getInstrMapFromCodeExpr (e : Expr) : MetaM InstructionMap := do
   let e ← Meta.whnf e
   if e.isAppOfArity ``Code.mk 2 then
@@ -331,6 +342,7 @@ def splitConjDisj (declType : Expr) : MetaM (TSyntax `rcasesPat) :=
   splitConjDisjAux (exprDepthBound declType) declType
 
 
+/-- Evaluate a singleton argument expression to the `UInt64` it denotes. -/
 def parseSingletonExpr (e : Expr) : MetaM (UInt64) := do
   if e.isAppOfArity ``Singleton.singleton 4 then
     let nRaw? := ((e.getArg! 3).getArg! 1).rawNatLit?

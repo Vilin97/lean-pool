@@ -48,6 +48,7 @@ to a instruction in the stack
 -/
 abbrev InstructionIndex := UInt64
 
+/-- The program counter: the index of the instruction currently being executed. -/
 abbrev ProgramCounter := UInt64
 
 /--
@@ -93,7 +94,9 @@ The InstructionMap and the LabelMap are combined into a single structure,
 which is refered as `Code`.
 -/
 structure Code where
+  /-- The instruction map, associating each instruction index with an instruction. -/
   instructionMap: InstructionMap
+  /-- The label map, associating each label name with its target index. -/
   labels: LabelMap
 
 
@@ -105,33 +108,42 @@ def DefaultCode : Code := { instructionMap := EmptyInstructionMap, labels := Emp
 
 
 namespace Code
+  /-- Replace the instruction map of a `Code` with `c`. -/
   def setCMap (m : Code) (c : InstructionMap) : Code :=
     { m with instructionMap := c}
 
+  /-- Replace the label map of a `Code` with `l`. -/
   def setLabels (m : Code) (l : LabelMap) : Code :=
     { m with labels := l}
 
+  /-- Add a list of `(name, index)` label bindings to a `Code`. -/
   def addMultipleLabels (m : Code) (l : List (String × UInt64)) : Code :=
   match l with
   | [] => m
   | h :: t => addMultipleLabels {m with labels := p(h.1 ↦ h.2; m.labels)} t
 
+  /-- Insert an instruction `v` at index `id` into the instruction map of a `Code`. -/
   def addCMap (m : Code) (id : InstructionIndex) (v : Instr) : Code :=
     {m with instructionMap := (id ↦ v; m.instructionMap)}
 
+  /-- Insert a label `id ↦ v` into the label map of a `Code`. -/
   def addLabels (m : Code) (id : String) (v : UInt64) : Code :=
     {m with labels := p(id ↦ v; m.labels)}
 
+  /-- Insert both an instruction and a label binding into a `Code`. -/
   def addMaps (m : Code) (id_c : InstructionIndex) (v_c : Instr) (id_l : String)
       (v_l : UInt64) : Code :=
     {m with instructionMap := (id_c ↦ v_c; m.instructionMap), labels :=
     p(id_l ↦ v_l; m.labels)}
 
-  def setMaps (m : Code) (c : InstructionMap) (l : LabelMap) :=
-    {m with instructionMap := c, labels := l}
+  /-- Replace both the instruction map and the label map of a `Code`. -/
+  def setMaps (m : Code) (c : InstructionMap) (l : LabelMap) : Code :=
+    (m.setCMap c).setLabels l
 
+  /-- Look up the target index of a label in a `Code`. -/
   def getLabel (m : Code) (l : String): Option UInt64 := m.labels.get l
 
+  /-- Look up the instruction stored at index `l` in a `Code`. -/
   def getInstrAt (m : Code) (l : UInt64): Instr := m.instructionMap.get l
 end Code
 

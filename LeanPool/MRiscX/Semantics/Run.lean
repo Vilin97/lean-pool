@@ -22,7 +22,8 @@ on the abstract syntax.
 
 namespace MState
 
-  -- small jump if function to have the runOneStep function cleaner
+  /-- Conditional jump on one register: jump to `lbl` if `cond` holds of register
+  `reg`, otherwise advance the program counter. -/
   def jif (ms: MState) (reg : UInt64) (lbl : String) (cond : UInt64 → Bool) :=
       let regCont := ms.getRegisterAt reg
       if cond regCont then
@@ -30,7 +31,8 @@ namespace MState
       else
         ms.incPc
 
-  -- small jump if function to have the runOneStep function cleaner
+  /-- Conditional jump on two registers: jump to `lbl` if `cond` holds of registers
+  `reg1` and `reg2`, otherwise advance the program counter. -/
   def jif' (ms: MState) (reg1 reg2 :UInt64) (lbl:String) (cond : UInt64 → UInt64 → Bool) :=
       let reg1Cont := ms.getRegisterAt reg1
       let reg2Cont := ms.getRegisterAt reg2
@@ -116,6 +118,7 @@ namespace MState
     | succ n' => ms.runOneStep.runNSteps n'
 
 
+  /-- Run the machine until it terminates or `fuel` steps have elapsed. -/
   def runUntilTerminatedWithFuel (ms : MState) (fuel : Nat) : MState :=
     match fuel with
     | Nat.zero => ms
@@ -125,10 +128,12 @@ namespace MState
       else
         runUntilTerminatedWithFuel ms.runOneStep (n')
 
+  /-- Run the machine until it terminates, bounded by `UInt64.size` steps. -/
   def runUntilTerminated (ms : MState) : MState :=
     runUntilTerminatedWithFuel ms UInt64.size
 
 
+  /-- The instruction the machine would execute after one more step. -/
   def nextInstruction (ms:MState) : Instr := ms.runOneStep.currInstruction
 
 end MState
