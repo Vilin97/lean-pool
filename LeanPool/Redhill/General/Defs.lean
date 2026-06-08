@@ -65,7 +65,10 @@ def tup (i : Fin (n + 6)) : ℤ :=
 
 variable {n F h}
 
-@[simp] lemma tup_castAdd {i : Fin n} :
+-- Not `@[simp]`: with `Fin.castAdd_to_castSucc` from another pool project in the global
+-- simp set, the left-hand side `i.castAdd 6` is rewritten to a `Fin.castSucc` chain, so this
+-- lemma's left-hand side is no longer in simp normal form. All call sites invoke it explicitly.
+lemma tup_castAdd {i : Fin n} :
     tup n F h (i.castAdd 6) = primeChain (100 * Y F ^ 6) i.1 := by
   simp [tup]
 
