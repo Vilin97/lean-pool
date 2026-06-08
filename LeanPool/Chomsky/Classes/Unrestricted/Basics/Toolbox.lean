@@ -11,6 +11,8 @@ import LeanPool.Chomsky.Classes.Unrestricted.Basics.Definition
 Auxiliary lemmas about general-grammar derivations.
 -/
 
+namespace Chomsky
+
 variable {T : Type} {g : Grammar T}
 
 
@@ -84,3 +86,5 @@ def asTerminal {N : Type} : Symbol T N → Option T
 /-- The list of terminals occurring in a grammar's rules. -/
 def allUsedTerminals (g : Grammar T) : List T :=
   (g.rules.map Grule.output).flatten.filterMap asTerminal
+
+end Chomsky

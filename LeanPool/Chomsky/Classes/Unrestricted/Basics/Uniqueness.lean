@@ -11,6 +11,8 @@ import LeanPool.Chomsky.Classes.Unrestricted.Basics.Definition
 Uniqueness results for general-grammar derivations.
 -/
 
+namespace Chomsky
+
 -- This file shows that our encoding of rules is not unique.
 
 private inductive Ter
@@ -52,3 +54,5 @@ example (u v : List (Symbol Ter Non)) : myGram.Transforms u v ↔ myGran.Transfo
       exact ⟨myRulf, List.mem_of_mem_head? rfl, p, q, bef, aft⟩
   rw [e1, e2]
   constructor <;> rintro ⟨p, q, bef, aft⟩ <;> exact ⟨p, q, by simp_all [A, B, x, y], aft⟩
+
+end Chomsky

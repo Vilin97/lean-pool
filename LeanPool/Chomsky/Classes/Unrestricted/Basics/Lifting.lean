@@ -12,6 +12,8 @@ import LeanPool.Chomsky.Utilities.ListUtils
 Lifting and sinking of grammar derivations along nonterminal embeddings.
 -/
 
+namespace Chomsky
+
 
 section functions_lift_sink
 
@@ -223,3 +225,5 @@ lemma sink_deri (G : LiftedGrammar T) {w₁ w₂ : List (Symbol T G.g.nt)}
 (sink_deri_aux hGww hw₁).left
 
 end translating_derivations
+
+end Chomsky

@@ -15,6 +15,8 @@ Closure of general-grammar languages under concatenation.
 
 open scoped Chomsky
 
+namespace Chomsky
+
 
 section list_technicalities
 
@@ -2060,9 +2062,10 @@ end hard_direction
 
 /-- The class of grammar-generated languages is closed under concatenation. -/
 theorem GG_of_GG_c_GG (L₁ : Language T) (L₂ : Language T) :
-  L₁.IsGG ∧ L₂.IsGG → (L₁ * L₂).IsGG :=
+  Language.IsGG L₁ ∧ Language.IsGG L₂ → Language.IsGG (L₁ * L₂) :=
 by
   rintro ⟨⟨g₁, rfl⟩, ⟨g₂, rfl⟩⟩
   use bigGrammar g₁ g₂
   exact Set.eq_of_subset_of_subset ↓in_concatenated_of_in_big ↓in_big_of_in_concatenated
 
+end Chomsky

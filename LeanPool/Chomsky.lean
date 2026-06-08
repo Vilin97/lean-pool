@@ -17,7 +17,7 @@ import LeanPool.Chomsky.Classes.Unrestricted.NormalForms.Kuroda
 Source: arxiv:2302.06420, url:https://github.com/madvorak/chomsky
 Authors: Martin Dvořák
 Status: verified
-Main declarations: `CF_subclass_GG`, `CF_of_CF_c_CF`, `GG_of_GG_u_GG`, `GG_of_star_GG`
+Main declarations: `Chomsky.CF_subclass_GG`, `Chomsky.GG_of_GG_u_GG`, `Chomsky.GG_of_star_GG`
 Tags: formal-languages, chomsky-hierarchy, context-free-grammar, closure-properties
 MSC: 68Q42
 -/

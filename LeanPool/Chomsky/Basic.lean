@@ -34,6 +34,8 @@ scoped notation:max "↓"t:arg => (fun _ => t)
 end Chomsky
 
 
+namespace Chomsky
+
 section unexpanders
 
 /-- Pretty-print `List.map f l` using dot notation `l.map f`. -/
@@ -61,3 +63,5 @@ def List.dropUnexpand : Lean.PrettyPrinter.Unexpander
   | _ => throw ()
 
 end unexpanders
+
+end Chomsky

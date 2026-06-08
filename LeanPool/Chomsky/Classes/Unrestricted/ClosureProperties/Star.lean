@@ -14,6 +14,8 @@ Closure of general-grammar languages under the Kleene star.
 
 open scoped Chomsky
 
+namespace Chomsky
+
 
 -- new nonterminal type
 private abbrev nn (N : Type) : Type :=
@@ -2461,7 +2463,7 @@ end hard_direction
 
 /-- The class of grammar-generated languages is closed under the Kleene star. -/
 theorem GG_of_star_GG (L : Language T) :
-  L.IsGG → (KStar.kstar L).IsGG :=
+  Language.IsGG L → Language.IsGG (KStar.kstar L) :=
 by
   rintro ⟨g, rfl⟩
   use g.star
@@ -2569,3 +2571,4 @@ by
     apply terminal_scan_aux
     aesop
 
+end Chomsky

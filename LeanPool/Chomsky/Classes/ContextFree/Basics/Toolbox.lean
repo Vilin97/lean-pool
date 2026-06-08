@@ -11,6 +11,8 @@ import LeanPool.Chomsky.Classes.ContextFree.Basics.Definition
 Auxiliary lemmas about context-free derivations.
 -/
 
+namespace Chomsky
+
 variable {T : Type} {g : CFG T}
 
 
@@ -73,3 +75,5 @@ by
     use r, r_in, v, w ++ pₒ
     rw [bef, aft]
     constructor <;> simp only [List.append_assoc]
+
+end Chomsky

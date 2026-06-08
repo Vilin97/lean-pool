@@ -15,6 +15,8 @@ Closure of general-grammar languages under reversal.
 
 open scoped Chomsky
 
+namespace Chomsky
+
 
 variable {T : Type}
 
@@ -79,7 +81,7 @@ by
 
 /-- The class of grammar-generated languages is closed under reversal. -/
 theorem GG_of_reverse_GG (L : Language T) :
-  L.IsGG → L.reverse.IsGG :=
+  Language.IsGG L → Language.IsGG L.reverse :=
 by
   rintro ⟨g, rfl⟩
   use reversalGrammar g
@@ -94,3 +96,4 @@ by
   rw [dual_of_reversalGrammar]
   rwa [List.reverse_reverse] at finished_up_to_reverses
 
+end Chomsky

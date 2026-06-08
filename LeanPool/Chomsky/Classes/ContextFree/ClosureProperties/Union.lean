@@ -14,6 +14,8 @@ Closure of context-free languages under union.
 
 open scoped Chomsky
 
+namespace Chomsky
+
 variable {T : Type}
 
 private def liftCFR₁ {N₁ : Type} (N₂ : Type) (r : N₁ × List (Symbol T N₁)) :
@@ -39,7 +41,7 @@ by
   rfl
 
 theorem CF_of_CF_u_CF (L₁ : Language T) (L₂ : Language T) :
-  L₁.IsCF ∧ L₂.IsCF → (L₁ + L₂).IsCF :=
+  Language.IsCF L₁ ∧ Language.IsCF L₂ → Language.IsCF (L₁ + L₂) :=
 by
   rintro ⟨⟨g₁, rfl⟩, ⟨g₂, rfl⟩⟩
   rw [g₁.language_eq_toGeneral_language]
@@ -49,3 +51,4 @@ by
   exact Set.eq_of_subset_of_subset ↓in_L₁_or_L₂_of_in_union
     ↓(·.casesOn in_union_of_in_L₁ in_union_of_in_L₂)
 
+end Chomsky

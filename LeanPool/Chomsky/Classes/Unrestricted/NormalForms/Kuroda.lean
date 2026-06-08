@@ -11,6 +11,8 @@ import LeanPool.Chomsky.Classes.Unrestricted.Basics.Definition
 The Kuroda normal form for general grammars.
 -/
 
+namespace Chomsky
+
 
 /-- Transformation rule for a grammar in the Kuroda Normal Form. -/
 inductive KurodaRule (T N : Type)
@@ -164,3 +166,5 @@ lemma KurodaGrammar.lang_eq (k : KurodaGrammar T) :
 by
   ext
   apply KurodaGrammar.deri_iff
+
+end Chomsky

@@ -12,6 +12,8 @@ import LeanPool.Chomsky.Classes.Unrestricted.Basics.Toolbox
 Context-free languages are included in the class of general-grammar languages.
 -/
 
+namespace Chomsky
+
 variable {T : Type}
 
 /-- The general grammar corresponding to a context-free grammar. -/
@@ -60,7 +62,9 @@ by
   apply g.deri_iff_toGeneral_deri
 
 theorem CF_subclass_GG (L : Language T) :
-  L.IsCF → L.IsGG :=
+  Language.IsCF L → Language.IsGG L :=
 by
   rintro ⟨g, rfl⟩
   exact ⟨g.toGeneral, g.language_eq_toGeneral_language.symm⟩
+
+end Chomsky

@@ -14,6 +14,8 @@ Closure of context-free languages under concatenation.
 
 open scoped Chomsky
 
+namespace Chomsky
+
 variable {T : Type}
 
 private def wrapCFR₁ {N₁ : Type} (N₂ : Type) (r : N₁ × List (Symbol T N₁)) :
@@ -60,7 +62,7 @@ by
 
 /-- The class of context-free languages is closed under concatenation. -/
 theorem CF_of_CF_c_CF (L₁ : Language T) (L₂ : Language T) :
-  L₁.IsCF ∧ L₂.IsCF → (L₁ * L₂).IsCF :=
+  Language.IsCF L₁ ∧ Language.IsCF L₂ → Language.IsCF (L₁ * L₂) :=
 by
   rintro ⟨⟨g₁, rfl⟩, ⟨g₂, rfl⟩⟩
   rw [g₁.language_eq_toGeneral_language]
@@ -69,3 +71,4 @@ by
   rw [bigCFG_language_eq_bigGrammar_language]
   exact Set.eq_of_subset_of_subset ↓in_concatenated_of_in_big ↓in_big_of_in_concatenated
 
+end Chomsky

@@ -15,6 +15,8 @@ Closure of context-free languages under reversal.
 
 open scoped Chomsky
 
+namespace Chomsky
+
 
 variable {T : Type}
 
@@ -66,7 +68,7 @@ by
 
 /-- The class of context-free languages is closed under reversal. -/
 theorem CF_of_reverse_CF (L : Language T) :
-  L.IsCF → L.reverse.IsCF :=
+  Language.IsCF L → Language.IsCF L.reverse :=
 by
   rintro ⟨g, rfl⟩
   use g.reverse
@@ -82,3 +84,4 @@ by
   rw [List.reverse_reverse] at finished_modulo_reverses
   exact finished_modulo_reverses
 
+end Chomsky

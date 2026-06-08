@@ -12,6 +12,8 @@ import Mathlib.Computability.Language
 Definition of general (unrestricted) grammars and their derivation relation.
 -/
 
+namespace Chomsky
+
 
 /-- Rewrite rule for a grammar without any restrictions. -/
 structure Grule (T N : Type) where
@@ -54,3 +56,5 @@ def Grammar.language (g : Grammar T) : Language T :=
 /-- Predicate "is grammar-generated"; defined by existence of a grammar for the given language. -/
 def Language.IsGG (L : Language T) : Prop :=
   ∃ g : Grammar T, g.language = L
+
+end Chomsky

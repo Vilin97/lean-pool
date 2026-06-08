@@ -15,6 +15,8 @@ Closure of general-grammar languages under union.
 
 open scoped Chomsky
 
+namespace Chomsky
+
 
 variable {T : Type}
 
@@ -267,10 +269,11 @@ by
 
 /-- The class of grammar-generated languages is closed under union. -/
 theorem GG_of_GG_u_GG (L₁ : Language T) (L₂ : Language T) :
-  L₁.IsGG ∧ L₂.IsGG → (L₁ + L₂).IsGG :=
+  Language.IsGG L₁ ∧ Language.IsGG L₂ → Language.IsGG (L₁ + L₂) :=
 by
   rintro ⟨⟨g₁, rfl⟩, ⟨g₂, rfl⟩⟩
   use unionGrammar g₁ g₂
   exact Set.eq_of_subset_of_subset ↓in_L₁_or_L₂_of_in_union
     ↓(·.casesOn in_union_of_in_L₁ in_union_of_in_L₂)
 
+end Chomsky
