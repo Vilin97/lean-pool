@@ -14,6 +14,11 @@ This module provides elaboration of MRiscX Hoare assignment chains.
 -/
 open Lean Elab
 
+/-- The total number of nodes in a syntax tree, an upper bound on its depth. -/
+private def assignmentSyntaxSize : Syntax → Nat
+  | .node _ _ args => 1 + args.foldl (fun acc s => acc + assignmentSyntaxSize s) 0
+  | _ => 1
+
 /-
 This file contains the elaboaration of the hoare assignment terms.
 Essentially, there are two types of hoare terms.
@@ -51,24 +56,21 @@ This function is similar to expandCDot?.
 It traverses the given syntax and searches for patterns to replace the keywords
 defined as syntax terminals with the actual functions calls
 -/
-def replaceKeywords (stx : Term) (curState : TSyntax `term) : TermElabM Syntax := do
-  go stx
-where
-  /--
-  Auxiliary function for expanding the `x[num]`, `mem[num]` and
-  `mem[x[num]]` notation.
-  If `stx` is a `x[num]`, `mem[num]` or `mem[x[num]]`,
-  we return the corresponding functions on the state.
-  Otherwise, we just return `stx`.
-  -/
-  go : Syntax → TermElabM Syntax
+/--
+Fuel-bounded core of `replaceKeywords`, expanding the `x[num]`, `mem[num]` and
+`mem[x[num]]` notation. The `fuel` argument bounds the syntax-tree recursion.
+-/
+private def replaceKeywordsAux (fuel : Nat) (curState : TSyntax `term) :
+    Syntax → TermElabM Syntax
   | _stx@`(⸨terminated⸩) =>
     return ←`(term | $(mkIdent `MState.terminated) ($curState))
   | _stx@`(x[$r:mriscx_num_or_ident]) => do
     let newR ← parseMriscxNumOrIdentToTerm r
     return ←`(term | $(mkIdent `MState.getRegisterAt) ($curState) $newR)
   | _stx@`(mem[$t:term]) => do
-    let et ← replaceKeywords t curState
+    let et ← match fuel with
+      | fuel + 1 => replaceKeywordsAux fuel curState t
+      | 0 => pure t.raw
     return ←`(term | $(mkIdent `MState.getMemoryAt) ($curState) ($(⟨et⟩)))
   | _stx@`(labels[$s:ident]) => do
     let newS ← checkIfVariableToTerm s false
@@ -78,25 +80,41 @@ where
     return ←`(term | $(mkIdent `MState.getLabelAt) ($curState) $newS)
   | _stx@`(⸨pc⸩) => do
     return ←`(term | $(mkIdent `MState.pc) ($curState))
-  | stx => match stx with
-    | .node _ k args => do
-      let args ← args.mapM go
+  | stx => match fuel, stx with
+    | fuel + 1, .node _ k args => do
+      let args ← args.mapM (replaceKeywordsAux fuel curState)
       return .node (.fromRef stx (canonical := true)) k args
-    | _ => pure stx
+    | _, stx => pure stx
+
+/--
+Traverse `stx` and replace the keyword notations (`x[..]`, `mem[..]`, `labels[..]`,
+`⸨pc⸩`, `⸨terminated⸩`) by the corresponding `MState` function calls on `curState`.
+-/
+def replaceKeywords (stx : Term) (curState : TSyntax `term) : TermElabM Syntax :=
+  replaceKeywordsAux (assignmentSyntaxSize stx) curState stx
 
 /-
 Seperate all the assignemnts within the ⟦⟧ and store in one array
 -/
-def getHoareAssignmentArray (stx: TSyntax `hoare_assignment_chain)
-    (curArr: Array (TSyntax `hoare_assignment)): TermElabM (Array (TSyntax `hoare_assignment)) := do
+/-- Fuel-bounded core of `getHoareAssignmentArray`; `fuel` bounds the recursion. -/
+private def getHoareAssignmentArrayAux (fuel : Nat) (stx : TSyntax `hoare_assignment_chain)
+    (curArr : Array (TSyntax `hoare_assignment)) :
+    TermElabM (Array (TSyntax `hoare_assignment)) := do
   match stx with
   | `(hoare_assignment_chain | $t:hoare_assignment) =>
     return curArr.push t
   | `(hoare_assignment_chain | $t1:hoare_assignment; $t2:hoare_assignment) =>
     return (curArr.push t1).push t2
   | `(hoare_assignment_chain | $t:hoare_assignment; $s:hoare_assignment_chain) =>
-    return ←(getHoareAssignmentArray s (curArr.push t))
+    match fuel with
+    | fuel + 1 => return ←(getHoareAssignmentArrayAux fuel s (curArr.push t))
+    | 0 => throwError "Ran out of fuel while reading a hoare assignment chain"
   | _ => throwError s!"hoare assignment {stx} term not known!"
+
+/-- Collect every assignment in the `⟦⟧` chain `stx` into a single array. -/
+def getHoareAssignmentArray (stx: TSyntax `hoare_assignment_chain)
+    (curArr: Array (TSyntax `hoare_assignment)): TermElabM (Array (TSyntax `hoare_assignment)) :=
+  getHoareAssignmentArrayAux (assignmentSyntaxSize stx) stx curArr
 
 /-
 Parse the TSyntax to the actual function calls
