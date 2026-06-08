@@ -988,6 +988,11 @@ import LeanPool.PrimeCert.PowMod
 import LeanPool.PrimeCert.PredMod
 import LeanPool.PrimeCert.SmallPrimes
 import LeanPool.PrimeCert.Wieferich
+import LeanPool.PumpingCfg
+import LeanPool.PumpingCfg.ParseTree
+import LeanPool.PumpingCfg.Pumping
+import LeanPool.PumpingCfg.Utils
+import LeanPool.PumpingCfg.toMathlib
 import LeanPool.QuasiBorelSpaces
 import LeanPool.QuasiBorelSpaces.Basic
 import LeanPool.QuasiBorelSpaces.Chain

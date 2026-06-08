@@ -2144,3 +2144,33 @@ projects:
     msc:
       - "11A41"
       - "11Y11"
+  - slug: pumping-cfg
+    title: Pumping Lemma for Context-Free Grammars
+    summary: Formalizes the pumping lemma for context-free languages via parse trees of Chomsky-normal-form grammars and a pigeonhole argument.
+    branch: formal language theory
+    entry_module: LeanPool.PumpingCfg
+    authors:
+      - Alexander Loitzl
+      - Martin Dvorak
+    source:
+      url: "https://github.com/AlexLoitzl/pumping_cfg"
+      github_repo: AlexLoitzl/pumping_cfg
+    status: verified
+    main_declarations:
+      - Language.IsContextFree.pumping
+      - ChomskyNormalFormGrammar.parseTree
+      - ChomskyNormalFormGrammar.pumping
+    main_results:
+      - declaration: Language.IsContextFree.pumping
+        informal: Every context-free language admits a pumping length p such that any word of length at least p decomposes as u v x y z with vy nonempty, vxy of length at most p, and u vⁱ x yⁱ z in the language for every i.
+      - declaration: ChomskyNormalFormGrammar.parseTree
+        informal: Parse trees for Chomsky-normal-form grammars, indexed by their root nonterminal.
+      - declaration: ChomskyNormalFormGrammar.pumping
+        informal: The pumping lemma at the level of a Chomsky-normal-form grammar, obtained from a sufficiently tall parse tree with a repeated nonterminal.
+    tags:
+      - formal-languages
+      - context-free-grammars
+      - computability
+      - pumping-lemma
+    msc:
+      - "68Q45"
