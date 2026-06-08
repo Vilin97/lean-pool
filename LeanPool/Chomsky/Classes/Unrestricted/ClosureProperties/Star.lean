@@ -160,16 +160,16 @@ by
               (by
                 rintro r ⟨rin, n, nrn⟩
                 cases rin with
-                | head => exact Sum.noConfusion nrn
+                | head => simp at nrn
                 | tail _ rin =>
                   cases rin with
-                  | head => exact Sum.noConfusion nrn
+                  | head => simp at nrn
                   | tail _ rin =>
                     cases rin with
-                    | head => exact Sum.noConfusion nrn
+                    | head => simp at nrn
                     | tail _ rin =>
                       cases rin with
-                      | head => exact Sum.noConfusion nrn
+                      | head => simp at nrn
                       | tail _ rin =>
                         change r ∈ g.rules.map wrapGr ++ rulesThatScanTerminals g at rin
                         rw [List.mem_append] at rin
@@ -183,7 +183,7 @@ by
                           rw [List.mem_map] at rin
                           rcases rin with ⟨t, tin, r_of_tg⟩
                           rw [←r_of_tg] at nrn
-                          exact Sum.noConfusion nrn)
+                          simp [wrapGr, liftRule] at nrn)
           convert_to G.g.Derives [Symbol.nonterminal ◩g.initial] (liftString G.liftNt (v.map Symbol.terminal))
           · symm
             apply List.map_map
@@ -205,7 +205,7 @@ by
               use r
             · exact stirn
           · exfalso
-            exact Symbol.noConfusion imposs
+            simp at imposs
         | tail b pin => exact ih.right p pin t tin
 
 private lemma terminal_scan_ind {g : Grammar T} {w : List (List T)} (n : ℕ)
@@ -262,7 +262,7 @@ by
         linarith
       simp [hw]
       apply gr_deri_of_tran_deri
-      · use g.star.rules[2]'(List.isSome_getElem?.→ rfl), List.getElem_mem (List.isSome_getElem?.→ rfl), [],
+      · use g.star.rules[2]'(by simp [Grammar.star]), List.getElem_mem (by simp [Grammar.star]), [],
             (w[w.length - k.succ]'lt_wl).map Symbol.terminal, rfl
       rw [List.nil_append]
       have scan_segment :
@@ -347,10 +347,10 @@ private lemma wrap_never_outputs_nt_inr {N : Type} {a : Symbol T N} (i : Fin 3) 
   wrapSym a ≠ Symbol.nonterminal ◪i :=
 by
   cases a <;> unfold wrapSym
-  · apply Symbol.noConfusion
+  · simp [liftSymbol]
   intro contr
   have inl_eq_inr := Symbol.nonterminal.inj contr
-  exact Sum.noConfusion inl_eq_inr
+  simp at inl_eq_inr
 
 private lemma wrap_never_outputs_Z {N : Type} {a : Symbol T N} : wrapSym a ≠ Z :=
   wrap_never_outputs_nt_inr 0
@@ -389,10 +389,10 @@ by
     · congr
       exact Symbol.terminal.inj wrap_eq
     · exfalso
-      exact Symbol.noConfusion wrap_eq
+      simp [wrapSym, liftSymbol] at wrap_eq
   · cases b
     · exfalso
-      exact Symbol.noConfusion wrap_eq
+      simp [wrapSym, liftSymbol] at wrap_eq
     · congr
       unfold wrapSym at wrap_eq
       exact Sum.inl.inj (Symbol.nonterminal.inj wrap_eq)
@@ -403,7 +403,6 @@ private lemma map_wrapSym_inj {N : Type} {x y : List (Symbol T N)}
 by
   ext1 n
   have eqnth := congr_arg (·[n]?) wrap_eqs
-  dsimp only at eqnth
   rw [List.getElem?_map, List.getElem?_map] at eqnth
   cases' hxn : x[n]? with xₙ
   · cases' hyn : y[n]? with yₙ
@@ -429,7 +428,7 @@ by
     | inl hHrL => exact map_wrap_never_contains_H hHrL
     | inr hHrN =>
       rw [List.mem_singleton] at hHrN
-      exact Sum.noConfusion (Symbol.nonterminal.inj hHrN)
+      simp [H] at hHrN
   | inr hHrR => exact map_wrap_never_contains_H hHrR
 
 private lemma snsri_not_in_join_mpHmmw {g : Grammar T} {x : List (List (Symbol T g.nt))} {i : Fin 3}
@@ -484,7 +483,6 @@ by
   clear hyp mid_brack
   classical
   have count_Hs := congr_arg (·.countIn H) hypp
-  dsimp only at count_Hs
   rw [List.countIn_append, List.countIn_append, List.countIn_zero_of_notin H_not_in_rule_input,
       add_zero, List.countIn_flatten, List.map_map, List.map_map] at count_Hs
   have lens := congr_arg List.length hypp
@@ -498,7 +496,6 @@ by
     rw [v_nil, List.append_nil] at hypp
     clear * - hypp xnn
     have hlast := congr_arg (·.reverse[0]?) hypp
-    dsimp only at hlast
     rw [List.reverse_flatten, List.reverse_append, List.reverse_append_append, List.reverse_singleton] at hlast
     have hH : some H =
         ((r₀.inputR.map wrapSym).reverse ++ [Symbol.nonterminal ◩r₀.inputN] ++ (r₀.inputL.map wrapSym).reverse ++ u.reverse)[0]? := by
@@ -520,13 +517,12 @@ by
       cases' hx : x.reverse with d l
       · exfalso
         exact xrnn hx
-      rw [List.map_cons, List.flatten, List.append_assoc, List.getElem?_append]
-      simp
+      rw [List.map_cons, List.flatten, List.append_assoc]
+      simp [List.getElem?_append, H]
     rw [←List.map_reverse] at hH
     cases hr₀ : r₀.inputR.reverse
     · rw [hr₀] at hH
-      simp at hH
-      exact Sum.noConfusion (Symbol.nonterminal.inj hH)
+      simp [H] at hH
     · rw [hr₀] at hH
       simp at hH
       exact wrap_never_outputs_H hH.symm
@@ -624,7 +620,7 @@ by
         ←List.append_assoc, ←List.append_assoc, ←List.append_assoc, List.map_drop, List.map_drop,
         List.append_left_inj, List.map_singleton, List.map_singleton, List.flatten_singleton,
         List.append_left_inj] at hxmxmxm
-    rw [List.get?_eq_some]
+    rw [List.getElem?_eq_some_iff]
     use mxl
     apply map_wrapSym_inj
     rw [hxmxmxm]
@@ -669,15 +665,15 @@ by
     · rw [hr₀, List.map_nil, List.nil_append] at hyp
       have imposs := List.head_eq_of_cons_eq hyp
       have inr_eq_inl := Symbol.nonterminal.inj imposs
-      exact Sum.noConfusion inr_eq_inl
+      simp at inr_eq_inl
     · rw [hr₀, List.map_cons] at hyp
       have imposs := List.head_eq_of_cons_eq hyp
       cases d
       · unfold wrapSym at imposs
-        exact Symbol.noConfusion imposs
+        simp [liftSymbol, Z, H, R, S] at imposs
       · unfold wrapSym at imposs
         have inr_eq_inl := Symbol.nonterminal.inj imposs
-        exact Sum.noConfusion inr_eq_inl
+        simp [liftSymbol, Z, H, R, S] at inr_eq_inl
   have hypr := congr_arg List.tail hyp
   rw [List.tail] at hypr
   repeat rw [List.append_assoc] at hypr
@@ -914,9 +910,10 @@ by
   by_cases is_x_nil : x = []
   · exfalso
     rw [is_x_nil, List.map_nil, List.map_nil, List.flatten] at hyp
-    have imposs : Symbol.nonterminal ◩r₀.inputN = R ∨ Symbol.nonterminal ◩r₀.inputN = H := by
-      simpa using congr_arg (Symbol.nonterminal ◩r₀.inputN ∈ ·) hyp
-    cases' imposs with imposs imposs <;> exact Sum.noConfusion (Symbol.nonterminal.inj imposs)
+    have imposs : (Symbol.nonterminal ◩r₀.inputN : ns T g.nt) = R ∨
+        (Symbol.nonterminal ◩r₀.inputN : ns T g.nt) = H := by
+      simpa using congr_arg ((Symbol.nonterminal ◩r₀.inputN : ns T g.nt) ∈ ·) hyp
+    cases' imposs with imposs imposs <;> simp [R, H] at imposs
   have unn : u ≠ [] := by
     by_contra u_nil
     rw [u_nil, List.nil_append] at hyp
@@ -925,14 +922,14 @@ by
       rw [hrL] at hyp
       have imposs := List.head_eq_of_cons_eq hyp
       have inr_eq_inl := Symbol.nonterminal.inj imposs
-      exact Sum.noConfusion inr_eq_inl
+      simp at inr_eq_inl
     | cons d l =>
       rw [hrL, List.map_cons] at hyp
       have imposs := List.head_eq_of_cons_eq hyp
       cases d
-      · exact Symbol.noConfusion imposs
+      · simp [wrapSym, liftSymbol, Z, H, R, S] at imposs
       · have inr_eq_inl := Symbol.nonterminal.inj imposs
-        exact Sum.noConfusion inr_eq_inl
+        simp [wrapSym, liftSymbol, Z, H, R, S] at inr_eq_inl
   have hypt := congr_arg List.tail hyp
   rw [List.tail] at hypt
   repeat rw [List.append_assoc] at hypt
@@ -945,16 +942,16 @@ by
       rw [hrL, List.map_nil, List.nil_append] at hypt
       have imposs := List.head_eq_of_cons_eq hypt
       have inr_eq_inl := Symbol.nonterminal.inj imposs
-      exact Sum.noConfusion inr_eq_inl
+      simp at inr_eq_inl
     | cons d l =>
       rw [hrL, List.map_cons] at hypt
       have imposs := List.head_eq_of_cons_eq hypt
       cases d
       · unfold wrapSym at imposs
-        exact Symbol.noConfusion imposs
+        simp [liftSymbol, Z, H, R, S] at imposs
       · unfold wrapSym at imposs
         have inr_eq_inl := Symbol.nonterminal.inj imposs
-        exact Sum.noConfusion inr_eq_inl
+        simp [liftSymbol, Z, H, R, S] at inr_eq_inl
   have hyptt := congr_arg List.tail hypt
   rw [List.tail, List.tail_append_of_ne_nil utnn] at hyptt
   repeat rw [←List.append_assoc] at hyptt
@@ -1031,7 +1028,7 @@ by
         exact wiin
       constructor
       · rw [List.map_nil, List.nil_append]
-        exact valid x₀ (List.mem_cons_self x₀ L)
+        exact valid x₀ (List.mem_cons_self)
       constructor
       · intro xᵢ xiin
         exact valid xᵢ (List.mem_cons_of_mem x₀ xiin)
@@ -1049,7 +1046,7 @@ by
         rw [RH_nil] at bef
         exact uv_nil_of_RH_eq bef
       rw [empty_string.left, List.nil_append, empty_string.right, List.append_nil] at aft
-      use [], ⟨[], rfl, (List.not_mem_nil · · |>.elim)⟩
+      use [], ⟨[], rfl, (List.not_mem_nil · |>.elim)⟩
       rw [aft, List.map_nil, RH_nil]
     | cons x₀ L =>
       right; right; right; right
@@ -1163,7 +1160,7 @@ private lemma case_3_ni_wb {g : Grammar T} {w : List (List T)} {β : List T} {i 
 by
   intro contra
   rw [List.mem_append] at contra
-  cases' contra with contra contra <;> rw [List.mem_map] at contra <;> rcases contra with ⟨t, -, imposs⟩ <;> exact Symbol.noConfusion imposs
+  cases' contra with contra contra <;> rw [List.mem_map] at contra <;> rcases contra with ⟨t, -, imposs⟩ <;> simp at imposs
 
 private lemma case_3_ni_u {g : Grammar T} {w : List (List T)} {β : List T}
     {γ : List (Symbol T g.nt)} {x : List (List (Symbol T g.nt))} {u v : List (ns T g.nt)} {s : ns T g.nt}
@@ -1176,7 +1173,6 @@ by
   intro R_in_u
   classical
   have count_R := congr_arg (·.countIn R) ass
-  dsimp only at count_R
   repeat rw [List.countIn_append] at count_R
   have R_ni_wb : @R T g.nt ∉ w.flatten.map Symbol.terminal ++ β.map Symbol.terminal := by
     apply case_3_ni_wb
@@ -1198,7 +1194,8 @@ private lemma case_3_u_eq_left_side {g : Grammar T} {w : List (List T)} {β : Li
   u = w.flatten.map Symbol.terminal ++ β.map (@Symbol.terminal T (nn g.nt)) :=
 by
   have R_ni_u : R ∉ u := case_3_ni_u ass
-  have R_ni_wb : R ∉ w.flatten.map Symbol.terminal ++ β.map Symbol.terminal := by
+  have R_ni_wb : R ∉ w.flatten.map (@Symbol.terminal T (nn g.nt)) ++
+      β.map (@Symbol.terminal T (nn g.nt)) := by
     apply @case_3_ni_wb T g
   repeat rw [List.append_assoc] at ass
   convert congr_arg (List.take u.length) ass.symm using 1
@@ -1321,14 +1318,14 @@ by
       | inl hw =>
         rw [List.mem_map] at hw
         rcases hw with ⟨t, -, impos⟩
-        exact Symbol.noConfusion impos
+        simp at impos
       | inr hβ =>
         rw [List.mem_map] at hβ
         rcases hβ with ⟨t, -, impos⟩
-        exact Symbol.noConfusion impos
+        simp at impos
     | inr hR =>
       rw [List.mem_singleton] at hR
-      exact Sum.noConfusion (Symbol.nonterminal.inj hR)
+      simp at hR
 
 private lemma case_3_match_rule {g : Grammar T} {r₀ : Grule T g.nt}
     {x : List (List (Symbol T g.nt))} {u v : List (ns T g.nt)} {w : List (List T)} {β : List T} {γ : List (Symbol T g.nt)}
@@ -1399,10 +1396,10 @@ by
         | inl among_terminals =>
           rw [←List.map_append, ←List.map_drop, List.mem_map] at among_terminals
           obtain ⟨t, -, ht⟩ := among_terminals
-          exact Symbol.noConfusion ht
+          simp at ht
         | inr hR =>
           rw [List.mem_singleton] at hR
-          exact Sum.noConfusion (Symbol.nonterminal.inj hR)
+          simp at hR
       | inr hbs =>
         have Rin : R ∈ r₀.inputL.map wrapSym ++ [Symbol.nonterminal ◩r₀.inputN] ++ r₀.inputR.map wrapSym := by
           obtain ⟨_, _, -⟩ := hbs
@@ -1571,10 +1568,10 @@ by
     rcases contr with ((((hZw | hZβ) | hZR) | hZγ) | hZH) | hZx
     · rw [List.mem_map] at hZw
       obtain ⟨s, -, imposs⟩ := hZw
-      exact Symbol.noConfusion imposs
+      simp at imposs
     · rw [List.mem_map] at hZβ
       obtain ⟨s, -, imposs⟩ := hZβ
-      exact Symbol.noConfusion imposs
+      simp at imposs
     · rw [List.mem_singleton] at hZR
       exact Z_neq_R hZR
     · rw [List.mem_map] at hZγ
@@ -1633,7 +1630,7 @@ by
           · rw [gamma_nil_here] at valid_middle
             apply valid_x
             rw [List.map_nil, List.nil_append]
-            exact List.mem_cons_self x₀ L
+            exact List.mem_cons_self
           constructor
           · intro xᵢ xiin
             exact valid_x xᵢ (List.mem_cons_of_mem x₀ xiin)
@@ -1718,7 +1715,7 @@ by
             · exfalso
               rw [List.map_nil, List.nil_append, List.singleton_append, List.singleton_append] at tv_matches
               have t_matches := List.head_eq_of_cons_eq tv_matches
-              exact Symbol.noConfusion t_matches
+              simp at t_matches
             rw [List.singleton_append, List.map_cons, List.cons_append, List.cons_append] at tv_matches
             use w, β ++ [t], δ, x, valid_w
             constructor
@@ -1728,7 +1725,7 @@ by
                 rw [t_eq_a, List.map_append, List.map_singleton, List.append_assoc, List.singleton_append]
                 exact valid_middle
               · exfalso
-                exact Symbol.noConfusion t_matches'
+                simp [liftSymbol] at t_matches'
             constructor
             · exact valid_x
             rw [aft, u_matches, List.map_append, List.map_singleton]
@@ -1984,13 +1981,13 @@ by
                 | nil =>
                   rw [hr₀, List.map_nil, List.nil_append] at ru_eq
                   have imposs := List.head_eq_of_cons_eq ru_eq
-                  exact Sum.noConfusion (Symbol.nonterminal.inj imposs)
+                  simp at imposs
                 | cons d l =>
                   rw [hr₀] at ru_eq
                   have imposs := List.head_eq_of_cons_eq ru_eq
                   cases d
-                  · exact Symbol.noConfusion imposs
-                  · exact Sum.noConfusion (Symbol.nonterminal.inj imposs)
+                  · simp at imposs
+                  · simp at imposs
             | inr hbs =>
               rcases hbs with ⟨y, w_eq, v_eq⟩
               have u_from_w : u = (w.map wrapSym).take u.length := by
@@ -2134,7 +2131,7 @@ by
                     exact rev.left
                   unfold H at H_eq_N
                   have inr_eq_inl := Symbol.nonterminal.inj H_eq_N
-                  exact Sum.noConfusion inr_eq_inl
+                  simp at inr_eq_inl
                 | cons d l =>
                   rw [hr₀, List.map_cons] at rev
                   have H_is : H = wrapSym d := by
@@ -2142,7 +2139,7 @@ by
                     exact rev.left
                   unfold H at H_is
                   cases d <;> unfold wrapSym at H_is
-                  · exact Symbol.noConfusion H_is
+                  · simp at H_is
                   · simp [liftSymbol] at H_is
               have bef_rev := congr_arg List.reverse bef
               repeat rw [List.reverse_append] at bef_rev
@@ -2179,7 +2176,7 @@ by
                     rw [List.mem_map] at hZr
                     rcases hZr with ⟨s, -, imposs⟩
                     cases s
-                    · exact Symbol.noConfusion imposs
+                    · simp at imposs
                     · simp [liftSymbol, Z] at imposs
                 | inr hZv =>
                   apply no_Z
@@ -2207,7 +2204,7 @@ by
                     rw [List.mem_map] at hRr
                     rcases hRr with ⟨s, -, imposs⟩
                     cases s
-                    · exact Symbol.noConfusion imposs
+                    · simp at imposs
                     · simp [liftSymbol, R] at imposs
                 | inr hRv =>
                   apply no_R
@@ -2254,7 +2251,7 @@ by
       constructor
       · intro y imposs
         exfalso
-        exact List.not_mem_nil y imposs
+        exact List.not_mem_nil imposs
       · rfl
   | tail _ orig ih =>
       cases' ih with ih ih
@@ -2297,7 +2294,7 @@ by
       · tauto
       rw [List.map_cons] at contr
       have terminal_eq_Z : Symbol.terminal d = Z := List.head_eq_of_cons_eq contr
-      exact Symbol.noConfusion terminal_eq_Z
+      simp at terminal_eq_Z
     cases' result with result result
     · exfalso
       rcases result with ⟨x, -, contr⟩
@@ -2305,7 +2302,7 @@ by
       · tauto
       rw [List.map_cons] at contr
       have terminal_eq_R : Symbol.terminal d = R := List.head_eq_of_cons_eq contr
-      exact Symbol.noConfusion terminal_eq_R
+      simp at terminal_eq_R
     cases' result with result result
     · exfalso
       rcases result with ⟨α, β, γ, x, -, -, -, contr⟩
@@ -2318,7 +2315,7 @@ by
         apply List.mem_cons_self
       rw [List.mem_map] at output_contains_R
       rcases output_contains_R with ⟨t, -, terminal_eq_R⟩
-      exact Symbol.noConfusion terminal_eq_R
+      simp at terminal_eq_R
     cases' result with result result
     · rcases result with ⟨u, win, map_eq_map⟩
       have w_eq_u : w = u := by
