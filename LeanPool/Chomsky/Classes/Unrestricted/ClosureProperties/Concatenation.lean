@@ -914,7 +914,7 @@ by
         rw [y.length_map] at inequality_map
         linarith
       · by_cases h1 : (r₁.inputR.map (wrapSymbol₁ g₂.nt)).length ≥ 1
-        · rw [List.getElem_append_right] at clash ; swap
+        · rw [List.getElem_append_right] at clash; swap
           · rw [List.length_append (bs := r₁.inputR.map (wrapSymbol₁ g₂.nt))]
             have trivi_ineq : ∀ m k : ℕ, k ≥ 1 → m ≤ m + k - 1 := by
               clear * -
@@ -1329,14 +1329,14 @@ by
       · rfl
     exact List.take_reverse.symm
   clear * - the_part yl_lt_vl
-  rw [List.take_append_of_le_length] at the_part ; swap
+  rw [List.take_append_of_le_length] at the_part; swap
   · rw [List.length_reverse]
     rw [List.length_map]
   repeat rw [List.append_assoc] at the_part
-  rw [List.take_append_of_le_length] at the_part ; swap
+  rw [List.take_append_of_le_length] at the_part; swap
   · rw [List.length_reverse]
     exact yl_lt_vl
-  rw [List.take_of_length_le] at the_part ; swap
+  rw [List.take_of_length_le] at the_part; swap
   · rw [List.length_reverse]
     rw [List.length_map]
   exact the_part
@@ -1390,7 +1390,7 @@ by
     constructor
     · have corres_y := correspondingStrings_drop (x.map (wrapSymbol₁ g₂.nt)).length ih_concat
       rw [List.drop_left] at corres_y
-      rw [List.drop_append_of_le_length] at corres_y ; swap
+      rw [List.drop_append_of_le_length] at corres_y; swap
       · simp
         linarith
       clear * - corres_y total_len
@@ -1456,7 +1456,7 @@ by
   · rw [aft, List.filterMap_append_append, List.map_append_append, List.append_assoc,
         ←List.append_assoc (x.map (wrapSymbol₁ g₂.nt)), List.append_assoc u]
     clear b'
-    apply correspondingStrings_append ; swap
+    apply correspondingStrings_append; swap
     · rw [unwrap_wrap₂_string]
       apply correspondingStrings_append
       · apply correspondingStrings_self
@@ -1528,7 +1528,7 @@ by
           clear * - same_lengths
           linarith
         rw [List.append_assoc] at ih_concat
-        have eqi_symb := correspondingStrings_getElem ulen₁ ?_ ih_concat ; swap
+        have eqi_symb := correspondingStrings_getElem ulen₁ ?_ ih_concat; swap
         · rw [List.length_append, List.length_append, List.length_singleton]
           clear * -
           linarith
