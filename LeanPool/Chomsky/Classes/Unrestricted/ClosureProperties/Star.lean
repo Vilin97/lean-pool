@@ -1038,7 +1038,7 @@ by
         rw [RH_nil] at bef
         exact uv_nil_of_RH_eq bef
       rw [empty_string.left, List.nil_append, empty_string.right, List.append_nil] at aft
-      use [], ⟨[], rfl, (List.not_mem_nil · |>.elim)⟩
+      use [], ⟨[], rfl, fun _ h => (List.not_mem_nil h).elim⟩
       rw [aft, List.map_nil, RH_nil]
     | cons x₀ L =>
       right; right; right; right
@@ -1390,7 +1390,7 @@ by
           simp at ht
         | inr hR =>
           rw [List.mem_singleton] at hR
-          simp at hR
+          simp [R] at hR
       | inr hbs =>
         have Rin : R ∈ r₀.inputL.map wrapSym ++ [Symbol.nonterminal ◩r₀.inputN] ++ r₀.inputR.map wrapSym := by
           obtain ⟨_, _, -⟩ := hbs
@@ -1498,7 +1498,8 @@ by
           rfl
         have core :
           r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR =
-          (γ.drop (u.length - (w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++ [R]).length)).take
+          (γ.drop (u.length - (w.flatten.map (@Symbol.terminal T (nn g.nt)) ++
+              β.map (@Symbol.terminal T (nn g.nt)) ++ [R]).length)).take
             (r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR).length := by
           have right_middle := congr_arg (List.take (r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR).length) right_half
           rw [same_r_input_lengths,
@@ -1706,7 +1707,7 @@ by
             · exfalso
               rw [List.map_nil, List.nil_append, List.singleton_append, List.singleton_append] at tv_matches
               have t_matches := List.head_eq_of_cons_eq tv_matches
-              simp at t_matches
+              simp [H] at t_matches
             rw [List.singleton_append, List.map_cons, List.cons_append, List.cons_append] at tv_matches
             use w, β ++ [t], δ, x, valid_w
             constructor
@@ -1974,9 +1975,7 @@ by
                 | cons d l =>
                   rw [hr₀] at ru_eq
                   have imposs := List.head_eq_of_cons_eq ru_eq
-                  cases d
-                  · simp at imposs
-                  · simp at imposs
+                  cases d <;> simp [wrapSym, liftSymbol, Z, H, R, S] at imposs
             | inr hbs =>
               rcases hbs with ⟨y, w_eq, v_eq⟩
               have u_from_w : u = (w.map wrapSym).take u.length := by
@@ -2296,14 +2295,11 @@ by
       rcases result with ⟨α, β, γ, x, -, -, -, contr⟩
       have output_contains_R : R ∈ w.map (@Symbol.terminal T g.star.nt) := by
         rw [contr]
-        apply List.mem_append_left
-        apply List.mem_append_left
-        apply List.mem_append_left
-        apply List.mem_append_right
-        apply List.mem_cons_self
+        simp only [List.mem_append, List.mem_cons]
+        tauto
       rw [List.mem_map] at output_contains_R
       rcases output_contains_R with ⟨t, -, terminal_eq_R⟩
-      simp at terminal_eq_R
+      simp [R] at terminal_eq_R
     cases' result with result result
     · rcases result with ⟨u, win, map_eq_map⟩
       have w_eq_u : w = u := by
@@ -2372,8 +2368,8 @@ by
         ([R] ++ ([H] ++ ((w.map (List.map Symbol.terminal)).map (· ++ [H])).flatten))
         (w.flatten.map Symbol.terminal ++ [R, H])
     have rebracket :
-      [H] ++ ((w.map (List.map Symbol.terminal)).map (· ++ [H])).flatten =
-             ((w.map (List.map Symbol.terminal)).map ([H] ++ ·)).flatten ++ [H] := by
+      [H] ++ ((w.map (List.map (@Symbol.terminal T (nn g.nt)))).map (· ++ [H])).flatten =
+             ((w.map (List.map (@Symbol.terminal T (nn g.nt)))).map ([H] ++ ·)).flatten ++ [H] := by
       apply List.append_flatten_map_append
     rw [rebracket]
     apply terminal_scan_aux
