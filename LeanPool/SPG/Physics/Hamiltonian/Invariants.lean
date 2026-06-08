@@ -136,7 +136,7 @@ def polyFixedRows (group : List SPGElement) (d : Nat) : Nat × List Exp3 × List
       acc ++ (List.range n).map (fun i =>
         (List.range n).map (fun j =>
           let pi := images.getD j 0
-          match listGet? exps i with
+          match listGet exps i with
           | none => 0
           | some ei => coeffOfPoly pi ei - (if i = j then (1 : ℚ) else 0)
         )
@@ -154,16 +154,16 @@ def hamFixedRows (group : List SPGElement) (d : Nat) : Nat × List Exp3 × List 
     (List.range size).map (fun idx =>
       let comp := idx / n
       let mi := idx % n
-      match listGet? exps mi with
+      match listGet exps mi with
       | none => zeroHam
       | some e =>
         let p := polyOfExp e
-        match listGet? spinBlocks comp with
+        match listGet spinBlocks comp with
         | none => zeroHam
         | some s => singleTerm p s
     )
   let hamCoeff (H : KPHam) (blk : Nat) (e : Exp3) : ℚ :=
-    match listGet? spinBlocks blk with
+    match listGet spinBlocks blk with
     | some .I => coeffOfPoly H.scalar e
     | some .x => coeffOfPoly (H.vector 0) e
     | some .y => coeffOfPoly (H.vector 1) e
@@ -175,7 +175,7 @@ def hamFixedRows (group : List SPGElement) (d : Nat) : Nat × List Exp3 × List 
       acc ++ (List.range size).map (fun i =>
         let compI := i / n
         let mi := i % n
-        match listGet? exps mi with
+        match listGet exps mi with
         | none => (List.range size).map (fun _ => 0)
         | some e =>
           (List.range size).map (fun j =>
@@ -254,24 +254,24 @@ def chamFixedRows (group : List SPGElement) (d : Nat) : Nat × List Exp3 × List
     (List.range size).map (fun idx =>
       let comp := idx / n
       let mi := idx % n
-      match listGet? exps mi with
+      match listGet exps mi with
       | none => zeroHam
       | some e =>
         let blk := comp / cpolyPartCount
         let part := comp % cpolyPartCount
         let parts := cpolyPartsOfExp e
-        match listGet? spinBlocks blk, listGet? parts part with
+        match listGet spinBlocks blk, listGet parts part with
         | some s, some p => csingleTerm p s
         | _, _ => zeroHam
     )
   let cpolyCoeff (p : CPoly) (part : Nat) (e : Exp3) : ℚ :=
-    match listGet? [p.re, p.im] part with
+    match listGet [p.re, p.im] part with
     | none => 0
     | some q => coeffOfPoly q e
   let hamCoeff (H : CKPHam) (comp : Nat) (e : Exp3) : ℚ :=
     let blk := comp / cpolyPartCount
     let part := comp % cpolyPartCount
-    match listGet? spinBlocks blk with
+    match listGet spinBlocks blk with
     | some .I => cpolyCoeff H.scalar part e
     | some .x => cpolyCoeff (H.vector 0) part e
     | some .y => cpolyCoeff (H.vector 1) part e
@@ -283,7 +283,7 @@ def chamFixedRows (group : List SPGElement) (d : Nat) : Nat × List Exp3 × List
       acc ++ (List.range size).map (fun i =>
         let compI := i / n
         let mi := i % n
-        match listGet? exps mi with
+        match listGet exps mi with
         | none => (List.range size).map (fun _ => 0)
         | some e =>
           (List.range size).map (fun j =>
@@ -323,16 +323,16 @@ def cpolyFixedRows (group : List SPGElement) (d : Nat) : Nat × List Exp3 × Lis
     (List.range size).map (fun idx =>
       let part := idx / n
       let mi := idx % n
-      match listGet? exps mi with
+      match listGet exps mi with
       | none => 0
       | some e =>
         let parts := cpolyPartsOfExp e
-        match listGet? parts part with
+        match listGet parts part with
         | none => 0
         | some p => p
     )
   let cpolyCoeff (p : CPoly) (part : Nat) (e : Exp3) : ℚ :=
-    match listGet? [p.re, p.im] part with
+    match listGet [p.re, p.im] part with
     | none => 0
     | some q => coeffOfPoly q e
   let rows :=
@@ -341,7 +341,7 @@ def cpolyFixedRows (group : List SPGElement) (d : Nat) : Nat × List Exp3 × Lis
       acc ++ (List.range size).map (fun i =>
         let partI := i / n
         let mi := i % n
-        match listGet? exps mi with
+        match listGet exps mi with
         | none => (List.range size).map (fun _ => 0)
         | some e =>
           (List.range size).map (fun j =>

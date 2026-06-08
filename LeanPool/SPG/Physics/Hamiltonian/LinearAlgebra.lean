@@ -93,10 +93,10 @@ def nullspaceBasis (rows : List (List ℚ)) (ncols : Nat) : List (List ℚ) :=
     )
   )
 
-/-- List Get?. -/
-def listGet? {α : Type} : List α → Nat → Option α
+/-- Safe indexing into a list, returning `none` when the index is out of range. -/
+def listGet {α : Type} : List α → Nat → Option α
   | [], _ => none
   | a :: _, 0 => some a
-  | _ :: as, n + 1 => listGet? as n
+  | _ :: as, n + 1 => listGet as n
 
 end SPG.Physics.Hamiltonian

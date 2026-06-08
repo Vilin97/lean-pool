@@ -30,7 +30,7 @@ Extract the sign factor `s(g) ∈ {+1,-1}` of `σz` under the minimal collinear 
 
 Returns `none` when `σz` is mixed into `σx/σy`, meaning the minimal `σz`-only closure fails.
 -/
-def sigmaZSign? (g : SPGElement) : Option Int :=
+def sigmaZSign (g : SPGElement) : Option Int :=
   let v := actOnSpin g .z
   if v 0 = 0 then
     if v 1 = 0 then
@@ -47,7 +47,7 @@ if the residual group contains any element with `s(g) = -1`, then the term is sy
 def forbidsGammaZeemanByS (group_elements : List SPGElement) (e : Vec3) : Bool :=
   let gE := residualGroup group_elements e
   gE.any (fun g =>
-    match sigmaZSign? g with
+    match sigmaZSign g with
     | some (-1) => true
     | _ => false
   )
