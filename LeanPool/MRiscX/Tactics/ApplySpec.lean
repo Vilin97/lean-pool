@@ -42,48 +42,68 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
       return (←`(tactic | first | $trueTac:tactic | $falseTac:tactic))
   match i with
   | Instr.LoadAddress dst addr =>
-    check `specification_LoadAddress (←`(tactic | apply specification_LoadAddress (pc := $(mkNumLit s!"{pc}"))
+    check `specification_LoadAddress
+      (←`(tactic | apply specification_LoadAddress
+        (pc := $(mkNumLit s!"{pc}"))
                                                         (dst := $(mkNumLit s!"{dst}"))
                                                         (addr := $(mkNumLit s!"{addr}"))))
   | Instr.LoadImmediate dst val =>
-    check `specification_LoadImmediate (←`(tactic | apply specification_LoadImmediate (pc := $(mkNumLit s!"{pc}"))
+    check `specification_LoadImmediate
+      (←`(tactic | apply specification_LoadImmediate
+        (pc := $(mkNumLit s!"{pc}"))
                                                           (dst := $(mkNumLit s!"{dst}"))
                                                           (val := $(mkNumLit s!"{val}"))))
   | Instr.CopyRegister dst src =>
-    check `specification_CopyRegister (←`(tactic | apply specification_CopyRegister  (pc := $(mkNumLit s!"{pc}"))
+    check `specification_CopyRegister
+      (←`(tactic | apply specification_CopyRegister
+        (pc := $(mkNumLit s!"{pc}"))
                                                           (dst := $(mkNumLit s!"{dst}"))
                                                           (src := $(mkNumLit s!"{src}"))))
   | Instr.AddImmediate dst reg val =>
-    check `specification_AddImmediate (←`(tactic | apply specification_AddImmediate  (pc := $(mkNumLit s!"{pc}"))
+    check `specification_AddImmediate
+      (←`(tactic | apply specification_AddImmediate
+        (pc := $(mkNumLit s!"{pc}"))
                                                           (dst := $(mkNumLit s!"{dst}"))
                                                           (regAddend := $(mkNumLit s!"{reg}"))
                                                           (val := $(mkNumLit s!"{val}"))))
   | Instr.Increment dst =>
-    check `specification_Increment (←`(tactic | apply specification_Increment (pc := $(mkNumLit s!"{pc}"))
+    check `specification_Increment
+      (←`(tactic | apply specification_Increment
+        (pc := $(mkNumLit s!"{pc}"))
                                                       (dst := $(mkNumLit s!"{dst}"))))
   | Instr.AddRegister dst regAddend1 regAddend2 =>
-    check `specification_AddRegister (←`(tactic | apply specification_AddRegister (pc := $(mkNumLit s!"{pc}"))
+    check `specification_AddRegister
+      (←`(tactic | apply specification_AddRegister
+        (pc := $(mkNumLit s!"{pc}"))
                                                         (dst := $(mkNumLit s!"{dst}"))
                                                         (regAddend1 :=
                                                           $(mkNumLit s!"{regAddend1}"))
                                                         (regAddend2 :=
                                                           $(mkNumLit s!"{regAddend2}"))))
   | Instr.SubImmediate dst reg imm =>
-    check `specification_SubImmediate (←`(tactic | apply specification_SubImmediate  (pc := $(mkNumLit s!"{pc}"))
+    check `specification_SubImmediate
+      (←`(tactic | apply specification_SubImmediate
+        (pc := $(mkNumLit s!"{pc}"))
                                                           (dst := $(mkNumLit s!"{dst}"))
                                                           (regMinuend := $(mkNumLit s!"{reg}"))
                                                           (subtrahend := $(mkNumLit s!"{imm}"))))
   | Instr.Decrement r =>
-    check `specification_Decrement (←`(tactic | apply specification_Decrement (pc := $(mkNumLit s!"{pc}"))
+    check `specification_Decrement
+      (←`(tactic | apply specification_Decrement
+        (pc := $(mkNumLit s!"{pc}"))
                                                       (dst := $(mkNumLit s!"{r}"))))
   | Instr.SubRegister dst regMinuend regSubtrahend =>
-    check `specification_SubRegister (←`(tactic | apply specification_SubRegister (pc := $(mkNumLit s!"{pc}"))
+    check `specification_SubRegister
+      (←`(tactic | apply specification_SubRegister
+        (pc := $(mkNumLit s!"{pc}"))
                                                         (dst := $(mkNumLit s!"{dst}"))
                                                         (regMinuend := $(mkNumLit s!"{regMinuend}"))
                                                         (regSubtrahend :=
                                                           $(mkNumLit s!"{regSubtrahend}"))))
   | Instr.XorImmediate dst reg val =>
-    check `specification_XorImmediate (←`(tactic | apply specification_XorImmediate (pc := $(mkNumLit s!"{pc}"))
+    check `specification_XorImmediate
+      (←`(tactic | apply specification_XorImmediate
+        (pc := $(mkNumLit s!"{pc}"))
                                                              (dst := $(mkNumLit s!"{dst}"))
                                                              (reg := $(mkNumLit s!"{reg}"))
                                                              (val := $(mkNumLit s!"{val}"))))
@@ -93,16 +113,22 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
                                                 (reg1 := $(mkNumLit s!"{reg1}"))
                                                 (reg2 := $(mkNumLit s!"{reg2}"))))
   | Instr.LoadWordImmediate dst addr =>
-    check `specification_LoadWordImmediate (←`(tactic | apply specification_LoadWordImmediate (pc := $(mkNumLit s!"{pc}"))
+    check `specification_LoadWordImmediate
+      (←`(tactic | apply specification_LoadWordImmediate
+        (pc := $(mkNumLit s!"{pc}"))
                                                              (dst := $(mkNumLit s!"{dst}"))
                                                              (addr := $(mkNumLit s!"{addr}"))))
   | Instr.LoadWordReg dst regWithAddr =>
-    check `specification_LoadWordReg (←`(tactic | apply specification_LoadWordReg (pc := $(mkNumLit s!"{pc}"))
+    check `specification_LoadWordReg
+      (←`(tactic | apply specification_LoadWordReg
+        (pc := $(mkNumLit s!"{pc}"))
                                                         (dst := $(mkNumLit s!"{dst}"))
                                                         (regWithAddr :=
                                                           $(mkNumLit s!"{regWithAddr}"))))
   | Instr.StoreWord regWithValue regWithAddr =>
-    check `specification_StoreWord (←`(tactic | apply specification_StoreWord (pc := $(mkNumLit s!"{pc}"))
+    check `specification_StoreWord
+      (←`(tactic | apply specification_StoreWord
+        (pc := $(mkNumLit s!"{pc}"))
                                                       (regWithValue :=
                                                         $(mkNumLit s!"{regWithValue}"))
                                                       (regWithAddr :=
