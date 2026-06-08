@@ -52,12 +52,12 @@ theorem eq_iff_eq_val (x y : Computableℝ) : x.val = y.val ↔ x = y :=
 
 /-- Alternate version of mapℝ that doesn't directly refer to f₂, so it stays
   computable even if f₂ isn't. -/
-def mapℝ' (f : ComputableℝSeq → ComputableℝSeq) (h : ∃ f₂ : ℝ → ℝ, ∀x, (f x).val = f₂ x.val) :
+def mapℝ' (f : ComputableℝSeq → ComputableℝSeq) (h : ∃ f₂ : ℝ → ℝ, ∀ x, (f x).val = f₂ x.val) :
     Computableℝ → Computableℝ :=
   Quotient.map f (fun a b h₂ ↦ h.elim fun _ h ↦ (h₂ ▸ h a).trans (h b).symm)
 
 /-- Given a unary function on sequences that clearly matches function on reals, lift it. -/
-def mapℝ (f : ComputableℝSeq → ComputableℝSeq) {f₂ : ℝ → ℝ} (h : ∀x, (f x).val = f₂ x.val) :
+def mapℝ (f : ComputableℝSeq → ComputableℝSeq) {f₂ : ℝ → ℝ} (h : ∀ x, (f x).val = f₂ x.val) :
     Computableℝ → Computableℝ :=
   mapℝ' f ⟨f₂, h⟩
 
@@ -66,13 +66,13 @@ theorem mapℝ'_eq_mapℝ : mapℝ' f h = mapℝ f h₂ := by
 
 /-- Alternate version of map₂ℝ that doesn't directly refer to f₂, so it stays
   computable even if f₂ isn't. -/
-def map₂ℝ' (f : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq) (h : ∃ f₂ : ℝ → ℝ → ℝ, ∀x y,
+def map₂ℝ' (f : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq) (h : ∃ f₂ : ℝ → ℝ → ℝ, ∀ x y,
     (f x y).val = f₂ x.val y.val) : Computableℝ → Computableℝ → Computableℝ :=
   Quotient.map₂ f (fun a b h₂ y z h₃ ↦ h.elim fun _ h ↦ (h₂ ▸ h₃ ▸ h a y).trans (h b z).symm)
 
 /-- Given a binary function that clearly mimics a standard real function, lift that. -/
 def map₂ℝ (f : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq) {f₂ : ℝ → ℝ → ℝ}
-    (h : ∀x y, (f x y).val = f₂ x.val y.val) :
+    (h : ∀ x y, (f x y).val = f₂ x.val y.val) :
     Computableℝ → Computableℝ → Computableℝ :=
   map₂ℝ' f ⟨f₂, h⟩
 
@@ -155,20 +155,21 @@ theorem neg_mk (x : ComputableℝSeq) : -mk x = mk (-x) :=
   rfl
 
 instance instCommRing : CommRing Computableℝ := by
-  refine' { natCast := fun n => mk n
-            intCast := fun z => mk z
-            zero := 0
-            one := 1
-            mul := (· * ·)
-            add := (· + ·)
-            neg := (- ·)
-            sub := (· - ·)
-            npow := npowRec --todo faster instances
-            nsmul := nsmulRec
-            zsmul := zsmulRec
-            natCast_succ := _
-            sub_eq_add_neg := _
-            .. }
+  refine { natCast := fun n => mk n
+           intCast := fun z => mk z
+           zero := 0
+           one := 1
+           mul := (· * ·)
+           add := (· + ·)
+           neg := (- ·)
+           sub := (· - ·)
+           npow := npowRec --todo faster instances
+           nsmul := nsmulRec
+           zsmul := zsmulRec
+           add_assoc := ?_, zero_add := ?_, add_zero := ?_, add_comm := ?_,
+           left_distrib := ?_, right_distrib := ?_, zero_mul := ?_, mul_zero := ?_,
+           mul_assoc := ?_, one_mul := ?_, mul_one := ?_, neg_add_cancel := ?_,
+           mul_comm := ?_, natCast_succ := ?_, sub_eq_add_neg := ?_ }
   all_goals
     intros
     first
@@ -178,7 +179,7 @@ instance instCommRing : CommRing Computableℝ := by
       try ring_nf!
 
 @[simp]
-theorem val_natpow (x : Computableℝ) (n : ℕ): (x ^ n).val = x.val ^ n := by
+theorem val_natpow (x : Computableℝ) (n : ℕ) : (x ^ n).val = x.val ^ n := by
   induction n
   · rw [pow_zero, val_one, pow_zero]
   · rename_i ih

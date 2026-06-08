@@ -73,7 +73,9 @@ lemma List_foldr_eq_finset_sum (x : ℚ) (n : ℕ) :
   · simp
   · intro v
     rename_i n ih
-    simp [Finset.range_add_one, List.range_succ, Nat.factorial_succ, ih]
+    simp only [List.range_succ, List.foldr_append, List.foldr_cons, List.foldr_nil, ih,
+      Finset.range_add_one, Finset.mem_range, lt_self_iff_false, not_false_eq_true,
+      Finset.sum_insert, Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
     rw [add_mul, one_mul, add_div, pow_succ]
     suffices x * v / (↑n + 1) * x ^ n / ↑n.factorial = v * (x ^ n * x) / ((↑n + 1) * ↑n.factorial) by
       rw [this]
@@ -173,21 +175,17 @@ theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
     exp_ub₀ x n - exp_lb₀ x n ≤ Real.exp x * (Real.exp (2 * x / n.factorial) - 1) := by
   rw [exp_ub₀, exp_lb₀]
   rw [List_foldr_eq_finset_sum]
-
   --Special case out x=0
   rcases eq_or_lt_of_le hx
   · subst x
     simp
   clear hx; rename_i hx
-
   have hceil : 0 < ⌈x⌉ := Int.lt_ceil.mpr (by exact_mod_cast hx)
   have hxc : (0 : ℚ) < ↑⌈x⌉.toNat := by
     exact_mod_cast Int.pos_iff_toNat_pos.mp hceil
   have hxd : (0 : ℚ) < x / ↑⌈x⌉.toNat := div_pos hx hxc
-
   set y := ∑ i ∈ Finset.range (n + 1), (x / ↑⌈x⌉.toNat) ^ i / ↑i.factorial with hdy
   set z := 2 * (x / ↑⌈x⌉.toNat) ^ (n + 1) / ↑(n + 1).factorial with hdz
-
   have hy_pos : 0 < y := by
     rw [hdy, Finset.range_add_one', Finset.sum_insert (by simp)]
     apply add_pos_of_pos_of_nonneg
@@ -199,7 +197,6 @@ theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
       rw [mul_sub, mul_one, ← mul_pow, mul_add, mul_one, mul_div_cancel₀]
       · norm_cast
       · norm_cast
-
   have hxn : 0 < ↑⌈x⌉.toNat := by exact_mod_cast hxc
   have hz : 0 < z := by
     rw [hdz]
@@ -209,7 +206,6 @@ theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
     have := exp_lb₀_le_exp n hx.le
     rw [exp_lb₀, List_foldr_eq_finset_sum] at this
     exact_mod_cast this
-
   have hzy₁ : z / y ≤ 2 * (x / ↑⌈x⌉.toNat) / n.factorial := by
     trans z
     · apply div_le_self hz.le
@@ -226,7 +222,6 @@ theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
         refine (Int.le_ceil x).trans ?_
         exact_mod_cast Int.self_le_toNat ⌈x⌉
       · exact_mod_cast Nat.factorial_le (Nat.le_add_right n 1)
-
   have hzy₂ := calc ((1 + z / y) ^ ⌈x⌉.toNat : ℝ)
     _ ≤ (1 + 2 * (x / ⌈x⌉.toNat) / n.factorial) ^ ⌈x⌉.toNat := by
       norm_cast at hzy₁ ⊢
@@ -240,7 +235,6 @@ theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
     _ ≤ Real.exp (2 * x / n.factorial) := by
       rw [mul_div, div_mul, div_self, div_one]
       simpa
-
   apply mul_le_mul hy₂ (by simpa using hzy₂.le) ?_ (Real.exp_nonneg _)
   rw [sub_nonneg]
   apply one_le_pow₀
@@ -289,25 +283,21 @@ theorem exp_ub_sub_exp_lb_of_neg {x : ℚ} (n : ℕ) (hx : x < 0) :
   simp only [exp_ub, Rat.not_le.mpr hx, ↓reduceIte, exp_lb]
   replace hx : 0 < -x := by linarith
   generalize -x=x' at hx ⊢; clear x; rename ℚ => x
-
   have hl₁ := exp_lb₀_pos n hx.le
   have hl₂ := exp_lb₀_le_exp n hx.le
   have hu₁ := exp_ub₀_ge_exp x n hx.le
   have hu₂ : 0 < exp_ub₀ x n := by rify at hl₁ ⊢; linarith
   have hlu := exp_ub₀_sub_exp_lb₀ n hx.le
-
   have hlb' : (exp_lb₀ x n : ℝ) ≠ 0 := by positivity
   have hub' : (exp_ub₀ x n : ℝ) ≠ 0 := by positivity
   conv_lhs =>
     equals (exp_ub₀ x n - exp_lb₀ x n : ℝ) / (exp_ub₀ x n * exp_lb₀ x n) =>
       rw [Rat.cast_inv, Rat.cast_inv, inv_sub_inv hlb' hub',
         _root_.mul_comm (exp_lb₀ x n : ℝ) (exp_ub₀ x n : ℝ)]
-
   rw [div_le_iff₀ (by positivity)]
   refine hlu.trans ?_
   conv_rhs =>
     rw [_root_.mul_comm (Rat.cast _), ← _root_.mul_assoc, _root_.mul_comm]
-
   apply mul_le_mul hu₁ ?_ ?_ (by positivity)
   · apply le_mul_of_one_le_right
     · rw [sub_nonneg, Real.one_le_exp_iff]
@@ -373,7 +363,7 @@ private lemma err_monotone_x (n : ℕ) :
     rw [sub_nonneg, Real.one_le_exp_iff]
     positivity
 
-private lemma inverr_monotone_x (ε : ℝ) (hε : 0 < ε):
+private lemma inverr_monotone_x (ε : ℝ) (hε : 0 < ε) :
     MonotoneOn (fun (x : ℝ) ↦ 2 * x / Real.log (1 + ε / Real.exp x)) (Set.Ici 0) := by
   apply MonotoneOn.mul ?_ ?_ ?_ ?_
   · apply MonotoneOn.mul monotoneOn_const ?_ (by norm_num) (by norm_num)

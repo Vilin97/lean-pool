@@ -147,8 +147,8 @@ theorem hub (x : ComputableℝSeq) : ∀n, x.ub n ≥ x.val :=
 theorem val_mem_interval (x : ComputableℝSeq) : ∀n, x.val ∈ x.lub n :=
   fun n ↦ ⟨x.hlb n, x.hub n⟩
 
-private theorem val_uniq' {x : ℝ} {lb ub : CauSeq ℚ abs} (hlb : ∀n, lb n ≤ x)
-    (hub : ∀n, ub n ≥ x) (heq : lb ≈ ub) : Real.mk lb = x :=
+private theorem val_uniq' {x : ℝ} {lb ub : CauSeq ℚ abs} (hlb : ∀ n, lb n ≤ x)
+    (hub : ∀ n, ub n ≥ x) (heq : lb ≈ ub) : Real.mk lb = x :=
   (Real.of_near lb x (fun εℝ hεℝ ↦
       let ⟨ε, ⟨hε₁, hε₂⟩⟩ := exists_rat_btwn hεℝ
       let ⟨i,hi⟩ := heq ε (Rat.cast_pos.1 hε₁)
@@ -162,7 +162,7 @@ private theorem val_uniq' {x : ℝ} {lb ub : CauSeq ℚ abs} (hlb : ∀n, lb n �
         <;> linarith⟩)).2
 
 /-- If a real number x is bounded below and above by a sequence, it must be the value of that sequence. -/
-theorem val_uniq {x : ℝ} {s : ComputableℝSeq} (hlb : ∀n, s.lb n ≤ x) (hub : ∀n, s.ub n ≥ x) :
+theorem val_uniq {x : ℝ} {s : ComputableℝSeq} (hlb : ∀ n, s.lb n ≤ x) (hub : ∀ n, s.ub n ≥ x) :
     s.val = x :=
   s.val_def ▸ val_uniq' hlb hub s.heq
 
@@ -170,8 +170,8 @@ theorem val_uniq {x : ℝ} {s : ComputableℝSeq} (hlb : ∀n, s.lb n ≤ x) (hu
 def mk (x : ℝ) (lub : ℕ → ℚInterval)
     (hcl : IsCauSeq abs (fun n ↦ (lub n).fst))
     (hcu : IsCauSeq abs (fun n ↦ (lub n).snd))
-    (hlb : ∀n, (lub n).fst ≤ x)
-    (hub : ∀n, (lub n).snd ≥ x)
+    (hlb : ∀ n, (lub n).fst ≤ x)
+    (hub : ∀ n, (lub n).snd ≥ x)
     (heq : let lb : CauSeq ℚ abs := ⟨fun n ↦ (lub n).fst, hcl⟩
         let ub : CauSeq ℚ abs := ⟨fun n ↦ (lub n).snd, hcu⟩
         lb ≈ ub) : ComputableℝSeq where
@@ -569,7 +569,7 @@ noncomputable def sign_witness_term (x : ComputableℝSeq) (hnz : x.val ≠ 0) :
     use (i, q)
 
 theorem sign_witness_term_prop (x : ComputableℝSeq) (n : ℕ) (hnz : x.val ≠ 0)
-    (hub : ¬(x.ub).val n < 0) (hlb: ¬(x.lb).val n > 0) :
+    (hub : ¬(x.ub).val n < 0) (hlb : ¬(x.lb).val n > 0) :
     n + Nat.succ 0 ≤ (x.sign_witness_term hnz).val.1 := by
   push Not at hub hlb
   obtain ⟨⟨k, q⟩, ⟨h₁, h₂, h₃⟩⟩ := x.sign_witness_term hnz
@@ -934,12 +934,12 @@ end inv
 
 section semiring --proving that computable real *sequences* form a commutative semiring
 
-theorem add_comm (x y: ComputableℝSeq) : x + y = y + x := by
+theorem add_comm (x y : ComputableℝSeq) : x + y = y + x := by
   ext <;> simp only [ub_add, lb_add] <;> ring_nf
 
 theorem mul_comm (x y : ComputableℝSeq) : x * y = y * x := by
   ext n
-  <;> simp only [lb_mul, ub_mul, mul_lb, mul_ub]
+  <;> simp only [lb_mul, ub_mul]
   · repeat rw [_root_.mul_comm (lb x)]
     repeat rw [_root_.mul_comm (ub x)]
     dsimp
@@ -959,13 +959,13 @@ theorem mul_comm (x y : ComputableℝSeq) : x * y = y * x := by
 theorem neg_mul (x y : ComputableℝSeq) : -x * y = -(x * y) := by
   ext
   · rw [lb_neg, lb_mul, ub_mul]
-    simp only [lb_neg, ub_neg, CauSeq.coe_inf, CauSeq.coe_mul, CauSeq.coe_neg, neg_mul,
+    simp only [lb_neg, ub_neg, CauSeq.coe_inf, CauSeq.coe_mul, CauSeq.coe_neg, 
       Pi.inf_apply, Pi.neg_apply, Pi.mul_apply, CauSeq.neg_apply, CauSeq.coe_sup, Pi.sup_apply, neg_sup]
     nth_rewrite 2 [inf_comm]
     nth_rewrite 3 [inf_comm]
     ring_nf
   · rw [ub_neg, lb_mul, ub_mul]
-    simp only [lb_neg, ub_neg, CauSeq.coe_inf, CauSeq.coe_mul, CauSeq.coe_neg, neg_mul,
+    simp only [lb_neg, ub_neg, CauSeq.coe_inf, CauSeq.coe_mul, CauSeq.coe_neg, 
       Pi.inf_apply, Pi.neg_apply, Pi.mul_apply, CauSeq.neg_apply, CauSeq.coe_sup, Pi.sup_apply, neg_inf]
     nth_rewrite 2 [sup_comm]
     nth_rewrite 3 [sup_comm]
@@ -999,13 +999,12 @@ TODO could include mul_inv_rev, inv_eq_of_mul, intCast_ofNat, intCast_negSucc. -
 class CompSeqClass (G : Type u) extends
   CommSemiring G, DivInvMonoid G, HasDistribNeg G, SubtractionCommMonoid G, IntCast G, RatCast G
 -/
-
 class CompSeqClass (G : Type u) extends
   AddCommMonoid G, CommMagma G, MulZeroOneClass G, Inv G, Div G,
   HasDistribNeg G, SubtractionCommMonoid G, NatCast G, IntCast G, RatCast G
 
 noncomputable instance instSeqCompSeqClass : CompSeqClass ComputableℝSeq := by
-  refine' {
+  refine {
             natCast := fun n => n
             intCast := fun z => z
             ratCast := fun q => q
@@ -1025,21 +1024,18 @@ noncomputable instance instSeqCompSeqClass : CompSeqClass ComputableℝSeq := by
             neg_mul := neg_mul
             mul_neg := mul_neg
             neg_eq_of_add := neg_eq_of_add
-
-            -- mul_assoc := mul_assoc
-            -- npow := @npowRec _ ⟨(1 : ℕ)⟩ ⟨(· * ·)⟩
-            -- left_distrib := left_distrib
-            -- right_distrib := right_distrib
-            -- zpow := zpowRec
-            , .. }
+            add_assoc := ?_, zero_add := ?_, add_zero := ?_, nsmul_zero := ?_, nsmul_succ := ?_,
+            one_mul := ?_, mul_one := ?_, zero_mul := ?_, mul_zero := ?_,
+            sub_eq_add_neg := ?_, zsmul_zero' := ?_, zsmul_succ' := ?_, zsmul_neg' := ?_,
+            neg_neg := ?_, neg_add_rev := ?_ }
   all_goals
     intros
     first
     | rfl
     | ext
       all_goals
-        try simp only [natCast_ub, natCast_lb, Nat.cast_add, Nat.cast_one, CauSeq.add_apply, CauSeq.one_apply,
-           CauSeq.zero_apply, CauSeq.neg_apply, lb_add, ub_add, one_ub, one_lb, zero_ub, zero_lb, ub_neg,
+        try simp only [CauSeq.add_apply, 
+           CauSeq.zero_apply, CauSeq.neg_apply, lb_add, ub_add, zero_ub, zero_lb, ub_neg,
            lb_neg, neg_add_rev, neg_neg, zero_add, add_zero]
         try ring_nf
         try rfl

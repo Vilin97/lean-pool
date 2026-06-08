@@ -39,7 +39,7 @@ analogous to `decidable_of_iff`, as a way to avoid `Eq.rec` on data-carrying ins
   fun ⟨sx, hsx⟩ ↦ ⟨fs sx, hsx ▸ h sx⟩
 
 @[reducible] def lift₂ (fr : ℝ → ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq)
-    (h : ∀a b, (fs a b).val = fr a.val b.val) :
+    (h : ∀ a b, (fs a b).val = fr a.val b.val) :
     IsComputable x → IsComputable y → IsComputable (fr x y) :=
   fun ⟨sx, hsx⟩ ⟨sy, hsy⟩ ↦ ⟨fs sx sy, hsx ▸ hsy ▸ h sx sy⟩
 
@@ -100,7 +100,7 @@ instance instComputableNatPow [hx : IsComputable x] (n : ℕ) : IsComputable (x 
 
 noncomputable instance instComputableZPow [hx : IsComputable x] (z : ℤ) : IsComputable (x ^ z) := by
   cases z
-  · rw [Int.ofNat_eq_coe, zpow_natCast]
+  · rw [Int.ofNat_eq_natCast, zpow_natCast]
     infer_instance
   · simp only [zpow_negSucc]
     infer_instance
@@ -165,37 +165,28 @@ theorem Real_mk_of_TendstoLocallyUniformly' (fImpl : ℕ → ℚ → ℚ) (f : �
     (hf : Continuous f)
     (x : CauSeq ℚ abs)
     : ∃ (h : IsCauSeq abs (fun n ↦ fImpl n (x n))), Real.mk ⟨_, h⟩ = f (.mk x) := by
-
   apply Real.of_near
-
   simp only [Metric.continuous_iff, gt_iff_lt, Real.dist_eq] at hf
-
   rcases x with ⟨x, hx⟩
   intro ε hε
-
   obtain ⟨δ₁, hδ₁pos, hδ₁⟩ := hf (.mk ⟨x, hx⟩) _ (half_pos hε)
   obtain ⟨i₁, hi₁⟩ := cauchy_real_mk ⟨x, hx⟩ δ₁ hδ₁pos
-
   obtain ⟨i₂_nhd, hi₂_nhds, i₃, hi₃⟩ := hfImpl _ (half_pos hε) (.mk ⟨x, hx⟩)
   obtain ⟨nl, nu, ⟨hnl, hnu⟩, hnd_sub⟩ := mem_nhds_iff_exists_Ioo_subset.mp hi₂_nhds
   replace hnd_sub : ∀ (r : ℚ), nl < r ∧ r < nu → ↑r ∈ i₂_nhd := fun r a => hnd_sub a
   replace hi₃ : ∀ (b : ℕ), i₃ ≤ b → ∀ (y : ℚ), nl < y ∧ y < nu → |f ↑y - ↑(fImpl b y)| < (ε / 2) := by
     peel hi₃
     exact fun h ↦ this (hnd_sub _ h)
-
   set ε_nhd := min (nu - (.mk ⟨x,hx⟩)) ((.mk ⟨x,hx⟩) - nl) with hε_nhd
   obtain ⟨i₄, hi₄⟩ := cauchy_real_mk ⟨x,hx⟩ (ε_nhd / 2) (by
     rw [hε_nhd, gt_iff_lt, ← min_div_div_right (zero_le_two), lt_inf_iff]
     constructor <;> linarith)
-
   have hεn₁ : ε_nhd ≤ _ := inf_le_left
   have hεn₂ : ε_nhd ≤ _ := inf_le_right
-
   set i := max i₁ (max i₃ i₄) with hi
   use i
   intro j hj
   simp only [hi, ge_iff_le, sup_le_iff] at hj
-
   specialize hδ₁ _ (hi₁ j (by linarith))
   specialize hi₄ j (by linarith)
   specialize hi₃ j (by linarith) (x j) (by
@@ -203,7 +194,6 @@ theorem Real_mk_of_TendstoLocallyUniformly' (fImpl : ℕ → ℚ → ℚ) (f : �
     · linarith [sub_le_of_abs_sub_le_left hi₄.le]
     · linarith [sub_le_of_abs_sub_le_right hi₄.le]
   )
-
   calc |↑(fImpl j (x j)) - f (Real.mk ⟨x, hx⟩)| =
     |(↑(fImpl j (x j)) - f ↑(x j)) + (f ↑(x j) - f (Real.mk ⟨x, hx⟩))| := by congr; ring_nf
     _ ≤ |(↑(fImpl j (x j)) - f ↑(x j))| + |(f ↑(x j) - f (Real.mk ⟨x, hx⟩))| := abs_add_le _ _

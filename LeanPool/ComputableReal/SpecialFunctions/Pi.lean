@@ -68,10 +68,8 @@ theorem sqrtTwoAddSeries_n_lb_gt_one (n k : ℕ) (hk : 3 ≤ k) : 1 ≤ (sqrtTwo
   rw [sqrtTwoAddSeries_n_succ_lb, Sqrt.sqrt_lb_def,
     if_neg (by push Not; change 0 < 2 + _; rify; positivity)]
   clear h₀
-
   have h₁ := sqrtTwoAddSeries_n_lb_nonneg n k
   rify at h₁ ⊢
-
   rw [show (2 + (sqrtTwoAddSeries_n n).lub k).toProd.1 = 2 + (sqrtTwoAddSeries_n n).lb k by rfl]
   set x : ℚ := (sqrtTwoAddSeries_n n).lb k
   have h₂ := Sqrt.sqrt_le_mkRat_add (2 + x) k
@@ -79,7 +77,6 @@ theorem sqrtTwoAddSeries_n_lb_gt_one (n k : ℕ) (hk : 3 ≤ k) : 1 ≤ (sqrtTwo
   replace h₂ : √↑(2 + x) * (1 - 2 / 2^k) ≤ y := by
     ring_nf at h₂ ⊢
     linarith
-
   refine le_trans ?_ (le_trans (a := √↑(2 + x) * 3 / 4) ?_ h₂)
   · suffices 4 / 3 ≤ √↑(2 + x) by linarith
     apply Real.le_sqrt_of_sq_le
@@ -103,16 +100,13 @@ theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
   dsimp [lb, ub] at ih
   rify at ih ⊢
   rw [sqrtTwoAddSeries_n_succ_lb, sqrtTwoAddSeries_n_succ_ub]
-
   set x := ((sqrtTwoAddSeries_n n).lub k)
-
   have hl : (2 + x).fst ≤ 2 + Real.sqrtTwoAddSeries 0 n := by
     change ((2 + _ : ℚ) : ℝ) ≤ _
     rw [Rat.cast_add, Rat.cast_ofNat, add_le_add_iff_left]
     convert ComputableℝSeq.hlb _ _
     symm
     exact IsComputable.prop
-
   have hu : 2 + Real.sqrtTwoAddSeries 0 n ≤ (2 + x).snd := by
     change _ ≤ ((2 + _ : ℚ) : ℝ)
     rw [Rat.cast_add, Rat.cast_ofNat, add_le_add_iff_left]
@@ -120,24 +114,19 @@ theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
     convert ComputableℝSeq.hub _ _
     symm
     exact IsComputable.prop
-
   have hm : 0 < (2 + x).fst := by
     change 0 < 2 + _
     suffices 0 ≤ x.fst by linarith
     apply sqrtTwoAddSeries_n_lb_nonneg n k
-
   have h₁ := Sqrt.sqrt_le_sqrtq_add (2 + Real.sqrtTwoAddSeries 0 n) (2 + x) k ⟨hl, hu⟩ hm
   have h₂ := Sqrt.sqrtq_sub_le_sqrt (2 + Real.sqrtTwoAddSeries 0 n) (2 + x) k ⟨hl, hu⟩ hm hk
-
   simp only [show (2 + x).snd = 2 + x.snd by rfl, show (2 + x).fst = 2 + x.fst by rfl] at h₁ h₂
   simp only [Rat.cast_add, Rat.cast_ofNat, add_sub_add_left_eq_sub, tsub_le_iff_right] at h₁ h₂
-
   set y := √(2 + Real.sqrtTwoAddSeries 0 n)
   set z := (Sqrt.sqrtq (2 + x) k).fst
   set w := (Sqrt.sqrtq (2 + x) k).snd
   set x₁ := x.fst
   set x₂ := x.snd
-
   have hgap : w - z ≤ (3 / 2) * ((↑x₂ - ↑x₁) / (√(2 + ↑x₁))) + 9 * y / 2^k := by
     rw [← mul_div] at h₁ h₂ ⊢
     conv at h₁ =>
@@ -145,7 +134,6 @@ theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
       rw [_root_.mul_comm]
     rw [← div_div] at h₁
     linarith
-
   have hxdiv : 3 / 2 * ((↑x₂ - ↑x₁) / √(2 + ↑x₁)) ≤ 18 * ↑n / 2 ^ k := by
     rcases n with _|n
     · simp [show x₁ = 0 by rfl, show x₂ = 0 by rfl]
@@ -161,13 +149,11 @@ theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
     rify at hx₂
     rw [div_le_one₀ (by positivity), Real.le_sqrt' (by positivity)]
     linarith
-
   have hydiv : 9 * y / 2^k ≤ 18 / 2^k := by
     rw [div_le_div_iff_of_pos_right]
     · have hy2 : y < 2 := Real.sqrtTwoAddSeries_lt_two (n.succ)
       linarith
     · exact_mod_cast Nat.two_pow_pos k
-
   rw [mul_add, add_div]
   linarith
 
@@ -185,7 +171,6 @@ theorem real_sqrtTwoAddSeries_lb (n : ℕ) : 1 / 2 ^ n < √(2 - Real.sqrtTwoAdd
       apply inv_le_one_of_one_le₀
       exact_mod_cast Nat.one_le_pow' n 3
     linarith [Real.pi_gt_three]
-
   have h₂ := lt_of_le_of_lt h (sub_right_lt_of_lt_add (Real.pi_lt_sqrtTwoAddSeries n))
   ring_nf at h₂
   rwa [lt_mul_iff_one_lt_left zero_lt_two, ← div_lt_iff₀ (by positivity)] at h₂
@@ -194,10 +179,8 @@ theorem sqrtTwoSubSqrtTwoAddSeries_lb (n k : ℕ) (hk : 3 ≤ k) :
     √(2 - Real.sqrtTwoAddSeries 0 n) ≤ (sqrtTwoSubSqrtTwoAddSeries_n n).lb k +
     (18 * n * 2 ^ n + 4) / 2 ^ k
      := by
-
   dsimp [lb]
   rw [sqrtTwoSubSqrtTwoAddSeries_eq]
-
   have h₁ := Sqrt.sqrt_le_sqrtq_add' (2 - Real.sqrtTwoAddSeries 0 n) ((2 - sqrtTwoAddSeries_n n).lub k) k
     ⟨?_, ?_⟩ ?_; rotate_left
   · change ((2 + -_ : ℚ) : ℝ) ≤ _
@@ -214,7 +197,6 @@ theorem sqrtTwoSubSqrtTwoAddSeries_lb (n k : ℕ) (hk : 3 ≤ k) :
     symm
     exact IsComputable.prop
   · linarith [Real.sqrtTwoAddSeries_lt_two n]
-
   have hx : ((2 - sqrtTwoAddSeries_n n).lub k).fst = 2 - (sqrtTwoAddSeries_n n).ub k := by
     change (2 +- _) = _
     rw [sub_eq_add_neg]
@@ -225,18 +207,15 @@ theorem sqrtTwoSubSqrtTwoAddSeries_lb (n k : ℕ) (hk : 3 ≤ k) :
     rfl
   simp only [hx, hy, Rat.cast_sub, Rat.cast_ofNat, sub_sub_sub_cancel_left] at h₁
   clear hx hy
-
   have h₄ := Real.sqrtTwoAddSeries_zero_nonneg n
   have h₅ := Real.sqrtTwoAddSeries_lt_two n
   have h₆ := sqrtTwoAddSeries_n_bounds n k hk
   have h₇ := (real_sqrtTwoAddSeries_lb n).le
-
   generalize
     (Sqrt.sqrtq ((2 - sqrtTwoAddSeries_n n).lub k) k).fst=w,
     (sqrtTwoAddSeries_n n).lb k=x,
     (sqrtTwoAddSeries_n n).ub k=y,
     Real.sqrtTwoAddSeries 0 n=z at *
-
   have h₈ : (↑y - ↑x) / √(2 - z) ≤ 18 * ↑n / 2 ^ k * 2 ^ n := by
     rw [div_eq_mul_inv]
     apply mul_le_mul
@@ -248,23 +227,19 @@ theorem sqrtTwoSubSqrtTwoAddSeries_lb (n k : ℕ) (hk : 3 ≤ k) :
       exact h₇
     · positivity
     · positivity
-
   have h₉ : 2 * √(2 - z) / 2 ^ k ≤ 4 / 2 ^ k := by
     apply div_le_div₀ zero_le_four ?_ (by positivity) le_rfl
     suffices √(2 - z) ≤ 2 by linarith
     rw [Real.sqrt_le_left zero_le_two]
     linarith
-
   have h₁₀ : ((18 * n * 2 ^ n + 4) / 2 ^ k : ℝ) = 18 * ↑n / 2 ^ k * 2 ^ n + 4 / 2 ^ k := by
     ring_nf
-
   linarith
 
 theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
     (sqrtTwoSubSqrtTwoAddSeries_n n).ub k - (18 * n * 2 ^ n + 14) / 2 ^ k ≤ √(2 - Real.sqrtTwoAddSeries 0 n) := by
   dsimp [ub]
   rw [sqrtTwoSubSqrtTwoAddSeries_eq]
-
   have h₁ := Sqrt.sqrtq_sub_le_sqrt' (2 - Real.sqrtTwoAddSeries 0 n) ((2 - sqrtTwoAddSeries_n n).lub k) k
     ⟨?_, ?_⟩ ?_ hk; rotate_left
   · change ((2 + -_ : ℚ) : ℝ) ≤ _
@@ -281,7 +256,6 @@ theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
     symm
     exact IsComputable.prop
   · linarith [Real.sqrtTwoAddSeries_lt_two n]
-
   have hx : ((2 - sqrtTwoAddSeries_n n).lub k).fst = 2 - (sqrtTwoAddSeries_n n).ub k := by
     change (2 +- _) = _
     rw [sub_eq_add_neg]
@@ -296,13 +270,11 @@ theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
   have h₅ := Real.sqrtTwoAddSeries_lt_two n
   have h₆ := sqrtTwoAddSeries_n_bounds n k hk
   have h₇ := (real_sqrtTwoAddSeries_lb n).le
-
   generalize
     (Sqrt.sqrtq ((2 - sqrtTwoAddSeries_n n).lub k) k).fst=w,
     (sqrtTwoAddSeries_n n).lb k=x,
     (sqrtTwoAddSeries_n n).ub k=y,
     Real.sqrtTwoAddSeries 0 n=z at *
-
   have h₈ : (↑y - ↑x) / √(2 - z) ≤ 18 * ↑n / 2 ^ k * 2 ^ n := by
     rw [div_eq_mul_inv]
     apply mul_le_mul
@@ -314,16 +286,13 @@ theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
       exact h₇
     · positivity
     · positivity
-
   have h₉ : 7 * √(2 - z) / 2 ^ k ≤ 14 / 2 ^ k := by
     apply div_le_div₀ (by norm_num) ?_ (by positivity) le_rfl
     suffices √(2 - z) ≤ 2 by linarith
     rw [Real.sqrt_le_left zero_le_two]
     linarith
-
   have h₁₀ : ((18 * n * 2 ^ n + 14) / 2 ^ k : ℝ) = 18 * ↑n / 2 ^ k * 2 ^ n + 14 / 2 ^ k := by
     ring_nf
-
   linarith
 
 /-- See theorem Real.pi_lt_sqrtTwoAddSeries in Mathlib -/
@@ -363,25 +332,21 @@ theorem pi_lb_ge_pi_sub_pow (n : ℕ) (hn : 0 < n) : Real.pi - 41 * n / 2 ^ n �
     have h₂ := Real.pi_lt_sqrtTwoAddSeries n
     push_cast
     linarith
-
   by_cases hn' : n < 2
   · interval_cases n
     norm_num
   clear hn
   push Not at hn'
   qify at hn'
-
   have h₁ : (2 ^ (n + 1) * ((18 * n * 2 ^ n + 4) / 2 ^ (3 * n)) + 1 / 4 ^ n : ℚ)
       = 36 * n / 2 ^ n + 9 / 4 ^ n := by
     rw [show (4 : ℚ) ^ n = (2 ^ 2) ^ n by rfl, ← pow_mul]
     field_simp
     ring_nf
   rw [h₁]; clear h₁
-
   suffices (9 / 4 ^ n : ℚ) ≤ 5 * n / 2 ^ n by
     simp only [← mul_div] at this ⊢
     linarith
-
   exact div_le_div₀ (by positivity) (by linarith) (by positivity) (pow_le_pow_left₀ rfl rfl n)
 
 theorem pi_ub_le_pi_add_pow (n : ℕ) (hn : 0 < n) : pi_ub n ≤ Real.pi + 51 * n / 2 ^ n := by
@@ -394,25 +359,21 @@ theorem pi_ub_le_pi_add_pow (n : ℕ) (hn : 0 < n) : pi_ub n ≤ Real.pi + 51 * 
     have h₂ := Real.pi_gt_sqrtTwoAddSeries n
     push_cast
     linarith
-
   by_cases hn' : n < 2
   · interval_cases n
     norm_num
   clear hn
   push Not at hn'
   qify at hn'
-
   have h₁ : (2 ^ (n + 1) * ((18 * n * 2 ^ n + 14) / 2 ^ (3 * n)) + 1 / 4 ^ n : ℚ)
       = 36 * n / 2 ^ n + 29 / 4 ^ n := by
     rw [show (4 : ℚ) ^ n = (2 ^ 2) ^ n by rfl, ← pow_mul]
     field_simp
     ring_nf
   rw [h₁]; clear h₁
-
   suffices (29 / 4 ^ n : ℚ) ≤ 15 * n / 2 ^ n by
     simp only [← mul_div] at this ⊢
     linarith
-
   exact div_le_div₀ (by positivity) (by linarith) (by positivity) (pow_le_pow_left₀ rfl rfl n)
 
 theorem pi_lb_causeq : ∃ (h' : IsCauSeq abs pi_lb), Real.mk ⟨pi_lb, h'⟩ = Real.pi := by

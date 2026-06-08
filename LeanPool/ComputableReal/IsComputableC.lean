@@ -193,3 +193,5 @@ noncomputable instance instDecidableLE : Decidable (x ≤ y) :=
 open ComplexOrder in
 noncomputable instance instDecidableLT : Decidable (x < y) :=
   inferInstanceAs (Decidable (_ ∧ _))
+
+end IsComputableℂ
