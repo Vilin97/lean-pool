@@ -37,13 +37,13 @@ def quoteTemporalHypLocToTerm : TemporalHypLoc → TSyntax `term
   | .byIdx idx => quote idx
 
 /-- Look up a hypothesis by location, returning `none` if absent. -/
-def findByTemporalHypLoc? (xs : List (String × α)) : TemporalHypLoc → Option (String × α)
+def findByTemporalHypLocOpt (xs : List (String × α)) : TemporalHypLoc → Option (String × α)
   | .byName name => xs.find? fun x => x.1 == name
   | .byIdx idx => xs[idx]?
 
 /-- Look up a hypothesis by location, throwing an error if absent. -/
 def findByTemporalHypLoc [Monad m] [MonadError m] (xs : List (String × α)) (loc : TemporalHypLoc)  (errorMsgPrefix errorMsgSuffix : String) : m (String × α) := do
-  match findByTemporalHypLoc? xs loc with
+  match findByTemporalHypLocOpt xs loc with
   | some res => pure res
   | none =>
     match loc with
@@ -52,18 +52,18 @@ def findByTemporalHypLoc [Monad m] [MonadError m] (xs : List (String × α)) (lo
 
 /-- If `tm` is a bare identifier that names a proof-mode hypothesis in `hyps`,
 return that name. Lean locals shadow proof-mode hypotheses. -/
-def temporalHypNameOfBareTerm? (hyps : List (String × α)) (tm : Term) :
+def temporalHypNameOfBareTermOpt (hyps : List (String × α)) (tm : Term) :
     TacticM (Option String) := withMainContext do
-  let some id ← LentilLib.termIdent? tm | return none
+  let some id ← LentilLib.termIdentOpt tm | return none
   if (← getLCtx).findFromUserName? id.getId |>.isSome then
     return none
   let name := toString id.getId
   return if hyps.any (fun ⟨hypName, _⟩ => hypName == name) then some name else none
 
 /-- Interpret a bare term as a hypothesis location, if it names one. -/
-def temporalHypLocOfBareTerm? (hyps : List (String × α)) (tm : Term) :
+def temporalHypLocOfBareTermOpt (hyps : List (String × α)) (tm : Term) :
     TacticM (Option TemporalHypLoc) := do
-  return (← temporalHypNameOfBareTerm? hyps tm).map .byName
+  return (← temporalHypNameOfBareTermOpt hyps tm).map .byName
 
 /-- Locations for `rewrite`/`simp`-like tactics. -/
 structure RewriteLocation where

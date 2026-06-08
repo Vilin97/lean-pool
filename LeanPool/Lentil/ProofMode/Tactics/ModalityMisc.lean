@@ -24,7 +24,7 @@ end
 
 -- FIXME: The following logic is very similar in `Lentil.ProofMode.Tactics.Monotone`,
 -- consider unifying them
-private def peelAlways? (p : Expr) : Option Expr :=
+private def peelAlwaysOpt (p : Expr) : Option Expr :=
   if p.getAppFn'.isConstOf ``TLA.always then
     if h : p.isApp = true then some (p.appArg h) else none
   else
@@ -38,11 +38,11 @@ private def proofModeToggleGoalUnderAlways : TacticM Unit := withMainContext do
   let some (hypTy, hyps) ← recognizeHypsList hypsExpr
     | throwError "tla_toggle_goal_under_always: failed to read the hypotheses from the goal"
   let some peeledHyps := hyps.mapM fun (name, pred) =>
-      (peelAlways? pred).map fun pred => (name, pred)
+      (peelAlwaysOpt pred).map fun pred => (name, pred)
     | throwError "tla_toggle_goal_under_always: expected every temporal hypothesis to have an always prefix"
   let peeledHypsExpr ← toHypsList hypTy peeledHyps
   let (leftToRight?, toggledGoal) :=
-    match peelAlways? goal with
+    match peelAlwaysOpt goal with
     | some goal => (true, goal)
     | none => (false, goal)
   let thm ← mkAppOptM ``Entails_toggle_goal_under_always #[none, some peeledHypsExpr, some toggledGoal]

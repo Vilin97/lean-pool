@@ -19,7 +19,7 @@ open PrettyPrinter.Delaborator SubExpr
 /-- Delaborate the name component of a `NamedPred`. -/
 def delabNameInNamedPred : DelabM Ident := do -- whenPPOption (fun o => o.get lentil.pp.useDelab.name true) do
   let e ← getExpr
-  let some s := parseStringLit? e | failure
+  let some s := parseStringLitOpt e | failure
   pure <| mkIdent <| Name.mkSimple s
 
 /-- Delaborate a `NamedPred` into a displayed hypothesis. -/

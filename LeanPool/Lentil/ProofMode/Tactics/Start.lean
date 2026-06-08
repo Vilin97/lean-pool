@@ -10,7 +10,7 @@ namespace TLA.ProofMode
 
 open Lean Meta Elab Tactic
 
-private def sequent? (e : Expr) : Option (Expr × Expr × Expr) :=
+private def sequentOpt (e : Expr) : Option (Expr × Expr × Expr) :=
   match_expr e with
   | TLA.predImplies σ lhs rhs => some (σ, lhs, rhs)
   | _ => none
@@ -46,7 +46,7 @@ elab_rules : tactic
     let mainGoal ← getMainGoal
     let ty ← mainGoal.getType
     let ty ← cleanupAnnotAndMore ty
-    let some (σ, lhs, rhs) := sequent? ty |
+    let some (σ, lhs, rhs) := sequentOpt ty |
       throwError "tla_start only supports goals reduced to a single |-tla- sequent, but got {ty}"
     let hyps ← getPremiseList lhs
     unless hyps.length == lbls.length do

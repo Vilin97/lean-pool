@@ -29,8 +29,8 @@ Outside proof mode, `tla_assumption` falls back to Lean's ordinary
 -/
 syntax (name := tlaAssumptionTac) "tla_assumption" : tactic
 
--- CHECK If in the future Lean has built-in `findIdxM?`, use it instead
-private def findIdxM? (xs : List α) (p : α → TacticM Bool) : TacticM (Option Nat) :=
+-- CHECK If in the future Lean has built-in `findIdxMOpt`, use it instead
+private def findIdxMOpt (xs : List α) (p : α → TacticM Bool) : TacticM (Option Nat) :=
   go 0 xs
 where
   go (idx : Nat) : List α → TacticM (Option Nat)
@@ -56,7 +56,7 @@ elab_rules : tactic
         | throwError "tla_assumption: goal is not a proof-mode Entails goal"
       let some (_, hyps) ← recognizeHypsList hyps
         | throwError "tla_assumption: failed to read the proof-mode hypotheses"
-      let some idx ← findIdxM? hyps fun (_, hyp) => isDefEq hyp goal
+      let some idx ← findIdxMOpt hyps fun (_, hyp) => isDefEq hyp goal
         | throwError "tla_assumption: no matching temporal hypothesis for{indentExpr goal}"
       evalTactic <| ← `(tactic| exact $(mkIdent ``Entails_assumption) $(Syntax.mkNatLit idx) (by rfl))
 

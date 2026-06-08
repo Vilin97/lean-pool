@@ -157,7 +157,7 @@ def tlaHaveTerm (newHypName : String) (tm : Term) : TacticM Nat := withMainConte
     let (head, args) ← match tm with
       | `(term| $f:term $args:term* ) => pure (f, args)
       | _ => pure (tm, #[])
-    if let some oldHypName ← temporalHypNameOfBareTerm? hyps head then
+    if let some oldHypName ← temporalHypNameOfBareTermOpt hyps head then
       evalTactic <| ← `(tactic|
         refine $(mkIdent ``Entails_duplicate_one_hyp_by_name) ($(quote newHypName)) ($(quote oldHypName)) (by rfl) ?_)
       postDSimpAfterApplyingReflectionTheorem haveTacDSimps

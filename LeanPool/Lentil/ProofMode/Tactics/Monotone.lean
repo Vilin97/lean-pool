@@ -88,7 +88,7 @@ where
   matchFirstTwo (nm1 nm2 : Name) (e : Expr) : Option Expr :=
     matchFirst nm1 e |>.bind (matchFirst nm2)
 
-private def findMonotonePeel? (hyps : List (String × Expr)) (goal : Expr) :
+private def findMonotonePeelOpt (hyps : List (String × Expr)) (goal : Expr) :
     Option (Name × List (String × Expr) × Expr) := do
   let recognize (e : Expr) : Option (Name × Expr) :=
     monotoneKinds.findSome? fun (recognizer, nm) => recognizer e |>.map (fun p => (nm, p))
@@ -117,7 +117,7 @@ private def proofModeMonotone : TacticM Unit := withMainContext do
   -- Can we wrap it?
   let some (hypTy, hyps) ← recognizeHypsList hypsExpr
     | throwError "tla_monotone: failed to read the hypotheses from the goal"
-  let some (nm, peeledHyps, peeledGoal) := findMonotonePeel? hyps goal
+  let some (nm, peeledHyps, peeledGoal) := findMonotonePeelOpt hyps goal
     | throwError "tla_monotone: expected every proof-mode hypothesis and the goal to have a common monotone temporal prefix"
   let peeledHypsExpr ← toHypsList hypTy peeledHyps
   let thm ← do

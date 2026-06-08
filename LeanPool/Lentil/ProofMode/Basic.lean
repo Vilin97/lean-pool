@@ -135,7 +135,7 @@ theorem modifyHypByName_spec {σ : Type u} (hyps : List (NamedPred σ)) (name : 
 open Lean Meta Elab Tactic
 
 /-- Like `Expr.isStringLit`, but returns the string. -/
-def parseStringLit? : Expr → Option String
+def parseStringLitOpt : Expr → Option String
   | .lit (.strVal s) => some s
   | _ => none
 
@@ -165,7 +165,7 @@ def recognizeHypsList (hyps : Expr) : MetaM (Option (Expr × List (String × Exp
     | some l =>
       let_expr TLA.ProofMode.NamedPred.mk _ nm pred := hyp
         | return none
-      let some nameStr := parseStringLit? nm | return none
+      let some nameStr := parseStringLitOpt nm | return none
       pure <| some ((nameStr, pred) :: l)
   let some hyps := hyps | return none
   return some (ty, hyps)

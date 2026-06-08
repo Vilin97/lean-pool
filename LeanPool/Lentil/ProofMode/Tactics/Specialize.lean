@@ -115,7 +115,7 @@ variable {α : Sort v} {p : α → pred σ} (witness : α)
 theorem Entails_specialize_forall_by_name (chosen : String)
   (hpred : hyps.find? (fun h => h.name == chosen) = some ⟨chosen, TLA.tlaForall p⟩) :
   Entails (replaceChosenPred hyps chosen (p witness)) goal → Entails hyps goal := by
-  obtain ⟨ht, ⟨idx, hidx, heq1, heq2⟩⟩ := List.find?_findIdx? hpred
+  obtain ⟨ht, ⟨idx, hidx, heq1, heq2⟩⟩ := List.findFindIdx hpred
   unfold replaceChosenPred modifyHypByName; rw [heq2]; dsimp
   apply Entails_specialize_forall_aux _ hidx rfl _ rfl (by grind)
 
@@ -136,7 +136,7 @@ include hq
 theorem Entails_specialize_pure_by_name (chosen : String)
   (hpred : hyps.find? (fun h => h.name == chosen) = some ⟨chosen, [tlafml| ⌞ q ⌟ → rhs]⟩) :
   Entails (replaceChosenPred hyps chosen rhs) goal → Entails hyps goal := by
-  obtain ⟨ht, ⟨idx, hidx, heq1, heq2⟩⟩ := List.find?_findIdx? hpred
+  obtain ⟨ht, ⟨idx, hidx, heq1, heq2⟩⟩ := List.findFindIdx hpred
   unfold replaceChosenPred modifyHypByName; rw [heq2]; dsimp
   apply Entails_specialize_pure_aux _ hidx rfl hq rfl (by grind)
 
@@ -157,7 +157,7 @@ include hlhs
 theorem Entails_specialize_valid_by_name (chosen : String)
   (hpred : hyps.find? (fun h => h.name == chosen) = some ⟨chosen, [tlafml| lhs → rhs]⟩) :
   Entails (replaceChosenPred hyps chosen rhs) goal → Entails hyps goal := by
-  obtain ⟨ht, ⟨idx, hidx, heq1, heq2⟩⟩ := List.find?_findIdx? hpred
+  obtain ⟨ht, ⟨idx, hidx, heq1, heq2⟩⟩ := List.findFindIdx hpred
   unfold replaceChosenPred modifyHypByName; rw [heq2]; dsimp
   apply Entails_specialize_valid_aux _ hidx rfl hlhs rfl (by grind)
 
@@ -180,7 +180,7 @@ include hprem
 theorem Entails_specialize_temporal_by_name (chosen : String)
   (hpred : hyps.find? (fun h => h.name == chosen) = some ⟨chosen, [tlafml| (repeatedAnd lhss) → rhs]⟩) :
   Entails (replaceChosenPred hyps chosen rhs) goal → Entails hyps goal := by
-  obtain ⟨ht, ⟨idx, hidx, heq1, heq2⟩⟩ := List.find?_findIdx? hpred
+  obtain ⟨ht, ⟨idx, hidx, heq1, heq2⟩⟩ := List.findFindIdx hpred
   unfold replaceChosenPred modifyHypByName; rw [heq2]; dsimp
   apply Entails_specialize_temporal_aux _ hidx rfl lhss ?_ rfl (by grind)
   subst lhss; rw [← List.map_filterMap]; clear hpred ht heq1 heq2; grind
@@ -230,7 +230,7 @@ def tlaSpecializeStep (pos : TemporalHypLoc) (arg : TSyntax `term) : TacticM Uni
           | `(term| ⟨ $args:term,* ⟩) => pure args.getElems.toList
           | _ => pure [arg]
         let premises ← premises.mapM fun arg => do
-          match (← termIdent? arg) with
+          match (← termIdentOpt arg) with
           | some id => pure <| toString id.getId
           | _ => throwError "tla_specialize: implication arguments must be a tuple or a single identifier; got {arg}"
         for premise in premises do

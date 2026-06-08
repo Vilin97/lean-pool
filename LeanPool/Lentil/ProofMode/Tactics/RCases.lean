@@ -114,7 +114,7 @@ private def nameStrForPat (pat : TSyntax `rcasesPat) : TacticM String := do
 
 /-- Unwrap a `rcasesPatLo` to a single `rcasesPat`, rejecting `: ty` ascriptions.
     A genuine `|` alternation is re-wrapped as a parenthesized `rcasesPat`, so it
-    can be carried uniformly and later recognized by `asAlternation?`. -/
+    can be carried uniformly and later recognized by `asAlternationOpt`. -/
 private def unwrapPatLo (p : TSyntax ``Lean.Parser.Tactic.rcasesPatLo) : TacticM (TSyntax `rcasesPat) := do
   match p with
   | `(rcasesPatLo| $_:rcasesPatMed : $_:term) =>
@@ -131,7 +131,7 @@ private def unwrapPatLo (p : TSyntax ``Lean.Parser.Tactic.rcasesPatLo) : TacticM
 
 /-- If `pat` is a parenthesized alternation `(p₁ | p₂ | …)` with at least two
     branches, return its branches; otherwise `none`. -/
-private def asAlternation? (pat : TSyntax `rcasesPat) : Option (Array (TSyntax `rcasesPat)) :=
+private def asAlternationOpt (pat : TSyntax `rcasesPat) : Option (Array (TSyntax `rcasesPat)) :=
   match pat with
   | `(rcasesPat| ( $lo:rcasesPatLo )) =>
     match lo with
@@ -177,8 +177,6 @@ private def splitAltRightAssoc (branches : Array (TSyntax `rcasesPat))
 def syntaxNodeCount : Syntax → Nat
   | .node _ _ args => args.foldl (fun acc s => acc + syntaxNodeCount s) 1
   | _ => 1
-
-mutual
 
 /-- Destructure the proof-mode hypothesis at `currentHyp` against `pat`.
     Precondition: the goal list contains exactly one goal — every caller
@@ -227,18 +225,22 @@ def tlaRcasesCoreFocused (fuel : Nat) (currentHyp : TemporalHypLoc)
       -- The `refine` left a single goal; `pat1` may case-split it, so `pat2`
       -- must then be applied to every goal `pat1` produced.
       tlaRcasesCoreFocused fuel (.byName n1Str) pat1
-      tlaRcasesCoreAllGoals fuel (.byName n2Str) pat2
+      let perGoal ← (← getGoals).mapM fun g =>
+        Tactic.run g (tlaRcasesCoreFocused fuel (.byName n2Str) pat2)
+      setGoals perGoal.flatten
     | TLA.tlaExists _ _ _ =>
       let nInnerStr ← nameStrForPat pat2
       let thm := if currentHyp matches .byName .. then ``Entails_rcases_exists_by_name else ``Entails_rcases_exists_by_idx
       evalTactic <| ← `(tactic| refine $(mkIdent thm) ($(quote nInnerStr))
           ($(quoteTemporalHypLocToTerm currentHyp)) (by rfl) ?_; rintro $pat1)
       postDSimpAfterApplyingReflectionTheorem rcasesTacDSimps
-      tlaRcasesCoreAllGoals fuel (.byName nInnerStr) pat2
+      let perGoal ← (← getGoals).mapM fun g =>
+        Tactic.run g (tlaRcasesCoreFocused fuel (.byName nInnerStr) pat2)
+      setGoals perGoal.flatten
     | _ =>
       throwError "tla_rcases: cannot destructure pred {pred} with pattern {pat}"
   | _ =>
-    match asAlternation? pat with
+    match asAlternationOpt pat with
     | some branches =>
       let (pat1, pat2) ← splitAltRightAssoc branches
       match_expr pred with
@@ -269,8 +271,6 @@ def tlaRcasesCoreAllGoals (fuel : Nat) (currentHyp : TemporalHypLoc)
     (pat : TSyntax `rcasesPat) : TacticM Unit := do
   let perGoal ← (← getGoals).mapM fun g => Tactic.run g (tlaRcasesCoreFocused fuel currentHyp pat)
   setGoals perGoal.flatten
-
-end
 
 /-- Destructure the proof-mode hypothesis at `currentHyp` against `pat`, acting
     on the main goal and leaving any other goals untouched. This is the entry
@@ -334,7 +334,7 @@ elab_rules : tactic
   | `(tactic| tla_obtain $pat:rcasesPat := $tm:term) => withMainContext do
     let some (_, hyps) ← recognizeEntailsHypsFromGoal
       | throwError "tla_obtain: failed to read the hypotheses from the goal"
-    match ← temporalHypLocOfBareTerm? hyps tm with
+    match ← temporalHypLocOfBareTermOpt hyps tm with
     | some loc => tlaRcasesCore loc pat
     | none =>
       let idx ← tlaHaveTerm default tm

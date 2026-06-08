@@ -19,7 +19,7 @@ private def resolveBinderNameHintAsString (e : Expr) : CoreM Expr := do
       let args := e'.getAppArgs'
       let α := args[0]!
       let target := args[3]!
-      let some name := parseStringLit? args[2]! | return .done e'
+      let some name := parseStringLitOpt args[2]! | return .done e'
       -- Manual eta-expansion
       return .done <| Expr.lam (Name.mkSimple name) α (.app (target.liftLooseBVars 0 1) (.bvar 0)) .default
     else return .done e')
