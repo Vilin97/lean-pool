@@ -212,10 +212,10 @@ theorem sw_otp : ∀ (p k c l : UInt64),
           rw [t_update_neq]
           · rw [t_update_neq]
             · rw [t_update_neq]
-              rw [←h_x3] at h_i
-              rw [←h_x3] at v
-              apply h_I
-              · exact v
+              · rw [←h_x3] at h_i
+                rw [←h_x3] at v
+                apply h_I
+                exact v
               · apply help_I_pre''' (p := p)
                 · exact h_I_pre'
                 · exact v
@@ -376,14 +376,19 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
       unfold otpCode
       simp
     · exact h_pc
-    · simp at *
+    · simp only [MState.incPc_increments_pc, MState.getRegisterAt_def,
+        MState.addRegister_unfold, ne_eq, not_false_eq_true, t_update_neq, gt_iff_lt,
+        MState.getMemoryAt_def, t_update_eq, UInt64.add_sub_cancel, Bool.not_eq_true,
+        show (1 : UInt64) ≠ 0 by decide, show (1 : UInt64) ≠ 2 by decide,
+        show (1 : UInt64) ≠ 3 by decide, show (1 : UInt64) ≠ 5 by decide,
+        show (1 : UInt64) ≠ 6 by decide, show (1 : UInt64) ≠ 7 by decide] at *
       repeat (constructor <;> try assumption)
       · rw [h_x1, h_x3]
         apply UInt64.add_sub_assoc
         · rw [←h_x3]
           exact h_x3LtL
         · rw [←h_x3]
-          simp
+          simp only [gt_iff_lt]
           exact h_cond
       · repeat (constructor <;> try assumption)
 
@@ -427,14 +432,19 @@ theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
     · simp
     · simpCurrInstr
     · exact h_pc
-    · simp at *
+    · simp only [MState.incPc_increments_pc, MState.getRegisterAt_def,
+        MState.addRegister_unfold, ne_eq, not_false_eq_true, t_update_neq, gt_iff_lt,
+        MState.getMemoryAt_def, t_update_eq, Bool.not_eq_true,
+        show (2 : UInt64) ≠ 0 by decide, show (2 : UInt64) ≠ 1 by decide,
+        show (2 : UInt64) ≠ 3 by decide, show (2 : UInt64) ≠ 5 by decide,
+        show (2 : UInt64) ≠ 6 by decide, show (2 : UInt64) ≠ 7 by decide] at *
       repeat (constructor <;> try assumption)
       · rw [h_x2, h_x3]
         apply UInt64.add_sub_assoc
         · rw [←h_x3]
           exact h_x3LtL
         · rw [←h_x3]
-          simp
+          simp only [gt_iff_lt]
           exact h_cond
       · repeat (constructor <;> try assumption)
 
@@ -474,7 +484,12 @@ theorem dec_otp : ∀ (p k c l : UInt64),
     · simp
     · simpCurrInstr
     · exact h_pc
-    · simp at *
+    · simp only [MState.incPc_increments_pc, MState.getRegisterAt_def,
+        MState.addRegister_unfold, t_update_eq, MState.getMemoryAt_def, ne_eq, not_false_eq_true,
+        t_update_neq, Bool.not_eq_true, show (3 : UInt64) ≠ 0 by decide,
+        show (3 : UInt64) ≠ 1 by decide, show (3 : UInt64) ≠ 2 by decide,
+        show (3 : UInt64) ≠ 5 by decide, show (3 : UInt64) ≠ 6 by decide,
+        show (3 : UInt64) ≠ 7 by decide] at *
       repeat (constructor <;> try assumption)
       · intros i h_I'
         have: i ≤ l - TMap.get s.registers 3  := by
