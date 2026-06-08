@@ -8,7 +8,7 @@ import LeanPool.Chomsky.Classes.Unrestricted.ClosureProperties.Concatenation
 
 
 -- new nonterminal type
-private def nn (N : Type) : Type :=
+private abbrev nn (N : Type) : Type :=
   N ⊕ Fin 3
 
 -- new symbol type
@@ -71,7 +71,7 @@ private def rulesThatScanTerminals (g : Grammar T) : List (Grule T (nn g.nt)) :=
   (allUsedTerminals g).map (fun t : T => Grule.mk [] ◪2 [Symbol.terminal t] [Symbol.terminal t, R])
 
 -- grammar for iteration of `g.language`
-private def Grammar.star (g : Grammar T) : Grammar T :=
+@[reducible] private def Grammar.star (g : Grammar T) : Grammar T :=
   Grammar.mk (nn g.nt) ◪0 (
     Grule.mk [] ◪0 [] [Z, S, H] :: (
     Grule.mk [] ◪0 [] [R, H] :: (
@@ -98,7 +98,7 @@ by
       · apply gr_deri_self
       · intro p pin
         exfalso
-        exact List.not_mem_nil p pin
+        exact List.not_mem_nil pin
   | cons v x ih =>
       have vx_reverse : (v::x).reverse = x.reverse ++ [v] := by
         apply List.reverse_cons
