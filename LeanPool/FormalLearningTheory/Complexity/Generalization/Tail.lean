@@ -5,6 +5,10 @@ Authors: Dhruv Gupta
 -/
 import LeanPool.FormalLearningTheory.Complexity.Generalization.Core
 
+/-!
+# LeanPool.FormalLearningTheory.Complexity.Generalization.Tail
+-/
+
 universe u v
 
 
@@ -12,11 +16,11 @@ section FinBlockInfrastructure
 
 open Equiv in
 /-- Extract block j from a flat array of k*m elements, using finProdFinEquiv. -/
-def block_extract {α : Type*} (k m : ℕ) (S : Fin (k * m) → α) (j : Fin k) : Fin m → α :=
+def blockExtract {α : Type*} (k m : ℕ) (S : Fin (k * m) → α) (j : Fin k) : Fin m → α :=
   fun i => S (finProdFinEquiv (j, i))
 
 /-- Boolean majority vote: returns true iff strictly more than half the votes are true. -/
-def majority_vote (k : ℕ) (votes : Fin k → Bool) : Bool :=
+def majorityVote (k : ℕ) (votes : Fin k → Bool) : Bool :=
   decide (2 * (Finset.univ.filter (fun j => votes j = true)).card > k)
 
 /-- Block index sets are disjoint for distinct blocks. -/
@@ -35,7 +39,7 @@ lemma block_extract_disjoint (k m : ℕ) (j₁ j₂ : Fin k) (hne : j₁ ≠ j�
 /-- Block extraction is measurable: extracting block j from a pi-type is measurable. -/
 lemma block_extract_measurable {X : Type*} [MeasurableSpace X]
     (k m : ℕ) (j : Fin k) :
-    Measurable (fun (ω : Fin (k * m) → X) => block_extract k m ω j) := by
+    Measurable (fun (ω : Fin (k * m) → X) => blockExtract k m ω j) := by
   exact measurable_pi_lambda _ (fun i => measurable_pi_apply _)
 
 /-- Block extractions are independent under the product measure.
@@ -43,17 +47,17 @@ lemma block_extract_measurable {X : Type*} [MeasurableSpace X]
 lemma iIndepFun_block_extract {X : Type*} [MeasurableSpace X]
     (k m : ℕ) (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D] :
     ProbabilityTheory.iIndepFun (β := fun _ : Fin k => Fin m → X)
-      (fun (j : Fin k) (ω : Fin (k * m) → X) => block_extract k m ω j)
+      (fun (j : Fin k) (ω : Fin (k * m) → X) => blockExtract k m ω j)
       (MeasureTheory.Measure.pi (fun _ : Fin (k * m) => D)) := by
   open MeasureTheory MeasureTheory.Measure ProbabilityTheory Equiv in
   -- The currying MeasurableEquiv: Fin(k*m) → X  ≃ᵐ  Fin k → (Fin m → X)
   set pcl := MeasurableEquiv.piCongrLeft (fun _ : Fin k × Fin m => X) finProdFinEquiv.symm
   set cur := MeasurableEquiv.curry (Fin k) (Fin m) X
   set e : (Fin (k * m) → X) ≃ᵐ (Fin k → Fin m → X) := pcl.trans cur
-  -- block_extract = e pointwise
-  have he : ∀ j ω, block_extract k m ω j = e ω j := by
+  -- blockExtract = e pointwise
+  have he : ∀ j ω, blockExtract k m ω j = e ω j := by
     intro j ω; ext i
-    simp only [block_extract, e, MeasurableEquiv.trans_apply, pcl, cur]
+    simp only [blockExtract, e, MeasurableEquiv.trans_apply, pcl, cur]
     simp [MeasurableEquiv.piCongrLeft, piCongrLeft_apply, MeasurableEquiv.curry,
       Function.curry]
   -- Rewrite goal to use e

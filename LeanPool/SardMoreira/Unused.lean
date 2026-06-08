@@ -6,6 +6,10 @@ Authors: Yury G. Kudryashov
 
 import LeanPool.SardMoreira.ContDiff
 
+/-!
+# LeanPool.SardMoreira.Unused
+-/
+
 open scoped Topology
 open Filter Set
 

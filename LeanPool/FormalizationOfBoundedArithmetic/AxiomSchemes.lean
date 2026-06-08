@@ -17,6 +17,10 @@ import LeanPool.FormalizationOfBoundedArithmetic.Syntax
 import LeanPool.FormalizationOfBoundedArithmetic.Semantics
 import LeanPool.FormalizationOfBoundedArithmetic.Order
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.AxiomSchemes
+-/
+
 open FirstOrder Language BoundedFormula Formula
 
 
@@ -49,10 +53,10 @@ def mkInductionSentence
   base ⟹ step ⟹ forall_x_holds
 
 /-- Normalize a realized induction sentence in a hypothesis. -/
-syntax (name := simp_induction) "simp_induction" " at " (ppSpace ident)? : tactic
+syntax (name := simpInduction) "simpInduction" " at " (ppSpace ident)? : tactic
 
 macro_rules
-| `(tactic| simp_induction at $h:ident) =>
+| `(tactic| simpInduction at $h:ident) =>
   `(tactic|
   conv at $h =>
     unfold Sentence.Realize mkInductionSentence
@@ -116,11 +120,11 @@ def mkComprehensionSentence {a} [IsEnum a] {name}
       z ∈' X ⇔
       univ.subst (Sum.elim (fun _ => .var z.name) (fun _ => .var y.name))
     let iff : zambella.Formula (Vars1 .z ⊕ Vars2 .y .X) :=
-      (display3 .z iff.rotate_213)
+      (display3 .z iff.rotate213)
     let all_z : zambella.Formula (Vars2 .y .X) :=
       iBdAllNumLt' y iff.flip
     let X_def : zambella.Formula (Vars1 .X ⊕ Vars1 .y) :=
-      (display2 .X (X.IsStr ⊓ all_z).rotate_21)
+      (display2 .X (X.IsStr ⊓ all_z).rotate21)
     let ex_X : zambella.Formula (Vars1 .y) := iExs' X_def.flip
     let ex_X_typed : zambella.Formula (Vars1 .y) :=
       ex_X.IsNum
@@ -128,10 +132,10 @@ def mkComprehensionSentence {a} [IsEnum a] {name}
     ex_X_typed.mkInl.flip.iAlls'
 
 /-- Normalize a realized comprehension sentence in a hypothesis. -/
-syntax (name := simp_comp) "simp_comp" " at " (ppSpace ident)? : tactic
+syntax (name := simpComp) "simpComp" " at " (ppSpace ident)? : tactic
 
 macro_rules
-| `(tactic| simp_comp at $h:ident) =>
+| `(tactic| simpComp at $h:ident) =>
   `(tactic|
   conv at $h =>
     unfold Sentence.Realize mkComprehensionSentence

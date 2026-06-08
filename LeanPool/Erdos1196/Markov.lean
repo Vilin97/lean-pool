@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Math Inc.
+Authors: Math Inc
 -/
 import LeanPool.Erdos1196.Normalization
 import LeanPool.Erdos1196.Preliminaries
@@ -139,7 +139,7 @@ lemma subMarkovRowSumBound :
   have hY_nat_gt_one : 1 < Y := by
     exact_mod_cast hY_gt_one
   have hY2 : 2 ≤ Y := by
-    simpa using hY_nat_gt_one
+    exact Nat.succ_le_iff.mpr hY_nat_gt_one
   have hm2 : 2 ≤ m := le_trans hY2 hm
   have hm_log_pos : 0 < Real.log (m : ℝ) := by
     exact Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hm2))

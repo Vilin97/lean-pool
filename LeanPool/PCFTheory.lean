@@ -10,7 +10,7 @@ import LeanPool.PCFTheory.ClubGuessing
 /-!
 # PCF Theory
 
-Source: url:https://github.com/YnirPaz/PCF-Theory
+Source: doi:10.1007/978-1-4020-5764-9_15
 Authors: YnirPaz
 Status: verified
 Main declarations: `Ordinal.exists_isClubGuessing_of_cof_uncountable`

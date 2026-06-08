@@ -27,6 +27,10 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Ring
 
+/-! Ring of integers calculations for quadratic algebras. -/
+
+section withoutRatAlgebraInstance
+
 attribute [-instance] DivisionRing.toRatAlgebra
 
 namespace QuadraticInteger
@@ -283,3 +287,5 @@ theorem d_1 : IsIntegralClosure S ℤ K := by
   · exact hx ▸ (IsIntegral.isIntegral x).algebraMap
 
 end QuadraticInteger
+
+end withoutRatAlgebraInstance

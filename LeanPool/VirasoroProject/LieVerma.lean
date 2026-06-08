@@ -126,13 +126,13 @@ def ofBasis {ι : Type*} [Nontrivial 𝕜] [IsCancelMulZero 𝕜] [Module.IsTors
 variable {𝕜 𝓰} in
 /-- The parts of a triangular decomposition determined by a basis have natural bases by
 construction. -/
-noncomputable def _root_.VirasoroProject.TriangularDecomposition.ofBasis.basis_part {ι : Type*}
+noncomputable def _root_.VirasoroProject.TriangularDecomposition.ofBasis.basisPart {ι : Type*}
     [Nontrivial 𝕜] [IsCancelMulZero 𝕜] [Module.IsTorsionFree 𝕜 𝓰]
     (B : Basis ι 𝕜 𝓰) (Bp : SignType → Set ι)
     (Bp_disj : Pairwise (fun ε₁ ε₂ ↦ Disjoint (Bp ε₁) (Bp ε₂)))
     (Bp_cover : ⋃ ε, Bp ε = Set.univ) (ε : SignType) :
     Basis (Bp ε) 𝕜 ((ofBasis B Bp Bp_disj Bp_cover).part ε) :=
-  Basis.basis_submodule_span B (Bp ε)
+  Basis.basisSubmoduleSpan B (Bp ε)
 
 variable {𝕜 𝓰}
 variable (tri : TriangularDecomposition 𝕜 𝓰)
@@ -203,11 +203,15 @@ lemma _root_.VirasoroProject.TriangularDecomposition.VermaHW.hwVec_cyclic (η : 
 lemma _root_.VirasoroProject.TriangularDecomposition.VermaHW.upper_smul_hwVec
     (η : weight tri) {E : 𝓰} (hE : E ∈ tri.upper) :
     ιUEA 𝕜 E • VermaHW.hwVec η = 0 := by
+  change (ιUEA 𝕜 E : 𝓤 𝕜 𝓰) • VermaModule.hwVec (weightHW η) = 0
   simpa [weightHW] using VermaModule.apply_hwVec_eq (weightHW η) (Sum.inr ⟨E, hE⟩)
 
 lemma _root_.VirasoroProject.TriangularDecomposition.VermaHW.cartan_smul_hwVec
     (η : weight tri) {H : 𝓰} (hH : H ∈ tri.cartan) :
     ιUEA 𝕜 H • VermaHW.hwVec η = (η ⟨H, hH⟩) • VermaHW.hwVec η := by
+  change
+    (ιUEA 𝕜 H : 𝓤 𝕜 𝓰) • VermaModule.hwVec (weightHW η) =
+      (algebraMap 𝕜 (𝓤 𝕜 𝓰) (η ⟨H, hH⟩)) • VermaModule.hwVec (weightHW η)
   simpa [weightHW] using VermaModule.apply_hwVec_eq (weightHW η) (Sum.inl ⟨H, hH⟩)
 
 /-- The universal map from a Verma module to any module with a vector of the given

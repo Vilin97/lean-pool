@@ -7,6 +7,10 @@ import Mathlib.Analysis.Calculus.ParametricIntegral
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
 import LeanPool.RiemannMappingTheorem.Cindex
 
+/-!
+# LeanPool.RiemannMappingTheorem.ToMathlib
+-/
+
 open intervalIntegral Real MeasureTheory Filter Topology Set Metric Interval
 
 variable {𝕜 E V : Type*} {r : ℝ} {z : ℂ} {a b t : ℝ} {n : ℕ}
@@ -81,7 +85,7 @@ lemma uIcc_mem_nhds_within (h : t ∈ uIoo a b) : uIcc a b ∈ 𝓝[Ioi t] t :=
 
 lemma eventually_mem_uIoo_of_mem_uIoc : ∀ᵐ x, x ∈ Ι a b → x ∈ uIoo a b := by
   apply eventually_of_mem (U := {a, b}ᶜ)
-  · simpa only [mem_ae_iff, compl_compl] using
+  · simpa only [mem_ae_iff, compl_compl, Set.insert_eq] using
       measure_union_null volume_singleton volume_singleton
   · rw [uIoo_eq_uIoc_sdiff_ends]
     exact fun t h1 h2 => ⟨h2, h1⟩

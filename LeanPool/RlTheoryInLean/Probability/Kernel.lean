@@ -6,7 +6,6 @@ Authors: Shangtong Zhang
 
 import LeanPool.RlTheoryInLean.Probability.Kernel.Basic
 import LeanPool.RlTheoryInLean.Probability.Kernel.Composition
-import LeanPool.RlTheoryInLean.Probability.Kernel.Composition
 
 /-!
 # Kernel

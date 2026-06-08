@@ -4,6 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Harper, Peiran Wu
 -/
 import LeanPool.OrderPQ.PrimeOrder
+import Mathlib.Data.ZMod.Aut
+import Mathlib.RingTheory.ZMod.UnitsCyclic
+
+/-!
+# LeanPool.OrderPQ.MulZMod
+-/
 
 section MulZMod
 
@@ -46,7 +52,7 @@ lemma unitOfNeZero_val (x : (ZMod p)ˣ) : unitOfNeZero x (Units.ne_zero _) = x :
   exact val_unitOfNeZero _ (Units.ne_zero _)
 
 /-- Multiplication by a unit in `ZMod p` as an additive automorphism. -/
-@[simps]
+@[simps -isSimp]
 def addAutOfUnit (x : (ZMod p)ˣ) : AddAut (ZMod p) where
   toFun a := x.val * a
   invFun a := x.inv * a
@@ -58,27 +64,23 @@ variable (p)
 
 /-- The group of additive automorphisms of `ZMod p` (with `p` prime) is isomorphic to the
 group of units of `ZMod p`. -/
-def mulEquivAddAutZMod : AddAut (ZMod p) ≃* (ZMod p)ˣ where
-  toFun f := unitOfNeZero (f 1) (by simp)
-  invFun x := addAutOfUnit x
-  left_inv f := AddAut.eq_of_apply_eq (Nat.card_zmod p) one_ne_zero _ _ (by simp)
-  right_inv _ := by simp
-  map_mul' f1 f2 := by
-    ext
-    obtain ⟨_, h1⟩ : ∃ n1, ∀ x, f1 x = n1 • x := AddMonoidHom.map_addCyclic f1.toAddMonoidHom
-    obtain ⟨_, h2⟩ : ∃ n2, ∀ x, f2 x = n2 • x := AddMonoidHom.map_addCyclic f2.toAddMonoidHom
-    simp [h1, h2]
+def mulEquivAddAutZMod : AddAut (ZMod p) ≃+ Additive (ZMod p)ˣ :=
+  ZMod.AddAutEquivUnits p
 
 /-- The group of multiplicative automorphisms of `MulZMod p` (with `p` prime) is isomorphic
 to the group of units of `ZMod p`. -/
 def mulEquivMulAutMulZMod : MulAut (MulZMod p) ≃* (ZMod p)ˣ :=
-  AddEquiv.toMultiplicative.mulEquiv.symm.trans <| mulEquivAddAutZMod p
+  (MulAutMultiplicative (ZMod p)).trans (AddEquiv.toMultiplicativeLeft (mulEquivAddAutZMod p))
+
+noncomputable instance : Fintype (MulAut (MulZMod p)) :=
+  Fintype.ofEquiv (ZMod p)ˣ (mulEquivMulAutMulZMod p).symm.toEquiv
 
 lemma mulAut_MulZMod_isCyclic : IsCyclic (MulAut (MulZMod p)) :=
   isCyclic_of_surjective (mulEquivMulAutMulZMod p).symm (mulEquivMulAutMulZMod p).symm.surjective
 
-lemma addAut_ZMod_isCyclic : IsCyclic (AddAut (ZMod p)) :=
-  isCyclic_of_surjective (mulEquivAddAutZMod p).symm (mulEquivAddAutZMod p).symm.surjective
+lemma addAut_ZMod_isCyclic : IsCyclic (Multiplicative (AddAut (ZMod p))) :=
+  isCyclic_of_surjective (AddEquiv.toMultiplicativeLeft (mulEquivAddAutZMod p)).symm
+    (AddEquiv.toMultiplicativeLeft (mulEquivAddAutZMod p)).symm.surjective
 
 @[simp]
 lemma card_mulAut_mulZMod :

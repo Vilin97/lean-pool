@@ -9,7 +9,7 @@ import LeanPool.FormalLearningTheory.Learner.Core
 import LeanPool.FormalLearningTheory.Learner.Bayesian
 import LeanPool.FormalLearningTheory.Criterion.PAC
 import LeanPool.FormalLearningTheory.Criterion.Gold
-import Mathlib.Data.Real.Sqrt
+import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!

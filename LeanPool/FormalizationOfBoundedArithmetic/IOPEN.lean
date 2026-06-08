@@ -7,8 +7,16 @@ Authors: ruplet
 -- for a quick demo, jump straight to `theorem add_assoc`
 import Mathlib.Tactic.Core
 import Mathlib.Logic.Basic
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 import Mathlib.ModelTheory.Basic
 import Mathlib.ModelTheory.Syntax
 import Mathlib.ModelTheory.Complexity
@@ -22,6 +30,10 @@ import LeanPool.FormalizationOfBoundedArithmetic.Complexity
 import LeanPool.FormalizationOfBoundedArithmetic.Order
 import LeanPool.FormalizationOfBoundedArithmetic.BasicSingleSorted
 import LeanPool.FormalizationOfBoundedArithmetic.SimpRules
+
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.IOPEN
+-/
 
 open FirstOrder Language BoundedFormula
 
@@ -57,19 +69,20 @@ by
     ((x + y) + z) =' (x + (y + z))
   have ind := iopen.open_induction <| display3 .z phi
   unfold phi at ind
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   rw [forall_swap_231]
   apply ind ?base ?step
   · intro x y
-    rw [B3 (x + y)]
-    rw [B3 y]
+    change (x + y) + 0 = x + (y + 0)
+    exact (B3 (x + y)).trans (congrArg (fun t => x + t) (B3 y).symm)
   · intro z hInd x y
-    rw [B4]
-    rw [B4]
-    rw [B4]
-    rw [<- (B2 (x + y + z) (x + (y + z)))]
-    rw [hInd]
+    change (x + y) + (z + 1) = x + (y + (z + 1))
+    calc
+      (x + y) + (z + 1) = ((x + y) + z) + 1 := B4 (x := x + y) (y := z)
+      _ = (x + (y + z)) + 1 := congrArg (fun t => t + 1) (hInd x y)
+      _ = x + ((y + z) + 1) := (B4 (x := x) (y := y + z)).symm
+      _ = x + (y + (z + 1)) := congrArg (fun t => x + t) (B4 (x := y) (y := z)).symm
 
 -- lemma for O2; "induction on y, first establishing the special cases y = 0 and y = 1..."
 -- proof: induction on x
@@ -78,8 +91,8 @@ lemma add_zero_comm
 by
   have ind := iopen.open_induction <| display1
     (((x + 0) =' (0 + x)) : Formula _ (Vars1 .x))
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   apply ind ?base ?step
   · trivial
   · intro a ha
@@ -102,8 +115,8 @@ theorem add_one_comm
 by
   have ind := iopen.open_induction <| display1
     (((x + 1) =' (1 + x)) : Formula _ (Vars1 .x))
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   apply ind ?base ?step
   · calc
       (0 : M) + 1 = 1 := zero_add 1
@@ -119,19 +132,22 @@ theorem add_comm
 by
   have ind := iopen.open_induction <| display2 .y
     (((x + y) =' (y + x)) : Formula _ (Vars2 .y .x))
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   rw [forall_comm]
   apply ind ?base ?step
   · intro x
     exact add_zero_comm x
   · intro a hInd b
-    rw [<- add_assoc]
-    rw [hInd]
-    rw [add_assoc]
+    change b + (a + 1) = (a + 1) + b
+    have hInd' : b + a = a + b := by
+      exact hInd b
     calc
-      a + (b + 1) = a + (1 + b) := by rw [add_one_comm b]
-      _ = a + 1 + b := by rw [<- add_assoc]
+      b + (a + 1) = (b + a) + 1 := B4 (x := b) (y := a)
+      _ = (a + b) + 1 := congrArg (fun t => t + 1) hInd'
+      _ = a + (b + 1) := (B4 (x := a) (y := b)).symm
+      _ = a + (1 + b) := congrArg (fun t => a + t) (add_one_comm b)
+      _ = (a + 1) + b := (add_assoc a 1 b).symm
 
 -- O3. x · (y + z) = (x · y) + (x · z) (Distributive law)
   -- proof: induction on z
@@ -140,23 +156,26 @@ theorem mul_add
 by
   have ind := iopen.open_induction <| display3 .z
      ((x * (y + z)) =' ((x * y) + (x * z)) : Formula _ (Vars3 .z .x .y))
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   rw [forall_swap_231]
   apply ind ?base ?step
   · intro a b
-    rw [B3]
-    rw [B5]
-    rw [B3]
+    change a * (b + 0) = a * b + a * 0
+    exact (congrArg (fun t => a * t) (B3 b)).trans
+      ((B3 (a * b)).symm.trans (congrArg (fun t => a * b + t) (B5 (x := a)).symm))
   · intro b hInd_b a2 a3
-    rw [add_comm]
-    rw [add_assoc]
-    rw [add_comm]
-    rw [hInd_b]
-    conv => lhs; left; rw [add_comm]; rw [B6]
-    rw [B6]
-    conv => rhs; right; rw [add_comm]
-    rw [add_assoc]
+    change a2 * (a3 + (b + 1)) = a2 * a3 + a2 * (b + 1)
+    have hInd' : a2 * (a3 + b) = a2 * a3 + a2 * b := by
+      exact hInd_b a2 a3
+    calc
+      a2 * (a3 + (b + 1)) = a2 * ((a3 + b) + 1) :=
+        congrArg (fun t => a2 * t) (B4 (x := a3) (y := b))
+      _ = a2 * (a3 + b) + a2 := B6 (x := a2) (y := a3 + b)
+      _ = (a2 * a3 + a2 * b) + a2 := congrArg (fun t => t + a2) hInd'
+      _ = a2 * a3 + (a2 * b + a2) := add_assoc (a2 * a3) (a2 * b) a2
+      _ = a2 * a3 + a2 * (b + 1) :=
+        congrArg (fun t => a2 * a3 + t) (B6 (x := a2) (y := b)).symm
 
 theorem mul_one
   : ∀ x : M, x * 1 = x :=
@@ -175,31 +194,36 @@ theorem mul_assoc
   by
     have ind := iopen.open_induction <| display3 .z
       ((((x * y) * z) =' (x * (y * z))) : Formula _ (Vars3 .z .x .y))
-    simp_complexity at ind
-    simp_induction at ind
+    simpComplexity at ind
+    simpInduction at ind
     rw [forall_swap_231]
     apply ind ?base ?step
     · intro x y
-      rw [B5]
-      rw [B5]
-      rw [B5]
-    · intro x hInd_x y z
-      rw [mul_add]
-      rw [mul_add]
+      change (x * y) * 0 = x * (y * 0)
       calc
-        y * z * x + y * z * 1 = y * (z * x) + y * z := by
-          rw [hInd_x]
-          rw [mul_one]
-        _ = y * (z * x) + y * (z * 1) := by rw [mul_one]
+        (x * y) * 0 = 0 := B5 (x := x * y)
+        _ = x * 0 := (B5 (x := x)).symm
+        _ = x * (y * 0) := congrArg (fun t => x * t) (B5 (x := y)).symm
+    · intro x hInd_x y z
+      change (y * z) * (x + 1) = y * (z * (x + 1))
+      have hInd' : (y * z) * x = y * (z * x) := by
+        exact hInd_x y z
+      calc
+        (y * z) * (x + 1) = (y * z) * x + y * z := B6 (x := y * z) (y := x)
+        _ = y * (z * x) + y * z := congrArg (fun t => t + y * z) hInd'
+        _ = y * (z * x) + y * (z * 1) :=
+          congrArg (fun t => y * (z * x) + t) (congrArg (fun t => y * t) (mul_one z).symm)
         _ = y * (z * x + z * 1) := (mul_add y (z * x) (z * 1)).symm
+        _ = y * (z * x + z) := congrArg (fun t => y * (z * x + t)) (mul_one z)
+        _ = y * (z * (x + 1)) := congrArg (fun t => y * t) (B6 (x := z) (y := x)).symm
 
 lemma zero_mul
   : ∀ x : M, 0 * x = 0 :=
 by
   have ind := iopen.open_induction <| display1
     (((0 * x) =' 0) : Formula _ (Vars1 .x))
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   apply ind ?base ?step
   · rw [B5]
   · intro x hInd_0_x
@@ -212,8 +236,8 @@ lemma one_mul
 by
   have ind := iopen.open_induction <| display1
     (((1 * x) =' x) : Formula _ (Vars1 .x))
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   apply ind ?base ?step
   · rw [B5]
   · intro x hInd_1_x
@@ -225,20 +249,30 @@ lemma mul_add_1_left
 by
   have ind := iopen.open_induction <| display2 .y
     (((x + 1) * y) =' ((x * y) + y) : Formula _ (Vars2 .y .x))
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   rw [forall_comm]
   apply ind ?base ?step
   · intro x
-    rw [B5]
-    rw [B5]
-    rw [B3]
+    change (x + 1) * 0 = x * 0 + 0
+    exact (B5 (x := x + 1)).trans ((B5 (x := x)).symm.trans (B3 (x * 0)).symm)
   · intro y hInd_y x
-    rw [B6]
-    rw [B6]
-    rw [hInd_y]
-    conv => lhs; rw [add_assoc]; right; rw [<- add_assoc]; left; rw [add_comm]
-    conv => rhs; rw [add_assoc]; right; rw [<- add_assoc]
+    change (x + 1) * (y + 1) = x * (y + 1) + (y + 1)
+    have hInd' : (x + 1) * y = x * y + y := by
+      exact hInd_y x
+    calc
+      (x + 1) * (y + 1) = (x + 1) * y + (x + 1) := B6 (x := x + 1) (y := y)
+      _ = (x * y + y) + (x + 1) := congrArg (fun t => t + (x + 1)) hInd'
+      _ = x * y + (y + (x + 1)) := add_assoc (x * y) y (x + 1)
+      _ = x * y + ((y + x) + 1) :=
+        congrArg (fun t => x * y + t) (B4 (x := y) (y := x))
+      _ = x * y + ((x + y) + 1) :=
+        congrArg (fun t => x * y + (t + 1)) (add_comm y x)
+      _ = x * y + (x + (y + 1)) :=
+        congrArg (fun t => x * y + t) (B4 (x := x) (y := y)).symm
+      _ = (x * y + x) + (y + 1) := (add_assoc (x * y) x (y + 1)).symm
+      _ = x * (y + 1) + (y + 1) :=
+        congrArg (fun t => t + (y + 1)) (B6 (x := x) (y := y)).symm
 
 -- O5. x · y = y · x (Commutativity of ·)
 theorem mul_comm
@@ -246,16 +280,19 @@ theorem mul_comm
 by
   have ind := iopen.open_induction <| display2 .y
     (((x * y) =' (y * x)) : Formula _ (Vars2 .y .x))
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   rw [forall_comm]
   apply ind ?base ?step
   · intro x
     exact (B5 (x := x)).trans (zero_mul x).symm
   · intro x hInd_x y
-    rw [B6]
+    change y * (x + 1) = (x + 1) * y
+    have hInd' : y * x = x * y := by
+      exact hInd_x y
     calc
-      y * x + y = x * y + y := by rw [hInd_x]
+      y * (x + 1) = y * x + y := B6 (x := y) (y := x)
+      _ = x * y + y := congrArg (fun t => t + y) hInd'
       _ = (x + 1) * y := (mul_add_1_left x y).symm
 
 example : Nonempty (True ∧ True) :=
@@ -269,24 +306,23 @@ theorem mp
   by
     have ind := iopen.open_induction <| display3 .z
       (((x + z) =' (y + z) ⟹ (x =' y)) : Formula _ (Vars3 .z .x .y))
-    simp_complexity at ind
-    simp_induction at ind
+    simpComplexity at ind
+    simpInduction at ind
     rw [forall_swap_231]
     apply ind ?base ?step
     · intro x y
-      rw [B3]
-      rw [B3]
+      change x + 0 = y + 0 → x = y
       intro h
-      exact h
+      exact (B3 x).symm.trans (h.trans (B3 y))
     · intro x hInd_x y z
-      conv => lhs; lhs; right; rw [add_comm]
-      conv => lhs; rhs; right; rw [add_comm]
-      rw [<- add_assoc]
-      rw [<- add_assoc]
+      change y + (x + 1) = z + (x + 1) → y = z
       intro h
-      apply B2
       apply hInd_x
-      exact h
+      apply B2
+      calc
+        (y + x) + 1 = y + (x + 1) := (B4 (x := y) (y := x)).symm
+        _ = z + (x + 1) := h
+        _ = (z + x) + 1 := B4 (x := z) (y := x)
 
 end add_cancel_right
 
@@ -342,8 +378,8 @@ theorem ne_succ
 by
   have ind := iopen.open_induction <| display1
     ((x ≠' (x + 1)) : Formula _ (Vars1 .x))
-  simp_complexity at ind
-  simp_induction at ind
+  simpComplexity at ind
+  simpInduction at ind
   apply ind ?base ?step
   · intro h
     -- TODO: why this self is necessary?

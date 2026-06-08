@@ -6,6 +6,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 import LeanPool.DirectedTopologyLean4.PathCover
 import LeanPool.DirectedTopologyLean4.SplitDihomotopy
 
+/-!
+# LeanPool.DirectedTopologyLean4.DihomotopyCover
+-/
+
 /-
   This file contains the definition of a (n, m)-covered (dipath) dihomotopy, covered by X₁ and X₂:
       It maps all subrectangles  [i/n, (i+1)/n] × [j/m, (j+1)/m] into either X₁ or X₂
@@ -64,11 +68,11 @@ is contained in the image of `F` restricted to `[0, 1/(n+1)] × [i/(m+1), (i+1)/
 -/
 lemma left_path_image_interval_subset_of_dihomotopy_subset (F : Dihomotopy f g) (n : ℕ) {i m : ℕ}
     (hi : i < m.succ) :
-    (Dipath.of_directedMap f).toPath.extend '' Icc (↑i / (↑m + 1)) ((↑i + 1) / (↑m + 1)) ⊆
+    (Dipath.ofDirectedMap f).toPath.extend '' Icc (↑i / (↑m + 1)) ((↑i + 1) / (↑m + 1)) ⊆
       F ''  UnitSubrectangle (Nat.succ_pos n) hi := by
   rintro x ⟨t, ⟨ht, rfl⟩⟩
   have tI : t ∈ I := UnitIntervalSub.mem_I_of_mem_interval_coed hi ht
-  rw [Path.extend_apply (Dipath.of_directedMap f).toPath tI]
+  rw [Path.extend_apply (Dipath.ofDirectedMap f).toPath tI]
   use (0, ⟨t, tI⟩)
   constructor
   · apply UnitSubrectangle.mem_unitSubrectangle
@@ -86,14 +90,14 @@ lemma left_path_image_interval_subset_of_dihomotopy_subset (F : Dihomotopy f g) 
 lemma path_covered_partiwse_of_dihomotopy_coveredPartwise_left {F : Dihomotopy f g}
     {hX : X₀ ∪ X₁ = univ}
   {n m : ℕ} (hF : coveredPartwise hX F n m) :
-    Dipath.covered_partwise hX (Dipath.of_directedMap f) m := by
-  apply Dipath.covered_partwise.covered_partwise_of_covered_by_intervals
+    Dipath.coveredPartwise hX (Dipath.ofDirectedMap f) m := by
+  apply Dipath.coveredPartwise.covered_partwise_of_covered_by_intervals
   intros i hi
   cases hF 0 i (Nat.succ_pos n) hi
-  case a.inl h =>
+  case inl h =>
     left
     exact subset_trans (left_path_image_interval_subset_of_dihomotopy_subset F n hi) h
-  case a.inr h =>
+  case inr h =>
     right
     exact subset_trans (left_path_image_interval_subset_of_dihomotopy_subset F n hi) h
 
@@ -103,11 +107,11 @@ is contained in the image of `F` restricted to `[n/(n+1), 1] × [i/(m+1), (i+1)/
 -/
 lemma right_path_image_interval_subset_of_dihomotopy_subset (F : Dihomotopy f g) (n : ℕ) {i m : ℕ}
     (hi : i < m.succ) :
-    (Dipath.of_directedMap g).toPath.extend '' Icc (↑i / (↑m + 1)) ((↑i + 1) / (↑m + 1)) ⊆
+    (Dipath.ofDirectedMap g).toPath.extend '' Icc (↑i / (↑m + 1)) ((↑i + 1) / (↑m + 1)) ⊆
       F ''  UnitSubrectangle (Nat.lt_succ_self n) hi := by
   rintro x ⟨t, ⟨ht, rfl⟩⟩
   have tI : t ∈ I := UnitIntervalSub.mem_I_of_mem_interval_coed hi ht
-  rw [Path.extend_apply (Dipath.of_directedMap g).toPath tI]
+  rw [Path.extend_apply (Dipath.ofDirectedMap g).toPath tI]
   use (1, ⟨t, tI⟩)
   constructor
   · apply UnitSubrectangle.mem_unitSubrectangle
@@ -124,14 +128,14 @@ lemma right_path_image_interval_subset_of_dihomotopy_subset (F : Dihomotopy f g)
 -/
 lemma path_covered_partiwse_of_dihomotopy_coveredPartwise_right {F : Dihomotopy f g}
   {hX : X₀ ∪ X₁ = univ} {n m : ℕ} (hF : coveredPartwise hX F n m) :
-    Dipath.covered_partwise hX (Dipath.of_directedMap g) m := by
-  apply Dipath.covered_partwise.covered_partwise_of_covered_by_intervals
+    Dipath.coveredPartwise hX (Dipath.ofDirectedMap g) m := by
+  apply Dipath.coveredPartwise.covered_partwise_of_covered_by_intervals
   intros i hi
   cases hF n i (Nat.lt_succ_self n) hi
-  case a.inl h =>
+  case inl h =>
     left
     exact subset_trans (right_path_image_interval_subset_of_dihomotopy_subset F n hi) h
-  case a.inr h =>
+  case inr h =>
     right
     exact subset_trans (right_path_image_interval_subset_of_dihomotopy_subset F n hi) h
 
@@ -157,7 +161,7 @@ lemma coveredPartwise_exists (F : Dihomotopy f g) (hX : X₀ ∪ X₁ = univ) (X
     rcases hin with h | h
     · exact ⟨0, h⟩
     · exact ⟨1, h⟩
-  rcases (lebesgue_number_lemma_unit_square h₁ h₂) with ⟨n, hn⟩
+  rcases (lebesgue_number_lemma_unitSquare h₁ h₂) with ⟨n, hn⟩
   refine ⟨n, n, ?_⟩
   intros i j hi hj
   obtain ⟨ι, hι⟩ := hn i j hi hj

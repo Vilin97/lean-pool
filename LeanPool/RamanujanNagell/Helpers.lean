@@ -35,9 +35,6 @@ import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
 import LeanPool.RamanujanNagell.QuadraticIntegers.RingOfIntegers
 import LeanPool.RamanujanNagell.QuadraticIntegers.FieldIsomorphism
 
-open Polynomial NumberField QuadraticAlgebra RingOfIntegers Algebra Nat Ideal InfinitePlace
-  UniqueFactorizationMonoid
-
 /-! ## Algebraic Number Theory Facts
 
 The following lemmas encode number-theoretic facts about the ring of integers of ℚ(√-7)
@@ -48,21 +45,25 @@ Reference: These facts can be found in standard algebraic number theory textbook
 The class number of ℚ(√-7) being 1 is part of the Heegner-Stark theorem which classifies
 all imaginary quadratic fields with class number 1: d = -1, -2, -3, -7, -11, -19, -43, -67, -163.
 -/
+
+open Polynomial NumberField QuadraticAlgebra RingOfIntegers Algebra Nat Ideal InfinitePlace
+  UniqueFactorizationMonoid
+
 noncomputable section
 /-- The minimal polynomial of θ: X² - X + 2.
     Its discriminant is -7, so it is irreducible over ℚ. -/
-abbrev f_minpoly : ℚ[X] := X ^ 2 - X + C 2
+abbrev fMinpoly : ℚ[X] := X ^ 2 - X + C 2
 
-instance : Fact (Irreducible f_minpoly) := ⟨by
-  -- `f_minpoly = X^2 - X + 2` has degree 2 and no rational root (discriminant 1 - 8 < 0),
+instance : Fact (Irreducible fMinpoly) := ⟨by
+  -- `fMinpoly = X^2 - X + 2` has degree 2 and no rational root (discriminant 1 - 8 < 0),
   -- so it is irreducible over ℚ.
-  have h_deg : f_minpoly.natDegree = 2 := by
-    unfold f_minpoly; compute_degree!
+  have h_deg : fMinpoly.natDegree = 2 := by
+    unfold fMinpoly; compute_degree!
   refine Polynomial.irreducible_of_degree_le_three_of_not_isRoot ?_ ?_
   · rw [h_deg]; decide
   · intro r hr
     have h1 : r ^ 2 - r + 2 = 0 := by
-      simpa [f_minpoly, Polynomial.IsRoot, Polynomial.eval_add, Polynomial.eval_sub,
+      simpa [fMinpoly, Polynomial.IsRoot, Polynomial.eval_add, Polynomial.eval_sub,
         Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C] using hr
     nlinarith [sq_nonneg (r - 1 / 2)]⟩
 
@@ -141,11 +142,11 @@ lemma my_minpoly : minpoly ℤ θ = X ^ 2 - X + 2 := by
   have h_monic : (X ^ 2 - X + C (2 : ℤ) : ℤ[X]).Monic := by
     rw [show (X ^ 2 - X + C (2 : ℤ) : ℤ[X]) = X ^ 2 - (X - C 2) from by ring]
     exact monic_X_pow_sub (by rw [degree_X_sub_C]; norm_num)
-  -- Irreducible over ℤ via Gauss's lemma + Fact (Irreducible f_minpoly)
+  -- Irreducible over ℤ via Gauss's lemma + Fact (Irreducible fMinpoly)
   have h_irred : Irreducible (X ^ 2 - X + C (2 : ℤ) : ℤ[X]) := by
     rw [Polynomial.IsPrimitive.Int.irreducible_iff_irreducible_map_cast h_monic.isPrimitive]
-    have : Polynomial.map (Int.castRingHom ℚ) (X ^ 2 - X + C (2 : ℤ)) = f_minpoly := by
-      simp [f_minpoly, Polynomial.map_sub, Polynomial.map_add, Polynomial.map_pow, map_X]
+    have : Polynomial.map (Int.castRingHom ℚ) (X ^ 2 - X + C (2 : ℤ)) = fMinpoly := by
+      simp [fMinpoly, Polynomial.map_sub, Polynomial.map_add, Polynomial.map_pow, map_X]
       rfl
     rw [this]
     exact Fact.out
@@ -166,11 +167,11 @@ lemma my_minpoly_theta_prime : minpoly ℤ θ' = X ^ 2 - X + 2 := by
   have h_monic : (X ^ 2 - X + C (2 : ℤ) : ℤ[X]).Monic := by
     rw [show (X ^ 2 - X + C (2 : ℤ) : ℤ[X]) = X ^ 2 - (X - C 2) from by ring]
     exact monic_X_pow_sub (by rw [degree_X_sub_C]; norm_num)
-  -- Irreducible over ℤ via Gauss's lemma + Fact (Irreducible f_minpoly)
+  -- Irreducible over ℤ via Gauss's lemma + Fact (Irreducible fMinpoly)
   have h_irred : Irreducible (X ^ 2 - X + C (2 : ℤ) : ℤ[X]) := by
     rw [Polynomial.IsPrimitive.Int.irreducible_iff_irreducible_map_cast h_monic.isPrimitive]
-    have : Polynomial.map (Int.castRingHom ℚ) (X ^ 2 - X + C (2 : ℤ)) = f_minpoly := by
-      simp [f_minpoly, Polynomial.map_sub, Polynomial.map_add, Polynomial.map_pow, map_X]
+    have : Polynomial.map (Int.castRingHom ℚ) (X ^ 2 - X + C (2 : ℤ)) = fMinpoly := by
+      simp [fMinpoly, Polynomial.map_sub, Polynomial.map_add, Polynomial.map_pow, map_X]
       rfl
     rw [this]
     exact Fact.out
@@ -232,14 +233,14 @@ lemma span_eq_top : adjoin ℤ {θ} = ⊤ := by
   -- 4. Pull back `adjoin ℤ {ω} = ⊤` (in QuadraticAlgebra ℤ (-2) 1) via the iso
   obtain ⟨iso, h_iso_omega⟩ :
       ∃ (iso : QuadraticAlgebra ℤ (-2 : ℤ) 1 ≃ₐ[ℤ] 𝓞 K), iso ω = θ := by
-    -- Use OK_to_K (FieldIsomorphism.lean) which maps ω ↦ ω directly (not via K').
-    letI alg_int_K : Algebra (QuadraticAlgebra ℤ (-2 : ℤ) 1) K :=
-      OK_to_K.toAlgebra
+    -- Use ringOfIntegersToK (FieldIsomorphism.lean) which maps ω ↦ ω directly (not via K').
+    letI algebraIntK : Algebra (QuadraticAlgebra ℤ (-2 : ℤ) 1) K :=
+      ringOfIntegersToK.toAlgebra
     haveI hST : IsScalarTower ℤ (QuadraticAlgebra ℤ (-2 : ℤ) 1) K :=
-      IsScalarTower.of_algebraMap_eq fun r => (OK_to_K.commutes r).symm
+      IsScalarTower.of_algebraMap_eq fun r => (ringOfIntegersToK.commutes r).symm
     haveI hIC : IsIntegralClosure (QuadraticAlgebra ℤ (-2 : ℤ) 1) ℤ K := isIntegralClosure_K (by
-      change OK_to_K ω = ω
-      rw [OK_to_K, QuadraticAlgebra.lift_apply_apply]
+      change ringOfIntegersToK ω = ω
+      rw [ringOfIntegersToK, QuadraticAlgebra.lift_apply_apply]
       simp [omega_re, omega_im])
     -- Apply IsIntegralClosure.equiv to obtain the canonical AlgEquiv
     refine ⟨IsIntegralClosure.equiv ℤ (QuadraticAlgebra ℤ (-2 : ℤ) 1) K (𝓞 K), ?_⟩
@@ -248,10 +249,10 @@ lemma span_eq_top : adjoin ℤ {θ} = ⊤ := by
     have h := IsIntegralClosure.algebraMap_equiv
       ℤ (QuadraticAlgebra ℤ (-2 : ℤ) 1) K (𝓞 K) ω
     -- h : algebraMap (𝓞 K) K (iso ω) = algebraMap (QuadraticAlgebra ℤ (-2) 1) K ω
-    -- With alg_int_K = OK_to_K.toAlgebra, algebraMap ... K ω = OK_to_K ω = ω.
+    -- With algebraIntK = ringOfIntegersToK.toAlgebra, algebraMap ... K ω = ringOfIntegersToK ω = ω.
     have h2 : (algebraMap (QuadraticAlgebra ℤ (-2 : ℤ) 1) K) ω = (ω : K) := by
-      change OK_to_K ω = ω
-      rw [OK_to_K, QuadraticAlgebra.lift_apply_apply]
+      change ringOfIntegersToK ω = ω
+      rw [ringOfIntegersToK, QuadraticAlgebra.lift_apply_apply]
       simp [omega_re, omega_im]
     exact h.trans h2
   -- Every element of QuadraticAlgebra ℤ (-2) 1 is in adjoin ℤ {ω}
@@ -610,7 +611,7 @@ lemma units_pm_one : ∀ u : Rˣ, u = 1 ∨ u = -1 := by
   -- Step 1: reduce to "u is a root of unity in K"
   suffices h_torsion : u ∈ NumberField.Units.torsion K by
     -- u has finite order (torsion = elements of finite order)
-    have h_fin : IsOfFinOrder u := (CommGroup.mem_torsion Rˣ u).mp h_torsion
+    have h_fin : IsOfFinOrder u := (CommGroup.mem_torsion u).mp h_torsion
     -- KEY fact: orderOf u divides 2.
     -- Proof sketch: any primitive nth root of unity ζ in K satisfies φ(n) ≤ [K:ℚ] = 2,
     -- so n ∈ {1,2,3,4,6}. But n ∈ {3,4,6} would force K = ℚ(ζ₃) or ℚ(i),
@@ -652,7 +653,6 @@ lemma units_pm_one : ∀ u : Rˣ, u = 1 ∨ u = -1 := by
           have h_deg : lm.charpoly.natDegree = 2 := by
             rw [LinearMap.charpoly_natDegree, NumberField.RingOfIntegers.rank K]
             convert K_degree_2 using 2
-            exact Subsingleton.elim _ _
           linarith [Polynomial.natDegree_le_of_dvd h_dvd h_ne]
         omega
       -- For n ≥ 7, φ(n) ≥ 4 > 2, so orderOf u ≤ 6
@@ -813,10 +813,10 @@ lemma norm_eq_coeff_zero_minpoly (x : 𝓞 K) (h_deg : (minpoly ℤ x).natDegree
         rw [ Module.finrank_eq_card_basis ( Module.Free.chooseBasis ℤ (𝓞 K) ) ];
       have h_charpoly_eq_minpoly : Module.finrank ℤ (𝓞 K) = Module.finrank ℚ K := by
         exact Eq.symm (IsAlgebraic.finrank_of_isFractionRing ℤ ℚ (𝓞 K) K)
-      have h_charpoly_eq_minpoly : Module.finrank ℚ K = Polynomial.natDegree f_minpoly := by
+      have h_charpoly_eq_minpoly : Module.finrank ℚ K = Polynomial.natDegree fMinpoly := by
         rw [QuadraticAlgebra.finrank_eq_two]
-        simp +decide [f_minpoly, Polynomial.natDegree_sub_eq_left_of_natDegree_lt]
-      simp_all +decide [ f_minpoly ];
+        simp +decide [fMinpoly, Polynomial.natDegree_sub_eq_left_of_natDegree_lt]
+      simp_all +decide [ fMinpoly ];
       norm_num [ Polynomial.natDegree_sub_eq_left_of_natDegree_lt ];
     have h_charpoly_eq_minpoly : (minpoly ℤ x) ∣ (LinearMap.charpoly (LinearMap.mulLeft ℤ x)) := by
       refine minpoly.isIntegrallyClosed_dvd ?_ ?_;

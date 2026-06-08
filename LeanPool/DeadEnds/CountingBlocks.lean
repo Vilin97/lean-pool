@@ -365,7 +365,7 @@ lemma partialBlock_injOn_mod (M X : ℕ) :
     exact hxy
   · exact (Nat.mod_injOn_Ico (X / M * M) M).mono (partialBlock_subset_Ico M X hM)
 
-lemma partialBlock_valid_mapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
+lemma partialBlock_validMapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
     let M := primeSquareProduct S
     let A := validResiduesMod b T S
     let validBlock := (partialBlock M X).filter fun N =>
@@ -394,7 +394,7 @@ lemma partialBlock_valid_count_le (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Pri
   let validBlock := (partialBlock M X).filter fun N =>
     ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)
   apply Finset.card_le_card_of_injOn (fun x => x % M)
-  · exact partialBlock_valid_mapsTo b T S X
+  · exact partialBlock_validMapsTo b T S X
   · intro x hx y hy hxy
     have hx' : x ∈ partialBlock M X := Finset.mem_filter.mp hx |>.1
     have hy' : y ∈ partialBlock M X := Finset.mem_filter.mp hy |>.1

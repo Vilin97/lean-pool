@@ -7,6 +7,10 @@ import LeanPool.DirectedTopologyLean4.CoverLemma
 import LeanPool.DirectedTopologyLean4.DipathSubtype
 import LeanPool.DirectedTopologyLean4.SplitPath.SplitProperties
 
+/-!
+# LeanPool.DirectedTopologyLean4.PathCover
+-/
+
 /-
   This file contains the definition of a directed path being n-covered by two subspaces X₁ and X₂:
   It maps any subinterval [i/n, (i+1)/n] into either X₁ or X₂.
@@ -85,7 +89,7 @@ lemma covered_split_path {γ : Dipath x₀ x₁} {hX : X₀ ∪ X₁ = Set.univ}
     (hT₀ : 0 < T) (hT₁ : T < 1) (hγ : covered hX γ) :
     covered hX (SplitDipath.FirstPart γ T) ∧ covered hX (SplitDipath.SecondPart γ T) := by
   apply covered_of_covered_trans
-  apply (covered_reparam_iff _ hX (SplitDipath.trans_reparam_map hT₀ hT₁) _ _).mpr
+  apply (covered_reparam_iff _ hX (SplitDipath.transReparamMap hT₀ hT₁) _ _).mpr
   · rw [SplitDipath.first_trans_second_reparam_eq_self γ hT₀ hT₁] at hγ
     exact hγ
 
@@ -93,28 +97,28 @@ end covered
 
 open covered
 
-/-- We say that `covered_partwise hX γ n` if a dipath γ can be split into n+1 parts, each of which
+/-- We say that `coveredPartwise hX γ n` if a dipath γ can be split into n+1 parts, each of which
 is covered by `X₁` or `X₂`
 -/
-def covered_partwise (hX : X₀ ∪ X₁ = Set.univ) {x y : X} (γ : Dipath x y) (n : ℕ) : Prop :=
+def coveredPartwise (hX : X₀ ∪ X₁ = Set.univ) {x y : X} (γ : Dipath x y) (n : ℕ) : Prop :=
   match n with
   | Nat.zero => covered hX γ
   | Nat.succ n =>
       covered hX (SplitDipath.FirstPart γ
         (Fraction.ofPos (show 0 < (n.succ + 1) by norm_num))) ∧
-      covered_partwise hX (SplitDipath.SecondPart γ
+      coveredPartwise hX (SplitDipath.SecondPart γ
         (Fraction.ofPos (show 0 < (n.succ + 1) by norm_num))) n
 
-namespace covered_partwise
+namespace coveredPartwise
 
 lemma covered_partwise_of_equal (hX : X₀ ∪ X₁ = Set.univ) {x₀ x₁ : X} {γ₁ γ₂ : Dipath x₀ x₁}
-    {n m : ℕ} (h : γ₁ = γ₂) (h' : n = m) (hγ₁ : covered_partwise hX γ₁ n) :
-  covered_partwise hX γ₂ m := by subst_vars; exact hγ₁
+    {n m : ℕ} (h : γ₁ = γ₂) (h' : n = m) (hγ₁ : coveredPartwise hX γ₁ n) :
+  coveredPartwise hX γ₂ m := by subst_vars; exact hγ₁
 
 /-- If γ is a dipath that is fully covered, then it is also partwise covered for all n ∈ ℕ
 -/
 lemma covered_partwise_of_covered {hX : X₀ ∪ X₁ = Set.univ} (n : ℕ) :
-    ∀ {x₀ x₁ : X} {γ : Dipath x₀ x₁}, covered hX γ → covered_partwise hX γ n := by
+    ∀ {x₀ x₁ : X} {γ : Dipath x₀ x₁}, covered hX γ → coveredPartwise hX γ n := by
   induction n
   case zero =>
     intros _ _ _ hγ
@@ -130,14 +134,14 @@ lemma covered_partwise_of_covered {hX : X₀ ∪ X₁ = Set.univ} (n : ℕ) :
 
 lemma covered_partwise_cast_iff (hX : X₀ ∪ X₁ = univ) {n : ℕ} :
     ∀ {x₀ x₁ x₀' x₁' : X} (γ : Dipath x₀ x₁) (hx₀ : x₀' = x₀) (hx₁ : x₁' = x₁),
-    covered_partwise hX γ n ↔ covered_partwise hX (γ.cast hx₀ hx₁) n := by
+    coveredPartwise hX γ n ↔ coveredPartwise hX (γ.cast hx₀ hx₁) n := by
   induction n
   case zero =>
     intros x₀ x₁ x₀' x₁' γ hx₀ hx₁
     exact covered_cast_iff _ _ _ _
   case succ n ih =>
     intros x₀ x₁ x₀' x₁' γ hx₀ hx₁
-    unfold covered_partwise
+    unfold coveredPartwise
     rw [SplitProperties.firstPart_cast, SplitProperties.secondPart_cast]
     constructor
     · rintro ⟨hγ₁, hγ₂⟩
@@ -149,19 +153,19 @@ lemma covered_partwise_cast_iff (hX : X₀ ∪ X₁ = univ) {n : ℕ} :
       · exact (covered_cast_iff _ _ _ _).mpr hγ₁
       · exact (ih _ _ _).mpr hγ₂
 
-/-- A dipath γ that can be covered with n+1 intervals can satisfied `covered_partwise _ γ n`.
+/-- A dipath γ that can be covered with n+1 intervals can satisfied `coveredPartwise _ γ n`.
  This is the converse of `covered_by_intervals_of_covered_partwise`.
 -/
 lemma covered_partwise_of_covered_by_intervals {hX : X₀ ∪ X₁ = Set.univ} (n : ℕ) :
     ∀ {x₀ x₁ : X} {γ : Dipath x₀ x₁}, (∀ (i : ℕ) (_ : i < (n + 1)),
       γ.extend '' Set.Icc ((↑i) / (↑n + 1)) ((↑i + 1) / (↑n + 1)) ⊆ X₀ ∨
       γ.extend '' Set.Icc ((↑i) / (↑n + 1)) ((↑i + 1) / (↑n + 1))
-          ⊆ X₁) → covered_partwise hX γ n := by
+          ⊆ X₁) → coveredPartwise hX γ n := by
   induction n
   case zero =>
     intros x₀ x₁ γ hγ
     have := hγ 0 (by linarith)
-    unfold covered_partwise covered
+    unfold coveredPartwise covered
     rw [Dipath.range_eq_image]
     convert this <;> simp
   case succ n ih =>
@@ -184,11 +188,11 @@ lemma covered_partwise_of_covered_by_intervals {hX : X₀ ∪ X₁ = Set.univ} (
       · exact Nat.succ_pos n
 
 
-/-- A dipath γ that satisfies `covered_partwise _ γ n` can be covered with n+1 intervals.
+/-- A dipath γ that satisfies `coveredPartwise _ γ n` can be covered with n+1 intervals.
  This is the converse of `covered_partwise_of_covered_by_intervals`.
 -/
 lemma covered_by_intervals_of_covered_partwise {hX : X₀ ∪ X₁ = Set.univ} (n : ℕ) :
-    ∀ {x₀ x₁ : X} {γ : Dipath x₀ x₁}, covered_partwise hX γ n →
+    ∀ {x₀ x₁ : X} {γ : Dipath x₀ x₁}, coveredPartwise hX γ n →
       (∀ (i : ℕ) (_ : i < (n + 1)),
         γ.extend '' Set.Icc ((↑i) / (↑n + 1)) ((↑i + 1) / (↑n + 1)) ⊆ X₀ ∨
         γ.extend '' Set.Icc ((↑i) / (↑n + 1)) ((↑i + 1) / (↑n + 1)) ⊆ X₁) := by
@@ -226,8 +230,8 @@ lemma covered_by_intervals_of_covered_partwise {hX : X₀ ∪ X₁ = Set.univ} (
   Here, k = d.succ, so we don't need the requirement k > 0.
 -/
 lemma covered_partwise_first_part_d (hX : X₀ ∪ X₁ = Set.univ) {n d : ℕ} (hd_n : d.succ < n.succ) :
-    ∀ {x₀ x₁ : X} {γ : Dipath x₀ x₁} (_ : covered_partwise hX γ n),
-      covered_partwise hX (SplitDipath.FirstPart γ <| Fraction (Nat.succ_pos n) (le_of_lt hd_n)) d
+    ∀ {x₀ x₁ : X} {γ : Dipath x₀ x₁} (_ : coveredPartwise hX γ n),
+      coveredPartwise hX (SplitDipath.FirstPart γ <| Fraction (Nat.succ_pos n) (le_of_lt hd_n)) d
           := by
   intro x y γ hγ
   apply covered_partwise_of_covered_by_intervals
@@ -241,8 +245,8 @@ lemma covered_partwise_first_part_d (hX : X₀ ∪ X₁ = Set.univ) {n d : ℕ} 
   Here, k = d.succ, so we don't need the requirement k > 0.
 -/
 lemma covered_partwise_second_part_d (hX : X₀ ∪ X₁ = Set.univ) {n d : ℕ} (hd_n : d.succ < n.succ) :
-    ∀ {x₀ x₁ : X} {γ : Dipath x₀ x₁} (_ : covered_partwise hX γ n),
-    covered_partwise hX (SplitDipath.SecondPart γ <| Fraction (Nat.succ_pos n) (le_of_lt hd_n))
+    ∀ {x₀ x₁ : X} {γ : Dipath x₀ x₁} (_ : coveredPartwise hX γ n),
+    coveredPartwise hX (SplitDipath.SecondPart γ <| Fraction (Nat.succ_pos n) (le_of_lt hd_n))
         (n - d.succ) := by
   intros x y γ hγ
   apply covered_partwise_of_covered_by_intervals
@@ -267,8 +271,8 @@ lemma covered_partwise_second_part_d (hX : X₀ ∪ X₁ = Set.univ) {n d : ℕ}
 covered by n+1 parts.
 -/
 lemma covered_partwise_first_part_end_split (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} {x₀ x₁ : X}
-  {γ : Dipath x₀ x₁} (hγ : covered_partwise hX γ n.succ) :
-    covered_partwise hX
+  {γ : Dipath x₀ x₁} (hγ : coveredPartwise hX γ n.succ) :
+    coveredPartwise hX
       (SplitDipath.FirstPart γ <| Fraction (Nat.succ_pos n.succ) (Nat.le_succ n.succ)) n :=
   covered_partwise_first_part_d hX (Nat.lt_succ_self _) hγ
 
@@ -276,7 +280,7 @@ lemma covered_partwise_first_part_end_split (hX : X₀ ∪ X₁ = Set.univ) {n :
 covered
 -/
 lemma covered_second_part_end_split (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} {x₀ x₁ : X}
-  {γ : Dipath x₀ x₁} (hγ : covered_partwise hX γ n.succ) :
+  {γ : Dipath x₀ x₁} (hγ : coveredPartwise hX γ n.succ) :
     covered hX (SplitDipath.SecondPart γ <| Fraction (Nat.succ_pos n.succ) (Nat.le_succ n.succ))
         := by
   have := covered_partwise_second_part_d hX (Nat.lt_succ_self n.succ) hγ
@@ -291,10 +295,10 @@ lemma covered_second_part_end_split (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} {x
 lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 0 < n) {k : ℕ} (hk : k > 0)
     :
   Π {x₀ x₁ : X} {γ : Dipath x₀ x₁},
-    ((covered_partwise hX (SplitDipath.FirstPart γ (Fraction.ofPos (Nat.succ_pos n))) (k - 1)) ∧
-    (covered_partwise hX (SplitDipath.SecondPart γ (Fraction.ofPos (Nat.succ_pos n))) (n * k - 1)))
+    ((coveredPartwise hX (SplitDipath.FirstPart γ (Fraction.ofPos (Nat.succ_pos n))) (k - 1)) ∧
+    (coveredPartwise hX (SplitDipath.SecondPart γ (Fraction.ofPos (Nat.succ_pos n))) (n * k - 1)))
         →
-    (covered_partwise hX γ ((n + 1) * k - 1)) := by
+    (coveredPartwise hX γ ((n + 1) * k - 1)) := by
   rintro x₀ x₁ γ ⟨hγ_first, hγ_second⟩
   apply covered_partwise_of_covered_by_intervals
   intros i hi
@@ -356,7 +360,7 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
 -/
 lemma covered_partwise_refine (hX : X₀ ∪ X₁ = Set.univ) (n k : ℕ) :
     Π {x₀ x₁ : X}
-        {γ : Dipath x₀ x₁}, covered_partwise hX γ n → covered_partwise hX  γ ((n + 1) * (k + 1) - 1)
+        {γ : Dipath x₀ x₁}, coveredPartwise hX γ n → coveredPartwise hX  γ ((n + 1) * (k + 1) - 1)
             := by
   induction n
   case zero =>
@@ -370,8 +374,8 @@ lemma covered_partwise_refine (hX : X₀ ∪ X₁ = Set.univ) (n k : ℕ) :
     · convert ih hγ_split_cov_second
 
 lemma covered_partwise_trans {hX : X₀ ∪ X₁ = Set.univ} {n : ℕ} {x₀ x₁ x₂ : X} {γ₁ : Dipath x₀ x₁}
-  {γ₂ : Dipath x₁ x₂} (hγ₁ : covered_partwise hX γ₁ n) (hγ₂ : covered_partwise hX γ₂ n) :
-    covered_partwise hX (γ₁.trans γ₂) (n + n).succ := by
+  {γ₂ : Dipath x₁ x₂} (hγ₁ : coveredPartwise hX γ₁ n) (hγ₂ : coveredPartwise hX γ₂ n) :
+    coveredPartwise hX (γ₁.trans γ₂) (n + n).succ := by
   apply covered_partwise_of_covered_by_intervals
   intros i hi
   have h_lt : n.succ < (n + n).succ.succ := by linarith
@@ -446,7 +450,7 @@ n-covered for some `n`.
 -/
 lemma has_subpaths {X₁ X₂ : Set X} (hX : X₁ ∪ X₂ = Set.univ) (X₁_open : IsOpen X₁)
   (X₂_open : IsOpen X₂) (γ : Dipath x₀ x₁) :
-    ∃ (n : ℕ), covered_partwise hX γ n := by
+    ∃ (n : ℕ), coveredPartwise hX γ n := by
   have := has_interval_division hX X₁_open X₂_open γ
   rcases this with ⟨n, n_pos, hn⟩
   use n-1
@@ -457,5 +461,5 @@ lemma has_subpaths {X₁ X₂ : Set X} (hX : X₁ ∪ X₂ = Set.univ) (X₁_ope
   have := hn i (by linarith)
   convert this <;> nth_rewrite 2 [←h] <;> simp
 
-end covered_partwise
+end coveredPartwise
 end Dipath

@@ -110,13 +110,13 @@ structure VelocityDecayConditions {X : Type*} [FlatTorus3 X]
 
     Consider the Vlasov-Maxwell-Landau system on a periodic spatial domain
     (modeled by a FlatTorus3) with collision frequency ν > 0, interaction
-    potential Ψ > 0, and uniform neutralizing ion background density ρ_ion > 0.
+    potential Ψ > 0, and uniform neutralizing ion background density ρIon > 0.
 
     Let (f, E, B) be a sufficiently smooth steady-state solution with f > 0
     and f(x, ·) ∈ L¹(ℝ³) for each x. Then:
 
     (i)   f is a spatially uniform, zero-drift Maxwellian:
-          f(v) = ρ_ion / (2πT)^(3/2) · exp(-|v|²/(2T))
+          f(v) = ρIon / (2πT)^(3/2) · exp(-|v|²/(2T))
 
     (ii)  The electric field vanishes: E = 0.
 
@@ -142,10 +142,10 @@ theorem Theorem42
     (f : X → (Fin 3 → ℝ) → ℝ)
     (E B : X → (Fin 3 → ℝ))
     -- === Physical parameters ===
-    (Ψ : ℝ → ℝ) (ν ρ_ion : ℝ)
+    (Ψ : ℝ → ℝ) (ν ρIon : ℝ)
     -- === Physical hypotheses ===
     (hν : 0 < ν)
-    (hρ_ion : 0 < ρ_ion)
+    (hρ_ion : 0 < ρIon)
     (hΨ : ∀ r, 0 < Ψ r)
     (hf_pos : ∀ x v, 0 < f x v)
     (hf_smooth : ∀ x, ContDiff ℝ 3 (f x))
@@ -153,8 +153,8 @@ theorem Theorem42
     -- === Steady-state Maxwell equations ===
     -- Ampère's law (∂ₜE = 0): ∇×B = J
     (hAmpere : ∀ x, FlatTorus3.curlX B x = fun i => ∫ v, v i * f x v)
-    -- Gauss's law: ∇·E = ρ − ρ_ion
-    (hGauss : ∀ x, FlatTorus3.divX E x = (∫ v, f x v) - ρ_ion)
+    -- Gauss's law: ∇·E = ρ − ρIon
+    (hGauss : ∀ x, FlatTorus3.divX E x = (∫ v, f x v) - ρIon)
     -- Solenoidal constraint: ∇·B = 0
     (hDivB : ∀ x, FlatTorus3.divX B x = 0)
     -- B is spatially differentiable (each component)
@@ -178,7 +178,7 @@ theorem Theorem42
     (hDecay : VelocityDecayConditions Ψ f E B) :
     -- === Conclusion ===
     ∃ (T_eq : ℝ) (B₀ : Fin 3 → ℝ), 0 < T_eq ∧
-    (∀ x v, f x v = equilibriumMaxwellian ρ_ion T_eq v) ∧
+    (∀ x v, f x v = equilibriumMaxwellian ρIon T_eq v) ∧
     (∀ x, E x = 0) ∧
     (∀ x, B x = B₀) := by
   -- Abbreviations for density and current (computed from f)
@@ -215,11 +215,11 @@ theorem Theorem42
       hDecay.hForceIBP_f_dg hDecay.hForceIBP_fg hDecay.hSpatialTransport_joint
       hDecay.hSpatTransComp
   have hPolynomialId := polynomial_identity_from_vlasov f E B Ψ ν hf_pos hf_smooth hf_int hΨ hVlasov
-  have hPB := poisson_boltzmann_from_vlasov f E B Ψ ν ρ ρ_ion hf_pos hf_smooth hf_int hΨ
+  have hPB := poisson_boltzmann_from_vlasov f E B Ψ ν ρ ρIon hf_pos hf_smooth hf_int hΨ
     (fun x => rfl) hGauss hDiff_fv hVlasov
   -- Extremizers of ρ (extreme value theorem on compact T³)
-  obtain ⟨x_max, hmax⟩ := continuous_attains_max ρ hρ_cont
-  obtain ⟨x_min, hmin⟩ := continuous_attains_min ρ hρ_cont
+  obtain ⟨xMax, hmax⟩ := continuous_attains_max ρ hρ_cont
+  obtain ⟨xMin, hmin⟩ := continuous_attains_min ρ hρ_cont
   -- Step 1: Symmetrized weak form for each x (the core analytical input).
   have hIBP : ∀ x, ∫ v, LandauOperator Ψ (f x) v * (Real.log ∘ f x) v =
       -(∫ v, ∫ w, dotProduct (vGrad (Real.log ∘ f x) v)
@@ -265,7 +265,7 @@ theorem Theorem42
     E := E
     B := B
     ν := ν
-    ρ_ion := ρ_ion
+    ρIon := ρIon
     Ψ := Ψ
     hν := hν
     hρ_ion := hρ_ion
@@ -299,16 +299,16 @@ theorem Theorem42
       ext i
       simp only [Pi.smul_apply, smul_eq_mul]
       exact current_density_of_gaussian (f x) (hf_pos x) (hf_int x) a₀ (b_func x) c₀ ha₀ i
-    x_max := x_max
+    xMax := xMax
     hmax := hmax
-    x_min := x_min
+    xMin := xMin
     hmin := hmin
     hPB_eq := hPB
     hNormalization := fun a₀ c₀ hc₀ hf_form hdens => by
       intro x v
-      have h_int : ∫ w : Fin 3 → ℝ, f x w = ρ_ion := by
+      have h_int : ∫ w : Fin 3 → ℝ, f x w = ρIon := by
         rw [← hdens x]
-      exact gaussian_normalization_maxwellian ρ_ion a₀ c₀ hρ_ion hc₀
+      exact gaussian_normalization_maxwellian ρIon a₀ c₀ hρ_ion hc₀
         (f x) (hf_form x) h_int v
   }
   obtain ⟨eq, hf_eq, hE, hB⟩ := result

@@ -7,8 +7,6 @@ Authors: Siddhartha Gadgil, Anand Rao
 import LeanPool.Polylean.UnitConjecture.FreeModule
 import Mathlib.Algebra.Field.Basic
 
-namespace LeanPool.Polylean
-
 /-!
 # Group Rings
 
@@ -20,6 +18,9 @@ We first define multiplication on formal sums. We prove many properties that are
 to show invariance under elementary moves and to prove that `R[G]` is a ring.
 
 -/
+
+namespace LeanPool.Polylean
+
 
 variable {R : Type} [Ring R] [DecidableEq R]
 

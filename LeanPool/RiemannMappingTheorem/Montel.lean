@@ -9,6 +9,10 @@ import LeanPool.RiemannMappingTheorem.Spaces
 import LeanPool.RiemannMappingTheorem.Defs
 import LeanPool.RiemannMappingTheorem.Hurwitz
 
+/-!
+# LeanPool.RiemannMappingTheorem.Montel
+-/
+
 open Set Function Metric UniformConvergence Complex
 
 variable {ι : Type*} {U K : Set ℂ} {z : ℂ} {F : ι → 𝓒 U} {Q : Set ℂ → Set ℂ}
@@ -55,7 +59,8 @@ lemma UniformlyBoundedOn.equicontinuousOn (h1 : UniformlyBoundedOn F U) (hU : Is
     fun x hx => (h2 i).differentiableAt (hU.mem_nhds (h hx))
   have e2 : ∀ x ∈ closedBall z δ, ‖_root_.deriv (F i) x‖ ≤ M := by simpa [MapsTo] using hM i
   have e3 : z ∈ closedBall z δ := mem_closedBall_self hδ.le
-  have e4 : w.1 ∈ closedBall z δ := by simpa using (lt_inf_iff.1 hw).1.le
+  have e4 : w.1 ∈ closedBall z δ := by
+    simpa [mem_closedBall, Subtype.dist_eq] using (lt_inf_iff.1 hw).1.le
   rw [dist_eq_norm]
   refine ((convex_closedBall _ _).norm_image_sub_le_of_norm_deriv_le e1 e2 e4 e3).trans_lt ?_
   have : ‖z - w.val‖ < ε / M := by
@@ -88,4 +93,4 @@ theorem montel (hU : IsOpen U) (h1 : UniformlyBoundedOn F U)
   exact TotallyBounded.subset l1 <| (isCompact_𝓑 hU hQ1).totallyBounded
 
 lemma isCompact_𝓜 (hU : IsOpen U) : IsCompact (𝓜 U) := by
-  simpa only [𝓑_const] using isCompact_𝓑 hU (fun _ _ => isCompact_closedBall 0 1)
+  simpa only [𝓜_eq_𝓑] using isCompact_𝓑 hU (fun _ _ => isCompact_closedBall 0 1)

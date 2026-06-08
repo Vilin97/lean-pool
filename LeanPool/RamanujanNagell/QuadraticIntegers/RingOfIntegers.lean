@@ -18,14 +18,14 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.Ring
 import LeanPool.RamanujanNagell.QuadraticIntegers.QuadraticIntegerROI
 
-open QuadraticAlgebra
-
-noncomputable section
-
 /-! ## The field ℚ(√-7) presented as QuadraticAlgebra ℚ (-7) 0
 
 In this presentation ω' satisfies (ω')² = -7 + 0·ω' = -7, so ω' = √(-7).
 -/
+
+open QuadraticAlgebra
+
+noncomputable section
 
 /-- The number field `ℚ(√-7)`, presented as `QuadraticAlgebra ℚ (-7) 0`. -/
 notation "K'" => QuadraticAlgebra ℚ (-7 : ℤ) 0
@@ -51,7 +51,7 @@ private def algK'Proof : (1 / 2 : ℚ) • ((ω : K') + 1) * ((1 / 2 : ℚ) • 
                add_zero, zero_add]
     simp only [smul_eq_mul]; ring
 
-noncomputable instance algebraIntZ_K' : Algebra (QuadraticAlgebra ℤ (-2 : ℤ) 1) K' :=
+noncomputable instance algebraIntZK' : Algebra (QuadraticAlgebra ℤ (-2 : ℤ) 1) K' :=
   (QuadraticAlgebra.lift (R := ℤ) ⟨(1 / 2 : ℚ) • ((ω : K') + 1), algK'Proof⟩).toRingHom.toAlgebra
 
 /-- The algebra map sends ω to (1+ω')/2. -/
@@ -85,7 +85,7 @@ theorem ring_of_integers_neg7 : IsIntegralClosure (QuadraticAlgebra ℤ (-2 : �
   -- Inline the lemma application directly into convert
   convert @QuadraticInteger.d_1 (-7 : ℤ) hsq halt hmod using 1
   refine Algebra.algebra_ext_iff.mpr (RingHom.ext_iff.mp ?_)
-  unfold algebraIntZ_K'
+  unfold algebraIntZK'
     -- The `change` here is optional documentation, but good for readability
   change (QuadraticAlgebra.lift (R := ℤ) ⟨(1 / 2 : ℚ) • ((ω : K') + 1), algK'Proof⟩).toRingHom =
     (QuadraticAlgebra.lift (R := ℤ)

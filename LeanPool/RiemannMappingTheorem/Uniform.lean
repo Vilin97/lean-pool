@@ -6,6 +6,10 @@ Authors: Vincent Beffara
 import Mathlib.Topology.UniformSpace.Compact
 import Mathlib.Topology.UniformSpace.UniformConvergence
 
+/-!
+# LeanPool.RiemannMappingTheorem.Uniform
+-/
+
 open Set Filter UniformSpace Function Uniformity Topology SetRel
 
 variable {ι α β : Type*} {a : α} {s t : Set α} {x u v : Set (α × α)}
@@ -63,13 +67,13 @@ end UniformSpace
 /-- The uniform neighbourhood filter of a set `s`: filter of supersets
 of `U`-thickenings of `s` for entourages `U`. Strengthens `𝓝ˢ s` for
 locally uniform statements. -/
-def uniform_nhds_set [UniformSpace α] (s : Set α) : Filter α :=
+def uniformNhdsSet [UniformSpace α] (s : Set α) : Filter α :=
   Filter.lift' (𝓤 α) (UniformSpace.thickening · s)
 
-/-- Notation for `uniform_nhds_set`, the uniform neighbourhood filter. -/
-scoped[Uniformity] notation "𝓝ᵘ" => uniform_nhds_set
+/-- Notation for `uniformNhdsSet`, the uniform neighbourhood filter. -/
+scoped[Uniformity] notation "𝓝ᵘ" => uniformNhdsSet
 
-namespace UniformSpace -- uniform_nhds_set
+namespace UniformSpace -- uniformNhdsSet
 
 variable [UniformSpace α]
 
@@ -80,10 +84,10 @@ lemma uniform_nhds_set_mono {s t : Set α} (h : s ⊆ t) : 𝓝ᵘ s ≤ 𝓝ᵘ
   lift'_mono le_rfl (fun _ => thickening_mono h)
 
 lemma uniform_nhds_set_singleton {a : α} : 𝓝ᵘ {a} = 𝓝 a := by
-  simp only [uniform_nhds_set, thickening_singleton, nhds_eq_uniformity]
+  simp only [uniformNhdsSet, thickening_singleton, nhds_eq_uniformity]
 
 lemma mem_uniform_nhds_set_iff : s ∈ 𝓝ᵘ t ↔ ∃ u ∈ 𝓤 α, thickening u t ⊆ s := by
-  simp [uniform_nhds_set, mem_lift'_sets]
+  simp [uniformNhdsSet, mem_lift'_sets]
 
 lemma nhds_le_uniform_nhds_set {s : Set α} (ha : a ∈ s) : 𝓝 a ≤ 𝓝ᵘ s := by
   simpa [← uniform_nhds_set_singleton] using uniform_nhds_set_mono (singleton_subset_iff.mpr ha)
@@ -117,7 +121,7 @@ open UniformSpace
 variable {p : Filter ι}
 
 lemma lemma0 [UniformSpace α] : Tendsto Prod.snd (𝓤 α ⊓ comap Prod.fst (𝓟 s)) (𝓝ᵘ s) := by
-  simp_rw [comap_principal, uniform_nhds_set, tendsto_lift', eventually_inf_principal]
+  simp_rw [comap_principal, uniformNhdsSet, tendsto_lift', eventually_inf_principal]
   exact fun U hU => mem_of_superset hU (fun ⟨x, y⟩ hxy hx => mem_biUnion hx hxy)
 
 lemma lemma2 {p : Filter ι} {f : α → β} {s : Set α} :

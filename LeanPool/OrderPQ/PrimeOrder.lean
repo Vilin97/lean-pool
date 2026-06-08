@@ -5,6 +5,10 @@ Authors: Scott Harper, Peiran Wu
 -/
 import LeanPool.OrderPQ.IsCyclic
 
+/-!
+# LeanPool.OrderPQ.PrimeOrder
+-/
+
 lemma ne_iff_eq_of_or_and_ne {α : Type*} {a b c : α} (h1 : a = b ∨ a = c) (h2 : b ≠ c) :
     a ≠ b ↔ a = c :=
   ⟨h1.resolve_left, fun h3 => ne_of_eq_of_ne h3 h2.symm⟩

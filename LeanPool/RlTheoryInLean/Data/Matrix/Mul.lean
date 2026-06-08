@@ -9,6 +9,10 @@ import Mathlib.Tactic.Ring.RingNF
 
 import Mathlib.Data.Real.Basic
 
+/-!
+# LeanPool.RlTheoryInLean.Data.Matrix.Mul
+-/
+
 open Finset Real
 
 namespace Matrix
@@ -35,11 +39,9 @@ section square
 
 variable {A : Matrix m m ℝ}
 
-lemma dotProduct_transpose_mulVec (x y : m → ℝ) :
+lemma dotProduct_transpose_mulVec_real (x y : m → ℝ) :
    x ⬝ᵥ Aᵀ *ᵥ y = y ⬝ᵥ A *ᵥ x := by
-  nth_rw 1 [dotProduct_mulVec]
-  rw [dotProduct_comm]
-  rw [vecMul_transpose]
+  simpa using Matrix.dotProduct_transpose_mulVec (A := A) (x := x) (y := y)
 
 lemma vecMul_diagonal_dotProduct
   [DecidableEq m] (d x y : m → ℝ) :

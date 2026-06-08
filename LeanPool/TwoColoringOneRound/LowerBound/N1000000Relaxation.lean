@@ -9,6 +9,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000Data
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000Witness
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000WeakDuality
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000Relaxation
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000Relaxation

@@ -6,9 +6,6 @@ Authors: Barinder S. Banwait, Xinze Li
 
 import LeanPool.RamanujanNagell.Helpers
 
-open Polynomial NumberField QuadraticAlgebra RingOfIntegers Algebra Nat Ideal
-  UniqueFactorizationMonoid
-
 /-!
 # The Ramanujan-Nagell equation
 
@@ -18,6 +15,9 @@ the conjugate-factor factorization, the coprimality of the factors, and the
 unit/sign analysis that together pin down the five solutions.
 
 -/
+
+open Polynomial NumberField QuadraticAlgebra RingOfIntegers Algebra Nat Ideal
+  UniqueFactorizationMonoid
 
 /--
 Outline of the uniqueness argument formalized below.
@@ -879,7 +879,7 @@ lemma corollary_C (x₁ x₂ : ℤ) (m₁ m₂ : ℕ)
 
 /-- The odd-indexed binomial sum: B_d = Σ_{j=0}^{(d-1)/2} C(d, 2j+1) · (-7)^j.
     This arises from expanding (1+√-7)^d = A_d + √-7 · B_d. -/
-noncomputable def binomial_B (d : ℕ) : ℤ :=
+noncomputable def binomialB (d : ℕ) : ℤ :=
   ∑ j ∈ Finset.range ((d + 1) / 2), (d.choose (2 * j + 1)) * (-7) ^ j
 
 /-- For j ≥ 1, 7^j > 2*j + 1, proved by induction. -/
@@ -945,15 +945,15 @@ private lemma higher_term_nat_dvd (d l j : ℕ) (hd : d > 0) (hj : j ≥ 1)
     property the sum has valuation exactly l. -/
 lemma lemma_A_binomial_valuation (d l : ℕ) (hd : d > 0)
     (h_div : (7 : ℤ) ^ l ∣ ↑d) (h_ndiv : ¬ (7 : ℤ) ^ (l + 1) ∣ ↑d) :
-    (7 : ℤ) ^ l ∣ binomial_B d ∧ ¬ (7 : ℤ) ^ (l + 1) ∣ binomial_B d := by
+    (7 : ℤ) ^ l ∣ binomialB d ∧ ¬ (7 : ℤ) ^ (l + 1) ∣ binomialB d := by
   set n := (d + 1) / 2 with hn_def
   set f : ℕ → ℤ := fun j => ↑(d.choose (2 * j + 1)) * (-7) ^ j with hf_def
   have hn_pos : n ≥ 1 := by omega
   -- The j=0 term is d
   have h_f0 : f 0 = ↑d := by simp [hf_def, Nat.choose_one_right]
-  -- Split: binomial_B d = f(0) + Σ_{j ∈ range(n-1)} f(j+1)
-  have h_split : binomial_B d = f 0 + ∑ j ∈ Finset.range (n - 1), f (j + 1) := by
-    unfold binomial_B
+  -- Split: binomialB d = f(0) + Σ_{j ∈ range(n-1)} f(j+1)
+  have h_split : binomialB d = f 0 + ∑ j ∈ Finset.range (n - 1), f (j + 1) := by
+    unfold binomialB
     conv_lhs => rw [show (d + 1) / 2 = (n - 1) + 1 from by omega]
     rw [Finset.sum_range_succ']
     ring
@@ -981,10 +981,10 @@ lemma lemma_A_binomial_valuation (d l : ℕ) (hd : d > 0)
   have h_tail : (7 : ℤ) ^ (l + 1) ∣ ∑ j ∈ Finset.range (n - 1), f (j + 1) :=
     Finset.dvd_sum h_higher
   constructor
-  · -- Part 1: 7^l ∣ binomial_B d
+  · -- Part 1: 7^l ∣ binomialB d
     rw [h_split, h_f0]
     exact dvd_add h_div (dvd_trans (pow_dvd_pow 7 (by omega : l ≤ l + 1)) h_tail)
-  · -- Part 2: ¬ 7^(l+1) ∣ binomial_B d
+  · -- Part 2: ¬ 7^(l+1) ∣ binomialB d
     intro h_contra
     apply h_ndiv
     rw [h_split, h_f0] at h_contra
@@ -996,12 +996,12 @@ lemma lemma_A_binomial_valuation (d l : ℕ) (hd : d > 0)
     creates the contradiction when combined with Corollary C. -/
 lemma lemma_B_binomial_valuation (d l : ℕ) (hd : d > 0)
     (h_div : (7 : ℤ) ^ l ∣ ↑d) (h_ndiv : ¬ (7 : ℤ) ^ (l + 1) ∣ ↑d) :
-    (7 : ℤ) ^ l ∣ binomial_B d ∧ ¬ (7 : ℤ) ^ (l + 1) ∣ binomial_B d := by
+    (7 : ℤ) ^ l ∣ binomialB d ∧ ¬ (7 : ℤ) ^ (l + 1) ∣ binomialB d := by
   exact lemma_A_binomial_valuation d l hd h_div h_ndiv
 
 /-- The even-indexed binomial sum A'_d = Σ_{j=0}^{d/2-1} C(d, 2(j+1)) · (-7)^j.
     This arises from the even-index part of the expansion of (1+√-7)^d. -/
-noncomputable def binomial_A' (d : ℕ) : ℤ :=
+noncomputable def binomialA' (d : ℕ) : ℤ :=
   ∑ j ∈ Finset.range (d / 2), (d.choose (2 * (j + 1)) : ℤ) * (-7) ^ j
 
 /-- If 7^l ∣ d, j ≥ 1, and 2(j+1) ≤ d, then 7^(l+1) ∣ C(d, 2(j+1)) · 7^j.
@@ -1056,7 +1056,7 @@ private lemma higher_even_term_nat_dvd (d l j : ℕ) (hd : d > 0) (hj : j ≥ 1)
 lemma even_binomial_valuation (d l : ℕ) (hd : d > 0)
     (h_div : (7 : ℤ) ^ l ∣ ↑d) (h_ndiv : ¬ (7 : ℤ) ^ (l + 1) ∣ ↑d)
     (h_7_dvd : 7 ∣ d) :
-    (7 : ℤ) ^ l ∣ binomial_A' d ∧ ¬ (7 : ℤ) ^ (l + 1) ∣ binomial_A' d := by
+    (7 : ℤ) ^ l ∣ binomialA' d ∧ ¬ (7 : ℤ) ^ (l + 1) ∣ binomialA' d := by
   set n := d / 2 with hn_def
   set f : ℕ → ℤ := fun j => ↑(d.choose (2 * (j + 1))) * (-7) ^ j with hf_def
   have hn_pos : n ≥ 1 := by omega
@@ -1095,8 +1095,8 @@ lemma even_binomial_valuation (d l : ℕ) (hd : d > 0)
       exact (Nat.Prime.coprime_iff_not_dvd (by decide)).mpr (by omega)
     exact_mod_cast h_cop_d1.dvd_of_dvd_mul_right h_dvd_prod
   -- Split: A'_d = f(0) + Σ_{j ∈ range(n-1)} f(j+1)
-  have h_split : binomial_A' d = f 0 + ∑ j ∈ Finset.range (n - 1), f (j + 1) := by
-    unfold binomial_A'
+  have h_split : binomialA' d = f 0 + ∑ j ∈ Finset.range (n - 1), f (j + 1) := by
+    unfold binomialA'
     conv_lhs => rw [show d / 2 = (n - 1) + 1 from by omega]
     rw [Finset.sum_range_succ']
     ring
@@ -1130,26 +1130,26 @@ lemma even_binomial_valuation (d l : ℕ) (hd : d > 0)
 
 /-- The trace sequence a(n) = θ^n + θ'^n, defined as an integer recurrence.
     Satisfies a(0) = 2, a(1) = 1, a(n+2) = a(n+1) - 2*a(n). -/
-def trace_seq : ℕ → ℤ
+def traceSeq : ℕ → ℤ
   | 0 => 2
   | 1 => 1
-  | (n + 2) => trace_seq (n + 1) - 2 * trace_seq n
+  | (n + 2) => traceSeq (n + 1) - 2 * traceSeq n
 
 /-- The trace sequence cast into R equals θ^n + θ'^n. -/
-lemma trace_seq_eq (n : ℕ) : (trace_seq n : R) = θ ^ n + θ' ^ n := by
-  induction n using trace_seq.induct with
+lemma traceSeqEq (n : ℕ) : (traceSeq n : R) = θ ^ n + θ' ^ n := by
+  induction n using traceSeq.induct with
   | case1 =>
-    simp only [trace_seq, Int.cast_ofNat, pow_zero]
+    simp only [traceSeq, Int.cast_ofNat, pow_zero]
     ring
   | case2 =>
-    simp only [trace_seq, Int.cast_one, pow_one]
+    simp only [traceSeq, Int.cast_one, pow_one]
     have h_theta' : (θ' : 𝓞 K) = 1 - θ := by
       apply Subtype.ext
       change (1 - ω : K) = (1 : K) - (ω : K)
       rfl
     rw [h_theta']; ring
   | case3 n ih1 ih2 =>
-    simp only [trace_seq, Int.cast_sub, Int.cast_mul, Int.cast_ofNat]
+    simp only [traceSeq, Int.cast_sub, Int.cast_mul, Int.cast_ofNat]
     rw [ih1, ih2]
     have h_theta' : (θ' : 𝓞 K) = 1 - θ := by
       apply Subtype.ext
@@ -1161,9 +1161,9 @@ lemma trace_seq_eq (n : ℕ) : (trace_seq n : R) = θ ^ n + θ' ^ n := by
     rw [key, show θ + θ' = 1 from by rw [h_theta']; ring, h_prod]
     ring
 
-/-- trace_seq m % 7 depends only on m % 3 (the recurrence has period 3 mod 7). -/
-private lemma trace_seq_mod7_period (m : ℕ) :
-    trace_seq m % 7 = trace_seq (m % 3) % 7 := by
+/-- traceSeq m % 7 depends only on m % 3 (the recurrence has period 3 mod 7). -/
+private lemma traceSeqMod7Period (m : ℕ) :
+    traceSeq m % 7 = traceSeq (m % 3) % 7 := by
   induction m using Nat.strongRecOn with
   | ind m ih =>
     match m with
@@ -1173,46 +1173,46 @@ private lemma trace_seq_mod7_period (m : ℕ) :
     | m + 3 =>
       have h1 := ih (m + 2) (by omega)
       have h2 := ih (m + 1) (by omega)
-      conv_lhs => rw [show trace_seq (m + 3) =
-        trace_seq (m + 2) - 2 * trace_seq (m + 1) from rfl]
+      conv_lhs => rw [show traceSeq (m + 3) =
+        traceSeq (m + 2) - 2 * traceSeq (m + 1) from rfl]
       -- Reduce to small values via h1, h2 and case split on m % 3
-      have key : (trace_seq (m + 2) - 2 * trace_seq (m + 1)) % 7 =
-          (trace_seq ((m + 2) % 3) - 2 * trace_seq ((m + 1) % 3)) % 7 := by omega
+      have key : (traceSeq (m + 2) - 2 * traceSeq (m + 1)) % 7 =
+          (traceSeq ((m + 2) % 3) - 2 * traceSeq ((m + 1) % 3)) % 7 := by omega
       rw [show (m + 3) % 3 = m % 3 from by omega, key]
       have : m % 3 = 0 ∨ m % 3 = 1 ∨ m % 3 = 2 := by omega
       rcases this with h0 | h1' | h2'
       · rw [h0, show (m + 2) % 3 = 2 from by omega,
-             show (m + 1) % 3 = 1 from by omega]; simp [trace_seq]
+             show (m + 1) % 3 = 1 from by omega]; simp [traceSeq]
       · rw [h1', show (m + 2) % 3 = 0 from by omega,
-             show (m + 1) % 3 = 2 from by omega]; simp [trace_seq]
+             show (m + 1) % 3 = 2 from by omega]; simp [traceSeq]
       · rw [h2', show (m + 2) % 3 = 1 from by omega,
-             show (m + 1) % 3 = 0 from by omega]; simp [trace_seq]
+             show (m + 1) % 3 = 0 from by omega]; simp [traceSeq]
 
 /-- The trace sequence is never divisible by 7. -/
-lemma trace_seq_not_dvd_seven (n : ℕ) : ¬((7 : ℤ) ∣ trace_seq n) := by
+lemma traceSeqNotDvdSeven (n : ℕ) : ¬((7 : ℤ) ∣ traceSeq n) := by
   intro ⟨k, hk⟩
-  have h := trace_seq_mod7_period n
+  have h := traceSeqMod7Period n
   rw [hk] at h
   rw [Int.mul_emod_right] at h
   have : n % 3 = 0 ∨ n % 3 = 1 ∨ n % 3 = 2 := by omega
   rcases this with h0 | h1 | h2
-  · rw [h0] at h; simp [trace_seq] at h
-  · rw [h1] at h; simp [trace_seq] at h
-  · rw [h2] at h; simp [trace_seq] at h
+  · rw [h0] at h; simp [traceSeq] at h
+  · rw [h1] at h; simp [traceSeq] at h
+  · rw [h2] at h; simp [traceSeq] at h
 
 lemma nat_even_iff_not_odd (n : ℕ) : Even n ↔ ¬ Odd n := by
   exact Iff.symm not_odd_iff_even
 
 /-- Auxiliary algebraic identity used in `at_most_one_m_per_class`: given the algebraic-integer
 data tying `θ^m_i - θ'^m_i = -2θ + 1`, one has
-`P * binomial_B d = 1 - 7 * A'_d - 2^d` (as integers), where `P = θ^m₁ + θ'^m₁`,
+`P * binomialB d = 1 - 7 * A'_d - 2^d` (as integers), where `P = θ^m₁ + θ'^m₁`,
 `A'_d = ∑_{j} C(d, 2(j+1)) (-7)^j`, and `d = m₂ - m₁`. -/
 private lemma seven_adic_identity (m₁ m₂ d : ℕ) (P : ℤ)
     (hP_eq : (P : R) = ↑(θ ^ m₁ + θ' ^ m₁))
     (h_m2_eq : m₂ = m₁ + d)
     (h_eq : θ ^ m₁ - θ' ^ m₁ = θ ^ m₂ - θ' ^ m₂)
     (h₁_theta : -2 * θ + 1 = θ ^ m₁ - θ' ^ m₁) :
-    P * binomial_B d = 1 - 7 *
+    P * binomialB d = 1 - 7 *
       (∑ j ∈ Finset.range (d / 2), (d.choose (2 * (j + 1)) : ℤ) * (-7) ^ j) - (2 : ℤ) ^ d := by
   set A'_d := ∑ j ∈ Finset.range (d / 2),
     (d.choose (2 * (j + 1)) : ℤ) * (-7) ^ j with hA'_def
@@ -1264,7 +1264,7 @@ private lemma seven_adic_identity (m₁ m₂ d : ℕ) (P : ℤ)
     rw [show -α_K + 1 = 2 * (1 - (↑θ : K)) from by rw [hα_def]; ring] at h
     rw [h]; exact Finset.sum_congr rfl (fun k _ => mul_comm _ _)
   have h_diff_binom : (2 * (↑θ : K)) ^ d - (2 * (1 - (↑θ : K))) ^ d =
-      2 * α_K * (↑(binomial_B d) : K) := by
+      2 * α_K * (↑(binomialB d) : K) := by
     rw [hbinom_plus, hbinom_minus, ← Finset.sum_sub_distrib]
     rw [← Finset.sum_filter_add_sum_filter_not (s := Finset.range (d+1)) (p := Odd)]
     have h_even_zero : ∑ k ∈ Finset.filter (fun x => ¬Odd x) (Finset.range (d + 1)),
@@ -1274,7 +1274,7 @@ private lemma seven_adic_identity (m₁ m₂ d : ℕ) (P : ℤ)
       have h_ev : Even k := (Nat.even_or_odd k).resolve_right hk.2
       simp [Even.neg_pow h_ev, sub_self]
     rw [h_even_zero, add_zero]
-    unfold binomial_B
+    unfold binomialB
     rw [Int.cast_sum, Finset.mul_sum]
     simp only [Int.cast_mul, Int.cast_pow, Int.cast_natCast, Int.cast_neg, Int.cast_ofNat]
     symm
@@ -1334,7 +1334,7 @@ private lemma seven_adic_identity (m₁ m₂ d : ℕ) (P : ℤ)
     intro j _
     have : α_K ^ (2 * (j + 1)) = (α_K ^ 2) ^ (j + 1) := by ring_nf
     rw [this, hsq]; ring
-  have h_in_K : 2 * (P : K) * (↑(binomial_B d) : K) =
+  have h_in_K : 2 * (P : K) * (↑(binomialB d) : K) =
       2 * ((1 : K) - 7 * ↑A'_d - (2 : K) ^ d) := by
     have h_sub1 : (P : K) * ((θ : K) ^ d - (θ' : K) ^ d) =
         α_K * ((θ : K) ^ d + (θ' : K) ^ d - 2) := by
@@ -1353,11 +1353,11 @@ private lemma seven_adic_identity (m₁ m₂ d : ℕ) (P : ℤ)
         (2 * (↑θ : K))^d + (2 * (1 - (↑θ : K)))^d := by
       rw [mul_pow, mul_pow, h_theta']; push_cast; ring
     rw [h_rhs_eq, h_sum_binom] at h_scaled
-    have h_cancel : α_K * (2 * (P : K) * ↑(binomial_B d)) =
+    have h_cancel : α_K * (2 * (P : K) * ↑(binomialB d)) =
         α_K * (2 * (1 - 7 * ↑A'_d - (2:K)^d)) := by linear_combination h_scaled
     exact mul_left_cancel₀ hα_ne h_cancel
   apply Int.cast_injective (α := K)
-  have h_lhs : ((P * binomial_B d : ℤ) : K) = (P : K) * (↑(binomial_B d) : K) := by
+  have h_lhs : ((P * binomialB d : ℤ) : K) = (P : K) * (↑(binomialB d) : K) := by
     push_cast; ring
   have h_rhs : ((1 - 7 * A'_d - (2 : ℤ) ^ d : ℤ) : K) =
       (1 : K) - 7 * ↑A'_d - (2 : K) ^ d := by push_cast; ring
@@ -1436,12 +1436,12 @@ lemma at_most_one_m_per_class (m₁ m₂ : ℕ)
   -- Step 7a: The trace P = θ^m₁ + θ'^m₁ is an integer not divisible by 7.
   -- (The recurrence a_m = a_{m-1} - 2·a_{m-2} has period 3 mod 7: {2,1,4,...}, none zero.)
   have h_trace : ∃ P : ℤ, (P : R) = ↑(θ ^ m₁ + θ' ^ m₁) ∧ ¬((7 : ℤ) ∣ P) := by
-    exact ⟨trace_seq m₁, trace_seq_eq m₁, trace_seq_not_dvd_seven m₁⟩
+    exact ⟨traceSeq m₁, traceSeqEq m₁, traceSeqNotDvdSeven m₁⟩
   -- Step 7b: Algebraic identity from the theta equation and binomial expansion:
   -- P · B_d = -7 · A'_d, derived from expanding θ^d - 1 and θ'^d - 1 via binomials.
   obtain ⟨P, hP_eq, hP_coprime⟩ := h_trace
   have h_m2_eq : m₂ = m₁ + d := by omega
-  have h_identity : P * binomial_B d = 1 - 7 * A'_d - (2 : ℤ) ^ d :=
+  have h_identity : P * binomialB d = 1 - 7 * A'_d - (2 : ℤ) ^ d :=
     seven_adic_identity m₁ m₂ d P hP_eq h_m2_eq h_eq h₁_theta
   -- Step 8: v₇(A'_d) = l (same ultrametric argument as lemma_A, for even-indexed terms).
   -- The j=0 term C(d,2) = d(d-1)/2 has v₇ = l (since 7^l ∥ d and 7∤(d-1), 7∤2).
@@ -1496,7 +1496,7 @@ lemma at_most_one_m_per_class (m₁ m₂ : ℕ)
   obtain ⟨h_Bd_div, h_Bd_ndiv⟩ := h_val
   obtain ⟨h_Ad_div, _⟩ := h_even_val
   -- 7^(l+1) ∣ P * B_d
-  have h_dvd_prod : (7 : ℤ) ^ (l + 1) ∣ P * binomial_B d := by
+  have h_dvd_prod : (7 : ℤ) ^ (l + 1) ∣ P * binomialB d := by
     rw [h_identity]
     -- 1 - 7*A'_d - 2^d = -(7*A'_d + (2^d - 1))
     have h1 : (7 : ℤ) ^ (l + 1) ∣ 7 * A'_d := by
@@ -1882,3 +1882,30 @@ theorem RamanujanNagell :
               _ = 2 ^ 15 - 7 := by rw [hn15]
               _ = 32761 := by norm_num
         exact helper_5 x_sq hn15
+
+private lemma equationOfListedSolution
+    {x a : ℤ} {n b : ℕ}
+    (h : (x, n) = (a, b))
+    (ha : a ^ 2 + 7 = (2 : ℤ) ^ b) :
+    x ^ 2 + 7 = 2 ^ n := by
+  have hx : x = a := congrArg Prod.fst h
+  have hn : n = b := congrArg Prod.snd h
+  rw [hx, hn]
+  exact ha
+
+/-- Exact iff form of the Ramanujan-Nagell theorem: the integer solutions of
+    `x ^ 2 + 7 = 2 ^ n` are precisely `(±1, 3)`, `(±3, 4)`,
+    `(±5, 5)`, `(±11, 7)`, and `(±181, 15)`. -/
+theorem ramanujanNagellExact :
+  ∀ x : ℤ, ∀ n : ℕ, x ^ 2 + 7 = 2 ^ n ↔
+    (x, n) = (1, 3) ∨ (x, n) = (-1, 3)
+  ∨ (x, n) = (3, 4) ∨ (x, n) = (-3, 4)
+  ∨ (x, n) = (5, 5) ∨ (x, n) = (-5, 5)
+  ∨ (x, n) = (11, 7) ∨ (x, n) = (-11, 7)
+  ∨ (x, n) = (181, 15) ∨ (x, n) = (-181, 15) := by
+  intro x n
+  constructor
+  · exact RamanujanNagell x n
+  · intro h
+    rcases h with h | h | h | h | h | h | h | h | h | h
+    all_goals exact equationOfListedSolution h (by norm_num)

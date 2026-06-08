@@ -16,7 +16,7 @@ import LeanPool.RamanujanNagell.QuadraticIntegers.RingOfIntegers
 Source: url:https://github.com/BarinderBanwait/ramanujan_nagell
 Authors: Barinder S. Banwait, Xinze Li
 Status: verified
-Main declarations: `RamanujanNagell`
+Main declarations: `ramanujanNagellExact`
 Tags: number-theory, diophantine-equations, quadratic-integers
 MSC: 11D61, 11D45, 11R11
 -/

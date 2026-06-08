@@ -8,7 +8,22 @@ import LeanPool.TwoColoringOneRound.UpperBound.Recursive3Param.ComputeP
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.MeasureTheory.Measure.Typeclasses.NoAtoms
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.Tactic
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
+/-!
+Exact computation of `ClassicalAlgorithm.p recursive3ParamAlg`.
+
+The final result is the dyadic rational value
+`94835 / 393216 ≈ 0.24117787679 < 24118/100000`.
+-/
 
 namespace Distributed2Coloring
 
@@ -18,12 +33,6 @@ open scoped unitInterval
 namespace UpperBound
 namespace Recursive3Param
 
-/-!
-Exact computation of `ClassicalAlgorithm.p recursive3ParamAlg`.
-
-The final result is the dyadic rational value
-`94835 / 393216 ≈ 0.24117787679 < 24118/100000`.
--/
 
 open scoped ENNReal
 

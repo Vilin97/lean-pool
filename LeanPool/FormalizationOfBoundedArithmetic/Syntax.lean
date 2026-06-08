@@ -8,6 +8,10 @@ import Mathlib.ModelTheory.Syntax
 
 import LeanPool.FormalizationOfBoundedArithmetic.IsEnum
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.Syntax
+-/
+
 namespace FirstOrder
 namespace Language
 
@@ -211,30 +215,43 @@ theorem relabel_relabelSum [enum : IsEnum β] (g : α ≃ γ) :
         = BoundedFormula.relabel (fun a : γ ⊕ β => Sum.map id enum.toIdx a)
           (BoundedFormula.relabelEquiv (Equiv.sumCongr g (_root_.Equiv.refl β)) φ) := by
   intro k φ
+  have hterm :
+      ∀ {n} (t : L.Term ((α ⊕ β) ⊕ Fin n)),
+        (Term.relabelEquiv (g.sumCongr (_root_.Equiv.refl (Fin (enum.size + n)))))
+            (Term.relabel (BoundedFormula.relabelAux
+              (fun a : α ⊕ β => Sum.map id enum.toIdx a) n) t)
+          =
+        Term.relabel (BoundedFormula.relabelAux
+            (fun a : γ ⊕ β => Sum.map id enum.toIdx a) n)
+            ((Term.relabelEquiv
+              ((g.sumCongr (_root_.Equiv.refl β)).sumCongr (_root_.Equiv.refl (Fin n)))) t) := by
+    intro n t
+    have hfun :
+        ((g.sumCongr (_root_.Equiv.refl (Fin (enum.size + n)))) ∘
+            BoundedFormula.relabelAux (fun a : α ⊕ β => Sum.map id enum.toIdx a) n)
+          =
+        (BoundedFormula.relabelAux (fun a : γ ⊕ β => Sum.map id enum.toIdx a) n ∘
+          ((g.sumCongr (_root_.Equiv.refl β)).sumCongr (_root_.Equiv.refl (Fin n)))) := by
+      funext x
+      exact relabelAux_sumCongr g n x
+    simpa only [Term.relabelEquiv_apply, Term.relabel_relabel] using
+      congrArg (fun h => Term.relabel h t) hfun
   induction φ with
   | falsum => rfl
   | equal t1 t2 =>
       dsimp [BoundedFormula.relabelEquiv, BoundedFormula.mapTermRelEquiv,
         BoundedFormula.relabel, BoundedFormula.mapTermRel, Term.relabelEquiv_apply,
         Term.relabel_relabel]
-      simp only [Term.relabel_relabel]
       congr 1
-      · congr 1
-        funext x
-        exact relabelAux_sumCongr g _ x
-      · congr 1
-        funext x
-        exact relabelAux_sumCongr g _ x
+      · exact hterm t1
+      · exact hterm t2
   | rel R ts =>
       dsimp [BoundedFormula.relabelEquiv, BoundedFormula.mapTermRelEquiv,
         BoundedFormula.relabel, BoundedFormula.mapTermRel, Term.relabelEquiv_apply,
         Term.relabel_relabel]
-      simp only [Term.relabel_relabel]
       congr 1
       funext i
-      congr 1
-      funext x
-      exact relabelAux_sumCongr g _ x
+      exact hterm (ts i)
   | imp φ ψ ihφ ihψ =>
       simp only [relabel_imp, imp, imp.injEq]
       exact ⟨ihφ, ihψ⟩

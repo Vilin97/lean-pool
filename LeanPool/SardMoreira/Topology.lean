@@ -6,6 +6,10 @@ Authors: Yury G. Kudryashov
 
 import Mathlib.Topology.NhdsWithin
 
+/-!
+# LeanPool.SardMoreira.Topology
+-/
+
 open Filter
 open scoped Topology
 

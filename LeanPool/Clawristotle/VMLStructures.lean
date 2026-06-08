@@ -48,11 +48,11 @@ structure VMLSteadyState (X : Type*) [FlatTorus3 X] where
   /-- The collision frequency. -/
   ν : ℝ
   /-- The (constant) ion background charge density. -/
-  ρ_ion : ℝ
+  ρIon : ℝ
   /-- The collision kernel weight `Ψ`. -/
   Ψ : ℝ → ℝ
   hν : 0 < ν
-  hρ_ion : 0 < ρ_ion
+  hρ_ion : 0 < ρIon
   hΨ : ∀ r, 0 < Ψ r
   hf_pos : ∀ x v, 0 < f x v
   /-- The charge density `ρ(x) = ∫ f(x, v) dv`. -/
@@ -63,37 +63,37 @@ structure VMLSteadyState (X : Type*) [FlatTorus3 X] where
   J : X → (Fin 3 → ℝ)
   -- Maxwell equations at steady state
   hAmpere : ∀ x, FlatTorus3.curlX B x = J x
-  hGauss : ∀ x, FlatTorus3.divX E x = ρ x - ρ_ion
+  hGauss : ∀ x, FlatTorus3.divX E x = ρ x - ρIon
   hDivB : ∀ x, FlatTorus3.divX B x = 0
   -- Spatial differentiability for B (needed for harmonic → constant)
   hDiff_B : ∀ i, FlatTorus3.IsSpatiallySmooth 2 (fun y => B y i)
   -- === H-theorem chain results (Sections 3-4 of tex) ===
   /-- The local log-density parameter `a(x)` in the Maxwellian form of `f`. -/
-  a_loc : X → ℝ
+  aLoc : X → ℝ
   /-- The local drift parameter `b(x)` in the Maxwellian form of `f`. -/
-  b_loc : X → (Fin 3 → ℝ)
+  bLoc : X → (Fin 3 → ℝ)
   /-- The local inverse-temperature parameter `c(x)` in the Maxwellian form of `f`. -/
-  c_loc : X → ℝ
-  hc_neg : ∀ x, c_loc x < 0
+  cLoc : X → ℝ
+  hc_neg : ∀ x, cLoc x < 0
   hMaxwellianForm : ∀ x v,
-    f x v = Real.exp (a_loc x + dotProduct (b_loc x) v + c_loc x * normSq v)
+    f x v = Real.exp (aLoc x + dotProduct (bLoc x) v + cLoc x * normSq v)
   -- === Polynomial matching results (Section 5 of tex) ===
-  /-- The constant value of `c_loc`. -/
+  /-- The constant value of `cLoc`. -/
   c₀ : ℝ
   hc₀_neg : c₀ < 0
-  hc_const : ∀ x, c_loc x = c₀
+  hc_const : ∀ x, cLoc x = c₀
   /-- The constant drift direction `b₀`. -/
   b₀ : Fin 3 → ℝ
-  hb_const : ∀ x, b_loc x = (-2 * c₀) • b₀
+  hb_const : ∀ x, bLoc x = (-2 * c₀) • b₀
   hForceBalance : ∀ x,
-    FlatTorus3.gradX a_loc x = -(2 * c₀) • (E x + cross b₀ (B x))
+    FlatTorus3.gradX aLoc x = -(2 * c₀) • (E x + cross b₀ (B x))
   hJ_def : ∀ x, J x = (ρ x) • b₀
   -- === Maximum principle (Section 7 of tex) ===
-  hDensityConst : ∀ x, ρ x = ρ_ion
-  hGradA_zero : b₀ = 0 → (∀ x, ρ x = ρ_ion) → ∀ x, FlatTorus3.gradX a_loc x = 0
+  hDensityConst : ∀ x, ρ x = ρIon
+  hGradA_zero : b₀ = 0 → (∀ x, ρ x = ρIon) → ∀ x, FlatTorus3.gradX aLoc x = 0
   -- === Normalization (Gaussian integral) ===
-  hNormalization : b₀ = 0 → (∀ x, ρ x = ρ_ion) →
-    ∀ x v, f x v = equilibriumMaxwellian ρ_ion (-1 / (2 * c₀)) v
+  hNormalization : b₀ = 0 → (∀ x, ρ x = ρIon) →
+    ∀ x v, f x v = equilibriumMaxwellian ρIon (-1 / (2 * c₀)) v
 
 -- ============================================================================
 -- The equilibrium configuration of a VML steady state.
@@ -115,7 +115,7 @@ structure VMLEquilibrium where
 
     Contains:
     - The physical state (f, E, B) on a spatial domain X with [FlatTorus3 X]
-    - Physical parameters (ν, ρ_ion, Ψ)
+    - Physical parameters (ν, ρIon, Ψ)
     - Maxwell equations at steady state
     - Entropy dissipation vanishes (from H-theorem chain)
     - Analytical interface hypotheses (polynomial identity, Gaussian integrals)
@@ -139,12 +139,12 @@ structure VMLInput (X : Type*) [FlatTorus3 X] where
   /-- The collision frequency. -/
   ν : ℝ
   /-- The (constant) ion background charge density. -/
-  ρ_ion : ℝ
+  ρIon : ℝ
   /-- The collision kernel weight `Ψ`. -/
   Ψ : ℝ → ℝ
   -- Positivity
   hν : 0 < ν
-  hρ_ion : 0 < ρ_ion
+  hρ_ion : 0 < ρIon
   hΨ : ∀ r, 0 < Ψ r
   hf_pos : ∀ x v, 0 < f x v
   -- Smoothness
@@ -161,7 +161,7 @@ structure VMLInput (X : Type*) [FlatTorus3 X] where
   J : X → (Fin 3 → ℝ)
   -- Maxwell equations at steady state
   hAmpere : ∀ x, FlatTorus3.curlX B x = J x
-  hGauss : ∀ x, FlatTorus3.divX E x = ρ x - ρ_ion
+  hGauss : ∀ x, FlatTorus3.divX E x = ρ x - ρIon
   hDivB : ∀ x, FlatTorus3.divX B x = 0
   -- Spatial differentiability for f(·,v): each slice f(·,v) is spatially C¹
   hDiff_fv : ∀ v, FlatTorus3.IsSpatiallySmooth 2 (fun x => f x v)
@@ -201,21 +201,21 @@ structure VMLInput (X : Type*) [FlatTorus3 X] where
     ∀ x, J x = ρ x • ((-1 / (2 * c₀)) • b x)
   -- Maximum principle inputs (compactness of T³)
   /-- A point where `ρ` attains its maximum (exists by compactness of T³). -/
-  x_max : X
-  hmax : ∀ x, ρ x ≤ ρ x_max
+  xMax : X
+  hmax : ∀ x, ρ x ≤ ρ xMax
   /-- A point where `ρ` attains its minimum (exists by compactness of T³). -/
-  x_min : X
-  hmin : ∀ x, ρ x_min ≤ ρ x
-  -- Poisson-Boltzmann equation: T Δ(log ρ) = ρ - ρ_ion (isotropic case: b₀ = 0)
+  xMin : X
+  hmin : ∀ x, ρ xMin ≤ ρ x
+  -- Poisson-Boltzmann equation: T Δ(log ρ) = ρ - ρIon (isotropic case: b₀ = 0)
   hPB_eq : ∀ (c₀ : ℝ), c₀ < 0 →
     (∀ x, ∃ a₀, ∀ v, f x v = Real.exp (a₀ + c₀ * normSq v)) →
     ∀ x, (-1 / (2 * c₀)) * FlatTorus3.divX (FlatTorus3.gradX (Real.log ∘ ρ)) x =
-      ρ x - ρ_ion
+      ρ x - ρIon
   -- Normalization: Gaussian integral yields equilibriumMaxwellian
   hNormalization : ∀ a₀ c₀,
     c₀ < 0 →
     (∀ x v, f x v = Real.exp (a₀ + c₀ * normSq v)) →
-    (∀ x, ρ x = ρ_ion) →
-    ∀ x v, f x v = equilibriumMaxwellian ρ_ion (-1 / (2 * c₀)) v
+    (∀ x, ρ x = ρIon) →
+    ∀ x v, f x v = equilibriumMaxwellian ρIon (-1 / (2 * c₀)) v
 
 end VML

@@ -12,6 +12,10 @@ import LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitalBasis
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000PairTransitivity
 import LeanPool.TwoColoringOneRound.LowerBound.N1000000StructureConstants
 
+/-!
+# LeanPool.TwoColoringOneRound.LowerBound.N1000000OrbitCounting
+-/
+
 namespace Distributed2Coloring.LowerBound
 
 namespace N1000000OrbitCounting
@@ -97,8 +101,10 @@ noncomputable instance (k : DirIdx) : Fintype (FreeCol k) := by
 
 private lemma card_freeCol (k : DirIdx) : Fintype.card (FreeCol k) = freeCols (maskAt k) := by
   classical
-  simpa [FreeCol, freeCols] using
-    (Fintype.card_subtype (α := Fin 3) (p := fun j : Fin 3 => colMatch (maskAt k) j = none))
+  change Fintype.card { j : Fin 3 // colMatch (maskAt k) j = none } = freeCols (maskAt k)
+  rw [freeCols]
+  exact Fintype.card_of_subtype
+    (Finset.univ.filter fun j : Fin 3 => colMatch (maskAt k) j = none) (by intro j; simp)
 
 private theorem colMatch_unique' (k : DirIdx) :
     ∀ j₁ j₂ : Fin 3, ∀ i : Fin 3,
@@ -386,7 +392,7 @@ private theorem encode_decode_id (k : DirIdx) :
   simpa using this
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-noncomputable def baseOrbit_equiv_embedding (k : DirIdx) :
+noncomputable def baseOrbitEquivEmbedding (k : DirIdx) :
     BaseOrbit k ≃ (FreeCol k ↪ AvailFrom3) where
   toFun := encodeBaseOrbit k
   invFun := decodeBaseOrbit k
@@ -397,7 +403,7 @@ theorem baseOrbit_card (k : DirIdx) : Fintype.card (BaseOrbit k) = baseTypeCount
   classical
   -- Convert to embeddings of the free columns into the `n-3` outside symbols.
   have hEquiv : Fintype.card (BaseOrbit k) = Fintype.card (FreeCol k ↪ AvailFrom3) :=
-    Fintype.card_congr (baseOrbit_equiv_embedding k)
+    Fintype.card_congr (baseOrbitEquivEmbedding k)
   -- Count embeddings via falling factorial.
   have hEmb :
       Fintype.card (FreeCol k ↪ AvailFrom3)

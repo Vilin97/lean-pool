@@ -5,6 +5,10 @@ Authors: Kalle Kytölä
 -/
 import Mathlib.Topology.Algebra.ConstMulAction
 
+/-!
+# LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.ConstMulAction
+-/
+
 lemma continuousConstSMul_of_discreteTopology (𝕜 X : Type*) [TopologicalSpace X]
     [DiscreteTopology X] [SMul 𝕜 X] :
     ContinuousConstSMul 𝕜 X :=

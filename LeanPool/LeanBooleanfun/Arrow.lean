@@ -171,11 +171,11 @@ private abbrev _Tnae3 : BooleanFunc n →ₗ[ℝ] BooleanFunc n where
 local notation "T" => _Tnae3
 
 /-- One of two crucial steps in the proof of Arrow's theorem:
- the auxiliary linear operator can be expressed in terms of `noise_operator`. -/
-lemma _eq_noise_operator : T = @noise_operator n (-1/3) := by
-  apply Module.Basis.ext (b := walsh_basis)
+ the auxiliary linear operator can be expressed in terms of `noiseOperator`. -/
+lemma _eq_noise_operator : T = @noiseOperator n (-1/3) := by
+  apply Module.Basis.ext (b := walshBasis)
   intro S
-  rw [walsh_basis, noise_operator, coe_basisOfOrthonormalOfCardEqFinrank,
+  rw [walshBasis, noiseOperator, coe_basisOfOrthonormalOfCardEqFinrank,
     LinearMap.coe_mk, AddHom.coe_mk, multiplier_walsh]
   funext x
   rw [smul_apply, smul_eq_mul]
@@ -228,7 +228,7 @@ lemma _eq_noise_operator : T = @noise_operator n (-1/3) := by
 /-- The probability of having a Condorcet winner can be expressed in terms of the noise operator.
 See [odonnell2014], Theorem 2.56. -/
 theorem probabilityCondorcetWinner_eq :
-    probabilityCondorcetWinner f = 3/4 * (1 - noise_stability (-1/3) f) := by
+    probabilityCondorcetWinner f = 3/4 * (1 - noiseStability (-1/3) f) := by
   simp_rw [probabilityCondorcetWinner.eq_def, oneOn_NAE3_eq, sub_mul, sum_sub_distrib]
   conv => enter [1, 2, 1, 1, 1]; tactic => simp_rw [← mul_sum]
   rw [_triple_sum_oneOn_consistent_eq]
@@ -242,7 +242,7 @@ theorem probabilityCondorcetWinner_eq :
   conv => enter [1, 2, 2, 2, 2, x, 2, y, 2, z]; rw [mul_assoc, mul_assoc]
   conv => enter [1, 2, 2, 2]; tactic => simp_rw [← mul_sum]
   have : ∑ x, f x * ∑ y, f y * ∑ z, oneOn (VoteConsistent x y z)
-      = 6^n * noise_stability (-1/3) f := by
+      = 6^n * noiseStability (-1/3) f := by
     calc
       _ = 3^n * (1/3)^n * ∑ x, f x * ∑ y, f y * ∑ z, oneOn (VoteConsistent x y z) := by
             simp only [one_div, inv_pow, isUnit_iff_ne_zero, ne_eq,
@@ -257,14 +257,14 @@ theorem probabilityCondorcetWinner_eq :
               not_false_eq_true, IsUnit.mul_inv_cancel_right]
       _ = 6^n * (1/2)^n * ∑ x, f x * T f x := by congr; rw [← mul_pow]; congr; norm_num
       _ = 6^n * ⟪f, T f⟫ := by rw [mul_assoc]; rfl
-      _ = 6^n * ⟪f, noise_operator (-1/3) f⟫ := by rw [_eq_noise_operator]
+      _ = 6^n * ⟪f, noiseOperator (-1/3) f⟫ := by rw [_eq_noise_operator]
   rw [this]
   have h16n : ((1 : ℝ) / 6) ^ n * 6 ^ n = 1 := by
     rw [div_pow, one_pow, div_mul_cancel₀ _ (pow_ne_zero _ (by norm_num : (6 : ℝ) ≠ 0))]
   have hneg : (-(1 : ℝ)/3) = -(1/3) := by ring
   rw [hneg]
   linear_combination
-    ((3 : ℝ)/4 - 3/4 * noise_stability (-(1/3)) f) * h16n
+    ((3 : ℝ)/4 - 3/4 * noiseStability (-(1/3)) f) * h16n
 
 /-- Arrow's theorem as formulated in [odonnell2014], Sec. 2.5 : Every unanimous voting rule that
 always admits a Condorcet winner is a dictatorship. -/
@@ -276,10 +276,10 @@ theorem dictator_of_condorcet_and_unanimous (h : IsUnanimous f) :
   intro hc
   have := probabilityCondorcetWinner_eq_one hc
   let ρ : ℝ := -1/3
-  have : noise_stability ρ f = ρ := by
+  have : noiseStability ρ f = ρ := by
     rw [probabilityCondorcetWinner_eq] at this
     calc
-      _ = 1 - 4/3 * (3/4 * ((1 : ℝ) - (noise_stability ρ f))) := by ring
+      _ = 1 - 4/3 * (3/4 * ((1 : ℝ) - (noiseStability ρ f))) := by ring
       _ = _   := by rw [this]; ring
   have hsumzero : ∑ S, (ρ^S.card - ρ) * |𝓕 f S|^2 = 0 := by
     simp_rw [sub_mul, sum_sub_distrib]
