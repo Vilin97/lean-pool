@@ -372,7 +372,7 @@ theorem specification_Jump (P : Assertion) (pc newPc : UInt64) (label : String) 
       simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq,
         Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not,
         not_and_self, imp_false, not_and]
-      simp [<- MState.run_one_step_eq_run_n_1]
+      simp only [← MState.run_one_step_eq_run_n_1]
       unfold MState.runOneStep MState.jump
       rw [h_terminated]
       simp [h_curr, h_label]
@@ -414,7 +414,7 @@ theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String)
       simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq,
         Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not,
         not_and_self, imp_false, not_and]
-      simp [<- MState.run_one_step_eq_run_n_1]
+      simp only [← MState.run_one_step_eq_run_n_1]
       unfold MState.runOneStep MState.jump
       rw [h_terminated]
       simp [h_curr, h_label]
@@ -460,7 +460,7 @@ theorem specification_JumpEq_true (P : Assertion) (pc newPc reg1 reg2 : UInt64) 
       simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq,
         Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not,
         not_and_self, imp_false, not_and]
-      simp [<- MState.run_one_step_eq_run_n_1]
+      simp only [← MState.run_one_step_eq_run_n_1]
       unfold MState.runOneStep MState.jump MState.jif' MState.jump
       rw [h_terminated]
       simp [h_curr, h_label, h_cond]
