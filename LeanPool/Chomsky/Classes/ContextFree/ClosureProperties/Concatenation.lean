@@ -6,6 +6,12 @@ Authors: Martin Dvořák
 import LeanPool.Chomsky.Classes.ContextFree.Basics.Inclusion
 import LeanPool.Chomsky.Classes.Unrestricted.ClosureProperties.Concatenation
 
+/-!
+# Concatenation
+
+Closure of context-free languages under concatenation.
+-/
+
 variable {T : Type}
 
 private def wrapCFR₁ {N₁ : Type} (N₂ : Type) (r : N₁ × List (Symbol T N₁)) :

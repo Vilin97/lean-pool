@@ -6,6 +6,12 @@ Authors: Martin Dvořák
 import LeanPool.Chomsky.Classes.Unrestricted.Basics.Toolbox
 import LeanPool.Chomsky.Utilities.ListUtils
 
+/-!
+# Lifting
+
+Lifting and sinking of grammar derivations along nonterminal embeddings.
+-/
+
 
 section functions_lift_sink
 

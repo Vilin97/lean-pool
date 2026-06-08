@@ -7,6 +7,12 @@ import LeanPool.Chomsky.Classes.Unrestricted.Basics.Toolbox
 import LeanPool.Chomsky.Utilities.LanguageOperations
 import LeanPool.Chomsky.Utilities.ListUtils
 
+/-!
+# Reverse
+
+Closure of general-grammar languages under reversal.
+-/
+
 
 variable {T : Type}
 

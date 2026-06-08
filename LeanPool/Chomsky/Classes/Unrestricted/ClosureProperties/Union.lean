@@ -7,6 +7,12 @@ import LeanPool.Chomsky.Classes.Unrestricted.Basics.Lifting
 import LeanPool.Chomsky.Utilities.ListUtils
 import Mathlib.Tactic.Linarith
 
+/-!
+# Union
+
+Closure of general-grammar languages under union.
+-/
+
 
 variable {T : Type}
 

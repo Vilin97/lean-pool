@@ -5,6 +5,12 @@ Authors: Martin Dvořák
 -/
 import LeanPool.Chomsky.Classes.ContextFree.Basics.Definition
 
+/-!
+# Toolbox
+
+Auxiliary lemmas about context-free derivations.
+-/
+
 variable {T : Type} {g : CFG T}
 
 

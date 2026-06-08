@@ -7,6 +7,12 @@ import LeanPool.Chomsky.Classes.ContextFree.Basics.Toolbox
 import LeanPool.Chomsky.Utilities.LanguageOperations
 import LeanPool.Chomsky.Utilities.ListUtils
 
+/-!
+# Reverse
+
+Closure of context-free languages under reversal.
+-/
+
 
 variable {T : Type}
 

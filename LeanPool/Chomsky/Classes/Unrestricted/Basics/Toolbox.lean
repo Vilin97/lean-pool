@@ -5,6 +5,12 @@ Authors: Martin Dvořák
 -/
 import LeanPool.Chomsky.Classes.Unrestricted.Basics.Definition
 
+/-!
+# Toolbox
+
+Auxiliary lemmas about general-grammar derivations.
+-/
+
 variable {T : Type} {g : Grammar T}
 
 

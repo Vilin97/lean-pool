@@ -5,6 +5,12 @@ Authors: Martin Dvořák
 -/
 import LeanPool.Chomsky.Classes.Unrestricted.Basics.Definition
 
+/-!
+# Definition
+
+Definition of context-free grammars and their derivation relation.
+-/
+
 
 /-- Context-free grammar that generates words over the alphabet `T` (a type of terminals). -/
 structure CFG (T : Type) where

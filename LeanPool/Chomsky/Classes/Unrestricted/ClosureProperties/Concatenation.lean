@@ -7,6 +7,12 @@ import LeanPool.Chomsky.Classes.Unrestricted.Basics.Toolbox
 import LeanPool.Chomsky.Utilities.ListUtils
 import Mathlib.Tactic.Linarith
 
+/-!
+# Concatenation
+
+Closure of general-grammar languages under concatenation.
+-/
+
 
 section list_technicalities
 

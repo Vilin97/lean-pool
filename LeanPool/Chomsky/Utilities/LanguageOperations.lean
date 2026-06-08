@@ -5,6 +5,12 @@ Authors: Martin Dvořák
 -/
 import Mathlib.Computability.Language
 
+/-!
+# LanguageOperations
+
+Operations on formal languages used throughout the development.
+-/
+
 variable {T : Type}
 
 def Language.bijemap {T' : Type} (L : Language T) (π : Equiv T T') : Language T' :=

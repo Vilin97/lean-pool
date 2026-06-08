@@ -6,6 +6,12 @@ Authors: Martin Dvořák
 import LeanPool.Chomsky.Classes.Unrestricted.Basics.Lifting
 import LeanPool.Chomsky.Classes.Unrestricted.ClosureProperties.Concatenation
 
+/-!
+# Star
+
+Closure of general-grammar languages under the Kleene star.
+-/
+
 
 -- new nonterminal type
 private abbrev nn (N : Type) : Type :=

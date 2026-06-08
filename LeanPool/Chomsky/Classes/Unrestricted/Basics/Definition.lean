@@ -6,6 +6,12 @@ Authors: Martin Dvořák
 import LeanPool.Chomsky.Basic
 import Mathlib.Computability.Language
 
+/-!
+# Definition
+
+Definition of general (unrestricted) grammars and their derivation relation.
+-/
+
 
 /-- Rewrite rule for a grammar without any restrictions. -/
 structure Grule (T N : Type) where

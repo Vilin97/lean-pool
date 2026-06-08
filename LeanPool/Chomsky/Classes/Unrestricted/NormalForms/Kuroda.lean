@@ -5,6 +5,12 @@ Authors: Martin Dvořák
 -/
 import LeanPool.Chomsky.Classes.Unrestricted.Basics.Definition
 
+/-!
+# Kuroda
+
+The Kuroda normal form for general grammars.
+-/
+
 
 /-- Transformation rule for a grammar in the Kuroda Normal Form. -/
 inductive KurodaRule (T N : Type)

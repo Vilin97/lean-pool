@@ -5,6 +5,12 @@ Authors: Martin Dvořák
 -/
 import LeanPool.Chomsky.Classes.Unrestricted.Basics.Definition
 
+/-!
+# Uniqueness
+
+Uniqueness results for general-grammar derivations.
+-/
+
 -- This file shows that our encoding of rules is not unique.
 
 private inductive Ter

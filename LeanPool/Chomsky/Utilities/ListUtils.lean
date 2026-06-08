@@ -9,6 +9,12 @@ import Mathlib.Data.List.Lemmas
 import Mathlib.Data.Nat.Find
 import LeanPool.Chomsky.Basic
 
+/-!
+# ListUtils
+
+List utilities used throughout the Chomsky-hierarchy formalization.
+-/
+
 namespace List
 
 variable {α β : Type*} {x y z : List α}

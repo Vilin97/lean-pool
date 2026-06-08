@@ -7,6 +7,12 @@ import Mathlib.Logic.Relation
 import Mathlib.Tactic.Common
 import Mathlib.Tactic.Cases
 
+/-!
+# Basic
+
+Basic definitions for the Chomsky-hierarchy formalization: symbols of a formal grammar.
+-/
+
 
 section notations
 

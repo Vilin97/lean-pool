@@ -6,6 +6,12 @@ Authors: Martin Dvořák
 import LeanPool.Chomsky.Classes.ContextFree.Basics.Toolbox
 import LeanPool.Chomsky.Classes.Unrestricted.Basics.Toolbox
 
+/-!
+# Inclusion
+
+Context-free languages are included in the class of general-grammar languages.
+-/
+
 variable {T : Type}
 
 def CFG.toGeneral (g : CFG T) : Grammar T :=

@@ -6,6 +6,12 @@ Authors: Martin Dvořák
 import LeanPool.Chomsky.Classes.ContextFree.Basics.Inclusion
 import LeanPool.Chomsky.Classes.Unrestricted.ClosureProperties.Union
 
+/-!
+# Union
+
+Closure of context-free languages under union.
+-/
+
 variable {T : Type}
 
 private def liftCFR₁ {N₁ : Type} (N₂ : Type) (r : N₁ × List (Symbol T N₁)) :
