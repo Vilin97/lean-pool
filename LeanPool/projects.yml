@@ -1885,21 +1885,19 @@ projects:
       github_repo: tangentstorm/leansieve
     status: verified
     main_declarations:
-      - hs_suffice
-      - c_prime
-      - no_skipped_prime
-      - RakeSieve.init
-      - RakeSieve.next
+      - Leansieve.hs_suffice
+      - Leansieve.c_prime
+      - Leansieve.no_skipped_prime
     main_results:
-      - declaration: hs_suffice
+      - declaration: Leansieve.hs_suffice
         informal: Proves that each step of a generic prime sieve produces a prime strictly greater than the previous one with no prime skipped in between, i.e. the next consecutive prime.
-      - declaration: c_prime
+      - declaration: Leansieve.c_prime
         informal: Proves that the candidate value produced at each sieve step is prime.
-      - declaration: no_skipped_prime
+      - declaration: Leansieve.no_skipped_prime
         informal: Proves that no prime lies strictly between the current prime and the next candidate produced by the sieve.
-      - declaration: RakeSieve.init
+      - declaration: Leansieve.RakeSieve.init
         informal: Constructs the initial RakeSieve state representing the numbers coprime to 2 with current prime 2 and candidate 3.
-      - declaration: RakeSieve.next
+      - declaration: Leansieve.RakeSieve.next
         informal: Advances a RakeSieve by sifting out multiples of the current prime, yielding the next sieve state.
     tags:
       - prime-sieve

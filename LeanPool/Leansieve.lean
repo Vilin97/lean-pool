@@ -11,7 +11,18 @@ import LeanPool.Leansieve.RakeMap.RakeMap
 import LeanPool.Leansieve.RakeSieve.RakeSieve
 
 /-!
-# leansieve: a formally verified prime number sieve
+# A formally verified prime number sieve
+
+Source: url:https://github.com/tangentstorm/leansieve
+Authors: tangentstorm
+Status: verified
+Main declarations: `Leansieve.hs_suffice`, `Leansieve.c_prime`, `Leansieve.no_skipped_prime`
+Tags: prime-sieve, number-theory, arithmetic-sequences, eratosthenes
+MSC: 11A41, 11N35
+-/
+
+/-!
+## Overview
 
 A formalization of natural-number sieves in Lean 4, modeling the natural numbers
 as collections of arithmetic sequences. An `ASeq` is a single arithmetic sequence
@@ -22,10 +33,5 @@ prime sieve (each step produces the next consecutive prime, skipping none), and
 `RakeSieve` instantiates that logic into a concrete, sieve-of-Eratosthenes-style
 prime generator.
 
-Source: url:https://github.com/tangentstorm/leansieve
-Authors: tangentstorm
-Status: verified
-Main declarations: `hs_suffice`, `c_prime`, `no_skipped_prime`, `RakeSieve.init`, `RakeSieve.next`
-Tags: prime-sieve, number-theory, arithmetic-sequences, eratosthenes
-MSC: 11A41
+All declarations live in the `Leansieve` namespace.
 -/
