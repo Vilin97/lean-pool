@@ -48,17 +48,17 @@ declare_config_elab elabCoalesceConfig CoalesceConfig
 
 -- FIXME: In principle the following two should also be customizable
 private def coalesceLeafHeads : List Name := [
-  ``TLA.state_pred,
-  ``TLA.action_pred,
-  ``TLA.pure_pred,
-  ``TLA.tla_enabled
+  ``TLA.statePred,
+  ``TLA.actionPred,
+  ``TLA.purePred,
+  ``TLA.tlaEnabled
 ]
 
 private def coalesceBinderHeads : List Name := [
-  ``TLA.tla_forall,
-  ``TLA.tla_exists,
-  ``TLA.tla_bigwedge,
-  ``TLA.tla_bigvee
+  ``TLA.tlaForall,
+  ``TLA.tlaExists,
+  ``TLA.tlaBigwedge,
+  ``TLA.tlaBigvee
 ]
 
 private def hasAnyHead (heads : List Name) (p : Expr) : Bool :=
@@ -114,19 +114,19 @@ private def collectPTLBlocks (fuel : Nat) (cfg : CoalesceConfig) (bound : Array 
   | fuel + 1 =>
   -- FIXME: The following is too specific for LTL
   match_expr p with
-  | TLA.tla_not _ p =>
+  | TLA.tlaNot _ p =>
     let r ← collectPTLBlocks fuel cfg bound p
-    return ⟨r.blocks, ← mkAppM ``TLA.tla_not #[r.expr]⟩
-  | TLA.tla_and _ p q => collectBinaryAux fuel cfg bound ``TLA.tla_and p q
-  | TLA.tla_or _ p q => collectBinaryAux fuel cfg bound ``TLA.tla_or p q
-  | TLA.tla_implies _ p q => collectBinaryAux fuel cfg bound ``TLA.tla_implies p q
-  | TLA.tla_forall _ _ p => collectBinderAux fuel cfg bound ``TLA.tla_forall p
-  | TLA.tla_exists _ _ p => collectBinderAux fuel cfg bound ``TLA.tla_exists p
+    return ⟨r.blocks, ← mkAppM ``TLA.tlaNot #[r.expr]⟩
+  | TLA.tlaAnd _ p q => collectBinaryAux fuel cfg bound ``TLA.tlaAnd p q
+  | TLA.tlaOr _ p q => collectBinaryAux fuel cfg bound ``TLA.tlaOr p q
+  | TLA.tlaImplies _ p q => collectBinaryAux fuel cfg bound ``TLA.tlaImplies p q
+  | TLA.tlaForall _ _ p => collectBinderAux fuel cfg bound ``TLA.tlaForall p
+  | TLA.tlaExists _ _ p => collectBinderAux fuel cfg bound ``TLA.tlaExists p
   -- NOTE: Design choice: big op should be first turned into `forall`/`exists`
   | TLA.always _ p => collectModalAux fuel cfg bound ``TLA.always p
   | TLA.eventually _ p => collectModalAux fuel cfg bound ``TLA.eventually p
   | TLA.later _ p => collectModalAux fuel cfg bound ``TLA.later p
-  | TLA.tla_until _ p q => collectBinaryAux fuel cfg bound ``TLA.tla_until p q
+  | TLA.tlaUntil _ p q => collectBinaryAux fuel cfg bound ``TLA.tlaUntil p q
   | _ =>
     -- Opaque `pred σ` terms already behave like propositional temporal atoms
     -- unless the user asks to refresh them into fresh coalescing atoms.
@@ -167,10 +167,10 @@ private def collectGoalBlocks (cfg : CoalesceConfig) (target : Expr) : MetaM Col
   | TLA.valid _ p =>
     let r ← collectPTLBlocks (p.approxDepth.toNat + 1) cfg #[] p
     return ⟨r.blocks, ← mkAppM ``TLA.valid #[r.expr]⟩
-  | TLA.pred_implies _ p q =>
+  | TLA.predImplies _ p q =>
     let rp ← collectPTLBlocks (p.approxDepth.toNat + 1) cfg #[] p
     let rq ← collectPTLBlocks (q.approxDepth.toNat + 1) cfg #[] q
-    return ⟨rp.blocks ++ rq.blocks, ← mkAppM ``TLA.pred_implies #[rp.expr, rq.expr]⟩
+    return ⟨rp.blocks ++ rq.blocks, ← mkAppM ``TLA.predImplies #[rp.expr, rq.expr]⟩
   | Entails _ hyps goal => collectEntailsBlocks cfg hyps goal
   | _ => throwError "tla_coalesce_to_ptl: expected a TLA validity goal, raw TLA sequent, or proof-mode Entails goal"
 where collectEntailsBlocks (cfg : CoalesceConfig) (hypsExpr goal : Expr) : MetaM CollectResult := do
@@ -188,7 +188,7 @@ where collectEntailsBlocks (cfg : CoalesceConfig) (hypsExpr goal : Expr) : MetaM
 private def ensureSupportedGoalShape (target : Expr) : MetaM Unit := do
   match_expr target with
   | TLA.valid _ _ => pure ()
-  | TLA.pred_implies _ _ _ => pure ()
+  | TLA.predImplies _ _ _ => pure ()
   | Entails _ _ _ => pure ()
   | _ => throwError "tla_coalesce_to_ptl: expected a TLA validity goal, raw TLA sequent, or proof-mode Entails goal"
 
@@ -202,7 +202,7 @@ private def dedupBlocks (blocks : Array Expr) : MetaM (Array Expr) :=
 /-
 private def unfoldDerivedTemporalHeads : TacticM Unit := do
   evalTactic <| ← `(tactic|
-    try dsimp only [TLA.leads_to, TLA.always_implies, TLA.weak_fairness])
+    try dsimp only [TLA.leadsTo, TLA.alwaysImplies, TLA.weakFairness])
 -/
 
 private def coalesceToPTL (cfg : CoalesceConfig) : TacticM Unit := withMainContext do

@@ -20,14 +20,14 @@ section state_pred_specialized
 variable {σ : Type u}
 
 theorem state_preds_and (p q : σ → Prop) : (⌜ p ⌝ ∧ ⌜ q ⌝) =tla= ⌜ λ s => p s ∧ q s ⌝ := by
-  funext e; tla_nontemporal_simp
+  funext e; tlaNontemporalSimp
 
 theorem init_invariant {init : σ → Prop} {next : action σ} {inv : σ → Prop}
     (hinit : ∀ s, init s → inv s)
     (hnext : ∀ s s', next s s' → inv s → inv s') :
   (⌜ init ⌝ ∧ □ ⟨next⟩) |-tla- (□ ⌜ inv ⌝) := by
   have hstep : (⌜ inv ⌝ ∧ ⟨next⟩) |-tla- (◯ ⌜ inv ⌝) := by
-    tla_finite_window
+    tlaFiniteWindow
     aesop
   rw (occs := .pos [2]) [always_induction]
   rw [and_pred_implies_split]; apply And.intro
@@ -45,7 +45,7 @@ theorem wf1' (p q init inv : σ → Prop) (next a : action σ)
   (hnext_inv : ∀ s s', next s s' → inv s → inv s') :
   (⌜ init ⌝ ∧ □ ⟨next⟩ ∧ 𝒲ℱ a) |-tla- (⌜ p ⌝ ↝ ⌜ q ⌝) := by
   have hinv := init_invariant hinit_inv hnext_inv
-  apply wf1 (state_pred p) (state_pred q) (state_pred init) (state_pred inv) <;> tla_unfold_simp <;> aesop
+  apply wf1 (statePred p) (statePred q) (statePred init) (statePred inv) <;> tlaUnfoldSimp <;> aesop
 -/
 
 end state_pred_specialized

@@ -10,7 +10,7 @@ namespace TLA.ProofMode
 open Lean Meta Elab Tactic
 
 -- FIXME: Replace this with `foldrDM`
-/-- Build the right-associative `tla_and` chain `p₁ ∧ (p₂ ∧ (… ∧ pₙ))` that
+/-- Build the right-associative `tlaAnd` chain `p₁ ∧ (p₂ ∧ (… ∧ pₙ))` that
     matches `repeatedAnd`'s reduced form. For `[p]` it is `p`. The empty case
     is unreachable from `tla_exit` — that branch goes through
     `Entails_nil_eq_valid` so the raw goal becomes `valid rhs` instead of the
@@ -18,7 +18,7 @@ open Lean Meta Elab Tactic
 private def buildAndChain (_σ : Expr) : List Expr → MetaM Expr
   | [] => panic! "buildAndChain: empty list"
   | [p] => pure p
-  | p :: ps => do mkAppM ``TLA.tla_and #[p, ← buildAndChain _σ ps]
+  | p :: ps => do mkAppM ``TLA.tlaAnd #[p, ← buildAndChain _σ ps]
 
 /--
 `tla_exit` is the inverse of `tla_start`: it leaves the proof mode by
@@ -53,7 +53,7 @@ elab_rules : tactic
       replaceMainGoal gs
     else
       let lhs ← buildAndChain σ preds
-      let newGoal ← mkAppM ``TLA.pred_implies #[lhs, rhs]
+      let newGoal ← mkAppM ``TLA.predImplies #[lhs, rhs]
       let g' ← mainGoal.change newGoal
       replaceMainGoal [g']
 

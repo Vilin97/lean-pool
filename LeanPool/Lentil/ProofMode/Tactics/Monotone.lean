@@ -25,16 +25,16 @@ variable {σ : Type u}
 
 theorem repeatedAnd_map_later (ps : List (pred σ)) :
   repeatedAnd (ps.map TLA.later) = TLA.later (repeatedAnd ps) :=
-  repeatedAnd_map_comm ps TLA.later (by funext e; tla_unfold_simp) later_and
+  repeatedAnd_map_comm ps TLA.later (by funext e; tlaUnfoldSimp) later_and
 
 theorem repeatedAnd_map_always (ps : List (pred σ)) :
   repeatedAnd (ps.map TLA.always) = TLA.always (repeatedAnd ps) :=
-  repeatedAnd_map_comm ps TLA.always (by funext e; tla_unfold_simp) (by intro p q; symm; apply always_and)
+  repeatedAnd_map_comm ps TLA.always (by funext e; tlaUnfoldSimp) (by intro p q; symm; apply always_and)
 
 theorem repeatedAnd_map_eventually_always (ps : List (pred σ)) :
   repeatedAnd (ps.map (fun p => TLA.eventually (TLA.always p))) =
     TLA.eventually (TLA.always (repeatedAnd ps)) :=
-  repeatedAnd_map_comm ps (TLA.eventually ∘ TLA.always) (by funext e; tla_unfold_simp) (by intro p q; symm; apply eventually_always_and_distrib)
+  repeatedAnd_map_comm ps (TLA.eventually ∘ TLA.always) (by funext e; tlaUnfoldSimp) (by intro p q; symm; apply eventually_always_and_distrib)
 
 variable {hyps : List (NamedPred σ)} {goal : pred σ}
 

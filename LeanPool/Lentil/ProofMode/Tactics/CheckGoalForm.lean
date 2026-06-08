@@ -33,16 +33,16 @@ where go : Nat → List (String × Expr) → List (String × Expr) → MetaM Uni
   | _, _, _ => throwError "tla_check_goal: internal hypothesis-count mismatch"
 
 /--
-`tla_check_goal_form` checks that the current proof-mode goal is in the
+`tlaCheckGoalForm` checks that the current proof-mode goal is in the
 canonical literal `Entails [...] goal` form used by the proof-mode tactics.
 
 It does not change the goal. This is useful in tests after a tactic that
 reflects over the hypothesis list: if the goal still contains unreduced list
 computations, then the check fails.
 -/
-elab "tla_check_goal_form" : tactic => do
+elab "tlaCheckGoalForm" : tactic => do
   unless (← recognizeEntailsHypsFromGoal).isSome do
-    throwError "tla_check_goal_form: goal is not in canonical Entails form"
+    throwError "tlaCheckGoalForm: goal is not in canonical Entails form"
 
 /--
 `tla_check_goal expected` checks that the current proof-mode goal has the

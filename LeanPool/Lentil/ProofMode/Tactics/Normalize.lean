@@ -14,17 +14,17 @@ attribute [tlanormsimp ↓] TLA.impl_intro TLA.valid_eq_true_implies TLA.impl_in
   TLA.or_false TLA.false_or TLA.forall_unit TLA.exists_unit
 
 /--
-`tla_normalize` rewrites a raw TLA goal into a shape that proof-mode tactics can
+`tlaNormalize` rewrites a raw TLA goal into a shape that proof-mode tactics can
 introduce and split more predictably.
 
 For example,
 ```lean
-tla_normalize
+tlaNormalize
 ```
 turns a valid implication goal such as `|-tla- p → q` into the corresponding
 sequent shape `p |-tla- q`, and reassociates simple conjunction structure using
 the proof-mode normalization simp set.
 -/
-macro "tla_normalize" : tactic => `(tactic| simp -$(mkIdent `failIfUnchanged) only [tlanormsimp])
+macro "tlaNormalize" : tactic => `(tactic| simp -$(mkIdent `failIfUnchanged) only [tlanormsimp])
 
 end TLA.ProofMode

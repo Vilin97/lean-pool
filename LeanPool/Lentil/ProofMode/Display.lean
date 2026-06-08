@@ -27,7 +27,7 @@ def delabNamedPred : DelabM (TSyntax ``tlaPmHyp) := do -- whenPPOption (fun o =>
   let e ← getExpr
   unless e.isAppOfArity' ``TLA.ProofMode.NamedPred.mk 3 do
     failure
-  let fml ← withAppArg TLA.delab_tlafml_inner
+  let fml ← withAppArg TLA.delabTlafmlInner
   let nm ← withAppFn <| withAppArg delabNameInNamedPred
   `(tlaPmHyp| $nm:ident : $fml:tlafml)
 
@@ -60,7 +60,7 @@ def delabEntails : Delab := do
   -- Entails {σ} hyps goal   →  args 0,1,2
   let hyps ← withAppFn <| withAppArg delabNamedPredList
   let hyps := hyps.toArray
-  let goal ← withAppArg TLA.delab_tlafml_inner
+  let goal ← withAppArg TLA.delabTlafmlInner
   let q ← `(tlaPmEntails| $hyps:tlaPmHyp* |-tla- $goal:tlafml)
   -- NOTE: This is a hack, but making `tlaPmEntails` a `term` might again introduce some
   -- weird parsing errors, so just "pretend" the result is a `term` and display it

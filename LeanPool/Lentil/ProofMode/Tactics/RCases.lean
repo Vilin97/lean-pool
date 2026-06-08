@@ -15,7 +15,7 @@ open Lean.Parser.Tactic
 
 -- Not sure if this is generally useful, so just make it as a `private theorem` for now
 private theorem exists_put_witness_back {α : Sort v} {p : α → pred σ} {Γ g : pred σ} :
-  (∀ x, ((Γ) |-tla- ((p x) → g))) = ((Γ) |-tla- ((∃ x, (p x)) → g)) := by tla_unfold_simp; grind
+  (∀ x, ((Γ) |-tla- ((p x) → g))) = ((Γ) |-tla- ((∃ x, (p x)) → g)) := by tlaUnfoldSimp; grind
 
 section
 
@@ -26,7 +26,7 @@ section
 variable (name1 name2 : String) {a b : pred σ}
 
 theorem Entails_rcases_and_by_idx (idx : Nat)
-  (heq : hyps[idx]?.map NamedPred.pred = some (tla_and a b)) :
+  (heq : hyps[idx]?.map NamedPred.pred = some (tlaAnd a b)) :
   letI hyps' := hyps.eraseIdx idx
   Entails (hyps' ++ [⟨name1, a⟩, ⟨name2, b⟩]) goal → Entails hyps goal := by
   unfold Entails
@@ -43,9 +43,9 @@ theorem Entails_rcases_and_by_name (chosen : String) :
   Entails_rcases_and_by_idx _ _ _
 
 -- NOTE: This proof is slightly repetitive with `Entails_rcases_and_by_idx`, but
--- here the hypothesis is `tla_or`, so the destructure splits into two subgoals.
+-- here the hypothesis is `tlaOr`, so the destructure splits into two subgoals.
 theorem Entails_rcases_or_by_idx (idx : Nat)
-  (heq : hyps[idx]?.map NamedPred.pred = some (tla_or a b)) :
+  (heq : hyps[idx]?.map NamedPred.pred = some (tlaOr a b)) :
   letI hyps' := hyps.eraseIdx idx
   Entails (hyps' ++ [⟨name1, a⟩]) goal → Entails (hyps' ++ [⟨name2, b⟩]) goal →
   Entails hyps goal := by
@@ -73,7 +73,7 @@ variable (newName : String) {α : Sort v} {p : α → pred σ}
 
 -- NOTE: This proof is slightly repetitive with the one above
 theorem Entails_rcases_exists_by_idx (idx : Nat)
-  (heq : hyps[idx]?.map NamedPred.pred = some (tla_exists p)) :
+  (heq : hyps[idx]?.map NamedPred.pred = some (tlaExists p)) :
   letI hyps' := hyps.eraseIdx idx
   (∀ x : α, Entails (hyps' ++ [⟨newName, p x⟩]) goal) → Entails hyps goal := by
   unfold Entails
@@ -185,8 +185,8 @@ mutual
     enforces this by running through `focus` or `Tactic.run`. `fuel` bounds the
     pattern-nesting depth.
 
-    A tuple `⟨..⟩` destructures `tla_and` / `tla_exists`; a parenthesized
-    alternation `(.. | ..)` case-splits a `tla_or`, producing two subgoals. -/
+    A tuple `⟨..⟩` destructures `tlaAnd` / `tlaExists`; a parenthesized
+    alternation `(.. | ..)` case-splits a `tlaOr`, producing two subgoals. -/
 def tlaRcasesCoreFocused (fuel : Nat) (currentHyp : TemporalHypLoc)
     (pat : TSyntax `rcasesPat) : TacticM Unit := do
   match fuel with
@@ -214,7 +214,7 @@ def tlaRcasesCoreFocused (fuel : Nat) (currentHyp : TemporalHypLoc)
   | `(rcasesPat| ⟨ $pats,* ⟩) =>
     let (pat1, pat2) ← splitBinaryRightAssoc pats.getElems
     match_expr pred with
-    | TLA.tla_and _ _ _ =>
+    | TLA.tlaAnd _ _ _ =>
       let n1Str ← nameStrForPat pat1
       let n2Str ← nameStrForPat pat2
       -- Inline `hpred := by rfl` so Lean can pin down the implicit `a, b` at
@@ -228,7 +228,7 @@ def tlaRcasesCoreFocused (fuel : Nat) (currentHyp : TemporalHypLoc)
       -- must then be applied to every goal `pat1` produced.
       tlaRcasesCoreFocused fuel (.byName n1Str) pat1
       tlaRcasesCoreAllGoals fuel (.byName n2Str) pat2
-    | TLA.tla_exists _ _ _ =>
+    | TLA.tlaExists _ _ _ =>
       let nInnerStr ← nameStrForPat pat2
       let thm := if currentHyp matches .byName .. then ``Entails_rcases_exists_by_name else ``Entails_rcases_exists_by_idx
       evalTactic <| ← `(tactic| refine $(mkIdent thm) ($(quote nInnerStr))
@@ -242,7 +242,7 @@ def tlaRcasesCoreFocused (fuel : Nat) (currentHyp : TemporalHypLoc)
     | some branches =>
       let (pat1, pat2) ← splitAltRightAssoc branches
       match_expr pred with
-      | TLA.tla_or _ _ _ =>
+      | TLA.tlaOr _ _ _ =>
         let n1Str ← nameStrForPat pat1
         let n2Str ← nameStrForPat pat2
         let thm := if currentHyp matches .byName .. then ``Entails_rcases_or_by_name else ``Entails_rcases_or_by_idx

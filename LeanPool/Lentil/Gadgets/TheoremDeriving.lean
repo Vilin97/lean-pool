@@ -17,13 +17,13 @@ open Lean Meta Core Elab TLA.Expr LentilLib
 /-- Assemble premises and a conclusion under a shared context `Γ`. -/
 def assembleUnderCommonContextShape (σ : Expr) (ps : List Expr) (q : Expr) : MetaM Expr := do
   withLocalDeclD `Γ (← mkAppM ``TLA.pred #[σ]) fun Γ => do
-    let ps' ← ps.toArray.mapM fun p => mkAppM ``TLA.pred_implies #[Γ, p]
-    let q' ← mkAppM ``TLA.pred_implies #[Γ, q]
+    let ps' ← ps.toArray.mapM fun p => mkAppM ``TLA.predImplies #[Γ, p]
+    let q' ← mkAppM ``TLA.predImplies #[Γ, q]
     let body ← mkArrowN ps' q'
     mkForallFVars #[Γ] body
 
 /-- Assemble a list of premise predicates and a conclusion into the arrow chain
-    of separated `pred_implies`/`valid` statements used by `tla_derive`. -/
+    of separated `predImplies`/`valid` statements used by `tla_derive`. -/
 def assembleSeparatedPredImplications (ps : List Expr) (q : Expr) : MetaM Expr := do
   let build p := do
     let (ps, q) ← simplify [] p
@@ -31,8 +31,8 @@ def assembleSeparatedPredImplications (ps : List Expr) (q : Expr) : MetaM Expr :
     | none => mkAppM ``TLA.valid #[q]
     | some p =>
       let ps := List.dropLast ps
-      let conj ← ps.foldrM (fun pp conj => mkAppM ``TLA.tla_and #[pp, conj]) p
-      mkAppM ``TLA.pred_implies #[conj, q]
+      let conj ← ps.foldrM (fun pp conj => mkAppM ``TLA.tlaAnd #[pp, conj]) p
+      mkAppM ``TLA.predImplies #[conj, q]
   let ps' ← ps.mapM build
   let q' ← build q
   let res ← mkArrowN ps'.toArray q'
@@ -41,25 +41,25 @@ where
   /-- Simplify a premise list and conclusion before assembling the implication chain. -/
   simplify (ps : List Expr) (q : Expr) : MetaM (List Expr × Expr) := do
     -- currently only do very simple simplification:
-    -- if `p` is empty while `q` is `always_implies` then turn it into `tla_implies`
-    -- if `q` is `tla_implies` then split it into parts
+    -- if `p` is empty while `q` is `alwaysImplies` then turn it into `tlaImplies`
+    -- if `q` is `tlaImplies` then split it into parts
     -- FIXME: might enhance this to allow definitionally equal pattern matching, like the one in `Qq`?
     match_expr q with
-    | TLA.always_implies _ a b =>
+    | TLA.alwaysImplies _ a b =>
       if ps.isEmpty then
-        -- turn `always_implies a b` into `tla_implies a b` and split that
-        let q' ← mkAppM ``TLA.tla_implies #[a, b]
+        -- turn `alwaysImplies a b` into `tlaImplies a b` and split that
+        let q' ← mkAppM ``TLA.tlaImplies #[a, b]
         let (ps', q'') ← splitImplicationsIntoParts q'
         pure (ps', q'')
       else
         pure (ps, q)
-    | TLA.tla_implies _ _ _ =>
+    | TLA.tlaImplies _ _ _ =>
       let (ps', q') ← splitImplicationsIntoParts q
       pure (ps ++ ps', q')
     | _ => pure (ps, q)
 
 -- inspired by how `to_additive` is implemented in Mathlib
-/-- For a TLA theorem whose conclusion is a single `TLA.pred_implies` or
+/-- For a TLA theorem whose conclusion is a single `TLA.predImplies` or
     `TLA.valid`, this function automatically derives its several equivalent
     or weakened versions, which might be easier to use elsewhere.
 
@@ -107,22 +107,22 @@ def deriveForPredImpliesOrValid (nm : Name) : CoreM Unit := do
       -- since the thing brought by `have` is not used in the proof term.
       -- to avoid this, we add a separate branch where there is no `have`.
       (← `(term| by solve
-        | tla_nontemporal_simp; aesop
-        | have := @$(mkIdent nm); tla_nontemporal_simp; aesop)) noncomputable?
+        | tlaNontemporalSimp; aesop
+        | have := @$(mkIdent nm); tlaNontemporalSimp; aesop)) noncomputable?
     simpleProveTheorem thmName2 lvlParams thmStmt2
       (← do
         let htmp ← mkIdent <$> mkFreshUserName `htmp
         let htmp' ← mkIdent <$> mkFreshUserName `htmp'
         let introNames ← ty.getForallBinderNames.toArray.mapM (mkIdent <$> mkFreshUserName ·)
         `(term| by solve
-        | tla_nontemporal_simp; aesop
+        | tlaNontemporalSimp; aesop
         | intro $introNames*; have $htmp := @$(mkIdent nm) $introNames*
           (try rw [← TLA.impl_intro] at $htmp:ident)
           repeat (first
             | (solve
-              | tla_nontemporal_simp; aesop)
+              | tlaNontemporalSimp; aesop)
             | have $htmp' := @$htmp; clear $htmp; have $htmp := @TLA.impl_decouple _ _ _ $htmp'; clear $htmp'
-            | unfold TLA.always_implies at $htmp:ident
+            | unfold TLA.alwaysImplies at $htmp:ident
             | rw [← TLA.always_intro] at $htmp:ident
             | intro $htmp':ident; specialize $htmp $htmp'; clear $htmp'
             | rw [TLA.and_valid_split, _root_.and_imp] at $htmp:ident
@@ -132,7 +132,7 @@ end TLA.Deriving
 
 /--
 For a TLA theorem with this attribute in the form of a single
-`TLA.pred_implies` or `TLA.valid`, its different variants will be derived.
+`TLA.predImplies` or `TLA.valid`, its different variants will be derived.
 See the docstring of `TLA.Deriving.deriveForPredImpliesOrValid` for more details.
 -/
 syntax (name := tlaDerive) "tla_derive" : attr

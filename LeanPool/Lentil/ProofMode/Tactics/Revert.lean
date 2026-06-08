@@ -28,7 +28,7 @@ private def resolveBinderNameHintAsString (e : Expr) : CoreM Expr := do
 -- but here we need to deal with the binder name, so make it a separate theorem.
 theorem Entails_revert_forall {σ : Type u} {hyps : List (NamedPred σ)}
   {α : Sort v} {p : α → pred σ} (n : String) :
-  Entails hyps (TLA.tla_forall (binderNameHintAsString n p)) → (∀ x, Entails hyps (p x)) := forall_elim.mpr
+  Entails hyps (TLA.tlaForall (binderNameHintAsString n p)) → (∀ x, Entails hyps (p x)) := forall_elim.mpr
 
 section
 

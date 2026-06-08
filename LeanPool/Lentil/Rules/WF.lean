@@ -25,7 +25,7 @@ variable {a : action σ}
 theorem wf_as_leads_to : (𝒲ℱ a) =tla= (□ Enabled a ↝ ⟨a⟩) := rfl
 
 theorem wf_alt1 : (𝒲ℱ a) =tla= □ ◇ ((¬ Enabled a) ∨ □ ◇ ⟨a⟩) := by
-  funext e; unfold weak_fairness; rw [implies_to_or]; simp [tlasimp]
+  funext e; unfold weakFairness; rw [implies_to_or]; simp [tlasimp]
   rw [← eventually_or]; (repeat rw [always_eventually_or_distrib]); simp [tlasimp]
 
 theorem wf_alt1' : (𝒲ℱ a) =tla= □ ◇ ((¬ Enabled a) ∨ ⟨a⟩) := by
@@ -58,11 +58,11 @@ theorem wf1 (p q : pred σ) (next a : action σ) :
       rcases ih with ⟨k', hle, ih⟩ | ih
       · left; exists k'; constructor; omega; apply ih
       · specialize hpuntilq _ ⟨ih, (hnext _)⟩
-        rcases hpuntilq with hq | hq <;> tla_unfold_simp'
+        rcases hpuntilq with hq | hq <;> tlaUnfoldSimp'
         · right; apply hq
         · left; exists (n + 1); aesop
     }
-  rcases htmp with ⟨k', _, hq⟩ | hq <;> tla_unfold_simp'
+  rcases htmp with ⟨k', _, hq⟩ | hq <;> tlaUnfoldSimp'
   · aesop
   · rcases hwf_alt with hq2 | hq2
     · specialize henable _ hq; aesop
@@ -77,7 +77,7 @@ theorem wf1_original (p q : pred σ) (next a : action σ) :
   tla_start hpuntilq haq henable
   tla_rintro ⟨hnext, hfair⟩
   tla_apply wf1 (next := next) (a := a)
-  tla_split_ands
+  tlaSplitAnds
   · rw [later_or]; tla_apply hpuntilq
   · tla_apply haq
   · intro e ⟨_, _, henable, _⟩ k hp

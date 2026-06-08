@@ -57,15 +57,15 @@ elab_rules : tactic
       postDSimpAfterApplyingReflectionTheorem pullPureTacDSimps
 
 /--
-`tla_prove_pure` proves a pure TLA entailment by reducing it to an ordinary Lean
+`tlaProvePure` proves a pure TLA entailment by reducing it to an ordinary Lean
 proposition.
 
 For example, on a goal whose temporal conclusion is `⌞P⌟`,
 ```lean
-tla_prove_pure
+tlaProvePure
 ```
 changes the remaining obligation to the Lean proposition `P`.
 -/
-macro "tla_prove_pure" : tactic => `(tactic| refine $(mkIdent ``pred_implies_pure) ?_)
+macro "tlaProvePure" : tactic => `(tactic| refine $(mkIdent ``pred_implies_pure) ?_)
 
 end TLA.ProofMode

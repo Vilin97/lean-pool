@@ -12,7 +12,7 @@ open Lean Meta Elab Tactic
 
 theorem Entails_intro_forall {σ : Type u} {hyps : List (NamedPred σ)}
   {α : Sort v} {p : α → pred σ} :
-  (∀ x, Entails hyps (p x)) → Entails hyps (TLA.tla_forall p) := forall_elim.mp
+  (∀ x, Entails hyps (p x)) → Entails hyps (TLA.tlaForall p) := forall_elim.mp
 
 theorem Entails_pure_fact_intro {σ : Type u} {hyps : List (NamedPred σ)}
   {q : Prop} {p : pred σ} :
@@ -37,13 +37,13 @@ def tlaIntroCoreStep (k : SyntaxNodeKind) (name : TSyntax k)
   let_expr TLA.ProofMode.Entails _ _ goalPred := ty
     | throwError m!"{errorMsgPrefix}: goal is not an Entails sequent, but {ty}"
   match_expr goalPred with
-  | TLA.tla_forall _ _ _ =>
+  | TLA.tlaForall _ _ _ =>
     let tac ← tacIntroNonTemporalHyp name
     evalTactic <| ← `(tactic|
       refine $(mkIdent ``Entails_intro_forall) ?_; $tac)
     return false
-  | TLA.tla_implies _ lhs _ =>
-    if lhs.isAppOf' ``TLA.pure_pred then
+  | TLA.tlaImplies _ lhs _ =>
+    if lhs.isAppOf' ``TLA.purePred then
       let tac ← tacIntroNonTemporalHyp name
       evalTactic <| ← `(tactic|
         refine $(mkIdent ``Entails_pure_fact_intro).$(mkIdent `mp) ?_; $tac)

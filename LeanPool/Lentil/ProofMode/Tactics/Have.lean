@@ -33,8 +33,8 @@ theorem Entails_have_valid {newHyp : pred σ} :
   Entails (hyps ++ [⟨newHypName, newHyp⟩]) goal →
   Entails hyps goal := by rw [valid_eq_true_implies]; apply Entails_have_true_pred_implies
 
--- NOTE: In theory we don't need this, but applying `Entails_have_valid` on a `pred_implies`
--- can break its form, so still have this more specific version to preserve the `pred_implies` shape
+-- NOTE: In theory we don't need this, but applying `Entails_have_valid` on a `predImplies`
+-- can break its form, so still have this more specific version to preserve the `predImplies` shape
 omit newHyp in
 theorem Entails_have_pred_implies {newHypLHS newHypRHS : pred σ} :
   ((newHypLHS) |-tla- (newHypRHS)) →
@@ -105,7 +105,7 @@ private def addValidTermHyp (newHypName : String) (tm : Term) : TacticM Unit := 
     -- the state type `σ` here
     match_expr ty with
     -- FIXME: Slightly repetitive
-    | TLA.pred_implies σ' lhs rhs =>
+    | TLA.predImplies σ' lhs rhs =>
       unless ← isDefEq σ' σ do
         throwError "tla_have: theorem state type{indentExpr σ'}\ndoes not match proof-mode state type{indentExpr σ}"
       mkAppOptM ``Entails_have_pred_implies
@@ -119,7 +119,7 @@ private def addValidTermHyp (newHypName : String) (tm : Term) : TacticM Unit := 
         mkAppOptM ``Entails_have_true_pred_implies
           #[some σ, some hypsExpr, some goal, some newHypNameExpr, some rhs, some e]
       else
-        let op ← mkAppOptM ``tla_and #[σ]
+        let op ← mkAppOptM ``tlaAnd #[σ]
         let lhs := List.foldrD (mkApp2 op) default <| hypsExprList.map Prod.snd
         mkAppOptM ``Entails_have_pred_implies
           #[some σ, some hypsExpr, some goal, some newHypNameExpr, some lhs, some rhs, some e]
@@ -238,7 +238,7 @@ syntax (name := tlaSufficesTac) "tla_suffices" (ppSpace colGt ident) " : " tlafm
 
 private def haveOrSufficesCommon (h : Ident) (fml : TSyntax `tlafml) : TacticM Unit := do
   let nameStr := toString h.getId
-  let fmlTerm ← TLA.syntax_tlafml_to_term fml
+  let fmlTerm ← TLA.syntaxTlafmlToTerm fml
   evalTactic <| ← `(tactic|
     refine $(mkIdent ``Entails_have_or_suffices)
       ($(quote nameStr)) $fmlTerm ?_ ?_)

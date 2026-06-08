@@ -21,11 +21,11 @@ def liftPropToPurePred (σ p : Expr) : MetaM Expr := do
     trace[lentil.debug] "lifted"
     -- do some very simple special checking
     if p.isTrue then
-      mkAppOptM ``TLA.tla_true #[some σ]
+      mkAppOptM ``TLA.tlaTrue #[some σ]
     else if p.isFalse then
-      mkAppOptM ``TLA.tla_false #[some σ]
+      mkAppOptM ``TLA.tlaFalse #[some σ]
     else
-      mkAppOptM ``TLA.pure_pred #[some σ, some p]
+      mkAppOptM ``TLA.purePred #[some σ, some p]
   else
     pure p
 
@@ -44,15 +44,15 @@ def convertPropToTLAPredAux (fuel : Nat) (alist : AssocList Expr Expr) (σ p : E
   | And a b => do
     trace[lentil.debug] "And case: {a} and {b}"
     let a' ← go fuel a; let b' ← go fuel b
-    mkAppM ``TLA.tla_and #[a', b']
+    mkAppM ``TLA.tlaAnd #[a', b']
   | Or a b => do
     trace[lentil.debug] "Or case: {a} or {b}"
     let a' ← go fuel a; let b' ← go fuel b
-    mkAppM ``TLA.tla_or #[a', b']
+    mkAppM ``TLA.tlaOr #[a', b']
   | Not a => do
     trace[lentil.debug] "Not case: not {a}"
     let a' ← go fuel a
-    mkAppM ``TLA.tla_not #[a']
+    mkAppM ``TLA.tlaNot #[a']
   | Exists _ f => do
     trace[lentil.debug] "Exists case: ∃ {f}"
     -- here, do some simple checking
@@ -64,10 +64,10 @@ def convertPropToTLAPredAux (fuel : Nat) (alist : AssocList Expr Expr) (σ p : E
         let b_ := b.instantiate1 avar
         let b' ← go fuel b_
         let b'' ← mkLambdaFVars #[avar] b'
-        mkAppM ``TLA.tla_exists #[b'']
+        mkAppM ``TLA.tlaExists #[b'']
     | _ =>
       let f' ← go fuel f
-      mkAppM ``TLA.tla_exists #[f']
+      mkAppM ``TLA.tlaExists #[f']
   | _ =>
     -- `p` is not any propositional connective listed above
     match p with
@@ -76,7 +76,7 @@ def convertPropToTLAPredAux (fuel : Nat) (alist : AssocList Expr Expr) (σ p : E
       if p.isArrow then
         trace[lentil.debug] "Arrow case: {a} → {b}"
         let a' ← go fuel a; let b' ← go fuel b
-        mkAppM ``TLA.tla_implies #[a', b']
+        mkAppM ``TLA.tlaImplies #[a', b']
       else
         trace[lentil.debug] "Forall case: ∀ {a}, {b}"
         -- HMM slightly repetitive
@@ -85,7 +85,7 @@ def convertPropToTLAPredAux (fuel : Nat) (alist : AssocList Expr Expr) (σ p : E
           let b_ := b.instantiate1 avar
           let b' ← go fuel b_
           let b'' ← mkLambdaFVars #[avar] b'
-          mkAppM ``TLA.tla_forall #[b'']
+          mkAppM ``TLA.tlaForall #[b'']
     | _ =>
       -- simply do a holistic replacement
       trace[lentil.debug] "Terminal case: {p}"

@@ -25,7 +25,7 @@ with a theorem saying that evaluating `p` on a trace is equivalent to evaluating
 find a `HasFiniteWindow p n`, applies the certificate theorem, introduces the
 `n` state variables, and simplifies the resulting `core`.
 
-For sequents, `tla_finite_window` first changes `p |-tla- q` by definitional
+For sequents, `tlaFiniteWindow` first changes `p |-tla- q` by definitional
 equality into `|-tla- p → q`, so the rest of the pipeline only handles validity
 goals.
 -/
@@ -183,7 +183,7 @@ structure FiniteWindow {σ : Type u} (p : pred σ) (n : Nat) where
 /-- A computable finite-window certificate.
 
 The window is an output parameter so that instance synthesis can compute a
-canonical bound for `p`. The certificate itself is data, because `tla_finite_window`
+canonical bound for `p`. The certificate itself is data, because `tlaFiniteWindow`
 uses its `core` field to produce the finite-state goal. -/
 class HasFiniteWindow {σ : Type u} (p : pred σ) (n : outParam Nat) where
   /-- The finite-window certificate for the predicate. -/
@@ -196,7 +196,7 @@ def finiteWindowOfHasFiniteWindow {σ : Type u} {p : pred σ} {n : Nat}
     [h : HasFiniteWindow p n] : FiniteWindow p n :=
   h.finite
 
-/-- Soundness theorem used by `tla_finite_window`: proving the finite core for
+/-- Soundness theorem used by `tlaFiniteWindow`: proving the finite core for
 all choices of its state arguments proves validity of the original predicate. -/
 theorem FiniteWindow.valid_of_forall {σ : Type u} {p : pred σ} {n : Nat}
     (h : FiniteWindow p n) : IteratedForall n h.core → valid p := by
@@ -210,50 +210,50 @@ theorem HasFiniteWindow.valid_of_forall {σ : Type u} {p : pred σ} {n : Nat}
 /- Base finite-window certificates. -/
 
 /-- Finite-window certificate for a pure predicate. -/
-def finiteWindowPure {σ : Type u} (P : Prop) : FiniteWindow (pure_pred (α := σ) P) 0 where
+def finiteWindowPure {σ : Type u} (P : Prop) : FiniteWindow (purePred (α := σ) P) 0 where
   core := ULift.up P
-  iff_of_eval := by simp [pure_pred, state_pred, IteratedHomPred.evalExec]
+  iff_of_eval := by simp [purePred, statePred, IteratedHomPred.evalExec]
 
-instance hasFiniteWindowPure {σ : Type u} (P : Prop) : HasFiniteWindow (pure_pred (α := σ) P) 0 where
+instance hasFiniteWindowPure {σ : Type u} (P : Prop) : HasFiniteWindow (purePred (α := σ) P) 0 where
   finite := finiteWindowPure P
 
 /-- Finite-window certificate for `⊤`. -/
-def finiteWindowTrue {σ : Type u} : FiniteWindow (tla_true (α := σ)) 0 where
+def finiteWindowTrue {σ : Type u} : FiniteWindow (tlaTrue (α := σ)) 0 where
   core := ULift.up True
-  iff_of_eval := by simp [tla_true, pure_pred, state_pred, IteratedHomPred.evalExec]
+  iff_of_eval := by simp [tlaTrue, purePred, statePred, IteratedHomPred.evalExec]
 
-instance hasFiniteWindowTrue {σ : Type u} : HasFiniteWindow (tla_true (α := σ)) 0 where
+instance hasFiniteWindowTrue {σ : Type u} : HasFiniteWindow (tlaTrue (α := σ)) 0 where
   finite := finiteWindowTrue
 
 /-- Finite-window certificate for `⊥`. -/
-def finiteWindowFalse {σ : Type u} : FiniteWindow (tla_false (α := σ)) 0 where
+def finiteWindowFalse {σ : Type u} : FiniteWindow (tlaFalse (α := σ)) 0 where
   core := ULift.up False
-  iff_of_eval := by simp [tla_false, pure_pred, state_pred, IteratedHomPred.evalExec]
+  iff_of_eval := by simp [tlaFalse, purePred, statePred, IteratedHomPred.evalExec]
 
-instance hasFiniteWindowFalse {σ : Type u} : HasFiniteWindow (tla_false (α := σ)) 0 where
+instance hasFiniteWindowFalse {σ : Type u} : HasFiniteWindow (tlaFalse (α := σ)) 0 where
   finite := finiteWindowFalse
 
 /-- Finite-window certificate for a state predicate. -/
-def finiteWindowState {σ : Type u} (p : σ → Prop) : FiniteWindow (state_pred p) 1 where
+def finiteWindowState {σ : Type u} (p : σ → Prop) : FiniteWindow (statePred p) 1 where
   core := fun s => ULift.up (p s)
-  iff_of_eval := by simp [state_pred, IteratedHomPred.evalExec]
+  iff_of_eval := by simp [statePred, IteratedHomPred.evalExec]
 
-instance hasFiniteWindowState {σ : Type u} (p : σ → Prop) : HasFiniteWindow (state_pred p) 1 where
+instance hasFiniteWindowState {σ : Type u} (p : σ → Prop) : HasFiniteWindow (statePred p) 1 where
   finite := finiteWindowState p
 
 /-- Finite-window certificate for an action predicate. -/
-def finiteWindowAction {σ : Type u} (a : action σ) : FiniteWindow (action_pred a) 2 where
+def finiteWindowAction {σ : Type u} (a : action σ) : FiniteWindow (actionPred a) 2 where
   core := fun s s' => ULift.up (a s s')
-  iff_of_eval := by simp [action_pred, IteratedHomPred.evalExec, exec.drop]
+  iff_of_eval := by simp [actionPred, IteratedHomPred.evalExec, exec.drop]
 
-instance hasFiniteWindowAction {σ : Type u} (a : action σ) : HasFiniteWindow (action_pred a) 2 where
+instance hasFiniteWindowAction {σ : Type u} (a : action σ) : HasFiniteWindow (actionPred a) 2 where
   finite := finiteWindowAction a
 
 /-- Finite-window certificate for an enabledness predicate. -/
-def finiteWindowEnabled {σ : Type u} (a : action σ) : FiniteWindow (tla_enabled a) 1 :=
+def finiteWindowEnabled {σ : Type u} (a : action σ) : FiniteWindow (tlaEnabled a) 1 :=
   finiteWindowState (enabled a)
 
-instance hasFiniteWindowEnabled {σ : Type u} (a : action σ) : HasFiniteWindow (tla_enabled a) 1 where
+instance hasFiniteWindowEnabled {σ : Type u} (a : action σ) : HasFiniteWindow (tlaEnabled a) 1 where
   finite := finiteWindowEnabled a
 
 /- Compositional finite-window certificates. Binary connectives first weaken
@@ -275,48 +275,48 @@ def finiteWindowBinary {σ : Type u} (op : Prop → Prop → Prop) (p q : pred �
 /-- Finite-window certificate for a conjunction. -/
 def finiteWindowAnd {σ : Type u} (p q : pred σ) (n m : Nat)
     (hp : FiniteWindow p n) (hq : FiniteWindow q m) :
-    FiniteWindow (tla_and p q) (max n m) :=
+    FiniteWindow (tlaAnd p q) (max n m) :=
   finiteWindowBinary (fun p q => p ∧ q) p q n m hp hq
 
 instance hasFiniteWindowAnd {σ : Type u} (p q : pred σ) (n m : Nat)
     [HasFiniteWindow p n] [HasFiniteWindow q m] :
-    HasFiniteWindow (tla_and p q) (max n m) where
+    HasFiniteWindow (tlaAnd p q) (max n m) where
   finite := finiteWindowAnd p q n m finiteWindowOfHasFiniteWindow finiteWindowOfHasFiniteWindow
 
 /-- Finite-window certificate for a disjunction. -/
 def finiteWindowOr {σ : Type u} (p q : pred σ) (n m : Nat)
     (hp : FiniteWindow p n) (hq : FiniteWindow q m) :
-    FiniteWindow (tla_or p q) (max n m) :=
+    FiniteWindow (tlaOr p q) (max n m) :=
   finiteWindowBinary (fun p q => p ∨ q) p q n m hp hq
 
 instance hasFiniteWindowOr {σ : Type u} (p q : pred σ) (n m : Nat)
     [HasFiniteWindow p n] [HasFiniteWindow q m] :
-    HasFiniteWindow (tla_or p q) (max n m) where
+    HasFiniteWindow (tlaOr p q) (max n m) where
   finite := finiteWindowOr p q n m finiteWindowOfHasFiniteWindow finiteWindowOfHasFiniteWindow
 
 /-- Finite-window certificate for a negation. -/
 def finiteWindowNot {σ : Type u} (p : pred σ) (n : Nat) (hp : FiniteWindow p n) :
-    FiniteWindow (tla_not p) n where
+    FiniteWindow (tlaNot p) n where
   core := IteratedHomPred.mkNot n hp.core
   iff_of_eval := by
     intro e
-    simp only [tla_not]
+    simp only [tlaNot]
     rw [hp.iff_of_eval e]
     rw [IteratedHomPred.evalExec_mkNot]
 
 instance hasFiniteWindowNot {σ : Type u} (p : pred σ) (n : Nat) [HasFiniteWindow p n] :
-    HasFiniteWindow (tla_not p) n where
+    HasFiniteWindow (tlaNot p) n where
   finite := finiteWindowNot p n finiteWindowOfHasFiniteWindow
 
 /-- Finite-window certificate for an implication. -/
 def finiteWindowImplies {σ : Type u} (p q : pred σ) (n m : Nat)
     (hp : FiniteWindow p n) (hq : FiniteWindow q m) :
-    FiniteWindow (tla_implies p q) (max n m) :=
+    FiniteWindow (tlaImplies p q) (max n m) :=
   finiteWindowBinary (fun p q => p → q) p q n m hp hq
 
 instance hasFiniteWindowImplies {σ : Type u} (p q : pred σ) (n m : Nat)
     [HasFiniteWindow p n] [HasFiniteWindow q m] :
-    HasFiniteWindow (tla_implies p q) (max n m) where
+    HasFiniteWindow (tlaImplies p q) (max n m) where
   finite := finiteWindowImplies p q n m finiteWindowOfHasFiniteWindow finiteWindowOfHasFiniteWindow
 
 /-- Finite-window certificate for the `◯` modality. -/
@@ -349,23 +349,23 @@ def finiteWindowBinder {σ : Type u} {α : Sort v} (op : (α → Prop) → Prop)
 /-- Finite-window certificate for a universal quantifier. -/
 def finiteWindowForall {σ : Type u} {α : Sort v} (p : α → pred σ) (n : Nat)
     (hp : ∀ x, FiniteWindow (p x) n) :
-    FiniteWindow (tla_forall p) n :=
+    FiniteWindow (tlaForall p) n :=
   finiteWindowBinder (fun r => ∀ x, r x) forall_congr' p n hp
 
 /-- Finite-window certificate for an existential quantifier. -/
 def finiteWindowExists {σ : Type u} {α : Sort v} (p : α → pred σ) (n : Nat)
     (hp : ∀ x, FiniteWindow (p x) n) :
-    FiniteWindow (tla_exists p) n :=
+    FiniteWindow (tlaExists p) n :=
   finiteWindowBinder (fun r => ∃ x, r x) exists_congr p n hp
 
 instance hasFiniteWindowForall {σ : Type u} {α : Sort v} (p : α → pred σ) (n : Nat)
     [hp : ∀ x, HasFiniteWindow (p x) n] :
-    HasFiniteWindow (tla_forall p) n where
+    HasFiniteWindow (tlaForall p) n where
   finite := finiteWindowForall p n fun _ => finiteWindowOfHasFiniteWindow
 
 instance hasFiniteWindowExists {σ : Type u} {α : Sort v} (p : α → pred σ) (n : Nat)
     [hp : ∀ x, HasFiniteWindow (p x) n] :
-    HasFiniteWindow (tla_exists p) n where
+    HasFiniteWindow (tlaExists p) n where
   finite := finiteWindowExists p n fun _ => finiteWindowOfHasFiniteWindow
 
 attribute [tla_finite_window_def]
@@ -398,11 +398,11 @@ private def finiteWindowOf (p : Expr) : MetaM (Expr × Nat) := do
   let instTy ← mkAppM ``HasFiniteWindow #[p, win]
   let inst ←
     try synthInstance instTy
-    catch _ => throwError "tla_finite_window: failed to synthesize a finite-window instance for {p}"
+    catch _ => throwError "tlaFiniteWindow: failed to synthesize a finite-window instance for {p}"
   let win ← instantiateMVars win
   let win ← withTransparency .all <| whnf win
   let some n ← (Lean.Meta.evalNat win).run
-    | throwError "tla_finite_window: synthesized finite window did not reduce to a numeral: {win}"
+    | throwError "tlaFiniteWindow: synthesized finite window did not reduce to a numeral: {win}"
   return (inst, n)
 
 private def introFiniteStates (n : Nat) : TacticM Unit := do
@@ -419,7 +419,7 @@ where
     Name.mkSimple <| "s" ++ String.ofList (List.replicate idx '\'')
 
 /--
-`tla_finite_window` reduces a finite-window TLA sequent to an ordinary Lean
+`tlaFiniteWindow` reduces a finite-window TLA sequent to an ordinary Lean
 goal over finitely many states.
 
 The tactic uses `HasFiniteWindow` instances for every predicate in the sequent.
@@ -428,7 +428,7 @@ predicates, Boolean connectives, implication, negation, and `◯`. It deliberate
 does not peel genuinely temporal structure such as `□`; use sequent/modal rules
 first to expose a finite local obligation.
 -/
-elab "tla_finite_window" : tactic => withMainContext do
+elab "tlaFiniteWindow" : tactic => withMainContext do
   -- Work only with validity goals. Sequents are definitional aliases for
   -- validity of temporal implication.
   changePredImpliesToValid
@@ -439,14 +439,14 @@ elab "tla_finite_window" : tactic => withMainContext do
     let target := target.headBeta.cleanupAnnotations
     match_expr target with
     | TLA.valid _ p => finiteWindowOf p
-    | _ => throwError "tla_finite_window: goal is not a TLA validity goal, but {target}"
+    | _ => throwError "tlaFiniteWindow: goal is not a TLA validity goal, but {target}"
   -- Replace the temporal goal by the finite core obligation, then expose the
   -- core as ordinary state variables.
   -- Apply at the meta level to avoid synthesizing instance twice
   let thm ← mkAppOptM ``HasFiniteWindow.valid_of_forall #[none, none, none, some inst]
   let g ← getMainGoal
   let gs ← g.apply thm
-  let [g] := gs | throwError "tla_finite_window: unexpected number of goals after applying finite-window validity theorem (got {gs.length}, expected 1)"
+  let [g] := gs | throwError "tlaFiniteWindow: unexpected number of goals after applying finite-window validity theorem (got {gs.length}, expected 1)"
   replaceMainGoal [g]
   introFiniteStates n
   -- The core still contains the instance constructors and computed `max` widths;

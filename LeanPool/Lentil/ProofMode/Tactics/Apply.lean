@@ -55,7 +55,7 @@ private def goalDirectedPremisesCut (remainingPremises : List Expr) (goal conclu
     match remainingPremises with
     | [] => throwError "tla_apply: failed to find a way to unify the goal and the hypothesis conclusion"
     | prem :: rest =>
-      let newConclusion ← mkAppM ``tla_implies #[prem, conclusion]
+      let newConclusion ← mkAppM ``tlaImplies #[prem, conclusion]
       goalDirectedPremisesCut rest goal newConclusion
 
 /--

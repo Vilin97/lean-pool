@@ -16,17 +16,17 @@ structure NamedPred (σ : Type u) where
   /-- The hypothesis predicate. -/
   pred : pred σ
 
--- FIXME: How to unify this with `tla_bigwedge`?
+-- FIXME: How to unify this with `tlaBigwedge`?
 /-- Right-fold a list of predicates into a single conjunction. -/
-def repeatedAnd (ps : List (pred σ)) : pred σ := (List.foldrD tla_and tla_true ps)
+def repeatedAnd (ps : List (pred σ)) : pred σ := (List.foldrD tlaAnd tlaTrue ps)
 
 /-- Right-fold a list of predicates into a chain of implications to `q`. -/
-def repeatedImplies (ps : List (pred σ)) (q : pred σ) : pred σ := ps.foldr tla_implies q
+def repeatedImplies (ps : List (pred σ)) (q : pred σ) : pred σ := ps.foldr tlaImplies q
 
 -- FIXME: This is not satisfactory ...
 theorem repeatedAnd_eq_bigwedge (ps : List (pred σ)) :
   ((repeatedAnd ps)) =tla= (⋀ x ∈ ps, x) := by
-  dsimp [tla_bigwedge, Foldable.fold]
+  dsimp [tlaBigwedge, Foldable.fold]
   rw [← List.foldrD_eq_foldr]
   · rfl
   · apply and_true
@@ -54,23 +54,23 @@ theorem repeatedAnd_reorder (ps1 ps2 : List (pred σ)) (p : pred σ) :
 theorem repeatedAnd_add_duplicate {ps : List (pred σ)} {p : pred σ} (h : p ∈ ps) :
   ((repeatedAnd ps)) =tla= ((repeatedAnd ps) ∧ p) := by
   simp [repeatedAnd_eq_bigwedge, bigwedge_forall_list]
-  funext e; tla_unfold_simp; grind
+  funext e; tlaUnfoldSimp; grind
 
 theorem repeatedAnd_subset_implies (ps1 ps2 : List (pred σ)) :
   ps1 ⊆ ps2 → ((repeatedAnd ps2)) |-tla- ((repeatedAnd ps1)) := by
   intro h; rw [List.subset_def] at h
   simp only [repeatedAnd_eq_bigwedge, bigwedge_forall_list]
-  tla_nontemporal_simp; aesop
+  tlaNontemporalSimp; aesop
 
 theorem repeatedImplies_apply {σ : Type u} {hs : List (pred σ)} {goal : pred σ} :
   ((repeatedAnd hs) ∧ (repeatedImplies hs goal)) |-tla- (goal) := by
   induction hs with
   | nil => intro e ⟨h1, h2⟩; exact h2
-  | cons p ps ih => rw [repeatedAnd_cons, repeatedImplies, List.foldr_cons]; tla_unfold_simp; aesop
+  | cons p ps ih => rw [repeatedAnd_cons, repeatedImplies, List.foldr_cons]; tlaUnfoldSimp; aesop
 
 /-- The proof-mode entailment: the conjunction of hypotheses entails the goal. -/
 def Entails (hyps : List (NamedPred σ)) (goal : pred σ) : Prop :=
-  TLA.pred_implies (repeatedAnd (hyps.map NamedPred.pred)) goal
+  TLA.predImplies (repeatedAnd (hyps.map NamedPred.pred)) goal
 
 theorem repeatedAnd_modifyHyp_reorder {σ : Type u} (hyps : List (NamedPred σ))
   (idx : Nat) (h : idx < hyps.length) (f : NamedPred σ → NamedPred σ) :
@@ -83,8 +83,8 @@ theorem repeatedAnd_modifyHyp_reorder {σ : Type u} (hyps : List (NamedPred σ))
   simp at htmp; intro p; apply List.Perm.mem_iff; exact htmp
 
 theorem repeatedAnd_map_comm {σ : Type u} (hyps : List (pred σ)) (f : pred σ → pred σ)
-  (htrue : tla_true = f tla_true)
-  (h : ∀ (p q : pred σ), tla_and (f p) (f q) = f (tla_and p q)) :
+  (htrue : tlaTrue = f tlaTrue)
+  (h : ∀ (p q : pred σ), tlaAnd (f p) (f q) = f (tlaAnd p q)) :
   ((repeatedAnd (hyps.map f))) = (f (repeatedAnd hyps)) := by
   simp [repeatedAnd_eq_bigwedge]
   induction hyps with

@@ -70,25 +70,25 @@ variable (hidx : idx < hyps.length) (hhyps' : hyps' = hyps.modify idx replaceFun
 include hidx hhyps'
 
 private theorem Entails_specialize_forall_aux {α : Sort v} {p : α → pred σ} (witness : α)
-  (heq : newHyp = p witness) (hpred : (hyps[idx]'hidx).pred = tla_forall p) :
+  (heq : newHyp = p witness) (hpred : (hyps[idx]'hidx).pred = tlaForall p) :
   Entails hyps' goal → Entails hyps goal := by
-  apply Entails_specializeHyp_aux idx (by right; constructor <;> assumption) (subHyps := [TLA.tla_forall p])
+  apply Entails_specializeHyp_aux idx (by right; constructor <;> assumption) (subHyps := [TLA.tlaForall p])
   · grind
-  · simp [repeatedAnd_singleton]; tla_unfold_simp; subst newHyp; grind
+  · simp [repeatedAnd_singleton]; tlaUnfoldSimp; subst newHyp; grind
 
 private theorem Entails_specialize_pure_aux {rhs : pred σ} {q : Prop} (hq : q)
   (heq : newHyp = rhs) (hpred : (hyps[idx]'hidx).pred = [tlafml| ⌞ q ⌟ → rhs]) :
   Entails hyps' goal → Entails hyps goal := by
   apply Entails_specializeHyp_aux idx (by right; constructor <;> assumption) (subHyps := [[tlafml| ⌞ q ⌟ → rhs]])
   · grind
-  · simp [repeatedAnd_singleton]; tla_unfold_simp; grind
+  · simp [repeatedAnd_singleton]; tlaUnfoldSimp; grind
 
 private theorem Entails_specialize_valid_aux {lhs rhs : pred σ} (hlhs : TLA.valid lhs)
   (heq : newHyp = rhs) (hpred : (hyps[idx]'hidx).pred = [tlafml| lhs → rhs]) :
   Entails hyps' goal → Entails hyps goal := by
   apply Entails_specializeHyp_aux idx (by right; constructor <;> assumption) (subHyps := [[tlafml| lhs → rhs]])
   · grind
-  · subst newHyp; simp [repeatedAnd_singleton]; revert hlhs; tla_unfold_simp; grind
+  · subst newHyp; simp [repeatedAnd_singleton]; revert hlhs; tlaUnfoldSimp; grind
 
 private theorem Entails_specialize_temporal_aux {rhs : pred σ} (lhss : List (pred σ))
   (hin : lhss ⊆ hyps.map NamedPred.pred)
@@ -96,7 +96,7 @@ private theorem Entails_specialize_temporal_aux {rhs : pred σ} (lhss : List (pr
   Entails hyps' goal → Entails hyps goal := by
   apply Entails_specializeHyp_aux idx (by right; constructor <;> assumption) (subHyps := [tlafml| (repeatedAnd lhss) → rhs] :: lhss)
   · grind
-  · rw [repeatedAnd_cons]; tla_unfold_simp; grind
+  · rw [repeatedAnd_cons]; tlaUnfoldSimp; grind
 
 end
 
@@ -113,14 +113,14 @@ section
 variable {α : Sort v} {p : α → pred σ} (witness : α)
 
 theorem Entails_specialize_forall_by_name (chosen : String)
-  (hpred : hyps.find? (fun h => h.name == chosen) = some ⟨chosen, TLA.tla_forall p⟩) :
+  (hpred : hyps.find? (fun h => h.name == chosen) = some ⟨chosen, TLA.tlaForall p⟩) :
   Entails (replaceChosenPred hyps chosen (p witness)) goal → Entails hyps goal := by
   obtain ⟨ht, ⟨idx, hidx, heq1, heq2⟩⟩ := List.find?_findIdx? hpred
   unfold replaceChosenPred modifyHypByName; rw [heq2]; dsimp
   apply Entails_specialize_forall_aux _ hidx rfl _ rfl (by grind)
 
 theorem Entails_specialize_forall_by_idx (idx : Nat)
-  (hpred : hyps[idx]?.map NamedPred.pred = some (TLA.tla_forall p)) :
+  (hpred : hyps[idx]?.map NamedPred.pred = some (TLA.tlaForall p)) :
   Entails (hyps.modify idx (fun ⟨name, _⟩ => ⟨name, p witness⟩)) goal → Entails hyps goal := by
   simp only [Option.map_eq_some_iff, List.getElem?_eq_some_iff] at hpred
   rcases hpred with ⟨_, ⟨hidx, rfl⟩, heq⟩
@@ -212,11 +212,11 @@ def tlaSpecializeStep (pos : TemporalHypLoc) (arg : TSyntax `term) : TacticM Uni
   let some (_, hyps) ← recognizeEntailsHypsFromGoal | throwError "tla_specialize: failed to read the hypotheses from the goal"
   let (_, pred) ← findByTemporalHypLoc hyps pos "tla_specialize" "the goal's Entails list"
   match_expr pred with
-  | TLA.tla_forall _ _ _ =>
+  | TLA.tlaForall _ _ _ =>
     let thm := if pos matches .byName .. then ``Entails_specialize_forall_by_name else ``Entails_specialize_forall_by_idx
     evalTactic <| ← `(tactic| refine $(mkIdent thm) $arg ($(quoteTemporalHypLocToTerm pos)) (by rfl) ?_)
-  | TLA.tla_implies _ lhs _ =>
-    if lhs.isAppOfArity' ``TLA.pure_pred 2 then
+  | TLA.tlaImplies _ lhs _ =>
+    if lhs.isAppOfArity' ``TLA.purePred 2 then
       -- Treat `arg` as a Lean term
       let thm := if pos matches .byName .. then ``Entails_specialize_pure_by_name else ``Entails_specialize_pure_by_idx
       evalTactic <| ← `(tactic| refine $(mkIdent thm) $arg ($(quoteTemporalHypLocToTerm pos)) (by rfl) ?_)

@@ -13,7 +13,7 @@ open Lean Meta
 /-- Split a TLA conjunction `Expr` into its list of conjuncts. -/
 def splitAndIntoParts (p : Expr) : MetaM (List Expr) := do
   match p with
-  | .app (.app (.app (.const ``TLA.tla_and _) _) a) b =>
+  | .app (.app (.app (.const ``TLA.tlaAnd _) _) a) b =>
     let as ← splitAndIntoParts a
     let bs ← splitAndIntoParts b
     pure (as ++ bs)
@@ -24,16 +24,16 @@ def splitAndIntoParts (p : Expr) : MetaM (List Expr) := do
 def splitImplicationsIntoParts (p : Expr) (cutAnd? : Bool := true) :
     MetaM (List Expr × Expr) := do
   match p with
-  | .app (.app (.app (.const ``TLA.tla_implies _) _) hp) q =>
+  | .app (.app (.app (.const ``TLA.tlaImplies _) _) hp) q =>
     let ps ← if cutAnd? then splitAndIntoParts hp else pure [hp]
     let (ps', q') ← splitImplicationsIntoParts q
     pure (ps ++ ps', q')
   | _ => pure ([], p)
 
-/-- Split a `pred_implies`/`valid` statement into its premises and conclusion. -/
+/-- Split a `predImplies`/`valid` statement into its premises and conclusion. -/
 def splitPredImpliesIntoParts (p : Expr) : MetaM (List Expr × Expr) := do
   match_expr p with
-  | TLA.pred_implies _ p q =>
+  | TLA.predImplies _ p q =>
     let ps ← splitAndIntoParts p
     let (ps', q') ← splitImplicationsIntoParts q
     pure (ps ++ ps', q')
@@ -46,7 +46,7 @@ def splitPredImpliesIntoParts (p : Expr) : MetaM (List Expr × Expr) := do
     should be much "cheaper". -/
 def peekStateType (p : Expr) : Option Expr :=
   match_expr p with
-  | TLA.pred_implies σ _ _ => .some σ
+  | TLA.predImplies σ _ _ => .some σ
   | TLA.valid σ _ => .some σ
   | _ => .none
 
