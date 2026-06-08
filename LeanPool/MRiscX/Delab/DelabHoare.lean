@@ -19,6 +19,8 @@ This file contains the delaboration of the hoare notation.
 
 -/
 
+namespace MRiscX
+
 -- identify Expr and initialize delaboration of MState functions
 open Delaborator SubExpr in
 /-- Annotate applications of the `MState` accessor functions in `e` so that the
@@ -35,16 +37,16 @@ def annotateStateFns (e : Expr) :  Expr :=
 
 
 /-- Reinterpret a term as an identifier syntax, if it is one. -/
-def termToIdent? (t : Term) : Option (TSyntax `ident) :=
+def termToIdent (t : Term) : Option (TSyntax `ident) :=
   if t.raw.isIdent then some ⟨t.raw⟩ else none
 
 
 /-- Extract the string literal carried by `t` as an identifier, if `t` is one. -/
-def extractStringFromTerm? (t : Term) : Option (TSyntax `ident) :=
+def extractStringFromTerm (t : Term) : Option (TSyntax `ident) :=
   if let some s := t.raw.isStrLit? then some (mkIdent (Name.mkSimple s)) else none
 
 /-- Reinterpret a term as a parsed MRiscX assembly block, if it has that kind. -/
-def termToMriscxSyntax? (t : Term) : Option (TSyntax `mriscxSyntax) :=
+def termToMriscxSyntax (t : Term) : Option (TSyntax `mriscxSyntax) :=
   if t.raw.getKind == `mriscxSyntaxBlock
    then some ⟨t.raw⟩
   else none
@@ -79,7 +81,7 @@ def stateFnsDelab : Delab := whenNotPPOption getPPExplicit <| withMDataExpr do
     `(⸨pc⸩)
   else if (← getExpr).isAppOfArity ``MState.getLabelAt 2 then
     let n ← withAppArg delab
-    match extractStringFromTerm? n with
+    match extractStringFromTerm n with
       | some id => `(labels[$id])
       | none => do throwError s!"fatal error, {n} is not a string"
   else
@@ -148,16 +150,16 @@ def hoareTripleDelab : Delab :=
     let L_wSyn ← withNaryArg 3 <| delab
     let L_bSyn ← withNaryArg 4 <| delab
     let cSyn ← withNaryArg 5 <| delab
-    match termToMriscxSyntax? cSyn with
+    match termToMriscxSyntax cSyn with
     | none => pure ()
     | some c =>
       return ←hoareTermToTerm (←`(hoareTerm | $c:mriscxSyntax
         ⦃$preSyn⦄ $lSyn ↦ ⟨$L_wSyn | $L_bSyn⟩ ⦃$postSyn⦄))
-    match termToIdent? cSyn with
+    match termToIdent cSyn with
     | none => pure ()
     | some c => return ←hoareTermToTerm (←`(hoareTerm | $c:ident
         ⦃$preSyn⦄ $lSyn ↦ ⟨$L_wSyn | $L_bSyn⟩ ⦃$postSyn⦄))
-    match extractStringFromTerm? cSyn with
+    match extractStringFromTerm cSyn with
     | none => pure ()
     | some c => return ←hoareTermToTerm (←`(hoareTerm | $c:ident
         ⦃$preSyn⦄ $lSyn ↦ ⟨$L_wSyn | $L_bSyn⟩ ⦃$postSyn⦄))
@@ -207,3 +209,5 @@ def AddMemUnexpander : Unexpander
     else
       `(hoareAssignmentChain | mem[$rTerm] ← $vTerm; $s:term)
   | _ => throw Unit.unit
+
+end MRiscX
