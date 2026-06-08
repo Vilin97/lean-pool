@@ -906,7 +906,7 @@ by
                     rw [List.length_append, List.length_map, List.length_map] at hsum
                     have hopp := inequality_map_opp
                     rw [List.length_map, len_lhs] at hopp
-                    rw [len_lhs, List.length_map]
+                    rw [len_lhs, List.length_map, List.length_map]
                     omega))
               ((r₁.inputR.map (wrapSymbol₁ g₂.nt) ++
                   v)[(u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)] ++ r₁.inputR.map (wrapSymbol₁ g₂.nt)).length
@@ -933,10 +933,31 @@ by
                 ((y.map (wrapSymbol₂ g₁.nt))[
                     (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++ [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length
                        - 1 - (x.map (wrapSymbol₁ g₂.nt)).length
-                    ]'_)
+                    ]'(by
+                      have hir : r₁.inputR.length = 0 := by
+                        have := congr_arg List.length ris_third_is_nil
+                        simpa using this
+                      have hsum := equal_total_len'
+                      rw [List.length_append, List.length_map, List.length_map] at hsum
+                      have hopp := inequality_map_opp
+                      rw [List.length_map, len_lhs] at hopp
+                      have hsing : (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
+                          [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length =
+                          u.length + r₁.inputL.length + 1 := by
+                        show (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
+                            [(Symbol.nonterminal ◩(some ◩r₁.inputN) : nst T g₁.nt g₂.nt)]).length = _
+                        simp only [List.append_assoc, List.length_append, List.length_map,
+                          List.length_cons, List.length_nil, List.singleton_append]
+                        omega
+                      rw [hsing, List.length_map, List.length_map]
+                      omega))
                 (Symbol.nonterminal ◩(some ◩r₁.inputN)) := by
               convert clash
-              simp
+              rw [show (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt) ++
+                  [Symbol.nonterminal ◩(some ◩r₁.inputN)]).length - 1 =
+                  (u ++ r₁.inputL.map (wrapSymbol₁ g₂.nt)).length from by
+                rw [List.length_append, List.length_singleton]; omega,
+                List.getElem_append_right (by omega), List.getElem_singleton]
             change correspondingSymbols _ (wrapSymbol₁ g₂.nt (Symbol.nonterminal r₁.inputN)) at clash'
             rw [List.getElem_map] at clash'
             exact correspondingSymbols_never₂ clash'
