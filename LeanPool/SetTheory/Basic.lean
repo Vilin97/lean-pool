@@ -33,7 +33,7 @@ open FirstOrder Language
 variable {v₁ : Fin 1 → M} {v₂ : Fin 2 → M}
 
 /-- The `formula` declaration. -/
-def Membership.mem.formula : ZFFormula 2 := #1 ∈' #0
+def Membership.mem.formula : ZFFormula 2 := #1 ∈ᶻ' #0
 @[realize_simps, realize]
 lemma Membership.mem.realize_iff : formula.Realize v₂ ↔ v₂ 1 ∈ v₂ 0 := by
   simp [formula, Formula.Realize, realize_simps]
@@ -51,7 +51,7 @@ lemma Eq.realize_iff : formula.Realize v₂ ↔ v₂ 0 = v₂ 1 := by
   simp [formula, Formula.Realize, realize_simps]
 
 /-- The `formula` declaration. -/
-def HasSubset.Subset.formula : ZFFormula 2 := ∀' (&0 ∈' #0 ⟹ &0 ∈' #1)
+def HasSubset.Subset.formula : ZFFormula 2 := ∀' (&0 ∈ᶻ' #0 ⟹ &0 ∈ᶻ' #1)
 @[realize_simps, realize]
 lemma HasSubset.Subset.realize_iff : formula.Realize v₂ ↔ v₂ 0 ⊆ v₂ 1 := by
   simp [formula, Formula.Realize, realize_simps, Fin.snoc]
@@ -394,14 +394,14 @@ section FirstOrder
 open FirstOrder Language
 
 /-- The `formula` declaration. -/
-def LE.le.formula : ZFFormula 2 := ∀' (&0 ∈' #0 ⟹ &1 ∈' #1)
+def LE.le.formula : ZFFormula 2 := ∀' (&0 ∈ᶻ' #0 ⟹ &1 ∈ᶻ' #1)
 @[realize_simps, realize]
 lemma LE.le.realize_iff {v : Fin 2 → M} : formula.Realize v ↔ v 0 ≤ v 1 := by
   simp [LE.le.formula, Formula.Realize, realize_simps, Fin.snoc]
   tauto
 
 /-- The `formula` declaration. -/
-def LT.lt.formula : ZFFormula 2 := ∀' (&0 ∈' #0 ⟹ &1 ∈' #1) ⊓ ∼(#0 =' #1)
+def LT.lt.formula : ZFFormula 2 := ∀' (&0 ∈ᶻ' #0 ⟹ &1 ∈ᶻ' #1) ⊓ ∼(#0 =' #1)
 @[realize_simps, realize]
 lemma LT.lt.realize_iff {v : Fin 2 → M} : formula.Realize v ↔ v 0 < v 1 := by
   simp [LT.lt.formula, Formula.Realize, realize_simps, Fin.snoc, lt_iff_le_and_ne]

@@ -95,8 +95,8 @@ attribute [realize_simps]
 
 /-- The `#_` notation. -/
 scoped[FirstOrder] prefix:arg "#" => Term.var ∘ Sum.inl
-/-- The `_∈'_` notation. -/
-scoped[FirstOrder] infix:88 " ∈' " => Relations.boundedFormula₂ (L := 𝓛ZF) memRel.mem
+/-- The `_∈ᶻ'_` notation: membership in the ZF first-order language `𝓛ZF`. -/
+scoped[FirstOrder] infix:88 " ∈ᶻ' " => Relations.boundedFormula₂ (L := 𝓛ZF) memRel.mem
 
 /-- The `label` declaration. -/
 declare_syntax_cat label
@@ -162,7 +162,7 @@ class HasEmpty (M) [ZFStructure M] where
   exists_empty : ∃! x : M, ∀ y, y ∉ x
 
 /-- The `EqEmptyN` declaration. -/
-def EqEmptyN (n : ℕ) : ZFFormula (n + 1) := ∀' ∼(&0 ∈' #(Fin.last n))
+def EqEmptyN (n : ℕ) : ZFFormula (n + 1) := ∀' ∼(&0 ∈ᶻ' #(Fin.last n))
 
 variable {n} [HasEmpty M]
 
