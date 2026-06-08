@@ -44,5 +44,6 @@ by
   rw [g₂.language_eq_toGeneral_language]
   use unionCFG g₁ g₂
   rw [unionCFG_language_eq_unionGrammar_language]
-  exact Set.eq_of_subset_of_subset ↓in_L₁_or_L₂_of_in_union ↓(·.casesOn in_union_of_in_L₁ in_union_of_in_L₂)
+  exact Set.eq_of_subset_of_subset ↓in_L₁_or_L₂_of_in_union
+    ↓(·.casesOn in_union_of_in_L₁ in_union_of_in_L₂)
 

@@ -67,9 +67,7 @@ def lg₁ : LiftedGrammar T :=
     oN₁_of_N
     (by
       intro x y hyp
-      apply Sum.inl_injective
-      apply Option.some_injective
-      exact hyp
+      exact Sum.inl_injective (Option.some_injective _ hyp)
     )
     (by
       intro x y hyp
@@ -120,9 +118,7 @@ def lg₂ : LiftedGrammar T :=
     oN₂_of_N
     (by
       intro x y hyp
-      apply Sum.inr_injective
-      apply Option.some_injective
-      exact hyp
+      exact Sum.inr_injective (Option.some_injective _ hyp)
     )
     (by
       intro x y hyp
@@ -273,5 +269,6 @@ theorem GG_of_GG_u_GG (L₁ : Language T) (L₂ : Language T) :
 by
   rintro ⟨⟨g₁, rfl⟩, ⟨g₂, rfl⟩⟩
   use unionGrammar g₁ g₂
-  exact Set.eq_of_subset_of_subset ↓in_L₁_or_L₂_of_in_union ↓(·.casesOn in_union_of_in_L₁ in_union_of_in_L₂)
+  exact Set.eq_of_subset_of_subset ↓in_L₁_or_L₂_of_in_union
+    ↓(·.casesOn in_union_of_in_L₁ in_union_of_in_L₂)
 

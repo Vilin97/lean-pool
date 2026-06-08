@@ -38,6 +38,7 @@ def CFG.Derives (g : CFG T) : List (Symbol T g.nt) → List (Symbol T g.nt) → 
 def CFG.language (g : CFG T) : Language T :=
   { w : List T | g.Derives [Symbol.nonterminal g.initial] (w.map Symbol.terminal) }
 
-/-- Predicate "is context-free"; defined by existence of a context-free grammar for the given language. -/
+/-- Predicate "is context-free"; defined by existence of a context-free grammar for the given
+language. -/
 def Language.IsCF (L : Language T) : Prop :=
   ∃ g : CFG T, g.language = L

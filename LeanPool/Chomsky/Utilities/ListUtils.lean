@@ -98,7 +98,8 @@ by
   · simp
   · cases n
     · simp [*]
-    · simp only [cons_append, take_succ_cons, length_cons, cons.injEq, append_cancel_left_eq, true_and, *]
+    · simp only [cons_append, take_succ_cons, length_cons, cons.injEq, append_cancel_left_eq,
+        true_and, *]
       congr 1
       omega
 

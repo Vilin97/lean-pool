@@ -51,7 +51,8 @@ def KurodaGrammar.Transforms (g : KurodaGrammar T) (w₁ w₂ : List (Symbol T g
           w₂ = u ++ v
 
 /-- Any number of steps of transformation by a grammar in the Kuroda Normal Form. -/
-def KurodaGrammar.Derives (g : KurodaGrammar T) : List (Symbol T g.nt) → List (Symbol T g.nt) → Prop :=
+def KurodaGrammar.Derives (g : KurodaGrammar T) :
+    List (Symbol T g.nt) → List (Symbol T g.nt) → Prop :=
   Relation.ReflTransGen g.Transforms
 
 /-- The set of words that can be derived from the initial nonterminal. -/

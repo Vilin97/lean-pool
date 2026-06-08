@@ -16,7 +16,8 @@ variable {T : Type}
 
 /-- The general grammar corresponding to a context-free grammar. -/
 def CFG.toGeneral (g : CFG T) : Grammar T :=
-  Grammar.mk g.nt g.initial (g.rules.map (fun r : g.nt × List (Symbol T g.nt) => Grule.mk [] r.fst [] r.snd))
+  Grammar.mk g.nt g.initial
+    (g.rules.map (fun r : g.nt × List (Symbol T g.nt) => Grule.mk [] r.fst [] r.snd))
 
 private lemma CFG.tran_iff_toGeneral_tran (g : CFG T) (w₁ w₂ : List (Symbol T g.nt)) :
   g.Transforms w₁ w₂ ↔ g.toGeneral.Transforms w₁ w₂ :=

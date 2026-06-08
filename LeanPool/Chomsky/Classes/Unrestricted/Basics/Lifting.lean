@@ -175,7 +175,8 @@ by
   · exact pre_in
   use sinkString G.sinkNt u
   use sinkString G.sinkNt v
-  have correct_inverse : sinkSymbol G.sinkNt ∘ liftSymbol G.liftNt = @Option.some (Symbol T G.g₀.nt) := by
+  have correct_inverse :
+      sinkSymbol G.sinkNt ∘ liftSymbol G.liftNt = @Option.some (Symbol T G.g₀.nt) := by
     ext1 x
     cases x
     · rfl
@@ -186,12 +187,14 @@ by
     unfold sinkString at *
     rw [List.filterMap_append_append] at sink_bef
     rw [List.filterMap_append_append] at sink_bef
-    convert sink_bef <;> rw [←preimage] <;> unfold liftRule <;> dsimp only <;> clear * - correct_inverse
+    convert sink_bef <;> rw [←preimage] <;> unfold liftRule <;> dsimp only <;>
+      clear * - correct_inverse
     · unfold liftString
       rw [List.filterMap_map, correct_inverse, List.filterMap_some]
     · change
         [Symbol.nonterminal r₀.inputN] =
-        List.filterMap (sinkSymbol G.sinkNt) (List.map (liftSymbol G.liftNt) [Symbol.nonterminal r₀.inputN])
+        List.filterMap (sinkSymbol G.sinkNt)
+          (List.map (liftSymbol G.liftNt) [Symbol.nonterminal r₀.inputN])
       rw [List.filterMap_map, correct_inverse, List.filterMap_some]
     · unfold liftString
       rw [List.filterMap_map, correct_inverse, List.filterMap_some]
