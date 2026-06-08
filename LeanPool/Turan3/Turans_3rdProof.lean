@@ -684,7 +684,7 @@ assuming W.w gain < W.w loose. It preservers the total weight improving the weig
 noncomputable
 def Enhance
   (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
-  (ε : NNReal) (_ : 0 < ε) (elt : ε < W.w loose - W.w gain) : FunToMax G where
+  (ε : NNReal) (epos : 0 < ε) (elt : ε < W.w loose - W.w gain) : FunToMax G where
   w := fun i =>
           if i = loose
           then W.w loose - ε
@@ -692,6 +692,7 @@ def Enhance
                then W.w gain + ε
                else W.w i
   h_w := by
+    have _epos : (0 : NNReal) < ε := epos
     let S : Finset α := {loose, gain}
     have split_univ : S ∪ (univ \ S) = univ :=
       Finset.union_sdiff_of_subset (Finset.subset_univ S)
@@ -1377,7 +1378,7 @@ lemma Enhance_loose_sum (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.
 and the supported incidence edges at `gain` (without s(loose, gain)). -/
 noncomputable
 def theBij (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
-  (ε : NNReal) (_epos : 0 < ε) (_elt : ε < W.w loose - W.w gain)
+  (ε : NNReal) (epos : 0 < ε) (elt : ε < W.w loose - W.w gain)
   (hc : G.IsClique ((Finset.univ : Finset α).filter (fun i => W.w i > 0)))
       (h_supp : W.w loose > 0 ∧ W.w gain > 0) :
   (e : { x // x ∈ G.supIncidenceFinset W loose \ {s(loose, gain)} }) →
@@ -1386,6 +1387,9 @@ def theBij (W : FunToMax G) (loose gain : α) (h_lt : W.w gain < W.w loose)
   fun e h =>
     ⟨(s(gain,(Sym2.Mem.other (helper_gain_mem G e.val (G.small_helpI (in_sdiff_left e.prop)))))),
      (by
+        have _epos : (0 : NNReal) < ε := epos
+        have _elt : ε < W.w loose - W.w gain := elt
+        have _hmem := h
         rw [mem_sdiff, notMem_singleton, mem_supIncidenceFinset,mem_incidenceFinset,
             mk'_mem_incidenceSet_iff]
         have tec := e.prop
