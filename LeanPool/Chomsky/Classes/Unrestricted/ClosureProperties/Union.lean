@@ -149,37 +149,32 @@ by
     cases w
     · simp at zeroth
     · simp at zeroth
+  rw [show (unionGrammar g₁ g₂).Transforms = Grammar.Transforms (T := T)
+    ⟨Option (g₁.nt ⊕ g₂.nt), none,
+      ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
+      ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
+      (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
+        g₂.rules.map (liftRule (some ∘ Sum.inr)))⟩ from rfl] at hggw₂
   rcases hggw₂ with ⟨i, ⟨r, rin, u, v, bef, aft⟩, deri⟩
   have uv_nil : u = [] ∧ v = [] := by
     have bef_len := congr_arg List.length bef
-    clear * - bef_len
     rw [List.length_singleton] at bef_len
     repeat rw [List.length_append] at bef_len
-    rw [List.length_singleton] at bef_len
-    constructor <;>
-    · rw [←List.length_eq_zero_iff]
-      linarith
+    have hsing : [Symbol.nonterminal r.inputN].length = 1 := rfl
+    refine ⟨List.length_eq_zero_iff.mp (by omega), List.length_eq_zero_iff.mp (by omega)⟩
   rw [uv_nil.left, List.nil_append, uv_nil.right, List.append_nil] at bef aft
   have same_nt : (unionGrammar g₁ g₂).initial = r.inputN := by
     clear * - bef
     have elemeq : [Symbol.nonterminal (unionGrammar g₁ g₂).initial] = [Symbol.nonterminal r.inputN] := by
       have bef_len := congr_arg List.length bef
-      rw [List.length_append_append, List.length_singleton, List.length_singleton] at bef_len
-      have rl_first : r.inputL.length = 0 := by
-        clear * - bef_len
-        linarith
-      have rl_third : r.inputR.length = 0 := by
-        clear * - bef_len
-        linarith
+      simp only [List.length_append, List.length_singleton, List.length_cons,
+        List.length_nil] at bef_len
+      have rl_first : r.inputL.length = 0 := by omega
+      have rl_third : r.inputR.length = 0 := by omega
       rw [List.length_eq_zero_iff] at rl_first rl_third
       rwa [rl_first, rl_third] at bef
     exact Symbol.nonterminal.inj (List.head_eq_of_cons_eq elemeq)
-  rw [show (unionGrammar g₁ g₂).rules =
-    ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
-    ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
-    (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
-      g₂.rules.map (liftRule (some ∘ Sum.inr))) from rfl,
-    List.mem_cons, List.mem_cons] at rin
+  rw [List.mem_cons, List.mem_cons] at rin
   obtain req₁ | req₂ | rin₃ := rin
   on_goal 3 => obtain rin₁ | rin₂ := List.mem_append.mp rin₃
   · rw [req₁] at aft
