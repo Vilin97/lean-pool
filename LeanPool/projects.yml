@@ -1912,11 +1912,11 @@ projects:
       github_repo: JulsDE/MRiscX
     status: verified
     main_declarations:
-      - hoare_triple_up
+      - hoareTripleUp
       - S_SEQ
       - proof_otp
     main_results:
-      - declaration: hoare_triple_up
+      - declaration: hoareTripleUp
         informal: Defines the MRiscX Hoare triple, asserting that from any state satisfying the precondition the code reaches a successor state satisfying the postcondition while respecting the line whitelist and blacklist.
       - declaration: S_SEQ
         informal: Proves the sequencing Hoare rule, peeling off the last instruction of a code block.
