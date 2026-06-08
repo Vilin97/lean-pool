@@ -10,6 +10,14 @@ import Mathlib.Tactic.Linarith
 
 variable {T : Type}
 
+private lemma filterMap_sinkSymbol_terminals {N N₀ : Type} (f : N → Option N₀) (w : List T) :
+    w.map Symbol.terminal = (w.map Symbol.terminal).filterMap (sinkSymbol f) := by
+  induction w with
+  | nil => rfl
+  | cons h t ih =>
+    rw [List.map_cons, List.map_cons, List.filterMap_cons]
+    rw [show sinkSymbol f (Symbol.terminal h) = some (Symbol.terminal h) from rfl, ← ih]
+
 def unionGrammar (g₁ g₂ : Grammar T) : Grammar T :=
   Grammar.mk (Option (g₁.nt ⊕ g₂.nt)) none (
     ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ :: (
@@ -19,6 +27,18 @@ def unionGrammar (g₁ g₂ : Grammar T) : Grammar T :=
 
 
 variable {g₁ g₂ : Grammar T}
+
+@[simp]
+lemma unionGrammar_initial : (unionGrammar g₁ g₂).initial = none :=
+  rfl
+
+@[simp]
+lemma unionGrammar_rules :
+    (unionGrammar g₁ g₂).rules =
+      ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
+      ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
+      (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++ g₂.rules.map (liftRule (some ∘ Sum.inr))) :=
+  rfl
 
 private def oN₁_of_N : (unionGrammar g₁ g₂).nt → Option g₁.nt
   | none => none
@@ -149,86 +169,72 @@ by
     cases w
     · simp at zeroth
     · simp at zeroth
-  rw [show (unionGrammar g₁ g₂).Transforms = Grammar.Transforms (T := T)
-    ⟨Option (g₁.nt ⊕ g₂.nt), none,
-      ⟨[], none, [], [Symbol.nonterminal (some ◩g₁.initial)]⟩ ::
-      ⟨[], none, [], [Symbol.nonterminal (some ◪g₂.initial)]⟩ ::
-      (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
-        g₂.rules.map (liftRule (some ∘ Sum.inr)))⟩ from rfl] at hggw₂
   rcases hggw₂ with ⟨i, ⟨r, rin, u, v, bef, aft⟩, deri⟩
   have uv_nil : u = [] ∧ v = [] := by
     have bef_len := congr_arg List.length bef
-    simp only [List.length_append, List.length_cons, List.length_nil] at bef_len
-    exact ⟨List.length_eq_zero_iff.mp (by omega), List.length_eq_zero_iff.mp (by omega)⟩
+    clear * - bef_len
+    simp only [List.append_assoc, List.length_append, List.length_cons, List.length_nil,
+      List.singleton_append] at bef_len
+    refine ⟨?_, ?_⟩ <;>
+    · rw [← List.length_eq_zero_iff]; omega
   rw [uv_nil.left, List.nil_append, uv_nil.right, List.append_nil] at bef aft
   have same_nt : (unionGrammar g₁ g₂).initial = r.inputN := by
-    clear * - bef
-    have elemeq : [Symbol.nonterminal (unionGrammar g₁ g₂).initial] = [Symbol.nonterminal r.inputN] := by
-      have bef_len := congr_arg List.length bef
-      simp only [List.length_append, List.length_singleton, List.length_cons,
-        List.length_nil] at bef_len
-      have rl_first : r.inputL.length = 0 := by omega
-      have rl_third : r.inputR.length = 0 := by omega
-      rw [List.length_eq_zero_iff] at rl_first rl_third
-      rwa [rl_first, rl_third] at bef
-    exact Symbol.nonterminal.inj (List.head_eq_of_cons_eq elemeq)
-  rw [List.mem_cons, List.mem_cons] at rin
+    have bef_len := congr_arg List.length bef
+    have rl_first : r.inputL.length = 0 ∧ r.inputR.length = 0 := by
+      clear * - bef_len
+      simp only [List.append_assoc, List.length_append, List.length_cons, List.length_nil,
+        List.singleton_append] at bef_len
+      omega
+    simp only [List.length_eq_zero_iff] at rl_first
+    rw [rl_first.left, rl_first.right, List.nil_append, List.append_nil] at bef
+    exact Symbol.nonterminal.inj (List.head_eq_of_cons_eq bef)
+  simp only [unionGrammar_rules, List.mem_cons] at rin
   obtain req₁ | req₂ | rin₃ := rin
   on_goal 3 => obtain rin₁ | rin₂ := List.mem_append.mp rin₃
   · rw [req₁] at aft
     dsimp only at aft
     rw [aft] at deri
     left
+    show g₁.Derives _ _
     have sinked := sink_deri lg₁ deri
     clear * - sinked
     specialize sinked (by
-        simp only [GoodString, List.mem_singleton, forall_eq]
-        use g₁.initial
-        rfl)
+        rw [GoodString]
+        intro a ha
+        cases ha with
+        | head => exact ⟨g₁.initial, rfl⟩
+        | tail _ h => exact (List.not_mem_nil h).elim)
     convert sinked
     unfold sinkString
-    rw [List.filterMap_map]
-    convert_to w.map Symbol.terminal = w.filterMap (Option.some ∘ Symbol.terminal)
-    rw [←List.filterMap_map, List.filterMap_some]
+    exact filterMap_sinkSymbol_terminals lg₁.sinkNt w
   · rw [req₂] at aft
     dsimp only at aft
     rw [aft] at deri
     right
+    show g₂.Derives _ _
     have sinked := sink_deri lg₂ deri
     clear * - sinked
     specialize sinked (by
-        simp only [GoodString, List.mem_singleton, forall_eq]
-        use g₂.initial
-        rfl)
+        rw [GoodString]
+        intro a ha
+        cases ha with
+        | head => exact ⟨g₂.initial, rfl⟩
+        | tail _ h => exact (List.not_mem_nil h).elim)
     convert sinked
     unfold sinkString
-    rw [List.filterMap_map]
-    convert_to w.map Symbol.terminal = w.filterMap (Option.some ∘ Symbol.terminal)
-    rw [←List.filterMap_map, List.filterMap_some]
-  · suffices True = False by contradiction
+    exact filterMap_sinkSymbol_terminals lg₂.sinkNt w
+  · exfalso
     rcases List.mem_map.mp rin₁ with ⟨r₁, -, r_of_r₁⟩
-    convert
-      congr_arg
-        (Symbol.nonterminal (liftRule (Option.some ∘ Sum.inl) r₁).inputN ∈ ·)
-        bef.symm
-    · rw [true_iff]
-      apply List.mem_append_left
-      apply List.mem_append_right
-      rw [List.mem_singleton, r_of_r₁]
-    · rw [List.mem_singleton, Symbol.nonterminal.injEq]
-      simp [liftRule, unionGrammar]
-  · suffices True = False by contradiction
+    rw [← r_of_r₁] at same_nt
+    rw [unionGrammar_initial] at same_nt
+    simp only [liftRule, Function.comp_apply] at same_nt
+    exact absurd same_nt (Option.some_ne_none _).symm
+  · exfalso
     rcases List.mem_map.mp rin₂ with ⟨r₂, -, r_of_r₂⟩
-    convert
-      congr_arg
-        (Symbol.nonterminal (liftRule (Option.some ∘ Sum.inr) r₂).inputN ∈ ·)
-        bef.symm
-    · rw [true_iff]
-      apply List.mem_append_left
-      apply List.mem_append_right
-      rw [List.mem_singleton, r_of_r₂]
-    · rw [List.mem_singleton, Symbol.nonterminal.injEq]
-      simp [liftRule, unionGrammar]
+    rw [← r_of_r₂] at same_nt
+    rw [unionGrammar_initial] at same_nt
+    simp only [liftRule, Function.comp_apply] at same_nt
+    exact absurd same_nt (Option.some_ne_none _).symm
 
 lemma in_union_of_in_L₁ {w : List T} (hwg : w ∈ g₁.language) :
   w ∈ (unionGrammar g₁ g₂).language :=

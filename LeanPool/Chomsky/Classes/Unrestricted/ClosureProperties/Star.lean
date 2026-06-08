@@ -488,7 +488,7 @@ by
   rw [List.countIn_append, List.countIn_append, List.countIn_zero_of_notin H_not_in_rule_input,
       add_zero, List.countIn_flatten, List.map_map, List.map_map] at count_Hs
   have lens := congr_arg List.length hypp
-  rw [List.length_append_append, List.length_append_append, List.length_singleton] at lens
+  rw [List.length_append, List.length_append, List.length_append, List.length_append, List.length_singleton] at lens
   have ul_lt : u.length < ((x.map (List.map wrapSym)).map (· ++ [H])).flatten.length := by
     clear * - lens
     linarith
@@ -534,7 +534,7 @@ by
       ((x.map (List.map wrapSym)).map (· ++ [H])).flatten.length := by
     have vl_pos : v.length > 0 := List.length_pos_of_ne_nil vnn
     clear * - lens vl_pos
-    rw [List.length_append, List.length_append_append, List.length_singleton]
+    rw [List.length_append, List.length_append, List.length_append, List.length_singleton]
     linarith
   rcases List.drop_flatten_of_lt urrrl_lt with ⟨m', k', mlt', klt', last_vl⟩
   have mxl : m < x.length := by
@@ -1357,7 +1357,7 @@ by
     · exfalso
       rw [is_x_nil, List.map_nil, List.map_nil, List.flatten] at xj_eq
       have imposs := congr_arg List.length xj_eq
-      rw [List.length, List.length_append_append, List.length_append_append, List.length_singleton] at imposs
+      rw [List.length, List.length_append, List.length_append, List.length_append, List.length_append, List.length_singleton] at imposs
       clear * - imposs
       linarith
     rcases cases_1_and_2_and_3a_match_aux is_x_nil xj_eq with ⟨m, u₁, v₁, u'_eq, xm_eq, v_eq⟩
