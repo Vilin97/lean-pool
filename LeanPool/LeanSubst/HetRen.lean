@@ -9,23 +9,31 @@ namespace LeanSubst
   universe u
   variable {S T : Type}
 
+  /-- A renaming tagged by a target type `T`, represented by its action on indices. -/
   structure HetRen (T : Type) where
+    /-- The underlying function on De Bruijn indices. -/
     act : Nat -> Nat
 
+  /-- The identity heterogeneous renaming at type `T`. -/
   def HetRen.id T : HetRen T := ⟨λ x => x⟩
 
+  /-- The heterogeneous renaming that shifts every index up by `k`. -/
   def HetRen.add T (k : Nat) : HetRen T := ⟨(· + k)⟩
 
+  /-- The heterogeneous renaming that shifts every index down by `k`. -/
   def HetRen.sub T (k : Nat) : HetRen T := ⟨(· - k)⟩
 
+  /-- Lift a heterogeneous renaming under `k` binders, fixing the first `k` indices. -/
   def HetRen.lift (r : HetRen T) (k : Nat := 1) : HetRen T := .mk λ n =>
     if n < k then n else r.act (n - k) + k
 
+  /-- Extend a heterogeneous renaming by mapping index `0` to `a` and shifting the rest. -/
   def HetRen.cons (a : Nat) (r : HetRen T) : HetRen T := .mk λ n =>
     match n with
     | 0 => a
     | n + 1 => r.act n
 
+  /-- Prepend a list of indices to a heterogeneous renaming via repeated `HetRen.cons`. -/
   def HetRen.append : List Nat -> HetRen T -> HetRen T
   | .nil, r => r
   | .cons hd tl, r => append tl (r.cons hd)
@@ -33,23 +41,31 @@ namespace LeanSubst
   instance : HAppend (List Nat) (HetRen T) (HetRen T) where
     hAppend := HetRen.append
 
+  /-- Sequential composition of heterogeneous renamings: apply `r1` then `r2`. -/
   def HetRen.compose : HetRen T -> HetRen T -> HetRen T
   | r1, r2 => .mk λ n => r2.act (r1.act n)
 
+  /-- View a plain renaming as a heterogeneous renaming at type `T`. -/
   def Ren.het T (r : Ren) : HetRen T := ⟨r.act⟩
 
   @[simp]
   theorem Ren.het_action {T i} {r : Ren} : (r.het T).act i = r.act i := by simp [Ren.het]
 
+  /-- A type `S` whose values support being acted on by a heterogeneous renaming over `T`. -/
   class HetRenMap (S T : Type) where
+    /-- Apply a heterogeneous renaming to a value. -/
     hrmap : HetRen T -> S -> S
 
   export HetRenMap (hrmap)
 
+  /-- Notation `t⟨r⟩` for applying heterogeneous renaming `r` to `t`. -/
   macro:max t:term noWs "⟨" r:term "⟩" : term => `(hrmap $r $t)
+  /-- Notation `a :: r` for `HetRen.cons`. -/
   infixr:67 (name := HetRen.cons_notation) " :: " => HetRen.cons
+  /-- Notation `r1 ∘ r2` for `HetRen.compose`. -/
   infixr:85 (name := HetRen.compose_notation) " ∘ " => HetRen.compose
 
+  /-- Pretty-printer that displays `hrmap r t` as `t⟨r⟩`. -/
   @[app_unexpander hrmap]
   def unexpandHetRenApply : Lean.PrettyPrinter.Unexpander
   | `($_ $r $t) => `($t⟨$r⟩)
@@ -111,10 +127,14 @@ namespace LeanSubst
       rw [lift_succ (r := r2)]
       rw [compose_lift_k1]
 
+  /-- A `HetRenMap` for which applying the identity renaming is the identity. -/
   class HetRenMapId (S T : Type) [HetRenMap S T] where
+    /-- Applying the identity heterogeneous renaming leaves a value unchanged. -/
     apply_id {t : S} : t⟨HetRen.id T⟩ = t
 
+  /-- A `HetRenMap` for which heterogeneous renaming is functorial in composition. -/
   class HetRenMapCompose (S T : Type) [HetRenMap S T] where
+    /-- Applying two renamings in sequence equals applying their composition. -/
     apply_compose {s : S} {r1 r2 : HetRen T} : s⟨r1⟩⟨r2⟩ = s⟨r1 ∘ r2⟩
 
   @[simp, grind =]

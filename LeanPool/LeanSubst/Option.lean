@@ -11,6 +11,7 @@ namespace LeanSubst
 
 variable {S T : Type}
 
+/-- Apply a renaming under an `Option`, leaving `none` unchanged. -/
 def Option.rmap [i : RenMap S] (r : Ren) : Option S -> Option S
 | none => none
 | some t => some (i.rmap r t)
@@ -18,6 +19,7 @@ def Option.rmap [i : RenMap S] (r : Ren) : Option S -> Option S
 instance [RenMap S] : RenMap (Option S) where
   rmap := Option.rmap
 
+/-- Apply a substitution under an `Option`, leaving `none` unchanged. -/
 def Option.smap [SubstMap S T] (σ : Subst T) : Option S -> Option S
 | none => none
 | some t => some t[σ:_]

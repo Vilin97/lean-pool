@@ -9,33 +9,41 @@ import LeanPool.LeanSubst.Subst
 namespace LeanSubst
   universe u
 
+  /-- A reduction relation that is preserved by substitution. -/
   class Substitutive {T : Type} [RenMap T] [SubstMap T T] (R : T -> T -> Prop) where
     subst {t s} (σ : Subst T) : R t s -> R (t[σ]) (s[σ])
 
+  /-- A reduction relation with the triangle property, given by a completion function. -/
   class HasTriangle {T : Type u} (R : T -> T -> Prop) where
+    /-- The completion of a term: every one-step reduct reduces to it. -/
     complete : T -> T
     triangle {t s} : R t s -> R s (complete t)
 
   section
     variable {T : Type}
 
+    /-- Lift a reduction `R` to substitution actions: reduce inside `su`, fix `re`. -/
     inductive ActionRed (R : T -> T -> Prop) : Subst.Action T -> Subst.Action T -> Prop where
     | su {x y} : R x y -> ActionRed R (.su x) (.su y)
     | re {x} : ActionRed R (.re x) (.re x)
 
+    /-- The reflexive-transitive closure of a reduction relation `R`. -/
     inductive Star (R : T -> T -> Prop) : T -> T -> Prop where
     | refl {t} : Star R t t
     | step {x y z} : Star R x y -> R y z -> Star R x z
 
+    /-- The transitive closure of a reduction relation `R`. -/
     inductive Plus (R : T -> T -> Prop) : T -> T -> Prop where
     | start {t s} : R t s -> Plus R t s
     | step {x y z} : Plus R x y -> R y z -> Plus R x z
 
+    /-- The conversion relation: the equivalence closure of `R`. -/
     inductive Conv (R : T -> T -> Prop) : T -> T -> Prop where
     | refl {x} : Conv R x x
     | forward {x y z} : Conv R x z -> R x y -> Conv R y z
     | backward {x y z} : Conv R y z -> R x y -> Conv R x z
 
+    /-- A reduction relation that is confluent. -/
     class HasConfluence (R : T -> T -> Prop) where
       confluence {s t1 t2} : Star R s t1 -> Star R s t2 -> ∃ t, Star R t1 t ∧ Star R t2 t
 
@@ -318,10 +326,12 @@ namespace LeanSubst
   section
     variable {T : Type u} (R : T -> T -> Prop) {t t' : T}
 
+    /-- A term is functional under `R` if it has at most one one-step reduct. -/
     @[simp]
     def FunctionalTerm (t : T) :=
       ∀ {x y}, R t x -> R t y -> x = y
 
+    /-- A reduction relation under which every term is functional (deterministic). -/
     class Functional where
       functional : ∀ {t}, FunctionalTerm R t
   end

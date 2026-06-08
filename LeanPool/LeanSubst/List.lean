@@ -12,6 +12,7 @@ namespace LeanSubst
 
 variable {S T : Type}
 
+/-- Apply a renaming pointwise to every element of a list. -/
 def List.rmap [i : RenMap S] (r : Ren) : List S -> List S
 | [] => []
 | .cons x tl => (i.rmap r x) :: rmap r tl
@@ -29,6 +30,7 @@ theorem List.rmap_cons [RenMap S] {x} {tl : List S} {r : Ren}
 := by
   simp [RenMap.rmap, List.rmap]
 
+/-- Apply a substitution pointwise to every element of a list. -/
 def List.smap [SubstMap S T] (σ : Subst T) : List S -> List S
 | [] => []
 | .cons x tl => x[σ:_] :: smap σ tl
@@ -56,26 +58,32 @@ instance [RenMap S] [RenMap T] [SubstMap T T] [SubstMap S T] [SubstMapCompose S 
 where
   apply_compose := by intro s σ τ; induction s <;> simp [*]
 
+/-- Look up the `n`-th element of a context list, substituting all binders crossed. -/
 @[simp, grind =]
 def List.dep_subst_get [SubstMap S T] (σ : Subst T) : List S -> Nat -> Option S
 | .nil, _ => none
 | .cons h _, 0 => return h[σ:_]
 | .cons _ t, n + 1 => (dep_subst_get σ t n)[σ:_]
 
+/-- Homogeneous variant of `List.dep_subst_get` (the `S = T` case). -/
 abbrev List.dep_subst_get1 [SubstMap S S] (σ : Subst S) : List S -> Nat -> Option S :=
   dep_subst_get σ
 
+/-- Notation `t[x|σ : T]` for `List.dep_subst_get` over `T`. -/
 macro:max t:term noWs "[" x:term "|" σ:term  ":" T:term "]" : term =>
   `(List.dep_subst_get (T := $T) $σ $t $x)
 
+/-- Notation `t[x|σ]` for the homogeneous `List.dep_subst_get1`. -/
 macro:max t:term noWs "[" x:term "|" σ:term "]" : term =>
   `(List.dep_subst_get1 $σ $t $x)
 
+/-- Pretty-printer that displays `List.dep_subst_get1 σ t x` as `t[x|σ]`. -/
 @[app_unexpander List.dep_subst_get1]
 def unexpand_list_dep_subst_get1 : Lean.PrettyPrinter.Unexpander
 | `($_ $σ $t $x) => `($t[$x|$σ])
 | _ => throw ()
 
+/-- Pretty-printer that displays `List.dep_subst_get σ t x` as `t[x|σ : _]`. -/
 @[app_unexpander smap]
 def unexpand_list_dep_subst_get : Lean.PrettyPrinter.Unexpander
 | `($_ $σ $t $x) => `($t[$x|$σ : _])

@@ -10,25 +10,39 @@ namespace LeanSubst
   universe u
   variable {S T : Type}
 
+  /-- A `SubstMap` for which applying the identity substitution is the identity. -/
   class SubstMapId (S T : Type) [RenMap T] [SubstMap S T] where
+    /-- Applying the identity substitution leaves a value unchanged. -/
     apply_id {t : S} : t[+0:T] = t
 
+  /-- A `SubstMap` whose substitution action agrees with renaming on renamings. -/
   class SubstMapStable (S : Type) [RenMap S] [SubstMap S S] where
+    /-- Applying a renaming as a substitution agrees with applying it as a renaming. -/
     apply_stable (r : Ren) (σ : Subst S) : r = σ -> rmap (T := S) r = smap σ
 
+  /-- A `SubstMap` for which renaming commutes with substitution. -/
   class SubstMapRenCommute (S T : Type) [RenMap S] [RenMap T] [SubstMap S T] where
+    /-- Renaming after substituting equals substituting after renaming. -/
     apply_ren_commute {s : S} (r : Ren) (τ : Subst T) : s⟨r⟩[τ:T] = s[τ:T]⟨r⟩
 
+  /-- A `SubstMap` for which a renaming followed by a substitution fuses on the left. -/
   class SubstMapRenComposeLeft (S T : Type) [RenMap S] [RenMap T] [SubstMap T T] [SubstMap S T] where
+    /-- Substituting by a renaming then by `τ` equals substituting by their composition. -/
     apply_ren_compose_left {s : S} {r : Ren} {τ : Subst T} : s[r.to:T][τ:_] = s[r.to ∘ τ:T]
 
+  /-- A `SubstMap` for which a substitution followed by a renaming fuses on the right. -/
   class SubstMapRenComposeRight (S T : Type) [RenMap S] [RenMap T] [SubstMap T T] [SubstMap S T] where
+    /-- Substituting by `σ` then by a renaming equals substituting by their composition. -/
     apply_ren_compose_right {s : S} {r : Ren} {σ : Subst T} : s[σ:_][r.to:T] = s[σ ∘ r.to:T]
 
+  /-- A `SubstMap` for which composed substitutions fuse. -/
   class SubstMapCompose (S T : Type) [RenMap S] [RenMap T] [SubstMap T T] [SubstMap S T] where
+    /-- Substituting by `σ` then by `τ` equals substituting by their composition. -/
     apply_compose {s : S} {σ τ : Subst T} : s[σ:T][τ:_] = s[σ ∘ τ:T]
 
+  /-- A `SubstMap` for which heterogeneously composed substitutions fuse. -/
   class SubstMapHetCompose (S T : Type) [RenMap S] [RenMap T] [SubstMap S S] [SubstMap S T] where
+    /-- Substituting by `σ` then by `τ` equals substituting by their heterogeneous composition. -/
     apply_hcompose {s : S} {σ : Subst S} {τ : Subst T} : s[σ][τ:T] = s[τ:T][σ ◾ τ]
 
   namespace Subst
@@ -59,11 +73,13 @@ namespace LeanSubst
         cases x; all_goals (simp [Subst.lift, Subst.id])
         grind
 
+      omit [RenMap T] in
       @[simp, grind =]
       theorem rewrite2 [SubstMap T T] {σ : Subst T} : +0 ∘ σ = σ := by
         funext; case _ x =>
         unfold Subst.compose; simp [Subst.id]
 
+      omit [RenMap T] in
       @[simp, grind =]
       theorem rewrite3_replace [SubstMap T T] {σ τ : Subst T} {s : T}
         : (su s :: σ) ∘ τ = su s[τ] :: (σ ∘ τ)
@@ -72,6 +88,7 @@ namespace LeanSubst
         funext; case _ x =>
         cases x; all_goals simp
 
+      omit [RenMap T] in
       @[simp, grind =]
       theorem rewrite3_rename [SubstMap T T] {s} {σ τ : Subst T}
         : (re s :: σ) ∘ τ = (τ.act s) :: (σ ∘ τ)
@@ -80,12 +97,14 @@ namespace LeanSubst
         funext; case _ x =>
         cases x; all_goals simp
 
+      omit [RenMap T] in
       @[simp, grind =]
       theorem rewrite4 [SubstMap T T]  {s} {σ : Subst T} : +1 ∘ (s :: σ) = σ := by
         simp [Subst.cons]
         funext; case _ x =>
         cases x; all_goals (simp [Subst.compose, Subst.succ])
 
+      omit [RenMap T] in
       @[simp, grind =]
       theorem rewrite5 [SubstMap T T] {σ : Subst T} : σ.act 0 :: (+1 ∘ σ) = σ := by
         simp [Subst.cons, Subst.compose]; congr
@@ -273,7 +292,7 @@ namespace LeanSubst
       : (σ ∘ r.to) ◾ (+1@T) = (σ ◾ +1@T) ∘ r.to
     := by
       have lem := hcomp_distr_ren_right (T := T) r σ +1
-      simp at lem; exact lem
+      exact lem
 
     @[simp, grind =]
     theorem apply_hcompose
@@ -541,12 +560,14 @@ namespace LeanSubst
       rw [rewrite_lift_succ (σ := τ)]
       rw [rewrite_lift_compose_k1]
 
+  /-- Tactic that discharges a `SubstMapId.apply_id` obligation by induction on the term. -/
   macro "subst_solve_id" : tactic => `(tactic| {
     intro t; induction t
     any_goals solve | simp +instances [*]
     all_goals try simp at *; simp  +instances [*]; grind
   })
 
+  /-- Tactic that discharges a `SubstMapStable.apply_stable` obligation by induction on the term. -/
   macro "subst_solve_stable" : tactic => `(tactic| {
     intro r σ h
     funext; case _ t =>
@@ -556,6 +577,7 @@ namespace LeanSubst
     all_goals try repeat funext; grind
   })
 
+  /-- Tactic that discharges a `SubstMapCompose.apply_compose` obligation by induction on the term. -/
   macro "subst_solve_compose" : tactic => `(tactic| {
     intro s σ τ
     induction s generalizing σ τ

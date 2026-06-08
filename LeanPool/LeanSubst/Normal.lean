@@ -14,14 +14,20 @@ namespace LeanSubst
   section
     variable {T : Type}
 
+    /-- A term is reducible under `R` if it has at least one `R`-successor. -/
     def Reducible (R : T -> T -> Prop) (t : T) := ∃ t', R t t'
+    /-- A term is normal under `R` if it is not reducible. -/
     def Normal (R : T -> T -> Prop) (t : T) := ¬ (Reducible R t)
+    /-- `t'` is a normal form of `t` if `t` reduces to `t'` and `t'` is normal. -/
     def NormalForm (R : T -> T -> Prop) (t : T) (t' : T) := Star R t t' ∧ Normal R t'
+    /-- A term is weakly normalizing if it has some normal form. -/
     def WN (R : T -> T -> Prop) (t : T) := ∃ t', NormalForm R t t'
 
+    /-- Strong normalization: every `R`-reduction sequence from `t` terminates. -/
     inductive SN (R : T -> T -> Prop) : T -> Prop where
     | sn {x} : (∀ y, R x y -> SN R y) -> SN R x
 
+    /-- Strong normalization phrased over the transitive closure `Plus R`. -/
     inductive SNPlus (R : T -> T -> Prop) : T -> Prop where
     | sn {x} : (∀ y, Plus R x y -> SNPlus R y) -> SNPlus R x
 
