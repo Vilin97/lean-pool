@@ -57,7 +57,7 @@ lemma list_filterMap_eq_of_map_eq_map_some {f : α → Option β} :
       simp at hf
     | some _ =>
       rw [hfa] at hf
-      simp at hf ⊢
+      simp only [List.cons.injEq, Option.some.injEq] at hf ⊢
       obtain ⟨hbb, hll⟩ := hf
       constructor
       · exact hbb
@@ -809,7 +809,7 @@ private lemma induction_step_for_lifted_rule_from_g₁ {g₁ g₂ : Grammar T}
 by
   rw [List.mem_map] at rin
   rcases rin with ⟨r₁, rin₁, wrap_r₁_eq_r⟩
-  simp [wrapGrule₁] at *
+  simp only [List.append_assoc, List.cons_append, List.nil_append, wrapGrule₁] at *
   rw [←List.singleton_append] at bef
   have h_y_v_len : y ≠ [] → 0 < v.length := by
     intro ynn
@@ -819,7 +819,7 @@ by
     rw [bef, ←wrap_r₁_eq_r] at ih_concat
     have y_nil : y = [] := by
       have ih_concat_rev := correspondingStrings_reverse ih_concat
-      simp [←List.map_reverse] at ih_concat_rev
+      simp only [List.reverse_append, ← List.map_reverse, List.cons_append, List.nil_append, List.reverse_cons, List.append_assoc] at ih_concat_rev
       cases hy : y.reverse with
       | nil =>
         rw [List.reverse_eq_nil_iff] at hy
@@ -827,7 +827,7 @@ by
       | cons d l =>
         exfalso
         rw [hy] at ih_concat_rev
-        simp [←List.map_reverse] at ih_concat_rev
+        simp only [List.map_cons, List.cons_append] at ih_concat_rev
         cases hr₁ : r₁.inputR.reverse with
         | nil =>
           rw [hr₁, List.map_nil, List.nil_append] at ih_concat_rev
@@ -1359,7 +1359,7 @@ by
   rw [←wrap_r₂_eq_r] at bef aft
   clear wrap_r₂_eq_r r
   simp only [wrapGrule₂] at *
-  simp at bef
+  simp only [List.append_assoc, List.cons_append, List.nil_append] at bef
   rw [←List.singleton_append] at bef
   rw [bef] at ih_concat
   let b' := u.drop x.length ++ r₂.output.map (wrapSymbol₂ g₁.nt) ++ v
@@ -1377,7 +1377,7 @@ by
       rw [List.length_map]
       exact ul_lt_xl
     simp_rw [List.getElem_append, ul_lt_xlm] at ulth
-    simp at ulth
+    simp only [↓reduceDIte, List.getElem_map, lt_self_iff_false, tsub_self, List.length_map, zero_tsub, List.length_cons, List.length_nil, zero_add, zero_lt_one, List.getElem_cons_zero] at ulth
     split at ulth
     · exact correspondingSymbols_never₁ ulth
     · change correspondingSymbols (wrapSymbol₁ g₂.nt x[u.length]) (wrapSymbol₂ g₁.nt (Symbol.nonterminal r₂.inputN)) at ulth
@@ -1861,7 +1861,7 @@ by
         · have ylen : y.length = ((w.drop x.length).map (@Symbol.terminal T g₂.nt)).length := by
             clear * - xylen
             rw [List.length_map, List.length_drop]
-            simp at xylen
+            simp only [List.length_map, bigGrammar_nt] at xylen
             exact Nat.eq_sub_of_add_eq' xylen
           rw [ylen] at hiy
           exact List.getElem?_eq_none_iff.← hiy
@@ -1898,7 +1898,7 @@ by
         symm
         apply List.map_drop
       simp_all
-      · simp at xylen
+      · simp only [List.length_map, bigGrammar_nt] at xylen
         rw [List.length_drop, List.length_map, ←xylen]
         convert i_lt_len_lwy
         rw [List.length_map, add_comm, Nat.add_sub_assoc (by rfl), Nat.sub_self, Nat.add_zero]

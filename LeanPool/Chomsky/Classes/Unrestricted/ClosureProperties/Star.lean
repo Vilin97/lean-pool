@@ -142,7 +142,7 @@ by
                 intro x y hyp
                 cases x
                 · cases y
-                  · simp [Sum.getLeft?] at hyp
+                  · simp only [Sum.getLeft?, Option.some.injEq] at hyp
                     left
                     exact congr_arg Sum.inl hyp
                   · simp [Sum.getLeft?] at hyp
@@ -263,7 +263,7 @@ by
       apply gr_append_deri
       clear * - terminals lt_wl
       specialize terminals (w.get ⟨w.length - k.succ, lt_wl⟩) (w.get_mem ⟨w.length - k.succ, lt_wl⟩)
-      simp
+      simp only [List.cons_append, List.nil_append, Nat.succ_eq_add_one]
       have hw : 0 < w.length := by
         linarith
       simp [hw]
@@ -308,7 +308,7 @@ by
           use ((w[w.length - k.succ]'lt_wl).take n).map Symbol.terminal
           use ((w[w.length - k.succ]'lt_wl).drop n.succ).map Symbol.terminal
           constructor
-          · simp
+          · simp only [Nat.succ_eq_add_one, List.map_take, List.map_drop, List.cons_append, List.nil_append, List.append_nil, Fin.isValue, List.append_assoc, List.append_cancel_left_eq, List.cons.injEq]
             constructor
             · rfl
             · rw [←List.map_drop, ←(((w[w.length - k.succ]'lt_wl).drop n).map Symbol.terminal).take_append_drop 1, ←List.singleton_append]
@@ -565,7 +565,7 @@ by
   rw [←hyp_u, ←hyp_v] at count_Hs
   have hmm : m = m' := by
     clear * - count_Hs mxl mxl' klt klt'
-    simp [List.countIn_append, List.countIn_flatten] at count_Hs
+    simp only [Function.comp_apply, List.countIn_append, List.countIn_flatten, List.map_take, List.map_map, List.get_eq_getElem, List.getElem_map, Nat.succ_eq_add_one, List.map_drop] at count_Hs
     have inside_wrap : ∀ y : List (Symbol T g.nt), (y.map wrapSym).countIn H = 0 := by
       intro
       rw [List.countIn_zero_of_notin]
@@ -611,11 +611,11 @@ by
       convert hypp
       · exact x_eq.symm
       · convert hyp_u using 1
-        simp
+        simp only [List.map_map, List.getElem_map, Function.comp_apply, List.append_cancel_left_eq, List.left_eq_take_iff, List.cons_ne_self, List.length_map, false_or]
         apply Nat.le_of_lt_succ
         simpa using klt
       · convert hyp_v using 1
-        simp
+        simp only [List.getElem_map, Nat.succ_eq_add_one, List.map_map, List.append_assoc, List.cons_append, List.nil_append, List.get_eq_getElem, Function.comp_apply]
         rw [←List.singleton_append, ←List.append_assoc, List.drop_append_of_le_length]
         simp [hmm]
         apply Nat.le_of_lt_succ
@@ -633,7 +633,7 @@ by
     simp [hmm]
     rfl
   · convert hyp_v.symm using 1
-    simp
+    simp only [List.get_eq_getElem, List.map_drop, Nat.succ_eq_add_one, List.map_map, List.append_assoc, List.cons_append, List.nil_append, List.getElem_map, Function.comp_apply]
     rw [←List.singleton_append, ←List.append_assoc, List.drop_append_of_le_length, hmm]
     simpa using Nat.le_of_lt_succ (by simpa using klt')
 
@@ -1430,7 +1430,7 @@ by
           rw [List.idxOf_append_of_notMem, List.map_cons, List.map_cons, List.flatten_cons] at first_H
           conv_rhs at first_H => rw [List.append_assoc]
           rw [List.idxOf_append_of_notMem] at first_H
-          simp at first_H ⊢
+          simp only [List.append_assoc, List.cons_append, List.nil_append, List.length_append, List.length_map, List.length_cons, List.map_map, List.idxOf_cons_self, add_zero, ge_iff_le] at first_H ⊢
           exact Nat.le.intro first_H
           · apply map_wrap_never_contains_H
           · apply H_not_in_rule_input

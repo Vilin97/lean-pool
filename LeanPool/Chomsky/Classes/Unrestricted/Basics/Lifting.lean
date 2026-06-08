@@ -155,7 +155,7 @@ by
       clear * - a_from_s
       simp [liftSymbol] at a_from_s
     | nonterminal s'' =>
-      simp [liftSymbol, GoodLetter]
+      simp only [GoodLetter, liftSymbol]
       use s''
       exact G.sinkNt_liftNt s''
   use r₀
