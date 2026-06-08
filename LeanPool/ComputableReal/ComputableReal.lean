@@ -23,9 +23,11 @@ def Computableℝ :=
 
 namespace Computableℝ
 
+/-- Definition of `mk`. -/
 def mk : ComputableℝSeq → Computableℝ :=
   Quotient.mk ComputableℝSeq.equiv
 
+/-- Definition of `val`. -/
 def val : Computableℝ → ℝ := Quotient.lift ComputableℝSeq.val (fun _ _ h ↦ h)
 
 @[simp]
@@ -36,8 +38,7 @@ theorem val_mk_eq_val : (mk x).val = x.val :=
 theorem val_quot_eq_val (x : ComputableℝSeq) : val (⟦x⟧ : Computableℝ) = x.val :=
   rfl
 
-@[simp]
-theorem eq_iff_seq_val (x y : ComputableℝSeq) : (mk x).val = (mk y).val ↔ mk x = mk y:=
+theorem eq_iff_seq_val (x y : ComputableℝSeq) : (mk x).val = (mk y).val ↔ mk x = mk y :=
   ⟨fun h ↦ Quotient.eq.2 h, Quotient.eq.1⟩
 
 @[simp]
@@ -137,7 +138,7 @@ theorem val_zero : (0 : Computableℝ).val = 0 := by
   rw [Zero.toOfNat0, instComputableZero]
   simp only [val_mk_eq_val, ComputableℝSeq.val_zero]
 
- @[simp]
+@[simp]
 theorem val_one : (1 : Computableℝ).val = 1 := by
   rw [One.toOfNat1, instComputableOne]
   simp only [val_mk_eq_val, ComputableℝSeq.val_one]
@@ -185,14 +186,13 @@ theorem val_natpow (x : Computableℝ) (n : ℕ) : (x ^ n).val = x.val ^ n := by
   · rename_i ih
     rw [pow_succ, pow_succ, val_mul, ih]
 
-@[simp]
 theorem val_nsmul (x : Computableℝ) (n : ℕ) : (n • x).val = n • x.val := by
   induction n
   · simp
   · rename_i ih
     simpa using ih
 
-section safe_inv
+section safeInv
 
 private def nz_quot_equiv := Equiv.subtypeQuotientEquivQuotientSubtype
     (fun x : ComputableℝSeq ↦ x.val ≠ 0)
@@ -207,17 +207,17 @@ private def nz_quot_equiv := Equiv.subtypeQuotientEquivQuotientSubtype
     (fun _ _ ↦ Iff.rfl)
 
 /-- Auxiliary inverse definition that operates on the nonzero Computableℝ values. -/
-noncomputable def safe_inv' : { x : Computableℝ // x ≠ 0 } → { x : Computableℝ // x ≠ 0 } :=
+noncomputable def safeInv' : { x : Computableℝ // x ≠ 0 } → { x : Computableℝ // x ≠ 0 } :=
   fun v ↦ nz_quot_equiv.invFun <| Quotient.map _ fun x y h₁ ↦ by
-    change (ComputableℝSeq.inv_nz x).val.val = (ComputableℝSeq.inv_nz y).val.val
-    rw [ComputableℝSeq.val_inv_nz x, ComputableℝSeq.val_inv_nz y, h₁]
+    change (ComputableℝSeq.invNz x).val.val = (ComputableℝSeq.invNz y).val.val
+    rw [ComputableℝSeq.val_invNz x, ComputableℝSeq.val_invNz y, h₁]
   (nz_quot_equiv.toFun v)
 
 /-- Inverse of a nonzero Computableℝ, safe (terminating) as long as x is nonzero. -/
-noncomputable irreducible_def safe_inv (hnz : x ≠ 0) : Computableℝ := safe_inv' ⟨x, hnz⟩
+noncomputable irreducible_def safeInv (hnz : x ≠ 0) : Computableℝ := safeInv' ⟨x, hnz⟩
 
 @[simp]
-theorem safe_inv_val (hnz : x ≠ 0) : (x.safe_inv hnz).val = x.val⁻¹ := by
+theorem safeInv_val (hnz : x ≠ 0) : (x.safeInv hnz).val = x.val⁻¹ := by
   let ⟨x',hx'⟩ := Quotient.exists_rep x
   subst hx'
   have : (nz_quot_equiv { val := ⟦x'⟧, property := hnz : { x : Computableℝ // x ≠ 0 } }) =
@@ -227,11 +227,11 @@ theorem safe_inv_val (hnz : x ≠ 0) : (x.safe_inv hnz).val = x.val⁻¹ := by
         rwa [← Computableℝ.val_zero, ← val_quot_eq_val, eq_iff_eq_val] at hnz
       )}⟧ := by
     apply Equiv.subtypeQuotientEquivQuotientSubtype_mk
-  rw [safe_inv, safe_inv', val, Equiv.toFun_as_coe, Equiv.invFun_as_coe, Quotient.lift_mk, this,
+  rw [safeInv, safeInv', val, Equiv.toFun_as_coe, Equiv.invFun_as_coe, Quotient.lift_mk, this,
     Quotient.map_mk, nz_quot_equiv, Equiv.subtypeQuotientEquivQuotientSubtype_symm_mk,
-    Quotient.lift_mk, ComputableℝSeq.val_inv_nz]
+    Quotient.lift_mk, ComputableℝSeq.val_invNz]
 
-end safe_inv
+end safeInv
 
 section field
 
@@ -272,6 +272,7 @@ section ordered
 
 variable (x y : Computableℝ)
 
+/-- Definition of `lt`. -/
 def lt : Prop := by
   apply Quotient.lift (fun z ↦ z.sign = SignType.pos) ?_ (y - x)
   intro a b h
@@ -281,6 +282,7 @@ def lt : Prop := by
 instance instLT : LT Computableℝ :=
   ⟨lt⟩
 
+/-- Definition of `le`. -/
 def le : Prop := by
   apply Quotient.lift (fun z ↦ SignType.zero ≤ z.sign) ?_ (y - x)
   intro a b h

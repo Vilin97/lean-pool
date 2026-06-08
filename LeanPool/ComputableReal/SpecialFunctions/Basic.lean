@@ -27,7 +27,7 @@ instance instComputableOfScientific (m : ℕ) (b : Bool) (e : ℕ) :
 instance instComputableDite (p : Prop) (x : p → ℝ) (y : ¬p → ℝ) [Decidable p]
     [hx : ∀ p, IsComputable (x p)] [hy : ∀ p, IsComputable (y p)]
     : IsComputable (dite p x y) :=
-  if h : p then lift_eq (by simp [h]) (hx h) else lift_eq (by simp [h]) (hy h)
+  if h : p then liftEq (by simp [h]) (hx h) else liftEq (by simp [h]) (hy h)
 
 @[inline]
 instance instComputableIte (p : Prop) (x y : ℝ) [Decidable p]
@@ -49,22 +49,22 @@ noncomputable instance instComputableSign (x : ℝ) [hx : IsComputable x] : IsCo
 --with this implementation.
 noncomputable instance instComputableMax (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
     IsComputable (max x y) :=
-  lift_eq (x := ite (x ≤ y) ..) (by rw [max_def]; congr) inferInstance
+  liftEq (x := ite (x ≤ y) ..) (by rw [max_def]; congr) inferInstance
 
 noncomputable instance instComputableMin (x y : ℝ) [hx : IsComputable x] [hy : IsComputable y] :
     IsComputable (min x y) :=
-  lift_eq (x := ite (x ≤ y) ..) (by rw [min_def]; congr) inferInstance
+  liftEq (x := ite (x ≤ y) ..) (by rw [min_def]; congr) inferInstance
 
 --This ends up calling the same sequence twice (which leads to an exponential
 --slowdown when many nested `abs` are present); would be good to write one that
 --directly takes the abs of each interval. Also, never returns a value for
 -- `abs (√2 - √2)`, for the same reasons as max.
 noncomputable instance instComputableAbs (x : ℝ) [hx : IsComputable x] : IsComputable |x| :=
-  lift_eq (abs.eq_1 x).symm inferInstance
+  liftEq (abs.eq_1 x).symm inferInstance
 
 noncomputable instance instComputableConjExponent (x : ℝ) [hx : IsComputable x] :
     IsComputable x.conjExponent :=
-  lift_eq (Real.conjExponent.eq_1 x).symm inferInstance
+  liftEq (Real.conjExponent.eq_1 x).symm inferInstance
 
 --Again, the order of arguments matters: if the argument `xs` is moved after
 -- `s`, then compilation breaks.

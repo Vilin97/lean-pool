@@ -12,7 +12,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 # Computable exponential
 
 Rational lower and upper bounds for `Real.exp` are built from truncated Taylor series
-(`exp_lb`/`exp_ub`), shown to converge, and packaged into a `ComputableℝSeq.exp`. This yields
+(`expLb`/`expUb`), shown to converge, and packaged into a `ComputableℝSeq.exp`. This yields
 `IsComputable` instances for `Real.exp`, `Real.sinh`, `Real.cosh`, and `Real.tanh`.
 -/
 
@@ -46,7 +46,7 @@ exp(x) <= expN(x) / (1 - x^(n+1) / (n+1)!)
 /-- A valid lower bound when 0 ≤ x. Forms a `CauSeq` that converges to Real.exp x from below.
 Functions by dividing `n` by a constant `k` so that it's in the range `[0,1]`, taking `n` terms
 of the Taylor expansion (which is an under-approximation), and then raising it to `k` again. -/
-def exp_lb₀ (x : ℚ) (n : ℕ) : ℚ :=
+def expLb₀ (x : ℚ) (n : ℕ) : ℚ :=
   let xc := ⌈x⌉.toNat
   let y : ℚ := x / xc
     -- (Finset.sum (Finset.range n) fun i => x ^ i / ↑(Nat.factorial i))
@@ -54,7 +54,7 @@ def exp_lb₀ (x : ℚ) (n : ℕ) : ℚ :=
   ey ^ xc
 
 /-- A valid upper bound when 0 ≤ x. CauSeq that converges to Real.exp x from above. -/
-def exp_ub₀ (x : ℚ) (n : ℕ) : ℚ :=
+def expUb₀ (x : ℚ) (n : ℕ) : ℚ :=
   let xc := ⌈x⌉.toNat
   let y : ℚ := x / xc
     -- (Finset.sum (Finset.range n) fun i => x ^ i / ↑(Nat.factorial i))
@@ -77,13 +77,14 @@ lemma List_foldr_eq_finset_sum (x : ℚ) (n : ℕ) :
       Finset.range_add_one, Finset.mem_range, lt_self_iff_false, not_false_eq_true,
       Finset.sum_insert, Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
     rw [add_mul, one_mul, add_div, pow_succ]
-    suffices x * v / (↑n + 1) * x ^ n / ↑n.factorial = v * (x ^ n * x) / ((↑n + 1) * ↑n.factorial) by
+    suffices x * v / (↑n + 1) * x ^ n / ↑n.factorial = v * (x ^ n * x) / ((↑n + 1) * ↑n.factorial)
+      by
       rw [this]
       ring
     field_simp
 
-theorem exp_lb₀_pos {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 0 < exp_lb₀ x n := by
-  rw [exp_lb₀, List_foldr_eq_finset_sum, Finset.range_add_one']
+theorem expLb₀_pos {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 0 < expLb₀ x n := by
+  rw [expLb₀, List_foldr_eq_finset_sum, Finset.range_add_one']
   rw [Finset.sum_insert (by simp)]
   have ha : (0 : ℚ) ≤ x / ↑⌈x⌉.toNat := div_nonneg hx (by positivity)
   apply pow_pos
@@ -91,8 +92,8 @@ theorem exp_lb₀_pos {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 0 < exp_lb₀ x n := 
   · positivity
   · exact Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg ha _) (by positivity)
 
-theorem exp_lb₀_ge_one {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 1 ≤ exp_lb₀ x n := by
-  rw [exp_lb₀, List_foldr_eq_finset_sum, Finset.range_add_one']
+theorem expLb₀_ge_one {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 1 ≤ expLb₀ x n := by
+  rw [expLb₀, List_foldr_eq_finset_sum, Finset.range_add_one']
   rw [Finset.sum_insert (by simp)]
   apply one_le_pow₀
   have ha : (0 : ℚ) ≤ x / ↑⌈x⌉.toNat := div_nonneg hx (by positivity)
@@ -100,8 +101,8 @@ theorem exp_lb₀_ge_one {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 1 ≤ exp_lb₀ x 
     Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg ha _) (by positivity)
   simpa using hsum
 
-theorem exp_lb₀_le_exp {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : exp_lb₀ x n ≤ Real.exp x := by
-  rw [exp_lb₀, List_foldr_eq_finset_sum]
+theorem expLb₀_le_exp {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : expLb₀ x n ≤ Real.exp x := by
+  rw [expLb₀, List_foldr_eq_finset_sum]
   have he : Real.exp x = (Real.exp (x / ↑⌈x⌉.toNat)) ^ ⌈x⌉.toNat := by
     cases eq_or_lt_of_le hx
     · subst x; simp
@@ -114,8 +115,8 @@ theorem exp_lb₀_le_exp {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : exp_lb₀ x n ≤ 
   apply_mod_cast Real.sum_le_exp_of_nonneg
   exact_mod_cast div_nonneg hx (by positivity)
 
-theorem exp_ub₀_ge_exp (x : ℚ) (n : ℕ) (hx : 0 ≤ x) : Real.exp x ≤ exp_ub₀ x n := by
-  rw [exp_ub₀, List_foldr_eq_finset_sum]
+theorem expUb₀_ge_exp (x : ℚ) (n : ℕ) (hx : 0 ≤ x) : Real.exp x ≤ expUb₀ x n := by
+  rw [expUb₀, List_foldr_eq_finset_sum]
   have he : Real.exp x = (Real.exp (x / ↑⌈x⌉.toNat)) ^ ⌈x⌉.toNat := by
     cases eq_or_lt_of_le hx
     · subst x; simp
@@ -168,12 +169,12 @@ theorem _root_.Real.one_plus_pow_lt_exp_mul {x y : ℝ} (hx : 0 < x) (hy : 0 < y
   rw [Real.exp_mul, _root_.add_comm]
   exact Real.rpow_lt_rpow (by linarith) (Real.add_one_lt_exp hx.ne') hy
 
-/-- This proves that the gap between `exp_lb₀` and `exp_ub₀` shrinks at least as
+/-- This proves that the gap between `expLb₀` and `expUb₀` shrinks at least as
 fast as `exp x * (exp (2x/n!) - 1)`. This is then used to prove that they are
 cauchy sequences in `n`, i.e. taking sufficiently large `n` makes this go to zero. -/
-theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
-    exp_ub₀ x n - exp_lb₀ x n ≤ Real.exp x * (Real.exp (2 * x / n.factorial) - 1) := by
-  rw [exp_ub₀, exp_lb₀]
+theorem expUb₀_sub_expLb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
+    expUb₀ x n - expLb₀ x n ≤ Real.exp x * (Real.exp (2 * x / n.factorial) - 1) := by
+  rw [expUb₀, expLb₀]
   rw [List_foldr_eq_finset_sum]
   --Special case out x=0
   rcases eq_or_lt_of_le hx
@@ -203,8 +204,8 @@ theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
     exact div_pos (mul_pos (by norm_num) (pow_pos hxd _)) (by positivity)
   have hzy₀ : 0 < z / y := div_pos hz hy_pos
   have hy₂ : y ^ ⌈x⌉.toNat ≤ Real.exp x := by
-    have := exp_lb₀_le_exp n hx.le
-    rw [exp_lb₀, List_foldr_eq_finset_sum] at this
+    have := expLb₀_le_exp n hx.le
+    rw [expLb₀, List_foldr_eq_finset_sum] at this
     exact_mod_cast this
   have hzy₁ : z / y ≤ 2 * (x / ↑⌈x⌉.toNat) / n.factorial := by
     trans z
@@ -241,59 +242,59 @@ theorem exp_ub₀_sub_exp_lb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
   rw [le_add_iff_nonneg_right]
   positivity
 
-/-- Unlike `exp_lb₀`, which only works for `0 ≤ x`, this is valid for all `x`. -/
-def exp_lb (x : ℚ) : ℕ → ℚ :=
-  if 0 ≤ x then exp_lb₀ x else fun n ↦ (exp_ub₀ (-x) n)⁻¹
+/-- Unlike `expLb₀`, which only works for `0 ≤ x`, this is valid for all `x`. -/
+def expLb (x : ℚ) : ℕ → ℚ :=
+  if 0 ≤ x then expLb₀ x else fun n ↦ (expUb₀ (-x) n)⁻¹
 
-/-- Unlike `exp_ub₀`, which only works for `0 ≤ x`, this is valid for all `x`. -/
-def exp_ub (x : ℚ) : ℕ → ℚ :=
-  if 0 ≤ x then exp_ub₀ x else fun n ↦ (exp_lb₀ (-x) n)⁻¹
+/-- Unlike `expUb₀`, which only works for `0 ≤ x`, this is valid for all `x`. -/
+def expUb (x : ℚ) : ℕ → ℚ :=
+  if 0 ≤ x then expUb₀ x else fun n ↦ (expLb₀ (-x) n)⁻¹
 
-theorem exp_lb_le_exp (x : ℚ) (n : ℕ) : exp_lb x n ≤ Real.exp x := by
-  rw [exp_lb]
+theorem expLb_le_exp (x : ℚ) (n : ℕ) : expLb x n ≤ Real.exp x := by
+  rw [expLb]
   split
-  · apply exp_lb₀_le_exp n ‹_›
+  · apply expLb₀_le_exp n ‹_›
   · simp only [Rat.cast_inv]
     rw [← inv_inv (Real.exp _)]
-    have := exp_ub₀_ge_exp (-x) n (by linarith)
+    have := expUb₀_ge_exp (-x) n (by linarith)
     rw [inv_le_inv₀]
     · simpa [Real.exp_neg]
     · refine lt_of_lt_of_le ?_ this
       positivity
     · positivity
 
-theorem exp_ub_ge_exp (x : ℚ) (n : ℕ) : Real.exp x ≤ exp_ub x n := by
-  rw [exp_ub]
+theorem expUb_ge_exp (x : ℚ) (n : ℕ) : Real.exp x ≤ expUb x n := by
+  rw [expUb]
   split
-  · apply exp_ub₀_ge_exp x n ‹_›
+  · apply expUb₀_ge_exp x n ‹_›
   · simp only [Rat.cast_inv]
     rw [← inv_inv (Real.exp _)]
-    have := exp_lb₀_le_exp (x := -x) n (by linarith)
+    have := expLb₀_le_exp (x := -x) n (by linarith)
     rw [inv_le_inv₀]
     · simpa [Real.exp_neg]
     · positivity
-    · exact_mod_cast exp_lb₀_pos (x := -x) n (by linarith)
+    · exact_mod_cast expLb₀_pos (x := -x) n (by linarith)
 
-theorem exp_ub_sub_exp_lb_of_nonneg {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
-    exp_ub x n - exp_lb x n ≤ Real.exp x * (Real.exp (2 * x / n.factorial) - 1) := by
-  simpa [exp_ub, hx, ↓reduceIte, exp_lb] using exp_ub₀_sub_exp_lb₀ n hx
+theorem expUb_sub_expLb_of_nonneg {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
+    expUb x n - expLb x n ≤ Real.exp x * (Real.exp (2 * x / n.factorial) - 1) := by
+  simpa [expUb, hx, ↓reduceIte, expLb] using expUb₀_sub_expLb₀ n hx
 
-theorem exp_ub_sub_exp_lb_of_neg {x : ℚ} (n : ℕ) (hx : x < 0) :
-    exp_ub x n - exp_lb x n ≤ Real.exp (2 * ↑(-x) / n.factorial) - 1 := by
-  simp only [exp_ub, Rat.not_le.mpr hx, ↓reduceIte, exp_lb]
+theorem expUb_sub_expLb_of_neg {x : ℚ} (n : ℕ) (hx : x < 0) :
+    expUb x n - expLb x n ≤ Real.exp (2 * ↑(-x) / n.factorial) - 1 := by
+  simp only [expUb, Rat.not_le.mpr hx, ↓reduceIte, expLb]
   replace hx : 0 < -x := by linarith
   generalize -x=x' at hx ⊢; clear x; rename ℚ => x
-  have hl₁ := exp_lb₀_pos n hx.le
-  have hl₂ := exp_lb₀_le_exp n hx.le
-  have hu₁ := exp_ub₀_ge_exp x n hx.le
-  have hu₂ : 0 < exp_ub₀ x n := by rify at hl₁ ⊢; linarith
-  have hlu := exp_ub₀_sub_exp_lb₀ n hx.le
-  have hlb' : (exp_lb₀ x n : ℝ) ≠ 0 := by positivity
-  have hub' : (exp_ub₀ x n : ℝ) ≠ 0 := by positivity
+  have hl₁ := expLb₀_pos n hx.le
+  have hl₂ := expLb₀_le_exp n hx.le
+  have hu₁ := expUb₀_ge_exp x n hx.le
+  have hu₂ : 0 < expUb₀ x n := by rify at hl₁ ⊢; linarith
+  have hlu := expUb₀_sub_expLb₀ n hx.le
+  have hlb' : (expLb₀ x n : ℝ) ≠ 0 := by positivity
+  have hub' : (expUb₀ x n : ℝ) ≠ 0 := by positivity
   conv_lhs =>
-    equals (exp_ub₀ x n - exp_lb₀ x n : ℝ) / (exp_ub₀ x n * exp_lb₀ x n) =>
+    equals (expUb₀ x n - expLb₀ x n : ℝ) / (expUb₀ x n * expLb₀ x n) =>
       rw [Rat.cast_inv, Rat.cast_inv, inv_sub_inv hlb' hub',
-        _root_.mul_comm (exp_lb₀ x n : ℝ) (exp_ub₀ x n : ℝ)]
+        _root_.mul_comm (expLb₀ x n : ℝ) (expUb₀ x n : ℝ)]
   rw [div_le_iff₀ (by positivity)]
   refine hlu.trans ?_
   conv_rhs =>
@@ -302,17 +303,17 @@ theorem exp_ub_sub_exp_lb_of_neg {x : ℚ} (n : ℕ) (hx : x < 0) :
   · apply le_mul_of_one_le_right
     · rw [sub_nonneg, Real.one_le_exp_iff]
       positivity
-    · exact_mod_cast exp_lb₀_ge_one n hx.le
+    · exact_mod_cast expLb₀_ge_one n hx.le
   · rw [sub_nonneg, Real.one_le_exp_iff]
     positivity
 
-theorem exp_ub_lb_err (x : ℚ) (n : ℕ) :
-    Real.exp x ≤ exp_lb x n + (Real.exp ↑|x| * (Real.exp (2 * |x| / n.factorial) - 1)) ∧
-    exp_ub x n - (Real.exp ↑|x| * (Real.exp (2 * |x| / n.factorial) - 1)) ≤ Real.exp x := by
-  have hl := exp_lb_le_exp x n
-  have hu := exp_ub_ge_exp x n
+theorem expUb_lb_err (x : ℚ) (n : ℕ) :
+    Real.exp x ≤ expLb x n + (Real.exp ↑|x| * (Real.exp (2 * |x| / n.factorial) - 1)) ∧
+    expUb x n - (Real.exp ↑|x| * (Real.exp (2 * |x| / n.factorial) - 1)) ≤ Real.exp x := by
+  have hl := expLb_le_exp x n
+  have hu := expUb_ge_exp x n
   rcases lt_or_ge x 0 with hx | hx
-  · have hlu := exp_ub_sub_exp_lb_of_neg n hx
+  · have hlu := expUb_sub_expLb_of_neg n hx
     replace hlu := hlu.trans (le_mul_of_one_le_left (a := Real.exp ↑(-x)) ?_ ?_)
     · simp only [abs_of_neg hx]
       constructor <;> linarith
@@ -320,7 +321,7 @@ theorem exp_ub_lb_err (x : ℚ) (n : ℕ) :
       have : 0 < -x := by linarith
       positivity
     · simp [hx.le]
-  · have hlu := exp_ub_sub_exp_lb_of_nonneg n hx
+  · have hlu := expUb_sub_expLb_of_nonneg n hx
     simp only [abs_of_nonneg hx]
     constructor <;> linarith
 
@@ -436,8 +437,8 @@ private lemma exists_n_bound_err (a b : ℝ) {ε : ℝ} (hε : 0 < ε) :
     exact Nat.self_le_factorial v₃
 
 theorem TLUW_lb_ub :
-    TendstoLocallyUniformlyWithout (fun n x => exp_lb x n) Real.exp ∧
-    TendstoLocallyUniformlyWithout (fun n x => exp_ub x n) Real.exp := by
+    TendstoLocallyUniformlyWithout (fun n x => expLb x n) Real.exp ∧
+    TendstoLocallyUniformlyWithout (fun n x => expUb x n) Real.exp := by
   rw [TendstoLocallyUniformlyWithout]
   constructor
   all_goals (
@@ -447,9 +448,9 @@ theorem TLUW_lb_ub :
     intro b hb y ⟨hy₁, hy₂⟩
     specialize hn y ⟨hy₁, hy₂⟩
     rw [abs_sub_lt_iff]
-    have hl := exp_lb_le_exp y b
-    have hu := exp_ub_ge_exp y b
-    have ⟨h₀, h₁⟩ := exp_ub_lb_err y b
+    have hl := expLb_le_exp y b
+    have hu := expUb_ge_exp y b
+    have ⟨h₀, h₁⟩ := expUb_lb_err y b
     have h₂ := err_antitone_n y hb
     simp only [Rat.cast_abs] at h₀ h₁ hn
     constructor <;> linarith
@@ -457,19 +458,20 @@ theorem TLUW_lb_ub :
 
 end Exp
 
+/-- Definition of `exp`. -/
 noncomputable def exp : ComputableℝSeq → ComputableℝSeq :=
-  of_TendstoLocallyUniformly_Continuous Real.continuous_exp
-  (fun n q ↦ ⟨⟨Exp.exp_lb q.fst n, Exp.exp_ub q.snd n⟩,
+  ofTendstoLocallyUniformlyContinuous Real.continuous_exp
+  (fun n q ↦ ⟨⟨Exp.expLb q.fst n, Exp.expUb q.snd n⟩,
     Rat.cast_le.mp <|
-      le_trans (Exp.exp_lb_le_exp q.fst n) <|
+      le_trans (Exp.expLb_le_exp q.fst n) <|
       le_trans (Real.exp_le_exp_of_le <| Rat.cast_le.mpr q.fst_le_snd) <|
-      Exp.exp_ub_ge_exp q.snd n⟩)
-  (fun n x ↦ Exp.exp_lb x n)
-  (fun n x ↦ Exp.exp_ub x n)
+      Exp.expUb_ge_exp q.snd n⟩)
+  (fun n x ↦ Exp.expLb x n)
+  (fun n x ↦ Exp.expUb x n)
   (fun n ⟨⟨q₁, _⟩, _⟩ _ ⟨hx, _⟩ ↦
-    (Exp.exp_lb_le_exp q₁ n).trans (Real.exp_le_exp_of_le hx))
+    (Exp.expLb_le_exp q₁ n).trans (Real.exp_le_exp_of_le hx))
   (fun n ⟨⟨_, q₂⟩, _⟩ _ ⟨_, hx⟩ ↦
-    (Real.exp_le_exp_of_le hx).trans (Exp.exp_ub_ge_exp q₂ n))
+    (Real.exp_le_exp_of_le hx).trans (Exp.expUb_ge_exp q₂ n))
   (fun _ _ ↦ rfl)
   (Exp.TLUW_lb_ub.1)
   (Exp.TLUW_lb_ub.2)
@@ -478,17 +480,21 @@ end ComputableℝSeq
 
 namespace IsComputable
 
-noncomputable instance instComputableExp (x : ℝ) [hx : IsComputable x] : IsComputable (Real.exp x) :=
+noncomputable instance instComputableExp (x : ℝ) [hx : IsComputable x] : IsComputable (Real.exp x)
+  :=
   lift Real.exp ComputableℝSeq.exp
-    (by apply ComputableℝSeq.val_of_TendstoLocallyUniformly_Continuous) hx
+    (by apply ComputableℝSeq.val_ofTendstoLocallyUniformlyContinuous) hx
 
-noncomputable instance instComputableSinh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.sinh x) :=
-  lift_eq (Real.sinh_eq x).symm inferInstance
+noncomputable instance instComputableSinh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.sinh
+  x) :=
+  liftEq (Real.sinh_eq x).symm inferInstance
 
-noncomputable instance instComputableCosh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.cosh x) :=
-  lift_eq (Real.cosh_eq x).symm inferInstance
+noncomputable instance instComputableCosh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.cosh
+  x) :=
+  liftEq (Real.cosh_eq x).symm inferInstance
 
-noncomputable instance instComputableTanh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.tanh x) :=
-  lift_eq (Real.tanh_eq_sinh_div_cosh x).symm inferInstance
+noncomputable instance instComputableTanh (x : ℝ) [hx : IsComputable x] : IsComputable (Real.tanh
+  x) :=
+  liftEq (Real.tanh_eq_sinh_div_cosh x).symm inferInstance
 
 end IsComputable

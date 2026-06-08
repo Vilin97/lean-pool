@@ -1902,7 +1902,7 @@ projects:
       - "30E20"
   - slug: computablereal
     title: Computable real numbers
-    summary: Implements computable real numbers as converging rational interval sequences quotiented into a field, with an IsComputable typeclass that lets native_decide prove inequalities involving sqrt, exp, pi, and other special functions.
+    summary: Implements computable real numbers as converging rational interval sequences quotiented into a field, with an IsComputable typeclass that supports deciding inequalities involving sqrt, exp, pi, and other special functions.
     branch: computable real arithmetic
     entry_module: LeanPool.ComputableReal
     authors:
@@ -1912,24 +1912,26 @@ projects:
       github_repo: Timeroot/computableReal
     status: verified
     main_declarations:
-      - LeanPool.ComputableReal.ComputableℝSeq
-      - LeanPool.ComputableReal.Computableℝ
-      - LeanPool.ComputableReal.IsComputable
-      - LeanPool.ComputableReal.Computableℝ.instField
-      - LeanPool.ComputableReal.ComputableℝSeq.Sqrt.sqrtq
+      - ComputableℝSeq
+      - Computableℝ
+      - IsComputable
     main_results:
-      - declaration: LeanPool.ComputableReal.ComputableℝSeq
+      - declaration: ComputableℝSeq
         informal: A sequence of converging rational lower and upper bounds representing a single computable real number.
-      - declaration: LeanPool.ComputableReal.Computableℝ
+      - declaration: Computableℝ
         informal: The type of computable reals, defined as computable sequences quotiented by equality of value.
-      - declaration: LeanPool.ComputableReal.IsComputable
-        informal: A typeclass witnessing that a real number is computable, used to drive native_decide.
-      - declaration: LeanPool.ComputableReal.Computableℝ.instField
+      - declaration: IsComputable
+        informal: A typeclass witnessing that a real number is computable, used to drive decision procedures on reals.
+      - declaration: Computableℝ.instField
         informal: The field instance on computable reals, providing addition, multiplication, and inverses.
-      - declaration: LeanPool.ComputableReal.ComputableℝSeq.Sqrt.sqrtq
+      - declaration: ComputableℝSeq.Sqrt.sqrtq
         informal: Computes converging rational interval bounds for the square root of a rational interval.
     tags:
       - computable-reals
       - interval-arithmetic
-      - native-decide
+      - decidability
       - real-numbers
+    msc:
+      - "03F60"
+      - "65G40"
+      - "68W30"

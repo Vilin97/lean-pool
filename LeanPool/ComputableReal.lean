@@ -15,11 +15,14 @@ import LeanPool.ComputableReal.SpecialFunctions
 Source: url:https://github.com/Timeroot/computableReal
 Authors: Alex Meiburg
 Status: verified
-Main declarations: `LeanPool.ComputableReal.ComputableℝSeq`, `LeanPool.ComputableReal.Computableℝ`, `LeanPool.ComputableReal.IsComputable`, `LeanPool.ComputableReal.Computableℝ.instField`, `LeanPool.ComputableReal.ComputableℝSeq.Sqrt.sqrtq`
-Tags: computable-reals, interval-arithmetic, native-decide, real-numbers
+Main declarations: `ComputableℝSeq`, `Computableℝ`, `IsComputable`
+Tags: computable-reals, interval-arithmetic, decidability, real-numbers
+MSC: 03F60, 65G40, 68W30
+-/
 
+/-!
 A framework for proving statements about concrete real numbers by computation: a
 `ComputableℝSeq` carries converging rational lower/upper bounds, these are quotiented
-into a field `Computableℝ`, and an `IsComputable` typeclass lets `native_decide`
-discharge inequalities involving `Real.sqrt`, `Real.exp`, `Real.pi`, and more.
+into a field `Computableℝ`, and an `IsComputable` typeclass drives the decidability
+instances for inequalities involving `Real.sqrt`, `Real.exp`, `Real.pi`, and more.
 -/

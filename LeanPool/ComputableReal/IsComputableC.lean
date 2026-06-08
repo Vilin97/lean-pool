@@ -30,8 +30,8 @@ open ComplexConjugate
 
 /-- Turns one `IsComputableℂ` into another one, given a proof that they're equal. This is directly
 analogous to `decidable_of_iff`, as a way to avoid `Eq.rec` on data-carrying instances. -/
-@[reducible] def lift_eq {x y : ℂ} (h : x = y) [hx : IsComputableℂ x] : IsComputableℂ y :=
-  ⟨hx.1.lift_eq (congrArg _ h), hx.2.lift_eq (congrArg _ h)⟩
+@[reducible] def liftEq {x y : ℂ} (h : x = y) [hx : IsComputableℂ x] : IsComputableℂ y :=
+  ⟨hx.1.liftEq (congrArg _ h), hx.2.liftEq (congrArg _ h)⟩
 
 --We'll need some version of this once we want nontrivial functions, like exp/sin.
 
@@ -110,8 +110,8 @@ instance instComputableMul : IsComputableℂ (x * y) :=
   let _ := hy.1;
   let _ := hx.2;
   let _ := hy.2;
-  ⟨IsComputable.lift_eq (Complex.mul_re x y).symm inferInstance,
-   IsComputable.lift_eq (Complex.mul_im x y).symm inferInstance⟩
+  ⟨IsComputable.liftEq (Complex.mul_re x y).symm inferInstance,
+   IsComputable.liftEq (Complex.mul_im x y).symm inferInstance⟩
 
 instance instComputableNatPow (n : ℕ) : IsComputableℂ (x ^ n) := by
   /- TODO do this by exponentation by squaring -/
@@ -128,15 +128,15 @@ and `x.im` each twice. If (when?) we get a faster implementation of natpow, this
 be more efficient.
 -/
 noncomputable instance instComputableNormSq : IsComputable (Complex.normSq x) :=
-  .lift_eq (x := x.re ^ 2 + x.im ^ 2) (by rw [Complex.normSq, pow_two, pow_two]; rfl)
+  .liftEq (x := x.re ^ 2 + x.im ^ 2) (by rw [Complex.normSq, pow_two, pow_two]; rfl)
     inferInstance
 
 instance instComputableStar : IsComputableℂ (conj x) :=
   ⟨hx.1, let _ := hx.2; inferInstanceAs (IsComputable (-x.im))⟩
 
 noncomputable instance instComputableInv : IsComputableℂ (x⁻¹) :=
-  ⟨let _ := hx.1; .lift_eq (Complex.inv_re x).symm inferInstance,
-  let _ := hx.2; .lift_eq (Complex.inv_im x).symm inferInstance⟩
+  ⟨let _ := hx.1; .liftEq (Complex.inv_re x).symm inferInstance,
+  let _ := hx.2; .liftEq (Complex.inv_im x).symm inferInstance⟩
 
 noncomputable instance instComputableDiv : IsComputableℂ (x / y) :=
   inferInstanceAs (IsComputableℂ (_ * _))
@@ -147,8 +147,8 @@ noncomputable instance instComputableZPow (z : ℤ) : IsComputableℂ (x ^ z) :=
     (fun a ↦ inferInstanceAs (IsComputableℂ (x ^ a.succ)⁻¹))
 
 noncomputable instance instComputableNSMul (n : ℕ) : IsComputableℂ (n • x) :=
-   ⟨let _ := hx.1; .lift_eq (Complex.re_nsmul n x).symm inferInstance,
-  let _ := hx.2; .lift_eq (Complex.im_nsmul n x).symm inferInstance⟩
+   ⟨let _ := hx.1; .liftEq (Complex.re_nsmul n x).symm inferInstance,
+  let _ := hx.2; .liftEq (Complex.im_nsmul n x).symm inferInstance⟩
 
 --Need it to pick the right instance for the smul. Probably a better way to do this
 attribute [-instance] Complex.instNormedAddCommGroup in
@@ -156,18 +156,18 @@ attribute [-instance] Complex.instNormedField in
 attribute [-instance] Complex.instDenselyNormedField in
 attribute [-instance] Complex.instRCLike in
 noncomputable instance instComputableZSMul (z : ℤ) : IsComputableℂ (z • x) :=
-   ⟨let _ := hx.1; .lift_eq (Complex.re_zsmul z x).symm inferInstance,
-  let _ := hx.2; .lift_eq (Complex.im_zsmul z x).symm inferInstance⟩
+   ⟨let _ := hx.1; .liftEq (Complex.re_zsmul z x).symm inferInstance,
+  let _ := hx.2; .liftEq (Complex.im_zsmul z x).symm inferInstance⟩
 
 --TODO: Can't find a way to make this computable (it really wants to use Complex.instField)
 noncomputable instance instComputableQSMul (q : ℚ) : IsComputableℂ (q • x) :=
-  lift_eq (Rat.smul_def q x).symm
+  liftEq (Rat.smul_def q x).symm
   --Alternative:
-  --  ⟨let _ := hx.1; .lift_eq (Complex.re_qsmul q x).symm inferInstance,
-  -- let _ := hx.2; .lift_eq (Complex.im_qsmul q x).symm inferInstance⟩
+  --  ⟨let _ := hx.1; .liftEq (Complex.re_qsmul q x).symm inferInstance,
+  -- let _ := hx.2; .liftEq (Complex.im_qsmul q x).symm inferInstance⟩
 
 noncomputable instance instComputableInner : IsComputable (inner ℝ x y) :=
-  IsComputable.lift_eq (Complex.inner x y).symm
+  IsComputable.liftEq (Complex.inner x y).symm
     (inferInstanceAs (IsComputable (Complex.re (y * conj x))))
 
 noncomputable instance instComputableNorm : IsComputable ‖x‖ :=

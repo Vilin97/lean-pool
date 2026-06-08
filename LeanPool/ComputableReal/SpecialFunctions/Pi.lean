@@ -29,49 +29,53 @@ noncomputable instance instComputableSqrtTwoAddSeries (x : ℝ) [hx : IsComputab
     IsComputable (Real.sqrtTwoAddSeries x n) :=
   n.rec hx (fun _ _ ↦ IsComputable.instComputableSqrt _)
 
-noncomputable def sqrtTwoAddSeries_n : ℕ → ComputableℝSeq :=
+/-- Definition of `sqrtTwoAddSeriesN`. -/
+noncomputable def sqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
   fun n ↦ (instComputableSqrtTwoAddSeries 0 n).seq
 
-theorem sqrtTwoAddSeries_n_lb_le (n k : ℕ) : (sqrtTwoAddSeries_n n).lb k ≤ Real.sqrtTwoAddSeries 0 n := by
+theorem sqrtTwoAddSeriesN_lb_le (n k : ℕ) : (sqrtTwoAddSeriesN n).lb k ≤ Real.sqrtTwoAddSeries 0
+  n := by
   rw [← IsComputable.prop (x := Real.sqrtTwoAddSeries 0 n)]
   exact ComputableℝSeq.hlb _ _
 
-theorem sqrtTwoAddSeries_n_ub_ge (n k : ℕ) : Real.sqrtTwoAddSeries 0 n ≤ (sqrtTwoAddSeries_n n).ub k := by
+theorem sqrtTwoAddSeriesN_ub_ge (n k : ℕ) : Real.sqrtTwoAddSeries 0 n ≤ (sqrtTwoAddSeriesN n).ub
+  k := by
   rw [← IsComputable.prop (x := Real.sqrtTwoAddSeries 0 n)]
   exact ComputableℝSeq.hub _ _
 
-theorem sqrtTwoAddSeries_n_ub_pos (n k : ℕ) : (0 : ℝ) ≤ (sqrtTwoAddSeries_n n).ub k := by
-   exact le_trans (Real.sqrtTwoAddSeries_zero_nonneg n) (sqrtTwoAddSeries_n_ub_ge n k)
+theorem sqrtTwoAddSeriesN_ub_pos (n k : ℕ) : (0 : ℝ) ≤ (sqrtTwoAddSeriesN n).ub k := by
+   exact le_trans (Real.sqrtTwoAddSeries_zero_nonneg n) (sqrtTwoAddSeriesN_ub_ge n k)
 
-theorem sqrtTwoAddSeries_n_lb_lt_two (n k : ℕ) : (sqrtTwoAddSeries_n n).lb k < 2 := by
+theorem sqrtTwoAddSeriesN_lb_lt_two (n k : ℕ) : (sqrtTwoAddSeriesN n).lb k < 2 := by
   rify
   refine lt_of_le_of_lt ?_ (Real.sqrtTwoAddSeries_lt_two n)
   convert ComputableℝSeq.hlb _ _
   symm
   exact IsComputable.prop
 
-theorem sqrtTwoAddSeries_n_succ_lb (n k : ℕ) :
-    (sqrtTwoAddSeries_n (n + 1)).lb k = (Sqrt.sqrtq (2 + (sqrtTwoAddSeries_n n).lub k) k).fst := by
+theorem sqrtTwoAddSeriesN_succ_lb (n k : ℕ) :
+    (sqrtTwoAddSeriesN (n + 1)).lb k = (Sqrt.sqrtq (2 + (sqrtTwoAddSeriesN n).lub k) k).fst := by
   rfl
 
-theorem sqrtTwoAddSeries_n_succ_ub (n k : ℕ) :
-    (sqrtTwoAddSeries_n (n + 1)).ub k = (Sqrt.sqrtq (2 + (sqrtTwoAddSeries_n n).lub k) k).snd := by
+theorem sqrtTwoAddSeriesN_succ_ub (n k : ℕ) :
+    (sqrtTwoAddSeriesN (n + 1)).ub k = (Sqrt.sqrtq (2 + (sqrtTwoAddSeriesN n).lub k) k).snd := by
   rfl
 
-theorem sqrtTwoAddSeries_n_lb_nonneg (n k : ℕ) : 0 ≤ (sqrtTwoAddSeries_n n).lb k := by
+theorem sqrtTwoAddSeriesN_lb_nonneg (n k : ℕ) : 0 ≤ (sqrtTwoAddSeriesN n).lb k := by
   cases n
   · rfl
   · apply Sqrt.sqrtq_nonneg
 
-theorem sqrtTwoAddSeries_n_lb_gt_one (n k : ℕ) (hk : 3 ≤ k) : 1 ≤ (sqrtTwoAddSeries_n (n + 1)).lb k := by
-  have h₀ : (0 : ℝ) ≤ ((sqrtTwoAddSeries_n n).lub k).snd := sqrtTwoAddSeries_n_ub_pos n k
-  rw [sqrtTwoAddSeries_n_succ_lb, Sqrt.sqrt_lb_def,
+theorem sqrtTwoAddSeriesN_lb_gt_one (n k : ℕ) (hk : 3 ≤ k) : 1 ≤ (sqrtTwoAddSeriesN (n + 1)).lb k
+  := by
+  have h₀ : (0 : ℝ) ≤ ((sqrtTwoAddSeriesN n).lub k).snd := sqrtTwoAddSeriesN_ub_pos n k
+  rw [sqrtTwoAddSeriesN_succ_lb, Sqrt.sqrt_lb_def,
     if_neg (by push Not; change 0 < 2 + _; rify; positivity)]
   clear h₀
-  have h₁ := sqrtTwoAddSeries_n_lb_nonneg n k
+  have h₁ := sqrtTwoAddSeriesN_lb_nonneg n k
   rify at h₁ ⊢
-  rw [show (2 + (sqrtTwoAddSeries_n n).lub k).toProd.1 = 2 + (sqrtTwoAddSeries_n n).lb k by rfl]
-  set x : ℚ := (sqrtTwoAddSeries_n n).lb k
+  rw [show (2 + (sqrtTwoAddSeriesN n).lub k).toProd.1 = 2 + (sqrtTwoAddSeriesN n).lb k by rfl]
+  set x : ℚ := (sqrtTwoAddSeriesN n).lb k
   have h₂ := Sqrt.sqrt_le_mkRat_add (2 + x) k
   generalize ↑(mkRat (Int.sqrt ((2 + x).num * 4 ^ k)) (((2 + x).den * 4 ^ k).sqrt + 1))=y at h₂ ⊢
   replace h₂ : √↑(2 + x) * (1 - 2 / 2^k) ≤ y := by
@@ -90,8 +94,8 @@ theorem sqrtTwoAddSeries_n_lb_gt_one (n k : ℕ) (hk : 3 ≤ k) : 1 ≤ (sqrtTwo
     rw [show 8 = (2 : ℝ) ^ 3 by norm_num]
     exact_mod_cast Nat.pow_le_pow_right (by norm_num) hk
 
-theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
-    (sqrtTwoAddSeries_n n).ub k ≤ (sqrtTwoAddSeries_n n).lb k + 18 * n / 2^k
+theorem sqrtTwoAddSeriesN_bounds (n k : ℕ) (hk : 3 ≤ k) :
+    (sqrtTwoAddSeriesN n).ub k ≤ (sqrtTwoAddSeriesN n).lb k + 18 * n / 2^k
     := by
   induction n
   · simp only [CharP.cast_eq_zero, zero_div, mul_zero, add_zero]
@@ -99,8 +103,8 @@ theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
   rename_i n ih
   dsimp [lb, ub] at ih
   rify at ih ⊢
-  rw [sqrtTwoAddSeries_n_succ_lb, sqrtTwoAddSeries_n_succ_ub]
-  set x := ((sqrtTwoAddSeries_n n).lub k)
+  rw [sqrtTwoAddSeriesN_succ_lb, sqrtTwoAddSeriesN_succ_ub]
+  set x := ((sqrtTwoAddSeriesN n).lub k)
   have hl : (2 + x).fst ≤ 2 + Real.sqrtTwoAddSeries 0 n := by
     change ((2 + _ : ℚ) : ℝ) ≤ _
     rw [Rat.cast_add, Rat.cast_ofNat, add_le_add_iff_left]
@@ -117,7 +121,7 @@ theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
   have hm : 0 < (2 + x).fst := by
     change 0 < 2 + _
     suffices 0 ≤ x.fst by linarith
-    apply sqrtTwoAddSeries_n_lb_nonneg n k
+    apply sqrtTwoAddSeriesN_lb_nonneg n k
   have h₁ := Sqrt.sqrt_le_sqrtq_add (2 + Real.sqrtTwoAddSeries 0 n) (2 + x) k ⟨hl, hu⟩ hm
   have h₂ := Sqrt.sqrtq_sub_le_sqrt (2 + Real.sqrtTwoAddSeries 0 n) (2 + x) k ⟨hl, hu⟩ hm hk
   simp only [show (2 + x).snd = 2 + x.snd by rfl, show (2 + x).fst = 2 + x.fst by rfl] at h₁ h₂
@@ -145,7 +149,7 @@ theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
       · have : (x.fst : ℝ) ≤ x.snd := by exact_mod_cast x.fst_le_snd
         linarith [x.fst_le_snd]
     have hx₂ : 1 ≤ x₁ :=
-      sqrtTwoAddSeries_n_lb_gt_one _ _ hk
+      sqrtTwoAddSeriesN_lb_gt_one _ _ hk
     rify at hx₂
     rw [div_le_one₀ (by positivity), Real.le_sqrt' (by positivity)]
     linarith
@@ -157,11 +161,12 @@ theorem sqrtTwoAddSeries_n_bounds (n k : ℕ) (hk : 3 ≤ k) :
   rw [mul_add, add_div]
   linarith
 
-noncomputable def sqrtTwoSubSqrtTwoAddSeries_n : ℕ → ComputableℝSeq :=
+/-- Definition of `sqrtTwoSubSqrtTwoAddSeriesN`. -/
+noncomputable def sqrtTwoSubSqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
   fun n ↦ (inferInstance : IsComputable (Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n))).seq
 
 theorem sqrtTwoSubSqrtTwoAddSeries_eq (n k : ℕ) :
-    (sqrtTwoSubSqrtTwoAddSeries_n n).lub k = Sqrt.sqrtq ((2 - sqrtTwoAddSeries_n n).lub k) k := by
+    (sqrtTwoSubSqrtTwoAddSeriesN n).lub k = Sqrt.sqrtq ((2 - sqrtTwoAddSeriesN n).lub k) k := by
   rfl
 
 theorem real_sqrtTwoAddSeries_lb (n : ℕ) : 1 / 2 ^ n < √(2 - Real.sqrtTwoAddSeries 0 n) := by
@@ -176,12 +181,13 @@ theorem real_sqrtTwoAddSeries_lb (n : ℕ) : 1 / 2 ^ n < √(2 - Real.sqrtTwoAdd
   rwa [lt_mul_iff_one_lt_left zero_lt_two, ← div_lt_iff₀ (by positivity)] at h₂
 
 theorem sqrtTwoSubSqrtTwoAddSeries_lb (n k : ℕ) (hk : 3 ≤ k) :
-    √(2 - Real.sqrtTwoAddSeries 0 n) ≤ (sqrtTwoSubSqrtTwoAddSeries_n n).lb k +
+    √(2 - Real.sqrtTwoAddSeries 0 n) ≤ (sqrtTwoSubSqrtTwoAddSeriesN n).lb k +
     (18 * n * 2 ^ n + 4) / 2 ^ k
      := by
   dsimp [lb]
   rw [sqrtTwoSubSqrtTwoAddSeries_eq]
-  have h₁ := Sqrt.sqrt_le_sqrtq_add' (2 - Real.sqrtTwoAddSeries 0 n) ((2 - sqrtTwoAddSeries_n n).lub k) k
+  have h₁ := Sqrt.sqrt_le_sqrtq_add' (2 - Real.sqrtTwoAddSeries 0 n) ((2 - sqrtTwoAddSeriesN
+    n).lub k) k
     ⟨?_, ?_⟩ ?_; rotate_left
   · change ((2 + -_ : ℚ) : ℝ) ≤ _
     rw [Rat.cast_add, Rat.cast_ofNat, Rat.cast_neg]
@@ -197,11 +203,11 @@ theorem sqrtTwoSubSqrtTwoAddSeries_lb (n k : ℕ) (hk : 3 ≤ k) :
     symm
     exact IsComputable.prop
   · linarith [Real.sqrtTwoAddSeries_lt_two n]
-  have hx : ((2 - sqrtTwoAddSeries_n n).lub k).fst = 2 - (sqrtTwoAddSeries_n n).ub k := by
+  have hx : ((2 - sqrtTwoAddSeriesN n).lub k).fst = 2 - (sqrtTwoAddSeriesN n).ub k := by
     change (2 +- _) = _
     rw [sub_eq_add_neg]
     rfl
-  have hy : ((2 - sqrtTwoAddSeries_n n).lub k).snd = 2 - (sqrtTwoAddSeries_n n).lb k := by
+  have hy : ((2 - sqrtTwoAddSeriesN n).lub k).snd = 2 - (sqrtTwoAddSeriesN n).lb k := by
     change (2 +- _) = _
     rw [sub_eq_add_neg]
     rfl
@@ -209,12 +215,12 @@ theorem sqrtTwoSubSqrtTwoAddSeries_lb (n k : ℕ) (hk : 3 ≤ k) :
   clear hx hy
   have h₄ := Real.sqrtTwoAddSeries_zero_nonneg n
   have h₅ := Real.sqrtTwoAddSeries_lt_two n
-  have h₆ := sqrtTwoAddSeries_n_bounds n k hk
+  have h₆ := sqrtTwoAddSeriesN_bounds n k hk
   have h₇ := (real_sqrtTwoAddSeries_lb n).le
   generalize
-    (Sqrt.sqrtq ((2 - sqrtTwoAddSeries_n n).lub k) k).fst=w,
-    (sqrtTwoAddSeries_n n).lb k=x,
-    (sqrtTwoAddSeries_n n).ub k=y,
+    (Sqrt.sqrtq ((2 - sqrtTwoAddSeriesN n).lub k) k).fst=w,
+    (sqrtTwoAddSeriesN n).lb k=x,
+    (sqrtTwoAddSeriesN n).ub k=y,
     Real.sqrtTwoAddSeries 0 n=z at *
   have h₈ : (↑y - ↑x) / √(2 - z) ≤ 18 * ↑n / 2 ^ k * 2 ^ n := by
     rw [div_eq_mul_inv]
@@ -237,10 +243,12 @@ theorem sqrtTwoSubSqrtTwoAddSeries_lb (n k : ℕ) (hk : 3 ≤ k) :
   linarith
 
 theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
-    (sqrtTwoSubSqrtTwoAddSeries_n n).ub k - (18 * n * 2 ^ n + 14) / 2 ^ k ≤ √(2 - Real.sqrtTwoAddSeries 0 n) := by
+    (sqrtTwoSubSqrtTwoAddSeriesN n).ub k - (18 * n * 2 ^ n + 14) / 2 ^ k ≤ √(2 -
+      Real.sqrtTwoAddSeries 0 n) := by
   dsimp [ub]
   rw [sqrtTwoSubSqrtTwoAddSeries_eq]
-  have h₁ := Sqrt.sqrtq_sub_le_sqrt' (2 - Real.sqrtTwoAddSeries 0 n) ((2 - sqrtTwoAddSeries_n n).lub k) k
+  have h₁ := Sqrt.sqrtq_sub_le_sqrt' (2 - Real.sqrtTwoAddSeries 0 n) ((2 - sqrtTwoAddSeriesN
+    n).lub k) k
     ⟨?_, ?_⟩ ?_ hk; rotate_left
   · change ((2 + -_ : ℚ) : ℝ) ≤ _
     rw [Rat.cast_add, Rat.cast_ofNat, Rat.cast_neg]
@@ -256,11 +264,11 @@ theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
     symm
     exact IsComputable.prop
   · linarith [Real.sqrtTwoAddSeries_lt_two n]
-  have hx : ((2 - sqrtTwoAddSeries_n n).lub k).fst = 2 - (sqrtTwoAddSeries_n n).ub k := by
+  have hx : ((2 - sqrtTwoAddSeriesN n).lub k).fst = 2 - (sqrtTwoAddSeriesN n).ub k := by
     change (2 +- _) = _
     rw [sub_eq_add_neg]
     rfl
-  have hy : ((2 - sqrtTwoAddSeries_n n).lub k).snd = 2 - (sqrtTwoAddSeries_n n).lb k := by
+  have hy : ((2 - sqrtTwoAddSeriesN n).lub k).snd = 2 - (sqrtTwoAddSeriesN n).lb k := by
     change (2 +- _) = _
     rw [sub_eq_add_neg]
     rfl
@@ -268,12 +276,12 @@ theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
   clear hx hy
   have h₄ := Real.sqrtTwoAddSeries_zero_nonneg n
   have h₅ := Real.sqrtTwoAddSeries_lt_two n
-  have h₆ := sqrtTwoAddSeries_n_bounds n k hk
+  have h₆ := sqrtTwoAddSeriesN_bounds n k hk
   have h₇ := (real_sqrtTwoAddSeries_lb n).le
   generalize
-    (Sqrt.sqrtq ((2 - sqrtTwoAddSeries_n n).lub k) k).fst=w,
-    (sqrtTwoAddSeries_n n).lb k=x,
-    (sqrtTwoAddSeries_n n).ub k=y,
+    (Sqrt.sqrtq ((2 - sqrtTwoAddSeriesN n).lub k) k).fst=w,
+    (sqrtTwoAddSeriesN n).lb k=x,
+    (sqrtTwoAddSeriesN n).ub k=y,
     Real.sqrtTwoAddSeries 0 n=z at *
   have h₈ : (↑y - ↑x) / √(2 - z) ≤ 18 * ↑n / 2 ^ k * 2 ^ n := by
     rw [div_eq_mul_inv]
@@ -296,36 +304,36 @@ theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
   linarith
 
 /-- See theorem Real.pi_lt_sqrtTwoAddSeries in Mathlib -/
-noncomputable def pi_lb (n : ℕ) : ℚ :=
-  2 ^ (n + 1) * (sqrtTwoSubSqrtTwoAddSeries_n n).lb (3 * n)
+noncomputable def piLb (n : ℕ) : ℚ :=
+  2 ^ (n + 1) * (sqrtTwoSubSqrtTwoAddSeriesN n).lb (3 * n)
 
 /-- See theorem Real.pi_gt_sqrtTwoAddSeries in Mathlib -/
-noncomputable def pi_ub (n : ℕ) : ℚ :=
-  2 ^ (n + 1) * (sqrtTwoSubSqrtTwoAddSeries_n n).ub (3 * n) + 1 / 4 ^ n
+noncomputable def piUb (n : ℕ) : ℚ :=
+  2 ^ (n + 1) * (sqrtTwoSubSqrtTwoAddSeriesN n).ub (3 * n) + 1 / 4 ^ n
 
-theorem pi_lb_le_pi (n : ℕ) : pi_lb n ≤ Real.pi := by
+theorem piLb_le_pi (n : ℕ) : piLb n ≤ Real.pi := by
   refine le_trans ?_ (Real.pi_gt_sqrtTwoAddSeries n).le
-  simp only [pi_lb, Rat.cast_mul, Rat.cast_pow, Rat.cast_ofNat]
+  simp only [piLb, Rat.cast_mul, Rat.cast_pow, Rat.cast_ofNat]
   rw [mul_le_mul_iff_of_pos_left (by positivity)]
-  have hval : (sqrtTwoSubSqrtTwoAddSeries_n n).val = Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n) :=
+  have hval : (sqrtTwoSubSqrtTwoAddSeriesN n).val = Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n) :=
     IsComputable.prop (x := Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n))
   rw [← hval]
   exact ComputableℝSeq.hlb _ _
 
-theorem pi_ub_ge_pi (n : ℕ) : Real.pi ≤ pi_ub n := by
+theorem piUb_ge_pi (n : ℕ) : Real.pi ≤ piUb n := by
   refine le_trans (Real.pi_lt_sqrtTwoAddSeries n).le ?_
-  simp only [one_div, pi_ub, Rat.cast_add, Rat.cast_mul, Rat.cast_pow, Rat.cast_ofNat, Rat.cast_inv,
+  simp only [one_div, piUb, Rat.cast_add, Rat.cast_mul, Rat.cast_pow, Rat.cast_ofNat, Rat.cast_inv,
     add_le_add_iff_right]
   rw [mul_le_mul_iff_of_pos_left (by positivity)]
-  have hval : (sqrtTwoSubSqrtTwoAddSeries_n n).val = Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n) :=
+  have hval : (sqrtTwoSubSqrtTwoAddSeriesN n).val = Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n) :=
     IsComputable.prop (x := Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n))
   rw [← hval]
   exact ComputableℝSeq.hub _ _
 
-theorem pi_lb_ge_pi_sub_pow (n : ℕ) (hn : 0 < n) : Real.pi - 41 * n / 2 ^ n ≤ pi_lb n := by
+theorem piLb_ge_pi_sub_pow (n : ℕ) (hn : 0 < n) : Real.pi - 41 * n / 2 ^ n ≤ piLb n := by
   suffices 2 ^ (n + 1) * ((18 * n * 2 ^ n + 4) / 2 ^ (3 * n)) + 1 / 4 ^ n ≤ (41 * n / 2 ^ n : ℚ) by
     rify at this
-    rw [pi_lb]
+    rw [piLb]
     have h₁ := sqrtTwoSubSqrtTwoAddSeries_lb n (3 * n) (by omega)
     replace h₁ := mul_le_mul_of_nonneg_left h₁ (show 0 ≤ 2 ^ (n + 1) by positivity)
     rw [mul_add] at h₁
@@ -349,10 +357,10 @@ theorem pi_lb_ge_pi_sub_pow (n : ℕ) (hn : 0 < n) : Real.pi - 41 * n / 2 ^ n �
     linarith
   exact div_le_div₀ (by positivity) (by linarith) (by positivity) (pow_le_pow_left₀ rfl rfl n)
 
-theorem pi_ub_le_pi_add_pow (n : ℕ) (hn : 0 < n) : pi_ub n ≤ Real.pi + 51 * n / 2 ^ n := by
+theorem piUb_le_pi_add_pow (n : ℕ) (hn : 0 < n) : piUb n ≤ Real.pi + 51 * n / 2 ^ n := by
   suffices 2 ^ (n + 1) * ((18 * n * 2 ^ n + 14) / 2 ^ (3 * n)) + 1 / 4 ^ n ≤ (51 * n / 2 ^ n : ℚ) by
     rify at this
-    rw [pi_ub]
+    rw [piUb]
     have h₁ := sqrtTwoSubSqrtTwoAddSeries_ub n (3 * n) (by omega)
     replace h₁ := mul_le_mul_of_nonneg_left h₁ (show 0 ≤ 2 ^ (n + 1) by positivity)
     rw [mul_sub] at h₁
@@ -376,8 +384,8 @@ theorem pi_ub_le_pi_add_pow (n : ℕ) (hn : 0 < n) : pi_ub n ≤ Real.pi + 51 * 
     linarith
   exact div_le_div₀ (by positivity) (by linarith) (by positivity) (pow_le_pow_left₀ rfl rfl n)
 
-theorem pi_lb_causeq : ∃ (h' : IsCauSeq abs pi_lb), Real.mk ⟨pi_lb, h'⟩ = Real.pi := by
-  refine Real.of_near pi_lb Real.pi ?_
+theorem piLb_causeq : ∃ (h' : IsCauSeq abs piLb), Real.mk ⟨piLb, h'⟩ = Real.pi := by
+  refine Real.of_near piLb Real.pi ?_
   intro ε hε
   have h₁ := Filter.Tendsto.const_mul 41 (tendsto_pow_const_div_const_pow_of_one_lt 1 one_lt_two)
   simp only [pow_one, mul_zero] at h₁
@@ -388,14 +396,14 @@ theorem pi_lb_causeq : ∃ (h' : IsCauSeq abs pi_lb), Real.mk ⟨pi_lb, h'⟩ = 
   intro j hj
   specialize hi j (le_of_max_le_left hj)
   rw [abs_lt]
-  have h₂ := pi_lb_ge_pi_sub_pow j (le_of_max_le_right hj)
+  have h₂ := piLb_ge_pi_sub_pow j (le_of_max_le_right hj)
   rw [← mul_div] at h₂
   constructor
   · linarith
-  · linarith [pi_lb_le_pi j]
+  · linarith [piLb_le_pi j]
 
-theorem pi_ub_causeq : ∃ (h' : IsCauSeq abs pi_ub), Real.mk ⟨pi_ub, h'⟩ = Real.pi := by
-  refine Real.of_near pi_ub Real.pi ?_
+theorem piUb_causeq : ∃ (h' : IsCauSeq abs piUb), Real.mk ⟨piUb, h'⟩ = Real.pi := by
+  refine Real.of_near piUb Real.pi ?_
   intro ε hε
   have h₁ := Filter.Tendsto.const_mul 51 (tendsto_pow_const_div_const_pow_of_one_lt 1 one_lt_two)
   simp only [pow_one, mul_zero] at h₁
@@ -406,23 +414,24 @@ theorem pi_ub_causeq : ∃ (h' : IsCauSeq abs pi_ub), Real.mk ⟨pi_ub, h'⟩ = 
   intro j hj
   specialize hi j (le_of_max_le_left hj)
   rw [abs_lt]
-  have h₂ := pi_ub_le_pi_add_pow j (le_of_max_le_right hj)
+  have h₂ := piUb_le_pi_add_pow j (le_of_max_le_right hj)
   rw [← mul_div] at h₂
   constructor
-  · linarith  [pi_ub_ge_pi j]
+  · linarith  [piUb_ge_pi j]
   · linarith
 
+/-- Definition of `Pi`. -/
 noncomputable def Pi : ComputableℝSeq :=
   mk Real.pi
-  (lub := fun n ↦ ⟨⟨pi_lb n, pi_ub n⟩,
-    Rat.cast_le.mp <| (pi_lb_le_pi n).trans (pi_ub_ge_pi n)⟩)
-  (hlb := pi_lb_le_pi)
-  (hub := pi_ub_ge_pi)
-  (hcl := pi_lb_causeq.rec (fun w _ ↦ w))
-  (hcu := pi_ub_causeq.rec (fun w _ ↦ w))
+  (lub := fun n ↦ ⟨⟨piLb n, piUb n⟩,
+    Rat.cast_le.mp <| (piLb_le_pi n).trans (piUb_ge_pi n)⟩)
+  (hlb := piLb_le_pi)
+  (hub := piUb_ge_pi)
+  (hcl := piLb_causeq.rec (fun w _ ↦ w))
+  (hcu := piUb_causeq.rec (fun w _ ↦ w))
   (heq := by
-    obtain ⟨_, h₁⟩ := pi_lb_causeq
-    obtain ⟨_, h₂⟩ := pi_ub_causeq
+    obtain ⟨_, h₁⟩ := piLb_causeq
+    obtain ⟨_, h₂⟩ := piUb_causeq
     rw [← Real.mk_eq, h₁, h₂]
   )
 
