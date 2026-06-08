@@ -255,10 +255,9 @@ theorem sw_otp : ∀ (p k c l : UInt64),
             rw [←neq] at h_pk
             apply UInt64.lt_irrefl c
             have: c < c := by
-              apply UInt64.lt_trans
-              change c < k
-              exact h_pk
-              exact h_kc
+              apply UInt64.lt_trans (b := k)
+              · exact h_pk
+              · exact h_kc
             exact this
       · repeat (constructor; try assumption)
         · rw [h_x0, h_x5, h_x0]
@@ -274,14 +273,14 @@ theorem sw_otp : ∀ (p k c l : UInt64),
         · constructor
           · rw [h_x2, h_x3]
             rw [t_update_neq]
-            exact h_x6
-            rw [h_x1, h_x3]
-            simp only [ne_eq, UInt64.add_left_inj]
-            intros neq
-            unfold iPre' at h_I_pre'
-            rcases h_I_pre' with ⟨pk, kc, _⟩
-            rw [←neq] at kc
-            apply UInt64.lt_irrefl c kc
+            · exact h_x6
+            · rw [h_x1, h_x3]
+              simp only [ne_eq, UInt64.add_left_inj]
+              intros neq
+              unfold iPre' at h_I_pre'
+              rcases h_I_pre' with ⟨pk, kc, _⟩
+              rw [←neq] at kc
+              apply UInt64.lt_irrefl c kc
           · repeat (constructor <;> try assumption)
 
 
