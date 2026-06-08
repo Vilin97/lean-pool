@@ -2157,24 +2157,20 @@ projects:
       github_repo: tannerduve/computability
     status: verified
     main_declarations:
-      - RecursiveIn
-      - exists_code_rel
-      - TuringReducible
-      - TuringDegree
-      - jump_recIn
-      - TuringDegree.instSemilatticeSup
+      - Computability.RecursiveIn
+      - Computability.TuringDegree
     main_results:
-      - declaration: RecursiveIn
+      - declaration: Computability.RecursiveIn
         informal: "The inductive relation `RecursiveIn O f` stating that `f : ℕ →. ℕ` is partial recursive relative to a set of oracle functions `O`."
-      - declaration: exists_code_rel
+      - declaration: Computability.exists_code_rel
         informal: Universality of the oracle evaluator `evalo`, that is, `RecursiveIn (Set.range g) f` holds iff there is a code `c` with `evalo g c = f`.
-      - declaration: TuringReducible
+      - declaration: Computability.TuringReducible
         informal: "`f` is Turing reducible to `g` (`f ≤ᵀ g`) when `f` is recursive in the singleton oracle set `{g}`."
-      - declaration: TuringDegree
+      - declaration: Computability.TuringDegree
         informal: The type of Turing degrees, the antisymmetrization of partial functions under Turing reducibility.
-      - declaration: jump_recIn
+      - declaration: Computability.jump_recIn
         informal: The original function is Turing reducible to its jump, `f ≤ᵀ f⌜`.
-      - declaration: TuringDegree.instSemilatticeSup
+      - declaration: Computability.TuringDegree.instSemilatticeSup
         informal: The Turing degrees form an upper semilattice with the Turing join as supremum.
     tags:
       - computability

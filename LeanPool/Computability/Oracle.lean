@@ -41,6 +41,8 @@ Computability, Oracle, Recursion, Primitive Recursion
 
 open Primrec Nat.Partrec Part Encodable
 
+namespace Computability
+
 variable {f g h : ℕ →. ℕ}
 
 /--
@@ -68,34 +70,37 @@ inductive RecursiveIn (O : Set (ℕ →. ℕ)) : (ℕ →. ℕ) → Prop
       RecursiveIn O fun a =>
         Nat.rfind fun n => (fun m => m = 0) <$> f (Nat.pair a n)
 
-namespace Nat
-/-- The primitive recursive functions `ℕ → ℕ`. -/
-protected inductive PrimrecIn (O : Set (ℕ → ℕ)): (ℕ → ℕ) → Prop
-  | zero : Nat.PrimrecIn O fun _ => 0
-  | protected succ : Nat.PrimrecIn O succ
-  | left : Nat.PrimrecIn O fun n => n.unpair.1
-  | right : Nat.PrimrecIn O fun n => n.unpair.2
-  | oracle : ∀ g ∈ O, Nat.PrimrecIn O g
-  | pair {f g} : Nat.PrimrecIn O f → Nat.PrimrecIn O g → Nat.PrimrecIn O fun n => pair (f n) (g n)
-  | comp {f g} : Nat.PrimrecIn O f → Nat.PrimrecIn O g → Nat.PrimrecIn O fun n => f (g n)
-  | prec {f g} :
-      Nat.PrimrecIn O f →
-        Nat.PrimrecIn O g →
-          Nat.PrimrecIn O (unpaired fun z n => n.rec (f z) fun y IH => g <| pair z <| pair y IH)
-end Nat
+/-- The primitive recursive functions `ℕ → ℕ` relative to a set of oracles `O`. -/
+inductive PrimrecIn (O : Set (ℕ → ℕ)) : (ℕ → ℕ) → Prop
+  | zero : PrimrecIn O fun _ => 0
+  | succ : PrimrecIn O Nat.succ
+  | left : PrimrecIn O fun n => n.unpair.1
+  | right : PrimrecIn O fun n => n.unpair.2
+  | oracle : ∀ g ∈ O, PrimrecIn O g
+  | pair {f g : ℕ → ℕ} :
+      PrimrecIn O f → PrimrecIn O g → PrimrecIn O fun n => Nat.pair (f n) (g n)
+  | comp {f g : ℕ → ℕ} : PrimrecIn O f → PrimrecIn O g → PrimrecIn O fun n => f (g n)
+  | prec {f g : ℕ → ℕ} :
+      PrimrecIn O f →
+        PrimrecIn O g →
+          PrimrecIn O
+            (Nat.unpaired fun z n => n.rec (f z) fun y IH => g <| Nat.pair z <| Nat.pair y IH)
 
+/-- Encodes a partial function `α →. σ` as a partial function `ℕ →. ℕ` using `Primcodable`. -/
 def liftPrim {α σ} [Primcodable α] [Primcodable σ] (f : α →. σ) : ℕ →. ℕ :=
   fun n => Part.bind (decode (α := α) n) fun a => (f a).map encode
 
+/-- Encodes a total function `α → σ` as a function `ℕ → ℕ` using `Primcodable`. -/
 def liftPrimrec {α σ} [Primcodable α] [Primcodable σ] (f : α → σ) : ℕ → ℕ :=
   fun n => (decode (α := α) n).map (fun a => encode (f a)) |>.getD 0
 
+/-- A partial function between `Primcodable` types is recursive in `O` if its lift is. -/
 def RecursiveIn' {α σ} [Primcodable α] [Primcodable σ] (O : Set (ℕ →. ℕ)) (f : α →. σ) : Prop :=
   RecursiveIn O (liftPrim f)
 
 /-- Relative primitive recursion between primcodable types -/
 def PrimrecIn' {α σ} [Primcodable α] [Primcodable σ] (O : Set (ℕ → ℕ)) (f : α → σ) : Prop :=
-  Nat.PrimrecIn O (liftPrimrec f)
+  PrimrecIn O (liftPrimrec f)
 
 /-- A binary partial function is recursive in `O` if the curried form is. -/
 def RecursiveIn₂ {α β σ} [Primcodable α] [Primcodable β] [Primcodable σ]
@@ -121,37 +126,33 @@ theorem RecursiveIn.of_eq_tot {f : ℕ →. ℕ} {g : ℕ → ℕ} (hf : Recursi
 /--
 If a function is partial recursive, then it is recursive in every partial function.
 -/
-lemma Nat.Partrec.recursiveIn (pF : Nat.Partrec f) : RecursiveIn O f := by
-  induction' pF with f' g' _ _ ih₁ ih₂ f' g' _ _ ih₁ ih₂ f' g' _ _ ih₁ ih₂ f' _ ih
-  repeat {constructor}
-  · case pair =>
-    apply RecursiveIn.pair ih₁ ih₂
-  · case comp =>
-    apply RecursiveIn.comp ih₁ ih₂
-  · case prec =>
-    apply RecursiveIn.prec ih₁ ih₂
-  · case rfind =>
-    apply RecursiveIn.rfind ih
+lemma recursiveIn_of_partrec (pF : Nat.Partrec f) : RecursiveIn O f := by
+  induction pF with
+  | zero | succ | left | right => constructor
+  | pair _ _ ih₁ ih₂ => exact RecursiveIn.pair ih₁ ih₂
+  | comp _ _ ih₁ ih₂ => exact RecursiveIn.comp ih₁ ih₂
+  | prec _ _ ih₁ ih₂ => exact RecursiveIn.prec ih₁ ih₂
+  | rfind _ ih => exact RecursiveIn.rfind ih
 
 /--
 If a function is computable, then it is computable in every oracle.
 -/
-theorem Computable.computableIn {f : α → β} [Primcodable α]
+theorem computableIn_of_computable {f : α → β} [Primcodable α]
 [Primcodable β]
 (hf : Computable f) : ComputableIn O f :=
-  Nat.Partrec.recursiveIn (by simpa [Computable] using hf)
+  recursiveIn_of_partrec hf
 
 theorem RecursiveIn.of_primrec {f : ℕ → ℕ} (hf : Nat.Primrec f) :
-RecursiveIn O (fun n => f n) := Nat.Partrec.recursiveIn (Nat.Partrec.of_primrec hf)
+RecursiveIn O (fun n => f n) := recursiveIn_of_partrec (Nat.Partrec.of_primrec hf)
 
-theorem Primrec.to_computableIn {α σ} [Primcodable α] [Primcodable σ]
+theorem computableIn_of_primrec {α σ} [Primcodable α] [Primcodable σ]
     {f : α → σ} (hf : Primrec f) (O : Set (ℕ →. ℕ)) :
-    ComputableIn O f := Computable.computableIn (Primrec.to_comp hf)
+    ComputableIn O f := computableIn_of_computable (Primrec.to_comp hf)
 
-nonrec theorem Primrec₂.to_computableIn₂ {α β σ} [Primcodable α] [Primcodable β] [Primcodable σ]
+theorem computableIn₂_of_primrec₂ {α β σ} [Primcodable α] [Primcodable β] [Primcodable σ]
     {f : α → β → σ} (hf : Primrec₂ f) (O : Set (ℕ →. ℕ)) :
     ComputableIn₂ O f :=
-  Primrec.to_computableIn hf O
+  computableIn_of_primrec hf O
 
 protected theorem ComputableIn.recursiveIn' {α σ} [Primcodable α] [Primcodable σ]
     {f : α → σ} {O} (hf : ComputableIn O f) :
@@ -172,57 +173,63 @@ variable {α : Type*} {β : Type*} {γ : Type*} {σ : Type*}
 variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 theorem const_in (O : Set (ℕ →. ℕ)) (s : σ) : ComputableIn O (fun _ : α => s) :=
-  Primrec.to_computableIn (Primrec.const s) O
+  computableIn_of_primrec (Primrec.const s) O
 
 theorem id_in (O : Set (ℕ →. ℕ)) : ComputableIn O (@id α) :=
-  Primrec.to_computableIn Primrec.id O
+  computableIn_of_primrec Primrec.id O
 
 theorem fst_in (O : Set (ℕ →. ℕ)) : ComputableIn O (@Prod.fst α β) :=
-  Primrec.to_computableIn Primrec.fst O
+  computableIn_of_primrec Primrec.fst O
 
 theorem snd_in (O : Set (ℕ →. ℕ)) : ComputableIn O (@Prod.snd α β) :=
-  Primrec.to_computableIn Primrec.snd O
+  computableIn_of_primrec Primrec.snd O
 
 theorem unpair_in (O : Set (ℕ →. ℕ)) : ComputableIn O Nat.unpair :=
-  Primrec.to_computableIn Primrec.unpair O
+  computableIn_of_primrec Primrec.unpair O
 
 theorem succ_in (O : Set (ℕ →. ℕ)) : ComputableIn O Nat.succ :=
-  Primrec.to_computableIn Primrec.succ O
+  computableIn_of_primrec Primrec.succ O
 
 theorem sumInl_in (O : Set (ℕ →. ℕ)) : ComputableIn O (@Sum.inl α β) :=
-  Primrec.to_computableIn Primrec.sumInl O
+  computableIn_of_primrec Primrec.sumInl O
 
 theorem sumInr_in (O : Set (ℕ →. ℕ)) : ComputableIn O (@Sum.inr α β) :=
-  Primrec.to_computableIn Primrec.sumInr O
+  computableIn_of_primrec Primrec.sumInr O
 
 /--
 If a function is recursive in the constant zero function,
 then it is partial recursive.
 -/
-lemma RecursiveIn.partrec_of_zero (fRecInZero : RecursiveIn {fun _ => Part.some 0} f) : Nat.Partrec f := by
-  induction' fRecInZero with g hg g h _ _ ih₁ ih₂ g h _ _ ih₁ ih₂ g h _ _ ih₁ ih₂ g _ ih
-  repeat {constructor}
-  · rw [Set.mem_singleton_iff] at hg; rw [hg];
-    exact Nat.Partrec.zero
-  repeat {constructor; assumption; try assumption}
+lemma RecursiveIn.partrec_of_zero (fRecInZero : RecursiveIn {fun _ => Part.some 0} f) :
+    Nat.Partrec f := by
+  induction fRecInZero with
+  | zero | succ | left | right => constructor
+  | oracle g hg => rw [hg]; exact Nat.Partrec.zero
+  | pair _ _ ih₁ ih₂ => exact .pair ih₁ ih₂
+  | comp _ _ ih₁ ih₂ => exact .comp ih₁ ih₂
+  | prec _ _ ih₁ ih₂ => exact .prec ih₁ ih₂
+  | rfind _ ih => exact .rfind ih
 
 /--
 If a function is partial recursive in the constant none function,
 then it is partial recursive.
 -/
-lemma RecursiveIn.partrec_of_none (fRecInNone : RecursiveIn {fun _ => Part.none} f) : Nat.Partrec f := by
-  induction' fRecInNone with g hg g h _ _ ih₁ ih₂ g h _ _ ih₁ ih₂ g h _ _ ih₁ ih₂ g _ ih
-  repeat {constructor}
-  · rw [Set.mem_singleton_iff] at hg; rw [hg];
-    exact Nat.Partrec.none
-  repeat {constructor; assumption; try assumption}
+lemma RecursiveIn.partrec_of_none (fRecInNone : RecursiveIn {fun _ => Part.none} f) :
+    Nat.Partrec f := by
+  induction fRecInNone with
+  | zero | succ | left | right => constructor
+  | oracle g hg => rw [hg]; exact Nat.Partrec.none
+  | pair _ _ ih₁ ih₂ => exact .pair ih₁ ih₂
+  | comp _ _ ih₁ ih₂ => exact .comp ih₁ ih₂
+  | prec _ _ ih₁ ih₂ => exact .prec ih₁ ih₂
+  | rfind _ ih => exact .rfind ih
 
 /--
 A partial function `f` is partial recursive if and only if it is recursive in
 every partial function `g`.
 -/
 theorem partrec_iff_forall_recursiveIn : Nat.Partrec f ↔ ∀ g, RecursiveIn {g} f:=
-  ⟨fun hf _ ↦ hf.recursiveIn, (· _ |>.partrec_of_zero)⟩
+  ⟨fun hf _ ↦ recursiveIn_of_partrec hf, (· _ |>.partrec_of_zero)⟩
 
 @[simp]
 lemma recursiveIn_empty_iff_partrec : RecursiveIn {} f ↔ Nat.Partrec f := by
@@ -237,7 +244,7 @@ lemma recursiveIn_empty_iff_partrec : RecursiveIn {} f ↔ Nat.Partrec f := by
     | prec _ _ ih₁ ih₂ => exact .prec ih₁ ih₂
     | rfind _ ih => exact .rfind ih
   · intro hf
-    exact Nat.Partrec.recursiveIn (O := ({} : Set (ℕ →. ℕ))) hf
+    exact recursiveIn_of_partrec (O := ({} : Set (ℕ →. ℕ))) hf
 
 theorem recursiveIn_mono {O₁ O₂ : Set (ℕ →. ℕ)} (hsub : O₁ ⊆ O₂) {g : ℕ →. ℕ} :
       RecursiveIn O₁ g → RecursiveIn O₂ g := by
@@ -266,3 +273,5 @@ theorem RecursiveIn_subst {O O' : Set (ℕ →. ℕ)} {f : ℕ →. ℕ} (hf : R
   | comp _ _ ihf ihg => exact .comp ihf ihg
   | prec _ _ ihf ihg => exact .prec ihf ihg
   | rfind _ ihf => exact .rfind ihf
+
+end Computability

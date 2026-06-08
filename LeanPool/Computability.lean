@@ -16,16 +16,17 @@ import LeanPool.Computability.AutGrp
 Source: url:https://github.com/tannerduve/computability
 Authors: Tanner Duve, Elan Roth
 Status: verified
-Main declarations: `RecursiveIn`, `exists_code_rel`, `TuringReducible`, `TuringDegree`, `jump_recIn`, `TuringDegree.instSemilatticeSup`
+Main declarations: `Computability.RecursiveIn`, `Computability.TuringDegree`
 Tags: computability, oracle-computability, turing-degrees, recursion-theory, arithmetical-hierarchy
-MSC: 03D30
+MSC: 03D30, 03D28
 -/
 
 /-!
 ## Mathematical overview
 
 This development formalises oracle-relative computability and the basic theory of
-Turing degrees via partial recursive functions.
+Turing degrees via partial recursive functions. All declarations live in the
+`Computability` namespace.
 
 The core relation `RecursiveIn O f` (`LeanPool.Computability.Oracle`) says that the
 partial function `f : ℕ →. ℕ` is computable relative to a set of oracle functions

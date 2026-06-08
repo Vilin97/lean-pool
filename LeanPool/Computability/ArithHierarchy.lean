@@ -5,13 +5,16 @@ Authors: Tanner Duve, Elan Roth
 -/
 import LeanPool.Computability.Jump
 
-def Delta0_0 (A : Set ℕ) [DecidablePred A] : Prop := True
-def Sigma0_0 := Delta0_0
-def Pi0_0 := Delta0_0
+/-!
+# The Arithmetical Hierarchy
 
-/-
-Iterated jump operator
+This file develops the iterated jump operator, the sets `∅⁽ⁿ⁾`, and the levels `Σ⁰ₙ`, `Π⁰ₙ`,
+`Δ⁰ₙ` of the arithmetical hierarchy relative to oracle computability.
 -/
+
+namespace Computability
+
+/-- The iterated Turing jump: `TuringJump n f` is the `n`-fold jump of `f`. -/
 def TuringJump (n : ℕ) (f : ℕ →. ℕ) : ℕ →. ℕ :=
   match n with
   | 0 => f
@@ -19,37 +22,43 @@ def TuringJump (n : ℕ) (f : ℕ →. ℕ) : ℕ →. ℕ :=
 
 /-- The `n`-fold jump of the empty oracle (totally undefined). Used as an oracle function. -/
 def arithJumpBase : ℕ → ℕ →. ℕ
-| 0     => λ _ => Part.none
+| 0     => fun _ => Part.none
 | n + 1 => jump (arithJumpBase n)
 
 /-- The classical `∅⁽ⁿ⁾` set: the domain of the `n`-fold jump of the empty oracle. -/
 def arithJumpSet (n : ℕ) : Set ℕ :=
   (arithJumpBase n).Dom
 
+/-- The halting set `K = ∅'`, the domain of the first jump of the empty oracle. -/
 abbrev K := arithJumpSet 1
 
+/-- A set `A` is decidable in `O` if its indicator is computable in `O`. -/
 def decidableIn (O : Set (ℕ →. ℕ)) (A : Set ℕ) : Prop :=
   ∃ f : ℕ → Bool, ComputableIn O f ∧ ∀ n, A n ↔ f n = true
 
-/-
-The arithmetical hierarchy:
-  Σ⁰₀ = ∆⁰₀ = Π⁰₀ = ∅
-  Σ⁰₁ = {n | ∃ m, ∀ k, (m + k) ∈ A}
-  Σ⁰ₙ = {n | ∃ m, ∀ k, (m + k) ∈ Σ⁰ₙ₋₁}
-  Π⁰ₙ = Σ⁰ₙᶜ
-  ∆⁰ₙ = Σ⁰ₙ ∩ Π⁰ₙ
--/
+/-- The base level `Δ⁰₀`: sets decidable in the empty oracle. -/
+def Delta00 (A : Set ℕ) : Prop := decidableIn {} A
+/-- The base level `Σ⁰₀`, equal to `Δ⁰₀`. -/
+def Sigma00 := Delta00
+/-- The base level `Π⁰₀`, equal to `Δ⁰₀`. -/
+def Pi00 := Delta00
+
+/-- The `Σ⁰ₙ` level of the arithmetical hierarchy. -/
 def Sigma0 (n : ℕ) (A : Set ℕ) : Prop :=
   match n with
   | 0 => decidableIn {} A
-  | k + 1 => recursively_enumerable_in {arithJumpBase k} A
+  | k + 1 => recursivelyEnumerableIn {arithJumpBase k} A
 
+/-- The `Π⁰ₙ` level: complements of `Σ⁰ₙ` sets. -/
 def Pi0 (n : ℕ) (A : Set ℕ) : Prop :=
   Sigma0 n Aᶜ
 
+/-- The `Δ⁰ₙ` level: sets that are both `Σ⁰ₙ` and `Π⁰ₙ`. -/
 def Delta0 (n : ℕ) (A : Set ℕ) : Prop :=
   Sigma0 n A ∧ Pi0 n A
 
-notation "Σ⁰_" => Sigma0
-notation "Π⁰_" => Pi0
-notation "Δ⁰_" => Delta0
+@[inherit_doc] notation "Σ⁰_" => Sigma0
+@[inherit_doc] notation "Π⁰_" => Pi0
+@[inherit_doc] notation "Δ⁰_" => Delta0
+
+end Computability
