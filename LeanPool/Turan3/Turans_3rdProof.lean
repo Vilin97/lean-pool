@@ -2682,45 +2682,42 @@ omit [DecidableEq α] in
 on the number of edges. -/
 theorem turans [Inhabited α] {p : ℕ} (h0 : p ≥ 2) (h1 : G.CliqueFree p) :
   (#E : ℝ) ≤ (1/2)* (1 -  1 / (p - 1)) * (#(univ : Finset α))^2 := by
+  have hp1 : 0 < p - 1 := Nat.zero_lt_sub_of_lt h0
   have := finale_bound G h0 h1 (UnivFun G)
-  have c := computation (p-1)
+  have c := computation (p-1) hp1
   rw [UnivFun_weight] at this
-  rw [Nat.cast_sub, Nat.cast_one] at c
+  rw [Nat.cast_sub (Nat.le_of_lt (Nat.lt_of_lt_of_le (by norm_num) h0)), Nat.cast_one] at c
   rw [← c]
   nth_rewrite 1 [one_div] at this
   rw [inv_pow] at this
+  rw [mul_inv_le_iff₀] at this
   swap
-  · exact Nat.zero_lt_sub_of_lt h0
-  swap
-  · exact Nat.le_of_lt (Nat.lt_of_lt_of_le (by norm_num) h0)
-  · rw [mul_inv_le_iff₀] at this
-    swap
-    · exact pow_pos (Nat.cast_pos.mpr (Fintype.card_pos_iff.mpr ⟨default⟩)) 2
-    · rw [← NNReal.coe_le_coe] at this
-      simp only [NNReal.coe_natCast, card_univ, NNReal.coe_mul, NNReal.coe_div, NNReal.coe_ofNat,
-        NNReal.coe_pow] at this
-      rw [NNReal.coe_sub] at this
-      · rw [NNReal.coe_sub] at this
-        · rw [NNReal.coe_one] at this
-          rw [NNReal.coe_sub] at this
-          · rw [cast_help]
-            dsimp
-            rw [cast_help] at this
-            dsimp at this
-            apply this
-          · rw [← Nat.cast_one]
-            rw [Nat.cast_le]
-            linarith
+  · exact pow_pos (Nat.cast_pos.mpr (Fintype.card_pos_iff.mpr ⟨default⟩)) 2
+  · rw [← NNReal.coe_le_coe] at this
+    simp only [NNReal.coe_natCast, card_univ, NNReal.coe_mul, NNReal.coe_div, NNReal.coe_ofNat,
+      NNReal.coe_pow] at this
+    rw [NNReal.coe_sub] at this
+    · rw [NNReal.coe_sub] at this
+      · rw [NNReal.coe_one] at this
+        rw [NNReal.coe_sub] at this
+        · rw [cast_help]
+          dsimp
+          rw [cast_help] at this
+          dsimp at this
+          apply this
         · rw [← Nat.cast_one]
-          rw [le_tsub_iff_right]
-          · rw [← Nat.cast_add]
-            rw [Nat.cast_le]
-            apply h0
-          · rw [← Nat.cast_one]
-            rw [Nat.cast_le]
-            linarith
+          rw [Nat.cast_le]
+          linarith
       · rw [← Nat.cast_one]
-        rw [Nat.cast_le]
-        linarith
+        rw [le_tsub_iff_right]
+        · rw [← Nat.cast_add]
+          rw [Nat.cast_le]
+          apply h0
+        · rw [← Nat.cast_one]
+          rw [Nat.cast_le]
+          linarith
+    · rw [← Nat.cast_one]
+      rw [Nat.cast_le]
+      linarith
 
 end Turan3
