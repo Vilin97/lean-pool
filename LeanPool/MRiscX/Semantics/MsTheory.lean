@@ -288,7 +288,8 @@ namespace MState
   simp
 
 @[simp] theorem jump_register_indep : ∀ (ms:MState) (m:Memory) (r:Registers) (c:Code) (s:String),
-  ({ms with registers := r, memory := m, code := c}.jump s).pc = ({ms with code := c}.jump s).pc := by
+  ({ms with registers := r, memory := m, code := c}.jump s).pc
+    = ({ms with code := c}.jump s).pc := by
   intros ms m r c s
   unfold MState.jump
   simp
@@ -296,29 +297,37 @@ namespace MState
   · dsimp
   · simp
 
-@[simp] theorem get_register_only_register : ∀ (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
-  {registers := r, memory := m, code := c, pc := p, terminated := terminated : MState}.getRegisterAt i =
+@[simp] theorem get_register_only_register :
+    ∀ (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
+  {registers := r, memory := m, code := c, pc := p,
+    terminated := terminated : MState}.getRegisterAt i =
   TMap.get r i := by
   intros r m _ terminated i p
   unfold MState.getRegisterAt
   simp
 
-@[simp] theorem get_register_only_register' : ∀ (ms:MState) (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
-  {ms with memory := m, registers := r, pc := p, code := c, terminated := terminated }.getRegisterAt i =
+@[simp] theorem get_register_only_register' :
+    ∀ (ms:MState) (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
+  {ms with memory := m, registers := r, pc := p, code := c, terminated := terminated }.getRegisterAt
+    i =
   {ms with registers := r}.getRegisterAt i := by
   intros ms r m _ terminated i p
   unfold MState.getRegisterAt
   simp
 
-@[simp] theorem get_register_only_memory : ∀ (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
-  {registers := r, memory := m, code := c, pc := p, terminated := terminated : MState}.getMemoryAt i =
+@[simp] theorem get_register_only_memory :
+    ∀ (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
+  {registers := r, memory := m, code := c, pc := p,
+    terminated := terminated : MState}.getMemoryAt i =
   TMap.get m i := by
   intros r m _ terminated i p
   unfold MState.getMemoryAt
   simp
 
-@[simp] theorem get_register_only_memory' : ∀ (ms:MState) (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
-  {ms with memory := m, registers := r, pc := p, code := c, terminated := terminated }.getMemoryAt i =
+@[simp] theorem get_register_only_memory' :
+    ∀ (ms:MState) (m:Memory) (r:Registers) (c:Code) (terminated:Bool) (i p:UInt64),
+  {ms with memory := m, registers := r, pc := p, code := c, terminated := terminated }.getMemoryAt
+    i =
   {ms with memory := m}.getMemoryAt i := by
   intros ms r m _ terminated i p
   unfold MState.getMemoryAt
@@ -553,7 +562,8 @@ theorem run_n_plus_m_intersect : ∀ (s s' : MState) (m m' : Nat) (L_w L_b L_w' 
   intros s s' m m' L_w L_b L_w' L_b' h_sets h_run1 h_pc_w h_pc_not_b h_safe1 h_safe2 n'' HN''
   rcases HN'' with ⟨h_pos, h_lt⟩
   rcases h_sets with ⟨h_Lw'SubL_b, h_LwInterLw'⟩
-  -- n'' ≤ m → s.runNSteps n'' ∉ L_b ∧ s.runNSteps n'' ∈ L_w → s.runNSteps n'' ∉ (L_w' ∪ L_b), da L_w ∩ L_w' = ∅
+  -- n'' ≤ m → s.runNSteps n'' ∉ L_b ∧ s.runNSteps n'' ∈ L_w
+  -- → s.runNSteps n'' ∉ (L_w' ∪ L_b), da L_w ∩ L_w' = ∅
   -- n'' > m → s.runNSteps n'' ∉ L_w' ∪ L_b'
   rw [Set.union_inter_distrib_left]
   by_cases h: n'' ≤ m
@@ -569,7 +579,8 @@ theorem run_n_plus_m_intersect : ∀ (s s' : MState) (m m' : Nat) (L_w L_b L_w' 
           not_or] at h_safe1
         rcases h_safe1 with ⟨_, h_safe1_r⟩
         constructor
-        · apply Set.notMem_subset (a:= (s.runNSteps n'').pc) (s := L_w') (t := L_b); repeat assumption
+        · apply Set.notMem_subset (a:= (s.runNSteps n'').pc) (s := L_w') (t := L_b)
+          repeat assumption
         · exact h_safe1_r
       intros h_in
       exact h_safe1_NinLw' (Set.mem_of_mem_inter_left h_in)
