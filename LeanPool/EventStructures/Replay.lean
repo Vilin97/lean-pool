@@ -18,6 +18,8 @@ the smallest (resp. largest) configuration compatible with a log, together with
 existence and uniqueness of minimal and maximal replays.
 -/
 
+namespace EventStructures
+
 variable (es : EventStructure)
 open EventStructure
 open Configuration
@@ -218,3 +220,5 @@ lemma maxReplay_unique {l : Set es.Event} {σ₁ σ₂ : Computations es}
   exact maxReplay_unique_config es h₁ h₂
 
 end Replay
+
+end EventStructures

@@ -15,6 +15,8 @@ have a minimal conflict with some event outside the configuration), and the
 notion of a computation being compatible with a log.
 -/
 
+namespace EventStructures
+
 variable (es : EventStructure)
 open EventStructure
 open Configuration
@@ -118,3 +120,5 @@ def CompatibleWithConfigLog (c : Conf es) : Type _ :=
   CompatibleComputations es (log es c)
 
 end Log
+
+end EventStructures

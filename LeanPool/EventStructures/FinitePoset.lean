@@ -14,6 +14,8 @@ of a partial order with well-founded strict order (or, constructively, of any
 partial order) has a minimal element.
 -/
 
+namespace EventStructures
+
 /-- Classical: A non-empty finite subset of a well-founded partial order has a minimal element. -/
 lemma Finset.exists_minimal_of_nonempty {α : Type*} [PartialOrder α] [WellFoundedLT α]
     (T : Finset α) (hne : T.Nonempty) :
@@ -62,3 +64,5 @@ lemma Finset.exists_minimal_dec {α : Type*} [PartialOrder α]
       rcases Finset.mem_insert.mp hyT with rfl | hy
       · exact lt_irrefl _ hya
       · exact (Finset.notMem_empty y) hy
+
+end EventStructures

@@ -19,6 +19,8 @@ quotient of paths by trace equivalence (asynchronous paths), and the resulting
 (synchronous and asynchronous) path categories.
 -/
 
+namespace EventStructures
+
 variable (es : EventStructure)
 open EventStructure
 open Configuration
@@ -360,3 +362,5 @@ instance asyncPathCategory : CategoryTheory.Category (Conf es) where
   id_comp := Path.Async.async_path_id_comp es
   comp_id := Path.Async.async_path_comp_id es
   assoc := Path.Async.assoc es
+
+end EventStructures

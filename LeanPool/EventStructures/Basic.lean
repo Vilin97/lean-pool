@@ -14,6 +14,8 @@ with the derived consistency, concurrency, minimal-conflict and past/future
 notions used throughout the development, and decidability data for events.
 -/
 
+namespace EventStructures
+
 /-- An event structure with binary conflict. -/
 structure EventStructure where
   /-- The type of events. -/
@@ -116,3 +118,5 @@ instance EventStructure.decLe (es : EventStructure) [DecidableEventStructure es]
   if hab : a = b then isTrue (hab ▸ le_refl a)
   else if hlt : a < b then isTrue (le_of_lt hlt)
   else isFalse fun h => (lt_or_eq_of_le h).elim hlt hab
+
+end EventStructures

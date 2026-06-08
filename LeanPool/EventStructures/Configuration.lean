@@ -15,6 +15,8 @@ enabling relation between a configuration and an event, and proves that enabling
 an event extends a configuration.
 -/
 
+namespace EventStructures
+
 variable (es : EventStructure)
 
 /-- A set of events is a configuration if it is conflict-free and downward closed. -/
@@ -73,3 +75,5 @@ lemma enables_extension {c : Set es.Event} {e : es.Event} (h : c ⊢ e) :
       · exact Set.mem_union_right _ rfl
 
 end Configuration
+
+end EventStructures

@@ -1912,22 +1912,20 @@ projects:
       github_repo: vikraman/event-structures
     status: verified
     main_declarations:
-      - EventStructure
-      - Conf
-      - Rollback.rollback_causal_safety
-      - Trace.TraceMonoid
+      - EventStructures.EventStructure
+      - EventStructures.Conf
     main_results:
-      - declaration: EventStructure
+      - declaration: EventStructures.EventStructure
         informal: Defines an event structure as a partially ordered set of events with an irreflexive symmetric conflict relation.
-      - declaration: Conf
+      - declaration: EventStructures.Conf
         informal: Defines a configuration as a conflict-free, downward-closed set of events.
-      - declaration: Rollback.rollback_correctness_finite
+      - declaration: EventStructures.Rollback.rollback_correctness_finite
         informal: Proves that the original configuration is reachable from the rollback of an event when the configuration is finitely representable.
-      - declaration: Rollback.rollback_causal_safety
+      - declaration: EventStructures.Rollback.rollback_causal_safety
         informal: Proves causal safety of rollback - events causally after the rolled-back event are removed.
-      - declaration: Replay.minReplay_unique
+      - declaration: EventStructures.Replay.minReplay_unique
         informal: Proves uniqueness of the minimal replay reconstructing a configuration compatible with a given log.
-      - declaration: Trace.TraceMonoid
+      - declaration: EventStructures.Trace.TraceMonoid
         informal: Defines the trace monoid as lists of events quotiented by trace equivalence.
     tags:
       - concurrency

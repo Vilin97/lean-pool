@@ -20,6 +20,8 @@ and causal safety, and—given a finite representation—correctness (the origin
 configuration is reachable from the rollback) and minimality.
 -/
 
+namespace EventStructures
+
 variable (es : EventStructure)
 
 namespace Rollback
@@ -302,3 +304,5 @@ lemma rollback_minimality {c : Conf es} {e : es.Event}
     _ = Path.length es p' := rfl
 
 end Rollback
+
+end EventStructures

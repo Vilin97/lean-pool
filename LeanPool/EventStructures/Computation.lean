@@ -17,6 +17,8 @@ configurations, and linearisations, and relates computations to the
 configurations they reach.
 -/
 
+namespace EventStructures
+
 variable (es : EventStructure)
 open EventStructure
 open Configuration
@@ -70,3 +72,5 @@ def computationToReachable : Computations es → ReachableConf es :=
 lemma computation_to_reachable_surjective :
     Function.Surjective (computationToReachable es) :=
   fun ⟨c, ⟨comp⟩⟩ => ⟨⟨c, comp⟩, rfl⟩
+
+end EventStructures

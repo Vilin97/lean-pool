@@ -15,6 +15,8 @@ relation and a congruence for concatenation, and builds the trace monoid as the
 quotient of lists of events by trace equivalence.
 -/
 
+namespace EventStructures
+
 variable (es : EventStructure)
 open EventStructure
 local infixl:50 " ⋈ " => es.concurrent
@@ -203,3 +205,5 @@ lemma mul_not_comm_empty
 end Monoid
 
 end Trace
+
+end EventStructures

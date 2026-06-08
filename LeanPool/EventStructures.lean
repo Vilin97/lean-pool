@@ -20,7 +20,7 @@ import LeanPool.EventStructures.Replay
 Source: url:https://github.com/vikraman/event-structures
 Authors: Vikraman Choudhury
 Status: verified
-Main declarations: `EventStructure`, `Conf`, `Rollback.rollback_causal_safety`, `Trace.TraceMonoid`
+Main declarations: `EventStructures.EventStructure`, `EventStructures.Conf`
 Tags: concurrency, order-theory, reversible-computation, event-structures
 MSC: 68Q85, 06A06
 -/
