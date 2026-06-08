@@ -603,7 +603,7 @@ by
       Function.comp_apply, List.length_nil, zero_add, List.take_left', List.length_flatten,
       List.map_take, List.length_take, add_lt_add_iff_left, add_lt_add_iff_right,
       lt_add_iff_pos_right, Nat.succ_eq_add_one, List.append_cancel_left_eq, List.left_eq_take_iff,
-      List.cons_ne_self, false_or, Nat.add_left_cancel_iff]
+      List.cons_ne_self, false_or]
     exact Nat.le_of_lt_succ klt
   constructor
   · have x_eq : x = x.take m ++ [x[m]'mxl] ++ x.drop m.succ := by
