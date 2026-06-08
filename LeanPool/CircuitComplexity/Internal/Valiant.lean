@@ -34,11 +34,12 @@ single-vertex path `![v]` always witnesses `n = 0`, so the label is
 automatically at least `1`. -/
 noncomputable def canonicalLabel {V : Type*} [Fintype V]
     (G : Digraph V) (v : V) : Nat :=
+  have _hV : Fintype V := ‹_›
   sSup { n | ∃ p : Fin (n + 1) → V, G.IsSimplePath p ∧ p (Fin.last n) = v } + 1
 
 end Digraph
 
-namespace Valiant
+namespace CircuitComplexity.Valiant
 
 open Digraph
 
@@ -51,10 +52,12 @@ strictly increasing along every edge. -/
 def IsLegalLabeling (G : Digraph V) (ℓ : V → ℕ) : Prop :=
   ∀ u v, G.Adj u v → ℓ u < ℓ v
 
+omit [Fintype V] in
 /-- The canonical-label set is bounded above by `Fintype.card V`: any
 injective `Fin (n + 1) → V` forces `n + 1 ≤ Fintype.card V`. -/
-private lemma canonicalLabel_set_bddAbove (G : Digraph V) (v : V) :
+private lemma canonicalLabel_set_bddAbove [Finite V] (G : Digraph V) (v : V) :
     BddAbove { n | ∃ p : Fin (n + 1) → V, G.IsSimplePath p ∧ p (Fin.last n) = v } := by
+  have : Fintype V := Fintype.ofFinite V
   refine ⟨Fintype.card V, ?_⟩
   rintro n ⟨p, ⟨_, hinj⟩, _⟩
   have := Fintype.card_le_of_injective p hinj
@@ -77,7 +80,7 @@ private lemma zero_mem_canonicalLabel_set (G : Digraph V) (v : V) :
 `+ 1` in the definition. -/
 lemma one_le_canonicalLabel (G : Digraph V) (v : V) :
     1 ≤ G.canonicalLabel v := by
-  show 1 ≤ _ + 1
+  change 1 ≤ _ + 1
   omega
 
 /-- In an acyclic digraph, the canonical label is bounded above by the
@@ -87,7 +90,7 @@ lemma canonicalLabel_le_depth
     (G : Digraph V) (hac : IsAcyclic G) (v : V) :
     G.canonicalLabel v ≤ G.depth := by
   set S : Set ℕ := { n | ∃ p : Fin (n + 1) → V, G.IsSimplePath p ∧ p (Fin.last n) = v }
-  show sSup S + 1 ≤ G.depth
+  change sSup S + 1 ≤ G.depth
   obtain ⟨p, ⟨hpath, _⟩, _⟩ :=
     Nat.sSup_mem ⟨0, zero_mem_canonicalLabel_set G v⟩ (canonicalLabel_set_bddAbove G v)
   exact le_csSup hac ⟨p, hpath⟩
@@ -140,10 +143,10 @@ private lemma not_acyclic_of_cycle_witness
     have hv_eq : p ⟨iv.val + (k.val + 1) % (m - iv.val), h_bnd (k.val + 1)⟩ = v := by
       have : (⟨iv.val + (k.val + 1) % (m - iv.val), h_bnd (k.val + 1)⟩ : Fin m) = iv := by
         apply Fin.ext
-        show iv.val + (k.val + 1) % (m - iv.val) = iv.val
+        change iv.val + (k.val + 1) % (m - iv.val) = iv.val
         rw [h_next]; rfl
       rw [this, hpv]
-    show G.Adj (p ⟨iv.val + k.val % (m - iv.val), h_bnd k.val⟩)
+    change G.Adj (p ⟨iv.val + k.val % (m - iv.val), h_bnd k.val⟩)
                (p ⟨iv.val + (k.val + 1) % (m - iv.val), h_bnd (k.val + 1)⟩)
     rw [hu_eq, hv_eq]
     exact huv
@@ -156,9 +159,9 @@ private lemma not_acyclic_of_cycle_witness
         (⟨iv.val + (k.val + 1) % (m - iv.val), h_bnd (k.val + 1)⟩ : Fin m) =
         ⟨iv.val + k.val % (m - iv.val) + 1, hbnd2⟩ := by
       apply Fin.ext
-      show iv.val + (k.val + 1) % (m - iv.val) = iv.val + k.val % (m - iv.val) + 1
+      change iv.val + (k.val + 1) % (m - iv.val) = iv.val + k.val % (m - iv.val) + 1
       omega
-    show G.Adj (p ⟨iv.val + k.val % (m - iv.val), h_bnd k.val⟩)
+    change G.Adj (p ⟨iv.val + k.val % (m - iv.val), h_bnd k.val⟩)
                (p ⟨iv.val + (k.val + 1) % (m - iv.val), h_bnd (k.val + 1)⟩)
     rw [h_target]
     exact step
@@ -167,10 +170,11 @@ omit [Fintype V] in
 /-- **Extending a simple path by an edge.** In an acyclic digraph, a
 simple path `p` ending at `u` followed by an edge `u → v` yields a
 simple path ending at `v` that is one longer. -/
-private lemma extend_simple_path [DecidableEq V] (G : Digraph V) (hac : IsAcyclic G)
+private lemma extend_simple_path (G : Digraph V) (hac : IsAcyclic G)
     {u v : V} (huv : G.Adj u v) {n : ℕ} {p : Fin (n + 1) → V}
     (hsp : G.IsSimplePath p) (hpu : p (Fin.last n) = u) :
     ∃ p' : Fin (n + 2) → V, G.IsSimplePath p' ∧ p' (Fin.last (n + 1)) = v := by
+  classical
   obtain ⟨hpath, hinj⟩ := hsp
   have hv_notin : ∀ i : Fin (n + 1), p i ≠ v := fun i hpv =>
     not_acyclic_of_cycle_witness G huv p hpath (Fin.last n) i hpu rfl hpv hac
@@ -180,7 +184,7 @@ private lemma extend_simple_path [DecidableEq V] (G : Digraph V) (hac : IsAcycli
     split_ifs with h₁ h₂
     · exact hpath ⟨k.val, h₁⟩ h₂
     · have heq : (⟨k.val, h₁⟩ : Fin (n + 1)) = Fin.last n := by
-        apply Fin.ext; show k.val = n; omega
+        apply Fin.ext; change k.val = n; omega
       rw [heq, hpu]; exact huv
     · omega
     · omega
@@ -190,22 +194,23 @@ private lemma extend_simple_path [DecidableEq V] (G : Digraph V) (hac : IsAcycli
     · apply Fin.ext; exact Fin.mk_eq_mk.mp (hinj hab)
     · exact absurd hab (hv_notin ⟨a, h₁⟩)
     · exact absurd hab.symm (hv_notin ⟨b, h₃⟩)
-    · apply Fin.ext; show a = b; omega
-  · show (if h : (Fin.last (n + 1)).val < n + 1 then _ else v) = v
+    · apply Fin.ext; change a = b; omega
+  · change (if h : (Fin.last (n + 1)).val < n + 1 then _ else v) = v
     simp [Fin.last]
 
 /-- **Canonical labeling is legal in acyclic graphs.** Any simple path
 ending at `u` followed by the edge `(u,v)` is a strictly longer simple
 path ending at `v` (using acyclicity to ensure `v` does not already
 appear in the path). -/
-lemma canonicalLabel_isLegal [DecidableEq V] (G : Digraph V) (hac : IsAcyclic G) :
+lemma canonicalLabel_isLegal (G : Digraph V) (hac : IsAcyclic G) :
     IsLegalLabeling G G.canonicalLabel := by
+  classical
   intro u v huv
   obtain ⟨p, hsp, hpu⟩ :=
     Nat.sSup_mem ⟨0, zero_mem_canonicalLabel_set G u⟩ (canonicalLabel_set_bddAbove G u)
   obtain ⟨p', hsp', hend⟩ := extend_simple_path G hac huv hsp hpu
   have hle := le_csSup (canonicalLabel_set_bddAbove G v) ⟨p', hsp', hend⟩
-  show _ + 1 < _ + 1
+  change _ + 1 < _ + 1
   omega
 
 section LegalLabelHelpers
@@ -232,7 +237,7 @@ private lemma legal_label_add_le
       hp ⟨a + k, hak⟩ h₂
     have stepl : ℓ (p ⟨a + k, hak⟩) < ℓ (p ⟨a + k + 1, h₂⟩) :=
       hℓ _ _ step
-    show ℓ (p ⟨a, h₁⟩) + (k + 1) ≤ ℓ (p ⟨a + k + 1, h₂⟩)
+    change ℓ (p ⟨a, h₁⟩) + (k + 1) ≤ ℓ (p ⟨a + k + 1, h₂⟩)
     omega
 
 /-- The label sequence along a directed walk under a legal labeling
@@ -250,10 +255,10 @@ private lemma legal_label_strictMono
   have e1 : (⟨i.val, i.isLt⟩ : Fin m) = i := rfl
   have e2 : (⟨i.val + (j.val - i.val), hd⟩ : Fin m) = j := by
     apply Fin.ext
-    show i.val + (j.val - i.val) = j.val
+    change i.val + (j.val - i.val) = j.val
     omega
   rw [e1, e2] at key
-  show ℓ (p i) < ℓ (p j)
+  change ℓ (p i) < ℓ (p j)
   have : 0 < j.val - i.val := by omega
   omega
 
@@ -400,9 +405,10 @@ lemma sum_card_levelEdges_eq
 there is an `r`-subset `I ⊆ s` with `n * (∑ I, a) ≤ r * (∑ s, a)`. Proved
 by repeatedly peeling off the element with the largest `a`-value. -/
 private lemma exists_r_subset_sum_le
-    {α : Type*} [DecidableEq α] (a : α → ℕ) :
+    {α : Type*} (a : α → ℕ) :
     ∀ (n : ℕ) (s : Finset α), s.card = n → ∀ (r : ℕ), r ≤ n →
       ∃ I ⊆ s, I.card = r ∧ n * (∑ i ∈ I, a i) ≤ r * (∑ i ∈ s, a i) := by
+  classical
   intro n
   induction n with
   | zero =>
@@ -493,7 +499,7 @@ private lemma maskOutI_split_at_pivot
   have hmask : maskOutI k I z =
       (if z.testBit (k - j) then 2 ^ (k - j) else 0) +
       ∑ i ∈ D.erase j, (if z.testBit (k - i) then 2 ^ (k - i) else 0) := by
-    show (∑ i ∈ D, if z.testBit (k - i) then 2 ^ (k - i) else 0) = _
+    change (∑ i ∈ D, if z.testBit (k - i) then 2 ^ (k - i) else 0) = _
     conv_lhs => rw [(Finset.insert_erase hj).symm]
     rw [Finset.sum_insert (Finset.notMem_erase _ _)]
   have h_filt_lt : (D.erase j).filter (· < j) = D.filter (· < j) := by
@@ -589,7 +595,7 @@ private lemma maskOutI_image_card_le
     (Finset.univ.image (fun v => maskOutI k I (f v))).card ≤ 2 ^ (k - I.card) := by
   let D : Finset ℕ := (Finset.Ioc 0 k) \ I
   have hD_card : D.card = k - I.card := by
-    show ((Finset.Ioc 0 k) \ I).card = k - I.card
+    change ((Finset.Ioc 0 k) \ I).card = k - I.card
     rw [Finset.card_sdiff_of_subset hI]
     simp
   let gbar : V → ({i // i ∈ D} → Bool) := fun v i => (f v).testBit (k - i.val)
@@ -597,7 +603,7 @@ private lemma maskOutI_image_card_le
     ∑ i ∈ D.attach, if b i then 2 ^ (k - i.val) else 0
   have heq : ∀ v, maskOutI k I (f v) = φ (gbar v) := by
     intro v
-    show (∑ i ∈ (Finset.Ioc 0 k) \ I,
+    change (∑ i ∈ (Finset.Ioc 0 k) \ I,
             if (f v).testBit (k - i) then 2 ^ (k - i) else 0) =
          (∑ i ∈ D.attach,
             if (gbar v) i then 2 ^ (k - i.val) else 0)
@@ -654,4 +660,4 @@ lemma depth_deleteEdges_levelEdges_le
     maskOutI_image_card_le hI _
   exact (depth_le_image_card G' hlegal).trans himg
 
-end Valiant
+end CircuitComplexity.Valiant

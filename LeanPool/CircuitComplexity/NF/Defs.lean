@@ -21,15 +21,19 @@ complexity measures, and De Morgan negation duality.
 * `CNF.neg` / `DNF.neg` — De Morgan negation (CNF ↔ DNF)
 -/
 
+namespace CircuitComplexity
+
+
 /-- A literal: a Boolean variable (by index) together with a polarity flag.
 
 `polarity = true` represents the positive literal xᵢ;
 `polarity = false` represents the negative literal ¬xᵢ. -/
 structure Literal (N : Nat) where
+  /-- The index of the variable this literal refers to. -/
   var : Fin N
   /-- `true` = positive literal (xᵢ); `false` = negative literal (¬xᵢ). -/
   polarity : Bool
-  deriving DecidableEq, Repr
+  deriving DecidableEq
 
 /-- Evaluate a literal on a bit assignment. -/
 def Literal.eval (l : Literal N) (x : BitString N) : Bool :=
@@ -55,7 +59,6 @@ A CNF is a conjunction of clauses, where each clause is a disjunction of literal
 structure CNF (N : Nat) where
   /-- The clauses of the formula. Each clause is a list of literals. -/
   clauses : List (List (Literal N))
-  deriving Repr
 
 namespace CNF
 
@@ -79,7 +82,6 @@ A DNF is a disjunction of terms, where each term is a conjunction of literals.
 structure DNF (N : Nat) where
   /-- The terms of the formula. Each term is a list of literals. -/
   terms : List (List (Literal N))
-  deriving Repr
 
 namespace DNF
 
@@ -120,3 +122,5 @@ theorem DNF.eval_neg (φ : DNF N) (x : BitString N) :
 /-- Negating a CNF preserves complexity. -/
 theorem CNF.neg_complexity (φ : CNF N) : φ.neg.complexity = φ.complexity := by
   simp [CNF.neg, DNF.complexity, CNF.complexity, List.length_map]
+
+end CircuitComplexity

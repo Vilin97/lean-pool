@@ -36,18 +36,23 @@ equivalently `G + 1 ≥ 2N − 1` total gates (since `Circuit.size = G + 1`
 for single-output circuits).
 
 When `Basis.andOr2` is known to be complete, this yields a
-`size_complexity` bound via `schnorr_size_complexity`.
+`sizeComplexity` bound via `schnorr_size_complexity`.
 -/
 
-/-- **Schnorr lower bound in terms of `size_complexity`**: the fan-in-2
+namespace CircuitComplexity
+
+
+/-- **Schnorr lower bound in terms of `sizeComplexity`**: the fan-in-2
     AND/OR circuit complexity of N-input XOR is at least `2N − 1`. -/
 theorem schnorr_size_complexity (N : Nat) [NeZero N] (hN : 1 ≤ N)
     [CompleteBasis Basis.andOr2] :
-    Circuit.size_complexity Basis.andOr2 (Schnorr.xorBool N) ≥ 2 * N - 1 := by
-  by_contra hlt; push_neg at hlt
+    Circuit.sizeComplexity Basis.andOr2 (Schnorr.xorBool N) ≥ 2 * N - 1 := by
+  by_contra hlt; push Not at hlt
   obtain ⟨G, c, hs, hc⟩ := Circuit.size_complexity_witness (B := Basis.andOr2)
     (Schnorr.xorBool N)
   have heval : ∀ x, (c.eval x) 0 = false.xor (Schnorr.xorBool N x) := by
     intro x; simp [congr_fun hc x]
   have hbound := schnorr_lower_bound_circuit N G c false heval hN
   rw [Circuit.size] at hs; omega
+
+end CircuitComplexity

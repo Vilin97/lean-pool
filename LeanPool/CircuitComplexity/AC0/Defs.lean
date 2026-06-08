@@ -15,6 +15,9 @@ This module defines the AC0 circuit complexity class.
   unbounded fan-in AND/OR)
 -/
 
+namespace CircuitComplexity
+
+
 /-- A Boolean function family is in **AC0** if there exist constants `d`
 (depth bound) and `c` (size exponent) such that for every input length
 `N ≥ 1`, some unbounded-fan-in AND/OR circuit of depth at most `d` and
@@ -31,3 +34,5 @@ def InAC0 (f : BoolFunFamily) : Prop :=
     ∃ (G : Nat) (circuit : Circuit Basis.unboundedAON N 1 G),
       circuit.depth ≤ d ∧ circuit.size ≤ N ^ c ∧
       (fun x => (circuit.eval x) 0) = f N
+
+end CircuitComplexity

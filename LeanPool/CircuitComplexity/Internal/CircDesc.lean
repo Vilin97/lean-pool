@@ -4,7 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
 import Mathlib.Data.Fintype.BigOperators
-import Mathlib.Tactic
+import Mathlib.Data.Nat.Log
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.IntervalCases
 import LeanPool.CircuitComplexity.Basic
 
 /-! # Internal: Circuit Descriptors and Shannon Counting Bound
@@ -14,6 +18,9 @@ arguments, and proves the Shannon lower bound for this model. The public
 theorem `shannon_lower_bound_circuit` (which speaks in terms of `Circuit`)
 is in `Circ.Internal.Bridge`.
 -/
+
+namespace CircuitComplexity
+
 
 /-! ## Gate and Circuit Descriptors -/
 
@@ -154,3 +161,5 @@ theorem shannon_lower_bound (N : Nat) (hN : 6 ≤ N) :
   -- By pigeonhole, some function is not in the image of evalD
   obtain ⟨f, _, hf⟩ := Finset.exists_mem_notMem_of_card_lt_card h_lt
   exact ⟨f, fun d hd => hf (Finset.mem_image.mpr ⟨d, Finset.mem_univ _, hd⟩)⟩
+
+end CircuitComplexity

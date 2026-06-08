@@ -31,6 +31,9 @@ De Morgan duality (`CNF.neg`).
 * `CNF.xorBool_complexity_lb` — any CNF computing XOR has `≥ 2^{N-1}` clauses
 -/
 
+namespace CircuitComplexity
+
+
 /-- Any DNF computing N-variable XOR requires at least `2^{N-1}` terms. -/
 theorem DNF.xorBool_complexity_lb (φ : DNF N) (hN : 1 ≤ N)
     (hcomp : ∀ x, φ.eval x = Schnorr.xorBool N x) :
@@ -48,3 +51,5 @@ theorem CNF.xorBool_complexity_lb (φ : CNF N) (hN : 1 ≤ N)
   · intro x; rw [CNF.eval_neg, hcomp]
   · intro x i
     rw [Schnorr.xorBool_flip, Bool.not_not]
+
+end CircuitComplexity

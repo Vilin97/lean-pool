@@ -19,6 +19,9 @@ used throughout the circuit complexity library.
 * `Basis.andOr2` — fan-in exactly 2 AND/OR basis (used in Shannon/Schnorr bounds)
 -/
 
+namespace CircuitComplexity
+
+
 /-- Operations in an AND/OR basis. Negation is handled by per-input flags
     on gates, so only AND and OR need explicit representation. -/
 inductive AONOp where
@@ -68,3 +71,5 @@ theorem AONOp.eval_two_and (inputs : BitString 2) :
 theorem AONOp.eval_two_or (inputs : BitString 2) :
     AONOp.eval .or 2 inputs = (inputs 0 || inputs 1) := by
   simp [AONOp.eval, Fin.foldl_succ_last, Fin.foldl_zero]
+
+end CircuitComplexity

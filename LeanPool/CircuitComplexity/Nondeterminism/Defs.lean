@@ -32,6 +32,9 @@ guesses the first `k` input bits.
 * `existQuantify_mono` — monotonicity under pointwise implication
 -/
 
+namespace CircuitComplexity
+
+
 variable {k m : Nat}
 
 /-- Existential quantification over the first `k` inputs of a Boolean function.
@@ -164,3 +167,5 @@ theorem existQuantify_succ (f : BitString ((k + 1) + m) → Bool) (y : BitString
         split_ifs <;> simp_all <;> try omega
         · exfalso; simp_all [Fin.castLT]
         · congr 1; simp [Fin.ext_iff]; omega⟩
+
+end CircuitComplexity

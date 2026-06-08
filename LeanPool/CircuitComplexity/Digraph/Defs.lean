@@ -44,6 +44,7 @@ noncomputable def depth (G : Digraph V) : Nat :=
 finite vertex type. -/
 def edgeFinset [Fintype V] [DecidableEq V]
     (G : Digraph V) [DecidableRel G.Adj] : Finset (V × V) :=
+  have _hV : DecidableEq V := ‹_›
   Finset.univ.filter (fun p => G.Adj p.1 p.2)
 
 lemma mem_edgeFinset [Fintype V] [DecidableEq V] {G : Digraph V}

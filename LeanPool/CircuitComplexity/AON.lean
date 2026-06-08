@@ -24,3 +24,7 @@ This module provides the AND/OR basis definitions and completeness results.
 * `CompleteBasis Basis.andOr2` — proved via gate-chain simulation
   from `unboundedAON`, using `CompleteBasis.of_simulation`
 -/
+
+namespace CircuitComplexity
+
+end CircuitComplexity

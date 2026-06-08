@@ -18,6 +18,9 @@ The public definitions (`IsEssentialInput`, `EssentialInputs`) are in
 `lower_bound_all_inputs`) are accessible through `Circ.LowerBound`.
 -/
 
+namespace CircuitComplexity
+
+
 namespace Circuit
 variable {B : Basis} {N M G : Nat} [NeZero N] [NeZero M]
 
@@ -74,7 +77,7 @@ theorem exists_gate_reads_input
     (∃ j : Fin M, ∃ k : Fin (c.outputs j).fanIn,
       ((c.outputs j).inputs k).val = i.val) := by
   by_contra h
-  push_neg at h
+  push Not at h
   obtain ⟨hg, ho⟩ := h
   obtain ⟨x, hx⟩ := hdep
   exact hx (hf ▸ eval_eq_of_unreferenced c i _ hg ho x)
@@ -183,3 +186,5 @@ theorem lower_bound_all_inputs {k : Nat}
     _ ≤ k * c.size := essential_inputs_le_mul_size c f hf
 
 end Circuit
+
+end CircuitComplexity

@@ -28,6 +28,9 @@ gates followed by chains for all original output gates. The new output gates
 are trivial passthroughs reading the last wire of each output chain.
 -/
 
+namespace CircuitComplexity
+
+
 /-! ## AONOp extensions -/
 
 /-- Dual operation: swaps AND ↔ OR. Used for constant-gate construction. -/
@@ -169,7 +172,9 @@ def iChainF (c : Circuit Basis.unboundedAON N M G) (i : Nat) : Nat :=
 def oChainF (c : Circuit Basis.unboundedAON N M G) (j : Nat) : Nat :=
   if h : j < M then chainLen (c.outputs ⟨j, h⟩).fanIn else 0
 
+/-- Total number of compiled gates contributed by the internal gates. -/
 def iTotal (c : Circuit Basis.unboundedAON N M G) : Nat := prefixSum (iChainF c) G
+/-- Total number of compiled gates contributed by the output gates. -/
 def oTotal (c : Circuit Basis.unboundedAON N M G) : Nat := prefixSum (oChainF c) M
 
 /-- Total internal gates in the compiled circuit. -/
@@ -242,7 +247,7 @@ lemma remapWire_lt_of_lt (c : Circuit Basis.unboundedAON N M G) (w : Fin (N + G)
   split
   · simp [iOffset]; omega
   · rename_i hNotLt
-    push_neg at hNotLt
+    push Not at hNotLt
     have hwN : w.val - N < i := by omega
     simp only []
     have key : iOffset c (w.val - N) + chainLen (c.gates ⟨w.val - N, by omega⟩).fanIn
@@ -265,8 +270,8 @@ lemma remapWire_lt_oOffset (c : Circuit Basis.unboundedAON N M G) (w : Fin (N + 
 /-- Helper: construct a function `Fin 2 → α` from two values. -/
 def fin2 (a b : α) : Fin 2 → α := fun i => if i.val = 0 then a else b
 
-@[simp] lemma fin2_zero (a b : α) : fin2 a b ⟨0, by omega⟩ = a := rfl
-@[simp] lemma fin2_one (a b : α) : fin2 a b ⟨1, by omega⟩ = b := rfl
+@[simp] lemma fin2_zero (a b : α) : fin2 a b 0 = a := rfl
+@[simp] lemma fin2_one (a b : α) : fin2 a b 1 = b := rfl
 
 /-- Operation for the chain gate: dual-op for constants, same op otherwise. -/
 private def mkChainOp (op : AONOp) (k : Nat) : AONOp :=
@@ -408,7 +413,7 @@ def compileFn (c : Circuit Basis.unboundedAON N M G) : Circuit Basis.andOr2 N M 
   outputs := compileOutputs c
   acyclic := by
     intro idx k
-    show (compileGateInputs c idx k).val < N + idx.val
+    change (compileGateInputs c idx k).val < N + idx.val
     have hN : 0 < N := by have := NeZero.ne N; omega
     unfold compileGateInputs
     split
@@ -466,13 +471,13 @@ lemma segLookup_of_prefixSum (n : Nat) (f : Nat → Nat) (i j : Nat)
     by_cases hlt : prefixSum f i + j < prefixSum f n
     · have hin : i < n := by
         by_contra h'
-        push_neg at h'
+        push Not at h'
         have : n ≤ i := by omega
         have := prefixSum_mono f this
         omega
       simp [hlt, ihn hin hlt]
     · -- i = n
-      push_neg at hlt
+      push Not at hlt
       have : i = n := by
         by_contra h'
         have : i < n := by omega
@@ -535,7 +540,8 @@ private lemma andOr2_eval (op : AONOp) (v : BitString 2) :
   cases op <;> simp [AONOp.eval, Fin.foldl_succ_last, Fin.foldl_zero, AONOp.binOp]
 
 /-- For k = 0: the single chain gate computes `op.identity`. -/
-private lemma mkChainGate_eval_zero {W base : Nat} (op : AONOp) (ri : Fin 0 → Fin W) (rn : Fin 0 → Bool)
+private lemma mkChainGate_eval_zero {W base : Nat} (op : AONOp) (ri : Fin 0 → Fin W)
+  (rn : Fin 0 → Bool)
     (hW : 0 < W) (hj : 0 < chainLen 0) (hbase : base + chainLen 0 ≤ W)
     (wv : BitString W) :
     (mkChainGate hW op 0 ri rn base 0 hj hbase).eval wv = op.identity := by
@@ -544,7 +550,8 @@ private lemma mkChainGate_eval_zero {W base : Nat} (op : AONOp) (ri : Fin 0 → 
   exact AONOp.dual_const op (wv ⟨0, hW⟩)
 
 /-- For k = 1: the single chain gate is a passthrough. -/
-private lemma mkChainGate_eval_one {W base : Nat} (op : AONOp) (ri : Fin 1 → Fin W) (rn : Fin 1 → Bool)
+private lemma mkChainGate_eval_one {W base : Nat} (op : AONOp) (ri : Fin 1 → Fin W)
+  (rn : Fin 1 → Bool)
     (hW : 0 < W) (hj : 0 < chainLen 1) (hbase : base + chainLen 1 ≤ W)
     (wv : BitString W) :
     (mkChainGate hW op 1 ri rn base 0 hj hbase).eval wv =
@@ -648,9 +655,10 @@ private theorem lastChainValue_eq (c : Circuit Basis.unboundedAON N M G) (input 
         ((compileFn c).wireValue input) := by
     intro j hj
     rw [Circuit.wireValue_ge _ _ _ (by simp; omega)]
-    show ((compileFn c).gates ⟨N + iOffset c i + j - N, _⟩).eval ((compileFn c).wireValue input) = _
+    change ((compileFn c).gates ⟨N + iOffset c i + j - N, _⟩).eval ((compileFn c).wireValue input)
+      = _
     simp only [show N + iOffset c i + j - N = iOffset c i + j from by omega, compileFn]
-    show (compileGates c ⟨iOffset c i + j, _⟩).eval ((compileFn c).wireValue input) = _
+    change (compileGates c ⟨iOffset c i + j, _⟩).eval ((compileFn c).wireValue input) = _
     exact compileGate_eval_at_iOffset c i hi j hj _ _
   rw [chain_wire (chainLen (c.gates ⟨i, hi⟩).fanIn - 1) (by omega)]
   -- Now: last chain gate eval = Gate.eval. Case split on fanIn.
@@ -694,7 +702,8 @@ private theorem lastChainValue_eq (c : Circuit Basis.unboundedAON N M G) (input 
         intro p; show _ = _; congr 1
         exact ih_outer _ (c.acyclic ⟨i, hi⟩ p)
       have h_fold : ∀ j : Nat, (hj : j < chainLen (c.gates ⟨i, hi⟩).fanIn) →
-          (mkChainGate (by unfold G'; omega : 0 < N + G' c) (c.gates ⟨i, hi⟩).op (c.gates ⟨i, hi⟩).fanIn
+          (mkChainGate (by unfold G'; omega : 0 < N + G' c) (c.gates ⟨i, hi⟩).op
+            (c.gates ⟨i, hi⟩).fanIn
             (fun p => remapWire c ((c.gates ⟨i, hi⟩).inputs p)) (c.gates ⟨i, hi⟩).negated
             (N + iOffset c i) j hj (by unfold G'; omega)).eval
             ((compileFn c).wireValue input) = partialFold (c.gates ⟨i, hi⟩).op v (j + 2) := by
@@ -732,7 +741,7 @@ theorem wireValue_remapWire (c : Circuit Basis.unboundedAON N M G) (input : BitS
       · rw [Circuit.wireValue_lt _ _ _ (by rw [remapWire_input c _ hw]; exact hw)]
         rw [Circuit.wireValue_lt _ _ _ hw]
         congr 1; exact Fin.ext (remapWire_input c _ hw)
-      · push_neg at hw
+      · push Not at hw
         have hi : n - N < G := by omega
         -- RHS = gate eval
         have rhs_eq : c.wireValue input ⟨n, hn⟩ =
@@ -741,8 +750,10 @@ theorem wireValue_remapWire (c : Circuit Basis.unboundedAON N M G) (input : BitS
         rw [rhs_eq]
         -- LHS: remapWire maps to last chain wire
         rw [show ⟨n, hn⟩ = (⟨N + (n - N), by omega⟩ : Fin (N + G)) from Fin.ext (by simp; omega)]
-        rw [show remapWire c ⟨N + (n - N), by omega⟩ = ⟨N + iOffset c (n - N) + chainLen (c.gates ⟨n - N, hi⟩).fanIn - 1, by
-            have := iOffset_chain_le_iTotal c hi; have := chainLen_pos (c.gates ⟨n - N, hi⟩).fanIn; unfold G'; omega⟩
+        rw [show remapWire c ⟨N + (n - N), by omega⟩ =
+            ⟨N + iOffset c (n - N) + chainLen (c.gates ⟨n - N, hi⟩).fanIn - 1, by
+            have := iOffset_chain_le_iTotal c hi; have := chainLen_pos
+              (c.gates ⟨n - N, hi⟩).fanIn; unfold G'; omega⟩
             from Fin.ext (by rw [remapWire_gate c hi])]
         exact lastChainValue_eq c input (n - N) hi (fun w' hw' => by
           have hwlt : w'.val < n := by
@@ -764,7 +775,8 @@ private lemma compileGate_eval_at_oOffset (c : Circuit Basis.unboundedAON N M G)
         (N + oOffset c j') p hp
         (by have := oOffset_chain_le_G' c hj'; omega)).eval wv := by
   have hNotInternal : ¬(iTotal c + prefixSum (oChainF c) j' + p < iTotal c) := by omega
-  have hoff : (iTotal c + prefixSum (oChainF c) j' + p) - iTotal c = prefixSum (oChainF c) j' + p := by omega
+  have hoff : (iTotal c + prefixSum (oChainF c) j' + p) - iTotal c = prefixSum (oChainF c) j' + p
+    := by omega
   have hoff_lt : prefixSum (oChainF c) j' + p < oTotal c := by
     have := oOffset_chain_le_G' c hj'; unfold G' oOffset oTotal at *; omega
   have hSeg := oSegLookup_eq c j' hj' p hp hoff_lt
@@ -806,10 +818,12 @@ private theorem lastOutputChainValue_eq (c : Circuit Basis.unboundedAON N M G) (
         ((compileFn c).wireValue input) := by
     intro p hp
     rw [Circuit.wireValue_ge _ _ _ (by simp; omega)]
-    show ((compileFn c).gates ⟨N + oOffset c j' + p - N, _⟩).eval ((compileFn c).wireValue input) = _
+    change ((compileFn c).gates ⟨N + oOffset c j' + p - N, _⟩).eval
+      ((compileFn c).wireValue input) = _
     simp only [show N + oOffset c j' + p - N = oOffset c j' + p from by omega, compileFn]
     have hoOff : oOffset c j' = iTotal c + prefixSum (oChainF c) j' := rfl
-    show (compileGates c ⟨iTotal c + prefixSum (oChainF c) j' + p, _⟩).eval ((compileFn c).wireValue input) = _
+    change (compileGates c ⟨iTotal c + prefixSum (oChainF c) j' + p, _⟩).eval
+      ((compileFn c).wireValue input) = _
     exact compileGate_eval_at_oOffset c j' hj' p hp _ _
   rw [chain_wire (chainLen (c.outputs ⟨j', hj'⟩).fanIn - 1) (by omega)]
   -- Case split on fanIn
@@ -844,11 +858,13 @@ private theorem lastOutputChainValue_eq (c : Circuit Basis.unboundedAON N M G) (
         ((c.outputs ⟨j', hj'⟩).negated p).xor (c.wireValue input ((c.outputs ⟨j', hj'⟩).inputs p))
       have hv_remap : ∀ p : Fin (c.outputs ⟨j', hj'⟩).fanIn,
           ((c.outputs ⟨j', hj'⟩).negated p).xor
-            ((compileFn c).wireValue input (remapWire c ((c.outputs ⟨j', hj'⟩).inputs p))) = v p := by
+            ((compileFn c).wireValue input (remapWire c ((c.outputs ⟨j', hj'⟩).inputs p))) = v p
+              := by
         intro p; show _ = _; congr 1
         exact wireValue_remapWire c input _
       have h_fold : ∀ p : Nat, (hp : p < chainLen (c.outputs ⟨j', hj'⟩).fanIn) →
-          (mkChainGate (by omega : 0 < N + G' c) (c.outputs ⟨j', hj'⟩).op (c.outputs ⟨j', hj'⟩).fanIn
+          (mkChainGate (by omega : 0 < N + G' c) (c.outputs ⟨j', hj'⟩).op
+            (c.outputs ⟨j', hj'⟩).fanIn
             (fun i => remapWire c ((c.outputs ⟨j', hj'⟩).inputs i)) (c.outputs ⟨j', hj'⟩).negated
             (N + oOffset c j') p hp (by omega)).eval
             ((compileFn c).wireValue input) = partialFold (c.outputs ⟨j', hj'⟩).op v (p + 2) := by
@@ -867,7 +883,8 @@ private theorem lastOutputChainValue_eq (c : Circuit Basis.unboundedAON N M G) (
               ih (by rw [hcl] at hp ⊢; omega)]
           rw [partialFold_succ _ v (p' + 2) (by rw [hcl] at hp; omega)]
       rw [h_fold _ (by omega)]
-      have hk_eq : chainLen (c.outputs ⟨j', hj'⟩).fanIn - 1 + 2 = (c.outputs ⟨j', hj'⟩).fanIn := by omega
+      have hk_eq : chainLen (c.outputs ⟨j', hj'⟩).fanIn - 1 + 2 = (c.outputs ⟨j', hj'⟩).fanIn :=
+        by omega
       rw [hk_eq, partialFold_full]
       simp only [Gate.eval, Basis.unboundedAON, AONOp.eval_eq_foldl]
       rfl
@@ -876,7 +893,7 @@ theorem compile_eval (c : Circuit Basis.unboundedAON N M G) :
     (compileFn c).eval = c.eval := by
   funext input j
   -- LHS: (compileFn c).eval input j = (compileOutputs c j).eval ((compileFn c).wireValue input)
-  show (compileOutputs c j).eval ((compileFn c).wireValue input) =
+  change (compileOutputs c j).eval ((compileFn c).wireValue input) =
        (c.outputs j).eval (c.wireValue input)
   -- The output gate is a passthrough AND(lastWire, lastWire) with no negation
   simp only [compileOutputs, Gate.eval, Basis.andOr2, AONOp.eval_two_and, Bool.and_self,
@@ -890,3 +907,5 @@ end CompileAON
 instance : CompleteBasis Basis.andOr2 :=
   CompleteBasis.of_simulation Basis.unboundedAON Basis.andOr2
     fun c => ⟨CompileAON.G' c, CompileAON.compileFn c, CompileAON.compile_eval c⟩
+
+end CircuitComplexity

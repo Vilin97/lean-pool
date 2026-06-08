@@ -41,3 +41,7 @@ And its corollary for functions that depend on all inputs:
         (hall : ∀ i : Fin N, IsEssentialInput f i) :
         N ≤ k * c.size
 -/
+
+namespace CircuitComplexity
+
+end CircuitComplexity

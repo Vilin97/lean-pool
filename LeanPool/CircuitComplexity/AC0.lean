@@ -16,5 +16,10 @@ This module re-exports the AC0 definitions and main results.
   unbounded fan-in AND/OR)
 -/
 
+namespace CircuitComplexity
+
+
 /-- The parity (XOR) function family: the `N`-input XOR for each input length. -/
 def parityFamily : BoolFunFamily := fun N => Schnorr.xorBool N
+
+end CircuitComplexity

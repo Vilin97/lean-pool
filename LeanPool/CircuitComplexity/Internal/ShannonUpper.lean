@@ -5,7 +5,12 @@ Authors: Samuel Schlesinger
 -/
 import LeanPool.CircuitComplexity.AON.Defs
 import Mathlib.Data.Nat.Log
-import Mathlib.Tactic
+import Mathlib.Algebra.BigOperators.Fin
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Positivity
 
 /-! # Internal: Shannon Upper Bound Construction
 
@@ -27,6 +32,9 @@ Build shared minterm trees for both variable groups, a pattern library
 for column functions, AND/OR combining layers. Total ≤ `18 · 2^N / N`
 gates for `N ≥ 16`.
 -/
+
+namespace CircuitComplexity
+
 
 namespace ShannonUpper
 
@@ -248,7 +256,8 @@ theorem binopCircuit_or_correct {N G₁ G₂ : Nat} [NeZero N]
       (c₂.outputs 0).eval (c₂.wireValue x) := by
     rw [Circuit.wireValue_ge _ _ _ (show ¬(N + G₁ + G₂ + 1 < N) by omega)]
     change (binopGWP c₁ c₂ ⟨_, _⟩).val.eval _ = _
-    have hfin : (⟨N + G₁ + G₂ + 1 - N, (by omega : N + G₁ + G₂ + 1 - N < G₁ + G₂ + 2)⟩ : Fin (G₁ + G₂ + 2)) =
+    have hfin :
+      (⟨N + G₁ + G₂ + 1 - N, (by omega : N + G₁ + G₂ + 1 - N < G₁ + G₂ + 2)⟩ : Fin (G₁ + G₂ + 2)) =
         ⟨G₁ + G₂ + 1, by omega⟩ := Fin.ext (show N + G₁ + G₂ + 1 - N = G₁ + G₂ + 1 by omega)
     rw [hfin]
     simp only [binopGWP,
@@ -260,7 +269,7 @@ theorem binopCircuit_or_correct {N G₁ G₂ : Nat} [NeZero N]
     cases (c₂.outputs 0).op <;> simp only <;> congr 1 <;> congr 1
     all_goals (apply binop_wireValue_c₂)
   -- The output gate of cb applies OR to these two wires
-  show (cb.outputs 0).eval (cb.wireValue x) = _
+  change (cb.outputs 0).eval (cb.wireValue x) = _
   rw [andOr2_gate_eval_two_inputs (g := cb.outputs 0)]
   -- The output gate has op = .or, negated = false, inputs 0 = N+G₁, inputs 1 = N+G₁+G₂+1
   have hcb_op : (cb.outputs 0).op = AONOp.or := rfl
@@ -464,6 +473,7 @@ private def mkG (W : Nat) (op : AONOp) (w0 w1 : Nat) (n0 n1 : Bool)
 
 /-! ### Circuit layout -/
 
+/-- Total gate count of the Shannon upper-bound circuit construction. -/
 def szSections (kk qq : Nat) : Nat :=
   1 + (2^(qq+1) - 4) + (2^(kk+1) - 4) + 2^(2^kk) * (2^kk - 1) + 2^qq + (2^qq - 1)
 
@@ -472,10 +482,14 @@ lemma szSections_pos (kk qq : Nat) : 0 < szSections kk qq := by
 
 /-! ### Section offsets (not private so they can be unfolded after `set`) -/
 
-def oC (qq : Nat) : Nat := 1 + (2^(qq+1) - 4)
-def oD (kk qq : Nat) : Nat := oC qq + (2^(kk+1) - 4)
-def oE (kk qq : Nat) : Nat := oD kk qq + 2^(2^kk) * (2^kk - 1)
-def oF (kk qq : Nat) : Nat := oE kk qq + 2^qq
+/-- Cumulative gate offset after Section C of the construction. -/
+def oC (qq : Nat) : Nat := 1 + (2 ^ (qq + 1) - 4)
+/-- Cumulative gate offset after Section D of the construction. -/
+def oD (kk qq : Nat) : Nat := oC qq + (2 ^ (kk + 1) - 4)
+/-- Cumulative gate offset after Section E of the construction. -/
+def oE (kk qq : Nat) : Nat := oD kk qq + 2 ^ (2 ^ kk) * (2 ^ kk - 1)
+/-- Cumulative gate offset after Section F of the construction. -/
+def oF (kk qq : Nat) : Nat := oE kk qq + 2 ^ qq
 
 /-! ### Power-of-2 helpers -/
 
@@ -487,6 +501,7 @@ private lemma pow_double (n : Nat) : 2 ^ (n + 1) = 2 * 2 ^ n := by ring
 
 /-! ### Minterm tree level -/
 
+/-- The level (depth from the root) of node `j` in the selection tree. -/
 def treeLevel (j : Nat) : Nat := Nat.log 2 (j + 4) - 1
 
 lemma treeLevel_ge_two (j : Nat) (hj : 4 ≤ j) : 2 ≤ treeLevel j := by
@@ -494,16 +509,19 @@ lemma treeLevel_ge_two (j : Nat) (hj : 4 ≤ j) : 2 ≤ treeLevel j := by
   have : 3 ≤ Nat.log 2 (j + 4) := Nat.le_log_of_pow_le (by omega) (by omega)
   omega
 
-lemma treeLevel_lt (j n : Nat) (hj : j < 2^(n+1) - 4) (hn : 2 ≤ n) :
+lemma treeLevel_lt (j n : Nat) (hj : j < 2 ^ (n + 1) - 4) (hn : 2 ≤ n) :
     treeLevel j < n := by
   unfold treeLevel
   have : j + 4 < 2^(n+1) := by have := pow_ge_4 (n+1) (by omega); omega
   have : Nat.log 2 (j + 4) < n + 1 := Nat.log_lt_of_lt_pow (by omega) this
   omega
 
-def treeBase (l : Nat) : Nat := 2^(l+1) - 4
+/-- The index of the first node at level `l` of the selection tree. -/
+def treeBase (l : Nat) : Nat := 2 ^ (l + 1) - 4
+/-- The position of node `j` within its level of the selection tree. -/
 def treePos (j l : Nat) : Nat := j - treeBase l
-def treeParentIdx (l m : Nat) : Nat := treeBase (l-1) + (m % 2^l)
+/-- The index of the parent of a node at level `l`, position `m`. -/
+def treeParentIdx (l m : Nat) : Nat := treeBase (l-1) + (m % 2 ^ l)
 
 lemma treeBase_le_of_level (j : Nat) (hj : 4 ≤ j) :
     treeBase (treeLevel j) ≤ j := by
@@ -550,13 +568,14 @@ private lemma treeLevel_parent (l m : Nat) (hl : 2 ≤ l) :
 
 private lemma treePos_parent (l m : Nat) (_hl : 2 ≤ l) :
     treePos (treeParentIdx l m) (l - 1) = m % 2 ^ l := by
-  show treeParentIdx l m - treeBase (l - 1) = m % 2 ^ l
-  show treeBase (l - 1) + m % 2 ^ l - treeBase (l - 1) = m % 2 ^ l
+  change treeParentIdx l m - treeBase (l - 1) = m % 2 ^ l
+  change treeBase (l - 1) + m % 2 ^ l - treeBase (l - 1) = m % 2 ^ l
   omega
 
 /-! ### Column pattern encoding -/
 
-noncomputable def encodeCol (k : Nat) (col : Fin (2^k) → Bool) : Nat :=
+/-- Encode a column of truth-table bits as a natural number. -/
+noncomputable def encodeCol (k : Nat) (col : Fin (2 ^ k) → Bool) : Nat :=
   Finset.sum (Finset.univ : Finset (Fin (2^k)))
     fun j => if col j then 2^j.val else 0
 
@@ -571,7 +590,7 @@ private lemma sum_pow_two_lt (n : Nat) :
         < 2 ^ n + 2 ^ n := by omega
       _ = 2 ^ (n + 1) := by ring
 
-theorem encodeCol_lt (k : Nat) (col : Fin (2^k) → Bool) :
+theorem encodeCol_lt (k : Nat) (col : Fin (2 ^ k) → Bool) :
     encodeCol k col < 2^(2^k) := by
   unfold encodeCol
   calc Finset.sum Finset.univ (fun j : Fin (2^k) => if col j then 2 ^ j.val else 0)
@@ -579,259 +598,24 @@ theorem encodeCol_lt (k : Nat) (col : Fin (2^k) → Bool) :
         apply Finset.sum_le_sum; intro j _; split_ifs <;> simp
     _ < 2 ^ (2^k) := sum_pow_two_lt (2^k)
 
+/-- The Boolean function selecting the addressed column of `f`. The hypothesis
+`hkq : k + q = N` records that the address and data bits partition the inputs. -/
 noncomputable def colFun (N : Nat) (f : BitString N → Bool)
-    (k q : Nat) (_hkq : k + q = N) (y : Fin (2^q)) : Fin (2^k) → Bool :=
+    (k q : Nat) (hkq : k + q = N) (y : Fin (2 ^ q)) : Fin (2 ^ k) → Bool :=
+  let _hkq := hkq
   fun a => f (fun idx =>
     if _ : idx.val < k then Nat.testBit a.val idx.val
     else Nat.testBit y.val (idx.val - k))
 
+/-- The pattern index of the addressed column of `f`. -/
 noncomputable def colPatIdx (N : Nat) (f : BitString N → Bool)
-    (k q : Nat) (hkq : k + q = N) (y : Fin (2^q)) : Nat :=
+    (k q : Nat) (hkq : k + q = N) (y : Fin (2 ^ q)) : Nat :=
   encodeCol k (colFun N f k q hkq y)
 
 theorem colPatIdx_lt (N : Nat) (f : BitString N → Bool)
-    (k q : Nat) (hkq : k + q = N) (y : Fin (2^q)) :
+    (k q : Nat) (hkq : k + q = N) (y : Fin (2 ^ q)) :
     colPatIdx N f k q hkq y < 2^(2^k) :=
   encodeCol_lt k (colFun N f k q hkq y)
-
-/-! ### Shannon gate array -/
-
-private noncomputable def shannonGateArray (N : Nat) [NeZero N]
-    (f : BitString N → Bool) (hN : 16 ≤ N) :
-    (i : Fin (szSections (addrBits N) (dataBits N))) →
-    { g : Gate Basis.andOr2 (N + szSections (addrBits N) (dataBits N)) //
-      ∀ j : Fin g.fanIn, (g.inputs j).val < N + i.val } := by
-  -- Abbreviations: we use `let` not `set` to keep definitions transparent
-  let k := addrBits N
-  let q := dataBits N
-  let W := N + szSections k q
-  let G := szSections k q
-  have hkq : k + q = N := by show addrBits N + dataBits N = N; have := addr_data_sum N hN; omega
-  have hk3 : 3 ≤ k := addrBits_ge_three N hN
-  have hq2 : 2 ≤ q := dataBits_ge_two N hN
-  have h4q : 4 ≤ 2^q := pow_ge_4 q (by omega)
-  have h4k : 4 ≤ 2^k := pow_ge_4 k (by omega)
-  have h4q1 : 4 ≤ 2^(q+1) := pow_ge_4 (q+1) (by omega)
-  have h4k1 : 4 ≤ 2^(k+1) := pow_ge_4 (k+1) (by omega)
-  have h2q1 : 2^(q+1) = 2 * 2^q := pow_double q
-  have h2k1 : 2^(k+1) = 2 * 2^k := pow_double k
-  have hW_pos : 0 < W := by show 0 < N + szSections k q; unfold szSections; positivity
-  have hG_eq : G = oF k q + (2^q - 1) := by
-    show szSections k q = oF k q + (2^q - 1)
-    unfold szSections oF oE oD oC; omega
-  intro i
-  -- ──── Section A: constFalse (gate 0) ────
-  if hiA : i.val = 0 then
-    exact mkG W .and 0 0 false true (by omega) (by omega) (N + i.val) (by omega) (by omega)
-  -- ──── Section B: data minterm tree ────
-  else if hiB : i.val < oC q then
-    let j := i.val - 1
-    have hjB : j < 2^(q+1) - 4 := by unfold oC at hiB; omega
-    if hjL1 : j < 4 then
-      -- Level 1: AND(input[k], input[k+1])
-      exact mkG W .and k (k+1) (!Nat.testBit j 0) (!Nat.testBit j 1)
-        (by omega) (by omega) (N + i.val) (by omega) (by omega)
-    else
-      let l := treeLevel j
-      let m := treePos j l
-      have hl2 : 2 ≤ l := treeLevel_ge_two j (by omega)
-      have hlq : l < q := treeLevel_lt j q hjB hq2
-      -- Parent wire: N + 1 + treeParentIdx l m (gate in data tree)
-      let pw := N + 1 + treeParentIdx l m
-      let vw := k + l
-      have hbase : treeBase l ≤ j := treeBase_le_of_level j (by omega)
-      have hpi_lt : treeParentIdx l m < j := treeParentIdx_lt_j l m j hl2 rfl hbase
-      have hpw_b : pw < N + i.val := by
-        show N + 1 + treeParentIdx l m < N + i.val; omega
-      have hvw_b : vw < N + i.val := by show k + l < N + i.val; omega
-      -- For W bounds, chain: treeParentIdx < j = i.val - 1 < i.val < G → in W
-      have hi_lt : i.val < szSections k q := i.isLt
-      have hpw_W : pw < W := by
-        show N + 1 + treeParentIdx l m < N + szSections k q; omega
-      have hvw_W : vw < W := by show k + l < N + szSections k q; omega
-      exact mkG W .and pw vw false (!Nat.testBit m l) hpw_W hvw_W (N + i.val) hpw_b hvw_b
-  -- ──── Section C: address minterm tree ────
-  else if hiC : i.val < oD k q then
-    let j := i.val - oC q
-    have hi_lt : i.val < szSections k q := i.isLt
-    have hjC : j < 2^(k+1) - 4 := by
-      show i.val - oC q < 2^(k+1) - 4
-      have : i.val < oC q + (2^(k+1) - 4) := by unfold oD at hiC; exact hiC
-      unfold oC at this ⊢; omega
-    if hjL1 : j < 4 then
-      exact mkG W .and 0 1 (!Nat.testBit j 0) (!Nat.testBit j 1)
-        (by omega) (by omega) (N + i.val) (by omega) (by omega)
-    else
-      let l := treeLevel j
-      let m := treePos j l
-      have hl2 : 2 ≤ l := treeLevel_ge_two j (by omega)
-      have hlk : l < k := treeLevel_lt j k hjC (by omega)
-      let pw := N + oC q + treeParentIdx l m
-      let vw := l
-      have hbase : treeBase l ≤ j := treeBase_le_of_level j (by omega)
-      have hpi_lt : treeParentIdx l m < j := treeParentIdx_lt_j l m j hl2 rfl hbase
-      -- j < 2^(k+1) - 4, and oC q + (2^(k+1) - 4) ≤ G
-      have hj_lt_G : oC q + j < G := by
-        show oC q + j < szSections k q
-        unfold szSections oC; omega
-      have hpw_b : pw < N + i.val := by
-        show N + oC q + treeParentIdx l m < N + i.val; omega
-      have hvw_b : vw < N + i.val := by show l < N + i.val; omega
-      have hpw_W : pw < W := by
-        show N + oC q + treeParentIdx l m < N + szSections k q; omega
-      have hvw_W : vw < W := by show l < N + szSections k q; omega
-      exact mkG W .and pw vw false (!Nat.testBit m l) hpw_W hvw_W (N + i.val) hpw_b hvw_b
-  -- ──── Section D: column library ────
-  else if hiD : i.val < oE k q then
-    -- Block p, position r. Block size = 2^k - 1.
-    -- Linear OR chain: gate 0 ORs select(0) with select(1),
-    -- gate r≥1 ORs prev with select(r+1).
-    -- select(a) = addrMinterm_a if testBit(p, a) else constFalse
-    let j := i.val - oD k q
-    have hjD : j < 2^(2^k) * (2^k - 1) := by
-      show i.val - oD k q < 2^(2^k) * (2^k - 1)
-      have : i.val < oD k q + 2^(2^k) * (2^k - 1) := by unfold oE at hiD; exact hiD
-      omega
-    let blkSz := 2^k - 1
-    have hblk_pos : 0 < blkSz := by omega
-    let p := j / blkSz
-    let r := j % blkSz
-    have hr_lt : r < blkSz := Nat.mod_lt j hblk_pos
-    -- Address minterm wire for index a: N + oC q + (2^k - 4) + a
-    let amw (a : Nat) : Nat := N + oC q + (2^k - 4) + a
-    let cfw : Nat := N  -- constFalse wire
-    -- Simplify: r + 1 regardless of r = 0 check
-    let selIdx (pos : Nat) : Nat :=
-      if Nat.testBit p pos then amw pos else cfw
-    let w0 : Nat := if r = 0 then selIdx 0 else N + oD k q + p * blkSz + (r - 1)
-    let w1 : Nat := selIdx (r + 1)
-    -- Bound proofs: all referenced wires are before the current gate
-    -- Address minterms are in section C (before D)
-    -- constFalse is gate 0 (before everything)
-    -- previous gate in same block is at index < i
-    have hamw_lt (a : Nat) (ha : a < 2^k) : amw a < N + i.val := by
-      show N + oC q + (2^k - 4) + a < N + i.val
-      have : oC q + (2^k - 4) + a < oD k q := by unfold oD oC; omega
-      omega
-    have hi_lt : i.val < szSections k q := i.isLt
-    have hamw_W (a : Nat) (ha : a < 2^k) : amw a < W := by
-      show N + oC q + (2^k - 4) + a < N + szSections k q
-      unfold szSections oC; omega
-    have hcfw_lt : cfw < N + i.val := by show N < N + i.val; omega
-    have hcfw_W : cfw < W := by show N < N + szSections k q; omega
-    -- selIdx bound helper
-    have hsel_lt (pos : Nat) (hpos : pos < 2^k) : selIdx pos < N + i.val := by
-      show (if Nat.testBit p pos then amw pos else cfw) < N + i.val
-      split_ifs
-      · exact hamw_lt pos hpos
-      · exact hcfw_lt
-    have hsel_W (pos : Nat) (hpos : pos < 2^k) : selIdx pos < W := by
-      show (if Nat.testBit p pos then amw pos else cfw) < W
-      split_ifs
-      · exact hamw_W pos hpos
-      · exact hcfw_W
-    have hi_eq : oD k q + j = i.val := by omega
-    have hpbr_j : blkSz * p + r = j := by
-      show blkSz * (j / blkSz) + j % blkSz = j; exact Nat.div_add_mod j blkSz
-    have hpbr : oD k q + p * blkSz + r = i.val := by nlinarith [mul_comm blkSz p]
-    have hw0_lt : w0 < W := by
-      show (if r = 0 then selIdx 0 else N + oD k q + p * blkSz + (r - 1)) < W
-      split_ifs with hr0
-      · exact hsel_W 0 (by omega)
-      · have hi_lt := i.isLt; omega
-    have hw1_lt : w1 < W := hsel_W (r + 1) (by omega)
-    have hb0 : w0 < N + i.val := by
-      show (if r = 0 then selIdx 0 else N + oD k q + p * blkSz + (r - 1)) < N + i.val
-      split_ifs with hr0
-      · exact hsel_lt 0 (by omega)
-      · omega
-    have hb1 : w1 < N + i.val := hsel_lt (r + 1) (by omega)
-    exact mkG W .or w0 w1 false false hw0_lt hw1_lt (N + i.val) hb0 hb1
-  -- ──── Section E: AND layer ────
-  else if hiE : i.val < oF k q then
-    let y := i.val - oE k q
-    have hy : y < 2^q := by
-      show i.val - oE k q < 2^q
-      have : i.val < oE k q + 2^q := by unfold oF at hiE; exact hiE
-      omega
-    -- Data minterm: N + 1 + (2^q - 4) + y
-    let dmw := N + 1 + (2^q - 4) + y
-    -- Column library output for row y
-    let p := colPatIdx N f k q hkq ⟨y, hy⟩
-    have hp : p < 2^(2^k) := colPatIdx_lt N f k q hkq ⟨y, hy⟩
-    let cw := N + oD k q + p * (2^k - 1) + (2^k - 2)
-    -- dmw is in section B, which is before section E (where i lives)
-    have hdmw_in_B : 1 + (2^q - 4) + y < oC q := by unfold oC; omega
-    have hdmw_b : dmw < N + i.val := by
-      show N + 1 + (2^q - 4) + y < N + i.val
-      have : oC q ≤ oD k q := by unfold oD; omega
-      have : oD k q ≤ oE k q := by unfold oE; omega
-      omega
-    have hdmw_W : dmw < W := by
-      show N + 1 + (2^q - 4) + y < N + szSections k q
-      unfold szSections at *; omega
-    -- cw is the last gate of column block p (in section D, before section E)
-    have hcw_in_D : p * (2^k - 1) + (2^k - 2) < 2^(2^k) * (2^k - 1) := by
-      have hmul : (p + 1) * (2^k - 1) ≤ 2^(2^k) * (2^k - 1) :=
-        Nat.mul_le_mul_right _ (by omega)
-      have hexp : p * (2^k - 1) + (2^k - 1) = (p + 1) * (2^k - 1) := by ring
-      omega
-    have hcw_b : cw < N + i.val := by
-      show N + oD k q + p * (2^k - 1) + (2^k - 2) < N + i.val
-      have hoE_le : oE k q ≤ i.val := by omega
-      -- oE k q = oD k q + 2^(2^k) * (2^k - 1), and our wire < oE, so < i.val
-      have : oD k q + p * (2^k - 1) + (2^k - 2) < oE k q := by
-        unfold oE; omega
-      omega
-    have hcw_W : cw < W := by
-      show N + oD k q + p * (2^k - 1) + (2^k - 2) < N + szSections k q
-      have hi_lt := i.isLt; omega
-    exact mkG W .and dmw cw false false hdmw_W hcw_W (N + i.val) hdmw_b hcw_b
-  -- ──── Section F: OR chain ────
-  else
-    let r := i.val - oF k q
-    have hiF : oF k q ≤ i.val := by omega
-    have hr : r < 2^q - 1 := by
-      show i.val - oF k q < 2^q - 1
-      have : i.val < oF k q + (2^q - 1) := by rw [← hG_eq]; exact i.isLt
-      omega
-    let w0 : Nat := if r = 0 then N + oE k q else N + oF k q + (r - 1)
-    let w1 : Nat := N + oE k q + (r + 1)
-    -- oE < oF ≤ i.val, and oE + (r+1) < oE + 2^q = oF ≤ i.val
-    have hoEF : oE k q < oF k q := by unfold oF; omega
-    have hsz_eq : szSections k q = oF k q + (2^q - 1) := hG_eq
-    have hw0_lt : w0 < W := by
-      show (if r = 0 then N + oE k q else N + oF k q + (r - 1)) < N + szSections k q
-      split_ifs
-      · omega
-      · omega
-    have hw1_lt : w1 < W := by
-      show N + oE k q + (r + 1) < N + szSections k q
-      unfold oF at hsz_eq; omega
-    have hb0 : w0 < N + i.val := by
-      show (if r = 0 then N + oE k q else N + oF k q + (r - 1)) < N + i.val
-      split_ifs with hr0
-      · omega
-      · omega
-    have hb1 : w1 < N + i.val := by
-      show N + oE k q + (r + 1) < N + i.val
-      unfold oF at hiF; omega
-    exact mkG W .or w0 w1 false false hw0_lt hw1_lt (N + i.val) hb0 hb1
-
-private noncomputable def shannonCircuit (N : Nat) [NeZero N]
-    (f : BitString N → Bool) (hN : 16 ≤ N) :
-    Circuit Basis.andOr2 N 1 (szSections (addrBits N) (dataBits N)) where
-  gates i := (shannonGateArray N f hN i).val
-  outputs _ :=
-    let lastWire := N + szSections (addrBits N) (dataBits N) - 1
-    { op := .or, fanIn := 2, arityOk := rfl,
-      inputs := fun _ => ⟨lastWire, by have := szSections_pos (addrBits N) (dataBits N); omega⟩,
-      negated := fun _ => false }
-  acyclic i k := (shannonGateArray N f hN i).property k
-
-/-! ### Correctness -/
-
-/-! #### Bit-vector testBit lemma -/
 
 /-- The sum Σ_{j < k} (if b j then 2^j else 0) has no overlap between
     powers, so it is bounded by 2^k. -/
@@ -917,6 +701,259 @@ private theorem testBit_sum_cond_pow_fin (k : Nat) (b : BitString k) (i : Nat) (
         rw [hlast_eq] at hbn
         exact (Bool.eq_false_iff.mpr hbn).symm
 
+private theorem addrDataSum (N : Nat) (hN : 16 ≤ N) :
+    addrBits N + dataBits N = N := by
+  have := addr_data_sum N hN; omega
+
+/-! ### Shannon gate array -/
+
+private noncomputable def shannonGateArray (N : Nat) [NeZero N]
+    (f : BitString N → Bool) (hN : 16 ≤ N) :
+    (i : Fin (szSections (addrBits N) (dataBits N))) →
+    { g : Gate Basis.andOr2 (N + szSections (addrBits N) (dataBits N)) //
+      ∀ j : Fin g.fanIn, (g.inputs j).val < N + i.val } := by
+  -- Abbreviations: we use `let` not `set` to keep definitions transparent
+  let k := addrBits N
+  let q := dataBits N
+  let W := N + szSections k q
+  let G := szSections k q
+  have hkq : k + q = N := by change addrBits N + dataBits N = N; have := addr_data_sum N hN; omega
+  have hk3 : 3 ≤ k := addrBits_ge_three N hN
+  have hq2 : 2 ≤ q := dataBits_ge_two N hN
+  have h4q : 4 ≤ 2^q := pow_ge_4 q (by omega)
+  have h4k : 4 ≤ 2^k := pow_ge_4 k (by omega)
+  have h4q1 : 4 ≤ 2^(q+1) := pow_ge_4 (q+1) (by omega)
+  have h4k1 : 4 ≤ 2^(k+1) := pow_ge_4 (k+1) (by omega)
+  have h2q1 : 2^(q+1) = 2 * 2^q := pow_double q
+  have h2k1 : 2^(k+1) = 2 * 2^k := pow_double k
+  have hW_pos : 0 < W := by change 0 < N + szSections k q; unfold szSections; positivity
+  have hG_eq : G = oF k q + (2^q - 1) := by
+    change szSections k q = oF k q + (2^q - 1)
+    unfold szSections oF oE oD oC; omega
+  intro i
+  -- ──── Section A: constFalse (gate 0) ────
+  if hiA : i.val = 0 then
+    exact mkG W .and 0 0 false true (by omega) (by omega) (N + i.val) (by omega) (by omega)
+  -- ──── Section B: data minterm tree ────
+  else if hiB : i.val < oC q then
+    let j := i.val - 1
+    have hjB : j < 2^(q+1) - 4 := by unfold oC at hiB; omega
+    if hjL1 : j < 4 then
+      -- Level 1: AND(input[k], input[k+1])
+      exact mkG W .and k (k+1) (!Nat.testBit j 0) (!Nat.testBit j 1)
+        (by omega) (by omega) (N + i.val) (by omega) (by omega)
+    else
+      let l := treeLevel j
+      let m := treePos j l
+      have hl2 : 2 ≤ l := treeLevel_ge_two j (by omega)
+      have hlq : l < q := treeLevel_lt j q hjB hq2
+      -- Parent wire: N + 1 + treeParentIdx l m (gate in data tree)
+      let pw := N + 1 + treeParentIdx l m
+      let vw := k + l
+      have hbase : treeBase l ≤ j := treeBase_le_of_level j (by omega)
+      have hpi_lt : treeParentIdx l m < j := treeParentIdx_lt_j l m j hl2 rfl hbase
+      have hpw_b : pw < N + i.val := by
+        change N + 1 + treeParentIdx l m < N + i.val; omega
+      have hvw_b : vw < N + i.val := by change k + l < N + i.val; omega
+      -- For W bounds, chain: treeParentIdx < j = i.val - 1 < i.val < G → in W
+      have hi_lt : i.val < szSections k q := i.isLt
+      have hpw_W : pw < W := by
+        change N + 1 + treeParentIdx l m < N + szSections k q; omega
+      have hvw_W : vw < W := by change k + l < N + szSections k q; omega
+      exact mkG W .and pw vw false (!Nat.testBit m l) hpw_W hvw_W (N + i.val) hpw_b hvw_b
+  -- ──── Section C: address minterm tree ────
+  else if hiC : i.val < oD k q then
+    let j := i.val - oC q
+    have hi_lt : i.val < szSections k q := i.isLt
+    have hjC : j < 2^(k+1) - 4 := by
+      change i.val - oC q < 2^(k+1) - 4
+      have : i.val < oC q + (2^(k+1) - 4) := by unfold oD at hiC; exact hiC
+      unfold oC at this ⊢; omega
+    if hjL1 : j < 4 then
+      exact mkG W .and 0 1 (!Nat.testBit j 0) (!Nat.testBit j 1)
+        (by omega) (by omega) (N + i.val) (by omega) (by omega)
+    else
+      let l := treeLevel j
+      let m := treePos j l
+      have hl2 : 2 ≤ l := treeLevel_ge_two j (by omega)
+      have hlk : l < k := treeLevel_lt j k hjC (by omega)
+      let pw := N + oC q + treeParentIdx l m
+      let vw := l
+      have hbase : treeBase l ≤ j := treeBase_le_of_level j (by omega)
+      have hpi_lt : treeParentIdx l m < j := treeParentIdx_lt_j l m j hl2 rfl hbase
+      -- j < 2^(k+1) - 4, and oC q + (2^(k+1) - 4) ≤ G
+      have hj_lt_G : oC q + j < G := by
+        change oC q + j < szSections k q
+        unfold szSections oC; omega
+      have hpw_b : pw < N + i.val := by
+        change N + oC q + treeParentIdx l m < N + i.val; omega
+      have hvw_b : vw < N + i.val := by change l < N + i.val; omega
+      have hpw_W : pw < W := by
+        change N + oC q + treeParentIdx l m < N + szSections k q; omega
+      have hvw_W : vw < W := by change l < N + szSections k q; omega
+      exact mkG W .and pw vw false (!Nat.testBit m l) hpw_W hvw_W (N + i.val) hpw_b hvw_b
+  -- ──── Section D: column library ────
+  else if hiD : i.val < oE k q then
+    -- Block p, position r. Block size = 2^k - 1.
+    -- Linear OR chain: gate 0 ORs select(0) with select(1),
+    -- gate r≥1 ORs prev with select(r+1).
+    -- select(a) = addrMinterm_a if testBit(p, a) else constFalse
+    let j := i.val - oD k q
+    have hjD : j < 2^(2^k) * (2^k - 1) := by
+      change i.val - oD k q < 2^(2^k) * (2^k - 1)
+      have : i.val < oD k q + 2^(2^k) * (2^k - 1) := by unfold oE at hiD; exact hiD
+      omega
+    let blkSz := 2^k - 1
+    have hblk_pos : 0 < blkSz := by omega
+    let p := j / blkSz
+    let r := j % blkSz
+    have hr_lt : r < blkSz := Nat.mod_lt j hblk_pos
+    -- Address minterm wire for index a: N + oC q + (2^k - 4) + a
+    let amw (a : Nat) : Nat := N + oC q + (2^k - 4) + a
+    let cfw : Nat := N  -- constFalse wire
+    -- Simplify: r + 1 regardless of r = 0 check
+    let selIdx (pos : Nat) : Nat :=
+      if Nat.testBit p pos then amw pos else cfw
+    let w0 : Nat := if r = 0 then selIdx 0 else N + oD k q + p * blkSz + (r - 1)
+    let w1 : Nat := selIdx (r + 1)
+    -- Bound proofs: all referenced wires are before the current gate
+    -- Address minterms are in section C (before D)
+    -- constFalse is gate 0 (before everything)
+    -- previous gate in same block is at index < i
+    have hamw_lt (a : Nat) (ha : a < 2^k) : amw a < N + i.val := by
+      change N + oC q + (2^k - 4) + a < N + i.val
+      have : oC q + (2^k - 4) + a < oD k q := by unfold oD oC; omega
+      omega
+    have hi_lt : i.val < szSections k q := i.isLt
+    have hamw_W (a : Nat) (ha : a < 2^k) : amw a < W := by
+      change N + oC q + (2^k - 4) + a < N + szSections k q
+      unfold szSections oC; omega
+    have hcfw_lt : cfw < N + i.val := by change N < N + i.val; omega
+    have hcfw_W : cfw < W := by change N < N + szSections k q; omega
+    -- selIdx bound helper
+    have hsel_lt (pos : Nat) (hpos : pos < 2^k) : selIdx pos < N + i.val := by
+      change (if Nat.testBit p pos then amw pos else cfw) < N + i.val
+      split_ifs
+      · exact hamw_lt pos hpos
+      · exact hcfw_lt
+    have hsel_W (pos : Nat) (hpos : pos < 2^k) : selIdx pos < W := by
+      change (if Nat.testBit p pos then amw pos else cfw) < W
+      split_ifs
+      · exact hamw_W pos hpos
+      · exact hcfw_W
+    have hi_eq : oD k q + j = i.val := by omega
+    have hpbr_j : blkSz * p + r = j := by
+      change blkSz * (j / blkSz) + j % blkSz = j; exact Nat.div_add_mod j blkSz
+    have hpbr : oD k q + p * blkSz + r = i.val := by nlinarith [mul_comm blkSz p]
+    have hw0_lt : w0 < W := by
+      change (if r = 0 then selIdx 0 else N + oD k q + p * blkSz + (r - 1)) < W
+      split_ifs with hr0
+      · exact hsel_W 0 (by omega)
+      · have hi_lt := i.isLt; omega
+    have hw1_lt : w1 < W := hsel_W (r + 1) (by omega)
+    have hb0 : w0 < N + i.val := by
+      change (if r = 0 then selIdx 0 else N + oD k q + p * blkSz + (r - 1)) < N + i.val
+      split_ifs with hr0
+      · exact hsel_lt 0 (by omega)
+      · omega
+    have hb1 : w1 < N + i.val := hsel_lt (r + 1) (by omega)
+    exact mkG W .or w0 w1 false false hw0_lt hw1_lt (N + i.val) hb0 hb1
+  -- ──── Section E: AND layer ────
+  else if hiE : i.val < oF k q then
+    let y := i.val - oE k q
+    have hy : y < 2^q := by
+      change i.val - oE k q < 2^q
+      have : i.val < oE k q + 2^q := by unfold oF at hiE; exact hiE
+      omega
+    -- Data minterm: N + 1 + (2^q - 4) + y
+    let dmw := N + 1 + (2^q - 4) + y
+    -- Column library output for row y
+    let p := colPatIdx N f k q hkq ⟨y, hy⟩
+    have hp : p < 2^(2^k) := colPatIdx_lt N f k q hkq ⟨y, hy⟩
+    let cw := N + oD k q + p * (2^k - 1) + (2^k - 2)
+    -- dmw is in section B, which is before section E (where i lives)
+    have hdmw_in_B : 1 + (2^q - 4) + y < oC q := by unfold oC; omega
+    have hdmw_b : dmw < N + i.val := by
+      change N + 1 + (2^q - 4) + y < N + i.val
+      have : oC q ≤ oD k q := by unfold oD; omega
+      have : oD k q ≤ oE k q := by unfold oE; omega
+      omega
+    have hdmw_W : dmw < W := by
+      change N + 1 + (2^q - 4) + y < N + szSections k q
+      unfold szSections at *; omega
+    -- cw is the last gate of column block p (in section D, before section E)
+    have hcw_in_D : p * (2^k - 1) + (2^k - 2) < 2^(2^k) * (2^k - 1) := by
+      have hmul : (p + 1) * (2^k - 1) ≤ 2^(2^k) * (2^k - 1) :=
+        Nat.mul_le_mul_right _ (by omega)
+      have hexp : p * (2^k - 1) + (2^k - 1) = (p + 1) * (2^k - 1) := by ring
+      omega
+    have hcw_b : cw < N + i.val := by
+      change N + oD k q + p * (2^k - 1) + (2^k - 2) < N + i.val
+      have hoE_le : oE k q ≤ i.val := by omega
+      -- oE k q = oD k q + 2^(2^k) * (2^k - 1), and our wire < oE, so < i.val
+      have : oD k q + p * (2^k - 1) + (2^k - 2) < oE k q := by
+        unfold oE; omega
+      omega
+    have hcw_W : cw < W := by
+      change N + oD k q + p * (2^k - 1) + (2^k - 2) < N + szSections k q
+      have hi_lt := i.isLt; omega
+    exact mkG W .and dmw cw false false hdmw_W hcw_W (N + i.val) hdmw_b hcw_b
+  -- ──── Section F: OR chain ────
+  else
+    let r := i.val - oF k q
+    have hiF : oF k q ≤ i.val := by omega
+    have hr : r < 2^q - 1 := by
+      change i.val - oF k q < 2^q - 1
+      have : i.val < oF k q + (2^q - 1) := by rw [← hG_eq]; exact i.isLt
+      omega
+    let w0 : Nat := if r = 0 then N + oE k q else N + oF k q + (r - 1)
+    let w1 : Nat := N + oE k q + (r + 1)
+    -- oE < oF ≤ i.val, and oE + (r+1) < oE + 2^q = oF ≤ i.val
+    have hoEF : oE k q < oF k q := by unfold oF; omega
+    have hsz_eq : szSections k q = oF k q + (2^q - 1) := hG_eq
+    have hw0_lt : w0 < W := by
+      change (if r = 0 then N + oE k q else N + oF k q + (r - 1)) < N + szSections k q
+      split_ifs
+      · omega
+      · omega
+    have hw1_lt : w1 < W := by
+      change N + oE k q + (r + 1) < N + szSections k q
+      unfold oF at hsz_eq; omega
+    have hb0 : w0 < N + i.val := by
+      change (if r = 0 then N + oE k q else N + oF k q + (r - 1)) < N + i.val
+      split_ifs with hr0
+      · omega
+      · omega
+    have hb1 : w1 < N + i.val := by
+      change N + oE k q + (r + 1) < N + i.val
+      unfold oF at hiF; omega
+    exact mkG W .or w0 w1 false false hw0_lt hw1_lt (N + i.val) hb0 hb1
+
+private theorem lastWire_is_orChain_last (N : Nat) (hN : 16 ≤ N) :
+    N + szSections (addrBits N) (dataBits N) - 1 =
+    N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2) := by
+  have hq2 : 2 ≤ dataBits N := dataBits_ge_two N hN
+  have h4q : 4 ≤ 2 ^ dataBits N := pow_ge_4 (dataBits N) hq2
+  change N + szSections (addrBits N) (dataBits N) - 1 =
+    N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2)
+  unfold szSections oF oE oD oC; omega
+
+private noncomputable def shannonCircuit (N : Nat) [NeZero N]
+    (f : BitString N → Bool) (hN : 16 ≤ N) :
+    Circuit Basis.andOr2 N 1 (szSections (addrBits N) (dataBits N)) where
+  gates i := (shannonGateArray N f hN i).val
+  outputs _ :=
+    let lastWire := N + szSections (addrBits N) (dataBits N) - 1
+    { op := .or, fanIn := 2, arityOk := rfl,
+      inputs := fun _ => ⟨lastWire, by have := szSections_pos (addrBits N) (dataBits N); omega⟩,
+      negated := fun _ => false }
+  acyclic i k := (shannonGateArray N f hN i).property k
+
+/-! ### Correctness -/
+
+/-! #### Bit-vector testBit lemma -/
+
+
 /-! #### colFun reconstruction lemma -/
 
 /-- Shift the data bits of x to form a q-bit function. -/
@@ -954,20 +991,7 @@ private theorem colFun_at_actual_bits (N : Nat) [NeZero N]
 
 /-! ##### Key identity -/
 
-private theorem addrDataSum (N : Nat) (hN : 16 ≤ N) :
-    addrBits N + dataBits N = N := by
-  have := addr_data_sum N hN; omega
-
 /-! ##### Connecting the last wire to the OR chain -/
-
-private theorem lastWire_is_orChain_last (N : Nat) (hN : 16 ≤ N) :
-    N + szSections (addrBits N) (dataBits N) - 1 =
-    N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2) := by
-  have hq2 : 2 ≤ dataBits N := dataBits_ge_two N hN
-  have h4q : 4 ≤ 2 ^ dataBits N := pow_ge_4 (dataBits N) hq2
-  show N + szSections (addrBits N) (dataBits N) - 1 =
-    N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2)
-  unfold szSections oF oE oD oC; omega
 
 /-! ##### Semantic decomposition of the circuit -/
 
@@ -1078,7 +1102,6 @@ private theorem or_andLayerSem_eq_f (N : Nat) [NeZero N]
     The data tree leaf and column library output wire-value proofs
     trace wireValue through Sections B and D respectively via
     tree-level induction. -/
-
 private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
     (f : BitString N → Bool) (hN : 16 ≤ N) (x : BitString N)
     (y : Nat) (hy : y < 2 ^ dataBits N)
@@ -1098,12 +1121,13 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
       (hjW : N + 1 + j < N + szSections (addrBits N) (dataBits N)),
       (shannonCircuit N f hN).wireValue x ⟨N + 1 + j, hjW⟩ =
       decide (∀ i : Fin (treeLevel j + 1),
-        x ⟨addrBits N + i.val, by have := i.isLt; have := treeLevel_lt j (dataBits N) hj hq2; omega⟩ =
+        x ⟨addrBits N + i.val,
+          by have := i.isLt; have := treeLevel_lt j (dataBits N) hj hq2; omega⟩ =
           Nat.testBit (treePos j (treeLevel j)) i.val) := by
     intro j
     exact Nat.strongRecOn j fun j ih => by
       intro hj hjW
-      rw [Circuit.wireValue_ge _ _ _ (by show ¬(N + 1 + j < N); omega)]
+      rw [Circuit.wireValue_ge _ _ _ (by change ¬(N + 1 + j < N); omega)]
       change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
       unfold shannonGateArray
       simp only [show N + 1 + j - N = 1 + j from by omega]
@@ -1111,16 +1135,15 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
       rw [dif_pos (by unfold oC; omega : 1 + j < oC (dataBits N))]
       simp only [show 1 + j - 1 = j from by omega]
       by_cases hjL1 : j < 4
-      ·
-        rw [dif_pos hjL1]
+      · rw [dif_pos hjL1]
         simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
           show ¬((1 : Nat) = 0) from by omega]
         rw [Circuit.wireValue_lt _ _ _ (show (⟨addrBits N, _⟩ : Fin _).val < N from by
-          show addrBits N < N; have := addr_le_N N hN; omega)]
+          change addrBits N < N; have := addr_le_N N hN; omega)]
         rw [Circuit.wireValue_lt _ _ _ (show (⟨addrBits N + 1, _⟩ : Fin _).val < N from by
-          show addrBits N + 1 < N; have := addr_le_N N hN; omega)]
+          change addrBits N + 1 < N; have := addr_le_N N hN; omega)]
         have htl : treeLevel j = 1 := by
           unfold treeLevel
           have h1 : Nat.log 2 (j + 4) = 2 := by
@@ -1150,8 +1173,7 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
           show addrBits N + 0 = addrBits N from by omega, Nat.testBit_zero]
         cases x ⟨addrBits N, by omega⟩ <;> cases x ⟨addrBits N + 1, by omega⟩ <;>
           cases j.testBit 1 <;> cases (decide (j % 2 = 1)) <;> simp_all
-      ·
-        rw [dif_neg hjL1]
+      · rw [dif_neg hjL1]
         simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
           Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
         simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
@@ -1162,7 +1184,7 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
         have hpi_lt : treeParentIdx (treeLevel j) (treePos j (treeLevel j)) < j :=
           treeParentIdx_lt_j _ _ j hl2 rfl hbase
         rw [Circuit.wireValue_lt _ _ _ (show (⟨addrBits N + treeLevel j, _⟩ : Fin _).val < N
-          from by show addrBits N + treeLevel j < N; omega)]
+          from by change addrBits N + treeLevel j < N; omega)]
         have hpar := ih (treeParentIdx (treeLevel j) (treePos j (treeLevel j)))
           hpi_lt (by omega) (by omega)
         have htlp := treeLevel_parent (treeLevel j) (treePos j (treeLevel j)) hl2
@@ -1248,6 +1270,198 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
     rw [testBit_sum_cond_pow_fin (dataBits N) data i.val hi]
     exact Eq.mpr (by congr 1) rfl
 
+/-- Each address-selector wire outputs `decide (a = aSum)`, where `aSum` is the
+numeric value of `x`'s address bits. (Extracted from `wireValue_colOutput`.) -/
+private theorem colOutput_addrLeaf (N : Nat) [NeZero N]
+    (f : BitString N → Bool) (hN : 16 ≤ N) (x : BitString N) :
+    ∀ (a : Nat) (_ha : a < 2 ^ addrBits N)
+      (haW : N + oC (dataBits N) + (2 ^ addrBits N - 4) + a <
+        N + szSections (addrBits N) (dataBits N)),
+      (shannonCircuit N f hN).wireValue x
+        ⟨N + oC (dataBits N) + (2 ^ addrBits N - 4) + a, haW⟩ =
+      decide (a = Finset.sum Finset.univ
+        (fun j : Fin (addrBits N) =>
+          if x ⟨j.val, by have := j.isLt; have := addr_le_N N hN; omega⟩
+          then 2 ^ j.val else 0)) := by
+  intro a ha haW
+  have hk3 := addrBits_ge_three N hN
+  have hq2 := dataBits_ge_two N hN
+  have h4k := pow_ge_4 (addrBits N) (by omega)
+  have hkq := addrDataSum N hN
+  set k := addrBits N
+  set q := dataBits N
+  set addr : BitString k := fun j => x ⟨j.val, by have := j.isLt; omega⟩
+  set aSum := Finset.sum Finset.univ (fun j : Fin k => if addr j then 2 ^ j.val else 0)
+  have haSum_lt : aSum < 2 ^ k := sum_cond_pow_fin_lt k addr
+  have hk1 : 2 ^ (k + 1) = 2 * 2 ^ k := pow_double k
+  have hsC : ∀ (j : Nat) (hj : j < 2 ^ (k + 1) - 4)
+      (hjW : N + oC q + j < N + szSections k q),
+      (shannonCircuit N f hN).wireValue x ⟨N + oC q + j, hjW⟩ =
+      decide (∀ i : Fin (treeLevel j + 1),
+        x ⟨i.val, by have := i.isLt; have := treeLevel_lt j k hj (by omega); omega⟩ =
+        Nat.testBit (treePos j (treeLevel j)) i.val) := by
+    intro j
+    exact Nat.strongRecOn j fun j ih => by
+      intro hj hjW
+      rw [Circuit.wireValue_ge _ _ _ (by change ¬(N + oC q + j < N); omega)]
+      change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
+      unfold shannonGateArray
+      simp only [show N + oC q + j - N = oC q + j from by omega]
+      rw [dif_neg (by unfold oC; omega : ¬(oC q + j = 0))]
+      rw [dif_neg (by unfold oC; omega : ¬(oC q + j < oC q))]
+      rw [dif_pos (by unfold oD oC; omega : oC q + j < oD k q)]
+      simp_rw [show oC q + j - oC (dataBits N) = j from by
+        change oC q + j - oC q = j; omega]
+      by_cases hjL1 : j < 4
+      · rw [dif_pos hjL1]
+        simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
+          Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
+        simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
+          show ¬((1 : Nat) = 0) from by omega]
+        rw [Circuit.wireValue_lt _ _ _ (show (⟨0, _⟩ : Fin _).val < N from by
+          change 0 < N; linarith [hkq, hk3])]
+        rw [Circuit.wireValue_lt _ _ _ (show (⟨1, _⟩ : Fin _).val < N from by
+          change 1 < N; linarith [hkq, hk3])]
+        have htl : treeLevel j = 1 := by
+          unfold treeLevel
+          have : Nat.log 2 (j + 4) = 2 := le_antisymm
+            (Nat.lt_succ_iff.mp (Nat.log_lt_of_lt_pow (by omega) (by omega)))
+            (Nat.le_log_of_pow_le (by omega) (by omega))
+          omega
+        have htp : treePos j 1 = j := by unfold treePos treeBase; omega
+        have hN2 : ∀ i : Nat, i < 2 → i < N := fun i hi => by linarith [hkq, hk3]
+        have hcast : (∀ i : Fin (treeLevel j + 1),
+            x ⟨i.val, by have := i.isLt; have := treeLevel_lt j k hj (by omega); omega⟩ =
+            j.testBit i.val) ↔
+            (∀ i : Fin 2, x ⟨i.val, hN2 i.val i.isLt⟩ = j.testBit i.val) := by
+          constructor
+          · intro h i; exact Eq.mpr (by congr 1) (h ⟨i.val, by rw [htl]; exact i.isLt⟩)
+          · intro h ⟨i, hi⟩; exact Eq.mpr (by congr 1) (h ⟨i, by rw [htl] at hi; exact hi⟩)
+        conv_rhs => rw [show treePos j (treeLevel j) = j from by rw [htl]; exact htp]
+        rw [decide_eq_decide.mpr hcast] <;> [skip; exact inferInstance]
+        simp only [Fin.forall_fin_two, Fin.val_zero, Fin.val_one, Nat.testBit_zero]
+        cases x ⟨0, hN2 0 (by omega)⟩ <;> cases x ⟨1, hN2 1 (by omega)⟩ <;>
+          cases j.testBit 1 <;> cases (decide (j % 2 = 1)) <;> simp_all
+      · rw [dif_neg hjL1]
+        simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
+          Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
+        simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
+          show ¬((1 : Nat) = 0) from by omega]
+        have hl2 : 2 ≤ treeLevel j := treeLevel_ge_two j (by omega)
+        have hlk : treeLevel j < k := treeLevel_lt j k hj (by omega)
+        have hbase : treeBase (treeLevel j) ≤ j := treeBase_le_of_level j (by omega)
+        have hpi_lt : treeParentIdx (treeLevel j) (treePos j (treeLevel j)) < j :=
+          treeParentIdx_lt_j _ _ j hl2 rfl hbase
+        simp only [Bool.false_xor]
+        rw [Circuit.wireValue_lt _ _ _ (show (⟨treeLevel j, _⟩ : Fin _).val < N from by
+          change treeLevel j < N; linarith [hkq, hlk])]
+        have hpar := ih (treeParentIdx (treeLevel j) (treePos j (treeLevel j)))
+          hpi_lt (by omega) (by omega)
+        have htlp := treeLevel_parent (treeLevel j) (treePos j (treeLevel j)) hl2
+        have htlp1 : treeLevel (treeParentIdx (treeLevel j) (treePos j (treeLevel j))) + 1 =
+          treeLevel j := by omega
+        have htpp : treePos (treeParentIdx (treeLevel j) (treePos j (treeLevel j)))
+          (treeLevel (treeParentIdx (treeLevel j) (treePos j (treeLevel j)))) =
+          treePos j (treeLevel j) % 2 ^ treeLevel j := by
+          rw [htlp]; exact treePos_parent (treeLevel j) (treePos j (treeLevel j)) hl2
+        change ((shannonCircuit N f hN).wireValue x
+            ⟨N + oC (dataBits N) + treeParentIdx (treeLevel j) (treePos j (treeLevel j)),
+              by linarith [hpi_lt]⟩ &&
+          (!(treePos j (treeLevel j)).testBit (treeLevel j) ^^
+            x ⟨treeLevel j, by linarith [hkq, hlk]⟩)) =
+          decide (∀ (i : Fin (treeLevel j + 1)),
+            x ⟨i.val, by have := i.isLt; linarith [hkq, hlk]⟩ =
+            (treePos j (treeLevel j)).testBit i.val)
+        rw [hpar]
+        rw [Bool.eq_iff_iff, Bool.and_eq_true]
+        constructor
+        · rintro ⟨h1, h2⟩
+          rw [decide_eq_true_eq] at h1 ⊢
+          intro i
+          by_cases hil : i.val < treeLevel j
+          · have h1i := h1 ⟨i.val, by rw [htlp1]; exact hil⟩
+            rw [htpp, Nat.testBit_mod_two_pow] at h1i
+            simp only [show decide (i.val < treeLevel j) = true from
+              decide_eq_true_eq.mpr hil, Bool.true_and] at h1i
+            exact Eq.mpr (by congr 1) h1i
+          · have hi_eq : i.val = treeLevel j := by have := i.isLt; omega
+            exact Eq.mpr (by simp only [hi_eq])
+              ((show ∀ (a b : Bool), (!b ^^ a) = true → a = b from by decide) _ _ h2)
+        · intro h
+          rw [decide_eq_true_eq] at h
+          refine ⟨?_, ?_⟩
+          · rw [decide_eq_true_eq]
+            intro i
+            have hi : i.val < treeLevel j := by omega
+            rw [htpp, Nat.testBit_mod_two_pow]
+            simp only [show decide (i.val < treeLevel j) = true from
+              decide_eq_true_eq.mpr hi, Bool.true_and]
+            exact Eq.mpr (by congr 1) (h ⟨i.val, by omega⟩)
+          · exact (show ∀ (a b : Bool), a = b → (!b ^^ a) = true from by decide) _ _
+              (Eq.mpr (by congr 1) (h ⟨treeLevel j, by omega⟩))
+  specialize hsC (2 ^ k - 4 + a) (by omega)
+    (by omega : N + oC q + (2 ^ k - 4 + a) < N + szSections k q)
+  simp only [show N + oC q + (2 ^ k - 4 + a) = N + oC q + (2 ^ k - 4) + a from by omega] at hsC
+  rw [hsC]
+  conv_lhs => rw [show treePos (2 ^ k - 4 + a)
+      (treeLevel (2 ^ k - 4 + a)) = a from by
+    rw [show treeLevel (2 ^ k - 4 + a) = k - 1 from by
+      unfold treeLevel; have : Nat.log 2 (2 ^ k - 4 + a + 4) = k := le_antisymm
+        (Nat.lt_succ_iff.mp (Nat.log_lt_of_lt_pow (by omega) (by omega)))
+        (Nat.le_log_of_pow_le (by omega) (by omega)); omega]
+    unfold treePos treeBase; rw [show k - 1 + 1 = k from by omega]; omega]
+  have hFin_eq : treeLevel (2 ^ k - 4 + a) + 1 = k := by
+    have : treeLevel (2 ^ k - 4 + a) = k - 1 := by
+      unfold treeLevel; have : Nat.log 2 (2 ^ k - 4 + a + 4) = k := le_antisymm
+        (Nat.lt_succ_iff.mp (Nat.log_lt_of_lt_pow (by omega) (by omega)))
+        (Nat.le_log_of_pow_le (by omega) (by omega)); omega
+    omega
+  rw [Bool.eq_iff_iff]
+  simp only [decide_eq_true_eq]
+  constructor
+  · intro h
+    apply Nat.eq_of_testBit_eq
+    intro i
+    by_cases hi : i < k
+    · rw [testBit_sum_cond_pow_fin k addr i hi]
+      exact Eq.mpr (by congr 1) (h ⟨i, by omega⟩).symm
+    · rw [Nat.testBit_lt_two_pow (lt_of_lt_of_le ha (Nat.pow_le_pow_right (by omega) (by omega))),
+          Nat.testBit_lt_two_pow
+            (lt_of_lt_of_le haSum_lt (Nat.pow_le_pow_right (by omega) (by omega)))]
+  · intro h i
+    have hlt : i.val < k := by have := i.isLt; omega
+    have e : aSum.testBit i.val = addr ⟨i.val, hlt⟩ :=
+      testBit_sum_cond_pow_fin k addr i.val hlt
+    have key : a.testBit i.val = addr ⟨i.val, hlt⟩ :=
+      (congrArg (fun n => Nat.testBit n i.val) h).trans e
+    exact Eq.mpr (by congr 1) key.symm
+
+/-- The wire at index `N` (the shared constant-`false` source) outputs `false`.
+(Extracted from `wireValue_colOutput`.) -/
+private theorem colOutput_constFalse (N : Nat) [NeZero N]
+    (f : BitString N → Bool) (hN : 16 ≤ N) (x : BitString N) :
+    ∀ (hW : N < N + szSections (addrBits N) (dataBits N)),
+      (shannonCircuit N f hN).wireValue x ⟨N, hW⟩ = false := by
+  intro hW
+  have hk3 := addrBits_ge_three N hN
+  have hkq := addrDataSum N hN
+  set k := addrBits N
+  set q := dataBits N
+  have h0N : (0 : Nat) < N := by linarith [hkq, hk3]
+  rw [Circuit.wireValue_ge _ _ _ (show ¬((⟨N, hW⟩ : Fin _).val < N) from by change ¬(N < N); omega)]
+  change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
+  unfold shannonGateArray
+  change (shannonGateArray N f hN ⟨N - N, by omega⟩).val.eval
+    ((shannonCircuit N f hN).wireValue x) = false
+  unfold shannonGateArray
+  rw [dif_pos (show N - N = 0 from by omega)]
+  simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
+    Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
+  simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
+    show ¬((1 : Nat) = 0) from by omega, Bool.false_xor, Bool.true_xor]
+  rw [Circuit.wireValue_lt _ _ _ (show (⟨0, _⟩ : Fin _).val < N from h0N)]
+  cases x ⟨0, h0N⟩ <;> rfl
+
 private theorem wireValue_colOutput (N : Nat) [NeZero N]
     (f : BitString N → Bool) (hN : 16 ≤ N) (x : BitString N)
     (y : Nat) (hy : y < 2 ^ dataBits N)
@@ -1277,162 +1491,15 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
   have hp_lt : p < 2 ^ (2 ^ k) := colPatIdx_lt N f k q hkq ⟨y, hy⟩
   have haSum_lt : aSum < 2 ^ k := sum_cond_pow_fin_lt k addr
   have hblk : 0 < 2 ^ k - 1 := by omega
-  have addrLeaf : ∀ (a : Nat) (ha : a < 2 ^ k)
+  have hbk : (2 : Nat) ^ addrBits N = 2 ^ k := rfl
+  have addrLeaf : ∀ (a : Nat) (_ha : a < 2 ^ k)
       (haW : N + oC q + (2 ^ k - 4) + a < N + szSections k q),
       (shannonCircuit N f hN).wireValue x
-        ⟨N + oC q + (2 ^ k - 4) + a, haW⟩ = decide (a = aSum) := by
-    intro a ha haW
-    have hsC : ∀ (j : Nat) (hj : j < 2 ^ (k + 1) - 4)
-        (hjW : N + oC q + j < N + szSections k q),
-        (shannonCircuit N f hN).wireValue x ⟨N + oC q + j, hjW⟩ =
-        decide (∀ i : Fin (treeLevel j + 1),
-          x ⟨i.val, by have := i.isLt; have := treeLevel_lt j k hj (by omega); omega⟩ =
-          Nat.testBit (treePos j (treeLevel j)) i.val) := by
-      intro j
-      exact Nat.strongRecOn j fun j ih => by
-        intro hj hjW
-        rw [Circuit.wireValue_ge _ _ _ (by show ¬(N + oC q + j < N); omega)]
-        change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
-        unfold shannonGateArray
-        simp only [show N + oC q + j - N = oC q + j from by omega]
-        rw [dif_neg (by unfold oC; omega : ¬(oC q + j = 0))]
-        rw [dif_neg (by unfold oC; omega : ¬(oC q + j < oC q))]
-        rw [dif_pos (by unfold oD oC; omega : oC q + j < oD k q)]
-        simp_rw [show oC q + j - oC (dataBits N) = j from by
-          show oC q + j - oC q = j; omega]
-        by_cases hjL1 : j < 4
-        · rw [dif_pos hjL1]
-          simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
-            Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
-          simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
-            show ¬((1 : Nat) = 0) from by omega]
-          rw [Circuit.wireValue_lt _ _ _ (show (⟨0, _⟩ : Fin _).val < N from by
-            show 0 < N; linarith [hkq, hk3])]
-          rw [Circuit.wireValue_lt _ _ _ (show (⟨1, _⟩ : Fin _).val < N from by
-            show 1 < N; linarith [hkq, hk3])]
-          have htl : treeLevel j = 1 := by
-            unfold treeLevel
-            have : Nat.log 2 (j + 4) = 2 := le_antisymm
-              (Nat.lt_succ_iff.mp (Nat.log_lt_of_lt_pow (by omega) (by omega)))
-              (Nat.le_log_of_pow_le (by omega) (by omega))
-            omega
-          have htp : treePos j 1 = j := by unfold treePos treeBase; omega
-          have hN2 : ∀ i : Nat, i < 2 → i < N := fun i hi => by linarith [hkq, hk3]
-          have hcast : (∀ i : Fin (treeLevel j + 1),
-              x ⟨i.val, by have := i.isLt; have := treeLevel_lt j k hj (by omega); omega⟩ =
-              j.testBit i.val) ↔
-              (∀ i : Fin 2, x ⟨i.val, hN2 i.val i.isLt⟩ = j.testBit i.val) := by
-            constructor
-            · intro h i; exact Eq.mpr (by congr 1) (h ⟨i.val, by rw [htl]; exact i.isLt⟩)
-            · intro h ⟨i, hi⟩; exact Eq.mpr (by congr 1) (h ⟨i, by rw [htl] at hi; exact hi⟩)
-          conv_rhs => rw [show treePos j (treeLevel j) = j from by rw [htl]; exact htp]
-          rw [decide_eq_decide.mpr hcast] <;> [skip; exact inferInstance]
-          simp only [Fin.forall_fin_two, Fin.val_zero, Fin.val_one, Nat.testBit_zero]
-          cases x ⟨0, hN2 0 (by omega)⟩ <;> cases x ⟨1, hN2 1 (by omega)⟩ <;>
-            cases j.testBit 1 <;> cases (decide (j % 2 = 1)) <;> simp_all
-        · rw [dif_neg hjL1]
-          simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
-            Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
-          simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
-            show ¬((1 : Nat) = 0) from by omega]
-          have hl2 : 2 ≤ treeLevel j := treeLevel_ge_two j (by omega)
-          have hlk : treeLevel j < k := treeLevel_lt j k hj (by omega)
-          have hbase : treeBase (treeLevel j) ≤ j := treeBase_le_of_level j (by omega)
-          have hpi_lt : treeParentIdx (treeLevel j) (treePos j (treeLevel j)) < j :=
-            treeParentIdx_lt_j _ _ j hl2 rfl hbase
-          simp only [Bool.false_xor]
-          rw [Circuit.wireValue_lt _ _ _ (show (⟨treeLevel j, _⟩ : Fin _).val < N from by
-            show treeLevel j < N; linarith [hkq, hlk])]
-          have hpar := ih (treeParentIdx (treeLevel j) (treePos j (treeLevel j)))
-            hpi_lt (by omega) (by omega)
-          have htlp := treeLevel_parent (treeLevel j) (treePos j (treeLevel j)) hl2
-          have htlp1 : treeLevel (treeParentIdx (treeLevel j) (treePos j (treeLevel j))) + 1 =
-            treeLevel j := by omega
-          have htpp : treePos (treeParentIdx (treeLevel j) (treePos j (treeLevel j)))
-            (treeLevel (treeParentIdx (treeLevel j) (treePos j (treeLevel j)))) =
-            treePos j (treeLevel j) % 2 ^ treeLevel j := by
-            rw [htlp]; exact treePos_parent (treeLevel j) (treePos j (treeLevel j)) hl2
-          change ((shannonCircuit N f hN).wireValue x
-              ⟨N + oC (dataBits N) + treeParentIdx (treeLevel j) (treePos j (treeLevel j)),
-                by linarith [hpi_lt]⟩ &&
-            (!(treePos j (treeLevel j)).testBit (treeLevel j) ^^
-              x ⟨treeLevel j, by linarith [hkq, hlk]⟩)) =
-            decide (∀ (i : Fin (treeLevel j + 1)),
-              x ⟨i.val, by have := i.isLt; linarith [hkq, hlk]⟩ =
-              (treePos j (treeLevel j)).testBit i.val)
-          rw [hpar]
-          rw [Bool.eq_iff_iff, Bool.and_eq_true]
-          constructor
-          · rintro ⟨h1, h2⟩
-            rw [decide_eq_true_eq] at h1 ⊢
-            intro i
-            by_cases hil : i.val < treeLevel j
-            · have h1i := h1 ⟨i.val, by rw [htlp1]; exact hil⟩
-              rw [htpp, Nat.testBit_mod_two_pow] at h1i
-              simp only [show decide (i.val < treeLevel j) = true from
-                decide_eq_true_eq.mpr hil, Bool.true_and] at h1i
-              exact Eq.mpr (by congr 1) h1i
-            · have hi_eq : i.val = treeLevel j := by have := i.isLt; omega
-              exact Eq.mpr (by simp only [hi_eq])
-                ((show ∀ (a b : Bool), (!b ^^ a) = true → a = b from by decide) _ _ h2)
-          · intro h
-            rw [decide_eq_true_eq] at h
-            refine ⟨?_, ?_⟩
-            · rw [decide_eq_true_eq]
-              intro i
-              have hi : i.val < treeLevel j := by omega
-              rw [htpp, Nat.testBit_mod_two_pow]
-              simp only [show decide (i.val < treeLevel j) = true from
-                decide_eq_true_eq.mpr hi, Bool.true_and]
-              exact Eq.mpr (by congr 1) (h ⟨i.val, by omega⟩)
-            · exact (show ∀ (a b : Bool), a = b → (!b ^^ a) = true from by decide) _ _
-                (Eq.mpr (by congr 1) (h ⟨treeLevel j, by omega⟩))
-    specialize hsC (2 ^ k - 4 + a) (by omega) (by omega)
-    simp only [show N + oC q + (2 ^ k - 4 + a) = N + oC q + (2 ^ k - 4) + a from by omega] at hsC
-    rw [hsC]
-    conv_lhs => rw [show treePos (2 ^ k - 4 + a)
-        (treeLevel (2 ^ k - 4 + a)) = a from by
-      rw [show treeLevel (2 ^ k - 4 + a) = k - 1 from by
-        unfold treeLevel; have : Nat.log 2 (2 ^ k - 4 + a + 4) = k := le_antisymm
-          (Nat.lt_succ_iff.mp (Nat.log_lt_of_lt_pow (by omega) (by omega)))
-          (Nat.le_log_of_pow_le (by omega) (by omega)); omega]
-      unfold treePos treeBase; rw [show k - 1 + 1 = k from by omega]; omega]
-    have hFin_eq : treeLevel (2 ^ k - 4 + a) + 1 = k := by
-      have : treeLevel (2 ^ k - 4 + a) = k - 1 := by
-        unfold treeLevel; have : Nat.log 2 (2 ^ k - 4 + a + 4) = k := le_antisymm
-          (Nat.lt_succ_iff.mp (Nat.log_lt_of_lt_pow (by omega) (by omega)))
-          (Nat.le_log_of_pow_le (by omega) (by omega)); omega
-      omega
-    rw [Bool.eq_iff_iff]
-    simp only [decide_eq_true_eq]
-    constructor
-    · intro h
-      apply Nat.eq_of_testBit_eq
-      intro i
-      by_cases hi : i < k
-      · rw [testBit_sum_cond_pow_fin k addr i hi]
-        exact Eq.mpr (by congr 1) (h ⟨i, by omega⟩).symm
-      · rw [Nat.testBit_lt_two_pow (lt_of_lt_of_le ha (Nat.pow_le_pow_right (by omega) (by omega))),
-            Nat.testBit_lt_two_pow (lt_of_lt_of_le haSum_lt (Nat.pow_le_pow_right (by omega) (by omega)))]
-    · intro h; subst h; intro i
-      rw [testBit_sum_cond_pow_fin k addr i.val (by omega)]
+        ⟨N + oC q + (2 ^ k - 4) + a, haW⟩ = decide (a = aSum) :=
+    colOutput_addrLeaf N f hN x
   have constFalse_wire : ∀ (hW : N < N + szSections k q),
-      (shannonCircuit N f hN).wireValue x ⟨N, hW⟩ = false := by
-    intro hW
-    have h0N : (0 : Nat) < N := by linarith [hkq, hk3]
-    rw [Circuit.wireValue_ge _ _ _ (show ¬((⟨N, hW⟩ : Fin _).val < N) from by show ¬(N < N); omega)]
-    change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
-    unfold shannonGateArray
-    change (shannonGateArray N f hN ⟨N - N, by omega⟩).val.eval
-      ((shannonCircuit N f hN).wireValue x) = false
-    unfold shannonGateArray
-    rw [dif_pos (show N - N = 0 from by omega)]
-    simp only [mkG, Gate.eval, Basis.andOr2, AONOp.eval,
-      Fin.foldl_succ_last, Fin.foldl_zero, Bool.true_and]
-    simp only [Fin.val_last, Fin.val_castSucc, ite_true, ite_false,
-      show ¬((1 : Nat) = 0) from by omega, Bool.false_xor, Bool.true_xor]
-    rw [Circuit.wireValue_lt _ _ _ (show (⟨0, _⟩ : Fin _).val < N from h0N)]
-    cases x ⟨0, h0N⟩ <;> rfl
+      (shannonCircuit N f hN).wireValue x ⟨N, hW⟩ = false :=
+    colOutput_constFalse N f hN x
   have colChain : ∀ (r : Nat) (hr : r < 2 ^ k - 1)
       (hrW : N + oD k q + p * (2 ^ k - 1) + r < N + szSections k q),
       (shannonCircuit N f hN).wireValue x
@@ -1444,10 +1511,10 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
     have hoC_eq : oC q = oC (dataBits N) := rfl
     have hW_bound : N + oC q + (2 ^ k - 4) + (2 ^ k) ≤ N + szSections k q := by
       have : oD k q ≤ szSections k q := by
-        show oD (addrBits N) (dataBits N) ≤ szSections (addrBits N) (dataBits N)
+        change oD (addrBits N) (dataBits N) ≤ szSections (addrBits N) (dataBits N)
         unfold szSections oD oC; omega
       have : oC q + (2 ^ k - 4) + 2 ^ k ≤ oD k q := by
-        show oC (dataBits N) + (2 ^ (addrBits N) - 4) + 2 ^ (addrBits N) ≤
+        change oC (dataBits N) + (2 ^ (addrBits N) - 4) + 2 ^ (addrBits N) ≤
           oD (addrBits N) (dataBits N)
         unfold oD oC
         have : 2 ^ (addrBits N + 1) - 4 = (2 ^ addrBits N - 4) + 2 ^ addrBits N := by
@@ -1457,7 +1524,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
         linarith
       omega
     have hoE_lt : oD k q + p * (2 ^ k - 1) + (2 ^ k - 1) ≤ oE k q := by
-      show oD (addrBits N) (dataBits N) +
+      change oD (addrBits N) (dataBits N) +
         colPatIdx N f (addrBits N) (dataBits N) (addrDataSum N hN) ⟨y, hy⟩ *
           (2 ^ (addrBits N) - 1) + (2 ^ (addrBits N) - 1) ≤
         oE (addrBits N) (dataBits N)
@@ -1478,14 +1545,18 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
           (shannonCircuit N f hN).wireValue x ⟨N, by linarith [hsel_bound pos hpos]⟩) =
         (Nat.testBit p pos && decide (pos = aSum)) := by
       split_ifs with htb
-      · rw [addrLeaf pos hpos (hsel_bound pos hpos)]
-        simp [htb]
-      · rw [constFalse_wire (by linarith [hsel_bound pos hpos])]
-        simp [htb]
+      · have h := colOutput_addrLeaf N f hN x pos hpos (hsel_bound pos hpos)
+        rw [show (Nat.testBit p pos && decide (pos = aSum)) = decide (pos = aSum) from by
+          simp [htb]]
+        exact h
+      · have h := colOutput_constFalse N f hN x (by linarith [hsel_bound pos hpos])
+        rw [show (Nat.testBit p pos && decide (pos = aSum)) = false from by simp [htb]]
+        exact h
     induction r with
     | zero =>
       have h_ne0 : oD k q + p * (2 ^ k - 1) ≠ 0 := by
-        show oD (addrBits N) (dataBits N) + colPatIdx N f (addrBits N) (dataBits N) (addrDataSum N hN)
+        change oD (addrBits N) (dataBits N) + colPatIdx N f (addrBits N) (dataBits N)
+          (addrDataSum N hN)
           ⟨y, hy⟩ * (2 ^ (addrBits N) - 1) ≠ 0
         unfold oD oC; omega
       have h_ge_oC : ¬(oD k q + p * (2 ^ k - 1) < oC q) := by
@@ -1494,7 +1565,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
       have h_ge_oD : ¬(oD k q + p * (2 ^ k - 1) < oD k q) := by omega
       have h_lt_oE : oD k q + p * (2 ^ k - 1) < oE k q := by linarith [hoE_lt]
       rw [Circuit.wireValue_ge _ _ _ (by
-        show ¬(N + oD k q + p * (2 ^ k - 1) + 0 < N); omega)]
+        change ¬(N + oD k q + p * (2 ^ k - 1) + 0 < N); omega)]
       change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
       unfold shannonGateArray
       simp only [show N + oD k q + p * (2 ^ k - 1) + 0 - N =
@@ -1516,13 +1587,16 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
         show (1 : Nat) = 0 + 1 from rfl, List.range_succ, List.range_zero]
       simp only [List.nil_append, List.foldl_append, List.foldl_cons, List.foldl_nil, Bool.false_or]
       congr 1 <;> split_ifs with htb
-      · simp only [htb, Bool.true_and]; exact addrLeaf _ (by omega) _
-      · simp only [Bool.eq_false_iff.mpr htb, Bool.false_and]; exact constFalse_wire _
-      · simp only [htb, Bool.true_and]; exact addrLeaf _ (by omega) _
-      · simp only [Bool.eq_false_iff.mpr htb, Bool.false_and]; exact constFalse_wire _
+      · simp only [htb, Bool.true_and]
+        exact colOutput_addrLeaf N f hN x _ (hbk ▸ (show _ < 2 ^ k by omega)) _
+      · simp only [Bool.eq_false_iff.mpr htb, Bool.false_and]; exact colOutput_constFalse N f hN x _
+      · simp only [htb, Bool.true_and]
+        exact colOutput_addrLeaf N f hN x _ (hbk ▸ (show _ < 2 ^ k by omega)) _
+      · simp only [Bool.eq_false_iff.mpr htb, Bool.false_and]; exact colOutput_constFalse N f hN x _
     | succ r' ih =>
       have h_ne0' : oD k q + p * (2 ^ k - 1) + (r' + 1) ≠ 0 := by
-        show oD (addrBits N) (dataBits N) + colPatIdx N f (addrBits N) (dataBits N) (addrDataSum N hN)
+        change oD (addrBits N) (dataBits N) + colPatIdx N f (addrBits N) (dataBits N)
+          (addrDataSum N hN)
           ⟨y, hy⟩ * (2 ^ (addrBits N) - 1) + (r' + 1) ≠ 0
         unfold oD oC; omega
       have h_ge_oC' : ¬(oD k q + p * (2 ^ k - 1) + (r' + 1) < oC q) := by
@@ -1531,7 +1605,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
       have h_ge_oD' : ¬(oD k q + p * (2 ^ k - 1) + (r' + 1) < oD k q) := by omega
       have h_lt_oE' : oD k q + p * (2 ^ k - 1) + (r' + 1) < oE k q := by linarith [hoE_lt]
       rw [Circuit.wireValue_ge _ _ _ (by
-        show ¬(N + oD k q + p * (2 ^ k - 1) + (r' + 1) < N); omega)]
+        change ¬(N + oD k q + p * (2 ^ k - 1) + (r' + 1) < N); omega)]
       change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
       unfold shannonGateArray
       simp only [show N + oD k q + p * (2 ^ k - 1) + (r' + 1) - N =
@@ -1558,8 +1632,10 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
       congr 1
       · exact ih (by omega) (by omega)
       · split_ifs with htb2
-        · simp only [htb2, Bool.true_and]; exact addrLeaf _ (by omega) _
-        · simp only [Bool.eq_false_iff.mpr htb2, Bool.false_and]; exact constFalse_wire _
+        · simp only [htb2, Bool.true_and]
+          exact colOutput_addrLeaf N f hN x _ (hbk ▸ (show _ < 2 ^ k by omega)) _
+        · simp only [Bool.eq_false_iff.mpr htb2, Bool.false_and]
+          exact colOutput_constFalse N f hN x _
   change (shannonCircuit N f hN).wireValue x
     ⟨N + oD k q + p * (2 ^ k - 1) + (2 ^ k - 2), by omega⟩ = _
   rw [colChain (2 ^ k - 2) (by omega) (by omega)]
@@ -1567,7 +1643,7 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
   have hfold := foldl_or_unique_true aSum haSum_lt
     (P := fun a => Nat.testBit p a && decide (a = aSum))
     (fun a _ hne => by simp [show ¬(a = aSum) from hne])
-  rw [hfold]; simp
+  rw [hfold]; simp only [decide_true, Bool.and_true]
   change (colPatIdx N f k q hkq ⟨y, hy⟩).testBit aSum = _
   unfold colPatIdx
   rw [encodeCol]
@@ -1596,7 +1672,7 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
       andLayerSem N f hN x y hy := by
     intro y hy hyW
     rw [Circuit.wireValue_ge _ _ _ (by
-      show ¬(N + oE (addrBits N) (dataBits N) + y < N); omega)]
+      change ¬(N + oE (addrBits N) (dataBits N) + y < N); omega)]
     change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
     unfold shannonGateArray
     simp only [show N + oE (addrBits N) (dataBits N) + y - N =
@@ -1629,7 +1705,7 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
   induction r with
   | zero =>
     rw [Circuit.wireValue_ge _ _ _ (show ¬((⟨N + oF (addrBits N) (dataBits N) + 0, hW⟩ :
-        Fin _).val < N) from by show ¬(N + oF (addrBits N) (dataBits N) + 0 < N); omega)]
+        Fin _).val < N) from by change ¬(N + oF (addrBits N) (dataBits N) + 0 < N); omega)]
     change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
     unfold shannonGateArray
     simp only [show N + oF (addrBits N) (dataBits N) + 0 - N =
@@ -1650,7 +1726,7 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
       Fin.val_last, Fin.val_castSucc, ite_false,
       show ¬((1 : Nat) = 0) from by omega,
       show (0 : Nat) + 1 = 1 from by omega]
-    show ((shannonCircuit N f hN).wireValue x
+    change ((shannonCircuit N f hN).wireValue x
         ⟨N + oE (addrBits N) (dataBits N) + 0, by linarith⟩ ||
       (shannonCircuit N f hN).wireValue x
         ⟨N + oE (addrBits N) (dataBits N) + 1, by linarith⟩) =
@@ -1664,7 +1740,7 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
       dif_pos (show 1 < 2 ^ dataBits N from by omega)]
   | succ r' ih =>
     rw [Circuit.wireValue_ge _ _ _ (show ¬((⟨N + oF (addrBits N) (dataBits N) + (r' + 1), hW⟩ :
-        Fin _).val < N) from by show ¬(N + oF (addrBits N) (dataBits N) + (r' + 1) < N); omega)]
+        Fin _).val < N) from by change ¬(N + oF (addrBits N) (dataBits N) + (r' + 1) < N); omega)]
     change (shannonGateArray N f hN ⟨_, _⟩).val.eval _ = _
     unfold shannonGateArray
     simp only [show N + oF (addrBits N) (dataBits N) + (r' + 1) - N =
@@ -1692,7 +1768,7 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
       show ¬((1 : Nat) = 0) from by omega]
     have hih := ih hr' hW'
     simp only [show r' + 1 + 1 = r' + 2 from by omega]
-    show ((shannonCircuit N f hN).wireValue x ⟨N + oF (addrBits N) (dataBits N) + r', hW'⟩ ||
+    change ((shannonCircuit N f hN).wireValue x ⟨N + oF (addrBits N) (dataBits N) + r', hW'⟩ ||
          (shannonCircuit N f hN).wireValue x
            ⟨N + oE (addrBits N) (dataBits N) + (r' + 2), by linarith⟩) =
         List.foldl (fun acc y => acc || if h : y < 2 ^ dataBits N
@@ -1808,3 +1884,8 @@ theorem shannon_construction (N : Nat) [NeZero N] (hN : 16 ≤ N)
   exact ⟨G, c, heval, by rw [Circuit.size]; exact shannon_size_le N hN G hG⟩
 
 end ShannonUpper
+
+end CircuitComplexity
+
+
+

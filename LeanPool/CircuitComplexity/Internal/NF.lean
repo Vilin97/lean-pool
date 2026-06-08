@@ -23,6 +23,9 @@ This internal module contains the proof infrastructure for CNF/DNF:
 The public interface re-exports the main theorems from `Circ.NF`.
 -/
 
+namespace CircuitComplexity
+
+
 /-! ## Helper lemmas for toCircuit correctness -/
 
 private lemma xor_neg_polarity_eq_eval (l : Literal N) (x : BitString N) :
@@ -227,7 +230,7 @@ end DNF
 private lemma Literal.eval_update_ne {l : Literal N} {i : Fin N} (hne : l.var ≠ i)
     (x : BitString N) (b : Bool) :
     l.eval (Function.update x i b) = l.eval x := by
-  simp [Literal.eval]
+  simp only [Literal.eval]
   rw [Function.update_of_ne hne]
 
 /-- If a term (conjunction of literals) doesn't mention variable `i`,
@@ -253,7 +256,7 @@ theorem DNF.term_mentions_all (φ : DNF N)
     ∀ i : Fin N, ∃ l ∈ term, l.var = i := by
   intro i
   by_contra hmiss
-  push_neg at hmiss
+  push Not at hmiss
   -- hmiss : ∀ l ∈ term, l.var ≠ i
   -- Since term misses variable i, flipping i doesn't change the term
   have hsat' : term.all (fun l => l.eval (Function.update x i (!x i))) = true := by
@@ -309,7 +312,9 @@ theorem card_true_of_flip_sensitive {N : Nat} (hN : 1 ≤ N)
   -- Bijection from S_true to S_false
   have hcard_eq : S_true.card = S_false.card := by
     apply Finset.card_bij (fun x _ => flip0 x)
-    · intro x hx; simp [S_true, S_false] at hx ⊢; exact flip0_tf x hx
+    · intro x hx
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and, S_true, S_false] at hx ⊢
+      exact flip0_tf x hx
     · intro a₁ h₁ a₂ h₂ heq
       have := congr_arg flip0 heq
       rwa [flip0_inv, flip0_inv] at this
@@ -390,3 +395,5 @@ theorem DNF.flip_complexity_lb (φ : DNF N) (hN : 1 ≤ N)
     rw [show (φ.terms[φ.terms.findIdx (fun t => t.all (fun l => l.eval x₁))]'hlt₁) =
         (φ.terms[k]'hlt) from by congr 1] at sat₁
     exact huniq _ (List.getElem_mem ..) x₁ x₂ sat₁ sat₂
+
+end CircuitComplexity

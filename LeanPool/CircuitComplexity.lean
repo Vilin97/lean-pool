@@ -16,6 +16,17 @@ import LeanPool.CircuitComplexity.Nondeterminism
 import LeanPool.CircuitComplexity.Valiant
 
 /-!
+# Circuit Complexity in Lean 4
+
+Source: url:https://github.com/SamuelSchlesinger/circuit-complexity
+Authors: Samuel Schlesinger
+Status: verified
+Main declarations: `CircuitComplexity.shannon_lower_bound_circuit`
+Tags: circuit-complexity, boolean-functions, lower-bounds, shannon-bound, parity
+MSC: 68Q06, 94C11
+-/
+
+/-!
 # Circuit Complexity
 
 A Lean 4 formalization of classical results in Boolean circuit complexity,
@@ -23,13 +34,4 @@ built on Mathlib. A `Circuit B N M G` is an acyclic Boolean circuit over basis
 `B` with `N` primary inputs, `M` outputs, and `G` internal gates; the
 `size_complexity` of a Boolean function is the minimum size of any circuit
 computing it.
-
-Source: url:https://github.com/SamuelSchlesinger/circuit-complexity
-Authors: Samuel Schlesinger
-Status: verified
-Main declarations: `shannon_lower_bound_circuit`, `schnorr_lower_bound_circuit`,
-`Circuit.gate_elimination_lower_bound`, `DNF.xorBool_complexity_lb`,
-`CNF.xorBool_complexity_lb`, `existQuantify_complexity_le`
-Tags: circuit-complexity, boolean-functions, lower-bounds, shannon-bound, parity
-MSC: 68Q06
 -/

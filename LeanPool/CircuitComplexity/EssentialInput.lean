@@ -17,6 +17,9 @@ for a Boolean function.
 * `EssentialInputs` — the set of essential input variables
 -/
 
+namespace CircuitComplexity
+
+
 /-- A function `f` depends on input variable `i` if flipping that bit
     can change some output. -/
 def IsEssentialInput {N M : Nat} (f : BitString N → BitString M) (i : Fin N) : Prop :=
@@ -29,3 +32,5 @@ instance {N M : Nat} {f : BitString N → BitString M} {i : Fin N} :
 /-- The set of input variables that `f` depends on. -/
 def EssentialInputs {N M : Nat} (f : BitString N → BitString M) : Finset (Fin N) :=
   Finset.univ.filter (IsEssentialInput f)
+
+end CircuitComplexity

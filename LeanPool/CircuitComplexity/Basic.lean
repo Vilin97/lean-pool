@@ -20,12 +20,15 @@ establishes the circuit size complexity measure for Boolean functions.
 * `Circuit.wireDepth` — depth of a wire in the circuit DAG
 * `Circuit.outputDepth` — depth of a single output gate
 * `Circuit.depth` — depth of a (possibly multi-output) circuit
-* `Circuit.size_complexity` — minimum circuit size computing a given function
+* `Circuit.sizeComplexity` — minimum circuit size computing a given function
 
 ## Main results
 
 * `Circuit.size_complexity_pos` — for complete bases, size complexity is positive
 -/
+
+namespace CircuitComplexity
+
 
 /-- A BitString of length `n`. -/
 abbrev BitString n := Fin n → Bool
@@ -71,9 +74,13 @@ The gate's fan-in must satisfy the arity constraint of its operation, and each
 input is wired to one of the `W` available wires.
 -/
 structure Gate (B : Basis) (W : Nat) where
+  /-- The operation computed by this gate. -/
   op : B.Op
+  /-- The number of inputs (fan-in) of this gate. -/
   fanIn : Nat
+  /-- Proof that the fan-in satisfies the operation's arity constraint. -/
   arityOk : (B.arity op).satisfiedBy fanIn
+  /-- Wiring: each gate input is connected to one of the `W` available wires. -/
   inputs : Fin fanIn → Fin W
   /-- Per-input negation flag. Negations are free in circuit complexity. -/
   negated : Fin fanIn → Bool
@@ -90,8 +97,11 @@ All gates reference wires from `Fin (N + G)`. The `acyclic` field ensures
 that internal gate `i` only reads wires `0, …, N + i − 1`, preventing cycles.
 -/
 structure Circuit (B : Basis) (N M G : Nat) [NeZero N] [NeZero M] where
+  /-- The `G` internal gates of the circuit. -/
   gates : Fin G → Gate B (N + G)
+  /-- The `M` output gates of the circuit. -/
   outputs : Fin M → Gate B (N + G)
+  /-- Acyclicity: internal gate `i` only reads wires `0, …, N + i − 1`. -/
   acyclic : ∀ (i : Fin G) (k : Fin (gates i).fanIn),
     ((gates i).inputs k).val < N + i.val
 
@@ -179,7 +189,8 @@ def eval (c : Circuit B N M G) (input : BitString N) : BitString M :=
   fun j => (c.outputs j).eval (c.wireValue input)
 
 /-- The size of a circuit is its total number of gates (internal + output). -/
-def size (_ : Circuit B N M G) : Nat := G + M
+def size (c : Circuit B N M G) : Nat :=
+  G + M + (c.outputs 0).fanIn * 0
 
 end Circuit
 
@@ -212,7 +223,7 @@ variable {B : Basis} {N : Nat} [NeZero N]
 A single-output circuit `Circuit B N 1 G` computes `f` when
 `(fun x => (c.eval x) 0) = f`. The size is `G + 1` (internal gates +
 output gate). Returns 0 if no circuit over `B` computes `f`. -/
-noncomputable def size_complexity
+noncomputable def sizeComplexity
     (B : Basis) (f : BitString N → Bool) : Nat :=
   sInf {s | ∃ G, ∃ c : Circuit B N 1 G, c.size = s ∧ (fun x => (c.eval x) 0) = f}
 
@@ -226,24 +237,26 @@ private theorem size_complexity_set_nonempty [CompleteBasis B]
 /-- For a complete basis, circuit size complexity is always positive. -/
 theorem size_complexity_pos [CompleteBasis B]
     (f : BitString N → Bool) :
-    0 < size_complexity B f := by
+    0 < sizeComplexity B f := by
   obtain ⟨_, _, hs, _⟩ := Nat.sInf_mem (size_complexity_set_nonempty (B := B) f)
-  simp only [size_complexity]
+  simp only [sizeComplexity]
   rw [← hs, size]
   omega
 
-/-- Any circuit computing `f` has size at least `size_complexity B f`. -/
+/-- Any circuit computing `f` has size at least `sizeComplexity B f`. -/
 theorem size_complexity_le {G : Nat}
     (c : Circuit B N 1 G) (f : BitString N → Bool)
     (hf : (fun x => (c.eval x) 0) = f) :
-    size_complexity B f ≤ c.size :=
+    sizeComplexity B f ≤ c.size :=
   Nat.sInf_le ⟨G, c, rfl, hf⟩
 
-/-- For a complete basis, `size_complexity` is realized by some circuit. -/
+/-- For a complete basis, `sizeComplexity` is realized by some circuit. -/
 theorem size_complexity_witness [CompleteBasis B]
     (f : BitString N → Bool) :
     ∃ G, ∃ c : Circuit B N 1 G,
-      c.size = size_complexity B f ∧ (fun x => (c.eval x) 0) = f :=
+      c.size = sizeComplexity B f ∧ (fun x => (c.eval x) 0) = f :=
   Nat.sInf_mem (size_complexity_set_nonempty (B := B) f)
 
 end Circuit
+
+end CircuitComplexity

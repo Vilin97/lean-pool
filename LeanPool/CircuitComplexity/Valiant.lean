@@ -33,7 +33,7 @@ first-differing bit, averaging, and the relabeling-after-removal
 bound — lives in `Circ.Internal.Valiant`.
 -/
 
-namespace Valiant
+namespace CircuitComplexity.Valiant
 
 open Digraph
 
@@ -79,8 +79,8 @@ theorem depth_reduction
       exact hbound
   · refine ⟨∅, Finset.empty_subset _, by simp, ?_⟩
     rw [deleteEdges_empty_depth]
-    show sSup _ ≤ _
+    change sSup _ ≤ _
     rw [Nat.sSup_of_not_bddAbove hac]
     exact Nat.zero_le _
 
-end Valiant
+end CircuitComplexity.Valiant

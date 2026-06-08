@@ -12,6 +12,9 @@ via DNF (disjunctive normal form) construction. The basis definitions are
 in `Circ.AON.Defs`; this module is re-exported through `Circ.AON`.
 -/
 
+namespace CircuitComplexity
+
+
 /-- Indicator circuit: outputs `true` iff the input equals `s`.
 
 A single N-input AND gate where input `i` is wired to primary input `i`,
@@ -178,7 +181,7 @@ private lemma exists_testBit_encode (N : Nat) (x : BitString N) :
       j
 
 /-- The single-output DNF circuit correctly computes `f`. -/
-def AONFor_is_Correct {N : Nat} [NeZero N] (f : BitString N → Bool) :
+theorem AONFor_is_Correct {N : Nat} [NeZero N] (f : BitString N → Bool) :
     (fun (x : BitString 1) => x 0) ∘ (AONFor f).eval = f := by
   funext x
   simp only [Function.comp, Circuit.eval, AONFor_outputs, Gate.eval,
@@ -336,12 +339,12 @@ private lemma AONForM_idx_j {N M : Nat} (j : Fin M) (k : Fin (2 ^ N)) :
   AONForM_j_of_add j k _
 
 /-- The multi-output DNF circuit correctly computes `f`. -/
-def AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
+theorem AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
     (f : BitString N → BitString M) :
     (AONForM f).eval = f := by
   funext x j
   -- Unfold eval to get the output gate evaluation
-  show ((AONForM f).outputs j).eval ((AONForM f).wireValue x) = f x j
+  change ((AONForM f).outputs j).eval ((AONForM f).wireValue x) = f x j
   simp only [AONForM, Gate.eval, Basis.unboundedAON, Bool.false_xor, AONOp.eval]
   -- Now the goal involves Fin.foldl over wireValues at output wires
   -- We need to connect wireValue to mkGate eval
@@ -370,22 +373,27 @@ def AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
       -- Use AONForM_idx_i and AONForM_idx_j to simplify
       have hi : AONForM_i (AONForM_idx j k) = k := AONForM_idx_i j k
       have hj' : AONForM_j (AONForM_idx j k) = j := AONForM_idx_j j k
-      by_cases hfk : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val) (AONForM_j (AONForM_idx j k)) = true
+      by_cases hfk : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val)
+        (AONForM_j (AONForM_idx j k)) = true
       · rw [AONForM_mkGate_eval_true_iff f _ _ hfk] at hk
         rw [hi, hj'] at hfk
         have hxeq : ∀ p : Fin N, x p = k.val.testBit p.val := by
           intro p; rw [← AONForM_wireValue_input f x p]
           rw [hi] at hk; exact hk p
-        have : f x j = f (fun p => k.val.testBit p.val) j := congr_arg (· j) (congr_arg f (funext hxeq))
+        have : f x j = f (fun p => k.val.testBit p.val) j := congr_arg (· j)
+          (congr_arg f (funext hxeq))
         rw [this]; exact hfk
-      · have hfk' : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val) (AONForM_j (AONForM_idx j k)) = false := by
-          cases h : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val) (AONForM_j (AONForM_idx j k)) <;> simp_all
+      · have hfk' : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val)
+            (AONForM_j (AONForM_idx j k)) = false := by
+          cases h : f (fun p => (AONForM_i (AONForM_idx j k)).val.testBit p.val)
+            (AONForM_j (AONForM_idx j k)) <;> simp_all
         exact absurd (AONForM_mkGate_eval_false f _ _ hfk' ▸ hk) Bool.false_ne_true
     · -- f x j = true → some gate fires
       intro hfx
       obtain ⟨m, hm⟩ := exists_testBit_encode N x
       refine ⟨m, ?_⟩
-      have hfm : f (fun p => (AONForM_i (AONForM_idx j m)).val.testBit p.val) (AONForM_j (AONForM_idx j m)) = true := by
+      have hfm : f (fun p => (AONForM_i (AONForM_idx j m)).val.testBit p.val)
+        (AONForM_j (AONForM_idx j m)) = true := by
         rw [AONForM_idx_i, AONForM_idx_j]
         convert hfx using 1; congr 1; funext p; exact hm p
       rw [AONForM_mkGate_eval_true_iff f _ _ hfm]
@@ -399,3 +407,5 @@ def AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]
 
 instance : CompleteBasis Basis.unboundedAON where
   complete f := ⟨_, AONForM f, AONForM_is_Correct f⟩
+
+end CircuitComplexity

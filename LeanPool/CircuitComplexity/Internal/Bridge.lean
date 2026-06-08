@@ -18,6 +18,9 @@ The public theorems `shannon_lower_bound_circuit` and
 `Circ.Schnorr` respectively.
 -/
 
+namespace CircuitComplexity
+
+
 /-! ## Encoding -/
 
 /-- Encode a `Basis.andOr2` gate as a `GateSlot`. -/
@@ -68,7 +71,7 @@ theorem wireValue_eq_wireValD {N G : Nat} [NeZero N]
     conv_rhs => unfold wireValD
     simp [hwN]
   · -- Gate wire
-    push_neg at hwN
+    push Not at hwN
     have hG : w.val - N < G := by omega
     rw [Circuit.wireValue_ge c input w (by omega)]
     -- h2 first, so omega can resolve Fin bounds
@@ -171,7 +174,7 @@ private theorem wireValD_padDesc_lt {N s s' : Nat} (d : CircDesc N s) (hs : 0 < 
       wireValD d x ⟨w.val, hw⟩ := by
   by_cases hwN : w.val < N
   · simp [wireValD, hwN]
-  · push_neg at hwN
+  · push Not at hwN
     have hi : w.val - N < s := by omega
     conv_lhs => unfold wireValD
     simp only [show ¬(w.val < N) from by omega, dite_false]
@@ -214,7 +217,7 @@ theorem evalD_padDesc {N s s' : Nat} (d : CircDesc N s) (hs : 0 < s)
   · -- s < s': the last wire is in the padded region
     rw [wireValD_padDesc_ge d hs h x ⟨N + s' - 1, by omega⟩ (by omega)]
   · -- s = s': both point to the same wire
-    push_neg at hsle
+    push Not at hsle
     have : s = s' := by omega
     subst this
     exact wireValD_padDesc_lt d hs h x ⟨N + s - 1, by omega⟩ (by omega)
@@ -252,3 +255,5 @@ theorem schnorr_lower_bound_circuit (N G : Nat) [NeZero N]
   have heval' : ∀ x, evalD hG1 (circuitToDesc c) x = comp.xor (Schnorr.xorBool N x) :=
     fun x => (congr_fun h x).symm ▸ heval x
   exact Schnorr.xor_lower_bound_2 N (G + 1) hG1 (circuitToDesc c) comp heval' hN
+
+end CircuitComplexity

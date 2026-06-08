@@ -19,6 +19,9 @@ This module defines the N-input XOR function and its key properties.
 * `Schnorr.xorBool_essential` — XOR depends on all inputs
 -/
 
+namespace CircuitComplexity
+
+
 namespace Schnorr
 
 /-- The N-input XOR (parity) function. -/
@@ -36,14 +39,14 @@ theorem xorBool_flip (N : Nat) (x : BitString N) (a : Fin N) :
   induction N with
   | zero => exact a.elim0
   | succ n ih =>
-    show (Function.update x a (!x a) 0).xor
+    change (Function.update x a (!x a) 0).xor
       (xorBool n (Function.update x a (!x a) ∘ Fin.succ)) =
       !((x 0).xor (xorBool n (x ∘ Fin.succ)))
     by_cases ha : a = 0
     · subst ha
       rw [Function.update_self]
       have htail : Function.update x 0 (!x 0) ∘ Fin.succ = x ∘ Fin.succ := by
-        funext i; show Function.update x 0 (!x 0) (Fin.succ i) = x (Fin.succ i)
+        funext i; change Function.update x 0 (!x 0) (Fin.succ i) = x (Fin.succ i)
         exact Function.update_of_ne (Fin.succ_ne_zero i) (!x 0) x
       rw [htail, Bool.not_xor]
     · rw [Function.update_of_ne (Ne.symm ha)]
@@ -62,3 +65,5 @@ theorem xorBool_essential (N : Nat) (a : Fin N) (x : BitString N) :
   rw [xorBool_flip]; cases xorBool N x <;> simp
 
 end Schnorr
+
+end CircuitComplexity

@@ -35,6 +35,9 @@ The OR of two Boolean functions has circuit complexity bounded by the sum
 of their complexities plus one, using `ShannonUpper.binopCircuit`.
 -/
 
+namespace CircuitComplexity
+
+
 variable {k m : Nat}
 
 /-! ## Gate evaluation helpers -/
@@ -44,8 +47,10 @@ variable {k m : Nat}
 private theorem andOr2_eval_two {W : Nat} (g : Gate Basis.andOr2 W)
     (wv : BitString W) :
     g.eval wv =
-    let a0 := g.negated ⟨0, by rw [andOr2_fanIn]; omega⟩ ^^ wv (g.inputs ⟨0, by rw [andOr2_fanIn]; omega⟩)
-    let a1 := g.negated ⟨1, by rw [andOr2_fanIn]; omega⟩ ^^ wv (g.inputs ⟨1, by rw [andOr2_fanIn]; omega⟩)
+    let a0 := g.negated ⟨0,
+      by rw [andOr2_fanIn]; omega⟩ ^^ wv (g.inputs ⟨0, by rw [andOr2_fanIn]; omega⟩)
+    let a1 := g.negated ⟨1,
+      by rw [andOr2_fanIn]; omega⟩ ^^ wv (g.inputs ⟨1, by rw [andOr2_fanIn]; omega⟩)
     match g.op with
     | .and => a0 && a1
     | .or  => a0 || a1 := by
@@ -90,7 +95,10 @@ private theorem mkConstGateP_eval {G : Nat} [NeZero m] (val : Bool) (bound : Nat
   · rename_i hval; rw [andOr2_eval_two]; simp only
     cases wv ⟨0, by have := NeZero.ne m; omega⟩ <;> simp [hval]
   · rename_i hval; rw [andOr2_eval_two]; simp only
-    cases wv ⟨0, by have := NeZero.ne m; omega⟩ <;> simp at hval ⊢ <;> exact hval
+    cases wv ⟨0, by have := NeZero.ne m; omega⟩ <;>
+      simp only [Bool.not_eq_true, ↓reduceIte, bne_self_eq_false, one_ne_zero, Bool.bne_false,
+        Bool.and_true, Bool.false_eq, Bool.bne_true, Bool.not_false, Bool.and_false] at hval ⊢ <;>
+      exact hval
 
 private theorem mkIdentGateP_eval {G : Nat} (op : AONOp) (w : Fin (k + m + G)) (neg : Bool)
     (bound : Nat) (hw : w.val < k + m + bound)
@@ -219,7 +227,7 @@ private theorem wireValue_zero {G : Nat} [NeZero m] (b : Bool)
     (c : Circuit Basis.andOr2 ((k + 1) + m) 1 G)
     (x : BitString (k + m)) :
     c.wireValue (prependInput b x) ⟨0, by omega⟩ = b := by
-  rw [Circuit.wireValue_lt _ _ _ (by show 0 < (k + 1) + m; omega)]
+  rw [Circuit.wireValue_lt _ _ _ (by change 0 < (k + 1) + m; omega)]
   simp [prependInput]
 
 /-- Wire value correspondence: for wires > 0, the old circuit's wire value
@@ -235,11 +243,13 @@ private theorem wireValue_restrict {G : Nat} [NeZero m] (b : Bool)
   | _ w ih =>
     by_cases hwN : w < (k + 1) + m
     · rw [Circuit.wireValue_lt _ _ _ (show (⟨w, hwlt⟩ : Fin _).val < (k + 1) + m by simp; omega)]
-      rw [Circuit.wireValue_lt _ _ _ (show (⟨w - 1, (by omega)⟩ : Fin _).val < k + m by simp; omega)]
+      rw [Circuit.wireValue_lt _ _ _
+        (show (⟨w - 1, (by omega)⟩ : Fin _).val < k + m by simp; omega)]
       simp only [prependInput, show ¬ (w = 0) from by omega, dite_false]
-    · push_neg at hwN
+    · push Not at hwN
       rw [Circuit.wireValue_ge _ _ _ (show ¬ (⟨w, hwlt⟩ : Fin _).val < (k + 1) + m by simp; omega)]
-      rw [Circuit.wireValue_ge _ _ _ (show ¬ (⟨w - 1, (by omega)⟩ : Fin _).val < k + m by simp; omega)]
+      rw [Circuit.wireValue_ge _ _ _
+        (show ¬ (⟨w - 1, (by omega)⟩ : Fin _).val < k + m by simp; omega)]
       simp only [restrictCircuit]
       have hidx : w - 1 - (k + m) = w - (k + 1 + m) := by omega
       have hg_eq : (⟨w - 1 - (k + m), by omega⟩ : Fin G) = ⟨w - (k + 1 + m), by omega⟩ := by
@@ -270,3 +280,5 @@ theorem restrictCircuit_eval {G : Nat} [NeZero m] (b : Bool)
   intro i hi hip
   have := wireValue_restrict b c x i (by omega) hip
   convert this using 2
+
+end CircuitComplexity
