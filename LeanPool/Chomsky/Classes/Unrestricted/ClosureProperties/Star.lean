@@ -1222,8 +1222,7 @@ by
   classical
   have count_R := congr_arg (·.countIn R) ass
   repeat rw [List.countIn_append] at count_R
-  have R_ni_wb : @R T g.nt ∉ w.flatten.map Symbol.terminal ++ β.map Symbol.terminal := by
-    apply case_3_ni_wb
+  have R_ni_wb : @R T g.nt ∉ w.flatten.map Symbol.terminal ++ β.map Symbol.terminal := case_3_ni_wb
   rw [List.countIn_singleton_eq, List.countIn_singleton_neq H_neq_R, add_zero,
       ←List.countIn_append, List.countIn_zero_of_notin R_ni_wb, zero_add,
       List.countIn_zero_of_notin map_wrap_never_contains_R, add_zero,
@@ -1267,10 +1266,8 @@ private lemma case_3_gamma_nil {g : Grammar T} {w : List (List T)} {β : List T}
       u ++ [Symbol.nonterminal ▶2] ++ [H] ++ v) :
   γ = [] :=
 by
-  have R_ni_wb : @R T g.nt ∉ w.flatten.map Symbol.terminal ++ β.map Symbol.terminal := by
-    apply case_3_ni_wb
-  have H_ni_wb : @H T g.nt ∉ w.flatten.map Symbol.terminal ++ β.map Symbol.terminal := by
-    apply case_3_ni_wb
+  have R_ni_wb : @R T g.nt ∉ w.flatten.map Symbol.terminal ++ β.map Symbol.terminal := case_3_ni_wb
+  have H_ni_wb : @H T g.nt ∉ w.flatten.map Symbol.terminal ++ β.map Symbol.terminal := case_3_ni_wb
   have H_ni_wbrg : H ∉ w.flatten.map (@Symbol.terminal T (nn g.nt)) ++ β.map Symbol.terminal ++ [R]
     ++ γ.map wrapSym := by
     intro contra
@@ -1677,6 +1674,100 @@ by
           omega
         · exact le_of_le_of_eq lt_v'len.le (congr_arg List.length v'_is_suffix)
 
+private lemma case_3_no_Z {g : Grammar T} {α : List (ns T g.nt)}
+    {w : List (List T)} {β : List T} {γ : List (Symbol T g.nt)}
+    {x : List (List (Symbol T g.nt))}
+    (cat : α = w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++ [R] ++ γ.map wrapSym ++ [H]
+      ++ ((x.map (List.map wrapSym)).map (· ++ [H])).flatten) :
+  Z ∉ α :=
+by
+  intro contr
+  rw [cat] at contr
+  clear * - contr
+  simp only [List.mem_append] at contr
+  rcases contr with ((((hZw | hZβ) | hZR) | hZγ) | hZH) | hZx
+  · rw [List.mem_map] at hZw
+    obtain ⟨s, -, imposs⟩ := hZw
+    simp [Z] at imposs
+  · rw [List.mem_map] at hZβ
+    obtain ⟨s, -, imposs⟩ := hZβ
+    simp [Z] at imposs
+  · rw [List.mem_singleton] at hZR
+    exact Z_neq_R hZR
+  · rw [List.mem_map] at hZγ
+    obtain ⟨s, -, imposs⟩ := hZγ
+    exact wrap_never_outputs_Z imposs
+  · rw [List.mem_singleton] at hZH
+    exact Z_neq_H hZH
+  · exact Z_not_in_join_mpHmmw hZx
+
+private lemma case_3_head_step {g : Grammar T} {α α' : List (ns T g.nt)}
+    {w : List (List T)} {β : List T} {γ : List (Symbol T g.nt)}
+    {x : List (List (Symbol T g.nt))} {u v : List (ns T g.nt)}
+    (valid_w : ∀ wᵢ ∈ w, wᵢ ∈ g.language)
+    (valid_middle : g.Derives [Symbol.nonterminal g.initial] (β.map Symbol.terminal ++ γ))
+    (cat : α = w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++ [R] ++ γ.map wrapSym ++ [H]
+      ++ ((x.map (List.map wrapSym)).map (· ++ [H])).flatten)
+    (bef : α = u ++ [@R T g.nt] ++ [H] ++ v)
+    (aft : α' = u ++ v) :
+  (∃ w : List (List T), ∃ β : List T, ∃ γ : List (Symbol T g.nt), ∃ x : List (List (Symbol T g.nt)),
+    (∀ wᵢ ∈ w, wᵢ ∈ g.language) ∧
+    g.Derives [Symbol.nonterminal g.initial] (β.map Symbol.terminal ++ γ) ∧
+    (∀ xᵢ ∈ x, g.Derives [Symbol.nonterminal g.initial] xᵢ) ∧
+    α' = w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++ [R] ++ γ.map wrapSym ++ [H] ++
+         ((x.map (List.map wrapSym)).map (· ++ [H])).flatten) ∨
+  (∃ u : List T, u ∈ KStar.kstar g.language ∧ α' = u.map Symbol.terminal) ∨
+  (∃ σ : List (Symbol T g.nt), α' = σ.map wrapSym ++ [R]) ∨
+  (∃ ω : List (ns T g.nt), α' = ω ++ [H]) ∧ Z ∉ α' ∧ R ∉ α' :=
+by
+  rw [cat] at bef
+  have gamma_nil_here := case_3_gamma_nil bef
+  rw [←List.reverse_reverse x] at *
+  rcases hx : x.reverse with _ | ⟨xₘ, L⟩
+  · right; left
+    rw [gamma_nil_here, List.map_nil, List.append_nil] at bef
+    rw [hx, List.reverse_nil, List.map_nil, List.map_nil, List.flatten,
+         List.append_nil] at bef
+    have v_nil := case_3_v_nil bef
+    rw [v_nil, List.append_nil] at bef aft
+    use List.flatten w ++ β
+    constructor
+    · use w ++ [β]
+      constructor
+      · rw [List.flatten_append]
+        rw [List.flatten_singleton]
+      · intro y y_in
+        rw [List.mem_append] at y_in
+        aesop
+    · rw [List.append_cancel_right_eq, R, List.append_cancel_right_eq] at bef
+      rw [aft, ←bef, List.map_append]
+  · right; right; right
+    rw [hx, List.reverse_cons] at bef
+    rw [aft]
+    have Z_ni_wb : Z ∉ w.flatten.map (@Symbol.terminal T (nn g.nt)) ++ β.map Symbol.terminal
+      := case_3_ni_wb
+    have R_ni_wb : R ∉ w.flatten.map (@Symbol.terminal T (nn g.nt)) ++ β.map Symbol.terminal
+      := case_3_ni_wb
+    have u_eq : u = w.flatten.map (@Symbol.terminal T (nn g.nt)) ++ β.map Symbol.terminal :=
+      case_3_u_eq_left_side bef
+    have v_eq : v = (((L.reverse ++ [xₘ]).map (List.map wrapSym)).map (· ++ [H])).flatten
+      := by
+      rw [u_eq, gamma_nil_here, List.map_nil, List.append_nil] at bef
+      exact List.append_cancel_left bef.symm
+    rw [u_eq, v_eq]
+    constructor
+    · use w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++
+            ((L.reverse.map (List.map wrapSym)).map (· ++ [H])).flatten ++
+            xₘ.map wrapSym
+      rw [List.map_append, List.map_append, List.flatten_append, List.map_singleton,
+          List.map_singleton, List.flatten_singleton, ←List.append_assoc,
+            ←List.append_assoc]
+    constructor
+    · rw [List.mem_append]
+      exact (·.casesOn Z_ni_wb Z_not_in_join_mpHmmw)
+    · rw [List.mem_append]
+      exact (·.casesOn R_ni_wb R_not_in_join_mpHmmw)
+
 private lemma star_case_3 {g : Grammar T} {α α' : List (ns T g.nt)}
     (orig : g.star.Transforms α α')
     (hyp :
@@ -1698,26 +1789,7 @@ private lemma star_case_3 {g : Grammar T} {α α' : List (ns T g.nt)}
   (∃ ω : List (ns T g.nt), α' = ω ++ [H]) ∧ Z ∉ α' ∧ R ∉ α' :=
 by
   rcases hyp with ⟨w, β, γ, x, valid_w, valid_middle, valid_x, cat⟩
-  have no_Z_in_alpha : Z ∉ α := by
-    intro contr
-    rw [cat] at contr
-    clear * - contr
-    simp only [List.mem_append] at contr
-    rcases contr with ((((hZw | hZβ) | hZR) | hZγ) | hZH) | hZx
-    · rw [List.mem_map] at hZw
-      obtain ⟨s, -, imposs⟩ := hZw
-      simp [Z] at imposs
-    · rw [List.mem_map] at hZβ
-      obtain ⟨s, -, imposs⟩ := hZβ
-      simp [Z] at imposs
-    · rw [List.mem_singleton] at hZR
-      exact Z_neq_R hZR
-    · rw [List.mem_map] at hZγ
-      obtain ⟨s, -, imposs⟩ := hZγ
-      exact wrap_never_outputs_Z imposs
-    · rw [List.mem_singleton] at hZH
-      exact Z_neq_H hZH
-    · exact Z_not_in_join_mpHmmw hZx
+  have no_Z_in_alpha : Z ∉ α := case_3_no_Z cat
   rcases orig with ⟨r, rin, u, v, bef, aft⟩
   cases rin with
   | head =>
@@ -1774,8 +1846,7 @@ by
             exact valid_x xᵢ (List.mem_cons_of_mem x₀ xiin)
           rw [aft]
           have u_eq : u = w.flatten.map (@Symbol.terminal T (nn g.nt)) ++ β.map
-            (@Symbol.terminal T (nn g.nt)) := by
-            exact case_3_u_eq_left_side bef
+            (@Symbol.terminal T (nn g.nt)) := case_3_u_eq_left_side bef
           have v_eq : v = (((x₀::L).map (List.map wrapSym)).map (· ++ [H])).flatten := by
             rw [u_eq, gamma_nil_here, List.map_nil, List.append_nil] at bef
             exact List.append_cancel_left bef.symm
@@ -1786,55 +1857,7 @@ by
         | head =>
           dsimp only at bef aft
           rw [List.append_nil] at bef aft
-          rw [cat] at bef
-          have gamma_nil_here := case_3_gamma_nil bef
-          rw [←List.reverse_reverse x] at *
-          rcases hx : x.reverse with _ | ⟨xₘ, L⟩
-          · right; left
-            rw [gamma_nil_here, List.map_nil, List.append_nil] at bef
-            rw [hx, List.reverse_nil, List.map_nil, List.map_nil, List.flatten,
-                 List.append_nil] at bef
-            have v_nil := case_3_v_nil bef
-            rw [v_nil, List.append_nil] at bef aft
-            use List.flatten w ++ β
-            constructor
-            · use w ++ [β]
-              constructor
-              · rw [List.flatten_append]
-                rw [List.flatten_singleton]
-              · intro y y_in
-                rw [List.mem_append] at y_in
-                aesop
-            · rw [List.append_cancel_right_eq, R, List.append_cancel_right_eq] at bef
-              rw [aft, ←bef, List.map_append]
-          · right; right; right
-            rw [hx, List.reverse_cons] at bef
-            rw [aft]
-            have Z_ni_wb : Z ∉ w.flatten.map (@Symbol.terminal T (nn g.nt)) ++ β.map Symbol.terminal
-              := by
-              apply case_3_ni_wb
-            have R_ni_wb : R ∉ w.flatten.map (@Symbol.terminal T (nn g.nt)) ++ β.map Symbol.terminal
-              := by
-              apply case_3_ni_wb
-            have u_eq : u = w.flatten.map (@Symbol.terminal T (nn g.nt)) ++ β.map Symbol.terminal :=
-              case_3_u_eq_left_side bef
-            have v_eq : v = (((L.reverse ++ [xₘ]).map (List.map wrapSym)).map (· ++ [H])).flatten
-              := by
-              rw [u_eq, gamma_nil_here, List.map_nil, List.append_nil] at bef
-              exact List.append_cancel_left bef.symm
-            rw [u_eq, v_eq]
-            constructor
-            · use w.flatten.map Symbol.terminal ++ β.map Symbol.terminal ++
-                    ((L.reverse.map (List.map wrapSym)).map (· ++ [H])).flatten ++
-                    xₘ.map wrapSym
-              rw [List.map_append, List.map_append, List.flatten_append, List.map_singleton,
-                  List.map_singleton, List.flatten_singleton, ←List.append_assoc,
-                    ←List.append_assoc]
-            constructor
-            · rw [List.mem_append]
-              exact (·.casesOn Z_ni_wb Z_not_in_join_mpHmmw)
-            · rw [List.mem_append]
-              exact (·.casesOn R_ni_wb R_not_in_join_mpHmmw)
+          exact case_3_head_step valid_w valid_middle cat bef aft
         | tail _ rin =>
           have rin' : r ∈ rulesThatScanTerminals g ∨ r ∈ g.rules.map wrapGr := by
             rwa [or_comm, ←List.mem_append]
