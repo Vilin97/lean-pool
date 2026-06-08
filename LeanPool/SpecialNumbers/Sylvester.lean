@@ -3,7 +3,6 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
-import Init.Data.List.Nat.Pairwise
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
@@ -32,6 +31,8 @@ We follow the presentantion from [Wikipedia](https://en.wikipedia.org/wiki/Sylve
 
 open Nat
 
+namespace SpecialNumbers
+
 /--
 Sylvester sequence: https://oeis.org/A000058.
 -/
@@ -52,9 +53,10 @@ theorem sylvester_two : sylvester 2 = 7 := by rfl
 theorem sylvester_three : sylvester 3 = 43 := by rfl
 
 theorem sylvester_ge_two (n : ℕ) : 2 ≤ sylvester n := by
-  induction' n with n ih
-  · simp
-  · simp only [sylvester, reduceLeDiff]
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    simp only [sylvester, Nat.reduceLeDiff]
     exact one_le_mul_of_one_le_of_one_le (by linarith) (by omega)
 
 /--
@@ -87,7 +89,7 @@ theorem sylvester_mod_eq_one {m n : ℕ} (h1 : m < n) :
     apply Finset.dvd_prod_of_mem
     exact Finset.mem_range.mpr h1
   rw [Nat.add_mod]
-  simp only [add_mod_mod, mod_add_mod, Nat.dvd_iff_mod_eq_zero.mp d]
+  simp only [add_mod_mod, Nat.dvd_iff_mod_eq_zero.mp d]
   have s1 : sylvester m > 1 := by linarith [sylvester_ge_two m]
   exact Nat.mod_eq_of_lt s1
 
@@ -216,3 +218,5 @@ theorem sylvester_eq_floor_constant_pow {n : ℕ} :
   refine ((Nat.floor_eq_iff ?h).mpr ?hb).symm
   · linarith [pow_pos sylvesterConstant_pos (2 ^ (n + 1))]
   · exact ⟨sylvester_le_const_pow, const_pow_lt_sylvester_add_one⟩
+
+end SpecialNumbers

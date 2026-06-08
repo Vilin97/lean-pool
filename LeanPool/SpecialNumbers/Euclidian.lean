@@ -3,11 +3,10 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
-import Mathlib.Tactic
-import Mathlib.Order.Monotone.Basic
-import Mathlib.Order.Filter.Basic
-import Mathlib.Order.Bounds.Basic
-import Mathlib.Data.Complex.ExponentialBounds
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Order.Filter.AtTopBot.Basic
+import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # Euclid Numbers
@@ -33,6 +32,8 @@ the notation from [knuth1989concrete].
 * [Concrete Mathematics][knuth1989concrete]
 * [The On-Line Encyclopedia of Integer Sequences][oeis]
 -/
+
+namespace SpecialNumbers
 
 namespace Euclid
 
@@ -68,10 +69,12 @@ $$
 -/
 theorem euclid_prod_finset_add_one {n : ℕ} :
     euclid (n + 1) = ∏ x ∈ Finset.Icc 1 n, euclid x + 1 := by
-  induction' n with n ih
-  · simp
-  · rw[euclid]
-    · simp [Nat.pow_two, Finset.prod_Icc_succ_top]
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [euclid]
+    · simp only [Nat.pow_two, le_add_iff_nonneg_left, zero_le, Finset.prod_Icc_succ_top,
+        Nat.add_right_cancel_iff]
       rw [← Nat.sub_one_mul]
       congr
       simp [ih]
@@ -123,7 +126,7 @@ theorem euclid_mod_eq_one {m n : ℕ} (h1 : m < n) (h2 : 0 < m) :
       apply Finset.dvd_prod_of_mem
       exact Finset.mem_Icc.mpr (by omega)
     rw [Nat.add_mod]
-    simp [Nat.dvd_iff_mod_eq_zero.mp d]
+    simp only [Nat.dvd_iff_mod_eq_zero.mp d, zero_add, dvd_refl, Nat.mod_mod_of_dvd]
     exact Nat.mod_eq_of_lt <| euclid_gt_one_of_pos <| by linarith
   · linarith
 
@@ -131,8 +134,8 @@ private lemma euclid_coprime_of_lt {m n : ℕ} (h : m < n) :
     Nat.Coprime (euclid m) (euclid n) := by
   by_cases c : m = 0
   · simp [c]
-  · simp [Nat.Coprime]
-    rw [Nat.gcd_rec, euclid_mod_eq_one] <;> first | simp | omega
+  · rw [Nat.Coprime, Nat.gcd_rec, euclid_mod_eq_one h (by omega)]
+    exact Nat.gcd_one_left (euclid m)
 
 /--
 The Euclid numbers are co-prime: $\gcd(e_n, e_m) = 1$, for $n\neq m$.
@@ -149,7 +152,7 @@ theorem euclid_strictMono : StrictMono euclid := by
   apply strictMono_nat_of_lt_succ
   intro n
   by_cases c : n = 0
-  · simp [c, euclid]
+  · simp [c]
   · have h : euclid n - 1 ≥ 1 := Nat.le_sub_one_of_lt <| euclid_gt_one_of_pos <| by omega
     calc
       euclid (n + 1) = (euclid n) * (euclid n - 1) + 1 := by simp [euclid, pow_two, Nat.mul_sub_one]
@@ -165,9 +168,10 @@ private theorem reuclid_ge_one (n : ℕ) : (1 : ℝ) ≤ euclid n := Nat.one_le_
 private theorem logEuclidSub_monotone : Monotone logEuclidSub := by
   refine monotone_nat_of_le_succ ?ha
   intro m
-  simp [logEuclidSub]
+  simp only [logEuclidSub, one_div]
   refine le_of_mul_le_mul_left ?h1 ((by simp) : (0 : ℝ) < (2 ^ (m + 1)))
-  simp
+  simp only [ne_eq, Nat.add_eq_zero_iff, one_ne_zero, and_false, not_false_eq_true,
+    pow_eq_zero_iff, OfNat.ofNat_ne_zero, mul_inv_cancel_left₀]
   rw [← mul_assoc, ← pow_sub₀ 2 (by linarith) (by linarith), Nat.add_sub_self_left m 1,
       pow_one, ← Real.log_rpow, Real.rpow_two]
   · refine (Real.log_le_log_iff ?hh1 ?hh2).mpr ?hh3
@@ -192,13 +196,16 @@ private noncomputable def logEuclidAdd : ℕ → ℝ
 private theorem logEuclidAdd_strictAnti : StrictAnti logEuclidAdd := by
   refine strictAnti_nat_of_succ_lt ?ha
   intro m
-  simp [logEuclidAdd]
+  simp only [logEuclidAdd, one_div]
   split
   · norm_num
-    refine mul_lt_of_lt_one_of_le_of_pos (by linarith) ?_ (by positivity)
-    rw [Real.log_le_iff_le_exp] <;> linarith [Real.exp_one_gt_d9]
+    have hlog : Real.log (5 / 2) ≤ 1 := by
+      rw [Real.log_le_iff_le_exp (by positivity)]
+      linarith [Real.exp_one_gt_d9]
+    linarith [hlog]
   · refine lt_of_mul_lt_mul_left ?h1 ((by simp) : (0 : ℝ) ≤ (2 ^ (m + 1)))
-    simp
+    simp only [ne_eq, Nat.add_eq_zero_iff, one_ne_zero, and_false, not_false_eq_true,
+      pow_eq_zero_iff, OfNat.ofNat_ne_zero, mul_inv_cancel_left₀]
     rw [← mul_assoc, ← pow_sub₀ 2 (by linarith) (by linarith), Nat.add_sub_self_left m 1,
         pow_one, ← Real.log_rpow, Real.rpow_two]
     · refine (Real.log_lt_log_iff (by positivity) ?hh2).mpr ?hh3
@@ -212,13 +219,13 @@ private theorem logEuclidAdd_strictAnti : StrictAnti logEuclidAdd := by
 
 private theorem logEuclidSub_lt_logEuclidAdd {n : ℕ} :
     logEuclidSub n < logEuclidAdd n := by
-  simp [logEuclidSub, logEuclidAdd]
+  simp only [logEuclidSub, one_div, logEuclidAdd]
   cases n
   case zero =>
     norm_num
     rw [Real.log_lt_iff_lt_exp] <;> linarith [Real.exp_one_gt_d9]
   case succ m =>
-    simp
+    simp only [inv_pos, Nat.ofNat_pos, pow_succ_pos, mul_lt_mul_iff_right₀]
     refine (Real.log_lt_log_iff ?_ ?_).mpr ?_ <;> linarith [reuclid_ge_one (m+1)]
 
 private theorem bddAbove_logEuclidSub : BddAbove (Set.range logEuclidSub) := by
@@ -296,9 +303,10 @@ theorem euclid_le_constant_pow {n : ℕ} : euclid n ≤ euclidConstant ^ (2 ^ n)
   refine (Real.log_le_log_iff ?ha ?hb).mp ?h
   · linarith [reuclid_ge_one n]
   · exact pow_pos euclidConstant_pos (2 ^ n)
-  · simp [log_euclidConstant_eq_euclidLogConstant]
+  · simp only [one_div, Real.log_pow, Nat.cast_pow, Nat.cast_ofNat,
+      log_euclidConstant_eq_euclidLogConstant]
     have c : logEuclidSub n ≤ euclidLogConstant := logEuclidSub_le_euclidLogConstant
-    simp [logEuclidSub] at c
+    simp only [logEuclidSub, one_div] at c
     rwa [<- inv_mul_le_iff₀]
     positivity
 
@@ -316,17 +324,18 @@ theorem constant_pow_lt_euclid_add_one {n : ℕ} :
   · norm_num
     refine (lt_div_iff₀' (by positivity)).mp ?he
     rw [div_eq_inv_mul]
-    simp [euclidConstant]
+    simp only [one_div]
     let c := @euclidLogConstant_lt_logEuclidAdd n
-    simp [logEuclidAdd] at c
+    simp only [logEuclidAdd, one_div] at c
     split at c
     · let d := @euclidLogConstant_lt_logEuclidAdd 2
-      simp [logEuclidAdd] at d
+      simp only [logEuclidAdd, one_div, euclid_two, Nat.cast_ofNat] at d
       norm_num at *
       have e : (1 / 4) * Real.log (7 / 2) < Real.log (3 / 2) := by
-        rw [<- Real.log_rpow]
+        rw [<- Real.log_rpow (by positivity)]
         refine (Real.log_lt_log_iff ?haa ?hbb).mpr ?hcc
-        any_goals positivity
+        · positivity
+        · positivity
         · refine (Real.lt_rpow_inv_iff_of_pos ?hhx ?hy ?hz).mp ?aa
           any_goals positivity
           norm_num
@@ -343,3 +352,5 @@ theorem euclid_eq_floor_constant_pow {n : ℕ} : euclid n = ⌊euclidConstant ^ 
   · exact ⟨ euclid_le_constant_pow, constant_pow_lt_euclid_add_one ⟩
 
 end Euclid
+
+end SpecialNumbers

@@ -1918,24 +1918,20 @@ projects:
       github_repo: provables/special-numbers
     status: verified
     main_declarations:
-      - sylvester
-      - sylvester_coprime
-      - sylvester_eq_floor_constant_pow
-      - Euclid.euclid_coprime
-      - Euclid.euclid_eq_floor_constant_pow
-      - eulerian
+      - SpecialNumbers.sylvester
+      - SpecialNumbers.eulerian
     main_results:
-      - declaration: sylvester
+      - declaration: SpecialNumbers.sylvester
         informal: Defines Sylvester's sequence by the recurrence e(n+1) = e(n) * (e(n) - 1) + 1.
-      - declaration: sylvester_coprime
+      - declaration: SpecialNumbers.sylvester_coprime
         informal: Shows distinct terms of Sylvester's sequence are coprime.
-      - declaration: sylvester_eq_floor_constant_pow
+      - declaration: SpecialNumbers.sylvester_eq_floor_constant_pow
         informal: Gives the explicit closed form for Sylvester's sequence as a floor of a doubly-exponential power of a constant.
-      - declaration: Euclid.euclid_coprime
+      - declaration: SpecialNumbers.Euclid.euclid_coprime
         informal: Shows distinct Euclid numbers are coprime.
-      - declaration: Euclid.euclid_eq_floor_constant_pow
+      - declaration: SpecialNumbers.Euclid.euclid_eq_floor_constant_pow
         informal: Gives the explicit closed form for the Euclid numbers as a floor of a doubly-exponential power of a constant.
-      - declaration: eulerian
+      - declaration: SpecialNumbers.eulerian
         informal: Defines the Eulerian numbers via their triangular recurrence, counting permutations by number of ascents.
     tags:
       - number-theory
