@@ -15,7 +15,7 @@ open Lean Meta Elab Tactic
     is unreachable from `tla_exit` — that branch goes through
     `Entails_nil_eq_valid` so the raw goal becomes `valid rhs` instead of the
     equivalent `(⊤) |-tla- rhs`. -/
-private partial def buildAndChain (_σ : Expr) : List Expr → MetaM Expr
+private def buildAndChain (_σ : Expr) : List Expr → MetaM Expr
   | [] => panic! "buildAndChain: empty list"
   | [p] => pure p
   | p :: ps => do mkAppM ``TLA.tla_and #[p, ← buildAndChain _σ ps]

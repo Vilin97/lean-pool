@@ -14,6 +14,17 @@ import LeanPool.Lentil.Tactics.Basic
 import LeanPool.Lentil.Tactics.FiniteWindow
 
 /-!
+# Lentil: Temporal Logic of Actions in Lean 4
+
+Source: url:https://github.com/verse-lab/Lentil
+Authors: Qiyuan Zhao
+Status: verified
+Main declarations: `TLA.always`, `TLA.eventually`, `TLA.always_induction`, `TLA.wf1`
+Tags: temporal-logic, tla, formal-verification, proof-mode
+MSC: 03B44, 68Q60
+-/
+
+/-!
 # Lentil: Temporal Logic of Actions (TLA) in Lean 4
 
 A shallow embedding of Leslie Lamport's Temporal Logic of Actions (TLA) in
@@ -23,10 +34,4 @@ The development includes the temporal modalities (`always`, `eventually`,
 `later`), the standard propositional and temporal proof rules, weak-fairness
 (`wf1`) and leads-to reasoning, plus an Iris-style interactive proof mode for
 working with TLA judgments.
-
-Source: url:https://github.com/verse-lab/Lentil
-Authors: Qiyuan Zhao
-Status: verified
-Main declarations: `TLA.always`, `TLA.eventually`, `TLA.always_induction`, `TLA.wf1`, `TLA.wf_as_leads_to`, `TLA.leads_to_trans`
-Tags: temporal-logic, tla, formal-verification, proof-mode
 -/

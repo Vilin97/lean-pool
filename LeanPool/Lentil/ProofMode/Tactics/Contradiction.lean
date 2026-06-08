@@ -18,10 +18,10 @@ variable {σ : Type u} {hyps : List (NamedPred σ)} {goal : pred σ}
     vacuously. -/
 theorem Entails_of_false_in_hyps (idx : Nat) (h : hyps[idx]?.map NamedPred.pred = some tla_false) :
   Entails hyps goal := by
-  simp [← List.get?Internal_eq_getElem?] at h ; rcases h with ⟨a, h1, h2⟩
+  simp [← List.get?Internal_eq_getElem?] at h; rcases h with ⟨a, h1, h2⟩
   apply Entails_revert_by_idx idx
   simp only [h1, Option.elim, h2]
-  intro _ _ hfalse ; exact hfalse.elim
+  intro _ _ hfalse; exact hfalse.elim
 
 /-- If the proof-mode context contains both `p` and `¬ p`, every goal follows. -/
 theorem Entails_of_contradicting_hyps {p : pred σ}
@@ -30,7 +30,7 @@ theorem Entails_of_contradicting_hyps {p : pred σ}
   (h2 : hyps[idx2]?.map NamedPred.pred = some (tla_not p)) :
   Entails hyps goal := by
   apply Entails_add_new [p, tla_not p] (by grind) "_" tla_false
-  · dsimp only [repeatedAnd, LentilLib.List.foldrD] ; rw [TLA.and_not_self_iff]
+  · dsimp only [repeatedAnd, LentilLib.List.foldrD]; rw [TLA.and_not_self_iff]
   · apply Entails_of_false_in_hyps hyps.length (by simp)
 
 end

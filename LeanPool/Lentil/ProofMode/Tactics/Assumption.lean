@@ -11,7 +11,7 @@ open Lean Meta Elab Tactic
 
 theorem Entails_assumption {σ : Type u} {hyps : List (NamedPred σ)} {goal : pred σ}
   (idx : Nat) (hlookup : (hyps.map NamedPred.pred)[idx]? = some goal) :
-  Entails hyps goal := by apply repeatedAnd_subset_implies [goal] ; grind
+  Entails hyps goal := by apply repeatedAnd_subset_implies [goal]; grind
 
 /--
 `tla_assumption` closes a proof-mode goal when the target predicate already

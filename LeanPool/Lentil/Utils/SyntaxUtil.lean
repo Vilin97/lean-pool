@@ -9,6 +9,7 @@ open Lean
 
 namespace LentilLib
 
+/-- Convert a `binderIdent` into a function binder. -/
 def binderIdentToFunBinder (stx : TSyntax ``binderIdent) : MacroM (TSyntax ``Parser.Term.funBinder) :=
   match stx with
   | `(binderIdent| $x:ident) =>  `(Parser.Term.funBinder| $x:ident )

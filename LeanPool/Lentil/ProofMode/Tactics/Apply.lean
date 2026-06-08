@@ -12,7 +12,7 @@ open Lean Meta Elab Tactic LentilLib
 
 theorem Entails_trans {σ : Type u} {hyps : List (NamedPred σ)} {mid goal : pred σ} :
   (mid) |-tla- (goal) → Entails hyps mid → Entails hyps goal := by
-  intro h1 h2 ; revert h1 ; revert h2 ; apply pred_implies_trans
+  intro h1 h2; revert h1; revert h2; apply pred_implies_trans
 
 /-
 `tla_apply t` is implemented through `tla_have := t`.
@@ -34,14 +34,14 @@ variable {σ : Type u} {hyps : List (NamedPred σ)} {goal : pred σ}
 theorem Entails_apply_hyp (hs : List (pred σ)) (h : hyps.getLast?.map NamedPred.pred = some (repeatedImplies hs goal)) :
   Entails hyps.dropLast (repeatedAnd hs) → Entails hyps goal := by
   unfold Entails
-  simp [List.getLast?_eq_some_iff] at h ; rcases h with ⟨a, ⟨hyps, rfl⟩, heq⟩
+  simp [List.getLast?_eq_some_iff] at h; rcases h with ⟨a, ⟨hyps, rfl⟩, heq⟩
   simp [heq, repeatedAnd_append, repeatedAnd_singleton, ← impl_intro_add_r]
-  intro h ; apply pred_implies_trans h ; simp [impl_intro_add_r]
+  intro h; apply pred_implies_trans h; simp [impl_intro_add_r]
   apply repeatedImplies_apply
 
 -- FIXME: Generalize this to allow `tla_assumption`
 theorem Entails_apply_hyp_closing_goal (h : hyps.getLast?.map NamedPred.pred = some goal) :
-  Entails hyps goal := Entails_apply_hyp [] h (by intro _ _ ; exact True.intro)
+  Entails hyps goal := Entails_apply_hyp [] h (by intro _ _; exact True.intro)
 
 end
 

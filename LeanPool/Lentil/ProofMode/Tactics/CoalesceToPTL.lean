@@ -31,6 +31,7 @@ inductive CoalesceAbstractLevel where
   | formula
 deriving BEq, Inhabited
 
+/-- Configuration controlling where `tla_coalesce_to_ptl` abstracts blocks. -/
 structure CoalesceConfig where
   /-- Whether quantifiers and big operators are abstracted as atoms or traversed. -/
   binders : CoalesceBinderMode := .block
@@ -42,6 +43,7 @@ structure CoalesceConfig where
   -- /-- Unfold derived temporal operators before collecting coalescing blocks. -/
   -- unfoldDerived : Bool := true
 
+/-- Elaborator for `CoalesceConfig` options. -/
 declare_config_elab elabCoalesceConfig CoalesceConfig
 
 -- FIXME: In principle the following two should also be customizable
@@ -92,31 +94,39 @@ Collect maximal non-PTL formula blocks below a propositional temporal skeleton.
 
 The PTL atoms stay at type `pred σ` in Lentil's shallow embedding. The config
 controls where the walker stops: at concrete first-order leaves, at modal
-arguments, or at whole formula positions.
+arguments, or at whole formula positions. `fuel` bounds the recursion depth;
+each recursive call descends into a strict subterm, so seeding it from the
+expression's depth always suffices.
 -/
-private partial def collectPTLBlocks (cfg : CoalesceConfig) (bound : Array Expr) (p : Expr) :
-    MetaM CollectResult := do
+private def collectPTLBlocks (fuel : Nat) (cfg : CoalesceConfig) (bound : Array Expr)
+    (p : Expr) : MetaM CollectResult := do
   if cfg.level == .formula || shouldAbstractBlock cfg p then
     let res ← collectTerminalPosition p
     return res
+  -- The unary/binary/modal/binder cases are inlined so the function is plainly
+  -- self-recursive on the decreasing `fuel`; `collectBinaryAux`/`collectModalAux`/
+  -- `collectBinderAux` take `fuel` explicitly so the recursive call's argument is
+  -- visibly smaller.
+  match fuel with
+  | 0 =>
+    let res ← collectTerminalPosition p
+    return res
+  | fuel + 1 =>
   -- FIXME: The following is too specific for LTL
   match_expr p with
   | TLA.tla_not _ p =>
-    collectUnary ``TLA.tla_not p
-  | TLA.tla_and _ p q => collectBinary ``TLA.tla_and p q
-  | TLA.tla_or _ p q => collectBinary ``TLA.tla_or p q
-  | TLA.tla_implies _ p q => collectBinary ``TLA.tla_implies p q
-  | TLA.tla_forall _ _ p => collectBinder ``TLA.tla_forall p
-  | TLA.tla_exists _ _ p => collectBinder ``TLA.tla_exists p
+    let r ← collectPTLBlocks fuel cfg bound p
+    return ⟨r.blocks, ← mkAppM ``TLA.tla_not #[r.expr]⟩
+  | TLA.tla_and _ p q => collectBinaryAux fuel cfg bound ``TLA.tla_and p q
+  | TLA.tla_or _ p q => collectBinaryAux fuel cfg bound ``TLA.tla_or p q
+  | TLA.tla_implies _ p q => collectBinaryAux fuel cfg bound ``TLA.tla_implies p q
+  | TLA.tla_forall _ _ p => collectBinderAux fuel cfg bound ``TLA.tla_forall p
+  | TLA.tla_exists _ _ p => collectBinderAux fuel cfg bound ``TLA.tla_exists p
   -- NOTE: Design choice: big op should be first turned into `forall`/`exists`
-  /-
-  | TLA.tla_bigwedge _ _ _ _ p s => collectBigOp ``TLA.tla_bigwedge p s
-  | TLA.tla_bigvee _ _ _ _ p s => collectBigOp ``TLA.tla_bigvee p s
-  -/
-  | TLA.always _ p => collectModal ``TLA.always p
-  | TLA.eventually _ p => collectModal ``TLA.eventually p
-  | TLA.later _ p => collectModal ``TLA.later p
-  | TLA.tla_until _ p q => collectBinary ``TLA.tla_until p q
+  | TLA.always _ p => collectModalAux fuel cfg bound ``TLA.always p
+  | TLA.eventually _ p => collectModalAux fuel cfg bound ``TLA.eventually p
+  | TLA.later _ p => collectModalAux fuel cfg bound ``TLA.later p
+  | TLA.tla_until _ p q => collectBinaryAux fuel cfg bound ``TLA.tla_until p q
   | _ =>
     -- Opaque `pred σ` terms already behave like propositional temporal atoms
     -- unless the user asks to refresh them into fresh coalescing atoms.
@@ -127,35 +137,27 @@ private partial def collectPTLBlocks (cfg : CoalesceConfig) (bound : Array Expr)
       return ⟨#[], p⟩
 where
   -- FIXME: The following usages of `mkAppM` should be optimized away?
-  collectUnary (op : Name) (p : Expr) : MetaM CollectResult := do
-    let r ← collectPTLBlocks cfg bound p
-    return ⟨r.blocks, ← mkAppM op #[r.expr]⟩
-  collectBinary (op : Name) (p q : Expr) : MetaM CollectResult := do
-    let rp ← collectPTLBlocks cfg bound p
-    let rq ← collectPTLBlocks cfg bound q
+  collectBinaryAux (fuel : Nat) (cfg : CoalesceConfig) (bound : Array Expr)
+      (op : Name) (p q : Expr) : MetaM CollectResult := do
+    let rp ← collectPTLBlocks fuel cfg bound p
+    let rq ← collectPTLBlocks fuel cfg bound q
     return ⟨rp.blocks ++ rq.blocks, ← mkAppM op #[rp.expr, rq.expr]⟩
-  collectModal (op : Name) (p : Expr) : MetaM CollectResult := do
+  collectModalAux (fuel : Nat) (cfg : CoalesceConfig) (bound : Array Expr)
+      (op : Name) (p : Expr) : MetaM CollectResult := do
     if cfg.level == .modal then
       let (block, expr) ← exposeBlock bound p
       return ⟨#[block], ← mkAppM op #[expr]⟩
     else
-      collectUnary op p
-  collectBinder (op : Name) (p : Expr) : MetaM CollectResult := do
+      let r ← collectPTLBlocks fuel cfg bound p
+      return ⟨r.blocks, ← mkAppM op #[r.expr]⟩
+  collectBinderAux (fuel : Nat) (cfg : CoalesceConfig) (bound : Array Expr)
+      (op : Name) (p : Expr) : MetaM CollectResult := do
     lambdaTelescope p fun xs body => do
       if xs.isEmpty then
         return ⟨#[], ← mkAppM op #[p]⟩
-      let r ← collectPTLBlocks cfg (bound ++ xs) body
+      let r ← collectPTLBlocks fuel cfg (bound ++ xs) body
       let p' ← mkLambdaFVars xs r.expr
       return ⟨r.blocks, ← mkAppM op #[p']⟩
-  /-
-  collectBigOp (op : Name) (p s : Expr) : MetaM CollectResult := do
-    lambdaTelescope p fun xs body => do
-      if xs.isEmpty then
-        return ⟨#[], ← mkAppM op #[p, s]⟩
-      let r ← collectPTLBlocks cfg (bound ++ xs) body
-      let p' ← mkLambdaFVars xs r.expr
-      return ⟨r.blocks, ← mkAppM op #[p', s]⟩
-  -/
   collectTerminalPosition (p : Expr) : MetaM CollectResult := do
     let (block, expr) ← exposeBlock bound p
     return ⟨#[block], expr⟩
@@ -163,11 +165,11 @@ where
 private def collectGoalBlocks (cfg : CoalesceConfig) (target : Expr) : MetaM CollectResult := do
   match_expr target with
   | TLA.valid _ p =>
-    let r ← collectPTLBlocks cfg #[] p
+    let r ← collectPTLBlocks (p.approxDepth.toNat + 1) cfg #[] p
     return ⟨r.blocks, ← mkAppM ``TLA.valid #[r.expr]⟩
   | TLA.pred_implies _ p q =>
-    let rp ← collectPTLBlocks cfg #[] p
-    let rq ← collectPTLBlocks cfg #[] q
+    let rp ← collectPTLBlocks (p.approxDepth.toNat + 1) cfg #[] p
+    let rq ← collectPTLBlocks (q.approxDepth.toNat + 1) cfg #[] q
     return ⟨rp.blocks ++ rq.blocks, ← mkAppM ``TLA.pred_implies #[rp.expr, rq.expr]⟩
   | Entails _ hyps goal => collectEntailsBlocks cfg hyps goal
   | _ => throwError "tla_coalesce_to_ptl: expected a TLA validity goal, raw TLA sequent, or proof-mode Entails goal"
@@ -177,9 +179,9 @@ where collectEntailsBlocks (cfg : CoalesceConfig) (hypsExpr goal : Expr) : MetaM
   let (hypBlocks, hyps') ←
     hyps.foldlM (init := ((#[] : Array Expr), (#[] : Array (String × Expr))))
       fun (blocks, hyps') (name, pred) => do
-        let r ← collectPTLBlocks cfg #[] pred
+        let r ← collectPTLBlocks (pred.approxDepth.toNat + 1) cfg #[] pred
         return (blocks ++ r.blocks, hyps'.push (name, r.expr))
-  let rGoal ← collectPTLBlocks cfg #[] goal
+  let rGoal ← collectPTLBlocks (goal.approxDepth.toNat + 1) cfg #[] goal
   let hypsExpr' ← toHypsList hypTy hyps'.toList
   return ⟨hypBlocks ++ rGoal.blocks, ← mkAppM ``Entails #[hypsExpr', rGoal.expr]⟩
 

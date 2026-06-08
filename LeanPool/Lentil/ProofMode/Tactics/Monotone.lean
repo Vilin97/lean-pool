@@ -10,6 +10,7 @@ namespace TLA.ProofMode
 
 open Lean Meta Elab Tactic
 
+/-- Map a function over the predicates of a hypothesis list. -/
 def mapHypPreds {σ : Type u} (f : pred σ → pred σ) (hyps : List (NamedPred σ)) :
     List (NamedPred σ) :=
   hyps.map fun h => { h with pred := f h.pred }
@@ -24,16 +25,16 @@ variable {σ : Type u}
 
 theorem repeatedAnd_map_later (ps : List (pred σ)) :
   repeatedAnd (ps.map TLA.later) = TLA.later (repeatedAnd ps) :=
-  repeatedAnd_map_comm ps TLA.later (by funext e ; tla_unfold_simp) later_and
+  repeatedAnd_map_comm ps TLA.later (by funext e; tla_unfold_simp) later_and
 
 theorem repeatedAnd_map_always (ps : List (pred σ)) :
   repeatedAnd (ps.map TLA.always) = TLA.always (repeatedAnd ps) :=
-  repeatedAnd_map_comm ps TLA.always (by funext e ; tla_unfold_simp) (by intro p q ; symm ; apply always_and)
+  repeatedAnd_map_comm ps TLA.always (by funext e; tla_unfold_simp) (by intro p q; symm; apply always_and)
 
 theorem repeatedAnd_map_eventually_always (ps : List (pred σ)) :
   repeatedAnd (ps.map (fun p => TLA.eventually (TLA.always p))) =
     TLA.eventually (TLA.always (repeatedAnd ps)) :=
-  repeatedAnd_map_comm ps (TLA.eventually ∘ TLA.always) (by funext e ; tla_unfold_simp) (by intro p q ; symm ; apply eventually_always_and_distrib)
+  repeatedAnd_map_comm ps (TLA.eventually ∘ TLA.always) (by funext e; tla_unfold_simp) (by intro p q; symm; apply eventually_always_and_distrib)
 
 variable {hyps : List (NamedPred σ)} {goal : pred σ}
 
@@ -41,7 +42,7 @@ private theorem Entails_monotone_aux (f : pred σ → pred σ)
   (h : ∀ ps, repeatedAnd (ps.map f) = f (repeatedAnd ps))
   (hmono : ∀ (p q : pred σ), (p) |-tla- (q) → ((f p)) |-tla- ((f q))) :
   Entails hyps goal → Entails (mapHypPreds f hyps) (f goal) := by
-  unfold Entails ; intro hh
+  unfold Entails; intro hh
   rw [mapHypPreds_preds, h]
   exact hmono _ _ hh
 
@@ -63,14 +64,14 @@ theorem Entails_eventually_monotone_single {name : String} {p : pred σ}
   (h : hyps = [⟨name, p⟩]) :
   Entails hyps goal →
   Entails (mapHypPreds TLA.eventually hyps) (TLA.eventually goal) := by
-  subst hyps ; exact TLA.eventually_monotone p goal
+  subst hyps; exact TLA.eventually_monotone p goal
 
 theorem Entails_always_eventually_monotone_single {name : String} {p : pred σ}
   (h : hyps = [⟨name, p⟩]) :
   Entails hyps goal →
   Entails (mapHypPreds (fun p => TLA.always (TLA.eventually p)) hyps)
     (TLA.always (TLA.eventually goal)) := by
-  subst hyps ; exact TLA.always_eventually_monotone p goal
+  subst hyps; exact TLA.always_eventually_monotone p goal
 
 end
 

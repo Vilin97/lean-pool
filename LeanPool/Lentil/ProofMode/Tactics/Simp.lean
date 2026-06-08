@@ -37,7 +37,7 @@ private def runConvAtProofModeLocations
 where
   runConvAtPath (path : Array Nat) (convTac : TSyntax `conv) : TacticM Unit := do
     let path ← path.mapM fun x => `(Lean.Parser.Tactic.Conv.enterArg| $(Syntax.mkNatLit x):num)
-    evalTactic <| ← `(tactic| conv => enter [$[$path],*] ; $convTac:conv)
+    evalTactic <| ← `(tactic| conv => enter [$[$path],*]; $convTac:conv)
   hypPredConvPath (idx : Nat) : Array Nat :=
     [1] ++ List.replicate idx 2 ++ [1, 2] |>.toArray
 

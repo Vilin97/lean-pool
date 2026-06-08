@@ -10,22 +10,27 @@ namespace TLA.Expr
 
 open Lean Meta
 
-partial def splitAndIntoParts (p : Expr) : MetaM (List Expr) := do
-  match_expr p with
-  | TLA.tla_and _ a b =>
+/-- Split a TLA conjunction `Expr` into its list of conjuncts. -/
+def splitAndIntoParts (p : Expr) : MetaM (List Expr) := do
+  match p with
+  | .app (.app (.app (.const ``TLA.tla_and _) _) a) b =>
     let as ← splitAndIntoParts a
     let bs ← splitAndIntoParts b
     pure (as ++ bs)
   | _ => pure [p]
 
-partial def splitImplicationsIntoParts (p : Expr) (cutAnd? : Bool := true) : MetaM (List Expr × Expr) := do
-  match_expr p with
-  | TLA.tla_implies _ p q =>
-    let ps ← if cutAnd? then splitAndIntoParts p else pure [p]
+/-- Split a chain of TLA implications into its list of premises and conclusion,
+    optionally further splitting each premise conjunction (`cutAnd?`). -/
+def splitImplicationsIntoParts (p : Expr) (cutAnd? : Bool := true) :
+    MetaM (List Expr × Expr) := do
+  match p with
+  | .app (.app (.app (.const ``TLA.tla_implies _) _) hp) q =>
+    let ps ← if cutAnd? then splitAndIntoParts hp else pure [hp]
     let (ps', q') ← splitImplicationsIntoParts q
     pure (ps ++ ps', q')
   | _ => pure ([], p)
 
+/-- Split a `pred_implies`/`valid` statement into its premises and conclusion. -/
 def splitPredImpliesIntoParts (p : Expr) : MetaM (List Expr × Expr) := do
   match_expr p with
   | TLA.pred_implies _ p q =>

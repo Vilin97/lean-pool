@@ -11,7 +11,7 @@ open Lean Meta Elab Tactic
 
 -- NOTE: The following approach to restoring binder names is inspired by
 -- `binderNameHint` and `resolveBinderNameHint`
-private def binderNameHintAsString (n : String) (p : α → β) : α → β := p
+private def binderNameHintAsString (_n : String) (p : α → β) : α → β := p
 
 private def resolveBinderNameHintAsString (e : Expr) : CoreM Expr := do
   Core.transform e (post := fun e' => do
@@ -43,7 +43,7 @@ theorem Entails_revert_by_idx (idx : Nat) :
   Entails hyps' goal' → Entails hyps goal := by
   rw [List.get?Internal_eq_getElem?]
   rcases h : hyps[idx]? with _ | r <;> dsimp
-  · simp at h ; simp [List.eraseIdx_of_length_le h]
+  · simp at h; simp [List.eraseIdx_of_length_le h]
   · replace h := List.mem_of_getElem? h
     rw [← Entails_intro_temporal r.name]
     refine pred_implies_trans ?_
@@ -58,8 +58,8 @@ theorem Entails_revert_by_name (toRevert : String) :
 theorem Entails_revert_all :
   Entails [] (repeatedImplies (hyps.map NamedPred.pred) goal) →
   Entails hyps goal := by
-  intro h ; replace h := (valid_eq_true_implies _).mpr h
-  intro e h1 ; apply repeatedImplies_apply ; apply And.intro ; apply h1 ; apply h
+  intro h; replace h := (valid_eq_true_implies _).mpr h
+  intro e h1; apply repeatedImplies_apply; apply And.intro; apply h1; apply h
 
 end
 
@@ -124,11 +124,11 @@ elab_rules : tactic
         | some decl =>
           if ← Meta.isProp decl.type then
             evalTactic <| ← `(tactic|
-              revert $name:ident ; refine $(mkIdent ``Entails_pure_fact_intro).$(mkIdent `mpr) ?_)
+              revert $name:ident; refine $(mkIdent ``Entails_pure_fact_intro).$(mkIdent `mpr) ?_)
           else
             let nameStr := toString name.getId
             evalTactic <| ← `(tactic|
-              revert $name:ident ; refine $(mkIdent ``Entails_revert_forall) $(quote nameStr) ?_)
+              revert $name:ident; refine $(mkIdent ``Entails_revert_forall) $(quote nameStr) ?_)
             restoreBinderNameInForallCase
         | none =>
           let nameStr := toString name.getId

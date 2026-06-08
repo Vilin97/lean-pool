@@ -50,10 +50,12 @@ implemented as direct `conv` visits to the selected expressions because
 simplification does not need `rewrite`'s theorem-premise side-goal behavior.
 -/
 
+/-- Replace the predicates at the given hypothesis indices. -/
 def replacePredsAtIndices {σ : Type u} (hyps : List (NamedPred σ))
     (idxs : List Nat) (preds : List (pred σ)) : List (NamedPred σ) :=
   (idxs.zip preds).foldl (fun hyps ⟨idx, pred⟩ => hyps.modify idx fun h => { h with pred := pred }) hyps
 
+/-- An `Entails` goal with some hypothesis predicates extracted out for rewriting. -/
 def EntailsWithSomePredsExtractedOut {σ : Type u} (hyps : List (NamedPred σ))
     (idxs : List Nat) (preds : List (pred σ)) (goal : pred σ) : Prop :=
   Entails (replacePredsAtIndices hyps idxs preds) goal

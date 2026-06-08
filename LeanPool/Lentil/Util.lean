@@ -10,11 +10,13 @@ import LeanPool.Lentil.Utils.MiscLemmas
 
 open Lean
 
+/-- Whether to use the custom TLA delaborator when pretty-printing. -/
 register_option lentil.pp.useDelab : Bool := {
   defValue := true
   descr := "Use the delaborator from `Lentil.Basic` for delaboration. "
 }
 
+/-- Whether to automatically render `satisfies` with the `|=tla=` notation. -/
 register_option lentil.pp.autoRenderSatisfies : Bool := {
   defValue := true
   descr := "Automatically render an application `p e` as `e |=tla= p` when `p` is a TLA formula. "

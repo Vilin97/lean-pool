@@ -15,7 +15,7 @@ open Lean.Parser.Tactic
 
 -- Not sure if this is generally useful, so just make it as a `private theorem` for now
 private theorem exists_put_witness_back {α : Sort v} {p : α → pred σ} {Γ g : pred σ} :
-  (∀ x, ((Γ) |-tla- ((p x) → g))) = ((Γ) |-tla- ((∃ x, (p x)) → g)) := by tla_unfold_simp ; grind
+  (∀ x, ((Γ) |-tla- ((p x) → g))) = ((Γ) |-tla- ((∃ x, (p x)) → g)) := by tla_unfold_simp; grind
 
 section
 
@@ -32,10 +32,10 @@ theorem Entails_rcases_and_by_idx (idx : Nat)
   unfold Entails
   simp only [List.map_append, repeatedAnd_append, ← impl_intro_add_r]
   intro h
-  conv at h => enter [2] ; dsimp only [repeatedAnd, LentilLib.List.foldrD, List.map]
+  conv at h => enter [2]; dsimp only [repeatedAnd, LentilLib.List.foldrD, List.map]
   apply Entails_revert_by_idx idx
-  simp at heq ; rcases heq with ⟨r, heq1, heq2⟩
-  rw [List.get?Internal_eq_getElem?, heq1] ; simp only [Option.elim, heq2] ; exact h
+  simp at heq; rcases heq with ⟨r, heq1, heq2⟩
+  rw [List.get?Internal_eq_getElem?, heq1]; simp only [Option.elim, heq2]; exact h
 
 theorem Entails_rcases_and_by_name (chosen : String) :
   letI idx := hyps.findIdx fun h => h.name == chosen
@@ -52,13 +52,13 @@ theorem Entails_rcases_or_by_idx (idx : Nat)
   unfold Entails
   simp only [List.map_append, repeatedAnd_append, ← impl_intro_add_r]
   intro h1 h2
-  conv at h1 => enter [2] ; dsimp only [repeatedAnd, LentilLib.List.foldrD, List.map]
-  conv at h2 => enter [2] ; dsimp only [repeatedAnd, LentilLib.List.foldrD, List.map]
+  conv at h1 => enter [2]; dsimp only [repeatedAnd, LentilLib.List.foldrD, List.map]
+  conv at h2 => enter [2]; dsimp only [repeatedAnd, LentilLib.List.foldrD, List.map]
   apply Entails_revert_by_idx idx
-  simp at heq ; rcases heq with ⟨r, heq1, heq2⟩
-  rw [List.get?Internal_eq_getElem?, heq1] ; simp only [Option.elim, heq2]
+  simp at heq; rcases heq with ⟨r, heq1, heq2⟩
+  rw [List.get?Internal_eq_getElem?, heq1]; simp only [Option.elim, heq2]
   -- Oh
-  intro e hΓ hab ; exact TLA.or_elim e hab (h1 e hΓ) (h2 e hΓ)
+  intro e hΓ hab; exact TLA.or_elim e hab (h1 e hΓ) (h2 e hΓ)
 
 theorem Entails_rcases_or_by_name (chosen : String) :
   letI idx := hyps.findIdx fun h => h.name == chosen
@@ -79,11 +79,11 @@ theorem Entails_rcases_exists_by_idx (idx : Nat)
   unfold Entails
   simp only [List.map_append, repeatedAnd_append, ← impl_intro_add_r]
   intro h
-  conv at h => enter [x, 2] ; dsimp only [repeatedAnd, LentilLib.List.foldrD, List.map]
+  conv at h => enter [x, 2]; dsimp only [repeatedAnd, LentilLib.List.foldrD, List.map]
   rw [exists_put_witness_back] at h
   apply Entails_revert_by_idx idx
-  simp at heq ; rcases heq with ⟨r, heq1, heq2⟩
-  rw [List.get?Internal_eq_getElem?, heq1] ; simp only [Option.elim, heq2] ; exact h
+  simp at heq; rcases heq with ⟨r, heq1, heq2⟩
+  rw [List.get?Internal_eq_getElem?, heq1]; simp only [Option.elim, heq2]; exact h
 
 theorem Entails_rcases_exists_by_name (chosen : String) :
   letI idx := hyps.findIdx fun h => h.name == chosen
@@ -172,15 +172,26 @@ private def splitAltRightAssoc (branches : Array (TSyntax `rcasesPat))
     let tail ← `(rcasesPat| ( $[$restArr]|* ))
     return (b1, tail)
 
+/-- The number of syntax nodes in `stx`; used as a recursion-fuel bound when
+    destructuring `rcasesPat` patterns (each sub-pattern is strictly smaller). -/
+def syntaxNodeCount : Syntax → Nat
+  | .node _ _ args => args.foldl (fun acc s => acc + syntaxNodeCount s) 1
+  | _ => 1
+
 mutual
 
 /-- Destructure the proof-mode hypothesis at `currentHyp` against `pat`.
     Precondition: the goal list contains exactly one goal — every caller
-    enforces this by running through `focus` or `Tactic.run`.
+    enforces this by running through `focus` or `Tactic.run`. `fuel` bounds the
+    pattern-nesting depth.
 
     A tuple `⟨..⟩` destructures `tla_and` / `tla_exists`; a parenthesized
     alternation `(.. | ..)` case-splits a `tla_or`, producing two subgoals. -/
-partial def tlaRcasesCoreFocused (currentHyp : TemporalHypLoc) (pat : TSyntax `rcasesPat) : TacticM Unit := do
+def tlaRcasesCoreFocused (fuel : Nat) (currentHyp : TemporalHypLoc)
+    (pat : TSyntax `rcasesPat) : TacticM Unit := do
+  match fuel with
+  | 0 => throwError "tla_rcases: pattern is nested too deeply"
+  | fuel + 1 =>
   -- FIXME: This handling also appears in the implementation of `tla_specialize`,
   -- so maybe reuse it?
   let some (_, hyps) ← recognizeEntailsHypsFromGoal | throwError "tla_rcases: failed to read the hypotheses from the goal"
@@ -215,15 +226,15 @@ partial def tlaRcasesCoreFocused (currentHyp : TemporalHypLoc) (pat : TSyntax `r
       postDSimpAfterApplyingReflectionTheorem rcasesTacDSimps
       -- The `refine` left a single goal; `pat1` may case-split it, so `pat2`
       -- must then be applied to every goal `pat1` produced.
-      tlaRcasesCoreFocused (.byName n1Str) pat1
-      tlaRcasesCoreAllGoals (.byName n2Str) pat2
+      tlaRcasesCoreFocused fuel (.byName n1Str) pat1
+      tlaRcasesCoreAllGoals fuel (.byName n2Str) pat2
     | TLA.tla_exists _ _ _ =>
       let nInnerStr ← nameStrForPat pat2
       let thm := if currentHyp matches .byName .. then ``Entails_rcases_exists_by_name else ``Entails_rcases_exists_by_idx
       evalTactic <| ← `(tactic| refine $(mkIdent thm) ($(quote nInnerStr))
-          ($(quoteTemporalHypLocToTerm currentHyp)) (by rfl) ?_ ; rintro $pat1)
+          ($(quoteTemporalHypLocToTerm currentHyp)) (by rfl) ?_; rintro $pat1)
       postDSimpAfterApplyingReflectionTheorem rcasesTacDSimps
-      tlaRcasesCoreAllGoals (.byName nInnerStr) pat2
+      tlaRcasesCoreAllGoals fuel (.byName nInnerStr) pat2
     | _ =>
       throwError "tla_rcases: cannot destructure pred {pred} with pattern {pat}"
   | _ =>
@@ -242,8 +253,8 @@ partial def tlaRcasesCoreFocused (currentHyp : TemporalHypLoc) (pat : TSyntax `r
         -- the `a`-branch and the `b`-branch. Recurse into each.
         match ← getGoals with
         | [g1, g2] =>
-          let g1s ← Tactic.run g1 (tlaRcasesCoreFocused (.byName n1Str) pat1)
-          let g2s ← Tactic.run g2 (tlaRcasesCoreFocused (.byName n2Str) pat2)
+          let g1s ← Tactic.run g1 (tlaRcasesCoreFocused fuel (.byName n1Str) pat1)
+          let g2s ← Tactic.run g2 (tlaRcasesCoreFocused fuel (.byName n2Str) pat2)
           setGoals (g1s ++ g2s)
         | _ => throwError "tla_rcases: expected exactly two subgoals after the or-split"
       | _ =>
@@ -254,8 +265,9 @@ partial def tlaRcasesCoreFocused (currentHyp : TemporalHypLoc) (pat : TSyntax `r
 /-- Run `tlaRcasesCoreFocused` on every current goal, collecting all resulting
     goals. Needed because an or-split multiplies goals, and sibling or
     subsequent patterns must then be applied to each of them. -/
-partial def tlaRcasesCoreAllGoals (currentHyp : TemporalHypLoc) (pat : TSyntax `rcasesPat) : TacticM Unit := do
-  let perGoal ← (← getGoals).mapM fun g => Tactic.run g (tlaRcasesCoreFocused currentHyp pat)
+def tlaRcasesCoreAllGoals (fuel : Nat) (currentHyp : TemporalHypLoc)
+    (pat : TSyntax `rcasesPat) : TacticM Unit := do
+  let perGoal ← (← getGoals).mapM fun g => Tactic.run g (tlaRcasesCoreFocused fuel currentHyp pat)
   setGoals perGoal.flatten
 
 end
@@ -264,7 +276,8 @@ end
     on the main goal and leaving any other goals untouched. This is the entry
     point; the recursive work happens in `tlaRcasesCoreFocused`. -/
 def tlaRcasesCore (currentHyp : TemporalHypLoc) (pat : TSyntax `rcasesPat) : TacticM Unit :=
-  focus (tlaRcasesCoreFocused currentHyp pat)
+  -- The pattern's syntax-node count bounds the destructuring recursion depth.
+  focus (tlaRcasesCoreFocused (syntaxNodeCount pat.raw + 1) currentHyp pat)
 
 /--
 `tla_rcases h with pat` destructures a temporal hypothesis in the proof-mode

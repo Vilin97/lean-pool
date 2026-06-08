@@ -27,8 +27,8 @@ theorem Entails_pull_pure {σ : Type u} {hyps : List (NamedPred σ)} {goal : pre
   (q → Entails hyps' goal) → Entails hyps goal := by
   intro heq hh
   apply Entails_revert_by_name (toRevert := toPull)
-  simp at heq ; rcases heq with ⟨r, heq1, heq2⟩
-  rw [List.get?Internal_eq_getElem?, heq1] ; simp only [Option.elim, heq2]
+  simp at heq; rcases heq with ⟨r, heq1, heq2⟩
+  rw [List.get?Internal_eq_getElem?, heq1]; simp only [Option.elim, heq2]
   rw [← Entails_pure_fact_intro]
   exact hh
 
@@ -53,7 +53,7 @@ elab_rules : tactic
     for h in hs do
       let nameStr := toString h.getId
       evalTactic <| ← `(tactic|
-        refine $(mkIdent ``Entails_pull_pure) ($(quote nameStr)) (by rfl) ?_ ; intro $h:ident)
+        refine $(mkIdent ``Entails_pull_pure) ($(quote nameStr)) (by rfl) ?_; intro $h:ident)
       postDSimpAfterApplyingReflectionTheorem pullPureTacDSimps
 
 /--

@@ -22,10 +22,11 @@ theorem Entails_intro_temporal {σ : Type u} {hyps : List (NamedPred σ)}
   {goal newHyp : pred σ} (newHypName : String) :
   Entails (hyps ++ [⟨newHypName, newHyp⟩]) goal =
   Entails hyps [tlafml| newHyp → goal ] := by
-  unfold Entails ; simp [impl_intro_add_r, repeatedAnd_append] ; rfl
+  unfold Entails; simp [impl_intro_add_r, repeatedAnd_append]; rfl
 
 private def introTacDSimps := #[``List.cons_append, ``List.nil_append]
 
+/-- Introduce one proof-mode hypothesis with the given name. -/
 def tlaIntroCoreStep (k : SyntaxNodeKind) (name : TSyntax k)
   (ident? : TSyntax k → TacticM (Option Ident))
   (errorMsgPrefix : String) (tacIntroNonTemporalHyp : TSyntax k → TacticM (TSyntax `tactic))
@@ -39,13 +40,13 @@ def tlaIntroCoreStep (k : SyntaxNodeKind) (name : TSyntax k)
   | TLA.tla_forall _ _ _ =>
     let tac ← tacIntroNonTemporalHyp name
     evalTactic <| ← `(tactic|
-      refine $(mkIdent ``Entails_intro_forall) ?_ ; $tac)
+      refine $(mkIdent ``Entails_intro_forall) ?_; $tac)
     return false
   | TLA.tla_implies _ lhs _ =>
     if lhs.isAppOf' ``TLA.pure_pred then
       let tac ← tacIntroNonTemporalHyp name
       evalTactic <| ← `(tactic|
-        refine $(mkIdent ``Entails_pure_fact_intro).$(mkIdent `mp) ?_ ; $tac)
+        refine $(mkIdent ``Entails_pure_fact_intro).$(mkIdent `mp) ?_; $tac)
       return false
     else
       let nameStr := match ← ident? name with

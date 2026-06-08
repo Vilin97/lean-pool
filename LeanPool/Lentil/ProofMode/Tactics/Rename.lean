@@ -20,15 +20,16 @@ include h
 private theorem renameHyp_pred_same : hyps'.map NamedPred.pred = hyps.map NamedPred.pred := by
   rcases h with rfl | ⟨hidx, rfl⟩
   on_goal 1=> rfl
-  dsimp ; rw [List.modify_eq_take_cons_drop hidx]
-  conv => enter [2, 2] ; rw [← LentilLib.List.take_getElem_drop hidx]
+  dsimp; rw [List.modify_eq_take_cons_drop hidx]
+  conv => enter [2, 2]; rw [← LentilLib.List.take_getElem_drop hidx]
   simp only [List.map_append, List.map_take, List.map_cons, List.map_drop]
 
 private theorem Entails_rename_aux : Entails hyps' goal = Entails hyps goal := by
-  unfold Entails ; congr 1 ; rw [renameHyp_pred_same newName idx h]
+  unfold Entails; congr 1; rw [renameHyp_pred_same newName idx h]
 
 end
 
+/-- Rename a hypothesis in a hypothesis list. -/
 def renameHyp {σ : Type u} (hyps : List (NamedPred σ)) (oldName newName : String) :=
   modifyHypByName hyps oldName renameFun
 
@@ -50,6 +51,7 @@ private def renameTacDSimps := #[``renameHyp, ``modifyHypByName, ``List.findIdx?
     ``dreduceIte, ``Option.elim, ``Bool.false_eq_true, ``List.modify, ``List.modifyTailIdx,
     ``List.modifyTailIdx.go, ``List.modifyHead]
 
+/-- Rename the hypothesis at the given location. -/
 def tlaRename (old : TemporalHypLoc) (newStr : String) : TacticM Unit := do
   let thm := if old matches .byName .. then ``Entails_rename_by_name else ``Entails_rename_by_idx
   evalTactic <| ← `(tactic|

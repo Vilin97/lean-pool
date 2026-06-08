@@ -29,19 +29,29 @@ def liftPropToPurePred (σ p : Expr) : MetaM Expr := do
   else
     pure p
 
-partial def convertPropToTLAPredAux (alist : AssocList Expr Expr) (σ p : Expr) : MetaM Expr := do
+/-- Recursively convert a propositional `Expr` `p` into the corresponding TLA
+    predicate, replacing leaves via `alist`. `fuel` bounds the recursion depth;
+    each recursive call descends into a strict subterm, so seeding it from the
+    expression's depth always suffices. -/
+def convertPropToTLAPredAux (fuel : Nat) (alist : AssocList Expr Expr) (σ p : Expr) :
+    MetaM Expr := do
+  match fuel with
+  | 0 =>
+    trace[lentil.debug] "Terminal case (out of fuel): {p}"
+    pure <| p.replace alist.find?
+  | fuel + 1 =>
   match_expr p with
   | And a b => do
     trace[lentil.debug] "And case: {a} and {b}"
-    let a' ← go a ; let b' ← go b
+    let a' ← go fuel a; let b' ← go fuel b
     mkAppM ``TLA.tla_and #[a', b']
   | Or a b => do
     trace[lentil.debug] "Or case: {a} or {b}"
-    let a' ← go a ; let b' ← go b
+    let a' ← go fuel a; let b' ← go fuel b
     mkAppM ``TLA.tla_or #[a', b']
   | Not a => do
     trace[lentil.debug] "Not case: not {a}"
-    let a' ← go a
+    let a' ← go fuel a
     mkAppM ``TLA.tla_not #[a']
   | Exists _ f => do
     trace[lentil.debug] "Exists case: ∃ {f}"
@@ -49,14 +59,14 @@ partial def convertPropToTLAPredAux (alist : AssocList Expr Expr) (σ p : Expr) 
     let f ← whnfD f
     match f with
     | Expr.lam na a b bi =>
-      let a' ← go a
+      let a' ← go fuel a
       withLocalDecl na bi a' fun avar => do
         let b_ := b.instantiate1 avar
-        let b' ← go b_
+        let b' ← go fuel b_
         let b'' ← mkLambdaFVars #[avar] b'
         mkAppM ``TLA.tla_exists #[b'']
     | _ =>
-      let f' ← go f
+      let f' ← go fuel f
       mkAppM ``TLA.tla_exists #[f']
   | _ =>
     -- `p` is not any propositional connective listed above
@@ -65,27 +75,32 @@ partial def convertPropToTLAPredAux (alist : AssocList Expr Expr) (σ p : Expr) 
       -- `p` can be an implication or `∀`
       if p.isArrow then
         trace[lentil.debug] "Arrow case: {a} → {b}"
-        let a' ← go a ; let b' ← go b
+        let a' ← go fuel a; let b' ← go fuel b
         mkAppM ``TLA.tla_implies #[a', b']
       else
         trace[lentil.debug] "Forall case: ∀ {a}, {b}"
         -- HMM slightly repetitive
-        let a' ← go a
+        let a' ← go fuel a
         withLocalDecl na bi a' fun avar => do
           let b_ := b.instantiate1 avar
-          let b' ← go b_
+          let b' ← go fuel b_
           let b'' ← mkLambdaFVars #[avar] b'
           mkAppM ``TLA.tla_forall #[b'']
     | _ =>
       -- simply do a holistic replacement
       trace[lentil.debug] "Terminal case: {p}"
       pure <| p.replace alist.find?
-where go (p : Expr) : MetaM Expr :=
-  convertPropToTLAPredAux alist σ p >>= liftPropToPurePred σ
+where
+  /-- Convert a subterm and lift the result to a pure predicate. -/
+  go (fuel : Nat) (p : Expr) : MetaM Expr :=
+    convertPropToTLAPredAux fuel alist σ p >>= liftPropToPurePred σ
 
-partial def convertPropToTLAPred (alist : AssocList Expr Expr) (σ p : Expr) : MetaM Expr :=
-  convertPropToTLAPredAux alist σ p >>= liftPropToPurePred σ
+/-- Convert a propositional `Expr` into the corresponding TLA predicate,
+    seeding the recursion fuel from the expression's approximate depth. -/
+def convertPropToTLAPred (alist : AssocList Expr Expr) (σ p : Expr) : MetaM Expr :=
+  convertPropToTLAPredAux (p.approxDepth.toNat + 1) alist σ p >>= liftPropToPurePred σ
 
+/-- Which shape a lifted theorem's conclusion takes. -/
 inductive LiftingCase where
   /-- The case where the conclusion is a single `↔`. -/
   | Iff
@@ -115,7 +130,7 @@ private def guessWhereToStart (thmStmt : Expr) : MetaM Nat := do
 /-- Convert a theorem statement to the level of temporal logic. Given the theorem statement
     and the name of the additional universe level (required by `σ` in `TLA.pred σ`),
     return the case for lifting and the converted statement. -/
-partial def convertTheoremStatement (thmStmt : Expr) (uName : Name) : MetaM (LiftingCase × Expr) := do
+def convertTheoremStatement (thmStmt : Expr) (uName : Name) : MetaM (LiftingCase × Expr) := do
   -- create a fresh state type `σ`
   let u := mkLevelSucc <| mkLevelParam uName
   -- NOTE: couldn't come up with a good way to avoid generating a fresh `σ` with a dagger, so just use `σ` here
@@ -167,7 +182,9 @@ partial def convertTheoremStatement (thmStmt : Expr) (uName : Name) : MetaM (Lif
           let thmStmt' ← mkAppM ``TLA.valid #[body'] >>= mkForallFVars (Array.append #[σ] ys)
           pure (LiftingCase.Other, thmStmt')
 
-partial def liftTheorem (thmName : Name) (liftedThmName : Option Name)
+/-- Lift the theorem named `thmName` to the temporal-logic level, optionally
+    renaming the result (`liftedThmName`) and supplying a proof `tactic?`. -/
+def liftTheorem (thmName : Name) (liftedThmName : Option Name)
   (tactic? : Option (TSyntax `term)) : MetaM Unit := do
   let info ← getConstInfo thmName
   let ty := info.type
@@ -190,11 +207,11 @@ partial def liftTheorem (thmName : Name) (liftedThmName : Option Name)
     | apply $(mkIdent thmName) ))   -- if not using `_root_.` then this may apply the theorem being proved!
   match lcase with
   | LiftingCase.Iff =>
-    let defaultTac ← `(term| by intros ; funext $e ; apply $(mkIdent ``propext) ; $finalTac )
+    let defaultTac ← `(term| by intros; funext $e; apply $(mkIdent ``propext); $finalTac )
     simpleProveTheorem newThmName (uName :: lvlParams) ty'
       (tactic?.getD defaultTac) noncomputable?
   | LiftingCase.Other =>
-    let defaultTac ← `(term| by intros ; (try intro $e:ident) ; $finalTac )
+    let defaultTac ← `(term| by intros; (try intro $e:ident); $finalTac )
     simpleProveTheorem newThmName (uName :: lvlParams) ty'
       (tactic?.getD defaultTac) noncomputable?
 

@@ -33,18 +33,25 @@ def simpleProveTheorem (name : Name) (lvlParams : List Name) (type : Expr) (proo
   simpleAddTheorem name lvlParams type proof nonComputable?
 
 -- inspired by [this discussion](https://leanprover.zulipchat.com/#narrow/channel/239415-metaprogramming-.2F-tactics/topic/Generating.20fresh.20names.20for.20universe.20levels)
+/-- Search successive indexed names `baseName_i` (starting at `i`) for one not in
+    `names`. `fuel` bounds the search; `names.length + 1` candidates always
+    contain a fresh one. -/
+private def mkUnusedNameLoop (names : List Name) (baseName : Name) (i : Nat) :
+    Nat → Name
+  | 0 => Name.appendIndexAfter baseName i
+  | fuel + 1 =>
+    let w := Name.appendIndexAfter baseName i
+    if names.contains w then
+      mkUnusedNameLoop names baseName (i + 1) fuel
+    else
+      w
+
 /-- Gives a name based on `baseName` that's not already in the list. -/
-partial def mkUnusedName (names : List Name) (baseName : Name) : Name :=
+def mkUnusedName (names : List Name) (baseName : Name) : Name :=
   if not (names.contains baseName) then
     baseName
   else
-    let rec loop (i : Nat := 0) : Name :=
-      let w := Name.appendIndexAfter baseName i
-      if names.contains w then
-        loop (i + 1)
-      else
-        w
-    loop 1
+    mkUnusedNameLoop names baseName 1 (names.length + 1)
 
 /-- Is `stx`, a `Term`, an `Ident`? -/
 def termIdent? (stx : TSyntax `term) : TacticM (Option (TSyntax `ident)) := do

@@ -14,6 +14,7 @@ namespace TLA.Deriving
 open Lean Meta Core Elab TLA.Expr LentilLib
 
 -- does not assume dependency from `ps` to `q`
+/-- Assemble premises and a conclusion under a shared context `Γ`. -/
 def assembleUnderCommonContextShape (σ : Expr) (ps : List Expr) (q : Expr) : MetaM Expr := do
   withLocalDeclD `Γ (← mkAppM ``TLA.pred #[σ]) fun Γ => do
     let ps' ← ps.toArray.mapM fun p => mkAppM ``TLA.pred_implies #[Γ, p]
@@ -21,7 +22,9 @@ def assembleUnderCommonContextShape (σ : Expr) (ps : List Expr) (q : Expr) : Me
     let body ← mkArrowN ps' q'
     mkForallFVars #[Γ] body
 
-partial def assembleSeparatedPredImplications (ps : List Expr) (q : Expr) : MetaM Expr := do
+/-- Assemble a list of premise predicates and a conclusion into the arrow chain
+    of separated `pred_implies`/`valid` statements used by `tla_derive`. -/
+def assembleSeparatedPredImplications (ps : List Expr) (q : Expr) : MetaM Expr := do
   let build p := do
     let (ps, q) ← simplify [] p
     match List.getLast? ps with
@@ -34,21 +37,26 @@ partial def assembleSeparatedPredImplications (ps : List Expr) (q : Expr) : Meta
   let q' ← build q
   let res ← mkArrowN ps'.toArray q'
   pure res
-where simplify (ps : List Expr) (q : Expr) : MetaM (List Expr × Expr) := do
-  -- currently only do very simple simplification:
-  -- if `p` is empty while `q` is `always_implies` then turn it into `tla_implies`
-  -- if `q` is `tla_implies` then split it into parts
-  -- FIXME: might enhance this to allow definitionally equal pattern matching, like the one in `Qq`?
-  match_expr q with
-  | TLA.always_implies _ a b =>
-    if ps.isEmpty then
-      simplify [] (← mkAppM ``TLA.tla_implies #[a, b])
-    else
-      pure (ps, q)
-  | TLA.tla_implies _ _ _ =>
-    let (ps', q') ← splitImplicationsIntoParts q
-    pure (ps ++ ps', q')
-  | _ => pure (ps, q)
+where
+  /-- Simplify a premise list and conclusion before assembling the implication chain. -/
+  simplify (ps : List Expr) (q : Expr) : MetaM (List Expr × Expr) := do
+    -- currently only do very simple simplification:
+    -- if `p` is empty while `q` is `always_implies` then turn it into `tla_implies`
+    -- if `q` is `tla_implies` then split it into parts
+    -- FIXME: might enhance this to allow definitionally equal pattern matching, like the one in `Qq`?
+    match_expr q with
+    | TLA.always_implies _ a b =>
+      if ps.isEmpty then
+        -- turn `always_implies a b` into `tla_implies a b` and split that
+        let q' ← mkAppM ``TLA.tla_implies #[a, b]
+        let (ps', q'') ← splitImplicationsIntoParts q'
+        pure (ps', q'')
+      else
+        pure (ps, q)
+    | TLA.tla_implies _ _ _ =>
+      let (ps', q') ← splitImplicationsIntoParts q
+      pure (ps ++ ps', q')
+    | _ => pure (ps, q)
 
 -- inspired by how `to_additive` is implemented in Mathlib
 /-- For a TLA theorem whose conclusion is a single `TLA.pred_implies` or
@@ -99,24 +107,24 @@ def deriveForPredImpliesOrValid (nm : Name) : CoreM Unit := do
       -- since the thing brought by `have` is not used in the proof term.
       -- to avoid this, we add a separate branch where there is no `have`.
       (← `(term| by solve
-        | tla_nontemporal_simp ; aesop
-        | have := @$(mkIdent nm) ; tla_nontemporal_simp ; aesop)) noncomputable?
+        | tla_nontemporal_simp; aesop
+        | have := @$(mkIdent nm); tla_nontemporal_simp; aesop)) noncomputable?
     simpleProveTheorem thmName2 lvlParams thmStmt2
       (← do
         let htmp ← mkIdent <$> mkFreshUserName `htmp
         let htmp' ← mkIdent <$> mkFreshUserName `htmp'
         let introNames ← ty.getForallBinderNames.toArray.mapM (mkIdent <$> mkFreshUserName ·)
         `(term| by solve
-        | tla_nontemporal_simp ; aesop
-        | intro $introNames* ; have $htmp := @$(mkIdent nm) $introNames*
+        | tla_nontemporal_simp; aesop
+        | intro $introNames*; have $htmp := @$(mkIdent nm) $introNames*
           (try rw [← TLA.impl_intro] at $htmp:ident)
           repeat (first
             | (solve
-              | tla_nontemporal_simp ; aesop)
-            | have $htmp' := @$htmp ; clear $htmp ; have $htmp := @TLA.impl_decouple _ _ _ $htmp' ; clear $htmp'
+              | tla_nontemporal_simp; aesop)
+            | have $htmp' := @$htmp; clear $htmp; have $htmp := @TLA.impl_decouple _ _ _ $htmp'; clear $htmp'
             | unfold TLA.always_implies at $htmp:ident
             | rw [← TLA.always_intro] at $htmp:ident
-            | intro $htmp':ident ; specialize $htmp $htmp' ; clear $htmp'
+            | intro $htmp':ident; specialize $htmp $htmp'; clear $htmp'
             | rw [TLA.and_valid_split, _root_.and_imp] at $htmp:ident
           ))) noncomputable?
 

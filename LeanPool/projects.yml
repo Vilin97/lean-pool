@@ -1884,13 +1884,14 @@ projects:
       url: "https://github.com/verse-lab/Lentil"
       github_repo: verse-lab/Lentil
     status: verified
+    msc:
+      - "03B44"
+      - "68Q60"
     main_declarations:
       - TLA.always
       - TLA.eventually
       - TLA.always_induction
       - TLA.wf1
-      - TLA.wf_as_leads_to
-      - TLA.leads_to_trans
     main_results:
       - declaration: TLA.always
         informal: Defines the TLA "always" (box) temporal modality, asserting a predicate holds on every suffix of an execution.

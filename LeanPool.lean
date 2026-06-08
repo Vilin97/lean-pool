@@ -699,6 +699,7 @@ import LeanPool.LeanPolyABC.MasonStothers
 import LeanPool.Lentil
 import LeanPool.Lentil.Basic
 import LeanPool.Lentil.Expr
+import LeanPool.Lentil.Foldable
 import LeanPool.Lentil.Gadgets.TheoremDeriving
 import LeanPool.Lentil.Gadgets.TheoremLifting
 import LeanPool.Lentil.ProofMode.Basic

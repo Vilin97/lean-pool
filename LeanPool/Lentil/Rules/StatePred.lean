@@ -20,7 +20,7 @@ section state_pred_specialized
 variable {σ : Type u}
 
 theorem state_preds_and (p q : σ → Prop) : (⌜ p ⌝ ∧ ⌜ q ⌝) =tla= ⌜ λ s => p s ∧ q s ⌝ := by
-  funext e ; tla_nontemporal_simp
+  funext e; tla_nontemporal_simp
 
 theorem init_invariant {init : σ → Prop} {next : action σ} {inv : σ → Prop}
     (hinit : ∀ s, init s → inv s)
@@ -30,7 +30,7 @@ theorem init_invariant {init : σ → Prop} {next : action σ} {inv : σ → Pro
     tla_finite_window
     aesop
   rw (occs := .pos [2]) [always_induction]
-  rw [and_pred_implies_split] ; apply And.intro
+  rw [and_pred_implies_split]; apply And.intro
   · intro e ⟨hinit', _⟩
     exact hinit _ hinit'
   · intro e ⟨_, hnext'⟩ k hinv

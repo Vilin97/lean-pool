@@ -31,7 +31,7 @@ omit newHyp in
 theorem Entails_have_valid {newHyp : pred σ} :
   (|-tla- (newHyp)) →
   Entails (hyps ++ [⟨newHypName, newHyp⟩]) goal →
-  Entails hyps goal := by rw [valid_eq_true_implies] ; apply Entails_have_true_pred_implies
+  Entails hyps goal := by rw [valid_eq_true_implies]; apply Entails_have_true_pred_implies
 
 -- NOTE: In theory we don't need this, but applying `Entails_have_valid` on a `pred_implies`
 -- can break its form, so still have this more specific version to preserve the `pred_implies` shape
@@ -143,6 +143,7 @@ private def addTheoremPrefix (newHypName : String) (head : Term) (usedArgs : Arr
     let arg :: args := restArgs | throwError "tla_have: failed to elaborate a TLA theorem head from {head}"
     addTheoremPrefix newHypName head (usedArgs.push arg) args)
 
+/-- Introduce a new proof-mode hypothesis proved by the given term. -/
 def tlaHaveTerm (newHypName : String) (tm : Term) : TacticM Nat := withMainContext do
   (do
     let some hypsLen ← goalHypsLength | throwError "tla_have: goal is not an Entails sequent"
@@ -167,12 +168,16 @@ def tlaHaveTerm (newHypName : String) (tm : Term) : TacticM Nat := withMainConte
       specializeByIdx idx rest.toArray
       return idx)
 where
+  /-- Specialize the hypothesis at the given index with the supplied arguments. -/
   specializeByIdx (idx : Nat) (args : Array (Term)) : TacticM Unit := do
     for arg in args do
       tlaSpecializeStep (.byIdx idx) arg
 
+/-- Syntax category for the clause of a `tla_have`. -/
 declare_syntax_cat tlaHaveClause
+/-- A `tla_have` clause stating a formula proved by a tactic block. -/
 syntax " : " tlafml " by " tacticSeq : tlaHaveClause
+/-- A `tla_have` clause assigning a term. -/
 syntax " := " term : tlaHaveClause
 /--
 `tla_have h : p by tac` adds a new temporal hypothesis `h : p` to the

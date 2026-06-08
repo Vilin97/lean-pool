@@ -21,6 +21,6 @@ tla_split_ands
 ```
 creates one goal for `p` and one goal for `q`.
 -/
-macro "tla_split_ands" : tactic => `(tactic| (simp only [$(mkIdent ``Entails_and_split):ident] ; split_ands ))
+macro "tla_split_ands" : tactic => `(tactic| (simp only [$(mkIdent ``Entails_and_split):ident]; split_ands ))
 
 end TLA.ProofMode
