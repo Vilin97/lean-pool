@@ -241,7 +241,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
             · rw [←h_x5, ←h_x6]
               exact h_x7
             · rw [h_x2, h_x1]
-              simp
+              simp only [ne_eq, UInt64.add_left_inj]
               intros neq
               unfold I_pre' at h_I_pre'
               rcases h_I_pre' with ⟨_, h_kc, _⟩
@@ -251,7 +251,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
           · rw [h_x0, h_x2]
             unfold I_pre' at h_I_pre'
             rcases h_I_pre' with ⟨h_pk, h_kc, _⟩
-            simp
+            simp only [ne_eq, UInt64.add_left_inj]
             intros neq
             rw [←neq] at h_pk
             apply UInt64.lt_irrefl c
@@ -325,12 +325,12 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · simp_currInstr
     · exact h_pc
     · repeat (constructor <;> try assumption)
-      simp
+      simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addRegister_unfold, t_update_eq]
       simp at *
       rw [h_x0, h_x3]
       grind
       repeat (constructor <;> try assumption)
-      simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addRegister_unfold, ne_eq, not_false_eq_true, t_update_neq, t_update_eq, UInt64.add_sub_cancel, MState.getMemoryAt_def]
+      simp only [MState.incPc_increments_pc, MState.getRegisterAt_def, MState.addRegister_unfold, t_update_eq, UInt64.add_sub_cancel, MState.getMemoryAt_def]
       exact h_x5
       repeat (constructor <;> try assumption)
 

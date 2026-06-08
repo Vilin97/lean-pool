@@ -48,7 +48,8 @@ theorem specification_LoadAddress (P: Assertion) (pc dst addr : UInt64) (L: Set 
   unfold hoare_triple_up_1
   rintro _ _ s HCurr h_pc ⟨pre, h_terminated⟩
   -- rw [pre2] at pre1
-  simp at h_terminated
+  simp only [
+    Bool.not_eq_true] at h_terminated
   unfold MState.addRegister at pre
   unfold weak
   exists s.runOneStep
@@ -59,18 +60,19 @@ theorem specification_LoadAddress (P: Assertion) (pc dst addr : UInt64) (L: Set 
       apply And.intro
       simp
       case right =>
-        simp [<- MState.run_one_step_eq_run_n_1]
+        simp only [← MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not, not_and_self, imp_false, not_and, true_and]
         unfold MState.runOneStep
         rw [h_terminated, ←h_pc, HCurr]
-        simp
+        simp only [Bool.false_eq_true, ↓reduceIte, MState.addRegister_unfold, MState.incPc_increments_pc, true_and]
         zero_lt_ne_zero
   case right =>
-      simp [- MState.run_one_step_eq_run_n_1]
+      simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
       unfold MState.runOneStep MState.getRegisterAt
       rw [HCurr]
-      simp
+      simp only [MState.addRegister_unfold, MState.incPc_increments_pc]
       simp [h_terminated, ←h_pc]
-      simp at pre
+      simp only [
+        MState.incPc_increments_pc] at pre
       rw [h_terminated] at pre
       rw [h_pc]
       rw [h_pc] at pre
@@ -98,7 +100,8 @@ theorem specification_LoadImmediate (P: Assertion) (pc dst val : UInt64) (L : Se
     rw [Hl]
     unfold hoare_triple_up_1
     rintro _ _ s HCurr h_pc ⟨pre, h_terminated⟩
-    simp at h_terminated
+    simp only [
+      Bool.not_eq_true] at h_terminated
     unfold weak
     exists s.runOneStep
     apply And.intro
@@ -108,19 +111,20 @@ theorem specification_LoadImmediate (P: Assertion) (pc dst val : UInt64) (L : Se
       apply And.intro
       simp
       case right =>
-        simp [<- MState.run_one_step_eq_run_n_1]
+        simp only [← MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not, not_and_self, imp_false, not_and, true_and]
         unfold MState.runOneStep
         rw [h_terminated, ←h_pc, HCurr]
-        simp
+        simp only [Bool.false_eq_true, ↓reduceIte, MState.addRegister_unfold, MState.incPc_increments_pc, true_and]
         zero_lt_ne_zero
     case right =>
       -- try rw [xor_iff_notation] at pre
-      simp [- MState.run_one_step_eq_run_n_1]
+      simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
       unfold MState.runOneStep
       rw [HCurr]
-      simp
+      simp only [MState.addRegister_unfold, MState.incPc_increments_pc]
       simp [h_terminated, ←h_pc]
-      simp at pre
+      simp only [MState.addRegister_unfold,
+        MState.incPc_increments_pc] at pre
       rw [h_terminated] at pre
       rw [h_pc]
       rw [h_pc] at pre
@@ -222,7 +226,8 @@ theorem specification_XorImmediate (P: Assertion) (pc dst reg val : UInt64) (L :
   rw [Hl]
   unfold hoare_triple_up_1
   rintro _ _ s HCurr h_pc ⟨pre, h_terminated⟩
-  simp at h_terminated
+  simp only [
+    Bool.not_eq_true] at h_terminated
   unfold weak
   exists s.runOneStep
   apply And.intro
@@ -231,17 +236,19 @@ theorem specification_XorImmediate (P: Assertion) (pc dst reg val : UInt64) (L :
     exists 1
     apply And.intro; simp
     case right =>
-      simp [<- MState.run_one_step_eq_run_n_1]
+      simp only [← MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not, not_and_self, imp_false, not_and, true_and]
       unfold MState.runOneStep
       rw [h_terminated, <-h_pc, HCurr]
-      simp
+      simp only [Bool.false_eq_true, ↓reduceIte, MState.getRegisterAt_def, MState.addRegister_unfold, MState.incPc_increments_pc, true_and]
       zero_lt_ne_zero
   case right =>
-    simp at pre
-    simp [-MState.run_one_step_eq_run_n_1]
+    simp only [MState.addRegister_unfold,
+      MState.getRegisterAt_def,
+      MState.incPc_increments_pc] at pre
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.getRegisterAt
     rw [h_terminated, HCurr]
-    simp
+    simp only [Bool.false_eq_true, ↓reduceIte, MState.addRegister_unfold, MState.incPc_increments_pc, UInt64.add_left_inj]
     simp [h_pc]
     rw [h_pc] at pre
     exact ⟨pre, h_terminated⟩
@@ -259,7 +266,8 @@ theorem specification_XOR (P: Assertion) (pc dst reg1 reg2 : UInt64) (L : Set UI
   rw [Hl]
   unfold hoare_triple_up_1
   rintro _ _ s HCurr h_pc ⟨pre, h_terminated⟩
-  simp at h_terminated
+  simp only [
+    Bool.not_eq_true] at h_terminated
   unfold weak
   exists s.runOneStep
   apply And.intro
@@ -268,17 +276,19 @@ theorem specification_XOR (P: Assertion) (pc dst reg1 reg2 : UInt64) (L : Set UI
     exists 1
     apply And.intro; simp
     case right =>
-      simp [<- MState.run_one_step_eq_run_n_1]
+      simp only [← MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not, not_and_self, imp_false, not_and, true_and]
       unfold MState.runOneStep
       rw [h_terminated, <-h_pc, HCurr]
-      simp
+      simp only [Bool.false_eq_true, ↓reduceIte, MState.getRegisterAt_def, MState.addRegister_unfold, MState.incPc_increments_pc, true_and]
       zero_lt_ne_zero
   case right =>
-    simp at pre
-    simp [- MState.run_one_step_eq_run_n_1]
+    simp only [MState.addRegister_unfold,
+      MState.getRegisterAt_def,
+      MState.incPc_increments_pc] at pre
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.getRegisterAt
     rw [h_terminated, HCurr]
-    simp
+    simp only [Bool.false_eq_true, ↓reduceIte, MState.addRegister_unfold, MState.incPc_increments_pc, UInt64.add_left_inj]
     simp [h_pc]
     rw [h_pc] at pre
     exact ⟨pre, h_terminated⟩
@@ -332,8 +342,10 @@ theorem specification_Jump (P : Assertion) (pc newPc : UInt64) (label : String) 
   rw [HL]
   unfold hoare_triple_up_1
   rintro _ _ state h_curr h_pc ⟨pre, h_label, h_terminated⟩
-  simp at h_terminated
-  simp at h_label
+  simp only [
+    Bool.not_eq_true] at h_terminated
+  simp only [
+    MState.get_label_from_code] at h_label
   unfold MState.currInstruction at h_curr
   exists state.runOneStep
   unfold weak
@@ -343,7 +355,7 @@ theorem specification_Jump (P : Assertion) (pc newPc : UInt64) (label : String) 
     exists 1
     apply And.intro; simp
     · constructor ; simp
-      simp
+      simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not, not_and_self, imp_false, not_and]
       simp [<- MState.run_one_step_eq_run_n_1]
       unfold MState.runOneStep MState.jump
       rw [h_terminated]
@@ -351,7 +363,7 @@ theorem specification_Jump (P : Assertion) (pc newPc : UInt64) (label : String) 
 
       zero_lt_ne_zero
   case right =>
-    simp [- MState.run_one_step_eq_run_n_1]
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jump
     unfold MState.setPc at pre
     rw [h_terminated]
@@ -371,9 +383,11 @@ theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String)
   rw [HL]
   unfold hoare_triple_up_1
   rintro h_inter h_empty state h_curr h_pc ⟨pre, h_label, h_terminated⟩
-  simp at h_terminated
-  simp at h_label
-  simp at h_curr
+  simp only [
+    Bool.not_eq_true] at h_terminated
+  simp only [
+    MState.get_label_from_code] at h_label
+  simp only [MState.currInstruction_unfold] at h_curr
   exists state.runOneStep
   unfold weak
   apply And.intro
@@ -382,7 +396,7 @@ theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String)
     exists 1
     apply And.intro; simp
     · constructor ; simp
-      simp
+      simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not, not_and_self, imp_false, not_and]
       simp [<- MState.run_one_step_eq_run_n_1]
       unfold MState.runOneStep MState.jump
       rw [h_terminated]
@@ -390,7 +404,7 @@ theorem specification_Jump' (P : Assertion) (pc newPc : UInt64) (label : String)
 
       zero_lt_ne_zero
   case right =>
-    simp [- MState.run_one_step_eq_run_n_1]
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jump
     unfold MState.setPc at pre
     rw [h_terminated]
@@ -412,9 +426,12 @@ theorem specification_JumpEq_true (P : Assertion) (pc newPc reg1 reg2: UInt64) (
   rw [HL]
   unfold hoare_triple_up_1
   rintro _ _ state h_curr h_pc ⟨pre, h_label, h_cond, h_terminated⟩
-  simp at h_terminated
-  simp at h_label
-  simp at h_cond
+  simp only [
+    Bool.not_eq_true] at h_terminated
+  simp only [
+    MState.get_label_from_code] at h_label
+  simp only [
+    MState.getRegisterAt_def] at h_cond
   unfold MState.currInstruction at h_curr
   exists state.runOneStep
   unfold weak
@@ -424,7 +441,7 @@ theorem specification_JumpEq_true (P : Assertion) (pc newPc reg1 reg2: UInt64) (
     exists 1
     apply And.intro; simp
     · constructor ; simp
-      simp
+      simp only [MState.run_one_step_eq_run_n_1, Set.mem_singleton_iff, Nat.lt_one_iff, ne_eq, Set.singleton_union, Set.mem_insert_iff, Set.mem_setOf_eq, not_or, Decidable.not_not, not_and_self, imp_false, not_and]
       simp [<- MState.run_one_step_eq_run_n_1]
       unfold MState.runOneStep MState.jump MState.jif' MState.jump
       rw [h_terminated]
@@ -432,7 +449,7 @@ theorem specification_JumpEq_true (P : Assertion) (pc newPc reg1 reg2: UInt64) (
 
       zero_lt_ne_zero
   case right =>
-    simp [- MState.run_one_step_eq_run_n_1]
+    simp only [MState.get_label_from_code, MState.runNSteps_code_remains, Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jump MState.jif' MState.jump
     unfold MState.setPc at pre
     rw [h_terminated]
@@ -454,9 +471,12 @@ theorem specification_JumpEq_false (P : Assertion) (pc reg1 reg2: UInt64) (s : S
   rw [HL]
   unfold hoare_triple_up_1
   rintro _ _ state h_curr h_pc ⟨pre, h_cond, h_terminated⟩
-  simp at h_terminated
-  simp at h_cond
-  simp at h_curr
+  simp only [
+    Bool.not_eq_true] at h_terminated
+  simp only [
+    MState.getRegisterAt_def, 
+    ne_eq] at h_cond
+  simp only [MState.currInstruction_unfold] at h_curr
   exists state.runOneStep
   unfold weak
   apply And.intro
@@ -472,13 +492,13 @@ theorem specification_JumpEq_false (P : Assertion) (pc reg1 reg2: UInt64) (s : S
         simp [h_curr, h_cond]
       · zero_lt_ne_zero
   case right =>
-    simp [- MState.run_one_step_eq_run_n_1]
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jif' MState.jump
     rw [h_terminated]
     -- rw [h_terminated] at pre
-    simp [h_curr, h_cond]
+    simp only [Bool.false_eq_true, ↓reduceIte, MState.currInstruction_unfold, MState.addRegister_unfold, MState.incPc_increments_pc, MState.getRegisterAt_def, MState.getMemoryAt_def, MState.addMemory_unfold, beq_iff_eq, bne_iff_ne, ne_eq, ite_not, gt_iff_lt, decide_eq_true_eq, decide_not, h_curr, h_cond]
     rw [← h_pc, h_terminated]
-    simp
+    simp only [and_true]
     simp [ h_terminated] at pre
     exact pre
 
@@ -537,11 +557,13 @@ theorem specification_JumpGt_false (P : Assertion) (pc reg1 reg2: UInt64) (s : S
   rw [HL]
   unfold hoare_triple_up_1
   rintro _ _ state h_curr h_pc ⟨pre, h_cond, h_terminated⟩
-  simp at h_terminated
-  simp at h_cond
-  simp at h_curr
+  simp only [
+    Bool.not_eq_true] at h_terminated
+  simp only [
+    MState.getRegisterAt_def] at h_cond
+  simp only [MState.currInstruction_unfold] at h_curr
   have h_cond_false: (TMap.get state.registers reg2 < TMap.get state.registers reg1) ↔ false := by
-    simp
+    simp only [Bool.false_eq_true, iff_false, UInt64.not_lt]
     exact h_cond
   exists state.runOneStep
   unfold weak
@@ -560,13 +582,13 @@ theorem specification_JumpGt_false (P : Assertion) (pc reg1 reg2: UInt64) (s : S
         simp
       · zero_lt_ne_zero
   case right =>
-    simp [-MState.run_one_step_eq_run_n_1]
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jif' MState.jump
     rw [h_terminated]
-    simp [h_curr]
+    simp only [Bool.false_eq_true, ↓reduceIte, MState.currInstruction_unfold, MState.addRegister_unfold, MState.incPc_increments_pc, MState.getRegisterAt_def, MState.getMemoryAt_def, MState.addMemory_unfold, beq_iff_eq, bne_iff_ne, ne_eq, ite_not, gt_iff_lt, decide_eq_true_eq, decide_not, h_curr, h_cond]
     rw [← h_pc, h_terminated]
     simp only [h_cond_false]
-    simp
+    simp only [Bool.false_eq_true, ↓reduceIte, and_true]
     simp [h_terminated] at pre
     exact pre
 
@@ -598,10 +620,14 @@ theorem specification_JumpLe_false (P : Assertion) (pc reg1 reg2: UInt64) (s : S
   rw [HL]
   unfold hoare_triple_up_1
   rintro _ _ state h_curr h_pc ⟨pre, h_cond, h_terminated⟩
-  simp at h_terminated
-  simp at h_cond
-  simp at h_curr
-  simp at pre
+  simp only [
+    Bool.not_eq_true] at h_terminated
+  simp only [
+    MState.getRegisterAt_def, 
+    gt_iff_lt] at h_cond
+  simp only [MState.currInstruction_unfold] at h_curr
+  simp only [
+    MState.incPc_increments_pc] at pre
   rw [← UInt64.not_le] at h_cond
   exists state.runOneStep
   unfold weak
@@ -617,11 +643,11 @@ theorem specification_JumpLe_false (P : Assertion) (pc reg1 reg2: UInt64) (s : S
         simp [h_curr, h_cond]
       · zero_lt_ne_zero
   case right =>
-    simp [- MState.run_one_step_eq_run_n_1]
+    simp only [Bool.not_eq_true, ne_eq, Set.mem_setOf_eq, Decidable.not_not]
     unfold MState.runOneStep MState.jif' MState.jump
     rw [h_terminated, ← h_pc]
-    simp [h_curr, h_cond, pre]
-    exact h_terminated
+    simp only [Bool.false_eq_true, ↓reduceIte, MState.currInstruction_unfold, MState.addRegister_unfold, MState.incPc_increments_pc, MState.getRegisterAt_def, MState.getMemoryAt_def, MState.addMemory_unfold, beq_iff_eq, bne_iff_ne, ne_eq, ite_not, gt_iff_lt, decide_eq_true_eq, decide_not, h_curr, h_cond]
+    exact ⟨⟨pre, h_terminated⟩, trivial⟩
 
 
 theorem specification_JumpEqZero_true (P : Assertion) (pc newPc reg: UInt64) (label : String)
