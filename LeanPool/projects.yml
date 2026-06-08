@@ -2144,3 +2144,43 @@ projects:
     msc:
       - "11A41"
       - "11Y11"
+  - slug: circuit-complexity
+    title: Circuit Complexity in Lean 4
+    summary: A Lean 4 formalization of classical Boolean circuit complexity, including the Shannon counting lower bound, Schnorr's XOR gate lower bound, a gate-elimination lower bound, CNF/DNF lower bounds for parity, and nondeterministic quantification complexity bounds.
+    branch: boolean circuit complexity lower bounds
+    entry_module: LeanPool.CircuitComplexity
+    authors:
+      - Samuel Schlesinger
+    source:
+      url: "https://github.com/SamuelSchlesinger/circuit-complexity"
+      github_repo: SamuelSchlesinger/circuit-complexity
+    status: verified
+    main_declarations:
+      - shannon_lower_bound_circuit
+      - schnorr_lower_bound_circuit
+      - Circuit.gate_elimination_lower_bound
+      - DNF.xorBool_complexity_lb
+      - CNF.xorBool_complexity_lb
+      - existQuantify_complexity_le
+    main_results:
+      - declaration: shannon_lower_bound_circuit
+        informal: For N at least 6, there exists a Boolean function on N inputs that cannot be computed by any fan-in-2 AND/OR circuit of size at most 2^N / (5N).
+      - declaration: schnorr_lower_bound_circuit
+        informal: Any fan-in-2 AND/OR circuit computing the N-input XOR function (or its complement) has at least 2(N-1) internal gates.
+      - declaration: Circuit.gate_elimination_lower_bound
+        informal: Any circuit over bounded fan-in k AND/OR computing a function with n' essential inputs has size at least n' / k.
+      - declaration: DNF.xorBool_complexity_lb
+        informal: Any DNF formula computing the N-input XOR function requires at least 2^(N-1) terms.
+      - declaration: CNF.xorBool_complexity_lb
+        informal: Any CNF formula computing the N-input XOR function requires at least 2^(N-1) clauses.
+      - declaration: existQuantify_complexity_le
+        informal: If a function f has circuit complexity s, then the existential quantification of f over a k-bit block has circuit complexity at most 2^k * (s + 1).
+    tags:
+      - circuit-complexity
+      - boolean-functions
+      - lower-bounds
+      - shannon-bound
+      - parity
+    msc:
+      - "68Q06"
+      - "94C11"
