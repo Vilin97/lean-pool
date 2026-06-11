@@ -3,7 +3,6 @@ Copyright (c) 2026 Alexander Loitzl, Martin Dvorak. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
-
 import LeanPool.PumpingCfg.Pumping
 
 /-!
@@ -12,7 +11,7 @@ import LeanPool.PumpingCfg.Pumping
 Source: url:https://github.com/AlexLoitzl/pumping_cfg
 Authors: Alexander Loitzl, Martin Dvorak
 Status: verified
-Main declarations: `Language.IsContextFree.pumping`, `ChomskyNormalFormGrammar.parseTree`, `ChomskyNormalFormGrammar.pumping`
+Main declarations: `Language.IsContextFree.pumping`, `ChomskyNormalFormGrammar.pumping`
 Tags: formal-languages, context-free-grammars, computability, pumping-lemma
 MSC: 68Q45
 -/
@@ -35,4 +34,10 @@ of length at least `p` decomposes as `w = u v x y z` with `vy` nonempty,
 
 Imported from <https://github.com/AlexLoitzl/pumping_cfg>. Upstream is
 Apache-2.0 licensed and contains no `sorry`s.
+
+Upstream imports the modules `Mathlib.Computability.ChomskyNormalForm.*` from
+the authors' in-review Mathlib branch (`alex-loitzl-cnf`), which is not part of
+the Mathlib release pinned here. Those modules (by the same authors, Apache-2.0)
+are vendored under `LeanPool/PumpingCfg/ChomskyNormalForm/` until they land in
+a pinned Mathlib release.
 -/

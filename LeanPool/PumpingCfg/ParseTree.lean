@@ -4,8 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
 
-import Mathlib.Computability.ChomskyNormalForm.Basic
-import LeanPool.PumpingCfg.toMathlib
+import LeanPool.PumpingCfg.ChomskyNormalForm.Basic
+import LeanPool.PumpingCfg.ToMathlib
+
+/-!
+# Parse trees for Chomsky normal form grammars
+
+Defines `ChomskyNormalFormGrammar.parseTree`, binary parse trees for grammars in Chomsky
+normal form, together with their yield and the subtree relation used by the pumping argument.
+-/
 
 universe uN uT
 
@@ -13,7 +20,7 @@ variable {T : Type uT}
 
 namespace ChomskyNormalFormGrammar
 
-variable {g : ChomskyNormalFormGrammar.{uN,uT} T}
+variable {g : ChomskyNormalFormGrammar T}
 
 -- TODO to be included in file: ChomskyNormalformgrammar
 
@@ -79,7 +86,7 @@ lemma yield_length_le_two_pow_height : p.yield.length ≤ 2 ^ (p.height - 1) := 
       omega
     have ht' : 2 ^ (t₁.height - 1) + 2 ^ (t₂.height - 1)
         ≤ 2 ^ (max t₁.height t₂.height - 1) + 2 ^ (max t₁.height t₂.height - 1) := by
-      apply Nat.add_le_add <;> apply Nat.pow_le_pow_of_le_right <;> omega
+      apply Nat.add_le_add <;> apply Nat.pow_le_pow_right <;> omega
     apply le_trans ht
     apply le_trans ht'
     have ht'' : max t₁.height t₂.height = max t₁.height t₂.height - 1 + 1 := by
@@ -167,16 +174,18 @@ lemma strict_subtree_decomposition {n : g.NT} {p₁ : parseTree n} {p₂ : parse
 lemma IsSubtreeOf.refl {n : g.NT} {p : parseTree n} : p.IsSubtreeOf p := IsSubtreeOf.eq p
 
 lemma IsSubtreeOf.trans {n₁ n₂ n₃ : g.NT} {p₁ : parseTree n₁} {p₂ : parseTree n₂}
-    {p₃ : parseTree n₃} (hp₁ : p₁.IsSubtreeOf p₂) (hp₂ : p₂.IsSubtreeOf p₃) : p₁.IsSubtreeOf p₃ := by
+    {p₃ : parseTree n₃} (hp₁ : p₁.IsSubtreeOf p₂) (hp₂ : p₂.IsSubtreeOf p₃) :
+    p₁.IsSubtreeOf p₃ := by
   induction hp₂ with
   | eq => exact hp₁
   | left_sub _ _ _ _ _ ih => exact left_sub _ _ _ _ (ih hp₁)
   | right_sub _ _ _ _ _ ih => exact right_sub _ _ _ _ (ih hp₁)
 
-lemma subtree_height {n₁ n₂ : g.NT} {p₁ : parseTree n₁} {p₂ : parseTree n₂} (hpp : p₁.IsSubtreeOf p₂) :
+lemma subtree_height {n₁ n₂ : g.NT} {p₁ : parseTree n₁} {p₂ : parseTree n₂}
+    (hpp : p₁.IsSubtreeOf p₂) :
     p₁.height ≤ p₂.height := by
     induction hpp with
-    | eq => simp [height]
+    | eq => simp
     | left_sub _ _ _ _ _ ht | right_sub _ _ _ _ _ ht =>
       apply ht.trans
       simp only [height]

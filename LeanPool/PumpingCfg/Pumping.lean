@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Loitzl, Martin Dvorak
 -/
 
-import Mathlib.Computability.ChomskyNormalForm.Translation
+import LeanPool.PumpingCfg.ChomskyNormalForm.Translation
 import LeanPool.PumpingCfg.Utils
 import LeanPool.PumpingCfg.ParseTree
 import Mathlib.Data.Set.Card
@@ -23,7 +23,8 @@ This file contains the proof of the pumping lemma for context-free grammars
    [Hopcroft et al. 2006]
 -/
 
-theorem pidgeonhole {α β : Type*} {A : Finset α} {B : Finset β} {f : A → B} (hf : f.Injective) : A.card ≤ B.card := by
+theorem pidgeonhole {α β : Type*} {A : Finset α} {B : Finset β} {f : A → B}
+    (hf : f.Injective) : A.card ≤ B.card := by
   if emptiness : A = ∅ then
     simp_all
   else
@@ -32,12 +33,15 @@ theorem pidgeonhole {α β : Type*} {A : Finset α} {B : Finset β} {f : A → B
     classical
     let f' : α → β := fun a => f (if ha : a ∈ A then ⟨a, ha⟩ else ⟨a₀, ha₀⟩)
     apply Finset.card_le_card_of_injOn f'
-    · aesop
+    · intro a ha
+      rw [Finset.mem_coe] at ha
+      simp only [f', dif_pos ha]
+      exact (f ⟨a, ha⟩).2
     · intro a₁ ha₁ a₂ ha₂ haa
       have haa' : f ⟨a₁, ha₁⟩ = f ⟨a₂, ha₂⟩ := by
         rw [Finset.mem_coe] at ha₁ ha₂
         simp only [f', ha₁, ha₂] at haa
-        exact Subtype.eq haa
+        exact Subtype.ext haa
       simpa using hf haa'
 
 universe uT uN
@@ -47,24 +51,26 @@ variable {T : Type uT}
 namespace ChomskyNormalFormGrammar
 
 /-- `generators g` is the set of nonterminals that appear in the left hand side of rules of `g` -/
-noncomputable def generators (g : ChomskyNormalFormGrammar.{uN, uT} T) [DecidableEq g.NT] :
+noncomputable def generators (g : ChomskyNormalFormGrammar T) [DecidableEq g.NT] :
     Finset g.NT :=
   (g.rules.toList.map ChomskyNormalFormRule.input).toFinset
 
-variable {g : ChomskyNormalFormGrammar.{uN, uT} T}
+variable {g : ChomskyNormalFormGrammar T}
 
 lemma pumping_string {u v : List (Symbol T g.NT)} {n : g.NT}
-    (hg : g.Derives [Symbol.nonterminal n] (u ++ [Symbol.nonterminal n] ++ v)) (i : ℕ):
+    (hg : g.Derives [Symbol.nonterminal n] (u ++ [Symbol.nonterminal n] ++ v)) (i : ℕ) :
     g.Derives [Symbol.nonterminal n] (u^+^i ++ [Symbol.nonterminal n] ++ v^+^i) := by
   induction i with
   | zero =>
-    simpa using Derives.refl [Symbol.nonterminal n]
+    simpa [nTimes] using Derives.refl [Symbol.nonterminal n]
   | succ n ih =>
     apply ih.trans
     apply ((hg.append_left _).append_right _).trans
-    rw [List.append_assoc, List.append_assoc, ← nTimes_succ_l, ← List.append_assoc, ← List.append_assoc, ← nTimes_succ_r]
+    rw [List.append_assoc, List.append_assoc, ← nTimes_succ_l, ← List.append_assoc,
+      ← List.append_assoc, ← nTimes_succ_r]
 
-lemma subtree_height_le {n₁ n₂ : g.NT} {p₁ : parseTree n₁} {p₂ : parseTree n₂} (hpp : p₂.IsSubtreeOf p₁) :
+lemma subtree_height_le {n₁ n₂ : g.NT} {p₁ : parseTree n₁} {p₂ : parseTree n₂}
+    (hpp : p₂.IsSubtreeOf p₁) :
     p₂.height ≤ p₁.height := by
   induction hpp with
   | eq => rfl
@@ -82,24 +88,24 @@ lemma input_mem_generators {r : ChomskyNormalFormRule T g.NT} (hrg : r ∈ g.rul
   | nil => simp
   | cons _ _ ih => aesop
 
-variable [DecidableEq (Σ _n : g.NT, parseTree _n)]
-
 lemma subtree_repeat_root_height_ind {n : g.NT} {p : parseTree n}
     (s : Finset (Σ _n : g.NT, parseTree _n)) (hs : ∀ e₁ ∈ s, ∀ e₂ ∈ s, e₁.fst = e₂.fst → e₁ = e₂)
     (hp : g.generators.card.succ ≤ p.height + s.card) (hps : ∀ pₛ ∈ s, p.IsSubtreeOf pₛ.snd) :
     (∃ n' : g.NT, ∃ p' p'' : parseTree n',
       p'.IsSubtreeOf p ∧ p''.IsSubtreeOf p' ∧ p' ≠ p'') ∨
     (∃ n₀, ∃ t t' : parseTree n₀, ⟨n₀, t⟩ ∈ s ∧ t'.IsSubtreeOf p) := by
+  classical
   induction p generalizing s with
   | @leaf n t hnt =>
     rw [Nat.succ_eq_add_one, parseTree.height, add_comm, Nat.add_le_add_iff_left] at hp
     by_contra! was_goal
-    have pidgeon : ¬(∃ f : { q // q ∈ (insert ⟨n, parseTree.leaf t hnt⟩ s) } → g.generators, f.Injective) := by
-      push_neg
+    have pidgeon :
+        ¬(∃ f : { q // q ∈ (insert ⟨n, parseTree.leaf t hnt⟩ s) } → g.generators, f.Injective) := by
+      push Not
       intro f hf
       have := pidgeonhole hf
       have : (insert ⟨n, parseTree.leaf t hnt⟩ s).card = s.card + 1 :=
-        Finset.card_insert_of_not_mem (was_goal.right n (.leaf t hnt) (.leaf t hnt) ·
+        Finset.card_insert_of_notMem (was_goal.right n (.leaf t hnt) (.leaf t hnt) ·
           (parseTree.IsSubtreeOf.refl))
       omega
     apply pidgeon
@@ -120,7 +126,7 @@ lemma subtree_repeat_root_height_ind {n : g.NT} {p : parseTree n}
       simp only [hxt, Subtype.mk.injEq] at hxy
       cases hy with
       | inl hyt =>
-        apply Subtype.eq
+        apply Subtype.ext
         rw [hxt, hyt]
       | inr hys =>
         exfalso
@@ -134,7 +140,7 @@ lemma subtree_repeat_root_height_ind {n : g.NT} {p : parseTree n}
         exact was_goal.right n (hxy ▸ x.val.snd) (parseTree.leaf t hnt) (by convert hxs <;> aesop)
           (parseTree.IsSubtreeOf.refl)
       | inr hys =>
-        exact Subtype.eq (hs x hxs y hys (by simp_all))
+        exact Subtype.ext (hs x hxs y hys (by simp_all))
   | @node n₀ _ _ t₁ t₂ hnc ih₁ ih₂ =>
     if hn₀ : ∃ t₀ : parseTree n₀, ⟨n₀, t₀⟩ ∈ s then
       right
@@ -143,7 +149,7 @@ lemma subtree_repeat_root_height_ind {n : g.NT} {p : parseTree n}
     else
       have hcard : (insert ⟨n₀, parseTree.node t₁ t₂ hnc⟩ s).card = 1 + s.card := by
         rw [add_comm]
-        exact Finset.card_insert_of_not_mem (hn₀ ⟨_, ·⟩)
+        exact Finset.card_insert_of_notMem (hn₀ ⟨_, ·⟩)
       specialize ih₁ (insert ⟨n₀, parseTree.node t₁ t₂ hnc⟩ s)
       specialize ih₂ (insert ⟨n₀, parseTree.node t₁ t₂ hnc⟩ s)
       simp only [parseTree.height] at hp
@@ -183,8 +189,11 @@ lemma subtree_repeat_root_height_ind {n : g.NT} {p : parseTree n}
           intro e he
           rw [Finset.mem_insert] at he
           cases he with
-          | inl he => exact he ▸ parseTree.IsSubtreeOf.left_sub t₁ t₂ t₁ hnc parseTree.IsSubtreeOf.refl
-          | inr he => exact (parseTree.IsSubtreeOf.left_sub t₁ t₂ t₁ hnc parseTree.IsSubtreeOf.refl).trans (hps _ he)
+          | inl he =>
+            exact he ▸ parseTree.IsSubtreeOf.left_sub t₁ t₂ t₁ hnc parseTree.IsSubtreeOf.refl
+          | inr he =>
+            exact (parseTree.IsSubtreeOf.left_sub t₁ t₂ t₁ hnc
+              parseTree.IsSubtreeOf.refl).trans (hps _ he)
         cases ih₁ hes hcard₁ hst₁ with
         | inl hp =>
           left
@@ -201,20 +210,25 @@ lemma subtree_repeat_root_height_ind {n : g.NT} {p : parseTree n}
             rw [Sigma.mk.inj_iff] at httt
             obtain ⟨hn₀, ht⟩ := httt
             left
-            use n₀, t₁.node t₂ (hn₀ ▸ hnc), t', hn₀ ▸ @parseTree.IsSubtreeOf.eq _ _ _ (t₁.node t₂ hnc) , parseTree.IsSubtreeOf.left_sub _ _ _ _ ht'
+            use n₀, t₁.node t₂ (hn₀ ▸ hnc), t',
+              hn₀ ▸ @parseTree.IsSubtreeOf.eq _ _ _ (t₁.node t₂ hnc),
+              parseTree.IsSubtreeOf.left_sub _ _ _ _ ht'
             intro ht
             obtain htt' := parseTree.subtree_height ht'
             rw [← ht] at htt'
             simp only [parseTree.height] at htt'
             omega
       | inr hcard₂ =>
-        -- This entire branch is the same as `inl hcard₁` except for `left_sub`/`right_sub` and `t₁`/`t₂` :/
+        -- Same as the `inl hcard₁` branch up to `left_sub`/`right_sub` and `t₁`/`t₂`.
         have hst₂ : ∀ e ∈ insert ⟨n₀, t₁.node t₂ hnc⟩ s, t₂.IsSubtreeOf e.snd := by
           intro e he
           rw [Finset.mem_insert] at he
           cases he with
-          | inl he => exact he ▸ parseTree.IsSubtreeOf.right_sub t₁ t₂ t₂ hnc parseTree.IsSubtreeOf.refl
-          | inr he => exact (parseTree.IsSubtreeOf.right_sub t₁ t₂ t₂ hnc parseTree.IsSubtreeOf.refl).trans (hps _ he)
+          | inl he =>
+            exact he ▸ parseTree.IsSubtreeOf.right_sub t₁ t₂ t₂ hnc parseTree.IsSubtreeOf.refl
+          | inr he =>
+            exact (parseTree.IsSubtreeOf.right_sub t₁ t₂ t₂ hnc
+              parseTree.IsSubtreeOf.refl).trans (hps _ he)
         cases ih₂ hes hcard₂ hst₂ with
         | inl hp =>
           left
@@ -231,7 +245,9 @@ lemma subtree_repeat_root_height_ind {n : g.NT} {p : parseTree n}
             rw [Sigma.mk.inj_iff] at httt
             obtain ⟨hn₀, ht⟩ := httt
             left
-            use n₀, t₁.node t₂ (hn₀ ▸ hnc), t', hn₀ ▸ @parseTree.IsSubtreeOf.eq _ _ _ (t₁.node t₂ hnc) , parseTree.IsSubtreeOf.right_sub _ _ _ _ ht'
+            use n₀, t₁.node t₂ (hn₀ ▸ hnc), t',
+              hn₀ ▸ @parseTree.IsSubtreeOf.eq _ _ _ (t₁.node t₂ hnc),
+              parseTree.IsSubtreeOf.right_sub _ _ _ _ ht'
             intro ht
             obtain htt' := parseTree.subtree_height ht'
             rw [← ht] at htt'
@@ -261,9 +277,11 @@ lemma subtree_repeat_root_height_aux {n : g.NT} {p : parseTree n}
   | @leaf n t =>
     exfalso
     have hn : n ∈ g.generators := by
-      simp [generators]
+      simp only [generators, List.mem_toFinset, List.mem_map, Finset.mem_toList,
+        ChomskyNormalFormRule.input]
       use ChomskyNormalFormRule.leaf n t
-    simp [parseTree.height] at hgp
+    simp only [Nat.succ_eq_add_one, parseTree.height, add_le_iff_nonpos_left,
+      nonpos_iff_eq_zero, Finset.card_eq_zero] at hgp
     rw [hgp] at hn
     simp at hn
   | node t₁ t₂ hnc ih₁ ih₂ =>
@@ -271,7 +289,8 @@ lemma subtree_repeat_root_height_aux {n : g.NT} {p : parseTree n}
     cases hgp with
     | inr hp => exact subtree_repeat_root_height_aux_aux hp
     | inl hp =>
-      simp [parseTree.height] at hp
+      simp only [Nat.succ_eq_add_one, parseTree.height, Order.lt_add_one_iff, le_sup_iff,
+        Order.add_one_le_iff] at hp
       cases hp with
       | inl hp₁ =>
         obtain ⟨n', p', p'', hp', hp'', hpg, hpp⟩ := ih₁ hp₁
@@ -303,7 +322,7 @@ lemma pumping {w : List T} (hwg : w ∈ g.language) (hw : w.length ≥ 2 ^ g.gen
   · simp_rw [hpuz, hpvy, List.append_assoc]
   · rw [← hpvy]
     apply le_trans p₁.yield_length_le_two_pow_height
-    apply Nat.pow_le_pow_of_le_right <;> omega
+    apply Nat.pow_le_pow_right <;> omega
   · intro k
     apply hguz.trans
     repeat rw [List.map_append]
@@ -315,6 +334,8 @@ lemma pumping {w : List T} (hwg : w ∈ g.language) (hw : w.length ≥ 2 ^ g.gen
     simpa [nTimes] using Derives.refl _
 
 end ChomskyNormalFormGrammar
+
+variable {T : Type}
 
 theorem Language.IsContextFree.pumping {L : Language T} (hL : L.IsContextFree) :
     ∃ p : ℕ, ∀ w ∈ L, w.length ≥ p → ∃ u v x y z : List T,

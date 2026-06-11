@@ -5,8 +5,16 @@ Authors: Alexander Loitzl, Martin Dvorak
 -/
 import Mathlib.Data.List.Basic
 
+/-!
+# List repetition utilities
+
+Defines `nTimes` (notation `l ^+^ n`), the `n`-fold repetition of a list,
+together with basic rewriting lemmas about it.
+-/
+
 variable {α : Type _}
 
+/-- `nTimes l n` (notation `l ^+^ n`) is the concatenation of `n` copies of the list `l`. -/
 def nTimes (l : List α) (n : ℕ) : List α :=
   (List.replicate n l).flatten
 
