@@ -2144,3 +2144,36 @@ projects:
     msc:
       - "11A41"
       - "11Y11"
+  - slug: frucht
+    title: "Frucht's theorem: every group is a graph automorphism group"
+    summary: Proves a strong form of Frucht's theorem that every group is isomorphic to the automorphism group of some simple graph, deriving it from the axiom of choice and, more finely, from foundation and a set-theoretic rigidity hypothesis, via canonical pointed graphs and Cayley colored graphs.
+    branch: graph theory
+    entry_module: LeanPool.Frucht
+    authors:
+      - Shuhao Song
+    source:
+      url: "https://github.com/znssong/Frucht"
+      github_repo: znssong/Frucht
+    status: verified
+    main_declarations:
+      - Frucht
+      - choice_implies_frucht
+      - foundation_implies_frucht
+    main_results:
+      - declaration: Frucht
+        informal: States Frucht's theorem, that every group is isomorphic to the automorphism group of some simple graph.
+      - declaration: choice_implies_frucht
+        informal: Proves Frucht's theorem assuming the axiom of choice.
+      - declaration: foundation_implies_frucht
+        informal: Proves Frucht's theorem from the axiom of foundation alone.
+      - declaration: fafa₂_implies_frucht
+        informal: Derives Frucht's theorem from the FAFA₂ rigidity hypothesis on canonical pointed graphs.
+      - declaration: frucht_from_all_cardinals_fafa₂
+        informal: Proves Frucht's theorem from a transitive class of canonical-graph-rigid representatives covering every cardinal.
+    tags:
+      - graph-theory
+      - group-theory
+      - automorphism-group
+      - set-theory
+    msc:
+      - "05C25"

@@ -518,6 +518,12 @@ import LeanPool.FriezePatterns
 import LeanPool.FriezePatterns.Chapter1
 import LeanPool.FriezePatterns.Chapter2
 import LeanPool.FriezePatterns.Chapter3
+import LeanPool.Frucht
+import LeanPool.Frucht.Classical
+import LeanPool.Frucht.ClassicalReplacements
+import LeanPool.Frucht.Frucht
+import LeanPool.Frucht.Graphs
+import LeanPool.Frucht.SetTheory
 import LeanPool.GrothendieckVanishing
 import LeanPool.GrothendieckVanishing.ClosedImmersion
 import LeanPool.GrothendieckVanishing.ClosedImmersionCohomology
