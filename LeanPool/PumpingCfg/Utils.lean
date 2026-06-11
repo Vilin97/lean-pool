@@ -18,6 +18,7 @@ variable {α : Type _}
 def nTimes (l : List α) (n : ℕ) : List α :=
   (List.replicate n l).flatten
 
+@[inherit_doc]
 infixl:69 " ^+^ " => nTimes
 
 variable {l : List α} {n : ℕ}
