@@ -21,8 +21,10 @@ pair of nonterminals.
 * `Language.toCFG_correct`: `g.toCFG` generates the same language a a context-free grammar `g`.
 -/
 
+universe uT uN
+
 /-- Rule that rewrites a single nonterminal to a single terminal or a pair of nonterminals. -/
-inductive ChomskyNormalFormRule.{uT,uN} (T : Type uT) (N : Type uN)
+inductive ChomskyNormalFormRule (T : Type uT) (N : Type uN)
   /-- First kind of rule, rewriting a nonterminal `n` to a single terminal `t`. -/
   | leaf (n : N) (t : T) : ChomskyNormalFormRule T N
   /-- Second kind of rule,  rewriting a nonterminal `n` to a pair of nonterminal `lr`. -/
@@ -30,7 +32,7 @@ inductive ChomskyNormalFormRule.{uT,uN} (T : Type uT) (N : Type uN)
 deriving DecidableEq
 
 /-- Chomsky normal form grammar that generates words over the alphabet `T` (a type of terminals). -/
-structure ChomskyNormalFormGrammar.{uN,uT} (T : Type uT) where
+structure ChomskyNormalFormGrammar (T : Type uT) where
   /-- Type of nonterminals. -/
   NT : Type uN
   /-- Initial nonterminal. -/
@@ -38,7 +40,6 @@ structure ChomskyNormalFormGrammar.{uN,uT} (T : Type uT) where
   /-- Rewrite rules. -/
   rules : Finset (ChomskyNormalFormRule T NT)
 
-universe uT uN
 variable {T : Type uT}
 
 namespace ChomskyNormalFormRule
