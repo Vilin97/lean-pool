@@ -1951,6 +1951,44 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: redhill
+    title: Improved Lower Bounds for Strong n-Conjectures
+    summary: Formalizes the disproof of Ramaekers's conjecture, constructing tuple families whose abc-style quality stays bounded above 1, and proves Browkin-Brzezinski lower bounds on the quality of the n-conjecture tuples.
+    branch: number theory
+    entry_module: LeanPool.Redhill
+    authors:
+      - Jeremy Tan
+    source:
+      title: "Improved Lower Bounds for Strong n-Conjectures"
+      authors:
+        - Rupert Hölzl
+        - Sören Kleine
+        - Frank Stephan
+      doi: "10.1017/S1446788725000084"
+      github_repo: Parcly-Taxel/Redhill
+    status: verified
+    main_declarations:
+      - not_ramaekersConjecture_ge_six
+      - le_quality_nConjectureTuples
+    main_results:
+      - declaration: RamaekersConjecture
+        informal: Defines Ramaekers's conjecture for fixed n as the statement that the quality of the relevant tuple set equals 1.
+      - declaration: not_ramaekersConjecture_ge_six
+        informal: Proves Ramaekers's conjecture fails for every n at least 6 (the general case, Theorem 1.14).
+      - declaration: not_ramaekersConjecture_odd_ge_five
+        informal: Proves Ramaekers's conjecture fails for every odd n at least 5 (the odd case via Pell equations, Theorem 1.13).
+      - declaration: not_ramaekersConjecture_five
+        informal: Proves Ramaekers's conjecture fails for n equal to 5 (the Konyagin prelude bound).
+      - declaration: le_quality_nConjectureTuples
+        informal: Proves the Browkin-Brzezinski 1994 lower bound 2n-5 on the quality of the n-conjecture tuples (Theorem 1.3).
+    tags:
+      - number-theory
+      - abc-conjecture
+      - n-conjecture
+      - ramaekers-conjecture
+    msc:
+      - "11A41"
+      - "11D75"
   - slug: synthetic-euclid
     title: "Synthetic Euclidean geometry: Euclid's Elements Book I"
     summary: Formalizes Book I of Euclid's Elements via an axiomatic synthetic-geometry system (incidence, betweenness, congruence, and area), culminating in the Pythagorean theorem and its converse.
@@ -2144,6 +2182,41 @@ projects:
     msc:
       - "11A41"
       - "11Y11"
+  - slug: circuit-complexity
+    title: Circuit Complexity in Lean 4
+    summary: A Lean 4 formalization of classical Boolean circuit complexity, including the Shannon counting lower bound, Schnorr's XOR gate lower bound, a gate-elimination lower bound, CNF/DNF lower bounds for parity, and nondeterministic quantification complexity bounds.
+    branch: boolean circuit complexity lower bounds
+    entry_module: LeanPool.CircuitComplexity
+    authors:
+      - Samuel Schlesinger
+    source:
+      url: "https://github.com/SamuelSchlesinger/circuit-complexity"
+      github_repo: SamuelSchlesinger/circuit-complexity
+    status: verified
+    main_declarations:
+      - CircuitComplexity.shannon_lower_bound_circuit
+    main_results:
+      - declaration: CircuitComplexity.shannon_lower_bound_circuit
+        informal: For N at least 6, there exists a Boolean function on N inputs that cannot be computed by any fan-in-2 AND/OR circuit of size at most 2^N / (5N).
+      - declaration: CircuitComplexity.schnorr_lower_bound_circuit
+        informal: Any fan-in-2 AND/OR circuit computing the N-input XOR function (or its complement) has at least 2(N-1) internal gates.
+      - declaration: CircuitComplexity.Circuit.gate_elimination_lower_bound
+        informal: Any circuit over bounded fan-in k AND/OR computing a function with n' essential inputs has size at least n' / k.
+      - declaration: CircuitComplexity.DNF.xorBool_complexity_lb
+        informal: Any DNF formula computing the N-input XOR function requires at least 2^(N-1) terms.
+      - declaration: CircuitComplexity.CNF.xorBool_complexity_lb
+        informal: Any CNF formula computing the N-input XOR function requires at least 2^(N-1) clauses.
+      - declaration: CircuitComplexity.existQuantify_complexity_le
+        informal: If a function f has circuit complexity s, then the existential quantification of f over a k-bit block has circuit complexity at most 2^k * (s + 1).
+    tags:
+      - circuit-complexity
+      - boolean-functions
+      - lower-bounds
+      - shannon-bound
+      - parity
+    msc:
+      - "68Q06"
+      - "94C11"
   - slug: computability
     title: Oracle Computability and Turing Degrees
     summary: Formalizes oracle-relative computability via partial recursive functions, Turing reducibility and the Turing degrees as an upper semilattice, a Gödel numbering with a universal oracle machine, the jump operator, and the arithmetical hierarchy.
