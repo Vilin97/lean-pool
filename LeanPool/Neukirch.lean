@@ -10,7 +10,7 @@ import LeanPool.Neukirch.HilbertRamificationTheory
 /-!
 # Neukirch's Algebraic Number Theory: Hilbert ramification theory
 
-Source: url:https://github.com/jjdishere/neukirch
+Source: doi:10.1007/978-3-662-03983-0
 Authors: Hu Yongle
 Status: verified
 Main declarations: `NumberField.ramificationIdx_mul_inertiaDegOfIsGalois`

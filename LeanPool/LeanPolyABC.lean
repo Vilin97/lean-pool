@@ -9,7 +9,7 @@ import LeanPool.LeanPolyABC.All
 /-!
 # Polynomial ABC (Mason–Stothers) and its corollaries
 
-Source: url:https://github.com/seewoo5/lean-poly-abc
+Source: arxiv:2408.15180
 Authors: Seewoo Lee
 Status: verified
 Main declarations: `LeanPolyABC.Polynomial.abc`, `LeanPolyABC.Polynomial.flt`

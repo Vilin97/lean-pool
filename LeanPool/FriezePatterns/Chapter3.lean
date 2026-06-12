@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Antoine de Saint-Germain. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Antoine de Saint-Germain
+Authors: Antoine de Saint-Germain, Akselai, Jon Cheah, Bockman Cheung, Eaton Liu
 -/
 
 import LeanPool.FriezePatterns.Chapter1

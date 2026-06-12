@@ -187,7 +187,7 @@ import LeanPool.LeanModularForms.ValenceFormula.WindingWeights.RhoPlusOne
 /-!
 # Modular forms and the generalized residue theorem
 
-Source: arxiv:1808.00997
+Source: arxiv:1808.00997, doi:10.1155/2019/6130464
 Authors: Chris Birkbeck
 Status: verified
 Main declarations: `generalizedResidueTheorem`, `valence_formula_textbook_orbit_finsum`

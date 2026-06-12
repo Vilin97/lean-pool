@@ -10,7 +10,7 @@ import LeanPool.ArchonFirstProofResults.FirstProof6
 /-!
 # Archon-FirstProof-Results
 
-Source: url:https://github.com/frenzymath/Archon-FirstProof-Results
+Source: arxiv:2602.05192
 Authors: FrenzyMath
 Status: verified
 Main declarations: `Problem4.harmonic_mean_inequality_full`, `Problem6.exists_eps_light_subset`

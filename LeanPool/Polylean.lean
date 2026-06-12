@@ -5,20 +5,28 @@ Authors: Siddhartha Gadgil, Anand Rao
 -/
 
 import LeanPool.Polylean.UnitConjecture
+import LeanPool.Polylean.Complexes
+import LeanPool.Polylean.Complexes.Constructions.UniversalCover
 import LeanPool.Polylean.Complexes.GraphPaths
 import LeanPool.Polylean.Complexes.Structures.Category
+import LeanPool.Polylean.Complexes.Structures.FreeGroupoid
 import LeanPool.Polylean.Complexes.Structures.Groupoid
+import LeanPool.Polylean.Complexes.Structures.Invertegory
 import LeanPool.Polylean.Complexes.Structures.Quiver
+import LeanPool.Polylean.Complexes.Structures.TwoComplex
+import LeanPool.Polylean.ConjInvLength
 import LeanPool.Polylean.ConjInvLength.Length
 import LeanPool.Polylean.ConjInvLength.LengthBound
+import LeanPool.Polylean.ConjInvLength.LengthNode
 import LeanPool.Polylean.ConjInvLength.MemoLength
 import LeanPool.Polylean.ConjInvLength.ProvedBound
 import LeanPool.Polylean.ConjInvLength.WordTree
+import LeanPool.Polylean.Polymath
 
 /-!
 # Polylean Unit Conjecture Counterexample
 
-Source: url:https://github.com/siddhartha-gadgil/Polylean
+Source: arxiv:2102.11818, doi:10.4007/annals.2021.194.3.9
 Authors: Siddhartha Gadgil, Anand Rao
 Status: verified
 Main declarations: `LeanPool.Polylean.P.torsionFree`, `LeanPool.Polylean.Gardam.GardamTheorem`
