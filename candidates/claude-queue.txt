@@ -9,9 +9,7 @@
 
 https://github.com/Luka-O/polya-enumeration-theorem
 https://github.com/andrejbauer/partial-combinatory-algebras
-https://github.com/RemyDegenne/testing-lower-bounds
 https://github.com/YnirPaz/PCF-Theory
-https://github.com/Command-Master/lean-bourgain
 https://github.com/kckennylau/EllipticCurve
 https://github.com/LieLean/LowDimSolvClassification
 https://github.com/JobPetrovcic/ArtinWedderburn
@@ -23,10 +21,8 @@ https://github.com/urkud/SardMoreira
 https://github.com/seb488/LeanComplexAnalysis
 https://github.com/nasqret/fineqs
 https://github.com/Dominique-Lawson/Directed-Topology-Lean-4
-https://github.com/sinhp/LeanFibredCategories
 https://github.com/themathqueen/monlib4
 https://github.com/FormalizedFormalLogic/Incompleteness
 https://github.com/ishiut/fo_zfc
-https://github.com/or4nge19/NeuralNetworks
 https://github.com/madvorak/duality
 https://github.com/roos-j/lean-booleanfun
