@@ -10,7 +10,7 @@ import LeanPool.SumsThreeSquares.SumThreeSquares
 /-!
 # Sums of Three Squares
 
-Source: doi:10.2307/2033731
+Source: doi:10.1090/S0002-9939-1957-0085275-8
 Authors: Bhavik Mehta, Pietro Monticone, Abel Donate Munoz
 Status: verified
 Main declarations: `LeanPool.SumsThreeSquares.blueprint_case_mod8_eq3`

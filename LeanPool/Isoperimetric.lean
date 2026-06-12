@@ -12,7 +12,7 @@ import LeanPool.Isoperimetric.PrekopaLeindler
 /-!
 # Prekopa-Leindler, Brunn-Minkowski, and the isoperimetric inequality
 
-Source: url:https://github.com/hojonathanho/isoperimetric
+Source: url:https://terrytao.wordpress.com/2011/09/16/the-brunn-minkowski-inequality-for-nilpotent-groups/
 Authors: Jonathan Ho
 Status: verified
 Main declarations: `prekopa_leindler`, `brunn_minkowski`, `isoperimetric_inequality`
