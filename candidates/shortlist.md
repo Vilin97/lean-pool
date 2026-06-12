@@ -8,7 +8,8 @@ listed first.
 
 Curated 2026-05-16. Projects already in lean-pool (see
 [`LeanPool/projects.yml`](../LeanPool/projects.yml)) are omitted. So is
-`math-inc/KakeyaFiniteFields` (imported via PR #33).
+`math-inc/KakeyaFiniteFields`, which fit mathematically but had PR #33 closed
+unmerged pending an explicit upstream license.
 
 A **[June 2026 refresh](#june-2026-refresh--new-candidates)** of projects that
 appeared or became active since the early-May sweep is appended at the end of
@@ -42,7 +43,6 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | --- | --- | --- | --- | ---: | --- |
 | [658060/topos](https://github.com/658060/topos) | Topos theory | *none* | v4.15.0 | 1,571 | 2026-02-20 |
 | [sven-manthe/A-formalization-of-Borel-determinacy-in-Lean](https://github.com/sven-manthe/A-formalization-of-Borel-determinacy-in-Lean) | Borel determinacy | Apache-2.0 | v4.28.0-rc1 | 8,277 | 2026-02-26 |
-| [RemyDegenne/testing-lower-bounds](https://github.com/RemyDegenne/testing-lower-bounds) | Information theory & hypothesis testing | Apache-2.0 | v4.13.0-rc3 | 13,201 | 2026-04-15 |
 | [calcu16/lean_complexity](https://github.com/calcu16/lean_complexity) | Complexity analysis | *none* | v4.5.0-rc1 | 5,595 | 2025-02-04 |
 
 **Dropped from user's original list (failed staleness / Lean cutoff):**
@@ -61,13 +61,10 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | --- | --- | --- | --- | ---: | --- |
 | [seewoo5/lean-poly-abc](https://github.com/seewoo5/lean-poly-abc) | Mason–Stothers (polynomial ABC) | Apache-2.0 | v4.9.0-rc2 | 1,290 | 2026-03-04 |
 | [alainchmt/RingOfIntegersProject](https://github.com/alainchmt/RingOfIntegersProject) | Certifying rings of integers in number fields | Apache-2.0 | v4.14.0-rc2 | 93,799 | 2026-03-20 |
-| [Command-Master/lean-bourgain](https://github.com/Command-Master/lean-bourgain) | Bourgain's pseudorandomness | Apache-2.0 | v4.7.0 | 7,322 | 2024-11-05 |
 | [BarinderBanwait/ramanujan_nagell](https://github.com/BarinderBanwait/ramanujan_nagell) | Ramanujan–Nagell theorem | Apache-2.0 | v4.26.0-rc2 | 3,571 | 2026-04-08 |
-| [jjdishere/neukirch](https://github.com/jjdishere/neukirch) | Neukirch ANT formalisation | Apache-2.0 | v4.5.0-rc1 | 4,756 | 2024-12-03 |
 | [KisaraBlue/ec-tate-lean](https://github.com/KisaraBlue/ec-tate-lean) | Elliptic curves, Tate's algorithm | Apache-2.0 | nightly-2023-08-19 | 7,786 | 2024-05-26 |
 | [kckennylau/EllipticCurve](https://github.com/kckennylau/EllipticCurve) | Elliptic curve over schemes | Apache-2.0 | v4.25.0-rc2 | 7,309 | 2025-11-04 |
 | [mariainesdff/ostrowski2024](https://github.com/mariainesdff/ostrowski2024) | Ostrowski's theorem | *none* | v4.26.0-rc2 | 2,507 | 2025-12-14 |
-| [pitmonticone/QuadraticIntegers](https://github.com/pitmonticone/QuadraticIntegers) | Ring of integers in quadratic fields | Apache-2.0 | v4.24.0 | 2,126 | 2026-03-09 |
 | [CBirkbeck/LeanModularForms](https://github.com/CBirkbeck/LeanModularForms) | Modular forms | Apache-2.0 | v4.29.0-rc8 | 77,344 | 2026-05-21 |
 
 ### Algebra / commutative algebra
@@ -102,7 +99,6 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | [b-mehta/HighlyAbundant](https://github.com/b-mehta/HighlyAbundant) | Highly abundant numbers (MO/501066) | *none* | v4.24.0-rc1 | 12,957 | 2025-12-19 |
 | [jcpaik/erdos-tuza-valtr](https://github.com/jcpaik/erdos-tuza-valtr) | Erdős–Tuza–Valtr conjecture | Apache-2.0 | v4.13.0-rc3 | 2,302 | 2024-11-09 |
 | [NickAdfor/polynomial-method-restricted-sums](https://github.com/NickAdfor/The-polynomial-method-and-restricted-sums-of-congruence-classes) | Polynomial method, restricted sumsets | Apache-2.0 | v4.27.0-rc1 | 4,149 | 2026-03-13 |
-| [badly-drawn-wizards/noperthedron](https://github.com/badly-drawn-wizards/noperthedron) | Convex polyhedron without Rupert property | Apache-2.0 | v4.25.0-rc2 | 1,105 | 2026-02-15 |
 | [dwrensha/Rupert.lean](https://github.com/dwrensha/Rupert.lean) | The Rupert problem for convex polyhedra | Apache-2.0 | v4.28.0 | 1,713 | 2026-04-05 |
 
 ### Analysis / probability / PDE
@@ -111,8 +107,6 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | --- | --- | --- | --- | ---: | --- |
 | [YellPika/quasi-borel-spaces](https://github.com/YellPika/quasi-borel-spaces) | Quasi-Borel spaces | MIT | v4.28.0-rc1 | 8,626 | 2026-04-10 |
 | [FredRaj3/SemicircleLaw](https://github.com/FredRaj3/SemicircleLaw) | Wigner's semicircle law | MIT | v4.24.0 | 3,174 | 2026-04-11 |
-| [bjoernkjoshanssen/hypothesis](https://github.com/bjoernkjoshanssen/hypothesis) | Probability and statistics | Apache-2.0 | v4.27.0-rc1 | 5,401 | 2026-02-18 |
-| [fpvandoorn/sard](https://github.com/fpvandoorn/sard) | General Sard theorem | Apache-2.0 | v4.12.0 | 1,360 | 2024-10-07 |
 | [cboone/zhang-yeung-inequality](https://github.com/cboone/zhang-yeung-inequality) | Zhang–Yeung non-Shannon inequality | Apache-2.0 | v4.28.0-rc1 | 5,008 | 2026-04-22 |
 | [susannabertolini/PhaseRetrieval](https://github.com/susannabertolini/PhaseRetrieval) | Stable phase retrieval (Hermite–Fock) | Apache-2.0 | v4.29.0-rc6 | 60,247 | 2026-05-20 |
 
@@ -120,7 +114,6 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 
 | Repo | Theorem / topic | License | Lean | LOC | Updated |
 | --- | --- | --- | --- | ---: | --- |
-| [dhyan-aranha/Monsky](https://github.com/dhyan-aranha/Monsky) | Monsky's theorem (UvA Lean community) | Apache-2.0 | v4.16.0-rc2 | 8,137 | 2025-10-30 |
 | [Jun2M/Main-theorem-of-polytopes](https://github.com/Jun2M/Main-theorem-of-polytopes) | Main theorem of polytopes | Apache-2.0 | v4.7.0-rc2 | 2,293 | 2024-05-22 |
 | [jzxia/WhiteheadTheorem](https://github.com/jzxia/WhiteheadTheorem) | Whitehead theorem (homotopy groups) | Apache-2.0 | v4.21.0-rc3 | 7,984 | 2026-03-12 |
 | [unhyperbolic/hyperbolicGeometryInLean](https://github.com/unhyperbolic/hyperbolicGeometryInLean) | Hyperbolic geometry | *none* | nightly-2023-06-20 | 933 | 2025-11-07 |
@@ -131,8 +124,6 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | Repo | Theorem / topic | License | Lean | LOC | Updated |
 | --- | --- | --- | --- | ---: | --- |
 | [kyoDralliam/model-theory-topos](https://github.com/kyoDralliam/model-theory-topos) | First-order model theory in a topos | *none* | v4.22.0-rc3 | 9,409 | 2026-01-29 |
-| [sinhp/LeanFibredCategories](https://github.com/sinhp/LeanFibredCategories) | Fibred categories | Apache-2.0 | v4.4.0-rc1 | 3,574 | 2026-04-15 |
-| [JoeyEremondi/lean-cwf](https://github.com/JoeyEremondi/lean-cwf) | Categories with Families | BSD-3-Clause | n/a | 5,346 | 2025-02-18 |
 | [mckoen/quasicategory](https://github.com/mckoen/quasicategory) | Quasi-categories | Apache-2.0 | v4.18.0-rc1 | 11,675 | 2025-10-25 |
 | [themathqueen/monlib4](https://github.com/themathqueen/monlib4) | Non-commutative graph theory | Apache-2.0 | v4.21.0-rc3 | 31,853 | 2026-01-06 |
 
@@ -141,7 +132,6 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | Repo | Theorem / topic | License | Lean | LOC | Updated |
 | --- | --- | --- | --- | ---: | --- |
 | [FormalizedFormalLogic/Incompleteness](https://github.com/FormalizedFormalLogic/Incompleteness) | Gödel incompleteness | Apache-2.0 | v4.16.0-rc2 | 2,514 | 2025-09-23 |
-| [VTrelat/ZFLean](https://github.com/VTrelat/ZFLean) | ZF set theory framework | Apache-2.0 | v4.27.0 | 9,623 | 2026-04-01 |
 | [mgignoux/lean4-gl-coalgebras](https://github.com/mgignoux/lean4-gl-coalgebras) | Craig interpolation for Gödel–Löb logic | Apache-2.0 | v4.28.0 | 9,594 | 2026-04-16 |
 
 ### CS-theory (graduate theoretical CS)
@@ -150,13 +140,6 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | --- | --- | --- | --- | ---: | --- |
 | [tannerduve/computability](https://github.com/tannerduve/computability) | Oracle computability, Turing degrees | Apache-2.0 | v4.24.0 | 3,035 | 2026-02-05 |
 | [SamuelSchlesinger/circuit-complexity](https://github.com/SamuelSchlesinger/circuit-complexity) | Boolean circuit complexity | Apache-2.0 | v4.29.0-rc4 | 7,756 | 2026-05-29 |
-
-### ML / statistics research
-
-| Repo | Theorem / topic | License | Lean | LOC | Updated |
-| --- | --- | --- | --- | ---: | --- |
-| [or4nge19/NeuralNetworks](https://github.com/or4nge19/NeuralNetworks) | Neural networks | Apache-2.0 | v4.24.0-rc1 | 31,666 | 2026-02-12 |
-| [mkaratarakis/HopfieldNet](https://github.com/mkaratarakis/HopfieldNet) | Hopfield networks | MIT | v4.27.0-rc1 | 149,180 | 2026-02-10 |
 
 ### Quantum / physics
 
@@ -177,7 +160,6 @@ Soft preference for ≥ ~1k LOC (fragments below that are not worth importing).
 | [ADedecker/ProperAction](https://github.com/ADedecker/ProperAction) | Proper actions | *none* | v4.7.0-rc2 | 908 | 2024-05-14 |
 | [AntoineChambert-Loir/Sion4](https://github.com/AntoineChambert-Loir/Sion4) | Sion's minimax theorem | *none* | v4.21.0-rc3 | 3,319 | 2025-09-26 |
 | [SReichelt/universe-abstractions](https://github.com/SReichelt/universe-abstractions) | Mathematical universes | *none* | nightly-2022-01-14 | 19,432 | 2024-04-08 |
-| [pannous/hyper-lean](https://github.com/pannous/hyper-lean) | Hyperreal numbers | Apache-2.0 | v4.27.0 | 9,636 | 2026-03-21 |
 | [thejohncrafter/Catlib4](https://github.com/thejohncrafter/Catlib4) | Category theory + theoretical CS | *none* | nightly-2023-04-20 | 3,045 | 2024-11-25 |
 | [ChrisHughes24/axgroth](https://github.com/ChrisHughes24/axgroth) | Ax–Grothendieck (likely) | *none* | v4.23.0-rc2 | 933 | 2026-03-29 |
 | [Louis-Le-Grand/Formalisation-of-constructable-numbers](https://github.com/Louis-Le-Grand/Formalisation-of-constructable-numbers) | Constructible numbers | *none* | v4.11.0-rc2 | 6,146 | 2024-11-13 |
@@ -198,6 +180,66 @@ other criterion but are likewise unlicensed:
 
 - [SamuelSchlesinger/complexitylib](https://github.com/SamuelSchlesinger/complexitylib) — computational complexity theory (Arora–Barak); v4.28.0, ~13,060 LOC, dormant since 2026-04-17.
 - [LarsenClose/fixed-point-formalization](https://github.com/LarsenClose/fixed-point-formalization) — fixed points in monoidal closed categories; v4.28.0, ~8,328 LOC, dormant since 2026-03-05.
+
+Closed import PRs that should not be retried until the blocker changes:
+
+- `math-inc/KakeyaFiniteFields` — PR #33; good Lean Pool fit, but closed
+  unmerged because the upstream repository has no explicit license.
+
+## Dropped after import PR review
+
+These candidates had import PRs closed without merge and should stay out of the
+active shortlist/queues unless a materially stronger upstream or project scope
+appears.
+
+- `amarmaduke/lean-subst` — PR #168; reusable substitution/reduction
+  infrastructure without a source-anchored headline theorem.
+- `tsurumi-yizhou/SPG` — PR #159; computational spin-point-group routines
+  without proved correctness/headline theorem.
+- `gdncc/cryptography` — PR #47 and PR #158; SHA-3 implementation lacks a
+  formal specification/correctness theorem.
+- `tangentstorm/leansieve` — PR #153; elementary sieve verification, below the
+  Lean Pool graduate/research project bar.
+- `riccardobrasca/FLT3` — PR #150; advertised theorem is imported from Mathlib
+  rather than proved by the project.
+- `bjoernkjoshanssen/hypothesis` — PR #142; loose undergraduate
+  statistics/examples collection without a source-anchored headline theorem.
+- `pannous/hyper-lean` — PR #102 and PR #139; only introductory
+  probability/measure examples survived, not the hyperreal project.
+- `JoeyEremondi/lean-cwf` — PR #98 and PR #104; BSD-3-Clause license and
+  substantial omitted upstream content under current criteria.
+- `badly-drawn-wizards/noperthedron` — PR #91; auxiliary geometry fragments do
+  not prove the advertised convex/no-Rupert headline theorem.
+- `pitmonticone/QuadraticIntegers` — PR #87; support instances only; the
+  quadratic-integers ring-of-integers theorem is absent.
+- `or4nge19/NeuralNetworks` — PR #82; weak/overstated Hopfield convergence
+  theorem and low code-quality assessment after scope narrowing.
+- `Command-Master/lean-bourgain` — PR #64; support layers only, missing the
+  Bourgain extractor/Szemeredi-Trotter theorem layer.
+- `mkaratarakis/HopfieldNet` — PR #125; unresolved `sorry`/build backlog and
+  duplicate overlap with the NeuralNetworks Hopfield core.
+- `fpvandoorn/sard` — PR #95; Sard support API only, no Sard/Sard-Smale theorem.
+- `sinhp/LeanFibredCategories` — PR #78; cartesian-morphism/fiber API only, no
+  theorem-level endpoint.
+- `RemyDegenne/testing-lower-bounds` — PR #62; only measure/kernel support API
+  survived, not the lower-bound formalization.
+- `misaka10987/archimedes` — PR #51; elementary coordinate-geometry API, no
+  graduate/research headline result.
+
+Closed import PRs superseded by later accepted imports:
+
+- `jjdishere/neukirch` — PR #130 closed unmerged; now represented in
+  [`LeanPool/projects.yml`](../LeanPool/projects.yml).
+- `dhyan-aranha/Monsky` — PR #96 and PR #105 closed unmerged; now represented
+  in [`LeanPool/projects.yml`](../LeanPool/projects.yml).
+- `siddhartha-gadgil/Polylean` — PR #97 closed unmerged; now represented in
+  [`LeanPool/projects.yml`](../LeanPool/projects.yml).
+- `ivankobe/FactorizationSystems` — PR #99 closed unmerged; now represented in
+  [`LeanPool/projects.yml`](../LeanPool/projects.yml).
+- `VTrelat/ZFLean` — PR #100 closed unmerged; now represented in
+  [`LeanPool/projects.yml`](../LeanPool/projects.yml).
+- `ruplet/formalization-of-bounded-arithmetic` — PR #101 closed unmerged; now
+  represented in [`LeanPool/projects.yml`](../LeanPool/projects.yml).
 
 ## Dropped by the tightened criteria
 
