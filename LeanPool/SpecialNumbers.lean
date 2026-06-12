@@ -3,6 +3,7 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
+
 import LeanPool.SpecialNumbers.Eulerian
 import LeanPool.SpecialNumbers.Euclidian
 import LeanPool.SpecialNumbers.Sylvester
@@ -25,9 +26,10 @@ This project formalizes material from Chapter 6 ("Special Numbers") of Knuth,
 Graham, and Patashnik's *Concrete Mathematics*, together with closely related
 integer sequences. All declarations live in the `SpecialNumbers` namespace.
 
-`Eulerian` defines the Eulerian numbers `SpecialNumbers.eulerian n k`, which
-count the permutations of `{1, …, n}` with exactly `k` ascents, and proves their
-boundary values and the triangular recurrence.
+`Eulerian` defines the Eulerian numbers `SpecialNumbers.eulerian n k` by their
+standard triangular recurrence and proves their boundary values. The
+combinatorial interpretation (counting permutations of `{1, …, n}` by number of
+ascents) is not formalized.
 
 `Euclidian` studies the Euclid numbers `SpecialNumbers.Euclid.euclid`
 (`SpecialNumbers.Euclid.euclid_coprime`, `SpecialNumbers.Euclid.euclid_strictMono`)

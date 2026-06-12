@@ -3,29 +3,30 @@ Copyright (c) 2026 Walter Moreira, Joe Stubbs. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Walter Moreira, Joe Stubbs
 -/
-import Mathlib.RingTheory.Binomial
-import Mathlib.RingTheory.Polynomial.Pochhammer
+import Mathlib.Algebra.GroupWithZero.Nat
+import Mathlib.Algebra.NeZero
 
 /-!
 # Eulerian Numbers
 
-This module formalizes the definition of Eulerian numbers (Section 6.2 from
-[Concrete Mathematics][knuth1989concrete]).
+This module defines the Eulerian numbers by their standard triangular recurrence
+(Section 6.2 of [Concrete Mathematics][knuth1989concrete]) and proves their
+boundary values.
 
-The Eulerian number $\left\langle{n\atop k}\right\rangle$ counts the number of permutations
-of $\{1,2,\ldots,n\}$ with $k$ ascents.
+The combinatorial interpretation of $\left\langle{n\atop k}\right\rangle$ — counting
+the permutations of $\{1,2,\ldots,n\}$ with $k$ ascents — is not formalized here.
 
 ## References
 
 * [Concrete Mathematics][knuth1989concrete]
 -/
 
-open Ring Polynomial
-
 namespace SpecialNumbers
 
 /--
-Eulerian number: counts the permutations of `{1, …, n}` with exactly `k` ascents.
+Eulerian number, defined by the recurrence
+`eulerian (n + 1) k = (k + 1) * eulerian n k + (n + 1 - k) * eulerian n (k - 1)`
+with boundary values `eulerian n 0 = 1` and `eulerian 0 k = 0` for `k > 0`.
 -/
 def eulerian (n k : ℕ) : ℕ :=
   match n, k with
@@ -71,25 +72,5 @@ theorem eulerian_of_succ_n_n (n : ℕ) : eulerian (n + 1) n = 1 := by
           show n + 1 - 1 = n by omega, ih]
         omega
       · omega
-
-lemma smul_mul_eq [NonAssocRing S] (r s : S) (a : ℕ) : (a • r) * s = r * (a • s) := by
-  rw [mul_smul_comm]
-  exact smul_mul_assoc a r s
-
-variable [NonAssocRing R] [Pow R ℕ] [BinomialRing R] [NatPowAssoc R]
-
-attribute [local instance] BinomialRing.toIsAddTorsionFree in
-lemma succ_mul_choose_eq (r : R) (n : ℕ) :
-    (n + 1) • choose (r + 1) (n + 1) = (r + 1) * choose r n := by
-  suffices h : (n + 1).factorial • choose (r + 1) (n + 1) = n.factorial • (r + 1) * choose r n by
-    rw [Nat.factorial] at h
-    nth_rw 1 [Nat.mul_comm] at h
-    rw [mul_smul] at h
-    rw [smul_mul_assoc] at h
-    exact nsmul_right_injective (by positivity) h
-  rw [← descPochhammer_eq_factorial_smul_choose]
-  simp only [descPochhammer]
-  rw [smeval_mul, smeval_X, smeval_comp, smul_mul_eq]
-  simp [descPochhammer_eq_factorial_smul_choose]
 
 end SpecialNumbers

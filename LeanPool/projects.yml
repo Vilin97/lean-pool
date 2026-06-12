@@ -1902,7 +1902,7 @@ projects:
       - "30E20"
   - slug: special-numbers
     title: Special Numbers
-    summary: Formalizes Eulerian numbers, Euclid numbers, and Sylvester's sequence from Chapter 6 of Concrete Mathematics, including their recurrences, coprimality, monotonicity, and explicit doubly-exponential closed forms.
+    summary: Formalizes the recurrence-defined Eulerian numbers, Euclid numbers, and Sylvester's sequence from Chapter 6 of Concrete Mathematics, including coprimality, monotonicity, and explicit doubly-exponential closed forms for the latter two.
     branch: integer sequences
     entry_module: LeanPool.SpecialNumbers
     authors:
@@ -1932,7 +1932,7 @@ projects:
       - declaration: SpecialNumbers.Euclid.euclid_eq_floor_constant_pow
         informal: Gives the explicit closed form for the Euclid numbers as a floor of a doubly-exponential power of a constant.
       - declaration: SpecialNumbers.eulerian
-        informal: Defines the Eulerian numbers via their triangular recurrence, counting permutations by number of ascents.
+        informal: Defines the Eulerian numbers via their standard triangular recurrence and boundary values.
     tags:
       - number-theory
       - combinatorics
