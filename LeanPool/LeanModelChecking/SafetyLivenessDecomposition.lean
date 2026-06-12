@@ -16,7 +16,8 @@ safety property and a liveness property, following Alpern and Schneider.
 namespace SafetyLivenessDecomposition
 
 -- Theorem statement based on:
--- Alpern, Bowen; Schneider, Fred B. Recognizing safety and liveness
+-- Alpern, Bowen; Schneider, Fred B. Defining liveness.
+-- Information Processing Letters 21 (1985), 181-185.
 -- https://doi.org/10.1016/0020-0190(85)90056-0
 
 /-- An infinite word over the alphabet `T`, modelled as a function from positions

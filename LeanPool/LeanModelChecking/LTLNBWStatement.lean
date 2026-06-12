@@ -11,7 +11,7 @@ import Mathlib.Data.Finite.Defs
 
 We define the syntax and language of Linear Temporal Logic (`LTL`) formulas and
 of nondeterministic Büchi automata (`NBW`), and state the theorem that every
-`LTL` formula has an equivalent `NBW`.
+`LTL` formula has an equivalent finite-state `NBW`.
 -/
 
 namespace LeanModelChecking
@@ -62,8 +62,11 @@ def NBW.language {S} (A : NBW S) (w : ℕ → S) :=
   ∃ p, A.run p w ∧ ∀ i, ∃ j ≥ i, p j ∈ A.F
 
 /-- The statement that every Linear Temporal Logic formula has an equivalent
-nondeterministic Büchi automaton, packaged as a proposition so it can be reused. -/
+*finite-state* nondeterministic Büchi automaton, packaged as a proposition so it
+can be reused. Without the `Finite A.Q` conjunct the statement would be much
+weaker, since an automaton with infinitely many states can encode arbitrary
+languages. -/
 def forAnyLTLFormulaExistsAnEquivalentNBWStatement :=
-  ∀ {AP} (φ : LTL AP), ∃ (A : NBW (Letter AP)), φ.language = A.language
+  ∀ {AP} (φ : LTL AP), ∃ (A : NBW (Letter AP)), Finite A.Q ∧ φ.language = A.language
 
 end LeanModelChecking

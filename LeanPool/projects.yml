@@ -1875,12 +1875,16 @@ projects:
       - "30E20"
   - slug: lean-model-checking
     title: Formalizations of theorems related to model checking
-    summary: Proves that every linear temporal logic formula has an equivalent nondeterministic Büchi automaton, and that every linear-time property decomposes as the intersection of a safety property and a liveness property.
+    summary: Proves that every linear temporal logic formula has an equivalent finite-state nondeterministic Büchi automaton (via negation normal form, alternating Büchi automata, and the Miyano-Hayashi breakpoint construction), and that every linear-time property decomposes as the intersection of a safety property and a liveness property.
     branch: model checking
     entry_module: LeanPool.LeanModelChecking
     authors:
       - György Kurucz
     source:
+      title: An Automata-Theoretic Approach to Linear Temporal Logic
+      authors:
+        - Moshe Y. Vardi
+      doi: "10.1007/3-540-60915-6_6"
       url: "https://github.com/kuruczgy/lean-model-checking"
       github_repo: kuruczgy/lean-model-checking
     status: verified
@@ -1888,13 +1892,18 @@ projects:
       - LeanModelChecking.for_any_LTL_formula_exists_an_equivalent_NBW
     main_results:
       - declaration: LeanModelChecking.for_any_LTL_formula_exists_an_equivalent_NBW
-        informal: For any linear temporal logic formula there exists an equivalent nondeterministic Büchi automaton accepting the same language.
+        informal: For any linear temporal logic formula there exists an equivalent finite-state nondeterministic Büchi automaton, i.e. one whose state type is finite, accepting the same language.
+        source_ref: "M. Y. Vardi and P. Wolper, An automata-theoretic approach to automatic program verification, LICS 1986, 332-344; C. Baier and J.-P. Katoen, Principles of Model Checking, MIT Press, 2008, ISBN 978-0-262-02649-9, https://mitpress.mit.edu/9780262026499/principles-of-model-checking/"
       - declaration: LeanModelChecking.LTL
         informal: The syntax of linear temporal logic formulas over a set of atomic propositions.
       - declaration: LeanModelChecking.NBW
         informal: A nondeterministic Büchi automaton over a given alphabet of letters.
+      - declaration: LeanModelChecking.ABW.toNBW.lang_eq
+        informal: The Miyano-Hayashi breakpoint construction turns any alternating Büchi automaton over a finite state space into a nondeterministic Büchi automaton accepting the same language.
+        source_ref: "S. Miyano and T. Hayashi, Alternating finite automata on omega-words, Theoretical Computer Science 32 (1984), 321-330, doi:10.1016/0304-3975(84)90049-5"
       - declaration: SafetyLivenessDecomposition.safety_liveness_decomposition
         informal: Every linear-time property is the intersection of a safety property and a liveness property.
+        source_ref: "B. Alpern and F. B. Schneider, Defining liveness, Information Processing Letters 21 (1985), 181-185, doi:10.1016/0020-0190(85)90056-0"
     tags:
       - model-checking
       - linear-temporal-logic
