@@ -87,10 +87,10 @@ def ValidSeq (k : ℕ) (b : Fin (k + 1) → ℕ) : Prop :=
   (∀ i j, i < j → b j < b i) ∧ 0 < b (Fin.last k)
 
 /-- The base sequence `b_i = k + 1 - i`. Its sum equals `(k + 2).choose 2`. -/
-def base_seq (k : ℕ) : Fin (k + 1) → ℕ := fun i => k + 1 - i
+def baseSeq (k : ℕ) : Fin (k + 1) → ℕ := fun i => k + 1 - i
 
-lemma sum_base_seq (k : ℕ) : ∑ i, base_seq k i = Nat.choose (k + 2) 2 := by
-  unfold base_seq;
+lemma sum_baseSeq (k : ℕ) : ∑ i, baseSeq k i = Nat.choose (k + 2) 2 := by
+  unfold baseSeq;
   induction k <;> simp_all +decide [ Nat.choose_succ_succ, Fin.sum_univ_succ ];
   ring
 
@@ -100,13 +100,13 @@ This follows from the fact that the sequence is strictly decreasing and the last
 1.
 -/
 lemma valid_seq_ge_base {k : ℕ} {b : Fin (k + 1) → ℕ} (h : ValidSeq k b) :
-    ∀ i, b i ≥ base_seq k i := by
+    ∀ i, b i ≥ baseSeq k i := by
       -- We proceed by induction on $i$.
       intro i
       induction i using Fin.reverseInduction with
-      | last => unfold base_seq; norm_num; linarith [ h.2 ]
+      | last => unfold baseSeq; norm_num; linarith [ h.2 ]
       | cast i ih =>
-        unfold base_seq at *
+        unfold baseSeq at *
         have := h.1 _ _ ( @Fin.castSucc_lt_succ k i ); norm_num at *; omega
 
 /-
@@ -115,22 +115,22 @@ strictly greater than the base sequence. This is because valid sequences are alw
 greater than or equal to the base sequence.
 -/
 lemma exists_gt_base_of_ne_base {k : ℕ} {b : Fin (k + 1) → ℕ}
-    (h_valid : ValidSeq k b) (h_ne : b ≠ base_seq k) :
-    ∃ j, base_seq k j < b j := by
+    (h_valid : ValidSeq k b) (h_ne : b ≠ baseSeq k) :
+    ∃ j, baseSeq k j < b j := by
       -- Since $b$ is not equal to the base sequence, there must be some $i$ where $b i \neq
-      -- base_seq k i$.
-      obtain ⟨i, hi⟩ : ∃ i, b i ≠ base_seq k i := by
+      -- baseSeq k i$.
+      obtain ⟨i, hi⟩ : ∃ i, b i ≠ baseSeq k i := by
         exact Function.ne_iff.mp h_ne;
-      -- Since $b$ is valid, we have $b i \geq base_seq k i$ for all $i$.
-      have h_ge : ∀ i, b i ≥ base_seq k i := by
+      -- Since $b$ is valid, we have $b i \geq baseSeq k i$ for all $i$.
+      have h_ge : ∀ i, b i ≥ baseSeq k i := by
         exact fun i => valid_seq_ge_base h_valid i;
       exact ⟨ i, lt_of_le_of_ne ( h_ge i ) hi.symm ⟩
 
 /-- The transformation T maps a sequence `b` to `b'` by finding the largest index
 `j` such that `b_j > k + 1 - j` and setting `b'_j = b_j - 1`. If no such `j`
 exists (i.e. `b` is the base sequence), it returns `b`. -/
-noncomputable def transform_seq (k : ℕ) (b : Fin (k + 1) → ℕ) : Fin (k + 1) → ℕ :=
-  let s := (Finset.univ : Finset (Fin (k + 1))).filter (fun j => base_seq k j < b j)
+noncomputable def transformSeq (k : ℕ) (b : Fin (k + 1) → ℕ) : Fin (k + 1) → ℕ :=
+  let s := (Finset.univ : Finset (Fin (k + 1))).filter (fun j => baseSeq k j < b j)
   if h : s.Nonempty then
     let j := s.max' h
     Function.update b j (b j - 1)
@@ -141,18 +141,18 @@ noncomputable def transform_seq (k : ℕ) (b : Fin (k + 1) → ℕ) : Fin (k + 1
 If b is a valid sequence different from the base sequence, then T(b) is also a valid sequence, its
 sum is one less than the sum of b, and T(b) is component-wise less than or equal to b.
 -/
-lemma transform_seq_props {k : ℕ} {b : Fin (k + 1) → ℕ}
-    (h_valid : ValidSeq k b) (h_not_base : b ≠ base_seq k) :
-    let b' := transform_seq k b
+lemma transformSeq_props {k : ℕ} {b : Fin (k + 1) → ℕ}
+    (h_valid : ValidSeq k b) (h_not_base : b ≠ baseSeq k) :
+    let b' := transformSeq k b
     ValidSeq k b' ∧ (∑ i, b' i = ∑ i, b i - 1) ∧ (∀ i, b' i ≤ b i) := by
       -- Let $j$ be the largest index such that $b_j > k + 1-j$.
-      obtain ⟨j, hj⟩ : ∃ j, base_seq k j < b j ∧ ∀ i > j, base_seq k i ≥ b i := by
-        obtain ⟨j, hj⟩ : ∃ j, base_seq k j < b j := by
+      obtain ⟨j, hj⟩ : ∃ j, baseSeq k j < b j ∧ ∀ i > j, baseSeq k i ≥ b i := by
+        obtain ⟨j, hj⟩ : ∃ j, baseSeq k j < b j := by
           apply exists_gt_base_of_ne_base h_valid h_not_base;
-        exact ⟨ Finset.max' ( Finset.univ.filter fun i => base_seq k i < b i ) ⟨ j,
+        exact ⟨ Finset.max' ( Finset.univ.filter fun i => baseSeq k i < b i ) ⟨ j,
             Finset.mem_filter.mpr ⟨ Finset.mem_univ _, hj ⟩ ⟩,
             Finset.mem_filter.mp ( Finset.max'_mem
-                ( Finset.univ.filter fun i => base_seq k i < b i )
+                ( Finset.univ.filter fun i => baseSeq k i < b i )
                 ⟨ j, Finset.mem_filter.mpr ⟨ Finset.mem_univ _, hj ⟩ ⟩ ) |>.2,
             fun i hi => le_of_not_gt fun hi' =>
                 not_lt_of_ge ( Finset.le_max' _ _ <| by aesop ) hi ⟩;
@@ -179,12 +179,12 @@ lemma transform_seq_props {k : ℕ} {b : Fin (k + 1) → ℕ}
           next h =>
             subst h
             simp_all only [tsub_pos_iff_lt]
-            unfold base_seq at *; aesop;
+            unfold baseSeq at *; aesop;
           next h => exact h_valid.2;
-      unfold transform_seq
+      unfold transformSeq
       obtain ⟨left, right⟩ := hj
       by_cases h : ((Finset.univ : Finset (Fin (k + 1))).filter
-          (fun j => base_seq k j < b j)).Nonempty
+          (fun j => baseSeq k j < b j)).Nonempty
       · -- h.Nonempty branch: b' = update b (max') (b max' - 1)
         simp only [dif_pos h]
         refine ⟨?_, ?_, ?_⟩
@@ -195,7 +195,7 @@ lemma transform_seq_props {k : ℕ} {b : Fin (k + 1) → ℕ}
           · exact ⟨j, left, le_rfl⟩
         · -- ∑ x, update b max' (b max' - 1) x = ∑ i, b i - 1
           have h_mem :=
-            Finset.max'_mem (Finset.filter (fun j => base_seq k j < b j) Finset.univ) h
+            Finset.max'_mem (Finset.filter (fun j => baseSeq k j < b j) Finset.univ) h
           simp_all only [mem_filter, mem_univ, true_and]
           rw [Finset.sum_update_of_mem]
           · rw [← Finset.sum_sdiff
@@ -204,10 +204,10 @@ lemma transform_seq_props {k : ℕ} {b : Fin (k + 1) → ℕ}
           · exact Finset.mem_univ _
         · -- ∀ i, update b max' (b max' - 1) i ≤ b i
           intro i
-          by_cases hi : i = Finset.max' (Finset.filter (fun j => base_seq k j < b j)
+          by_cases hi : i = Finset.max' (Finset.filter (fun j => baseSeq k j < b j)
             Finset.univ) h <;> aesop
       · -- ¬h.Nonempty branch: b' = b — but this is impossible because we have `j` with
-        -- `base_seq k j < b j`, so the filter is non-empty
+        -- `baseSeq k j < b j`, so the filter is non-empty
         exfalso
         apply h
         exact ⟨j, Finset.mem_filter.mpr ⟨Finset.mem_univ _, left⟩⟩
@@ -216,25 +216,25 @@ lemma transform_seq_props {k : ℕ} {b : Fin (k + 1) → ℕ}
 For any sequence b, the compressed sizes sequence is component-wise less than or equal to b. This
 follows immediately from the definition involving min.
 -/
-lemma compressed_sizes_le {k : ℕ} {b : Fin (k + 1) → ℕ} : ∀ i, compressed_sizes b i ≤ b i := by
+lemma compressedSizes_le {k : ℕ} {b : Fin (k + 1) → ℕ} : ∀ i, compressedSizes b i ≤ b i := by
   intro i
   obtain ⟨i, ih⟩ := i
-  unfold compressed_sizes
+  unfold compressedSizes
   cases i <;> aesop
 
 /-
-The value of compressed_sizes at index i + 1 is min(compressed_sizes b i - 1, b (i + 1)) by
+The value of compressedSizes at index i + 1 is min(compressedSizes b i - 1, b (i + 1)) by
 definition.
 -/
-lemma compressed_sizes_succ {k : ℕ} {b : Fin (k + 1) → ℕ} (i : Fin k) :
-    compressed_sizes b (Fin.succ i) = min (compressed_sizes b (Fin.castSucc i) - 1) (
+lemma compressedSizes_succ {k : ℕ} {b : Fin (k + 1) → ℕ} (i : Fin k) :
+    compressedSizes b (Fin.succ i) = min (compressedSizes b (Fin.castSucc i) - 1) (
         b (Fin.succ i)) := by
       cases i
       simp_all only [Fin.succ_mk, Fin.castSucc_mk];
-      -- By definition of compressed_sizes, we have compressed_sizes b (i + 1) = min
-      -- (compressed_sizes
+      -- By definition of compressedSizes, we have compressedSizes b (i + 1) = min
+      -- (compressedSizes
       -- b i - 1) (b (i + 1)).
-      rw [compressed_sizes]
+      rw [compressedSizes]
 
 /-
 If the last element of the compressed sizes sequence is positive, then all elements are positive.
@@ -242,20 +242,20 @@ This can be proven by reverse induction or by observing that the sequence is non
 strictly decreasing where positive). Actually, from the recurrence, b'_{i + 1} <= b'_i - 1, so b'_i
 >= b'_{i + 1} + 1 > b'_{i + 1}. So if the last is positive, previous ones are larger.
 -/
-lemma compressed_sizes_pos {k : ℕ} {b : Fin (k + 1) → ℕ}
-    (h_last_pos : compressed_sizes b (Fin.last k) > 0) :
-    ∀ i, 0 < compressed_sizes b i := by
+lemma compressedSizes_pos {k : ℕ} {b : Fin (k + 1) → ℕ}
+    (h_last_pos : compressedSizes b (Fin.last k) > 0) :
+    ∀ i, 0 < compressedSizes b i := by
       intro i
-      have fwd : 0 ≤ compressed_sizes b (Fin.last k) := le_of_lt h_last_pos
+      have fwd : 0 ≤ compressedSizes b (Fin.last k) := le_of_lt h_last_pos
       induction i using Fin.reverseInduction with
       | last => assumption
       | cast i ih =>
-        -- By definition of compressed sizes, we have `compressed_sizes b i.succ = min
-        -- (compressed_sizes b i.castSucc - 1) (b i.succ)`.
+        -- By definition of compressed sizes, we have `compressedSizes b i.succ = min
+        -- (compressedSizes b i.castSucc - 1) (b i.succ)`.
         have h_compressed_succ :
-            compressed_sizes b i.succ = min (compressed_sizes b i.castSucc - 1) (b i.succ) := by
-          exact compressed_sizes_succ i
-        cases min_cases ( compressed_sizes b i.castSucc - 1 ) ( b i.succ ) <;> omega
+            compressedSizes b i.succ = min (compressedSizes b i.castSucc - 1) (b i.succ) := by
+          exact compressedSizes_succ i
+        cases min_cases ( compressedSizes b i.castSucc - 1 ) ( b i.succ ) <;> omega
 
 /-
 If a valid sequence has a sum strictly greater than the target sum (which is at least the base sum),
@@ -275,17 +275,17 @@ lemma polynomialMethod_reduction_lemma {k : ℕ} {b : Fin (k + 1) → ℕ} (h_va
         -- each time while maintaining validity and the component-wise inequality.
         have h_transform : ∃ b' : Fin (k + 1) → ℕ,
             ValidSeq k b' ∧ (∑ i, b' i = ∑ i, b i - 1) ∧ (∀ i, b' i ≤ b i) := by
-          by_cases h_eq_base : b = base_seq k;
+          by_cases h_eq_base : b = baseSeq k;
           · subst h_eq_base
             exfalso
-            have h_sum_1 : ∑ i, base_seq k i > p + (k + 2).choose 2 - 1 := ‹_›
-            rw [ sum_base_seq ] at h_sum_1;
+            have h_sum_1 : ∑ i, baseSeq k i > p + (k + 2).choose 2 - 1 := ‹_›
+            rw [ sum_baseSeq ] at h_sum_1;
             have hp : p > 1 := Fact.out
             have hk : 0 < (k + 2).choose 2 := Nat.choose_pos ( by linarith : 2 ≤ k + 2 )
             omega
-          · exact ⟨ transform_seq k b, transform_seq_props h_valid h_eq_base |>.1,
-              transform_seq_props h_valid h_eq_base |>.2.1,
-              transform_seq_props h_valid h_eq_base |>.2.2 ⟩;
+          · exact ⟨ transformSeq k b, transformSeq_props h_valid h_eq_base |>.1,
+              transformSeq_props h_valid h_eq_base |>.2.1,
+              transformSeq_props h_valid h_eq_base |>.2.2 ⟩;
         grind
 
 /-
@@ -293,9 +293,9 @@ The compressed sizes sequence is strictly decreasing because each term is define
 the previous term minus 1 and the original sequence value. Thus, b'_{i + 1} <= b'_i - 1 < b'_i.
 Since the last term is positive by hypothesis, the sequence is valid.
 -/
-lemma compressed_sizes_is_valid {k : ℕ} {b : Fin (k + 1) → ℕ}
-    (h_last_pos : compressed_sizes b (Fin.last k) > 0) :
-    ValidSeq k (compressed_sizes b) := by
+lemma compressedSizes_is_valid {k : ℕ} {b : Fin (k + 1) → ℕ}
+    (h_last_pos : compressedSizes b (Fin.last k) > 0) :
+    ValidSeq k (compressedSizes b) := by
       refine ⟨ ?_, h_last_pos ⟩;
       -- We proceed by induction on $j - i$.
       intro i j hij
@@ -303,99 +303,99 @@ lemma compressed_sizes_is_valid {k : ℕ} {b : Fin (k + 1) → ℕ}
       | zero => tauto
       | succ j ih =>
         rcases lt_or_eq_of_le ( show i ≤ Fin.castSucc j from Nat.le_of_lt_succ hij ) with h | h
-        · -- By definition of compressed_sizes, we have compressed_sizes b (j + 1) = min
-          -- (compressed_sizes b j - 1) (b (j + 1)).
+        · -- By definition of compressedSizes, we have compressedSizes b (j + 1) = min
+          -- (compressedSizes b j - 1) (b (j + 1)).
           have h_compressed_succ :
-              compressed_sizes b (Fin.succ j) = min (compressed_sizes b (Fin.castSucc j) - 1) (
+              compressedSizes b (Fin.succ j) = min (compressedSizes b (Fin.castSucc j) - 1) (
               b (Fin.succ j)) := by
-            exact compressed_sizes_succ j
+            exact compressedSizes_succ j
           exact h_compressed_succ.symm ▸ lt_of_le_of_lt ( min_le_left _ _ ) (
               Nat.lt_of_le_of_lt ( Nat.sub_le _ _ ) ( ih _ h ) );
         · subst h
-          -- By definition of `compressed_sizes`, we have `compressed_sizes b (Fin.succ j) = min
-          -- (compressed_sizes b (Fin.castSucc j) - 1) (b (Fin.succ j))`.
+          -- By definition of `compressedSizes`, we have `compressedSizes b (Fin.succ j) = min
+          -- (compressedSizes b (Fin.castSucc j) - 1) (b (Fin.succ j))`.
           have h_compressed_succ :
-              compressed_sizes b (Fin.succ j) = min (compressed_sizes b (Fin.castSucc j) - 1) (
+              compressedSizes b (Fin.succ j) = min (compressedSizes b (Fin.castSucc j) - 1) (
               b (Fin.succ j)) := by
-            exact compressed_sizes_succ j
-          rcases min_cases ( compressed_sizes b ( Fin.castSucc j ) - 1 ) (
+            exact compressedSizes_succ j
+          rcases min_cases ( compressedSizes b ( Fin.castSucc j ) - 1 ) (
               b ( Fin.succ j ) ) with ⟨ left, right ⟩ | ⟨ left, right ⟩
-          · -- By definition of `compressed_sizes`, we know that `compressed_sizes b (Fin.last k) >
+          · -- By definition of `compressedSizes`, we know that `compressedSizes b (Fin.last k) >
             -- 0`.
             rw [h_compressed_succ, left]
-            have h_compressed_last_pos : ∀ i, compressed_sizes b i > 0 := by
-              exact fun i => compressed_sizes_pos h_last_pos i
+            have h_compressed_last_pos : ∀ i, compressedSizes b i > 0 := by
+              exact fun i => compressedSizes_pos h_last_pos i
             exact Nat.sub_lt (h_compressed_last_pos _) Nat.one_pos
           · rw [h_compressed_succ, left]
             exact right.trans_le ( Nat.sub_le _ _ )
 
 end AristotleLemmas
 
-theorem compressed_sizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
+theorem compressedSizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
     (_h_nonempty : ∀ i, (A i).Nonempty)
     (_h_sizes_noninc : ∀ i j, i ≤ j → (A j).card ≤ (A i).card)
-    (h_last_pos : compressed_sizes (fun i => (A i).card) (Fin.last k) > 0) :
-    (restricted_sum_set k A).card ≥
+    (h_last_pos : compressedSizes (fun i => (A i).card) (Fin.last k) > 0) :
+    (restrictedSumSet k A).card ≥
     min p (∑ i : Fin (k + 1),
-        compressed_sizes (fun i => (A i).card) i - (Nat.choose (k + 2) 2) + 1) := by
-  by_cases h_case : ∑ i, compressed_sizes (fun i => #(A i)) i ≤ p + Nat.choose (k + 2) 2 - 1;
+        compressedSizes (fun i => (A i).card) i - (Nat.choose (k + 2) 2) + 1) := by
+  by_cases h_case : ∑ i, compressedSizes (fun i => #(A i)) i ≤ p + Nat.choose (k + 2) 2 - 1;
   · -- Let $b'$ be the compressed sizes sequence.
-    set b' : Fin (k + 1) → ℕ := compressed_sizes (fun i => #(A i));
+    set b' : Fin (k + 1) → ℕ := compressedSizes (fun i => #(A i));
     -- Since $b'$ is a valid sequence, we can choose subsets $A'_i \subseteq A_i$ such that $|A'_i|
     -- = b'_i$ for all $i$.
     obtain ⟨A', hA'⟩ : ∃ A' : Fin (k + 1) → Finset (ZMod p),
         (∀ i, A' i ⊆ A i) ∧ (∀ i, (A' i).card = b' i) ∧
             (∀ i j, i < j → (A' i).card ≠ (A' j).card) := by
       have h_valid_seq : ValidSeq k b' := by
-        apply compressed_sizes_is_valid; assumption;
+        apply compressedSizes_is_valid; assumption;
       have h_subset : ∀ i, ∃ A'_i ⊆ A i, (A'_i).card = b' i := by
         intro i;
         exact Finset.exists_subset_card_eq ( by
           linarith [ h_valid_seq.2,
-            show compressed_sizes ( fun i => Finset.card ( A i ) ) i ≤ Finset.card ( A i )
-              from compressed_sizes_le i ] );
+            show compressedSizes ( fun i => Finset.card ( A i ) ) i ≤ Finset.card ( A i )
+              from compressedSizes_le i ] );
       choose A' hA' using h_subset;
       exact ⟨ A', fun i => hA' i |>.1, fun i => hA' i |>.2,
           fun i j hij =>
               by rw [ hA' i |>.2, hA' j |>.2 ]; exact ne_of_gt ( h_valid_seq.1 i j hij ) ⟩;
-    -- By `restricted_sum_distinct_sizes`, we have |restricted_sum_set k A'| ≥ ∑ b' - (k + 2 choose
+    -- By `restricted_sum_distinct_sizes`, we have |restrictedSumSet k A'| ≥ ∑ b' - (k + 2 choose
     -- 2)
     -- + 1.
     have h_restricted_sum_A' :
-        (restricted_sum_set k A').card ≥ (∑ i, b' i) - (Nat.choose (k + 2) 2) + 1 := by
+        (restrictedSumSet k A').card ≥ (∑ i, b' i) - (Nat.choose (k + 2) 2) + 1 := by
       obtain ⟨ left, left_1, right ⟩ := hA'
       apply le_trans ?_ (restricted_sum_distinct_sizes A' ?_ ?_ ?_)
       · simp_rw [left_1]; exact le_rfl
       · exact fun i => Finset.card_pos.mp ( by
           rw [ left_1 ];
-          exact compressed_sizes_pos h_last_pos i )
+          exact compressedSizes_pos h_last_pos i )
       · intro i j hij
         exact right i j hij
       · simp_rw [left_1]; exact h_case
-    -- Since $A'_i \subseteq A_i$, we have $restricted_sum_set k A' \subseteq restricted_sum_set k
+    -- Since $A'_i \subseteq A_i$, we have $restrictedSumSet k A' \subseteq restrictedSumSet k
     -- A$.
-    have h_restricted_sum_subset : restricted_sum_set k A' ⊆ restricted_sum_set k A := by
+    have h_restricted_sum_subset : restrictedSumSet k A' ⊆ restrictedSumSet k A := by
       intro x hx;
-      unfold restricted_sum_set at *; aesop;
+      unfold restrictedSumSet at *; aesop;
     exact le_trans ( min_le_right _ _ ) (
         h_restricted_sum_A'.trans ( Finset.card_mono h_restricted_sum_subset ) );
   · -- Apply the reduction lemma to find a sequence b'' with the desired properties.
     obtain ⟨b'', hb''⟩ : ∃ b'',
         ValidSeq k b'' ∧ (∑ i, b'' i = p + Nat.choose (k + 2) 2 - 1) ∧
-            (∀ i, b'' i ≤ compressed_sizes (fun i => #(A i)) i) := by
-      have := polynomialMethod_reduction_lemma ( compressed_sizes_is_valid h_last_pos )
+            (∀ i, b'' i ≤ compressedSizes (fun i => #(A i)) i) := by
+      have := polynomialMethod_reduction_lemma ( compressedSizes_is_valid h_last_pos )
         ( by linarith ); aesop;
     have h_subset : ∃ A'' : Fin (k + 1) → Finset (ZMod p),
         (∀ i, A'' i ⊆ A i) ∧ (∀ i, (A'' i).card = b'' i) ∧
             (∀ i j, i < j → (A'' i).card ≠ (A'' j).card) ∧
-            (#(restricted_sum_set k A'') ≥ ∑ i, b'' i - Nat.choose (k + 2) 2 + 1) := by
+            (#(restrictedSumSet k A'') ≥ ∑ i, b'' i - Nat.choose (k + 2) 2 + 1) := by
       have h_subset : ∃ A'' : Fin (k + 1) → Finset (ZMod p),
           (∀ i, A'' i ⊆ A i) ∧ (∀ i, (A'' i).card = b'' i) ∧
               (∀ i j, i < j → (A'' i).card ≠ (A'' j).card) := by
         have h_subset : ∀ i, ∃ A''_i ⊆ A i, (A''_i).card = b'' i := by
           intros i
           have h_card : b'' i ≤ #(A i) := by
-            exact le_trans ( hb''.2.2 i ) ( compressed_sizes_le i );
+            exact le_trans ( hb''.2.2 i ) ( compressedSizes_le i );
           exact Finset.exists_subset_card_eq h_card;
         choose A'' hA''₁ hA''₂ using h_subset;
         exact ⟨ A'', hA''₁, hA''₂,
@@ -416,12 +416,12 @@ theorem compressed_sizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
     obtain ⟨ A'', hA''₁, hA''₂, hA''₃,
         hA''₄ ⟩ := h_subset
     have :=
-        Finset.card_mono ( show restricted_sum_set k A'' ⊆ restricted_sum_set k A from ?_ )
+        Finset.card_mono ( show restrictedSumSet k A'' ⊆ restrictedSumSet k A from ?_ )
     · simp_all only [gt_iff_lt, not_le, ne_eq, ge_iff_le, Order.add_one_le_iff, inf_le_iff]
       obtain ⟨left, right⟩ := hb''
       obtain ⟨left_1, right⟩ := right
       omega
-    · intro x hx; unfold restricted_sum_set at *
+    · intro x hx; unfold restrictedSumSet at *
       simp_all only [gt_iff_lt, not_le, ne_eq, ge_iff_le, Order.add_one_le_iff, mem_image,
           mem_filter, Fintype.mem_piFinset]
       obtain ⟨left, right⟩ := hb''

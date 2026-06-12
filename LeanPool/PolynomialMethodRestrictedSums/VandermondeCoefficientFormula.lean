@@ -48,20 +48,20 @@ open BigOperators
 variable {k : ℕ}
 
 /-- Falling factorial (s)_r = s(s-1)...(s-r + 1) -/
-def falling_factorial (s : ℕ) (r : ℕ) : ℕ :=
+def fallingFactorial (s : ℕ) (r : ℕ) : ℕ :=
   if r = 0 then 1
   else ∏ i ∈ range r, (s - i)
 
 /-- Vandermonde matrix (c^j) -/
-def vandermonde_matrix (c : Fin (k + 1) → ℕ) : Matrix (Fin (k + 1)) (Fin (k + 1)) ℚ :=
+def vandermondeMatrix (c : Fin (k + 1) → ℕ) : Matrix (Fin (k + 1)) (Fin (k + 1)) ℚ :=
   Matrix.of (fun i j : Fin (k + 1) => (c i : ℚ) ^ (j : ℕ))
 
 /-- Falling factorial matrix ((c)_j) -/
-def falling_factorial_matrix (c : Fin (k + 1) → ℕ) : Matrix (Fin (k + 1)) (Fin (k + 1)) ℚ :=
-  Matrix.of (fun i j : Fin (k + 1) => (falling_factorial (c i) j : ℚ))
+def fallingFactorialMatrix (c : Fin (k + 1) → ℕ) : Matrix (Fin (k + 1)) (Fin (k + 1)) ℚ :=
+  Matrix.of (fun i j : Fin (k + 1) => (fallingFactorial (c i) j : ℚ))
 
 /-- Expected value: m! / (∏ c!) * ∏_{i>j} (c - c) -/
-def expected_value (c : Fin (k + 1) → ℕ) (m : ℕ) : ℚ :=
+def expectedValue (c : Fin (k + 1) → ℕ) (m : ℕ) : ℚ :=
   (m.factorial : ℚ) * (∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
     if j.val < i.val then ((c i : ℚ) - (c j : ℚ)) else 1) /
     (∏ i : Fin (k + 1), ((c i).factorial : ℚ))
@@ -103,16 +103,16 @@ def toFinsupp (c : Fin (k + 1) → ℕ) : (Fin (k + 1)) →₀ ℕ :=
 -/
 noncomputable section AristotleLemmas
 
-lemma det_falling_factorial_eq_det_vandermonde (c : Fin (k + 1) → ℕ) :
-  (falling_factorial_matrix c).det = (vandermonde_matrix c).det := by
+lemma det_fallingFactorial_eq_det_vandermonde (c : Fin (k + 1) → ℕ) :
+  (fallingFactorialMatrix c).det = (vandermondeMatrix c).det := by
     -- By definition of $V$, we can write $F$ as $V * M$ where $M$ is an upper triangular matrix
     -- with ones on the diagonal.
     obtain ⟨M, hM⟩ : ∃ M : Matrix (Fin (k + 1)) (Fin (k + 1)) ℚ,
-        falling_factorial_matrix c = vandermonde_matrix c * M ∧ (∀ i, M i i = 1) ∧
+        fallingFactorialMatrix c = vandermondeMatrix c * M ∧ (∀ i, M i i = 1) ∧
             (∀ i j, i > j → M i j = 0) := by
       -- For each $j$, we can express $(falling\_factorial (c i) j)$ as a linear combination of $c
       -- i^l$ for $l \leq j$.
-      have h_comb : ∀ i j, falling_factorial (c i) j = ∑ l ∈ Finset.range (j + 1),
+      have h_comb : ∀ i j, fallingFactorial (c i) j = ∑ l ∈ Finset.range (j + 1),
           (Polynomial.coeff
               (Polynomial.C 1 * (∏ m ∈ Finset.range j, (Polynomial.X - Polynomial.C (m : ℚ))))
               l) * (c i : ℚ) ^ l := by
@@ -130,7 +130,7 @@ lemma det_falling_factorial_eq_det_vandermonde (c : Fin (k + 1) → ℕ) :
           exact fun i hi => Polynomial.X_sub_C_ne_zero _
         replace h_poly := congr_arg (Polynomial.eval (c i : ℚ)) h_poly
         simp_all? +decide [Polynomial.eval_prod, Polynomial.eval_finsetSum]
-        unfold falling_factorial
+        unfold fallingFactorial
         simp_all only [Nat.cast_ite, Nat.cast_one, Nat.cast_prod]
         split
         next h =>
@@ -166,7 +166,7 @@ lemma det_falling_factorial_eq_det_vandermonde (c : Fin (k + 1) → ℕ) :
         convert h_comb i j using 1
         rw [Finset.sum_subset (Finset.range_mono (Nat.succ_le_succ (Fin.is_le j)))]
         · rw [Finset.sum_range]
-          simp +decide [mul_comm, vandermonde_matrix]
+          simp +decide [mul_comm, vandermondeMatrix]
         · intro x a a_1
           simp_all only [Nat.succ_eq_add_one, mem_range, not_lt, mul_eq_zero, pow_eq_zero_iff',
               Nat.cast_eq_zero, ne_eq]
@@ -202,9 +202,9 @@ lemma det_falling_factorial_eq_det_vandermonde (c : Fin (k + 1) → ℕ) :
         exact right
     simp_all only [gt_iff_lt, det_mul, mul_one]
 
-lemma falling_factorial_eq_factorial_div (n k : ℕ) :
-  falling_factorial n k = if k ≤ n then n.factorial / (n - k).factorial else 0 := by
-    unfold falling_factorial
+lemma fallingFactorial_eq_factorial_div (n k : ℕ) :
+  fallingFactorial n k = if k ≤ n then n.factorial / (n - k).factorial else 0 := by
+    unfold fallingFactorial
     rcases le_or_gt k n with hn | hk
     · simp_all only [↓reduceIte]
       split
@@ -239,21 +239,21 @@ lemma falling_factorial_eq_factorial_div (n k : ℕ) :
 
 /-- Symmetric group sum expression C = ∑_{σ∈S_{k + 1}} (-1)^{sign(σ)} * m! / ∏ᵢ (cᵢ - σ(i))!
     Corrected to use proper sign and handle 0 case. -/
-def symmetric_sum_fixed (c : Fin (k + 1) → ℕ) (m : ℕ) : ℚ :=
+def symmetricSumFixed (c : Fin (k + 1) → ℕ) (m : ℕ) : ℚ :=
   ∑ σ : Equiv.Perm (Fin (k + 1)),
     if (∀ i, σ i ≤ c i) then
       ((σ.sign : ℤ) : ℚ) *
       ((m.factorial : ℚ) / ∏ i : Fin (k + 1), ((c i - (σ i : ℕ)).factorial : ℚ))
     else 0
 
-lemma symmetric_sum_fixed_eq_expected_value (c : Fin (k + 1) → ℕ) (m : ℕ) :
-  symmetric_sum_fixed c m = expected_value c m := by
+lemma symmetricSumFixed_eq_expectedValue (c : Fin (k + 1) → ℕ) (m : ℕ) :
+  symmetricSumFixed c m = expectedValue c m := by
     -- By definition of $expected\_value$, we know that
     -- $expected\_value c m = \frac{m!}{\prod_{i=0}^k c_i!} \cdot \prod_{i > j} (c_i - c_j)$.
-    have h_def : expected_value c m = (m.factorial : ℚ) *
-        Matrix.det (vandermonde_matrix c) / (∏ i, ((c i).factorial : ℚ)) := by
+    have h_def : expectedValue c m = (m.factorial : ℚ) *
+        Matrix.det (vandermondeMatrix c) / (∏ i, ((c i).factorial : ℚ)) := by
       -- The determinant of the Vandermonde matrix is the product of (c_i - c_j) for i > j.
-      have h_det_vandermonde : Matrix.det (vandermonde_matrix c) = ∏ i, ∏ j,
+      have h_det_vandermonde : Matrix.det (vandermondeMatrix c) = ∏ i, ∏ j,
           if j.val < i.val then ((c i : ℚ) - (c j : ℚ)) else 1 := by
         -- By definition of Vandermonde matrix, we know that its determinant is given by the product
         -- of the differences of the entries.
@@ -265,14 +265,14 @@ lemma symmetric_sum_fixed_eq_expected_value (c : Fin (k + 1) → ℕ) (m : ℕ) 
           rw [Finset.prod_comm]
           simp +decide [Finset.prod_ite, Finset.filter_lt_eq_Ioi]
         convert h_vandermonde_det (fun i => c i) using 1
-      unfold expected_value
+      unfold expectedValue
       simp_all only [Fin.val_fin_lt]
-    unfold symmetric_sum_fixed
+    unfold symmetricSumFixed
     -- We'll use the fact that $\det(\text{falling\_factorial\_matrix} c) = \sum_{\sigma}
     -- \text{sgn}(\sigma) \prod_i (c_i)_{\sigma(i)}$.
-    have h_det_falling_factorial : Matrix.det (falling_factorial_matrix c) = ∑ σ :
+    have h_det_fallingFactorial : Matrix.det (fallingFactorialMatrix c) = ∑ σ :
         Equiv.Perm (Fin (k + 1)), (Equiv.Perm.sign σ : ℚ) *
-        (∏ i, (falling_factorial (c i) (σ i).val : ℚ)) := by
+        (∏ i, (fallingFactorial (c i) (σ i).val : ℚ)) := by
       rw [Matrix.det_apply']
       refine Finset.sum_bij (fun σ _ => σ.symm) ?_ ?_ ?_ ?_
       · intro a ha
@@ -293,12 +293,12 @@ lemma symmetric_sum_fixed_eq_expected_value (c : Fin (k + 1) → ℕ) (m : ℕ) 
           rfl
     -- By definition of $falling\_factorial$, we know that $\prod_i (c_i)_{\sigma(i)} = \prod_i
     -- \frac{c_i!}{(c_i - \sigma(i))!}$ if $\forall i, \sigma(i) \le c_i$, else 0.
-    have h_falling_factorial : ∀ σ : Equiv.Perm (Fin (k + 1)),
-        (∏ i, (falling_factorial (c i) (σ i).val : ℚ)) = if ∀ i,
+    have h_fallingFactorial : ∀ σ : Equiv.Perm (Fin (k + 1)),
+        (∏ i, (fallingFactorial (c i) (σ i).val : ℚ)) = if ∀ i,
         (σ i).val ≤ c i then (∏ i, ((c i).factorial : ℚ)) / (∏ i,
             ((c i - (σ i).val).factorial : ℚ)) else 0 := by
       intro σ; split_ifs
-          <;> simp_all? (config := {decide := Bool.true}) [falling_factorial_eq_factorial_div]
+          <;> simp_all? (config := {decide := Bool.true}) [fallingFactorial_eq_factorial_div]
       · rw [← Finset.prod_div_distrib, Finset.prod_congr rfl]
         intros
         rw [Nat.cast_div (Nat.factorial_dvd_factorial <| Nat.sub_le _ _) (by positivity)]
@@ -307,15 +307,15 @@ lemma symmetric_sum_fixed_eq_expected_value (c : Fin (k + 1) → ℕ) (m : ℕ) 
         simp_all only [mem_univ, ite_eq_right_iff, Nat.cast_eq_zero, Nat.div_eq_zero_iff, true_and]
         obtain ⟨w, h⟩ := h
         exact ⟨w, fun hw => False.elim <| h.not_ge hw⟩
-    -- By combining the results from h_det_falling_factorial and h_falling_factorial, we can
+    -- By combining the results from h_det_fallingFactorial and h_fallingFactorial, we can
     -- conclude the proof.
-    have h_final : Matrix.det (vandermonde_matrix c) = (∏ i, ((c i).factorial : ℚ)) *
+    have h_final : Matrix.det (vandermondeMatrix c) = (∏ i, ((c i).factorial : ℚ)) *
         (∑ σ : Equiv.Perm (Fin (k + 1)), (Equiv.Perm.sign σ : ℚ) * (if ∀ i,
             (σ i).val ≤ c i then 1 / (∏ i, ((c i - (σ i).val).factorial : ℚ)) else 0)) := by
-      convert h_det_falling_factorial using 1
-      · convert det_falling_factorial_eq_det_vandermonde c |> Eq.symm
+      convert h_det_fallingFactorial using 1
+      · convert det_fallingFactorial_eq_det_vandermonde c |> Eq.symm
       · rw [Finset.mul_sum _ _ _]; exact Finset.sum_congr rfl fun _ _ =>
-          by rw [h_falling_factorial]; split_ifs <;> ring
+          by rw [h_fallingFactorial]; split_ifs <;> ring
     rw [h_def, h_final]
     norm_num [Finset.mul_sum _ _ _, mul_assoc, mul_comm, mul_left_comm, div_eq_mul_inv,
         Finset.prod_eq_zero_iff, Nat.factorial_ne_zero]
@@ -566,7 +566,7 @@ theorem Vandermonde_coefficient_formula (c : Fin (k + 1) → ℕ) (m : ℕ)
     MvPolynomial.coeff (toFinsupp c)
       ((∑ i : Fin (k + 1), X i) ^ m *
        ∏ i : Fin (k + 1), ∏ j : Fin (k + 1), if j < i then (X i - X j) else 1)
-    = expected_value c m := by
+    = expectedValue c m := by
   -- The coefficient of $X^c$ in $P$ is the sum over $\sigma$ of $\text{sgn}(\sigma)$ times the
   -- coefficient of $X^c$ in $(\sum X_i)^m \prod_i X_i^{\sigma(i)}$.
   have h_coeff : MvPolynomial.coeff (toFinsupp c) (
@@ -616,4 +616,4 @@ theorem Vandermonde_coefficient_formula (c : Fin (k + 1) → ℕ) (m : ℕ)
   rw [h_coeff]
   rw [Finset.sum_congr rfl fun σ _ => by rw [coeff_term c m σ h_sum]]
   norm_num +zetaDelta at *
-  convert symmetric_sum_fixed_eq_expected_value c m using 1
+  convert symmetricSumFixed_eq_expectedValue c m using 1

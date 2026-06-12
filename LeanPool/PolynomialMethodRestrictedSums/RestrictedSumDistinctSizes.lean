@@ -41,13 +41,13 @@ variable {R : Type*} [CommRing R]
 variable {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
 
 /-- S = {a + ... + a | a ∈ A, a ≠ a for all i ≠ j} -/
-def restricted_sum_set (k : ℕ) (A : Fin (k + 1) → Finset (ZMod p)) : Finset (ZMod p) :=
+def restrictedSumSet (k : ℕ) (A : Fin (k + 1) → Finset (ZMod p)) : Finset (ZMod p) :=
   ((Fintype.piFinset A).filter fun f =>
     ∀ (i j : Fin (k + 1)), i < j → f i ≠ f j)
     |>.image (fun f => ∑ i, f i)
 
 /-- Vandermonde: ∏_{i>j} (X - X) -/
-noncomputable def vandermonde_polynomial (k : ℕ) : MvPolynomial (Fin (k + 1)) (ZMod p) :=
+noncomputable def vandermondePolynomial (k : ℕ) : MvPolynomial (Fin (k + 1)) (ZMod p) :=
   ∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
     if j.val < i.val then (X i - X j) else 1
 
@@ -55,13 +55,13 @@ noncomputable def vandermonde_polynomial (k : ℕ) : MvPolynomial (Fin (k + 1)) 
 /-- (Used in CompressedSizesRestrictedSum and DiasDaSilvaHamidoune)
 The compressed sizes b'_i defined recursively:
     b'_0 = b_0, b'_i = min{b'_{i-1} - 1, b_i} for i ≥ 1 -/
-def compressed_sizes (b : Fin (k + 1) → ℕ) : Fin (k + 1) → ℕ :=
+def compressedSizes (b : Fin (k + 1) → ℕ) : Fin (k + 1) → ℕ :=
   fun i =>
     match i with
     | 0 => b 0
     | ⟨i + 1, hi⟩ =>
       let prev : Fin (k + 1) := ⟨i, by omega⟩
-      min (compressed_sizes b prev - 1) (b ⟨i + 1, hi⟩)
+      min (compressedSizes b prev - 1) (b ⟨i + 1, hi⟩)
 
 /-
 Proposition 1.2:
@@ -106,7 +106,7 @@ noncomputable section AristotleLemmas
 The total degree of the Vandermonde polynomial is (k + 1) choose 2.
 -/
 lemma vandermonde_degree_eq (k : ℕ) (p : ℕ) [Fact (Nat.Prime p)] :
-  (vandermonde_polynomial k : MvPolynomial (Fin (k + 1)) (ZMod p)).totalDegree = (k + 1).choose 2 :=
+  (vandermondePolynomial k : MvPolynomial (Fin (k + 1)) (ZMod p)).totalDegree = (k + 1).choose 2 :=
       by
     -- The Vandermonde polynomial is a product of linear terms, each contributing a degree of 1.
     have van_deg : ∀ i j : Fin (k + 1),
@@ -147,7 +147,7 @@ lemma vandermonde_degree_eq (k : ℕ) (p : ℕ) [Fact (Nat.Prime p)] :
     convert h_total_deg
         (Finset.filter (fun ij => ij.2.val < ij.1.val)
           (Finset.univ : Finset (Fin (k + 1) × Fin (k + 1)))) _ using 1;
-    · unfold vandermonde_polynomial
+    · unfold vandermondePolynomial
       simp? (config := { decide := Bool.true }) [Finset.prod_filter];
       erw [Finset.prod_product];
     · rw [show
@@ -195,12 +195,12 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
     (h_sum : ∑ i, c i = m + (k + 1).choose 2) :
     MvPolynomial.coeff (toFinsupp c)
       ((∑ i : Fin (k + 1), (X i : MvPolynomial (Fin (k + 1)) (ZMod p))) ^ m *
-       vandermonde_polynomial k) ≠ 0 := by
+       vandermondePolynomial k) ≠ 0 := by
          -- Therefore, the coefficient in ZMod p is non-zero because none of the factors in
-         -- `expected_value c m` are divisible by `p`.
+         -- `expectedValue c m` are divisible by `p`.
          intro h_coeff_zero_in_charP
-         have h_coeff_not_zero_in_K : (expected_value c m : ℚ) ≠ 0 := by
-           norm_num [expected_value, h_sum];
+         have h_coeff_not_zero_in_K : (expectedValue c m : ℚ) ≠ 0 := by
+           norm_num [expectedValue, h_sum];
            simp_all? +decide [Finset.prod_eq_zero_iff];
            exact ⟨⟨Nat.factorial_ne_zero _,
                fun i j => by split_ifs <;> norm_num; exact sub_ne_zero_of_ne <|
@@ -209,7 +209,7 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
              (MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) ((∑ i : Fin (k + 1),
                  MvPolynomial.X i) ^ m * ∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
                      if j.val < i.val then (X i - X j) else 1 : MvPolynomial (Fin (k + 1)) (ℤ)))
-                         = expected_value c m := by
+                         = expectedValue c m := by
            convert Vandermonde_coefficient_formula c m h_sum using 1;
            norm_num [Finsupp.equivFunOnFinite];
            unfold toFinsupp
@@ -244,7 +244,7 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
              (∑ i : Fin (k + 1), MvPolynomial.X i) ^ m * ∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
              if j.val < i.val then (X i - X j) else 1 : MvPolynomial (Fin (k + 1)) (ℤ))) = 0 := by
            convert h_coeff_zero_in_charP using 1;
-           unfold vandermonde_polynomial;
+           unfold vandermondePolynomial;
            -- By definition of polynomial multiplication and the fact that the coefficients are
            -- integers, the coefficient of the polynomial in ZMod p is the same as the coefficient
            -- of the polynomial in ℤ.
@@ -264,7 +264,7 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
                Finset.prod_congr rfl fun j hj => by split_ifs <;> simp +decide [*]);
          simp_all? +decide [ZMod.intCast_zmod_eq_zero_iff_dvd];
          obtain ⟨a, ha⟩ := h_coeff_not_zero_in_K';
-         simp_all? +decide [expected_value];
+         simp_all? +decide [expectedValue];
          rw [eq_div_iff] at h_coeff_not_zero_in_K <;> norm_cast at *
              <;> simp_all? +decide [Finset.prod_eq_zero_iff, Nat.factorial_ne_zero];
          -- Since $p$ is prime and $p \mid m! \prod_{i>j} (c_i - c_j)$, it must divide one of the
@@ -299,7 +299,7 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
     (h_nonempty : ∀ i, (A i).Nonempty)
     (h_sizes_distinct : ∀ i j, i < j → (A i).card ≠ (A j).card)
     (h_sum_bound : ∑ i, (A i).card ≤ p + (Nat.choose (k + 2) 2) - 1) :
-    (restricted_sum_set k A).card ≥ ∑ i, (A i).card - (Nat.choose (k + 2) 2) + 1 := by
+    (restrictedSumSet k A).card ≥ ∑ i, (A i).card - (Nat.choose (k + 2) 2) + 1 := by
       -- Let $c_i = |A_i| - 1$, so that $|A_i| = c_i + 1$. Then $m = \sum_{i=0}^k c_i -
       -- \binom{k + 1}{2}$.
       set c : Fin (k + 1) → ℕ := fun i => (A i).card - 1
@@ -311,7 +311,7 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
       have h_coeff_nonzero :
           (MvPolynomial.coeff (toFinsupp c) ((∑ i,
               (X i : MvPolynomial (Fin (k + 1)) (ZMod p))) ^ m *
-            vandermonde_polynomial k)) ≠ 0 := by
+            vandermondePolynomial k)) ≠ 0 := by
         -- Since $|A_i|$ are distinct, $c_i$ are distinct.
         have hc_distinct : ∀ i j, i < j → c i ≠ c j := by
           exact fun i j hij => fun h => h_sizes_distinct i j hij <|
@@ -371,10 +371,10 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
           rwa [Nat.choose_two_right];
       -- Apply Theorem 2.1 with this h, the sets A_i, and parameters c_i, m. The theorem gives |S| ≥
       -- m + 1.
-      have h_theorem : let h := vandermonde_polynomial k;
+      have h_theorem : let h := vandermondePolynomial k;
         let S := (Fintype.piFinset A).filter (fun f => h.eval f ≠ 0) |>.image (fun f => ∑ i, f i);
         S.card ≥ m + 1 := by
-          convert ANR_polynomial_method (vandermonde_polynomial k) A c _ _ _ using 1;
+          convert ANR_polynomial_method (vandermondePolynomial k) A c _ _ _ using 1;
           any_goals exact m;
           · refine Iff.intro (fun h_card_ge h_coeff => ⟨h_card_ge, ?_⟩) (fun a => ?_)
             · exact restricted_sum_m_bound A h_nonempty h_sum_bound
@@ -458,10 +458,10 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
                 simp +arith +decide [Finset.sum_add_distrib]);
       -- Note that $h(f) \ne 0$ corresponds to $f_i$ being distinct. So $S$ is the restricted sum
       -- set.
-      have hS_eq_restricted_sum_set : let h := vandermonde_polynomial k;
+      have hS_eq_restrictedSumSet : let h := vandermondePolynomial k;
         let S := (Fintype.piFinset A).filter (fun f => h.eval f ≠ 0) |>.image (fun f => ∑ i, f i);
-        S = restricted_sum_set k A := by
-          ext; simp only [restricted_sum_set, vandermonde_polynomial, ne_eq, mem_image, mem_filter,
+        S = restrictedSumSet k A := by
+          ext; simp only [restrictedSumSet, vandermondePolynomial, ne_eq, mem_image, mem_filter,
             Fintype.mem_piFinset];
           constructor <;> rintro ⟨a, ⟨ha₁, ha₂⟩,
               rfl⟩ <;> use a <;> simp_all? +decide [Finset.prod_eq_zero_iff];
@@ -471,9 +471,9 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
             exact Ne.symm (ha₂ _ _ ‹_›);
       simp_all only [ne_eq, ge_iff_le, Order.add_one_le_iff, gt_iff_lt, m, c]
       -- After `aesop`, the goal is
-      --   ∑ i, #(A i) - (k + 2).choose 2 < #(restricted_sum_set k A).
+      --   ∑ i, #(A i) - (k + 2).choose 2 < #(restrictedSumSet k A).
       -- We have
-      --   h_theorem : ∑ x, (#(A x) - 1) - (k + 1).choose 2 < #(restricted_sum_set k A).
+      --   h_theorem : ∑ x, (#(A x) - 1) - (k + 1).choose 2 < #(restrictedSumSet k A).
       -- The two LHSs are equal because each `#(A i) ≥ 1` and
       -- `(k + 2).choose 2 = (k + 1).choose 2 + (k + 1)`.
       have h_card_pos : ∀ i, 1 ≤ #(A i) := fun i => Finset.card_pos.mpr (h_nonempty i)

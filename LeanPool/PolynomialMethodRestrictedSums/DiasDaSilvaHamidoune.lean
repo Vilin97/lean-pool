@@ -37,7 +37,7 @@ variable {R : Type*} [CommRing R]
 variable {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
 
 /-- The set of all sums of s distinct elements of A -/
-def distinct_sum_set (A : Finset (ZMod p)) (s : ℕ) : Finset (ZMod p) :=
+def distinctSumSet (A : Finset (ZMod p)) (s : ℕ) : Finset (ZMod p) :=
   (A.powerset.filter (fun B => B.card = s)).image (fun B => ∑ x ∈ B, x)
 
 /--
@@ -83,10 +83,10 @@ Thus by Theorem 3.2, we get the desired bound.
 -/
 theorem dias_da_silva_hamidoune (A : Finset (ZMod p)) (s : ℕ)
     (_h_nonempty : A.Nonempty) (h_s_le_card : s ≤ A.card) :
-    (distinct_sum_set A s).card ≥ min p (s * A.card - s ^ 2 + 1) := by
+    (distinctSumSet A s).card ≥ min p (s * A.card - s ^ 2 + 1) := by
   by_cases hs : s = 0
   · subst hs
-    suffices h : (distinct_sum_set A 0).Nonempty by
+    suffices h : (distinctSumSet A 0).Nonempty by
       rw [ge_iff_le]
       calc min p (0 * #A - 0 ^ 2 + 1)
           ≤ 1 := by omega
@@ -94,15 +94,15 @@ theorem dias_da_silva_hamidoune (A : Finset (ZMod p)) (s : ℕ)
     exact ⟨ 0, Finset.mem_image.mpr ⟨ ∅, by aesop ⟩ ⟩
   · -- Apply Theorem 3.2 with k = s - 1 and A_i = A for all i.
     have h_theorem : ∀ (A : Finset (ZMod p)) (k : ℕ) (hk : k + 1 ≤ A.card),
-        (restricted_sum_set k (fun _ => A)).card ≥ min p ((k + 1) * A.card - (k + 1) ^ 2 + 1) := by
+        (restrictedSumSet k (fun _ => A)).card ≥ min p ((k + 1) * A.card - (k + 1) ^ 2 + 1) := by
       intros A k hk
       have h_compressed : ∀ i : Fin (k + 1),
-          compressed_sizes (fun _ => A.card) i = A.card - i.val := by
+          compressedSizes (fun _ => A.card) i = A.card - i.val := by
         intro i
         induction i using Fin.induction with
-        | zero => unfold compressed_sizes; aesop
+        | zero => unfold compressedSizes; aesop
         | succ i ih =>
-          unfold compressed_sizes
+          unfold compressedSizes
           simp_all only [Order.add_one_le_iff, Fin.val_castSucc, Fin.val_succ]
           split
           next i_1 heq => simp_all only [Fin.zero_eta, Fin.succ_ne_zero]
@@ -111,9 +111,9 @@ theorem dias_da_silva_hamidoune (A : Finset (ZMod p)) (s : ℕ)
             rcases i with ⟨ _ | i, hi ⟩ <;> simp_all +decide [ Nat.sub_sub ]
       -- Apply Theorem 3.2 with the given parameters.
       have h_apply_theorem :
-          (restricted_sum_set k (fun _ => A)).card ≥ min p ((∑ i : Fin (k + 1),
+          (restrictedSumSet k (fun _ => A)).card ≥ min p ((∑ i : Fin (k + 1),
               (A.card - i.val)) - (Nat.choose (k + 2) 2) + 1) := by
-        convert compressed_sizes_restricted_sum ( fun _ => A ) _ _ _ using 1;
+        convert compressedSizes_restricted_sum ( fun _ => A ) _ _ _ using 1;
         · aesop;
         · exact fun i => Finset.card_pos.mp ( by linarith );
         · aesop;
@@ -144,8 +144,8 @@ theorem dias_da_silva_hamidoune (A : Finset (ZMod p)) (s : ℕ)
     | inr h_1 => ?_
     · -- By definition of $restricted\_sum\_set$, we have $restricted\_sum\_set n (fun _ => A)
       -- \subseteq distinct\_sum\_set A (n + 1)$.
-      have h_subset : restricted_sum_set n (fun _ => A) ⊆ distinct_sum_set A (n + 1) := by
-        intro x hx; unfold restricted_sum_set at hx; unfold distinct_sum_set
+      have h_subset : restrictedSumSet n (fun _ => A) ⊆ distinctSumSet A (n + 1) := by
+        intro x hx; unfold restrictedSumSet at hx; unfold distinctSumSet
         simp_all only [ne_eq, mem_image, mem_filter, Fintype.mem_piFinset, mem_powerset]
         obtain ⟨w, h_1⟩ := hx
         obtain ⟨left, right⟩ := h_1
@@ -168,7 +168,7 @@ theorem dias_da_silva_hamidoune (A : Finset (ZMod p)) (s : ℕ)
     · refine Or.inr (lt_of_lt_of_le h_1 ?_);
       refine Finset.card_le_card ?_;
       intro x hx;
-      unfold restricted_sum_set at hx; unfold distinct_sum_set
+      unfold restrictedSumSet at hx; unfold distinctSumSet
       simp_all only [ne_eq, mem_image, mem_filter, Fintype.mem_piFinset, mem_powerset]
       obtain ⟨w, h_1⟩ := hx
       obtain ⟨left, right⟩ := h_1
