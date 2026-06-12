@@ -1853,26 +1853,35 @@ projects:
       - "11F11"
       - "30E20"
   - slug: root-system
-    title: Explicit construction of classical root systems
-    summary: Constructs the root pairings of classical type (Aₙ, BCₙ) explicitly — from signed intervals and from a dot-product space — and proves the pairing and reflection identities exhibiting them as Mathlib `RootPairing`s.
+    title: Explicit type Aₙ and BCₙ root pairings
+    summary: Constructs the type Aₙ and BCₙ root pairings explicitly over ℤ — from signed intervals on Fin n and from the reflective vectors of the standard dot product — proves the pairing and reflection identities exhibiting them as Mathlib `RootPairing`s, and identifies the BCₙ roots with the classical set {±eᵢ, ±2eᵢ, ±eᵢ ± eⱼ}.
     branch: representation theory
     entry_module: LeanPool.RootSystem
     authors:
       - Antoine de Saint Germain
       - Ambrose Tang
     source:
+      title: "Introduction to Lie Algebras and Representation Theory"
+      authors:
+        - James E. Humphreys
+      doi: "10.1007/978-1-4612-6398-2"
       url: https://antoine-dsg.github.io/root_system/
       github_repo: Antoine-dSG/root_system
     status: verified
     main_declarations:
       - An.rootPairing
       - BCn.rootPairing
+      - BCn.isReflective_iff_isClassicalRoot
     main_results:
       - declaration: An.rootPairing
-        informal: Constructs the type Aₙ root system as a Mathlib RootPairing over the integers from signed intervals on Fin n.
+        informal: Constructs the type Aₙ root pairing over the integers from signed intervals on Fin n, with finiteness, reducedness, and crystallographic properties.
         source_ref: "N. Bourbaki, Lie Groups and Lie Algebras, Chapters 4-6, Springer, 2002; J. E. Humphreys, Introduction to Lie Algebras and Representation Theory, GTM 9, Springer, 1972, Ch. III."
       - declaration: BCn.rootPairing
-        informal: Constructs the type BCₙ root pairing from the standard dot-product space via a symmetric nondegenerate form.
+        informal: Constructs the type BCₙ root pairing from the reflective vectors of the standard dot product on ℤⁿ via a symmetric nondegenerate form.
+      - declaration: BCn.isReflective_iff_isClassicalRoot
+        informal: Characterizes the reflective vectors of the standard dot product on ℤⁿ as exactly the classical type BCₙ roots ±eᵢ, ±2eᵢ, and ±eᵢ ± eⱼ for i ≠ j.
+      - declaration: BCn.range_rootPairing_root
+        informal: Identifies the root set of the type BCₙ root pairing with the classical type BCₙ root set.
     tags:
       - representation-theory
       - root-systems
