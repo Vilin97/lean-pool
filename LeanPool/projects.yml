@@ -2731,3 +2731,40 @@ projects:
     msc:
       - "51A05"
       - "51A30"
+  - slug: polynomial-method-restricted-sums
+    title: The polynomial method and restricted sums of congruence classes
+    summary: Formalizes the polynomial method (Alon–Tarsi-style combinatorial Nullstellensatz arguments) and applies it to restricted sums of congruence classes, including Cauchy–Davenport, Dias da Silva–Hamidoune, and a Vandermonde coefficient formula.
+    branch: combinatorics
+    entry_module: LeanPool.PolynomialMethodRestrictedSums
+    authors:
+      - Nick Adfor
+    source:
+      url: https://github.com/NickAdfor/The-polynomial-method-and-restricted-sums-of-congruence-classes
+      github_repo: NickAdfor/The-polynomial-method-and-restricted-sums-of-congruence-classes
+    status: verified
+    main_declarations:
+      - ANR_polynomial_method
+      - cauchy_davenport
+      - dias_da_silva_hamidoune
+    main_results:
+      - declaration: ANR_polynomial_method
+        informal: The Alon–Nathanson–Rusza polynomial method theorem, giving a non-vanishing-coefficient criterion for restricted sums.
+        source_ref: "N. Alon, M. B. Nathanson, I. Z. Ruzsa, The polynomial method and restricted sums of congruence classes, J. Number Theory 56 (1996), 404-417."
+      - declaration: cauchy_davenport
+        informal: The Cauchy–Davenport theorem on sums of subsets of the cyclic group of prime order.
+      - declaration: dias_da_silva_hamidoune
+        informal: The Dias da Silva–Hamidoune lower bound for restricted sums of distinct elements in a prime cyclic group.
+      - declaration: restricted_sum_distinct_sizes
+        informal: A lower bound for restricted sums when the summand sets have distinct sizes.
+      - declaration: Vandermonde_coefficient_formula
+        informal: A closed-form expression for a specific Vandermonde-style coefficient used by the polynomial method.
+    tags:
+      - combinatorics
+      - polynomial-method
+      - alon-tarsi
+      - restricted-sums
+      - congruence-classes
+    msc:
+      - "11B30"
+      - "11B75"
+      - "11P70"

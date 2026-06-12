@@ -1435,6 +1435,13 @@ import LeanPool.Polylean.UnitConjecture.Tactics
 import LeanPool.Polylean.UnitConjecture.Tactics.AesopRuleSets
 import LeanPool.Polylean.UnitConjecture.Tactics.ReduceGoal
 import LeanPool.Polylean.UnitConjecture.TorsionFree
+import LeanPool.PolynomialMethodRestrictedSums
+import LeanPool.PolynomialMethodRestrictedSums.ANRPolynomialMethod
+import LeanPool.PolynomialMethodRestrictedSums.CauchyDavenportTheorem
+import LeanPool.PolynomialMethodRestrictedSums.CompressedSizesRestrictedSum
+import LeanPool.PolynomialMethodRestrictedSums.DiasDaSilvaHamidoune
+import LeanPool.PolynomialMethodRestrictedSums.RestrictedSumDistinctSizes
+import LeanPool.PolynomialMethodRestrictedSums.VandermondeCoefficientFormula
 import LeanPool.Polytopes
 import LeanPool.Polytopes.Cutspace
 import LeanPool.Polytopes.Halfspace
