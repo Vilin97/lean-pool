@@ -3,12 +3,13 @@ Copyright (c) 2026 Shuhao Song. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shuhao Song
 -/
+
 import LeanPool.SetTheory.KunenInconsistency
 
 /-!
 # The Kunen inconsistency theorem
 
-Source: url:https://github.com/znssong/SetTheory
+Source: doi:10.2307/2269948, url:https://github.com/znssong/SetTheory
 Authors: Shuhao Song
 Status: verified
 Main declarations: `SetTheory.kunen_inconsistency_V`, `NontrivialElementaryEmbedding`

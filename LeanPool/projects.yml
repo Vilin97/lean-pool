@@ -1908,6 +1908,10 @@ projects:
     authors:
       - Shuhao Song
     source:
+      title: Elementary embeddings and infinitary combinatorics
+      authors:
+        - Kenneth Kunen
+      doi: "10.2307/2269948"
       url: "https://github.com/znssong/SetTheory"
       github_repo: znssong/SetTheory
     status: verified
