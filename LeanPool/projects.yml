@@ -1909,7 +1909,8 @@ projects:
       - Paul Mure
       - Joonhyup Lee
     source:
-      url: "https://github.com/mit-plv/lean4-itree"
+      arxiv: "1906.00046"
+      doi: "10.1145/3371119"
       github_repo: mit-plv/lean4-itree
     status: verified
     main_declarations:
@@ -1931,6 +1932,7 @@ projects:
         informal: Defines interpretation of an interaction tree against an effect handler into an arbitrary iterable monad.
       - declaration: Lean4Itree.plfp_acc
         informal: Proves the accumulation principle for the parameterized least fixed point underlying the Paco coinduction library.
+        source_ref: "C.-K. Hur, G. Neis, D. Dreyer, V. Vafeiadis, The Power of Parameterization in Coinductive Proof, POPL 2013, doi:10.1145/2429069.2429093."
     tags:
       - coinduction
       - interaction-trees
