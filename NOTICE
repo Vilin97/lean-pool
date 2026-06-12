@@ -165,3 +165,33 @@ Projects relicensed by their original author
   LeanPool/ForwardEuler              https://github.com/Vilin97/forward_euler
       Originally distributed without a license file, then placed under the
       Apache License, Version 2.0, by its sole author.
+
+
+--------------------------------------------------------------------------------
+Additional upstream attribution and citation notices
+--------------------------------------------------------------------------------
+
+The following notices are reproduced from the upstream repositories' own NOTICE
+files or LICENSE addenda. Only each project's Apache-2.0 Lean sources were
+imported here; these notes preserve attribution and citation requests made by
+the original authors.
+
+  LeanPool/ZhangYeungInequality      https://github.com/cboone/zhang-yeung-inequality
+      The upstream repository ships a NOTICE file (Apache License, Version 2.0,
+      Section 4(d)). Its attribution notice reads:
+
+          The Zhang-Yeung Inequality
+          Copyright 2026 Christopher Boone
+
+      The upstream additionally carries CC-BY-4.0 prose, CC-BY-SA-4.0 for its
+      code of conduct, CC0-1.0 for generated files, and bundled reference
+      materials under a custom license; none of those files were imported.
+
+  LeanPool/FormalLearningTheory      https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+      The upstream LICENSE appends a citation request. The original author asks
+      that publications, software, or derivative works built on this
+      formalization cite:
+
+          Gupta, D. (2026). Formal Learning Theory Kernel: Lean4 Formalization
+          of the Fundamental Theorem of Statistical Learning.
+          https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel

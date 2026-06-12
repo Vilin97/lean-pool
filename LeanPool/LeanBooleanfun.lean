@@ -13,7 +13,7 @@ import LeanPool.LeanBooleanfun.Arrow
 /-!
 # Analysis of Boolean functions in Lean
 
-Source: doi:10.1017/CBO9781139814782
+Source: arxiv:2105.10386, doi:10.1017/CBO9781139814782
 Authors: Joris Roos
 Status: verified
 Main declarations: `LeanPool.LeanBooleanfun.BooleanFun.BV.dictator_of_condorcet_and_unanimous`

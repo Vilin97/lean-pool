@@ -40,7 +40,7 @@ import LeanPool.QuasiBorelSpaces.UnitInterval
 /-!
 # Quasi-Borel Spaces
 
-Source: arxiv:1701.02547
+Source: arxiv:1701.02547, doi:10.1109/LICS.2017.8005137
 Authors: Anthony Vandikas, Kiarash Sotoudeh
 Status: verified
 Main declarations: `QuasiBorelSpace`, `OmegaQuasiBorelSpace`, `QuasiBorelSpace.ProbabilityMeasure`

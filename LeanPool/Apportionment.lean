@@ -10,7 +10,7 @@ import LeanPool.Apportionment.PlausibleInstances
 /-!
 # Apportionmentlib
 
-Source: url:https://github.com/mdbrnowski/Apportionmentlib
+Source: url:https://archive.org/details/fairrepresentati00bali
 Authors: Michał Dobranowski
 Status: verified
 Main declarations: `Apportionment.balinski_young`

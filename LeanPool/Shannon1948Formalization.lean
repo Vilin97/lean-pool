@@ -9,7 +9,7 @@ import LeanPool.Shannon1948Formalization.Entropy
 /-!
 # Shannon Entropy Characterization
 
-Source: url:https://github.com/SamuelSchlesinger/shannon-1948-formalization
+Source: doi:10.1002/j.1538-7305.1948.tb01338.x
 Authors: Samuel Schlesinger
 Status: verified
 Main declarations: `LeanPool.Shannon1948Formalization.entropyNat_unique`

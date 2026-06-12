@@ -9,7 +9,7 @@ import LeanPool.Fineqs.Main
 /-!
 # FinEqs - reducing equations defining a subset of n-space over a finite field
 
-Source: arxiv:1906.11174
+Source: arxiv:1906.11174, doi:10.5802/afst.1766
 Authors: Stefan Barańczuk, Aristotle
 Status: verified
 Main declarations: `LeanPool.Fineqs.theorem_1`, `LeanPool.Fineqs.prop_1`
