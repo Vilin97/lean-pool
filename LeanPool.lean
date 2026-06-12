@@ -1052,9 +1052,6 @@ import LeanPool.QuasiBorelSpaces.UnitInterval.AssocProd
 import LeanPool.RamanujanNagell
 import LeanPool.RamanujanNagell.Basic
 import LeanPool.RamanujanNagell.Helpers
-import LeanPool.RamanujanNagell.QuadraticIntegers.FieldIsomorphism
-import LeanPool.RamanujanNagell.QuadraticIntegers.QuadraticIntegerROI
-import LeanPool.RamanujanNagell.QuadraticIntegers.RingOfIntegers
 import LeanPool.RamanujanTauMissesPrimes
 import LeanPool.RamanujanTauMissesPrimes.Solution
 import LeanPool.RiemannMappingTheorem

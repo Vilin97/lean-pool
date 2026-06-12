@@ -1274,7 +1274,7 @@ projects:
       - Barinder S. Banwait
       - Xinze Li
     source:
-      url: https://github.com/BarinderBanwait/ramanujan_nagell
+      arxiv: "2604.09808"
       github_repo: BarinderBanwait/ramanujan_nagell
     status: verified
     main_declarations:
