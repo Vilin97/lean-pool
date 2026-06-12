@@ -99,7 +99,7 @@ lemma Finset.sum_range_cast_mul_two {n : ℕ} :
 @[simp] lemma finCongr_trans_finCongr {m n o} (h₁ : m = n) (h₂ : n = o) :
   (finCongr h₁).trans (finCongr h₂) = finCongr (h₁.trans h₂) := rfl
 
-@[simp] lemma Fin.natAdd_zero_right [NeZero m] [NeZero (n + m)] :
+lemma Fin.natAdd_zero_right [NeZero m] [NeZero (n + m)] :
     Fin.natAdd n (0 : Fin m) = ⟨n, lt_add_of_pos_right _ (NeZero.pos _)⟩ := rfl
 
 lemma Matrix.det_submatrix {m n : Type*} [DecidableEq m] [DecidableEq n] [Fintype m] [Fintype n]
