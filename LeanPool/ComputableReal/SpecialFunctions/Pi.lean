@@ -8,11 +8,13 @@ import Mathlib.Analysis.Real.Pi.Bounds
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 /-!
-# Computable pi
+# Verified rational bounds for pi
 
 Rational lower and upper bounds for `Real.pi` are derived from the
 `Real.sqrtTwoAddSeries` approximation, shown to converge, and packaged into a
-`ComputableℝSeq.Pi`, giving an `IsComputable` instance for `Real.pi`.
+`ComputableℝSeq.Pi`, giving an `IsComputable` instance for `Real.pi`. The bounds
+go through the `noncomputable` square-root sequences, so `Pi` and the derived
+bounds `piLb`/`piUb` are `noncomputable` Lean terms.
 -/
 
 open scoped QInterval

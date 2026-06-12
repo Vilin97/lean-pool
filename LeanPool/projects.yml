@@ -1901,14 +1901,15 @@ projects:
       - "11F11"
       - "30E20"
   - slug: computablereal
-    title: Computable real numbers
-    summary: Implements computable real numbers as converging rational interval sequences quotiented into a field, with an IsComputable typeclass that supports deciding inequalities involving sqrt, exp, pi, and other special functions.
-    branch: computable real arithmetic
+    title: Verified interval-Cauchy real arithmetic
+    summary: Represents real numbers as Cauchy sequences of nested rational intervals quotiented into a field, with executable interval ring arithmetic, proven-convergent rational bounds for sqrt, exp, and pi, and an IsComputable typeclass that packages such approximations to drive classical (noncomputable) comparison instances, after O'Connor's certified exact real computation.
+    branch: interval arithmetic
     entry_module: LeanPool.ComputableReal
     authors:
       - Alex Meiburg
     source:
-      url: "https://github.com/Timeroot/computableReal"
+      arxiv: "0805.2438"
+      doi: "10.1007/978-3-540-71067-7_21"
       github_repo: Timeroot/computableReal
     status: verified
     main_declarations:
@@ -1917,21 +1918,20 @@ projects:
       - IsComputable
     main_results:
       - declaration: ComputableℝSeq
-        informal: A sequence of converging rational lower and upper bounds representing a single computable real number.
+        informal: A sequence of converging rational lower and upper bounds representing a single real number.
       - declaration: Computableℝ
-        informal: The type of computable reals, defined as computable sequences quotiented by equality of value.
+        informal: The quotient of interval-Cauchy sequences by equality of value, an ordered field whose ring operations are executable interval arithmetic.
       - declaration: IsComputable
-        informal: A typeclass witnessing that a real number is computable, used to drive decision procedures on reals.
+        informal: A typeclass packaging an explicit interval-Cauchy approximation of a real number, used to drive its classical comparison instances.
       - declaration: Computableℝ.instField
-        informal: The field instance on computable reals, providing addition, multiplication, and inverses.
+        informal: The field instance on the quotient; inversion extracts a sign witness classically and is noncomputable.
       - declaration: ComputableℝSeq.Sqrt.sqrtq
         informal: Computes converging rational interval bounds for the square root of a rational interval.
     tags:
-      - computable-reals
       - interval-arithmetic
-      - decidability
       - real-numbers
+      - cauchy-sequences
+      - special-functions
     msc:
-      - "03F60"
       - "65G40"
-      - "68W30"
+      - "68V20"

@@ -9,11 +9,13 @@ import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.NumberTheory.Real.GoldenRatio
 
 /-!
-# Computable square roots
+# Verified rational bounds for square roots
 
 Rational lower and upper bounds for `Real.sqrt` of a rational interval are built via integer square
 roots (`boundedSqrt`/`sqrtq`), shown to converge, and assembled into `ComputableℝSeq.Sqrt.sqrt`.
-This yields an `IsComputable` instance for `Real.sqrt` and the golden ratio constants.
+This yields an `IsComputable` instance for `Real.sqrt` and the golden ratio constants. The bound
+functions are executable; the packaged sequence mentions `Real.sqrt` itself as its reference
+value, so `sqrt` and the instances are `noncomputable` Lean terms.
 -/
 
 namespace ComputableℝSeq

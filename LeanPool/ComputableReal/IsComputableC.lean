@@ -8,20 +8,22 @@ import LeanPool.ComputableReal.SpecialFunctions.Sqrt
 import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
-# Computability of complex numbers
+# Interval approximations for complex numbers
 
-`IsComputableℂ x` packages `IsComputable` witnesses for the real and imaginary parts of a complex
-number `x`, and is closed under the field operations, powers, conjugation, norm and inner product.
-This also provides `DecidableEq` and (with `ComplexOrder`) `Decidable` comparison instances.
+`IsComputableℂ x` packages `IsComputable` approximations for the real and imaginary parts of a
+complex number `x`, and is closed under the field operations, powers, conjugation, norm and inner
+product. This also provides `DecidableEq` and (with `ComplexOrder`) `Decidable` comparison
+instances; like their real counterparts, these comparison instances are classical and
+`noncomputable`.
 -/
 
 /-- Type class stating that `x : ℂ` has a `ComputableℝSeq` for its real and imaginary parts.
 Note that we can't define this as `IsComputable x.re` + `IsComputable x.im`, because then
 (if `x` is a noncomputable expression) this will be a noncomputable expression. -/
 class IsComputableℂ (x : ℂ) : Type where
-    /-- A computability witness for the real part. -/
+    /-- An interval-approximation witness for the real part. -/
     re : IsComputable x.re
-    /-- A computability witness for the imaginary part. -/
+    /-- An interval-approximation witness for the imaginary part. -/
     im : IsComputable x.im
 
 namespace IsComputableℂ

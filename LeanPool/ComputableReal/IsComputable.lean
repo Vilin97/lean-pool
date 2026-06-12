@@ -10,15 +10,20 @@ import Mathlib.Tactic.Peel
 /-!
 # The `IsComputable` typeclass
 
-`IsComputable x` witnesses that the real number `x` carries a `ComputableℝSeq`, i.e. that `x` is
-a computable number. Closure instances (for arithmetic, powers, scalar multiples) and `Decidable`
-instances for comparisons are provided, along with a tool for lifting continuous functions defined
-by locally-uniformly converging rational approximations.
+`IsComputable x` packages a `ComputableℝSeq` converging to the real number `x`: an explicit
+sequence of rational interval approximations. Closure instances (for arithmetic, powers, scalar
+multiples) and `Decidable` instances for comparisons are provided, along with a tool for lifting
+continuous functions defined by locally-uniformly converging rational approximations.
+
+Since a `ComputableℝSeq` is an arbitrary function `ℕ → ℚInterval` (with convergence proofs)
+rather than recursive data, this is not computability in the computable-analysis sense, and the
+comparison instances below are classical (`noncomputable`, via sign information on the limit).
 -/
 
-/-- Type class stating that `x : ℝ` has a `ComputableℝSeq`, i.e. that `x` is a computable number.
-Like `Decidable`, it carries data with it - even though (classically) we could prove that every
-proposition is decidable, and every real is computable. -/
+/-- Type class stating that `x : ℝ` carries a `ComputableℝSeq`: an explicit sequence of rational
+interval approximations converging to `x`. Like `Decidable`, it carries data with it, and
+classically every real number admits such a sequence; its value lies in the explicit
+approximations it provides, not in a computability guarantee. -/
 class IsComputable (x : ℝ) : Type where
     /-- A computable sequence representing `x`. -/
     seq : ComputableℝSeq
@@ -128,9 +133,10 @@ noncomputable instance instComputableQSMul [hx : IsComputable x] (q : ℚ) : IsC
   change IsComputable (_ * _)
   infer_instance
 
-/-- When expressions involve that happen to be `IsComputable`, we can get a decidability
-instance by lifting them to a comparison on the `ComputableℝSeq`s, where comparison is
-computable. -/
+/-- When expressions happen to be `IsComputable`, we can get a decidability instance by
+lifting them to a comparison on the `ComputableℝSeq`s. The comparison there is classical
+(it goes through the noncomputable `ComputableℝSeq.sign`), so this instance is
+`noncomputable` and carries no algorithmic content. -/
 noncomputable instance instDecidableLE [hx : IsComputable x] [hy : IsComputable y] : Decidable (x ≤
   y) :=
   decidable_of_decidable_of_iff (p := Computableℝ.mk hx.seq ≤ Computableℝ.mk hy.seq) (by

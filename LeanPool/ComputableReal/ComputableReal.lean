@@ -6,12 +6,13 @@ Authors: Alex Meiburg
 import LeanPool.ComputableReal.ComputableRSeq
 
 /-!
-# Computable reals
+# The quotient field of interval-Cauchy sequences
 
 `Computableℝ` is the quotient of `ComputableℝSeq` by the equivalence relation of
 converging to the same real value. This file equips it with its commutative ring,
-field, and linear order structures, so that it forms an ordered field whose
-comparisons are decidable.
+field, and linear order structures. The ring operations are executable interval
+arithmetic; inversion and the comparison `Decidable` instances go through the
+classical `ComputableℝSeq.sign` and are `noncomputable`.
 -/
 
 /-- Computable reals, defined as the quotient of ComputableℝSeq sequences -- sequences with

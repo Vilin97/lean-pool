@@ -11,7 +11,7 @@ import Mathlib.Tactic.Rify
 import LeanPool.ComputableReal.AuxLemmas
 
 /-!
-# Computable real sequences
+# Interval-Cauchy real sequences
 
 A `ComputableℝSeq` carries a sequence of rational intervals (`ℚInterval`) that
 converge to a single real number, with proofs that the lower and upper rational
@@ -19,6 +19,12 @@ bounds are valid and Cauchy-equivalent. This file develops the basic interval
 arithmetic on `ℚInterval` and the algebraic operations (addition, negation,
 multiplication, inversion) on `ComputableℝSeq`, culminating in a commutative
 semiring structure.
+
+The interval sequence is an arbitrary function `ℕ → ℚInterval`, with no recursiveness
+requirement, so membership in this type is not computability in the computable-analysis
+sense. Addition, negation, and multiplication are executable interval arithmetic, while
+`sign` (and hence inversion and division, which need a nonzero witness) is defined
+classically and is `noncomputable`.
 -/
 
 namespace QInterval
@@ -102,9 +108,10 @@ scoped instance instOfNatQInterval : OfNat ℚInterval n :=
 
 end QInterval
 
-/-- Type class for sequences that converge to some real number from above and below. `lub` is a
-  function that gives upper *and* lower bounds, bundled so it can reuse computation. `hcau`
-  asserts that the two bounds are Cauchy sequences, `hlub` asserts that they're valid
+/-- Structure for sequences that converge to some real number from above and below. `lub` is a
+  function that gives upper *and* lower bounds, bundled so it can reuse computation; it is an
+  arbitrary function `ℕ → ℚInterval`, with no recursiveness requirement. `hcl` and `hcu`
+  assert that the two bounds are Cauchy sequences, `hlub` asserts that they're valid
   lower and upper bounds, and `heq'` asserts that they converge to a common value. Use
   `ComputableℝSeq.mk` to construct with regards to a reference real value.
 
@@ -549,11 +556,11 @@ section signs
 private noncomputable instance sign_aux_sound (x : ℝ) :
     Inhabited { s : SignType // s = SignType.sign x } := ⟨SignType.sign x, rfl⟩
 
-/-- The sign of `x`, defined as the sign of its real value. This ends up providing `DecidableEq`
-  and `DecidableLT` instances on `Computableℝ`, but "in practice" this should only be used to prove
-  nonequality, or check which of two inequal values is the larger -- not to prove equality. (The
-  only equalities that will realistically end up being proven are the ones that could have been done
-  entirely with rational numbers the whole way.) -/
+/-- The sign of `x`, defined classically as the sign of its real value, so this definition is
+  `noncomputable` and carries no algorithmic content. (Searching the interval sequence for a
+  sign witness terminates exactly when `x ≠ 0` or some interval is the point `0`, so a fuel-free
+  executable version cannot be total.) This ends up providing the `DecidableEq` and
+  `DecidableLT` instances on `Computableℝ`, which are likewise classical. -/
 noncomputable def sign (x : ComputableℝSeq) : SignType :=
   SignType.sign x.val
 

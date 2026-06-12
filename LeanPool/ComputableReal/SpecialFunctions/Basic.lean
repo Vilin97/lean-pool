@@ -8,11 +8,12 @@ import Mathlib.Data.Real.Sign
 import Mathlib.Data.Real.ConjExponents
 
 /-!
-# Computability of basic real operations
+# `IsComputable` instances for basic real operations
 
 This file provides `IsComputable` instances for scientific literals, `dite`/`ite`, `Real.sign`,
 `max`, `min`, `abs`, conjugate exponents, and finite sums, closing the `IsComputable` typeclass
-under the basic operations on real numbers.
+under the basic operations on real numbers. The instances that branch on a comparison
+(`Real.sign`, `max`, `min`, `abs`) inherit its classical sign test and are `noncomputable`.
 -/
 
 namespace IsComputable

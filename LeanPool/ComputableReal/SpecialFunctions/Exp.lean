@@ -9,11 +9,13 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 /-!
-# Computable exponential
+# Verified rational bounds for the exponential
 
 Rational lower and upper bounds for `Real.exp` are built from truncated Taylor series
 (`expLb`/`expUb`), shown to converge, and packaged into a `ComputableℝSeq.exp`. This yields
-`IsComputable` instances for `Real.exp`, `Real.sinh`, `Real.cosh`, and `Real.tanh`.
+`IsComputable` instances for `Real.exp`, `Real.sinh`, `Real.cosh`, and `Real.tanh`. The bound
+functions are executable; the packaged sequence mentions `Real.exp` itself as its reference
+value, so `exp` and the instances are `noncomputable` Lean terms.
 -/
 
 namespace ComputableℝSeq
