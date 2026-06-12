@@ -39,7 +39,7 @@ import LeanPool.BrauerGroupNew.Subfield
 /-!
 # Brauer Group Core
 
-Source: url:https://doi.org/10.1017/9781107359419
+Source: url:https://doi.org/10.1017/9781316661277
 Authors: Yunzhou Xie, Yichen Feng, Jujian Zhang, Yael Dillies
 Status: verified
 Main declarations: `BrauerGroup.BruaerGroup`, `BrauerGroupHom.Br`, `WedderburnArtin`
