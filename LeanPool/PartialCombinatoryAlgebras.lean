@@ -14,7 +14,7 @@ import LeanPool.PartialCombinatoryAlgebras.GraphModel
 /-!
 # Partial Combinatory Algebras
 
-Source: url:https://doi.org/10.1016/S0049-237X(08)80044-6
+Source: url:https://doi.org/10.1016/S0049-237X(08)80003-1
 Authors: Andrej Bauer
 Status: verified
 Main declarations: `LeanPool.PartialCombinatoryAlgebras.PCA`

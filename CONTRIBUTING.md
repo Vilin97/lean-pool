@@ -2,6 +2,10 @@
 
 Lean Pool welcomes serious, medium- to large-scale formalizations of mathematics and related disciplines (see [`MOTIVATION.md`](MOTIVATION.md)). Browse [`LeanPool/`](LeanPool/) for examples and [`candidates/CRITERIA.txt`](candidates/CRITERIA.txt) for what we include.
 
+## Opt out
+
+If you would like to withdraw your project from Lean Pool, open an issue.
+
 ## Submitting a project
 
 There are two paths:
