@@ -2731,6 +2731,168 @@ projects:
     msc:
       - "51A05"
       - "51A30"
+  - slug: mriscx
+    title: MRiscX
+    summary: A Hoare logic for verifying unstructured RISC-V-like assembly in Lean, following Lundberg et al. (SEFM 2020), with a certified interpreter, proved structural Hoare rules, per-instruction specifications, custom elaborators and tactics, and a complete One-Time-Pad correctness proof.
+    branch: program verification
+    entry_module: LeanPool.MRiscX
+    authors:
+      - Julius Marx
+    source:
+      doi: "10.1007/978-3-030-58768-0_11"
+      url: "https://github.com/JulsDE/MRiscX"
+      github_repo: JulsDE/MRiscX
+    status: verified
+    main_declarations:
+      - hoareTripleUp
+      - S_SEQ
+      - proof_otp
+    main_results:
+      - declaration: hoareTripleUp
+        informal: Defines the MRiscX Hoare triple, asserting that from any state satisfying the precondition the code reaches a successor state satisfying the postcondition while respecting the line whitelist and blacklist.
+        source_ref: "D. Lundberg, R. Guanciale, A. Lindner, M. Dam, Hoare-Style Logic for Unstructured Programs, SEFM 2020, doi:10.1007/978-3-030-58768-0_11."
+      - declaration: S_SEQ
+        informal: Proves the sequencing Hoare rule, peeling off the last instruction of a code block.
+        source_ref: "D. Lundberg, R. Guanciale, A. Lindner, M. Dam, Hoare-Style Logic for Unstructured Programs, SEFM 2020, doi:10.1007/978-3-030-58768-0_11."
+      - declaration: PRE_STR
+        informal: Proves the precondition-strengthening rule for MRiscX Hoare triples.
+      - declaration: POST_WEAK
+        informal: Proves the postcondition-weakening rule for MRiscX Hoare triples.
+      - declaration: specification_LoadImmediate
+        informal: Proves the per-instruction Hoare specification of the load-immediate instruction.
+      - declaration: proof_otp
+        informal: Proves the full correctness of a One-Time-Pad implementation written in MRiscX assembly.
+    tags:
+      - hoare-logic
+      - program-verification
+      - risc-v
+      - assembly
+      - formal-methods
+    msc:
+      - 68Q60
+  - slug: special-numbers
+    title: Special Numbers
+    summary: Formalizes the Eulerian numbers, Euclid numbers, and Sylvester's sequence from Chapter 6 of Concrete Mathematics, proving Worpitzky's identity for the first and coprimality, monotonicity, and explicit doubly-exponential closed forms for the latter two.
+    branch: integer sequences
+    entry_module: LeanPool.SpecialNumbers
+    authors:
+      - Walter Moreira
+      - Joe Stubbs
+    source:
+      title: "Concrete Mathematics: A Foundation for Computer Science"
+      authors:
+        - Ronald L. Graham
+        - Donald E. Knuth
+        - Oren Patashnik
+      url: "https://github.com/provables/special-numbers"
+      github_repo: provables/special-numbers
+    status: verified
+    main_declarations:
+      - SpecialNumbers.sylvester
+      - SpecialNumbers.eulerian
+      - SpecialNumbers.worpitzky
+    main_results:
+      - declaration: SpecialNumbers.sylvester
+        informal: Defines Sylvester's sequence by the recurrence e(n+1) = e(n) * (e(n) - 1) + 1.
+      - declaration: SpecialNumbers.sylvester_coprime
+        informal: Shows distinct terms of Sylvester's sequence are coprime.
+      - declaration: SpecialNumbers.sylvester_eq_floor_constant_pow
+        informal: Gives the explicit closed form for Sylvester's sequence as a floor of a doubly-exponential power of a constant.
+      - declaration: SpecialNumbers.Euclid.euclid_coprime
+        informal: Shows distinct Euclid numbers are coprime.
+      - declaration: SpecialNumbers.Euclid.euclid_eq_floor_constant_pow
+        informal: Gives the explicit closed form for the Euclid numbers as a floor of a doubly-exponential power of a constant.
+      - declaration: SpecialNumbers.eulerian
+        informal: Defines the Eulerian numbers via their standard triangular recurrence and boundary values.
+      - declaration: SpecialNumbers.worpitzky
+        informal: Proves Worpitzky's identity, expanding the power x^n in the binomial-coefficient basis with Eulerian-number coefficients.
+        source_ref: "R. L. Graham, D. E. Knuth, O. Patashnik, Concrete Mathematics, 2nd ed., Addison-Wesley, 1994, identity (6.37)."
+    tags:
+      - number-theory
+      - combinatorics
+      - integer-sequences
+    msc:
+      - "11B73"
+      - "11B83"
+  - slug: root-system
+    title: Explicit type Aₙ and BCₙ root pairings
+    summary: Constructs the type Aₙ and BCₙ root pairings explicitly over ℤ — from signed intervals on Fin n and from the reflective vectors of the standard dot product — proves the pairing and reflection identities exhibiting them as Mathlib `RootPairing`s, and identifies the BCₙ roots with the classical set {±eᵢ, ±2eᵢ, ±eᵢ ± eⱼ}.
+    branch: representation theory
+    entry_module: LeanPool.RootSystem
+    authors:
+      - Antoine de Saint Germain
+      - Ambrose Tang
+    source:
+      title: "Introduction to Lie Algebras and Representation Theory"
+      authors:
+        - James E. Humphreys
+      doi: "10.1007/978-1-4612-6398-2"
+      url: https://antoine-dsg.github.io/root_system/
+      github_repo: Antoine-dSG/root_system
+    status: verified
+    main_declarations:
+      - An.rootPairing
+      - BCn.rootPairing
+      - BCn.isReflective_iff_isClassicalRoot
+    main_results:
+      - declaration: An.rootPairing
+        informal: Constructs the type Aₙ root pairing over the integers from signed intervals on Fin n, with finiteness, reducedness, and crystallographic properties.
+        source_ref: "N. Bourbaki, Lie Groups and Lie Algebras, Chapters 4-6, Springer, 2002; J. E. Humphreys, Introduction to Lie Algebras and Representation Theory, GTM 9, Springer, 1972, Ch. III."
+      - declaration: BCn.rootPairing
+        informal: Constructs the type BCₙ root pairing from the reflective vectors of the standard dot product on ℤⁿ via a symmetric nondegenerate form.
+      - declaration: BCn.isReflective_iff_isClassicalRoot
+        informal: Characterizes the reflective vectors of the standard dot product on ℤⁿ as exactly the classical type BCₙ roots ±eᵢ, ±2eᵢ, and ±eᵢ ± eⱼ for i ≠ j.
+      - declaration: BCn.range_rootPairing_root
+        informal: Identifies the root set of the type BCₙ root pairing with the classical type BCₙ root set.
+    tags:
+      - representation-theory
+      - root-systems
+      - lie-theory
+      - combinatorics
+    msc:
+      - "17B22"
+      - "20F55"
+  - slug: event-structures
+    title: Event Structures and Causal-Consistent Reversibility
+    summary: Formalizes event structures with binary conflict, their configurations, computations, the trace monoid, and causal-consistent reversibility, proving correctness and causal-safety of rollback, uniqueness of minimal and maximal replays, and conditional replay-existence characterizations.
+    branch: concurrency theory
+    entry_module: LeanPool.EventStructures
+    authors:
+      - Vikraman Choudhury
+    source:
+      doi: "10.1007/3-540-17906-2_31"
+      url: "https://github.com/vikraman/event-structures"
+      github_repo: vikraman/event-structures
+    status: verified
+    main_declarations:
+      - EventStructures.EventStructure
+      - EventStructures.Conf
+    main_results:
+      - declaration: EventStructures.EventStructure
+        informal: Defines an event structure as a partially ordered set of events with an irreflexive symmetric conflict relation.
+        source_ref: "M. Nielsen, G. Plotkin, G. Winskel, Petri nets, event structures and domains, part I, Theoretical Computer Science 13 (1981), 85-108, doi:10.1016/0304-3975(81)90112-2."
+      - declaration: EventStructures.Conf
+        informal: Defines a configuration as a conflict-free, downward-closed set of events.
+        source_ref: "G. Winskel, Event structures, Advances in Petri Nets 1986, LNCS 255, Springer, 1987, 325-392, doi:10.1007/3-540-17906-2_31."
+      - declaration: EventStructures.Rollback.rollback_correctness_finite
+        informal: Proves that the original configuration is reachable from the rollback of an event when the configuration is finitely representable.
+        source_ref: "Causal-consistent reversibility in the sense of V. Danos, J. Krivine, Reversible communicating systems, CONCUR 2004, LNCS 3170, Springer, 2004, 292-307, doi:10.1007/978-3-540-28644-8_19."
+      - declaration: EventStructures.Rollback.rollback_causal_safety
+        informal: Proves causal safety of rollback - events causally after the rolled-back event are removed.
+        source_ref: "Causal-consistent reversibility in the sense of V. Danos, J. Krivine, Reversible communicating systems, CONCUR 2004, LNCS 3170, Springer, 2004, 292-307, doi:10.1007/978-3-540-28644-8_19."
+      - declaration: EventStructures.Replay.minReplay_unique
+        informal: Proves uniqueness of the minimal replay of a log - any two minimal replays compatible with the log reach the same configuration.
+      - declaration: EventStructures.Trace.TraceMonoid
+        informal: Defines the trace monoid as lists of events quotiented by the congruence generated by swapping adjacent concurrent events; paths in the configuration graph are quotiented by the same trace equivalence to form asynchronous paths.
+        source_ref: "A. Mazurkiewicz, Trace theory, Advances in Petri Nets 1986, LNCS 255, Springer, 1987, 278-324, doi:10.1007/3-540-17906-2_30."
+    tags:
+      - concurrency
+      - order-theory
+      - reversible-computation
+      - event-structures
+    msc:
+      - "68Q85"
+      - "06A06"
   - slug: polynomial-method-restricted-sums
     title: The polynomial method and restricted sums of congruence classes
     summary: Formalizes the polynomial method (Alon–Tarsi-style combinatorial Nullstellensatz arguments) and applies it to restricted sums of congruence classes, including Cauchy–Davenport, Dias da Silva–Hamidoune, and a Vandermonde coefficient formula.
