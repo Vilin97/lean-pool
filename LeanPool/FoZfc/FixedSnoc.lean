@@ -95,7 +95,6 @@ theorem fixedSnoc_castSucc {n : ℕ} {xs : Fin n → V} {a : V} :
 theorem Fintuple_1_0 {a : V} : ![a] 0 = a := by rfl
 
 /-- `![a, b] (0 : Fin 2) = a`. -/
-@[simp]
 theorem Fintuple_2_0 {a b : V} : ![a, b] (0 : Fin 2) = a := by rfl
 
 /-- `![a] 0 = a` via `Nat.cast`. -/
