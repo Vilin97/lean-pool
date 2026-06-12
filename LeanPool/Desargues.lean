@@ -10,12 +10,12 @@ import LeanPool.Desargues.PV
 import LeanPool.Desargues.Structure
 
 /-!
-# Projective geometry and central projection
+# Axiomatic projective geometry (Faure–Frölicher)
 
-Source: url:https://github.com/oneofvalts/desargues
+Source: doi:10.1007/978-94-015-9590-2
 Authors: Abdullah Uyu
 Status: verified
-Main declarations: `Basic.ProjectiveGeometry`, `Basic.centralProjection`
+Main declarations: `Basic.ProjectiveGeometry`, `Basic.centralProjection`, `Basic.cen_proj_bij`
 Tags: projective-geometry, incidence-geometry, geometry
 MSC: 51A05, 51A30
 -/
@@ -23,12 +23,15 @@ MSC: 51A05, 51A30
 /-!
 ## Mathematical overview
 
-A formalization following Faure and Frölicher's *Modern Projective Geometry* of
-the axiomatic theory of projective geometries and central projections — the
-framework in which Desargues' theorem is proved.
+An axiomatic development, following Faure and Frölicher's *Modern Projective
+Geometry* (Kluwer, 2000), of projective geometries given by a ternary
+collinearity relation. The headline theorem is `Basic.cen_proj_bij`: the
+central projection between two lines is a bijection. Desargues' theorem itself
+is not formalized — this is the upstream `desargues` repository's groundwork in
+the setting where that theorem is classically stated.
 
-- `Basic.ProjectiveGeometry`: the projective-geometry axioms as a typeclass on a
-  collinearity relation.
+- `Basic.ProjectiveGeometry`: the projective-geometry axioms `L₁`–`L₃` as a
+  typeclass on a collinearity relation, with the line operator `Basic.star`.
 - `Basic.centralProjection` and `Basic.cen_proj_bij`: the central projection
   map between lines and the proof that it is a bijection.
 - `Structure.Subspace` / `Structure.ProjectiveSubgeometry`: subspaces and

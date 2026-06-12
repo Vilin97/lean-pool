@@ -1260,8 +1260,8 @@ projects:
       - "68W15"
       - "05C15"
   - slug: desargues
-    title: Projective geometry and central projection
-    summary: Formalizes, following Faure–Frölicher's Modern Projective Geometry, the axiomatic theory of projective geometries, subspaces, and central projections, and exhibits every Mathlib projectivization as a projective geometry.
+    title: Axiomatic projective geometry (Faure–Frölicher)
+    summary: Develops, following Faure and Frölicher's Modern Projective Geometry, the axiomatic theory of projective geometries given by a ternary collinearity relation, with subspaces and subgeometries, proves that the central projection between two lines is a bijection, and exhibits every Mathlib projectivization as a projective geometry. Groundwork from the upstream desargues repository — Desargues' theorem itself is not formalized.
     branch: geometry
     entry_module: LeanPool.Desargues
     authors:
@@ -1271,19 +1271,20 @@ projects:
       authors:
         - Claude-Alain Faure
         - Alfred Frölicher
-      url: https://github.com/oneofvalts/desargues
+      doi: "10.1007/978-94-015-9590-2"
       github_repo: oneofvalts/desargues
     status: verified
     main_declarations:
       - Basic.ProjectiveGeometry
       - Basic.centralProjection
+      - Basic.cen_proj_bij
     main_results:
       - declaration: Basic.ProjectiveGeometry
-        informal: Axiomatizes a projective geometry as a typeclass on a collinearity relation.
+        informal: Axiomatizes a projective geometry as a typeclass (axioms L₁–L₃, Faure–Frölicher p. 26) on a ternary collinearity relation.
       - declaration: Basic.centralProjection
         informal: Defines the central projection of a line onto another from a center point.
       - declaration: Basic.cen_proj_bij
-        informal: Proves that the central projection between two lines is a bijection.
+        informal: The headline theorem — the central projection between two lines is a bijection.
     tags:
       - projective-geometry
       - incidence-geometry
