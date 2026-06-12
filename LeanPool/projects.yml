@@ -1875,30 +1875,29 @@ projects:
       - "30E20"
   - slug: circuitlib
     title: "circuitlib: a circuit verification library for Lean 4"
-    summary: Formalizes digital logic circuits as a monoidal category over Belnap four-valued logic, defining combinational and sequential circuit categories together with verified gates and arithmetic circuits.
-    branch: circuit verification
+    summary: A categorical semantics framework for digital circuits over Belnap's four-valued logic, following Ghica-Kaye-Sprunger. Its main theorems prove that combinational circuits (monotone functions on wire vectors) and sequential circuits (causal monotone stream functions) form symmetric monoidal categories, with a verified full adder as demonstration.
+    branch: categorical circuit semantics
     entry_module: LeanPool.Circuitlib
     authors:
       - Matt Hunzinger
     source:
+      arxiv: "2201.10456"
       url: "https://github.com/matthunz/circuitlib"
       github_repo: matthunz/circuitlib
     status: verified
     main_declarations:
-      - Circuit.CircuitCategory
-      - Circuit.BelnapLevel
-      - Circuit.CombinationalCircuit
+      - Circuit.SequentialCircuitCategory.instSymmetricCategory
     main_results:
-      - declaration: Circuit.CircuitCategory
-        informal: A typeclass packaging the generating morphisms (gates, wire stub/drop/fork/join) of a monoidal category of circuits over a gate set.
-      - declaration: Circuit.BelnapLevel
-        informal: The Belnap four-valued logic lattice (bottom, false, true, top) used as the wire value semantics.
-      - declaration: Circuit.CombinationalCircuit
-        informal: The combinational circuit category over Belnap levels and Belnap gates, with monotone wire-functions as morphisms.
-      - declaration: Circuit.CombinationalCircuit.adder
-        informal: A full-adder circuit built from half adders, proven to compute the correct sum and carry bits.
-      - declaration: Circuit.SequentialCircuitCategory
-        informal: The category of sequential circuits whose morphisms are causal, monotone stream functions.
+      - declaration: Circuit.SequentialCircuitCategory.instSymmetricCategory
+        informal: The category of sequential circuits, whose morphisms are causal monotone stream functions as in Ghica-Kaye-Sprunger's denotational semantics, is symmetric monoidal, with all coherence laws (pentagon, triangle, hexagons, symmetry) proven.
+      - declaration: Circuit.CombinationalCircuitCategory.instSymmetricCategory
+        informal: The category of combinational circuits, with wire counts as objects and monotone wire-vector functions as morphisms, is symmetric monoidal under juxtaposition of wire bundles.
+      - declaration: Circuit.SequentialCircuitCategory.tensorHom_causal
+        informal: Causality is preserved by parallel composition, the key lemma making sequential circuits closed under the tensor product.
+      - declaration: Circuit.BelnapLevel.instSemilatticeSup
+        informal: Belnap's four truth values under the information order form a join-semilattice, the wire-value semantics in which every circuit denotes a monotone function.
+      - declaration: Circuit.CombinationalCircuit.adder_def
+        informal: Correctness of a full adder assembled categorically from two half adders, gates, braidings, and whiskerings, computing the Boolean sum and carry bits; a demonstration of the framework.
     tags:
       - circuits
       - hardware

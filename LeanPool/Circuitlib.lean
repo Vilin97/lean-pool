@@ -10,10 +10,10 @@ import LeanPool.Circuitlib.Circuit.Category.Sequential
 /-!
 # circuitlib: a circuit verification library for Lean 4
 
-Source: url:https://github.com/matthunz/circuitlib
+Source: arxiv:2201.10456, url:https://github.com/matthunz/circuitlib
 Authors: Matt Hunzinger
 Status: verified
-Main declarations: `Circuit.CircuitCategory`, `Circuit.BelnapLevel`, `Circuit.CombinationalCircuit`
+Main declarations: `Circuit.SequentialCircuitCategory.instSymmetricCategory`
 Tags: circuits, hardware, category-theory, combinational, sequential
 MSC: 18M05, 68Q60, 94C11
 -/
