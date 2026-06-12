@@ -7,6 +7,10 @@ import Mathlib.Analysis.Analytic.IsolatedZeros
 import Mathlib.Analysis.Complex.RemovableSingularity
 import Mathlib.MeasureTheory.Integral.CircleIntegral
 
+/-!
+# LeanPool.RiemannMappingTheorem.Cindex
+-/
+
 open Real Complex Function TopologicalSpace Filter Topology Metric MeasureTheory Nat
 
 /-- The argument-principle integral
@@ -84,7 +88,10 @@ lemma eventually_deriv_div_self_eq (hp : HasFPowerSeriesAt f p z₀) (h : p ≠ 
   obtain ⟨r, h2⟩ := hp.has_fpower_series_iterate_dslope_fslope p.order
   have lh1 := h2.differentiableOn.eventually_differentiableAt (Metric.eball_mem_nhds _ h2.r_pos)
   have lh2 := hp.dslope_order_eventually_ne_zero h
-  have lh3 := eventually_eventually_nhds.mpr hp.eq_pow_order_mul_iterate_dslope
+  have lh3 : ∀ᶠ z in 𝓝 z₀, f =ᶠ[𝓝 z] fun w => (w - z₀) ^ p.order * g w := by
+    exact Eventually.of_forall fun _ =>
+      Eventually.of_forall fun w => by
+        simpa [g, smul_eq_mul] using hp.eq_pow_order_mul_iterate_dslope w
   filter_upwards [lh1, lh2, lh3] with z using deriv_div_self_eq_div_add_deriv_div_self
 
 lemma cindex_eq_zero (hU : IsOpen U) (hr : 0 < r) (hcr : closedBall c r ⊆ U)
@@ -120,7 +127,8 @@ lemma cindex_eq_order_aux (hU : IsOpen U) (hr : 0 < r) (h0 : closedBall z₀ r �
   have e6 : (∮ z in C(z₀, r), deriv g z / g z) = 0 :=
     by simpa [cindex, Real.pi_ne_zero, I_ne_zero] using cindex_eq_zero hU hr h0 h1 h2
   have e7 : (∮ z in C(z₀, r), c / (z - z₀)) = 2 * π * I * c := by
-    simpa [div_eq_mul_inv, mul_comm _ _⁻¹] using circle_integral_sub_center_inv_smul hr
+    simpa [div_eq_mul_inv, smul_eq_mul, mul_comm, mul_left_comm, mul_assoc] using
+      circle_integral_sub_center_inv_smul (E := ℂ) (c := z₀) (v := c) hr
   simp [field, cindex, e4, e5, e6, e7]
 
 lemma exists_cindex_eq_order' (hp : HasFPowerSeriesAt f p z₀) (h : p ≠ 0) :

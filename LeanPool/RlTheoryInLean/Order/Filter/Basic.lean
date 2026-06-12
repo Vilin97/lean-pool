@@ -9,6 +9,10 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Real.Basic
 
+/-!
+# LeanPool.RlTheoryInLean.Order.Filter.Basic
+-/
+
 open Finset Real Filter
 open scoped BigOperators
 

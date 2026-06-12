@@ -7,8 +7,6 @@ import LeanPool.BruhatTits.Cartan.Uniqueness
 import LeanPool.BruhatTits.Lattice.Basic
 import LeanPool.BruhatTits.Utils.Matrix
 
-open Module
-
 /-!
 # Distance on lattices and vertices
 
@@ -39,6 +37,9 @@ graph.
 - `BruhatTits.dist_inv_isSimilar`: The distance function is invariant under homothety.
 -/
 
+open Module
+
+
 variable {K : Type*} [Field K]
 variable {R : Subring K} [IsDiscreteValuationRing R] [IsFractionRing R K]
 
@@ -55,7 +56,7 @@ lemma smulBasis_apply_of_isLattice {M : Submodule R (ι → K)} [IsLattice M] (g
     ((smulBasis g b) i).val j = (b.toGL * g) j i := by
   dsimp only [smulBasis, toLinearEquivOfBasis]
   simp only [Basis.map_apply, LinearEquiv.trans_apply, Basis.equivFun_apply, Basis.repr_self,
-    Basis.equivFun_symm_apply, AddSubmonoidClass.coe_finset_sum, SetLike.val_smul, Finset.sum_apply,
+    Basis.equivFun_symm_apply, AddSubmonoidClass.coe_finsetSum, SetLike.val_smul, Finset.sum_apply,
     Pi.smul_apply, «GL».map, RingHom.mapMatrix_apply, Subring.coe_subtype, Units.inv_eq_val_inv,
     coe_units_inv, Units.val_mul]
   change (Finset.univ.sum fun x ↦ g.val.mulVec (Finsupp.single i 1) x * (b x).val j) =
@@ -93,7 +94,6 @@ lemma basis_smul_def_of_isLattice {M : Submodule R (ι → K)} [IsLattice M] (g 
   smulBasis_apply_of_isLattice g b i j
 
 omit [IsDiscreteValuationRing ↥R] in
-@[simp]
 lemma basis_smul_toGL {M : Submodule R (ι → K)} [IsLattice M] (g : GL ι R)
     (b : Basis ι R M) :
     ((MulOpposite.op g) • b).toGL = b.toGL * g := by

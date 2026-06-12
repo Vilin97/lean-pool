@@ -9,8 +9,6 @@ import Mathlib.Data.Int.Cast.Lemmas
 import Mathlib.Algebra.Ring.Basic
 import LeanPool.Polylean.UnitConjecture.EnumDecide
 
-namespace LeanPool.Polylean
-
 /-!
 
 ## Free groups
@@ -27,6 +25,9 @@ homomorphisms on finitely generated free groups.
 - `ℤFree` - a proof that the additive group of integers is a free group on the one-element type.
 - `prodFree` - a proof that the product of free groups is free.
 -/
+
+namespace LeanPool.Polylean
+
 
 /-- Free (Additive) Groups, implemented as a typeclass.
     A free additive group with a basis `X` is an additive group `F` with an

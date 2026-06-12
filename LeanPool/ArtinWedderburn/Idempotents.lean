@@ -34,8 +34,12 @@ def IsOrthogonal (e f : R) : Prop := e * f = 0 ∧ f * e = 0
 def AreOrthogonalIdempotents (e f : R) : Prop :=
   IsIdempotentElem e ∧ IsIdempotentElem f ∧ IsOrthogonal e f
 
-theorem leq_neq_lt (I J : Ideal R) : I ≤ J → I ≠ J → I < J := fun hleq hneq =>
-  lt_of_le_of_ne hleq hneq
+theorem leq_neq_lt (I J : Ideal R) : I ≤ J → I ≠ J → I < J := by
+  intro hleq hneq
+  refine ⟨hleq, ?_⟩
+  intro heq
+  have h : I = J := le_antisymm hleq heq
+  trivial
 
 -- Lemma 2.9
 theorem one_sub_e_larger_span_on_sub_e_sub_f (e f : R)
@@ -45,33 +49,38 @@ theorem one_sub_e_larger_span_on_sub_e_sub_f (e f : R)
     apply Ideal.span_le.mpr
     intro x hx
     rw [Set.mem_singleton_iff] at hx
-    rw [hx, SetLike.mem_coe]
+    rw [hx]
+    rw [SetLike.mem_coe]
     have factor : (1 - e - f) * (1 - e) = 1 - e - f := by
-      have h1 := ef_ort_idem.left
-      have h2 := ef_ort_idem.right.right.right
-      calc (1 - e - f) * (1 - e) = 1 - e - f - e + (e * e) + (f * e) := by noncomm_ring
-        _ = 1 - e - f - e + e + 0 := by rw [h1, h2]
+      calc
+        (1 - e - f) * (1 - e) = 1 - e - f - e + (e * e) + (f * e) := by noncomm_ring
+        _ = 1 - e - f - e + e + 0 := by
+          rw [ef_ort_idem.left, ef_ort_idem.right.right.right]
         _ = 1 - e - f := by noncomm_ring
     rw [Eq.symm factor]
-    exact Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self (1 - e))
+    have in_span : 1 - e ∈ Ideal.span {1 - e} := Ideal.mem_span_singleton_self (1 - e)
+    exact Ideal.mul_mem_left (Ideal.span {1 - e}) (1 - e - f) in_span
   have hneq : Ideal.span {1 - e - f} ≠ Ideal.span {1 - e} := by
     intro heq
     have f_in_ideal : f ∈ Ideal.span {1 - e} := by
       have fact_f : f = f * (1 - e) := by
-        rw [mul_one_sub, ef_ort_idem.right.right.right, sub_zero]
+        calc
+          f = f - f * e := by rw [ef_ort_idem.right.right.right]; noncomm_ring
+          _ = f * (1 - e) := by noncomm_ring
       rw [fact_f]
-      exact Ideal.mul_mem_left _ f (Ideal.mem_span_singleton_self (1 - e))
+      exact Ideal.mul_mem_left (Ideal.span {1 - e}) f (Ideal.mem_span_singleton_self (1 - e))
     rw [← heq] at f_in_ideal
     obtain ⟨r, hr⟩ := Ideal.mem_span_singleton'.mp f_in_ideal
     have fz : f = 0 := by
-      calc f = r * (1 - e - f) := hr.symm
+      calc
+        f = r * (1 - e - f) := by rw [hr]
         _ = r * (1 - e - f - f + e * f + f * f) := by
           rw [ef_ort_idem.right.right.left, ef_ort_idem.right.left]; noncomm_ring
         _ = r * (1 - e - f) * (1 - f) := by noncomm_ring
         _ = f - f * f := by rw [hr]; noncomm_ring
         _ = 0 := by rw [ef_ort_idem.right.left]; noncomm_ring
     contradiction
-  exact leq_neq_lt _ _ hleq hneq
+  exact leq_neq_lt (Ideal.span {1 - e - f}) (Ideal.span {1 - e}) hleq hneq
 
 theorem e_span_larger_e_sub_f (e f : R) (h : AreOrthogonalIdempotents (1 - e) f) (fnz : f ≠ 0) :
     Ideal.span {e - f} < Ideal.span {e} := by
@@ -86,7 +95,7 @@ def HasMatrixUnits (R : Type*) [Ring R] (n : ℕ) : Prop :=
     (∀ i j k l, es i j * es k l = (if j = k then es i l else 0))
 
 /-- Kronecker delta valued in `R`: equal to `1` when `i = j` and `0` otherwise. -/
-def kronecker_delta (n : ℕ) (i j : Fin n) : R := if i = j then 1 else 0
+def kroneckerDelta (n : ℕ) (i j : Fin n) : R := if i = j then 1 else 0
 
 /-- Two elements are pairwise orthogonal when both of their products vanish. -/
 def PairwiseOrthogonal (a b : R) : Prop := a * b = 0 ∧ b * a = 0
@@ -98,9 +107,9 @@ theorem OrtIdem_imply_MatUnits {n : ℕ} (hn : 0 < n)
     (ort : (∀ i j : Fin n, i ≠ j → PairwiseOrthogonal (diag_es i) (diag_es j)))
     (sum_eq_one : ∑ i, diag_es i = 1)
     (row_es : Fin n → R)
-    (row_in : ∀ i : Fin n, row_es i ∈ both_mul (diag_es ⟨0, hn⟩) (diag_es i))
+    (row_in : ∀ i : Fin n, row_es i ∈ bothMul (diag_es ⟨0, hn⟩) (diag_es i))
     (col_es : Fin n → R)
-    (col_in : ∀ i : Fin n, col_es i ∈ both_mul (diag_es i) (diag_es ⟨0, hn⟩))
+    (col_in : ∀ i : Fin n, col_es i ∈ bothMul (diag_es i) (diag_es ⟨0, hn⟩))
     (comp1 : ∀ i, row_es i * col_es i = diag_es ⟨0, hn⟩)
     (comp2 : ∀ i, col_es i * row_es i = diag_es i) : HasMatrixUnits R n := by
   refine ⟨fun i j => (col_es i) * (row_es j), ?_, ?_⟩
@@ -135,49 +144,61 @@ lemma eRf_nonzero (h : IsPrimeRing R) (e f : R) (he : e ≠ 0) (hf : f ≠ 0) :
     ∃ (a : R), e * a * f ≠ 0 := by
   by_contra ha
   push Not at ha
-  have eRf_zero : both_mul e f = {0} := by
-    ext x; constructor
-    · rintro ⟨r, hr⟩; exact Set.mem_of_eq_of_mem hr (ha r)
-    · intro hx; exact ⟨0, by rw [Set.mem_singleton_iff.mp hx]; noncomm_ring⟩
-  exact (prime_ring_equiv.1 h _ _ eRf_zero).elim he hf
+  have eRf_zero : bothMul e f = {0} := by
+    ext x
+    constructor
+    · intro ⟨r, hr⟩
+      specialize ha r
+      exact Set.mem_of_eq_of_mem hr ha
+    · intro hx
+      rw [Set.mem_singleton_iff] at hx
+      refine ⟨0, ?_⟩
+      rw [hx]
+      noncomm_ring
+  apply prime_ring_equiv.1 h at eRf_zero
+  cases eRf_zero with
+  | inl h => exact he h
+  | inr h => exact hf h
 
--- multiplication with e and f preserves both_mul e f
+-- multiplication with e and f preserves bothMul e f
 lemma both_mul_e_f (idem_e : IsIdempotentElem e) (idem_f : IsIdempotentElem f) :
-    ∀ x ∈ both_mul e f, e * x = x ∧ x * f = x := by
+    ∀ x ∈ bothMul e f, e * x = x ∧ x * f = x := by
   rintro x ⟨y, hy⟩
-  constructor
-  · calc e * x = (e * e) * y * f := by rw [hy]; noncomm_ring
+  have he : e * x = x := by
+    calc _ = (e * e) * y * f := by rw [hy]; noncomm_ring
       _ = e * y * f := by rw [idem_e]
-      _ = x := hy.symm
-  · calc x * f = e * y * (f * f) := by rw [hy]; noncomm_ring
+      _ = x := Eq.symm hy
+  have hf : x * f = x := by
+    calc _ = e * y * (f * f) := by rw [hy]; noncomm_ring
       _ = e * y * f := by rw [idem_f]
-      _ = x := hy.symm
+      _ = x := Eq.symm hy
+  exact ⟨he, hf⟩
 
--- both_mul is closed for addition
+-- bothMul is closed for addition
 lemma both_mul_add :
-    ∀ (x y : R), x ∈ both_mul e f → y ∈ both_mul e f → x + y ∈ both_mul e f := by
+    ∀ (x y : R), x ∈ bothMul e f → y ∈ bothMul e f → x + y ∈ bothMul e f := by
   intro x y ⟨a, ha⟩ ⟨b, hb⟩
   use (a + b)
   rw [ha, hb]
   noncomm_ring
 
--- both_mul is closed for multiplication
-lemma both_mul_neg : ∀ (x : R), x ∈ both_mul e f → -x ∈ both_mul e f := by
+-- bothMul is closed for multiplication
+lemma both_mul_neg : ∀ (x : R), x ∈ bothMul e f → -x ∈ bothMul e f := by
   intro x ⟨a, ha⟩
   use -a
   rw [ha]
   noncomm_ring
 
--- both_mul is closed for additive inverses
+-- bothMul is closed for additive inverses
 lemma both_mul_sub :
-    ∀ (x y : R), x ∈ both_mul e f → y ∈ both_mul e f → x - y ∈ both_mul e f := by
+    ∀ (x y : R), x ∈ bothMul e f → y ∈ bothMul e f → x - y ∈ bothMul e f := by
   intro x y ⟨a, ha⟩ ⟨b, hb⟩
   use (a - b)
   rw [ha, hb]
   noncomm_ring
 
 lemma both_mul_mul :
-    ∀ (x y : R), x ∈ both_mul e f → y ∈ both_mul f e → x * y ∈ both_mul e e := by
+    ∀ (x y : R), x ∈ bothMul e f → y ∈ bothMul f e → x * y ∈ bothMul e e := by
   intro x y ⟨a, ha⟩ ⟨b, hb⟩
   use (a * f * f * b)
   rw [ha, hb]
@@ -185,13 +206,13 @@ lemma both_mul_mul :
 
 /-- Witnesses for the "nice idempotents" property: elements `u ∈ eRf`, `v ∈ fRe`
 with `u * v = e` and `v * u = f`. -/
-structure two_nice_idempotents (e f : R) where
+structure twoNiceIdempotents (e f : R) where
   /-- The element of `eRf` whose product with `v` recovers `e`. -/
   u : R
   /-- The element of `fRe` whose product with `u` recovers `f`. -/
   v : R
-  u_mem : u ∈ both_mul e f
-  v_mem : v ∈ both_mul f e
+  u_mem : u ∈ bothMul e f
+  v_mem : v ∈ bothMul f e
   u_mul_v : u * v = e
   v_mul_u : v * u = f
 
@@ -200,7 +221,7 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
     (idem_e : IsIdempotentElem e) (idem_f : IsIdempotentElem f)
     (heRe : IsDivisionRing (CornerSubring idem_e))
     (hfRf : IsDivisionRing (CornerSubring idem_f)) :
-    ∃ u v : R, u ∈ both_mul e f ∧ v ∈ both_mul f e ∧ u * v = e ∧ v * u = f := by
+    ∃ u v : R, u ∈ bothMul e f ∧ v ∈ bothMul f e ∧ u * v = e ∧ v * u = f := by
   have he : e ≠ 0 := corner_ring_division_e_nonzero idem_e heRe
   have hf : f ≠ 0 := corner_ring_division_e_nonzero idem_f hfRf
   have ha : ∃ (a : R), e * a * f ≠ 0 := eRf_nonzero h e f he hf
@@ -227,11 +248,12 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
   have hxy : x * y = (e_corner : R) := by
     rw [Subtype.ext_iff] at hy
     exact hy
-  obtain ⟨c, hc⟩ := x_in_corner_x_eq_e_y_e y.2
+  have hc : ∃ (c : R), y = e * c * e := x_in_corner_x_eq_e_y_e y.2
+  obtain ⟨c, hc⟩ := hc
   have y_val_eq : y.val = e * c * e := hc
   let v := f * (b * e * c) * e
   let u := e * a * f
-  have hv_mem : v ∈ both_mul f e := ⟨b * e * c, rfl⟩
+  have hv_mem : v ∈ bothMul f e := ⟨b * e * c, rfl⟩
   have uv_calc : u * v = e := by
     change e * a * f * (f * (b * e * c) * e) = e
     have h1 : e * a * f * (f * (b * e * c) * e) = e * a * (f * f) * b * e * c * e := by
@@ -249,8 +271,8 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
       _ = e := hxy
   refine ⟨u, v, ?_, hv_mem, uv_calc, ?_⟩
   · exact ⟨a, rfl⟩
-  · have hu : u ∈ both_mul e f := ⟨a, rfl⟩
-    have hv : v ∈ both_mul f e := hv_mem
+  · have hu : u ∈ bothMul e f := ⟨a, rfl⟩
+    have hv : v ∈ bothMul f e := hv_mem
     have fv_eq_v : f * v = (v : R) := (both_mul_e_f idem_f idem_e v hv).1
     have ve_eq_v : v * e = v := (both_mul_e_f idem_f idem_e v hv).2
     have uv_eq_e : u * v = e := uv_calc
@@ -286,12 +308,12 @@ theorem lemma_2_19 (h : IsPrimeRing R) (e f : R)
         _ = 0 := by rw [v_eq_zero]; noncomm_ring
     exact he e_eq_zero
 
-/-- Packaging of `lemma_2_19` as a `two_nice_idempotents` structure. -/
+/-- Packaging of `lemma_2_19` as a `twoNiceIdempotents` structure. -/
 noncomputable
-def lemma_2_19' (h : IsPrimeRing R) (e f : R)
+def lemma219' (h : IsPrimeRing R) (e f : R)
     (idem_e : IsIdempotentElem e) (idem_f : IsIdempotentElem f)
     (heRe : IsDivisionRing (CornerSubring idem_e))
-    (hfRf : IsDivisionRing (CornerSubring idem_f)) : two_nice_idempotents e f := by
+    (hfRf : IsDivisionRing (CornerSubring idem_f)) : twoNiceIdempotents e f := by
   have h := lemma_2_19 h e f idem_e idem_f heRe hfRf
   choose u v hu hv h1 h2 using h
   exact
@@ -303,7 +325,7 @@ def lemma_2_19' (h : IsPrimeRing R) (e f : R)
       v_mul_u := h2 }
 
 theorem f_in_corner_othogonal (e f : R) (idem_e : IsIdempotentElem e)
-    (f_mem : f ∈ both_mul (1 - e) (1 - e)) : IsOrthogonal e f := by
+    (f_mem : f ∈ bothMul (1 - e) (1 - e)) : IsOrthogonal e f := by
   obtain ⟨x, hx⟩ := f_mem
   refine ⟨?_, ?_⟩
   · rw [hx]
@@ -324,10 +346,10 @@ lemma e_idem_to_e_val_idem {e : R} {idem_e : IsIdempotentElem e}
 lemma sum_orthogonal_idem_is_idem (e f : R) (h : AreOrthogonalIdempotents e f) :
     IsIdempotentElem (e + f) := by
   let ⟨idem_e, idem_f, h1, h2⟩ := h
-  unfold IsIdempotentElem
-  rw [show (e + f) * (e + f) = e * e + e * f + f * e + f * f from by noncomm_ring,
-      idem_e, idem_f, h1, h2]
-  simp
+  calc
+    (e + f) * (e + f) = e * e + e * f + f * e + f * f := by noncomm_ring
+    _ = e + 0 + 0 + f := by rw [idem_e, idem_f, h1, h2]
+    _ = e + f := by simp
 
 lemma prod_orthogonal_idem_is_idem (e f : R) (_idem_e : IsIdempotentElem e)
     (idem_f : IsIdempotentElem f) (h : IsOrthogonal e f) :
@@ -341,41 +363,49 @@ lemma prod_orthogonal_idem_is_idem (e f : R) (_idem_e : IsIdempotentElem e)
 
 lemma e_f_orhogonal_f_1_sub_e_eq_f (e f : R) (h : IsOrthogonal e f) :
     f * (1 - e) = f := by
-  rw [mul_one_sub, h.2, sub_zero]
+  calc _ = f - f * e := by noncomm_ring
+    _ = f := by rw [h.2]; noncomm_ring
 
 lemma f_mem_corner_e_e_sub_f_idem (e : R) (idem_e : IsIdempotentElem e)
     (f : CornerSubring idem_e) (idem_f : IsIdempotentElem f) :
     IsIdempotentElem (e - f) := by
+  have idem_one_sub_e : IsIdempotentElem (1 - e) := IsIdempotentElem.one_sub idem_e
   have one_sub_e_f_orthogonal : IsOrthogonal (1 - e) f :=
-    f_in_corner_othogonal (1 - e) f (IsIdempotentElem.one_sub idem_e) (by simp)
+    f_in_corner_othogonal (1 - e) f idem_one_sub_e (by simp)
   have ef_eq_f : e * f = f := left_unit_mul idem_e f.property
   unfold IsIdempotentElem
-  rw [show (e - f) * (e - f) = (e * e) - e * f + (f * f) - f * e from by noncomm_ring,
-      idem_e, ef_eq_f, e_idem_to_e_val_idem idem_f,
-      show e - f + f - f * e = e - f + f * (1 - e) from by noncomm_ring,
-      one_sub_e_f_orthogonal.2]
-  simp
+  calc _ = (e * e) - e * f + (f * f) - f * e := by noncomm_ring
+    _ = e - f + f - f * e := by rw [idem_e, ef_eq_f, (e_idem_to_e_val_idem idem_f)]
+    _ = e - f + f * (1 - e) := by noncomm_ring
+    _ = e - f := by rw [one_sub_e_f_orthogonal.2]; noncomm_ring
 
-lemma ort_comm (e f : R) (ort : IsOrthogonal e f) : IsOrthogonal f e :=
-  ⟨ort.2, ort.1⟩
+lemma ort_comm (e f : R) (ort : IsOrthogonal e f) : IsOrthogonal f e := by
+  unfold IsOrthogonal at *
+  rw [and_comm]
+  exact ort
 
 lemma orth_coercion (e : R) (idem_e : IsIdempotentElem e) (x y : CornerSubring idem_e)
-    (ort : IsOrthogonal x y) : IsOrthogonal x.val y.val :=
-  ⟨(AddSubmonoid.mk_eq_zero _).mp ort.1, (AddSubmonoid.mk_eq_zero _).mp ort.2⟩
+    (ort : IsOrthogonal x y) : IsOrthogonal x.val y.val := by
+  let ⟨h1, h2⟩ := ort
+  refine ⟨?_, ?_⟩
+  · exact (AddSubmonoid.mk_eq_zero (CornerSubring idem_e).toAddSubmonoid).mp h1
+  · exact (AddSubmonoid.mk_eq_zero (CornerSubring idem_e).toAddSubmonoid).mp h2
 
 lemma iso_idem_to_idem (R' : Type*) [Ring R'] (φ : R ≃+* R') (e : R)
     (idem_e : IsIdempotentElem e) : IsIdempotentElem (φ e) := by
-  unfold IsIdempotentElem
+  unfold IsIdempotentElem at *
   rw [← RingEquiv.map_mul, idem_e]
 
 lemma iso_orthogonal_to_orthogonal (R' : Type*) [Ring R'] (φ : R ≃+* R') (x y : R)
-    (ort : IsOrthogonal x y) : IsOrthogonal (φ x) (φ y) :=
-  ⟨by rw [← RingEquiv.map_mul, ort.1, RingEquiv.map_eq_zero_iff],
-   by rw [← RingEquiv.map_mul, ort.2, RingEquiv.map_eq_zero_iff]⟩
+    (ort : IsOrthogonal x y) : IsOrthogonal (φ x) (φ y) := by
+  let ⟨h1, h2⟩ := ort
+  refine ⟨?_, ?_⟩
+  · rw [← RingEquiv.map_mul, h1, RingEquiv.map_eq_zero_iff]
+  · rw [← RingEquiv.map_mul, h2, RingEquiv.map_eq_zero_iff]
 
 -- lemma 2.14
 theorem artinian_ring_has_minimal_left_ideal_of_element [IsArtinian R R] [Nontrivial R] :
-    ∃ I : Ideal R, IsAtom I := IsAtomic.exists_atom _
+    ∃ I : Ideal R, IsAtom I := IsAtomic.exists_atom (Ideal R)
 
 -- obtain an element to extend OrtIdem
 theorem prime_and_artinian_esists_idem_corner_div [Nontrivial R]
@@ -387,10 +417,7 @@ theorem prime_and_artinian_esists_idem_corner_div [Nontrivial R]
     by_contra I_sq_zero
     specialize h I_sq_zero
     let I_neq_zero := hI.1
-    have I_eq_zero : I = ⊥ := by
-      cases h with
-      | inl hi => exact hi
-      | inr hi => exact hi
+    have I_eq_zero : I = ⊥ := by aesop
     contradiction
   obtain ⟨e, _he_mem, henz, he_idem, _hspan, hdiv⟩ :=
     minimal_ideal_I_sq_nonzero_exists_idem_and_div I hI I_sq_nonzero
@@ -412,23 +439,33 @@ structure OrtIdemDiv (R : Type*) [Ring R] extends OrtIdem R where
 
 -- A ring, isomorphic to OrtIdem ring, is itself OrtIdem
 /-- Transport an `OrtIdem R` along a ring isomorphism `φ : R ≃+* R'`. -/
-def isomorphic_OrtIdem (R' : Type*) [Ring R'] (φ : R ≃+* R') (hoi : OrtIdem R) : OrtIdem R' :=
+def isomorphicOrtIdem (R' : Type*) [Ring R'] (φ : R ≃+* R') (hoi : OrtIdem R) : OrtIdem R' :=
   { n := hoi.n,
     f := fun i => φ (hoi.f i),
-    h := fun i => iso_idem_to_idem R' φ (hoi.f i) (hoi.h i),
-    sum_one := by rw [← RingEquiv.map_sum, hoi.sum_one, map_one],
-    orthogonal := fun i j hij => iso_orthogonal_to_orthogonal R' φ _ _ (hoi.orthogonal i j hij) }
+    h := fun i => iso_idem_to_idem R' φ (hoi.f i) (hoi.h i)
+    sum_one :=
+      calc ∑ x : Fin hoi.n, φ (hoi.f x) = φ (∑ x : Fin hoi.n, (hoi.f x)) :=
+            Eq.symm (RingEquiv.map_sum φ hoi.f Finset.univ)
+        _ = φ (1) := by rw [hoi.sum_one]
+        _ = 1 := RingEquiv.map_one φ
+    orthogonal := fun i j hij => by
+      apply iso_orthogonal_to_orthogonal
+      exact hoi.orthogonal i j hij }
 
 -- canonical isomorphism between corner rings
 /-- A ring isomorphism `φ : R ≃+* R'` induces a ring isomorphism between the corner rings
 of an idempotent and of its image under `φ`. -/
-def ring_iso_to_corner_iso (R' : Type*) [Ring R'] (φ : R ≃+* R') (e : R)
+def ringIsoToCornerIso (R' : Type*) [Ring R'] (φ : R ≃+* R') (e : R)
     (idem_e : IsIdempotentElem e) :
     CornerSubring idem_e ≃+* CornerSubring (iso_idem_to_idem R' φ e idem_e) :=
   { toFun := fun x => ⟨φ x.val, by
       rw [subring_mem_idem]
-      have hx : x.val = e * x.val * e := (corner_ring_set_mem idem_e).mp (Subtype.coe_prop x)
-      simpa [RingEquiv.map_mul] using congrArg (⇑φ) hx⟩,
+      have hx : x = e * x * e := by
+        apply (corner_ring_set_mem idem_e).mp
+        exact Subtype.coe_prop x
+      have hx' : φ x = φ (e * x * e) := congrArg (⇑φ) hx
+      rw [RingEquiv.map_mul, RingEquiv.map_mul] at hx'
+      exact hx'⟩,
     invFun := fun y => ⟨φ.symm y.val, by
       have h : y = φ e * y * φ e := by
         apply (corner_ring_set_mem ?idem_e).mp
@@ -445,13 +482,13 @@ def ring_iso_to_corner_iso (R' : Type*) [Ring R'] (φ : R ≃+* R') (e : R)
 
 -- A ring, isomorphic to OrtIdemDiv ring, is itself OrtIdemDiv
 /-- Transport an `OrtIdemDiv R` along a ring isomorphism `φ : R ≃+* R'`. -/
-def isomorphic_OrtIdemDiv {R' : Type*} [Ring R'] (φ : R ≃+* R') (hoi : OrtIdemDiv R) :
+def isomorphicOrtIdemDiv {R' : Type*} [Ring R'] (φ : R ≃+* R') (hoi : OrtIdemDiv R) :
     OrtIdemDiv R' :=
-  { toOrtIdem := isomorphic_OrtIdem R' φ hoi.toOrtIdem,
+  { toOrtIdem := isomorphicOrtIdem R' φ hoi.toOrtIdem,
     div := fun i => by
       let ψ : (CornerSubring (hoi.h i)) ≃+*
-        (CornerSubring ((isomorphic_OrtIdem R' φ hoi.toOrtIdem).h i)) :=
-        ring_iso_to_corner_iso R' φ (hoi.f i) (hoi.h i)
+        (CornerSubring ((isomorphicOrtIdem R' φ hoi.toOrtIdem).h i)) :=
+        ringIsoToCornerIso R' φ (hoi.f i) (hoi.h i)
       apply isomorphic_ring_div ψ (hoi.div i) }
 
 end LeanPool.ArtinWedderburn

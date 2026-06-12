@@ -14,7 +14,7 @@ import LeanPool.DemazureOperatorsLean.Matsumoto
 /-!
 # Demazure Operators and Lean
 
-Source: doi:10.1070/RM1973v028n03ABEH001549
+Source: doi:10.1070/RM1973v028n03ABEH001557
 Authors: Óscar Álvarez Sánchez
 Status: verified
 Main declarations: `Demazure.Dem`, `CoxeterSystem.strongExchangeProperty`

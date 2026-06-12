@@ -135,10 +135,10 @@ theorem locallyInjective_stalkFunctor_map_injective
     [PreservesFilteredColimits (forget C)]
     {X : TopCat.{u}} {F G : X.Presheaf C} (T : F ⟶ G)
     [CategoryTheory.Presheaf.IsLocallyInjective (Opens.grothendieckTopology X) T] :
-    ∀ x : X, Function.Injective ((TopCat.Presheaf.stalkFunctor C x).map T) := by
+  ∀ x : X, Function.Injective ((TopCat.Presheaf.stalkFunctor C x).map T) := by
   intro x s t hst
-  obtain ⟨U, hxU, sU, rfl⟩ := F.germ_exist x s
-  obtain ⟨V, hxV, sV, hsV⟩ := F.germ_exist x t
+  obtain ⟨U, hxU, sU, rfl⟩ := F.exists_germ_eq s
+  obtain ⟨V, hxV, sV, hsV⟩ := F.exists_germ_eq t
   rw [← hsV] at hst ⊢
   rw [TopCat.Presheaf.stalkFunctor_map_germ_apply] at hst
   rw [TopCat.Presheaf.stalkFunctor_map_germ_apply] at hst
@@ -205,23 +205,13 @@ theorem closedIncl_counit_isIso
       (G := Opens.map (closedIncl hs))
       (coverPreserving_opens_map (closedIncl hs))
   haveI : (TopCat.Sheaf.pushforward C (closedIncl hs)).Full := by
-    simpa [TopCat.Sheaf.pushforward] using
-      (CategoryTheory.Functor.IsCoverDense.full_sheafPushforwardContinuous
-        (J := Opens.grothendieckTopology X)
-        (K := Opens.grothendieckTopology (TopCat.of s))
-        (G := Opens.map (closedIncl hs)) :
-          ((Opens.map (closedIncl hs)).sheafPushforwardContinuous
-            C (Opens.grothendieckTopology X)
-            (Opens.grothendieckTopology (TopCat.of s))).Full)
+    change ((Opens.map (closedIncl hs)).sheafPushforwardContinuous C
+      (Opens.grothendieckTopology X) (Opens.grothendieckTopology (TopCat.of s))).Full
+    infer_instance
   haveI : (TopCat.Sheaf.pushforward C (closedIncl hs)).Faithful := by
-    simpa [TopCat.Sheaf.pushforward] using
-      (CategoryTheory.Functor.IsCoverDense.faithful_sheafPushforwardContinuous
-        (J := Opens.grothendieckTopology X)
-        (K := Opens.grothendieckTopology (TopCat.of s))
-        (G := Opens.map (closedIncl hs)) :
-          ((Opens.map (closedIncl hs)).sheafPushforwardContinuous
-            C (Opens.grothendieckTopology X)
-            (Opens.grothendieckTopology (TopCat.of s))).Faithful)
+    change ((Opens.map (closedIncl hs)).sheafPushforwardContinuous C
+      (Opens.grothendieckTopology X) (Opens.grothendieckTopology (TopCat.of s))).Faithful
+    infer_instance
   infer_instance
 
 end TopCat
@@ -237,7 +227,7 @@ theorem pushforward_closedIncl_stalk_eq_zero
     a = 0 := by
   let Gsh : TopCat.Sheaf AddCommGrpCat.{u} (TopCat.of s) := ⟨G, hG⟩
   let F' := (TopCat.Presheaf.pushforward AddCommGrpCat.{u} (TopCat.closedIncl hs)).obj G
-  obtain ⟨U, hxU, sU, rfl⟩ := F'.germ_exist x a
+  obtain ⟨U, hxU, sU, rfl⟩ := F'.exists_germ_eq a
   let W : Opens X := U ⊓ ⟨sᶜ, hs.isOpen_compl⟩
   have hW_map : (Opens.map (TopCat.closedIncl hs)).obj W = ⊥ := by
     exact TopCat.closedIncl_map_eq_bot_of_le_compl (hs := hs) (U := W) inf_le_right
@@ -338,7 +328,9 @@ instance closedIncl_pushforward_preservesEpis
       balanced_of_strongEpiCategory
     have hf_loc : TopCat.Presheaf.IsLocallySurjective f.hom := by
       exact (TopCat.Sheaf.isLocallySurjective_iff_epi f).mpr inferInstance
-    simpa using epi_pushforward_map_closedIncl_of_locallySurjective
+    change Epi ((TopCat.Sheaf.pushforward AddCommGrpCat.{u}
+      (TopCat.closedIncl hs)).map (ObjectProperty.homMk f.hom))
+    exact epi_pushforward_map_closedIncl_of_locallySurjective
       (hs := hs) (F := F.obj) (G := G.obj) F.property G.property f.hom hf_loc
 
 instance closedIncl_pushforward_preservesMonos
@@ -381,7 +373,8 @@ lemma stalkPullbackHom_naturality
         (Opposite.op ((TopologicalSpace.Opens.map f).obj U)) := by
     have h := congr_arg (fun β ↦ NatTrans.app β (Opposite.op U))
       ((Presheaf.pullbackPushforwardAdjunction C f).unit.naturality α)
-    simpa only [Functor.id_obj, Functor.id_map, Functor.comp_obj, Functor.comp_map] using h
+    dsimp at h ⊢
+    exact h
   erw [← Category.assoc]
   rw [Presheaf.stalkFunctor_map_germ U ((ConcreteCategory.hom f) x) hU α]
   erw [Category.assoc]
@@ -389,23 +382,8 @@ lemma stalkPullbackHom_naturality
   erw [Presheaf.germ_stalkPullbackHom_assoc]
   erw [← Category.assoc]
   rw [key]
-  exact (show (((Presheaf.pullbackPushforwardAdjunction C f).unit.app F).app
-        (Opposite.op U) ≫
-        ((Presheaf.pullback C f).map α).app
-          (Opposite.op ((TopologicalSpace.Opens.map f).obj U))) ≫
-        ((Presheaf.pullback C f).obj G).germ
-          ((TopologicalSpace.Opens.map f).obj U) x hU =
-      ((Presheaf.pullbackPushforwardAdjunction C f).unit.app F).app
-        (Opposite.op U) ≫
-        (((Presheaf.pullback C f).obj F).germ
-          ((TopologicalSpace.Opens.map f).obj U) x hU ≫
-        (Presheaf.stalkFunctor C x).map
-          ((Presheaf.pullback C f).map α)) from by
-    simpa only [Category.assoc] using congrArg
-      (fun k => ((Presheaf.pullbackPushforwardAdjunction C f).unit.app F).app
-        (Opposite.op U) ≫ k)
-      (Presheaf.stalkFunctor_map_germ ((TopologicalSpace.Opens.map f).obj U) x hU
-        ((Presheaf.pullback C f).map α)).symm)
+  erw [Presheaf.stalkFunctor_map_germ]
+  exact Category.assoc _ _ _
 
 -- Unit stalk is iso for closed immersions.
 -- Proof chain: triangle identity → pullback.map(η) iso → pullbackIso naturality

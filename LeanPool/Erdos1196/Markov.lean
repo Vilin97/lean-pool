@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 Math Inc. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Math Inc.
+Authors: Math Inc
 -/
 import LeanPool.Erdos1196.Normalization
 import LeanPool.Erdos1196.Preliminaries
@@ -43,22 +43,29 @@ lemma tsum_eq_sum_divisors_of_dvd_and {α : Type*} [AddCommMonoid α] [Topologic
       n.divisors.sum (fun q => if P q then f q else 0) := by
   calc
     (∑' q : ℕ, if q ∣ n ∧ P q then f q else 0) =
-        n.divisors.sum (fun q => if q ∣ n ∧ P q then f q else 0) :=
-          tsum_eq_sum_divisors_of_nondivisors_zero (n := n) hn _ (fun q hq => by simp [hq])
-    _ = n.divisors.sum (fun q => if P q then f q else 0) :=
-          Finset.sum_congr rfl fun q hq => by grind only [= Nat.mem_divisors]
+        n.divisors.sum (fun q => if q ∣ n ∧ P q then f q else 0) := by
+          refine tsum_eq_sum_divisors_of_nondivisors_zero (n := n) hn _ ?_
+          intro q hq
+          simp [hq]
+    _ = n.divisors.sum (fun q => if P q then f q else 0) := by
+          refine Finset.sum_congr rfl ?_
+          intro q hq
+          grind only [= Nat.mem_divisors]
 
 /-- Rewriting `R_Y(m)` as `log m` times the tail sum isolates the input from `tailEstimate`. -/
 private lemma ryEqLogMulTailSum (Y m : ℕ) :
     ry Y m = Real.log (m : ℝ) * tailSum m Y := by
-  calc ry Y m =
+  calc
+    ry Y m =
         ∑' q : ℕ,
           Real.log (m : ℝ) *
-            (if Y ≤ q then Λ q / ((q : ℝ) * Real.log ((m * q : ℕ) : ℝ) ^ 2) else 0) :=
-          tsum_congr fun q => by
-            by_cases hq : Y ≤ q <;>
-              simp [hq, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
-    _ = Real.log (m : ℝ) * tailSum m Y := by rw [tailSum, tsum_mul_left]
+            (if Y ≤ q then Λ q / ((q : ℝ) * Real.log ((m * q : ℕ) : ℝ) ^ 2) else 0) := by
+          refine tsum_congr ?_
+          intro q
+          by_cases hq : Y ≤ q <;>
+            simp [hq, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
+    _ = Real.log (m : ℝ) * tailSum m Y := by
+          rw [tailSum, tsum_mul_left]
 
 /-- Rewriting the main term gives `R_Y(m) = 1 - log Y / log (mY) + O(1 / log m)`. -/
 private lemma ryApproximation :
@@ -71,33 +78,47 @@ private lemma ryApproximation :
   intro Y m hY hm
   have hm1 : 1 ≤ m := le_trans (by decide : 1 ≤ 2) hm
   have htail' := htail hm1 hY
-  have hm_log_pos : 0 < Real.log (m : ℝ) :=
-    Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hm))
-  have hlogMY_pos : 0 < Real.log ((m * Y : ℕ) : ℝ) :=
-    Real.log_pos (by exact_mod_cast lt_of_lt_of_le (by decide : 1 < 4) (Nat.mul_le_mul hm hY))
-  have hlog_le : Real.log (m : ℝ) ≤ Real.log ((m * Y : ℕ) : ℝ) :=
-    Real.log_le_log (by exact_mod_cast lt_of_lt_of_le (by decide : 0 < 2) hm)
-      (by exact_mod_cast show m ≤ m * Y from
-        Nat.le_mul_of_pos_right m (lt_of_lt_of_le (by decide : 0 < 2) hY))
-  have hsq : (Real.log (m : ℝ)) ^ 2 ≤ (Real.log ((m * Y : ℕ) : ℝ)) ^ 2 := by nlinarith
-  have hlog_mul : Real.log ((m * Y : ℕ) : ℝ) = Real.log (m : ℝ) + Real.log (Y : ℝ) := by
-    rw [Nat.cast_mul, Real.log_mul] <;> positivity
-  have hmain : Real.log (m : ℝ) * (1 / Real.log ((m * Y : ℕ) : ℝ)) =
-      1 - Real.log (Y : ℝ) / Real.log ((m * Y : ℕ) : ℝ) := by
-    field_simp [hlogMY_pos.ne']
+  have hm_log_nonneg : 0 ≤ Real.log (m : ℝ) := by
+    exact Real.log_nonneg (by exact_mod_cast hm1)
+  have hm_log_pos : 0 < Real.log (m : ℝ) := by
+    exact Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hm))
+  have hlogMY_pos : 0 < Real.log ((m * Y : ℕ) : ℝ) := by
+    exact Real.log_pos (by
+      exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 4) (show 4 ≤ m * Y by
+        simpa using Nat.mul_le_mul hm hY)))
+  have hsq : (Real.log (m : ℝ)) ^ 2 ≤ (Real.log ((m * Y : ℕ) : ℝ)) ^ 2 := by
+    have hlog_le : Real.log (m : ℝ) ≤ Real.log ((m * Y : ℕ) : ℝ) := by
+      refine Real.log_le_log ?_ ?_
+      · exact_mod_cast (lt_of_lt_of_le (by decide : 0 < 2) hm)
+      · exact_mod_cast (by
+          have hY1 : 1 ≤ Y := le_trans (by decide : 1 ≤ 2) hY
+          simpa using Nat.mul_le_mul_left m hY1 : m ≤ m * Y)
+    nlinarith
+  have hmain :
+      Real.log (m : ℝ) * (1 / Real.log ((m * Y : ℕ) : ℝ)) =
+        1 - Real.log (Y : ℝ) / Real.log ((m * Y : ℕ) : ℝ) := by
+    have hlogMY_ne : Real.log ((m * Y : ℕ) : ℝ) ≠ 0 := hlogMY_pos.ne'
+    have hlog_mul :
+        Real.log ((m * Y : ℕ) : ℝ) = Real.log (m : ℝ) + Real.log (Y : ℝ) := by
+      rw [Nat.cast_mul, Real.log_mul]
+      all_goals positivity
+    field_simp [hlogMY_ne]
     linarith
   rw [ryEqLogMulTailSum]
   calc
     |Real.log (m : ℝ) * tailSum m Y - (1 - Real.log (Y : ℝ) / Real.log ((m * Y : ℕ) : ℝ))|
       = |Real.log (m : ℝ) * (tailSum m Y - 1 / Real.log ((m * Y : ℕ) : ℝ))| := by
           rw [← hmain, mul_sub]
-      _ = |Real.log (m : ℝ)| * |tailSum m Y - 1 / Real.log ((m * Y : ℕ) : ℝ)| := by
-          rw [abs_mul]
-      _ ≤ |Real.log (m : ℝ)| * (C / Real.log ((m * Y : ℕ) : ℝ) ^ 2) := by gcongr
-      _ ≤ C / Real.log (m : ℝ) := by
-          rw [abs_of_nonneg hm_log_pos.le]
-          field_simp [hm_log_pos.ne', hlogMY_pos.ne']
-          exact hsq
+    _ = |Real.log (m : ℝ)| * |tailSum m Y - 1 / Real.log ((m * Y : ℕ) : ℝ)| := by
+      rw [abs_mul]
+    _ ≤ |Real.log (m : ℝ)| * (C / Real.log ((m * Y : ℕ) : ℝ) ^ 2) := by
+      gcongr
+    _ ≤ C / Real.log (m : ℝ) := by
+      rw [abs_of_nonneg hm_log_nonneg]
+      have hm_log_ne : Real.log (m : ℝ) ≠ 0 := hm_log_pos.ne'
+      have hlogMY_ne : Real.log ((m * Y : ℕ) : ℝ) ≠ 0 := hlogMY_pos.ne'
+      field_simp [hm_log_ne, hlogMY_ne]
+      exact hsq
 
 /-- Choosing the cutoff `Y` large enough makes every sufficiently late transition row sum at most
 `1`, so the outgoing weights define an eventual sub-Markov chain. -/
@@ -111,29 +132,46 @@ lemma subMarkovRowSumBound :
   intro Y hYlarge
   refine ⟨Y, le_rfl, ?_⟩
   intro m hm
-  have hY_gt_one : (1 : ℝ) < (Y : ℝ) :=
-    lt_trans (by simpa using Real.one_lt_exp_iff.2 (by nlinarith [hCpos])) hYlarge
-  have hY2 : 2 ≤ Y := by exact_mod_cast hY_gt_one
+  have hY_gt_one : (1 : ℝ) < (Y : ℝ) := by
+    exact lt_trans
+      (by simpa using Real.one_lt_exp_iff.2 (by nlinarith [hCpos]))
+      hYlarge
+  have hY_nat_gt_one : 1 < Y := by
+    exact_mod_cast hY_gt_one
+  have hY2 : 2 ≤ Y := by
+    exact Nat.succ_le_iff.mpr hY_nat_gt_one
   have hm2 : 2 ≤ m := le_trans hY2 hm
-  have hm_log_pos : 0 < Real.log (m : ℝ) :=
-    Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hm2))
+  have hm_log_pos : 0 < Real.log (m : ℝ) := by
+    exact Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hm2))
   have hmY_ge_four : 4 ≤ m * Y := Nat.mul_le_mul hm2 hY2
-  have hlogMY_pos : 0 < Real.log ((m * Y : ℕ) : ℝ) :=
-    Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 4) hmY_ge_four))
+  have hlogMY_pos : 0 < Real.log ((m * Y : ℕ) : ℝ) := by
+    exact Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 4) hmY_ge_four))
   have hupper : ry Y m ≤ 1 - Real.log (Y : ℝ) / Real.log ((m * Y : ℕ) : ℝ) +
-      C / Real.log (m : ℝ) := by linarith [(abs_le.mp (hC hY2 hm2)).2]
+      C / Real.log (m : ℝ) := by
+    linarith [(abs_le.mp (hC hY2 hm2)).2]
   rw [show (∑' q : ℕ, transitionWeight Y m q) = ry Y m by simp [transitionWeight, ry]]
   refine hupper.trans ?_
+  have hmul_le_sq : (m * Y : ℕ) ≤ m * m := Nat.mul_le_mul_left m hm
   have hlogMY_le : Real.log ((m * Y : ℕ) : ℝ) ≤ 2 * Real.log (m : ℝ) := by
-    have h1 : Real.log ((m * Y : ℕ) : ℝ) ≤ Real.log ((m : ℝ) * m) :=
-      Real.log_le_log (by exact_mod_cast lt_of_lt_of_le (by decide : 0 < 4) hmY_ge_four)
-        (by exact_mod_cast Nat.mul_le_mul_left m hm)
-    linarith [show Real.log ((m : ℝ) * m) = 2 * Real.log (m : ℝ) from by
-      rw [Real.log_mul] <;> [ring; positivity; positivity]]
+    have hcast_le : ((m * Y : ℕ) : ℝ) ≤ (m : ℝ) * m := by
+      exact_mod_cast hmul_le_sq
+    calc
+      Real.log ((m * Y : ℕ) : ℝ) ≤ Real.log ((m : ℝ) * m) :=
+        Real.log_le_log
+          (by exact_mod_cast (lt_of_lt_of_le (by decide : 0 < 4) hmY_ge_four))
+          hcast_le
+      _ = 2 * Real.log (m : ℝ) := by
+        rw [Real.log_mul]
+        · ring
+        · positivity
+        · positivity
   have htwoC_lt_logY : 2 * C < Real.log (Y : ℝ) := by
     simpa [Real.log_exp] using (Real.log_lt_log (Real.exp_pos _) hYlarge)
-  have herror : C / Real.log (m : ℝ) ≤ Real.log (Y : ℝ) / Real.log ((m * Y : ℕ) : ℝ) := by
-    field_simp [hm_log_pos.ne', hlogMY_pos.ne']
+  have herror :
+      C / Real.log (m : ℝ) ≤ Real.log (Y : ℝ) / Real.log ((m * Y : ℕ) : ℝ) := by
+    have hm_log_ne : Real.log (m : ℝ) ≠ 0 := hm_log_pos.ne'
+    have hlogMY_ne : Real.log ((m * Y : ℕ) : ℝ) ≠ 0 := hlogMY_pos.ne'
+    field_simp [hm_log_ne, hlogMY_ne]
     nlinarith
   linarith
 
@@ -145,7 +183,7 @@ lemma normalizationEstimate {Y : ℕ} (hY : 2 ≤ Y) :
         |normalizationConstant x Y - 1| ≤ C / Real.log (x : ℝ) := by
   let S : ℝ := ∑ q ∈ Finset.Ico 1 Y, Λ q / (q : ℝ)
   have hS_nonneg : 0 ≤ S :=
-    Finset.sum_nonneg fun q _ =>
+    Finset.sum_nonneg fun q hq =>
       div_nonneg ArithmeticFunction.vonMangoldt_nonneg (by positivity)
   rcases normalizationFirstEntryPart_estimate (Y := Y) hY with
     ⟨Centry, hCentry_pos, xentry, hentry⟩
@@ -153,13 +191,17 @@ lemma normalizationEstimate {Y : ℕ} (hY : 2 ≤ Y) :
   intro x hxx
   have hx3 : 3 ≤ x := le_trans (le_max_left 3 xentry) hxx
   have hsmall := summable_normalizationSmallPrimePart_and_tsum_le (x := x) (Y := Y) hx3
-  have hfirst := hentry (le_trans (le_max_right 3 xentry) hxx)
+  have hxentry : xentry ≤ x := le_trans (le_max_right 3 xentry) hxx
+  have hfirst := hentry hxentry
   have hsmall_nonneg : 0 ≤ ∑' n : ℕ, normalizationSmallPrimePart x Y n :=
-    tsum_nonneg fun n => by by_cases hn : x ≤ n <;>
-      simp [normalizationSmallPrimePart, hn, smallPrimeEntryWeight_nonneg]
-  have hdecomp : normalizationConstant x Y =
-      (∑' n : ℕ, normalizationSmallPrimePart x Y n) +
-        (∑' n : ℕ, normalizationFirstEntryPart x Y n) := by
+    tsum_nonneg fun n => by
+      by_cases hn : x ≤ n
+      · simp [normalizationSmallPrimePart, hn, smallPrimeEntryWeight_nonneg]
+      · simp [normalizationSmallPrimePart, hn]
+  have hdecomp :
+      normalizationConstant x Y =
+        (∑' n : ℕ, normalizationSmallPrimePart x Y n) +
+          (∑' n : ℕ, normalizationFirstEntryPart x Y n) := by
     rw [normalizationConstant_eq_tsum_parts, Summable.tsum_add hsmall.1 hfirst.1]
   calc
     |normalizationConstant x Y - 1|
@@ -220,16 +262,20 @@ lemma visitProbabilityRecurrence_sum_parents {x Y : ℕ} (chain : MarkovLayer x 
             else 0 := by
               simpa using (chain.visitProbabilityRecurrence (n := n) hxn)
     _ = initialDistribution x Y n +
-          n.divisors.sum (fun m =>
-            if x ≤ m ∧ Y ≤ n / m then
-              chain.visitProbability m * transitionWeight Y m (n / m)
+          n.divisors.sum (fun q =>
+            if Y ≤ q ∧ x ≤ n / q then
+              chain.visitProbability (n / q) * transitionWeight Y (n / q) q
             else 0) := by
-          rw [← hswap]
-          congr 1
           simpa [and_assoc, and_left_comm, and_comm] using
             (tsum_eq_sum_divisors_of_dvd_and (n := n) hn
               (P := fun q => Y ≤ q ∧ x ≤ n / q)
               (fun q => chain.visitProbability (n / q) * transitionWeight Y (n / q) q))
+    _ = initialDistribution x Y n +
+          n.divisors.sum (fun m =>
+            if x ≤ m ∧ Y ≤ n / m then
+              chain.visitProbability m * transitionWeight Y m (n / m)
+            else 0) := by
+          rw [hswap]
 
 /--
 For a proper parent `n / q`, any last-jump term with the explicit parent value simplifies to the
@@ -247,10 +293,11 @@ lemma lastJumpContribution_eq_of_formula {x Y : ℕ} (hx : 2 ≤ x) {n q : ℕ}
   have hq_pos : 0 < q := Nat.pos_of_mem_divisors hq
   have hcast_div : ((n / q : ℕ) : ℝ) = (n : ℝ) / q :=
     Nat.cast_div hdvd (by exact_mod_cast hq_pos.ne')
+  have hqR : (q : ℝ) ≠ 0 := by exact_mod_cast hq_pos.ne'
   have hlog_ne : Real.log ((n : ℝ) / q) ≠ 0 := by
     rw [← hcast_div]
-    exact (Real.log_pos (by exact_mod_cast
-      (lt_of_lt_of_le (by decide : 1 < 2) (le_trans hx hxq)))).ne'
+    have hnq2 : 2 ≤ n / q := le_trans hx hxq
+    exact (Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hnq2))).ne'
   rw [hvisit, transitionWeight, if_pos hYq, hcast_div]
   calc
     (1 / (normalizationConstant x Y * ((n : ℝ) / q) * Real.log ((n : ℝ) / q))) *
@@ -264,7 +311,7 @@ lemma lastJumpContribution_eq_of_formula {x Y : ℕ} (hx : 2 ≤ x) {n q : ℕ}
     _ = (1 / normalizationConstant x Y) *
           ((1 / ((n : ℝ) * (Real.log (n : ℝ)) ^ 2)) * Λ q) := by
           congr 1
-          field_simp [hlog_ne, show (q : ℝ) ≠ 0 from by exact_mod_cast hq_pos.ne']
+          field_simp [hlog_ne, hqR]
 
 /--
 The divisor decomposition of `log n` rewrites the explicit target formula as the normalized initial
@@ -329,7 +376,8 @@ lemma explicitFormula_eq_recurrence_rhs {x Y n : ℕ} (hx : 2 ≤ x) (hn : x ≤
               (1 / ((n : ℝ) * (Real.log (n : ℝ)) ^ 2)) * Λ q
             else 0) := by
     rw [Finset.mul_sum]
-    refine Finset.sum_congr rfl fun q hq => ?_
+    refine Finset.sum_congr rfl ?_
+    intro q hq
     by_cases hqx : Y ≤ q ∧ x ≤ n / q
     · by_cases hq1 : q = 1
       · subst hq1
@@ -341,12 +389,19 @@ lemma explicitFormula_eq_recurrence_rhs {x Y n : ℕ} (hx : 2 ≤ x) (hn : x ≤
   calc
     1 / (normalizationConstant x Y * (n : ℝ) * Real.log (n : ℝ)) =
         initialDistribution x Y n +
+          (1 / normalizationConstant x Y) *
+            n.divisors.sum (fun q =>
+              if Y ≤ q ∧ x ≤ n / q then
+                (1 / ((n : ℝ) * (Real.log (n : ℝ)) ^ 2)) * Λ q
+              else 0) := by
+            simpa using
+              formula_eq_initialDistribution_add_filteredVonMangoldt (x := x) (Y := Y) (n := n)
+    _ = initialDistribution x Y n +
           n.divisors.sum (fun q =>
             if Y ≤ q ∧ x ≤ n / q then
               f (n / q) * transitionWeight Y (n / q) q
             else 0) := by
-            rw [hrec]
-            exact formula_eq_initialDistribution_add_filteredVonMangoldt
+          rw [hrec]
     _ = initialDistribution x Y n +
           ∑' q : ℕ,
             if Y ≤ q ∧ q ∣ n ∧ x ≤ n / q then
@@ -376,7 +431,9 @@ lemma visitProbabilityFormula {x Y : ℕ} (chain : MarkovLayer x Y) (hx : 2 ≤ 
   intro q hq hqx hq1
   have hn_pos : 0 < n := by omega
   have hq_ne_zero : q ≠ 0 := (Nat.pos_of_mem_divisors hq).ne'
-  have hlt : n / q < n := Nat.div_lt_self hn_pos (by omega)
+  have hlt : n / q < n := by
+    have hq_gt_one : 1 < q := by omega
+    exact Nat.div_lt_self hn_pos hq_gt_one
   have hcast_div : ((n / q : ℕ) : ℝ) = (n : ℝ) / q :=
     Nat.cast_div (Nat.dvd_of_mem_divisors hq) (by exact_mod_cast hq_ne_zero)
   simpa [hcast_div] using ih (n / q) hlt hqx.2

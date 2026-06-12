@@ -6,6 +6,10 @@ Authors: Scott Harper, Peiran Wu
 
 import LeanPool.OrderPQ.Basic
 
+/-!
+# LeanPool.OrderPQ.Main
+-/
+
 namespace OrderPQ
 
 -- Let `p` and `q` be prime numbers.

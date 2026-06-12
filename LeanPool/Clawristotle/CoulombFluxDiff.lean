@@ -24,8 +24,7 @@ namespace VML
 private lemma aestronglyMeasurable_fderiv_apply
     {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
-    [MeasurableSpace E] [OpensMeasurableSpace E] [SecondCountableTopology E]
-    [MeasureSpace E]
+    [MeasureSpace E] [OpensMeasurableSpace E] [SecondCountableTopology E]
     [MeasurableSpace F] [BorelSpace F] [SecondCountableTopology F]
     {f : E → F} (hf : Differentiable ℝ f) (h : E) :
     AEStronglyMeasurable (fun v => fderiv ℝ f v h) := by

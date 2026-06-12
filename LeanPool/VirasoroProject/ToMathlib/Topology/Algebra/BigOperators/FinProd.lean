@@ -5,6 +5,10 @@ Authors: Kalle Kytölä
 -/
 import Mathlib.Algebra.BigOperators.Finprod
 
+/-!
+# LeanPool.VirasoroProject.ToMathlib.Topology.Algebra.BigOperators.FinProd
+-/
+
 section
 
 lemma Finset.sum_eq_sum_support {ι R : Type*} [AddCommMonoid R] {s : Finset ι} {f : ι → R}

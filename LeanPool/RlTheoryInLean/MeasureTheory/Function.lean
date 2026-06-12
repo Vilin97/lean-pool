@@ -5,8 +5,6 @@ Authors: Shangtong Zhang
 -/
 
 import LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation
-import LeanPool.RlTheoryInLean.MeasureTheory.Function.ConditionalExpectation
-import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space
 import LeanPool.RlTheoryInLean.MeasureTheory.Function.L1Space
 
 /-!

@@ -8,6 +8,10 @@ import Mathlib.GroupTheory.Sylow
 import LeanPool.OrderPQ.MulZMod
 import LeanPool.OrderPQ.SemidirectProduct
 
+/-!
+# LeanPool.OrderPQ.Basic
+-/
+
 /-
 
 ## OrderPQ
@@ -170,8 +174,8 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
     Nonempty (MulZMod q ⋊[φ1] MulZMod p ≃* MulZMod q ⋊[φ2] MulZMod p) := by
   set P := MulZMod p; set Q := MulZMod q; set A := MulAut Q
   have hP_card : Nat.card P = p := nat_card_mulZMod
-  have hR {φ : P →* A} (hφ : φ ≠ 1) : Nat.card φ.range = p
-  · convert hP_card using 1
+  have hR {φ : P →* A} (hφ : φ ≠ 1) : Nat.card φ.range = p := by
+    convert hP_card using 1
     refine Nat.card_eq_of_bijective _ (MonoidHom.ofInjective ?_).symm.bijective
     exact ((IsSimpleGroup.of_prime_card hP_card).monoidHom_ne_one_iff_injective _).mp hφ
   have hA : IsCyclic A := mulAut_MulZMod_isCyclic q
@@ -181,14 +185,14 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
   have hB (B' : Subgroup A) (h : Nat.card B' = p) : B' = B :=
     IsCyclic.subgroup_eq_of_card_eq B' B (hB_card ▸ h)
   obtain ⟨b, hb_generator⟩ := (Subgroup.isCyclic B).exists_generator
-  have hb : (b : A) ≠ (1 : A)
-  · intro hyp
+  have hb : (b : A) ≠ (1 : A) := by
+    intro hyp
     absurd hp.elim.ne_one
     have : Fintype B := Fintype.ofFinite B
     rw [← orderOf_one (G := A), ← hyp, ← hB_card]
     simp [orderOf_eq_card_of_forall_mem_zpowers hb_generator]
-  have hg_exists {φ : P →* A} (hφ : φ ≠ 1) : ∃ g : P, φ g = b
-  · have hb_range : (b : A) ∈ φ.range := by
+  have hg_exists {φ : P →* A} (hφ : φ ≠ 1) : ∃ g : P, φ g = b := by
+    have hb_range : (b : A) ∈ φ.range := by
       rw [hB φ.range (hR hφ)]
       exact b.property
     exact MonoidHom.mem_range.mp hb_range
@@ -203,7 +207,8 @@ lemma nonempty_mulEquiv_mulZMod_prime_semidirectProduct_mulZMod_prime
     rw [hf, hg1, hg2]
   refine Nonempty.intro (SemidirectProduct.congr (MulEquiv.refl Q) f (fun x => ?_))
   ext y
-  simpa using congrArg (fun e : MulAut Q => e y) (hcompat x)
+  change (φ1 x) y = (φ2 (f x)) y
+  exact congrArg (fun e : MulAut Q => e y) (hcompat x)
 
 lemma exists_monoidHom_ne_one_and_nonempty_mulEquiv_semidirectProduct
     (hpq : p < q) (h : Nat.card G = p * q) (h' : ¬IsCyclic G) :
@@ -273,11 +278,11 @@ lemma nonempty_mulEquiv_prod_of_card_eq_prime_pow_two_of_not_isCyclic
     {p : ℕ} [hp : Fact p.Prime] {G : Type*} [Group G] (h : Nat.card G = p ^ 2) (h' : ¬IsCyclic G) :
     Nonempty (G ≃* (MulZMod p) × (MulZMod p)) := by
   have : Finite G := Finite.of_card_eq_neZero h
-  have : Nontrivial G
-  · rw [← Finite.one_lt_card_iff_nontrivial, h, Nat.one_lt_pow_iff (by norm_num1)]
+  have : Nontrivial G := by
+    rw [← Finite.one_lt_card_iff_nontrivial, h, Nat.one_lt_pow_iff (by norm_num1)]
     exact hp.elim.one_lt
-  have ho : ∀ x ≠ (1 : G), orderOf x = p
-  · rwa [← Monoid.exponent_eq_prime_iff hp.elim, ← not_isCyclic_iff_exponent_eq_prime hp.elim h]
+  have ho : ∀ x ≠ (1 : G), orderOf x = p := by
+    rwa [← Monoid.exponent_eq_prime_iff hp.elim, ← not_isCyclic_iff_exponent_eq_prime hp.elim h]
   obtain ⟨x, hx⟩ := exists_ne (1 : G)
   set P : Subgroup G := Subgroup.zpowers x
   have hP : Nat.card P = p := Nat.card_zpowers x ▸ ho x hx
@@ -295,14 +300,14 @@ lemma nonempty_mulEquiv_prod_of_card_eq_prime_pow_two_of_not_isCyclic
     (MulEquiv.ofPrimeCardEq hP nat_card_mulZMod) (MulEquiv.ofPrimeCardEq hQ nat_card_mulZMod)
   refine ⟨MulEquiv.trans ?_ fPQ⟩
   let _ := IsPGroup.commGroupOfCardEqPrimeSq h
-  have inf_eq_bot : P ⊓ Q = (⊥ : Subgroup G)
-  · rw [Subgroup.eq_bot_iff_card]
+  have inf_eq_bot : P ⊓ Q = (⊥ : Subgroup G) := by
+    rw [Subgroup.eq_bot_iff_card]
     have : Nat.card (P ⊓ Q : Subgroup G) ∣ p := hP ▸ Subgroup.card_dvd_of_le inf_le_left
     refine Nat.Prime.eq_one_or_self_of_dvd hp.elim _ this |>.resolve_right (fun hinf => ?_)
     have hPQ : P ⊓ Q = Q := Subgroup.eq_of_le_of_card_ge inf_le_right (Nat.le_of_eq (hinf ▸ hQ))
     exact hyP <| (inf_eq_right.mp hPQ) <| Subgroup.mem_zpowers y
-  have sup_eq_top : P ⊔ Q = (⊤ : Subgroup G)
-  · rw [← Subgroup.coe_eq_univ, Subgroup.normal_mul]
+  have sup_eq_top : P ⊔ Q = (⊤ : Subgroup G) := by
+    rw [← Subgroup.coe_eq_univ, Subgroup.normal_mul]
     refine Subgroup.prod_eq_of_inf_eq_bot_and_card inf_eq_bot ?_
     rw [hP, hQ, h, pow_two]
   exact mulEquivProd P.normal_of_isMulCommutative Q.normal_of_isMulCommutative inf_eq_bot sup_eq_top

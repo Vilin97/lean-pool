@@ -15,6 +15,10 @@ import LeanPool.FormalizationOfBoundedArithmetic.Order
 import LeanPool.FormalizationOfBoundedArithmetic.LanguagePeano
 import LeanPool.FormalizationOfBoundedArithmetic.LanguageZambella
 
+/-!
+# LeanPool.FormalizationOfBoundedArithmetic.Semantics
+-/
+
 namespace FirstOrder.Language
 open BoundedFormula
 
@@ -91,48 +95,71 @@ variable {L : Language} {M : Type*} [L.Structure M] {a b} {n1 n2 n3 n4}
 lemma realize_flip (phi : L.Formula (a ⊕ b)) {v : (b ⊕ a) -> M}
   : phi.flip.Realize v
     <->
-    phi.Realize (v ∘ Sum.swap) := by
-  unfold Formula.Realize Formula.flip
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
+    phi.Realize (v ∘ Sum.swap)
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.flip
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 @[delta0_simps]
 lemma realize_rotate_21 (phi : L.Formula (Vars2 n1 n2)) {v : _ -> M}
-  : phi.rotate_21.Realize v
+  : phi.rotate21.Realize v
     <->
     phi.Realize (v ∘ (fun fv => match fv with
       | .fv1 => .fv2
-      | .fv2 => .fv1)) := by
-  unfold Formula.Realize Formula.rotate_21
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
-  exact Iff.rfl
+      | .fv2 => .fv1))
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.rotate21
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 @[delta0_simps]
 lemma realize_rotate_213 (phi : L.Formula (Vars3 n1 n2 n3)) {v : _ -> M}
-  : phi.rotate_213.Realize v
+  : phi.rotate213.Realize v
     <->
     phi.Realize (v ∘ (fun fv => match fv with
       | .fv1 => .fv2
       | .fv2 => .fv1
-      | .fv3 => .fv3)) := by
-  unfold Formula.Realize Formula.rotate_213
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
-  exact Iff.rfl
+      | .fv3 => .fv3))
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.rotate213
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 @[delta0_simps]
 lemma realize_mkInl (phi : L.Formula a) {v : (a ⊕ Empty) -> M}
   : phi.mkInl.Realize v
     <->
-    phi.Realize (v ∘ Sum.inl) := by
-  unfold Formula.Realize Formula.mkInl
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
+    phi.Realize (v ∘ Sum.inl)
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.mkInl
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 @[delta0_simps]
 lemma realize_display1 (phi : L.Formula (Vars1 n1)) {v : ((Vars1 n1) ⊕ Empty) -> M}
   : phi.display1.Realize v
     <->
-    phi.Realize (v ∘ .inl) := by
-  unfold Formula.Realize Formula.display1
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
+    phi.Realize (v ∘ .inl)
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.display1
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 @[delta0_simps]
 lemma realize_display2 (phi : L.Formula (Vars2 n1 n2))
@@ -141,10 +168,14 @@ lemma realize_display2 (phi : L.Formula (Vars2 n1 n2))
     <->
     phi.Realize (v ∘ (fun fv => match fv with
       | .fv1 => .inl .fv1
-      | .fv2 => .inr .fv1)) := by
-  unfold Formula.Realize Formula.display2
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
-  exact Iff.rfl
+      | .fv2 => .inr .fv1))
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.display2
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 @[delta0_simps]
 lemma realize_display3 (phi : L.Formula (Vars3 n1 n2 n3))
@@ -154,10 +185,14 @@ lemma realize_display3 (phi : L.Formula (Vars3 n1 n2 n3))
     phi.Realize (v ∘ (fun fv => match fv with
       | .fv1 => .inl .fv1
       | .fv2 => .inr .fv1
-      | .fv3 => .inr .fv2)) := by
-  unfold Formula.Realize Formula.display3
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
-  exact Iff.rfl
+      | .fv3 => .inr .fv2))
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.display3
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 @[delta0_simps]
 lemma realize_display4 (phi : L.Formula (Vars4 n1 n2 n3 n4))
@@ -168,37 +203,49 @@ lemma realize_display4 (phi : L.Formula (Vars4 n1 n2 n3 n4))
       | .fv1 => .inl .fv1
       | .fv2 => .inr .fv1
       | .fv3 => .inr .fv2
-      | .fv4 => .inr .fv3)) := by
-  unfold Formula.Realize Formula.display4
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
-  exact Iff.rfl
+      | .fv4 => .inr .fv3))
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.display4
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 
 @[delta0_simps]
 lemma realize_display_swapleft (phi : L.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
     {v : ((Vars2 n1 n2) ⊕ (Vars1 n3)) -> M}
-  : phi.display_swapleft.Realize v
+  : phi.displaySwapleft.Realize v
     <->
     phi.Realize (v ∘ (fun fv => match fv with
       | .inl .fv1 => .inl .fv1
       | .inr .fv1 => .inl .fv2
-      | .inr .fv2 => .inr .fv1)) := by
-  unfold Formula.Realize Formula.display_swapleft
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
-  exact Iff.rfl
+      | .inr .fv2 => .inr .fv1))
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.displaySwapleft
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 @[delta0_simps]
 lemma realize_display_swapleft' (phi : L.Formula (Vars1 n1 ⊕ Vars2 n2 n3))
     {v : ((Vars1 n1 ⊕ Vars1 n2) ⊕ (Vars1 n3)) -> M}
-  : phi.display_swapleft'.Realize v
+  : phi.displaySwapleft'.Realize v
     <->
     phi.Realize (v ∘ (fun fv => match fv with
       | .inl .fv1 => .inl (.inl .fv1)
       | .inr .fv1 => .inl (.inr .fv1)
-      | .inr .fv2 => .inr .fv1)) := by
-  unfold Formula.Realize Formula.display_swapleft'
-  simp only [realize_relabelEquiv, Equiv.coe_fn_mk]
-  exact Iff.rfl
+      | .inr .fv2 => .inr .fv1))
+  :=
+by
+  unfold Formula.Realize
+  unfold Formula.displaySwapleft'
+  rw [realize_relabelEquiv]
+  dsimp only [Equiv.coe_fn_mk]
+  exact Eq.to_iff rfl
 
 
 /-- `peel_iAlls' k` rewrites `(iAlls' φ).Realize` by peeling exactly
@@ -211,8 +258,12 @@ elab_rules : conv
   let some n := k.raw.isNatLit?
     | throwErrorAt k "peel_iAlls': expected a nonnegative integer literal"
   Conv.evalUnfold (← `(conv| unfold iAlls'))
+  Conv.evalSimp (← `(conv| simp only [IsEnum.size.Empty, IsEnum.size.Vars1,
+    IsEnum.size.Vars2, IsEnum.size.Vars3, Nat.add_zero, Nat.reduceAdd]))
   for _ in [:n + 1] do
     Conv.evalUnfold (← `(conv| unfold BoundedFormula.alls))
+    Conv.evalSimp (← `(conv| simp only [IsEnum.size.Empty, IsEnum.size.Vars1,
+      IsEnum.size.Vars2, IsEnum.size.Vars3, Nat.add_zero, Nat.reduceAdd]))
   for _ in [:n] do
     Conv.evalRewrite (← `(conv| rw [BoundedFormula.realize_all]))
     Conv.evalExt (← `(conv| ext))
@@ -228,8 +279,12 @@ elab_rules : conv
   let some n := k.raw.isNatLit?
     | throwErrorAt k "peel_iExs': expected a nonnegative integer literal"
   Conv.evalUnfold (← `(conv| unfold iExs'))
+  Conv.evalSimp (← `(conv| simp only [IsEnum.size.Empty, IsEnum.size.Vars1,
+    IsEnum.size.Vars2, IsEnum.size.Vars3, Nat.add_zero, Nat.reduceAdd]))
   for _ in [:n + 1] do
     Conv.evalUnfold (← `(conv| unfold BoundedFormula.exs))
+    Conv.evalSimp (← `(conv| simp only [IsEnum.size.Empty, IsEnum.size.Vars1,
+      IsEnum.size.Vars2, IsEnum.size.Vars3, Nat.add_zero, Nat.reduceAdd]))
   Conv.evalUnfold (← `(conv| unfold Formula.Realize))
   for _ in [:n] do
     Conv.evalRewrite (← `(conv| rw [BoundedFormula.realize_ex]))
@@ -359,19 +414,16 @@ by
   · cases x
     · simp only [Sum.elim_inl, Nat.add_zero, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.castAdd_zero,
       Fin.cast_refl, Function.comp_id, Function.comp_apply, Sum.map_inl, id_eq]
-    · simp only [Sum.elim_inr, IsEnum.size.Vars1, Nat.add_zero,
-      Nat.succ_eq_add_one, Nat.reduceAdd, Fin.castAdd_zero, Fin.cast_refl, Function.comp_id,
-      Function.comp_apply, Sum.map_inr]
+    · simp only [Sum.elim_inr, Nat.add_zero, Nat.succ_eq_add_one, Nat.reduceAdd,
+      Fin.castAdd_zero, Fin.cast_refl, Function.comp_id, Function.comp_apply, Sum.map_inr]
       simp only [Fin.snoc, Nat.reduceAdd, Fin.val_eq_zero, lt_self_iff_false,
         ↓reduceDIte, Fin.reduceLast, cast_eq]
   · cases x;
-    · simp only [Sum.elim_inl, IsEnum.size.Vars1, Nat.add_zero,
-        Nat.succ_eq_add_one, Nat.reduceAdd, Fin.castAdd_zero, Fin.cast_refl, Function.comp_id,
-        Function.comp_apply, Sum.map_inl, id_eq]
-    · simp only [Sum.elim_inr, IsEnum.size.Vars1, Nat.add_zero,
-      Nat.succ_eq_add_one, Nat.reduceAdd, Fin.castAdd_zero, Fin.cast_refl, Function.comp_id,
-      Function.comp_apply, Sum.map_inr, Fin.snoc, Fin.val_eq_zero, lt_self_iff_false, ↓reduceDIte,
-      Fin.reduceLast, cast_eq]
+    · simp only [Sum.elim_inl, Nat.add_zero, Nat.succ_eq_add_one, Nat.reduceAdd,
+        Fin.castAdd_zero, Fin.cast_refl, Function.comp_id, Function.comp_apply, Sum.map_inl, id_eq]
+    · simp only [Sum.elim_inr, Nat.add_zero, Nat.succ_eq_add_one, Nat.reduceAdd,
+      Fin.castAdd_zero, Fin.cast_refl, Function.comp_id, Function.comp_apply, Sum.map_inr, Fin.snoc,
+      Fin.val_eq_zero, lt_self_iff_false, ↓reduceDIte, Fin.reduceLast, cast_eq]
 
 end realize_iExs'
 
@@ -482,21 +534,34 @@ by
     rhs; intro;
     lhs;
   unfold Formula.Realize
-  have henv : ∀ x : M,
-      ((Sum.elim (Sum.elim v (fun _ : Vars1 n1 => x)) (default : Fin 0 → M)) ∘
-        (Sum.map (Sum.inl : a → a ⊕ Vars1 n1) (id : Fin 0 → Fin 0))) =
-        Sum.elim v Fin.elim0 := fun x => by
-    funext y
-    cases y with
-    | inl y => simp
-    | inr y => exact Fin.elim0 y
   constructor
-  · intro ⟨x, hxle, hphi⟩
-    exact ⟨x, by simpa only [peano.instLEOfStructure, Sum.elim_inl, Sum.elim_inr,
-      Term.realize_relabel, Sum.elim_map, henv x] using hxle, hphi⟩
-  · intro ⟨x, hxle, hphi⟩
-    exact ⟨x, ⟨by simpa only [peano.instLEOfStructure, Sum.elim_inl, Sum.elim_inr,
-      Term.realize_relabel, Sum.elim_map, henv x] using hxle, hphi⟩⟩
+  · intro h
+    rcases h with ⟨x, hx⟩
+    rcases hx with ⟨hxle, hphi⟩
+    have henv :
+        ((Sum.elim (Sum.elim v (fun _ : Vars1 n1 => x)) (default : Fin 0 → M)) ∘
+          (Sum.map (Sum.inl : a → a ⊕ Vars1 n1) (id : Fin 0 → Fin 0))) =
+          Sum.elim v Fin.elim0 := by
+      funext y
+      cases y with
+      | inl y => simp
+      | inr y => exact Fin.elim0 y
+    refine ⟨x, ?_, hphi⟩
+    simpa only [peano.instLEOfStructure, Sum.elim_inl, Sum.elim_inr, Term.realize_relabel,
+      Sum.elim_map, henv] using hxle
+  · intro h
+    rcases h with ⟨x, hxle, hphi⟩
+    have henv :
+        ((Sum.elim (Sum.elim v (fun _ : Vars1 n1 => x)) (default : Fin 0 → M)) ∘
+          (Sum.map (Sum.inl : a → a ⊕ Vars1 n1) (id : Fin 0 → Fin 0))) =
+          Sum.elim v Fin.elim0 := by
+      funext y
+      cases y with
+      | inl y => simp
+      | inr y => exact Fin.elim0 y
+    refine ⟨x, ⟨?_, hphi⟩⟩
+    simpa only [peano.instLEOfStructure, Sum.elim_inl, Sum.elim_inr, Term.realize_relabel,
+      Sum.elim_map, henv] using hxle
 
 namespace realize_iBdAll'
 

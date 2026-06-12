@@ -21,13 +21,13 @@ in a short exact sequence of
 * `MonoidHom.correctorHom`: Given a short exact sequence `0 ⟶ U ⟶ V ⟶ W ⟶ 0` of abelian groups
   and a section `σ : W → V` of it, the corrector `γ : V → U` is a group homomorphism, uniquely
   specified by the condition `v = σ(π(v)) + ι(γ(v))` for any `v : V`.
-* `LinearMap.choose_section`: Given a short exact sequence `0 ⟶ U ⟶ V ⟶ W ⟶ 0` of modules,
+* `LinearMap.chooseSection`: Given a short exact sequence `0 ⟶ U ⟶ V ⟶ W ⟶ 0` of modules,
   where `W` is a free module, one can choose a linear section `σ : W → V` of the short exact
   sequence.
 * `LinearMap.corrector`: Given a short exact sequence `0 ⟶ U ⟶ V ⟶ W ⟶ 0` of modules
   and a section `σ : W → V`, the corrector `γ : V → U` is a linear map, uniquely
   specified by the condition `v = σ(π(v)) + ι(γ(v))` for any `v : V`.
-* `ses_basis`: Given a short exact sequence `0 ⟶ U ⟶ V ⟶ W ⟶ 0` of modules and a section
+* `sesBasis`: Given a short exact sequence `0 ⟶ U ⟶ V ⟶ W ⟶ 0` of modules and a section
   `σ : W → V` of it, one can construct a basis of `V` from a basis of `W` and a basis of `U`.
 
 ## Main statements
@@ -160,7 +160,7 @@ namespace LinearMap
 
 open Module.Free in
 /-- A choice of a linear section of a surjective linear map to a free module. -/
-noncomputable def choose_section {𝕜 : Type*} [CommSemiring 𝕜] {V W : Type*}
+noncomputable def chooseSection {𝕜 : Type*} [CommSemiring 𝕜] {V W : Type*}
     [AddCommGroup V] [Module 𝕜 V] [AddCommGroup W] [Module 𝕜 W] [Module.Free 𝕜 W]
     {g : V →ₗ[𝕜] W} (hg : range g = ⊤) :
     W →ₗ[𝕜] V :=
@@ -172,16 +172,16 @@ open Module.Free in
 lemma choose_section_prop {𝕜 : Type*} [CommSemiring 𝕜] {V W : Type*}
     [AddCommGroup V] [Module 𝕜 V] [AddCommGroup W] [Module 𝕜 W] [Module.Free 𝕜 W]
     {g : V →ₗ[𝕜] W} (hg : range g = ⊤) :
-    g ∘ₗ (choose_section hg) = 1 := by
+    g ∘ₗ (chooseSection hg) = 1 := by
   apply (chooseBasis 𝕜 W).ext fun i ↦ ?_
   have aux (i : ChooseBasisIndex 𝕜 W) : ∃ v, g v = (chooseBasis 𝕜 W) i :=
     range_eq_top.mp hg (chooseBasis 𝕜 W i)
-  simp [choose_section, (aux i).choose_spec]
+  simp [chooseSection, (aux i).choose_spec]
 
 lemma choose_section_prop_apply {𝕜 : Type*} [CommSemiring 𝕜] {V W : Type*}
     [AddCommGroup V] [Module 𝕜 V] [AddCommGroup W] [Module 𝕜 W] [Module.Free 𝕜 W]
     {g : V →ₗ[𝕜] W} (hg : range g = ⊤) (w : W) :
-    g (choose_section hg w) = w :=
+    g (chooseSection hg w) = w :=
   LinearMap.congr_fun (choose_section_prop hg) w
 
 variable {𝕜 : Type*} [Ring 𝕜]
@@ -287,8 +287,8 @@ lemma ses_directSum_isInternal (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ 
 
 /-- From a short exact sequence of modules, a section of it, we can construct a basis of
 the middle module from bases of the two other modules.
-(See `ses_basis` for a more conveniently indexed basis.) -/
-noncomputable def ses_basis' (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ : g ∘ₗ σ = 1) :
+(See `sesBasis` for a more conveniently indexed basis.) -/
+noncomputable def sesBasis' (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ : g ∘ₗ σ = 1) :
     Basis ((j' : Bool) × (fun j ↦ if j then ιU else ιW) j') 𝕜 V := by
   apply (ses_directSum_isInternal hf hfg hgσ).collectedBasis
   let f_iso : U ≃ₗ[𝕜] range f :=
@@ -309,9 +309,9 @@ noncomputable def ses_basis' (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ : 
 
 /-- From a short exact sequence of modules, a section of it, we can construct a basis of
 the middle module from bases of the two other modules. -/
-noncomputable def ses_basis (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ : g ∘ₗ σ = 1) :
+noncomputable def sesBasis (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ : g ∘ₗ σ = 1) :
     Basis (ιU ⊕ ιW) 𝕜 V := by
-  let auxBasis := ses_basis' basU basW hf hfg hgσ
+  let auxBasis := sesBasis' basU basW hf hfg hgσ
   let β : ιU ⊕ ιW ≃ ((j' : Bool) × (fun j ↦ if j then ιU else ιW) j') := {
     toFun i := match i with
       | Sum.inl iu => ⟨true, iu⟩
@@ -331,16 +331,16 @@ noncomputable def ses_basis (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ : g
 
 @[simp] lemma ses_basis_eq_of_left (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ : g ∘ₗ σ = 1)
     (iu : ιU) :
-    ses_basis basU basW hf hfg hgσ (Sum.inl iu) = f (basU iu) := by
-  simp only [ses_basis, ses_basis', ↓dreduceIte, eq_mpr_eq_cast, Bool.false_eq_true, id_eq,
+    sesBasis basU basW hf hfg hgσ (Sum.inl iu) = f (basU iu) := by
+  simp only [sesBasis, sesBasis', ↓dreduceIte, eq_mpr_eq_cast, Bool.false_eq_true, id_eq,
     Basis.coe_reindex, DirectSum.IsInternal.collectedBasis_coe, Equiv.symm_symm, Equiv.coe_fn_mk,
     Function.comp_apply, ↓reduceDIte, cast_eq]
   rfl
 
 @[simp] lemma ses_basis_eq_of_right (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ : g ∘ₗ σ = 1)
     (iw : ιW) :
-    ses_basis basU basW hf hfg hgσ (Sum.inr iw) = σ (basW iw) := by
-  simp only [ses_basis, ses_basis', ↓dreduceIte, eq_mpr_eq_cast, Bool.false_eq_true, id_eq,
+    sesBasis basU basW hf hfg hgσ (Sum.inr iw) = σ (basW iw) := by
+  simp only [sesBasis, sesBasis', ↓dreduceIte, eq_mpr_eq_cast, Bool.false_eq_true, id_eq,
     Basis.coe_reindex, DirectSum.IsInternal.collectedBasis_coe, Equiv.symm_symm, Equiv.coe_fn_mk,
     Function.comp_apply, ↓reduceDIte, cast_eq]
   rfl

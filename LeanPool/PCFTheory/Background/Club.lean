@@ -101,7 +101,7 @@ theorem isClub_univ {α : Ordinal} (h : IsSuccLimit α) : IsClub Set.univ α := 
   · exact fun p plt ↦ ⟨succ p, ⟨mem_univ _, ⟨lt_succ _, h.succ_lt plt⟩⟩⟩
 
 /-- The trivial club consisting of every ordinal below a successor-limit `α`. -/
-def univ_club {α : Ordinal} (h : IsSuccLimit α) : Club α := ⟨Set.univ, isClub_univ h⟩
+def univClub {α : Ordinal} (h : IsSuccLimit α) : Club α := ⟨Set.univ, isClub_univ h⟩
 
 namespace IsClub
 
@@ -222,8 +222,10 @@ theorem isAcc_iSup_of_between {δ : Ordinal.{u}} (C : Set Ordinal) (δLim : IsSu
   rw [Ordinal.lt_iSup_iff] at hp
   obtain ⟨r, hr⟩ := hp
   obtain ⟨q, hq⟩ := h r
-  exact ⟨q, hq.1, hr.trans_le hq.2.1,
-    (Ordinal.lt_iSup_iff).mpr ⟨succ (succ r), hq.2.2.trans_lt (sInc (succ r))⟩⟩
+  use q
+  refine ⟨hq.1, ⟨hr.trans_le hq.2.1, ?_⟩⟩
+  rw [Ordinal.lt_iSup_iff]
+  exact ⟨succ (succ r), hq.2.2.trans_lt (sInc (succ r))⟩
 
 namespace IsClub
 
@@ -364,20 +366,17 @@ end IsClub
 
 theorem exists_unbounded_Iio_cof {α : Ordinal} (hlim : IsSuccLimit α) : ∃ S, S ⊆ Iio α ∧ IsAcc α S
     ∧ #S = Cardinal.lift.{u + 1, u} α.cof := by
-  have h_t_lim : IsSuccLimit (type (· < · : ↑(Iio α) → ↑(Iio α) → Prop)) := by
-    rw [type_lt_Iio]
-    exact isSuccLimit_lift.mpr hlim
   obtain ⟨S, hUnb, hCard⟩ :=
-    Ordinal.cof_eq' (· < · : ↑(Iio α) → ↑(Iio α) → Prop) h_t_lim
+    Order.exists_cof_eq ↑(Iio α)
   refine ⟨Subtype.val '' S, ?_, ?_, ?_⟩
   · exact Subtype.coe_image_subset (Iio α) S
   · rw [isAcc_iff]
     refine ⟨hlim.bot_lt.ne.symm, ?_⟩
     intro β βltα
-    obtain ⟨x, hx⟩ := hUnb ⟨succ β, hlim.succ_lt βltα⟩
-    refine ⟨x.1, ⟨x, hx.1, rfl⟩, ?_, x.2⟩
-    exact (lt_succ β).trans hx.2
-  · rw [Cardinal.mk_image_eq Subtype.val_injective, hCard, type_lt_Iio, lift_cof]
+    obtain ⟨x, hxS, hxle⟩ := hUnb ⟨succ β, hlim.succ_lt βltα⟩
+    refine ⟨x.1, ⟨x, hxS, rfl⟩, ?_, x.2⟩
+    exact (lt_succ β).trans_le hxle
+  · rw [Cardinal.mk_image_eq Subtype.val_injective, hCard, cof_Iio, lift_cof]
 
 theorem exists_club_card {o : Ordinal.{u}} (h : IsSuccLimit o) :
     ∃ C : Club o, #C = Cardinal.lift.{u + 1, u} o.cof := by

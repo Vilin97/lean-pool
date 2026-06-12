@@ -49,7 +49,7 @@ theorem left_inv_implies_divring [Nontrivial R]
 /-- Promote a proof of `IsDivisionRing R` to a Mathlib `DivisionRing R` instance. -/
 @[reducible]
 noncomputable
-def IsDivisionRing_to_DivisionRing (div : IsDivisionRing R) : DivisionRing R := by
+def IsDivisionRingToDivisionRing (div : IsDivisionRing R) : DivisionRing R := by
   unfold IsDivisionRing at div
   haveI : Nontrivial R := by
     obtain ⟨⟨x, hx⟩, _⟩ := div

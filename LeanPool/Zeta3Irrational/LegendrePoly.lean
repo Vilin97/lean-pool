@@ -11,8 +11,16 @@ import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.Data.Real.StarOrdered
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.IntegrationByParts
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 /-!
 # Legendre Polynomials
 
@@ -351,7 +359,7 @@ lemma n_derivative' {x z : ℝ} (n : ℕ) (hx : x ∈ Set.Ioo 0 1) (hz : z ∈ S
 
 lemma shiftedLegendre_poly_eval_zero_eq_zero {m : ℕ} (h : m < n) :
     eval 0 ((⇑derivative)^[m] (X ^ n * (1 - X) ^ n) : ℝ[X]) = 0 := by
-  rw [Polynomial.iterate_derivative_mul, Polynomial.eval_finset_sum]
+  rw [Polynomial.iterate_derivative_mul, Polynomial.eval_finsetSum]
   apply Finset.sum_eq_zero
   intro x hx
   simp_all only [Nat.succ_eq_add_one, Finset.mem_range, nsmul_eq_mul, eval_mul, eval_natCast,
@@ -370,7 +378,7 @@ lemma shiftedLegendre_poly_eval_zero_eq_zero {m : ℕ} (h : m < n) :
 
 lemma shiftedLegendre_poly_eval_one_eq_zero {m : ℕ} (h : m < n) :
     eval 1 ((⇑derivative)^[m] (X ^ n * (1 - X) ^ n) : ℝ[X]) = 0 := by
-  rw [Polynomial.iterate_derivative_mul, Polynomial.eval_finset_sum]
+  rw [Polynomial.iterate_derivative_mul, Polynomial.eval_finsetSum]
   apply Finset.sum_eq_zero
   intro x hx
   simp_all only [Nat.succ_eq_add_one, Finset.mem_range, nsmul_eq_mul, eval_mul, eval_natCast,
@@ -390,8 +398,8 @@ lemma shiftedLegendre_poly_eval_one_eq_zero {m : ℕ} (h : m < n) :
 
 lemma shiftedLegendre_continuousOn {n m : ℕ} : ContinuousOn
     (fun x ↦ eval x ((⇑derivative)^[n - m] (X ^ n * (1 - X) ^ n : ℝ[X]))) (Set.uIcc 0 1) := by
-  simp_rw [Polynomial.iterate_derivative_mul, Polynomial.eval_finset_sum]
-  apply continuousOn_finset_sum
+  simp_rw [Polynomial.iterate_derivative_mul, Polynomial.eval_finsetSum]
+  apply continuousOn_finsetSum
   intro i _
   simp_rw [Algebra.smul_def, eval_mul]
   apply ContinuousOn.mul
@@ -459,9 +467,9 @@ lemma integral_shiftedLegendre_mul_smooth_eq_aux {x z : ℝ} (n m : ℕ) (h : m 
     · apply shiftedLegendre_continuousOn
     · apply special_deriv_div_continuousOn hx hz
     · intro x _
-      simp_rw [Polynomial.iterate_derivative_mul, Polynomial.eval_finset_sum]
+      simp_rw [Polynomial.iterate_derivative_mul, Polynomial.eval_finsetSum]
       simp only [Nat.succ_eq_add_one, nsmul_eq_mul, eval_mul, eval_natCast, map_sum,
-        eval_finset_sum]
+        eval_finsetSum]
       apply HasDerivAt.fun_sum
       intro i _
       simp only [derivative_mul, derivative_natCast, zero_mul, zero_add, eval_mul, eval_natCast,
@@ -555,10 +563,10 @@ lemma integral_shiftedLegendre_mul_smooth_eq_aux {x z : ℝ} (n m : ℕ) (h : m 
           apply DifferentiableAt.const_mul differentiableAt_id
       · apply pow_ne_zero _ hh
     · simp_rw [← Function.iterate_succ_apply', Polynomial.iterate_derivative_mul,
-        Polynomial.eval_finset_sum]
+        Polynomial.eval_finsetSum]
       simp only [Nat.succ_eq_add_one, nsmul_eq_mul, eval_mul, eval_natCast]
       apply ContinuousOn.intervalIntegrable_of_Icc (by norm_num)
-      apply continuousOn_finset_sum
+      apply continuousOn_finsetSum
       intro i _
       apply ContinuousOn.mul continuousOn_const
       · apply ContinuousOn.mul

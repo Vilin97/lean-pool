@@ -18,6 +18,8 @@ import Mathlib.NumberTheory.SumPrimeReciprocals
 import Mathlib.Order.BourbakiWitt
 import Mathlib.Order.CompletePartialOrder
 
+/-! ## Counting functions for joint conditions -/
+
 namespace LeanPool.DeadEnds
 
 noncomputable instance decidablePredViolation (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) :
@@ -69,7 +71,6 @@ noncomputable def explicitDensityFormula (b : ℕ) : ℝ :=
   ∑ T ∈ (Finset.range b).powerset,
     ((-1 : ℝ) ^ T.card) * jointSquarefreeDensity b T
 
-/-! ## Counting functions for joint conditions -/
 
 /-- Count N in [1,X] such that N is squarefree and bN+d is squarefree for all d in T -/
 def countJointSquarefree (b : ℕ) (T : Finset ℕ) (X : ℕ) : ℕ :=

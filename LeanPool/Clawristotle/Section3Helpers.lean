@@ -92,7 +92,9 @@ lemma analysis_nonneg_dbl_zero
         |> fun ⟨ε, εpos, hε⟩ => ⟨ε, εpos, fun w' hw' => hε <| by simpa using hw'⟩
     exact ne_of_gt (lt_of_lt_of_le
       (by simpa using Metric.measure_ball_pos _ _ hε.1)
-      (MeasureTheory.measure_mono fun x hx => hε.2 x hx))
+      (MeasureTheory.measure_mono
+        (show { a : Fin 3 → ℝ | ¬g v a = 0 } ⊇ Metric.ball w ε
+          from fun x hx => hε.2 x hx)))
   intro v w
   by_contra h_nonzero
   push Not at h_nonzero

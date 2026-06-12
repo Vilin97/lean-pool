@@ -8,6 +8,10 @@ import LeanPool.DemazureOperatorsLean.Demazure
 import LeanPool.DemazureOperatorsLean.DemazureAux
 import LeanPool.DemazureOperatorsLean.DemazureAuxRelations
 
+/-!
+# LeanPool.DemazureOperatorsLean.DemazureRelations
+-/
+
 noncomputable section
 open MvPolynomial
 
@@ -24,7 +28,9 @@ lemma demazure_order_two : ∀ (i : Fin n) (p : MvPolynomial (Fin (n + 1)) ℂ),
   DemazureLinear i (DemazureLinear i p) = 0 := by
   intro i p
   apply eq_zero_of_mk'_zero.mp
-  simp only [DemazureLinear, LinearMap.coe_mk, AddHom.coe_mk, ← demazure_definitions_equivalent]
+  dsimp [DemazureLinear]
+  rw[← demazure_definitions_equivalent]
+  rw[← demazure_definitions_equivalent]
   exact demaux_order_two i (mk' p)
 
 -- Demazure operators with adjacent indices have a braid relation
@@ -34,7 +40,7 @@ lemma demazure_commutes_adjacent (i : Fin n) (h : i + 1 < n) : ∀ p : MvPolynom
   intro p
   dsimp [DemazureLinear]
   apply eq_of_eq_mk'.mp
-  simp only [← demazure_definitions_equivalent]
+  repeat rw[← demazure_definitions_equivalent]
   apply demaux_commutes_adjacent
 
 -- Demazure operators with non-adjacent indices commute
@@ -44,8 +50,9 @@ lemma demazure_commutes_non_adjacent (i j : Fin n) (h : NonAdjacent i j) :
   intro p
   dsimp [DemazureLinear]
   apply eq_of_eq_mk'.mp
-  simp only [← demazure_definitions_equivalent]
-  exact demaux_commutes_non_adjacent i j h p
+  repeat rw[← demazure_definitions_equivalent]
+  apply demaux_commutes_non_adjacent
+  exact h
 
 -- Relation between demazure operator and multiplication by non-adjacent monomials
 lemma demazure_mul_monomial_non_adjacent (i j : Fin n) (h : NonAdjacent i j) :
@@ -55,9 +62,12 @@ lemma demazure_mul_monomial_non_adjacent (i j : Fin n) (h : NonAdjacent i j) :
   intro p
   dsimp [DemazureLinear]
   apply eq_of_eq_mk'.mp
-  rw [← mk'_mul]
-  simp only [← demazure_definitions_equivalent]
-  exact demaux_mul_monomial_non_adjacent i j h p
+  repeat rw[← demazure_definitions_equivalent]
+  rw[← mk'_mul]
+  rw[← mk'_mul]
+  rw[← demazure_definitions_equivalent]
+  rw[mk'_mul]
+  apply demaux_mul_monomial_non_adjacent i j h
 
 -- Relation between demazure operator and multiplication by adjacent monomial
 lemma demazure_mul_monomial_adjacent (i : Fin n) (h : i + 1 < n) :
@@ -67,18 +77,27 @@ lemma demazure_mul_monomial_adjacent (i : Fin n) (h : i + 1 < n) :
   intro p
   dsimp [DemazureLinear]
   apply eq_of_eq_mk'.mp
-  rw [mk'_add, ← mk'_mul]
-  simp only [← demazure_definitions_equivalent]
-  exact demaux_mul_monomial_adjacent i h p
+  rw[mk'_add]
+  rw[← mk'_mul]
+  repeat rw[← demazure_definitions_equivalent]
+  apply demaux_mul_monomial_adjacent i h
 
 -- Symmetric polynomials act as scalars wrt Demazure operators
 lemma demazure_mul_symm (i : Fin n) (g f : MvPolynomial (Fin (n + 1)) ℂ)
     (h : MvPolynomial.IsSymmetric g) :
     DemazureLinear i (g*f) = g*(DemazureLinear i f) := by
   dsimp [DemazureLinear]
-  rw [← eq_of_eq_mk', ← demazure_definitions_equivalent, ← mk'_mul, ← mk'_mul,
-    ← demazure_definitions_equivalent]
-  exact demaux_mul_symm i (mk' g) (mk' f) ⟨to_frac g, rfl, h, MvPolynomial.IsSymmetric.one⟩
+  rw[← eq_of_eq_mk']
+  rw[← demazure_definitions_equivalent]
+  rw [← mk'_mul]
+  rw [← mk'_mul]
+  rw[← demazure_definitions_equivalent]
+  have : IsSymmetric (mk' g) := by
+    dsimp [IsSymmetric]
+    use (toFrac g)
+    dsimp [toFrac]
+    exact ⟨rfl, h, MvPolynomial.IsSymmetric.one⟩
+  exact demaux_mul_symm i (mk' g) (mk' f) this
 
 /- This enables to define the Demazure operator as a linear map over the ring of
 symmetric polynomials, the main result of this project -/
@@ -90,9 +109,13 @@ def Dem (i : Fin n) : LinearMap (RingHom.id (MvPolynomial.symmetricSubalgebra (F
   map_smul' := by
     intro r x
     simp only [RingHom.id_apply]
-    exact demazure_mul_symm i r x
-      ((MvPolynomial.mem_symmetricSubalgebra (r : MvPolynomial (Fin (n + 1)) ℂ)).mp
-        (SetLike.coe_mem r))
+    let p : MvPolynomial (Fin (n + 1)) ℂ := r
+    have wah : p = r := by rfl
+    have h : MvPolynomial.IsSymmetric p := by
+      apply (MvPolynomial.mem_symmetricSubalgebra p).mp
+      rw[wah]
+      exact SetLike.coe_mem r
+    exact demazure_mul_symm i p x h
 
 end Demazure
 

@@ -6,6 +6,10 @@ Authors: Siddhartha Gadgil, Anand Rao
 
 import Mathlib.Algebra.Group.Defs
 
+/-!
+# LeanPool.Polylean.ConjInvLength.LengthBound
+-/
+
 namespace LeanPool.Polylean
 /-- The four generators used for words in the conjugation-invariant length example. -/
 inductive Letter where

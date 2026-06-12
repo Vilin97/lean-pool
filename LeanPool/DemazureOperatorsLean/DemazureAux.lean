@@ -6,6 +6,9 @@ Authors: Óscar Álvarez Sánchez
 
 import LeanPool.DemazureOperatorsLean.Demazure
 
+/-!
+# LeanPool.DemazureOperatorsLean.DemazureAux
+-/
 
 noncomputable section
 open MvPolynomial
@@ -33,7 +36,7 @@ structure PolyFraction' (n : ℕ) where
 
 example : PolyFraction' 2 := ⟨X 0 + X 1, 1, one_ne_zero⟩
 /-- View a polynomial as a fraction with denominator one. -/
-def to_frac (p : MvPolynomial (Fin (n + 1)) ℂ) : PolyFraction' n := ⟨p, 1, one_ne_zero⟩
+def toFrac (p : MvPolynomial (Fin (n + 1)) ℂ) : PolyFraction' n := ⟨p, 1, one_ne_zero⟩
 
 /-- The proportionality relation on polynomial fractions. -/
 def r (n : ℕ) : PolyFraction' n → PolyFraction' n → Prop :=
@@ -50,18 +53,25 @@ lemma r_equiv : Equivalence (r n) := by
     change x.numerator * y.denominator = y.numerator * x.denominator at h1
     change y.numerator * z.denominator = z.numerator * y.denominator at h2
     by_cases h3 : y.numerator = 0
-    · simp [h3, y.denominator_ne_zero] at h1 h2
-      simp [h1, h2]
+    · simp[h3, y.denominator_ne_zero] at h1
+      simp[h3, y.denominator_ne_zero] at h2
+      simp[h1, h2]
     · apply poly_cancel_left y.denominator_ne_zero
       apply poly_cancel_left h3
-      linear_combination z.denominator * y.numerator * h1 +
-        x.denominator * y.numerator * h2
+      ring_nf
+      rw[mul_assoc y.numerator]
+      rw[mul_comm y.denominator x.numerator]
+      rw[h1]
+      rw[mul_comm y.numerator (y.numerator * x.denominator)]
+      rw[mul_assoc]
+      rw[h2]
+      ring_nf
 
 instance s (n : ℕ) : Setoid (PolyFraction' n) where
   r := r n
   iseqv := r_equiv
 
-instance has_equiv : HasEquiv (PolyFraction' n) := instHasEquivOfSetoid
+instance hasEquiv : HasEquiv (PolyFraction' n) := instHasEquivOfSetoid
 
 lemma equiv_r {a b : PolyFraction' n} : (r n) a b ↔ a ≈ b := by
   rfl
@@ -97,9 +107,14 @@ lemma mk_eq {a b : PolyFraction' n} :
     mk a = mk b ↔ a.numerator*b.denominator = a.denominator*b.numerator := by
   constructor
   · intro h
-    simpa [r, mul_comm] using (equiv_r.mpr (Quotient.exact h) : r n a b)
+    have hr : a ≈ b := Quotient.exact h
+    rw[← equiv_r] at hr
+    simpa [r, mul_comm] using hr
   · intro h
-    exact Quotient.sound (equiv_r.mp (by simpa [r, mul_comm] using h))
+    change Quotient.mk (s n) a = Quotient.mk (s n) b
+    apply Quotient.sound
+    rw[← equiv_r]
+    simpa [r, mul_comm] using h
 
 -- function to get a representant of a fraction
 lemma get_polyfraction_rep (p : PolyFraction n) : ∃p' : PolyFraction' n, mk p' = p := by
@@ -111,22 +126,32 @@ def add' {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction' n :=
     p.denominator * q.denominator, mul_ne_zero p.denominator_ne_zero q.denominator_ne_zero⟩
 
 /-- Addition of representatives followed by the quotient map. -/
-def add_mk {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction n :=
+def addMk {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction n :=
   fun p q => mk (add' p q)
 
 lemma add'_s {n : ℕ} : ∀ a₁ b₁ a₂ b₂ : PolyFraction' n, a₁ ≈ a₂ → b₁ ≈ b₂ →
-    add_mk a₁ b₁ = add_mk a₂ b₂ := by
+    addMk a₁ b₁ = addMk a₂ b₂ := by
   intro a1 b1 a2 b2 h1 h2
-  simp only [add_mk, add', mk_eq]
-  rw [← equiv_r] at h1 h2
+  simp only [addMk, add', mk_eq]
+  ring_nf
+  rw[← equiv_r] at h1
+  rw[← equiv_r] at h2
   change a1.numerator * a2.denominator = a2.numerator * a1.denominator at h1
   change b1.numerator * b2.denominator = b2.numerator * b1.denominator at h2
-  linear_combination b1.denominator * b2.denominator * h1 +
-    a1.denominator * a2.denominator * h2
+  rw[mul_comm a1.numerator]
+  rw[mul_assoc b1.denominator]
+  rw[h1]
+  rw[mul_comm b1.numerator]
+  rw[mul_assoc a1.denominator]
+  rw[mul_comm b1.numerator]
+  rw[mul_assoc a1.denominator]
+  rw[mul_assoc a2.denominator]
+  rw[h2]
+  ring_nf
 
 /-- Addition on quotient polynomial fractions. -/
 def add : PolyFraction n → PolyFraction n → PolyFraction n :=
-  fun p q ↦ Quotient.lift₂ (add_mk) (add'_s) p q
+  fun p q ↦ Quotient.lift₂ (addMk) (add'_s) p q
 
 -- Enable use of + notation
 instance addition : Add (PolyFraction n) := ⟨add⟩
@@ -141,11 +166,21 @@ lemma sub'_s {n : ℕ} : ∀ a₁ b₁ a₂ b₂ : PolyFraction' n, a₁ ≈ a�
     (sub' a₁ b₁) = (sub' a₂ b₂) := by
   intro a1 b1 a2 b2 h1 h2
   simp only [sub', mk_eq]
-  rw [← equiv_r] at h1 h2
+  ring_nf
+  rw[← equiv_r] at h1
+  rw[← equiv_r] at h2
   change a1.numerator * a2.denominator = a2.numerator * a1.denominator at h1
   change b1.numerator * b2.denominator = b2.numerator * b1.denominator at h2
-  linear_combination b1.denominator * b2.denominator * h1 -
-    a1.denominator * a2.denominator * h2
+  rw[mul_comm a1.numerator]
+  rw[mul_assoc b1.denominator]
+  rw[h1]
+  rw[mul_comm b1.numerator]
+  rw[mul_assoc a1.denominator]
+  rw[mul_comm b1.numerator]
+  rw[mul_assoc a1.denominator]
+  rw[mul_assoc a2.denominator]
+  rw[h2]
+  ring_nf
 
 /-- Subtraction on quotient polynomial fractions. -/
 def sub : PolyFraction n → PolyFraction n → PolyFraction n :=
@@ -157,22 +192,29 @@ def mul' {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction' n :=
     mul_ne_zero p.denominator_ne_zero q.denominator_ne_zero⟩
 
 /-- Multiplication of representatives followed by the quotient map. -/
-def mul_mk {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction n :=
+def mulMk {n : ℕ} : PolyFraction' n → PolyFraction' n → PolyFraction n :=
   fun p q => mk (mul' p q)
 
 lemma mul'_s {n : ℕ} : ∀ a₁ b₁ a₂ b₂ : PolyFraction' n, a₁ ≈ a₂ → b₁ ≈ b₂ →
-    (mul_mk a₁ b₁) = (mul_mk a₂ b₂) := by
+    (mulMk a₁ b₁) = (mulMk a₂ b₂) := by
   intro a1 b1 a2 b2 h1 h2
-  simp only [mul_mk, mul', mk_eq]
-  rw [← equiv_r] at h1 h2
+  simp only [mulMk, mul', mk_eq]
+  ring_nf
+  rw[← equiv_r] at h1
+  rw[← equiv_r] at h2
   change a1.numerator * a2.denominator = a2.numerator * a1.denominator at h1
   change b1.numerator * b2.denominator = b2.numerator * b1.denominator at h2
-  linear_combination b1.numerator * b2.denominator * h1 +
-    a2.numerator * a1.denominator * h2
+  rw[mul_comm a1.numerator]
+  rw[mul_assoc b1.numerator]
+  rw[h1]
+  rw[mul_comm b1.numerator]
+  rw[mul_assoc (a2.numerator * a1.denominator)]
+  rw[h2]
+  ring_nf
 
 /-- Multiplication on quotient polynomial fractions. -/
 def mul : PolyFraction n → PolyFraction n → PolyFraction n :=
-  fun p q ↦ Quotient.lift₂ (mul_mk) (mul'_s) p q
+  fun p q ↦ Quotient.lift₂ (mulMk) (mul'_s) p q
 
 -- Enable use of * notation
 instance multiplication' : Mul (PolyFraction' n) := ⟨mul'⟩
@@ -203,39 +245,49 @@ def neg' (p : PolyFraction' n) : PolyFraction' n :=
   ⟨-p.numerator, p.denominator, p.denominator_ne_zero⟩
 
 /-- Negation of representatives followed by the quotient map. -/
-def neg_mk (p : PolyFraction' n) : PolyFraction n := mk (neg' p)
+def negMk (p : PolyFraction' n) : PolyFraction n := mk (neg' p)
 
-lemma neg_s (n : ℕ) : ∀ (a₁ a₂ : PolyFraction' n), a₁ ≈ a₂ → (neg_mk a₁) = (neg_mk a₂) := by
+lemma neg_s (n : ℕ) : ∀ (a₁ a₂ : PolyFraction' n), a₁ ≈ a₂ → (negMk a₁) = (negMk a₂) := by
   intro a1 a2 h
-  simp only [neg_mk, neg', mk_eq, neg_mul, mul_neg, neg_inj]
-  rw [← equiv_r] at h
+  simp only [negMk, neg', mk_eq, neg_mul, mul_neg, neg_inj]
+  ring_nf
+  rw[← equiv_r] at h
   change a1.numerator * a2.denominator = a2.numerator * a1.denominator at h
-  linear_combination h
+  rw[h]
+  ring_nf
 
 /-- Negation on quotient polynomial fractions. -/
-def neg (p : PolyFraction n) : PolyFraction n := Quotient.lift neg_mk (neg_s n) p
+def neg (p : PolyFraction n) : PolyFraction n := Quotient.lift negMk (neg_s n) p
 
 -- some basic properties of these operations
 lemma add_comm (p q : PolyFraction n) : add p q = add q p := by
   rcases get_polyfraction_rep p with ⟨p', hp⟩
   rcases get_polyfraction_rep q with ⟨q', hq⟩
-  rw [← hp, ← hq]
-  simp [add, lift2_r, add_mk, add']
-  ring
+  simp only [add]
+  rw[← hp]
+  rw[← hq]
+  simp[lift2_r]
+  simp[addMk, add']
+  ring_nf
 
 lemma add_assoc (p q r : PolyFraction n) : add (add p q) r = add p (add q r) := by
   rcases get_polyfraction_rep p with ⟨p', hp⟩
   rcases get_polyfraction_rep q with ⟨q', hq⟩
   rcases get_polyfraction_rep r with ⟨r', hr⟩
-  rw [← hp, ← hq, ← hr]
-  have hpq : add (mk p') (mk q') = mk (add' p' q') := by simp [add, add_mk]
-  have hqr : add (mk q') (mk r') = mk (add' q' r') := by simp [add, add_mk]
-  rw [hpq, hqr]
-  simp only [add, lift2_r, add']
+  rw[← hp]
+  rw[← hq]
+  rw[← hr]
+  have hpq : (add (mk p') (mk q')) = mk (add' p' q') := by
+    simp[add, addMk]
+  have hqr : (add (mk q') (mk r')) = mk (add' q' r') := by
+    simp[add, addMk]
+  rw[hpq, hqr]
+  simp only [add, lift2_r]
+  simp only [add']
   apply Quotient.sound
   apply equiv_r.mp
-  simp [Demazure.r, add']
-  ring
+  simp[Demazure.r, add']
+  ring_nf
 
 -- We don't prove that it is a ring since we don't need all the properties for our use
 
@@ -283,10 +335,10 @@ def DemAux (i : Fin n) (p : PolyFraction n) : PolyFraction n :=
 
 /- This definition is equivalent to the direct one on the polynomial ring-/
 lemma demazure_definitions_equivalent' : ∀ i : Fin n, ∀ p : MvPolynomial (Fin (n + 1)) ℂ,
-  mk (DemAux' i (to_frac p)) = mk' (DemazureFun i p) := by
+  mk (DemAux' i (toFrac p)) = mk' (DemazureFun i p) := by
   intro i p
   simp only [mk', mk_eq, mul_one]
-  simp only [DemAux', to_frac, SwapVariables, renameEquiv_apply, map_one, mul_one, one_mul]
+  simp only [DemAux', toFrac, SwapVariables, renameEquiv_apply, map_one, mul_one, one_mul]
   have h : DemazureDenominator i * ((DemazureNumerator i p) /ₘ (DemazureDenominator i)) =
       DemazureNumerator i p := demazure_division_exact' i p
   apply (SwapVariables (Fin.castSucc i) (0 : Fin (n + 1))).injective
@@ -313,10 +365,10 @@ lemma demazure_definitions_equivalent' : ∀ i : Fin n, ∀ p : MvPolynomial (Fi
 lemma demazure_definitions_equivalent : ∀ i : Fin n, ∀ p : MvPolynomial (Fin (n + 1)) ℂ,
   DemAux i (mk' p) = mk' (DemazureFun i p) := by
   intro i p
-  rw [mk']
+  rw[mk']
   simp only [DemAux]
-  rw [lift_r]
-  rw [← demazure_definitions_equivalent' i p]
+  rw[lift_r]
+  rw[← demazure_definitions_equivalent' i p]
   rfl
 
 /- We can prove equalities in the ring of polynomials by reducing to the polynomial fraction case.
@@ -330,14 +382,14 @@ lemma eq_zero_of_mk'_zero {p : MvPolynomial (Fin (n + 1)) ℂ} : mk' p = zero �
   · intro h
     simpa [mk', zero] using h
   · intro h
-    simp [h, mk', zero]
+    simp[h, mk', zero]
 
 lemma eq_of_eq_mk' {p q : MvPolynomial (Fin (n + 1)) ℂ} : mk' p = mk' q ↔ p = q := by
   constructor
   · intro h
     simpa [mk'] using h
   · intro h
-    simp [h]
+    simp[h]
 
 
 /- Some lemmas for interplay between mk and add -/
@@ -345,11 +397,12 @@ lemma eq_of_eq_mk' {p q : MvPolynomial (Fin (n + 1)) ℂ} : mk' p = mk' q ↔ p 
 lemma simp_add {p q : PolyFraction n} : p + q = add p q := rfl
 
 lemma mk_add {p q : PolyFraction' n} :  ((mk p) : PolyFraction n) + mk q = mk (p + q) := by
-  have h1 : p + q = add' p q := rfl
-  simp [add, add_mk, add', h1]
+  have h1 : p+q = add' p q := by rfl
+  have h2 : mk p + mk q = add (mk p) (mk q) := by rfl
+  simp[add, addMk, add', h1, h2]
 
 lemma mk'_add : ∀ (p q : MvPolynomial (Fin (n + 1)) ℂ), mk' (p + q) = mk' p + mk' q := by
-  simp[mk', add, add_mk, add']
+  simp[mk', add, addMk, add']
 
 @[simp]
 lemma simp_mul' {p q : PolyFraction' n} :
@@ -360,10 +413,12 @@ lemma simp_mul' {p q : PolyFraction' n} :
 lemma simp_mul {p q : PolyFraction n} : p * q = mul p q := rfl
 
 lemma mk_mul {p q : PolyFraction' n} :  ((mk p) : PolyFraction n) * mk q = mk (p * q) := by
-  simp [mul, mul_mk, mul']
+  have h1 : p*q = mul' p q := by rfl
+  have h2 : mk p * mk q = mul (mk p) (mk q) := by rfl
+  simp[mul, mulMk, mul']
 
 lemma mk'_mul {p q : MvPolynomial (Fin (n + 1)) ℂ} :  mk' p * mk' q = mk' (p * q) := by
-  simp[mk', mul_mk, mul', mul]
+  simp[mk', mulMk, mul', mul]
 
 end Demazure
 

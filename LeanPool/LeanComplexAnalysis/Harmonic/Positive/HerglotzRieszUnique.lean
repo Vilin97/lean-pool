@@ -8,8 +8,16 @@ import Mathlib.Analysis.Normed.Group.FunctionSeries
 import Mathlib.MeasureTheory.Measure.HasOuterApproxClosed
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.Topology.ContinuousMap.StoneWeierstrass
-import Mathlib.Tactic
-
+import Mathlib.Tactic.Common
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.Ring.RingNF
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Positivity
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Polyrith
 /-!
 # Uniqueness of the Herglotz–Riesz measure
 
@@ -37,7 +45,8 @@ lemma moments_eq_integers (μ₁ μ₂ : ProbabilityMeasure (sphere (0 : ℂ) 1)
     have h_inv : ∀ x : sphere (0 : ℂ) 1, x ^ (-m : ℤ) = starRingEnd ℂ (x ^ m) := by
       simp only [mem_sphere_zero_iff_norm, Subtype.forall]
       intro x hx
-      rw [zpow_neg, inv_eq_of_mul_eq_one_right]
+      rw [zpow_neg]
+      rw [inv_eq_of_mul_eq_one_right]
       simp [← mul_pow, mul_conj, normSq_eq_norm_sq, hx]
     have aux : ∀ ν : ProbabilityMeasure (sphere (0 : ℂ) 1),
         ∫ x : sphere (0 : ℂ) 1, (x : ℂ) ^ (-m : ℤ) ∂ν =
@@ -47,7 +56,11 @@ lemma moments_eq_integers (μ₁ μ₂ : ProbabilityMeasure (sphere (0 : ℂ) 1)
             ∫ (x : sphere (0 : ℂ) 1), (starRingEnd ℂ) ((x : ℂ) ^ m) ∂↑ν from integral_conj.symm]
       refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
       exact h_inv x
-    rw [aux μ₁, aux μ₂, h]
+    have h_inv_integral : ∫ x : sphere (0 : ℂ) 1, (x : ℂ) ^ (-m : ℤ) ∂μ₁ =
+      starRingEnd ℂ (∫ x : sphere (0 : ℂ) 1, (x : ℂ) ^ m ∂μ₁) ∧ ∫ x : sphere (0 : ℂ) 1,
+        (x : ℂ) ^ (-m : ℤ) ∂μ₂ = starRingEnd ℂ (∫ x : sphere (0 : ℂ) 1, (x : ℂ) ^ m ∂μ₂) :=
+      ⟨aux μ₁, aux μ₂⟩
+    rw [h_inv_integral.1, h_inv_integral.2, h]
   · have hn : 0 ≤ n := by omega
     lift n to ℕ using hn
     simp only [zpow_natCast]
@@ -65,8 +78,9 @@ lemma continuous_zpow_on_unit_circle (n : ℤ) :
        · convert continuous_subtype_val.pow (n := m+1) using 1
          infer_instance
        · intro x
-         apply pow_ne_zero
-         rw [← norm_ne_zero_iff, mem_sphere_zero_iff_norm.mp x.2]
+         apply pow_ne_zero _
+         have : ‖(x : ℂ)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
+         rw [← norm_ne_zero_iff, this]
          exact one_ne_zero
 
 /-- The span of moments is dense in the space of continuous functions on the unit circle. -/
@@ -88,8 +102,8 @@ lemma span_moments_dense : (Submodule.span ℂ (Set.range (fun n : ℤ => Contin
         mem_sphere_iff_norm, sub_zero, Subtype.mk.injEq] at this hA hA'
       convert this A _ using 2
       · intro x y hxy
-        have hx_norm : ‖(x : ℂ)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
-        have hy_norm : ‖(y : ℂ)‖ = 1 := mem_sphere_zero_iff_norm.mp y.2
+        have hx_norm : ‖(x : ℂ)‖ = 1 := by exact mem_sphere_zero_iff_norm.mp x.2
+        have hy_norm : ‖(y : ℂ)‖ = 1 := by exact mem_sphere_zero_iff_norm.mp y.2
         specialize hA x.1 hx_norm y.1 hy_norm
         obtain ⟨f, hf_mem, hf_ne⟩ := hA (Subtype.coe_ne_coe.mpr hxy)
         exact ⟨f, ⟨f, hf_mem, rfl⟩, hf_ne⟩
@@ -214,7 +228,7 @@ lemma measure_eq_of_moments (μ₁ μ₂ : Measure (sphere (0 : ℂ) 1))
       obtain ⟨c, rfl⟩ := hf
       simp_rw [Finsupp.sum, ContinuousMap.coe_sum, ContinuousMap.coe_smul,
         ContinuousMap.coe_mk, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
-      rw [integral_finset_sum, integral_finset_sum]
+      rw [integral_finsetSum, integral_finsetSum]
       · refine Finset.sum_congr rfl (fun i _ => ?_)
         rw [show (∫ (a : ↑(sphere 0 1)), c i * (↑a : ℂ) ^ i ∂μ₁) =
               c i * ∫ (a : ↑(sphere 0 1)), (↑a : ℂ) ^ i ∂μ₁ from
@@ -223,13 +237,20 @@ lemma measure_eq_of_moments (μ₁ μ₂ : Measure (sphere (0 : ℂ) 1))
               c i * ∫ (a : ↑(sphere 0 1)), (↑a : ℂ) ^ i ∂μ₂ from
             MeasureTheory.integral_const_mul _ _,
             h_integrals]
-      all_goals (intro n _; apply_rules [Integrable.const_mul, integrable_const]
-                 refine Integrable.mono' (g := fun _ => 1) ?_ ?_ ?_
-                 · norm_num
-                 · exact Continuous.aestronglyMeasurable (continuous_zpow_on_unit_circle n)
-                 · filter_upwards with x
-                   have hx : ‖(x : ℂ)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
-                   simp [hx])
+      · intro n hn; apply_rules [Integrable.const_mul, integrable_const]
+        refine Integrable.mono' (g := fun _ => 1) ?_ ?_ ?_
+        · norm_num
+        · exact Continuous.aestronglyMeasurable (continuous_zpow_on_unit_circle n)
+        · filter_upwards with x
+          have hx : ‖(x : ℂ)‖ = 1 := by exact mem_sphere_zero_iff_norm.mp x.2
+          simp [hx]
+      · intro n hn; apply_rules [Integrable.const_mul, integrable_const]
+        refine Integrable.mono' (g := fun _ => 1) ?_ ?_ ?_
+        · norm_num
+        · exact Continuous.aestronglyMeasurable (continuous_zpow_on_unit_circle n)
+        · filter_upwards with x
+          have hx : ‖(x : ℂ)‖ = 1 := by exact mem_sphere_zero_iff_norm.mp x.2
+          simp [hx]
   have h_eq : ∀ f : C((sphere (0 : ℂ) 1), ℝ), ∫ x, f x ∂μ₁ = ∫ x, f x ∂μ₂ := by
     intro f
     convert congr_arg re (h_integrals (ContinuousMap.mk (fun x =>
@@ -251,15 +272,15 @@ lemma coeffs_eq_of_series_eq (c1 c2 : ℕ → ℂ)
     · congr
       ext n
       ring
-    · have h_summable : Summable (fun n => ‖z‖ ^ (n + 1) * ‖c1 n‖) :=
-        Summable.of_nonneg_of_le (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _)
+    · have h_summable : Summable (fun n => ‖z‖ ^ (n + 1) * ‖c1 n‖) := by
+        exact Summable.of_nonneg_of_le (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _)
           (norm_nonneg _)) (fun n => mul_le_mul_of_nonneg_left (hc1.choose_spec n)
             (pow_nonneg (norm_nonneg _) _))
               (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
                 hz |> Summable.comp_injective <| Nat.succ_injective)
       exact Summable.of_norm <| by simpa using h_summable
-    · have h_summable : Summable (fun n => ‖z‖ ^ (n + 1) * ‖c2 n‖) :=
-        Summable.of_nonneg_of_le (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _)
+    · have h_summable : Summable (fun n => ‖z‖ ^ (n + 1) * ‖c2 n‖) := by
+        exact Summable.of_nonneg_of_le (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _)
           (norm_nonneg _))
             (fun n => mul_le_mul_of_nonneg_left (hc2.choose_spec n)
               (pow_nonneg (norm_nonneg _) _))
@@ -344,12 +365,18 @@ lemma kernel_expansion (z : ℂ) (hz : ‖z‖ < 1) (w : ℂ) (hw : ‖w‖ = 1)
     (w + z) / (w - z) = 1 + 2 * ∑' n : ℕ, z ^ (n + 1) * star (w ^ (n + 1)) := by
   have h_expand : (1 : ℂ) + 2 * z / (w - z) = 1 + 2 * ∑' n : ℕ, (z / w) ^ (n + 1) := by
     have h_expand : ∑' n : ℕ, (z / w) ^ (n + 1) = z / w / (1 - z / w) := by
-      rw [show ∑' n : ℕ, (z / w) ^ (n + 1) = (z / w) * (∑' n : ℕ, (z / w) ^ n) from by
-          rw [← tsum_mul_left]; exact tsum_congr fun _ => by ring]
-      rw [tsum_geometric_of_norm_lt_one (by rw [norm_div, hw, div_one]; exact hz)]
-      exact div_eq_mul_inv _ _
+      have h_geo_series : (∑' n : ℕ, (z / w) ^ (n + 1)) =
+        (z / w) * (∑' n : ℕ, (z / w) ^ n) := by
+        rw [← tsum_mul_left]; exact tsum_congr fun _ => by ring
+      rw [h_geo_series, tsum_geometric_of_norm_lt_one]
+      · rfl
+      · rw [norm_div, hw, div_one]
+        exact hz
     rw [h_expand]
-    have w_ne : w ≠ 0 := by rintro rfl; simp at hw
+    have w_ne : w ≠ 0 := by
+      intro hw0
+      rw [hw0, norm_zero] at hw
+      simp at hw
     field_simp [w_ne]
   convert h_expand using 1
   · rw [one_add_div]
@@ -385,7 +412,10 @@ lemma integral_kernel_expansion
         refine le_trans (norm_tsum_le_tsum_norm ?_) ?_
         · simpa using summable_nat_add_iff 1 |>.2 <|
              summable_geometric_of_lt_one (norm_nonneg _) hz
-        · exact le_of_eq (tsum_congr fun i => by simp [norm_pow])
+        · refine le_of_eq ?_
+          congr 1
+          ext i
+          simp [norm_pow]
   rw [h_integral, integral_add (integrable_const 1)
         ((MeasureTheory.Integrable.const_mul h_integrable_tsum (2 : ℂ)))]
   rw [show ∫ a : sphere (0 : ℂ) 1, (2 : ℂ) *
@@ -397,7 +427,9 @@ lemma integral_kernel_expansion
   congr 1
   rw [integral_tsum]
   · congr 1
-    exact tsum_congr fun i => MeasureTheory.integral_const_mul (z ^ (i + 1))
+    apply tsum_congr
+    intro i
+    exact MeasureTheory.integral_const_mul (z ^ (i + 1))
       (fun a : sphere (0 : ℂ) 1 => star ((a : ℂ) ^ (i + 1)))
   · fun_prop (disch := norm_num)
   · refine ne_of_lt (lt_of_le_of_lt (ENNReal.tsum_le_tsum
@@ -426,23 +458,40 @@ theorem HerglotzRiesz_representation_uniqueness
       (∑' n : ℕ, z ^ (n + 1) * ∫ x : sphere (0 : ℂ) 1, star (x.val ^ (n + 1)) ∂μ₁) =
       (∑' n : ℕ, z ^ (n + 1) * ∫ x : sphere (0 : ℂ) 1, star (x.val ^ (n + 1)) ∂μ₂) := by
       intro z hz
-      have hz' : z ∈ ball 0 1 := mem_ball_zero_iff.mpr hz
-      linear_combination' h z hz' / 2 - integral_kernel_expansion μ₁ z hz / 2 +
-          integral_kernel_expansion μ₂ z hz / 2
+      have h_integral_expansion1 : (∫ x : sphere (0 : ℂ) 1, ((x.val + z) / (x.val - z)) ∂μ₁) =
+        1 + 2 * (∑' n : ℕ, z ^ (n + 1) * ∫ x : sphere (0 : ℂ) 1,
+          star (x.val ^ (n + 1)) ∂μ₁) := integral_kernel_expansion μ₁ z hz
+      have h_integral_expansion2 : (∫ x : sphere (0 : ℂ) 1, ((x.val + z) / (x.val - z)) ∂μ₂) =
+        1 + 2 * (∑' n : ℕ, z ^ (n + 1) * ∫ x : sphere (0 : ℂ) 1,
+          star (x.val ^ (n + 1)) ∂μ₂) := integral_kernel_expansion μ₂ z hz
+      have hz' : z ∈ ball 0 1 := by
+        rw [Metric.mem_ball, dist_eq]
+        simp [hz]
+      linear_combination h z hz' / 2 - h_integral_expansion1 / 2 + h_integral_expansion2 / 2
+    have h_bounds : ∀ n : ℕ, ‖∫ x : sphere (0 : ℂ) 1, star (x.val ^ (n + 1)) ∂μ₁‖ ≤ 1 ∧
+                             ‖∫ x : sphere (0 : ℂ) 1, star (x.val ^ (n + 1)) ∂μ₂‖ ≤ 1 := by
+      intro n
+      refine ⟨?_, ?_⟩ <;> refine le_trans (norm_integral_le_integral_norm _) ?_
+      all_goals simp
     apply_rules [coeffs_eq_of_series_eq]
-    · exact ⟨1, fun n => by refine le_trans (norm_integral_le_integral_norm _) ?_; simp⟩
-    · exact ⟨1, fun n => by refine le_trans (norm_integral_le_integral_norm _) ?_; simp⟩
+    · exact ⟨1, fun n => h_bounds n |>.1⟩
+    · exact ⟨1, fun n => h_bounds n |>.2⟩
   have h : μ₁.toMeasure = μ₂.toMeasure := by
     apply_rules [measure_eq_of_moments]
     ext (_ | k) <;> simp only [star_pow, RCLike.star_def, pow_zero, integral_const, probReal_univ,
       one_smul] at h_coeffs ⊢
-    convert congr_arg Star.star (h_coeffs k) using 1 <;>
+    convert congr_arg Star.star (h_coeffs k) using 1
     · rw [Complex.star_def]
-      rw [show ∀ μ : ProbabilityMeasure (sphere (0 : ℂ) 1),
-            (starRingEnd ℂ) (∫ (x : sphere (0 : ℂ) 1),
-              (starRingEnd ℂ) (x : ℂ) ^ (k + 1) ∂↑μ) =
-            ∫ (x : sphere (0 : ℂ) 1), (starRingEnd ℂ) ((starRingEnd ℂ) (x : ℂ) ^ (k + 1)) ∂↑μ
-          from fun μ => integral_conj.symm]
+      rw [show (starRingEnd ℂ) (∫ (x : sphere (0 : ℂ) 1),
+              (starRingEnd ℂ) (x : ℂ) ^ (k + 1) ∂↑μ₁) =
+            ∫ (x : sphere (0 : ℂ) 1), (starRingEnd ℂ) ((starRingEnd ℂ) (x : ℂ) ^ (k + 1)) ∂↑μ₁
+          from integral_conj.symm]
+      simp
+    · rw [Complex.star_def]
+      rw [show (starRingEnd ℂ) (∫ (x : sphere (0 : ℂ) 1),
+              (starRingEnd ℂ) (x : ℂ) ^ (k + 1) ∂↑μ₂) =
+            ∫ (x : sphere (0 : ℂ) 1), (starRingEnd ℂ) ((starRingEnd ℂ) (x : ℂ) ^ (k + 1)) ∂↑μ₂
+          from integral_conj.symm]
       simp
   exact Subtype.ext h
 

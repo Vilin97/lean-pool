@@ -6,7 +6,6 @@ Authors: Shangtong Zhang
 
 import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 import LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite
-import LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite
 import LeanPool.RlTheoryInLean.Probability.MarkovChain.Trajectory
 
 /-!

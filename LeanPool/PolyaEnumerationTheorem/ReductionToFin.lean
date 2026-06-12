@@ -82,7 +82,7 @@ private lemma inv_smul (g : G) (f : Fin enum.card → Y) :
 /-- A bijection between the distinct colorings of `X` with colors in `Y` under the group action
     of `G` on `X` and the distinct colorings of `Fin enum.card` with colors in `Y` under the
     induced group action of `G` on `Fin enum.card`. -/
-def equiv_of_quotient_of_quotient_Fin :
+def equivOfQuotientOfQuotientFin :
     (Quotient (MulAction.orbitRel G (X → Y))) ≃
       (Quotient (MulAction.orbitRel G (Fin enum.card → Y))) where
   toFun := Quotient.map (fwdColoring X Y) (by
@@ -99,10 +99,11 @@ def equiv_of_quotient_of_quotient_Fin :
 /-- An instance of `Fintype` for the distinct colorings of `Fin enum.card` with colors in `Y` under
     the induced group action of `G` on `Fin enum.card`. Required by
     `numDistinctColorings_eq_numDistinctColorings_of_Fin`. -/
-instance [Fintype (Quotient (MulAction.orbitRel G (X → Y)))] :
+instance instFintypeQuotientForallFinCardOrbitRelOfForallLeanPool
+    [Fintype (Quotient (MulAction.orbitRel G (X → Y)))] :
     Fintype (Quotient (MulAction.orbitRel G (Fin enum.card → Y))) :=
   Fintype.ofEquiv (Quotient (MulAction.orbitRel G (X → Y)))
-    (equiv_of_quotient_of_quotient_Fin X Y G)
+    (equivOfQuotientOfQuotientFin X Y G)
 
 /-- The number of distinct colorings of `X` with colors in `Y` under the group action of `G` on
     `X` is equal to the number of distinct colorings of `Fin enum.card` with colors in `Y` under
@@ -110,7 +111,7 @@ instance [Fintype (Quotient (MulAction.orbitRel G (X → Y)))] :
 lemma numDistinctColorings_eq_numDistinctColorings_of_Fin
     [Fintype (Quotient (MulAction.orbitRel G (X → Y)))] :
     numDistinctColorings X Y G = numDistinctColorings (Fin (enum.card)) Y G :=
-  Fintype.card_congr (equiv_of_quotient_of_quotient_Fin X Y G)
+  Fintype.card_congr (equivOfQuotientOfQuotientFin X Y G)
 
 end ReductionToFin
 

@@ -6,6 +6,12 @@ Authors: Siddhartha Gadgil, Anand Rao
 
 import LeanPool.Polylean.Complexes.Structures.Category
 
+/-!
+# LeanPool.Polylean.Complexes.Structures.Groupoid
+
+Imported Lean Pool material for `LeanPool.Polylean.Complexes.Structures.Groupoid`.
+-/
+
 namespace LeanPool.Polylean
 
 /-- A `Groupoid` is defined as a `Category` in which every morphism has an inverse satisfying certain conditions. -/

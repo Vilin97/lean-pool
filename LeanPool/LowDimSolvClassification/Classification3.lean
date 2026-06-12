@@ -17,6 +17,10 @@ import LeanPool.LowDimSolvClassification.GeneralResults
 import LeanPool.LowDimSolvClassification.LemmasDim3
 import LeanPool.LowDimSolvClassification.InstancesLowDim
 
+/-!
+# LeanPool.LowDimSolvClassification.Classification3
+-/
+
 open Module
 open Submodule
 namespace LieAlgebra.Dim3
@@ -414,9 +418,9 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
   let adb0 : End K (Family K α β) := Family.ade₁
   let adv : End K (Family K α' β') := ad K (Family K α' β') v
   let adv_restr : (commutator K (Family K α' β')) →ₗ[K] (commutator K (Family K α' β'))
-      := Family.ad_restr v
+      := Family.adRestr v
   have v0b0v (u : commutator K (Family K α' β')) : ((v 0) •
-      ((Family.ade₁_restr α' β') u)) = adv_restr u := by
+      ((Family.ade₁Restr α' β') u)) = adv_restr u := by
     have : u.val 0 = 0 := by
       obtain ⟨u, hu⟩ := u
       have u_in_span : u ∈ span K {Family.e₂, Family.e₃} := by
@@ -434,7 +438,7 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
       symm at h
       apply_fun (fun x => x 0) at h
       exact h
-    unfold Family.ade₁_restr adv_restr
+    unfold Family.ade₁Restr adv_restr
     rw [Family.ad_restr_apply, Family.ad_restr_apply]
     rw [@SetLike.mk_smul_of_tower_mk]
     refine Subtype.mk_eq_mk.mpr ?_
@@ -455,7 +459,7 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
     ring
   let B_basis' : Basis (Fin 2) K (commutator K (Family K α' β')) := commutatorBasis α' β' hα'
   let M_adb0'_restr : Matrix (Fin 2) (Fin 2) K := LinearMap.toMatrix (B_basis') (B_basis')
-      (Family.ade₁_restr α' β')
+      (Family.ade₁Restr α' β')
   set M_adv_restr : Matrix (Fin 2) (Fin 2) K := LinearMap.toMatrix (B_basis')
       (B_basis') adv_restr with hM_adv_restr
   have eq_Matrix : (v 0) • M_adb0'_restr = M_adv_restr := by
@@ -463,7 +467,7 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
     simp only [Matrix.smul_apply]
     unfold M_adb0'_restr M_adv_restr
     simp only [LinearMap.toMatrix_apply]
-    have : ((v 0) • (Family.ade₁_restr α' β' (B_basis' j))) = adv_restr (B_basis' j) := by
+    have : ((v 0) • (Family.ade₁Restr α' β' (B_basis' j))) = adv_restr (B_basis' j) := by
       exact v0b0v (B_basis' j)
     rw [← this]
     rw [@LinearEquiv.map_smul]
@@ -491,10 +495,10 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
     rw [Family.M_trace]
     simp only [smul_eq_mul]
   let B_basis : Basis (Fin 2) K (commutator K (Family K α β)) := commutatorBasis α β hα
-  let f_restr := LieEquiv.commutator_equiv f
-  have conjad : f_restr ∘ₗ Family.ade₁_restr α β ∘ₗ f_restr.symm = adv_restr := by
+  let f_restr := LieEquiv.commutatorEquiv f
+  have conjad : f_restr ∘ₗ Family.ade₁Restr α β ∘ₗ f_restr.symm = adv_restr := by
     ext x
-    unfold Family.ade₁_restr
+    unfold Family.ade₁Restr
     rw [LinearMap.coe_comp]
     rw [LinearEquiv.coe_coe, Function.comp_apply, LinearMap.coe_comp, Function.comp_apply]
     rw [Family.ad_restr_apply, Family.ad_restr_apply]
@@ -511,13 +515,13 @@ private lemma iso_iff_mp {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0)
     rw [LieEquiv.commutator_equiv_apply]
     rw [LieEquiv.apply_symm_apply]
   have det_adv_restr_eq_det_adb0 : LinearMap.det adv_restr = LinearMap.det
-      (Family.ade₁_restr α β) := by
+      (Family.ade₁Restr α β) := by
     rw [← conjad]
     apply LinearMap.det_conj
   have tr_adv_restr_eq_tr_adb0 : LinearMap.trace K _ adv_restr = LinearMap.trace _ _
-      (Family.ade₁_restr α β) := by
+      (Family.ade₁Restr α β) := by
     rw [← conjad]
-    exact LinearMap.trace_conj' (Family.ade₁_restr α β) f_restr.toLinearEquiv
+    exact LinearMap.trace_conj' (Family.ade₁Restr α β) f_restr.toLinearEquiv
   use (Units.mk0 (v 0) v0n0)
   simp only [Fin.isValue, Units.val_mk0]
   rw [← neg_eq_iff_eq_neg (b := (v 0)^2 * α')] at det_adv_restr_eq
@@ -579,7 +583,7 @@ theorem iso_iff {α α' β β' : K} (hα : α ≠ 0) (hα' : α' ≠ 0) :
 theorem not_iso_hyperbolic {α β : K} (hα : α ≠ 0) : IsEmpty (Family K α β ≃ₗ⁅K⁆ Hyperbolic K) := by
   constructor
   intro f
-  let f' := LieEquiv.commutator_equiv f
+  let f' := LieEquiv.commutatorEquiv f
   --f(e₁) = t e₁ + w, with w in commutator, t ≠ 0
   have hfe₁ : ∃ (t : K) (w : Hyperbolic K), f Family.e₁ = t • Hyperbolic.e₁ + w ∧
       w ∈ commutator K (Hyperbolic K) := by
@@ -598,7 +602,7 @@ theorem not_iso_hyperbolic {α β : K} (hα : α ≠ 0) : IsEmpty (Family K α �
     rw [h, zero_smul, zero_add] at hfe₁
     rw [← hfe₁] at wcomm
     apply Family.e₁_not_in_comm (β := β) hα
-    let e₁up := f.symm.commutator_equiv ⟨f Family.e₁, wcomm⟩
+    let e₁up := f.symm.commutatorEquiv ⟨f Family.e₁, wcomm⟩
     have : e₁up.val = Family.e₁ := by
       unfold e₁up
       rw [LieEquiv.commutator_equiv_apply]
@@ -606,13 +610,13 @@ theorem not_iso_hyperbolic {α β : K} (hα : α ≠ 0) : IsEmpty (Family K α �
     rw [← this]
     exact e₁up.prop
   --restrict ad(e₁) and ad(f(e₁)) to the respective commutators.
-  let ade₁ := Family.ade₁_restr α β
-  let adfe₁ := Hyperbolic.ad_restr (f Family.e₁)
+  let ade₁ := Family.ade₁Restr α β
+  let adfe₁ := Hyperbolic.adRestr (f Family.e₁)
   have ad_conj : adfe₁ = f' ∘ₗ ade₁ ∘ₗ f'.symm := by
     ext x
     rw [LinearMap.coe_comp]
     rw [LinearEquiv.coe_coe, Function.comp_apply, LinearMap.coe_comp, Function.comp_apply]
-    unfold adfe₁ ade₁ Family.ade₁_restr
+    unfold adfe₁ ade₁ Family.ade₁Restr
     rw [Hyperbolic.ad_restr_apply, Family.ad_restr_apply]
     unfold Hyperbolic.adjoint Family.adjoint
     simp only [ad_apply]
@@ -641,7 +645,7 @@ theorem not_iso_hyperbolic {α β : K} (hα : α ≠ 0) : IsEmpty (Family K α �
     Family.e₂_in_comm (hα := hα)⟩ := by
     rw [ade₁_id]
     simp only [LinearMap.smul_apply, LinearMap.id_coe, id_eq, SetLike.mk_smul_mk]
-  unfold ade₁ Family.ade₁_restr at this
+  unfold ade₁ Family.ade₁Restr at this
   rw [Family.ad_restr_apply] at this
   simp only [SetLike.mk_smul_mk, Subtype.mk.injEq] at this
   unfold Family.adjoint at this

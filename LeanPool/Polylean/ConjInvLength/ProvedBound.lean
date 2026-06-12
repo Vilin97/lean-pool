@@ -6,6 +6,10 @@ Authors: Siddhartha Gadgil, Anand Rao
 
 import LeanPool.Polylean.ConjInvLength.LengthBound
 
+/-!
+# LeanPool.Polylean.ConjInvLength.ProvedBound
+-/
+
 namespace LeanPool.Polylean
 open Letter
 

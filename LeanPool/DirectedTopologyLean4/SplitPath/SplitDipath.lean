@@ -5,6 +5,10 @@ Authors: Dominique Lawson, Henning Basold, Peter Bruin
 -/
 import LeanPool.DirectedTopologyLean4.SplitPath.SplitPath
 
+/-!
+# LeanPool.DirectedTopologyLean4.SplitPath.SplitDipath
+-/
+
 /- This file contains definitions for splitting a directed path `γ : Dipath x y` at some point
   `T : I` yielding two different directed paths:
   * Its first part, from `x` to `γ T`, given by evaluating `γ` on `[0, T]`.
@@ -75,20 +79,20 @@ lemma second_part_apply (γ : Dipath x₀ x₁) (T t : I) :
 
 /-- The reparametrization of `I` used to glue the first and second part of a dipath split at
 `T` back into the original dipath, packaged as a directed self-map of `I`. -/
-def trans_reparam_map {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) : D(I,I) where
-  toFun := fun t => ⟨trans_reparam T t, trans_reparam_mem_I t hT₀ hT₁⟩
+def transReparamMap {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) : D(I,I) where
+  toFun := fun t => ⟨transReparam T t, trans_reparam_mem_I t hT₀ hT₁⟩
   continuous_toFun := Continuous.subtype_mk (continuous_trans_reparam hT₀ hT₁) _
   directed_toFun := DirectedUnitInterval.directed_of_monotone _ (monotone_trans_reparam hT₀ hT₁)
 
-lemma trans_reparam_map_zero {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) : trans_reparam_map hT₀ hT₁ 0 = 0
+lemma trans_reparam_map_zero {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) : transReparamMap hT₀ hT₁ 0 = 0
     :=
   Subtype.ext (trans_reparam_zero T)
-lemma trans_reparam_map_one {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) : trans_reparam_map hT₀ hT₁ 1 = 1 :=
+lemma trans_reparam_map_one {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) : transReparamMap hT₀ hT₁ 1 = 1 :=
   Subtype.ext (trans_reparam_one hT₁)
 
 lemma first_trans_second_reparam_eq_self (γ : Dipath x₀ x₁) {T : I} (hT₀ : 0 < T) (hT₁ : T < 1) :
   γ = ((FirstPart γ T).trans (SecondPart γ T)).reparam
-    (trans_reparam_map hT₀ hT₁) (trans_reparam_map_zero _ _) (trans_reparam_map_one _ _) := by
+    (transReparamMap hT₀ hT₁) (trans_reparam_map_zero _ _) (trans_reparam_map_one _ _) := by
   ext t
   exact first_trans_second_reparam_eq_self_aux (γ : Path x₀ x₁) t hT₀ hT₁
 

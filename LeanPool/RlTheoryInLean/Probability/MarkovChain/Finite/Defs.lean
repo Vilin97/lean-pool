@@ -14,6 +14,10 @@ import LeanPool.RlTheoryInLean.Probability.MarkovChain.Defs
 import LeanPool.RlTheoryInLean.Data.Matrix.Stochastic
 import LeanPool.RlTheoryInLean.Probability.Kernel.Basic
 
+/-!
+# LeanPool.RlTheoryInLean.Probability.MarkovChain.Finite.Defs
+-/
+
 open MeasureTheory MeasureTheory.Measure Filtration ProbabilityTheory.Kernel ProbabilityTheory
 open Finset NNReal ENNReal Preorder Function StochasticMatrix Filter
 
@@ -28,65 +32,99 @@ variable {S : Type u}
 variable [Fintype S] [MeasurableSpace S] [MeasurableSingletonClass S]
 
 /-- Matrix representation of a finite-state Markov transition kernel. -/
-def kernel_mat (M : HomMarkovChainSpec S)
+def kernelMat (M : HomMarkovChainSpec S)
   : Matrix S S ℝ :=
   Matrix.of (fun a b => (M.kernel a {b}).toReal)
 
 /-- Vector representation of the initial distribution of a finite Markov chain. -/
-def init_vec (M : HomMarkovChainSpec S)
+def initVec (M : HomMarkovChainSpec S)
   : S → ℝ :=
   fun s => (M.init {s}).toReal
 
 lemma prob_sum_to_one
   (μ : Measure S) [IsProbabilityMeasure μ] :
   ∑ s, (μ {s}).toReal = 1 := by
-  have h : ∑ s, μ {s} = 1 := by simp
-  have := congrArg ENNReal.toReal h
-  rwa [ENNReal.toReal_sum (fun s _ => measure_ne_top μ {s})] at this
+  have : ∑ s, μ {s} = 1 := by simp
+  have := congrArg ENNReal.toReal this
+  rw [ENNReal.toReal_sum (fun s _ => measure_ne_top μ {s})] at this
+  exact this
 
 instance (M : HomMarkovChainSpec S)
-  : StochasticVec (init_vec M) :=
-  ⟨fun s => by unfold init_vec; simp, by unfold init_vec; apply prob_sum_to_one⟩
+  : StochasticVec (initVec M) := by
+  constructor
+  case nonneg =>
+    intro s;
+    unfold initVec; simp
+  case rowsum =>
+    unfold initVec
+    apply prob_sum_to_one
 
 instance (M : HomMarkovChainSpec S)
-  : RowStochastic (kernel_mat M) :=
-  ⟨fun s => ⟨fun j => by unfold kernel_mat; simp, by
-    unfold kernel_mat
+  : RowStochastic (kernelMat M) := by
+  constructor
+  intro s
+  constructor
+  case nonneg =>
+    intro j; unfold kernelMat; simp
+  case rowsum =>
+    unfold kernelMat
     simp only [Matrix.of_apply]
-    haveI := (M.markov_kernel).isProbabilityMeasure s
-    apply prob_sum_to_one⟩⟩
+    have := (M.markov_kernel).isProbabilityMeasure s
+    apply prob_sum_to_one
 
 omit [Fintype S] [MeasurableSingletonClass S] in
 lemma kernel_apply_eq_mat_apply
   (M : HomMarkovChainSpec S) (s s' : S) :
-  (M.kernel s {s'}).toReal = kernel_mat M s s' := by
-  simp [kernel_mat]
+  (M.kernel s {s'}).toReal = kernelMat M s s' := by
+  simp [kernelMat]
 
 lemma integral_fintype_kernel_iter
   {α : Type*} [NormedAddCommGroup α] [NormedSpace ℝ α] [CompleteSpace α] [DecidableEq S]
   (M : HomMarkovChainSpec S) (n : ℕ) (f : S → α) (s : S) :
-  ∫ s', f s' ∂ M.kernel.iter n s = ∑ s', ((kernel_mat M) ^ n) s s' • f s' := by
+  ∫ s', f s' ∂ M.kernel.iter n s = ∑ s', ((kernelMat M) ^ n) s s' • f s' := by
   induction n generalizing s with
   | zero =>
     simp only [pow_zero, Matrix.one_apply]
-    rw [show M.kernel.iter 0 s = Measure.dirac s from Kernel.id_apply s, integral_dirac]
-    simp [sum_ite_eq]
+    have hiter0 : (M.kernel.iter 0) s = Measure.dirac s := Kernel.id_apply s
+    rw [hiter0, integral_dirac]
+    symm
+    simp only [ite_smul, one_smul, zero_smul]
+    rw [sum_ite_eq]
+    simp
   | succ n ih =>
     simp only [pow_succ']
-    haveI : IsMarkovKernel M.kernel := M.markov_kernel
-    haveI : IsMarkovKernel (M.kernel.iter (n + 1)) :=
+    -- iter (n+1) = (iter n).comp κ = iter n ∘ₖ κ
+    -- M.kernel is a Markov kernel
+    haveI hmarkovK : IsMarkovKernel M.kernel := M.markov_kernel
+    -- M.kernel.iter (n+1) is also a Markov kernel (by the instance in Kernel.Basic)
+    haveI hmarkovIter : IsMarkovKernel (M.kernel.iter (n + 1)) :=
       ProbabilityTheory.Kernel.instIsMarkovKernelIter (n + 1) M.kernel
-    haveI : IsProbabilityMeasure ((M.kernel.iter (n + 1)) s) := by infer_instance
+    haveI hprob : IsProbabilityMeasure ((M.kernel.iter (n + 1)) s) :=
+      hmarkovIter.isProbabilityMeasure s
     have hInt : Integrable f ((M.kernel.iter (n + 1)) s) := Integrable.of_finite
+    -- Rewrite using the definitional equality
     conv_lhs => rw [show M.kernel.iter (n + 1) = (M.kernel.iter n) ∘ₖ M.kernel from rfl]
     rw [Kernel.integral_comp hInt]
     simp_rw [fun x => ih x]
     simp only [Matrix.mul_apply]
-    haveI : IsProbabilityMeasure (M.kernel s) := M.markov_kernel.isProbabilityMeasure s
-    rw [integral_fintype (Integrable.of_finite)]
-    simp_rw [Measure.real_def, kernel_apply_eq_mat_apply, smul_sum, smul_smul]
+    haveI hprob' : IsProbabilityMeasure (M.kernel s) := M.markov_kernel.isProbabilityMeasure s
+    have hfInt : Integrable (fun s' => ∑ s'', (kernelMat M ^ n) s' s'' • f s'') (M.kernel s) :=
+      Integrable.of_finite
+    rw [integral_fintype hfInt]
+    simp_rw [Measure.real_def, kernel_apply_eq_mat_apply]
+    -- LHS: ∑ x, kernelMat M s x • ∑ s'', (kernelMat M ^ n) x s'' • f s''
+    -- RHS: ∑ x, (∑ j, kernelMat M s j * (kernelMat M ^ n) j x) • f x
+    -- Expand the smul in LHS
+    simp_rw [smul_sum, smul_smul]
+    -- LHS: ∑ x, ∑ x_1, (kernelMat M s x * (kernelMat M ^ n) x x_1) • f x_1
+    -- RHS: ∑ x, (∑ j, kernelMat M s j * (kernelMat M ^ n) j x) • f x
+    -- Swap the outer and inner sum
     rw [Finset.sum_comm]
-    congr 1; ext x; rw [← Finset.sum_smul]
+    -- Now LHS: ∑ x_1, ∑ x, (kernelMat M s x * (kernelMat M ^ n) x x_1) • f x_1
+    -- Manipulate to match RHS
+    congr 1
+    ext x
+    rw [← Finset.sum_smul]
 
 end Finite
 

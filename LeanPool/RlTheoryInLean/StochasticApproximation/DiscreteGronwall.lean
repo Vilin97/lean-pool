@@ -5,6 +5,10 @@ Authors: Shangtong Zhang
 -/
 import LeanPool.RlTheoryInLean.Defs
 
+/-!
+# LeanPool.RlTheoryInLean.StochasticApproximation.DiscreteGronwall
+-/
+
 open Real Finset
 
 namespace StochasticApproximation

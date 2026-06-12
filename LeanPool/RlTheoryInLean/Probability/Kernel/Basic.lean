@@ -15,6 +15,10 @@ import Mathlib.MeasureTheory.Function.L1Space.Integrable
 import Mathlib.Probability.Process.Filtration
 import Mathlib.Topology.Bornology.Basic
 
+/-!
+# LeanPool.RlTheoryInLean.Probability.Kernel.Basic
+-/
+
 open MeasureTheory MeasureTheory.Measure Filtration ProbabilityTheory.Kernel ProbabilityTheory
 open Finset Bornology NNReal ENNReal Preorder Filter
 

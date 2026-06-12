@@ -6,6 +6,12 @@ Authors: Siddhartha Gadgil, Anand Rao
 
 import LeanPool.Polylean.Complexes.Structures.Quiver
 
+/-!
+# LeanPool.Polylean.Complexes.Structures.Category
+
+Imported Lean Pool material for `LeanPool.Polylean.Complexes.Structures.Category`.
+-/
+
 namespace LeanPool.Polylean
 
 /-- The definition of a `CategoryStruct`, a barebones structure for a category containing none of the axioms (following `mathlib`). -/

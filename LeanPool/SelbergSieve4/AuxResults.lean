@@ -14,7 +14,6 @@ import Mathlib.NumberTheory.ArithmeticFunction.Misc
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import Mathlib.NumberTheory.ArithmeticFunction.Zeta
---import SelbergSieve.AesopDiv
 import LeanPool.SelbergSieve4.ForMathlib
 import LeanPool.SelbergSieve4.ForArithmeticFunction
 import LeanPool.SelbergSieve4.ForMathlib.ProdsAntidiagonal
@@ -22,6 +21,11 @@ import Mathlib.Analysis.SpecialFunctions.NonIntegrable
 import Mathlib.Data.Nat.Prime.Basic
 import LeanPool.SelbergSieve4.Tactic.Multiplicativity
 
+/-!
+# LeanPool.SelbergSieve4.AuxResults
+-/
+
+--import SelbergSieve.AesopDiv
 noncomputable section
 
 local macro_rules | `($x ^ $y)   => `(HPow.hPow $x $y)
@@ -116,10 +120,13 @@ theorem moebius_inv_dvd_lower_bound_real {P : ℕ} (hP : Squarefree P) (l m : �
     (hm : m ∣ P) :
     (∑ d ∈ P.divisors, if l ∣ d ∧ d ∣ m then (μ d : ℝ) else 0) =
       if l = m then (μ l : ℝ) else 0 := by
-  exact_mod_cast moebius_inv_dvd_lower_bound' hP l m hm
+  norm_cast
+  apply moebius_inv_dvd_lower_bound' hP l m hm
 
-theorem gcd_dvd_mul (m n : ℕ) : m.gcd n ∣ m * n :=
-  (Nat.gcd_dvd_left m n).trans ⟨n, rfl⟩
+theorem gcd_dvd_mul (m n : ℕ) : m.gcd n ∣ m * n := by
+  calc
+    m.gcd n ∣ m := Nat.gcd_dvd_left m n
+    _ ∣ m * n := ⟨n, rfl⟩
 
 theorem multiplicative_zero_of_zero_dvd (f : ArithmeticFunction ℝ)
     (h_mult : IsMultiplicative f) {m n : ℕ}
@@ -129,8 +136,9 @@ theorem multiplicative_zero_of_zero_dvd (f : ArithmeticFunction ℝ)
     (coprime_of_squarefree_mul h_sq), h_zero]
 
 theorem primeDivisors_nonempty (n : ℕ) (hn : 2 ≤ n) : n.primeFactors.Nonempty := by
-  simp_rw [Finset.Nonempty, Nat.mem_primeFactors_of_ne_zero (by positivity)]
-  exact Nat.exists_prime_and_dvd (by linarith)
+  unfold Finset.Nonempty
+  simp_rw[Nat.mem_primeFactors_of_ne_zero (by positivity)]
+  apply Nat.exists_prime_and_dvd (by linarith)
 
 theorem div_mult_of_dvd_squarefree (f : ArithmeticFunction ℝ) (h_mult : IsMultiplicative f)
     (l d : ℕ) (hdl : d ∣ l)
@@ -147,7 +155,7 @@ theorem inv_sub_antitoneOn_gt {R : Type*} [Field R] [LinearOrder R] [IsStrictOrd
   refine antitoneOn_iff_forall_lt.mpr ?_
   intro a ha b hb hab
   rw [Set.mem_Ioi] at ha hb
-  gcongr; linarith
+  gcongr
 
 theorem inv_sub_antitoneOn_Icc {R : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R]
     (a b c : R) (ha : c < a) :
@@ -158,73 +166,69 @@ theorem inv_sub_antitoneOn_Icc {R : Type*} [Field R] [LinearOrder R] [IsStrictOr
 
 theorem inv_antitoneOn_pos {R : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R] :
     AntitoneOn (fun x:R ↦ x⁻¹) (Set.Ioi 0) := by
-  have := inv_sub_antitoneOn_gt (R := R) 0
-  simp only [sub_zero] at this
-  exact this
+  convert inv_sub_antitoneOn_gt (R:=R) 0; ring
 
 theorem inv_antitoneOn_Icc {R : Type*} [Field R] [LinearOrder R] [IsStrictOrderedRing R]
     (a b : R) (ha : 0 < a) :
     AntitoneOn (fun x ↦ x⁻¹) (Set.Icc a b) := by
-  have := inv_sub_antitoneOn_Icc a b 0 ha
-  simp only [sub_zero] at this
-  exact this
+  convert inv_sub_antitoneOn_Icc a b 0 ha; ring
 
 theorem log_add_one_le_sum_inv (n : ℕ) :
     Real.log ↑(n+1) ≤ ∑ d ∈ Finset.Icc 1 n, (d:ℝ)⁻¹ := by
-  have h1 : Real.log (n + 1 : ℕ) = ∫ x in (1:ℕ)..↑(n+1), x⁻¹ := by
-    rw [integral_inv (by simp [(show ¬ (1:ℝ) ≤ 0 by norm_num)])]
-    congr
-    push_cast
-    ring
-  rw [h1, show Finset.Icc 1 n = Finset.Ico 1 (n + 1) from by ext; simp]
-  exact AntitoneOn.integral_le_sum_Ico (by norm_num) (inv_antitoneOn_Icc _ _ (by norm_num))
+  calc _ = ∫ x in (1)..↑(n+1), x⁻¹ := ?_
+       _ = ∫ x in (1:ℕ)..↑(n+1), x⁻¹ := ?_
+       _ ≤ _ := ?_
+  · rw[integral_inv (by simp[(show ¬ (1:ℝ) ≤ 0 by norm_num)] )]; congr; ring
+  · congr; norm_num
+  · apply AntitoneOn.integral_le_sum_Ico (by norm_num)
+    apply inv_antitoneOn_Icc
+    norm_num
 
 theorem log_le_sum_inv (y : ℝ) (hy : 1 ≤ y) :
     Real.log y ≤ ∑ d ∈ Finset.Icc 1 (⌊y⌋₊), (d:ℝ)⁻¹ := by
-  calc Real.log y
-      ≤ Real.log (Nat.floor y + 1) := by
-        gcongr
-        exact (le_ceil y).trans (by exact_mod_cast ceil_le_floor_add_one y)
-    _ = Real.log ↑(⌊y⌋₊ + 1) := by push_cast
-                                   ring_nf
-    _ ≤ _ := log_add_one_le_sum_inv _
+  calc _ ≤ Real.log ↑(Nat.floor y + 1) := ?_
+       _ ≤ _ := ?_
+  · gcongr
+    apply (le_ceil y).trans
+    norm_cast
+    exact ceil_le_floor_add_one y
+  · apply log_add_one_le_sum_inv
 
 theorem sum_inv_le_log (n : ℕ) (hn : 1 ≤ n) :
-    ∑ d ∈ Finset.Icc 1 n, (d : ℝ)⁻¹ ≤ 1 + Real.log ↑n := by
+    ∑ d ∈ Finset.Icc 1 n, (d : ℝ)⁻¹ ≤ 1 + Real.log ↑n :=
+  by
   rw [← Finset.sum_erase_add (Icc 1 n) _ (by simp [hn] : 1 ∈ Icc 1 n), add_comm]
+  gcongr
+  · norm_num
   simp only [Icc_erase_left]
-  gcongr ?_ + ?_
-  · simp
-  rw [show Ioc 1 n = Ico 2 (n + 1) from by ext x; simp [Nat.succ_le_iff]]
-  calc ∑ d ∈ Ico 2 (n + 1), (d : ℝ)⁻¹
-      = ∑ d ∈ Ico 2 (n + 1), (↑(d + 1) - 1)⁻¹ := by congr
-                                                    norm_num
-    _ ≤ ∫ x in (2).. ↑(n + 1), (x - 1)⁻¹ :=
-        @AntitoneOn.sum_le_integral_Ico 2 (n + 1) (fun x : ℝ => (x - 1)⁻¹) (by linarith)
-          (inv_sub_antitoneOn_Icc _ _ _ (by norm_num))
-    _ = Real.log ↑n := by
-        rw [intervalIntegral.integral_comp_sub_right _ 1, integral_inv]
-        · norm_num
-        · norm_num
-          simp [hn]
+  calc
+    ∑ d ∈ Ico 2 (n + 1), (d : ℝ)⁻¹ = ∑ d ∈ Ico 2 (n + 1), (↑(d + 1) - 1)⁻¹ := ?_
+    _ ≤ ∫ x in (2).. ↑(n + 1), (x - 1)⁻¹  := ?_
+    _ = Real.log ↑n := ?_
+  · congr; norm_num;
+  · apply @AntitoneOn.sum_le_integral_Ico 2 (n + 1) fun x : ℝ => (x - 1)⁻¹
+    · linarith [hn]
+    apply inv_sub_antitoneOn_Icc; norm_num
+  rw [intervalIntegral.integral_comp_sub_right _ 1, integral_inv]
+  · norm_num
+  norm_num; simp[hn, show (0:ℝ) < 1 by norm_num]
 
 theorem sum_inv_le_log_real (y : ℝ) (hy : 1 ≤ y) :
     ∑ d ∈ Finset.Icc 1 (⌊y⌋₊), (d:ℝ)⁻¹ ≤ 1 + Real.log y := by
-  have h1 : 1 ≤ ⌊y⌋₊ := by
-    apply le_floor
-    exact_mod_cast hy
-  calc ∑ d ∈ Finset.Icc 1 (⌊y⌋₊), (d:ℝ)⁻¹
-      ≤ 1 + Real.log (⌊y⌋₊) := sum_inv_le_log _ h1
-    _ ≤ 1 + Real.log y := by gcongr
-                             exact floor_le (by linarith)
+  trans (1 + Real.log (⌊y⌋₊))
+  · apply sum_inv_le_log (⌊y⌋₊)
+    apply le_floor; norm_cast
+  gcongr
+  · norm_cast; apply Nat.lt_of_succ_le; apply le_floor; norm_cast
+  · apply floor_le; linarith
 
-theorem nat_le_prod {f : ι → ℕ} {s : Finset ι} {i : ι} (hi : i ∈ s)
+theorem natLe_prod {f : ι → ℕ} {s : Finset ι} {i : ι} (hi : i ∈ s)
     (hf : ∀ i ∈ s, f i ≠ 0) :
     f i ≤ ∏ j ∈ s, f j := by
   classical
-  rw [← prod_erase_mul (a := i) (h := hi)]
-  exact Nat.le_mul_of_pos_left _
-    (prod_pos fun j hj => Nat.pos_of_ne_zero (hf j (mem_of_mem_erase hj)))
+  rw [←prod_erase_mul (a:=i) (h:= hi)]
+  exact Nat.le_mul_of_pos_left _ <|
+    prod_pos fun j hj => Nat.pos_of_ne_zero (hf j (mem_of_mem_erase hj))
 
 
 -- Lemma 3.1 in Heath-Brown's notes
@@ -232,7 +236,8 @@ theorem sum_pow_cardDistinctFactors_div_self_le_log_pow {P k : ℕ} (x : ℝ) (h
     (hP : Squarefree P) :
     (∑ d ∈ P.divisors, if d ≤ x then (k:ℝ) ^ (ω d) / (d : ℝ) else (0 : ℝ))
     ≤ (1 + Real.log x) ^ k := by
-  have hx_pos : 0 < x := by linarith
+  have hx_pos : 0 < x := by
+    linarith
   calc
     _ = ∑ d ∈ P.divisors,
           ∑ a ∈ Fintype.piFinset fun _i : Fin k => P.divisors,
@@ -249,9 +254,9 @@ theorem sum_pow_cardDistinctFactors_div_self_le_log_pow {P k : ℕ} (x : ℝ) (h
     _ ≤ (1 + Real.log x) ^ k := ?_
   · apply sum_congr rfl; intro d hd
     rw [mem_divisors] at hd
-    simp_rw [ite_and]
-    rw [← sum_filter, Finset.sum_const, ← finMulAntidiagonal_univ_eq hd.1 hd.2,
-      card_finMulAntidiagonal (hP.squarefree_of_dvd hd.1), if_pos hd.1]
+    simp_rw [ite_and];
+    rw [←sum_filter, Finset.sum_const, ←finMulAntidiagonal_univ_eq hd.1 hd.2,
+      card_finMulAntidiagonal <| hP.squarefree_of_dvd hd.1, if_pos hd.1]
     simp only [div_eq_mul_inv, nsmul_eq_mul, cast_pow, mul_ite, mul_zero]
   · rw [sum_comm]; apply sum_congr rfl; intro a _; rw [sum_eq_single (∏ i, a i)]
     · apply if_ctx_congr _ _ (fun _ => rfl)
@@ -272,45 +277,53 @@ theorem sum_pow_cardDistinctFactors_div_self_le_log_pow {P k : ℕ} (x : ℝ) (h
     · apply le_of_eq
       apply prod_congr rfl
       intro i hi
-      have hai_le_x : (a i : ℝ) ≤ x := by
+      have hai_le_x : ↑(a i) ≤ x := by
         refine le_trans ?_ h
         norm_cast
-        rw [← prod_erase_mul (a := i) (h := hi)]
+        rw [←prod_erase_mul (a:=i) (h:= hi)]
         apply Nat.le_mul_of_pos_left
         rw [Fintype.mem_piFinset] at ha
-        exact prod_pos fun j hj => pos_of_mem_divisors (ha j)
+        apply prod_pos
+        intro j hj
+        apply pos_of_mem_divisors (ha j)
       rw [if_pos hai_le_x]
-    · apply prod_nonneg
-      intro j _
-      split_ifs <;> norm_num
-  · rw [← sum_filter]
+    · apply prod_nonneg; intro j _
+      split_ifs
+      · norm_num
+      · rfl
+  · rw [←sum_filter]
     gcongr
-    calc ∑ d ∈ P.divisors.filter (fun d : ℕ => (d : ℝ) ≤ x), (d : ℝ)⁻¹
-        ≤ ∑ d ∈ Icc 1 (floor x), (d : ℝ)⁻¹ := by
-          apply sum_le_sum_of_subset_of_nonneg
-          · intro d
-            rw [mem_filter, mem_Icc]
-            intro hd
-            exact ⟨Nat.succ_le_iff.mpr (pos_of_mem_divisors hd.1),
-                   (le_floor_iff (le_of_lt hx_pos)).mpr hd.2⟩
-          · norm_num
-      _ ≤ 1 + Real.log x := sum_inv_le_log_real x (by linarith)
+    trans (∑ d ∈ Icc 1 (floor x), (d:ℝ)⁻¹)
+    · apply sum_le_sum_of_subset_of_nonneg
+      · intro d
+        rw[mem_filter, mem_Icc]
+        intro hd
+        constructor
+        · rw [Nat.succ_le_iff]
+          exact pos_of_mem_divisors hd.1
+        · rw [le_floor_iff]
+          · exact hd.2
+          · exact le_of_lt hx_pos
+      · norm_num
+    apply sum_inv_le_log_real
+    linarith
 
 theorem sum_pow_cardDistinctFactors_le_self_mul_log_pow {P h : ℕ} (x : ℝ) (hx : 1 ≤ x)
     (hP : Squarefree P) :
     (∑ d ∈ P.divisors, if ↑d ≤ x then (h : ℝ) ^ ω d else (0 : ℝ)) ≤ x * (1 + Real.log x) ^ h := by
   trans (∑ d ∈ P.divisors, x * if ↑d ≤ x then (h : ℝ) ^ ω d / d else (0 : ℝ))
-  · simp_rw [mul_ite, mul_zero, ← sum_filter]
+  · simp_rw [mul_ite, mul_zero, ←sum_filter]
     gcongr with i hi
-    rw [div_eq_mul_inv, mul_comm _ (i : ℝ)⁻¹, ← mul_assoc]
-    trans (1 * (h : ℝ) ^ ω i)
+    rw [div_eq_mul_inv, mul_comm _ (i:ℝ)⁻¹, ←mul_assoc]
+    trans (1*(h:ℝ)^ω i)
     · rw [one_mul]
     gcongr
     rw [mem_filter] at hi
-    exact (one_le_div (by exact_mod_cast Nat.pos_of_mem_divisors hi.1)).mpr hi.2
-  rw [← mul_sum]
+    rw [←div_eq_mul_inv]
+    apply one_le_div (by norm_cast; apply Nat.pos_of_mem_divisors hi.1) |>.mpr hi.2
+  rw [←mul_sum];
   gcongr
-  exact sum_pow_cardDistinctFactors_div_self_le_log_pow x hx hP
+  apply sum_pow_cardDistinctFactors_div_self_le_log_pow x hx hP
 
 
 end Aux

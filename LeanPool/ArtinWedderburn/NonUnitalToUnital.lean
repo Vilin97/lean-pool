@@ -21,7 +21,7 @@ variable (e : R)
 /-- Designate `e` as the `1` element when building a unital `Ring` structure
 on `R` via `Ring.ofMinimalAxioms`. -/
 @[reducible]
-def e_one : One R := ⟨e⟩
+def eOne : One R := ⟨e⟩
 
 variable (is_left_unit : ∀ x : R, e * x = x)
 variable (is_right_unit : ∀ x : R, x * e = x)
@@ -30,14 +30,15 @@ variable (is_right_unit : ∀ x : R, x * e = x)
 -- then it is a regular ring
 /-- Promote a non-unital ring `R` with a two-sided identity `e` to a unital `Ring R`. -/
 @[reducible]
-def non_unital_w_e_is_ring : Ring R :=
-  @Ring.ofMinimalAxioms R inferInstance inferInstance inferInstance inferInstance (e_one e)
-    (fun a b c => add_assoc a b c)
-    (fun a => AddZeroClass.zero_add a)
-    (fun a => neg_add_cancel a)
-    (fun a b c => mul_assoc a b c)
+def nonUnitalWEIsRing : Ring R :=
+  @Ring.ofMinimalAxioms R (by exact inferInstance) (by exact inferInstance) (by exact inferInstance)
+    (by exact inferInstance) (by exact eOne e)
+    (by intro a b c; rw [add_assoc])
+    (by intro a; exact AddZeroClass.zero_add a)
+    (by intro a; exact neg_add_cancel a)
+    (by intro a b c; exact mul_assoc a b c)
     is_left_unit is_right_unit
-    (fun a b c => LeftDistribClass.left_distrib a b c)
-    (fun a b c => RightDistribClass.right_distrib a b c)
+    (by intro a b c; exact LeftDistribClass.left_distrib a b c)
+    (by intro a b c; exact RightDistribClass.right_distrib a b c)
 
 end LeanPool.ArtinWedderburn

@@ -22,11 +22,11 @@ variable (I J : Ideal R)
 
 -- the set Ia
 /-- The set `I * a = {x * a | x ∈ I}` as a subset of `R`. -/
-def sub_ideal_set (I : Ideal R) (a : R) : Set R := {r | ∃ x ∈ I, r = x * a}
+def subIdealSet (I : Ideal R) (a : R) : Set R := {r | ∃ x ∈ I, r = x * a}
 
 /-- The left ideal `I * a` consisting of elements `x * a` for `x ∈ I`. -/
-def sub_ideal (I : Ideal R) (a : R) : Ideal R :=
-  { carrier := sub_ideal_set I a,
+def subIdeal (I : Ideal R) (a : R) : Ideal R :=
+  { carrier := subIdealSet I a,
     zero_mem' := by
       refine ⟨0, ?_, ?_⟩
       · exact Submodule.zero_mem I
@@ -44,7 +44,7 @@ def sub_ideal (I : Ideal R) (a : R) : Ideal R :=
       · rw [hx]
         noncomm_ring }
 
-theorem sub_ideal_le_ideal (I : Ideal R) (a : R) (h : a ∈ I) : sub_ideal I a ≤ I := by
+theorem sub_ideal_le_ideal (I : Ideal R) (a : R) (h : a ∈ I) : subIdeal I a ≤ I := by
   rintro x ⟨r, _, ha⟩
   rw [ha]
   exact Ideal.mul_mem_left I r h
@@ -64,48 +64,53 @@ theorem mul_ne_zero_imply_set_ne_zero (I J : Ideal R) (h : I * J ≠ ⊥) :
 
 -- if I*I is nonzero, then there is y in I, such that Iy is nonzero
 theorem ideal_sq_ne_bot_imply_subideal_ne_bot (I : Ideal R) (h : I * I ≠ ⊥) :
-    ∃ y ∈ I, sub_ideal I y ≠ ⊥ := by
+    ∃ y ∈ I, subIdeal I y ≠ ⊥ := by
   obtain ⟨x, hx, y, hy, hxy⟩ := mul_ne_zero_imply_set_ne_zero I I h
   refine ⟨y, hy, ?_⟩
-  refine (Submodule.ne_bot_iff (sub_ideal I y)).mpr ?_
+  refine (Submodule.ne_bot_iff (subIdeal I y)).mpr ?_
   refine ⟨x * y, ⟨x, hx, rfl⟩, hxy⟩
 
 -- if I*I is nonzero, then there is y in I, such that Iy is nonzero and y ≠ 0
 theorem ideal_sq_ne_bot_imply_subideal_ne_bot2 (I : Ideal R) (h : I * I ≠ ⊥) :
-    ∃ y ∈ I, y ≠ 0 ∧ sub_ideal I y ≠ ⊥ := by
+    ∃ y ∈ I, y ≠ 0 ∧ subIdeal I y ≠ ⊥ := by
   obtain ⟨x, hx, y, hy, hxy⟩ := mul_ne_zero_imply_set_ne_zero I I h
   refine ⟨y, hy, ?_, ?_⟩
   · intro hc
     apply hxy
     rw [hc]
     simp
-  · refine (Submodule.ne_bot_iff (sub_ideal I y)).mpr ?_
+  · refine (Submodule.ne_bot_iff (subIdeal I y)).mpr ?_
     refine ⟨x * y, ⟨x, hx, rfl⟩, hxy⟩
 
 -- if I <= J and not I < J, then I = J
 theorem le_and_not_lt_eq (I J : Ideal R) (h1 : I ≤ J) (h2 : ¬ (I < J)) : I = J := by
-  have : I = J ∨ I ≠ J := Classical.em (I = J)
-  rcases this with h | h
-  · exact h
-  · exact absurd (lt_of_le_of_ne h1 h) h2
+  rw [lt_iff_le_and_ne] at h2
+  push Not at h2
+  exact h2 h1
 
--- if I is an atom, then there exists a nonzero element y in I, such that sub_ideal I y = I
+-- if I is an atom, then there exists a nonzero element y in I, such that subIdeal I y = I
 theorem minimal_ideal_I_sq_nonzero_exists_el (hI : IsAtom I) (hII : I * I ≠ ⊥) :
-    ∃ y : R, y ∈ I ∧ sub_ideal I y = I := by
+    ∃ y : R, y ∈ I ∧ subIdeal I y = I := by
   obtain ⟨y, ⟨hy, hyI⟩⟩ := ideal_sq_ne_bot_imply_subideal_ne_bot I hII
-  exact ⟨y, hy, le_and_not_lt_eq _ _ (sub_ideal_le_ideal I y hy)
-    (fun b => hyI (hI.right (sub_ideal I y) b))⟩
+  refine ⟨y, hy, ?_⟩
+  obtain ⟨_, hsi⟩ := hI
+  have h1 := sub_ideal_le_ideal I y hy
+  have h2 := fun b => hyI (hsi (subIdeal I y) b)
+  exact le_and_not_lt_eq (subIdeal I y) I h1 h2
 
--- if I is an atom, then there exists a nonzero element y in I, such that sub_ideal I y = I and y
+-- if I is an atom, then there exists a nonzero element y in I, such that subIdeal I y = I and y
 -- is nonzero
 theorem minimal_ideal_I_sq_nonzero_exists_el2 (hI : IsAtom I) (hII : I * I ≠ ⊥) :
-    ∃ y : R, y ∈ I ∧ y ≠ 0 ∧ sub_ideal I y = I := by
+    ∃ y : R, y ∈ I ∧ y ≠ 0 ∧ subIdeal I y = I := by
   obtain ⟨y, ⟨hy, ynz, hyI⟩⟩ := ideal_sq_ne_bot_imply_subideal_ne_bot2 I hII
-  exact ⟨y, hy, ynz, le_and_not_lt_eq _ _ (sub_ideal_le_ideal I y hy)
-    (fun b => hyI (hI.right (sub_ideal I y) b))⟩
+  refine ⟨y, hy, ynz, ?_⟩
+  obtain ⟨_, hsi⟩ := hI
+  have h1 := sub_ideal_le_ideal I y hy
+  have h2 := fun b => hyI (hsi (subIdeal I y) b)
+  exact le_and_not_lt_eq (subIdeal I y) I h1 h2
 
 theorem minimal_ideal_I_sq_nonzero_exists_els2 (hI : IsAtom I) (hII : I * I ≠ ⊥) :
-    ∃ y : R, y ∈ I ∧ y ≠ 0 ∧ sub_ideal I y = I ∧ ∃ e ∈ I, e ≠ 0 ∧ y = e * y := by
+    ∃ y : R, y ∈ I ∧ y ≠ 0 ∧ subIdeal I y = I ∧ ∃ e ∈ I, e ≠ 0 ∧ y = e * y := by
   obtain ⟨y, ⟨hy, ynz, hI⟩⟩ := minimal_ideal_I_sq_nonzero_exists_el2 I hI hII
   refine ⟨y, hy, ynz, hI, ?_⟩
   rw [← hI] at hy
@@ -119,7 +124,7 @@ theorem minimal_ideal_I_sq_nonzero_exists_els2 (hI : IsAtom I) (hII : I * I ≠ 
   contradiction
 
 theorem minimal_ideal_I_sq_nonzero_exists_els (hI : IsAtom I) (hII : I * I ≠ ⊥) :
-    ∃ y : R, y ∈ I ∧ sub_ideal I y = I ∧ ∃ e ∈ I, y = e * y := by
+    ∃ y : R, y ∈ I ∧ subIdeal I y = I ∧ ∃ e ∈ I, y = e * y := by
   obtain ⟨y, ⟨hy, hI⟩⟩ := minimal_ideal_I_sq_nonzero_exists_el I hI hII
   refine ⟨y, hy, hI, ?_⟩
   rw [← hI] at hy
@@ -127,7 +132,7 @@ theorem minimal_ideal_I_sq_nonzero_exists_els (hI : IsAtom I) (hII : I * I ≠ �
   exact ⟨e, he, hey⟩
 
 /-- The left ideal of elements in `I` that annihilate `a` on the right. -/
-def elem_ann (I : Ideal R) (a : R) : Ideal R :=
+def elemAnn (I : Ideal R) (a : R) : Ideal R :=
   { carrier := {x | x ∈ I ∧ x * a = 0},
     zero_mem' := by simp,
     add_mem' := by
@@ -139,12 +144,12 @@ def elem_ann (I : Ideal R) (a : R) : Ideal R :=
       refine ⟨Submodule.smul_mem I c hx, ?_⟩
       simp [mul_assoc, hxa] }
 
-theorem elem_ann_le_ideal (I : Ideal R) (a : R) : elem_ann I a ≤ I := by
+theorem elem_ann_le_ideal (I : Ideal R) (a : R) : elemAnn I a ≤ I := by
   rintro x ⟨hx, _⟩
   exact hx
 
 theorem e_semiidem (I : Ideal R) (e y : R) (he : e ∈ I) (h : e * y = y) :
-    (e * e - e) ∈ (elem_ann I y) := by
+    (e * e - e) ∈ (elemAnn I y) := by
   refine ⟨?_, ?_⟩
   · have hde : e * e - e = (e - 1) * e := by noncomm_ring
     rw [hde]
@@ -161,13 +166,17 @@ theorem strict_contain (I J : Ideal R) (hleq : I ≤ J) (hneq : ∃ x, x ∈ J �
   contradiction
 
 theorem ideal_neq_bot_if_has_nonzero_el (I : Ideal R) (h : ∃ x ∈ I, x ≠ 0) : I ≠ ⊥ := by
+  by_contra hI
   obtain ⟨x, hx, xnz⟩ := h
-  exact fun hI => xnz (by rw [hI] at hx; exact hx)
+  rw [hI] at hx
+  contradiction
 
 theorem nonzero_ideal_in_min_ideal (I J : Ideal R) (atom_I : IsAtom I) (Jnz : J ≠ ⊥)
     (hJsubI : J ≤ I) : J = I := by
   by_contra hcon
-  exact Jnz (atom_I.right J (lt_of_le_of_ne hJsubI hcon))
+  have hJltI : J < I := lt_of_le_of_ne hJsubI hcon
+  have span_eq_bot : J = ⊥ := atom_I.right J hJltI
+  contradiction
 
 theorem minimal_ideal_I_sq_nonzero_exists_idem (h_atom_I : IsAtom I) (hII : I * I ≠ ⊥) :
     ∃ e : R, e ∈ I ∧ e ≠ 0 ∧ IsIdempotentElem e ∧ Ideal.span {e} = I := by
@@ -175,30 +184,32 @@ theorem minimal_ideal_I_sq_nonzero_exists_idem (h_atom_I : IsAtom I) (hII : I * 
     minimal_ideal_I_sq_nonzero_exists_els2 I h_atom_I hII
   obtain hye : e * y = y := Eq.symm hey
   obtain h12 := e_semiidem I e y he hye
-  have hneq : ∃ x, x ∈ I ∧ x ∉ elem_ann I y := by
+  have hneq : ∃ x, x ∈ I ∧ x ∉ elemAnn I y := by
     refine ⟨e, he, ?_⟩
     intro hcon
     obtain ⟨_, hey0⟩ := hcon
     rw [hye] at hey0
     exact ynz hey0
-  have h_ann_sub : elem_ann I y < I :=
-    strict_contain (elem_ann I y) I (elem_ann_le_ideal I y) hneq
-  have ann_zero : elem_ann I y = ⊥ := h_atom_I.2 (elem_ann I y) h_ann_sub
+  have h_ann_sub : elemAnn I y < I :=
+    strict_contain (elemAnn I y) I (elem_ann_le_ideal I y) hneq
+  have ann_zero : elemAnn I y = ⊥ := h_atom_I.2 (elemAnn I y) h_ann_sub
   refine ⟨e, he, henz, ?_, ?_⟩
   · unfold IsIdempotentElem
     rw [ann_zero] at h12
-    calc e * e = (e * e - e) + e := by noncomm_ring
-      _ = 0 + e := by rw [h12]
-      _ = e := by abel
+    calc
+      e * e = (e * e - e) + e := by noncomm_ring
+        _ = 0 + e := by rw [h12]
+        _ = e := by abel
   · have span_neq_bot : Ideal.span {e} ≠ ⊥ := by
       by_contra hRe
       have einspane : e ∈ Ideal.span {e} := Ideal.mem_span_singleton_self e
       rw [hRe] at einspane
-      exact henz einspane
+      contradiction
     by_contra hcon
     have hspanltI : (Ideal.span {e} : Ideal R) < I :=
       lt_of_le_of_ne ((Ideal.span_singleton_le_iff_mem I).mpr he) hcon
-    exact span_neq_bot (h_atom_I.right (Ideal.span {e}) hspanltI)
+    have span_eq_bot : Ideal.span {e} = ⊥ := h_atom_I.right (Ideal.span {e}) hspanltI
+    contradiction
 
 -- Lemma 2.12
 -- hypothesis: I^2 ≠ ⊥ and I is a minimal left ideal
@@ -211,7 +222,7 @@ theorem corner_ring_div (h_atom_I : IsAtom I) (e : R) (e_in_I : e ∈ I) (henz :
     unfold CornerSubringNonUnital at hx
     obtain ⟨r, _, _⟩ := hx
     intro erenz
-    have hsubI : left_ideal_of_element (e * r * e) ≤ I := by
+    have hsubI : leftIdealOfElement (e * r * e) ≤ I := by
       rintro x ⟨y, hy⟩
       have hx : x = (y * e * r) * e := by
         calc
@@ -219,11 +230,11 @@ theorem corner_ring_div (h_atom_I : IsAtom I) (e : R) (e_in_I : e ∈ I) (henz :
           _ = (y * e * r) * e := by noncomm_ring
       rw [hx]
       exact Ideal.mul_mem_left I (y * e * r) e_in_I
-    have hnz : left_ideal_of_element (e * r * e) ≠ ⊥ := by
-      refine ideal_neq_bot_if_has_nonzero_el (left_ideal_of_element (e * r * e)) ?_
+    have hnz : leftIdealOfElement (e * r * e) ≠ ⊥ := by
+      refine ideal_neq_bot_if_has_nonzero_el (leftIdealOfElement (e * r * e)) ?_
       refine ⟨e * r * e, ⟨1, by simp⟩, erenz⟩
-    have heq : left_ideal_of_element (e * r * e) = I :=
-      nonzero_ideal_in_min_ideal I (left_ideal_of_element (e * r * e)) h_atom_I hnz hsubI
+    have heq : leftIdealOfElement (e * r * e) = I :=
+      nonzero_ideal_in_min_ideal I (leftIdealOfElement (e * r * e)) h_atom_I hnz hsubI
     obtain ⟨s, hs⟩ := (Ideal.ext_iff.mp heq e).mpr e_in_I
     refine ⟨e * s * e, ⟨s, rfl⟩, ?_⟩
     calc (e * s * e) * (e * r * e) = e * s * (e * e) * r * e := by noncomm_ring

@@ -9,7 +9,7 @@ import LeanPool.GrothendieckVanishing.GrothendieckVanishingOverview
 /-!
 # Grothendieck's Vanishing Theorem
 
-Source: url:https://github.com/Vilin97/Clawristotle/tree/grothendieck-vanishing
+Source: doi:10.1007/978-1-4757-3849-0, url:https://github.com/Vilin97/Clawristotle/tree/grothendieck-vanishing
 Authors: Vasily Ilin, Brian Nugent
 Status: verified
 Main declarations: `GrothendieckVanishing`

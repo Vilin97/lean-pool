@@ -14,6 +14,10 @@ import Mathlib.Data.Real.StarOrdered
 
 import LeanPool.RlTheoryInLean.Data.Matrix.Mul
 
+/-!
+# LeanPool.RlTheoryInLean.Data.Matrix.PosDef
+-/
+
 open Real Finset Filter TopologicalSpace Preorder Matrix EuclideanSpace
 open scoped InnerProductSpace RealInnerProductSpace
 
