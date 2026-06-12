@@ -4,18 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Colin Jones
 -/
 import Mathlib.Analysis.Calculus.Deriv.ZPow
-import LeanPool.LeanLJ.Instance
 import LeanPool.LeanLJ.Function
 
 /-!
 # Analytic properties of the Lennard-Jones potential
 
 This file proves continuity and differentiability of the truncated Lennard-Jones pair
-potential on its interaction domain, computes a couple of supporting derivatives, and
-shows that two algebraic formulations of the potential agree.
+potential on its interaction domain, computes its derivative explicitly on the open
+interaction region (`ljp_hasDerivAt`, `ljp_deriv`), and shows that two algebraic
+formulations of the potential agree.
 -/
 
-open LeanLJ
 namespace LeanLJ
 
 lemma lj_pow_12' (σ r : ℝ) (h : r ≠ 0) :
@@ -78,32 +77,29 @@ theorem ljp_eq_gt (r_c ε σ : ℝ) : ∀ r ∈ {r | r > r_c ∧ r > 0}, ljReal 
 
 
 theorem ljp_continuous_closed_domain (r_c ε σ : ℝ) :
-  ContinuousOn (fun r => if r ≤ r_c then 4 * ε * (((σ / r) ^ 6) ^ 2 - (σ / r) ^ 6) else 0)
-    {r | 0 < r ∧ r ≤ r_c} := by
+  ContinuousOn (fun r => Ljp r r_c ε σ) {r | 0 < r ∧ r ≤ r_c} := by
   have subset_pos : {r | 0 < r ∧ r ≤ r_c} ⊆ {r | r > 0} := by
     intro r hr
     exact hr.1
   have base := (scale_continuous ε σ).mono subset_pos
   apply ContinuousOn.congr base
   intro r hr
-  simp only [if_pos hr.2]
+  simp only [Ljp, if_pos hr.2]
   ring
 
 theorem ljp_continuous_piecewise (r_c ε σ : ℝ) :
-  ContinuousOn (fun r => if r ≤ r_c then 4 * ε * (((σ / r) ^ 6) ^ 2 - (σ / r) ^ 6) else 0)
-    {r | 0 < r ∧ r < r_c} := by
+  ContinuousOn (fun r => Ljp r r_c ε σ) {r | 0 < r ∧ r < r_c} := by
   have subset_pos : {r | 0 < r ∧ r < r_c} ⊆ {r | r > 0} := by
     intro r hr
     exact hr.1
   have base := (scale_continuous ε σ).mono subset_pos
   apply ContinuousOn.congr base
   intro r hr
-  simp only [if_pos (le_of_lt hr.2)]
+  simp only [Ljp, if_pos (le_of_lt hr.2)]
   ring
 
 theorem ljp_differentiable (r_c ε σ : ℝ) :
-  DifferentiableOn ℝ (fun r => if r ≤ r_c then 4 * ε * (((σ / r) ^ 6) ^ 2 - (σ / r) ^ 6) else 0)
-    {r | 0 < r ∧ r ≤ r_c} := by
+  DifferentiableOn ℝ (fun r => Ljp r r_c ε σ) {r | 0 < r ∧ r ≤ r_c} := by
   have subset_pos : {r | 0 < r ∧ r ≤ r_c} ⊆ {r | r > 0} := by
     intro r hr
     exact hr.1
@@ -130,8 +126,42 @@ theorem ljp_differentiable (r_c ε σ : ℝ) :
           exact ne_of_gt hx
   apply DifferentiableOn.congr (base.mono subset_pos)
   · intro r hr
-    simp [if_pos hr.2]
+    simp [Ljp, if_pos hr.2]
 
+/-- On the open interaction region `0 < r < r_c`, the truncated Lennard-Jones potential
+has the explicit derivative `24 * ε * (σ ^ 6 / r ^ 7 - 2 * σ ^ 12 / r ^ 13)`. -/
+theorem ljp_hasDerivAt (r_c ε σ : ℝ) {r : ℝ} (h0 : 0 < r) (hc : r < r_c) :
+    HasDerivAt (fun r => Ljp r r_c ε σ)
+      (24 * ε * (σ ^ 6 / r ^ 7 - 2 * σ ^ 12 / r ^ 13)) r := by
+  have hne : r ≠ 0 := ne_of_gt h0
+  have h12 : HasDerivAt (fun x : ℝ => x ^ (-12 : ℤ)) ((-12 : ℤ) * r ^ ((-12 : ℤ) - 1)) r :=
+    hasDerivAt_zpow (-12) r (Or.inl hne)
+  have h6 : HasDerivAt (fun x : ℝ => x ^ (-6 : ℤ)) ((-6 : ℤ) * r ^ ((-6 : ℤ) - 1)) r :=
+    hasDerivAt_zpow (-6) r (Or.inl hne)
+  have hg : HasDerivAt
+      (fun x : ℝ => 4 * ε * (σ ^ 12 * x ^ (-12 : ℤ) - σ ^ 6 * x ^ (-6 : ℤ)))
+      (4 * ε * (σ ^ 12 * ((-12 : ℤ) * r ^ ((-12 : ℤ) - 1))
+        - σ ^ 6 * ((-6 : ℤ) * r ^ ((-6 : ℤ) - 1)))) r :=
+    ((h12.const_mul (σ ^ 12)).sub (h6.const_mul (σ ^ 6))).const_mul (4 * ε)
+  have heq : (fun x : ℝ => Ljp x r_c ε σ)
+      =ᶠ[nhds r] fun x : ℝ => 4 * ε * (σ ^ 12 * x ^ (-12 : ℤ) - σ ^ 6 * x ^ (-6 : ℤ)) := by
+    filter_upwards [Ioo_mem_nhds h0 hc] with x hx
+    have hxne : x ≠ 0 := ne_of_gt hx.1
+    simp only [Ljp, if_pos hx.2.le]
+    field_simp
+  have hval : 4 * ε * (σ ^ 12 * ((-12 : ℤ) * r ^ ((-12 : ℤ) - 1))
+      - σ ^ 6 * ((-6 : ℤ) * r ^ ((-6 : ℤ) - 1)))
+      = 24 * ε * (σ ^ 6 / r ^ 7 - 2 * σ ^ 12 / r ^ 13) := by
+    norm_num
+    field_simp
+    ring
+  exact hval ▸ hg.congr_of_eventuallyEq heq
+
+/-- The derivative of the truncated Lennard-Jones potential on the open interaction
+region, as a `deriv` equality. -/
+theorem ljp_deriv (r_c ε σ : ℝ) {r : ℝ} (h0 : 0 < r) (hc : r < r_c) :
+    deriv (fun r => Ljp r r_c ε σ) r = 24 * ε * (σ ^ 6 / r ^ 7 - 2 * σ ^ 12 / r ^ 13) :=
+  (ljp_hasDerivAt r_c ε σ h0 hc).deriv
 
 theorem ljp_second_derivative (r_c ε σ : ℝ) :
     DifferentiableOn ℝ

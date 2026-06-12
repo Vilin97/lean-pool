@@ -6,21 +6,18 @@ Authors: Colin Jones
 import Mathlib.Algebra.Order.Round
 import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import LeanPool.LeanLJ.Instance
 
 /-!
 # Lennard-Jones potential and energy functions
 
-This file defines the periodic-boundary distance helpers (`pbc`, `minImageDistance`),
-several formulations of the truncated Lennard-Jones pair potential (`lj`, `Ljp`, `LJ`),
-the long-range correction `uLRC`, and the energy-summation routines over atom pairs.
+This file defines the periodic-boundary distance helpers (`pbcReal`, `minImageDistanceReal`),
+the truncated real Lennard-Jones pair potential in several formulations (`ljReal`, `Ljp`,
+`LJ`), the long-range correction `uLRCReal`, and an executable `Float` mirror of each
+together with the energy-summation routines over atom pairs. The `Float` definitions carry
+no theorems; all proved results are about the real-valued definitions.
 -/
 
-open LeanLJ
 namespace LeanLJ
-
-/-- Periodic-boundary wrap of `x` into a cell of size `L`, for any `RealLike` type. -/
-def pbc {α} [RealLike α] (x L : α) : α := x - L * (HasRound.pround (x / L) : α)
 
 /-- Periodic-boundary wrap of a `Float` position into a cell of size `boxLength`. -/
 def pbcFloat (position boxLength : Float) : Float :=
@@ -41,30 +38,12 @@ noncomputable def squaredminImageDistanceReal (posA posB boxLength : Fin 3 → �
 noncomputable def minImageDistanceReal (posA posB boxLength : Fin 3 → ℝ) : ℝ :=
   (squaredminImageDistanceReal posA posB boxLength).sqrt
 
-/-- The minimum-image distance between two 3-vectors over any `RealLike` type. -/
-def minImageDistance {α : Type} [RealLike α]
-    (posA posB : Fin 3 → α) (boxLength : Fin 3 → α) : α :=
-  let dx := pbc (posB (0 : Fin 3) - posA (0 : Fin 3)) (boxLength (0 : Fin 3))
-  let dy := pbc (posB (1 : Fin 3) - posA (1 : Fin 3)) (boxLength (1 : Fin 3))
-  let dz := pbc (posB (2 : Fin 3) - posA (2 : Fin 3)) (boxLength (2 : Fin 3))
-  HasSqrt.sqrt (dx ^ (2 : Nat) + dy ^ (2 : Nat) + dz ^ (2 : Nat))
-
 /-- The minimum-image distance between two `Float` 3-vectors under a box. -/
 def minImageDistanceFloat (posA posB : Fin 3 → Float) (boxLength : Fin 3 → Float) : Float :=
   let dx := pbcFloat (posB (0 : Fin 3) - posA (0 : Fin 3)) (boxLength (0 : Fin 3))
   let dy := pbcFloat (posB (1 : Fin 3) - posA (1 : Fin 3)) (boxLength (1 : Fin 3))
   let dz := pbcFloat (posB (2 : Fin 3) - posA (2 : Fin 3)) (boxLength (2 : Fin 3))
-  Float.sqrt (dx ^ (2 : Nat) + dy ^ (2 : Nat) + dz ^ (2 : Nat))
-
-/-- The truncated Lennard-Jones pair potential over any `RealLike` type. -/
-def ljP {α : Type} [RealLike α] (r r_c ε σ : α) : α :=
-  if r ≤ r_c then
-    let r3 := (σ / r) ^ (3 : Nat)
-    let r6 := r3 * r3
-    let r12 := r6 * r6
-    4 * ε * (r12 - r6)
-  else
-    0
+  Float.sqrt (dx * dx + dy * dy + dz * dz)
 
 /-- The truncated real Lennard-Jones pair potential, in nested-power form. -/
 noncomputable def ljReal (r r_c ε σ : ℝ) : ℝ :=
@@ -95,7 +74,8 @@ noncomputable def LJ (r r_c ε σ : ℝ) : ℝ :=
 /-- The truncated `Float` Lennard-Jones pair potential. -/
 def ljFloat (r r_c ε σ : Float) : Float :=
   if r ≤ r_c then
-    let r3 := (σ / r) ^ (3 : Nat)
+    let s := σ / r
+    let r3 := s * s * s
     let r6 := r3 * r3
     let r12 := r6 * r6
     4 * ε * (r12 - r6)
@@ -108,13 +88,6 @@ def pi : Float := 3.141592653589793
 /-- The `Float` number density `N / boxlength ^ 3`. -/
 def rho (N boxlength : Float) : Float := N / boxlength ^ 3
 
-/-- The Lennard-Jones long-range correction over any `RealLike` type. -/
-def uLRC {α : Type} [RealLike α]
-    (ρ pi ε σ rc : α) : α :=
-  (8 * pi * ρ * ε) *
-    ((1 / (9 : α)) * (σ ^ (12 : Nat) / rc ^ (9 : Nat))
-       - (1 / (3 : α)) * (σ ^ (6 : Nat) / rc ^ (3 : Nat)))
-
 /-- The `Float` Lennard-Jones long-range correction. -/
 def uLRCFloat (rho pi ε σ rc : Float) : Float :=
   (8 * rho * pi * ε) * ((1 / 9) * (σ ^ 12 / rc ^ 9) - (1 / 3) * (σ ^ 6 / rc ^ 3))
@@ -122,13 +95,6 @@ def uLRCFloat (rho pi ε σ rc : Float) : Float :=
 /-- The real Lennard-Jones long-range correction, using `Real.pi`. -/
 noncomputable def uLRCReal (ρ ε σ rc : ℝ) : ℝ :=
   (8 * Real.pi * ρ * ε) * ((1 / 9) * (σ ^ 12 / rc ^ 9) - (1 / 3) * (σ ^ 6 / rc ^ 3))
-
-/-- The truncated real Lennard-Jones pair potential in its simplest form. -/
-noncomputable def lj (r r_c ε σ : ℝ) : ℝ :=
-  if r ≤ r_c then
-    4 * ε * ((σ / r) ^ 12 - (σ / r) ^ 6)
-  else
-    0
 
 /-- The list of unordered index pairs `(i, j)` with `i < j` for `n` atoms. -/
 def pairs (n : Nat) : List (Nat × Nat) :=

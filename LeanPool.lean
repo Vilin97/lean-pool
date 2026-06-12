@@ -500,7 +500,6 @@ import LeanPool.LeanComplexAnalysis.UnivalentFunctions.ClassS
 import LeanPool.LeanLJ
 import LeanPool.LeanLJ.CSVParser
 import LeanPool.LeanLJ.Function
-import LeanPool.LeanLJ.Instance
 import LeanPool.LeanLJ.LennardJonesProof
 import LeanPool.LeanLJ.LongRangeCorrection
 import LeanPool.LeanLJ.MinImageDistancePeriodicBC

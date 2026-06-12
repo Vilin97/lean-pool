@@ -1902,7 +1902,7 @@ projects:
       - "30E20"
   - slug: leanlj
     title: "LeanLJ: a verified Lennard-Jones potential and energy framework"
-    summary: Formalizes the Lennard-Jones pair potential, its derivatives and continuity, the long-range correction integral, and minimum-image-distance bookkeeping under periodic boundary conditions, providing a verified core for molecular-simulation energy calculations.
+    summary: Formalizes the Lennard-Jones pair potential over the real numbers, proving its continuity, differentiability and explicit derivative on the interaction domain, the closed-form long-range correction integral, and minimum-image-distance properties under periodic boundary conditions, alongside an executable Float layer for molecular-simulation energy calculations.
     branch: molecular physics
     entry_module: LeanPool.LeanLJ
     authors:
@@ -1914,14 +1914,18 @@ projects:
     status: verified
     main_declarations:
       - LeanLJ.long_range_correction_equality
-      - LeanLJ.Lj_eq
+      - LeanLJ.ljp_hasDerivAt
     main_results:
       - declaration: LeanLJ.long_range_correction_equality
         informal: Evaluates the Lennard-Jones long-range correction integral in closed form as the standard analytic tail expression.
+        source_ref: "D. Frenkel and B. Smit, Understanding Molecular Simulation, 2nd ed., Academic Press, 2002, Section 3.2.2, doi:10.1016/B978-0-12-267351-1.X5000-7."
+      - declaration: LeanLJ.ljp_hasDerivAt
+        informal: Computes the explicit derivative 24ε(σ⁶/r⁷ − 2σ¹²/r¹³) of the truncated Lennard-Jones potential on the open interaction region.
+        source_ref: "J. E. Lennard-Jones, On the determination of molecular fields. II. From the equation of state of a gas, Proc. R. Soc. Lond. A 106 (1924), 463-477, doi:10.1098/rspa.1924.0082."
       - declaration: LeanLJ.Lj_eq
         informal: Proves that two formulations of the truncated Lennard-Jones potential agree.
       - declaration: LeanLJ.ljp_differentiable
-        informal: Proves that the truncated Lennard-Jones potential is differentiable on its interior domain and computes its derivative.
+        informal: Proves that the truncated Lennard-Jones potential is differentiable on its positive interaction domain.
       - declaration: LeanLJ.ljp_continuous_closed_domain
         informal: Proves that the truncated Lennard-Jones potential is continuous on the closed interaction domain.
       - declaration: LeanLJ.minImageDistance_real_self

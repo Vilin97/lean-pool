@@ -5,7 +5,6 @@ Authors: Colin Jones
 -/
 import Mathlib.Analysis.SpecialFunctions.ImproperIntegrals
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
-import LeanPool.LeanLJ.Instance
 import LeanPool.LeanLJ.Function
 
 /-!
