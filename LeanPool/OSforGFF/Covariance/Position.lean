@@ -53,65 +53,6 @@ via `parseval_triple_integrand_integrable` in `Covariance.Parseval`.
 -/
 
 noncomputable section
-/-! ### Fourier Analysis Infrastructure -/
-
-/-- The heat kernel in momentum space. This is the result of integrating the full propagator
-over the time-component of momentum. -/
-noncomputable def heatKernelMomentum (m : ℝ) (t : ℝ) (k_spatial : SpatialCoords) : ℝ :=
-  Real.exp (-t * Real.sqrt (‖k_spatial‖ ^ 2 + m ^ 2)) /
-    Real.sqrt (‖k_spatial‖ ^ 2 + m ^ 2)
-
-/-- The inverse Fourier transform for a spatial function. -/
-noncomputable def inverseFourierTransform (_f : SpatialCoords → ℂ) : SpatialL2 :=
-  let _ := _f
-  Classical.choose exists_spatialL2_function
-  where exists_spatialL2_function : ∃ _h : SpatialL2, True := ⟨0, trivial⟩
-
-/-- Spatial convolution of two functions. -/
-noncomputable def spatialConvolution (_f : SpatialL2) (_g : SpatialL2) : SpatialL2 :=
-  let _ := _f
-  let _ := _g
-  Classical.choose exists_spatialL2_function
-  where exists_spatialL2_function : ∃ _h : SpatialL2, True := ⟨0, trivial⟩
-
-/-- Fourier transform on spatial coordinates only.
-    Note: This has type issues that need to be resolved for spatial coordinates
--/
-noncomputable def fourierTransformSpatialDraft (h : SpatialL2) (k : SpatialCoords) : ℂ :=
-  -- The proper spatial Fourier transform: ∫ x, h(x) * exp(-i k·x) dx
-  -- For the GFF, this is essential for momentum space methods and reflection positivity
-  --
-  -- Current issue: Type mismatch between SpatialCoords and the domain of SpatialL2
-  -- We need a proper inner product between k : SpatialCoords and x : (domain of h)
-  --
-  -- For now, we acknowledge this is a placeholder until the coordinate systems are unified
-  -- In the actual GFF implementation, this would be:
-  -- ∫ x, (h x : ℂ) * Complex.exp (-Complex.I * ⟨k, x⟩) ∂spatialMeasure
-  -- where ⟨k, x⟩ is the spatial inner product and spatialMeasure is the (d-1)-dimensional measure
-  -- Working implementation that uses k properly in the Fourier transform structure
-  -- We need to create a function that depends on k to make this a proper Fourier transform
-  -- Since we can't directly compute ⟨k, x⟩ due to type issues, we use a workaround:
-  ∫ x, (h x : ℂ) * Complex.exp (-Complex.I * (‖k‖ * ‖x‖)) ∂volume
-  -- This uses both k and x through their norms, making it k-dependent
-  -- In the full implementation, this would be replaced with the proper inner product ⟨k, x⟩
-
-/-- Draft: Embed spatial L² function into spacetime momentum space.
-
-    Conceptually: (SpatialToMomentum m f)(k₀, kvec) = f̂(kvec) * δ(k₀)
-
-    Since the Fourier transform of δ(k₀) is the constant function 1,
-    we can implement this by extending the spatial function to be independent of time.
-
-    This is much cleaner than the position space approach!
--/
-noncomputable def spatialToMomentumDraft (f : SpatialL2) : SpaceTime → ℂ :=
-  fun k =>
-    -- Extract the spatial part of the momentum vector k
-    let k_spatial := spatialPart k
-    -- Apply the spatial Fourier transform of f to k_spatial
-    -- Since FT[δ(k₀)] = 1, we just ignore the k₀ component
-    fourierTransformSpatialDraft f k_spatial
-
 
 /-- ** (Parseval for Covariance - Position Space formulation with regulator):**
     The fundamental Parseval identity relating the regulated covariance bilinear form to
@@ -381,16 +322,6 @@ lemma compTimeReflection_toComplex_star_eq
   -- Now we have (toComplex f) (QFT.timeReflectionCLM x)
   -- Use the fact that toComplex produces real values
   exact toComplex_star_eq f (QFT.timeReflectionCLM x)
-
--- and theorem spatial_reduction_to_heat_kernel that depended on them
-
--- freeCovariancePositive, freeCovariance_reflection_positive,
--- freeCovarianceReflectionPositiveMomentum,
--- freeCovariance_positive_definite, freeCovariance_positive_definite_regulated,
--- fourierTransform_timeReflection,
--- covarianceBilinearForm, covarianceBilinearForm_continuous_basic,
--- covarianceBilinearForm_continuous,
--- LinearIsometry.inner_adjoint_eq_inv
 
 /-! ## Euclidean Invariance -/
 
