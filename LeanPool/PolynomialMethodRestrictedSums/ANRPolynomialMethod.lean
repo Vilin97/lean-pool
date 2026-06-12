@@ -59,22 +59,6 @@ noncomputable def elimination_polynomials (A : Fin (k + 1) → Finset (ZMod p)) 
     Fin (k + 1) → MvPolynomial (Fin (k + 1)) (ZMod p) :=
   fun i => ∏ a ∈ A i, (MvPolynomial.X i - C a)
 
-/-- Reduction of polynomial degrees -/
-noncomputable def reduce_polynomial_degrees (P : MvPolynomial (Fin (k + 1)) (ZMod p))
-    (g : Fin (k + 1) → MvPolynomial (Fin (k + 1)) (ZMod p))
-    (c : Fin (k + 1) → ℕ) : MvPolynomial (Fin (k + 1)) (ZMod p) :=
-  P.support.sum fun m =>
-    let coeff := P.coeff m
-    let needs_replacement : Finset (Fin (k + 1)) :=
-      Finset.filter (fun i => m i > c i) Finset.univ
-    if h : needs_replacement.Nonempty then
-      let i : Fin (k + 1) := needs_replacement.min' h
-      let new_m : (Fin (k + 1)) →₀ ℕ :=
-        Finsupp.update m i (m i - (c i + 1))
-      coeff • (MvPolynomial.monomial new_m 1) * (MvPolynomial.X i ^ (c i + 1) - g i)
-    else
-      coeff • MvPolynomial.monomial m 1
-
 /-- The sum of variables polynomial -/
 noncomputable def sumX_polynomial : MvPolynomial (Fin (k + 1)) (ZMod p) :=
   ∑ i, MvPolynomial.X i
@@ -1213,37 +1197,24 @@ end AristotleLemmas
 
 /-- Alon-Nathanson-Ruzsa Polynomial Method (Theorem 2.1)
 
-(Or name it as Thames Shifted Course. As it is really important in the article.)
-
-Proof strategy: Use Lemma 2.2 (eq_zero_of_eval_zero_at_prod_finset) to prove Theorem 2.1
-
-Proof outline:
-1. Assume the conclusion is false, i.e., there exists a set E subset Z_p with |E| = m such that
-restricted sumset subset E
+Proof outline (by contradiction):
+1. Assume the conclusion is false, so the restricted sumset S has at most m elements;
+   extend S to a multiset E of Z_p with |E| = m (`extend_to_size`).
 2. Construct the polynomial Q(x_0,...,x_k) = h(x_0,...,x_k) * prod_{e in E} (x_0+...+x_k - e)
-   - deg(Q) = deg(h) + m = sum c_i
-   - For all (a_0,...,a_k) in prod A_i, we have Q(a_0,...,a_k) = 0
-   - The coefficient of monomial prod x_i^{c_i} in Q is nonzero
-
-3. For each i, define g_i(x_i) = prod_{a in A_i} (x_i - a) = x_i^{c_i+1} - sum_j b_ij x_i^j
-4. Construct polynomial Q_bar by replacing all occurrences of x_i^{c_i+1} in Q with sum_j b_ij x_i^j
-   - For each a_i in A_i, g_i(a_i) = 0, so Q_bar still vanishes on prod A_i
-   - deg_{x_i}(Q_bar) <= c_i
-
-5. Apply Lemma 2.2:
-   - Q_bar vanishes on prod A_i
-   - Degree in each variable <= c_i
-   - Therefore Q_bar = 0
-
-6. But the coefficient of prod x_i^{c_i} in Q_bar is the same as in Q:
-   - The replacement process doesn't affect this specific monomial
-   - By assumption, this coefficient is nonzero in Q
-   - Therefore it's nonzero in Q_bar, contradicting Q_bar = 0
-
-Key points:
-- Use polynomial replacement technique to reduce degrees to satisfy Lemma 2.2 conditions
-- The replacement process preserves the coefficient of the target monomial
-- Proof by contradiction
+   (`construction_polynomial`):
+   - deg(Q) = deg(h) + m = sum c_i (`construction_polynomial_totalDegree`)
+   - Q vanishes on prod A_i, since each grid point sums to an element of E
+     (`construction_polynomial_vanishes`)
+   - The coefficient of the monomial prod x_i^{c_i} in Q is nonzero, since it agrees with
+     the corresponding coefficient of h * (x_0+...+x_k)^m
+     (`construction_polynomial_coeff_target_generalized`)
+3. By Lemma 2.1.10 (`coeff_target_eq_zero_of_vanishes_on_grid`), a polynomial of total
+   degree at most sum c_i that vanishes on prod A_i has zero coefficient at prod x_i^{c_i}:
+   reducing Q modulo the elimination polynomials g_i = prod_{a in A_i} (x_i - a) leaves the
+   target coefficient unchanged (`exists_remainder`), and the reduced polynomial vanishes
+   identically by Lemma 2.2 (`eq_zero_of_eval_zero_at_prod_finset`).
+4. Steps 2 and 3 contradict each other, so |S| >= m + 1; m < p follows since S is a subset
+   of Z_p.
 -/
 theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
     (A : Fin (k + 1) → Finset (ZMod p))
@@ -1421,19 +1392,11 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
         rw [mul_comm, h_coeff_eq]
         apply_rules [coeff_target_eq_zero_of_vanishes_on_grid]
         exact hQ_total_deg.le
-    -- Define elimination polynomials g_i
-    set g : Fin (k + 1) → MvPolynomial (Fin (k + 1)) (ZMod p) :=
-      elimination_polynomials A with hg_def
-    -- Construct Q_bar by reducing degrees
-    set Q_bar : MvPolynomial (Fin (k + 1)) (ZMod p) :=
-      reduce_polynomial_degrees Q g c with hQ_bar_def
-    let target := Finsupp.equivFunOnFinite.symm c
-    -- Apply the lemma that states if a polynomial vanishes on a grid, then the coefficient of the
-    -- target monomial is zero.
-    have hQ_coeff_zero : MvPolynomial.coeff target Q = 0 := by
-      -- Apply the lemma that states if a polynomial vanishes on a grid, then the coefficient of the
-      -- target monomial is zero. Use hQ_zero to satisfy the condition.
-      apply coeff_target_eq_zero_of_vanishes_on_grid Q A c hA hQ_total_deg.le hQ_zero
+    -- Since Q vanishes on the grid, the coefficient of the target monomial in Q is zero,
+    -- contradicting hQ_coeff.
+    have hQ_coeff_zero :
+        MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) Q = 0 :=
+      coeff_target_eq_zero_of_vanishes_on_grid Q A c hA hQ_total_deg.le hQ_zero
     contradiction
   -- Step 2: Prove m < p first (this is needed for the main argument)
   have hmp : m < p := by

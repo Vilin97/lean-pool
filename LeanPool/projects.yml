@@ -2749,15 +2749,19 @@ projects:
     main_results:
       - declaration: ANR_polynomial_method
         informal: The Alon–Nathanson–Rusza polynomial method theorem, giving a non-vanishing-coefficient criterion for restricted sums.
-        source_ref: "N. Alon, M. B. Nathanson, I. Z. Ruzsa, The polynomial method and restricted sums of congruence classes, J. Number Theory 56 (1996), 404-417."
+        source_ref: "N. Alon, M. B. Nathanson, I. Z. Ruzsa, The polynomial method and restricted sums of congruence classes, J. Number Theory 56 (1996), 404-417, doi:10.1006/jnth.1996.0029."
       - declaration: cauchy_davenport
         informal: The Cauchy–Davenport theorem on sums of subsets of the cyclic group of prime order.
+        source_ref: "N. Alon, Combinatorial Nullstellensatz, Combinatorics, Probability and Computing 8 (1999), 7-29, doi:10.1017/S0963548398003411."
       - declaration: dias_da_silva_hamidoune
         informal: The Dias da Silva–Hamidoune lower bound for restricted sums of distinct elements in a prime cyclic group.
+        source_ref: "J. A. Dias da Silva, Y. O. Hamidoune, Cyclic spaces for Grassmann derivatives and additive theory, Bull. London Math. Soc. 26 (1994), 140-146, doi:10.1112/blms/26.2.140."
       - declaration: restricted_sum_distinct_sizes
         informal: A lower bound for restricted sums when the summand sets have distinct sizes.
+        source_ref: "N. Alon, M. B. Nathanson, I. Z. Ruzsa, The polynomial method and restricted sums of congruence classes, J. Number Theory 56 (1996), 404-417, doi:10.1006/jnth.1996.0029."
       - declaration: Vandermonde_coefficient_formula
         informal: A closed-form expression for a specific Vandermonde-style coefficient used by the polynomial method.
+        source_ref: "N. Alon, M. B. Nathanson, I. Z. Ruzsa, The polynomial method and restricted sums of congruence classes, J. Number Theory 56 (1996), 404-417, doi:10.1006/jnth.1996.0029."
     tags:
       - combinatorics
       - polynomial-method

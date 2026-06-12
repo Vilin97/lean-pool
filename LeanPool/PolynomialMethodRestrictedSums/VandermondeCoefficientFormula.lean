@@ -60,12 +60,6 @@ def vandermonde_matrix (c : Fin (k + 1) → ℕ) : Matrix (Fin (k + 1)) (Fin (k 
 def falling_factorial_matrix (c : Fin (k + 1) → ℕ) : Matrix (Fin (k + 1)) (Fin (k + 1)) ℚ :=
   Matrix.of (fun i j : Fin (k + 1) => (falling_factorial (c i) j : ℚ))
 
-/-- Symmetric group sum expression C = ∑_{∈S_{k + 1}} (-1)^{sign()} * m! / ∏ (c - (i))! -/
-def symmetric_sum (c : Fin (k + 1) → ℕ) (m : ℕ) : ℚ :=
-  ∑ σ : Equiv.Perm (Fin (k + 1)),
-    ((-1 : ℚ)) ^ (σ.sign : ℤ) *
-    ((m.factorial : ℚ) / ∏ i : Fin (k + 1), ((c i - (σ i : ℕ)).factorial : ℚ))
-
 /-- Expected value: m! / (∏ c!) * ∏_{i>j} (c - c) -/
 def expected_value (c : Fin (k + 1) → ℕ) (m : ℕ) : ℚ :=
   (m.factorial : ℚ) * (∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
@@ -207,15 +201,6 @@ lemma det_falling_factorial_eq_det_vandermonde (c : Fin (k + 1) → ℕ) :
         obtain ⟨left_1, right⟩ := right
         exact right
     simp_all only [gt_iff_lt, det_mul, mul_one]
-
-/-- Symmetric group sum expression C = ∑_{σ∈S_{k + 1}} (-1)^{sign(σ)} * m! / ∏ᵢ (cᵢ - σ(i))!
-    Corrected to be 0 if cᵢ < σ(i) for any i. -/
-def symmetric_sum_correct (c : Fin (k + 1) → ℕ) (m : ℕ) : ℚ :=
-  ∑ σ : Equiv.Perm (Fin (k + 1)),
-    if (∀ i, σ i ≤ c i) then
-      ((-1 : ℚ)) ^ (σ.sign : ℤ) *
-      ((m.factorial : ℚ) / ∏ i : Fin (k + 1), ((c i - (σ i : ℕ)).factorial : ℚ))
-    else 0
 
 lemma falling_factorial_eq_factorial_div (n k : ℕ) :
   falling_factorial n k = if k ≤ n then n.factorial / (n - k).factorial else 0 := by

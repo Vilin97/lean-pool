@@ -223,13 +223,6 @@ lemma compressed_sizes_le {k : ℕ} {b : Fin (k + 1) → ℕ} : ∀ i, compresse
   cases i <;> aesop
 
 /-
-The value of compressed_sizes at index 0 is b 0 by definition.
--/
-lemma compressed_sizes_zero {k : ℕ} {b : Fin (k + 1) → ℕ} : compressed_sizes b 0 = b 0 := by
-  unfold compressed_sizes
-  rfl
-
-/-
 The value of compressed_sizes at index i + 1 is min(compressed_sizes b i - 1, b (i + 1)) by
 definition.
 -/
@@ -335,16 +328,6 @@ lemma compressed_sizes_is_valid {k : ℕ} {b : Fin (k + 1) → ℕ}
             exact Nat.sub_lt (h_compressed_last_pos _) Nat.one_pos
           · rw [h_compressed_succ, left]
             exact right.trans_le ( Nat.sub_le _ _ )
-
-/-
-The compressed sizes sequence is strictly decreasing because each term is defined as the minimum of
-the previous term minus 1 and the original sequence value. Thus, b'_{i + 1} <= b'_i - 1 < b'_i.
-Since the last term is positive by hypothesis, the sequence is valid.
--/
-lemma compressed_sizes_valid_seq {k : ℕ} {b : Fin (k + 1) → ℕ}
-    (h_last_pos : compressed_sizes b (Fin.last k) > 0) :
-    ValidSeq k (compressed_sizes b) := by
-      exact compressed_sizes_is_valid h_last_pos
 
 end AristotleLemmas
 
