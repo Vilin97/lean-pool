@@ -1265,6 +1265,60 @@ projects:
     msc:
       - "68W15"
       - "05C15"
+  - slug: a-formalization-of-borel-determinacy-in-lean
+    title: A formalization of Borel determinacy in Lean
+    summary: Formalizes Martin's theorem that every Borel Gale-Stewart game is determined.
+    branch: descriptive set theory
+    entry_module: LeanPool.AFormalizationOfBorelDeterminacyInLean
+    authors:
+      - Sven Manthe
+    source:
+      arxiv: "2502.03432"
+      github_repo: sven-manthe/A-formalization-of-Borel-determinacy-in-Lean
+    status: verified
+    main_declarations:
+      - GaleStewartGame.borel_determinacy
+      - GaleStewartGame.Games.borel_determinacy
+    main_results:
+      - declaration: GaleStewartGame.borel_determinacy
+        informal: Proves that every Borel Gale-Stewart game on a nonempty discrete alphabet is determined.
+      - declaration: GaleStewartGame.Games.borel_determinacy
+        informal: Proves Borel determinacy for the bundled game representation used in the formalization.
+    tags:
+      - descriptive-set-theory
+      - game-theory
+      - determinacy
+    msc:
+      - "03E15"
+      - "54H05"
+      - "91A44"
+  - slug: main-theorem-of-polytopes
+    title: The main theorem of polytopes
+    summary: Formalizes the Minkowski–Weyl theorem — the equivalence between V-polytopes (convex hulls of finite point sets) and bounded H-polytopes (finite intersections of half-spaces) in a finite-dimensional real vector space.
+    branch: convex geometry
+    entry_module: LeanPool.Polytopes
+    authors:
+      - Jun Kwon
+    source:
+      title: "Main theorem of polytopes"
+      url: https://github.com/Jun2M/Main-theorem-of-polytopes
+      github_repo: Jun2M/Main-theorem-of-polytopes
+    status: verified
+    main_declarations:
+      - MainTheoremOfPolytopes
+    main_results:
+      - declaration: MainTheoremOfPolytopes
+        informal: The Minkowski–Weyl theorem — a set is a V-polytope iff it is a bounded H-polytope.
+        source_ref: "G. M. Ziegler, Lectures on Polytopes, GTM 152, Springer, 1995, Theorem 1.1."
+      - declaration: Vpolytope_of_Hpolytope
+        informal: Every bounded H-polytope (finite intersection of half-spaces) is the convex hull of a finite point set.
+    tags:
+      - convex-geometry
+      - discrete-geometry
+      - polytopes
+    msc:
+      - "52B11"
+      - "52A20"
   - slug: lean-poly-abc
     title: Polynomial ABC (Mason–Stothers) and its corollaries
     summary: Formalizes the Mason–Stothers theorem (the polynomial ABC theorem) and derives the polynomial Fermat's Last Theorem, the Fermat–Catalan inequality, Davenport's theorem, and a no-parametrization corollary.
@@ -1843,6 +1897,30 @@ projects:
       - "60A05"
       - "18C50"
       - "68Q55"
+  - slug: lean4-gl-coalgebras
+    title: Craig Interpolation for Gödel-Löb logic via coalgebraic proofs
+    summary: Formalizes a proof-theoretic Craig interpolation theorem for Gödel-Löb provability logic, built on a coalgebraic notion of circular proof.
+    branch: provability logic
+    entry_module: LeanPool.Lean4GlCoalgebras
+    authors:
+      - Madeleine Gignoux
+    source:
+      doi: "10.1134/S0081543811060198"
+      github_repo: mgignoux/lean4-gl-coalgebras
+    status: verified
+    main_declarations:
+      - Lean4GlCoalgebras.interpolation
+    main_results:
+      - declaration: Lean4GlCoalgebras.interpolation
+        informal: Proves the Craig interpolation theorem for Gödel-Löb provability logic.
+    tags:
+      - modal-logic
+      - provability-logic
+      - craig-interpolation
+      - proof-theory
+    msc:
+      - "03B45"
+      - "03F45"
   - slug: leanmodularforms
     title: Modular forms and the generalized residue theorem
     summary: Formalizes the Hungerbühler-Wasem generalized residue theorem for Cauchy principal value integrals through poles and applies it to the valence formula for modular forms on the modular group.
@@ -1873,6 +1951,664 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: redhill
+    title: Improved Lower Bounds for Strong n-Conjectures
+    summary: Formalizes the disproof of Ramaekers's conjecture, constructing tuple families whose abc-style quality stays bounded above 1, and proves Browkin-Brzezinski lower bounds on the quality of the n-conjecture tuples.
+    branch: number theory
+    entry_module: LeanPool.Redhill
+    authors:
+      - Jeremy Tan
+    source:
+      title: "Improved Lower Bounds for Strong n-Conjectures"
+      authors:
+        - Rupert Hölzl
+        - Sören Kleine
+        - Frank Stephan
+      doi: "10.1017/S1446788725000084"
+      github_repo: Parcly-Taxel/Redhill
+    status: verified
+    main_declarations:
+      - not_ramaekersConjecture_ge_six
+      - le_quality_nConjectureTuples
+    main_results:
+      - declaration: RamaekersConjecture
+        informal: Defines Ramaekers's conjecture for fixed n as the statement that the quality of the relevant tuple set equals 1.
+      - declaration: not_ramaekersConjecture_ge_six
+        informal: Proves Ramaekers's conjecture fails for every n at least 6 (the general case, Theorem 1.14).
+      - declaration: not_ramaekersConjecture_odd_ge_five
+        informal: Proves Ramaekers's conjecture fails for every odd n at least 5 (the odd case via Pell equations, Theorem 1.13).
+      - declaration: not_ramaekersConjecture_five
+        informal: Proves Ramaekers's conjecture fails for n equal to 5 (the Konyagin prelude bound).
+      - declaration: le_quality_nConjectureTuples
+        informal: Proves the Browkin-Brzezinski 1994 lower bound 2n-5 on the quality of the n-conjecture tuples (Theorem 1.3).
+    tags:
+      - number-theory
+      - abc-conjecture
+      - n-conjecture
+      - ramaekers-conjecture
+    msc:
+      - "11A41"
+      - "11D75"
+  - slug: synthetic-euclid
+    title: "Synthetic Euclidean geometry: Euclid's Elements Book I"
+    summary: Formalizes Book I of Euclid's Elements via an axiomatic synthetic-geometry system (incidence, betweenness, congruence, and area), culminating in the Pythagorean theorem and its converse.
+    branch: synthetic euclidean geometry
+    entry_module: LeanPool.SyntheticEuclid4
+    authors:
+      - André Hernandez-Espiet
+      - Vladimir Sedlacek
+    source:
+      title: "A formal system for Euclid's Elements"
+      authors:
+        - Jeremy Avigad
+        - Edward Dean
+        - John Mumma
+      doi: "10.1017/S1755020309990098"
+      url: "https://github.com/ah1112/synthetic_euclid_4"
+      github_repo: ah1112/synthetic_euclid_4
+    status: verified
+    main_declarations:
+      - SyntheticEuclid4.pythagoras
+      - SyntheticEuclid4.pythagoras_converse
+    main_results:
+      - declaration: SyntheticEuclid4.IncidenceGeometry
+        informal: The axiomatic class of synthetic Euclidean geometry, bundling points, lines, circles, and the incidence, betweenness, congruence, and area primitives with Euclid's axioms.
+      - declaration: SyntheticEuclid4.square_of_len
+        informal: Constructs a square on a given segment off a given line.
+      - declaration: SyntheticEuclid4.pythagoras_construct
+        informal: Constructs the three squares and parallelograms on the sides of a triangle used in the proof of the Pythagorean theorem.
+      - declaration: SyntheticEuclid4.pythagoras
+        informal: Euclid I.47, the Pythagorean theorem, that the square on the hypotenuse of a right triangle equals the sum of the squares on the other two sides.
+      - declaration: SyntheticEuclid4.pythagoras_converse
+        informal: Euclid I.48, the converse of the Pythagorean theorem, that a triangle whose square areas satisfy the Pythagorean relation has a right angle.
+    tags:
+      - euclidean-geometry
+      - synthetic-geometry
+      - pythagorean-theorem
+    msc:
+      - "51M04"
+  - slug: flean
+    title: "Flean: Floating-Point Numbers in Lean"
+    summary: Formalizes a configurable model of floating-point numbers in Lean 4, including normal and subnormal representations, conversions between rationals and floats, round-trip correctness, and rounding error bounds.
+    branch: numerical analysis
+    entry_module: LeanPool.Flean
+    authors:
+      - Joseph McKinsey
+    source:
+      doi: "10.1109/IEEESTD.2019.8766229"
+      url: "https://github.com/josephmckinsey/flean"
+      github_repo: josephmckinsey/flean
+    status: verified
+    msc:
+      - "65G50"
+      - "65G30"
+      - "68V20"
+    main_declarations:
+      - Flean.Float
+      - toFloat
+      - toRat
+      - to_float_to_rat
+      - roundf_close
+    main_results:
+      - declaration: Flean.Float
+        informal: Defines the floating-point number type parameterized by a precision and exponent configuration, with normal, subnormal, infinite, and NaN cases.
+      - declaration: toFloat
+        informal: Rounds a rational number to the nearest representable floating-point value under a given rounding mode.
+      - declaration: toRat
+        informal: Interprets a floating-point value as the exact rational number it represents.
+      - declaration: to_float_to_rat
+        informal: Proves the round-trip identity that converting a finite nonzero float to a rational and back recovers the original float.
+      - declaration: roundf_close
+        informal: Bounds the distance between a rational and its rounded floating-point representation.
+    tags:
+      - floating-point
+      - numerical-analysis
+      - ieee-754
+      - rounding
+  - slug: istranscendentalpi
+    title: The transcendence of π
+    summary: Formalizes a self-contained proof, following Niven's 1939 argument, that the real and complex number π is transcendental over the rationals.
+    branch: number theory
+    entry_module: LeanPool.IsTranscendentalPi
+    authors:
+      - James Huang
+      - Samuël Borza
+    source:
+      url: "https://github.com/samuelborza/IsTranscendentalPi"
+      github_repo: samuelborza/IsTranscendentalPi
+    status: verified
+    main_declarations:
+      - IsTranscendentalPi
+      - IsTranscendentalPiReal
+    main_results:
+      - declaration: IsTranscendentalPi
+        informal: Proves that the complex number π is transcendental over ℚ.
+      - declaration: IsTranscendentalPiReal
+        informal: Proves that the real number π is transcendental over ℚ.
+      - declaration: isAlgebraic_I_mul_pi_of_isAlgebraic_pi
+        informal: Shows that if π is algebraic over ℚ then so is iπ.
+      - declaration: exists_monic_rat_poly_aeval_Ipi_eq_zero
+        informal: Produces a monic rational polynomial vanishing at iπ when iπ is algebraic.
+    tags:
+      - transcendence
+      - pi
+      - number-theory
+      - niven
+    msc:
+      - "11A41"
+  - slug: brouwer
+    title: Existence of Nash equilibria via Brouwer's fixed-point theorem
+    summary: Formalizes Scarf's combinatorial lemma, derives Brouwer's fixed-point theorem on a simplex and on finite products of simplices, and uses it to prove the existence of a mixed Nash equilibrium in every finite game.
+    branch: game theory
+    entry_module: LeanPool.Brouwer
+    authors:
+      - Math_XMUM
+    source:
+      doi: "10.1073/pnas.36.1.48"
+      url: "https://github.com/math-xmum/Brouwer"
+      github_repo: math-xmum/Brouwer
+    status: verified
+    main_declarations:
+      - ExistsNashEq
+      - Brouwer
+      - Brouwer_Product
+      - IndexedLOrder.Scarf
+      - FinGame
+    main_results:
+      - declaration: ExistsNashEq
+        informal: Every finite game has a mixed Nash equilibrium.
+        source_ref: "J. Nash, Equilibrium Points in N-Person Games, Proceedings of the National Academy of Sciences 36(1):48-49, 1950, doi:10.1073/pnas.36.1.48."
+      - declaration: Brouwer
+        informal: Every continuous self-map of a standard simplex has a fixed point.
+        source_ref: "H. Scarf, The Approximation of Fixed Points of a Continuous Mapping, SIAM Journal on Applied Mathematics 15(5):1328-1343, 1967, doi:10.1137/0115116."
+      - declaration: Brouwer_Product
+        informal: Every continuous self-map of a finite product of simplices has a fixed point.
+        source_ref: "H. Scarf, The Approximation of Fixed Points of a Continuous Mapping, SIAM Journal on Applied Mathematics 15(5):1328-1343, 1967, doi:10.1137/0115116."
+      - declaration: IndexedLOrder.Scarf
+        informal: Scarf's combinatorial lemma producing a colorful simplex.
+        source_ref: "H. Scarf, The Approximation of Fixed Points of a Continuous Mapping, SIAM Journal on Applied Mathematics 15(5):1328-1343, 1967, doi:10.1137/0115116."
+      - declaration: FinGame
+        informal: The structure of a finite game with finitely many players and finite pure strategy sets.
+        source_ref: "J. Nash, Equilibrium Points in N-Person Games, Proceedings of the National Academy of Sciences 36(1):48-49, 1950, doi:10.1073/pnas.36.1.48."
+      - declaration: FinGame.mixedNashEquilibrium
+        informal: The predicate that a mixed strategy profile is a Nash equilibrium.
+        source_ref: "J. Nash, Equilibrium Points in N-Person Games, Proceedings of the National Academy of Sciences 36(1):48-49, 1950, doi:10.1073/pnas.36.1.48."
+    tags:
+      - game-theory
+      - nash-equilibrium
+      - brouwer-fixed-point
+      - scarf-lemma
+      - simplex
+    msc:
+      - "91A06"
+      - "91A10"
+      - "47H10"
+  - slug: primecert
+    title: Formally verified primality certificates
+    summary: Implements Pocklington's primality test and the cube-root Brillhart-Lehmer-Selfridge variant in Lean 4, with custom metaprogramming to produce compact, kernel-checkable primality certificates.
+    branch: primality certificates
+    entry_module: LeanPool.PrimeCert
+    authors:
+      - Kenny Lau
+      - Bhavik Mehta
+    source:
+      doi: "10.1090/S0025-5718-1975-0384673-1"
+      url: "https://github.com/b-mehta/PrimeCert"
+      github_repo: b-mehta/PrimeCert
+    status: verified
+    main_declarations:
+      - pocklington_test
+      - PrimeCert.pocklington3_test
+      - wieferich_mirimanoff
+    main_results:
+      - declaration: pocklington_test
+        informal: "The core Pocklington divisor theorem: every prime factor of N is congruent to 1 modulo a fully factored divisor F of N - 1, given pseudo-primitive roots for each prime factor of F."
+        source_ref: "H. C. Pocklington, The Determination of the Prime or Composite Nature of Large Numbers by Fermat's Theorem, Proceedings of the Cambridge Philosophical Society 18:29-30, 1914."
+      - declaration: pocklington_certify
+        informal: Certifies that N is prime when a fully factored divisor F of N - 1 exceeds the square root of N and the Pocklington primitive-root predicate holds for a single root.
+        source_ref: "H. C. Pocklington, The Determination of the Prime or Composite Nature of Large Numbers by Fermat's Theorem, Proceedings of the Cambridge Philosophical Society 18:29-30, 1914."
+      - declaration: PrimeCert.pocklington3_test
+        informal: The cube-root (Brillhart-Lehmer-Selfridge) variant of the Pocklington test, requiring only a divisor F of N - 1 exceeding the cube root of N together with a sieve and a non-square certificate.
+        source_ref: "J. Brillhart, D. H. Lehmer, and J. L. Selfridge, New Primality Criteria and Factorizations of 2^m ± 1, Mathematics of Computation 29(130):620-647, 1975, doi:10.1090/S0025-5718-1975-0384673-1."
+      - declaration: wieferich_mirimanoff
+        informal: No prime below 6000 is simultaneously a Wieferich prime and a Mirimanoff prime.
+        source_ref: "J. Brillhart, D. H. Lehmer, and J. L. Selfridge, New Primality Criteria and Factorizations of 2^m ± 1, Mathematics of Computation 29(130):620-647, 1975, doi:10.1090/S0025-5718-1975-0384673-1."
+    tags:
+      - number-theory
+      - primality-testing
+      - pocklington
+      - primality-certificate
+      - metaprogramming
+    msc:
+      - "11A41"
+      - "11Y11"
+  - slug: circuit-complexity
+    title: Circuit Complexity in Lean 4
+    summary: A Lean 4 formalization of classical Boolean circuit complexity, including the Shannon counting lower bound, Schnorr's XOR gate lower bound, a gate-elimination lower bound, CNF/DNF lower bounds for parity, and nondeterministic quantification complexity bounds.
+    branch: boolean circuit complexity lower bounds
+    entry_module: LeanPool.CircuitComplexity
+    authors:
+      - Samuel Schlesinger
+    source:
+      url: "https://github.com/SamuelSchlesinger/circuit-complexity"
+      github_repo: SamuelSchlesinger/circuit-complexity
+    status: verified
+    main_declarations:
+      - CircuitComplexity.shannon_lower_bound_circuit
+    main_results:
+      - declaration: CircuitComplexity.shannon_lower_bound_circuit
+        informal: For N at least 6, there exists a Boolean function on N inputs that cannot be computed by any fan-in-2 AND/OR circuit of size at most 2^N / (5N).
+      - declaration: CircuitComplexity.schnorr_lower_bound_circuit
+        informal: Any fan-in-2 AND/OR circuit computing the N-input XOR function (or its complement) has at least 2(N-1) internal gates.
+      - declaration: CircuitComplexity.Circuit.gate_elimination_lower_bound
+        informal: Any circuit over bounded fan-in k AND/OR computing a function with n' essential inputs has size at least n' / k.
+      - declaration: CircuitComplexity.DNF.xorBool_complexity_lb
+        informal: Any DNF formula computing the N-input XOR function requires at least 2^(N-1) terms.
+      - declaration: CircuitComplexity.CNF.xorBool_complexity_lb
+        informal: Any CNF formula computing the N-input XOR function requires at least 2^(N-1) clauses.
+      - declaration: CircuitComplexity.existQuantify_complexity_le
+        informal: If a function f has circuit complexity s, then the existential quantification of f over a k-bit block has circuit complexity at most 2^k * (s + 1).
+    tags:
+      - circuit-complexity
+      - boolean-functions
+      - lower-bounds
+      - shannon-bound
+      - parity
+    msc:
+      - "68Q06"
+      - "94C11"
+  - slug: computability
+    title: Oracle Computability and Turing Degrees
+    summary: Formalizes oracle-relative computability via partial recursive functions, Turing reducibility and the Turing degrees as an upper semilattice, a Gödel numbering with a universal oracle machine, the jump operator, and the arithmetical hierarchy.
+    branch: computability theory
+    entry_module: LeanPool.Computability
+    authors:
+      - Tanner Duve
+      - Elan Roth
+    source:
+      url: "https://github.com/tannerduve/computability"
+      github_repo: tannerduve/computability
+    status: verified
+    main_declarations:
+      - Computability.RecursiveIn
+      - Computability.TuringDegree
+    main_results:
+      - declaration: Computability.RecursiveIn
+        informal: "The inductive relation `RecursiveIn O f` stating that `f : ℕ →. ℕ` is partial recursive relative to a set of oracle functions `O`."
+      - declaration: Computability.exists_code_rel
+        informal: Universality of the oracle evaluator `evalo`, that is, `RecursiveIn (Set.range g) f` holds iff there is a code `c` with `evalo g c = f`.
+      - declaration: Computability.TuringReducible
+        informal: "`f` is Turing reducible to `g` (`f ≤ᵀ g`) when `f` is recursive in the singleton oracle set `{g}`."
+      - declaration: Computability.TuringDegree
+        informal: The type of Turing degrees, the antisymmetrization of partial functions under Turing reducibility.
+      - declaration: Computability.jump_recIn
+        informal: The original function is Turing reducible to its jump, `f ≤ᵀ f⌜`.
+      - declaration: Computability.TuringDegree.instSemilatticeSup
+        informal: The Turing degrees form an upper semilattice with the Turing join as supremum.
+    tags:
+      - computability
+      - oracle-computability
+      - turing-degrees
+      - recursion-theory
+      - arithmetical-hierarchy
+    msc:
+      - "03D30"
+      - "03D28"
+  - slug: pumping-cfg
+    title: Pumping Lemma for Context-Free Grammars
+    summary: Formalizes the pumping lemma for context-free languages via parse trees of Chomsky-normal-form grammars and a pigeonhole argument.
+    branch: formal language theory
+    entry_module: LeanPool.PumpingCfg
+    authors:
+      - Alexander Loitzl
+      - Martin Dvorak
+    source:
+      url: "https://github.com/AlexLoitzl/pumping_cfg"
+      github_repo: AlexLoitzl/pumping_cfg
+    status: verified
+    main_declarations:
+      - Language.IsContextFree.pumping
+      - ChomskyNormalFormGrammar.pumping
+    main_results:
+      - declaration: Language.IsContextFree.pumping
+        informal: Every context-free language admits a pumping length p such that any word of length at least p decomposes as u v x y z with vy nonempty, vxy of length at most p, and u vⁱ x yⁱ z in the language for every i.
+      - declaration: ChomskyNormalFormGrammar.pumping
+        informal: The pumping lemma at the level of a Chomsky-normal-form grammar, obtained from a sufficiently tall parse tree with a repeated nonterminal.
+    tags:
+      - formal-languages
+      - context-free-grammars
+      - computability
+      - pumping-lemma
+    msc:
+      - "68Q45"
+  - slug: chomsky
+    title: Chomsky hierarchy in Lean 4
+    summary: Formalizes general (unrestricted) grammars and context-free grammars together with their derivation relations, shows context-free languages form a subclass of general-grammar languages, proves both classes are closed under union, concatenation, and reversal (and general-grammar languages under the Kleene star), and defines the Kuroda normal form.
+    branch: formal language theory
+    entry_module: LeanPool.Chomsky
+    authors:
+      - Martin Dvořák
+    source:
+      url: "https://github.com/madvorak/chomsky"
+      arxiv: "2302.06420"
+      github_repo: madvorak/chomsky
+    status: verified
+    main_declarations:
+      - Chomsky.CF_subclass_GG
+      - Chomsky.GG_of_GG_u_GG
+      - Chomsky.GG_of_star_GG
+    main_results:
+      - declaration: Chomsky.CF_subclass_GG
+        informal: Proves that every context-free language is generated by some general (unrestricted) grammar, i.e. the context-free class is a subclass of the general-grammar class.
+      - declaration: Chomsky.CF_of_CF_u_CF
+        informal: Proves that the union of two context-free languages is context-free.
+      - declaration: Chomsky.CF_of_CF_c_CF
+        informal: Proves that the concatenation of two context-free languages is context-free.
+      - declaration: Chomsky.CF_of_reverse_CF
+        informal: Proves that the reversal of a context-free language is context-free.
+      - declaration: Chomsky.GG_of_GG_u_GG
+        informal: Proves that the union of two general-grammar languages is again a general-grammar language.
+      - declaration: Chomsky.GG_of_star_GG
+        informal: Proves that the Kleene star of a general-grammar language is again a general-grammar language.
+    tags:
+      - formal-languages
+      - chomsky-hierarchy
+      - context-free-grammar
+      - closure-properties
+    msc:
+      - "68Q42"
+  - slug: lentil
+    title: 'Lentil: Temporal Logic of Actions in Lean 4'
+    summary: A shallow embedding of Leslie Lamport's Temporal Logic of Actions (TLA) in Lean 4, with the temporal modalities, standard propositional and temporal proof rules, weak-fairness and leads-to reasoning, and an interactive proof mode for TLA judgments.
+    branch: temporal logic
+    entry_module: LeanPool.Lentil
+    authors:
+      - Qiyuan Zhao
+    source:
+      url: "https://github.com/verse-lab/Lentil"
+      github_repo: verse-lab/Lentil
+    status: verified
+    msc:
+      - "03B44"
+      - "68Q60"
+    main_declarations:
+      - TLA.always
+      - TLA.eventually
+      - TLA.always_induction
+      - TLA.wf1
+    main_results:
+      - declaration: TLA.always
+        informal: Defines the TLA "always" (box) temporal modality, asserting a predicate holds on every suffix of an execution.
+      - declaration: TLA.eventually
+        informal: Defines the TLA "eventually" (diamond) temporal modality, asserting a predicate holds on some suffix of an execution.
+      - declaration: TLA.always_induction
+        informal: The always-induction rule, equating `□ p` with `p` together with `□ (p → ◯ p)`.
+      - declaration: TLA.wf1
+        informal: The WF1 weak-fairness proof rule deriving a leads-to property from a next-state action under weak fairness.
+      - declaration: TLA.wf_as_leads_to
+        informal: Characterizes weak fairness of an action as a leads-to property between its enabledness and its occurrence.
+      - declaration: TLA.leads_to_trans
+        informal: Transitivity of the leads-to relation.
+    tags:
+      - temporal-logic
+      - tla
+      - formal-verification
+      - proof-mode
+  - slug: incompleteness
+    title: Gödel's First and Second Incompleteness Theorems
+    summary: Formalizes Gödel's first and second incompleteness theorems for first-order arithmetic, building on formalized arithmetization and provability-logic infrastructure.
+    branch: mathematical logic
+    entry_module: LeanPool.Incompleteness
+    authors:
+      - Palalansoukî
+    source:
+      doi: "10.1007/BF01700692"
+      github_repo: FormalizedFormalLogic/Incompleteness
+    status: verified
+    main_declarations:
+      - LeanPool.Incompleteness.goedelFirst
+      - LeanPool.Incompleteness.goedelSecond
+    main_results:
+      - declaration: LeanPool.Incompleteness.goedelFirst
+        informal: "Proves Gödel's first incompleteness theorem: a Sigma1-sound Delta1-definable theory extending arithmetic is incomplete."
+      - declaration: LeanPool.Incompleteness.goedelSecond
+        informal: "Proves Gödel's second incompleteness theorem: such a theory cannot prove its own consistency."
+    tags:
+      - incompleteness
+      - provability
+      - first-order-arithmetic
+      - mathematical-logic
+    msc:
+      - "03F40"
+      - "03F30"
+  - slug: phaseretrieval
+    title: Stable phase retrieval for Hermite-Fock expansions
+    summary: Formalizes stable phase retrieval for finite Hermite-Fock polynomials and their Gaussian L2 closure in d complex dimensions, together with the quantitative one-dimensional Fock-space local stability estimate that underlies it.
+    branch: analysis
+    entry_module: LeanPool.PhaseRetrieval
+    authors:
+      - Susanna Bertolini
+      - Jaume de Dios Pont
+    source:
+      title: "Stable phase retrieval for Hermite-Fock expansions"
+      authors:
+        - Susanna Bertolini
+        - Jaume de Dios Pont
+      url: https://github.com/susannabertolini/PhaseRetrieval
+      github_repo: susannabertolini/PhaseRetrieval
+    status: verified
+    main_declarations:
+      - DimdPolyShowcaseChallenge.stable_phase_retrieval
+    main_results:
+      - declaration: DimdPolyShowcaseChallenge.stable_phase_retrieval
+        informal: Proves stable phase retrieval for the Gaussian L2 closure of finite d-dimensional Hermite-Fock polynomials at a fixed level, giving a uniform stability constant bounding the phase-aligned L2 distance by the L2 distance of magnitudes.
+        source_ref: "R. Balan, P. Casazza, D. Edidin, On signal reconstruction without phase, Appl. Comput. Harmon. Anal. 20 (2006), 345-356, doi:10.1016/j.acha.2005.07.001."
+      - declaration: FockSPR.orthogonalReduction_exists_phase
+        informal: Proves the phase-aligned one-dimensional Fock-space local stability estimate, producing a unit phase for which the L2 distance to one is controlled by the magnitude defect.
+      - declaration: FockSPR.orthogonalReduction_core
+        informal: Proves the quantitative centered core estimate bounding the Gaussian Fock norm of a polynomial with small norm by the magnitude defect against one.
+      - declaration: FockSPR.LocalFockSPR
+        informal: Proves the local Fock-space stable phase retrieval coercivity estimate for centered polynomials.
+      - declaration: DimdPolyShowcaseChallenge.HermitePoly
+        informal: Defines the normalized one-variable complex Hermite-Fock basis polynomial.
+      - declaration: DimdPolyShowcaseChallenge.TrueHermiteFunctions
+        informal: Defines the Gaussian L2 closure of finite Hermite-Fock polynomials at a fixed level.
+    tags:
+      - phase-retrieval
+      - hermite-fock
+      - gaussian-measure
+      - complex-analysis
+    msc:
+      - "42C05"
+      - "46E22"
+      - "94A12"
+  - slug: turan3
+    title: Turán's theorem (the "Book" weighting proof)
+    summary: Formalizes the weighting/optimization proof of Turán's theorem from Proofs from THE BOOK, bounding the number of edges of a p-clique-free simple graph by (1/2)(1 - 1/(p-1)) n².
+    branch: extremal graph theory
+    entry_module: LeanPool.Turan3
+    authors:
+      - Rodrigo Gutierrez
+      - Yves Jäckle
+    source:
+      url: "https://github.com/ro-gut/turan3"
+      github_repo: ro-gut/turan3
+    status: verified
+    main_declarations:
+      - Turan3.turans
+      - Turan3.finale_bound
+      - Turan3.Better_forms_clique
+    main_results:
+      - declaration: Turan3.turans
+        informal: Turán's theorem — a p-clique-free simple graph on n vertices has at most (1/2)(1 - 1/(p-1)) n² edges.
+      - declaration: Turan3.finale_bound
+        informal: For any weight distribution on a p-clique-free graph, the total edge weight is at most ((p-1)(p-2)/2)·(1/(p-1))², the bound used to derive the edge count.
+      - declaration: Turan3.Better_forms_clique
+        informal: Starting from any weight function, the minimal-support weight-non-decreasing improvement has support that forms a clique.
+      - declaration: Turan3.Enhance_total_weight_stricinc
+        informal: Equalizing weights between a maximum- and minimum-weight vertex in the clique support strictly increases the total edge weight.
+    tags:
+      - graph-theory
+      - combinatorics
+      - turan-theorem
+      - extremal-graph-theory
+    msc:
+      - "05C35"
+  - slug: settheory
+    title: The Kunen inconsistency theorem
+    summary: Formalizes elementary embeddings of models of ZF set theory and proves the Kunen inconsistency theorem, that there is no nontrivial elementary embedding of the set-theoretic universe into itself.
+    branch: set theory
+    entry_module: LeanPool.SetTheory
+    authors:
+      - Shuhao Song
+    source:
+      title: Elementary embeddings and infinitary combinatorics
+      authors:
+        - Kenneth Kunen
+      doi: "10.2307/2269948"
+      url: "https://github.com/znssong/SetTheory"
+      github_repo: znssong/SetTheory
+    status: verified
+    main_declarations:
+      - SetTheory.kunen_inconsistency_V
+      - NontrivialElementaryEmbedding
+    main_results:
+      - declaration: SetTheory.kunen_inconsistency_V
+        informal: Proves the Kunen inconsistency theorem, that every elementary embedding of the von Neumann universe V into itself is the identity.
+      - declaration: SetTheory.kunen_inconsistency_vonNeumann
+        informal: Proves the Kunen inconsistency theorem for von Neumann levels V_μ at a successor-limit ordinal, computing the supremum of the critical-point iterates.
+      - declaration: SetTheory.crit
+        informal: Defines the critical point of a nontrivial elementary embedding as the least ordinal it moves.
+      - declaration: NontrivialElementaryEmbedding
+        informal: Defines a nontrivial elementary embedding of a model of ZF into itself.
+    tags:
+      - set-theory
+      - large-cardinals
+      - elementary-embedding
+      - kunen-inconsistency
+      - model-theory
+    msc:
+      - "03E55"
+      - "03C90"
+  - slug: lean4-itree
+    title: Coinductive Interaction Trees using QPFs
+    summary: Formalizes coinductive interaction trees as the M-type of a polynomial functor (via Mathlib QPFs), proving the lawful functor and monad structure, a bisimulation equality coinciding with propositional equality, and iteration and effect-handler interpretation combinators, supported by a vendored parameterized-coinduction (Paco) library.
+    branch: coinduction and semantics
+    entry_module: LeanPool.Lean4Itree
+    authors:
+      - Paul Mure
+      - Joonhyup Lee
+    source:
+      arxiv: "1906.00046"
+      doi: "10.1145/3371119"
+      github_repo: mit-plv/lean4-itree
+    status: verified
+    main_declarations:
+      - Lean4Itree.ITree
+      - Lean4Itree.ITree.ieq_iff_eq
+      - Lean4Itree.plfp_acc
+    main_results:
+      - declaration: Lean4Itree.ITree
+        informal: Defines the coinductive interaction tree as the final coalgebra (M-type) of the interaction-tree polynomial functor.
+      - declaration: Lean4Itree.ITree.IEq
+        informal: Defines bisimulation equality between interaction trees as a coinductive fixed point.
+      - declaration: Lean4Itree.ITree.ieq_iff_eq
+        informal: Proves that bisimulation equality of interaction trees coincides with propositional equality.
+      - declaration: Lean4Itree.ITree.bind_assoc
+        informal: Proves associativity of monadic bind for interaction trees, part of the LawfulMonad instance.
+      - declaration: Lean4Itree.ITree.iter
+        informal: Defines the iteration combinator producing an interaction tree from a step function.
+      - declaration: Lean4Itree.ITree.interp
+        informal: Defines interpretation of an interaction tree against an effect handler into an arbitrary iterable monad.
+      - declaration: Lean4Itree.plfp_acc
+        informal: Proves the accumulation principle for the parameterized least fixed point underlying the Paco coinduction library.
+        source_ref: "C.-K. Hur, G. Neis, D. Dreyer, V. Vafeiadis, The Power of Parameterization in Coinductive Proof, POPL 2013, doi:10.1145/2429069.2429093."
+    tags:
+      - coinduction
+      - interaction-trees
+      - monads
+      - qpf
+      - semantics
+    msc:
+      - "68Q55"
+      - "18C50"
+      - "68N18"
+  - slug: lean-model-checking
+    title: Formalizations of theorems related to model checking
+    summary: Proves that every linear temporal logic formula has an equivalent finite-state nondeterministic Büchi automaton (via negation normal form, alternating Büchi automata, and the Miyano-Hayashi breakpoint construction), and that every linear-time property decomposes as the intersection of a safety property and a liveness property.
+    branch: model checking
+    entry_module: LeanPool.LeanModelChecking
+    authors:
+      - György Kurucz
+    source:
+      title: An Automata-Theoretic Approach to Linear Temporal Logic
+      authors:
+        - Moshe Y. Vardi
+      doi: "10.1007/3-540-60915-6_6"
+      url: "https://github.com/kuruczgy/lean-model-checking"
+      github_repo: kuruczgy/lean-model-checking
+    status: verified
+    main_declarations:
+      - LeanModelChecking.for_any_LTL_formula_exists_an_equivalent_NBW
+    main_results:
+      - declaration: LeanModelChecking.for_any_LTL_formula_exists_an_equivalent_NBW
+        informal: For any linear temporal logic formula there exists an equivalent finite-state nondeterministic Büchi automaton, i.e. one whose state type is finite, accepting the same language.
+        source_ref: "M. Y. Vardi and P. Wolper, An automata-theoretic approach to automatic program verification, LICS 1986, 332-344; C. Baier and J.-P. Katoen, Principles of Model Checking, MIT Press, 2008, ISBN 978-0-262-02649-9, https://mitpress.mit.edu/9780262026499/principles-of-model-checking/"
+      - declaration: LeanModelChecking.LTL
+        informal: The syntax of linear temporal logic formulas over a set of atomic propositions.
+      - declaration: LeanModelChecking.NBW
+        informal: A nondeterministic Büchi automaton over a given alphabet of letters.
+      - declaration: LeanModelChecking.ABW.toNBW.lang_eq
+        informal: The Miyano-Hayashi breakpoint construction turns any alternating Büchi automaton over a finite state space into a nondeterministic Büchi automaton accepting the same language.
+        source_ref: "S. Miyano and T. Hayashi, Alternating finite automata on omega-words, Theoretical Computer Science 32 (1984), 321-330, doi:10.1016/0304-3975(84)90049-5"
+      - declaration: SafetyLivenessDecomposition.safety_liveness_decomposition
+        informal: Every linear-time property is the intersection of a safety property and a liveness property.
+        source_ref: "B. Alpern and F. B. Schneider, Defining liveness, Information Processing Letters 21 (1985), 181-185, doi:10.1016/0020-0190(85)90056-0"
+    tags:
+      - model-checking
+      - linear-temporal-logic
+      - buchi-automaton
+      - safety-liveness
+      - omega-automata
+    msc:
+      - "68Q60"
+      - "03B44"
+      - "68Q45"
+  - slug: computablereal
+    title: Verified interval-Cauchy real arithmetic
+    summary: Represents real numbers as Cauchy sequences of nested rational intervals quotiented into a field, with executable interval ring arithmetic, proven-convergent rational bounds for sqrt, exp, and pi, and an IsComputable typeclass that packages such approximations to drive classical (noncomputable) comparison instances, after O'Connor's certified exact real computation.
+    branch: interval arithmetic
+    entry_module: LeanPool.ComputableReal
+    authors:
+      - Alex Meiburg
+    source:
+      arxiv: "0805.2438"
+      doi: "10.1007/978-3-540-71067-7_21"
+      github_repo: Timeroot/computableReal
+    status: verified
+    main_declarations:
+      - ComputableℝSeq
+      - Computableℝ
+      - IsComputable
+    main_results:
+      - declaration: ComputableℝSeq
+        informal: A sequence of converging rational lower and upper bounds representing a single real number.
+      - declaration: Computableℝ
+        informal: The quotient of interval-Cauchy sequences by equality of value, an ordered field whose ring operations are executable interval arithmetic.
+      - declaration: IsComputable
+        informal: A typeclass packaging an explicit interval-Cauchy approximation of a real number, used to drive its classical comparison instances.
+      - declaration: Computableℝ.instField
+        informal: The field instance on the quotient; inversion extracts a sign witness classically and is noncomputable.
+      - declaration: ComputableℝSeq.Sqrt.sqrtq
+        informal: Computes converging rational interval bounds for the square root of a rational interval.
+    tags:
+      - interval-arithmetic
+      - real-numbers
+      - cauchy-sequences
+      - special-functions
+    msc:
+      - "65G40"
+      - "68V20"
   - slug: circuitlib
     title: "circuitlib: a circuit verification library for Lean 4"
     summary: A categorical semantics framework for digital circuits over Belnap's four-valued logic, following Ghica-Kaye-Sprunger. Its main theorems prove that combinational circuits (monotone functions on wire vectors) and sequential circuits (causal monotone stream functions) form symmetric monoidal categories, with a verified full adder as demonstration.
