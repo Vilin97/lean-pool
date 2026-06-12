@@ -9,7 +9,7 @@ import LeanPool.Monlib4.Monlib
 /-!
 # Monlib4 Operator-Algebra and Quantum-Set Core
 
-Source: doi:10.4169/amer.math.monthly.124.10.966
+Source: arxiv:1810.08368, doi:10.4169/amer.math.monthly.124.10.966
 Authors: Monica Omar
 Status: verified
 Main declarations: `Matrix.aut_mat_inner`, `QuantumSet`, `schurMul`, `QuantumGraph`

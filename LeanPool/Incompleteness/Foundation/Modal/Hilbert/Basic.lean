@@ -1,0 +1,157 @@
+/-
+Copyright (c) 2026 Palalansoukî. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Palalansoukî
+-/
+
+import LeanPool.Incompleteness.Foundation.Modal.Formula
+import LeanPool.Incompleteness.Foundation.Modal.Substitution
+import LeanPool.Incompleteness.Foundation.Modal.Entailment.K
+import LeanPool.Incompleteness.Foundation.Logic.HilbertStyle.Lukasiewicz
+
+/-! # Basic -/
+
+
+namespace LO
+namespace Modal
+
+open Entailment
+
+variable {α : Type*}
+
+/-- Imported declaration from the Incompleteness formalization. -/
+structure Hilbert (α : Type*) where
+  /-- Imported declaration from the Incompleteness formalization. -/
+  axioms : Set (Formula α)
+
+namespace Hilbert
+
+variable {H H₁ H₂ : Hilbert α}
+
+/-- Imported declaration from the Incompleteness formalization. -/
+abbrev axiomInstances (H : Hilbert α) : Set (Formula α) := { φ⟦s⟧ | (φ ∈ H.axioms) (s :
+    Substitution α) }
+
+lemma mem_axiomInstances_of_mem_axioms {φ} (h : φ ∈ H.axioms) : φ ∈ H.axiomInstances := by
+  use φ;
+  constructor;
+  · assumption;
+  · use Substitution.id;
+    simp;
+
+/-- Imported declaration from the Incompleteness formalization. -/
+class FiniteAxiomatizable (H : Hilbert α) where
+  axioms_fin : Set.Finite H.axioms := by aesop
+
+
+/-- Imported declaration from the Incompleteness formalization. -/
+inductive Deduction (H : Hilbert α) : (Formula α) → Type _
+  | maxm {φ}      : φ ∈ H.axiomInstances → Deduction H φ
+  | mdp {φ ψ}     : Deduction H (φ ==> ψ) → Deduction H φ → Deduction H ψ
+  | nec {φ}       : Deduction H φ → Deduction H (□φ)
+  | imply₁ φ ψ    : Deduction H <| Axioms.Imply₁ φ ψ
+  | imply₂ φ ψ χ  : Deduction H <| Axioms.Imply₂ φ ψ χ
+  | ec φ ψ        : Deduction H <| Axioms.ElimContra φ ψ
+
+namespace Deduction
+
+instance : Entailment (Formula α) (Hilbert α) := ⟨Deduction⟩
+
+instance : Entailment.Lukasiewicz H where
+  mdp := mdp
+  imply₁ := imply₁
+  imply₂ := imply₂
+  elimContra := ec
+
+instance : Entailment.Classical H where
+
+instance : Entailment.HasDiaDuality H := inferInstance
+
+instance : Entailment.Necessitation H := ⟨nec⟩
+
+lemma «maxm!» {φ} (h : φ ∈ H.axiomInstances) : H ⊢! φ := ⟨maxm h⟩
+
+end Deduction
+
+
+open Deduction
+
+namespace Deduction
+
+/-- Imported declaration from the Incompleteness formalization. -/
+noncomputable def «rec!»
+  {motive      : (φ : Formula α) → H ⊢! φ → Sort*}
+  (maxm       : ∀ {φ}, (h : φ ∈ H.axiomInstances) → motive φ (maxm! h))
+  (mdp        : ∀ {φ ψ}, {hpq : H ⊢! φ ==> ψ} → {hp : H ⊢! φ} → motive (φ ==> ψ) hpq →
+    motive φ hp → motive ψ (mdp! hpq hp))
+  (nec        : ∀ {φ}, {hp : H ⊢! φ} → (ihp : motive φ hp) → motive (□φ) (nec! hp))
+  (imply₁     : ∀ {φ ψ}, motive (Axioms.Imply₁ φ ψ) <| ⟨imply₁ φ ψ⟩)
+  (imply₂     : ∀ {φ ψ χ}, motive (Axioms.Imply₂ φ ψ χ) <| ⟨imply₂ φ ψ χ⟩)
+  (ec : ∀ {φ ψ}, motive (Axioms.ElimContra φ ψ) <| ⟨ec φ ψ⟩)
+  : ∀ {φ}, (d : H ⊢! φ) → motive φ d := by
+  intro φ d;
+  induction d.some with
+  | maxm h => exact maxm h
+  | mdp hpq hp ihpq ihp => exact mdp (ihpq ⟨hpq⟩) (ihp ⟨hp⟩)
+  | nec hp ih => exact nec (ih ⟨hp⟩)
+  | _ => aesop;
+
+/-- Imported declaration from the Incompleteness formalization. -/
+lemma «subst!» {φ} (s) (h : H ⊢! φ) : H ⊢! φ⟦s⟧ := by
+  induction h using Deduction.rec! with
+  | imply₁ => simp;
+  | imply₂ => simp;
+  | ec => simp;
+  | mdp ihφψ ihφ => exact ihφψ ⨀ ihφ;
+  | nec ihφ => exact nec! ihφ;
+  | maxm h =>
+    obtain ⟨ψ, h, ⟨s', rfl⟩⟩ := h;
+    apply maxm!;
+    use ψ;
+    constructor;
+    · assumption;
+    · use s' ∘ s;
+      exact subst_comp;
+
+end Deduction
+
+
+/-- Imported declaration from the Incompleteness formalization. -/
+abbrev theorems (H : Hilbert α) := Entailment.theory H
+
+lemma of_subset (hs : H₁.axioms ⊆ H₂.axioms) : H₁ ⊢! φ → H₂ ⊢! φ := by
+  intro h;
+  induction h using Deduction.rec! with
+  | maxm h =>
+    obtain ⟨ψ, h, ⟨s, rfl⟩⟩ := h;
+    apply maxm!;
+    use ψ;
+    constructor;
+    · exact hs h;
+    · use s;
+  | mdp ih₁ ih₂ => exact mdp! ih₁ ih₂;
+  | nec ih => exact nec! ih;
+  | _ => simp;
+
+lemma weakerThan_of_dominate_axiomInstances (hMaxm : ∀ {φ :
+    Formula α}, φ ∈ H₁.axiomInstances → H₂ ⊢! φ) :
+    H₁ wkn H₂ := by
+  apply Entailment.weakerThan_iff.mpr;
+  intro φ h;
+  induction h using Deduction.rec! with
+  | maxm h => apply hMaxm h;
+  | mdp ih₁ ih₂ => exact mdp! ih₁ ih₂;
+  | nec ih => exact nec! ih;
+  | _ => simp;
+
+lemma weakerThan_of_dominate_axioms (hMaxm : ∀ {φ : Formula α}, φ ∈ H₁.axioms → H₂ ⊢! φ) :
+    H₁ wkn H₂ := by
+  apply weakerThan_of_dominate_axiomInstances;
+  rintro φ ⟨ψ, hψ, ⟨s, rfl⟩⟩;
+  apply subst!;
+  apply hMaxm hψ;
+
+end Hilbert
+
+end Modal
+end LO

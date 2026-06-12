@@ -16,7 +16,7 @@ import LeanPool.AndersonConjecture.QuasiCompleteRing
 /-!
 # The Anderson Conjecture: A Weakly Quasi-Complete Ring Need Not Be Quasi-Complete
 
-Source: url:https://github.com/frenzymath/Anderson-Conjecture
+Source: doi:10.1007/978-1-4939-0925-4_2
 Authors: FrenzyMath
 Status: verified
 Main declarations: `anderson_main_theorem`

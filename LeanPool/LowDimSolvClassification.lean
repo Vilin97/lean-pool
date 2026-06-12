@@ -18,7 +18,7 @@ import LeanPool.LowDimSolvClassification.Tactics
 /-!
 # Classification of low-dimensional solvable Lie algebras
 
-Source: url:https://bookstore.ams.org/crmm-33
+Source: doi:10.1090/crmm/033, url:https://bookstore.ams.org/crmm-33
 Authors: Viviana del Barco, Gustavo Infanti, Exequiel Rivas, Paul Schwahn
 Status: verified
 Main declarations: `LieAlgebra.Dim3.classification`

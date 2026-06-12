@@ -19,7 +19,7 @@ import LeanPool.Monsky.Square
 /-!
 # Monsky's Theorem
 
-Source: doi:10.2307/2316270
+Source: doi:10.2307/2317329
 Authors: Dhyan Aranha, contributors
 Status: verified
 Main declarations: `LeanPool.Monsky.monsky_theorem`
