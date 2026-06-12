@@ -1951,6 +1951,44 @@ projects:
     msc:
       - "11F11"
       - "30E20"
+  - slug: redhill
+    title: Improved Lower Bounds for Strong n-Conjectures
+    summary: Formalizes the disproof of Ramaekers's conjecture, constructing tuple families whose abc-style quality stays bounded above 1, and proves Browkin-Brzezinski lower bounds on the quality of the n-conjecture tuples.
+    branch: number theory
+    entry_module: LeanPool.Redhill
+    authors:
+      - Jeremy Tan
+    source:
+      title: "Improved Lower Bounds for Strong n-Conjectures"
+      authors:
+        - Rupert Hölzl
+        - Sören Kleine
+        - Frank Stephan
+      doi: "10.1017/S1446788725000084"
+      github_repo: Parcly-Taxel/Redhill
+    status: verified
+    main_declarations:
+      - not_ramaekersConjecture_ge_six
+      - le_quality_nConjectureTuples
+    main_results:
+      - declaration: RamaekersConjecture
+        informal: Defines Ramaekers's conjecture for fixed n as the statement that the quality of the relevant tuple set equals 1.
+      - declaration: not_ramaekersConjecture_ge_six
+        informal: Proves Ramaekers's conjecture fails for every n at least 6 (the general case, Theorem 1.14).
+      - declaration: not_ramaekersConjecture_odd_ge_five
+        informal: Proves Ramaekers's conjecture fails for every odd n at least 5 (the odd case via Pell equations, Theorem 1.13).
+      - declaration: not_ramaekersConjecture_five
+        informal: Proves Ramaekers's conjecture fails for n equal to 5 (the Konyagin prelude bound).
+      - declaration: le_quality_nConjectureTuples
+        informal: Proves the Browkin-Brzezinski 1994 lower bound 2n-5 on the quality of the n-conjecture tuples (Theorem 1.3).
+    tags:
+      - number-theory
+      - abc-conjecture
+      - n-conjecture
+      - ramaekers-conjecture
+    msc:
+      - "11A41"
+      - "11D75"
   - slug: synthetic-euclid
     title: "Synthetic Euclidean geometry: Euclid's Elements Book I"
     summary: Formalizes Book I of Euclid's Elements via an axiomatic synthetic-geometry system (incidence, betweenness, congruence, and area), culminating in the Pythagorean theorem and its converse.
@@ -2144,6 +2182,246 @@ projects:
     msc:
       - "11A41"
       - "11Y11"
+  - slug: circuit-complexity
+    title: Circuit Complexity in Lean 4
+    summary: A Lean 4 formalization of classical Boolean circuit complexity, including the Shannon counting lower bound, Schnorr's XOR gate lower bound, a gate-elimination lower bound, CNF/DNF lower bounds for parity, and nondeterministic quantification complexity bounds.
+    branch: boolean circuit complexity lower bounds
+    entry_module: LeanPool.CircuitComplexity
+    authors:
+      - Samuel Schlesinger
+    source:
+      url: "https://github.com/SamuelSchlesinger/circuit-complexity"
+      github_repo: SamuelSchlesinger/circuit-complexity
+    status: verified
+    main_declarations:
+      - CircuitComplexity.shannon_lower_bound_circuit
+    main_results:
+      - declaration: CircuitComplexity.shannon_lower_bound_circuit
+        informal: For N at least 6, there exists a Boolean function on N inputs that cannot be computed by any fan-in-2 AND/OR circuit of size at most 2^N / (5N).
+      - declaration: CircuitComplexity.schnorr_lower_bound_circuit
+        informal: Any fan-in-2 AND/OR circuit computing the N-input XOR function (or its complement) has at least 2(N-1) internal gates.
+      - declaration: CircuitComplexity.Circuit.gate_elimination_lower_bound
+        informal: Any circuit over bounded fan-in k AND/OR computing a function with n' essential inputs has size at least n' / k.
+      - declaration: CircuitComplexity.DNF.xorBool_complexity_lb
+        informal: Any DNF formula computing the N-input XOR function requires at least 2^(N-1) terms.
+      - declaration: CircuitComplexity.CNF.xorBool_complexity_lb
+        informal: Any CNF formula computing the N-input XOR function requires at least 2^(N-1) clauses.
+      - declaration: CircuitComplexity.existQuantify_complexity_le
+        informal: If a function f has circuit complexity s, then the existential quantification of f over a k-bit block has circuit complexity at most 2^k * (s + 1).
+    tags:
+      - circuit-complexity
+      - boolean-functions
+      - lower-bounds
+      - shannon-bound
+      - parity
+    msc:
+      - "68Q06"
+      - "94C11"
+  - slug: computability
+    title: Oracle Computability and Turing Degrees
+    summary: Formalizes oracle-relative computability via partial recursive functions, Turing reducibility and the Turing degrees as an upper semilattice, a Gödel numbering with a universal oracle machine, the jump operator, and the arithmetical hierarchy.
+    branch: computability theory
+    entry_module: LeanPool.Computability
+    authors:
+      - Tanner Duve
+      - Elan Roth
+    source:
+      url: "https://github.com/tannerduve/computability"
+      github_repo: tannerduve/computability
+    status: verified
+    main_declarations:
+      - Computability.RecursiveIn
+      - Computability.TuringDegree
+    main_results:
+      - declaration: Computability.RecursiveIn
+        informal: "The inductive relation `RecursiveIn O f` stating that `f : ℕ →. ℕ` is partial recursive relative to a set of oracle functions `O`."
+      - declaration: Computability.exists_code_rel
+        informal: Universality of the oracle evaluator `evalo`, that is, `RecursiveIn (Set.range g) f` holds iff there is a code `c` with `evalo g c = f`.
+      - declaration: Computability.TuringReducible
+        informal: "`f` is Turing reducible to `g` (`f ≤ᵀ g`) when `f` is recursive in the singleton oracle set `{g}`."
+      - declaration: Computability.TuringDegree
+        informal: The type of Turing degrees, the antisymmetrization of partial functions under Turing reducibility.
+      - declaration: Computability.jump_recIn
+        informal: The original function is Turing reducible to its jump, `f ≤ᵀ f⌜`.
+      - declaration: Computability.TuringDegree.instSemilatticeSup
+        informal: The Turing degrees form an upper semilattice with the Turing join as supremum.
+    tags:
+      - computability
+      - oracle-computability
+      - turing-degrees
+      - recursion-theory
+      - arithmetical-hierarchy
+    msc:
+      - "03D30"
+      - "03D28"
+  - slug: pumping-cfg
+    title: Pumping Lemma for Context-Free Grammars
+    summary: Formalizes the pumping lemma for context-free languages via parse trees of Chomsky-normal-form grammars and a pigeonhole argument.
+    branch: formal language theory
+    entry_module: LeanPool.PumpingCfg
+    authors:
+      - Alexander Loitzl
+      - Martin Dvorak
+    source:
+      url: "https://github.com/AlexLoitzl/pumping_cfg"
+      github_repo: AlexLoitzl/pumping_cfg
+    status: verified
+    main_declarations:
+      - Language.IsContextFree.pumping
+      - ChomskyNormalFormGrammar.pumping
+    main_results:
+      - declaration: Language.IsContextFree.pumping
+        informal: Every context-free language admits a pumping length p such that any word of length at least p decomposes as u v x y z with vy nonempty, vxy of length at most p, and u vⁱ x yⁱ z in the language for every i.
+      - declaration: ChomskyNormalFormGrammar.pumping
+        informal: The pumping lemma at the level of a Chomsky-normal-form grammar, obtained from a sufficiently tall parse tree with a repeated nonterminal.
+    tags:
+      - formal-languages
+      - context-free-grammars
+      - computability
+      - pumping-lemma
+    msc:
+      - "68Q45"
+  - slug: chomsky
+    title: Chomsky hierarchy in Lean 4
+    summary: Formalizes general (unrestricted) grammars and context-free grammars together with their derivation relations, shows context-free languages form a subclass of general-grammar languages, proves both classes are closed under union, concatenation, and reversal (and general-grammar languages under the Kleene star), and defines the Kuroda normal form.
+    branch: formal language theory
+    entry_module: LeanPool.Chomsky
+    authors:
+      - Martin Dvořák
+    source:
+      url: "https://github.com/madvorak/chomsky"
+      arxiv: "2302.06420"
+      github_repo: madvorak/chomsky
+    status: verified
+    main_declarations:
+      - Chomsky.CF_subclass_GG
+      - Chomsky.GG_of_GG_u_GG
+      - Chomsky.GG_of_star_GG
+    main_results:
+      - declaration: Chomsky.CF_subclass_GG
+        informal: Proves that every context-free language is generated by some general (unrestricted) grammar, i.e. the context-free class is a subclass of the general-grammar class.
+      - declaration: Chomsky.CF_of_CF_u_CF
+        informal: Proves that the union of two context-free languages is context-free.
+      - declaration: Chomsky.CF_of_CF_c_CF
+        informal: Proves that the concatenation of two context-free languages is context-free.
+      - declaration: Chomsky.CF_of_reverse_CF
+        informal: Proves that the reversal of a context-free language is context-free.
+      - declaration: Chomsky.GG_of_GG_u_GG
+        informal: Proves that the union of two general-grammar languages is again a general-grammar language.
+      - declaration: Chomsky.GG_of_star_GG
+        informal: Proves that the Kleene star of a general-grammar language is again a general-grammar language.
+    tags:
+      - formal-languages
+      - chomsky-hierarchy
+      - context-free-grammar
+      - closure-properties
+    msc:
+      - "68Q42"
+  - slug: lentil
+    title: 'Lentil: Temporal Logic of Actions in Lean 4'
+    summary: A shallow embedding of Leslie Lamport's Temporal Logic of Actions (TLA) in Lean 4, with the temporal modalities, standard propositional and temporal proof rules, weak-fairness and leads-to reasoning, and an interactive proof mode for TLA judgments.
+    branch: temporal logic
+    entry_module: LeanPool.Lentil
+    authors:
+      - Qiyuan Zhao
+    source:
+      url: "https://github.com/verse-lab/Lentil"
+      github_repo: verse-lab/Lentil
+    status: verified
+    msc:
+      - "03B44"
+      - "68Q60"
+    main_declarations:
+      - TLA.always
+      - TLA.eventually
+      - TLA.always_induction
+      - TLA.wf1
+    main_results:
+      - declaration: TLA.always
+        informal: Defines the TLA "always" (box) temporal modality, asserting a predicate holds on every suffix of an execution.
+      - declaration: TLA.eventually
+        informal: Defines the TLA "eventually" (diamond) temporal modality, asserting a predicate holds on some suffix of an execution.
+      - declaration: TLA.always_induction
+        informal: The always-induction rule, equating `□ p` with `p` together with `□ (p → ◯ p)`.
+      - declaration: TLA.wf1
+        informal: The WF1 weak-fairness proof rule deriving a leads-to property from a next-state action under weak fairness.
+      - declaration: TLA.wf_as_leads_to
+        informal: Characterizes weak fairness of an action as a leads-to property between its enabledness and its occurrence.
+      - declaration: TLA.leads_to_trans
+        informal: Transitivity of the leads-to relation.
+    tags:
+      - temporal-logic
+      - tla
+      - formal-verification
+      - proof-mode
+  - slug: incompleteness
+    title: Gödel's First and Second Incompleteness Theorems
+    summary: Formalizes Gödel's first and second incompleteness theorems for first-order arithmetic, building on formalized arithmetization and provability-logic infrastructure.
+    branch: mathematical logic
+    entry_module: LeanPool.Incompleteness
+    authors:
+      - Palalansoukî
+    source:
+      doi: "10.1007/BF01700692"
+      github_repo: FormalizedFormalLogic/Incompleteness
+    status: verified
+    main_declarations:
+      - LeanPool.Incompleteness.goedelFirst
+      - LeanPool.Incompleteness.goedelSecond
+    main_results:
+      - declaration: LeanPool.Incompleteness.goedelFirst
+        informal: "Proves Gödel's first incompleteness theorem: a Sigma1-sound Delta1-definable theory extending arithmetic is incomplete."
+      - declaration: LeanPool.Incompleteness.goedelSecond
+        informal: "Proves Gödel's second incompleteness theorem: such a theory cannot prove its own consistency."
+    tags:
+      - incompleteness
+      - provability
+      - first-order-arithmetic
+      - mathematical-logic
+    msc:
+      - "03F40"
+      - "03F30"
+  - slug: phaseretrieval
+    title: Stable phase retrieval for Hermite-Fock expansions
+    summary: Formalizes stable phase retrieval for finite Hermite-Fock polynomials and their Gaussian L2 closure in d complex dimensions, together with the quantitative one-dimensional Fock-space local stability estimate that underlies it.
+    branch: analysis
+    entry_module: LeanPool.PhaseRetrieval
+    authors:
+      - Susanna Bertolini
+      - Jaume de Dios Pont
+    source:
+      title: "Stable phase retrieval for Hermite-Fock expansions"
+      authors:
+        - Susanna Bertolini
+        - Jaume de Dios Pont
+      url: https://github.com/susannabertolini/PhaseRetrieval
+      github_repo: susannabertolini/PhaseRetrieval
+    status: verified
+    main_declarations:
+      - DimdPolyShowcaseChallenge.stable_phase_retrieval
+    main_results:
+      - declaration: DimdPolyShowcaseChallenge.stable_phase_retrieval
+        informal: Proves stable phase retrieval for the Gaussian L2 closure of finite d-dimensional Hermite-Fock polynomials at a fixed level, giving a uniform stability constant bounding the phase-aligned L2 distance by the L2 distance of magnitudes.
+        source_ref: "R. Balan, P. Casazza, D. Edidin, On signal reconstruction without phase, Appl. Comput. Harmon. Anal. 20 (2006), 345-356, doi:10.1016/j.acha.2005.07.001."
+      - declaration: FockSPR.orthogonalReduction_exists_phase
+        informal: Proves the phase-aligned one-dimensional Fock-space local stability estimate, producing a unit phase for which the L2 distance to one is controlled by the magnitude defect.
+      - declaration: FockSPR.orthogonalReduction_core
+        informal: Proves the quantitative centered core estimate bounding the Gaussian Fock norm of a polynomial with small norm by the magnitude defect against one.
+      - declaration: FockSPR.LocalFockSPR
+        informal: Proves the local Fock-space stable phase retrieval coercivity estimate for centered polynomials.
+      - declaration: DimdPolyShowcaseChallenge.HermitePoly
+        informal: Defines the normalized one-variable complex Hermite-Fock basis polynomial.
+      - declaration: DimdPolyShowcaseChallenge.TrueHermiteFunctions
+        informal: Defines the Gaussian L2 closure of finite Hermite-Fock polynomials at a fixed level.
+    tags:
+      - phase-retrieval
+      - hermite-fock
+      - gaussian-measure
+      - complex-analysis
+    msc:
+      - "42C05"
+      - "46E22"
+      - "94A12"
   - slug: turan3
     title: Turán's theorem (the "Book" weighting proof)
     summary: Formalizes the weighting/optimization proof of Turán's theorem from Proofs from THE BOOK, bounding the number of edges of a p-clique-free simple graph by (1/2)(1 - 1/(p-1)) n².

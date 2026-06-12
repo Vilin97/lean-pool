@@ -1,0 +1,103 @@
+/-
+Copyright (c) 2026 Palalansoukî. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Palalansoukî
+-/
+
+import LeanPool.Incompleteness.Foundation.Modal.Hilbert.Maximal.Basic
+import LeanPool.Incompleteness.Foundation.IntProp.Kripke.Hilbert.Cl.Classical
+
+/-! # Unprovability -/
+
+
+namespace LO
+namespace Modal
+
+open Entailment
+
+open IntProp
+
+open Hilbert
+open Hilbert.Deduction
+open Formula
+
+namespace Hilbert
+
+
+namespace Triv
+
+lemma unprovable_AxiomL : Hilbert.Triv ⊬ (Axioms.L (.atom a)) := by
+  apply Hilbert.Triv.classical_reducible.not.mpr;
+  apply IntProp.Hilbert.Cl.unprovable_of_exists_classicalValuation;
+  use (fun _ => False);
+  simp [TrivTranslation, toPropFormula];
+
+end Triv
+
+
+namespace Ver
+
+lemma unprovable_AxiomP : (Hilbert.Ver) ⊬ Axioms.P := by
+  apply Hilbert.Ver.classical_reducible.not.mpr;
+  apply IntProp.Hilbert.Cl.unprovable_of_exists_classicalValuation;
+  dsimp [VerTranslation, toPropFormula, IntProp.Formula.Kripke.Satisfies];
+  use (fun _ => True);
+  simp;
+
+end Ver
+
+
+namespace K4
+
+lemma provable_Cl_trivTranslated : (Hilbert.K4) ⊢! φ → (Hilbert.Cl) ⊢! φᵀᴾ := by
+  intro h;
+  apply Hilbert.Triv.classical_reducible.mp;
+  exact Entailment.weakerThan_iff.mp K4_weakerThan_Triv h;
+
+lemma unprovable_AxiomL : Hilbert.K4 ⊬ (Axioms.L (.atom a)) := by
+  apply not_imp_not.mpr provable_Cl_trivTranslated;
+  apply IntProp.Hilbert.Cl.unprovable_of_exists_classicalValuation;
+  use (fun _ => False);
+  simp [TrivTranslation, toPropFormula];
+
+end K4
+
+
+namespace GL
+
+lemma provable_CL_verTranslated : (Hilbert.GL) ⊢! φ → (Hilbert.Cl) ⊢! φⱽᴾ := by
+  intro h;
+  induction h using Deduction.rec! with
+    | maxm a =>
+      rcases a with ⟨_, (⟨_, _, rfl⟩ | ⟨_, rfl⟩), ⟨_, rfl⟩⟩
+      <;> simp [VerTranslation, toPropFormula];
+    | mdp ih₁ ih₂ =>
+      dsimp [VerTranslation] at ih₁ ih₂;
+      exact ih₁ ⨀ ih₂;
+    | _ => simp [VerTranslation, toPropFormula];
+
+lemma unprovable_AxiomT : (Hilbert.GL) ⊬ Axioms.T (.atom a) := by
+  apply not_imp_not.mpr provable_CL_verTranslated;
+  apply IntProp.Hilbert.Cl.unprovable_of_exists_classicalValuation;
+  use (fun _ => False);
+  simp [VerTranslation, toPropFormula];
+
+instance : Entailment.Consistent (Hilbert.GL) := by
+  apply consistent_iff_exists_unprovable.mpr;
+  use (Axioms.T (atom 0));
+  apply unprovable_AxiomT;
+
+end GL
+
+theorem not_S4_weakerThan_GL : ¬(Hilbert.S4) wkn (Hilbert.GL) := by
+  apply Entailment.not_weakerThan_iff.mpr;
+  existsi (Axioms.T (atom 0));
+  constructor;
+  · exact axiomT!;
+  · exact GL.unprovable_AxiomT;
+
+end Hilbert
+
+
+end Modal
+end LO
