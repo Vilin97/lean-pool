@@ -1902,7 +1902,7 @@ projects:
       - "30E20"
   - slug: special-numbers
     title: Special Numbers
-    summary: Formalizes the recurrence-defined Eulerian numbers, Euclid numbers, and Sylvester's sequence from Chapter 6 of Concrete Mathematics, including coprimality, monotonicity, and explicit doubly-exponential closed forms for the latter two.
+    summary: Formalizes the Eulerian numbers, Euclid numbers, and Sylvester's sequence from Chapter 6 of Concrete Mathematics, proving Worpitzky's identity for the first and coprimality, monotonicity, and explicit doubly-exponential closed forms for the latter two.
     branch: integer sequences
     entry_module: LeanPool.SpecialNumbers
     authors:
@@ -1920,6 +1920,7 @@ projects:
     main_declarations:
       - SpecialNumbers.sylvester
       - SpecialNumbers.eulerian
+      - SpecialNumbers.worpitzky
     main_results:
       - declaration: SpecialNumbers.sylvester
         informal: Defines Sylvester's sequence by the recurrence e(n+1) = e(n) * (e(n) - 1) + 1.
@@ -1933,6 +1934,9 @@ projects:
         informal: Gives the explicit closed form for the Euclid numbers as a floor of a doubly-exponential power of a constant.
       - declaration: SpecialNumbers.eulerian
         informal: Defines the Eulerian numbers via their standard triangular recurrence and boundary values.
+      - declaration: SpecialNumbers.worpitzky
+        informal: Proves Worpitzky's identity, expanding the power x^n in the binomial-coefficient basis with Eulerian-number coefficients.
+        source_ref: "R. L. Graham, D. E. Knuth, O. Patashnik, Concrete Mathematics, 2nd ed., Addison-Wesley, 1994, identity (6.37)."
     tags:
       - number-theory
       - combinatorics

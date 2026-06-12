@@ -14,7 +14,7 @@ import LeanPool.SpecialNumbers.Sylvester
 Source: url:https://github.com/provables/special-numbers
 Authors: Walter Moreira, Joe Stubbs
 Status: verified
-Main declarations: `SpecialNumbers.sylvester`, `SpecialNumbers.eulerian`
+Main declarations: `SpecialNumbers.sylvester`, `SpecialNumbers.eulerian`, `SpecialNumbers.worpitzky`
 Tags: number-theory, combinatorics, integer-sequences
 MSC: 11B73, 11B83
 -/
