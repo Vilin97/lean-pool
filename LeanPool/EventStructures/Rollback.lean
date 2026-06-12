@@ -112,9 +112,7 @@ lemma rollbackFuture_mem {c : Conf es} {e : es.Event} {x : es.Event} :
 /-- Redoability: `e` is enabled in `rollback(c,e)` when `e ∈ c`. -/
 lemma rollback_redoable {c : Conf es} {e : es.Event} (he : e ∈ c.1) :
     (@rollbackFuture es c e).1 ⊢ e := by
-  constructor
-  · exact rollback_future_isConf (es := es) (c := c)
-  constructor
+  refine ⟨rollback_future_isConf (es := es) (c := c), fun hmem => hmem.2 le_rfl, ?_, ?_⟩
   · -- All events in rollback are consistent with e
     intro e' he'
     exact c.2.1 he he'.1
@@ -170,17 +168,17 @@ lemma rollback_maximum {c : Conf es} {e : es.Event} {m : Conf es}
   intro m' ⟨hm'sub, hm'not⟩ x hx
   exact ⟨hm'sub hx, fun hxFuture => hm'not (m'.2.2 hx hxFuture)⟩
 
-/-- Helper: An event in the future is enabled in a partial configuration that
-    contains its strict past and is consistent. -/
+/-- Helper: An event in the future that is not yet in a partial configuration is
+    enabled there, provided the partial configuration contains its strict past
+    and is consistent. -/
 lemma event_enabled_when_past_present {c : Conf es} {e x : es.Event}
     (hx : x ∈ c.1 ∩ es.future e) (c' : Conf es)
+    (hxnot : x ∉ c'.1)
     (hpast : ∀ y, y < x → y ∈ c.1 ∩ es.future e → y ∈ c'.1)
     (hbase : (@rollbackFuture es c e).1 ⊆ c'.1)
     (hconf : c'.1 ⊆ c.1) :
     c'.1 ⊢ x := by
-  constructor
-  · exact c'.2
-  constructor
+  refine ⟨c'.2, hxnot, ?_, ?_⟩
   · -- Consistency: x is consistent with all events in c'
     intro y hy
     have hyc : y ∈ c.1 := hconf hy
@@ -237,7 +235,7 @@ theorem execList_exists_finite [DecidableEventStructure es] {c : Conf es} {e : e
       have hxc : x ∈ c.1 := (hcF x).mp hxcF
       have hxnotc' : x ∉ c'.1 := fun h => hxnotcF' ((hcF' x).mpr h)
       have henab : c'.1 ⊢ x := by
-        refine ⟨c'.2, ?_, ?_⟩
+        refine ⟨c'.2, hxnotc', ?_, ?_⟩
         · intro y hy
           have hyc : y ∈ c.1 := (hcF y).mp (hcF'sub ((hcF' y).mpr hy))
           exact c.2.1 hxc hyc

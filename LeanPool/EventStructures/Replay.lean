@@ -201,18 +201,16 @@ lemma maxReplay_exists (l : Set es.Event)
   obtain ⟨σ, h_conf, h_compat⟩ := hexists
   exact ⟨σ, maxReplaySet_is_maximal_replay es h_conf h_compat⟩
 
-/-- All minimal replays of a log are trace-equivalent.
-    They have the same configuration, so they represent the same point in the
-    quotient of paths by trace equivalence. -/
+/-- Uniqueness of the minimal replay: any two minimal replays of a log reach
+    the same configuration. -/
 lemma minReplay_unique {l : Set es.Event} {σ₁ σ₂ : Computations es}
     (h₁ : isMinReplay es l σ₁) (h₂ : isMinReplay es l σ₂) :
     conf es σ₁ = conf es σ₂ := by
   apply Subtype.ext
   exact minReplay_unique_config es h₁ h₂
 
-/-- All maximal replays of a log are trace-equivalent.
-    They have the same configuration, so they represent the same point in the
-    quotient of paths by trace equivalence. -/
+/-- Uniqueness of the maximal replay: any two maximal replays of a log reach
+    the same configuration. -/
 lemma maxReplay_unique {l : Set es.Event} {σ₁ σ₂ : Computations es}
     (h₁ : isMaxReplay es l σ₁) (h₂ : isMaxReplay es l σ₂) :
     conf es σ₁ = conf es σ₂ := by

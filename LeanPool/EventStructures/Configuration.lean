@@ -32,20 +32,26 @@ def FinConf : Type := {X : Finset es.Event // isConf es (X : Set es.Event)}
 
 namespace Configuration
 
-/-- A configuration c enables an event e if e is consistent with all events in c
-    and the past of e is contained in c. -/
+/-- A configuration c enables an event e if e is fresh (not already in c),
+    e is consistent with all events in c, and the past of e is contained in c.
+    Freshness rules out self-loop edges in the configuration graph. -/
 def enables (c : Set es.Event) (e : es.Event) : Prop :=
   isConf es c ∧
+  e ∉ c ∧
   (∀ e' ∈ c, es.consistent e e') ∧
   es.past e ⊆ c
 
 /-- Notation for the enabling relation. -/
 local infix:50 " ⊢ " => enables es
 
+/-- An enabled event is not already in the configuration. -/
+lemma enables_not_mem {c : Set es.Event} {e : es.Event} (h : c ⊢ e) : e ∉ c :=
+  h.2.1
+
 /-- If a configuration c enables an event e, then c ∪ {e} is also a configuration. -/
 lemma enables_extension {c : Set es.Event} {e : es.Event} (h : c ⊢ e) :
     isConf es (c ∪ {e}) := by
-  obtain ⟨⟨hConflictFree, hDownClosed⟩, hConsistent, hPast⟩ := h
+  obtain ⟨⟨hConflictFree, hDownClosed⟩, -, hConsistent, hPast⟩ := h
   constructor
   · -- Conflict-free
     intro e₁ e₂ h₁ h₂
