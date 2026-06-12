@@ -126,8 +126,8 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
                                                         (regWithAddr :=
                                                           $(mkNumLit s!"{regWithAddr}"))))
   | Instr.StoreWord regWithValue regWithAddr =>
-    check `specification_StoreWord
-      (←`(tactic | apply specification_StoreWord
+    check `specification_StoreWordImmediate
+      (←`(tactic | apply specification_StoreWordImmediate
         (pc := $(mkNumLit s!"{pc}"))
                                                       (regWithValue :=
                                                         $(mkNumLit s!"{regWithValue}"))
@@ -139,68 +139,64 @@ private def getSpecTacFromInstr (i : Instr) (pc : UInt64) (name? : Option Ident 
   | Instr.JumpEq reg1 reg2 lbl =>
     handleJump `specification_JumpEq_true `specification_JumpEq_false
       (←`(tactic | apply specification_JumpEq_true (pc := $(mkNumLit s!"{pc}"))
-                                                        (r1 := $(mkNumLit s!"{reg1}"))
-                                                        (r2 := $(mkNumLit s!"{reg2}"))
-                                                        (label := $(mkStrLit lbl))))
+                                                        (reg1 := $(mkNumLit s!"{reg1}"))
+                                                        (reg2 := $(mkNumLit s!"{reg2}"))
+                                                        (s := $(mkStrLit lbl))))
       (←`(tactic | apply specification_JumpEq_false (pc := $(mkNumLit s!"{pc}"))
-                                                        (r1 := $(mkNumLit s!"{reg1}"))
-                                                        (r2 := $(mkNumLit s!"{reg2}"))
-                                                        (label := $(mkStrLit lbl))))
+                                                        (reg1 := $(mkNumLit s!"{reg1}"))
+                                                        (reg2 := $(mkNumLit s!"{reg2}"))
+                                                        (s := $(mkStrLit lbl))))
       "JumpEq"
   | Instr.JumpNeq reg1 reg2 lbl =>
     handleJump `specification_JumpNeq_true `specification_JumpNeq_false
       (←`(tactic | apply specification_JumpNeq_true (pc := $(mkNumLit s!"{pc}"))
-                                                        (r1 := $(mkNumLit s!"{reg1}"))
-                                                        (r2 := $(mkNumLit s!"{reg2}"))
-                                                        (label := $(mkStrLit lbl))))
+                                                        (reg1 := $(mkNumLit s!"{reg1}"))
+                                                        (reg2 := $(mkNumLit s!"{reg2}"))
+                                                        (s := $(mkStrLit lbl))))
       (←`(tactic | apply specification_JumpNeq_false (pc := $(mkNumLit s!"{pc}"))
-                                                        (r1 := $(mkNumLit s!"{reg1}"))
-                                                        (r2 := $(mkNumLit s!"{reg2}"))
-                                                        (label := $(mkStrLit lbl))))
+                                                        (reg1 := $(mkNumLit s!"{reg1}"))
+                                                        (reg2 := $(mkNumLit s!"{reg2}"))
+                                                        (s := $(mkStrLit lbl))))
       "JumpNeq"
   | Instr.JumpGt reg1 reg2 lbl =>
     handleJump `specification_JumpGt_true `specification_JumpGt_false
       (←`(tactic | apply specification_JumpGt_true (pc := $(mkNumLit s!"{pc}"))
-                                                        (r1 := $(mkNumLit s!"{reg1}"))
-                                                        (r2 := $(mkNumLit s!"{reg2}"))
-                                                        (label := $(mkStrLit lbl))))
+                                                        (reg1 := $(mkNumLit s!"{reg1}"))
+                                                        (reg2 := $(mkNumLit s!"{reg2}"))
+                                                        (s := $(mkStrLit lbl))))
       (←`(tactic | apply specification_JumpGt_false (pc := $(mkNumLit s!"{pc}"))
-                                                        (r1 := $(mkNumLit s!"{reg1}"))
-                                                        (r2 := $(mkNumLit s!"{reg2}"))
-                                                        (label := $(mkStrLit lbl))))
+                                                        (reg1 := $(mkNumLit s!"{reg1}"))
+                                                        (reg2 := $(mkNumLit s!"{reg2}"))
+                                                        (s := $(mkStrLit lbl))))
       "JumpGt"
   | Instr.JumpLe reg1 reg2 lbl =>
     handleJump `specification_JumpLe_true `specification_JumpLe_false
       (←`(tactic | apply specification_JumpLe_true (pc := $(mkNumLit s!"{pc}"))
-                                                        (r1 := $(mkNumLit s!"{reg1}"))
-                                                        (r2 := $(mkNumLit s!"{reg2}"))
-                                                        (label := $(mkStrLit lbl))))
+                                                        (reg1 := $(mkNumLit s!"{reg1}"))
+                                                        (reg2 := $(mkNumLit s!"{reg2}"))
+                                                        (s := $(mkStrLit lbl))))
       (←`(tactic | apply specification_JumpLe_false (pc := $(mkNumLit s!"{pc}"))
-                                                        (r1 := $(mkNumLit s!"{reg1}"))
-                                                        (r2 := $(mkNumLit s!"{reg2}"))
-                                                        (label := $(mkStrLit lbl))))
+                                                        (reg1 := $(mkNumLit s!"{reg1}"))
+                                                        (reg2 := $(mkNumLit s!"{reg2}"))
+                                                        (s := $(mkStrLit lbl))))
       "JumpLe"
   | Instr.JumpEqZero reg lbl =>
     handleJump `specification_JumpEqZero_true `specification_JumpEqZero_false
       (←`(tactic | apply specification_JumpEqZero_true (pc := $(mkNumLit s!"{pc}"))
                                                         (reg := $(mkNumLit s!"{reg}"))
-                                                        (lbl := $(mkNumLit s!"{lbl}"))
                                                         (label := $(mkStrLit lbl))))
       (←`(tactic | apply specification_JumpEqZero_false (pc := $(mkNumLit s!"{pc}"))
                                                         (reg := $(mkNumLit s!"{reg}"))
-                                                        (lbl := $(mkNumLit s!"{lbl}"))
-                                                        ))
+                                                        (label := $(mkStrLit lbl))))
       "JumpEqZero"
   | Instr.JumpNeqZero reg lbl =>
     handleJump `specification_JumpNeqZero_true `specification_JumpNeqZero_false
       (←`(tactic | apply specification_JumpNeqZero_true (pc := $(mkNumLit s!"{pc}"))
                                                         (reg := $(mkNumLit s!"{reg}"))
-                                                        (lbl := $(mkNumLit s!"{lbl}"))
-                                                        (label := $(mkStrLit lbl))))
+                                                        (s := $(mkStrLit lbl))))
       (←`(tactic | apply specification_JumpNeqZero_false (pc := $(mkNumLit s!"{pc}"))
                                                         (reg := $(mkNumLit s!"{reg}"))
-                                                        (lbl := $(mkNumLit s!"{lbl}"))
-                                                        ))
+                                                        (s := $(mkStrLit lbl))))
       "JumpNeqZero"
   | Instr.Panic =>
     throwError "Cannot apply a specification for the instruction `Panic`"

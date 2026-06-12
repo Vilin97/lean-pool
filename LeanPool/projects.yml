@@ -1902,12 +1902,13 @@ projects:
       - "30E20"
   - slug: mriscx
     title: MRiscX
-    summary: A certified RISC-V interpreter that lets RISC-V assembly programs be written and verified in Lean via Hoare logic, with proved Hoare rules, per-instruction specifications, custom elaborators and tactics, and a complete One-Time-Pad correctness proof.
+    summary: A Hoare logic for verifying unstructured RISC-V-like assembly in Lean, following Lundberg et al. (SEFM 2020), with a certified interpreter, proved structural Hoare rules, per-instruction specifications, custom elaborators and tactics, and a complete One-Time-Pad correctness proof.
     branch: program verification
     entry_module: LeanPool.MRiscX
     authors:
       - Julius Marx
     source:
+      doi: "10.1007/978-3-030-58768-0_11"
       url: "https://github.com/JulsDE/MRiscX"
       github_repo: JulsDE/MRiscX
     status: verified
@@ -1918,8 +1919,10 @@ projects:
     main_results:
       - declaration: hoareTripleUp
         informal: Defines the MRiscX Hoare triple, asserting that from any state satisfying the precondition the code reaches a successor state satisfying the postcondition while respecting the line whitelist and blacklist.
+        source_ref: "D. Lundberg, R. Guanciale, A. Lindner, M. Dam, Hoare-Style Logic for Unstructured Programs, SEFM 2020, doi:10.1007/978-3-030-58768-0_11."
       - declaration: S_SEQ
         informal: Proves the sequencing Hoare rule, peeling off the last instruction of a code block.
+        source_ref: "D. Lundberg, R. Guanciale, A. Lindner, M. Dam, Hoare-Style Logic for Unstructured Programs, SEFM 2020, doi:10.1007/978-3-030-58768-0_11."
       - declaration: PRE_STR
         informal: Proves the precondition-strengthening rule for MRiscX Hoare triples.
       - declaration: POST_WEAK

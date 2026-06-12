@@ -722,6 +722,7 @@ import LeanPool.MRiscX.Elab.HoareElaborator
 import LeanPool.MRiscX.Examples.Examples
 import LeanPool.MRiscX.Examples.OtpProof
 import LeanPool.MRiscX.Examples.SingleProofsOTP
+import LeanPool.MRiscX.Examples.SpecAutomation
 import LeanPool.MRiscX.Hoare.EvalLabelInHoare
 import LeanPool.MRiscX.Hoare.HoareAssignmentElab
 import LeanPool.MRiscX.Hoare.HoareCore
