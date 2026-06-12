@@ -2934,3 +2934,40 @@ projects:
       - "11B30"
       - "11B75"
       - "11P70"
+  - slug: egrs75
+    title: The Erdős–Graham–Ruzsa–Straus two-prime theorem
+    summary: A complete machine-checked proof that for any two distinct odd primes p and q there are infinitely many n with binom(2n,n) coprime to pq, including the iterated carry-controlled digit-clearing step that Bloom and Croot defer to the 1975 paper, via a per-move lexicographic measure, an elementary staircase lemma, and a Dirichlet-approximation seed.
+    branch: number theory
+    entry_module: LeanPool.Egrs75
+    authors:
+      - Egor Lyfar
+    source:
+      title: On the prime factors of (2n choose n)
+      authors:
+        - Paul Erdős
+        - Ronald L. Graham
+        - Imre Z. Ruzsa
+        - Ernst G. Straus
+      doi: "10.1090/S0025-5718-1975-0369288-3"
+      github_repo: lyfar/egrs75-lean
+    status: verified
+    main_declarations:
+      - Egrs75.MuFinish.egrs_two_prime_mu
+      - Egrs75.Finish.egrs_two_prime_finish
+    main_results:
+      - declaration: Egrs75.MuFinish.egrs_two_prime_mu
+        informal: Proves that for distinct odd primes p and q there are infinitely many n with p and q both not dividing the central binomial coefficient binom(2n,n), via the mu-measure descent.
+      - declaration: Egrs75.Finish.egrs_two_prime_finish
+        informal: Proves the same theorem along an independent second route, a bad-bit-mask strong induction consuming the same single-move lemma.
+      - declaration: Egrs75.not_dvd_centralBinom_iff_lowDigits
+        informal: The Kummer bridge, stating that an odd prime p does not divide binom(2n,n) exactly when every base-p digit of n is at most (p-1)/2.
+      - declaration: Egrs75.MathlibAPI.irrational_log_div_log
+        informal: Proves that the ratio of logarithms of two distinct primes is irrational.
+    tags:
+      - number-theory
+      - central-binomial-coefficients
+      - digit-representations
+      - erdos-problems
+    msc:
+      - "11A63"
+      - "11B65"
