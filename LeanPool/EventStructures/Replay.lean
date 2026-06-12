@@ -15,7 +15,9 @@ import LeanPool.EventStructures.Trace
 This module defines minimal and maximal replays of a log, the minimum and
 maximum replay sets, and proves that the minimum (resp. maximum) replay set is
 the smallest (resp. largest) configuration compatible with a log, together with
-existence and uniqueness of minimal and maximal replays.
+uniqueness of minimal and maximal replays and *conditional* existence lemmas:
+existence is established relative to a computation compatible with the log that
+reaches the corresponding replay set, not unconditionally.
 -/
 
 namespace EventStructures
@@ -183,18 +185,20 @@ lemma maxReplay_unique_config {l : Set es.Event} {σ₁ σ₂ : Computations es}
     -- By maximality of σ₁: (conf es σ₂).1 ⊆ (conf es σ₁).1 (since σ₂ ⊨ l)
     exact h₁.2 σ₂ h₂.1 hx
 
-/-- The minimum replay always exists when there exists a computation reaching
-    the minimum replay set that is compatible with the log.
-    The minimality follows directly from minReplaySet_is_minimal_replay. -/
+/-- Conditional existence of the minimal replay: *if* some computation
+    compatible with the log reaches the minimum replay set, then a minimal
+    replay exists. This is a characterization lemma, not an unconditional
+    existence theorem; minimality follows from minReplaySet_is_minimal_replay. -/
 lemma minReplay_exists (l : Set es.Event)
     (hexists : ∃ σ : Computations es, (conf es σ).1 = minReplaySet es l ∧ σ ⊨ l) :
     ∃ σ : Computations es, isMinReplay es l σ := by
   obtain ⟨σ, h_conf, h_compat⟩ := hexists
   exact ⟨σ, minReplaySet_is_minimal_replay es h_conf h_compat⟩
 
-/-- The maximum replay always exists when there exists a computation reaching
-    the maximum replay set that is compatible with the log.
-    The maximality follows directly from maxReplaySet_is_maximal_replay. -/
+/-- Conditional existence of the maximal replay: *if* some computation
+    compatible with the log reaches the maximum replay set, then a maximal
+    replay exists. This is a characterization lemma, not an unconditional
+    existence theorem; maximality follows from maxReplaySet_is_maximal_replay. -/
 lemma maxReplay_exists (l : Set es.Event)
     (hexists : ∃ σ : Computations es, (conf es σ).1 = maxReplaySet es l ∧ σ ⊨ l) :
     ∃ σ : Computations es, isMaxReplay es l σ := by

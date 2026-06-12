@@ -1902,7 +1902,7 @@ projects:
       - "30E20"
   - slug: event-structures
     title: Event Structures and Causal-Consistent Reversibility
-    summary: Formalizes event structures with binary conflict, their configurations, computations, the trace monoid, and causal-consistent reversibility, proving correctness, uniqueness, and causal-safety of rollback and replay operations.
+    summary: Formalizes event structures with binary conflict, their configurations, computations, the trace monoid, and causal-consistent reversibility, proving correctness and causal-safety of rollback, uniqueness of minimal and maximal replays, and conditional replay-existence characterizations.
     branch: concurrency theory
     entry_module: LeanPool.EventStructures
     authors:
