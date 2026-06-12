@@ -529,6 +529,8 @@ import LeanPool.FelConjecture
 import LeanPool.FelConjecture.Solution
 import LeanPool.Fineqs
 import LeanPool.Fineqs.Main
+import LeanPool.FiveEighthsTheorem
+import LeanPool.FiveEighthsTheorem.Basic
 import LeanPool.Flean
 import LeanPool.Flean.Basic
 import LeanPool.Flean.FloatCfg

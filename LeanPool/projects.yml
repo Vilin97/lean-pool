@@ -2971,3 +2971,32 @@ projects:
     msc:
       - "11A63"
       - "11B65"
+  - slug: five-eighths-theorem
+    title: The 5/8 theorem
+    summary: Proves Gustafson's 5/8 theorem — the Mathlib commuting probability of a nonabelian group is at most 5/8, with the infinite case immediate from commProb being zero — via the finite-group index bounds for the center and centralizers of noncentral elements.
+    branch: group theory
+    entry_module: LeanPool.FiveEighthsTheorem
+    authors:
+      - Xuanji Li
+    source:
+      title: "What is the probability that two group elements commute?"
+      authors:
+        - W. H. Gustafson
+      doi: "10.2307/2317564"
+      github_repo: ldct/lean-monorepo
+    status: verified
+    main_declarations:
+      - FiveEighths.commProb_le_five_eighths
+    main_results:
+      - declaration: FiveEighths.commProb_le_five_eighths
+        informal: The commuting probability of a nonabelian group is at most 5/8.
+      - declaration: FiveEighths.centralFraction_le_quarter
+        informal: The center of a finite nonabelian group contains at most a quarter of its elements.
+      - declaration: FiveEighths.centralizerFraction_le_half
+        informal: The centralizer of a noncentral element of a finite group contains at most half of its elements.
+    tags:
+      - group-theory
+      - finite-groups
+      - commuting-probability
+    msc:
+      - "20P05"
