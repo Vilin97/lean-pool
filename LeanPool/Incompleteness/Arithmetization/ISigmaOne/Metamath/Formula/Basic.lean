@@ -1131,15 +1131,8 @@ lemma graph_rel_iff {k r v y} (hkr : L.Rel k r) (hv : L.IsUTermVec k v) :
   constructor
   · intro h
     rcases Graph.case_iff.mp h with ⟨_, (⟨k, r, v, H, rfl⟩ | ⟨_, _, _, H, _⟩ | ⟨H, _⟩ | ⟨H, _⟩ |
-      ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩
-    · simp only [qqRel_inj] at H; rcases H with ⟨rfl, rfl, rfl⟩; rfl
-    · simp [qqRel, qqNRel] at H
-    · simp [qqRel, qqVerum] at H
-    · simp [qqRel, qqFalsum] at H
-    · simp [qqRel, qqAnd] at H
-    · simp [qqRel, qqOr] at H
-    · simp [qqRel, qqAll] at H
-    · simp [qqRel, qqEx] at H
+      ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩ <;>
+      simp_all [qqRel, qqNRel, qqVerum, qqFalsum, qqAnd, qqOr, qqAll, qqEx]
   · rintro rfl; exact (Graph.case_iff).mpr ⟨by simp [hkr, hv], Or.inl ⟨k, r, v, rfl, rfl⟩⟩
 
 lemma graph_nrel_iff {k r v y} (hkr : L.Rel k r) (hv : L.IsUTermVec k v) :
@@ -1147,15 +1140,8 @@ lemma graph_nrel_iff {k r v y} (hkr : L.Rel k r) (hv : L.IsUTermVec k v) :
   constructor
   · intro h
     rcases Graph.case_iff.mp h with ⟨_, (⟨_, _, _, H, _⟩ | ⟨_, _, _, H, rfl⟩ | ⟨H, _⟩ | ⟨H, _⟩ |
-      ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩
-    · simp [qqNRel, qqRel] at H
-    · simp only [qqNRel_inj] at H; rcases H with ⟨rfl, rfl, rfl⟩; rfl
-    · simp [qqNRel, qqVerum] at H
-    · simp [qqNRel, qqFalsum] at H
-    · simp [qqNRel, qqAnd] at H
-    · simp [qqNRel, qqOr] at H
-    · simp [qqNRel, qqAll] at H
-    · simp [qqNRel, qqEx] at H
+      ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩ <;>
+      simp_all [qqRel, qqNRel, qqVerum, qqFalsum, qqAnd, qqOr, qqAll, qqEx]
   · rintro rfl; exact (Graph.case_iff).mpr ⟨by simp [hkr, hv], Or.inr <| Or.inl ⟨k, r, v, rfl, rfl⟩⟩
 
 lemma graph_verum_iff {y} :
@@ -1163,15 +1149,8 @@ lemma graph_verum_iff {y} :
   constructor
   · intro h
     rcases Graph.case_iff.mp h with ⟨_, (⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨H, rfl⟩ | ⟨H, _⟩ |
-      ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩
-    · simp [qqVerum, qqRel] at H
-    · simp [qqVerum, qqNRel] at H
-    · simp only at H; rcases H; rfl
-    · simp [qqVerum, qqFalsum] at H
-    · simp [qqVerum, qqAnd] at H
-    · simp [qqVerum, qqOr] at H
-    · simp [qqVerum, qqAll] at H
-    · simp [qqVerum, qqEx] at H
+      ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩ <;>
+      simp_all [qqRel, qqNRel, qqVerum, qqFalsum, qqAnd, qqOr, qqAll, qqEx]
   · rintro rfl; exact (Graph.case_iff).mpr ⟨by simp, Or.inr <| Or.inr <| Or.inl ⟨rfl, rfl⟩⟩
 
 lemma graph_falsum_iff {y} :
@@ -1179,15 +1158,8 @@ lemma graph_falsum_iff {y} :
   constructor
   · intro h
     rcases Graph.case_iff.mp h with ⟨_, (⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨H, _⟩ | ⟨H, rfl⟩ |
-      ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩
-    · simp [qqFalsum, qqRel] at H
-    · simp [qqFalsum, qqNRel] at H
-    · simp [qqFalsum, qqVerum] at H
-    · simp only at H; rcases H; rfl
-    · simp [qqFalsum, qqAnd] at H
-    · simp [qqFalsum, qqOr] at H
-    · simp [qqFalsum, qqAll] at H
-    · simp [qqFalsum, qqEx] at H
+      ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩ <;>
+      simp_all [qqRel, qqNRel, qqVerum, qqFalsum, qqAnd, qqOr, qqAll, qqEx]
   · rintro rfl; exact (Graph.case_iff).mpr ⟨by simp, Or.inr <| Or.inr <| Or.inr <| Or.inl ⟨rfl,
     rfl⟩⟩
 
@@ -1218,16 +1190,11 @@ lemma graph_and_inv {p₁ p₂ r : V} :
         c.and param p₁ p₂ r₁ r₂ := by
   intro h
   rcases Graph.case_iff.mp h with ⟨_, (⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨H, _⟩ | ⟨H, _⟩ |
-    ⟨_, _, _, _, _, _, H, rfl⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩
-  · simp [qqAnd, qqRel] at H
-  · simp [qqAnd, qqNRel] at H
-  · simp [qqAnd, qqVerum] at H
-  · simp [qqAnd, qqFalsum] at H
-  · simp only [qqAnd_inj] at H; rcases H with ⟨rfl, rfl⟩
-    exact ⟨_, _, by assumption, by assumption, rfl⟩
-  · simp [qqAnd, qqOr] at H
-  · simp [qqAnd, qqAll] at H
-  · simp [qqAnd, qqEx] at H
+    ⟨_, _, _, _, _, _, H, rfl⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩ <;>
+    first
+    | (simp only [qqAnd_inj] at H; rcases H with ⟨rfl, rfl⟩
+       exact ⟨_, _, by assumption, by assumption, rfl⟩)
+    | simp_all [qqRel, qqNRel, qqVerum, qqFalsum, qqAnd, qqOr, qqAll, qqEx]
 
 lemma graph_or {p₁ p₂ r₁ r₂ : V} (hp₁ : L.IsUFormula p₁) (hp₂ : L.IsUFormula p₂)
     (h₁ : c.Graph param p₁ r₁) (h₂ : c.Graph param p₂ r₂) :
@@ -1240,16 +1207,11 @@ lemma graph_or_inv {p₁ p₂ r : V} :
         c.or param p₁ p₂ r₁ r₂ := by
   intro h
   rcases Graph.case_iff.mp h with ⟨_, (⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨H, _⟩ | ⟨H, _⟩ |
-    ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, rfl⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩
-  · simp [qqOr, qqRel] at H
-  · simp [qqOr, qqNRel] at H
-  · simp [qqOr, qqVerum] at H
-  · simp [qqOr, qqFalsum] at H
-  · simp [qqOr, qqAnd] at H
-  · simp only [qqOr_inj] at H; rcases H with ⟨rfl, rfl⟩
-    exact ⟨_, _, by assumption, by assumption, rfl⟩
-  · simp [qqOr, qqAll] at H
-  · simp [qqOr, qqEx] at H
+    ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, rfl⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩)⟩ <;>
+    first
+    | (simp only [qqOr_inj] at H; rcases H with ⟨rfl, rfl⟩
+       exact ⟨_, _, by assumption, by assumption, rfl⟩)
+    | simp_all [qqRel, qqNRel, qqVerum, qqFalsum, qqAnd, qqOr, qqAll, qqEx]
 
 lemma graph_all {p₁ r₁ : V} (hp₁ : L.IsUFormula p₁) (h₁ : c.Graph (c.allChanges param) p₁ r₁) :
     c.Graph param (^∀ p₁) (c.all param p₁ r₁) :=
@@ -1260,16 +1222,11 @@ lemma graph_all_inv {p₁ r : V} :
     c.Graph param (^∀ p₁) r → ∃ r₁, c.Graph (c.allChanges param) p₁ r₁ ∧ r = c.all param p₁ r₁ := by
   intro h
   rcases Graph.case_iff.mp h with ⟨_, (⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨H, _⟩ | ⟨H, _⟩ |
-    ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, rfl⟩ | ⟨_, _, _, H, _⟩)⟩
-  · simp [qqAll, qqRel] at H
-  · simp [qqAll, qqNRel] at H
-  · simp [qqAll, qqVerum] at H
-  · simp [qqAll, qqFalsum] at H
-  · simp [qqAll, qqAnd] at H
-  · simp [qqAll, qqOr] at H
-  · simp only [qqAll_inj] at H; rcases H with rfl
-    exact ⟨_, by assumption, rfl⟩
-  · simp [qqAll, qqEx] at H
+    ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, rfl⟩ | ⟨_, _, _, H, _⟩)⟩ <;>
+    first
+    | (simp only [qqAll_inj] at H; rcases H with rfl
+       exact ⟨_, by assumption, rfl⟩)
+    | simp_all [qqRel, qqNRel, qqVerum, qqFalsum, qqAnd, qqOr, qqAll, qqEx]
 
 lemma graph_ex {p₁ r₁ : V} (hp₁ : L.IsUFormula p₁) (h₁ : c.Graph (c.exChanges param) p₁ r₁) :
     c.Graph param (^∃ p₁) (c.ex param p₁ r₁) :=
@@ -1280,16 +1237,11 @@ lemma graph_ex_inv {p₁ r : V} :
     c.Graph param (^∃ p₁) r → ∃ r₁, c.Graph (c.exChanges param) p₁ r₁ ∧ r = c.ex param p₁ r₁ := by
   intro h
   rcases Graph.case_iff.mp h with ⟨_, (⟨_, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨H, _⟩ | ⟨H, _⟩ |
-    ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, rfl⟩)⟩
-  · simp [qqEx, qqRel] at H
-  · simp [qqEx, qqNRel] at H
-  · simp [qqEx, qqVerum] at H
-  · simp [qqEx, qqFalsum] at H
-  · simp [qqEx, qqAnd] at H
-  · simp [qqEx, qqOr] at H
-  · simp [qqEx, qqAll] at H
-  · simp only [qqEx_inj] at H; rcases H with rfl
-    exact ⟨_, by assumption, rfl⟩
+    ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, _, _, _, H, _⟩ | ⟨_, _, _, H, _⟩ | ⟨_, _, _, H, rfl⟩)⟩ <;>
+    first
+    | (simp only [qqEx_inj] at H; rcases H with rfl
+       exact ⟨_, by assumption, rfl⟩)
+    | simp_all [qqRel, qqNRel, qqVerum, qqFalsum, qqAnd, qqOr, qqAll, qqEx]
 
 variable (param)
 
