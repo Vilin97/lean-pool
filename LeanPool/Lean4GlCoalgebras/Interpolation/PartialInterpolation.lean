@@ -63,6 +63,31 @@ def splitToExt {𝕏 : Split.Proof} {x : 𝕏.X} {τ} : Split.RuleApp → Ext.Ru
   | .boxₗ _ _ in_Δ => .boxₗ _ _ in_Δ
   | .boxᵣ _ _ in_Δ => .boxᵣ _ _ in_Δ
 
+lemma Split_to_Ext_isBox {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
+    r.isBox → (@splitToExt _ x τ r).isBox := by
+  unfold splitToExt
+  cases r <;> simp [RuleApp.isBox, Ext.RuleApp.isBox]
+
+lemma Split_to_Ext_notNonAxLeaf {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
+    ¬ (@splitToExt _ x τ r).isNonAxLeaf := by
+  unfold splitToExt
+  cases r <;> simp [Ext.RuleApp.isNonAxLeaf]
+
+lemma Split_to_Ext_f {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
+    Ext.f (@splitToExt _ x τ r) = f r := by
+  unfold splitToExt
+  cases r <;> simp [f, Ext.f]
+
+lemma Split_to_Ext_fₚ {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
+    Ext.fₚ (@splitToExt _ x τ r) = fₚ r := by
+  unfold splitToExt
+  cases r <;> simp [fₚ, Ext.fₚ]
+
+lemma Split_to_Ext_fₙ {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
+    Ext.fₙ (@splitToExt _ x τ r) = fₙ r := by
+  unfold splitToExt
+  cases r <;> simp [fₙ_alternate, Ext.fₙ_alternate]
+
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 noncomputable def partialLeftTopₗ {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X)
     {Δ in_Δ} (rule_def : r 𝕏.α x = RuleApp.topₗ Δ in_Δ)
@@ -538,18 +563,6 @@ noncomputable def partialInterpolationLeft {𝕏 : Proof} [fin_X : Fintype 𝕏.
     let 𝕐₂ := equiv.1.choose
     let y₂ := equiv.1.choose_spec.choose
     have y₂_prop := equiv.1.choose_spec.choose_spec
-    have split_to_ext_isBox {𝕐 : Split.Proof} {x : 𝕐.X} {τ} (r : Split.RuleApp) :
-        r.isBox → (@splitToExt _ x τ r).isBox := by
-      unfold splitToExt
-      cases r <;> simp [RuleApp.isBox, Ext.RuleApp.isBox]
-    have split_to_ext_f {𝕐 : Split.Proof} {x : 𝕐.X} {τ} (r : Split.RuleApp) :
-        Ext.f (@splitToExt _ x τ r) = f r := by
-      unfold splitToExt
-      cases r <;> simp [f, Ext.f]
-    have split_to_ext_fₙ {𝕐 : Split.Proof} {x : 𝕐.X} {τ} (r : Split.RuleApp) :
-        Ext.fₙ (@splitToExt _ x τ r) = fₙ r := by
-      unfold splitToExt
-      cases r <;> simp [fₙ_alternate, Ext.fₙ_alternate]
     { X := Unit ⊕ 𝕐₁.X ⊕ 𝕐₂.X
       α | Sum.inl u =>
           ⟨Ext.RuleApp.cutᵣ (leftInterpolantSequent x) (interpolant 𝕏 (equation x)),
@@ -560,7 +573,7 @@ noncomputable def partialInterpolationLeft {𝕏 : Proof} [fin_X : Fintype 𝕏.
           ⟨splitToExt (r 𝕐₂.α z₂), List.map (Sum.inr ∘ Sum.inr) (p 𝕐₂.α z₂)⟩
       step
         | Sum.inl u => by
-          simp only [Ext.r, Ext.T, Ext.p, List.map_cons, split_to_ext_f,
+          simp only [Ext.r, Ext.T, Ext.p, List.map_cons, Split_to_Ext_f,
             List.map_nil, Ext.fₙ_alternate, List.cons.injEq, and_true]
           constructor
           · convert y₁_prop
@@ -586,7 +599,7 @@ noncomputable def partialInterpolationLeft {𝕏 : Proof} [fin_X : Fintype 𝕏.
               all_goals
                 convert 𝕐₂_h
                 all_goals
-                  try simp [r_def, Ext.r, split_to_ext_f, split_to_ext_fₙ]
+                  try simp [r_def, Ext.r, Split_to_Ext_f, Split_to_Ext_fₙ]
                   try tauto
       root := Sum.inl ()
       path | Sum.inl u, f => by
@@ -695,7 +708,7 @@ noncomputable def partialInterpolationLeft {𝕏 : Proof} [fin_X : Fintype 𝕏.
                   simp [fn_def] at this
                 · have := isRight' (n + m)
                   simp [fn_def] at this
-                · apply split_to_ext_isBox
+                · apply Split_to_Ext_isBox
                   convert m_prop
                   unfold g
                   simp [fn_def]
@@ -800,7 +813,7 @@ noncomputable def partialInterpolationLeft {𝕏 : Proof} [fin_X : Fintype 𝕏.
                 simp [fn_def] at this
               · have := isRight' (n + m)
                 simp [fn_def] at this
-              · apply split_to_ext_isBox
+              · apply Split_to_Ext_isBox
                 convert m_prop
                 unfold g
                 simp [fn_def]}
@@ -1295,18 +1308,6 @@ noncomputable def partialInterpolationRight {𝕏 : Proof} [fin_X : Fintype 𝕏
     let 𝕐₂ := equiv.2.choose
     let y₂ := equiv.2.choose_spec.choose
     have y₂_prop := equiv.2.choose_spec.choose_spec
-    have split_to_ext_isBox {𝕐 : Split.Proof} {x : 𝕐.X} {τ} (r : Split.RuleApp) :
-        r.isBox → (@splitToExt _ x τ r).isBox := by
-      unfold splitToExt
-      cases r <;> simp [RuleApp.isBox, Ext.RuleApp.isBox]
-    have split_to_ext_f {𝕐 : Split.Proof} {x : 𝕐.X} {τ} (r : Split.RuleApp) :
-        Ext.f (@splitToExt _ x τ r) = f r := by
-      unfold splitToExt
-      cases r <;> simp [f, Ext.f]
-    have split_to_ext_fₙ {𝕐 : Split.Proof} {x : 𝕐.X} {τ} (r : Split.RuleApp) :
-        Ext.fₙ (@splitToExt _ x τ r) = fₙ r := by
-      unfold splitToExt
-      cases r <;> simp [fₙ_alternate, Ext.fₙ_alternate]
     { X := Unit ⊕ 𝕐₁.X ⊕ 𝕐₂.X
       α | Sum.inl u =>
           ⟨Ext.RuleApp.cutₗ (rightInterpolantSequent x) (~interpolant 𝕏 (equation x)),
@@ -1317,7 +1318,7 @@ noncomputable def partialInterpolationRight {𝕏 : Proof} [fin_X : Fintype 𝕏
           ⟨splitToExt (r 𝕐₂.α z₂), List.map (Sum.inr ∘ Sum.inr) (p 𝕐₂.α z₂)⟩
       step
         | Sum.inl u => by
-          simp only [Ext.r, Ext.T, Ext.p, List.map_cons, split_to_ext_f,
+          simp only [Ext.r, Ext.T, Ext.p, List.map_cons, Split_to_Ext_f,
             List.map_nil, Ext.fₙ_alternate, List.cons.injEq, and_true]
           constructor
           · convert y₁_prop
@@ -1343,7 +1344,7 @@ noncomputable def partialInterpolationRight {𝕏 : Proof} [fin_X : Fintype 𝕏
               all_goals
                 convert 𝕐₂_h
                 all_goals
-                  try simp [r_def, Ext.r, split_to_ext_f, split_to_ext_fₙ]
+                  try simp [r_def, Ext.r, Split_to_Ext_f, Split_to_Ext_fₙ]
                   try tauto
       root := Sum.inl ()
       path | Sum.inl u, f => by
@@ -1451,7 +1452,7 @@ noncomputable def partialInterpolationRight {𝕏 : Proof} [fin_X : Fintype 𝕏
                 · have := isRight' (n + m)
                   simp [fn_def] at this
                 · simp only [Ext.T]
-                  apply split_to_ext_isBox
+                  apply Split_to_Ext_isBox
                   convert m_prop
                   unfold g
                   simp [fn_def]
@@ -1556,35 +1557,10 @@ noncomputable def partialInterpolationRight {𝕏 : Proof} [fin_X : Fintype 𝕏
                 simp [fn_def] at this
               · have := isRight' (n + m)
                 simp [fn_def] at this
-              · apply split_to_ext_isBox
+              · apply Split_to_Ext_isBox
                 convert m_prop
                 unfold g
                 simp [fn_def]}
-
-lemma Split_to_Ext_isBox {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
-    r.isBox → (@splitToExt _ x τ r).isBox := by
-  unfold splitToExt
-  cases r <;> simp [RuleApp.isBox, Ext.RuleApp.isBox]
-
-lemma Split_to_Ext_notNonAxLeaf {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
-    ¬ (@splitToExt _ x τ r).isNonAxLeaf := by
-  unfold splitToExt
-  cases r <;> simp [Ext.RuleApp.isNonAxLeaf]
-
-lemma Split_to_Ext_f {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
-    Ext.f (@splitToExt _ x τ r) = f r := by
-  unfold splitToExt
-  cases r <;> simp [f, Ext.f]
-
-lemma Split_to_Ext_fₚ {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
-    Ext.fₚ (@splitToExt _ x τ r) = fₚ r := by
-  unfold splitToExt
-  cases r <;> simp [fₚ, Ext.fₚ]
-
-lemma Split_to_Ext_fₙ {𝕏 : Split.Proof} {x : 𝕏.X} {τ} (r : Split.RuleApp) :
-    Ext.fₙ (@splitToExt _ x τ r) = fₙ r := by
-  unfold splitToExt
-  cases r <;> simp [fₙ_alternate, Ext.fₙ_alternate]
 
 lemma partialEquationLeft_proves_eq {𝕏 : Proof} [fin_X : Fintype 𝕏.X] (x : 𝕏.X) :
   Ext.Proves x (partialEquationLeft x) (leftEquationSequent x) :=

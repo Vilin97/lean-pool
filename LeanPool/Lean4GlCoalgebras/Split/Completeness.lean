@@ -234,16 +234,6 @@ lemma next_next_cor {Γ Δ : SplitSequent} {strat : Strategy coalgebraGame Prove
   have P_has_moves_next : (coalgebraGame.moves next).Nonempty :=
     winning_has_moves P_next still_winning_next
   let next_next' := strat next P_next P_has_moves_next
-  have B_next_next : coalgebraGame.turn next_next'.1 = Builder := by
-    have next_next_in_moves := next_next'.2
-    unfold next Game.Pos.moves Game.moves at next_next_in_moves
-    dsimp [coalgebraGame] at next_next_in_moves
-    rcases (Finset.mem_map).mp next_next_in_moves with ⟨R, _, hR⟩
-    rw [← hR]
-    rfl
-  have next_next_in_cone : inMyCone strat (startPos Γ) next_next' := by
-    have := @inMyCone.oStep _ _ strat _ _ _ g.2.1 g.2.2 next_in_moves
-    exact inMyCone.myStep this P_has_moves_next P_next
   have h : next_next'.1 = (nextNext g h nrep pos).1 := by grind [nextNext]
   simp only [← h]
   have next_next_in_moves := next_next'.2
@@ -1524,6 +1514,35 @@ lemma diamond_in_last_of_diamond_in_first {Γ : SplitSequent}
         · grind
         · exact P_turn_u₂
 
+/-- A diamond in the first sequent of a maximal path also lies in its last sequent. -/
+private lemma diamond_in_last_of_diamond_in_first_path {Γ : SplitSequent}
+    {strat : Strategy coalgebraGame Builder} (h : winning strat (startPos Γ))
+    (γ : MaximalPath Γ strat) {φ}
+    (hmem : ◇φ ∈ (firstSplitSequent γ).toSequent) :
+    ◇φ ∈ (lastSplitSequent h γ).toSequent := by
+  apply diamond_in_last_of_diamond_in_first h γ φ (γ.list.length - 1)
+  · rcases γ with ⟨ρ, ne, chain, max, head_cases, in_cone⟩
+    simp
+    grind
+  · convert hmem
+    simp only [firstSplitSequent, MaximalPath.first]
+    have : 0 < γ.list.length := by have := γ.ne; grind
+    congr
+    rw [←List.getElem_zero_eq_head]
+    · congr
+      grind
+    · grind
+  · rcases γ with ⟨ρ, ne, chain, max, head_cases, in_cone⟩
+    simp
+    grind
+  · convert (maximal_path_starts_in_prover_turn γ)
+    simp only [MaximalPath.first]
+    have : 0 < γ.list.length := by have := γ.ne; grind
+    rw [←List.getElem_zero_eq_head]
+    · congr
+      grind
+    · grind
+
 lemma formula_in_successor_of_diamond_formula_in {Γ : SplitSequent}
     {strat : Strategy coalgebraGame Builder} (h : winning strat (startPos Γ))
     {π ρ : MaximalPath Γ strat} (π_ρ : pathRelation Γ strat π ρ) :
@@ -1591,28 +1610,7 @@ lemma diamond_in_path_of_diamond_formula_in {Γ : SplitSequent}
     apply diamond_in_of_move_move_diamond_in
       (maximal_path_ends_in_prover_turn h _) (maximal_path_starts_in_prover_turn _)
       rel φ
-    apply diamond_in_last_of_diamond_in_first h _ φ (γ.list.length - 1)
-    · rcases γ with ⟨ρ, ne, chain, max, head_cases, in_cone⟩
-      simp
-      grind
-    · convert ih
-      simp only [firstSplitSequent, MaximalPath.first]
-      have : 0 < γ.list.length := by have := γ.ne; grind
-      congr
-      rw [←List.getElem_zero_eq_head]
-      · congr
-        grind
-      · grind
-    · rcases γ with ⟨ρ, ne, chain, max, head_cases, in_cone⟩
-      simp
-      grind
-    · convert (maximal_path_starts_in_prover_turn γ)
-      simp only [MaximalPath.first]
-      have : 0 < γ.list.length := by have := γ.ne; grind
-      rw [←List.getElem_zero_eq_head]
-      · congr
-        grind
-      · grind
+    exact diamond_in_last_of_diamond_in_first_path h γ ih
 
 lemma formula_in_path_of_diamond_formula_in {Γ : SplitSequent}
     {strat : Strategy coalgebraGame Builder} (h : winning strat (startPos Γ))
@@ -1626,28 +1624,7 @@ lemma formula_in_path_of_diamond_formula_in {Γ : SplitSequent}
   case tail γ π_γ γ_ρ =>
     have φ_in_γ := diamond_in_path_of_diamond_formula_in h π_γ φ φ_in
     apply formula_in_successor_of_diamond_formula_in h γ_ρ φ ?_
-    apply diamond_in_last_of_diamond_in_first h γ φ (γ.list.length - 1)
-    · rcases γ with ⟨ρ, ne, chain, max, head_cases, in_cone⟩
-      simp
-      grind
-    · convert φ_in_γ
-      simp only [firstSplitSequent, MaximalPath.first]
-      have : 0 < γ.list.length := by have := γ.ne; grind
-      congr
-      rw [←List.getElem_zero_eq_head]
-      · congr
-        grind
-      · grind
-    · rcases γ with ⟨ρ, ne, chain, max, head_cases, in_cone⟩
-      simp
-      grind
-    · convert (maximal_path_starts_in_prover_turn γ)
-      simp only [MaximalPath.first]
-      have : 0 < γ.list.length := by have := γ.ne; grind
-      rw [←List.getElem_zero_eq_head]
-      · congr
-        grind
-      · grind
+    exact diamond_in_last_of_diamond_in_first_path h γ φ_in_γ
 
 /-- A terminal split rule application cannot be available at the last node of a
 Builder-winning path. -/
@@ -1773,11 +1750,15 @@ private lemma first_split_sequent_mem_at_reverse_index {Γ : SplitSequent}
   | nil => contradiction
   | cons x xs => cases x; simp [proverSplitSequent]
 
-/-- A left box formula at the last node produces a related maximal path from its premise. -/
-private lemma box_successor_path_of_last_left_box {Δ : SplitSequent}
+/-- A box rule application at the last node produces a related maximal path whose first
+sequent contains the unboxed formula. -/
+private lemma box_successor_path_of_last_box {Δ : SplitSequent}
     {strat : Strategy coalgebraGame Builder}
     (h : winning strat (startPos Δ)) (π : MaximalPath Δ strat) {φ : Formula}
-    (box_in : Sum.inl (□φ) ∈ lastSplitSequent h π) :
+    (R : RuleApp)
+    (R_mem : R ∈ SplitSequent.ruleApps (lastSplitSequent h π))
+    (R_box : R.isBox)
+    (R_premise : ∀ Δ', Δ' ∈ R.splitSequents → φ ∈ Δ'.toSequent) :
     ∃ ρ : MaximalPath Δ strat,
       Relation.TransGen (pathRelation Δ strat) π ρ ∧
         (Sum.inl φ ∈ firstSplitSequent ρ ∨ Sum.inr φ ∈ firstSplitSequent ρ) := by
@@ -1794,13 +1775,12 @@ private lemma box_successor_path_of_last_left_box {Δ : SplitSequent}
     apply in_cone
     simp
   let next_move : coalgebraGame.Pos :=
-    ⟨Sum.inr (RuleApp.boxₗ (lastSplitSequent h π) φ box_in),
-      (lastSplitSequent h π) :: Γs', Rs'⟩
+    ⟨Sum.inr R, (lastSplitSequent h π) :: Γs', Rs'⟩
   have move_last_next : Move π.last next_move := by
     unfold next_move
     simp only [last_def]
     apply Move.prover
-    exact ruleApp_boxl_mem box_in
+    exact R_mem
   have B_turn_next : coalgebraGame.turn next_move = Builder := by rfl
   have next_in_moves : next_move ∈ coalgebraGame.moves π.last :=
     move_iff_in_moves.1 move_last_next
@@ -1818,7 +1798,7 @@ private lemma box_successor_path_of_last_left_box {Δ : SplitSequent}
     have move_next_next' := move_next_next
     unfold next_move at move_next_next'
     cases move_next_next'
-    simp [afterBox, RuleApp.isBox]
+    simpa [afterBox] using R_box
   have ⟨ρ, ρ_def⟩ :=
     always_exists_maximal_path_from_root_or_after Δ strat h nextNext next_next_in_cone
       (Or.inl after_box_next_next)
@@ -1831,11 +1811,25 @@ private lemma box_successor_path_of_last_left_box {Δ : SplitSequent}
       unfold next_move at move_next_next'
       cases move_next_next'
       case builder Γ_mem Γ_not_mem =>
-        simp only [RuleApp.splitSequents, Finset.mem_singleton] at Γ_mem
-        subst Γ_mem
         rw [first_SplitSequent_eq_of_first ρ ρ_def]
-        simp [SplitSequent.toSequent, SplitSequent.D]
+        exact R_premise _ Γ_mem
     simpa [SplitSequent.toSequent] using hφ
+
+/-- A left box formula at the last node produces a related maximal path from its premise. -/
+private lemma box_successor_path_of_last_left_box {Δ : SplitSequent}
+    {strat : Strategy coalgebraGame Builder}
+    (h : winning strat (startPos Δ)) (π : MaximalPath Δ strat) {φ : Formula}
+    (box_in : Sum.inl (□φ) ∈ lastSplitSequent h π) :
+    ∃ ρ : MaximalPath Δ strat,
+      Relation.TransGen (pathRelation Δ strat) π ρ ∧
+        (Sum.inl φ ∈ firstSplitSequent ρ ∨ Sum.inr φ ∈ firstSplitSequent ρ) :=
+  box_successor_path_of_last_box h π (RuleApp.boxₗ (lastSplitSequent h π) φ box_in)
+    (ruleApp_boxl_mem box_in) (by simp [RuleApp.isBox])
+    (by
+      intro Δ' hΔ'
+      simp only [RuleApp.splitSequents, Finset.mem_singleton] at hΔ'
+      subst hΔ'
+      simp [SplitSequent.toSequent, SplitSequent.D])
 
 /-- A right box formula at the last node produces a related maximal path from its premise. -/
 private lemma box_successor_path_of_last_right_box {Δ : SplitSequent}
@@ -1844,62 +1838,14 @@ private lemma box_successor_path_of_last_right_box {Δ : SplitSequent}
     (box_in : Sum.inr (□φ) ∈ lastSplitSequent h π) :
     ∃ ρ : MaximalPath Δ strat,
       Relation.TransGen (pathRelation Δ strat) π ρ ∧
-        (Sum.inl φ ∈ firstSplitSequent ρ ∨ Sum.inr φ ∈ firstSplitSequent ρ) := by
-  have P_turn_y : coalgebraGame.turn π.last = Prover := maximal_path_ends_in_prover_turn h π
-  rcases last_def : π.last with ⟨Γ' | R', Γs', Rs'⟩ <;>
-    try (rw [last_def] at P_turn_y; change Builder = Prover at P_turn_y; cases P_turn_y)
-  have eq : Γ' = lastSplitSequent h π := by
-    unfold lastSplitSequent
-    simp only [last_def]
-    simp [proverSplitSequent]
-  subst eq
-  have in_cone : inMyCone strat (startPos Δ) π.last := by
-    rcases π with ⟨π, ne, chain, max, head_cases, in_cone⟩
-    apply in_cone
-    simp
-  let next_move : coalgebraGame.Pos :=
-    ⟨Sum.inr (RuleApp.boxᵣ (lastSplitSequent h π) φ box_in),
-      (lastSplitSequent h π) :: Γs', Rs'⟩
-  have move_last_next : Move π.last next_move := by
-    unfold next_move
-    simp only [last_def]
-    apply Move.prover
-    exact ruleApp_boxr_mem box_in
-  have B_turn_next : coalgebraGame.turn next_move = Builder := by rfl
-  have next_in_moves : next_move ∈ coalgebraGame.moves π.last :=
-    move_iff_in_moves.1 move_last_next
-  have next_in_cone : inMyCone strat (startPos Δ) next_move :=
-    inMyCone.oStep in_cone (by simpa [last_def] using P_turn_y) next_in_moves
-  have B_turn_winning : winning strat next_move := winning_of_in_cone_winning next_in_cone h
-  let next_next_move := strat next_move B_turn_next (winning_has_moves B_turn_next B_turn_winning)
-  rcases next_next_move_def : next_next_move with ⟨nextNext, next_next_mem⟩
-  have move_next_next : Move next_move nextNext := move_iff_in_moves.2 next_next_mem
-  have next_next_in_cone : inMyCone strat (startPos Δ) nextNext := by
-    simpa [next_next_move, next_next_move_def] using
-      (inMyCone.myStep next_in_cone
-        (winning_has_moves B_turn_next B_turn_winning) B_turn_next)
-  have after_box_next_next : afterBox nextNext := by
-    have move_next_next' := move_next_next
-    unfold next_move at move_next_next'
-    cases move_next_next'
-    simp [afterBox, RuleApp.isBox]
-  have ⟨ρ, ρ_def⟩ :=
-    always_exists_maximal_path_from_root_or_after Δ strat h nextNext next_next_in_cone
-      (Or.inl after_box_next_next)
-  refine ⟨ρ, ?_, ?_⟩
-  · apply Relation.TransGen.single
-    simp only [pathRelation, Relation.Comp]
-    exact ⟨next_move, move_last_next, ρ_def ▸ move_next_next⟩
-  · have hφ : φ ∈ (firstSplitSequent ρ).toSequent := by
-      have move_next_next' := move_next_next
-      unfold next_move at move_next_next'
-      cases move_next_next'
-      case builder Γ_mem Γ_not_mem =>
-        simp only [RuleApp.splitSequents, Finset.mem_singleton] at Γ_mem
-        subst Γ_mem
-        rw [first_SplitSequent_eq_of_first ρ ρ_def]
-        simp [SplitSequent.toSequent, SplitSequent.D]
-    simpa [SplitSequent.toSequent] using hφ
+        (Sum.inl φ ∈ firstSplitSequent ρ ∨ Sum.inr φ ∈ firstSplitSequent ρ) :=
+  box_successor_path_of_last_box h π (RuleApp.boxᵣ (lastSplitSequent h π) φ box_in)
+    (ruleApp_boxr_mem box_in) (by simp [RuleApp.isBox])
+    (by
+      intro Δ' hΔ'
+      simp only [RuleApp.splitSequents, Finset.mem_singleton] at hΔ'
+      subst hΔ'
+      simp [SplitSequent.toSequent, SplitSequent.D])
 
 /-- The penultimate node of a non-box maximal path cannot also be a Prover turn. -/
 private lemma no_penultimate_prover_turn {Δ : SplitSequent}
