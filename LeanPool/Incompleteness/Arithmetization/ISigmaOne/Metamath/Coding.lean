@@ -98,8 +98,7 @@ namespace Semiformula
 namespace Operator
 
 lemma lt_eq [L.LT] (t u : Semiterm L ξ n) :
-    LT.lt.operator ![t, u] = Semiformula.rel Language.LT.lt ![t, u] := by
-      simp [operator, LT.sentence_eq, rew_rel]
+    LT.lt.operator ![t, u] = Semiformula.rel Language.LT.lt ![t, u] := lt_def t u
 
 end Operator
 end Semiformula

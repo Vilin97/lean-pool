@@ -214,7 +214,7 @@ lemma div_mul_right (a : V) {b} (pos : 0 < b) : (b * a) / b = a := by
 
 @[simp 1100] lemma div_self {a : V} (hx : 0 < a) : a / a = 1 := by simpa using div_mul_left 1 hx
 
-@[simp 1100] lemma div_mul' (a : V) {b} (pos : 0 < b) : (b * a) / b = a := by simp [mul_comm, pos]
+@[simp 1100] lemma div_mul' (a : V) {b} (pos : 0 < b) : (b * a) / b = a := div_mul_right a pos
 
 @[simp] lemma div_add_self_left {a} (pos : 0 < a) (b : V) : (a + b) / a = 1 + b / a := by
   simpa using div_mul_add_self 1 b pos
@@ -782,7 +782,7 @@ theorem fin4 {n} : (2 : Fin (n + 3)).succ = 3 := rfl
 
 @[simp] theorem _root_.LO.Arith.Fin.succ_zero_eq_one'' {n} : (0 : Fin (n + 1)).succ = 1 := rfl
 
-@[simp] theorem _root_.LO.Arith.Fin.succ_two_eq_three {n} : (2 : Fin (n + 3)).succ = 3 := rfl
+@[simp] theorem _root_.LO.Arith.Fin.succ_two_eq_three {n} : (2 : Fin (n + 3)).succ = 3 := fin4
 
 example (v : Fin 4 → ℕ) : v (2 : Fin 3).succ = v 3 := by { simp [] }
 

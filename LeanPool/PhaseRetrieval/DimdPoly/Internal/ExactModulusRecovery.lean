@@ -4201,13 +4201,8 @@ theorem bKappa_coeff_recovery_of_realHermite_orthonormal
 private theorem skappa_ext_coeff_from_realHermite
     {d : Nat} {kappa : MultiIndex d} {U V : Skappa d kappa}
     (hcoeff : ∀ alpha, coeffSkappa U alpha = coeffSkappa V alpha) :
-    U = V := by
-  cases U
-  cases V
-  simp only [coeffSkappa] at hcoeff
-  congr
-  funext alpha
-  exact hcoeff alpha
+    U = V :=
+  skappa_ext_of_coeff_eq hcoeff
 
 theorem bKappa_injective_of_realHermite_coeff_recovery
     {d : Nat} (kappa : MultiIndex d)
@@ -9667,13 +9662,8 @@ private theorem pkappa_eq_zero_of_eval_zero_wip
 private theorem skappa_ext_coeff_exact_wip
     {d : Nat} {kappa : MultiIndex d} {U V : Skappa d kappa}
     (hcoeff : ∀ alpha, coeffSkappa U alpha = coeffSkappa V alpha) :
-    U = V := by
-  cases U
-  cases V
-  simp only [coeffSkappa] at hcoeff
-  congr
-  funext alpha
-  exact hcoeff alpha
+    U = V :=
+  skappa_ext_of_coeff_eq hcoeff
 
 private theorem bKappa_zero_exact_wip
     {d : Nat} (kappa : MultiIndex d) :

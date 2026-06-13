@@ -47,11 +47,7 @@ macro_rules | `(tactic| trivial) => `(tactic|
     | apply mem_imp₂ <| by assumption
   )
 
-lemma mem_left (h : ψ ∈ φ.subformulas) : ψ ∈ φ.subformulasGrz := by
-  unfold subformulasGrz;
-  simp only [Finset.mem_union];
-  left;
-  tauto;
+lemma mem_left (h : ψ ∈ φ.subformulas) : ψ ∈ φ.subformulasGrz := mem_origin h
 
 
 

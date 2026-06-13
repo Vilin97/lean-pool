@@ -47,14 +47,12 @@ lemma fdPolygon_at_zero : fdPolygon 0 = 1/2 + HHeight * I := by
   norm_num
 
 /-- Polygon vertex at t=1: rho'. -/
-lemma fdPolygon_at_one : fdPolygon 1 = rho' := by
-  simp only [fdPolygon, HHeight, rho', chordSegment]
-  norm_num
+lemma fdPolygon_at_one : fdPolygon 1 = rho' :=
+  fdPolygon_at_t1
 
 /-- Polygon vertex at t=4: top-left corner (-1/2 + HHeight·i). -/
-lemma fdPolygon_at_four : fdPolygon 4 = -1/2 + HHeight * I := by
-  simp only [fdPolygon, HHeight]
-  norm_num
+lemma fdPolygon_at_four : fdPolygon 4 = -1/2 + HHeight * I :=
+  fdPolygon_at_t4
 
 /-- Direction from p to z0 is in Q1 (re > 0, im > 0). -/
 lemma v0_quadrant (p : ℂ) (hp_re : |p.re| < 1 / 2) (hp_im : p.im < HHeight) :
@@ -103,9 +101,8 @@ lemma v1_quadrant (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)
   exact ⟨by linarith, by linarith⟩
 
 /-- Polygon vertex at t=3: rho. -/
-lemma fdPolygon_at_three : fdPolygon 3 = rho := by
-  simp only [fdPolygon, chordSegment, iPoint, rho]
-  norm_num
+lemma fdPolygon_at_three : fdPolygon 3 = rho :=
+  fdPolygon_at_t3
 
 /-- Direction from p to fdPolygon 3 (= rho) is in Q3 (re < 0, im < 0). -/
 lemma v3_quadrant (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)

@@ -73,8 +73,8 @@ lemma fdBox_convex (M : ℝ) : Convex ℝ (fdBox M) := by
          him ▸ strict_convex_comb_lb ha hb hab hx.2.2.1 hy.2.2.1,
          him ▸ strict_convex_comb_ub ha hb hab hx.2.2.2 hy.2.2.2⟩
 
-private lemma fdBox_im_pos' {M : ℝ} {z : ℂ} (hz : z ∈ fdBox M) : 0 < z.im := by
-  linarith [hz.2.2.1]
+private lemma fdBox_im_pos' {M : ℝ} {z : ℂ} (hz : z ∈ fdBox M) : 0 < z.im :=
+  fdBox_im_pos hz
 
 /-! ### allZerosInFdBox -/
 

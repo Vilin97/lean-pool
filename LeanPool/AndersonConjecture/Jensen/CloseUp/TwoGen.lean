@@ -284,23 +284,7 @@ theorem isAExtension_trans' {R S U : NSubring T}
 lemma exists_prime_mem_of_ne_bot_closeup {S : Type*} [CommRing S] [IsDomain S]
     [UniqueFactorizationMonoid S]
     (Q : Ideal S) [hQ : Q.IsPrime] (hQ_ne_bot : Q ≠ ⊥) :
-    ∃ q : S, Prime q ∧ q ∈ Q := by
-  obtain ⟨a, haQ, ha_ne⟩ : ∃ a ∈ Q, a ≠ (0 : S) := by
-    by_contra h
-    push Not at h
-    exact hQ_ne_bot (le_antisymm (fun x hx => (Submodule.mem_bot _).mpr (h x hx)) bot_le)
-  have ha_nu : ¬IsUnit a := fun hu => hQ.ne_top (Ideal.eq_top_of_isUnit_mem Q haQ hu)
-  suffices ∀ x : S, x ≠ 0 → ¬IsUnit x → x ∈ Q → ∃ q : S, Prime q ∧ q ∈ Q from
-    this a ha_ne ha_nu haQ
-  intro x
-  apply wellFounded_dvdNotUnit.induction x
-  intro x ih hx_ne hx_nu hxQ
-  obtain ⟨p, hp_irr, hp_dvd⟩ := WfDvdMonoid.exists_irreducible_factor hx_nu hx_ne
-  obtain ⟨b, hxpb⟩ := hp_dvd
-  rcases hQ.mem_or_mem (show p * b ∈ Q from hxpb ▸ hxQ) with hp_Q | hb_Q
-  · exact ⟨p, hp_irr.prime, hp_Q⟩
-  · have hb_ne : b ≠ 0 := right_ne_zero_of_mul (hxpb ▸ hx_ne)
-    have hb_nu : ¬IsUnit b := fun hu => hQ.ne_top (Ideal.eq_top_of_isUnit_mem Q hb_Q hu)
-    exact ih b ⟨hb_ne, p, hp_irr.prime.not_unit, by rw [hxpb, mul_comm]⟩ hb_ne hb_nu hb_Q
+    ∃ q : S, Prime q ∧ q ∈ Q :=
+  exists_prime_mem_of_ne_bot Q hQ_ne_bot
 
 end

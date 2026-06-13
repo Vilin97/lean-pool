@@ -933,24 +933,12 @@ lemma real_sq_div_mono (n : ℕ) (P : ℕ) (θ : ℝ)
 lemma truncatedObtuseRegion_subset_box_rb (n : ℕ) (η : ℝ) :
     truncatedObtuseRegion n η ⊆
       (Set.Icc (⌈η * (n : ℝ)⌉ - 1 : ℤ) (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ)) ×ˢ
-      (Set.Icc (⌈η * (n : ℝ)⌉ - 1 : ℤ) (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ)) := by
-  intro ⟨p, q⟩ h
-  simp only [truncatedObtuseRegion, Set.mem_setOf_eq, Set.mem_prod, Set.mem_Icc] at h ⊢
-  have h₁ : (η * (n : ℝ) : ℝ) ≤ (p : ℝ) := h.1
-  have h₂ : (η * (n : ℝ) : ℝ) ≤ (q : ℝ) := h.2.1
-  have h₃ : (p : ℝ) + (q : ℝ) < (n : ℝ) / 2 := h.2.2.1
-  have hc : ⌈η * (n : ℝ)⌉ ≤ p + 1 ∧ ⌈η * (n : ℝ)⌉ ≤ q + 1 := by
-    constructor <;> · rw [Int.ceil_le]; push_cast; linarith
-  have hp : (p : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-    rw [Int.le_floor]; linarith
-  have hq : (q : ℤ) ≤ ⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ := by
-    rw [Int.le_floor]; linarith
-  exact ⟨⟨by omega, hp⟩, ⟨by omega, hq⟩⟩
+      (Set.Icc (⌈η * (n : ℝ)⌉ - 1 : ℤ) (⌊(n : ℝ) / 2 - η * (n : ℝ)⌋ : ℤ)) :=
+  truncatedObtuseRegion_subset_box n η
 
 lemma truncatedObtuseRegion_finite_rb (n : ℕ) (η : ℝ) :
     (truncatedObtuseRegion n η).Finite :=
-  ((Set.finite_Icc _ _).prod (Set.finite_Icc _ _)).subset
-    (truncatedObtuseRegion_subset_box_rb n η)
+  truncatedObtuseRegion_finite n η
 
 lemma residueBadPairs_finite (n : ℕ) (η : ℝ) :
     (residueBadPairs n η).Finite :=
@@ -1358,11 +1346,8 @@ lemma counting_eq_fourier_ramanujan_sum
   simp_rw [character_product_simplify n]
 
 lemma largestPrimeFactor_pos_helper_fb (n : ℕ) (hn : 2 ≤ n) :
-    ∃ a : ℕ, n.primeFactors.max = ↑a ∧ 0 < a := by
-  have h₁ : 1 < n := by omega
-  have h₂ : n.primeFactors.Nonempty := Nat.nonempty_primeFactors.mpr h₁
-  obtain ⟨a, ha⟩ := Finset.max_of_nonempty h₂
-  exact ⟨a, ha, Nat.pos_of_mem_primeFactors (Finset.mem_of_max ha)⟩
+    ∃ a : ℕ, n.primeFactors.max = ↑a ∧ 0 < a :=
+  largestPrimeFactor_pos_helper n hn
 
 lemma largestPrimeFactor_ge_two (n : ℕ) (hn : 2 ≤ n) :
     2 ≤ largestPrimeFactor n := by
@@ -7238,65 +7223,22 @@ lemma fiber_ncard_bound (η : ℝ) (θ : ℝ)
 
 lemma pos_of_mem_truncatedObtuseRegion_snd (n : ℕ) (η : ℝ) (hη_pos : 0 < η)
     (pq : ℤ × ℤ) (h : pq ∈ truncatedObtuseRegion n η) :
-    0 < pq.2 := by
-  have h₂ : (η * (n : ℝ) : ℝ) ≤ (pq.2 : ℝ) := by
-    simpa [truncatedObtuseRegion] using h.2.1
-  have h₃ : (0 : ℝ) < η * (n : ℝ) := by
-    by_cases hn : n = 0
-    · have h₆ : (n : ℝ) = 0 := by simp [hn]
-      have h₇ : η * (n : ℝ) = 0 := by rw [h₆]; ring
-      have h₉ : (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 :=
-        by simpa [truncatedObtuseRegion] using h.2.2.1
-      have h₁₁ : (pq.1 : ℝ) + (pq.2 : ℝ) < 0 := by linarith
-      have h₁₂ : (η * (n : ℝ) : ℝ) ≤ (pq.1 : ℝ) := by
-        simpa [truncatedObtuseRegion] using h.1
-      linarith
-    · have h₇ : (0 : ℝ) < η * (n : ℝ) := by positivity
-      linarith
-  have h₅ : 0 < pq.2 := by
-    by_contra h₆
-    have h₇ : pq.2 ≤ 0 := by linarith
-    have h₈ : (pq.2 : ℝ) ≤ 0 := by
-      exact_mod_cast h₇
-    linarith
-  exact h₅
+    0 < pq.2 :=
+  pos_of_mem_truncatedObtuseRegion_snd_fb n η hη_pos pq h
 
 lemma pos_of_mem_truncatedObtuseRegion_fst (n : ℕ) (η : ℝ) (hη_pos : 0 < η)
     (pq : ℤ × ℤ) (h : pq ∈ truncatedObtuseRegion n η) :
-    0 < pq.1 := by
-  have h₁ : η * (n : ℝ) ≤ (pq.1 : ℝ) := h.1
-  have h₂ : η * (n : ℝ) ≤ (pq.2 : ℝ) := h.2.1
-  have h₃ : (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 := h.2.2.1
-  by_cases hn : n = 0
-  · have h₅ : (n : ℝ) = 0 := by norm_cast
-    have h₆ : η * (n : ℝ) = 0 := by rw [h₅]; ring
-    have h₈ : (pq.1 : ℝ) > 0 := by
-      by_contra _
-      linarith
-    have h₉ : 0 < (pq.1 : ℤ) := by
-      norm_cast at h₈ ⊢
-    exact h₉
-  · have h₇ : 0 < η * (n : ℝ) := by positivity
-    have h₉ : (pq.1 : ℝ) > 0 := by linarith
-    have h₁₀ : 0 < (pq.1 : ℤ) := by
-      norm_cast at h₉ ⊢
-    exact h₁₀
+    0 < pq.1 :=
+  pos_of_mem_truncatedObtuseRegion_fst_fb n η hη_pos pq h
 
 lemma snd_lt_half_of_mem_truncatedObtuseRegion' (n : ℕ) (η : ℝ)
     (pq : ℤ × ℤ) (h : pq ∈ truncatedObtuseRegion n η) (hp_pos : 0 < pq.1) :
-    (pq.2 : ℝ) < (n : ℝ) / 2 := by
-  simp only [truncatedObtuseRegion] at h
-  have h₁ : (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 := by
-    exact h.2.2.1
-  have h₂ : 0 < (pq.1 : ℝ) := by exact_mod_cast hp_pos
-  linarith
+    (pq.2 : ℝ) < (n : ℝ) / 2 :=
+  snd_lt_half_of_mem_truncatedObtuseRegion_fb n η pq h hp_pos
 
 lemma intLe_half_of_real_lt_half (n : ℕ) (q : ℤ) (hq : (q : ℝ) < (n : ℝ) / 2) :
-    q ≤ ↑n / 2 := by
-  have h₂ : (2 : ℝ) * (q : ℝ) < (n : ℝ) := by linarith
-  have h₃ : (2 : ℤ) * q < (n : ℤ) := by norm_cast at h₂ ⊢
-  have h₅ : q ≤ (n : ℤ) / 2 := by omega
-  simpa [Int.ediv_eq_zero_of_lt] using h₅
+    q ≤ ↑n / 2 :=
+  intLe_half_of_real_lt_half_fb n q hq
 
 lemma snd_mem_Icc_of_mem_residueBadPairs (n : ℕ) (η : ℝ) (hη : 0 < η) (_hn : 2 ≤ n)
     (pq : ℤ × ℤ) (hpq : pq ∈ residueBadPairs n η) :
@@ -7588,49 +7530,13 @@ lemma residueBadPairs_ncard_bound (η : ℝ) (θ : ℝ)
 
 lemma pos_of_mem_truncatedObtuseRegion_fst_pd (n : ℕ) (η : ℝ) (hη_pos : 0 < η)
     (pq : ℤ × ℤ) (h : pq ∈ truncatedObtuseRegion n η) :
-    0 < pq.1 := by
-  have h₁ : η * (n : ℝ) ≤ (pq.1 : ℝ) := h.1
-  have h₂ : η * (n : ℝ) ≤ (pq.2 : ℝ) := h.2.1
-  have h₃ : (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 := h.2.2.1
-  by_cases hn : n = 0
-  · have h₅ : (n : ℝ) = 0 := by norm_cast
-    have h₆ : η * (n : ℝ) = 0 := by rw [h₅]; ring
-    have h₈ : (pq.1 : ℝ) > 0 := by
-      by_contra _
-      linarith
-    have h₉ : 0 < (pq.1 : ℤ) := by
-      norm_cast at h₈ ⊢
-    exact h₉
-  · have h₇ : 0 < η * (n : ℝ) := by positivity
-    have h₉ : (pq.1 : ℝ) > 0 := by linarith
-    have h₁₀ : 0 < (pq.1 : ℤ) := by
-      norm_cast at h₉ ⊢
-    exact h₁₀
+    0 < pq.1 :=
+  pos_of_mem_truncatedObtuseRegion_fst_fb n η hη_pos pq h
 
 lemma pos_of_mem_truncatedObtuseRegion_snd_pd (n : ℕ) (η : ℝ) (hη_pos : 0 < η)
     (pq : ℤ × ℤ) (h : pq ∈ truncatedObtuseRegion n η) :
-    0 < pq.2 := by
-  have h₂ : (η * (n : ℝ) : ℝ) ≤ (pq.2 : ℝ) := by
-    simpa [truncatedObtuseRegion] using h.2.1
-  have h₃ : (0 : ℝ) < η * (n : ℝ) := by
-    by_cases hn : n = 0
-    · have h₆ : (n : ℝ) = 0 := by simp [hn]
-      have h₇ : η * (n : ℝ) = 0 := by rw [h₆]; ring
-      have h₉ : (pq.1 : ℝ) + (pq.2 : ℝ) < (n : ℝ) / 2 :=
-        by simpa [truncatedObtuseRegion] using h.2.2.1
-      have h₁₁ : (pq.1 : ℝ) + (pq.2 : ℝ) < 0 := by linarith
-      have h₁₂ : (η * (n : ℝ) : ℝ) ≤ (pq.1 : ℝ) := by
-        simpa [truncatedObtuseRegion] using h.1
-      linarith
-    · have h₇ : (0 : ℝ) < η * (n : ℝ) := by positivity
-      linarith
-  have h₅ : 0 < pq.2 := by
-    by_contra h₆
-    have h₇ : pq.2 ≤ 0 := by linarith
-    have h₈ : (pq.2 : ℝ) ≤ 0 := by
-      exact_mod_cast h₇
-    linarith
-  exact h₅
+    0 < pq.2 :=
+  pos_of_mem_truncatedObtuseRegion_snd_fb n η hη_pos pq h
 
 lemma fst_lt_half_of_mem_truncatedObtuseRegion (n : ℕ) (η : ℝ)
     (pq : ℤ × ℤ) (h : pq ∈ truncatedObtuseRegion n η) (hq_pos : 0 < pq.2) :
@@ -7847,12 +7753,8 @@ lemma badPairsE_ncard_bound (η : ℝ) (θ : ℝ)
     (n : ℕ) (hn : 2 ≤ n)
     (hP : (largestPrimeFactor n : ℝ) ≥ (n : ℝ) ^ θ)
     (h_small : (1 + Real.log (n : ℝ)) ^ 3 / (n : ℝ) ^ θ < η ^ 2 / 100) :
-    ((badPairsE n η).ncard : ℝ) ≤ (n : ℝ) ^ 2 * (1 / (n : ℝ) ^ θ + 1 / Real.log n) := by
-  obtain ⟨E', hE'_fin, hE'_sub, hE'_card⟩ :=
-    exists_fourier_exceptional_superset η θ hη_pos hη_lt hθ_pos hθ_lt n hn hP h_small
-  calc ((badPairsE n η).ncard : ℝ)
-      ≤ (E'.ncard : ℝ) := by exact_mod_cast Set.ncard_le_ncard hE'_sub hE'_fin
-    _ ≤ (n : ℝ) ^ 2 * (1 / (n : ℝ) ^ θ + 1 / Real.log n) := hE'_card
+    ((badPairsE n η).ncard : ℝ) ≤ (n : ℝ) ^ 2 * (1 / (n : ℝ) ^ θ + 1 / Real.log n) :=
+  badPairsE_ncard_le η θ hη_pos hη_lt hθ_pos hθ_lt n hn hP h_small
 
 lemma exceptional_set_construction_single_n (η : ℝ) (θ : ℝ)
     (hη_pos : 0 < η) (hη_lt : η < 1 / 6) (hθ_pos : 0 < θ) (hθ_lt : θ < 1)

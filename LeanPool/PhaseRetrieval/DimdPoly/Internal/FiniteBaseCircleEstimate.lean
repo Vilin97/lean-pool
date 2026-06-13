@@ -51,7 +51,7 @@ private theorem bandPoly_sub_fast_mul_slow_sub
   ring_nf
 
 private theorem norm_circleChar_wip (n : Nat) (x : Circle) :
-    ‖circleChar n x‖ = 1 := by simp [circleChar, norm_zeta]
+    ‖circleChar n x‖ = 1 := norm_circleChar n x
 
 private theorem circleChar_mk_wip (n : Nat) (theta : ℝ) :
     circleChar n (QuotientAddGroup.mk theta : Circle) =

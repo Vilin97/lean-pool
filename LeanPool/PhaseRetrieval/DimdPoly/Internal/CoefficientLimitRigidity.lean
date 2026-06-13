@@ -45,13 +45,8 @@ private theorem toFun_ofPkappa_wip
 private theorem skappa_ext_coeff_wip
     {d : Nat} {kappa : MultiIndex d} {U V : Skappa d kappa}
     (hcoeff : ∀ alpha, coeffSkappa U alpha = coeffSkappa V alpha) :
-    U = V := by
-  cases U
-  cases V
-  simp only [coeffSkappa] at hcoeff
-  congr
-  funext alpha
-  exact hcoeff alpha
+    U = V :=
+  skappa_ext_of_coeff_eq hcoeff
 
 private theorem skappa_eq_zero_of_coeff_zero_wip
     {d : Nat} {kappa : MultiIndex d} {U : Skappa d kappa}
@@ -4764,24 +4759,7 @@ theorem lowAnnulusDefectControl
         t <= 4 ->
         highAnnulusMass J (ofPkappa kappa H) <= 1 / 4 ->
         defect F (t • H) <= delta_low * t ->
-        lowAnnulusMass J (ofPkappa kappa H) <= 1 / 4 := by
-  let _ := hd
-  let _ := hF_ne
-  let _ := hF_norm
-  /-
-  Assembly-specific compactness/no-escape output:
-  small defect, after the high-annulus estimate has localized the normalized
-  perturbation, must force the low-annulus mass small. This is weaker than the
-  previous arbitrary finite-coefficient statement and is exactly the bridge used
-  by `orthogonal_coercivity`.
-  -/
-  by_cases hJ : J = 0
-  · refine ⟨1, by norm_num, ?_⟩
-    intro H t horth hH_norm ht_pos ht_le_four hhigh hdefect
-    subst J
-    have hnonempty : Nonempty (Fin d) := Fin.pos_iff_nonempty.mp hd
-    have hempty : lowAnnuli d 0 = ∅ := by simp [lowAnnuli]
-    simp [lowAnnulusMass, hempty]
-  · exact finite_window_lowAnnulusDefectControl_core_wip hd kappa F hF_ne hF_norm J
+        lowAnnulusMass J (ofPkappa kappa H) <= 1 / 4 :=
+  finite_window_lowAnnulusDefectControl_core_wip hd kappa F hF_ne hF_norm J
 
 end DimdPolyLEAN

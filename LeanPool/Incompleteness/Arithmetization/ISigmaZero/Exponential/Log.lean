@@ -298,12 +298,7 @@ lemma _root_.LO.Arith.Exponential.lt_length {x y : V} (H : Exponential x y) :
     x < ‖y‖ :=
   (le_iff_lt_length_of_exp H).mp (by rfl)
 
-lemma lt_exponential_length {a b : V} (h : Exponential ‖a‖ b) : a < b := by
-  rcases zero_le a with (rfl | pos)
-  · simp at h; simp [h]
-  rw [length_of_pos pos] at h
-  rcases Exponential.exponential_succ.mp h with ⟨b, rfl, H⟩
-  exact lt_exponential_log_self H
+lemma lt_exponential_length {a b : V} (h : Exponential ‖a‖ b) : a < b := lt_exp_len_self h
 
 lemma sq_len_le_three_mul (a : V) : ‖a‖ ^ 2 ≤ 3 * a := by
   induction a using hierarchy_polynomial_induction_oRing_sigma₀

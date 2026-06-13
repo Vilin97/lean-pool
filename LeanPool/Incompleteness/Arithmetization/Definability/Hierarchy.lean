@@ -303,7 +303,7 @@ lemma _root_.LO.FirstOrder.Arith.HierarchySymbol.Semiformula.ProperOn.extd
 lemma _root_.LO.FirstOrder.Arith.HierarchySymbol.Semiformula.ProperWithParamOn.extd
     {φ : Dlt-[m].Semisentence n} (h :
     φ.ProperOn M) :
-    φ.extd.ProperOn M := by intro e; rcases φ; simpa [Semiformula.extd] using h.iff e
+    φ.extd.ProperOn M := ProperOn.extd h
 
 lemma sigma_extd_val (φ : Sg-[m].Semiformula ξ n) :
     φ.extd.val = Semiformula.lMap Language.oringEmb φ.val := by rcases φ; simp [extd]

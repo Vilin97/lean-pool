@@ -224,7 +224,7 @@ lemma _root_.LO.Entailment.Consistent.of_unprovable {𝓢 : S} {f} (h : 𝓢 ⊬
   ⟨fun hp ↦ h (hp f)⟩
 
 lemma inconsistent_iff_theory_eq_univ {𝓢 : S} :
-    Inconsistent 𝓢 ↔ theory 𝓢 = Set.univ := by simp [inconsistent_def, theory, Set.ext_iff]
+    Inconsistent 𝓢 ↔ theory 𝓢 = Set.univ := inconsistent_iff_theory_eq
 
 alias ⟨Inconsistent.theory_eq, _⟩ := inconsistent_iff_theory_eq_univ
 
@@ -411,7 +411,7 @@ lemma le_of_subset (h : 𝓢 ⊆ 𝓣) : 𝓢 wkn 𝓣 := ⟨by rintro f ⟨b⟩
 lemma «weakening!» (h : 𝓢 ⊆ 𝓣) {f} : 𝓢 ⊢! f → 𝓣 ⊢! f := by rintro ⟨b⟩; exact ⟨weakening h b⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-lemma weakerThanOfSubset (h : 𝓢 ⊆ 𝓣) : 𝓢 wkn 𝓣 := ⟨fun _ ↦ weakening! h⟩
+lemma weakerThanOfSubset (h : 𝓢 ⊆ 𝓣) : 𝓢 wkn 𝓣 := le_of_subset h
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def translation (h : 𝓢 ⊆ 𝓣) : 𝓢 ↝ 𝓣 where

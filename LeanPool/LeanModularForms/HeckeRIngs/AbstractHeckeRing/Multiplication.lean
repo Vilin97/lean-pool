@@ -26,12 +26,8 @@ variable (P : HeckePair G) (Z : Type*) [CommRing Z]
 
 /-- Two `HeckeCoset` elements are equal iff their `toSet`s are equal. -/
 lemma HeckeCoset_ext_toSet {D₁ D₂ : HeckeCoset P}
-    (h : HeckeCoset.toSet D₁ = HeckeCoset.toSet D₂) : D₁ = D₂ := by
-  revert h
-  exact Quotient.ind₂ (motive := fun D₁ D₂ =>
-    HeckeCoset.toSet D₁ = HeckeCoset.toSet D₂ → D₁ = D₂) (fun g₁ g₂ h => by
-    simp only [HeckeCoset.toSet_mk] at h
-    exact Quotient.sound h) D₁ D₂
+    (h : HeckeCoset.toSet D₁ = HeckeCoset.toSet D₂) : D₁ = D₂ :=
+  HeckeCoset.ext_toSet h
 
 /-- The stabilizer quotient for the identity double coset is trivial. -/
 lemma decompQuot_T_one_eq_top :

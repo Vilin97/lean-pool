@@ -1394,83 +1394,8 @@ private theorem fourierCoeff_star_circleSeries_mul_star_finiteCirclePoly_nat
 /-- Vanishing real part forces a purely imaginary scalar multiple. -/
 private theorem circleSeries_neg_fourierCoeff_eq_zero_aux
     {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ Hk k) {r : ℝ} (hr : 0 < r) :
-    ∀ m : ℕ, fourierCoeff (circleSeries k (hermiteCoeff k G) r) (-(m + 1 : ℤ)) = 0 := by
-  intro m
-  let fcont : C(Circle, ℂ) :=
-    ⟨circleSeries k (hermiteCoeff k G) r, continuous_circleSeries_hermiteCoeff hG r hr⟩
-  let fLp := ContinuousMap.toLp (p := 2) AddCircle.haarAddCircle ℂ fcont
-  let s : ℤ → ℝ := fun n => ‖fourierCoeff fLp n‖ ^ 2
-  have hsummable : Summable s := by simpa [s, fLp] using (hasSum_sq_fourierCoeff fLp).summable
-  have hsummable_nat : Summable (fun n : ℕ => s n) :=
-    hsummable.comp_injective Nat.cast_injective
-  have hsummable_neg : Summable (fun n : ℕ => s (-(n + 1 : ℤ))) := by
-    have hneginj : Function.Injective (fun n : ℕ => (-(n + 1 : ℤ))) := by
-      intro x y h
-      have h' : Int.negSucc x = Int.negSucc y := by simpa [Int.negSucc] using h
-      exact Int.negSucc.inj h'
-    exact hsummable.comp_injective hneginj
-  have hparseval :
-      ∑' n : ℤ, s n = circleL2Sq (circleSeries k (hermiteCoeff k G) r) := by
-    have hIntEq :
-        ∫ t : Circle, ‖fLp t‖ ^ 2 ∂AddCircle.haarAddCircle =
-          circleL2Sq (circleSeries k (hermiteCoeff k G) r) := by
-      unfold circleL2Sq
-      refine integral_congr_ae ?_
-      filter_upwards [ContinuousMap.coeFn_toAEEqFun (μ := AddCircle.haarAddCircle) fcont] with t ht
-      simp [fcont, fLp, ht]
-    calc
-      ∑' n : ℤ, s n = ∫ t : Circle, ‖fLp t‖ ^ 2 ∂AddCircle.haarAddCircle := by
-        simpa [s] using (tsum_sq_fourierCoeff fLp)
-      _ = circleL2Sq (circleSeries k (hermiteCoeff k G) r) := hIntEq
-  have hcoeff : ∀ n : ℕ, fourierCoeff fLp n = hermiteCoeff k G n * (qkn k n r : ℂ) := by
-    intro n
-    calc
-      fourierCoeff fLp n = fourierCoeff fcont n := fourierCoeff_toLp (f := fcont) n
-      _ = hermiteCoeff k G n * (qkn k n r : ℂ) :=
-          circleSeries_fourierCoeff_hermiteCoeff (k := k) (G := G) hG (r := r) hr n
-  have hnat_eq :
-      ∑' n : ℕ, s n = circleL2Sq (circleSeries k (hermiteCoeff k G) r) := by
-    have hqabs : ∀ n : ℕ, |qkn k n r| ^ 2 = qkn k n r ^ 2 := by
-      intro n
-      simp
-    calc
-      ∑' n : ℕ, s n = ∑' n : ℕ, ‖hermiteCoeff k G n * (qkn k n r : ℂ)‖ ^ 2 := by simp [s, hcoeff]
-      _ = ∑' n : ℕ, (|qkn k n r| * ‖hermiteCoeff k G n‖) ^ 2 := by
-        congr with n
-        simp [mul_comm]
-      _ = ∑' n : ℕ, ‖hermiteCoeff k G n‖ ^ 2 * qkn k n r ^ 2 := by
-        congr with n
-        calc
-          (|qkn k n r| * ‖hermiteCoeff k G n‖) ^ 2 =
-              |qkn k n r| ^ 2 * ‖hermiteCoeff k G n‖ ^ 2 := by ring
-          _ = qkn k n r ^ 2 * ‖hermiteCoeff k G n‖ ^ 2 := by rw [hqabs]
-          _ = ‖hermiteCoeff k G n‖ ^ 2 * qkn k n r ^ 2 := by ring
-      _ = circleL2Sq (circleSeries k (hermiteCoeff k G) r) := by
-        simpa [circleL2Sq] using
-          (circleSeries_l2_identity_hermiteCoeff (k := k) (G := G) hG (r := r) hr).symm
-  have hsplit :
-      ∑' n : ℤ, s n = ∑' n : ℕ, s n + ∑' n : ℕ, s (-(n + 1 : ℤ)) := by
-    simpa [add_comm, add_left_comm, add_assoc] using
-      (tsum_of_nat_of_neg_add_one (f := s) hsummable_nat hsummable_neg)
-  have hneg_sum_zero : ∑' n : ℕ, s (-(n + 1 : ℤ)) = 0 := by linarith [hparseval, hnat_eq, hsplit]
-  have htermle : s (-(m + 1 : ℤ)) ≤ ∑' n : ℕ, s (-(n + 1 : ℤ)) := by
-    exact hsummable_neg.le_tsum m (by
-      intro n hn
-      dsimp [s]
-      positivity)
-  have hsq : s (-(m + 1 : ℤ)) = 0 := by
-    have hle : s (-(m + 1 : ℤ)) ≤ 0 := by
-      calc
-        s (-(m + 1 : ℤ)) ≤ ∑' n : ℕ, s (-(n + 1 : ℤ)) := htermle
-        _ = 0 := hneg_sum_zero
-    exact le_antisymm hle (by positivity)
-  have hsqLp : fourierCoeff fLp (-(m + 1 : ℤ)) = 0 := by
-    have hsq' : ‖fourierCoeff fLp (-(m + 1 : ℤ))‖ ^ 2 = 0 := by simpa [s] using hsq
-    have hnorm : ‖fourierCoeff fLp (-(m + 1 : ℤ))‖ = 0 := by exact sq_eq_zero_iff.mp hsq'
-    exact norm_eq_zero.mp hnorm
-  have hsq' : fourierCoeff fcont (-(m + 1 : ℤ)) = 0 := by
-    exact (fourierCoeff_toLp (f := fcont) (-(m + 1 : ℤ))).symm.trans hsqLp
-  exact hsq'
+    ∀ m : ℕ, fourierCoeff (circleSeries k (hermiteCoeff k G) r) (-(m + 1 : ℤ)) = 0 :=
+  circleSeries_neg_fourierCoeff_eq_zero hG hr
 
 /-- A complex number with zero real part is anti-self-adjoint. -/
 private lemma add_star_eq_zero_of_re_zero (z : ℂ) (hz : z.re = 0) : z + star z = 0 := by
