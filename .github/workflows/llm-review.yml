@@ -32,7 +32,7 @@ jobs:
     if: >-
       (github.event_name == 'workflow_run' &&
        github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.pull_requests[0] != null) ||
+       github.event.workflow_run.event == 'pull_request') ||
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'issue_comment' &&
        github.event.issue.pull_request != null &&
@@ -49,6 +49,8 @@ jobs:
           PR_FROM_WORKFLOW_RUN: ${{ github.event.workflow_run.pull_requests[0].number }}
           SHA_FROM_WORKFLOW_RUN: ${{ github.event.workflow_run.head_sha }}
           CONCLUSION_FROM_WORKFLOW_RUN: ${{ github.event.workflow_run.conclusion }}
+          HEAD_OWNER_FROM_WORKFLOW_RUN: ${{ github.event.workflow_run.head_repository.owner.login }}
+          HEAD_BRANCH_FROM_WORKFLOW_RUN: ${{ github.event.workflow_run.head_branch }}
         run: |
           set -euo pipefail
           head_sha=""
@@ -60,6 +62,13 @@ jobs:
               pr="$PR_FROM_WORKFLOW_RUN"
               head_sha="$SHA_FROM_WORKFLOW_RUN"
               lean_ci_conclusion="$CONCLUSION_FROM_WORKFLOW_RUN"
+              if [ -z "$pr" ]; then
+                # PRs from forks leave workflow_run.pull_requests empty, so
+                # resolve the PR number from the run's head repo and branch.
+                pr=$(gh api \
+                  "repos/$REPO/pulls?state=open&head=$HEAD_OWNER_FROM_WORKFLOW_RUN:$HEAD_BRANCH_FROM_WORKFLOW_RUN" \
+                  --jq '.[0].number // empty')
+              fi
               ;;
             *) echo "::error::Unexpected event $EVENT_NAME"; exit 1 ;;
           esac

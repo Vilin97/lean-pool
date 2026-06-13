@@ -1,0 +1,88 @@
+name: Proof Profile Comment
+
+# Companion to the `Proof Profile` workflow. That workflow runs the PR's Lean
+# code to profile it, so it must run on the `pull_request` event — where a PR
+# from a fork only gets a read-only GITHUB_TOKEN and cannot post a comment.
+# This workflow fires when it finishes, runs in the base-repo context with a
+# writable token, and posts the already-rendered profile for every PR, fork or
+# not. It never checks out or runs PR code; it only downloads the pre-rendered
+# `proof-profile-comment` artifact and posts it, so the writable token is never
+# exposed to untrusted PR code.
+on:
+  workflow_run:
+    workflows: ["Proof Profile"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+  # Needed to list and download artifacts from the triggering run.
+  actions: read
+
+# Serialize posters for the same source branch so two profile runs of one PR
+# cannot race into duplicate comments; the latest profile wins.
+concurrency:
+  group: >-
+    proof-profile-comment-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    name: Proof profile comment
+    steps:
+      - name: Find the comment payload artifact
+        id: artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          set -euo pipefail
+          # The profile run only uploads this artifact when it actually
+          # profiled files; absent means there is nothing to post.
+          id=$(gh api "repos/$REPO/actions/runs/$RUN_ID/artifacts" --paginate \
+                 --jq '.artifacts[] | select(.name == "proof-profile-comment") | .id' \
+               | head -n1)
+          if [ -z "$id" ]; then
+            echo "No proof-profile-comment artifact on run $RUN_ID; nothing to post."
+          fi
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
+      - name: Post sticky PR comment with profile
+        if: steps.artifact.outputs.id != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ARTIFACT_ID: ${{ steps.artifact.outputs.id }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$REPO/actions/artifacts/$ARTIFACT_ID/zip" > payload.zip
+          unzip -o -q payload.zip -d payload
+
+          # The PR number is attacker-influenced (it rode in an artifact built
+          # from a fork's run), so reduce it to digits before using it in any
+          # API path.
+          pr=$(tr -dc '0-9' < payload/proof-profile-pr.txt)
+          if [ -z "$pr" ]; then
+            echo "::error::No valid PR number in the comment payload."
+            exit 1
+          fi
+
+          # Marker so subsequent runs update the same comment instead of
+          # stacking new ones.
+          marker="<!-- proof-profile-comment -->"
+          {
+            printf '%s\n' "$marker"
+            cat payload/proof-profile.md
+          } > comment-body.md
+
+          existing=$(gh api "repos/$REPO/issues/$pr/comments" --paginate \
+            --jq "[.[] | select(.body | startswith(\"$marker\"))] | first | .id // empty")
+
+          if [ -n "$existing" ]; then
+            jq -n --rawfile body comment-body.md '{body: $body}' \
+              | gh api -X PATCH "repos/$REPO/issues/comments/$existing" --input -
+          else
+            gh pr comment "$pr" --repo "$REPO" --body-file comment-body.md
+          fi

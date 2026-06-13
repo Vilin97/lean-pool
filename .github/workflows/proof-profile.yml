@@ -18,7 +18,9 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
+  # This job runs the PR's Lean code, so it stays least-privilege: it reads PR
+  # metadata but no longer posts (the `Proof Profile Comment` workflow does).
+  pull-requests: read
 
 # Workflow-level concurrency applies to every run regardless of the job-level
 # `if:`, so an `issue_comment` event for a non-`/profile` comment (e.g. `/review`)
@@ -565,31 +567,32 @@ jobs:
               f.write(rendered)
           PY
 
-      - name: Post sticky PR comment with profile
+      # A `pull_request` run from a fork gets a read-only GITHUB_TOKEN and
+      # cannot post a PR comment, so the comment is posted by the separate
+      # `Proof Profile Comment` workflow (workflow_run), which runs in the
+      # base-repo context with a writable token. Here we only stage the
+      # rendered profile and the PR number as an artifact for it to consume —
+      # this keeps the untrusted, PR-code-executing job (this one) read-only
+      # while the privileged poster never runs PR code.
+      - name: Stage comment payload for the companion workflow
         if: steps.files.outputs.files != ''
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.pr.outputs.number }}
-          REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          # Marker so we can find and update the same comment on subsequent
-          # runs instead of stacking new ones.
-          marker="<!-- proof-profile-comment -->"
-          {
-            printf '%s\n' "$marker"
-            cat proof-profile.md
-          } > comment-body.md
+          # proof-profile.md is written by the render step above; the PR number
+          # is re-validated as numeric by the poster before use.
+          printf '%s\n' "$PR_NUMBER" > proof-profile-pr.txt
 
-          existing=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" --paginate \
-            --jq "[.[] | select(.body | startswith(\"$marker\"))] | first | .id // empty")
-
-          if [ -n "$existing" ]; then
-            jq -n --rawfile body comment-body.md '{body: $body}' \
-              | gh api -X PATCH "repos/$REPO/issues/comments/$existing" --input -
-          else
-            gh pr comment "$PR_NUMBER" --body-file comment-body.md
-          fi
+      - name: Upload comment payload
+        if: steps.files.outputs.files != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: proof-profile-comment
+          path: |
+            proof-profile.md
+            proof-profile-pr.txt
+          if-no-files-found: ignore
 
       - name: Upload proof profile
         if: always() && steps.files.outputs.files != ''
