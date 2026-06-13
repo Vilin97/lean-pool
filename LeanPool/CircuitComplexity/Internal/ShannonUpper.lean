@@ -934,8 +934,6 @@ private theorem lastWire_is_orChain_last (N : Nat) (hN : 16 ≤ N) :
     N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2) := by
   have hq2 : 2 ≤ dataBits N := dataBits_ge_two N hN
   have h4q : 4 ≤ 2 ^ dataBits N := pow_ge_4 (dataBits N) hq2
-  change N + szSections (addrBits N) (dataBits N) - 1 =
-    N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2)
   unfold szSections oF oE oD oC; omega
 
 private noncomputable def shannonCircuit (N : Nat) [NeZero N]
@@ -1777,7 +1775,6 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
     rw [show r' + 1 + 2 = (r' + 2) + 1 from by omega,
         List.range_succ, List.foldl_append, List.foldl_cons, List.foldl_nil]
     have hr2 : r' + 2 < 2 ^ dataBits N := by omega
-    have hr2 : r' + 2 < 2 ^ dataBits N := by omega
     rw [show andLayerSem N f hN x (r' + 2) hr2 =
       (if h : r' + 2 < 2 ^ dataBits N then andLayerSem N f hN x (r' + 2) h else false) from
       by rw [dif_pos hr2]]
@@ -1824,8 +1821,6 @@ private theorem shannon_lastWire_correct (N : Nat) [NeZero N]
   have h4q : 4 ≤ 2 ^ dataBits N := pow_ge_4 (dataBits N) hq2
   have hW_or : N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2) <
     N + szSections (addrBits N) (dataBits N) := by
-    show N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2) <
-      N + szSections (addrBits N) (dataBits N)
     unfold szSections oF oE oD oC; omega
   have hfin_eq :
     (⟨N + szSections (addrBits N) (dataBits N) - 1,
