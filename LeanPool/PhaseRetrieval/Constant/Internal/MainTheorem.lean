@@ -899,8 +899,7 @@ private lemma pre_absorption {D : ℕ} (hD : 1 ≤ D) (a : Fin D → ℂ) :
     have : S_fock ≤ 4 * 1620 ^ 2 * rhoFockNormSq a +
         C * ((etaCoeff 5 J + ε') * fockNormSq a) := by
       calc S_fock ≤ 4 * 1620 ^ 2 * S_rho + C * S_leak := h2
-        _ ≤ 4 * 1620 ^ 2 * rhoFockNormSq a + C * ((etaCoeff 5 J + ε') * fockNormSq a) := by
-          gcongr
+        _ ≤ 4 * 1620 ^ 2 * rhoFockNormSq a + C * ((etaCoeff 5 J + ε') * fockNormSq a) := by gcongr
     nlinarith
   -- Universal eta bound: C*eta_J < 1/4 (much tighter than < 1/2)
   have h_C_eta_tight : C * etaCoeff 5 J < 1 / 4 :=

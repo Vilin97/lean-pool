@@ -188,8 +188,8 @@ alias Matrix.PosDef.pos_eigenvalues := Matrix.PosDef.eigenvalues_pos
 
 theorem Matrix.PosDef.trace_ne_zero [Fintype n] [Nonempty n]
     {x : Matrix n n 𝕜} (hx : x.PosDef) :
-    x.trace ≠ 0 := by
-  exact ne_of_gt hx.trace_pos
+    x.trace ≠ 0 :=
+  ne_of_gt hx.trace_pos
 
 /-- A positive definite matrix has trace with positive real part. -/
 theorem Matrix.PosDef.pos_trace [Fintype n] [Nonempty n]
@@ -473,8 +473,8 @@ theorem Matrix.PosDef.diagonal_iff [DecidableEq n] (x : n → 𝕜) :
 
 theorem Matrix.toLin_piLp_eq_toLin' {n : Type*} [Fintype n] [DecidableEq n] :
     Matrix.toLpLin (R := 𝕜) (m := n) (n := n) 2 2 =
-      Matrix.toLin (PiLp.basisFun 2 𝕜 n) (PiLp.basisFun 2 𝕜 n) := by
-  exact Matrix.toLpLin_eq_toLin (R := 𝕜) (m := n) (n := n) 2 2
+      Matrix.toLin (PiLp.basisFun 2 𝕜 n) (PiLp.basisFun 2 𝕜 n) :=
+  Matrix.toLpLin_eq_toLin (R := 𝕜) (m := n) (n := n) 2 2
 
 alias Matrix.commute_iff := Matrix.IsHermitian.commute_iff
 
@@ -537,8 +537,8 @@ theorem _root_.Matrix.PosDef.trace_conjTranspose_hMul_self_eq_zero {m : Type*}
     have hQx : Q * xᴴ = 0 := by
       rw [hy, Matrix.mul_assoc, h, Matrix.mul_zero]
     letI := hQ.invertible
-    have hxT : xᴴ = 0 := by
-      exact (Matrix.mul_right_injective_of_invertible (A := Q)) (by simpa using hQx)
+    have hxT : xᴴ = 0 :=
+      (Matrix.mul_right_injective_of_invertible (A := Q)) (by simpa using hQx)
     rwa [← Matrix.conjTranspose_eq_zero]
   · intro h
     rw [h, conjTranspose_zero, Matrix.mul_zero]

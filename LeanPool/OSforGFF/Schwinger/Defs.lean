@@ -128,6 +128,10 @@ lemma CovarianceBilinear_of_integrable
   have hint₁ : Integrable (fun ω => u₁ ω * v ω) dμ_config.toMeasure := by simpa using h_int φ₁ ψ
   have hint₂ : Integrable (fun ω => u₂ ω * v ω) dμ_config.toMeasure := by simpa using h_int φ₂ ψ
   have hint₃ : Integrable (fun ω => u₁ ω * u₂ ω) dμ_config.toMeasure := by simpa using h_int φ₁ φ₂
+  have hlin : ∫ ω, c • (u₁ ω * v ω) ∂dμ_config.toMeasure
+              = c • ∫ ω, u₁ ω * v ω ∂dμ_config.toMeasure := by
+    simpa using (integral_smul (μ := dμ_config.toMeasure)
+      (f := fun ω => u₁ ω * v ω) c)
   -- 1) Scalar multiplication in the first argument
   have h_smul_left_integrand :
       (fun ω => distributionPairingℂReal ω (c • φ₁) * distributionPairingℂReal ω ψ)
@@ -143,11 +147,6 @@ lemma CovarianceBilinear_of_integrable
     ring
   have h1 :
       SchwingerFunctionℂ₂ dμ_config (c • φ₁) ψ = c * SchwingerFunctionℂ₂ dμ_config φ₁ ψ := by
-    -- Use scalar pull-out from the integral
-    have hlin : ∫ ω, c • (u₁ ω * v ω) ∂dμ_config.toMeasure
-                = c • ∫ ω, u₁ ω * v ω ∂dμ_config.toMeasure := by
-      simpa using (integral_smul (μ := dμ_config.toMeasure)
-        (f := fun ω => u₁ ω * v ω) c)
     calc
       SchwingerFunctionℂ₂ dμ_config (c • φ₁) ψ
           = ∫ ω, distributionPairingℂReal ω (c • φ₁) * distributionPairingℂReal ω ψ
@@ -196,10 +195,6 @@ lemma CovarianceBilinear_of_integrable
     ring
   have h3 :
       SchwingerFunctionℂ₂ dμ_config φ₁ (c • ψ) = c * SchwingerFunctionℂ₂ dμ_config φ₁ ψ := by
-    have hlin : ∫ ω, c • (u₁ ω * v ω) ∂dμ_config.toMeasure
-                = c • ∫ ω, u₁ ω * v ω ∂dμ_config.toMeasure := by
-      simpa using (integral_smul (μ := dμ_config.toMeasure)
-        (f := fun ω => u₁ ω * v ω) c)
     calc
       SchwingerFunctionℂ₂ dμ_config φ₁ (c • ψ)
           = ∫ ω, distributionPairingℂReal ω φ₁ * distributionPairingℂReal ω (c • ψ)

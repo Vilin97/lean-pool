@@ -154,8 +154,7 @@ lemma satisfiableSet_iff_models_nonempty {T : Set F} :
 
 namespace RealizeSet
 
-lemma realize {T : Set F} (𝓜 : M) [𝓜 ⊧* T] (hf : f ∈ T) : 𝓜 ⊧ f :=
-  all_realize hf
+lemma realize {T : Set F} (𝓜 : M) [𝓜 ⊧* T] (hf : f ∈ T) : 𝓜 ⊧ f := all_realize hf
 
 lemma of_subset {T U : Set F} {𝓜 : M} (h : 𝓜 ⊧* U) (ss : T ⊆ U) : 𝓜 ⊧* T :=
   ⟨fun _ hf => h.all_realize (ss hf)⟩
@@ -243,8 +242,7 @@ lemma consequence_iff_not_satisfiable [LogicalConnective F] [Tarski M] {f : F} :
     exact (Semantics.Not.realize_not.mp hparts.1) this
   · intro h 𝓜 hT
     by_contra hf
-    exact h ⟨𝓜, by
-      exact RealizeSet.insert_iff.mpr ⟨by simpa using hf, hT⟩⟩
+    exact h ⟨𝓜, by exact RealizeSet.insert_iff.mpr ⟨by simpa using hf, hT⟩⟩
 
 lemma weakening {T U : Set F} {f} (h : T ⊨[M] f) (ss : T ⊆ U) : U ⊨[M] f :=
   consequence_iff.mpr fun hs => consequence_iff.mp h (RealizeSet.of_subset hs ss)
@@ -260,8 +258,7 @@ namespace Cumulative
 
 lemma subset_of_le {T : ℕ → Set F} (H : Cumulative T)
     {s₁ s₂ : ℕ} (h : s₁ ≤ s₂) : T s₁ ⊆ T s₂ := by
-  suffices ∀ s d, T s ⊆ T (s + d) by
-    simpa[Nat.add_sub_of_le h] using this s₁ (s₂ - s₁)
+  suffices ∀ s d, T s ⊆ T (s + d) by simpa[Nat.add_sub_of_le h] using this s₁ (s₂ - s₁)
   intro s d
   induction d with
   | zero => simp

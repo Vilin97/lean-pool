@@ -184,8 +184,8 @@ theorem TensorProduct.submodule_exists_le_tensorProduct {R M N : Type*}
     rfl
   have :=
     calc U = Submodule.span R e' := this.symm
-        _ ≤ Submodule.span R (LinearMap.range (TensorProduct.mapIncl M' N')) := by
-          exact Submodule.span_mono hS
+        _ ≤ Submodule.span R (LinearMap.range (TensorProduct.mapIncl M' N')) :=
+          Submodule.span_mono hS
   use M', N', hM', hN'
   simp_all only [TensorProduct.mapIncl,
     Submodule.span_coe_eq_restrictScalars, Submodule.restrictScalars_self]

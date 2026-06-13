@@ -372,8 +372,8 @@ open LinearMap in
 private theorem is_self_adjoint_to_clm {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] [CompleteSpace E]
     {p : E →ₗ[𝕜] E} :
-    IsSelfAdjoint p ↔ IsSelfAdjoint (toContinuousLinearMap p) := by
-  exact (LinearMap.isSelfAdjoint_toContinuousLinearMap p).symm
+    IsSelfAdjoint p ↔ IsSelfAdjoint (toContinuousLinearMap p) :=
+  (LinearMap.isSelfAdjoint_toContinuousLinearMap p).symm
 
 -- Orthogonal projection existence goes through finite-dimensional completeness and CLM coercions.
 open LinearMap in

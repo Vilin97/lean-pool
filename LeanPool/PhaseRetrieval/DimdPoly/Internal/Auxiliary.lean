@@ -174,8 +174,7 @@ private theorem phase_stability_coefficients_of_ne_zero
   have ha_pos : 0 < a := inv_pos.mpr hnorm_pos
   let Fn : Finsupp (Fin d -> ℕ) ℂ := (a : ℂ) • F
   have hFn_norm : explicitPkappaNorm Fn = 1 := by
-    have hcast_inv : (a : ℂ) = ((explicitPkappaNorm F : ℂ)⁻¹) := by
-      simp [a]
+    have hcast_inv : (a : ℂ) = ((explicitPkappaNorm F : ℂ)⁻¹) := by simp [a]
     change explicitPkappaNorm ((a : ℂ) • F) = 1
     rw [hcast_inv]
     exact explicitPkappaNorm_normalized hF
@@ -605,10 +604,8 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
       C_P ^ 2 * explicitModulusDistanceSq P Q := by
   let δ : ℕ -> ℝ := fun n => Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q)
   let M : ℝ := explicitModulusDistanceSq P Q
-  have hM_nonneg : 0 ≤ M := by
-    exact explicitModulusDistanceSq_nonneg P Q
-  have hδ_tendsto : Filter.Tendsto δ Filter.atTop (nhds (0 : ℝ)) := by
-    simpa [δ] using hQn_lim.sqrt
+  have hM_nonneg : 0 ≤ M := by exact explicitModulusDistanceSq_nonneg P Q
+  have hδ_tendsto : Filter.Tendsto δ Filter.atTop (nhds (0 : ℝ)) := by simpa [δ] using hQn_lim.sqrt
   have hbound_n :
       ∀ n,
         explicitPhaseOptimizedDistanceSq P Q ≤

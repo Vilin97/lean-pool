@@ -28,8 +28,8 @@ Hermitian-preservation lemmas.
 open scoped ComplexOrder
 
 lemma RCLike.neg_ofReal {𝕜 : Type*} [RCLike 𝕜] (a : ℝ) :
-    (a : 𝕜) < 0 ↔ a < 0 := by
-  exact RCLike.ofReal_lt_zero
+    (a : 𝕜) < 0 ↔ a < 0 :=
+  RCLike.ofReal_lt_zero
 
 instance Pi.coe {k : Type _} {s r : k → Type _} [∀ i, CoeTC (s i) (r i)] :
     CoeTC (Π i, s i) (Π i, r i) :=

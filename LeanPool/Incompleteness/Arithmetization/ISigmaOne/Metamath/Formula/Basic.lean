@@ -1330,10 +1330,8 @@ lemma graph_unique {p : V} :
   case hnrel =>
     intro k R v hkR hv
     simp [c.graph_nrel_iff hkR hv]
-  case hverum =>
-    simp [c.graph_verum_iff]
-  case hfalsum =>
-    simp [c.graph_falsum_iff]
+  case hverum => simp [c.graph_verum_iff]
+  case hfalsum => simp [c.graph_falsum_iff]
   case hand =>
     intro p₁ p₂ _ _ ih₁ ih₂ param r r' hr hr'
     rcases c.graph_and_inv hr with ⟨r₁, r₂, h₁, h₂, rfl⟩

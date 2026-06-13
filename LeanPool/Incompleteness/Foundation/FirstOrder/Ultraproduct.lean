@@ -82,12 +82,9 @@ lemma eval_Uprod [(i : I) → Nonempty (A i)] {φ : Semiformula L μ n} :
       LogicalConnective.HomClass.map_or, LogicalConnective.Prop.or_eq,
       eval_all, eval_ex, Nat.succ_eq_add_one, *]
   case hverum => exact Filter.univ_mem
-  case hnrel k r v =>
-    exact Ultrafilter.compl_mem_iff_notMem.symm
-  case hand =>
-    exact Filter.inter_mem_iff.symm
-  case hor φ ψ ihp ihq =>
-    exact Ultrafilter.union_mem_iff.symm
+  case hnrel k r v => exact Ultrafilter.compl_mem_iff_notMem.symm
+  case hand => exact Filter.inter_mem_iff.symm
+  case hor φ ψ ihp ihq => exact Ultrafilter.union_mem_iff.symm
   case hall φ _ =>
     constructor
     · intro h

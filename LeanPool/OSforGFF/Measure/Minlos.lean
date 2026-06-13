@@ -178,8 +178,8 @@ theorem minlos_gaussian_construction
   : ∃ μ : ProbabilityMeasure (WeakDual ℝ E),
     (∀ f : E, gaussianCharacteristicFunctional covariance_form f =
               ∫ ω, Complex.exp (I * (ω f)) ∂μ.toMeasure) := by
-  have h_cf_cont : Continuous (gaussianCharacteristicFunctional covariance_form) := by
-    exact continuous_exp.comp (continuous_const.mul (continuous_ofReal.comp h_continuous))
+  have h_cf_cont : Continuous (gaussianCharacteristicFunctional covariance_form) :=
+    continuous_exp.comp (continuous_const.mul (continuous_ofReal.comp h_continuous))
   have h_cf_pd := gaussian_positive_definite_bochner T covariance_form h_eq h_symm
   have h_cf_norm : gaussianCharacteristicFunctional covariance_form 0 = 1 := by
     simp [gaussianCharacteristicFunctional, h_zero]

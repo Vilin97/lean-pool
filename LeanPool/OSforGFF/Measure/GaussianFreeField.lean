@@ -155,10 +155,10 @@ theorem gaussian_satisfies_OS0
         apply AnalyticOnNhd.mul
         · exact analyticOnNhd_const
         · -- z_i * z_j is analytic as product of coordinate projections
-          have coord_i : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z i) Set.univ := by
-            exact (ContinuousLinearMap.proj i : (Fin n → ℂ) →L[ℂ] ℂ).analyticOnNhd _
-          have coord_j : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z j) Set.univ := by
-            exact (ContinuousLinearMap.proj j : (Fin n → ℂ) →L[ℂ] ℂ).analyticOnNhd _
+          have coord_i : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z i) Set.univ :=
+            (ContinuousLinearMap.proj i : (Fin n → ℂ) →L[ℂ] ℂ).analyticOnNhd _
+          have coord_j : AnalyticOnNhd ℂ (fun z : Fin n → ℂ => z j) Set.univ :=
+            (ContinuousLinearMap.proj j : (Fin n → ℂ) →L[ℂ] ℂ).analyticOnNhd _
           exact AnalyticOnNhd.mul coord_i coord_j
       -- Apply finite sum analyticity twice by decomposing the sum
       -- First for outer sum

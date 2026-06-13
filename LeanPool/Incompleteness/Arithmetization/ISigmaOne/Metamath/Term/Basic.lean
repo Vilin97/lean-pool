@@ -72,8 +72,7 @@ def _root_.LO.FirstOrder.Arith.qqBvarDef : Sg0.Semisentence 2 :=
 
 lemma qqBvar_defined : Sg0-Function₁ (qqBvar : V → V) via qqBvarDef := by
   intro v
-  suffices h : v 0 = ^#(v 1) ↔ ⟪0, v 1⟫ < v 0 ∧ v 0 = ⟪0, v 1⟫ + 1 by
-    simpa [qqBvarDef] using h
+  suffices h : v 0 = ^#(v 1) ↔ ⟪0, v 1⟫ < v 0 ∧ v 0 = ⟪0, v 1⟫ + 1 by simpa [qqBvarDef] using h
   constructor
   · intro h
     rw [h]
@@ -90,8 +89,7 @@ def _root_.LO.FirstOrder.Arith.qqFvarDef : Sg0.Semisentence 2 :=
 
 lemma qqFvar_defined : Sg0-Function₁ (qqFvar : V → V) via qqFvarDef := by
   intro v
-  suffices h : v 0 = ^&(v 1) ↔ ⟪1, v 1⟫ < v 0 ∧ v 0 = ⟪1, v 1⟫ + 1 by
-    simpa [qqFvarDef] using h
+  suffices h : v 0 = ^&(v 1) ↔ ⟪1, v 1⟫ < v 0 ∧ v 0 = ⟪1, v 1⟫ + 1 by simpa [qqFvarDef] using h
   constructor
   · intro h
     rw [h]

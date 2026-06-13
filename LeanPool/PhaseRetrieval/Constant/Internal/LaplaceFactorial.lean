@@ -72,8 +72,7 @@ private lemma hasDerivAt_phiFunc (n : ℕ) {r : ℝ} (hr : 0 < r) :
     HasDerivAt (phiFunc n) ((2 * ↑n + 1) / r - 2 * r) r := by
   unfold phiFunc
   have h1 := (Real.hasDerivAt_log (ne_of_gt hr)).const_mul (2 * ↑n + 1 : ℝ)
-  have h2 : HasDerivAt (fun r => r ^ 2) (2 * r) r := by
-    simpa using hasDerivAt_pow 2 r
+  have h2 : HasDerivAt (fun r => r ^ 2) (2 * r) r := by simpa using hasDerivAt_pow 2 r
   convert h1.sub h2 using 1
 
 /-- Derivative: `φ_n'(r) = (2n+1)/r − 2r`, vanishing at `r = r_n`. -/

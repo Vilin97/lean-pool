@@ -561,8 +561,7 @@ private lemma large_amplitude {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
       real_cont_integrable (h_1pP_cont.norm.pow 2)
     have h_sub : cns = ∫ t : AddCircle T, (‖(1 : ℂ) + P t‖ ^ 2 - 1)
         ∂AddCircle.haarAddCircle := by
-      have h1 : ∫ t : AddCircle T, (1 : ℝ) ∂AddCircle.haarAddCircle = 1 := by
-        simp [integral_const]
+      have h1 : ∫ t : AddCircle T, (1 : ℝ) ∂AddCircle.haarAddCircle = 1 := by simp [integral_const]
       rw [integral_sub h_int_norm_sq (integrable_const (1 : ℝ)), h_int_1pP, h1]; ring
     rw [h_sub]
     apply le_trans (integral_mono

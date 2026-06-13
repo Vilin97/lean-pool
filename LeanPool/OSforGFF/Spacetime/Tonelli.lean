@@ -207,8 +207,8 @@ theorem schwartz_tonelli_spacetime
         ‖g (spacetimeDecomp.symm p₂)‖ * K t₁ p₂.1) := by
       obtain ⟨C, hC⟩ := hK_bdd
       have hC_pos : 0 ≤ C := le_trans (hK_nn t₁ 0) (hC t₁ 0)
-      have h_bound_int : Integrable (fun p₂ => C * ‖g (spacetimeDecomp.symm p₂)‖) := by
-        exact hg_int.const_mul C
+      have h_bound_int : Integrable (fun p₂ => C * ‖g (spacetimeDecomp.symm p₂)‖) :=
+        hg_int.const_mul C
       have h_meas : AEStronglyMeasurable (fun p₂ : ℝ × SpatialCoords =>
           ‖g (spacetimeDecomp.symm p₂)‖ * K t₁ p₂.1) volume := by
         have h1 : AEStronglyMeasurable (fun p₂ => ‖g (spacetimeDecomp.symm p₂)‖) volume :=

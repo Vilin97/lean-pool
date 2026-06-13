@@ -80,8 +80,8 @@ lemma psd_cauchy_schwarz
   subst hB
   have hform (a b : ι → ℝ) :
       a ⬝ᵥ (B.transpose * B).mulVec b = (B.mulVec a) ⬝ᵥ (B.mulVec b) := by
-    have h1 : (B.transpose * B).mulVec b = B.transpose.mulVec (B.mulVec b) := by
-      exact (Matrix.mulVec_mulVec b B.transpose B).symm
+    have h1 : (B.transpose * B).mulVec b = B.transpose.mulVec (B.mulVec b) :=
+      (Matrix.mulVec_mulVec b B.transpose B).symm
     calc
       a ⬝ᵥ (B.transpose * B).mulVec b
           = a ⬝ᵥ B.transpose.mulVec (B.mulVec b) := by rw [h1]
@@ -119,13 +119,9 @@ lemma psd_offdiag_zero_of_diag_zero
   have hy : (Pi.single j (1 : ℝ)) ⬝ᵥ H.mulVec (Pi.single j 1) = H j j := by simp
   have hxy : (Pi.single i (1 : ℝ)) ⬝ᵥ H.mulVec (Pi.single j 1) = H i j := by simp
   -- Substitute and use hii, hjj
-  have : (H i j)^2 ≤ (H i i) * (H j j) := by simpa [hx, hy, hxy]
-    using hcs
+  have hle : (H i j)^2 ≤ 0 := by simpa [hx, hy, hxy, hii, hjj] using hcs
   -- Right side is 0, left is square ≥ 0, hence equality and H i j = 0 over ℝ
-  have : (H i j)^2 ≤ 0 := by simpa [hii, hjj]
-  have hsq_nonneg : 0 ≤ (H i j)^2 := by have := sq_nonneg (H i j); simpa using this
-  have : (H i j)^2 = 0 := le_antisymm this hsq_nonneg
-  exact sq_eq_zero_iff.mp this
+  exact sq_eq_zero_iff.mp (le_antisymm hle (sq_nonneg (H i j)))
 
 /-- For a real PSD matrix, if it is nonzero then some diagonal entry is strictly positive. -/
 lemma posSemidef_diag_pos_exists_of_ne_zero
@@ -199,7 +195,7 @@ lemma frobenius_pos_of_psd_posdef
       -- Uu is a unitary group element, coerce to show membership
       rw [show U = Uu.val from rfl]
       exact Uu.property
-    have hU_unitary : U * U.conjTranspose = 1 := by exact Matrix.mem_unitaryGroup_iff.mp hU_mem
+    have hU_unitary : U * U.conjTranspose = 1 := Matrix.mem_unitaryGroup_iff.mp hU_mem
     have hU_right : U * U.transpose = 1 := by
       simpa [Matrix.conjTranspose_eq_transpose_of_trivial] using hU_unitary
     exact congr_transpose_mul_mul_ne_zero U G hU_right hG_ne_zero

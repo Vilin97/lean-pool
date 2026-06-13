@@ -430,8 +430,7 @@ lemma quote_termShiftVec {k n} (v : Fin k → SyntacticSemiterm L n) :
           rw [←FirstOrder.Semiterm.quote_one']
           congr
         _ = Formalized.numeral ((k : V) + 1) ^+ ↑qqOne := by rfl
-        _ = Formalized.numeral ((k + 1 : V) + 1) := by
-          simp []
+        _ = Formalized.numeral ((k + 1 : V) + 1) := by simp []
 
 omit [(k : ℕ) → Encodable (L.Rel k)] [DefinableLanguage L] in
 lemma quote_eterm_eq_quote_emb (t : Semiterm L Empty n) : (⌜t⌝ : V) = (⌜Rew.embs t⌝ : V) := by

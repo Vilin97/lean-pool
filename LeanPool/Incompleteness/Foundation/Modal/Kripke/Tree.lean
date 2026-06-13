@@ -110,8 +110,7 @@ def PMorphism (F : Frame) (r : F) : F.TreeUnravelling r →ₚ F where
       rw [←hz]
       simp
     have hcy := List.getLast?_eq_getLast_of_ne_nil (l := cy.1) (by aesop)
-    have hlast : cy.1.getLast (by aesop) = z := by
-      simpa [hcy] using hlast?
+    have hlast : cy.1.getLast (by aesop) = z := by simpa [hcy] using hlast?
     simpa [hlast] using h (cx.1.getLast (by aesop)) hx z hy
   back {cx y} h := by
     simp_all only [Set.mem_setOf_eq];

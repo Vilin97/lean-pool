@@ -107,8 +107,7 @@ theorem blockDecompositionNorm
               exact hblock ((mem_squareBlock_iff_blockIndexMulti_eq α ℓ).mp hsq)
             simp [hblock]
     _ = Finset.sum G.support (fun α => Finset.sum s (fun ℓ => if blockIndexMulti α = ℓ then
-        ‖G.coeff α‖ ^ 2 else 0)) := by
-          rw [Finset.sum_comm]
+        ‖G.coeff α‖ ^ 2 else 0)) := by rw [Finset.sum_comm]
     _ = Finset.sum G.support (fun α => ‖G.coeff α‖ ^ 2) := by
           refine Finset.sum_congr rfl ?_
           intro α hα
@@ -425,8 +424,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
       simp [Algebra.smul_def, mul_left_comm, mul_comm]
     convert hsmul.const_mul (1 / Real.pi) using 1
     funext z
-    have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by
-      positivity
+    have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by positivity
     simp only [gaussianDensity, pow_one, one_div, univ_unique, Fin.default_eq_zero,
       Fin.isValue, sum_singleton, hnonneg, ENNReal.toReal_ofReal, real_smul, ofReal_exp,
       ofReal_neg, ofReal_pow]
@@ -638,8 +636,7 @@ private lemma shell_offset_mem_cube_sdiff
           (fun _ : Fin d => Finset.Icc (-((r - 1 : ℕ) : ℤ)) (((r - 1 : ℕ) : ℤ))) at hx
     rw [Fintype.mem_piFinset] at hx
     rcases sup_coord_exists hd j ℓ with ⟨q0, hq0⟩
-    have hdist : Nat.dist (j q0) (ℓ q0) = r := by
-      simpa [hj] using hq0.symm
+    have hdist : Nat.dist (j q0) (ℓ q0) = r := by simpa [hj] using hq0.symm
     have hxq := hx q0
     simp [Finset.mem_Icc] at hxq
     by_cases hle : j q0 ≤ ℓ q0
@@ -685,8 +682,7 @@ private lemma finiteShellSubtype
         IsEmpty {j : MultiIndex 0 // blockDistance j ℓ = r} := by
       refine ⟨?_⟩
       intro j
-      have hdist0 : blockDistance j.1 ℓ = 0 := by
-        simp [blockDistance]
+      have hdist0 : blockDistance j.1 ℓ = 0 := by simp [blockDistance]
       omega
     letI : IsEmpty {j : MultiIndex 0 // blockDistance j ℓ = r} := hempty
     infer_instance
@@ -702,8 +698,7 @@ private lemma finiteShellSubtype
       intro a b hab
       apply Subtype.ext
       funext q
-      have hq : (f a).1 q = (f b).1 q := by
-        simpa using congrArg (fun x => x.1 q) hab
+      have hq : (f a).1 q = (f b).1 q := by simpa using congrArg (fun x => x.1 q) hab
       dsimp [f] at hq
       omega
     exact Finite.of_injective f hf
@@ -717,15 +712,13 @@ private lemma sharpShellCount_of_pos
         IsEmpty {j : MultiIndex 0 // blockDistance j ℓ = r} := by
       refine ⟨?_⟩
       intro j
-      have hdist0 : blockDistance j.1 ℓ = 0 := by
-        simp [blockDistance]
+      have hdist0 : blockDistance j.1 ℓ = 0 := by simp [blockDistance]
       omega
     have hcard0 : Nat.card {j : MultiIndex 0 // blockDistance j ℓ = r} = 0 := by
       letI : IsEmpty {j : MultiIndex 0 // blockDistance j ℓ = r} := hempty
       simp [Nat.card_eq_fintype_card]
     rw [hcard0]
-    have hr0 : r ≠ 0 := by
-      omega
+    have hr0 : r ≠ 0 := by omega
     simp [shellCardinality]
   · let f : {j : MultiIndex d // blockDistance j ℓ = r} →
         {x // x ∈
@@ -739,8 +732,7 @@ private lemma sharpShellCount_of_pos
       intro a b hab
       apply Subtype.ext
       funext q
-      have hq : (f a).1 q = (f b).1 q := by
-        simpa using congrArg (fun x => x.1 q) hab
+      have hq : (f a).1 q = (f b).1 q := by simpa using congrArg (fun x => x.1 q) hab
       dsimp [f] at hq
       omega
     let shell :
@@ -766,8 +758,7 @@ private lemma shell_cardinality_bound_filter
       ext j
       simp only [mem_filter, notMem_empty, iff_false, not_and]
       intro hj hEq
-      have hdist0 : blockDistance j ℓ = 0 := by
-        simp [blockDistance]
+      have hdist0 : blockDistance j ℓ = 0 := by simp [blockDistance]
       have : r = 0 := by simpa [hdist0] using hEq.symm
       omega
     simp [hfilter0, shellCardinality]
@@ -794,10 +785,8 @@ private lemma shell_cardinality_bound_filter
     rw [← hfilter]
     calc
       ((Nat.card {j // j ∈ s.filter fun j => blockDistance j ℓ = r} : ℕ) : ℝ)
-          ≤ Nat.card {j : MultiIndex d // blockDistance j ℓ = r} := by
-            exact_mod_cast hcard
-      _ ≤ shellCardinality d r := by
-            exact_mod_cast sharpShellCount_of_pos ℓ hr
+          ≤ Nat.card {j : MultiIndex d // blockDistance j ℓ = r} := by exact_mod_cast hcard
+      _ ≤ shellCardinality d r := by exact_mod_cast sharpShellCount_of_pos ℓ hr
 
 /-- Single-basis localization on a product annulus. -/
 theorem productBasisLocalization
@@ -1030,8 +1019,7 @@ theorem blockLocalization
                       rw [Finset.mul_sum]
     _ =
         (C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^ 2)) *
-          hermiteNormSq κ (blockPart ℓ G) := by
-            rw [← finiteParseval]
+          hermiteNormSq κ (blockPart ℓ G) := by rw [← finiteParseval]
 
 /-- Crude shell-count helper for sup-norm block shells. -/
 theorem shellCountingFormula
@@ -1056,8 +1044,7 @@ theorem polynomialGaussianSeriesSummable
     · linarith
     · intro i
       have hnat : i ≤ i * i := Nat.le_mul_self i
-      have hreal : (i : ℝ) ≤ (i : ℝ) * (i : ℝ) := by
-        exact_mod_cast hnat
+      have hreal : (i : ℝ) ≤ (i : ℝ) * (i : ℝ) := by exact_mod_cast hnat
       simpa [pow_two] using hreal
   have hmajor : Summable (fun r : ℕ => C * Real.exp (-(c / 2) * (r : ℝ) ^ 2)) :=
     hgeom.mul_left C
@@ -1085,8 +1072,7 @@ private lemma polynomialGaussianTailMajorant_summable
     · linarith
     · intro i
       have hnat : i ≤ i * i := Nat.le_mul_self i
-      have hreal : (i : ℝ) ≤ (i : ℝ) * (i : ℝ) := by
-        exact_mod_cast hnat
+      have hreal : (i : ℝ) ≤ (i : ℝ) * (i : ℝ) := by exact_mod_cast hnat
       simpa [pow_two] using hreal
   have hmajor : Summable (fun r : ℕ => C * Real.exp (-(a / 2) * (r : ℝ) ^ 2)) :=
     hgeom.mul_left C
@@ -1142,16 +1128,12 @@ private lemma shellExp_global_majorant
       (shellCardinality d r : ℝ) ≤ (3 : ℝ) ^ d * (1 + (r : ℝ) ^ d) := by
     by_cases hr0 : r = 0
     · subst hr0
-      have hzero_nat : shellCardinality d 0 ≤ 1 := by
-        simp [shellCardinality]
-      have hzero : (shellCardinality d 0 : ℝ) ≤ 1 := by
-        exact_mod_cast hzero_nat
-      have hpow_pos : 0 < (3 : ℝ) ^ d := by
-        positivity
+      have hzero_nat : shellCardinality d 0 ≤ 1 := by simp [shellCardinality]
+      have hzero : (shellCardinality d 0 : ℝ) ≤ 1 := by exact_mod_cast hzero_nat
+      have hpow_pos : 0 < (3 : ℝ) ^ d := by positivity
       have hone :
           (1 : ℝ) ≤ (3 : ℝ) ^ d * (1 + (((0 : ℕ) : ℝ) ^ d)) := by
-        have hpow1 : (1 : ℝ) ≤ (3 : ℝ) ^ d := by
-          exact one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 3)
+        have hpow1 : (1 : ℝ) ≤ (3 : ℝ) ^ d := by exact one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 3)
         have hfac : (1 : ℝ) ≤ 1 + (((0 : ℕ) : ℝ) ^ d) := by
           have hnonneg : (0 : ℝ) ≤ (((0 : ℕ) : ℝ) ^ d) := by positivity
           linarith
@@ -1163,14 +1145,11 @@ private lemma shellExp_global_majorant
     · have hr1 : 1 ≤ r := Nat.succ_le_of_lt (Nat.pos_iff_ne_zero.mpr hr0)
       have hs : (shellCardinality d r : ℝ) ≤ ((2 * r + 1) ^ d : ℕ) := by
         exact_mod_cast shellCountingFormula d r
-      have hbase : (2 * r + 1 : ℝ) ≤ 3 * r := by
-        nlinarith [show (1 : ℝ) ≤ r by exact_mod_cast hr1]
-      have hpow : (2 * r + 1 : ℝ) ^ d ≤ (3 * r : ℝ) ^ d := by
-        gcongr
+      have hbase : (2 * r + 1 : ℝ) ≤ 3 * r := by nlinarith [show (1 : ℝ) ≤ r by exact_mod_cast hr1]
+      have hpow : (2 * r + 1 : ℝ) ^ d ≤ (3 * r : ℝ) ^ d := by gcongr
       have hshell' : (shellCardinality d r : ℝ) ≤ (3 : ℝ) ^ d * (r : ℝ) ^ d := by
         calc
-          (shellCardinality d r : ℝ) ≤ (2 * r + 1 : ℝ) ^ d := by
-            exact_mod_cast hs
+          (shellCardinality d r : ℝ) ≤ (2 * r + 1 : ℝ) ^ d := by exact_mod_cast hs
           _ ≤ (3 * r : ℝ) ^ d := hpow
           _ = (3 : ℝ) ^ d * (r : ℝ) ^ d := by rw [mul_pow]
       have hrpow_nonneg : 0 ≤ (r : ℝ) ^ d := by positivity
@@ -1187,22 +1166,19 @@ private lemma shellExp_global_majorant
         have hnonneg : 0 ≤ max ((r : ℝ) - B) 0 ^ 2 := by positivity
         linarith
       · have hlarge : 2 * B < (r : ℝ) := by linarith
-        have hhalf : (r : ℝ) / 2 ≤ (r : ℝ) - B := by
-          nlinarith
+        have hhalf : (r : ℝ) / 2 ≤ (r : ℝ) - B := by nlinarith
         have hmaxeq : max ((r : ℝ) - B) 0 = (r : ℝ) - B := by
           apply max_eq_left
           linarith
         rw [hmaxeq]
-        have hsquare_half : ((r : ℝ) / 2) ^ 2 ≤ ((r : ℝ) - B) ^ 2 := by
-          nlinarith
+        have hsquare_half : ((r : ℝ) / 2) ^ 2 ≤ ((r : ℝ) - B) ^ 2 := by nlinarith
         nlinarith [hsquare_half]
     have hlog :
         -(c) * max ((r : ℝ) - B) 0 ^ 2 ≤ c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2 := by
       nlinarith [hsq, hc]
     calc
       Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2)
-        ≤ Real.exp (c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2) := by
-          exact Real.exp_le_exp.mpr hlog
+        ≤ Real.exp (c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2) := by exact Real.exp_le_exp.mpr hlog
       _ = Real.exp (c * B ^ 2) * Real.exp (-(c / 8) * (r : ℝ) ^ 2) := by
           have hsplit :
               c * B ^ 2 - (c / 8) * (r : ℝ) ^ 2 =
@@ -1496,8 +1472,7 @@ private lemma finitePartialLeakage_bound_of_shell_sum_bound
                                   C * Real.exp (-(c) * max (((blockDistance j ℓ : ℕ) : ℝ) - B) 0 ^
                                       2)
                                 else 0)) *
-                              hermiteNormSq κ (blockPart ℓ G) := by
-                                rw [← Finset.sum_mul]
+                              hermiteNormSq κ (blockPart ℓ G) := by rw [← Finset.sum_mul]
             rw [hfactor]
             exact mul_le_mul_of_nonneg_right hshell' hnorm_nonneg
     _ = localizationLeakageCoefficient C c B d M * hermiteNormSq κ G := by
@@ -1565,8 +1540,7 @@ private lemma shell_sum_bound_of_shell_cardinality_bound
               if M < r then C * Real.exp (-(c) * max ((r : ℝ) - B) 0 ^ 2) else 0) := by
               refine Finset.sum_congr rfl ?_
               intro j hj
-              have hjr : blockDistance j ℓ = r := by
-                simpa using (Finset.mem_filter.mp hj).2
+              have hjr : blockDistance j ℓ = r := by simpa using (Finset.mem_filter.mp hj).2
               simp [hjr]
       _ =
           (((s.filter fun j => blockDistance j ℓ = r).card : ℕ) : ℝ) *

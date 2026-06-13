@@ -204,8 +204,7 @@ noncomputable def neExt (t₁ t₂ u₁ u₂ : ⌜ℒₒᵣ⌝.Term) :
     have := replace T (#'0 ≠' u₁.bShift) t₁ t₂
     simpa using this
   have b : Γ ⊢[T] t₂ ≠' u₁ := of (Γ := Γ) this ⨀ bt ⨀ bl
-  have : T ⊢ u₁ =' u₂ ==> t₂ ≠' u₁ ==> t₂ ≠' u₂ := by
-    simpa using replace T (t₂.bShift ≠' #'0) u₁ u₂
+  have : T ⊢ u₁ =' u₂ ==> t₂ ≠' u₁ ==> t₂ ≠' u₂ := by simpa using replace T (t₂.bShift ≠' #'0) u₁ u₂
   exact of (Γ := Γ) this ⨀ bu ⨀ b
 
 lemma ne_ext (t₁ t₂ u₁ u₂ : ⌜ℒₒᵣ⌝.Term) : T ⊢! t₁ =' t₂ ==> u₁ =' u₂ ==> t₁ ≠' u₁ ==> t₂ ≠' u₂ :=

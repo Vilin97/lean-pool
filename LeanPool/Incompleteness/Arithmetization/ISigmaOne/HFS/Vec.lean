@@ -196,8 +196,7 @@ section «lp_section_3»
 /-- Imported declaration from the Incompleteness formalization. -/
 def graphDef : Sg1.Semisentence 1 := blueprint.fixpointDef
 
-lemma graph_defined : Sg1-Predicate (Graph : V → Prop) via graphDef :=
-  construction.fixpoint_defined
+lemma graph_defined : Sg1-Predicate (Graph : V → Prop) via graphDef := construction.fixpoint_defined
 
 instance graph_definable : Sg1-Predicate (Graph : V → Prop) := graph_defined.to_definable
 
@@ -274,8 +273,7 @@ def nth (v i : V) : V := Classical.choose! (graph_existsUnique v i)
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped notation:max v:max ".[" i "]" => nth v i
 
-lemma nth_graph (v i : V) : Graph ⟪v, i, v.[i]⟫ :=
-  Classical.choose!_spec (graph_existsUnique v i)
+lemma nth_graph (v i : V) : Graph ⟪v, i, v.[i]⟫ := Classical.choose!_spec (graph_existsUnique v i)
 
 lemma nth_eq_of_graph {v i x : V} (h : Graph ⟪v, i, x⟫) :
     nth v i = x :=
@@ -541,8 +539,7 @@ variable (param)
 lemma graph_exists (xs : V) : ∃ y, c.Graph param ⟪xs, y⟫ := by
   induction xs using cons_induction_sigma1
   · definability
-  case nil =>
-    exact ⟨c.nil param, c.graph_nil.mpr rfl⟩
+  case nil => exact ⟨c.nil param, c.graph_nil.mpr rfl⟩
   case cons x xs ih =>
     · rcases ih with ⟨y, hy⟩
       exact ⟨c.cons param x xs y, c.graph_cons.mpr ⟨y, rfl, hy⟩⟩
@@ -687,8 +684,7 @@ end «lp_section_8»
 lemma nth_ext {v₁ v₂ : V} (hl : len v₁ = len v₂) (H : ∀ i < len v₁, v₁.[i] = v₂.[i]) : v₁ = v₂ := by
   induction v₁ using cons_induction_pi1 generalizing v₂
   · definability
-  case nil =>
-    exact Eq.symm <| len_zero_iff_eq_nil.mp (by simp [←hl])
+  case nil => exact Eq.symm <| len_zero_iff_eq_nil.mp (by simp [←hl])
   case cons x₁ v₁ ih =>
     rcases nil_or_cons v₂ with (rfl | ⟨x₂, v₂, rfl⟩)
     · simp at hl
@@ -836,8 +832,7 @@ lemma nth_le_listMaxs (v : V) (hv : v ≠ 0) : ∃ i < len v, v.[i] = listMax v 
   induction v using cons_induction_sigma1
   · definability
   case nil => simp at hv
-  case cons x v ih =>
-    simp
+  case cons x v ih => simp
 -/
 
 end «lp_section_10»

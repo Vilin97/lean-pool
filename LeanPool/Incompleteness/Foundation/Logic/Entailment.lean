@@ -578,8 +578,7 @@ def _root_.LO.Entailment.Deduction.translation (φ : F) (𝓢 : S) : cons φ �
   toFun := fun ψ ↦ φ ==> ψ
   prf := deduction
 
-lemma deduction_iff : cons φ 𝓢 ⊢! ψ ↔ 𝓢 ⊢! φ ==> ψ :=
-  ⟨Deduction.of_insert!, Deduction.inv!⟩
+lemma deduction_iff : cons φ 𝓢 ⊢! ψ ↔ 𝓢 ⊢! φ ==> ψ := ⟨Deduction.of_insert!, Deduction.inv!⟩
 
 end «lp_section_7»
 
@@ -603,8 +602,7 @@ section «lp_section_9»
 
 variable {𝓢 𝓣 : S} {𝓜 𝓝 : M} [Sound 𝓢 𝓜] [Sound 𝓣 𝓝]
 
-lemma not_provable_of_countermodel {φ : F} (hp : ¬𝓜 ⊧ φ) : 𝓢 ⊬ φ :=
-  fun b ↦ hp (Sound.sound b)
+lemma not_provable_of_countermodel {φ : F} (hp : ¬𝓜 ⊧ φ) : 𝓢 ⊬ φ := fun b ↦ hp (Sound.sound b)
 
 lemma consistent_of_meaningful : Semantics.Meaningful 𝓜 → Entailment.Consistent 𝓢 :=
   fun H ↦ ⟨fun h ↦ by rcases H with ⟨f, hf⟩; exact hf (Sound.sound (h f))⟩
@@ -613,8 +611,7 @@ lemma consistent_of_model [LogicalConnective F] [Semantics.Bot M] (𝓜 : M) [So
     Entailment.Consistent 𝓢 :=
   consistent_of_meaningful (𝓜 := 𝓜) inferInstance
 
-lemma realizeSet_of_prfSet {T : Set F} (b : 𝓢 ⊢!* T) : 𝓜 ⊧* T :=
-  ⟨fun _ hf => sound (b hf)⟩
+lemma realizeSet_of_prfSet {T : Set F} (b : 𝓢 ⊢!* T) : 𝓜 ⊧* T := ⟨fun _ hf => sound (b hf)⟩
 
 end «lp_section_9»
 

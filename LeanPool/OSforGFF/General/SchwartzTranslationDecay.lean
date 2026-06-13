@@ -1102,8 +1102,7 @@ theorem schwartz_bilinear_translation_decay_proof
       have hK_tail_bdd_abs : ∃ M : ℝ, ∀ z : E, |kernelTail K R₀ z| ≤ M := by
         refine ⟨M_tail, ?_⟩
         intro z
-        have h := hM_tail z
-        simpa [K_tail, Complex.norm_real] using h
+        simpa [K_tail, Complex.norm_real] using hM_tail z
       exact schwartz_bilinear_prod_integrable f g K hK_meas hK_loc R₀ hR₀
         hK_tail_bdd_abs a
     -- Step 2: Apply Fubini to swap integration order

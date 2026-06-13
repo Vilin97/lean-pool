@@ -228,8 +228,7 @@ namespace Pow2
 lemma mul {a b : V} (ha : Pow2 a) (hb : Pow2 b) : Pow2 (a * b) := by
   wlog hab : a ≤ b
   · simpa [mul_comm] using this hb ha (lt_of_not_ge hab).le
-  suffices ∀ b : V, ∀ a ≤ b, Pow2 a → Pow2 b → Pow2 (a * b) by
-    exact this b a hab ha hb
+  suffices ∀ b : V, ∀ a ≤ b, Pow2 a → Pow2 b → Pow2 (a * b) by exact this b a hab ha hb
   intro b
   induction b using order_induction_sigma0
   · definability
@@ -278,8 +277,7 @@ lemma dvd_of_le {a b : V} (ha : Pow2 a) (hb : Pow2 b) : a ≤ b → a ∣ b := b
 lemma le_iff_dvd {a b : V} (ha : Pow2 a) (hb : Pow2 b) : a ≤ b ↔ a ∣ b :=
   ⟨Pow2.dvd_of_le ha hb, le_of_dvd hb.pos⟩
 
-lemma two_le {a : V} (pa : Pow2 a) (ne1 : a ≠ 1) : 2 ≤ a :=
-  le_of_dvd pa.pos (pa.two_dvd' ne1)
+lemma two_le {a : V} (pa : Pow2 a) (ne1 : a ≠ 1) : 2 ≤ a := le_of_dvd pa.pos (pa.two_dvd' ne1)
 
 lemma le_iff_lt_two {a b : V} (ha : Pow2 a) (hb : Pow2 b) : a ≤ b ↔ a < 2 * b := by
   constructor

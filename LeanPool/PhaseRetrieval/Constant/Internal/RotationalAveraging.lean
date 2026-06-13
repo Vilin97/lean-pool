@@ -171,8 +171,7 @@ theorem rotational_averaging_bound {r : ℝ} (hr : 0 ≤ r) :
           simp only [f, fourier_mk_eq]
           have habs : |θ| ≤ Real.pi / 4 := abs_le.mpr ⟨hθ.1, hθ.2⟩
           calc r ^ 2 / 2
-              = (r / Real.sqrt 2) ^ 2 := by
-                rw [div_pow, Real.sq_sqrt (by norm_num : (2 : ℝ) ≥ 0)]
+              = (r / Real.sqrt 2) ^ 2 := by rw [div_pow, Real.sq_sqrt (by norm_num : (2 : ℝ) ≥ 0)]
             _ ≤ _ := pow_le_pow_left₀ (div_nonneg hr (Real.sqrt_nonneg _))
                       (rho_arc_lower_bound hr habs).le 2)
         ((integrand_continuous r).continuousOn.integrableOn_compact isCompact_Icc)

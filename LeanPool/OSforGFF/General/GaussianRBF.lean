@@ -159,8 +159,7 @@ lemma exp_is_pd_kernel {α : Type*} (K : α → α → ℂ) (hK : IsPositiveDefi
   -- The kernel matrix M_{ij} = K(x_i, x_j) is PSD (real part)
   let M : Matrix (Fin m) (Fin m) ℝ := Matrix.of fun i j => (K (x i) (x j)).re
   -- M is PSD because K is a symmetric real-valued PD kernel
-  have hM_psd : M.PosSemidef := by
-    exact real_valued_PD_kernel_gives_PSD_matrix K h_real h_symm hK m x
+  have hM_psd : M.PosSemidef := real_valued_PD_kernel_gives_PSD_matrix K h_real h_symm hK m x
   -- Apply the Hadamard series result: entrywiseExp M is PSD
   have hExpM_psd : (OSforGFF.entrywiseExp M).PosSemidef := by
     have h := OSforGFF.posSemidef_entrywiseExp_hadamardSeries_of_posSemidef M hM_psd

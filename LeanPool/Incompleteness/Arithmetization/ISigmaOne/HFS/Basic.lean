@@ -661,8 +661,7 @@ theorem sigmaOne_skolem {R : V → V → Prop} (hP : Sg1-Relation R) {s : V}
           <| fun _ ↦ and_congr_right <| fun _ ↦
             ⟨fun h x _ y _ hxy ↦ h x y hxy,
               fun h x y hxy ↦ h x (lt_of_mem_dom hxy) y (lt_of_mem_rng hxy) hxy⟩
-    case hempty =>
-      exact ⟨∅, by simp⟩
+    case hempty => exact ⟨∅, by simp⟩
     case hinsert a u ha ih =>
       have : ∃ f, IsMapping f ∧ domain f = u ∧ ∀ x y, ⟪x, y⟫ ∈ f → R x y :=
         ih (subset_trans (susbset_insert a u) hu)

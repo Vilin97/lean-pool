@@ -186,8 +186,8 @@ private theorem Psi.adjoint_rank_one [hφ : φ.IsFaithfulPosMap] (a b : ℍ) (t 
     withMatrixQuantum[φ]
       (hφ.psi (ψ := φ) t s (LinearMap.adjoint ((|a⟩⟨b|).toLinearMap)) =
         ((hφ.sig (t - s)).toLinearMap ⊗ₘ (hφ.sig (t - s)).op.toLinearMap)
-          (tenSwap ℂ (Star.star (hφ.psi (ψ := φ) t s (|a⟩⟨b|).toLinearMap)))) := by
-  exact withMatrixQuantum[φ] (Psi.adjoint_apply (A := ℍ) (B := ℍ) t s (|a⟩⟨b|).toLinearMap)
+          (tenSwap ℂ (Star.star (hφ.psi (ψ := φ) t s (|a⟩⟨b|).toLinearMap)))) :=
+  withMatrixQuantum[φ] (Psi.adjoint_apply (A := ℍ) (B := ℍ) t s (|a⟩⟨b|).toLinearMap)
 
 -- set_option maxHeartbeats 0 in
 -- set_option synthInstance.maxHeartbeats 0 in

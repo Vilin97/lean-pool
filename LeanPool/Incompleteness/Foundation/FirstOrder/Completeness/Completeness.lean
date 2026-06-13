@@ -79,8 +79,7 @@ theorem complete {φ : SyntacticFormula L} :
   have : Entailment.Inconsistent (insert (∼∀∀φ) T) := this.of_supset ssu
   exact Derivation.provable_iff_inconsistent.mpr this
 
-theorem complete_iff : T ⊨ φ ↔ T ⊢! φ :=
-  ⟨fun h ↦ complete h, sound!⟩
+theorem complete_iff : T ⊨ φ ↔ T ⊢! φ := ⟨fun h ↦ complete h, sound!⟩
 
 instance (T : Theory L) : Complete T (Semantics.models (SmallStruc L) T) := ⟨complete⟩
 

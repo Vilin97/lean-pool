@@ -220,18 +220,12 @@ lemma eval_mk {e} {ε} {φ : Semiformula L μ n} :
     Semiformula.Evalm (QuotEq L M) (fun i =>
       ⟦e i⟧) (fun i => ⟦ε i⟧) φ ↔ Semiformula.Evalm M e ε φ := by
   induction φ using Semiformula.rec'
-  case hverum =>
-    simp only [LogicalConnective.HomClass.map_top, «Prop».top_eq_true]
-  case hfalsum =>
-    simp only [LogicalConnective.HomClass.map_bot, «Prop».bot_eq_false]
-  case hrel =>
-    simp only [Semiformula.eval_rel, val_mk, rel_mk]
-  case hnrel =>
-    simp only [Semiformula.eval_nrel, val_mk, rel_mk]
-  case hand =>
-    simp only [LogicalConnective.HomClass.map_and, LogicalConnective.Prop.and_eq, *]
-  case hor =>
-    simp only [LogicalConnective.HomClass.map_or, LogicalConnective.Prop.or_eq, *]
+  case hverum => simp only [LogicalConnective.HomClass.map_top, «Prop».top_eq_true]
+  case hfalsum => simp only [LogicalConnective.HomClass.map_bot, «Prop».bot_eq_false]
+  case hrel => simp only [Semiformula.eval_rel, val_mk, rel_mk]
+  case hnrel => simp only [Semiformula.eval_nrel, val_mk, rel_mk]
+  case hand => simp only [LogicalConnective.HomClass.map_and, LogicalConnective.Prop.and_eq, *]
+  case hor => simp only [LogicalConnective.HomClass.map_or, LogicalConnective.Prop.or_eq, *]
   case hall n φ ih =>
     simp only [Semiformula.eval_all, Nat.succ_eq_add_one]
     constructor
@@ -370,8 +364,7 @@ noncomputable instance [Operator.Mul L] : Mul (ModelOfSatEq sat) :=
 
 instance [Operator.Mul L] : Structure.Mul L (ModelOfSatEq sat) := ⟨fun _ _ => rfl⟩
 
-instance [Operator.LT L] : LT (ModelOfSatEq sat) :=
-  ⟨fun x y => (@Operator.LT.lt L _).val ![x, y]⟩
+instance [Operator.LT L] : LT (ModelOfSatEq sat) := ⟨fun x y => (@Operator.LT.lt L _).val ![x, y]⟩
 
 instance [Operator.LT L] : Structure.LT L (ModelOfSatEq sat) := ⟨fun _ _ => iff_of_eq rfl⟩
 

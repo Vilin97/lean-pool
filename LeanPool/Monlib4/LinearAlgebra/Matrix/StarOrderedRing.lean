@@ -34,8 +34,8 @@ theorem _root_.Matrix.eq_zero_iff {n : Type _} [Fintype n]
   calc
     x = 0 ↔ (Matrix.toLpLin 2 2) x = 0 := by simp only [LinearEquiv.map_eq_zero_iff]
     _ ↔ ∀ a : WithLp 2 (n → ℂ),
-        (inner ℂ (((Matrix.toLpLin 2 2) x) a) a : ℂ) = 0 := by
-      exact (inner_map_self_eq_zero (T := (Matrix.toLpLin 2 2) x)).symm
+        (inner ℂ (((Matrix.toLpLin 2 2) x) a) a : ℂ) = 0 :=
+      (inner_map_self_eq_zero (T := (Matrix.toLpLin 2 2) x)).symm
     _ ↔ ∀ a : WithLp 2 (n → ℂ),
         (inner ℂ a (((Matrix.toLpLin 2 2) x) a) : ℂ) = 0 := by
       simp_rw [inner_eq_zero_symm]

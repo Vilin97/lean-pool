@@ -69,8 +69,7 @@ theorem high_frequency_circle_estimate
     (hband : 1343 * (L : ℝ) ^ 2 ≤ (N : ℝ) ^ 2) :
     circleL2Sq (positiveTrigonometricPolynomial (frequencyBand N L) c)
       ≤ 32 * circleRhoNormSq (positiveTrigonometricPolynomial (frequencyBand N L) c) := by
-  have hband_nat : 1343 * L ^ 2 ≤ N ^ 2 := by
-    exact_mod_cast hband
+  have hband_nat : 1343 * L ^ 2 ≤ N ^ 2 := by exact_mod_cast hband
   have hpoly :
       positiveTrigonometricPolynomial (frequencyBand N L) c =
         fun t => ∑ m : Fin L, c (N + m.val) * fourier ((N + m.val : ℕ) : ℤ) t := by
@@ -149,17 +148,14 @@ theorem phase_normalized_orthogonal_reduction
             hnorm1
         simpa [abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)] using hnorm2
       exact htri.trans (by nlinarith)
-    have ha_bound : |a| ≤ (defect h * (2 + ‖h‖) + ‖h‖ ^ 2) / 2 := by
-      nlinarith
-    have hg_add : g + (a : ℂ) • f0 = h := by
-      simp [g]
+    have ha_bound : |a| ≤ (defect h * (2 + ‖h‖) + ‖h‖ ^ 2) / 2 := by nlinarith
+    have hg_add : g + (a : ℂ) • f0 = h := by simp [g]
     have hsplit : ‖h‖ ≤ ‖g‖ + |a| := by
       calc
         ‖h‖ = ‖g + (a : ℂ) • f0‖ := by rw [← hg_add]
         _ ≤ ‖g‖ + ‖(a : ℂ) • f0‖ := norm_add_le _ _
         _ = ‖g‖ + |a| := by simp [norm_smul, hf0, Real.norm_eq_abs]
-    have hh_main : ‖h‖ ≤ (C + 1) * |a| + C * defect h := by
-      nlinarith
+    have hh_main : ‖h‖ ≤ (C + 1) * |a| + C * defect h := by nlinarith
     have hδ_le_one : (1 / (C + 1 : ℝ)) ≤ 1 := by
       have hCp1 : 0 < C + 1 := by linarith
       rw [div_le_iff₀ hCp1]
@@ -170,15 +166,13 @@ theorem phase_normalized_orthogonal_reduction
     have hh_quad :
         ‖h‖ ≤ ((5 * C + 3) / 2) * defect h + ((C + 1) / 2) * ‖h‖ ^ 2 := by
       nlinarith [hh_main, ha_simple, hdefect_nonneg h, hC]
-    have hx_sq : ‖h‖ ^ 2 ≤ (1 / (C + 1 : ℝ)) * ‖h‖ := by
-      nlinarith [hhδ, norm_nonneg h]
+    have hx_sq : ‖h‖ ^ 2 ≤ (1 / (C + 1 : ℝ)) * ‖h‖ := by nlinarith [hhδ, norm_nonneg h]
     have hCp1_nonneg : 0 ≤ C + 1 := by linarith
     have hx_sq' : (C + 1) * ‖h‖ ^ 2 ≤ ‖h‖ := by
       calc
         (C + 1) * ‖h‖ ^ 2 ≤ (C + 1) * ((1 / (C + 1 : ℝ)) * ‖h‖) :=
           mul_le_mul_of_nonneg_left hx_sq hCp1_nonneg
-        _ = ‖h‖ := by
-          field_simp [show (C + 1 : ℝ) ≠ 0 by linarith]
+        _ = ‖h‖ := by field_simp [show (C + 1 : ℝ) ≠ 0 by linarith]
     have habsorb : ((C + 1) / 2) * ‖h‖ ^ 2 ≤ ‖h‖ / 2 := by
       have hhalf := mul_le_mul_of_nonneg_right hx_sq' (show (0 : ℝ) ≤ 1 / 2 by norm_num)
       simpa [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hhalf
@@ -186,8 +180,7 @@ theorem phase_normalized_orthogonal_reduction
       exact hh_quad.trans <|
         by simpa [add_assoc, add_left_comm, add_comm] using
           add_le_add_left habsorb (((5 * C + 3) / 2) * defect h)
-    have hh_final : ‖h‖ / 2 ≤ ((5 * C + 3) / 2) * defect h := by
-      nlinarith [hh_half]
+    have hh_final : ‖h‖ / 2 ≤ ((5 * C + 3) / 2) * defect h := by nlinarith [hh_half]
     nlinarith [hh_final, hdefect_nonneg h]
 
 end HermiteLEAN

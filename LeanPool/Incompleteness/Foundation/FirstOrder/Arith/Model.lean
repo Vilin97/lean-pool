@@ -193,8 +193,7 @@ instance models_CobhamR0 : ℕ ⊧ₘ* 𝐑₀ := ⟨by
   case equal h =>
     have : ℕ ⊧ₘ* (𝐄𝐐 : Theory ℒₒᵣ) := inferInstance
     simpa [models_def] using modelsTheory_iff.mp this h
-  case Ω₃ h =>
-    simpa [models_def, ←le_iff_eq_or_lt] using h⟩
+  case Ω₃ h => simpa [models_def, ←le_iff_eq_or_lt] using h⟩
 
 instance models_PeanoMinus : ℕ ⊧ₘ* 𝐏𝐀⁻ := ⟨by
   intro σ h

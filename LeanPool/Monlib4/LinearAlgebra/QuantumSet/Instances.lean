@@ -127,7 +127,6 @@ theorem _root_.RCLike.pos_toNNReal_units {𝕜 : Type*} [RCLike 𝕜] (r : 𝕜)
       Units.zero_lt]⟩
   use Units.mk0 ⟨RCLike.re r, le_of_lt (RCLike.pos_def.mp h).1⟩
     (ne_of_gt (RCLike.pos_def.mp h).1)
-  change r = ((RCLike.re r : ℝ) : 𝕜)
   exact (RCLike.conj_eq_iff_re.mp (RCLike.conj_eq_iff_im.mpr (RCLike.pos_def.mp h).2)).symm
 theorem _root_.RCLike.nonneg_toNNReal {𝕜 : Type*} [RCLike 𝕜] (r : 𝕜) :
   0 ≤ r ↔ ∃ s : NNReal, r = (((s : NNReal) : ℝ) : 𝕜) := by
@@ -745,8 +744,8 @@ theorem LinearMap.pi_mul'_comp_mul'_adjoint_of_delta_form [∀ i, Nontrivial (s 
   simp [Matrix.includeBlock_apply, Pi.smul_apply]
 
 theorem Qam.Nontracial.delta_pos [Nonempty n] {φ : Module.Dual ℂ (Matrix n n ℂ)}
-    [hφ : φ.IsFaithfulPosMap] : 0 < φ.matrix⁻¹.trace := by
-  exact Matrix.PosDef.trace_pos (Matrix.PosDef.inv hφ.matrixIsPosDef)
+    [hφ : φ.IsFaithfulPosMap] : 0 < φ.matrix⁻¹.trace :=
+  Matrix.PosDef.trace_pos (Matrix.PosDef.inv hφ.matrixIsPosDef)
 
 omit [Fintype k] [DecidableEq k] in
 theorem Pi.Qam.Nontracial.delta_ne_zero [Nonempty k] [∀ i, Nontrivial (s i)] {δ : ℂ}
@@ -771,8 +770,7 @@ def Matrix.quantumSetDeltaForm [Nonempty n] {φ : Module.Dual ℂ (Matrix n n �
   exact show QuantumSetDeltaForm (Matrix n n ℂ) from
     { delta := φ.matrix⁻¹.trace
       delta_pos := Qam.Nontracial.delta_pos
-      mul_comp_comul_eq := by
-        exact LinearMap.mul'_comp_mul'_adjoint_of_delta_form (φ := φ) }
+      mul_comp_comul_eq := LinearMap.mul'_comp_mul'_adjoint_of_delta_form (φ := φ) }
 
 /-- The delta-form quantum-set structure for a finite product of matrix algebras. -/
 @[reducible]

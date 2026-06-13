@@ -28,6 +28,41 @@ lemma norm_symm (x y : ℤ) : ‖![x, y]‖ = ‖![y,x]‖ := by
   simp
 
 
+/-- The shared majorant step: `(r z * ‖![n, m]‖)⁻¹` is `O(|n|⁻¹)` along `cofinite`. -/
+private lemma linear_bigO_majorant (m : ℤ) (z : ℍ) :
+    (fun (n : ℤ) => ((r z * ‖![n, m]‖))⁻¹) =O[cofinite] fun n => (|(n : ℝ)|⁻¹) := by
+  rw [@Asymptotics.isBigO_iff']
+  use (r z)⁻¹
+  refine ⟨by simp only [gt_iff_lt, inv_pos]; exact r_pos z, ?_⟩
+  simp only [Nat.succ_eq_add_one, Nat.reduceAdd, mul_inv_rev, norm_mul, norm_inv,
+    Real.norm_eq_abs, abs_abs, abs_norm, Int.cofinite_eq, eventually_sup, eventually_atBot,
+    eventually_atTop, ge_iff_le]
+  constructor
+  · use min (-1) m
+    intro n hn
+    rw [mul_comm]
+    gcongr
+    · simp [(r_pos z).le]
+    · exact r_pos z
+    · exact le_abs_self (r z)
+    · simp only [abs_pos, ne_eq, Int.cast_eq_zero]
+      omega
+    · rw [EisensteinSeries.norm_eq_max_natAbs]
+      simp
+  use max 1 m
+  intro b hb
+  rw [EisensteinSeries.norm_eq_max_natAbs]
+  simp only [Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one,
+    Nat.cast_max, Nat.cast_natAbs, Int.cast_abs]
+  rw [mul_comm]
+  gcongr
+  · simp [(r_pos z).le]
+  · exact r_pos z
+  · exact le_abs_self (r z)
+  · simp only [abs_pos, ne_eq, Int.cast_eq_zero]
+    omega
+  · simp
+
 lemma linear_bigO (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((m : ℂ) * z + n)⁻¹) =O[cofinite]
     fun n => (|(n : ℝ)|⁻¹) := by
   have h1 : (fun (n : ℤ) => ((m : ℂ) * z + n)⁻¹) =O[cofinite]
@@ -52,37 +87,7 @@ lemma linear_bigO (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((m : ℂ) * z + n)⁻
       exact (r_pos z).le
     rw [← hr, _root_.norm_symm]
     exact this}
-  apply Asymptotics.IsBigO.trans h1
-  rw [@Asymptotics.isBigO_iff']
-  use (r z)⁻¹
-  refine ⟨by simp only [gt_iff_lt, inv_pos]; exact r_pos z, ?_⟩
-  simp only [Nat.succ_eq_add_one, Nat.reduceAdd, mul_inv_rev, norm_mul, norm_inv,
-    Real.norm_eq_abs, abs_abs, abs_norm, Int.cofinite_eq, eventually_sup, eventually_atBot,
-    eventually_atTop, ge_iff_le]
-  constructor
-  · use min (-1) m
-    intro n hn
-    --have := EisensteinSeries.summand_bound z (k := 1) (by norm_num) ![n, m]
-    rw [mul_comm]
-    gcongr
-    · simp [(r_pos z).le]
-    · exact r_pos z
-    · exact le_abs_self (r z)
-    · simp; omega
-    · rw [EisensteinSeries.norm_eq_max_natAbs]
-      simp
-  use max 1 m
-  intro b hb
-  rw [EisensteinSeries.norm_eq_max_natAbs]
-  simp only [Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one,
-    Nat.cast_max, Nat.cast_natAbs, Int.cast_abs]
-  rw [mul_comm]
-  gcongr
-  · simp [(r_pos z).le]
-  · exact r_pos z
-  · exact le_abs_self (r z)
-  · simp only [abs_pos, ne_eq, Int.cast_eq_zero]; omega
-  · simp
+  exact h1.trans (linear_bigO_majorant m z)
 
 lemma linear_bigO_pow (m : ℤ) (z : ℍ) (k : ℕ) : (fun (n : ℤ) => ((((m : ℂ) * z + n)) ^ k )⁻¹)
   =O[cofinite]
@@ -115,7 +120,7 @@ lemma linear_bigO_nat (m : ℤ) (z : ℍ) : (fun (n : ℕ) => ((m : ℂ) * z + n
 lemma linear_bigO' (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((n : ℂ) * z + m)⁻¹) =O[cofinite]
     fun n => (|(n : ℝ)|⁻¹) := by
   have h1 : (fun (n : ℤ) => ((n : ℂ) * z + m)⁻¹) =O[cofinite]
-    (fun n : ℤ => ((r z * ‖![m, n]‖))⁻¹) := by
+    (fun n : ℤ => ((r z * ‖![n, m]‖))⁻¹) := by
     rw [@Asymptotics.isBigO_iff']
     use 1
     simp only [gt_iff_lt, zero_lt_one, norm_inv, Nat.succ_eq_add_one, Nat.reduceAdd, mul_inv_rev,
@@ -134,35 +139,6 @@ lemma linear_bigO' (m : ℤ) (z : ℍ) : (fun (n : ℤ) => ((n : ℂ) * z + m)�
         apply symm
         rw [abs_eq_self]
         exact (r_pos z).le
-      rw [← hr, _root_.norm_symm]
+      rw [← hr]
       exact this}
-  apply Asymptotics.IsBigO.trans h1
-  rw [@Asymptotics.isBigO_iff']
-  use (r z)⁻¹
-  refine ⟨by simp only [gt_iff_lt, inv_pos]; exact r_pos z, ?_⟩
-  simp only [Nat.succ_eq_add_one, Nat.reduceAdd, mul_inv_rev, norm_mul, norm_inv,
-    Real.norm_eq_abs, abs_abs, abs_norm, Int.cofinite_eq, eventually_sup, eventually_atBot,
-    eventually_atTop, ge_iff_le]
-  constructor
-  · use min (-1) m
-    intro n hn
-    --have := EisensteinSeries.summand_bound z (k := 1) (by norm_num) ![n, m]
-    rw [mul_comm]
-    gcongr
-    · simp [(r_pos z).le]
-    · exact r_pos z
-    · exact le_abs_self (r z)
-    · simp; omega
-    · simp [EisensteinSeries.norm_eq_max_natAbs]
-  use max 1 m
-  intro b hb
-  rw [EisensteinSeries.norm_eq_max_natAbs]
-  simp only [Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one,
-    Nat.cast_max, Nat.cast_natAbs, Int.cast_abs]
-  rw [mul_comm]
-  gcongr
-  · simp [(r_pos z).le]
-  · exact r_pos z
-  · exact le_abs_self (r z)
-  · simp; omega
-  · simp
+  exact h1.trans (linear_bigO_majorant m z)

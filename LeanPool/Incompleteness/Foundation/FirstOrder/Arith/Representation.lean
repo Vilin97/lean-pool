@@ -86,8 +86,7 @@ lemma _root_.Nat.Partrec.projection {f : ℕ →. ℕ} (hf : Nat.Partrec f) (uni
     intro a m n₁ n₂ hn h₁
     rcases hF.mp h₁ with ⟨x, hx, H⟩
     apply hF.mpr ⟨x, lt_of_lt_of_le hx hn, Code.evaln_mono hn H⟩
-  have hrfind : _root_.Partrec (fun m : ℕ ↦ rfindOpt (F m)) :=
-    _root_.Partrec.rfindOpt this.to_comp
+  have hrfind : _root_.Partrec (fun m : ℕ ↦ rfindOpt (F m)) := _root_.Partrec.rfindOpt this.to_comp
   have : Nat.Partrec (fun m : ℕ ↦ rfindOpt (F m)) := _root_.Partrec.nat_iff.mp hrfind
   exact ⟨_, this, by
     intro a m
@@ -378,8 +377,7 @@ private lemma codeAux_sigma_one {k} (c : Nat.ArithPart₁.Code k) : Hierarchy Sg
     exact Hierarchy.or
       (Hierarchy.and (Hierarchy.rel _ _ _ _) (Hierarchy.rel _ _ _ _))
       (Hierarchy.and (Hierarchy.nrel _ _ _ _) (Hierarchy.rel _ _ _ _))
-  case comp c d ihc ihg =>
-    exact Hierarchy.exClosure (by simp [ihc, ihg])
+  case comp c d ihc ihg => exact Hierarchy.exClosure (by simp [ihc, ihg])
   case rfind k c ih =>
     exact Hierarchy.and (Hierarchy.rew _ ih)
       (Hierarchy.ball Semiterm.Positive.fvar

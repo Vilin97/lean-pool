@@ -557,8 +557,7 @@ lemma zero_mem_iff {a : V} : 0 ∉ a ↔ 2 ∣ a := by simp [mem_iff_bit, Bit, L
 lemma le_of_subset {a b : V} (h : a ⊆ b) : a ≤ b := by
   induction b using hierarchy_polynomial_induction_oRing_pi₁ generalizing a
   · definability
-  case zero =>
-    simp [eq_zero_of_subset_zero h]
+  case zero => simp [eq_zero_of_subset_zero h]
   case even b _ IH =>
     have IH : a / 2 ≤ b := IH (by simpa using subset_div_two h)
     have : 2 * (a / 2) = a :=

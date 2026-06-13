@@ -200,10 +200,8 @@ lemma norm_compContinuousMultilinearMap_ofReal {n : ℕ} {E : Fin n → Type*}
     (m : ContinuousMultilinearMap ℝ E ℝ) :
     ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖ = ‖m‖ := by
   apply le_antisymm
-  · calc ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖
-        ≤ ‖Complex.ofRealCLM‖ * ‖m‖ := ContinuousLinearMap.norm_compContinuousMultilinearMap_le _ _
-      _ = 1 * ‖m‖ := by rw [Complex.norm_ofRealCLM]
-      _ = ‖m‖ := one_mul _
+  · simpa [Complex.norm_ofRealCLM] using
+      ContinuousLinearMap.norm_compContinuousMultilinearMap_le Complex.ofRealCLM m
   · have h_nonneg : (0 : ℝ) ≤ ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖ := norm_nonneg _
     have h_bound : ∀ v, ‖m v‖ ≤ ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖ * ∏ i, ‖v i‖ :=
       by
@@ -347,11 +345,9 @@ noncomputable def conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace �
     have h_norm : ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n f
       x)‖ ≤
         ‖iteratedFDeriv ℝ n f x‖ := by
-      calc ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n f x)‖
-          ≤ ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ)‖ * ‖iteratedFDeriv ℝ n f x‖ :=
-            ContinuousLinearMap.norm_compContinuousMultilinearMap_le _ _
-        _ = 1 * ‖iteratedFDeriv ℝ n f x‖ := by rw [Complex.conjCLE_norm]
-        _ = ‖iteratedFDeriv ℝ n f x‖ := one_mul _
+      simpa [Complex.conjCLE_norm] using
+        ContinuousLinearMap.norm_compContinuousMultilinearMap_le
+          (Complex.conjCLE : ℂ →L[ℝ] ℂ) (iteratedFDeriv ℝ n f x)
     calc ‖x‖ ^ k * ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n
       f x)‖
         ≤ ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ := by

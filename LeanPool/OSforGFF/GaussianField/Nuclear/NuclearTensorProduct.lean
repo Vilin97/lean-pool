@@ -649,8 +649,8 @@ theorem _root_.GaussianField.DyninMityaginSpace.ofRapidDecayEquiv_hasBiorthogona
 theorem nat_pair_bound (n m : ℕ) : Nat.pair n m ≤ (n + m + 1) ^ 2 := by
   have hpair : Nat.pair n m ≤ (max n m + 1) ^ 2 :=
     Nat.le_of_lt (Nat.pair_lt_max_add_one_sq n m)
-  have hmax : max n m + 1 ≤ n + m + 1 := by
-    exact Nat.succ_le_succ (max_le (Nat.le_add_right n m) (Nat.le_add_left m n))
+  have hmax : max n m + 1 ≤ n + m + 1 :=
+    Nat.succ_le_succ (max_le (Nat.le_add_right n m) (Nat.le_add_left m n))
   exact hpair.trans (Nat.pow_le_pow_left hmax 2)
 
 /-- Converse bound: each component of `Nat.unpair` is bounded by the pair index. -/

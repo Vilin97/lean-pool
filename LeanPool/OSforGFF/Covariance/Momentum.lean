@@ -335,8 +335,8 @@ lemma heatKernelPositionSpace_bounded (r : ℝ) (hr : 0 < r) :
       have h_exp_nonneg : 0 ≤ Real.exp ((r^2 / 4) * u) := le_of_lt h_exp_pos
       have := div_le_div_of_nonneg_right h_bound h_exp_nonneg
       simp only [mul_div_assoc] at this
-      have h_cancel : Real.exp ((r^2 / 4) * u) / Real.exp ((r^2 / 4) * u) = 1 := by
-        exact div_self (ne_of_gt h_exp_pos)
+      have h_cancel : Real.exp ((r^2 / 4) * u) / Real.exp ((r^2 / 4) * u) = 1 :=
+        div_self (ne_of_gt h_exp_pos)
       rw [h_cancel] at this
       simp only [mul_one] at this
       have h_rpow_sq : u ^ (2 : ℝ) = u^2 := Real.rpow_natCast u 2
@@ -670,8 +670,8 @@ theorem integrable_schwinger_fourier_integrand (α : ℝ) (hα : 0 < α) (m : �
     rw [h_eq_indicator]
     exact h_indicator
   -- Step 3: The product g(k) * h(t) is integrable on the product measure
-  have hgh_int : Integrable (fun p : SpaceTime × ℝ => g p.1 * h p.2) (volume.prod volume) := by
-    exact Integrable.mul_prod hg_int hh_int
+  have hgh_int : Integrable (fun p : SpaceTime × ℝ => g p.1 * h p.2) (volume.prod volume) :=
+    Integrable.mul_prod hg_int hh_int
   -- Step 4: Our function f is bounded by g * h
   have hf_le : ∀ p : SpaceTime × ℝ, ‖f p‖ ≤ g p.1 * h p.2 := by
     intro ⟨k, t⟩
@@ -1513,8 +1513,7 @@ lemma aestronglyMeasurable_freeCovariance_regulated (α : ℝ) (hα : 0 < α) (m
             · apply mul_le_mul_of_nonneg_left h_prop_bound (Real.exp_nonneg _)
             · positivity
         _ = Real.exp (-α * ‖k‖ ^ 2) / (m^2 * (2 * Real.pi) ^ STDimension) := by ring
-    have h_bound_int : Integrable bound volume := by
-      exact (gaussian_regulator_integrable' α hα).div_const _
+    have h_bound_int : Integrable bound volume := (gaussian_regulator_integrable' α hα).div_const _
     have h_cont_k : ∀ᵐ k ∂volume, Continuous fun p => F p k := by
       apply Filter.Eventually.of_forall
       intro k
@@ -2015,8 +2014,8 @@ theorem freeCovarianceℂ_bilinear_integrable' (m : ℝ) [Fact (0 < m)] (f g : T
     ext p
     rw [h_transl_inv p.1 p.2]
   rw [h_eq]
-  have hK_int : Integrable (fun z : SpaceTime => (freeCovarianceKernel m z : ℂ)) volume := by
-    exact Integrable.ofReal (freeCovarianceKernel_integrable m (Fact.out))
+  have hK_int : Integrable (fun z : SpaceTime => (freeCovarianceKernel m z : ℂ)) volume :=
+    Integrable.ofReal (freeCovarianceKernel_integrable m (Fact.out))
   exact schwartz_bilinear_integrable_of_translationInvariant_L1
     (fun z => (freeCovarianceKernel m z : ℂ)) hK_int f g
 

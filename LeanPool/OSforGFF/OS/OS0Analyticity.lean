@@ -310,8 +310,7 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
   -- The key: exp(p|ω f|) ≤ C * exp(α (ω f)²) and RHS is integrable
   have h_norm_pow_bound : ∀ ω : FieldConfiguration,
       Real.exp (p.toReal * |ω f|) ≤ C * Real.exp (α * (ω f)^2) := fun ω => by
-    have h1 := h_exp_bound (ω f)
-    exact h1
+    exact h_exp_bound (ω f)
   -- Integrability of exp(p|ω f|) follows from domination
   have h_exp_p_integrable : Integrable (fun ω => Real.exp (p.toReal * |ω f|)) (muGFF m).toMeasure
     := by

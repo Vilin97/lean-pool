@@ -125,8 +125,7 @@ private lemma pointwise_bound {h : ℝ} (hh : 0 < h) {f f' : ℝ → ℂ}
           · exact hbd
       _ = h * M := by rw [intervalIntegral.integral_const, sub_zero, smul_eq_mul]
   calc 1 / h * ‖∫ y in (0 : ℝ)..h, (f x - f y)‖
-      ≤ 1 / h * (h * M) := by
-        exact mul_le_mul_of_nonneg_left h_norm_bound (by positivity)
+      ≤ 1 / h * (h * M) := by exact mul_le_mul_of_nonneg_left h_norm_bound (by positivity)
     _ = M := by field_simp
 
 -- to_mathlib: Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
@@ -175,8 +174,7 @@ private lemma cauchy_schwarz_interval {a b : ℝ} (hab : a ≤ b) {g : ℝ → �
   -- And S² = c²·(b-a)², so S² ≤ (b-a)·∫g²
   calc S ^ 2 = (c * (b - a)) ^ 2 := by rw [hcba]
     _ = c ^ 2 * (b - a) * (b - a) := by ring
-    _ ≤ (∫ t in a..b, g t ^ 2) * (b - a) := by
-        exact mul_le_mul_of_nonneg_right h_ineq hba_pos.le
+    _ ≤ (∫ t in a..b, g t ^ 2) * (b - a) := by exact mul_le_mul_of_nonneg_right h_ineq hba_pos.le
     _ = (b - a) * ∫ t in a..b, g t ^ 2 := by ring
 
 /-! ## M1: Poincaré inequality on intervals (weak version) -/

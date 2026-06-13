@@ -49,8 +49,7 @@ private lemma phaseAnchor_mul_norm (w : ℂ) : phaseAnchor w * ‖w‖ = w := by
 private lemma conj_phaseAnchor_mul (w : ℂ) : conj (phaseAnchor w) * w = ‖w‖ := by
   calc
     conj (phaseAnchor w) * w
-        = conj (phaseAnchor w) * (phaseAnchor w * ‖w‖) := by
-            rw [phaseAnchor_mul_norm]
+        = conj (phaseAnchor w) * (phaseAnchor w * ‖w‖) := by rw [phaseAnchor_mul_norm]
     _ = (conj (phaseAnchor w) * phaseAnchor w) * ‖w‖ := by ring
     _ = ‖w‖ := by
           rw [← Complex.normSq_eq_conj_mul_self, Complex.normSq_eq_norm_sq, norm_phaseAnchor]
@@ -67,18 +66,15 @@ private lemma norm_sub_phaseAnchor_le (w lam : ℂ) (hlam : ‖lam‖ = 1) :
             nth_rewrite 1 [hw_eq]
             rfl
           calc
-            ‖w - phaseAnchor w‖ = ‖phaseAnchor w * ‖w‖ - phaseAnchor w‖ := by
-              rw [hw_sub]
+            ‖w - phaseAnchor w‖ = ‖phaseAnchor w * ‖w‖ - phaseAnchor w‖ := by rw [hw_sub]
             _ = ‖phaseAnchor w * ((‖w‖ : ℂ) - 1)‖ := by
               congr 1
               ring
         _ = ‖phaseAnchor w‖ * ‖((‖w‖ : ℂ) - 1)‖ := norm_mul _ _
         _ = ‖phaseAnchor w‖ * ‖(((‖w‖ - 1 : ℝ) : ℂ))‖ := by
               rw [show ((‖w‖ : ℂ) - 1) = (((‖w‖ - 1 : ℝ) : ℂ)) by simp]
-        _ = ‖phaseAnchor w‖ * |‖w‖ - 1| := by
-              rw [Complex.norm_real, Real.norm_eq_abs]
-        _ = |‖w‖ - 1| := by
-              rw [norm_phaseAnchor, one_mul]
+        _ = ‖phaseAnchor w‖ * |‖w‖ - 1| := by rw [Complex.norm_real, Real.norm_eq_abs]
+        _ = |‖w‖ - 1| := by rw [norm_phaseAnchor, one_mul]
     _ = |‖w‖ - ‖lam‖| := by rw [hlam]
     _ ≤ ‖w - lam‖ := abs_norm_sub_norm_le _ _
 
@@ -89,8 +85,7 @@ private lemma phaseDistanceSqNorm_eq_centered
         (1 / Real.pi) * ∫ z : ℂ,
           ‖(p - Polynomial.C (p.eval 0)).eval z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) := by
   set q : Polynomial ℂ := p - Polynomial.C (p.eval 0)
-  have hq0 : q.eval 0 = 0 := by
-    simp [q]
+  have hq0 : q.eval 0 = 0 := by simp [q]
   have hcoeff0 : q.coeff 0 = 0 := by
     rw [coeff_zero_eq_eval_zero]
     exact hq0
@@ -105,8 +100,7 @@ private lemma phaseDistanceSqNorm_eq_centered
   have hp_eval : ∀ z, p.eval z = p.eval 0 + polyEval a z := by
     intro z
     calc
-      p.eval z = q.eval z + p.eval 0 := by
-        simp [q]
+      p.eval z = q.eval z + p.eval 0 := by simp [q]
       _ = p.eval 0 + polyEval a z := by
         rw [hq_eval]
         ring
@@ -126,12 +120,10 @@ private lemma phaseDistanceSqNorm_eq_centered
     _ = ‖((1 : ℂ) + p.eval 0) - lam‖ ^ 2 + fockNormSq a := by
           simpa using gaussian_integral_const_add_polyEval a (((1 : ℂ) + p.eval 0) - lam)
     _ = ‖((1 : ℂ) + p.eval 0) - lam‖ ^ 2 +
-          (1 / Real.pi) * ∫ z : ℂ, ‖q.eval z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-            rw [← hq_gauss]
+          (1 / Real.pi) * ∫ z : ℂ, ‖q.eval z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) := by rw [← hq_gauss]
     _ = ‖((1 : ℂ) + p.eval 0) - lam‖ ^ 2 +
           (1 / Real.pi) * ∫ z : ℂ, ‖(p - Polynomial.C (p.eval 0)).eval z‖ ^ 2 *
-            Real.exp (-‖z‖ ^ 2) := by
-              simp [q]
+            Real.exp (-‖z‖ ^ 2) := by simp [q]
 
 private lemma phaseDistanceSqNorm_one_eq
     (p : Polynomial ℂ) :
@@ -155,8 +147,7 @@ theorem LocalFockSPR_of_small_norm_exists_phase
         ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by
   let w0 : ℂ := (1 : ℂ) + p.eval 0
   let lam0 : ℂ := phaseAnchor w0
-  have hlam0 : ‖lam0‖ = 1 := by
-    simpa [lam0] using norm_phaseAnchor w0
+  have hlam0 : ‖lam0‖ = 1 := by simpa [lam0] using norm_phaseAnchor w0
   have hphase_le_one : phaseDistanceSqNorm p lam0 ≤ phaseDistanceSqNorm p 1 := by
     have hnorm : ‖w0 - lam0‖ ≤ ‖w0 - 1‖ := by
       simpa [lam0] using norm_sub_phaseAnchor_le w0 1 (by simp)
@@ -195,14 +186,12 @@ theorem LocalFockSPR_of_small_norm_exists_phase
         (1 / Real.pi) * ∫ z : ℂ, ‖q.eval z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) := by
     unfold phaseDistanceSqNorm
     rw [hdist_eq]
-  have hw0_phase : conj lam0 * w0 = ‖w0‖ := by
-    simpa [lam0] using conj_phaseAnchor_mul w0
+  have hw0_phase : conj lam0 * w0 = ‖w0‖ := by simpa [lam0] using conj_phaseAnchor_mul w0
   have hq_real : Complex.im (q.eval 0) = 0 := by
     have hq0 :
         q.eval 0 = ((‖w0‖ - 1 : ℝ) : ℂ) := by
       calc
-        q.eval 0 = conj lam0 * w0 - 1 := by
-          simpa [w0] using hq_eval_mul 0
+        q.eval 0 = conj lam0 * w0 - 1 := by simpa [w0] using hq_eval_mul 0
         _ = (‖w0‖ : ℂ) - 1 := by rw [hw0_phase]
         _ = ((‖w0‖ - 1 : ℝ) : ℂ) := by simp
     rw [hq0]
@@ -232,7 +221,6 @@ theorem LocalFockSPR_of_small_norm_exists_phase
     _ ≤ 23003 ^ 2 *
           ∫ z : ℂ, (|‖1 + q.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := hlocal
     _ = 23003 ^ 2 *
-          ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by
-            rw [hrho_eq]
+          ∫ z : ℂ, (|‖1 + p.eval z‖ - 1|) ^ 2 * Real.exp (-‖z‖ ^ 2) := by rw [hrho_eq]
 
 end FockSPR

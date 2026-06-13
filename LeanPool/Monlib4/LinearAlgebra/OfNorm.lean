@@ -349,11 +349,9 @@ def IsBilinearMapProd.toLmLm {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [No
       map_smul' := fun r y => hf.smul_right r x y }
   map_add' y z := by
     ext x
-    simp only [LinearMap.add_apply]
     exact hf.add_left y z x
   map_smul' r z := by
     ext x
-    simp only [LinearMap.smul_apply]
     exact hf.smul_left r z x
 
 /-- Bundle a product map that is left-linear and right-continuous-linear. -/
@@ -366,7 +364,6 @@ def IsLmLeftIsClmRight.toLmClm {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [
   toFun x := (hf₂ x).mk'
   map_add' y z := by
     ext x
-    simp only [ContinuousLinearMap.add_apply]
     exact (hf₁ x).map_add _ _
   map_smul' r z := by
     ext x
@@ -665,12 +662,10 @@ lemma NormedSpace.Dual.transpose_isometry
   [NormedSpace 𝕜 X] [NormedSpace 𝕜 Y]
   {f : X ≃ₗᵢ[𝕜] Y} :
   _root_.Isometry (NormedSpace.Dual.transpose 𝕜 f.toLinearIsometry.toContinuousLinearMap) := by
-{
   rw [AddMonoidHomClass.isometry_iff_norm]
   intro x
   simp_rw [NormedSpace.Dual.transpose_apply]
   exact ContinuousLinearMap.opNorm_comp_linearIsometryEquiv _ _
-}
 
 open NormedSpace in
 /-- Pull back continuous linear functionals along a linear isometry equivalence. -/

@@ -562,24 +562,12 @@ def algebra {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
         by
           rw [Algebra.algebraMap_eq_smul_one]
           exact Matrix.IsBlockDiagonal.smul Matrix.IsBlockDiagonal.one r⟩
-    map_one' := by
-      apply Subtype.ext
-      exact map_one (algebraMap R (Matrix (Σ i, s i) (Σ i, s i) R))
-    map_zero' := by
-      apply Subtype.ext
-      exact map_zero (algebraMap R (Matrix (Σ i, s i) (Σ i, s i) R))
-    map_add' x y := by
-      apply Subtype.ext
-      exact map_add (algebraMap R (Matrix (Σ i, s i) (Σ i, s i) R)) x y
-    map_mul' x y := by
-      apply Subtype.ext
-      exact map_mul (algebraMap R (Matrix (Σ i, s i) (Σ i, s i) R)) x y }
-  commutes' r x := by
-    apply Subtype.ext
-    exact Algebra.commutes r (x : Matrix (Σ i, s i) (Σ i, s i) R)
-  smul_def' r x := by
-    apply Subtype.ext
-    exact Algebra.smul_def r (x : Matrix (Σ i, s i) (Σ i, s i) R)
+    map_one' := Subtype.ext (map_one (algebraMap R (Matrix (Σ i, s i) (Σ i, s i) R)))
+    map_zero' := Subtype.ext (map_zero (algebraMap R (Matrix (Σ i, s i) (Σ i, s i) R)))
+    map_add' x y := Subtype.ext (map_add (algebraMap R (Matrix (Σ i, s i) (Σ i, s i) R)) x y)
+    map_mul' x y := Subtype.ext (map_mul (algebraMap R (Matrix (Σ i, s i) (Σ i, s i) R)) x y) }
+  commutes' r x := Subtype.ext (Algebra.commutes r (x : Matrix (Σ i, s i) (Σ i, s i) R))
+  smul_def' r x := Subtype.ext (Algebra.smul_def r (x : Matrix (Σ i, s i) (Σ i, s i) R))
 
 theorem coe_blockDiagonal'_blockDiag' {k : Type _} [DecidableEq k] {s : k → Type _}
     (x : (BlockDiagonals R k s)) :

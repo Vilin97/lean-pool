@@ -385,8 +385,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
       simp [toComplex_apply, fIm, complexTestFunctionDecompose]
     -- Robust proof without external lemma names: |Im z|^2 ≤ ‖z‖^2
     have habs_sq : |(f x).im| ^ 2 = ((f x).im) ^ 2 := by simp [pow_two]
-    have hineq : ((f x).im) ^ 2 ≤ (f x).re ^ 2 + (f x).im ^ 2 := by
-      exact le_add_of_nonneg_left (sq_nonneg _)
+    have hineq : ((f x).im) ^ 2 ≤ (f x).re ^ 2 + (f x).im ^ 2 := le_add_of_nonneg_left (sq_nonneg _)
     have hnorm_sq : ‖f x‖ ^ 2 = (f x).re ^ 2 + (f x).im ^ 2 := by
       simpa [Complex.normSq_apply, pow_two] using (Complex.sq_norm (f x))
     have hsq : |(f x).im| ^ 2 ≤ ‖f x‖ ^ 2 := by simpa [habs_sq, hnorm_sq] using hineq

@@ -253,12 +253,9 @@ private theorem phase_alignment
     rw [hu_decomp, sub_eq_add_neg]
     calc
       phase • (f0 + (a • f0 + g)) + -f0
-          = phase • ((1 + a) • f0 + g) + (-1 : ℂ) • f0 := by
-              simp [add_smul, add_assoc]
-      _ = (phase * β) • f0 + phase • g + (-1 : ℂ) • f0 := by
-            simp [β, smul_add, mul_smul]
-      _ = (phase * β) • f0 + (-1 : ℂ) • f0 + phase • g := by
-            abel_nf
+          = phase • ((1 + a) • f0 + g) + (-1 : ℂ) • f0 := by simp [add_smul, add_assoc]
+      _ = (phase * β) • f0 + phase • g + (-1 : ℂ) • f0 := by simp [β, smul_add, mul_smul]
+      _ = (phase * β) • f0 + (-1 : ℂ) • f0 + phase • g := by abel_nf
       _ = ((phase * β - 1 : ℂ) • f0) + phase • g := by
             rw [← add_smul]
             congr 1
@@ -299,8 +296,7 @@ private theorem phase_alignment
   have hcomp : ‖((phase * β - 1 : ℂ) • f0)‖ ≤ ‖a • f0‖ := by
     rw [norm_smul, norm_smul]
     simpa [hf0] using hcoef
-  have hphase_g : ‖phase • g‖ = ‖g‖ := by
-    rw [norm_smul, hphase, one_mul]
+  have hphase_g : ‖phase • g‖ = ‖g‖ := by rw [norm_smul, hphase, one_mul]
   have hnorm_sq_le :
       ‖phase • (f0 + u) - f0‖ * ‖phase • (f0 + u) - f0‖ ≤ ‖u‖ * ‖u‖ := by
     rw [hh_sq, hu_sq, hphase_g]

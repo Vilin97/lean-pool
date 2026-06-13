@@ -476,8 +476,8 @@ lemma schwinger_bound_integrable_xy (s : ℝ) (hs : 0 < s)
         · exact continuous_snd
       have h_cont_r : Continuous (fun r : ℝ => heatKernelPositionSpace s r) := by
         have h_cont_on : ContinuousOn (fun r : ℝ => heatKernelPositionSpace s r) Set.univ := by
-          have h_proj : ContinuousOn (fun r : ℝ => (s, r)) Set.univ := by
-            exact (continuous_const.prodMk continuous_id).continuousOn
+          have h_proj : ContinuousOn (fun r : ℝ => (s, r)) Set.univ :=
+            (continuous_const.prodMk continuous_id).continuousOn
           have h_maps : Set.MapsTo (fun r : ℝ => (s, r)) Set.univ (Set.Ioi 0 ×ˢ Set.univ) := by
             intro r _; exact ⟨hs, Set.mem_univ _⟩
           exact heatKernelPositionSpace_continuousOn.comp h_proj h_maps
@@ -2184,8 +2184,8 @@ lemma schwartz_heat_product_aestronglymeasurable (f : TestFunctionℂ)
       ‖f x‖ * ‖f a‖ * c₁ * Real.exp (-(x 0 + a 0)^2 / (4 * s)) * c₂) volume := by
   have h_fx : AEStronglyMeasurable (fun _ : SpaceTime => ‖f x‖) volume :=
     aestronglyMeasurable_const
-  have h_fa : AEStronglyMeasurable (fun a : SpaceTime => ‖f a‖) volume := by
-    exact (SchwartzMap.continuous f).aestronglyMeasurable.norm
+  have h_fa : AEStronglyMeasurable (fun a : SpaceTime => ‖f a‖) volume :=
+    (SchwartzMap.continuous f).aestronglyMeasurable.norm
   have h_c1 : AEStronglyMeasurable (fun _ : SpaceTime => c₁) volume :=
     aestronglyMeasurable_const
   have h_c2 : AEStronglyMeasurable (fun _ : SpaceTime => c₂) volume :=
@@ -2283,8 +2283,8 @@ lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
       have h2' : ((‖f p.1‖ * ‖f p.2‖) * |c₁| *
           |Real.exp (-(p.1 0 + p.2 0)^2 / (4 * s))|) * |c₂| ≤
           ((‖f p.1‖ * ‖f p.2‖) * |c₁| * 1) * |c₂| := by
-        have h_nonneg' : 0 ≤ (‖f p.1‖ * ‖f p.2‖) * |c₁| := by
-          exact mul_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg _)) (abs_nonneg _)
+        have h_nonneg' : 0 ≤ (‖f p.1‖ * ‖f p.2‖) * |c₁| :=
+          mul_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg _)) (abs_nonneg _)
         exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left h1 h_nonneg') (abs_nonneg _)
       have h2'' : ((‖f p.1‖ * ‖f p.2‖) * |c₁| * 1) * |c₂| =
           (|c₁| * |c₂|) * (‖f p.1‖ * ‖f p.2‖) := by

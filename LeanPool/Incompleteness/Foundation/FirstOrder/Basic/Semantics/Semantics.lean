@@ -653,8 +653,7 @@ abbrev Models₀ (σ : Sentence L) : Prop := M ⊧ₘ (↑σ : SyntacticFormula 
 infix:45 " ⊧ₘ₀ " => Models₀
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev ModelsTheory (T : Theory L) : Prop :=
-  Semantics.RealizeSet s.toStruc T
+abbrev ModelsTheory (T : Theory L) : Prop := Semantics.RealizeSet s.toStruc T
 
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:45 " ⊧ₘ* " => ModelsTheory

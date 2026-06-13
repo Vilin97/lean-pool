@@ -732,10 +732,10 @@ theorem rankOne_euclideanSpaceTensor_eq_toEuclideanLin_vecMulVec {n m : Type*} [
       (Matrix.reshape (Matrix.vecMulVec (star y.ofLp) (star w.ofLp))))) := by
   let xz : EuclideanSpace ℂ (n × m) := euclideanSpaceTensor' (R := ℂ) (x ⊗ₜ[ℂ] z)
   let yw : EuclideanSpace ℂ (n × m) := euclideanSpaceTensor' (R := ℂ) (y ⊗ₜ[ℂ] w)
-  have hxz : xz.ofLp = Matrix.reshape (Matrix.vecMulVec x.ofLp z.ofLp) := by
-    exact EuclideanSpaceTensor_apply_eq_reshape_vecMulVec x z
-  have hyw : yw.ofLp = Matrix.reshape (Matrix.vecMulVec y.ofLp w.ofLp) := by
-    exact EuclideanSpaceTensor_apply_eq_reshape_vecMulVec y w
+  have hxz : xz.ofLp = Matrix.reshape (Matrix.vecMulVec x.ofLp z.ofLp) :=
+    EuclideanSpaceTensor_apply_eq_reshape_vecMulVec x z
+  have hyw : yw.ofLp = Matrix.reshape (Matrix.vecMulVec y.ofLp w.ofLp) :=
+    EuclideanSpaceTensor_apply_eq_reshape_vecMulVec y w
   have hsyw :
       (star yw).ofLp = Matrix.reshape (Matrix.vecMulVec (star y.ofLp) (star w.ofLp)) := by
     change star yw.ofLp = Matrix.reshape (Matrix.vecMulVec (star y.ofLp) (star w.ofLp))
@@ -783,8 +783,8 @@ Classical.choose (TensorProduct.exists_finset x)
 theorem TensorProduct.chooseFinset_spec {R M N : Type*} [CommSemiring R]
   [AddCommMonoid M] [AddCommMonoid N] [Module R M] [Module R N]
   (x : TensorProduct R M N) :
-  x = ∑ s ∈ (TensorProduct.chooseFinset x), s.1 ⊗ₜ s.2 := by
-  exact Classical.choose_spec (TensorProduct.exists_finset x)
+  x = ∑ s ∈ (TensorProduct.chooseFinset x), s.1 ⊗ₜ s.2 :=
+  Classical.choose_spec (TensorProduct.exists_finset x)
 
 /-- A product-coordinate decomposition of Euclidean space vectors. -/
 -- changed from choosing some `Finset (_ × _)` like above to the following

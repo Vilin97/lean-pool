@@ -50,16 +50,14 @@ omit [SigmaFinite μ] in
 private lemma lpNorm_coe_l2 {E : Type*} [NormedAddCommGroup E]
     (F : MeasureTheory.Lp E 2 μ) :
     MeasureTheory.lpNorm (fun x : Ω => F x) 2 μ = ‖F‖ := by
-  have hmeas : AEStronglyMeasurable (fun x : Ω => F x) μ := by
-    fun_prop
+  have hmeas : AEStronglyMeasurable (fun x : Ω => F x) μ := by fun_prop
   rw [MeasureTheory.Lp.norm_def]
   exact (MeasureTheory.toReal_eLpNorm hmeas).symm
 
 omit [SigmaFinite μ] in
 private lemma lpNorm_norm_l2 (F : MeasureTheory.Lp ℂ 2 μ) :
     MeasureTheory.lpNorm (fun x : Ω => ‖(F : Ω → ℂ) x‖) 2 μ = ‖F‖ := by
-  have hmeas : AEStronglyMeasurable (fun x : Ω => (F : Ω → ℂ) x) μ := by
-    fun_prop
+  have hmeas : AEStronglyMeasurable (fun x : Ω => (F : Ω → ℂ) x) μ := by fun_prop
   rw [MeasureTheory.lpNorm_norm hmeas 2]
   exact lpNorm_coe_l2 μ F
 
@@ -86,17 +84,13 @@ private lemma compare_pointwise_ae
         Hh - (a : ℂ) • F + F := by
     calc
       (ι (h - (a : ℂ) • f0 + f0) : MeasureTheory.Lp ℂ 2 μ)
-          = ι h - (a : ℂ) • ι f0 + ι f0 := by
-              rw [map_add, map_sub, ι.map_smul]
-      _ = Hh - (a : ℂ) • F + F := by
-              rfl
+          = ι h - (a : ℂ) • ι f0 + ι f0 := by rw [map_add, map_sub, ι.map_smul]
+      _ = Hh - (a : ℂ) • F + F := by rfl
   have hB :
       (ι (h + f0) : MeasureTheory.Lp ℂ 2 μ) = Hh + F := by
     calc
-      (ι (h + f0) : MeasureTheory.Lp ℂ 2 μ) = ι h + ι f0 := by
-        rw [map_add]
-      _ = Hh + F := by
-        rfl
+      (ι (h + f0) : MeasureTheory.Lp ℂ 2 μ) = ι h + ι f0 := by rw [map_add]
+      _ = Hh + F := by rfl
   have hAae :
       ((ι (h - (a : ℂ) • f0 + f0) : MeasureTheory.Lp ℂ 2 μ) : Ω → ℂ)
         =ᵐ[μ] fun x => Hh x - (a : ℂ) * F x + F x := by
@@ -234,10 +228,8 @@ theorem local_stability
               simpa using
                 (MeasureTheory.lpNorm_add_le hdb_mem (g := dh)
                   (p := (2 : ℝ≥0∞)) (μ := μ) (by norm_num))
-      _ ≤ |a| + MeasureTheory.lpNorm dh 2 μ := by
-              exact add_le_add hdb_le le_rfl
-      _ = |a| + defect h := by
-              simp [defect, localDefect, dh]
+      _ ≤ |a| + MeasureTheory.lpNorm dh 2 μ := by exact add_le_add hdb_le le_rfl
+      _ = |a| + defect h := by simp [defect, localDefect, dh]
   have hscalar :
       ∀ h : H, (inner ℂ h f0).im = 0 →
         |(2 : ℝ) * (inner ℂ h f0).re + ‖h‖ ^ 2| ≤ defect h * (2 + ‖h‖) := by
@@ -277,22 +269,18 @@ theorem local_stability
     have hsum_bound : ‖X + Y‖ ≤ 2 + ‖h‖ := by
       calc
         ‖X + Y‖ ≤ ‖X‖ + ‖Y‖ := norm_add_le X Y
-        _ = ‖A‖ + ‖F‖ := by
-            rw [hXnorm, hYnorm]
-        _ = ‖h + f0‖ + ‖f0‖ := by
-            rw [hA_norm, hF_norm]
+        _ = ‖A‖ + ‖F‖ := by rw [hXnorm, hYnorm]
+        _ = ‖h + f0‖ + ‖f0‖ := by rw [hA_norm, hF_norm]
         _ ≤ (‖h‖ + ‖f0‖) + ‖f0‖ := by
             gcongr
             exact norm_add_le h f0
         _ = 2 + ‖h‖ := by
-            have hf0' : ‖f0‖ = 1 := by
-              simpa [hF_norm] using hf0
+            have hf0' : ‖f0‖ = 1 := by simpa [hF_norm] using hf0
             rw [hf0']
             ring
     have hleft_eq :
         (2 : ℝ) * (inner ℂ h f0).re + ‖h‖ ^ 2 = ‖X‖ ^ 2 - ‖Y‖ ^ 2 := by
-      have hf0' : ‖f0‖ = 1 := by
-        simpa [hF_norm] using hf0
+      have hf0' : ‖f0‖ = 1 := by simpa [hF_norm] using hf0
       rw [hXnorm, hYnorm, hA_norm, hF_norm]
       have hadd := norm_add_sq (𝕜 := ℂ) h f0
       rw [hadd, hf0']
@@ -301,14 +289,12 @@ theorem local_stability
       ring
     calc
       |(2 : ℝ) * (inner ℂ h f0).re + ‖h‖ ^ 2|
-          = |‖X‖ ^ 2 - ‖Y‖ ^ 2| := by
-              rw [hleft_eq]
+          = |‖X‖ ^ 2 - ‖Y‖ ^ 2| := by rw [hleft_eq]
       _ ≤ ‖X - Y‖ * ‖X + Y‖ := abs_norm_sq_sub_norm_sq_le X Y
       _ ≤ defect h * (2 + ‖h‖) := by
               rw [hsubnorm]
               exact mul_le_mul_of_nonneg_left hsum_bound (hdefect_nonneg h)
-  have hf0' : ‖f0‖ = 1 := by
-    simpa using hf0
+  have hf0' : ‖f0‖ = 1 := by simpa using hf0
   simpa [defect, localDefect] using
     (HermiteLEAN.phase_normalized_orthogonal_reduction
       (defect := defect)

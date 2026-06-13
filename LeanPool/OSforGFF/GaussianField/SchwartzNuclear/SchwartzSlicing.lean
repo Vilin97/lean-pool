@@ -399,8 +399,7 @@ private lemma schwartz_slice_y_le_seminorm (d : ℕ)
   -- The slice function equals (f ∘ (c + ·)) ∘ L
   set f' : EuclideanSpace ℝ (Fin (d + 2)) → ℝ := fun z => f (c + z)
   -- Step 2: Chain rule for composition with L
-  have hf'_smooth : ContDiff ℝ (↑(⊤ : ℕ∞)) f' := by
-    exact f.smooth'.comp (contDiff_const.add contDiff_id)
+  have hf'_smooth : ContDiff ℝ (↑(⊤ : ℕ∞)) f' := f.smooth'.comp (contDiff_const.add contDiff_id)
   have h_chain : iteratedFDeriv ℝ m (f' ∘ ⇑L) y =
       (iteratedFDeriv ℝ m f' (L y)).compContinuousLinearMap (fun _ => L) :=
     L.iteratedFDeriv_comp_right hf'_smooth y

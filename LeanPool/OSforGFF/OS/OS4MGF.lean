@@ -148,13 +148,13 @@ lemma continuous_distributionPairingℂ_timeTranslation (ω : FieldConfiguration
   simp only [h_decomp_re, h_decomp_im]
   apply Continuous.add
   · apply Complex.continuous_ofReal.comp
-    have h_trans_cont : Continuous (fun s => timeTranslationSchwartz (-s) g_re) := by
-      exact (TimeTranslation.continuous_timeTranslationSchwartz g_re).comp continuous_neg
+    have h_trans_cont : Continuous (fun s => timeTranslationSchwartz (-s) g_re) :=
+      (TimeTranslation.continuous_timeTranslationSchwartz g_re).comp continuous_neg
     exact ω.continuous.comp h_trans_cont
   · apply Continuous.mul continuous_const
     apply Complex.continuous_ofReal.comp
-    have h_trans_cont : Continuous (fun s => timeTranslationSchwartz (-s) g_im) := by
-      exact (TimeTranslation.continuous_timeTranslationSchwartz g_im).comp continuous_neg
+    have h_trans_cont : Continuous (fun s => timeTranslationSchwartz (-s) g_im) :=
+      (TimeTranslation.continuous_timeTranslationSchwartz g_im).comp continuous_neg
     exact ω.continuous.comp h_trans_cont
 
 /-! ## Euclidean Group Infrastructure for Time Translation -/

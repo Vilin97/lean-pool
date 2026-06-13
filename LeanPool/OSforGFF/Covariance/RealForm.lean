@@ -266,8 +266,7 @@ lemma sqrtPropagatorMap_norm_eq_covariance (m : ℝ) [Fact (0 < m)] (f : TestFun
         ‖sqrtPropagatorMap m f k‖ = ‖F k * momentumWeightSqrtMathlib m k‖ := rfl
         _ = ‖F k‖ * ‖(momentumWeightSqrtMathlib m k : ℂ)‖ := by simp
         _ = ‖F k‖ * momentumWeightSqrtMathlib m k := by
-          have h := congrArg (fun t : ℝ => ‖F k‖ * t) h_abs
-          simpa using h
+          simpa using congrArg (fun t : ℝ => ‖F k‖ * t) h_abs
     have h_sq : ‖sqrtPropagatorMap m f k‖ ^ 2
         = ‖F k‖ ^ 2 * (momentumWeightSqrtMathlib m k) ^ 2 := by
       simp [pow_two, h_norm, mul_comm, mul_left_comm, mul_assoc]

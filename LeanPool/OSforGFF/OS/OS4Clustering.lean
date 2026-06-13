@@ -120,8 +120,7 @@ lemma gff_generating_sum_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunct
 lemma LinearIsometry_inv_one : LinearIsometry.inv (1 : O4) = 1 := by
   -- Use comp_inv: R.comp (inv R) = 1
   -- For R = 1: 1.comp (inv 1) = 1, so inv 1 = 1 (since 1.comp x = x)
-  have h := LinearIsometry.comp_inv (1 : O4)
-  simpa only [LinearIsometry.one_comp] using h
+  simpa only [LinearIsometry.one_comp] using LinearIsometry.comp_inv (1 : O4)
 
 /-! ## Translation Invariance from OS2 -/
 

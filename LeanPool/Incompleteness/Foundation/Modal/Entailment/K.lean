@@ -329,8 +329,7 @@ omit [DecidableEq F] in @[simp] lemma collectMultiboxAnd! :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def collectBoxAnd : 𝓢 ⊢ □φ ⋏ □ψ ==> □(φ ⋏ ψ) := collectMultiboxAnd (n := 1)
-omit [DecidableEq F] in @[simp] lemma collectBoxAnd! : 𝓢 ⊢! □φ ⋏ □ψ ==> □(φ ⋏ ψ) :=
-  ⟨collectBoxAnd⟩
+omit [DecidableEq F] in @[simp] lemma collectBoxAnd! : 𝓢 ⊢! □φ ⋏ □ψ ==> □(φ ⋏ ψ) := ⟨collectBoxAnd⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def collectMultiboxAnd' (h : 𝓢 ⊢ □^[n]φ ⋏ □^[n]ψ) : 𝓢 ⊢ □^[n](φ ⋏ ψ) := collectMultiboxAnd ⨀ h
@@ -411,8 +410,7 @@ omit [DecidableEq F] in @[simp] lemma collectMultiboxOr! :
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def collectBoxOr : 𝓢 ⊢ □φ ⋎ □ψ ==> □(φ ⋎ ψ) := collectMultiboxOr (n := 1)
-omit [DecidableEq F] in @[simp] lemma collectBoxOr! : 𝓢 ⊢! □φ ⋎ □ψ ==> □(φ ⋎ ψ) :=
-  ⟨collectBoxOr⟩
+omit [DecidableEq F] in @[simp] lemma collectBoxOr! : 𝓢 ⊢! □φ ⋎ □ψ ==> □(φ ⋎ ψ) := ⟨collectBoxOr⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def collectMultiboxOr' (h : 𝓢 ⊢ □^[n]φ ⋎ □^[n]ψ) : 𝓢 ⊢ □^[n](φ ⋎ ψ) := collectMultiboxOr ⨀ h

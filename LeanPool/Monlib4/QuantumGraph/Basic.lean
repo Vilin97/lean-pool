@@ -383,32 +383,19 @@ attribute [local instance] starAlgebra.mulOpposite
 noncomputable def InnerProductAlgebra.mulOpposite {A :
     Type*} [starAlgebra A] [InnerProductAlgebra A] :
     InnerProductAlgebra (Aᵐᵒᵖ) where
-  norm_smul_le c x := by
-    change ‖c • x.unop‖ ≤ ‖c‖ * ‖x.unop‖
-    exact InnerProductAlgebra.norm_smul_le c x.unop
+  norm_smul_le c x := InnerProductAlgebra.norm_smul_le c x.unop
   norm_sq_eq_inner x := by
     rw [MulOpposite.inner_eq]
-    change ‖x.unop‖ ^ 2 = RCLike.re ⟪x.unop, x.unop⟫_ℂ
     exact InnerProductAlgebra.norm_sq_eq_inner x.unop
-  dist_eq x y := by
-    change dist x.unop y.unop = ‖-x.unop + y.unop‖
-    exact InnerProductAlgebra.dist_eq x.unop y.unop
-  conj_symm x y := by
-    simp only [MulOpposite.inner_eq]
-    exact InnerProductAlgebra.conj_symm x.unop y.unop
-  add_left x y z := by
-    simp only [MulOpposite.inner_eq, MulOpposite.unop_add]
-    exact InnerProductAlgebra.add_left x.unop y.unop z.unop
-  smul_left x y r := by
-    simp only [MulOpposite.inner_eq, MulOpposite.unop_smul]
-    exact InnerProductAlgebra.smul_left x.unop y.unop r
+  dist_eq x y := InnerProductAlgebra.dist_eq x.unop y.unop
+  conj_symm x y := InnerProductAlgebra.conj_symm x.unop y.unop
+  add_left x y z := InnerProductAlgebra.add_left x.unop y.unop z.unop
+  smul_left x y r := InnerProductAlgebra.smul_left x.unop y.unop r
 attribute [local instance] InnerProductAlgebra.mulOpposite
 noncomputable instance QuantumSet.mulOpposite {A : Type*} [starAlgebra A] [QuantumSet A]
   [kms : Fact (k A = -(1 / 2))] :
     QuantumSet Aᵐᵒᵖ where
-  modAut_isSymmetric r x y := by
-    simp only [MulOpposite.inner_eq]
-    exact QuantumSet.modAut_isSymmetric (-r) x.unop y.unop
+  modAut_isSymmetric r x y := QuantumSet.modAut_isSymmetric (-r) x.unop y.unop
   k := k A
   inner_star_left _ _ _ := by
     simp only [MulOpposite.inner_eq, modAut, MulOpposite.unop_mul, MulOpposite.unop_star,

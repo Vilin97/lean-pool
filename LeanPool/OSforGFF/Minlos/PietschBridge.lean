@@ -373,8 +373,7 @@ lemma Seminorm.innerProd_smul_left (R : Seminorm ℝ E) (hR : R.IsHilbertian) (a
     have h2 : Continuous (fun t : ℝ => R (t • x - y)) := by
       simpa [sub_eq_add_neg] using R.continuous_smul_add x (-y)
     exact (h1.pow 2 |>.sub (h2.pow 2)).div_const 4
-  have hsmul := map_real_smul f hf a 1
-  simpa [f] using hsmul
+  simpa [f] using map_real_smul f hf a 1
 
 /-! ### Bessel Inequality for Hilbertian Seminorms -/
 

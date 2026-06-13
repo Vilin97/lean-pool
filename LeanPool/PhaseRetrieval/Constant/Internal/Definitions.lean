@@ -185,8 +185,7 @@ private lemma norm_polyEvalCircle_le {D : ℕ} (a : Fin D → ℂ) (r : ℝ) (t 
               mul_le_mul_of_nonneg_left (ContinuousMap.norm_coe_le_norm _ _) (by positivity)
           _ = ‖a k‖ * ‖r‖ ^ (k.val + 1) := by
               rw [fourier_norm]; ring
-          _ = ‖a k‖ * |r| ^ (k.val + 1) := by
-              rw [Real.norm_eq_abs]
+          _ = ‖a k‖ * |r| ^ (k.val + 1) := by rw [Real.norm_eq_abs]
 
 /-- ‖polyEvalCircle a r t‖² ≤ D * ∑ ‖a_k‖² * r^{2(k+1)}, a convenient bound.
     Actually, we prove the simpler bound: ≤ (∑ ‖a_k‖ * |r|^{k+1})² . -/
@@ -439,10 +438,8 @@ private lemma integrableOn_polar_norm {D : ℕ} (a : Fin D → ℂ) :
                   ≤ r ^ 3 * (2 * (1 + (r ^ (D - 1)) ^ 2) * C ^ 2) := by
                     exact mul_le_mul_of_nonneg_left
                       (le_trans hsq hsq2) (pow_nonneg hr_nn 3)
-                _ = 2 * C ^ 2 * (r ^ 3 + r ^ 3 * (r ^ (D - 1)) ^ 2) := by
-                    ring
-                _ = 2 * C ^ 2 * (r ^ 3 + r * r ^ (D * 2)) := by
-                    rw [hpow_eq]
+                _ = 2 * C ^ 2 * (r ^ 3 + r ^ 3 * (r ^ (D - 1)) ^ 2) := by ring
+                _ = 2 * C ^ 2 * (r ^ 3 + r * r ^ (D * 2)) := by rw [hpow_eq]
                 _ ≤ r * r ^ (D * 2) * C ^ 2 * 4 + r ^ 3 * C ^ 2 * 4 := by
                     nlinarith [pow_nonneg hr_nn 3,
                       mul_nonneg hr_nn (pow_nonneg hr_nn (D * 2)),
@@ -791,8 +788,7 @@ theorem fockNorm_eq_gaussian_integral {D : ℕ} (a : Fin D → ℂ) :
     rw [Finset.mul_sum]
     congr 1
     ext k
-    have : (r ^ 2) ^ (k.val + 1) = r ^ (2 * (k.val + 1)) := by
-      rw [← pow_mul]
+    have : (r ^ 2) ^ (k.val + 1) = r ^ (2 * (k.val + 1)) := by rw [← pow_mul]
     rw [this]
     ring
   simp_rw [integrand_eq]

@@ -206,10 +206,8 @@ instance : DefinableLanguage ℒₒᵣ where
   func :=
     .mkSigma “k f. (k = 0 ∧ f = 0) ∨ (k = 0 ∧ f = 1) ∨ (k = 2 ∧ f = 0) ∨ (k = 2 ∧ f = 1)” (by simp)
   rel  := .mkSigma “k r. (k = 2 ∧ r = 0) ∨ (k = 2 ∧ r = 1)” (by simp)
-  func_iff {k c} := by
-    exact Language.ORing.of_mem_range_encode_func
-  rel_iff {k c} := by
-    exact Language.ORing.of_mem_range_encode_rel
+  func_iff {k c} := by exact Language.ORing.of_mem_range_encode_func
+  rel_iff {k c} := by exact Language.ORing.of_mem_range_encode_rel
 
 namespace Formalized
 

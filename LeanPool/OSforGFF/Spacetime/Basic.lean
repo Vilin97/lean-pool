@@ -223,12 +223,7 @@ lemma complex_testfunction_decompose_recompose
   f x = ((complexTestFunctionDecompose f).1 x : ℂ)
           + Complex.I * ((complexTestFunctionDecompose f).2 x : ℂ) := by
   -- Reduce to the standard identity z = re z + i im z
-  have h1 : f x = (Complex.re (f x) : ℂ) + (Complex.im (f x) : ℂ) * Complex.I :=
-    (Complex.re_add_im (f x)).symm
-  have h2 : f x = (Complex.re (f x) : ℂ) + Complex.I * (Complex.im (f x) : ℂ) := by
-    simpa [mul_comm] using h1
-  -- Rewrite re/im via the decomposition
-  simpa using h2
+  simpa [mul_comm] using (Complex.re_add_im (f x)).symm
 
 /-- Complex version of the pairing: real field configuration with complex test function
     We extend the pairing by treating the complex test function as f(x) = f_re(x) + i*f_im(x)

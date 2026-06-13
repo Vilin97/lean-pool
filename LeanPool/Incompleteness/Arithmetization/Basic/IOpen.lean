@@ -58,8 +58,7 @@ lemma div_exists_unique_pos (a : V) {b} (pos : 0 < b) : ∃! u, b * u ≤ a ∧ 
       simpa using open_leastNumber (P :=
         fun u ↦ b * u ≤ a) ⟨“x. &b * x ≤ &a”, by simp, by intro x; simp⟩
     have hx : a < b * (a + 1) := by
-      have : a + 0 < b * a + b :=
-        add_lt_add_of_le_of_lt (le_mul_self_of_pos_left pos) pos
+      have : a + 0 < b * a + b := add_lt_add_of_le_of_lt (le_mul_self_of_pos_left pos) pos
       simpa [mul_add] using this
     exact this hx
   rcases this with ⟨u, hu⟩
@@ -295,8 +294,7 @@ lemma rem_defined : Sg0-Function₂ ((· % ·) : V → V → V) via remDef := by
 
 instance rem_definable : Sg0-Function₂ ((· % ·) : V → V → V) := rem_defined.to_definable _
 
-lemma div_add_mod (a b : V) : b * (a / b) + (a % b) = a :=
-  add_tsub_self_of_le (mul_div_le a b)
+lemma div_add_mod (a b : V) : b * (a / b) + (a % b) = a := add_tsub_self_of_le (mul_div_le a b)
 
 @[simp] lemma mod_zero (a : V) : a % 0 = a := by simp [mod_def]
 
@@ -494,8 +492,7 @@ lemma sqrt_eq_of_le_of_le {x a : V} (le : x * x ≤ a) (h : a ≤ x * x + 2 * x)
 
 @[simp] lemma sqrt_one : √(1 : V) = 1 := by simpa using sqrt_mul_self (1 : V)
 
-lemma sqrt_two : √(2 : V) = 1 :=
-  Eq.symm <| eq_sqrt 1 2 (by simp [one_add_one_eq_two])
+lemma sqrt_two : √(2 : V) = 1 := Eq.symm <| eq_sqrt 1 2 (by simp [one_add_one_eq_two])
 
 lemma sqrt_three : √(3 : V) = 1 :=
   Eq.symm <| eq_sqrt 1 3 <| by simp [one_add_one_eq_two, two_mul_two_eq_four,
@@ -613,8 +610,7 @@ prefix: 80 "π₂" => pi₂
     calc
       √a * √a + √a + (a - √a * √a - √a) =
           √a * √a + (√a + (a - √a * √a - √a)) := by rw [add_assoc]
-      _ = √a * √a + (a - √a * √a) := by
-        rw [add_tsub_cancel_of_le this]
+      _ = √a * √a + (a - √a * √a) := by rw [add_tsub_cancel_of_le this]
       _                                 = a                       := add_tsub_self_of_le (by simp)
 
 @[simp] lemma unpair_pair (a b : V) : unpair ⟪a, b⟫ = (a, b) := by

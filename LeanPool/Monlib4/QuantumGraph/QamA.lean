@@ -162,10 +162,7 @@ theorem qamA.smul [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x ≠
 
 private theorem kronecker_to_tensor_product_mul' (x y : Matrix (n × n) (n × n) ℂ) :
     kroneckerToTensorProduct (x * y) = kroneckerToTensorProduct x * kroneckerToTensorProduct y :=
-  calc
-    kroneckerToTensorProduct (x * y) = kroneckerToTensor (x * y) := rfl
-    _ = kroneckerToTensor x * kroneckerToTensor y := (map_mul _ _ _)
-    _ = kroneckerToTensorProduct x * kroneckerToTensorProduct y := rfl
+  map_mul kroneckerToTensor x y
 
 theorem qamA.is_idempotent [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ // x ≠ 0 }) :
     withMatrixQuantum[φ]

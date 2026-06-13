@@ -473,8 +473,7 @@ end «lp_section_7»
     (L.termBShiftVec k ts).[i] = L.termBShift ts.[i] :=
   (construction L).nth_resultVec _ hts hi
 
-@[simp] lemma termBShiftVec_nil : L.termBShiftVec 0 0 = 0 :=
-  (construction L).resultVec_nil ![]
+@[simp] lemma termBShiftVec_nil : L.termBShiftVec 0 0 = 0 := (construction L).resultVec_nil ![]
 
 lemma termBShiftVec_cons {k t ts : V} (ht : L.IsUTerm t) (hts : L.IsUTermVec k ts) :
     L.termBShiftVec (k + 1) (t ∷ ts) = L.termBShift t ∷ L.termBShiftVec k ts :=

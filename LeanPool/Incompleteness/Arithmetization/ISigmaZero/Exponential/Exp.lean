@@ -39,8 +39,7 @@ lemma ext_defined : Sg0-Function₂ (fun a b : V ↦ ext a b) via extDef := by
 
 instance ext_definable : Sg0-Function₂ (ext : V → V → V) := ext_defined.to_definable
 
-@[simp] lemma ext_le_add (u z : V) : ext u z ≤ z :=
-  le_trans (mod_le (z / u) u) (by simp [])
+@[simp] lemma ext_le_add (u z : V) : ext u z ≤ z := le_trans (mod_le (z / u) u) (by simp [])
 
 instance : Bounded₂ (ext : V → V → V) := ⟨#1, by intro v; simp⟩
 
@@ -415,13 +414,11 @@ lemma bit_zero {x y : V} : Exponential x y → Exponential (2 * x) (y ^ 2) := by
           ext i (append (i ^ 2) Y (y ^ 2)) ^ 2
       constructor
       · calc
-          ext (i ^ 2) (append (i ^ 2) X (2 * x)) = 2 * x :=
-            ext_append_last (i ^ 2) X hxsqi
+          ext (i ^ 2) (append (i ^ 2) X (2 * x)) = 2 * x := ext_append_last (i ^ 2) X hxsqi
           _ = 2 * ext i (append (i ^ 2) X (2 * x)) := by
             rw [ext_append_of_lt ppi ppi.sq hiisq X (2 * x), hXx]
       · calc
-          ext (i ^ 2) (append (i ^ 2) Y (y ^ 2)) = y ^ 2 :=
-            ext_append_last (i ^ 2) Y hysqi
+          ext (i ^ 2) (append (i ^ 2) Y (y ^ 2)) = y ^ 2 := ext_append_last (i ^ 2) Y hysqi
           _ = ext i (append (i ^ 2) Y (y ^ 2)) ^ 2 := by
             rw [ext_append_of_lt ppi ppi.sq hiisq Y (y ^ 2), hYy]
   have hseqₘ' : Seqₘ (2 * x) (y ^ 2) X' Y' :=
@@ -520,13 +517,11 @@ lemma bit_one {x y : V} : Exponential x y → Exponential (2 * x + 1) (2 * y ^ 2
           2 * ext i (append (i ^ 2) Y (2 * y ^ 2)) ^ 2
       constructor
       · calc
-          ext (i ^ 2) (append (i ^ 2) X (2 * x + 1)) = 2 * x + 1 :=
-            ext_append_last (i ^ 2) X hxsqi
+          ext (i ^ 2) (append (i ^ 2) X (2 * x + 1)) = 2 * x + 1 := ext_append_last (i ^ 2) X hxsqi
           _ = 2 * ext i (append (i ^ 2) X (2 * x + 1)) + 1 := by
             rw [ext_append_of_lt ppi ppi.sq hiisq X (2 * x + 1), hXx]
       · calc
-          ext (i ^ 2) (append (i ^ 2) Y (2 * y ^ 2)) = 2 * y ^ 2 :=
-            ext_append_last (i ^ 2) Y hysqi
+          ext (i ^ 2) (append (i ^ 2) Y (2 * y ^ 2)) = 2 * y ^ 2 := ext_append_last (i ^ 2) Y hysqi
           _ = 2 * ext i (append (i ^ 2) Y (2 * y ^ 2)) ^ 2 := by
             rw [ext_append_of_lt ppi ppi.sq hiisq Y (2 * y ^ 2), hYy]
   have hseqₘ' : Seqₘ (2 * x + 1) (2 * y ^ 2) X' Y' :=
@@ -660,8 +655,7 @@ lemma exponential_succ {x y : V} : Exponential (x + 1) y ↔ ∃ z, y = 2 * z �
           have : Exponential (2 * (x + 1)) y := by
             simpa [mul_add, add_assoc, one_add_one_eq_two] using H
           rcases exponential_even.mp this with ⟨y, rfl, H'⟩
-          have : 1 < y := by
-            simpa using (show 1 < y ^ 2 from lt_of_le_of_lt (by simp) hxy)
+          have : 1 < y := by simpa using (show 1 < y ^ 2 from lt_of_le_of_lt (by simp) hxy)
           have : Exponential (x + 1) y ↔ ∃ z ≤ y, y = 2 * z ∧ Exponential x z :=
             IH y (lt_square_of_lt <| this) (lt_trans (by simp) H'.lt)
           rcases this.mp H' with ⟨y, _, rfl, H''⟩

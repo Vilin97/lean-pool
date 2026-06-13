@@ -148,8 +148,8 @@ instance n_isFinite [QuantumSet A] : Finite (n A) := by
 
 /-- A quantum set is finite-dimensional over `ℂ` via its fixed orthonormal basis. -/
 instance QuantumSet.toFinite [hA : QuantumSet A] :
-    Module.Finite ℂ A := by
-  exact Module.Finite.of_basis hA.onb.toBasis
+    Module.Finite ℂ A :=
+  Module.Finite.of_basis hA.onb.toBasis
 
 lemma QuantumSet.modAut_isSelfAdjoint [hA : QuantumSet A] (r : ℝ) :
     IsSelfAdjoint (ha.modAut r).toLinearMap := by

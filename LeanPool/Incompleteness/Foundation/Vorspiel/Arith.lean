@@ -171,10 +171,8 @@ lemma to_partrec' {n} {f : List.Vector ℕ n →. ℕ} (hf : ArithPart₁ f) : P
         (_root_.Primrec.const 1)
         (_root_.Primrec.const 0)
     exact Partrec'.of_part this.to_comp.partrec
-  case comp m n f g _ _ hf hg =>
-    exact Partrec'.comp g hf hg
-  case rfind f _ hf =>
-    exact Partrec'.rfind hf
+  case comp m n f g _ _ hf hg => exact Partrec'.comp g hf hg
+  case rfind f _ hf => exact Partrec'.rfind hf
 
 lemma of_eq {n} {f g : List.Vector ℕ n →. ℕ} (hf : ArithPart₁ f) (H : ∀ i, f i = g i) :
     ArithPart₁ g :=
@@ -477,8 +475,7 @@ lemma dvd (i j : Fin n) : Arith₁ (fun v => isDvdNat (v.get i) (v.get j)) := by
 
 lemma rem (i j : Fin n) : Arith₁ (fun v => v.get i % v.get j) := by
   let F : List.Vector ℕ (n + 1) → ℕ := fun v => isDvdNat (v.get j.succ) (v.get i.succ - v.head)
-  have : Arith₁ F :=
-    (dvd 0 1).comp₂ _ (proj j.succ) ((sub 0 1).comp₂ _ (proj i.succ) head)
+  have : Arith₁ F := (dvd 0 1).comp₂ _ (proj j.succ) ((sub 0 1).comp₂ _ (proj i.succ) head)
   exact (ArithPart₁.rfindPos this).of_eq <| by
     intro v
     simp only [get_cons_succ, head_cons, isDvdNat_pos_iff, PFun.coe_val, eq_some_iff,
@@ -547,8 +544,7 @@ lemma ball {φ : List.Vector ℕ n → ℕ → ℕ} (hp : @Arith₁ (n + 1) (fun
       rcases this with ⟨x, hx, hpx, hlx⟩
       exact ⟨x, ⟨by symm; simp[hpx], by intro m hm; symm; simp[hlx m hm, lt_trans hm hx]⟩, by
         have hne : x ≠ v.get i := ne_of_lt hx
-        have : isEqNat x (v.get i) = 0 := by
-          simp only [isEqNat, hne, ↓reduceIte]
+        have : isEqNat x (v.get i) = 0 := by simp only [isEqNat, hne, ↓reduceIte]
         rw [this]
         symm
         exact ball_eq_zero_iff.mpr ⟨x, hx, hpx⟩⟩

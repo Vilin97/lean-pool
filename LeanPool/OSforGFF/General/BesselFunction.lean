@@ -603,8 +603,7 @@ private lemma besselK1_near_origin_tail_bound (z : ℝ) (hz : 0 < z)
         Filter.tendsto_neg_atTop_atBot.comp h3
       convert h4 using 1
       ext t; ring
-    have h4 := h1.const_mul (-2/z)
-    simpa only [mul_zero] using h4
+    simpa only [mul_zero] using h1.const_mul (-2/z)
   have hg_int : IntegrableOn g (Ioi 1) := by
     apply integrableOn_Ioi_deriv_of_nonneg hF_cont
     · intro x _; exact hF_deriv x

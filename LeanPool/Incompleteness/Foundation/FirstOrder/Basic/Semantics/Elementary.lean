@@ -262,8 +262,7 @@ namespace ElementaryEquiv
 lemma refl (M) [Nonempty M] [Structure L M] : M ≡ₑ[L] M := fun σ => by rfl
 
 @[symm]
-lemma symm : (M₁ ≡ₑ[L] M₂) → (M₂ ≡ₑ[L] M₁) :=
-  fun h σ => (h σ).symm
+lemma symm : (M₁ ≡ₑ[L] M₂) → (M₂ ≡ₑ[L] M₁) := fun h σ => (h σ).symm
 
 @[trans]
 lemma trans :

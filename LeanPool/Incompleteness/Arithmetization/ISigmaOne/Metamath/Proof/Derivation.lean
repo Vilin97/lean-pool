@@ -1180,8 +1180,7 @@ lemma disjDistr (ps s : V) (d : T.Derivable (vecToSet ps ∪ s)) :
       have : T.Derivable (insert (^⋁ takeLast ps k) (s'' ∪ s)) := by
         refine ih (le_trans (by simp) hk) s'' (le_of_subset hs'') hs'' ?_
         intro i hi
-        have : i ≤ len ps - (k + 1) := by
-          simpa [sub_sub] using le_sub_one_of_lt hi
+        have : i ≤ len ps - (k + 1) := by simpa [sub_sub] using le_sub_one_of_lt hi
         rcases lt_or_eq_of_le this with (hi | rfl)
         · simp [s'', hs' i hi]
         · simp [s'']

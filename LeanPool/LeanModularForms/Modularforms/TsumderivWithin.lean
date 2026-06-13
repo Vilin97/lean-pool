@@ -112,6 +112,58 @@ theorem der_iter_eq_der2' (k n : ℕ) (r : ℍ') :
 noncomputable def ctsExpTwoPiN (K : Set ℂ) : ContinuousMap K ℂ where
   toFun := fun r : K => Complex.exp (2 * ↑π * Complex.I * r)
 
+private theorem ctsExpTwoPiN_norm_lt_one (K : Set ℂ) (hK1 : K ⊆ ℍ') [CompactSpace K] :
+    ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K)‖ < 1 := by
+  rw [BoundedContinuousFunction.norm_lt_iff_of_compact]
+  · intro x; rw [BoundedContinuousFunction.mkOfCompact_apply]; simp_rw [ctsExpTwoPiN]
+    simp only [ContinuousMap.coe_mk]
+    apply exp_upperHalfPlane_lt_one ⟨x.1, hK1 x.2⟩
+  linarith
+
+private theorem ctsExpTwoPiN_summable_norm (e : ℕ) {r : ℝ} (hr : r < 1) (hr2 : 0 ≤ r) :
+    Summable fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ e * (r : ℂ) ^ n)‖ := by
+  have : ∀ (n : ℕ), ((2 * ↑π) ^ e) * ‖((n) ^ e * ((r : ℂ) ^ n))‖ =
+    ‖((2 * ↑π * Complex.I * n) ^ e * (r : ℂ) ^ n)‖ := by
+      intro n
+      norm_cast
+      simp only [Nat.cast_pow, norm_mul, norm_pow, Real.norm_eq_abs,
+        ofReal_mul, ofReal_ofNat, ofReal_pow, norm_ofNat, norm_real, norm_I,
+        mul_one, norm_natCast]
+      norm_cast
+      simp only [Nat.cast_pow]
+      have hh : |π| = π := by simp [Real.pi_pos.le]
+      rw [hh]
+      ring
+  apply Summable.congr _ this
+  rw [summable_mul_left_iff]
+  · apply summable_norm_pow_mul_geometric_of_norm_lt_one
+    rw [Complex.norm_real, Real.norm_of_nonneg hr2]
+    exact hr
+  norm_cast
+  apply pow_ne_zero
+  apply mul_ne_zero
+  · linarith
+  apply Real.pi_ne_zero
+
+private theorem ctsExpTwoPiN_exp_norm_le (K : Set ℂ) [CompactSpace K] (n : ℕ) (t : K) :
+    ‖(Complex.exp (2 * π * Complex.I * n * t))‖ ≤
+      ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K)‖ ^ n := by
+  have hw1 :
+    ‖ (Complex.exp (2 * π * Complex.I * n * t))‖ =
+      ‖ (Complex.exp (2 * π * Complex.I * t))‖ ^ n := by
+        norm_cast
+        rw [← Complex.norm_pow];
+        congr;
+        rw [← exp_nat_mul];
+        ring_nf
+  rw [hw1]
+  norm_cast
+  apply pow_le_pow_left₀
+  · simp only [norm_nonneg]
+  have :=
+    BoundedContinuousFunction.norm_coe_le_norm
+      (BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K)) t
+  simpa [ctsExpTwoPiN] using this
 
 theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact K) (k : ℕ) :
     ∃ u : ℕ → ℝ,
@@ -124,39 +176,10 @@ theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
     rw [isCompact_iff_isCompact_univ] at hK2
     apply hK2
   set r : ℝ := ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖
-  have hr : ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖ < 1 :=
-    by
-    rw [BoundedContinuousFunction.norm_lt_iff_of_compact]
-    · intro x; rw [BoundedContinuousFunction.mkOfCompact_apply]; simp_rw [ctsExpTwoPiN]
-      simp only [ContinuousMap.coe_mk]
-      apply exp_upperHalfPlane_lt_one ⟨x.1, hK1 x.2⟩
-    linarith
+  have hr : r < 1 := ctsExpTwoPiN_norm_lt_one K hK1
   have hr2 : 0 ≤ r := by apply norm_nonneg _
-  have hu : Summable fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k + 1) * r ^ n)‖ :=
-    by
-    have : ∀ (n : ℕ), ((2 * ↑π)^(k+1))* ‖((n) ^ (k + 1) * (r ^ n))‖ =
-      ‖((2 * ↑π * Complex.I * n) ^ (k + 1) * r ^ n)‖ := by
-        intro n
-        norm_cast
-        simp only [Nat.cast_pow, norm_mul, norm_pow, Real.norm_eq_abs,
-          ofReal_mul, ofReal_ofNat, ofReal_pow, norm_ofNat, norm_real, norm_I,
-          mul_one, norm_natCast]
-        norm_cast
-        simp only [Nat.cast_pow]
-        have hh : |π| = π := by simp [Real.pi_pos.le]
-        rw [hh]
-        ring
-    apply Summable.congr _ this
-    rw [summable_mul_left_iff]
-    · apply summable_norm_pow_mul_geometric_of_norm_lt_one
-      convert hr
-      rw [norm_norm]
-    norm_cast
-    apply pow_ne_zero
-    apply mul_ne_zero
-    · linarith
-    apply Real.pi_ne_zero
-  · use fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k + 1) * r ^ n)‖, hu
+  have hu := ctsExpTwoPiN_summable_norm (k + 1) hr hr2
+  · use fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k + 1) * (r : ℂ) ^ n)‖, hu
     intro n t
     have go := der_iter_eq_der2' k n ⟨t.1, hK1 t.2⟩
     simp only [Complex.norm_mul, norm_pow, norm_ofNat, norm_real, Real.norm_eq_abs, norm_I, mul_one,
@@ -168,28 +191,11 @@ theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
     rw [h1]
     simp only [Complex.norm_mul, norm_pow, norm_ofNat, norm_real, Real.norm_eq_abs, norm_I, mul_one,
       RCLike.norm_natCast]
-    have ineqe : ‖(Complex.exp (2 * π * Complex.I * n * t))‖ ≤ ‖r‖ ^ n := by
-      have hw1 :
-        ‖ (Complex.exp (2 * π * Complex.I * n * t))‖ =
-          ‖ (Complex.exp (2 * π * Complex.I * t))‖ ^ n := by
-            norm_cast
-            rw [← Complex.norm_pow];
-            congr;
-            rw [← exp_nat_mul];
-            ring_nf
-      rw [hw1]
-      norm_cast
-      apply pow_le_pow_left₀
-      · simp only [norm_nonneg]
-      have :=
-        BoundedContinuousFunction.norm_coe_le_norm
-          (BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K)) t
-      rw [norm_norm]
-      simpa [ctsExpTwoPiN] using this
+    have ineqe := ctsExpTwoPiN_exp_norm_le K n t
     apply mul_le_mul
     · simp
-    · simp only [Real.norm_eq_abs] at ineqe
-      convert ineqe
+    · convert ineqe using 2
+      exact abs_of_nonneg hr2
     · positivity
     positivity
 
@@ -210,7 +216,6 @@ theorem hasDerivAt_tsum_fun {α : Type _} (f : α → ℂ → ℂ)
     by
     intro y hy
     apply Summable.hasSum
-    simp?
     apply hf y hy
   apply hasDerivAt_of_tendstoLocallyUniformlyOn hs _ _ A hx
   · use fun n : Finset α => fun a => ∑ i ∈ n, derivWithin (fun z => f i z) s a
@@ -256,64 +261,17 @@ theorem iter_deriv_comp_bound3 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
     rw [isCompact_iff_isCompact_univ] at hK2
     apply hK2
   set r : ℝ := ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖
-  have hr : ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖ < 1 :=
-    by
-    rw [BoundedContinuousFunction.norm_lt_iff_of_compact]
-    · intro x; rw [BoundedContinuousFunction.mkOfCompact_apply]; simp_rw [ctsExpTwoPiN]
-      simp only [ContinuousMap.coe_mk]
-      apply exp_upperHalfPlane_lt_one ⟨x.1, hK1 x.2⟩
-    linarith
+  have hr : r < 1 := ctsExpTwoPiN_norm_lt_one K hK1
   have hr2 : 0 ≤ r := by apply norm_nonneg _
-  have hu : Summable fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k) * r ^ n)‖ :=
-    by
-    have : ∀ (n : ℕ), ((2 * ↑π)^(k))* ‖((n) ^ (k) * (r ^ n))‖ =
-      ‖((2 * ↑π * Complex.I * n) ^ (k) * r ^ n)‖ := by
-        intro n
-        norm_cast
-        simp only [Nat.cast_pow, norm_mul, norm_pow, Real.norm_eq_abs,
-          ofReal_mul, ofReal_ofNat, ofReal_pow, norm_ofNat, norm_real, norm_I,
-          mul_one, norm_natCast]
-        norm_cast
-        simp only [Nat.cast_pow]
-        have hh : |π| = π := by simp [Real.pi_pos.le]
-        rw [hh]
-        ring
-    apply Summable.congr _ this
-    rw [summable_mul_left_iff]
-    · apply summable_norm_pow_mul_geometric_of_norm_lt_one
-      convert hr
-      rw [norm_norm]
-    norm_cast
-    apply pow_ne_zero
-    apply mul_ne_zero
-    · linarith
-    apply Real.pi_ne_zero
-  use fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k) * r ^ n)‖, hu
+  have hu := ctsExpTwoPiN_summable_norm k hr hr2
+  use fun n : ℕ => ‖((2 * ↑π * Complex.I * n) ^ (k) * (r : ℂ) ^ n)‖, hu
   intro n t
   simp only [Complex.norm_mul, norm_pow, norm_ofNat, norm_real, Real.norm_eq_abs, norm_I, mul_one,
     RCLike.norm_natCast]
-  have ineqe : ‖(Complex.exp (2 * π * Complex.I * n * t))‖ ≤ ‖r‖ ^ n :=
-    by
-    have hw1 :
-      ‖ (Complex.exp (2 * π * Complex.I * n * t))‖ =
-        ‖ (Complex.exp (2 * π * Complex.I * t))‖ ^ n := by
-          norm_cast
-          rw [← Complex.norm_pow];
-          congr;
-          rw [← exp_nat_mul];
-          ring_nf
-    rw [hw1]
-    norm_cast
-    apply pow_le_pow_left₀
-    · simp only [norm_nonneg]
-    have :=
-      BoundedContinuousFunction.norm_coe_le_norm
-        (BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K)) t
-    rw [norm_norm]
-    simpa [ctsExpTwoPiN] using this
+  have ineqe := ctsExpTwoPiN_exp_norm_le K n t
   apply mul_le_mul
   · simp
-  · simp only [Real.norm_eq_abs] at ineqe
-    convert ineqe
+  · convert ineqe using 2
+    exact abs_of_nonneg hr2
   · positivity
   positivity

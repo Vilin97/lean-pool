@@ -43,8 +43,7 @@ infixr:70 " :>ₙ " => cases
 @[simp 1100] lemma ne_step_max (n m : ℕ) : n ≠ max n m + 1 :=
   ne_of_lt <| Nat.lt_succ_of_le <| by simp
 
-lemma ne_step_max' (n m : ℕ) : n ≠ max m n + 1 :=
-  ne_of_lt <| Nat.lt_succ_of_le <| by simp
+lemma ne_step_max' (n m : ℕ) : n ≠ max m n + 1 := ne_of_lt <| Nat.lt_succ_of_le <| by simp
 
 lemma rec_eq {α : Sort*} (a : α) (f₁ f₂ : ℕ → α → α) (n : ℕ) (H : ∀ m < n, ∀ a, f₁ m a = f₂ m a) :
     (n.rec a f₁ : α) = n.rec a f₂ := by
@@ -86,8 +85,7 @@ infixr:70 " :> " => vecCons
     (a :> s) (Fin.last (n + 1)) = s (Fin.last n) := vecCons_succ (Fin.last n)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def vecConsLast {n : ℕ} (t : Fin n → α) (h : α) : Fin n.succ → α :=
-  Fin.lastCases h t
+def vecConsLast {n : ℕ} (t : Fin n → α) (h : α) : Fin n.succ → α := Fin.lastCases h t
 
 @[simp] lemma cons_app_one {n : ℕ} (a : α) (s : Fin n.succ → α) : (a :> s) 1 = s 0 := rfl
 
@@ -297,14 +295,12 @@ end Matrix
 namespace DMatrix
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def vecEmpty : Fin 0 → α :=
-  Fin.elim0
+def vecEmpty : Fin 0 → α := Fin.elim0
 
 variable {n} {α : Fin (n + 1) → Type*}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def vecCons (h : α 0) (t : (i : Fin n) → α i.succ) : (i : Fin n.succ) → α i :=
-  Fin.cons h t
+def vecCons (h : α 0) (t : (i : Fin n) → α i.succ) : (i : Fin n.succ) → α i := Fin.cons h t
 
 /-- Imported declaration from the Incompleteness formalization. -/
 infixr:70 " ::> " => vecCons

@@ -70,8 +70,7 @@ class Boldface {k} (P : (Fin k → V) → Prop) : Prop where
   definable : ∃ φ : ℌ.Semiformula V k, DefinedWithParam P φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev DefinedPred (P : V → Prop) (φ : ℌ.Semisentence 1) : Prop :=
-  Defined (fun v ↦ P (v 0)) φ
+abbrev DefinedPred (P : V → Prop) (φ : ℌ.Semisentence 1) : Prop := Defined (fun v ↦ P (v 0)) φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev DefinedRel (R : V → V → Prop) (φ : ℌ.Semisentence 2) : Prop :=
@@ -94,8 +93,7 @@ abbrev DefinedFunction {k} (f : (Fin k → V) → V) (φ : ℌ.Semisentence (k +
 variable (ℌ)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-abbrev DefinedFunction₀ (c : V) (φ : ℌ.Semisentence 1) : Prop :=
-  DefinedFunction (fun _ => c) φ
+abbrev DefinedFunction₀ (c : V) (φ : ℌ.Semisentence 1) : Prop := DefinedFunction (fun _ => c) φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev DefinedFunction₁ (f : V → V) (φ : ℌ.Semisentence 2) : Prop :=

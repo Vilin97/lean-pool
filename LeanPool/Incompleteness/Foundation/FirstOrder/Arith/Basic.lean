@@ -301,8 +301,7 @@ noncomputable instance _root_.LO.FirstOrder.Theory.EQ'.subTheoryOfEQ : (𝐄𝐐
   Entailment.WeakerThan.ofAxm! <| by
   rintro φ h
   rcases (show 𝐄𝐐' φ from h)
-  case refl =>
-    apply Entailment.by_axm _ eqAxiom.refl
+  case refl => apply Entailment.by_axm _ eqAxiom.refl
   case replace φ =>
     apply complete ?_
     apply EQ.provOf.{_, 0} _ ?_

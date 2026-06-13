@@ -198,8 +198,7 @@ lemma seminorm_le_nuclear_expansion
       calc |hN.coeff m f| * q (hN.basis m)
           ≤ |hN.coeff m f| * ((C₁ : ℝ) * (s₁.sup hN.p) (hN.basis m)) := by
             apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
-            have h := hqbound (hN.basis m)
-            exact h
+            exact hqbound (hN.basis m)
         _ ≤ |hN.coeff m f| * ((C₁ : ℝ) * (D * (1 + (m : ℝ)) ^ S)) := by
             apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
             exact mul_le_mul_of_nonneg_left (hDbound m) (le_of_lt hC₁_pos)

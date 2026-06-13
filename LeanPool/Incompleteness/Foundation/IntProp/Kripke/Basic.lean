@@ -44,8 +44,7 @@ variable {F : Frame} {x y z : F.World}
 
 @[refl, simp] lemma rel_refl' : x ≺ x := F.rel_refl.refl x
 
-@[trans] lemma rel_trans' : x ≺ y → y ≺ z → x ≺ z :=
-  F.rel_trans.trans x y z
+@[trans] lemma rel_trans' : x ≺ y → y ≺ z → x ≺ z := F.rel_trans.trans x y z
 
 end Frame
 

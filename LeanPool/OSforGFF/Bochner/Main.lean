@@ -660,8 +660,8 @@ lemma measure_of_pd_l1 (φ : V → ℂ)
     change Continuous (VectorFourier.fourierIntegral Real.fourierChar volume (innerₗ V) ψ)
     exact VectorFourier.fourierIntegral_continuous Real.continuous_fourierChar
       continuous_inner hψ_int
-  have hdensity_meas : Measurable density := by
-    exact ENNReal.measurable_ofReal.comp ((Complex.continuous_re.comp hψ_ft_cont).measurable)
+  have hdensity_meas : Measurable density :=
+    ENNReal.measurable_ofReal.comp ((Complex.continuous_re.comp hψ_ft_cont).measurable)
   set μ_raw := volume.withDensity density
   -- Step 8: Total mass = ψ(0) = φ(0) = 1 (Fourier inversion at 0)
   have htotal : μ_raw Set.univ = 1 := by

@@ -207,8 +207,7 @@ instance (i) : 𝐈open wkn 𝐈Sgi :=
 lemma iSigma_weakerThan_of_le {s₁ s₂} (h : s₁ ≤ s₂) : 𝐈Sg s₁ wkn 𝐈Sg s₂ :=
   Entailment.WeakerThan.ofSubset (iSigma_subset_mono h)
 
-instance : 𝐈Sg0 wkn 𝐈Sg1 :=
-  iSigma_weakerThan_of_le (by decide)
+instance : 𝐈Sg0 wkn 𝐈Sg1 := iSigma_weakerThan_of_le (by decide)
 
 instance (i) : 𝐈Sgi wkn 𝐏𝐀 :=
   Entailment.WeakerThan.ofSubset <| Set.union_subset_union_right _  <|

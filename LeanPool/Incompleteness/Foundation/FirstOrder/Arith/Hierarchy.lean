@@ -89,8 +89,7 @@ lemma zero_eq_alt {φ : Semiformula L ξ n} : Hierarchy Γ 0 φ → Hierarchy Γ
   induction h <;> try
     simp only [verum, falsum, rel, nrel, and_iff, or_iff, Nat.add_eq_zero_iff,
       one_ne_zero, and_false, and_self] at hz ⊢
-  case and _ _ ihp ihq =>
-    exact ⟨ihp hz, ihq hz⟩
+  case and _ _ ihp ihq => exact ⟨ihp hz, ihq hz⟩
   case or _ _ ihp ihq => exact ⟨ihp hz, ihq hz⟩
   case ball pos _ ih => exact ball pos (ih hz)
   case bex pos _ ih => exact bex pos (ih hz)

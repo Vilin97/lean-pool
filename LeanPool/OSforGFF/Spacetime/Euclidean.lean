@@ -255,8 +255,7 @@ private def fderiv_act_inv_eq_linear (g : E) :
   ext x v i
   let L := g⁻¹.R.toContinuousLinearMap
   calc (fderiv ℝ (act g⁻¹) x v) i
-      = (fderiv ℝ (fun y => L y + g⁻¹.t) x v) i := rfl
-      _ = ((fderiv ℝ (fun y => L y + g⁻¹.t) x) v) i := rfl
+      = ((fderiv ℝ (fun y => L y + g⁻¹.t) x) v) i := rfl
       _ = ((fderiv ℝ L x) v) i := by rw [fderiv_linear_add_const]
       _ = (L v) i := by rw [ContinuousLinearMap.fderiv]
 
@@ -275,11 +274,8 @@ private def act_inv_poly_bound (g : E) :
       ≤ ‖g⁻¹.R x‖ + ‖g⁻¹.t‖ := norm_add_le _ _
     _ = ‖x‖ + ‖g⁻¹.t‖ := by rw [g⁻¹.R.norm_map x]
     _ ≤ (1 + ‖g⁻¹.t‖) * (1 + ‖x‖)^1 := by
-        simp only [pow_one]
-        ring_nf
-        have h1 : 0 ≤ ‖x‖ := norm_nonneg x
-        have h2 : 0 ≤ ‖g⁻¹.t‖ := norm_nonneg _
-        linarith [mul_nonneg h2 h1]
+        nlinarith [norm_nonneg x, norm_nonneg g⁻¹.t,
+          mul_nonneg (norm_nonneg g⁻¹.t) (norm_nonneg x)]
 /-! ### Unified Action of Euclidean group on function spaces ---------
 
     UNIFIED EUCLIDEAN ACTION FRAMEWORK
@@ -326,14 +322,11 @@ lemma euclidean_pullback_polynomial_bounds (g : E) :
   simp only [pow_one, euclideanPullback, act]
   have h_iso : ‖g⁻¹.R x‖ = ‖x‖ := g⁻¹.R.norm_map x
   rw [← h_iso]
-  have h_ineq : ‖g⁻¹.R x‖ ≤ ‖g⁻¹.R x + g⁻¹.t‖ + ‖g⁻¹.t‖ := norm_le_add_norm_add _ _
   calc ‖g⁻¹.R x‖
-      ≤ ‖g⁻¹.R x + g⁻¹.t‖ + ‖g⁻¹.t‖ := h_ineq
+      ≤ ‖g⁻¹.R x + g⁻¹.t‖ + ‖g⁻¹.t‖ := norm_le_add_norm_add _ _
     _ ≤ (1 + ‖g⁻¹.t‖) * (1 + ‖g⁻¹.R x + g⁻¹.t‖) := by
-        have h1 : 0 ≤ ‖g⁻¹.R x + g⁻¹.t‖ := norm_nonneg _
-        have h2 : 0 ≤ ‖g⁻¹.t‖ := norm_nonneg _
-        ring_nf
-        linarith [mul_nonneg h2 h1]
+        nlinarith [norm_nonneg (g⁻¹.R x + g⁻¹.t), norm_nonneg g⁻¹.t,
+          mul_nonneg (norm_nonneg g⁻¹.t) (norm_nonneg (g⁻¹.R x + g⁻¹.t))]
 
 /-- Action of Euclidean group on test functions via pullback.
     For g ∈ E and f ∈ TestFunctionℂ, define (g • f)(x) = f(g⁻¹ • x).

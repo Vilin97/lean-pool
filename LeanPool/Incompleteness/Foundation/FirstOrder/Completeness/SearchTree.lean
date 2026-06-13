@@ -228,8 +228,7 @@ lemma chain_spec (nwf : ¬WellFounded (SearchTree.Lt T Γ)) (s) : chainAt[s + 1]
 omit [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)] in
 lemma chain_monotone (nwf : ¬WellFounded (SearchTree.Lt T Γ)) {s u : ℕ} (h : s ≤ u) :
     chainAt[s] ⊆ chainAt[u] := by
-  suffices ∀ d, chainAt[s] ⊆ chainAt[s + d] by
-    simpa[Nat.add_sub_of_le h] using this (u - s)
+  suffices ∀ d, chainAt[s] ⊆ chainAt[s + d] by simpa[Nat.add_sub_of_le h] using this (u - s)
   intro d
   induction d with
   | zero => simp
@@ -291,10 +290,8 @@ lemma chainSet_and (nwf : ¬WellFounded (SearchTree.Lt T Γ)) {φ ψ : Syntactic
     chain_spec' nwf _ _
   generalize hΔ : chainAt[(encode <| Code.and φ ψ).pair s + 1] = Δ at this
   rcases this
-  case and₁ =>
-    exact Or.inl (Set.mem_iUnion.mpr ⟨(encode <| Code.and φ ψ).pair s + 1, by simp[hΔ]⟩)
-  case and₂ =>
-    exact Or.inr (Set.mem_iUnion.mpr ⟨(encode <| Code.and φ ψ).pair s + 1, by simp[hΔ]⟩)
+  case and₁ => exact Or.inl (Set.mem_iUnion.mpr ⟨(encode <| Code.and φ ψ).pair s + 1, by simp[hΔ]⟩)
+  case and₂ => exact Or.inr (Set.mem_iUnion.mpr ⟨(encode <| Code.and φ ψ).pair s + 1, by simp[hΔ]⟩)
   case andRefl =>
     have : φ ⋏ ψ ∈ chainAt[(encode <| Code.and φ ψ).pair s] :=
       chain_monotone nwf (Nat.right_le_pair _ _) hs

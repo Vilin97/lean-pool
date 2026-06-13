@@ -552,8 +552,8 @@ theorem orthogonal_projection_is_le_iff_commutes [InnerProductSpace ℂ E]
 
 theorem orthogonalProjection.is_le_iff_subset [InnerProductSpace ℂ E] {U V : Submodule ℂ E}
     [CompleteSpace E]
-    [CompleteSpace U] [CompleteSpace V] : ↥P U ≤ ↥P V ↔ U ≤ V := by
-  exact Submodule.starProjection_le_starProjection_iff
+    [CompleteSpace U] [CompleteSpace V] : ↥P U ≤ ↥P V ↔ U ≤ V :=
+  Submodule.starProjection_le_starProjection_iff
 
 theorem Submodule.map_to_linearMap [Module 𝕜 E] {p : E →L[𝕜] E} {U : Submodule 𝕜 E}
     {x : E} :
@@ -856,8 +856,8 @@ theorem Submodule.is_pairwise_orthogonal_iff_orthogonal_projection_comp_eq_zero
 
 --
 theorem orthogonalProjection.orthogonal_complement_eq [InnerProductSpace 𝕜 E]
-    (U : Submodule 𝕜 E) [HasOrthogonalProjection U] : ↥P Uᗮ = 1 - ↥P U := by
-  exact Submodule.starProjection_orthogonal' U
+    (U : Submodule 𝕜 E) [HasOrthogonalProjection U] : ↥P Uᗮ = 1 - ↥P U :=
+  Submodule.starProjection_orthogonal' U
 
 example [InnerProductSpace ℂ E] {U W : Submodule ℂ E} [CompleteSpace E] [CompleteSpace U]
   [CompleteSpace W] :

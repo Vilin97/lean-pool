@@ -536,8 +536,7 @@ lemma conj_shift (Γ : List L.Formula) : (⋀Γ).shift = ⋀(Γ.map .shift) := b
     induction Γ using List.induction_with_singleton
     case hnil => simp
     case hsingle => simp [List.conj₂]
-    case hcons p ps hps ih =>
-      simp [hps, ih]
+    case hcons p ps hps ih => simp [hps, ih]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def generalize {Γ} {p : L.Semiformula (0 + 1)} (d : Γ.map .shift ⊢[T] p.free) : Γ ⊢[T] p.all := by

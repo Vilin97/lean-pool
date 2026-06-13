@@ -98,8 +98,8 @@ lemma integral_neg_invariance
   classical
   -- Step 1: Define the pushforward measure
   let μneg := μ.toMeasure.map negMap
-  have hμneg_prob : IsProbabilityMeasure μneg := by
-    exact Measure.isProbabilityMeasure_map (Measurable.aemeasurable negMap_measurable)
+  have hμneg_prob : IsProbabilityMeasure μneg :=
+    Measure.isProbabilityMeasure_map (Measurable.aemeasurable negMap_measurable)
   -- Step 2: Show characteristic functionals are equal
   have hCF_equal : ∀ g : TestFunction,
       ∫ ω, Complex.exp (Complex.I * (distributionPairing ω g)) ∂μneg
@@ -173,14 +173,13 @@ lemma integral_neg_invariance
     exact minlos_gaussian_uniqueness h_cf_cont C.gaussian_cf_pd h_cf_norm
       (fun g => (hCF_equal g).trans (h_realCF g)) h_realCF
   have hμeq : μneg = μ.toMeasure := by
-    have h := congrArg ProbabilityMeasure.toMeasure hμeq_prob
-    exact h
+    exact congrArg ProbabilityMeasure.toMeasure hμeq_prob
   -- Step 4: Use the equality of measures to get the integral identity
   have hf_aestrongly_measurable : AEStronglyMeasurable f μneg := by
     rw [hμeq]
     exact hInt.aestronglyMeasurable
-  have h_cov : ∫ ω, f ω ∂μneg = ∫ ω, f (negMap ω) ∂μ.toMeasure := by
-    exact integral_map (Measurable.aemeasurable negMap_measurable) hf_aestrongly_measurable
+  have h_cov : ∫ ω, f ω ∂μneg = ∫ ω, f (negMap ω) ∂μ.toMeasure :=
+    integral_map (Measurable.aemeasurable negMap_measurable) hf_aestrongly_measurable
   rw [hμeq] at h_cov
   rw [h_cov]
   simp [negMap]

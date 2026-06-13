@@ -128,8 +128,7 @@ lemma cauchy_schwarz_time_integral_pointwise (A : ℝ → Ω → ℂ) (T : ℝ) 
     (hf_sq : IntegrableOn (fun s => ‖A s ω‖ ^ 2) (Icc 0 T) volume) :
     ‖∫ s in Icc 0 T, A s ω‖ ^ 2 ≤ T * ∫ s in Icc 0 T, ‖A s ω‖ ^ 2 := by
   have hab : (0 : ℝ) ≤ T := le_of_lt hT
-  have h := sq_setIntegral_le_measure_mul_setIntegral_sq_proved hab hf_sq
-  simpa only [sub_zero] using h
+  simpa only [sub_zero] using sq_setIntegral_le_measure_mul_setIntegral_sq_proved hab hf_sq
 
 omit [MeasurableSpace Ω] in
 /-- The scaled time average satisfies a pointwise L² bound. -/

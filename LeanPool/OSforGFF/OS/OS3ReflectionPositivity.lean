@@ -434,8 +434,7 @@ lemma gaussianFreeField_OS3_matrix_real
         ((f i).val - QFT.compTimeReflectionReal (f j).val)).re
       = Z i * Z j * E i j := by
     intro i j
-    have h_entry := gaussianFreeField_real_entry_factor (m := m) (f := f i) (g := f j)
-    simpa [Z, E, R] using h_entry
+    simpa [Z, E, R] using gaussianFreeField_real_entry_factor (m := m) (f := f i) (g := f j)
   -- Step 2: Rewrite the sum using the factorisation
   have h_sum₁ :
       (∑ i, ∑ j, c i * c j *

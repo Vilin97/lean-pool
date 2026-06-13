@@ -58,10 +58,8 @@ theorem localDegreeInterval
     · by_cases hjm : j q ≤ M
       · simp [hjm]
       · have hjgt : M < j q := lt_of_not_ge hjm
-        have hidx : j q - M ≤ blockIndexMulti α q := by
-          omega
-        have hsq : (j q - M) ^ 2 ≤ (blockIndexMulti α q) ^ 2 := by
-          exact Nat.pow_le_pow_left hidx 2
+        have hidx : j q - M ≤ blockIndexMulti α q := by omega
+        have hsq : (j q - M) ^ 2 ≤ (blockIndexMulti α q) ^ 2 := by exact Nat.pow_le_pow_left hidx 2
         have hsqrt : (blockIndexMulti α q) ^ 2 ≤ α q := by
           simpa [blockIndexMulti, HermiteLEAN.blockIndex, pow_two] using Nat.sqrt_le' (α q)
         have hle : (j q - M) ^ 2 ≤ α q := hsq.trans hsqrt
@@ -123,8 +121,7 @@ theorem degreeIntervalOrder
       have hstep : (j q) ^ 2 + 1 ≤ (j q + 1) ^ 2 := by
         ring_nf
         omega
-      have hmono : (j q + 1) ^ 2 ≤ (j q + M + 1) ^ 2 := by
-        exact Nat.pow_le_pow_left (by omega) 2
+      have hmono : (j q + 1) ^ 2 ≤ (j q + M + 1) ^ 2 := by exact Nat.pow_le_pow_left (by omega) 2
       omega
     exact hsquare.trans hupper
   have hinterval :
@@ -181,8 +178,7 @@ theorem lowAnnulusDegreeWidthBound
     have hqR : j q ≤ R := by
       dsimp [R, annulusRadius]
       exact Finset.le_sup (s := Finset.univ) (f := fun q : Fin d => j q) (by simp)
-    have hmono : j q + M + 1 ≤ R + M + 1 := by
-      omega
+    have hmono : j q + M + 1 ≤ R + M + 1 := by omega
     have hsquare : (j q + M + 1) ^ 2 ≤ (R + M + 1) ^ 2 := Nat.pow_le_pow_left hmono 2
     omega
   have hupper_sum : degreeIntervalUpper j M ≤ d * (((R + M + 1) ^ 2) - 1) := by
@@ -197,8 +193,7 @@ theorem lowAnnulusDegreeWidthBound
       degreeWidth j M ≤ degreeIntervalUpper j M + 1 := degreeWidth_le_upper_succ j M
       _ ≤ d * (((R + M + 1) ^ 2) - 1) + 1 := Nat.add_le_add_right hupper_sum 1
   have hA : 1 ≤ (R + M + 1) ^ 2 := by
-    have hbase : 0 < R + M + 1 := by
-      omega
+    have hbase : 0 < R + M + 1 := by omega
     exact Nat.succ_le_of_lt (Nat.pow_pos hbase)
   have hfinal : d * (((R + M + 1) ^ 2) - 1) + 1 ≤ d * (R + M + 1) ^ 2 := by
     calc
@@ -223,16 +218,14 @@ theorem uniformLowAnnulusWidthBound
     have hqT : j q + 1 ≤ T := by
       have : j q < T := lt_of_le_of_lt hqR (by simpa [T] using hj)
       exact Nat.succ_le_of_lt this
-    have hmono : j q + M + 1 ≤ T + M := by
-      omega
+    have hmono : j q + M + 1 ≤ T + M := by omega
     have hsquare : (j q + M + 1) ^ 2 ≤ (T + M) ^ 2 := Nat.pow_le_pow_left hmono 2
     omega
   have hupper_sum : degreeIntervalUpper j M ≤ d * (((T + M) ^ 2) - 1) := by
     dsimp [degreeIntervalUpper]
     calc
       ∑ q : Fin d, ((j q + M + 1) ^ 2 - 1)
-          ≤ ∑ q : Fin d, (((T + M) ^ 2) - 1) := by
-              exact Finset.sum_le_sum fun q _ => hcoord_upper q
+          ≤ ∑ q : Fin d, (((T + M) ^ 2) - 1) := by exact Finset.sum_le_sum fun q _ => hcoord_upper q
       _ = d * (((T + M) ^ 2) - 1) := by simp
   have hmain : degreeWidth j M ≤ d * (((T + M) ^ 2) - 1) + 1 := by
     calc
@@ -246,8 +239,7 @@ theorem uniformLowAnnulusWidthBound
       exact Nat.mul_pos (Nat.mul_pos (by decide : 0 < 120) hdpos) hodd
     omega
   have hA : 1 ≤ (T + M) ^ 2 := by
-    have hbase : 0 < T + M := by
-      omega
+    have hbase : 0 < T + M := by omega
     exact Nat.succ_le_of_lt (Nat.pow_pos hbase)
   have hfinal : d * (((T + M) ^ 2) - 1) + 1 ≤ d * (T + M) ^ 2 := by
     calc
@@ -283,11 +275,9 @@ private theorem coordGapEqInt
     (n M : ℕ) (hMn : M ≤ n) :
     (((((n + M + 1) ^ 2 - 1) - (n - M) ^ 2 + 1 : ℕ) : ℤ)) =
       (2 * M + 1) * (2 * n + 1) := by
-  have h1 : 1 ≤ (n + M + 1) ^ 2 := by
-    exact Nat.succ_le_of_lt (Nat.pow_pos (by omega))
+  have h1 : 1 ≤ (n + M + 1) ^ 2 := by exact Nat.succ_le_of_lt (Nat.pow_pos (by omega))
   have h2 : (n - M) ^ 2 ≤ (n + M + 1) ^ 2 - 1 := by
-    have hklt : n - M < n + M + 1 := by
-      omega
+    have hklt : n - M < n + M + 1 := by omega
     have hsq : (n - M) ^ 2 < (n + M + 1) ^ 2 := by
       exact Nat.pow_lt_pow_left hklt (by decide : 2 ≠ 0)
     omega
@@ -339,8 +329,7 @@ private theorem degreeWidth_eq_gap_sum
     · have hMx : M ≤ j x := by
         omega
       rw [max_eq_left hMx]
-      have hklt : j x - M < j x + M + 1 := by
-        omega
+      have hklt : j x - M < j x + M + 1 := by omega
       have hsq : (j x - M) ^ 2 < (j x + M + 1) ^ 2 := by
         exact Nat.pow_lt_pow_left hklt (by decide : 2 ≠ 0)
       omega
@@ -362,8 +351,7 @@ theorem highAnnulusDegreeBounds
       degreeWidth j M ≤ d * (2 * M + 1) * (2 * annulusRadius j + 1) := by
   let R := annulusRadius j
   let C := (2 * M + 1) * (2 * R + 1)
-  have hMR : M + 1 ≤ R := by
-    simpa [R] using hj
+  have hMR : M + 1 ≤ R := by simpa [R] using hj
   have hlower : (annulusRadius j - M) ^ 2 ≤ degreeIntervalLower j M := by
     exact highAnnulusDegreeLowerBound (hd := hd) (j := j) (M := M) hj
   rcases annulusRadius_exists_coord (hd := hd) (j := j) with ⟨q0, hq0⟩
@@ -400,8 +388,7 @@ theorem highAnnulusDegreeBounds
   have hwidth : degreeWidth j M ≤ d * C := by
     rw [degreeWidth_eq_gap_sum, ← hgap'_eq]
     calc
-      (∑ q : Fin d, gap' q) ≤ ∑ q : Fin d, C := by
-        exact Finset.sum_le_sum fun q _ => hpointwise q
+      (∑ q : Fin d, gap' q) ≤ ∑ q : Fin d, C := by exact Finset.sum_le_sum fun q _ => hpointwise q
       _ = d * C := by simp
   exact ⟨hlower, by simpa [C, R, Nat.mul_assoc] using hwidth⟩
 
@@ -419,24 +406,20 @@ theorem highFrequencyThreshold
   let x := R - M
   have hM1 : M + 1 ≤ degreeThreshold d M := by
     unfold degreeThreshold
-    have hdpos : 0 < d := by
-      omega
-    have hodd : 0 < 2 * M + 1 := by
-      omega
+    have hdpos : 0 < d := by omega
+    have hodd : 0 < 2 * M + 1 := by omega
     have hprod : 0 < 120 * d * (2 * M + 1) := by
       exact Nat.mul_pos (Nat.mul_pos (by decide) hdpos) hodd
     omega
   have hhigh' : M + 1 ≤ annulusRadius j := le_trans hM1 hj
-  have hhigh : M + 1 ≤ R := by
-    simpa [R] using hhigh'
+  have hhigh : M + 1 ≤ R := by simpa [R] using hhigh'
   rcases highAnnulusDegreeBounds (hd := hd) (j := j) (M := M) hhigh with ⟨hlower, hwidth⟩
   have hx_ge : 120 * d * (2 * M + 1) ≤ x := by
     dsimp [x, R]
     unfold degreeThreshold at hj
     omega
   have hM_bound : 2 * M + 1 ≤ x := by
-    have h1 : 2 * M + 1 ≤ 120 * d * (2 * M + 1) := by
-      nlinarith
+    have h1 : 2 * M + 1 ≤ 120 * d * (2 * M + 1) := by nlinarith
     exact le_trans h1 hx_ge
   have hR_bound : 2 * R + 1 ≤ 3 * x := by
     dsimp [x]
@@ -445,10 +428,8 @@ theorem highFrequencyThreshold
     have hstep1 :
         40 * d * (2 * M + 1) * (2 * R + 1) ≤ 40 * d * (2 * M + 1) * (3 * x) := by
       gcongr
-    have hstep2 : 40 * d * (2 * M + 1) * (3 * x) = (120 * d * (2 * M + 1)) * x := by
-      ring
-    have hstep3 : (120 * d * (2 * M + 1)) * x ≤ x * x := by
-      exact Nat.mul_le_mul_right x hx_ge
+    have hstep2 : 40 * d * (2 * M + 1) * (3 * x) = (120 * d * (2 * M + 1)) * x := by ring
+    have hstep3 : (120 * d * (2 * M + 1)) * x ≤ x * x := by exact Nat.mul_le_mul_right x hx_ge
     calc
       40 * d * (2 * M + 1) * (2 * R + 1) ≤ 40 * d * (2 * M + 1) * (3 * x) := hstep1
       _ = (120 * d * (2 * M + 1)) * x := hstep2

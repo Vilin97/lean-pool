@@ -84,8 +84,7 @@ private lemma rho_sq_lower (α w z : ℂ)
       (1 / 2) * (rho (α * z)) ^ 2 -
         ‖w - z‖ ^ 2 := by
   have h1 := rho_pointwise_lower (α * w) (α * z)
-  have h2 : ‖α * w - α * z‖ = ‖w - z‖ := by
-    rw [← mul_sub, norm_mul, hα, one_mul]
+  have h2 : ‖α * w - α * z‖ = ‖w - z‖ := by rw [← mul_sub, norm_mul, hα, one_mul]
   exact nonneg_safe_square _ _ _
     (rho_nonneg' _) (rho_nonneg' _)
     (norm_nonneg _) (by linarith)
