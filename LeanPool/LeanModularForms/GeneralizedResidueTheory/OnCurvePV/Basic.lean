@@ -138,8 +138,7 @@ lemma pv_limit_via_dyadic {γ : ℝ → ℂ} {a b t₀ : ℝ} {L : ℂ}
           _ ≤ K * δ / 2 ^ M + (2 * K * δ / 2 ^ N - 2 * K * δ / 2 ^ M) := by
               linarith [h_first_piece, h_sum_bound]
           _ = 2 * K * δ / 2 ^ N - K * δ / 2 ^ M := by ring
-          _ ≤ 2 * K * δ / 2 ^ N := by
-              linarith [show (0 : ℝ) ≤ K * δ / 2 ^ M from by positivity]
+          _ ≤ 2 * K * δ / 2 ^ N := by linarith [show (0 : ℝ) ≤ K * δ / 2 ^ M from by positivity]
     have hN_ge_N₂ : N ≥ N₂ := le_max_right _ _
     have h_pow_le : (2 : ℝ) ^ N₂ ≤ 2 ^ N :=
       pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hN_ge_N₂
@@ -272,8 +271,7 @@ lemma arc_angle_injective {t t' : ℝ}
   obtain ⟨n, hn⟩ := h_eq
   have h_vals : Real.pi * (1 + t) / 6 - Real.pi * (1 + t') / 6 = 2 * Real.pi * ↑n := by
     have : (↑(Real.pi * (1 + t) / 6) : ℂ) * I - ↑(Real.pi * (1 + t') / 6) * I =
-        ↑(2 * Real.pi * ↑n) * I := by
-      rw [hn]; push_cast; ring
+        ↑(2 * Real.pi * ↑n) * I := by rw [hn]; push_cast; ring
     have h2 : (↑(Real.pi * (1 + t) / 6 - Real.pi * (1 + t') / 6) : ℂ) * I =
         ↑(2 * Real.pi * ↑n) * I := by
       rw [show (↑(Real.pi * (1 + t) / 6 - Real.pi * (1 + t') / 6) : ℂ) * I =

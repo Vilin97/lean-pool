@@ -42,8 +42,7 @@ private lemma segment_subset_convex {S : Set ℂ} (hS : Convex ℝ S)
     {c z : ℂ} (hc : c ∈ S) (hz : z ∈ S) :
     ∀ t ∈ Icc (0 : ℝ) 1, c + t • (z - c) ∈ S := by
   intro t ht
-  have heq : c + t • (z - c) = (1 - t) • c + t • z := by
-    module
+  have heq : c + t • (z - c) = (1 - t) • c + t • z := by module
   rw [heq]
   exact hS hc hz (by linarith [ht.2]) ht.1 (by linarith [ht.1])
 
@@ -130,8 +129,7 @@ private lemma integral_t_mul_deriv_eq {f : ℂ → ℂ} {S : Set ℂ}
   simp only [u, v, u', v'] at h_parts
   simp only [ofReal_one, ofReal_zero, one_mul, zero_mul,
     sub_zero] at h_parts
-  have hv1 : f (c + (1 : ℝ) • (z - c)) = f z := by
-    simp
+  have hv1 : f (c + (1 : ℝ) • (z - c)) = f z := by simp
   rw [hv1] at h_parts
   exact h_parts
 
@@ -220,8 +218,7 @@ private lemma segmentIntegrand_lipschitzOnWith {f : ℂ → ℂ}
   have hgy : c + t • (y - c) ∈ S :=
     segment_subset_convex hS_convex hc (hε_ball hy) t ht
   have h_diff :
-      (c + t • (x - c)) - (c + t • (y - c)) = t • (x - y) := by
-    module
+      (c + t • (x - c)) - (c + t • (y - c)) = t • (x - y) := by module
   have hconv_seg : Convex ℝ
       (segment ℝ (c + t • (x - c)) (c + t • (y - c))) :=
     convex_segment _ _
@@ -259,8 +256,7 @@ private lemma segmentIntegrand_lipschitzOnWith {f : ℂ → ℂ}
     _ ≤ M * ‖(c + t • (x - c)) - (c + t • (y - c))‖ :=
         h_bound
     _ = M * ‖t • (x - y)‖ := by rw [h_diff]
-    _ = M * (|t| * ‖x - y‖) := by
-        rw [norm_smul]; simp only [Real.norm_eq_abs]
+    _ = M * (|t| * ‖x - y‖) := by rw [norm_smul]; simp only [Real.norm_eq_abs]
     _ = |t| * M * ‖x - y‖ := by ring
     _ = |t| * M * dist x y := by rw [dist_eq_norm]
     _ ≤ Real.toNNReal (|t| * M) * dist x y := by

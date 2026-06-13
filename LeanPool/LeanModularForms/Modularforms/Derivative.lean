@@ -434,8 +434,7 @@ theorem serre_D_mul (k₁ k₂ : ℤ) (F G : ℍ → ℂ) (hF : MDiff F)
   calc
     serreD (k₁ + k₂) (F * G)
     _ = D (F * G) - (k₁ + k₂) * 12⁻¹ * E₂ * (F * G) := by rfl
-    _ = (D F * G + F * D G) - (k₁ + k₂) * 12⁻¹ * E₂ * (F * G) := by
-        rw [D_mul F G hF hG]
+    _ = (D F * G + F * D G) - (k₁ + k₂) * 12⁻¹ * E₂ * (F * G) := by rw [D_mul F G hF hG]
     _ = (D F - k₁ * 12⁻¹ * E₂ * F) * G
         + F * (D G - k₂ * 12⁻¹ * E₂ * G) := by ring_nf
     _ = (serreD k₁ F) * G + F * (serreD k₂ G) := by rfl
@@ -569,8 +568,7 @@ lemma D_slash (k : ℤ) (F : ℍ → ℂ) (hF : MDiff F) (γ : SL(2, ℤ)) :
         simp only [gz] at h ⊢
         exact h
       -- im(num/denom) > 0 follows from gz ∈ ℍ
-      have hmob_im : (num γ w / denom γ w).im > 0 := by
-        rw [← hsmul_coe]; exact gz.im_pos
+      have hmob_im : (num γ w / denom γ w).im > 0 := by rw [← hsmul_coe]; exact gz.im_pos
       -- Now F(gz) = F(ofComplex(num/denom)) = (F ∘ ofComplex)(num/denom)
       -- gz = γ • ⟨w, hw⟩, so F gz = F (γ • ⟨w, hw⟩)
       congr 1
@@ -965,8 +963,7 @@ theorem serre_D_isBoundedAtImInfty_of_bounded {f : ℍ → ℂ} (k : ℂ)
 /-- A level-1 modular form is invariant under slash action by any element of SL(2,ℤ). -/
 @[simp]
 lemma ModularForm.slash_eq_self {k : ℤ} (f : ModularForm (Gamma 1) k) (γ : SL(2, ℤ)) :
-    (f : ℍ → ℂ) ∣[k] γ = f := by
-  rw [SL_slash]; exact f.slash_action_eq' _ ⟨γ, mem_Gamma_one γ, rfl⟩
+    (f : ℍ → ℂ) ∣[k] γ = f := by rw [SL_slash]; exact f.slash_action_eq' _ ⟨γ, mem_Gamma_one γ, rfl⟩
 
 /-- The Serre derivative of a weight-k level-1 modular form is a weight-(k+2) modular form. -/
 noncomputable def serreDModularForm (k : ℤ) (f : ModularForm (Gamma 1) k) :

@@ -298,8 +298,7 @@ private lemma exit_time_tendsto_right
     have hε_lt_t₁ : ε < ‖γ.toFun t₁ - s‖ := lt_of_lt_of_le hε_lt (min_le_left _ _)
     by_contra h_not_lt
     push Not at h_not_lt
-    have ht₁_le_σ₂ : t₁ ≤ σ₂ ε := by
-      simp only [ht₁_def]; linarith [min_le_left η (r - t₀)]
+    have ht₁_le_σ₂ : t₁ ≤ σ₂ ε := by simp only [ht₁_def]; linarith [min_le_left η (r - t₀)]
     have := hσ₂_mid t₁ ⟨ht₁_gt.le, ht₁_le_σ₂⟩
     linarith
   · filter_upwards [Ioo_mem_nhdsGT hδ] with ε hε
@@ -336,8 +335,7 @@ private lemma exit_time_tendsto_left
     have hε_lt_t₁ : ε < ‖γ.toFun t₁ - s‖ := lt_of_lt_of_le hε_lt (min_le_left _ _)
     by_contra h_not_lt
     push Not at h_not_lt
-    have hσ₁_le_t₁ : σ₁ ε ≤ t₁ := by
-      simp only [ht₁_def]; linarith [min_le_left η (t₀ - l)]
+    have hσ₁_le_t₁ : σ₁ ε ≤ t₁ := by simp only [ht₁_def]; linarith [min_le_left η (t₀ - l)]
     have := hσ₁_mid t₁ ⟨hσ₁_le_t₁, ht₁_lt.le⟩
     linarith
   · filter_upwards [Ioo_mem_nhdsGT hδ] with ε hε

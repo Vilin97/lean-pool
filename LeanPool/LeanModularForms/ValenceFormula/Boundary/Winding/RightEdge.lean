@@ -45,8 +45,7 @@ lemma rightEdge_fdBoundary_eq (H : ℝ) (s : ℂ)
   intro t₀
   have hH_sqrt : Real.sqrt 3 / 2 < H := by linarith
   have hden_pos : 0 < H - Real.sqrt 3 / 2 := by linarith
-  have ht₀_le : t₀ ≤ 1 := by
-    rw [div_le_one hden_pos]; linarith
+  have ht₀_le : t₀ ≤ 1 := by rw [div_le_one hden_pos]; linarith
   simp only [fdBoundaryH, ht₀_le, ↓reduceIte]
   apply Complex.ext
   · simp [Complex.add_re, Complex.mul_re, Complex.ofReal_re, Complex.I_re, Complex.I_im]
@@ -128,8 +127,7 @@ lemma rightEdge_dist_from_arc (s : ℂ) (z : ℂ) (hz : ‖z‖ = 1) :
 lemma rightEdge_dist_from_leftVertical (s : ℂ) (hs_re : s.re = 1 / 2) (z : ℂ)
     (hz_re : z.re = -1 / 2) :
     1 ≤ ‖z - s‖ := by
-  have hre : (z - s).re = -1 := by
-    simp [Complex.sub_re, hz_re, hs_re]; ring
+  have hre : (z - s).re = -1 := by simp [Complex.sub_re, hz_re, hs_re]; ring
   calc 1 = |(z - s).re| := by rw [hre]; norm_num
     _ ≤ ‖z - s‖ := abs_re_le_norm (z - s)
 
@@ -183,14 +181,12 @@ lemma log_div_of_re_pos {a b : ℂ} (ha : 0 < a.re) (hb : 0 < b.re) :
   rw [div_eq_mul_inv]
   have hb_arg_ne_pi : b.arg ≠ Real.pi := by
     intro h; have := Complex.arg_eq_pi_iff.mp h; linarith [this.1]
-  have hb_inv_arg : b⁻¹.arg = -b.arg := by
-    rw [Complex.arg_inv]; simp [hb_arg_ne_pi]
+  have hb_inv_arg : b⁻¹.arg = -b.arg := by rw [Complex.arg_inv]; simp [hb_arg_ne_pi]
   have ha_abs_arg : |a.arg| < Real.pi / 2 :=
     Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl ha)
   have hb_abs_arg : |b.arg| < Real.pi / 2 :=
     Complex.abs_arg_lt_pi_div_two_iff.mpr (Or.inl hb)
-  have hbi_abs_arg : |b⁻¹.arg| < Real.pi / 2 := by
-    rw [hb_inv_arg, abs_neg]; exact hb_abs_arg
+  have hbi_abs_arg : |b⁻¹.arg| < Real.pi / 2 := by rw [hb_inv_arg, abs_neg]; exact hb_abs_arg
   have h_sum : a.arg + b⁻¹.arg ∈ Set.Ioc (-Real.pi) Real.pi := by
     constructor
     · linarith [abs_lt.mp ha_abs_arg, abs_lt.mp hbi_abs_arg]
@@ -268,8 +264,7 @@ private lemma rightEdge_min_dist_from_non_seg1 (H : ℝ) (s : ℂ)
     (hs_re : s.re = 1 / 2) (hs_norm : ‖s‖ > 1) (hs_im : s.im < H)
     (t : ℝ) (ht1 : 1 < t) (ht5 : t ≤ 5) :
     min (min (‖s‖ - 1) 1) (H - s.im) ≤ ‖fdBoundaryH H t - s‖ := by
-  have neg_sub_norm : ‖fdBoundaryH H t - s‖ = ‖s - fdBoundaryH H t‖ := by
-    rw [norm_sub_rev]
+  have neg_sub_norm : ‖fdBoundaryH H t - s‖ = ‖s - fdBoundaryH H t‖ := by rw [norm_sub_rev]
   rw [neg_sub_norm]
   by_cases h2 : t ≤ 2
   · exact rightEdge_min_dist_from_non_seg1_arc s hs_norm _

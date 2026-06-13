@@ -183,8 +183,7 @@ private lemma mulMap_scalar_eq (c : ℕ) (hc : 0 < c) (b : Fin n → ℕ) (hb_po
       _ = ↑p.1.out * L_c * R_c * ↑p.2.out * L_b *
             (diagMat n (fun _ => c) * diagMat n b) * R_b := by group
       _ = ↑p.1.out * L_c * R_c * ↑p.2.out * L_b *
-            diagMat n ((fun _ => c) * b) * R_b := by
-          rw [diagMat_mul n _ b (fun _ => hc) hb_pos]
+            diagMat n ((fun _ => c) * b) * R_b := by rw [diagMat_mul n _ b (fun _ => hc) hb_pos]
   apply HeckeCoset_ext_toSet (P := GLPair n)
   rw [mulMap, HeckeCoset.toSet_mk]
   simp only [TDiag, HeckeCoset.toSet_mk,
@@ -480,8 +479,7 @@ lemma conjugate_congruent_mem_SLnZ (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) (_h
     have hτ_val : (↑(mapGL ℚ τ) : Matrix _ _ ℚ) = τ.val.map (Int.cast) := by
       simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
     have hM_val : (↑(mapGL ℚ (⟨M, hM_det⟩ : SpecialLinearGroup (Fin n) ℤ)) : Matrix _ _ ℚ) =
-        M.map (Int.cast) := by
-      simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
+        M.map (Int.cast) := by simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
     simp only [Units.val_mul, hτ_val, hM_val, diagMat_val _ _ ha]
     have h_mul_map : ∀ (A B : Matrix (Fin n) (Fin n) ℤ),
         (A * B).map (Int.cast : ℤ → ℚ) = A.map Int.cast * B.map Int.cast := by
@@ -527,8 +525,7 @@ lemma inv_conjugate_congruent_mem_SLnZ (b : Fin n → ℕ) (hb : ∀ i, 0 < b i)
     have hτ_val : (↑(mapGL ℚ τ) : Matrix _ _ ℚ) = τ.val.map (Int.cast) := by
       simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
     have hN_val : (↑(mapGL ℚ (⟨N, hN_det⟩ : SpecialLinearGroup (Fin n) ℤ)) : Matrix _ _ ℚ) =
-        N.map (Int.cast) := by
-      simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
+        N.map (Int.cast) := by simp [mapGL_coe_matrix, algebraMap_int_eq, RingHom.mapMatrix_apply]
     simp only [Units.val_mul, hτ_val, hN_val, diagMat_val _ _ hb]
     have h_mul_map : ∀ (A B : Matrix (Fin n) (Fin n) ℤ),
         (A * B).map (Int.cast : ℤ → ℚ) = A.map Int.cast * B.map Int.cast := by
@@ -710,8 +707,7 @@ private lemma diagSandwich_scaling (b : Fin n → ℕ) (hb : ∀ i, 0 < b i)
     have hbq_ne_int : (b q : ℤ) ≠ 0 := Int.natCast_ne_zero.mpr (hb q).ne'
     refine ⟨(∏ k, (b k : ℤ)) / (b q : ℤ) * (b p : ℤ) * G.val p q, ?_⟩
     have h_div_eq : (∏ k, (b k : ℚ)) * ((b p : ℚ) * ↑(G.val p q) * ((b q : ℚ)⁻¹)) =
-        (∏ k, (b k : ℚ)) / (b q : ℚ) * ((b p : ℚ) * ↑(G.val p q)) := by
-      rw [div_eq_mul_inv]; ring
+        (∏ k, (b k : ℚ)) / (b q : ℚ) * ((b p : ℚ) * ↑(G.val p q)) := by rw [div_eq_mul_inv]; ring
     rw [h_div_eq]
     push_cast [Int.cast_div h_dvd (show ((b q : ℤ) : ℚ) ≠ 0 from Int.cast_ne_zero.mpr hbq_ne_int)]
     ring

@@ -145,8 +145,7 @@ private lemma g_rho'_ne_zero (hH : Real.sqrt 3 / 2 < H)
       · rw [fdBoundary_H_at_three_eq_rho] at h_eq
         simp only [ellipticPointRhoPlusOne, ellipticPointRhoPlusOne',
           ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk] at h_eq
-        have : (-1/2 + ↑(Real.sqrt 3) / 2 * I - (1/2 + ↑(Real.sqrt 3) / 2 * I) : ℂ) = -1 := by
-          ring
+        have : (-1/2 + ↑(Real.sqrt 3) / 2 * I - (1/2 + ↑(Real.sqrt 3) / 2 * I) : ℂ) = -1 := by ring
         rw [this] at h_eq; exact absurd h_eq (by norm_num)
       · rcases le_or_gt t 4 with h4 | h4
         · rw [g_rho'_seg3_value h3' h4] at h_eq
@@ -337,8 +336,7 @@ private lemma g_rho'_norm_ge_one_seg3 {t : ℝ} (ht3 : 3 ≤ t) (ht4 : t ≤ 4) 
   · rw [fdBoundary_H_at_three_eq_rho]
     simp only [ellipticPointRhoPlusOne, ellipticPointRhoPlusOne',
       ellipticPointRho, ellipticPointRho', UpperHalfPlane.coe_mk]
-    have : (-1/2 + ↑(Real.sqrt 3) / 2 * I - (1/2 + ↑(Real.sqrt 3) / 2 * I) : ℂ) = -1 := by
-      ring
+    have : (-1/2 + ↑(Real.sqrt 3) / 2 * I - (1/2 + ↑(Real.sqrt 3) / 2 * I) : ℂ) = -1 := by ring
     rw [this, norm_neg, norm_one]
   · have hre : (fdBoundaryH H t - (ellipticPointRhoPlusOne : ℂ)).re = -1 := by
       rw [g_rho'_seg3_value (H := H) ht3' ht4]

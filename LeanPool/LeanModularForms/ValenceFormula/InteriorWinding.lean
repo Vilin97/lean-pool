@@ -96,8 +96,7 @@ private lemma arc_hasDerivAt' (s : ℝ) :
     HasDerivAt (fun s' : ℝ => exp ((↑Real.pi * (↑s' + 1) / 6) * I))
       (exp ((↑Real.pi * (↑s + 1) / 6) * I) * (↑Real.pi / 6 * I)) s := by
   apply HasDerivAt.cexp
-  have h1 : HasDerivAt (fun s : ℝ => (s : ℂ)) 1 s := by
-    simpa using (hasDerivAt_id s).ofReal_comp
+  have h1 : HasDerivAt (fun s : ℝ => (s : ℂ)) 1 s := by simpa using (hasDerivAt_id s).ofReal_comp
   have h2 : HasDerivAt (fun s : ℝ => (s : ℂ) + 1) 1 s := by
     convert h1.add (hasDerivAt_const s (1 : ℂ)) using 1; simp only [add_zero]
   have h3 : HasDerivAt (fun s : ℝ =>
@@ -221,8 +220,7 @@ private lemma fdHomot_deriv_bound (H : ℝ) (hH : heightCutoff ≤ H) :
       ‖deriv (fun t' => fdBoundaryH (heightCutoff + s * (H - heightCutoff)) t') t‖ ≤ M := by
   refine ⟨max (H - Real.sqrt 3 / 2) 1, fun t _ht s hs => ?_⟩
   set H_s := heightCutoff + s * (H - heightCutoff) with hH_s_def
-  have hH_s_sqrt : Real.sqrt 3 / 2 < H_s := by
-    nlinarith [sqrt3_div2_lt_heightCutoff, hs.1, hs.2]
+  have hH_s_sqrt : Real.sqrt 3 / 2 < H_s := by nlinarith [sqrt3_div2_lt_heightCutoff, hs.1, hs.2]
   have hH_s_le : H_s ≤ H := by nlinarith [hs.2]
   rw [show (fun t' => fdBoundaryH H_s t') = fdBoundaryH H_s from rfl]
   by_cases htp : t ∈ fdBoundaryHPartition
@@ -327,8 +325,7 @@ theorem gWN_fdBoundary_H_eq_neg_one_of_interior (p : ℂ) (hp_norm : ‖p‖ > 1
 
 private lemma gWN_translate (γ : ℝ → ℂ) (a b : ℝ) (p : ℂ) :
     generalizedWindingNumber' (fun t => γ t - p) a b 0 =
-    generalizedWindingNumber' γ a b p := by
-  unfold generalizedWindingNumber'; simp only [sub_zero]
+    generalizedWindingNumber' γ a b p := by unfold generalizedWindingNumber'; simp only [sub_zero]
 
 /-- For any strict interior point with im < H, the generalized
 winding number of fdBoundaryH around p is -1.
@@ -343,16 +340,14 @@ theorem gWN_fdBoundary_H_eq_neg_one_of_strictInterior
   push Not at hp_low
   set Hmid := (1 + heightCutoff) / 2
   have hHmid_gt1 : 1 < Hmid := by simp only [Hmid]; linarith [one_lt_heightCutoff]
-  have hHmid_lt : Hmid < heightCutoff := by
-    simp only [Hmid]; linarith [one_lt_heightCutoff]
+  have hHmid_lt : Hmid < heightCutoff := by simp only [Hmid]; linarith [one_lt_heightCutoff]
   set q : ℂ := ↑p.re + ↑Hmid * I
   have hq_re : q.re = p.re := by
     simp only [q, add_re, ofReal_re, mul_re, ofReal_im, I_re, I_im]; ring
   have hq_im : q.im = Hmid := by
     simp only [q, add_im, ofReal_im, mul_im, ofReal_re, I_re, I_im]; ring
   have hq_im_pos : 0 < q.im := by rw [hq_im]; linarith
-  have hq_norm : ‖q‖ > 1 := by
-    linarith [Complex.abs_im_le_norm q, abs_of_pos hq_im_pos]
+  have hq_norm : ‖q‖ > 1 := by linarith [Complex.abs_im_le_norm q, abs_of_pos hq_im_pos]
   have hq_re_bound : |q.re| < 1 / 2 := by rw [hq_re]; exact hp_re
   have hq_im_lt : q.im < heightCutoff := by rw [hq_im]; exact hHmid_lt
   have hq_wn := gWN_fdBoundary_H_eq_neg_one_of_interior q hq_norm hq_re_bound hq_im_pos

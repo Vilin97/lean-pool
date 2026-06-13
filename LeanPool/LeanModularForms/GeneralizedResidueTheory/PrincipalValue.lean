@@ -114,8 +114,7 @@ lemma continuousOn_pv_base (f : ℂ → ℂ) (γ : ℝ → ℂ)
 /-- If `f =ᶠ g` along a filter, their `limUnder` values agree. -/
 theorem limUnder_eventually_eq {α : Type*} [TopologicalSpace α] [Nonempty α]
     {f g : ℝ → α} {l : Filter ℝ} [l.NeBot] (h : ∀ᶠ x in l, f x = g x) :
-    limUnder l f = limUnder l g := by
-  simp only [limUnder, Filter.map_congr h]
+    limUnder l f = limUnder l g := by simp only [limUnder, Filter.map_congr h]
 
 private theorem aEStronglyMeasurable_pv_integrand
     {f : ℂ → ℂ} {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ} {ε : ℝ}
@@ -411,8 +410,7 @@ private theorem pv_simple_pole_integrand_split
     (if ε < ‖γ_fun t - z₀‖
     then c / (γ_fun t - z₀) * deriv γ_fun t else 0) +
     (if ε < ‖γ_fun t - z₀‖
-    then g (γ_fun t) * deriv γ_fun t else 0) := by
-  split_ifs <;> ring
+    then g (γ_fun t) * deriv γ_fun t else 0) := by split_ifs <;> ring
 
 private theorem pv_simple_pole_tendsto
     (γ : PiecewiseC1Immersion) (z₀ c : ℂ) (g : ℂ → ℂ)

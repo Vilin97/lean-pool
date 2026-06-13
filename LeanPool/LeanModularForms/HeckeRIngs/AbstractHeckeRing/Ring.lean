@@ -146,8 +146,7 @@ lemma T_single_mul_T_single (D₁ D₂ : HeckeCoset P) (a b : ℤ) :
 /-- The product of two unit-coefficient basis elements is the multiplication finsupp. -/
 @[simp] lemma T_single_one_mul_T_single_one (D₁ D₂ : HeckeCoset P) :
     TSingle P ℤ D₁ 1 * TSingle P ℤ D₂ 1 =
-      m P (HeckeCoset.rep D₁) (HeckeCoset.rep D₂) := by
-  simp [T_single_mul_T_single]
+      m P (HeckeCoset.rep D₁) (HeckeCoset.rep D₂) := by simp [T_single_mul_T_single]
 
 /-- Right multiplication by 1 is the identity. -/
 lemma T_single_mul_one (D : HeckeCoset P) (a : ℤ) :
@@ -190,8 +189,7 @@ lemma m_support (g₁ g₂ : P.Δ) :
 
 /-- The multiplicity `heckeMultiplicity` is nonneg since it is a natural number cast to `ℤ`. -/
 lemma heckeMultiplicity_nonneg (g₁ g₂ d : P.Δ) :
-    0 ≤ heckeMultiplicity P g₁ g₂ d := by
-  simp [heckeMultiplicity]
+    0 ≤ heckeMultiplicity P g₁ g₂ d := by simp [heckeMultiplicity]
 
 /-- Extensionality for Hecke ring elements. -/
 @[ext] lemma ext_𝕋 {f g : 𝕋 P ℤ}

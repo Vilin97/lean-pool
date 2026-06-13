@@ -62,8 +62,7 @@ theorem Θ₂_as_jacobiTheta₂ (τ : ℍ) : Θ₂ τ = cexp (π * I * τ / 4) *
   simp_rw [Θ₂, Θ₂_term_as_jacobiTheta₂_term, tsum_mul_left, jacobiTheta₂]
 
 theorem Θ₃_term_as_jacobiTheta₂_term (τ : ℍ) (n : ℤ) :
-    Θ₃Term n τ = jacobiTheta₂_term n 0 τ := by
-  simp [Θ₃Term, jacobiTheta₂_term]
+    Θ₃Term n τ = jacobiTheta₂_term n 0 τ := by simp [Θ₃Term, jacobiTheta₂_term]
 
 theorem Θ₃_as_jacobiTheta₂ (τ : ℍ) : Θ₃ τ = jacobiTheta₂ (0 : ℂ) τ := by
   simp_rw [Θ₃, Θ₃_term_as_jacobiTheta₂_term, jacobiTheta₂]
@@ -91,8 +90,7 @@ lemma H₂_T_action : (H₂ ∣[(2 : ℤ)] T) = -H₂ := by
       mul_comm ((4 : ℕ) : ℂ), Nat.cast_ofNat, div_mul_cancel₀ (b := (4 : ℂ)) _ (by simp),
       Complex.exp_pi_mul_I, neg_one_mul]
   calc
-  _ = ∑' (n : ℤ), cexp (π * I * (n + 1 / 2) ^ 2 * ((1 : ℝ) +ᵥ x)) := by
-    simp_rw [Θ₂, Θ₂Term]
+  _ = ∑' (n : ℤ), cexp (π * I * (n + 1 / 2) ^ 2 * ((1 : ℝ) +ᵥ x)) := by simp_rw [Θ₂, Θ₂Term]
   _ = ∑' (n : ℤ), cexp (π * I / 4) * cexp (π * I * (n ^ 2 + n) + π * I * (n + 1 / 2) ^ 2 * x) := by
     apply tsum_congr fun b ↦ ?_
     rw [coe_vadd, ofReal_one]
@@ -143,8 +141,7 @@ lemma H₄_T_inv_action : (H₄ ∣[(2 : ℤ)] T⁻¹) = H₃ := by
   nth_rw 1 [← H₃_T_action, ← slash_mul, mul_inv_cancel, slash_one]
 
 /-- Use α = T * T -/
-lemma H₂_α_action : (H₂ ∣[(2 : ℤ)] α.1) = H₂ := by
-  simp [α_eq_T_sq, sq, slash_mul, H₂_T_action]
+lemma H₂_α_action : (H₂ ∣[(2 : ℤ)] α.1) = H₂ := by simp [α_eq_T_sq, sq, slash_mul, H₂_T_action]
 
 lemma H₃_α_action : (H₃ ∣[(2 : ℤ)] α.1) = H₃ := by
   simp [α_eq_T_sq, sq, slash_mul, H₃_T_action, H₄_T_action]
@@ -180,8 +177,7 @@ lemma H₂_S_action : (H₂ ∣[(2 : ℤ)] S) = -H₄ := by
     · ring_nf; simp [inv_inv]
   _ = cexp (-π * I / x) * x ^ (-2 : ℤ)
         * ((1 / (I / x) ^ ((1 : ℂ) / 2)) ^ 4 * cexp (π * I / (4 * x)) ^ 4
-          * jacobiTheta₂ (1 / 2) x ^ 4) := by
-    simp [mul_pow]
+          * jacobiTheta₂ (1 / 2) x ^ 4) := by simp [mul_pow]
   _ = cexp (-π * I / x) * x ^ (-2 : ℤ)
         * ((1 / (I / x) ^ (2 : ℂ)) * cexp (π * I / (4 * x)) ^ 4 * jacobiTheta₂ (1 / 2) x ^ 4) := by
     congr 3
@@ -201,8 +197,7 @@ lemma H₂_S_action : (H₂ ∣[(2 : ℤ)] S) = -H₄ := by
   _ = -jacobiTheta₂ (1 / 2) x ^ 4 := by
     rw [neg_mul, ← Complex.exp_add, neg_mul (π : ℂ), neg_div, neg_add_cancel, Complex.exp_zero,
       neg_one_mul]
-  _ = -H₄ ⟨x, hx⟩ := by
-    simp [H₄, Θ₄_as_jacobiTheta₂]
+  _ = -H₄ ⟨x, hx⟩ := by simp [H₄, Θ₄_as_jacobiTheta₂]
 
 lemma H₃_S_action : (H₃ ∣[(2 : ℤ)] S) = -H₃ := by
   ext x
@@ -439,8 +434,7 @@ lemma jacobiTheta₂_rel_aux (n : ℤ) (t : ℝ) :
 -- lemma Complex.norm_exp (z : ℂ) : ‖cexp z‖ = rexp z.re := by
 -- simp [abs_exp]
 
-lemma Complex.norm_exp_mul_I (z : ℂ) : ‖cexp (z * I)‖ = rexp (-z.im) := by
-  simp [norm_exp]
+lemma Complex.norm_exp_mul_I (z : ℂ) : ‖cexp (z * I)‖ = rexp (-z.im) := by simp [norm_exp]
 
 theorem isBoundedAtImInfty_H₂ : IsBoundedAtImInfty H₂ := by
   simp_rw [UpperHalfPlane.isBoundedAtImInfty_iff, H₂, Θ₂]
@@ -845,15 +839,13 @@ theorem jacobiTheta₂_half_apply_tendsto_atImInfty :
       simp
     · rw [tendsto_zero_iff_norm_tendsto_zero]
       simp_rw [hnorm]
-      have hk2_pos : 0 < (k : ℝ) ^ 2 := by
-        exact sq_pos_of_ne_zero (Int.cast_ne_zero.mpr hk)
+      have hk2_pos : 0 < (k : ℝ) ^ 2 := sq_pos_of_ne_zero (Int.cast_ne_zero.mpr hk)
       exact (Real.tendsto_exp_atBot).comp
         (tendsto_im_atImInfty.const_mul_atTop_of_neg (by nlinarith [Real.pi_pos, hk2_pos]))
   · rw [eventually_atImInfty]
     use 1, fun z hz k ↦ ?_
     rw [hnorm]
-    have hcoef_nonpos : (-π * (k : ℝ) ^ 2) ≤ 0 := by
-      nlinarith [Real.pi_pos, sq_nonneg (k : ℝ)]
+    have hcoef_nonpos : (-π * (k : ℝ) ^ 2) ≤ 0 := by nlinarith [Real.pi_pos, sq_nonneg (k : ℝ)]
     have hmul : (-π * (k : ℝ) ^ 2) * z.im ≤ (-π * (k : ℝ) ^ 2) * 1 := by
       exact mul_le_mul_of_nonpos_left hz hcoef_nonpos
     simpa using Real.exp_le_exp.mpr hmul
@@ -1053,11 +1045,9 @@ lemma Delta_eq_H₂_H₃_H₄ (τ : ℍ) :
       exact ((H₂_div_exp_tendsto.pow 2).mul (H₃_tendsto_atImInfty.pow 2)).mul
         (H₄_tendsto_atImInfty.pow 2)
     have h_eq_fns : ∀ z : ℍ, c * (Delta z / cexp (2 * ↑π * I * ↑z)) =
-        theta_prod_sq z / cexp (2 * ↑π * I * ↑z) := by
-      intro z; rw [← mul_div_assoc, hc_pw]
+        theta_prod_sq z / cexp (2 * ↑π * I * ↑z) := by intro z; rw [← mul_div_assoc, hc_pw]
     have hc_lim : Tendsto (fun z : ℍ ↦ c * (Delta z / cexp (2 * ↑π * I * ↑z)))
-        atImInfty (nhds c) := by
-      have := hD_asymp.const_mul c; rwa [mul_one] at this
+        atImInfty (nhds c) := by have := hD_asymp.const_mul c; rwa [mul_one] at this
     exact tendsto_nhds_unique (hc_lim.congr h_eq_fns) hP_asymp
   have h := hc_pw τ
   rw [hc_eq] at h
@@ -1302,8 +1292,7 @@ theorem H₄_imag_axis_pos : ResToImagAxis.Pos H₄ := by
     -- H₄.resToImagAxis t is real (im = 0)
     have hH₄_real := H₄_imag_axis_real t ht
     -- From hEq, extract real parts
-    have hRe : (H₂.resToImagAxis (1 / t)).re = ((t : ℂ) ^ 2 * H₄.resToImagAxis t).re := by
-      rw [hEq]
+    have hRe : (H₂.resToImagAxis (1 / t)).re = ((t : ℂ) ^ 2 * H₄.resToImagAxis t).re := by rw [hEq]
     -- Since t^2 is real positive and H₄.resToImagAxis t is real:
     -- (t^2 * H₄.resToImagAxis t).re = t^2 * (H₄.resToImagAxis t).re
     have hProd_re : ((t : ℂ) ^ 2 * H₄.resToImagAxis t).re =

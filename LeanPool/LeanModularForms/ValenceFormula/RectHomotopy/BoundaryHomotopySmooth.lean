@@ -328,10 +328,8 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
         rw [h_exp]
         simp only [chordSegment, iPoint, rho]
         simp only [Complex.real_smul]; push_cast; ring
-      have h_f4_eq_rho : f4 3 = rho := by
-        dsimp only [f4]; simp only [rho, HHeight]; push_cast; ring
-      have h_at_3 : fdBoundaryToPolygonHomotopy (3, s) = f4 3 := by
-        rw [h_fbd_eq_rho, h_f4_eq_rho]
+      have h_f4_eq_rho : f4 3 = rho := by dsimp only [f4]; simp only [rho, HHeight]; push_cast; ring
+      have h_at_3 : fdBoundaryToPolygonHomotopy (3, s) = f4 3 := by rw [h_fbd_eq_rho, h_f4_eq_rho]
       have h_at_t' : fdBoundaryToPolygonHomotopy (t', s) = f4 t' := by
         have ht'1 : ¬(t' ≤ 1) :=
           not_le.mpr (lt_of_lt_of_le (by norm_num : (1 : ℝ) < 3)

@@ -130,8 +130,7 @@ lemma mem_toSet_mk (g : P.Δ) (x : G) :
 
 /-- If two `HeckeCoset`s have the same `toSet`, they are equal. -/
 lemma ext_toSet {D₁ D₂ : HeckeCoset P} (h : HeckeCoset.toSet D₁ = HeckeCoset.toSet D₂) :
-    D₁ = D₂ := by
-  exact Quotient.ind₂ (fun g₁ g₂ => by intro h; exact Quotient.sound h) D₁ D₂ h
+    D₁ = D₂ := Quotient.ind₂ (fun g₁ g₂ => by intro h; exact Quotient.sound h) D₁ D₂ h
 
 /-- The carrier set equals the double coset of the representative. -/
 lemma toSet_eq_rep (D : HeckeCoset P) :

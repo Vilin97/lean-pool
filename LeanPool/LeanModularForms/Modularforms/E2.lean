@@ -33,8 +33,7 @@ def E₂ : ℍ → ℂ := EisensteinSeries.E2
 def D₂ (γ : SL(2, ℤ)) : ℍ → ℂ := EisensteinSeries.D2 γ
 
 lemma D₂_apply (γ : SL(2, ℤ)) (z : ℍ) :
-    D₂ γ z = (2 * π * Complex.I * γ 1 0) / (γ 1 0 * z + γ 1 1) := by
-  rfl
+    D₂ γ z = (2 * π * Complex.I * γ 1 0) / (γ 1 0 * z + γ 1 1) := by rfl
 
 lemma D2_one : D₂ 1 = 0 := by
   ext z
@@ -46,8 +45,7 @@ lemma D2_mul (A B : SL(2, ℤ)) : D₂ (A * B) = ((D₂ A) ∣[(2 : ℤ)] B) + (
 lemma D2_inv (A : SL(2, ℤ)) : (D₂ A) ∣[(2 : ℤ)] A⁻¹ = -D₂ (A⁻¹) := by
   simpa [D₂] using (EisensteinSeries.D2_inv A)
 
-lemma D2_T : D₂ ModularGroup.T = 0 := by
-  simpa [D₂] using (EisensteinSeries.D2_T)
+lemma D2_T : D₂ ModularGroup.T = 0 := by simpa [D₂] using (EisensteinSeries.D2_T)
 
 lemma D2_S (z : ℍ) : D₂ ModularGroup.S z = 2 * (π : ℂ) * Complex.I / z :=
   EisensteinSeries.D2_S z
@@ -135,8 +133,7 @@ lemma tsum_eq_tsum_sigma (z : ℍ) : ∑' n : ℕ, (n + 1) *
             dsimp [q]
             rw [← Complex.exp_nat_mul]
             congr 1
-            have hn : (((n + 1 : ℕ) : ℂ)) = (n : ℂ) + 1 := by
-              norm_num [Nat.cast_add]
+            have hn : (((n + 1 : ℕ) : ℂ)) = (n : ℂ) + 1 := by norm_num [Nat.cast_add]
             rw [hn]
             ring
           simp [f, pow_one, hpow]
@@ -148,8 +145,7 @@ lemma tsum_eq_tsum_sigma (z : ℍ) : ∑' n : ℕ, (n + 1) *
             dsimp [q]
             rw [← Complex.exp_nat_mul]
             congr 1
-            have hn : (((n + 1 : ℕ) : ℂ)) = (n : ℂ) + 1 := by
-              norm_num [Nat.cast_add]
+            have hn : (((n + 1 : ℕ) : ℂ)) = (n : ℂ) + 1 := by norm_num [Nat.cast_add]
             rw [hn]
             ring
           simp [g, hpow]

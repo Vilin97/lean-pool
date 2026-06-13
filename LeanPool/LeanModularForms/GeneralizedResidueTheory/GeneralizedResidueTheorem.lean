@@ -189,8 +189,7 @@ theorem generalizedResidueTheorem (U : Set ℂ) (hU : IsOpen U)
        (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
          (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) +
       (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
-         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by
-    ext ε; ring
+         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by ext ε; ring
   rw [h_eq, show L = 0 + L from (zero_add _).symm]
   exact hCancel.add hPV_res_tendsto
 
@@ -274,8 +273,7 @@ theorem generalizedResidueTheorem_simplePoles (U : Set ℂ) (hU : IsOpen U)
     intro s hs
     rw [h_res_sing_eq s hs]
     have h_eq : (fun z => residueSimplePole f s / (z - s)) =
-        (fun z => residueSimplePole f s * (fun z => (z - s)⁻¹) z) := by
-      ext z; simp [div_eq_mul_inv]
+        (fun z => residueSimplePole f s * (fun z => (z - s)⁻¹) z) := by ext z; simp [div_eq_mul_inv]
     rw [h_eq]
     apply CauchyPrincipalValueExists'.const_mul
     apply cauchyPrincipalValueExists_of_singular_inv γ s
@@ -338,8 +336,7 @@ theorem generalizedResidueTheorem_simplePoles (U : Set ℂ) (hU : IsOpen U)
          (∫ t in γ.a..γ.b,
             cauchyPrincipalValueIntegrandOn S0 f_sing γ.toFun ε t)) +
         (∫ t in γ.a..γ.b,
-            cauchyPrincipalValueIntegrandOn S0 f_sing γ.toFun ε t)) := by
-      ext ε; ring
+            cauchyPrincipalValueIntegrandOn S0 f_sing γ.toFun ε t)) := by ext ε; ring
     rw [h_eq, show L_sing = 0 + L_sing from (zero_add _).symm]
     exact hCancel.add hL_sing
   -- CPV(f) = limUnder = L_sing = limUnder(f_sing) = CPV(f_sing) = formula

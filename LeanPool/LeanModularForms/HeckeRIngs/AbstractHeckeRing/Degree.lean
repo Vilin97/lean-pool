@@ -77,8 +77,7 @@ private lemma smulOrbit_map_inj (g : P.Δ) (β : P.Δ) :
       (g : G)} * P.H := Quotient.exact heq
   have hmem : (β : G) * (i₁.out : G) * (g : G) ∈
       ({(β : G) * (i₂.out : G) * (g : G)} : Set G) *
-      (P.H : Set G) := by
-    rw [← hset]; exact ⟨_, rfl, 1, P.H.one_mem, mul_one _⟩
+      (P.H : Set G) := by rw [← hset]; exact ⟨_, rfl, 1, P.H.one_mem, mul_one _⟩
   obtain ⟨_, ha, k, hk, hkk⟩ := hmem
   rw [Set.mem_singleton_iff] at ha; subst ha
   have cancel : (i₂.out : G) * (g : G) * k =
@@ -224,8 +223,7 @@ lemma deg_add (f g : 𝕋 P ℤ) :
     deg P (f + g) = deg P f + deg P g := (deg P).map_add f g
 
 /-- The degree of an integer cast is the integer itself. -/
-lemma deg_intCast (n : ℤ) : deg P (n : 𝕋 P ℤ) = n := by
-  simp [deg, degFun, HeckeCoset_deg_T_one]
+lemma deg_intCast (n : ℤ) : deg P (n : 𝕋 P ℤ) = n := by simp [deg, degFun, HeckeCoset_deg_T_one]
 
 end API
 

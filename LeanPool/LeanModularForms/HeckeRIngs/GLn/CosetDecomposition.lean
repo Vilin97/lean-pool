@@ -87,19 +87,16 @@ def upperTriMat (a : Fin n → ℕ) (hdiv : DivChain n a) (B : UpperTriRep n a h
 @[simp]
 lemma upperTriMat_apply_lt (a : Fin n → ℕ) (hdiv : DivChain n a) (B : UpperTriRep n a hdiv)
     {i j : Fin n} (h : i < j) :
-    upperTriMat n a hdiv B i j = (a i : ℤ) * (B ⟨(i, j), h⟩ : ℕ) := by
-  simp [upperTriMat, h]
+    upperTriMat n a hdiv B i j = (a i : ℤ) * (B ⟨(i, j), h⟩ : ℕ) := by simp [upperTriMat, h]
 
 @[simp]
 lemma upperTriMat_apply_diag (a : Fin n → ℕ) (hdiv : DivChain n a)
     (B : UpperTriRep n a hdiv) (i : Fin n) :
-    upperTriMat n a hdiv B i i = (a i : ℤ) := by
-  simp [upperTriMat]
+    upperTriMat n a hdiv B i i = (a i : ℤ) := by simp [upperTriMat]
 
 lemma upperTriMat_apply_gt (a : Fin n → ℕ) (hdiv : DivChain n a) (B : UpperTriRep n a hdiv)
     {i j : Fin n} (h : j < i) :
-    upperTriMat n a hdiv B i j = 0 := by
-  simp [upperTriMat, not_lt.mpr (le_of_lt h), ne_of_gt h]
+    upperTriMat n a hdiv B i j = 0 := by simp [upperTriMat, not_lt.mpr (le_of_lt h), ne_of_gt h]
 
 lemma upperTriMat_det (a : Fin n → ℕ) (hdiv : DivChain n a) (B : UpperTriRep n a hdiv) :
     (upperTriMat n a hdiv B).det = ∏ i, (a i : ℤ) := by
@@ -259,10 +256,8 @@ private lemma coset_entry_zero_of_lt {a : Fin n → ℕ} {hpos : ∀ i, 0 < a i}
     apply mul_left_cancel₀ h_ai_ne
     rw [← mul_assoc, mul_comm (a i : ℤ) (σ.val i j), mul_assoc, ← h_aj_eq]
     linarith
-  have h1 : ((B₁ ⟨(i, j), hij⟩ : ℕ) : ℤ) < (q : ℤ) := by
-    exact_mod_cast (B₁ ⟨(i, j), hij⟩).isLt
-  have h2 : ((B₂ ⟨(i, j), hij⟩ : ℕ) : ℤ) < (q : ℤ) := by
-    exact_mod_cast (B₂ ⟨(i, j), hij⟩).isLt
+  have h1 : ((B₁ ⟨(i, j), hij⟩ : ℕ) : ℤ) < (q : ℤ) := by exact_mod_cast (B₁ ⟨(i, j), hij⟩).isLt
+  have h2 : ((B₂ ⟨(i, j), hij⟩ : ℕ) : ℤ) < (q : ℤ) := by exact_mod_cast (B₂ ⟨(i, j), hij⟩).isLt
   by_contra hσ_ne
   have h_abs : (q : ℤ) ≤ |σ.val i j * (q : ℤ)| := by
     rw [abs_mul, abs_of_nonneg (by omega : (q : ℤ) ≥ 0)]
@@ -294,8 +289,7 @@ theorem upperTriMat_distinct_cosets (a : Fin n → ℕ)
   set M₂ := upperTriMat n a hdiv B₂
   suffices hσ_cols : ∀ (m : ℕ), ∀ (j : Fin n), j.val < m →
       ∀ (i : Fin n), σ.val i j = if i = j then 1 else 0 by
-    have hσ_one : σ.val = 1 := by
-      ext i j; rw [hσ_cols (j.val + 1) j (by omega) i, Matrix.one_apply]
+    have hσ_one : σ.val = 1 := by ext i j; rw [hσ_cols (j.val + 1) j (by omega) i, Matrix.one_apply]
     exact upperTriMat_injective n a hpos hdiv
       (show M₁ = M₂ by rw [hmat, hσ_one, Matrix.one_mul])
   intro m
@@ -305,8 +299,7 @@ theorem upperTriMat_distinct_cosets (a : Fin n → ℕ)
     intro j hj i
     rcases Nat.lt_succ_iff_lt_or_eq.mp hj with hlt | hjeq
     · exact ih j hlt i
-    · have h_eq : M₁ i j = ∑ k : Fin n, σ.val i k * M₂ k j := by
-        rw [hmat]; simp [Matrix.mul_apply]
+    · have h_eq : M₁ i j = ∑ k : Fin n, σ.val i k * M₂ k j := by rw [hmat]; simp [Matrix.mul_apply]
       have ih' : ∀ (k : Fin n), k.val < j.val → ∀ (i : Fin n),
           σ.val i k = if i = k then 1 else 0 :=
         fun k hk => ih k (hjeq ▸ hk)

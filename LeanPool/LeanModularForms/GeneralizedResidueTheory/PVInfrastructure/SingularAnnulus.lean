@@ -468,8 +468,7 @@ private lemma singular_annulus_diff_pointwise_bound
   · simp only [hγ, and_self, ↓reduceIte, ofReal_sub, hlin, sub_self, norm_zero, ge_iff_le]
     exact le_of_lt hbound_pos
   · simp only [hγ, hlin, ↓reduceIte, sub_zero]
-    have ht_ne : t ≠ t₀ := by
-      intro heq; simp [heq] at hγ; linarith
+    have ht_ne : t ≠ t₀ := by intro heq; simp [heq] at hγ; linarith
     have ht_pos : 0 < |t - t₀| :=
       abs_pos.mpr (sub_ne_zero.mpr ht_ne)
     have ht_loc := h_localize t ht hγ.2
@@ -594,8 +593,7 @@ lemma singular_annulus_bound_explicit
       hγ_C2 hγ_deriv hL
   have hγ_diff : DifferentiableAt ℝ γ t₀ :=
     hγ_C2.differentiableAt two_ne_zero
-  have hγ_hasderiv : HasDerivAt γ L t₀ := by
-    rw [← hγ_deriv]; exact hγ_diff.hasDerivAt
+  have hγ_hasderiv : HasDerivAt γ L t₀ := by rw [← hγ_deriv]; exact hγ_diff.hasDerivAt
   obtain ⟨δ_lo, hδ_lo_pos, h_lower⟩ :=
     gamma_lower_bound_of_hasDerivAt hL hγ_hasderiv
   obtain ⟨δ_up, hδ_up_pos, h_upper⟩ :=

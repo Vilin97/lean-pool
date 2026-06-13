@@ -503,8 +503,7 @@ theorem cpv_integrand_intervalIntegrable
         have h_eq_S : S = (S \ γ.partition) ∪ (↑γ.partition ∩ S) := by
           ext x; simp only [S, Set.mem_union, Set.mem_diff, Set.mem_inter_iff]; tauto
         have h_restrict_eq : volume.restrict S =
-            volume.restrict ((S \ γ.partition) ∪ (↑γ.partition ∩ S)) := by
-          rw [← h_eq_S]
+            volume.restrict ((S \ γ.partition) ∪ (↑γ.partition ∩ S)) := by rw [← h_eq_S]
         rw [h_restrict_eq, aestronglyMeasurable_union_iff]
         exact ⟨h_cont_on_S.aestronglyMeasurable h_diff_meas,
           (Measure.restrict_zero_set h_P_null).symm ▸ aestronglyMeasurable_zero_measure _⟩

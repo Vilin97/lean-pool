@@ -85,8 +85,7 @@ noncomputable def GLPairAntiInvolution : AntiInvolution (GLPair n) where
 lemma GL_pair_onHeckeCoset_eq (D : HeckeCoset (GLPair n)) :
     (GLPairAntiInvolution n).onHeckeCoset D = D := by
   obtain ⟨a, ha, _hdiv, hrep⟩ := exists_diagonal_representative n (HeckeCoset.rep D)
-  have hD : D = TDiag a := by
-    rw [← hrep]; exact (Quotient.out_eq D).symm
+  have hD : D = TDiag a := by rw [← hrep]; exact (Quotient.out_eq D).symm
   rw [hD]
   simp only [TDiag, AntiInvolution.onHeckeCoset_mk]
   rw [HeckeCoset.eq_iff]

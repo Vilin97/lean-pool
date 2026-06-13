@@ -223,8 +223,7 @@ private lemma dixonH2_deriv_bound (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
           M_f * ε⁻¹ ^ 2 * M_d := by
   have hab : γ.a ≤ γ.b := le_of_lt γ.hab
   filter_upwards with t _ht x hx_ball
-  have ht : t ∈ Icc γ.a γ.b := by
-    rw [Set.uIoc_of_le hab] at _ht; exact Set.Ioc_subset_Icc_self _ht
+  have ht : t ∈ Icc γ.a γ.b := by rw [Set.uIoc_of_le hab] at _ht; exact Set.Ioc_subset_Icc_self _ht
   rw [norm_mul, norm_mul, norm_pow, norm_inv]
   calc ‖f (γ.toFun t)‖ * ‖γ.toFun t - x‖⁻¹ ^ 2 * ‖deriv γ.toFun t‖
       ≤ M_f * ε⁻¹ ^ 2 * M_d := by
@@ -310,8 +309,7 @@ private lemma dixonH2_hasDerivAt (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
       ∀ x ∈ Metric.ball w ε,
         HasDerivAt (fun x => dixonH2_F f γ x t) (dixonH2_F' f γ x t) x := by
     filter_upwards with t _ht x hx_ball
-    have ht' : t ∈ Icc γ.a γ.b := by
-      rw [Set.uIoc_of_le hab] at _ht; exact Ioc_subset_Icc_self _ht
+    have ht' : t ∈ Icc γ.a γ.b := by rw [Set.uIoc_of_le hab] at _ht; exact Ioc_subset_Icc_self _ht
     simp only [dixonH2_F, dixonH2_F']
     exact dixonH2_pointwise_hasDerivAt (f (γ.toFun t)) (deriv γ.toFun t) (γ.toFun t) x
       (sub_ne_zero.mpr (_hball_avoids x hx_ball t ht'))

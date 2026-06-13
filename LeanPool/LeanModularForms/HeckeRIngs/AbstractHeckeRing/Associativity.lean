@@ -39,8 +39,7 @@ private lemma smulOrbit_map_injective (g : P.Δ) (β : P.Δ) :
       (g : G)} * P.H := Quotient.exact heq
   have hmem : (β : G) * (i₁.out : G) * (g : G) ∈
       ({(β : G) * (i₂.out : G) * (g : G)} : Set G) *
-        (P.H : Set G) := by
-    rw [← hset]; exact ⟨_, rfl, 1, P.H.one_mem, mul_one _⟩
+        (P.H : Set G) := by rw [← hset]; exact ⟨_, rfl, 1, P.H.one_mem, mul_one _⟩
   obtain ⟨_, ha, k, hk, hkk⟩ := hmem
   rw [Set.mem_singleton_iff] at ha; subst ha
   have cancel : (i₂.out : G) * (g : G) * k =
@@ -239,8 +238,7 @@ lemma heckeMultiplicity_uniform (g₂ g₁ : P.Δ) (D : HeckeCoset P)
       change ({(i'.out : G) * g₂'} : Set G) * {(j'.out : G) * g₁'} * P.H = {g_D} * P.H
       rw [Set.singleton_mul_singleton]
       have hcond' : ({(i.out : G) * g₂' * ((j.out : G) * g₁')} : Set G) * ↑P.H =
-          {(q₀.out : G) * g_D} * ↑P.H := by
-        rw [← Set.singleton_mul_singleton]; exact hcond
+          {(q₀.out : G) * g_D} * ↑P.H := by rw [← Set.singleton_mul_singleton]; exact hcond
       have hn_coe : (i'.out : G) = (q₀.out : G)⁻¹ * (i.out : G) * (n : G) :=
         mk_out_coe_eq_mul P (QuotientGroup.mk_out_eq_mul
           ((ConjAct.toConjAct g₂' • P.H).subgroupOf P.H)
@@ -399,8 +397,7 @@ private lemma iter_smulOrbit_mem_mulSupport_smulOrbit
   set β := (HeckeLeftCoset.rep j : G)
   have h_rep_mem : g₂'⁻¹ * (i₀.out : G)⁻¹ * α⁻¹ * β ∈ P.H := by
     have h_j_set : HeckeLeftCoset.toSet j =
-        ({α * (i₀.out : G) * g₂'} : Set G) * ↑P.H := by
-      rw [← hj_eq]; rfl
+        ({α * (i₀.out : G) * g₂'} : Set G) * ↑P.H := by rw [← hj_eq]; rfl
     have hβ : β ∈ ({α * (i₀.out : G) * g₂'} : Set G) * ↑P.H := by
       have h_coset : ({β} : Set G) * ↑P.H = ({α * (i₀.out : G) * g₂'} : Set G) * ↑P.H := by
         have h1 : HeckeLeftCoset.toSet j = ({β} : Set G) * ↑P.H := by
@@ -564,8 +561,7 @@ private lemma smulOrbit_count_eq_m' (g₂ g₁ : P.Δ) (D₀ : HeckeCoset P)
               congr_arg _ h
           _ = ({(β₀ : G)} * {↑q₀.out * (HeckeCoset.rep D₀ : G)}) * ↑P.H :=
               (mul_assoc ({(β₀ : G)} : Set G) _ _).symm
-          _ = ({(β₀ : G) * ↑q₀.out * (HeckeCoset.rep D₀ : G)} : Set G) * ↑P.H := by
-              rw [hr]
+          _ = ({(β₀ : G) * ↑q₀.out * (HeckeCoset.rep D₀ : G)} : Set G) * ↑P.H := by rw [hr]
   have h_prop := fun p => propext (h_iff p)
   simp_rw [h_prop]
   -- Step 5: Conclude using the multiplicity definition and uniformity

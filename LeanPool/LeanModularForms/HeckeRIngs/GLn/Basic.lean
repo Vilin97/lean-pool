@@ -89,8 +89,7 @@ lemma det_intMat_cast (A : Matrix (Fin n) (Fin n) ℤ) :
 /-- `(A.map cast) * (B.map cast) = (A * B).map cast` for integer matrices cast to `ℚ`. -/
 private lemma intMat_map_mul (A B : Matrix (Fin n) (Fin n) ℤ) :
     (A.map (Int.cast : ℤ → ℚ)) * (B.map (Int.cast : ℤ → ℚ)) =
-    (A * B).map (Int.cast : ℤ → ℚ) := by
-  ext i j; simp [Matrix.mul_apply, Matrix.map_apply]
+    (A * B).map (Int.cast : ℤ → ℚ) := by ext i j; simp [Matrix.mul_apply, Matrix.map_apply]
 
 /-- The submonoid of `GL_n(ℚ)` consisting of invertible matrices with integer entries
     and positive determinant. This is Shimura's `Δ`. -/
@@ -384,8 +383,7 @@ abbrev HeckeAlgebra := 𝕋 (GLPair n) ℤ
 /-- Embed an integer matrix with positive determinant into `Δ` as a `GL_n(ℚ)` element. -/
 noncomputable def intMatToDelta (A : Matrix (Fin n) (Fin n) ℤ) (hdet : 0 < A.det) :
     (GLPair n).Δ := by
-  have hne : (A.map (Int.cast : ℤ → ℚ)).det ≠ 0 := by
-    rw [det_intMat_cast]; exact_mod_cast hdet.ne'
+  have hne : (A.map (Int.cast : ℤ → ℚ)).det ≠ 0 := by rw [det_intMat_cast]; exact_mod_cast hdet.ne'
   have hval : (↑(GeneralLinearGroup.mkOfDetNeZero _ hne) : Matrix (Fin n) (Fin n) ℚ) =
       A.map (Int.cast : ℤ → ℚ) := rfl
   exact ⟨GeneralLinearGroup.mkOfDetNeZero _ hne,

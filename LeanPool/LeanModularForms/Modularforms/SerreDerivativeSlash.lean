@@ -102,8 +102,7 @@ lemma serre_DE₂_slash_invariant (γ : SL(2, ℤ)) :
       show ((E₂ * E₂) ∣[(4 : ℤ)] γ) z = (E₂ ∣[(2 : ℤ)] γ) z * (E₂ ∣[(2 : ℤ)] γ) z by
         simpa using congrFun hprod z]
   set α := (1 : ℂ) / (2 * riemannZeta 2) with hα_def
-  have hE₂slash_fun : (E₂ ∣[(2 : ℤ)] γ) = E₂ - α • D₂ γ := by
-    ext w; simpa using congrFun hE₂slash w
+  have hE₂slash_fun : (E₂ ∣[(2 : ℤ)] γ) = E₂ - α • D₂ γ := by ext w; simpa using congrFun hE₂slash w
   rw [hE₂slash_fun]
   simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
   have hD_lin : D (E₂ - α • D₂ γ) z = D E₂ z - α * D (D₂ γ) z := by

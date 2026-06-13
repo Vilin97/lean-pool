@@ -372,8 +372,7 @@ lemma Delta_isTheta_rexp : Delta =Θ[atImInfty] (fun τ => Real.exp (-2 * π * �
     rw [Complex.norm_exp]
   simp only [mul_re, re_ofNat, ofReal_re, im_ofNat, ofReal_im, mul_zero, sub_zero, Complex.I_re,
     mul_im, zero_mul, add_zero, Complex.I_im, mul_one, sub_self, coe_re, coe_im, zero_sub]
-  have hm : 0 ≤ 2 * rexp (-(2 * π * z.im)) := by
-    positivity
+  have hm : 0 ≤ 2 * rexp (-(2 * π * z.im)) := by positivity
   have h4 := mul_le_mul_of_nonneg_left hA3 hm
   conv at h4 =>
     enter [1]

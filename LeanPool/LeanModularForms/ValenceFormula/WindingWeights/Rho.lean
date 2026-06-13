@@ -584,8 +584,7 @@ private lemma norm_le_middle_rho (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
       rw [g_norm_arc ht1 ht3']
       rw [← h_norm_L, g_norm_seg2 hδ_L_pos hδ_L_lt_one]
       have h_3mt_le : 3 - t ≤ δ_L := by linarith
-      have h_angle_le : (3 - t) * Real.pi / 12 ≤ δ_L * Real.pi / 12 := by
-        nlinarith [Real.pi_pos]
+      have h_angle_le : (3 - t) * Real.pi / 12 ≤ δ_L * Real.pi / 12 := by nlinarith [Real.pi_pos]
       exact mul_le_mul_of_nonneg_left
         (Real.sin_le_sin_of_le_of_le_pi_div_two
           (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos]) h_angle_le)
@@ -613,8 +612,7 @@ private lemma cutoff_integral_eq_ftc (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
   have hε_half_neg : -1 ≤ ε / 2 := by linarith
   have hpi_pos : 0 < Real.pi := Real.pi_pos
   have hδ_R_pos : 0 < δ_R := div_pos hε hH_gap
-  have hδ_R_lt_one : δ_R < 1 := by
-    rw [hδ_R_def, div_lt_one hH_gap]; linarith
+  have hδ_R_lt_one : δ_R < 1 := by rw [hδ_R_def, div_lt_one hH_gap]; linarith
   have hδ_L_pos : 0 < δ_L := by
     rw [hδ_L_def]; exact mul_pos (div_pos (by norm_num) hpi_pos)
       (Real.arcsin_pos.mpr (by linarith))
@@ -630,8 +628,7 @@ private lemma cutoff_integral_eq_ftc (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
         < 12 / Real.pi * (Real.pi / 12) :=
           mul_lt_mul_of_pos_left harcsin_lt (div_pos (by norm_num) hpi_pos)
       _ = 1 := by field_simp
-  have hδ_L_angle : δ_L * Real.pi / 12 = Real.arcsin (ε / 2) := by
-    rw [hδ_L_def]; field_simp
+  have hδ_L_angle : δ_L * Real.pi / 12 = Real.arcsin (ε / 2) := by rw [hδ_L_def]; field_simp
   have h_norm_L : ‖g (3 - δ_L)‖ = ε := by
     change ‖fdBoundaryH H (3 - δ_L) - ellipticPointRho‖ = ε
     rw [g_norm_seg2 hδ_L_pos hδ_L_lt_one, hδ_L_angle,
@@ -678,8 +675,7 @@ private lemma cutoff_integral_eq_ftc (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
     norm_le_middle_rho H hH hε hδ_L_pos hδ_L_lt_one hδ_R_pos hδ_R_lt_one h_norm_L h_norm_R hH_gap
   have hF_when_gt (t : ℝ) (h_gt : ‖g t‖ > ε) : F t = deriv g t / g t := by
     simp only [hF_def, if_pos h_gt, mul_comm (g t)⁻¹, div_eq_mul_inv]
-  have hF_when_le (t : ℝ) (h_le : ¬(‖g t‖ > ε)) : F t = 0 := by
-    simp only [hF_def, if_neg h_le]
+  have hF_when_le (t : ℝ) (h_le : ¬(‖g t‖ > ε)) : F t = 0 := by simp only [hF_def, if_neg h_le]
   have hF_eq_left_ae :
       ∀ᵐ t ∂volume, t ∈ Ι (0 : ℝ) (3 - δ_L) → F t = deriv g t / g t := by
     have : ({3 - δ_L} : Set ℝ)ᶜ ∈ ae volume :=
@@ -714,8 +710,7 @@ private lemma cutoff_integral_eq_ftc (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
     (hF_int_left.trans hF_int_mid) hF_int_right
   have h_split : ∫ t in (0 : ℝ)..5, F t =
       (∫ t in (0 : ℝ)..(3 - δ_L), F t) + (∫ t in (3 - δ_L)..(3 + δ_R), F t) +
-      (∫ t in (3 + δ_R)..(5 : ℝ), F t) := by
-    rw [← h_adj2, ← h_adj1]
+      (∫ t in (3 + δ_R)..(5 : ℝ), F t) := by rw [← h_adj2, ← h_adj1]
   have h_mid_zero : ∫ t in (3 - δ_L)..(3 + δ_R), F t = 0 := by
     rw [intervalIntegral.integral_congr_ae (ae_of_all _ (fun t ht => hF_eq_mid t ht))]
     simp [intervalIntegral.integral_zero]

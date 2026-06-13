@@ -98,8 +98,7 @@ lemma f₂_decompose :
 
 /-- f₄ decomposes as serreD 2 H₄ + (1/6) • (H₄ * (2*H₂ + H₄)) -/
 lemma f₄_decompose :
-    f₄ = serreD (2 : ℤ) H₄ + ((1/6 : ℂ) • (H₄ * ((2 : ℂ) • H₂ + H₄))) := by
-  rfl
+    f₄ = serreD (2 : ℤ) H₄ + ((1/6 : ℂ) • (H₄ * ((2 : ℂ) • H₂ + H₄))) := by rfl
 
 /-!
 ## Phase 2: MDifferentiable for Error Terms
@@ -587,16 +586,14 @@ Their difference is a weight-4 cusp form, hence zero by dimension vanishing.
 
 /-- S-action on HSumSq: invariant since H₂|S = -H₄ and H₄|S = -H₂ -/
 private lemma H_sum_sq_S_action : (HSumSq ∣[(4 : ℤ)] S) = HSumSq := by
-  have h_eq : HSumSq = H₂ * H₂ + H₂ * H₄ + H₄ * H₄ := by
-    ext z; simp [HSumSq, sq]
+  have h_eq : HSumSq = H₂ * H₂ + H₂ * H₄ + H₄ * H₄ := by ext z; simp [HSumSq, sq]
   simp only [h_eq, show (4 : ℤ) = 2 + 2 from by norm_num,
     SlashAction.add_slash, mul_slash_SL2 2 2 S _ _, H₂_S_action, H₄_S_action]
   ext z; simp [Pi.mul_apply, Pi.add_apply]; ring
 
 /-- T-action on HSumSq: invariant since H₂|T = -H₂ and H₄|T = H₃ = H₂+H₄ -/
 private lemma H_sum_sq_T_action : (HSumSq ∣[(4 : ℤ)] T) = HSumSq := by
-  have h_eq : HSumSq = H₂ * H₂ + H₂ * H₄ + H₄ * H₄ := by
-    ext z; simp [HSumSq, sq]
+  have h_eq : HSumSq = H₂ * H₂ + H₂ * H₄ + H₄ * H₄ := by ext z; simp [HSumSq, sq]
   simp only [h_eq, show (4 : ℤ) = 2 + 2 from by norm_num,
     SlashAction.add_slash, mul_slash_SL2 2 2 T _ _, H₂_T_action, H₄_T_action, ← jacobi_identity]
   ext z; simp [Pi.mul_apply, Pi.add_apply]; ring

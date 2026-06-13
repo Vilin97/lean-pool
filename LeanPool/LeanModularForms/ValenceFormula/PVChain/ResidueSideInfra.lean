@@ -73,8 +73,7 @@ lemma fdBox_convex (M : ℝ) : Convex ℝ (fdBox M) := by
          him ▸ strict_convex_comb_lb ha hb hab hx.2.2.1 hy.2.2.1,
          him ▸ strict_convex_comb_ub ha hb hab hx.2.2.2 hy.2.2.2⟩
 
-private lemma fdBox_im_pos' {M : ℝ} {z : ℂ} (hz : z ∈ fdBox M) : 0 < z.im := by
-  linarith [hz.2.2.1]
+private lemma fdBox_im_pos' {M : ℝ} {z : ℂ} (hz : z ∈ fdBox M) : 0 < z.im := by linarith [hz.2.2.1]
 
 /-! ### allZerosInFdBox -/
 
@@ -383,8 +382,7 @@ private lemma logDerivPatched_eventuallyEq_raw_punctured (F : ℂ → ℂ) (S0 :
     logDerivPatched F S0 hsp =ᶠ[𝓝[≠] s] F := by
   rw [Filter.EventuallyEq, eventually_nhdsWithin_iff]
   have h_open : IsOpen ((↑(S0.erase s) : Set ℂ)ᶜ) := (S0.erase s).finite_toSet.isClosed.isOpen_compl
-  have h_s_mem : s ∈ ((↑(S0.erase s) : Set ℂ)ᶜ) := by
-    simp [Set.mem_compl_iff]
+  have h_s_mem : s ∈ ((↑(S0.erase s) : Set ℂ)ᶜ) := by simp [Set.mem_compl_iff]
   filter_upwards [h_open.mem_nhds h_s_mem] with z hz hzne
   exact dif_neg (fun habs => hz (Finset.mem_coe.mpr (Finset.mem_erase.mpr ⟨hzne, habs⟩)))
 
@@ -450,8 +448,7 @@ omit f hf in
 /-- `‖fdBoundaryH H t‖ ≥ 1` for `t ∈ [0, 5]` when `H ≥ 1`. -/
 lemma fdBoundary_H_norm_ge_one {H : ℝ} (hH : 1 ≤ H) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5) :
     ‖fdBoundaryH H t‖ ≥ 1 := by
-  have hH_sqrt3 : Real.sqrt 3 / 2 ≤ H := by
-    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
+  have hH_sqrt3 : Real.sqrt 3 / 2 ≤ H := by nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
   by_cases h1 : t ≤ 1
   · rw [fdBoundary_H_eq_seg1_H h1]
     have hre : (fdBoundarySeg1H H t).re = 1/2 := by
@@ -612,8 +609,7 @@ lemma winding_zero_for_non_fd_point_H_geo (S : Finset UpperHalfPlane)
     exact hz₀_not_S s (hS_complete s h_fd h_ord) rfl
   have h_off : ∀ t ∈ Icc (0 : ℝ) 5, fdBoundaryH H t ≠ z₀ :=
     off_curve_of_not_in_fd_H hH z₀ hz₀_not_fd
-  have hH_sqrt3 : Real.sqrt 3 / 2 < H := by
-    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
+  have hH_sqrt3 : Real.sqrt 3 / 2 < H := by nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
   have h_classical := generalizedWindingNumber_eq_classical_away
     (fdBoundaryHCurve H) z₀ (by intro t ht; exact h_off t ht)
   rw [show (fdBoundaryHCurve H).toFun = fdBoundaryH H from rfl,
@@ -640,13 +636,10 @@ lemma winding_zero_for_non_fd_point_H_geo (S : Finset UpperHalfPlane)
       rw [Complex.mem_slitPlane_iff]
       by_contra h_not_slit; push Not at h_not_slit
       have h_re_neg_I : ((-I) * (fdBoundaryH H t - z₀)).re =
-          (fdBoundaryH H t).im - z₀.im := by
-        simp [mul_re, neg_re, I_re, I_im, sub_re, sub_im]
+          (fdBoundaryH H t).im - z₀.im := by simp [mul_re, neg_re, I_re, I_im, sub_re, sub_im]
       have h_im_neg_I : ((-I) * (fdBoundaryH H t - z₀)).im =
-          -((fdBoundaryH H t).re - z₀.re) := by
-        simp [mul_im, neg_im, I_re, I_im, sub_re, sub_im]
-      have h1 : (fdBoundaryH H t).im ≤ z₀.im := by
-        linarith [h_re_neg_I ▸ h_not_slit.1]
+          -((fdBoundaryH H t).re - z₀.re) := by simp [mul_im, neg_im, I_re, I_im, sub_re, sub_im]
+      have h1 : (fdBoundaryH H t).im ≤ z₀.im := by linarith [h_re_neg_I ▸ h_not_slit.1]
       have h2 : (fdBoundaryH H t).re = z₀.re := by
         have := h_not_slit.2; rw [h_im_neg_I] at this; linarith
       have h_sq_norm_z₀ := Complex.sq_norm z₀

@@ -293,8 +293,7 @@ lemma eta_logDeriv_eql' (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z 
     rw [E, add_mul, add_comm]
     congr 1
     · have hzne := ne_zero z
-      have hI : Complex.I ≠ 0 := by
-        exact I_ne_zero
+      have hI : Complex.I ≠ 0 := I_ne_zero
       have hpi : (π : ℂ) ≠ 0 := by
         simp only [ne_eq, ofReal_eq_zero]
         exact Real.pi_ne_zero
@@ -320,8 +319,7 @@ lemma eta_logDeriv_eql' (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z 
 lemma eta_logderivs' : {z : ℂ | 0 < z.im}.EqOn (logDeriv (η ∘ (fun z : ℂ => -1/z)))
   (logDeriv ((csqrt) * η)) := by
   intro z hz
-  have := eta_logDeriv_eql' ⟨z, hz⟩
-  exact this
+  exact eta_logDeriv_eql' ⟨z, hz⟩
 
 lemma eta_logderivs_const' : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   (z • ((csqrt) * η)) := by

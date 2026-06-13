@@ -260,8 +260,7 @@ lemma cpv_exists_inv_sub_of_closed_unique
               Complex.norm_real, Real.norm_eq_abs, abs_of_pos Real.pi_pos,
               Complex.norm_I, mul_one]
           have h_dist : dist (↑n * (2 * ↑Real.pi * I)) (↑m * (2 * ↑Real.pi * I)) =
-              ‖(↑(n - m) : ℂ)‖ * (2 * Real.pi) := by
-            rw [dist_eq_norm, h_sub, norm_mul, h_norm_2piI]
+              ‖(↑(n - m) : ℂ)‖ * (2 * Real.pi) := by rw [dist_eq_norm, h_sub, norm_mul, h_norm_2piI]
           rw [h_dist, Complex.norm_intCast] at hz_ball
           have h_int_pos : (1 : ℝ) ≤ |(↑(n - m) : ℝ)| := by
             have h1 := Int.one_le_abs (sub_ne_zero.mpr (Ne.symm hmn))

@@ -98,8 +98,7 @@ private lemma contourIntegral_add_principalPart_regularPart (f : ℂ → ℂ) (s
   have h_decomp : ∀ t ∈ Set.uIcc γ.a γ.b,
       f (γ.toFun t) * deriv γ.toFun t =
       pp (γ.toFun t) * deriv γ.toFun t +
-        (f (γ.toFun t) - pp (γ.toFun t)) * deriv γ.toFun t := by
-    intro t _; ring
+        (f (γ.toFun t) - pp (γ.toFun t)) * deriv γ.toFun t := by intro t _; ring
   rw [intervalIntegral.integral_congr h_decomp]
   have h_pp_int : IntervalIntegrable
       (fun t => pp (γ.toFun t) * deriv γ.toFun t) volume γ.a γ.b :=

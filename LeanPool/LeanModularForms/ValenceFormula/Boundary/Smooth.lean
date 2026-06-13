@@ -353,16 +353,13 @@ lemma fdBoundary_H_hasDerivAt_seg5 (H : ℝ) {t : ℝ} (h4 : 4 < t) :
   exact hd.congr_of_eventuallyEq heq
 
 theorem continuous_fdBoundary_seg1_H (H : ℝ) :
-    Continuous (fdBoundarySeg1H H) := by
-  unfold fdBoundarySeg1H; fun_prop
+    Continuous (fdBoundarySeg1H H) := by unfold fdBoundarySeg1H; fun_prop
 
 theorem continuous_fdBoundary_seg4_H (H : ℝ) :
-    Continuous (fdBoundarySeg4H H) := by
-  unfold fdBoundarySeg4H; fun_prop
+    Continuous (fdBoundarySeg4H H) := by unfold fdBoundarySeg4H; fun_prop
 
 theorem continuous_fdBoundary_seg5_H (H : ℝ) :
-    Continuous (fdBoundarySeg5H H) := by
-  unfold fdBoundarySeg5H; fun_prop
+    Continuous (fdBoundarySeg5H H) := by unfold fdBoundarySeg5H; fun_prop
 
 lemma hasDerivAt_fdBoundary_seg1_H (H t : ℝ) :
     HasDerivAt (fdBoundarySeg1H H) (-(↑(H - Real.sqrt 3 / 2) : ℂ) * I) t := by
@@ -388,8 +385,7 @@ lemma hasDerivAt_fdBoundary_seg4_H (H t : ℝ) :
 lemma hasDerivAt_fdBoundary_seg5_H (H t : ℝ) :
     HasDerivAt (fdBoundarySeg5H H) 1 t := by
   have hfun : fdBoundarySeg5H H = fun s : ℝ =>
-      ((-9 / 2 : ℂ) + ↑H * I) + ↑s * (1 : ℂ) := by
-    ext s; simp only [fdBoundarySeg5H]; ring
+      ((-9 / 2 : ℂ) + ↑H * I) + ↑s * (1 : ℂ) := by ext s; simp only [fdBoundarySeg5H]; ring
   rw [hfun]
   exact (((hasDerivAt_id t).ofReal_comp).mul_const _).const_add _
     |>.congr_deriv (by norm_cast)
@@ -525,8 +521,7 @@ private lemma arc_eventuallyEq_right_1 (H : ℝ) :
   have hs_ici : (1 : ℝ) ≤ s := hs.2
   rcases eq_or_lt_of_le hs_ici with rfl | hs1
   · simp only [fdBoundaryH, show (1 : ℝ) ≤ 1 from le_rfl, ite_true]
-    have harg : (↑Real.pi * (↑(1 : ℝ) + 1) / 6) * I = ↑(Real.pi / 3 : ℝ) * I := by
-      push_cast; ring
+    have harg : (↑Real.pi * (↑(1 : ℝ) + 1) / 6) * I = ↑(Real.pi / 3 : ℝ) * I := by push_cast; ring
     rw [harg, exp_mul_I, ← ofReal_cos, ← ofReal_sin,
       Real.cos_pi_div_three, Real.sin_pi_div_three]
     push_cast; ring
@@ -539,8 +534,7 @@ lemma fdBoundary_H_not_differentiableAt_1 {H : ℝ} (_hH : Real.sqrt 3 / 2 < H) 
     (fdBoundary_H_eq_seg1_H le_rfl).symm
   have hval_arc : (fun s => exp ((↑Real.pi * (↑s + 1) / 6) * I)) 1 = fdBoundaryH H 1 := by
     dsimp only
-    have harg : (↑Real.pi * ((1 : ℂ) + 1) / 6) * I = ↑(Real.pi / 3 : ℝ) * I := by
-      push_cast; ring
+    have harg : (↑Real.pi * ((1 : ℂ) + 1) / 6) * I = ↑(Real.pi / 3 : ℝ) * I := by push_cast; ring
     rw [harg, exp_mul_I]
     simp only [fdBoundaryH, show (1 : ℝ) ≤ 1 from le_rfl, ite_true]
     rw [← ofReal_cos, ← ofReal_sin,
@@ -804,8 +798,7 @@ lemma fdBoundary_H_deriv_continuousOn_Ioo_45 (H : ℝ) :
 
 private lemma norm_cast_sub_eq {H : ℝ} (hH : Real.sqrt 3 / 2 < H) :
     ‖(↑H - ↑(Real.sqrt 3) / 2 : ℂ)‖ = H - Real.sqrt 3 / 2 := by
-  have hcast : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) = ↑(H - Real.sqrt 3 / 2) := by
-    push_cast; ring
+  have hcast : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) = ↑(H - Real.sqrt 3 / 2) := by push_cast; ring
   rw [hcast, Complex.norm_real, Real.norm_of_nonneg (by linarith)]
 
 lemma fdBoundary_H_deriv_bound_ex {H : ℝ}

@@ -542,8 +542,7 @@ theorem cauchyPV_sectorCurve_eq_mul_residueSimplePole (r : ℝ) (hr : 0 < r) (α
           deriv (sectorCurve r α) t
         else 0) := by
     intro ε hε t; split_ifs with h
-    · have hne : sectorCurve r α t ≠ 0 := by
-        intro heq; simp [heq] at h; linarith
+    · have hne : sectorCurve r α t ≠ 0 := by intro heq; simp [heq] at h; linarith
       rw [hf_eq _ hne]
     · rfl
   have h_sp := cauchyPV_sectorCurve_simplePole r hr α hα_nonneg hα_le c g hg
@@ -597,8 +596,7 @@ private theorem sectorCurve_norm_le_near_three (r : ℝ) (hr : 0 < r) (α : ℝ)
     ∀ t ∈ Icc (3 - δ) 3, ‖sectorCurve r α t‖ ≤ ε := by
   intro t ht
   rw [sectorCurve_norm_seg3' r hr α t ⟨le_trans (by linarith : 2 ≤ 3 - δ) ht.1, ht.2⟩]
-  calc (3 - t) * r ≤ δ * r := by
-        apply mul_le_mul_of_nonneg_right _ hr.le; linarith [ht.1]
+  calc (3 - t) * r ≤ δ * r := by apply mul_le_mul_of_nonneg_right _ hr.le; linarith [ht.1]
     _ = ε := hδr_eq
 
 private theorem sectorCurve_norm_gt_mid (r : ℝ) (hr : 0 < r) (α : ℝ)
@@ -616,8 +614,7 @@ private theorem sectorCurve_norm_gt_mid (r : ℝ) (hr : 0 < r) (α : ℝ)
       rw [this]; exact hε_lt_r
     · rw [sectorCurve_norm_seg3' r hr α t ⟨le_of_lt h2, by linarith [ht.2]⟩]
       calc ε = δ * r := hδr_eq.symm
-        _ < (3 - t) * r := by
-          apply mul_lt_mul_of_pos_right _ hr; linarith [ht.2]
+        _ < (3 - t) * r := by apply mul_lt_mul_of_pos_right _ hr; linarith [ht.2]
 
 private theorem zpow_integrableOn_δ1 (r : ℝ) (hr : 0 < r) (α : ℝ)
     (n : ℕ) (δ : ℝ) (hδ_pos : 0 < δ) (hδ_lt_1 : δ < 1) :

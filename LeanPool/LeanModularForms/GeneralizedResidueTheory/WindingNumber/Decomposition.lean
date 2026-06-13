@@ -247,8 +247,7 @@ theorem externalWindingContribution_translate
     cauchyPrincipalValue' (·⁻¹)
       (fun t => γ.toFun t - z₀) γ.a γ.b 0
   have h_eq : (fun t => (γ.translate c).toFun t - (z₀ + c)) =
-      (fun t => γ.toFun t - z₀) := by
-    ext t; simp only [PiecewiseC1Immersion.translate]; ring
+      (fun t => γ.toFun t - z₀) := by ext t; simp only [PiecewiseC1Immersion.translate]; ring
   rw [h_eq]
 
 /-- Winding number with angles is additive over disjoint crossing sets. -/

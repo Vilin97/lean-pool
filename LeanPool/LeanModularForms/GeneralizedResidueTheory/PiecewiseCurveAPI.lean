@@ -70,8 +70,7 @@ theorem sortedPartition_sorted (γ : PiecewiseC1Curve) :
 
 /-- The `sortedPartition` has no duplicates. -/
 theorem sortedPartition_nodup (γ : PiecewiseC1Curve) :
-    γ.sortedPartition.Nodup := by
-  simp only [sortedPartition, Finset.sort_nodup]
+    γ.sortedPartition.Nodup := by simp only [sortedPartition, Finset.sort_nodup]
 
 /-- The `sortedPartition` is nonempty (contains at least `a` and `b`). -/
 theorem sortedPartition_nonempty (γ : PiecewiseC1Curve) :

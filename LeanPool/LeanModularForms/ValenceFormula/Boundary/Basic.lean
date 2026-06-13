@@ -37,8 +37,7 @@ lemma one_lt_heightCutoff : 1 < heightCutoff := by
   linarith [Real.sqrt_pos_of_pos (show (3 : ℝ) > 0 by norm_num)]
 
 lemma sqrt3_div2_lt_heightCutoff :
-    Real.sqrt 3 / 2 < heightCutoff := by
-  unfold heightCutoff; linarith
+    Real.sqrt 3 / 2 < heightCutoff := by unfold heightCutoff; linarith
 
 /-- Segment 1: right vertical from (1/2 + H·i) down to ρ+1. -/
 def fdBoundarySeg1 : ℝ → ℂ := fun t =>
@@ -238,8 +237,7 @@ lemma fdBoundary_H_at_five (H : ℝ) :
   push_cast; ring
 
 lemma fdBoundary_H_closed (H : ℝ) :
-    fdBoundaryH H 0 = fdBoundaryH H 5 := by
-  rw [fdBoundary_H_at_zero, fdBoundary_H_at_five]
+    fdBoundaryH H 0 = fdBoundaryH H 5 := by rw [fdBoundary_H_at_zero, fdBoundary_H_at_five]
 
 private lemma fdBoundary_H_seg1_cont (H : ℝ) :
     Continuous (fun t : ℝ => (1 : ℂ) / 2 + (↑H - ↑t * (↑H - ↑(Real.sqrt 3) / 2)) * I) :=
@@ -328,8 +326,7 @@ theorem fdBoundary_H_continuous (H : ℝ) :
     Continuous (fdBoundaryH H) := by
   have : (fdBoundaryH H) = (fun t => if t ≤ 1 then
       1 / 2 + (↑H - ↑t * (↑H - ↑(Real.sqrt 3) / 2)) * I
-      else fdBoundary_H_inner1234 H t) := by
-    ext t; exact fdBoundary_H_eq_layered H t
+      else fdBoundary_H_inner1234 H t) := by ext t; exact fdBoundary_H_eq_layered H t
   rw [this]
   apply Continuous.if_le (fdBoundary_H_seg1_cont H) (fdBoundary_H_inner1234_cont H)
     continuous_id continuous_const

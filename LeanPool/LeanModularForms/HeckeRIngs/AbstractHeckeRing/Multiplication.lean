@@ -529,8 +529,7 @@ lemma heckeMultiplicity_one_mul (g₁ d : P.Δ) :
         change (h₀ * ↑j₀.out * (↑g₁ : G))⁻¹ * ↑d ∈ P.H
         have key : (h₀ * ↑j₀.out * (↑g₁ : G))⁻¹ * ↑d =
             ((↑g₁ : G)⁻¹ * (↑n : G)⁻¹ * ↑g₁) *
-            ((↑j'.out * (↑g₁ : G))⁻¹ * ↑d) := by
-          rw [hn_coe]; group
+            ((↑j'.out * (↑g₁ : G))⁻¹ * ↑d) := by rw [hn_coe]; group
         rw [key]
         exact P.H.mul_mem (by convert P.H.inv_mem hn_conj using 1; group) hj'⟩⟩
   · intro hm; by_contra hne

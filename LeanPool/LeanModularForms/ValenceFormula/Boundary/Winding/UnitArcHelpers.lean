@@ -60,8 +60,7 @@ lemma unitArc_fdBoundary_eq (H : ℝ) (s : ℂ)
   intro t₀
   have ht₀_Ioo := unitArc_t₀_mem_Ioo s hs_re hs_im_pos
   rw [fdBoundary_H_eq_arc ht₀_Ioo.1 ht₀_Ioo.2]
-  have h_angle : Real.pi * (1 + t₀) / 6 = Real.arccos s.re := by
-    simp only [t₀]; field_simp; ring
+  have h_angle : Real.pi * (1 + t₀) / 6 = Real.arccos s.re := by simp only [t₀]; field_simp; ring
   rw [h_angle]
   rw [exp_real_angle_I]
   have hs_re_range : s.re ∈ Icc (-1 : ℝ) 1 := by
@@ -162,8 +161,7 @@ private lemma unitArc_unique_crossing (H : ℝ) (hH : 1 < H) (s : ℂ)
 private lemma unitArc_dist_from_seg1 (s : ℂ) (hs_re : |s.re| < 1 / 2) (z : ℂ)
     (hz_re : z.re = 1 / 2) : 1/2 - s.re ≤ ‖z - s‖ := by
   have hd : (z - s).re = 1/2 - s.re := by simp [Complex.sub_re, hz_re]
-  calc 1/2 - s.re = |(z - s).re| := by
-        rw [hd, abs_of_pos (by linarith [(abs_lt.mp hs_re).2])]
+  calc 1/2 - s.re = |(z - s).re| := by rw [hd, abs_of_pos (by linarith [(abs_lt.mp hs_re).2])]
     _ ≤ ‖z - s‖ := Complex.abs_re_le_norm _
 
 private lemma unitArc_dist_from_seg4 (s : ℂ) (hs_re : |s.re| < 1 / 2) (z : ℂ)

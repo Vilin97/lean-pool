@@ -340,8 +340,7 @@ theorem zpow_boundary_diff_tendsto_zero
       =o[𝓝[>] 0] (fun ε => (ε : ℝ) ^ (n - 1 : ℕ)) := by
     have h_eq : (fun ε => (wR ε / ↑‖wR ε‖) ^ k - (wL ε / ↑‖wL ε‖) ^ k) =
         fun ε => ((wR ε / ↑‖wR ε‖) ^ k - uR ^ k) -
-          ((wL ε / ↑‖wL ε‖) ^ k - uL ^ k) := by
-      ext ε; rw [h_angle]; ring
+          ((wL ε / ↑‖wL ε‖) ^ k - uL ^ k) := by ext ε; rw [h_angle]; ring
     rw [h_eq]; exact h_oR.sub h_oL
   rw [Metric.tendsto_nhds]
   intro η hη
@@ -451,8 +450,7 @@ lemma unit_zpow_eq_of_angle_multiple
   have h_eq : ↑k * (↑(arg z₁) * I) -
       (↑k * (↑(arg z₂) * I) + ↑n * (2 * ↑Real.pi * I)) =
       ↑((↑k : ℝ) * (arg z₁ - arg z₂) -
-        (↑n : ℝ) * (2 * Real.pi)) * I := by
-    push_cast; ring
+        (↑n : ℝ) * (2 * Real.pi)) * I := by push_cast; ring
   rw [h_eq, mul_eq_zero]
   left
   rw [ofReal_eq_zero]
@@ -590,8 +588,7 @@ lemma re_pos_right_of_slope
       sub_smul_slope _ _ _
     rw [vsub_eq_sub, hcross] at hsub
     have hmul : (↑(t - t₀) : ℂ) * (slope γ.toFun t₀ t * starRingEnd ℂ L_R) =
-        (γ.toFun t - s) * starRingEnd ℂ L_R := by
-      rw [← mul_assoc, ← Complex.real_smul, hsub]
+        (γ.toFun t - s) * starRingEnd ℂ L_R := by rw [← mul_assoc, ← Complex.real_smul, hsub]
     simp only [← hmul, mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
   linarith [mul_pos h_pos_factor h_slope_pos]
 
@@ -638,8 +635,7 @@ lemma re_pos_left_of_slope
       sub_smul_slope _ _ _
     rw [vsub_eq_sub, hcross] at hsub
     have hmul : (↑(t - t₀) : ℂ) * (slope γ.toFun t₀ t * starRingEnd ℂ (-L_L)) =
-        (γ.toFun t - s) * starRingEnd ℂ (-L_L) := by
-      rw [← mul_assoc, ← Complex.real_smul, hsub]
+        (γ.toFun t - s) * starRingEnd ℂ (-L_L) := by rw [← mul_assoc, ← Complex.real_smul, hsub]
     simp only [← hmul, mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
   linarith [mul_pos_of_neg_of_neg h_neg_factor h_slope_neg]
 

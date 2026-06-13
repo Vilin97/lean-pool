@@ -276,8 +276,7 @@ private lemma deriv_cont_seg3 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
         have := h_shift.mul_const ((Real.pi : ℂ) / 6)
         simp only [one_mul] at this
         exact this
-      have := h_mul.const_add ((Real.pi : ℂ) / 2)
-      exact this
+      exact h_mul.const_add ((Real.pi : ℂ) / 2)
     have h_times_I :
         HasDerivAt (fun t' : ℝ =>
             ((Real.pi : ℂ) / 2 + ((t' : ℂ) - 2) *

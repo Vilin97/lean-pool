@@ -109,8 +109,7 @@ theorem windingNumberCycle_eq_zero_outside
     {z : ℂ} (hz : z ∉ U) :
     windingNumberCycle Γ z = 0 := by
   simp only [windingNumberCycle, Finsupp.sum]
-  exact Finset.sum_eq_zero fun γ hγ => by
-    rw [(h_null γ hγ).winding_zero z hz, mul_zero]
+  exact Finset.sum_eq_zero fun γ hγ => by rw [(h_null γ hγ).winding_zero z hz, mul_zero]
 
 /-! ### Residue theorem for cycles (simple poles) -/
 

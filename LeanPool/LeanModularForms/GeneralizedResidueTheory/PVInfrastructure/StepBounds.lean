@@ -93,8 +93,7 @@ lemma integral_inv_symm
     (∫ t in (t₀ + ε₁)..(t₀ + ε₂),
       (↑(t - t₀) : ℂ)⁻¹) = 0 := by
   have h_odd : ∀ u : ℝ,
-      (↑(-u) : ℂ)⁻¹ = -((↑u : ℂ)⁻¹) := by
-    intro u; simp only [ofReal_neg, neg_inv]
+      (↑(-u) : ℂ)⁻¹ = -((↑u : ℂ)⁻¹) := by intro u; simp only [ofReal_neg, neg_inv]
   have h_reflect :
       ∫ t in (t₀ - ε₂)..(t₀ - ε₁),
         (↑(t - t₀) : ℂ)⁻¹ =
@@ -132,12 +131,9 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
           ‖r t‖ ≤ g t := by
       intro t ⟨ht_lo, ht_hi⟩
       have h_t_minus : t - t₀ < 0 := by linarith
-      have h_abs : |t - t₀| = t₀ - t := by
-        rw [abs_of_neg h_t_minus]; ring
-      have h_abs_lo : c₁ < |t - t₀| := by
-        rw [h_abs]; linarith
-      have h_abs_hi : |t - t₀| < c₂ := by
-        rw [h_abs]; linarith
+      have h_abs : |t - t₀| = t₀ - t := by rw [abs_of_neg h_t_minus]; ring
+      have h_abs_lo : c₁ < |t - t₀| := by rw [h_abs]; linarith
+      have h_abs_hi : |t - t₀| < c₂ := by rw [h_abs]; linarith
       have h_bound := hr_bound t h_abs_lo h_abs_hi
       simp only [g]; rwa [h_abs] at h_bound
     have h_norm_le_ae :
@@ -210,10 +206,8 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
       have h_t_minus : t - t₀ > 0 := by linarith
       have h_abs : |t - t₀| = t - t₀ :=
         abs_of_pos h_t_minus
-      have h_abs_lo : c₁ < |t - t₀| := by
-        rw [h_abs]; linarith
-      have h_abs_hi : |t - t₀| < c₂ := by
-        rw [h_abs]; linarith
+      have h_abs_lo : c₁ < |t - t₀| := by rw [h_abs]; linarith
+      have h_abs_hi : |t - t₀| < c₂ := by rw [h_abs]; linarith
       have h_bound := hr_bound t h_abs_lo h_abs_hi
       simp only [g]; rwa [h_abs] at h_bound
     have h_norm_le_ae :
@@ -548,8 +542,7 @@ lemma summableSubseqAux_le_geometric {γ : ℝ → ℂ}
       _ ≤ (ε 0 / 2 ^ m) / 2 := by
           apply div_le_div_of_nonneg_right ih
             (by norm_num : (0 : ℝ) ≤ 2)
-      _ = ε 0 / 2 ^ (m + 1) := by
-          rw [pow_succ]; ring
+      _ = ε 0 / 2 ^ (m + 1) := by rw [pow_succ]; ring
 
 /-- The summable subsequence tends to 0. -/
 lemma summableSubseqAux_tendsto_zero {γ : ℝ → ℂ}
@@ -565,8 +558,7 @@ lemma summableSubseqAux_tendsto_zero {γ : ℝ → ℂ}
     fun n => by
       have h1 := summableSubseqAux_le_geometric hL
         hγ_hasderiv hγ_cont_deriv δ₀ hδ₀_pos n
-      have h2 : ε 0 / 2 ^ n = ε 0 * (1 / 2) ^ n := by
-        rw [one_div, inv_pow, ← div_eq_mul_inv]
+      have h2 : ε 0 / 2 ^ n = ε 0 * (1 / 2) ^ n := by rw [one_div, inv_pow, ← div_eq_mul_inv]
       linarith
   have h_geom_tendsto :
       Tendsto (fun n => ε 0 * (1 / 2 : ℝ) ^ n)
@@ -748,22 +740,19 @@ lemma remainder_dyadic_step {r : ℝ → ℂ}
       (t₀ + ε₀ / 2 ^ n), r t‖ ≤
         2 * η * Real.log 2 := by
   have h_pow_pos : (0 : ℝ) < 2 ^ n := by positivity
-  have h_pow1_pos : (0 : ℝ) < 2 ^ (n + 1) := by
-    positivity
+  have h_pow1_pos : (0 : ℝ) < 2 ^ (n + 1) := by positivity
   have hε_n_pos : 0 < ε₀ / 2 ^ n :=
     div_pos hε₀_pos h_pow_pos
   have hε_n1_pos : 0 < ε₀ / 2 ^ (n + 1) :=
     div_pos hε₀_pos h_pow1_pos
   have h_lt : ε₀ / 2 ^ (n + 1) < ε₀ / 2 ^ n := by
     have h_pow_lt : (2 : ℝ) ^ n < 2 ^ (n + 1) := by
-      have h : (2 : ℝ) ^ (n + 1) = 2 ^ n * 2 := by
-        ring
+      have h : (2 : ℝ) ^ (n + 1) = 2 ^ n * 2 := by ring
       rw [h]; linarith
     exact div_lt_div_of_pos_left hε₀_pos h_pow_pos
       h_pow_lt
   have h_ratio :
-      (ε₀ / 2 ^ n) / (ε₀ / 2 ^ (n + 1)) = 2 := by
-    field_simp; ring
+      (ε₀ / 2 ^ n) / (ε₀ / 2 ^ (n + 1)) = 2 := by field_simp; ring
   have hr_restricted :
       ∀ t, ε₀ / 2 ^ (n + 1) < |t - t₀| →
         |t - t₀| < ε₀ / 2 ^ n →
@@ -805,8 +794,7 @@ lemma pv_dyadic_step_O_eps {r : ℝ → ℂ}
     have hb :
         ∀ t ∈ Set.uIoc (t₀ - ε_n) (t₀ - ε_n / 2),
           ‖r t‖ ≤ C := fun t ht => by
-      have hle : t₀ - ε_n ≤ t₀ - ε_n / 2 := by
-        linarith
+      have hle : t₀ - ε_n ≤ t₀ - ε_n / 2 := by linarith
       have ⟨h1, h2⟩ :=
         (Set.uIoc_of_le hle ▸
           ht : t ∈ Set.Ioc _ _)
@@ -827,8 +815,7 @@ lemma pv_dyadic_step_O_eps {r : ℝ → ℂ}
     have hb :
         ∀ t ∈ Set.uIoc (t₀ + ε_n / 2) (t₀ + ε_n),
           ‖r t‖ ≤ C := fun t ht => by
-      have hle : t₀ + ε_n / 2 ≤ t₀ + ε_n := by
-        linarith
+      have hle : t₀ + ε_n / 2 ≤ t₀ + ε_n := by linarith
       have ⟨h1, h2⟩ :=
         (Set.uIoc_of_le hle ▸
           ht : t ∈ Set.Ioc _ _)
@@ -863,8 +850,7 @@ lemma cauchySeq_pv_dyadic {I : ℝ → ℂ} {δ₀ C : ℝ}
   calc ‖I (δ₀ / 2 ^ (n + 1)) -
       I (δ₀ / 2 ^ n)‖
       ≤ C * δ₀ / 2 ^ n := h_step n
-    _ = C * δ₀ * (1 / 2) ^ n := by
-        rw [one_div, inv_pow, ← div_eq_mul_inv]
+    _ = C * δ₀ * (1 / 2) ^ n := by rw [one_div, inv_pow, ← div_eq_mul_inv]
 
 /-- t-space bound from γ-annulus. -/
 lemma t_bound_from_gamma_annulus
@@ -879,8 +865,7 @@ lemma t_bound_from_gamma_annulus
     |t - t₀| ≤ 2 * ε / ‖L‖ := by
   have hL_norm_pos : 0 < ‖L‖ := norm_pos_iff.mpr hL
   calc |t - t₀|
-      = 2 * ((‖L‖ / 2) * |t - t₀|) / ‖L‖ := by
-        field_simp
+      = 2 * ((‖L‖ / 2) * |t - t₀|) / ‖L‖ := by field_simp
     _ ≤ 2 * ‖γ t - γ t₀‖ / ‖L‖ := by
         apply div_le_div_of_nonneg_right
         · linarith [h_lower t ht_pos ht_lt]
@@ -902,15 +887,13 @@ lemma integrand_bound_on_annulus
     ‖(γ t - γ t₀)⁻¹ * deriv γ t‖ ≤
       |t - t₀|⁻¹ + C := by
   have h_inv_norm : ‖(↑(t - t₀) : ℂ)⁻¹‖ =
-      |t - t₀|⁻¹ := by
-    rw [norm_inv, Complex.norm_real, Real.norm_eq_abs]
+      |t - t₀|⁻¹ := by rw [norm_inv, Complex.norm_real, Real.norm_eq_abs]
   calc ‖(γ t - γ t₀)⁻¹ * deriv γ t‖
       ≤ ‖(γ t - γ t₀)⁻¹ * deriv γ t -
           (↑(t - t₀))⁻¹‖ +
         ‖(↑(t - t₀) : ℂ)⁻¹‖ := by
           linarith [norm_sub_norm_le ((γ t - γ t₀)⁻¹ * deriv γ t) (↑(t - t₀))⁻¹]
-    _ ≤ C + |t - t₀|⁻¹ := by
-        rw [h_inv_norm]; linarith [hr_bounded t ht_pos ht_lt]
+    _ ≤ C + |t - t₀|⁻¹ := by rw [h_inv_norm]; linarith [hr_bounded t ht_pos ht_lt]
     _ = |t - t₀|⁻¹ + C := by ring
 
 /-- Annulus localization: γ-annulus points are local. -/
@@ -990,12 +973,10 @@ lemma telescoping_sum_bound {X : Type*} [SeminormedAddCommGroup X]
         ≤ ‖I (N + d' + 2) - I (N + d' + 1)‖ +
           ‖I (N + d' + 1) - I N‖ := norm_add_le _ _
       _ ≤ K * δ / 2 ^ (N + d' + 1) +
-          (2 * K * δ / 2 ^ N - 2 * K * δ / 2 ^ (N + d' + 1)) := by
-        linarith [h_step_d', ih']
+          (2 * K * δ / 2 ^ N - 2 * K * δ / 2 ^ (N + d' + 1)) := by linarith [h_step_d', ih']
       _ = 2 * K * δ / 2 ^ N - K * δ / 2 ^ (N + d' + 1) := by ring
       _ = 2 * K * δ / 2 ^ N - 2 * K * δ / 2 ^ (N + d' + 2) := by
-        have h_pow : (2 : ℝ) ^ (N + d' + 2) = 2 * 2 ^ (N + d' + 1) := by
-          rw [pow_succ]; ring
+        have h_pow : (2 : ℝ) ^ (N + d' + 2) = 2 * 2 ^ (N + d' + 1) := by rw [pow_succ]; ring
         field_simp [h_pow]; ring
 
 end

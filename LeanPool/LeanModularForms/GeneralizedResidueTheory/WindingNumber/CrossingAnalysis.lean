@@ -90,8 +90,7 @@ lemma piecewiseC1Immersion_norm_strictMono_near_crossing
     · have hmem := Finset.mem_filter.mp (Finset.min'_mem Q hQ)
       exact ⟨Q.min' hQ, hmem.2,
         le_trans (γ.partition_subset hmem.1).2 (le_refl _),
-        fun s hs hc => by
-          linarith [Finset.min'_le Q s (Finset.mem_filter.mpr ⟨hc, hs.1⟩), hs.2]⟩
+        fun s hs hc => by linarith [Finset.min'_le Q s (Finset.mem_filter.mpr ⟨hc, hs.1⟩), hs.2]⟩
     · exact ⟨γ.b, ht₀.2, le_refl _,
         fun s hs hc => hQ ⟨s, Finset.mem_filter.mpr ⟨hc, hs.1⟩⟩⟩
   obtain ⟨l₀, hl₀, hl₀a, hno_L⟩ :
@@ -101,8 +100,7 @@ lemma piecewiseC1Immersion_norm_strictMono_near_crossing
     · have hmem := Finset.mem_filter.mp (Finset.max'_mem Q hQ)
       exact ⟨Q.max' hQ, hmem.2,
         le_trans (γ.partition_subset hmem.1).1 (le_refl _),
-        fun s hs hc => by
-          linarith [Finset.le_max' Q s (Finset.mem_filter.mpr ⟨hc, hs.2⟩), hs.1]⟩
+        fun s hs hc => by linarith [Finset.le_max' Q s (Finset.mem_filter.mpr ⟨hc, hs.2⟩), hs.1]⟩
     · exact ⟨γ.a, ht₀.1, le_refl _,
         fun s hs hc => hQ ⟨s, Finset.mem_filter.mpr ⟨hc, hs.2⟩⟩⟩
   -- Step 3: HasDerivWithinAt on Ici/Iic from one-sided tendsto (using FDeriv.Extend)
@@ -541,8 +539,7 @@ lemma exp_cutoff_integral_eq_ratio
     · have := h_left γ.a ⟨le_refl _, h'⟩; rw [h, sub_self, norm_zero] at this; linarith
   -- f equals γ'/(γ-z₀) wherever ‖γ-z₀‖ > ε
   have hf_val : ∀ t, ε < ‖γ.toFun t - z₀‖ →
-      f t = (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t := by
-    intro t h; simp only [f]; exact if_pos h
+      f t = (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t := by intro t h; simp only [f]; exact if_pos h
   -- Membership helpers
   have hσ₁_mem : σ₁ ∈ Set.uIcc γ.a γ.b := by
     rw [Set.uIcc_of_le γ.hab.le]; exact ⟨hσ₁, hσ₁₂.le.trans hσ₂⟩
@@ -612,8 +609,7 @@ lemma exp_cutoff_integral_eq_ratio
   let F : ℝ → ℂ := fun t => ∫ s in γ.a..t, f s
   let G : ℝ → ℂ := fun t => (γ.toFun t - z₀) * cexp (-F t)
   have hFa : F γ.a = 0 := intervalIntegral.integral_same
-  have hGa : G γ.a = γ.toFun γ.a - z₀ := by
-    simp only [G, hFa, neg_zero, Complex.exp_zero, mul_one]
+  have hGa : G γ.a = γ.toFun γ.a - z₀ := by simp only [G, hFa, neg_zero, Complex.exp_zero, mul_one]
   -- F continuous
   have hF_cont : ContinuousOn F (Icc γ.a γ.b) := by
     have := intervalIntegral.continuousOn_primitive_interval' h_int left_mem_uIcc
@@ -987,8 +983,7 @@ lemma crossing_ratio_tendsto
       have hL_R_eq : L_R = L_right :=
         tendsto_nhds_unique htend_R hL_right_spec.2
       rw [hL_L_eq, hL_R_eq]
-      have hL_left_ne' : (‖L_left‖ : ℂ) ≠ 0 := by
-        exact_mod_cast norm_ne_zero_iff.mpr hL_left_spec.1
+      have hL_left_ne' : (‖L_left‖ : ℂ) ≠ 0 := by exact_mod_cast norm_ne_zero_iff.mpr hL_left_spec.1
       have hL_right_ne' : (‖L_right‖ : ℂ) ≠ 0 := by
         exact_mod_cast norm_ne_zero_iff.mpr hL_right_spec.1
       -- Polar form: -L_left / ‖L_left‖ = exp(arg(-L_left) * I)
@@ -1016,8 +1011,7 @@ lemma crossing_ratio_tendsto
         rw [hL_L, hL_R]
       rw [← hL_L_eq_LR]
       have hne : (‖L_L‖ : ℂ) ≠ 0 := by exact_mod_cast ne_of_gt hL_L_pos
-      have hratio : (-L_L / ↑‖L_L‖) / (L_L / ↑‖L_L‖) = -1 := by
-        field_simp [hne, hL_L_ne]
+      have hratio : (-L_L / ↑‖L_L‖) / (L_L / ↑‖L_L‖) = -1 := by field_simp [hne, hL_L_ne]
       rw [hratio, show -(I * ↑Real.pi) = -(↑Real.pi * I) by ring,
           Complex.exp_neg, Complex.exp_pi_mul_I]
       norm_num

@@ -319,8 +319,7 @@ lemma integral_singular_term_eq_winding_times_coeff
     rw [generalizedWindingNumber_eq_classical_away γ s h_avoids]
     field_simp [h_ne]
   have h_integrand : ∀ t, c / (γ.toFun t - s) * deriv γ.toFun t =
-      c * ((γ.toFun t - s)⁻¹ * deriv γ.toFun t) := by
-    intro t; rw [div_eq_mul_inv]; ring
+      c * ((γ.toFun t - s)⁻¹ * deriv γ.toFun t) := by intro t; rw [div_eq_mul_inv]; ring
   calc ∫ t in γ.a..γ.b, c / (γ.toFun t - s) * deriv γ.toFun t
       = ∫ t in γ.a..γ.b, c * ((γ.toFun t - s)⁻¹ * deriv γ.toFun t) := by
         apply intervalIntegral.integral_congr; intro t _; exact h_integrand t
@@ -380,8 +379,7 @@ private lemma continuousAt_g_at_pole
       ext x; simp only [Finset.mem_filter, Finset.mem_singleton]
       exact ⟨fun ⟨_, hxz⟩ => hxz, fun hxz => ⟨hxz ▸ hs, hxz⟩⟩
     have hsingleton : ∑ s ∈ S0.filter (· = z), residueSimplePole f s / (w - s) =
-        residueSimplePole f z / (w - z) := by
-      rw [hfilter_eq, Finset.sum_singleton]
+        residueSimplePole f z / (w - z) := by rw [hfilter_eq, Finset.sum_singleton]
     rw [hsum_split, hsingleton]; ring
   exact (funext hg_eq_at ▸ hf_ext.sub h2 : _)
 
@@ -600,8 +598,7 @@ private lemma cpv_eq_classical_eventually_of_avoids
           (fun ⟨t, ht, hts⟩ => h_avoids s hs t ht hts)
       _ = δ := hδ_eq
   refine ⟨δ, hδ_pos, fun ε ⟨_, hε_lt_δ⟩ t ht => ?_⟩
-  have ht' : t ∈ Icc γ.a γ.b := by
-    rw [Set.uIcc_of_le (le_of_lt γ.hab)] at ht; exact ht
+  have ht' : t ∈ Icc γ.a γ.b := by rw [Set.uIcc_of_le (le_of_lt γ.hab)] at ht; exact ht
   exact cauchyPrincipalValueIntegrandOn_eq_of_far S0 f γ.toFun ε t fun s hs =>
     calc ε < δ := hε_lt_δ
       _ ≤ Metric.infDist s (γ.toFun '' Icc γ.a γ.b) :=

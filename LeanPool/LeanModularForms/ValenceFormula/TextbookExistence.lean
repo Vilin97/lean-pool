@@ -90,8 +90,7 @@ lemma orb_S_smul_eq (p : ℍ) :
 private lemma uhp_norm_one_re_zero_eq_i (p : ℍ) (hn : ‖(p : ℂ)‖ = 1) (hr : (p : ℂ).re = 0) :
     p = ellipticPointI' := by
   apply UpperHalfPlane.ext; change (p : ℂ) = I
-  have h_nsq : Complex.normSq (p : ℂ) = 1 := by
-    rw [Complex.normSq_eq_norm_sq, hn, one_pow]
+  have h_nsq : Complex.normSq (p : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hn, one_pow]
   rw [Complex.normSq_apply, hr] at h_nsq
   have h_im : (p : ℂ).im = 1 := by
     have h_prod : ((p : ℂ).im - 1) * ((p : ℂ).im + 1) = 0 := by nlinarith
@@ -105,8 +104,7 @@ private lemma uhp_norm_one_re_neg_half_eq_rho (p : ℍ)
     p = ellipticPointRho' := by
   apply UpperHalfPlane.ext
   show (p : ℂ) = (ellipticPointRho' : ℂ)
-  have h_nsq : Complex.normSq (p : ℂ) = 1 := by
-    rw [Complex.normSq_eq_norm_sq, hn, one_pow]
+  have h_nsq : Complex.normSq (p : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hn, one_pow]
   rw [Complex.normSq_apply, hr] at h_nsq
   have h_im : (p : ℂ).im = Real.sqrt 3 / 2 := by
     have h_sq : (p : ℂ).im ^ 2 = 3 / 4 := by nlinarith
@@ -126,8 +124,7 @@ private lemma uhp_norm_one_re_half_eq_rho_plus_one (p : ℍ)
     p = ellipticPointRhoPlusOne' := by
   apply UpperHalfPlane.ext
   show (p : ℂ) = (ellipticPointRhoPlusOne' : ℂ)
-  have h_nsq : Complex.normSq (p : ℂ) = 1 := by
-    rw [Complex.normSq_eq_norm_sq, hn, one_pow]
+  have h_nsq : Complex.normSq (p : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hn, one_pow]
   rw [Complex.normSq_apply, hr] at h_nsq
   have h_im : (p : ℂ).im = Real.sqrt 3 / 2 := by
     have h_sq : (p : ℂ).im ^ 2 = 3 / 4 := by nlinarith
@@ -193,8 +190,7 @@ theorem exists_repCanon_of_nonEllOrbit :
   intro q hord
   obtain ⟨hq_ne_i, hq_ne_rho⟩ := q.2
   obtain ⟨p0, hp0_orb, hp0_fd⟩ := orbit_has_fd_rep q.val
-  have hp0_ord : orderOfVanishingAt' (⇑f) p0 ≠ 0 := by
-    rw [← ordOrbit_mk f p0, hp0_orb]; exact hord
+  have hp0_ord : orderOfVanishingAt' (⇑f) p0 ≠ 0 := by rw [← ordOrbit_mk f p0, hp0_orb]; exact hord
   have hp0_s₀ : p0 ∈ s₀ f hf := s₀_complete f hf p0 hp0_fd hp0_ord
   have hp0_ne_i : p0 ≠ ellipticPointI' :=
     fun h ↦ by rw [h] at hp0_orb; exact hq_ne_i hp0_orb.symm

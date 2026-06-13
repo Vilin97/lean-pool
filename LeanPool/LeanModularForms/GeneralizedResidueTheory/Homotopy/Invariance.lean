@@ -53,8 +53,7 @@ private theorem homotopy_uniform_avoidance
     ⟨(t, s), ⟨ht, hs⟩, rfl⟩
   calc Metric.infDist z₀ _ ≤ dist z₀ (H (t, s)) :=
         Metric.infDist_le_dist_of_mem hmem
-    _ = ‖H (t, s) - z₀‖ := by
-        rw [Complex.dist_eq, norm_sub_rev]
+    _ = ‖H (t, s) - z₀‖ := by rw [Complex.dist_eq, norm_sub_rev]
 
 private lemma homotopy_integrand_continuousOn_t
     {H : ℝ × ℝ → ℂ} {a b : ℝ} {z₀ : ℂ} {P : Finset ℝ}
@@ -150,8 +149,7 @@ private lemma homotopy_pv_eq_integral
   filter_upwards [Ioo_mem_nhdsGT hδ_pos] with ε hε
   apply intervalIntegral.integral_congr_ae
   filter_upwards with t ht
-  have ht' : t ∈ Icc a b := by
-    rw [Set.uIoc_of_le hab.le] at ht; exact Ioc_subset_Icc_self ht
+  have ht' : t ∈ Icc a b := by rw [Set.uIoc_of_le hab.le] at ht; exact Ioc_subset_Icc_self ht
   simp only [f, ((mem_Ioo.mp hε).2.trans_le (hδ_bound t ht' s hs)), ↓reduceIte, deriv_sub_const]
 
 private lemma homotopy_piecewise_aestronglyMeasurable
@@ -367,8 +365,7 @@ private lemma smooth_winding_pv_eq_integral
   filter_upwards [Ioo_mem_nhdsGT hδ_pos] with ε hε
   apply intervalIntegral.integral_congr_ae
   filter_upwards with t ht
-  have ht' : t ∈ Icc a b := by
-    rw [Set.uIoc_of_le hab.le] at ht; exact Ioc_subset_Icc_self ht
+  have ht' : t ∈ Icc a b := by rw [Set.uIoc_of_le hab.le] at ht; exact Ioc_subset_Icc_self ht
   simp only [f, ((mem_Ioo.mp hε).2.trans_le (hδ_bound t ht' s hs)), ↓reduceIte, deriv_sub_const]
 
 private lemma smooth_winding_integral_continuousOn
@@ -425,8 +422,7 @@ private theorem windingNumber_continuous_in_param
     ContinuousOn.mul
       (ContinuousOn.inv₀
         (hγ_cont.sub continuous_const).continuousOn
-        (fun ⟨t, s⟩ ⟨ht, hs⟩ => by
-          simp only [ne_eq, sub_eq_zero]; exact hγ_avoid t ht s hs))
+        (fun ⟨t, s⟩ ⟨ht, hs⟩ => by simp only [ne_eq, sub_eq_zero]; exact hγ_avoid t ht s hs))
       hγ_deriv_cont.continuousOn
   obtain ⟨M, hM⟩ : ∃ M, ∀ t ∈ Icc a b, ∀ s ∈ Icc (0 : ℝ) 1, ‖f t s‖ ≤ M := by
     obtain ⟨M, hM⟩ := (isCompact_Icc.prod isCompact_Icc).exists_bound_of_continuousOn hf_cont_on

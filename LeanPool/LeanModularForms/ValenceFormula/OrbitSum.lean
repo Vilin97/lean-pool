@@ -158,8 +158,7 @@ theorem fd_im_gt_half (p : ℍ) (hp : p ∈ 𝒟) : (1 : ℝ)/2 < (p : ℂ).im :
   have h_re_sq : (p : ℂ).re * (p : ℂ).re ≤ 1/4 := by
     have hre := abs_le.mp habs_re
     nlinarith [mul_self_nonneg (p : ℂ).re, hre_bridge]
-  have him_sq : (p : ℂ).im * (p : ℂ).im ≤ 1/4 := by
-    nlinarith [p.im_pos, him_bridge]
+  have him_sq : (p : ℂ).im * (p : ℂ).im ≤ 1/4 := by nlinarith [p.im_pos, him_bridge]
   linarith
 
 private theorem no_zeros_above_height' (hf : f ≠ 0) :

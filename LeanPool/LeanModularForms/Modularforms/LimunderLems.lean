@@ -64,6 +64,4 @@ lemma limUnder_congr_eventually (f g : ℕ → ℂ) (h : ∀ᶠ n in atTop, f n 
 lemma tsum_limUnder_atTop (f : ℤ → ℂ) (hf : Summable f) : ∑' n, f n =
     limUnder atTop (fun N : ℕ => ∑ n ∈ Finset.Ico (-N : ℤ) N, f n) := by
   rw [Filter.Tendsto.limUnder_eq]
-  have := hf.hasSum
-  have V := this.comp verga
-  apply V
+  exact hf.hasSum.comp verga

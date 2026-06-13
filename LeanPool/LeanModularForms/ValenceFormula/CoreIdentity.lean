@@ -148,8 +148,7 @@ private theorem explicit_coefficients (S : Finset UpperHalfPlane) (hS : ∀ p �
 
 private lemma unit_circle_re_neg_half_eq_rho (s : ℍ)
     (hs_norm : ‖(s : ℂ)‖ = 1) (hs_re : (s : ℂ).re = -1 / 2) : s = ellipticPointRho' := by
-  have h_nsq : Complex.normSq (s : ℂ) = 1 := by
-    rw [Complex.normSq_eq_norm_sq, hs_norm, one_pow]
+  have h_nsq : Complex.normSq (s : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hs_norm, one_pow]
   rw [Complex.normSq_apply, hs_re] at h_nsq
   have h_im : (s : ℂ).im = Real.sqrt 3 / 2 := by
     have h_prod : ((s : ℂ).im - Real.sqrt 3 / 2) *
@@ -167,8 +166,7 @@ private lemma unit_circle_re_neg_half_eq_rho (s : ℍ)
 private lemma unit_circle_re_pos_half_eq_rho_plus_one (s : ℍ)
     (hs_norm : ‖(s : ℂ)‖ = 1) (hs_re : (s : ℂ).re = 1 / 2) :
     s = ellipticPointRhoPlusOne' := by
-  have h_nsq : Complex.normSq (s : ℂ) = 1 := by
-    rw [Complex.normSq_eq_norm_sq, hs_norm, one_pow]
+  have h_nsq : Complex.normSq (s : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hs_norm, one_pow]
   rw [Complex.normSq_apply, hs_re] at h_nsq
   have h_im : (s : ℂ).im = Real.sqrt 3 / 2 := by
     have h_prod : ((s : ℂ).im - Real.sqrt 3 / 2) *
@@ -198,12 +196,10 @@ private lemma vert_edge_im_gt_sqrt3_half (s : ℍ) (hs_norm : ‖(s : ℂ)‖ > 
 private lemma unit_circle_re_zero_eq_i (s : ℍ)
     (hs_norm : ‖(s : ℂ)‖ = 1) (hs_re : (s : ℂ).re = 0) : s = ellipticPointI' := by
   apply UpperHalfPlane.ext
-  have h_nsq : Complex.normSq (s : ℂ) = 1 := by
-    rw [Complex.normSq_eq_norm_sq, hs_norm, one_pow]
+  have h_nsq : Complex.normSq (s : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hs_norm, one_pow]
   rw [Complex.normSq_apply, hs_re, mul_zero, zero_add] at h_nsq
   have h_le : (s : ℂ).im ≤ 1 := by nlinarith [mul_self_nonneg ((s : ℂ).im - 1), h_nsq]
-  have h_ge : 1 ≤ (s : ℂ).im := by
-    nlinarith [mul_le_of_le_one_right s.2.le h_le, h_nsq]
+  have h_ge : 1 ≤ (s : ℂ).im := by nlinarith [mul_le_of_le_one_right s.2.le h_le, h_nsq]
   apply Complex.ext
   · exact hs_re.trans Complex.I_re.symm
   · exact (le_antisymm h_le h_ge).trans Complex.I_im.symm

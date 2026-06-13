@@ -44,11 +44,9 @@ lemma slope_fdPolygon_seg2 (s t : ℝ) (hs : s > 1) (ht : t > 1) (hs2 : s ≤ 2)
   have hs' : ¬(s ≤ 1) := not_le.mpr hs
   have ht' : ¬(t ≤ 1) := not_le.mpr ht
   have heq_s : fdPolygon s =
-      chordSegment rho' iPoint (s - 1) := by
-    simp only [fdPolygon, hs', ↓reduceIte, hs2]
+      chordSegment rho' iPoint (s - 1) := by simp only [fdPolygon, hs', ↓reduceIte, hs2]
   have heq_t : fdPolygon t =
-      chordSegment rho' iPoint (t - 1) := by
-    simp only [fdPolygon, ht', ↓reduceIte, ht2]
+      chordSegment rho' iPoint (t - 1) := by simp only [fdPolygon, ht', ↓reduceIte, ht2]
   simp only [slope_def_module, heq_s, heq_t, chordSegment, Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
     simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
@@ -64,11 +62,9 @@ lemma slope_fdPolygon_seg3 (s t : ℝ) (hs : s > 2) (ht : t > 2) (hs3 : s ≤ 3)
   have hs2 : ¬(s ≤ 2) := not_le.mpr hs
   have ht2 : ¬(t ≤ 2) := not_le.mpr ht
   have heq_s : fdPolygon s =
-      chordSegment iPoint rho (s - 2) := by
-    simp only [fdPolygon, hs1, ↓reduceIte, hs2, hs3]
+      chordSegment iPoint rho (s - 2) := by simp only [fdPolygon, hs1, ↓reduceIte, hs2, hs3]
   have heq_t : fdPolygon t =
-      chordSegment iPoint rho (t - 2) := by
-    simp only [fdPolygon, ht1, ↓reduceIte, ht2, ht3]
+      chordSegment iPoint rho (t - 2) := by simp only [fdPolygon, ht1, ↓reduceIte, ht2, ht3]
   simp only [slope_def_module, heq_s, heq_t, chordSegment, Complex.real_smul]
   have hne : (↑t : ℂ) - ↑s ≠ 0 := by
     simp only [sub_ne_zero, ne_eq, Complex.ofReal_inj]
@@ -124,8 +120,7 @@ lemma slope_fdPolygon_seg5 (s t : ℝ) (hs : s > 4) (ht : t > 4) (hst : s ≠ t)
 lemma fdPolygon_deriv_ne_at_t1 : (-I : ℂ) ≠ (iPoint - rho') := by
   simp only [rho', iPoint]
   intro heq
-  have h_lhs : (-I : ℂ).re = 0 := by
-    simp only [Complex.neg_re, Complex.I_re, neg_zero]
+  have h_lhs : (-I : ℂ).re = 0 := by simp only [Complex.neg_re, Complex.I_re, neg_zero]
   have h_rhs : (I - (1/2 + ↑(Real.sqrt 3) / 2 * I)).re = -1/2 := by
     simp only [Complex.sub_re, Complex.I_re, Complex.add_re,
       Complex.one_re, Complex.div_ofNat_re, Complex.mul_re,
@@ -207,8 +202,7 @@ lemma slope_fdPolygon_at_t2_left (s : ℝ) (hs1 : s > 1) (hs2 : s < 2) :
   have heqs : fdPolygon s = chordSegment rho' iPoint (s - 1) := by
     simp only [fdPolygon, not_le.mpr hs1, ↓reduceIte, le_of_lt hs2]
   simp only [slope_def_module, heq2, heqs, chordSegment, Complex.real_smul]
-  have hne : (↑s : ℂ) - 2 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs2
+  have hne : (↑s : ℂ) - 2 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs2
   simp only [Complex.ofReal_sub, Complex.ofReal_one, rho', iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -222,8 +216,7 @@ lemma slope_fdPolygon_at_t2_right (s : ℝ) (hs2 : s > 2) (hs3 : s ≤ 3) :
     simp only [fdPolygon, not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) hs2),
       ↓reduceIte, not_le.mpr hs2, hs3]
   simp only [slope_def_module, heq2, heqs, chordSegment, Complex.real_smul]
-  have hne : (↑s : ℂ) - 2 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs2
+  have hne : (↑s : ℂ) - 2 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs2
   simp only [Complex.ofReal_sub, Complex.ofReal_ofNat, Complex.ofReal_one, rho, iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -238,8 +231,7 @@ lemma slope_fdPolygon_at_t3_left (s : ℝ) (hs2 : s > 2) (hs3 : s < 3) :
     simp only [fdPolygon, not_le.mpr (lt_trans (by norm_num : (1 : ℝ) < 2) hs2),
       ↓reduceIte, not_le.mpr hs2, le_of_lt hs3]
   simp only [slope_def_module, heq3, heqs, chordSegment, Complex.real_smul]
-  have hne : (↑s : ℂ) - 3 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs3
+  have hne : (↑s : ℂ) - 3 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs3
   simp only [Complex.ofReal_sub, Complex.ofReal_ofNat, Complex.ofReal_one, rho, iPoint]
   push_cast; field_simp [hne]; ring
 
@@ -257,8 +249,7 @@ lemma slope_fdPolygon_at_t3_right (s : ℝ) (hs3 : s > 3) (hs4 : s ≤ 4) :
       not_le.mpr hs3, hs4]
   simp only [slope_def_module, heq3, heqs]
   erw [Complex.real_smul]
-  have hne : (↑s : ℂ) - 3 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs3
+  have hne : (↑s : ℂ) - 3 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs3
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; simp only [HHeight]; push_cast; ring
 
@@ -276,8 +267,7 @@ lemma slope_fdPolygon_at_t4_left (s : ℝ) (hs3 : s > 3) (hs4 : s < 4) :
       not_le.mpr hs3, le_of_lt hs4]
   simp only [slope_def_module, heq4, heqs]
   erw [Complex.real_smul]
-  have hne : (↑s : ℂ) - 4 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs4
+  have hne : (↑s : ℂ) - 4 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_lt hs4
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; simp only [HHeight]; push_cast; ring
 
@@ -294,8 +284,7 @@ lemma slope_fdPolygon_at_t4_right (s : ℝ) (hs4 : s > 4) :
       not_le.mpr (lt_trans (by norm_num : (3 : ℝ) < 4) hs4), not_le.mpr hs4]
   simp only [slope_def_module, heq4, heqs]
   erw [Complex.real_smul]
-  have hne : (↑s : ℂ) - 4 ≠ 0 := by
-    simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs4
+  have hne : (↑s : ℂ) - 4 ≠ 0 := by simp only [sub_ne_zero]; norm_cast; exact ne_of_gt hs4
   simp only [Complex.ofReal_inv, Complex.ofReal_sub]
   field_simp [hne]; push_cast; ring
 
@@ -415,8 +404,7 @@ lemma fdPolygon_deriv_bounded :
         simp only [fdPolygon, show s ≤ 1 from le_of_lt hs, if_true, fdPolygonSeg1]
       rw [heq, fdPolygon_deriv_seg1]; simp only
       rw [Complex.norm_mul, norm_neg, Complex.norm_I, mul_one]
-      have heq2 : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by
-        simp only [HHeight]; push_cast; ring
+      have heq2 : (↑HHeight - ↑(Real.sqrt 3) / 2 : ℂ) = 1 := by simp only [HHeight]; push_cast; ring
       rw [heq2, norm_one]; norm_num
     · push Not at h_seg1
       by_cases h_seg2 : t < 2 ∧ t > 1

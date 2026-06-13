@@ -405,8 +405,7 @@ lemma qexpsummable (k : ℕ) (hk : 3 ≤ (k : ℤ)) (z : ℍ) :
         (f := fun a : ℕ ↦ (((a) : ℝ) ^ k) * ‖cexp (2 * ↑π * Complex.I * ↑z) ^ (a)‖)
     simp only [Nat.ofNat_le_cast, Nat.cast_add, Nat.cast_one, norm_pow] at *
     rw [this]
-    have ht : ‖cexp (2 * ↑π * Complex.I * ↑z)‖ < 1 := by
-      exact norm_exp_two_pi_I_lt_one z
+    have ht : ‖cexp (2 * ↑π * Complex.I * ↑z)‖ < 1 := norm_exp_two_pi_I_lt_one z
     have := summable_norm_pow_mul_geometric_of_norm_lt_one k ht
     simp only [Complex.norm_mul, norm_pow, RCLike.norm_natCast] at *
     apply this
@@ -551,8 +550,7 @@ lemma E4_q_exp : (fun m => (qExpansion 1 E₄).coeff m) =
     have pin : (π : ℂ) ≠ 0 := by simp
     field_simp
 
-lemma E4_q_exp_zero : (qExpansion 1 E₄).coeff 0 = 1 := by
-  simpa using congr_fun E4_q_exp 0
+lemma E4_q_exp_zero : (qExpansion 1 E₄).coeff 0 = 1 := by simpa using congr_fun E4_q_exp 0
 
 
 @[simp]
@@ -595,8 +593,7 @@ lemma E6_q_exp : (fun m => (qExpansion 1 E₆).coeff m) =
   have pin : (π : ℂ) ≠ 0 := by simp
   field_simp
 
-lemma E6_q_exp_zero : (qExpansion 1 E₆).coeff 0 = 1 := by
-  simpa using congr_fun E6_q_exp 0
+lemma E6_q_exp_zero : (qExpansion 1 E₆).coeff 0 = 1 := by simpa using congr_fun E6_q_exp 0
 
 theorem E4E6_coeff_zero_eq_zero :
   (PowerSeries.coeff 0)
@@ -715,12 +712,10 @@ lemma asdf : TendstoLocallyUniformlyOn
       (hsum.hasProdUniformlyOn_nat_one_add (f := fun n : ℕ => fun y : ℂ => -y ^ (n + 1))
         (hK := isCompact_closedBall (0 : ℂ) (1 / 2))
         (h := Filter.Eventually.of_forall (fun n (x : ℂ) hx => by
-          have hx' : ‖x‖ ≤ (1 / 2 : ℝ) := by
-            simpa [Metric.mem_closedBall, dist_eq_norm] using hx
+          have hx' : ‖x‖ ≤ (1 / 2 : ℝ) := by simpa [Metric.mem_closedBall, dist_eq_norm] using hx
           calc
             ‖-x ^ (n + 1)‖ = ‖x‖ ^ (n + 1) := by simp
-            _ ≤ (1 / 2 : ℝ) ^ (n + 1) := by
-              exact pow_le_pow_left₀ (norm_nonneg x) hx' _))
+            _ ≤ (1 / 2 : ℝ) ^ (n + 1) := pow_le_pow_left₀ (norm_nonneg x) hx' _))
         (hcts := fun n => by fun_prop)).tendstoUniformlyOn_finsetRange
   exact TendstoLocallyUniformlyOn.mono (s := Metric.closedBall (0 : ℂ) (1/2 : ℝ))
     hclosed.tendstoLocallyUniformlyOn ball_subset_closedBall
@@ -817,8 +812,7 @@ lemma E4_pow_q_exp_one : (qExpansion 1 ((E₄).mul ((E₄).mul E₄))).coeff 1 =
 lemma Ek_ne_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : E k hk ≠ 0 := by
   have hq := Ek_q_exp_zero k hk hk2
   intro h
-  have hcoeff : PowerSeries.constantCoeff (qExpansion 1 (0 : ℍ → ℂ)) = 1 := by
-    simpa [h] using hq
+  have hcoeff : PowerSeries.constantCoeff (qExpansion 1 (0 : ℍ → ℂ)) = 1 := by simpa [h] using hq
   have hqzero : PowerSeries.constantCoeff (qExpansion 1 (0 : ℍ → ℂ)) = 0 := by
     simpa using congrArg (fun p : PowerSeries ℂ => p.coeff 0)
       ((qExpansion_zero (h := (1 : ℕ))) : qExpansion 1 (0 : ℍ → ℂ) = 0)
@@ -826,11 +820,9 @@ lemma Ek_ne_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : E k hk ≠ 0 
   exact zero_ne_one this
 
 /-This is in the mod forms repo-/
-lemma E4_ne_zero : E₄ ≠ 0 := by
-  apply Ek_ne_zero 4 (by norm_num) (by exact Nat.even_iff.mpr rfl)
+lemma E4_ne_zero : E₄ ≠ 0 := by apply Ek_ne_zero 4 (by norm_num) (by exact Nat.even_iff.mpr rfl)
 
-lemma E6_ne_zero : E₆ ≠ 0 := by
-    apply Ek_ne_zero 6 (by norm_num) (by exact Nat.even_iff.mpr rfl)
+lemma E6_ne_zero : E₆ ≠ 0 := by apply Ek_ne_zero 6 (by norm_num) (by exact Nat.even_iff.mpr rfl)
 
 lemma modularForm_normalise (f : ModularForm Γ(1) k) (hf : ¬ IsCuspForm Γ(1) k f) :
     (qExpansion 1 (((qExpansion 1 f).coeff 0)⁻¹ • f)).coeff 0 = 1 := by
@@ -841,8 +833,7 @@ lemma modularForm_normalise (f : ModularForm Γ(1) k) (hf : ¬ IsCuspForm Γ(1) 
   exact hf h
 
 lemma PowerSeries.coeff_add (f g : PowerSeries ℂ) (n : ℕ) :
-    (f + g).coeff n = (f.coeff n) + (g.coeff n) := by
-  exact rfl
+    (f + g).coeff n = (f.coeff n) + (g.coeff n) := rfl
 
 open ArithmeticFunction
 
@@ -975,8 +966,7 @@ theorem E₂_imag_axis_real : ResToImagAxis.Real E₂ := by
   have hsum : Summable fun n : ℕ+ => ↑n * cexp (2 * ↑Real.pi * Complex.I * n * z) /
       (1 - cexp (2 * ↑Real.pi * Complex.I * n * z)) := by
     set r : ℂ := cexp (2 * ↑Real.pi * Complex.I * z) with hr
-    have hr_norm : ‖r‖ < 1 := by
-      simpa [hr] using exp_upperHalfPlane_lt_one z
+    have hr_norm : ‖r‖ < 1 := by simpa [hr] using exp_upperHalfPlane_lt_one z
     have hs : Summable fun n : ℕ => (n : ℂ) * r ^ n / (1 - r ^ n) := by
       simpa [pow_one] using
         (summable_norm_pow_mul_geometric_div_one_sub (k := 1) (r := r) hr_norm)

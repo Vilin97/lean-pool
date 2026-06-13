@@ -63,8 +63,7 @@ lemma rho'_norm : ‖rho'‖ = 1 := by
     Real.sq_sqrt (by linarith : (0 : ℝ) ≤ 3)
   rw [h]; norm_num
 
-lemma i_point_norm : ‖iPoint‖ = 1 := by
-  simp only [iPoint, Complex.norm_I]
+lemma i_point_norm : ‖iPoint‖ = 1 := by simp only [iPoint, Complex.norm_I]
 
 lemma outside_closed_unit_ball (z : ℂ) (hz : ‖z‖ > 1) :
     z ∉ closedBall (0 : ℂ) 1 := by
@@ -143,16 +142,14 @@ def arc2 (t : ℝ) : ℂ :=
 lemma arc1_on_unit_circle (t : ℝ) : ‖arc1 t‖ = 1 := by
   simp only [arc1]
   have h : I * (↑θRho' + ↑t * (↑θI - ↑θRho')) =
-      I * ↑(θRho' + t * (θI - θRho')) := by
-    simp only [ofReal_add, ofReal_mul, ofReal_sub]
+      I * ↑(θRho' + t * (θI - θRho')) := by simp only [ofReal_add, ofReal_mul, ofReal_sub]
   rw [h, mul_comm]
   exact Complex.norm_exp_ofReal_mul_I _
 
 lemma arc2_on_unit_circle (t : ℝ) : ‖arc2 t‖ = 1 := by
   simp only [arc2]
   have h : I * (↑θI + ↑t * (↑θRho - ↑θI)) =
-      I * ↑(θI + t * (θRho - θI)) := by
-    simp only [ofReal_add, ofReal_mul, ofReal_sub]
+      I * ↑(θI + t * (θRho - θI)) := by simp only [ofReal_add, ofReal_mul, ofReal_sub]
   rw [h, mul_comm]
   exact Complex.norm_exp_ofReal_mul_I _
 

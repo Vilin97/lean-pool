@@ -76,8 +76,7 @@ def gammaSetNEquiv (N : ℕ) (hN : N ≠ 0) : gammaSetN N ≃ gammaSet 1 1 0 whe
     simp only [gammaSetN, singleton_smul, nsmul_eq_mul, mem_smul_set]
     use v
     simp
-  left_inv v := by
-    simp_rw [← gammaSetN_map_eq N v]
+  left_inv v := by simp_rw [← gammaSetN_map_eq N v]
   right_inv v := by
     simp only [nsmul_eq_mul]
     have H : N • v.1 ∈ gammaSetN N := by
@@ -154,10 +153,8 @@ def GammaSetOneEquiv : (Fin 2 → ℤ) ≃ (Σn : ℕ, gammaSetN n) where
 
 theorem q_exp_iden_2 (k : ℕ) (hk : 3 ≤ k) (hk2 : Even k) (z : ℍ) :
     ∑' x : ℤ × ℤ, 1 / ((x.1 : ℂ) * z + x.2) ^ k =
-      2 * (riemannZeta (k)) + 2 * ∑' c : ℕ+, ∑' d : ℤ, 1 / (c * (z : ℂ) + d) ^ k :=
-  by
-  have hkk : 1 < (k ) := by
-    linarith
+      2 * (riemannZeta (k)) + 2 * ∑' c : ℕ+, ∑' d : ℤ, 1 / (c * (z : ℂ) + d) ^ k := by
+  have hkk : 1 < (k ) := by linarith
   rw [Summable.tsum_prod, sum_int_even]
   · simp only [Int.cast_zero, zero_mul, zero_add, one_div, Int.cast_natCast, add_left_inj]
     rw [sum_int_even]
@@ -366,7 +363,6 @@ lemma E_k_q_expansion (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) 
     convert step.symm ▸ h
   simp_rw [← mul_assoc]
   rw [HE1, mul_add]
-  have : 2⁻¹ * (riemannZeta (k))⁻¹ * (2 * riemannZeta (k)) = 1 := by
-    field_simp
+  have : 2⁻¹ * (riemannZeta (k))⁻¹ * (2 * riemannZeta (k)) = 1 := by field_simp
   rw [this]
   ring

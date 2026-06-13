@@ -75,13 +75,11 @@ theorem fdBoundary_H_onCurvePVProvider (S : Finset UpperHalfPlane) :
 
 omit f hf in
 lemma sArcOfS_rho_in (S : Finset UpperHalfPlane) :
-    ellipticPointRho ∈ sArcOfS S := by
-  simp [sArcOfS]
+    ellipticPointRho ∈ sArcOfS S := by simp [sArcOfS]
 
 omit f hf in
 lemma sArcOfS_rho_plus_one_in (S : Finset UpperHalfPlane) :
-    ellipticPointRhoPlusOne ∈ sArcOfS S := by
-  simp [sArcOfS]
+    ellipticPointRhoPlusOne ∈ sArcOfS S := by simp [sArcOfS]
 
 omit f hf in
 lemma sArcOfS_unit (S : Finset UpperHalfPlane) :
@@ -99,8 +97,7 @@ lemma sArcOfS_unit (S : Finset UpperHalfPlane) :
 omit f hf in
 private lemma neg_inv_rho_eq_rho_plus_one :
     -(1 : ℂ) / ellipticPointRho = ellipticPointRhoPlusOne := by
-  have hre : (ellipticPointRho : ℂ).re = -1/2 := by
-    simp [ellipticPointRho, ellipticPointRho']
+  have hre : (ellipticPointRho : ℂ).re = -1/2 := by simp [ellipticPointRho, ellipticPointRho']
   have him : (ellipticPointRho : ℂ).im = Real.sqrt 3 / 2 := by
     simp [ellipticPointRho, ellipticPointRho']
   have hre2 : (ellipticPointRhoPlusOne : ℂ).re = 1/2 := by
@@ -125,8 +122,7 @@ private lemma neg_inv_rho_plus_one_eq_rho :
     simp [ellipticPointRhoPlusOne, ellipticPointRhoPlusOne']
   have him : (ellipticPointRhoPlusOne : ℂ).im = Real.sqrt 3 / 2 := by
     simp [ellipticPointRhoPlusOne, ellipticPointRhoPlusOne']
-  have hre2 : (ellipticPointRho : ℂ).re = -1/2 := by
-    simp [ellipticPointRho, ellipticPointRho']
+  have hre2 : (ellipticPointRho : ℂ).re = -1/2 := by simp [ellipticPointRho, ellipticPointRho']
   have him2 : (ellipticPointRho : ℂ).im = Real.sqrt 3 / 2 := by
     simp [ellipticPointRho, ellipticPointRho']
   have hnormSq : (1/2 : ℝ) * (1/2) + Real.sqrt 3 / 2 * (Real.sqrt 3 / 2) = 1 := by
@@ -391,8 +387,7 @@ private lemma im_ge_sqrt3_half_of_re_half_and_norm_eq_one (p : ℍ)
       ring
     linarith
   have h_im_sq : (↑p : ℂ).im ^ 2 ≥ 3/4 := by
-    have h_re2 : (↑p : ℂ).re ^ 2 ≤ 1 / 4 := by
-      have ⟨h1, h2⟩ := abs_le.mp hre; nlinarith [h1, h2]
+    have h_re2 : (↑p : ℂ).re ^ 2 ≤ 1 / 4 := by have ⟨h1, h2⟩ := abs_le.mp hre; nlinarith [h1, h2]
     nlinarith [h_nsq, h_re2]
   have h_im_sq' : (Real.sqrt 3 / 2) ^ 2 ≤ (↑p : ℂ).im ^ 2 := by
     rw [div_pow, Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]; linarith
@@ -432,8 +427,7 @@ lemma fdBox_of_on_curve (S : Finset UpperHalfPlane) (hS : ∀ p ∈ S, p ∈ �
           simp only [neg_im, neg_neg]
           have h_nsq_val : Complex.normSq (-(↑p : ℂ)) = 1 := by
             rw [Complex.normSq_neg]
-            have h_norm_sq : ‖(↑p : ℂ)‖ ^ 2 = 1 := by
-              rw [hp_norm]; norm_num
+            have h_norm_sq : ‖(↑p : ℂ)‖ ^ 2 = 1 := by rw [hp_norm]; norm_num
             have : ‖(↑p : ℂ)‖ ^ 2 = (↑p : ℂ).re ^ 2 + (↑p : ℂ).im ^ 2 := by
               rw [Complex.sq_norm, Complex.normSq_apply]
               ring

@@ -135,8 +135,7 @@ theorem ramanujan_E₆' : serreD 6 E₆.toFun = - 2⁻¹ * E₄.toFun * E₄.toF
 
 /-- Relationship between D and serreD: `D f = serreD k f + k/12 * E₂ * f`. -/
 lemma D_eq_serre_D_add (k : ℂ) (f : ℍ → ℂ) (z : ℍ) :
-    D f z = serreD k f z + k * 12⁻¹ * E₂ z * f z := by
-  simp only [serre_D_apply]; ring
+    D f z = serreD k f z + k * 12⁻¹ * E₂ z * f z := by simp only [serre_D_apply]; ring
 
 @[simp]
 theorem ramanujan_E₂ : D E₂ = 12⁻¹ * (E₂ * E₂ - E₄.toFun) := by

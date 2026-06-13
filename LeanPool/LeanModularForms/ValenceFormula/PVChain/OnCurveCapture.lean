@@ -43,8 +43,7 @@ theorem oncurve_arc_capture
   have h_im_ge := fdBoundary_H_im_ge_sqrt3_div_2 H hH.le t ht
   have h_im_pos : 0 < z.im := by linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 by norm_num)]
   have h_normSq : z.re ^ 2 + z.im ^ 2 = 1 := by
-    have : ‖z‖ ^ 2 = z.re ^ 2 + z.im ^ 2 := by
-      rw [Complex.sq_norm, Complex.normSq_apply]; ring
+    have : ‖z‖ ^ 2 = z.re ^ 2 + z.im ^ 2 := by rw [Complex.sq_norm, Complex.normSq_apply]; ring
     rw [h_norm] at this; linarith
   have h_im_sq_ge : z.im ^ 2 ≥ 3/4 := by
     nlinarith [mul_self_le_mul_self (by positivity : 0 ≤ Real.sqrt 3 / 2) h_im_ge,
@@ -73,16 +72,14 @@ theorem oncurve_vert_capture
     (h_zero : modularFormCompOfComplex f (fdBoundaryH H' t) = 0) :
     (fdBoundaryH H' t : ℂ) ∈ (↑(sVertOfS S) : Set ℂ) := by
   set z := fdBoundaryH H' t with hz_def
-  have hz_seg : z = fdBoundarySeg1H H' t := by
-    rw [hz_def, fdBoundary_H_eq_seg1_H (le_of_lt ht.2)]
+  have hz_seg : z = fdBoundarySeg1H H' t := by rw [hz_def, fdBoundary_H_eq_seg1_H (le_of_lt ht.2)]
   have h_re : z.re = 1/2 := by
     rw [hz_seg]; simp [fdBoundarySeg1H, add_re, mul_re, I_re, I_im, ofReal_re, ofReal_im]
   have h_im_val : z.im = H' - t * (H' - Real.sqrt 3 / 2) := by
     rw [hz_seg]; simp [fdBoundarySeg1H, add_im, mul_im, I_re, I_im, ofReal_re, ofReal_im,
       div_ofNat]
   have h_im_gt : z.im > Real.sqrt 3 / 2 := by rw [h_im_val]; nlinarith [ht.2]
-  have h_im_pos : 0 < z.im := by
-    linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 by norm_num)]
+  have h_im_pos : 0 < z.im := by linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 by norm_num)]
   have h_re_sq : z.re ^ 2 = 1/4 := by rw [h_re]; ring
   have h_norm_gt : ‖z‖ > 1 := by
     have h_im_sq_gt : z.im ^ 2 > 3 / 4 := by

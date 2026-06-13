@@ -68,8 +68,7 @@ lemma circleParam_deriv (z₀ : ℂ) (r : ℝ) (a b : ℝ)
     2 * Real.pi * I * (((t : ℂ) - a) / (b - a))
   have hf_deriv : HasDerivAt f (2 * Real.pi * I / (b - a)) t := by
     have h_eq : f = fun t : ℝ =>
-        (2 * Real.pi * I / (b - a)) * ((t : ℂ) - a) := by
-      ext t; simp only [f]; field_simp
+        (2 * Real.pi * I / (b - a)) * ((t : ℂ) - a) := by ext t; simp only [f]; field_simp
     rw [h_eq]
     have h1 : HasDerivAt (fun t : ℝ => (t : ℂ) - (a : ℂ)) 1 t :=
       Complex.ofRealCLM.hasDerivAt.sub_const (a : ℂ)
@@ -117,8 +116,7 @@ theorem circleParam_winding_eq_one (z₀ : ℂ) (r : ℝ)
       2 * Real.pi * I := by
     intro ε _hε_pos hε_lt_r
     have h_cond : ∀ t,
-        ‖circleParam z₀ r a b t - z₀‖ > ε := fun t => by
-      rw [havoids]; exact hε_lt_r
+        ‖circleParam z₀ r a b t - z₀‖ > ε := fun t => by rw [havoids]; exact hε_lt_r
     have h_simp :
         (fun t => if ‖circleParam z₀ r a b t - z₀‖ > ε
           then (circleParam z₀ r a b t - z₀)⁻¹ *
@@ -376,8 +374,7 @@ theorem winding_of_S1_curve_eq_degree (z₀ : ℂ) (a b : ℝ) (_hab : a < b)
     field_simp [exp_ne_zero]
   have h_integral : ∫ t in a..b, (γ t - z₀)⁻¹ * deriv γ t = 2 * Real.pi * I * n := by
     have h1 : ∫ t in a..b, (γ t - z₀)⁻¹ * deriv γ t =
-        ∫ t in a..b, I * (Complex.ofReal (deriv θ t)) := by
-      congr 1; ext t; exact h_integrand t
+        ∫ t in a..b, I * (Complex.ofReal (deriv θ t)) := by congr 1; ext t; exact h_integrand t
     have h_pull : ∫ t in a..b, I * Complex.ofReal (deriv θ t) =
         I * ∫ t in a..b, Complex.ofReal (deriv θ t) := by
       simp_rw [← smul_eq_mul]; exact intervalIntegral.integral_smul I _
@@ -402,8 +399,7 @@ theorem winding_of_S1_curve_eq_degree (z₀ : ℂ) (a b : ℝ) (_hab : a < b)
     intro ε _ hε_lt
     have h_cond : ∀ t, ‖γ t - z₀‖ > ε := fun t => by rw [h_S1]; exact hε_lt
     have : (fun t => if ‖γ t - z₀‖ > ε then (γ t - z₀)⁻¹ * deriv γ t else 0) =
-        fun t => (γ t - z₀)⁻¹ * deriv γ t := by
-      ext t; simp only [h_cond t, ↓reduceIte]
+        fun t => (γ t - z₀)⁻¹ * deriv γ t := by ext t; simp only [h_cond t, ↓reduceIte]
     rw [this, h_integral]
   have hlim : Tendsto (fun ε =>
       ∫ t in a..b, if ‖γ t - z₀‖ > ε then (γ t - z₀)⁻¹ * deriv γ t else 0)

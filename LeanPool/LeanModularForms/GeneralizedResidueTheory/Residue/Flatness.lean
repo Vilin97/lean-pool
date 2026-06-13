@@ -52,12 +52,10 @@ def tangentDeviation (w L : ℂ) : ℂ :=
   w - orthogonalProjectionComplex w L
 
 theorem orthogonalProjectionComplex_zero_left (L : ℂ) :
-    orthogonalProjectionComplex 0 L = 0 := by
-  simp [orthogonalProjectionComplex]
+    orthogonalProjectionComplex 0 L = 0 := by simp [orthogonalProjectionComplex]
 
 theorem tangentDeviation_zero_left (L : ℂ) :
-    tangentDeviation 0 L = 0 := by
-  simp [tangentDeviation, orthogonalProjectionComplex_zero_left]
+    tangentDeviation 0 L = 0 := by simp [tangentDeviation, orthogonalProjectionComplex_zero_left]
 
 theorem tangentDeviation_zero_right (w : ℂ) :
     tangentDeviation w 0 = w := by
@@ -110,8 +108,7 @@ theorem norm_tangentDeviation_le (w L : ℂ) (hL : L ≠ 0) :
         exact (Complex.abs_re_le_norm _).trans
           (by rw [norm_mul, starRingEnd_apply, norm_star])
     _ = ‖w‖ * (‖L‖ * ‖L‖ / Complex.normSq L) := by ring
-    _ = ‖w‖ := by
-        rw [Complex.norm_mul_self_eq_normSq L, div_self hns.ne', mul_one]
+    _ = ‖w‖ := by rw [Complex.norm_mul_self_eq_normSq L, div_self hns.ne', mul_one]
 
 /-! ### Flatness of order n (Definition 3.2)
 

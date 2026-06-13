@@ -35,10 +35,8 @@ private lemma arg_approach_i_left (hδ : 0 < δ) (hδ_small : δ < 1) :
   set θ := Real.pi / 2 - δ * Real.pi / 6 with hθ_def
   rw [show Real.pi * (1 + (2 - δ)) / 6 = θ from by simp only [hθ_def]; ring]
   rw [show (↑θ : ℂ) * I = ↑θ * I from rfl, exp_real_angle_I]
-  have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by
-    rw [hθ_def, Real.cos_pi_div_two_sub]
-  have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by
-    rw [hθ_def, Real.sin_pi_div_two_sub]
+  have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by rw [hθ_def, Real.cos_pi_div_two_sub]
+  have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by rw [hθ_def, Real.sin_pi_div_two_sub]
   have h_re_factor : Real.sin (δ * Real.pi / 6) =
       2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := by
     rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
@@ -125,10 +123,8 @@ private lemma g_i_norm_left {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ < 1) :
   rw [fdBoundary_H_eq_arc h1 h3, exp_real_angle_I]
   set θ := Real.pi / 2 - δ * Real.pi / 6 with hθ_def
   rw [show Real.pi * (1 + (2 - δ)) / 6 = θ from by simp only [hθ_def]; ring]
-  have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by
-    rw [hθ_def, Real.cos_pi_div_two_sub]
-  have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by
-    rw [hθ_def, Real.sin_pi_div_two_sub]
+  have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by rw [hθ_def, Real.cos_pi_div_two_sub]
+  have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by rw [hθ_def, Real.sin_pi_div_two_sub]
   have h_re_factor : Real.sin (δ * Real.pi / 6) =
       2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := by
     rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
@@ -309,8 +305,7 @@ private lemma t₀_i_lt_four (hH : 1 < H) : t₀_i H < 4 := by
     nlinarith [Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num),
               sq_nonneg (2 - Real.sqrt 3)]
   rw [show (4 : ℝ) = 3 + 1 from by ring]
-  have : (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) < 1 := by
-    rw [div_lt_one h_den_pos]; linarith
+  have : (1 - Real.sqrt 3 / 2) / (H - Real.sqrt 3 / 2) < 1 := by rw [div_lt_one h_den_pos]; linarith
   linarith
 
 private lemma g_i_at_t₀ (hH : 1 < H) :
@@ -803,8 +798,7 @@ private lemma i_h_near (H : ℝ) :
                 hδpi12_le
                 (by nlinarith))
               (by norm_num)
-        _ = ε := by
-            rw [hδ_angle, Real.sin_arcsin hε_half_neg hε_half_le]; linarith
+        _ = ε := by rw [hδ_angle, Real.sin_arcsin hε_half_neg hε_half_le]; linarith
   · have ht3 : t < 3 := by linarith [h_abs.2]
     rw [g_i_norm_arc_right ht2 ht3]
     have ht2_le : t - 2 ≤ δ := by linarith [h_abs.2]
@@ -818,8 +812,7 @@ private lemma i_h_near (H : ℝ) :
               hδpi12_le
               (by nlinarith))
             (by norm_num)
-      _ = ε := by
-          rw [hδ_angle, Real.sin_arcsin hε_half_neg hε_half_le]; linarith
+      _ = ε := by rw [hδ_angle, Real.sin_arcsin hε_half_neg hε_half_le]; linarith
 
 private lemma i_angle_bound {δ ε : ℝ} (H : ℝ)
     (hδ_pos : 0 < δ) (hδ_lt_one : δ < 1)

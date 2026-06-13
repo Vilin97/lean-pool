@@ -289,8 +289,7 @@ lemma circleIntegral_logDeriv_cuspFunction_of_radius (hf : f ≠ 0)
     simp only
     rw [h_split _ (circleMap_mem_sphere 0 hR_le θ)]
   have h_div_eq : (fun q : ℂ => (↑m : ℂ) / q + logDeriv g q) =
-      (fun q => (↑m : ℂ) * q⁻¹ + logDeriv g q) := by
-    ext; simp [div_eq_mul_inv]
+      (fun q => (↑m : ℂ) * q⁻¹ + logDeriv g q) := by ext; simp [div_eq_mul_inv]
   rw [h_congr, h_div_eq, circleIntegral.integral_add hci_inv hci_logDeriv,
       circleIntegral_const_mul_inv (↑m : ℂ) (ne_of_gt hR_pos),
       circleIntegral_logDeriv_regular_zero g hR_pos hR_lt hg_diff hg_nonvan,

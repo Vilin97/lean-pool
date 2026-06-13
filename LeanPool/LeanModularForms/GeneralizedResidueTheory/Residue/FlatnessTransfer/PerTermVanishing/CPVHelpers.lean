@@ -190,8 +190,7 @@ lemma intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff
     isCompact_Icc.image_of_continuousOn hγ_cont
   have h_safe_closed : IsClosed ({z : ℂ | ∀ s ∈ S0, ε ≤ ‖z - s‖}) := by
     have : {z : ℂ | ∀ s ∈ S0, ε ≤ ‖z - s‖} =
-        ⋂ s ∈ (↑S0 : Set ℂ), {z | ε ≤ ‖z - s‖} := by
-      ext z; simp [Set.mem_iInter]
+        ⋂ s ∈ (↑S0 : Set ℂ), {z | ε ≤ ‖z - s‖} := by ext z; simp [Set.mem_iInter]
     rw [this]; exact isClosed_biInter fun s _ =>
       isClosed_le continuous_const (continuous_norm.comp (continuous_id.sub continuous_const))
   have h_safe_compact : IsCompact
@@ -289,8 +288,7 @@ private lemma residueAt_congr {f g : ℂ → ℂ} {s : ℂ}
     intro r hr_pos hr_lt
     apply circleIntegral.integral_congr hr_pos.le
     intro z hz
-    have hne : z ≠ s := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+    have hne : z ≠ s := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
     exact hδ_eq ⟨Metric.mem_ball.mpr (by rw [Metric.mem_sphere.mp hz]; exact hr_lt),
       Set.mem_compl_singleton_iff.mpr hne⟩
   exact limUnder_eventually_eq (by

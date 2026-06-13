@@ -34,8 +34,7 @@ def mulDeltaMap (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 1) (k - 12)
   exact ModularForm.mcast hk this
 
 lemma mcast_apply {a b : ℤ} {Γ : Subgroup SL(2, ℤ)} (h : a = b) (f : ModularForm Γ a) (z : ℍ) :
-  (ModularForm.mcast h f) z = f z := by
-  rfl
+  (ModularForm.mcast h f) z = f z := by rfl
 
 lemma mul_Delta_map_eq (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 1) (k - 12)) (z : ℍ) :
   (mulDeltaMap k f) z = f z * Delta z := by
@@ -350,8 +349,7 @@ lemma weight_eight_one_dimensional (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even 
           (PowerSeries.coeff 0) (qExpansion 1 ⇑(c⁻¹ • f)) =
               (PowerSeries.coeff 0) (qExpansion 1 (c⁻¹ • ⇑f)) := by rfl
           _ = (PowerSeries.coeff 0)
-              (qExpansion 1 (((PowerSeries.coeff 0) (qExpansion 1 ⇑f))⁻¹ • ⇑f)) := by
-              simp [hcInv]
+              (qExpansion 1 (((PowerSeries.coeff 0) (qExpansion 1 ⇑f))⁻¹ • ⇑f)) := by simp [hcInv]
           _ = 1 := hnorm0
       have hE := Ek_q_exp_zero k hk hk2
       have hnorm' : PowerSeries.constantCoeff (qExpansion 1 (c⁻¹ • ⇑f)) = 1 := by
@@ -413,9 +411,7 @@ f^3 = a^3 E₆, but now this would mean that Δ = 0 or a = 0, which is a contrad
     exfalso
     let F := DirectSum.of _ 2 f
     let D := DirectSum.of _ 12 (ModFormMk Γ(1) 12 Delta) 12
-    have : D ≠ 0 := by
-      have HD := ModForm_mk_inj _ _ _ Delta_ne_zero
-      apply HD
+    have : D ≠ 0 := ModForm_mk_inj _ _ _ Delta_ne_zero
     have HF2 : (F^2) = c4 • (DirectSum.of _ 4 E₄) := by
       rw [← DirectSum.of_smul, hc4]
       simp only [F]
@@ -507,8 +503,7 @@ lemma dim_modforms_eq_one_add_dim_cuspforms (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk
     have hsmul : qExpansion 1 ⇑(c • E k hk) = c • qExpansion 1 (E k hk) := by
       calc
         qExpansion 1 ⇑(c • E k hk) = qExpansion 1 (c • ⇑(E k hk)) := by rfl
-        _ = c • qExpansion 1 (E k hk) := by
-          simpa using (qExpansion_smul2 1 c (E k hk)).symm
+        _ = c • qExpansion 1 (E k hk) := by simpa using (qExpansion_smul2 1 c (E k hk)).symm
     rw [hqsub, hsmul]
     rw [← Nat.cast_one (R := ℝ)]
     simp [PowerSeries.coeff_zero_eq_constantCoeff, map_sub, smul_eq_mul, Ek_q_exp_zero k hk hk2,
@@ -543,19 +538,16 @@ lemma dim_modforms_lvl_one (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
         refine Eq.symm (Int.subNatNat_of_le ?_)
         omega
       rw [hk12] at iH
-      have : ((k - 12) : ℕ) = (k : ℚ) - 12 := by
-        norm_cast
+      have : ((k - 12) : ℕ) = (k : ℚ) - 12 := by norm_cast
       rw [iH, this]
       by_cases h12 : 12 ∣ ((k) : ℤ) - 2
-      · have h12k : 12 ∣ (k : ℤ) -12 - 2 := by
-          omega
+      · have h12k : 12 ∣ (k : ℤ) -12 - 2 := by omega
         simp only [h12k, ↓reduceIte, h12]
         have := floor_lem1 k 12 (by norm_num)
         norm_cast at *
         apply this
         omega
-      · have h12k : ¬ 12 ∣ (k : ℤ) -12 - 2 := by
-          omega
+      · have h12k : ¬ 12 ∣ (k : ℤ) -12 - 2 := by omega
         simp only [h12k, ↓reduceIte, Nat.cast_add, Nat.cast_one, h12]
         have := floor_lem1 k 12 (by norm_num)
         norm_cast at *
@@ -570,8 +562,7 @@ lemma dim_modforms_lvl_one (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
     have hkop : k ∈ Finset.filter Even (Finset.Icc 3 14) := by
       simp only [Finset.mem_filter, Finset.mem_Icc, hk2, and_true]
       omega
-    have : Finset.filter Even (Finset.Icc 3 14) = ({4,6,8,10,12, 14} : Finset ℕ) := by
-        decide
+    have : Finset.filter Even (Finset.Icc 3 14) = ({4,6,8,10,12, 14} : Finset ℕ) := by decide
     rw [this] at hkop
     fin_cases hkop <;> simp_all only [Nat.ofNat_le_cast, Nat.cast_ite, Nat.cast_add, Nat.cast_one,
       Nat.cast_ofNat, Int.reduceLE, Int.reduceSub, Int.reduceLT, dvd_refl,

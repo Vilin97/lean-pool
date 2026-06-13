@@ -94,8 +94,7 @@ private lemma delta_cosetRep_det_pos (g : (GLPair 2).Δ) (σ : (GLPair 2).H) :
     (by rw [SLnZ_det_one_real]; exact one_pos)
 
 private lemma sigma_eq_refl_of_pos_det {g : GL (Fin 2) ℝ} (hg : 0 < g.det.val) :
-    UpperHalfPlane.σ g = .refl ℝ ℂ := by
-  unfold UpperHalfPlane.σ; simp only [hg, ↓reduceIte]
+    UpperHalfPlane.σ g = .refl ℝ ℂ := by unfold UpperHalfPlane.σ; simp only [hg, ↓reduceIte]
 
 private lemma glMap_transpose_det_val (g : GL (Fin 2) ℚ) :
     (glMap (GLTransposeEquiv 2 g).unop).det.val = (glMap g).det.val := by
@@ -191,8 +190,7 @@ private lemma left_coset_disjoint (D : HeckeCoset (GLPair 2))
           ((GLPair 2).H : Set _) := by rw [h_key]
     _ = ({(j.out : GL (Fin 2) ℚ) * (HeckeCoset.rep D : GL _ ℚ)} : Set _) *
           (({(GLTransposeEquiv 2 h).unop} : Set _) *
-          ((GLPair 2).H : Set _)) := by
-        rw [← Set.singleton_mul_singleton, mul_assoc]
+          ((GLPair 2).H : Set _)) := by rw [← Set.singleton_mul_singleton, mul_assoc]
     _ = ({(j.out : GL (Fin 2) ℚ) * (HeckeCoset.rep D : GL _ ℚ)} : Set _) *
           ((GLPair 2).H : Set _) := by
         have hT : (GLTransposeEquiv 2 h).unop ∈ (GLPair 2).H :=

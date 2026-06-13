@@ -171,8 +171,7 @@ lemma smul_add_right (T : 𝕋 P Z) (m₁ m₂ : HeckeModule P Z) :
     intro D b
     exact Finsupp.sum_add_index'
       (fun m => by simp [mul_zero, Finsupp.single_zero, Finset.sum_const_zero])
-      (fun m c₁ c₂ => by
-        simp only [← Finset.sum_add_distrib, mul_add, Finsupp.single_add])
+      (fun m c₁ c₂ => by simp only [← Finset.sum_add_distrib, mul_add, Finsupp.single_add])
   simp_rw [inner_split]
   exact Finsupp.sum_add
 
@@ -189,9 +188,7 @@ lemma smulOrbit_disjoint_of_ne (g₁ g₂ : P.Δ) (β : P.Δ)
   have hset : ({(β : G) * (i₁.out : G) *
       (g₁ : G)} : Set G) * (P.H : Set G) =
     {(β : G) * (i₂.out : G) *
-      (g₂ : G)} * P.H := by
-    have := Quotient.exact hi₁
-    exact this
+      (g₂ : G)} * P.H := Quotient.exact hi₁
   have hmem : (β : G) * ↑i₁.out * (g₁ : G) ∈
       ({(β : G) * ↑i₂.out * (g₂ : G)} : Set G) * (↑P.H : Set G) := by
     rw [← hset]; exact ⟨_, rfl, 1, P.H.one_mem, mul_one _⟩
@@ -202,8 +199,7 @@ lemma smulOrbit_disjoint_of_ne (g₁ g₂ : P.Δ) (β : P.Δ)
     have h : (β : G) *
         (↑i₂.out * (g₂ : G) * k) =
         (β : G) *
-        (↑i₁.out * (g₁ : G)) := by
-      have := hkk; dsimp at this; group at this ⊢; exact this
+        (↑i₁.out * (g₁ : G)) := by have := hkk; dsimp at this; group at this ⊢; exact this
     exact mul_left_cancel h
   have hg : (g₁ : G) =
       ↑(i₁.out⁻¹ * i₂.out) *
@@ -212,8 +208,7 @@ lemma smulOrbit_disjoint_of_ne (g₁ g₂ : P.Δ) (β : P.Δ)
     have : ↑i₁.out *
         (↑(i₁.out⁻¹ * i₂.out) *
         (g₂ : G) * k) =
-        ↑i₂.out * (g₂ : G) * k := by
-      simp only [Subgroup.coe_mul, Subgroup.coe_inv]; group
+        ↑i₂.out * (g₂ : G) * k := by simp only [Subgroup.coe_mul, Subgroup.coe_inv]; group
     rw [this]; exact hstep.symm
   change DoubleCoset.doubleCoset (g₁ : G) P.H P.H =
     DoubleCoset.doubleCoset (g₂ : G) P.H P.H

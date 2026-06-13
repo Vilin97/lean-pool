@@ -191,6 +191,5 @@ lemma IsCuspForm_iff_coeffZero_eq_zero (k : ℤ) (f : ModularForm Γ(1) k) :
 
 lemma CuspFormSubmodule_mem_iff_coeffZero_eq_zero (k : ℤ) (f : ModularForm Γ(1) k) :
     f ∈ CuspFormSubmodule Γ(1) k ↔ (qExpansion 1 f).coeff 0 = 0 := by
-  have := IsCuspForm_iff_coeffZero_eq_zero k f
-  apply this
+  exact IsCuspForm_iff_coeffZero_eq_zero k f
 

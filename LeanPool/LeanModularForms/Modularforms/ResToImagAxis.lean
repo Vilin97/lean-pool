@@ -462,14 +462,12 @@ theorem tendsto_rpow_mul_resToImagAxis_of_fourier_shift
 /-- Extract the imaginary part condition at a specific point from `ResToImagAxis.Real`. -/
 lemma ResToImagAxis.Real.im_eq_zero_at {F : ℍ → ℂ} (hF : ResToImagAxis.Real F)
     {t : ℝ} (ht : 0 < t) (z : ℍ) (hz : z = ⟨Complex.I * t, by simp [ht]⟩) :
-    (F z).im = 0 := by
-  subst hz; simpa [Function.resToImagAxis, ResToImagAxis, ht] using hF t ht
+    (F z).im = 0 := by subst hz; simpa [Function.resToImagAxis, ResToImagAxis, ht] using hF t ht
 
 /-- Extract the positivity condition at a specific point from `ResToImagAxis.Pos`. -/
 lemma ResToImagAxis.Pos.re_pos_at {F : ℍ → ℂ} (hF : ResToImagAxis.Pos F)
     {t : ℝ} (ht : 0 < t) (z : ℍ) (hz : z = ⟨Complex.I * t, by simp [ht]⟩) :
-    0 < (F z).re := by
-  subst hz; simpa [Function.resToImagAxis, ResToImagAxis, ht] using hF.2 t ht
+    0 < (F z).re := by subst hz; simpa [Function.resToImagAxis, ResToImagAxis, ht] using hF.2 t ht
 
 /-- Tendsto conversion: if F tends to c at atImInfty, then F.resToImagAxis tends to c at atTop. -/
 lemma tendsto_resToImagAxis_of_tendsto_atImInfty {F : ℍ → ℂ} {c : ℂ}

@@ -192,8 +192,7 @@ lemma tL_mem_Ioo (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)
   have hH : HHeight = Real.sqrt 3 / 2 + 1 := rfl
   have hdenom_pos : HHeight - Real.sqrt 3 / 2 > 0 := by rw [hH]; linarith
   have hnum_pos : p.im - Real.sqrt 3 / 2 > 0 := by linarith
-  have hnum_lt : p.im - Real.sqrt 3 / 2 < HHeight - Real.sqrt 3 / 2 := by
-    linarith
+  have hnum_lt : p.im - Real.sqrt 3 / 2 < HHeight - Real.sqrt 3 / 2 := by linarith
   simp only [tL, Set.mem_Ioo]
   constructor
   · linarith [div_pos hnum_pos hdenom_pos]
@@ -328,8 +327,7 @@ lemma fdPolygon_zero_ne_interior (p : ℂ) (hp_im : p.im < HHeight) : fdPolygon 
 
 /-- fdPolygon 5 ≠ p for interior points. -/
 lemma fdPolygon_five_ne_interior (p : ℂ) (hp_im : p.im < HHeight) : fdPolygon 5 ≠ p := by
-  have h : fdPolygon 5 = fdPolygon 0 := by
-    simp only [fdPolygon]; norm_num
+  have h : fdPolygon 5 = fdPolygon 0 := by simp only [fdPolygon]; norm_num
   rw [h]
   exact fdPolygon_zero_ne_interior p hp_im
 

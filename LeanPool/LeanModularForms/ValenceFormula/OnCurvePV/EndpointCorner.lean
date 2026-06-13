@@ -97,8 +97,7 @@ private lemma endpoint_avoid_14 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
             Complex.mul_re, Complex.I_re, Complex.I_im, Complex.ofReal_im,
             Complex.add_im, Complex.mul_im, Complex.one_re, Complex.one_im,
             Complex.div_ofNat]
-          have hH0 : 0 < H := by
-            linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
+          have hH0 : 0 < H := by linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
           nlinarith [mul_lt_mul hH hH.le (by positivity : (0 : ℝ) < Real.sqrt 3 / 2) hH0.le,
                      Real.mul_self_sqrt (show (0 : ℝ) ≤ 3 from by norm_num)]
         calc (1 : ℝ) = Real.sqrt 1 := by simp only [Real.sqrt_one]
@@ -206,8 +205,7 @@ lemma cpv_at_endpoint (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
   have hε_δ : ε < δ := by have := min_le_right c (min 1 δ); have := min_le_right 1 δ; linarith
   have hε₀2_pos : 0 < ε₀ / 2 := by positivity
   have hε₀2_c : ε₀ / 2 < c := by have := min_le_left c (min 1 δ); linarith
-  have hε₀2_1 : ε₀ / 2 < 1 := by
-    have := min_le_right c (min 1 δ); have := min_le_left 1 δ; linarith
+  have hε₀2_1 : ε₀ / 2 < 1 := by have := min_le_right c (min 1 δ); have := min_le_left 1 δ; linarith
   have hε₀2_δ : ε₀ / 2 < δ := by
     have := min_le_right c (min 1 δ); have := min_le_right 1 δ; linarith
   suffices h_formula : ∀ η, 0 < η → η < c → η < 1 → η < δ →
@@ -385,8 +383,7 @@ private lemma corner_cpv_03 (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
             Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.I_im, Complex.ofReal_im,
             Complex.add_im, Complex.neg_im, Complex.mul_im, Complex.one_re, Complex.one_im,
             Complex.div_ofNat]
-          have hH0 : 0 < H := by
-            linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
+          have hH0 : 0 < H := by linarith [Real.sqrt_pos.mpr (show (0 : ℝ) < 3 from by norm_num)]
           nlinarith [mul_lt_mul hH hH.le (by positivity : (0 : ℝ) < Real.sqrt 3 / 2) hH0.le,
                      Real.mul_self_sqrt (show (0 : ℝ) ≤ 3 from by norm_num)]
         calc (1 : ℝ) = Real.sqrt 1 := by simp only [Real.sqrt_one]
@@ -494,8 +491,7 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
       have key : ∀ (a b : ℂ), a ≠ 0 → b ≠ 0 → (a * b)⁻¹ * b = a⁻¹ := fun a b _ hb => by
         rw [mul_inv_rev, mul_assoc, mul_comm a⁻¹ b,
           ← mul_assoc, inv_mul_cancel₀ hb, one_mul]
-      have hc_eq : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) = ↑c := by
-        push_cast [hc_def]; ring
+      have hc_eq : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) = ↑c := by push_cast [hc_def]; ring
       have hrw1 : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) * I = (↑c : ℂ) * I := by rw [hc_eq]
       have hrw2 : (↑((t - 4) * c) : ℂ) * I = ↑(t - 4) * (↑c * I) := by push_cast; ring
       rw [hrw1, hrw2]
@@ -545,8 +541,7 @@ lemma cpv_at_corner (H : ℝ) (hH : Real.sqrt 3 / 2 < H) :
             rw [if_neg]; push Not
             rw [h_norm_seg4 t (by linarith [ht.1]) ht.2]
             have h1 : 4 - t ≤ η / c := by linarith [ht.1]
-            calc (4 - t) * c ≤ (η / c) * c := by
-                  apply mul_le_mul_of_nonneg_right h1 hc.le
+            calc (4 - t) * c ≤ (η / c) * c := by apply mul_le_mul_of_nonneg_right h1 hc.le
               _ = η := by field_simp)
         rw [this, intervalIntegral.integral_zero]
       rw [h_zero, add_zero]

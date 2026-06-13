@@ -61,20 +61,15 @@ noncomputable def HSeg4 (p : ℝ × ℝ) : ℂ :=
 /-- The homotopy on the fifth segment of the fundamental-domain boundary. -/
 noncomputable def HSeg5 (p : ℝ × ℝ) : ℂ := (p.1 - 9/2) + HHeight * I
 
-lemma H_seg1_continuous : Continuous HSeg1 := by
-  unfold HSeg1; continuity
+lemma H_seg1_continuous : Continuous HSeg1 := by unfold HSeg1; continuity
 
-lemma H_seg2_continuous : Continuous HSeg2 := by
-  unfold HSeg2 chordSegment; continuity
+lemma H_seg2_continuous : Continuous HSeg2 := by unfold HSeg2 chordSegment; continuity
 
-lemma H_seg3_continuous : Continuous HSeg3 := by
-  unfold HSeg3 chordSegment; continuity
+lemma H_seg3_continuous : Continuous HSeg3 := by unfold HSeg3 chordSegment; continuity
 
-lemma H_seg4_continuous : Continuous HSeg4 := by
-  unfold HSeg4; continuity
+lemma H_seg4_continuous : Continuous HSeg4 := by unfold HSeg4; continuity
 
-lemma H_seg5_continuous : Continuous HSeg5 := by
-  unfold HSeg5; continuity
+lemma H_seg5_continuous : Continuous HSeg5 := by unfold HSeg5; continuity
 
 lemma exp_pi_div_three_eq_rho' :
     Complex.exp (↑(Real.pi / 3) * I) = rho' := by
@@ -114,8 +109,7 @@ lemma H_match_at_t1 (p : ℝ × ℝ) (hp : p.1 = 1) :
     simp only [Complex.ofReal_one, sub_self,
       zero_mul, add_zero]
   simp only [hangle]
-  have hpi3 : (↑Real.pi / 3 : ℂ) = ↑(Real.pi / 3) := by
-    push_cast; ring
+  have hpi3 : (↑Real.pi / 3 : ℂ) = ↑(Real.pi / 3) := by push_cast; ring
   rw [hpi3, exp_pi_div_three_eq_rho']
   simp only [sub_self, rho']
   simp only [Complex.real_smul,
@@ -240,8 +234,7 @@ lemma fdBoundaryToPolygonHomotopy_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_r
     rw [heq] at hre
     have : |p.re| = 1/2 := by rw [hre]; norm_num
     linarith
-  · have ht2 : t - 1 ∈ Icc 0 1 := by
-      constructor <;> linarith [h1, h2]
+  · have ht2 : t - 1 ∈ Icc 0 1 := by constructor <;> linarith [h1, h2]
     have h_arc_in := segment2_arc_in_closed_unit_ball t
     have h_chord_in := chord1_in_closed_unit_ball (t - 1) ht2
     have h_in_ball : (1 - s) • Complex.exp
@@ -252,8 +245,7 @@ lemma fdBoundaryToPolygonHomotopy_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_r
         h_arc_in h_chord_in s hs
     have hp_out := outside_closed_unit_ball p hp_norm
     exact fun h => hp_out (h ▸ h_in_ball)
-  · have ht3 : t - 2 ∈ Icc 0 1 := by
-      constructor <;> linarith [h2, h3]
+  · have ht3 : t - 2 ∈ Icc 0 1 := by constructor <;> linarith [h2, h3]
     have h_arc_in := segment3_arc_in_closed_unit_ball t
     have h_chord_in := chord2_in_closed_unit_ball (t - 2) ht3
     have h_in_ball : (1 - s) • Complex.exp
@@ -320,16 +312,14 @@ lemma circleAround_closed (p : ℂ) (ε : ℝ) :
   rw [h5, Complex.exp_zero, Complex.exp_two_pi_mul_I]
 
 lemma circleAround_continuous (p : ℂ) (ε : ℝ) :
-    Continuous (circleAround p ε) := by
-  unfold circleAround; continuity
+    Continuous (circleAround p ε) := by unfold circleAround; continuity
 
 lemma circleAround_dist (p : ℂ) (ε : ℝ) (hε : 0 ≤ ε) (t : ℝ) : ‖circleAround p ε t - p‖ = ε := by
   simp only [circleAround, add_sub_cancel_left]
   rw [Complex.norm_mul]
   have hform :
       2 * Real.pi * I * (t : ℂ) / 5 =
-        ↑(2 * Real.pi * t / 5) * I := by
-    push_cast; ring
+        ↑(2 * Real.pi * t / 5) * I := by push_cast; ring
   rw [hform, Complex.norm_exp_ofReal_mul_I, mul_one,
     Complex.norm_real]
   exact abs_of_nonneg hε

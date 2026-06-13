@@ -169,8 +169,7 @@ private lemma unitArc_norm_lt_of_abs_lt (s : ℂ) (H : ℝ) (t₀ : ℝ)
     rw [abs_lt]; constructor <;> linarith [ht₀_Ioo.1, ht₀_Ioo.2]
   have hφ₁_nn : 0 ≤ Real.pi * |t₁ - t₀| / 6 := by positivity
   have hφ₂_le_pi : Real.pi * |t₂ - t₀| / 6 ≤ Real.pi := by nlinarith [Real.pi_pos]
-  have hφ_lt : Real.pi * |t₁ - t₀| / 6 < Real.pi * |t₂ - t₀| / 6 := by
-    nlinarith [Real.pi_pos]
+  have hφ_lt : Real.pi * |t₁ - t₀| / 6 < Real.pi * |t₂ - t₀| / 6 := by nlinarith [Real.pi_pos]
   rw [Complex.norm_def, Complex.norm_def]
   apply Real.sqrt_lt_sqrt (Complex.normSq_nonneg _)
   rw [hns₁, hns₂, hcos₁, hcos₂]
@@ -266,14 +265,11 @@ private lemma unitArc_h_near (H : ℝ) (s : ℂ)
     (hδ_eq : ‖fdBoundaryH H (t₀ + δ) - s‖ = ε)
     (t : ℝ) (habs : |t - t₀| ≤ δ) :
     ‖fdBoundaryH H t - s‖ ≤ ε := by
-  have hδ_left : 1 < t₀ - δ := by
-    have := lt_of_lt_of_le hδ_lt_hw (hhw ▸ min_le_left _ _); linarith
+  have hδ_left : 1 < t₀ - δ := by have := lt_of_lt_of_le hδ_lt_hw (hhw ▸ min_le_left _ _); linarith
   have hδ_right : t₀ + δ < 3 := by
     have := lt_of_lt_of_le hδ_lt_hw (hhw ▸ min_le_right _ _); linarith
-  have ht1 : 1 < t := by
-    have : -δ ≤ t - t₀ := (abs_le.mp habs).1; linarith
-  have ht3 : t < 3 := by
-    have : t - t₀ ≤ δ := (abs_le.mp habs).2; linarith
+  have ht1 : 1 < t := by have : -δ ≤ t - t₀ := (abs_le.mp habs).1; linarith
+  have ht3 : t < 3 := by have : t - t₀ ≤ δ := (abs_le.mp habs).2; linarith
   exact unitArc_arc_inside_le_eps s H t₀ δ ε ht₀_Ioo h_s_arc hδ_pos hδ_left hδ_right hδ_eq
     t ht1 ht3 habs
 

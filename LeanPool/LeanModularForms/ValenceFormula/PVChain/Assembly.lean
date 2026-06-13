@@ -45,14 +45,10 @@ The modular side decomposes into:
 omit f hf in
 private lemma norm_sub_one_le {z s : ℂ} (hz : z.re = 1 / 2) (hs : s.re = -1 / 2) :
     ‖(z - 1) - s‖ ≤ ‖z - s‖ := by
-  have hre1 : ((z - 1) - s).re = 0 := by
-    simp only [Complex.sub_re, Complex.one_re]; linarith
-  have him1 : ((z - 1) - s).im = z.im - s.im := by
-    simp only [Complex.sub_im, Complex.one_im]; ring
-  have hre2 : (z - s).re = 1 := by
-    simp only [Complex.sub_re]; linarith
-  have him2 : (z - s).im = z.im - s.im := by
-    simp only [Complex.sub_im]
+  have hre1 : ((z - 1) - s).re = 0 := by simp only [Complex.sub_re, Complex.one_re]; linarith
+  have him1 : ((z - 1) - s).im = z.im - s.im := by simp only [Complex.sub_im, Complex.one_im]; ring
+  have hre2 : (z - s).re = 1 := by simp only [Complex.sub_re]; linarith
+  have him2 : (z - s).im = z.im - s.im := by simp only [Complex.sub_im]
   have h1 : ‖(z - 1) - s‖ ^ 2 = (z.im - s.im) ^ 2 := by
     rw [Complex.sq_norm, Complex.normSq_apply, hre1, him1]; ring
   have h2 : ‖z - s‖ ^ 2 = 1 + (z.im - s.im) ^ 2 := by
@@ -64,14 +60,10 @@ private lemma norm_sub_one_le {z s : ℂ} (hz : z.re = 1 / 2) (hs : s.re = -1 / 
 omit f hf in
 private lemma norm_sub_le_sub_one {z s : ℂ} (hz : z.re = 1 / 2) (hs : s.re = 1 / 2) :
     ‖z - s‖ ≤ ‖(z - 1) - s‖ := by
-  have hre1 : (z - s).re = 0 := by
-    simp only [Complex.sub_re]; linarith
-  have him1 : (z - s).im = z.im - s.im := by
-    simp only [Complex.sub_im]
-  have hre2 : ((z - 1) - s).re = -1 := by
-    simp only [Complex.sub_re, Complex.one_re]; linarith
-  have him2 : ((z - 1) - s).im = z.im - s.im := by
-    simp only [Complex.sub_im, Complex.one_im]; ring
+  have hre1 : (z - s).re = 0 := by simp only [Complex.sub_re]; linarith
+  have him1 : (z - s).im = z.im - s.im := by simp only [Complex.sub_im]
+  have hre2 : ((z - 1) - s).re = -1 := by simp only [Complex.sub_re, Complex.one_re]; linarith
+  have him2 : ((z - 1) - s).im = z.im - s.im := by simp only [Complex.sub_im, Complex.one_im]; ring
   have h1 : ‖z - s‖ ^ 2 = (z.im - s.im) ^ 2 := by
     rw [Complex.sq_norm, Complex.normSq_apply, hre1, him1]; ring
   have h2 : ‖(z - 1) - s‖ ^ 2 = 1 + (z.im - s.im) ^ 2 := by
@@ -121,8 +113,7 @@ private lemma norm_shift_neg_inv_eq {z s : ℂ} (hz_re : z.re = 1 / 2) (hs_unit 
     rw [Complex.sq_norm, Complex.normSq_apply, h1_re, h1_im]; ring
   have h_sq2 : ‖z - s‖ ^ 2 = (z.re - s.re) ^ 2 + (z.im - s.im) ^ 2 := by
     rw [Complex.sq_norm, Complex.normSq_apply, Complex.sub_re z s, Complex.sub_im z s]; ring
-  have h_eq : ‖(z - 1) - (-(1 : ℂ) / s)‖ ^ 2 = ‖z - s‖ ^ 2 := by
-    rw [h_sq1, h_sq2, hz_re]; ring
+  have h_eq : ‖(z - 1) - (-(1 : ℂ) / s)‖ ^ 2 = ‖z - s‖ ^ 2 := by rw [h_sq1, h_sq2, hz_re]; ring
   nlinarith [sq_nonneg (‖(z - 1) - (-(1 : ℂ) / s)‖ - ‖z - s‖),
     norm_nonneg ((z - 1) - (-(1 : ℂ) / s)), norm_nonneg (z - s)]
 
@@ -134,8 +125,7 @@ private lemma neg_inv_involution {s : ℂ} (hs_unit : ‖s‖ = 1) :
 
 omit f hf in
 private lemma norm_neg_inv_of_norm_one {s : ℂ} (hs : ‖s‖ = 1) :
-    ‖-(1 : ℂ) / s‖ = 1 := by
-  rw [norm_div, norm_neg, norm_one, hs, div_one]
+    ‖-(1 : ℂ) / s‖ = 1 := by rw [norm_div, norm_neg, norm_one, hs, div_one]
 
 omit f hf in
 private lemma truncation_iff_shift_union
@@ -393,8 +383,7 @@ private lemma norm_deriv_fdBoundary_H_le
     (ht_ne1 : t ≠ 1) (ht_ne3 : t ≠ 3) (ht_ne4 : t ≠ 4) :
     ‖deriv (fdBoundaryH H) t‖ ≤ max H 1 := by
   have h_norm_cast : ‖(↑H - ↑(Real.sqrt 3) / 2 : ℂ)‖ = H - Real.sqrt 3 / 2 := by
-    have hcast : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) = ↑(H - Real.sqrt 3 / 2) := by
-      push_cast; ring
+    have hcast : (↑H - ↑(Real.sqrt 3) / 2 : ℂ) = ↑(H - Real.sqrt 3 / 2) := by push_cast; ring
     rw [hcast, Complex.norm_real, Real.norm_of_nonneg (by
       linarith [Real.sqrt_pos_of_pos (by norm_num : (3 : ℝ) > 0)])]
   by_cases h1 : t < 1

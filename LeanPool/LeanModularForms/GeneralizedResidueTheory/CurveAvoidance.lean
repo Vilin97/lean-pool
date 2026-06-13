@@ -93,8 +93,7 @@ theorem curveInfDist_pos_of_avoids {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ}
     isCompact_Icc.image_of_continuousOn hγ
   have h_closed : IsClosed (γ '' Icc a b) :=
     h_compact.isClosed
-  have h_nonempty : (γ '' Icc a b).Nonempty := by
-    exact ⟨γ a, mem_image_of_mem γ (left_mem_Icc.mpr hab)⟩
+  have h_nonempty : (γ '' Icc a b).Nonempty := ⟨γ a, mem_image_of_mem γ (left_mem_Icc.mpr hab)⟩
   rw [← h_closed.notMem_iff_infDist_pos h_nonempty]
   intro ⟨t, ht, heq⟩
   exact hav t ht heq

@@ -233,8 +233,7 @@ private lemma heckeSlash_fiber_sum [DecidableEq (HeckeCoset (GLPair 2))] (k : �
   rw [← Finset.sum_fiberwise (s := S) (g := q_of)]
   conv_lhs =>
     arg 2; ext q
-    rw [Finset.sum_congr rfl (fun p hp => by
-      simp only [Finset.mem_filter] at hp; rw [hp.2])]
+    rw [Finset.sum_congr rfl (fun p hp => by simp only [Finset.mem_filter] at hp; rw [hp.2])]
     rw [Finset.sum_const]
   have h_fiber_eq : ∀ q : decompQuot (GLPair 2) (HeckeCoset.rep D),
       (S.filter (fun p => q_of p = q)).card = Nat.card

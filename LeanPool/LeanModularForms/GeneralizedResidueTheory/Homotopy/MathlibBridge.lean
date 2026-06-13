@@ -50,8 +50,7 @@ functions, `smul` and `mul` coincide. -/
 theorem contourIntegral_circleMap_eq_circleIntegral (f : ℂ → ℂ) (c : ℂ) (R : ℝ) :
     ∫ θ in (0 : ℝ)..2 * Real.pi,
       f (circleMap c R θ) * deriv (circleMap c R) θ =
-    ∮ z in C(c, R), f z := by
-  simp only [circleIntegral, smul_eq_mul, mul_comm]
+    ∮ z in C(c, R), f z := by simp only [circleIntegral, smul_eq_mul, mul_comm]
 
 /-- The generalized winding number of `circleMap c R` around `w` (for a point
 not on the circle) equals `(2πi)⁻¹ * ∮ z in C(c,R), (z - w)⁻¹`.
@@ -94,8 +93,7 @@ theorem generalizedWindingNumber_circleMap_eq_inv_circleIntegral
       rcases hx with rfl | rfl
       · exact ⟨le_refl _, h2pi.le⟩
       · exact ⟨h2pi.le, le_refl _⟩
-    endpoints_in_partition := by
-      exact ⟨by simp, by simp⟩
+    endpoints_in_partition := ⟨by simp, by simp⟩
     continuous_toFun := hcont
     smooth_off_partition := hdiff
     deriv_continuous_off_partition := hderiv_cont

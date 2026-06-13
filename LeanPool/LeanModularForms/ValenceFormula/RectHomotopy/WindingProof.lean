@@ -303,8 +303,7 @@ lemma winding_fdPolygon_at_ref_eq_neg_one :
       fun t => by rw [h_dist_target]; exact hε1
     have h_simp : (fun t => if ‖γ_target t - refP₀‖ > ε then
           (γ_target t - refP₀)⁻¹ * deriv γ_target t else 0) =
-        (fun t => (γ_target t - refP₀)⁻¹ * deriv γ_target t) := by
-      ext t; simp [h_triv t]
+        (fun t => (γ_target t - refP₀)⁻¹ * deriv γ_target t) := by ext t; simp [h_triv t]
     rw [h_simp]
     have h_integrand : ∀ t, (γ_target t - refP₀)⁻¹ * deriv γ_target t =
         -(2 * ↑Real.pi * I / 5) := by
@@ -334,9 +333,7 @@ lemma winding_fdPolygon_at_ref_eq_neg_one :
         have h4 : HasDerivAt (fun t : ℝ =>
               exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)))
             (exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)) *
-              (I * ((-(2 * Real.pi / 5) : ℝ) : ℂ))) t := by
-          have := (hasDerivAt_exp _).comp t h3
-          exact this
+              (I * ((-(2 * Real.pi / 5) : ℝ) : ℂ))) t := (hasDerivAt_exp _).comp t h3
         have h5 : HasDerivAt (fun t : ℝ =>
               refP₀ +
                 exp (I * ((θ₀ - 2 * Real.pi * t / 5 : ℝ) : ℂ)))
@@ -375,8 +372,7 @@ lemma winding_fdPolygon_at_ref_eq_neg_one :
       (fun t => if ‖rc t - refP₀‖ > ε then (rc t - refP₀)⁻¹ * deriv rc t else 0)
       (fun t => (rc t - refP₀)⁻¹ * deriv rc t) (Set.uIcc 0 5) := by
     intro t ht
-    have ht' : t ∈ Icc (0 : ℝ) 5 := by
-      rwa [Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 5)] at ht
+    have ht' : t ∈ Icc (0 : ℝ) 5 := by rwa [Set.uIcc_of_le (by norm_num : (0 : ℝ) ≤ 5)] at ht
     exact if_pos (h_cutoff ε hε_pos hε_lt1 t ht')
   rw [intervalIntegral.integral_congr h_if_eq]
   exact rc_integral_eq_neg_two_pi_I_ref_p₀

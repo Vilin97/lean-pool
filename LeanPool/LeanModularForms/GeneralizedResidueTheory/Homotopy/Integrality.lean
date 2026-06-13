@@ -322,8 +322,7 @@ private lemma logDeriv_integral_hasDerivAt_off_finset
     {t : ℝ} (ht : t ∈ Ioo a b) (ht_notP : t ∉ P) :
     HasDerivAt (fun t => ∫ s in a..t, deriv γ s / (γ s - z₀))
       (deriv γ t / (γ t - z₀)) t := by
-  have ht_in_uIcc : t ∈ Set.uIcc a b := by
-    rw [Set.uIcc_of_le hab.le]; exact Ioo_subset_Icc_self ht
+  have ht_in_uIcc : t ∈ Set.uIcc a b := by rw [Set.uIcc_of_le hab.le]; exact Ioo_subset_Icc_self ht
   exact intervalIntegral.integral_hasDerivAt_right
     (h_int.mono_set (Set.uIcc_subset_uIcc_left ht_in_uIcc))
     (logDeriv_stronglyMeasurableAtFilter_off_finset hγ_cont hγ_deriv_cont hγ_avoids ht ht_notP)
@@ -417,8 +416,7 @@ private lemma exp_neg_integral_eq_one_of_closed
       Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))) = γ a - z₀ := by
     calc (γ a - z₀) * Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀)))
         = (γ b - z₀) *
-          Complex.exp (-(∫ s in a..b, deriv γ s / (γ s - z₀))) := by
-          rw [hγ_closed]
+          Complex.exp (-(∫ s in a..b, deriv γ s / (γ s - z₀))) := by rw [hγ_closed]
       _ = (γ a - z₀) * Complex.exp (-(∫ s in a..a, deriv γ s / (γ s - z₀))) :=
           hG_const b (right_mem_Icc.mpr hab.le)
       _ = γ a - z₀ := by simp [intervalIntegral.integral_same]
@@ -436,8 +434,7 @@ private lemma winding_integer_from_exp_one
   unfold generalizedWindingNumber'
   rw [pv_eq_integral_of_bound_away hab hδ hδ_bd]
   have h_eq : ∫ t in a..b, (γ t - z₀)⁻¹ * deriv γ t =
-      ∫ t in a..b, deriv γ t / (γ t - z₀) := by
-    congr 1; ext t; rw [mul_comm, div_eq_mul_inv]
+      ∫ t in a..b, deriv γ t / (γ t - z₀) := by congr 1; ext t; rw [mul_comm, div_eq_mul_inv]
   rw [h_eq]
   have hFb' : ∫ t in a..b, deriv γ t / (γ t - z₀) = -(↑n * (2 * Real.pi * I)) := by
     have h := hn; linear_combination -h
@@ -517,8 +514,7 @@ theorem exp_integral_eq_endpoint_ratio_piecewise
     simp only [intervalIntegral.integral_same, neg_zero, exp_zero, mul_one] at this
     exact this
   have h_neg : Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))) =
-      (γ a - z₀) / (γ b - z₀) := by
-    rw [eq_div_iff hne_b, mul_comm]; exact hGb'
+      (γ a - z₀) / (γ b - z₀) := by rw [eq_div_iff hne_b, mul_comm]; exact hGb'
   rw [show Complex.exp (∫ t in a..b, deriv γ t / (γ t - z₀)) =
       (Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))))⁻¹ from by
     rw [Complex.exp_neg, inv_inv], h_neg, inv_div]
@@ -620,8 +616,7 @@ private lemma exp_endpoint_ratio_from_gFunc
     simp only [intervalIntegral.integral_same, neg_zero, exp_zero, mul_one] at this
     exact this
   have h_neg : Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))) =
-      (γ a - z₀) / (γ b - z₀) := by
-    rw [eq_div_iff hne_b, mul_comm]; exact hGb'
+      (γ a - z₀) / (γ b - z₀) := by rw [eq_div_iff hne_b, mul_comm]; exact hGb'
   rw [show Complex.exp (∫ t in a..b, deriv γ t / (γ t - z₀)) =
       (Complex.exp (-(∫ t in a..b, deriv γ t / (γ t - z₀))))⁻¹ from by
     rw [Complex.exp_neg, inv_inv], h_neg, inv_div]
@@ -674,8 +669,7 @@ theorem windingNumber_integer_of_closed_avoiding
     ∃ n : ℤ,
     generalizedWindingNumber' γ a b z₀ = n := by
   let τ := fun t => γ t - z₀
-  have hτ_closed : τ a = τ b := by
-    simp only [τ]; rw [hγ_closed]
+  have hτ_closed : τ a = τ b := by simp only [τ]; rw [hγ_closed]
   have hτ_cont : ContinuousOn τ (Icc a b) :=
     hγ_cont.sub continuousOn_const
   have hτ_diff : ∀ t ∈ Ioo a b,

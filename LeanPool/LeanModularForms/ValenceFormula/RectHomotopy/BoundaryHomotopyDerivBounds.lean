@@ -70,14 +70,12 @@ lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
   have hs' : |s| ≤ 1 := by
     rw [abs_le]
     constructor <;> linarith [hs.1, hs.2]
-  have hpi6 : Real.pi / 6 ≤ 1 := by
-    have := Real.pi_le_four; linarith
+  have hpi6 : Real.pi / 6 ≤ 1 := by have := Real.pi_le_four; linarith
   have hi_rho : ‖iPoint - rho'‖ ≤ 2 := by
     calc ‖iPoint - rho'‖
         ≤ ‖iPoint‖ + ‖rho'‖ :=
           norm_sub_le _ _
-      _ = 1 + 1 := by
-          rw [i_point_norm, rho'_norm]
+      _ = 1 + 1 := by rw [i_point_norm, rho'_norm]
       _ = 2 := by norm_num
   by_cases hd : DifferentiableAt ℝ (fun t' : ℝ =>
         let arc_point :=
@@ -99,8 +97,7 @@ lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
           s • chord_point) t‖ ≤
         |1 - s| * 1 + |s| * 2 := by
       have hpi : (Real.pi / 2 - Real.pi / 3 : ℂ) =
-            Real.pi / 6 := by
-        ring
+            Real.pi / 6 := by ring
       have func_eq : (fun t' : ℝ =>
             let arc_point :=
               Complex.exp ((Real.pi / 3 +
@@ -117,8 +114,7 @@ lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
             let chord_point :=
               chordSegment rho' iPoint (t' - 1)
             (1 - s) • arc_point +
-              s • chord_point) := by
-        ext t'; simp only [hpi]
+              s • chord_point) := by ext t'; simp only [hpi]
       rw [func_eq]
       have h_arc : HasDerivAt (fun t' : ℝ =>
             Complex.exp (((Real.pi : ℝ) / 3 +
@@ -191,8 +187,7 @@ lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
                   exact abs_of_pos
                     Real.pi_pos
                 have h2 :
-                    ‖(6 : ℂ)‖ = 6 := by
-                  norm_num
+                    ‖(6 : ℂ)‖ = 6 := by norm_num
                 rw [norm_div, h1, h2]
               rw [hpi_norm,
                 Complex.norm_I, one_mul]
@@ -204,13 +199,11 @@ lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
                     I =
                   ((Real.pi / 3 + (t - 1) *
                       (Real.pi / 6)) : ℝ) *
-                    I := by
-                push_cast; ring
+                    I := by push_cast; ring
               rw [this,
                 Complex.norm_exp_ofReal_mul_I]
         _ = |1 - s| * Real.pi / 6 +
-            |s| * ‖iPoint - rho'‖ := by
-          ring
+            |s| * ‖iPoint - rho'‖ := by ring
         _ ≤ |1 - s| * 1 + |s| * 2 := by
             have h1 :
                 |1 - s| * Real.pi / 6 ≤
@@ -218,8 +211,7 @@ lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
               have hpos : (0 : ℝ) ≤ |1 - s| :=
                 abs_nonneg _
               calc |1 - s| * Real.pi / 6 = |1 - s| *
-                        (Real.pi / 6) := by
-                      ring
+                        (Real.pi / 6) := by ring
                   _ ≤ |1 - s| * 1 :=
                     mul_le_mul_of_nonneg_left
                       hpi6 hpos
@@ -240,8 +232,7 @@ lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
             s • chord_point) t‖
         ≤ |1 - s| * 1 + |s| * 2 :=
           h_bound
-      _ ≤ 1 * 1 + 1 * 2 := by
-          nlinarith [h1s, hs']
+      _ ≤ 1 * 1 + 1 * 2 := by nlinarith [h1s, hs']
       _ = 3 := by norm_num
       _ ≤ 5 := by norm_num
   · simp only [
@@ -266,14 +257,12 @@ lemma norm_deriv_H_seg3_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
   have hs' : |s| ≤ 1 := by
     rw [abs_le]
     constructor <;> linarith [hs.1, hs.2]
-  have hpi6 : Real.pi / 6 ≤ 1 := by
-    have := Real.pi_le_four; linarith
+  have hpi6 : Real.pi / 6 ≤ 1 := by have := Real.pi_le_four; linarith
   have hrho_i : ‖rho - iPoint‖ ≤ 2 := by
     calc ‖rho - iPoint‖
         ≤ ‖rho‖ + ‖iPoint‖ :=
           norm_sub_le _ _
-      _ = 1 + 1 := by
-          rw [rho_norm, i_point_norm]
+      _ = 1 + 1 := by rw [rho_norm, i_point_norm]
       _ = 2 := by norm_num
   by_cases hd : DifferentiableAt ℝ (fun t' : ℝ =>
         let arc_point :=
@@ -296,8 +285,7 @@ lemma norm_deriv_H_seg3_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
         |1 - s| * 1 + |s| * 2 := by
       have hpi : (2 * Real.pi / 3 -
             Real.pi / 2 : ℂ) =
-            Real.pi / 6 := by
-        ring
+            Real.pi / 6 := by ring
       have func_eq : (fun t' : ℝ =>
             let arc_point :=
               Complex.exp ((Real.pi / 2 +
@@ -314,8 +302,7 @@ lemma norm_deriv_H_seg3_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
             let chord_point :=
               chordSegment iPoint rho (t' - 2)
             (1 - s) • arc_point +
-              s • chord_point) := by
-        ext t'; simp only [hpi]
+              s • chord_point) := by ext t'; simp only [hpi]
       rw [func_eq]
       have h_arc : HasDerivAt (fun t' : ℝ =>
             Complex.exp (((Real.pi : ℝ) / 2 +
@@ -388,8 +375,7 @@ lemma norm_deriv_H_seg3_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
                   exact abs_of_pos
                     Real.pi_pos
                 have h2 :
-                    ‖(6 : ℂ)‖ = 6 := by
-                  norm_num
+                    ‖(6 : ℂ)‖ = 6 := by norm_num
                 rw [norm_div, h1, h2]
               rw [hpi_norm,
                 Complex.norm_I, one_mul]
@@ -401,13 +387,11 @@ lemma norm_deriv_H_seg3_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
                     I =
                   ((Real.pi / 2 + (t - 2) *
                       (Real.pi / 6)) : ℝ) *
-                    I := by
-                push_cast; ring
+                    I := by push_cast; ring
               rw [this,
                 Complex.norm_exp_ofReal_mul_I]
         _ = |1 - s| * Real.pi / 6 +
-            |s| * ‖rho - iPoint‖ := by
-          ring
+            |s| * ‖rho - iPoint‖ := by ring
         _ ≤ |1 - s| * 1 + |s| * 2 := by
             have h1 :
                 |1 - s| * Real.pi / 6 ≤
@@ -415,8 +399,7 @@ lemma norm_deriv_H_seg3_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
               have hpos : (0 : ℝ) ≤ |1 - s| :=
                 abs_nonneg _
               calc |1 - s| * Real.pi / 6 = |1 - s| *
-                        (Real.pi / 6) := by
-                      ring
+                        (Real.pi / 6) := by ring
                   _ ≤ |1 - s| * 1 :=
                     mul_le_mul_of_nonneg_left
                       hpi6 hpos
@@ -437,8 +420,7 @@ lemma norm_deriv_H_seg3_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
             s • chord_point) t‖
         ≤ |1 - s| * 1 + |s| * 2 :=
           h_bound
-      _ ≤ 1 * 1 + 1 * 2 := by
-          nlinarith [h1s, hs']
+      _ ≤ 1 * 1 + 1 * 2 := by nlinarith [h1s, hs']
       _ = 3 := by norm_num
       _ ≤ 5 := by norm_num
   · simp only [

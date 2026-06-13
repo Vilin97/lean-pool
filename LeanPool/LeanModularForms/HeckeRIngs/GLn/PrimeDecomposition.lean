@@ -114,8 +114,7 @@ section Coprimality
 
 /-- The determinant of a p-power diagonal is a power of `p`. -/
 lemma prod_ppow (p : ℕ) (e : Fin n → ℕ) :
-    ∏ i, (ppowDiag n p e) i = p ^ (∑ i, e i) := by
-  simp only [ppowDiag, Finset.prod_pow_eq_pow_sum]
+    ∏ i, (ppowDiag n p e) i = p ^ (∑ i, e i) := by simp only [ppowDiag, Finset.prod_pow_eq_pow_sum]
 
 /-- The p-part and p-free part determinants are coprime. -/
 lemma prod_ppow_remove_coprime (p : ℕ) (hp : p.Prime)
@@ -181,8 +180,7 @@ lemma T_elem_ppow_mem_R_p (p : ℕ) (hp : p.Prime) (e : Fin n → ℕ) (hmono : 
 lemma one_mem_R_p (p : ℕ) (hp : p.Prime) :
     TElem (fun _ : Fin n => 1) ∈ RP n p hp := by
   have h : TElem (fun _ : Fin n => 1) =
-      TElem (ppowDiag n p (fun _ => 0)) := by
-    congr
+      TElem (ppowDiag n p (fun _ => 0)) := by congr
   rw [h]
   exact T_elem_ppow_mem_R_p n p hp (fun _ => 0) monotone_const
 

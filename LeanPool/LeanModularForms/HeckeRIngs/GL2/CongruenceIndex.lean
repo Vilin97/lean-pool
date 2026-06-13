@@ -51,19 +51,16 @@ private lemma TjS_inv_10 (j : ℤ) : ((T ^ j * S)⁻¹).1 1 0 = -1 := by
 private lemma TjS_inv_11 (j : ℤ) : ((T ^ j * S)⁻¹).1 1 1 = j := by
   simp [coe_T_zpow, coe_S, Matrix.SpecialLinearGroup.coe_inv, adjugate_fin_two_of]
 
-private lemma TjS_00 (j : ℤ) : (T ^ j * S).1 0 0 = j := by
-  simp [coe_T_zpow, coe_S]
+private lemma TjS_00 (j : ℤ) : (T ^ j * S).1 0 0 = j := by simp [coe_T_zpow, coe_S]
 
-private lemma TjS_10 (j : ℤ) : (T ^ j * S).1 1 0 = 1 := by
-  simp [coe_S]
+private lemma TjS_10 (j : ℤ) : (T ^ j * S).1 1 0 = 1 := by simp [coe_S]
 
 private lemma TjS_inv_mul_10 (j : ℤ) (σ : SL(2, ℤ)) :
     ((T ^ j * S)⁻¹ * σ).1 1 0 = j * σ.1 1 0 - σ.1 0 0 := by
   rw [SL2_entry_mul, TjS_inv_10, TjS_inv_11]; ring
 
 private lemma rep_diff_10 (i j : ℤ) :
-    ((T ^ j * S)⁻¹ * (T ^ i * S)).1 1 0 = j - i := by
-  rw [TjS_inv_mul_10, TjS_10, TjS_00]; ring
+    ((T ^ j * S)⁻¹ * (T ^ i * S)).1 1 0 = j - i := by rw [TjS_inv_mul_10, TjS_10, TjS_00]; ring
 
 section BaseCase
 
@@ -264,8 +261,7 @@ theorem Gamma0_prime_power_index (p : ℕ) (hp : Nat.Prime p) (k : ℕ) (hk : 0 
         intro σ hσ; rw [Gamma0_mem] at hσ ⊢
         rw [ZMod.intCast_zmod_eq_zero_iff_dvd] at hσ ⊢
         exact dvd_trans (by exact_mod_cast pow_dvd_pow p (Nat.le_succ m)) hσ
-      have hpm : p * p ^ (m - 1) = p ^ m := by
-        rw [mul_comm, ← pow_succ]; congr 1; omega
+      have hpm : p * p ^ (m - 1) = p ^ m := by rw [mul_comm, ← pow_succ]; congr 1; omega
       rw [← Subgroup.relIndex_mul_index h_le,
         Gamma0_relindex_step p hp m hm', ih hm', ← mul_assoc, hpm]
 

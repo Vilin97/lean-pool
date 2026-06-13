@@ -116,8 +116,7 @@ private theorem aestronglyMeasurable_of_continuousOn_off_finite
     (hf_cont : ContinuousOn f ((Icc a b) \ P)) :
     AEStronglyMeasurable f (volume.restrict (Icc a b)) := by
   have h_union : Icc a b =
-      (Icc a b \ (P : Set ℝ)) ∪ ((P : Set ℝ) ∩ Icc a b) := by
-    ext x; simp [and_comm]; tauto
+      (Icc a b \ (P : Set ℝ)) ∪ ((P : Set ℝ) ∩ Icc a b) := by ext x; simp [and_comm]; tauto
   rw [h_union, aestronglyMeasurable_union_iff]
   constructor
   · exact hf_cont.aestronglyMeasurable
@@ -182,8 +181,7 @@ private theorem eq_on_Ioo_of_deriv_zero
       f x = f y :=
     fun x hx y hy => IsOpen.is_const_of_deriv_eq_zero
       isOpen_Ioo isPreconnected_Ioo h_diff h_dz hx hy
-  have h_mid : (t + s_min) / 2 ∈ Ioo t s_min := by
-    constructor <;> linarith
+  have h_mid : (t + s_min) / 2 ∈ Ioo t s_min := by constructor <;> linarith
   have h_eq_mid : ∀ x ∈ Ioo t s_min, f x = f ((t + s_min) / 2) :=
     fun x hx => h_const x hx _ h_mid
   have h_cont_Ioo : ContinuousWithinAt f (Ioo t s_min) t :=

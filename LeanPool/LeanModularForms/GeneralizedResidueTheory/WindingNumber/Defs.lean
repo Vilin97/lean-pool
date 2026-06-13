@@ -52,8 +52,7 @@ def angleAtCrossing (γ : PiecewiseC1Immersion) (t₀ : ℝ)
 theorem angleAtCrossing_smooth (γ : PiecewiseC1Immersion)
     (t₀ : ℝ) (ht₀ : t₀ ∈ Ioo γ.a γ.b)
     (hsmooth : t₀ ∉ γ.toPiecewiseC1Curve.partition) :
-    angleAtCrossing γ t₀ ht₀ = Real.pi := by
-  simp only [angleAtCrossing, hsmooth, ↓reduceDIte]
+    angleAtCrossing γ t₀ ht₀ = Real.pi := by simp only [angleAtCrossing, hsmooth, ↓reduceDIte]
 
 /-- Winding number via explicit angle sum at crossings. -/
 def windingNumberWithAngles'

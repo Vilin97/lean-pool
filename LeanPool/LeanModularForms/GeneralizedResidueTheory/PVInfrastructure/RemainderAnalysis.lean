@@ -187,8 +187,7 @@ lemma quadratic_approx_of_contDiffAt_two
     simp only [f₃]
     have hid : deriv (fun x : ℝ => x) s = 1 :=
       deriv_id s
-    have hsub : deriv (fun x => x - t₀) s = 1 := by
-      rw [deriv_sub_const, hid]
+    have hsub : deriv (fun x => x - t₀) s = 1 := by rw [deriv_sub_const, hid]
     have : deriv (fun s => (s - t₀) • L) s = deriv (fun s => s - t₀) s • L :=
       deriv_smul_const (differentiableAt_id.sub (differentiableAt_const _)) L
     rw [this, hsub]; simp
@@ -199,15 +198,13 @@ lemma quadratic_approx_of_contDiffAt_two
     have hs_diff : DifferentiableAt ℝ γ s :=
       h_γ_diff_on s hs
     have h_eq_sub :
-        h = fun s => (f₁ s - f₂ s) - f₃ s := by
-      ext; simp [h, f₁, f₂, f₃]
+        h = fun s => (f₁ s - f₂ s) - f₃ s := by ext; simp [h, f₁, f₂, f₃]
     have h_diff_f1f2 :
         DifferentiableAt ℝ (fun s => f₁ s - f₂ s) s :=
       hs_diff.sub (h_f₂_diff s)
     have step1 :
         deriv h s =
-          deriv (fun s => (f₁ s - f₂ s) - f₃ s) s := by
-      rw [← h_eq_sub]
+          deriv (fun s => (f₁ s - f₂ s) - f₃ s) s := by rw [← h_eq_sub]
     have step2 :
         deriv (fun s => (f₁ s - f₂ s) - f₃ s) s =
           deriv (fun s => f₁ s - f₂ s) s -
@@ -219,8 +216,7 @@ lemma quadratic_approx_of_contDiffAt_two
       deriv_sub hs_diff (h_f₂_diff s)
     simp only [step1, step2, step3,
       h_deriv_f₂, h_deriv_f₃, sub_zero, f₁]
-  have h_at_t₀ : h t₀ = 0 := by
-    simp only [h, f₁, f₂, f₃, sub_self]; simp
+  have h_at_t₀ : h t₀ = 0 := by simp only [h, f₁, f₂, f₃, sub_self]; simp
   have h_deriv_bound :
       ∀ s ∈ Set.uIcc t₀ t,
         ‖deriv h s‖ ≤ M * |t - t₀| := by
@@ -239,14 +235,12 @@ lemma quadratic_approx_of_contDiffAt_two
       h_deriv_bound (convex_uIcc t₀ t)
       Set.left_mem_uIcc Set.right_mem_uIcc
   rw [h_at_t₀, sub_zero, Real.norm_eq_abs] at h_bound
-  have h_eq : h t = γ t - γ t₀ - (t - t₀) • L := by
-    simp only [h, f₁, f₂, f₃]
+  have h_eq : h t = γ t - γ t₀ - (t - t₀) • L := by simp only [h, f₁, f₂, f₃]
   calc ‖γ t - γ t₀ - (t - t₀) • L‖
       = ‖h t‖ := by rw [h_eq]
     _ ≤ M * |t - t₀| * |t - t₀| := h_bound
     _ = M * |t - t₀| ^ 2 := by ring
-    _ ≤ K * |t - t₀| ^ 2 := by
-        nlinarith [sq_nonneg |t - t₀|]
+    _ ≤ K * |t - t₀| ^ 2 := by nlinarith [sq_nonneg |t - t₀|]
 
 /-- Bounded slope deviation from C² smoothness. -/
 lemma bounded_slope_deviation_of_contDiffAt_two
@@ -295,8 +289,7 @@ lemma numerator_quadratic_bound
   have h_identity :
       (↑(t - t₀) : ℂ) * deriv γ t - (γ t - γ t₀) =
         (↑(t - t₀) : ℂ) * (deriv γ t - L) -
-          (γ t - γ t₀ - (t - t₀) • L) := by
-    rw [Complex.real_smul]; ring
+          (γ t - γ t₀ - (t - t₀) • L) := by rw [Complex.real_smul]; ring
   rw [h_identity]
   have h1 :
       ‖(↑(t - t₀) : ℂ) * (deriv γ t - L)‖ ≤
@@ -317,8 +310,7 @@ lemma numerator_quadratic_bound
         K₁ * |t - t₀| ^ 2 :=
         add_le_add h1 h2
     _ = (K₁ + K₂) * |t - t₀| ^ 2 := by ring
-    _ ≤ (K₁ + K₂ + 1) * |t - t₀| ^ 2 := by
-        nlinarith [sq_nonneg |t - t₀|]
+    _ ≤ (K₁ + K₂ + 1) * |t - t₀| ^ 2 := by nlinarith [sq_nonneg |t - t₀|]
 
 /-- Bounded remainder from C² smoothness. -/
 lemma remainder_bounded_of_C2
@@ -332,8 +324,7 @@ lemma remainder_bounded_of_C2
   have hL_norm_pos : 0 < ‖L‖ := norm_pos_iff.mpr hL
   have hγ_diff : DifferentiableAt ℝ γ t₀ :=
     hγ_C2.differentiableAt two_ne_zero
-  have hγ_hasderiv : HasDerivAt γ L t₀ := by
-    rw [← hγ_deriv]; exact hγ_diff.hasDerivAt
+  have hγ_hasderiv : HasDerivAt γ L t₀ := by rw [← hγ_deriv]; exact hγ_diff.hasDerivAt
   obtain ⟨δ₁, hδ₁_pos, h_lower⟩ :=
     gamma_lower_bound_of_hasDerivAt hL hγ_hasderiv
   obtain ⟨K, δ₂, hδ₂_pos, h_numer⟩ :=
@@ -356,8 +347,7 @@ lemma remainder_bounded_of_C2
       (γ t - γ t₀)⁻¹ * deriv γ t - (↑(t - t₀))⁻¹ =
         ((↑(t - t₀) : ℂ) * deriv γ t -
           (γ t - γ t₀)) /
-        ((γ t - γ t₀) * (↑(t - t₀))) := by
-    field_simp [h_Δγ_ne, ht_ne]
+        ((γ t - γ t₀) * (↑(t - t₀))) := by field_simp [h_Δγ_ne, ht_ne]
   rw [h_identity, norm_div]
   have h_numer_bound :
       ‖(↑(t - t₀) : ℂ) * deriv γ t -
@@ -369,8 +359,7 @@ lemma remainder_bounded_of_C2
     rw [norm_mul, Complex.norm_real]
     have h := h_lower t ht_pos ht₁
     calc (‖L‖ / 2) * |t - t₀| ^ 2
-        = (‖L‖ / 2 * |t - t₀|) * |t - t₀| := by
-          ring
+        = (‖L‖ / 2 * |t - t₀|) * |t - t₀| := by ring
       _ ≤ ‖γ t - γ t₀‖ * |t - t₀| :=
           mul_le_mul_of_nonneg_right h (abs_nonneg _)
   have h_denom_pos :

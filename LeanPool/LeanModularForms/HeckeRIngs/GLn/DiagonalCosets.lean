@@ -103,8 +103,7 @@ noncomputable def diagMatDelta (a : Fin n → ℕ) : (GLPair n).Δ :=
   else ⟨1, (GLPair n).Δ.one_mem⟩
 
 @[simp] lemma diagMat_delta_val (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) :
-    (↑(diagMatDelta n a) : GL (Fin n) ℚ) = diagMat n a := by
-  simp only [diagMatDelta, dif_pos ha]
+    (↑(diagMatDelta n a) : GL (Fin n) ℚ) = diagMat n a := by simp only [diagMatDelta, dif_pos ha]
 
 end HeckeDiagonal
 
@@ -898,8 +897,7 @@ private lemma double_coset_eq_of_SLnZ_equiv (α : (GLPair n).Δ) (A : Matrix (Fi
       A.map (Int.cast : ℤ → ℚ) * (↑R : Matrix _ _ ℤ).map (Int.cast : ℤ → ℚ)
       = ((↑L : Matrix _ _ ℤ) * A).map (Int.cast : ℤ → ℚ) *
         (↑R : Matrix _ _ ℤ).map (Int.cast : ℤ → ℚ) := by rw [h_map_mul]
-    _ = ((↑L : Matrix _ _ ℤ) * A * (↑R : Matrix _ _ ℤ)).map (Int.cast : ℤ → ℚ) := by
-        rw [h_map_mul]
+    _ = ((↑L : Matrix _ _ ℤ) * A * (↑R : Matrix _ _ ℤ)).map (Int.cast : ℤ → ℚ) := by rw [h_map_mul]
     _ = (Matrix.diagonal d).map (Int.cast : ℤ → ℚ) := by rw [hLR]
 
 /-- Every element of `Delta` has a diagonal representative with divisibility chain

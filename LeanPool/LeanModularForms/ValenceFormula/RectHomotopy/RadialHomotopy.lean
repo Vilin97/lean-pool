@@ -395,8 +395,7 @@ lemma fdPolygon_right_deriv_norm_le (x : ℝ) :
   simp only [fdPolygonRightDeriv]
   split_ifs with h1 h2 h3 h4
   · simp only [fdPolygon_deriv_seg1]
-    have h1 : (↑HHeight : ℂ) - ↑(Real.sqrt 3) / 2 = 1 := by
-      simp only [HHeight]; push_cast; ring
+    have h1 : (↑HHeight : ℂ) - ↑(Real.sqrt 3) / 2 = 1 := by simp only [HHeight]; push_cast; ring
     rw [h1]; simp [Complex.norm_I]
   · rw [fdPolygon_deriv_seg2]
     calc ‖iPoint - rho'‖ ≤ ‖iPoint‖ + ‖rho'‖ := norm_sub_le _ _
@@ -407,8 +406,7 @@ lemma fdPolygon_right_deriv_norm_le (x : ℝ) :
       _ = 1 + 1 := by rw [rho_norm, i_point_norm]
       _ ≤ 3 := by norm_num
   · simp only [fdPolygon_deriv_seg4]
-    have h1 : (↑HHeight : ℂ) - ↑(Real.sqrt 3) / 2 = 1 := by
-      simp only [HHeight]; push_cast; ring
+    have h1 : (↑HHeight : ℂ) - ↑(Real.sqrt 3) / 2 = 1 := by simp only [HHeight]; push_cast; ring
     rw [h1]; simp [Complex.norm_I]
   · rw [fdPolygon_deriv_seg5]; simp only [norm_one]; norm_num
 
@@ -562,8 +560,7 @@ lemma polygonToCircleRadial_deriv_bounded (p : ℂ) (hp_norm : ‖p‖ > 1)
       intro t'
       rw [hg_eq t', hg_eq t]
       have h_cancel : ∀ (a b c d e : ℂ),
-          a + b + c - (a + d + e) = (b - d) + (c - e) := by
-        intros; ring
+          a + b + c - (a + d + e) = (b - d) + (c - e) := by intros; ring
       rw [h_cancel]
       simp only [RCLike.real_smul_eq_coe_mul]
       push_cast

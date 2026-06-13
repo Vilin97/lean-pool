@@ -67,8 +67,7 @@ private lemma exists_height_above_sqrt3_and_S
   · exact ⟨1, by nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)],
       le_refl _, fun s hs => absurd hs (Finset.notMem_empty s)⟩
   · refine ⟨max 1 (S.sup' hne (fun s => (s : ℂ).im) + 1), ?_, ?_, ?_⟩
-    · calc Real.sqrt 3 / 2 < 1 := by
-            nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
+    · calc Real.sqrt 3 / 2 < 1 := by nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
           _ ≤ _ := le_max_left _ _
     · exact le_max_left _ _
     · intro s hs
@@ -450,7 +449,6 @@ theorem cpv_residue_side_tendsto
     exact cpv_residue_side_sum_convert f hf S hS hS_complete
       hH_sqrt3 hH_ge1 hH_bound S_on hS_on_def
   rw [h_sum_convert] at hL_tendsto_S_on
-  exact hL_tendsto_S_on.congr (fun ε => by
-    apply intervalIntegral.integral_congr; intro t _; rfl)
+  exact hL_tendsto_S_on.congr (fun ε => by apply intervalIntegral.integral_congr; intro t _; rfl)
 
 end

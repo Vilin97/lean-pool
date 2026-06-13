@@ -98,8 +98,7 @@ private lemma evalE₄E₆_component_eq (p : MvPolynomial (Fin 2) ℂ) (n : ℕ)
   intro d hd
   apply evalE₄E₆_monomial_grade
   intro heq
-  have : Finsupp.weight E₄E₆Weight d = n := by
-    have := weight_fin2_cast d; omega
+  have : Finsupp.weight E₄E₆Weight d = n := by have := weight_fin2_cast d; omega
   exfalso; exact (MvPolynomial.mem_support_iff.mp hd) (by
     simp only [q, MvPolynomial.coeff_sub]
     rw [MvPolynomial.coeff_weightedHomogeneousComponent, if_pos this, sub_self])
@@ -107,8 +106,7 @@ private lemma evalE₄E₆_component_eq (p : MvPolynomial (Fin 2) ℂ) (n : ℕ)
 private lemma no_wt_monomial_of_odd {n : ℕ} (hn : Odd n) (d : Fin 2 →₀ ℕ) :
     Finsupp.weight E₄E₆Weight d ≠ n := by
   intro h
-  have : Finsupp.weight E₄E₆Weight d = d 0 * 4 + d 1 * 6 := by
-    have := weight_fin2_cast d; omega
+  have : Finsupp.weight E₄E₆Weight d = d 0 * 4 + d 1 * 6 := by have := weight_fin2_cast d; omega
   rw [this] at h
   have hev : Even n := ⟨d 0 * 2 + d 1 * 3, by omega⟩
   simp only [Nat.even_iff, Nat.odd_iff] at hev hn; omega
@@ -116,8 +114,7 @@ private lemma no_wt_monomial_of_odd {n : ℕ} (hn : Odd n) (d : Fin 2 →₀ ℕ
 private lemma no_wt_monomial_of_two (d : Fin 2 →₀ ℕ) :
     Finsupp.weight E₄E₆Weight d ≠ 2 := by
   intro h
-  have : Finsupp.weight E₄E₆Weight d = d 0 * 4 + d 1 * 6 := by
-    have := weight_fin2_cast d; omega
+  have : Finsupp.weight E₄E₆Weight d = d 0 * 4 + d 1 * 6 := by have := weight_fin2_cast d; omega
   rw [this] at h; omega
 
 private lemma whomog_eq_zero_of_no_monomials {n : ℕ} (p : MvPolynomial (Fin 2) ℂ)
@@ -208,8 +205,7 @@ private lemma monomial_reduction (a b : ℕ) (ha : 3 ≤ a) :
     MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X 1 ^ (b + 2) +
     (1728 : ℂ) • DeltaPoly * (MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X 1 ^ b) := by
   have : (MvPolynomial.X (0 : Fin 2) : MvPolynomial (Fin 2) ℂ) ^ a =
-    MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X (0 : Fin 2) ^ 3 := by
-    rw [← pow_add]; congr 1; omega
+    MvPolynomial.X 0 ^ (a - 3) * MvPolynomial.X (0 : Fin 2) ^ 3 := by rw [← pow_add]; congr 1; omega
   rw [this, X0_cubed_eq]
   ring
 
@@ -251,15 +247,13 @@ private lemma delta_piece_eq_monomial_sub
     MvPolynomial.X (0 : Fin 2) ^ 3 - MvPolynomial.X (1 : Fin 2) ^ 2 := by
     simp only [DeltaPoly, smul_smul]; norm_num
   have hd_fin : d = Finsupp.single (0 : Fin 2) (d 0) +
-      Finsupp.single (1 : Fin 2) (d 1) := by
-    ext i; fin_cases i <;> simp [Finsupp.add_apply]
+      Finsupp.single (1 : Fin 2) (d 1) := by ext i; fin_cases i <;> simp [Finsupp.add_apply]
   have hdp_simp : MvPolynomial.C c * ((1728 : ℂ) • DeltaPoly *
       (MvPolynomial.X (0 : Fin 2) ^ (d 0 - 3) * MvPolynomial.X (1 : Fin 2) ^ (d 1))) =
     MvPolynomial.C c *
       (MvPolynomial.X (0 : Fin 2) ^ 3 - MvPolynomial.X (1 : Fin 2) ^ 2) *
       (MvPolynomial.X (0 : Fin 2) ^ (d 0 - 3) *
-        MvPolynomial.X (1 : Fin 2) ^ (d 1)) := by
-    rw [h1728]; ring
+        MvPolynomial.X (1 : Fin 2) ^ (d 1)) := by rw [h1728]; ring
   rw [hdp_simp]
   have h3 : (MvPolynomial.X (0 : Fin 2) ^ 3 : MvPolynomial (Fin 2) ℂ) *
     (MvPolynomial.X (0 : Fin 2) ^ (d 0 - 3) * MvPolynomial.X (1 : Fin 2) ^ d 1) =
@@ -526,8 +520,7 @@ private lemma eval_Delta_mul_zero_imp {n : ℕ} (hn12 : 12 ≤ n)
     have h := hds
     rw [DirectSum.of_apply, dif_pos hcast] at h
     have : ∀ {k₁ k₂ : ℤ} (h : k₁ = k₂) (f : ModularForm Γ(1) k₁),
-      h ▸ f = (0 : ModularForm Γ(1) k₂) → f = 0 := by
-      intros k₁ k₂ heq f hf; cases heq; exact hf
+      h ▸ f = (0 : ModularForm Γ(1) k₂) → f = 0 := by intros k₁ k₂ heq f hf; cases heq; exact hf
     exact this hcast _ h
   ext z; simp only [ModularForm.zero_apply]
   have hpw := congr_fun (congr_arg (fun (f : ModularForm Γ(1) _) => f.toFun) hds2) z
@@ -625,8 +618,7 @@ private lemma per_weight_injective : ∀ (n : ℕ) (p : MvPolynomial (Fin 2) ℂ
       · exact whomog_eq_zero_of_no_monomials p hp (fun d => no_wt_monomial_of_two d)
     · push Not at hn4
       by_cases hn12 : n < 12
-      · have hn_cases : n = 4 ∨ n = 6 ∨ n = 8 ∨ n = 10 := by
-          obtain ⟨m, rfl⟩ := hk_odd; omega
+      · have hn_cases : n = 4 ∨ n = 6 ∨ n = 8 ∨ n = 10 := by obtain ⟨m, rfl⟩ := hk_odd; omega
         rcases hn_cases with rfl | rfl | rfl | rfl
         · exact per_weight_injective_small 1 0 (by omega) (by omega) rfl p hp heval
         · exact per_weight_injective_small 0 1 (by omega) (by omega) rfl p hp heval

@@ -297,8 +297,7 @@ private lemma row0_clear {m : ℕ} (τ : Matrix.SpecialLinearGroup (Fin (m + 1))
         (if (j : ℕ) = 0 then 0 else (σ.1 0 j).natAbs) ≠ 0 := by
       by_contra h; push Not at h
       exact hzero (Finset.sum_eq_zero (fun j _ => h j))
-    have hj₀ : j₀ ≠ 0 := by
-      intro h; subst h; simp at hj₀_nz
+    have hj₀ : j₀ ≠ 0 := by intro h; subst h; simp at hj₀_nz
     have hj₀_entry : σ.1 0 j₀ ≠ 0 := by
       intro h; simp [h, show ¬(j₀ : ℕ) = 0 from fun h₀ => hj₀ (Fin.ext h₀)] at hj₀_nz
     set E := slTransvecG (0 : Fin (m+1)) j₀ (Ne.symm hj₀) (-σ.1 0 j₀)
@@ -408,8 +407,7 @@ private lemma block_form_transvec_lift {m : ℕ} (M : Matrix.SpecialLinearGroup 
   | cons E L' ihL' =>
     simp only [List.prod_cons] at hL_eq
     obtain ⟨i, j, hij, c, rfl⟩ := hL E (List.mem_cons.mpr (Or.inl rfl))
-    have H00' : (blockLift i j hij (-c) * M).1 0 0 = 1 := by
-      rw [blockLift_row0]; exact H00
+    have H00' : (blockLift i j hij (-c) * M).1 0 0 = 1 := by rw [blockLift_row0]; exact H00
     have H0j' : ∀ k, k ≠ 0 → (blockLift i j hij (-c) * M).1 0 k = 0 := by
       intro k hk; rw [blockLift_row0]; exact H0j k hk
     have Hi0' : ∀ k, k ≠ 0 → (blockLift i j hij (-c) * M).1 k 0 = 0 := by

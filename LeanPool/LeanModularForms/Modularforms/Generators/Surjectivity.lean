@@ -47,8 +47,7 @@ private lemma mul_modform_ne_zero_of_coeff_one {k₁ k₂ : ℤ}
     simp only [Nat.cast_one] at this; rw [this]
     simp only [PowerSeries.coeff_mul, Finset.antidiagonal_zero, Finset.sum_singleton, hf, hg,
       mul_one]
-  have hcoe : (⇑(f.mul g) : ℍ → ℂ) = 0 := by
-    rw [h]; ext z; simp only [zero_apply, Pi.zero_apply]
+  have hcoe : (⇑(f.mul g) : ℍ → ℂ) = 0 := by rw [h]; ext z; simp only [zero_apply, Pi.zero_apply]
   rw [show qExpansion 1 (f.mul g) = qExpansion 1 (0 : ℍ → ℂ) from
     congr_arg (qExpansion 1) hcoe, qExpansion_zero] at hcoeff
   simp only [PowerSeries.coeff_zero_eq_constantCoeff, PowerSeries.constantCoeff_zero,
@@ -122,8 +121,7 @@ private lemma one_modform_ne_zero : (1 : ModularForm Γ(1) 0) ≠ 0 := by
     Pi.one_apply, zero_apply, one_ne_zero] at this
 
 private lemma evalE₄E₆_one :
-    evalE₄E₆ 1 = DirectSum.of (fun k : ℤ => ModularForm Γ(1) k) 0 1 := by
-  rw [map_one]; rfl
+    evalE₄E₆ 1 = DirectSum.of (fun k : ℤ => ModularForm Γ(1) k) 0 1 := by rw [map_one]; rfl
 
 private lemma evalE₄E₆_X0_sq :
     evalE₄E₆ (MvPolynomial.X 0 ^ 2) =

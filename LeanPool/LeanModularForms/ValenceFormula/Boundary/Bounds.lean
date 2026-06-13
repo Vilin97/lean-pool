@@ -226,8 +226,7 @@ lemma fdBoundary_H_re_abs_le_half (H : ℝ) :
           rw [fdBoundary_H_eq_seg5_H h4, seg5_H_re]; rw [abs_le]; constructor <;> linarith
 
 lemma fdBoundary_eq_seg1 {t : ℝ} (ht : t ≤ 1) :
-    fdBoundary t = fdBoundarySeg1 t := by
-  simp only [fdBoundary, ht, ite_true, fdBoundarySeg1]
+    fdBoundary t = fdBoundarySeg1 t := by simp only [fdBoundary, ht, ite_true, fdBoundarySeg1]
 
 lemma fdBoundary_eq_seg2 {t : ℝ} (ht1 : 1 < t) (ht2 : t ≤ 2) :
     fdBoundary t = fdBoundarySeg2 t := by
@@ -265,8 +264,7 @@ lemma fdBoundary_im_pos :
 lemma fdBoundary_H_im_le_H {H : ℝ} (hH : 1 ≤ H) :
     ∀ t ∈ Icc (0 : ℝ) 5, (fdBoundaryH H t).im ≤ H := by
   intro t ⟨ht0, ht5⟩
-  have hH_sqrt3 : Real.sqrt 3 / 2 < H := by
-    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
+  have hH_sqrt3 : Real.sqrt 3 / 2 < H := by nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
   by_cases h1 : t ≤ 1
   · rw [fdBoundary_H_eq_seg1_H h1, seg1_H_im ht0 h1]; nlinarith
   · push Not at h1
@@ -324,17 +322,14 @@ lemma fdBoundary_im_ge_sqrt3_div_2 :
 
 lemma fdBoundary_passes_through_i :
     ∃ t ∈ Icc (0 : ℝ) 5,
-      fdBoundary t = ellipticPointI := by
-  exact ⟨2, by norm_num, fdBoundary_at_two⟩
+      fdBoundary t = ellipticPointI := ⟨2, by norm_num, fdBoundary_at_two⟩
 
 lemma fdBoundary_passes_through_rho :
     ∃ t ∈ Icc (0 : ℝ) 5,
-      fdBoundary t = ellipticPointRho := by
-  exact ⟨3, by norm_num, fdBoundary_at_three⟩
+      fdBoundary t = ellipticPointRho := ⟨3, by norm_num, fdBoundary_at_three⟩
 
 lemma fdBoundary_passes_through_rho_plus_one :
     ∃ t ∈ Icc (0 : ℝ) 5,
-      fdBoundary t = ellipticPointRhoPlusOne := by
-  exact ⟨1, by norm_num, fdBoundary_at_one⟩
+      fdBoundary t = ellipticPointRhoPlusOne := ⟨1, by norm_num, fdBoundary_at_one⟩
 
 end

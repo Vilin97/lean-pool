@@ -77,8 +77,7 @@ theorem fdBoundary_H_seg2 (H : ℝ) {t : ℝ} (ht1 : ¬(t ≤ 1)) (ht2 : ¬(t �
 theorem fdBoundary_H_seg3 (H : ℝ) {t : ℝ} (ht1 : ¬(t ≤ 1)) (ht2 : ¬(t ≤ 2))
     (ht3 : ¬(t ≤ 3)) (ht4 : t ≤ 4) :
     fdBoundaryH H t = -1/2 + (↑(Real.sqrt 3) / 2 + (↑t - 3) *
-      (↑H - ↑(Real.sqrt 3) / 2)) * I := by
-  simp only [fdBoundaryH, ht1, ht2, ht3, ht4, ↓reduceIte]
+      (↑H - ↑(Real.sqrt 3) / 2)) * I := by simp only [fdBoundaryH, ht1, ht2, ht3, ht4, ↓reduceIte]
 
 theorem fdBoundary_H_seg4 (H : ℝ) {t : ℝ} (ht1 : ¬(t ≤ 1)) (ht2 : ¬(t ≤ 2))
     (ht3 : ¬(t ≤ 3)) (ht4 : ¬(t ≤ 4)) :
@@ -206,8 +205,7 @@ lemma ftc_log_piece_lower {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     hnh_log_cont (fun t ht => by
       have hda := (hh_diff t ht).hasDerivAt.neg
       have := hda.clog_real (hnh_slit t ht)
-      have goal_eq : -deriv h t / -h t = deriv h t / h t := by
-        simp only [neg_div_neg_eq]
+      have goal_eq : -deriv h t / -h t = deriv h t / h t := by simp only [neg_div_neg_eq]
       exact goal_eq ▸ this) hint_h
   exact ⟨hint_g, by
     calc ∫ t in a..b, deriv g t / g t

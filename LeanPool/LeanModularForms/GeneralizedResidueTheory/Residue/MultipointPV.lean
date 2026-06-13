@@ -401,8 +401,7 @@ lemma A_int_bound_good_set {S0 : Finset ℂ} {f g_reg : ℂ → ℂ} {γ : ℝ �
         ∑ s ∈ S0, if ‖γ t - s‖ > ε then residueSimplePole f s / (γ t - s) * deriv γ t
           else 0)‖ ≤ Mg * Mγ := by
   intro t ht
-  have h_no_excl : ¬∃ s ∈ S0, ‖γ t - s‖ ≤ ε := by
-    push Not; exact fun s hs => h_all_far t ht s hs
+  have h_no_excl : ¬∃ s ∈ S0, ‖γ t - s‖ ≤ ε := by push Not; exact fun s hs => h_all_far t ht s hs
   simp only [cauchyPrincipalValueIntegrandOn, h_no_excl, ↓reduceIte]
   have h_sum_active : ∑ s ∈ S0, (if ε < ‖γ t - s‖
       then residueSimplePole f s / (γ t - s) * deriv γ t else 0) =

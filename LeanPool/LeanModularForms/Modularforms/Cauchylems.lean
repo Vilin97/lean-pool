@@ -55,11 +55,9 @@ lemma cc (f : ℤ → ℂ) (hc : CauchySeq fun N : ℕ => ∑ m ∈ Finset.Icc (
       rw [show f n + f n = 2 * f n by ring] at H3
       simp only [Complex.norm_mul, norm_ofNat] at H3
       have HN := hN N (by rfl)
-      have hgn : g N ≤ |g N| := by
-        exact le_abs_self (g N)
+      have hgn : g N ≤ |g N| := le_abs_self (g N)
       have := le_trans H3 hgn
-      have hgnn : 2 * ‖(f n)‖ < 2 * ε := by
-        exact lt_of_le_of_lt this HN
+      have hgnn : 2 * ‖(f n)‖ < 2 * ε := lt_of_le_of_lt this HN
       nlinarith
     omega
   · omega

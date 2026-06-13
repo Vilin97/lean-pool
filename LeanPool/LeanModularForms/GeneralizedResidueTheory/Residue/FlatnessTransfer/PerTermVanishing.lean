@@ -73,8 +73,7 @@ theorem pv_higher_order_term_tendsto_zero
     push_cast [Nat.cast_sub h1m] at hj h_n_a ⊢
     have h_expand : (1 - (m : ℝ)) * (arg uR - arg uL) =
         (1 - (m : ℝ)) * _root_.angleAtCrossing γ t₀ ht₀ +
-        (1 - (m : ℝ)) * ((n_a : ℝ) * (2 * Real.pi)) := by
-      rw [h_n_a]; ring
+        (1 - (m : ℝ)) * ((n_a : ℝ) * (2 * Real.pi)) := by rw [h_n_a]; ring
     linarith
   have h_L3 : Tendsto (fun ε => wR ε ^ (1 - (m : ℤ)) - wL ε ^ (1 - (m : ℤ)))
       (𝓝[>] 0) (𝓝 0) :=
@@ -118,8 +117,7 @@ private theorem circleIntegral_laurent_term
     (∮ z in C(s, r), c / (z - s) ^ (k + 1)) =
       if k = 0 then c * (2 * ↑Real.pi * I) else 0 := by
   have hr_ne : r ≠ 0 := ne_of_gt hr_pos
-  have hs_not : s ∉ Metric.sphere s r := by
-    simp [hr_ne.symm]
+  have hs_not : s ∉ Metric.sphere s r := by simp [hr_ne.symm]
   have h_eq : Set.EqOn (fun z => c / (z - s) ^ (k + 1))
       (fun z => c * (z - s) ^ (-(↑(k + 1) : ℤ))) (Metric.sphere s r) := by
     intro z _
@@ -130,8 +128,7 @@ private theorem circleIntegral_laurent_term
   · simp only [hk, zero_add, Nat.cast_one, if_true]
     congr 1
     have h_eq' : Set.EqOn (fun z => (z - s) ^ (-(1 : ℤ)))
-        (fun z => (z - s)⁻¹) (Metric.sphere s r) := by
-      intro z _; simp only [zpow_neg_one]
+        (fun z => (z - s)⁻¹) (Metric.sphere s r) := by intro z _; simp only [zpow_neg_one]
     rw [circleIntegral.integral_congr hr_pos.le h_eq',
       circleIntegral.integral_sub_center_inv s hr_ne]
   · simp only [hk, if_false]
@@ -146,8 +143,7 @@ private theorem circleIntegral_laurent_sum (s : ℂ) (r : ℝ) (hr_pos : 0 < r)
     (∮ z in C(s, r), ∑ k : Fin N, a k / (z - s) ^ (k.val + 1)) =
       a ⟨0, hN⟩ * (2 * ↑Real.pi * I) := by
   have hr_ne : r ≠ 0 := ne_of_gt hr_pos
-  have hs_not : s ∉ Metric.sphere s r := by
-    simp [hr_ne.symm]
+  have hs_not : s ∉ Metric.sphere s r := by simp [hr_ne.symm]
   have h_ci_term : ∀ k : Fin N,
       CircleIntegrable (fun z => a k / (z - s) ^ (k.val + 1)) s r := by
     intro k
@@ -217,10 +213,8 @@ theorem residueAt_eq_laurent_head_coeff (f : ℂ → ℂ) (s : ℂ) (N : ℕ)
   have h_eq_on : Set.EqOn f
       (fun z => g z + ∑ k : Fin N, a k / (z - s) ^ (k.val + 1)) (Metric.sphere s r) := by
     intro z hz
-    have h_ne : z ≠ s := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
-    have h_in : dist z s < rf := by
-      rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
+    have h_ne : z ≠ s := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+    have h_in : dist z s < rf := by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
     exact hrf_eq ⟨Metric.mem_ball.mpr h_in, Set.mem_compl_singleton_iff.mpr h_ne⟩
   have h_g_cont : ContinuousOn g (Metric.closedBall s r) :=
     hg_ball.continuousOn.mono (Metric.closedBall_subset_ball hr_lt_rg)

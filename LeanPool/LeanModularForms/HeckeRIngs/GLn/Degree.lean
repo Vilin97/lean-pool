@@ -110,8 +110,7 @@ private def invTransposeEquiv : SL(n, ℤ) ≃* SL(n, ℤ) where
     simp only [inv_inv]; ext i j; simp [coe_transpose]
   right_inv σ := by
     change (σ⁻¹.transpose).transpose⁻¹ = σ
-    have : (σ⁻¹.transpose).transpose = σ⁻¹ := by
-      ext i j; simp [coe_transpose]
+    have : (σ⁻¹.transpose).transpose = σ⁻¹ := by ext i j; simp [coe_transpose]
     rw [this, inv_inv]
   map_mul' σ τ := by
     show (σ * τ).transpose⁻¹ = σ.transpose⁻¹ * τ.transpose⁻¹
@@ -225,15 +224,13 @@ private lemma relIndex_conj_inv_eq_conj_diag (a : Fin n → ℕ) (ha : ∀ i, 0 
   · intro hσ
     refine ⟨φ σ, ?_, invTransposeEquiv_invol n σ⟩
     change f (φ σ) ∈ ConjAct.toConjAct α⁻¹ • H
-    have : f (φ σ) = (f σ.transpose)⁻¹ := by
-      change f (σ.transpose⁻¹) = _; exact map_inv f _
+    have : f (φ σ) = (f σ.transpose)⁻¹ := by change f (σ.transpose⁻¹) = _; exact map_inv f _
     rw [this]
     exact (ConjAct.toConjAct α⁻¹ • H).inv_mem
       (transpose_mem_conj_inv_of_mem_conj n a ha σ hσ)
   · rintro ⟨τ, hτ, rfl⟩
     change f (φ τ) ∈ ConjAct.toConjAct α • H
-    have : f (φ τ) = (f τ.transpose)⁻¹ := by
-      change f (τ.transpose⁻¹) = _; exact map_inv f _
+    have : f (φ τ) = (f τ.transpose)⁻¹ := by change f (τ.transpose⁻¹) = _; exact map_inv f _
     rw [this]
     exact (ConjAct.toConjAct α • H).inv_mem
       (transpose_mem_conj_of_mem_conj_inv n a ha τ hτ)
@@ -434,8 +431,7 @@ private lemma conjDiag_relIndex_eq_Gamma0_index
     simp only [f, mapGL_coe_matrix, map_apply_coe,
       RingHom.mapMatrix_apply] at this
     ext i j; exact Int.cast_injective (congr_fun₂ this i j)
-  have h_H_eq : H = Subgroup.map f ⊤ := by
-    simp only [H, f, MonoidHom.range_eq_map]
+  have h_H_eq : H = Subgroup.map f ⊤ := by simp only [H, f, MonoidHom.range_eq_map]
   have h_gamma0_iff : ∀ σ : SL(2, ℤ),
       σ ∈ Gamma0 (p ^ k) ↔ α⁻¹ * f σ * α ∈ H := by
     intro σ
@@ -458,8 +454,7 @@ private lemma conjDiag_relIndex_eq_Gamma0_index
   calc (ConjAct.toConjAct α • H).relIndex H
       = ((ConjAct.toConjAct α • H) ⊓ H).relIndex H :=
           (Subgroup.inf_relIndex_right _ _).symm
-    _ = (Subgroup.map f (Gamma0 (p ^ k))).relIndex (Subgroup.map f ⊤) := by
-          rw [h_inf_eq, h_H_eq]
+    _ = (Subgroup.map f (Gamma0 (p ^ k))).relIndex (Subgroup.map f ⊤) := by rw [h_inf_eq, h_H_eq]
     _ = (Gamma0 (p ^ k)).relIndex ⊤ :=
           Subgroup.relIndex_map_map_of_injective _ _ h_inj
     _ = (Gamma0 (p ^ k)).index := (Gamma0 (p ^ k)).relIndex_top_right

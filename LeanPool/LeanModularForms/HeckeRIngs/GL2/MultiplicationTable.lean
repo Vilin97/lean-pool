@@ -79,12 +79,10 @@ private theorem HA_neg_mul (a b : HeckeAlgebra 2) : (-a) * b = -(a * b) := by
   exact eq_neg_of_add_eq_zero_right h.symm
 
 private theorem HA_mul_sub (a b c : HeckeAlgebra 2) :
-    a * (b - c) = a * b - a * c := by
-  rw [sub_eq_add_neg, HA_mul_add, HA_mul_neg, ← sub_eq_add_neg]
+    a * (b - c) = a * b - a * c := by rw [sub_eq_add_neg, HA_mul_add, HA_mul_neg, ← sub_eq_add_neg]
 
 private theorem HA_sub_mul (a b c : HeckeAlgebra 2) :
-    (a - b) * c = a * c - b * c := by
-  rw [sub_eq_add_neg, HA_add_mul, HA_neg_mul, ← sub_eq_add_neg]
+    (a - b) * c = a * c - b * c := by rw [sub_eq_add_neg, HA_add_mul, HA_neg_mul, ← sub_eq_add_neg]
 
 private theorem HA_mul_assoc (a b c : HeckeAlgebra 2) :
     a * b * c = a * (b * c) :=
@@ -249,8 +247,7 @@ private lemma mulSupport_pp_dvd_p_aux
     ext i j
     have h := congr_arg
       (fun (g : GL (Fin 2) ℚ) => (↑g : Matrix _ _ ℚ) i j) h_gl
-    have h1p : ∀ i : Fin 2, 0 < (![1, p] : Fin 2 → ℕ) i := by
-      intro i; fin_cases i <;> simp [hp.pos]
+    have h1p : ∀ i : Fin 2, 0 < (![1, p] : Fin 2 → ℕ) i := by intro i; fin_cases i <;> simp [hp.pos]
     have h1pk : ∀ i : Fin 2, 0 < (![1, p ^ k] : Fin 2 → ℕ) i := by
       intro i; fin_cases i <;> simp [pow_pos hp.pos k]
     simp only [diagMat_val 2 _ ha_pos, diagMat_val 2 _ h1p, diagMat_val 2 _ h1pk,
@@ -514,8 +511,7 @@ private lemma heckeMultiplicity_values (k : ℕ) (hk : 0 < k) :
           subst hi0; simpa using dvd_pow_self p (show k ≠ 0 by omega))
         (k - 1) (by omega)
         (by change p ^ k / p = p ^ (k - 1)
-            have : p ^ k = p ^ (k - 1) * p := by
-              rw [← pow_succ]; congr 1; omega
+            have : p ^ k = p ^ (k - 1) * p := by rw [← pow_succ]; congr 1; omega
             rw [this, Nat.mul_div_cancel _ hp.pos])
     rw [hd_o2] at h_deg
     have hp2 : (2 : ℤ) ≤ p := by exact_mod_cast hp.two_le
@@ -674,8 +670,7 @@ private lemma T_sum_ppow_recurrence_step (k : ℕ) (hk_pos : 0 < k)
     ← HA_mul_assoc (TPp p) (TPp p), sub_eq_iff_eq_add] at h5
   have h6 : TSum ⟨p, hp.pos⟩ * TSum ⟨p ^ (k + 2), pow_pos hp.pos (k + 2)⟩ =
       TSum ⟨p ^ (k + 2 + 1), pow_pos hp.pos (k + 2 + 1)⟩ +
-      (↑p : ℤ) • (TPp p * TSum ⟨p ^ (k + 1), pow_pos hp.pos (k + 1)⟩) := by
-    rw [h5]; abel
+      (↑p : ℤ) • (TPp p * TSum ⟨p ^ (k + 1), pow_pos hp.pos (k + 1)⟩) := by rw [h5]; abel
   exact eq_sub_iff_add_eq.mpr h6.symm
 
 /-- Theorem 3.24(6 recurrence): `T(p^{k+1}) = T(p) T(p^k) - p T(p,p) T(p^{k-1})` for k >= 1. -/
@@ -911,8 +906,7 @@ section CoprimeMultiplicativity
 open Finset in
 /-- `∏ i, (![a, d]) i (![a, d]) = a * d`. -/
 private lemma prod_mk2 (a d : ℕ) :
-    ∏ i, (![a, d]) i = a * d := by
-  simp [Fin.prod_univ_two]
+    ∏ i, (![a, d]) i = a * d := by simp [Fin.prod_univ_two]
 
 /-- Coprime factoring: `T(a,da) T(b,db) = T(ab,da*db)` when `a*da` and `b*db` are coprime. -/
 lemma T_ad_mul_of_coprime (a b da db : ℕ)
@@ -1022,8 +1016,7 @@ private lemma T_ad_self_eq_T_elem (c : ℕ) (hc : 0 < c) : TAd c c = TElem (fun 
 
 /-- `TPp q ^ i = TAd (q^i) (q^i)` : the `i`-th power of `T(p,p)` equals `TAd(p^i, p^i)`. -/
 private lemma T_pp_pow_eq_T_ad (q : ℕ) (hq : q.Prime) (i : ℕ) : TPp q ^ i =
-    TAd (q ^ i) (q ^ i) := by
-  rw [T_ad_self_eq_T_elem _ (pow_pos hq.pos i), T_pp_pow q hq i]
+    TAd (q ^ i) (q ^ i) := by rw [T_ad_self_eq_T_elem _ (pow_pos hq.pos i), T_pp_pow q hq i]
 
 /-- `gcd(q^r, q^s) = q^r` when `r <= s`. -/
 lemma gcd_pow_pow_of_le (q : ℕ) (r s : ℕ) (hrs : r ≤ s) : Nat.gcd (q ^ r) (q ^ s) = q ^ r :=

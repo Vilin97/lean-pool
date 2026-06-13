@@ -64,8 +64,7 @@ theorem unitArc_at_end (θ₁ θ₂ a b : ℝ) (hab : a ≠ b) :
   have hba : b - a ≠ 0 := sub_ne_zero.mpr (Ne.symm hab)
   congr 1
   push_cast
-  have : (↑b - ↑a) / (↑b - ↑a) = (1 : ℂ) := by
-    apply div_self; exact_mod_cast hba
+  have : (↑b - ↑a) / (↑b - ↑a) = (1 : ℂ) := by apply div_self; exact_mod_cast hba
   rw [this, one_mul]
   ring
 

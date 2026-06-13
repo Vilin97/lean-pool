@@ -44,17 +44,14 @@ theorem Set.countable_setOf_isolated_points'
         fun heq => h_ne (by simp [heq])
       have h1 : |t₁ - t₂| ≤ |t₁ - x| + |x - t₂| :=
         abs_sub_le t₁ x t₂
-      have h2 : |t₁ - x| < r ⟨t₁, ht₁⟩ / 2 := by
-        rw [abs_sub_comm]; exact hx₁
+      have h2 : |t₁ - x| < r ⟨t₁, ht₁⟩ / 2 := by rw [abs_sub_comm]; exact hx₁
       have h3 : |x - t₂| < r ⟨t₂, ht₂⟩ / 2 := hx₂
       have h4' :=
         hr_sep ⟨t₁, ht₁⟩ t₂ ht₂ (Ne.symm h_ne')
-      have h4 : r ⟨t₁, ht₁⟩ ≤ |t₁ - t₂| := by
-        rw [abs_sub_comm]; exact h4'
+      have h4 : r ⟨t₁, ht₁⟩ ≤ |t₁ - t₂| := by rw [abs_sub_comm]; exact h4'
       have h5' :=
         hr_sep ⟨t₂, ht₂⟩ t₁ ht₁ h_ne'
-      have h5 : r ⟨t₂, ht₂⟩ ≤ |t₂ - t₁| := by
-        rw [abs_sub_comm]; exact h5'
+      have h5 : r ⟨t₂, ht₂⟩ ≤ |t₂ - t₁| := by rw [abs_sub_comm]; exact h5'
       rw [abs_sub_comm] at h5
       linarith [hr_pos ⟨t₁, ht₁⟩, hr_pos ⟨t₂, ht₂⟩]
     have h_open : ∀ t : S, IsOpen (ball t) :=
@@ -96,10 +93,8 @@ theorem preimage_singleton_measure_zero_of_deriv_ne_zero
     intro t ⟨_, ht_eq⟩ ht_ne
     by_contra h_lt
     push Not at h_lt
-    have h_in_ball : dist t t₀ < ε := by
-      simp only [Real.dist_eq]; exact h_lt
-    have h_ne' : t ∈ ({t₀} : Set ℝ)ᶜ := by
-      simp [ht_ne]
+    have h_in_ball : dist t t₀ < ε := by simp only [Real.dist_eq]; exact h_lt
+    have h_ne' : t ∈ ({t₀} : Set ℝ)ᶜ := by simp [ht_ne]
     exact h_ball h_in_ball h_ne' ht_eq
   have h_countable : S.Countable := by
     have h_eq : S = (S ∩ ↑P) ∪ (S \ ↑P) :=

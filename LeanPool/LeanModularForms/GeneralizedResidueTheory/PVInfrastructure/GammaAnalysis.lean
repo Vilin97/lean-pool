@@ -91,8 +91,7 @@ private lemma norm_sub_pos_on_farSet
         (h_inj_far t_min' ht_min'_mem.1 ht_min'_mem.2))
     exact ⟨‖γ t_min' - γ t₀‖, h_min_pos,
       fun t ht1 ht2 => ht_min'_min ⟨ht1, ht2⟩⟩
-  · exact ⟨1, one_pos, fun t ht1 ht2 => by
-      exfalso; exact h_nonempty ⟨t, ht1, ht2⟩⟩
+  · exact ⟨1, one_pos, fun t ht1 ht2 => by exfalso; exact h_nonempty ⟨t, ht1, ht2⟩⟩
 
 /-- The integrand times (t-t₀) tends to 1.
 This is the key estimate:
@@ -118,8 +117,7 @@ lemma integrand_times_t_tendsto_one
       have h_comp :
           (fun t => (t - t₀)⁻¹ • (γ t - γ t₀)) =
           (fun s => s⁻¹ • (γ (t₀ + s) - γ t₀)) ∘
-            (fun t => t - t₀) := by
-        ext t; simp [add_sub_cancel]
+            (fun t => t - t₀) := by ext t; simp [add_sub_cancel]
       rw [h_comp]
       apply Tendsto.comp hγ_hasderiv
       apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
@@ -133,13 +131,11 @@ lemma integrand_times_t_tendsto_one
         exact ht
     have h_smul_eq :
         ∀ t : ℝ, (t - t₀)⁻¹ • (γ t - γ t₀) =
-          (γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹ := by
-      intro t; rw [Algebra.smul_def]; simp [mul_comm]
+          (γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹ := by intro t; rw [Algebra.smul_def]; simp [mul_comm]
     have h_slope' :
         Tendsto
           (fun t => (γ t - γ t₀) * (↑(t - t₀) : ℂ)⁻¹)
-          (𝓝[≠] t₀) (𝓝 L) := by
-      simp only [← h_smul_eq]; exact h_slope
+          (𝓝[≠] t₀) (𝓝 L) := by simp only [← h_smul_eq]; exact h_slope
     have h_recip :
         Tendsto
           (fun t =>
@@ -195,8 +191,7 @@ lemma integrand_asymptotic
   have h_key :
       (γ t - γ t₀)⁻¹ * deriv γ t - (↑(t - t₀))⁻¹ =
       ((↑(t - t₀) : ℂ) * (γ t - γ t₀)⁻¹ *
-        deriv γ t - 1) * (↑(t - t₀))⁻¹ := by
-    field_simp
+        deriv γ t - 1) * (↑(t - t₀))⁻¹ := by field_simp
   rw [h_key]
   calc ‖((↑(t - t₀) : ℂ) * (γ t - γ t₀)⁻¹ *
         deriv γ t - 1) * (↑(t - t₀))⁻¹‖
@@ -238,8 +233,7 @@ lemma gamma_lower_bound_of_hasDerivAt
     have h1 :
         ‖γ t - γ t₀‖ =
           ‖(t - t₀) • L +
-            (γ t - γ t₀ - (t - t₀) • L)‖ := by
-      congr 1; ring
+            (γ t - γ t₀ - (t - t₀) • L)‖ := by congr 1; ring
     rw [h1]
     exact norm_add_lower_bound _ _
   have h_smul : ‖(t - t₀) • L‖ = |t - t₀| * ‖L‖ :=
@@ -248,8 +242,7 @@ lemma gamma_lower_bound_of_hasDerivAt
       ≥ ‖(t - t₀) • L‖ -
           ‖γ t - γ t₀ - (t - t₀) • L‖ := h_tri
     _ ≥ |t - t₀| * ‖L‖ -
-          (‖L‖ / 2) * |t - t₀| := by
-        rw [h_smul]; linarith
+          (‖L‖ / 2) * |t - t₀| := by rw [h_smul]; linarith
     _ = (‖L‖ / 2) * |t - t₀| := by ring
 
 /-- Upper bound on ‖γ t - γ t₀‖ from non-zero derivative.
@@ -275,8 +268,7 @@ lemma gamma_upper_bound_of_hasDerivAt
     have h1 :
         ‖γ t - γ t₀‖ =
           ‖(t - t₀) • L +
-            (γ t - γ t₀ - (t - t₀) • L)‖ := by
-      congr 1; ring
+            (γ t - γ t₀ - (t - t₀) • L)‖ := by congr 1; ring
     rw [h1]
     exact norm_add_le _ _
   have h_smul : ‖(t - t₀) • L‖ = |t - t₀| * ‖L‖ :=
@@ -285,8 +277,7 @@ lemma gamma_upper_bound_of_hasDerivAt
       ≤ ‖(t - t₀) • L‖ +
           ‖γ t - γ t₀ - (t - t₀) • L‖ := h_tri
     _ ≤ |t - t₀| * ‖L‖ +
-          ‖L‖ * |t - t₀| := by
-        rw [h_smul]; linarith
+          ‖L‖ * |t - t₀| := by rw [h_smul]; linarith
     _ = 2 * ‖L‖ * |t - t₀| := by ring
 
 /-- If γ is continuous on [a,b] and injective at γ(t₀),

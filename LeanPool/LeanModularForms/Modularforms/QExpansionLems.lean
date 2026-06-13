@@ -155,8 +155,7 @@ instance instFunLikeUpperHalfPlaneFun :
     FunLike (ℍ → ℂ) ℍ ℂ := { coe := fun ⦃a₁⦄ ↦ a₁, coe_injective' := fun ⦃_ _⦄ a ↦ a}
 
 lemma qExpansion_ext (f g : ℍ → ℂ) (h : f = g) : qExpansion 1 f =
-    qExpansion 1 g := by
-  rw [h]
+    qExpansion 1 g := by rw [h]
 
 lemma cuspFunction_congr_funLike
     {α β : Type*} [FunLike α ℍ ℂ] [FunLike β ℍ ℂ] (n : ℕ) (f : α) (g : β) (h : ⇑f = ⇑g) :

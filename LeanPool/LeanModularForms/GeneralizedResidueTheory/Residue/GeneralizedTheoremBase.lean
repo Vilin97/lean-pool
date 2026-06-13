@@ -170,8 +170,7 @@ private lemma cpv_cauchy_of_sum_and_regular (S0 : Finset ℂ) (f : ℂ → ℂ)
     exact multipointPV_diff_tendsto S0 f γ (cpv_crossing_null S0 γ)
       g_reg hg_decomp hg_reg_cont hS0_sep
   have h_M_tendsto : Tendsto M (𝓝[>] 0) (𝓝 (L + G)) := by
-    have h_eq : M = fun ε => S' ε + A ε := by
-      ext ε; simp [M, A, S']
+    have h_eq : M = fun ε => S' ε + A ε := by ext ε; simp [M, A, S']
     rw [h_eq]
     exact h_sum_tendsto.add h_A_tendsto
   exact h_M_tendsto.cauchy_map
@@ -299,8 +298,7 @@ private lemma single_pole_pv_base_exists
   simp only [h_int_eq]
   have hL' : Tendsto (fun ε => c * ∫ t in γ.a..γ.b,
       if ‖γ.toFun t - s‖ > ε then (γ.toFun t - s)⁻¹ * deriv γ.toFun t else 0)
-      (𝓝[>] 0) (𝓝 L) := by
-    convert hL using 1; ext ε; exact (cpv_integral_factor_const γ s c ε).symm
+      (𝓝[>] 0) (𝓝 L) := by convert hL using 1; ext ε; exact (cpv_integral_factor_const γ s c ε).symm
   convert hL'.const_mul c⁻¹ using 1
   · ext ε; simp only [inv_mul_cancel_left₀ hc]
   · congr 1; field_simp [hc]
@@ -346,8 +344,7 @@ private lemma cpv_eq_sum_single_pole_cpvs
       exact hLs.limUnder_eq
     rw [h_eq_L]; exact hLs
   have hg_decomp : ∀ z, z ∉ (S0 : Set ℂ) →
-      f z = g z + ∑ s ∈ S0, residueSimplePole f s / (z - s) := by
-    intro z _; simp only [g]; ring
+      f z = g z + ∑ s ∈ S0, residueSimplePole f s / (z - s) := by intro z _; simp only [g]; ring
   have hS0_sep :
       ∃ δ' > 0, ∀ s ∈ S0, ∀ s' ∈ S0, s ≠ s' → δ' ≤ ‖s' - s‖ := by
     by_cases hS0_card : S0.card ≤ 1
@@ -563,10 +560,8 @@ private lemma residueAt_eq_of_simple_pole_decomp (f : ℂ → ℂ) (z₀ c : ℂ
   have hr_ne : r ≠ 0 := ne_of_gt hr_pos
   have h_eq_on : Set.EqOn f (fun z => c * (z - z₀)⁻¹ + g z) (Metric.sphere z₀ r) := by
     intro z hz
-    have h_ne : z ≠ z₀ := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
-    have h_in : dist z z₀ < rf := by
-      rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
+    have h_ne : z ≠ z₀ := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+    have h_in : dist z z₀ < rf := by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
     have h_mem : z ∈ Metric.ball z₀ rf ∩ {z₀}ᶜ :=
       ⟨Metric.mem_ball.mpr h_in, Set.mem_compl_singleton_iff.mpr h_ne⟩
     have := hrf_eq h_mem
@@ -682,8 +677,7 @@ lemma cpv_eq_of_cancel_and_exists
     (fun ε =>
       ((∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f γ.toFun ε t) -
        (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f_res γ.toFun ε t)) +
-      (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f_res γ.toFun ε t)) := by
-    ext ε; ring
+      (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f_res γ.toFun ε t)) := by ext ε; ring
   have h_f_tendsto : Tendsto
       (fun ε => ∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f γ.toFun ε t)
       (𝓝[>] 0) (𝓝 L_res) := by
@@ -723,8 +717,7 @@ theorem generalizedResidueTheorem_higher_order_tendsto
        (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
          (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) +
       (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
-         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by
-    ext ε; ring
+         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by ext ε; ring
   rw [h_eq, show (2 * Real.pi * I * ∑ s ∈ S0,
       generalizedWindingNumber' γ.toFun γ.a γ.b s * residueAt f s) =
     0 + (2 * Real.pi * I * ∑ s ∈ S0,

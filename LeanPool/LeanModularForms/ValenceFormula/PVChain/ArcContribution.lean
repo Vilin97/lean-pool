@@ -397,8 +397,7 @@ lemma arc_cpv_integral_S_identity (S : Finset UpperHalfPlane)
       _ = -(↑k * (↑Real.pi / 6 * I)) *
             ∫ t in (1 : ℝ)..3, (↑(if ind t then (0 : ℝ) else 1) : ℂ) :=
           intervalIntegral.integral_const_mul _ _
-      _ = -(↑k * (↑Real.pi / 6 * I)) * ↑m_val := by
-          congr 1; exact intervalIntegral.integral_ofReal
+      _ = -(↑k * (↑Real.pi / 6 * I)) * ↑m_val := by congr 1; exact intervalIntegral.integral_ofReal
   have h_cov_int : IntervalIntegrable (fun t => F (4 - t)) MeasureTheory.volume 1 3 := by
     convert (hF_int.comp_sub_left 4).symm using 2 <;> norm_num
   have h_sum_split : ∫ t in (1 : ℝ)..3, (F (4 - t) + F t) =
@@ -406,8 +405,7 @@ lemma arc_cpv_integral_S_identity (S : Finset UpperHalfPlane)
     intervalIntegral.integral_add h_cov_int hF_int
   have h_2I : I_val + I_val = -(↑k * (↑Real.pi / 6 * I)) * ↑m_val := by
     have : (∫ t in (1 : ℝ)..3, F (4 - t)) + I_val =
-        -(↑k * (↑Real.pi / 6 * I)) * ↑m_val := by
-      rw [← h_sum_split]; exact h_sum_int
+        -(↑k * (↑Real.pi / 6 * I)) * ↑m_val := by rw [← h_sum_split]; exact h_sum_int
     rwa [h_cov] at this
   have h_solve : I_val = -(↑k * (↑Real.pi / 12 * I)) * ↑m_val := by
     have two_ne : (2 : ℂ) ≠ 0 := by norm_num

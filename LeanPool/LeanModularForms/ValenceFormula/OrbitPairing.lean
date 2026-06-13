@@ -46,12 +46,10 @@ private lemma norm_eq_of_normSq_eq {z w : ℂ}
     have := normSq_eq_norm_sq z; have := normSq_eq_norm_sq w; linarith)
 
 private lemma one_le_normSq_of_norm_gt_one {z : ℂ} (h : ‖z‖ > 1) :
-    1 ≤ Complex.normSq z := by
-  rw [normSq_eq_norm_sq]; nlinarith [norm_nonneg z]
+    1 ≤ Complex.normSq z := by rw [normSq_eq_norm_sq]; nlinarith [norm_nonneg z]
 
 private lemma normSq_eq_one_of_norm_eq_one {z : ℂ} (h : ‖z‖ = 1) :
-    Complex.normSq z = 1 := by
-  rw [normSq_eq_norm_sq, h]; norm_num
+    Complex.normSq z = 1 := by rw [normSq_eq_norm_sq, h]; norm_num
 
 /-- Coercion identity for T-translation: `((1 : ℝ) +ᵥ p : ℂ) = (p : ℂ) + 1`. -/
 lemma vAdd_one_coe (p : ℍ) : ((1 : ℝ) +ᵥ p : ℂ) = (p : ℂ) + 1 := by
@@ -154,8 +152,7 @@ lemma S_smul_coe (p : ℍ) : ((ModularGroup.S • p : ℍ) : ℂ) = (-(p : ℂ))
 
 /-- S-action preserves norm on the unit circle. -/
 theorem S_smul_norm_of_unit (p : ℍ) (hp : ‖(p : ℂ)‖ = 1) :
-    ‖((ModularGroup.S • p : ℍ) : ℂ)‖ = 1 := by
-  rw [S_smul_coe, norm_inv, norm_neg, hp, inv_one]
+    ‖((ModularGroup.S • p : ℍ) : ℂ)‖ = 1 := by rw [S_smul_coe, norm_inv, norm_neg, hp, inv_one]
 
 /-- S-action negates real part on the unit circle. -/
 theorem S_smul_re_neg_of_unit (p : ℍ) (hp : ‖(p : ℂ)‖ = 1) :
@@ -198,8 +195,7 @@ theorem vAdd_one_leftVert_subset_rightVert (S : Finset ℍ)
     refine ⟨one_le_normSq_of_norm_gt_one hnorm, ?_⟩
     rw [show p.re = (p : ℂ).re from rfl, hre]; norm_num
   have hp1_fd := vAdd_one_mem_fd_of_left_vert p hp_fd hre
-  have hp1_ord : orderOfVanishingAt' (⇑f) ((1 : ℝ) +ᵥ p) ≠ 0 := by
-    rwa [ord_add_one_eq f p]
+  have hp1_ord : orderOfVanishingAt' (⇑f) ((1 : ℝ) +ᵥ p) ≠ 0 := by rwa [ord_add_one_eq f p]
   have hp1_in_S := hS_complete _ hp1_fd hp1_ord
   simp only [sRightVert, Finset.mem_filter]
   refine ⟨hp1_in_S, ?_, ?_⟩

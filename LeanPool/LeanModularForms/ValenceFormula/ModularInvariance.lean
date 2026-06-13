@@ -185,8 +185,7 @@ lemma modform_comp_ofComplex_S_identity (z : ℂ) (hz : 0 < z.im) :
       rw [UpperHalfPlane.modular_S_smul]
       change -(1 : ℂ)/z = (-z)⁻¹; field_simp)
   rw [h_eq]
-  have hS : ModularGroup.S ∈ Gamma 1 := by
-    rw [Gamma_one_top]; exact Subgroup.mem_top _
+  have hS : ModularGroup.S ∈ Gamma 1 := by rw [Gamma_one_top]; exact Subgroup.mem_top _
   have h := SlashInvariantForm.slash_action_eqn_SL'' f hS z_uhp
   rw [ModularGroup.denom_S] at h; exact h
 
@@ -262,8 +261,7 @@ lemma ord_S_eq (p : ℍ) :
 /-- An open box containing the truncated fundamental domain. -/
 def fdBox (M : ℝ) : Set ℂ := {z : ℂ | -1 < z.re ∧ z.re < 1 ∧ (1 : ℝ)/2 < z.im ∧ z.im < M}
 
-lemma fdBox_im_pos {M : ℝ} {z : ℂ} (hz : z ∈ fdBox M) : 0 < z.im := by
-  linarith [hz.2.2.1]
+lemma fdBox_im_pos {M : ℝ} {z : ℂ} (hz : z ∈ fdBox M) : 0 < z.im := by linarith [hz.2.2.1]
 
 /-- A nonzero modular form has finitely many zeros in `fdBox M`. -/
 theorem modularForm_finitely_many_zeros_in_fdBox (hf : f ≠ 0) {M : ℝ} (hM : (1 : ℝ) / 2 < M) :

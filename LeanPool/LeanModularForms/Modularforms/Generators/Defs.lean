@@ -212,8 +212,7 @@ lemma evalE₄E₆_whc_eq_single (n : ℕ) (p : MvPolynomial (Fin 2) ℂ)
 lemma DirectSum_of_cast_eq {k₁ k₂ : ℤ} (hk : k₁ = k₂)
     (x : ModularForm (CongruenceSubgroup.Gamma 1) k₁) :
     DirectSum.of (fun k : ℤ => ModularForm (CongruenceSubgroup.Gamma 1) k) k₁ x =
-    DirectSum.of _ k₂ (hk ▸ x) := by
-  subst hk; rfl
+    DirectSum.of _ k₂ (hk ▸ x) := by subst hk; rfl
 
 /-- The 0th q-expansion coefficient of `Δ` is 0 (Δ is a cusp form). -/
 lemma qExpansion_coeff_zero_Delta :

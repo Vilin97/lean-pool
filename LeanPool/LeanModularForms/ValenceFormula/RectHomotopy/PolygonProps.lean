@@ -73,24 +73,19 @@ noncomputable def fdPolygonSeg4 : ℝ → ℂ := fun t =>
 noncomputable def fdPolygonSeg5 : ℝ → ℂ := fun t => (t - 9/2) + HHeight * I
 
 lemma fdPolygon_seg1_continuous :
-    Continuous fdPolygonSeg1 := by
-  unfold fdPolygonSeg1; continuity
+    Continuous fdPolygonSeg1 := by unfold fdPolygonSeg1; continuity
 
 lemma fdPolygon_seg2_continuous :
-    Continuous fdPolygonSeg2 := by
-  unfold fdPolygonSeg2 chordSegment; continuity
+    Continuous fdPolygonSeg2 := by unfold fdPolygonSeg2 chordSegment; continuity
 
 lemma fdPolygon_seg3_continuous :
-    Continuous fdPolygonSeg3 := by
-  unfold fdPolygonSeg3 chordSegment; continuity
+    Continuous fdPolygonSeg3 := by unfold fdPolygonSeg3 chordSegment; continuity
 
 lemma fdPolygon_seg4_continuous :
-    Continuous fdPolygonSeg4 := by
-  unfold fdPolygonSeg4; continuity
+    Continuous fdPolygonSeg4 := by unfold fdPolygonSeg4; continuity
 
 lemma fdPolygon_seg5_continuous :
-    Continuous fdPolygonSeg5 := by
-  unfold fdPolygonSeg5; continuity
+    Continuous fdPolygonSeg5 := by unfold fdPolygonSeg5; continuity
 
 lemma fdPolygon_match_t1 :
     fdPolygonSeg1 1 = fdPolygonSeg2 1 := by
@@ -258,8 +253,7 @@ lemma fdPolygon_deriv_seg1 :
     deriv fdPolygonSeg1 =
       fun _ => -(HHeight - Real.sqrt 3 / 2) * I := by
   have hrw : fdPolygonSeg1 = fun (t : ℝ) => ((1 : ℂ)/2 + HHeight * I) + ↑t *
-        (-(HHeight - Real.sqrt 3 / 2) * I) := by
-    ext t; simp only [fdPolygonSeg1]; ring
+        (-(HHeight - Real.sqrt 3 / 2) * I) := by ext t; simp only [fdPolygonSeg1]; ring
   rw [hrw, deriv_affine_mul]
 
 lemma fdPolygon_deriv_seg2 :
@@ -304,8 +298,7 @@ lemma fdPolygon_deriv_seg5 :
 lemma fdPolygon_seg1_differentiable :
     Differentiable ℝ fdPolygonSeg1 := by
   have h : fdPolygonSeg1 = fun (t : ℝ) => ((1 : ℂ)/2 + HHeight * I) + ↑t *
-        (-(HHeight - Real.sqrt 3 / 2) * I) := by
-    ext t; simp only [fdPolygonSeg1]; ring
+        (-(HHeight - Real.sqrt 3 / 2) * I) := by ext t; simp only [fdPolygonSeg1]; ring
   rw [h]
   exact (differentiable_const _).add (Complex.ofRealCLM.differentiable.mul
       (differentiable_const _))
@@ -427,8 +420,7 @@ lemma fdPolygon_differentiableAt_off_partition (t : ℝ) (ht : t ∈ Ioo 0 5)
           exact fdPolygon_seg5_differentiable.differentiableAt.congr_of_eventuallyEq heq
 
 lemma fdPolygon_seg1_deriv_val :
-    -(HHeight - Real.sqrt 3 / 2) * I = -I := by
-  simp only [HHeight]; push_cast; ring
+    -(HHeight - Real.sqrt 3 / 2) * I = -I := by simp only [HHeight]; push_cast; ring
 
 lemma fdPolygon_seg4_deriv_val : (HHeight - Real.sqrt 3 / 2) * I = I := by
   simp only [HHeight]; push_cast; ring
