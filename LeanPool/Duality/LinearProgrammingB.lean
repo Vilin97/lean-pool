@@ -218,8 +218,7 @@ private theorem StandardLP.toValidELP_optimum_eq (P : StandardLP I J R) :
 
 omit [Fintype J] in
 private lemma StandardLP.toValidELP_dualize_eq (P : StandardLP I J R) :
-    P.toValidELP.dualize = P.dualize.toValidELP :=
-  rfl
+    P.toValidELP.dualize = P.dualize.toValidELP := rfl
 
 
 variable [Fintype I]

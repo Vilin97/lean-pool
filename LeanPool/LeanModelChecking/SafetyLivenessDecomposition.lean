@@ -109,10 +109,9 @@ theorem safety_liveness_decomposition
       simpa [slice_length] using slice_append (σ.slice i) β
     refine fun hAβ => ?_
     obtain ⟨γ, hγ⟩ := hAβ i
-    have hγ' : (σ.slice i).append γ ∈ P := by
-      convert hγ using 1
-      simp [hslice]
-    exact (hforall γ) hγ'
+    refine hforall γ ?_
+    convert hγ using 1
+    simp [hslice]
   · -- `B` is a liveness property
     intro α
     by_cases h : ∃ β : InfWord T, α.append β ∈ P
@@ -124,18 +123,15 @@ theorem safety_liveness_decomposition
       have hslice : (α.append (fun _ => t)).slice α.length = α := slice_append α _
       refine fun hA => ?_
       obtain ⟨γ, hγ⟩ := hA α.length
-      have hγ' : α.append γ ∈ P := by
-        convert hγ using 1
-        simp [hslice]
-      exact (hforall γ) hγ'
+      refine hforall γ ?_
+      convert hγ using 1
+      simp [hslice]
   · -- intersection equals `P`
     ext σ; constructor
     · intro hσ
-      have hA : σ ∈ A := hσ.1
-      have hB : σ ∈ B := hσ.2
-      cases hB with
-      | inl h => exact h
-      | inr h => exact False.elim (h hA)
+      rcases hσ.2 with h | h
+      · exact h
+      · exact False.elim (h hσ.1)
     · intro hσ
       refine ⟨?_, Or.inl hσ⟩
       intro n

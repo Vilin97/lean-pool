@@ -68,9 +68,8 @@ lemma round_near_int_of_nonneg {q : ℚ} (h : 0 ≤ q) : 0 ≤ roundNearInt q :=
   rw [roundNearInt]
   split_ifs <;> (try exact Int.floor_nonneg.mpr h) <;> (try exact Int.ceil_nonneg h)
 
-lemma round_near_int_of_pos {q : ℚ} (h : 0 < q) : 0 ≤ roundNearInt q := by
-  apply round_near_int_of_nonneg
-  exact le_of_lt h
+lemma round_near_int_of_pos {q : ℚ} (h : 0 < q) : 0 ≤ roundNearInt q :=
+  round_near_int_of_nonneg (le_of_lt h)
 
 /-
 Round nearest preserves order.
@@ -164,8 +163,7 @@ lemma round_near_eq_of (q : ℚ) (z : ℤ) :
         linarith
       norm_cast
     rw [roundNearInt, fract_eq]
-    have : 1/2 < q - (z - 1) := by
-      linarith
+    have : 1/2 < q - (z - 1) := by linarith
     simp_rw [if_neg (not_lt_of_gt this), if_pos this]
     symm
     apply Int.ceil_eq_iff.mpr ⟨?_, le_of_lt h3⟩
@@ -189,8 +187,7 @@ lemma round_near_int_le (q : ℚ) :
     · linarith
     linarith
   · have : Int.fract q = 1/2 := le_antisymm (le_of_not_gt h2) (le_of_not_gt h1)
-    rw [abs_sub_comm, Int.self_sub_floor, abs_of_nonneg (Int.fract_nonneg q)]
-    rw [this]
+    rw [abs_sub_comm, Int.self_sub_floor, abs_of_nonneg (Int.fract_nonneg q), this]
   have : Int.fract q = 1/2 := le_antisymm (le_of_not_gt h2) (le_of_not_gt h1)
   rw [abs_of_nonneg (by linarith [Int.le_ceil q])]
   rw [fract_eq_ceil_of_pos] at this
@@ -206,8 +203,7 @@ lemma round_near_int_of_int (z : ℤ) :
 lemma round_near_add_half (z : ℤ) (h : z % 2 = 0) :
   roundNearInt (z + 1/2) = z := by
   rw [roundNearInt]
-  have : Int.fract (1 / 2 : ℚ) = 1/2 := by
-    exact Int.fract_div_intCast_eq_div_intCast_mod
+  have : Int.fract (1 / 2 : ℚ) = 1/2 := Int.fract_div_intCast_eq_div_intCast_mod
   rw [one_div] at this
   simp only [one_div, Int.fract_intCast_add, this, lt_self_iff_false, ↓reduceIte,
     Int.floor_intCast_add]
@@ -218,8 +214,7 @@ lemma round_near_add_half (z : ℤ) (h : z % 2 = 0) :
 lemma round_near_sub_half (z : ℤ) (h : z % 2 = 0) :
   roundNearInt (z - 1/2) = z := by
   rw [roundNearInt]
-  have : Int.fract (1 / 2 : ℚ) = 1/2 := by
-    exact Int.fract_div_intCast_eq_div_intCast_mod
+  have : Int.fract (1 / 2 : ℚ) = 1/2 := Int.fract_div_intCast_eq_div_intCast_mod
   have : Int.fract (-(1 / 2 : ℚ)) = 1/2 := by
     rw [Int.fract_neg, this]
     · norm_num
@@ -247,8 +242,7 @@ lemma round_of_add_half (z : ℤ) :
     norm_num
   rw [this]
   simp only [lt_self_iff_false, ↓reduceIte, Int.floor_intCast_add]
-  rw [add_comm (z : ℚ), Int.ceil_add_intCast]
-  rw [show ⌊(1 : ℚ)/2⌋ = 0 by norm_num, add_zero]
+  rw [add_comm (z : ℚ), Int.ceil_add_intCast, show ⌊(1 : ℚ)/2⌋ = 0 by norm_num, add_zero]
   split_ifs with h
   · assumption
   rw [show ⌈(1 : ℚ) / 2⌉ = 1 by norm_num]

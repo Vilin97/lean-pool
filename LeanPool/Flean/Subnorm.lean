@@ -29,8 +29,7 @@ def SubnormRep.neg (f : SubnormRep C) : SubnormRep C :=
   ⟨¬f.s, f.m⟩
 
 lemma neg_subnorm_involutive : Function.Involutive (@SubnormRep.neg C) := by
-  unfold Function.Involutive
-  simp [SubnormRep.neg]
+  simp [Function.Involutive, SubnormRep.neg]
 
 /-- A subnormal representation is nonzero when its mantissa is nonzero. -/
 def SubnormRep.nonzero (f : SubnormRep C) : Prop := f.m ≠ 0
@@ -81,8 +80,7 @@ lemma neg_subnormal_round (r : IntRounder) {q : ℚ} (h : q ≠ 0) :
   rw [subnormalRound, subnormalRound, SubnormRep.neg, IntRounder.neg]
   simp only [Left.neg_neg_iff, abs_neg, zpow_neg, decide_eq_true_eq, not_lt, SubnormRep.mk.injEq,
     decide_eq_decide]
-  have not_to_ge : 0 < q ↔ 0 ≤ q := by
-    exact Iff.symm (Ne.le_iff_lt (id (Ne.symm h)))
+  have not_to_ge : 0 < q ↔ 0 ≤ q := Iff.symm (Ne.le_iff_lt (id (Ne.symm h)))
   have lt_to_lt : 0 < q ↔ ¬(q < 0) := by
     rw [not_to_ge]
     exact Iff.symm not_lt
@@ -123,8 +121,7 @@ lemma subnormal_round_coe (r : IntRounder) [rh : ValidRounder r]
   have hprec : (C.prec : ℚ) ≠ 0 := by
     norm_cast; linarith [C.prec_pos]
   rw [abs_of_nonneg (by positivity), mul_assoc, mul_assoc, <-mul_assoc (2 ^ _),
-    mul_inv_cancel₀ (by positivity), one_mul]
-  rw [div_mul_cancel₀ _ hprec]
+    mul_inv_cancel₀ (by positivity), one_mul, div_mul_cancel₀ _ hprec]
 
 
 lemma subnormal_round_down_coe (s : SubnormRep C) (h : s.nonzero) :
@@ -139,8 +136,7 @@ lemma subnormal_round_le_of_le (r : IntRounder) [rh : ValidRounder r] (q1 q2 : �
   · rw [h1, subnormalRound]
     simp only [lt_self_iff_false, decide_false, abs_zero, zero_mul]
     nth_rw 1 [show (0 : ℚ) = ↑(0 : ℕ) by rfl]
-    rw [rh.leftInverse false]
-    rw [subnormalToQ]
+    rw [rh.leftInverse false, subnormalToQ]
     simp only [Bool.false_eq_true, ↓reduceIte, CharP.cast_eq_zero, zero_div, mul_zero, zero_mul]
     have : decide (q2 < 0) = false := by simp; linarith
     rw [subnormalToQ, subnormalRound, this]
@@ -150,8 +146,8 @@ lemma subnormal_round_le_of_le (r : IntRounder) [rh : ValidRounder r] (q1 q2 : �
   · rw [h2]
     nth_rw 2 [subnormalRound]
     simp only [lt_self_iff_false, decide_false, abs_zero, zpow_neg, zero_mul]
-    rw [show (0 : ℚ) = ↑(0 : ℕ) by rfl, rh.leftInverse false]
-    rw [subnormalToQ, subnormalToQ, subnormalRound]
+    rw [show (0 : ℚ) = ↑(0 : ℕ) by rfl, rh.leftInverse false, subnormalToQ, subnormalToQ,
+      subnormalRound]
     simp only [CharP.cast_eq_zero, zero_div, mul_zero, zero_mul]
     have : decide (q1 < 0) = true := by
       apply decide_eq_true
@@ -163,18 +159,16 @@ lemma subnormal_round_le_of_le (r : IntRounder) [rh : ValidRounder r] (q1 q2 : �
   revert h r
   apply casesQPlane (q1 := q1) (q2 := q2)
   · intro q1 q1pos q2 q2pos r rh h
-    rw [subnormalRound, subnormalRound]
-    rw [subnormalToQ, subnormalToQ]
-    rw [decide_eq_false (by linarith), decide_eq_false (by linarith)]
+    rw [subnormalRound, subnormalRound, subnormalToQ, subnormalToQ,
+      decide_eq_false (by linarith), decide_eq_false (by linarith)]
     simp only [Bool.false_eq_true, ↓reduceIte, one_mul]
     gcongr
     apply rh.le_iff_le
     · positivity
     gcongr
   · intro q1 q1neg q2 q2pos r rh h
-    rw [subnormalRound, subnormalRound]
-    rw [subnormalToQ, subnormalToQ]
-    rw [decide_eq_true (by linarith), decide_eq_false (by linarith)]
+    rw [subnormalRound, subnormalRound, subnormalToQ, subnormalToQ,
+      decide_eq_true (by linarith), decide_eq_false (by linarith)]
     simp only [↓reduceIte, zpow_neg, neg_mul, one_mul, Bool.false_eq_true]
     have : ∀a b, (0 : ℚ) ≤ a → 0 ≤ b → -a ≤ b := by
       intros a b ha hb
@@ -252,16 +246,11 @@ lemma rounddownsub_le (q : ℚ) :
   have t3 := div_pos t1 t2
   by_cases h : q < 0
   · simp only [h, decide_true, ↓reduceIte, zpow_neg, neg_mul, one_mul]
-    rw [roundinf_apply, neg_le]
-    rw [<-abs_of_pos (a := -q) (Left.neg_pos_iff.mpr h)]
-    rw [abs_neg]
-    rw [Nat.cast_natAbs]
+    rw [roundinf_apply, neg_le, <-abs_of_pos (a := -q) (Left.neg_pos_iff.mpr h), abs_neg,
+      Nat.cast_natAbs]
     simp only [Int.cast_abs]
     rw [abs_of_neg, abs_of_pos]
-    · rw [<-div_eq_mul_inv]
-      rw [div_mul]--, <-div_le_div_iff_of_pos_right t3]
-      rw [le_div_iff₀ t3]
-      rw [mul_div, mul_div_right_comm]
+    · rw [<-div_eq_mul_inv, div_mul, le_div_iff₀ t3, mul_div, mul_div_right_comm]
       apply Int.le_ceil
     · norm_cast
       apply Int.lt_ceil.mpr
@@ -273,10 +262,7 @@ lemma rounddownsub_le (q : ℚ) :
   replace h := le_of_not_gt h
   rw [round0_apply, abs_of_nonneg h, Nat.cast_natAbs]
   rw [abs_of_nonneg]
-  · rw [<-div_eq_mul_inv]
-    rw [div_mul]
-    rw [div_le_iff₀ t3]
-    rw [mul_div, mul_div_right_comm]
+  · rw [<-div_eq_mul_inv, div_mul, div_le_iff₀ t3, mul_div, mul_div_right_comm]
     apply Int.floor_le
   positivity
 
@@ -287,14 +273,10 @@ lemma le_roundupsub (q : ℚ) :
   by_cases h : q < 0
   · rw [roundup]
     simp only [h, decide_true, ↓reduceIte, zpow_neg, neg_mul, one_mul]
-    rw [le_neg]
-    rw [abs_of_neg h, round0_apply, Nat.cast_natAbs]
-    rw [Int.cast_abs]
+    rw [le_neg, abs_of_neg h, round0_apply, Nat.cast_natAbs, Int.cast_abs]
     rw [abs_of_nonneg]
-    · rw [<-div_eq_mul_inv]
-      rw [div_mul]--, <-div_le_div_iff_of_pos_right t3]
-      rw [div_le_iff₀ (div_pos t1 (by positivity))]
-      rw [mul_div, mul_div_right_comm]
+    · rw [<-div_eq_mul_inv, div_mul, div_le_iff₀ (div_pos t1 (by positivity)), mul_div,
+        mul_div_right_comm]
       apply Int.floor_le
     norm_cast
     apply Int.le_floor.mpr
@@ -310,10 +292,8 @@ lemma le_roundupsub (q : ℚ) :
   replace h := le_of_not_gt h
   rw [roundinf_apply, abs_of_nonneg h, Nat.cast_natAbs]
   rw [abs_of_nonneg]
-  · rw [<-div_eq_mul_inv]
-    rw [div_mul]--, <-div_le_div_iff_of_pos_right t3]
-    rw [le_div_iff₀ (div_pos t1 (by positivity))]
-    rw [mul_div, mul_div_right_comm]
+  · rw [<-div_eq_mul_inv, div_mul, le_div_iff₀ (div_pos t1 (by positivity)), mul_div,
+      mul_div_right_comm]
     apply Int.le_ceil
   positivity
 
@@ -366,9 +346,7 @@ lemma subnormal_round_eq_up_down (r : IntRounder) [rh : ValidRounder r] (q : ℚ
   subnormalRound r q = subnormalRound (C := C) roundup q := by
   unfold subnormalRound
   set x := |q| * 2^(-C.emin) * C.prec
-  have := round_eq_or' (r := r) (b := q < 0)
-      (q := x) (h := by positivity)
-  rcases this with this | this
+  rcases round_eq_or' (r := r) (b := q < 0) (q := x) (h := by positivity) with this | this
   · simp [this]
   simp [this]
 
@@ -377,12 +355,10 @@ lemma subnormal_round_close (r : IntRounder) [rh : ValidRounder r] (q : ℚ) :
   apply le_trans (b := subnormalToQ (subnormalRound (C := C) roundup q)
     - subnormalToQ (subnormalRound (C := C) rounddown q))
   · rcases subnormal_round_eq_up_down r q with h | h
-    · rw [h, abs_of_nonneg (by rw [sub_nonneg]; exact rounddownsub_le q)]
-      rw [sub_le_sub_iff_right]
+    · rw [h, abs_of_nonneg (by rw [sub_nonneg]; exact rounddownsub_le q), sub_le_sub_iff_right]
       exact le_roundupsub q
-    · rw [h, abs_sub_comm,
-        abs_of_nonneg (by rw [sub_nonneg]; exact le_roundupsub q)]
-      rw [sub_le_sub_iff_left]
+    · rw [h, abs_sub_comm, abs_of_nonneg (by rw [sub_nonneg]; exact le_roundupsub q),
+        sub_le_sub_iff_left]
       exact rounddownsub_le q
   · exact subnormal_up_minus_down q
 
@@ -400,9 +376,8 @@ lemma subnormal_near_close (q : ℚ) :
       apply lt_of_le_of_ne (by linarith)
       exact (neg_ne_zero.mpr h).symm
     replace this := this (q := -q) (by linarith) negq
-    rw [<-roundnearest_neg] at this
-    rw [subnormal_round_neg (h := h), subnormal_to_q_neg] at this
-    rw [neg_sub_neg, abs_sub_comm] at this
+    rw [<-roundnearest_neg, subnormal_round_neg (h := h), subnormal_to_q_neg, neg_sub_neg,
+      abs_sub_comm] at this
     exact this
   rw [subnormalRound, roundnearest_apply]
   have : ¬(q < 0) := by linarith

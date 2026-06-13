@@ -69,15 +69,13 @@ def and {n : ℕ} (ϕ1 ϕ2 : L.BoundedFormula α n) : L.BoundedFormula α n :=  
 theorem realize_or [L.Structure V] {n : ℕ}
     {ϕ ψ : L.BoundedFormula ℕ n} {s : ℕ → V} {xs : Fin n → V} :
     (ϕ ∨' ψ).Realize s xs ↔ ϕ.Realize s xs ∨ ψ.Realize s xs := by
-  rw [BoundedFormula.or]
-  simp only [realize_imp, realize_not, or_iff_not_imp_left]
+  simp only [BoundedFormula.or, realize_imp, realize_not, or_iff_not_imp_left]
 
 @[simp]
 theorem realize_and [L.Structure V] {n : ℕ}
     {ϕ ψ : L.BoundedFormula ℕ n} {s : ℕ → V} {xs : Fin n → V} :
     (ϕ ∧' ψ).Realize s xs ↔ ϕ.Realize s xs ∧ ψ.Realize s xs := by
-  rw [BoundedFormula.and]
-  simp
+  simp [BoundedFormula.and]
 
 end BoundedFormula
 
@@ -149,17 +147,12 @@ theorem realize_replaceFV {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
   induction t with
   | var i =>
     rcases i with k | k
-    · unfold Term.replaceFV
-      simp
-    · unfold Term.replaceFV
-      simp
+    · simp [Term.replaceFV]
+    · simp [Term.replaceFV]
   | func _f _ts _ih =>
     unfold Term.replaceFV
     simp only [Term.realize_func]
-    apply congr
-    · rfl
-    · funext i
-      apply _ih
+    exact congr rfl (funext fun i => _ih i)
 
 theorem realize_liftAt'_one {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
     {t : L.Term (ℕ ⊕ Fin n)} {a : V} :
@@ -168,8 +161,7 @@ theorem realize_liftAt'_one {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
   induction t with
   | var i =>
     rcases i with k | k
-    · unfold Term.liftAt
-      simp
+    · simp [Term.liftAt]
     · simp
   | func _f _ts _ih => simp
 
@@ -185,18 +177,16 @@ theorem realize_liftAt' {n n' : ℕ} {s : ℕ → V} {xs : Fin n → V}
   induction t with
   | var i =>
     rcases i with k | k
-    · unfold Term.liftAt
-      simp
+    · simp [Term.liftAt]
     · simp only [Term.realize_liftAt, Fin.is_lt, ↓reduceIte, Term.realize_var,
         Function.comp_apply, Sum.map_inr, Sum.elim_inr]
       rw [← h_xs1_restriction_xs]
   | func _f _ts _ih =>
     simp only [Term.realize_liftAt, Fin.is_lt, ↓reduceIte, Term.realize_func]
-    apply congr
-    · rfl
-    · funext k
-      rw [← _ih]
-      simp
+    apply congr rfl
+    funext k
+    rw [← _ih]
+    simp
 
 end Term
 
@@ -210,7 +200,7 @@ theorem realize_replaceFV {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
   induction ϕ with
   | falsum =>
     unfold BoundedFormula.replaceFV
-    exact Eq.to_iff rfl
+    rfl
   | equal t₁ t₂ =>
     unfold BoundedFormula.replaceFV
     let s1 := fun k ↦ Term.realize (Sum.elim s xs) (tsN k)
@@ -259,15 +249,11 @@ theorem realize_replaceFV {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
     apply forall_congr'
     intro a
     rw [ih]
-    have h1 : ∀ (k : ℕ), Term.realize (Sum.elim s (fixedSnoc xs a))
-        (Term.liftAt 1 _n (tsN k)) = Term.realize (Sum.elim s xs) (tsN k) := by
-      intro k
-      apply Term.realize_liftAt'_one
     have h2 : (fun k ↦ Term.realize (Sum.elim s (fixedSnoc xs a))
         (Term.liftAt 1 _n (tsN k))) = (fun k ↦ Term.realize (Sum.elim s xs)
         (tsN k)) := by
       funext k
-      apply h1
+      apply Term.realize_liftAt'_one
     rw [h2]
 
 end BoundedFormula
@@ -326,8 +312,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
             apply Fin.eq_of_val_eq
             simp only [Fin.val_cast, Fin.val_castAdd, Fin.ofNat_eq_cast,
               Fin.val_castSucc, Fin.val_natCast]
-            rw [Nat.mod_eq_of_lt]
-            omega
+            rw [Nat.mod_eq_of_lt (by omega)]
           rw [h2_1]
           simp only [Fin.ofNat_eq_cast, snoc_init]
           have h2_2 : NeZero _n := by
@@ -340,8 +325,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
               simp only [Fin.ofNat_eq_cast]
               apply Fin.eq_of_val_eq
               simp only [Fin.val_castSucc, Fin.val_natCast]
-              rw [Nat.mod_eq_of_lt]
-              omega
+              rw [Nat.mod_eq_of_lt (by omega)]
             rw [h2_3_1]
             simp only [Fin.ofNat_eq_cast, snoc_init, Function.comp_apply,
               Fin.val_natCast, Fin.val_castSucc]
@@ -349,12 +333,9 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
             · apply congrArg
               apply Fin.eq_of_val_eq
               simp only [Fin.val_castAdd, Fin.val_natCast]
-              rw [Nat.mod_eq_of_lt, Nat.mod_eq_of_lt]
-              · omega
-              · omega
-            · rw [Nat.mod_eq_of_lt]
-              · omega
-              · omega
+              rw [Nat.mod_eq_of_lt (by omega), Nat.mod_eq_of_lt (by omega)]
+            · rw [Nat.mod_eq_of_lt (by omega)]
+              omega
           rw [h2_3]
           simp
         · omega
@@ -382,7 +363,7 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
               apply Fin.eq_of_val_eq
               simp only [Fin.val_cast, Fin.val_addNat, Fin.ofNat_eq_cast,
                 Fin.val_castSucc, Fin.val_natCast]
-              · rw [Nat.mod_eq_of_lt]; omega
+              · rw [Nat.mod_eq_of_lt (by omega)]
             rw [h2]
             have h3 : NeZero _n := by
               have h3_1 : k.val < _n := by
@@ -391,21 +372,17 @@ theorem realize_liftAt' {n' m : ℕ} {h_n_prime_nezero : n' > 0} {s : ℕ → V}
             have h4 : k = (Fin.ofNat _n k.val).castSucc := by
               apply Fin.eq_of_val_eq
               simp only [Fin.ofNat_eq_cast, Fin.val_castSucc, Fin.val_natCast]
-              rw [Nat.mod_eq_of_lt]
-              omega
+              rw [Nat.mod_eq_of_lt (by omega)]
             nth_rw 2 [h4]
             simp only [Fin.ofNat_eq_cast, snoc_init, Function.comp_apply, Fin.val_natCast]
             rw [if_neg]
             · apply congrArg
               apply Fin.eq_of_val_eq
               simp only [Fin.val_natCast, Fin.val_addNat]
-              rw [Nat.mod_eq_of_lt, Nat.mod_eq_of_lt]
-              · omega
-              · omega
+              rw [Nat.mod_eq_of_lt (by omega), Nat.mod_eq_of_lt (by omega)]
             · simp only [not_lt]
-              rw [Nat.mod_eq_of_lt]
-              · omega
-              · omega
+              rw [Nat.mod_eq_of_lt (by omega)]
+              omega
           · omega
     rw [← h2]
     apply ih1

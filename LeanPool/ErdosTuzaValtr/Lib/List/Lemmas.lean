@@ -93,8 +93,7 @@ theorem List.ofMirrorMirror {l : List αᵒᵈ} : l.ofMirror.Mirror = l := by
     rw [ih]
 
 @[simp]
-theorem Finset.ofMirrorMirror [LinearOrder α] {S : Finset αᵒᵈ} : S.ofMirror.Mirror = S :=
-  by
+theorem Finset.ofMirrorMirror [LinearOrder α] {S : Finset αᵒᵈ} : S.ofMirror.Mirror = S := by
   rw [Finset.ofMirror, Finset.Mirror]
   rw [Finset.image_image]; convert Finset.image_id
   infer_instance
@@ -140,8 +139,7 @@ theorem Finset.memMirror [LinearOrder α] {a : α} {S : Finset α} : toDual a �
   simp [Finset.Mirror]
 
 @[simp]
-theorem Finset.Mirror_card [LinearOrder α] {S : Finset α} : S.Mirror.card = S.card :=
-  by
+theorem Finset.Mirror_card [LinearOrder α] {S : Finset α} : S.Mirror.card = S.card := by
   rw [Finset.Mirror]
   apply S.card_image_of_injective
   intro a b; simp

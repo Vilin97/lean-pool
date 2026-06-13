@@ -118,8 +118,7 @@ theorem head_lt_getLast {l : List α} (l_cup : C.Cup l) (p q : α) (hl : 2 ≤ l
 
 /-- Compatibility alias for the upstream theorem name. -/
 theorem «head?_lt_getLast?» {l : List α} (l_cup : C.Cup l) (p q : α) (hl : 2 ≤ l.length)
-    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q :=
-  head_lt_getLast l_cup p q hl hp hq
+    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q := head_lt_getLast l_cup p q hl hp hq
 
 end Cup
 
@@ -208,8 +207,7 @@ theorem head_lt_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p q
 
 /-- Compatibility alias for the upstream theorem name. -/
 theorem «head?_lt_getLast?» {n : ℕ} {l : List α} (l_ncup : C.NCup (n + 2) l) (p q : α)
-    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q :=
-  head_lt_getLast l_ncup p q hp hq
+    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p < q := head_lt_getLast l_ncup p q hp hq
 
 theorem head_le_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α) (hp : p ∈ l.head?)
     (hq : q ∈ l.getLast?) : p ≤ q := by
@@ -226,13 +224,11 @@ theorem head_le_getLast {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α)
     | cons p' rest =>
       rw [List.getLast?_cons_cons] at hq
       rw [List.pairwise_cons] at l_sorted
-      apply le_of_lt
-      exact l_sorted.1 q (List.mem_of_mem_getLast? hq)
+      exact le_of_lt (l_sorted.1 q (List.mem_of_mem_getLast? hq))
 
 /-- Compatibility alias for the upstream theorem name. -/
 theorem «head?_le_getLast?» {n : ℕ} {l : List α} (l_ncup : C.NCup n l) (p q : α)
-    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p ≤ q :=
-  head_le_getLast l_ncup p q hp hq
+    (hp : p ∈ l.head?) (hq : q ∈ l.getLast?) : p ≤ q := head_le_getLast l_ncup p q hp hq
 
 end NCup
 
@@ -285,7 +281,6 @@ theorem hasNGon_supset {n : ℕ} {S1 S2 : Finset α} (h : S1 ⊆ S2) (h1 : C.Has
   exact ⟨c1, c2, gon, fun a a_c1 => h (c1_in a a_c1), fun a a_c2 => h (c2_in a a_c2)⟩
 
 theorem hasNCup_le {n m : ℕ} {S : Finset α} (h : n ≤ m) : C.HasNCup m S → C.HasNCup n S := by
-  intro ngon
-  rcases ngon with ⟨c, ⟨⟨c_cup, c_length⟩, c_in⟩⟩
+  rintro ⟨c, ⟨⟨c_cup, c_length⟩, c_in⟩⟩
   refine ⟨c.take n, ⟨c_cup.take n, ?_⟩, fun a ha => c_in a (List.take_subset _ _ ha)⟩
   rw [List.length_take, c_length, Nat.min_eq_left h]

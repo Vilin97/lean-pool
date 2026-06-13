@@ -119,8 +119,7 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
     (def_D : D = C.delta (n + 2) S) (no_join : ¬C.HasJoin (n + 3) (n + 2) S) {p' r : α}
     (p'r_laced : C.HasLaced (n + 2) (S \ D) p' r) :
     l.alpha p' = 1 ∧
-      ∃ p : α, C.HasLaced (n + 3) S p r ∧ p < p' ∧ l.alpha p = 0 ∧ C.beta S p = C.beta S p' :=
-  by
+      ∃ p : α, C.HasLaced (n + 3) S p r ∧ p < p' ∧ l.alpha p = 0 ∧ C.beta S p = C.beta S p' := by
   rcases p'r_laced with
     ⟨a, b, cp', c, cr, cp'_cup, c_cup, cr_cup, ⟨cp'_in_SD, c_in_SD, cr_in_SD⟩, eq_ab, cp'_last,
       c_head, c_last, cr_head⟩
@@ -164,9 +163,7 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
       -- Show that the slope of o and o' is ff
       have soo' : ¬l.Slope o o' := by
         intro soo'
-        have inc := slope_tt_inc_beta soo' o_in_S o'_in_S o_lt_o'
-        rw [eq_o] at inc
-        exact absurd inc (lt_irrefl _)
+        exact absurd (eq_o ▸ slope_tt_inc_beta soo' o_in_S o'_in_S o_lt_o') (lt_irrefl _)
       -- extend cp' to left with o
       have cp'_in_S := List.in_superset Finset.sdiff_subset cp'_in_SD
       have ocp'_cup : C.NCup (a + 1) (o::cp') :=
@@ -191,14 +188,12 @@ theorem laced_extension {n : ℕ} {S D : Finset α} (l : C.Label S) (cup_free : 
       by omega, dp_last, ?_, List.mem_getLast?_cons c_last, cr_head⟩
     rw [List.head?_cons]; rfl
 
-theorem main_induction_wlog (n : ℕ) : C.MainGoal n → C.MainGoalWlog (n + 1) :=
-  by
+theorem main_induction_wlog (n : ℕ) : C.MainGoal n → C.MainGoalWlog (n + 1) := by
   intro ih S no_join S_card cap4_free cup_free
   have l : C.Label S := cap4FreeLabel cap4_free
   set D := C.delta (n + 2) S with def_D
   have D_card := C.delta_card (n + 2) S; rw [← def_D] at D_card
-  have SD_card : (n + 2).choose 2 + 2 ≤ (S \ D).card :=
-    by
+  have SD_card : (n + 2).choose 2 + 2 ≤ (S \ D).card := by
     apply Nat.le_of_add_le_add_right
     rw [Finset.card_sdiff_add_card]
     apply le_trans _ (Finset.card_le_card Finset.subset_union_left)
@@ -245,8 +240,7 @@ theorem main_induction_wlog (n : ℕ) : C.MainGoal n → C.MainGoalWlog (n + 1) 
     have q'_in_S := Finset.sdiff_subset q's_laced.mem_ends.left
     refine ⟨p, q, r, s, ⟨⟨?_, ?_, r_lt_s⟩, pr_laced, qs_laced⟩⟩
     · have ap_eq_aq := Eq.trans ap aq.symm
-      rw [C.alpha_eq_beta_inc p_in_S q_in_S ap_eq_aq]
-      rw [bp, bq]
+      rw [C.alpha_eq_beta_inc p_in_S q_in_S ap_eq_aq, bp, bq]
       have ap'_eq_aq' := Eq.trans ap' aq'.symm
       rw [← C.alpha_eq_beta_inc p'_in_S q'_in_S ap'_eq_aq']
       exact p'_lt_q'

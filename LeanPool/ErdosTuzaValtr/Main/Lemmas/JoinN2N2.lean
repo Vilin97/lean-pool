@@ -93,8 +93,7 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
 theorem Config.join_n2_n2_case_tt (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 : List α)
     (lab : C.Label S) (a_in_S : a ∈ S) (x_in_S : x ∈ S) (b_in_S : b ∈ S)
     (hc1 : C.NCup (n + 2) (c1 ++ [a, x])) (c1_in_S : c1.In S) (hc2 : C.NCup (n + 2) (x::b::c2))
-    (c2_in_S : c2.In S) (hab : lab.Slope a b) : C.HasNGon (n + 3) S :=
-  by
+    (c2_in_S : c2.In S) (hab : lab.Slope a b) : C.HasNGon (n + 3) S := by
   rw [← Finset.memMirror] at a_in_S x_in_S b_in_S
   rw [← Mirror.ncup] at hc1 hc2
   rw [← List.Mirror_in] at c1_in_S c2_in_S

@@ -139,14 +139,12 @@ lemma EF.vec_sub_nonpos_iff (u v : I → F∞) : u + (-v) ≤ 0 ↔ u ≤ v := b
 omit [IsStrictOrderedRing F] in
 lemma sumElim_dotWeig_sumElim [Fintype I] [Fintype J] (u : I → F∞) (v : J → F∞)
     (x : I → F≥0) (y : J → F≥0) :
-    Sum.elim u v ᵥ⬝ Sum.elim x y = u ᵥ⬝ x + v ᵥ⬝ y := by
-  simp [dotWeig]
+    Sum.elim u v ᵥ⬝ Sum.elim x y = u ᵥ⬝ x + v ᵥ⬝ y := by simp [dotWeig]
 
 omit [IsStrictOrderedRing F] in
 lemma Matrix.fromRows_mulWeig [Fintype J] {I₁ I₂ : Type*} (M₁ : Matrix I₁ J F∞)
     (M₂ : Matrix I₂ J F∞) (w : J → F≥0) :
-    Matrix.fromRows M₁ M₂ ₘ* w = Sum.elim (M₁ ₘ* w) (M₂ ₘ* w) := by
-  ext (_|_) <;> rfl
+    Matrix.fromRows M₁ M₂ ₘ* w = Sum.elim (M₁ ₘ* w) (M₂ ₘ* w) := by ext (_|_) <;> rfl
 
 omit [IsStrictOrderedRing F] in
 lemma Matrix.fromCols_mulWeig_sumElim {J₁ J₂ : Type*} [Fintype J₁] [Fintype J₂]
@@ -233,8 +231,7 @@ lemma ValidELP.weakDuality_of_no_bot [Fintype I] [Fintype J]
   · use Sum.elim y 1
     constructor
     · rw [Matrix.transpose_fromRows, Matrix.fromCols_neg, Matrix.fromCols_mulWeig_sumElim]
-      have hle0 : (-P.Aᵀ) ₘ* y + (-P.c) ≤ 0 := by
-        rwa [EF.vec_sub_nonpos_iff]
+      have hle0 : (-P.Aᵀ) ₘ* y + (-P.c) ≤ 0 := by rwa [EF.vec_sub_nonpos_iff]
       convert hle0
       ext
       simp [Matrix.mulWeig, dotWeig, EF.one_smul]
@@ -278,8 +275,7 @@ section nneg_vs_zero
 
 omit [IsStrictOrderedRing F] in
 lemma eq_zero_of_zero_eq_val {k : F≥0} (hk : 0 = k.val) :
-    k = 0 :=
-  Subtype.ext hk.symm
+    k = 0 := Subtype.ext hk.symm
 
 omit [IsStrictOrderedRing F] in
 lemma pos_of_NN_not_zero {k : F≥0} (hk : ¬(k = 0)) :
@@ -412,10 +408,8 @@ lemma EF.add_smul (k l : F≥0) (r : F∞) :
     if k_eq_0 : k = 0 then
       rw [k_eq_0, EF.zero_smul_nonbot top_ne_bot, zero_add, zero_add]
     else
-      have k_pos : 0 < k := by
-        exact pos_of_NN_not_zero k_eq_0
-      rw [EF.pos_smul_top (add_pos_of_pos_of_nonneg k_pos l.property)]
-      rw [EF.pos_smul_top k_pos]
+      have k_pos : 0 < k := pos_of_NN_not_zero k_eq_0
+      rw [EF.pos_smul_top (add_pos_of_pos_of_nonneg k_pos l.property), EF.pos_smul_top k_pos]
       if l_eq_0 : l = 0 then
         rw [l_eq_0, EF.zero_smul_nonbot top_ne_bot, add_zero]
       else
@@ -458,15 +452,12 @@ lemma EF.mul_smul (k l : F≥0) (r : F∞) :
       rw [l_eq_0, EF.zero_smul_nonbot top_ne_bot, mul_zero, EF.zero_smul_nonbot top_ne_bot,
         smul_zero]
     else
-      have l_pos : 0 < l := by
-        apply lt_of_le_of_ne l.property
-        exact l_eq_0 ∘ eq_zero_of_zero_eq_val
+      have l_pos : 0 < l := pos_of_NN_not_zero l_eq_0
       rw [EF.pos_smul_top l_pos]
       if k_eq_0 : k = 0 then
         rw [k_eq_0, EF.zero_smul_nonbot top_ne_bot, zero_mul, EF.zero_smul_nonbot top_ne_bot]
       else
-        have c_pos : 0 < k := by
-          exact pos_of_NN_not_zero k_eq_0
+        have c_pos : 0 < k := pos_of_NN_not_zero k_eq_0
         rw [EF.pos_smul_top c_pos, EF.pos_smul_top (mul_pos c_pos l_pos)]
   | (f : F) =>
     change toE ((k * l) * f) = toE (k * (l * f))
@@ -489,8 +480,7 @@ lemma EF.mul_smul_vec (k l : F≥0) (v : J → F∞) :
   apply EF.mul_smul
 
 lemma EF.vec_smul_le_smul_left {k : F≥0} (hk : 0 < k) (u v : I → F∞) :
-    k • u ≤ k • v ↔ u ≤ v := by
-  simp [Pi.le_def, EF.smul_le_smul_left, hk]
+    k • u ≤ k • v ↔ u ≤ v := by simp [Pi.le_def, EF.smul_le_smul_left, hk]
 
 lemma Multiset.sum_neq_EF_top {s : Multiset F∞} (hs : ⊤ ∉ s) :
     s.sum ≠ ⊤ := by
@@ -530,8 +520,7 @@ lemma zero_dotWeig [Fintype J] (w : J → F≥0) : (0 : J → F∞) ᵥ⬝ w = 0
   exact smul_zero (w j)
 
 lemma dotWeig_add [Fintype J] (x : J → F∞) (v w : J → F≥0) :
-    x ᵥ⬝ (v + w) = x ᵥ⬝ v + x ᵥ⬝ w := by
-  simp [dotWeig, EF.add_smul, Finset.sum_add_distrib]
+    x ᵥ⬝ (v + w) = x ᵥ⬝ v + x ᵥ⬝ w := by simp [dotWeig, EF.add_smul, Finset.sum_add_distrib]
 
 lemma dotWeig_smul [Fintype J] {k : F≥0} (hk : 0 < k) (x : J → F∞) (v : J → F≥0) :
     x ᵥ⬝ (k • v) = k • (x ᵥ⬝ v) := by
@@ -589,8 +578,7 @@ lemma ValidELP.dualize_dualize (P : ValidELP I J F) : P = P.dualize.dualize := b
   simp [ValidELP.dualize]
 
 lemma ValidELP.no_bot_of_feasible [Fintype J] (P : ValidELP I J F) (hP : P.IsFeasible) (i : I) :
-    P.b i ≠ ⊥ :=
-  P.no_bot_of_reaches hP.choose_spec.left i
+    P.b i ≠ ⊥ := P.no_bot_of_reaches hP.choose_spec.left i
 
 variable [Fintype J]
 
@@ -903,8 +891,7 @@ private lemma ValidELP.strongDuality_aux_caseY (P : ValidELP I J F)
       rw [hcx, hby] at hbc
       exact (hbc.trans EF.zero_lt_top).false
     | (q : F) =>
-      have z_inv_pos : 0 < z⁻¹ := by
-        exact inv_pos_of_pos z_pos
+      have z_inv_pos : 0 < z⁻¹ := inv_pos_of_pos z_pos
       refine ⟨z⁻¹ * p, z⁻¹ * q, ⟨z⁻¹ • x, ?_, ?_⟩, ⟨z⁻¹ • y, ?_, ?_⟩, ?_⟩
       · rwa [
           ←EF.vec_smul_le_smul_left z_inv_pos, smul_zero,
@@ -1067,10 +1054,8 @@ lemma ExtendedLP.optimum_eq_of_reaches_bounded [Fintype J] {P : ExtendedLP I J F
   have hP : P.IsFeasible := by
     obtain ⟨x, hx⟩ := reaches
     exact ⟨toE r, ⟨x, hx⟩, EF.coe_neq_top r⟩
-  have hPP : ∃ r : F, P.Reaches (toE r) ∧ P.IsBoundedBy r := by
-    use r
-  have hPb : ¬P.IsUnbounded := by
-    exact (· ⟨r, bounded⟩)
+  have hPP : ∃ r : F, P.Reaches (toE r) ∧ P.IsBoundedBy r := by use r
+  have hPb : ¬P.IsUnbounded := (· ⟨r, bounded⟩)
   have hopt : P.optimum = some (toE hPP.choose) := by
     unfold ExtendedLP.optimum
     rw [if_neg (not_not.mpr hP), if_neg hPb, dif_pos hPP]

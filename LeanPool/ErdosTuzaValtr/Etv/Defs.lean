@@ -26,8 +26,7 @@ def HasLaced (n : ℕ) (S : Finset α) (p q : α) : Prop :=
 namespace HasLaced
 
 theorem mem_ends {C : Config α} {n : ℕ} {S : Finset α} {p q : α} (h : C.HasLaced n S p q) :
-    p ∈ S ∧ q ∈ S :=
-  by
+    p ∈ S ∧ q ∈ S := by
   rcases h with ⟨-, -, -, c, -, -, -, -, ⟨-, c_in_S, -⟩, -, ⟨-, c_head, c_last, -⟩⟩
   exact ⟨c_in_S _ (List.mem_of_mem_head? c_head), c_in_S _ (List.mem_of_mem_getLast? c_last)⟩
 

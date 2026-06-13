@@ -99,11 +99,9 @@ lemma matrixOfQuat_is_unitary (q : Quaternion ℝ) (nz : Quaternion.normSq q ≠
       mul_one]
   constructor
   · rw [star_smul, smul_mul_smul_comm, denorm_half_unitary2, smul_smul,
-      show star n2 = n2 by rfl, local_arith]
-    apply one_smul
+      show star n2 = n2 by rfl, local_arith, one_smul]
   · rw [star_smul, smul_mul_smul_comm, denorm_half_unitary, smul_smul,
-      show star n2 = n2 by rfl, local_arith]
-    apply one_smul
+      show star n2 = n2 by rfl, local_arith, one_smul]
 
 lemma denormMatrixOfQuat_has_correct_det (q : Quaternion ℝ)
    : (denormMatrixOfQuat q).det = (Quaternion.normSq q)^3 := by

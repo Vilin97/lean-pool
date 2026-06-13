@@ -42,8 +42,7 @@ theorem has_cap2_cup2 {S : Finset α} (hS : 1 < S.card) : C.HasNCap 2 S ∧ C.Ha
   · rw [List.cons_in, List.cons_in]; exact ⟨a_in_S, b_in_S, List.nil_in⟩
 
 theorem binom_eq (a b : ℕ) :
-    (a + b + 2).choose (a + 1) = (a + b + 1).choose a + (a + b + 1).choose (a + 1) :=
-  rfl
+    (a + b + 2).choose (a + 1) = (a + b + 1).choose a + (a + b + 1).choose (a + 1) := rfl
 
 theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card) :
     C.HasNCap (a + 2) S ∨ C.HasNCup (b + 2) S := by
@@ -75,8 +74,7 @@ theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card)
     set is_start_of_cap : α → Prop := fun p =>
       ∃ c, C.Cap c ∧ c.In S ∧ c.length = a + 2 ∧ p ∈ c.head? with def_is_start_of_cap
     set T := Finset.filter is_start_of_cap S with def_T
-    have eq_card : (S \ T).card + T.card = S.card :=
-      by
+    have eq_card : (S \ T).card + T.card = S.card := by
       apply Finset.card_sdiff_add_card_eq_card
       rw [def_T]; exact S.filter_subset is_start_of_cap
     have sz_cases : sz_ab1 < (S \ T).card ∨ sz_a1b < T.card := by by_contra! h; omega
@@ -85,8 +83,7 @@ theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card)
     · rcases hab1 (S \ T) sz_cases with hcap | hcup
       · rcases hcap with ⟨c, ⟨c_cap, c_length⟩, c_in⟩
         have c_nnil : c ≠ [] := by
-          intro eq_c
-          subst eq_c
+          rintro rfl
           simp only [List.length_nil] at c_length
           omega
         rcases List.takeHead c_nnil with ⟨ch, ct, eq_c⟩

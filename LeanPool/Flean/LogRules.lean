@@ -62,23 +62,15 @@ lemma mantissa_ge_one {m : ℕ} : 1 ≤ ((m : ℚ) / C.prec + 1) := by
 
 lemma mantissa_lt_two {m : ℕ} (h : m < C.prec) : ((m : ℚ) / C.prec + 1) < 2 := by
   suffices (m : ℚ) / C.prec < 1 by linarith
-  apply (div_lt_one (by norm_cast; exact C.prec_pos)).mpr
-  norm_cast
+  exact (div_lt_one (by norm_cast; exact C.prec_pos)).mpr (by norm_cast)
 
 --lemma mantissa_2e_pos {e : ℤ} {m : ℕ} : 0 < ((m : ℚ) / C.prec + 1) * 2^e := by
 --  positivity
 
 lemma q_exp_eq_exp {e : ℤ} {m : ℕ} (h : m < C.prec) :
   Int.log 2 |((m : ℚ) / ↑C.prec + 1) * 2 ^ e| = e := by
-  have mantissa_lt : ((m : ℚ) / C.prec + 1) < 2 := by
-    suffices (m : ℚ) / C.prec < 1 by linarith
-    suffices (m : ℚ) < C.prec by
-      apply Bound.div_lt_one_of_pos_of_lt
-      · norm_cast; exact Nat.zero_lt_of_lt h
-      exact this
-    norm_cast
   rw [abs_of_nonneg (by positivity)]
-  exact log_one_to_two_eq (by norm_num) mantissa_ge_one (by norm_cast)
+  exact log_one_to_two_eq (by norm_num) mantissa_ge_one (by exact_mod_cast mantissa_lt_two h)
 
 lemma q_mantissa_eq_mantissa {e : ℤ} {m : ℕ} (h : m < C.prec) :
     |(((m : ℚ)/C.prec) + 1) * 2^e| * (2^(Int.log 2 |(((m : ℚ)/C.prec) + 1) * 2^e|))⁻¹
@@ -106,9 +98,7 @@ lemma small_floor_aux {q : ℚ} {n : ℕ} (h : q < 1) (h' : 0 ≤ q) (n_pos : 0 
   suffices ⌊q * n⌋.natAbs < (n : ℤ) by
     norm_cast at this
   rw [Int.natAbs_of_nonneg (by positivity)]
-  suffices q * n < n by
-    exact Int.floor_lt.mpr this
-  exact (mul_lt_iff_lt_one_left (by norm_cast : 0 < (n : ℚ))).2 h
+  exact Int.floor_lt.mpr ((mul_lt_iff_lt_one_left (by norm_cast : 0 < (n : ℚ))).2 h)
 
 lemma small_ceil {q : ℚ} {n : ℕ} (h : q ≤ 1) (h' : 0 ≤ q) (n_nonneg : 0 ≤ n) :
   ⌈q * n⌉.natAbs ≤ n := by
@@ -130,11 +120,8 @@ lemma casesQPlane (P : ℚ → ℚ → Prop)
   (h3 : ∀ q1 > 0, ∀ q2 < 0, P q1 q2)
   (h4 : ∀ q1 < 0, ∀ q2 < 0, P (-q1) (-q2) → P q2 q1) (q1 q2 : ℚ)
   (q1_nezero : q1 ≠ 0) (q2_nezero : q2 ≠ 0) : P q1 q2 := by
-  have h : ∀q ≠ (0 : ℚ), q > 0 ∨ q < 0 := by
-    intro q qnezero
-    by_cases h : q > 0
-    · exact Or.inl h
-    exact lt_or_gt_of_ne (Ne.symm qnezero)
+  have h : ∀q ≠ (0 : ℚ), q > 0 ∨ q < 0 := fun q qnezero ↦
+    (lt_or_gt_of_ne qnezero).symm
   rcases (h q1 q1_nezero) with h' | h'
   · rcases (h q2 q2_nezero) with h'' | h''
     · exact h1 q1 h' q2 h''

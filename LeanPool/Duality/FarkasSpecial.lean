@@ -72,9 +72,7 @@ lemma EF.pos_smul_top {c : F≥0} (hc : 0 < c) : c • (⊤ : F∞) = ⊤ := by
 lemma EF.smul_top_neq_bot (c : F≥0) : c • (⊤ : F∞) ≠ ⊥ := by
   change EF.smulNN c ⊤ ≠ ⊥
   change (if c = 0 then (0 : F∞) else ⊤) ≠ ⊥
-  by_cases hc0 : c = 0
-  · simp [hc0]
-  · simp [hc0]
+  by_cases hc0 : c = 0 <;> simp [hc0]
 
 omit [IsStrictOrderedRing F] in
 lemma EF.smul_coe_neq_bot (c : F≥0) (f : F) : c • toE f ≠ (⊥ : F∞) :=
@@ -107,8 +105,7 @@ def EF.AddHom : F →+ F∞ := ⟨⟨toE, EF.coe_zero⟩, EF.coe_add⟩
 
 omit [LinearOrder F] [IsStrictOrderedRing F] in
 lemma Finset.sum_toE {ι : Type*} (s : Finset ι) (f : ι → F) :
-    toE (s.sum f) = s.sum (fun i : ι => toE (f i)) :=
-  map_sum EF.AddHom f s
+    toE (s.sum f) = s.sum (fun i : ι => toE (f i)) := map_sum EF.AddHom f s
 
 lemma Multiset.sum_eq_EF_bot_iff (s : Multiset F∞) : s.sum = (⊥ : F∞) ↔ ⊥ ∈ s := by
   constructor <;> intro hs
@@ -285,8 +282,7 @@ lemma no_bot_has_top_dotWeig_le {v : I → F∞} (hv : ∀ a, v a ≠ ⊥) {i : 
 
 lemma no_bot_has_top_dotWeig_nneg_le {v : I → F∞} (hv : ∀ a, v a ≠ ⊥) {i : I} (hvi : v i = ⊤)
     (w : I → F≥0) {f : F} (hq : v ᵥ⬝ w ≤ f) :
-    w i = 0 :=
-  le_antisymm (no_bot_has_top_dotWeig_le hv hvi w hq) (w i).property
+    w i = 0 := le_antisymm (no_bot_has_top_dotWeig_le hv hvi w hq) (w i).property
 
 lemma dotWeig_zero_le_zero (v : I → F∞) :
     v ᵥ⬝ (0 : I → F≥0) ≤ (0 : F∞) := by

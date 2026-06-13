@@ -141,16 +141,14 @@ lemma FactorizationSystem_diagonal_canonicity
   (r : X ⟶ Y) (hr : R r) (S : l □ r) (d : diagonalFiller S) :
   d.map = (FactorizationSystemDiagonal F l hl r hr S).map := by
   let comm : (l ≫ F.leftMap d.map) ≫ F.rightMap d.map = S.top := by calc
-    (l ≫ F.leftMap d.map) ≫ F.rightMap d.map = l ≫ F.leftMap d.map ≫ F.rightMap d.map :=
-      by simp
+    (l ≫ F.leftMap d.map) ≫ F.rightMap d.map = l ≫ F.leftMap d.map ≫ F.rightMap d.map := by simp
     _ = l ≫ d.map := by rw [F.factorization d.map]
     _ = S.top := d.comm_top
   let K := F.factorizationIso S.top (F.image d.map) (l ≫ F.leftMap d.map)
     (F.is_closed_comp_left_class.precomp l hl (F.leftMap d.map) (F.left_map_in_left_class d.map))
     (F.rightMap d.map) (F.right_map_in_right_class d.map) comm
   let comm' : F.leftMap d.map ≫ F.rightMap d.map ≫ r = S.bot := by calc
-    F.leftMap d.map ≫ F.rightMap d.map ≫ r = (F.leftMap d.map ≫ F.rightMap d.map) ≫ r :=
-      by simp
+    F.leftMap d.map ≫ F.rightMap d.map ≫ r = (F.leftMap d.map ≫ F.rightMap d.map) ≫ r := by simp
     _ = d.map ≫ r := by rw [F.factorization d.map]
     _ = S.bot := d.comm_bot
   let K' := F.factorizationIso S.bot (F.image d.map) (F.leftMap d.map)
@@ -162,8 +160,7 @@ lemma FactorizationSystem_diagonal_canonicity
     (F.rightMap S.bot) ( F.right_map_in_right_class S.bot)
     (by have fact := F.factorization S.bot; aesop_cat)
   let fact : F.leftMap S.top ≫ F.rightMap S.top ≫ r = l ≫ S.bot := by calc
-    F.leftMap S.top ≫ F.rightMap S.top ≫ r = (F.leftMap S.top ≫ F.rightMap S.top) ≫ r := by
-      simp
+    F.leftMap S.top ≫ F.rightMap S.top ≫ r = (F.leftMap S.top ≫ F.rightMap S.top) ≫ r := by simp
     _ = S.top ≫ r := by rw [F.factorization S.top]
     _ = l ≫ S.bot := by rw [← S.comm]
   let I' := F.factorizationIso (l ≫ S.bot) (F.image S.top) (F.leftMap S.top)
@@ -173,12 +170,10 @@ lemma FactorizationSystem_diagonal_canonicity
   let kk := K'.fst ≪≫ K.fst.symm
   let ii := I.fst.symm ≪≫ I'.fst
   let fact' : (l ≫ F.leftMap S.bot) ≫ F.rightMap S.bot = l ≫ S.bot := by calc
-    (l ≫ F.leftMap S.bot) ≫ F.rightMap S.bot = l ≫ (F.leftMap S.bot ≫ F.rightMap S.bot) := by
-      simp
+    (l ≫ F.leftMap S.bot) ≫ F.rightMap S.bot = l ≫ (F.leftMap S.bot ≫ F.rightMap S.bot) := by simp
     _ = l ≫ S.bot := by rw [F.factorization S.bot]
   let fact'' : F.leftMap S.top ≫ F.rightMap S.top ≫ r = l ≫ S.bot := by calc
-    F.leftMap S.top ≫ F.rightMap S.top ≫ r = (F.leftMap S.top ≫ F.rightMap S.top) ≫ r := by
-      simp
+    F.leftMap S.top ≫ F.rightMap S.top ≫ r = (F.leftMap S.top ≫ F.rightMap S.top) ≫ r := by simp
     _ = S.top ≫ r := by rw [F.factorization S.top]
     _ = l ≫ S.bot := by rw [← S.comm]
   let comm₀ : (l ≫ F.leftMap S.bot) ≫ ii.hom = F.leftMap S.top := by calc
@@ -209,8 +204,7 @@ lemma FactorizationSystem_diagonal_canonicity
     _ = F.leftMap S.top ≫ (K.fst.hom ≫ K.fst.inv) := by simp
     _ = F.leftMap S.top := by rw [K.fst.hom_inv_id]; simp
   let comm₁' : kk.hom ≫ F.rightMap S.top ≫ r = F.rightMap S.bot := by calc
-    kk.hom ≫ F.rightMap S.top ≫ r = K'.fst.hom ≫ K.fst.inv ≫ F.rightMap S.top ≫ r := by
-      aesop_cat
+    kk.hom ≫ F.rightMap S.top ≫ r = K'.fst.hom ≫ K.fst.inv ≫ F.rightMap S.top ≫ r := by aesop_cat
     _ = K'.fst.hom ≫ K.fst.inv ≫ (K.fst.hom ≫ F.rightMap d.map) ≫ r := by rw [K.snd.right]
     _ = K'.fst.hom ≫ (K.fst.inv ≫ K.fst.hom) ≫ F.rightMap d.map ≫ r := by simp
     _ = K'.fst.hom ≫ F.rightMap d.map ≫ r := by rw [K.fst.inv_hom_id]; simp

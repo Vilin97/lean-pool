@@ -234,8 +234,7 @@ def betaCup {a : α} (ha : a ∈ S) :
     List.getLast?_singleton, Option.some_or, Option.mem_def]
   tauto
 
-theorem has_beta_cup {a : α} (ha : a ∈ S) : C.HasNCup (C.beta S a + 1) S :=
-  by
+theorem has_beta_cup {a : α} (ha : a ∈ S) : C.HasNCup (C.beta S a + 1) S := by
   rcases C.betaCup S ha with ⟨c, c_in, c_cup, -⟩
   use c
 
@@ -279,8 +278,7 @@ theorem Config.Label.alpha_le_beta {a : α} (ha : a ∈ S) : l.alpha a ≤ C.bet
 variable {l}
 
 theorem slope_ff_inc_alpha {a b : α} (sab : ¬l.Slope a b) (ha : a ∈ S) (hb : b ∈ S)
-    (a_le_b : a < b) : l.alpha a < l.alpha b :=
-  by
+    (a_le_b : a < b) : l.alpha a < l.alpha b := by
   rcases l.alphaCup ha with ⟨c, c_length, c_in, c_sorted, c_chain, c_last⟩
   rcases List.takeLast' c_last with ⟨c', c_eq⟩
   rw [Nat.lt_iff_add_one_le, ← add_le_add_iff_right 1]
@@ -328,9 +326,7 @@ theorem Config.alpha_eq_beta_inc {a b : α} (ha : a ∈ S) (hb : b ∈ S) (h : l
   · intro hab
     by_cases hl : l.Slope a b
     · exact slope_tt_inc_beta hl ha hb hab
-    · have h' := slope_ff_inc_alpha hl ha hb hab
-      rw [h] at h'
-      exact absurd h' (lt_irrefl _)
+    · exact absurd (h ▸ slope_ff_inc_alpha hl ha hb hab) (lt_irrefl _)
   · intro hab
     rcases lt_trichotomy a b with (a_lt_b | a_eq_b | b_lt_a)
     · exact a_lt_b
@@ -339,9 +335,7 @@ theorem Config.alpha_eq_beta_inc {a b : α} (ha : a ∈ S) (hb : b ∈ S) (h : l
       by_cases hl : l.Slope b a
       · have h' := slope_tt_inc_beta hl hb ha b_lt_a
         exact absurd (lt_trans h' hab) (lt_irrefl _)
-      · have h' := slope_ff_inc_alpha hl hb ha b_lt_a
-        rw [h] at h'
-        exact absurd h' (lt_irrefl _)
+      · exact absurd (h ▸ slope_ff_inc_alpha hl hb ha b_lt_a) (lt_irrefl _)
 
 variable {C} (l)
 
@@ -350,9 +344,7 @@ theorem Config.Label.beta_eq_alpha_inc {a b : α} (ha : a ∈ S) (hb : b ∈ S)
   constructor
   · intro hab
     by_cases hl : l.Slope a b
-    · have h' := slope_tt_inc_beta hl ha hb hab
-      rw [h] at h'
-      exact absurd h' (lt_irrefl _)
+    · exact absurd (h ▸ slope_tt_inc_beta hl ha hb hab) (lt_irrefl _)
     · exact slope_ff_inc_alpha hl ha hb hab
   · intro hab
     rcases lt_trichotomy a b with (a_lt_b | a_eq_b | b_lt_a)
@@ -360,8 +352,6 @@ theorem Config.Label.beta_eq_alpha_inc {a b : α} (ha : a ∈ S) (hb : b ∈ S)
     · subst a_eq_b; exact absurd hab (lt_irrefl _)
     · exfalso
       by_cases hl : l.Slope b a
-      · have h' := slope_tt_inc_beta hl hb ha b_lt_a
-        rw [h] at h'
-        exact absurd h' (lt_irrefl _)
+      · exact absurd (h ▸ slope_tt_inc_beta hl hb ha b_lt_a) (lt_irrefl _)
       · have h' := slope_ff_inc_alpha hl hb ha b_lt_a
         exact absurd (lt_trans h' hab) (lt_irrefl _)

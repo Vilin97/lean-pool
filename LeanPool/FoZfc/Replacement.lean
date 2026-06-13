@@ -70,8 +70,8 @@ def ExtIsFunctFormula [ModelSets V] {n : ℕ} (s : ℕ → V) (xs : Fin n → V)
 theorem realize_is_funct_formula [ModelSets V] {n : ℕ} (s : ℕ → V)
     (xs : Fin n → V) (ϕ : LZFC.BoundedFormula ℕ n) :
     (intIsFunctFormula ϕ).Realize s xs ↔ ExtIsFunctFormula s xs ϕ := by
-  unfold intIsFunctFormula ExtIsFunctFormula RelByFormula
-  simp [realize_liftAt', realize_fixedSnoc_makeTsN_2]
+  simp [intIsFunctFormula, ExtIsFunctFormula, RelByFormula, realize_liftAt',
+    realize_fixedSnoc_makeTsN_2]
 
 /-- Make a formula for fv 1 is the image of fv 0 under the relation defined by ϕ. -/
 def intIsImage {n : ℕ} (ϕ : LZFC.BoundedFormula ℕ n) :
@@ -93,19 +93,15 @@ theorem replaceInitialValues_replaceInitialValues {n m : ℕ} {h : n ≤ m}
   funext k
   unfold replaceInitialValues
   by_cases h_k_le_m : k < m + 1
-  · rw [if_pos h_k_le_m]
-    rw [if_pos h_k_le_m]
+  · rw [if_pos h_k_le_m, if_pos h_k_le_m]
   · have h_k_gt_n : ¬ (k < n + 1) := by omega
-    rw [if_neg h_k_le_m]
-    rw [if_neg h_k_gt_n]
-    rw [if_neg h_k_le_m]
+    rw [if_neg h_k_le_m, if_neg h_k_gt_n, if_neg h_k_le_m]
 
 @[simp]
 theorem realize_is_image [ModelSets V] {n : ℕ} (s : ℕ → V) (xs : Fin n → V)
     (ϕ : LZFC.BoundedFormula ℕ n) (a b : V) : (intIsImage ϕ).Realize
     (replaceInitialValues s ![a, b]) xs ↔ ExtIsImage s xs ϕ a b := by
-  unfold intIsImage ExtIsImage
-  simp [realize_liftAt', realize_fixedSnoc_makeTsN_2]
+  simp [intIsImage, ExtIsImage, realize_liftAt', realize_fixedSnoc_makeTsN_2]
 
 /-- Model with the Replacement schema. -/
 class ModelReplacement (V : Type u) extends ModelSets V where
@@ -121,8 +117,8 @@ theorem ext_replacement [ModelReplacement V] {n : ℕ} (s : ℕ → V)
     ExtIsFunctFormula s xs ϕ → ∀ (a : V), ∃ (b : V),
     ExtIsImage s xs ϕ a b := by
   intro h0 a
-  have h_intIsFunctFormula : (intIsFunctFormula ϕ).Realize s xs := by
-    apply (realize_is_funct_formula s xs ϕ).mpr h0
+  have h_intIsFunctFormula : (intIsFunctFormula ϕ).Realize s xs :=
+    (realize_is_funct_formula s xs ϕ).mpr h0
   obtain ⟨b, h_b⟩ := realize_ex.mp ((ModelReplacement.replacement_schema
     s xs ϕ) h_intIsFunctFormula a)
   rw [snoc_conv, snoc_conv] at h_b
@@ -143,8 +139,7 @@ theorem ext_test [ModelPR V] (s : ℕ → V) (xs : Fin 0 → V) (a : V) :
     unfold RelByFormula
     simp only [realize_is_singleton, replaceInitialValues_2_0, replaceInitialValues_2_1]
     exact ext_singleton_unique
-  obtain ⟨b, hb⟩ := ext_replacement s xs intIsSingleton h1 a
-  exact ⟨b, hb⟩
+  exact ext_replacement s xs intIsSingleton h1 a
 
 /-- The image of `intIsSingleton` exists as a witness to replacement, internally. -/
 theorem int_test [ModelPR V] (s : ℕ → V) (xs : Fin 0 → V) :

@@ -31,8 +31,7 @@ lemma subnormal_roundsub_valid [R : Rounding] :
 lemma subnormal_roundsub_coe [R : Rounding] (s : SubnormRep C) (h : s.nonzero) :
   roundsub (subnormalToQ s) = s := by
   unfold roundsub
-  apply subnormal_round_coe
-  exact h
+  exact subnormal_round_coe _ h
 
 /-- A floating-point number of the format `C`: a signed infinity, `NaN`, a valid
 normal representation, or a valid subnormal representation. -/
@@ -168,8 +167,7 @@ lemma log_lt_emax_of_max_float {q : ℚ} (q_nonneg : q ≠ 0) (h : |q| ≤ maxFl
   rw [<-Int.lt_zpow_iff_log_lt (by norm_num) (by positivity)]
   unfold maxFloatQ at h
   apply lt_of_le_of_lt h
-  rw [zpow_add₀ (by norm_num)]
-  rw [mul_comm]
+  rw [zpow_add₀ (by norm_num), mul_comm]
   apply mul_lt_mul' ?_ ?_ (by linarith [max_mantissa_q C]) (by positivity)
   · rfl
   linarith [max_mantissa_q C]
@@ -179,12 +177,7 @@ lemma float_range (f : Flean.Float C) :
   |toRat f| ≤ maxFloatQ C := by
   unfold toRat
   unfold maxFloatQ
-  have : (1 : ℚ) / C.prec ≤ 1 := by
-    rw [one_div_le]
-    · simp only [ne_eq, one_ne_zero, not_false_eq_true, div_self, Nat.one_le_cast]
-      exact C.prec_pos
-    · exact Nat.cast_pos'.mpr C.prec_pos
-    norm_num
+  have := one_div_prec_le_one C
   have : 0 < (2 - (1 : ℚ) / C.prec) := by linarith
   have := C.prec_pos
   rcases f with _ | _ | ⟨f, ve, vm⟩ | ⟨sm, vm⟩
@@ -234,11 +227,7 @@ lemma to_float_to_rat [R : Rounding] (f : Flean.Float C) (finite : f.IsFinite)
   --simp [Flean.Float.IsZero] at nonzero
   rcases f with _ | _ | ⟨f, ve, vm⟩ | ⟨sm, vm⟩
   <;> simp only at finite nonzero
-  · have : coeQ f ≠ 0 := by
-      rcases f with ⟨s, e, m⟩
-      cases s
-      · linarith [coe_q_false_pos (C := C) (e := e) (m := m)]
-      linarith [coe_q_true_neg (C := C) (e := e) (m := m)]
+  · have : coeQ f ≠ 0 := coe_q_nezero
     simp only [toRat]
     unfold toFloat
     split_ifs
@@ -251,8 +240,7 @@ lemma to_float_to_rat [R : Rounding] (f : Flean.Float C) (finite : f.IsFinite)
       linarith [ve.2]
     simp [this]
   have sm_nonzero : sm.m ≠ 0 := by
-    rw [<-is_zero_iff_subnormal_to_q _ vm] at nonzero
-    rw [subnorm_eq_0_iff_to_q] at nonzero
+    rw [<-is_zero_iff_subnormal_to_q _ vm, subnorm_eq_0_iff_to_q] at nonzero
     exact nonzero
   have := subnormal_range sm vm sm_nonzero
   simp only [toRat]
@@ -323,13 +311,11 @@ lemma splitIsFinite [R : Rounding] {q : ℚ}
     simp [toRat, subnormalToQ]
   · left
     constructor
-    · apply le_of_lt
-      exact (Int.lt_zpow_iff_log_lt (b := 2) (by norm_num) (by positivity)).2 i2
+    · exact le_of_lt ((Int.lt_zpow_iff_log_lt (b := 2) (by norm_num) (by positivity)).2 i2)
     dsimp at f_def
     split_ifs at f_def with h'
     · --simp only [i1, ↓reduceDIte, i2, h']
-      rw [f_def, toRat, coeQ, subnormalToQ, h']
-      rw [roundsub, subnormalRound]
+      rw [f_def, toRat, coeQ, subnormalToQ, h', roundsub, subnormalRound]
       dsimp
       rw [mul_assoc, mul_assoc]
       congr 1
@@ -400,11 +386,8 @@ def Flean.Float.neg : Flean.Float C → Flean.Float C
 lemma to_float_neg (f : Flean.Float C) (h : f.IsFinite) :
   toRat (Flean.Float.neg f) = -toRat f := by
   unfold toRat
-  rcases f with _ | _ | ⟨f, ve, vm⟩ | ⟨sm, vm⟩
-  · simp [Flean.Float.neg]
-  · simp [Flean.Float.neg]
-  · simp [Flean.Float.neg, coe_q_of_neg]
-  simp [Flean.Float.neg, subnormal_to_q_neg]
+  rcases f with _ | _ | ⟨f, ve, vm⟩ | ⟨sm, vm⟩ <;>
+    simp [Flean.Float.neg, coe_q_of_neg, subnormal_to_q_neg]
 
 lemma float_le_float_of [R : Rounding] (q1 q2 : ℚ)
   (h1 : (toFloat (C := C) q1).IsFinite)
@@ -424,8 +407,7 @@ lemma float_le_float_of [R : Rounding] (q1 q2 : ℚ)
         rw [abs_of_nonpos h'] at q2_large
         rw [abs_of_nonpos (le_trans h h')] at q1_small
         apply le_antisymm h
-        have := le_trans q1_small q2_large
-        linarith
+        linarith [le_trans q1_small q2_large]
       apply le_trans (b := 2^C.emin)
       · rw [<-subnormal_to_q_emin, <-roundsub_emin]
         apply subnormal_round_le_of_le (C := C) (r := roundFunction R) q1 (2^C.emin)
@@ -517,8 +499,8 @@ lemma float_up_minus_down (q : ℚ) (h : (toFloatDown (C := C) q).IsFinite)
     ≤ max ((2 : ℚ)^C.emin / (C.prec : ℚ)) (2 ^ (Int.log 2 |q|) / C.prec) := by
   unfold toFloatDown toFloatUp at *
   by_cases q_is_boundary : |q| = 2^C.emin
-  · rw [to_float_boundary (R := .mk (.down)) q_is_boundary]
-    rw [to_float_boundary (R := .mk (.up)) q_is_boundary]
+  · rw [to_float_boundary (R := .mk (.down)) q_is_boundary,
+      to_float_boundary (R := .mk (.up)) q_is_boundary]
     simp only [sub_self]
     positivity
   rcases splitIsFinite (R := .mk (.down)) (h := h) with ⟨q_small, h⟩ | ⟨q_large, h⟩
@@ -528,12 +510,8 @@ lemma float_up_minus_down (q : ℚ) (h : (toFloatDown (C := C) q).IsFinite)
     unfold roundsub
     simp only [roundFunction]
     apply subnormal_up_minus_down (C := C)
-  · exfalso
-    apply q_is_boundary
-    apply le_antisymm q_small q_large'
-  · exfalso
-    apply q_is_boundary
-    apply le_antisymm q_small' q_large
+  · exact absurd (le_antisymm q_small q_large') q_is_boundary
+  · exact absurd (le_antisymm q_small' q_large) q_is_boundary
   rw [h, h']
   apply le_max_of_le_right
   apply roundf_up_minus_down
@@ -551,8 +529,7 @@ lemma float_eq_up_or_down [R : Rounding] (q : ℚ) :
   split_ifs with h1
   · simp only
     set x := |q| * 2 ^ (-C.emin) * ↑C.prec with x_def
-    have := round_eq_or' (r := roundFunction R) (b := q < 0)
-        (q := x) (h := by positivity)
+    have := round_eq_or' (r := roundFunction R) (b := q < 0) (q := x) (h := by positivity)
     simp_rw [subnormalRound]
     rcases this with h' | h'
     · left
@@ -623,11 +600,7 @@ lemma to_float_in_range [R : Rounding] {q : ℚ} (h : |q| ≤ maxFloatQ C) :
     · simp
     · simp
     · simp only [Flean.Float.inf.injEq, decide_eq_false_iff_not, not_lt, not_le, decide_eq_true_eq]
-      have := round_min_e' (C := C) q q_nezero
-      exfalso
-      suffices (roundRep q).e ≤ C.emax by
-        linarith
-      exact roundf_in_range _ q_nezero h
+      linarith [round_rep_in_range (C := C) q_nezero h]
     · simp
   simp [toFloat]
   split_ifs <;> simp
@@ -635,8 +608,7 @@ lemma to_float_in_range [R : Rounding] {q : ℚ} (h : |q| ≤ maxFloatQ C) :
 lemma float_error' [R : Rounding] (q : ℚ) (h : |q| ≤ maxFloatQ C) :
   |toRat (toFloat (C := C) q) - q|
     ≤ max ((2 : ℚ)^C.emin / C.prec) (2 ^ (Int.log 2 |q|) / C.prec) := by
-  apply float_error
-  apply to_float_in_range h
+  exact float_error _ (to_float_in_range h)
 
 lemma float_nearest_error (q : ℚ) (h : (toFloatNearest (C := C) q).IsFinite) :
   |q - toRat (toFloatNearest (C := C) q)|

@@ -998,8 +998,7 @@ theorem length_eq_of_ne (a : Point) (bc : b ≠ c) : ∃ f, length a f = length 
   rcases B_circ_of_ne (ne_32_of_tri eqtri.1) bc with ⟨e, α, Bdbe, bα, cα, eα⟩
   rcases B_circ_out_of_B (ne_31_of_tri eqtri.1) Bdbe eqtri.2.2.2 with ⟨f, β, Bdaf, dβ, eβ, fβ⟩
   have be_bc := (length_eq_of_oncircle bα cα eα).symm
-  have de_df := length_eq_of_oncircle dβ eβ fβ
-  have af_be := length_eq_of_B_B Bdbe Bdaf eqtri.2.2.2 de_df
+  have af_be := length_eq_of_B_B Bdbe Bdaf eqtri.2.2.2 (length_eq_of_oncircle dβ eβ fβ)
   exact ⟨f, af_be.trans be_bc⟩
 
 /-- Euclid I.2, generalization -/
@@ -1039,8 +1038,7 @@ theorem B_length_eq_of_ne_lt (cd : c ≠ d) (cd_lt_ab : length c d < length a b)
   rcases circle_of_ne (ne_of_ne_len' cd ae_cd) with ⟨α, aα, eα⟩
   rcases B_oncircle_of_inside_outside (inside_circle_of_center aα)
     (out_circle_of_lt aα eα (by rwa [← ae_cd] at cd_lt_ab)) with ⟨f, Bafb, fα⟩
-  have ae_af := length_eq_of_oncircle aα eα fα
-  exact ⟨f, Bafb, by linarith⟩
+  exact ⟨f, Bafb, by linarith [length_eq_of_oncircle aα eα fα]⟩
 
 /-- Euclid I.5, (part 1), isosceles triangles have equal angles -/
 theorem angle_eq_of_iso (iso_abc : isoTri a b c) : angle a b c = angle a c b :=
@@ -1268,8 +1266,7 @@ theorem len_lt_of_tri' (tri_abc : triangle a b c) : length a b < length a c + le
     (tri132_of_tri123 tri_abc) <| col_of_B Bacd) <|
     by linarith[angle_symm c b d, angle_symm d b a, angle_extension_of_B (ne_of_col_tri'
     (col_132_of_col <| col_of_B Bacd) <| tri213 tri_abc) <| B_symm Bacd]
-  have : length a c + length c d = length a d := length_sum_of_B Bacd
-  linarith
+  linarith [length_sum_of_B Bacd]
 
 /-- Euclid I.20, the triangle inequalities -/
 theorem len_lt_of_tri (tri_abc : triangle a b c) : length a b < length a c + length b c ∧

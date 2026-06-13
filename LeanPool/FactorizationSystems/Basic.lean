@@ -419,11 +419,10 @@ lemma left_cancellation_right_class :
   let t := F.leftMap u
   let q := F.rightMap u
   let fact := F.factorization u
-  let comm : t ≫ q ≫ v = w := by
-    calc
-      t ≫ q ≫ v = (t ≫ q) ≫ v := by simp
-      _ = u ≫ v := by rw [fact]
-      _ = w := by rfl
+  let comm : t ≫ q ≫ v = w := by calc
+    t ≫ q ≫ v = (t ≫ q) ≫ v := by simp
+    _ = u ≫ v := by rw [fact]
+    _ = w := by rfl
   let i := (
     factFactIso F w E t (F.left_map_in_left_class u) (q ≫ v)
     (F.is_closed_comp_right_class.precomp _ (F.right_map_in_right_class u) _ Rv) comm X (𝟙 X)
@@ -434,16 +433,14 @@ lemma left_cancellation_right_class :
     (F.is_closed_comp_right_class.precomp _ (F.right_map_in_right_class u) _ Rv) comm X (𝟙 X)
     (F.contains_isos_left_class (Iso.refl X)) w Rw (by aesop_cat)
   )
-  have eq : t = i.inv := by
-    calc
-      t = t ≫ 𝟙 E := by rw [Category.comp_id]
-      _ = t ≫ i.hom ≫ i.inv := by rw [i.hom_inv_id]
-      _ = (t ≫ i.hom) ≫ i.inv := by simp
-      _ = i.inv := by rw [fact']; simp
+  have eq : t = i.inv := by calc
+    t = t ≫ 𝟙 E := by rw [Category.comp_id]
+    _ = t ≫ i.hom ≫ i.inv := by rw [i.hom_inv_id]
+    _ = (t ≫ i.hom) ≫ i.inv := by simp
+    _ = i.inv := by rw [fact']; simp
   have Riinv : R i.inv := F.contains_isos_right_class (asIso i.inv)
   have Rt : R t := by rw [eq]; exact Riinv
-  have Rqt : R (t ≫ q) := by
-    exact F.is_closed_comp_right_class.precomp t Rt q (F.right_map_in_right_class u)
+  have Rqt : R (t ≫ q) := F.is_closed_comp_right_class.precomp t Rt q (F.right_map_in_right_class u)
   rw [←fact]
   exact Rqt
 

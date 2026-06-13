@@ -56,26 +56,20 @@ lemma not_exists_until_iff_forall {P Q : Nat → Prop} :
     cases Classical.em (Q i) with
     | inl hQi =>
         refine Or.inr ?_
-        have hforall : ¬ ∀ k < i, P k := by
-          intro hPi
-          exact h ⟨i, hQi, hPi⟩
+        have hforall : ¬ ∀ k < i, P k := fun hPi => h ⟨i, hQi, hPi⟩
         obtain ⟨k, hk⟩ := Classical.not_forall.mp hforall
         have hklt : k < i := by
           by_contra hnot
           exact hk (fun hlt => (hnot hlt).elim)
-        have hnotPk : ¬ P k := by
-          intro hPk
-          exact hk (fun _ => hPk)
-        exact ⟨k, hklt, hnotPk⟩
+        exact ⟨k, hklt, fun hPk => hk (fun _ => hPk)⟩
     | inr hQi =>
         exact Or.inl hQi
   · intro h
     rintro ⟨i, hQi, hPi⟩
-    have hi := h i
-    cases hi with
+    cases h i with
     | inl hneg => exact hneg hQi
     | inr hcounter =>
-        rcases hcounter with ⟨k, hk, hk'⟩
+        obtain ⟨k, hk, hk'⟩ := hcounter
         exact hk' (hPi k hk)
 
 namespace LTL
@@ -122,18 +116,10 @@ lemma toNNFCore_sound {AP} (f : LTL AP) :
     refine ⟨?_, ?_⟩
     · intro w
       constructor
-      · intro h
-        rcases h with ⟨i, hgi, hfi⟩
-        refine ⟨i, ?_, ?_⟩
-        · exact (ihg.1 _).mp hgi
-        · intro k hk
-          exact (ihf.1 _).mp (hfi k hk)
-      · intro h
-        rcases h with ⟨i, hgi, hfi⟩
-        refine ⟨i, ?_, ?_⟩
-        · exact (ihg.1 _).mpr hgi
-        · intro k hk
-          exact (ihf.1 _).mpr (hfi k hk)
+      · rintro ⟨i, hgi, hfi⟩
+        exact ⟨i, (ihg.1 _).mp hgi, fun k hk => (ihf.1 _).mp (hfi k hk)⟩
+      · rintro ⟨i, hgi, hfi⟩
+        exact ⟨i, (ihg.1 _).mpr hgi, fun k hk => (ihf.1 _).mpr (hfi k hk)⟩
     · intro w
       have hf : ∀ k,
           ¬ LTL.language f (fun j => w (j + k)) ↔

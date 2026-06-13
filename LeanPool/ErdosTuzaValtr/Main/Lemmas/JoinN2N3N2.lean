@@ -174,8 +174,7 @@ theorem Config.join_n2_n3_n2_tt (S : Finset α) (cap4_free : ¬C.HasNCap 4 S) {n
     {P : List α} (hPx : C.NCup (n + 2) (P ++ [x])) (Px_in_S : (P ++ [x]).In S) {Q : List α}
     (hxQy : C.NCup (n + 3) ((x::Q) ++ [y])) (xQy_in_S : ((x::Q) ++ [y]).In S) {R : List α}
     (hyR : C.NCup (n + 2) (y::R)) (yR_in_S : (y::R).In S) (label : C.Label S)
-    (sxy : label.Slope x y) : ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s :=
-  by
+    (sxy : label.Slope x y) : ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s := by
   have Mirrored_goal : ∃ s r q p, C.Mirror.HasInterweavedLaced (n + 3) S.Mirror s r q p := by
     rw [← Mirror.ncup] at hPx hxQy hyR
     simp only [List.Mirror_append, List.Mirror_cons, List.Mirror_nil, List.nil_append,

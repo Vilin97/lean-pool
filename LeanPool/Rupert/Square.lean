@@ -38,6 +38,18 @@ theorem rh_lemma : rh * rh + rh * rh  = 1 := by
        _ = 2 * (2 / 2^2) := by simp
        _ = 1 := by norm_num
 
+private lemma le_of_mul_two_sqrt_le {a b : ℝ} (H : a * (2 * √2) ≤ b * (2 * √2)) : a ≤ b :=
+  le_of_mul_le_mul_right H (by positivity)
+
+private lemma shifted_coeff_nonneg :
+    (0:ℝ) ≤ ((1 - 1e-3) * √2 - 1) / (2 * (1 - 1e-3) * √2) := by
+  have h1 : 0 ≤ 2 * (1 - 1e-3) * √2 := by positivity
+  suffices H : (0:ℝ) ≤ (1 - 1e-3) * √2 - 1 from div_nonneg H h1
+  suffices H : (1:ℝ) ≤ (1 - 1e-3) * √2 from sub_nonneg_of_le H
+  refine (sq_le_sq₀ zero_le_one (by positivity)).mp ?_
+  rw [mul_pow, Real.sq_sqrt zero_le_two]
+  norm_num
+
 /-- Rotation matrix for the inner square shadow. -/
 abbrev innerRot : Matrix (Fin 3) (Fin 3) ℝ :=
    !![1, 0, 0;
@@ -110,9 +122,8 @@ by π/4 radians. No offset translation is needed.
    · intro i
      fin_cases i
      · simp only [Fin.isValue, one_div, Fin.zero_eta, cons_val_zero]
-       suffices H : 0 * (2 * √2) ≤ (4⁻¹ + v 0 / (2 * √2)) * (2 * √2) by
-         have : 0 < 2 * √2 := by positivity
-         exact le_of_mul_le_mul_right H this
+       suffices H : 0 * (2 * √2) ≤ (4⁻¹ + v 0 / (2 * √2)) * (2 * √2) from
+         le_of_mul_two_sqrt_le H
        rw [zero_mul]
        ring_nf
        rw [mul_assoc]
@@ -120,24 +131,21 @@ by π/4 radians. No offset translation is needed.
        linarith
      · simp only [Fin.isValue, one_div, Fin.mk_one, cons_val_one, cons_val_zero,
          sub_nonneg]
-       suffices H : v 0 / (2 * √2) * (2 * √2) ≤ 4⁻¹ * (2 * √2) by
-         have : 0 < 2 * √2 := by positivity
-         exact le_of_mul_le_mul_right H this
+       suffices H : v 0 / (2 * √2) * (2 * √2) ≤ 4⁻¹ * (2 * √2) from
+         le_of_mul_two_sqrt_le H
        simp
        linarith
      · simp only [Fin.isValue, one_div, Fin.reduceFinMk, cons_val]
-       suffices H : 0 * (2 * √2) ≤ (4⁻¹ + v 1 / (2 * √2)) * (2 * √2) by
-         have : 0 < 2 * √2 := by positivity
-         exact le_of_mul_le_mul_right H this
+       suffices H : 0 * (2 * √2) ≤ (4⁻¹ + v 1 / (2 * √2)) * (2 * √2) from
+         le_of_mul_two_sqrt_le H
        rw [zero_mul]
        ring_nf
        rw [mul_assoc]
        simp
        linarith
      · simp only [Fin.isValue, one_div, Fin.reduceFinMk, cons_val, sub_nonneg]
-       suffices H : v 1 / (2 * √2) * (2 * √2) ≤ 4⁻¹ * (2 * √2) by
-         have : 0 < 2 * √2 := by positivity
-         exact le_of_mul_le_mul_right H this
+       suffices H : v 1 / (2 * √2) * (2 * √2) ≤ 4⁻¹ * (2 * √2) from
+         le_of_mul_two_sqrt_le H
        simp
        linarith
    · simp [Fin.sum_univ_four]
@@ -172,12 +180,7 @@ by π/4 radians. No offset translation is needed.
    refine ⟨?_, ?_, ?_, ?_⟩
    · intro i; fin_cases i
      · simp only [Fin.zero_eta, Fin.isValue, cons_val_zero]
-       have h1 : 0 ≤ 2 * (1 - 1e-3) * √2 := by positivity
-       suffices H : (0:ℝ) ≤ (1 - 1e-3) * √2 - 1 from div_nonneg H h1
-       suffices H : (1:ℝ) ≤ (1 - 1e-3) * √2 from sub_nonneg_of_le H
-       refine (sq_le_sq₀ zero_le_one (by positivity)).mp ?_
-       rw [mul_pow, Real.sq_sqrt zero_le_two]
-       norm_num
+       exact shifted_coeff_nonneg
      · simp only [Fin.mk_one, Fin.isValue, cons_val_one, cons_val_fin_one]
        positivity
    · simp only [Fin.sum_univ_two, Fin.isValue, cons_val_zero, cons_val_one,
@@ -222,12 +225,7 @@ by π/4 radians. No offset translation is needed.
      · simp only [Fin.zero_eta, Fin.isValue, cons_val_zero]
        positivity
      · simp only [Fin.mk_one, Fin.isValue, cons_val_one, cons_val_fin_one]
-       have h1 : 0 ≤ 2 * (1 - 1e-3) * √2 := by positivity
-       suffices H : (0:ℝ) ≤ (1 - 1e-3) * √2 - 1 from div_nonneg H h1
-       suffices H : (1:ℝ) ≤ (1 - 1e-3) * √2 from sub_nonneg_of_le H
-       refine (sq_le_sq₀ zero_le_one (by positivity)).mp ?_
-       rw [mul_pow, Real.sq_sqrt zero_le_two]
-       norm_num
+       exact shifted_coeff_nonneg
    · simp; field
    · intro i
      fin_cases i

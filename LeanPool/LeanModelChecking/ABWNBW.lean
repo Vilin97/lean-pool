@@ -73,15 +73,12 @@ theorem ABW.toNBW.lang_sub {S Q} {A : ABW S Q} {w : Nat → S} :
   rcases h4 with h4 | ⟨j, h4⟩
   · exfalso
     simp only [W] at h4
-    rw [show (b + (start - b) + (endi - start - 1) + 1)= endi by omega] at h4
-    rw [hend] at h4
+    rw [show (b + (start - b) + (endi - start - 1) + 1)= endi by omega, hend] at h4
     contradiction
   · grind
 
 lemma lemma1 {α : Type} {a b c : Set α} {h : Disjoint a b} : a = (a ∪ (b ∩ c)) \ b := by
-  rw [Set.union_diff_distrib]
-  rw [Disjoint.sdiff_eq_right h.symm]
-  rw [←Set.sdiff_inter_right_comm]
+  rw [Set.union_diff_distrib, Disjoint.sdiff_eq_right h.symm, ←Set.sdiff_inter_right_comm]
   simp
 
 /-- The set of states occupying level `i` of the run DAG `G`. -/
@@ -139,8 +136,7 @@ lemma ancestor_trans {i j k} (hij : i ≤ j) (hjk : j ≤ k) (v : G.level k) :
   induction k
   · have i0 : i = 0 := by omega
     have j0 : j = 0 := by omega
-    subst i0
-    subst j0
+    subst i0 j0
     unfold ancestor
     simp only [↓reduceDIte]
     apply ancestor_refl
@@ -316,8 +312,7 @@ theorem ABW.toNBW.lang_sup {S Q} {A : ABW S Q} [Finite Q] {w : Nat → S} :
   ) n
   simp only [S'] at bad_path_f
   specialize W_not_F (n + j)
-  rw [←Set.disjoint_iff_inter_eq_empty] at W_not_F
-  rw [Set.disjoint_left] at W_not_F
+  rw [←Set.disjoint_iff_inter_eq_empty, Set.disjoint_left] at W_not_F
   specialize W_not_F (bad_path_f j).prop
   contradiction
 

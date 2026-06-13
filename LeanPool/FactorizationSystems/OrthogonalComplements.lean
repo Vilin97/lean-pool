@@ -391,8 +391,7 @@ lemma diagonal_comm_bot_limit_is_closed_under_limits_r_ort_complement (W : Morph
     sq_lim.bot ≫ (targetLimitConeArrowLimitCone f s).cone.π.app i
   have hleft :
       (d ≫ s.cone.pt.hom) ≫ (targetLimitConeArrowLimitCone f s).cone.π.app i =
-        d ≫ ((s.cone.π.app i).left ≫ (f.obj i).hom) := by
-    calc
+        d ≫ ((s.cone.π.app i).left ≫ (f.obj i).hom) := by calc
       (d ≫ s.cone.pt.hom) ≫ (s.cone.π.app i).right =
           d ≫ (s.cone.pt.hom ≫ (s.cone.π.app i).right) := by
         rw [Category.assoc]

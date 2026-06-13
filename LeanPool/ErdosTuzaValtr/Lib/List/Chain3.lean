@@ -25,8 +25,7 @@ theorem chain3_split {a b c d : α} {l1 l2 : List α} :
 @[simp]
 theorem chain3_append_cons3 {a b c d e : α} {l1 l2 : List α} :
     Chain3 R a b (l1 ++ c :: d :: e :: l2) ↔
-      Chain3 R a b (l1 ++ [c, d]) ∧ R c d e ∧ Chain3 R d e l2 :=
-  by rw [chain3_split, chain3_cons]
+      Chain3 R a b (l1 ++ [c, d]) ∧ R c d e ∧ Chain3 R d e l2 := by rw [chain3_split, chain3_cons]
 
 @[simp]
 theorem chain3'_nil : Chain3' R [] :=
@@ -49,10 +48,7 @@ theorem chain3'_split {a b : α} :
       Chain3' R (l1 ++ a :: b :: l2) ↔ Chain3' R (l1 ++ [a, b]) ∧ Chain3' R (a :: b :: l2)
   | [], l2 => (and_iff_right (chain3'_pair a b)).symm
   | [c], l2 => by simp
-  |-- todo
-      c ::
-      d :: l1,
-    l2 => chain3_split
+  | c :: d :: l1, l2 => chain3_split
 
 @[simp]
 theorem chain3'_append_cons3 {a b c : α} {l1 l2 : List α} :

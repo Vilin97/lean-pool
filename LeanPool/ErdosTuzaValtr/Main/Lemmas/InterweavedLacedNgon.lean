@@ -21,8 +21,7 @@ variable {α : Type _} [LinearOrder α] (C : Config α)
 
 theorem Config.hasInterweavedLaced_hasNGon_ff {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNCap 4 S)
     {p q r s : α} (label : C.Label S) (q_lt_r : q < r) (sqr : ¬label.Slope q r) :
-    C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=
-  by
+    C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S := by
   intro h; rcases h with ⟨⟨p_lt_q, q_le_r, r_lt_s⟩, ⟨pr_laced, qs_laced⟩⟩
   rcases pr_laced with
     ⟨a, b, cp, c1, cr, hcp, hc1, hcr,
@@ -30,18 +29,10 @@ theorem Config.hasInterweavedLaced_hasNGon_ff {n : ℕ} {S : Finset α} (cap4_fr
   rcases qs_laced with
     ⟨c, d, cq, c2, cs, hcq, hc2, hcs,
       ⟨⟨cq_in_S, c2_in_S, cs_in_S⟩, eq_cd, cq_last, c2_head, c2_last, cs_head⟩⟩
-  have p_in_S : p ∈ S := by
-    apply c1_in_S
-    exact List.mem_of_mem_head? c1_head
-  have q_in_S : q ∈ S := by
-    apply c2_in_S
-    exact List.mem_of_mem_head? c2_head
-  have r_in_S : r ∈ S := by
-    apply c1_in_S
-    exact List.mem_of_mem_getLast? c1_last
-  have s_in_S : s ∈ S := by
-    apply c2_in_S
-    exact List.mem_of_mem_getLast? c2_last
+  have p_in_S : p ∈ S := c1_in_S _ (List.mem_of_mem_head? c1_head)
+  have q_in_S : q ∈ S := c2_in_S _ (List.mem_of_mem_head? c2_head)
+  have r_in_S : r ∈ S := c1_in_S _ (List.mem_of_mem_getLast? c1_last)
+  have s_in_S : s ∈ S := c2_in_S _ (List.mem_of_mem_getLast? c2_last)
   have label := cap4FreeLabel cap4_free
   by_cases spq : label.Slope p q
   swap
@@ -101,16 +92,14 @@ theorem Config.hasInterweavedLaced_hasNGon_ff {n : ℕ} {S : Finset α} (cap4_fr
 
 theorem Config.hasInterweavedLaced_hasNGon_tt {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNCap 4 S)
     {p q r s : α} (label : C.Label S) (q_lt_r : q < r) (sqr : label.Slope q r) :
-    C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=
-  by
+    C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S := by
   rw [← Mirror.hasInterweavedLaced, ← Mirror.hasNGon]
   have srq := sqr; rw [← Mirror_slope] at srq
   rw [← Mirror.hasNCap] at cap4_free
   apply C.Mirror.hasInterweavedLaced_hasNGon_ff <;> assumption
 
 theorem Config.hasInterweavedLaced_hasNGon {n : ℕ} {S : Finset α} (cap4_free : ¬C.HasNCap 4 S)
-    {p q r s : α} : C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S :=
-  by
+    {p q r s : α} : C.HasInterweavedLaced (n + 2) S p q r s → C.HasNGon (n + 3) S := by
   intro h; have q_le_r : q ≤ r := by rw [Config.HasInterweavedLaced] at h; tauto
   rw [le_iff_eq_or_lt] at q_le_r
   rcases q_le_r with q_eq_r | q_lt_r

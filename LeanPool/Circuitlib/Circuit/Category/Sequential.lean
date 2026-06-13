@@ -266,17 +266,13 @@ abbrev isoInv (h : n = m) :
 @[simp]
 lemma iso_hom_inv_id
     (h : n = m) :
-    isoHom h ≫ isoInv h = 𝟙 (OfNat.ofNat n : SequentialCircuitCategory V G) := by
-  apply Subtype.ext
-  funext v
-  rfl
+    isoHom h ≫ isoInv h = 𝟙 (OfNat.ofNat n : SequentialCircuitCategory V G) :=
+  Subtype.ext (funext fun _ => rfl)
 
 lemma iso_inv_hom_id
     (h : n = m) :
-    isoInv h ≫ isoHom h = 𝟙 (OfNat.ofNat m : SequentialCircuitCategory V G) := by
-  apply Subtype.ext
-  funext v
-  rfl
+    isoInv h ≫ isoHom h = 𝟙 (OfNat.ofNat m : SequentialCircuitCategory V G) :=
+  Subtype.ext (funext fun _ => rfl)
 
 omit [Preorder V] in
 @[simp]
@@ -550,8 +546,7 @@ lemma monoidal_tensorObj_obj
 
 lemma braiding_hom_eq
     {X Y : SequentialCircuitCategory V G} :
-    (X ⊗ Y).obj - X.obj + min X.obj (X ⊗ Y).obj = (Y ⊗ X).obj :=
-  by simp
+    (X ⊗ Y).obj - X.obj + min X.obj (X ⊗ Y).obj = (Y ⊗ X).obj := by simp
 
 /-- The underlying wire-function of the braiding, swapping two blocks of wires. -/
 @[inline, simp]

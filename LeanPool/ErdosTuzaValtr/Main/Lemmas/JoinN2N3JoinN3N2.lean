@@ -66,8 +66,7 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
     (cy1_cup : C.NCup (n + 3) cy1) (cy1_in_S : cy1.In S) {cy : List α} (cy_cup : C.NCup (n + 2) cy)
     (cy_in_S : cy.In S) (x : α) (cx_last : x ∈ cx.getLast?) (cx1_head : x ∈ cx1.head?) (y : α)
     (cy1_last : y ∈ cy1.getLast?) (cy_head : y ∈ cy.head?) :
-    ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s :=
-  by
+    ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s := by
   have l := cap4FreeLabel cap4_free
   have x_in_S := cx_in_S _ (List.mem_of_mem_getLast? cx_last)
   have y_in_S := cy_in_S _ (List.mem_of_mem_head? cy_head)
@@ -156,8 +155,7 @@ theorem Config.join_n2_n3_join_n3_n2_main (S : Finset α) (n : ℕ) (cap4_free :
 
 theorem Config.join_n2_n3_join_n3_n2 (S : Finset α) (n : ℕ) (cap4_free : ¬C.HasNCap 4 S)
     (cup_free : ¬C.HasNCup (n + 4) S) (hx : C.HasJoin (n + 2) (n + 3) S)
-    (hy : C.HasJoin (n + 3) (n + 2) S) : ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s :=
-  by
+    (hy : C.HasJoin (n + 3) (n + 2) S) : ∃ p q r s, C.HasInterweavedLaced (n + 3) S p q r s := by
   rcases hx with ⟨x, cx, cx1, ⟨cx_cup, cx_in_S, cx_last⟩, ⟨cx1_cup, cx1_in_S, cx1_head⟩⟩
   rcases hy with ⟨y, cy1, cy, ⟨cy1_cup, cy1_in_S, cy1_last⟩, ⟨cy_cup, cy_in_S, cy_head⟩⟩
   apply

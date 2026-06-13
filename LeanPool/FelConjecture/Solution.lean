@@ -60,8 +60,7 @@ lemma gapPolynomial_coeff (S : NumericalSemigroup) (n : ℕ) :
     (PowerSeries.coeff n) (S.gapPolynomial : PowerSeries ℚ) =
     if n ∈ S.gaps then 1 else 0 := by
   unfold gapPolynomial
-  rw [Polynomial.coeff_coe]
-  rw [Polynomial.finsetSum_coeff]
+  rw [Polynomial.coeff_coe, Polynomial.finsetSum_coeff]
   simp_rw [Polynomial.coeff_X_pow]
   exact Finset.sum_ite_eq S.gaps n (fun _ => 1)
 
@@ -73,9 +72,7 @@ lemma mem_gaps_iff_not_mem_carrier (S : NumericalSemigroup) (n : ℕ) :
 lemma semigroupGapDecomposition_aux (S : NumericalSemigroup) (n : ℕ) :
     (PowerSeries.coeff n) (S.hilbertSeries + (S.gapPolynomial : PowerSeries ℚ)) =
     (PowerSeries.coeff n) (PowerSeries.mk (1 : ℕ → ℚ)) := by
-  rw [map_add]
-  rw [hilbertSeries_coeff, gapPolynomial_coeff]
-  rw [PowerSeries.coeff_mk]
+  rw [map_add, hilbertSeries_coeff, gapPolynomial_coeff, PowerSeries.coeff_mk]
   simp only [Pi.one_apply]
   by_cases h : n ∈ S.carrier
   · simp only [decide_eq_true_eq, h, ↓reduceIte]
@@ -155,21 +152,8 @@ lemma coeff_mul_hilbert_product {S : NumericalSemigroup} (G : NumericalSemigroup
       (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)) := by
     intro k _
     simp [PowerSeries.coeff_map]
-  calc
-    (PowerSeries.coeff n) (S.hilbertSeries *
-      (G.productPolynomial.map (Int.castRingHom ℚ) : PowerSeries ℚ)) =
-        ∑ k ∈ Finset.range (n + 1), (PowerSeries.coeff k) S.hilbertSeries *
-          (PowerSeries.coeff (n - k)) (G.productPolynomial.map (Int.castRingHom ℚ)) := by
-      rw [h1]
-    _ = ∑ k ∈ Finset.range (n + 1), (PowerSeries.coeff k) S.hilbertSeries *
-      (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)) := by
-      apply Finset.sum_congr rfl
-      intro k hk
-      rw [h2 k hk]
-    _ = ∑ k ∈ Finset.range (n + 1),
-      (PowerSeries.coeff k) S.hilbertSeries *
-        (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)) := by
-      rfl
+  rw [h1]
+  exact Finset.sum_congr rfl fun k hk => by rw [h2 k hk]
 
 lemma hilbertNumerator_coeff_lt {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n :
   ℕ)
@@ -231,13 +215,7 @@ lemma lhs_eq_sum_over_carrier {S : NumericalSemigroup} (G : NumericalSemigroupGe
     apply Finset.sum_congr rfl
     intro k _
     split_ifs <;> simp [*]
-  have h₂ : ∑ k ∈ Finset.range (n + 1),
-    (if (Classical.propDecidable (k ∈
-      S.carrier)).decide then (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)) else 0) =
-    ∑ k ∈ (Finset.range (n + 1)).filter (fun k => (Classical.propDecidable (k ∈ S.carrier)).decide),
-      (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)) := by
-    rw [← Finset.sum_filter]
-  rw [h₁, h₂]
+  rw [h₁, ← Finset.sum_filter]
 
 lemma partition_sum {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n : ℕ) :
     ∑ k ∈ Finset.range (n + 1), (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)) =
@@ -256,42 +234,21 @@ lemma partition_sum {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S
     simp only [Finset.mem_filter, decide_eq_true_eq]
   · congr 1
     ext k
-    simp only [Finset.mem_filter]
-    constructor
-    · intro ⟨hk, hnot⟩
-      refine ⟨hk, ?_⟩
-      simp only [Bool.not_eq_true', decide_eq_false_iff_not]
-      exact hnot
-    · intro ⟨hk, hbool⟩
-      simp only [Bool.not_eq_true', decide_eq_false_iff_not] at hbool
-      exact ⟨hk, hbool⟩
+    simp only [Finset.mem_filter, Bool.not_eq_true', decide_eq_false_iff_not]
 
 lemma filter_not_carrier_eq_gaps {S : NumericalSemigroup} (n : ℕ) :
     (Finset.range (n + 1)).filter (fun k => !(Classical.propDecidable (k ∈ S.carrier)).decide) =
     S.gaps.filter (· ≤ n) := by
-  have h_main : (Finset.range (n +
-    1)).filter (fun k => !(Classical.propDecidable (k ∈ S.carrier)).decide) =
-      S.gaps.filter (· ≤ n) := by
-    apply Finset.ext
-    intro k
-    simp only [Finset.mem_filter, Finset.mem_range, NumericalSemigroup.gaps,
-      Set.Finite.mem_toFinset,
-      Set.mem_compl_iff]
-    constructor
-    · intro h
-      have h₂ : ¬(k ∈ S.carrier) := by
-        simpa [Classical.propDecidable] using h.2
-      have h₃ : k ≤ n := by
-        omega
-      have h₄ : ¬(k ∈ S.carrier) := h₂
-      exact ⟨h₄, h₃⟩
-    · intro h
-      have h₁ : ¬(k ∈ S.carrier) := h.1
-      have h₃ : k < n + 1 := by
-        omega
-      have h₄ : ¬(k ∈ S.carrier) := h₁
-      exact ⟨h₃, by simpa [Classical.propDecidable] using h₄⟩
-  apply h_main
+  apply Finset.ext
+  intro k
+  simp only [Finset.mem_filter, Finset.mem_range, NumericalSemigroup.gaps,
+    Set.Finite.mem_toFinset,
+    Set.mem_compl_iff]
+  constructor
+  · intro h
+    exact ⟨by simpa [Classical.propDecidable] using h.2, by omega⟩
+  · intro h
+    exact ⟨by omega, by simpa [Classical.propDecidable] using h.1⟩
 
 lemma carrier_sum_eq_full_minus_gaps {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S)
   (n : ℕ) :
@@ -330,9 +287,7 @@ lemma lhs_eq_hilbertNumerator_coeff {S : NumericalSemigroup} (G : NumericalSemig
       (if Classical.propDecidable (k ∈ S.carrier) |>.decide then 1 else 0) *
       (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)) =
     (Int.castRingHom ℚ) (G.hilbertNumerator.coeff n) := by
-  rw [indicator_sum_eq_full_minus_gaps]
-  rw [sum_coeff_reindex]
-  rw [hilbertNumerator_coeff_lt G n hn]
+  rw [indicator_sum_eq_full_minus_gaps, sum_coeff_reindex, hilbertNumerator_coeff_lt G n hn]
   simp only [map_sub, map_sum]
 
 lemma sum_range_reindex (f : ℕ → ℚ) (n : ℕ) :
@@ -351,10 +306,9 @@ lemma large_n_both_zero {S : NumericalSemigroup} (G : NumericalSemigroupGenerato
       (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)) =
     (Int.castRingHom ℚ) ((∑ k ∈ Finset.range (n + 1), G.productPolynomial.coeff k) -
      (∑ g ∈ S.gaps.filter (· ≤ n), G.productPolynomial.coeff (n - g)))) := by
-  rw [lhs_eq_sum_over_carrier]
-  rw [carrier_sum_eq_full_minus_gaps]
-  rw [sum_range_reindex (fun k => (Int.castRingHom ℚ) (G.productPolynomial.coeff k)) n]
-  rw [map_sub, map_sum, map_sum]
+  rw [lhs_eq_sum_over_carrier, carrier_sum_eq_full_minus_gaps,
+    sum_range_reindex (fun k => (Int.castRingHom ℚ) (G.productPolynomial.coeff k)) n,
+    map_sub, map_sum, map_sum]
 
 lemma sum_over_semigroup_eq_diff {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n :
   ℕ) :
@@ -392,11 +346,8 @@ lemma productPolynomial_eval_one {S : NumericalSemigroup} (G : NumericalSemigrou
 lemma sum_coeff_eq_eval_one {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) :
     ∑ k ∈ Finset.range (G.productPolynomial.natDegree + 1), G.productPolynomial.coeff k =
     Polynomial.eval 1 G.productPolynomial := by
-  have h₁ : ∑ k ∈ Finset.range (G.productPolynomial.natDegree + 1),
-    G.productPolynomial.coeff k = G.productPolynomial.eval 1 := by
-    rw [Polynomial.eval_eq_sum_range]
-    simp [add_comm]
-  rw [h₁]
+  rw [Polynomial.eval_eq_sum_range]
+  simp [add_comm]
 
 lemma coeff_Ico_eq_zero {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S)
     (n : ℕ) (_hn : G.productPolynomial.natDegree + 1 ≤ n)
@@ -425,8 +376,7 @@ lemma first_sum_zero {S : NumericalSemigroup} (G : NumericalSemigroupGenerators 
   have h1 : G.productPolynomial.natDegree + 1 ≤ n := by
     unfold hilbertNumeratorDegBound at hn
     omega
-  rw [sum_coeff_large_eq_sum_coeff_deg G n h1]
-  rw [sum_coeff_eq_eval_one G]
+  rw [sum_coeff_large_eq_sum_coeff_deg G n h1, sum_coeff_eq_eval_one G]
   exact productPolynomial_eval_one G
 
 lemma coeff_n_minus_gap_zero {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S)
@@ -456,9 +406,7 @@ lemma coeff_eq_zero_of_large {S : NumericalSemigroup} (G : NumericalSemigroupGen
     (hn : n ≥ G.hilbertNumeratorDegBound) :
     (PowerSeries.coeff n) (S.hilbertSeries *
       (G.productPolynomial.map (Int.castRingHom ℚ) : PowerSeries ℚ)) = 0 := by
-  rw [coeff_mul_eq_indicator_sum]
-  rw [large_n_both_zero G n hn]
-  rw [rhs_zero_of_large G n hn]
+  rw [coeff_mul_eq_indicator_sum, large_n_both_zero G n hn, rhs_zero_of_large G n hn]
   simp
 
 lemma numeratorIdentity_coeff {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n : ℕ)
@@ -473,8 +421,7 @@ lemma numeratorIdentity_coeff {S : NumericalSemigroup} (G : NumericalSemigroupGe
     exact sum_over_semigroup_eq_diff G n
   · -- Case n >= bound: both sides are 0
     push Not at h
-    rw [coeff_eq_zero_of_large G n h]
-    rw [coeff_hilbertNumerator_formula, if_neg (by omega)]
+    rw [coeff_eq_zero_of_large G n h, coeff_hilbertNumerator_formula, if_neg (by omega)]
 
 theorem numeratorIdentity {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) :
     S.hilbertSeries * (G.productPolynomial.map (Int.castRingHom ℚ) : PowerSeries ℚ) =
@@ -579,10 +526,7 @@ lemma term_simplify (m p r : ℕ) (hr : r ≤ p) (A_coeff G_r : ℚ) :
       (((m + p).choose r : ℚ) * ((m + p - r).factorial : ℚ) * A_coeff * G_r) =
     (p.factorial : ℚ) / (r.factorial : ℚ) * A_coeff * G_r := by
   have hr_mp : r ≤ m + p := Nat.le_add_left r m |>.trans (Nat.add_le_add_left hr m)
-  have h := choose_mul_sub_factorial_eq_div (m + p) r hr_mp
-  have h₁ : ((m + p).choose r : ℚ) *
-    ((m + p - r).factorial : ℚ) = ( (m + p).factorial : ℚ ) / ( r.factorial : ℚ ) := by
-    exact h
+  have h₁ := choose_mul_sub_factorial_eq_div (m + p) r hr_mp
   calc
     (p.factorial : ℚ) / ((m + p).factorial : ℚ) * (((m + p).choose r : ℚ) *
       ((m + p - r).factorial : ℚ) * A_coeff * G_r) =
@@ -607,8 +551,7 @@ lemma gap_sum_simplify {S : NumericalSemigroup} (G : NumericalSemigroupGenerator
     ∑ r ∈ Finset.range (p + 1),
       ((p.factorial : ℚ) / (r.factorial : ℚ)) *
         (PowerSeries.coeff (p - r)) G.ASeries * S.gapPowerSum r := by
-  rw [outer_factor_cancel]
-  rw [Finset.mul_sum]
+  rw [outer_factor_cancel, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro r hr
   rw [Finset.mem_range] at hr
@@ -721,14 +664,7 @@ lemma coeff_A_mul_E {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S
       · simp only [Prod.mk.injEq]
         exact ⟨by omega, trivial⟩
     · intros r _; rfl
-  calc
-    (PowerSeries.coeff p) (G.ASeries * PowerSeries.mk fun n => ∑ g ∈ S.gaps,
-      (g : ℚ)^n / (n.factorial : ℚ)) = ∑ ij ∈ Finset.antidiagonal p,
-        (PowerSeries.coeff ij.1) G.ASeries *
-          (PowerSeries.coeff ij.2 (PowerSeries.mk fun n => ∑ g ∈ S.gaps,
-            (g : ℚ)^n / (n.factorial : ℚ))) := by rw [h₁]
-    _ = ∑ r ∈ Finset.range (p + 1), (PowerSeries.coeff (p - r)) G.ASeries * (∑ g ∈ S.gaps,
-      (g : ℚ)^r / (r.factorial : ℚ)) := by rw [h₂]
+  rw [h₁, h₂]
 
 lemma sum_swap_gaps_range {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (p : ℕ) :
     ∑ r ∈ Finset.range (p + 1), (PowerSeries.coeff (p - r)) G.ASeries * (∑ g ∈ S.gaps,
@@ -741,8 +677,7 @@ lemma sum_swap_gaps_range {S : NumericalSemigroup} (G : NumericalSemigroupGenera
     apply Finset.sum_congr rfl
     intro r _
     rw [Finset.mul_sum]
-  rw [h₁]
-  rw [Finset.sum_comm]
+  rw [h₁, Finset.sum_comm]
   apply Finset.sum_congr rfl
   intro g _
   apply Finset.sum_congr rfl
@@ -758,10 +693,7 @@ lemma gap_term_coeff_shift {S : NumericalSemigroup} (G : NumericalSemigroupGener
             (PowerSeries.mk fun n => ∑ g ∈ S.gaps, (g : ℚ)^n / (n.factorial : ℚ)) =
             PowerSeries.X ^ G.m * (G.ASeries *
             (PowerSeries.mk fun n => ∑ g ∈ S.gaps, (g : ℚ)^n / (n.factorial : ℚ))) := by ring
-  rw [h1]
-  rw [add_comm]
-  rw [PowerSeries.coeff_X_pow_mul]
-  rw [coeff_A_mul_E]
+  rw [h1, add_comm, PowerSeries.coeff_X_pow_mul, coeff_A_mul_E]
   exact sum_swap_gaps_range G p
 
 lemma Q_exp_coeff_at_m_plus_p {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (p : ℕ)
@@ -772,9 +704,7 @@ lemma Q_exp_coeff_at_m_plus_p {S : NumericalSemigroup} (G : NumericalSemigroupGe
        ∑ g ∈ S.gaps, ∑ r ∈ Finset.range (p + 1),
          (PowerSeries.coeff (p - r)) G.ASeries * (g : ℚ)^r / (r.factorial : ℚ)) := by
   unfold QExpSeries
-  rw [PowerSeries.coeff_smul]
-  rw [map_add]
-  rw [B_term_coeff_shift, gap_term_coeff_shift]
+  rw [PowerSeries.coeff_smul, map_add, B_term_coeff_shift, gap_term_coeff_shift]
   simp only [smul_eq_mul]
 
 lemma gap_coeff_to_leibniz {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (p : ℕ) :
@@ -811,12 +741,7 @@ lemma gap_sum_swap {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S)
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro g _
-  calc ((G.m + p).factorial : ℚ) / (r.factorial : ℚ) *
-        (PowerSeries.coeff (p - r)) G.ASeries * (g : ℚ)^r
-      = (((G.m + p).choose r : ℚ) * ((G.m + p - r).factorial : ℚ)) *
-        (PowerSeries.coeff (p - r)) G.ASeries * (g : ℚ)^r := by rw [h_choose]
-    _ = ((G.m + p).choose r : ℚ) * ((G.m + p - r).factorial : ℚ) *
-        (PowerSeries.coeff (p - r)) G.ASeries * (g : ℚ)^r := by ring
+  rw [h_choose]
 
 lemma gap_term_final_form {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (p : ℕ) :
     ((G.m + p).factorial : ℚ) *
@@ -845,22 +770,13 @@ lemma exp_poly_sub_sum_extend (P : Polynomial ℤ) (k : ℕ) (n : ℕ) (hk : P.n
     intro x hx
     simp only [Finset.mem_range] at hx ⊢
     omega
-  have h_extra_zero : ∀ (j : ℕ),
-    j ∈ Finset.range k → j ∉ Finset.range (P.natDegree + 1) → (P.coeff j : ℚ) * (j : ℚ)^n = 0 := by
-    intro j _ hj'
-    have h₂ : ¬(j < P.natDegree + 1) := by
-      intro h
-      apply hj'
-      simp_all [Finset.mem_range]
-    have h₄ : (P.coeff j : ℤ) = 0 := by
-      have h₅ : P.natDegree < j := by omega
-      have h₆ : P.coeff j = 0 := Polynomial.coeff_eq_zero_of_natDegree_lt h₅
-      simp_all
-    have h₅ : (P.coeff j : ℚ) = 0 := by norm_cast at h₄ ⊢
-    simp [h₅]
   apply Finset.sum_subset h_subset
-  intro j hj hj'
-  exact h_extra_zero j hj hj'
+  intro j _ hj'
+  have h₂ : ¬(j < P.natDegree + 1) := fun h => hj' (by simp_all [Finset.mem_range])
+  have h₅ : (P.coeff j : ℚ) = 0 := by
+    have : P.coeff j = 0 := Polynomial.coeff_eq_zero_of_natDegree_lt (by omega)
+    simp [this]
+  simp [h₅]
 
 lemma hilbertNumerator_natDegree_le_pred_bound {S : NumericalSemigroup}
     (G : NumericalSemigroupGenerators S) :
@@ -910,8 +826,7 @@ lemma j_lt_bound_of_mem_range_natDegree {S : NumericalSemigroup}
     (G : NumericalSemigroupGenerators S) (j : ℕ)
     (hj : j ∈ Finset.range (G.hilbertNumerator.natDegree + 1)) :
     j < G.hilbertNumeratorDegBound := by
-  have hj_lt := Finset.mem_range.mp hj
-  exact Nat.lt_of_lt_of_le hj_lt (hilbertNumerator_natDegree_lt_bound G)
+  exact Nat.lt_of_lt_of_le (Finset.mem_range.mp hj) (hilbertNumerator_natDegree_lt_bound G)
 
 lemma hilbert_sum_decomposition_natDegree {S : NumericalSemigroup}
     (G : NumericalSemigroupGenerators S) (n : ℕ) :
@@ -992,14 +907,9 @@ lemma natDegree_ge_of_gaps_nonempty {S : NumericalSemigroup} (G : NumericalSemig
             by_contra h0
             push Not at h0
             interval_cases gmax
-            · have : (0 : ℕ) ∈ S.gaps := hgmax_mem
-              have hmem : 0 ∈ S.carrier := S.zero_mem
-              have hnotmem : 0 ∉ S.carrier := by
-                have : S.gaps = S.finite_complement.toFinset := rfl
-                rw [this] at hgmax_mem
-                rw [Set.Finite.mem_toFinset] at hgmax_mem
-                exact hgmax_mem
-              contradiction
+            · rw [show S.gaps = S.finite_complement.toFinset from rfl,
+                Set.Finite.mem_toFinset] at hgmax_mem
+              exact hgmax_mem S.zero_mem
           omega
         have h1 :=
           NumericalSemigroupGenerators.sum_coeff_large_eq_sum_coeff_deg G
@@ -1020,7 +930,6 @@ lemma natDegree_ge_of_gaps_nonempty {S : NumericalSemigroup} (G : NumericalSemig
           have := Finset.le_sup (f := id) hg
           simp only [id_eq, hgmax_eq] at this
           exact this
-        have hlt : g < gmax := lt_of_le_of_ne hle hne
         simp only [hgmax_eq]
         omega
     · intro j _ hj
@@ -1076,10 +985,7 @@ lemma hilbertNumerator_coeff_eq_partial_sum_gaps_empty {S : NumericalSemigroup}
     (G : NumericalSemigroupGenerators S) (hgaps : ¬S.gaps.Nonempty) (j : ℕ)
     (hj : j < G.hilbertNumeratorDegBound) :
     G.hilbertNumerator.coeff j = ∑ k ∈ Finset.range (j + 1), G.productPolynomial.coeff k := by
-  have h₁ : S.gaps = ∅ := by
-    by_contra h
-    have h₂ : S.gaps.Nonempty := Finset.nonempty_iff_ne_empty.mpr h
-    contradiction
+  have h₁ : S.gaps = ∅ := Finset.not_nonempty_iff_eq_empty.mp hgaps
   have h₂ : ∀ (n : ℕ), ∑ g ∈ S.gaps.filter (· ≤ n), G.productPolynomial.coeff (n - g) = 0 := by
     intro n
     rw [h₁]
@@ -1126,10 +1032,8 @@ lemma coeff_at_D_plus_one_gaps_empty {S : NumericalSemigroup}
       (∑ k ∈ Finset.range (D + 1 + 1), (G.productPolynomial.coeff k : ℚ)) -
       (∑ k ∈ Finset.range (D + 1), (G.productPolynomial.coeff k : ℚ)) :=
     coeff_eq_partial_sum_diff G.productPolynomial (D + 1)
-  have h2 : (∑ k ∈ Finset.range (D + 1 + 1), (G.productPolynomial.coeff k : ℚ)) = 0 := by
-    apply partial_sum_zero_after_natDegree_gaps_empty G hgaps (D + 1)
-    · exact Nat.lt_add_one D
-    · exact hbound
+  have h2 : (∑ k ∈ Finset.range (D + 1 + 1), (G.productPolynomial.coeff k : ℚ)) = 0 :=
+    partial_sum_zero_after_natDegree_gaps_empty G hgaps (D + 1) (Nat.lt_add_one D) hbound
   rw [h1, h2, zero_sub]
 
 lemma coeff_zero_after_D_plus_one_gaps_empty {S : NumericalSemigroup}
@@ -1212,9 +1116,7 @@ lemma poly_sum_tail_eq_neg_partial_gaps_empty {S : NumericalSemigroup}
       omega
     rw [hsplit, Finset.sum_union hdisj]
     simp only [Finset.sum_singleton]
-    rw [sum_tail_eq_zero G n hgaps hbound]
-    rw [add_zero]
-    rw [coeff_at_D_plus_one_gaps_empty G hgaps hbound]
+    rw [sum_tail_eq_zero G n hgaps hbound, add_zero, coeff_at_D_plus_one_gaps_empty G hgaps hbound]
     simp only [← hD_def, Nat.cast_add, Nat.cast_one, neg_mul]
 
 lemma telescoping_sum_gaps_empty {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S)
@@ -1278,8 +1180,8 @@ lemma partialSumGenFunc_coeff {S : NumericalSemigroup} (G : NumericalSemigroupGe
 
 lemma exp_poly_sub_one : expPolySub 1 = 1 := by
   ext n
-  simp only [expPolySub, PowerSeries.coeff_mk, PowerSeries.coeff_one]
-  simp only [Polynomial.natDegree_one, Polynomial.coeff_one]
+  simp only [expPolySub, PowerSeries.coeff_mk, PowerSeries.coeff_one, Polynomial.natDegree_one,
+    Polynomial.coeff_one]
   rw [Finset.range_one, Finset.sum_singleton]
   simp only [↓reduceIte, CharP.cast_eq_zero]
   cases n with
@@ -1292,8 +1194,7 @@ lemma coeff_mul_expand (P Q : Polynomial ℤ) (n : ℕ) :
       ((∑ a ∈ Finset.range (P.natDegree + 1), (P.coeff a : ℚ) * (a : ℚ)^k) / k.factorial) *
       ((∑ b ∈ Finset.range (Q.natDegree + 1),
         (Q.coeff b : ℚ) * (b : ℚ)^(n - k)) / (n - k).factorial) := by
-  rw [PowerSeries.coeff_mul]
-  rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
+  rw [PowerSeries.coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
   congr 1
   ext k
   simp only [expPolySub, PowerSeries.coeff_mk]
@@ -1354,15 +1255,7 @@ lemma term_factorial_to_choose (Pa Qb : ℚ) (a b k n : ℕ) (hk : k ≤ n) :
     have h₆ : (n.factorial : ℚ) ≠ 0 := by positivity
     field_simp [h₄, h₅, h₆] at h₃ ⊢
     nlinarith
-  have h₂ : Pa * Qb * (a : ℚ)^k * (b : ℚ)^(n - k) / (k.factorial * (n - k).factorial : ℚ) =
-      Pa * Qb * (a : ℚ)^k * (b : ℚ)^(n - k) * ((n.choose k : ℚ) / (n.factorial : ℚ)) := by
-    have h₃ : (Pa * Qb * (a : ℚ)^k * (b : ℚ)^(n - k) : ℚ) / (k.factorial * (n - k).factorial : ℚ) =
-        (Pa * Qb * (a : ℚ)^k * (b : ℚ)^(n - k) : ℚ) * ((1 : ℚ) / (k.factorial *
-          (n - k).factorial : ℚ)) := by
-      ring_nf
-    rw [h₃]
-    rw [h₁]
-  exact h₂
+  rw [div_eq_mul_one_div, h₁]
 
 lemma natDegree_one_sub_X_pow_le (k : ℕ) :
     (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree ≤ k := by
@@ -1379,11 +1272,7 @@ lemma natDegree_one_sub_X_pow_le (k : ℕ) :
     Polynomial ℤ)) ≤ k := by
     rw [h₂, h₃]
     exact max_le_iff.mpr ⟨by simp, by simp⟩
-  calc
-    (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree ≤
-      max (Polynomial.natDegree (1 : Polynomial ℤ)) (Polynomial.natDegree (Polynomial.X ^ k :
-        Polynomial ℤ)) := h₁
-    _ ≤ k := h₄
+  exact le_trans h₁ h₄
 
 lemma sum_coeff_one_sub_X_pow (k : ℕ) (_hk : 0 < k) :
     ∑ j ∈ Finset.range (k + 1), ((1 - Polynomial.X ^ k : Polynomial ℤ).coeff j : ℚ) = 0 := by
@@ -1409,32 +1298,16 @@ lemma exp_poly_sub_one_sub_X_pow_coeff_zero (k : ℕ) (hk : 0 < k) :
 
 lemma natDegree_one_sub_X_pow_eq (k : ℕ) (hk : 0 < k) :
     (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree = k := by
-  have h₁ : (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree ≤ k := by
-    have h₂ : (1 : Polynomial ℤ).natDegree = 0 := by
-      simp [Polynomial.natDegree_one]
-    have h₃ : (Polynomial.X ^ k : Polynomial ℤ).natDegree = k := by
-      simp [Polynomial.natDegree_pow, Polynomial.natDegree_X]
-    have h₄ : (1 -
-      Polynomial.X ^ k : Polynomial ℤ).natDegree ≤
-        max (1 : Polynomial ℤ).natDegree (Polynomial.X ^ k : Polynomial ℤ).natDegree := by
-      apply Polynomial.natDegree_sub_le
-    have h₅ : max (1 : Polynomial ℤ).natDegree (Polynomial.X ^ k : Polynomial ℤ).natDegree ≤ k := by
-      simp [h₂, h₃]
-    linarith
+  have h₁ : (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree ≤ k := natDegree_one_sub_X_pow_le k
   have h₂ : (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree ≥ k := by
     have h₃ : (1 - Polynomial.X ^ k : Polynomial ℤ).coeff k = -1 := by
       simp [Polynomial.coeff_sub, Polynomial.coeff_one, Polynomial.coeff_X_pow]
       cases k <;> simp_all
-    have h₅ : (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree ≥ k := by
-      by_contra h₆
-      have h₇ : (1 - Polynomial.X ^ k : Polynomial ℤ).natDegree < k := by
-        linarith
-      have h₈ : (1 - Polynomial.X ^ k : Polynomial ℤ).coeff k = 0 := by
-        apply Polynomial.coeff_eq_zero_of_natDegree_lt
-        exact_mod_cast h₇
-      rw [h₃] at h₈
-      norm_num at h₈
-    exact h₅
+    by_contra h₆
+    have h₈ : (1 - Polynomial.X ^ k : Polynomial ℤ).coeff k = 0 :=
+      Polynomial.coeff_eq_zero_of_natDegree_lt (by omega)
+    rw [h₃] at h₈
+    norm_num at h₈
   linarith
 
 lemma one_sub_X_pow_term_eq_zero (k n j : ℕ) (_hk : 0 < k) (hn : 1 ≤ n)
@@ -1463,16 +1336,7 @@ lemma one_sub_X_pow_term_eq_zero (k n j : ℕ) (_hk : 0 < k) (hn : 1 ≤ n)
     rw [h₂]
     norm_num
   | inr h₂ =>
-    have h₃ : (j : ℕ) = 0 := by norm_cast at h₂ ⊢
-    have h₅ : (j : ℚ) ^ n = 0 := by
-      have h₈ : (j : ℚ) = 0 := by simp_all
-      rw [h₈]
-      have h₁₁ : n ≠ 0 := by linarith
-      simp [h₁₁]
-    calc
-      ((1 - Polynomial.X ^ k : Polynomial ℤ).coeff j : ℚ) *
-        (j : ℚ) ^ n = ((1 - Polynomial.X ^ k : Polynomial ℤ).coeff j : ℚ) * 0 := by rw [h₅]
-      _ = 0 := by ring
+    rw [h₂, zero_pow (by omega : n ≠ 0), mul_zero]
 
 lemma one_sub_X_pow_term_at_k (k n : ℕ) (hk : 0 < k) :
     ((1 - Polynomial.X ^ k : Polynomial ℤ).coeff k : ℚ) * (k : ℚ)^n = -((k : ℚ)^n) := by
@@ -1496,19 +1360,12 @@ lemma one_sub_X_pow_sum_eq (k n : ℕ) (hk : 0 < k) (hn : 1 ≤ n) :
 lemma exp_poly_sub_one_sub_X_pow_coeff_pos (k n : ℕ) (hk : 0 < k) (hn : 1 ≤ n) :
     (PowerSeries.coeff n) (expPolySub (1 -
       Polynomial.X ^ k)) = -((k : ℚ)^n) / (n.factorial : ℚ) := by
-  rw [exp_poly_sub_coeff]
-  rw [one_sub_X_pow_sum_eq k n hk hn]
+  rw [exp_poly_sub_coeff, one_sub_X_pow_sum_eq k n hk hn]
 
 lemma rhs_coeff_zero {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (i : Fin G.m) :
     (PowerSeries.coeff 0) (-(G.d i : ℚ) • (PowerSeries.X * G.scaledExpFactor i)) = 0 := by
-  have h₁ : (PowerSeries.coeff 0) (PowerSeries.X * G.scaledExpFactor i) = 0 := by
-    simp
-  have h₂ : (PowerSeries.coeff 0) (-(G.d i : ℚ) • (PowerSeries.X *
-    G.scaledExpFactor i)) = (-(G.d i : ℚ)) * (PowerSeries.coeff 0) (PowerSeries.X *
-      G.scaledExpFactor i) := by
-    simp
-  rw [h₂, h₁]
-  ring_nf
+  rw [PowerSeries.coeff_smul]
+  simp
 
 lemma rhs_coeff_pos {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (i : Fin G.m)
     (n : ℕ) (hn : 1 ≤ n) :
@@ -1518,8 +1375,8 @@ lemma rhs_coeff_pos {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S
   obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.one_le_iff_ne_zero.mp hn)
   subst hk
   rw [PowerSeries.coeff_succ_X_mul]
-  simp only [NumericalSemigroupGenerators.scaledExpFactor, PowerSeries.coeff_mk]
-  simp only [smul_eq_mul, Nat.succ_eq_add_one]
+  simp only [NumericalSemigroupGenerators.scaledExpFactor, PowerSeries.coeff_mk, smul_eq_mul,
+    Nat.succ_eq_add_one]
   ring
 
 lemma single_factor_exp_transform {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S)
@@ -1529,16 +1386,13 @@ lemma single_factor_exp_transform {S : NumericalSemigroup} (G : NumericalSemigro
   apply PowerSeries.ext
   intro n
   rcases n.eq_zero_or_pos with rfl | hn
-  · rw [exp_poly_sub_one_sub_X_pow_coeff_zero (G.d i) (G.hd_pos i)]
-    rw [rhs_coeff_zero G i]
-  · rw [exp_poly_sub_one_sub_X_pow_coeff_pos (G.d i) n (G.hd_pos i) hn]
-    rw [rhs_coeff_pos G i n hn]
+  · rw [exp_poly_sub_one_sub_X_pow_coeff_zero (G.d i) (G.hd_pos i), rhs_coeff_zero G i]
+  · rw [exp_poly_sub_one_sub_X_pow_coeff_pos (G.d i) n (G.hd_pos i) hn, rhs_coeff_pos G i n hn]
 
 lemma prod_smul_eq_smul_prod (m : ℕ) (c : Fin m → ℚ) (f : Fin m → PowerSeries ℚ) :
     ∏ i : Fin m, (c i • f i) = (∏ i : Fin m, c i) • (∏ i : Fin m, f i) := by
   simp only [MvPowerSeries.smul_eq_C_mul]
-  rw [Finset.prod_mul_distrib]
-  rw [← map_prod]
+  rw [Finset.prod_mul_distrib, ← map_prod]
 
 lemma prod_X_mul_eq_X_pow_mul (m : ℕ) (f : Fin m → PowerSeries ℚ) :
     ∏ i : Fin m, (PowerSeries.X * f i) = PowerSeries.X ^ m * ∏ i : Fin m, f i := by
@@ -1554,16 +1408,13 @@ lemma prod_neg_eq_neg_one_pow_mul (m : ℕ) (c : Fin m → ℚ) :
     _ = (∏ i : Fin m, (-1 : ℚ)) * ∏ i : Fin m, c i := by
       rw [Finset.prod_mul_distrib]
     _ = ((-1 : ℚ) ^ m) * ∏ i : Fin m, c i := by
-      have h2 : ∏ i : Fin m, (-1 : ℚ) = (-1 : ℚ) ^ m := by
-        simp [Finset.prod_const]
-      rw [h2]
+      rw [show ∏ _i : Fin m, (-1 : ℚ) = (-1 : ℚ) ^ m by simp [Finset.prod_const]]
 
 lemma prod_single_factor_eq_final_form {S : NumericalSemigroup} (G : NumericalSemigroupGenerators
   S) :
     ∏ i : Fin G.m, (-(G.d i : ℚ) • (PowerSeries.X * G.scaledExpFactor i)) =
     ((-1 : ℚ)^G.m * (G.piM : ℚ)) • (PowerSeries.X ^ G.m * G.ASeries) := by
-  rw [prod_smul_eq_smul_prod]
-  rw [prod_X_mul_eq_X_pow_mul]
+  rw [prod_smul_eq_smul_prod, prod_X_mul_eq_X_pow_mul]
   have h1 : (∏ i : Fin G.m, -(G.d i : ℚ)) = (-1 : ℚ) ^ G.m * (G.piM : ℚ) := by
     rw [prod_neg_eq_neg_one_pow_mul]
     congr 1
@@ -1621,16 +1472,11 @@ lemma factor_out_factorial (P Q : Polynomial ℤ) (n : ℕ) :
       apply Finset.sum_congr rfl
       intro b _
       ring_nf
-    _ = (1 / (n.factorial : ℚ)) * ∑ k ∈ Finset.range (n + 1),
-      ∑ a ∈ Finset.range (P.natDegree + 1),
-        ∑ b ∈ Finset.range (Q.natDegree + 1),
-          (P.coeff a : ℚ) * (Q.coeff b : ℚ) * (n.choose k : ℚ) * (a : ℚ)^k * (b : ℚ)^(n - k) := by
-      simp [Finset.mul_sum, mul_assoc]
     _ = (1 / n.factorial) * ∑ k ∈ Finset.range (n + 1),
       ∑ a ∈ Finset.range (P.natDegree + 1),
         ∑ b ∈ Finset.range (Q.natDegree + 1),
           (P.coeff a : ℚ) * (Q.coeff b : ℚ) * (n.choose k : ℚ) * (a : ℚ)^k * (b : ℚ)^(n - k) := by
-      simp_all [div_eq_mul_inv]
+      simp [Finset.mul_sum, mul_assoc]
 
 lemma sum_rearrange (P Q : Polynomial ℤ) (n : ℕ) :
     ∑ k ∈ Finset.range (n + 1),
@@ -1693,13 +1539,8 @@ lemma exp_poly_sub_mul_coeff_eq (P Q : Polynomial ℤ) (n : ℕ) :
     (∑ a ∈ Finset.range (P.natDegree + 1),
      ∑ b ∈ Finset.range (Q.natDegree + 1),
        (P.coeff a : ℚ) * (Q.coeff b : ℚ) * ((a : ℚ) + b)^n) / (n.factorial : ℚ) := by
-  rw [coeff_mul_expand]
-  rw [lhs_to_triple_sum]
-  rw [triple_sum_factorial_to_choose]
-  rw [factor_out_factorial]
-  rw [sum_rearrange]
-  rw [factor_coeffs_from_inner_sum]
-  rw [apply_binomial_to_inner_sum]
+  rw [coeff_mul_expand, lhs_to_triple_sum, triple_sum_factorial_to_choose, factor_out_factorial,
+    sum_rearrange, factor_coeffs_from_inner_sum, apply_binomial_to_inner_sum]
   ring
 
 lemma convolution_sum_eq (P Q : Polynomial ℤ) (n : ℕ) :
@@ -1721,8 +1562,7 @@ lemma convolution_sum_eq (P Q : Polynomial ℤ) (n : ℕ) :
   have h2 : (∑ k ∈ Finset.range (j + 1), (P.coeff k : ℚ) * (Q.coeff (j - k) : ℚ)) * (j : ℚ) ^ n =
       ∑ k ∈ Finset.range (j + 1), (P.coeff k : ℚ) * (Q.coeff (j - k) : ℚ) * (j : ℚ) ^ n := by
     rw [Finset.sum_mul]
-  rw [h2]
-  rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
+  rw [h2, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk]
   apply Finset.sum_congr rfl
   intro k hk
   have hk' : k ≤ j := Nat.lt_succ_iff.mp (Finset.mem_range.mp hk)
@@ -1798,8 +1638,7 @@ lemma triangular_to_rectangular_sum (P Q : Polynomial ℤ) (n : ℕ) :
     ∑ a ∈ Finset.range (P.natDegree + 1),
       ∑ b ∈ Finset.range (Q.natDegree + 1),
         (P.coeff a : ℚ) * (Q.coeff b : ℚ) * ((a : ℚ) + b)^n := by
-  rw [nested_sum_eq_biUnion_sum]
-  rw [← product_sum_eq_nested]
+  rw [nested_sum_eq_biUnion_sum, ← product_sum_eq_nested]
   symm
   apply Finset.sum_subset (rectangle_subset_triangle P Q)
   intro ab h_in_tri h_not_rect
@@ -1810,9 +1649,7 @@ lemma exp_poly_sub_prod_coeff_eq (P Q : Polynomial ℤ) (n : ℕ) :
     (∑ a ∈ Finset.range (P.natDegree + 1),
      ∑ b ∈ Finset.range (Q.natDegree + 1),
        (P.coeff a : ℚ) * (Q.coeff b : ℚ) * ((a : ℚ) + b)^n) / (n.factorial : ℚ) := by
-  rw [exp_poly_sub_coeff]
-  rw [convolution_sum_eq]
-  rw [triangular_to_rectangular_sum]
+  rw [exp_poly_sub_coeff, convolution_sum_eq, triangular_to_rectangular_sum]
 
 lemma exp_poly_sub_mul (P Q : Polynomial ℤ) :
     expPolySub (P * Q) = expPolySub P * expPolySub Q := by
@@ -1931,25 +1768,11 @@ lemma summand_eq_for_pos {S : NumericalSemigroup} (G : NumericalSemigroupGenerat
     have h₁₆ : ((n - k).factorial : ℚ) ≠ 0 := by positivity
     field_simp [h₁₄, h₁₅, h₁₆] at h₁₂ ⊢
     nlinarith
-  calc
-    (-1 / (k.factorial : ℚ)) * ((∑ j ∈ Finset.range (G.hilbertNumerator.natDegree + 1),
-      (∑ m ∈ Finset.range (j + 1),
-        (G.productPolynomial.coeff m : ℚ)) * (j : ℚ)^(n - k)) / ((n - k).factorial : ℚ))
-      = (-(∑ j ∈ Finset.range (G.hilbertNumerator.natDegree + 1), (∑ m ∈ Finset.range (j + 1),
-        (G.productPolynomial.coeff m : ℚ)) * (j : ℚ)^(n - k)) : ℚ) / ((k.factorial : ℚ) *
-          ((n - k).factorial : ℚ)) := by ring_nf
-      _ = (-(∑ j ∈ Finset.range (G.hilbertNumerator.natDegree + 1), (∑ m ∈ Finset.range (j + 1),
-        (G.productPolynomial.coeff m : ℚ)) * (j : ℚ)^(n - k)) : ℚ) * (1 / ((k.factorial : ℚ) *
-          ((n - k).factorial : ℚ))) := by field_simp
-      _ = (-(∑ j ∈ Finset.range (G.hilbertNumerator.natDegree + 1), (∑ m ∈ Finset.range (j + 1),
-        (G.productPolynomial.coeff m : ℚ)) * (j : ℚ)^(n - k)) : ℚ) *
-          (1 / (k.factorial : ℚ) / ((n - k).factorial : ℚ)) := by field_simp
-      _ = (-(∑ j ∈ Finset.range (G.hilbertNumerator.natDegree + 1), (∑ m ∈ Finset.range (j + 1),
-        (G.productPolynomial.coeff m : ℚ)) * (j : ℚ)^(n - k)) : ℚ) *
-          ((n.choose k : ℚ) / (n.factorial : ℚ)) := by rw [h₈]
-      _ = (-(n.choose k : ℚ) / (n.factorial : ℚ)) *
-        (∑ j ∈ Finset.range (G.hilbertNumerator.natDegree + 1), (∑ m ∈ Finset.range (j + 1),
-          (G.productPolynomial.coeff m : ℚ)) * (j : ℚ)^(n - k)) := by ring_nf
+  generalize (∑ j ∈ Finset.range (G.hilbertNumerator.natDegree + 1),
+    (∑ m ∈ Finset.range (j + 1), (G.productPolynomial.coeff m : ℚ)) * (j : ℚ)^(n - k)) = s
+  rw [show (-(n.choose k : ℚ) / (n.factorial : ℚ)) = -((n.choose k : ℚ) / (n.factorial : ℚ)) by
+    rw [neg_div], h₈]
+  ring
 
 lemma apply_factorial_identity {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n :
   ℕ) :
@@ -2024,15 +1847,8 @@ lemma factor_neg_choose_div_factorial (D n : ℕ) (coeff : ℕ → ℚ) :
         (if k = 0 then 0 else (n.choose k : ℚ) * (∑ j ∈ Finset.range (D + 1),
           coeff j * (j : ℚ)^(n - k))) := by
         rw [Finset.mul_sum]
-  calc
-    ∑ k ∈ Finset.range (n + 1),
-      (if k = 0 then 0 else (-(n.choose k : ℚ) / (n.factorial : ℚ)) * (∑ j ∈ Finset.range (D + 1),
-        coeff j * (j : ℚ)^(n - k))) = ∑ k ∈ Finset.range (n + 1),
-          (if k = 0 then 0 else (-1 / (n.factorial : ℚ)) * ((n.choose k : ℚ) *
-            (∑ j ∈ Finset.range (D + 1), coeff j * (j : ℚ)^(n - k)))) := h₁
-    _ = (-1 / (n.factorial : ℚ)) * ∑ k ∈ Finset.range (n + 1),
-      (if k = 0 then 0 else (n.choose k : ℚ) * (∑ j ∈ Finset.range (D + 1),
-        coeff j * (j : ℚ)^(n - k))) := h₂
+  rw [h₁]
+  exact h₂
 
 lemma swap_and_apply_binomial (D n : ℕ) (coeff : ℕ → ℚ) :
     ∑ k ∈ Finset.range (n + 1),
@@ -2085,11 +1901,8 @@ lemma coeff_lhs_expand {S : NumericalSemigroup} (G : NumericalSemigroupGenerator
     (∑ j ∈ Finset.range (G.hilbertNumerator.natDegree + 1),
       (∑ k ∈ Finset.range (j + 1), (G.productPolynomial.coeff k : ℚ)) *
       (((j : ℚ) + 1)^n - (j : ℚ)^n)) := by
-  rw [coeff_mul_as_range_sum]
-  rw [coeff_sum_substitute]
-  rw [drop_k_eq_zero_term]
-  rw [apply_factorial_identity]
-  rw [factor_and_apply_binomial]
+  rw [coeff_mul_as_range_sum, coeff_sum_substitute, drop_k_eq_zero_term, apply_factorial_identity,
+    factor_and_apply_binomial]
 
 lemma coeff_lhs_eq_rhs {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n : ℕ) :
     (PowerSeries.coeff n) ((1 - PowerSeries.exp ℚ) * partialSumGenFunc G) =
@@ -2106,13 +1919,9 @@ lemma partialSumGenFunc_mul_one_sub_exp {S : NumericalSemigroup}
 lemma partialSumGenFunc_identity {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) :
     PowerSeries.X * partialSumGenFunc G =
     ((-1 : ℚ)^(G.m + 1) * (G.piM : ℚ)) • (PowerSeries.X ^ G.m * G.BSeries) := by
-  have h1 : (1 - PowerSeries.exp ℚ) * partialSumGenFunc G = expPolySub G.productPolynomial :=
-    partialSumGenFunc_mul_one_sub_exp G
-  have h2 : expPolySub G.productPolynomial =
-      ((-1 : ℚ)^G.m * (G.piM : ℚ)) • (PowerSeries.X ^ G.m * G.ASeries) :=
-    productPolynomial_exp_transform G
   have h3 : (1 - PowerSeries.exp ℚ) * partialSumGenFunc G =
-      ((-1 : ℚ)^G.m * (G.piM : ℚ)) • (PowerSeries.X ^ G.m * G.ASeries) := h1.trans h2
+      ((-1 : ℚ)^G.m * (G.piM : ℚ)) • (PowerSeries.X ^ G.m * G.ASeries) :=
+    (partialSumGenFunc_mul_one_sub_exp G).trans (productPolynomial_exp_transform G)
   have h4 : (PowerSeries.exp ℚ - 1) * partialSumGenFunc G =
       ((-1 : ℚ)^(G.m + 1) * (G.piM : ℚ)) • (PowerSeries.X ^ G.m * G.ASeries) := by
     have neg_eq : PowerSeries.exp ℚ - 1 = -(1 - PowerSeries.exp ℚ) := by ring
@@ -2126,9 +1935,7 @@ lemma partialSumGenFunc_identity {S : NumericalSemigroup} (G : NumericalSemigrou
       bernoulliPowerSeries ℚ * (((-1 : ℚ)^(G.m + 1) * (G.piM : ℚ)) • (PowerSeries.X ^ G.m *
         G.ASeries)) := by
     rw [mul_assoc, h4]
-  have h6 : bernoulliPowerSeries ℚ * (PowerSeries.exp ℚ - 1) = PowerSeries.X :=
-    bernoulliPowerSeries_mul_exp_sub_one ℚ
-  rw [h6] at h5
+  rw [bernoulliPowerSeries_mul_exp_sub_one ℚ] at h5
   have h7 : bernoulliPowerSeries ℚ * (((-1 : ℚ)^(G.m + 1) * (G.piM : ℚ)) • (PowerSeries.X ^ G.m *
     G.ASeries)) =
       ((-1 : ℚ)^(G.m + 1) * (G.piM : ℚ)) • (PowerSeries.X ^ G.m * G.BSeries) := by
@@ -2160,9 +1967,7 @@ lemma partialSumGenFunc_coeff_eq_bernoulli_term {S : NumericalSemigroup}
       (PowerSeries.coeff (n + 1)) (((-1 : ℚ)^(G.m + 1) * (G.piM : ℚ)) • (PowerSeries.X ^ G.m *
         G.BSeries)) := by
     rw [h_identity]
-  rw [PowerSeries.coeff_succ_X_mul] at h_coeff
-  rw [PowerSeries.coeff_smul] at h_coeff
-  rw [coeff_X_pow_shift G n] at h_coeff
+  rw [PowerSeries.coeff_succ_X_mul, PowerSeries.coeff_smul, coeff_X_pow_shift G n] at h_coeff
   simp only [smul_eq_mul] at h_coeff
   exact h_coeff
 
@@ -2192,8 +1997,7 @@ lemma gap_sum_at_jstar {S : NumericalSemigroup} (G : NumericalSemigroupGenerator
     intro g hg
     calc g ≤ S.gaps.sup id := Finset.le_sup (f := id) hg
          _ ≤ G.productPolynomial.natDegree + S.gaps.sup id := le_add_self
-  rw [hfilter]
-  rw [Finset.sum_eq_single_of_mem gmax hgmax_mem]
+  rw [hfilter, Finset.sum_eq_single_of_mem gmax hgmax_mem]
   · have hsub : G.productPolynomial.natDegree +
     S.gaps.sup id - gmax = G.productPolynomial.natDegree := by
       rw [hgmax_eq, Nat.add_sub_cancel]
@@ -2204,7 +2008,6 @@ lemma gap_sum_at_jstar {S : NumericalSemigroup} (G : NumericalSemigroupGenerator
       have := Finset.le_sup (f := id) hg
       simp only [id_eq, hgmax_eq] at this
       exact this
-    have hlt : g < gmax := lt_of_le_of_ne hle hne
     simp only [hgmax_eq]
     omega
 
@@ -2230,14 +2033,9 @@ lemma hilbertNumerator_coeff_at_jstar {S : NumericalSemigroup} (G : NumericalSem
         by_contra h0
         push Not at h0
         interval_cases gmax
-        · have : (0 : ℕ) ∈ S.gaps := hgmax_mem
-          have hmem : 0 ∈ S.carrier := S.zero_mem
-          have hnotmem : 0 ∉ S.carrier := by
-            have : S.gaps = S.finite_complement.toFinset := rfl
-            rw [this] at hgmax_mem
-            rw [Set.Finite.mem_toFinset] at hgmax_mem
-            exact hgmax_mem
-          contradiction
+        · rw [show S.gaps = S.finite_complement.toFinset from rfl,
+            Set.Finite.mem_toFinset] at hgmax_mem
+          exact hgmax_mem S.zero_mem
       omega
     have h1 := NumericalSemigroupGenerators.sum_coeff_large_eq_sum_coeff_deg G jstar (by omega)
     rw [h1, NumericalSemigroupGenerators.sum_coeff_eq_eval_one G,
@@ -2246,8 +2044,8 @@ lemma hilbertNumerator_coeff_at_jstar {S : NumericalSemigroup} (G : NumericalSem
   have hgap := gap_sum_at_jstar G hnonempty
   rw [hgap, neg_neg_one_pow_eq]
 
-lemma neg_one_pow_ne_zero' (m : ℕ) : ((-1 : ℤ) ^ (m + 1)) ≠ 0 := by
-  exact Int.neg_one_pow_ne_zero
+lemma neg_one_pow_ne_zero' (m : ℕ) : ((-1 : ℤ) ^ (m + 1)) ≠ 0 :=
+  Int.neg_one_pow_ne_zero
 
 lemma hilbertNumerator_natDegree_ge_jstar {S : NumericalSemigroup} (G :
   NumericalSemigroupGenerators S)
@@ -2327,26 +2125,10 @@ lemma summand_zero_beyond_degree' {S : NumericalSemigroup}
     (_hk : k ∈ Finset.range (G.hilbertNumerator.natDegree + 1 - g))
     (hk_not : k ∉ Finset.range (G.productPolynomial.natDegree + 1)) :
     (G.productPolynomial.coeff k : ℚ) * ((k : ℚ) + (g : ℚ))^n = 0 := by
-  have h₁ : (G.productPolynomial.coeff k : ℤ) = 0 := by
-    have h₂ : k > G.productPolynomial.natDegree := by
-      have h₃ : k ≥ G.productPolynomial.natDegree + 1 := by
-        by_contra h
-        have h₄ : k < G.productPolynomial.natDegree + 1 := by linarith
-        have h₅ : k ∈ Finset.range (G.productPolynomial.natDegree + 1) := by
-          simp [Finset.mem_range]
-          omega
-        exact hk_not h₅
-      omega
-    have h₃ : G.productPolynomial.coeff k = 0 := by
-      apply Polynomial.coeff_eq_zero_of_natDegree_lt
-      exact h₂
-    norm_cast at h₃ ⊢
-  have h₂ : (G.productPolynomial.coeff k : ℚ) = 0 := by
-    norm_cast at h₁ ⊢
-  calc
-    (G.productPolynomial.coeff k : ℚ) * ((k : ℚ) + (g : ℚ)) ^ n = 0 * ((k : ℚ) + (g : ℚ)) ^ n :=
-      by rw [h₂]
-    _ = 0 := by simp
+  rw [Finset.mem_range] at hk_not
+  have h₃ : G.productPolynomial.coeff k = 0 :=
+    Polynomial.coeff_eq_zero_of_natDegree_lt (by omega)
+  rw [show (G.productPolynomial.coeff k : ℚ) = 0 by rw [h₃]; norm_cast, zero_mul]
 
 lemma inner_sum_extend_range' {S : NumericalSemigroup}
     (G : NumericalSemigroupGenerators S) (n g : ℕ) (hg : g ∈ S.gaps) :
@@ -2399,59 +2181,21 @@ lemma gap_sum_exchange {S : NumericalSemigroup} (G : NumericalSemigroupGenerator
 
 lemma binomial_sum_eq_add_pow (a b : ℚ) (n : ℕ) :
     ∑ k ∈ Finset.range (n + 1), (n.choose k : ℚ) * a^k * b^(n - k) = (a + b)^n := by
-  have h₁ : (a + b)^n = ∑ k ∈ Finset.range (n + 1),
-    (a : ℚ)^k * (b : ℚ)^(n - k) * (n.choose k : ℚ) := by
-    rw [add_pow]
-  have h₂ : ∑ k ∈ Finset.range (n + 1), (n.choose k : ℚ) * a^k * b^(n - k) =
-      ∑ k ∈ Finset.range (n + 1), (a : ℚ)^k * (b : ℚ)^(n - k) * (n.choose k : ℚ) := by
-    apply Finset.sum_congr rfl
-    intro k _
-    have h₃ : (n.choose k : ℚ) * a ^ k * b ^ (n - k) = (a : ℚ) ^ k * (b : ℚ) ^ (n - k) *
-      (n.choose k : ℚ) := by
-      ring_nf
-    rw [h₃]
-  have h₃ : ∑ k ∈ Finset.range (n + 1), (n.choose k : ℚ) * a^k * b^(n - k) = (a + b)^n := by
-    calc
-      _ = ∑ k ∈ Finset.range (n + 1),
-        (a : ℚ) ^ k * (b : ℚ) ^ (n - k) * (n.choose k : ℚ) := by rw [h₂]
-      _ = (a + b) ^ n := by
-        linarith
-  apply h₃
+  rw [add_pow]
+  apply Finset.sum_congr rfl
+  intro k _
+  ring
 
 lemma triple_sum_exchange (gaps : Finset ℕ) (degP : ℕ) (coeff : ℕ → ℚ) (n : ℕ) :
     ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1), ∑ r ∈ Finset.range (n + 1),
       (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) =
     ∑ r ∈ Finset.range (n + 1), ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1),
       (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) := by
-  have h₁ : ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1), ∑ r ∈ Finset.range (n + 1),
-      (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) =
-    ∑ g ∈ gaps, ∑ r ∈ Finset.range (n + 1), ∑ k ∈ Finset.range (degP + 1),
-      (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) := by
-    apply Finset.sum_congr rfl
-    intro g _
-    have h₂ : ∑ k ∈ Finset.range (degP + 1), ∑ r ∈ Finset.range (n + 1),
-        (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) =
-      ∑ r ∈ Finset.range (n + 1), ∑ k ∈ Finset.range (degP + 1),
-        (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) := by
-      apply Finset.sum_comm
-    rw [h₂]
-  have h₂ : ∑ g ∈ gaps, ∑ r ∈ Finset.range (n + 1), ∑ k ∈ Finset.range (degP + 1),
-      (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) =
-    ∑ r ∈ Finset.range (n + 1), ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1),
-      (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) := by
-    have h₃ : ∑ g ∈ gaps, ∑ r ∈ Finset.range (n + 1), ∑ k ∈ Finset.range (degP + 1),
-        (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) =
-      ∑ r ∈ Finset.range (n + 1), ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1),
-        (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) := by
-      rw [Finset.sum_comm]
-    exact h₃
-  calc
-    ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1), ∑ r ∈ Finset.range (n + 1),
-        (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) =
+  rw [show (∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1), ∑ r ∈ Finset.range (n + 1),
+      (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r)) =
       ∑ g ∈ gaps, ∑ r ∈ Finset.range (n + 1), ∑ k ∈ Finset.range (degP + 1),
-        (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) := by rw [h₁]
-    _ = ∑ r ∈ Finset.range (n + 1), ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1),
-        (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) := by rw [h₂]
+      (coeff k) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r)
+    from Finset.sum_congr rfl fun g _ => Finset.sum_comm, Finset.sum_comm]
 
 lemma factor_binomial_coeff_from_double_sum (gaps : Finset ℕ) (degP : ℕ) (coeff : ℕ → ℚ) (n r : ℕ) :
     ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1),
@@ -2504,32 +2248,10 @@ lemma factor_binomial_coeff_from_double_sum (gaps : Finset ℕ) (degP : ℕ) (co
       (g : ℚ) ^ (n - r) =
         (∑ k ∈ Finset.range (degP + 1), (coeff k) * (k : ℚ) ^ r) * (∑ g ∈ gaps,
           (g : ℚ) ^ (n - r)) := by
-      calc
-        ∑ k ∈ Finset.range (degP + 1), (coeff k) * (k : ℚ) ^ r * ∑ g ∈ gaps, (g : ℚ) ^ (n - r) =
-            ∑ k ∈ Finset.range (degP + 1), ((coeff k) * (k : ℚ) ^ r * ∑ g ∈ gaps,
-              (g : ℚ) ^ (n - r)) := by simp [mul_assoc]
-        _ = ∑ k ∈ Finset.range (degP + 1), ((coeff k) * (k : ℚ) ^ r) * (∑ g ∈ gaps,
-          (g : ℚ) ^ (n - r)) := by
-          apply Finset.sum_congr rfl
-          intro k _
-          ring_nf
-        _ = (∑ k ∈ Finset.range (degP + 1), (coeff k) * (k : ℚ) ^ r) * (∑ g ∈ gaps,
-          (g : ℚ) ^ (n - r)) := by
-          simp [Finset.sum_mul]
+      rw [Finset.sum_mul]
     rw [h4, h5, h6]
     ring
-  calc
-    ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1),
-      (coeff k) * (n.choose r : ℚ) * (k : ℚ) ^ r * (g : ℚ) ^ (n - r) =
-        ∑ g ∈ gaps, (n.choose r : ℚ) * ∑ k ∈ Finset.range (degP + 1),
-          (coeff k) * (k : ℚ) ^ r * (g : ℚ) ^ (n - r) := by
-      exact h1
-    _ = (n.choose r : ℚ) * ∑ g ∈ gaps, ∑ k ∈ Finset.range (degP + 1),
-      (coeff k) * (k : ℚ) ^ r * (g : ℚ) ^ (n - r) := by
-      exact h2
-    _ = (n.choose r : ℚ) * (∑ k ∈ Finset.range (degP + 1), (coeff k) * (k : ℚ) ^ r) * (∑ g ∈ gaps,
-      (g : ℚ) ^ (n - r)) := by
-      exact h3
+  rw [h1, h2, h3]
 
 lemma sum_choose_mul_div_factorial_eq_sum_div_factorials (n : ℕ) (A B : ℕ → ℚ) :
     ∑ r ∈ Finset.range (n + 1), ((n.choose r : ℚ) * A r * B r) / (n.factorial : ℚ) =
@@ -2566,13 +2288,7 @@ lemma sum_choose_mul_div_factorial_eq_sum_div_factorials (n : ℕ) (A B : ℕ �
         have h₈ : (r.factorial : ℚ) ≠ 0 := by positivity
         have h₉ : ((n - r).factorial : ℚ) ≠ 0 := by positivity
         field_simp [h₈, h₉]
-  have h_sum_eq : ∑ r ∈ Finset.range (n + 1),
-    ((n.choose r : ℚ) * A r * B r) / (n.factorial : ℚ) = ∑ r ∈ Finset.range (n + 1),
-      (A r / (r.factorial : ℚ)) * (B r / ((n - r).factorial : ℚ)) := by
-    apply Finset.sum_congr rfl
-    intro r hr
-    rw [h_main r hr]
-  apply h_sum_eq
+  exact Finset.sum_congr rfl fun r hr => h_main r hr
 
 lemma gap_sum_binomial_expand {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (n : ℕ)
   :
@@ -2596,26 +2312,18 @@ lemma gap_sum_binomial_expand {S : NumericalSemigroup} (G : NumericalSemigroupGe
     ext g
     congr 1
     ext k
-    rw [binom_expand k g]
-    rw [Finset.mul_sum]
+    rw [binom_expand k g, Finset.mul_sum]
     congr 1
     ext r
     ring
-  have step2 : ∑ g ∈ S.gaps, ∑ k ∈ Finset.range (G.productPolynomial.natDegree + 1),
-      ∑ r ∈ Finset.range (n + 1),
-        (G.productPolynomial.coeff k : ℚ) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) =
-    ∑ r ∈ Finset.range (n + 1), ∑ g ∈ S.gaps,
-      ∑ k ∈ Finset.range (G.productPolynomial.natDegree + 1),
-      (G.productPolynomial.coeff k : ℚ) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) := by
-    exact triple_sum_exchange S.gaps G.productPolynomial.natDegree (fun k =>
-      (G.productPolynomial.coeff k : ℚ)) n
+  have step2 := triple_sum_exchange S.gaps G.productPolynomial.natDegree (fun k =>
+    (G.productPolynomial.coeff k : ℚ)) n
   have step3 : ∀ r, ∑ g ∈ S.gaps, ∑ k ∈ Finset.range (G.productPolynomial.natDegree + 1),
       (G.productPolynomial.coeff k : ℚ) * (n.choose r : ℚ) * (k : ℚ)^r * (g : ℚ)^(n - r) =
     (n.choose r : ℚ) * (∑ k ∈ Finset.range (G.productPolynomial.natDegree + 1),
         (G.productPolynomial.coeff k : ℚ) * (k : ℚ)^r) *
-      (∑ g ∈ S.gaps, (g : ℚ)^(n - r)) := by
-    intro r
-    exact factor_binomial_coeff_from_double_sum S.gaps G.productPolynomial.natDegree
+      (∑ g ∈ S.gaps, (g : ℚ)^(n - r)) :=
+    fun r => factor_binomial_coeff_from_double_sum S.gaps G.productPolynomial.natDegree
       (fun k => (G.productPolynomial.coeff k : ℚ)) n r
   rw [step1, step2]
   simp_rw [step3]
@@ -2629,8 +2337,7 @@ lemma P_sum_to_exp_coeff {S : NumericalSemigroup} (G : NumericalSemigroupGenerat
     (∑ k ∈ Finset.range (G.productPolynomial.natDegree + 1),
       (G.productPolynomial.coeff k : ℚ) * (k : ℚ)^r) / (r.factorial : ℚ) =
     ((-1 : ℚ)^G.m * (G.piM : ℚ)) * (PowerSeries.coeff r) (PowerSeries.X ^ G.m * G.ASeries) := by
-  rw [← exp_poly_sub_coeff]
-  rw [productPolynomial_exp_transform]
+  rw [← exp_poly_sub_coeff, productPolynomial_exp_transform]
   simp only [map_smul, smul_eq_mul]
 
 lemma gap_sum_to_coeff {S : NumericalSemigroup} (k : ℕ) :
@@ -2657,14 +2364,7 @@ lemma binomial_sum_to_convolution {S : NumericalSemigroup} (G : NumericalSemigro
     ((-1 : ℚ)^G.m * (G.piM : ℚ)) *
       (PowerSeries.coeff n) (PowerSeries.X ^ G.m * G.ASeries *
         PowerSeries.mk fun k => ∑ g ∈ S.gaps, (g : ℚ)^k / (k.factorial : ℚ)) := by
-  have h1 : ∀ r, (∑ k ∈ Finset.range (G.productPolynomial.natDegree + 1),
-      (G.productPolynomial.coeff k : ℚ) * (k : ℚ)^r) / (r.factorial : ℚ) =
-      ((-1 : ℚ)^G.m * (G.piM : ℚ)) * (PowerSeries.coeff r) (PowerSeries.X ^ G.m * G.ASeries) :=
-    fun r => P_sum_to_exp_coeff G r
-  have h2 : ∀ r, (∑ g ∈ S.gaps, (g : ℚ)^r) / (r.factorial : ℚ) =
-      (PowerSeries.coeff r) (PowerSeries.mk fun j => ∑ g ∈ S.gaps, (g : ℚ)^j / (j.factorial : ℚ)) :=
-    fun r => gap_sum_to_coeff r
-  conv_lhs => arg 2; ext r; rw [h1 r, h2 (n - r)]
+  conv_lhs => arg 2; ext r; rw [P_sum_to_exp_coeff G r, gap_sum_to_coeff (n - r)]
   rw [sum_factor_scalar']
   congr 1
   rw [← coeff_mul_range']
@@ -2677,19 +2377,15 @@ lemma gap_part_equals_gap_term_natDegree {S : NumericalSemigroup}
     ((-1 : ℚ)^(G.m + 1) * (G.piM : ℚ)) * (-(PowerSeries.coeff n) (PowerSeries.X ^ G.m *
       G.ASeries *
          PowerSeries.mk fun k => ∑ g ∈ S.gaps, (g : ℚ)^k / (k.factorial : ℚ))) := by
-  rw [gap_sum_exchange]
-  rw [gap_sum_binomial_expand]
-  rw [binomial_sum_to_convolution]
+  rw [gap_sum_exchange, gap_sum_binomial_expand, binomial_sum_to_convolution]
   ring
 
 lemma exp_poly_sub_hilbertNumerator_eq {S : NumericalSemigroup}
     (G : NumericalSemigroupGenerators S) :
     expPolySub G.hilbertNumerator = QExpSeries G := by
   ext n
-  rw [exp_poly_sub_coeff, Q_exp_series_coeff]
-  rw [hilbert_sum_decomposition_natDegree]
-  rw [sub_div]
-  rw [sum_part_equals_bernoulli_term_natDegree, gap_part_equals_gap_term_natDegree]
+  rw [exp_poly_sub_coeff, Q_exp_series_coeff, hilbert_sum_decomposition_natDegree, sub_div,
+    sum_part_equals_bernoulli_term_natDegree, gap_part_equals_gap_term_natDegree]
   ring
 
 lemma hilbertNumerator_exp_eq_Q_exp {S : NumericalSemigroup}
@@ -2741,16 +2437,9 @@ lemma K_invariant_expanded {S : NumericalSemigroup} (G : NumericalSemigroupGener
     ∑ r ∈ Finset.range (p + 1),
       ((p.factorial : ℚ) / (r.factorial : ℚ)) *
         (PowerSeries.coeff (p - r)) G.ASeries * S.gapPowerSum r := by
-  -- Step 1: Unfold KInvariant and substitute C_m_plus_p_formula
   unfold NumericalSemigroupGenerators.KInvariant
-  rw [C_m_plus_p_formula]
-  -- Step 2: Distribute the coefficient over the addition
-  rw [mul_add]
-  -- Step 3: Simplify the Bernoulli term
-  have hpi : 0 < G.piM := pi_m_pos G
-  rw [bernoulli_term_simplify G.m p G.piM hpi]
-  -- Step 4: Simplify the gap sum term
-  rw [gap_sum_simplify]
+  rw [C_m_plus_p_formula, mul_add, bernoulli_term_simplify G.m p G.piM (pi_m_pos G),
+    gap_sum_simplify]
 
 lemma bernoulli_coeff_to_T_delta {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (p :
   ℕ) :
@@ -2768,8 +2457,7 @@ lemma bernoulli_coeff_to_T_delta {S : NumericalSemigroup} (G : NumericalSemigrou
   -- Goal: p! * coeff = coeff * ((1+p)^{-1} * (1+p)!)
   -- We have (1+p)! = (1+p) * p!, so (1+p)^{-1} * (1+p)! = p!
   have h2 : (1 + (p : ℚ))⁻¹ * ((1 + p).factorial : ℚ) = (p.factorial : ℚ) := by
-    rw [Nat.add_comm 1 p, Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ]
-    rw [add_comm]
+    rw [Nat.add_comm 1 p, Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, add_comm]
     field_simp
   rw [h2]
   ring
@@ -2808,22 +2496,14 @@ lemma sum_A_coeff_eq_sum_T_sigma {S : NumericalSemigroup} (G : NumericalSemigrou
   intro r hr
   rw [Finset.mem_range] at hr
   have hrp : r ≤ p := Nat.lt_succ_iff.mp hr
-  have h := A_coeff_to_T_sigma G p r hrp
-  calc (p.factorial : ℚ) / (r.factorial : ℚ) *
-        (PowerSeries.coeff (p - r)) G.ASeries * S.gapPowerSum r
-      = ((p.factorial : ℚ) / (r.factorial : ℚ) *
-        (PowerSeries.coeff (p - r)) G.ASeries) * S.gapPowerSum r := by ring
-    _ = ((p.choose r : ℚ) * G.TSigma (p - r)) * S.gapPowerSum r := by rw [h]
-    _ = (p.choose r : ℚ) * G.TSigma (p - r) * S.gapPowerSum r := by ring
+  rw [A_coeff_to_T_sigma G p r hrp]
 
 lemma fels_conjecture_main {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S) (p : ℕ) :
     G.KInvariant p =
       ∑ r ∈ Finset.range (p + 1),
         (p.choose r : ℚ) * G.TSigma (p - r) * S.gapPowerSum r +
       (2 ^ (p + 1) : ℚ) / ((p : ℚ) + 1) * G.TDelta (p + 1) := by
-  rw [K_invariant_expanded]
-  rw [bernoulli_coeff_to_T_delta]
-  rw [sum_A_coeff_eq_sum_T_sigma]
+  rw [K_invariant_expanded, bernoulli_coeff_to_T_delta, sum_A_coeff_eq_sum_T_sigma]
   ring
 
 end FelsConjectureProof

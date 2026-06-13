@@ -24,8 +24,7 @@ variable {γ : Type _} [LinearOrder γ] (C : Config γ)
 
 open OrderDual
 
-theorem Config.Mirror_mainGoal (n : ℕ) : C.MainGoal n → C.Mirror.MainGoal n :=
-  by
+theorem Config.Mirror_mainGoal (n : ℕ) : C.MainGoal n → C.Mirror.MainGoal n := by
   intro h Sm hSm cap4_free cup_free
   have eq_S : Sm.ofMirror.Mirror = Sm := Finset.ofMirrorMirror
   rw [← eq_S] at hSm cap4_free cup_free ⊢

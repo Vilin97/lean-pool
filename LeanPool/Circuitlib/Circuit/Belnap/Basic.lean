@@ -39,8 +39,7 @@ lemma and_leq
 @[simp]
 lemma and_monotonic : Monotone and := by
   intro a b hab i
-  have hi : i = 0 := by ext; omega
-  subst hi
+  obtain rfl : i = 0 := by omega
   exact and_leq (hab 0) (hab 1)
 
 /-- The OR wire-function on a pair of Belnap-valued wires. -/
@@ -62,8 +61,7 @@ lemma or_leq
 @[simp]
 lemma or_monotonic : Monotone or := by
   intro a b hab i
-  have hi : i = 0 := by ext; omega
-  subst hi
+  obtain rfl : i = 0 := by omega
   exact or_leq (hab 0) (hab 1)
 
 /-- The NOT wire-function on a single Belnap-valued wire. -/
@@ -87,8 +85,7 @@ lemma not_leq {x y : BelnapLevel} (h : x ≤ y) : x.not ≤ y.not := by
 @[simp]
 lemma not_monotonic : Monotone not := by
   intro a b hab i
-  have hi : i = 0 := by ext; omega
-  subst hi
+  obtain rfl : i = 0 := by omega
   exact not_leq (hab 0)
 
 end Belnap

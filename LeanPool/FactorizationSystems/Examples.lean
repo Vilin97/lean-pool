@@ -112,11 +112,9 @@ lemma factorization_iso_set_hom' {X Y : Type u} (f : X ⟶ Y) (im : Type u)
     (q : MorphismProperty.monomorphisms _ right) (fact : left ≫ right = f) (y : imageSet f) :
     ∃! y' : im, right y' = (rightMapSet f) y := by
   let ⟨fx, P⟩ := y
-  have injectiveRight : Function.Injective right := by
-    exact (mono_iff_injective right).mp q
+  have injectiveRight : Function.Injective right := (mono_iff_injective right).mp q
   obtain ⟨x, hx⟩ := P
-  have hfact : right (left x) = f x := by
-    simpa using congrArg (fun h : X ⟶ Y => h x) fact
+  have hfact : right (left x) = f x := by simpa using congrArg (fun h : X ⟶ Y => h x) fact
   refine ⟨left x, hfact.trans hx, ?_⟩
   intro y' hy
   apply injectiveRight

@@ -103,13 +103,11 @@ instance
 
 lemma tensorHom_val_add
     {X₁ X₂ : CombinationalCircuitCategory V G} :
-    min X₁.obj (X₁.obj + X₂.obj) = X₁.obj :=
-  by simp
+    min X₁.obj (X₁.obj + X₂.obj) = X₁.obj := by simp
 
 lemma tensorHom_val_sub
     {X₁ X₂ : CombinationalCircuitCategory V G} :
-    X₁.obj + X₂.obj - X₁.obj = X₂.obj :=
-  by simp
+    X₁.obj + X₂.obj - X₁.obj = X₂.obj := by simp
 
 variable [SemilatticeSup V]
 
@@ -384,8 +382,7 @@ lemma associator_naturality
     tensorHom (tensorHom f₁ f₂) f₃ ≫ (Y₁.associator Y₂ Y₃).hom =
       (X₁.associator X₂ X₃).hom ≫ tensorHom f₁ (tensorHom f₂ f₃) := by
   apply Subtype.ext; funext v; apply Vector.ext; intro i hi
-  simp only [CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
-  simp
+  simp [CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
 
 lemma pentagon
     (W X Y Z : CombinationalCircuitCategory V G) :
@@ -394,8 +391,8 @@ lemma pentagon
       whiskerLeft W (X.associator Y Z).hom =
     ((W.tensorObj X).associator Y Z).hom ≫ (W.associator X (Y.tensorObj Z)).hom := by
   apply Subtype.ext; funext v; apply Vector.ext; intro i hi
-  simp only [CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
-  simp [show W.obj + (X.obj + (Y.obj + Z.obj)) =
+  simp [CategoryStruct.comp, Function.comp, Vector.append, Vector.cast,
+    show W.obj + (X.obj + (Y.obj + Z.obj)) =
     W.obj + (X.obj + Y.obj) + Z.obj from by omega,
     show min W.obj (W.obj + (X.obj + Y.obj) + Z.obj) = W.obj from by omega]
 
@@ -425,8 +422,7 @@ lemma leftUnitor_naturality
     {X Y : CombinationalCircuitCategory V G} (f : X ⟶ Y) :
     whiskerLeft tensorUnit f ≫ (leftUnitor Y).hom = (leftUnitor X).hom ≫ f := by
   apply Subtype.ext; funext v; apply Vector.ext; intro i hi
-  simp only [iso, CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
-  simp
+  simp [iso, CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
 
 lemma rightUnitor_naturality
     {X Y : CombinationalCircuitCategory V G}
@@ -444,8 +440,7 @@ lemma triangle
     (associator X tensorUnit Y).hom ≫ whiskerLeft X (leftUnitor Y).hom =
     whiskerRight (rightUnitor X).hom Y := by
   apply Subtype.ext; funext v; apply Vector.ext; intro i hi
-  simp only [CategoryStruct.comp, Vector.append, Function.comp]
-  simp
+  simp [CategoryStruct.comp, Vector.append, Function.comp]
 
 @[inline, simp]
 instance : MonoidalCategory.{v} (CombinationalCircuitCategory V G) where

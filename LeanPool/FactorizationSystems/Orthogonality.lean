@@ -569,8 +569,7 @@ lemma hom_orthogonal_aux_fac_left
       calc
         homOrthogonalAuxInv l r h ≫ (homSquare l r).top =
         homOrthogonalAuxInv l r h ≫
-          ((diagonalsHomCospanPullbackLift l r) ≫ homCospanPullbackFst l r) :=
-          by rw [triangle_comm]
+          ((diagonalsHomCospanPullbackLift l r) ≫ homCospanPullbackFst l r) := by rw [triangle_comm]
         _ = (homOrthogonalAuxInv l r h ≫ diagonalsHomCospanPullbackLift l r) ≫
           homCospanPullbackFst l r := by aesop_cat
         _ = (homOrthogonalAuxInv l r h ≫ homOrthogonalAuxHom l r h) ≫
@@ -596,8 +595,7 @@ lemma hom_orthogonal_aux_fac_right
       calc
         homOrthogonalAuxInv l r h ≫ (homSquare l r).left =
         homOrthogonalAuxInv l r h ≫
-          (diagonalsHomCospanPullbackLift l r ≫ homCospanPullbackSnd l r) :=
-          by rw [triangle_comm]
+          (diagonalsHomCospanPullbackLift l r ≫ homCospanPullbackSnd l r) := by rw [triangle_comm]
         _ = (homOrthogonalAuxInv l r h ≫ homOrthogonalAuxHom l r h) ≫
           homCospanPullbackSnd l r := by rfl
         _ = homCospanPullbackSnd l r := by rw [hom_orthogonal_aux_inv_hom_id l r]; simp
@@ -615,8 +613,7 @@ lemma hom_orthogonal_aux_uniq
     (homPullbackConeIsLimit l r).lift s
   have comm₁' :
       (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackFst l r =
-      lift ≫ homPullbackFst l r := by
-    calc
+      lift ≫ homPullbackFst l r := by calc
       (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackFst l r =
           m ≫ (homOrthogonalAuxHom l r h ≫ homPullbackFst l r) := by
         rw [Category.assoc]
@@ -629,8 +626,7 @@ lemma hom_orthogonal_aux_uniq
           ((homPullbackConeIsLimit l r).fac s Limits.WalkingCospan.left).symm
   have comm₂' :
       (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackSnd l r =
-      lift ≫ homPullbackSnd l r := by
-    calc
+      lift ≫ homPullbackSnd l r := by calc
       (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackSnd l r =
           m ≫ (homOrthogonalAuxHom l r h ≫ homPullbackSnd l r) := by
         rw [Category.assoc]
