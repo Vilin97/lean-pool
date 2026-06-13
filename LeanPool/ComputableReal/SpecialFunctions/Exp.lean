@@ -86,8 +86,7 @@ lemma List_foldr_eq_finset_sum (x : ℚ) (n : ℕ) :
     field_simp
 
 theorem expLb₀_pos {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 0 < expLb₀ x n := by
-  rw [expLb₀, List_foldr_eq_finset_sum, Finset.range_add_one']
-  rw [Finset.sum_insert (by simp)]
+  rw [expLb₀, List_foldr_eq_finset_sum, Finset.range_add_one', Finset.sum_insert (by simp)]
   have ha : (0 : ℚ) ≤ x / ↑⌈x⌉.toNat := div_nonneg hx (by positivity)
   apply pow_pos
   apply add_pos_of_pos_of_nonneg
@@ -95,8 +94,7 @@ theorem expLb₀_pos {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 0 < expLb₀ x n := by
   · exact Finset.sum_nonneg fun i _ ↦ div_nonneg (pow_nonneg ha _) (by positivity)
 
 theorem expLb₀_ge_one {x : ℚ} (n : ℕ) (hx : 0 ≤ x) : 1 ≤ expLb₀ x n := by
-  rw [expLb₀, List_foldr_eq_finset_sum, Finset.range_add_one']
-  rw [Finset.sum_insert (by simp)]
+  rw [expLb₀, List_foldr_eq_finset_sum, Finset.range_add_one', Finset.sum_insert (by simp)]
   apply one_le_pow₀
   have ha : (0 : ℚ) ≤ x / ↑⌈x⌉.toNat := div_nonneg hx (by positivity)
   have hsum : (0 : ℚ) ≤ ∑ i ∈ Finset.range n, (x / ↑⌈x⌉.toNat) ^ (i + 1) / ↑(i + 1).factorial :=
@@ -176,8 +174,7 @@ fast as `exp x * (exp (2x/n!) - 1)`. This is then used to prove that they are
 cauchy sequences in `n`, i.e. taking sufficiently large `n` makes this go to zero. -/
 theorem expUb₀_sub_expLb₀ {x : ℚ} (n : ℕ) (hx : 0 ≤ x) :
     expUb₀ x n - expLb₀ x n ≤ Real.exp x * (Real.exp (2 * x / n.factorial) - 1) := by
-  rw [expUb₀, expLb₀]
-  rw [List_foldr_eq_finset_sum]
+  rw [expUb₀, expLb₀, List_foldr_eq_finset_sum]
   --Special case out x=0
   rcases eq_or_lt_of_le hx
   · subst x

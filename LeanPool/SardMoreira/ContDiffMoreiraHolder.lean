@@ -156,8 +156,7 @@ theorem comp' {g : F → G} {f : E → F} {a : E} {k : ℕ} {α : I}
       · intro i hi
         by_cases hfd : DifferentiableAt ℝ f a
         · refine ((hg.of_le hi).isBigO.comp_tendsto hf.continuousAt).trans ?_
-          refine .rpow α.2.1 (.of_forall fun _ ↦ norm_nonneg _) <| .norm_norm ?_
-          exact hfd.isBigO_sub
+          exact .rpow α.2.1 (.of_forall fun _ ↦ norm_nonneg _) <| .norm_norm hfd.isBigO_sub
         · obtain rfl : k = 0 := by
             contrapose! hfd
             exact hf.differentiableAt hfd

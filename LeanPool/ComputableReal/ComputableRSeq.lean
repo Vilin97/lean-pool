@@ -426,58 +426,48 @@ section simps
 variable (x y : ComputableℝSeq)
 
 @[simp]
-theorem natCast_lb : (Nat.cast n : ComputableℝSeq).lb = n := by
-  rfl
+theorem natCast_lb : (Nat.cast n : ComputableℝSeq).lb = n := by rfl
 
 @[simp]
-theorem natCast_ub : (Nat.cast n : ComputableℝSeq).ub = n := by
-  rfl
+theorem natCast_ub : (Nat.cast n : ComputableℝSeq).ub = n := by rfl
 
 @[simp]
 theorem val_natCast : (Nat.cast n : ComputableℝSeq).val = n :=
   val_eq_mk_lb _ ▸ natCast_lb ▸ rfl
 
 @[simp]
-theorem intCast_lb : (Int.cast z : ComputableℝSeq).lb = z := by
-  rfl
+theorem intCast_lb : (Int.cast z : ComputableℝSeq).lb = z := by rfl
 
 @[simp]
-theorem intCast_ub : (Int.cast z : ComputableℝSeq).ub = z := by
-  rfl
+theorem intCast_ub : (Int.cast z : ComputableℝSeq).ub = z := by rfl
 
 @[simp]
 theorem val_intCast : (Int.cast z : ComputableℝSeq).val = z :=
   val_eq_mk_lb _ ▸ intCast_lb ▸ rfl
 
-theorem ratCast_lb : (Rat.cast q : ComputableℝSeq).lb = CauSeq.const abs q := by
-  rfl
+theorem ratCast_lb : (Rat.cast q : ComputableℝSeq).lb = CauSeq.const abs q := by rfl
 
-theorem ratCast_ub : (Rat.cast q : ComputableℝSeq).ub = CauSeq.const abs q := by
-  rfl
+theorem ratCast_ub : (Rat.cast q : ComputableℝSeq).ub = CauSeq.const abs q := by rfl
 
 @[simp]
 theorem val_ratCast : (Rat.cast q : ComputableℝSeq).val = q :=
   val_eq_mk_lb _ ▸ ratCast_lb ▸ rfl
 
 @[simp]
-theorem zero_lb : (0 : ComputableℝSeq).lb = 0 := by
-  rfl
+theorem zero_lb : (0 : ComputableℝSeq).lb = 0 := by rfl
 
 @[simp]
-theorem zero_ub : (0 : ComputableℝSeq).ub = 0 := by
-  rfl
+theorem zero_ub : (0 : ComputableℝSeq).ub = 0 := by rfl
 
 @[simp]
 theorem val_zero : (0 : ComputableℝSeq).val = 0 :=
   val_eq_mk_lb _ ▸ Real.mk_zero
 
 @[simp]
-theorem one_lb : (1 : ComputableℝSeq).lb = 1 := by
-  rfl
+theorem one_lb : (1 : ComputableℝSeq).lb = 1 := by rfl
 
 @[simp]
-theorem one_ub : (1 : ComputableℝSeq).ub = 1 := by
-  rfl
+theorem one_ub : (1 : ComputableℝSeq).ub = 1 := by rfl
 
 @[simp]
 theorem val_one : (1 : ComputableℝSeq).val = 1 :=
@@ -500,8 +490,7 @@ theorem lb_neg : (-x).lb = -x.ub :=
   rfl
 
 @[simp]
-theorem ub_neg : (-x).ub = -x.lb := by
-  rfl
+theorem ub_neg : (-x).ub = -x.lb := by rfl
 
 @[simp]
 theorem val_neg : (-x).val = -x.val := by
@@ -509,24 +498,21 @@ theorem val_neg : (-x).val = -x.val := by
 
 @[simp]
 theorem lb_sub : (x - y).lb = x.lb - y.ub := by
-  suffices (sub x y).lb = x.lb - y.ub by
-    convert this
+  change (sub x y).lb = x.lb - y.ub
   rw [sub, add, neg]
   ext
   simp [mk, lb, ub, sub_eq_add_neg]
 
 @[simp]
 theorem ub_sub : (x - y).ub = x.ub - y.lb := by
-  suffices (sub x y).ub = x.ub - y.lb by
-    convert this
+  change (sub x y).ub = x.ub - y.lb
   rw [sub, add, neg]
   ext
   simp [mk, lb, ub, sub_eq_add_neg]
 
 @[simp]
 theorem val_sub : (x - y).val = x.val - y.val := by
-  suffices (sub x y).val = x.val - y.val by
-    convert this
+  change (sub x y).val = x.val - y.val
   rw [sub, add, neg, mk_val_eq_val, mk_val_eq_val]
   rfl
 
@@ -544,8 +530,7 @@ theorem ub_mul : (x * y).ub = ((x.lb * y.lb) ⊔ (x.ub * y.lb)) ⊔ ((x.lb * y.u
 
 @[simp]
 theorem val_mul : (x * y).val = x.val * y.val := by
-  suffices (mul x y).val = x.val * y.val by
-    convert this
+  change (mul x y).val = x.val * y.val
   rw [val_def]
   exact val_uniq' (mulLb_is_lb x y) (mulUb_is_ub x y) (lb_ub_mul_equiv x y)
 
@@ -999,8 +984,7 @@ theorem neg_mul (x y : ComputableℝSeq) : -x * y = -(x * y) := by
     nth_rewrite 3 [sup_comm]
     ring_nf
 
-theorem mul_neg (x y : ComputableℝSeq) : x * -y = -(x * y) := by
-  rw [mul_comm, neg_mul, mul_comm]
+theorem mul_neg (x y : ComputableℝSeq) : x * -y = -(x * y) := by rw [mul_comm, neg_mul, mul_comm]
 
 theorem neg_eq_of_add (x y : ComputableℝSeq) (h : x + y = 0) : -x = y := by
   have hlb : ∀(x y : ComputableℝSeq), x + y = 0 → x.lb = -y.ub := by

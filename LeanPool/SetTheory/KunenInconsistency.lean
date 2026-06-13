@@ -75,8 +75,7 @@ def injSubset {A B : M} (hsub : A ⊆ B) : A ↪ B := {
   inj' := by simp [Injective]
 }
 
-lemma card_le_of_sub {A B : M} (hsub : A ⊆ B) : #A ≤ #B :=
-  (Cardinal.le_def ..).mpr ⟨injSubset hsub⟩
+lemma card_le_of_sub {A B : M} (hsub : A ⊆ B) : #A ≤ #B := (Cardinal.le_def ..).mpr ⟨injSubset hsub⟩
 
 lemma bddAbove_ordinal_κ :
     BddAbove (Set.range fun n => (⟨κ n, isOrdinal_crit_iter _⟩ : Ordinals M)) := by

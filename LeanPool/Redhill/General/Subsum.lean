@@ -60,8 +60,7 @@ variable (hh : tailK n F < X F h)
 
 include hh
 
-lemma Y6_le_X : 196 * Y F ^ 6 ≤ X F h :=
-  tailK_lower_bound.trans hh.le
+lemma Y6_le_X : 196 * Y F ^ 6 ≤ X F h := tailK_lower_bound.trans hh.le
 
 lemma b₁_upper_bound : ((X F h ^ 2 + 10 * Y F ^ 3 : ℤ) ^ 2).natAbs ≤ 4 * X F h ^ 4 := by
   norm_cast
@@ -151,8 +150,7 @@ lemma X4_le_natAbs_b3 {b₁ b₂ b₃ : SignType} (hl : b₃ < b₂) :
     X F h ^ 4 ≤ (b₁ * (X F h ^ 2 + 10 * Y F ^ 3 : ℤ) ^ 2 + b₂ * ((10 * Y F - 1) * X F h ^ 4) +
       b₃ * (-2 * Y F * (5 * X F h ^ 4 + 10 * X F h ^ 2 * Y F ^ 2 + Y F ^ 4))).natAbs := by
   calc
-    _ = 5 * X F h ^ 4 - 4 * X F h ^ 4 := by
-      rw [← tsub_mul, show 5 - 4 = 1 by decide, one_mul]
+    _ = 5 * X F h ^ 4 - 4 * X F h ^ 4 := by rw [← tsub_mul, show 5 - 4 = 1 by decide, one_mul]
     _ ≤ 5 * X F h ^ 4 - (b₁ * (X F h ^ 2 + 10 * Y F ^ 3 : ℤ) ^ 2).natAbs := by
       refine Nat.sub_le_sub_left ?_ _
       rw [Int.natAbs_mul, ← one_mul (4 * _)]
@@ -172,8 +170,7 @@ lemma X4_le_natAbs_b3 {b₁ b₂ b₃ : SignType} (hl : b₃ < b₂) :
           simp_rw [Int.natAbs_pow, Int.natAbs_natCast]
           exact Nat.mul_le_mul_right _ (by lia)
         · simp_rw [SignType.coe_neg, SignType.coe_one, neg_one_mul]
-          have n₁ : 0 ≤ (10 * Y F - 1 : ℕ) * (X F h ^ 4 : ℤ) := by
-            exact_mod_cast Nat.zero_le _
+          have n₁ : 0 ≤ (10 * Y F - 1 : ℕ) * (X F h ^ 4 : ℤ) := by exact_mod_cast Nat.zero_le _
           have n₂ : 0 ≤ -(-2 * Y F * (5 * X F h ^ 4 + 10 * X F h ^ 2 * Y F ^ 2 + Y F ^ 4) : ℤ) := by
             simp_rw [neg_mul, neg_neg]
             exact_mod_cast Nat.zero_le _

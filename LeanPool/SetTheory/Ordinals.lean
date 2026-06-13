@@ -36,8 +36,7 @@ namespace SetTheory
   convert (IsOrdinal.toV α).symm using 1
   simp only [IsOrdinal, isOrdinal_iff_forall_mem_isTransitive, toZFSet_simps]
 
-@[simp] lemma isOrdinal_empty : IsOrdinal (∅ : M) := by
-  simp [IsOrdinal, IsTransitive]
+@[simp] lemma isOrdinal_empty : IsOrdinal (∅ : M) := by simp [IsOrdinal, IsTransitive]
 
 lemma _root_.ZFSet.IsOrdinal.mem_iff_lt
     {x y : ZFSet} (hx : x.IsOrdinal) (hy : y.IsOrdinal) : x ∈ y ↔ x < y := by
@@ -102,8 +101,7 @@ lemma rank_trcl {x : M} : rank (trcl x) = rank x := by
     · exact rank_enoughTransitive.le
   · exact rank_mono sub_trcl
 
-lemma rank_singleton {x : M} : rank {x} = succ (rank x) := by
-  simp [toZFSet_simps]
+lemma rank_singleton {x : M} : rank {x} = succ (rank x) := by simp [toZFSet_simps]
 
 /-- The `rankFunc` declaration. -/
 def rankFunc (x : M) : ((trcl {x}) : M) → (succ (rank x) : M) := by
@@ -211,11 +209,9 @@ instance : OrderBot (Ordinals M) where
 instance : ConditionallyCompleteLinearOrderBot (Ordinals M) :=
   WellFoundedLT.conditionallyCompleteLinearOrderBot _
 
-lemma sSup_empty_ordinals : sSup (∅ : Set (Ordinals M)) = ⊥ := by
-  simp
+lemma sSup_empty_ordinals : sSup (∅ : Set (Ordinals M)) = ⊥ := by simp
 
-@[simp] lemma sInf_empty_ordinals : sInf (∅ : Set (Ordinals M)) = ⊥ := by
-  simp [sInf]
+@[simp] lemma sInf_empty_ordinals : sInf (∅ : Set (Ordinals M)) = ⊥ := by simp [sInf]
 
 /-- The `toOrdinal` declaration. -/
 def toOrdinal : Ordinals M ↪o Ordinal.{0} where

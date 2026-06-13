@@ -266,13 +266,11 @@ theorem exists_pos_forall_measure_le_toSphere_ge_le
         Measure.prod_apply, mul_comm, ← setLIntegral_const]
       · refine (setLIntegral_mono ?_ ?_).trans (setLIntegral_le_lintegral _ _)
         · apply measurable_measure_prodMk_left
-          refine MeasurableEquiv.measurable _ ?_
-          exact hsm.preimage measurable_subtype_coe
+          exact MeasurableEquiv.measurable _ (hsm.preimage measurable_subtype_coe)
         · intro x hx
           simpa [T, homeomorphUnitSphereProd_symm_apply_coe, Set.preimage, Set.mem_setOf_eq]
             using hx
-      · refine MeasurableEquiv.measurable _ ?_
-        exact hsm.preimage measurable_subtype_coe
+      · exact MeasurableEquiv.measurable _ (hsm.preimage measurable_subtype_coe)
     _ ≤ μ s := by
       rw [(MeasurableEmbedding.subtype_coe <| by measurability).comap_preimage]
       exact measure_mono inter_subset_left
@@ -484,8 +482,7 @@ theorem MeasurableSet.setOf_tendsto_measure_sectl_inter_closedBall_div
     · exact measurable_fst.dist measurable_snd.fst
     · exact measurable_const
   refine measurableSet_tendsto_fun (fun q ↦ .div ?_ (.measure_apply μ _ this)) hf
-  refine .measure_apply _ _ ?_
-  exact .inter (hs.preimage <| .prodMk measurable_fst measurable_snd.snd) this
+  exact .measure_apply _ _ (.inter (hs.preimage <| .prodMk measurable_fst measurable_snd.snd) this)
 
 theorem MeasurableSet.setOf_tendsto_measure_inter_closedBall_div
     {X : Type*} [PseudoMetricSpace X] [SecondCountableTopology X]

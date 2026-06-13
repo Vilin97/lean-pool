@@ -41,8 +41,7 @@ lemma Membership.mem.realize_iff : formula.Realize v₂ ↔ v₂ 1 ∈ v₂ 0 :=
 /-- The `formula` declaration. -/
 def Ne.formula : ZFFormula 2 := ∼(#0 =' #1)
 @[realize_simps, realize]
-lemma Ne.realize_iff : formula.Realize v₂ ↔ v₂ 0 ≠ v₂ 1 := by
-  simp [formula, Formula.Realize]
+lemma Ne.realize_iff : formula.Realize v₂ ↔ v₂ 0 ≠ v₂ 1 := by simp [formula, Formula.Realize]
 
 /-- The `formula` declaration. -/
 def Eq.formula : ZFFormula 2 := #0 =' #1
@@ -284,8 +283,7 @@ lemma isSet_iff_exists_set {C : Set M} : IsSet C ↔ ∃ x : M, ∀ y, y ∈ x �
     exact hz
   )
 
-lemma not_mem_self {x : M} : x ∉ x := by
-  simpa [toZFSet_simps] using mem_irrefl _
+lemma not_mem_self {x : M} : x ∉ x := by simpa [toZFSet_simps] using mem_irrefl _
 
 open Classical in
 lemma exists_separate (x : M) (p : M → Prop) : IsSet {y | y ∈ x ∧ p y} := by
@@ -416,8 +414,7 @@ lemma Singleton.singleton.eq_iff (x y : M) : ({x} : M) = y ↔ ∀ z, z ∈ y �
 def Singleton.singleton.formula := SetTheory.singleton.formula
 @[realize_simps] lemma Singleton.singleton.realize_iff (v : Fin 2 → M) :
     formula.Realize v ↔ {v 0} = v 1 := SetTheory.singleton.realize_iff v
-@[realize] lemma Singleton.singleton.eu (x : M) : IsSet {y | y = x} :=
-  SetTheory.singleton.eu x
+@[realize] lemma Singleton.singleton.eu (x : M) : IsSet {y | y = x} := SetTheory.singleton.eu x
 
 instance instInsertMM : Insert M M where insert := SetTheory.insert
 @[simp] lemma Insert.insert.spec (x y z : M) : z ∈ insert x y ↔ z = x ∨ z ∈ y :=
@@ -428,8 +425,7 @@ lemma Insert.insert.eq_iff (x y z : M) : Insert.insert x y = z ↔ ∀ w, w ∈ 
 def Insert.insert.formula := SetTheory.insert.formula
 @[realize_simps] lemma Insert.insert.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ insert (v 0) (v 1) = v 2 := SetTheory.insert.realize_iff v
-@[realize] lemma Insert.insert.eu (x y : M) : IsSet {z | z = x ∨ z ∈ y} :=
-  SetTheory.insert.eu x y
+@[realize] lemma Insert.insert.eu (x y : M) : IsSet {z | z = x ∨ z ∈ y} := SetTheory.insert.eu x y
 
 end FirstOrder
 
@@ -555,8 +551,7 @@ lemma isTransitive_trcl {x : M} : IsTransitive (trcl x) := by
   rw [mem_trcl_iff] at hy ⊢
   exact fun t ⟨ht, sub⟩ => ht (hy t ⟨ht, sub⟩) hz
 
-lemma trcl_trans {x y z : M} (hz : z ∈ y) (hy : y ∈ trcl x) : z ∈ trcl x :=
-  isTransitive_trcl hy hz
+lemma trcl_trans {x y z : M} (hz : z ∈ y) (hy : y ∈ trcl x) : z ∈ trcl x := isTransitive_trcl hy hz
 
 lemma sub_trcl {x : M} : x ⊆ trcl x := by
   intro y hy
@@ -585,8 +580,7 @@ lemma Union.union.eq_iff (x y z : M) : x ∪ y = z ↔ ∀ w, w ∈ z ↔ w ∈ 
 def Union.union.formula := SetTheory.union.formula
 @[realize_simps] lemma Union.union.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ v 0 ∪ v 1 = v 2 := SetTheory.union.realize_iff v
-@[realize] lemma Union.union.eu (x y : M) : IsSet {z | z ∈ x ∨ z ∈ y} :=
-  SetTheory.union.eu x y
+@[realize] lemma Union.union.eu (x y : M) : IsSet {z | z ∈ x ∨ z ∈ y} := SetTheory.union.eu x y
 
 instance instInterM : Inter M where inter := SetTheory.inter
 @[simp] lemma Inter.inter.spec (x y z : M) : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y := SetTheory.inter.spec ..
@@ -596,8 +590,7 @@ lemma Inter.inter.eq_iff (x y z : M) : x ∩ y = z ↔ ∀ w, w ∈ z ↔ w ∈ 
 def Inter.inter.formula := SetTheory.inter.formula
 @[realize_simps] lemma Inter.inter.realize_iff (v : Fin 3 → M) :
     formula.Realize v ↔ v 0 ∩ v 1 = v 2 := SetTheory.inter.realize_iff v
-@[realize] lemma Inter.inter.eu (x y : M) : IsSet {z | z ∈ x ∧ z ∈ y} :=
-  SetTheory.inter.eu x y
+@[realize] lemma Inter.inter.eu (x y : M) : IsSet {z | z ∈ x ∧ z ∈ y} := SetTheory.inter.eu x y
 
 namespace SetTheory
 
@@ -855,8 +848,7 @@ lemma subset_func {f g : M} (hf : IsFunc f) (hg : IsFunc g)
   rwa [eq_comm, this, apply.eq_iff _ _ hg (dom_sub x_mem_dom)] at ext
 
 lemma ext_func {f g : M} (hf : IsFunc f) (hg : IsFunc g)
-    (dom_eq : Dom f = Dom g) (ext : ∀ x ∈ Dom f, apply f x = apply g x) : f = g :=
-  le_antisymm
+    (dom_eq : Dom f = Dom g) (ext : ∀ x ∈ Dom f, apply f x = apply g x) : f = g := le_antisymm
     (subset_func hf hg (le_of_eq dom_eq) ext)
     (subset_func hg hf (ge_of_eq dom_eq) fun x hx => (ext x (dom_eq ▸ hx)).symm)
 
@@ -865,8 +857,7 @@ lemma ext_func {f g : M} (hf : IsFunc f) (hg : IsFunc g)
   change ∀ x, x ∉ sInf (upperBounds ∅)
   simpa [sInf, upperBounds] using fun _ _ => ⟨_, not_mem_self⟩
 
-@[simp] lemma sInf_empty : sInf (∅ : Set M) = ∅ := by
-  simp [sInf]
+@[simp] lemma sInf_empty : sInf (∅ : Set M) = ∅ := by simp [sInf]
 
 /-- The `IsInjective` declaration. -/
 @[realize] def IsInjective (f : M) :=

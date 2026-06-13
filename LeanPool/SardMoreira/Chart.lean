@@ -127,14 +127,12 @@ def chartImplicitData (f : E × F → ℝ) (a : E × F)
 @[simp]
 theorem chartImplicitData_leftFun {f : E × F → ℝ} {a : E × F}
     (hfa : ContDiffMoreiraHolderAt k α f a) (hk : k ≠ 0) (hdf : fderiv ℝ f a ∘L .inr ℝ E F ≠ 0) :
-    (chartImplicitData f a hfa hk hdf).leftFun = f := by
-  simp [chartImplicitData]
+    (chartImplicitData f a hfa hk hdf).leftFun = f := by simp [chartImplicitData]
 
 @[simp]
 theorem chartImplicitData_leftDeriv {f : E × F → ℝ} {a : E × F}
     (hfa : ContDiffMoreiraHolderAt k α f a) (hk : k ≠ 0) (hdf : fderiv ℝ f a ∘L .inr ℝ E F ≠ 0) :
-    (chartImplicitData f a hfa hk hdf).leftDeriv = fderiv ℝ f a := by
-  simp [chartImplicitData]
+    (chartImplicitData f a hfa hk hdf).leftDeriv = fderiv ℝ f a := by simp [chartImplicitData]
 
 @[simp]
 theorem fst_rightFun_chartImplicitData {f : E × F → ℝ} {a : E × F}
@@ -147,8 +145,7 @@ theorem fst_rightFun_chartImplicitData {f : E × F → ℝ} {a : E × F}
 @[simp]
 theorem chartImplicitData_pt {f : E × F → ℝ} {a : E × F}
     (hfa : ContDiffMoreiraHolderAt k α f a) (hk : k ≠ 0) (hdf : fderiv ℝ f a ∘L .inr ℝ E F ≠ 0) :
-    (chartImplicitData f a hfa hk hdf).pt = a := by
-  simp [chartImplicitData]
+    (chartImplicitData f a hfa hk hdf).pt = a := by simp [chartImplicitData]
 
 theorem chartImplicitData_rightDeriv_apply_ker {f : E × F → ℝ} {a : E × F}
     (hfa : ContDiffMoreiraHolderAt k α f a) (hk : k ≠ 0) (hdf : fderiv ℝ f a ∘L .inr ℝ E F ≠ 0)
@@ -464,9 +461,7 @@ theorem nonempty_atlas {k : ℕ} (hk : k ≠ 0) (α : I) (s : Set (E × F)) :
     simp only [biUnion_iUnion, biUnion_image, Chart.comp]
     rcases mem_iUnion₂.mp (htu ⟨hx, hxt⟩) with ⟨i, hiu, y, hy, rfl⟩
     rcases mem_iUnion₂.mp ((Ψ i hiu).subset_biUnion_isLargeAt hy) with ⟨g, hgS, z, hz, rfl⟩
-    refine mem_iUnion_of_mem i <| mem_iUnion_of_mem hiu <| mem_biUnion hgS ?_
-    apply mem_image_of_mem
-    exact hz
+    exact mem_iUnion_of_mem i <| mem_iUnion_of_mem hiu <| mem_biUnion hgS (mem_image_of_mem _ hz)
 
 end
 

@@ -306,39 +306,31 @@ lemma isCoprime_natAdd_natAdd {i j : Fin 6} (hij : i < j) :
     · simp_rw [tup_natAdd_one, neg_right_iff, Nat.isCoprime_iff_coprime]
       exact .of_forall fun _ ↦ VWPair.of_coprime U_pos le_rfl
     · refine isCoprime_natAdd_two_of_rough (Q := fun F ↦ (VW n F).v) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
       contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenY3p1_le_U⟩)).1
+      exact ((VW n F).not_dvd _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenY3p1_le_U⟩)).1
     · refine isCoprime_natAdd_three_of_rough (Q := fun F ↦ (VW n F).v) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
       contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenYm1_le_U⟩)).1
+      exact ((VW n F).not_dvd _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenYm1_le_U⟩)).1
     · refine isCoprime_natAdd_four_of_rough (Q := fun F ↦ (VW n F).v) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
       contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).1
+      exact ((VW n F).not_dvd _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).1
     · refine isCoprime_natAdd_five_of_rough (Q := fun F ↦ (VW n F).v) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
       contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).1
+      exact ((VW n F).not_dvd _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).1
   · simp_rw [tup_natAdd_one, neg_left_iff]
     obtain rfl | rfl | rfl | rfl : j = 2 ∨ j = 3 ∨ j = 4 ∨ j = 5 := by lia
     · refine isCoprime_natAdd_two_of_rough (Q := fun F ↦ (VW n F).w) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
       contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenY3p1_le_U⟩)).2
+      exact ((VW n F).not_dvd _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenY3p1_le_U⟩)).2
     · refine isCoprime_natAdd_three_of_rough (Q := fun F ↦ (VW n F).w) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
       contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenYm1_le_U⟩)).2
+      exact ((VW n F).not_dvd _ (Finset.mem_Icc.mpr ⟨lf, df.trans tenYm1_le_U⟩)).2
     · refine isCoprime_natAdd_four_of_rough (Q := fun F ↦ (VW n F).w) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
       contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).2
+      exact ((VW n F).not_dvd _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).2
     · refine isCoprime_natAdd_five_of_rough (Q := fun F ↦ (VW n F).w) fun {f} lf df ↦ ?_
-      have := (VW n F).not_dvd
       contrapose! df
-      exact (this _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).2
+      exact ((VW n F).not_dvd _ (Finset.mem_Icc.mpr ⟨lf, df.trans Yp1_le_U⟩)).2
   · obtain rfl | rfl | rfl : j = 3 ∨ j = 4 ∨ j = 5 := by lia
     exacts [isCoprime_natAdd_two_three, isCoprime_natAdd_two_four, isCoprime_natAdd_two_five]
   · obtain rfl | rfl : j = 4 ∨ j = 5 := by lia

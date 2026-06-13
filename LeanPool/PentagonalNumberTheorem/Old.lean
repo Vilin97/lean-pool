@@ -59,11 +59,7 @@ theorem two_pentagonal'' (k : ℤ) : 2 * pentagonal'' k = k * (3 * k - 1) := by
   refine Int.two_mul_ediv_two_of_even ?_
   obtain h | h := Int.even_or_odd k
   · exact Even.mul_right h (3 * k - 1)
-  · refine Even.mul_left ?_ _
-    refine Int.even_sub_one.mpr ?_
-    refine Int.not_even_iff_odd.mpr ?_
-    refine Odd.mul ?_ h
-    decide
+  · exact Even.mul_left (Int.even_sub_one.mpr (Int.not_even_iff_odd.mpr (Odd.mul (by decide) h))) _
 
 /-- Nonnegativity -/
 theorem pentagonal_nonneg'' (k : ℤ) : 0 ≤ pentagonal'' k := by
@@ -103,8 +99,7 @@ def pentagonalDelta (n : ℤ) := 1 + 24 * n
 theorem pentagonalDelta_pentagonal (k : ℤ) :
     pentagonalDelta (pentagonal'' k) = (6 * k - 1) ^ 2 := by
   unfold pentagonalDelta
-  rw [show 24 * pentagonal'' k = 12 * (2 * pentagonal'' k) by ring]
-  rw [two_pentagonal'']
+  rw [show 24 * pentagonal'' k = 12 * (2 * pentagonal'' k) by ring, two_pentagonal'']
   ring
 
 /-- The first definition of $\phi(x)$, where each coefficient is assigned according to the
@@ -331,8 +326,7 @@ theorem lengthWhile_mono
     l.lengthWhile p ≤ (l ++ r).lengthWhile p := match l with
   | [] => by simp
   | x :: xs => by
-    rw [cons_append]
-    rw [lengthWhile, lengthWhile]
+    rw [cons_append, lengthWhile, lengthWhile]
     split <;> simp [lengthWhile_mono]
 
 theorem lengthWhile_set
@@ -1121,9 +1115,7 @@ theorem getLast_up (hn : 0 < n) (x : FerrersDiagram n)
     (hpospen : ¬ x.IsPosPentagonal hn) :
     x.delta.getLast (x.delta_ne_nil hn) <
     (x.up hn hdown hpospen).delta.getLast ((x.up hn hdown hpospen).delta_ne_nil hn) := by
-  simp_rw [List.getLast_eq_getElem ((x.up hn hdown hpospen).delta_ne_nil hn)]
-  simp_rw [delta_up]
-  simp_rw [putDiagFun]
+  simp_rw [List.getLast_eq_getElem ((x.up hn hdown hpospen).delta_ne_nil hn), delta_up, putDiagFun]
   rw [List.getElem_set]
   have h1 : 1 < x.delta.length := x.one_lt_length hn hdown hpospen
   have htake : List.take (x.delta.length - 1) x.delta ≠ [] := by
@@ -1141,8 +1133,7 @@ theorem getLast_up (hn : 0 < n) (x : FerrersDiagram n)
         (by simpa using htake) := by
       convert (List.getLast_eq_getElem _).symm
       simp
-    rw [hlast]
-    rw [List.getLast_updateLast _ _ htake]
+    rw [hlast, List.getLast_updateLast _ _ htake]
     simp only [lt_add_iff_pos_left, gt_iff_lt]
     apply List.forall_iff_forall_mem.mp x.delta_pos
     exact List.mem_of_mem_take (List.getLast_mem _)
@@ -1322,10 +1313,8 @@ theorem down_up (hn : 0 < n) (x : FerrersDiagram n)
     (x.up hn hdown hpospen).down hn (x.up_isToDown hn hdown hpospen)
     (x.up_notNegPentagonal hn hdown hpospen) = x := by
   ext1
-  simp_rw [delta_down, delta_up]
-  simp_rw [diagSize_up]
-  rw [takeDiagFun_putDiagFun]
-  rw [putLastFun_takeLastFun _ _ x.delta_pos]
+  simp_rw [delta_down, delta_up, diagSize_up]
+  rw [takeDiagFun_putDiagFun, putLastFun_takeLastFun _ _ x.delta_pos]
 
 /-! ## Up/down involution
 
@@ -1339,16 +1328,14 @@ theorem parity_up (hn : 0 < n) (x : FerrersDiagram n)
     (hdown : ¬ x.IsToDown hn)
     (hpospen : ¬ x.IsPosPentagonal hn) :
     Even (x.up hn hdown hpospen).delta.length ↔ ¬ Even x.delta.length := by
-  rw [length_up]
-  rw [Nat.even_sub' (Nat.one_le_of_lt (List.length_pos_iff.mpr (x.delta_ne_nil hn)))]
+  rw [length_up, Nat.even_sub' (Nat.one_le_of_lt (List.length_pos_iff.mpr (x.delta_ne_nil hn)))]
   simp
 
 theorem parity_down (hn : 0 < n) (x : FerrersDiagram n)
     (hdown : x.IsToDown hn)
     (hnegpen : ¬ x.IsNegPentagonal hn) :
     Even (x.down hn hdown hnegpen).delta.length ↔ ¬ Even x.delta.length := by
-  rw [length_down]
-  rw [Nat.even_add']
+  rw [length_down, Nat.even_add']
   simp
 
 /-- `bij` is either `up` or `down`, depending on which way is legal. -/
@@ -1510,10 +1497,8 @@ match l with
   | nil => simp [foldDelta_eq_nil.mp h]
   | cons x' xs' =>
     simp only
-    rw [List.sum_cons, ← h, sum_foldDelta, List.zipIdx_cons, List.map_cons, List.sum_cons]
-    rw [mul_one]
-    rw [add_comm x' x, add_assoc]
-    rw [Nat.add_left_cancel_iff]
+    rw [List.sum_cons, ← h, sum_foldDelta, List.zipIdx_cons, List.map_cons, List.sum_cons,
+      mul_one, add_comm x' x, add_assoc, Nat.add_left_cancel_iff]
     nth_rw 2 [List.zipIdx_succ]
     simp_rw [List.map_map]
     have : (fun x ↦ x.1 * x.2) ∘ (fun (x : ℕ × ℕ) ↦ (x.1, x.2 + 1)) =
@@ -1521,8 +1506,7 @@ match l with
       ext x
       simp
       ring
-    rw [this]
-    rw [List.sum_map_add]
+    rw [this, List.sum_map_add]
     suffices x' = xs.sum by simpa
     rw [← head_foldDelta]
     simp [h]
@@ -1606,24 +1590,19 @@ match l with
 | [] | [x] => by simp [unfoldDelta]
 | x :: y :: xs => by
   rw [List.pairwise_cons_cons_iff_of_trans] at hsort
-  rw [unfoldDelta]
-  rw [List.sum_cons, List.zipIdx_cons, List.map_cons, List.sum_cons, List.zipIdx_succ]
-  rw [← sum_unfoldDelta hsort.2]
-  rw [mul_one, List.map_map]
+  rw [unfoldDelta, List.sum_cons, List.zipIdx_cons, List.map_cons, List.sum_cons,
+    List.zipIdx_succ, ← sum_unfoldDelta hsort.2, mul_one, List.map_map]
   simp only
   have : (fun x ↦ x.1 * x.2) ∘ (fun (x : ℕ × ℕ) ↦ (x.1, x.2 + 1)) =
       fun x ↦ x.1 + x.1 * (x.2) := by
     ext x
     simp
     ring
-  rw [this]
-  rw [List.sum_map_add]
-  rw [← add_assoc]
+  rw [this, List.sum_map_add, ← add_assoc]
   suffices x - y + (unfoldDelta (y :: xs)).sum = x by simpa
   rw [← Nat.sub_add_comm hsort.1.le]
   apply Nat.sub_eq_of_eq_add
-  rw [Nat.add_left_cancel_iff]
-  rw [sum_unfoldDelta' hsort.2]
+  rw [Nat.add_left_cancel_iff, sum_unfoldDelta' hsort.2]
   simp
 
 @[simp]
@@ -1805,8 +1784,7 @@ theorem negpenSum {k : ℕ} (hk : 0 < k) :
     intro i hi
     rw [Finset.mem_range] at hi
     simp [hi]
-  rw [hsum]
-  rw [Finset.sum_add_distrib]
+  rw [hsum, Finset.sum_add_distrib]
   push_cast
   simp_rw [mul_add]
   rw [Finset.sum_range_id_mul_two']
@@ -1835,8 +1813,7 @@ theorem pospenSum {k : ℕ} (hk : 0 < k) :
     intro i hi
     rw [Finset.mem_range] at hi
     simp [hi]
-  rw [hsum]
-  rw [Finset.sum_add_distrib]
+  rw [hsum, Finset.sum_add_distrib]
   push_cast
   simp_rw [mul_add]
   rw [Finset.sum_range_id_mul_two']
@@ -1860,8 +1837,7 @@ theorem two_n_eq (hn : 0 < n) (x : FerrersDiagram n)
     apply List.ext_getElem (by simp)
     intro i h1 h2
     simpa using hone i (by simpa using h1)
-  rw [hrep]
-  rw [pospenSum (List.length_pos_iff.mpr (x.delta_ne_nil hn))]
+  rw [hrep, pospenSum (List.length_pos_iff.mpr (x.delta_ne_nil hn))]
 
 end IsPosPentagonal
 
@@ -1881,8 +1857,7 @@ theorem two_n_eq (hn : 0 < n) (x : FerrersDiagram n)
     apply List.ext_getElem (by simp)
     intro i h1 h2
     simpa using hone i (by simpa using h1)
-  rw [hrep]
-  rw [negpenSum (List.length_pos_iff.mpr (x.delta_ne_nil hn))]
+  rw [hrep, negpenSum (List.length_pos_iff.mpr (x.delta_ne_nil hn))]
 
 end IsNegPentagonal
 
@@ -1914,8 +1889,7 @@ theorem pentagonal_of_exists_k (hn : 0 < n) {k : ℤ} (h : 2 * n = k * (3 * k - 
     }, ?_⟩
     · apply Int.natCast_inj.mp
       apply Int.eq_of_mul_eq_mul_left (show 2 ≠ 0 by simp)
-      rw [h]
-      rw [negpenSum (by simpa using hneg)]
+      rw [h, negpenSum (by simpa using hneg)]
       have hk : -(-k).toNat = k := by simpa [← Int.neg_min_neg] using hneg.le
       rw [hk]
     · refine Or.inr ⟨?_, ?_⟩
@@ -1937,8 +1911,7 @@ theorem pentagonal_of_exists_k (hn : 0 < n) {k : ℤ} (h : 2 * n = k * (3 * k - 
     }, ?_⟩
     · apply Int.natCast_inj.mp
       apply Int.eq_of_mul_eq_mul_left (show 2 ≠ 0 by simp)
-      rw [h]
-      rw [pospenSum (by simpa using hpos)]
+      rw [h, pospenSum (by simpa using hpos)]
       have hk : k.toNat = k := by simpa [← Int.neg_min_neg] using hpos.le
       rw [hk]
     · refine Or.inl ⟨?_, ?_⟩
@@ -1972,9 +1945,8 @@ theorem pentagonal_subsingleton (hn : 0 < n) :
       have hbi' : i = b.delta.length - 1 := h ▸ hai'
       conv => left; left; rw [hai']
       conv => right; left; rw [hbi']
-      rw [← List.getLast_eq_getElem (a.delta_ne_nil hn)]
-      rw [← List.getLast_eq_getElem (b.delta_ne_nil hn)]
-      rw [ha.1, hb.1]
+      rw [← List.getLast_eq_getElem (a.delta_ne_nil hn),
+        ← List.getLast_eq_getElem (b.delta_ne_nil hn), ha.1, hb.1]
       exact h
   · obtain ha' := IsPosPentagonal.two_n_eq hn a ha
     obtain hb' := IsNegPentagonal.two_n_eq hn b hb
@@ -2001,9 +1973,8 @@ theorem pentagonal_subsingleton (hn : 0 < n) :
       have hbi' : i = b.delta.length - 1 := h ▸ hai'
       conv => left; left; rw [hai']
       conv => right; left; rw [hbi']
-      rw [← List.getLast_eq_getElem (a.delta_ne_nil hn)]
-      rw [← List.getLast_eq_getElem (b.delta_ne_nil hn)]
-      rw [ha.1, hb.1]
+      rw [← List.getLast_eq_getElem (a.delta_ne_nil hn),
+        ← List.getLast_eq_getElem (b.delta_ne_nil hn), ha.1, hb.1]
       simpa using h
 
 /-- Third definition of $\phi$: coefficients represents the existence of even and odd
@@ -2038,9 +2009,7 @@ theorem phiCoeff_eq_card_sub (hn : 0 < n) :
         exact heven
       have hnodd : ↑{x | (IsPosPentagonal hn x ∨ IsNegPentagonal hn x) ∧
           ¬Even x.delta.length}.ncard = 0 := by
-        rw [Set.ncard_eq_zero]
-        rw [Set.setOf_and]
-        rw [Disjoint.inter_eq]
+        rw [Set.ncard_eq_zero, Set.setOf_and, Disjoint.inter_eq]
         rw [Set.disjoint_left]
         intro y hy
         rw [show y = x from pentagonal_subsingleton hn hy hx]
@@ -2058,9 +2027,7 @@ theorem phiCoeff_eq_card_sub (hn : 0 < n) :
         exact heven
       have hneven : ↑{x | (IsPosPentagonal hn x ∨ IsNegPentagonal hn x) ∧
           Even x.delta.length}.ncard = 0 := by
-        rw [Set.ncard_eq_zero]
-        rw [Set.setOf_and]
-        rw [Disjoint.inter_eq]
+        rw [Set.ncard_eq_zero, Set.setOf_and, Disjoint.inter_eq]
         rw [Set.disjoint_left]
         intro y hy
         rw [show y = x from pentagonal_subsingleton hn hy hx]
@@ -2076,8 +2043,7 @@ theorem phiCoeff_eq_card_sub (hn : 0 < n) :
       apply (Set.ncard_inter_le_ncard_left _ _).trans
       rw [Set.setOf_or]
       apply (Set.ncard_union_le _ _).trans
-      rw [nonpos_iff_eq_zero, Nat.add_eq_zero_iff]
-      rw [Set.ncard_eq_zero, Set.ncard_eq_zero]
+      rw [nonpos_iff_eq_zero, Nat.add_eq_zero_iff, Set.ncard_eq_zero, Set.ncard_eq_zero]
       constructor
       all_goals
       · ext x
@@ -2099,11 +2065,8 @@ def phiCoeff' (n : ℕ) := ∑ s ∈ Nat.Partition.distincts n, (-1) ^ s.parts.c
 theorem phiCoeff_eq (n : ℕ) : phiCoeff n = phiCoeff' n := by
   obtain rfl | hn := Nat.eq_zero_or_pos n
   · decide
-  rw [FerrersDiagram.phiCoeff_eq_card_sub hn]
-  rw [← FerrersDiagram.card_sub hn]
-  rw [Set.ncard_eq_toFinset_card]
-  rw [Set.ncard_eq_toFinset_card]
-  rw [phiCoeff']
+  rw [FerrersDiagram.phiCoeff_eq_card_sub hn, ← FerrersDiagram.card_sub hn,
+    Set.ncard_eq_toFinset_card, Set.ncard_eq_toFinset_card, phiCoeff']
   let even := (Nat.Partition.distincts n).filter (Even ·.parts.card)
   let odd := (Nat.Partition.distincts n).filter (¬Even ·.parts.card)
   have hdisj : Disjoint even odd := Finset.disjoint_filter_filter_not _ _ _
@@ -2122,8 +2085,7 @@ theorem phiCoeff_eq (n : ℕ) : phiCoeff n = phiCoeff' n := by
     unfold odd at hx
     rw [Finset.mem_filter] at hx
     exact Odd.neg_one_pow (by simpa using hx.2)
-  rw [heven, hodd]
-  rw [Finset.sum_neg_distrib]
+  rw [heven, hodd, Finset.sum_neg_distrib]
   simp_rw [Finset.sum_const, nsmul_one, Int.add_neg_eq_sub]
   congr 2
   all_goals
@@ -2147,15 +2109,10 @@ theorem eularPhi : HasProd (fun (n : ℕ+) ↦ (1 - PowerSeries.monomial n (1 : 
   intro s hs
   rw [PowerSeries.coeff_mk]
   simp_rw [sub_eq_add_neg]
-  rw [Finset.prod_one_add]
-  rw [map_sum]
+  rw [Finset.prod_one_add, map_sum]
   have (i : ℕ+) : -PowerSeries.monomial i 1 = (PowerSeries.monomial i (-1)) := by simp
-  simp_rw [this]
-  simp_rw [PowerSeries.prod_monomial]
-  simp_rw [Finset.prod_const]
-  simp_rw [PowerSeries.coeff_monomial]
-  rw [Finset.sum_ite]
-  rw [Finset.sum_const_zero, add_zero]
+  simp_rw [this, PowerSeries.prod_monomial, Finset.prod_const, PowerSeries.coeff_monomial]
+  rw [Finset.sum_ite, Finset.sum_const_zero, add_zero]
   unfold phiCoeff'
   let f (x : Finset ℕ+) (h : x ∈ s.powerset.filter (n = ∑ i ∈ ·, i.val)) : n.Partition := {
     parts := x.val.map (↑)

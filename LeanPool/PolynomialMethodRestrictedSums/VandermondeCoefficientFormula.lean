@@ -541,8 +541,7 @@ lemma coeff_term (c : Fin (k + 1) → ℕ) (m : ℕ) (σ : Equiv.Perm (Fin (k + 
           unfold toFinsupp at a
           simp_all only [ne_eq, Finsupp.coe_mk]
           linarith
-        rw [Finset.prod_eq_prod_diff_singleton_mul <| Finset.mem_univ w]
-        rw [MvPolynomial.coeff_mul]
+        rw [Finset.prod_eq_prod_diff_singleton_mul <| Finset.mem_univ w, MvPolynomial.coeff_mul]
         have fwd : LE.le (α := ℕ) (snd w : ℕ) (σ w : Fin (k + 1)).1 := le_of_lt h_snd_w
         have fwd_1 : c w ≤ (σ w).1 := le_of_lt h
         refine Or.inr <| Finset.sum_eq_zero fun x hx => ?_
@@ -588,8 +587,7 @@ theorem Vandermonde_coefficient_formula (c : Fin (k + 1) → ℕ) (m : ℕ)
             Matrix.det (Matrix.of (fun i j : Fin (k + 1) =>
               (MvPolynomial.X j : MvPolynomial (Fin (k + 1)) ℚ) ^ (i : ℕ))) := by
         erw [Matrix.det_transpose, Matrix.det_vandermonde]
-        rw [Finset.prod_sigma', Finset.prod_sigma']
-        rw [← Finset.prod_filter]
+        rw [Finset.prod_sigma', Finset.prod_sigma', ← Finset.prod_filter]
         refine Finset.prod_bij (fun x hx => ⟨x.snd, x.fst⟩) ?_ ?_ ?_ ?_
         · intro a ha
           simp_all only [mem_sigma, mem_univ, mem_Ioi, true_and]
@@ -613,7 +611,6 @@ theorem Vandermonde_coefficient_formula (c : Fin (k + 1) → ℕ) (m : ℕ)
       simp +decide [Algebra.smul_def]
     simp +decide only [h_vandermonde, mul_smul_comm, Finset.mul_sum _ _ _]
     rw [MvPolynomial.coeff_sum]; aesop
-  rw [h_coeff]
-  rw [Finset.sum_congr rfl fun σ _ => by rw [coeff_term c m σ h_sum]]
+  rw [h_coeff, Finset.sum_congr rfl fun σ _ => by rw [coeff_term c m σ h_sum]]
   norm_num +zetaDelta at *
   convert symmetricSumFixed_eq_expectedValue c m using 1

@@ -51,8 +51,7 @@ lemma eq_zero_of_eval_zero_at_prod_finset {σ : Type*} [Finite σ] [IsDomain R]
     (P : MvPolynomial σ R) (S : σ → Finset R)
     (Hdeg : ∀ i, P.degreeOf i < #(S i))
     (Heval : ∀ (x : σ → R), (∀ i, x i ∈ S i) → eval x P = 0) :
-    P = 0 := by
-      exact MvPolynomial.eq_zero_of_eval_zero_at_prod_finset P S Hdeg Heval
+    P = 0 := by exact MvPolynomial.eq_zero_of_eval_zero_at_prod_finset P S Hdeg Heval
 
 /-- Definition of elimination polynomials g_i -/
 noncomputable def eliminationPolynomials (A : Fin (k + 1) → Finset (ZMod p)) :
@@ -106,8 +105,7 @@ lemma constructionPolynomial_vanishes
         · simp_all only [implies_true, not_false_eq_true, and_self]
     have h_sum_in_E : (∑ i, x i) ∈ E := hE_sub h_sum_in_S
     have h_prod_zero : eval x ((E.map (fun e => sumXPolynomial - C e)).prod) = 0 := by
-      have factor_zero : eval x (sumXPolynomial - C (∑ i, x i)) = 0 := by
-        simp [sumXPolynomial]
+      have factor_zero : eval x (sumXPolynomial - C (∑ i, x i)) = 0 := by simp [sumXPolynomial]
       have mem : sumXPolynomial - C (∑ i, x i) ∈
           (show Multiset (MvPolynomial (Fin (k + 1)) (ZMod p)) from
             E.map (fun e => sumXPolynomial - C e)) :=
@@ -230,12 +228,10 @@ lemma constructionPolynomial_totalDegree
     rw [key, hE_card]
   -- (Removed previous in-line derivation to fix failing aesop tactics.)
   -- We instead delegate to `totalDegree_prod_sumX_sub_C_eq_card`.
-  have h_h_deg : h.totalDegree = (∑ i, c i) - m := by
-    exact Nat.eq_sub_of_add_eq' hm
+  have h_h_deg : h.totalDegree = (∑ i, c i) - m := by exact Nat.eq_sub_of_add_eq' hm
   -- By definition of constructionPolynomial, we have constructionPolynomial h E = h *
   -- productPolynomial k E.
-  have h_construction_eq : constructionPolynomial h E = h * productPolynomial k E := by
-    exact rfl
+  have h_construction_eq : constructionPolynomial h E = h * productPolynomial k E := by exact rfl
   -- Apply the property that the total degree of a product of two polynomials is the sum of their
   -- total degrees.
   have h_total_deg : (h * productPolynomial k E).totalDegree = h.totalDegree +
@@ -282,8 +278,7 @@ lemma coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq
     subst h
     simp only [MvPolynomial.coeff_C, ↓reduceIte]
     -- carry hx in the simplified form (snd = E.card + 1) for the legacy bullet
-    have hx_snd : ∑ x, snd x = E.card + 1 := by
-      simpa [Finsupp.zero_apply, zero_add] using hx_sum
+    have hx_snd : ∑ x, snd x = E.card + 1 := by simpa [Finsupp.zero_apply, zero_add] using hx_sum
     clear hx_sum
     -- legacy bullet 1 body
     rw [MvPolynomial.coeff_sum]
@@ -396,8 +391,7 @@ lemma constructionPolynomial_coeff_target_generalized
           simp [Finset.mem_antidiagonal]
       contrapose! h_coeff
       simp_all +decide only [ne_eq, mul_eq_zero, mul_comm, zero_eq_mul, false_or]
-      rw [MvPolynomial.coeff_mul]
-      rw [Finset.sum_eq_single (0, (Finsupp.equivFunOnFinite.symm c))]
+      rw [MvPolynomial.coeff_mul, Finset.sum_eq_single (0, (Finsupp.equivFunOnFinite.symm c))]
       · -- the diagonal term: coeff 0 h * coeff (sym c) ((∑ X)^m) = 0 via h_final
         change coeff 0 h *
             coeff (Finsupp.equivFunOnFinite.symm c)
@@ -429,8 +423,7 @@ lemma constructionPolynomial_coeff_target_generalized
                   rw [← coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq E snd h_deg]
                 rw [← hE_card, h_eq, h_snd_eq, h_prod_zero, mul_zero]
               · -- snd has wrong degree; show coeff snd ((∑ X)^m) = 0
-                have h_left : fst ∈ h.support :=
-                  MvPolynomial.mem_support_iff.mpr h_coeff_fst
+                have h_left : fst ∈ h.support := MvPolynomial.mem_support_iff.mpr h_coeff_fst
                 have h_sum_eq : (∑ i, fst i) + (∑ i, snd i) = ∑ i, c i := by
                   have hh := congr_arg (fun x => ∑ i, x i) hmem
                   simp only [Finsupp.coe_add, Pi.add_apply, equivFunOnFinite_symm_apply_apply,
@@ -470,11 +463,9 @@ lemma constructionPolynomial_coeff_target_generalized
                     intro x _ hx
                     simpa [Finsupp.mem_support_iff] using hx
                   rw [h_supp] at h_not_lt
-                  have h_snd_lt : ∑ i, snd i < E.card :=
-                    lt_of_le_of_ne h_not_lt h_deg
+                  have h_snd_lt : ∑ i, snd i < E.card := lt_of_le_of_ne h_not_lt h_deg
                   have h_fst_gt : ∑ i, fst i > h.totalDegree := by
-                    have hm' : E.card + h.totalDegree = ∑ i, c i := by
-                      rw [hE_card]; exact hm
+                    have hm' : E.card + h.totalDegree = ∑ i, c i := by rw [hE_card]; exact hm
                     omega
                   exact absurd h_deg_le (not_le.mpr h_fst_gt)
                 rw [← hE_card, h_snd_zero, mul_zero]
@@ -814,8 +805,7 @@ private lemma elimination_polynomial_sub_top_totalDegree_lt
         rw [MvPolynomial.degreeOf_eq_sup]
         exact Finset.le_sup (f := fun m => m j) hmem
       exact hle.trans (le_of_eq h_deg_j)
-  rw [MvPolynomial.totalDegree]
-  rw [Finset.sup_lt_iff (by simpa using h_card)]
+  rw [MvPolynomial.totalDegree, Finset.sup_lt_iff (by simpa using h_card)]
   intro m hm
   have h_eq : (m.sum fun _ e => e) = m i := by
     rw [Finsupp.sum, Finset.sum_eq_single i]
@@ -911,8 +901,7 @@ lemma monomial_reduction_step (m : Fin (k + 1) →₀ ℕ) (i : Fin (k + 1))
                 have h_mi : c i + 1 ≤ m i := by
                   have := h_le i
                   simpa [Finsupp.single_apply] using this
-                have happ : (m - Finsupp.single i (c i + 1)) i = m i - (c i + 1) := by
-                  simp
+                have happ : (m - Finsupp.single i (c i + 1)) i = m i - (c i + 1) := by simp
                 rw [happ]
                 have h_sum_eq :
                     (Finset.univ \ {i}).sum (fun j => m j) = ∑ x ∈ Finset.univ \ {i}, m x := rfl

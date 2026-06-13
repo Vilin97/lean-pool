@@ -24,8 +24,7 @@ namespace ContextFreeGrammar
 variable {g : ContextFreeGrammar T}
 
 lemma Produces.input_output {r : ContextFreeRule T g.NT} (hrg : r ∈ g.rules) :
-    g.Produces [.nonterminal r.input] r.output :=
-  ⟨r, hrg, ContextFreeRule.Rewrites.input_output⟩
+    g.Produces [.nonterminal r.input] r.output := ⟨r, hrg, ContextFreeRule.Rewrites.input_output⟩
 
 lemma Produces.rule {n : g.NT} {u : List (Symbol T g.NT)}
     (hnu : g.Produces [Symbol.nonterminal n] u) :
@@ -40,8 +39,7 @@ theorem Derives.head_induction_on {v : List (Symbol T g.NT)} {P : ∀ u, g.Deriv
     (refl : P v (Derives.refl v))
     (head : ∀ {u w} (huw : g.Produces u w) (hwv : g.Derives w v),
       P w hwv → P u (hwv.head huw)) :
-    P u huv :=
-  Relation.ReflTransGen.head_induction_on huv refl head
+    P u huv := Relation.ReflTransGen.head_induction_on huv refl head
 
 end ContextFreeGrammar
 
@@ -71,10 +69,7 @@ lemma derives_iff_derivesIn (g : ContextFreeGrammar T) (v w : List (Symbol T g.N
       left
     | tail _ last ih =>
       obtain ⟨n, ihn⟩ := ih
-      use n.succ
-      right
-      · exact ihn
-      · exact last
+      exact ⟨n.succ, .tail _ _ _ _ ihn last⟩
   · intro ⟨n, hgvwn⟩
     induction hgvwn with
     | refl => rfl
@@ -87,21 +82,16 @@ lemma mem_language_iff_derivesIn (g : ContextFreeGrammar T) (w : List T) :
 
 variable {g : ContextFreeGrammar T}
 
-lemma DerivesIn.zero_steps (w : List (Symbol T g.NT)) : g.DerivesIn w w 0 := by
-  left
+lemma DerivesIn.zero_steps (w : List (Symbol T g.NT)) : g.DerivesIn w w 0 := by left
 
 lemma Produces.single_step {v w : List (Symbol T g.NT)} (hvw : g.Produces v w) :
-    g.DerivesIn v w 1 := by
-  right
-  · left
-  · exact hvw
+    g.DerivesIn v w 1 := .tail _ _ _ _ (.refl v) hvw
 
 variable {n : ℕ}
 
 lemma DerivesIn.trans_produces {u v w : List (Symbol T g.NT)}
     (huv : g.DerivesIn u v n) (hvw : g.Produces v w) :
-    g.DerivesIn u w n.succ :=
-  DerivesIn.tail u v w n huv hvw
+    g.DerivesIn u w n.succ := DerivesIn.tail u v w n huv hvw
 
 @[trans]
 lemma DerivesIn.trans {u v w : List (Symbol T g.NT)} {m : ℕ}
@@ -113,8 +103,7 @@ lemma DerivesIn.trans {u v w : List (Symbol T g.NT)} {m : ℕ}
 
 lemma Produces.trans_derivesIn {u v w : List (Symbol T g.NT)}
     (huv : g.Produces u v) (hvw : g.DerivesIn v w n) :
-    g.DerivesIn u w n.succ :=
-  n.succ_eq_one_add ▸ huv.single_step.trans hvw
+    g.DerivesIn u w n.succ := n.succ_eq_one_add ▸ huv.single_step.trans hvw
 
 lemma DerivesIn.tail_of_succ {u w : List (Symbol T g.NT)} (huw : g.DerivesIn u w n.succ) :
     ∃ v : List (Symbol T g.NT), g.DerivesIn u v n ∧ g.Produces v w := by
@@ -191,30 +180,18 @@ lemma DerivesIn.append_split {p q w : List (Symbol T g.NT)} {n : ℕ}
     rcases append_eq_append_cons heq with ⟨a, hq', hp⟩ | ⟨a, hp', hq⟩
     · rw [hv, hq', ← List.append_assoc] at hd
       obtain ⟨x, y, m₁, m₂, hw, hd₁, hd₂, hn⟩ := hd.append_split
-      use x, y, (m₁ + 1), m₂
-      constructor
-      · exact hw
-      · constructor
-        · apply Produces.trans_derivesIn
-          · use r
-            constructor
-            · exact hrg
-            · rw [hp, ← List.singleton_append, ← List.append_assoc]
-              apply r.rewrites_of_exists_parts
-          · exact hd₁
-        · exact ⟨hd₂, by omega⟩
+      refine ⟨x, y, m₁ + 1, m₂, hw, ?_, hd₂, by omega⟩
+      refine Produces.trans_derivesIn ⟨r, hrg, ?_⟩ hd₁
+      rw [hp, ← List.singleton_append, ← List.append_assoc]
+      apply r.rewrites_of_exists_parts
     · rw [hv, hp', List.append_assoc, List.append_assoc] at hd
       obtain ⟨x, y, m₁, m₂, hw, hd₁, hd₂, hn⟩ := hd.append_split
-      use x, y, m₁, m₂ + 1, hw, hd₁
-      constructor
-      · apply Produces.trans_derivesIn
-        · use r
-          constructor
-          · exact hrg
-          · rw [hq, ← List.singleton_append, ← List.append_assoc]
-            apply r.rewrites_of_exists_parts
-        · rwa [List.append_assoc]
-      · omega
+      refine ⟨x, y, m₁, m₂ + 1, hw, hd₁, ?_, by omega⟩
+      apply Produces.trans_derivesIn
+      · refine ⟨r, hrg, ?_⟩
+        rw [hq, ← List.singleton_append, ← List.append_assoc]
+        apply r.rewrites_of_exists_parts
+      · rwa [List.append_assoc]
 
 lemma DerivesIn.three_split {p q r w : List (Symbol T g.NT)} {n : ℕ}
     (hg : g.DerivesIn (p ++ q ++ r) w n) :

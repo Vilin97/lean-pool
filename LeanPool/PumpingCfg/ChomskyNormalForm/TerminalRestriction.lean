@@ -87,8 +87,7 @@ lemma projectString_terminals {u : List T} :
     exact ⟨rfl, ih⟩
 
 lemma projectSymbol_nonterminal {n : N} :
-    projectSymbol (@Symbol.nonterminal T (N ⊕ T) (Sum.inl n)) = Symbol.nonterminal n :=
-  rfl
+    projectSymbol (@Symbol.nonterminal T (N ⊕ T) (Sum.inl n)) = Symbol.nonterminal n := rfl
 
 lemma embedString_preserves_nonempty {u : List (Symbol T N)} (hu : u ≠ []) :
     embedString u ≠ [] := by
@@ -101,13 +100,11 @@ lemma embedString_terminals {u : List T} :
   | cons => simp [embedString, embedSymbol]
 
 lemma embedString_append {u v : List (Symbol T N)} :
-    embedString (u ++ v) = embedString u ++ embedString v :=
-  List.map_append
+    embedString (u ++ v) = embedString u ++ embedString v := List.map_append
 
 lemma rightEmbed_string_nonUnit {u : List (Symbol T N)} (hu : ContextFreeGrammar.NonUnit u)
     (hut : ∀ t, u ≠ [Symbol.terminal t]) :
-    ContextFreeGrammar.NonUnit (rightEmbedString u) :=
-  match u with
+    ContextFreeGrammar.NonUnit (rightEmbedString u) := match u with
   | [] => trivial
   | [Symbol.nonterminal _] => hu
   | [Symbol.terminal t] => hut t rfl

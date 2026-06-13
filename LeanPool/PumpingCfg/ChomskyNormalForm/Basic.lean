@@ -181,18 +181,15 @@ lemma Produces.single {u v : List (Symbol T g.NT)} (hvw : g.Produces u v) : g.De
 
 @[trans]
 lemma Derives.trans {u v w : List (Symbol T g.NT)} (huv : g.Derives u v) (hvw : g.Derives v w) :
-    g.Derives u w :=
-  Relation.ReflTransGen.trans huv hvw
+    g.Derives u w := Relation.ReflTransGen.trans huv hvw
 
 lemma Derives.trans_produces {u v w : List (Symbol T g.NT)}
     (huv : g.Derives u v) (hvw : g.Produces v w) :
-    g.Derives u w :=
-  huv.trans hvw.single
+    g.Derives u w := huv.trans hvw.single
 
 lemma Produces.trans_derives {u v w : List (Symbol T g.NT)}
     (huv : g.Produces u v) (hvw : g.Derives v w) :
-    g.Derives u w :=
-  huv.single.trans hvw
+    g.Derives u w := huv.single.trans hvw
 
 lemma Derives.eq_or_head {u w : List (Symbol T g.NT)} (huw : g.Derives u w) :
     u = w ∨ ∃ v : List (Symbol T g.NT), g.Produces u v ∧ g.Derives v w :=
@@ -234,8 +231,7 @@ theorem Derives.head_induction_on {v : List (Symbol T g.NT)} {P : ∀ u, g.Deriv
     {u : List (Symbol T g.NT)} (huv : g.Derives u v)
     (refl : P v (Derives.refl v))
     (head : ∀ {u w} (huw : g.Produces u w) (hwv : g.Derives w v), P w hwv → P u (hwv.head huw)) :
-    P u huv :=
-  Relation.ReflTransGen.head_induction_on huv refl head
+    P u huv := Relation.ReflTransGen.head_induction_on huv refl head
 
 /-! `ChomskyNormalFormGrammar` to `ContextFreeGrammar` translation and related properties -/
 section toCFG
@@ -262,9 +258,7 @@ lemma Derives.toCFG_match {u v : List (Symbol T g.NT)} (huv : g.Derives u v) :
     g.toCFG.Derives u v := by
   induction huv with
   | refl => rfl
-  | tail _ hp ih =>
-    apply ih.trans_produces
-    exact Produces.toCFG_match hp
+  | tail _ hp ih => exact ih.trans_produces (Produces.toCFG_match hp)
 
 lemma Generates.toCFG_match {u : List (Symbol T g.NT)} (hu : g.Generates u) : g.toCFG.Generates u :=
   Derives.toCFG_match hu
@@ -316,10 +310,7 @@ lemma derives_iff_derivesIn (g : ChomskyNormalFormGrammar T) (v w : List (Symbol
       left
     | tail _ last ih =>
       obtain ⟨n, ihn⟩ := ih
-      use n.succ
-      right
-      · exact ihn
-      · exact last
+      exact ⟨n.succ, .tail _ _ _ _ ihn last⟩
   · intro ⟨n, hgvwn⟩
     induction hgvwn with
     | refl => rfl
@@ -332,8 +323,7 @@ lemma mem_language_iff_derivesIn (g : ChomskyNormalFormGrammar T) (w : List T) :
 
 variable {g : ChomskyNormalFormGrammar T}
 
-lemma DerivesIn.zero_steps (w : List (Symbol T g.NT)) : g.DerivesIn w w 0 := by
-  left
+lemma DerivesIn.zero_steps (w : List (Symbol T g.NT)) : g.DerivesIn w w 0 := by left
 
 lemma DerivesIn.zero_steps_eq {u v : List (Symbol T g.NT)} (huv : g.DerivesIn u v 0) :
     u = v:= by
@@ -341,17 +331,13 @@ lemma DerivesIn.zero_steps_eq {u v : List (Symbol T g.NT)} (huv : g.DerivesIn u 
   rfl
 
 lemma Produces.single_step {v w : List (Symbol T g.NT)} (hvw : g.Produces v w) :
-    g.DerivesIn v w 1 := by
-  right
-  · left
-  · exact hvw
+    g.DerivesIn v w 1 := .tail _ _ _ _ (.refl v) hvw
 
 variable {n : ℕ}
 
 lemma DerivesIn.trans_produces {u v w : List (Symbol T g.NT)}
     (huv : g.DerivesIn u v n) (hvw : g.Produces v w) :
-    g.DerivesIn u w n.succ :=
-  DerivesIn.tail u v w n huv hvw
+    g.DerivesIn u w n.succ := DerivesIn.tail u v w n huv hvw
 
 @[trans]
 lemma DerivesIn.trans {u v w : List (Symbol T g.NT)} {m : ℕ}
@@ -363,8 +349,7 @@ lemma DerivesIn.trans {u v w : List (Symbol T g.NT)} {m : ℕ}
 
 lemma Produces.trans_derivesIn {u v w : List (Symbol T g.NT)}
     (huv : g.Produces u v) (hvw : g.DerivesIn v w n) :
-    g.DerivesIn u w n.succ :=
-  n.succ_eq_one_add ▸ huv.single_step.trans hvw
+    g.DerivesIn u w n.succ := n.succ_eq_one_add ▸ huv.single_step.trans hvw
 
 lemma DerivesIn.tail_of_succ {u w : List (Symbol T g.NT)} (huw : g.DerivesIn u w n.succ) :
     ∃ v : List (Symbol T g.NT), g.DerivesIn u v n ∧ g.Produces v w := by
@@ -429,10 +414,8 @@ lemma DerivesIn.append_split {p q w : List (Symbol T g.NT)} {n : ℕ}
         | nil =>
           right
           use []
-          rw [hq]
-          constructor
-          · repeat rw [List.append_nil]
-          · rfl
+          rw [hq, List.append_nil, List.append_nil]
+          exact ⟨rfl, rfl⟩
         | cons d l =>
           left
           use l
@@ -442,18 +425,10 @@ lemma DerivesIn.append_split {p q w : List (Symbol T g.NT)} {n : ℕ}
     rcases append_eq_append_cons heq with ⟨a, hq', hp⟩ | ⟨a, hp', hq⟩
     · rw [hv, hq', ← List.append_assoc] at hd
       obtain ⟨x, y, m₁, m₂, hw, hd₁, hd₂, hn⟩ := hd.append_split
-      use x, y, (m₁ + 1), m₂
-      constructor
-      · exact hw
-      · constructor
-        · apply Produces.trans_derivesIn
-          · use r
-            constructor
-            · exact hrg
-            · rw [hp, ← List.singleton_append, ← List.append_assoc]
-              apply r.rewrites_of_exists_parts
-          · exact hd₁
-        · exact ⟨hd₂, by omega⟩
+      refine ⟨x, y, m₁ + 1, m₂, hw, ?_, hd₂, by omega⟩
+      refine Produces.trans_derivesIn ⟨r, hrg, ?_⟩ hd₁
+      rw [hp, ← List.singleton_append, ← List.append_assoc]
+      apply r.rewrites_of_exists_parts
     · rw [hv, hp', List.append_assoc, List.append_assoc] at hd
       obtain ⟨x, y, m₁, m₂, hw, hd₁, hd₂, hn⟩ := hd.append_split
       use x, y, m₁, m₂ + 1, hw, hd₁

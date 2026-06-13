@@ -32,8 +32,7 @@ variable {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
 --
 -- 1.  Fin 2
 lemma sum_fin_two {M : Type*} [AddCommMonoid M] (f : Fin 2 → M) :
-    ∑ i, f i = f 0 + f 1 := by
-  rw [Fin.sum_univ_two]
+    ∑ i, f i = f 0 + f 1 := by rw [Fin.sum_univ_two]
 
 
 
@@ -93,8 +92,7 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
   have h_coeff_ne_zero : coeff (equivFunOnFinite.symm cs) ((∑ i : Fin 2, X i) ^ m * h_poly) ≠ 0 :=
       by
     simp only [h_poly, mul_one, Fin.sum_univ_two]
-    rw [add_pow]
-    rw [coeff_sum]
+    rw [add_pow, coeff_sum]
     rw [Finset.sum_eq_single (cs 0)] --  (m_1 = cs 0)
     · --  1  ()
       have h_exp : m - cs 0 = cs 1 := by
@@ -117,8 +115,7 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
           have h3 : p - 1 < p := by exact Nat.sub_lt (h2) (Nat.zero_lt_one)
           exact lt_of_le_of_lt h1 h3
       · simp only [X, monomial_pow, monomial_mul]
-        rw [coeff_monomial]
-        rw [if_pos]
+        rw [coeff_monomial, if_pos]
         · rw [one_pow, one_pow, one_mul]; exact one_ne_zero
         · --
           ext i; fin_cases i
@@ -129,8 +126,7 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
       rw [show (↑(m.choose b) : MvPolynomial (Fin 2) (ZMod p)) = C (m.choose b : ZMod p) by simp]
       rw [mul_comm, coeff_C_mul]
       simp only [X, monomial_pow, monomial_mul]
-      rw [coeff_monomial]
-      rw [if_neg]
+      rw [coeff_monomial, if_neg]
       · simp -- 0 *  = 0
       · --  b = cs 0
         intro h_eq

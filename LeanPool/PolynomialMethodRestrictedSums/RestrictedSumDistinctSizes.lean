@@ -306,8 +306,7 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
       set m : ℕ := ∑ i, c i - (k + 1).choose 2;
       -- Show that $m < p$ and that the coefficient of $\prod X_i^{c_i}$ in $(\sum X_i)^m \cdot
       -- \text{vandermonde}$ is non-zero modulo $p$.
-      have hm_lt_p : m < p := by
-        exact restricted_sum_m_bound A h_nonempty h_sum_bound
+      have hm_lt_p : m < p := by exact restricted_sum_m_bound A h_nonempty h_sum_bound
       have h_coeff_nonzero :
           (MvPolynomial.coeff (toFinsupp c) ((∑ i,
               (X i : MvPolynomial (Fin (k + 1)) (ZMod p))) ^ m *
@@ -483,8 +482,7 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
         calc
           ∑ i, #(A i) = ∑ i : Fin (k + 1), ((#(A i) - 1) + 1) :=
               Finset.sum_congr rfl fun i _ => this i
-          _ = ∑ i, (#(A i) - 1) + (k + 1) := by
-              rw [Finset.sum_add_distrib]; simp
+          _ = ∑ i, (#(A i) - 1) + (k + 1) := by rw [Finset.sum_add_distrib]; simp
       have h_choose_succ : (k + 2).choose 2 = (k + 1).choose 2 + (k + 1) := by
         rw [show ((k + 2 : ℕ).choose 2) = ((k + 1 + 1 : ℕ).choose (1 + 1)) from rfl,
             Nat.choose_succ_succ' (k + 1) 1, Nat.choose_one_right,

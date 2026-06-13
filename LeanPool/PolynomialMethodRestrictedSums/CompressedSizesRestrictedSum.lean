@@ -119,11 +119,9 @@ lemma exists_gt_base_of_ne_base {k : ℕ} {b : Fin (k + 1) → ℕ}
     ∃ j, baseSeq k j < b j := by
       -- Since $b$ is not equal to the base sequence, there must be some $i$ where $b i \neq
       -- baseSeq k i$.
-      obtain ⟨i, hi⟩ : ∃ i, b i ≠ baseSeq k i := by
-        exact Function.ne_iff.mp h_ne;
+      obtain ⟨i, hi⟩ : ∃ i, b i ≠ baseSeq k i := by exact Function.ne_iff.mp h_ne;
       -- Since $b$ is valid, we have $b i \geq baseSeq k i$ for all $i$.
-      have h_ge : ∀ i, b i ≥ baseSeq k i := by
-        exact fun i => valid_seq_ge_base h_valid i;
+      have h_ge : ∀ i, b i ≥ baseSeq k i := by exact fun i => valid_seq_ge_base h_valid i;
       exact ⟨ i, lt_of_le_of_ne ( h_ge i ) hi.symm ⟩
 
 /-- The transformation T maps a sequence `b` to `b'` by finding the largest index
@@ -194,8 +192,7 @@ lemma transformSeq_props {k : ℕ} {b : Fin (k + 1) → ℕ}
           · exact fun i hi => not_lt.1 fun contra => not_lt_of_ge (right i contra) hi
           · exact ⟨j, left, le_rfl⟩
         · -- ∑ x, update b max' (b max' - 1) x = ∑ i, b i - 1
-          have h_mem :=
-            Finset.max'_mem (Finset.filter (fun j => baseSeq k j < b j) Finset.univ) h
+          have h_mem := Finset.max'_mem (Finset.filter (fun j => baseSeq k j < b j) Finset.univ) h
           simp_all only [mem_filter, mem_univ, true_and]
           rw [Finset.sum_update_of_mem]
           · rw [← Finset.sum_sdiff
@@ -346,8 +343,7 @@ theorem compressedSizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
     obtain ⟨A', hA'⟩ : ∃ A' : Fin (k + 1) → Finset (ZMod p),
         (∀ i, A' i ⊆ A i) ∧ (∀ i, (A' i).card = b' i) ∧
             (∀ i j, i < j → (A' i).card ≠ (A' j).card) := by
-      have h_valid_seq : ValidSeq k b' := by
-        apply compressedSizes_is_valid; assumption;
+      have h_valid_seq : ValidSeq k b' := by apply compressedSizes_is_valid; assumption;
       have h_subset : ∀ i, ∃ A'_i ⊆ A i, (A'_i).card = b' i := by
         intro i;
         exact Finset.exists_subset_card_eq ( by
@@ -394,8 +390,7 @@ theorem compressedSizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
               (∀ i j, i < j → (A'' i).card ≠ (A'' j).card) := by
         have h_subset : ∀ i, ∃ A''_i ⊆ A i, (A''_i).card = b'' i := by
           intros i
-          have h_card : b'' i ≤ #(A i) := by
-            exact le_trans ( hb''.2.2 i ) ( compressedSizes_le i );
+          have h_card : b'' i ≤ #(A i) := by exact le_trans ( hb''.2.2 i ) ( compressedSizes_le i );
           exact Finset.exists_subset_card_eq h_card;
         choose A'' hA''₁ hA''₂ using h_subset;
         exact ⟨ A'', hA''₁, hA''₂,
@@ -415,8 +410,7 @@ theorem compressedSizes_restricted_sum (A : Fin (k + 1) → Finset (ZMod p))
       · grind;
     obtain ⟨ A'', hA''₁, hA''₂, hA''₃,
         hA''₄ ⟩ := h_subset
-    have :=
-        Finset.card_mono ( show restrictedSumSet k A'' ⊆ restrictedSumSet k A from ?_ )
+    have := Finset.card_mono ( show restrictedSumSet k A'' ⊆ restrictedSumSet k A from ?_ )
     · simp_all only [gt_iff_lt, not_le, ne_eq, ge_iff_le, Order.add_one_le_iff, inf_le_iff]
       obtain ⟨left, right⟩ := hb''
       obtain ⟨left_1, right⟩ := right

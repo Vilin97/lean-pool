@@ -63,8 +63,7 @@ def mapℝ (f : ComputableℝSeq → ComputableℝSeq) {f₂ : ℝ → ℝ} (h :
     Computableℝ → Computableℝ :=
   mapℝ' f ⟨f₂, h⟩
 
-theorem mapℝ'_eq_mapℝ : mapℝ' f h = mapℝ f h₂ := by
-  rfl
+theorem mapℝ'_eq_mapℝ : mapℝ' f h = mapℝ f h₂ := by rfl
 
 /-- Alternate version of map₂ℝ that doesn't directly refer to f₂, so it stays
   computable even if f₂ isn't. -/

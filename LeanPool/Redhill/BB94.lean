@@ -30,18 +30,15 @@ lemma C_eq_zero_iff : C k j = 0 ↔ k < j := by
   simp_rw [C, Nat.add_eq_zero_iff, mul_eq_zero, two_ne_zero, false_or, choose_eq_zero_iff]
   lia
 
-lemma C_pos_iff : 0 < C k j ↔ j ≤ k := by
-  rw [← not_iff_not, not_lt, le_zero, C_eq_zero_iff, not_le]
+lemma C_pos_iff : 0 < C k j ↔ j ≤ k := by rw [← not_iff_not, not_lt, le_zero, C_eq_zero_iff, not_le]
 
 alias ⟨_, C_eq_zero_of_lt⟩ := C_eq_zero_iff
 
 @[simp]
-lemma C_zero : C k 0 = 2 * k + 1 := by
-  simp [C, add_comm]
+lemma C_zero : C k 0 = 2 * k + 1 := by simp [C, add_comm]
 
 @[simp]
-lemma C_self : C k k = 1 := by
-  simp [C, two_mul]
+lemma C_self : C k k = 1 := by simp [C, two_mul]
 
 lemma C_add_two_add_one :
     C (k + 2) (j + 1) = 2 * C (k + 1) (j + 1) + C (k + 1) j - C k (j + 1) := by

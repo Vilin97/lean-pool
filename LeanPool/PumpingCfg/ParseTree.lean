@@ -143,32 +143,26 @@ lemma strict_subtree_decomposition {n : g.NT} {p₁ : parseTree n} {p₂ : parse
   | left_sub q₁ q₂ p₂ hrn hp₂ =>
     obtain ⟨u, v, huv, hguv⟩ := subtree_decomposition hp₂
     simp_rw [yield, huv]
-    use u, v ++ q₂.yield
-    constructor
-    · simp
-    · constructor
-      · have h := q₂.yield_length_pos
-        repeat rw [List.length_append]
-        omega
-      · apply (Produces.input_output hrn).trans_derives
-        simp only [ChomskyNormalFormRule.output]
-        rw [← List.singleton_append, List.map_append, ← List.append_assoc]
-        exact Derives.trans (Derives.append_left q₂.yield_derives _) (Derives.append_right hguv _)
+    refine ⟨u, v ++ q₂.yield, by simp, ?_, ?_⟩
+    · have h := q₂.yield_length_pos
+      repeat rw [List.length_append]
+      omega
+    · apply (Produces.input_output hrn).trans_derives
+      simp only [ChomskyNormalFormRule.output]
+      rw [← List.singleton_append, List.map_append, ← List.append_assoc]
+      exact Derives.trans (Derives.append_left q₂.yield_derives _) (Derives.append_right hguv _)
   | right_sub q₁ q₂ p₂ hrn hp₂ =>
     obtain ⟨u, v, huv, hguv⟩ := subtree_decomposition hp₂
     simp_rw [yield, huv]
-    use q₁.yield ++ u, v
-    constructor
-    · simp
-    · constructor
-      · have := q₁.yield_length_pos
-        repeat rw [List.length_append]
-        omega
-      · apply (Produces.input_output hrn).trans_derives
-        simp only [ChomskyNormalFormRule.output]
-        rw [← List.singleton_append, List.map_append, List.append_assoc, List.append_assoc]
-        nth_rewrite 2 [← List.append_assoc]
-        exact (hguv.append_left _).trans (Derives.append_right q₁.yield_derives _)
+    refine ⟨q₁.yield ++ u, v, by simp, ?_, ?_⟩
+    · have := q₁.yield_length_pos
+      repeat rw [List.length_append]
+      omega
+    · apply (Produces.input_output hrn).trans_derives
+      simp only [ChomskyNormalFormRule.output]
+      rw [← List.singleton_append, List.map_append, List.append_assoc, List.append_assoc]
+      nth_rewrite 2 [← List.append_assoc]
+      exact (hguv.append_left _).trans (Derives.append_right q₁.yield_derives _)
 
 @[refl]
 lemma IsSubtreeOf.refl {n : g.NT} {p : parseTree n} : p.IsSubtreeOf p := IsSubtreeOf.eq p
