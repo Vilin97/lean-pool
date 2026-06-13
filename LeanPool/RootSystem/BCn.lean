@@ -52,14 +52,12 @@ theorem dotProduct_apply (n : ℕ) (x y : Space n) :
 @[simp]
 theorem dotProduct_single_right {n : ℕ} (x : Space n) (i : Fin n) :
     dotProduct n x (Pi.single i 1) = x i := by
-  rw [dotProduct_apply]
-  simp [Pi.single_apply]
+  simp [dotProduct_apply, Pi.single_apply]
 
 @[simp]
 theorem dotProduct_single_left {n : ℕ} (x : Space n) (i : Fin n) :
     dotProduct n (Pi.single i 1) x = x i := by
-  rw [dotProduct_apply]
-  simp [Pi.single_apply]
+  simp [dotProduct_apply, Pi.single_apply]
 
 theorem dotProduct_isSymm (n : ℕ) : LinearMap.IsSymm (dotProduct n) where
   eq x y := by
@@ -93,8 +91,7 @@ type-`BCₙ` roots `±eᵢ`, `±2eᵢ`, and `±eᵢ ± eⱼ` for `i ≠ j`.
 
 theorem dotProduct_single_left_eq {n : ℕ} (i : Fin n) (a : ℤ) (y : Space n) :
     dotProduct n (Pi.single i a) y = a * y i := by
-  rw [dotProduct_apply]
-  simp [Pi.single_apply, ite_mul]
+  simp [dotProduct_apply, Pi.single_apply, ite_mul]
 
 /-- The classical type-`BCₙ` root set: `x` is a classical root when it is `±eᵢ` or `±2eᵢ`
 for some `i`, or `±eᵢ ± eⱼ` for some `i ≠ j`, where `eᵢ` is the `i`-th standard basis

@@ -261,12 +261,8 @@ lemma must_have_minus_sign (m : ℕ) (hm_odd : Odd m) (hm_ge : m ≥ 3)
       exact (mul_dvd_mul_iff_left hθ'_ne).mp this
     have h_unit := isUnit_of_dvd_one h_dvd_one
     obtain ⟨u, hu⟩ := h_unit
-    rcases units_pm_one u with rfl | rfl
-    · -- u = 1: θ' = 1, but θ' = ⟨1, -1⟩ ≠ ⟨1, 0⟩ = 1
-      have h_re_im := congrArg QuadraticAlgebra.im hu
-      simp [θ'] at h_re_im
-    · have h_re_im := congrArg QuadraticAlgebra.im hu
-      simp [θ'] at h_re_im
+    have h_re_im := congrArg QuadraticAlgebra.im hu
+    rcases units_pm_one u with rfl | rfl <;> simp [θ'] at h_re_im
   · exact h_minus
 
 
@@ -303,6 +299,10 @@ lemma expand_by_binomial (m : ℕ) (hm_ge : m ≥ 3)
     calc α ^ 2 = 4 * θ ^ 2 - 4 * θ + 1 := by rw [hα_def]; ring
       _ = 4 * (θ - 2) - 4 * θ + 1 := by rw [h_theta_sq]
       _ = -7 := by ring
+  have hne : α ≠ 0 := by
+    intro h0; rw [h0, zero_pow two_ne_zero] at hα_sq
+    have : ((0 : ℤ) : R) = ((-7 : ℤ) : R) := by exact_mod_cast hα_sq
+    have := congrArg QuadraticAlgebra.re this; simp at this
   have hθ' : θ' = 1 - θ := theta'_eq_one_sub_theta
   -- step1 : -2^m·α = (2θ)^m - (2(1-θ))^m
   have step1 : -(2 : R) ^ m * α = (2 * θ) ^ m - (2 * (1 - θ)) ^ m := by
@@ -341,10 +341,6 @@ lemma expand_by_binomial (m : ℕ) (hm_ge : m ≥ 3)
       ring
     obtain ⟨S, hS⟩ := hdiff
     have hcancel : -(2 : ℤ) ^ (m - 1) = S := by
-      have hne : α ≠ 0 := by
-        intro h0; rw [h0, zero_pow two_ne_zero] at hα_sq
-        have : ((0 : ℤ) : R) = ((-7 : ℤ) : R) := by exact_mod_cast hα_sq
-        have := congrArg QuadraticAlgebra.re this; simp at this
       have h1 : -(2 : R) ^ m = 2 * (S : R) :=
         mul_right_cancel₀ hne (by linear_combination step1.trans hS)
       have h2 : ((-(2 : ℤ) ^ m : ℤ) : R) = ((2 * S : ℤ) : R) := by
@@ -411,10 +407,6 @@ lemma expand_by_binomial (m : ℕ) (hm_ge : m ≥ 3)
           have hpow : α ^ (2 * j + 1) = α * (α ^ 2) ^ j := by ring_nf
           rw [hpow, hα_sq]
           ring
-      have hne : α ≠ 0 := by
-        intro h0; rw [h0, zero_pow two_ne_zero] at hα_sq
-        have : ((0 : ℤ) : R) = ((-7 : ℤ) : R) := by exact_mod_cast hα_sq
-        have := congrArg QuadraticAlgebra.re this; simp at this
       have h2_ne : (2 : R) ≠ 0 := by
         intro h0
         have := congrArg QuadraticAlgebra.re h0
@@ -433,6 +425,11 @@ lemma expand_by_binomial (m : ℕ) (hm_ge : m ≥ 3)
   rw [hq]
   omega
 
+
+private lemma pow_sixtyfour_mod_seven (q : ℕ) : ((2 : ℤ) ^ 6) ^ q % 7 = 1 := by
+  induction q with
+  | zero => norm_num
+  | succ q ih => rw [pow_succ, Int.mul_emod, ih]; norm_num
 
 /-- Key consequence of unique factorization in ℤ[(1+√-7)/2]:
     For odd n ≥ 5, if x² + 7 = 2ⁿ, then setting m = n - 2, we have
@@ -470,36 +467,24 @@ theorem odd_case_only_three_values_mod_42 :
       · right; right
         have hcast : (↑n : ℤ) - 2 = ↑m := by omega
         rw [hcast] at h_mod7
-        have h64 : ∀ q : ℕ, ((2 : ℤ) ^ 6) ^ q % 7 = 1 := by
-          intro q; induction q with
-          | zero => norm_num
-          | succ q ih => rw [pow_succ, Int.mul_emod, ih]; norm_num
         have h_pow_mod : (2 : ℤ) ^ (m - 1) % 7 = 1 := by
           obtain ⟨q, hq⟩ : 6 ∣ (m - 1) := ⟨(m - 1) / 6, by omega⟩
           rw [show (m : ℕ) - 1 = 6 * q from by omega, pow_mul]
-          exact h64 q
+          exact pow_sixtyfour_mod_seven q
         omega
       · left
         have hcast : (↑n : ℤ) - 2 = ↑m := by omega
         rw [hcast] at h_mod7
-        have h64 : ∀ q : ℕ, ((2 : ℤ) ^ 6) ^ q % 7 = 1 := by
-          intro q; induction q with
-          | zero => norm_num
-          | succ q ih => rw [pow_succ, Int.mul_emod, ih]; norm_num
         have h_pow_mod : (2 : ℤ) ^ (m - 1) % 7 = 4 := by
           obtain ⟨q, hq⟩ : ∃ q, m - 1 = 6 * q + 2 := ⟨(m - 1) / 6, by omega⟩
-          rw [hq, pow_add, pow_mul, Int.mul_emod, h64 q]; norm_num
+          rw [hq, pow_add, pow_mul, Int.mul_emod, pow_sixtyfour_mod_seven q]; norm_num
         omega
       · right; left
         have hcast : (↑n : ℤ) - 2 = ↑m := by omega
         rw [hcast] at h_mod7
-        have h64 : ∀ q : ℕ, ((2 : ℤ) ^ 6) ^ q % 7 = 1 := by
-          intro q; induction q with
-          | zero => norm_num
-          | succ q ih => rw [pow_succ, Int.mul_emod, ih]; norm_num
         have h_pow_mod : (2 : ℤ) ^ (m - 1) % 7 = 2 := by
           obtain ⟨q, hq⟩ : ∃ q, m - 1 = 6 * q + 4 := ⟨(m - 1) / 6, by omega⟩
-          rw [hq, pow_add, pow_mul, Int.mul_emod, h64 q]; norm_num
+          rw [hq, pow_add, pow_mul, Int.mul_emod, pow_sixtyfour_mod_seven q]; norm_num
         omega
 
 /-! ## Skeleton for the uniqueness argument -/
@@ -510,9 +495,8 @@ lemma corollary_C (x₁ x₂ : ℤ) (m₁ m₂ : ℕ)
     (h₁_eq : (x₁ ^ 2 + 7) / 4 = 2 ^ m₁)
     (h₂_eq : (x₂ ^ 2 + 7) / 4 = 2 ^ m₂) :
     θ ^ m₁ - θ' ^ m₁ = θ ^ m₂ - θ' ^ m₂ := by
-  have h1 := main_m_condition x₁ m₁ h₁_odd h₁_ge h₁_eq
-  have h2 := main_m_condition x₂ m₂ h₂_odd h₂_ge h₂_eq
-  rw [← h1, ← h2]
+  rw [← main_m_condition x₁ m₁ h₁_odd h₁_ge h₁_eq,
+    ← main_m_condition x₂ m₂ h₂_odd h₂_ge h₂_eq]
 
 /-- B_d = Σ_{j=0}^{(d-1)/2} C(d, 2j+1) · (-7)^j. -/
 noncomputable def binomialB (d : ℕ) : ℤ :=
@@ -773,8 +757,7 @@ lemma traceSeq_not_dvd_seven (n : ℕ) : ¬((7 : ℤ) ∣ traceSeq n) := by
   · rw [h1] at h; simp [traceSeq] at h
   · rw [h2] at h; simp [traceSeq] at h
 
-lemma nat_even_iff_not_odd (n : ℕ) : Even n ↔ ¬ Odd n := by
-  exact Iff.symm not_odd_iff_even
+lemma nat_even_iff_not_odd (n : ℕ) : Even n ↔ ¬ Odd n := not_odd_iff_even.symm
 
 /-- The key algebraic identity behind `at_most_one_m_per_class`, proved in `R` and
     lifted back to `ℤ` via injectivity of `ℤ → R`: if `P = θ ^ m + θ' ^ m`,
@@ -1010,17 +993,14 @@ lemma at_most_one_m_per_class (m₁ m₂ : ℕ)
   exact h_Bd_ndiv (h_coprime.dvd_of_dvd_mul_left h_dvd_prod)
 
 /-- m = 3 is a solution: x = 5, (25+7)/4 = 8 = 2³. -/
-lemma theta_eq_at_3 : -2 * θ + 1 = θ ^ 3 - θ' ^ 3 := by
-  have h_div : ((5 : ℤ) ^ 2 + 7) / 4 = 2 ^ 3 := by norm_num
-  exact main_m_condition 5 3 ⟨1, by omega⟩ (by omega) h_div
+lemma theta_eq_at_3 : -2 * θ + 1 = θ ^ 3 - θ' ^ 3 :=
+  main_m_condition 5 3 ⟨1, by omega⟩ (by omega) (by norm_num)
 
-lemma theta_eq_at_5 : -2 * θ + 1 = θ ^ 5 - θ' ^ 5 := by
-  have h_div : ((11 : ℤ) ^ 2 + 7) / 4 = 2 ^ 5 := by norm_num
-  exact main_m_condition 11 5 ⟨2, by omega⟩ (by omega) h_div
+lemma theta_eq_at_5 : -2 * θ + 1 = θ ^ 5 - θ' ^ 5 :=
+  main_m_condition 11 5 ⟨2, by omega⟩ (by omega) (by norm_num)
 
-lemma theta_eq_at_13 : -2 * θ + 1 = θ ^ 13 - θ' ^ 13 := by
-  have h_div : ((181 : ℤ) ^ 2 + 7) / 4 = 2 ^ 13 := by norm_num
-  exact main_m_condition 181 13 ⟨6, by omega⟩ (by omega) h_div
+lemma theta_eq_at_13 : -2 * θ + 1 = θ ^ 13 - θ' ^ 13 :=
+  main_m_condition 181 13 ⟨6, by omega⟩ (by omega) (by norm_num)
 
 /-- For x² + 7 = 2ⁿ with odd n ≥ 5: n ∈ {5, 7, 15}. -/
 theorem odd_case_only_three_values :
@@ -1070,16 +1050,13 @@ lemma x_is_odd :
   ∀ x : ℤ, ∀ n : ℕ, n ≠ 0 → x ^ 2 + 7 = 2 ^ n →
     x % 2 = 1 := by
     intros x n hn h
-    have m : (x^2) = 2^n - 7 := by
-      exact eq_tsub_of_add_eq h
+    have m : (x^2) = 2^n - 7 := eq_tsub_of_add_eq h
     have m₂ : (x ^ 2) % 2 = 1 := by
-      rw [m]
-      rw [← Int.odd_iff]
+      rw [m, ← Int.odd_iff]
       exact two_pow_min_seven_odd n hn
     rw [← Int.odd_iff]
     rw [← Int.odd_iff] at m₂
-    apply sq_odd_then_odd
-    exact m₂
+    exact sq_odd_then_odd x m₂
 
 lemma ramanujan_nagell_even_pow_factors :
   ∀ x : ℤ , ∀ k : ℕ, (2^k + x) * (2^k - x) = 7 →
@@ -1111,31 +1088,7 @@ lemma ramanujan_nagell_even_pow_factors :
   have ha_ge_one : a ≥ 1 := by linarith
   have hb_ge_one : b ≥ 1 := by linarith
   have h_cases : (a = 1 ∧ b = 7) ∨ (a = 7 ∧ b = 1) := by
-    rcases (show a = 1 ∨ a = 2 ∨ a = 3 ∨ a = 4 ∨ a = 5 ∨ a = 6 ∨ a = 7 by omega) with
-      ha1 | ha2 | ha3 | ha4 | ha5 | ha6 | ha7
-    · left
-      refine ⟨ha1, ?_⟩
-      have : (1 : ℤ) * b = 7 := by rw [← ha1]; exact hab
-      linarith
-    · exfalso
-      have : (2 : ℤ) * b = 7 := by rw [← ha2]; exact hab
-      omega
-    · exfalso
-      have : (3 : ℤ) * b = 7 := by rw [← ha3]; exact hab
-      omega
-    · exfalso
-      have : (4 : ℤ) * b = 7 := by rw [← ha4]; exact hab
-      omega
-    · exfalso
-      have : (5 : ℤ) * b = 7 := by rw [← ha5]; exact hab
-      omega
-    · exfalso
-      have : (6 : ℤ) * b = 7 := by rw [← ha6]; exact hab
-      omega
-    · right
-      refine ⟨ha7, ?_⟩
-      have h7b : (7 : ℤ) * b = 7 := by simp only [ha7] at hab; exact hab
-      linarith
+    interval_cases a <;> omega
   rcases h_cases with ⟨ha_eq, hb_eq⟩ | ⟨ha_eq, hb_eq⟩
   · right
     simp only [ha_def, hb_def] at ha_eq hb_eq
@@ -1244,10 +1197,7 @@ theorem RamanujanNagell :
     apply x_is_odd x n
     · intro h'
       rw [h', pow_zero] at h
-      have blah : x ^ 2 < 0  := by linarith
-      have blah2 : 0 ≤ x^2 := sq_nonneg x
-      apply lt_irrefl x
-      linarith
+      nlinarith [sq_nonneg x]
     · exact h
   rw [← Int.odd_iff] at h₂
   rcases Nat.even_or_odd n with h₃ | h₃
@@ -1297,11 +1247,7 @@ theorem RamanujanNagell :
       have n_ge_5 : n ≥ 5 := omg n_ge_4 n_ne_4
       clear n_ge_4 n_ne_4 n_ge_3
       let M : ℕ := n - 2
-      have M_ge_3 : M ≥ 3 := by
-        calc
-          M = n - 2 := by rfl
-          _ ≥ 5 - 2 := by omega
-          _ = 3 := by norm_num
+      have M_ge_3 : M ≥ 3 := by omega
       have n_is_M_plus_2 : n = M + 2 := by omega
       have h_cases := odd_case_only_three_values x n h₃ n_ge_5 (by linarith : x ^ 2 + 7 = 2 ^ n)
       rcases h_cases with hn5 | hn7 | hn15

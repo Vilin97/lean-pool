@@ -30,10 +30,7 @@ lemma div_succ_le_succ_div (m n : ℕ) : succ m / succ n ≤ succ (m / succ n) :
     exact le_succ (m / succ n)
 
 lemma div2_succ_succ_eq_succ_div2 (n : ℕ) : succ (succ n) / 2 = succ (n / 2) := by
-  rw [succ_eq_add_one, succ_eq_add_one, add_assoc, add_div_eq_of_add_mod_lt,
-    Nat.div_self (zero_lt_succ 1)]
-  rw [mod_self, add_zero]
-  exact mod_lt n (zero_lt_succ 1)
+  omega
 
 end Obvious
 
@@ -42,10 +39,7 @@ namespace Int
 lemma div2_lt_self {x : ℕ} (h : 0 < x) : x / 2 < x :=
   Nat.div_lt_self h (Nat.lt_succ_self 1) -- todo why nat needed
 lemma div2_succ_le_self (x : ℕ) : Nat.succ x / 2 ≤ x := by
-  cases x with
-  | zero => simp
-  | succ x =>
-    exact (div_succ_le_succ_div (Nat.succ x) 1).trans (succ_le_of_lt (div2_lt_self (succ_pos x)))
+  omega
 
 
 /-- The 2-adic valuation and odd part of a natural number: `valBinNat x = (v, r)`
@@ -96,9 +90,7 @@ lemma odd_part_le_self_nat (x : ℕ) : (valBinNat x).2 ≤ x := by
           have h' := ih (Nat.succ x / 2) (div2_succ_le_self x);
           exact le_trans h' (le_succ x)
         | inr odd =>
-          have not_even : Nat.succ x % 2 ≠ 0 := by
-            rw [odd]
-            simp
+          have not_even : Nat.succ x % 2 ≠ 0 := by omega
           rw [valBinNat, dif_neg (not_and_of_not_right (0 < Nat.succ x) not_even),
             if_pos (zero_lt_succ x)]
       | step y_le_x => exact le_trans (ih y y_le_x) (le_succ x);
@@ -123,9 +115,7 @@ lemma odd_part_succ_pos (x : ℕ) : 0 < (valBinNat (Nat.succ x)).2 := by
           rw [valBinNat_even h, div2_succ_succ_eq_succ_div2]
           exact ih (x / 2) (Nat.div_le_self x 2)
         | inr odd =>
-          have not_even : Nat.succ (Nat.succ x) % 2 ≠ 0 := by
-            rw [odd]
-            simp
+          have not_even : Nat.succ (Nat.succ x) % 2 ≠ 0 := by omega
           rw [valBinNat, dif_neg (not_and_of_not_right (0 < Nat.succ (Nat.succ x)) not_even),
             if_pos (zero_lt_succ (Nat.succ x))]
           exact zero_lt_succ (Nat.succ x)
@@ -134,11 +124,7 @@ lemma odd_part_succ_pos (x : ℕ) : 0 < (valBinNat (Nat.succ x)).2 := by
 
 lemma odd_part_nat_pos (x : ℕ) : x ≠ 0 → 0 < (valBinNat x).2 := by
   cases x with
-  | zero =>
-    intro absurd
-    apply False.elim
-    apply absurd
-    rfl
+  | zero => exact fun h => absurd rfl h
   | succ x =>
     intro _
     exact odd_part_succ_pos x

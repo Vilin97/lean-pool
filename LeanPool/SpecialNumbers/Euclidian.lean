@@ -104,9 +104,7 @@ theorem euclid_ne_zero {n : ℕ} : NeZero (euclid n) := NeZero.of_pos euclid_gt_
 /--
 Euclid numbers are $\ge 1$.
 -/
-theorem euclid_ge_one {n : ℕ} : 1 ≤ euclid n := by
-  simp [Nat.one_le_iff_ne_zero]
-  linarith [@euclid_gt_zero n]
+theorem euclid_ge_one {n : ℕ} : 1 ≤ euclid n := euclid_gt_zero
 
 /--
 Only $e_0 = 1$.
@@ -122,9 +120,8 @@ $e_n \equiv 1\ (\mathrm{mod}~e_m)$, when $0 < m < n$.
 theorem euclid_mod_eq_one {m n : ℕ} (h1 : m < n) (h2 : 0 < m) :
     euclid n % euclid m = 1 := by
   rw [euclid_prod_finset_add_one_of_pos]
-  · have d : (euclid m) ∣  ∏ x ∈ Finset.Icc 1 (n-1), euclid x := by
-      apply Finset.dvd_prod_of_mem
-      exact Finset.mem_Icc.mpr (by omega)
+  · have d : (euclid m) ∣  ∏ x ∈ Finset.Icc 1 (n-1), euclid x :=
+      Finset.dvd_prod_of_mem _ (Finset.mem_Icc.mpr (by omega))
     rw [Nat.add_mod]
     simp only [Nat.dvd_iff_mod_eq_zero.mp d, zero_add, dvd_refl, Nat.mod_mod_of_dvd]
     exact Nat.mod_eq_of_lt <| euclid_gt_one_of_pos <| by linarith
@@ -260,8 +257,8 @@ private theorem log_euclidConstant_eq_euclidLogConstant :
   simp [euclidConstant]
 
 private theorem logEuclidSub_tendsto_euclidLogConstant :
-    Tendsto logEuclidSub atTop (nhds euclidLogConstant) := by
-  exact tendsto_atTop_ciSup logEuclidSub_monotone bddAbove_logEuclidSub
+    Tendsto logEuclidSub atTop (nhds euclidLogConstant) :=
+  tendsto_atTop_ciSup logEuclidSub_monotone bddAbove_logEuclidSub
 
 /--
 The sequence `pl_euc_m` is bounded above by `euclid_log_constant`:

@@ -208,11 +208,10 @@ theorem RecursiveIn_cond_const {O : Set (ℕ →. ℕ)} {c : ℕ → Bool} {f : 
     (hc : Computable c) (hf : RecursiveIn O f) (k : ℕ) :
     RecursiveIn O (fun n => bif (c n) then f n else (Part.some k)) := by
   classical
-  have hid : RecursiveIn O (fun n : ℕ => n) := by
-    exact recursiveIn_of_partrec (O := O) ((Partrec.nat_iff).1 (Computable.id.partrec))
-  have hcode : RecursiveIn O (fun n : ℕ => encode (c n)) := by
-    have hcomp : Computable (fun n : ℕ => encode (c n)) := (Computable.encode.comp hc)
-    exact recursiveIn_of_partrec (O := O) ((Partrec.nat_iff).1 hcomp.partrec)
+  have hid : RecursiveIn O (fun n : ℕ => n) :=
+    recursiveIn_of_partrec (O := O) ((Partrec.nat_iff).1 (Computable.id.partrec))
+  have hcode : RecursiveIn O (fun n : ℕ => encode (c n)) :=
+    recursiveIn_of_partrec (O := O) ((Partrec.nat_iff).1 (Computable.encode.comp hc).partrec)
   let pairFn : ℕ →. ℕ := fun n =>
     Nat.pair <$> (show Part ℕ from n) <*> (show Part ℕ from encode (c n))
   have hpair : RecursiveIn O pairFn := by
@@ -272,8 +271,8 @@ theorem eq01_natPartrec : Nat.Partrec eq01 := by
     by_cases h : (Nat.unpair p).1 = (Nat.unpair p).2 <;> simp [eq01, h]
   exact (Partrec.nat_iff).1 hpart
 
-theorem eq01_recursiveIn (O : Set (ℕ →. ℕ)) : RecursiveIn O eq01 := by
-  exact recursiveIn_of_partrec (O := O) eq01_natPartrec
+theorem eq01_recursiveIn (O : Set (ℕ →. ℕ)) : RecursiveIn O eq01 :=
+  recursiveIn_of_partrec (O := O) eq01_natPartrec
 
 theorem eq01_rfind_none :
     Nat.rfind

@@ -143,31 +143,22 @@ private lemma isUnit_of_norm_one {a : R} (h : QuadraticAlgebra.norm a = 1) : IsU
   apply QuadraticAlgebra.isUnit_iff_norm_isUnit.mpr
   rw [h]; exact isUnit_one
 
-lemma theta_irreducible : Irreducible θ := by
+private lemma irreducible_of_norm_eq_two {x : R} (hx : QuadraticAlgebra.norm x = 2) :
+    Irreducible x := by
   refine ⟨?_, ?_⟩
   · intro hu
-    have h1 : IsUnit (QuadraticAlgebra.norm θ) := QuadraticAlgebra.isUnit_iff_norm_isUnit.mp hu
-    have h2 : IsUnit (2 : ℤ) := h1
+    have h2 : IsUnit (2 : ℤ) := hx ▸ QuadraticAlgebra.isUnit_iff_norm_isUnit.mp hu
     exact absurd (Int.isUnit_iff.mp h2) (by decide)
   · intro a b hab
     have hnab : QuadraticAlgebra.norm a * QuadraticAlgebra.norm b = 2 := by
-      rw [← map_mul, ← hab]; rfl
+      rw [← map_mul, ← hab]; exact hx
     rcases norm_factor_dichotomy (norm_nonneg a) (norm_nonneg b) hnab with h | h
     · exact Or.inl (isUnit_of_norm_one h)
     · exact Or.inr (isUnit_of_norm_one h)
 
-lemma theta'_irreducible : Irreducible θ' := by
-  refine ⟨?_, ?_⟩
-  · intro hu
-    have h1 : IsUnit (QuadraticAlgebra.norm θ') := QuadraticAlgebra.isUnit_iff_norm_isUnit.mp hu
-    have h2 : IsUnit (2 : ℤ) := h1
-    exact absurd (Int.isUnit_iff.mp h2) (by decide)
-  · intro a b hab
-    have hnab : QuadraticAlgebra.norm a * QuadraticAlgebra.norm b = 2 := by
-      rw [← map_mul, ← hab]; rfl
-    rcases norm_factor_dichotomy (norm_nonneg a) (norm_nonneg b) hnab with h | h
-    · exact Or.inl (isUnit_of_norm_one h)
-    · exact Or.inr (isUnit_of_norm_one h)
+lemma theta_irreducible : Irreducible θ := irreducible_of_norm_eq_two rfl
+
+lemma theta'_irreducible : Irreducible θ' := irreducible_of_norm_eq_two rfl
 
 /-! ## EuclideanDomain instance via smart rounding
 
@@ -363,13 +354,8 @@ the key dichotomy `α * β = θ^m · θ'^m ∧ IsCoprime α β → α = ±θ^m �
 
 lemma theta_theta'_not_associated : ¬ Associated θ θ' := by
   rintro ⟨u, hu⟩
-  rcases units_pm_one u with rfl | rfl
-  · -- θ = θ' · 1 = θ', compare re-components: 0 ≠ 1
-    have h := congrArg QuadraticAlgebra.re hu
-    simp [θ, θ'] at h
-  · -- θ = θ' · (-1) = -θ', compare re-components: 0 ≠ -1
-    have h := congrArg QuadraticAlgebra.re hu
-    simp [θ, θ'] at h
+  have h := congrArg QuadraticAlgebra.re hu
+  rcases units_pm_one u with rfl | rfl <;> simp [θ, θ'] at h
 
 lemma theta_not_dvd_theta' : ¬ (θ ∣ θ') := by
   intro h

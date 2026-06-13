@@ -97,10 +97,8 @@ lemma mem_polarDual {X : Set E} {v : E} :
     specialize h (SetLike.coe <| pointDual ⟨ x, hx0 ⟩) ?_
     · apply Set.mem_image_of_mem
       apply Set.mem_image_of_mem
-      rw [Set.mem_preimage]
-      exact hx
-    rw [mem_pointDual] at h
-    exact h
+      rwa [Set.mem_preimage]
+    rwa [mem_pointDual] at h
   · -- 2.
     intro h Hi_s hHi_s
     rw [Set.mem_image] at hHi_s
@@ -108,8 +106,7 @@ lemma mem_polarDual {X : Set E} {v : E} :
     rw [Set.mem_image] at hHi_
     rcases hHi_ with ⟨ p, hp, rfl ⟩
     specialize h p.1 hp
-    rw [mem_pointDual]
-    exact h
+    rwa [mem_pointDual]
 
 lemma mem_polarDual' {X : Set E} {v : E} :
   v ∈ polarDual X ↔ ∀ x ∈ X, inner ℝ v x ≤ (1:ℝ) := by
@@ -151,8 +148,7 @@ lemma doublePolarDual_self {X : Set E}
       rw [lt_div_iff₀ hαneg, neg_one_mul, neg_neg]
       exact hX (by assumption) (by assumption)
     · -- 2.
-      rw [div_lt_iff₀ hαneg, neg_one_mul, neg_neg]
-      exact h
+      rwa [div_lt_iff₀ hαneg, neg_one_mul, neg_neg]
   · -- 2.
     rw [polarDual_comm]
 
@@ -190,11 +186,10 @@ lemma compact_polarDual_iff [FiniteDimensional ℝ E] {X : Set E} (hXcl : IsClos
       have h := interior_subset <| hball hu
       rw [mem_polarDual] at h
       specialize h x hx
-      rw [real_inner_smul_right, real_inner_self_eq_norm_mul_norm, ←mul_assoc,
+      rwa [real_inner_smul_right, real_inner_self_eq_norm_mul_norm, ←mul_assoc,
         div_mul_cancel₀ _ (norm_ne_zero_iff.mpr hx0), mul_comm,
         ← div_le_div_iff_of_pos_right (div_pos hε zero_lt_two),
         mul_div_cancel_right₀ _ (Ne.symm <| ne_of_lt (div_pos hε zero_lt_two)), one_div_div] at h
-      exact h
     · -- 2.
       rw [interior_eq_compl_closure_compl, Set.mem_compl_iff, Metric.mem_closure_iff]
       simp only [dist_zero_left]
@@ -211,8 +206,7 @@ lemma compact_polarDual_iff [FiniteDimensional ℝ E] {X : Set E} (hXcl : IsClos
         push Not at hb
         rcases hb with ⟨ y, hy, hb ⟩
         specialize hM y hy
-        have hnorminner: |inner ℝ y b| ≤ ‖y‖ * ‖b‖ := by
-          exact abs_real_inner_le_norm y b
+        have hnorminner: |inner ℝ y b| ≤ ‖y‖ * ‖b‖ := abs_real_inner_le_norm y b
         rw [abs_of_pos (lt_trans zero_lt_one hb)] at hnorminner
         have : (1:ℝ) ≤ ‖y‖ * ‖b‖ := le_trans (le_of_lt hb) hnorminner
         have hynezero: y ≠ 0 := by
@@ -237,6 +231,5 @@ lemma polarDual_compact_if [FiniteDimensional ℝ E] {X : Set E} (hXcl : IsClose
   (hXcv : Convex ℝ X) :
   0 ∈ interior X → IsCompact (polarDual X) := by
   intro h
-  rw [← doublePolarDual_self hXcl hXcv (interior_subset h),
+  rwa [← doublePolarDual_self hXcl hXcv (interior_subset h),
     compact_polarDual_iff (polarDual_closed _)] at h
-  exact h

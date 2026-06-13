@@ -72,9 +72,8 @@ theorem jump_recIn (f : ℕ →. ℕ) : f ≤ᵀ (f⌜) := by
       | succ n ih => simp [evalo, ih, const]
     unfold jump s
     rw [ decodeCodeo_encodeCodeo ]; simp [ *, evalo ];
-  have h_s : RecursiveIn {jump f} (fun n => Part.some (s n)) := by
-    apply RecursiveIn.of_primrec
-    apply s_primrec
+  have h_s : RecursiveIn {jump f} (fun n => Part.some (s n)) :=
+    RecursiveIn.of_primrec s_primrec
   have h_jump : RecursiveIn {jump f} (jump f) := by
     apply RecursiveIn.oracle
     norm_num at *
@@ -95,9 +94,7 @@ def REPredIn (f : ℕ →. ℕ) (p : ℕ → Prop) :=
 
 theorem dom_re_in_jump (f : ℕ →. ℕ) :
   REPredIn (f⌜) (fun n => (f n).Dom) :=
-by
-  refine ⟨f, ?_, rfl⟩
-  exact jump_recIn f
+  ⟨f, jump_recIn f, rfl⟩
 
 section decide
 
@@ -105,8 +102,7 @@ variable {α} [Primcodable α]
 
 protected lemma ComputablePredIn.decide {p : α → Prop} {f : ℕ →. ℕ} [DecidablePred p]
     (hp : ComputablePredIn f p) :
-    ComputableIn {f} (fun a => decide (p a)) := by
-  convert hp.choose_spec
+    ComputableIn {f} (fun a => decide (p a)) := by convert hp.choose_spec
 
 lemma ComputableIn.computablePred {p : α → Prop} [DecidablePred p]
     (hp : Computable (fun a => decide (p a))) : ComputablePred p :=
@@ -133,7 +129,6 @@ theorem re_in_trans (A : Set ℕ) (f h : ℕ →. ℕ) :
   recursivelyEnumerableIn₂ h A := by
   intro freInA fh
   obtain ⟨g, hg, hA⟩ := freInA
-  refine ⟨g, ?_, hA⟩
-  exact TuringReducible.trans hg fh
+  exact ⟨g, TuringReducible.trans hg fh, hA⟩
 
 end Computability

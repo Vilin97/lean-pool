@@ -121,12 +121,10 @@ theorem classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
         have : m = -⌊x i⌋ := by
           by_contra hne; cases Int.lt_or_gt_of_ne hne with
           | inl hlt =>
-            have : (m : ℝ) + 1 ≤ (-⌊x i⌋ : ℝ) := by
-              exact_mod_cast Int.lt_iff_add_one_le.mp hlt
+            have : (m : ℝ) + 1 ≤ (-⌊x i⌋ : ℝ) := by exact_mod_cast Int.lt_iff_add_one_le.mp hlt
             linarith [h_in.2, h_floor.1]
           | inr hrt =>
-            have : (-⌊x i⌋ : ℝ) + 1 ≤ (m : ℝ) := by
-              exact_mod_cast Int.lt_iff_add_one_le.mp hrt
+            have : (-⌊x i⌋ : ℝ) + 1 ≤ (m : ℝ) := by exact_mod_cast Int.lt_iff_add_one_le.mp hrt
             linarith [h_in.1, h_floor.2]
         change y i = g i
         calc

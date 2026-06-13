@@ -61,41 +61,22 @@ lemma isRollback_iff_maximal {c : Conf es} {e : es.Event} {m : Conf es} :
       ∀ m' : Conf es, m' ∈ RollbackCandidates es c e → m.1 ⊆ m'.1 → m'.1 ⊆ m.1 := by
   constructor
   · intro h
-    refine ⟨?_, ?_⟩
-    · exact ⟨h.1, h.2.1⟩
-    · intro m' hm' hsubset
-      rcases hm' with ⟨hm'sub, hm'not⟩
-      exact h.2.2 m' hm'sub hm'not hsubset
-  · intro h
-    rcases h with ⟨hm, hmax⟩
-    rcases hm with ⟨hmsub, hmnot⟩
-    refine ⟨hmsub, hmnot, ?_⟩
-    intro m' hm'sub hm'not hsubset
-    exact hmax m' ⟨hm'sub, hm'not⟩ hsubset
+    exact ⟨⟨h.1, h.2.1⟩, fun m' ⟨hm'sub, hm'not⟩ hsubset => h.2.2 m' hm'sub hm'not hsubset⟩
+  · rintro ⟨⟨hmsub, hmnot⟩, hmax⟩
+    exact ⟨hmsub, hmnot, fun m' hm'sub hm'not hsubset =>
+      hmax m' ⟨hm'sub, hm'not⟩ hsubset⟩
 
 lemma rollback_subset_future {c : Conf es} {e : es.Event} {m : Conf es}
     (h : isRollback es c e m) : m.1 ⊆ c.1 \ es.future e := by
   intro x hx
-  refine ⟨h.1 hx, ?_⟩
-  intro hxFuture
-  have hle : e ≤ x := hxFuture
-  have hemem : e ∈ m.1 := (m.2).2 hx hle
-  exact h.2.1 hemem
+  exact ⟨h.1 hx, fun hxFuture => h.2.1 ((m.2).2 hx hxFuture)⟩
 
 /-- Removing the future of `e` from a configuration keeps it a configuration. -/
 lemma rollback_future_isConf {c : Conf es} {e : es.Event} :
     isConf es (c.1 \ es.future e) := by
-  constructor
-  · intro e₁ e₂ h₁ h₂
-    rcases h₁ with ⟨h₁c, _⟩
-    rcases h₂ with ⟨h₂c, _⟩
-    exact c.2.1 h₁c h₂c
-  · intro x y hx hy
-    rcases hx with ⟨hxc, hxf⟩
-    refine ⟨c.2.2 hxc hy, ?_⟩
-    intro hyf
-    have hle : e ≤ x := le_trans hyf hy
-    exact hxf hle
+  refine ⟨fun ⟨h₁c, _⟩ ⟨h₂c, _⟩ => c.2.1 h₁c h₂c, ?_⟩
+  intro x y ⟨hxc, hxf⟩ hy
+  exact ⟨c.2.2 hxc hy, fun hyf => hxf (le_trans hyf hy)⟩
 
 /-- The canonical rollback configuration: remove all events causally after `e`. -/
 def rollbackFuture (c : Conf es) (e : es.Event) : Conf es :=
@@ -112,15 +93,11 @@ lemma rollbackFuture_mem {c : Conf es} {e : es.Event} {x : es.Event} :
 /-- Redoability: `e` is enabled in `rollback(c,e)` when `e ∈ c`. -/
 lemma rollback_redoable {c : Conf es} {e : es.Event} (he : e ∈ c.1) :
     (@rollbackFuture es c e).1 ⊢ e := by
-  refine ⟨rollback_future_isConf (es := es) (c := c), fun hmem => hmem.2 le_rfl, ?_, ?_⟩
-  · -- All events in rollback are consistent with e
-    intro e' he'
-    exact c.2.1 he he'.1
-  · -- The strict past of e is contained in rollback
-    intro x hx
-    have hxc : x ∈ c.1 := c.2.2 he (le_of_lt hx)
-    have hxnot : x ∉ es.future e := fun h => not_le_of_gt hx h
-    exact ⟨hxc, hxnot⟩
+  refine ⟨rollback_future_isConf (es := es) (c := c), fun hmem => hmem.2 le_rfl,
+    fun e' he' => c.2.1 he he'.1, ?_⟩
+  -- The strict past of e is contained in rollback
+  intro x hx
+  exact ⟨c.2.2 he (le_of_lt hx), fun h => not_le_of_gt hx h⟩
 
 /-- Causal safety: Rollback removes exactly the causal consequences of `e`. -/
 lemma rollback_causal_safety {c : Conf es} {e : es.Event} {x : es.Event} :
@@ -130,25 +107,18 @@ lemma rollback_causal_safety {c : Conf es} {e : es.Event} {x : es.Event} :
 /-- The canonical rollback is a rollback for `c` and `e`. -/
 lemma rollback_future {c : Conf es} {e : es.Event} :
     isRollback es c e (@rollbackFuture es c e) := by
-  constructor
-  · exact fun _ hx => hx.1  -- Subset of c
-  constructor
-  · exact fun he => he.2 le_rfl  -- e not in rollback
-  · -- Maximality
-    intro m' hm'sub hm'not _ _ hx
-    have hxc : _ ∈ c.1 := hm'sub hx
-    have hxnot : _ ∉ es.future e := fun h => hm'not (m'.2.2 hx h)
-    exact ⟨hxc, hxnot⟩
+  -- Subset of c, e not in rollback, and maximality.
+  refine ⟨fun _ hx => hx.1, fun he => he.2 le_rfl, ?_⟩
+  intro m' hm'sub hm'not _ _ hx
+  exact ⟨hm'sub hx, fun h => hm'not (m'.2.2 hx h)⟩
 
 /-- Any rollback coincides with the canonical rollback. -/
 @[simp] lemma rollback_eq_future {c : Conf es} {e : es.Event} {m : Conf es}
     (h : isRollback es c e m) : m.1 = c.1 \ es.future e := by
-  apply Set.Subset.antisymm
-  · exact rollback_subset_future (es := es) h
-  · -- The canonical rollback is also a candidate, so m must contain it by maximality
-    have hsub : c.1 \ es.future e ⊆ c.1 := fun x hx => hx.1
-    have hnot : e ∉ c.1 \ es.future e := fun he => he.2 le_rfl
-    exact h.2.2 (@rollbackFuture es c e) hsub hnot (rollback_subset_future (es := es) h)
+  refine Set.Subset.antisymm (rollback_subset_future (es := es) h) ?_
+  -- The canonical rollback is also a candidate, so m must contain it by maximality.
+  exact h.2.2 (@rollbackFuture es c e) (fun x hx => hx.1) (fun he => he.2 le_rfl)
+    (rollback_subset_future (es := es) h)
 
 /-- Rollbacks are unique when they exist. -/
 lemma rollback_unique {c : Conf es} {e : es.Event}
@@ -161,10 +131,8 @@ lemma rollback_unique {c : Conf es} {e : es.Event}
 lemma rollback_maximum {c : Conf es} {e : es.Event} {m : Conf es}
     (h : isRollback es c e m) :
     ∀ m' : Conf es, m' ∈ RollbackCandidates es c e → m'.1 ⊆ m.1 := by
-  -- By uniqueness, m equals the canonical rollback
-  have : m = @rollbackFuture es c e := rollback_unique (es := es) h (rollback_future (es := es))
-  cases this
-  -- Now show any candidate is a subset of the canonical rollback
+  -- By uniqueness, m equals the canonical rollback; any candidate is a subset of it.
+  cases rollback_unique (es := es) h (rollback_future (es := es))
   intro m' ⟨hm'sub, hm'not⟩ x hx
   exact ⟨hm'sub hx, fun hxFuture => hm'not (m'.2.2 hx hxFuture)⟩
 
@@ -178,20 +146,15 @@ lemma event_enabled_when_past_present {c : Conf es} {e x : es.Event}
     (hbase : (@rollbackFuture es c e).1 ⊆ c'.1)
     (hconf : c'.1 ⊆ c.1) :
     c'.1 ⊢ x := by
-  refine ⟨c'.2, hxnot, ?_, ?_⟩
-  · -- Consistency: x is consistent with all events in c'
-    intro y hy
-    have hyc : y ∈ c.1 := hconf hy
-    exact c.2.1 hx.1 hyc
-  · -- Past: the strict past of x is in c'
-    intro y hy
-    by_cases hyf : y ∈ es.future e
-    · -- y is in the future of e, so it was added before x
-      have hyc : y ∈ c.1 := c.2.2 hx.1 (le_of_lt hy)
-      exact hpast y hy ⟨hyc, hyf⟩
-    · -- y is not in the future of e, so it's in the rollback
-      have hyc : y ∈ c.1 := c.2.2 hx.1 (le_of_lt hy)
-      exact hbase ⟨hyc, hyf⟩
+  refine ⟨c'.2, hxnot, fun y hy => c.2.1 hx.1 (hconf hy), ?_⟩
+  -- Past: the strict past of x is in c'
+  intro y hy
+  have hyc : y ∈ c.1 := c.2.2 hx.1 (le_of_lt hy)
+  by_cases hyf : y ∈ es.future e
+  · -- y is in the future of e, so it was added before x
+    exact hpast y hy ⟨hyc, hyf⟩
+  · -- y is not in the future of e, so it's in the rollback
+    exact hbase ⟨hyc, hyf⟩
 
 /-- Constructive: given a `Finset` representation `cF` of the underlying configuration `c`,
     there is an executable list from the rollback configuration to `c`.

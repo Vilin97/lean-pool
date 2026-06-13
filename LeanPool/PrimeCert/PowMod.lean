@@ -90,14 +90,12 @@ lemma powModTR_aux_eq (n a b c fuel) (hfuel : b < fuel) :
     case isTrue hb0 => rw [hb0, powModAux, pow_zero, one_mul]
     split
     case isTrue hb0 hbe =>
-      rw [ih _ _ _ (by omega)]
-      rw [powModAux, powModAux, Nat.mul_mod _ c, Nat.mul_mod _ c]
+      rw [ih _ _ _ (by omega), powModAux, powModAux, Nat.mul_mod _ c, Nat.mul_mod _ c]
       conv_rhs =>
         rw [← Nat.mod_add_div b 2]
       rw [hbe, zero_add, pow_mul, ← pow_two, ← Nat.pow_mod]
     case isFalse hb0 hbo =>
-      rw [ih _ _ _ (by omega)]
-      rw [powModAux, powModAux, Nat.mul_mod, Nat.mod_mod, ← pow_two,
+      rw [ih _ _ _ (by omega), powModAux, powModAux, Nat.mul_mod, Nat.mod_mod, ← pow_two,
         ← Nat.pow_mod, ← Nat.pow_mul, ← Nat.mul_mod, ← mul_assoc, ← Nat.pow_add_one]
       congr! 3
       lia

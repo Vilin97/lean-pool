@@ -19,10 +19,7 @@ Imported Lean Pool material for `LeanPool.EcTateLean.Algebra.Ring.Basic`.
 
 variable {R : Type _}
 
-theorem add_self_eq_mul_two [Semiring R] (a : R) : a + a = 2 * a := by
-  rw [←one_mul a, ←add_mul, one_mul]
-  congr
-  norm_num
+theorem add_self_eq_mul_two [Semiring R] (a : R) : a + a = 2 * a := (two_mul a).symm
 
 section Ring
 --theorem sub_eq_add_neg (a b : R) : a - b = a + -b := Ring.sub_eq_add_neg a b
@@ -70,14 +67,8 @@ section IntegralDomain
 variable [CommRing R] [IsDomain R]
 
 -- TODO maybe delete
-theorem nzero_mul_left_cancel (a b c : R) : a ≠ 0 → a * b = a * c → b = c := by
-  intro a_ne_z ab_eq_ac
-  rw [←add_left_inj (-(a * c)), add_neg_cancel (a * c), neg_mul_eq_mul_neg, ←mul_add] at ab_eq_ac
-  cases (@mul_eq_zero _ _ _ a (b + -c)).1 ab_eq_ac with
-  | inl h => exact False.elim (a_ne_z h)
-  | inr h =>
-    rw [←add_left_inj (-c), add_neg_cancel c]
-    exact h
+theorem nzero_mul_left_cancel (a b c : R) : a ≠ 0 → a * b = a * c → b = c :=
+  fun h => mul_left_cancel₀ h
 
 
 end IntegralDomain

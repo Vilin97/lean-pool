@@ -163,8 +163,7 @@ lemma factorial_le_prod_primes (S : Finset ℕ) (hS : ∀ p ∈ S, Nat.Prime p) 
   rw [← hl_prod, ← hl_length]
   have hfact : (l.length + 1).factorial = ∏ i ∈ Finset.range l.length, (i + 2) := by
     have h := Finset.prod_range_succ' (fun k => k + 1) l.length
-    simp only [zero_add, mul_one, Finset.prod_range_add_one_eq_factorial] at h
-    exact h
+    simpa only [zero_add, mul_one, Finset.prod_range_add_one_eq_factorial] using h
   rw [hfact]
   have hprod_eq : l.prod = ∏ i : Fin l.length, l.get i := by
     conv_lhs => rw [← List.ofFn_get l]
@@ -269,8 +268,7 @@ lemma den_sum_dvd_of_each_den_dvd {n : ℕ} {f : ℕ → ℚ} {D : ℕ}
     have h1 : (f n).den ∣ D := hf n (Nat.lt_succ_self n)
     have h2 : (∑ j ∈ Finset.range n, f j).den ∣ D :=
       ih (fun j hj => hf j (Nat.lt_succ_of_lt hj))
-    have h_lcm : (∑ j ∈ Finset.range n, f j).den.lcm (f n).den ∣ D := Nat.lcm_dvd h2 h1
-    exact dvd_trans (Rat.add_den_dvd_lcm _ _) h_lcm
+    exact dvd_trans (Rat.add_den_dvd_lcm _ _) (Nat.lcm_dvd h2 h1)
 
 lemma term_vanishes_for_odd_gt_one (k j : ℕ) (hj_odd : Odd j) (hj_gt : 1 < j) :
     (↑((2 * k + 1).choose j) : ℚ) * bernoulli j = 0 := by
@@ -287,8 +285,7 @@ lemma term_j_one_den_dvd (k : ℕ) (hk : 2 ≤ k) :
     have h := Rat.mul_den_dvd (↑(2 * k + 1) : ℚ) (-1 / 2)
     simp only [Rat.den_natCast, one_mul] at h
     have h2' : ((-1 : ℚ) / 2).den = 2 := by norm_num [Rat.den_neg_eq_den]
-    simp only [h2'] at h
-    exact h
+    simpa only [h2'] using h
   exact dvd_trans hden (Nat.factorial_dvd_factorial (by omega : 2 ≤ 2 * k))
 
 lemma term_even_den_dvd (k m : ℕ) (_hk : 2 ≤ k) (_hm_ge : 1 ≤ m) (hm_lt : m < k)
@@ -297,9 +294,7 @@ lemma term_even_den_dvd (k m : ℕ) (_hk : 2 ≤ k) (_hm_ge : 1 ≤ m) (hm_lt : 
   have h_mul := Rat.mul_den_dvd (↑((2 * k + 1).choose (2 * m)) : ℚ) (bernoulli (2 * m))
   have h_binom_den : (↑((2 * k + 1).choose (2 * m)) : ℚ).den = 1 := Rat.den_natCast _
   simp only [h_binom_den, one_mul] at h_mul
-  have h_fact : (2 * m + 1).factorial ∣ (2 * k).factorial :=
-    Nat.factorial_dvd_factorial (by omega)
-  exact dvd_trans (dvd_trans h_mul ih) h_fact
+  exact dvd_trans (dvd_trans h_mul ih) (Nat.factorial_dvd_factorial (by omega))
 
 lemma each_term_den_dvd_factorial (k : ℕ) (hk : 2 ≤ k)
     (ih : ∀ m : ℕ, 1 ≤ m → m < k → (bernoulli (2 * m)).den ∣ (2 * m + 1).factorial)

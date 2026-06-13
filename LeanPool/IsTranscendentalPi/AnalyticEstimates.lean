@@ -59,8 +59,8 @@ lemma Fp_cexp_bounded (T : ℤ[X]) (a : ℂ) :
     ‖a * cexp (-(t * a)) * aeval (t * a) (Fp T p)‖
         = ‖a‖ * ‖cexp (-(t * a))‖ * ‖aeval (t * a) (Fp T p)‖ := by simp [mul_assoc, mul_comm]
     _ ≤ ‖a‖ * rexp ‖a‖ * (‖a‖ ^ (p - 1) * M ^ p) := by gcongr
-    _ ≤ (‖a‖ * ‖a‖ ^ (p - 1)) * rexp ‖a‖ * M ^ p := by
-          exact le_of_eq (by simp [mul_assoc, mul_left_comm, mul_comm])
+    _ ≤ (‖a‖ * ‖a‖ ^ (p - 1)) * rexp ‖a‖ * M ^ p :=
+          le_of_eq (by simp [mul_assoc, mul_left_comm, mul_comm])
     _ = _ := by rw [hp', pow_succ, Nat.add_sub_cancel, mul_comm ‖a‖ (‖a‖ ^ (p - 1)), ← pow_succ]
 
 /-- The integral ``∫₀¹ a * exp(-(t a)) * T(t a) dt` is `≤ ‖a‖ᵖ * exp(‖a‖) * Mᵖ`. -/
@@ -86,8 +86,7 @@ lemma sum_intExpNegPoly_bound
     ∃ A B : ℝ, 0 ≤ A ∧ 0 ≤ B ∧
       (∀ p : ℕ, 0 < p → ‖∑ i : Fin n, b i * cexp (a i) * intExpNegPoly (Fp T p) (a i)‖
         ≤ A * B ^ p) := by
-  have huniv_nonempty : (Finset.univ : Finset (Fin n)).Nonempty := by
-    refine ⟨⟨0, hn⟩, by simp⟩
+  have huniv_nonempty : (Finset.univ : Finset (Fin n)).Nonempty := ⟨⟨0, hn⟩, by simp⟩
   choose M hM0 hM using (fun i : Fin n => intExpNegPoly_bounded T (a i))
   let A : ℝ := ∑ i : Fin n, ‖b i * cexp (a i)‖ * rexp ‖a i‖
   let B : ℝ := Finset.sup' Finset.univ huniv_nonempty (fun i : Fin n => ‖a i‖ * M i)
@@ -102,9 +101,8 @@ lemma sum_intExpNegPoly_bound
     exact le_trans (mul_nonneg (norm_nonneg _) (hM0 i0)) (hB i0)
   refine ⟨A, B, hA0, hB0, ?_⟩
   intro p hp
-  have hpow : ∀ i : Fin n, (‖a i‖ * M i) ^ p ≤ B ^ p := by
-    intro i
-    exact pow_le_pow_left₀ (mul_nonneg (norm_nonneg _) (hM0 i)) (hB i) p
+  have hpow : ∀ i : Fin n, (‖a i‖ * M i) ^ p ≤ B ^ p :=
+    fun i => pow_le_pow_left₀ (mul_nonneg (norm_nonneg _) (hM0 i)) (hB i) p
   calc
     _ ≤ ∑ i : Fin n, ‖b i * cexp (a i) * intExpNegPoly (Fp T p) (a i)‖ := by
           simpa using (norm_sum_le (Finset.univ)
@@ -114,12 +112,11 @@ lemma sum_intExpNegPoly_bound
       refine Finset.sum_le_sum (fun i hi => by
         simpa [mul_assoc, mul_left_comm, mul_pow] using
           (mul_le_mul_of_nonneg_left (hM i p hp) (norm_nonneg (b i * cexp (a i)))))
-    _ ≤ ∑ i : Fin n, ‖b i * cexp (a i)‖ * rexp ‖a i‖ * B ^ p := by
-      refine Finset.sum_le_sum (fun i hi => ?_)
-      exact mul_le_mul_of_nonneg_left (hpow i) (by positivity)
-    _ ≤ _ := by exact (le_of_eq ((Finset.sum_mul (s := Finset.univ)
-                                  (f := fun i : Fin n => ‖b i * cexp (a i)‖ * rexp ‖a i‖)
-                                  (a := B ^ p)).symm))
+    _ ≤ ∑ i : Fin n, ‖b i * cexp (a i)‖ * rexp ‖a i‖ * B ^ p :=
+      Finset.sum_le_sum (fun i hi => mul_le_mul_of_nonneg_left (hpow i) (by positivity))
+    _ ≤ _ := le_of_eq (Finset.sum_mul (s := Finset.univ)
+                        (f := fun i : Fin n => ‖b i * cexp (a i)‖ * rexp ‖a i‖)
+                        (a := B ^ p)).symm
 
 /-- For `p` large, `cᵖ ‖∑ᵢ bᵢ exp(aᵢ) ∫₀¹ aᵢ * exp(-(t aᵢ)) * T(t aᵢ) dt‖` is `≤ (p - 1)!`. -/
 lemma sum_intExpNegPoly_asym_ubound
@@ -162,9 +159,7 @@ lemma sum_cexp_simp
   simp_rw [factorise_sumIteratedDerivPoly T p, aeval_mul, aeval_C]
   congr 1
   rw [Finset.mul_sum]
-  refine Finset.sum_congr rfl ?_
-  intro i hi
-  ac_rfl
+  exact Finset.sum_congr rfl fun i hi => by ac_rfl
 
 /-- The sum `∑ᵢ bᵢ exp(aᵢ) ∫₀¹ aᵢ * exp(-(t aᵢ)) * T(t aᵢ) dt`
 can be as `((p−1)! T(0)ᵖ + p! Gₚ(0)) ∑ᵢ₌₀ⁿ⁻¹ bᵢ eᵃⁱ − p! ∑ᵢ₌₀ⁿ⁻¹ bᵢ Gₚ(aᵢ)`. -/
@@ -229,15 +224,10 @@ lemma sum_Gp_asym_lbound
       ¬ (p : ℕ) ∣ Int.natAbs (k * (c * T.coeff 0)) := by
     letI : Nonempty {p : ℕ // Nat.Prime p} := ⟨⟨2, by decide⟩⟩
     rcases Nat.exists_infinite_primes (Int.natAbs (k * (c * T.coeff 0)) + 1) with ⟨q, hq, hqprime⟩
-    refine Filter.eventually_atTop.2 ?_
-    refine ⟨⟨q, hqprime⟩, ?_⟩
-    intro p hp
-    have hlt : Int.natAbs (k * (c * T.coeff 0)) < p := by
-      exact lt_of_lt_of_le (Nat.lt_of_lt_of_le (by omega) hq) hp
-    exact Nat.not_dvd_of_pos_of_lt (Int.natAbs_pos.2 hkcT0) hlt
-  filter_upwards
-    [hf, hnotdvd]
-    with p hpEq hpLarge
+    refine Filter.eventually_atTop.2 ⟨⟨q, hqprime⟩, fun p hp => ?_⟩
+    exact Nat.not_dvd_of_pos_of_lt (Int.natAbs_pos.2 hkcT0)
+      (lt_of_lt_of_le (Nat.lt_of_lt_of_le (by omega) hq) hp)
+  filter_upwards [hf, hnotdvd] with p hpEq hpLarge
   rw [sum_cexp_eq n (p : ℕ) T a b c k f p.2.pos hpEq]
   let z := -(k * (c ^ (p : ℕ) * T.coeff 0 ^ (p : ℕ))
             + ((p : ℕ) : ℤ) * (k * (c ^ (p : ℕ) * (Gp T (p : ℕ)).coeff 0) + f (p : ℕ)))

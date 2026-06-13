@@ -220,8 +220,7 @@ lemma IsConcordant_of_IsPopulationMonotone (rule : Rule) [h_anon : IsAnonymous r
   replace h_anon := h_anon.anonymous e σ App'
   have h_App' : App' ∈ rule.res e' := by
     rw [h_anon]
-    use App
-    exact ⟨h_App, by aesop⟩
+    exact ⟨App, h_App, by aesop⟩
   have h_p' : e'.votes[i] = e.votes[j] := by aesop
   have h_q' : e'.votes[j] = e.votes[i] := by aesop
   replace h_mono := h_mono.population_monotone e e' i j (by trivial)

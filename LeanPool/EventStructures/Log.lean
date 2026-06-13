@@ -56,8 +56,8 @@ lemma logged_iff {e : es.Event} : logged es e ↔ ∃ e', e ## e' :=
 /-- By symmetry of minimal conflict, if e is logged, then any e' with e ## e'
     also has minimal conflict with some event. -/
 lemma logged_symm {e e' : es.Event} (h : e ## e') :
-    logged es e' := by
-  exact ⟨e, es.minimalConflict_symm h⟩
+    logged es e' :=
+  ⟨e, es.minimalConflict_symm h⟩
 
 /-- Notation for the conflict relation. -/
 local infixl:50 " # " => es.conflict

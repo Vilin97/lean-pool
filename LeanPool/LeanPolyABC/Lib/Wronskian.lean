@@ -63,12 +63,11 @@ theorem degree_lt_add {a b : R[X]} (ha : a ≠ 0) (hb : b ≠ 0) :
     (wronskian a b).degree ≤ max (a * derivative b).degree (derivative a * b).degree :=
       Polynomial.degree_sub_le _ _
     _ < a.degree + b.degree := by
-      rw [max_lt_iff]
-      refine ⟨?_, ?_⟩
-      · apply lt_of_le_of_lt (degree_mul_le a (derivative b))
+      refine max_lt_iff.mpr ⟨?_, ?_⟩
+      · refine lt_of_le_of_lt (degree_mul_le a (derivative b)) ?_
         rw [WithBot.add_lt_add_iff_left (degree_ne_bot ha)]
         exact Polynomial.degree_derivative_lt hb
-      · apply lt_of_le_of_lt (degree_mul_le (derivative a) b)
+      · refine lt_of_le_of_lt (degree_mul_le (derivative a) b) ?_
         rw [WithBot.add_lt_add_iff_right (degree_ne_bot hb)]
         exact Polynomial.degree_derivative_lt ha
 
