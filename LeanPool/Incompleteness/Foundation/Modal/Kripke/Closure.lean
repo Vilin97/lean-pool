@@ -157,8 +157,7 @@ namespace Frame
 namespace RelIrreflGen
 
 @[simp] lemma rel_irreflexive :
-    Std.Irrefl F.RelIrreflGen := by
-  exact ⟨fun x h => h.1 rfl⟩
+    Std.Irrefl F.RelIrreflGen := by exact ⟨fun x h => h.1 rfl⟩
 
 end RelIrreflGen
 end Frame
@@ -175,8 +174,7 @@ namespace Frame
 namespace IrreflexiveClosure
 
 lemma rel_irreflexive :
-    Std.Irrefl (F^≠.Rel) := by
-  exact ⟨fun x h => h.1 rfl⟩
+    Std.Irrefl (F^≠.Rel) := by exact ⟨fun x h => h.1 rfl⟩
 
 end IrreflexiveClosure
 end Frame

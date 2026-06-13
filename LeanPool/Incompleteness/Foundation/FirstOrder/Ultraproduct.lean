@@ -155,8 +155,7 @@ lemma ultrafilter_exists [(t : FinSubtheory T) → Nonempty (A t)]
     haveI : DecidableEq (Set (FinSubtheory T)) := fun _ _ => Classical.propDecidable _
     intro t ht
     have : ∃ t' : Finset (SyntacticFormula L), ↑t' ⊆ T ∧ Finset.image (Semiformula.domain A) t' =
-        t := by
-      simpa [Finset.subset_set_image_iff] using ht
+        t := by simpa [Finset.subset_set_image_iff] using ht
     rcases this with ⟨t, htT, rfl⟩
     exact ⟨⟨t, htT⟩, by
       suffices ∀ i ∈ t, A ⟨t, htT⟩ ⊧ₘ i by simpa [Semiformula.domain] using this
@@ -168,8 +167,7 @@ lemma compactness_aux :
   · rintro h ⟨t, ht⟩; exact Semantics.Satisfiable.of_subset h ht
   · intro h
     have : ∀ i : FinSubtheory T, ∃ (M : Type u) (_ : Nonempty M) (_ : Structure L M),
-      M ⊧ₘ* (i.val : Theory L) :=
-      by intro i; exact satisfiable_iff.mp (h i)
+      M ⊧ₘ* (i.val : Theory L) := by intro i; exact satisfiable_iff.mp (h i)
     choose A si s hA using this
     have : ∃ 𝓤 : Ultrafilter (FinSubtheory T), Set.image (Semiformula.domain A) T ⊆ 𝓤.sets :=
       ultrafilter_exists A hA

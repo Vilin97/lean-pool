@@ -310,10 +310,8 @@ example (r₀ r₁ p : UInt64) :
       · have : (r₁ ↦ 0; (2 ↦ 291; s.registers)).get r₀ = p := by assumption
         rw [t_update_neq, t_update_neq] at this
         · exact this
-        · apply Ne.symm
-          exact h₂
-        · apply Ne.symm
-          assumption
+        · exact Ne.symm h₂
+        · exact Ne.symm h₁
       · rw [t_update_neq, t_update_eq]
         assumption
       -- /:

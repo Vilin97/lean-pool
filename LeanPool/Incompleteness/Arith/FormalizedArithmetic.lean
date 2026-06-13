@@ -39,8 +39,7 @@ variable {V}
 @[simp] lemma two_lt_three : (2 : V) < (1 + 1 + 1 : V) := by simp [←one_add_one_eq_two]
 @[simp] lemma two_lt_four : (2 : V) < (1 + 1 + 1 + 1 : V) := by simp [←one_add_one_eq_two]
 @[simp] lemma three_lt_four : (3 : V) < (1 + 1 + 1 + 1 :
-    V) := by
-  simp [←two_add_one_eq_three, ←one_add_one_eq_two]
+    V) := by simp [←two_add_one_eq_three, ←one_add_one_eq_two]
 @[simp] lemma two_sub_one_eq_one : (2 : V) - 1 = 1 := by simp [←one_add_one_eq_two]
 @[simp] lemma three_sub_one_eq_two : (3 : V) - 1 = 2 := by simp [←two_add_one_eq_three]
 

@@ -326,13 +326,9 @@ lemma comm_square' :
   simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
     Basis.equiv_apply, Equiv.refl_apply, AlgHom.toLinearMap_apply]
   change iso (e i) = (inclusion' n k k_bar A iso) ((Matrix.stdBasis ℒ (Fin n) (Fin n)) i)
-  rw [ee_apply n k k_bar A iso i]
-  rw [Matrix.stdBasis_eq_single]
-  rw [Matrix.stdBasis_eq_single]
+  rw [ee_apply n k k_bar A iso i, Matrix.stdBasis_eq_single, Matrix.stdBasis_eq_single]
   ext a b
-  simp only [inclusion']
-  simp only [Algebra.ofId]
-  simp only [AlgHom.mapMatrix_apply, Matrix.map_apply, Matrix.single]
+  simp only [inclusion', Algebra.ofId, AlgHom.mapMatrix_apply, Matrix.map_apply, Matrix.single]
   change (if i.1 = a ∧ i.2 = b then 1 else 0) =
     algebraMap ℒ k_bar ((if i.1 = a ∧ i.2 = b then 1 else 0) : ℒ)
   simp

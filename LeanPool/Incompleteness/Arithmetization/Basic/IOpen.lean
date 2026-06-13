@@ -135,8 +135,7 @@ lemma div_mul_add (a b : V) {r} (hr : r < b) : (a * b + r) / b = a :=
   div_eq_of (by simp [mul_comm]) (by simp [mul_comm b a, mul_add, hr])
 
 lemma div_mul_add' (a b : V) {r} (hr : r < b) :
-    (b * a + r) / b = a := by
-  simpa [mul_comm] using div_mul_add a b hr
+    (b * a + r) / b = a := by simpa [mul_comm] using div_mul_add a b hr
 
 @[simp] lemma zero_div (a : V) : 0 / a = 0 := by
   rcases zero_le a with (rfl | pos)
@@ -214,8 +213,7 @@ lemma div_mul_right (a : V) {b} (pos : 0 < b) : (b * a) / b = a := by
   · simp
   · simp [sq, pos]
 
-@[simp 1100] lemma div_self {a : V} (hx : 0 < a) : a / a = 1 := by
-  simpa using div_mul_left 1 hx
+@[simp 1100] lemma div_self {a : V} (hx : 0 < a) : a / a = 1 := by simpa using div_mul_left 1 hx
 
 @[simp 1100] lemma div_mul' (a : V) {b} (pos : 0 < b) : (b * a) / b = a := by simp [mul_comm, pos]
 
@@ -263,16 +261,13 @@ lemma div_lt_of_lt_mul {a b c : V} (h : a < b * c) : a / c < b := by
   simp_all
 
 lemma div_cancel_left {c} (pos : 0 < c) (a b : V) :
-    (c * a) / (c * b) = a / b := by
-  simp [div_mul, pos]
+    (c * a) / (c * b) = a / b := by simp [div_mul, pos]
 
 lemma div_cancel_right {c} (pos : 0 < c) (a b : V) :
-    (a * c) / (b * c) = a / b := by
-  simp [mul_comm _ c, div_cancel_left pos]
+    (a * c) / (b * c) = a / b := by simp [mul_comm _ c, div_cancel_left pos]
 
 @[simp] lemma two_mul_add_one_div_two (a : V) :
-    (2 * a + 1) / 2 = a := by
-  simp [div_mul_add_self']
+    (2 * a + 1) / 2 = a := by simp [div_mul_add_self']
 
 end «lp_section_2»
 
@@ -290,8 +285,7 @@ lemma mod_def (a b : V) : a % b = a - b * (a / b) := rfl
 def _root_.LO.FirstOrder.Arith.remDef : Sg0.Semisentence 3 :=
   .mkSigma “c a b. ∃ d <⁺ a, !divDef.val d a b ∧ !subDef.val c a (b * d)” (by simp)
 
-lemma rem_graph (a b c : V) : a = b % c ↔ ∃ x ≤ b, (x = b / c ∧ a = b - c * x) := by
-  simp [mod_def]
+lemma rem_graph (a b c : V) : a = b % c ↔ ∃ x ≤ b, (x = b / c ∧ a = b - c * x) := by simp [mod_def]
 
 lemma rem_defined : Sg0-Function₂ ((· % ·) : V → V → V) via remDef := by
   intro v; simp [remDef, rem_graph, Semiformula.eval_substs, le_iff_lt_succ]
@@ -333,8 +327,7 @@ lemma mod_mul_add_of_lt (a b : V) {r} (hr : r < b) : (a * b + r) % b = r := by
   · simp
   · simpa using mod_mul_add_of_lt a b h
 
-@[simp] lemma mod_mul_self_right (a b : V) : (b * a) % b = 0 := by
-  simp [mul_comm]
+@[simp] lemma mod_mul_self_right (a b : V) : (b * a) % b = 0 := by simp [mul_comm]
 
 @[simp] lemma mod_eq_self_of_lt {a b : V} (h : a < b) : a % b = a := by
   simpa using mod_mul_add_of_lt 0 b h
@@ -345,8 +338,7 @@ lemma mod_mul_add_of_lt (a b : V) {r} (hr : r < b) : (a * b + r) % b = r := by
   have : a % b = r := by simpa [←ha] using this
   simp [this, hr]
 
-@[simp] lemma mod_le (a b : V) : a % b ≤ a := by
-  simp [mod_def]
+@[simp] lemma mod_le (a b : V) : a % b ≤ a := by simp [mod_def]
 
 instance mod_polybounded : Bounded₂ ((· % ·) : V → V → V) := ⟨#0, by intro v; simp⟩
 
@@ -509,8 +501,7 @@ lemma sqrt_three : √(3 : V) = 1 :=
   Eq.symm <| eq_sqrt 1 3 <| by simp [one_add_one_eq_two, two_mul_two_eq_four,
     ←three_add_one_eq_four]
 
-@[simp] lemma sqrt_four : √(4 : V) = 2 := by
-  simp [←two_mul_two_eq_four]
+@[simp] lemma sqrt_four : √(4 : V) = 2 := by simp [←two_mul_two_eq_four]
 
 @[simp] lemma two_ne_square (a : V) : 2 ≠ a ^ 2 := by
   intro h
@@ -621,8 +612,7 @@ prefix: 80 "π₂" => pi₂
     have :√a ≤ a - √a * √a := by simpa using h
     calc
       √a * √a + √a + (a - √a * √a - √a) =
-          √a * √a + (√a + (a - √a * √a - √a)) := by
-        rw [add_assoc]
+          √a * √a + (√a + (a - √a * √a - √a)) := by rw [add_assoc]
       _ = √a * √a + (a - √a * √a) := by
         rw [add_tsub_cancel_of_le this]
       _                                 = a                       := add_tsub_self_of_le (by simp)
@@ -651,8 +641,7 @@ def pairEquiv :
 @[simp] lemma pi₁_le_self (a : V) : π₁ a ≤ a := by simp [pi₁, unpair]; split_ifs <;> simp
 
 @[simp] lemma pi₂_le_self (a : V) :
-    π₂ a ≤ a := by
-  simp [pi₂, unpair]; split_ifs <;> simp [add_assoc]
+    π₂ a ≤ a := by simp [pi₂, unpair]; split_ifs <;> simp [add_assoc]
 
 @[simp] lemma le_pair_left (a b : V) : a ≤ ⟪a, b⟫ := by simpa using pi₁_le_self ⟪a, b⟫
 
@@ -739,8 +728,7 @@ lemma pair_lt_pair_right (a : V) {b₁ b₂} (h : b₁ < b₂) : ⟪a, b₁⟫ <
         a * a + a + b₁ < (a + 1) * (a + 1) + b₁ := by
           simp only [add_mul_self_eq, mul_one, add_lt_add_iff_right]
           exact lt_succ_iff_le.mpr (by simp only [add_le_add_iff_left, le_two_mul_left])
-        _              ≤ b₂ * b₂ + b₁           := by
-          simpa [←sq, succ_le_iff_lt] using h₂
+        _              ≤ b₂ * b₂ + b₁           := by simpa [←sq, succ_le_iff_lt] using h₂
         _              ≤ b₂ * b₂ + a            := by simpa using h₁
     · simp only [h₂, ↓reduceIte]
       simpa [add_comm] using add_lt_add_left h (a * a + a)
@@ -975,8 +963,7 @@ lemma nat_cast_pair (n m : ℕ) : (⟪n, m⟫ : ℕ) = ⟪(↑n : V), (↑m : V)
 lemma nat_pair_eq (m n : ℕ) : ⟪n, m⟫ = Nat.pair n m := by simp [Arith.pair, Nat.pair]
 
 lemma pair_coe_eq_coe_pair (m n : ℕ) :  ⟪n, m⟫ = (Nat.pair n m :
-    V) := by
-  simp [nat_pair_eq]
+    V) := by simp [nat_pair_eq]
 
 end «lp_nc_section_1»
 

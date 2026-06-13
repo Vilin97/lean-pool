@@ -81,89 +81,48 @@ def grammarOfKurodaGrammar (k : KurodaGrammar T) : Grammar T :=
   Grammar.mk k.nt k.initial (k.rules.map gruleOfKurodaRule)
 
 lemma KurodaGrammar.tran_iff (k : KurodaGrammar T) (w₁ w₂ : List (Symbol T k.nt)) :
-  k.Transforms w₁ w₂ ↔ (grammarOfKurodaGrammar k).Transforms w₁ w₂ :=
-by
+  k.Transforms w₁ w₂ ↔ (grammarOfKurodaGrammar k).Transforms w₁ w₂ := by
   have align : (grammarOfKurodaGrammar k).Transforms w₁ w₂ ↔
       Grammar.Transforms (T := T) ⟨k.nt, k.initial, k.rules.map gruleOfKurodaRule⟩ w₁ w₂ := Iff.rfl
   rw [align]
   constructor
   · rintro ⟨r, rin, u, v, hruv⟩
-    cases r with
-    | two_two A B C D =>
-      obtain ⟨bef, aft⟩ := hruv
-      exact ⟨gruleOfKurodaRule (.two_two A B C D), List.mem_map.mpr ⟨_, rin, rfl⟩, u, v,
-        by rw [bef]; simp [gruleOfKurodaRule], by rw [aft]; simp [gruleOfKurodaRule]⟩
-    | one_two A B C =>
-      obtain ⟨bef, aft⟩ := hruv
-      exact ⟨gruleOfKurodaRule (.one_two A B C), List.mem_map.mpr ⟨_, rin, rfl⟩, u, v,
-        by rw [bef]; simp [gruleOfKurodaRule], by rw [aft]; simp [gruleOfKurodaRule]⟩
-    | one_one A t =>
-      obtain ⟨bef, aft⟩ := hruv
-      exact ⟨gruleOfKurodaRule (.one_one A t), List.mem_map.mpr ⟨_, rin, rfl⟩, u, v,
-        by rw [bef]; simp [gruleOfKurodaRule], by rw [aft]; simp [gruleOfKurodaRule]⟩
-    | one_nil A =>
-      obtain ⟨bef, aft⟩ := hruv
-      exact ⟨gruleOfKurodaRule (.one_nil A), List.mem_map.mpr ⟨_, rin, rfl⟩, u, v,
-        by rw [bef]; simp [gruleOfKurodaRule], by rw [aft]; simp [gruleOfKurodaRule]⟩
+    cases r <;>
+      · obtain ⟨bef, aft⟩ := hruv
+        exact ⟨gruleOfKurodaRule _, List.mem_map.mpr ⟨_, rin, rfl⟩, u, v,
+          by rw [bef]; simp [gruleOfKurodaRule], by rw [aft]; simp [gruleOfKurodaRule]⟩
   · rintro ⟨r, rin, u, v, hruv⟩
     obtain ⟨r₀, rink, rfl⟩ := List.mem_map.mp rin
     cases r₀ with
     | two_two A B C D =>
       obtain ⟨bef, aft⟩ := hruv
-      refine ⟨.two_two A B C D, rink, u, v, ?_, ?_⟩
-      · rw [show (gruleOfKurodaRule (KurodaRule.two_two A B C D)).inputL = [] from rfl,
-          show (gruleOfKurodaRule (KurodaRule.two_two A B C D)).inputN = A from rfl,
-          show (gruleOfKurodaRule (KurodaRule.two_two A B C D)).inputR =
-            [Symbol.nonterminal B] from rfl] at bef
-        rw [bef]; simp
-      · rw [show (gruleOfKurodaRule (KurodaRule.two_two A B C D)).output =
-          [Symbol.nonterminal C, Symbol.nonterminal D] from rfl] at aft
-        exact aft
+      simp only [gruleOfKurodaRule] at bef aft
+      exact ⟨.two_two A B C D, rink, u, v, by rw [bef]; simp, by rw [aft]⟩
     | one_two A B C =>
       obtain ⟨bef, aft⟩ := hruv
-      refine ⟨.one_two A B C, rink, u, v, ?_, ?_⟩
-      · rw [show (gruleOfKurodaRule (KurodaRule.one_two A B C)).inputL = [] from rfl,
-          show (gruleOfKurodaRule (KurodaRule.one_two A B C)).inputN = A from rfl,
-          show (gruleOfKurodaRule (KurodaRule.one_two A B C)).inputR = [] from rfl] at bef
-        rw [bef]; simp
-      · rw [show (gruleOfKurodaRule (KurodaRule.one_two A B C)).output =
-          [Symbol.nonterminal B, Symbol.nonterminal C] from rfl] at aft
-        exact aft
+      simp only [gruleOfKurodaRule] at bef aft
+      exact ⟨.one_two A B C, rink, u, v, by rw [bef]; simp, by rw [aft]⟩
     | one_one A t =>
       obtain ⟨bef, aft⟩ := hruv
-      refine ⟨.one_one A t, rink, u, v, ?_, ?_⟩
-      · rw [show (gruleOfKurodaRule (KurodaRule.one_one A t)).inputL = [] from rfl,
-          show (gruleOfKurodaRule (KurodaRule.one_one A t)).inputN = A from rfl,
-          show (gruleOfKurodaRule (KurodaRule.one_one A t)).inputR = [] from rfl] at bef
-        rw [bef]; simp
-      · rw [show (gruleOfKurodaRule (KurodaRule.one_one A t)).output =
-          [Symbol.terminal t] from rfl] at aft
-        exact aft
+      simp only [gruleOfKurodaRule] at bef aft
+      exact ⟨.one_one A t, rink, u, v, by rw [bef]; simp, by rw [aft]⟩
     | one_nil A =>
       obtain ⟨bef, aft⟩ := hruv
-      refine ⟨.one_nil A, rink, u, v, ?_, ?_⟩
-      · rw [show (gruleOfKurodaRule (KurodaRule.one_nil A)).inputL = [] from rfl,
-          show (gruleOfKurodaRule (KurodaRule.one_nil A)).inputN = A from rfl,
-          show (gruleOfKurodaRule (KurodaRule.one_nil A)).inputR = [] from rfl] at bef
-        rw [bef]; simp
-      · rw [show (gruleOfKurodaRule (KurodaRule.one_nil A)).output = [] from rfl] at aft
-        rw [aft]; simp
+      simp only [gruleOfKurodaRule] at bef aft
+      exact ⟨.one_nil A, rink, u, v, by rw [bef]; simp, by rw [aft]; simp⟩
 lemma KurodaGrammar.tran_rel_eq (k : KurodaGrammar T) :
-  k.Transforms = (grammarOfKurodaGrammar k).Transforms :=
-by
+  k.Transforms = (grammarOfKurodaGrammar k).Transforms := by
   ext
   apply KurodaGrammar.tran_iff
 
 lemma KurodaGrammar.deri_iff (k : KurodaGrammar T) (w₁ w₂ : List (Symbol T k.nt)) :
-  k.Derives w₁ w₂ ↔ (grammarOfKurodaGrammar k).Derives w₁ w₂ :=
-by
+  k.Derives w₁ w₂ ↔ (grammarOfKurodaGrammar k).Derives w₁ w₂ := by
   unfold KurodaGrammar.Derives
   rw [KurodaGrammar.tran_rel_eq]
   rfl
 
 lemma KurodaGrammar.lang_eq (k : KurodaGrammar T) :
-  k.language = (grammarOfKurodaGrammar k).language :=
-by
+  k.language = (grammarOfKurodaGrammar k).language := by
   ext
   apply KurodaGrammar.deri_iff
 

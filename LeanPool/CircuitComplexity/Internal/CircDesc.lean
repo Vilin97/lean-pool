@@ -107,8 +107,7 @@ theorem n_plus_s_lt (N : Nat) (hN : 6 ≤ N) :
 theorem mul_s_lt_two_pow (N : Nat) (hN : 6 ≤ N) :
     (2 * N + 3) * (2 ^ N / (5 * N)) < 2 ^ N := by
   calc (2 * N + 3) * (2 ^ N / (5 * N))
-      < (5 * N) * (2 ^ N / (5 * N)) :=
-        Nat.mul_lt_mul_of_pos_right (by omega) (s_pos N hN)
+      < (5 * N) * (2 ^ N / (5 * N)) := Nat.mul_lt_mul_of_pos_right (by omega) (s_pos N hN)
     _ ≤ 2 ^ N := by rw [Nat.mul_comm]; exact Nat.div_mul_le_self _ _
 
 /-- **Key arithmetic bound**: the number of circuit descriptors of size

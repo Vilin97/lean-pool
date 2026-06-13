@@ -146,8 +146,7 @@ theorem evalPkappa_lpNorm_eq_norm
 theorem evalPkappaL2_norm
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
     ‖evalPkappaL2 kappa F‖ = ‖F‖ := by
-  rw [evalPkappaL2_eq_toLp hd kappa F]
-  rw [MeasureTheory.Lp.norm_toLp]
+  rw [evalPkappaL2_eq_toLp hd kappa F, MeasureTheory.Lp.norm_toLp]
   rw [MeasureTheory.toReal_eLpNorm (memLp_two_evalPkappa hd kappa F).1]
   exact evalPkappa_lpNorm_eq_norm hd kappa F
 
@@ -220,8 +219,7 @@ private theorem defect_lpNorm_evalPkappaL2_eq
   filter_upwards [hGF, hF] with z hGFz hFz
   rw [evalPkappaL2_eq_toLp hd kappa (G + F),
     evalPkappaL2_eq_toLp hd kappa F]
-  rw [hGFz, hFz]
-  rw [add_comm G F]
+  rw [hGFz, hFz, add_comm G F]
 
 private theorem phase_alignment
     {H : Type*}
@@ -552,8 +550,7 @@ theorem localPhaseStability
     have hconj := hstar_im
     rw [show star (pkappaInner H F) = (starRingEnd ℂ) (pkappaInner H F) from rfl,
       Complex.conj_im] at hconj
-    rw [neg_eq_zero] at hconj
-    exact hconj
+    rwa [neg_eq_zero] at hconj
   refine ⟨phase, hphase, ?_⟩
   calc
     phasedCoeffDistance F Q phase = ‖H‖ := rfl

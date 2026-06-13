@@ -178,8 +178,7 @@ lemma unravelFunctor_preimage m n :
     change (f' ≫ g')⁻¹' (G.sets m).1 = _
     rw [cat_preimage_comp]
     have hg : (ConcreteCategory.hom g')⁻¹' (G.sets m).1 =
-        ((unravelNth G k n).sets m).1 := by
-      simpa [g'] using ih
+        ((unravelNth G k n).sets m).1 := by simpa [g'] using ih
     exact hg ▸ (((unravelNth G k n).continue k).2.2.2 m).symm
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def unravelLim : Limits.Cone (unravelFunctor G k) :=

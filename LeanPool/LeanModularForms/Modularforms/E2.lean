@@ -125,34 +125,26 @@ lemma tsum_eq_tsum_sigma (z : ℍ) : ∑' n : ℕ, (n + 1) *
   have hf := tsum_pnat_eq_tsum_succ (f := f)
   have hg := tsum_pnat_eq_tsum_succ (f := g)
   rw [hf, hg] at h
+  have hpow : ∀ n : ℕ, cexp (2 * π * Complex.I * (n + 1) * z) = q ^ (n + 1) := by
+    intro n
+    dsimp [q]
+    rw [← Complex.exp_nat_mul]
+    congr 1
+    have hn : (((n + 1 : ℕ) : ℂ)) = (n : ℂ) + 1 := by norm_num [Nat.cast_add]
+    rw [hn]
+    ring
   calc
     ∑' n : ℕ, (n + 1) * cexp (2 * π * Complex.I * (n + 1) * z) /
         (1 - cexp (2 * π * Complex.I * (n + 1) * z))
       = ∑' n : ℕ, f (n + 1) := by
           apply tsum_congr
           intro n
-          have hpow : cexp (2 * π * Complex.I * (n + 1) * z) = q ^ (n + 1) := by
-            dsimp [q]
-            rw [← Complex.exp_nat_mul]
-            congr 1
-            have hn : (((n + 1 : ℕ) : ℂ)) = (n : ℂ) + 1 := by
-              norm_num [Nat.cast_add]
-            rw [hn]
-            ring
-          simp [f, pow_one, hpow]
+          simp [f, pow_one, hpow n]
     _ = ∑' n : ℕ, g (n + 1) := h
     _ = ∑' n : ℕ, sigma 1 (n + 1) * cexp (2 * π * Complex.I * (n + 1) * z) := by
           apply tsum_congr
           intro n
-          have hpow : cexp (2 * π * Complex.I * (n + 1) * z) = q ^ (n + 1) := by
-            dsimp [q]
-            rw [← Complex.exp_nat_mul]
-            congr 1
-            have hn : (((n + 1 : ℕ) : ℂ)) = (n : ℂ) + 1 := by
-              norm_num [Nat.cast_add]
-            rw [hn]
-            ring
-          simp [g, hpow]
+          simp [g, hpow n]
 
 lemma E₂_eq (z : UpperHalfPlane) : E₂ z =
     1 - 24 * ∑' n : ℕ+, ↑n * cexp (2 * π * Complex.I * n * z) /

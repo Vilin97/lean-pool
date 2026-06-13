@@ -89,8 +89,7 @@ theorem zero_eq : (0 : ZFRat) = mk (0, ⟨1, ZFInt.one_ne_zero⟩) := rfl
 theorem one_eq : (1 : ZFRat) = mk (1, ⟨1, ZFInt.one_ne_zero⟩) := rfl
 
 theorem mk_eq_zero_iff {n m} : ZFRat.mk (n,m) = 0 ↔ n = 0 where
-  mp := by
-    intro h
+  mp h := by
     rw [zero_eq, eq, ZFSet.qrel] at h
     simpa only [mul_one, ne_eq, mul_zero] using h
   mpr := by
@@ -99,8 +98,7 @@ theorem mk_eq_zero_iff {n m} : ZFRat.mk (n,m) = 0 ↔ n = 0 where
     rw [ZFSet.qrel, mul_one, mul_zero]
 
 theorem mk_eq_one_iff {n m} : ZFRat.mk (n,m) = 1 ↔ n = m where
-  mp := by
-    intro h
+  mp h := by
     rw [one_eq, eq, ZFSet.qrel] at h
     simpa only [ne_eq, mul_one] using h
   mpr := by
@@ -229,8 +227,7 @@ theorem neg_add_cancel_right (a b : ZFRat) : a + -b + b = a := by
 
 theorem add_left_cancel {a b c : ZFRat} (h : a + b = a + c) : b = c := by
   have h₁ : -a + (a + b) = -a + (a + c) := by rw [h]
-  simp only [add_assoc, add_left_neg, zero_add] at h₁
-  exact h₁
+  simpa only [add_assoc, add_left_neg, zero_add] using h₁
 
 theorem neg_add {a b : ZFRat} : -(a + b) = -a + -b := by
   apply add_left_cancel (a := a + b)
@@ -260,8 +257,7 @@ theorem zero_sub (a : ZFRat) : 0 - a = -a := by rw [sub_eq_add_neg, zero_add]
 theorem sub_eq_zero_of_eq {a b : ZFRat} (h : a = b) : a - b = 0 := by rw [h, sub_self]
 
 theorem eq_of_sub_eq_zero {a b : ZFRat} (h : a - b = 0) : a = b := by
-  have : 0 + b = b := by rw [zero_add]
-  have : a - b + b = b := by rwa [h]
+  have : a - b + b = b := by rw [h, zero_add]
   rwa [sub_eq_add_neg, neg_add_cancel_right] at this
 
 theorem sub_eq_zero {a b : ZFRat} : a - b = 0 ↔ a = b := ⟨eq_of_sub_eq_zero, sub_eq_zero_of_eq⟩

@@ -401,8 +401,7 @@ lemma _root_.Matrix.smul_one_eq_one_iff {𝕜 n : Type*} [DecidableEq n] [Field 
       rw [not_isEmpty_iff] at h
       let i : n := h.some
       specialize h1 i i
-      simp only [↓reduceIte] at h1
-      exact h1
+      simpa only [↓reduceIte] using h1
     · rintro rfl i j
       rfl
 

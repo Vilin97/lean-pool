@@ -63,9 +63,7 @@ theorem summable_neg {α : Type*} [TopologicalSpace α] [AddCommMonoid α] (f : 
 lemma aux33 (f : ℕ → ℂ) (hf : Summable f) : ∑' n, f (n) =
     limUnder atTop (fun N : ℕ => ∑ n ∈ Finset.range N, f (n)) := by
   rw [Filter.Tendsto.limUnder_eq]
-  have := hf.hasSum
-  have V := this.comp tendsto_finset_range
-  apply V
+  exact hf.hasSum.comp tendsto_finset_range
 
 /- this is being Pr'd-/
 lemma tsum_pnat_eq_tsum_succ3 {α : Type*} [TopologicalSpace α] [AddCommMonoid α] [T2Space α]

@@ -40,16 +40,14 @@ def unionGrammar (g₁ g₂ : Grammar T) : Grammar T :=
 variable {g₁ g₂ : Grammar T}
 
 @[simp]
-lemma unionGrammar_initial : (unionGrammar g₁ g₂).initial = none :=
-  rfl
+lemma unionGrammar_initial : (unionGrammar g₁ g₂).initial = none := rfl
 
 @[simp]
 lemma unionGrammar_rules :
     (unionGrammar g₁ g₂).rules =
       ⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩ ::
       ⟨[], none, [], [Symbol.nonterminal (some ▶g₂.initial)]⟩ ::
-      (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++ g₂.rules.map (liftRule (some ∘ Sum.inr))) :=
-  rfl
+      (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++ g₂.rules.map (liftRule (some ∘ Sum.inr))) := rfl
 
 private def oN₁_of_N : (unionGrammar g₁ g₂).nt → Option g₁.nt
   | none => none
@@ -167,17 +165,14 @@ def lg₂ : LiftedGrammar T :=
 
 lemma in_L₁_or_L₂_of_in_union {w : List T}
     (hwgg : w ∈ (unionGrammar g₁ g₂).language) :
-  w ∈ g₁.language ∨ w ∈ g₂.language :=
-by
+  w ∈ g₁.language ∨ w ∈ g₂.language := by
   unfold Grammar.language at hwgg ⊢
   have hggw := gr_eq_or_tran_deri_of_deri hwgg
   clear hwgg
   rcases hggw with hggw₁ | hggw₂
   · exfalso
     have zeroth := congr_arg (·[0]?) hggw₁
-    cases w
-    · simp at zeroth
-    · simp at zeroth
+    cases w <;> simp at zeroth
   rcases hggw₂ with ⟨i, ⟨r, rin, u, v, bef, aft⟩, deri⟩
   have uv_nil : u = [] ∧ v = [] := by
     have bef_len := congr_arg List.length bef
@@ -246,8 +241,7 @@ by
     exact absurd same_nt (Option.some_ne_none _).symm
 
 lemma in_union_of_in_L₁ {w : List T} (hwg : w ∈ g₁.language) :
-  w ∈ (unionGrammar g₁ g₂).language :=
-by
+  w ∈ (unionGrammar g₁ g₂).language := by
   unfold Grammar.language at hwg ⊢
   apply gr_deri_of_tran_deri
   · refine ⟨⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩, ?_, [], [], rfl, rfl⟩
@@ -257,8 +251,7 @@ by
   apply List.map_map
 
 lemma in_union_of_in_L₂ {w : List T} (hwg : w ∈ g₂.language) :
-  w ∈ (unionGrammar g₁ g₂).language :=
-by
+  w ∈ (unionGrammar g₁ g₂).language := by
   apply gr_deri_of_tran_deri
   · refine ⟨⟨[], none, [], [Symbol.nonterminal (some ▶g₂.initial)]⟩, ?_, [], [], rfl, rfl⟩
     apply List.mem_cons_of_mem
@@ -269,8 +262,7 @@ by
 
 /-- The class of grammar-generated languages is closed under union. -/
 theorem GG_of_GG_u_GG (L₁ : Language T) (L₂ : Language T) :
-  Language.IsGG L₁ ∧ Language.IsGG L₂ → Language.IsGG (L₁ + L₂) :=
-by
+  Language.IsGG L₁ ∧ Language.IsGG L₂ → Language.IsGG (L₁ + L₂) := by
   rintro ⟨⟨g₁, rfl⟩, ⟨g₂, rfl⟩⟩
   use unionGrammar g₁ g₂
   exact Set.eq_of_subset_of_subset ↓in_L₁_or_L₂_of_in_union

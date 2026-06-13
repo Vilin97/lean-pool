@@ -105,8 +105,7 @@ lemma AlgEquiv.TensorProduct.map_map_toLinearMap
     [Algebra R A] [Algebra R B] [Algebra R C] [Algebra R D] [Algebra R E] [Algebra R F]
     (h : B ≃ₐ[R] E) (i : D ≃ₐ[R] F) (f : A ≃ₐ[R] B) (g : C ≃ₐ[R] D) (x : A ⊗[R] C) :
   (AlgEquiv.TensorProduct.map h i) ((AlgEquiv.TensorProduct.map f g) x)
-    = (AlgEquiv.TensorProduct.map (f.trans h) (g.trans i)) x :=
-by
+    = (AlgEquiv.TensorProduct.map (f.trans h) (g.trans i)) x := by
   simp only [TensorProduct.map, coe_mk, Algebra.TensorProduct.map_apply_map_apply,
     Equiv.coe_fn_mk]
   rfl
@@ -134,8 +133,7 @@ rfl
 @[simp]
 lemma AlgEquiv.TensorProduct.map_one {R A B : Type*} [CommSemiring R] [Semiring A]
   [Semiring B] [Algebra R A] [Algebra R B] :
-  AlgEquiv.TensorProduct.map (1 : A ≃ₐ[R] A) (1 : B ≃ₐ[R] B) = 1 :=
-by
+  AlgEquiv.TensorProduct.map (1 : A ≃ₐ[R] A) (1 : B ≃ₐ[R] B) = 1 := by
   rw [AlgEquiv.ext_iff]
   simp_rw [← AlgEquiv.toLinearMap_apply, ← LinearMap.ext_iff]
   simp only [map_toLinearMap, one_toLinearMap, _root_.TensorProduct.map_one]

@@ -116,9 +116,7 @@ lemma ofHom_comp (f : C(X, Y)) (g : C(Y, Z)) (point : X) :
   rfl
 
 lemma ofHom'_comp {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) (point : X) :
-    ofHom' (f ≫ g) point = (ofHom' f point) ≫ (ofHom' g (f point)) := by
-  unfold ofHom'
-  simp only []
+    ofHom' (f ≫ g) point = (ofHom' f point) ≫ (ofHom' g (f point)) :=
   rfl
 
 end PointedTopCat
@@ -130,27 +128,17 @@ lemma isIso_iff_bijective {A B : Type u} {a₀ : A} {b₀ : B}
     (f : Pointed.of a₀ ⟶ Pointed.of b₀) : IsIso f ↔ Function.Bijective f := by
   constructor
   · intro isof
-    refine ⟨?_, ?_⟩
-    · intro a₁ a₂ ha
-      have h1 : (f ≫ inv f) a₁ = (f ≫ inv f) a₂ := by
-        change (inv f) (f a₁) = (inv f) (f a₂)
-        rw [ha]
-      rw [CategoryTheory.IsIso.hom_inv_id] at h1
-      exact h1
-    · intro b
-      refine ⟨(inv f) b, ?_⟩
-      have : (inv f ≫ f) b = b := by
-        rw [CategoryTheory.IsIso.inv_hom_id]; rfl
+    refine ⟨fun a₁ a₂ ha ↦ ?_, fun b ↦ ⟨(inv f) b, ?_⟩⟩
+    · have h1 : (f ≫ inv f) a₁ = (f ≫ inv f) a₂ := by
+        change (inv f) (f a₁) = (inv f) (f a₂); rw [ha]
+      rwa [CategoryTheory.IsIso.hom_inv_id] at h1
+    · have : (inv f ≫ f) b = b := by rw [CategoryTheory.IsIso.inv_hom_id]; rfl
       exact this
   · intro bf
     constructor
     obtain ⟨g, ⟨gl, gr⟩⟩ := Function.bijective_iff_has_inverse.mp bf
-    use { toFun := g,
-          map_point := by
-            dsimp only
-            have : f a₀ = b₀ := f.map_point
-            rw [← this, gl a₀] }
-    constructor
+    have hp : g b₀ = a₀ := by have : f a₀ = b₀ := f.map_point; rw [← this, gl a₀]
+    refine ⟨⟨g, hp⟩, ?_, ?_⟩
     · ext a; exact gl a
     · ext b; exact gr b
 
@@ -225,16 +213,13 @@ def inducedMap' (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
     π_ n X.as X.point → π_ n Y.as Y.point :=
   Quotient.map (GenLoop.inducedMap' n f) fun α β hαβ ↦ by
     let H := hαβ.some
-    have := H.toHomotopy
     exact Nonempty.intro <|
       { toHomotopy := (ContinuousMap.Homotopy.refl f.right.hom).comp H.toHomotopy
         prop' t y hy := by
           simp only [GenLoop.inducedMap', ContinuousMap.toFun_eq_coe,
             ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.comp_apply,
             ContinuousMap.Homotopy.refl_apply, ContinuousMap.coe_mk, ContinuousMap.comp_apply]
-          have hprop : H.toHomotopy (t, y) = α.val y := by
-            have := H.prop' t y hy
-            simpa using this
+          have hprop : H.toHomotopy (t, y) = α.val y := by simpa using H.prop' t y hy
           rw [hprop] }
 
 lemma inducedMap'_default (n : ℕ) {X Y : PointedTopCat} (f : X ⟶ Y) :
@@ -405,9 +390,7 @@ lemma isIso_inducedPointedHom_of_isHomeomorph (n : ℕ) (x₀ : X) (f : C(X, Y))
 instance isIso_inducedPointedHom_id (n : ℕ) (x₀ : X) :
     IsIso (inducedPointedHom n x₀ (ContinuousMap.id X)) := by
   apply isIso_inducedPointedHom_of_isHomeomorph
-  apply isHomeomorph_iff_exists_homeomorph.mpr
-  use Homeomorph.refl X
-  rfl
+  exact isHomeomorph_iff_exists_homeomorph.mpr ⟨Homeomorph.refl X, rfl⟩
 
 lemma inducedPointedHom_comp (n : ℕ) (x₀ : X) (f : C(X, Y)) (g : C(Y, Z)) :
     inducedPointedHom n x₀ (g.comp f) =

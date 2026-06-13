@@ -64,8 +64,7 @@ theorem unitArc_at_end (θ₁ θ₂ a b : ℝ) (hab : a ≠ b) :
   have hba : b - a ≠ 0 := sub_ne_zero.mpr (Ne.symm hab)
   congr 1
   push_cast
-  have : (↑b - ↑a) / (↑b - ↑a) = (1 : ℂ) := by
-    apply div_self; exact_mod_cast hba
+  have : (↑b - ↑a) / (↑b - ↑a) = (1 : ℂ) := by apply div_self; exact_mod_cast hba
   rw [this, one_mul]
   ring
 
@@ -99,12 +98,10 @@ theorem unitArc_hasDerivAt (θ₁ θ₂ a b t : ℝ) (hab : a < b) :
   have hangle := unitArc_angle_hasDerivAt θ₁ θ₂ a b t hba
   -- Lift angle derivative to ℂ
   have hlift : HasDerivAt (fun s => (↑(θ₁ + (s - a) / (b - a) * (θ₂ - θ₁)) : ℂ))
-      (↑((θ₂ - θ₁) / (b - a))) t :=
-    hangle.ofReal_comp
+      (↑((θ₂ - θ₁) / (b - a))) t := hangle.ofReal_comp
   -- Multiply by I
   have hc : HasDerivAt (fun s => (↑(θ₁ + (s - a) / (b - a) * (θ₂ - θ₁)) : ℂ) * I)
-      (↑((θ₂ - θ₁) / (b - a)) * I) t :=
-    hlift.mul_const I
+      (↑((θ₂ - θ₁) / (b - a)) * I) t := hlift.mul_const I
   -- Apply chain rule for cexp
   have hexp := hc.cexp
   simp only [unitArc]

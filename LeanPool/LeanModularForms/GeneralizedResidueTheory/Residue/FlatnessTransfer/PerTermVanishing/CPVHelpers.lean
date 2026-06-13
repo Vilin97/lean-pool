@@ -120,8 +120,7 @@ theorem holomorphic_cpv_tendsto_zero_on_convex (U : Set ℂ) (hU : IsOpen U)
       MeasureTheory.volume γ.a γ.b :=
     (piecewiseC1_deriv_intervalIntegrable γ.toPiecewiseC1Curve hγ'_bdd).continuousOn_mul
       hgγ_cont
-  have hU_ne : U.Nonempty :=
-    ⟨γ.toFun γ.a, hγ_in_U γ.a (left_mem_Icc.mpr (le_of_lt γ.hab))⟩
+  have hU_ne : U.Nonempty := ⟨γ.toFun γ.a, hγ_in_U γ.a (left_mem_Icc.mpr (le_of_lt γ.hab))⟩
   obtain ⟨F, hF⟩ := holomorphic_convex_primitive hU_convex hU hU_ne hg
   have h_Fγ_cont : ContinuousOn (F ∘ γ.toFun) (Icc γ.a γ.b) := by
     intro t ht
@@ -190,8 +189,7 @@ lemma intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff
     isCompact_Icc.image_of_continuousOn hγ_cont
   have h_safe_closed : IsClosed ({z : ℂ | ∀ s ∈ S0, ε ≤ ‖z - s‖}) := by
     have : {z : ℂ | ∀ s ∈ S0, ε ≤ ‖z - s‖} =
-        ⋂ s ∈ (↑S0 : Set ℂ), {z | ε ≤ ‖z - s‖} := by
-      ext z; simp [Set.mem_iInter]
+        ⋂ s ∈ (↑S0 : Set ℂ), {z | ε ≤ ‖z - s‖} := by ext z; simp [Set.mem_iInter]
     rw [this]; exact isClosed_biInter fun s _ =>
       isClosed_le continuous_const (continuous_norm.comp (continuous_id.sub continuous_const))
   have h_safe_compact : IsCompact
@@ -228,8 +226,7 @@ lemma intervalIntegrable_cpvIntegrandOn_of_continuousOn_diff
   set cpv_fn := cauchyPrincipalValueIntegrandOn S0 g γ.toFun ε
   have h_cpv_aesm : AEStronglyMeasurable cpv_fn (volume.restrict (Icc γ.a γ.b)) := by
     let GoodSet := {t : ℝ | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}
-    have hGoodSet_meas : MeasurableSet (GoodSet ∩ Icc γ.a γ.b) :=
-      measurableSet_goodSet_Icc S0 γ ε
+    have hGoodSet_meas : MeasurableSet (GoodSet ∩ Icc γ.a γ.b) := measurableSet_goodSet_Icc S0 γ ε
     have hgγ_cont_good : ContinuousOn (fun t => g (γ.toFun t))
         (GoodSet ∩ Icc γ.a γ.b) := by
       apply ContinuousOn.comp (hg_cont.mono h_safe_sub) (hγ_cont.mono inter_subset_right)
@@ -289,8 +286,7 @@ private lemma residueAt_congr {f g : ℂ → ℂ} {s : ℂ}
     intro r hr_pos hr_lt
     apply circleIntegral.integral_congr hr_pos.le
     intro z hz
-    have hne : z ≠ s := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+    have hne : z ≠ s := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
     exact hδ_eq ⟨Metric.mem_ball.mpr (by rw [Metric.mem_sphere.mp hz]; exact hr_lt),
       Set.mem_compl_singleton_iff.mpr hne⟩
   exact limUnder_eventually_eq (by
@@ -407,8 +403,7 @@ lemma residueAt_sub_residueSum_eq_zero
   have h_min_dist : ∃ δ > 0, ∀ s' ∈ S0, s' ≠ s → δ ≤ dist s' s := by
     by_cases h_other : ∃ s' ∈ S0, s' ≠ s
     · obtain ⟨s', hs', hne⟩ := h_other
-      have h_nonempty : (S0.filter (· ≠ s)).Nonempty :=
-        ⟨s', Finset.mem_filter.mpr ⟨hs', hne⟩⟩
+      have h_nonempty : (S0.filter (· ≠ s)).Nonempty := ⟨s', Finset.mem_filter.mpr ⟨hs', hne⟩⟩
       exact ⟨(S0.filter (· ≠ s)).inf' h_nonempty (fun s' => dist s' s),
         (Finset.lt_inf'_iff h_nonempty).mpr (fun b hb => dist_pos.mpr (Finset.mem_filter.mp hb).2),
         fun s' hs' hne' => Finset.inf'_le _ (Finset.mem_filter.mpr ⟨hs', hne'⟩)⟩

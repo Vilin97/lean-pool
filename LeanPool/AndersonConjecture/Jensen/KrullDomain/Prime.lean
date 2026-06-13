@@ -22,6 +22,23 @@ open Cardinal Ideal Polynomial Set Pointwise
 
 variable {T : Type*} [CommRing T] [IsLocalRing T] [IsNoetherianRing T] [IsDomain T]
 
+/-- A nonzero principal prime `span {g}` below a prime `I` of height `≤ 1` already equals `I`. -/
+private lemma span_singleton_eq_of_height_le_one {S : Type*} [CommRing S] [IsDomain S]
+    (g : S) (I : Ideal S) [I.IsPrime] [(Ideal.span {g}).IsPrime]
+    (hg : Ideal.span {g} ≠ (⊥ : Ideal S)) (hle : Ideal.span {g} ≤ I)
+    (hht : I.height ≤ 1) : Ideal.span {g} = I := by
+  by_contra hne
+  have hstrict := lt_of_le_of_ne hle hne
+  rw [show (1 : ℕ∞) = ↑(1 : ℕ) from rfl, Ideal.height_le_iff] at hht
+  have hspan_height := hht (Ideal.span {g}) inferInstance hstrict
+  have hbot_fin : (⊥ : Ideal S).FiniteHeight := ⟨Or.inr (by simp [Ideal.height_bot])⟩
+  have h0 := @Ideal.height_strict_mono_of_isPrime S _ (⊥ : Ideal S) (Ideal.span {g})
+    Ideal.isPrime_bot (bot_lt_iff_ne_bot.mpr hg) hbot_fin
+  rw [Ideal.height_bot] at h0
+  rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_height
+  rw [hspan_height] at h0
+  exact lt_irrefl _ h0
+
 section AdjoinLocPrime
 
 /-- If r is prime in NSubring R and r ∤ y, then y ∉ P for any P ∈ Ass(T/(r·T)).
@@ -47,21 +64,8 @@ lemma not_mem_associatedPrime_of_ndvd
     Ideal.span_singleton_eq_bot.not.mpr hr.ne_zero
   haveI : (Ideal.span {r}).IsPrime := (Ideal.span_singleton_prime hr.ne_zero).mpr hr
   -- Height argument: P ∩ R = Ideal.span{r}
-  have hspan_eq : Ideal.span {r} = P.comap R.carrier.subtype := by
-    by_contra hne
-    have hstrict := lt_of_le_of_ne hspan_le hne
-    rw [show (1 : ℕ∞) = ↑(1 : ℕ) from rfl] at hht
-    rw [Ideal.height_le_iff] at hht
-    have hspan_ht := hht (Ideal.span {r}) inferInstance hstrict
-    have hbot_lt := bot_lt_iff_ne_bot.mpr hspan_ne
-    have hbot_fin : (⊥ : Ideal R.carrier).FiniteHeight :=
-      ⟨Or.inr (by simp [Ideal.height_bot])⟩
-    have h0 := @Ideal.height_strict_mono_of_isPrime R.carrier _
-      (⊥ : Ideal R.carrier) (Ideal.span {r}) Ideal.isPrime_bot hbot_lt hbot_fin
-    rw [Ideal.height_bot] at h0
-    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_ht
-    rw [hspan_ht] at h0
-    exact lt_irrefl _ h0
+  have hspan_eq : Ideal.span {r} = P.comap R.carrier.subtype :=
+    span_singleton_eq_of_height_le_one r _ hspan_ne hspan_le hht
   have hy_comap : y ∈ P.comap R.carrier.subtype := hy_P
   rw [← hspan_eq] at hy_comap
   exact hry (Ideal.mem_span_singleton.mp hy_comap)
@@ -207,25 +211,8 @@ theorem coprime_not_both_in_prime (R : NSubring T)
     rw [ne_eq, Ideal.span_singleton_eq_bot]
     exact hq_prime.ne_zero
   -- Height argument: span{q} = P∩R since ht(P∩R) ≤ 1
-  have hspan_eq : Ideal.span {q} = P.comap R.carrier.subtype := by
-    by_contra hne
-    have hstrict : Ideal.span {q} < P.comap R.carrier.subtype :=
-      lt_of_le_of_ne hspan_le hne
-    have hht' : (P.comap R.carrier.subtype).height ≤ ↑(1 : ℕ) := hPR_ht
-    rw [Ideal.height_le_iff] at hht'
-    have hspan_height : (Ideal.span {q}).height < ↑(1 : ℕ) :=
-      hht' _ inferInstance hstrict
-    have hbot_lt : (⊥ : Ideal R.carrier) < Ideal.span {q} :=
-      bot_lt_iff_ne_bot.mpr hspan_ne_bot
-    have hbot_fin : (⊥ : Ideal R.carrier).FiniteHeight :=
-      ⟨Or.inr (by simp [Ideal.height_bot])⟩
-    have h0 : (⊥ : Ideal R.carrier).height < (Ideal.span {q}).height :=
-      @Ideal.height_strict_mono_of_isPrime R.carrier _ (⊥ : Ideal R.carrier)
-        (Ideal.span {q}) Ideal.isPrime_bot hbot_lt hbot_fin
-    rw [Ideal.height_bot] at h0
-    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_height
-    rw [hspan_height] at h0
-    exact lt_irrefl _ h0
+  have hspan_eq : Ideal.span {q} = P.comap R.carrier.subtype :=
+    span_singleton_eq_of_height_le_one q _ hspan_ne_bot hspan_le hPR_ht
   have hy₁_span : y₁ ∈ Ideal.span {q} := hspan_eq ▸ hy₁_comap
   have hy₂_span : y₂ ∈ Ideal.span {q} := hspan_eq ▸ hy₂_comap
   rw [Ideal.mem_span_singleton] at hy₁_span hy₂_span

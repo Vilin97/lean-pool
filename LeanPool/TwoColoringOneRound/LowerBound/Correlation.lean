@@ -75,23 +75,20 @@ noncomputable def corrAvg {n : Nat} (f : Coloring n) (u v : Vertex n) : Q :=
   (∑ σ : G n, corr f (σ • u) (σ • v)) / (Fintype.card (G n) : Q)
 
 lemma cardG_pos (n : Nat) : 0 < (Fintype.card (G n) : Q) := by
-  have : 0 < Fintype.card (G n) := Fintype.card_pos
-  exact_mod_cast this
+  exact_mod_cast (Fintype.card_pos : 0 < Fintype.card (G n))
 
 lemma corrAvg_smul {n : Nat} (f : Coloring n) (τ : G n) (u v : Vertex n) :
     corrAvg f (τ • u) (τ • v) = corrAvg f u v := by
   classical
-  -- Change variables `σ ↦ σ * τ` in the group average.
+  -- Change variables `σ ↦ σ * τ` in the group average; `g (σ * τ)` matches the LHS by `mul_smul`.
   unfold corrAvg corr
   set g : G n → Q := fun σ => spin (f (σ • u)) * spin (f (σ • v))
   have hsum : (∑ σ : G n, g (σ * τ)) = ∑ σ : G n, g σ := by
     simpa using (Function.Bijective.sum_comp (Group.mulRight_bijective τ) g)
-  -- `g (σ * τ)` matches the LHS summand by `mul_smul`.
   have hsum' :
       (∑ σ : G n, spin (f (σ • (τ • u))) * spin (f (σ • (τ • v)))) =
         ∑ σ : G n, spin (f (σ • u)) * spin (f (σ • v)) := by
     simpa [g, mul_smul] using hsum
-  -- Rewrite the LHS numerator using `hsum'`.
   simp [hsum', g]
 
 lemma corr_le_one (b0 b1 : Bool) : spin b0 * spin b1 ≤ (1 : Q) := by
@@ -103,48 +100,21 @@ lemma neg_one_le_corr (b0 b1 : Bool) : (-1 : Q) ≤ spin b0 * spin b1 := by
 lemma corrAvg_le_one {n : Nat} (f : Coloring n) (u v : Vertex n) : corrAvg f u v ≤ 1 := by
   classical
   unfold corrAvg corr
-  set s : Finset (G n) := Finset.univ
-  have hterm : ∀ σ ∈ s, spin (f (σ • u)) * spin (f (σ • v)) ≤ (1 : Q) := by
-    intro σ _hσ
-    exact corr_le_one (f (σ • u)) (f (σ • v))
-  have hsum : s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) ≤ s.card • (1 : Q) :=
-    Finset.sum_le_card_nsmul s _ _ hterm
-  have hsum' :
-      s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) ≤
-        (Fintype.card (G n) : Q) := by
-    have hcard : (s.card : Q) = (Fintype.card (G n) : Q) := by
-      have : s.card = Fintype.card (G n) := by
-        simp [s]
-      exact_mod_cast this
-    have : s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) ≤ (s.card : Q) := by
-      simpa [nsmul_one] using hsum
-    simpa [hcard] using this
-  exact (div_le_one (cardG_pos n)).2 hsum'
+  refine (div_le_one (cardG_pos n)).2 ?_
+  calc (∑ σ : G n, spin (f (σ • u)) * spin (f (σ • v)))
+      ≤ ∑ _σ : G n, (1 : Q) :=
+        Finset.sum_le_sum fun σ _ => corr_le_one (f (σ • u)) (f (σ • v))
+    _ = (Fintype.card (G n) : Q) := by simp [Finset.card_univ]
 
 lemma neg_one_le_corrAvg {n : Nat} (f : Coloring n) (u v : Vertex n) :
     (-1 : Q) ≤ corrAvg f u v := by
   classical
   unfold corrAvg corr
-  set s : Finset (G n) := Finset.univ
-  have hterm : ∀ σ ∈ s, (-1 : Q) ≤ spin (f (σ • u)) * spin (f (σ • v)) := by
-    intro σ _hσ
-    exact neg_one_le_corr (f (σ • u)) (f (σ • v))
-  have hsum : s.card • (-1 : Q) ≤ s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) :=
-    Finset.card_nsmul_le_sum s _ _ hterm
-  have hpos : 0 < (Fintype.card (G n) : Q) := cardG_pos n
-  have :
-      (-1 : Q) * (Fintype.card (G n) : Q) ≤
-        s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) := by
-    have hcard : (s.card : Q) = (Fintype.card (G n) : Q) := by
-      have : s.card = Fintype.card (G n) := by
-        simp [s]
-      exact_mod_cast this
-    have :
-        (-1 : Q) * (s.card : Q) ≤
-          s.sum (fun σ : G n => spin (f (σ • u)) * spin (f (σ • v))) := by
-      simpa [nsmul_eq_mul, mul_comm, mul_left_comm, mul_assoc] using hsum
-    simpa [hcard] using this
-  exact (_root_.le_div_iff₀ hpos).2 this
+  refine (_root_.le_div_iff₀ (cardG_pos n)).2 ?_
+  calc (-1 : Q) * (Fintype.card (G n) : Q)
+      = ∑ _σ : G n, (-1 : Q) := by simp [Finset.card_univ, mul_comm]
+    _ ≤ ∑ σ : G n, spin (f (σ • u)) * spin (f (σ • v)) :=
+        Finset.sum_le_sum fun σ _ => neg_one_le_corr (f (σ • u)) (f (σ • v))
 
 lemma triangle_inequalities (b0 b1 b2 : Bool) :
     (-(spin b0 * spin b1 + spin b0 * spin b2 + spin b1 * spin b2) ≤ (1 : Q)) ∧
@@ -171,19 +141,13 @@ lemma corrAvg_triangle {n : Nat} (f : Coloring n) (u v w : Vertex n) :
   have hne : (Fintype.card (G n) : Q) ≠ 0 := ne_of_gt hpos
   have avg_le_one (g : G n → Q) (hg : ∀ σ : G n, g σ ≤ (1 : Q)) :
       (∑ σ : G n, g σ) / (Fintype.card (G n) : Q) ≤ 1 := by
-    have hsum : (∑ σ : G n, g σ) ≤ ∑ _σ : G n, (1 : Q) := by
-      classical
-      simpa using
-        (Finset.sum_le_sum (s := (Finset.univ : Finset (G n))) fun σ _ => hg σ)
-    have hdiv :
-        (∑ σ : G n, g σ) / (Fintype.card (G n) : Q)
-          ≤ (∑ _σ : G n, (1 : Q)) / (Fintype.card (G n) : Q) :=
+    have hsum : (∑ σ : G n, g σ) ≤ ∑ _σ : G n, (1 : Q) :=
+      Finset.sum_le_sum fun σ _ => hg σ
+    simpa [Finset.sum_const, nsmul_eq_mul, hne] using
       div_le_div_of_nonneg_right hsum (le_of_lt hpos)
-    simpa [Finset.sum_const, nsmul_eq_mul, hne] using hdiv
   have avg_le_one_of_eq (g : G n → Q) (hg : ∀ σ : G n, g σ ≤ (1 : Q)) (rhs : Q)
-      (hEq : (∑ σ : G n, g σ) / (Fintype.card (G n) : Q) = rhs) : rhs ≤ 1 := by
-    have h := avg_le_one (g := g) hg
-    simpa [hEq] using h
+      (hEq : (∑ σ : G n, g σ) / (Fintype.card (G n) : Q) = rhs) : rhs ≤ 1 :=
+    hEq ▸ avg_le_one (g := g) hg
   have hterm (σ : G n) :
       (-(corr f (σ • u) (σ • v) + corr f (σ • u) (σ • w) + corr f (σ • v) (σ • w) : Q) ≤ 1) ∧
         (corr f (σ • u) (σ • v) + corr f (σ • u) (σ • w) - corr f (σ • v) (σ • w) ≤ 1) ∧

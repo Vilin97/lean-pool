@@ -127,8 +127,7 @@ lemma besselK1_pos (z : ℝ) (hz : 0 < z) : 0 < besselK1 z := by
                   have : -z * cosh t ≤ -z * (exp t / 2) := by
                     apply mul_le_mul_of_nonpos_left h_cosh_ge (by linarith)
                   linarith
-              _ = exp (2 * t - z * exp t / 2) := by
-                  rw [← exp_add]; ring_nf
+              _ = exp (2 * t - z * exp t / 2) := by rw [← exp_add]; ring_nf
           -- exp(2t - z*exp(t)/2) → 0 as t → ∞
           have h_exp_to_zero : Tendsto (fun t => exp (2 * t - z * exp t / 2))
               atTop (nhds 0) := by
@@ -173,8 +172,7 @@ lemma besselK1_pos (z : ℝ) (hz : 0 < z) : 0 < besselK1 z := by
           have h1 : ∀ᶠ t in atTop, |f t / exp (-t)| < 1 := by
             have := Metric.tendsto_nhds.mp h_ratio_tendsto 1 one_pos
             filter_upwards [this] with t ht
-            simp only [Real.dist_eq, sub_zero] at ht
-            exact ht
+            simpa only [Real.dist_eq, sub_zero] using ht
           filter_upwards [h1] with t ht
           have hgt : 0 < exp (-t) := exp_pos _
           rw [abs_lt] at ht
@@ -606,8 +604,7 @@ private lemma besselK1_near_origin_tail_bound (z : ℝ) (hz : 0 < z)
       convert h4 using 1
       ext t; ring
     have h4 := h1.const_mul (-2/z)
-    simp only [mul_zero] at h4
-    exact h4
+    simpa only [mul_zero] using h4
   have hg_int : IntegrableOn g (Ioi 1) := by
     apply integrableOn_Ioi_deriv_of_nonneg hF_cont
     · intro x _; exact hF_deriv x
@@ -729,12 +726,10 @@ lemma besselK1_mul_self_le (z : ℝ) (hz : 0 < z) (hz_le : z ≤ 1) :
     have h_pointwise : ∀ t ∈ Icc (0:ℝ) 1, f t ≤ cosh 1 := by
       intro t ⟨ht0, ht1⟩
       simp only [hf_def]
-      have h_exp_le : exp (-z * cosh t) ≤ 1 := by
-        rw [exp_le_one_iff]; nlinarith [cosh_pos t]
+      have h_exp_le : exp (-z * cosh t) ≤ 1 := by rw [exp_le_one_iff]; nlinarith [cosh_pos t]
       have h_cosh_le : cosh t ≤ cosh 1 := by
         -- cosh is increasing on [0,∞), so for 0 ≤ t ≤ 1, cosh t ≤ cosh 1
-        rw [cosh_le_cosh]
-        rw [abs_of_nonneg ht0, abs_of_pos (by linarith : (0:ℝ) < 1)]
+        rw [cosh_le_cosh, abs_of_nonneg ht0, abs_of_pos (by linarith : (0:ℝ) < 1)]
         exact ht1
       calc exp (-z * cosh t) * cosh t ≤ 1 * cosh t := by nlinarith [cosh_pos t]
         _ ≤ cosh 1 := by simp [h_cosh_le]
@@ -991,8 +986,7 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
       -- Use cutoff max(4, 8/z) - for u ≥ 4, we have exp(u) ≥ u²/2
       filter_upwards [eventually_ge_atTop (max 4 (8/z))] with u hu
       simp only [Real.norm_eq_abs, one_mul, neg_mul]
-      rw [abs_of_pos (mul_pos (exp_pos _) (exp_pos _))]
-      rw [abs_of_pos (exp_pos _)]
+      rw [abs_of_pos (mul_pos (exp_pos _) (exp_pos _)), abs_of_pos (exp_pos _)]
       -- Goal: exp(u)*exp(-z*cosh(u)) ≤ exp(-u), i.e., 2u ≤ z*cosh(u)
       have hu4 : u ≥ 4 := le_trans (le_max_left _ _) hu
       have hu8z : u ≥ 8/z := le_trans (le_max_right _ _) hu
@@ -1000,8 +994,7 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
         calc z * u ≥ z * (8 / z) := by nlinarith [hu8z]
           _ = 8 := by field_simp
       have h_cosh_eq : cosh u = (exp u + exp (-u)) / 2 := cosh_eq u
-      have h_cosh_lower : cosh u ≥ exp u / 2 := by
-        rw [h_cosh_eq]; have := exp_pos (-u); linarith
+      have h_cosh_lower : cosh u ≥ exp u / 2 := by rw [h_cosh_eq]; have := exp_pos (-u); linarith
       have h_cosh_pos : 0 < cosh u := cosh_pos u
       -- Key bound: exp(u) ≥ u²/2 for u ≥ 4
       -- Proof: exp(4) > 49 > 8 = 4²/2, and exp(u) - u²/2 is increasing for u ≥ 4
@@ -1092,8 +1085,7 @@ lemma bessel_symmetry_integral (z : ℝ) (hz : 0 < z) :
       hg_int.comp_neg
     -- Use cosh(-u) = cosh(u)
     have h2 : IntegrableOn (fun u => exp (-u) * exp (-z * cosh u)) (-(Ioi (0 : ℝ))) := by
-      simp only [cosh_neg] at h1
-      exact h1
+      simpa only [cosh_neg] using h1
     -- -(Ioi 0) = Iio 0
     have hIio_eq : -(Ioi (0 : ℝ)) = Iio 0 := by
       ext x; simp only [Set.mem_neg, Set.mem_Ioi, Set.mem_Iio]; constructor <;> intro h <;> linarith
@@ -1254,8 +1246,7 @@ lemma schwingerIntegral_eq_besselK1 (m r : ℝ) (hm : 0 < m) (hr : 0 < r) :
       _ = ∫ u in Set.univ, (c * exp u) • g (φ u) :=
           integral_image_eq_integral_deriv_smul_of_monotoneOn MeasurableSet.univ
             hφ_deriv (hφ_mono.monotone.monotoneOn Set.univ) g
-      _ = ∫ u, (c * exp u) * g (c * exp u) := by
-          rw [setIntegral_univ]; simp only [smul_eq_mul, φ]
+      _ = ∫ u, (c * exp u) * g (c * exp u) := by rw [setIntegral_univ]; simp only [smul_eq_mul, φ]
   rw [h_cov]
   -- Now apply h_transform to simplify the integrand
   have h_eq : ∫ u, (c * exp u) * g (c * exp u) =

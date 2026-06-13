@@ -59,8 +59,7 @@ def lang : Semiterm L μ n → Finset (Σ k, L.Func k)
     ⟨k, f⟩ ∈ (func f v).lang := by simp[lang]
 
 lemma lang_func_ss {k} (f : L.Func k) (v : Fin k → Semiterm L μ n) (i) :
-    (v i).lang ⊆ (func f v).lang :=
-  by
+    (v i).lang ⊆ (func f v).lang := by
     intro x h
     simp only [lang, Finset.mem_insert, Finset.mem_biUnion, Finset.mem_univ, true_and]
     exact Or.inr ⟨i, h⟩
@@ -108,8 +107,7 @@ noncomputable def langRel : ∀ {n}, Semiformula L μ n → Finset (Σ k, L.Rel 
 
 omit [∀ k, DecidableEq (L.Rel k)] in
 lemma langFunc_rel_ss {k} (r : L.Rel k) (v : Fin k → Semiterm L μ n) (i) :
-    (v i).lang ⊆ (rel r v).langFunc :=
-  by
+    (v i).lang ⊆ (rel r v).langFunc := by
     intro x h
     simp only [langFunc, Finset.mem_biUnion, Finset.mem_univ, true_and]
     exact ⟨i, h⟩

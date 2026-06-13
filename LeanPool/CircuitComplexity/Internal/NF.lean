@@ -384,13 +384,11 @@ theorem DNF.flip_complexity_lb (φ : DNF N) (hN : 1 ≤ N)
     set k := φ.terms.findIdx (fun t => t.all (fun l => l.eval x₂))
     have hlt : k < φ.terms.length := by
       rw [List.findIdx_lt_length]; exact hfind x₂ hx₂
-    have sat₂ : (φ.terms[k]'hlt).all (fun l => l.eval x₂) = true :=
-      List.findIdx_getElem (w := hlt)
+    have sat₂ : (φ.terms[k]'hlt).all (fun l => l.eval x₂) = true := List.findIdx_getElem (w := hlt)
     have hlt₁ : φ.terms.findIdx (fun t => t.all (fun l => l.eval x₁)) < φ.terms.length := by
       rw [List.findIdx_lt_length]; exact hfind x₁ hx₁
     have sat₁ : (φ.terms[φ.terms.findIdx (fun t => t.all (fun l => l.eval x₁))]'hlt₁).all
-        (fun l => l.eval x₁) = true :=
-      List.findIdx_getElem (w := hlt₁)
+        (fun l => l.eval x₁) = true := List.findIdx_getElem (w := hlt₁)
     have heq' : φ.terms.findIdx (fun t => t.all (fun l => l.eval x₁)) = k := heq
     rw [show (φ.terms[φ.terms.findIdx (fun t => t.all (fun l => l.eval x₁))]'hlt₁) =
         (φ.terms[k]'hlt) from by congr 1] at sat₁

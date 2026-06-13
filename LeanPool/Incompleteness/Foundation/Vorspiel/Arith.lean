@@ -33,20 +33,16 @@ def isLeNat (n m : ℕ) : ℕ := if n ≤ m then 1 else 0
 def isDvdNat (n m : ℕ) : ℕ := if n ∣ m then 1 else 0
 
 @[simp] lemma isEqNat_pos_iff :
-    0 < isEqNat n m ↔ n = m := by
-  simp[isEqNat]; by_cases n = m <;> simp[*]
+    0 < isEqNat n m ↔ n = m := by simp[isEqNat]; by_cases n = m <;> simp[*]
 
 @[simp] lemma isLtNat_pos_iff :
-    0 < isLtNat n m ↔ n < m := by
-  simp[isLtNat]; by_cases n < m <;> simp[*]
+    0 < isLtNat n m ↔ n < m := by simp[isLtNat]; by_cases n < m <;> simp[*]
 
 @[simp] lemma isLeNat_pos_iff :
-    0 < isLeNat n m ↔ n ≤ m := by
-  simp[isLeNat]; by_cases n ≤ m <;> simp[*]
+    0 < isLeNat n m ↔ n ≤ m := by simp[isLeNat]; by_cases n ≤ m <;> simp[*]
 
 @[simp] lemma isDvdNat_pos_iff :
-    0 < isDvdNat n m ↔ n ∣ m := by
-  simp[isDvdNat]; by_cases n ∣ m <;> simp[*]
+    0 < isDvdNat n m ↔ n ∣ m := by simp[isDvdNat]; by_cases n ∣ m <;> simp[*]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def inv (n : ℕ) : ℕ := isEqNat n 0
@@ -71,22 +67,18 @@ def and (n m : ℕ) : ℕ := isLtNat 0 (n * m)
 def or (n m : ℕ) : ℕ := isLtNat 0 (n + m)
 
 lemma and_eq (n m : ℕ) :
-    and n m = if 0 < n ∧ 0 < m then 1 else 0 := by
-  simp [mul_pos_iff, and, isLtNat]
+    and n m = if 0 < n ∧ 0 < m then 1 else 0 := by simp [mul_pos_iff, and, isLtNat]
 
 lemma and_eq_one (n m : ℕ) :
-    and n m = 1 ↔ 0 < n ∧ 0 < m := by
-  simp[and_eq, imp_false, Nat.pos_iff_ne_zero]
+    and n m = 1 ↔ 0 < n ∧ 0 < m := by simp[and_eq, imp_false, Nat.pos_iff_ne_zero]
 
 lemma or_eq (n m : ℕ) : or n m = if 0 < n ∨ 0 < m then 1 else 0 := by simp[or, isLtNat]
 
 @[simp] lemma and_pos_iff (n m : ℕ) :
-    0 < and n m ↔ 0 < n ∧ 0 < m := by
-  simp[and_eq]; by_cases 0 < n ∧ 0 < m <;> simp[*]
+    0 < and n m ↔ 0 < n ∧ 0 < m := by simp[and_eq]; by_cases 0 < n ∧ 0 < m <;> simp[*]
 
 @[simp] lemma or_pos_iff (n m : ℕ) :
-    0 < or n m ↔ 0 < n ∨ 0 < m := by
-  simp[or_eq]; by_cases 0 < n ∨ 0 < m <;> simp[*]
+    0 < or n m ↔ 0 < n ∨ 0 < m := by simp[or_eq]; by_cases 0 < n ∨ 0 < m <;> simp[*]
 
 @[simp] lemma inv_pos_iff (n : ℕ) : 0 < inv n ↔ ¬0 < n := by simp[inv]
 

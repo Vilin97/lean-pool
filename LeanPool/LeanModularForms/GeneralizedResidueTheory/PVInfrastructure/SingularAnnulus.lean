@@ -213,13 +213,10 @@ lemma singular_tAnnLin_inside_interval
       |t - t₀| < min (t₀ - a) (b - t₀) := by
     have h1 :
         ‖L‖ * |t - t₀| <
-        ‖L‖ * min (t₀ - a) (b - t₀) :=
-      lt_of_le_of_lt ht_bound hε₁_small
+        ‖L‖ * min (t₀ - a) (b - t₀) := lt_of_le_of_lt ht_bound hε₁_small
     exact lt_of_mul_lt_mul_left h1 (le_of_lt hL_pos)
-  have h1 : |t - t₀| < t₀ - a :=
-    lt_of_lt_of_le h_abs_lt (min_le_left _ _)
-  have h2 : |t - t₀| < b - t₀ :=
-    lt_of_lt_of_le h_abs_lt (min_le_right _ _)
+  have h1 : |t - t₀| < t₀ - a := lt_of_lt_of_le h_abs_lt (min_le_left _ _)
+  have h2 : |t - t₀| < b - t₀ := lt_of_lt_of_le h_abs_lt (min_le_right _ _)
   rw [abs_lt] at h1 h2
   exact Set.mem_Icc.mpr
     ⟨by linarith [h1.1], by linarith [h2.2]⟩
@@ -245,8 +242,7 @@ lemma singular_symmDiff_sup_bound
     {t₀ c : ℝ} (hc_pos : 0 < c)
     {t : ℝ} (ht_lower : c ≤ |t - t₀|) :
     ‖(↑(t - t₀) : ℂ)⁻¹‖ ≤ 1 / c := by
-  have ht_pos : (0 : ℝ) < |t - t₀| :=
-    lt_of_lt_of_le hc_pos ht_lower
+  have ht_pos : (0 : ℝ) < |t - t₀| := lt_of_lt_of_le hc_pos ht_lower
   rw [norm_inv, Complex.norm_real,
     Real.norm_eq_abs, one_div]
   exact inv_anti₀ hc_pos ht_lower
@@ -280,8 +276,7 @@ private lemma singular_annulus_f_lin_bound
           < ε₂ / ‖L‖ := div_lt_div_of_pos_left hε₂_pos hL_pos (by linarith)
         _ ≤ |t - t₀| := by rw [div_le_iff₀ hL_pos, mul_comm]; exact le_of_lt hcond.1
     calc ‖(↑(t - t₀) : ℂ)⁻¹‖
-        ≤ 1 / (ε₂ / (2 * ‖L‖)) :=
-          singular_symmDiff_sup_bound (by positivity) (le_of_lt hlo)
+        ≤ 1 / (ε₂ / (2 * ‖L‖)) := singular_symmDiff_sup_bound (by positivity) (le_of_lt hlo)
       _ = 2 * ‖L‖ / ε₂ := by rw [one_div, inv_div]
   · simp only [hcond, ite_false, norm_zero]; positivity
 
@@ -403,8 +398,7 @@ private lemma singular_annulus_lin_integral_zero
       then (↑(t - t₀) : ℂ)⁻¹ else 0) = 0 := by
   set c₁ := ε₂ / ‖L‖; set c₂ := ε₁ / ‖L‖
   have hc₁_pos : 0 < c₁ := div_pos hε₂_pos hL_pos
-  have hc₁_le_c₂ : c₁ ≤ c₂ :=
-    div_le_div_of_nonneg_right hε₂_le (le_of_lt hL_pos)
+  have hc₁_le_c₂ : c₁ ≤ c₂ := div_le_div_of_nonneg_right hε₂_le (le_of_lt hL_pos)
   have hc₂_lt_dist : c₂ < min (t₀ - a) (b - t₀) := by
     rw [show c₂ = ε₁ / ‖L‖ from rfl, div_lt_iff₀ hL_pos]
     linarith [mul_comm ‖L‖ (min (t₀ - a) (b - t₀))]
@@ -468,13 +462,10 @@ private lemma singular_annulus_diff_pointwise_bound
   · simp only [hγ, and_self, ↓reduceIte, ofReal_sub, hlin, sub_self, norm_zero, ge_iff_le]
     exact le_of_lt hbound_pos
   · simp only [hγ, hlin, ↓reduceIte, sub_zero]
-    have ht_ne : t ≠ t₀ := by
-      intro heq; simp [heq] at hγ; linarith
-    have ht_pos : 0 < |t - t₀| :=
-      abs_pos.mpr (sub_ne_zero.mpr ht_ne)
+    have ht_ne : t ≠ t₀ := by intro heq; simp [heq] at hγ; linarith
+    have ht_pos : 0 < |t - t₀| := abs_pos.mpr (sub_ne_zero.mpr ht_ne)
     have ht_loc := h_localize t ht hγ.2
-    have ht_lt_δ_up : |t - t₀| < δ_up :=
-      lt_of_lt_of_le ht_loc hδ₁_le_δ_up
+    have ht_lt_δ_up : |t - t₀| < δ_up := lt_of_lt_of_le ht_loc hδ₁_le_δ_up
     have h_lo :
         ε₂ / (2 * ‖L‖) ≤ |t - t₀| :=
       le_of_lt (by
@@ -592,19 +583,13 @@ lemma singular_annulus_bound_explicit
       δ_meas, hδ_meas_pos, h_meas⟩ :=
     annulus_symmDiff_measure_bound hab hat₀
       hγ_C2 hγ_deriv hL
-  have hγ_diff : DifferentiableAt ℝ γ t₀ :=
-    hγ_C2.differentiableAt two_ne_zero
-  have hγ_hasderiv : HasDerivAt γ L t₀ := by
-    rw [← hγ_deriv]; exact hγ_diff.hasDerivAt
-  obtain ⟨δ_lo, hδ_lo_pos, h_lower⟩ :=
-    gamma_lower_bound_of_hasDerivAt hL hγ_hasderiv
-  obtain ⟨δ_up, hδ_up_pos, h_upper⟩ :=
-    gamma_upper_bound_of_hasDerivAt hL hγ_hasderiv
+  have hγ_diff : DifferentiableAt ℝ γ t₀ := hγ_C2.differentiableAt two_ne_zero
+  have hγ_hasderiv : HasDerivAt γ L t₀ := by rw [← hγ_deriv]; exact hγ_diff.hasDerivAt
+  obtain ⟨δ_lo, hδ_lo_pos, h_lower⟩ := gamma_lower_bound_of_hasDerivAt hL hγ_hasderiv
+  obtain ⟨δ_up, hδ_up_pos, h_upper⟩ := gamma_upper_bound_of_hasDerivAt hL hγ_hasderiv
   let δ₁ := min δ₀' (min δ_lo δ_up)
-  have hδ₁_pos : 0 < δ₁ :=
-    lt_min hδ₀'_pos (lt_min hδ_lo_pos hδ_up_pos)
-  obtain ⟨ρ, hρ_pos, h_far_bound⟩ :=
-    no_return_of_inj_continuous hδ₁_pos hγ_cont h_inj
+  have hδ₁_pos : 0 < δ₁ := lt_min hδ₀'_pos (lt_min hδ_lo_pos hδ_up_pos)
+  obtain ⟨ρ, hρ_pos, h_far_bound⟩ := no_return_of_inj_continuous hδ₁_pos hγ_cont h_inj
   have ht₀_mem := Set.mem_Ioo.mp hat₀
   have h_dist_pos :
       0 < min (t₀ - a) (b - t₀) := by
@@ -620,12 +605,10 @@ lemma singular_annulus_bound_explicit
   have hCsing_pos : 0 < Csing := by positivity
   use Csing, hCsing_pos, δ, hδ_pos
   intro ε₁ ε₂ hε₂_pos hε₂_le h_ratio hε₁_lt
-  have hε₁_pos : 0 < ε₁ :=
-    lt_of_lt_of_le hε₂_pos hε₂_le
+  have hε₁_pos : 0 < ε₁ := lt_of_lt_of_le hε₂_pos hε₂_le
   have hε₁_lt_δ_meas : ε₁ < δ_meas :=
     lt_of_lt_of_le hε₁_lt (le_trans (min_le_left _ _) (min_le_left _ _))
-  have hε₁_lt_ρ : ε₁ < ρ :=
-    lt_of_lt_of_le hε₁_lt (le_trans (min_le_left _ _) (min_le_right _ _))
+  have hε₁_lt_ρ : ε₁ < ρ := lt_of_lt_of_le hε₁_lt (le_trans (min_le_left _ _) (min_le_right _ _))
   have hε₁_lt_Ldist : ε₁ < ‖L‖ * min (t₀ - a) (b - t₀) :=
     lt_of_lt_of_le hε₁_lt (le_trans (min_le_right _ _) (min_le_left _ _))
   have hε₁_lt_Lδ₀' : ε₁ < ‖L‖ * δ₀' :=
@@ -677,8 +660,7 @@ lemma singular_annulus_bound_explicit
   -- AE measurable version of the gamma norm
   have h_norm_cont :
       ContinuousOn (fun t => ‖γ t - γ t₀‖)
-        (Set.Icc a b) :=
-    (hγ_cont.sub continuousOn_const).norm
+        (Set.Icc a b) := (hγ_cont.sub continuousOn_const).norm
   have h_norm_aesm :
       AEStronglyMeasurable
         (fun t => ‖γ t - γ t₀‖)
@@ -688,13 +670,11 @@ lemma singular_annulus_bound_explicit
       measurableSet_Icc
   set h' := h_norm_aesm.mk (fun t => ‖γ t - γ t₀‖)
     with hh'_def
-  have hh'_sm : StronglyMeasurable h' :=
-    h_norm_aesm.stronglyMeasurable_mk
+  have hh'_sm : StronglyMeasurable h' := h_norm_aesm.stronglyMeasurable_mk
   have hh'_ae :
       ∀ᵐ t ∂(MeasureTheory.volume.restrict
         (Set.Icc a b)),
-      ‖γ t - γ t₀‖ = h' t :=
-    h_norm_aesm.ae_eq_mk
+      ‖γ t - γ t₀‖ = h' t := h_norm_aesm.ae_eq_mk
   set f_γ' : ℝ → ℂ := fun t =>
     if ε₂ < h' t ∧ h' t ≤ ε₁
     then (↑(t - t₀) : ℂ)⁻¹ else 0 with hf_γ'_def
@@ -788,8 +768,7 @@ lemma singular_annulus_bound_explicit
     _ ≤ (Kmeas * ε₁ ^ 2 / ‖L‖ ^ 3) * bound := by
         exact mul_le_mul_of_nonneg_right
           (ENNReal.toReal_le_of_le_ofReal (by positivity) hS'_vol_bound) (le_of_lt hbound_pos)
-    _ ≤ Csing * ε₁ :=
-        singular_annulus_final_ratio hKmeas_pos hL_pos hε₁_pos hε₂_pos h_ratio
+    _ ≤ Csing * ε₁ := singular_annulus_final_ratio hKmeas_pos hL_pos hε₁_pos hε₂_pos h_ratio
 
 
 end

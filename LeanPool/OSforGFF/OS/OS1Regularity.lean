@@ -44,8 +44,7 @@ open scoped MeasureTheory ENNReal
 -/
 theorem fourier_plancherel_schwartz (g : TestFunctionℂ) :
     ∫ k, ‖(SchwartzMap.fourierTransformCLM ℂ g) k‖^2 ∂volume =
-      ∫ x, ‖g x‖^2 ∂volume :=
-  SchwartzMap.integral_norm_sq_fourier g
+      ∫ x, ‖g x‖^2 ∂volume := SchwartzMap.integral_norm_sq_fourier g
 
 /-- **Two-point Schwinger function equals the free covariance kernel.**
 
@@ -169,11 +168,9 @@ theorem schwinger_two_point_decay_bound (m : ℝ) [Fact (0 < m)] :
       ring
     simp only [norm_zero, h_rhs, le_refl]
   · -- Non-coincident points: use the bridge lemma
-    rw [schwingerTwoPointFunction_eq_freeCovarianceKernel m (x - y) h]
-    rw [Real.norm_eq_abs]
+    rw [schwingerTwoPointFunction_eq_freeCovarianceKernel m (x - y) h, Real.norm_eq_abs]
     have := hC_bound x y
-    rw [schwingerTwoPoint_eq_freeCovarianceKernel, Real.norm_eq_abs] at this
-    exact this
+    rwa [schwingerTwoPoint_eq_freeCovarianceKernel, Real.norm_eq_abs] at this
 
 /-- The abstract two-point Schwinger function is measurable.
     This uses the bridge lemma to connect to the concrete GFF definition.
@@ -268,8 +265,7 @@ lemma gff_generating_bound_by_imaginary (m : ℝ) [Fact (0 < m)] (f : TestFuncti
   -- Take real part: Re C(f,f) = Re C(frC,frC) - Re C(fiC,fiC)
   -- The cross terms with I have zero real part, so they vanish
   have h_re : (freeCovarianceℂBilinear m f f).re =
-              (freeCovarianceℂBilinear m frC frC).re - (freeCovarianceℂBilinear m fiC fiC).re :=
-                 by
+              (freeCovarianceℂBilinear m frC frC).re - (freeCovarianceℂBilinear m fiC fiC).re := by
     rw [h_expand]
     simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.I_re, Complex.I_im]
     -- For real test functions frC and fiC, the bilinear form produces real values
@@ -388,8 +384,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
     have hL : ‖(toComplex fIm) x‖ = |(f x).im| := by
       simp [toComplex_apply, fIm, complexTestFunctionDecompose]
     -- Robust proof without external lemma names: |Im z|^2 ≤ ‖z‖^2
-    have habs_sq : |(f x).im| ^ 2 = ((f x).im) ^ 2 := by
-      simp [pow_two]
+    have habs_sq : |(f x).im| ^ 2 = ((f x).im) ^ 2 := by simp [pow_two]
     have hineq : ((f x).im) ^ 2 ≤ (f x).re ^ 2 + (f x).im ^ 2 := by
       exact le_add_of_nonneg_left (sq_nonneg _)
     have hnorm_sq : ‖f x‖ ^ 2 = (f x).re ^ 2 + (f x).im ^ 2 := by
@@ -463,8 +458,7 @@ lemma gff_two_point_locally_integrable (m : ℝ) [Fact (0 < m)] :
     -- We have h_decay: ‖S(x-y)‖ ≤ C * ‖x-y‖^{-2}, and need |S(x)| ≤ C * ‖x‖^{-2}
     -- Setting y = 0 gives ‖S(x-0)‖ = ‖S(x)‖ ≤ C * ‖x-0‖^{-2} = C * ‖x‖^{-2}
     have := h_decay x 0
-    simp only [Real.norm_eq_abs, sub_zero] at this
-    exact this
+    simpa only [Real.norm_eq_abs, sub_zero] using this
   · -- h_meas: Measurability (follows from Schwartz theory)
     exact schwingerTwoPoint_measurable m
 
@@ -519,8 +513,7 @@ theorem gaussianFreeField_satisfies_OS1_revised (m : ℝ) [Fact (0 < m)] :
         exact integral_nonneg hpt
       have hcpos : 0 ≤ (1 / (2 * m^2)) := by positivity
       -- Use `add_nonneg` and rearrange
-      have hadd : (1 / (2 * m^2)) * ∫ x, ‖f x‖ ∂volume ≥ 0 := by
-        exact mul_nonneg hcpos hI1_nonneg
+      have hadd : (1 / (2 * m^2)) * ∫ x, ‖f x‖ ∂volume ≥ 0 := by exact mul_nonneg hcpos hI1_nonneg
       calc (1 / (2 * m^2)) * ∫ x, ‖f x‖^(2:ℝ) ∂volume
         _ ≤ (1 / (2 * m^2)) * ∫ x, ‖f x‖^(2:ℝ) ∂volume + (1 / (2 * m^2)) * ∫ x, ‖f x‖ ∂volume :=
             le_add_of_nonneg_right hadd

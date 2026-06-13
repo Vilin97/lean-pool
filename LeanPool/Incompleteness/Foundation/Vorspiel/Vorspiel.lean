@@ -130,8 +130,7 @@ infixl:70 " <: " => vecConsLast
   funext <| Fin.cases (by simp) (by simp)
 
 @[simp] lemma zero_cons_succ_eq_self (f : Fin (n + 1) → α) : (f 0 :> (f ·.succ) :
-    Fin (n + 1) → α) = f := by
-    funext x; cases x using Fin.cases <;> simp
+    Fin (n + 1) → α) = f := by funext x; cases x using Fin.cases <;> simp
 
 lemma eq_vecCons (s : Fin (n + 1) → C) : s = s 0 :> s ∘ Fin.succ :=
    funext <| Fin.cases (by simp) (by simp)
@@ -185,16 +184,14 @@ lemma comp_vecCons'' (f : α → β) (a : α) (s : Fin n → α) : f ∘ (a :> s
 @[simp] lemma comp₂ (a₁ a₂ : α) : f ∘ ![a₁, a₂] = ![f a₁, f a₂] := by simp [comp_vecCons'']
 
 @[simp] lemma comp₃ (a₁ a₂ a₃ : α) :
-    f ∘ ![a₁, a₂, a₃] = ![f a₁, f a₂, f a₃] := by
-  simp [comp_vecCons'']
+    f ∘ ![a₁, a₂, a₃] = ![f a₁, f a₂, f a₃] := by simp [comp_vecCons'']
 
 lemma comp_vecConsLast (f : α → β) (a : α) (s : Fin n → α) :
     (fun x => f <| (s <: a) x) = f ∘ s <: f a :=
 funext (fun i => Fin.lastCases (by simp) (by simp) i)
 
 @[simp 1100] lemma vecHead_comp (f : α → β) (v : Fin (n + 1) → α) :
-    vecHead (f ∘ v) = f (vecHead v) :=
-  by simp [vecHead]
+    vecHead (f ∘ v) = f (vecHead v) := by simp [vecHead]
 
 lemma vecTail_comp (f : α → β) (v : Fin (n + 1) → α) : vecTail (f ∘ v) = f ∘ (vecTail v) := by
   simp [vecTail, Function.comp_assoc]
@@ -240,8 +237,7 @@ def toList : {n : ℕ} → (Fin n → α) → List α
 
 @[simp] lemma toList_succ (v : Fin (n + 1) → α) : toList v = v 0 :: toList (v ∘ Fin.succ) := rfl
 
-@[simp] lemma toList_length (v : Fin n → α) : (toList v).length = n :=
-  by induction n <;> simp [*]
+@[simp] lemma toList_length (v : Fin n → α) : (toList v).length = n := by induction n <;> simp [*]
 
 @[simp] lemma mem_toList_iff {v : Fin n → α} {a} : a ∈ toList v ↔ ∃ i, v i = a := by
   induction n
@@ -278,8 +274,7 @@ def appendr {n m} (v : Fin n → α) (w : Fin m → α) :
 @[simp] lemma appendr_nil {m} (w : Fin m → α) : appendr ![] w = w := by funext i; simp [appendr]
 
 @[simp] lemma appendr_cons {m n} (x : α) (v : Fin n → α) (w : Fin m → α) :
-    appendr (x :> v) w = x :> appendr v w := by
-  funext i; simp [appendr]
+    appendr (x :> v) w = x :> appendr v w := by funext i; simp [appendr]
 
 section «lp_section_3»
 
@@ -293,8 +288,7 @@ open Encodable
 @[simp] lemma vecToNat_empty (v : Fin 0 → ℕ) : vecToNat v = 0 := by rfl
 
 @[simp] lemma encode_succ {n} (x : ℕ) (v : Fin n → ℕ) :
-    vecToNat (x :> v) = Nat.pair x (vecToNat v) + 1 := by
-  simp [vecToNat, Function.comp_def]
+    vecToNat (x :> v) = Nat.pair x (vecToNat v) + 1 := by simp [vecToNat, Function.comp_def]
 
 end «lp_section_3»
 
@@ -385,8 +379,7 @@ lemma lt_of_eq_natToVec {e : ℕ} {v : Fin n → ℕ} (h : e.natToVec n = some v
         simp only [cons_val_succ]
         exact lt_trans (ih hnv i) (Nat.lt_succ_iff.mpr <| unpair_right_le e)
 
-lemma one_le_of_bodd {n : ℕ} (h : n.bodd = true) : 1 ≤ n :=
-by induction n <;> simp  at h ⊢
+lemma one_le_of_bodd {n : ℕ} (h : n.bodd = true) : 1 ≤ n := by induction n <;> simp  at h ⊢
 
 lemma pair_le_pair_of_le {a₁ a₂ b₁ b₂ : ℕ} (ha : a₁ ≤ a₂) (hb : b₁ ≤ b₂) :
     a₁.pair b₁ ≤ a₂.pair b₂ := by
@@ -474,8 +467,7 @@ def funEqOn (φ : α → Prop) (f g : α → β) : Prop := ∀ a, φ a → f a =
 
 lemma _root_.Function.funEqOn.of_subset {φ ψ : α → Prop} {f g : α → β} (e : funEqOn φ f g) (h :
     ∀ a, ψ a → φ a) :
-    funEqOn ψ f g :=
-  by intro a ha; exact e a (h a ha)
+    funEqOn ψ f g := by intro a ha; exact e a (h a ha)
 
 end Function
 
@@ -593,8 +585,7 @@ lemma sup_ofFn (f : Fin n → α) : (ofFn f).sup = Finset.sup Finset.univ f := b
   | zero => simp
   | succ n ih =>
     have h₁ : (Finset.univ : Finset (Fin (n + 1))) =
-      insert 0 ((Finset.univ : Finset (Fin n)).image Fin.succ) := by
-      ext i; simp
+      insert 0 ((Finset.univ : Finset (Fin n)).image Fin.succ) := by ext i; simp
     have h₂ : Finset.sup Finset.univ (fun i ↦ f (Fin.succ i)) = Finset.sup {0}ᶜ f := by
       simpa [Function.comp_def] using Eq.symm <|
           Finset.sup_image (Finset.univ : Finset (Fin n)) Fin.succ f
@@ -632,16 +623,13 @@ lemma remove_nil (a : α) : [].remove a = [] := by simp [List.remove]
 
 @[simp 1100]
 lemma eq_remove_cons {l : List α} :
-    (ψ :: l).remove ψ = l.remove ψ := by
-  induction l <;> simp_all [List.remove];
+    (ψ :: l).remove ψ = l.remove ψ := by induction l <;> simp_all [List.remove];
 
 @[simp]
 lemma remove_singleton_of_ne {φ ψ : α} (h : φ ≠ ψ) :
-    [φ].remove ψ = [φ] := by
-  simp_all [List.remove];
+    [φ].remove ψ = [φ] := by simp_all [List.remove];
 
-lemma mem_remove_iff {l : List α} : b ∈ l.remove a ↔ b ∈ l ∧ b ≠ a := by
-  simp [List.remove]
+lemma mem_remove_iff {l : List α} : b ∈ l.remove a ↔ b ∈ l ∧ b ≠ a := by simp [List.remove]
 
 lemma mem_of_mem_remove {a b : α} {l : List α} (h : b ∈ l.remove a) : b ∈ l := by
   rw [mem_remove_iff] at h; exact h.1
@@ -708,8 +696,7 @@ lemma get_one {α : Type*} {n} (v : Vector α (n + 2)) : v.get 1 = v.tail.head :
   simpa [Vector.get_zero] using (Vector.get_tail_succ v 0).symm
 
 lemma ofFn_vecCons (a : α) (v : Fin n → α) :
-    ofFn (a :> v) = a ::ᵥ ofFn v := by
-  ext i; cases i using Fin.cases <;> simp
+    ofFn (a :> v) = a ::ᵥ ofFn v := by ext i; cases i using Fin.cases <;> simp
 
 end Vector
 end List
@@ -792,8 +779,7 @@ namespace Part
         exact h 0
       refine ⟨w.head, hhead, w.tail, ?_, (List.Vector.cons_head_tail w).symm⟩
       intro i
-      have htail : w.tail.get i = w.get i.succ := by
-        exact List.Vector.get_tail_succ w i
+      have htail : w.tail.get i = w.get i.succ := List.Vector.get_tail_succ w i
       exact htail.symm ▸ h i.succ
 
 end Part

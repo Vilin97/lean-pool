@@ -1579,8 +1579,7 @@ private theorem circleSeries_star_finiteCirclePoly_add_star_eq_zero
     have hrew : star ((c * c) * (s * star p)) = (c * c) * star (s * star p) := by
       rw [star_mul, hcc]
       simp [mul_comm, mul_assoc]
-    rw [hx, hrew] at hmain
-    exact hmain
+    rwa [hx, hrew] at hmain
   have hcpos : 0 < (((r ^ k) / Real.sqrt ((Nat.factorial k : ℕ) : ℝ)) : ℝ) := by
     positivity
   have hcnz : (c * c) ≠ 0 := by
@@ -1762,8 +1761,7 @@ private theorem positive_mode_main_sum_tendsto
       _ = star (a i0) * hermiteCoeff k G (d + ell) := hsum0
       _ = star (topCoeff a) * hermiteCoeff k G (d + ell) := by
             simp [topCoeff, i0]
-  rw [htop] at hsum
-  exact hsum
+  rwa [htop] at hsum
 
 /-- The lower-index correction terms in the positive-mode relation vanish after normalization. -/
 private theorem positive_mode_error_sum_tendsto_zero
@@ -1990,8 +1988,7 @@ private theorem finite_positive_mode_main_tendsto
       simp [hne]
     · intro hn
       exact False.elim (hn (Finset.mem_univ n))
-  rw [htop] at hsum
-  exact hsum
+  rwa [htop] at hsum
 
 private def finitePositiveModeErrorSum
     (k d : ℕ) (a b : Fin (d + 1) → ℂ) (n : Fin (d + 1)) (r : ℝ) : ℂ :=
@@ -2077,8 +2074,7 @@ private theorem finite_positive_mode_error_tendsto
       simp [hne]
     · intro hi0
       exact False.elim (hi0 (Finset.mem_univ i0))
-  rw [htop] at hsum
-  exact hsum
+  rwa [htop] at hsum
 
 private theorem finite_positive_mode_main_raw
     {k d : ℕ} (a b : Fin (d + 1) → ℂ) (n : Fin (d + 1)) {r : ℝ} :

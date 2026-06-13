@@ -127,8 +127,7 @@ lemma glasser_integral_substitution_identity (c : ℝ) (hc : 0 < c) :
     · have h_eq : c / (c / u) - c / u = u - c / u := by field_simp [ne_of_gt hu_pos]
       rw [h_eq, ← glasser_sq_symm]
   simp only [smul_eq_mul, g] at h_cov ⊢
-  rw [setIntegral_congr_fun measurableSet_Ioi h_simp] at h_cov
-  exact h_cov
+  rwa [setIntegral_congr_fun measurableSet_Ioi h_simp] at h_cov
 
 /-- Split (0, ∞) = (0, 1] ∪ (1, ∞) -/
 private lemma Ioi_zero_eq_Ioc_union_Ioi : Ioi (0 : ℝ) = Ioc 0 1 ∪ Ioi 1 := by
@@ -208,8 +207,7 @@ theorem glasser_weighted_integrable (c : ℝ) (hc : 0 < c) :
       ext v; simp only [mem_image, mem_Ioc, mem_Ici]
       constructor
       · rintro ⟨u, ⟨hu_pos, hu_le⟩, rfl⟩
-        have : c / u ≥ c / 1 := by
-          apply div_le_div_of_nonneg_left (le_of_lt hc) hu_pos hu_le
+        have : c / u ≥ c / 1 := by apply div_le_div_of_nonneg_left (le_of_lt hc) hu_pos hu_le
         simpa only [ge_iff_le, div_one] using this
       · intro hv
         have hv_pos : 0 < v := lt_of_lt_of_le hc hv
@@ -390,8 +388,7 @@ lemma glasser_image_eq_univ (c : ℝ) (hc : 0 < c) :
   have h_at_sqrt : f (sqrt c) = 0 := by
     simp only [f]
     have h : sqrt c ≠ 0 := ne_of_gt (sqrt_pos.mpr hc)
-    have h2 : c / sqrt c = sqrt c := by
-      rw [div_eq_iff h, ← sq]; exact (sq_sqrt (le_of_lt hc)).symm
+    have h2 : c / sqrt c = sqrt c := by rw [div_eq_iff h, ← sq]; exact (sq_sqrt (le_of_lt hc)).symm
     linarith
   have h_sqrt_pos : sqrt c ∈ Ioi 0 := sqrt_pos.mpr hc
   have hpc : IsPreconnected (Ioi (0 : ℝ)) := isPreconnected_Ioi
@@ -490,8 +487,7 @@ lemma laplace_integral_subst_sq (a b : ℝ) (_ha : 0 < a) (_hb : 0 < b) :
   have ht_ne : t ≠ 0 := ne_of_gt ht_pos
   have ht_nonneg : 0 ≤ t := le_of_lt ht_pos
   -- Simplify t^(2-1) = t
-  have h1 : (t : ℝ) ^ ((2 : ℝ) - 1) = t := by
-    rw [show (2 : ℝ) - 1 = 1 by norm_num, rpow_one]
+  have h1 : (t : ℝ) ^ ((2 : ℝ) - 1) = t := by rw [show (2 : ℝ) - 1 = 1 by norm_num, rpow_one]
   rw [h1]
   -- Key: (t^2)^(-1/2) = t⁻¹
   have key : (t ^ (2 : ℝ)) ^ (-(1/2) : ℝ) = t⁻¹ := by

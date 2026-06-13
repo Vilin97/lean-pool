@@ -53,8 +53,7 @@ private theorem highAnnulusMass_le_norm_sq_wip
 
 private theorem defect_nonneg_annulus
     {d : Nat} {kappa : MultiIndex d} (F G : Pkappa d kappa) :
-    0 <= defect F G := by
-  exact Real.sqrt_nonneg _
+    0 <= defect F G := by exact Real.sqrt_nonneg _
 
 private theorem toFun_ofPkappa_annulus
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -153,8 +152,7 @@ private lemma rotate_one_volume_preserving_annulus
         funext z
         simp only [f, dite_true]
         rfl
-      rw [hfeq] at hmp
-      exact hmp
+      rwa [hfeq] at hmp
     · simpa [f, h] using
         (show MeasurePreserving (id : ℂ → ℂ) (volume : Measure ℂ) (volume : Measure ℂ) from
           ⟨measurable_id, by simp⟩)
@@ -409,8 +407,7 @@ private theorem annulusBandLength_pos
 
 private theorem norm_nonneg_pkappa_annulus
     {d : Nat} {kappa : MultiIndex d} (F : Pkappa d kappa) :
-    0 ≤ ‖F‖ := by
-  exact Real.sqrt_nonneg _
+    0 ≤ ‖F‖ := by exact Real.sqrt_nonneg _
 
 private theorem norm_ne_zero_of_ne_zero_pkappa_annulus
     {d : Nat} {kappa : MultiIndex d}
@@ -574,8 +571,7 @@ private theorem annulusMass_eq_coordFiber_average_annulus
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gammaD d := by
-          rw [hmass0]
-          rw [hmass_indicator]
+          rw [hmass0, hmass_indicator]
           exact havg.symm
     _ = ∫⁻ z : Cd d,
           Set.indicator (productAnnulus j)
@@ -1110,8 +1106,7 @@ private theorem baseDefectAnnulusMass_eq_coordFiber_average_annulus
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gammaD d := by
-          rw [hdef0]
-          rw [hdef_indicator]
+          rw [hdef0, hdef_indicator]
           exact havg.symm
     _ = ∫⁻ z : Cd d,
           Set.indicator (productAnnulus j)
@@ -1469,8 +1464,7 @@ private theorem Phi_rotate_one_exp_annulus
     · subst hq
       simp
     · simp [Function.update, hq]
-  rw [hupdate]
-  rw [Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp)]
+  rw [hupdate, Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp)]
   rw [oneDimPhi_phaseLaw_annulus]
   conv_rhs =>
     rw [Finset.prod_eq_mul_prod_diff_singleton_of_mem (s := Finset.univ) (i := q0) (by simp)]
@@ -1503,8 +1497,7 @@ private theorem Phi_rotateCoord_circle_phase_annulus
             Complex.exp (Complex.I * θ) := by
         congr 1
         ring_nf
-      rw [hone]
-      rw [Phi_rotate_one_exp_annulus]
+      rw [hone, Phi_rotate_one_exp_annulus]
       have hphase :
           Complex.exp (Complex.I * (((kappa q0 : Nat) : Int) : ℂ) * θ) *
               (Complex.exp (Complex.I * (((alpha q0 : ℤ) - (kappa q0 : ℤ) : ℂ) * θ)) *
@@ -2202,8 +2195,7 @@ private theorem summable_annulusMass_ofPkappa_annulus
 
 private theorem mem_lowAnnuli_iff_annulus
     {d J : Nat} {j : Idx d} :
-    j ∈ lowAnnuli d J ↔ ∀ q : Fin d, j q < J := by
-  simp [lowAnnuli]
+    j ∈ lowAnnuli d J ↔ ∀ q : Fin d, j q < J := by simp [lowAnnuli]
 
 private theorem not_mem_lowAnnuli_iff_maxCoordAnnulus
     {d : Nat} (hd : 0 < d) (J : Nat) (j : Idx d) :
@@ -2404,9 +2396,7 @@ private theorem norm_smul_pkappa_real_sq_annulus
       refine Finset.sum_congr rfl ?_
       intro alpha halpha
       simp [Finsupp.smul_apply, Real.norm_eq_abs, sq_abs, mul_pow]
-    rw [hsum]
-    rw [Real.sq_sqrt (mul_nonneg (sq_nonneg t) (by positivity))]
-    rw [Real.sq_sqrt (by positivity)]
+    rw [hsum, Real.sq_sqrt (mul_nonneg (sq_nonneg t) (by positivity)), Real.sq_sqrt (by positivity)]
 
 private theorem finite_base_product_annulus_estimate_large_eps
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)

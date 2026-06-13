@@ -34,8 +34,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
     Integrable
       (fun z : CSpace 1 => HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))
       (gaussianMeasure 1)
-  rw [gaussianMeasure]
-  rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+  rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
   · have hcross :
         Integrable
           (fun z : CSpace 1 =>
@@ -329,16 +328,14 @@ theorem productBasisOrthonormal
               (fun z : CSpace 1 => oneDimPhi (κ q) (α q) (z 0)) = 1 := by
         intro q
         have hov := oneVariableBasisOrthonormal (k := κ q) (m := α q) (n := α q)
-        rw [if_pos rfl] at hov
-        exact hov
+        rwa [if_pos rfl] at hov
       simp [hcoord]
     · obtain ⟨q, hq⟩ : ∃ q : Fin d, α q ≠ β q := by
         simpa [funext_iff] using h
       rw [if_neg h, Finset.prod_eq_zero_iff]
       refine ⟨q, Finset.mem_univ q, ?_⟩
       have hov := oneVariableBasisOrthonormal (k := κ q) (m := α q) (n := β q)
-      rw [if_neg hq] at hov
-      exact hov
+      rwa [if_neg hq] at hov
   exact hfactor.2.trans hprod
 
 /-- The distinguished basis vector has Gaussian norm one. -/
@@ -439,8 +436,7 @@ theorem coefficientAtZero
 /-- Orthogonality to `ν_κ` is equivalent to vanishing zero coefficient. -/
 theorem orthogonalToNu_iff_coeff_zero
     {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) :
-    hermiteInnerNu κ G = 0 ↔ G.coeff 0 = 0 := by
-  simp [coefficientAtZero (κ := κ) (G := G)]
+    hermiteInnerNu κ G = 0 ↔ G.coeff 0 = 0 := by simp [coefficientAtZero (κ := κ) (G := G)]
 
 private lemma circle_pow_factor
     (ω : _root_.Circle) {j k p : ℕ} (hjk : j ≤ k) (hjp : j ≤ p) :
@@ -864,8 +860,7 @@ private lemma gaussian_lintegral_rotate_eq
     have hfeq : (fun (a : CSpace d) (i : Fin d) => (mulCircleLIE ω) (a i)) = f := by
       funext z q
       rfl
-    rw [hfeq] at h
-    exact h
+    rwa [hfeq] at h
   have hmeas : MeasurableEmbedding f := by
     let inv : CSpace d → CSpace d := fun z q => (((ω⁻¹ : _root_.Circle) : ℂ) * z q)
     have hinv : Function.LeftInverse inv f := by
@@ -944,8 +939,7 @@ private lemma rotate_one_volume_preserving
         funext z
         simp only [f, dite_true]
         rfl
-      rw [hfeq] at hmp
-      exact hmp
+      rwa [hfeq] at hmp
     · simpa [f, h] using
         (show MeasurePreserving (id : ℂ → ℂ) (volume : Measure ℂ) (volume : Measure ℂ) from
           ⟨measurable_id, by simp⟩)
@@ -1043,9 +1037,7 @@ private lemma PhiKappaAlpha_rotate_one
     · subst hq
       simp
     · simp [Function.update, hq]
-  rw [hupdate]
-  rw [Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp)]
-  rw [oneDimPhi_phaseLaw]
+  rw [hupdate, Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp), oneDimPhi_phaseLaw]
   conv_rhs => rw [Finset.prod_eq_mul_prod_diff_singleton_of_mem (s := Finset.univ) (i := q0) (by
       simp)]
   ring

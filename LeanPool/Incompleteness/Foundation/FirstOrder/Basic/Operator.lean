@@ -79,8 +79,7 @@ lemma positive_operator_iff {k} {o : Operator L k} {v : Fin k → Semiterm L ξ 
   exact ⟨fun h i hi x hx ↦ h x i hi hx, fun h x i hi hx ↦ h i hi x hx⟩
 
 @[simp] lemma positive_const (c : Const L) : (c :
-    Semiterm L ξ (n + 1)).Positive := by
-  simp [const, positive_operator_iff]
+    Semiterm L ξ (n + 1)).Positive := by simp [const, positive_operator_iff]
 
 -- f.operator ![ ... f.operator ![f.operator ![z, t 0], t 1], ... ,t (n-1)]
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -337,12 +336,10 @@ lemma val_operator {k} (o : Operator L k) (v) :
   exact Empty.elim x
 
 @[simp 1100] lemma val_const (o : Const L) :
-    val s e ε o.const = o.val ![] := by
-  simp [Operator.const, val_operator, Matrix.empty_eq]
+    val s e ε o.const = o.val ![] := by simp [Operator.const, val_operator, Matrix.empty_eq]
 
 @[simp] lemma val_operator₀ (o : Const L) :
-    val s e ε (o.operator v) = o.val ![] := by
-  simp [Matrix.empty_eq]
+    val s e ε (o.operator v) = o.val ![] := by simp [Matrix.empty_eq]
 
 @[simp] lemma val_operator₁ (o : Operator L 1) :
     val s e ε (o.operator ![t]) = o.val ![t.val s e ε] := by
@@ -354,8 +351,7 @@ lemma val_operator {k} (o : Operator L k) (v) :
   | succ i => exact Fin.elim0 i
 
 @[simp] lemma val_operator₂ (o : Operator L 2) (t u) :
-    val s e ε (o.operator ![t, u]) = o.val ![t.val s e ε, u.val s e ε] :=
-  by
+    val s e ε (o.operator ![t, u]) = o.val ![t.val s e ε, u.val s e ε] := by
     rw [val_operator]
     congr
     funext i
@@ -550,8 +546,7 @@ lemma eval_operator {k} {o : Operator L k} {v : Fin k → Semiterm L ξ n} :
   simp [Operator.operator, eval_substs, Operator.val]
 
 @[simp] lemma eval_operator₀ {o : Const L} {v} :
-    Eval s e ε (o.operator v) ↔ o.val (M := M) ![] := by
-  simp [eval_operator, Matrix.empty_eq]
+    Eval s e ε (o.operator v) ↔ o.val (M := M) ![] := by simp [eval_operator, Matrix.empty_eq]
 
 @[simp] lemma eval_operator₁ {o : Operator L 1} {t : Semiterm L ξ n} :
     Eval s e ε (o.operator ![t]) ↔ o.val ![t.val s e ε] := by
@@ -769,8 +764,7 @@ variable {L}
 lemma le_iff_of_eq_of_lt
     [Operator.Eq L] [Operator.LT L] [LT M] [Structure.Eq L M] [Structure.LT L M] {a b :
     M} :
-    (@Operator.LE.le L _).val ![a, b] ↔ a = b ∨ a < b := by
-  simp [Operator.LE.def_of_Eq_of_LT]
+    (@Operator.LE.le L _).val ![a, b] ↔ a = b ∨ a < b := by simp [Operator.LE.def_of_Eq_of_LT]
 
 @[simp] lemma eq_lang [L.Eq] [Structure.Eq L M] {v : Fin 2 → M} :
     Structure.rel (L := L) Language.Eq.eq v ↔ v 0 = v 1 := by

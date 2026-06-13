@@ -60,16 +60,13 @@ instance : ToString (Formula α) := ⟨toStr⟩
 end «lp_section_1»
 
 @[simp] lemma and_inj (φ₁ ψ₁ φ₂ ψ₂ : Formula α) :
-    φ₁ ⋏ φ₂ = ψ₁ ⋏ ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by
-  simp[Wedge.wedge]
+    φ₁ ⋏ φ₂ = ψ₁ ⋏ ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by simp[Wedge.wedge]
 
 @[simp] lemma or_inj (φ₁ ψ₁ φ₂ ψ₂ : Formula α) :
-    φ₁ ⋎ φ₂ = ψ₁ ⋎ ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by
-  simp[Vee.vee]
+    φ₁ ⋎ φ₂ = ψ₁ ⋎ ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by simp[Vee.vee]
 
 @[simp] lemma imp_inj (φ₁ ψ₁ φ₂ ψ₂ : Formula α) :
-    φ₁ ==> φ₂ = ψ₁ ==> ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by
-  simp[Arrow.arrow]
+    φ₁ ==> φ₂ = ψ₁ ==> ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by simp[Arrow.arrow]
 
 @[simp] lemma neg_inj (φ ψ : Formula α) : ∼φ = ∼ψ ↔ φ = ψ := by simp[Tilde.tilde]
 

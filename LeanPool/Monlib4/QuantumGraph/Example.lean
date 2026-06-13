@@ -82,8 +82,7 @@ variable {A B : Type*} [ha : starAlgebra A] [hb : starAlgebra B]
 
 theorem Qam.completeGraph_eq' :
   Qam.completeGraph A B =
-    Algebra.linearMap ℂ A ∘ₗ Coalgebra.counit :=
-by
+    Algebra.linearMap ℂ A ∘ₗ Coalgebra.counit := by
   rw [Coalgebra.counit_eq_bra_one]
   ext
   simp [Algebra.algebraMap_eq_smul_one]
@@ -123,8 +122,7 @@ theorem Qam.Nontracial.CompleteGraph.is_symm :
 Qam.Nontracial.CompleteGraph.symm_eq
 
 theorem Qam.Nontracial.CompleteGraph.is_reflexive :
-  (Qam.completeGraph A A) •ₛ 1 = 1 :=
-by
+  (Qam.completeGraph A A) •ₛ 1 = 1 := by
   obtain ⟨α, β, hαβ⟩ := (1 : l(A)).exists_sum_rankOne
   nth_rw 1 [hαβ]
   simp_rw [map_sum, Qam.completeGraph, schurMul.apply_rankOne, one_mul, ← hαβ]
@@ -240,8 +238,7 @@ theorem Qam.complement'_complement' {E₁ E₂ : Type _} [NormedAddCommGroupOfRi
 theorem Qam.Nontracial.Complement'.ir_reflexive
     (x : l(A)) (α : Prop) [Decidable α] :
     x •ₛ (1 : l(A)) = ite α (1 : l(A)) (0 : l(A)) ↔
-      (Qam.complement' x) •ₛ (1 : l(A)) = ite α (0 : l(A)) (1 : l(A)) :=
-by
+      (Qam.complement' x) •ₛ (1 : l(A)) = ite α (0 : l(A)) (1 : l(A)) := by
   simp_rw [Qam.complement', _root_.map_sub, LinearMap.sub_apply,
     Qam.refl_idempotent_completeGraph_left]
   by_cases h : α <;> simp_rw [h]

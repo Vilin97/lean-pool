@@ -149,8 +149,7 @@ theorem close_up_dvd
         rw [show ((p * a : R.carrier) : T) = (p : T) * (a : T) from
           map_mul R.carrier.subtype p a] at ht
         exact ht
-      have : (p : T) * (c' : T) = (p : T) * ((a : T) * t) := by
-        rw [← hpc, hpa, mul_assoc]
+      have : (p : T) * (c' : T) = (p : T) * ((a : T) * t) := by rw [← hpc, hpa, mul_assoc]
       exact ⟨t, mul_left_cancel₀ hp_ne this⟩
     have hc'R : c' ∈ Ideal.span {a} := ih c' hc'_a
     rw [Ideal.mem_span_singleton] at hc'R ⊢

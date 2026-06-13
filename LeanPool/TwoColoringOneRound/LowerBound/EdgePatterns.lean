@@ -77,13 +77,10 @@ instance : DecidablePred (Pat0110 (two := two)) := by
 private lemma big_ne_small {n : Nat} {two : Sym n} (x : Big (two := two)) (y : Small (two := two)) :
     (x.1 : Sym n) ≠ y.1 := by
   intro hxy
-  have hx : two ≤ (y.1 : Sym n) := hxy ▸ x.2
-  exact (not_lt_of_ge hx) y.2
+  exact (not_lt_of_ge (hxy ▸ x.2 : two ≤ (y.1 : Sym n))) y.2
 
 private lemma small_ne_big {n : Nat} {two : Sym n} (x : Small (two := two)) (y : Big (two := two)) :
-    (x.1 : Sym n) ≠ y.1 := by
-  intro hxy
-  exact big_ne_small (two := two) (x := y) (y := x) hxy.symm
+    (x.1 : Sym n) ≠ y.1 := fun hxy => big_ne_small (two := two) (x := y) (y := x) hxy.symm
 
 private def bigValEmbedding {n : Nat} {two : Sym n} : Big (two := two) ↪ Sym n :=
   ⟨Subtype.val, Subtype.val_injective⟩
@@ -95,9 +92,7 @@ private lemma disjoint_range_big_small {n : Nat} {two : Sym n}
     (ad : Fin 2 ↪ Big (two := two)) (bc : Fin 2 ↪ Small (two := two)) :
     Disjoint (Set.range (ad.trans bigValEmbedding)) (Set.range (bc.trans smallValEmbedding)) := by
   refine Set.disjoint_left.2 ?_
-  intro x hx hy
-  rcases hx with ⟨i, rfl⟩
-  rcases hy with ⟨j, h⟩
+  rintro x ⟨i, rfl⟩ ⟨j, h⟩
   have h' : (ad i).1 = (bc j).1 := by
     simpa [bigValEmbedding, smallValEmbedding] using h.symm
   exact (big_ne_small (two := two) (x := ad i) (y := bc j) h').elim
@@ -106,9 +101,7 @@ private lemma disjoint_range_small_big {n : Nat} {two : Sym n}
     (bc : Fin 2 ↪ Small (two := two)) (ad : Fin 2 ↪ Big (two := two)) :
     Disjoint (Set.range (bc.trans smallValEmbedding)) (Set.range (ad.trans bigValEmbedding)) := by
   refine Set.disjoint_left.2 ?_
-  intro x hx hy
-  rcases hx with ⟨i, rfl⟩
-  rcases hy with ⟨j, h⟩
+  rintro x ⟨i, rfl⟩ ⟨j, h⟩
   have h' : (bc i).1 = (ad j).1 := by
     simpa [bigValEmbedding, smallValEmbedding] using h.symm
   exact (small_ne_big (two := two) (x := bc i) (y := ad j) h').elim
@@ -230,11 +223,7 @@ theorem card_pat0000 :
         intro x
         ext i
         rfl }
-  have hcard :
-      Fintype.card {e : Edge n // Pat0000 (two := two) e}
-        = Fintype.card (Fin 4 ↪ Small (two := two)) :=
-    Fintype.card_congr hEquiv
-  simp [hcard, Fintype.card_embedding_eq]
+  simp [Fintype.card_congr hEquiv, Fintype.card_embedding_eq]
 
 theorem card_pat1111 :
     Fintype.card {e : Edge n // Pat1111 (two := two) e}
@@ -268,11 +257,7 @@ theorem card_pat1111 :
         intro x
         ext i
         rfl }
-  have hcard :
-      Fintype.card {e : Edge n // Pat1111 (two := two) e}
-        = Fintype.card (Fin 4 ↪ Big (two := two)) :=
-    Fintype.card_congr hEquiv
-  simp [hcard, Fintype.card_embedding_eq]
+  simp [Fintype.card_congr hEquiv, Fintype.card_embedding_eq]
 
 theorem card_pat1001 :
     Fintype.card {e : Edge n // Pat1001 (two := two) e}
@@ -315,11 +300,7 @@ theorem card_pat1001 :
         cases p with
         | mk ad bc =>
             apply Prod.ext <;> ext i <;> fin_cases i <;> rfl }
-  have hcard :
-      Fintype.card {e : Edge n // Pat1001 (two := two) e}
-        = Fintype.card ((Fin 2 ↪ Big (two := two)) × (Fin 2 ↪ Small (two := two))) :=
-    Fintype.card_congr hEquiv
-  simp [hcard, Fintype.card_embedding_eq, Fintype.card_prod]
+  simp [Fintype.card_congr hEquiv, Fintype.card_embedding_eq, Fintype.card_prod]
 
 theorem card_pat0110 :
     Fintype.card {e : Edge n // Pat0110 (two := two) e}
@@ -362,11 +343,7 @@ theorem card_pat0110 :
         cases p with
         | mk ad bc =>
             apply Prod.ext <;> ext i <;> fin_cases i <;> rfl }
-  have hcard :
-      Fintype.card {e : Edge n // Pat0110 (two := two) e}
-        = Fintype.card ((Fin 2 ↪ Big (two := two)) × (Fin 2 ↪ Small (two := two))) :=
-    Fintype.card_congr hEquiv
-  simp [hcard, Fintype.card_embedding_eq, Fintype.card_prod]
+  simp [Fintype.card_congr hEquiv, Fintype.card_embedding_eq, Fintype.card_prod]
 
 end EdgePatterns
 

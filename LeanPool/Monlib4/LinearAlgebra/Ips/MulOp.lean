@@ -89,8 +89,7 @@ theorem MulOpposite.opContinuousLinearEquiv_adjoint {𝕜 A : Type*}
   [RCLike 𝕜] [NormedAddCommGroup A] [InnerProductSpace 𝕜 A] [CompleteSpace A] :
   ContinuousLinearMap.adjoint
     (MulOpposite.opContinuousLinearEquiv 𝕜 (M:=A)).toContinuousLinearMap
-    = (MulOpposite.opContinuousLinearEquiv 𝕜 (M:=A)).symm.toContinuousLinearMap :=
-by
+    = (MulOpposite.opContinuousLinearEquiv 𝕜 (M:=A)).symm.toContinuousLinearMap := by
   ext x
   apply ext_inner_left 𝕜
   intro y
@@ -100,8 +99,7 @@ by
 theorem MulOpposite.opLinearEquiv_adjoint {𝕜 A : Type*} [RCLike 𝕜] [NormedAddCommGroup A]
   [InnerProductSpace 𝕜 A] [FiniteDimensional 𝕜 A] :
     LinearMap.adjoint (MulOpposite.opLinearEquiv 𝕜 (M:=A)).toLinearMap
-      = (MulOpposite.opLinearEquiv 𝕜 (M:=A)).symm.toLinearMap :=
-by
+      = (MulOpposite.opLinearEquiv 𝕜 (M:=A)).symm.toLinearMap := by
   haveI : CompleteSpace A := FiniteDimensional.complete 𝕜 A
   calc LinearMap.adjoint (MulOpposite.opLinearEquiv 𝕜 (M:=A)).toLinearMap
         = ContinuousLinearMap.adjoint

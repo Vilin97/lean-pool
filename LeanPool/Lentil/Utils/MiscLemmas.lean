@@ -48,11 +48,7 @@ theorem findFindIdx {α : Type u} {l : List α} {p : α → Bool} {res : α}
   p res = true ∧ ∃ (idx : Nat) (hidx : idx < l.length), (l[idx]'hidx) = res ∧ l.findIdx? p = idx := by
   rw [List.find?_eq_some_iff_getElem] at hpred
   rcases hpred with ⟨ht, ⟨idx, hidx, rfl, h⟩⟩
-  constructor
-  · assumption
-  · exists idx, hidx; constructor
-    · rfl
-    · rw [List.findIdx?_eq_some_iff_getElem]; grind
+  exact ⟨ht, idx, hidx, rfl, by rw [List.findIdx?_eq_some_iff_getElem]; grind⟩
 
 /-- Right-fold a non-empty list, returning the default `d` on the empty list. -/
 def foldrD {β : Type v} (f : β → β → β) (d : β) : List β → β

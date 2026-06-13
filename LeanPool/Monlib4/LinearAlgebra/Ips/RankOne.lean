@@ -36,8 +36,7 @@ noncomputable def ket (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [NormedAddCommGro
     map_smul' := fun _ _ => by simp only [smul_smul, smul_eq_mul]; rfl }
   map_add' := fun _ _ => by simp only [smul_add]; rfl
   map_smul' := fun α _ => by simp_rw [smul_smul, mul_comm _ α, ← smul_smul]; rfl
-  cont :=
-  by
+  cont := by
     refine continuous_clm_apply.mpr ?_
     intro
     simp only [ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk]
@@ -50,8 +49,7 @@ lemma ket_one_apply
 by simp only [ket_apply_apply, one_smul]
 
 theorem ket_RCLike {𝕜 : Type*} [RCLike 𝕜] (x : 𝕜) :
-  ket 𝕜 x = ContinuousLinearMap.mul 𝕜 𝕜 x :=
-by
+  ket 𝕜 x = ContinuousLinearMap.mul 𝕜 𝕜 x := by
   ext
   simp only [ket_one_apply, ContinuousLinearMap.mul_apply', mul_one]
 
@@ -66,8 +64,7 @@ theorem ket_RCLike_one {𝕜 : Type*} [RCLike 𝕜] :
 by rw [ket_RCLike, ContinuousLinearMap.mul_one_apply]
 
 theorem bra_RCLike {𝕜 : Type*} [RCLike 𝕜] (x : 𝕜) :
-  bra 𝕜 x = ContinuousLinearMap.mul 𝕜 𝕜 ((starRingEnd 𝕜) x) :=
-by
+  bra 𝕜 x = ContinuousLinearMap.mul 𝕜 𝕜 ((starRingEnd 𝕜) x) := by
   ext
   simp only [innerSL_apply_apply, RCLike.inner_apply, mul_one, ContinuousLinearMap.mul_apply',
     one_mul]
@@ -78,8 +75,7 @@ by rw [bra_RCLike, map_one, ContinuousLinearMap.mul_one_apply]
 
 lemma bra_adjoint_eq_ket {𝕜 E : Type*} [RCLike 𝕜]
   [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E] (x : E) :
-  ContinuousLinearMap.adjoint (bra 𝕜 x : E →L[𝕜] 𝕜) = (ket 𝕜 x) :=
-by
+  ContinuousLinearMap.adjoint (bra 𝕜 x : E →L[𝕜] 𝕜) = (ket 𝕜 x) := by
   ext
   apply ext_inner_left 𝕜
   intro y
@@ -88,32 +84,28 @@ by
 
 lemma _root_.ket_adjoint_eq_bra {𝕜 E : Type*} [RCLike 𝕜]
   [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [CompleteSpace E] (x : E) :
-  ContinuousLinearMap.adjoint (ket 𝕜 x) = bra 𝕜 x :=
-by
+  ContinuousLinearMap.adjoint (ket 𝕜 x) = bra 𝕜 x := by
   rw [← bra_adjoint_eq_ket, ContinuousLinearMap.adjoint_adjoint]
 
 open scoped InnerProductSpace
 
 lemma bra_ket_apply {𝕜 E : Type*} [RCLike 𝕜]
   [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] (x y : E) :
-  (bra 𝕜 x) ∘L (ket 𝕜 y) = ket 𝕜 ⟪x, y⟫_𝕜 :=
-by
+  (bra 𝕜 x) ∘L (ket 𝕜 y) = ket 𝕜 ⟪x, y⟫_𝕜 := by
   ext
   simp_rw [ContinuousLinearMap.comp_apply, ket_one_apply]
   rfl
 
 lemma bra_ket_one_eq_inner {𝕜 E : Type*} [RCLike 𝕜]
   [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] (x y : E) :
-  ((bra 𝕜 x) ∘L (ket 𝕜 y)) 1 = ⟪x, y⟫_𝕜 :=
-by
+  ((bra 𝕜 x) ∘L (ket 𝕜 y)) 1 = ⟪x, y⟫_𝕜 := by
   rw [bra_ket_apply, ket_one_apply]
 
 lemma continuousLinearMap_comp_ket {𝕜 E₁ E₂ : Type*} [RCLike 𝕜] [NormedAddCommGroup E₁]
   [InnerProductSpace 𝕜 E₁]
   [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
   (f : E₁ →L[𝕜] E₂) (x : E₁) :
-  f ∘L ket 𝕜 x = ket 𝕜 (f x) :=
-by
+  f ∘L ket 𝕜 x = ket 𝕜 (f x) := by
   ext
   simp only [ContinuousLinearMap.comp_apply, ket_one_apply]
 
@@ -122,8 +114,7 @@ lemma bra_comp_continuousLinearMap {𝕜 E₁ E₂ : Type*} [RCLike 𝕜] [Norme
   [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
   [CompleteSpace E₁] [CompleteSpace E₂]
   (x : E₂) (f : E₁ →L[𝕜] E₂) :
-  bra 𝕜 x ∘L f = bra 𝕜 (ContinuousLinearMap.adjoint f x) :=
-by
+  bra 𝕜 x ∘L f = bra 𝕜 (ContinuousLinearMap.adjoint f x) := by
   ext
   simp only [ContinuousLinearMap.comp_apply, bra_apply_apply,
     ContinuousLinearMap.adjoint_inner_left]
@@ -160,14 +151,12 @@ theorem ket_bra_eq_rankOne {x : E₁} {y : E₂} :
 rfl
 
 theorem ket_eq_rankOne_one (x : E₁) :
-  ket 𝕜 x = rankOne 𝕜 x 1 :=
-by
+  ket 𝕜 x = rankOne 𝕜 x 1 := by
   ext
   simp only [ket_apply_apply, one_smul, rankOne_apply_apply_apply, RCLike.inner_apply, map_one,
     mul_one]
 theorem bra_eq_one_rankOne (x : E₁) :
-  bra 𝕜 x = rankOne 𝕜 1 x :=
-by
+  bra 𝕜 x = rankOne 𝕜 1 x := by
   ext
   simp only [innerSL_apply_apply, rankOne_apply_apply_apply, smul_eq_mul, mul_one]
 
@@ -185,8 +174,7 @@ $| x \rangle\langle y | | z \rangle\langle w | =
 @[simp]
 theorem rankOne.apply_rankOne {E₃ : Type*} [NormedAddCommGroup E₃] [InnerProductSpace 𝕜 E₃]
   (x : E₁) (y z : E₂) (w : E₃) :
-    (rankOne 𝕜 x y) ∘L rankOne 𝕜 z w = ⟪y,z⟫_𝕜 • rankOne 𝕜 x w :=
-  by
+    (rankOne 𝕜 x y) ∘L rankOne 𝕜 z w = ⟪y,z⟫_𝕜 • rankOne 𝕜 x w := by
   ext r
   simp_rw [ContinuousLinearMap.smul_apply, comp_apply, rankOne_apply,
     inner_smul_right, mul_comm, smul_smul]
@@ -195,8 +183,7 @@ theorem rankOne.apply_rankOne {E₃ : Type*} [NormedAddCommGroup E₃] [InnerPro
 theorem ContinuousLinearMap.comp_rankOne {E₃ : Type*} [NormedAddCommGroup E₃]
   [InnerProductSpace 𝕜 E₃]
   (x : E₁) (y : E₂) (u : E₁ →L[𝕜] E₃) :
-    u ∘L rankOne 𝕜 x y = rankOne 𝕜 (u x) y :=
-  by
+    u ∘L rankOne 𝕜 x y = rankOne 𝕜 (u x) y := by
   ext r
   simp_rw [comp_apply, rankOne_apply, map_smul]
 
@@ -204,8 +191,7 @@ theorem ContinuousLinearMap.comp_rankOne {E₃ : Type*} [NormedAddCommGroup E₃
 theorem ContinuousLinearMap.rankOne_comp {E₃ : Type*} [NormedAddCommGroup E₃]
   [InnerProductSpace 𝕜 E₃]
   [CompleteSpace E₂] [CompleteSpace E₃] (x : E₁) (y : E₂) (u : E₃ →L[𝕜] E₂) :
-    rankOne 𝕜 x y ∘L u = rankOne 𝕜 x (adjoint u y) :=
-  by
+    rankOne 𝕜 x y ∘L u = rankOne 𝕜 x (adjoint u y) := by
   ext r
   simp_rw [comp_apply, rankOne_apply, adjoint_inner_left]
 
@@ -229,8 +215,7 @@ isSelfAdjoint_iff_isSymmetric.mpr rankOne_self_isSymmetric
 
 /-- $| x \rangle\langle y |^* = | y \rangle\langle x |$ -/
 theorem rankOne_adjoint [CompleteSpace E₁] [CompleteSpace E₂] (x : E₁) (y : E₂) :
-  adjoint (rankOne 𝕜 x y) = rankOne 𝕜 y x :=
-by
+  adjoint (rankOne 𝕜 x y) = rankOne 𝕜 y x := by
   rw [← ket_bra_eq_rankOne, adjoint_comp, bra_adjoint_eq_ket, ket_adjoint_eq_bra]
   rfl
 
@@ -243,14 +228,12 @@ theorem rankOne_inner_right (x y : E₁) (z w : E₂) :
   rw [rankOne_apply, inner_smul_right]
 
 theorem ContinuousLinearMap.commutes_with_all_iff [CompleteSpace E₁] {T : E₁ →L[𝕜] E₁} :
-    (∀ S, Commute S T) ↔ ∃ α : 𝕜, T = α • 1 :=
-  by
+    (∀ S, Commute S T) ↔ ∃ α : 𝕜, T = α • 1 := by
   constructor
   · intro h
     have h' : ∀ x y : E₁, rankOne 𝕜 x y ∘L T = T ∘L rankOne 𝕜 x y := fun x y => h _
     simp_rw [ContinuousLinearMap.rankOne_comp, ContinuousLinearMap.comp_rankOne] at h'
-    have h'' : ∀ x y : E₁, rankOne 𝕜 (adjoint T y) x = rankOne 𝕜 y (T x) :=
-      by
+    have h'' : ∀ x y : E₁, rankOne 𝕜 (adjoint T y) x = rankOne 𝕜 y (T x) := by
       intro x y
       nth_rw 1 [← rankOne_adjoint]
       rw [h', rankOne_adjoint]
@@ -273,14 +256,12 @@ theorem ContinuousLinearMap.commutes_with_all_iff [CompleteSpace E₁] {T : E₁
     simp_rw [Commute, SemiconjBy, mul_def, hα, comp_smul, smul_comp, one_def, comp_id, id_comp]
 
 theorem ContinuousLinearMap.centralizer [CompleteSpace E₁] :
-    (@Set.univ (E₁ →L[𝕜] E₁)).centralizer = { x : E₁ →L[𝕜] E₁ | ∃ α : 𝕜, x = α • 1 } :=
-  by
+    (@Set.univ (E₁ →L[𝕜] E₁)).centralizer = { x : E₁ →L[𝕜] E₁ | ∃ α : 𝕜, x = α • 1 } := by
   simp_rw [Set.centralizer, Set.mem_univ, true_imp_iff, ← ContinuousLinearMap.commutes_with_all_iff]
   rfl
 
 theorem ContinuousLinearMap.scalar_centralizer :
-    {x : E₁ →L[𝕜] E₁ | ∃ α : 𝕜, x = α • 1}.centralizer = @Set.univ (E₁ →L[𝕜] E₁) :=
-  by
+    {x : E₁ →L[𝕜] E₁ | ∃ α : 𝕜, x = α • 1}.centralizer = @Set.univ (E₁ →L[𝕜] E₁) := by
   simp_rw [Set.centralizer, Set.ext_iff, Set.mem_setOf, Set.mem_univ, iff_true]
   rintro x y ⟨α, rfl⟩
   simp only [Algebra.smul_mul_assoc, one_mul, Algebra.mul_smul_comm, mul_one]
@@ -291,10 +272,8 @@ theorem ContinuousLinearMap.centralizer_centralizer [CompleteSpace E₁] :
 
 theorem colinear_of_rankOne_self_eq_rankOne_self
   (x y : E₁) (h : rankOne 𝕜 x x = rankOne 𝕜 y y) :
-      ∃ α : 𝕜ˣ, x = (α : 𝕜) • y :=
-by
-  have : x = 0 ↔ y = 0 :=
-    by
+      ∃ α : 𝕜ˣ, x = (α : 𝕜) • y := by
+  have : x = 0 ↔ y = 0 := by
     constructor <;> intro hh <;>
       simp only [hh, ContinuousLinearMap.ext_iff, map_zero, ContinuousLinearMap.zero_apply,
         @eq_comm _ (0 : E₁ →L[𝕜] E₁), rankOne_apply, smul_eq_zero] at h
@@ -325,8 +304,7 @@ theorem rankOne.ext_iff {x y : E₁} (_hx : x ≠ 0) (_hy : y ≠ 0)
 theorem colinear_of_ne_zero_rankOne_eq_rankOne [CompleteSpace E₂] [CompleteSpace E₁]
   {a c : E₁} {b d : E₂} (h : rankOne 𝕜 a b = rankOne 𝕜 c d)
   (ha : a ≠ 0) (hb : b ≠ 0) :
-    (∃ α β : 𝕜ˣ, a = (α : 𝕜) • c ∧ b = (α * β : 𝕜) • d) :=
-by
+    (∃ α β : 𝕜ˣ, a = (α : 𝕜) • c ∧ b = (α * β : 𝕜) • d) := by
   have h₂ := h
   apply_fun ContinuousLinearMap.adjoint at h₂
   simp only [rankOne_adjoint, ContinuousLinearMap.ext_iff, rankOne_apply] at h h₂
@@ -362,8 +340,7 @@ by
   exact ⟨α, β, h₃, h₄⟩
 
 theorem ket_eq_ket_iff {x y : E₁} :
-  ket 𝕜 x = ket 𝕜 y ↔ x = y :=
-by
+  ket 𝕜 x = ket 𝕜 y ↔ x = y := by
   simp only [ContinuousLinearMap.ext_iff, ket_apply_apply,
     ← @sub_eq_zero _ _ (_ • _), ← @sub_eq_zero _ _ x]
   simp only [← smul_sub, smul_eq_zero, forall_or_right,
@@ -373,16 +350,14 @@ by
   simp only [one_ne_zero] at h
 
 theorem bra_eq_bra_iff {x y : E₁} :
-  bra 𝕜 x = bra 𝕜 y ↔ x = y :=
-by
+  bra 𝕜 x = bra 𝕜 y ↔ x = y := by
   simp only [ContinuousLinearMap.ext_iff, bra_apply_apply,
     ← @sub_eq_zero _ _ ⟪_, _⟫_𝕜, ← @sub_eq_zero _ _ x]
   simp only [← inner_sub_left, forall_inner_eq_zero_iff]
 
 theorem ContinuousLinearMap.ext_inner_map {F : Type _} [NormedAddCommGroup F]
   [InnerProductSpace 𝕜 F] (T S : E₁ →L[𝕜] F) :
-      T = S ↔ ∀ x y, ⟪T x,y⟫_𝕜 = ⟪S x,y⟫_𝕜 :=
-by
+      T = S ↔ ∀ x y, ⟪T x,y⟫_𝕜 = ⟪S x,y⟫_𝕜 := by
   simp only [ContinuousLinearMap.ext_iff]
   constructor
   · intro h x y
@@ -392,8 +367,7 @@ by
     exact h x
 theorem LinearMap.ext_inner_map {F : Type _} [NormedAddCommGroup F]
   [InnerProductSpace 𝕜 F] (T S : E₁ →ₗ[𝕜] F) :
-      T = S ↔ ∀ x y, ⟪T x,y⟫_𝕜 = ⟪S x,y⟫_𝕜 :=
-by
+      T = S ↔ ∀ x y, ⟪T x,y⟫_𝕜 = ⟪S x,y⟫_𝕜 := by
   simp only [LinearMap.ext_iff]
   constructor
   · intro h x y
@@ -408,8 +382,7 @@ theorem ContinuousLinearMap.exists_sum_rankOne
   [FiniteDimensional 𝕜 E₁] [FiniteDimensional 𝕜 E₂] (T : E₁ →L[𝕜] E₂) :
     ∃ (x : Fin (Module.finrank 𝕜 E₁) × Fin (Module.finrank 𝕜 E₂) → E₂)
       (y : Fin (Module.finrank 𝕜 E₁) × Fin (Module.finrank 𝕜 E₂) → E₁),
-      T = ∑ i, rankOne 𝕜 (x i) (y i) :=
-  by
+      T = ∑ i, rankOne 𝕜 (x i) (y i) := by
   letI := FiniteDimensional.complete 𝕜 E₁
   letI := FiniteDimensional.complete 𝕜 E₂
   let e₁ := stdOrthonormalBasis 𝕜 E₁
@@ -443,16 +416,14 @@ theorem LinearMap.exists_sum_rankOne [FiniteDimensional 𝕜 E₁] [FiniteDimens
     (T : E₁ →ₗ[𝕜] E₂) :
     ∃ (x : Fin (Module.finrank 𝕜 E₁) × Fin (Module.finrank 𝕜 E₂) → E₂)
       (y : Fin (Module.finrank 𝕜 E₁) × Fin (Module.finrank 𝕜 E₂) → E₁),
-      T = ∑ i, ↑(rankOne 𝕜 (x i) (y i)) :=
-by
+      T = ∑ i, ↑(rankOne 𝕜 (x i) (y i)) := by
   obtain ⟨a, b, h⟩ := ContinuousLinearMap.exists_sum_rankOne (toContinuousLinearMap T)
   refine ⟨a, b, ?_⟩
   simpa using congrArg ContinuousLinearMap.toLinearMap h
 
 theorem rankOne.sum_orthonormalBasis_eq_id {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E] {ι : Type _} [Fintype ι] (b : OrthonormalBasis ι 𝕜 E) :
-    ∑ i, rankOne 𝕜 (b i) (b i) = 1 :=
-by
+    ∑ i, rankOne 𝕜 (b i) (b i) = 1 := by
   rw [ContinuousLinearMap.ext_iff]
   intros
   apply @ext_inner_left 𝕜 _
@@ -531,8 +502,7 @@ theorem ContinuousLinearMap.ext_of_rankOne {𝕜 H₁ H₂ H' : Type _} [RCLike 
     [NormedAddCommGroup H₂] [InnerProductSpace 𝕜 H₂]
     [FiniteDimensional 𝕜 H₁] [FiniteDimensional 𝕜 H₂]
     {x y : (H₁ →L[𝕜] H₂) →L[𝕜] H'}
-    (h : ∀ a b, x (rankOne 𝕜 a b) = y (rankOne 𝕜 a b)) : x = y :=
-by
+    (h : ∀ a b, x (rankOne 𝕜 a b) = y (rankOne 𝕜 a b)) : x = y := by
   ext a
   obtain ⟨α, β, rfl⟩ := ContinuousLinearMap.exists_sum_rankOne a
   simp_rw [map_sum, h]
@@ -542,8 +512,7 @@ theorem LinearMap.ext_of_rankOne {𝕜 H₁ H₂ H' : Type _} [RCLike 𝕜] [Add
     [NormedAddCommGroup H₂] [InnerProductSpace 𝕜 H₂]
     [FiniteDimensional 𝕜 H₁] [FiniteDimensional 𝕜 H₂]
     {x y : (H₁ →L[𝕜] H₂) →ₗ[𝕜] H'}
-    (h : ∀ a b, x (rankOne 𝕜 a b) = y (rankOne 𝕜 a b)) : x = y :=
-by
+    (h : ∀ a b, x (rankOne 𝕜 a b) = y (rankOne 𝕜 a b)) : x = y := by
   ext a
   obtain ⟨α, β, rfl⟩ := ContinuousLinearMap.exists_sum_rankOne a
   simp_rw [map_sum, h]
@@ -555,8 +524,7 @@ theorem AddMonoidHom.ext_of_rank_one' {𝕜 H₁ H₂ H' : Type _} [RCLike 𝕜]
     [FiniteDimensional 𝕜 H₁] [FiniteDimensional 𝕜 H₂]
     {x y : (H₁ →ₗ[𝕜] H₂) →+ H'}
     (h : ∀ a b, x (rankOne 𝕜 a b).toLinearMap = y (rankOne 𝕜 a b).toLinearMap) :
-    x = y :=
-by
+    x = y := by
   ext a
   obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne a
   simp_rw [map_sum, h]
@@ -566,8 +534,7 @@ theorem LinearMap.ext_of_rank_one' {𝕜 H₁ H₂ H' : Type _} [RCLike 𝕜] [A
     [NormedAddCommGroup H₂] [InnerProductSpace 𝕜 H₂]
     [FiniteDimensional 𝕜 H₁] [FiniteDimensional 𝕜 H₂]
     {x y : (H₁ →ₗ[𝕜] H₂) →ₗ[𝕜] H'}
-    (h : ∀ a b, x (rankOne 𝕜 a b).toLinearMap = y (rankOne 𝕜 a b).toLinearMap) : x = y :=
-by
+    (h : ∀ a b, x (rankOne 𝕜 a b).toLinearMap = y (rankOne 𝕜 a b).toLinearMap) : x = y := by
   ext a
   obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne a
   simp_rw [map_sum, h]
@@ -577,8 +544,7 @@ open scoped BigOperators
 theorem rankOne.sum_orthonormalBasis_eq_id_lm {𝕜 : Type _} {E : Type _} [RCLike 𝕜]
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] {ι : Type _} [Fintype ι]
     (b : OrthonormalBasis ι 𝕜 E) :
-    ∑ i, (rankOne 𝕜 (b i) (b i) : E →L[𝕜] E).toLinearMap = 1 :=
-by
+    ∑ i, (rankOne 𝕜 (b i) (b i) : E →L[𝕜] E).toLinearMap = 1 := by
   simp only [← ContinuousLinearMap.coe_sum, rankOne.sum_orthonormalBasis_eq_id b]
   rfl
 
@@ -611,8 +577,7 @@ theorem LinearMap.rankOne_comp {𝕜 E₁ E₂ E₃ : Type _} [RCLike 𝕜] [Nor
   [NormedAddCommGroup E₂] [NormedAddCommGroup E₃] [InnerProductSpace 𝕜 E₁]
   [InnerProductSpace 𝕜 E₂] [InnerProductSpace 𝕜 E₃] [FiniteDimensional 𝕜 E₂]
   [FiniteDimensional 𝕜 E₃] (x : E₁) (y : E₂) (u : E₃ →ₗ[𝕜] E₂) :
-    (rankOne 𝕜 x y).toLinearMap ∘ₗ u = (rankOne 𝕜 x (adjoint u y)) :=
-by
+    (rankOne 𝕜 x y).toLinearMap ∘ₗ u = (rankOne 𝕜 x (adjoint u y)) := by
   ext
   simp_rw [LinearMap.comp_apply, ContinuousLinearMap.coe_coe, rankOne_apply,
     LinearMap.adjoint_inner_left]
@@ -627,8 +592,7 @@ by rw [LinearMap.rankOne_comp, LinearMap.adjoint_adjoint]
 theorem OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne {ι 𝕜 : Type _} [RCLike 𝕜] {E : Type _}
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [Fintype ι] {U : Submodule 𝕜 E}
     [CompleteSpace U] (b : OrthonormalBasis ι 𝕜 ↥U) :
-    orthogonalProjection' U = ∑ i : ι, rankOne 𝕜 (b i : E) (b i : E) :=
-by
+    orthogonalProjection' U = ∑ i : ι, rankOne 𝕜 (b i : E) (b i : E) := by
   ext
   simp_rw [orthogonalProjection'_apply, OrthonormalBasis.orthogonalProjection_apply_eq_sum b,
     ContinuousLinearMap.sum_apply, rankOne_apply, Submodule.coe_sum, Submodule.coe_smul_of_tower]
@@ -637,8 +601,7 @@ theorem LinearMap.comp_rankOne {𝕜 E₁ E₂ E₃ : Type _} [RCLike 𝕜] [Nor
   [NormedAddCommGroup E₂] [NormedAddCommGroup E₃] [InnerProductSpace 𝕜 E₁]
   [InnerProductSpace 𝕜 E₂]
   [InnerProductSpace 𝕜 E₃] (x : E₁) (y : E₂) (u : E₁ →ₗ[𝕜] E₃) :
-    u ∘ₗ (rankOne 𝕜 x y).toLinearMap = rankOne 𝕜 (u x) y :=
-by
+    u ∘ₗ (rankOne 𝕜 x y).toLinearMap = rankOne 𝕜 (u x) y := by
   ext
   simp_rw [LinearMap.comp_apply, ContinuousLinearMap.coe_coe, rankOne_apply, _root_.map_smul]
 
@@ -662,8 +625,7 @@ theorem _root_.rankOne_lm_sum_sum {𝕜 E₁ E₂ : Type _} [RCLike 𝕜] [Norme
   [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₁] [InnerProductSpace 𝕜 E₂]
     {ι₁ ι₂ : Type _} {k : Finset ι₁} {k₂ : Finset ι₂} (f : ι₁ → E₁) (g : ι₂ → E₂) :
     (rankOne 𝕜 (∑ i ∈ k, f i) (∑ i ∈ k₂, g i)).toLinearMap =
-      ∑ i ∈ k, ∑ j ∈ k₂, (rankOne 𝕜 (f i) (g j)).toLinearMap :=
-by
+      ∑ i ∈ k, ∑ j ∈ k₂, (rankOne 𝕜 (f i) (g j)).toLinearMap := by
   simp_rw [map_sum, LinearMap.sum_apply, ContinuousLinearMap.coe_sum]
   rw [Finset.sum_comm]
 
@@ -699,8 +661,7 @@ theorem OrthonormalBasis.repr_adjoint {ι 𝕜 E : Type*} [RCLike 𝕜] [NormedA
   letI := Module.Basis.finiteDimensional_of_finite b.toBasis
   letI := FiniteDimensional.complete 𝕜 E
   ContinuousLinearMap.adjoint b.repr.toContinuousLinearEquiv.toContinuousLinearMap
-    = b.repr.symm.toContinuousLinearEquiv.toContinuousLinearMap :=
-by
+    = b.repr.symm.toContinuousLinearEquiv.toContinuousLinearMap := by
   haveI := Module.Basis.finiteDimensional_of_finite b.toBasis
   haveI := FiniteDimensional.complete 𝕜 E
   ext x
@@ -733,8 +694,7 @@ theorem rankOne_toMatrix_of_onb
   (b₁ : OrthonormalBasis ι₁ 𝕜 E₁) (b₂ : OrthonormalBasis ι₂ 𝕜 E₂) (x : E₁) (y : E₂) :
   LinearMap.toMatrix b₂.toBasis b₁.toBasis (rankOne 𝕜 x y).toLinearMap
     =
-    (Matrix.replicateCol (Fin 1) (b₁.repr x)) * (Matrix.replicateCol (Fin 1) (b₂.repr y))ᴴ :=
-by
+    (Matrix.replicateCol (Fin 1) (b₁.repr x)) * (Matrix.replicateCol (Fin 1) (b₂.repr y))ᴴ := by
   ext1 i j
   simp_rw [LinearMap.toMatrix_apply, ContinuousLinearMap.coe_coe, rankOne_apply,
     map_smul, Finsupp.smul_apply, OrthonormalBasis.coe_toBasis_repr_apply,

@@ -217,8 +217,7 @@ theorem integrand_intervalIntegrable_of_avoids (γ : PiecewiseC1Immersion)
   have h_inv_cont : ContinuousOn (fun t => (γ.toFun t - z)⁻¹) (Icc γ.a γ.b) :=
     ContinuousOn.inv₀ (γ.continuous_toFun.sub continuousOn_const)
       (fun t ht => sub_ne_zero.mpr (h_avoids t ht))
-  obtain ⟨M_inv, hM_inv⟩ :=
-    isCompact_Icc.exists_bound_of_continuousOn (h_inv_cont.norm)
+  obtain ⟨M_inv, hM_inv⟩ := isCompact_Icc.exists_bound_of_continuousOn (h_inv_cont.norm)
   obtain ⟨M_d, hM_d⟩ := piecewiseC1Immersion_deriv_bounded γ
   apply intervalIntegrable_of_piecewise_continuousOn_bounded
     (P := γ.partition) (M_inv * M_d) hab

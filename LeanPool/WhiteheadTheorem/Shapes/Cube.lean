@@ -61,9 +61,7 @@ def boundaryJarInclToBoundary (n : ℕ) : C(⊔I^n, ∂I^n) where
 lemma mem_boundaryJar_of_lt_last {n : ℕ} (y : I^(Fin (n + 1)))
     (hy : ∃ i < Fin.last _, y i = 0 ∨ y i = 1) : y ∈ ⊔I^(n+1) := by
   obtain ⟨i, ⟨hi, hyi⟩⟩ := hy
-  constructor
-  · exact ⟨i, hyi⟩
-  · intro _; exact ⟨i, ⟨hi, hyi⟩⟩
+  exact ⟨⟨i, hyi⟩, fun _ ↦ ⟨i, ⟨hi, hyi⟩⟩⟩
 
 lemma mem_boundaryJar_of_exists_eq_zero {n : ℕ} (y : I^Fin n)
     (hy : ∃ i, y i = 0) : y ∈ ⊔I^n :=
@@ -71,12 +69,10 @@ lemma mem_boundaryJar_of_exists_eq_zero {n : ℕ} (y : I^Fin n)
   | 0 => isEmptyElim hy.choose
   | n + 1 => by
       obtain ⟨i, hi⟩ := hy
-      constructor
-      · use i; left; exact hi
-      · intro hn1
-        by_cases h : i = Fin.last _
-        · rw [← h] at hn1; exfalso; exact (by norm_num : (1 : I) ≠ 0) (hn1.symm.trans hi)
-        · use i; exact ⟨Fin.lt_last_iff_ne_last.mpr h, Or.inl hi⟩
+      refine ⟨⟨i, Or.inl hi⟩, fun hn1 ↦ ?_⟩
+      by_cases h : i = Fin.last _
+      · rw [← h] at hn1; exact absurd (hn1.symm.trans hi) (by norm_num : (1 : I) ≠ 0)
+      · exact ⟨i, Fin.lt_last_iff_ne_last.mpr h, Or.inl hi⟩
 
 lemma mem_boundaryLid_or_mem_boundaryJar_of_mem_boundary {n : ℕ} (y : I^Fin n)
     (hy : y ∈ ∂I^n) : y ∈ Cube.boundaryLid n ∨ y ∈ ⊔I^n :=
@@ -85,10 +81,7 @@ lemma mem_boundaryLid_or_mem_boundaryJar_of_mem_boundary {n : ℕ} (y : I^Fin n)
   | n + 1 => by
       by_cases hyn : y (Fin.last _) = 1
       · left; exact hyn
-      · right
-        constructor
-        · exact hy
-        · intro hyn'; exfalso; exact hyn hyn'
+      · exact Or.inr ⟨hy, fun hyn' ↦ absurd hyn' hyn⟩
 
 /-- `⊔I^1 = {0}` is a singleton -/
 instance uniqueBoundaryJarOne : Unique (⊔I^1) where
@@ -296,12 +289,11 @@ lemma mem_boundary {n : ℕ} (y : I^Fin n) : inclToBot y ∈ ∂I^(n + 1) := by
 
 /-- (y, 0) is in the `boundaryJar`. -/
 lemma mem_boundaryJar {n : ℕ} (y : I^Fin n) : inclToBot y ∈ ⊔I^(n + 1) := by
-  constructor
-  · exact mem_boundary y
-  · intro h; exfalso
-    have : inclToBot y (Fin.last n) = (0 : ℝ) := by simp [inclToBot]
-    refine (by norm_num : (0 : ℝ) ≠ (1 : ℝ)) <| this.symm.trans ?_
-    rw [h, Set.Icc.coe_one]
+  refine ⟨mem_boundary y, fun h ↦ ?_⟩
+  exfalso
+  have : inclToBot y (Fin.last n) = (0 : ℝ) := by simp [inclToBot]
+  refine (by norm_num : (0 : ℝ) ≠ (1 : ℝ)) <| this.symm.trans ?_
+  rw [h, Set.Icc.coe_one]
 
 end inclToBot
 

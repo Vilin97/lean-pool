@@ -239,8 +239,7 @@ end rankOne
 
 theorem Matrix.vecMulVec_eq_replicateCol_conjTranspose (v : n → 𝕜) :
     vecMulVec v (star v) = replicateCol (Fin 1) v * (replicateCol (Fin 1) v)ᴴ := by
-  rw [Matrix.conjTranspose_replicateCol]
-  rw [Matrix.vecMulVec_eq (Fin 1)]
+  rw [Matrix.conjTranspose_replicateCol, Matrix.vecMulVec_eq (Fin 1)]
   rfl
 
 theorem Matrix.posSemidef_iff_replicateCol_mul_conjTranspose_replicateCol [Finite n]

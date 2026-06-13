@@ -28,8 +28,7 @@ variable {R A B : Type _} [CommSemiring R]
 
 theorem commutes_with_unit_iff [Semiring A] [Semiring B] [Algebra R A] [Algebra R B]
     (f : A →ₗ[R] B) :
-    f ∘ₗ Algebra.linearMap R A = Algebra.linearMap R B ↔ f 1 = 1 :=
-  by
+    f ∘ₗ Algebra.linearMap R A = Algebra.linearMap R B ↔ f 1 = 1 := by
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, Algebra.linearMap_apply,
     Algebra.algebraMap_eq_smul_one, _root_.map_smul]
   refine ⟨fun h => ?_, fun h x => by rw [h]⟩
@@ -42,8 +41,7 @@ theorem commutes_with_mul'_iff [NonUnitalNonAssocSemiring A] [Module R A]
     [NonUnitalNonAssocSemiring B] [Module R B] [SMulCommClass R B B] [IsScalarTower R B B]
     (f : A →ₗ[R] B) :
     LinearMap.mul' R B ∘ₗ TensorProduct.map f f = f ∘ₗ LinearMap.mul' R A ↔
-      ∀ x y : A, f (x * y) = f x * f y :=
-  by
+      ∀ x y : A, f (x * y) = f x * f y := by
   simp_rw [TensorProduct.ext_iff', LinearMap.comp_apply, TensorProduct.map_tmul,
     LinearMap.mul'_apply, eq_comm]
 
@@ -58,8 +56,7 @@ theorem LinearMap.adjoint_commutes_with_mul_adjoint_iff {𝕜 X Y : Type*} [RCLi
         (LinearMap.adjoint (LinearMap.mul' 𝕜 Y))
       = (LinearMap.adjoint (LinearMap.mul' 𝕜 X)) ∘ₗ LinearMap.adjoint f
     ↔
-      ∀ x y : X, f (x * y) = f x * f y :=
-by
+      ∀ x y : X, f (x * y) = f x * f y := by
   simp_rw [← TensorProduct.map_adjoint, ← LinearMap.adjoint_comp, ← commutes_with_mul'_iff]
   refine ⟨fun h => ?_, fun h => by rw [h]⟩
   apply_fun LinearMap.adjoint at h
@@ -73,8 +70,7 @@ lemma LinearMap.commutes_with_mul_adjoint_iff {𝕜 X Y : Type*} [RCLike 𝕜]
     (TensorProduct.map f f) ∘ₗ (LinearMap.adjoint (LinearMap.mul' 𝕜 X))
       = (LinearMap.adjoint (LinearMap.mul' 𝕜 Y)) ∘ₗ f
     ↔
-      ∀ x y : Y, (adjoint f) (x * y) = (adjoint f) x * (adjoint f) y :=
-by
+      ∀ x y : Y, (adjoint f) (x * y) = (adjoint f) x * (adjoint f) y := by
   simp_rw [← commutes_with_mul'_iff]
   constructor <;>
   · intro h
@@ -91,8 +87,7 @@ lemma LinearIsometryEquiv.commutes_with_mul_adjoint_iff_of_surjective_isometry
         (LinearMap.adjoint (LinearMap.mul' 𝕜 X))
       = (LinearMap.adjoint (LinearMap.mul' 𝕜 Y)) ∘ₗ f.toLinearMap
     ↔
-      ∀ x y : X, f (x * y) = f x * f y :=
-by
+      ∀ x y : X, f (x * y) = f x * f y := by
   simp_rw [LinearMap.commutes_with_mul_adjoint_iff]
   haveI : CompleteSpace X := FiniteDimensional.complete 𝕜 _
   haveI : CompleteSpace Y := FiniteDimensional.complete 𝕜 _
@@ -120,8 +115,7 @@ by
 theorem Matrix.KroneckerProduct.ext_iff {R P n₁ n₂ : Type _} [Finite n₁] [Finite n₂]
     [CommSemiring R] [AddCommMonoid P] [Module R P]
     {g h : Matrix (n₁ × n₂) (n₁ × n₂) R →ₗ[R] P} :
-    g = h ↔ ∀ (x : Matrix n₁ n₁ R) (y : Matrix n₂ n₂ R), g (x ⊗ₖ y) = h (x ⊗ₖ y) :=
-  by
+    g = h ↔ ∀ (x : Matrix n₁ n₁ R) (y : Matrix n₂ n₂ R), g (x ⊗ₖ y) = h (x ⊗ₖ y) := by
   classical
   letI := Fintype.ofFinite n₁
   letI := Fintype.ofFinite n₂

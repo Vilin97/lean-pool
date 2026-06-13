@@ -90,8 +90,7 @@ lemma one_sub_exp_neg_pos {t : ℝ} (ht : 0 < t) : 0 < 1 - Real.exp (-t) := by
 
 /-- exp(-b) ≤ exp(-a) when a ≤ b. -/
 lemma exp_neg_le_exp_neg {a b : ℝ} (hab : a ≤ b) :
-    Real.exp (-b) ≤ Real.exp (-a) :=
-  Real.exp_le_exp_of_le (neg_le_neg hab)
+    Real.exp (-b) ≤ Real.exp (-a) := Real.exp_le_exp_of_le (neg_le_neg hab)
 
 /-- The denominator 1 - exp(-R²/2) is positive for R > 0. -/
 lemma one_sub_exp_half_sq_pos (R : ℝ) (hR : 0 < R) :
@@ -558,8 +557,7 @@ private lemma gaussian_inner_sq_le' (σ : ℝ) (hσ : 0 < σ) (w : V) :
             rw [← integral_const_mul]; congr 1; ext x; ring
           rw [step_a, integral_sub (gaussDensity_mul_cosh_integrable' σ hσ w c)
             (gaussDensity_integrable' σ hσ), gaussDensity_cosh_integral' σ hσ w c, hc]
-          have : rexp (t * σ ^ 2 * ‖w‖ ^ 2 / 2) = rexp (t * A) := by
-            congr 1; rw [hA_def]; ring
+          have : rexp (t * σ ^ 2 * ‖w‖ ^ 2 / 2) = rexp (t * A) := by congr 1; rw [hA_def]; ring
           rw [this]; ring
   have step2 : Filter.Tendsto (fun t => 2 * C * (rexp (t * A) - 1) / t)
       (nhdsWithin (0 : ℝ) (Set.Ioi 0)) (nhds (C * (σ ^ 2 * ‖w‖ ^ 2))) := by
@@ -663,8 +661,7 @@ lemma gaussDensity_mul_quadForm_integrable' (σ : ℝ) (hσ : 0 < σ)
     unfold gaussDensity at h
     convert h using 1; ext x; congr 1
     rw [mul_pow, Real.sq_sqrt (by positivity : (2 : ℝ) ≥ 0)]; ring
-  have hqf_cont : Continuous (fun x : V => quadForm S x) := by
-    unfold quadForm; fun_prop
+  have hqf_cont : Continuous (fun x : V => quadForm S x) := by unfold quadForm; fun_prop
   apply hbound_int.mono'
   · exact ((gaussDensity_continuous' σ).mul hqf_cont).aestronglyMeasurable
   · filter_upwards with x
@@ -801,8 +798,7 @@ theorem gaussian_averaging_bound
         rw [mul_add]; congr 1
         · rw [← mul_assoc, mul_comm C⁻¹ ε, mul_assoc, inv_mul_cancel₀ hCne, mul_one]
         · ring
-    _ ≤ ε + 2 * (σ ^ 2 * T) := by
-        linarith [gaussian_quadForm_integral_le σ hσ S hS T hT h_trace]
+    _ ≤ ε + 2 * (σ ^ 2 * T) := by linarith [gaussian_quadForm_integral_le σ hσ S hS T hT h_trace]
     _ = ε + 2 * σ ^ 2 * T := by ring
 
 end GaussianAveraging
@@ -1056,10 +1052,8 @@ lemma exists_R_for_tail_bound (C η σ : ℝ) (hC : 0 < C) (hCη : C < η) (hσ 
   · have hσ2 : 0 < σ ^ 2 := by positivity
     have hR_sq : R ^ 2 = 2 * (-Real.log δ) / σ ^ 2 := by
       rw [hR_def, div_pow, Real.sq_sqrt (by nlinarith)]
-    have h_exp_arg : σ ^ 2 * R ^ 2 / 2 = -Real.log δ := by
-      rw [hR_sq]; field_simp
-    rw [h_exp_arg, neg_neg, Real.exp_log hδ_pos]
-    rw [div_lt_iff₀ (by linarith : 0 < 1 - δ)]
+    have h_exp_arg : σ ^ 2 * R ^ 2 / 2 = -Real.log δ := by rw [hR_sq]; field_simp
+    rw [h_exp_arg, neg_neg, Real.exp_log hδ_pos, div_lt_iff₀ (by linarith : 0 < 1 - δ)]
     have : η * (1 - δ) = (η + C) / 2 := by rw [hδ_def]; field_simp; ring
     linarith
 
@@ -1089,8 +1083,7 @@ theorem sazonov_tightness (φ : H → ℂ) (_hpd : IsPositiveDefinite φ)
   have hT1 : 0 < T + 1 := by linarith
   have hσ_sq_pos : 0 < η / (6 * (T + 1)) := by positivity
   have hσ_pos : 0 < σ := Real.sqrt_pos.mpr hσ_sq_pos
-  have hσ_sq : σ ^ 2 = η / (6 * (T + 1)) := by
-    rw [hσ_def, sq, Real.mul_self_sqrt hσ_sq_pos.le]
+  have hσ_sq : σ ^ 2 = η / (6 * (T + 1)) := by rw [hσ_def, sq, Real.mul_self_sqrt hσ_sq_pos.le]
   set C := ε + 2 * σ ^ 2 * T with hC_def
   have hC_bound : C < η := by
     rw [hC_def, hε_def, hσ_sq]
@@ -1100,8 +1093,7 @@ theorem sazonov_tightness (φ : H → ℂ) (_hpd : IsPositiveDefinite φ)
     rw [div_add_div _ _ (by positivity : (3:ℝ) ≠ 0) (by positivity : 3 * (T + 1) ≠ 0)]
     rw [div_lt_iff₀ (by positivity : 0 < 3 * (3 * (T + 1)))]
     nlinarith
-  have hC_pos : 0 < C := by
-    rw [hC_def]; nlinarith [sq_nonneg σ]
+  have hC_pos : 0 < C := by rw [hC_def]; nlinarith [sq_nonneg σ]
   obtain ⟨R, hR, hR_bound⟩ := exists_R_for_tail_bound C η σ hC_pos hC_bound hσ_pos
   use R, hR
   intro n v hv μ hμ

@@ -31,10 +31,8 @@ theorem init_invariant {init : σ → Prop} {next : action σ} {inv : σ → Pro
     aesop
   rw (occs := .pos [2]) [always_induction]
   rw [and_pred_implies_split]; apply And.intro
-  · intro e ⟨hinit', _⟩
-    exact hinit _ hinit'
-  · intro e ⟨_, hnext'⟩ k hinv
-    exact hstep (e.drop k) ⟨hinv, hnext' k⟩
+  · exact fun e ⟨hinit', _⟩ => hinit _ hinit'
+  · exact fun e ⟨_, hnext'⟩ k hinv => hstep (e.drop k) ⟨hinv, hnext' k⟩
 /-
 /-- `wf1` with `p`, `q`, `init` and `inv` being state predicates. -/
 theorem wf1' (p q init inv : σ → Prop) (next a : action σ)

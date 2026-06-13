@@ -137,8 +137,7 @@ noncomputable instance Pi.quantumSet [Fact (∀ i, (hQ i).k = 0)] : QuantumSet (
       PiLp.star_apply]
     have hk : (hQ i).k = 0 := (Fact.out : ∀ i, (hQ i).k = 0) i
     have h := (hQ i).inner_star_left (x i) (y i) (z i)
-    rw [hk] at h
-    exact h
+    rwa [hk] at h
   inner_conj_left x y z := by
     rw [piInnerProductAlgebra_inner_apply, piInnerProductAlgebra_inner_apply]
     apply Finset.sum_congr rfl

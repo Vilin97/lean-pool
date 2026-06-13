@@ -51,18 +51,15 @@ lemma diagEmbed_ne_zero_of_ne_zero {x : ι → ℝ} (hx : x ≠ 0) : diagEmbed (
 
 /-- Finite sum over pairs equals iterated double sum over coordinates (binderless sums). -/
 lemma sum_pairs_eq_double [Fintype ι] (g : ι × ι → ℝ) :
-  (∑ p, g p) = ∑ i, ∑ j, g (i, j) :=
-  Fintype.sum_prod_type g
+  (∑ p, g p) = ∑ i, ∑ j, g (i, j) := Fintype.sum_prod_type g
 
 /-- Over `ℝ`, the Hadamard product of Hermitian matrices is Hermitian. -/
 private lemma isHermitian_hadamard_real {A B : Matrix ι ι ℝ}
     (hA : A.IsHermitian) (hB : B.IsHermitian) : (A ∘ₕ B).IsHermitian := by
   rw [Matrix.IsHermitian]
   ext i j
-  have hAij : A i j = A j i := by
-    simpa using (Matrix.IsHermitian.apply hA i j).symm
-  have hBij : B i j = B j i := by
-    simpa using (Matrix.IsHermitian.apply hB i j).symm
+  have hAij : A i j = A j i := by simpa using (Matrix.IsHermitian.apply hA i j).symm
+  have hBij : B i j = B j i := by simpa using (Matrix.IsHermitian.apply hB i j).symm
   simp [Matrix.conjTranspose, Matrix.hadamard, hAij, hBij]
 
 /-- Schur product theorem (real case, finite index):

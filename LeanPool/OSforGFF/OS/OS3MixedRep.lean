@@ -298,8 +298,7 @@ theorem heatKernel_bilinear_fourier_form (m : ℝ) [Fact (0 < m)] (f : TestFunct
     -- Apply k_integral_after_k0_eval
     have h_k := k_integral_after_k0_eval s hs_pos (timeReflection x - y)
     -- Rewrite using helper lemmas for time and spatial components
-    rw [timeReflection_sub_zero, spatialPart_timeReflection_sub] at h_k
-    exact h_k
+    rwa [timeReflection_sub_zero, spatialPart_timeReflection_sub] at h_k
   -- Step 4: Rearrange the integrand to match fubini_ksp_xy_swap LHS form
   -- Move the constant outside x,y integrals and swap k_sp integrand order
   have h_step3 : ∫ s in Set.Ioi 0, (Real.exp (-s * m^2) : ℂ) *
@@ -383,8 +382,7 @@ theorem heatKernel_bilinear_fourier_form (m : ℝ) [Fact (0 < m)] (f : TestFunct
             Complex.exp (-(s : ℂ) * ‖k_sp‖^2) *
             Complex.exp (-Complex.I * spatialDot k_sp (spatialPart x - spatialPart y)) := by
     -- Use smul version for set integrals
-    rw [← smul_eq_mul, ← smul_eq_mul]
-    rw [← integral_smul]
+    rw [← smul_eq_mul, ← smul_eq_mul, ← integral_smul]
     apply MeasureTheory.setIntegral_congr_ae measurableSet_Ioi
     filter_upwards with s hs
     simp only [smul_eq_mul]
@@ -678,8 +676,7 @@ lemma s_integral_complex_eval (k_sp : SpatialCoords) (x y : SpaceTime) (m : ℝ)
   rw [Complex.ofReal_exp]
   -- Now we have: C * (↑π / ↑ω * cexp ↑(-ω * |t|)) = RHS
   -- Rearrange the exp argument: -ω * |t| = -|t| * ω
-  have h_arg : ((-ω * |t| : ℝ) : ℂ) = ((-|t| * ω : ℝ) : ℂ) := by
-    congr 1; ring
+  have h_arg : ((-ω * |t| : ℝ) : ℂ) = ((-|t| * ω : ℝ) : ℂ) := by congr 1; ring
   rw [h_arg]
   -- Convert ↑(-|t| * ω) to -↑|t| * ↑ω
   rw [Complex.ofReal_mul, Complex.ofReal_neg]
@@ -1025,8 +1022,7 @@ theorem schwinger_bilinear_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
   have h_null : μ {p : ℝ × SpaceTime × SpaceTime | p.1 ≤ 0} = 0 := by
     have h_preimage : {p : ℝ × SpaceTime × SpaceTime | p.1 ≤ 0} = Set.Iic 0 ×ˢ Set.univ := by
       ext p; simp only [Set.mem_setOf_eq, Set.mem_prod, Set.mem_Iic, Set.mem_univ, and_true]
-    rw [h_preimage, Measure.prod_prod]
-    rw [Measure.restrict_apply measurableSet_Iic]
+    rw [h_preimage, Measure.prod_prod, Measure.restrict_apply measurableSet_Iic]
     simp only [Set.Iic_inter_Ioi, Set.Ioc_self, measure_empty, zero_mul]
   -- The set where the bound fails is contained in {p | p.1 ≤ 0}
   apply measure_mono_null _ h_null
@@ -1435,8 +1431,7 @@ theorem heatKernel_bilinear_to_mixed_rep (m : ℝ) [Fact (0 < m)] (f : TestFunct
       Complex.exp (-Complex.I * (k 0 * z 0)) *
       Complex.exp (-Complex.I * spatialDot (spatialPart k) (spatialPart z)) := by
     intro k z
-    rw [h_inner k z]
-    rw [← Complex.exp_add]
+    rw [h_inner k z, ← Complex.exp_add]
     congr 1
     -- -I * (a + b) = -I*a + (-I*b) = -I*a - I*b
     push_cast
@@ -1738,8 +1733,7 @@ theorem bilinear_to_k0_inside (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ)
   -- Now LHS = (π * (1/(2π)^d)) * ∫...
   rw [mul_assoc]
   -- Now LHS = π * ((1/(2π)^d) * ∫...)
-  rw [← mul_assoc ((π : ℂ)) _ _]
-  rw [mul_comm ((π : ℂ)) (((1 / (2 * π) ^ STDimension : ℝ) : ℂ))]
+  rw [← mul_assoc ((π : ℂ)) _ _, mul_comm ((π : ℂ)) (((1 / (2 * π) ^ STDimension : ℝ) : ℂ))]
   rw [mul_assoc]
   -- Now LHS = (1/(2π)^d) * (π * ∫...)
   -- Step 4: Show the integrals are equal

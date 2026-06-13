@@ -91,8 +91,7 @@ private lemma radial_gaussian_integral (n : ℕ) :
     intro r _; congr 1
     · rw [← rpow_natCast r (2 * n + 1)]; congr 1; push_cast; ring
     · congr 1; congr 1; rw [← rpow_natCast r 2]; norm_num
-  rw [setIntegral_congr_fun measurableSet_Ioi pow_eq]
-  rw [integral_rpow_mul_exp_neg_rpow hp hq]
+  rw [setIntegral_congr_fun measurableSet_Ioi pow_eq, integral_rpow_mul_exp_neg_rpow hp hq]
   have h1 : (2 * (n : ℝ) + 1 + 1) / 2 = ↑n + 1 := by ring
   rw [h1, Real.Gamma_nat_eq_factorial]; ring
 
@@ -1183,8 +1182,7 @@ theorem LocalFockSPR
     set a : Fin D → ℂ := fun k => p.coeff (k.val + 1)
     have heval : ∀ z, p.eval z = polyEval a z := by
       intro z
-      rw [eval_eq_sum_range, polyEval]
-      rw [Finset.sum_range_succ' (fun i => p.coeff i * z ^ i)]
+      rw [eval_eq_sum_range, polyEval, Finset.sum_range_succ' (fun i => p.coeff i * z ^ i)]
       simp only [hcoeff0, zero_mul, pow_zero]
       rw [← Fin.sum_univ_eq_sum_range]
       ring

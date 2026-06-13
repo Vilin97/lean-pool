@@ -27,16 +27,14 @@ private def CFG.reverse (g : CFG T) : CFG T :=
     (g.rules.map (fun r : g.nt × List (Symbol T g.nt) => (r.fst, r.snd.reverse)))
 
 private lemma dual_of_reversalGrammar (g : CFG T) :
-  g.reverse.reverse = g :=
-by
+  g.reverse.reverse = g := by
   obtain ⟨_, _, _⟩ := g
   unfold CFG.reverse
   aesop
 
 private lemma derives_reversed {g : CFG T} {v : List (Symbol T g.nt)}
     (hgv : g.reverse.Derives [Symbol.nonterminal g.reverse.initial] v) :
-  g.Derives [Symbol.nonterminal g.initial] v.reverse :=
-by
+  g.Derives [Symbol.nonterminal g.initial] v.reverse := by
   induction hgv with
   | refl =>
       change g.Derives _ (List.reverse [Symbol.nonterminal g.reverse.initial])
@@ -59,8 +57,7 @@ by
 
 private lemma reversed_word_in_original_language {g : CFG T} {w : List T}
     (hgw : w ∈ g.reverse.language) :
-  w.reverse ∈ g.language :=
-by
+  w.reverse ∈ g.language := by
   unfold CFG.language at *
   change g.Derives [Symbol.nonterminal g.initial] (w.reverse.map Symbol.terminal)
   rw [List.map_reverse]
@@ -68,20 +65,16 @@ by
 
 /-- The class of context-free languages is closed under reversal. -/
 theorem CF_of_reverse_CF (L : Language T) :
-  Language.IsCF L → Language.IsCF L.reverse :=
-by
+  Language.IsCF L → Language.IsCF L.reverse := by
   rintro ⟨g, rfl⟩
   use g.reverse
   apply Set.eq_of_subset_of_subset ↓reversed_word_in_original_language
   intro w hwL
-  have pre_reversal : ∃ g₀ : CFG T, g = g₀.reverse := by
-    use g.reverse
-    rw [dual_of_reversalGrammar]
-  obtain ⟨g₀, pre_rev⟩ := pre_reversal
+  obtain ⟨g₀, pre_rev⟩ : ∃ g₀ : CFG T, g = g₀.reverse :=
+    ⟨g.reverse, (dual_of_reversalGrammar g).symm⟩
   rw [pre_rev] at hwL ⊢
   have finished_modulo_reverses := reversed_word_in_original_language hwL
   rw [dual_of_reversalGrammar]
-  rw [List.reverse_reverse] at finished_modulo_reverses
-  exact finished_modulo_reverses
+  rwa [List.reverse_reverse] at finished_modulo_reverses
 
 end Chomsky

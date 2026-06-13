@@ -204,8 +204,7 @@ lemma mem_sInter_iff {x s : V} :
 @[simp] lemma mem_sInter_iff_empty : ⋂ʰᶠ (∅ : V) = ∅ := mem_ext (by simp [mem_sInter_iff])
 
 lemma mem_sInter_iff_of_pos {x s : V} (h : s ≠ ∅) :
-    x ∈ ⋂ʰᶠ s ↔ ∀ t ∈ s, x ∈ t := by
-  simp [mem_sInter_iff, h]
+    x ∈ ⋂ʰᶠ s ↔ ∀ t ∈ s, x ∈ t := by simp [mem_sInter_iff, h]
 
 end «lp_section_4»
 
@@ -257,8 +256,7 @@ lemma mem_product_iff' {x a b : V} : x ∈ a ×ʰᶠ b ↔ π₁ x ∈ a ∧ π�
   · rintro ⟨h₁, h₂⟩; exact ⟨π₁ x, h₁, π₂ x, h₂, by simp⟩
 
 @[simp] lemma pair_mem_product_iff {x y a b : V} :
-    ⟪x, y⟫ ∈ a ×ʰᶠ b ↔ x ∈ a ∧ y ∈ b := by
-  simp [mem_product_iff']
+    ⟪x, y⟫ ∈ a ×ʰᶠ b ↔ x ∈ a ∧ y ∈ b := by simp [mem_product_iff']
 
 lemma pair_mem_product {x y a b : V} (hx : x ∈ a) (hy : y ∈ b) : ⟪x, y⟫ ∈ a ×ʰᶠ b := by
   simp only [pair_mem_product_iff]
@@ -366,8 +364,7 @@ instance domain_definable' (ℌ : HierarchySymbol) : ℌ-Function₁ (domain :
   mem_ext (by simp [mem_domain_iff])
 
 @[simp] lemma domain_insert (x y s : V) :
-    domain (insert ⟪x, y⟫ s) = insert x (domain s) := by
-  simp [insert_eq_union_singleton]
+    domain (insert ⟪x, y⟫ s) = insert x (domain s) := by simp [insert_eq_union_singleton]
 
 @[simp] lemma domain_bound (s : V) : domain s ≤ 2 * s := le_iff_lt_succ.mpr
   <| lt_of_lt_log (by simp) (by
@@ -471,8 +468,7 @@ section «lp_section_9»
 def Disjoint (s t : V) : Prop := s ∩ t = ∅
 
 lemma _root_.LO.Arith.Disjoint.iff {s t : V} :
-    Disjoint s t ↔ ∀ x, x ∉ s ∨ x ∉ t := by
-  simp [Disjoint, isempty_iff, imp_iff_not_or]
+    Disjoint s t ↔ ∀ x, x ∉ s ∨ x ∉ t := by simp [Disjoint, isempty_iff, imp_iff_not_or]
 
 lemma _root_.LO.Arith.Disjoint.not_of_mem {s t x : V} (hs : x ∈ s) (ht : x ∈ t) :
     ¬Disjoint s t := by
@@ -480,12 +476,10 @@ lemma _root_.LO.Arith.Disjoint.not_of_mem {s t x : V} (hs : x ∈ s) (ht : x ∈
   exact ⟨x, hs, ht⟩
 
 lemma _root_.LO.Arith.Disjoint.symm {s t : V} (h : Disjoint s t) :
-    Disjoint t s := by
-  simpa [Disjoint, inter_comm t s] using h
+    Disjoint t s := by simpa [Disjoint, inter_comm t s] using h
 
 @[simp] lemma _root_.LO.Arith.Disjoint.singleton_iff {a : V} : Disjoint ({a} :
-    V) s ↔ a ∉ s := by
-  simp [Disjoint, isempty_iff]
+    V) s ↔ a ∉ s := by simp [Disjoint, isempty_iff]
 
 end «lp_section_9»
 
@@ -614,8 +608,7 @@ lemma mem_restr_iff {x f s : V} :
   Classical.choose!_spec (restr_exists_unique f s) x
 
 @[simp] lemma pair_mem_restr_iff {x y f s : V} :
-    ⟪x, y⟫ ∈ f ↾ s ↔ ⟪x, y⟫ ∈ f ∧ x ∈ s := by
-  simp [mem_restr_iff]
+    ⟪x, y⟫ ∈ f ↾ s ↔ ⟪x, y⟫ ∈ f ∧ x ∈ s := by simp [mem_restr_iff]
 
 @[simp] lemma restr_empty (f : V) : f ↾ ∅ = ∅ := mem_ext (by simp [mem_restr_iff])
 
@@ -662,8 +655,7 @@ theorem sigmaOne_skolem {R : V → V → Prop} (hP : Sg1-Relation R) {s : V}
     · have :
         Sg1-Predicate fun u ↦
           u ⊆ s → ∃ f, IsMapping f ∧ domain f = u ∧
-            ∀ x < f, ∀ y < f, ⟪x, y⟫ ∈ f → R x y := by
-          definability
+            ∀ x < f, ∀ y < f, ⟪x, y⟫ ∈ f → R x y := by definability
       exact this.of_iff <| by
         intro x; apply imp_congr_right <| fun _ ↦ exists_congr <| fun f ↦ and_congr_right
           <| fun _ ↦ and_congr_right <| fun _ ↦

@@ -433,8 +433,7 @@ private lemma A_eq_integral_A_int (S0 : Finset ℂ) (f g_reg : ℂ → ℂ) (γ 
     intro s _hs; exact intervalIntegrable_residueTerm hε
   -- Sum of integrals = integral of sum
   have h_sum_eq : ∑ s ∈ S0, ∫ t in γ.a..γ.b, S_int_fun s t =
-      ∫ t in γ.a..γ.b, ∑ s ∈ S0, S_int_fun s t :=
-    (intervalIntegral.integral_finsetSum hS_int).symm
+      ∫ t in γ.a..γ.b, ∑ s ∈ S0, S_int_fun s t := (intervalIntegral.integral_finsetSum hS_int).symm
   -- Integrability of sum
   have hSum_int : IntervalIntegrable (fun t => ∑ s ∈ S0, S_int_fun s t)
       volume γ.a γ.b := by
@@ -621,13 +620,11 @@ lemma multipointPV_eq_sum_of_integral_zero
   obtain ⟨L, hL⟩ := _hPV_exists
   have h_pv_eq_L :
       cauchyPrincipalValueOn S0 f γ.toFun
-        γ.a γ.b = L :=
-    hL.limUnder_eq
+        γ.a γ.b = L := hL.limUnder_eq
   have h_G_zero :
       ∫ t in γ.a..γ.b,
         _g_reg (γ.toFun t) *
-          deriv γ.toFun t = 0 :=
-    _hg_zero
+          deriv γ.toFun t = 0 := _hg_zero
   have h_A_tendsto :=
     multipointPV_diff_tendsto S0 f γ
       _h_crossing_null _g_reg _hg_decomp _hg_cont
@@ -670,8 +667,7 @@ lemma multipointPV_eq_sum_of_integral_zero
       ring
     have h_sub :
         Tendsto (fun ε => Mf ε - Af ε) (𝓝[>] 0)
-          (𝓝 (L - 0)) :=
-      hL.sub h_A_tendsto
+          (𝓝 (L - 0)) := hL.sub h_A_tendsto
     simp only [sub_zero] at h_sub
     rw [h_eq]
     exact h_sub

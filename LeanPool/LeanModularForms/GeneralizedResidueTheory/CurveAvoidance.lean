@@ -55,8 +55,7 @@ noncomputable def curveInfDist (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ) : ℝ
 
 /-- Trivial wrapper: CurveAvoids follows from pointwise inequality. -/
 theorem curveAvoids_of_ne_on_Icc {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ}
-    (h : ∀ t ∈ Icc a b, γ t ≠ z₀) : CurveAvoids γ a b z₀ :=
-  h
+    (h : ∀ t ∈ Icc a b, γ t ≠ z₀) : CurveAvoids γ a b z₀ := h
 
 /-- If every point on the curve has imaginary part strictly greater than z₀.im,
 then the curve avoids z₀. -/
@@ -89,10 +88,8 @@ theorem curveInfDist_pos_of_avoids {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ}
     (hγ : ContinuousOn γ (Icc a b)) (hab : a ≤ b)
     (hav : CurveAvoids γ a b z₀) : 0 < curveInfDist γ a b z₀ := by
   unfold curveInfDist
-  have h_compact : IsCompact (γ '' Icc a b) :=
-    isCompact_Icc.image_of_continuousOn hγ
-  have h_closed : IsClosed (γ '' Icc a b) :=
-    h_compact.isClosed
+  have h_compact : IsCompact (γ '' Icc a b) := isCompact_Icc.image_of_continuousOn hγ
+  have h_closed : IsClosed (γ '' Icc a b) := h_compact.isClosed
   have h_nonempty : (γ '' Icc a b).Nonempty := by
     exact ⟨γ a, mem_image_of_mem γ (left_mem_Icc.mpr hab)⟩
   rw [← h_closed.notMem_iff_infDist_pos h_nonempty]

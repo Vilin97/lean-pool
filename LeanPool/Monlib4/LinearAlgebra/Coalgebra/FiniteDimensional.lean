@@ -36,8 +36,7 @@ rfl
 
 lemma algebraMapCLM_adjoint_eq_bra_one {R A : Type*} [RCLike R] [NormedAddCommGroupOfRing A]
   [InnerProductSpace R A] [SMulCommClass R A A] [IsScalarTower R A A] [CompleteSpace A] :
-  ContinuousLinearMap.adjoint (algebraMapCLM R A) = bra R 1 :=
-by
+  ContinuousLinearMap.adjoint (algebraMapCLM R A) = bra R 1 := by
   rw [algebraMapCLM_eq_ket_one, ← bra_adjoint_eq_ket, ContinuousLinearMap.adjoint_adjoint]
 
 lemma LinearMap.rTensor_adjoint {𝕜 A B C : Type*} [RCLike 𝕜]
@@ -45,23 +44,20 @@ lemma LinearMap.rTensor_adjoint {𝕜 A B C : Type*} [RCLike 𝕜]
   [InnerProductSpace 𝕜 A] [InnerProductSpace 𝕜 B] [InnerProductSpace 𝕜 C]
   [FiniteDimensional 𝕜 A] [FiniteDimensional 𝕜 B] [FiniteDimensional 𝕜 C]
   (f : A →ₗ[𝕜] B) :
-  adjoint (rTensor C f) = rTensor C (adjoint f) :=
-by
+  adjoint (rTensor C f) = rTensor C (adjoint f) := by
   simp_rw [rTensor, TensorProduct.map_adjoint, adjoint_id]
 lemma LinearMap.lTensor_adjoint {𝕜 A B C : Type*} [RCLike 𝕜]
   [NormedAddCommGroup A] [NormedAddCommGroup B] [NormedAddCommGroup C]
   [InnerProductSpace 𝕜 A] [InnerProductSpace 𝕜 B] [InnerProductSpace 𝕜 C]
   [FiniteDimensional 𝕜 A] [FiniteDimensional 𝕜 B] [FiniteDimensional 𝕜 C]
   (f : A →ₗ[𝕜] B) :
-  adjoint (lTensor C f) = lTensor C (adjoint f) :=
-by
+  adjoint (lTensor C f) = lTensor C (adjoint f) := by
   simp_rw [lTensor, TensorProduct.map_adjoint, adjoint_id]
 
 lemma TensorProduct.rid_adjoint {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
   [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] :
   LinearMap.adjoint (TensorProduct.rid 𝕜 E).toLinearMap =
-    (TensorProduct.rid 𝕜 E).symm.toLinearMap :=
-  by
+    (TensorProduct.rid 𝕜 E).symm.toLinearMap := by
   ext1
   apply @ext_inner_right 𝕜
   intro y
@@ -132,8 +128,7 @@ open scoped InnerProductSpace
 -- open scoped ofFiniteDimensionalHilbertAlgebra in
 lemma Coalgebra.inner_eq_counit' [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A] :
-  (⟪(1 : A), ·⟫_R) = Coalgebra.counit :=
-by
+  (⟪(1 : A), ·⟫_R) = Coalgebra.counit := by
   simp_rw [Coalgebra.counit]
   ext
   apply ext_inner_left R
@@ -146,8 +141,7 @@ by
 
 lemma Coalgebra.counit_eq_bra_one [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A] :
-  Coalgebra.counit = (bra R (1 : A)).toLinearMap :=
-by
+  Coalgebra.counit = (bra R (1 : A)).toLinearMap := by
   haveI := FiniteDimensional.complete R A
   rw [counit_eq_unit_adjoint, ← algebraMapCLM_adjoint_eq_bra_one]
   rfl
@@ -157,8 +151,7 @@ theorem Coalgebra.rTensor_mul_comp_lTensor_comul
   [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A]
   (h : ∃ σ : A → A, ∀ x y z : A, ⟪x * y, z⟫_R = ⟪y, σ x * z⟫_R) :
-  (rT A (m A)) ∘ₗ (ϰ A A A).symm.toLinearMap ∘ₗ (lT A comul) = comul ∘ₗ (m A) :=
-by
+  (rT A (m A)) ∘ₗ (ϰ A A A).symm.toLinearMap ∘ₗ (lT A comul) = comul ∘ₗ (m A) := by
   rw [TensorProduct.ext_iff']
   intro x y
   rw [TensorProduct.inner_ext_iff']
@@ -258,8 +251,7 @@ theorem Coalgebra.lTensor_mul_comp_rTensor_comul_of
   [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A]
   (h : ∃ σ : A → A, ∀ x y z : A, ⟪x * y, z⟫_R = ⟪y, σ x * z⟫_R) :
-  (lT A (m A)) ∘ₗ (ϰ A A A).toLinearMap ∘ₗ (rT A comul) = comul ∘ₗ (m A) :=
-by
+  (lT A (m A)) ∘ₗ (ϰ A A A).toLinearMap ∘ₗ (rT A comul) = comul ∘ₗ (m A) := by
   apply_fun adjoint using LinearEquiv.injective _
   simp_rw [comul_eq_mul_adjoint]
   letI : NormedAddCommGroup (A ⊗[R] A) := by infer_instance
@@ -318,8 +310,7 @@ lemma AlgHom.isAlgHom
   {R A B : Type*} [CommSemiring R] [Semiring A]
   [Semiring B] [Algebra R A] [Algebra R B]
   (x : A →ₐ[R] B) :
-  x.toLinearMap.IsAlgHom :=
-by
+  x.toLinearMap.IsAlgHom := by
   rw [LinearMap.isAlgHom_iff, commutes_with_mul'_iff, commutes_with_unit_iff]
   simp only [toLinearMap_apply, map_one, map_mul, implies_true, and_self]
 lemma AlgEquiv.isAlgHom
@@ -336,8 +327,7 @@ variable {B : Type*} [RCLike R] [NormedAddCommGroupOfRing A] [NormedAddCommGroup
   (x : A →ₗ[R] B)
 
 theorem LinearMap.isAlgHom_iff_adjoint_isCoalgHom :
-  x.IsAlgHom ↔ (LinearMap.adjoint x).IsCoalgHom :=
-by
+  x.IsAlgHom ↔ (LinearMap.adjoint x).IsCoalgHom := by
   simp_rw [isAlgHom_iff, isCoalgHom_iff, Coalgebra.counit_eq_unit_adjoint,
     Coalgebra.comul_eq_mul_adjoint, ← TensorProduct.map_adjoint, ← LinearMap.adjoint_comp]
   constructor
@@ -349,6 +339,5 @@ by
     exact ⟨h1, h2⟩
 
 theorem LinearMap.isCoalgHom_iff_adjoint_isAlgHom :
-  x.IsCoalgHom ↔ (LinearMap.adjoint x).IsAlgHom :=
-by
+  x.IsCoalgHom ↔ (LinearMap.adjoint x).IsAlgHom := by
   rw [isAlgHom_iff_adjoint_isCoalgHom, adjoint_adjoint]

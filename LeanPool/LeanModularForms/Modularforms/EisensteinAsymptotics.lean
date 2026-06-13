@@ -225,10 +225,8 @@ def serreDE₂ModularForm : ModularForm (CongruenceSubgroup.Gamma 1) 4 where
 /-- serreD 1 E₂ → -1/12 at i∞. -/
 lemma serre_DE₂_tendsto_atImInfty :
     Filter.Tendsto (serreD 1 E₂) atImInfty (nhds (-(1/12 : ℂ))) := by
-  have h := serre_D_tendsto_neg_k_div_12 1 E₂ E₂_holo'
+  simpa only [Int.cast_one, neg_div] using serre_D_tendsto_neg_k_div_12 1 E₂ E₂_holo'
     E₂_isBoundedAtImInfty E₂_tendsto_one_atImInfty
-  simp only [Int.cast_one, neg_div] at h
-  exact h
 
 /-! ## Generic q-expansion summability and derivative bounds -/
 

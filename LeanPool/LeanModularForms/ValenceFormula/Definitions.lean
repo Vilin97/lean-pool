@@ -58,24 +58,20 @@ theorem ellipticPointRho_add_one_eq :
 
 private lemma rho_normSq_eq_one : Complex.normSq (ellipticPointRho' : ℂ) = 1 := by
   change Complex.normSq (-1/2 + (Real.sqrt 3 / 2) * I : ℂ) = 1
-  have h1 : (-1/2 + (Real.sqrt 3 / 2) * I : ℂ) =
-      ((-1/2 : ℝ) : ℂ) + ((Real.sqrt 3 / 2 : ℝ) : ℂ) * I := by push_cast; ring
-  rw [h1, Complex.normSq_add_mul_I]
-  have h2 : (-1/2 : ℝ)^2 = 1/4 := by ring
-  have h3 : (Real.sqrt 3 / 2)^2 = 3/4 := by
-    rw [div_pow, Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)]; norm_num
-  rw [h2, h3]; ring
+  rw [show (-1/2 + (Real.sqrt 3 / 2) * I : ℂ) =
+      ((-1/2 : ℝ) : ℂ) + ((Real.sqrt 3 / 2 : ℝ) : ℂ) * I from by push_cast; ring,
+    Complex.normSq_add_mul_I]
+  rw [div_pow, div_pow, Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)]
+  ring
 
 private lemma rho_plus_one_normSq_eq_one :
     Complex.normSq (ellipticPointRhoPlusOne' : ℂ) = 1 := by
   change Complex.normSq (1/2 + (Real.sqrt 3 / 2) * I : ℂ) = 1
-  have h1 : (1/2 + (Real.sqrt 3 / 2) * I : ℂ) =
-      ((1/2 : ℝ) : ℂ) + ((Real.sqrt 3 / 2 : ℝ) : ℂ) * I := by push_cast; ring
-  rw [h1, Complex.normSq_add_mul_I]
-  have h2 : (1/2 : ℝ)^2 = 1/4 := by ring
-  have h3 : (Real.sqrt 3 / 2)^2 = 3/4 := by
-    rw [div_pow, Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)]; norm_num
-  rw [h2, h3]; ring
+  rw [show (1/2 + (Real.sqrt 3 / 2) * I : ℂ) =
+      ((1/2 : ℝ) : ℂ) + ((Real.sqrt 3 / 2 : ℝ) : ℂ) * I from by push_cast; ring,
+    Complex.normSq_add_mul_I]
+  rw [div_pow, div_pow, Real.sq_sqrt (by norm_num : (3 : ℝ) ≥ 0)]
+  ring
 
 theorem ellipticPointRhoPlusOne_norm : ‖ellipticPointRhoPlusOne‖ = 1 := by
   change Real.sqrt (Complex.normSq _) = 1; rw [rho_plus_one_normSq_eq_one, Real.sqrt_one]

@@ -108,8 +108,7 @@ lemma SchwartzMap.hasTemperateGrowth_general
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (g : 𝓢(E, V)) :
-    Function.HasTemperateGrowth (⇑g) :=
-  hasTemperateGrowth g
+    Function.HasTemperateGrowth (⇑g) := hasTemperateGrowth g
 
 /- Measure lifting from real to complex Lp spaces -/
 
@@ -740,8 +739,7 @@ theorem schwartz_vanishing_linear_bound_general
     rw [Prod.norm_def]
     simp only [_root_.sub_self, norm_zero, max_eq_left (norm_nonneg t)]
     rw [Real.norm_eq_abs, abs_of_nonneg ht]
-  rw [h_dist] at h_mvt
-  exact h_mvt
+  rwa [h_dist] at h_mvt
 
 end SchwartzLinearBound
 
@@ -838,8 +836,7 @@ theorem schwartz_integrable_decay {V : Type*} [NormedAddCommGroup V]
     intro k hk
     -- Use the bound for each term
     -- We need to know ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖
-    have h_norm : ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖ := by
-       rw [norm_iteratedFDeriv_zero]
+    have h_norm : ‖iteratedFDeriv ℝ 0 f x‖ = ‖f x‖ := by rw [norm_iteratedFDeriv_zero]
     -- Rearrange to match hC
     have h_rearrange : ‖f x‖ * ((N.choose k : ℝ) * ‖x‖^k) = (N.choose k : ℝ) * (‖x‖^k *
       ‖iteratedFDeriv ℝ 0 f x‖) := by
@@ -909,12 +906,10 @@ lemma bumpSelfConv_support_subset (φ : ContDiffBump (0 : E)) :
   obtain ⟨y, hy, z, hz, hyz⟩ := hx'
   have hy_ball : y ∈ Metric.ball (0 : E) φ.rOut := by
     have := φ.support_normed_eq (μ := volume)
-    rw [this] at hy
-    exact hy
+    rwa [this] at hy
   have hz_ball : z ∈ Metric.ball (0 : E) φ.rOut := by
     have := φ.support_normed_eq (μ := volume)
-    rw [this] at hz
-    exact hz
+    rwa [this] at hz
   rw [Metric.mem_ball] at hy_ball hz_ball ⊢
   rw [dist_zero_right] at hy_ball hz_ball ⊢
   rw [← hyz]
@@ -991,8 +986,7 @@ theorem double_mollifier_convergence
       Measure.restrict_eq_self_of_ae_mem h_ae
     have h_meas : MeasurableSet {x : E | x ≠ 0} := isOpen_ne.measurableSet
     have h := hC.aestronglyMeasurable (μ := volume) h_meas
-    rw [h_restrict] at h
-    exact h
+    rwa [h_restrict] at h
   -- Step 2: C converges to C(a) at a (since C is continuous at a)
   have hCconv : Tendsto (uncurry fun _ : ι => C) (l ×ˢ 𝓝 a) (𝓝 (C a)) := by
     have h : uncurry (fun _ : ι => C) = C ∘ Prod.snd := by
@@ -1028,8 +1022,7 @@ theorem double_mollifier_convergence
       conv =>
         enter [2, y]
         rw [mul_assoc]
-      rw [MeasureTheory.integral_const_mul]
-      rw [h_inner x]
+      rw [MeasureTheory.integral_const_mul, h_inner x]
     -- 3. Show equal to (ψ ⋆ (ψ ⋆ C))(a)
     have h_outer : (∫ x, ψ (x - a) * (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] C) x) =
                    (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ, volume] (ψ ⋆[ContinuousLinearMap.lsmul ℝ ℝ,
@@ -1121,8 +1114,7 @@ theorem double_mollifier_convergence
                 rw [← h_ta] at htv
                 have hr : (φ i).rOut < ‖a‖ / 3 := by
                    rw [mem_preimage, Metric.mem_ball, dist_zero_right] at hi
-                   rw [Real.norm_of_nonneg (le_of_lt (φ i).rOut_pos)] at hi
-                   exact hi
+                   rwa [Real.norm_of_nonneg (le_of_lt (φ i).rOut_pos)] at hi
                 have : ‖a‖ < ‖a‖ := by
                    rcases htv with ⟨ht, _⟩
                    calc ‖a‖ ≤ 2 * (φ i).rOut := ht

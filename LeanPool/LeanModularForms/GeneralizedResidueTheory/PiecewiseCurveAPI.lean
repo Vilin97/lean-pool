@@ -60,8 +60,7 @@ noncomputable def consecutivePairs (γ : PiecewiseC1Curve) : List (ℝ × ℝ) :
 /-- Membership in `sortedPartition` is equivalent to membership in the original partition. -/
 @[simp]
 theorem mem_sortedPartition (γ : PiecewiseC1Curve) (x : ℝ) :
-    x ∈ γ.sortedPartition ↔ x ∈ γ.partition :=
-  Finset.mem_sort (· ≤ ·)
+    x ∈ γ.sortedPartition ↔ x ∈ γ.partition := Finset.mem_sort (· ≤ ·)
 
 /-- The `sortedPartition` is sorted with respect to `≤`. -/
 theorem sortedPartition_sorted (γ : PiecewiseC1Curve) :
@@ -70,8 +69,7 @@ theorem sortedPartition_sorted (γ : PiecewiseC1Curve) :
 
 /-- The `sortedPartition` has no duplicates. -/
 theorem sortedPartition_nodup (γ : PiecewiseC1Curve) :
-    γ.sortedPartition.Nodup := by
-  simp only [sortedPartition, Finset.sort_nodup]
+    γ.sortedPartition.Nodup := by simp only [sortedPartition, Finset.sort_nodup]
 
 /-- The `sortedPartition` is nonempty (contains at least `a` and `b`). -/
 theorem sortedPartition_nonempty (γ : PiecewiseC1Curve) :
@@ -167,8 +165,7 @@ private theorem pairwise_consecutive_union :
     | nil => exact absurd rfl htail_ne
     | cons y ys =>
       simp only [List.zip_cons_cons, List.tail_cons]
-      have hys_sorted : (y :: ys).Pairwise (· ≤ ·) :=
-        (List.pairwise_cons.mp hsorted).2
+      have hys_sorted : (y :: ys).Pairwise (· ≤ ·) := (List.pairwise_cons.mp hsorted).2
       have hys_ne : y :: ys ≠ [] := List.cons_ne_nil y ys
       rw [List.getLast_cons_cons] at hlast
       cases ys with
@@ -239,8 +236,7 @@ private theorem pairwise_zip_tail_le {l : List ℝ} (hl : l.Pairwise (· ≤ ·)
 
 /-- For each consecutive pair `(p, q)`, we have `p ≤ q`. -/
 theorem consecutivePairs_le (γ : PiecewiseC1Curve) (p : ℝ × ℝ)
-    (hp : p ∈ γ.consecutivePairs) : p.1 ≤ p.2 :=
-  pairwise_zip_tail_le (sortedPartition_sorted γ) hp
+    (hp : p ∈ γ.consecutivePairs) : p.1 ≤ p.2 := pairwise_zip_tail_le (sortedPartition_sorted γ) hp
 
 /-- Both components of a consecutive pair lie in `[a, b]`. -/
 theorem consecutivePairs_subset (γ : PiecewiseC1Curve) (p : ℝ × ℝ)

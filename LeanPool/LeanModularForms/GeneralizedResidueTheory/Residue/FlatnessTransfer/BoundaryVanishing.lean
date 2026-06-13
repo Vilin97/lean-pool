@@ -128,8 +128,7 @@ private lemma slope_tendsto_right_of_deriv
       ⟨γ.toPiecewiseC1Curve.endpoints_in_partition.2, ht₀.2⟩⟩
   let δ := P.min' hP_ne
   have hδ_in : δ ∈ P := Finset.min'_mem _ hP_ne
-  have hδ_in_part : δ ∈ γ.toPiecewiseC1Curve.partition :=
-    (Finset.mem_filter.mp hδ_in).1
+  have hδ_in_part : δ ∈ γ.toPiecewiseC1Curve.partition := (Finset.mem_filter.mp hδ_in).1
   have hδ_gt : t₀ < δ := (Finset.mem_filter.mp hδ_in).2
   have hδ_le_b : δ ≤ γ.b := (γ.toPiecewiseC1Curve.partition_subset hδ_in_part).2
   have h_no_part : ∀ t ∈ Ioo t₀ δ, t ∉ γ.toPiecewiseC1Curve.partition := by
@@ -176,8 +175,7 @@ private lemma direction_of_slope_tendsto
   rcases eq_or_ne w 0 with hw | hw
   · simp [hw]
   · have h_inv_pos : (0 : ℝ) < ε⁻¹ := inv_pos_of_pos hε
-    have h_inv_ne : (↑(ε⁻¹ : ℝ) : ℂ) ≠ 0 :=
-      Complex.ofReal_ne_zero.mpr (ne_of_gt h_inv_pos)
+    have h_inv_ne : (↑(ε⁻¹ : ℝ) : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (ne_of_gt h_inv_pos)
     rw [Complex.real_smul]
     have h_norm : (↑‖↑(ε⁻¹ : ℝ) * w‖ : ℂ) = ↑(ε⁻¹ : ℝ) * ↑‖w‖ := by
       simp only [norm_mul, Complex.norm_real, Real.norm_eq_abs,
@@ -211,8 +209,7 @@ private lemma slope_tendsto_left_of_deriv
       ⟨γ.toPiecewiseC1Curve.endpoints_in_partition.1, ht₀.1⟩⟩
   let δ := P.max' hP_ne
   have hδ_in : δ ∈ P := Finset.max'_mem _ hP_ne
-  have hδ_in_part : δ ∈ γ.toPiecewiseC1Curve.partition :=
-    (Finset.mem_filter.mp hδ_in).1
+  have hδ_in_part : δ ∈ γ.toPiecewiseC1Curve.partition := (Finset.mem_filter.mp hδ_in).1
   have hδ_lt : δ < t₀ := (Finset.mem_filter.mp hδ_in).2
   have ha_le_δ : γ.a ≤ δ := (γ.toPiecewiseC1Curve.partition_subset hδ_in_part).1
   have h_no_part : ∀ t ∈ Ioo δ t₀, t ∉ γ.toPiecewiseC1Curve.partition := by
@@ -340,8 +337,7 @@ theorem zpow_boundary_diff_tendsto_zero
       =o[𝓝[>] 0] (fun ε => (ε : ℝ) ^ (n - 1 : ℕ)) := by
     have h_eq : (fun ε => (wR ε / ↑‖wR ε‖) ^ k - (wL ε / ↑‖wL ε‖) ^ k) =
         fun ε => ((wR ε / ↑‖wR ε‖) ^ k - uR ^ k) -
-          ((wL ε / ↑‖wL ε‖) ^ k - uL ^ k) := by
-      ext ε; rw [h_angle]; ring
+          ((wL ε / ↑‖wL ε‖) ^ k - uL ^ k) := by ext ε; rw [h_angle]; ring
     rw [h_eq]; exact h_oR.sub h_oL
   rw [Metric.tendsto_nhds]
   intro η hη
@@ -353,14 +349,12 @@ theorem zpow_boundary_diff_tendsto_zero
   obtain ⟨hε_pos, hε_lt⟩ := hε_mem
   rw [dist_eq_norm, sub_zero]
   have h_factR : wR ε ^ k = (↑ε : ℂ) ^ k * (wR ε / (↑‖wR ε‖ : ℂ)) ^ k := by
-    have h_ne : (↑‖wR ε‖ : ℂ) ≠ 0 :=
-      Complex.ofReal_ne_zero.mpr (norm_ne_zero_iff.mpr h_ne_R)
+    have h_ne : (↑‖wR ε‖ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (norm_ne_zero_iff.mpr h_ne_R)
     have : wR ε = (↑‖wR ε‖ : ℂ) * (wR ε / (↑‖wR ε‖ : ℂ)) := by field_simp
     conv_lhs => rw [this]
     rw [mul_zpow, h_nR]
   have h_factL : wL ε ^ k = (↑ε : ℂ) ^ k * (wL ε / (↑‖wL ε‖ : ℂ)) ^ k := by
-    have h_ne : (↑‖wL ε‖ : ℂ) ≠ 0 :=
-      Complex.ofReal_ne_zero.mpr (norm_ne_zero_iff.mpr h_ne_L)
+    have h_ne : (↑‖wL ε‖ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (norm_ne_zero_iff.mpr h_ne_L)
     have : wL ε = (↑‖wL ε‖ : ℂ) * (wL ε / (↑‖wL ε‖ : ℂ)) := by field_simp
     conv_lhs => rw [this]
     rw [mul_zpow, h_nL]
@@ -411,8 +405,7 @@ theorem norm_sub_le_tangentDeviation_of_unit (u v : ℂ)
     ring
   have h_re_le : (u * starRingEnd ℂ v).re ≤ 1 := by
     have h1 : |(u * starRingEnd ℂ v).re| ≤ 1 := by
-      calc |(u * starRingEnd ℂ v).re| ≤ ‖u * starRingEnd ℂ v‖ :=
-            Complex.abs_re_le_norm _
+      calc |(u * starRingEnd ℂ v).re| ≤ ‖u * starRingEnd ℂ v‖ := Complex.abs_re_le_norm _
         _ = 1 := by rw [norm_mul, hu, starRingEnd_apply, norm_star, hv, mul_one]
     exact le_of_abs_le h1
   have h_re_bound : 1 - (u * starRingEnd ℂ v).re = ‖u - v‖ ^ 2 / 2 := by linarith
@@ -451,8 +444,7 @@ lemma unit_zpow_eq_of_angle_multiple
   have h_eq : ↑k * (↑(arg z₁) * I) -
       (↑k * (↑(arg z₂) * I) + ↑n * (2 * ↑Real.pi * I)) =
       ↑((↑k : ℝ) * (arg z₁ - arg z₂) -
-        (↑n : ℝ) * (2 * Real.pi)) * I := by
-    push_cast; ring
+        (↑n : ℝ) * (2 * Real.pi)) * I := by push_cast; ring
   rw [h_eq, mul_eq_zero]
   left
   rw [ofReal_eq_zero]
@@ -554,8 +546,7 @@ lemma re_pos_right_of_slope
     (L_R : ℂ) (hL_R_ne : L_R ≠ 0)
     (htend_R : Tendsto (deriv γ.toFun) (𝓝[>] t₀) (𝓝 L_R)) :
     ∀ᶠ t in 𝓝[>] t₀, 0 < ((γ.toFun t - s) * starRingEnd ℂ L_R).re := by
-  have hcont : ContinuousAt γ.toFun t₀ :=
-    γ.continuous_toFun.continuousAt (Icc_mem_nhds ht₀.1 ht₀.2)
+  have hcont : ContinuousAt γ.toFun t₀ := γ.continuous_toFun.continuousAt (Icc_mem_nhds ht₀.1 ht₀.2)
   have hdiff_right : ∀ᶠ t in 𝓝[>] t₀, DifferentiableAt ℝ γ.toFun t := by
     have hcl : IsClosed ((↑γ.partition : Set ℝ) \ {t₀}) :=
       (γ.partition.finite_toSet.subset Set.diff_subset).isClosed
@@ -586,12 +577,10 @@ lemma re_pos_right_of_slope
     Set.mem_Ioi.mp (Set.mem_preimage.mp ht)
   have h_key : (t - t₀) * (slope γ.toFun t₀ t * starRingEnd ℂ L_R).re =
       ((γ.toFun t - s) * starRingEnd ℂ L_R).re := by
-    have hsub : (t - t₀) • slope γ.toFun t₀ t = γ.toFun t -ᵥ γ.toFun t₀ :=
-      sub_smul_slope _ _ _
+    have hsub : (t - t₀) • slope γ.toFun t₀ t = γ.toFun t -ᵥ γ.toFun t₀ := sub_smul_slope _ _ _
     rw [vsub_eq_sub, hcross] at hsub
     have hmul : (↑(t - t₀) : ℂ) * (slope γ.toFun t₀ t * starRingEnd ℂ L_R) =
-        (γ.toFun t - s) * starRingEnd ℂ L_R := by
-      rw [← mul_assoc, ← Complex.real_smul, hsub]
+        (γ.toFun t - s) * starRingEnd ℂ L_R := by rw [← mul_assoc, ← Complex.real_smul, hsub]
     simp only [← hmul, mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
   linarith [mul_pos h_pos_factor h_slope_pos]
 
@@ -601,8 +590,7 @@ lemma re_pos_left_of_slope
     (L_L : ℂ) (hL_L_ne : L_L ≠ 0)
     (htend_L : Tendsto (deriv γ.toFun) (𝓝[<] t₀) (𝓝 L_L)) :
     ∀ᶠ t in 𝓝[<] t₀, 0 < ((γ.toFun t - s) * starRingEnd ℂ (-L_L)).re := by
-  have hcont : ContinuousAt γ.toFun t₀ :=
-    γ.continuous_toFun.continuousAt (Icc_mem_nhds ht₀.1 ht₀.2)
+  have hcont : ContinuousAt γ.toFun t₀ := γ.continuous_toFun.continuousAt (Icc_mem_nhds ht₀.1 ht₀.2)
   have hdiff_left : ∀ᶠ t in 𝓝[<] t₀, DifferentiableAt ℝ γ.toFun t := by
     have hcl : IsClosed ((↑γ.partition : Set ℝ) \ {t₀}) :=
       (γ.partition.finite_toSet.subset Set.diff_subset).isClosed
@@ -634,12 +622,10 @@ lemma re_pos_left_of_slope
     Set.mem_Iio.mp (Set.mem_preimage.mp ht)
   have h_key : (t - t₀) * (slope γ.toFun t₀ t * starRingEnd ℂ (-L_L)).re =
       ((γ.toFun t - s) * starRingEnd ℂ (-L_L)).re := by
-    have hsub : (t - t₀) • slope γ.toFun t₀ t = γ.toFun t -ᵥ γ.toFun t₀ :=
-      sub_smul_slope _ _ _
+    have hsub : (t - t₀) • slope γ.toFun t₀ t = γ.toFun t -ᵥ γ.toFun t₀ := sub_smul_slope _ _ _
     rw [vsub_eq_sub, hcross] at hsub
     have hmul : (↑(t - t₀) : ℂ) * (slope γ.toFun t₀ t * starRingEnd ℂ (-L_L)) =
-        (γ.toFun t - s) * starRingEnd ℂ (-L_L) := by
-      rw [← mul_assoc, ← Complex.real_smul, hsub]
+        (γ.toFun t - s) * starRingEnd ℂ (-L_L) := by rw [← mul_assoc, ← Complex.real_smul, hsub]
     simp only [← hmul, mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
   linarith [mul_pos_of_neg_of_neg h_neg_factor h_slope_neg]
 

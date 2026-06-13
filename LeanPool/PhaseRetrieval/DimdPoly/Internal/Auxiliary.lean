@@ -137,8 +137,7 @@ private theorem explicitModulusDefect_smul_of_nonneg
       congrFun (evalPkappa_smul hd κ (a : ℂ) F) z, norm_mul, norm_mul,
       Complex.norm_of_nonneg ha]
     ring
-  rw [hintegral, Real.sqrt_mul (sq_nonneg a), Real.sqrt_sq_eq_abs]
-  rw [abs_of_nonneg ha]
+  rw [hintegral, Real.sqrt_mul (sq_nonneg a), Real.sqrt_sq_eq_abs, abs_of_nonneg ha]
 
 private theorem modulusDefect_sq_eq_integral_rev
     {d : ℕ} (κ : Fin d -> ℕ)
@@ -315,13 +314,11 @@ def explicitModulusDistanceSq
 
 private theorem explicitGaussianL2DistanceSq_nonneg
     {d : ℕ} (P Q : (Fin d -> ℂ) -> ℂ) :
-    0 ≤ explicitGaussianL2DistanceSq P Q :=
-  MeasureTheory.integral_nonneg fun _ => sq_nonneg _
+    0 ≤ explicitGaussianL2DistanceSq P Q := MeasureTheory.integral_nonneg fun _ => sq_nonneg _
 
 private theorem explicitModulusDistanceSq_nonneg
     {d : ℕ} (P Q : (Fin d -> ℂ) -> ℂ) :
-    0 ≤ explicitModulusDistanceSq P Q :=
-  MeasureTheory.integral_nonneg fun _ => sq_nonneg _
+    0 ≤ explicitModulusDistanceSq P Q := MeasureTheory.integral_nonneg fun _ => sq_nonneg _
 
 private theorem sqrt_integral_norm_sq_eq_lpNorm
     {d : ℕ} {E : Type*} [NormedAddCommGroup E]
@@ -432,9 +429,7 @@ private theorem explicitGaussianL2DistanceSq_phase_eq_l2_norm_sq
     change hP.toLp P - hθQ.toLp (θ.1 • Q) =
       hP.toLp P - θ.1 • hQ.toLp Q
     rw [MeasureTheory.MemLp.toLp_const_smul]
-  rw [← Real.sq_sqrt (explicitGaussianL2DistanceSq_nonneg P (fun z => θ.1 * Q z))]
-  rw [hsqrt]
-  rw [← hnorm]
+  rw [← Real.sq_sqrt (explicitGaussianL2DistanceSq_nonneg P (fun z => θ.1 * Q z)), hsqrt, ← hnorm]
   rw [htoLp]
 
 private theorem explicitPhaseOptimizedDistanceSq_attained
@@ -477,8 +472,7 @@ private theorem explicitPhaseOptimizedDistanceSq_attained
     rintro r ⟨θ, rfl⟩
     change explicitGaussianL2DistanceSq P (fun z => θ₀.1 * Q z) ≤
       explicitGaussianL2DistanceSq P (fun z => θ.1 * Q z)
-    rw [hobjective θ]
-    rw [hobjective θ₀]
+    rw [hobjective θ, hobjective θ₀]
     exact hθ₀_min trivial
   exact le_antisymm hge hle
 
@@ -538,8 +532,7 @@ private theorem explicitClosure_subset_explicitSequentialClosure
       ∀ n, Real.sqrt (explicitGaussianL2DistanceSq (Qn n) Q) =
         dist (fn n) (hQ_mem.toLp Q) := by
     intro n
-    rw [← hQn_toLp n]
-    rw [MeasureTheory.Lp.dist_def]
+    rw [← hQn_toLp n, MeasureTheory.Lp.dist_def]
     have hsub_mem : MeasureTheory.MemLp (fun z => Qn n z - Q z) 2 (explicitGamma d) :=
       (hQn_mem n).sub hQ_mem
     have hae :
@@ -688,8 +681,7 @@ private theorem explicitPhaseOptimized_bound_of_l2_closure
       have hsimp :
           Real.sqrt (C_P ^ 2 * explicitModulusDistanceSq P (Qn n)) =
             C_P * Real.sqrt (explicitModulusDistanceSq P (Qn n)) := by
-        rw [Real.sqrt_mul (sq_nonneg C_P), Real.sqrt_sq_eq_abs]
-        rw [abs_of_nonneg (le_of_lt hC_P_pos)]
+        rw [Real.sqrt_mul (sq_nonneg C_P), Real.sqrt_sq_eq_abs, abs_of_nonneg (le_of_lt hC_P_pos)]
       simpa [hsimp] using hsqrt
     have hmod_tri :
         Real.sqrt (explicitModulusDistanceSq P (Qn n)) ≤ Real.sqrt M + δ n := by

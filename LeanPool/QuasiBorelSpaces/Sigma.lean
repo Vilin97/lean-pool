@@ -358,9 +358,7 @@ lemma isHom_elim'
     {f : ∀ i, P i → B} (hf : ∀ i, IsHom (f i))
     {g : A → (i : I) × P i} (hg : IsHom g)
     : IsHom (fun x ↦ f (g x).1 (g x).2) := by
-  apply isHom_comp' (f := fun x : Sigma P ↦ (f x.1 x.2 : B)) (g := g)
-  · exact isHom_elim hf
-  · exact hg
+  exact isHom_comp' (f := fun x : Sigma P ↦ (f x.1 x.2 : B)) (g := g) (isHom_elim hf) hg
 
 @[fun_prop, simp]
 lemma isHom_fst [QuasiBorelSpace I] : IsHom (Sigma.fst : Sigma P → I) := by

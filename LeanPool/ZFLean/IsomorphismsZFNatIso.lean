@@ -263,8 +263,7 @@ theorem isIso_delete_singleton {k : ZFNat} {ℓ : ZFSet} (ℓ_mem_m : ℓ ∈ (�
 
 /-- Imported ZFLean declaration. -/
 theorem iso_eq_iff_proof {n m : ZFNat} : ↑n ≅ᶻ ↑m ↔ n = m where
-  mp := by classical
-    intro iso
+  mp iso := by classical
     induction n generalizing m with
     | zero =>
       obtain ⟨bij, isfunc, isbij⟩ := iso

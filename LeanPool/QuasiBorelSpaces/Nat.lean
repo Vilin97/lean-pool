@@ -28,10 +28,9 @@ lemma isHom_rec
     {g : A → ℕ → B → B} (hg : IsHom fun (x, y, z) ↦ g x y z)
     {h : A → ℕ} (hh : IsHom h)
     : IsHom (fun x ↦ (Nat.rec (f x) (g x) (h x) : B)) := by
-  apply isHom_cases (ix := h) (f := fun n x ↦ (Nat.rec (f x) (g x) n : B))
-  · exact hh
-  · intro n
-    induction n with
+  apply isHom_cases (ix := h) (f := fun n x ↦ (Nat.rec (f x) (g x) n : B)) hh
+  intro n
+  induction n with
     | zero =>
       simp only [Nat.rec_zero]
       fun_prop

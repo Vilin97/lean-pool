@@ -107,9 +107,7 @@ def extensionsEquiv (hx : Fixing (x.val.length + 1) f := by as_aux_lemma => synt
       (cast (by rw [hlen])
         (extensions.map (pointedResIso f x hx).hom (extensionsRes (mkPointed x) a)))) =
     (f a.valT').val
-  rw [extensionsRes_symm_val']
-  rw [cast_val' hlen]
-  rw [extensions_map_val']
+  rw [extensionsRes_symm_val', cast_val' hlen, extensions_map_val']
   change (f (res.val' (extensions.valT' (extensionsRes (mkPointed x) a)))).val =
     (f a.valT').val
   rw [extensionsRes_res_valT']
@@ -141,8 +139,7 @@ def extensionsEquiv' (hy : Fixing (y.val.length + 1) f := by as_aux_lemma => syn
 @[simp] lemma extensionsEquiv'_symm_val'
   (hy : Fixing (y.val.length + 1) f) (a : ExtensionsAt (pInv f y)) :
   ((extensionsEquiv' f y hy).symm a).valT' = f a.valT' := by
-  have hy' : Fixing ((pInv f y).val.length + 1) f := by
-    simpa [h_length_pInv] using hy
+  have hy' : Fixing ((pInv f y).val.length + 1) f := by simpa [h_length_pInv] using hy
   have hnode : f (pInv f y) = y := cancel_pInv_right f y (hy.mon (by simp))
   change (cast (congrArg ExtensionsAt hnode) (extensionsEquiv f (pInv f y) hy' a)).valT' =
     f a.valT'

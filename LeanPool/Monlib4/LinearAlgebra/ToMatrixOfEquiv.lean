@@ -145,12 +145,10 @@ theorem LinearEquiv.one_apply {R E : Type _} [CommSemiring R] [AddCommMonoid E]
 
 theorem OrthonormalBasis.std_toMatrix {n : Type _} [Fintype n] [DecidableEq n] :
     (((EuclideanSpace.orthonormalBasis n 𝕜).toMatrix).symm).toLinearEquiv
-      = Matrix.toEuclideanLin :=
-  by
+      = Matrix.toEuclideanLin := by
   change ((EuclideanSpace.orthonormalBasis n 𝕜).toMatrix.toAlgEquiv.symm).toLinearEquiv
     = Matrix.toEuclideanLin
-  rw [← orthonormalBasis_toMatrix_eq_basis_toMatrix]
-  rw [Matrix.toEuclideanLin_eq_toLin_orthonormal]
+  rw [← orthonormalBasis_toMatrix_eq_basis_toMatrix, Matrix.toEuclideanLin_eq_toLin_orthonormal]
   rfl
 
 namespace LinearEquiv
@@ -177,8 +175,7 @@ open Matrix Module.End
 
 theorem Matrix.stdBasis_repr_eq_reshape {R I J : Type _} [Fintype I] [Finite J]
     [CommSemiring R] :
-    (Matrix.stdBasis R I J).equivFun = Matrix.reshape :=
-  by
+    (Matrix.stdBasis R I J).equivFun = Matrix.reshape := by
   classical
   ext x ij
   rw [Module.Basis.equivFun_apply]

@@ -34,20 +34,14 @@ lemma bijective_of_dim_eq_of_isCentralSimple
     (f : A →ₐ[K] B) (h : Module.finrank K A = Module.finrank K B) :
     Function.Bijective f := by
   obtain hA|hA := subsingleton_or_nontrivial A
-  · have eq1 : Module.finrank K A = 0 := by
-      rw [finrank_zero_iff_forall_zero]
-      intro x
-      apply Subsingleton.elim
+  · have eq1 : Module.finrank K A = 0 :=
+      finrank_zero_iff_forall_zero.2 fun x ↦ Subsingleton.elim _ _
     rw [eq1] at h
-    replace h : Subsingleton B := by
-      constructor
-      symm at h
-      rw [finrank_zero_iff_forall_zero] at h
-      intro a b
-      rw [h a, h b]
+    replace h : Subsingleton B :=
+      ⟨fun a b ↦ by rw [finrank_zero_iff_forall_zero.1 h.symm a,
+        finrank_zero_iff_forall_zero.1 h.symm b]⟩
     rw [Function.bijective_iff_existsUnique]
-    intro b
-    refine ⟨0, Subsingleton.elim _ _, fun _ _ => Subsingleton.elim _ _⟩
+    exact fun b ↦ ⟨0, Subsingleton.elim _ _, fun _ _ => Subsingleton.elim _ _⟩
   · have := IsSimpleRing.iff_injective_ringHom_or_subsingleton_codomain A |>.1 csa_source
       f.toRingHom
     rcases this with (H|H)
@@ -147,13 +141,13 @@ instance fin_end : FiniteDimensional K (Module.End K A) :=
 omit [Algebra.IsCentral K A] hA in
 lemma dim_eq :
     Module.finrank K (A ⊗[K] Aᵐᵒᵖ) = Module.finrank K (Module.End K A) := by
-  rw [Module.finrank_tensorProduct]
-  rw [show Module.finrank K (Module.End K A) =
-    Module.finrank K (Matrix (Fin <| Module.finrank K A) (Fin <| Module.finrank K A) K) from
-    (algEquivMatrix <| Module.finBasis _ _).toLinearEquiv.finrank_eq]
-  rw [Module.finrank_matrix, Fintype.card_fin]
-  rw [show Module.finrank K Aᵐᵒᵖ = Module.finrank K A from
-    (MulOpposite.opLinearEquiv K : A ≃ₗ[K] Aᵐᵒᵖ).symm.finrank_eq]
+  rw [Module.finrank_tensorProduct,
+    show Module.finrank K (Module.End K A) =
+      Module.finrank K (Matrix (Fin <| Module.finrank K A) (Fin <| Module.finrank K A) K) from
+      (algEquivMatrix <| Module.finBasis _ _).toLinearEquiv.finrank_eq,
+    Module.finrank_matrix, Fintype.card_fin,
+    show Module.finrank K Aᵐᵒᵖ = Module.finrank K A from
+      (MulOpposite.opLinearEquiv K : A ≃ₗ[K] Aᵐᵒᵖ).symm.finrank_eq]
   simp only [Module.finrank_self, mul_one]
 
 /-- The central simple algebra isomorphism `A ⊗ Aᵐᵒᵖ ≃ End_K(A)`. -/
@@ -435,24 +429,14 @@ theorem mul_assoc' (A B C : BrauerGroup (K := K)) : A * B * C = A * (B * C) := b
 lemma mul_inv (A : CSA.{u, u} K) : IsBrauerEquivalent (mul A (inv (K := K) A)) oneIn' := by
   unfold mul inv oneIn'
   let n := Module.finrank K A
-  have hn : NeZero n := by
-    constructor
-    by_contra! hn
-    simp only [n] at hn
-    have := Module.finrank_pos_iff (R := K) (M := A) |>.2 inferInstance
-    omega
+  have hn : NeZero n := ⟨Module.finrank_pos.ne'⟩
   have := tensorSelfOp K A
   exact ⟨1, n, one_ne_zero, hn.1, ⟨dimOneIso _|>.trans this⟩⟩
 
 lemma inv_mul (A : CSA.{u, u} K) : IsBrauerEquivalent (mul (inv (K := K) A) A) oneIn' := by
   unfold mul inv oneIn'
   let n := Module.finrank K A
-  have hn : NeZero n := by
-    constructor
-    by_contra! hn
-    simp only [n] at hn
-    have := Module.finrank_pos_iff (R := K) (M := A) |>.2 inferInstance
-    omega
+  have hn : NeZero n := ⟨Module.finrank_pos.ne'⟩
   have := tensorOpSelf K A
   exact ⟨1, n, one_ne_zero, hn.1, ⟨dimOneIso _|>.trans this⟩⟩
 

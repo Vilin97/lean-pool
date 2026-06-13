@@ -26,12 +26,8 @@ lemma IsSimpleRing.left_of_tensor (B C : Type u)
       rw [← subsingleton_iff_zero_eq_one, show (0 : B ⊗[K] C) = 0 ⊗ₜ 0 by simp,
         show (1 : B ⊗[K] C) = 1 ⊗ₜ 1 by rfl, show (1 : B) = 0 from Subsingleton.elim _ _]
       simp only [tmul_zero, zero_tmul]
-    have : Subsingleton (TwoSidedIdeal (B ⊗[K] C)) := by
-      constructor
-      intro I J
-      refine SetLike.ext fun x ↦ ?_
-      rw [show x = 0 from Subsingleton.elim _ _]
-      refine ⟨fun _ => TwoSidedIdeal.zero_mem _, fun _ ↦ TwoSidedIdeal.zero_mem _⟩
+    have : Subsingleton (TwoSidedIdeal (B ⊗[K] C)) :=
+      ⟨fun I J ↦ SetLike.ext fun x ↦ by simp [Subsingleton.elim x 0]⟩
     have H := hbc.1.1
     rw [← not_subsingleton_iff_nontrivial] at H
     contradiction
@@ -40,12 +36,8 @@ lemma IsSimpleRing.left_of_tensor (B C : Type u)
       rw [← subsingleton_iff_zero_eq_one, show (0 : B ⊗[K] C) = 0 ⊗ₜ 0 by simp,
         show (1 : B ⊗[K] C) = 1 ⊗ₜ 1 by rfl, show (1 : C) = 0 from Subsingleton.elim _ _]
       simp only [tmul_zero]
-    have : Subsingleton (TwoSidedIdeal (B ⊗[K] C)) := by
-      constructor
-      intro I J
-      refine SetLike.ext fun x ↦ ?_
-      rw [show x = 0 from Subsingleton.elim _ _]
-      refine ⟨fun _ => TwoSidedIdeal.zero_mem _, fun _ ↦ TwoSidedIdeal.zero_mem _⟩
+    have : Subsingleton (TwoSidedIdeal (B ⊗[K] C)) :=
+      ⟨fun I J ↦ SetLike.ext fun x ↦ by simp [Subsingleton.elim x 0]⟩
     have H := hbc.1.1
     rw [← not_subsingleton_iff_nontrivial] at H
     contradiction

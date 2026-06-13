@@ -55,8 +55,7 @@ noncomputable def spatialDot (k_spatial x_spatial : SpatialCoords) : ℝ :=
   ∑ i, k_spatial i * x_spatial i
 
 /-- Inner product on ℝ equals multiplication. -/
-lemma real_inner_eq_mul (x y : ℝ) : @inner ℝ ℝ _ x y = x * y := by
-  simp [inner, mul_comm]
+lemma real_inner_eq_mul (x y : ℝ) : @inner ℝ ℝ _ x y = x * y := by simp [inner, mul_comm]
 
 /-- spatialDot equals the real inner product on SpatialCoords. -/
 lemma spatialDot_eq_inner (k_spatial x_spatial : SpatialCoords) :
@@ -185,8 +184,7 @@ theorem heatKernel_eq_gaussianFT (s : ℝ) (hs : 0 < s) (z : SpaceTime) :
     (-Complex.I) z
   rw [h_main]
   -- Step 3: Simplify (-I)² = -1
-  have h_I_sq : (-Complex.I) ^ 2 = -1 := by
-    rw [neg_sq, Complex.I_sq]
+  have h_I_sq : (-Complex.I) ^ 2 = -1 := by rw [neg_sq, Complex.I_sq]
   simp only [h_I_sq, neg_one_mul]
   -- Step 4: Verify the coefficient equality
   -- Need: (4πs)^{-d/2} exp(-‖z‖²/(4s)) = (1/(2π)^d) * (π/s)^{d/2} * exp(-‖z‖²/(4s))
@@ -507,8 +505,7 @@ lemma schwinger_bound_integrable_xy (s : ℝ) (hs : 0 < s)
         funext y
         have hy : 0 ≤ G (x, y) :=
           schwinger_bound_integrand_nonneg s hs f Cf hCf_nonneg m x y
-        have : ‖G (x, y)‖ = G (x, y) := by
-          simpa using (Real.norm_of_nonneg hy)
+        have : ‖G (x, y)‖ = G (x, y) := by simpa using (Real.norm_of_nonneg hy)
         simpa [G, this, mul_assoc]
       calc
         ∫ y : SpaceTime, ‖G (x, y)‖
@@ -646,8 +643,7 @@ theorem schwinger_bound_integrable_fubini (m : ℝ) [Fact (0 < m)] (f : TestFunc
       have h_nonneg' : 0 ≤ F (s, p.1, p.2) := by
         simpa [F] using
           schwinger_bound_integrand_nonneg s hs' f Cf hCf_nonneg m p.1 p.2
-      have : ‖F (s, p.1, p.2)‖ = F (s, p.1, p.2) := by
-        simpa using (Real.norm_of_nonneg h_nonneg')
+      have : ‖F (s, p.1, p.2)‖ = F (s, p.1, p.2) := by simpa using (Real.norm_of_nonneg h_nonneg')
       simpa [F, this, mul_assoc]
     have h_eq :
         ∫ p : SpaceTime × SpaceTime, ‖F (s, p.1, p.2)‖ =
@@ -957,8 +953,7 @@ theorem integrable_dominate_G (C : ℝ) (m : ℝ) [Fact (0 < m)] :
             -- (π/s)^(3/2) = π^(3/2) / s^(3/2) for s > 0
             -- Note: the exponent in Gaussian formula comes as ↑3/2 = (3:ℕ)/2 : ℝ
             have h_exp_eq : (↑3 : ℝ) / 2 = (3/2 : ℝ) := by norm_num
-            rw [h_exp_eq]
-            rw [Real.div_rpow (le_of_lt Real.pi_pos) (le_of_lt hs_pos)]
+            rw [h_exp_eq, Real.div_rpow (le_of_lt Real.pi_pos) (le_of_lt hs_pos)]
             -- s^(3/2) * exp(-sm²) * (π^(3/2) / s^(3/2)) = π^(3/2) * exp(-sm²)
             have h_s_ne' : s ^ (3/2 : ℝ) ≠ 0 := ne_of_gt h_s_pos'
             field_simp [h_s_ne']
@@ -1135,8 +1130,7 @@ lemma integral_u_cubed_gaussian (s : ℝ) (hs : 0 < s) :
   -- Now the LHS matches the formula in h
   calc ∫ u in Set.Ioi 0, u ^ (3:ℝ) * Real.exp (-(1 / (4 * s)) * u ^ (2:ℝ))
       = (1 / (4 * s)) ^ (-(3 + 1) / 2) * (1 / 2) * Real.Gamma ((3 + 1) / 2) := h
-    _ = (1 / (4 * s)) ^ ((-2) : ℝ) * (1 / 2) * Real.Gamma 2 := by
-        congr 2 <;> norm_num
+    _ = (1 / (4 * s)) ^ ((-2) : ℝ) * (1 / 2) * Real.Gamma 2 := by congr 2 <;> norm_num
     _ = (1 / (4 * s)) ^ ((-2) : ℝ) * (1 / 2) * 1 := by rw [hG2]
     _ = (4 * s) ^ (2 : ℝ) * (1 / 2) := by
         rw [Real.rpow_neg (le_of_lt hb), Real.rpow_two, Real.rpow_two]
@@ -1259,8 +1253,7 @@ lemma triangular_fubini_quadrant {f : ℝ → ℝ → ℝ}
           Function.comp_apply]
         split_ifs <;> simp_all
       -- Apply transfer
-      rw [← hφ_mp.integrable_comp_emb φ_homeo.measurableEmbedding]
-      rw [h_eq]
+      rw [← hφ_mp.integrable_comp_emb φ_homeo.measurableEmbedding, h_eq]
       exact hf_int
     -- 2. LHS = ∫∫ g
     have h_lhs : ∫ x in Set.Ioi 0, ∫ u in Set.Ioi x, f x u = ∫ x, ∫ u, g (x, u) := by
@@ -1342,8 +1335,7 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
     rw [Real.sqrt_div' π (le_of_lt hs)]
     -- s^{3/2} = s · √s
     have h32 : s^(3/2 : ℝ) = s * Real.sqrt s := by
-      rw [show (3/2 : ℝ) = 1 + 1/2 by norm_num]
-      rw [Real.rpow_add hs']
+      rw [show (3/2 : ℝ) = 1 + 1/2 by norm_num, Real.rpow_add hs']
       simp only [Real.rpow_one]
       rw [Real.sqrt_eq_rpow]
     rw [h32]
@@ -1382,8 +1374,7 @@ lemma heat_kernel_moment_integral (s : ℝ) (hs : 0 < s) :
     · have hx : ∫ x in (0 : ℝ)..u, x = u^2 / 2 := by
         rw [show (fun x : ℝ => x) = (fun x => x^1) by ext; simp, integral_pow]
         simp; ring
-      have hx2 : ∫ x in (0 : ℝ)..u, x^2 = u^3 / 3 := by
-        rw [integral_pow]; simp; ring
+      have hx2 : ∫ x in (0 : ℝ)..u, x^2 = u^3 / 3 := by rw [integral_pow]; simp; ring
       rw [intervalIntegral.integral_const_mul, hx, hx2]
       ring
     · exact (continuous_const.mul continuous_id).intervalIntegrable 0 u
@@ -1917,8 +1908,7 @@ private lemma heat_kernel_spatial_integral_bound (s : ℝ) (hs : 0 < s)
           (Real.exp_nonneg _)))]
         have h_eq : Real.sqrt (π / s) * Real.exp (-(t₁ + t₂)^2 / (4 * s)) * (C_sp * t₁) *
           (C_sp * t₂)
-            = C_sp^2 * t₁ * Real.sqrt (π / s) * (t₂ * Real.exp (-(t₁ + t₂)^2 / (4 * s))) :=
-              by ring
+            = C_sp^2 * t₁ * Real.sqrt (π / s) * (t₂ * Real.exp (-(t₁ + t₂)^2 / (4 * s))) := by ring
         exact le_of_eq h_eq
     · exact measurableSet_Ioi
     · intro t₂ ht₂; exact h_bound t₁ ht₁ t₂ ht₂
@@ -2272,8 +2262,7 @@ lemma schwartz_iterated_integral_integrable (f : TestFunctionℂ)
           have hsq : 0 ≤ (p.1 0 + p.2 0)^2 := sq_nonneg _
           have hden : 0 < (4 * s) := by nlinarith [hs]
           exact div_nonneg hsq (le_of_lt hden)
-        have hneg' : -(p.1 0 + p.2 0)^2 / (4 * s) = -((p.1 0 + p.2 0)^2 / (4 * s)) := by
-          ring
+        have hneg' : -(p.1 0 + p.2 0)^2 / (4 * s) = -((p.1 0 + p.2 0)^2 / (4 * s)) := by ring
         have hneg : -(p.1 0 + p.2 0)^2 / (4 * s) ≤ 0 := by
           simpa [hneg'] using (neg_nonpos.mpr h_nonneg)
         simpa using (Real.exp_le_exp.mpr hneg)
@@ -2827,8 +2816,7 @@ lemma s_xy_swap_bound_integrable (f : TestFunctionℂ) (m : ℝ) [Fact (0 < m)] 
       rw [Real.sqrt_div Real.pi_nonneg, div_eq_mul_inv]
       congr 1
       -- (√s)⁻¹ = s^{-1/2}
-      rw [Real.sqrt_eq_rpow]
-      rw [← Real.rpow_neg (le_of_lt hs)]
+      rw [Real.sqrt_eq_rpow, ← Real.rpow_neg (le_of_lt hs)]
       congr 1
       norm_num
     rw [h_sqrt]

@@ -51,8 +51,7 @@ rfl
 theorem QuantumGraph.Grad_eq (gns : k B = 0) (A : B →ₗ[ℂ] B) :
   QuantumGraph.Grad A
     = ((PhiMap (LinearMap.real A)).1 ∘ₗ (rT _ (η _)) ∘ₗ (τ _).symm.toLinearMap)
-      - (PhiMap A).1 ∘ₗ (lT _ (η _)) ∘ₗ (τ' _).symm.toLinearMap :=
-by
+      - (PhiMap A).1 ∘ₗ (lT _ (η _)) ∘ₗ (τ' _).symm.toLinearMap := by
   rw [← grad_phiMap_apply]
   revert A
   rw [← AddMonoidHom.ext_iff]
@@ -84,8 +83,7 @@ by
     mul_smul_comm, mul_comm]
 
 theorem QuantumGraph.Grad_apply' (gns : k B = 0) (A : B →ₗ[ℂ] B) (x : B) :
-  QuantumGraph.Grad A x = (PhiMap (LinearMap.real A)).1 (1 ⊗ₜ x) - (PhiMap A).1 (x ⊗ₜ 1) :=
-by
+  QuantumGraph.Grad A x = (PhiMap (LinearMap.real A)).1 (1 ⊗ₜ x) - (PhiMap A).1 (x ⊗ₜ 1) := by
   simp_rw [Grad_eq gns, LinearMap.sub_apply, LinearMap.comp_apply,
     LinearEquiv.coe_coe,
     TensorProduct.lid_symm_apply, TensorProduct.rid_symm_apply,
@@ -94,8 +92,7 @@ by
 
 theorem QuantumGraph.Real.range_grad_le_range_phiMap
   (gns : k B = 0) {A : B →ₗ[ℂ] B} (hA : QuantumGraph.Real _ A) :
-    LinearMap.range (QuantumGraph.Grad A) ≤ LinearMap.range (PhiMap A).1 :=
-by
+    LinearMap.range (QuantumGraph.Grad A) ≤ LinearMap.range (PhiMap A).1 := by
   have : IsIdempotentElem (PhiMap A).1 :=
   by
     rw [IsIdempotentElem, PhiMap_apply, ← schurMul_Upsilon_toBimodule, hA.1]
@@ -106,8 +103,7 @@ by
 
 theorem Upsilon_symm_grad_apply_apply (gns : k B = 0) (A : B →ₗ[ℂ] B) (x : B) :
   Upsilon.symm (QuantumGraph.Grad A x)
-    = rmul x ∘ₗ LinearMap.real A - A ∘ₗ rmul x :=
-by
+    = rmul x ∘ₗ LinearMap.real A - A ∘ₗ rmul x := by
   suffices ∀ a b : B, Upsilon.symm (QuantumGraph.Grad (rankOne ℂ a b) x)
     = rmul x ∘ₗ LinearMap.real (rankOne ℂ a b) - rankOne ℂ a b ∘ₗ rmul x by
     obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne A
@@ -132,8 +128,7 @@ theorem QuantumGraph.grad_adjoint_comp_grad (gns : k B = 0) (A : B →ₗ[ℂ] B
     = outDegree (A •ₛ LinearMap.real A)
       - A •ₛ A
       - LinearMap.adjoint (A •ₛ A)
-      + inDegree (LinearMap.real A •ₛ A) :=
-by
+      + inDegree (LinearMap.real A •ₛ A) := by
   rw [Grad_apply, LinearMap.adjoint_comp, Coalgebra.comul_eq_mul_adjoint,
     map_sub, LinearMap.rTensor_adjoint, LinearMap.lTensor_adjoint]
   simp_rw [LinearMap.adjoint_adjoint, ← Coalgebra.comul_eq_mul_adjoint]
@@ -162,8 +157,7 @@ map_sub _ _ _
 
 theorem QuantumGraph.apply_mul_of_isReal
   (gns : k B = 0) {A : B →ₗ[ℂ] B} (hA : LinearMap.IsReal A) (x y : B) :
-    Grad A (x * y) = Grad A x •ᵣ y + x •ₗ Grad A y :=
-by
+    Grad A (x * y) = Grad A x •ᵣ y + x •ₗ Grad A y := by
   simp only [Grad_apply' gns, Bimodule.lsmul_sub,
     PhiMap_apply, TensorProduct.toIsBimoduleMap_apply_coe, rmulMapLmul_apply_apply,
     Bimodule.one_lsmul, Bimodule.rsmul_one, Bimodule.sub_rsmul,

@@ -146,8 +146,7 @@ private lemma integral_addCircle_volume_eq_smul_haar
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f : AddCircle T → E) :
     ∫ t : AddCircle T, f t = T • ∫ t : AddCircle T, f t ∂AddCircle.haarAddCircle := by
-  rw [AddCircle.volume_eq_smul_haarAddCircle]
-  rw [integral_smul_measure]
+  rw [AddCircle.volume_eq_smul_haarAddCircle, integral_smul_measure]
   simp [ENNReal.toReal_ofReal T_pos.le]
 
 /-- Integral of periodic function over `Ioo(-π, π)` equals integral over `AddCircle T`. -/
@@ -702,8 +701,7 @@ private lemma radial_gaussian_integral (n : ℕ) :
     · congr 1; congr 1
       rw [← rpow_natCast r 2]
       norm_num
-  rw [setIntegral_congr_fun measurableSet_Ioi pow_eq]
-  rw [integral_rpow_mul_exp_neg_rpow hp hq]
+  rw [setIntegral_congr_fun measurableSet_Ioi pow_eq, integral_rpow_mul_exp_neg_rpow hp hq]
   -- Now we have: 2 * (1/2 * Γ((2n+2)/2)) = n!
   -- (2n+2)/2 = n+1, and Γ(n+1) = n!
   have h1 : (2 * (n : ℝ) + 1 + 1) / 2 = ↑n + 1 := by ring

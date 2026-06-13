@@ -54,8 +54,7 @@ lemma subtree_fair (x : S.subtree) {a : A} (hp : IsPosition x.val p.swap) :
   · synthIsPosition
   · exact h' hpr hpo
 lemma subtree_compatible (x : S.subtree) (hp : IsPosition x.val p) {a}
-  (hx : x.val ++ [a] ∈ S.subtree) : ⟨a, hx.1⟩ ∈ S (S.subtreeIncl x) hp :=
-  hx.2 List.prefix_rfl _
+  (hx : x.val ++ [a] ∈ S.subtree) : ⟨a, hx.1⟩ ∈ S (S.subtreeIncl x) hp := hx.2 List.prefix_rfl _
 lemma subtree_compatible_iff (x : S.subtree) (hp : IsPosition x.val p) {a} :
   x.val ++ [a] ∈ S.subtree ↔ ∃ hx : x.val ++ [a] ∈ T, ⟨a, hx⟩ ∈ S (S.subtreeIncl x) hp := by
   refine ⟨fun h ↦ ⟨h.1, (subtree_compatible S x hp h)⟩, fun h ↦ ⟨h.1, fun {y b} hpr hpo ↦ ?_⟩⟩
@@ -165,8 +164,7 @@ lemma PreStrategy.eval_mem_congr {U : tree A} (S : PreStrategy U p) {x x' : U}
 
 /-- regard a Strategy as PreStrategy -/
 abbrev Strategy.pre (S : Strategy T p) : PreStrategy T p := fun x hx ↦ {S x hx}
-@[simp] lemma Strategy.isQuasi (S : Strategy T p) : S.pre.IsQuasi := by
-  simp [PreStrategy.IsQuasi]
+@[simp] lemma Strategy.isQuasi (S : Strategy T p) : S.pre.IsQuasi := by simp [PreStrategy.IsQuasi]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 abbrev Strategy.quasi (S : Strategy T p) : QuasiStrategy T p := ⟨S.pre, S.isQuasi⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

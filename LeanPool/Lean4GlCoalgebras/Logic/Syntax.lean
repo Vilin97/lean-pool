@@ -136,9 +136,7 @@ lemma neg_eq {φ ψ : Formula} : (~φ) = (~ψ) → φ = ψ := by
 /-- Negation is involutive. -/
 @[simp]
 lemma neg_neg_eq (φ : Formula) : (~~φ) = φ := by
-  induction φ <;> simp_all [Formula.neg]
-  · rfl
-  · rfl
+  induction φ <;> simp_all [Formula.neg] <;> rfl
 
 /-- Length of a BML Formula. -/
 def length : Formula → Nat
@@ -211,9 +209,7 @@ def FL : Formula → Sequent
 
 /-- Fischer-Ladner closure is reflexive. -/
 lemma FL_refl {φ : Formula} : φ ∈ FL φ := by
-  cases φ <;> simp [FL]
-  · rfl
-  · rfl
+  cases φ <;> simp [FL] <;> rfl
 
 /-- Fischer-Ladner closure is monotone. -/
 lemma FL_mon {φ ψ : Formula} (ψ_sub_φ : ψ ∈ FL φ) : FL ψ ⊆ FL φ := by
@@ -392,11 +388,7 @@ lemma in_FL_of_in_FL_SplitFormula_right {φ : Formula} {ψ : SplitFormula}
 
 /-- Fischer-Ladner Closure is reflexive. -/
 lemma FL_refl {φ : SplitFormula} : φ ∈ FL φ := by
-  rcases φ with φ | φ <;> cases φ <;> simp [FL]
-  · rfl
-  · rfl
-  · rfl
-  · rfl
+  rcases φ with φ | φ <;> cases φ <;> simp [FL] <;> rfl
 
 /-- Fischer-Ladner Closure is monotone. -/
 lemma FL_mon {φ ψ : SplitFormula} (ψ_sub_φ : ψ ∈ FL φ) : FL ψ ⊆ FL φ := by
@@ -534,9 +526,7 @@ lemma single_iff (n : Nat) (C D E : Formula) :
 
 @[simp]
 lemma single_identity (n : ℕ) (φ : Formula) : (single n (at n) φ) = φ := by
-  induction φ <;> simp_all [single]
-  · rfl
-  · rfl
+  induction φ <;> simp_all [single] <;> rfl
 
 /-- Simultaneous substitution for `p` meeting criteria `c`. -/
 def partial_ {c : Nat → Prop} [DecidablePred c] (σ : Subtype c → Formula) : Formula → Formula
@@ -572,8 +562,7 @@ decreasing_by
   induction φ <;> simp_all [Formula.vocab]
 
 lemma in_single_voc (m n : Nat) (φ ψ : Formula) :
-  m ∉ φ.vocab → (m ≠ n → m ∉ ψ.vocab) → n ∉ φ.vocab → m ∉ (single n φ ψ).vocab
-  := by
+  m ∉ φ.vocab → (m ≠ n → m ∉ ψ.vocab) → n ∉ φ.vocab → m ∉ (single n φ ψ).vocab := by
     intro mp
     induction ψ <;>
       simp_all only [single, Formula.vocab, Finset.notMem_empty, Finset.mem_singleton,

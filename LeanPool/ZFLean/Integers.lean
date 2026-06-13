@@ -168,8 +168,7 @@ theorem sub_zero (a : ZFInt) : a - 0 = a := by rw [sub_eq_add_neg, neg_zero, add
 theorem zero_sub (a : ZFInt) : 0 - a = -a := by rw [sub_eq_add_neg, zero_add]
 theorem sub_eq_zero_of_eq {a b : ZFInt} (h : a = b) : a - b = 0 := by rw [h, sub_self]
 theorem eq_of_sub_eq_zero {a b : ZFInt} (h : a - b = 0) : a = b := by
-  have : 0 + b = b := by rw [zero_add]
-  have : a - b + b = b := by rwa [h]
+  have : a - b + b = b := by rw [h, zero_add]
   rwa [sub_eq_add_neg, neg_add_cancel_right] at this
 theorem sub_eq_zero {a b : ZFInt} : a - b = 0 ↔ a = b := ⟨eq_of_sub_eq_zero, sub_eq_zero_of_eq⟩
 theorem sub_sub (a b c : ZFInt) : a - b - c = a - (b + c) := by
@@ -354,15 +353,9 @@ theorem lt_irrefl {a : ZFInt} : ¬ a < a := by
 theorem lt_zero_iff {n m : ZFNat} : m < n ↔ 0 < ZFInt.mk (n,m) := by
   constructor
   · intro h
-    induction n using ZFNat.induction generalizing m with
-    | zero =>
-      rw [ZFInt.zero_eq]
-      change 0 + m < 0 + 0
-      exact ZFNat.add_lt_add_left h 0
-    | succ n ih =>
-      rw [ZFInt.zero_eq]
-      change 0 + m < 0 + n.succ
-      exact ZFNat.add_lt_add_left h 0
+    rw [ZFInt.zero_eq]
+    change 0 + m < 0 + n
+    exact ZFNat.add_lt_add_left h 0
   · intro h
     rw [ZFInt.zero_eq] at h
     change 0 + m < 0 + n at h
@@ -688,14 +681,10 @@ theorem mul_pos_neg_neg (a b : ZFInt) (ha : 0 < a) (hb : b < 0) : a * b < 0 := b
   exact mul_pos_pos_pos _ _ ((neg_flip_lt b).mp hb) ha
 theorem mul_nonneg_nonneg_nonneg (a b : ZFInt) (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
   rcases ha with ha | rfl <;> rcases hb with hb | rfl
-  · left
-    exact mul_pos_pos_pos a b ha hb
-  · right
-    rw [mul_zero]
-  · right
-    rw [zero_mul]
-  · right
-    rw [zero_mul]
+  · exact Or.inl <| mul_pos_pos_pos a b ha hb
+  · exact Or.inr (mul_zero a).symm
+  · exact Or.inr (zero_mul b).symm
+  · exact Or.inr (zero_mul 0).symm
 theorem mul_nonpos_nonneg_nonpos (a b : ZFInt) (ha : a ≤ 0) (hb : 0 ≤ b) : a * b ≤ 0 := by
   rw [neg_flip_le, neg_mul_eq_neg_mul]
   exact mul_nonneg_nonneg_nonneg _ _ (neg_nonneg.mpr ha) hb
@@ -768,8 +757,7 @@ theorem eq_le_iff {a b : ZFInt} : a = b ↔ a ≤ b ∧ b ≤ a := by
     rcases h₁ with h₁ | rfl <;> rcases h₂ with h₂ | h₂
     · nomatch lt_irrefl <| lt_trans h₁ h₂
     · exact h₂.symm
-    · rfl
-    · rfl
+    all_goals rfl
 theorem mul_eq_zero_iff {a b : ZFInt} : a * b = 0 ↔ a = 0 ∨ b = 0 := by
   constructor
   · intro h

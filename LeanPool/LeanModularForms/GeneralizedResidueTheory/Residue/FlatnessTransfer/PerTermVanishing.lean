@@ -73,8 +73,7 @@ theorem pv_higher_order_term_tendsto_zero
     push_cast [Nat.cast_sub h1m] at hj h_n_a ⊢
     have h_expand : (1 - (m : ℝ)) * (arg uR - arg uL) =
         (1 - (m : ℝ)) * _root_.angleAtCrossing γ t₀ ht₀ +
-        (1 - (m : ℝ)) * ((n_a : ℝ) * (2 * Real.pi)) := by
-      rw [h_n_a]; ring
+        (1 - (m : ℝ)) * ((n_a : ℝ) * (2 * Real.pi)) := by rw [h_n_a]; ring
     linarith
   have h_L3 : Tendsto (fun ε => wR ε ^ (1 - (m : ℤ)) - wL ε ^ (1 - (m : ℤ)))
       (𝓝[>] 0) (𝓝 0) :=
@@ -118,8 +117,7 @@ private theorem circleIntegral_laurent_term
     (∮ z in C(s, r), c / (z - s) ^ (k + 1)) =
       if k = 0 then c * (2 * ↑Real.pi * I) else 0 := by
   have hr_ne : r ≠ 0 := ne_of_gt hr_pos
-  have hs_not : s ∉ Metric.sphere s r := by
-    simp [hr_ne.symm]
+  have hs_not : s ∉ Metric.sphere s r := by simp [hr_ne.symm]
   have h_eq : Set.EqOn (fun z => c / (z - s) ^ (k + 1))
       (fun z => c * (z - s) ^ (-(↑(k + 1) : ℤ))) (Metric.sphere s r) := by
     intro z _
@@ -130,8 +128,7 @@ private theorem circleIntegral_laurent_term
   · simp only [hk, zero_add, Nat.cast_one, if_true]
     congr 1
     have h_eq' : Set.EqOn (fun z => (z - s) ^ (-(1 : ℤ)))
-        (fun z => (z - s)⁻¹) (Metric.sphere s r) := by
-      intro z _; simp only [zpow_neg_one]
+        (fun z => (z - s)⁻¹) (Metric.sphere s r) := by intro z _; simp only [zpow_neg_one]
     rw [circleIntegral.integral_congr hr_pos.le h_eq',
       circleIntegral.integral_sub_center_inv s hr_ne]
   · simp only [hk, if_false]
@@ -146,8 +143,7 @@ private theorem circleIntegral_laurent_sum (s : ℂ) (r : ℝ) (hr_pos : 0 < r)
     (∮ z in C(s, r), ∑ k : Fin N, a k / (z - s) ^ (k.val + 1)) =
       a ⟨0, hN⟩ * (2 * ↑Real.pi * I) := by
   have hr_ne : r ≠ 0 := ne_of_gt hr_pos
-  have hs_not : s ∉ Metric.sphere s r := by
-    simp [hr_ne.symm]
+  have hs_not : s ∉ Metric.sphere s r := by simp [hr_ne.symm]
   have h_ci_term : ∀ k : Fin N,
       CircleIntegrable (fun z => a k / (z - s) ^ (k.val + 1)) s r := by
     intro k
@@ -217,10 +213,8 @@ theorem residueAt_eq_laurent_head_coeff (f : ℂ → ℂ) (s : ℂ) (N : ℕ)
   have h_eq_on : Set.EqOn f
       (fun z => g z + ∑ k : Fin N, a k / (z - s) ^ (k.val + 1)) (Metric.sphere s r) := by
     intro z hz
-    have h_ne : z ≠ s := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
-    have h_in : dist z s < rf := by
-      rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
+    have h_ne : z ≠ s := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+    have h_in : dist z s < rf := by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
     exact hrf_eq ⟨Metric.mem_ball.mpr h_in, Set.mem_compl_singleton_iff.mpr h_ne⟩
   have h_g_cont : ContinuousOn g (Metric.closedBall s r) :=
     hg_ball.continuousOn.mono (Metric.closedBall_subset_ball hr_lt_rg)
@@ -401,8 +395,7 @@ private lemma aesm_diff_single_multi_cpv_zpow
       ({t | ε < ‖γ.toFun t - s‖} \
         {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}) ∩
         Icc γ.a γ.b ⊆
-      {t | ε < ‖γ.toFun t - s‖} ∩ Icc γ.a γ.b :=
-    Set.inter_subset_inter_left _ Set.diff_subset
+      {t | ε < ‖γ.toFun t - s‖} ∩ Icc γ.a γ.b := Set.inter_subset_inter_left _ Set.diff_subset
   have hSG_meas : MeasurableSet (({t | ε < ‖γ.toFun t - s‖} \
       {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}) ∩ Icc γ.a γ.b) := by
     rw [show ({t | ε < ‖γ.toFun t - s‖} \
@@ -447,8 +440,7 @@ private lemma zpow_deriv_norm_bound
     ‖(fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t) * deriv γ.toFun t‖ ≤
       ε⁻¹ ^ m * (|Mγ'| + 1) := by
   calc ‖(fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t) * deriv γ.toFun t‖
-      ≤ ‖(fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t)‖ * ‖deriv γ.toFun t‖ :=
-        norm_mul_le _ _
+      ≤ ‖(fun z => (z - s) ^ (-(m : ℤ))) (γ.toFun t)‖ * ‖deriv γ.toFun t‖ := norm_mul_le _ _
     _ ≤ ε⁻¹ ^ m * (|Mγ'| + 1) := by
         apply mul_le_mul
         · simp only []
@@ -523,8 +515,7 @@ private lemma multi_cutoff_zpow_intervalIntegrable
   refine IntegrableOn.mono_set ?_ Ioc_subset_Icc_self
   refine integrableOn_of_bounded_aeMeasurable (M := ε⁻¹ ^ m * (|Mγ'| + 1)) ?_ ?_
   · let GoodSet := {t : ℝ | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}
-    have hGoodSet_meas : MeasurableSet (GoodSet ∩ Icc γ.a γ.b) :=
-      measurableSet_goodSet_Icc S0 γ ε
+    have hGoodSet_meas : MeasurableSet (GoodSet ∩ Icc γ.a γ.b) := measurableSet_goodSet_Icc S0 γ ε
     have hfγ_cont_good : ContinuousOn (fun t => f_zpow (γ.toFun t))
         (GoodSet ∩ Icc γ.a γ.b) := by
       have hf_cont : ContinuousOn f_zpow {z : ℂ | z - s ≠ 0} :=
@@ -587,16 +578,14 @@ private lemma dct_bound_diff_cpv_zpow
     · rw [if_pos h_single_cut]; simp only [sub_zero]
       obtain ⟨s', hs', hs'_close⟩ := h_multi_cut
       have hs'_ne : s' ≠ s := by intro heq; rw [heq] at hs'_close; linarith
-      have h_sep_s' : δ_sep ≤ ‖s - s'‖ :=
-        hδ_sep_le s' (Finset.mem_erase.mpr ⟨hs'_ne, hs'⟩)
+      have h_sep_s' : δ_sep ≤ ‖s - s'‖ := hδ_sep_le s' (Finset.mem_erase.mpr ⟨hs'_ne, hs'⟩)
       have h_far : ‖γ.toFun t - s‖ ≥ δ_sep / 2 := by
         have h1 : ‖s - s'‖ ≤ ‖γ.toFun t - s‖ + ‖γ.toFun t - s'‖ := by
           calc ‖s - s'‖ = ‖(s - γ.toFun t) + (γ.toFun t - s')‖ := by ring_nf
             _ ≤ ‖s - γ.toFun t‖ + ‖γ.toFun t - s'‖ := norm_add_le _ _
             _ = ‖γ.toFun t - s‖ + ‖γ.toFun t - s'‖ := by rw [norm_sub_rev]
         linarith [hε2]
-      have ht_Icc : t ∈ Icc γ.a γ.b :=
-        Ioc_subset_Icc_self (Set.uIoc_of_le γ.hab.le ▸ ht)
+      have ht_Icc : t ∈ Icc γ.a γ.b := Ioc_subset_Icc_self (Set.uIoc_of_le γ.hab.le ▸ ht)
       calc ‖f_zpow (γ.toFun t) * deriv γ.toFun t‖
           ≤ ‖f_zpow (γ.toFun t)‖ * ‖deriv γ.toFun t‖ := norm_mul_le _ _
         _ ≤ (δ_sep / 2)⁻¹ ^ m * (|Mγ'| + 1) := by
@@ -642,8 +631,7 @@ private lemma ae_limit_diff_cpv_zpow
     push Not; intro s' hs'
     exact lt_of_lt_of_le hε.2 (Finset.inf'_le _ hs')
   rw [if_neg h_no_near]
-  have h_far_s : ‖γ.toFun t - s‖ > ε :=
-    lt_of_lt_of_le hε.2 (Finset.inf'_le _ hs)
+  have h_far_s : ‖γ.toFun t - s‖ > ε := lt_of_lt_of_le hε.2 (Finset.inf'_le _ hs)
   rw [if_pos h_far_s]; ring
 
 /-- Reduce the multi-point CPV goal to showing the single-multi difference

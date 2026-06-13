@@ -34,15 +34,13 @@ private def unionCFG (g₁ g₂ : CFG T) : CFG T :=
     g₂.rules.map (liftCFR₂ g₁.nt))))
 
 private lemma unionCFG_language_eq_unionGrammar_language (g₁ g₂ : CFG T) :
-  (unionCFG g₁ g₂).language = (unionGrammar g₁.toGeneral g₂.toGeneral).language :=
-by
+  (unionCFG g₁ g₂).language = (unionGrammar g₁.toGeneral g₂.toGeneral).language := by
   rw [CFG.language_eq_toGeneral_language]
   simp only [unionCFG, unionGrammar, CFG.toGeneral, List.map_cons, List.map_append, List.map_map]
   rfl
 
 theorem CF_of_CF_u_CF (L₁ : Language T) (L₂ : Language T) :
-  Language.IsCF L₁ ∧ Language.IsCF L₂ → Language.IsCF (L₁ + L₂) :=
-by
+  Language.IsCF L₁ ∧ Language.IsCF L₂ → Language.IsCF (L₁ + L₂) := by
   rintro ⟨⟨g₁, rfl⟩, ⟨g₂, rfl⟩⟩
   rw [g₁.language_eq_toGeneral_language]
   rw [g₂.language_eq_toGeneral_language]

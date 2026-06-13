@@ -58,7 +58,6 @@ abbrev top : Set (MapCyl f) := Set.range (domIncl f)
 lemma domIncl_hom_eq_pushoutInr'_comp :
     (domIncl f).hom = (pushoutInr' _ _).comp (Cyl.i₁ToComplRangeI₀ X) := by
   ext x
-  simp_all only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk]
   rfl
 
 theorem isEmbedding_domIncl : Topology.IsEmbedding (domIncl f) := by

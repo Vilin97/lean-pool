@@ -59,8 +59,7 @@ def pick4 {n : ℕ} (emb : Fin 4 ↪ Fin n) : Samples n → Samples 4 :=
 lemma measurable_pick4 {n : ℕ} (emb : Fin 4 ↪ Fin n) : Measurable (pick4 emb) := by
   classical
   rw [measurable_pi_iff]
-  intro i
-  simpa [pick4] using (measurable_pi_apply (emb i))
+  exact fun i => by simpa [pick4] using (measurable_pi_apply (emb i))
 
 lemma measurePreserving_pick4 {n : ℕ} (emb : Fin 4 ↪ Fin n) :
     MeasurePreserving
@@ -105,7 +104,7 @@ lemma measurePreserving_pick4 {n : ℕ} (emb : Fin 4 ↪ Fin n) :
         (f := eRange.symm))
   have hcomp : (fun S : Samples n => eCongr (Prod.fst (eSplit S))) = pick4 emb := by
     funext S i
-    -- `eSplit` is restriction to subtypes (`Equiv.piEquivPiSubtypeProd`).
+    -- `eSplit` is restriction to subtypes (`Equiv.piEquivPiSubtypeProd`);
     -- `eCongr` is reindexing along `eRange.symm` (`Equiv.piCongrLeft`).
     simp [eSplit, eCongr, eRange, pick4, f, p, MeasurableEquiv.coe_piCongrLeft, Equiv.piCongrLeft]
   have :
@@ -169,17 +168,12 @@ lemma edgeMonochromatic_iff {n : ℕ} (alg : ClassicalAlgorithm) (S : Samples n)
       ]
   constructor
   · intro h
-    have hEq : alg.f srcT = alg.f dstT := by
-      apply hinj
-      simpa [LowerBound.Edge.monochromatic, coloringOfSeeds, colorToBool, srcT, dstT] using h
-    have : (pick4 (n := n) ⟨e.1, e.2⟩ S) ∈ ClassicalAlgorithm.pEvent alg := (hrew).2 hEq
-    simpa [edgeEvent] using this
+    have hEq : alg.f srcT = alg.f dstT := hinj
+      (by simpa [LowerBound.Edge.monochromatic, coloringOfSeeds, colorToBool, srcT, dstT] using h)
+    simpa [edgeEvent] using (hrew).2 hEq
   · intro h
-    have hp : (pick4 (n := n) ⟨e.1, e.2⟩ S) ∈ ClassicalAlgorithm.pEvent alg := by
-      simpa [edgeEvent] using h
-    have hEq : alg.f srcT = alg.f dstT := (hrew).1 hp
-    have : colorToBool (alg.f srcT) = colorToBool (alg.f dstT) := by simp [hEq]
-    simpa [LowerBound.Edge.monochromatic, coloringOfSeeds, colorToBool, srcT, dstT] using this
+    have hEq : alg.f srcT = alg.f dstT := (hrew).1 (by simpa [edgeEvent] using h)
+    simp [LowerBound.Edge.monochromatic, coloringOfSeeds, colorToBool, srcT, dstT, hEq]
 
 /-!
 Instead of directly identifying `p alg` with the expectation of the *fraction*
@@ -194,50 +188,35 @@ lemma monoCount_eq_sum_edgeEvent_indicator {n : ℕ} (alg : ClassicalAlgorithm) 
       (Finset.univ : Finset (LowerBound.Edge n)).sum (fun e =>
         (edgeEvent alg e).indicator (fun _ => (1 : ENNReal)) S) := by
   classical
-  -- `monoCount` is the cardinality of the filtered finset of monochromatic edges.
+  -- `monoCount` is the cardinality of the filtered finset of monochromatic edges, which
+  -- `Finset.natCast_card_filter` expresses as a sum of `0/1`-indicators in `ENNReal`.
   have hcard :
       (LowerBound.monoCount (coloringOfSeeds alg S) : ENNReal) =
         (Finset.univ : Finset (LowerBound.Edge n)).sum (fun e =>
           if LowerBound.Edge.monochromatic (coloringOfSeeds alg S) e then (1 : ENNReal) else
             0) := by
-    classical
-    -- `monoCount` is a cardinality, and `Finset.natCast_card_filter` expresses it as a sum of
-    -- `0/1`-indicators in any `AddCommMonoidWithOne` (here `ENNReal`).
     unfold LowerBound.monoCount LowerBound.monoEdges
-    exact
-      (Finset.natCast_card_filter (R := ENNReal)
-        (s := (Finset.univ : Finset (LowerBound.Edge n)))
-        (p := LowerBound.Edge.monochromatic (coloringOfSeeds alg S)))
-  refine hcard.trans ?_
-  refine Finset.sum_congr rfl ?_
-  intro e _
+    exact Finset.natCast_card_filter (R := ENNReal)
+      (s := (Finset.univ : Finset (LowerBound.Edge n)))
+      (p := LowerBound.Edge.monochromatic (coloringOfSeeds alg S))
+  refine hcard.trans (Finset.sum_congr rfl fun e _ => ?_)
   by_cases hme : LowerBound.Edge.monochromatic (coloringOfSeeds alg S) e
-  · have : S ∈ edgeEvent alg e := (edgeMonochromatic_iff (alg := alg) S e).1 hme
-    simp [hme, Set.indicator_of_mem, this]
-  · have : S ∉ edgeEvent alg e := by
-      intro hs
-      exact hme ((edgeMonochromatic_iff (alg := alg) S e).2 hs)
+  · simp [hme, Set.indicator_of_mem, (edgeMonochromatic_iff (alg := alg) S e).1 hme]
+  · have : S ∉ edgeEvent alg e :=
+      fun hs => hme ((edgeMonochromatic_iff (alg := alg) S e).2 hs)
     simp [hme, Set.indicator_of_notMem, this]
 
-lemma lintegral_monoCount_eq_edgeCount_mul_p {n : ℕ} (hn : 4 ≤ n) (alg : ClassicalAlgorithm) :
+lemma lintegral_monoCount_eq_edgeCount_mul_p {n : ℕ} (_hn : 4 ≤ n) (alg : ClassicalAlgorithm) :
     (∫⁻ S : Samples n, (LowerBound.monoCount (coloringOfSeeds alg S) : ENNReal)) =
       (LowerBound.edgeCount n : ENNReal) * ClassicalAlgorithm.p alg := by
   classical
-  have hedgeCount_pos : 0 < LowerBound.edgeCount n := by
-    -- Provide a single explicit edge (using indices `0,1,2,3`) to show non-emptiness.
-    have h4 : 4 ≤ n := hn
-    refine (Fintype.card_pos_iff.2 ?_)
-    refine ⟨⟨fun i => ⟨i.1, lt_of_lt_of_le i.2 h4⟩, ?_⟩⟩
-    intro i j hij
-    apply Fin.ext
-    exact congrArg (fun x : Fin n => x.1) hij
   have hrewrite :
       (∫⁻ S : Samples n, (LowerBound.monoCount (coloringOfSeeds alg S) : ENNReal)) =
         ∫⁻ S : Samples n,
           (Finset.univ : Finset (LowerBound.Edge n)).sum (fun e =>
             (edgeEvent alg e).indicator (fun _ => (1 : ENNReal)) S) := by
-    refine MeasureTheory.lintegral_congr_ae ?_
-    exact Filter.Eventually.of_forall (fun S => monoCount_eq_sum_edgeEvent_indicator (alg := alg) S)
+    exact MeasureTheory.lintegral_congr_ae (Filter.Eventually.of_forall
+      fun S => monoCount_eq_sum_edgeEvent_indicator (alg := alg) S)
   rw [hrewrite]
   -- Pull out the constant factor.
   have hmeas (e : LowerBound.Edge n) :
@@ -250,39 +229,21 @@ lemma lintegral_monoCount_eq_edgeCount_mul_p {n : ℕ} (hn : 4 ≤ n) (alg : Cla
         (Finset.univ : Finset (LowerBound.Edge n)).sum (fun e =>
           (volume : Measure (Samples n)) (edgeEvent alg e)) := by
       -- Swap `lintegral` and finite sum, and evaluate each term as a set measure.
-      have hswap :=
-        (MeasureTheory.lintegral_finsetSum (μ := (volume : Measure (Samples n)))
-          (s := (Finset.univ : Finset (LowerBound.Edge n)))
-          (f := fun e S => (edgeEvent alg e).indicator (fun _ => (1 : ENNReal)) S)
-          (by intro e _he; exact hmeas e))
-      rw [hswap]
-      refine Finset.sum_congr rfl ?_
-      intro e _
-      exact
-        (MeasureTheory.lintegral_indicator_one
-          (μ := (volume : Measure (Samples n)))
-          (measurableSet_edgeEvent (alg := alg) e))
+      rw [MeasureTheory.lintegral_finsetSum (μ := (volume : Measure (Samples n)))
+        (s := (Finset.univ : Finset (LowerBound.Edge n)))
+        (f := fun e S => (edgeEvent alg e).indicator (fun _ => (1 : ENNReal)) S)
+        (fun e _he => hmeas e)]
+      exact Finset.sum_congr rfl fun e _ =>
+        MeasureTheory.lintegral_indicator_one (μ := (volume : Measure (Samples n)))
+          (measurableSet_edgeEvent (alg := alg) e)
     _ =
         (Finset.univ : Finset (LowerBound.Edge n)).sum (fun _e => ClassicalAlgorithm.p alg) := by
-      refine Finset.sum_congr rfl ?_
-      intro e _
-      rw [edgeEvent_measure_eq_p (alg := alg) (e := e)]
+      exact Finset.sum_congr rfl fun e _ => edgeEvent_measure_eq_p (alg := alg) (e := e)
     _ =
         (LowerBound.edgeCount n : ENNReal) * ClassicalAlgorithm.p alg := by
       -- Sum of a constant over a finite type equals `card * constant`.
-      classical
-      have hsum :
-          (Finset.univ : Finset (LowerBound.Edge n)).sum (fun _e => ClassicalAlgorithm.p alg) =
-            (Finset.univ : Finset (LowerBound.Edge n)).card • ClassicalAlgorithm.p alg := by
-        exact
-          (Finset.sum_const (s := (Finset.univ : Finset (LowerBound.Edge n)))
-            (b := ClassicalAlgorithm.p alg))
-      have hcard :
-          (Finset.univ : Finset (LowerBound.Edge n)).card = LowerBound.edgeCount n := by
-        unfold LowerBound.edgeCount
-        exact Finset.card_univ
-      -- Rewrite `nsmul` as multiplication by a natural and use `card_univ = edgeCount`.
-      rw [hsum, hcard, nsmul_eq_mul]
+      rw [Finset.sum_const, nsmul_eq_mul, Finset.card_univ]
+      rfl
 
 theorem p_ge_23879 (alg : ClassicalAlgorithm) :
     ENNReal.ofReal (23879 / 100000 : ℝ) ≤ ClassicalAlgorithm.p alg := by
@@ -291,15 +252,12 @@ theorem p_ge_23879 (alg : ClassicalAlgorithm) :
     dsimp [n1000000, LowerBound.N1000000.n, LowerBound.N1000000Data.n]
     omega
   have hedgeCount_pos : 0 < LowerBound.edgeCount n1000000 := by
-    refine (Fintype.card_pos_iff.2 ?_)
-    refine ⟨⟨fun i => ⟨i.1, lt_of_lt_of_le i.2 hn⟩, ?_⟩⟩
-    intro i j hij
-    apply Fin.ext
-    exact congrArg (fun x : Fin n1000000 => x.1) hij
-  have hedgeCount_ne_zero : (LowerBound.edgeCount n1000000 : ENNReal) ≠ 0 := by
-    exact (Nat.cast_ne_zero.2 (Nat.ne_of_gt hedgeCount_pos))
-  have hedgeCount_ne_top : (LowerBound.edgeCount n1000000 : ENNReal) ≠ (⊤ : ENNReal) := by
-    exact ENNReal.natCast_ne_top _
+    refine Fintype.card_pos_iff.2 ⟨⟨fun i => ⟨i.1, lt_of_lt_of_le i.2 hn⟩, fun i j hij => ?_⟩⟩
+    exact Fin.ext (congrArg (fun x : Fin n1000000 => x.1) hij)
+  have hedgeCount_ne_zero : (LowerBound.edgeCount n1000000 : ENNReal) ≠ 0 :=
+    Nat.cast_ne_zero.2 (Nat.ne_of_gt hedgeCount_pos)
+  have hedgeCount_ne_top : (LowerBound.edgeCount n1000000 : ENNReal) ≠ (⊤ : ENNReal) :=
+    ENNReal.natCast_ne_top _
   have hedgeCount_pos_q : (0 : ℚ) < (LowerBound.edgeCount n1000000 : ℚ) := by
     exact_mod_cast hedgeCount_pos
   -- Pointwise, apply the certified finite bound to the induced coloring and clear the division.
@@ -310,9 +268,8 @@ theorem p_ge_23879 (alg : ClassicalAlgorithm) :
         ((23879 : ℚ) / 100000) ≤
           LowerBound.monoFraction (coloringOfSeeds (n := n1000000) alg S) :=
       LowerBound.N1000000.monoFraction_ge_23879 (f := coloringOfSeeds (n := n1000000) alg S)
-    have hb' := hb
-    dsimp [LowerBound.monoFraction] at hb'
-    exact (le_div_iff₀ hedgeCount_pos_q).1 hb'
+    dsimp [LowerBound.monoFraction] at hb
+    exact (le_div_iff₀ hedgeCount_pos_q).1 hb
   -- Convert pointwise bound to an `ENNReal` inequality.
   have hpointwiseENN (S : Samples n1000000) :
       ENNReal.ofReal (((23879 : ℝ) / 100000) * (LowerBound.edgeCount n1000000 : ℝ)) ≤
@@ -321,31 +278,17 @@ theorem p_ge_23879 (alg : ClassicalAlgorithm) :
         ((((23879 : ℚ) / 100000) * (LowerBound.edgeCount n1000000 : ℚ) : ℝ)) ≤
           (LowerBound.monoCount (coloringOfSeeds (n := n1000000) alg S) : ℝ) := by
       exact_mod_cast hpointwiseQ S
-    have hENN : ENNReal.ofReal
-          ((((23879 : ℚ) / 100000) * (LowerBound.edgeCount n1000000 : ℚ) : ℝ)) ≤
-        ENNReal.ofReal (LowerBound.monoCount (coloringOfSeeds (n := n1000000) alg S) : ℝ) :=
-      ENNReal.ofReal_le_ofReal hr
-    have hcast :
-        (((((23879 : ℚ) / 100000) * (LowerBound.edgeCount n1000000 : ℚ)) : ℝ)) =
-          ((23879 : ℝ) / 100000) * (LowerBound.edgeCount n1000000 : ℝ) := by
-      rfl
-    have hnat :
-        ENNReal.ofReal (LowerBound.monoCount (coloringOfSeeds (n := n1000000) alg S) : ℝ) =
-          (LowerBound.monoCount (coloringOfSeeds (n := n1000000) alg S) : ENNReal) := by
-      exact ENNReal.ofReal_natCast _
-    have hENN' := hENN
-    rw [hcast] at hENN'
-    rw [hnat] at hENN'
-    exact hENN'
+    have hENN := ENNReal.ofReal_le_ofReal hr
+    rwa [show (((((23879 : ℚ) / 100000) * (LowerBound.edgeCount n1000000 : ℚ)) : ℝ)) =
+        ((23879 : ℝ) / 100000) * (LowerBound.edgeCount n1000000 : ℝ) from rfl,
+      ENNReal.ofReal_natCast] at hENN
   -- Integrate the pointwise inequality and evaluate the `monoCount` integral.
-  haveI : IsProbabilityMeasure (volume : Measure (Samples n1000000)) := by infer_instance
   have hint :
       ENNReal.ofReal (((23879 : ℝ) / 100000) * (LowerBound.edgeCount n1000000 : ℝ)) ≤
         ∫⁻ S : Samples n1000000,
           (LowerBound.monoCount (coloringOfSeeds (n := n1000000) alg S) : ENNReal) := by
-    have hint0 :=
-      (lintegral_mono (μ := (volume : Measure (Samples n1000000))) fun S => hpointwiseENN S)
-    simpa only [lintegral_const, measure_univ, mul_one] using hint0
+    simpa only [lintegral_const, measure_univ, mul_one] using
+      lintegral_mono (μ := (volume : Measure (Samples n1000000))) fun S => hpointwiseENN S
   have hcalc :
       (∫⁻ S : Samples n1000000,
           (LowerBound.monoCount (coloringOfSeeds (n := n1000000) alg S) : ENNReal)) =
@@ -354,44 +297,19 @@ theorem p_ge_23879 (alg : ClassicalAlgorithm) :
   have hbound :
       ENNReal.ofReal (((23879 : ℝ) / 100000) * (LowerBound.edgeCount n1000000 : ℝ)) ≤
         (LowerBound.edgeCount n1000000 : ENNReal) * ClassicalAlgorithm.p alg := by
-    have hbound0 := hint
-    rw [hcalc] at hbound0
-    exact hbound0
+    rwa [hcalc] at hint
   -- Rewrite the left side as `edgeCount * 0.23879` and cancel `edgeCount`.
   have hleft :
       ENNReal.ofReal (((23879 : ℝ) / 100000) * (LowerBound.edgeCount n1000000 : ℝ)) =
         (LowerBound.edgeCount n1000000 : ENNReal) * ENNReal.ofReal ((23879 : ℝ) / 100000) := by
-    have h0 : (0 : ℝ) ≤ ((23879 : ℝ) / 100000) := by
-      positivity
-    calc
-      ENNReal.ofReal (((23879 : ℝ) / 100000) * (LowerBound.edgeCount n1000000 : ℝ))
-          = ENNReal.ofReal ((23879 : ℝ) / 100000) *
-              ENNReal.ofReal (LowerBound.edgeCount n1000000 : ℝ) := by
-                exact (ENNReal.ofReal_mul (q := (LowerBound.edgeCount n1000000 : ℝ)) h0)
-      _ = ENNReal.ofReal ((23879 : ℝ) / 100000) * (LowerBound.edgeCount n1000000 : ENNReal) := by
-            rw [ENNReal.ofReal_natCast]
-      _ = (LowerBound.edgeCount n1000000 : ENNReal) * ENNReal.ofReal ((23879 : ℝ) / 100000) := by
-            rw [mul_comm]
+    rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_natCast, mul_comm]
   have hbound' :
       (LowerBound.edgeCount n1000000 : ENNReal) * ENNReal.ofReal ((23879 : ℝ) / 100000) ≤
         (LowerBound.edgeCount n1000000 : ENNReal) * ClassicalAlgorithm.p alg := by
-    have hbound'0 := hbound
-    rw [hleft] at hbound'0
-    exact hbound'0
-  -- Multiply by the inverse of `edgeCount` to cancel.
-  let eC : ENNReal := (LowerBound.edgeCount n1000000 : ENNReal)
-  have hmul :
-      eC⁻¹ * (eC * ENNReal.ofReal ((23879 : ℝ) / 100000)) ≤
-        eC⁻¹ * (eC * ClassicalAlgorithm.p alg) := by
-    exact mul_le_mul_right hbound' (eC⁻¹)
-  have hmul' :
-      (eC⁻¹ * eC) * ENNReal.ofReal ((23879 : ℝ) / 100000) ≤
-        (eC⁻¹ * eC) * ClassicalAlgorithm.p alg := by
-    simpa [mul_assoc] using hmul
-  have hcancel : eC⁻¹ * eC = 1 := by
-    dsimp [eC]
-    exact ENNReal.inv_mul_cancel hedgeCount_ne_zero hedgeCount_ne_top
-  simpa [hcancel] using hmul'
+    rwa [hleft] at hbound
+  -- Cancel the common positive, finite factor `edgeCount`.
+  rw [mul_comm _ (ENNReal.ofReal _), mul_comm _ (ClassicalAlgorithm.p alg)] at hbound'
+  exact (ENNReal.mul_le_mul_iff_left hedgeCount_ne_zero hedgeCount_ne_top).1 hbound'
 
 theorem exists_algorithm_p_le_24118 :
     ∃ alg : ClassicalAlgorithm, ClassicalAlgorithm.p alg ≤ ENNReal.ofReal (24118 / 100000 : ℝ) := by

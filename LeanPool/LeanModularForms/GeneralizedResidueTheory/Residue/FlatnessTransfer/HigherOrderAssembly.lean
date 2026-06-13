@@ -59,8 +59,7 @@ private theorem residueAt_eq_zero_of_analyticExpansion (f : ℂ → ℂ) (s : �
   have hr_lt_rf : r < rf := lt_of_lt_of_le hr_lt (min_le_right _ _)
   have h_eq_on : ∀ z ∈ Metric.sphere s r, f z = g_loc z := by
     intro z hz
-    have hne : z ≠ s := by
-      intro h; rw [h, Metric.mem_sphere, dist_self] at hz; linarith
+    have hne : z ≠ s := by intro h; rw [h, Metric.mem_sphere, dist_self] at hz; linarith
     have h_in : z ∈ Metric.ball s rf ∩ {s}ᶜ :=
       ⟨Metric.mem_ball.mpr (by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf),
        Set.mem_compl_singleton_iff.mpr hne⟩
@@ -76,14 +75,12 @@ private theorem residueAt_eq_zero_of_analyticExpansion (f : ℂ → ℂ) (s : �
       (fun z ⟨hz, _⟩ => hg_diff.differentiableAt
         (Metric.isOpen_ball.mem_nhds hz))
   have hf_ci : (∮ z in C(s, r), f z) =
-      (∮ z in C(s, r), g_loc z) :=
-    circleIntegral.integral_congr hr_pos.le h_eq_on
+      (∮ z in C(s, r), g_loc z) := circleIntegral.integral_congr hr_pos.le h_eq_on
   simp [hf_ci, hg_ci_zero]
 
 private theorem meromorphicAt_ppMinusRes (f : ℂ → ℂ) (s : ℂ) (hMero_s : MeromorphicAt f s) :
     MeromorphicAt (fun z => meromorphicPrincipalPart f s z - residueAt f s / (z - s)) s := by
-  obtain ⟨g_rp, hg_rp_an, hg_rp_eq⟩ :=
-    meromorphicAt_sub_principalPart_eventually f s hMero_s
+  obtain ⟨g_rp, hg_rp_an, hg_rp_eq⟩ := meromorphicAt_sub_principalPart_eventually f s hMero_s
   have h_pp_eq : (fun z => f z - g_rp z) =ᶠ[𝓝[≠] s]
       meromorphicPrincipalPart f s := by
     filter_upwards [hg_rp_eq] with z hz
@@ -108,8 +105,7 @@ private theorem laurent_coeff_le_poleOrder (f : ℂ → ℂ) (s : ℂ)
     ⟨⟨kv, hkv⟩, Finset.mem_filter.mpr
       ⟨Finset.mem_univ _, ha_zero⟩⟩
   set m_idx := (nonzero_idx.max' h_ne) with hm_def
-  have hm_ne : a_s m_idx ≠ 0 :=
-    (Finset.mem_filter.mp (nonzero_idx.max'_mem h_ne)).2
+  have hm_ne : a_s m_idx ≠ 0 := (Finset.mem_filter.mp (nonzero_idx.max'_mem h_ne)).2
   have hkv_le_m : kv ≤ m_idx.val :=
     Finset.le_max' nonzero_idx ⟨kv, hkv⟩
       (Finset.mem_filter.mpr ⟨Finset.mem_univ _, ha_zero⟩)
@@ -136,11 +132,9 @@ private theorem laurent_coeff_le_poleOrder (f : ℂ → ℂ) (s : ℂ)
         by_cases hkm : k.val < m_idx.val
         · simp [zero_pow (by omega : m_idx.val - k.val ≠ 0)]
         · push Not at hkm
-          have hk_gt : m_idx < k :=
-            lt_of_le_of_ne (Fin.mk_le_mk.mpr hkm) (Ne.symm hk)
+          have hk_gt : m_idx < k := lt_of_le_of_ne (Fin.mk_le_mk.mpr hkm) (Ne.symm hk)
           have := hm_max k
-          have hk_eq : a_s k = 0 := by
-            by_contra ha; exact absurd (this ha) (not_le.mpr hk_gt)
+          have hk_eq : a_s k = 0 := by by_contra ha; exact absurd (this ha) (not_le.mpr hk_gt)
           simp only [hk_eq, zero_mul]
       · intro h; exact absurd (Finset.mem_univ m_idx) h
     rw [this]; exact hm_ne
@@ -171,11 +165,9 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
   have h_single := residueAt_sub_residueSum_eq_zero {s} f s
     (Finset.mem_singleton.mpr rfl) hMero_s
   simp only [Finset.sum_singleton] at h_single
-  obtain ⟨g_rp, hg_rp_an, hg_rp_eq⟩ :=
-    meromorphicAt_sub_principalPart_eventually f s hMero_s
+  obtain ⟨g_rp, hg_rp_an, hg_rp_eq⟩ := meromorphicAt_sub_principalPart_eventually f s hMero_s
   obtain ⟨rg, hrg_pos, hg_ball⟩ := hg_rp_an.exists_ball_analyticOnNhd
-  have h_ev_mem : {z | f z - meromorphicPrincipalPart f s z = g_rp z} ∈ 𝓝[≠] s :=
-    hg_rp_eq
+  have h_ev_mem : {z | f z - meromorphicPrincipalPart f s z = g_rp z} ∈ 𝓝[≠] s := hg_rp_eq
   rw [Metric.mem_nhdsWithin_iff] at h_ev_mem
   obtain ⟨rp, hrp_pos, hrp_eq⟩ := h_ev_mem
   set ρ' := min rg rp with hρ'_def
@@ -190,8 +182,7 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
         (fun z => meromorphicPrincipalPart f s z - residueAt f s / (z - s)) z =
         (fun z => f z - residueAt f s / (z - s)) z - g_rp z := by
       intro z hz
-      have hne : z ≠ s := by
-        intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+      have hne : z ≠ s := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
       have h_in : z ∈ Metric.ball s rp ∩ {s}ᶜ :=
         ⟨Metric.mem_ball.mpr (by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rp),
          Set.mem_compl_singleton_iff.mpr hne⟩
@@ -229,8 +220,7 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
     have h_split : (∮ z in C(s, r),
         (fun z => (meromorphicPrincipalPart f s z - residueAt f s / (z - s)) + g_rp z) z) =
       (∮ z in C(s, r), (fun z => meromorphicPrincipalPart f s z - residueAt f s / (z - s)) z) +
-        (∮ z in C(s, r), g_rp z) :=
-      circleIntegral.integral_add h_term_ci hg_ci
+        (∮ z in C(s, r), g_rp z) := circleIntegral.integral_add h_term_ci hg_ci
     have h_sum_eq : ∀ z ∈ Metric.sphere s r,
         (fun z => (meromorphicPrincipalPart f s z - residueAt f s / (z - s)) + g_rp z) z =
         (fun z => f z - residueAt f s / (z - s)) z := by
@@ -253,8 +243,7 @@ private theorem residueAt_ppMinusRes_eq_zero (f : ℂ → ℂ) (s : ℂ)
           (∮ z in C(s, r), g_rp z) := by rw [hg_ci_zero]
       _ = (∮ z in C(s, r), (fun z =>
             (meromorphicPrincipalPart f s z -
-              residueAt f s / (z - s)) + g_rp z) z) :=
-          h_split.symm
+              residueAt f s / (z - s)) + g_rp z) z) := h_split.symm
       _ = (∮ z in C(s, r), (fun z => f z - residueAt f s / (z - s)) z) := h_int_eq
   rw [show residueAt (fun z => meromorphicPrincipalPart f s z - residueAt f s / (z - s)) s =
     residueAt (fun z => f z - residueAt f s / (z - s)) s from by
@@ -313,14 +302,11 @@ private theorem assembly_regNF_differentiableWithinAt_pole
       (fun w => g_corr z hz_S w -
         ∑ s' ∈ S0.erase z, meromorphicPrincipalPart f s' w) z :=
     (hg_corr_an z hz_S).differentiableAt.sub h_other_pp_diff
-  have h_S_minus_z_closed : IsClosed ((↑(S0.erase z) : Set ℂ)) :=
-    (S0.erase z).finite_toSet.isClosed
+  have h_S_minus_z_closed : IsClosed ((↑(S0.erase z) : Set ℂ)) := (S0.erase z).finite_toSet.isClosed
   have hz_not_erase : z ∉ (↑(S0.erase z) : Set ℂ) :=
     fun hh => (Finset.notMem_erase z S0) (Finset.mem_coe.mp hh)
-  have h_compl_open : IsOpen (↑(S0.erase z) : Set ℂ)ᶜ :=
-    h_S_minus_z_closed.isOpen_compl
-  have hz_in_compl : z ∈ (↑(S0.erase z) : Set ℂ)ᶜ :=
-    Set.mem_compl hz_not_erase
+  have h_compl_open : IsOpen (↑(S0.erase z) : Set ℂ)ᶜ := h_S_minus_z_closed.isOpen_compl
+  have hz_in_compl : z ∈ (↑(S0.erase z) : Set ℂ)ᶜ := Set.mem_compl hz_not_erase
   have h_ev : (fun w => g_corr z hz_S w -
       ∑ s' ∈ S0.erase z, meromorphicPrincipalPart f s' w) =ᶠ[𝓝 z]
       assembly_regNF S0 f g_corr := by
@@ -340,8 +326,7 @@ private theorem assembly_regNF_differentiableWithinAt_pole
         exact hw_compl (Finset.mem_coe.mpr (Finset.mem_erase.mpr ⟨hne, hw_S⟩))
       rw [hw_eq]; simp [hz_S]
     · have hw_ne_z : w ≠ z := fun heq => hw_S (heq ▸ hz_S)
-      have h_fw : f w - meromorphicPrincipalPart f z w = g_corr z hz_S w :=
-        hV_eq ⟨hw_V, hw_ne_z⟩
+      have h_fw : f w - meromorphicPrincipalPart f z w = g_corr z hz_S w := hV_eq ⟨hw_V, hw_ne_z⟩
       simp only [dif_neg hw_S, assembly_reg, assembly_totalPP]
       rw [show (∑ s ∈ S0, meromorphicPrincipalPart f s w) =
           meromorphicPrincipalPart f z w +
@@ -659,10 +644,8 @@ private theorem cpv_perTerm_uncrossed (U : Set ℂ) (S0 : Finset ℂ)
     have h_term_diff : DifferentiableOn ℂ term_s (U \ {s}) :=
       (differentiableOn_ppMinusRes f s (hMero s hs)).mono
         (fun z hz => Set.mem_compl_singleton_iff.mpr hz.2)
-    have h_term_mero : MeromorphicAt term_s s :=
-      meromorphicAt_ppMinusRes f s (hMero s hs)
-    have h_term_res : residueAt term_s s = 0 :=
-      residueAt_ppMinusRes_eq_zero f s (hMero s hs)
+    have h_term_mero : MeromorphicAt term_s s := meromorphicAt_ppMinusRes f s (hMero s hs)
+    have h_term_res : residueAt term_s s = 0 := residueAt_ppMinusRes_eq_zero f s (hMero s hs)
     exact h_finset_vanish {s} term_s
       (fun s' hs' => by rw [Finset.mem_singleton.mp hs']; exact h_term_mero)
       (fun s' hs' => by rw [Finset.mem_singleton.mp hs']; exact h_term_res)
@@ -784,10 +767,8 @@ private theorem assembly_errNF_eventuallyEq (f : ℂ → ℂ) (s : ℂ)
        Set.mem_compl_singleton_iff.mpr hzs⟩
     have hfz : f z = g_loc z + ∑ k : Fin N_s,
         a_s k / (z - s) ^ (k.val + 1) := hr1_eq hz_in_1
-    have hgrpz : f z - meromorphicPrincipalPart f s z = g_rp z :=
-      hr2_eq hz_in_2
-    have hpp : meromorphicPrincipalPart f s z = f z - g_rp z := by
-      linear_combination -hgrpz
+    have hgrpz : f z - meromorphicPrincipalPart f s z = g_rp z := hr2_eq hz_in_2
+    have hpp : meromorphicPrincipalPart f s z = f z - g_rp z := by linear_combination -hgrpz
     rw [hpp, hfz]
     have h_sum_split : ∑ k : Fin N_s, a_s k / (z - s) ^ (k.val + 1) -
         ∑ k : Fin N_s, (if k.val ≥ 1 then a_s k / (z - s) ^ (k.val + 1) else 0) =
@@ -826,8 +807,7 @@ private theorem assembly_polarHigher_differentiableOn
   have h_eq_sum : (fun w => ∑ k : Fin N_s,
       if k.val ≥ 1 then a_s k / (w - s) ^ (k.val + 1) else 0) =
     ∑ k : Fin N_s, fun w =>
-      if k.val ≥ 1 then a_s k / (w - s) ^ (k.val + 1) else 0 := by
-    ext w; simp [Finset.sum_apply]
+      if k.val ≥ 1 then a_s k / (w - s) ^ (k.val + 1) else 0 := by ext w; simp [Finset.sum_apply]
   rw [h_eq_sum]
   exact (DifferentiableAt.sum fun k _ => h_each k).differentiableWithinAt
 
@@ -895,8 +875,7 @@ private theorem cpv_perTerm_crossed_positive_order
   set term_s := fun z => meromorphicPrincipalPart f s z - residueAt f s / (z - s) with hterm_s
   have h_unique_s := fun t ht hc => h_unique_cross s hs t ht t₁ ht₁ hc hcross₁
   have h_a0 := (residueAt_eq_laurent_head_coeff f s N_s hN_s_pos a_s g_loc hg_loc_an hf_eq_loc).symm
-  obtain ⟨g_rp, hg_rp_an, hg_rp_eq⟩ :=
-    meromorphicAt_sub_principalPart_eventually f s (hMero s hs)
+  obtain ⟨g_rp, hg_rp_an, hg_rp_eq⟩ := meromorphicAt_sub_principalPart_eventually f s (hMero s hs)
   let err_nf := assembly_errNF f s g_loc g_rp a_s
   have hD : DifferentiableOn ℂ err_nf U :=
     differentiableOn_of_eventuallyEq_analytic_off_sub U s err_nf (assembly_errLoc g_loc g_rp)

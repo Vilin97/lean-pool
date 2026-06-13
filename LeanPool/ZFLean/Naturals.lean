@@ -888,7 +888,7 @@ theorem add_lt_add_right {n m : ZFNat} (h : n < m) (k : ZFNat) : n + k < m + k :
   add_comm k m ▸ add_comm k n ▸ add_lt_add_left h k
 
 theorem lt_add_of_pos_right {n k : ZFNat} (h : 0 < k) : n < n + k := by
-  let this := add_zero ▸ add_lt_add_left h n;
+  have := add_zero ▸ add_lt_add_left h n
   exact this
 
 theorem lt_of_add_lt_add_left {n m k : ZFNat} : n + k < n + m → k < m := by

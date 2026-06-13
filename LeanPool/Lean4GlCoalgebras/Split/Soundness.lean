@@ -631,8 +631,7 @@ lemma chain_model_prop {𝕏 : Proof}
       (¬ (r 𝕏.α (chain prop w_prop n).1).isBox →
         (chain prop w_prop n).2.1 = (chain prop w_prop (n + 1)).2.1) ∧
       ((r 𝕏.α (chain prop w_prop n).1).isBox →
-        M.R (chain prop w_prop n).2.1 (chain prop w_prop (n + 1)).2.1)
-  := by
+        M.R (chain prop w_prop n).2.1 (chain prop w_prop (n + 1)).2.1) := by
   intro n
   constructor
   · conv =>
@@ -739,8 +738,7 @@ lemma inc_chain_eventual_inc_chain_prop {β}
   {Q : β → β → Prop} {g : ℕ → β}
   (Q_prop : ∀ n, ∃ m, Q (g n) (g m)) :
   ∀ n, Q (incChainEventualIncChain Q_prop n).1
-         (incChainEventualIncChain Q_prop (n + 1)).1
-   := by
+         (incChainEventualIncChain Q_prop (n + 1)).1 := by
     intro n
     conv =>
       congr

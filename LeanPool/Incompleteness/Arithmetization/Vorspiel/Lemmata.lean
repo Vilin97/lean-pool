@@ -113,8 +113,7 @@ instance : Nonempty M := ⟨0⟩
 @[simp] lemma numeral_two_eq_two : (ORingStruc.numeral 2 : M) = 2 := by simp [numeral_eq_natCast]
 
 @[simp] lemma numeral_three_eq_three : (ORingStruc.numeral 3 :
-    M) = 3 := by
-  simp [numeral_eq_natCast]
+    M) = 3 := by simp [numeral_eq_natCast]
 
 @[simp] lemma numeral_four_eq_four : (ORingStruc.numeral 4 : M) = 4 := by simp [numeral_eq_natCast]
 
@@ -170,8 +169,7 @@ lemma two_mul_two_eq_four : 2 * 2 = (4 : M) := by
   rw [←one_add_one_eq_two, mul_add, add_mul, mul_one, ←add_assoc,
     one_add_one_eq_two, two_add_one_eq_three, three_add_one_eq_four]
 
-lemma two_pow_two_eq_four : 2 ^ 2 = (4 : M) := by
-  simp [sq, two_mul_two_eq_four]
+lemma two_pow_two_eq_four : 2 ^ 2 = (4 : M) := by simp [sq, two_mul_two_eq_four]
 
 lemma two_pos : (0 : M) < 2 := by exact _root_.two_pos
 
@@ -224,8 +222,7 @@ theorem lt_of_mul_lt_mul_right (h : b * a < c * a) :
 lemma pow_three (x : M) : x^3 = x * x * x := by rw [← two_add_one_eq_three, pow_add, sq]; simp
 
 lemma pow_four (x : M) :
-    x^4 = x * x * x * x := by
-  rw [← three_add_one_eq_four, pow_add, pow_three]; simp
+    x^4 = x * x * x * x := by rw [← three_add_one_eq_four, pow_add, pow_three]; simp
 
 lemma pow_four_eq_sq_sq (x : M) : x^4 = (x ^ 2) ^ 2 := by simp [pow_four, sq, mul_assoc]
 
@@ -248,8 +245,7 @@ scoped instance : CovariantClass M M (Function.swap (· * ·)) (· ≤ ·) :=
 
 @[simp] lemma sq_eq_one_iff {a : M} : a ^ 2 = 1 ↔ a = 1 := by simp [sq]
 
-lemma lt_square_of_lt {a : M} (pos : 1 < a) : a < a ^ 2 := by
-  rw [sq]; apply lt_mul_self pos
+lemma lt_square_of_lt {a : M} (pos : 1 < a) : a < a ^ 2 := by rw [sq]; apply lt_mul_self pos
 
 lemma two_mul_le_sq {i : M} (h : 2 ≤ i) : 2 * i ≤ i ^ 2 := by
   rw [sq]

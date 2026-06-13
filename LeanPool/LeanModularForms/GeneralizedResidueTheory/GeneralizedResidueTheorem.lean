@@ -166,8 +166,7 @@ theorem generalizedResidueTheorem (U : Set ℂ) (hU : IsOpen U)
   -- Rewrite residueSimplePole(f_res) to residueAt(f)
   have h_limit_eq : L = 2 * Real.pi * I * ∑ s ∈ S0,
       generalizedWindingNumber' γ.toFun γ.a γ.b s * residueAt f s := by
-    have hL_eq : L = cauchyPrincipalValueOn S0 f_res γ.toFun γ.a γ.b :=
-      (hL.limUnder_eq).symm
+    have hL_eq : L = cauchyPrincipalValueOn S0 f_res γ.toFun γ.a γ.b := (hL.limUnder_eq).symm
     rw [hL_eq, h_value]
     congr 1; apply Finset.sum_congr rfl
     intro s hs; rw [h_res_eq s hs]
@@ -189,8 +188,7 @@ theorem generalizedResidueTheorem (U : Set ℂ) (hU : IsOpen U)
        (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
          (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) +
       (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
-         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by
-    ext ε; ring
+         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by ext ε; ring
   rw [h_eq, show L = 0 + L from (zero_add _).symm]
   exact hCancel.add hPV_res_tendsto
 
@@ -274,8 +272,7 @@ theorem generalizedResidueTheorem_simplePoles (U : Set ℂ) (hU : IsOpen U)
     intro s hs
     rw [h_res_sing_eq s hs]
     have h_eq : (fun z => residueSimplePole f s / (z - s)) =
-        (fun z => residueSimplePole f s * (fun z => (z - s)⁻¹) z) := by
-      ext z; simp [div_eq_mul_inv]
+        (fun z => residueSimplePole f s * (fun z => (z - s)⁻¹) z) := by ext z; simp [div_eq_mul_inv]
     rw [h_eq]
     apply CauchyPrincipalValueExists'.const_mul
     apply cauchyPrincipalValueExists_of_singular_inv γ s
@@ -338,15 +335,12 @@ theorem generalizedResidueTheorem_simplePoles (U : Set ℂ) (hU : IsOpen U)
          (∫ t in γ.a..γ.b,
             cauchyPrincipalValueIntegrandOn S0 f_sing γ.toFun ε t)) +
         (∫ t in γ.a..γ.b,
-            cauchyPrincipalValueIntegrandOn S0 f_sing γ.toFun ε t)) := by
-      ext ε; ring
+            cauchyPrincipalValueIntegrandOn S0 f_sing γ.toFun ε t)) := by ext ε; ring
     rw [h_eq, show L_sing = 0 + L_sing from (zero_add _).symm]
     exact hCancel.add hL_sing
   -- CPV(f) = limUnder = L_sing = limUnder(f_sing) = CPV(f_sing) = formula
-  have h1 : cauchyPrincipalValueOn S0 f γ.toFun γ.a γ.b = L_sing :=
-    h_f_tendsto.limUnder_eq
-  have h2 : cauchyPrincipalValueOn S0 f_sing γ.toFun γ.a γ.b = L_sing :=
-    hL_sing.limUnder_eq
+  have h1 : cauchyPrincipalValueOn S0 f γ.toFun γ.a γ.b = L_sing := h_f_tendsto.limUnder_eq
+  have h2 : cauchyPrincipalValueOn S0 f_sing γ.toFun γ.a γ.b = L_sing := hL_sing.limUnder_eq
   -- ════════════════════════════════════════════════════════════════════════
   -- Step 6: Translate residueSimplePole → residueAt
   -- ════════════════════════════════════════════════════════════════════════

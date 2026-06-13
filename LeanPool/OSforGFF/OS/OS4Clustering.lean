@@ -121,8 +121,7 @@ lemma LinearIsometry_inv_one : LinearIsometry.inv (1 : O4) = 1 := by
   -- Use comp_inv: R.comp (inv R) = 1
   -- For R = 1: 1.comp (inv 1) = 1, so inv 1 = 1 (since 1.comp x = x)
   have h := LinearIsometry.comp_inv (1 : O4)
-  simp only [LinearIsometry.one_comp] at h
-  exact h
+  simpa only [LinearIsometry.one_comp] using h
 
 /-! ## Translation Invariance from OS2 -/
 
@@ -152,8 +151,7 @@ lemma generating_euclidean_invariant
 -/
 lemma gff_generating_norm_le_one_real (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
     ‖GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) (toComplex f)‖ ≤ 1 := by
-  rw [gff_complex_generating m (toComplex f)]
-  rw [Complex.norm_exp]
+  rw [gff_complex_generating m (toComplex f), Complex.norm_exp]
   have h_re : (-(1/2 : ℂ) * SchwingerFunctionℂ₂ (gaussianFreeFieldFree m) (toComplex f) (toComplex
     f)).re =
       -(1/2) * (SchwingerFunctionℂ₂ (gaussianFreeFieldFree m) (toComplex f) (toComplex f)).re := by
@@ -615,8 +613,7 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
   -- From freeCovariance_exponential_bound': |C(u,v)| ≤ c·e^{-m‖u-v‖} for m‖u-v‖ ≥ 1
   -- The constant is C_exp = m^2 * (sinh 1 + 2) / (4 * π^2)
   let C_exp := m^2 * (Real.sinh 1 + 2) / (4 * Real.pi^2)
-  have hC_exp_pos : C_exp > 0 := by
-    simp only [C_exp]; positivity
+  have hC_exp_pos : C_exp > 0 := by simp only [C_exp]; positivity
   have hK_cont : ContinuousOn (freeCovarianceKernel m) (Metric.closedBall (0 : SpaceTime) (1/m))ᶜ :=
     (freeCovarianceKernel_continuousOn m hm).mono fun z hz => by
       simp only [Set.mem_compl_iff, Metric.mem_closedBall, dist_zero_right, not_le] at hz
@@ -660,8 +657,7 @@ theorem gaussianFreeField_satisfies_OS4_PolynomialClustering (m : ℝ) [Fact (0 
     -- The RHS is exactly the form of the decay lemma with a = timeShiftConst(t)
     have h_norm_bound := hBound (TimeTranslation.timeShiftConst t)
     -- ‖timeShiftConst(t)‖ = |t| = t for t ≥ 0
-    rw [timeShiftConst_norm, abs_of_nonneg ht] at h_norm_bound
-    exact h_norm_bound
+    rwa [timeShiftConst_norm, abs_of_nonneg ht] at h_norm_bound
   -- Step 6: Construct the final constant
   -- The bound is: |LHS - Ef·Eg| ≤ |Ef| · |Eg| · |e^{S₂} - 1|
   --             ≤ |Ef| · |Eg| · |S₂| · e^{|S₂|}  (by exp bound)

@@ -387,8 +387,7 @@ private lemma schwartz_timeTranslation_mvt_bound
               rw [h_smul_eq]
           _ = ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℝ ℝ) y :=
               ContinuousLinearMap.fderiv _
-      rw [h1, hg_eq]
-      rw [fderiv_comp t h_iter_diff h_path_diff]
+      rw [h1, hg_eq, fderiv_comp t h_iter_diff h_path_diff]
       simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, path, h_fderiv_path]
       simp only [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.id_apply, one_smul]
       rfl
@@ -403,8 +402,7 @@ private lemma schwartz_timeTranslation_mvt_bound
       ≤ ‖(continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime) ℝ)
             (iteratedFDeriv ℝ (n + 1) f (x + t • y))‖ * ‖y‖ :=
           ContinuousLinearMap.le_opNorm _ _
-      _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * ‖y‖ := by
-          rw [LinearIsometryEquiv.norm_map]
+      _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * ‖y‖ := by rw [LinearIsometryEquiv.norm_map]
       _ = ‖iteratedFDeriv ℝ (n + 1) f (x + t • y)‖ * |h| := by rw [hy]
       _ = |h| * D t := by ring
       _ ≤ |h| * ⨆ s ∈ Set.Icc (0 : ℝ) 1, D s := by
@@ -413,8 +411,7 @@ private lemma schwartz_timeTranslation_mvt_bound
             use (SchwartzMap.seminorm ℝ 0 (n + 1)) f
             rintro _ ⟨⟨s, _⟩, rfl⟩
             have := SchwartzMap.le_seminorm ℝ 0 (n + 1) f (x + s • y)
-            simp only [pow_zero, one_mul] at this
-            exact this
+            simpa only [pow_zero, one_mul] using this
           haveI : Nonempty ↑(Set.Icc (0 : ℝ) 1) := ⟨⟨0, by simp⟩⟩
           have h_sSup_le : sSup (∅ : Set ℝ) ≤ ⨆ i : ↑(Set.Icc (0 : ℝ) 1), D i.1 := by
             simp only [Real.sSup_empty]
@@ -435,8 +432,7 @@ private lemma schwartz_timeTranslation_mvt_bound
     (convex_Icc 0 1)
     (Set.left_mem_Icc.mpr zero_le_one)
     (Set.right_mem_Icc.mpr zero_le_one)
-  simp only [sub_zero, Real.norm_eq_abs, abs_one, mul_one] at h_mvt
-  exact h_mvt
+  simpa only [sub_zero, Real.norm_eq_abs, abs_one, mul_one] using h_mvt
 
 /-- **Locally Uniform Lipschitz Bound for Time Translation.**
 
@@ -482,8 +478,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
     rw [iteratedFDeriv_add_apply hT.contDiffAt hf.neg.contDiffAt]
     -- Convert (fun x => -f x) back to (-f) for iteratedFDeriv_neg
     conv_lhs => rw [← h_neg_eq]
-    rw [iteratedFDeriv_neg]
-    rw [iteratedFDeriv_timeTranslationSchwartz]
+    rw [iteratedFDeriv_neg, iteratedFDeriv_timeTranslationSchwartz]
     simp only [Pi.neg_apply, sub_eq_add_neg]
   rw [h_diff]
   -- Step 2: Handle h = 0 case (trivial)
@@ -571,8 +566,7 @@ theorem schwartz_timeTranslation_lipschitz_seminorm
         simp only [w]; rw [mul_comm]; exact hp
       have h3 : ‖t • y‖ ≤ |h| := by
         rw [norm_smul, Real.norm_eq_abs, hy]
-        have ht_bound : |t| ≤ 1 := by
-          rw [abs_le]; constructor <;> linarith [ht.1, ht.2]
+        have ht_bound : |t| ≤ 1 := by rw [abs_le]; constructor <;> linarith [ht.1, ht.2]
         calc |t| * |h| ≤ 1 * |h| := by nlinarith [abs_nonneg t, abs_nonneg h]
           _ = |h| := one_mul _
       have h4 : (1 + ‖t • y‖) ^ k ≤ (1 + |h|) ^ k := by
@@ -828,8 +822,7 @@ lemma continuous_timeTranslationSchwartz (f : TestFunction) :
               apply mul_le_mul_of_nonneg_left h1 (abs_nonneg h)
           _ = |h| * (2 : ℝ) ^ k * (2 : ℝ) ^ k * C := by ring
     _ = |h| * (4 : ℝ) ^ k * C := by
-        have h2_eq : (2 : ℝ) ^ k * (2 : ℝ) ^ k = (4 : ℝ) ^ k := by
-          rw [← mul_pow]; norm_num
+        have h2_eq : (2 : ℝ) ^ k * (2 : ℝ) ^ k = (4 : ℝ) ^ k := by rw [← mul_pow]; norm_num
         calc |h| * (2 : ℝ) ^ k * (2 : ℝ) ^ k * C
           = |h| * ((2 : ℝ) ^ k * (2 : ℝ) ^ k) * C := by ring
           _ = |h| * (4 : ℝ) ^ k * C := by rw [h2_eq]
@@ -877,8 +870,7 @@ lemma timeTranslationDistribution_add (s t : ℝ) (ω : FieldConfiguration) :
   -- T_{-s}(T_{-t} f) = T_{-s-t} f by the group property
   have h : timeTranslationSchwartz (-(s + t)) f =
            timeTranslationSchwartz (-t) (timeTranslationSchwartz (-s) f) := by
-    rw [neg_add]
-    rw [← timeTranslationSchwartz_add]
+    rw [neg_add, ← timeTranslationSchwartz_add]
     ring_nf
   rw [h]
 

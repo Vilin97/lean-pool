@@ -247,8 +247,7 @@ theorem size_complexity_pos [CompleteBasis B]
 theorem size_complexity_le {G : Nat}
     (c : Circuit B N 1 G) (f : BitString N → Bool)
     (hf : (fun x => (c.eval x) 0) = f) :
-    sizeComplexity B f ≤ c.size :=
-  Nat.sInf_le ⟨G, c, rfl, hf⟩
+    sizeComplexity B f ≤ c.size := Nat.sInf_le ⟨G, c, rfl, hf⟩
 
 /-- For a complete basis, `sizeComplexity` is realized by some circuit. -/
 theorem size_complexity_witness [CompleteBasis B]

@@ -45,8 +45,7 @@ noncomputable section
 
 /-- If `f` has derivative `f'` at `x`, then `Re ∘ f` has derivative `Re(f')` at `x`. -/
 private lemma HasDerivAt.re' {f : ℝ → ℂ} {f' : ℂ} {x : ℝ} (h : HasDerivAt f f' x) :
-    HasDerivAt (fun t => (f t).re) f'.re x :=
-  Complex.reCLM.hasFDerivAt.comp_hasDerivAt x h
+    HasDerivAt (fun t => (f t).re) f'.re x := Complex.reCLM.hasFDerivAt.comp_hasDerivAt x h
 
 /-! ### Eventually not in partition (shared pattern) -/
 
@@ -124,8 +123,7 @@ theorem PiecewiseC1Immersion.eventually_ne_left_of_partition
     exact this.eventually (Ioi_mem_nhds hL_sq_pos)
   -- (E3): Eventually t ∈ [a, b]
   have h_ev_Iab : ∀ᶠ t in 𝓝[<] p, t ∈ Icc γ.a γ.b := by
-    have h1 : ∀ᶠ t in 𝓝[<] p, γ.a < t :=
-      eventually_nhdsWithin_of_eventually_nhds (Ioi_mem_nhds hap)
+    have h1 : ∀ᶠ t in 𝓝[<] p, γ.a < t := eventually_nhdsWithin_of_eventually_nhds (Ioi_mem_nhds hap)
     have h2 : ∀ᶠ t in 𝓝[<] p, t < p := eventually_nhdsWithin_of_forall fun t ht => ht
     exact (h1.and h2).mono fun t ⟨hat, htp⟩ => ⟨le_of_lt hat, le_trans (le_of_lt htp) hpb⟩
   -- Extract interval (q, p) where all hold
@@ -188,8 +186,7 @@ theorem PiecewiseC1Immersion.eventually_ne_right_of_partition
     exact this.eventually (Ioi_mem_nhds hL_sq_pos)
   -- (E3): Eventually t ∈ [a, b]
   have h_ev_Iab : ∀ᶠ t in 𝓝[>] p, t ∈ Icc γ.a γ.b := by
-    have h1 : ∀ᶠ t in 𝓝[>] p, t < γ.b :=
-      eventually_nhdsWithin_of_eventually_nhds (Iio_mem_nhds hpb)
+    have h1 : ∀ᶠ t in 𝓝[>] p, t < γ.b := eventually_nhdsWithin_of_eventually_nhds (Iio_mem_nhds hpb)
     have h2 : ∀ᶠ t in 𝓝[>] p, p < t := eventually_nhdsWithin_of_forall fun t ht => ht
     exact (h1.and h2).mono fun t ⟨htb, htp⟩ => ⟨le_trans hap (le_of_lt htp), le_of_lt htb⟩
   -- Extract interval (p, r)
@@ -338,8 +335,7 @@ theorem exists_isolated_crossing_interval
     intro t ht hγt
     by_contra h_ne
     -- t ∈ Icc a' b' ⊆ Ioo l u since l < a' ≤ t ≤ b' < u
-    have ht_Ioo_lu : t ∈ Ioo l u :=
-      ⟨lt_of_lt_of_le hl_lt_a' ht.1, lt_of_le_of_lt ht.2 hb'_lt_u⟩
+    have ht_Ioo_lu : t ∈ Ioo l u := ⟨lt_of_lt_of_le hl_lt_a' ht.1, lt_of_le_of_lt ht.2 hb'_lt_u⟩
     -- By h_Ioo: t ≠ t₀ → γ(t) ≠ z₀ ∨ t ∉ [a,b]
     have := h_Ioo ht_Ioo_lu h_ne
     rcases this with h_ne_z₀ | h_not_Icc
@@ -380,8 +376,7 @@ theorem PiecewiseC1Immersion.deriv_ne_zero_of_C2
     deriv γ.toFun t₀ ≠ 0 := by
   by_cases hpart : t₀ ∈ γ.toPiecewiseC1Curve.partition
   · -- At a partition point with C² regularity, the derivative is continuous
-    have h_cont_at : ContinuousAt (deriv γ.toFun) t₀ :=
-      continuousAt_deriv_of_contDiffAt_two hγ_C2
+    have h_cont_at : ContinuousAt (deriv γ.toFun) t₀ := continuousAt_deriv_of_contDiffAt_two hγ_C2
     -- Use right derivative limit (t₀ < b since t₀ ∈ Ioo a b)
     obtain ⟨L, hL_ne, hL_tend⟩ := γ.right_deriv_limit t₀ hpart ht₀.2
     -- The continuous derivative must equal L
@@ -503,8 +498,7 @@ theorem cpv_integrand_intervalIntegrable
         have h_eq_S : S = (S \ γ.partition) ∪ (↑γ.partition ∩ S) := by
           ext x; simp only [S, Set.mem_union, Set.mem_diff, Set.mem_inter_iff]; tauto
         have h_restrict_eq : volume.restrict S =
-            volume.restrict ((S \ γ.partition) ∪ (↑γ.partition ∩ S)) := by
-          rw [← h_eq_S]
+            volume.restrict ((S \ γ.partition) ∪ (↑γ.partition ∩ S)) := by rw [← h_eq_S]
         rw [h_restrict_eq, aestronglyMeasurable_union_iff]
         exact ⟨h_cont_on_S.aestronglyMeasurable h_diff_meas,
           (Measure.restrict_zero_set h_P_null).symm ▸ aestronglyMeasurable_zero_measure _⟩
@@ -585,8 +579,7 @@ private theorem cpv_exists_on_subinterval
         exists_isolated_crossing_interval γ z₀ t₁ ht₁_Ioo_ab hγt₁
       -- Get C² and continuous-deriv data
       have hC2_t₁ := hC2 t₁ ht₁_Ioo hγt₁
-      obtain ⟨a₀, b₀, ht₁_Ioo_a₀b₀, _hab₀_sub, h_a₀b₀_cont⟩ :=
-        h_cont_deriv_cross t₁ ht₁_Ioo hγt₁
+      obtain ⟨a₀, b₀, ht₁_Ioo_a₀b₀, _hab₀_sub, h_a₀b₀_cont⟩ := h_cont_deriv_cross t₁ ht₁_Ioo hγt₁
       -- Intersect isolating interval with continuous-deriv interval and with (c,d)
       -- to get [α, β] with α < t₁ < β, [α,β] ⊆ [a',b'] ∩ [a₀,b₀] ∩ [c,d]
       set α := max (max a' a₀) c with hα_def
@@ -614,8 +607,7 @@ private theorem cpv_exists_on_subinterval
       have h_unique_αβ : ∀ t ∈ Icc α β, γ.toFun t = z₀ → t = t₁ :=
         fun t ht hγt => h_unique t (hαβ_sub_a'b' ht) hγt
       -- Continuous derivative on [α, β]
-      have h_cont_αβ : ContinuousOn (deriv γ.toFun) (Icc α β) :=
-        h_a₀b₀_cont.mono hαβ_sub_a₀b₀
+      have h_cont_αβ : ContinuousOn (deriv γ.toFun) (Icc α β) := h_a₀b₀_cont.mono hαβ_sub_a₀b₀
       -- γ(α) ≠ z₀ and γ(β) ≠ z₀
       have hαβ_lt : α < β := lt_trans hα_lt_t₁ ht₁_lt_β
       have hα_ne : γ.toFun α ≠ z₀ := fun h =>

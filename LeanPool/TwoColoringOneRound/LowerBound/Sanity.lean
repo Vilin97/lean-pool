@@ -66,13 +66,8 @@ private lemma not_all_small (e : Edge 5) : ¬ (∀ i : Fin 4, e.1 i < two5) := b
   classical
   intro hall
   let emb : Fin 4 ↪ Small5 :=
-    { toFun := fun i => ⟨e.1 i, hall i⟩
-      inj' := by
-        intro i j hij
-        apply e.2
-        exact congrArg Subtype.val hij }
-  have hle : Fintype.card (Fin 4) ≤ Fintype.card Small5 :=
-    Fintype.card_le_of_embedding emb
+    ⟨fun i => ⟨e.1 i, hall i⟩, fun i j hij => e.2 (congrArg Subtype.val hij)⟩
+  have hle : Fintype.card (Fin 4) ≤ Fintype.card Small5 := Fintype.card_le_of_embedding emb
   -- Turn the card inequality into a numeral contradiction.
   simp only [Fintype.card_fin, card_Small5] at hle
   exact (by decide : ¬(4 : Nat) ≤ 2) hle
@@ -81,13 +76,8 @@ private lemma not_all_big (e : Edge 5) : ¬ (∀ i : Fin 4, two5 ≤ e.1 i) := b
   classical
   intro hall
   let emb : Fin 4 ↪ Big5 :=
-    { toFun := fun i => ⟨e.1 i, hall i⟩
-      inj' := by
-        intro i j hij
-        apply e.2
-        exact congrArg Subtype.val hij }
-  have hle : Fintype.card (Fin 4) ≤ Fintype.card Big5 :=
-    Fintype.card_le_of_embedding emb
+    ⟨fun i => ⟨e.1 i, hall i⟩, fun i j hij => e.2 (congrArg Subtype.val hij)⟩
+  have hle : Fintype.card (Fin 4) ≤ Fintype.card Big5 := Fintype.card_le_of_embedding emb
   simp only [Fintype.card_fin, card_Big5] at hle
   exact (by decide : ¬(4 : Nat) ≤ 3) hle
 
@@ -109,23 +99,13 @@ private lemma monochromatic_iff_pat (e : Edge 5) :
   · intro hmono
     rcases hpatterns.mp hmono with hall0 | hall1 | hall2 | hall3
     · -- all bits `false` is impossible for an injective 4-tuple into `Small5` (only 2 elements)
-      have hall : ∀ i : Fin 4, e.1 i < two5 := by
-        intro i
+      exact (not_all_small (e := e) fun i => by
         fin_cases i
-        · exact hall0.1
-        · exact hall0.2.1
-        · exact hall0.2.2.1
-        · exact hall0.2.2.2
-      exact False.elim (not_all_small (e := e) hall)
+        exacts [hall0.1, hall0.2.1, hall0.2.2.1, hall0.2.2.2]).elim
     · -- all bits `true` is impossible for an injective 4-tuple into `Big5` (only 3 elements)
-      have hall : ∀ i : Fin 4, two5 ≤ e.1 i := by
-        intro i
+      exact (not_all_big (e := e) fun i => by
         fin_cases i
-        · exact hall1.1
-        · exact hall1.2.1
-        · exact hall1.2.2.1
-        · exact hall1.2.2.2
-      exact False.elim (not_all_big (e := e) hall)
+        exacts [hall1.1, hall1.2.1, hall1.2.2.1, hall1.2.2.2]).elim
     · exact Or.inl hall2
     · exact Or.inr hall3
   · rintro (h1001 | h0110)
@@ -135,23 +115,19 @@ private lemma card_pat1001 : Fintype.card {e : Edge 5 // pat1001 e} = 12 := by
   classical
   have h :
       Fintype.card {e : Edge 5 // pat1001 e}
-        = (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 := by
-    exact EdgePatterns.card_pat1001 (n := 5) (two := two5)
-  have hnum : (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 = 12 := by
-    rw [card_Big5, card_Small5]
-    decide
-  exact h.trans hnum
+        = (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 :=
+    EdgePatterns.card_pat1001 (n := 5) (two := two5)
+  rw [card_Big5, card_Small5] at h
+  exact h
 
 private lemma card_pat0110 : Fintype.card {e : Edge 5 // pat0110 e} = 12 := by
   classical
   have h :
       Fintype.card {e : Edge 5 // pat0110 e}
-        = (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 := by
-    exact EdgePatterns.card_pat0110 (n := 5) (two := two5)
-  have hnum : (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 = 12 := by
-    rw [card_Big5, card_Small5]
-    decide
-  exact h.trans hnum
+        = (Fintype.card Big5).descFactorial 2 * (Fintype.card Small5).descFactorial 2 :=
+    EdgePatterns.card_pat0110 (n := 5) (two := two5)
+  rw [card_Big5, card_Small5] at h
+  exact h
 
 theorem edgeCount_5 : edgeCount 5 = 120 := by
   classical
@@ -193,7 +169,7 @@ theorem monoCount_f5 : monoCount f5 = 24 := by
     _ = 24 := by decide
 
 theorem monoFraction_f5 : monoFraction f5 = (1 : ℚ) / 5 := by
-  simp [monoFraction, monoCount_f5, edgeCount_5]
+  rw [monoFraction, monoCount_f5, edgeCount_5]
   norm_num
 
 end Sanity

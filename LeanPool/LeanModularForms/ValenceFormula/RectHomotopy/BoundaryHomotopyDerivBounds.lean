@@ -21,14 +21,10 @@ namespace RectHomotopyProof
 private lemma hasDerivAt_arc_exp (α β c t : ℝ) :
     HasDerivAt (fun t' : ℝ => Complex.exp (((α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) * I))
       ((β : ℂ) * I * Complex.exp (((α : ℂ) + ((t : ℂ) - c) * (β : ℂ)) * I)) t := by
-  have h_shift : HasDerivAt (fun t' : ℝ => (t' : ℂ) - c) 1 t := by
-    have h := @ContinuousLinearMap.hasDerivAt ℝ _ ℂ _ _ t Complex.ofRealCLM
-    simp only [Complex.ofRealCLM_apply] at h
-    exact h.sub_const (c : ℂ)
+  have h_shift : HasDerivAt (fun t' : ℝ => (t' : ℂ) - c) 1 t :=
+    Complex.ofRealCLM.hasDerivAt.sub_const (c : ℂ)
   have h_inner : HasDerivAt (fun t' : ℝ => (α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) (β : ℂ) t := by
-    have h_mul := h_shift.mul_const (β : ℂ)
-    simp only [one_mul] at h_mul
-    exact h_mul.const_add (α : ℂ)
+    simpa only [one_mul] using (h_shift.mul_const (β : ℂ)).const_add (α : ℂ)
   have h_times_I : HasDerivAt (fun t' : ℝ => ((α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) * I)
       ((β : ℂ) * I) t := h_inner.mul_const I
   have h := (Complex.hasDerivAt_exp (((α : ℂ) + ((t : ℂ) - c) * (β : ℂ)) * I)).comp t h_times_I
@@ -45,11 +41,9 @@ private lemma hasDerivAt_chordSegment_shift (a b : ℂ) (c t : ℝ) :
       have := (hasDerivAt_const t (1 : ℝ)).sub h_shift
       simp only [zero_sub] at this
       exact this
-    have := h_coef.smul_const a
-    simpa only [neg_one_smul] using this
+    simpa only [neg_one_smul] using h_coef.smul_const a
   have h2 : HasDerivAt (fun t' : ℝ => (t' - c) • b) b t := by
-    have := h_shift.smul_const b
-    simpa only [one_smul] using this
+    simpa only [one_smul] using h_shift.smul_const b
   convert h1.add h2 using 1
   ring
 
@@ -148,10 +142,7 @@ lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
                   (t - 1) * ((Real.pi : ℝ) / 6)) *
                   I)) +
            s • (iPoint - rho')) t := by
-        have h1 := h_arc.const_smul (1 - s)
-        have h2 := h_chord.const_smul s
-        have := h1.add h2
-        convert this
+        convert (h_arc.const_smul (1 - s)).add (h_chord.const_smul s)
       rw [h_combined.deriv]
       calc ‖(1 - s) • (((Real.pi : ℝ) / 6) * I *
                 Complex.exp (((Real.pi : ℝ) / 3 +
@@ -346,9 +337,7 @@ lemma norm_deriv_H_seg3_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
                   (t - 2) * ((Real.pi : ℝ) / 6)) *
                   I)) +
            s • (rho - iPoint)) t := by
-        have h1 := h_arc.const_smul (1 - s)
-        have h2 := h_chord.const_smul s
-        convert h1.add h2
+        convert (h_arc.const_smul (1 - s)).add (h_chord.const_smul s)
       rw [h_combined.deriv]
       calc ‖(1 - s) • (((Real.pi : ℝ) / 6) * I *
                 Complex.exp (((Real.pi : ℝ) / 2 +
@@ -603,8 +592,7 @@ lemma norm_deriv_H_seg5_le (t : ℝ) (_s : ℝ) :
         HasDerivAt (fun t' : ℝ =>
             (↑t' : ℂ) - 9/2) 1 t :=
       h1.sub_const (9/2)
-    have := h2.add_const ((HHeight : ℂ) * I)
-    convert this using 1
+    convert h2.add_const ((HHeight : ℂ) * I) using 1
   rw [h_deriv.deriv]
   norm_num
 

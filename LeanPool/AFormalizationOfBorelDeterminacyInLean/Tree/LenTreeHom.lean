@@ -110,8 +110,7 @@ lemma take_apply (f : S ⟶ T) (n : ℕ) (x : S) :
   · simpa [List.prefix_take_iff] using f.monotone' (List.take_prefix n x.val)
   · simp only [LenHom.h_length_simp, take_coe, List.length_take]
 lemma take_apply_val (f : S ⟶ T) (n : ℕ) (x : S) :
-  (f (take n x)).val = (f x).val.take n :=
-  congr_arg Subtype.val (take_apply f n x)
+  (f (take n x)).val = (f x).val.take n := congr_arg Subtype.val (take_apply f n x)
 lemma prefix_iff (f : S ⟶ T) x y (hf : Function.Injective f) :
   f x ≤ f y ↔ x ≤ y := by
   constructor <;> intro h

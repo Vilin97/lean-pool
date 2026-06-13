@@ -134,30 +134,8 @@ lemma centralizer_tensor_centralizer :
     (Algebra.TensorProduct.map (Subalgebra.centralizer F B).val
       (Subalgebra.centralizer F B').val).range := by
   refine le_antisymm ?_ ?_
-  · have := Algebra.TensorProduct.includeLeft (R := F) (S := F) (A := A) (B := B') |>.comp B.val
-    have ineq1 :
-        Subalgebra.centralizer F (A := A ⊗[F] A')
-          ((Algebra.TensorProduct.map B.val B'.val).range :
-            Subalgebra F (A ⊗[F] A')) ≤
-        Subalgebra.centralizer F (A := A ⊗[F] A')
-          (Algebra.TensorProduct.includeLeft (R := F) (S := F) (A := A) (B := A') |>.comp
-            B.val).range ⊓
-        Subalgebra.centralizer F (A := A ⊗[F] A')
-          (Algebra.TensorProduct.includeRight (R := F) (A := A) (B := A') |>.comp
-            B'.val).range := by
-      apply centralizer_tensor_le_inf_centralizer
-    have eq1 : Subalgebra.centralizer F (A := A ⊗[F] A')
-          (Algebra.TensorProduct.includeLeft (R := F) (S := F) (A := A) (B := A') |>.comp
-            B.val).range =
-          (Algebra.TensorProduct.map (Subalgebra.centralizer F B).val (AlgHom.id F A')).range := by
-      apply centralizer_inclusionLeft (𝒜' := 𝒜')
-    have eq2 : Subalgebra.centralizer F (A := A ⊗[F] A')
-          (Algebra.TensorProduct.includeRight (R := F) (A := A) (B := A') |>.comp
-            B'.val).range =
-          (Algebra.TensorProduct.map (AlgHom.id F A) (Subalgebra.centralizer F B').val).range := by
-      apply centralizer_inclusionRight (𝒜 := 𝒜)
-    refine ineq1.trans ?_
-    rw [eq1, eq2]
+  · refine (centralizer_tensor_le_inf_centralizer (B := B) (B' := B')).trans ?_
+    rw [centralizer_inclusionLeft (𝒜' := 𝒜'), centralizer_inclusionRight (𝒜 := 𝒜)]
     have := IsCentralSimple.TensorProduct.submodule_tensor_inf_tensor_submodule F A A'
       (Subalgebra.toSubmodule <| Subalgebra.centralizer F (B : Set A))
       (Subalgebra.toSubmodule <| Subalgebra.centralizer F (B' : Set A'))
@@ -458,9 +436,7 @@ def Subalgebra.conj (B : Subalgebra F A) (x : Aˣ) : Subalgebra F A where
 
 omit [FiniteDimensional F A] [Algebra.IsCentral F A] [IsSimpleRing A] in
 lemma Subalgebra.mem_conj {B : Subalgebra F A} {x : Aˣ} {y : A} :
-    y ∈ B.conj x ↔ ∃ b ∈ B, y = x * b * x⁻¹ := by
-  simp only [conj]
-  rfl
+    y ∈ B.conj x ↔ ∃ b ∈ B, y = x * b * x⁻¹ := Iff.rfl
 
 /-- The algebra homomorphism from a subalgebra to its conjugate. -/
 @[simps]
@@ -834,10 +810,7 @@ lemma dim_centralizer :
     Module.End.rightMulEquiv (F := F) (B := B) |>.toLinearEquiv.finrank_eq
   rw [eq'] at this
   rw [show Module.finrank F Bᵐᵒᵖ = Module.finrank F B by rw [finrank_mop], ← mul_assoc] at this
-  rw [Nat.mul_left_inj] at this
-  · exact this
-  rw [← pos_iff_ne_zero]
-  exact Module.finrank_pos
+  rwa [Nat.mul_left_inj Module.finrank_pos.ne'] at this
 
 lemma double_centralizer :
     Subalgebra.centralizer F (Subalgebra.centralizer F (B : Set A) : Set A) = B := by
@@ -846,14 +819,10 @@ lemma double_centralizer :
   · intro x hx y hy
     exact hy x hx |>.symm
   · haveI := centralizerIsSimple B (Module.finBasis F _)
-    have eq1 := dim_centralizer F B
-    have eq2 := dim_centralizer F (A := A) (Subalgebra.centralizer F B)
-    have eq3 := eq1.trans eq2.symm
+    have eq3 := (dim_centralizer F B).trans (dim_centralizer F (A := A)
+      (Subalgebra.centralizer F B)).symm
     rw [mul_comm] at eq3
-    have eq4 := Nat.mul_left_inj (by
-      suffices 0 < Module.finrank F (Subalgebra.centralizer F (B : Set A)) by omega
-      apply Module.finrank_pos) |>.1 eq3
-    exact eq4
+    exact (Nat.mul_left_inj Module.finrank_pos.ne').1 eq3
 
 /-
 074U

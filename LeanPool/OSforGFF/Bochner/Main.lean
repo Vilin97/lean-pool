@@ -501,8 +501,7 @@ theorem pd_l1_fourier_re_nonneg_ax
     (V : Type*) [NormedAddCommGroup V] [InnerProductSpace ℝ V]
     [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V]
     (φ : V → ℂ) (hpd : IsPositiveDefinite φ) (hint : Integrable φ) (hcont : Continuous φ)
-    (ξ : V) : 0 ≤ (𝓕 φ ξ).re :=
-  pd_l1_fourier_re_nonneg_theorem φ hpd hint hcont ξ
+    (ξ : V) : 0 ≤ (𝓕 φ ξ).re := pd_l1_fourier_re_nonneg_theorem φ hpd hint hcont ξ
 
 omit [InnerProductSpace ℝ V] [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] in
 /-- 𝓕(φ_ε)(ξ) → 𝓕(φ)(ξ) as ε → 0⁺, by dominated convergence.
@@ -702,8 +701,7 @@ lemma measure_of_pd_l1 (φ : V → ℂ)
       rw [h1, hint_eq]; simp
     rw [hre_eq]; simp
   -- Step 9: Package as ProbabilityMeasure
-  have hfm : IsFiniteMeasure μ_raw := by
-    constructor; rw [htotal]; exact ENNReal.one_lt_top
+  have hfm : IsFiniteMeasure μ_raw := by constructor; rw [htotal]; exact ENNReal.one_lt_top
   have hprob : IsProbabilityMeasure μ_raw := ⟨htotal⟩
   set μ : ProbabilityMeasure V := ⟨μ_raw, hprob⟩
   -- Step 10: charFun(μ)(t) = φ(t) via Fourier inversion
@@ -737,8 +735,7 @@ lemma measure_of_pd_l1 (φ : V → ℂ)
   simp only [hdensity_simp]
   -- Goal: (𝓕ψ x).re • cexp(⟪x,ξ⟫ * I) = cexp(2π⟪x,τ⁻¹ξ⟫ * I) • 𝓕ψ x
   have him : (𝓕 ψ x).im = 0 := (hψ_ft_nonneg x).2
-  have hre_cast : 𝓕 ψ x = ↑((𝓕 ψ x).re) := by
-    apply Complex.ext <;> simp [him]
+  have hre_cast : 𝓕 ψ x = ↑((𝓕 ψ x).re) := by apply Complex.ext <;> simp [him]
   -- 2π⟪x,τ⁻¹ξ⟫ = 2π · τ⁻¹ · ⟪x,ξ⟫ = ⟪x,ξ⟫ (since τ = 2π)
   have hinner : 2 * π * ⟪x, τ⁻¹ • ξ⟫_ℝ = ⟪x, ξ⟫_ℝ := by
     rw [real_inner_smul_right, hτ_def]
@@ -1014,8 +1011,7 @@ private lemma gaussianRegularize_deviation_bound (φ : V → ℂ)
   -- Triangle inequality
   calc ‖(1 - φ v) + φ v * (1 - cexp (-(ε : ℂ) * ↑(‖v‖ ^ 2)))‖
       ≤ ‖1 - φ v‖ + ‖φ v * (1 - cexp (-(ε : ℂ) * ↑(‖v‖ ^ 2)))‖ := norm_add_le _ _
-    _ = ‖1 - φ v‖ + ‖φ v‖ * ‖1 - cexp (-(ε : ℂ) * ↑(‖v‖ ^ 2))‖ := by
-        rw [norm_mul]
+    _ = ‖1 - φ v‖ + ‖φ v‖ * ‖1 - cexp (-(ε : ℂ) * ↑(‖v‖ ^ 2))‖ := by rw [norm_mul]
     _ ≤ ‖1 - φ v‖ + 1 * ‖1 - cexp (-(ε : ℂ) * ↑(‖v‖ ^ 2))‖ := by
         gcongr
         -- ‖φ v‖ ≤ (φ 0).re = 1
@@ -1060,8 +1056,7 @@ private lemma charFun_measure_inner_bound (φ : V → ℂ)
         ≤ ‖(1 : ℂ) - φ (t • y)‖ + ‖t • y‖ ^ 2 :=
           gaussianRegularize_deviation_bound φ hpd hnorm _ ε hε hε1
       _ ≤ C + ‖t • y‖ ^ 2 := by gcongr; exact hCbound t ht
-      _ = C + t ^ 2 * ‖y‖ ^ 2 := by
-          rw [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs]
+      _ = C + t ^ 2 * ‖y‖ ^ 2 := by rw [norm_smul, Real.norm_eq_abs, mul_pow, sq_abs]
       _ ≤ C + (2 * r⁻¹) ^ 2 * ‖y‖ ^ 2 := by
           have hle : -(2 * r⁻¹) ≤ 2 * r⁻¹ := by linarith [inv_pos.mpr hr]
           rw [Set.uIoc_of_le hle] at ht
@@ -1156,8 +1151,7 @@ theorem gaussianRegularize_measures_tight (φ : V → ℂ)
       calc 16 * ‖y‖ ^ 2 / δ
           ≤ Real.sqrt (16 * ‖y‖ ^ 2 / δ) ^ 2 :=
             le_of_eq (Real.sq_sqrt (by positivity)).symm
-        _ < r ^ 2 := by
-            exact pow_lt_pow_left₀ hsqrt_le (Real.sqrt_nonneg _) (by norm_num)
+        _ < r ^ 2 := by exact pow_lt_pow_left₀ hsqrt_le (Real.sqrt_nonneg _) (by norm_num)
     rw [inv_pow, mul_inv_lt_iff₀ (sq_pos_of_pos hr_pos)]
     -- hr_sq: 16 * ‖y‖² / δ < r², i.e. 16 * ‖y‖² < δ * r²
     rw [div_lt_iff₀ hδ_pos] at hr_sq

@@ -38,8 +38,7 @@ lemma isVar_cases
     apply Measurable.fun_comp
     · apply measurable_from_top
     · apply hix
-  have hφk (n) : IsVar (φ (Function.invFun k n)) := by
-    simp only [hφ]
+  have hφk (n) : IsVar (φ (Function.invFun k n)) := hφ _
   have := isVar_cases' hix' hφk
   simp only [hk'] at this
   apply this
@@ -128,8 +127,8 @@ lemma isHom_comp
 lemma isHom_comp'
     {f : B → C} (hf : IsHom f)
     {g : A → B} (hg : IsHom g)
-    : IsHom (fun x ↦ f (g x)) := by
-  exact isHom_comp hf hg
+    : IsHom (fun x ↦ f (g x)) :=
+  isHom_comp hf hg
 
 @[simp]
 lemma isHom_const (x : B) : IsHom (Function.const A x) := by

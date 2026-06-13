@@ -229,8 +229,7 @@ lemma gff_generating_time_invariant (m : ℝ) [Fact (0 < m)] (s : ℝ) (f : Test
       ∂(gaussianFreeFieldFree m).toMeasure =
     ∫ ω, Complex.exp (distributionPairingℂReal ω f)
       ∂(gaussianFreeFieldFree m).toMeasure := by
-  rw [gff_mgf_formula, gff_mgf_formula]
-  rw [freeCovarianceℂ_bilinear_timeTranslation_invariant m s f f]
+  rw [gff_mgf_formula, gff_mgf_formula, freeCovarianceℂ_bilinear_timeTranslation_invariant m s f f]
 
 /-! ## Joint MGF Factorization -/
 
@@ -255,8 +254,7 @@ lemma gff_joint_mgf_factorization (m : ℝ) [Fact (0 < m)] (f g : TestFunction�
       (∫ ω, Complex.exp (distributionPairingℂReal ω (f + g))
       ∂(gaussianFreeFieldFree m).toMeasure) := by
     congr 1; ext ω; rw [h_pairing_add]
-  rw [h_lhs]
-  rw [gff_mgf_formula, gff_mgf_formula, gff_mgf_formula]
+  rw [h_lhs, gff_mgf_formula, gff_mgf_formula, gff_mgf_formula]
   rw [gff_two_point_equals_covarianceℂ_free]
   rw [freeCovarianceℂ_bilinear_add_left, freeCovarianceℂ_bilinear_add_right,
       freeCovarianceℂ_bilinear_add_right]
@@ -287,8 +285,7 @@ lemma exp_sub_one_bound_general (x : ℂ) : ‖Complex.exp x - 1‖ ≤ ‖x‖ 
           = Real.exp ‖x‖ * (1 - Real.exp (-‖x‖)) := by
             rw [Real.exp_neg]
             field_simp
-        _ ≤ Real.exp ‖x‖ * ‖x‖ := by
-            apply mul_le_mul_of_nonneg_left this (le_of_lt hexp_pos)
+        _ ≤ Real.exp ‖x‖ * ‖x‖ := by apply mul_le_mul_of_nonneg_left this (le_of_lt hexp_pos)
         _ = ‖x‖ * Real.exp ‖x‖ := mul_comm _ _
     · push Not at hr1
       calc Real.exp ‖x‖ - 1

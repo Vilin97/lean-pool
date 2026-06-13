@@ -151,8 +151,7 @@ instance instTopologicalSpace : TopologicalSpace RapidDecaySeq :=
   (SeminormFamily.moduleFilterBasis (𝕜 := ℝ) rapidDecaySeminorm).topology
 
 theorem rapidDecay_withSeminorms :
-    WithSeminorms (rapidDecaySeminorm : ℕ → Seminorm ℝ RapidDecaySeq) :=
-  ⟨rfl⟩
+    WithSeminorms (rapidDecaySeminorm : ℕ → Seminorm ℝ RapidDecaySeq) := ⟨rfl⟩
 
 instance instIsTopologicalAddGroup : IsTopologicalAddGroup RapidDecaySeq :=
   rapidDecay_withSeminorms.topologicalAddGroup
@@ -544,8 +543,7 @@ theorem finset_sup_rapidDecaySeminorm_basisVec_le (s : Finset ℕ) (m : ℕ) :
   calc (s.sup rapidDecaySeminorm) (basisVec m)
       ≤ rapidDecaySeminorm (s.sup id) (basisVec m) :=
         finset_sup_rapidDecaySeminorm_le s (basisVec m)
-    _ = (1 + (m : ℝ)) ^ (s.sup id) :=
-        rapidDecaySeminorm_basisVec _ m
+    _ = (1 + (m : ℝ)) ^ (s.sup id) := rapidDecaySeminorm_basisVec _ m
 
 end RapidDecaySeq
 
@@ -713,12 +711,10 @@ def fromPairIndex (n m : ℕ) : ℕ := Nat.pair n m
 def toPairIndex (p : ℕ) : ℕ × ℕ := Nat.unpair p
 
 theorem toPairIndex_fromPairIndex (n m : ℕ) :
-    toPairIndex (fromPairIndex n m) = (n, m) :=
-  Nat.unpair_pair n m
+    toPairIndex (fromPairIndex n m) = (n, m) := Nat.unpair_pair n m
 
 theorem fromPairIndex_toPairIndex (p : ℕ) :
-    fromPairIndex (toPairIndex p).1 (toPairIndex p).2 = p :=
-  Nat.pair_unpair p
+    fromPairIndex (toPairIndex p).1 (toPairIndex p).2 = p := Nat.pair_unpair p
 
 /-! ### Pure tensor embedding -/
 
@@ -777,13 +773,11 @@ private theorem one_add_pair_le_sq (i j : ℕ) :
     (1 + (Nat.pair i j : ℝ)) ≤ (2 * (1 + (i : ℝ)) * (1 + (j : ℝ))) ^ 2 := by
   have hi : (0 : ℝ) ≤ i := Nat.cast_nonneg i
   have hj : (0 : ℝ) ≤ j := Nat.cast_nonneg j
-  have h_pair : (Nat.pair i j : ℝ) ≤ ((i : ℝ) + j + 1) ^ 2 := by
-    exact_mod_cast nat_pair_bound i j
+  have h_pair : (Nat.pair i j : ℝ) ≤ ((i : ℝ) + j + 1) ^ 2 := by exact_mod_cast nat_pair_bound i j
   calc (1 : ℝ) + Nat.pair i j
       ≤ 1 + (i + j + 1) ^ 2 := by linarith
     _ ≤ (i + j + 2) ^ 2 := by nlinarith
-    _ ≤ (2 * (1 + i) * (1 + j)) ^ 2 := by
-        exact pow_le_pow_left₀ (by positivity) (by nlinarith) _
+    _ ≤ (2 * (1 + i) * (1 + j)) ^ 2 := by exact pow_le_pow_left₀ (by positivity) (by nlinarith) _
 
 /-- The pure tensor map: given `e₁ : E₁` and `e₂ : E₂` with DM structure,
 produces the sequence `m ↦ coeff(unpair(m).1, e₁) * coeff(unpair(m).2, e₂)`.
@@ -843,8 +837,7 @@ noncomputable def pure
           B₁ / (1 + (i : ℝ)) ^ 2 := by
         rw [le_div_iff₀ (pow_pos hi_pos 2)]
         calc |DyninMityaginSpace.coeff i e₁| * (1 + ↑i) ^ (2 * k) * (1 + ↑i) ^ 2
-            = |DyninMityaginSpace.coeff i e₁| * ((1 + ↑i) ^ (2 * k) * (1 + ↑i) ^ 2) :=
-              by ring
+            = |DyninMityaginSpace.coeff i e₁| * ((1 + ↑i) ^ (2 * k) * (1 + ↑i) ^ 2) := by ring
           _ = |DyninMityaginSpace.coeff i e₁| * (1 + ↑i) ^ (2 * k + 2) := by
               rw [← pow_add]
           _ ≤ B₁ := hc₁ i
@@ -852,8 +845,7 @@ noncomputable def pure
           B₂ / (1 + (j : ℝ)) ^ 2 := by
         rw [le_div_iff₀ (pow_pos hj_pos 2)]
         calc |DyninMityaginSpace.coeff j e₂| * (1 + ↑j) ^ (2 * k) * (1 + ↑j) ^ 2
-            = |DyninMityaginSpace.coeff j e₂| * ((1 + ↑j) ^ (2 * k) * (1 + ↑j) ^ 2) :=
-              by ring
+            = |DyninMityaginSpace.coeff j e₂| * ((1 + ↑j) ^ (2 * k) * (1 + ↑j) ^ 2) := by ring
           _ = |DyninMityaginSpace.coeff j e₂| * (1 + ↑j) ^ (2 * k + 2) := by
               rw [← pow_add]
           _ ≤ B₂ := hc₂ j
@@ -1053,8 +1045,7 @@ theorem pure_continuous :
   -- Package as AddMonoidHom for continuous_of_continuousAt_zero₂
   set f : E₁ →+ E₂ →+ NuclearTensorProduct E₁ E₂ :=
     { toFun := fun e₁ => (pureLin e₁).toAddMonoidHom
-      map_zero' := by
-        ext e₂ m; simp [pureLin, pure_val]; rfl
+      map_zero' := by ext e₂ m; simp [pureLin, pure_val]; rfl
       map_add' := fun e₁ e₁' => by
         ext e₂ m; simp [pureLin, pure_val, add_mul] }
   change Continuous (fun p : E₁ × E₂ => f p.1 p.2)
@@ -1154,8 +1145,7 @@ private lemma lift_summable
               (pow_le_pow_left₀ h1i hi_le S₁) (le_of_lt hD₁)) (le_of_lt hC))
             (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ h1j hj_le S₂) (le_of_lt hD₂))
             (by positivity) (by positivity)
-      _ = K * (|a.val m| * (1 + (m : ℝ)) ^ (S₁ + S₂)) := by
-          rw [hK_def, pow_add]; ring
+      _ = K * (|a.val m| * (1 + (m : ℝ)) ^ (S₁ + S₂)) := by rw [hK_def, pow_add]; ring
 
 /-- Auxiliary: the norm bound for `lift` as a term-by-term inequality.
 Extracts the common calculation used in both `lift` continuity and `lift_summable`.
@@ -1379,14 +1369,12 @@ theorem lift_pure
         congr 1; ext n; congr 1; exact (h_inner n).tsum_eq.symm
     _ = ∑' n, ∑' k, c₁ n e₁ • (c₂ k e₂ • B (ψ₁ n) (ψ₂ k)) := by
         congr 1; ext n; exact ((h_inner n).summable.tsum_const_smul _).symm
-    _ = ∑' n, ∑' k, (c₁ n e₁ * c₂ k e₂) • B (ψ₁ n) (ψ₂ k) := by
-        simp_rw [mul_smul]
+    _ = ∑' n, ∑' k, (c₁ n e₁ * c₂ k e₂) • B (ψ₁ n) (ψ₂ k) := by simp_rw [mul_smul]
     _ = ∑' (p : ℕ × ℕ), (c₁ p.1 e₁ * c₂ p.2 e₂) •
           B (ψ₁ p.1) (ψ₂ p.2) :=
         (h_summ_prod.tsum_prod' h_fiber).symm
     _ = ∑' m, (c₁ (Nat.unpair m).1 e₁ * c₂ (Nat.unpair m).2 e₂) •
-          B (ψ₁ (Nat.unpair m).1) (ψ₂ (Nat.unpair m).2) :=
-        (Equiv.tsum_eq Nat.pairEquiv.symm _).symm
+          B (ψ₁ (Nat.unpair m).1) (ψ₂ (Nat.unpair m).2) := (Equiv.tsum_eq Nat.pairEquiv.symm _).symm
 
 end Lift
 

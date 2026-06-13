@@ -93,12 +93,9 @@ lemma psd_cauchy_schwarz
   let u : ι → ℝ := B.mulVec x
   let v : ι → ℝ := B.mulVec y
   -- xᵀ (Bᵀ B) y = (Bx)⋅(By), and similarly for x/x and y/y
-  have hxy : x ⬝ᵥ (B.transpose * B).mulVec y = u ⬝ᵥ v := by
-    simpa [u, v] using hform x y
-  have hxx : x ⬝ᵥ (B.transpose * B).mulVec x = u ⬝ᵥ u := by
-    simpa [u] using hform x x
-  have hyy : y ⬝ᵥ (B.transpose * B).mulVec y = v ⬝ᵥ v := by
-    simpa [v] using hform y y
+  have hxy : x ⬝ᵥ (B.transpose * B).mulVec y = u ⬝ᵥ v := by simpa [u, v] using hform x y
+  have hxx : x ⬝ᵥ (B.transpose * B).mulVec x = u ⬝ᵥ u := by simpa [u] using hform x x
+  have hyy : y ⬝ᵥ (B.transpose * B).mulVec y = v ⬝ᵥ v := by simpa [v] using hform y y
   -- Cauchy–Schwarz in ℝ^ι: |u⋅v|^2 ≤ (u⋅u)(v⋅v)
   have hCS : (u ⬝ᵥ v)^2 ≤ (u ⬝ᵥ u) * (v ⬝ᵥ v) := by
     classical
@@ -202,8 +199,7 @@ lemma frobenius_pos_of_psd_posdef
       -- Uu is a unitary group element, coerce to show membership
       rw [show U = Uu.val from rfl]
       exact Uu.property
-    have hU_unitary : U * U.conjTranspose = 1 := by
-      exact Matrix.mem_unitaryGroup_iff.mp hU_mem
+    have hU_unitary : U * U.conjTranspose = 1 := by exact Matrix.mem_unitaryGroup_iff.mp hU_mem
     have hU_right : U * U.transpose = 1 := by
       simpa [Matrix.conjTranspose_eq_transpose_of_trivial] using hU_unitary
     exact congr_transpose_mul_mul_ne_zero U G hU_right hG_ne_zero
@@ -212,12 +208,8 @@ lemma frobenius_pos_of_psd_posdef
   have htrace_cycle : Matrix.trace (G.transpose * B) = Matrix.trace (H * (Matrix.diagonal d)) := by
     have hG_symm : G.transpose = G := by
       simpa [Matrix.IsHermitian, Matrix.conjTranspose_eq_transpose_of_trivial] using hG_herm
-    rw [hG_symm, hB_decomp]
-    rw [← Matrix.mul_assoc, ← Matrix.mul_assoc]
-    rw [Matrix.trace_mul_comm]
-    rw [Matrix.mul_assoc]
-    rw [← Matrix.mul_assoc]
-    rw [Matrix.mul_assoc]
+    rw [hG_symm, hB_decomp, ← Matrix.mul_assoc, ← Matrix.mul_assoc]
+    rw [Matrix.trace_mul_comm, Matrix.mul_assoc, ← Matrix.mul_assoc, Matrix.mul_assoc]
     simp [H, Matrix.mul_assoc]
   -- Expand trace(H * diagonal d) as ∑ i d i * H i i
   have htrace_sum : Matrix.trace (H * Matrix.diagonal d) = ∑ i, d i * H i i := by
@@ -238,8 +230,6 @@ lemma frobenius_pos_of_psd_posdef
       exact mul_nonneg (le_of_lt (hd_pos i)) (hdiag_nonneg i)
     exact add_pos_of_pos_of_nonneg h_pos h_nonneg
   -- Transport back to the original Frobenius sum
-  have htrace_pos : 0 < Matrix.trace (H * Matrix.diagonal d) := by
-    simpa [htrace_sum] using hsum_pos
-  have htrace_pos' : 0 < Matrix.trace (G.transpose * B) := by
-    simpa [htrace_cycle] using htrace_pos
+  have htrace_pos : 0 < Matrix.trace (H * Matrix.diagonal d) := by simpa [htrace_sum] using hsum_pos
+  have htrace_pos' : 0 < Matrix.trace (G.transpose * B) := by simpa [htrace_cycle] using htrace_pos
   simpa [hfrob_trace] using htrace_pos'

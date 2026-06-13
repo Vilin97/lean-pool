@@ -554,8 +554,7 @@ theorem Qam.orthogonalProjection'_eq [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)}
     hφ.toMatrix.symm
       (TensorProduct.toKronecker
         ((TensorProduct.map id (transposeAlgEquiv p ℂ ℂ).symm.toLinearMap)
-          ((hφ.psi (ψ := φ) 0 (1 / 2)) A)))) :=
-by
+          ((hφ.psi (ψ := φ) 0 (1 / 2)) A)))) := by
   withMatrixQuantumCtx[φ]
   exact (Qam.idempotent_and_real_iff_exists_ortho_proj A).mp ⟨hA1, hA2⟩ |>.choose_spec
 
@@ -581,8 +580,7 @@ theorem Qam.IdempotentAndReal.eq [hφ : φ.IsFaithfulPosMap]
           (LinearMap.adjoint
             (LinearMap.mulRight ℂ
               (φ.matrix *
-                (Qam.onbOfIdempotentAndReal hA1 hA2 i).1)))) :=
-by
+                (Qam.onbOfIdempotentAndReal hA1 hA2 i).1)))) := by
   withMatrixQuantumCtx[φ]
   let U := Qam.submoduleOfIdempotentAndReal hA1 hA2
   letI : AddCommGroup U := Submodule.addCommGroup U
@@ -634,8 +632,7 @@ theorem Qam.reflIdempotent_zero [hφ : φ.IsFaithfulPosMap] (a : l(ℍ)) : Qam.r
   map_zero _
 
 theorem Qam.zero_reflIdempotent [hφ : φ.IsFaithfulPosMap] (a : l(ℍ)) : Qam.reflIdempotent hφ 0 a =
-  0 := by
-  simp_rw [LinearMap.map_zero, LinearMap.zero_apply]
+  0 := by simp_rw [LinearMap.map_zero, LinearMap.zero_apply]
 
 /-- Number of edges of a real QAM, computed as the rank of its associated submodule. -/
 @[reducible]
@@ -703,16 +700,14 @@ theorem RealQam.edges_eq [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : RealQam 
 
 theorem completeGraphRealQam [hφ : φ.IsFaithfulPosMap] :
     withProjectionMatrixCoalgebraQuantum[φ]
-    (RealQam hφ (Qam.completeGraph ℍ ℍ)) :=
-by
+    (RealQam hφ (Qam.completeGraph ℍ ℍ)) := by
   withProjectionMatrixCoalgebraQuantumCtx[φ]
   exact ⟨Qam.Nontracial.CompleteGraph.qam, Qam.Nontracial.CompleteGraph.isReal⟩
 
 theorem Qam.completeGraph_edges [hφ : φ.IsFaithfulPosMap] :
   withProjectionMatrixCoalgebraQuantum[φ]
   ((@completeGraphRealQam p _ _ φ hφ).edges =
-    FiniteDimensional.finrank ℂ (⊤ : Submodule ℂ ℍ)) :=
-by
+    FiniteDimensional.finrank ℂ (⊤ : Submodule ℂ ℍ)) := by
   withProjectionMatrixCoalgebraQuantumCtx[φ]
   have this : (RealQam.edges completeGraphRealQam : ℂ) =
     (Qam.completeGraph ℍ ℍ φ.matrix⁻¹).trace := RealQam.edges_eq _
@@ -729,8 +724,7 @@ by
 theorem Qam.trivialGraphRealQam [hφ : φ.IsFaithfulPosMap] [Nonempty p] :
     withProjectionMatrixCoalgebraQuantum[φ]
     (letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
-     RealQam hφ (Qam.trivialGraph ℍ)) :=
-by
+     RealQam hφ (Qam.trivialGraph ℍ)) := by
   withProjectionMatrixCoalgebraQuantumCtx[φ]
   letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
   exact ⟨Qam.Nontracial.TrivialGraph.qam, Qam.Nontracial.trivialGraph.isReal⟩
@@ -738,8 +732,7 @@ by
 theorem Qam.trivialGraph_edges [hφ : φ.IsFaithfulPosMap] [Nonempty p] :
     withProjectionMatrixCoalgebraQuantum[φ]
     (letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
-     (@Qam.trivialGraphRealQam p _ _ φ hφ _).edges = 1) :=
-by
+     (@Qam.trivialGraphRealQam p _ _ φ hφ _).edges = 1) := by
   withProjectionMatrixCoalgebraQuantumCtx[φ]
   letI : QuantumSetDeltaForm ℍ := Matrix.quantumSetDeltaForm (φ := φ)
   have := RealQam.edges_eq (@Qam.trivialGraphRealQam p _ _ φ hφ _)

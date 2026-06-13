@@ -98,8 +98,7 @@ theorem innerAut_adjoint_eq_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
       ext1
       simp_rw [innerAutStarAlg_symm_apply, innerAutStarAlg_apply, Unitary.star_eq_inv,
         UnitaryGroup.inv_apply, star_star]
-    have hf' : innerAut (star U) = (innerAutStarAlg U).symm.toLinearMap := by
-      rw [hh, hf]
+    have hf' : innerAut (star U) = (innerAutStarAlg U).symm.toLinearMap := by rw [hh, hf]
     have := List.TFAE.out
         (@Module.Dual.IsFaithfulPosMap.starAlgEquiv_is_isometry_tFAE n _ _ φ hφ _
           (innerAutStarAlg U))
@@ -114,15 +113,13 @@ theorem Qam.mul'_adjoint_commutes_with_innerAut_lm [hφ : φ.IsFaithfulPosMap] [
     withMatrixQuantum[φ]
     (
     TensorProduct.map (innerAut x) (innerAut x) ∘ₗ Coalgebra.comul =
-      Coalgebra.comul ∘ₗ innerAut x) :=
-by
+      Coalgebra.comul ∘ₗ innerAut x) := by
   exact withMatrixQuantum[φ] (commutes_with_mul''_adjoint (f := innerAutStarAlg x) (by
       rw [innerAutStarAlg_apply, ← hx, mul_assoc, ← unitaryGroup.star_coe_eq_coe_star,
         unitaryGroup.star_coe_eq_coe_star, Unitary.coe_mul_star_self, mul_one]))
 
 theorem Qam.unit_commutes_with_innerAut_lm (U : Matrix.unitaryGroup n ℂ) :
-  innerAut U ∘ₗ η = η := by
-  rw [commutes_with_unit_iff, innerAut_apply_one]
+  innerAut U ∘ₗ η = η := by rw [commutes_with_unit_iff, innerAut_apply_one]
 
 theorem Qam.mul'_commutes_with_innerAut_lm (x : Matrix.unitaryGroup n ℂ) :
     m ∘ₗ ((innerAut x) ⊗ₘ (innerAut x)) = innerAut x ∘ₗ m :=
@@ -408,8 +405,7 @@ theorem innerAut_lm_basis_apply (U : Matrix.unitaryGroup n ℂ) (i j k l : n) :
 lemma Module.Dual.IsFaithfulPosMap.basis_eq_onb_toBasis
   [hφ : φ.IsFaithfulPosMap] :
   withMatrixQuantum[φ]
-  (hφ.basis = (hφ.orthonormalBasis).toBasis) :=
-by
+  (hφ.basis = (hφ.orthonormalBasis).toBasis) := by
   exact withMatrixQuantum[φ] (by
     ext
     simp only [OrthonormalBasis.coe_toBasis, Module.Dual.IsFaithfulPosMap.orthonormalBasis_apply,
@@ -421,8 +417,7 @@ theorem Qam.rankOne_toMatrix_of_star_algEquiv_coord [hφ : φ.IsFaithfulPosMap]
   (
   hφ.toMatrix |x⟩⟨y| (i, j) (k, l) =
     ((x * hφ.matrixIsPosDef.rpow (1 / 2)) ⊗ₖ (y * hφ.matrixIsPosDef.rpow (1 / 2))ᴴᵀ)
-      (i, k) (j, l)) :=
-by
+      (i, k) (j, l)) := by
   exact withMatrixQuantum[φ] (by
     simp only [Module.Dual.IsFaithfulPosMap.toMatrix,
       LinearMap.toMatrixAlgEquiv,

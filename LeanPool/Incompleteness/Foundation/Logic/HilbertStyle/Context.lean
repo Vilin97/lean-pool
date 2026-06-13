@@ -54,8 +54,7 @@ lemma mem_def {φ : F} {Γ : FiniteContext F 𝓢} : φ ∈ Γ ↔ φ ∈ Γ.ctx
   iff_of_eq rfl
 
 @[simp 1100] lemma not_mem_empty (φ : F) : ¬φ ∈ (∅ :
-    FiniteContext F 𝓢) := by
-  simp [EmptyCollection.emptyCollection]
+    FiniteContext F 𝓢) := by simp [EmptyCollection.emptyCollection]
 
 instance : Collection F (FiniteContext F 𝓢) where
   subset_iff := List.subset_def

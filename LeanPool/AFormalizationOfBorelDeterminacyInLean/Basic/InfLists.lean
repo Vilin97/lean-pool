@@ -28,8 +28,7 @@ namespace Discrete
   (x ++ₛ ·) ∘ (y ++ₛ ·) = ((x ++ y) ++ₛ ·) := by
   ext1; simp
 @[simp] lemma subAtInf_append (T : Set (Stream' A)) (x y : List A) :
-  (y ++ₛ ·)⁻¹' ((x ++ₛ ·)⁻¹' T) = ((x ++ y) ++ₛ ·)⁻¹' T := by
-  simp [← Set.preimage_comp]
+  (y ++ₛ ·)⁻¹' ((x ++ₛ ·)⁻¹' T) = ((x ++ y) ++ₛ ·)⁻¹' T := by simp [← Set.preimage_comp]
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def principalOpen : Set (Stream' A) := Set.range (x ++ₛ ·)

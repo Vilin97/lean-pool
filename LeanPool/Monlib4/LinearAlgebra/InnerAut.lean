@@ -393,8 +393,7 @@ theorem _root_.Matrix.innerAut_posSemidef_iff (U : unitaryGroup n 𝕜) {a : Mat
   · intro h
     rw [← Matrix.nonneg_iff_posSemidef] at h ⊢
     rcases CStarAlgebra.nonneg_iff_eq_star_mul_self.mp h with ⟨b, hb⟩
-    rw [hb, Matrix.innerAut.map_mul]
-    rw [← Matrix.innerAut.map_star]
+    rw [hb, Matrix.innerAut.map_mul, ← Matrix.innerAut.map_star]
     exact CStarAlgebra.nonneg_iff_eq_star_mul_self.mpr ⟨innerAut U b, rfl⟩
 
 theorem _root_.Matrix.posSemidef_innerAut {a : Matrix n n 𝕜} (ha : a.PosSemidef)
@@ -502,8 +501,7 @@ theorem _root_.StarAlgEquiv.of_matrix_is_inner
     exact hpos_def
   have hpositive : 0 < RCLike.re α := by
     have hαpos : 0 < α := (Matrix.posDef_diagonal_iff.mp hdiag_pos) h.some
-    rw [hα_re, RCLike.ofReal_pos] at hαpos
-    exact hαpos
+    rwa [hα_re, RCLike.ofReal_pos] at hαpos
   have hunitary :
       (((RCLike.re α : ℝ) ^ (-(1 / 2 : ℝ)) : ℝ) : 𝕜) • y ∈ unitaryGroup n 𝕜 := by
     rw [mem_unitaryGroup_iff', star_eq_conjTranspose]

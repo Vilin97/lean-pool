@@ -232,17 +232,13 @@ theorem varOfDirIdx_eq_some_iff (d : DirIdx) (i : Var) :
 theorem varOfDirIdx_spec (d : DirIdx) (hd : d ≠ idDirIdx) :
     ∃ i : Var, varOfDirIdx d = some i ∧ (d = varOrbit i ∨ d = invDir (varOrbit i)) := by
   classical
-  have hNone : varOfDirIdx d ≠ none := by
-    intro h
-    have : d = idDirIdx := (varOfDirIdx_eq_none_iff (d := d)).1 h
-    exact hd this
+  have hNone : varOfDirIdx d ≠ none :=
+    fun h => hd ((varOfDirIdx_eq_none_iff (d := d)).1 h)
   cases hOpt : varOfDirIdx d with
   | none =>
       cases hNone hOpt
   | some i0 =>
-      refine ⟨i0, ?_, ?_⟩
-      · rfl
-      · exact (varOfDirIdx_eq_some_iff (d := d) (i := i0)).1 hOpt
+      exact ⟨i0, rfl, (varOfDirIdx_eq_some_iff (d := d) (i := i0)).1 hOpt⟩
 
 private theorem ASymm_varOrbit_entry_one_of_orbit {u v : V} {d0 : DirIdx} {i0 : Var}
     (hd0 : dirMask v u = maskAt d0)

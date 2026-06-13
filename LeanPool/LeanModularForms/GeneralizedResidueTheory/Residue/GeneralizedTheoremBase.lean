@@ -93,8 +93,7 @@ private lemma finset_min_sep (S0 : Finset ℂ)
       push Not at h_all_eq
       have hsub : S0 ⊆ {s} := fun x hx =>
         Finset.mem_singleton.mpr (h_all_eq x hx s hs)
-      have h0 : 0 < S0.card :=
-        Finset.card_pos.mpr ⟨s, hs⟩
+      have h0 : 0 < S0.card := Finset.card_pos.mpr ⟨s, hs⟩
       have := Finset.card_le_card hsub
       simp only [Finset.card_singleton] at this; omega
     obtain ⟨s₁, hs₁, s₂, hs₂, hne₁₂⟩ := h_exists_pair
@@ -104,8 +103,7 @@ private lemma finset_min_sep (S0 : Finset ℂ)
       refine Finset.Nonempty.image ?_ _
       exact ⟨(s₁, s₂), Finset.mem_filter.mpr
         ⟨Finset.mem_product.mpr ⟨hs₁, hs₂⟩, hne₁₂⟩⟩
-    obtain ⟨δ, hδ_mem, hδ_min⟩ :=
-      Finset.exists_min_image _ id h_finite
+    obtain ⟨δ, hδ_mem, hδ_min⟩ := Finset.exists_min_image _ id h_finite
     simp only [id] at hδ_min
     have hδ_mem' := Finset.mem_image.mp hδ_mem
     obtain ⟨⟨a, b⟩, hab_mem, hab_eq⟩ := hδ_mem'
@@ -165,13 +163,11 @@ private lemma cpv_cauchy_of_sum_and_regular (S0 : Finset ℂ) (f : ℂ → ℂ)
     have hg_decomp : ∀ z, z ∉ (S0 : Set ℂ) →
         f z = g_reg z + ∑ s ∈ S0, residueSimplePole f s / (z - s) := by
       intro z _; simp only [g_reg]; ring
-    have hS0_sep : ∃ δ' > 0, ∀ s ∈ S0, ∀ s' ∈ S0, s ≠ s' → δ' ≤ ‖s' - s‖ :=
-      ⟨δ, hδ_pos, hδ_sep⟩
+    have hS0_sep : ∃ δ' > 0, ∀ s ∈ S0, ∀ s' ∈ S0, s ≠ s' → δ' ≤ ‖s' - s‖ := ⟨δ, hδ_pos, hδ_sep⟩
     exact multipointPV_diff_tendsto S0 f γ (cpv_crossing_null S0 γ)
       g_reg hg_decomp hg_reg_cont hS0_sep
   have h_M_tendsto : Tendsto M (𝓝[>] 0) (𝓝 (L + G)) := by
-    have h_eq : M = fun ε => S' ε + A ε := by
-      ext ε; simp [M, A, S']
+    have h_eq : M = fun ε => S' ε + A ε := by ext ε; simp [M, A, S']
     rw [h_eq]
     exact h_sum_tendsto.add h_A_tendsto
   exact h_M_tendsto.cauchy_map
@@ -198,8 +194,7 @@ lemma cauchyPrincipalValueOn_singular_sum (S0 : Finset ℂ) (f : ℂ → ℂ)
     intro t _
     simp only [Finset.notMem_empty, false_and,
       exists_false, ↓reduceIte]
-  · have hS0_nonempty : S0.Nonempty :=
-      Finset.nonempty_iff_ne_empty.mpr hS0_empty
+  · have hS0_nonempty : S0.Nonempty := Finset.nonempty_iff_ne_empty.mpr hS0_empty
     unfold CauchyPrincipalValueExistsOn
     exact CompleteSpace.complete
       (cpv_cauchy_of_sum_and_regular S0 f γ hS0_nonempty hPV_each hg_reg_cont)
@@ -212,13 +207,11 @@ private lemma holomorphic_closed_integral_zero (U : Set ℂ) (hU : IsOpen U)
     (hγ_in_U : ∀ t ∈ Icc γ.a γ.b, γ.toFun t ∈ U)
     (hg_cont_on_image : ContinuousOn g (γ.toFun '' Icc γ.a γ.b)) :
     ∫ t in γ.a..γ.b, g (γ.toFun t) * deriv γ.toFun t = 0 := by
-  have hU_ne : U.Nonempty :=
-    ⟨γ.toFun γ.a, hγ_in_U γ.a (left_mem_Icc.mpr (le_of_lt γ.hab))⟩
+  have hU_ne : U.Nonempty := ⟨γ.toFun γ.a, hγ_in_U γ.a (left_mem_Icc.mpr (le_of_lt γ.hab))⟩
   obtain ⟨F, hF⟩ := holomorphic_convex_primitive hU_convex hU hU_ne hg_diff
   have h_Fγ_cont : ContinuousOn (F ∘ γ.toFun) (Icc γ.a γ.b) := by
     intro t ht
-    have hFcont : ContinuousAt F (γ.toFun t) :=
-      (hF (γ.toFun t) (hγ_in_U t ht)).continuousAt
+    have hFcont : ContinuousAt F (γ.toFun t) := (hF (γ.toFun t) (hγ_in_U t ht)).continuousAt
     exact hFcont.continuousWithinAt.comp (γ.continuous_toFun t ht) (mapsTo_image γ.toFun _)
   have h_deriv :
       ∀ t ∈ Ioo γ.a γ.b, t ∉ γ.partition →
@@ -299,8 +292,7 @@ private lemma single_pole_pv_base_exists
   simp only [h_int_eq]
   have hL' : Tendsto (fun ε => c * ∫ t in γ.a..γ.b,
       if ‖γ.toFun t - s‖ > ε then (γ.toFun t - s)⁻¹ * deriv γ.toFun t else 0)
-      (𝓝[>] 0) (𝓝 L) := by
-    convert hL using 1; ext ε; exact (cpv_integral_factor_const γ s c ε).symm
+      (𝓝[>] 0) (𝓝 L) := by convert hL using 1; ext ε; exact (cpv_integral_factor_const γ s c ε).symm
   convert hL'.const_mul c⁻¹ using 1
   · ext ε; simp only [inv_mul_cancel_left₀ hc]
   · congr 1; field_simp [hc]
@@ -346,8 +338,7 @@ private lemma cpv_eq_sum_single_pole_cpvs
       exact hLs.limUnder_eq
     rw [h_eq_L]; exact hLs
   have hg_decomp : ∀ z, z ∉ (S0 : Set ℂ) →
-      f z = g z + ∑ s ∈ S0, residueSimplePole f s / (z - s) := by
-    intro z _; simp only [g]; ring
+      f z = g z + ∑ s ∈ S0, residueSimplePole f s / (z - s) := by intro z _; simp only [g]; ring
   have hS0_sep :
       ∃ δ' > 0, ∀ s ∈ S0, ∀ s' ∈ S0, s ≠ s' → δ' ≤ ‖s' - s‖ := by
     by_cases hS0_card : S0.card ≤ 1
@@ -407,8 +398,7 @@ private lemma generalizedResidueTheorem'_crossing_formula
       hg_cont_on_image hg_integral_zero
   calc cauchyPrincipalValueOn S0 f γ.toFun γ.a γ.b
       = ∑ s ∈ S0, cauchyPrincipalValue'
-          (fun z => residueSimplePole f s / (z - s)) γ.toFun γ.a γ.b s :=
-        h_multipoint_eq_sum
+          (fun z => residueSimplePole f s / (z - s)) γ.toFun γ.a γ.b s := h_multipoint_eq_sum
     _ = ∑ s ∈ S0, (2 * Real.pi * I *
           generalizedWindingNumber' γ.toFun γ.a γ.b s *
           residueSimplePole f s) := by
@@ -448,8 +438,7 @@ theorem generalizedResidueTheorem'
       ∀ s ∈ S0, ∀ s' ∈ S0,
         s ≠ s' → 0 < ‖s' - s‖ := by
     intro s hs s' hs' hne
-    obtain ⟨ε, hε_pos, hε_sep⟩ :=
-      hS_discrete s (hS0_subset s hs)
+    obtain ⟨ε, hε_pos, hε_sep⟩ := hS_discrete s (hS0_subset s hs)
     exact lt_of_lt_of_le hε_pos
       (hε_sep s' (hS0_subset s' hs') (Ne.symm hne))
   have h_decomp :=
@@ -530,8 +519,7 @@ theorem residueSimplePole_eq_of_decomposition (f : ℂ → ℂ) (z₀ c : ℂ) (
     rw [show (0 : ℂ) = z₀ - z₀ from (sub_self z₀).symm]
     exact tendsto_nhdsWithin_of_tendsto_nhds
       (continuous_id.sub continuous_const).continuousAt.tendsto
-  have h_g : Tendsto g (𝓝[≠] z₀) (𝓝 (g z₀)) :=
-    hg.continuousAt.tendsto.mono_left nhdsWithin_le_nhds
+  have h_g : Tendsto g (𝓝[≠] z₀) (𝓝 (g z₀)) := hg.continuousAt.tendsto.mono_left nhdsWithin_le_nhds
   have h_prod : Tendsto (fun z => (z - z₀) * g z) (𝓝[≠] z₀) (𝓝 0) := by
     have := h_sub.mul h_g; simp only [zero_mul] at this; exact this
   have h_ev : ∀ᶠ z in 𝓝[≠] z₀, (z - z₀) * f z = c + (z - z₀) * g z := by
@@ -563,10 +551,8 @@ private lemma residueAt_eq_of_simple_pole_decomp (f : ℂ → ℂ) (z₀ c : ℂ
   have hr_ne : r ≠ 0 := ne_of_gt hr_pos
   have h_eq_on : Set.EqOn f (fun z => c * (z - z₀)⁻¹ + g z) (Metric.sphere z₀ r) := by
     intro z hz
-    have h_ne : z ≠ z₀ := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
-    have h_in : dist z z₀ < rf := by
-      rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
+    have h_ne : z ≠ z₀ := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+    have h_in : dist z z₀ < rf := by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
     have h_mem : z ∈ Metric.ball z₀ rf ∩ {z₀}ᶜ :=
       ⟨Metric.mem_ball.mpr h_in, Set.mem_compl_singleton_iff.mpr h_ne⟩
     have := hrf_eq h_mem
@@ -579,8 +565,7 @@ private lemma residueAt_eq_of_simple_pole_decomp (f : ℂ → ℂ) (z₀ c : ℂ
   have h_ci_inv : CircleIntegrable (fun z => (z - z₀)⁻¹) z₀ r :=
     circleIntegrable_sub_inv_iff.mpr (Or.inr (by
       rw [Metric.mem_sphere, dist_self, abs_of_pos hr_pos]; exact hr_ne.symm))
-  have h_ci_cinv : CircleIntegrable (fun z => c * (z - z₀)⁻¹) z₀ r :=
-    h_ci_inv.const_fun_smul
+  have h_ci_cinv : CircleIntegrable (fun z => c * (z - z₀)⁻¹) z₀ r := h_ci_inv.const_fun_smul
   have h_int_eq : (∮ z in C(z₀, r), f z) =
       c * (∮ z in C(z₀, r), (z - z₀)⁻¹) + (∮ z in C(z₀, r), g z) := by
     rw [circleIntegral.integral_congr hr_pos.le h_eq_on,
@@ -682,8 +667,7 @@ lemma cpv_eq_of_cancel_and_exists
     (fun ε =>
       ((∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f γ.toFun ε t) -
        (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f_res γ.toFun ε t)) +
-      (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f_res γ.toFun ε t)) := by
-    ext ε; ring
+      (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f_res γ.toFun ε t)) := by ext ε; ring
   have h_f_tendsto : Tendsto
       (fun ε => ∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0 f γ.toFun ε t)
       (𝓝[>] 0) (𝓝 L_res) := by
@@ -723,8 +707,7 @@ theorem generalizedResidueTheorem_higher_order_tendsto
        (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
          (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) +
       (∫ t in γ.a..γ.b, cauchyPrincipalValueIntegrandOn S0
-         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by
-    ext ε; ring
+         (fun z => ∑ s ∈ S0, residueAt f s / (z - s)) γ.toFun ε t)) := by ext ε; ring
   rw [h_eq, show (2 * Real.pi * I * ∑ s ∈ S0,
       generalizedWindingNumber' γ.toFun γ.a γ.b s * residueAt f s) =
     0 + (2 * Real.pi * I * ∑ s ∈ S0,

@@ -288,8 +288,7 @@ private lemma euclideanSnoc_y_hasTemperateGrowth (d : ℕ) (t : ℝ) :
   have hL_bound : ∀ y, ‖L_fun y‖ ≤ 1 * ‖y‖ := fun y => by
     rw [one_mul]
     have hdef : ‖L_fun y‖ = ‖euclideanSnoc (d + 1) y 0‖ := rfl
-    have h : ‖euclideanSnoc (d + 1) y 0‖ ^ 2 = ‖y‖ ^ 2 := by
-      rw [euclideanSnoc_norm_sq]; ring
+    have h : ‖euclideanSnoc (d + 1) y 0‖ ^ 2 = ‖y‖ ^ 2 := by rw [euclideanSnoc_norm_sq]; ring
     nlinarith [norm_nonneg (euclideanSnoc (d + 1) y 0), norm_nonneg y,
       sq_nonneg (‖euclideanSnoc (d + 1) y 0‖ - ‖y‖)]
   set L := L_fun.mkContinuous 1 hL_bound
@@ -381,8 +380,7 @@ private lemma euclideanSnoc_decomp (d : ℕ) (y : EuclideanSpace ℝ (Fin (d + 1
   · intro j; simp [Fin.snoc_castSucc]
 
 private lemma euclideanSnoc_linearCLM_norm_le (d : ℕ) :
-    ‖euclideanSnoc_linearCLM d‖ ≤ 1 :=
-  LinearMap.mkContinuous_norm_le _ zero_le_one _
+    ‖euclideanSnoc_linearCLM d‖ ≤ 1 := LinearMap.mkContinuous_norm_le _ zero_le_one _
 
 /-- Pointwise bound: the y-seminorm of the slice `f ∘ euclideanSnoc · t` is
 bounded by the seminorm of `f`, uniformly in `t`. This uses the chain rule
@@ -434,8 +432,7 @@ private lemma schwartz_slice_y_le_seminorm (d : ℕ)
                   (fun _ _ => euclideanSnoc_linearCLM_norm_le d)
             _ = 1 := by simp
       _ = ‖iteratedFDeriv ℝ m f (c + L y)‖ := by rw [mul_one, h_trans]
-      _ = ‖iteratedFDeriv ℝ m f (euclideanSnoc (d + 1) y t)‖ := by
-          rw [euclideanSnoc_decomp d y t]
+      _ = ‖iteratedFDeriv ℝ m f (euclideanSnoc (d + 1) y t)‖ := by rw [euclideanSnoc_decomp d y t]
   -- Step 6: Combine with Schwartz decay
   calc ‖y‖ ^ k * ‖iteratedFDeriv ℝ m (schwartz_slice_y d f t) y‖
       ≤ ‖y‖ ^ k * ‖iteratedFDeriv ℝ m f (euclideanSnoc (d + 1) y t)‖ :=
@@ -676,8 +673,7 @@ private lemma schwartz_slice_partial_chain_rule (d : ℕ)
     simp only [Function.comp_apply, f']
     congr 1
     exact euclideanSnoc_decomp d y' t
-  rw [h_fun_eq]
-  rw [L.iteratedFDeriv_comp_right hf'_smooth y (WithTop.coe_le_coe.mpr le_top)]
+  rw [h_fun_eq, L.iteratedFDeriv_comp_right hf'_smooth y (WithTop.coe_le_coe.mpr le_top)]
   simp only [ContinuousMultilinearMap.compContinuousLinearMap_apply]
   congr 1
   ext u
@@ -1080,8 +1076,7 @@ private lemma schwartz_slice_partial_pointwise_bound (d : ℕ)
   set C_w := ‖ContinuousMultilinearMap.apply ℝ
     (fun _ : Fin l' => EuclideanSpace ℝ (Fin (d + 2))) ℝ w‖
   calc ‖y‖ ^ k * (‖t‖ ^ a * ‖iteratedFDeriv ℝ b (↑g) t‖)
-      ≤ ‖y‖ ^ k * (‖t‖ ^ a * ‖iteratedFDeriv ℝ b G (euclideanSnoc (d + 1) y t)‖) := by
-        gcongr
+      ≤ ‖y‖ ^ k * (‖t‖ ^ a * ‖iteratedFDeriv ℝ b G (euclideanSnoc (d + 1) y t)‖) := by gcongr
     _ ≤ ‖y‖ ^ k * (‖t‖ ^ a * (C_w *
           ‖iteratedFDeriv ℝ (b + l') (↑f : _ → ℝ) (euclideanSnoc (d + 1) y t)‖)) := by
         gcongr
@@ -1149,12 +1144,10 @@ lemma schwartz_slice_partial_seminorm_bound (d : ℕ) (k' l' a b : ℕ) :
           = ‖y‖ ^ k' * (‖t‖ ^ a * ‖iteratedFDeriv ℝ b (↑g) t‖) := by ring
         _ ≤ ‖ContinuousMultilinearMap.apply ℝ _ ℝ w‖ * f.seminorm ℝ (k' + a) (b + l') :=
             schwartz_slice_partial_pointwise_bound d f l' y v k' a b t
-        _ ≤ (∏ i : Fin l', ‖v i‖) * f.seminorm ℝ (k' + a) (b + l') := by
-            gcongr
+        _ ≤ (∏ i : Fin l', ‖v i‖) * f.seminorm ℝ (k' + a) (b + l') := by gcongr
     calc ‖y‖ ^ k' * SchwartzMap.seminorm ℝ a b g
         ≤ ‖y‖ ^ k' * (((∏ i, ‖v i‖) * f.seminorm ℝ (k' + a) (b + l')) / ‖y‖ ^ k') :=
           mul_le_mul_of_nonneg_left h_sem (le_of_lt hy_pos)
-      _ = (∏ i, ‖v i‖) * f.seminorm ℝ (k' + a) (b + l') :=
-          mul_div_cancel₀ _ (ne_of_gt hy_pos)
+      _ = (∏ i, ‖v i‖) * f.seminorm ℝ (k' + a) (b + l') := mul_div_cancel₀ _ (ne_of_gt hy_pos)
 
 end GaussianField

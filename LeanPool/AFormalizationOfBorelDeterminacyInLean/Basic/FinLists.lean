@@ -25,12 +25,10 @@ example (x : List α) {n m} (h : n = m) : x.get n = x.get m := by simp [h]-/
 @[simp] lemma append_compose (x y : List α) : (x ++ ·) ∘ (y ++ ·) = ((x ++ y) ++ ·) := by
   ext1; simp [List.append_assoc]
 @[simp] lemma subAtFin_append (T : Set (List α)) (x y : List α) :
-  (y ++ ·)⁻¹' ((x ++ ·)⁻¹' T) = ((x ++ y) ++ ·)⁻¹' T := by
-  simp [← Set.preimage_comp]
+  (y ++ ·)⁻¹' ((x ++ ·)⁻¹' T) = ((x ++ y) ++ ·)⁻¹' T := by simp [← Set.preimage_comp]
 
 lemma eq_take_concat (x : List α) n (h : x.length = n + 1) :
-  x = x.take n ++ [x[n]] := by
-  rw [take_concat_get', ← h, take_length]
+  x = x.take n ++ [x[n]] := by rw [take_concat_get', ← h, take_length]
 lemma head_eq_get (x : List α) h : x.head h = x[0]'(List.length_pos_iff.mpr h) :=
   (getElem_zero (List.length_pos_iff.mpr h)).symm
 lemma tail_eq_drop : ∀ x : List α, x.tail = x.drop 1
@@ -108,8 +106,7 @@ lemma zipInitsMap_append : (x ++ y).zipInitsMap f
 lemma IsPrefix.zipInitsMap (h : x <+: y) : x.zipInitsMap f <+: y.zipInitsMap f := by
   obtain ⟨_, rfl⟩ := h; rw [zipInitsMap_append]; constructor; rfl
 @[simp] lemma zipInitsMap_concat :
-  (x ++ [a]).zipInitsMap f = x.zipInitsMap f ++ [f a (x ++ [a])] := by
-  simp [zipInitsMap_append]
+  (x ++ [a]).zipInitsMap f = x.zipInitsMap f ++ [f a (x ++ [a])] := by simp [zipInitsMap_append]
 @[simp, simp_lengths] lemma zipInitsMap_length :
   (x.zipInitsMap f).length (α := no_index _) = x.length := by simp [zipInitsMap]
 lemma zipInitsMap_take : (x.zipInitsMap f).take n = (x.take n).zipInitsMap f := by
@@ -121,10 +118,8 @@ lemma zipInitsMap_map (g : β → γ) :
   x.zipInitsMap (fun a b ↦ g (f a b)) = (x.zipInitsMap f).map g := by
   simp [zipInitsMap, map_zipWith]
 @[simp] lemma zipInitsMap_eq_map (g : α → β) :
-  x.zipInitsMap (fun a _ ↦ g a) = x.map g := by
-  simp [zipInitsMap, ← map_zipWith, zipWith_left]
+  x.zipInitsMap (fun a _ ↦ g a) = x.map g := by simp [zipInitsMap, ← map_zipWith, zipWith_left]
 @[simp] lemma zipInitsMap_get n (h : n < (x.zipInitsMap f).length) : (x.zipInitsMap f)[n]
-  = f (x[n]'(by simpa using h)) (x.take (n + 1)) := by
-  simp [zipInitsMap]
+  = f (x[n]'(by simpa using h)) (x.take (n + 1)) := by simp [zipInitsMap]
 
 end List

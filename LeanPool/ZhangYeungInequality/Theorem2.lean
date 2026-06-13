@@ -791,13 +791,9 @@ private lemma sum_ptilde_over_y_z_u
     (μ : Measure Ω) [IsFiniteMeasure μ] (x : S₁) :
     (∑ y : S₂, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map X).real {x} := by
-  have step1 : (∑ y : S₂, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ y : S₂, ∑ u : S₄, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_congr rfl fun _ _ => Finset.sum_comm
-  have step2 : (∑ y : S₂, ∑ u : S₄, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ u : S₄, ∑ y : S₂, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_comm
-  rw [step1, step2]
+  rw [show (∑ y : S₂, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
+      = ∑ u : S₄, ∑ y : S₂, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) from
+    (Finset.sum_congr rfl fun _ _ => Finset.sum_comm).trans Finset.sum_comm]
   simp_rw [sum_ptilde_over_y_z hX hY hZ hU μ]
   exact sum_map_pair_second hX hU μ x
 
@@ -812,13 +808,9 @@ private lemma sum_ptilde_over_x_z_u
     (μ : Measure Ω) [IsFiniteMeasure μ] (y : S₂) :
     (∑ x : S₁, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map Y).real {y} := by
-  have step1 : (∑ x : S₁, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ x : S₁, ∑ u : S₄, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_congr rfl fun _ _ => Finset.sum_comm
-  have step2 : (∑ x : S₁, ∑ u : S₄, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ u : S₄, ∑ x : S₁, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_comm
-  rw [step1, step2]
+  rw [show (∑ x : S₁, ∑ z : S₃, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
+      = ∑ u : S₄, ∑ x : S₁, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u) from
+    (Finset.sum_congr rfl fun _ _ => Finset.sum_comm).trans Finset.sum_comm]
   simp_rw [sum_ptilde_over_x_z hX hY hZ hU μ]
   exact sum_map_pair_second hY hU μ y
 
@@ -833,17 +825,12 @@ private lemma sum_ptilde_over_x_y_u
     (μ : Measure Ω) [IsFiniteMeasure μ] (z : S₃) :
     (∑ x : S₁, ∑ y : S₂, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map Z).real {z} := by
-  have step1 : (∑ x : S₁, ∑ y : S₂, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ x : S₁, ∑ u : S₄, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_congr rfl fun _ _ => Finset.sum_comm
-  have step2 : (∑ x : S₁, ∑ u : S₄, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ u : S₄, ∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_comm
-  rw [step1, step2]
-  have hFibre : ∀ u : S₄, (∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
-      = (μ.map (fun ω => (Z ω, U ω))).real {(z, u)} :=
-    fun u => ptilde_fibre_sum hX hY hZ hU μ z u
-  simp_rw [hFibre]
+  rw [show (∑ x : S₁, ∑ y : S₂, ∑ u : S₄, ptilde X Y Z U μ (x, y, z, u))
+      = ∑ u : S₄, ∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) from
+    (Finset.sum_congr rfl fun _ _ => Finset.sum_comm).trans Finset.sum_comm]
+  simp_rw [show ∀ u : S₄, (∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
+      = (μ.map (fun ω => (Z ω, U ω))).real {(z, u)} from
+    fun u => ptilde_fibre_sum hX hY hZ hU μ z u]
   exact sum_map_pair_second hZ hU μ z
 
 omit [Fintype S₄] in
@@ -857,17 +844,12 @@ private lemma sum_ptilde_over_x_y_z
     (μ : Measure Ω) [IsFiniteMeasure μ] (u : S₄) :
     (∑ x : S₁, ∑ y : S₂, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u))
       = (μ.map U).real {u} := by
-  have step1 : (∑ x : S₁, ∑ y : S₂, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ x : S₁, ∑ z : S₃, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_congr rfl fun _ _ => Finset.sum_comm
-  have step2 : (∑ x : S₁, ∑ z : S₃, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
-      = ∑ z : S₃, ∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) :=
-    Finset.sum_comm
-  rw [step1, step2]
-  have hFibre : ∀ z : S₃, (∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
-      = (μ.map (fun ω => (Z ω, U ω))).real {(z, u)} :=
-    fun z => ptilde_fibre_sum hX hY hZ hU μ z u
-  simp_rw [hFibre]
+  rw [show (∑ x : S₁, ∑ y : S₂, ∑ z : S₃, ptilde X Y Z U μ (x, y, z, u))
+      = ∑ z : S₃, ∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u) from
+    (Finset.sum_congr rfl fun _ _ => Finset.sum_comm).trans Finset.sum_comm]
+  simp_rw [show ∀ z : S₃, (∑ x : S₁, ∑ y : S₂, ptilde X Y Z U μ (x, y, z, u))
+      = (μ.map (fun ω => (Z ω, U ω))).real {(z, u)} from
+    fun z => ptilde_fibre_sum hX hY hZ hU μ z u]
   exact sum_map_pair_first hZ hU μ u
 
 /-! ### Sum-to-one -/
@@ -2108,12 +2090,8 @@ private lemma theorem2_delta_le_zero
     Real.sum_mul_log_div_leq h_ptilde_nn h_phat_nn h_abs
   have h_kl_nonneg : 0 ≤ ∑ t ∈ s,
       ptilde X Y Z U μ t * Real.log (ptilde X Y Z U μ t / phat X Y Z U μ t) := by
-    have : (1 : ℝ) * Real.log (1 / 1) ≤
-        ∑ t ∈ s, ptilde X Y Z U μ t *
-          Real.log (ptilde X Y Z U μ t / phat X Y Z U μ t) := by
-      rw [h_ptilde_sum, h_phat_sum] at h_log_sum
-      exact h_log_sum
-    simpa using this
+    rw [h_ptilde_sum, h_phat_sum] at h_log_sum
+    simpa using h_log_sum
   have h_delta_eq : delta Z U X Y μ
       = ∑ t ∈ s, pJoint X Y Z U μ t *
           Real.log (phat X Y Z U μ t / ptilde X Y Z U μ t) :=

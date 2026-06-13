@@ -287,14 +287,11 @@ lemma nth_succ (v i : V) :
     v.[i + 1] = (sndIdx v).[i] :=
   nth_eq_of_graph (graph_succ.mpr <| nth_graph _ _)
 
-@[simp] lemma nth_cons_zero (x v : V) : (x ∷ v).[0] = x := by
-  simp [nth_zero]
+@[simp] lemma nth_cons_zero (x v : V) : (x ∷ v).[0] = x := by simp [nth_zero]
 
-@[simp] lemma nth_cons_succ (x v i : V) : (x ∷ v).[i + 1] = v.[i] := by
-  simp [nth_succ]
+@[simp] lemma nth_cons_succ (x v i : V) : (x ∷ v).[i + 1] = v.[i] := by simp [nth_succ]
 
-@[simp] lemma nth_cons_one (x v : V) : (x ∷ v).[1] = v.[0] := by
-  simpa using nth_cons_succ x v 0
+@[simp] lemma nth_cons_one (x v : V) : (x ∷ v).[1] = v.[0] := by simpa using nth_cons_succ x v 0
 
 @[simp] lemma nth_cons_two (x v : V) : (x ∷ v).[2] = v.[1] := by
   simpa [-nth_cons_succ, one_add_one_eq_two] using nth_cons_succ x v 1
@@ -702,8 +699,7 @@ lemma nth_ext {v₁ v₂ : V} (hl : len v₁ = len v₂) (H : ∀ i < len v₁, 
 
 lemma nth_ext' (l : V) {v₁ v₂ : V} (hl₁ : len v₁ = l) (hl₂ : len v₂ = l) (H :
     ∀ i < l, v₁.[i] = v₂.[i]) :
-    v₁ = v₂ := by
-  rcases hl₂; exact nth_ext hl₁ (by simpa [hl₁] using H)
+    v₁ = v₂ := by rcases hl₂; exact nth_ext hl₁ (by simpa [hl₁] using H)
 
 lemma le_of_nth_le_nth {v₁ v₂ : V} (hl : len v₁ = len v₂) (H : ∀ i < len v₁, v₁.[i] ≤ v₂.[i]) :
     v₁ ≤ v₂ := by
@@ -789,8 +785,7 @@ def listMax (v : V) : V := construction.result ![] v
 @[simp] lemma listMax_nil : listMax (0 : V) = 0 := by simp [listMax, construction]
 
 @[simp] lemma listMax_cons (x v : V) :
-    listMax (x ∷ v) = max x (listMax v) := by
-  simp [listMax, construction]
+    listMax (x ∷ v) = max x (listMax v) := by simp [listMax, construction]
 
 section «lp_section_11»
 
@@ -998,8 +993,7 @@ def concat (v z : V) : V := construction.result ![z] v
 @[simp] lemma concat_nil (z : V) : concat 0 z = ?[z] := by simp [concat, construction]
 
 @[simp] lemma concat_cons (x v z : V) :
-    concat (x ∷ v) z = x ∷ concat v z := by
-  simp [concat, construction]
+    concat (x ∷ v) z = x ∷ concat v z := by simp [concat, construction]
 
 section «lp_section_15»
 
@@ -1042,8 +1036,7 @@ lemma concat_nth_lt (v z : V) {i} (hi : i < len v) : (concat v z).[i] = v.[i] :=
   case nil => simp
   case cons x v ih => simp [ih]
 
-lemma concat_nth_len' (v z : V) {i} (hi : len v = i) : (concat v z).[i] = z := by
-  rcases hi; simp
+lemma concat_nth_len' (v z : V) {i} (hi : len v = i) : (concat v z).[i] = z := by rcases hi; simp
 
 end «lp_section_14»
 
@@ -1078,8 +1071,7 @@ lemma nth_mem_memVec {i v : V} (h : i < len v) : v.[i] ∈ᵥ v := ⟨i, by simp
     · rcases hx with ⟨i, hi, rfl⟩
       exact ⟨i + 1, by simp [hi]⟩
 
-lemma le_of_memVec {x v : V} (h : x ∈ᵥ v) : x ≤ v := by
-  rcases h with ⟨i, _, rfl⟩; simp
+lemma le_of_memVec {x v : V} (h : x ∈ᵥ v) : x ≤ v := by rcases h with ⟨i, _, rfl⟩; simp
 
 section «lp_section_17»
 
@@ -1183,12 +1175,10 @@ def _root_.LO.Arith.repeatVec.construction : PR.Construction V repeatVec.bluepri
 def repeatVec (x k : V) : V := repeatVec.construction.result ![x] k
 
 @[simp] lemma repeatVec_zero (x : V) :
-    repeatVec x 0 = 0 := by
-  simp [repeatVec, repeatVec.construction]
+    repeatVec x 0 = 0 := by simp [repeatVec, repeatVec.construction]
 
 @[simp] lemma repeatVec_succ (x k : V) :
-    repeatVec x (k + 1) = x ∷ repeatVec x k := by
-  simp [repeatVec, repeatVec.construction]
+    repeatVec x (k + 1) = x ∷ repeatVec x k := by simp [repeatVec, repeatVec.construction]
 
 section «lp_section_21»
 
@@ -1220,8 +1210,7 @@ end «lp_section_21»
   case zero => simp
   case succ k ih => simp [ih]
 
-@[simp] lemma le_repaetVec (x k : V) : k ≤ repeatVec x k := by
-  simpa using len_le (repeatVec x k)
+@[simp] lemma le_repaetVec (x k : V) : k ≤ repeatVec x k := by simpa using len_le (repeatVec x k)
 
 lemma nth_repeatVec (x k : V) {i} (h : i < k) : (repeatVec x k).[i] = x := by
   induction k using induction_sigma1 generalizing i

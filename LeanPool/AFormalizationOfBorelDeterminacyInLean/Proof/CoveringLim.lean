@@ -199,13 +199,11 @@ lemma cancel_resEq_inv_cast {m n} (h : n = m) (h' : k ≤ m) (x : (resEq k).obj 
     have : FixingEq k (limConeπMap hF n) := fixingEq_of_fixing (h := by synthFixing)
     apply cancel_inv_right_types
 lemma cancel_pInv_cast {m n} (h : m = n) x [Tree.Fixing x.val.length (limConeπMap hF n)] :
-  (limConeπMap hF m (pInv (limConeπMap hF n) x)) = cast (by rw [h]) x :=
-  by subst h; simp
+  (limConeπMap hF m (pInv (limConeπMap hF n) x)) = cast (by rw [h]) x := by subst h; simp
 lemma cast_lifts' {m n} (h : m = n) {S : (LvlStratHom.system p).obj ⟨limConePt hF⟩} {y} hy :
   (⟨((limConeBodyLifts hF S y hy n).1.res m).val, by apply resEq_mem⟩ :
     (F.obj (Opposite.op (k ⊔ n))).1)
-  = ⟨((limConeBodyLifts hF S y hy n).1.res n).val, by apply resEq_mem⟩ :=
-  by subst h; rfl
+  = ⟨((limConeBodyLifts hF S y hy n).1.res n).val, by apply resEq_mem⟩ := by subst h; rfl
 
 lemma take_apply_val_resEq {S T} (f : S ⟶ T) (k n : ℕ) (x : (resEq k).obj S) :
   (f ⟨x.val.take n, take_mem (resEq.val' x)⟩).val = (f (resEq.val' x)).val.take n :=
@@ -276,8 +274,7 @@ lemma limCone_body_consistent (S : (LvlStratHom.system p).obj ⟨limConePt hF⟩
   rw [← limConeStr_large (h := by simp_rw [le_sup_iff, le_add_iff_nonneg_right, zero_le, or_true])]
   simp only [limConeBodySystem, ExtensionsAt.valT'_coe, ExtensionsAt.val'_length]
   have :
-      Tree.Fixing (x.val.length + 1) (limConeπMap hF (n ⊔ (x.val.length + 1))) := by
-    synthFixing
+      Tree.Fixing (x.val.length + 1) (limConeπMap hF (n ⊔ (x.val.length + 1))) := by synthFixing
   change _ = (limConeπMap hF (n ⊔ (x.val.length + 1)))
     (resEq.val' ((limConeBodySystem hF S y yc).res (x.val.length + 1)))
   rw [limConeBodySystem_project hF S y yc (x.val.length + 1)]

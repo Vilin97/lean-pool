@@ -331,12 +331,10 @@ private def AONForM_idx {N M : Nat} (j : Fin M) (k : Fin (2 ^ N)) :
     have := AONForM_output_bound (N := N) j k; omega⟩
 
 private lemma AONForM_idx_i {N M : Nat} (j : Fin M) (k : Fin (2 ^ N)) :
-    AONForM_i (AONForM_idx j k) = k :=
-  AONForM_i_of_add j k _
+    AONForM_i (AONForM_idx j k) = k := AONForM_i_of_add j k _
 
 private lemma AONForM_idx_j {N M : Nat} (j : Fin M) (k : Fin (2 ^ N)) :
-    AONForM_j (AONForM_idx j k) = j :=
-  AONForM_j_of_add j k _
+    AONForM_j (AONForM_idx j k) = j := AONForM_j_of_add j k _
 
 /-- The multi-output DNF circuit correctly computes `f`. -/
 theorem AONForM_is_Correct {N M : Nat} [NeZero N] [NeZero M]

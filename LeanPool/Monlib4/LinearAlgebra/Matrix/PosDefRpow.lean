@@ -232,8 +232,7 @@ theorem _root_.Matrix.posDefOne_rpow (n : Type _) [Fintype n] [DecidableEq n] (r
     rw [dotProduct_comm, ← EuclideanSpace.inner_eq_star_dotProduct]
     rw [inner_self_eq_norm_sq_to_K, hQ.1.eigenvectorBasis.orthonormal.norm_eq_one]
     simp
-  rw [PosDef.rpow_eq]
-  rw [heig]
+  rw [PosDef.rpow_eq, heig]
   simp_rw [Pi.pow_def, Real.one_rpow]
   have hdiag : (diagonal (RCLike.ofReal ∘ fun _ : n => (1 : ℝ)) : Matrix n n 𝕜) = 1 := by
     ext i j

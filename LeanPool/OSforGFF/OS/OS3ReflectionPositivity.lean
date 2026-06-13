@@ -152,8 +152,7 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
           have h_smul_first : freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f
             j).val * c j =
             freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (c j • (f j).val) := by
-            rw [mul_comm]
-            rw [freeCovarianceFormR_smul_right]
+            rw [mul_comm, freeCovarianceFormR_smul_right]
           rw [h_smul_first, ih_right]
           -- Now apply freeCovarianceFormR_add_right
           rw [← freeCovarianceFormR_add_right]
@@ -227,11 +226,9 @@ lemma freeCovarianceFormR_reflection_expansion
     intro u v
     calc
       freeCovarianceFormR m u (-v)
-          = freeCovarianceFormR m (-v) u := by
-              exact freeCovarianceFormR_symm m u (-v)
+          = freeCovarianceFormR m (-v) u := by exact freeCovarianceFormR_symm m u (-v)
       _ = -freeCovarianceFormR m v u := h_neg_left v u
-      _ = -freeCovarianceFormR m u v := by
-            simp [freeCovarianceFormR_symm]
+      _ = -freeCovarianceFormR m u v := by simp [freeCovarianceFormR_symm]
   have h_cross : freeCovarianceFormR m θg f = Cfg := by
     simpa [θf, θg, Cfg]
       using
@@ -251,14 +248,11 @@ lemma freeCovarianceFormR_reflection_expansion
       simpa [sub_eq_add_neg, θg] using h_add
     calc
       freeCovarianceFormR m f (f - θg)
-          = freeCovarianceFormR m (f - θg) f := by
-              exact freeCovarianceFormR_symm m f (f - θg)
+          = freeCovarianceFormR m (f - θg) f := by exact freeCovarianceFormR_symm m f (f - θg)
       _ = freeCovarianceFormR m f f
             + freeCovarianceFormR m (-θg) f := h_add'
-      _ = Cf + (-freeCovarianceFormR m θg f) := by
-            simp [θg, Cf, h_neg_left]
-      _ = Cf - Cfg := by
-            simp [sub_eq_add_neg, h_cross]
+      _ = Cf + (-freeCovarianceFormR m θg f) := by simp [θg, Cf, h_neg_left]
+      _ = Cf - Cfg := by simp [sub_eq_add_neg, h_cross]
   have h_term₂ :
       freeCovarianceFormR m (-θg) (f - θg) = -Cfg + Cg := by
     have h_add :=
@@ -281,8 +275,7 @@ lemma freeCovarianceFormR_reflection_expansion
       calc
         freeCovarianceFormR m (-θg) (-θg)
             = -freeCovarianceFormR m θg (-θg) := h₁'
-        _ = -(-freeCovarianceFormR m θg θg) := by
-              exact neg_inj.mpr h₂'
+        _ = -(-freeCovarianceFormR m θg θg) := by exact neg_inj.mpr h₂'
         _ = freeCovarianceFormR m θg θg := by simp
     calc
       freeCovarianceFormR m (-θg) (f - θg)
@@ -291,11 +284,9 @@ lemma freeCovarianceFormR_reflection_expansion
       _ = freeCovarianceFormR m f (-θg)
             + freeCovarianceFormR m (-θg) (-θg) := h_add'
       _ = -freeCovarianceFormR m f θg
-            + freeCovarianceFormR m (-θg) (-θg) := by
-              simp [θg, h_neg_right]
+            + freeCovarianceFormR m (-θg) (-θg) := by simp [θg, h_neg_right]
       _ = -freeCovarianceFormR m f θg
-            + freeCovarianceFormR m θg θg := by
-              simp [h_negneg]
+            + freeCovarianceFormR m θg θg := by simp [h_negneg]
       _ = -Cfg + Cg := by
           have h_sym : freeCovarianceFormR m f θg = freeCovarianceFormR m θg f := by
             simpa using freeCovarianceFormR_symm m f θg
@@ -312,8 +303,7 @@ lemma freeCovarianceFormR_reflection_expansion
     freeCovarianceFormR m (f - θg) (f - θg)
         = freeCovarianceFormR m f (f - θg)
             + freeCovarianceFormR m (-θg) (f - θg) := h_total'
-    _ = (Cf - Cfg) + (-Cfg + Cg) := by
-          simp [h_term₁, h_term₂]
+    _ = (Cf - Cfg) + (-Cfg + Cg) := by simp [h_term₁, h_term₂]
     _ = Cf + Cg - 2 * Cfg := by ring
 
 /-- Evaluate the real generating functional of the free field on a real test function. -/
@@ -389,13 +379,11 @@ lemma gaussianFreeField_real_entry_factor
   set a : ℝ := -(1 / 2 : ℝ) * Cf
   set b : ℝ := -(1 / 2 : ℝ) * Cg
   set A : ℝ := a + b
-  have hA : A = -(1 / 2 : ℝ) * Cf + -(1 / 2 : ℝ) * Cg := by
-    simp [A, a, b]
+  have hA : A = -(1 / 2 : ℝ) * Cf + -(1 / 2 : ℝ) * Cg := by simp [A, a, b]
   have h_factor :
       -(1 / 2 : ℝ) * (Cf + Cg - 2 * Cfg) = A + Cfg := by
     have h_ring : -(1 / 2 : ℝ) * (Cf + Cg - 2 * Cfg)
-        = -(1 / 2 : ℝ) * Cf + -(1 / 2 : ℝ) * Cg + Cfg := by
-          ring
+        = -(1 / 2 : ℝ) * Cf + -(1 / 2 : ℝ) * Cg + Cfg := by ring
     simpa [A, a, b, add_comm, add_left_comm, add_assoc, hA] using h_ring
   calc
     (GJGeneratingFunctional (gaussianFreeFieldFree m)
@@ -409,14 +397,11 @@ lemma gaussianFreeField_real_entry_factor
         -- Exponential of sums factorises; use `Real.exp_add` twice
         calc
         Real.exp (-(1 / 2 : ℝ) * (Cf + Cg - 2 * Cfg))
-          = Real.exp (A + Cfg) := by
-              exact Real.exp_eq_exp.mpr h_factor
-        _ = Real.exp A * Real.exp Cfg := by
-              simp [Real.exp_add]
+          = Real.exp (A + Cfg) := by exact Real.exp_eq_exp.mpr h_factor
+        _ = Real.exp A * Real.exp Cfg := by simp [Real.exp_add]
         _ =
           (Real.exp a * Real.exp b)
-            * Real.exp Cfg := by
-              simp [A, a, b, Real.exp_add]
+            * Real.exp Cfg := by simp [A, a, b, Real.exp_add]
     _ =
         (GJGeneratingFunctional (gaussianFreeFieldFree m) (f.val)).re
         * (GJGeneratingFunctional (gaussianFreeFieldFree m) (g.val)).re
@@ -466,8 +451,7 @@ lemma gaussianFreeField_OS3_matrix_real
   -- Step 4: Apply PSD property of E
   have h_R_psd : R.PosSemidef := by
     simpa [R] using freeCovarianceFormR_reflection_matrix_posSemidef (m := m) f
-  have h_E_psd : E.PosSemidef := by
-    simpa [E] using entrywiseExp_posSemidef_of_posSemidef R h_R_psd
+  have h_E_psd : E.PosSemidef := by simpa [E] using entrywiseExp_posSemidef_of_posSemidef R h_R_psd
   -- Step 5: Use PSD property - the quadratic form yᵀEy is nonnegative
   have h_quad_sum :
       (∑ i, ∑ j, y i * y j * E i j)
@@ -479,10 +463,8 @@ lemma gaussianFreeField_OS3_matrix_real
       0 ≤ (∑ i, ∑ j, c i * c j *
         (GJGeneratingFunctional (gaussianFreeFieldFree m)
           ((f i).val - QFT.compTimeReflectionReal (f j).val)).re) := by
-    have h₁ : 0 ≤ ∑ i, ∑ j, y i * y j * E i j := by
-      simpa [h_quad_sum] using hy_nonneg
-    have h₂ : 0 ≤ ∑ i, ∑ j, c i * c j * (Z i * Z j * E i j) := by
-      simpa [h_sum₂] using h₁
+    have h₁ : 0 ≤ ∑ i, ∑ j, y i * y j * E i j := by simpa [h_quad_sum] using hy_nonneg
+    have h₂ : 0 ≤ ∑ i, ∑ j, c i * c j * (Z i * Z j * E i j) := by simpa [h_sum₂] using h₁
     simpa [h_sum₁] using h₂
   exact h_goal
 
@@ -585,8 +567,7 @@ private lemma freeCovarianceℂ_bilinear_star_star_conj
         obtain ⟨C, hC⟩ := f.decay' k n
         use C; intro x
         calc ‖x‖ ^ k * ‖iteratedFDeriv ℝ n (fun x => starRingEnd ℂ (f x)) x‖
-            = ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ := by
-              rw [starRingEnd_iteratedFDeriv_norm_eq]
+            = ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ := by rw [starRingEnd_iteratedFDeriv_norm_eq]
           _ ≤ C := hC x⟩
     let g_conj : TestFunctionℂ :=
       ⟨fun x => starRingEnd ℂ (g x), by
@@ -597,8 +578,7 @@ private lemma freeCovarianceℂ_bilinear_star_star_conj
         obtain ⟨C, hC⟩ := g.decay' k n
         use C; intro x
         calc ‖x‖ ^ k * ‖iteratedFDeriv ℝ n (fun x => starRingEnd ℂ (g x)) x‖
-            = ‖x‖ ^ k * ‖iteratedFDeriv ℝ n g x‖ := by
-              rw [starRingEnd_iteratedFDeriv_norm_eq]
+            = ‖x‖ ^ k * ‖iteratedFDeriv ℝ n g x‖ := by rw [starRingEnd_iteratedFDeriv_norm_eq]
           _ ≤ C := hC x⟩
     exact freeCovarianceℂ_bilinear_integrable m f_conj g_conj
   exact double_integral_timeReflection
@@ -676,8 +656,7 @@ private lemma quadForm_conj_self_of_hermitian
   congr 1; ext j; congr 1; ext i
   -- Goal: v i * starRingEnd ℂ (v j) * starRingEnd ℂ (M i j) = starRingEnd ℂ (v j) * v i * M j i
   -- starRingEnd ℂ (M i j) = M j i from Hermiticity
-  have : starRingEnd ℂ (M i j) = M j i := by
-    rw [hH j i]; exact starRingEnd_self_apply _
+  have : starRingEnd ℂ (M i j) = M j i := by rw [hH j i]; exact starRingEnd_self_apply _
   rw [this]; ring
 
 /-- For a Hermitian matrix, the imaginary part of the quadratic form is zero. -/
@@ -693,8 +672,7 @@ private lemma posSemidef_of_isRePSD_isHermitian
     (Matrix.of M).PosSemidef := by
   apply Matrix.PosSemidef.of_dotProduct_mulVec_nonneg (isHermitian_of_isHermitianMatrix hH)
   intro v
-  rw [quadForm_eq_double_sum]
-  rw [Complex.nonneg_iff]
+  rw [quadForm_eq_double_sum, Complex.nonneg_iff]
   exact ⟨hM v, (quadForm_im_eq_zero_of_hermitian hH v).symm⟩
 
 /-- Bridge: `Matrix.PosSemidef` over `ℂ` implies `IsRePSD`. -/

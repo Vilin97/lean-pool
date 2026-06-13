@@ -98,8 +98,7 @@ variable {S T : Trees}
 @[simps obj] def bodyPre : Prefunctor Trees (Type*) where
   obj S := body S.2
   map f := TypeCat.ofHom fun a ↦ bodyMap f.toOrderHom ⟨a, by simp⟩
-@[ext] lemma bodyPre_obj_ext {x y : bodyPre.obj S} (h : x.val = y.val) : x = y := by
-  exact Subtype.ext h
+@[ext] lemma bodyPre_obj_ext {x y : bodyPre.obj S} (h : x.val = y.val) : x = y := Subtype.ext h
 lemma LenHom.bodyMap_spec (f : S ⟶ T) (a : body S.2)
   x (hx : (a : Stream' S.1) ∈ principalOpen x) n (hlx : n < x.length) :
   (bodyPre.map f a).val.get n = (f ⟨x, a.prop x hx⟩).val[n]'(by simpa) := by
@@ -151,8 +150,7 @@ lemma bodyMap_spec_res' (f : S ⟶ T) (a : body S.2) n :
   (bodyFunctor.map f a).val.get n = (f ⟨a.val.take (n + 1), a.prop _ (by simp)⟩).val[n]  :=
   LenHom.bodyMap_spec_res f a n
 lemma bodyMap_restrict {S T : Trees} (f : S ⟶ T) a n :
-  (bodyFunctor.map f a).val.take n = (f (body.take n a)).val :=
-  LenHom.bodyPre_map_restrict f a n
+  (bodyFunctor.map f a).val.take n = (f (body.take n a)).val := LenHom.bodyPre_map_restrict f a n
 lemma LenHom.bodyMap_continuous {S T : Trees} (f : S ⟶ T) :
   Continuous (bodyFunctor.map f) := by
   change Continuous (fun a : body S.2 => bodyMap f.toOrderHom ⟨a.val, by simp [bodyDom_univ]⟩)

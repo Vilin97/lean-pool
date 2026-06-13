@@ -485,8 +485,7 @@ theorem freeCovarianceℂ_bilinear_smul_left
       simp only [zero_mul]
     simp_rw [h]
     rw [integral_zero, integral_zero]
-  rw [zero_bilinear, add_zero] at h
-  exact h
+  rwa [zero_bilinear, add_zero] at h
 
 /-- Symmetry of the complex bilinear form: swapping arguments gives the same result. -/
 theorem freeCovarianceℂ_bilinear_symm

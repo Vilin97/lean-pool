@@ -41,12 +41,10 @@ variable (hp : IsPosition H.x.val Player.one)
 @[simp] lemma extension_take :
   (H.extension hp R).val' (A := no_index _).take (α := no_index _)
     (H.x.val.length (α := no_index _))
-  = H.liftVal := by
-  exact ExtensionsAt.val'_take_of_eq _ H.liftVal_length.symm
+  = H.liftVal := ExtensionsAt.val'_take_of_eq _ H.liftVal_length.symm
 @[simp] lemma extensionMap_take (h : n ≤ H.x.val.length) :
   (H.extensionMap hp R).val' (A := no_index _).take (α := no_index _) n
-  = H.x.val.take n := by
-  exact ExtensionsAt.val'_take_of_le _ h
+  = H.x.val.take n := ExtensionsAt.val'_take_of_le _ h
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps] def extensionLift : Lift hyp where
   x := (H.extensionMap hp R).valT'
@@ -253,8 +251,7 @@ lemma winning_condition : WinningCondition H.toLift.liftShort.val (by simp) := b
       (H.toLift.liftShort.val.eq_take_concat (2 * k + 1) (by simp))
     rw [hconcat]
     erw [List.map_append, List.map_singleton]
-    rw [H.toLift.liftShort_val_take]
-    rw [H.toLift.liftVeryShort_val_map]
+    rw [H.toLift.liftShort_val_take, H.toLift.liftVeryShort_val_map]
     rfl
   apply Set.mem_iUnion₂_of_mem hWon
   change (body.append (H.toLift.liftShort.val[2 * k + 1].1 :: u) a).val ∈
@@ -278,12 +275,10 @@ lemma concat_mem_tree {y a} (hp : IsPosition y Player.zero)
     simpa [hget] using hy.1
   let node : upA hyp := (H.x.val[2 * k], H.S.fst.subtree)
   have htarget : getTree' hyp (pInvTreeHomMap hyp (H.x.val.take (2 * k)) ++ [node]) =
-      H.S.fst.subtree := by
-    exact getTree_concat (pInvTreeHomMap hyp (H.x.val.take (2 * k))) node
+      H.S.fst.subtree := getTree_concat (pInvTreeHomMap hyp (H.x.val.take (2 * k))) node
   change H.toLift.liftShort.val[2 * k + 1].1 :: y ++ [a] ∈
     getTree' hyp (pInvTreeHomMap hyp (H.x.val.take (2 * k)) ++ [node])
-  rw [htarget]
-  rw [subtree_compatible_iff _ ⟨_, hyS⟩ (by synthIsPosition)]
+  rw [htarget, subtree_compatible_iff _ ⟨_, hyS⟩ (by synthIsPosition)]
   have hx : (H.toLift.liftShort.val[2 * k + 1].1 :: y) ++ [a] ∈ H.game.tree := by
     change H.x.val.take (2 * k + 1) ++
       ((H.toLift.liftShort.val[2 * k + 1].1 :: y) ++ [a]) ∈ G.tree

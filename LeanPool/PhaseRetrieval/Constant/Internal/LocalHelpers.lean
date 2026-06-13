@@ -98,8 +98,7 @@ private lemma phaseDistanceSqNorm_eq_centered
   set a : Fin D → ℂ := fun k => q.coeff (k.val + 1)
   have hq_eval : ∀ z, q.eval z = polyEval a z := by
     intro z
-    rw [eval_eq_sum_range, polyEval]
-    rw [Finset.sum_range_succ' (fun i => q.coeff i * z ^ i)]
+    rw [eval_eq_sum_range, polyEval, Finset.sum_range_succ' (fun i => q.coeff i * z ^ i)]
     simp only [hcoeff0, zero_mul, pow_zero]
     rw [← Fin.sum_univ_eq_sum_range]
     ring

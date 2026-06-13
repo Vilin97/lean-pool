@@ -163,8 +163,7 @@ lemma monoFraction_eq_one_add_edgeCorrelation_div_two {n : Nat} (f : Coloring n)
     (hE : edgeCount n ≠ 0) :
     monoFraction f = ((1 : ℚ) + edgeCorrelation f) / 2 := by
   classical
-  have hE' : (edgeCount n : ℚ) ≠ 0 := by
-    exact_mod_cast hE
+  have hE' : (edgeCount n : ℚ) ≠ 0 := by exact_mod_cast hE
   let z : Edge n → ℚ := fun e =>
     ((signOfColoring f (Edge.src e) * signOfColoring f (Edge.dst e) : Int) : ℚ)
   -- Express `monoCount` as a sum of indicators using `Finset.sum_boole`.

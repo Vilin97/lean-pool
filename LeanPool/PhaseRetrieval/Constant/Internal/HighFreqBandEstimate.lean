@@ -126,8 +126,7 @@ This follows from:
 
 -- to_mathlib: Mathlib.MeasureTheory.Integral.IntervalIntegral
 /-- Haar integral equals (1/T) times the sum of interval integrals. -/
-private lemma iLeft_zero (N : ℕ) : iLeft N 0 = 0 := by
-  simp [iLeft]
+private lemma iLeft_zero (N : ℕ) : iLeft N 0 = 0 := by simp [iLeft]
 
 private lemma iLeft_N (N : ℕ) (hN : 1 ≤ N) : iLeft N N = T := by
   unfold iLeft
@@ -642,8 +641,7 @@ private lemma poincare_per_interval {N L : ℕ} (hN : 1 ≤ N)
   have hp := FockSPR.MissingMathlib.poincare_interval
     hh_pos hf_deriv hf_cont hf'_cont
   simp only [one_div] at hp
-  rw [h_mean_inv] at hp
-  exact hp
+  rwa [h_mean_inv] at hp
 
 /-- 4.1a: Poincaré bound with (L−1)² derivative bound. -/
 private lemma poincare_bound {N L : ℕ} (hN : 1 ≤ N)

@@ -108,14 +108,7 @@ lemma mixed_g_linear : G.mixedG i (update  x i y) = ∑ s : G.SS i,
            by_cases h1 : j = i
            · rw [h1, Function.update_self]
              simp
-           · push Not at h1
-             rw [Function.update_of_ne (show j ≠ i by exact h1)]
-             set t := fun j =>(update x i y j) (f j)
-             have h2 : t j = (x j) (f j) := by
-              unfold t
-              rw [Function.update_of_ne (show j ≠ i by exact h1)]
-             rw [Function.update_of_ne (show j ≠ i by exact h1)]
-             rw [h2]
+           · simp only [Function.update_of_ne h1]
   rw [h,Function.update_self]
   have h1 : y (f i) = ∑ j : G.SS i, y j * (stdSimplex.pure j) (f i) := by
     calc
@@ -143,14 +136,7 @@ lemma mixed_g_linear : G.mixedG i (update  x i y) = ∑ s : G.SS i,
   by_cases h2 : j = i
   · rw [h2,Function.update_self]
     simp
-  · push Not at h2
-    nth_rw 2 [Function.update_of_ne (show j ≠ i by exact h2)]
-    set p := fun j =>(update x i y j) (f j)
-    have h3 : p j = (x j) (f j) := by
-      unfold p
-      rw [Function.update_of_ne (show j ≠ i by exact h2)]
-    rw [Function.update_of_ne (show j ≠ i by exact h2)]
-    rw [h3]
+  · simp only [Function.update_of_ne h2]
 
 /-- The mixed extension of a finite game, as a `Game` on simplices. -/
 def FinGame2MixedGame (G : FinGame) : Game := {
@@ -217,18 +203,8 @@ lemma reindex_right_inv :
   ∀ y, reindex eI (reindexInv eI y) = y := by
     intro y; funext k
     rw [reindex,reindexInv]
-    have h1 : eI (eI.symm k) = k := eI.apply_symm_apply _
-    have h2 : eI.symm (eI (eI.symm k)) = eI.symm k := eI.symm_apply_apply _
     apply eq_of_heq
-    rw [eqRec_heq_iff_heq]
-    rw [h1]
-
-
-
-
-
-
-
+    rw [eqRec_heq_iff_heq, eI.apply_symm_apply]
 
 lemma reindex_left_inv {n : ℕ} (eI : G.I ≃ Fin n) :
   let reindex : G.mixedS → ((k : Fin n) → stdSimplex ℝ (G.SS (eI.symm k))) :=
@@ -238,11 +214,8 @@ lemma reindex_left_inv {n : ℕ} (eI : G.I ≃ Fin n) :
   ∀ x, reindexInv (reindex x) = x := by
     intro reindex reindexInv x; funext i
     dsimp [reindex, reindexInv]
-    have h1 : eI.symm (eI i) = i := eI.symm_apply_apply i
-    have h2 : eI (eI.symm (eI i)) = eI i := eI.apply_symm_apply _
     apply eq_of_heq
-    rw [eqRec_heq_iff_heq]
-    rw [h1]
+    rw [eqRec_heq_iff_heq, eI.symm_apply_apply]
 
 /-- Lifts an equivalence `e : n ≃ m` to a function between simplices. -/
 def mapSimplex {n m : Type*} [Fintype n] [Fintype m] (e : n ≃ m) :
@@ -408,7 +381,7 @@ lemma sigma_le_g_function (i : G.I) (σ : G.mixedS) (a : G.SS i) : σ i a ≤ gF
   rw [gFunction]; norm_num
 
 lemma g_function_noneg (i : G.I) (σ : G.mixedS) (a : G.SS i) : 0 ≤ gFunction i σ a := by
-  have h1: 0 ≤ σ i a:= (σ i).2.1 a
+  have h1 : 0 ≤ σ i a := (σ i).2.1 a
   linarith [sigma_le_g_function i σ a]
 
 --variable (sigma : G.mixedS ) (i : G.I) (a : G.SS i)
@@ -441,70 +414,34 @@ variable (G)
 noncomputable def nashMap (σ : G.mixedS) : G.mixedS :=
   fun (i : G.I) ↦ ⟨nashMapAux σ i, nash_map_cert σ i⟩
 
+private lemma continuous_coord {G : FinGame} {i'' : G.I} (t : G.SS i'') :
+    Continuous (fun a : G.mixedS => (a i'') t) :=
+  ((continuous_apply t).comp continuous_subtype_val).comp (continuous_apply i'')
+
 lemma cg : Continuous fun a => gFunction (G:=G) i a s := by
   unfold gFunction
   apply Continuous.add
-  · let f : G.mixedS → stdSimplex ℝ (G.SS i) := fun σ => σ i
-    let g : stdSimplex ℝ (G.SS i) → ℝ := fun a => a s
-    have hfg: g ∘ f = fun σ => σ i s := by
-      ext σ; rfl
-    rw [<-hfg]
-    apply Continuous.comp
-    · have hgg : g =  (fun a => a s) ∘ (fun a => a.1)  := rfl
-      rw [hgg]
-      apply Continuous.comp
-      · apply continuous_apply
-      · continuity
-    · continuity
-  · apply Continuous.max
-    · continuity
-    · unfold mixedG
-      apply Continuous.sub
-      · apply continuous_finsetSum
-        intro i' _
-        apply Continuous.mul
-        · apply continuous_finsetProd
-          intro i'' _
-          by_cases h : i'' = i
-          · rw [h]
-            continuity
-          · simp only [ne_eq, h, not_false_eq_true, Function.update_of_ne]
-            have : (fun (a : G.mixedS) => (a i'') (i' i'')) = (fun f => f (i' i''))
-                ∘ Subtype.val ∘ fun a => a i'' := by
-              rfl
-            rw [this]
-            apply Continuous.comp
-            · continuity
-            · apply Continuous.comp <;> continuity
-        · continuity
-      · apply continuous_finsetSum
-        intro i' _
-        apply Continuous.mul
-        · apply continuous_finsetProd
-          intro i'' _
-          by_cases h : i'' = i
-          · have : (fun (a : G.mixedS) => (a i) (i' i)) = (fun f => f (i' i))
-              ∘ Subtype.val ∘ fun a => a i := by
-              rfl
-            rw [h]
-            rw [this]
-            apply Continuous.comp
-            · continuity
-            · apply Continuous.comp <;> continuity
-          · have : (fun (a : G.mixedS) => (a i'') (i' i'')) = (fun f => f (i' i''))
-              ∘ Subtype.val ∘ fun a => a i'' := by
-              rfl
-            rw [this]
-            apply Continuous.comp
-            · continuity
-            · apply Continuous.comp <;> continuity
-        · continuity
+  · exact continuous_coord s
+  · apply Continuous.max continuous_const
+    unfold mixedG
+    apply Continuous.sub
+    · apply continuous_finsetSum
+      intro i' _
+      refine Continuous.mul (continuous_finsetProd _ fun i'' _ => ?_) continuous_const
+      by_cases h : i'' = i
+      · rw [h]; continuity
+      · simpa only [ne_eq, h, not_false_eq_true, Function.update_of_ne] using
+          continuous_coord (i' i'')
+    · apply continuous_finsetSum
+      intro i' _
+      refine Continuous.mul (continuous_finsetProd _ fun i'' _ => ?_) continuous_const
+      by_cases h : i'' = i
+      · rw [h]; exact continuous_coord (i' i)
+      · exact continuous_coord (i' i'')
 
 
-lemma nash_map_cont : Continuous <| nashMap G :=
-  by
-  unfold nashMap
-  unfold nashMapAux
+lemma nash_map_cont : Continuous <| nashMap G := by
+  unfold nashMap nashMapAux
   apply continuous_pi
   intro i
   apply Continuous.subtype_mk
@@ -516,7 +453,7 @@ lemma nash_map_cont : Continuous <| nashMap G :=
     intro i _; apply cg
   · intro σ
     apply ne_of_gt
-    nlinarith [show 1 ≤ ∑ b : G.SS i, gFunction i σ b by apply one_le_sum_g i σ]
+    nlinarith [show 1 ≤ ∑ b : G.SS i, gFunction i σ b from one_le_sum_g i σ]
 
 
 theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
@@ -526,24 +463,14 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
   by_cases H : ∀ t, G.mixedG i σ  ≥ G.mixedG i (update σ i (stdSimplex.pure t))
   · have h1 : ∃ t : G.SS i, mixedG i (update σ i (stdSimplex.pure t)) ≥  mixedG i (update σ i y)
       := by
-      have h1 : G.mixedG i (update  σ i y) = ∑ s : G.SS i,
-          y s * G.mixedG i (update σ i (stdSimplex.pure s)) := by apply mixed_g_linear
-      rw [h1]
+      rw [mixed_g_linear]
       obtain ⟨t,ht⟩ := Finite.exists_max (fun s => G.mixedG i (update σ i (stdSimplex.pure s)))
       use t
       simp only [ge_iff_le]
       have : ∑ s : G.SS i, y s * G.mixedG i (update σ i (stdSimplex.pure s))
-             ≤ ∑ s : G.SS i, y s * G.mixedG i (update σ i (stdSimplex.pure t)) := by
-        apply Finset.sum_le_sum
-        intro s _
-        apply mul_le_mul_of_nonneg_left (ht s)
-        have : 0 ≤ y s := (y).2.1 s
-        exact this
-      have h2 : ∑ s : G.SS i, y s  = 1 := by
-        exact (y).2.2
-      rw [← Finset.sum_mul, h2] at this
-      simp only [one_mul] at this
-      exact this
+             ≤ ∑ s : G.SS i, y s * G.mixedG i (update σ i (stdSimplex.pure t)) :=
+        Finset.sum_le_sum fun s _ => mul_le_mul_of_nonneg_left (ht s) ((y).2.1 s)
+      rwa [← Finset.sum_mul, show ∑ s : G.SS i, y s = 1 from (y).2.2, one_mul] at this
     obtain ⟨t, ht⟩ := h1
     specialize H t
     nlinarith
@@ -551,13 +478,11 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
     push Not at H
     obtain ⟨t,ht⟩ := H
     have H1 :  1 < ∑ b, gFunction i σ b := by
-      have h1 : 1 ≤ ∑ b : G.SS i, gFunction i σ b := by
-        apply one_le_sum_g i σ
+      have h1 : 1 ≤ ∑ b : G.SS i, gFunction i σ b := one_le_sum_g i σ
       have h2 : 1 ≠ ∑ b : G.SS i, gFunction i σ b := by
         intro h2
         replace h2 : ∑ b : G.SS i, σ i b  = ∑ b : G.SS i,   gFunction  i σ b := by
-          have h3 : 1 = ∑ b : G.SS i, σ i b := Eq.symm (σ i).2.2
-          rw [h3] at h2
+          rw [show (1 : ℝ) = ∑ b : G.SS i, σ i b from Eq.symm (σ i).2.2] at h2
           exact h2
         unfold gFunction at h2
         replace h2 : ∑ s : G.SS i, max 0 (mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ)
@@ -575,26 +500,14 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
             obtain ⟨s, hs⟩:= h
             have h3 : max 0 (mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ)
                 = mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ := by simp; nlinarith
-            have h4: ∀ s : G.SS i , 0 ≤ max 0 (mixedG i (update σ i (stdSimplex.pure s))
-                - mixedG i σ) := by
-                intro s
-                simp
             have h5 : ∑ s : G.SS i, max 0 (mixedG i (update σ i (stdSimplex.pure s))
                 - mixedG i σ) > 0 := by
               have f : mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ ≤ ∑ s : G.SS i,
                   max 0 (mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ) := by
                 rw [← h3]
-                set g :G.SS i → ℝ := fun s => max 0 (mixedG i (update σ i (stdSimplex.pure s))
-                    - mixedG i σ)
-                have h6 : g s = max 0 (mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ)
-                    := by rfl
-                rw [←h6]
-                apply Finset.single_le_sum
-                · have h4 : ∀ s : G.SS i, 0 ≤ g s := by
-                    simp [g]
-                  intro s _
-                  apply h4
-                · simp
+                exact Finset.single_le_sum
+                  (f := fun s => max 0 (mixedG i (update σ i (stdSimplex.pure s)) - mixedG i σ))
+                  (fun s _ => le_max_left _ _) (Finset.mem_univ s)
               nlinarith
             nlinarith
         nlinarith
@@ -622,11 +535,8 @@ theorem ExistsNashEq : ∃ σ : G.mixedS , mixedNashEquilibrium σ := by {
         rintro rfl
         simp only [div_zero] at h2
         exact h1 h2
-      have hxy : x * y = x := by
-        rw [eq_div_iff hy] at h2
-        linarith
-      have : x * y = x * 1 := by rw [hxy, mul_one]
-      exact mul_left_cancel₀ h1 this
+      rw [eq_div_iff hy] at h2
+      exact mul_left_cancel₀ h1 (by linarith : x * y = x * 1)
     have := self_div_lemma (by linarith) this
     linarith
 }

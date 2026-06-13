@@ -492,22 +492,17 @@ lemma root_defined : Sg0-Function₂ (root : V → V → V) via rootDef := by
 @[simp] lemma fstIdx_axL (s p : V) : fstIdx (axL s p) = s := by simp [fstIdx, axL]
 @[simp] lemma fstIdx_verumIntro (s : V) : fstIdx (verumIntro s) = s := by simp [fstIdx, verumIntro]
 @[simp] lemma fstIdx_andIntro (s p q dp dq : V) :
-    fstIdx (andIntro s p q dp dq) = s := by
-  simp [fstIdx, andIntro]
+    fstIdx (andIntro s p q dp dq) = s := by simp [fstIdx, andIntro]
 @[simp] lemma fstIdx_orIntro (s p q dpq : V) :
-    fstIdx (orIntro s p q dpq) = s := by
-  simp [fstIdx, orIntro]
+    fstIdx (orIntro s p q dpq) = s := by simp [fstIdx, orIntro]
 @[simp] lemma fstIdx_allIntro (s p d : V) :
-    fstIdx (allIntro s p d) = s := by
-  simp [fstIdx, allIntro]
+    fstIdx (allIntro s p d) = s := by simp [fstIdx, allIntro]
 @[simp] lemma fstIdx_exIntro (s p t d : V) :
-    fstIdx (exIntro s p t d) = s := by
-  simp [fstIdx, exIntro]
+    fstIdx (exIntro s p t d) = s := by simp [fstIdx, exIntro]
 @[simp] lemma fstIdx_wkRule (s d : V) : fstIdx (wkRule s d) = s := by simp [fstIdx, wkRule]
 @[simp] lemma fstIdx_shiftRule (s d : V) : fstIdx (shiftRule s d) = s := by simp [fstIdx, shiftRule]
 @[simp] lemma fstIdx_cutRule (s p d₁ d₂ : V) :
-    fstIdx (cutRule s p d₁ d₂) = s := by
-  simp [fstIdx, cutRule]
+    fstIdx (cutRule s p d₁ d₂) = s := by simp [fstIdx, cutRule]
 @[simp] lemma fstIdx_root (s p : V) : fstIdx (root s p) = s := by simp [fstIdx, root]
 
 end «lp_section_5»
@@ -955,8 +950,7 @@ lemma _root_.LO.Arith.Language.Theory.Derivation.isFormulaSet {d : V} (h : T.Der
   h.case.1
 
 lemma _root_.LO.Arith.Language.Theory.DerivationOf.isFormulaSet {d s : V} (h : T.DerivationOf d s) :
-    L.IsFormulaSet s := by
-  simpa [h.1] using h.2.case.1
+    L.IsFormulaSet s := by simpa [h.1] using h.2.case.1
 
 lemma _root_.LO.Arith.Language.Theory.Derivation.axL
     {s p : V} (hs : L.IsFormulaSet s) (h : p ∈ s) (hn :
@@ -1112,8 +1106,7 @@ lemma cut {s : V} (p) (hd₁ : T.Derivable (insert p s)) (hd₂ : T.Derivable (i
   exact ⟨cutRule s p d₁ d₂, by simp, Language.Theory.Derivation.cutRule hd₁ hd₂⟩
 
 lemma by_axm {s : V} (hs : L.IsFormulaSet s) (p) (hp : p ∈ s) (hT : p ∈ T) :
-    T.Derivable s := by
-  exact ⟨Arith.root s p, by simp, Language.Theory.Derivation.root hs hp hT⟩
+    T.Derivable s := by exact ⟨Arith.root s p, by simp, Language.Theory.Derivation.root hs hp hT⟩
 
 lemma of_ss (h : T ⊆ U) {s : V} : T.Derivable s → U.Derivable s := by
   rintro ⟨d, hd⟩; exact ⟨d, hd.1, hd.2.of_ss h⟩

@@ -66,8 +66,7 @@ def neg {n} : Semiformula L ξ n → Semiformula L ξ n
   | all φ    => ex (neg φ)
   | ex φ     => all (neg φ)
 
-lemma neg_neg (φ : Semiformula L ξ n) : neg (neg φ) = φ :=
-  by induction φ <;> simp[*, neg]
+lemma neg_neg (φ : Semiformula L ξ n) : neg (neg φ) = φ := by induction φ <;> simp[*, neg]
 
 instance : LogicalConnective (Semiformula L ξ n) where
   tilde := neg
@@ -408,8 +407,7 @@ def qr : ∀ {n}, Semiformula L ξ n → ℕ
 @[simp] lemma qr_neg (φ : Semiformula L ξ n) : (∼φ).qr = φ.qr := by
   induction φ using rec' <;> simp [*]
 
-@[simp] lemma qr_imply (φ ψ : Semiformula L ξ n) : (φ ==> ψ).qr = max φ.qr ψ.qr :=
-  by simp[imp_eq]
+@[simp] lemma qr_imply (φ ψ : Semiformula L ξ n) : (φ ==> ψ).qr = max φ.qr ψ.qr := by simp[imp_eq]
 
 @[simp] lemma qr_iff (φ ψ : Semiformula L ξ n) : (φ <=> ψ).qr = max φ.qr ψ.qr :=
   by simp[iff_eq, total_of]
@@ -439,14 +437,12 @@ lemma open_nrel {k} (r : L.Rel k) (v : Fin k → Semiterm L ξ n) : (nrel r v).O
 
 @[simp] lemma not_open_ex {φ : Semiformula L ξ (n + 1)} : ¬(∃' φ).Open := by simp[Open]
 
-@[simp] lemma open_neg {φ : Semiformula L ξ n} : (∼φ).Open ↔ φ.Open := by
-  simp[Open]
+@[simp] lemma open_neg {φ : Semiformula L ξ n} : (∼φ).Open ↔ φ.Open := by simp[Open]
 
 @[simp] lemma open_imply {φ ψ : Semiformula L ξ n} : (φ ==> ψ).Open ↔ φ.Open ∧ ψ.Open :=
   by simp[Open]
 
-@[simp] lemma open_iff {φ ψ : Semiformula L ξ n} : (φ <=> ψ).Open ↔ φ.Open ∧ ψ.Open :=
-  by simp[Open]
+@[simp] lemma open_iff {φ ψ : Semiformula L ξ n} : (φ <=> ψ).Open ↔ φ.Open ∧ ψ.Open := by simp[Open]
 
 end «lp_section_4»
 
@@ -499,16 +495,13 @@ lemma freeVariables_nrel {k} (r : L.Rel k) (v : Fin k → Semiterm L ξ n) :
   induction φ using rec' <;> simp [*, freeVariables_rel, freeVariables_nrel]
 
 @[simp] lemma freeVariables_imp (φ ψ : Semiformula L ξ n) :
-    (φ ==> ψ).freeVariables = φ.freeVariables ∪ ψ.freeVariables := by
-  simp [imp_eq]
+    (φ ==> ψ).freeVariables = φ.freeVariables ∪ ψ.freeVariables := by simp [imp_eq]
 
 @[simp] lemma freeVariables_univClosure (φ : Semiformula L ξ n) :
-    (∀* φ).freeVariables = φ.freeVariables := by
-  induction n <;> simp [univClosure, *]
+    (∀* φ).freeVariables = φ.freeVariables := by induction n <;> simp [univClosure, *]
 
 @[simp] lemma freeVariables_sentence {ο : Type*} [IsEmpty ο] (φ : Semiformula L ο n) :
-    φ.freeVariables = ∅ := by
-  ext x; exact IsEmpty.elim inferInstance x
+    φ.freeVariables = ∅ := by ext x; exact IsEmpty.elim inferInstance x
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev «FVar?» (φ : Semiformula L ξ n) (x : ξ) : Prop := x ∈ φ.freeVariables
@@ -524,24 +517,19 @@ abbrev «FVar?» (φ : Semiformula L ξ n) (x : ξ) : Prop := x ∈ φ.freeVaria
 @[simp] lemma «fvar?_falsum» (x) : ¬(⊥ : Semiformula L ξ n).FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_and» (x) (φ ψ : Semiformula L ξ n) :
-    (φ ⋏ ψ).FVar? x ↔ φ.FVar? x ∨ ψ.FVar? x := by
-  simp [FVar?]
+    (φ ⋏ ψ).FVar? x ↔ φ.FVar? x ∨ ψ.FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_or» (x) (φ ψ : Semiformula L ξ n) :
-    (φ ⋎ ψ).FVar? x ↔ φ.FVar? x ∨ ψ.FVar? x := by
-  simp [FVar?]
+    (φ ⋎ ψ).FVar? x ↔ φ.FVar? x ∨ ψ.FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_all» (x) (φ : Semiformula L ξ (n + 1)) :
-    (∀' φ).FVar? x ↔ φ.FVar? x := by
-  simp [FVar?]
+    (∀' φ).FVar? x ↔ φ.FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_ex» (x) (φ : Semiformula L ξ (n + 1)) :
-    (∃' φ).FVar? x ↔ φ.FVar? x := by
-  simp [FVar?]
+    (∃' φ).FVar? x ↔ φ.FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_univClosure» (x) (φ : Semiformula L ξ n) :
-    (∀* φ).FVar? x ↔ φ.FVar? x := by
-  simp [FVar?]
+    (∀* φ).FVar? x ↔ φ.FVar? x := by simp [FVar?]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def fvSup (φ : SyntacticSemiformula L n) : ℕ := (φ.freeVariables.max).recBotCoe 0 .succ
@@ -604,8 +592,7 @@ def lMapAux (Φ : L₁ →ᵥ L₂) : ∀ {n}, Semiformula L₁ ξ n → Semifor
   | _, ∃' φ     => ∃' lMapAux Φ φ
 
 lemma lMapAux_neg {n} (φ : Semiformula L₁ ξ n) :
-    (∼φ).lMapAux Φ = ∼φ.lMapAux Φ :=
-  by induction φ using Semiformula.rec' <;> simp[*, lMapAux]
+    (∼φ).lMapAux Φ = ∼φ.lMapAux Φ := by induction φ using Semiformula.rec' <;> simp[*, lMapAux]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def lMap (Φ : L₁ →ᵥ L₂) {n} : Semiformula L₁ ξ n →ˡᶜ Semiformula L₂ ξ n where

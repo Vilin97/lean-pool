@@ -38,16 +38,13 @@ noncomputable def t2 : Rand :=
   (⟨(17 / 32 : ℝ), by constructor <;> norm_num⟩ : I)
 
 lemma t1_lt_t2 : (t1 : ℝ) < t2 := by
-  simp [t1, t2]
-  norm_num
+  norm_num [t1, t2]
 
 lemma t2_lt_t : (t2 : ℝ) < t := by
-  simp [t2, t]
-  norm_num
+  norm_num [t2, t]
 
 lemma t_lt_one : (t : ℝ) < 1 := by
-  simp [t]
-  norm_num
+  norm_num [t]
 
 lemma zero_lt_t : (0 : ℝ) < t := by
   simp [t]
@@ -98,46 +95,37 @@ noncomputable def g (x y z : Rand) : Color :=
 lemma measurable_zBase : Measurable fun xy : Rand × Rand => zBase xy.1 xy.2 := by
   classical
   -- `zBase` is piecewise defined using comparisons against constants and projections.
-  have mx : Measurable fun xy : Rand × Rand => (xy.1 : ℝ) := by
-    exact measurable_subtype_coe.comp measurable_fst
-  have my : Measurable fun xy : Rand × Rand => (xy.2 : ℝ) := by
-    exact measurable_subtype_coe.comp measurable_snd
+  have mx : Measurable fun xy : Rand × Rand => (xy.1 : ℝ) :=
+    measurable_subtype_coe.comp measurable_fst
+  have my : Measurable fun xy : Rand × Rand => (xy.2 : ℝ) :=
+    measurable_subtype_coe.comp measurable_snd
   have mxy : Measurable fun xy : Rand × Rand => ((xy.1 : ℝ), (xy.2 : ℝ)) := mx.prodMk my
   let leSet : Set (ℝ × ℝ) := {p : ℝ × ℝ | p.1 ≤ p.2}
-  have hxy_le : MeasurableSet {xy : Rand × Rand | ((xy.1 : ℝ), (xy.2 : ℝ)) ∈ leSet} := by
-    have hclosed : IsClosed leSet := isClosed_le continuous_fst continuous_snd
-    have hset : MeasurableSet leSet := hclosed.measurableSet
-    exact hset.preimage mxy
+  have hxy_le : MeasurableSet {xy : Rand × Rand | ((xy.1 : ℝ), (xy.2 : ℝ)) ∈ leSet} :=
+    (isClosed_le continuous_fst continuous_snd).measurableSet.preimage mxy
   refine Measurable.ite (hp := ?_) ?_ ?_
   · -- `(t : ℝ) ≤ y`
     exact (measurableSet_Ici : MeasurableSet (Set.Ici (t : ℝ))).preimage my
-  · refine Measurable.ite (hp := ?_) ?_ ?_
-    · exact (measurableSet_Iio : MeasurableSet (Set.Iio (t : ℝ))).preimage mx
-    · exact measurable_const
-    · exact measurable_const
-  · refine Measurable.ite (hp := ?_) ?_ ?_
-    · exact (measurableSet_Ici : MeasurableSet (Set.Ici (t : ℝ))).preimage mx
-    · exact measurable_const
-    · refine Measurable.ite (hp := hxy_le) ?_ ?_
-      · exact measurable_const
-      · exact my
+  · exact Measurable.ite ((measurableSet_Iio : MeasurableSet (Set.Iio (t : ℝ))).preimage mx)
+      measurable_const measurable_const
+  · refine Measurable.ite ((measurableSet_Ici : MeasurableSet (Set.Ici (t : ℝ))).preimage mx)
+      measurable_const ?_
+    exact Measurable.ite hxy_le measurable_const my
 
 lemma measurable_z0 : Measurable fun xy : Rand × Rand => z0 xy.1 xy.2 := by
   classical
-  have mx : Measurable fun xy : Rand × Rand => (xy.1 : ℝ) := by
-    exact measurable_subtype_coe.comp measurable_fst
-  have my : Measurable fun xy : Rand × Rand => (xy.2 : ℝ) := by
-    exact measurable_subtype_coe.comp measurable_snd
+  have mx : Measurable fun xy : Rand × Rand => (xy.1 : ℝ) :=
+    measurable_subtype_coe.comp measurable_fst
+  have my : Measurable fun xy : Rand × Rand => (xy.2 : ℝ) :=
+    measurable_subtype_coe.comp measurable_snd
   have mxy : Measurable fun xy : Rand × Rand => ((xy.1 : ℝ), (xy.2 : ℝ)) := mx.prodMk my
   let leSet : Set (ℝ × ℝ) := {p : ℝ × ℝ | p.1 ≤ p.2}
-  have hxy_le : MeasurableSet {xy : Rand × Rand | ((xy.1 : ℝ), (xy.2 : ℝ)) ∈ leSet} := by
-    have hclosed : IsClosed leSet := isClosed_le continuous_fst continuous_snd
-    have hset : MeasurableSet leSet := hclosed.measurableSet
-    exact hset.preimage mxy
-  have hxIcc : MeasurableSet {xy : Rand × Rand | (xy.1 : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)} := by
-    exact (measurableSet_Icc : MeasurableSet (Set.Icc (t1 : ℝ) (t : ℝ))).preimage mx
-  have hyIcc : MeasurableSet {xy : Rand × Rand | (xy.2 : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)} := by
-    exact (measurableSet_Icc : MeasurableSet (Set.Icc (t1 : ℝ) (t : ℝ))).preimage my
+  have hxy_le : MeasurableSet {xy : Rand × Rand | ((xy.1 : ℝ), (xy.2 : ℝ)) ∈ leSet} :=
+    (isClosed_le continuous_fst continuous_snd).measurableSet.preimage mxy
+  have hxIcc : MeasurableSet {xy : Rand × Rand | (xy.1 : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)} :=
+    (measurableSet_Icc : MeasurableSet (Set.Icc (t1 : ℝ) (t : ℝ))).preimage mx
+  have hyIcc : MeasurableSet {xy : Rand × Rand | (xy.2 : ℝ) ∈ Set.Icc (t1 : ℝ) (t : ℝ)} :=
+    (measurableSet_Icc : MeasurableSet (Set.Icc (t1 : ℝ) (t : ℝ))).preimage my
   have hsq :
       MeasurableSet
         {xy : Rand × Rand |
@@ -149,42 +137,28 @@ lemma measurable_z0 : Measurable fun xy : Rand × Rand => z0 xy.1 xy.2 := by
       (measurableSet_Iio : MeasurableSet (Set.Iio (t2 : ℝ))).preimage my
     refine Measurable.ite (hp := hy_lt) ?ylt ?yge
     · -- `y < t2`
-      have hx_ge : MeasurableSet {xy : Rand × Rand | (xy.1 : ℝ) ∈ Set.Ici (t2 : ℝ)} :=
-        (measurableSet_Ici : MeasurableSet (Set.Ici (t2 : ℝ))).preimage mx
-      refine Measurable.ite (hp := hx_ge) ?_ ?_
-      · exact measurable_const
-      · refine Measurable.ite (hp := hxy_le) ?_ ?_
-        · exact measurable_const
-        · exact my
+      refine Measurable.ite
+        ((measurableSet_Ici : MeasurableSet (Set.Ici (t2 : ℝ))).preimage mx) measurable_const ?_
+      exact Measurable.ite hxy_le measurable_const my
     · -- `¬ y < t2`
-      have hx_lt : MeasurableSet {xy : Rand × Rand | (xy.1 : ℝ) ∈ Set.Iio (t2 : ℝ)} :=
-        (measurableSet_Iio : MeasurableSet (Set.Iio (t2 : ℝ))).preimage mx
-      refine Measurable.ite (hp := hx_lt) ?_ ?_
-      · exact measurable_const
-      · exact measurable_const
+      exact Measurable.ite ((measurableSet_Iio : MeasurableSet (Set.Iio (t2 : ℝ))).preimage mx)
+        measurable_const measurable_const
   · -- Outside-square branch
     exact measurable_zBase
 
 lemma measurable_g : Measurable fun xyz : Rand × Rand × Rand => g xyz.1 xyz.2.1 xyz.2.2 := by
   classical
-  have mz : Measurable fun xyz : Rand × Rand × Rand => (xyz.2.2 : ℝ) := by
-    exact measurable_subtype_coe.comp (measurable_snd.comp measurable_snd)
+  have mz : Measurable fun xyz : Rand × Rand × Rand => (xyz.2.2 : ℝ) :=
+    measurable_subtype_coe.comp (measurable_snd.comp measurable_snd)
   let xy : Rand × Rand × Rand → Rand × Rand := fun xyz => (xyz.1, xyz.2.1)
-  have mxy : Measurable xy := by
-    exact measurable_fst.prodMk (measurable_fst.comp measurable_snd)
-  have mcut : Measurable fun xyz : Rand × Rand × Rand => z0 (xy xyz).1 (xy xyz).2 := by
-    exact measurable_z0.comp mxy
+  have mxy : Measurable xy := measurable_fst.prodMk (measurable_fst.comp measurable_snd)
+  have mcut : Measurable fun xyz : Rand × Rand × Rand => z0 (xy xyz).1 (xy xyz).2 :=
+    measurable_z0.comp mxy
   have hset :
-      MeasurableSet {xyz : Rand × Rand × Rand | (xyz.2.2 : ℝ) < z0 xyz.1 xyz.2.1} := by
-    -- express the predicate as the preimage of `{p | p.1 < p.2}` under a measurable map to `ℝ × ℝ`
-    have m : Measurable fun xyz : Rand × Rand × Rand => ((xyz.2.2 : ℝ), z0 xyz.1 xyz.2.1) :=
-      mz.prodMk mcut
-    have hopen : IsOpen {p : ℝ × ℝ | p.1 < p.2} := isOpen_lt continuous_fst continuous_snd
-    have hmeas : MeasurableSet ({p : ℝ × ℝ | p.1 < p.2} : Set (ℝ × ℝ)) := hopen.measurableSet
-    exact hmeas.preimage m
-  refine Measurable.ite (hp := hset) ?_ ?_
-  · exact measurable_const
-  · exact measurable_const
+      MeasurableSet {xyz : Rand × Rand × Rand | (xyz.2.2 : ℝ) < z0 xyz.1 xyz.2.1} :=
+    -- the predicate is the preimage of `{p | p.1 < p.2}` under a measurable map to `ℝ × ℝ`
+    (isOpen_lt continuous_fst continuous_snd).measurableSet.preimage (mz.prodMk mcut)
+  refine Measurable.ite (hp := hset) ?_ ?_ <;> exact measurable_const
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 noncomputable def recursive3ParamAlg : ClassicalAlgorithm where

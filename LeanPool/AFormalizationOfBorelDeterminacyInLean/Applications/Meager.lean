@@ -57,8 +57,7 @@ lemma isNowhereDense.union (hA : IsNowhereDense A) (hB : IsNowhereDense B) :
   IsNowhereDense (A ∪ B) := by
   simpa [isNowhereDense_iff_compl_contains_openDense] using And.intro hA hB
 lemma isNowhereDense_iUnion {I} {A : I → Set X} [Finite I] (h : ∀ i, IsNowhereDense (A i)) :
-  IsNowhereDense (⋃ i, A i) := by
-  simpa [isNowhereDense_iff_compl_contains_openDense] using h
+  IsNowhereDense (⋃ i, A i) := by simpa [isNowhereDense_iff_compl_contains_openDense] using h
 lemma tendsto_openDense_of_isOpenMap (hc : Continuous f) (ho : IsOpenMap f) :
   Filter.Tendsto f openDenseFilter openDenseFilter :=
   openDenseFilterBasis.hasBasis.ge_iff.mpr fun U ⟨hUo, hUd⟩ ↦
@@ -176,8 +175,7 @@ lemma isNowhereDense_disjoint_open {I} (U : I → Set X) (hO : ∀ i, IsOpen (U 
   have hCl i : IsClopen (V ↓∩ U i) := ⟨hC i, hO' i⟩
   unfold IsNowhereDense at *
   rw [interior_open_cover _ hO' hcov, closure_open_cover _ hO' hcov]
-  have heq i B : closure B ∩ V ↓∩ U i = closure (B ∩ V ↓∩ U i) :=
-    (hCl i).inter_closure
+  have heq i B : closure B ∩ V ↓∩ U i = closure (B ∩ V ↓∩ U i) := (hCl i).inter_closure
   simp_rw [Set.iUnion_inter, heq, Set.inter_assoc,
     ← fun i j ↦ ((hCl j).inter (hCl i)).inter_closure (A := V ↓∩ A),
     ← Set.inter_iUnion, ← Set.iUnion_inter, hcov, Set.univ_inter, heq, Set.iUnion_eq_empty]
@@ -273,8 +271,7 @@ lemma forces_empty_iff_isMeagre : U ⊩ ∅ ↔ IsMeagre (U : Set X) := by
 lemma forces_mono_left (h : V ⊩ A) (hUV : U.1 ⊆ V.1) : U ⊩ A := by
   rw [forces_iff_isMeagre] at *
   exact h.mono (by tauto_set)
-lemma forces_mono_right (h : U ⊩ A) (hAB : A ⊆ B) : U ⊩ B :=
-  Filter.mem_of_superset h (by tauto_set)
+lemma forces_mono_right (h : U ⊩ A) (hAB : A ⊆ B) : U ⊩ B := Filter.mem_of_superset h (by tauto_set)
 lemma forces_iInter_right {I} [Countable I] (A : I → Set X)
   (h : ∀ i, U ⊩ A i) : U ⊩ ⋂ i, A i := by
   change ((U : Set X) ↓∩ ⋂ i, A i ∈ residual (U : Set X))

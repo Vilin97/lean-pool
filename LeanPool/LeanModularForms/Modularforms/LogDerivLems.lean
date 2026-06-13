@@ -88,9 +88,7 @@ theorem logDeriv_tprod_eq_tsumold {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ
       apply DifferentiableAt.differentiableWithinAt
       have hp : ∀ (i : ℕ), i ∈ Finset.range b →  DifferentiableAt ℂ (f i) z := by
         intro i hi
-        have := (hd i z hz).differentiableAt
-        apply this
-        exact IsOpen.mem_nhds hs hz
+        exact (hd i z hz).differentiableAt (IsOpen.mem_nhds hs hz)
       have := DifferentiableAt.finsetProd hp
       convert this
     · exact hnez

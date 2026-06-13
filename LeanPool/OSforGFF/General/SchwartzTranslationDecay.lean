@@ -65,8 +65,7 @@ Proof: Schwartz decay gives ‖x‖^k · ‖f(x)‖ ≤ seminorm k 0 f for all k
 Taking k = 1: ‖f(x)‖ ≤ C/‖x‖ → 0 as ‖x‖ → ∞.
 -/
 lemma schwartz_tendsto_zero (f : SchwartzMap E ℂ) :
-    Tendsto f (cocompact E) (nhds 0) :=
-  zero_at_infty f
+    Tendsto f (cocompact E) (nhds 0) := zero_at_infty f
 
 /-! ## Kernel decomposition -/
 
@@ -244,8 +243,7 @@ lemma integrable_tail_small {f : E → ℂ} (hf : Integrable f) (ε : ℝ) (hε 
   simp only [dist_zero_right] at hN
   -- hN : ‖∫ x in s N, ‖f x‖‖ < ε, but ∫ x in s N, ‖f x‖ ≥ 0, so this gives what we need
   have h_nonneg : 0 ≤ ∫ x in s N, ‖f x‖ := setIntegral_nonneg (hs_meas N) (fun _ _ => norm_nonneg _)
-  rw [Real.norm_eq_abs, abs_of_nonneg h_nonneg] at hN
-  exact hN
+  rwa [Real.norm_eq_abs, abs_of_nonneg h_nonneg] at hN
 
 /-- Convolution of an integrable function with a function vanishing at infinity
 also vanishes at infinity. This is a fundamental result in harmonic analysis.
@@ -341,8 +339,7 @@ theorem convolution_vanishes_of_integrable_and_C0
           hK_meas ?_
         intro x hxK
         exact mul_le_mul_of_nonneg_left (hg_small_on_K x hxK).le (norm_nonneg _)
-      have h2 : ∫ x in K, ‖f x‖ * η = η * ∫ x in K, ‖f x‖ := by
-        rw [integral_mul_const]; ring
+      have h2 : ∫ x in K, ‖f x‖ * η = η * ∫ x in K, ‖f x‖ := by rw [integral_mul_const]; ring
       have h3 : ∫ x in K, ‖f x‖ ≤ If := setIntegral_le_integral hf_int.norm
         (Eventually.of_forall (fun _ => norm_nonneg _))
       linarith [mul_le_mul_of_nonneg_left h3 hη_pos.le]
@@ -477,8 +474,7 @@ theorem schwartz_bilinear_prod_integrable
     · filter_upwards with ⟨x, y⟩
       simp only [Function.uncurry]
       calc ‖f x * (K_sing (x - y) : ℂ) * g (y - a)‖
-          = ‖f x‖ * ‖(K_sing (x - y) : ℂ)‖ * ‖g (y - a)‖ := by
-            rw [norm_mul, norm_mul]
+          = ‖f x‖ * ‖(K_sing (x - y) : ℂ)‖ * ‖g (y - a)‖ := by rw [norm_mul, norm_mul]
         _ ≤ max Cf 1 * ‖(K_sing (x - y) : ℂ)‖ * ‖g (y - a)‖ := by
             apply mul_le_mul_of_nonneg_right
             · exact mul_le_mul_of_nonneg_right (le_trans (hCf x) (le_max_left _ _))
@@ -977,8 +973,7 @@ theorem schwartz_bilinear_translation_decay_proof
     intro y
     -- Need: (∫ f * K_sing) + (∫ f * K_tail) = ∫ f * K
     symm
-    rw [hdec]
-    rw [← integral_add]
+    rw [hdec, ← integral_add]
     · congr 1
       ext x
       push_cast
@@ -1131,8 +1126,7 @@ theorem schwartz_bilinear_translation_decay_proof
   have h_translate : ∫ y : E, g (y - a) * H y = ∫ w : E, g w * H (w + a) := by
     have : ∫ y : E, g (y - a) * H y = ∫ w : E, g ((w + a) - a) * H (w + a) := by
       rw [integral_add_right_eq_self (fun y => g (y - a) * H y) a]
-    simp only [add_sub_cancel_right] at this
-    exact this
+    simpa only [add_sub_cancel_right] using this
   -- Step 10e-iii: Rewrite w + a = w - (-a)
   have h_neg : ∫ w : E, g w * H (w + a) = ∫ w : E, g w * H (w - (-a)) := by
     congr 1; ext w; congr 1; simp only [sub_neg_eq_add]

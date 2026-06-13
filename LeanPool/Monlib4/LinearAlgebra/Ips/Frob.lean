@@ -46,15 +46,13 @@ theorem Module.Dual.tensorMul_apply' (φ₁ : Module.Dual ℂ (Matrix n n ℂ))
     φ₁.tensorMul φ₂ x =
       ∑ i, ∑ j, ∑ k, ∑ l,
         (TensorProduct.toKronecker x) (i, k) (j, l) *
-          (φ₁ (stdBasisMatrix i j (1 : ℂ)) * φ₂ (stdBasisMatrix k l (1 : ℂ))) :=
-  by
+          (φ₁ (stdBasisMatrix i j (1 : ℂ)) * φ₂ (stdBasisMatrix k l (1 : ℂ))) := by
   simp_rw [← Module.Dual.tensorMul_apply, ← smul_eq_mul, ← _root_.map_smul, ← map_sum]
   rw [← x.matrix_eq_sum_std_basis]
 
 theorem Module.Dual.tensorMul_apply'' (φ₁ : Module.Dual ℂ (Matrix n n ℂ))
     (φ₂ : Module.Dual ℂ (Matrix p p ℂ)) (a : Matrix (n × p) (n × p) ℂ) :
-    ((φ₁.tensorMul φ₂).comp kroneckerToTensorProduct) a = (φ₁.matrix ⊗ₖ φ₂.matrix * a).trace :=
-  by
+    ((φ₁.tensorMul φ₂).comp kroneckerToTensorProduct) a = (φ₁.matrix ⊗ₖ φ₂.matrix * a).trace := by
   have :
     (φ₁.matrix ⊗ₖ φ₂.matrix * a).trace =
       ((traceLinearMap _ ℂ ℂ).comp (LinearMap.mulLeft ℂ (φ₁.matrix ⊗ₖ φ₂.matrix))) a :=
@@ -82,8 +80,7 @@ theorem Module.Dual.tensorMul_matrix (φ₁ : Module.Dual ℂ (Matrix n n ℂ))
 theorem Module.Dual.IsFaithfulPosMap.tensorMul {φ₁ : Module.Dual ℂ (Matrix n n ℂ)}
     {φ₂ : Module.Dual ℂ (Matrix p p ℂ)} [hφ₁ : φ₁.IsFaithfulPosMap]
     [hφ₂ : φ₂.IsFaithfulPosMap] :
-    (Module.Dual.IsFaithfulPosMap ((φ₁.tensorMul φ₂).comp kroneckerToTensorProduct)) :=
-  by
+    (Module.Dual.IsFaithfulPosMap ((φ₁.tensorMul φ₂).comp kroneckerToTensorProduct)) := by
   rw [Module.Dual.isFaithfulPosMap_iff_of_matrix, Module.Dual.tensorMul_matrix]
   exact PosDef.kronecker hφ₁.matrixIsPosDef hφ₂.matrixIsPosDef
 
@@ -111,8 +108,7 @@ theorem Matrix.kroneckerToTensorProduct_adjoint [hφ : φ.IsFaithfulPosMap]
       (@TensorProduct.toKronecker ℂ n p _ _ _ _ _ :
         Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ →ₗ[ℂ] Matrix (n × p) (n × p) ℂ) =
       LinearMap.adjoint (kroneckerToTensorProduct :
-          Matrix (n × p) (n × p) ℂ →ₗ[ℂ] Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ) :=
-    by
+          Matrix (n × p) (n × p) ℂ →ₗ[ℂ] Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.SeminormedAddCommGroup (Matrix n n ℂ) :=
     (Module.Dual.NormedAddCommGroup φ).toSeminormedAddCommGroup
@@ -160,8 +156,7 @@ theorem Matrix.kroneckerToTensorProduct_adjoint [hφ : φ.IsFaithfulPosMap]
     _ =
         (starRingEnd ℂ) (a (x_1, x_3) (x_2, x_4)) *
           (⟪(stdBasisMatrix x_1 x_2 (1 : ℂ) ⊗ₖ stdBasisMatrix x_3 x_4 (1 : ℂ)),
-            x ⊗ₖ y⟫_ℂ) :=
-      by
+            x ⊗ₖ y⟫_ℂ) := by
         rw [Module.Dual.IsFaithfulPosMap.inner_eq' _
           ((stdBasisMatrix x_1 x_2 (1 : ℂ)) ⊗ₖ (stdBasisMatrix x_3 x_4 (1 : ℂ))) (x ⊗ₖ y),
           Module.Dual.tensorMul_matrix, kronecker_conjTranspose, ← mul_kronecker_mul,
@@ -187,8 +182,7 @@ theorem TensorProduct.toKronecker_adjoint [hφ : φ.IsFaithfulPosMap]
       Module.Dual.InnerProductSpace ((φ.tensorMul ψ).comp kroneckerToTensorProduct)
     (kroneckerToTensorProduct : Matrix (n × p) (n × p) ℂ →ₗ[ℂ] Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ) =
       LinearMap.adjoint (@TensorProduct.toKronecker ℂ n p _ _ _ _ _ :
-          Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ →ₗ[ℂ] Matrix (n × p) (n × p) ℂ) :=
-  by
+          Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ →ₗ[ℂ] Matrix (n × p) (n × p) ℂ) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.SeminormedAddCommGroup (Matrix n n ℂ) :=
     (Module.Dual.NormedAddCommGroup φ).toSeminormedAddCommGroup
@@ -209,8 +203,7 @@ theorem TensorProduct.toKronecker_adjoint [hφ : φ.IsFaithfulPosMap]
 theorem Matrix.kroneckerToTensorProduct_comp_toKronecker :
     (kroneckerToTensorProduct : Matrix (n × p) (n × p) ℂ →ₗ[ℂ] _).comp
         (TensorProduct.toKronecker : Matrix n n ℂ ⊗[ℂ] Matrix p p ℂ →ₗ[ℂ] _) =
-      1 :=
-  by
+      1 := by
   rw [TensorProduct.ext_iff']
   intro x y
   simp_rw [LinearMap.comp_apply, TensorProduct.toKronecker_to_tensorProduct, Module.End.one_apply]
@@ -316,8 +309,7 @@ theorem LinearMap.pi_mul'_apply_includeBlock' {i j : k} :
         (includeBlock : (ℍ_ j) →ₗ[ℂ] (PiMat ℂ k s)) ∘ₗ
           (LinearMap.mul' ℂ (ℍ_ j)) ∘ₗ
             (TensorProduct.map (matrixDirectSumFromTo i j) (1 : (ℍ_ j) →ₗ[ℂ] ℍ_ j))
-      else 0 :=
-  by
+      else 0 := by
   classical
   rw [TensorProduct.ext_iff']
   intro x y

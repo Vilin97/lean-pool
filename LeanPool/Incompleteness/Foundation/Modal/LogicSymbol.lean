@@ -58,8 +58,7 @@ lemma box_injective' : □φ = □ψ ↔ φ = ψ := by
 @[simp] lemma multibox_succ : □^[(n + 1)]φ = □(□^[n]φ) := by apply iterate_succ_apply'
 
 @[simp] lemma multibox_injective : Function.Injective (□^[n] · :
-    F → F) := by
-  apply Function.Injective.iterate (by simp);
+    F → F) := by apply Function.Injective.iterate (by simp);
 
 @[simp]
 lemma multimop_injective' : □^[n]φ = □^[n]ψ ↔ φ = ψ := by
@@ -115,8 +114,7 @@ lemma dia_injective' : ◇φ = ◇ψ ↔ φ = ψ := by
 @[simp] lemma multidia_succ : ◇^[(n + 1)]φ = ◇(◇^[n]φ) := by apply iterate_succ_apply'
 
 @[simp] lemma multidia_injective : Function.Injective (◇^[n] · :
-    F → F) := by
-  apply Function.Injective.iterate (by simp);
+    F → F) := by apply Function.Injective.iterate (by simp);
 
 @[simp]
 lemma multidia_injective' : ◇^[n]φ = ◇^[n]ψ ↔ φ = ψ := by
@@ -212,19 +210,16 @@ variable [Box F]
 
 
 @[simp 1100] lemma multibox_subset_mono (h : s ⊆ t) :
-    □''^[n]s ⊆ □''^[n]t := by
-  simp_all [Set.subset_def];
+    □''^[n]s ⊆ □''^[n]t := by simp_all [Set.subset_def];
 
 lemma box_subset_mono (h : s ⊆ t) : □''s ⊆ □''t := by simpa using multibox_subset_mono (n := 1) h;
 
 
 @[simp 1100] lemma premultibox_subset_mono (h : s ⊆ t) :
-    □''⁻¹^[n]s ⊆ □''⁻¹^[n]t := by
-  simp_all [Set.subset_def];
+    □''⁻¹^[n]s ⊆ □''⁻¹^[n]t := by simp_all [Set.subset_def];
 
 lemma prebox_subset_mono (h : s ⊆ t) :
-    □''⁻¹s ⊆  □''⁻¹t := by
-  simpa using premultibox_subset_mono (n := 1) h;
+    □''⁻¹s ⊆  □''⁻¹t := by simpa using premultibox_subset_mono (n := 1) h;
 
 
 @[simp 1100] lemma iff_mem_premultibox : φ ∈ □''⁻¹^[n]s ↔ □^[n]φ ∈ s := by simp;
@@ -238,24 +233,21 @@ lemma subset_premulitibox_iff_multibox_subset (h : s ⊆ □''⁻¹^[n]t) :  □
   assumption;
 
 lemma subset_prebox_iff_box_subset (h : s ⊆ □''⁻¹t) :
-    □''s ⊆ t := by
-  simpa using subset_premulitibox_iff_multibox_subset (n := 1) h
+    □''s ⊆ t := by simpa using subset_premulitibox_iff_multibox_subset (n := 1) h
 
 lemma subset_multibox_iff_premulitibox_subset (h : s ⊆ □''^[n]t) : □''⁻¹^[n]s ⊆ t := by
   intro φ hp;
   have := premultibox_subset_mono h hp;
   simp_all;
 lemma subset_box_iff_prebox_subset (h : s ⊆ □''t) :
-    □''⁻¹s ⊆ t := by
-  simpa using subset_multibox_iff_premulitibox_subset (n := 1) h
+    □''⁻¹s ⊆ t := by simpa using subset_multibox_iff_premulitibox_subset (n := 1) h
 
 lemma forall_multibox_of_subset_multibox (h : s ⊆ □''^[n]t) : ∀ φ ∈ s, ∃ ψ ∈ t, φ = □^[n]ψ := by
   intro φ hp;
   obtain ⟨ψ, _, rfl⟩ := h hp;
   use ψ;
 lemma forall_box_of_subset_box (h : s ⊆ □''t) :
-    ∀ φ ∈ s, ∃ ψ ∈ t, φ = □ψ := by
-  simpa using forall_multibox_of_subset_multibox (n := 1) h
+    ∀ φ ∈ s, ∃ ψ ∈ t, φ = □ψ := by simpa using forall_multibox_of_subset_multibox (n := 1) h
 
 lemma eq_premultibox_multibox_of_subset_premultibox (h : s ⊆ □''^[n]t) :
      □''^[n]□''⁻¹^[n]s = s := by
@@ -267,8 +259,7 @@ lemma eq_premultibox_multibox_of_subset_premultibox (h : s ⊆ □''^[n]t) :
     obtain ⟨ψ, _, rfl⟩ := forall_multibox_of_subset_multibox h φ hp;
     simp_all [Set.premultibox];
 lemma eq_prebox_box_of_subset_prebox (h : s ⊆ □''t) :
-    □''□''⁻¹s = s := by
-  simpa using eq_premultibox_multibox_of_subset_premultibox (n := 1) h
+    □''□''⁻¹s = s := by simpa using eq_premultibox_multibox_of_subset_premultibox (n := 1) h
 
 end «lp_section_2»
 
@@ -283,19 +274,16 @@ variable [Dia F]
 
 
 @[simp 1100] lemma multidia_subset_mono (h : s ⊆ t) :
-    ◇''^[n]s ⊆ ◇''^[n]t := by
-  simp_all [Set.subset_def];
+    ◇''^[n]s ⊆ ◇''^[n]t := by simp_all [Set.subset_def];
 
 lemma dia_subset_mono (h : s ⊆ t) : ◇''s ⊆ ◇''t := by simpa using multidia_subset_mono (n := 1) h;
 
 
 @[simp 1100] lemma premultidia_subset_mono (h : s ⊆ t) :
-    ◇''⁻¹^[n]s ⊆ ◇''⁻¹^[n]t := by
-  simp_all [Set.subset_def];
+    ◇''⁻¹^[n]s ⊆ ◇''⁻¹^[n]t := by simp_all [Set.subset_def];
 
 lemma predia_subset_mono (h : s ⊆ t) :
-    ◇''⁻¹s ⊆ ◇''⁻¹t := by
-  simpa using premultidia_subset_mono (n := 1) h;
+    ◇''⁻¹s ⊆ ◇''⁻¹t := by simpa using premultidia_subset_mono (n := 1) h;
 
 
 @[simp 1100] lemma iff_mem_premultidia : φ ∈ ◇''⁻¹^[n]s ↔ ◇^[n]φ ∈ s := by simp;
@@ -308,8 +296,7 @@ lemma subset_premultidia_iff_multidia_subset (h : s ⊆ ◇''⁻¹^[n]t) :  ◇'
   assumption;
 
 lemma subset_predia_iff_dia_subset (h : s ⊆ ◇''⁻¹t) :
-    ◇''s ⊆ t := by
-  simpa using subset_premultidia_iff_multidia_subset (n := 1) h
+    ◇''s ⊆ t := by simpa using subset_premultidia_iff_multidia_subset (n := 1) h
 
 lemma subset_multidia_iff_premultidia_subset (h : s ⊆ ◇''^[n]t) : ◇''⁻¹^[n]s ⊆ t := by
   intro φ hp;
@@ -317,16 +304,14 @@ lemma subset_multidia_iff_premultidia_subset (h : s ⊆ ◇''^[n]t) : ◇''⁻¹
   simp_all;
 
 lemma subset_dia_iff_predia_subset (h : s ⊆ ◇''t) :
-    ◇''⁻¹s ⊆ t := by
-  simpa using subset_multidia_iff_premultidia_subset (n := 1) h
+    ◇''⁻¹s ⊆ t := by simpa using subset_multidia_iff_premultidia_subset (n := 1) h
 
 lemma forall_multidia_of_subset_multidia (h : s ⊆ ◇''^[n]t) : ∀ φ ∈ s, ∃ ψ ∈ t, φ = ◇^[n]ψ := by
   intro φ hp;
   obtain ⟨ψ, _, rfl⟩ := h hp;
   use ψ;
 lemma forall_dia_of_subset_dia (h : s ⊆ ◇''t) :
-    ∀ φ ∈ s, ∃ ψ ∈ t, φ = ◇ψ := by
-  simpa using forall_multidia_of_subset_multidia (n := 1) h
+    ∀ φ ∈ s, ∃ ψ ∈ t, φ = ◇ψ := by simpa using forall_multidia_of_subset_multidia (n := 1) h
 
 lemma eq_premultidia_multidia_of_subset_premultidia (h : s ⊆ ◇''^[n]t) :
      ◇''^[n]◇''⁻¹^[n]s = s := by
@@ -338,8 +323,7 @@ lemma eq_premultidia_multidia_of_subset_premultidia (h : s ⊆ ◇''^[n]t) :
     obtain ⟨ψ, _, rfl⟩ := forall_multidia_of_subset_multidia h φ hp;
     simp_all [Set.premultidia];
 lemma eq_predia_dia_of_subset_predia (h : s ⊆ ◇''t) :
-    ◇''◇''⁻¹s = s := by
-  simpa using eq_premultidia_multidia_of_subset_premultidia (n := 1) h
+    ◇''◇''⁻¹s = s := by simpa using eq_premultidia_multidia_of_subset_premultidia (n := 1) h
 
 end «lp_section_3»
 
@@ -402,8 +386,7 @@ lemma multibox_coe [DecidableEq F] : (s.multibox n) = □''^[n](s : Set F) := by
 lemma box_coe [DecidableEq F] : s.modalBox = □''(s : Set F) := by simpa using multibox_coe (n := 1)
 
 lemma multibox_mem_coe [DecidableEq F] : φ ∈ s.multibox n ↔ φ ∈ □''^[n](↑s :
-    Set F) := by
-  constructor <;> simp_all
+    Set F) := by constructor <;> simp_all
 
 lemma box_mem_coe [DecidableEq F] : φ ∈ s.modalBox ↔ φ ∈ □''(↑s : Set F) := by simp;
 
@@ -438,8 +421,7 @@ lemma multidia_coe [DecidableEq F] : (s.multidia n) = ◇''^[n](s : Set F) := by
 lemma dia_coe [DecidableEq F] : s.dia = ◇''(s : Set F) := by simpa using multidia_coe (n := 1)
 
 lemma multidia_mem_coe [DecidableEq F] : φ ∈ s.multidia n ↔ φ ∈ ◇''^[n](↑s :
-    Set F) := by
-  constructor <;> simp_all
+    Set F) := by constructor <;> simp_all
 
 lemma dia_mem_coe [DecidableEq F] : φ ∈ s.dia ↔ φ ∈ ◇''(↑s : Set F) := by simp;
 

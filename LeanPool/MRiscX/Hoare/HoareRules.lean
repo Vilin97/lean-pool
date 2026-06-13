@@ -38,18 +38,10 @@ theorem BL_SUBSET : ∀ (code : Code) (P Q : Assertion) (l: UInt64) (L_w L_b L :
   intros c P Q l L_w L_b L T
   unfold hoareTripleUp
   intros H _ h_LwEmpty s HCode pre H_pc
-  have L_b_sub : L_b \ L ⊆ L_b := by
-    apply Set.diff_subset
   specialize H T h_LwEmpty s HCode pre H_pc
   rcases H with ⟨s', ⟨H1, H2, H3⟩⟩
-  exists s'
-  constructor
-  · apply weak_with_less_BL_weakens; exact H1
-  · constructor
-    · exact H2
-    · apply Set.notMem_subset
-      · exact L_b_sub
-      · exact H3
+  exact ⟨s', weak_with_less_BL_weakens _ _ _ _ _ _ H1, H2,
+    Set.notMem_subset Set.diff_subset H3⟩
 
 /--
 Allows to weaken the Hoare triple
@@ -320,12 +312,8 @@ theorem S_COND : ∀ (c : Code) (P C Q : Assertion) (l : UInt64)
   specialize h_RunCondFalse h_LwInterLb h_LwNotEmpty s h_code
   apply excluded_middle_implication (P s) (C s)
   constructor
-  · intros H
-    specialize h_RunCondTrue h_pc H
-    exact h_RunCondTrue
-  · intros H
-    specialize h_RunCondFalse h_pc H
-    exact h_RunCondFalse
+  · exact fun H => h_RunCondTrue h_pc H
+  · exact fun H => h_RunCondFalse h_pc H
   exact pre
 
 

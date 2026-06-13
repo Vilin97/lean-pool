@@ -329,8 +329,7 @@ scoped instance instInsertVV : Insert V V := ⟨bitInsert⟩
 lemma insert_eq {i a : V} : insert i a = bitInsert i a := rfl
 
 lemma singleton_eq_insert (i : V) : ({i} :
-    V) = insert i ∅ := by
-  simp [singleton_def, insert, bitInsert, emptyset_def]
+    V) = insert i ∅ := by simp [singleton_def, insert, bitInsert, emptyset_def]
 
 instance : LawfulSingleton V V where
   insert_empty_eq := fun x ↦ Eq.symm <| singleton_eq_insert x
@@ -393,8 +392,7 @@ lemma insert_le_of_le_of_le {i j a b : V} (hij : i ≤ j) (hab : a ≤ b) : inse
 end «lp_section_5»
 
 lemma one_eq_singleton : (1 :
-    V) = {∅} := by
-  simp [singleton_eq_insert, insert, bitInsert, emptyset_def]
+    V) = {∅} := by simp [singleton_eq_insert, insert, bitInsert, emptyset_def]
 
 @[simp] lemma mem_singleton_iff {i j : V} :
     i ∈ ({j} : V) ↔ i = j := by simp [singleton_eq_insert, -insert_empty_eq]
@@ -426,8 +424,7 @@ lemma le_log_of_mem {i a : V} (h : i ∈ a) :
   (exp_le_iff_le_log (pos_of_nonempty h)).mp (exp_le_of_mem h)
 
 lemma succ_mem_iff_mem_div_two {i a : V} :
-    i + 1 ∈ a ↔ i ∈ a / 2 := by
-  simp [mem_iff_bit, Bit, LenBit.iff_rem, exp_succ, div_mul]
+    i + 1 ∈ a ↔ i ∈ a / 2 := by simp [mem_iff_bit, Bit, LenBit.iff_rem, exp_succ, div_mul]
 
 lemma lt_length_of_mem {i a : V} (h : i ∈ a) : i < ‖a‖ := by
   simpa [length_of_pos (pos_of_nonempty h), ←le_iff_lt_succ] using le_log_of_mem h
@@ -549,8 +546,7 @@ lemma zero_mem_iff {a : V} : 0 ∉ a ↔ 2 ∣ a := by simp [mem_iff_bit, Bit, L
 @[simp] lemma zero_not_mem (a : V) : 0 ∉ 2 * a := by simp [mem_iff_bit, Bit, LenBit]
 
 @[simp] lemma zero_mem_double_add_one (a : V) :
-    0 ∈ 2 * a + 1 := by
-  simp [mem_iff_bit, Bit, LenBit, ←mod_eq_zero_iff_dvd]
+    0 ∈ 2 * a + 1 := by simp [mem_iff_bit, Bit, LenBit, ←mod_eq_zero_iff_dvd]
 
 @[simp] lemma succ_mem_two_mul_iff {i a : V} : i + 1 ∈ 2 * a ↔ i ∈ a := by
   simp [mem_iff_bit, Bit, LenBit, exp_succ, div_cancel_left]

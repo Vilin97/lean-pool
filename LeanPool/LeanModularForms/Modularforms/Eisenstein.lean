@@ -215,8 +215,7 @@ lemma modfom_q_exp_cuspfunc (c : ℕ → ℂ) (f : F) [ModularFormClass F Γ(n) 
         · intro k
           apply Tendsto.const_mul
           have := ((continuous_pow k (M := ℂ) ).tendsto) 0
-          apply Filter.Tendsto.mono_left this
-          exact nhdsWithin_le_nhds
+          exact Filter.Tendsto.mono_left this nhdsWithin_le_nhds
         rw [eventually_iff_exists_mem]
         use {z | (z : ℂ) ≠ 0 ∧ ‖z‖ < 1 / 2}
         constructor
@@ -444,16 +443,13 @@ lemma qexpsummable (k : ℕ) (hk : 3 ≤ (k : ℤ)) (z : ℍ) :
   simpa using Nat.card_divisors_le_self (b + 1)
 
 
-lemma Ek_q_exp_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : (qExpansion 1 (E k hk)).coeff 0 =
-    1 := by
+private lemma Ek_qExp_hasSum (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) :
+    HasSum (fun m : ℕ ↦ (fun m => if m = 0 then 1 else
+      (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m)) m •
+      𝕢 ((1 : ℕ) : ℝ) z ^ m) ((E k hk) z) := by
   let c : ℕ → ℂ := fun m => if m = 0 then 1 else
     (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m)
-  have h := q_exp_unique 1 c (E k hk) ?_
-  · have hc := congr_fun h 0
-    rw [Nat.cast_one] at hc
-    rw [← hc]
-    simp [c]
-  intro z
+  change HasSum (fun m : ℕ ↦ c m • 𝕢 ((1 : ℕ) : ℝ) z ^ m) ((E k hk) z)
   have := E_k_q_expansion k hk hk2 z
   rw [Summable.hasSum_iff]
   · simp only [one_div, neg_mul] at this
@@ -483,6 +479,16 @@ lemma Ek_q_exp_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : (qExpansio
   have := qexpsummable k hk z
   simp only [one_div, neg_mul, EkQ, smul_eq_mul, ite_mul, one_mul, Nat.cast_one, c] at *
   apply this
+
+lemma Ek_q_exp_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : (qExpansion 1 (E k hk)).coeff 0 =
+    1 := by
+  let c : ℕ → ℂ := fun m => if m = 0 then 1 else
+    (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m)
+  have h := q_exp_unique 1 c (E k hk) (Ek_qExp_hasSum k hk hk2)
+  have hc := congr_fun h 0
+  rw [Nat.cast_one] at hc
+  rw [← hc]
+  simp [c]
 
 
 lemma Ek_q_exp (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
@@ -491,38 +497,8 @@ lemma Ek_q_exp (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
     (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m) := by
   let c : ℕ → ℂ := fun m => if m = 0 then 1 else
       (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m)
-  have h := q_exp_unique 1 c (E k hk) ?_
-  · rw [← Nat.cast_one (R := ℝ), ← h]
-  intro z
-  have := E_k_q_expansion k hk hk2 z
-  rw [Summable.hasSum_iff]
-  · simp only [one_div, neg_mul] at this
-    rw [this, tsum_eq_zero_add']
-    · have V := tsum_pnat_eq_tsum_succ (f := fun b => c (b) • 𝕢 ↑1 ↑z ^ (b))
-      simp only [smul_eq_mul, Nat.cast_one, pow_zero, mul_one] at *
-      rw [← V]
-      simp only [one_div, neg_mul, ↓reduceIte, PNat.ne_zero, add_right_inj, c]
-      rw [← tsum_mul_left]
-      apply tsum_congr
-      intro b
-      ring_nf
-      field_simp
-      congr
-      rw [Function.Periodic.qParam]
-      rw [← Complex.exp_nsmul]
-      congr
-      simp
-      ring
-    have hr := (summable_nat_add_iff 1 (f := fun n : ℕ ↦ c (n) • 𝕢 (1 : ℝ) ↑z ^ (n)))
-    simp only [smul_eq_mul, Nat.cast_one] at *
-    rw [hr]
-    have := qexpsummable k hk z
-    simp only [one_div, neg_mul, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, ite_mul,
-      one_mul, EkQ, smul_eq_mul, c] at *
-    apply this
-  have := qexpsummable k hk z
-  simp only [one_div, neg_mul, EkQ, smul_eq_mul, ite_mul, one_mul, Nat.cast_one, c] at *
-  apply this
+  have h := q_exp_unique 1 c (E k hk) (Ek_qExp_hasSum k hk hk2)
+  rw [← Nat.cast_one (R := ℝ), ← h]
 
 lemma E4_q_exp : (fun m => (qExpansion 1 E₄).coeff m) =
     fun m => if m = 0 then 1 else (240 : ℂ) * (σ 3 m) := by

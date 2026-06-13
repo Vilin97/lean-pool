@@ -98,8 +98,7 @@ private lemma contourIntegral_add_principalPart_regularPart (f : ℂ → ℂ) (s
   have h_decomp : ∀ t ∈ Set.uIcc γ.a γ.b,
       f (γ.toFun t) * deriv γ.toFun t =
       pp (γ.toFun t) * deriv γ.toFun t +
-        (f (γ.toFun t) - pp (γ.toFun t)) * deriv γ.toFun t := by
-    intro t _; ring
+        (f (γ.toFun t) - pp (γ.toFun t)) * deriv γ.toFun t := by intro t _; ring
   rw [intervalIntegral.integral_congr h_decomp]
   have h_pp_int : IntervalIntegrable
       (fun t => pp (γ.toFun t) * deriv γ.toFun t) volume γ.a γ.b :=
@@ -478,8 +477,7 @@ lemma pv_res_tendsto_of_immersion_nullHomologous (U : Set ℂ) (S : Set ℂ)
   obtain ⟨L, hL⟩ := h_exists
   have h_limit_eq : L = 2 * Real.pi * I * ∑ s ∈ S0,
       generalizedWindingNumber' γ.toFun γ.a γ.b s * residueAt f s := by
-    have hL_eq : L = cauchyPrincipalValueOn S0 f_res γ.toFun γ.a γ.b :=
-      hL.limUnder_eq.symm
+    have hL_eq : L = cauchyPrincipalValueOn S0 f_res γ.toFun γ.a γ.b := hL.limUnder_eq.symm
     rw [hL_eq, h_value]; congr 1; apply Finset.sum_congr rfl
     intro s hs; rw [h_res_eq s hs]
   rw [← h_limit_eq]

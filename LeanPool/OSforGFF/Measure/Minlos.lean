@@ -219,8 +219,7 @@ theorem minlos_gaussian_uniqueness
   {μ₁ μ₂ : ProbabilityMeasure (WeakDual ℝ E)}
   (h₁ : ∀ f : E, ∫ ω, Complex.exp (I * (ω f)) ∂μ₁.toMeasure = Φ f)
   (h₂ : ∀ f : E, ∫ ω, Complex.exp (I * (ω f)) ∂μ₂.toMeasure = Φ f) :
-  μ₁ = μ₂ :=
-  minlos_uniqueness hΦ_cont hΦ_pd hΦ_norm h₁ h₂
+  μ₁ = μ₂ := minlos_uniqueness hΦ_cont hΦ_pd hΦ_norm h₁ h₂
 
 /-! ## Symmetry Transfer from Characteristic Functional to Measure -/
 

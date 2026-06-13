@@ -170,22 +170,16 @@ lemma sqrtPropagatorMap_sq_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
       gcongr
     have h_nonneg_dom : 0 ≤ (1 / m) ^ 2 * ‖F k‖ ^ 2 := by positivity
     calc ‖‖sqrtPropagatorMap m f k‖ ^ 2‖
-        = ‖sqrtPropagatorMap m f k‖ ^ 2 := by
-          rw [Real.norm_of_nonneg (sq_nonneg _)]
-      _ = ‖F k * (momentumWeightSqrtMathlib m k : ℂ)‖ ^ 2 := by
-          unfold sqrtPropagatorMap; rfl
-      _ = (‖F k‖ * ‖(momentumWeightSqrtMathlib m k : ℂ)‖) ^ 2 := by
-          rw [norm_mul]
+        = ‖sqrtPropagatorMap m f k‖ ^ 2 := by rw [Real.norm_of_nonneg (sq_nonneg _)]
+      _ = ‖F k * (momentumWeightSqrtMathlib m k : ℂ)‖ ^ 2 := by unfold sqrtPropagatorMap; rfl
+      _ = (‖F k‖ * ‖(momentumWeightSqrtMathlib m k : ℂ)‖) ^ 2 := by rw [norm_mul]
       _ = (‖F k‖ * (momentumWeightSqrtMathlib m k)) ^ 2 := by
           congr 1
           rw [Complex.norm_real, Real.norm_of_nonneg (momentumWeightSqrt_mathlib_pos (m := m) k).le]
-      _ = ‖F k‖ ^ 2 * (momentumWeightSqrtMathlib m k) ^ 2 := by
-          rw [mul_pow]
-      _ ≤ ‖F k‖ ^ 2 * (1 / m) ^ 2 := by
-          gcongr
+      _ = ‖F k‖ ^ 2 * (momentumWeightSqrtMathlib m k) ^ 2 := by rw [mul_pow]
+      _ ≤ ‖F k‖ ^ 2 * (1 / m) ^ 2 := by gcongr
       _ = (1 / m) ^ 2 * ‖F k‖ ^ 2 := by ring
-      _ = ‖(1 / m) ^ 2 * ‖F k‖ ^ 2‖ := by
-          rw [Real.norm_of_nonneg h_nonneg_dom]
+      _ = ‖(1 / m) ^ 2 * ‖F k‖ ^ 2‖ := by rw [Real.norm_of_nonneg h_nonneg_dom]
   exact h_dom_integrable.mono h_sq_meas h_dom_pointwise
 
 /-- The weighted Fourier representative lies in L². -/
@@ -377,8 +371,7 @@ lemma embeddingMapCLM_apply (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
   classical
   set g := SchwartzMap.fourierTransformCLM ℂ (toComplex f) with hg
   set A := (SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure SpaceTime)) g with hA
-  have h_eval : embeddingMapCLM m f = (momentumWeightSqrtMathlibMulCLM m) A := by
-    rfl
+  have h_eval : embeddingMapCLM m f = (momentumWeightSqrtMathlibMulCLM m) A := by rfl
   have h_mul := momentumWeightSqrt_mathlib_mul_CLM_spec (m := m) A
   have h_mul' : embeddingMapCLM m f =ᵐ[volume]
       fun k => (momentumWeightSqrtMathlib m k : ℂ) * A k := by
@@ -557,8 +550,7 @@ theorem freeCovarianceFormR_symm (m : ℝ) [Fact (0 < m)] (f g : TestFunction) :
           rw [← freeCovarianceℂ_bilinear_agrees_on_reals m f g]
     _ = freeCovarianceℂBilinear m (toComplex g) (toComplex f) := by
           rw [freeCovarianceℂ_bilinear_symm m (toComplex f) (toComplex g)]
-    _ = (freeCovarianceFormR m g f : ℂ) := by
-          rw [freeCovarianceℂ_bilinear_agrees_on_reals m g f]
+    _ = (freeCovarianceFormR m g f : ℂ) := by rw [freeCovarianceℂ_bilinear_agrees_on_reals m g f]
 
 /-- Linearity in the first argument of the real covariance bilinear form. -/
 lemma freeCovarianceFormR_add_left (m : ℝ) [Fact (0 < m)] (f₁ f₂ g : TestFunction) :
@@ -607,8 +599,7 @@ lemma freeCovarianceFormR_smul_left (m : ℝ) [Fact (0 < m)] (c : ℝ) (f g : Te
       (freeCovarianceFormR m (c • f) g : ℂ)
           = freeCovarianceℂBilinear m ((c : ℂ) • toComplex f) (toComplex g) := hL
       _ = (c : ℂ) * freeCovarianceℂBilinear m (toComplex f) (toComplex g) := h
-      _ = (c : ℂ) * (freeCovarianceFormR m f g : ℂ) := by
-            rw [hR]
+      _ = (c : ℂ) * (freeCovarianceFormR m f g : ℂ) := by rw [hR]
   simpa [Complex.ofReal_mul] using h'
 
 /-- Addition in the second argument of the real covariance bilinear form. -/
@@ -658,8 +649,7 @@ lemma freeCovarianceFormR_smul_right (m : ℝ) [Fact (0 < m)] (c : ℝ) (f g : T
       (freeCovarianceFormR m f (c • g) : ℂ)
           = freeCovarianceℂBilinear m (toComplex f) ((c : ℂ) • toComplex g) := hL
       _ = (c : ℂ) * freeCovarianceℂBilinear m (toComplex f) (toComplex g) := h
-      _ = (c : ℂ) * (freeCovarianceFormR m f g : ℂ) := by
-            rw [hR]
+      _ = (c : ℂ) * (freeCovarianceFormR m f g : ℂ) := by rw [hR]
   simpa [Complex.ofReal_mul] using h'
 
 /-- Zero in the first argument gives zero. -/
@@ -816,8 +806,7 @@ lemma freeCovarianceFormR_left_linear_any_right
     have h_smul : c k * freeCovarianceFormR m (QFT.compTimeReflectionReal (f k).val) g =
       freeCovarianceFormR m (c k • QFT.compTimeReflectionReal (f k).val) g :=
       (freeCovarianceFormR_smul_left m (c k) (QFT.compTimeReflectionReal (f k).val) g).symm
-    rw [h_smul, ih]
-    rw [← freeCovarianceFormR_add_left]
+    rw [h_smul, ih, ← freeCovarianceFormR_add_left]
 
 end QFT
 

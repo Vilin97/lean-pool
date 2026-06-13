@@ -190,31 +190,9 @@ lemma center_tensorProduct
     ext x
     simp only [Algebra.inf_toSubmodule, Submodule.mem_inf, Subalgebra.mem_toSubmodule,
       AlgHom.mem_range]
-  have eq1 :
-      Subalgebra.toSubmodule (Algebra.TensorProduct.map (Subalgebra.center K B).val (.id K C)).range
-        = LinearMap.range (TensorProduct.map (Subalgebra.center K B).val.toLinearMap .id) := rfl
-  rw [eq1]
-  have eq2 :
-      Subalgebra.toSubmodule (Algebra.TensorProduct.map (.id K B) (Subalgebra.center K C).val).range
-        = LinearMap.range (TensorProduct.map .id (Subalgebra.center K C).val.toLinearMap) := rfl
-  rw [eq2]
-  have eq3 :
-      Subalgebra.toSubmodule (Algebra.TensorProduct.map (Subalgebra.center K B).val
-        (Subalgebra.center K C).val).range =
-      LinearMap.range (TensorProduct.map (Subalgebra.center K B).val.toLinearMap
-        (Subalgebra.center K C).val.toLinearMap) := by
-    rfl
-  rw [eq3]
-  have := TensorProduct.submodule_tensor_inf_tensor_submodule K B C
+  exact TensorProduct.submodule_tensor_inf_tensor_submodule K B C
     (Subalgebra.toSubmodule <| .center K B)
     (Subalgebra.toSubmodule <| .center K C)
-  have eq4 : (Subalgebra.toSubmodule (Subalgebra.center K B)).subtype =
-    (Subalgebra.center K B).val.toLinearMap := by rfl
-  rw [eq4] at this
-  have eq5 : (Subalgebra.toSubmodule (Subalgebra.center K C)).subtype =
-    (Subalgebra.center K C).val.toLinearMap := by rfl
-  rw [eq5] at this
-  rw [this]
 
 /-- Linear map from the tensor product of centers into the tensor product algebra. -/
 noncomputable def centerTensorCenter (B C : Type v) [Ring B] [Algebra K B] [Ring C] [Algebra K C] :
@@ -319,16 +297,14 @@ lemma _root_.IsCentralSimple.is_obtainable_by_sum_tmul.exists_minimal_element
     subst hx1
     exact hx0 I.zero_mem |>.elim
   obtain ⟨s, rfl⟩ := TensorProduct.eq_repr_basis_left 𝒜 x
-  let n := @Nat.find (fun n => ∃ x : A ⊗[K] B, is_obtainable_by_sum_tmul x 𝒜 I n) _
+  have H0 : ∃ n, ∃ x : A ⊗[K] B, is_obtainable_by_sum_tmul x 𝒜 I n :=
     ⟨s.support.card, ∑ i ∈ s.support, 𝒜 i ⊗ₜ[K] s i, ⟨hx0, hx1, s.support, rfl, s, rfl⟩⟩
-  obtain ⟨x, hx⟩ : ∃ x, is_obtainable_by_sum_tmul x 𝒜 I n :=
-    @Nat.find_spec (fun n => ∃ x : A ⊗[K] B, is_obtainable_by_sum_tmul x 𝒜 I n) _
-      ⟨s.support.card, ∑ i ∈ s.support, 𝒜 i ⊗ₜ[K] s i, ⟨hx0, hx1, s.support, rfl, s, rfl⟩⟩
+  let n := Nat.find H0
+  obtain ⟨x, hx⟩ : ∃ x, is_obtainable_by_sum_tmul x 𝒜 I n := Nat.find_spec H0
   refine ⟨n, x, hx, fun m y hy => ?_⟩
   by_contra r
   simp only [not_le] at r
-  have := @Nat.find_min (fun n => ∃ x : A ⊗[K] B, is_obtainable_by_sum_tmul x 𝒜 I n) _
-      ⟨s.support.card, ∑ i ∈ s.support, 𝒜 i ⊗ₜ[K] s i, ⟨hx0, hx1, s.support, rfl, s, rfl⟩⟩ m r
+  have := Nat.find_min H0 r
   simp only [not_exists] at this
   exact this y hy
 lemma _root_.IsCentralSimple.TensorProduct.map_comap_le_span_of_isSimple_isCentralSimple

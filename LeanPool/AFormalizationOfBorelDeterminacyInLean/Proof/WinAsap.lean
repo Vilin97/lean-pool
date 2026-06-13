@@ -99,8 +99,7 @@ lemma extracted_1 {G : Game A} {p : Player} {x : List A} (h : WinningPrefix G p 
   Strategy (G.residual ((x ++ y).take (h.extend y).num)).tree
     (p.residual ((x ++ y).take (h.extend y).num)) =
   Strategy (G.residual (x.take h.num)).tree
-    (p.residual (x.take h.num)) := by
-  rw [h.extend_num, h.take_num]
+    (p.residual (x.take h.num)) := by rw [h.extend_num, h.take_num]
 lemma extracted_2 {G : Game A} {p : Player} {x : List A} (h : WinningPrefix G p x) {y : List A}
   (a : Strategy (G.residual ((x ++ y).take (h.extend y).num)).tree
     (p.residual ((x ++ y).take (h.extend y).num))) :

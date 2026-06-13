@@ -137,13 +137,9 @@ instance : QuasiBorelSpace (X →ω𝒒 Y) where
   isVar_cases' {ix} {φ} hix hφ := by
     rw [← isHom_iff_measurable] at hix
     let ix' := fun (p : ℝ × X) ↦ ix p.1
-    have hix' : IsHom ix' := by
-      apply isHom_comp (hf := hix)
-      exact Prod.isHom_fst
+    have hix' : IsHom ix' := isHom_comp (hf := hix) Prod.isHom_fst
     let branches := fun n (p : ℝ × X) ↦ (φ n p.1) p.2
-    apply isHom_cases (ix := ix') (f := branches)
-    · exact hix'
-    · exact hφ
+    exact isHom_cases (ix := ix') (f := branches) hix' hφ
 
 instance : MeasurableSpace (X →ω𝒒 Y) := toMeasurableSpace
 
@@ -160,11 +156,8 @@ lemma isHom_eval : IsHom (fun p : (X →ω𝒒 Y) × X ↦ p.1 p.2) := by
   have h_func : IsHom (fun r ↦ (φ r).1) := isHom_comp Prod.isHom_fst hφ
   have h_arg  : IsHom (fun r ↦ (φ r).2) := isHom_comp Prod.isHom_snd hφ
   rw [isHom_def] at h_func
-  have h_input : IsHom (fun r : ℝ ↦ (r, (φ r).2)) := by
-    apply Prod.isHom_mk
-    · exact isHom_id
-    · exact h_arg
-  apply isHom_comp (hf := h_func) (hg := h_input)
+  have h_input : IsHom (fun r : ℝ ↦ (r, (φ r).2)) := Prod.isHom_mk isHom_id h_arg
+  exact isHom_comp (hf := h_func) (hg := h_input)
 
 @[simp]
 lemma ωScottContinuous_eval : ωScottContinuous (fun p : (X →ω𝒒 Y) × X ↦ p.1 p.2) := by

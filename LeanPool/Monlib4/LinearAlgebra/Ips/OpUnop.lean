@@ -83,8 +83,7 @@ theorem tenSwap_apply' (x : A) (y : B) :
   rfl
 
 theorem tenSwap_symm :
-  (tenSwap R).symm = (tenSwap R : B ⊗[R] Aᵐᵒᵖ ≃ₗ[R] A ⊗[R] Bᵐᵒᵖ) :=
-by
+  (tenSwap R).symm = (tenSwap R : B ⊗[R] Aᵐᵒᵖ ≃ₗ[R] A ⊗[R] Bᵐᵒᵖ) := by
   apply LinearEquiv.toLinearMap_injective
   apply TensorProduct.ext'
   intro _ _
@@ -92,8 +91,7 @@ by
 
 theorem tenSwap_comp_tenSwap :
     (tenSwap R).toLinearMap ∘ₗ (tenSwap R).toLinearMap =
-      (1 : A ⊗[R] Bᵐᵒᵖ →ₗ[R] A ⊗[R] Bᵐᵒᵖ) :=
-  by
+      (1 : A ⊗[R] Bᵐᵒᵖ →ₗ[R] A ⊗[R] Bᵐᵒᵖ) := by
   apply TensorProduct.ext'
   intro _ _
   rfl

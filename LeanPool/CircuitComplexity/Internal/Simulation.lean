@@ -423,8 +423,7 @@ def compileFn (c : Circuit Basis.unboundedAON N M G) : Circuit Basis.andOr2 N M 
       have hi : seg.1 < G := segLookup_fst_lt G _ _ h
       have hj : seg.2 < chainLen (c.gates ⟨seg.1, hi⟩).fanIn := by
         rw [← iChainF_eq c hi]; exact segLookup_snd_lt G _ _ h
-      have hsum : prefixSum (iChainF c) seg.1 + seg.2 = idx.val :=
-        segLookup_sum G _ _ h
+      have hsum : prefixSum (iChainF c) seg.1 + seg.2 = idx.val := segLookup_sum G _ _ h
       have hiOff : iOffset c seg.1 = prefixSum (iChainF c) seg.1 := rfl
       have hri_lt : ∀ i, (remapWire c ((c.gates ⟨seg.1, hi⟩).inputs i)).val <
           N + iOffset c seg.1 :=
@@ -712,8 +711,7 @@ private theorem lastChainValue_eq (c : Circuit Basis.unboundedAON N M G) (input 
         | zero =>
           rw [mkChainGate_eval_ge2_zero _ (by omega : 2 ≤ _)]
           rw [hv_remap ⟨0, by omega⟩, hv_remap ⟨1, by omega⟩]
-          rw [partialFold_two _ v (by omega)]
-          rw [AONOp.identity_binOp]
+          rw [partialFold_two _ v (by omega), AONOp.identity_binOp]
         | succ j' ih =>
           rw [mkChainGate_eval_ge2_succ _ (by omega : 2 ≤ _) _ _
             (by unfold G'; omega) hj (by unfold G'; omega)]
@@ -873,8 +871,7 @@ private theorem lastOutputChainValue_eq (c : Circuit Basis.unboundedAON N M G) (
         | zero =>
           rw [mkChainGate_eval_ge2_zero _ (by omega : 2 ≤ _)]
           rw [hv_remap ⟨0, by omega⟩, hv_remap ⟨1, by omega⟩]
-          rw [partialFold_two _ v (by omega)]
-          rw [AONOp.identity_binOp]
+          rw [partialFold_two _ v (by omega), AONOp.identity_binOp]
         | succ p' ih =>
           rw [mkChainGate_eval_ge2_succ _ (by omega : 2 ≤ _) _ _
             (by omega) hp (by omega)]

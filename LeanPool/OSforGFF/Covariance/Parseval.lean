@@ -165,8 +165,7 @@ lemma freeCovariance_regulated_eq_complex_integral (α : ℝ) (m : ℝ) (x y : S
   -- So I = ∫f(k) = ∫f(-k) = ∫conj(f(k)) = conj(I)
   have h_self_conj : I = starRingEnd ℂ I := by
     have h1 : I = ∫ k, f (-k) := (integral_comp_neg_spacetime f).symm
-    have h2 : starRingEnd ℂ I = ∫ k, conj (f k) := by
-      rw [hI]; exact (integral_conj (𝕜 := ℂ)).symm
+    have h2 : starRingEnd ℂ I = ∫ k, conj (f k) := by rw [hI]; exact (integral_conj (𝕜 := ℂ)).symm
     rw [h2, h1]
     congr 1; funext k; exact hf_conj k
   exact conj_eq_iff_re.mp (id (Eq.symm h_self_conj))
@@ -192,13 +191,11 @@ lemma phase_bound (k x y : SpaceTime) :
 
 /-- The free propagator is bounded by 1/m². -/
 lemma freePropagatorMomentum_le_inv_sq (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
-    freePropagatorMomentum m k ≤ 1 / m^2 :=
-  freePropagator_bounded k
+    freePropagatorMomentum m k ≤ 1 / m^2 := freePropagator_bounded k
 
 /-- The free propagator is strictly positive. -/
 lemma freePropagatorMomentum_pos' (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
-    0 < freePropagatorMomentum m k :=
-  freePropagator_pos k
+    0 < freePropagatorMomentum m k := freePropagator_pos k
 
 /-- The Gaussian regulator exp(-α‖k‖²) is integrable for α > 0. -/
 lemma gaussian_regulator_integrable (α : ℝ) (hα : 0 < α) :
@@ -314,8 +311,7 @@ lemma triple_integrand_norm_le (α : ℝ) (m : ℝ) [Fact (0 < m)] (f : TestFunc
     _ ≤ ‖f x‖ * (1 / m^2 / (2 * Real.pi) ^ STDimension * Real.exp (-α * ‖k‖^2)) * ‖f y‖ := by
       gcongr
       calc Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension
-        _ ≤ Real.exp (-α * ‖k‖^2) * (1 / m^2) / (2 * Real.pi) ^ STDimension := by
-            gcongr
+        _ ≤ Real.exp (-α * ‖k‖^2) * (1 / m^2) / (2 * Real.pi) ^ STDimension := by gcongr
         _ = 1 / m^2 / (2 * Real.pi) ^ STDimension * Real.exp (-α * ‖k‖^2) := by ring
 
 /-- The regulated integrand is integrable in all variables jointly. -/
@@ -409,8 +405,7 @@ lemma integrand_rescale (α : ℝ) (m : ℝ) (f : TestFunctionℂ) (p : SpaceTim
       (2 * Real.pi) ^ STDimension := by
   have h2pi_pos : (0 : ℝ) < 2 * Real.pi := by positivity
   have h2pi_nonneg : (0 : ℝ) ≤ 2 * Real.pi := le_of_lt h2pi_pos
-  rw [norm_sq_smul_eq (2 * Real.pi) h2pi_nonneg p]
-  rw [freePropagatorMomentum_rescale m p]
+  rw [norm_sq_smul_eq (2 * Real.pi) h2pi_nonneg p, freePropagatorMomentum_rescale m p]
   rw [physicsFT_rescale f p]
   have exp_eq : -α * ((2 * Real.pi) ^ 2 * ‖p‖ ^ 2) = -α * (2 * Real.pi) ^ 2 * ‖p‖ ^ 2 := by ring
   rw [exp_eq]
@@ -432,8 +427,7 @@ lemma change_of_variables_momentum (α : ℝ) (m : ℝ) (f : TestFunctionℂ) :
   have h_subst := MeasureTheory.Measure.integral_comp_smul (μ := volume) g (2 * Real.pi)
   have h_rearranged : ∫ k, g k ∂volume = |2 * Real.pi| ^ STDimension * ∫ p, g ((2 * Real.pi) • p)
     ∂volume := by
-    rw [h_subst, h_finrank]
-    rw [abs_inv, abs_pow, smul_eq_mul]
+    rw [h_subst, h_finrank, abs_inv, abs_pow, smul_eq_mul]
     field_simp
   simp only [g] at h_rearranged
   rw [h_rearranged]
@@ -448,8 +442,7 @@ lemma change_of_variables_momentum (α : ℝ) (m : ℝ) (f : TestFunctionℂ) :
         ‖(SchwartzMap.fourierTransformCLM ℂ f) p‖^2 * freePropagatorMomentumMathlib m p /
         (2 * Real.pi) ^ STDimension := by
     congr 1; ext p; exact h_integrand p
-  rw [h_int_eq]
-  rw [← MeasureTheory.integral_const_mul]
+  rw [h_int_eq, ← MeasureTheory.integral_const_mul]
   congr 1
   ext p
   rw [abs_of_pos h2pi_pos]

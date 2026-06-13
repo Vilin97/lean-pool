@@ -155,8 +155,7 @@ theorem gff_integrand_analytic
         induction s using Finset.induction_on with
         | empty => simp [h_zero]
         | insert i s hi ih =>
-          rw [Finset.sum_insert hi, Finset.sum_insert hi]
-          rw [h_add, h_smul, ih]
+          rw [Finset.sum_insert hi, Finset.sum_insert hi, h_add, h_smul, ih]
       exact h_gen Finset.univ
     -- Now show ∑ i, z i * c_i is analytic (it's a polynomial)
     simp_rw [h_linear]
@@ -304,8 +303,7 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
     have h_const_mul : Integrable (fun ω => C * Real.exp (α * (distributionPairingCLM f ω)^2))
       (muGFF m).toMeasure := by
       exact h_fernique.const_mul C
-    simp only [distributionPairingCLM_apply, distributionPairing] at h_const_mul
-    exact h_const_mul
+    simpa only [distributionPairingCLM_apply, distributionPairing] using h_const_mul
   -- For the MemLp construction, we need snorm to be finite
   -- snorm f p μ = (∫ ‖f‖^p)^(1/p) for p ∈ (0, ∞)
   -- ‖exp(|x|)‖^p = exp(|x|)^p = exp(p * |x|)
@@ -330,8 +328,7 @@ lemma gff_exp_abs_pairing_memLp (f : TestFunction) (p : ENNReal) (hp : p ≠ ⊤
   -- snorm f p μ = (∫ ‖f‖^p.toReal)^(1/p.toReal) when 0 < p < ⊤
   -- The key observation: ‖exp(|x|)‖^(p.toReal) = exp(p.toReal * |x|)
   have h_norm_rpow : ∀ x : ℝ, ‖Real.exp |x|‖ ^ p.toReal = Real.exp (p.toReal * |x|) := fun x => by
-    rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
-    rw [← Real.exp_mul]
+    rw [Real.norm_eq_abs, abs_of_pos (Real.exp_pos _), ← Real.exp_mul]
     congr 1
     ring
   -- Convert integrability of exp(p|x|) to eLpNorm bound
@@ -417,8 +414,7 @@ lemma gff_exp_abs_sum_memLp {ι : Type*} (s : Finset ι) (g : ι → TestFunctio
   -- First simplify (2 * s.card)⁻¹ = 2⁻¹ * s.card⁻¹
   rw [ENNReal.mul_inv (Or.inl h2_ne_zero) (Or.inl h2_ne_top)]
   -- Goal: 2 = (s.card * (2⁻¹ * s.card⁻¹))⁻¹
-  rw [mul_comm (2 : ENNReal)⁻¹ (s.card : ENNReal)⁻¹]
-  rw [← mul_assoc]
+  rw [mul_comm (2 : ENNReal)⁻¹ (s.card : ENNReal)⁻¹, ← mul_assoc]
   rw [ENNReal.mul_inv_cancel hk_ne_zero hk_ne_top]
   -- Goal: 2 = (1 * 2⁻¹)⁻¹
   rw [one_mul]
@@ -521,8 +517,7 @@ lemma gff_cf_slice_entire (f_re f_im : TestFunction) :
     have h_dom : Integrable (fun ω => Real.exp (c ^ 2 / (4 * α) + α * (ω f_im) ^ 2))
         (muGFF m).toMeasure := by
       have h := h_fernique.const_mul (Real.exp (c ^ 2 / (4 * α)))
-      simp only [distributionPairingCLM_apply, distributionPairing, ← Real.exp_add] at h
-      exact h
+      simpa only [distributionPairingCLM_apply, distributionPairing, ← Real.exp_add] using h
     apply h_dom.mono
       (Real.continuous_exp.measurable.comp
         (measurable_const.mul (continuous_abs.measurable.comp h_eval_meas_im))
@@ -714,14 +709,12 @@ theorem gff_complex_CF_covariance (f : TestFunctionℂ) :
       simp only [Metric.mem_ball, Complex.dist_eq, sub_zero, Complex.norm_real]
       rw [Real.norm_eq_abs, abs_of_pos h_half_pos]
       linarith)
-    have h_ne : ((ε / 2 : ℝ) : ℂ) ≠ 0 := by
-      simp only [ne_eq, Complex.ofReal_eq_zero]; linarith
+    have h_ne : ((ε / 2 : ℝ) : ℂ) ≠ 0 := by simp only [ne_eq, Complex.ofReal_eq_zero]; linarith
     exact hV_sub ⟨h_mem_V, h_ne⟩ (h_agree (ε / 2))
   -- Step 5: Evaluate at t = I
   have h_eval : L Complex.I = R Complex.I := congrFun h_eq Complex.I
   -- Step 6: Relate L(I) to LHS and R(I) to RHS
-  have h_LHS : GJGeneratingFunctionalℂ (muGFF m) f = L Complex.I := by
-    simp only [L]; congr 1
+  have h_LHS : GJGeneratingFunctionalℂ (muGFF m) f = L Complex.I := by simp only [L]; congr 1
   have h_RHS : cexp (-(1/2 : ℂ) * freeCovarianceℂBilinear m f f) = R Complex.I := by
     simp only [R]; congr 1; congr 1
     -- Expand C_ℂ(f, f) using bilinearity and agrees_on_reals

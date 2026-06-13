@@ -71,8 +71,7 @@ structure LiftedGrammar (T : Type) where
 
 private lemma lifted_grammar_inverse {T : Type} {G : LiftedGrammar T} {x : G.g.nt} {n₀ : G.g₀.nt}
     (hGxn₀ : G.sinkNt x = some n₀) :
-  (Option.map G.liftNt (G.sinkNt x) = x) :=
-by
+  (Option.map G.liftNt (G.sinkNt x) = x) := by
   rw [hGxn₀, Option.map_some]
   apply congr_arg
   symm
@@ -107,8 +106,7 @@ match hGww with
 
 lemma lift_deri (G : LiftedGrammar T) {w₁ w₂ : List (Symbol T G.g₀.nt)}
     (hGww : G.g₀.Derives w₁ w₂) :
-  G.g.Derives (liftString G.liftNt w₁) (liftString G.liftNt w₂) :=
-by
+  G.g.Derives (liftString G.liftNt w₁) (liftString G.liftNt w₂) := by
   induction hGww with
   | refl => exact gr_deri_self
   | tail _ orig ih => exact gr_deri_of_deri_tran ih (lift_tran orig)
@@ -124,8 +122,7 @@ def GoodString {G : LiftedGrammar T} (s : List (Symbol T G.g.nt)) : Prop :=
 
 lemma sink_tran {G : LiftedGrammar T} {w₁ w₂ : List (Symbol T G.g.nt)}
     (hGww : G.g.Transforms w₁ w₂) (hw₁ : GoodString w₁) :
-  G.g₀.Transforms (sinkString G.sinkNt w₁) (sinkString G.sinkNt w₂) ∧ GoodString w₂ :=
-by
+  G.g₀.Transforms (sinkString G.sinkNt w₁) (sinkString G.sinkNt w₂) ∧ GoodString w₂ := by
   rcases hGww with ⟨r, rin, u, v, bef, aft⟩
   rcases G.preimage_of_rules r (by
       constructor
@@ -211,8 +208,7 @@ by
 
 private lemma sink_deri_aux {G : LiftedGrammar T} {w₁ w₂ : List (Symbol T G.g.nt)}
     (hGww : G.g.Derives w₁ w₂) (hw₁ : GoodString w₁) :
-  G.g₀.Derives (sinkString G.sinkNt w₁) (sinkString G.sinkNt w₂) ∧ GoodString w₂ :=
-by
+  G.g₀.Derives (sinkString G.sinkNt w₁) (sinkString G.sinkNt w₂) ∧ GoodString w₂ := by
   induction hGww with
   | refl => exact ⟨gr_deri_self, hw₁⟩
   | tail _ orig ih =>
@@ -221,8 +217,7 @@ by
 
 lemma sink_deri (G : LiftedGrammar T) {w₁ w₂ : List (Symbol T G.g.nt)}
     (hGww : G.g.Derives w₁ w₂) (hw₁ : GoodString w₁) :
-  G.g₀.Derives (sinkString G.sinkNt w₁) (sinkString G.sinkNt w₂) :=
-(sink_deri_aux hGww hw₁).left
+  G.g₀.Derives (sinkString G.sinkNt w₁) (sinkString G.sinkNt w₂) := (sink_deri_aux hGww hw₁).left
 
 end translating_derivations
 

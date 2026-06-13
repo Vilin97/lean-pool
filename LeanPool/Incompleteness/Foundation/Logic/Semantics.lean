@@ -171,12 +171,10 @@ instance empty' (𝓜 : M) : 𝓜 ⊧* (∅ : Set F) := ⟨by simp⟩
     𝓜 ⊧* {f} ↔ 𝓜 ⊧ f := by simp [realizeSet_iff]
 
 @[simp] lemma insert_iff {T : Set F} {f : F} {𝓜 : M} :
-    𝓜 ⊧* insert f T ↔ 𝓜 ⊧ f ∧ 𝓜 ⊧* T := by
-  simp [realizeSet_iff]
+    𝓜 ⊧* insert f T ↔ 𝓜 ⊧ f ∧ 𝓜 ⊧* T := by simp [realizeSet_iff]
 
 @[simp] lemma union_iff {T U : Set F} {𝓜 : M} :
-    𝓜 ⊧* T ∪ U ↔ 𝓜 ⊧* T ∧ 𝓜 ⊧* U := by
-  simp only [realizeSet_iff, Set.mem_union, or_imp, forall_and]
+    𝓜 ⊧* T ∪ U ↔ 𝓜 ⊧* T ∧ 𝓜 ⊧* U := by simp only [realizeSet_iff, Set.mem_union, or_imp, forall_and]
 
 @[simp] lemma image_iff {ι} {f : ι → F} {A : Set ι} {𝓜 : M} :
     𝓜 ⊧* f '' A ↔ ∀ i ∈ A, 𝓜 ⊧ (f i) := by simp [realizeSet_iff]
@@ -190,12 +188,10 @@ instance empty' (𝓜 : M) : 𝓜 ⊧* (∅ : Set F) := ⟨by simp⟩
 end RealizeSet
 
 lemma valid_neg_iff [LogicalConnective F] [Tarski M] (f : F) :
-    Valid M (∼f) ↔ ¬Satisfiable M {f} := by
-  simp [Valid, Satisfiable]
+    Valid M (∼f) ↔ ¬Satisfiable M {f} := by simp [Valid, Satisfiable]
 
 lemma _root_.LO.Semantics.Satisfiable.of_subset {T U : Set F} (h : Satisfiable M U) (ss : T ⊆ U) :
-    Satisfiable M T := by
-  rcases h with ⟨𝓜, h⟩; exact ⟨𝓜, RealizeSet.of_subset h ss⟩
+    Satisfiable M T := by rcases h with ⟨𝓜, h⟩; exact ⟨𝓜, RealizeSet.of_subset h ss⟩
 
 variable (M)
 

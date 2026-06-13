@@ -37,8 +37,7 @@ variable {S T U : Trees} {k m n : ℕ}
 
 @[ext] lemma res_ext (x y : (res k).obj S) (h : x.val = y.val) : x = y := Subtype.ext h
 @[simp] lemma mem_res_obj (x : List T.1) :
-  Membership.mem (γ := tree T.1) ((Tree.res k).obj T).2 x ↔ x ∈ T.2 ∧ x.length ≤ k :=
-  Iff.rfl
+  Membership.mem (γ := tree T.1) ((Tree.res k).obj T).2 x ↔ x ∈ T.2 ∧ x.length ≤ k := Iff.rfl
 /-- Remove all nodes of a tree not on level exactly k -/
 @[simps map] def resEq (k : ℕ) : Trees ⥤ Type* where
   obj := fun S ↦ {x | x ∈ S.2 ∧ x.length = k}
@@ -48,8 +47,7 @@ variable {S T U : Trees} {k m n : ℕ}
 @[ext] lemma resEq_ext (x y : (resEq k).obj S) (h : x.val = y.val) : x = y := Subtype.ext h
 lemma resEq_ext_hEq (x : (resEq k).obj T) (y : (resEq m).obj T) (h' : x.val = y.val) :
   HEq x y := by
-  have hkm : k = m := by
-    rw [← x.prop.2, ← y.prop.2, h']
+  have hkm : k = m := by rw [← x.prop.2, ← y.prop.2, h']
   cases hkm
   exact heq_of_eq (Subtype.ext h')
 
@@ -127,8 +125,7 @@ lemma fixing_iff_forget_isIso k (f : S ⟶ T) :
   constructor
   · intro _; exact Functor.map_isIso (forget Trees) ((res k).map f)
   · intro h
-    haveI : IsIso ((forget Trees).map ((res k).map f)) := by
-      exact h
+    haveI : IsIso ((forget Trees).map ((res k).map f)) := h
     constructor
     exact isIso_of_reflects_iso ((res k).map f) (forget Trees)
 lemma Fixing.bijective {k} {f : S ⟶ T} (h : Fixing k f) :
@@ -181,8 +178,7 @@ lemma Fixing.inj (x y : S) (ht : Fixing x.val.length f := by as_aux_lemma => syn
 def pInv (y : T) (h : Fixing y.val.length f := by as_aux_lemma => synthFixing) : S :=
   let x := inv ((res y.val.length).map f) ⟨y.val, ⟨y.prop, le_rfl⟩⟩; res.val' x
 @[simp, simp_lengths] lemma h_length_pInv (y : T) (h : Fixing y.val.length f) :
-  (pInv f y h).val.length (α := no_index _) = y.val.length (α := no_index _) :=
-  by
+  (pInv f y h).val.length (α := no_index _) = y.val.length (α := no_index _) := by
   change (inv ((res y.val.length).map f) ⟨y.val, ⟨y.prop, le_rfl⟩⟩).val.length =
     y.val.length
   exact (inv ((res y.val.length).map f)).h_length ⟨y.val, ⟨y.prop, le_rfl⟩⟩
@@ -210,8 +206,7 @@ lemma take_apply_pInv x (h : Fixing x.val.length f) :
   pInv f (take n x) = take n (pInv f x h) := by
   apply Fixing.inj f _; simp [take_apply]
 lemma take_apply_pInv_val x (h : Fixing x.val.length f) :
-  (pInv f (take n x)).val = (pInv f x h).val.take n :=
-  congr_arg Subtype.val (take_apply_pInv f x h)
+  (pInv f (take n x)).val = (pInv f x h).val.take n := congr_arg Subtype.val (take_apply_pInv f x h)
 @[simp] lemma inv_val'_eq_pInv x (h : Fixing k f := by as_aux_lemma => synthFixing) :
   res.val' (inv ((res k).map f) x) = pInv f (res.val' x) := by
   apply Fixing.inj f _

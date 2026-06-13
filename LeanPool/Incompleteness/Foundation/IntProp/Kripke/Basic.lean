@@ -111,20 +111,16 @@ variable {M : Kripke.Model} {w w' : M.World} {a : ℕ} {φ ψ χ : Formula ℕ}
 @[simp 1100] lemma bot_def : Formula.Kripke.Satisfies M w ⊥ ↔ False := by simp [Satisfies];
 
 @[simp 1100] lemma and_def :
-    Formula.Kripke.Satisfies M w (φ ⋏ ψ) ↔ w ⊧ φ ∧ w ⊧ ψ := by
-  simp [Satisfies];
+    Formula.Kripke.Satisfies M w (φ ⋏ ψ) ↔ w ⊧ φ ∧ w ⊧ ψ := by simp [Satisfies];
 
 @[simp 1100] lemma or_def :
-    Formula.Kripke.Satisfies M w (φ ⋎ ψ) ↔ w ⊧ φ ∨ w ⊧ ψ := by
-  simp [Satisfies];
+    Formula.Kripke.Satisfies M w (φ ⋎ ψ) ↔ w ⊧ φ ∨ w ⊧ ψ := by simp [Satisfies];
 
 @[simp 1100] lemma imp_def : Formula.Kripke.Satisfies M w (φ ==> ψ) ↔ ∀ {w' :
-    M.World}, (w ≺ w') → (w' ⊧ φ → w' ⊧ ψ) := by
-  simp [Satisfies, imp_iff_not_or];
+    M.World}, (w ≺ w') → (w' ⊧ φ → w' ⊧ ψ) := by simp [Satisfies, imp_iff_not_or];
 
 @[simp 1100] lemma neg_def : Formula.Kripke.Satisfies M w (∼φ) ↔ ∀ {w' :
-    M.World}, (w ≺ w') → ¬(w' ⊧ φ) := by
-  simp [Satisfies];
+    M.World}, (w ≺ w') → ¬(w' ⊧ φ) := by simp [Satisfies];
 
 instance : Semantics.Top M.World where
   realize_top := by simp [Satisfies];
@@ -292,8 +288,7 @@ protected lemma wlem : Confluent M.Rel → M ⊧ Axioms.WeakLEM φ := by
   contrapose;
   push Not;
   intro h;
-  obtain ⟨x, ⟨y, Rxy, hyφ⟩, ⟨z, Rxz, hz⟩⟩ := by
-    simpa [Satisfies] using exists_world_of_not h;
+  obtain ⟨x, ⟨y, Rxy, hyφ⟩, ⟨z, Rxz, hz⟩⟩ := by simpa [Satisfies] using exists_world_of_not h;
   use x, y, z;
   refine ⟨⟨Rxy, Rxz⟩, ?_⟩;
   · rintro w Ryw;
@@ -327,8 +322,7 @@ instance : Semantics.Bot (Frame) := ⟨fun _ => ValidOnFrame.bot⟩
 
 
 lemma iff_not_exists_valuation : (¬F ⊧ φ) ↔ (∃ V : Kripke.Valuation F, ¬(⟨F, V⟩ :
-    Kripke.Model) ⊧ φ) := by
-  simp [ValidOnFrame];
+    Kripke.Model) ⊧ φ) := by simp [ValidOnFrame];
 
 alias ⟨exists_valuation_of_not, not_of_exists_valuation⟩ := iff_not_exists_valuation
 

@@ -59,8 +59,7 @@ theorem Player.not_i_eq_other {i} : ¬ i = other i := by cases i <;> simp
 theorem Player.not_other_i_eq_i {i} : ¬ other i = i := by cases i <;> simp
 
 @[simp]
-theorem other_other {i} : other (other i) = i := by
-  cases i <;> simp [other]
+theorem other_other {i} : other (other i) = i := by cases i <;> simp [other]
 
 /-- Two-player game with
 - perfect information

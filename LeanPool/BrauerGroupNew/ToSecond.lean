@@ -276,12 +276,8 @@ lemma conjFactorCompCoeff_comp_comp₁
     conjFactorCompCoeff_spec (z := xρστ), ← _root_.mul_assoc]
 
 lemma conjFactorCompCoeff_eq (x : A.conjFactor σ) (y : A.conjFactor τ) (z : A.conjFactor (σ * τ)) :
-    A.ι (conjFactorCompCoeff x y z) = (x.1 * y.1) * z.1⁻¹ := by
-  have := conjFactorTwistCoeff_spec' (mul' x y) z
-  simp only [AlgEquiv.mul_apply, mul'_coe] at this
-  rw [this]
-  simp only [AlgEquiv.mul_apply, Units.mul_inv_cancel_right]
-  rfl
+    A.ι (conjFactorCompCoeff x y z) = (x.1 * y.1) * z.1⁻¹ :=
+  conjFactorCompCoeff_spec'' x y z
 
 lemma conjFactorCompCoeff_comp_comp₂
     (xρ : A.conjFactor ρ) (xσ : A.conjFactor σ) (xτ : A.conjFactor τ)

@@ -100,12 +100,10 @@ protected lemma not_def : x ⊧ ∼φ ↔ ¬(x ⊧ φ) := by simp [Satisfies];
 protected lemma top_def : x ⊧ ⊤ := by simp [Satisfies];
 
 @[simp 1100] protected lemma box_def :
-    Kripke.Satisfies M x (□φ) ↔ ∀ y, x ≺ y → y ⊧ φ := by
-  simp [Satisfies];
+    Kripke.Satisfies M x (□φ) ↔ ∀ y, x ≺ y → y ⊧ φ := by simp [Satisfies];
 
 @[simp 1100] protected lemma dia_def :
-    Kripke.Satisfies M x (◇φ) ↔ ∃ y, x ≺ y ∧ y ⊧ φ := by
-  simp [Satisfies];
+    Kripke.Satisfies M x (◇φ) ↔ ∃ y, x ≺ y ∧ y ⊧ φ := by simp [Satisfies];
 
 protected instance : Semantics.Tarski (M.World) where
   realize_top := fun _ => Satisfies.top_def;
@@ -251,8 +249,7 @@ protected lemma imply₁ : M ⊧ (Axioms.Imply₁ φ ψ) := by simp [ValidOnMode
 protected lemma imply₂ : M ⊧ (Axioms.Imply₂ φ ψ χ) := by simp [ValidOnModel]; tauto;
 
 protected lemma elimContra :
-    M ⊧ (Axioms.ElimContra φ ψ) := by
-  simp [ValidOnModel, Satisfies]; tauto;
+    M ⊧ (Axioms.ElimContra φ ψ) := by simp [ValidOnModel, Satisfies]; tauto;
 
 protected lemma axiomK : M ⊧ (Axioms.K φ ψ)  := by
   intro V;
@@ -291,8 +288,7 @@ instance : Semantics.Bot (Kripke.Frame) where
   realize_bot _ := ValidOnFrame.bot_def
 
 lemma iff_not_exists_valuation : (¬F ⊧ φ) ↔ (∃ V : Kripke.Valuation F, ¬(⟨F, V⟩ :
-    Kripke.Model) ⊧ φ) := by
-  simp [ValidOnFrame];
+    Kripke.Model) ⊧ φ) := by simp [ValidOnFrame];
 
 alias ⟨exists_valuation_of_not, not_of_exists_valuation⟩ := iff_not_exists_valuation
 
@@ -332,16 +328,13 @@ protected lemma subst (h : F ⊧ φ) : F ⊧ φ⟦s⟧ := by
   exact h (fun w a => Satisfies ⟨F, V⟩ w (atom a⟦s⟧)) x;
 
 protected lemma imply₁ :
-    F ⊧ (Axioms.Imply₁ φ ψ) := by
-  intro V; exact ValidOnModel.imply₁ (M := ⟨F, V⟩);
+    F ⊧ (Axioms.Imply₁ φ ψ) := by intro V; exact ValidOnModel.imply₁ (M := ⟨F, V⟩);
 
 protected lemma imply₂ :
-    F ⊧ (Axioms.Imply₂ φ ψ χ) := by
-  intro V; exact ValidOnModel.imply₂ (M := ⟨F, V⟩);
+    F ⊧ (Axioms.Imply₂ φ ψ χ) := by intro V; exact ValidOnModel.imply₂ (M := ⟨F, V⟩);
 
 protected lemma elimContra :
-    F ⊧ (Axioms.ElimContra φ ψ) := by
-  intro V; exact ValidOnModel.elimContra (M := ⟨F, V⟩);
+    F ⊧ (Axioms.ElimContra φ ψ) := by intro V; exact ValidOnModel.elimContra (M := ⟨F, V⟩);
 
 protected lemma axiomK : F ⊧ (Axioms.K φ ψ) := by intro V; exact ValidOnModel.axiomK (M := ⟨F, V⟩);
 

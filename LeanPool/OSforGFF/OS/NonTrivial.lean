@@ -64,8 +64,7 @@ theorem toComplex_injective : Function.Injective (toComplex : TestFunction → T
   intro f g h
   ext x
   have : toComplex f x = toComplex g x := congr_fun (congr_arg _ h) x
-  simp only [toComplex_apply, Complex.ofReal_inj] at this
-  exact this
+  simpa only [toComplex_apply, Complex.ofReal_inj] using this
 
 /-! ## Injectivity of the Fourier transform on Schwartz space -/
 
@@ -165,8 +164,7 @@ theorem embeddingMap_injective (m : ℝ) [Fact (0 < m)] :
   intro f g h
   suffices f - g = 0 from eq_of_sub_eq_zero this
   -- T(f-g) = 0 in L²
-  have h_zero : embeddingMap m (f - g) = 0 := by
-    rw [map_sub, h, sub_self]
+  have h_zero : embeddingMap m (f - g) = 0 := by rw [map_sub, h, sub_self]
   -- ‖T(f-g)‖² = ∫ |sqrtPropagatorMap|² = 0
   have h_norm_zero : ‖embeddingMap m (f - g)‖ = 0 := by rw [h_zero, norm_zero]
   have h_int_zero : ∫ k, ‖sqrtPropagatorMap m (f - g) k‖ ^ 2 ∂volume = 0 := by
@@ -290,8 +288,7 @@ theorem besselK1_tendsto_atTop_at_zero :
         rw [Real.cosh_le_cosh]
         rw [abs_of_nonneg ht.1, abs_of_nonneg hT_pos.le]; exact ht.2
       calc Real.exp (-z * Real.cosh T)
-          ≤ Real.exp (-z * Real.cosh t) := by
-            apply Real.exp_le_exp.mpr; nlinarith [Real.cosh_pos t]
+          ≤ Real.exp (-z * Real.cosh t) := by apply Real.exp_le_exp.mpr; nlinarith [Real.cosh_pos t]
         _ = Real.exp (-z * Real.cosh t) * 1 := (mul_one _).symm
         _ ≤ Real.exp (-z * Real.cosh t) * Real.cosh t :=
             mul_le_mul_of_nonneg_left (Real.one_le_cosh t) (Real.exp_nonneg _)

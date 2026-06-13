@@ -129,8 +129,7 @@ lemma cauchy_schwarz_time_integral_pointwise (A : ℝ → Ω → ℂ) (T : ℝ) 
     ‖∫ s in Icc 0 T, A s ω‖ ^ 2 ≤ T * ∫ s in Icc 0 T, ‖A s ω‖ ^ 2 := by
   have hab : (0 : ℝ) ≤ T := le_of_lt hT
   have h := sq_setIntegral_le_measure_mul_setIntegral_sq_proved hab hf_sq
-  simp only [sub_zero] at h
-  exact h
+  simpa only [sub_zero] using h
 
 omit [MeasurableSpace Ω] in
 /-- The scaled time average satisfies a pointwise L² bound. -/
@@ -143,8 +142,7 @@ lemma scaled_time_average_pointwise_bound (A : ℝ → Ω → ℂ) (T : ℝ) (hT
       (1/T)^2 * ‖∫ s in Icc 0 T, A s ω‖ ^ 2 := by
     rw [norm_mul]
     have h_norm : ‖(1/T : ℂ)‖ = 1/T := by
-      rw [show (1/T : ℂ) = ((1/T : ℝ) : ℂ) by simp]
-      rw [Complex.norm_real]
+      rw [show (1/T : ℂ) = ((1/T : ℝ) : ℂ) by simp, Complex.norm_real]
       exact abs_of_pos (by positivity)
     rw [h_norm]
     ring
@@ -269,8 +267,7 @@ theorem L2_time_average_bound (μ : Measure Ω) [SFinite μ]
         filter_upwards [h_ae_slice_int] with ω hω_int
         exact scaled_time_average_pointwise_bound A T hT ω hω_int
     -- Step 3: Factor out (1/T)
-    _ = (1/T) * (∫ (ω : Ω), (∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) ∂μ) := by
-        rw [integral_const_mul]
+    _ = (1/T) * (∫ (ω : Ω), (∫ (s : ℝ) in Icc 0 T, ‖A s ω‖^2) ∂μ) := by rw [integral_const_mul]
     -- Step 4: Fubini swap
     _ = (1/T) * (∫ (s : ℝ) in Icc 0 T, (∫ (ω : Ω), ‖A s ω‖^2 ∂μ)) := by
         rw [integral_swap_Icc μ (fun p => ‖A p.1 p.2‖^2) T h_prod_int]
@@ -670,8 +667,7 @@ private lemma memLp_two_weighted_sum {n : ℕ} (w : Fin n → ℝ) (f : Fin n �
       (memLp_two_weighted _ _ (hf_int _) (hf_meas _))
 
 private lemma integrable_sq_of_memLp_two {f : α → ℝ} (hf : MemLp f 2 μ) :
-    Integrable (fun x => (f x)^2) μ :=
-  MemLp.integrable_sq hf
+    Integrable (fun x => (f x)^2) μ := MemLp.integrable_sq hf
 
 /-- **Minkowski inequality for weighted L² sums** (proved theorem)
 
@@ -847,8 +843,7 @@ theorem _root_.OSforGFF.L2_variance_time_average_bound (μ : Measure Ω) [IsProb
           integral_prod (f := fun su => Cov su.1 su.2)
             (h_Fubini.integral_prod_right.congr (ae_of_all _ fun su => h_inner su.1 su.2))
   -- Step C: ‖z‖² = Re(z · conj z), commute Re with ∫
-  have h_re : ∀ z : ℂ, ‖z‖ ^ 2 = (z * starRingEnd ℂ z).re := by
-    intro z; simp [RCLike.mul_conj, sq]
+  have h_re : ∀ z : ℂ, ‖z‖ ^ 2 = (z * starRingEnd ℂ z).re := by intro z; simp [RCLike.mul_conj, sq]
   have h_eq : (∫ ω, ‖(∫ s in Icc 0 T, A s ω) - ↑T * EA‖ ^ 2 ∂μ) =
       (∫ (s : ℝ) in Icc 0 T, ∫ (u : ℝ) in Icc 0 T, Cov s u).re := by
     calc (∫ ω, ‖(∫ s in Icc 0 T, A s ω) - ↑T * EA‖ ^ 2 ∂μ)
@@ -862,8 +857,7 @@ theorem _root_.OSforGFF.L2_variance_time_average_bound (μ : Measure Ω) [IsProb
   -- Final: ∫ ‖Z‖² = Re(∫∫ Cov) ≤ ‖∫∫ Cov‖
   calc ∫ ω, ‖(∫ (s : ℝ) in Icc 0 T, A s ω) - ↑T * EA‖ ^ 2 ∂μ
       = (∫ (s : ℝ) in Icc 0 T, ∫ (u : ℝ) in Icc 0 T, Cov s u).re := h_eq
-    _ ≤ ‖∫ (s : ℝ) in Icc 0 T, ∫ (u : ℝ) in Icc 0 T, Cov s u‖ :=
-        Complex.re_le_norm _
+    _ ≤ ‖∫ (s : ℝ) in Icc 0 T, ∫ (u : ℝ) in Icc 0 T, Cov s u‖ := Complex.re_le_norm _
 
 end VarianceBound
 
@@ -1001,8 +995,7 @@ theorem _root_.OSforGFF.L2_process_covariance_fubini_integrable {Ω : Type*} [Me
     (h1.measurable.nnnorm.coe_nnreal_ennreal).pow_const _
   have hm2 : Measurable (fun x : Ω × (ℝ × ℝ) => (↑‖A x.2.2 x.1 - c‖₊ : ℝ≥0∞) ^ 2) :=
     (h2.measurable.nnnorm.coe_nnreal_ennreal).pow_const _
-  have hν_fin : ν Set.univ < ⊤ := by
-    rw [Measure.restrict_apply_univ]; exact measure_Icc_lt_top
+  have hν_fin : ν Set.univ < ⊤ := by rw [Measure.restrict_apply_univ]; exact measure_Icc_lt_top
   have hF_meas : Measurable (fun z : ℝ × Ω => (↑‖A z.1 z.2 - c‖₊ : ℝ≥0∞) ^ 2) :=
     (hF_sm.measurable.nnnorm.coe_nnreal_ennreal).pow_const _
   have h_lint_base : ∫⁻ z : ℝ × Ω, ↑‖uncurry A z - c‖₊ ^ (2 : ℕ) ∂(ν.prod μ) < ⊤ :=
@@ -1012,8 +1005,7 @@ theorem _root_.OSforGFF.L2_process_covariance_fubini_integrable {Ω : Type*} [Me
   haveI : SFinite ν := inferInstance
   have hg_meas : ∀ ω, Measurable (fun s : ℝ => (↑‖A s ω - c‖₊ : ℝ≥0∞) ^ 2) := fun ω =>
     ((h_cont_s ω).sub continuous_const).measurable.nnnorm.coe_nnreal_ennreal.pow_const _
-  have hF_meas_swap : Measurable (fun p : Ω × ℝ => (↑‖A p.2 p.1 - c‖₊ : ℝ≥0∞) ^ 2) := by
-    fun_prop
+  have hF_meas_swap : Measurable (fun p : Ω × ℝ => (↑‖A p.2 p.1 - c‖₊ : ℝ≥0∞) ^ 2) := by fun_prop
   calc ∫⁻ x, ↑‖(A x.2.1 x.1 - c) * starRingEnd ℂ (A x.2.2 x.1 - c)‖₊
         ∂(μ.prod (ν.prod ν))
       ≤ ∫⁻ x, (↑‖A x.2.1 x.1 - c‖₊ ^ 2 + ↑‖A x.2.2 x.1 - c‖₊ ^ 2)

@@ -163,8 +163,7 @@ variable {v}
 @[simp] lemma limSeq_zero : c.limSeq v 0 = ∅ := by simp [limSeq, prConstruction]
 
 lemma limSeq_succ (s : V) :
-    c.limSeq v (s + 1) = c.succ v s (c.limSeq v s) := by
-  simp [limSeq, prConstruction]
+    c.limSeq v (s + 1) = c.succ v s (c.limSeq v s) := by simp [limSeq, prConstruction]
 
 lemma termSet_defined : Sg1.DefinedFunction (fun v ↦ c.limSeq (v ·.succ) (v 0)) φ.limSeqDef :=
   fun v ↦ by simp [c.prConstruction.result_defined_iff, Blueprint.limSeqDef]; rfl
@@ -257,8 +256,7 @@ lemma finite_upperbound (m : V) : ∃ s, ∀ z < m, c.Fixpoint v z → z ∈ c.l
             (by definability)))
     exact finite_comprehension₁! this ⟨m, fun i hi ↦ hi.1⟩ |>.exists
   rcases this with ⟨F, hF⟩
-  have : ∀ x ∈ F, ∃ u, x ∈ c.limSeq v u := by
-    intro x hx; exact hF x |>.mp hx |>.2
+  have : ∀ x ∈ F, ∃ u, x ∈ c.limSeq v u := by intro x hx; exact hF x |>.mp hx |>.2
   have : ∃ f, IsMapping f ∧ domain f = F ∧ ∀ (x y : V), ⟪x, y⟫ ∈ f → x ∈ c.limSeq v y :=
     sigmaOne_skolem
     (by apply HierarchySymbol.Boldface.comp₂

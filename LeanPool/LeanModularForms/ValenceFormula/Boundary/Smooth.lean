@@ -147,22 +147,12 @@ lemma fdBoundary_H_hasDerivAt_seg4' (H : ℝ) (t : ℝ)
   have hd : HasDerivAt (fun s : ℝ => (-1 : ℂ) / 2 +
       (↑(Real.sqrt 3) / 2 + (↑s - 3) * (↑H - ↑(Real.sqrt 3) / 2)) * I)
       ((↑H - ↑(Real.sqrt 3) / 2) * I) t := by
-    have h_ofReal : HasDerivAt (fun s : ℝ => (s : ℂ)) 1 t := by
-      simpa using (hasDerivAt_id t).ofReal_comp
-    have h_lin : HasDerivAt (fun s : ℝ => (↑s : ℂ) - 3) 1 t := by
-      have := h_ofReal.sub (hasDerivAt_const t (3 : ℂ)); simp only [sub_zero] at this; exact this
-    have h_scaled : HasDerivAt (fun s : ℝ => ((↑s : ℂ) - 3) * (↑H - ↑(Real.sqrt 3) / 2))
-        (1 * (↑H - ↑(Real.sqrt 3) / 2)) t := h_lin.mul_const _
-    have h_shifted : HasDerivAt (fun s : ℝ =>
-        ↑(Real.sqrt 3) / 2 + ((↑s : ℂ) - 3) * (↑H - ↑(Real.sqrt 3) / 2))
-        (0 + 1 * (↑H - ↑(Real.sqrt 3) / 2)) t := (hasDerivAt_const t _).add h_scaled
-    have h_timesI : HasDerivAt (fun s : ℝ =>
-        (↑(Real.sqrt 3) / 2 + ((↑s : ℂ) - 3) * (↑H - ↑(Real.sqrt 3) / 2)) * I)
-        ((0 + 1 * (↑H - ↑(Real.sqrt 3) / 2)) * I) t := h_shifted.mul_const _
     have h_final : HasDerivAt (fun s : ℝ => (-1 : ℂ) / 2 +
         (↑(Real.sqrt 3) / 2 + ((↑s : ℂ) - 3) * (↑H - ↑(Real.sqrt 3) / 2)) * I)
-        (0 + (0 + 1 * (↑H - ↑(Real.sqrt 3) / 2)) * I) t := (hasDerivAt_const t _).add h_timesI
-    simp only [zero_add, one_mul] at h_final; exact h_final
+        (0 + (0 + 1 * (↑H - ↑(Real.sqrt 3) / 2)) * I) t :=
+      (hasDerivAt_const t _).add ((((hasDerivAt_const t _).add
+        (((hasDerivAt_id t).ofReal_comp.sub_const (3 : ℂ)).mul_const _)).mul_const I))
+    simpa only [zero_add, one_mul] using h_final
   exact hd.congr_of_eventuallyEq heq
 
 lemma fdBoundary_H_hasDerivAt_seg5' (H : ℝ) (t : ℝ)

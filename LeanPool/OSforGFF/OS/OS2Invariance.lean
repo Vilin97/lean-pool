@@ -72,8 +72,7 @@ noncomputable def actEquiv (g : E) : SpaceTime ≃ᵐ SpaceTime where
 
 /-- Measure-preserving property of actEquiv. -/
 lemma measurePreserving_actEquiv (g : E) :
-    MeasurePreserving (actEquiv g) volume volume :=
-  measurePreserving_act g
+    MeasurePreserving (actEquiv g) volume volume := measurePreserving_act g
 
 /-! ## Main theorem: Bilinear form invariance -/
 

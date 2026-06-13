@@ -188,24 +188,21 @@ def substs (v : L.SemitermVec k n) (w : L.SemitermVec n m) : L.SemitermVec k m :
   rfl
 
 @[simp] lemma bShift_nil (n : V) :
-    (nil L n).bShift = nil L (n + 1) := by
-  ext; simp [bShift]
+    (nil L n).bShift = nil L (n + 1) := by ext; simp [bShift]
 
 @[simp] lemma bShift_cons (t : L.Semiterm n) (v : L.SemitermVec k n) :
     (t ∷ᵗ v).bShift = t.bShift ∷ᵗ v.bShift := by
   ext; simp [bShift, Language.Semiterm.bShift, termBShiftVec_cons t.prop.isUTerm v.prop.isUTerm]
 
 @[simp] lemma shift_nil (n : V) :
-    (nil L n).shift = nil L n := by
-  ext; simp [shift]
+    (nil L n).shift = nil L n := by ext; simp [shift]
 
 @[simp] lemma shift_cons (t : L.Semiterm n) (v : L.SemitermVec k n) :
     (t ∷ᵗ v).shift = t.shift ∷ᵗ v.shift := by
   ext; simp [shift, Language.Semiterm.shift, termShiftVec_cons t.prop.isUTerm v.prop.isUTerm]
 
 @[simp] lemma substs_nil (w : L.SemitermVec n m) :
-    (nil L n).substs w = nil L m := by
-  ext; simp [substs]
+    (nil L n).substs w = nil L m := by ext; simp [substs]
 
 @[simp] lemma substs_cons (w : L.SemitermVec n m) (t : L.Semiterm n) (v : L.SemitermVec k n) :
     (t ∷ᵗ v).substs w = t.substs w ∷ᵗ v.substs w := by
@@ -216,12 +213,10 @@ def nth (t : L.SemitermVec k n) (i : V) (hi : i < k := by simp) : L.Semiterm n :
   ⟨t.val.[i], t.prop.nth hi⟩
 
 @[simp] lemma nth_val (v : L.SemitermVec k n) (i : V) (hi : i < k) :
-    (v.nth i hi).val = v.val.[i] := by
-  simp [nth]
+    (v.nth i hi).val = v.val.[i] := by simp [nth]
 
 @[simp] lemma nth_zero (t : L.Semiterm n) (v : L.SemitermVec k n) :
-    (t ∷ᵗ v).nth 0 = t := by
-  ext; simp [nth]
+    (t ∷ᵗ v).nth 0 = t := by ext; simp [nth]
 
 @[simp] lemma nth_succ (t : L.Semiterm n) (v : L.SemitermVec k n) (i : V) (hi : i < k) :
     (t ∷ᵗ v).nth (i + 1) (by simp [hi]) = v.nth i hi := by ext; simp [nth]
@@ -249,8 +244,7 @@ def q (w : L.SemitermVec k n) : L.SemitermVec (k + 1) (n + 1) := L.bvar (0 : V) 
   ext; simp [bShift, nth, Language.Semiterm.bShift, hi]
 
 @[simp] lemma q_one (w : L.SemitermVec k n) (h : 0 < k) :
-    w.q.nth 1 (by simp [h]) = (w.nth 0 h).bShift := by
-  simpa using q_succ w h
+    w.q.nth 1 (by simp [h]) = (w.nth 0 h).bShift := by simpa using q_succ w h
 
 lemma q_of_pos (w : L.SemitermVec k n) (i) (ipos : 0 < i) (hi : i < k + 1) :
     w.q.nth i (by simp [hi]) =
@@ -260,8 +254,7 @@ lemma q_of_pos (w : L.SemitermVec k n) (i) (ipos : 0 < i) (hi : i < k + 1) :
   · simp [q_succ w (by simpa using hi)]
 
 @[simp] lemma q_val_eq_qVec (w : L.SemitermVec k n) :
-    w.q.val = L.qVec w.val := by
-  simp [q, Language.qVec, Language.bvar, bShift, w.prop.lh]
+    w.q.val = L.qVec w.val := by simp [q, Language.qVec, Language.bvar, bShift, w.prop.lh]
 
 end SemitermVec
 end Language
@@ -311,8 +304,7 @@ namespace Semiterm
   rw [substs_cons_bShift t.prop]; simp
 
 lemma bShift_shift_comm (t : L.Semiterm n) :
-    t.shift.bShift = t.bShift.shift := by
-  ext; simp [termBShift_termShift t.prop]
+    t.shift.bShift = t.bShift.shift := by ext; simp [termBShift_termShift t.prop]
 
 end Semiterm
 end Language
@@ -331,8 +323,7 @@ lemma _root_.LO.Arith.Language.Semiterm.FVFree.iff {t : L.Semiterm n} : t.FVFree
   simp [FVFree, Language.IsTermFVFree, Semiterm.ext_iff]
 
 @[simp] lemma _root_.LO.Arith.Language.Semiterm.FVFree.bvar (z : V) (h : z < n) :
-    (L.bvar z h).FVFree := by
-  simp [FVFree, h]
+    (L.bvar z h).FVFree := by simp [FVFree, h]
 
 @[simp] lemma _root_.LO.Arith.Language.Semiterm.FVFree.bShift (t : L.Semiterm n) (ht : t.FVFree) :
     t.bShift.FVFree := by simp [FVFree.iff, ←bShift_shift_comm, FVFree.iff.mp ht]
@@ -368,24 +359,20 @@ variable {n : V}
 @[simp] lemma val_mul (t₁ t₂ : ⌜ℒₒᵣ⌝.Semiterm n) : (t₁ * t₂).val = t₁.val ^* t₂.val := rfl
 
 @[simp] lemma add_inj_iff {t₁ t₂ u₁ u₂ : ⌜ℒₒᵣ⌝.Semiterm n} :
-    t₁ + t₂ = u₁ + u₂ ↔ t₁ = u₁ ∧ t₂ = u₂ := by
-  simp [Language.Semiterm.ext_iff, qqAdd]
+    t₁ + t₂ = u₁ + u₂ ↔ t₁ = u₁ ∧ t₂ = u₂ := by simp [Language.Semiterm.ext_iff, qqAdd]
 
 @[simp] lemma mul_inj_iff {t₁ t₂ u₁ u₂ : ⌜ℒₒᵣ⌝.Semiterm n} :
-    t₁ * t₂ = u₁ * u₂ ↔ t₁ = u₁ ∧ t₂ = u₂ := by
-  simp [Language.Semiterm.ext_iff, qqMul]
+    t₁ * t₂ = u₁ * u₂ ↔ t₁ = u₁ ∧ t₂ = u₂ := by simp [Language.Semiterm.ext_iff, qqMul]
 
 @[simp] lemma subst_numeral {m n : V} (w : ⌜ℒₒᵣ⌝.SemitermVec n m) (x : V) :
     (↑x : ⌜ℒₒᵣ⌝.Semiterm n).substs w = ↑x := by
   ext; simp [Language.Semiterm.substs, numeral_substs w.prop]
 
 @[simp] lemma subst_add {m n : V} (w : ⌜ℒₒᵣ⌝.SemitermVec n m) (t₁ t₂ : ⌜ℒₒᵣ⌝.Semiterm n) :
-    (t₁ + t₂).substs w = t₁.substs w + t₂.substs w := by
-  ext; simp [qqAdd, Language.Semiterm.substs]
+    (t₁ + t₂).substs w = t₁.substs w + t₂.substs w := by ext; simp [qqAdd, Language.Semiterm.substs]
 
 @[simp] lemma subst_mul {m n : V} (w : ⌜ℒₒᵣ⌝.SemitermVec n m) (t₁ t₂ : ⌜ℒₒᵣ⌝.Semiterm n) :
-    (t₁ * t₂).substs w = t₁.substs w * t₂.substs w := by
-  ext; simp [qqMul, Language.Semiterm.substs]
+    (t₁ * t₂).substs w = t₁.substs w * t₂.substs w := by ext; simp [qqMul, Language.Semiterm.substs]
 
 @[simp] lemma shift_numeral (x : V) : (↑x : ⌜ℒₒᵣ⌝.Semiterm n).shift = ↑x := by
   ext; simp [Language.Semiterm.shift]
@@ -406,8 +393,7 @@ variable {n : V}
   ext; simp [qqMul, Language.Semiterm.bShift]
 
 @[simp] lemma fvFree_numeral (x : V) : (↑x :
-    ⌜ℒₒᵣ⌝.Semiterm n).FVFree := by
-  simp [Language.Semiterm.FVFree.iff]
+    ⌜ℒₒᵣ⌝.Semiterm n).FVFree := by simp [Language.Semiterm.FVFree.iff]
 
 @[simp] lemma fvFree_add (t₁ t₂ : ⌜ℒₒᵣ⌝.Semiterm n) :
     (t₁ + t₂).FVFree ↔ t₁.FVFree ∧ t₂.FVFree := by simp [Language.Semiterm.FVFree.iff]

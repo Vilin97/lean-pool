@@ -439,8 +439,7 @@ instance isIso_pointedHomOfPath (n : ℕ) (p : Path x₀ x₁) :
 lemma bijective_changeBasePt (n : ℕ) (p : Path x₀ x₁) :
     Function.Bijective (changeBasePt n p) := by
   rw [(by rfl : changeBasePt n p = ConcreteCategory.hom (pointedHomOfPath n p))]
-  apply (Pointed.isIso_iff_bijective _).mp
-  apply isIso_pointedHomOfPath
+  exact (Pointed.isIso_iff_bijective _).mp (isIso_pointedHomOfPath n p)
 
 /-- `ChangeBasePt` commutes with the induced map:
 ```
@@ -537,9 +536,7 @@ theorem isIso_inducedPointedHom_of_isHomotopyEquiv (n : ℕ) (x₀ : X) (f : C(X
         (shgf : Function.Surjective (h ∘ g ∘ f))
         (bh : Function.Bijective h) (bf : Function.Bijective f) : Function.Surjective g :=
       Function.Surjective.of_comp <| (Function.Surjective.of_comp_iff' bh (g ∘ f)).mp shgf
-    refine this surj ?_ ?_
-    · apply (Pointed.isIso_iff_bijective _).mp
-      infer_instance
+    refine this surj ((Pointed.isIso_iff_bijective _).mp inferInstance) ?_
     · apply bijective_changeBasePt
   exact (Pointed.isIso_iff_bijective _).mpr ⟨inj_f, surj_f⟩
 
@@ -547,8 +544,7 @@ theorem isIso_inducedPointedHom'_of_isHomotopyEquiv
     (n : ℕ) {X Y : TopCat.{u}} (x₀ : X) (f : X ⟶ Y)
     (hf : IsHomotopyEquiv f.hom) : IsIso (inducedPointedHom' n x₀ f) := by
   rw [inducedPointedHom'_eq_inducedPointedHom]
-  apply isIso_inducedPointedHom_of_isHomotopyEquiv
-  exact hf
+  exact isIso_inducedPointedHom_of_isHomotopyEquiv n x₀ f.hom hf
 
 theorem isIso_inducedPointedHom'_of_isHomeomorph
     (n : ℕ) {X Y : TopCat.{u}} (x₀ : X) (f : X ⟶ Y)

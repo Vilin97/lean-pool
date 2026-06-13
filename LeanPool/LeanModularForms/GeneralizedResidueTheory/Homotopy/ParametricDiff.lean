@@ -61,8 +61,7 @@ theorem intervalIntegral_continuous_on_param
     exact (hf_cont.comp
       (continuous_const.prodMk continuous_id)).continuousAt
   have hcompact :
-      IsCompact (Icc a b ×ˢ Icc (s₀ - 1) (s₀ + 1)) :=
-    isCompact_Icc.prod isCompact_Icc
+      IsCompact (Icc a b ×ˢ Icc (s₀ - 1) (s₀ + 1)) := isCompact_Icc.prod isCompact_Icc
   have hbound : ∃ M : ℝ,
       ∀ p ∈ Icc a b ×ˢ Icc (s₀ - 1) (s₀ + 1),
         ‖(fun p => f p.1 p.2) p‖ ≤ M :=
@@ -71,8 +70,7 @@ theorem intervalIntegral_continuous_on_param
   obtain ⟨M, hM⟩ := hbound
   apply intervalIntegral.continuousAt_of_dominated_interval
   · filter_upwards with s; exact hmeas s
-  · have h_nhd : Ioo (s₀ - 1) (s₀ + 1) ∈ 𝓝 s₀ := by
-      apply Ioo_mem_nhds <;> linarith
+  · have h_nhd : Ioo (s₀ - 1) (s₀ + 1) ∈ 𝓝 s₀ := by apply Ioo_mem_nhds <;> linarith
     filter_upwards [h_nhd] with s hs
     filter_upwards with t
     intro ht
@@ -89,11 +87,9 @@ lemma contDiff_partialDeriv_snd_of_contDiff_two
     ContDiff ℝ 1 (fun p : ℝ × ℝ =>
       deriv (fun s => H (p.1, s)) p.2) := by
   have h1 : ContDiff ℝ 1
-      (fun p : ℝ × ℝ => fderiv ℝ H p) :=
-    hH.fderiv_right le_rfl
+      (fun p : ℝ × ℝ => fderiv ℝ H p) := hH.fderiv_right le_rfl
   have h2 : ContDiff ℝ 1
-      (fun p : ℝ × ℝ => (fderiv ℝ H p) (0, 1)) :=
-    h1.clm_apply contDiff_const
+      (fun p : ℝ × ℝ => (fderiv ℝ H p) (0, 1)) := h1.clm_apply contDiff_const
   convert h2 using 1
   ext p
   have hH_diff : Differentiable ℝ H :=
@@ -115,11 +111,9 @@ lemma contDiff_partialDeriv_fst_of_contDiff_two
     ContDiff ℝ 1 (fun p : ℝ × ℝ =>
       deriv (fun t => H (t, p.2)) p.1) := by
   have h1 : ContDiff ℝ 1
-      (fun p : ℝ × ℝ => fderiv ℝ H p) :=
-    hH.fderiv_right le_rfl
+      (fun p : ℝ × ℝ => fderiv ℝ H p) := hH.fderiv_right le_rfl
   have h2 : ContDiff ℝ 1
-      (fun p : ℝ × ℝ => (fderiv ℝ H p) (1, 0)) :=
-    h1.clm_apply contDiff_const
+      (fun p : ℝ × ℝ => (fderiv ℝ H p) (1, 0)) := h1.clm_apply contDiff_const
   convert h2 using 1
   ext p
   have hH_diff : Differentiable ℝ H :=
@@ -150,10 +144,8 @@ lemma schwarz_partialDeriv_comm
     hH.differentiable
       (by norm_num : (2 : WithTop ℕ∞) ≠ 0)
   have hH1 : ContDiff ℝ 1
-      (fun p : ℝ × ℝ => fderiv ℝ H p) :=
-    hH.fderiv_right le_rfl
-  have hfH : Differentiable ℝ (fun p => fderiv ℝ H p) :=
-    hH1.differentiable one_ne_zero
+      (fun p : ℝ × ℝ => fderiv ℝ H p) := hH.fderiv_right le_rfl
+  have hfH : Differentiable ℝ (fun p => fderiv ℝ H p) := hH1.differentiable one_ne_zero
   have h_inner_t : ∀ s',
       deriv (fun t' => H (t', s')) t =
         fderiv ℝ H (t, s') (1, 0) := fun s' => by
@@ -163,17 +155,13 @@ lemma schwarz_partialDeriv_comm
         (differentiableAt_const s')
     have h_has_deriv :
         HasDerivAt (fun t' => (t', s')) (1, 0) t := by
-      have h1 : HasDerivAt (fun t' => t') 1 t :=
-        hasDerivAt_id t
-      have h2 : HasDerivAt (fun _ : ℝ => s') 0 t :=
-        hasDerivAt_const t s'
+      have h1 : HasDerivAt (fun t' => t') 1 t := hasDerivAt_id t
+      have h2 : HasDerivAt (fun _ : ℝ => s') 0 t := hasDerivAt_const t s'
       exact h1.prodMk h2
     calc deriv (fun t' => H (t', s')) t
         = (fderiv ℝ H (t, s'))
-            (deriv (fun t' => (t', s')) t) :=
-          fderiv_comp_deriv t (hH_diff (t, s')) h_emb
-      _ = (fderiv ℝ H (t, s')) (1, 0) := by
-          rw [h_has_deriv.deriv]
+            (deriv (fun t' => (t', s')) t) := fderiv_comp_deriv t (hH_diff (t, s')) h_emb
+      _ = (fderiv ℝ H (t, s')) (1, 0) := by rw [h_has_deriv.deriv]
   have h_inner_s : ∀ t',
       deriv (fun s' => H (t', s')) s =
         fderiv ℝ H (t', s) (0, 1) := fun t' => by
@@ -182,17 +170,13 @@ lemma schwarz_partialDeriv_comm
       (differentiableAt_const t').prodMk differentiableAt_id
     have h_has_deriv :
         HasDerivAt (fun s' => (t', s')) (0, 1) s := by
-      have h1 : HasDerivAt (fun _ : ℝ => t') 0 s :=
-        hasDerivAt_const s t'
-      have h2 : HasDerivAt (fun s' => s') 1 s :=
-        hasDerivAt_id s
+      have h1 : HasDerivAt (fun _ : ℝ => t') 0 s := hasDerivAt_const s t'
+      have h2 : HasDerivAt (fun s' => s') 1 s := hasDerivAt_id s
       exact h1.prodMk h2
     calc deriv (fun s' => H (t', s')) s
         = (fderiv ℝ H (t', s))
-            (deriv (fun s' => (t', s')) s) :=
-          fderiv_comp_deriv s (hH_diff (t', s)) h_emb
-      _ = (fderiv ℝ H (t', s)) (0, 1) := by
-          rw [h_has_deriv.deriv]
+            (deriv (fun s' => (t', s')) s) := fderiv_comp_deriv s (hH_diff (t', s)) h_emb
+      _ = (fderiv ℝ H (t', s)) (0, 1) := by rw [h_has_deriv.deriv]
   simp_rw [h_inner_t, h_inner_s]
   have h_emb_s : DifferentiableAt ℝ (fun s' : ℝ => (t, s')) s :=
     (differentiableAt_const t).prodMk differentiableAt_id
@@ -209,12 +193,10 @@ lemma schwarz_partialDeriv_comm
         (0, 1) (1, 0) := by
     have h_clm_diff :
         DifferentiableAt ℝ
-          (fun s' => fderiv ℝ H (t, s')) s :=
-      (hfH (t, s)).comp s h_emb_s
+          (fun s' => fderiv ℝ H (t, s')) s := (hfH (t, s)).comp s h_emb_s
     have h_const_diff :
         DifferentiableAt ℝ
-          (fun _ : ℝ => (1, 0) : ℝ → ℝ × ℝ) s :=
-      differentiableAt_const (1, 0)
+          (fun _ : ℝ => (1, 0) : ℝ → ℝ × ℝ) s := differentiableAt_const (1, 0)
     rw [deriv_clm_apply h_clm_diff h_const_diff]
     simp only [deriv_const, map_zero, add_zero]
     have h_comp :
@@ -231,12 +213,10 @@ lemma schwarz_partialDeriv_comm
         (1, 0) (0, 1) := by
     have h_clm_diff :
         DifferentiableAt ℝ
-          (fun t' => fderiv ℝ H (t', s)) t :=
-      (hfH (t, s)).comp t h_emb_t
+          (fun t' => fderiv ℝ H (t', s)) t := (hfH (t, s)).comp t h_emb_t
     have h_const_diff :
         DifferentiableAt ℝ
-          (fun _ : ℝ => (0, 1) : ℝ → ℝ × ℝ) t :=
-      differentiableAt_const (0, 1)
+          (fun _ : ℝ => (0, 1) : ℝ → ℝ × ℝ) t := differentiableAt_const (0, 1)
     rw [deriv_clm_apply h_clm_diff h_const_diff]
     simp only [deriv_const, map_zero, add_zero]
     have h_comp :
@@ -253,8 +233,7 @@ private lemma differentiableAt_mul_of_contDiff
     (g : ℝ → ℂ) (h : ℝ → ℂ) (t : ℝ)
     (hg : DifferentiableAt ℝ g t)
     (hh : ContDiff ℝ 1 h) :
-    DifferentiableAt ℝ (fun t' => g t' * h t') t :=
-  hg.mul (hh.differentiable one_ne_zero t)
+    DifferentiableAt ℝ (fun t' => g t' * h t') t := hg.mul (hh.differentiable one_ne_zero t)
 
 private lemma differentiableAt_comp_of_holomorphic
     (f : ℂ → ℂ) (H : ℝ × ℝ → ℂ) (t s : ℝ)
@@ -387,8 +366,7 @@ private lemma homotopy_mixed_partial_continuous
       fderiv ℝ (fun p' : ℝ × ℝ => deriv (fun t' => H (t', p'.2)) p'.1) p (0, 1)) := by
     ext p
     have hg_diff : Differentiable ℝ (fun p' : ℝ × ℝ =>
-        deriv (fun t' => H (t', p'.2)) p'.1) :=
-      h_partialT.differentiable one_ne_zero
+        deriv (fun t' => H (t', p'.2)) p'.1) := h_partialT.differentiable one_ne_zero
     have h_emb_diff : DifferentiableAt ℝ (fun s' : ℝ => (p.1, s')) p.2 :=
       (differentiableAt_const p.1).prodMk differentiableAt_id
     have h_deriv_emb : deriv (fun s' => (p.1, s')) p.2 = (0, 1) :=
@@ -399,8 +377,7 @@ private lemma homotopy_mixed_partial_continuous
       _ = (fderiv ℝ (fun p' => deriv (fun t' => H (t', p'.2)) p'.1) p)
             (deriv (fun s' => (p.1, s')) p.2) := by
           apply fderiv_comp_deriv p.2 (hg_diff p) h_emb_diff
-      _ = (fderiv ℝ (fun p' => deriv (fun t' => H (t', p'.2)) p'.1) p) (0, 1) := by
-          rw [h_deriv_emb]
+      _ = (fderiv ℝ (fun p' => deriv (fun t' => H (t', p'.2)) p'.1) p) (0, 1) := by rw [h_deriv_emb]
   rw [h_eq]
   exact (h_partialT.continuous_fderiv one_ne_zero).clm_apply continuous_const
 
@@ -466,8 +443,7 @@ private lemma homotopy_uniform_bound
   have hε_pos : (0 : ℝ) < ε := by norm_num
   let K : Set (ℝ × ℝ) := Icc a b ×ˢ Icc (s - ε) (s + ε)
   have hK_compact : IsCompact K := isCompact_Icc.prod isCompact_Icc
-  have hK_ne : K.Nonempty :=
-    ⟨(a, s), left_mem_Icc.mpr (le_of_lt hab), by constructor <;> linarith⟩
+  have hK_ne : K.Nonempty := ⟨(a, s), left_mem_Icc.mpr (le_of_lt hab), by constructor <;> linarith⟩
   obtain ⟨M_pt, _, hM_pt_max⟩ :=
     hK_compact.exists_isMaxOn hK_ne (continuous_norm.comp h_F'_cont).continuousOn
   let M : ℝ := ‖deriv (fun s'' => f (H (M_pt.1, s'')) *
@@ -574,8 +550,7 @@ private lemma homotopy_J_deriv_continuousOn
       (Icc a b) := by
   have h_partialS := contDiff_partialDeriv_snd_of_contDiff_two H hH
   have h_partialT := contDiff_partialDeriv_fst_of_contDiff_two H hH
-  have h_embed : Continuous (fun t : ℝ => (t, s)) :=
-    continuous_id.prodMk continuous_const
+  have h_embed : Continuous (fun t : ℝ => (t, s)) := continuous_id.prodMk continuous_const
   have h_partial_cont : Continuous (fun t => deriv (fun s'' => H (t, s'')) s) :=
     h_partialS.continuous.comp h_embed
   have h_partial_deriv_cont : Continuous (fun t =>
@@ -631,8 +606,7 @@ theorem hasDerivAt_homotopy_integral_zero
           deriv (fun t' => H (t', s')) t) 0 s := by
   let J : ℝ → ℝ → ℂ := fun t s' =>
     f (H (t, s')) * deriv (fun s'' => H (t, s'')) s'
-  have h_boundary : J b s - J a s = 0 := by
-    simp only [J, hderiv_a, hderiv_b, mul_zero, sub_zero]
+  have h_boundary : J b s - J a s = 0 := by simp only [J, hderiv_a, hderiv_b, mul_zero, sub_zero]
   -- Main derivation: derivative = J(b,s) - J(a,s) = 0
   have h_deriv : HasDerivAt (fun s' => ∫ t in a..b,
       f (H (t, s')) * deriv (fun t' => H (t', s')) t) (J b s - J a s) s := by

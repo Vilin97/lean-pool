@@ -109,10 +109,7 @@ theorem funsToPowRel_left_inverse {A B : ZFSet} :
         apply fapply_mem_range
       · apply fapply.def
       · rw [lambda_spec]
-        and_intros
-        · apply fapply_mem_range
-        · rw [mem_funs]
-          exact hf
+        refine ⟨fapply_mem_range _ _, mem_funs.mpr hf, ?_⟩
         · conv_lhs => rw [lambda_eta hf]
           rw [lambda_ext_iff ?_]
           · intro a ha
@@ -205,9 +202,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
         · rwa [mem_powerset]
       · apply fapply.def
       · rw [lambda_spec]
-        and_intros
-        · apply fapply_mem_range
-        · rwa [mem_powerset]
+        refine ⟨fapply_mem_range _ _, by rwa [mem_powerset], ?_⟩
         · rw [dite_cond_eq_true (eq_true ?_)]
           · ext1 ab
             simp only [mem_prod, dite_else_false, mem_sep, and_exists_self]
@@ -266,9 +261,7 @@ theorem funsToPowRel_right_inverse {A B : ZFSet} :
               rw [mem_powerset]
             · rwa [mem_powerset]
 
-theorem isIso_funs_to_pow_rel {A B : ZFSet} : A.funs B.powerset ≅ᶻ (A.prod B).powerset := by
-  apply isIso_of_two_sided_inverse
-  · exact funsToPowRel_left_inverse
-  · exact funsToPowRel_right_inverse
+theorem isIso_funs_to_pow_rel {A B : ZFSet} : A.funs B.powerset ≅ᶻ (A.prod B).powerset :=
+  isIso_of_two_sided_inverse funsToPowRel_left_inverse funsToPowRel_right_inverse
 
 end ZFSet

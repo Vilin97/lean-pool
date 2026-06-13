@@ -100,8 +100,7 @@ end BodySystemObj
     apply resEq_ext
     convert bodyMap_restrict f x n using 1)
 lemma bodyEquivSystem_hom_app_res_coe (x : bodyFunctor.obj T) :
-  ((BodySystemObj.ofObj (bodyEquivSystem.hom.app T x)).res k).val = x.val.take k := by
-  rfl
+  ((BodySystemObj.ofObj (bodyEquivSystem.hom.app T x)).res k).val = x.val.take k := by rfl
 
 namespace BodySystemObj
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -155,13 +154,11 @@ namespace ResStrategy
 @[congr] --simp needs this
 lemma eval_val'_congr' (S S' : ResStrategy T p k) (h : S = S')
   (x x' : T) (h' : x = x') hp hl :
-  (S x hp hl).val' = (S' x' (by subst h'; exact hp) (by subst h'; exact hl)).val' := by
-  congr!
+  (S x hp hl).val' = (S' x' (by subst h'; exact hp) (by subst h'; exact hl)).val' := by congr!
 @[congr]
 lemma eval_valT'_congr' (S S' : ResStrategy T p k) (h : S = S')
   (x x' : T) (h' : x = x') hp hl :
-  (S x hp hl).valT' = (S' x' (by subst h'; exact hp) (by subst h'; exact hl)).valT' := by
-  congr!
+  (S x hp hl).valT' = (S' x' (by subst h'; exact hp) (by subst h'; exact hl)).valT' := by congr!
 @[congr]
 lemma eval_val_congr' (S S' : ResStrategy T p k) (h : S = S')
   (x x' : T) (h' : x = x') hp hl :
@@ -310,8 +307,7 @@ lemma bodyEquivSystem_strat' {x} (S : StrategySystem T p) :
   rw [bodyEquivSystem_strat]
   have hpoint : (bodyEquivSystem.hom.app T) ((bodyEquivSystem.inv.app T) x) = x := by
     change ((bodyEquivSystem.inv.app T ≫ bodyEquivSystem.hom.app T) x) = x
-    rw [← NatTrans.comp_app]
-    rw [bodyEquivSystem.inv_hom_id]
+    rw [← NatTrans.comp_app, bodyEquivSystem.inv_hom_id]
     rfl
   rw [hpoint]
 lemma bodyEquivSystem_strat'' {x} (S : Strategy T.2 p) :

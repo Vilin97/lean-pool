@@ -35,8 +35,7 @@ private lemma integral_addCircle_volume_eq_smul_haar
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f : AddCircle T → E) :
     ∫ t : AddCircle T, f t = T • ∫ t : AddCircle T, f t ∂AddCircle.haarAddCircle := by
-  rw [AddCircle.volume_eq_smul_haarAddCircle]
-  rw [integral_smul_measure]
+  rw [AddCircle.volume_eq_smul_haarAddCircle, integral_smul_measure]
   simp [ENNReal.toReal_ofReal T_pos.le]
 
 /-- Integral of a periodic function over `(-π, π)` equals its integral over `AddCircle T`. -/
@@ -223,8 +222,7 @@ private lemma integral_real_const_add_polyEvalCircle_sq {D : ℕ}
       exact integral_add
         (real_cont_integrable_circle continuous_const)
         (real_cont_integrable_circle ((Complex.continuous_re.comp hcont).const_mul (2 * u)))
-    rw [h_split]
-    rw [integral_const, integral_const_mul, integral_re_polyEvalCircle_eq_zero]
+    rw [h_split, integral_const, integral_const_mul, integral_re_polyEvalCircle_eq_zero]
     simp
   linarith
 
@@ -303,8 +301,7 @@ private lemma integral_const_add_polyEvalCircle_sq {D : ℕ}
   linarith
 
 private lemma continuous_mk_addCircle :
-    Continuous (fun θ : ℝ => (QuotientAddGroup.mk θ : AddCircle T)) :=
-  continuous_quotient_mk'
+    Continuous (fun θ : ℝ => (QuotientAddGroup.mk θ : AddCircle T)) := continuous_quotient_mk'
 
 private lemma continuous_polyEvalCircle_comp {D : ℕ} (a : Fin D → ℂ) :
     Continuous (fun p : ℝ × ℝ => polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)) := by
@@ -864,16 +861,14 @@ private lemma radial_gaussian_integral (n : ℕ) :
       congr 1
       rw [← rpow_natCast r 2]
       norm_num
-  rw [setIntegral_congr_fun measurableSet_Ioi pow_eq]
-  rw [integral_rpow_mul_exp_neg_rpow hp hq]
+  rw [setIntegral_congr_fun measurableSet_Ioi pow_eq, integral_rpow_mul_exp_neg_rpow hp hq]
   have h1 : (2 * (n : ℝ) + 1 + 1) / 2 = ↑n + 1 := by ring
   rw [h1, Real.Gamma_nat_eq_factorial]
   ring
 
 private lemma norm_polyEval_eq_norm_polyEvalCircle {D : ℕ} (a : Fin D → ℂ) (r θ : ℝ) :
     ‖polyEval a (Complex.polarCoord.symm (r, θ))‖ =
-      ‖polyEvalCircle a r (QuotientAddGroup.mk θ)‖ := by
-  rw [polyEval_polar_eq_polyEvalCircle]
+      ‖polyEvalCircle a r (QuotientAddGroup.mk θ)‖ := by rw [polyEval_polar_eq_polyEvalCircle]
 
 private lemma fockNorm_polar_local {D : ℕ} (a : Fin D → ℂ) :
     (1 / Real.pi) * ∫ z : ℂ, ‖polyEval a z‖ ^ 2 * Real.exp (-‖z‖ ^ 2) =
@@ -1294,8 +1289,7 @@ private lemma integrable_gaussian_sq_real_const_add_polyEval {D : ℕ}
     unfold F
     exact mul_nonneg (sq_nonneg ‖(u : ℂ) + polyEval a z‖) (le_of_lt (Real.exp_pos _)))
   refine (MeasureTheory.lintegral_ofReal_ne_top_iff_integrable hF_meas hF_nonneg).1 ?_
-  rw [← Complex.lintegral_comp_polarCoord_symm (fun z => ENNReal.ofReal (F z))]
-  rw [polarCoord_target]
+  rw [← Complex.lintegral_comp_polarCoord_symm (fun z => ENNReal.ofReal (F z)), polarCoord_target]
   rw [show (volume : Measure (ℝ × ℝ)) = volume.prod volume from Measure.volume_eq_prod ℝ ℝ]
   let G : ℝ × ℝ → ℝ := fun p =>
     p.1 * (‖(u : ℂ) + polyEvalCircle a p.1 (QuotientAddGroup.mk p.2)‖ ^ 2 *
@@ -1484,8 +1478,7 @@ private lemma integrable_mul_of_sq_gaussian {f g : ℂ → ℝ}
     Integrable (fun z => f z * g z) gaussianMeasure := by
   refine MeasureTheory.Integrable.mono' (hf2.add hg2) hfgm ?_
   filter_upwards with z
-  rw [Real.norm_eq_abs]
-  rw [abs_mul]
+  rw [Real.norm_eq_abs, abs_mul]
   have hbound : |f z| * |g z| ≤ |f z| ^ 2 + |g z| ^ 2 := by
     nlinarith [sq_nonneg (|f z| - |g z|)]
   simpa [sq_abs] using hbound
@@ -1795,8 +1788,7 @@ theorem LocalFockSPR_of_small_norm
   set a : Fin D → ℂ := fun k => q.coeff (k.val + 1)
   have hq_eval : ∀ z, q.eval z = polyEval a z := by
     intro z
-    rw [eval_eq_sum_range, polyEval]
-    rw [Finset.sum_range_succ' (fun i => q.coeff i * z ^ i)]
+    rw [eval_eq_sum_range, polyEval, Finset.sum_range_succ' (fun i => q.coeff i * z ^ i)]
     simp only [hcoeff0, zero_mul, pow_zero]
     rw [← Fin.sum_univ_eq_sum_range]
     ring

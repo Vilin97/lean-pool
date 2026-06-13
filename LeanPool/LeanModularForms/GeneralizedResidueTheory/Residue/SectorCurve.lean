@@ -70,8 +70,7 @@ def sectorCurve (r : ℝ) (α : ℝ) (t : ℝ) : ℂ :=
 
 /-- The sector curve at t=0 is 0. -/
 theorem sectorCurve_zero (r : ℝ) (α : ℝ) :
-    sectorCurve r α 0 = 0 := by
-  simp [sectorCurve]
+    sectorCurve r α 0 = 0 := by simp [sectorCurve]
 
 /-- The sector curve at t=3 is 0. -/
 theorem sectorCurve_three (r : ℝ) (α : ℝ) :
@@ -82,13 +81,11 @@ theorem sectorCurve_three (r : ℝ) (α : ℝ) :
 
 /-- The sector curve is a closed curve (starts and ends at 0). -/
 theorem sectorCurve_closed (r : ℝ) (α : ℝ) :
-    sectorCurve r α 0 = sectorCurve r α 3 := by
-  rw [sectorCurve_zero, sectorCurve_three]
+    sectorCurve r α 0 = sectorCurve r α 3 := by rw [sectorCurve_zero, sectorCurve_three]
 
 /-- The sector curve at t=1 is r (the transition from radial to arc). -/
 theorem sectorCurve_one (r : ℝ) (α : ℝ) :
-    sectorCurve r α 1 = ↑r := by
-  simp [sectorCurve]
+    sectorCurve r α 1 = ↑r := by simp [sectorCurve]
 
 /-- The sector curve at t=2 is r * exp(i * alpha) (end of arc). -/
 theorem sectorCurve_two (r : ℝ) (α : ℝ) :
@@ -99,8 +96,7 @@ theorem sectorCurve_two (r : ℝ) (α : ℝ) :
 
 /-- Segment 1: for t in [0,1], the sector curve is `t * r`. -/
 theorem sectorCurve_seg1 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 0 1) :
-    sectorCurve r α t = ↑(t * r) := by
-  simp [sectorCurve, ht.2]
+    sectorCurve r α t = ↑(t * r) := by simp [sectorCurve, ht.2]
 
 /-- Segment 2: for t in [1,2], the sector curve is `r * exp(i*(t-1)*alpha)`. -/
 theorem sectorCurve_seg2 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Icc 1 2) :
@@ -156,8 +152,7 @@ theorem sectorCurve_continuousOn (r : ℝ) (α : ℝ) :
 
 /-- The sector curve passes through the origin at t=0 and t=3. -/
 theorem sectorCurve_passes_through_origin (r : ℝ) (α : ℝ) :
-    sectorCurve r α 0 = 0 ∧ sectorCurve r α 3 = 0 :=
-  ⟨sectorCurve_zero r α, sectorCurve_three r α⟩
+    sectorCurve r α 0 = 0 ∧ sectorCurve r α 3 = 0 := ⟨sectorCurve_zero r α, sectorCurve_three r α⟩
 
 /-- On the arc segment (t in [1,2]), the sector curve has modulus r. -/
 theorem sectorCurve_norm_on_arc (r : ℝ) (hr : 0 < r) (α : ℝ) (t : ℝ)
@@ -228,8 +223,7 @@ theorem deriv_sectorCurve_seg3 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Ioo 2 
       convert this using 1; ring
     exact h1.ofReal_comp
   have h_full : HasDerivAt (fun s => ↑((3 - s) * r) * exp (I * ↑α))
-      (↑(-r) * exp (I * ↑α)) t :=
-    h_inner.mul_const _
+      (↑(-r) * exp (I * ↑α)) t := h_inner.mul_const _
   rw [h_full.deriv]; push_cast; ring
 
 /-! ### PV integrand analysis -/
@@ -317,8 +311,7 @@ theorem log_cancellation (r : ℝ) (hr : 0 < r) (ε : ℝ) (hε : 0 < ε) (hεr 
     rw [← h1, intervalIntegral.integral_ofReal]
   have h2c : ∫ t in (2 : ℝ)..(3 - ε / r), (-(↑((3 - t)⁻¹)) : ℂ) =
       ↑(Real.log (ε / r)) := by
-    have : ∀ t : ℝ, (-(↑((3 - t)⁻¹) : ℂ)) = (↑((-((3 - t)⁻¹)) : ℝ)) := by
-      intro t; push_cast; ring
+    have : ∀ t : ℝ, (-(↑((3 - t)⁻¹) : ℂ)) = (↑((-((3 - t)⁻¹)) : ℝ)) := by intro t; push_cast; ring
     simp_rw [this, intervalIntegral.integral_ofReal, h2]
   rw [h1c, h2c, ← Complex.ofReal_add, neg_add_cancel, Complex.ofReal_zero]
 
@@ -661,8 +654,7 @@ theorem pv_sector_dz_over_z (r : ℝ) (hr : 0 < r) (α : ℝ)
         if ‖sectorCurve r α t - 0‖ > ε
           then (sectorCurve r α t)⁻¹ * deriv (sectorCurve r α) t
           else 0)
-      (𝓝[>] 0) (𝓝 (I * ↑α)) :=
-    tendsto_const_nhds.congr' (h_ev.mono (fun ε h => h.symm))
+      (𝓝[>] 0) (𝓝 (I * ↑α)) := tendsto_const_nhds.congr' (h_ev.mono (fun ε h => h.symm))
   constructor
   · -- The PV exists
     exact ⟨I * ↑α, h_tendsto⟩

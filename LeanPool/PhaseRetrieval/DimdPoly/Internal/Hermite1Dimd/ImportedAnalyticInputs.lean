@@ -115,8 +115,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
     Integrable
       (fun z : CSpace 1 => HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))
       (gaussianMeasure 1)
-  rw [gaussianMeasure]
-  rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+  rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
   · have hcross :
         Integrable
           (fun z : CSpace 1 =>
@@ -964,8 +963,7 @@ theorem scaledPositiveFrequencyCircleEstimate
     have hmulR : (fun t => rho a (a * Q t)) = fun t => ‖a‖ * rho 1 (Q t) := by
       funext t
       simp [rho_mul_right]
-    rw [← hmulP]
-    rw [circleL2NormSq_const_mul]
+    rw [← hmulP, circleL2NormSq_const_mul]
     have hconstR :
         circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) =
           ‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t)) := by
@@ -1028,8 +1026,7 @@ theorem scaledHighFrequencyBandEstimate
     have hmulR : (fun t => rho a (a * Q t)) = fun t => ‖a‖ * rho 1 (Q t) := by
       funext t
       simp [rho_mul_right]
-    rw [← hmulP]
-    rw [circleL2NormSq_const_mul]
+    rw [← hmulP, circleL2NormSq_const_mul]
     have hscaled :=
       mul_le_mul_of_nonneg_left hbase (sq_nonneg ‖a‖)
     have hconstR :
@@ -1258,9 +1255,7 @@ private lemma gaussianDensity_eq_prod
   | zero =>
       simp [gaussianDensity]
   | succ d ih =>
-      rw [gaussianDensity_succ_split]
-      rw [ih]
-      rw [Fin.prod_univ_succ]
+      rw [gaussianDensity_succ_split, ih, Fin.prod_univ_succ]
 
 private lemma integrable_weighted_coord_of_integrable_gaussian
     (f g : ℂ → ℂ)
@@ -1419,8 +1414,7 @@ theorem tensorGaussianFactorization
       Integrable
         (fun z : CSpace d => ∏ q : Fin d, F q (z q) * conj (G q (z q)))
         (gaussianMeasure d) := by
-    rw [gaussianMeasure]
-    rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+    rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
     · convert hprod_volume using 1
       funext z
       have hnonneg : 0 ≤ gaussianDensity d z := by

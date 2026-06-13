@@ -221,8 +221,7 @@ private lemma extensionFun_eq (d : ℕ → E) (hd : DenseRange d)
         ≤ (↑C : ℝ) * (s.sup p) (d m - d n) := h_bound m
       _ ≤ (↑C + 1) * (s.sup p) (d m - d n) := by
           apply mul_le_mul_of_nonneg_right (by linarith) (apply_nonneg _ _)
-      _ < (↑C + 1) * (ε / (↑C + 1)) := by
-          exact mul_lt_mul_of_pos_left hx_U hCε
+      _ < (↑C + 1) * (ε / (↑C + 1)) := by exact mul_lt_mul_of_pos_left hx_U hCε
       _ = ε := mul_div_cancel₀ ε (ne_of_gt hCε)
   exact extendFrom_eq (subset_closure (Set.mem_range_self n)) h_cwat
 
@@ -295,8 +294,7 @@ private lemma extensionFun_continuous (d : ℕ → E) (hd : DenseRange d)
               _ ≤ (s.sup p) (d m - x) + (s.sup p) (x - d n) := (s.sup p).add_le' _ _
               _ = (s.sup p) (d m - x) + (s.sup p) (d n - x) := by
                   congr 1; rw [show x - d n = -(d n - x) from by abel, map_neg_eq_map]
-        _ < ((C : ℝ) + 1) * (δ + δ) := by
-            apply mul_lt_mul_of_pos_left (add_lt_add ha.1 hb.1) hCε
+        _ < ((C : ℝ) + 1) * (δ + δ) := by apply mul_lt_mul_of_pos_left (add_lt_add ha.1 hb.1) hCε
         _ = ε := by rw [hδ_def]; field_simp; ring⟩
   exact CompleteSpace.complete h_cauchy
 
@@ -972,8 +970,7 @@ theorem projection_ae_eq [SeparableSpace E] [IsHilbertNuclear E] [Nonempty E]
     intro k t
     have h2 := h_cf_joint 2 ![t, -t] ![d (φ k), f]
     simp only [Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one] at h2
-    have h_lhs : ∀ ω', t * ω' (d (φ k)) + -t * ω' f = t * Y k ω' := by
-      intro ω'; simp only [Y]; ring
+    have h_lhs : ∀ ω', t * ω' (d (φ k)) + -t * ω' f = t * Y k ω' := by intro ω'; simp only [Y]; ring
     conv at h2 =>
       lhs; arg 2; ext ω'
       rw [show t * ω' (d (φ k)) + -t * ω' f = t * Y k ω' from h_lhs ω']
@@ -1129,8 +1126,7 @@ lemma uniqueness_via_projection [SeparableSpace E] [IsHilbertNuclear E] [Nonempt
   -- Step 2: μ' = (μ'.map embed).map P = ν.map P = μ
   apply Subtype.ext
   change μ'.toMeasure = ν.map measurableProjection
-  rw [← h_mu'_embed]
-  rw [Measure.map_map measurable_measurableProjection measurable_weakDualEmbed]
+  rw [← h_mu'_embed, Measure.map_map measurable_measurableProjection measurable_weakDualEmbed]
   rw [show measurableProjection ∘ weakDualEmbed E = id from projection_embed_eq]
   simp [Measure.map_id]
 

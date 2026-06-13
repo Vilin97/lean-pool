@@ -171,10 +171,8 @@ private lemma mutualInfo_add_n_way_inequality
         funext ω k
         exact Fin.elim0 k
       rw [htuple]
-      have hconstMI : I[A : (fun _ : Ω => c); μ] = 0 := mutualInfo_const hA c
-      have hconstH : H[(fun _ : Ω => c); μ] = 0 := by
-        simp
-      linarith
+      have hconstH : H[(fun _ : Ω => c); μ] = 0 := by simp
+      linarith [mutualInfo_const (μ := μ) hA c, hconstH]
   | succ n ih =>
       let Binit : ∀ k : Fin n, Ω → β k.castSucc := fun k => B k.castSucc
       let Blast : Ω → β (Fin.last n) := B (Fin.last n)
@@ -328,10 +326,8 @@ theorem _root_.ZhangYeung.theorem5
     calc
       n * I[Z : U; μ] - n * I[Z : U | X i; μ] - ∑ k : Fin n, I[Z : U | X k; μ]
         = ∑ k : Fin n, delta Z U (X i) (X k) μ := hDeltaSum.symm
-      _ = ∑ k : Fin n, delta Z' U' (X' i) (XstarCoord k) ν := by
-        refine Finset.sum_congr rfl ?_
-        intro k _
-        exact hTransport k
+      _ = ∑ k : Fin n, delta Z' U' (X' i) (XstarCoord k) ν :=
+        Finset.sum_congr rfl fun k _ => hTransport k
       _ ≤ ∑ k : Fin n, I[X' i : XstarCoord k; ν] := Finset.sum_le_sum fun k _ => hPair k
   have hChain := mutualInfo_add_n_way_inequality (A := X' i) (B :=
     XstarCoord) (hX' i) hXstarCoord ν
@@ -347,29 +343,20 @@ theorem _root_.ZhangYeung.theorem5
     mutualInfo_le_of_condIndepFun (hX' i) hXstar (hZ'.prodMk hU') ν hCondProj
   have hMargXZU :
       I[X' i : (fun ω' => (Z' ω', U' ω')); ν]
-        = I[X i : (fun ω => (Z ω, U ω)); μ] := by
-    have hPairXZU :
-        IdentDistrib (fun ω => (X i ω, (Z ω, U ω)))
-          (fun ω' => (X' i ω', (Z' ω', U' ω'))) μ ν :=
-      hFirst.symm.comp (measurable_pairXZU i)
-    exact hPairXZU.mutualInfo_eq.symm
+        = I[X i : (fun ω => (Z ω, U ω)); μ] :=
+    (hFirst.symm.comp (measurable_pairXZU i)).mutualInfo_eq.symm
   have hTupleSecond :
       IdentDistrib (fun ω' => fun k : Fin n => XstarCoord k ω') (fun ω => fun k :
-        Fin n => X k ω) ν μ := by
-    exact hSecond.comp measurable_fst
+        Fin n => X k ω) ν μ :=
+    hSecond.comp measurable_fst
   have hMargJoint :
       H[(fun ω' => fun k : Fin n => XstarCoord k ω'); ν] =
         H[(fun ω : Ω => fun k : Fin n => X k ω); μ] :=
     hTupleSecond.entropy_congr
-  have hMargSingle : ∀ k : Fin n, H[XstarCoord k; ν] = H[X k; μ] := by
-    intro k
-    have hCoord : IdentDistrib (XstarCoord k) (X k) ν μ := by
-      exact hTupleSecond.comp (measurable_pi_apply k)
-    exact hCoord.entropy_congr
-  have hMargSingles : ∑ k : Fin n, H[XstarCoord k; ν] = ∑ k : Fin n, H[X k; μ] := by
-    refine Finset.sum_congr rfl ?_
-    intro k _
-    exact hMargSingle k
+  have hMargSingle : ∀ k : Fin n, H[XstarCoord k; ν] = H[X k; μ] := fun k =>
+    (hTupleSecond.comp (measurable_pi_apply k)).entropy_congr
+  have hMargSingles : ∑ k : Fin n, H[XstarCoord k; ν] = ∑ k : Fin n, H[X k; μ] :=
+    Finset.sum_congr rfl fun k _ => hMargSingle k
   have hInternal :
       n * I[Z : U; μ] - ∑ j, I[Z : U | X j; μ] - n * I[Z : U | X i; μ]
         ≤ I[X i : (fun ω => (Z ω, U ω)); μ]
@@ -418,9 +405,6 @@ theorem _root_.ZhangYeung.theorem5_averaged
   have hleft :
       ∑ i : Fin n, (n * I[U : Z; μ] - ∑ j : Fin n, I[U : Z | X j; μ] - n * I[U : Z | X i; μ])
         = n * lhs := by
-    have hsumCond : ∑ x : Fin n, n * I[U : Z | X x; μ] = n * ∑ x : Fin n,
-      I[U : Z | X x; μ] := by
-      rw [Finset.mul_sum]
     calc
       ∑ i : Fin n, (n * I[U : Z; μ] - ∑ j : Fin n, I[U : Z | X j; μ] - n * I[U : Z | X i; μ])
           = n ^ 2 * I[U : Z; μ] - ∑ x : Fin n, n * I[U : Z | X x; μ] - n * ∑ j : Fin n,
@@ -430,7 +414,7 @@ theorem _root_.ZhangYeung.theorem5_averaged
             ring
       _ = n ^ 2 * I[U : Z; μ] - n * ∑ x : Fin n, I[U : Z | X x; μ] - n * ∑ j : Fin n,
         I[U : Z | X j; μ] := by
-            rw [hsumCond]
+            rw [Finset.mul_sum]
       _ = n * lhs := by
             change n ^ 2 * I[U : Z; μ] - n * ∑ x : Fin n,
               I[U : Z | X x; μ] - n * ∑ j : Fin n, I[U : Z | X j; μ]
@@ -445,15 +429,14 @@ theorem _root_.ZhangYeung.theorem5_averaged
   have hn_pos_nat : 0 < n := lt_of_lt_of_le (by decide : 0 < 2) hn
   have hn_pos : (0 : ℝ) < n := by exact_mod_cast hn_pos_nat
   have hn_ne : (n : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hn_pos_nat)
-  have hdiv : lhs ≤ ((∑ i : Fin n, rhs i) + n * tail) / n := by
-    exact (le_div_iff₀ hn_pos).2 (by simpa [mul_comm] using hscaled)
+  have hdiv : lhs ≤ ((∑ i : Fin n, rhs i) + n * tail) / n :=
+    (le_div_iff₀ hn_pos).2 (by simpa [mul_comm] using hscaled)
   have hsplit : ((∑ i : Fin n, rhs i) + n * tail) / n = (1 / n : ℝ) * (∑ i : Fin n,
     rhs i) + tail := by
     field_simp [hn_ne]
-  have hfinal := hdiv
-  rw [hsplit] at hfinal
+  rw [hsplit] at hdiv
   simpa [lhs, rhs, tail, sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-    mul_add, add_mul, mul_comm, mul_left_comm, mul_assoc] using hfinal
+    mul_add, add_mul, mul_comm, mul_left_comm, mul_assoc] using hdiv
 
 end MainTheorems
 

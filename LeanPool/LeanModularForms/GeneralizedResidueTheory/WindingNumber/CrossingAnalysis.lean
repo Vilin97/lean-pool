@@ -447,8 +447,7 @@ lemma exists_cutoff_boundary_times_with_mono
         (∀ t ∈ Icc σ₁ σ₂, ‖γ.toFun t - z₀‖ ≤ ε)) := by
   obtain ⟨l, r, hl_lt, hr_gt, hl_ge_a, hr_le_b, hg_anti, hg_mono⟩ :=
     piecewiseC1Immersion_norm_strictMono_near_crossing γ z₀ t₀ ht₀ hcross
-  obtain ⟨δ₁, hδ₁, hbnd₁⟩ :=
-    exists_cutoff_boundary_times γ z₀ t₀ ht₀ hcross honly
+  obtain ⟨δ₁, hδ₁, hbnd₁⟩ := exists_cutoff_boundary_times γ z₀ t₀ ht₀ hcross honly
   have hg_l_pos : 0 < ‖γ.toFun l - z₀‖ := by
     apply norm_pos_iff.mpr; apply sub_ne_zero.mpr
     intro heq; have := honly l ⟨hl_ge_a, le_trans hl_lt.le (le_of_lt ht₀.2)⟩ heq; linarith
@@ -541,8 +540,7 @@ lemma exp_cutoff_integral_eq_ratio
     · have := h_left γ.a ⟨le_refl _, h'⟩; rw [h, sub_self, norm_zero] at this; linarith
   -- f equals γ'/(γ-z₀) wherever ‖γ-z₀‖ > ε
   have hf_val : ∀ t, ε < ‖γ.toFun t - z₀‖ →
-      f t = (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t := by
-    intro t h; simp only [f]; exact if_pos h
+      f t = (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t := by intro t h; simp only [f]; exact if_pos h
   -- Membership helpers
   have hσ₁_mem : σ₁ ∈ Set.uIcc γ.a γ.b := by
     rw [Set.uIcc_of_le γ.hab.le]; exact ⟨hσ₁, hσ₁₂.le.trans hσ₂⟩
@@ -612,8 +610,7 @@ lemma exp_cutoff_integral_eq_ratio
   let F : ℝ → ℂ := fun t => ∫ s in γ.a..t, f s
   let G : ℝ → ℂ := fun t => (γ.toFun t - z₀) * cexp (-F t)
   have hFa : F γ.a = 0 := intervalIntegral.integral_same
-  have hGa : G γ.a = γ.toFun γ.a - z₀ := by
-    simp only [G, hFa, neg_zero, Complex.exp_zero, mul_one]
+  have hGa : G γ.a = γ.toFun γ.a - z₀ := by simp only [G, hFa, neg_zero, Complex.exp_zero, mul_one]
   -- F continuous
   have hF_cont : ContinuousOn F (Icc γ.a γ.b) := by
     have := intervalIntegral.continuousOn_primitive_interval' h_int left_mem_uIcc
@@ -751,8 +748,7 @@ private lemma crossing_sigma_tendsto_t₀
       continuous_norm.comp_continuousOn
         (γ.continuous_toFun.mono diff_subset |>.sub continuousOn_const)
     obtain ⟨tm, htm, htm_min⟩ := hK_compact.exists_isMinOn hK_ne hcont_norm
-    have hm_pos : 0 < ‖γ.toFun tm - z₀‖ :=
-      norm_pos_iff.mpr (sub_ne_zero.mpr (hK_nonzero tm htm))
+    have hm_pos : 0 < ‖γ.toFun tm - z₀‖ := norm_pos_iff.mpr (sub_ne_zero.mpr (hK_nonzero tm htm))
     filter_upwards [hσ_Icc, hσ_val, Ioo_mem_nhdsGT hm_pos] with ε hε_in hε_norm hε_lt
     simp only [Real.dist_eq]
     by_contra h; push Not at h
@@ -879,8 +875,7 @@ lemma crossing_ratio_tendsto
       (𝓝[>] t₀) (𝓝 (L_R / ↑‖L_R‖)) := by
     have hLne : (‖L_R‖ : ℂ) ≠ 0 := by exact_mod_cast ne_of_gt hL_R_pos
     have hnorm_tend : Filter.Tendsto (fun t => ‖(γ.toFun t - z₀) / ((t - t₀ : ℝ) : ℂ)‖)
-        (𝓝[>] t₀) (𝓝 ‖L_R‖) :=
-      continuous_norm.continuousAt.tendsto.comp hslope_R
+        (𝓝[>] t₀) (𝓝 ‖L_R‖) := continuous_norm.continuousAt.tendsto.comp hslope_R
     apply (hslope_R.div hnorm_tend.ofReal hLne).congr'
     filter_upwards [hnorm_tend.eventually (Ioi_mem_nhds (by linarith : ‖L_R‖ / 2 < ‖L_R‖)),
                     self_mem_nhdsWithin] with t hpos htgt
@@ -900,8 +895,7 @@ lemma crossing_ratio_tendsto
       (𝓝[<] t₀) (𝓝 (-L_L / ↑‖L_L‖)) := by
     have hLne : (‖L_L‖ : ℂ) ≠ 0 := by exact_mod_cast ne_of_gt hL_L_pos
     have hnorm_tend : Filter.Tendsto (fun t => ‖(γ.toFun t - z₀) / ((t - t₀ : ℝ) : ℂ)‖)
-        (𝓝[<] t₀) (𝓝 ‖L_L‖) :=
-      continuous_norm.continuousAt.tendsto.comp hslope_L
+        (𝓝[<] t₀) (𝓝 ‖L_L‖) := continuous_norm.continuousAt.tendsto.comp hslope_L
     rw [neg_div]
     apply (hslope_L.div hnorm_tend.ofReal hLne).neg.congr'
     filter_upwards [hnorm_tend.eventually (Ioi_mem_nhds (by linarith : ‖L_L‖ / 2 < ‖L_L‖)),
@@ -947,13 +941,11 @@ lemma crossing_ratio_tendsto
   -- (γ(σ₁(ε)) - z₀)/‖γ(σ₁(ε)) - z₀‖ → -L_L/‖L_L‖
   have hdir_σ₁ : Filter.Tendsto
       (fun ε => (γ.toFun (σ₁ ε) - z₀) / ↑‖γ.toFun (σ₁ ε) - z₀‖)
-      (𝓝[>] (0 : ℝ)) (𝓝 (-L_L / ↑‖L_L‖)) :=
-    hdir_L.comp hσ₁_nhds_lt
+      (𝓝[>] (0 : ℝ)) (𝓝 (-L_L / ↑‖L_L‖)) := hdir_L.comp hσ₁_nhds_lt
   -- (γ(σ₂(ε)) - z₀)/‖γ(σ₂(ε)) - z₀‖ → L_R/‖L_R‖
   have hdir_σ₂ : Filter.Tendsto
       (fun ε => (γ.toFun (σ₂ ε) - z₀) / ↑‖γ.toFun (σ₂ ε) - z₀‖)
-      (𝓝[>] (0 : ℝ)) (𝓝 (L_R / ↑‖L_R‖)) :=
-    hdir_R.comp hσ₂_nhds_gt
+      (𝓝[>] (0 : ℝ)) (𝓝 (L_R / ↑‖L_R‖)) := hdir_R.comp hσ₂_nhds_gt
   -- ============================================================
   -- Step 6: Show ratio = direction ratio (using equal norms = ε)
   -- ============================================================
@@ -982,13 +974,10 @@ lemma crossing_ratio_tendsto
       set L_right := Classical.choose (γ.right_deriv_limit t₀ h ht₀.2)
       have hL_left_spec := Classical.choose_spec (γ.left_deriv_limit t₀ h ht₀.1)
       have hL_right_spec := Classical.choose_spec (γ.right_deriv_limit t₀ h ht₀.2)
-      have hL_L_eq : L_L = L_left :=
-        tendsto_nhds_unique htend_L hL_left_spec.2
-      have hL_R_eq : L_R = L_right :=
-        tendsto_nhds_unique htend_R hL_right_spec.2
+      have hL_L_eq : L_L = L_left := tendsto_nhds_unique htend_L hL_left_spec.2
+      have hL_R_eq : L_R = L_right := tendsto_nhds_unique htend_R hL_right_spec.2
       rw [hL_L_eq, hL_R_eq]
-      have hL_left_ne' : (‖L_left‖ : ℂ) ≠ 0 := by
-        exact_mod_cast norm_ne_zero_iff.mpr hL_left_spec.1
+      have hL_left_ne' : (‖L_left‖ : ℂ) ≠ 0 := by exact_mod_cast norm_ne_zero_iff.mpr hL_left_spec.1
       have hL_right_ne' : (‖L_right‖ : ℂ) ≠ 0 := by
         exact_mod_cast norm_ne_zero_iff.mpr hL_right_spec.1
       -- Polar form: -L_left / ‖L_left‖ = exp(arg(-L_left) * I)
@@ -998,8 +987,7 @@ lemma crossing_ratio_tendsto
         rw [← norm_neg L_left]
         exact complex_div_norm_eq_exp_arg (by rwa [norm_neg])
       have h_L_right_polar : L_right / ↑‖L_right‖ =
-          Complex.exp (↑(Complex.arg L_right) * I) :=
-        complex_div_norm_eq_exp_arg hL_right_ne'
+          Complex.exp (↑(Complex.arg L_right) * I) := complex_div_norm_eq_exp_arg hL_right_ne'
       -- The goal after rw [hL_L_eq, hL_R_eq] is:
       -- -L_left / ↑‖L_left‖ / (L_right / ↑‖L_right‖)
       -- = exp(-(I * (arg L_right - arg(-L_left))))
@@ -1016,8 +1004,7 @@ lemma crossing_ratio_tendsto
         rw [hL_L, hL_R]
       rw [← hL_L_eq_LR]
       have hne : (‖L_L‖ : ℂ) ≠ 0 := by exact_mod_cast ne_of_gt hL_L_pos
-      have hratio : (-L_L / ↑‖L_L‖) / (L_L / ↑‖L_L‖) = -1 := by
-        field_simp [hne, hL_L_ne]
+      have hratio : (-L_L / ↑‖L_L‖) / (L_L / ↑‖L_L‖) = -1 := by field_simp [hne, hL_L_ne]
       rw [hratio, show -(I * ↑Real.pi) = -(↑Real.pi * I) by ring,
           Complex.exp_neg, Complex.exp_pi_mul_I]
       norm_num

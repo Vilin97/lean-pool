@@ -339,8 +339,7 @@ private theorem Pkn_eval_natShift (k n : ℕ) (x : ℝ) :
     (Pkn k n).eval (x + n) =
       Finset.sum (Finset.range (k + 1)) (fun j =>
         ((-1 : ℝ) ^ j) * (Nat.choose k j : ℝ) *
-        (Nat.descFactorial n j : ℝ) * (x + n) ^ (k - j)) := by
-  simpa using Pkn_eval k n (x + n)
+        (Nat.descFactorial n j : ℝ) * (x + n) ^ (k - j)) := by simpa using Pkn_eval k n (x + n)
 
 private theorem Pkn_coeff (k n m : ℕ) :
     (Pkn k n).coeff m =
@@ -521,8 +520,7 @@ private theorem qkn_power_split
   rw [hexp, zpow_add₀ hr0]
   have hcast : (2 * ((k - j : ℕ) : ℤ)) = (((2 * (k - j) : ℕ)) : ℤ) := by
     norm_num
-  rw [hcast, zpow_natCast]
-  rw [show r ^ (2 * (k - j)) = (r ^ 2) ^ (k - j) by rw [pow_mul]]
+  rw [hcast, zpow_natCast, show r ^ (2 * (k - j)) = (r ^ 2) ^ (k - j) by rw [pow_mul]]
 
 private theorem qkn_eq_Pkn
     (k n : ℕ) {r : ℝ}
@@ -595,8 +593,7 @@ private lemma integral_addCircle_volume_eq_smul_haar
     [NormedSpace ℝ E]
     (f : Circle → E) :
     ∫ t : Circle, f t = T • ∫ t : Circle, f t ∂AddCircle.haarAddCircle := by
-  rw [AddCircle.volume_eq_smul_haarAddCircle]
-  rw [integral_smul_measure]
+  rw [AddCircle.volume_eq_smul_haarAddCircle, integral_smul_measure]
   have hT_nonneg : 0 ≤ T := by
     simpa [T, HermiteLEAN.T] using (show (0 : ℝ) ≤ 2 * Real.pi by positivity)
   simp [ENNReal.toReal_ofReal hT_nonneg]
@@ -625,8 +622,7 @@ private lemma integral_Ioo_eq_T_smul_haar
   rw [integral_Ioo_eq_addCircle, integral_addCircle_volume_eq_smul_haar]
 
 private lemma continuous_mk_addCircle :
-    Continuous (fun θ : ℝ => (QuotientAddGroup.mk θ : Circle)) :=
-  continuous_quotient_mk'
+    Continuous (fun θ : ℝ => (QuotientAddGroup.mk θ : Circle)) := continuous_quotient_mk'
 
 private lemma continuous_circlePoint_mk :
     Continuous (fun p : ℝ × ℝ => circlePoint p.1 ((QuotientAddGroup.mk p.2 : Circle))) := by
@@ -748,8 +744,7 @@ private lemma annulus_polar_indicator_rw
       rw [hpolar, hcircle, norm_mul, norm_mul, mul_pow, mul_pow, hfour,
         norm_sq_circleLeadingFactor, hnormPolar]
       ring_nf
-    rw [hFpolar]
-    rw [show (r, θ).1 = r by rfl, show (r, θ).2 = θ by rfl]
+    rw [hFpolar, show (r, θ).1 = r by rfl, show (r, θ).2 = θ by rfl]
     rw [hcircle, norm_mul, norm_mul, mul_pow, mul_pow, hfour, norm_sq_circleLeadingFactor]
     ring_nf
   · have hann : Complex.polarCoord.symm (r, θ) ∉ annulus j := by
@@ -757,8 +752,7 @@ private lemma annulus_polar_indicator_rw
       apply hrj
       change (j : ℝ) ≤ ‖Complex.polarCoord.symm (r, θ)‖ ∧
           ‖Complex.polarCoord.symm (r, θ)‖ < (((j + 1 : ℕ) : ℝ)) at hz
-      rw [Complex.norm_polarCoord_symm, abs_of_pos hrpos'] at hz
-      exact hz
+      rwa [Complex.norm_polarCoord_symm, abs_of_pos hrpos'] at hz
     change r * Set.indicator (annulus j) _ (Complex.polarCoord.symm (r, θ)) = _
     rw [Set.indicator_of_notMem hann]
     rw [Set.indicator_of_notMem (show
@@ -807,8 +801,7 @@ private lemma annulusIntegralSq_finiteHermiteSum_eq_radial
     ext p
     rcases p with ⟨r, θ⟩
     simp [and_left_comm, and_assoc]
-  rw [hstrip]
-  rw [show (volume : Measure (ℝ × ℝ)) = volume.prod volume from Measure.volume_eq_prod ℝ ℝ]
+  rw [hstrip, show (volume : Measure (ℝ × ℝ)) = volume.prod volume from Measure.volume_eq_prod ℝ ℝ]
   rw [setIntegral_prod _ ((integrableOn_annulus_polar_finiteHermiteSum k a j).mono_set
     (Set.prod_mono
       (by
@@ -878,8 +871,7 @@ private lemma annulusIntegralSq_finiteHermiteSum_eq_radial
     · exact measurableSet_Ioi.inter measurableSet_Ico
     · intro r hr
       exact inner_eq r hr
-  rw [houter]
-  rw [MeasureTheory.integral_const_mul]
+  rw [houter, MeasureTheory.integral_const_mul]
   have hT_eq : (1 / Real.pi) * T = 2 := by
     simp [T, HermiteLEAN.T]
     field_simp
@@ -1074,8 +1066,7 @@ private lemma intervalIntegrable_basisRadialTerm
       _ = 1 ^ 2 := by rw [fourier_mk_norm (n := (n : ℤ)) (θ := (0 : ℝ))]
       _ = 1 := by norm_num
   rw [hphi, norm_mul, norm_mul, mul_pow, mul_pow, hfourk, norm_sq_circleLeadingFactor]
-  rw [norm_mul, mul_pow, hfourn]
-  rw [Complex.norm_real, Real.norm_eq_abs]
+  rw [norm_mul, mul_pow, hfourn, Complex.norm_real, Real.norm_eq_abs]
   ring_nf
 
 private lemma sqrt_sub_le_sub_of_one_le
@@ -1567,8 +1558,7 @@ private theorem annulusIntegralSq_phi0_eq
         apply hrj
         change (j : ℝ) ≤ ‖Complex.polarCoord.symm (r, θ)‖ ∧
             ‖Complex.polarCoord.symm (r, θ)‖ < (((j + 1 : ℕ) : ℝ)) at hz
-        rw [Complex.norm_polarCoord_symm, abs_of_pos hrpos'] at hz
-        exact hz
+        rwa [Complex.norm_polarCoord_symm, abs_of_pos hrpos'] at hz
       change r * Set.indicator (annulus j) F (Complex.polarCoord.symm (r, θ)) = _
       rw [Set.indicator_of_notMem hann,
         Set.indicator_of_notMem (show
@@ -1599,8 +1589,7 @@ private theorem annulusIntegralSq_phi0_eq
     ext p
     rcases p with ⟨r, θ⟩
     simp [and_left_comm, and_assoc]
-  rw [hstrip]
-  rw [show (volume : Measure (ℝ × ℝ)) = volume.prod volume from Measure.volume_eq_prod ℝ ℝ]
+  rw [hstrip, show (volume : Measure (ℝ × ℝ)) = volume.prod volume from Measure.volume_eq_prod ℝ ℝ]
   rw [setIntegral_prod _ (integrableOn_annulus_polar_phi0 k j (‖g 0‖ ^ 2))]
   have inner_eq :
       ∀ r : ℝ,
@@ -1909,8 +1898,7 @@ private theorem qkn_eventual_upper_bound (k n : ℕ) :
             dsimp [C, c]
             ring
   have hclose' : ‖(qkn k n r : ℂ)‖ / r ^ n ≤ C := by
-    rw [hdiv_norm] at hclose
-    exact hclose
+    rwa [hdiv_norm] at hclose
   have hmul := mul_le_mul_of_nonneg_right hclose' hrpow_nonneg
   have hrewrite : (‖(qkn k n r : ℂ)‖ / r ^ n) * r ^ n = ‖(qkn k n r : ℂ)‖ := by
     field_simp [hrpow_pos.ne']
@@ -2062,8 +2050,7 @@ private theorem qkn_small_n_growth
         positivity
       rw [mul_comm (r ^ k) _, mul_assoc]
       gcongr
-      rw [abs_of_pos (zpow_pos hr_pos _), mul_comm]
-      rw [zpow_mul_pow_eq hr_pos k n j hjn hkn]
+      rw [abs_of_pos (zpow_pos hr_pos _), mul_comm, zpow_mul_pow_eq hr_pos k n j hjn hkn]
       exact pow_le_one_add_pow_of_le hr_pos.le (by omega)
     -- Bound coefficients: C(k,j) * descFact(n,j) ≤ 2^k * k^k
     have hcoeff_bound : ∀ j ∈ Finset.range (n + 1),

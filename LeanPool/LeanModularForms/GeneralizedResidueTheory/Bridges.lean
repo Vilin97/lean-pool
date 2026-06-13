@@ -29,8 +29,7 @@ private theorem rescale_continuous (γ : PiecewiseC1Curve) :
   continuous_subtype_val.comp (iccHomeoI γ.a γ.b γ.hab).symm.continuous
 
 private theorem rescale_mem_Icc (γ : PiecewiseC1Curve) (t : I) :
-    (γ.rescale t : ℝ) ∈ Icc γ.a γ.b :=
-  (γ.rescale t).2
+    (γ.rescale t : ℝ) ∈ Icc γ.a γ.b := (γ.rescale t).2
 
 private theorem rescale_zero (γ : PiecewiseC1Curve) :
     (γ.rescale ⟨0, left_mem_Icc.mpr zero_le_one⟩ : ℝ) = γ.a := by
@@ -59,13 +58,11 @@ def toContinuousMap (γ : PiecewiseC1Curve) : C(I, ℂ) :=
 
 /-- `toPath` agrees with the original curve under rescaling. -/
 theorem toPath_apply (γ : PiecewiseC1Curve) (t : I) :
-    γ.toPath t = γ.toFun ((iccHomeoI γ.a γ.b γ.hab).symm t) :=
-  rfl
+    γ.toPath t = γ.toFun ((iccHomeoI γ.a γ.b γ.hab).symm t) := rfl
 
 /-- `toContinuousMap` agrees with the original curve under rescaling. -/
 theorem toContinuousMap_apply (γ : PiecewiseC1Curve) (t : I) :
-    γ.toContinuousMap t = γ.toFun ((iccHomeoI γ.a γ.b γ.hab).symm t) :=
-  rfl
+    γ.toContinuousMap t = γ.toFun ((iccHomeoI γ.a γ.b γ.hab).symm t) := rfl
 
 /-- A closed `PiecewiseC1Curve` gives a loop, i.e., a `Path` from `γ(a)` to itself. -/
 def toLoop (γ : PiecewiseC1Curve) (hc : γ.IsClosed) :

@@ -320,8 +320,7 @@ lemma eta_logDeriv_eql' (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z 
 lemma eta_logderivs' : {z : ℂ | 0 < z.im}.EqOn (logDeriv (η ∘ (fun z : ℂ => -1/z)))
   (logDeriv ((csqrt) * η)) := by
   intro z hz
-  have := eta_logDeriv_eql' ⟨z, hz⟩
-  exact this
+  exact eta_logDeriv_eql' ⟨z, hz⟩
 
 lemma eta_logderivs_const' : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   (z • ((csqrt) * η)) := by

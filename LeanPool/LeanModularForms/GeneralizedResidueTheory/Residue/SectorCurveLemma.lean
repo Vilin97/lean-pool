@@ -104,8 +104,7 @@ theorem pv_sector_higher_power (r : ℝ) (_hr : 0 < r) (α : ℝ)
   set f : ℝ → ℂ := fun t =>
     (sectorCurve r α t) ^ (n - 1) * deriv (sectorCurve r α) t
   set F : ℝ → ℂ := fun t => (sectorCurve r α t) ^ n / (↑n : ℂ)
-  have hF_cont : ContinuousOn F (Icc 0 3) :=
-    ((sectorCurve_continuousOn r α).pow n).div_const _
+  have hF_cont : ContinuousOn F (Icc 0 3) := ((sectorCurve_continuousOn r α).pow n).div_const _
   have hS_count : ({1, 2} ∩ Ioo (0 : ℝ) 3 : Set ℝ).Countable :=
     (Set.Finite.inter_of_left (Set.toFinite {1, 2}) _).countable
   have hγ_diff : ∀ t ∈ Ioo (0 : ℝ) 3,
@@ -329,8 +328,7 @@ private theorem cauchyPV_inv_integrableOn_3δ3 (r : ℝ) (hr : 0 < r) (α : ℝ)
     simp only [cauchyPrincipalValueIntegrand', sub_zero]
     rw [if_neg (not_lt.mpr _)]
     rw [sectorCurve_norm_seg3' r hr α t ⟨by linarith [ht.1], ht.2⟩]
-    have : (3 - t) * r ≤ ε / r * r :=
-      mul_le_mul_of_nonneg_right (by linarith [ht.1]) hr.le
+    have : (3 - t) * r ≤ ε / r * r := mul_le_mul_of_nonneg_right (by linarith [ht.1]) hr.le
     linarith [div_mul_cancel₀ ε (ne_of_gt hr)])
 
 private theorem cauchyPV_inv_integrableOn_δ1 (r : ℝ) (hr : 0 < r) (α : ℝ)
@@ -542,8 +540,7 @@ theorem cauchyPV_sectorCurve_eq_mul_residueSimplePole (r : ℝ) (hr : 0 < r) (α
           deriv (sectorCurve r α) t
         else 0) := by
     intro ε hε t; split_ifs with h
-    · have hne : sectorCurve r α t ≠ 0 := by
-        intro heq; simp [heq] at h; linarith
+    · have hne : sectorCurve r α t ≠ 0 := by intro heq; simp [heq] at h; linarith
       rw [hf_eq _ hne]
     · rfl
   have h_sp := cauchyPV_sectorCurve_simplePole r hr α hα_nonneg hα_le c g hg
@@ -597,8 +594,7 @@ private theorem sectorCurve_norm_le_near_three (r : ℝ) (hr : 0 < r) (α : ℝ)
     ∀ t ∈ Icc (3 - δ) 3, ‖sectorCurve r α t‖ ≤ ε := by
   intro t ht
   rw [sectorCurve_norm_seg3' r hr α t ⟨le_trans (by linarith : 2 ≤ 3 - δ) ht.1, ht.2⟩]
-  calc (3 - t) * r ≤ δ * r := by
-        apply mul_le_mul_of_nonneg_right _ hr.le; linarith [ht.1]
+  calc (3 - t) * r ≤ δ * r := by apply mul_le_mul_of_nonneg_right _ hr.le; linarith [ht.1]
     _ = ε := hδr_eq
 
 private theorem sectorCurve_norm_gt_mid (r : ℝ) (hr : 0 < r) (α : ℝ)
@@ -611,13 +607,11 @@ private theorem sectorCurve_norm_gt_mid (r : ℝ) (hr : 0 < r) (α : ℝ)
     calc ε = δ * r := hδr_eq.symm
       _ < t * r := mul_lt_mul_of_pos_right ht.1 hr
   · rcases le_or_gt t 2 with h2 | h2
-    · have : ‖sectorCurve r α t‖ = r :=
-        sectorCurve_norm_on_arc r hr α t ⟨le_of_lt h1, h2⟩
+    · have : ‖sectorCurve r α t‖ = r := sectorCurve_norm_on_arc r hr α t ⟨le_of_lt h1, h2⟩
       rw [this]; exact hε_lt_r
     · rw [sectorCurve_norm_seg3' r hr α t ⟨le_of_lt h2, by linarith [ht.2]⟩]
       calc ε = δ * r := hδr_eq.symm
-        _ < (3 - t) * r := by
-          apply mul_lt_mul_of_pos_right _ hr; linarith [ht.2]
+        _ < (3 - t) * r := by apply mul_lt_mul_of_pos_right _ hr; linarith [ht.2]
 
 private theorem zpow_integrableOn_δ1 (r : ℝ) (hr : 0 < r) (α : ℝ)
     (n : ℕ) (δ : ℝ) (hδ_pos : 0 < δ) (hδ_lt_1 : δ < 1) :
@@ -855,8 +849,7 @@ theorem pv_sector_negative_power (r : ℝ) (hr : 0 < r) (α : ℝ)
   have h_tendsto : Tendsto (fun ε =>
       ∫ t in (0 : ℝ)..3,
         if ‖γ t - 0‖ > ε then (γ t) ^ (-(↑n : ℤ)) * deriv γ t else 0)
-      (𝓝[>] 0) (𝓝 0) :=
-    tendsto_const_nhds.congr' (h_ev.mono fun ε h => h.symm)
+      (𝓝[>] 0) (𝓝 0) := tendsto_const_nhds.congr' (h_ev.mono fun ε h => h.symm)
   exact ⟨⟨0, h_tendsto⟩, h_tendsto.limUnder_eq⟩
 
 /-- The generalized winding number of the sector curve around 0

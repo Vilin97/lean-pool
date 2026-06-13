@@ -432,8 +432,7 @@ lemma log_bexp {a x : V} (h : x < ‖a‖) :
   Exponential.log_eq_of_exp (exp_bexp_of_lt h)
 
 lemma len_bexp {a x : V} (h : x < ‖a‖) :
-    ‖bexp a x‖ = x + 1 := by
-  rw [length_of_pos (bexp_pos h), log_bexp h]
+    ‖bexp a x‖ = x + 1 := by rw [length_of_pos (bexp_pos h), log_bexp h]
 
 @[simp 1100] lemma bexp_zero_zero : bexp (0 : V) 0 = 0 := bexp_eq_zero_of_le (by simp)
 
@@ -478,16 +477,13 @@ def fbit (a i : V) : V := (a / bexp a i) % 2
 @[simp] lemma fbit_le_one (a i : V) : fbit a i ≤ 1 := lt_two_iff_le_one.mp (by simp [fbit])
 
 lemma fbit_eq_one_iff {a i : V} :
-    fbit a i = 1 ↔ LenBit (bexp a i) a := by
-  simp [fbit, LenBit.iff_rem]
+    fbit a i = 1 ↔ LenBit (bexp a i) a := by simp [fbit, LenBit.iff_rem]
 
 lemma fbit_eq_zero_iff {a i : V} :
-    fbit a i = 0 ↔ ¬LenBit (bexp a i) a := by
-  simp [fbit, LenBit.iff_rem]
+    fbit a i = 0 ↔ ¬LenBit (bexp a i) a := by simp [fbit, LenBit.iff_rem]
 
 lemma fbit_eq_zero_of_le {a i : V} (hi : ‖a‖ ≤ i) :
-    fbit a i = 0 := by
-  simp [fbit, bexp_eq_zero_of_le hi]
+    fbit a i = 0 := by simp [fbit, bexp_eq_zero_of_le hi]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.fbitDef : Sg0.Semisentence 3 := .mkSigma
@@ -518,8 +514,7 @@ instance : Bounded₂ (fbit : V → V → V) := ⟨‘1’, fun _ ↦ by simp⟩
     simp [fbit, this]
 
 @[simp] lemma fbit_two_mul_add_one_zero_eq_one (a : V) :
-    fbit (2 * a + 1) 0 = 1 := by
-  simp [fbit]
+    fbit (2 * a + 1) 0 = 1 := by simp [fbit]
 
 end «lp_section_1»
 
@@ -539,22 +534,19 @@ lemma lt_two_mul_exponential_log {a : V} (pos : 0 < a) : a < 2 * exp (log a) := 
   rcases H.uniq (exponential_exp (log a))
   assumption
 
-@[simp] lemma length_exponential (a : V) : ‖exp a‖ = a + 1 := by
-  simp [length_of_pos (exp_pos a)]
+@[simp] lemma length_exponential (a : V) : ‖exp a‖ = a + 1 := by simp [length_of_pos (exp_pos a)]
 
 lemma exp_add (a b : V) : exp (a + b) = exp a * exp b :=
   exp_of_exponential (Exponential.add_mul (exponential_exp a) (exponential_exp b))
 
 lemma log_mul_exp_add_of_lt {a b : V} (pos : 0 < a) (i : V) (hb : b < exp i) :
-    log (a * exp i + b) = log a + i := by
-  simp [log_mul_pow2_add_of_lt pos (exp_pow2 i) hb]
+    log (a * exp i + b) = log a + i := by simp [log_mul_pow2_add_of_lt pos (exp_pow2 i) hb]
 
 lemma log_mul_exp {a : V} (pos : 0 < a) (i : V) : log (a * exp i) = log a + i := by
   simp [log_mul_pow2 pos (exp_pow2 i)]
 
 lemma length_mul_exp_add_of_lt {a b : V} (pos : 0 < a) (i : V) (hb : b < exp i) :
-    ‖a * exp i + b‖ = ‖a‖ + i := by
-  simp [length_mul_pow2_add_of_lt pos (exp_pow2 i) hb]
+    ‖a * exp i + b‖ = ‖a‖ + i := by simp [length_mul_pow2_add_of_lt pos (exp_pow2 i) hb]
 
 lemma length_mul_exp {a : V} (pos : 0 < a) (i : V) : ‖a * exp i‖ = ‖a‖ + i := by
   simp [length_mul_pow2 pos (exp_pow2 i)]

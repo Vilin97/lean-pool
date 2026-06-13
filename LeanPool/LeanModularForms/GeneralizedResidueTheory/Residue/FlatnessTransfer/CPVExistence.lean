@@ -158,8 +158,7 @@ private lemma continuousOn_cutoff_integral
   · exact intervalIntegrable_const
   · rw [Set.uIoc_of_le γ.hab.le]
     have h_ae : ∀ᵐ t ∂volume,
-        ¬(t ∈ Icc γ.a γ.b ∧ ‖γ.toFun t - z₀‖ = ε₀) :=
-      compl_mem_ae_iff.mpr h_level_null
+        ¬(t ∈ Icc γ.a γ.b ∧ ‖γ.toFun t - z₀‖ = ε₀) := compl_mem_ae_iff.mpr h_level_null
     filter_upwards [h_ae] with t ht_not_level ht_Ioc
     have ht_Icc := Ioc_subset_Icc_self ht_Ioc
     have h_ne : ‖γ.toFun t - z₀‖ ≠ ε₀ := fun h => ht_not_level ⟨ht_Icc, h⟩
@@ -192,8 +191,7 @@ lemma cpv_exists_inv_sub_of_closed_unique
     if ‖γ.toFun t - z₀‖ > ε then (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t else 0
   have h_exp := tendsto_exp_cutoff_integral_crossing γ hclosed z₀ t₀ ht₀ hcross honly
   obtain ⟨δ, hδ, l, r, hl_lt, hr_gt, hl_ge_a, hr_le_b, hg_anti, hg_mono,
-    hδ_le_l, hδ_le_r, hbnd⟩ :=
-    exists_cutoff_boundary_times_with_mono γ z₀ t₀ ht₀ hcross honly
+    hδ_le_l, hδ_le_r, hbnd⟩ := exists_cutoff_boundary_times_with_mono γ z₀ t₀ ht₀ hcross honly
   set L₀ : ℂ := Complex.exp (-(I * ↑(angleAtCrossing γ t₀ ht₀)))
   have hL₀_ne : L₀ ≠ 0 := Complex.exp_ne_zero _
   have hR_cont : ContinuousOn R (Ioo 0 δ) :=
@@ -260,8 +258,7 @@ lemma cpv_exists_inv_sub_of_closed_unique
               Complex.norm_real, Real.norm_eq_abs, abs_of_pos Real.pi_pos,
               Complex.norm_I, mul_one]
           have h_dist : dist (↑n * (2 * ↑Real.pi * I)) (↑m * (2 * ↑Real.pi * I)) =
-              ‖(↑(n - m) : ℂ)‖ * (2 * Real.pi) := by
-            rw [dist_eq_norm, h_sub, norm_mul, h_norm_2piI]
+              ‖(↑(n - m) : ℂ)‖ * (2 * Real.pi) := by rw [dist_eq_norm, h_sub, norm_mul, h_norm_2piI]
           rw [h_dist, Complex.norm_intCast] at hz_ball
           have h_int_pos : (1 : ℝ) ≤ |(↑(n - m) : ℝ)| := by
             have h1 := Int.one_le_abs (sub_ne_zero.mpr (Ne.symm hmn))

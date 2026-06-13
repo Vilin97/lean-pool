@@ -176,15 +176,10 @@ lemma edge_in_FL {𝕏 : Proof} {x y : 𝕏.X} (x_y : (edge 𝕏.α) x y) :
   case andₗ Δ φ ψ in_Δ =>
     apply @List.mem_map_of_mem _ _ _ _ (fun x ↦ f (r 𝕏.α x)) at x_y
     simp only [this, List.mem_cons, List.not_mem_nil, or_false] at x_y
-    rcases x_y with h|h <;> rw [h]
-    · simp only [SplitSequent.FL, Finset.subset_iff,
-      Finset.mem_union, Finset.mem_singleton, Finset.mem_biUnion]
-      intro χ χ_cases
-      rcases χ_cases with h|_ <;> subst_eqs
-      · exact ⟨χ, fₙ_sub_f h, SplitFormula.FL_refl⟩
-      · exact ⟨Sum.inl (φ & ψ), by simp [f, in_Δ], by simp [SplitFormula.FL, SplitFormula.FL_refl]⟩
-    · simp only [SplitSequent.FL, Finset.subset_iff,
-      Finset.mem_union, Finset.mem_singleton, Finset.mem_biUnion]
+    rcases x_y with h|h <;> rw [h] <;>
+      simp only [SplitSequent.FL, Finset.subset_iff,
+        Finset.mem_union, Finset.mem_singleton, Finset.mem_biUnion]
+    all_goals
       intro χ χ_cases
       rcases χ_cases with h|_ <;> subst_eqs
       · exact ⟨χ, fₙ_sub_f h, SplitFormula.FL_refl⟩
@@ -192,15 +187,10 @@ lemma edge_in_FL {𝕏 : Proof} {x y : 𝕏.X} (x_y : (edge 𝕏.α) x y) :
   case andᵣ Δ φ ψ in_Δ =>
     apply @List.mem_map_of_mem _ _ _ _ (fun x ↦ f (r 𝕏.α x)) at x_y
     simp only [this, List.mem_cons, List.not_mem_nil, or_false] at x_y
-    rcases x_y with h|h <;> rw [h]
-    · simp only [SplitSequent.FL, Finset.subset_iff,
-      Finset.mem_union, Finset.mem_singleton, Finset.mem_biUnion]
-      intro χ χ_cases
-      rcases χ_cases with h|_ <;> subst_eqs
-      · exact ⟨χ, fₙ_sub_f h, SplitFormula.FL_refl⟩
-      · exact ⟨Sum.inr (φ & ψ), by simp [f, in_Δ], by simp [SplitFormula.FL, SplitFormula.FL_refl]⟩
-    · simp only [SplitSequent.FL, Finset.subset_iff,
-      Finset.mem_union, Finset.mem_singleton, Finset.mem_biUnion]
+    rcases x_y with h|h <;> rw [h] <;>
+      simp only [SplitSequent.FL, Finset.subset_iff,
+        Finset.mem_union, Finset.mem_singleton, Finset.mem_biUnion]
+    all_goals
       intro χ χ_cases
       rcases χ_cases with h|_ <;> subst_eqs
       · exact ⟨χ, fₙ_sub_f h, SplitFormula.FL_refl⟩
@@ -377,17 +367,7 @@ lemma lt_if_not_box_edge {𝕏 : Proof} {x y : 𝕏.X} :
   intro ⟨x_y, not_box⟩
   have h := 𝕏.step x
   cases r_def : (r 𝕏.α x) <;> simp_all only
-  case andₗ Δ A B and_in =>
-    have := @List.mem_map_of_mem _ _ _ _ (fun x ↦ f (r 𝕏.α x)) x_y
-    simp only [h, List.mem_cons, List.not_mem_nil, or_false] at this
-    rcases this with c | c
-    all_goals
-    · rw [c]
-      simp only [SplitSequent.length, fₙ, f, fₚ, gt_iff_lt]
-      exact Finset.sum_diff_singleton_lt and_in (by
-        simp [SplitFormula.length, Formula.length]
-        omega)
-  case andᵣ Δ A B and_in =>
+  case andₗ Δ A B and_in | andᵣ Δ A B and_in =>
     have := @List.mem_map_of_mem _ _ _ _ (fun x ↦ f (r 𝕏.α x)) x_y
     simp only [h, List.mem_cons, List.not_mem_nil, or_false] at this
     rcases this with c | c

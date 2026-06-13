@@ -262,9 +262,7 @@ theorem schwartz_tonelli_spacetime
       apply Integrable.mono' (hGg_int.const_mul C) (h_meas_K.aestronglyMeasurable.mul h_meas_G)
       filter_upwards with t₂
       simp only [Pi.mul_apply]
-      rw [Real.norm_eq_abs, abs_mul]
-      rw [abs_of_nonneg (hK_nn t₁ t₂)]
-      rw [abs_of_nonneg]
+      rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (hK_nn t₁ t₂), abs_of_nonneg]
       · apply mul_le_mul_of_nonneg_right (hC t₁ t₂)
         apply integral_nonneg
         intro
@@ -302,15 +300,13 @@ theorem schwartz_tonelli_spacetime
         apply MeasureTheory.integral_congr_ae
         filter_upwards with v₁
         rw [← MeasureTheory.integral_const_mul]
-    _ = K t₁ t₂ * ∫ v₁, ∫ v₂, a v₁ * b v₂ := by
-        rw [← MeasureTheory.integral_const_mul]
+    _ = K t₁ t₂ * ∫ v₁, ∫ v₂, a v₁ * b v₂ := by rw [← MeasureTheory.integral_const_mul]
     _ = K t₁ t₂ * ∫ v₁, a v₁ * ∫ v₂, b v₂ := by
         congr 1
         apply MeasureTheory.integral_congr_ae
         filter_upwards with v₁
         rw [← MeasureTheory.integral_const_mul]
-    _ = K t₁ t₂ * ∫ v₁, a v₁ * G_g t₂ := by
-        simp only [b, G_g]
+    _ = K t₁ t₂ * ∫ v₁, a v₁ * G_g t₂ := by simp only [b, G_g]
     _ = K t₁ t₂ * (G_g t₂ * ∫ v₁, a v₁) := by
         congr 1
         have h_comm : (∫ v₁, a v₁ * G_g t₂) = G_g t₂ * ∫ v₁, a v₁ := by
@@ -319,7 +315,5 @@ theorem schwartz_tonelli_spacetime
           filter_upwards with v₁
           ring
         exact h_comm
-    _ = K t₁ t₂ * (G_g t₂ * G_f t₁) := by
-        simp only [a, G_f]
-    _ = K t₁ t₂ * G_f t₁ * G_g t₂ := by
-        ring
+    _ = K t₁ t₂ * (G_g t₂ * G_f t₁) := by simp only [a, G_f]
+    _ = K t₁ t₂ * G_f t₁ * G_g t₂ := by ring

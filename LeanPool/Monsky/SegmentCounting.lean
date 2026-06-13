@@ -625,8 +625,7 @@ lemma isPurple_twoModFunction : twoModFunction (isPurple v) := by
     nth_rewrite 2[hhelpx]; exact corner_in_closedHull
   have hz : z ∈ closedHull (toSegment x z) := by
     nth_rewrite 2[hhelpz]; exact corner_in_closedHull
-  have hy : y ∈ closedHull (toSegment x z) := by
-    exact (open_sub_closed (toSegment x z) hColin.2)
+  have hy : y ∈ closedHull (toSegment x z) := (open_sub_closed (toSegment x z) hColin.2)
   --This finishes the aux lemmas
   rcases h with ⟨ c, hnotc⟩
   have hx1 := hnotc x hx; have hy1 := hnotc y hy; have hz1 := hnotc z hz
@@ -737,7 +736,7 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : isTriangulation �
   rcases e with ⟨f, g⟩
   rcases f with ⟨m, n⟩
   simp only [product_eq_sprod, mem_product] at m
-  have Lnonempty : ∃ (x : ℝ²), x ∈ openHull L := by
+  have Lnonempty : ∃ (x : ℝ²), x ∈ openHull L:= by
     apply open_seg_nonempty
   rcases Lnonempty with ⟨x, hx⟩
   have convex : closedHull L ⊆ closedHull unitSquare := by
@@ -757,8 +756,7 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : isTriangulation �
       have hL1 : L 1 ∈ triangulationPoints Δ := m.2
       exact triangulationPoints_subset_unitSquare hCover hL1
   have xinTriangle : ∃ P ∈ Δ, x ∈ closedHull P := by
-    have xclosed : x ∈ closedHull unitSquare := by
-      exact convex (open_sub_closed L hx)
+    have xclosed : x ∈ closedHull unitSquare := convex (open_sub_closed L hx)
     rw [hCover] at xclosed
     simp only [mem_coe, Set.mem_iUnion, exists_prop] at xclosed
     exact xclosed
@@ -772,8 +770,7 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : isTriangulation �
     specialize b P
     rcases hP with ⟨P', hP''⟩
     apply b at P'
-    have xinclosed : x ∈ closedHull L := by
-      exact open_sub_closed L hx
+    have xinclosed : x ∈ closedHull L := open_sub_closed L hx
     have xnotinopen : x ∉ openHull P := by
       by_contra hcontra
       tauto_set
@@ -830,10 +827,8 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : isTriangulation �
   rcases xinTside with ⟨i, hi⟩
   have dis : openHull P ∩ closedHull L = ∅ := by
     by_contra hcontra
-    have nonemp' : Set.Nonempty (openHull P ∩ closedHull L) := by
-      exact Set.nonempty_iff_ne_empty.mpr hcontra
-    have nonempt : ∃ z,  z ∈ openHull P ∧ z ∈ closedHull L := by
-      exact nonemp'
+    have nonemp' : Set.Nonempty (openHull P ∩ closedHull L) := Set.nonempty_iff_ne_empty.mpr hcontra
+    have nonempt : ∃ z,  z ∈ openHull P ∧ z ∈ closedHull L := nonemp'
     rcases nonempt with ⟨z, hz⟩
     unfold triangulationAvoidingSet  at b
     simp only [Set.disjoint_iUnion_right] at b
@@ -870,8 +865,7 @@ lemma segment_in_interior_aux {Δ : Finset Triangle} (hCover : isTriangulation �
         rw [h3]
     apply q at hP'
     contradiction
-  have fin : closedHull L ⊆ closedHull (Tside P i) := by
-    exact seg_sub_side (non_degen P hP.1) hx hi dis this
+  have fin : closedHull L ⊆ closedHull (Tside P i) := seg_sub_side (non_degen P hP.1) hx hi dis this
   rcases hP with ⟨T, hT, hT'⟩
   use P
   constructor
@@ -885,8 +879,7 @@ lemma segment_in_interior_or_boundary {Δ : Finset Triangle} (hCover : isTriangu
   openHull L ⊆ boundary unitSquare ∨ openHull L ⊆ openHull unitSquare := by
   have hclosed : closedHull unitSquare = boundary unitSquare ∪ openHull unitSquare := by
     rw [← boundary_union_open_closed]
-  have hT : ∃ T ∈ Δ, closedHull L ⊆ closedHull T := by
-    apply segment_in_interior_aux hCover non_degen hL
+  have hT : ∃ T ∈ Δ, closedHull L ⊆ closedHull T := segment_in_interior_aux hCover non_degen hL
   rcases hT with ⟨t, ht⟩
   have hLunitS : closedHull L ⊆ closedHull unitSquare := by
     apply isCover_sub at hCover
@@ -896,8 +889,7 @@ lemma segment_in_interior_or_boundary {Δ : Finset Triangle} (hCover : isTriangu
   by_cases h : openHull L ⊆ boundary unitSquare
   · left
     exact h
-  have hLclosed : openHull L ⊆ closedHull unitSquare := by
-    exact subset_trans (open_sub_closed L) hLunitS
+  have hLclosed : openHull L ⊆ closedHull unitSquare := subset_trans (open_sub_closed L) hLunitS
   right
   · have this : ∀ x, x ∈ openHull L → x ∉ boundary unitSquare  := by
       by_contra hcontra
@@ -909,7 +901,7 @@ lemma segment_in_interior_or_boundary {Δ : Finset Triangle} (hCover : isTriangu
         obtain ⟨x, hx⟩ := hcontra'
         apply line_in_boundary hLunitS hx
       have that' : openHull L ⊆ boundary unitSquare := by
-        have hopen : openHull L ⊆ closedHull L := by
+        have hopen : openHull L ⊆ closedHull L:= by
           apply open_sub_closed
         apply _root_.trans hopen that
       contradiction
@@ -1430,8 +1422,7 @@ lemma triangleBoundary_decomposition {Δ : Finset Triangle} {T : Triangle} (hdet
           apply open_pol_nonempty
           linarith
         rcases xopoenhullS with ⟨x, hx⟩
-        have xclosedhullS : x ∈ closedHull S := by
-          exact open_sub_closed S hx
+        have xclosedhullS : x ∈ closedHull S := open_sub_closed S hx
         have xinboundaryT : x ∈ boundary T := by
           rw [boundary_is_union_sides hdet]
           apply hα at xclosedhullS
@@ -1477,8 +1468,7 @@ lemma triangleBoundary_decomposition {Δ : Finset Triangle} {T : Triangle} (hdet
         · by_contra hcontra
           have nonemp' : Set.Nonempty (openHull T ∩ closedHull S) := by
             exact Set.nonempty_iff_ne_empty.mpr hcontra
-          have nonempt : ∃ z,  z ∈ openHull T ∧ z ∈ closedHull S := by
-            exact nonemp'
+          have nonempt : ∃ z,  z ∈ openHull T ∧ z ∈ closedHull S := nonemp'
           rcases nonempt with ⟨z, hz⟩
           simp only [Set.disjoint_iUnion_right] at hη
           specialize hη T
@@ -1578,8 +1568,7 @@ lemma different_points (T : Triangle) (h_det : det T ≠ 0) (i j : Fin 3) (hneq 
         simp only [Fin.isValue, Fin.reduceEq, not_false_eq_true, true_and]
         use hj
   rcases hk with ⟨k, hik, hjk⟩
-  have hT : ∃ b, σ b = (fun | 0 =>  i | 1 =>  j | 2 => k) := by
-    exact fun_in_bijections hneq hik hjk
+  have hT : ∃ b, σ b = (fun | 0 =>  i | 1 =>  j | 2 => k) := fun_in_bijections hneq hik hjk
   rcases hT with ⟨b, hb⟩
   have det0 : det T = 0 := by
     rw [det_perm b]
@@ -1841,9 +1830,7 @@ lemma boundary_filter_intersection (Δ : Finset Triangle) (T : Δ) :
       exact triangulation_boundary_intersection Δ
     rw [← int]
     simp only [mem_inter]
-    constructor
-    · exact h1
-    · exact h2
+    exact ⟨h1, h2⟩
   tauto
 
 

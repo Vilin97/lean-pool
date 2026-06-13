@@ -68,8 +68,7 @@ lemma circleParam_deriv (z₀ : ℂ) (r : ℝ) (a b : ℝ)
     2 * Real.pi * I * (((t : ℂ) - a) / (b - a))
   have hf_deriv : HasDerivAt f (2 * Real.pi * I / (b - a)) t := by
     have h_eq : f = fun t : ℝ =>
-        (2 * Real.pi * I / (b - a)) * ((t : ℂ) - a) := by
-      ext t; simp only [f]; field_simp
+        (2 * Real.pi * I / (b - a)) * ((t : ℂ) - a) := by ext t; simp only [f]; field_simp
     rw [h_eq]
     have h1 : HasDerivAt (fun t : ℝ => (t : ℂ) - (a : ℂ)) 1 t :=
       Complex.ofRealCLM.hasDerivAt.sub_const (a : ℂ)
@@ -80,13 +79,11 @@ lemma circleParam_deriv (z₀ : ℂ) (r : ℝ) (a b : ℝ)
     rw [smul_eq_mul, mul_comm]
   have hmul : HasDerivAt (fun t => (r : ℂ) * exp (f t))
       ((r : ℂ) * (exp (f t) *
-        (2 * Real.pi * I / (b - a)))) t :=
-    hexp_comp.const_mul (r : ℂ)
+        (2 * Real.pi * I / (b - a)))) t := hexp_comp.const_mul (r : ℂ)
   have hadd : HasDerivAt
       (fun t => z₀ + (r : ℂ) * exp (f t))
       (0 + (r : ℂ) * (exp (f t) *
-        (2 * Real.pi * I / (b - a)))) t :=
-    (hasDerivAt_const t z₀).add hmul
+        (2 * Real.pi * I / (b - a)))) t := (hasDerivAt_const t z₀).add hmul
   simp only [zero_add] at hadd
   rw [hadd.deriv]; ring
 
@@ -224,22 +221,18 @@ lemma circleParamCW_hasDerivAt (z₀ : ℂ) (r : ℝ)
   unfold circleParamCW
   have hdiff :
       DifferentiableAt ℝ (circleParam z₀ r a b)
-        (a + b - t) :=
-    (circleParam_differentiable z₀ r a b).differentiableAt
+        (a + b - t) := (circleParam_differentiable z₀ r a b).differentiableAt
   have hg : HasDerivAt
       (fun t : ℝ => (a + b - t : ℝ)) (-1 : ℝ) t := by
-    have h1 : HasDerivAt (fun _ : ℝ => (a + b : ℝ)) 0 t :=
-      hasDerivAt_const t (a + b)
-    have h2 : HasDerivAt (fun t : ℝ => t) 1 t :=
-      hasDerivAt_id t
+    have h1 : HasDerivAt (fun _ : ℝ => (a + b : ℝ)) 0 t := hasDerivAt_const t (a + b)
+    have h2 : HasDerivAt (fun t : ℝ => t) 1 t := hasDerivAt_id t
     convert h1.sub h2 using 1; ring
   have hf : HasDerivAt (circleParam z₀ r a b)
       (r * (2 * Real.pi * I / (b - a)) *
         exp (2 * Real.pi * I *
           ((↑(a + b - t) - a) / (b - a))))
       (a + b - t) := by
-    have hd :=
-      circleParam_deriv z₀ r a b hab (a + b - t)
+    have hd := circleParam_deriv z₀ r a b hab (a + b - t)
     rw [← hd]
     exact hdiff.hasDerivAt
   have hchain := HasDerivAt.scomp t hf hg
@@ -251,8 +244,7 @@ lemma circleParamCW_deriv (z₀ : ℂ) (r : ℝ) (a b : ℝ)
     deriv (circleParamCW z₀ r a b) t =
     -(r * (2 * Real.pi * I / (b - a)) *
       exp (2 * Real.pi * I *
-        (((a + b - t : ℝ) - a) / (b - a)))) :=
-  (circleParamCW_hasDerivAt z₀ r a b hab t).deriv
+        (((a + b - t : ℝ) - a) / (b - a)))) := (circleParamCW_hasDerivAt z₀ r a b hab t).deriv
 
 lemma circleParamCW_integrand_neg (z₀ : ℂ) (r : ℝ)
     (hr : 0 < r) (a b : ℝ) (hab : a < b) (t : ℝ) :
@@ -262,12 +254,10 @@ lemma circleParamCW_integrand_neg (z₀ : ℂ) (r : ℝ)
   rw [circleParamCW_deriv z₀ r a b hab t]
   simp only [circleParamCW, circleParam,
     add_sub_cancel_left]
-  have hr_ne : (r : ℂ) ≠ 0 :=
-    Complex.ofReal_ne_zero.mpr (ne_of_gt hr)
+  have hr_ne : (r : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr (ne_of_gt hr)
   have hexp_ne :
       exp (2 * Real.pi * I *
-        (((a + b - t : ℝ) - a) / (b - a))) ≠ 0 :=
-    exp_ne_zero _
+        (((a + b - t : ℝ) - a) / (b - a))) ≠ 0 := exp_ne_zero _
   field_simp [hr_ne, hexp_ne]
 
 /-- Winding number of a CW circle around its center is -1. -/
@@ -376,8 +366,7 @@ theorem winding_of_S1_curve_eq_degree (z₀ : ℂ) (a b : ℝ) (_hab : a < b)
     field_simp [exp_ne_zero]
   have h_integral : ∫ t in a..b, (γ t - z₀)⁻¹ * deriv γ t = 2 * Real.pi * I * n := by
     have h1 : ∫ t in a..b, (γ t - z₀)⁻¹ * deriv γ t =
-        ∫ t in a..b, I * (Complex.ofReal (deriv θ t)) := by
-      congr 1; ext t; exact h_integrand t
+        ∫ t in a..b, I * (Complex.ofReal (deriv θ t)) := by congr 1; ext t; exact h_integrand t
     have h_pull : ∫ t in a..b, I * Complex.ofReal (deriv θ t) =
         I * ∫ t in a..b, Complex.ofReal (deriv θ t) := by
       simp_rw [← smul_eq_mul]; exact intervalIntegral.integral_smul I _
@@ -402,8 +391,7 @@ theorem winding_of_S1_curve_eq_degree (z₀ : ℂ) (a b : ℝ) (_hab : a < b)
     intro ε _ hε_lt
     have h_cond : ∀ t, ‖γ t - z₀‖ > ε := fun t => by rw [h_S1]; exact hε_lt
     have : (fun t => if ‖γ t - z₀‖ > ε then (γ t - z₀)⁻¹ * deriv γ t else 0) =
-        fun t => (γ t - z₀)⁻¹ * deriv γ t := by
-      ext t; simp only [h_cond t, ↓reduceIte]
+        fun t => (γ t - z₀)⁻¹ * deriv γ t := by ext t; simp only [h_cond t, ↓reduceIte]
     rw [this, h_integral]
   have hlim : Tendsto (fun ε =>
       ∫ t in a..b, if ‖γ t - z₀‖ > ε then (γ t - z₀)⁻¹ * deriv γ t else 0)

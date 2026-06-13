@@ -112,8 +112,7 @@ private theorem productBasisPhaseLawCircle
       rw [fourier_mk_eq_exp]
       congr 1
       ring_nf
-    rw [hrot, productBasisPhaseLaw]
-    rw [fourier_mk_eq_exp]
+    rw [hrot, productBasisPhaseLaw, fourier_mk_eq_exp]
     apply congrArg₂ (· * ·)
     · congr 1
       push_cast
@@ -136,8 +135,7 @@ private theorem totalDegreePiecePhaseLawCircle
     rw [fourier_mk_eq_exp]
     congr 1
     ring
-  rw [hrot, totalDegreePiecePhaseLaw]
-  rw [fourier_mk_eq_exp]
+  rw [hrot, totalDegreePiecePhaseLaw, fourier_mk_eq_exp]
   apply congrArg₂ (· * ·)
   · congr 1
     push_cast
@@ -369,8 +367,7 @@ private lemma localOrbit_defect_sq
                     (fourier (-(totalDegree κ : ℤ)) t : ℂ) = 1 := by
               rw [← fourier_add]
               simp
-            rw [localOrbit]
-            rw [← mul_assoc, hcancel, one_mul]
+            rw [localOrbit, ← mul_assoc, hcancel, one_mul]
   exact congrArg (fun x : ℝ => x ^ 2) hmain
 
 /-- The orbitwise mass integrand is continuous and hence circle-integrable. -/
@@ -560,8 +557,7 @@ private lemma annulusMass_localOrbit_lintegral
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gaussianMeasure d := by
-          rw [hmass0]
-          rw [hmass_indicator]
+          rw [hmass0, hmass_indicator]
           exact havg.symm
     _ = ∫⁻ z : CSpace d,
           Set.indicator (productAnnulus j)
@@ -714,8 +710,7 @@ private lemma defectAnnulusMass_localOrbit_lintegral
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gaussianMeasure d := by
-          rw [hdef0]
-          rw [hdef_indicator]
+          rw [hdef0, hdef_indicator]
           exact havg.symm
     _ = ∫⁻ z : CSpace d,
           Set.indicator (productAnnulus j)

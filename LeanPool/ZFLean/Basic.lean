@@ -23,11 +23,7 @@ theorem nonempty_exists_iff {n : ZFSet} : n ≠ ∅ ↔ ∃ m, m ∈ n := by
 
 theorem subset_of_empty {x : ZFSet} (h : x ⊆ ∅) : x = ∅ := by
   ext1 z
-  constructor
-  · intro hz
-    exact h hz
-  · intro hz
-    nomatch notMem_empty z hz
+  exact ⟨fun hz => h hz, fun hz => absurd hz (notMem_empty z)⟩
 
 theorem sep_subset_self {P : ZFSet → Prop} {a : ZFSet} : a.sep P ⊆ a := by
   intros x hx
@@ -47,15 +43,8 @@ theorem insert_def {x y : ZFSet} : insert x y = {x} ∪ y := by
 
 theorem sInter_pair {a b : ZFSet} : ⋂₀ {a, b} = a ∩ b := by
   ext1 x
-  constructor
-  · intro h
-    rw [mem_sInter (by simp only [nonempty_def, mem_insert_iff, exists_or_eq_left])] at h
-    simp only [mem_insert_iff, mem_singleton, forall_eq_or_imp, forall_eq] at h
-    rwa [← mem_inter] at h
-  · intro h
-    rw [mem_sInter (by simp only [nonempty_def, mem_insert_iff, exists_or_eq_left])]
-    simp only [mem_insert_iff, mem_singleton, forall_eq_or_imp, forall_eq]
-    rwa [← mem_inter]
+  rw [mem_sInter (by simp only [nonempty_def, mem_insert_iff, exists_or_eq_left]), mem_inter]
+  simp only [mem_insert_iff, mem_singleton, forall_eq_or_imp, forall_eq]
 
 @[simp]
 theorem sep_empty_iff {A : ZFSet} {P : ZFSet → Prop} : A.sep P = ∅ ↔ (A = ∅ ∨ ∀ x ∈ A, ¬ P x) where
@@ -74,12 +63,8 @@ theorem sep_empty_iff {A : ZFSet} {P : ZFSet → Prop} : A.sep P = ∅ ↔ (A = 
     rcases h with rfl | h
     · exact sep_empty P
     · ext1 z
-      constructor
-      · intro hz
-        rw [mem_sep] at hz
-        nomatch h _ hz.left, hz.right
-      · intro hz
-        nomatch notMem_empty z, hz
+      rw [mem_sep]
+      exact ⟨fun hz => absurd hz.right (h _ hz.left), fun hz => absurd hz (notMem_empty z)⟩
 
 theorem insert_prod {A B x : ZFSet} : (insert x A).prod B = A.prod B ∪ ({x} : ZFSet).prod B := by
   ext1 z
@@ -153,9 +138,9 @@ theorem empty_union {A : ZFSet} : ∅ ∪ A = A := by
 theorem union_mono {x y z : ZFSet} : x ⊆ z → y ⊆ z → x ∪ y ⊆ z := by
   intro hx hy a ha
   rw [ZFSet.mem_union] at ha
-  rcases ha with _ | _
-  · exact hx ‹_›
-  · exact hy ‹_›
+  rcases ha with h | h
+  · exact hx h
+  · exact hy h
 
 theorem inter_mono {x y z : ZFSet} : x ⊆ z → y ⊆ z → x ∩ y ⊆ z := by
   intro hx _ a ha
@@ -210,9 +195,7 @@ theorem insert_mem {x y : ZFSet} (h : x ∈ y) : insert x y = y := by
 
 theorem eq_of_subset_subset {A B : ZFSet} (hAB : A ⊆ B) (hBA : B ⊆ A) : A = B := by
   ext1 x
-  constructor <;> intro h
-  · exact hAB (hBA (hAB h))
-  · exact hBA (hAB (hBA h))
+  exact ⟨fun h => hAB h, fun h => hBA h⟩
 
 theorem powerset_inj {A B : ZFSet} (h : A.powerset = B.powerset) : A = B := by
   have A_sub := @ZFSet.mem_powerset_self A
@@ -230,27 +213,17 @@ theorem prod_inj {A B C D : ZFSet} (h : A.prod B = C.prod D) (hA : A ≠ ∅) (h
     exact ⟨ha, hb⟩
   rw [ZFSet.ext_iff, ZFSet.ext_iff]
   suffices ∀ x y, (x ∈ A ↔ x ∈ C) ∧ (y ∈ B ↔ y ∈ D) by
-    and_intros
-    · intro z
-      specialize this z b
-      exact this.1
-    · intro z
-      specialize this a z
-      exact this.2
+    exact ⟨fun z => (this z b).1, fun z => (this a z).2⟩
   rw [ZFSet.ext_iff] at h
   simp only [mem_prod] at h
   intro x y
-  and_intros
+  refine ⟨?_, ?_⟩
   · specialize h (x.pair b)
     simp only [pair_inj, exists_eq_right_right'] at h
-    constructor <;> intro hx
-    · exact (h.mp ⟨hx, hb⟩).1
-    · exact (h.mpr ⟨hx, bD⟩).1
+    exact ⟨fun hx => (h.mp ⟨hx, hb⟩).1, fun hx => (h.mpr ⟨hx, bD⟩).1⟩
   · specialize h (a.pair y)
     simp only [pair_inj, exists_eq_right_right'] at h
-    constructor <;> intro hy
-    · exact (h.mp ⟨ha, hy⟩).2
-    · exact (h.mpr ⟨aC, hy⟩).2
+    exact ⟨fun hy => (h.mp ⟨ha, hy⟩).2, fun hy => (h.mpr ⟨aC, hy⟩).2⟩
 
 end ZFSet
 

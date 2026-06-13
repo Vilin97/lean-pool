@@ -39,13 +39,11 @@ postfix:max "⁻¹" => inv
 
 theorem mem_inv {x y R A B : ZFSet} (hR : R ⊆ A.prod B) :
     y.pair x ∈ R⁻¹ ↔ x.pair y ∈ R where
-  mp := by
-    intro h
+  mp h := by
     dsimp [inv] at h
     rw [mem_sep, pair_mem_prod, π₁_pair, π₂_pair] at h
     exact h.2
-  mpr := by
-    intro h
+  mpr h := by
     rw [inv, mem_sep, pair_mem_prod, π₁_pair, π₂_pair]
     dsimp
     and_intros
@@ -63,12 +61,10 @@ theorem subset_prod_inv {R A B : ZFSet} (hR : R ⊆ A.prod B) : R⁻¹ ⊆ B.pro
 
 theorem inv_involutive {R A B : ZFSet} (hR : R ⊆ A.prod B) : (R⁻¹)⁻¹ = R := by
   ext1 z
-  constructor
-  · intro h
-    obtain ⟨a, ha, b, hb, rfl⟩ := (subset_prod_inv <| subset_prod_inv hR) h |> mem_prod.mp
+  refine ⟨fun h => ?_, fun h => ?_⟩
+  · obtain ⟨a, ha, b, hb, rfl⟩ := (subset_prod_inv <| subset_prod_inv hR) h |> mem_prod.mp
     rwa [mem_inv, mem_inv] at h
-  · intro h
-    obtain ⟨a, ha, b, hb, rfl⟩ := hR h |> mem_prod.mp
+  · obtain ⟨a, ha, b, hb, rfl⟩ := hR h |> mem_prod.mp
     rwa [mem_inv, mem_inv]
 
 /--
@@ -554,8 +550,7 @@ infixl:90 " ∘ᶻ " => fcomp
 @[simp] theorem pair_mem_composition (g f : ZFSet) {A B C x y : ZFSet}
   (hg : IsFunc B C g) (hf : IsFunc A B f) :
     x.pair y ∈ (g ∘ᶻ f) ↔ ∃ w ∈ B, x.pair w ∈ f ∧ w.pair y ∈ g where
-  mp := by
-    intro hxy
+  mp hxy := by
     simp only [mem_composition, pair_inj, ↓existsAndEq, and_true, exists_and_left,
       exists_eq_left'] at hxy
     obtain ⟨a, ha, b, hb, fxb, gby⟩ := hxy
@@ -686,8 +681,7 @@ theorem fapply_Id {A x : ZFSet} (hx : x ∈ A) :
   rw [←mem_id]
 
 theorem fapply_mem_range {f A B : ZFSet} (hf : f.IsPFunc A B) {x : ZFSet} (hx : x ∈ f.Dom) :
-    (@ᶻf ⟨x, hx⟩).val ∈ B := by
-  apply Subtype.property
+    (@ᶻf ⟨x, hx⟩).val ∈ B := Subtype.property _
 
 theorem _root_.ZFSet.fapply.def {f A B : ZFSet} (hf : f.IsPFunc A B) {x : ZFSet} (hx : x ∈ f.Dom) :
   x.pair (@ᶻf ⟨x, hx⟩) ∈ f := by
@@ -878,8 +872,7 @@ theorem lambda_spec {dom ran : ZFSet} {exp : ZFSet → ZFSet} {x : ZFSet} {y : Z
 theorem mem_lambda {dom ran : ZFSet} {exp : ZFSet → ZFSet} {z : ZFSet} :
     (z ∈ λᶻ : dom → ran | x ↦ exp x) ↔
     ∃ x y : ZFSet, z = x.pair y ∧ x ∈ dom ∧ y ∈ ran ∧ y = exp x where
-  mp := by
-    intro hz
+  mp hz := by
     rw [lambda, mem_sep] at hz
     obtain ⟨hz, eq⟩ := hz
     rw [mem_prod] at hz
@@ -896,8 +889,7 @@ theorem mem_lambda {dom ran : ZFSet} {exp : ZFSet → ZFSet} {z : ZFSet} :
 
 theorem lambda_ext_iff {d r : ZFSet} {f₁ f₂ : ZFSet → ZFSet} (hf₁ : ∀ {x}, x ∈ d → f₁ x ∈ r) :
     (λᶻ : d → r | x ↦ f₁ x) = (λᶻ : d → r | x ↦ f₂ x) ↔ ∀ z ∈ d, f₁ z = f₂ z where
-  mp := by
-    intro h z hz
+  mp h z hz := by
     rw [ZFSet.ext_iff] at h
     specialize h (z.pair (f₁ z))
     rw [lambda_spec, lambda_spec, eq_self, and_true] at h
@@ -988,8 +980,7 @@ where
   mp := by
     rintro rfl
     exact fun _ _ ↦ rfl
-  mpr := by
-    intro h
+  mpr h := by
     rw [
       lambda_eta hf,
       lambda_eta hg,
@@ -1179,8 +1170,7 @@ theorem inv_fcomp_iff {A B C : ZFSet} {f g : ZFSet} {hf : IsFunc A B f}
 theorem fcomp_bij_fcomp_inv_right {A B C : ZFSet} {f g h : ZFSet} {hf : IsFunc A B f}
   (hbij : f.IsBijective hf) (hg : IsFunc B C g) (hh : IsFunc A C h) :
     (g ∘ᶻ f) = h ↔ g = (h ∘ᶻ f⁻¹) where
-  mp := by
-    intro eq
+  mp eq := by
     ext1 z
     constructor <;> intro hz
     · obtain ⟨x, hx, y, hy, rfl⟩ := hg.1 hz |> mem_prod.mp
@@ -1199,8 +1189,7 @@ theorem fcomp_bij_fcomp_inv_right {A B C : ZFSet} {f g h : ZFSet} {hf : IsFunc A
       rw [mem_inv] at fwx
       obtain rfl := hf.2 w hw |>.unique fwx fwx'
       exact gx'y
-  mpr := by
-    intro eq
+  mpr eq := by
     ext1 z
     constructor <;> intro hz
     · rw [mem_composition] at hz
@@ -1221,8 +1210,7 @@ theorem fcomp_bij_fcomp_inv_right {A B C : ZFSet} {f g h : ZFSet} {hf : IsFunc A
 theorem fcomp_bij_fcomp_inv_left {A B C : ZFSet} {f g h : ZFSet} {hf : IsFunc B C f}
   (hbij : f.IsBijective hf) (hg : IsFunc A B g) (hh : IsFunc A C h) :
     (f ∘ᶻ g) = h ↔ g = (f⁻¹ ∘ᶻ h) where
-  mp := by
-    intro eq
+  mp eq := by
     ext1 z
     constructor <;> intro hz
     · obtain ⟨x, hx, y, hy, rfl⟩ := hg.1 hz |> mem_prod.mp
@@ -1242,8 +1230,7 @@ theorem fcomp_bij_fcomp_inv_left {A B C : ZFSet} {f g h : ZFSet} {hf : IsFunc B 
       obtain ⟨y', hy', gxy', fy'w⟩ := gwx
       obtain rfl := hbij.1 _ _ _ hy hy' hw fyw fy'w
       exact gxy'
-  mpr := by
-    intro eq
+  mpr eq := by
     ext1 z
     constructor <;> intro hz
     · rw [mem_composition] at hz
@@ -1304,8 +1291,7 @@ notation:60 R:max"[" X "]" => Image R X
 
 theorem mem_Image {R A B X y : ZFSet} (hR : R ⊆ A.prod B) :
     y ∈ R[X] ↔ y ∈ B ∧ ∃ x ∈ X, x.pair y ∈ R where
-  mp := by
-    intro hy
+  mp hy := by
     rw [Image, mem_sep] at hy
     exact ⟨hy.1, hy.2⟩
   mpr := by
@@ -2501,8 +2487,7 @@ theorem mem_fprod {A B C D f g x : ZFSet} {hf : A.IsFunc C f} {hg : B.IsFunc D g
     let fa : ZFSet := @ᶻf ⟨a, by rwa [is_func_dom_eq hf]⟩
     let gb : ZFSet := @ᶻg ⟨b, by rwa [is_func_dom_eq hg]⟩
     x = (a.pair b).pair (fa.pair gb) where
-  mp := by
-    intro hx
+  mp hx := by
     rw [fprod, mem_lambda] at hx
     obtain ⟨ab, cd, rfl, hab, hcd, rfl⟩ := hx
     rw [dite_cond_eq_true (eq_true hab)] at hcd

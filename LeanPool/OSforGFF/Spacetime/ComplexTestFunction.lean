@@ -381,8 +381,7 @@ noncomputable def conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace �
     - conj(f)_re = f_re and conj(f)_im = -f_im
 -/
 lemma distributionPairingℂ_real_conj (ω : FieldConfiguration) (f : TestFunctionℂ) :
-    starRingEnd ℂ (distributionPairingℂReal ω f) = distributionPairingℂReal ω (conjSchwartz f) :=
-      by
+    starRingEnd ℂ (distributionPairingℂReal ω f) = distributionPairingℂReal ω (conjSchwartz f) := by
   -- Expand distributionPairingℂReal in terms of real and imaginary parts
   simp only [distributionPairingℂReal]
   -- For the conjugate side, we need to show conj(f)_re = f_re and conj(f)_im = -f_im

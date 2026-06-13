@@ -198,8 +198,7 @@ lemma open_unitSquare_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ openHull unit
       · rw[hn]; simp[hx i]
       --for n≥ 1, the proof is as follows
       have hn4 : (n : ℝ ) ≥ 1 :=  Nat.one_le_cast.mpr ( Nat.one_le_iff_ne_zero.mpr hn)
-      have h7: (1/(n: ℝ )) ≤  1 := by
-        exact (div_le_one₀ (lt_of_le_of_lt' hn4 (by norm_num))).mpr hn4
+      have h7: (1/(n: ℝ )) ≤  1 := (div_le_one₀ (lt_of_le_of_lt' hn4 (by norm_num))).mpr hn4
       constructor
       · apply neg_lt_iff_pos_add.mp
         have h6: -((↑n)⁻¹ * ((|y 0| ⊔ |y 1|)⁻¹ * 2⁻¹ *
@@ -710,8 +709,7 @@ lemma line_in_boundary {x : ℝ²} {L : Segment} (hL : closedHull L ⊆ closedHu
   rw [square_boundary_is_union_sides] at hboundary
   simp only [Set.mem_inter_iff, Set.mem_iUnion] at hboundary
   rcases hboundary with ⟨hx, ⟨i, h1⟩⟩
-  have : closedHull L ⊆ closedHull (squareBoundaryBig i) := by
-    apply squareBoundaryBig_inter_seg hx h1 hL
+  have : closedHull L ⊆ closedHull (squareBoundaryBig i) := squareBoundaryBig_inter_seg hx h1 hL
   exact subset_trans this (square_boundary_in_boundary i)
 
 

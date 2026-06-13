@@ -190,8 +190,7 @@ private lemma pd_double_integral_re_nonneg (ψ : V → ℂ) (hpd : IsPositiveDef
           _ ≤ ∫ _, (ψ 0).re ∂μ :=
               integral_mono_of_nonneg (ae_of_all _ (fun _ => norm_nonneg _))
                 (integrable_const _) (ae_of_all _ (fun _ => hbound _))
-          _ = (ψ 0).re * (μ Set.univ).toReal := by
-              rw [integral_const, smul_eq_mul, mul_comm]; rfl)
+          _ = (ψ 0).re * (μ Set.univ).toReal := by rw [integral_const, smul_eq_mul, mul_comm]; rfl)
     exact tendsto_integral_of_dominated_convergence
       (fun _ => (ψ 0).re * (μ Set.univ).toReal)
       hmeas2 (integrable_const _) hbd2 (ae_of_all _ h_inner_conv)

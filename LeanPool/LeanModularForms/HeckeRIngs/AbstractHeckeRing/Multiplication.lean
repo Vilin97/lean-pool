@@ -217,18 +217,9 @@ private lemma mulMap_T_one_eq (g₁ : P.Δ)
 
 /-- Left multiplication by a singleton set is cancellative. -/
 lemma set_singleton_mul_left_cancel (a : G) {S T : Set G}
-    (h : ({a} : Set G) * S = ({a} : Set G) * T) : S = T := by
-  ext x; constructor
-  · intro hx
-    have hax : a * x ∈ ({a} : Set G) * T := by
-      rw [← h]; exact Set.mul_mem_mul (Set.mem_singleton a) hx
-    obtain ⟨b, hb, y, hy, heq⟩ := hax
-    rw [Set.mem_singleton_iff.mp hb] at heq; exact mul_left_cancel heq ▸ hy
-  · intro hx
-    have hax : a * x ∈ ({a} : Set G) * S := by
-      rw [h]; exact Set.mul_mem_mul (Set.mem_singleton a) hx
-    obtain ⟨b, hb, y, hy, heq⟩ := hax
-    rw [Set.mem_singleton_iff.mp hb] at heq; exact mul_left_cancel heq ▸ hy
+    (h : ({a} : Set G) * S = ({a} : Set G) * T) : S = T :=
+  Set.image_injective.mpr (mul_right_injective a)
+    (by simpa only [Set.singleton_mul] using h)
 
 /-- When the first-component representatives agree, the second-component
     representatives must also agree (by left-cancellation on the common prefix). -/

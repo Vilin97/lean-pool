@@ -29,14 +29,9 @@ include T in theorem isAExtension_trans {R S U : NSubring T}
   -- Primality lifts through each link of the chain R ≤ S ≤ U
   primes_preserved r hr :=
     h₂.primes_preserved ⟨r.1, h₁.le r.2⟩ (h₁.primes_preserved r hr)
-  card_le := by
+  card_le :=
     -- max(ℵ₀, #U) ≤ max(ℵ₀, max(ℵ₀, #R)) = max(ℵ₀, #R) by idempotence
-    calc Cardinal.mk U.carrier
-        ≤ max Cardinal.aleph0 (Cardinal.mk S.carrier) := h₂.card_le
-      _ ≤ max Cardinal.aleph0 (max Cardinal.aleph0 (Cardinal.mk R.carrier)) :=
-          max_le_max_left _ h₁.card_le
-      _ = max Cardinal.aleph0 (Cardinal.mk R.carrier) := by
-          rw [← max_assoc, max_self]
+    h₂.card_le.trans ((max_le_max_left _ h₁.card_le).trans (by rw [← max_assoc, max_self]))
 
 include T in lemma card_lt_of_aext' (hT_aleph0 : Cardinal.aleph0 < Cardinal.mk T)
     {A B : NSubring T} (hAB : IsAExtension A B)
@@ -88,8 +83,7 @@ include T in theorem build_union_isNSubring
       ciSup_le fun α => h_card α
     calc Cardinal.mk U ≤ Cardinal.mk ι' * κ := le_trans h1 (mul_le_mul_right h2 _)
       _ ≤ κ * κ := mul_le_mul_left h_ι_card κ
-      _ ≤ max κ κ := Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)
-      _ = κ := max_self κ
+      _ ≤ κ := (Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)).trans_eq (max_self κ)
   · -- Maximal ideal of U = pullback of maximal ideal of T
     ext ⟨a, ha⟩
     simp only [Ideal.mem_comap, Subring.coe_subtype]
@@ -123,10 +117,7 @@ include T in theorem build_union_isNSubring
                       norm_cast
     by_contra hq_ne
     -- Pick nonzero s ∈ q and x ∈ P \ q
-    obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : U, s ∈ q ∧ s ≠ 0 := by
-      by_contra h
-      push Not at h
-      exact hq_ne ((Submodule.eq_bot_iff q).mpr fun x hx => h x hx)
+    obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
     obtain ⟨x, hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
     -- Pull s and x back to a common stage γ = max(αs, αx)
     obtain ⟨αs, hαs⟩ := hU_mem s
@@ -139,15 +130,11 @@ include T in theorem build_union_isNSubring
       (fun (x : (chain.ring γ).carrier) => (x : T)) h))
     have hs'_q : s' ∈ Ideal.comap inclγ q :=
       show inclγ s' ∈ q from (show inclγ s' = s from Subtype.ext rfl) ▸ hs_q
-    have hq'_ne : Ideal.comap inclγ q ≠ ⊥ := fun h => by
-      rw [h] at hs'_q
-      exact hs'_ne (Ideal.mem_bot.mp hs'_q)
+    have hq'_ne : Ideal.comap inclγ q ≠ ⊥ := fun h => hs'_ne (Ideal.mem_bot.mp (h ▸ hs'_q))
     set x' : (chain.ring γ).carrier :=
       ⟨(x : T), chain.mono (le_max_right ..) hαx⟩
-    have hx'_nq : x' ∉ Ideal.comap inclγ q := fun h => by
-      have h' : inclγ x' ∈ q := h
-      rw [show inclγ x' = x from Subtype.ext rfl] at h'
-      exact hx_nq h'
+    have hx'_nq : x' ∉ Ideal.comap inclγ q := fun h =>
+      hx_nq ((show inclγ x' = x from Subtype.ext rfl) ▸ (h : inclγ x' ∈ q))
     -- At stage γ the pullback of q is a nonzero prime strictly below P∩R_γ
     have hq'_lt : Ideal.comap inclγ q <
         Ideal.comap (chain.ring γ).carrier.subtype P :=
@@ -236,8 +223,7 @@ include T in private theorem union_card_le_max
       ≤ Cardinal.mk ι *
         (⨆ α, Cardinal.mk ↑((chain.ring α).carrier : Set T)) := h1
     _ ≤ κ * κ := mul_le_mul' hι_card (ciSup_le fun α => hfq_card α)
-    _ ≤ max κ κ := Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)
-    _ = κ := max_self κ
+    _ ≤ κ := (Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)).trans_eq (max_self κ)
 
 /-- Build the transfinite recursion and prove its invariant for close_up_all. -/
 private def close_up_all_one_pass_aux_proof
@@ -586,8 +572,7 @@ include T in theorem build_union_isNSubring_nat
       _ ≤ Cardinal.aleph0 * κ := by gcongr
       _ ≤ κ * κ := by gcongr
                       exact le_max_left ..
-      _ ≤ max κ κ := Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)
-      _ = κ := max_self κ
+      _ ≤ κ := (Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)).trans_eq (max_self κ)
   · -- Maximal ideal: same argument as build_union_isNSubring, adapted for ℕ index
     ext ⟨a, ha⟩
     simp only [Ideal.mem_comap, Subring.coe_subtype]
@@ -617,10 +602,7 @@ include T in theorem build_union_isNSubring_nat
     suffices q = ⊥ by rw [this, Ideal.height_bot]
                       norm_cast
     by_contra hq_ne
-    obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : U, s ∈ q ∧ s ≠ 0 := by
-      by_contra h
-      push Not at h
-      exact hq_ne ((Submodule.eq_bot_iff q).mpr fun x hx => h x hx)
+    obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
     obtain ⟨x, hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
     obtain ⟨αs, hαs⟩ := hU_mem s
     obtain ⟨αx, hαx⟩ := hU_mem x
@@ -632,15 +614,11 @@ include T in theorem build_union_isNSubring_nat
       (fun (x : (chain.ring γ).carrier) => (x : T)) h))
     have hs'_q : s' ∈ Ideal.comap inclγ q :=
       show inclγ s' ∈ q from (show inclγ s' = s from Subtype.ext rfl) ▸ hs_q
-    have hq'_ne : Ideal.comap inclγ q ≠ ⊥ := fun h => by
-      rw [h] at hs'_q
-      exact hs'_ne (Ideal.mem_bot.mp hs'_q)
+    have hq'_ne : Ideal.comap inclγ q ≠ ⊥ := fun h => hs'_ne (Ideal.mem_bot.mp (h ▸ hs'_q))
     set x' : (chain.ring γ).carrier :=
       ⟨(x : T), chain.mono (le_max_right ..) hαx⟩
-    have hx'_nq : x' ∉ Ideal.comap inclγ q := fun h => by
-      have h' : inclγ x' ∈ q := h
-      rw [show inclγ x' = x from Subtype.ext rfl] at h'
-      exact hx_nq h'
+    have hx'_nq : x' ∉ Ideal.comap inclγ q := fun h =>
+      hx_nq ((show inclγ x' = x from Subtype.ext rfl) ▸ (h : inclγ x' ∈ q))
     have hq'_lt : Ideal.comap inclγ q <
         Ideal.comap (chain.ring γ).carrier.subtype P :=
       lt_of_le_of_ne
@@ -748,8 +726,8 @@ include T in theorem close_up_all_omega
             _ ≤ Cardinal.aleph0 * κ := by gcongr
             _ ≤ κ * κ := by gcongr
                             exact le_max_left ..
-            _ ≤ max κ κ := Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)
-            _ = κ := max_self κ }
+            _ ≤ κ := (Cardinal.mul_le_max_of_aleph0_le_left (le_max_left ..)).trans_eq
+                       (max_self κ) }
     · -- Closing-up: given f.g. I ⊆ S and c ∈ I·T, show c ∈ I
       intro I hI c hc
       obtain ⟨gens, hgens⟩ := hI
@@ -862,10 +840,7 @@ include T in theorem combined_step
   -- M ≠ 0: if M = 0 then q contains a unit, contradicting q prime and proper
   have hM_ne_bot : IsLocalRing.maximalIdeal T ≠ ⊥ := by
     intro h
-    have ⟨r, hr_mem, hr_ne⟩ : ∃ r ∈ q, r ≠ (0 : T) := by
-      by_contra hall
-      push Not at hall
-      exact hq_ne_bot ((Submodule.eq_bot_iff q).mpr hall)
+    have ⟨r, hr_mem, hr_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne_bot
     have hr_unit : IsUnit r := by
       by_contra h_not
       have := (IsLocalRing.mem_maximalIdeal _).mpr h_not

@@ -48,8 +48,7 @@ local notation:25 Δ₁" ≺[" c:25 "] " Δ₂:80 => Redux T c Δ₁ Δ₂
 
 lemma _root_.LO.FirstOrder.Completeness.Redux.antimonotone {c : Code L} {Δ₂ Δ₁ : Sequent L} (h :
     Δ₂ ≺[c] Δ₁) :
-    Δ₁ ⊆ Δ₂ := by
-  cases h <;> simp[List.subset_cons_of_subset _ (List.subset_cons_self _ _)]
+    Δ₁ ⊆ Δ₂ := by cases h <;> simp[List.subset_cons_of_subset _ (List.subset_cons_self _ _)]
 
 variable [∀ k, DecidableEq (L.Func k)] [∀ k, DecidableEq (L.Rel k)] [∀ k,
   Encodable (L.Func k)] [∀ k, Encodable (L.Rel k)]
@@ -71,8 +70,7 @@ lemma _root_.LO.FirstOrder.Completeness.ReduxNat.antimonotone {s : ℕ} {Δ₂ �
 omit [(k : ℕ) → DecidableEq (L.Func k)] [(k : ℕ) → DecidableEq (L.Rel k)] in
 lemma _root_.LO.FirstOrder.Completeness.ReduxNat.toRedux {c : Code L} {i} {Δ₂ Δ₁ : Sequent L} (h :
     Δ₂ ≺⟨(encode c).pair i⟩ Δ₁) :
-    Δ₂ ≺[c] Δ₁ := by
-  rcases h with (⟨h, r⟩ | ⟨h⟩); { simp at h; simpa[h] using r }; { simp at h }
+    Δ₂ ≺[c] Δ₁ := by rcases h with (⟨h, r⟩ | ⟨h⟩); { simp at h; simpa[h] using r }; { simp at h }
 
 /-- Imported declaration from the Incompleteness formalization. -/
 inductive SearchTreeAux (T : Theory L) (Γ : Sequent L) : ℕ → Sequent L → Type u

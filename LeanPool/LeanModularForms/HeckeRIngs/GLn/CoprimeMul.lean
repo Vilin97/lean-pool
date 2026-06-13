@@ -106,26 +106,14 @@ lemma diagMat_scalar_conj_eq (c : ℕ) (hc : 0 < c) (x : GL (Fin n) ℚ) :
 
 lemma conjAct_scalar_smul_eq (c : ℕ) (hc : 0 < c) :
     ConjAct.toConjAct (diagMat n (fun _ => c)) • (GLPair n).H = (GLPair n).H := by
-  ext x; constructor
-  · intro hx
-    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at hx
-    simp only [ConjAct.smul_def, map_inv, ConjAct.ofConjAct_toConjAct, inv_inv] at hx
-    rwa [diagMat_scalar_conj_eq n c hc] at hx
-  · intro hx
-    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem]
-    simp only [ConjAct.smul_def, map_inv, ConjAct.ofConjAct_toConjAct, inv_inv]
-    rwa [diagMat_scalar_conj_eq n c hc]
+  ext x
+  rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem]
+  simp only [ConjAct.smul_def, map_inv, ConjAct.ofConjAct_toConjAct, inv_inv]
+  rw [diagMat_scalar_conj_eq n c hc]
 
 private lemma conjAct_mem_smul_eq (h : GL (Fin n) ℚ) (hh : h ∈ (GLPair n).H) :
-    ConjAct.toConjAct h • (GLPair n).H = (GLPair n).H := by
-  ext x; simp only [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def,
-    map_inv, ConjAct.ofConjAct_toConjAct, inv_inv]
-  constructor
-  · intro hx; have : x = h * (h⁻¹ * x * h) * h⁻¹ := by group
-    rw [this]
-    exact (GLPair n).H.mul_mem ((GLPair n).H.mul_mem hh hx) ((GLPair n).H.inv_mem hh)
-  · intro hx
-    exact (GLPair n).H.mul_mem ((GLPair n).H.mul_mem ((GLPair n).H.inv_mem hh) hx) hh
+    ConjAct.toConjAct h • (GLPair n).H = (GLPair n).H :=
+  Subgroup.conjAct_pointwise_smul_eq_self (Subgroup.le_normalizer hh)
 
 /-- The degree of a scalar double coset `T(c,...,c)` is `1`. -/
 lemma HeckeCoset_deg_scalar (c : ℕ) (hc : 0 < c) :

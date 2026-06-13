@@ -62,13 +62,11 @@ lemma v0_quadrant (p : ℂ) (hp_re : |p.re| < 1 / 2) (hp_im : p.im < HHeight) :
   rw [fdPolygon_at_zero]
   have hpre : p.re < 1/2 := (abs_lt.mp hp_re).2
   constructor
-  · have : (1/2 + HHeight * I - p).re = 1/2 - p.re := by
-      simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
+  · simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
                  Complex.I_re, Complex.I_im, Complex.ofReal_im, mul_zero, zero_mul,
                  Complex.div_ofNat_re, Complex.one_re, sub_self, add_zero]
     linarith
-  · have : (1/2 + HHeight * I - p).im = HHeight - p.im := by
-      simp only [Complex.add_im, Complex.sub_im, Complex.mul_im, Complex.ofReal_re,
+  · simp only [Complex.add_im, Complex.sub_im, Complex.mul_im, Complex.ofReal_re,
                  Complex.I_re, Complex.I_im, Complex.ofReal_im, mul_one, zero_mul, add_zero,
                  Complex.div_ofNat_im, Complex.one_im, zero_div, zero_add]
     linarith
@@ -125,18 +123,16 @@ lemma v4_quadrant (p : ℂ) (hp_re : |p.re| < 1 / 2) (hp_im : p.im < HHeight) :
   rw [fdPolygon_at_four]
   have hpre_neg : -(1/2) < p.re := (abs_lt.mp hp_re).1
   have hpre : -1/2 < p.re := by linarith
-  have hre : (-1/2 + HHeight * I - p).re = -1/2 - p.re := by
-    simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
+  constructor
+  · simp only [Complex.add_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
                Complex.I_re, Complex.I_im, Complex.ofReal_im, mul_zero, zero_mul,
                Complex.neg_re, Complex.div_ofNat_re, Complex.one_re, sub_self, add_zero]
-  have him : (-1/2 + HHeight * I - p).im = HHeight - p.im := by
-    simp only [Complex.add_im, Complex.sub_im, Complex.mul_im, Complex.ofReal_re,
+    linarith
+  · simp only [Complex.add_im, Complex.sub_im, Complex.mul_im, Complex.ofReal_re,
                Complex.I_re, Complex.I_im, Complex.ofReal_im, mul_one, zero_mul,
                Complex.neg_im, Complex.div_ofNat_im, Complex.one_im, zero_div, neg_zero,
                zero_add, add_zero]
-  constructor
-  · rw [hre]; linarith
-  · rw [him]; linarith
+    linarith
 
 /-- Q1: re > 0, im > 0 → 0 < arg < π/2. -/
 lemma arg_Q1 (z : ℂ) (hz_re : 0 < z.re) (hz_im : 0 < z.im) :
@@ -222,11 +218,8 @@ lemma seg4_im_formula (t : ℝ) (ht : t ∈ Set.Ioc (3 : ℝ) 4) : (fdPolygon t)
   · linarith [ht.1]
   · linarith [ht.1]
   · linarith [ht.1]
-  · have h : (-1/2 + (Real.sqrt 3 / 2 + (t - 3) * (HHeight - Real.sqrt 3 / 2)) * I).im =
-        Real.sqrt 3 / 2 + (t - 3) * (HHeight - Real.sqrt 3 / 2) := by
-      simp [Complex.add_im, Complex.mul_im, Complex.I_re,
+  · simp [Complex.add_im, Complex.mul_im, Complex.I_re,
         Complex.I_im, Complex.ofReal_im]
-    exact h
   · linarith [ht.2]
 
 /-- Sign of (fdPolygon t - p).im on seg4: negative before tL, zero at tL,
@@ -319,11 +312,11 @@ noncomputable def fdPolygonRadialCircleAngleLifted (p : ℂ) :
 lemma fdPolygon_zero_ne_interior (p : ℂ) (hp_im : p.im < HHeight) : fdPolygon 0 ≠ p := by
   rw [fdPolygon_at_zero]
   intro heq
-  have him : (1/2 + HHeight * I).im = HHeight := by
+  have hp_im' : p.im = HHeight := by
+    rw [← heq]
     simp only [Complex.add_im, Complex.mul_im, Complex.ofReal_re, Complex.I_re, Complex.I_im,
                Complex.ofReal_im, mul_one, zero_mul, Complex.div_ofNat_im, Complex.one_im,
                zero_div, zero_add, add_zero]
-  have hp_im' : p.im = HHeight := by rw [← heq]; exact him
   linarith
 
 /-- fdPolygon 5 ≠ p for interior points. -/

@@ -203,8 +203,7 @@ lemma neg {φ : Semiformula L ξ n} : Hierarchy Γ s φ → Hierarchy Γ.alt s (
   ⟨fun h => by simpa using neg h, fun h => by simpa using neg h⟩
 
 @[simp] lemma imp_iff {φ ψ : Semiformula L ξ n} :
-    Hierarchy Γ s (φ ==> ψ) ↔ (Hierarchy Γ.alt s φ ∧ Hierarchy Γ s ψ) := by
-  simp[Semiformula.imp_eq]
+    Hierarchy Γ s (φ ==> ψ) ↔ (Hierarchy Γ.alt s φ ∧ Hierarchy Γ s ψ) := by simp[Semiformula.imp_eq]
 
 @[simp] lemma ball_iff {Γ s n} {φ : Semiformula L ξ (n + 1)} {t : Semiterm L ξ (n + 1)} (ht :
     t.Positive) :
@@ -426,8 +425,7 @@ lemma iff_iff {φ ψ : Semiformula L ξ n} :
   simp[Semiformula.iff_eq]; tauto
 
 @[simp 1100] lemma matrix_conj_iff {b s n} {φ : Fin m → Semiformula L ξ n} :
-    Hierarchy b s (Matrix.conjVec fun j ↦ φ j) ↔ ∀ j, Hierarchy b s (φ j) := by
-  cases m <;> simp
+    Hierarchy b s (Matrix.conjVec fun j ↦ φ j) ↔ ∀ j, Hierarchy b s (φ j) := by cases m <;> simp
 
 lemma remove_forall {φ : Semiformula L ξ (n + 1)} : Hierarchy b s (∀' φ) → Hierarchy b s φ := by
   intro h; rcases h

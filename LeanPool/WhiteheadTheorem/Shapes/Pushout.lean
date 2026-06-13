@@ -242,13 +242,7 @@ lemma _root_.Function.Injective.preimage_image_of_restrict
     apply Set.mem_preimage.mpr
     obtain ⟨a, has, hax⟩ := hx
     subst hax
-    simp_all only [Set.restrict_apply, Set.mem_image, Subtype.exists, exists_and_right]
-    obtain ⟨val, property⟩ := a
-    simp_all only
-    apply Exists.intro
-    · apply And.intro
-      on_goal 2 => rfl
-      · simp_all only [exists_const]
+    exact ⟨a, has, rfl⟩
 
 /--
 In the pushout square below, if `g X` is closed in `Z`,
@@ -267,8 +261,7 @@ lemma isOpenMap_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
   haveI : ∀ z : Z, Decidable (z ∈ Set.range g) := fun _ ↦ Classical.dec _
   intro s hs
   apply TopCat.pushout_isOpen
-  · simp only []
-    have : colimit (span f g) = pushout f g := rfl
+  · have : colimit (span f g) = pushout f g := rfl
     change IsOpen <| (colimit.ι (span f g) WalkingSpan.left) ⁻¹' ((pushoutInr' f g) '' s)
     change IsOpen <| (pushout.inl f g) ⁻¹' ((pushoutInr' f g) '' s)
     have : (pushout.inl f g) ⁻¹' ((pushoutInr' f g) '' s) = ∅ := by
@@ -281,9 +274,7 @@ lemma isOpenMap_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
       convert pushoutInr_neq_pushoutInl_of_mem_compl_range f g z z.property y
     rw [this]
     exact isOpen_empty
-  · simp only []
-    change IsOpen <| (pushout.inr f g) ⁻¹' ((pushoutInr' f g) '' s)
-    unfold pushoutInr'
+  · unfold pushoutInr'
     have : (pushout.inr f g) ⁻¹' ((pushoutInr' f g) '' s) = s := by
       apply Function.Injective.preimage_image_of_restrict
       · exact injective_pushoutInr' f g

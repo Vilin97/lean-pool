@@ -46,8 +46,7 @@ No axioms declared here. Transitively uses `schwartzIsHilbertNuclear, schwartzSe
 noncomputable section
 
 private lemma distributionPairingCLM_measurable (φ : TestFunction) :
-    Measurable (distributionPairingCLM φ) :=
-  WeakDual.eval_measurable φ
+    Measurable (distributionPairingCLM φ) := WeakDual.eval_measurable φ
 
 /-! ## Gaussian Measures on Field Configurations
 -/
@@ -198,8 +197,7 @@ private lemma charFun_eq_GJGeneratingFunctional
   [IsProbabilityMeasure (μ.toMeasure.map (distributionPairingCLM φ))] :
   charFun (μ.toMeasure.map (distributionPairingCLM φ)) t =
     GJGeneratingFunctional μ (t • φ) := by
-  rw [charFun]
-  rw [integral_map (distributionPairingCLM_measurable φ).aemeasurable (by fun_prop)]
+  rw [charFun, integral_map (distributionPairingCLM_measurable φ).aemeasurable (by fun_prop)]
   rw [GJGeneratingFunctional]
   congr 1
   ext ω
@@ -307,8 +305,7 @@ lemma gff_second_moment_eq_covariance
   calc ∫ ω, (distributionPairingCLM φ ω)^2 ∂(gaussianFreeFieldFree m).toMeasure
     _ = ∫ x, x^2 ∂((gaussianFreeFieldFree m).toMeasure.map (distributionPairingCLM φ)) := by
       rw [integral_map (distributionPairingCLM_measurable φ).aemeasurable (by fun_prop)]
-    _ = ∫ x, x^2 ∂(gaussianReal 0 (freeCovarianceFormR m φ φ).toNNReal) := by
-      rw [h_gauss]
+    _ = ∫ x, x^2 ∂(gaussianReal 0 (freeCovarianceFormR m φ φ).toNNReal) := by rw [h_gauss]
     _ = (freeCovarianceFormR m φ φ).toNNReal := by
       -- For centered Gaussian, variance equals second moment
       have h_var_eq : Var[fun x => x; gaussianReal 0 (freeCovarianceFormR m φ φ).toNNReal] =
@@ -318,8 +315,7 @@ lemma gff_second_moment_eq_covariance
         exact variance_of_integral_eq_zero (by fun_prop) h_mean
       rw [← h_var_eq]
       exact variance_fun_id_gaussianReal
-    _ = freeCovarianceFormR m φ φ := by
-      simp [Real.coe_toNNReal', freeCovarianceFormR_pos]
+    _ = freeCovarianceFormR m φ φ := by simp [Real.coe_toNNReal', freeCovarianceFormR_pos]
 
 /-- The Gaussian CF with the free covariance is positive definite,
     via the square-root propagator embedding into a Hilbert space.

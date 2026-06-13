@@ -48,11 +48,8 @@ lemma conjAct_smul_coe_eq (g : G) :
 
 /-- Conjugation by an element of `H` fixes `H`. -/
 lemma conjAct_smul_elt_eq (h : H) :
-    ConjAct.toConjAct (h : G) • H = H := by
-  have : ConjAct.toConjAct (h : G) • (H : Set G) = H := by
-    rw [conjAct_smul_coe_eq, Subgroup.singleton_mul_subgroup h.2,
-      Subgroup.subgroup_mul_singleton (by simp)]
-  rw [← Subgroup.coe_pointwise_smul] at this; norm_cast at *
+    ConjAct.toConjAct (h : G) • H = H :=
+  Subgroup.conjAct_pointwise_smul_eq_self (Subgroup.le_normalizer h.2)
 
 /-- A left coset contained in another left coset is equal to it. -/
 lemma leftCoset_eq_of_subset (a b : G)

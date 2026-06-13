@@ -108,9 +108,8 @@ lemma isHom_eval'
     {f : A → B →𝒒 C} (hf : IsHom f)
     {g : A → B} (hg : IsHom g)
     : IsHom (fun x ↦ f x (g x)) := by
-  apply isHom_comp' (f := fun x ↦ x.1 x.2) (g := fun x ↦ (f x, g x))
-  · simp only [isHom_eval]
-  · fun_prop
+  apply isHom_comp' (f := fun x ↦ x.1 x.2) (g := fun x ↦ (f x, g x)) (by simp only [isHom_eval])
+  fun_prop
 
 @[fun_prop]
 lemma isHom_mk
@@ -122,12 +121,8 @@ lemma isHom_mk
   fun_prop
 
 @[simp]
-lemma isHom_iff (f : A → B →𝒒 C) : IsHom f ↔ IsHom (fun x : A × B ↦ f x.1 x.2) := by
-  apply Iff.intro
-  · intro hf
-    fun_prop
-  · intro hf
-    apply isHom_mk hf
+lemma isHom_iff (f : A → B →𝒒 C) : IsHom f ↔ IsHom (fun x : A × B ↦ f x.1 x.2) :=
+  ⟨fun hf ↦ by fun_prop, fun hf ↦ isHom_mk hf⟩
 
 /-- Currying for `QuasiBorelHom`s. -/
 @[simps -fullyApplied]

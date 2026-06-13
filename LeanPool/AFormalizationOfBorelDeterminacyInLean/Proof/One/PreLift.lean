@@ -229,8 +229,7 @@ lemma liftVal_very_short (h : H.x.val.length = 2 * k + 1) : H.liftVal = H.liftVe
           pInvTreeHomMap hyp (H.x.val.take (min n (2 * k + 1)))
         rw [pInvTreeHomMap, List.zipInitsMap_take]
         congr 1
-        rw [List.take_take]
-        rw [min_eq_left h, min_eq_left (by omega : n ≤ 2 * k + 1)]
+        rw [List.take_take, min_eq_left h, min_eq_left (by omega : n ≤ 2 * k + 1)]
       · simp
 -- for u drop (2 * k + 1)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
@@ -321,8 +320,7 @@ instance : Preorder (Lift' hyp) where
 namespace Lift'
 variable (H : Lift' hyp)
 lemma conShort (h : 2 * k + 2 ≤ H.x.val.length) :
-  H.liftShort.val[2 * k + 1].1 = H.x.val[2 * k + 1] :=
-  ((H.con_short_long h).mp H.con).1
+  H.liftShort.val[2 * k + 1].1 = H.x.val[2 * k + 1] := ((H.con_short_long h).mp H.con).1
 lemma conLong : H.x.val.drop (2 * k + 2) ∈ getTree' hyp H.liftShort.val := by
   simpa [add_comm, ← add_assoc] using H.con.2
 @[simp] lemma liftShort_val_map (h : 2 * k + 2 ≤ H.x.val.length) :
@@ -341,8 +339,7 @@ lemma conLong : H.x.val.drop (2 * k + 2) ∈ getTree' hyp H.liftShort.val := by
       · exact congrArg (List.map Prod.fst) H.liftShort_val_take |>.trans
           H.liftVeryShort_val_map
       · exact congrArg List.singleton (H.conShort h)
-    _ = H.x.val.take (2 * k + 2) := by
-      exact H.x.val.take_concat_get' (2 * k + 1) (by omega)
+    _ = H.x.val.take (2 * k + 2) := H.x.val.take_concat_get' (2 * k + 1) (by omega)
 @[simp] lemma liftVal_lift : H.liftVal.map (α := no_index _) Prod.fst = H.x.val := by
   unfold Lift.liftVal
   split_ifs with hshort

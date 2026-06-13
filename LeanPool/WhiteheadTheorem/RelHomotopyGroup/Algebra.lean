@@ -42,10 +42,8 @@ variable {X Y : Type*} [Inhabited X] [Inhabited Y] (f : X → Y) [IsPointedMap f
 lemma default_mem_image_of_default_mem {A : Set X} : default ∈ A → default ∈ f '' A :=
   fun h ↦ (Set.mem_image _ _ _).mpr ⟨default, ⟨h, IsPointedMap.map_default⟩⟩
 
-lemma default_mem_preimage_default : default ∈ f ⁻¹' {default} := by
-  apply Set.mem_preimage.mpr
-  rw [(IsPointedMap.map_default : f _ = _)]
-  exact Set.mem_singleton _
+lemma default_mem_preimage_default : default ∈ f ⁻¹' {default} :=
+  Set.mem_preimage.mpr <| (IsPointedMap.map_default (f := f)) ▸ Set.mem_singleton _
 
 lemma default_subset_preimage_default : {default} ⊆ f ⁻¹' {default} :=
   Set.singleton_subset_iff.mpr (default_mem_preimage_default _)
@@ -107,13 +105,10 @@ private lemma im_B_eq_zero (a : A → B) (b : B → C) (a_surj : Function.Surjec
   ext y
   constructor
   · rintro ⟨x, rfl⟩
-    have hx : x ∈ b ⁻¹' ({default} : Set C) := by
-      rw [exb]
-      exact Set.mem_univ x
-    simpa using hx
+    simpa using (exb ▸ Set.mem_univ x : x ∈ b ⁻¹' ({default} : Set C))
   · intro hy
     rw [Set.mem_singleton_iff] at hy
-    subst y
+    subst hy
     exact ⟨default, IsPointedMap.map_default⟩
 
 private lemma ker_c_eq_C (c : C → D) (d : D → E) (d_inj : Function.Injective d)
@@ -125,15 +120,9 @@ private lemma ker_c_eq_C (c : C → D) (d : D → E) (d_inj : Function.Injective
     apply Set.subset_singleton_iff.mpr
     intro x hx
     rw [Set.mem_preimage, Set.mem_singleton_iff] at hx
-    apply @d_inj x default
-    rw [hx]
-    exact Eq.symm IsPointedMap.map_default
-  have : {default} = Set.range c := this.symm.trans exd
-  apply Set.eq_univ_of_forall
-  intro x
-  have hx : c x ∈ Set.range c := ⟨x, rfl⟩
-  rw [← this] at hx
-  exact hx
+    exact d_inj <| hx.trans IsPointedMap.map_default.symm
+  have hc : {default} = Set.range c := this.symm.trans exd
+  exact Set.eq_univ_of_forall fun x ↦ hc ▸ ⟨x, rfl⟩
 
 /-- `C = {0}` if there is an exact sequence `A --a-> B --b-> C --c-> D --d-> E`
 of five pointed sets such that `a` is surjective and `d` is injective. -/
@@ -144,10 +133,8 @@ theorem unique_mid_of_five (a : A → B) (b : B → C) (c : C → D) (d : D → 
     Nonempty (Unique C) :=
   Nonempty.intro <|
     { uniq := fun x ↦ by
-        have h1 := im_B_eq_zero a b a_surj exb
-        have h2 := ker_c_eq_C c d d_inj exd
-        have h : @Set.univ C = {default} := h2.symm.trans exc |>.trans h1
-        apply Set.eq_singleton_iff_unique_mem.mp h |>.right
-        simp only [Set.mem_univ] }
+        have h : @Set.univ C = {default} :=
+          (ker_c_eq_C c d d_inj exd).symm.trans exc |>.trans (im_B_eq_zero a b a_surj exb)
+        exact Set.eq_singleton_iff_unique_mem.mp h |>.right x (Set.mem_univ x) }
 
 end ExactSeq

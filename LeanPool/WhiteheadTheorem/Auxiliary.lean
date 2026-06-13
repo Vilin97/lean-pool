@@ -24,14 +24,10 @@ namespace CategoryTheory
 -- #check CategoryTheory.eq_of_comp_right_eq
 lemma eq_of_comp_right_iso_eq {C : Type*} [Category C] {X Y Z : C}
     (h : X ⟶ Y) [IsIso h] {f g : Y ⟶ Z} (e : h ≫ f = h ≫ g) : f = g := by
-  have := congrArg (inv h ≫ ·) e
-  simp only [IsIso.inv_hom_id_assoc] at this
-  exact this
+  simpa only [IsIso.inv_hom_id_assoc] using congrArg (inv h ≫ ·) e
 lemma eq_of_comp_left_iso_eq {C : Type*} [Category C] {X Y Z : C}
     (h : Y ⟶ Z) [IsIso h] {f g : X ⟶ Y} (e : f ≫ h = g ≫ h) : f = g := by
-  have := congrArg (· ≫ inv h) e
-  simp only [Category.assoc, IsIso.hom_inv_id, Category.comp_id] at this
-  exact this
+  simpa only [Category.assoc, IsIso.hom_inv_id, Category.comp_id] using congrArg (· ≫ inv h) e
 
 end CategoryTheory
 
@@ -85,9 +81,7 @@ lemma Real.range_bddAbove_of_finite_domain {ι : Type*} (f : ι → ℝ) [Finite
   cases isEmpty_or_nonempty ι
   · exact ⟨0, fun y hy ↦ (IsEmpty.exists_iff.mp hy).elim⟩
   · obtain ⟨i, hi⟩ := Finite.exists_max f
-    exact ⟨f i, fun y hy ↦ by
-      obtain ⟨j, hj⟩ := Set.mem_range.mp hy
-      rw [← hj]; exact hi j⟩
+    exact ⟨f i, Set.forall_mem_range.mpr hi⟩
 
 lemma Real.forall_le_of_iSup_le_of_finite_domain {ι : Type*} {f : ι → ℝ} {a : ℝ}
     [Finite ι] (hf : ⨆ i, f i ≤ a) : ∀ (i : ι), f i ≤ a :=

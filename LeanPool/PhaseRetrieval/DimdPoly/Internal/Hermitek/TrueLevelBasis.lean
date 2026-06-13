@@ -276,8 +276,7 @@ private lemma gaussian_monomial_moments_off_diag {a b : ℕ} (hab : a ≠ b) :
     rw [← _root_.Circle.coe_pow, ← _root_.Circle.coe_pow, ← _root_.Circle.coe_mul]
     -- Goal: ↑(ω^a * ω⁻¹^b) = -1. Reduce ω^a * ω⁻¹^b to ω^d.
     have hprod : ω ^ a * ω⁻¹ ^ b = ω ^ d := by
-      rw [hd_def]
-      rw [show ω ^ a * ω⁻¹ ^ b = ω ^ a * (ω ^ b)⁻¹ from by rw [inv_pow]]
+      rw [hd_def, show ω ^ a * ω⁻¹ ^ b = ω ^ a * (ω ^ b)⁻¹ from by rw [inv_pow]]
       rw [← zpow_natCast ω a, ← zpow_natCast ω b, ← zpow_sub]
     rw [hprod]
     -- ω^d = Circle.exp(π/d)^d = Circle.exp(d * (π/d)) = Circle.exp(π) = -1
@@ -333,8 +332,7 @@ private lemma integral_norm_pow_exp_gaussian (a : ℕ) :
     (show (-2 : ℝ) < ((2 * a : ℕ) : ℝ) from by
       have : (0 : ℝ) ≤ ((2 * a : ℕ) : ℝ) := Nat.cast_nonneg _; linarith)]
   rw [show ((2 * a : ℕ) : ℝ) + 2 = 2 * ((a : ℝ) + 1) from by push_cast; ring]
-  rw [show 2 * ((a : ℝ) + 1) / 2 = (a : ℝ) + 1 from by ring]
-  rw [show 2 * π / 2 = π from by ring]
+  rw [show 2 * ((a : ℝ) + 1) / 2 = (a : ℝ) + 1 from by ring, show 2 * π / 2 = π from by ring]
   rw [Real.Gamma_nat_eq_factorial]
 
 /-- Gaussian monomial moments in the weighted plane. -/
@@ -546,8 +544,7 @@ private lemma qkn_div_rn_bound (k n : ℕ) :
     intro j _
     have : r ^ ((n : ℤ) - 2 * (j : ℤ)) / r ^ n =
         r ^ (((n : ℤ) - 2 * (j : ℤ)) - (n : ℤ)) := by
-      rw [zpow_sub_mul (ne_of_gt hr_pos) ((n : ℤ) - 2 * (j : ℤ)) (n : ℤ)]
-      rw [zpow_natCast]
+      rw [zpow_sub_mul (ne_of_gt hr_pos) ((n : ℤ) - 2 * (j : ℤ)) (n : ℤ), zpow_natCast]
       exact mul_div_cancel_left₀ _ (pow_ne_zero n (ne_of_gt hr_pos))
     rw [mul_div_assoc, this]
   set S := fun j => ((-1 : ℝ) ^ j) * (Nat.choose k j : ℝ) *
@@ -588,8 +585,7 @@ private lemma qkn_div_rn_bound (k n : ℕ) :
               = (Nat.choose k j : ℝ) * ((Nat.factorial n : ℝ) / (Nat.factorial (n - j) : ℝ)) *
                 |r ^ ((-2 : ℤ) * (j : ℤ))| := by
                 rw [show ((n : ℤ) - 2 * (j : ℤ)) - (n : ℤ) = (-2 : ℤ) * (j : ℤ) from by omega]
-                rw [abs_pow, abs_neg, abs_one, one_pow, one_mul]
-                rw [abs_of_nonneg (Nat.cast_nonneg _)]
+                rw [abs_pow, abs_neg, abs_one, one_pow, one_mul, abs_of_nonneg (Nat.cast_nonneg _)]
                 rw [abs_of_nonneg (div_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _))]
             _ ≤ (Nat.choose k j : ℝ) * ((Nat.factorial n : ℝ) / (Nat.factorial (n - j) : ℝ)) *
                 |r ^ ((-2 : ℤ))| := by
@@ -766,8 +762,7 @@ theorem qkn_ratio_control :
     rw [h, norm_zero] at hden_lower
     linarith [mul_pos hcd (pow_pos hr_pos d)]
   -- The ratio bound
-  rw [norm_div]
-  rw [div_le_div_iff₀ (norm_pos_iff.mpr hden_ne) hr_pos]
+  rw [norm_div, div_le_div_iff₀ (norm_pos_iff.mpr hden_ne) hr_pos]
   -- ‖qkn n‖ * r ≤ (cn+1)*r^(n+1) ≤ (cn+1)*r^d = C*cd*r^d ≤ C*‖qkn d‖
   calc ‖(qkn k n r : ℂ)‖ * r
       ≤ (cn + 1) * r ^ n * r := by
@@ -1062,8 +1057,7 @@ private theorem double_sum_vandermonde (k m : ℕ) :
           ↑(Nat.descFactorial m j) * ↑(Nat.factorial (m + k - i - j))) := by
     intro i _; rw [Finset.mul_sum]
     apply Finset.sum_congr rfl; intro j _; rw [pow_add]; ring
-  rw [Finset.sum_congr rfl hfactor]
-  rw [Finset.sum_eq_single 0]
+  rw [Finset.sum_congr rfl hfactor, Finset.sum_eq_single 0]
   · simp only [pow_zero, one_mul, Nat.choose_zero_right, Nat.cast_one,
       Nat.descFactorial_zero, Nat.sub_zero, mul_one]
     rw [inner_sum_at_zero k m]; ring
@@ -1459,8 +1453,7 @@ theorem integrable_weightedCross (k m n : ℕ) :
                 ‖((Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ)‖ := by
                   rw [norm_mul]
           _ = (‖Phi k m z‖ * ‖Phi k n z‖) * ‖((Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ)‖ := by
-                rw [norm_mul]
-                rw [show ‖(starRingEnd ℂ) (Phi k n z)‖ = ‖Phi k n z‖ by simp]
+                rw [norm_mul, show ‖(starRingEnd ℂ) (Phi k n z)‖ = ‖Phi k n z‖ by simp]
           _ = (‖Phi k m z‖ * ‖Phi k n z‖) * Real.exp (-‖z‖ ^ 2) := by
                 rw [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hexp_nonneg]
       _ ≤ (((‖Phi k m z‖ ^ 2 + ‖Phi k n z‖ ^ 2) / 2) * Real.exp (-‖z‖ ^ 2)) := by
@@ -1602,8 +1595,7 @@ private theorem weightedInner_finset_sum_left
                 Finset.sum s
                   (fun b => f b z * (starRingEnd ℂ) (g z) * (Real.exp (-‖z‖ ^ 2) : ℂ)) := by
           funext z
-          rw [mul_assoc]
-          rw [Finset.sum_mul]
+          rw [mul_assoc, Finset.sum_mul]
           simp [mul_left_comm, mul_comm]
         exact hEq.symm ▸ hsumInt'
       change weightedInner ((fun z : ℂ => f a z) + fun z => Finset.sum s (fun b => f b z)) g =
@@ -1840,8 +1832,7 @@ theorem weightedNorm_smul (c : ℂ) (G : ℂ → ℂ) :
   have hsq : weightedNormSq (c • G) = ‖c‖ ^ 2 * weightedNormSq G := by
     change (1 / Real.pi) * ∫ z : ℂ, ‖(c • G) z‖ ^ 2 * Real.exp (-‖z‖ ^ 2)
       = ‖c‖ ^ 2 * ((1 / Real.pi) * ∫ z : ℂ, ‖G z‖ ^ 2 * Real.exp (-‖z‖ ^ 2))
-    rw [hInt]
-    rw [MeasureTheory.integral_const_mul]
+    rw [hInt, MeasureTheory.integral_const_mul]
     ring
   have hcsq : √(‖c‖ ^ 2) = ‖c‖ := by
     rw [Real.sqrt_sq_eq_abs, abs_of_nonneg (norm_nonneg c)]
@@ -1873,8 +1864,7 @@ theorem weightedDefectNorm_smul (c : ℂ) (F0 G : ℂ → ℂ) :
   have hsq : weightedDefectNormSq (c • F0) (c • G) = ‖c‖ ^ 2 * weightedDefectNormSq F0 G := by
     change (1 / Real.pi) * ∫ z : ℂ, (modulusDefect (c • F0) (c • G) z) ^ 2 * Real.exp (-‖z‖ ^ 2)
       = ‖c‖ ^ 2 * ((1 / Real.pi) * ∫ z : ℂ, (modulusDefect F0 G z) ^ 2 * Real.exp (-‖z‖ ^ 2))
-    rw [hInt]
-    rw [MeasureTheory.integral_const_mul]
+    rw [hInt, MeasureTheory.integral_const_mul]
     ring
   have hcsq : √(‖c‖ ^ 2) = ‖c‖ := by
     rw [Real.sqrt_sq_eq_abs, abs_of_nonneg (norm_nonneg c)]
@@ -2646,8 +2636,7 @@ private lemma bessel_truncate_le {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ Hk k)
       calc
         ‖Tfun z * (starRingEnd ℂ) (G z) * (Real.exp (-‖z‖ ^ 2) : ℂ)‖
             = (‖Tfun z‖ * ‖G z‖) * rexp (-‖z‖ ^ 2) := by
-                rw [norm_mul, norm_mul]
-                rw [show ‖(starRingEnd ℂ) (G z)‖ = ‖G z‖ by simp]
+                rw [norm_mul, norm_mul, show ‖(starRingEnd ℂ) (G z)‖ = ‖G z‖ by simp]
                 rw [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (exp_nonneg _)]
         _ ≤ ((‖Tfun z‖ ^ 2 + ‖G z‖ ^ 2) / 2) * rexp (-‖z‖ ^ 2) := by
               nlinarith [sq_nonneg (‖Tfun z‖ - ‖G z‖), exp_nonneg (-‖z‖ ^ 2 : ℝ)]
@@ -3245,10 +3234,8 @@ private lemma summable_sq_qkn (k : ℕ) {r : ℝ} (hr : 0 < r) :
       simp [t0]
     have hfourn : ‖(fourier (n : ℤ) t0 : ℂ)‖ ^ 2 = 1 := by
       simp [t0]
-    rw [hphi, norm_mul, norm_mul, mul_pow, mul_pow, hfourk]
-    rw [norm_mul, mul_pow, hfourn]
-    rw [Complex.norm_real, Real.norm_eq_abs]
-    rw [show ‖circleLeadingFactor k r‖ ^ 2 = c by rfl]
+    rw [hphi, norm_mul, norm_mul, mul_pow, mul_pow, hfourk, norm_mul, mul_pow, hfourn]
+    rw [Complex.norm_real, Real.norm_eq_abs, show ‖circleLeadingFactor k r‖ ^ 2 = c by rfl]
     ring_nf
   have hsPhi := summable_sq_Phi_eval k (circlePoint r t0)
   have hsScaled : Summable (fun n => c⁻¹ * (‖Phi k n (circlePoint r t0)‖ ^ 2)) := by
@@ -3837,8 +3824,7 @@ theorem circleSeries_fourierCoeff_hermiteCoeff :
               funext t
               unfold circleSeries
               rw [← tsum_mul_left]
-            rw [hfun]
-            rw [MeasureTheory.integral_tsum_of_summable_integral_norm hInt hIntNorm]
+            rw [hfun, MeasureTheory.integral_tsum_of_summable_integral_norm hInt hIntNorm]
     _ = ∑' m : ℕ, if m = n then c m else 0 := by
           apply tsum_congr
           intro m
@@ -4317,8 +4303,7 @@ theorem truncCirclePoly_tendsto_circleSeries :
         have hnorm : ‖(fourier (-(k : ℤ)) t : ℂ)‖ = 1 := by
           simp
         have : (0 : ℝ) = 1 := by
-          rw [h0, norm_zero] at hnorm
-          exact hnorm
+          rwa [h0, norm_zero] at hnorm
         linarith
     have hGcircle := circle_representation_hermiteCoeff (k := k) (G := G) hG r hr t
     have hTcircle := truncate_circle k J G hr t
@@ -4467,8 +4452,7 @@ theorem hermite_series_locally_uniform :
           norm_add_le (G z - truncate k J0 G z) (truncate k J0 G z - truncate k J0 G z₀)]
     _ < ε / 3 + ε / 3 + ε / 3 := by
         have h1 : ‖G z - truncate k J0 G z‖ ≤ ε / 3 := by
-          rw [show G z - truncate k J0 G z = -(truncate k J0 G z - G z) by ring]
-          rw [norm_neg]
+          rw [show G z - truncate k J0 G z = -(truncate k J0 G z - G z) by ring, norm_neg]
           exact hclose_z
         linarith
     _ = ε := by ring
@@ -4562,8 +4546,7 @@ private theorem circleSeries_fourierCoeff_of_summable :
               funext t
               unfold circleSeries
               rw [← tsum_mul_left]
-            rw [hfun]
-            rw [MeasureTheory.integral_tsum_of_summable_integral_norm hInt hIntNorm]
+            rw [hfun, MeasureTheory.integral_tsum_of_summable_integral_norm hInt hIntNorm]
     _ = ∑' m : ℕ, if m = n then c m else 0 := by
           apply tsum_congr
           intro m
@@ -4744,8 +4727,7 @@ private lemma summable_hermite_eval_mul
               exact_mod_cast rfl
     have hSqLe : S ≤ Cz * Real.sqrt S := by
       have hFz_norm : ‖finiteHermiteSum k a z‖ ≤ Cz * weightedNorm (finiteHermiteSum k a) := heval
-      rw [hFz, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hS_nn, hWN] at hFz_norm
-      exact hFz_norm
+      rwa [hFz, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hS_nn, hWN] at hFz_norm
     by_cases hS0 : S = 0
     · rw [hS0]
       positivity
@@ -5732,7 +5714,6 @@ theorem hermiteSeries_mem_Hk :
 theorem modulusDefect_le_norm (F0 G : ℂ → ℂ) (z : ℂ) :
     modulusDefect F0 G z ≤ ‖G z‖ := by
   have h := abs_norm_sub_norm_le (F0 z + G z) (F0 z)
-  rw [add_sub_cancel_left] at h
-  exact h
+  rwa [add_sub_cancel_left] at h
 
 end HermitekLEAN

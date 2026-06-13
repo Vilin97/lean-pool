@@ -73,9 +73,7 @@ theorem localization_away_UFD (y : R₀) (hy : y ≠ 0) :
   -- Write z = a/s with s a power of y, then factor a in R
   obtain ⟨⟨a, s⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers y) z
   change IsLocalization.mk' _ a s ≠ 0 at hz
-  have ha : a ≠ 0 := by intro h
-                        apply hz
-                        simp [h]
+  have ha : a ≠ 0 := fun h => hz (by simp [h])
   obtain ⟨f, hf_prime, hf_assoc⟩ := UniqueFactorizationMonoid.exists_prime_factors a ha
   -- Partition prime factors: g = primes not dividing y (stay prime),
   -- h = primes dividing y (become units)
@@ -150,9 +148,7 @@ theorem localization_submonoid_UFD {S : Type*} [CommRing S]
   intro z hz
   obtain ⟨⟨a, s⟩, rfl⟩ := IsLocalization.mk'_surjective M z
   change IsLocalization.mk' _ a s ≠ 0 at hz
-  have ha : a ≠ 0 := by intro h
-                        apply hz
-                        simp [h]
+  have ha : a ≠ 0 := fun h => hz (by simp [h])
   obtain ⟨f, hf_prime, hf_assoc⟩ :=
     UniqueFactorizationMonoid.exists_prime_factors a ha
   -- g = primes disjoint from M (stay prime in S), h = primes dividing some m ∈ M (become units)

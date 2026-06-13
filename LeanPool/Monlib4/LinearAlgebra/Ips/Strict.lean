@@ -83,8 +83,7 @@ theorem TensorProduct.rid_coe' (x : E) (r : R) : x ⊗ₜ[R] r = r • x := by
     mul_one]
 
 theorem TensorProduct.lid_coe_rid_coe (x : E) :
-  (x : R ⊗[R] E) = (x : E ⊗[R] R) :=
-  by
+  (x : R ⊗[R] E) = (x : E ⊗[R] R) := by
   simp only [LinearEquiv.apply_symm_apply]
 
 @[reducible, instance]

@@ -113,23 +113,19 @@ def payoff (p : Player) (G : Game A) : Set (body G.tree) := match p with
   by_cases h : x.length % 2 = 0
   · cases p
     · unfold Player.payoff Player.residual
-      rw [if_pos h]
-      rw [Game.residual_payoff_even G x h]
+      rw [if_pos h, Game.residual_payoff_even G x h]
     · unfold Player.payoff Player.residual
-      rw [if_pos h]
-      rw [Game.residual_payoff_even G x h]
+      rw [if_pos h, Game.residual_payoff_even G x h]
       ext y
       rfl
   · have hodd : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp h
     cases p
     · unfold Player.payoff Player.residual
-      rw [if_neg h]
-      rw [Game.residual_payoff_odd G x hodd]
+      rw [if_neg h, Game.residual_payoff_odd G x hodd]
       ext y
       rfl
     · unfold Player.payoff Player.residual
-      rw [if_neg h]
-      rw [Game.residual_payoff_odd G x hodd]
+      rw [if_neg h, Game.residual_payoff_odd G x hodd]
       exact compl_compl (body.append x ⁻¹' G.payoff)
 end Player
 @[congr] lemma subtype_val_player_payoff {G' p'} (h : G = G') (hp : p = p') :
@@ -156,8 +152,7 @@ lemma PreStrategy.IsWinning.residual {s : PreStrategy G.tree p} (h : s.IsWinning
   simpa [PreStrategy.residual, Game.residual, subAt_body, subAt_body_image] using
     Set.preimage_mono (f := fun a ↦ x.val ++ₛ a) h
 lemma PreStrategy.IsWinning.choose (s : QuasiStrategy G.tree p) (h : s.1.IsWinning) :
-  s.2.choose.pre.IsWinning :=
-  GaleStewartGame.PreStrategy.sub_winning (s.1.choose_sub s.2) h
+  s.2.choose.pre.IsWinning := GaleStewartGame.PreStrategy.sub_winning (s.1.choose_sub s.2) h
 
 namespace Game
 @[congr] lemma exists_isWinning (S T : Game A) (p q : Player) (hS : S = T) (hp : p = q) :

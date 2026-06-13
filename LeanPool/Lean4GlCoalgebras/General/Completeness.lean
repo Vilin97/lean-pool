@@ -420,8 +420,7 @@ lemma rewind_history_correspondence_aux (Γ) (info : Sequent ⊕ RuleApp)
       f (builderRuleApp (rewindHistory ⟨info, Γs, Rs⟩ ⟨2 * n + 1, h4⟩)
         (by
             have turn_eq := @rewind_turn ⟨info, Γs, Rs⟩ ⟨2 * n + 1, h4⟩
-            simpa [p_turn_q] using turn_eq)) = Γs[n]'h2)
-  := by
+            simpa [p_turn_q] using turn_eq)) = Γs[n]'h2) := by
   have rewind_one_step_in_cone :=
     fun h ↦ rewind_history_one_step_in_cone ⟨info, Γs, Rs⟩ h strat in_cone
   have length := history_length_in_cone strat ⟨info, Γs, Rs⟩ in_cone

@@ -236,9 +236,7 @@ theorem Phi_rotate_one_exp
     · subst hq
       simp
     · simp [Function.update, hq]
-  rw [hupdate]
-  rw [Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp)]
-  rw [oneDimPhi_phaseLaw]
+  rw [hupdate, Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp), oneDimPhi_phaseLaw]
   conv_rhs =>
     rw [Finset.prod_eq_mul_prod_diff_singleton_of_mem (s := Finset.univ) (i := q0) (by simp)]
   ring_nf
@@ -263,15 +261,13 @@ theorem Phi_rotateCoord_circle_phase
   induction x using Quotient.inductionOn with
   | h θ =>
       rw [fourier_mk_eq_exp ((kappa q0 : Nat) : Int) θ]
-      rw [fourier_mk_eq_exp ((alpha q0 : Nat) : Int) θ]
-      rw [fourier_mk_eq_exp (1 : Int) θ]
+      rw [fourier_mk_eq_exp ((alpha q0 : Nat) : Int) θ, fourier_mk_eq_exp (1 : Int) θ]
       have hone :
         Complex.exp (Complex.I * ((1 : ℤ) : ℂ) * θ) =
             Complex.exp (Complex.I * θ) := by
         congr 1
         ring_nf
-      rw [hone]
-      rw [Phi_rotate_one_exp]
+      rw [hone, Phi_rotate_one_exp]
       have hphase :
           Complex.exp (Complex.I * (((kappa q0 : Nat) : Int) : ℂ) * θ) *
               (Complex.exp
@@ -1420,8 +1416,7 @@ theorem toFun_as_L2_eq_boxLimit
 
 theorem toFun_represents_toL2
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (U : Skappa d kappa) :
-    IsTensorL2Rep (toL2 kappa U) (toFun kappa U) := by
-  exact toFun_as_L2_eq_boxLimit hd kappa U
+    IsTensorL2Rep (toL2 kappa U) (toFun kappa U) := by exact toFun_as_L2_eq_boxLimit hd kappa U
 
 theorem coeff_recovery
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (U : Skappa d kappa)
@@ -1456,8 +1451,7 @@ theorem coeff_recovery
             simpa [Φ] using (finite_coeff_recovery hd kappa (truncateFinset (box J) U) beta).symm
       _ = coeffSkappa U beta := by
             simp only [coeffPkappa, coeffSkappa, truncateFinset]
-            rw [Finsupp.finsetSum_apply]
-            rw [Finset.sum_eq_single beta]
+            rw [Finsupp.finsetSum_apply, Finset.sum_eq_single beta]
             · simp
             · intro alpha halpha hne
               simp [Finsupp.single_eq_of_ne hne.symm]

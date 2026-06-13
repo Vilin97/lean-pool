@@ -92,8 +92,7 @@ theorem inner_pi_eq_sum [∀ i, (ψ i).IsFaithfulPosMap] (x y : PiMat ℂ k s) :
 theorem blockDiagonal'_includeBlock_trace' {R k : Type _} [CommSemiring R] [Fintype k]
     [DecidableEq k] {s : k → Type _} [∀ i, Fintype (s i)]
     (j : k) (x : Matrix (s j) (s j) R) :
-    (blockDiagonal' (includeBlock x)).trace = x.trace :=
-    by
+    (blockDiagonal' (includeBlock x)).trace = x.trace := by
     classical
   calc
     (blockDiagonal' (includeBlock x)).trace
@@ -233,8 +232,7 @@ theorem Module.Dual.pi.apply_eq_of (ψ : ∀ i, Module.Dual ℂ (Matrix (s i) (s
   specialize h a'
   simp_rw [ha', ← Module.Dual.pi.apply_single_block, ← Pi.mul_apply, ←
     blockDiagonal'_includeBlock_trace, ← ha', Pi.mul_apply, ← ha']
-  simp only [← blockDiagonal'AlgHom_apply, ← _root_.map_mul, a', hMul_includeBlock] at h
-  exact h
+  simpa only [← blockDiagonal'AlgHom_apply, ← _root_.map_mul, a', hMul_includeBlock] using h
 
 -- theorem StarAlgEquiv.pi_symm_apply_eq (f : ∀ i, Matrix (s i) (s i) ℂ ≃⋆ₐ[ℂ] Matrix (s i) (s i) ℂ)
 --     (x y : PiMat ℂ k s) :
@@ -333,8 +331,7 @@ theorem sig_conjTranspose (hφ : φ.IsFaithfulPosMap) (r : ℝ) (a : Matrix n n 
 
 theorem sig_adjoint [hφ : φ.IsFaithfulPosMap] {t : ℝ} :
     withMatrixInner[φ]
-      (LinearMap.adjoint (hφ.sig t).toLinearMap = (hφ.sig t).toLinearMap) :=
-by
+      (LinearMap.adjoint (hφ.sig t).toLinearMap = (hφ.sig t).toLinearMap) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   rw [LinearMap.ext_iff_inner_map]
@@ -358,8 +355,7 @@ by
       rfl
 
 theorem hMul_right (hφ : φ.IsFaithfulPosMap) (x y z : Matrix n n ℂ) :
-    φ (xᴴ * (y * z)) = φ ((x * (φ.matrix * zᴴ * φ.matrix⁻¹))ᴴ * y) :=
-  by
+    φ (xᴴ * (y * z)) = φ ((x * (φ.matrix * zᴴ * φ.matrix⁻¹))ᴴ * y) := by
   haveI := (hφ.matrixIsPosDef).invertible
   simp_rw [φ.apply, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose,
     hφ.matrixIsPosDef.1.eq, hφ.matrixIsPosDef.inv.1.eq, ← Matrix.mul_assoc, Matrix.mul_assoc,
@@ -383,8 +379,7 @@ theorem inner_left_conj (hφ : φ.IsFaithfulPosMap) (x y z : Matrix n n ℂ) :
 hφ.hMul_right _ _ _
 
 theorem hMul_left (hφ : φ.IsFaithfulPosMap) (x y z : Matrix n n ℂ) :
-    φ ((x * y)ᴴ * z) = φ (xᴴ * (z * (φ.matrix * yᴴ * φ.matrix⁻¹))) :=
-by
+    φ ((x * y)ᴴ * z) = φ (xᴴ * (z * (φ.matrix * yᴴ * φ.matrix⁻¹))) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   rw [← inner_eq, ← inner_conj_symm, inner_left_conj, inner_conj_symm]
@@ -396,8 +391,7 @@ hφ.hMul_left _ _ _
 
 theorem adjoint_eq (hφ : φ.IsFaithfulPosMap) :
   withMatrixInner[φ]
-    (LinearMap.adjoint φ = (Algebra.linearMap ℂ (Matrix n n ℂ) : ℂ →ₗ[ℂ] Matrix n n ℂ)) :=
-by
+    (LinearMap.adjoint φ = (Algebra.linearMap ℂ (Matrix n n ℂ) : ℂ →ₗ[ℂ] Matrix n n ℂ)) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   rw [LinearMap.ext_iff]
@@ -418,8 +412,7 @@ theorem starAlgEquiv_adjoint_eq (hφ : φ.IsFaithfulPosMap)
   ((LinearMap.adjoint (f : Matrix n n ℂ ≃⋆ₐ[ℂ] Matrix n n ℂ).toLinearMap :
           Matrix n n ℂ →ₗ[ℂ] Matrix n n ℂ)
       x =
-    (f.symm (x * φ.matrix) : Matrix n n ℂ) * φ.matrix⁻¹) :=
-by
+    (f.symm (x * φ.matrix) : Matrix n n ℂ) * φ.matrix⁻¹) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   haveI := hφ.matrixIsPosDef.invertible
@@ -438,8 +431,7 @@ by
 
 theorem starAlgEquiv_unitary_commute_iff [φ.IsFaithfulPosMap]
     (f : Matrix n n ℂ ≃⋆ₐ[ℂ] Matrix n n ℂ) :
-    Commute φ.matrix f.ofMatrixUnitary ↔ f φ.matrix = φ.matrix :=
-  by
+    Commute φ.matrix f.ofMatrixUnitary ↔ f φ.matrix = φ.matrix := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   rw [Commute, SemiconjBy]
@@ -466,8 +458,7 @@ theorem starAlgEquiv_is_isometry_tFAE [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
               Matrix n n ℂ →ₗ[ℂ] Matrix n n ℂ) =
           f.symm.toLinearMap,
         φ ∘ₗ f.toLinearMap = φ, ∀ x y, ⟪f x, f y⟫_ℂ = ⟪x, y⟫_ℂ,
-        ∀ x : Matrix n n ℂ, ‖f x‖ = ‖x‖, Commute φ.matrix f.ofMatrixUnitary]) :=
-  by
+        ∀ x : Matrix n n ℂ, ‖f x‖ = ‖x‖, Commute φ.matrix f.ofMatrixUnitary]) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   tfae_have 5 ↔ 2 := by
@@ -481,8 +472,7 @@ theorem starAlgEquiv_is_isometry_tFAE [hφ : φ.IsFaithfulPosMap] [Nontrivial n]
     have :
       ∀ x y,
         ⟪f x, f y⟫_ℂ - ⟪x, y⟫_ℂ =
-          ⟪(LinearMap.adjoint f.toLinearMap ∘ₗ f.toLinearMap - 1) x, y⟫_ℂ :=
-      by
+          ⟪(LinearMap.adjoint f.toLinearMap ∘ₗ f.toLinearMap - 1) x, y⟫_ℂ := by
       intro x y
       simp only [LinearMap.sub_apply, Module.End.one_apply, inner_sub_left, LinearMap.comp_apply,
         LinearMap.adjoint_inner_left, StarAlgEquiv.toLinearMap_apply]
@@ -544,8 +534,7 @@ protected noncomputable def basis (hφ : φ.IsFaithfulPosMap) : Basis (n × n) �
           (∑ x ∈ a.support, a x • (single x.fst x.snd 1 : Matrix n n ℂ)) *
                 hQ.rpow (-(1 / 2)) *
               hQ.rpow (1 / 2) =
-            0 * hQ.rpow (1 / 2) :=
-      by
+            0 * hQ.rpow (1 / 2) := by
       intro a
       constructor <;> intro h
       · rw [h]
@@ -618,8 +607,7 @@ theorem basis_is_orthonormal (hφ : φ.IsFaithfulPosMap) :
 
 /-- The normalized matrix basis as an orthonormal basis. -/
 protected noncomputable def orthonormalBasis (hφ : φ.IsFaithfulPosMap) :
-    withMatrixInner[φ] (OrthonormalBasis (n × n) ℂ (Matrix n n ℂ)) :=
-by
+    withMatrixInner[φ] (OrthonormalBasis (n × n) ℂ (Matrix n n ℂ)) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   exact hφ.basis.toOrthonormalBasis hφ.basis_is_orthonormal
@@ -628,8 +616,7 @@ protected theorem orthonormalBasis_apply
   (hφ : φ.IsFaithfulPosMap) (ij : n × n) :
   withMatrixInner[φ]
   ((hφ.orthonormalBasis : OrthonormalBasis (n × n) ℂ (Matrix n n ℂ)) ij =
-    single ij.1 ij.2 (1 : ℂ) *  hφ.matrixIsPosDef.rpow (-(1 / 2 : ℝ))) :=
-by
+    single ij.1 ij.2 (1 : ℂ) *  hφ.matrixIsPosDef.rpow (-(1 / 2 : ℝ))) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   rw [← IsFaithfulPosMap.basis_apply, IsFaithfulPosMap.orthonormalBasis,
@@ -638,8 +625,7 @@ by
 theorem inner_coord (hφ : φ.IsFaithfulPosMap) (ij : n × n) (y : Matrix n n ℂ) :
     withMatrixInner[φ]
     (⟪(hφ.orthonormalBasis : OrthonormalBasis _ _ _) ij, y⟫_ℂ =
-      (y *  hφ.matrixIsPosDef.rpow (1 / 2)) ij.1 ij.2) :=
-by
+      (y *  hφ.matrixIsPosDef.rpow (1 / 2)) ij.1 ij.2) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   let Q := φ.matrix
@@ -665,8 +651,7 @@ theorem inner_coord' (hφ : φ.IsFaithfulPosMap) (ij : n × n) (y : Matrix n n �
   exact hφ.inner_coord ij y
 
 protected theorem basis_repr_apply (hφ : φ.IsFaithfulPosMap) (x : Matrix n n ℂ) (ij : n × n) :
-     withMatrixInner[φ] (hφ.basis.repr x ij = ⟪hφ.basis ij, x⟫_ℂ) :=
-by
+     withMatrixInner[φ] (hφ.basis.repr x ij = ⟪hφ.basis ij, x⟫_ℂ) := by
   letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := φ)
   rw [hφ.basis_apply, ← hφ.orthonormalBasis_apply, ←
@@ -678,8 +663,7 @@ protected theorem toMatrixLinEquiv_symm_apply (hφ : φ.IsFaithfulPosMap) (hψ :
      withMatrixInner[φ] (withMatrixInner[ψ]
      ((hφ.toMatrixLinEquiv hψ).symm x =
       ∑ i, ∑ j, ∑ k, ∑ l,
-        (x (i, j) (k, l) : ℂ) • | hψ.basis (i, j)⟩⟨ hφ.basis (k, l)|)) :=
-  by
+        (x (i, j) (k, l) : ℂ) • | hψ.basis (i, j)⟩⟨ hφ.basis (k, l)|)) := by
   rw [IsFaithfulPosMap.toMatrixLinEquiv, LinearMap.ext_iff]
   intro a
   simp_rw [LinearMap.toMatrix_symm, toLin_apply, mulVec, dotProduct,
@@ -735,8 +719,7 @@ section DirectSum
 theorem LinearMap.sum_single_comp_proj {R : Type _} {ι : Type _} [Fintype ι] [DecidableEq ι]
     [Semiring R] {φ : ι → Type _} [∀ i : ι, AddCommMonoid (φ i)] [∀ i : ι, Module R (φ i)] :
     ∑ i : ι, LinearMap.single _ _ i ∘ₗ LinearMap.proj i = (LinearMap.id : (∀ i, φ i) →ₗ[R] ∀ i,
-      φ i) :=
-  by
+      φ i) := by
   simp_rw [LinearMap.ext_iff, LinearMap.sum_apply, LinearMap.id_apply, LinearMap.comp_apply,
     LinearMap.proj_apply, LinearMap.coe_single, Pi.single, funext_iff, Finset.sum_apply,
     Function.update, Pi.zero_apply, Finset.sum_dite_eq, Finset.mem_univ, if_true]
@@ -788,8 +771,7 @@ theorem hMul_right (hψ : ∀ i, (ψ i).IsFaithfulPosMap) (x y z : PiMat ℂ k s
     Module.Dual.pi ψ (star x * (y * z)) =
       Module.Dual.pi ψ
         (star (x * (Module.Dual.pi.matrixBlock ψ * star z * (Module.Dual.pi.matrixBlock ψ)⁻¹)) *
-          y) :=
-    by
+          y) := by
     letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
     letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
     letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -821,8 +803,7 @@ theorem inner_right_hMul [∀ i, (ψ i).IsFaithfulPosMap]
 omit [DecidableEq k] in
 theorem adjoint_eq [hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
     withPiInner[ψ]
-    (LinearMap.adjoint (Module.Dual.pi ψ) = Algebra.linearMap ℂ (PiMat ℂ k s)) :=
-    by
+    (LinearMap.adjoint (Module.Dual.pi ψ) = Algebra.linearMap ℂ (PiMat ℂ k s)) := by
     letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
     letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
     letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -848,8 +829,7 @@ protected noncomputable def basis (hψ : ∀ i, (ψ i).IsFaithfulPosMap) :
 protected theorem basis_apply (hψ : ∀ i, (ψ i).IsFaithfulPosMap) (ijk : Σ i, s i × s i) :
     Module.Dual.pi.IsFaithfulPosMap.basis hψ ijk =
       includeBlock
-        (single ijk.2.1 ijk.2.2 1 * (hψ ijk.1).matrixIsPosDef.rpow (-(1 / 2 : ℝ))) :=
-  by
+        (single ijk.2.1 ijk.2.2 1 * (hψ ijk.1).matrixIsPosDef.rpow (-(1 / 2 : ℝ))) := by
   simp only [Module.Dual.pi.IsFaithfulPosMap.basis, Pi.basis_apply, funext_iff, ← Matrix.ext_iff]
   intro i j k
   simp only [Pi.single, includeBlock_apply, Pi.zero_apply, Function.update]
@@ -869,8 +849,7 @@ omit [(i : k) → DecidableEq (s i)] in
 theorem includeBlock_left_inner (hψ : ∀ i, (ψ i).IsFaithfulPosMap) {i : k}
     (x : Matrix (s i) (s i) ℂ) (y : PiMat ℂ k s) :
     withPiInner[ψ]
-    (⟪includeBlock x, y⟫_ℂ = ⟪x, y i⟫_ℂ) :=
-by
+    (⟪includeBlock x, y⟫_ℂ = ⟪x, y i⟫_ℂ) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -901,8 +880,7 @@ omit [(i : k) → DecidableEq (s i)] in
 theorem includeBlock_inner_same' [hψ : ∀ i, (ψ i).IsFaithfulPosMap] {i j : k}
     {x : Matrix (s i) (s i) ℂ} {y : Matrix (s j) (s j) ℂ} (h : i = j) :
     withPiInner[ψ]
-    (⟪includeBlock x, includeBlock y⟫_ℂ = ⟪x, by rw [h]; exact y⟫_ℂ) :=
-    by
+    (⟪includeBlock x, includeBlock y⟫_ℂ = ⟪x, by rw [h]; exact y⟫_ℂ) := by
     letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
     letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
     letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -916,8 +894,7 @@ omit [(i : k) → DecidableEq (s i)] in
 theorem includeBlock_inner_block_left [hψ : ∀ i, (ψ i).IsFaithfulPosMap] {j : k}
     {x : PiMat ℂ k s} {y : Matrix (s j) (s j) ℂ} {i : k} :
     withPiInner[ψ]
-    (⟪includeBlock (x i), includeBlock y⟫_ℂ = if i = j then ⟪x j, y⟫_ℂ else 0) :=
-by
+    (⟪includeBlock (x i), includeBlock y⟫_ℂ = if i = j then ⟪x j, y⟫_ℂ else 0) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -945,8 +922,7 @@ omit [Fintype k] [DecidableEq k] in
 theorem _root_.Module.Dual.pi.IsFaithfulPosMap.basis.apply_cast_eq_mpr
     (hψ : ∀ i, (ψ i).IsFaithfulPosMap) {i j : k}
     {a : s j × s j} (h : i = j) :
-    (hψ i).basis (by rw [h]; exact a) = by rw [h]; exact (hψ j).basis a :=
-  by
+    (hψ i).basis (by rw [h]; exact a) = by rw [h]; exact (hψ j).basis a := by
   simp only [eq_mpr_eq_cast]; aesop
 
 
@@ -956,8 +932,7 @@ protected theorem basis_is_orthonormal [hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
     @Orthonormal ℂ _ _
       (Module.Dual.PiNormedAddCommGroup (_hφ := hψ)).toSeminormedAddCommGroup
       (Module.Dual.pi.InnerProductSpace (hφ := hψ)) _
-      (Module.Dual.pi.IsFaithfulPosMap.basis hψ) :=
-by
+      (Module.Dual.pi.IsFaithfulPosMap.basis hψ) := by
   letI : _root_.SeminormedAddCommGroup (PiMat ℂ k s) :=
     (Module.Dual.PiNormedAddCommGroup (_hφ := hψ)).toSeminormedAddCommGroup
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) :=
@@ -982,8 +957,7 @@ by
       rw [← Sigma.eta i, ← Sigma.eta j]
       simp_rw [includeBlock_inner_same' h']
       rw [← Module.Dual.pi.IsFaithfulPosMap.basis.apply_cast_eq_mpr hψ h']
-      simp only [orthonormal_iff_ite.mp (hψ _).basis_is_orthonormal i.snd]
-      simp only [eq_mpr_eq_cast]
+      simp only [orthonormal_iff_ite.mp (hψ _).basis_is_orthonormal i.snd, eq_mpr_eq_cast]
       rw [eq_comm, ite_eq_right_iff]
       intro hh
       simp only [hh, cast_heq, not_true_eq_false] at h
@@ -991,8 +965,7 @@ by
 
 /-- The dependent pi basis as an orthonormal basis. -/
 protected noncomputable def orthonormalBasis (hψ : ∀ i, (ψ i).IsFaithfulPosMap) :
-    withPiInner[ψ] (OrthonormalBasis (Σ i, s i × s i) ℂ (PiMat ℂ k s)) :=
-by
+    withPiInner[ψ] (OrthonormalBasis (Σ i, s i × s i) ℂ (PiMat ℂ k s)) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1007,8 +980,7 @@ protected theorem orthonormalBasis_apply (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
     withPiInner[ψ]
     ((Module.Dual.pi.IsFaithfulPosMap.orthonormalBasis hψ : OrthonormalBasis _ _ _) ijk =
       includeBlock
-        (single ijk.2.1 ijk.2.2 1 * (hψ ijk.1).matrixIsPosDef.rpow (-(1 / 2 : ℝ)))) :=
-    by
+        (single ijk.2.1 ijk.2.2 1 * (hψ ijk.1).matrixIsPosDef.rpow (-(1 / 2 : ℝ)))) := by
     letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
     letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
     letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1032,8 +1004,7 @@ protected theorem inner_coord (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
   (y : PiMat ℂ k s) :
   withPiInner[ψ]
   (⟪Module.Dual.pi.IsFaithfulPosMap.basis hψ ijk, y⟫_ℂ =
-    (y ijk.1 * (hψ ijk.1).matrixIsPosDef.rpow (1 / 2)) ijk.2.1 ijk.2.2) :=
-by
+    (y ijk.1 * (hψ ijk.1).matrixIsPosDef.rpow (1 / 2)) ijk.2.1 ijk.2.2) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1048,8 +1019,7 @@ protected theorem basis_repr_apply [hψ : ∀ i, (ψ i).IsFaithfulPosMap]
     (x : PiMat ℂ k s) (ijk : Σ i, s i × s i) :
     withPiInner[ψ]
     ((Module.Dual.pi.IsFaithfulPosMap.basis hψ).repr x ijk =
-      ⟪(hψ ijk.1).basis ijk.2, x ijk.1⟫_ℂ) :=
-    by
+      ⟪(hψ ijk.1).basis ijk.2, x ijk.1⟫_ℂ) := by
     letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
     letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
     letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1062,8 +1032,7 @@ protected theorem basis_repr_apply [hψ : ∀ i, (ψ i).IsFaithfulPosMap]
 
 theorem _root_.Module.Dual.pi.IsFaithfulPosMap.MatrixBlock.isSelfAdjoint
     (hψ : ∀ i, (ψ i).IsFaithfulPosMap) :
-    IsSelfAdjoint (Module.Dual.pi.matrixBlock ψ) :=
-  by
+    IsSelfAdjoint (Module.Dual.pi.matrixBlock ψ) := by
   ext x
   simp only [Pi.star_apply, Module.Dual.pi.matrixBlock_apply, star_eq_conjTranspose,
     (hψ x).matrixIsPosDef.1.eq]
@@ -1071,8 +1040,7 @@ theorem _root_.Module.Dual.pi.IsFaithfulPosMap.MatrixBlock.isSelfAdjoint
 /-- Invertibility of the block diagonal density matrix. -/
 @[reducible]
 noncomputable def matrixBlockInvertible (hψ : ∀ i, (ψ i).IsFaithfulPosMap) :
-    Invertible (Module.Dual.pi.matrixBlock ψ) :=
-  by
+    Invertible (Module.Dual.pi.matrixBlock ψ) := by
   haveI := fun i => (hψ i).matrixIsPosDef.invertible
   apply Invertible.mk (Module.Dual.pi.matrixBlock ψ)⁻¹
   all_goals
@@ -1082,16 +1050,14 @@ noncomputable def matrixBlockInvertible (hψ : ∀ i, (ψ i).IsFaithfulPosMap) :
   rw [mul_inv_of_invertible]
 
 theorem matrixBlock_inv_hMul_self [hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
-    (Module.Dual.pi.matrixBlock ψ)⁻¹ * Module.Dual.pi.matrixBlock ψ = 1 :=
-  by
+    (Module.Dual.pi.matrixBlock ψ)⁻¹ * Module.Dual.pi.matrixBlock ψ = 1 := by
   haveI := fun i => (hψ i).matrixIsPosDef.invertible
   ext1
   simp_rw [Pi.mul_apply, Pi.inv_apply, Module.Dual.pi.matrixBlock_apply, Pi.one_apply,
     inv_mul_of_invertible]
 
 theorem matrixBlock_self_hMul_inv (hψ : ∀ i, (ψ i).IsFaithfulPosMap) :
-    Module.Dual.pi.matrixBlock ψ * (Module.Dual.pi.matrixBlock ψ)⁻¹ = 1 :=
-  by
+    Module.Dual.pi.matrixBlock ψ * (Module.Dual.pi.matrixBlock ψ)⁻¹ = 1 := by
   haveI := fun i => (hψ i).matrixIsPosDef.invertible
   ext ij kl
   simp_rw [Pi.mul_apply, Pi.inv_apply, Module.Dual.pi.matrixBlock_apply, Pi.one_apply,
@@ -1129,8 +1095,7 @@ theorem toMatrixLinEquiv_apply' [hψ : ∀ i, (ψ i).IsFaithfulPosMap]
     (f : (PiMat ℂ k s) →ₗ[ℂ] PiMat ℂ k₂ s₂) (r : Σ r, s₂ r × s₂ r) (l : Σ r, s r × s r) :
     (toMatrixLinEquiv hψ hφ) f r l =
       (f (includeBlock ((hψ l.1).basis l.2)) r.1 * (hφ r.1).matrixIsPosDef.rpow (1 / 2))
-        r.2.1 r.2.2 :=
-by
+        r.2.1 r.2.2 := by
   simp_rw [toMatrixLinEquiv, LinearMap.toMatrix_apply, IsFaithfulPosMap.basis_repr_apply, ←
     Module.Dual.IsFaithfulPosMap.inner_coord, IsFaithfulPosMap.basis_apply,
     Module.Dual.IsFaithfulPosMap.orthonormalBasis_apply, ← Module.Dual.IsFaithfulPosMap.basis_apply]
@@ -1182,8 +1147,7 @@ toMatrixLinEquiv_apply' _ _ _
 
 private theorem mul_inv_eq_iff_eq_mul_aux [hψ : ∀ i, (ψ i).IsFaithfulPosMap]
     (b c : PiMat ℂ k s) :
-    b * (Module.Dual.pi.matrixBlock ψ)⁻¹ = c ↔ b = c * Module.Dual.pi.matrixBlock ψ :=
-  by
+    b * (Module.Dual.pi.matrixBlock ψ)⁻¹ = c ↔ b = c * Module.Dual.pi.matrixBlock ψ := by
   constructor <;> rintro rfl <;> rw [mul_assoc]
   · rw [matrixBlock_inv_hMul_self, mul_one]
   · rw [matrixBlock_self_hMul_inv hψ, mul_one]
@@ -1298,15 +1262,13 @@ variable [DecidableEq n] {φ : Module.Dual ℂ (Matrix n n ℂ)}
 
 theorem inner_single_left [hφ : φ.IsFaithfulPosMap] (i j : n) (x : Matrix n n ℂ) :
     withMatrixInner[φ]
-    (⟪single i j (1 : ℂ), x⟫_ℂ = (x * φ.matrix) i j) :=
-  by
+    (⟪single i j (1 : ℂ), x⟫_ℂ = (x * φ.matrix) i j) := by
   simp only [IsFaithfulPosMap.inner_eq', single_conjTranspose, star_one]
   rw [Matrix.mul_assoc, ← trace_mul_cycle', Matrix.single_hMul_trace]
 
 theorem inner_single_single [hφ : φ.IsFaithfulPosMap] (i j k l : n) :
     withMatrixInner[φ]
-    (⟪single i j (1 : ℂ), single k l (1 : ℂ)⟫_ℂ = ite (i = k) (φ.matrix l j) 0) :=
-  by
+    (⟪single i j (1 : ℂ), single k l (1 : ℂ)⟫_ℂ = ite (i = k) (φ.matrix l j) 0) := by
   simp_rw [inner_single_left, mul_apply, single, of_apply, boole_mul, ite_and]
   simp only [Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ,
     if_true, Finset.sum_ite_eq]
@@ -1317,8 +1279,7 @@ theorem LinearMap.mul'_adjoint [hφ : φ.IsFaithfulPosMap] (x : Matrix n n ℂ) 
     withMatrixInner[φ]
     (LinearMap.adjoint (LinearMap.mul' ℂ ℍ) x =
       ∑ i : n, ∑ j : n, ∑ k : n, ∑ l : n,
-        (x i l * φ.matrix⁻¹ k j) • Matrix.single i j 1 ⊗ₜ[ℂ] Matrix.single k l 1) :=
-by
+        (x i l * φ.matrix⁻¹ k j) • Matrix.single i j 1 ⊗ₜ[ℂ] Matrix.single k l 1) := by
   letI : _root_.NormedAddCommGroup ℍ := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ ℍ := Module.Dual.InnerProductSpace (φ := φ)
   rw [TensorProduct.inner_ext_iff']
@@ -1365,8 +1326,7 @@ open scoped Classical in
 omit [DecidableEq n] in
 theorem Matrix.linearMap_ext_iff_inner_map [hφ : φ.IsFaithfulPosMap] {x y : l(ℍ)} :
     withMatrixInner[φ]
-    (x = y ↔ ∀ u v : ℍ, ⟪x u, v⟫_ℂ = ⟪y u, v⟫_ℂ) :=
-  by
+    (x = y ↔ ∀ u v : ℍ, ⟪x u, v⟫_ℂ = ⟪y u, v⟫_ℂ) := by
   letI : _root_.NormedAddCommGroup ℍ := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ ℍ := Module.Dual.InnerProductSpace (φ := φ)
   simp_rw [LinearMap.ext_iff]
@@ -1381,8 +1341,7 @@ open scoped Classical in
 omit [DecidableEq n] in
 theorem Matrix.linearMap_ext_iff_map_inner [hφ : φ.IsFaithfulPosMap] {x y : l(ℍ)} :
     withMatrixInner[φ]
-    (x = y ↔ ∀ u v : ℍ, ⟪v, x u⟫_ℂ = ⟪v, y u⟫_ℂ) :=
-  by
+    (x = y ↔ ∀ u v : ℍ, ⟪v, x u⟫_ℂ = ⟪v, y u⟫_ℂ) := by
   letI : _root_.NormedAddCommGroup ℍ := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ ℍ := Module.Dual.InnerProductSpace (φ := φ)
   rw [@Matrix.linearMap_ext_iff_inner_map n _ φ hφ x y]
@@ -1394,8 +1353,7 @@ theorem Matrix.linearMap_ext_iff_map_inner [hφ : φ.IsFaithfulPosMap] {x y : l(
 
 theorem Matrix.inner_conj_Q [hφ : φ.IsFaithfulPosMap] (a x : ℍ) :
     withMatrixInner[φ]
-    (⟪x, φ.matrix * a * φ.matrix⁻¹⟫_ℂ = ⟪x * aᴴ, 1⟫_ℂ) :=
-  by
+    (⟪x, φ.matrix * a * φ.matrix⁻¹⟫_ℂ = ⟪x * aᴴ, 1⟫_ℂ) := by
   letI : _root_.NormedAddCommGroup ℍ := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ ℍ := Module.Dual.InnerProductSpace (φ := φ)
   simp_rw [IsFaithfulPosMap.inner_eq', ← Matrix.mul_assoc]
@@ -1440,8 +1398,7 @@ local notation "m" => LinearMap.mul' ℂ ℍ
 
 theorem Qam.Nontracial.mul_comp_mul_adjoint [hφ : φ.IsFaithfulPosMap] :
     withMatrixInner[φ]
-    (LinearMap.mul' ℂ ℍ ∘ₗ LinearMap.adjoint (LinearMap.mul' ℂ ℍ) = trace (φ.matrix⁻¹) • 1) :=
-  by
+    (LinearMap.mul' ℂ ℍ ∘ₗ LinearMap.adjoint (LinearMap.mul' ℂ ℍ) = trace (φ.matrix⁻¹) • 1) := by
   letI : _root_.NormedAddCommGroup ℍ := Module.Dual.NormedAddCommGroup φ
   letI : _root_.InnerProductSpace ℂ ℍ := Module.Dual.InnerProductSpace (φ := φ)
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply]
@@ -1470,8 +1427,7 @@ theorem Qam.Nontracial.mul_comp_mul_adjoint [hφ : φ.IsFaithfulPosMap] :
 
 
 theorem LinearMap.mulLeft_toMatrix (hφ : φ.IsFaithfulPosMap) (x : Matrix n n ℂ) :
-    hφ.toMatrix (LinearMap.mulLeft ℂ x) = x ⊗ₖ 1 :=
-  by
+    hφ.toMatrix (LinearMap.mulLeft ℂ x) = x ⊗ₖ 1 := by
   letI : _root_.NormedAddCommGroup ℍ := Module.Dual.NormedAddCommGroup φ
   letI : _root_.TopologicalSpace ℍ :=
     (Module.Dual.NormedAddCommGroup φ).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
@@ -1488,8 +1444,7 @@ theorem LinearMap.mulLeft_toMatrix (hφ : φ.IsFaithfulPosMap) (x : Matrix n n �
     Finset.mem_univ, if_true, eq_comm]
 
 theorem LinearMap.mulRight_toMatrix [hφ : φ.IsFaithfulPosMap] (x : Matrix n n ℂ) :
-    hφ.toMatrix (LinearMap.mulRight ℂ x) = 1 ⊗ₖ (hφ.sig (1 / 2) x)ᵀ :=
-  by
+    hφ.toMatrix (LinearMap.mulRight ℂ x) = 1 ⊗ₖ (hφ.sig (1 / 2) x)ᵀ := by
   letI : _root_.NormedAddCommGroup ℍ := Module.Dual.NormedAddCommGroup φ
   letI : _root_.TopologicalSpace ℍ :=
     (Module.Dual.NormedAddCommGroup φ).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
@@ -1520,8 +1475,7 @@ omit [(i : k) → DecidableEq (s i)] in
 theorem includeBlock_adjoint [hψ : ∀ i, (ψ i).IsFaithfulPosMap] {i : k}
     (x : PiMat ℂ k s) :
     withPiInner[ψ]
-    (LinearMap.adjoint (includeBlock : (ℍ_ i) →ₗ[ℂ] PiMat ℂ k s) x = x i) :=
-  by
+    (LinearMap.adjoint (includeBlock : (ℍ_ i) →ₗ[ℂ] PiMat ℂ k s) x = x i) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1537,8 +1491,7 @@ theorem pi_inner_single_left [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (i : k) (j l
     (x : PiMat ℂ k s) :
     withPiInner[ψ]
     (⟪blockDiag' (single (⟨i, j⟩ : Σ a, s a) (⟨i, l⟩ : Σ a, s a) (1 : ℂ)), x⟫_ℂ =
-      (x i * (ψ i).matrix) j l) :=
-  by
+      (x i * (ψ i).matrix) j l) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1561,8 +1514,7 @@ theorem pi_inner_single_single [hψ : ∀ i, (ψ i).IsFaithfulPosMap] {i j : k}
         blockDiag' (single ⟨j, c⟩ ⟨j, d⟩ (1 : ℂ))⟫_ℂ =
       dite (i = j)
         (fun h => ite (a = by rw [h]; exact c) ((ψ i).matrix (by rw [h]; exact d) b) 0)
-        fun _ => 0) :=
-  by
+        fun _ => 0) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1598,8 +1550,7 @@ theorem LinearMap.pi_mul'_adjoint_single_block [hψ : ∀ i, (ψ i).IsFaithfulPo
     withPiInner[ψ]
     ((LinearMap.adjoint (LinearMap.mul' ℂ (PiMat ℂ k s))) (includeBlock x) =
       (TensorProduct.map includeBlock includeBlock)
-        (LinearMap.adjoint (LinearMap.mul' ℂ (ℍ_ i)) x)) :=
-  by
+        (LinearMap.adjoint (LinearMap.mul' ℂ (ℍ_ i)) x)) := by
   classical
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
@@ -1622,8 +1573,7 @@ theorem LinearMap.pi_mul'_adjoint [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x : Pi
       ∑ r : k, ∑ a, ∑ b, ∑ c, ∑ d,
         (x r a d * (pi.matrixBlock ψ r)⁻¹ c b) •
           blockDiag' (Matrix.single (⟨r, a⟩ : Σ i, s i) (⟨r, b⟩ : Σ i, s i) (1 : ℂ)) ⊗ₜ[ℂ]
-            blockDiag' (Matrix.single (⟨r, c⟩ : Σ i, s i) (⟨r, d⟩ : Σ i, s i) (1 : ℂ))) :=
-  by
+            blockDiag' (Matrix.single (⟨r, c⟩ : Σ i, s i) (⟨r, d⟩ : Σ i, s i) (1 : ℂ))) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1642,8 +1592,7 @@ omit [Fintype k] [(i : k) → DecidableEq (s i)] in
 theorem LinearMap.pi_mul'_apply_includeBlock {i : k} (x : (ℍ_ i) ⊗[ℂ] ℍ_ i) :
     letI : ∀ i, DecidableEq (s i) := fun i => Classical.decEq (s i)
     LinearMap.mul' ℂ (PiMat ℂ k s) ((TensorProduct.map includeBlock includeBlock) x) =
-      includeBlock (LinearMap.mul' ℂ (ℍ_ i) x) :=
-  by
+      includeBlock (LinearMap.mul' ℂ (ℍ_ i) x) := by
   classical
   simp_rw [← LinearMap.comp_apply]
   revert x
@@ -1657,8 +1606,7 @@ private theorem linear_map.pi_mul'_comp_mul_adjoint_aux [hψ : ∀ i, (ψ i).IsF
     withPiInner[ψ]
     (LinearMap.mul' ℂ (PiMat ℂ k s) (LinearMap.adjoint (LinearMap.mul' ℂ (PiMat ℂ k s))
       (includeBlock x)) =
-      trace ((ψ i).matrix⁻¹) • includeBlock x) :=
-  by
+      trace ((ψ i).matrix⁻¹) • includeBlock x) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1672,8 +1620,7 @@ private theorem linear_map.pi_mul'_comp_mul_adjoint_aux [hψ : ∀ i, (ψ i).IsF
 theorem LinearMap.pi_mul'_comp_mul'_adjoint [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x : PiMat ℂ k s) :
     withPiInner[ψ]
     (LinearMap.mul' ℂ (PiMat ℂ k s) (LinearMap.adjoint (LinearMap.mul' ℂ (PiMat ℂ k s)) x) =
-      ∑ i, Matrix.trace (((ψ i).matrix)⁻¹) • includeBlock (x i)) :=
-  by
+      ∑ i, Matrix.trace (((ψ i).matrix)⁻¹) • includeBlock (x i)) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
@@ -1686,16 +1633,14 @@ theorem LinearMap.pi_mul'_comp_mul'_adjoint [hψ : ∀ i, (ψ i).IsFaithfulPosMa
 
 lemma Matrix.smul_inj_mul_one {n : Type*} [DecidableEq n]
   [Nonempty n] (x y : ℂ) :
-  x • (1 : Matrix n n ℂ) = y • (1 : Matrix n n ℂ) ↔ x = y :=
-by
+  x • (1 : Matrix n n ℂ) = y • (1 : Matrix n n ℂ) ↔ x = y := by
   simp_rw [← Matrix.ext_iff, Matrix.smul_apply, Matrix.one_apply, smul_ite,
     smul_zero, smul_eq_mul, mul_one]
   constructor
   · intro h
     let i : n := Nonempty.some ‹_›
     specialize h i i
-    simp only [↓reduceIte] at h
-    exact h
+    simpa only [↓reduceIte] using h
   · rintro rfl i j
     rfl
 
@@ -1705,8 +1650,7 @@ theorem LinearMap.pi_mul'_comp_mul'_adjoint_eq_smul_id_iff [hψ : ∀ i, (ψ i).
     [∀ i, Nontrivial (s i)] (α : ℂ) :
     withPiInner[ψ]
     (LinearMap.mul' ℂ (PiMat ℂ k s) ∘ₗ (LinearMap.adjoint (LinearMap.mul' ℂ (PiMat ℂ k s))) =
-      α • 1 ↔ ∀ i, Matrix.trace ((ψ i).matrix⁻¹) = α) :=
-  by
+      α • 1 ↔ ∀ i, Matrix.trace ((ψ i).matrix⁻¹) = α) := by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
   letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
   letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=

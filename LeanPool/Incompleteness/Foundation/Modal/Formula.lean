@@ -126,16 +126,13 @@ lemma iff_eq (φ ψ : Formula α) : φ <=> ψ = (φ ==> ψ) ⋏ (ψ ==> φ) := r
 lemma falsum_eq : (falsum : Formula α) = ⊥ := rfl
 
 @[simp] lemma and_inj (φ₁ ψ₁ φ₂ ψ₂ : Formula α) :
-    φ₁ ⋏ φ₂ = ψ₁ ⋏ ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by
-  simp[Wedge.wedge]
+    φ₁ ⋏ φ₂ = ψ₁ ⋏ ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by simp[Wedge.wedge]
 
 @[simp] lemma or_inj (φ₁ ψ₁ φ₂ ψ₂ : Formula α) :
-    φ₁ ⋎ φ₂ = ψ₁ ⋎ ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by
-  simp[Vee.vee]
+    φ₁ ⋎ φ₂ = ψ₁ ⋎ ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by simp[Vee.vee]
 
 @[simp] lemma imp_inj (φ₁ ψ₁ φ₂ ψ₂ : Formula α) :
-    φ₁ ==> φ₂ = ψ₁ ==> ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by
-  simp[Arrow.arrow]
+    φ₁ ==> φ₂ = ψ₁ ==> ψ₂ ↔ φ₁ = ψ₁ ∧ φ₂ = ψ₂ := by simp[Arrow.arrow]
 
 @[simp] lemma neg_inj (φ ψ : Formula α) : ∼φ = ∼ψ ↔ φ = ψ := by simp [NegAbbrev.neg];
 
@@ -166,11 +163,9 @@ def degree : Formula α → Nat
   | □φ => φ.degree + 1
 
 @[simp] lemma degree_neg (φ : Formula α) :
-    degree (∼φ) = degree φ := by
-  induction φ <;> simp_all [degree]
+    degree (∼φ) = degree φ := by induction φ <;> simp_all [degree]
 @[simp] lemma degree_imp (φ ψ : Formula α) :
-    degree (φ ==> ψ) = max (degree φ) (degree ψ) := by
-  simp [degree]
+    degree (φ ==> ψ) = max (degree φ) (degree ψ) := by simp [degree]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[elab_as_elim]

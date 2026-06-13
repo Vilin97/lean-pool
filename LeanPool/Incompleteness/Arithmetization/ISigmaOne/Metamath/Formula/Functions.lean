@@ -205,8 +205,7 @@ variable {L}
 section «lp_section_3»
 
 @[simp] lemma _root_.LO.Arith.Language.IsUFormula.imp {p q : V} :
-    L.IsUFormula (L.imp p q) ↔ L.IsUFormula p ∧ L.IsUFormula q := by
-  simp [Language.imp]
+    L.IsUFormula (L.imp p q) ↔ L.IsUFormula p ∧ L.IsUFormula q := by simp [Language.imp]
 
 @[simp] lemma _root_.LO.Arith.Language.IsSemiformula.imp {n p q : V} :
     L.IsSemiformula n (L.imp p q) ↔ L.IsSemiformula n p ∧ L.IsSemiformula n q := by

@@ -153,10 +153,8 @@ theorem essential_inputs_le_mul_size {k : Nat}
           (fun idx => coveredInputs (gateAt c idx))).card :=
         Finset.card_le_card (essential_subset_covered c f hf)
     _ ≤ ∑ idx : Fin G ⊕ Fin M,
-          (coveredInputs (gateAt c idx)).card :=
-        Finset.card_biUnion_le
-    _ ≤ ∑ _ : Fin G ⊕ Fin M, k :=
-        Finset.sum_le_sum fun idx _ => boundedAON_coveredInputs_card_le _
+          (coveredInputs (gateAt c idx)).card := Finset.card_biUnion_le
+    _ ≤ ∑ _ : Fin G ⊕ Fin M, k := Finset.sum_le_sum fun idx _ => boundedAON_coveredInputs_card_le _
     _ = (Fintype.card (Fin G ⊕ Fin M)) * k := by
         rw [Finset.sum_const, Finset.card_univ, Nat.nsmul_eq_mul]
     _ = k * c.size := by
@@ -168,8 +166,7 @@ theorem gate_elimination_lower_bound {k : Nat}
     (c : Circuit (Basis.boundedAON k) N M G)
     (f : BitString N → BitString M)
     (hf : c.eval = f) :
-    (EssentialInputs f).card ≤ k * c.size :=
-  essential_inputs_le_mul_size c f hf
+    (EssentialInputs f).card ≤ k * c.size := essential_inputs_le_mul_size c f hf
 
 /-- Corollary: if `f` depends on all N inputs, then N ≤ k · size. -/
 theorem lower_bound_all_inputs {k : Nat}

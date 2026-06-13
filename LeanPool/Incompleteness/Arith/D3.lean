@@ -36,12 +36,10 @@ def toNumVec {n} (e : Fin n → V) : (Language.codeIn ℒₒᵣ V).SemitermVec n
 @[simp] lemma toNumVec_nil : (toNumVec (![] : Fin 0 → V)) = .nil _ _ := by ext; simp [toNumVec]
 
 @[simp 1100] lemma toNumVec_nth {n} (e : Fin n → V) (i : Fin n) :
-    (toNumVec e).nth i = ↑(e i) := by
-  ext; simp [toNumVec]
+    (toNumVec e).nth i = ↑(e i) := by ext; simp [toNumVec]
 
 @[simp] lemma toNumVec_val_nth {n} (e : Fin n → V) (i : Fin n) :
-    (toNumVec e).val.[i] = numeral (e i) := by
-  simp [toNumVec]
+    (toNumVec e).val.[i] = numeral (e i) := by simp [toNumVec]
 
 /-- TODO: move -/
 @[simp 1100] lemma coe_coe_lt {n} (i : Fin n) : (i : V) < (n : V) :=

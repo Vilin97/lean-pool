@@ -141,8 +141,7 @@ lemma bodyLiftExists_iff_system
     constructor
     · exact (bodyEquivSystem_strat _).mp x.prop
     apply ((isIso_iff_bijective (bodyEquivSystem.inv.app _)).mp inferInstance).1
-    rw [← naturality_apply_types]
-    rw [Iso.hom_inv_id_app_apply]
+    rw [← naturality_apply_types, Iso.hom_inv_id_app_apply]
     apply Subtype.ext
     exact hx
   · let y' : Tree.bodyFunctor.obj U.1 := ⟨y.val, body_mono (PreStrategy.subtree_sub _) y.prop⟩
@@ -157,8 +156,7 @@ lemma bodyLiftExists_iff_system
       rw [naturality_apply_types]
       have hpoint : (bodyEquivSystem.hom.app T.1) ((bodyEquivSystem.inv.app T.1) x) = x := by
         change ((bodyEquivSystem.inv.app T.1 ≫ bodyEquivSystem.hom.app T.1) x) = x
-        rw [← NatTrans.comp_app]
-        rw [bodyEquivSystem.inv_hom_id]
+        rw [← NatTrans.comp_app, bodyEquivSystem.inv_hom_id]
         rfl
       rw [hpoint]
       exact hxe

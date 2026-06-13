@@ -93,8 +93,7 @@ lemma integral_inv_symm
     (∫ t in (t₀ + ε₁)..(t₀ + ε₂),
       (↑(t - t₀) : ℂ)⁻¹) = 0 := by
   have h_odd : ∀ u : ℝ,
-      (↑(-u) : ℂ)⁻¹ = -((↑u : ℂ)⁻¹) := by
-    intro u; simp only [ofReal_neg, neg_inv]
+      (↑(-u) : ℂ)⁻¹ = -((↑u : ℂ)⁻¹) := by intro u; simp only [ofReal_neg, neg_inv]
   have h_reflect :
       ∫ t in (t₀ - ε₂)..(t₀ - ε₁),
         (↑(t - t₀) : ℂ)⁻¹ =
@@ -120,8 +119,7 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
     ‖∫ t in (t₀ - c₂)..(t₀ - c₁), r t‖ +
       ‖∫ t in (t₀ + c₁)..(t₀ + c₂), r t‖ ≤
         2 * η * Real.log (c₂ / c₁) := by
-  have h_log_pos : 0 < Real.log (c₂ / c₁) :=
-    Real.log_pos (one_lt_div hc₁_pos |>.mpr hc₁₂)
+  have h_log_pos : 0 < Real.log (c₂ / c₁) := Real.log_pos (one_lt_div hc₁_pos |>.mpr hc₁₂)
   have h_left :
       ‖∫ t in (t₀ - c₂)..(t₀ - c₁), r t‖ ≤
         η * Real.log (c₂ / c₁) := by
@@ -132,20 +130,16 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
           ‖r t‖ ≤ g t := by
       intro t ⟨ht_lo, ht_hi⟩
       have h_t_minus : t - t₀ < 0 := by linarith
-      have h_abs : |t - t₀| = t₀ - t := by
-        rw [abs_of_neg h_t_minus]; ring
-      have h_abs_lo : c₁ < |t - t₀| := by
-        rw [h_abs]; linarith
-      have h_abs_hi : |t - t₀| < c₂ := by
-        rw [h_abs]; linarith
+      have h_abs : |t - t₀| = t₀ - t := by rw [abs_of_neg h_t_minus]; ring
+      have h_abs_lo : c₁ < |t - t₀| := by rw [h_abs]; linarith
+      have h_abs_hi : |t - t₀| < c₂ := by rw [h_abs]; linarith
       have h_bound := hr_bound t h_abs_lo h_abs_hi
       simp only [g]; rwa [h_abs] at h_bound
     have h_norm_le_ae :
         ∀ᵐ t, t ∈ Set.Ioc (t₀ - c₂) (t₀ - c₁) →
           ‖r t‖ ≤ g t := by
       have h_meas_zero :
-          MeasureTheory.volume {t₀ - c₁} = 0 :=
-        Real.volume_singleton
+          MeasureTheory.volume {t₀ - c₁} = 0 := Real.volume_singleton
       have h_compl :
           ∀ᵐ t, t ∉ ({t₀ - c₁} : Set ℝ) := by
         rw [MeasureTheory.ae_iff]
@@ -189,8 +183,7 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
       rw [h_subst]
       have h_inv :
           ∫ u in c₁..c₂, u⁻¹ =
-            Real.log (c₂ / c₁) :=
-        integral_inv_of_pos hc₁_pos hc₂_pos
+            Real.log (c₂ / c₁) := integral_inv_of_pos hc₁_pos hc₂_pos
       have h_factor :
           ∫ u in c₁..c₂, η / u =
             η * ∫ u in c₁..c₂, u⁻¹ := by
@@ -208,20 +201,16 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
           ‖r t‖ ≤ g t := by
       intro t ⟨ht_lo, ht_hi⟩
       have h_t_minus : t - t₀ > 0 := by linarith
-      have h_abs : |t - t₀| = t - t₀ :=
-        abs_of_pos h_t_minus
-      have h_abs_lo : c₁ < |t - t₀| := by
-        rw [h_abs]; linarith
-      have h_abs_hi : |t - t₀| < c₂ := by
-        rw [h_abs]; linarith
+      have h_abs : |t - t₀| = t - t₀ := abs_of_pos h_t_minus
+      have h_abs_lo : c₁ < |t - t₀| := by rw [h_abs]; linarith
+      have h_abs_hi : |t - t₀| < c₂ := by rw [h_abs]; linarith
       have h_bound := hr_bound t h_abs_lo h_abs_hi
       simp only [g]; rwa [h_abs] at h_bound
     have h_norm_le_ae :
         ∀ᵐ t, t ∈ Set.Ioc (t₀ + c₁) (t₀ + c₂) →
           ‖r t‖ ≤ g t := by
       have h_meas_zero :
-          MeasureTheory.volume {t₀ + c₂} = 0 :=
-        Real.volume_singleton
+          MeasureTheory.volume {t₀ + c₂} = 0 := Real.volume_singleton
       have h_compl :
           ∀ᵐ t, t ∉ ({t₀ + c₂} : Set ℝ) := by
         rw [MeasureTheory.ae_iff]
@@ -266,8 +255,7 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
       rw [h_subst]
       have h_inv :
           ∫ u in c₁..c₂, u⁻¹ =
-            Real.log (c₂ / c₁) :=
-        integral_inv_of_pos hc₁_pos hc₂_pos
+            Real.log (c₂ / c₁) := integral_inv_of_pos hc₁_pos hc₂_pos
       have h_factor :
           ∫ u in c₁..c₂, η / u =
             η * ∫ u in c₁..c₂, u⁻¹ := by
@@ -278,8 +266,7 @@ lemma remainder_annulus_bound {r : ℝ → ℂ}
   calc ‖∫ t in (t₀ - c₂)..(t₀ - c₁), r t‖ +
       ‖∫ t in (t₀ + c₁)..(t₀ + c₂), r t‖
       ≤ η * Real.log (c₂ / c₁) +
-        η * Real.log (c₂ / c₁) :=
-          add_le_add h_left h_right
+        η * Real.log (c₂ / c₁) := add_le_add h_left h_right
     _ = 2 * η * Real.log (c₂ / c₁) := by ring
 
 /-- Scale-dependent η from asymptotic control. -/
@@ -406,14 +393,12 @@ lemma summableSubseqAux_pos {γ : ℝ → ℂ}
   induction n with
   | zero =>
     simp only [summableSubseqAux_zero]
-    have h_min_pos : 0 < min δ₀ (δ 0) :=
-      lt_min hδ₀_pos (hδ_pos 0)
+    have h_min_pos : 0 < min δ₀ (δ 0) := lt_min hδ₀_pos (hδ_pos 0)
     positivity
   | succ m ih =>
     simp only [summableSubseqAux_succ]
     have h_min_pos :
-        0 < min (ε m / 2) (δ (m + 1)) :=
-      lt_min (by linarith) (hδ_pos (m + 1))
+        0 < min (ε m / 2) (δ (m + 1)) := lt_min (by linarith) (hδ_pos (m + 1))
     positivity
 
 lemma summableSubseqAux_halving {γ : ℝ → ℂ}
@@ -461,17 +446,14 @@ lemma summableSubseqAux_lt_delta {γ : ℝ → ℂ}
   induction n with
   | zero =>
     simp only [summableSubseqAux_zero]
-    have h_min_le : min δ₀ (δ 0) ≤ δ 0 :=
-      min_le_right _ _
-    have h_min_pos : 0 < min δ₀ (δ 0) :=
-      lt_min hδ₀_pos (hδ_pos 0)
+    have h_min_le : min δ₀ (δ 0) ≤ δ 0 := min_le_right _ _
+    have h_min_pos : 0 < min δ₀ (δ 0) := lt_min hδ₀_pos (hδ_pos 0)
     exact lt_of_le_of_lt (div_le_div_of_nonneg_right h_min_le (by norm_num : (0 : ℝ) < 2).le)
       (half_lt_self (hδ_pos 0))
   | succ m _ =>
     simp only [summableSubseqAux_succ]
     have h_min_le :
-        min (ε m / 2) (δ (m + 1)) ≤ δ (m + 1) :=
-      min_le_right _ _
+        min (ε m / 2) (δ (m + 1)) ≤ δ (m + 1) := min_le_right _ _
     have h_min_pos :
         0 < min (ε m / 2) (δ (m + 1)) := by
       refine lt_min ?_ (hδ_pos (m + 1))
@@ -548,8 +530,7 @@ lemma summableSubseqAux_le_geometric {γ : ℝ → ℂ}
       _ ≤ (ε 0 / 2 ^ m) / 2 := by
           apply div_le_div_of_nonneg_right ih
             (by norm_num : (0 : ℝ) ≤ 2)
-      _ = ε 0 / 2 ^ (m + 1) := by
-          rw [pow_succ]; ring
+      _ = ε 0 / 2 ^ (m + 1) := by rw [pow_succ]; ring
 
 /-- The summable subsequence tends to 0. -/
 lemma summableSubseqAux_tendsto_zero {γ : ℝ → ℂ}
@@ -565,8 +546,7 @@ lemma summableSubseqAux_tendsto_zero {γ : ℝ → ℂ}
     fun n => by
       have h1 := summableSubseqAux_le_geometric hL
         hγ_hasderiv hγ_cont_deriv δ₀ hδ₀_pos n
-      have h2 : ε 0 / 2 ^ n = ε 0 * (1 / 2) ^ n := by
-        rw [one_div, inv_pow, ← div_eq_mul_inv]
+      have h2 : ε 0 / 2 ^ n = ε 0 * (1 / 2) ^ n := by rw [one_div, inv_pow, ← div_eq_mul_inv]
       linarith
   have h_geom_tendsto :
       Tendsto (fun n => ε 0 * (1 / 2 : ℝ) ^ n)
@@ -596,23 +576,19 @@ lemma cutoff_integrand_intervalIntegrable
   have h_deriv_bdd :
       ∃ M > 0, ∀ t ∈ Set.Icc a b,
         ‖deriv γ t‖ ≤ M := by
-    have h_compact : IsCompact (Set.Icc a b) :=
-      isCompact_Icc
+    have h_compact : IsCompact (Set.Icc a b) := isCompact_Icc
     have h_cont :
         ContinuousOn (fun t => ‖deriv γ t‖)
           (Set.Icc a b) :=
       continuous_norm.comp_continuousOn
         hγ_cont_deriv
-    have h_nonempty : (Set.Icc a b).Nonempty :=
-      ⟨t₀, Set.Ioo_subset_Icc_self hat₀⟩
-    obtain ⟨x_max, hx_mem, hx_max⟩ :=
-      h_compact.exists_isMaxOn h_nonempty h_cont
+    have h_nonempty : (Set.Icc a b).Nonempty := ⟨t₀, Set.Ioo_subset_Icc_self hat₀⟩
+    obtain ⟨x_max, hx_mem, hx_max⟩ := h_compact.exists_isMaxOn h_nonempty h_cont
     exact ⟨max (‖deriv γ x_max‖) 1,
       lt_max_of_lt_right one_pos,
       fun t ht => le_max_of_le_left (hx_max ht)⟩
   obtain ⟨M_deriv, hM_pos, hM_deriv⟩ := h_deriv_bdd
-  have hM_bound_pos : 0 < M_deriv / ε :=
-    div_pos hM_pos hε_pos
+  have hM_bound_pos : 0 < M_deriv / ε := div_pos hM_pos hε_pos
   have h_norm_bound_ae :
       ∀ t ∈ Set.uIoc a b,
         ‖(if ε < ‖γ t - γ t₀‖
@@ -628,8 +604,7 @@ lemma cutoff_integrand_intervalIntegrable
         rw [norm_inv, one_div]
         exact inv_anti₀ hε_pos (le_of_lt h_in)
       calc ‖(γ t - γ t₀)⁻¹ * deriv γ t‖
-          = ‖(γ t - γ t₀)⁻¹‖ * ‖deriv γ t‖ :=
-            norm_mul _ _
+          = ‖(γ t - γ t₀)⁻¹‖ * ‖deriv γ t‖ := norm_mul _ _
         _ ≤ (1 / ε) * M_deriv := by
             apply mul_le_mul h_bound (hM_deriv t ht)
               (norm_nonneg _)
@@ -748,29 +723,23 @@ lemma remainder_dyadic_step {r : ℝ → ℂ}
       (t₀ + ε₀ / 2 ^ n), r t‖ ≤
         2 * η * Real.log 2 := by
   have h_pow_pos : (0 : ℝ) < 2 ^ n := by positivity
-  have h_pow1_pos : (0 : ℝ) < 2 ^ (n + 1) := by
-    positivity
-  have hε_n_pos : 0 < ε₀ / 2 ^ n :=
-    div_pos hε₀_pos h_pow_pos
-  have hε_n1_pos : 0 < ε₀ / 2 ^ (n + 1) :=
-    div_pos hε₀_pos h_pow1_pos
+  have h_pow1_pos : (0 : ℝ) < 2 ^ (n + 1) := by positivity
+  have hε_n_pos : 0 < ε₀ / 2 ^ n := div_pos hε₀_pos h_pow_pos
+  have hε_n1_pos : 0 < ε₀ / 2 ^ (n + 1) := div_pos hε₀_pos h_pow1_pos
   have h_lt : ε₀ / 2 ^ (n + 1) < ε₀ / 2 ^ n := by
     have h_pow_lt : (2 : ℝ) ^ n < 2 ^ (n + 1) := by
-      have h : (2 : ℝ) ^ (n + 1) = 2 ^ n * 2 := by
-        ring
+      have h : (2 : ℝ) ^ (n + 1) = 2 ^ n * 2 := by ring
       rw [h]; linarith
     exact div_lt_div_of_pos_left hε₀_pos h_pow_pos
       h_pow_lt
   have h_ratio :
-      (ε₀ / 2 ^ n) / (ε₀ / 2 ^ (n + 1)) = 2 := by
-    field_simp; ring
+      (ε₀ / 2 ^ n) / (ε₀ / 2 ^ (n + 1)) = 2 := by field_simp; ring
   have hr_restricted :
       ∀ t, ε₀ / 2 ^ (n + 1) < |t - t₀| →
         |t - t₀| < ε₀ / 2 ^ n →
           ‖r t‖ ≤ η / |t - t₀| := by
     intro t ht_lo ht_hi
-    have ht_pos : 0 < |t - t₀| :=
-      lt_trans hε_n1_pos ht_lo
+    have ht_pos : 0 < |t - t₀| := lt_trans hε_n1_pos ht_lo
     have ht_lt : |t - t₀| < ε₀ := by
       have h1 : ε₀ / 2 ^ n ≤ ε₀ :=
         div_le_self hε₀_pos.le
@@ -805,8 +774,7 @@ lemma pv_dyadic_step_O_eps {r : ℝ → ℂ}
     have hb :
         ∀ t ∈ Set.uIoc (t₀ - ε_n) (t₀ - ε_n / 2),
           ‖r t‖ ≤ C := fun t ht => by
-      have hle : t₀ - ε_n ≤ t₀ - ε_n / 2 := by
-        linarith
+      have hle : t₀ - ε_n ≤ t₀ - ε_n / 2 := by linarith
       have ⟨h1, h2⟩ :=
         (Set.uIoc_of_le hle ▸
           ht : t ∈ Set.Ioc _ _)
@@ -827,8 +795,7 @@ lemma pv_dyadic_step_O_eps {r : ℝ → ℂ}
     have hb :
         ∀ t ∈ Set.uIoc (t₀ + ε_n / 2) (t₀ + ε_n),
           ‖r t‖ ≤ C := fun t ht => by
-      have hle : t₀ + ε_n / 2 ≤ t₀ + ε_n := by
-        linarith
+      have hle : t₀ + ε_n / 2 ≤ t₀ + ε_n := by linarith
       have ⟨h1, h2⟩ :=
         (Set.uIoc_of_le hle ▸
           ht : t ∈ Set.Ioc _ _)
@@ -863,8 +830,7 @@ lemma cauchySeq_pv_dyadic {I : ℝ → ℂ} {δ₀ C : ℝ}
   calc ‖I (δ₀ / 2 ^ (n + 1)) -
       I (δ₀ / 2 ^ n)‖
       ≤ C * δ₀ / 2 ^ n := h_step n
-    _ = C * δ₀ * (1 / 2) ^ n := by
-        rw [one_div, inv_pow, ← div_eq_mul_inv]
+    _ = C * δ₀ * (1 / 2) ^ n := by rw [one_div, inv_pow, ← div_eq_mul_inv]
 
 /-- t-space bound from γ-annulus. -/
 lemma t_bound_from_gamma_annulus
@@ -879,8 +845,7 @@ lemma t_bound_from_gamma_annulus
     |t - t₀| ≤ 2 * ε / ‖L‖ := by
   have hL_norm_pos : 0 < ‖L‖ := norm_pos_iff.mpr hL
   calc |t - t₀|
-      = 2 * ((‖L‖ / 2) * |t - t₀|) / ‖L‖ := by
-        field_simp
+      = 2 * ((‖L‖ / 2) * |t - t₀|) / ‖L‖ := by field_simp
     _ ≤ 2 * ‖γ t - γ t₀‖ / ‖L‖ := by
         apply div_le_div_of_nonneg_right
         · linarith [h_lower t ht_pos ht_lt]
@@ -902,15 +867,13 @@ lemma integrand_bound_on_annulus
     ‖(γ t - γ t₀)⁻¹ * deriv γ t‖ ≤
       |t - t₀|⁻¹ + C := by
   have h_inv_norm : ‖(↑(t - t₀) : ℂ)⁻¹‖ =
-      |t - t₀|⁻¹ := by
-    rw [norm_inv, Complex.norm_real, Real.norm_eq_abs]
+      |t - t₀|⁻¹ := by rw [norm_inv, Complex.norm_real, Real.norm_eq_abs]
   calc ‖(γ t - γ t₀)⁻¹ * deriv γ t‖
       ≤ ‖(γ t - γ t₀)⁻¹ * deriv γ t -
           (↑(t - t₀))⁻¹‖ +
         ‖(↑(t - t₀) : ℂ)⁻¹‖ := by
           linarith [norm_sub_norm_le ((γ t - γ t₀)⁻¹ * deriv γ t) (↑(t - t₀))⁻¹]
-    _ ≤ C + |t - t₀|⁻¹ := by
-        rw [h_inv_norm]; linarith [hr_bounded t ht_pos ht_lt]
+    _ ≤ C + |t - t₀|⁻¹ := by rw [h_inv_norm]; linarith [hr_bounded t ht_pos ht_lt]
     _ = |t - t₀|⁻¹ + C := by ring
 
 /-- Annulus localization: γ-annulus points are local. -/
@@ -990,12 +953,10 @@ lemma telescoping_sum_bound {X : Type*} [SeminormedAddCommGroup X]
         ≤ ‖I (N + d' + 2) - I (N + d' + 1)‖ +
           ‖I (N + d' + 1) - I N‖ := norm_add_le _ _
       _ ≤ K * δ / 2 ^ (N + d' + 1) +
-          (2 * K * δ / 2 ^ N - 2 * K * δ / 2 ^ (N + d' + 1)) := by
-        linarith [h_step_d', ih']
+          (2 * K * δ / 2 ^ N - 2 * K * δ / 2 ^ (N + d' + 1)) := by linarith [h_step_d', ih']
       _ = 2 * K * δ / 2 ^ N - K * δ / 2 ^ (N + d' + 1) := by ring
       _ = 2 * K * δ / 2 ^ N - 2 * K * δ / 2 ^ (N + d' + 2) := by
-        have h_pow : (2 : ℝ) ^ (N + d' + 2) = 2 * 2 ^ (N + d' + 1) := by
-          rw [pow_succ]; ring
+        have h_pow : (2 : ℝ) ^ (N + d' + 2) = 2 * 2 ^ (N + d' + 1) := by rw [pow_succ]; ring
         field_simp [h_pow]; ring
 
 end

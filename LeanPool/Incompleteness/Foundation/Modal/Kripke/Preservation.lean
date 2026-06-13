@@ -269,8 +269,7 @@ namespace PointGenerated
 variable {F : Kripke.Frame} {r : F.World}
 
 lemma rel_transitive (F_trans : IsTrans F.World F.Rel) :
-    IsTrans (F↾r).World (F↾r).Rel := by
-  exact ⟨fun _ _ _ hxy hyz => F_trans.trans _ _ _ hxy hyz⟩
+    IsTrans (F↾r).World (F↾r).Rel := by exact ⟨fun _ _ _ hxy hyz => F_trans.trans _ _ _ hxy hyz⟩
 
 lemma rel_irreflexive (F_irrefl : Std.Irrefl F.Rel) : Std.Irrefl (F↾r).Rel := by
   exact ⟨fun x h => F_irrefl.irrefl x.1 h⟩

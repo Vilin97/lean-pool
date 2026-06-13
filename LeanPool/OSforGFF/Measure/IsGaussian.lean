@@ -43,8 +43,7 @@ variable (m : ℝ) [Fact (0 < m)]
 lemma gaussian_pairing_product_integrable_free_core
     (φ ψ : TestFunctionℂ) :
     Integrable (fun ω => distributionPairingℂReal ω φ * distributionPairingℂReal ω ψ)
-      (gaussianFreeFieldFree m).toMeasure :=
-  gaussian_pairing_product_integrable_free_2point m φ ψ
+      (gaussianFreeFieldFree m).toMeasure := gaussian_pairing_product_integrable_free_2point m φ ψ
 
 /-! ## Core Theorems
 
@@ -65,8 +64,7 @@ lemma freeCovarianceFormR_bilinear_expand (f g : TestFunction) (t s : ℝ) :
   -- Expand using add_left/right and smul_left/right
   calc freeCovarianceFormR m (t • f + s • g) (t • f + s • g)
     _ = freeCovarianceFormR m (t • f) (t • f + s • g) +
-        freeCovarianceFormR m (s • g) (t • f + s • g) := by
-          rw [freeCovarianceFormR_add_left]
+        freeCovarianceFormR m (s • g) (t • f + s • g) := by rw [freeCovarianceFormR_add_left]
     _ = freeCovarianceFormR m (t • f) (t • f) + freeCovarianceFormR m (t • f) (s • g) +
         (freeCovarianceFormR m (s • g) (t • f) + freeCovarianceFormR m (s • g) (s • g)) := by
           rw [freeCovarianceFormR_add_right, freeCovarianceFormR_add_right]
@@ -417,8 +415,7 @@ theorem schwinger_eq_covariance_real (f g : TestFunction) :
   -- Q(f-g,f-g) = Q(f,f) - 2Q(f,g) + Q(g,g)
   -- Difference = 4Q(f,g)
   -- Use f - g = f + (-1) • g for subtraction
-  have h_sub : f - g = f + (-1 : ℝ) • g := by
-    simp only [sub_eq_add_neg, neg_smul, one_smul]
+  have h_sub : f - g = f + (-1 : ℝ) • g := by simp only [sub_eq_add_neg, neg_smul, one_smul]
   -- Expand Q(f+g, f+g)
   have h_expand_plus : freeCovarianceFormR m (f + g) (f + g) =
       freeCovarianceFormR m f f + 2 * freeCovarianceFormR m f g + freeCovarianceFormR m g g := by

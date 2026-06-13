@@ -231,16 +231,14 @@ lemma lostLift_map (h : (takeLift y n).Lost) :
   rw [treeHom_body]
   ext n'
   simp only [lostLift]
-  let hlong : (takeLift y (n + (n' + 1))).Lost :=
-    h.lost_of_le ((takeLift_mono y).mpr (by omega))
+  let hlong : (takeLift y (n + (n' + 1))).Lost := h.lost_of_le ((takeLift_mono y).mpr (by omega))
   change ((List.take (n' + 1) hlong.toLLift'.liftVal)[n']).1 = y.val n'
   rw [List.getElem_take]
   rw [WLLift.liftVal_lift_get]; simp [Stream'.get]
 
 lemma body_stratMap :
   ∃ x : body R.pre.subtree, (bodyFunctor.map π
-    ⟨x.val, body_mono R.pre.subtree_sub x.prop⟩).val = y.val :=
-  by
+    ⟨x.val, body_mono R.pre.subtree_sub x.prop⟩).val = y.val := by
   classical
   exact if h : ∀ n, (takeLift y n).Winnable then ⟨wonLift y h, wonLift_map y h⟩
   else by

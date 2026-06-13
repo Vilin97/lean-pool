@@ -121,8 +121,7 @@ instance PropLogicSymbols : LogicalConnective Prop where
 @[simp] lemma _root_.LO.LogicalConnective.Prop.or_eq (φ ψ : Prop) : (φ ⋎ ψ) = (φ ∨ ψ) := rfl
 
 @[simp] lemma _root_.LO.LogicalConnective.Prop.iff_eq (φ ψ : Prop) :
-    (φ <=> ψ) = (φ ↔ ψ) := by
-  simp[LogicalConnective.iff, iff_iff_implies_and_implies]
+    (φ <=> ψ) = (φ ↔ ψ) := by simp[LogicalConnective.iff, iff_iff_implies_and_implies]
 
 instance : DeMorgan Prop where
   verum := by simp
@@ -425,13 +424,11 @@ def conj : List α → α
 @[simp] lemma conj_cons {a : α} {as : List α} : conj (a :: as) = a ⋏ as.conj := rfl
 
 lemma map_conj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (l : List α) :
-    f l.conj ↔ ∀ a ∈ l, f a := by
-  induction l <;> simp[*]
+    f l.conj ↔ ∀ a ∈ l, f a := by induction l <;> simp[*]
 
 lemma map_conj_append [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (l₁ l₂ :
     List α) :
-    f (l₁ ++ l₂).conj ↔ f (l₁.conj ⋏ l₂.conj) := by
-  induction l₁ <;> induction l₂ <;> aesop;
+    f (l₁ ++ l₂).conj ↔ f (l₁.conj ⋏ l₂.conj) := by induction l₁ <;> induction l₂ <;> aesop;
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def disj : List α → α
@@ -443,13 +440,11 @@ def disj : List α → α
 @[simp] lemma disj_cons {a : α} {as : List α} : disj (a :: as) = a ⋎ as.disj := rfl
 
 lemma map_disj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (l : List α) :
-    f l.disj ↔ ∃ a ∈ l, f a := by
-  induction l <;> simp[*]
+    f l.disj ↔ ∃ a ∈ l, f a := by induction l <;> simp[*]
 
 lemma map_disj_append [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (l₁ l₂ :
     List α) :
-    f (l₁ ++ l₂).disj ↔ f (l₁.disj ⋎ l₂.disj) := by
-  induction l₁ <;> induction l₂ <;> aesop;
+    f (l₁ ++ l₂).disj ↔ f (l₁.disj ⋎ l₂.disj) := by induction l₁ <;> induction l₂ <;> aesop;
 
 end «lp_section_6»
 
@@ -515,8 +510,7 @@ noncomputable def conj (s : Finset α) : α := s.toList.conj
 -- prefix:80 "⋀" => Finset.conj
 
 lemma map_conj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (s : Finset α) :
-    f s.conj ↔ ∀ a ∈ s, f a := by
-  simpa [conj] using List.map_conj f s.toList
+    f s.conj ↔ ∀ a ∈ s, f a := by simpa [conj] using List.map_conj f s.toList
 
 lemma map_conj_union [DecidableEq α] [FunLike F α Prop] [LogicalConnective.HomClass F α Prop]
     (f : F) (s₁ s₂ : Finset α) : f (s₁ ∪ s₂).conj ↔ f (s₁.conj ⋏ s₂.conj) := by
@@ -537,8 +531,7 @@ noncomputable def disj (s : Finset α) : α := s.toList.disj
 -- prefix:80 "⋁" => Finset.disj
 
 lemma map_disj [FunLike F α Prop] [LogicalConnective.HomClass F α Prop] (f : F) (s : Finset α) :
-    f s.disj ↔ ∃ a ∈ s, f a := by
-  simpa [disj] using List.map_disj f s.toList
+    f s.disj ↔ ∃ a ∈ s, f a := by simpa [disj] using List.map_disj f s.toList
 
 lemma map_disj_union [DecidableEq α] [FunLike F α Prop] [LogicalConnective.HomClass F α Prop]
     (f : F) (s₁ s₂ : Finset α) : f (s₁ ∪ s₂).disj ↔ f (s₁.disj ⋎ s₂.disj) := by

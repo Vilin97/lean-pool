@@ -68,8 +68,7 @@ lemma ae_eq_zero_of_charfun_eq_one {Ω : Type*} [MeasurableSpace Ω]
       (by fun_prop : AEStronglyMeasurable (fun x => cexp (@inner ℝ ℝ _ x t * I)) _)]
     have h_inner : ∀ ω, cexp (@inner ℝ ℝ _ (X ω) t * I) = exp (I * ↑(t * X ω)) := by
       intro ω
-      have : @inner ℝ ℝ _ (X ω) t = t * X ω := by
-        change t * starRingEnd ℝ (X ω) = t * X ω; simp
+      have : @inner ℝ ℝ _ (X ω) t = t * X ω := by change t * starRingEnd ℝ (X ω) = t * X ω; simp
       rw [this]; push_cast; ring_nf
     simp_rw [h_inner]
     rw [hcf t]
@@ -532,8 +531,7 @@ omit [TopologicalSpace F] [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] in
 private lemma gs_pythagoras (p : Seminorm ℝ F)
     (hp : p.IsHilbertian) (x y : F) (hxy : p.innerProd x y = 0) :
     p (x + y) ^ 2 = p x ^ 2 + p y ^ 2 := by
-  have h1 : p (x + y) ^ 2 = p (x - y) ^ 2 := by
-    simp only [Seminorm.innerProd] at hxy; linarith
+  have h1 : p (x + y) ^ 2 = p (x - y) ^ 2 := by simp only [Seminorm.innerProd] at hxy; linarith
   linarith [hp x y]
 
 omit [TopologicalSpace F] [IsTopologicalAddGroup F] [ContinuousSMul ℝ F] in
@@ -715,8 +713,7 @@ lemma gram_schmidt_seminorm (p : Seminorm ℝ E) (hp : p.IsHilbertian)
       p.IsOrthonormalSeq e ∧
       (∀ (β : Fin N → ℝ), ∃ (α : Fin k → ℝ),
         p (∑ i, β i • d i - ∑ j, α j • e j) = 0 ∧
-        p (∑ i, β i • d i) ^ 2 = ∑ j, α j ^ 2) :=
-  gram_schmidt_seminorm_aux p hp N d
+        p (∑ i, β i • d i) ^ 2 = ∑ j, α j ^ 2) := gram_schmidt_seminorm_aux p hp N d
 
 
 /-! ## Per-N concentration bound -/
@@ -790,8 +787,7 @@ lemma concentrationBadSetN_measure_bound
         (R * p (c.sum fun i a => (a : ℝ) • d i)) ^ 2 := by
       calc (∑ j, (α c) j * ω (e j)) ^ 2
           ≤ (∑ j, (α c) j ^ 2) * (∑ j, ω (e j) ^ 2) := h_cs
-        _ = p (c.sum fun i a => (a : ℝ) • d i) ^ 2 * (∑ j, ω (e j) ^ 2) := by
-            rw [hα_parseval c]
+        _ = p (c.sum fun i a => (a : ℝ) • d i) ^ 2 * (∑ j, ω (e j) ^ 2) := by rw [hα_parseval c]
         _ ≤ p (c.sum fun i a => (a : ℝ) • d i) ^ 2 * R ^ 2 :=
             mul_le_mul_of_nonneg_left h_not_tail (sq_nonneg _)
         _ = (R * p (c.sum fun i a => (a : ℝ) • d i)) ^ 2 := by ring
@@ -867,8 +863,7 @@ private lemma joint_kernel_bound_finite
     Measure.isProbabilityMeasure_map h_meas_z.aemeasurable
   let μ' : ProbabilityMeasure V := ⟨μ, h_prob⟩
   -- Step 1: Coordinate access: (eval_z ω) i = ω (z i)
-  have h_coord : ∀ (ω : E → ℝ) (i : Fin (n + 1)), (eval_z ω) i = ω (z i) := by
-    intro ω i; rfl
+  have h_coord : ∀ (ω : E → ℝ) (i : Fin (n + 1)), (eval_z ω) i = ω (z i) := by intro ω i; rfl
   -- Step 2: Inner product on V: ⟨eval_z(ω), v⟩ = ∑ j, v j * ω(z j)
   have h_inner : ∀ (ω : E → ℝ) (v : V),
       @inner ℝ V _ (eval_z ω) v = ∑ j, v j * ω (z j) := by
@@ -915,8 +910,7 @@ private lemma joint_kernel_bound_finite
   -- Step 6: Convert integral bound on V to bound on E → ℝ
   have h_norm_sq : ∀ ω : E → ℝ, ‖eval_z ω‖ ^ 2 = ∑ i, ω (z i) ^ 2 := by
     intro ω
-    rw [EuclideanSpace.norm_eq]
-    rw [Real.sq_sqrt (Finset.sum_nonneg (fun i _ => sq_nonneg _))]
+    rw [EuclideanSpace.norm_eq, Real.sq_sqrt (Finset.sum_nonneg (fun i _ => sq_nonneg _))]
     congr 1; ext i; simp [h_coord]
   have h_gauss_orig : ∀ σ : ℝ, 0 < σ →
       ∫ ω, (1 - Real.exp (-(σ ^ 2 * (∑ i, ω (z i) ^ 2) / 2))) ∂ν ≤ ε_q := by
@@ -1010,8 +1004,7 @@ private lemma joint_kernel_bound_finite
       exact Real.mul_self_sqrt (by positivity : (0 : ℝ) ≤ 2 * target / δ + 1)
     have h_exp_small : Real.exp (-(σ₀ ^ 2 * δ / 2)) < η / (ε_q + η) := by
       rw [hσ₀_sq]
-      have h_neg_eq : -((2 * target / δ + 1) * δ / 2) = -(target + δ / 2) := by
-        field_simp
+      have h_neg_eq : -((2 * target / δ + 1) * δ / 2) = -(target + δ / 2) := by field_simp
       rw [h_neg_eq]
       have h_ratio_pos : (0 : ℝ) < η / (ε_q + η) := by positivity
       rw [← Real.lt_log_iff_exp_lt h_ratio_pos]
@@ -1030,8 +1023,7 @@ private lemma joint_kernel_bound_finite
         ≤ ε_q / (1 - Real.exp (-(σ₀ ^ 2 * δ / 2))) := by
           rw [le_div_iff₀ h_c_pos, mul_comm]
           exact h_bound
-      _ < ε_q / (ε_q / (ε_q + η)) := by
-          apply div_lt_div_of_pos_left hε_q (by positivity) h_c_lb
+      _ < ε_q / (ε_q / (ε_q + η)) := by apply div_lt_div_of_pos_left hε_q (by positivity) h_c_lb
       _ = ε_q + η := by field_simp
   rw [h_bad_eq, h_union]
   exact le_of_tendsto' (tendsto_measure_iUnion_atTop h_mono) h_level
@@ -1079,8 +1071,7 @@ private lemma kernel_concentration_bound
     | empty => simp [map_zero]
     | insert a s ha ih =>
       rw [Finset.sum_insert ha]
-      have hv : p_m (t a • z (c_list a)) = 0 := by
-        rw [map_smul_eq_mul, h_each, mul_zero]
+      have hv : p_m (t a • z (c_list a)) = 0 := by rw [map_smul_eq_mul, h_each, mul_zero]
       linarith [map_add_le_add p_m (t a • z (c_list a))
         (∑ x ∈ s, t x • z (c_list x)), apply_nonneg p_m
         (t a • z (c_list a) + ∑ x ∈ s, t x • z (c_list x))]
@@ -1217,8 +1208,7 @@ private lemma kernel_concentration_bound
       have h_c_supp : ∀ j, (c_list j).support ⊆ Finset.range N := by
         intro j
         have := (good.equivFin.symm j).2
-        simp only [good, Finset.mem_filter, Finset.mem_univ, true_and] at this
-        exact this
+        simpa only [good, Finset.mem_filter, Finset.mem_univ, true_and] using this
       -- {∃ i ∈ good, ω(z(f i)) ≠ 0} = {∃ j : Fin n, ω(z(c_list j)) ≠ 0}
       have h_set_eq : {ω : E → ℝ | ∃ i ∈ good, ω (z (f i)) ≠ 0} =
           {ω | ∃ j : Fin n, ω (z (c_list j)) ≠ 0} := by
@@ -1360,8 +1350,7 @@ private lemma tail_bound_uniform_gaussian_average
     intro c v; apply PiLp.ext; intro j
     change ∑ l, Mij j l * ((c • v : V) : Fin _ → ℝ) l =
       c * (∑ l, Mij j l * (v : Fin _ → ℝ) l)
-    rw [show ((c • v : V) : Fin _ → ℝ) = c • (v : Fin _ → ℝ) from rfl]
-    rw [Finset.mul_sum]
+    rw [show ((c • v : V) : Fin _ → ℝ) = c • (v : Fin _ → ℝ) from rfl, Finset.mul_sum]
     exact Finset.sum_congr rfl fun l _ => by simp [Pi.smul_apply, smul_eq_mul]; ring
   let S_lm : V →ₗ[ℝ] V := {
     toFun := S_fun
@@ -1390,8 +1379,7 @@ private lemma tail_bound_uniform_gaussian_average
       rw [h_expand_inner]
       rw [show @inner ℝ V _ v (S_fun w) = @inner ℝ V _ (S_fun w) v from
         (real_inner_comm v (S_fun w)).symm]
-      rw [h_expand_inner]
-      rw [Finset.sum_comm (f := fun j l => Mij j l * w l * v j)]
+      rw [h_expand_inner, Finset.sum_comm (f := fun j l => Mij j l * w l * v j)]
       congr 1; ext j; congr 1; ext l
       have : Mij l j = Mij j l := (Seminorm.innerProd_comm p_inner _ _).symm
       rw [this]; ring
@@ -1675,8 +1663,7 @@ private lemma badSetN_bound_with_kernel
         (R * p_m (c.sum fun i a => (a : ℝ) • d i)) ^ 2 := by
       calc (∑ j, α_map c j * ω (e j)) ^ 2
           ≤ (∑ j, α_map c j ^ 2) * (∑ j, ω (e j) ^ 2) := h_cs
-        _ = p_m (c.sum fun i a => (a : ℝ) • d i) ^ 2 * (∑ j, ω (e j) ^ 2) := by
-            rw [h_pars]
+        _ = p_m (c.sum fun i a => (a : ℝ) • d i) ^ 2 * (∑ j, ω (e j) ^ 2) := by rw [h_pars]
         _ ≤ p_m (c.sum fun i a => (a : ℝ) • d i) ^ 2 * R ^ 2 :=
             mul_le_mul_of_nonneg_left h_not_tail (sq_nonneg _)
         _ = (R * p_m (c.sum fun i a => (a : ℝ) • d i)) ^ 2 := by ring
@@ -1829,8 +1816,7 @@ theorem nuclear_cylindrical_concentration
       ≤ ν {ω | R ^ 2 < ∑ j : Fin k, (ω (e j)) ^ 2} + ENNReal.ofReal (ε / 8) := h_bn
     _ ≤ ENNReal.ofReal (ε / 4) + ENNReal.ofReal (ε / 8) := by gcongr
     _ ≤ ENNReal.ofReal (ε / 4 + ε / 8) := ENNReal.ofReal_add (by linarith) (by linarith) |>.symm.le
-    _ ≤ ENNReal.ofReal (ε / 2) := by
-        apply ENNReal.ofReal_le_ofReal; linarith
+    _ ≤ ENNReal.ofReal (ε / 2) := by apply ENNReal.ofReal_le_ofReal; linarith
 
 
 /-! ## Main theorem -/

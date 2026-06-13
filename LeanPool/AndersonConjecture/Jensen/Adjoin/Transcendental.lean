@@ -121,10 +121,7 @@ lemma adjoin_height_case_bot
   suffices q = ⊥ by rw [this, Ideal.height_bot]
                     norm_cast
   by_contra hq_ne
-  obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : ↥S_sub, s ∈ q ∧ s ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hq_ne (Submodule.eq_bot_iff q |>.mpr fun x hx => h x hx)
+  obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
   obtain ⟨x', hx_P, hx_nq⟩ := Set.exists_of_ssubset hq_lt
   have eval_mem' : ∀ f : Polynomial R.carrier, (aeval x f : T) ∈ S_sub := by
     intro f
@@ -155,11 +152,7 @@ lemma adjoin_height_case_bot
     rw [h, map_zero] at heqs
     exact hs_ne (Subtype.ext ((mul_eq_zero.mp heqs).resolve_right
       (IsUnit.ne_zero (IsLocalRing.notMem_maximalIdeal.mp hqs))))
-  have hJ_ne : J ≠ ⊥ := by
-    intro h
-    rw [h] at hps_J
-    simp only [Ideal.mem_bot] at hps_J
-    exact hps_ne hps_J
+  have hJ_ne : J ≠ ⊥ := fun h => hps_ne (Ideal.mem_bot.mp (h ▸ hps_J))
   have hJJ'_ne : J ≠ J' := by
     intro heq
     apply hx_nq
@@ -186,9 +179,7 @@ lemma adjoin_height_case_bot
       change (aeval x (Polynomial.C c) : T) = c
       simp [Polynomial.aeval_C, Algebra.algebraMap_ofSubring]
     have hcP : (c : T) ∈ P := hcval ▸ (hq_lt.le hcq : S_sub.subtype (φ _) ∈ P)
-    have := (show c ∈ Ideal.comap R.carrier.subtype P from hcP)
-    rw [hPR] at this
-    exact Ideal.mem_bot.mp this
+    exact Ideal.mem_bot.mp (hPR ▸ (show c ∈ Ideal.comap R.carrier.subtype P from hcP))
   -- Map J, J' to K[X] (PID, dim ≤ 1) to get contradiction via saturation
   set K := FractionRing R.carrier
   set ψ := Polynomial.mapRingHom (algebraMap R.carrier K)
@@ -201,9 +192,7 @@ lemma adjoin_height_case_bot
     have hcval : (φ (Polynomial.C c) : T) = (c : T) := by
       simp [hφ_val, Polynomial.aeval_C, Algebra.algebraMap_ofSubring]
     have hcP : (c : T) ∈ P := hcval ▸ this
-    have := (show c ∈ Ideal.comap R.carrier.subtype P from hcP)
-    rw [hPR] at this
-    exact Ideal.mem_bot.mp this
+    exact Ideal.mem_bot.mp (hPR ▸ (show c ∈ Ideal.comap R.carrier.subtype P from hcP))
   have hJ_disj : Disjoint (M' : Set (Polynomial R.carrier)) (J : Set _) := by
     rw [Set.disjoint_left]
     intro f hfM hfJ
@@ -258,11 +247,7 @@ lemma adjoin_height_case_ne_bot
     (hPR : P.comap R.carrier.subtype ≠ ⊥) :
     (Ideal.comap S_sub.subtype P).height ≤ ↑(1 : ℕ) := by
   -- Step 1: Extract a prime generator p₀ of P ∩ R
-  obtain ⟨a₀, ha₀_mem, ha₀_ne⟩ : ∃ a₀ : R.carrier,
-      a₀ ∈ P.comap R.carrier.subtype ∧ a₀ ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hPR ((Submodule.eq_bot_iff _).mpr fun y hy => h y hy)
+  obtain ⟨a₀, ha₀_mem, ha₀_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hPR
   haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
   obtain ⟨p₀, hp₀_prime_R, hp₀_dvd, hp₀_mem_PR⟩ : ∃ p₀ : R.carrier,
       Prime p₀ ∧ p₀ ∣ a₀ ∧ p₀ ∈ P.comap R.carrier.subtype := by
@@ -276,27 +261,8 @@ lemma adjoin_height_case_ne_bot
         (fun h => absurd
           ((P.comap R.carrier.subtype).eq_top_of_isUnit_mem h u.isUnit)
           (hP_prime.comap R.carrier.subtype).ne_top)
-    have hfactor_in_P : ∃ f ∈ factors, f ∈ P.comap R.carrier.subtype := by
-      suffices ∀ (m : Multiset R.carrier), (∀ b ∈ m, Prime b) →
-          m.prod ∈ P.comap R.carrier.subtype →
-          ∃ f ∈ m, f ∈ P.comap R.carrier.subtype from
-        this factors hfp hprod_in
-      intro m
-      induction m using Multiset.induction with
-      | empty =>
-        intro _ h
-        simp only [Multiset.prod_zero] at h
-        exact absurd ((P.comap R.carrier.subtype).eq_top_iff_one.mpr h)
-          (hP_prime.comap R.carrier.subtype).ne_top
-      | cons a s ih =>
-        intro hpr hprod
-        rw [Multiset.prod_cons] at hprod
-        rcases (hP_prime.comap R.carrier.subtype).mem_or_mem hprod with ha | hs
-        · exact ⟨a, Multiset.mem_cons_self a s, ha⟩
-        · obtain ⟨f, hf, hfP⟩ :=
-            ih (fun b hb => hpr b (Multiset.mem_cons_of_mem hb)) hs
-          exact ⟨f, Multiset.mem_cons_of_mem hf, hfP⟩
-    obtain ⟨f, hf_mem, hf_P⟩ := hfactor_in_P
+    obtain ⟨f, hf_mem, hf_P⟩ :=
+      ((hP_prime.comap R.carrier.subtype).multiset_prod_mem_iff_exists_mem factors).mp hprod_in
     exact ⟨f, hfp f hf_mem, dvd_trans (Multiset.dvd_prod hf_mem) hassoc.dvd, hf_P⟩
   have hp₀_ne : p₀ ≠ 0 := hp₀_prime_R.ne_zero
   have hp₀_ne_T : (p₀ : T) ≠ 0 := fun h => hp₀_ne (Subtype.ext h)
@@ -376,10 +342,7 @@ lemma adjoin_height_case_ne_bot
   suffices q = ⊥ by rw [this, Ideal.height_bot]
                     norm_cast
   by_contra hq_ne
-  obtain ⟨s, hs_q, hs_ne⟩ : ∃ s : ↥S_sub, s ∈ q ∧ s ≠ 0 := by
-    by_contra h
-    push Not at h
-    exact hq_ne (Submodule.eq_bot_iff q |>.mpr fun y hy => h y hy)
+  obtain ⟨s, hs_q, hs_ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hq_ne
   haveI : q.IsPrime := hq_prime
   have hp₀_not_q : p₀_S ∉ q := by
     intro hp₀q
@@ -535,8 +498,7 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
     apply hinj
     simp only [map_mul]
     calc aeval x pb * aeval x pc * aeval x qa * aeval x qd
-        = (↑b * aeval x qb) * (↑c * aeval x qc) * aeval x qa * aeval x qd := by
-          rw [heqb, heqc]
+        = (↑b * aeval x qb) * (↑c * aeval x qc) * aeval x qa * aeval x qd := by rw [heqb, heqc]
       _ = ↑b * ↑c * (aeval x qb * aeval x qc * aeval x qa * aeval x qd) := by ring
       _ = ↑a * ↑d * (aeval x qb * aeval x qc * aeval x qa * aeval x qd) := by rw [heq_T]
       _ = (↑a * aeval x qa) * (↑d * aeval x qd) * aeval x qb * aeval x qc := by ring
@@ -545,9 +507,8 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
     have : pa ∣ pb * pc * qa * qd := ⟨pd * qb * qc, by rw [poly_eq]
                                                        ring⟩
     exact dvd_trans ⟨g, hfg⟩ this
-  have hf_dvd_rhs' : f ∣ (pb * pc) * (qa * qd) := by
-    rw [show (pb * pc) * (qa * qd) = pb * pc * qa * qd from by ring]
-    exact hf_dvd_rhs
+  have hf_dvd_rhs' : f ∣ (pb * pc) * (qa * qd) :=
+    (show (pb * pc) * (qa * qd) = pb * pc * qa * qd from by ring) ▸ hf_dvd_rhs
   rcases hf_prime.dvd_or_dvd hf_dvd_rhs' with hf_dvd_bc | hf_dvd_qaqd
   · rcases hf_prime.dvd_or_dvd hf_dvd_bc with hf_dvd_pb | hf_dvd_pc
     · left
@@ -593,8 +554,7 @@ private lemma adjoinLoc_uniqueFactorizationMonoid
   · -- f | qa * qd contradicts qa(x)*qd(x) ∉ M since f(x) ∈ M
     exfalso
     obtain ⟨w, hw⟩ := hf_dvd_qaqd
-    have : (aeval x qa : T) * aeval x qd = aeval x f * aeval x w := by
-      rw [← map_mul, ← map_mul, hw]
+    have : (aeval x qa : T) * aeval x qd = aeval x f * aeval x w := by rw [← map_mul, ← map_mul, hw]
     have hprod_nM : (aeval x qa : T) * aeval x qd ∉ IsLocalRing.maximalIdeal T :=
       IsLocalRing.notMem_maximalIdeal.mpr
         ((IsLocalRing.notMem_maximalIdeal.mp hqa).mul
@@ -635,8 +595,7 @@ private lemma adjoinLoc_prime_of_prime
         apply_fun (fun x => (x : T)) at h
         simpa using h
       calc aeval x pa * aeval x pb * aeval x qc
-          = ((a : T) * aeval x qa) * ((b : T) * aeval x qb) * aeval x qc := by
-            rw [heqa, heqb]
+          = ((a : T) * aeval x qa) * ((b : T) * aeval x qb) * aeval x qc := by rw [heqa, heqb]
         _ = (a : T) * (b : T) * (aeval x qa * aeval x qb * aeval x qc) := by ring
         _ = r.1 * (c : T) * (aeval x qa * aeval x qb * aeval x qc) := by rw [hab]
         _ = r.1 * ((c : T) * aeval x qc) * aeval x qa * aeval x qb := by ring
@@ -663,8 +622,7 @@ private lemma adjoinLoc_prime_of_prime
           have : aeval x (C r * d) = aeval x pa := by rw [← hd]
           rw [map_mul, aeval_C] at this
           exact this.symm
-        have heq_a : (a : T) * aeval x qa = r.1 * aeval x d := by
-          rw [heqa, heq_pa]
+        have heq_a : (a : T) * aeval x qa = r.1 * aeval x d := by rw [heqa, heq_pa]
         have hqa_unit : IsUnit (aeval x qa : T) :=
           IsLocalRing.notMem_maximalIdeal.mp hqa
         have hc'_mem_set : ∃ (c' : T), c' ∈ adjoinLocSet R x ∧
@@ -691,8 +649,7 @@ private lemma adjoinLoc_prime_of_prime
           have : aeval x (C r * d) = aeval x pb := by rw [← hd]
           rw [map_mul, aeval_C] at this
           exact this.symm
-        have heq_b : (b : T) * aeval x qb = r.1 * aeval x d := by
-          rw [heqb, heq_pb]
+        have heq_b : (b : T) * aeval x qb = r.1 * aeval x d := by rw [heqb, heq_pb]
         have hqb_unit : IsUnit (aeval x qb : T) :=
           IsLocalRing.notMem_maximalIdeal.mp hqb
         obtain ⟨u, hu⟩ := hqb_unit
@@ -796,15 +753,8 @@ theorem adjoin_transcendental_isNSubring
           Cardinal.mul_eq_self (le_max_right _ _)
       _ = max Cardinal.aleph0 (Cardinal.mk R.carrier) := max_comm _ _
   have hCard_NSubring : Cardinal.mk S_sub ≤
-      max Cardinal.aleph0 (Cardinal.mk (IsLocalRing.ResidueField T)) := by
-    calc Cardinal.mk S_sub
-        ≤ max Cardinal.aleph0 (Cardinal.mk R.carrier) := hCard_S
-      _ ≤ max Cardinal.aleph0 (max Cardinal.aleph0
-            (Cardinal.mk (IsLocalRing.ResidueField T))) := by
-          gcongr
-          exact R.card_le
-      _ = max Cardinal.aleph0 (Cardinal.mk (IsLocalRing.ResidueField T)) := by
-          simp
+      max Cardinal.aleph0 (Cardinal.mk (IsLocalRing.ResidueField T)) :=
+    hCard_S.trans (max_le (le_max_left ..) R.card_le)
   have hMaxIdealEq : IsLocalRing.maximalIdeal S_sub =
       (IsLocalRing.maximalIdeal T).comap S_sub.subtype := by
     ext ⟨a, ha⟩
@@ -813,8 +763,7 @@ theorem adjoin_transcendental_isNSubring
       rw [Ideal.mem_comap]
       by_contra h
       rw [IsLocalRing.mem_maximalIdeal] at hx
-      exact hx (hinv ⟨a, ha⟩
-        (show (⟨a, ha⟩ : S_sub).val ∉ IsLocalRing.maximalIdeal T from h))
+      exact hx (hinv ⟨a, ha⟩ h)
     · intro hx
       rw [Ideal.mem_comap] at hx
       rw [IsLocalRing.mem_maximalIdeal]

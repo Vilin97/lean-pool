@@ -303,8 +303,7 @@ end «lp_section_1»
 @[simp] lemma qqNRel_inj (k₁ r₁ v₁ k₂ r₂ v₂ : V) :
     ^nrel k₁ r₁ v₁ = ^nrel k₂ r₂ v₂ ↔ k₁ = k₂ ∧ r₁ = r₂ ∧ v₁ = v₂ := by simp [qqNRel]
 @[simp] lemma qqAnd_inj (p₁ q₁ p₂ q₂ : V) :
-    p₁ ^⋏ q₁ = p₂ ^⋏ q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ := by
-  simp [qqAnd]
+    p₁ ^⋏ q₁ = p₂ ^⋏ q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ := by simp [qqAnd]
 @[simp] lemma qqOr_inj (p₁ q₁ p₂ q₂ : V) : p₁ ^⋎ q₁ = p₂ ^⋎ q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ := by simp [qqOr]
 @[simp] lemma qqAll_inj (p₁ p₂ : V) : ^∀ p₁ = ^∀ p₂ ↔ p₁ = p₂ := by simp [qqAll]
 @[simp] lemma qqEx_inj (p₁ p₂ : V) : ^∃ p₁ = ^∃ p₂ ↔ p₁ = p₂ := by simp [qqEx]
@@ -632,8 +631,7 @@ lemma _root_.LO.Arith.Language.IsUFormula.pos {p : V} (h : L.IsUFormula p) : 0 <
 --lemma Language.IsSemiformula.pos {n p : V} (h : L.Semiformula n p) : 0 < p := h.1.pos
 
 @[simp] lemma _root_.LO.Arith.Language.IsUFormula.not_zero : ¬L.IsUFormula (0 :
-    V) := by
-  intro h; simpa using h.pos
+    V) := by intro h; simpa using h.pos
 
 -- @[simp] lemma Language.IsSemiformula.not_zero (m : V) : ¬L.Semiformula m (0 : V) := by
 --   intro h; simpa using h.pos
@@ -645,11 +643,9 @@ lemma _root_.LO.Arith.Language.IsUFormula.pos {p : V} (h : L.IsUFormula p) : 0 <
     L.Semiformula n (^nrel n k r v) ↔ L.Rel k r ∧ L.SemitermVec k n v := by
       simp [Language.IsSemiformula]
 @[simp] lemma Language.IsSemiformula.verum (n : V) :
-    L.Semiformula n ^⊤[n] := by
-  simp [Language.IsSemiformula]
+    L.Semiformula n ^⊤[n] := by simp [Language.IsSemiformula]
 @[simp] lemma Language.IsSemiformula.falsum (n : V) :
-    L.Semiformula n ^⊥[n] := by
-  simp [Language.IsSemiformula]
+    L.Semiformula n ^⊥[n] := by simp [Language.IsSemiformula]
 @[simp] lemma Language.IsSemiformula.and {n p q : V} :
     L.Semiformula n (p ^⋏ q) ↔ L.Semiformula n p ∧ L.Semiformula n q := by
       simp [Language.IsSemiformula]
@@ -657,11 +653,9 @@ lemma _root_.LO.Arith.Language.IsUFormula.pos {p : V} (h : L.IsUFormula p) : 0 <
     L.Semiformula n (p ^⋎ q) ↔ L.Semiformula n p ∧ L.Semiformula n q := by
       simp [Language.IsSemiformula]
 @[simp] lemma Language.IsSemiformula.all {n p : V} :
-    L.Semiformula n (^∀ p) ↔ L.Semiformula (n + 1) p := by
-  simp [Language.IsSemiformula]
+    L.Semiformula n (^∀ p) ↔ L.Semiformula (n + 1) p := by simp [Language.IsSemiformula]
 @[simp] lemma Language.IsSemiformula.ex {n p : V} :
-    L.Semiformula n (^∃ p) ↔ L.Semiformula (n + 1) p := by
-  simp [Language.IsSemiformula]
+    L.Semiformula n (^∃ p) ↔ L.Semiformula (n + 1) p := by simp [Language.IsSemiformula]
 -/
 
 lemma _root_.LO.Arith.Language.IsUFormula.induction1 (Γ) {P : V → Prop} (hP : Γ-[1]-Predicate P)
@@ -1653,12 +1647,10 @@ end «lp_section_6»
     L.bv (p ^⋎ q) = Max.max (L.bv p) (L.bv q) := by simp [Language.bv, hp, hq, construction]
 
 @[simp] lemma bv_all {p} (hp : L.IsUFormula p) :
-    L.bv (^∀ p) = L.bv p - 1 := by
-  simp [Language.bv, hp, construction]
+    L.bv (^∀ p) = L.bv p - 1 := by simp [Language.bv, hp, construction]
 
 @[simp] lemma bv_ex {p} (hp : L.IsUFormula p) :
-    L.bv (^∃ p) = L.bv p - 1 := by
-  simp [Language.bv, hp, construction]
+    L.bv (^∃ p) = L.bv p - 1 := by simp [Language.bv, hp, construction]
 
 lemma bv_eq_of_not_isUFormula {p} (h : ¬L.IsUFormula p) :
     L.bv p = 0 :=
@@ -1940,8 +1932,7 @@ lemma _root_.LO.Arith.Language.IsSemiformula.pos {n p : V} (h : L.IsSemiformula 
   h.isUFormula.pos
 
 @[simp] lemma _root_.LO.Arith.Language.IsSemiformula.not_zero (m : V) : ¬L.IsSemiformula m (0 :
-    V) := by
-  intro h; simpa using h.pos
+    V) := by intro h; simpa using h.pos
 
 end «lp_section_7»
 

@@ -202,8 +202,7 @@ lemma inconsistent_def {𝓢 : S} :
     Inconsistent 𝓢 ↔ ∀ f, 𝓢 ⊢! f := by simp [Inconsistent]
 
 lemma inconsistent_iff_theory_eq {𝓢 : S} :
-    Inconsistent 𝓢 ↔ theory 𝓢 = Set.univ := by
-  simp [Inconsistent, Set.ext_iff, theory]
+    Inconsistent 𝓢 ↔ theory 𝓢 = Set.univ := by simp [Inconsistent, Set.ext_iff, theory]
 
 lemma not_inconsistent_iff_consistent {𝓢 : S} :
     ¬Inconsistent 𝓢 ↔ Consistent 𝓢 :=
@@ -217,8 +216,7 @@ lemma not_consistent_iff_inconsistent {𝓢 : S} :
 alias ⟨_, Inconsistent.not_con⟩ := not_consistent_iff_inconsistent
 
 lemma consistent_iff_exists_unprovable {𝓢 : S} :
-    Consistent 𝓢 ↔ ∃ f, 𝓢 ⊬ f := by
-  simp [←not_inconsistent_iff_consistent, inconsistent_def]
+    Consistent 𝓢 ↔ ∃ f, 𝓢 ⊬ f := by simp [←not_inconsistent_iff_consistent, inconsistent_def]
 
 alias ⟨Consistent.exists_unprovable, _⟩ := consistent_iff_exists_unprovable
 
@@ -571,8 +569,7 @@ lemma «of_insert!» (h : cons φ 𝓢 ⊢! ψ) : 𝓢 ⊢! φ ==> ψ := by
 
 alias deduction! := Deduction.of_insert!
 
-lemma «inv!» (h : 𝓢 ⊢! φ ==> ψ) : cons φ 𝓢 ⊢! ψ := by
-  rcases h with ⟨b⟩; exact ⟨Deduction.inv b⟩
+lemma «inv!» (h : 𝓢 ⊢! φ ==> ψ) : cons φ 𝓢 ⊢! ψ := by rcases h with ⟨b⟩; exact ⟨Deduction.inv b⟩
 
 end Deduction
 

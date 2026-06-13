@@ -26,8 +26,7 @@ variable [V ⊧ₘ* 𝐈Sg0]
 /-- Imported declaration from the Incompleteness formalization. -/
 def ext (u z : V) : V := z / u % u
 
-lemma ext_graph (a b c : V) : a = ext b c ↔ ∃ x ≤ c, x = c / b ∧ a = x % b := by
-  simp [ext]
+lemma ext_graph (a b c : V) : a = ext b c ↔ ∃ x ≤ c, x = c / b ∧ a = x % b := by simp [ext]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.extDef : Sg0.Semisentence 3 :=
@@ -56,8 +55,7 @@ lemma ext_add_of_dvd_sq_right {u z₁ z₂ : V} (pos : 0 < u) (h : u ^ 2 ∣ z�
   simp [div_add_mul_self, pos]
 
 lemma ext_add_of_dvd_sq_left {u z₁ z₂ : V} (pos : 0 < u) (h : u ^ 2 ∣ z₁) :
-    ext u (z₁ + z₂) = ext u z₂ := by
-  rw [add_comm]; exact ext_add_of_dvd_sq_right pos h
+    ext u (z₁ + z₂) = ext u z₂ := by rw [add_comm]; exact ext_add_of_dvd_sq_right pos h
 
 lemma ext_rem {i j z : V} (ppi : PPow2 i) (ppj : PPow2 j) (hij : i < j) :
     ext i (z % j) = ext i z := by
@@ -189,8 +187,7 @@ lemma three_lt_four : (3 : V) < 4 := by rw [←three_add_one_eq_four]; exact lt_
 lemma two_lt_four : (2 : V) < 4 := lt_trans two_lt_three three_lt_four
 
 lemma seq₀_zero_two : Seq₀ (seqX₀ : V) (seqY₀ :
-    V) := by
-  simp [seqX₀, seqY₀, Seq₀, ext, two_lt_four]
+    V) := by simp [seqX₀, seqY₀, Seq₀, ext, two_lt_four]
 
 lemma _root_.LO.Arith.Exponential.Seq₀.rem {X Y i : V} (h : Seq₀ X Y) (ppi : PPow2 i) (hi : 4 < i) :
     Seq₀ (X % i) (Y % i) := by

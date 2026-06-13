@@ -99,14 +99,10 @@ lemma mem_span_ideal_iff_exists_fin (s : Ideal R) (x : R) :
     exact ⟨n, fin, 1, xR, y, by simp⟩
 
 lemma coe_bot_set : ((⊥ : TwoSidedIdeal R) : Set R) = {0} := by
-  ext x
-  simp only [SetLike.mem_coe, Set.mem_singleton_iff]
-  rfl
+  ext x; exact Iff.rfl
 
 lemma coe_top_set : ((⊤ : TwoSidedIdeal R) : Set R) = Set.univ := by
-  ext x
-  simp only [SetLike.mem_coe, Set.mem_univ]
-  rfl
+  ext x; exact iff_of_true trivial trivial
 
 section IsSimpleOrder
 

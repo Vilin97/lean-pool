@@ -617,8 +617,7 @@ private lemma large_amplitude {L : ℕ} (hL : 1 ≤ L) {E : Finset ℕ}
   -- Equivalently: 144L·y ≥ cns.
   -- Since cns² ≤ y(2cns+4) and 144L·cns ≥ 2cns+4 (proved below), we get
   -- cns² ≤ y·(144L·cns), so cns ≤ 144L·y (for cns > 0).
-  rw [ge_iff_le]
-  rw [div_le_iff₀ (by positivity : (0 : ℝ) < 144 * ↑L)]
+  rw [ge_iff_le, div_le_iff₀ (by positivity : (0 : ℝ) < 144 * ↑L)]
   -- Need: cns ≤ 144 * L * y
   have hL_ge : (1 : ℝ) ≤ (↑L : ℝ) := Nat.one_le_cast.mpr hL
   have h_key : 2 * cns + 4 ≤ 144 * ↑L * cns := by

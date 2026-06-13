@@ -204,8 +204,7 @@ private lemma integrable_oneDimPhi_cross_gaussian_wip
       (fun z : Cd 1 => HermitekLEAN.Phi k m (z 0) *
         (starRingEnd ℂ) (HermitekLEAN.Phi k n (z 0)))
       (gammaD 1)
-  rw [gammaD]
-  rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+  rw [gammaD, MeasureTheory.integrable_withDensity_iff_integrable_smul']
   · have hcross :
         Integrable
           (fun z : Cd 1 =>

@@ -65,8 +65,7 @@ theorem nonUnitalAlgHom_comp_mul {R A B : Type*} [CommSemiring R] [Semiring A]
 theorem algHom_comp_mul {R A B : Type*} [CommSemiring R] [Semiring A]
     [Semiring B] [Algebra R A] [Algebra R B] (f : A →ₐ[R] B) :
     f.toLinearMap ∘ₗ LinearMap.mul' R A =
-      (LinearMap.mul' R B) ∘ₗ (f.toLinearMap ⊗ₘ f.toLinearMap) :=
-  by
+      (LinearMap.mul' R B) ∘ₗ (f.toLinearMap ⊗ₘ f.toLinearMap) := by
   change (LinearMapClass.linearMap f.toNonUnitalAlgHom) ∘ₗ LinearMap.mul' R A =
     (LinearMap.mul' R B) ∘ₗ
       ((LinearMapClass.linearMap f.toNonUnitalAlgHom) ⊗ₘ

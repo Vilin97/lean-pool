@@ -48,15 +48,12 @@ lemma naturality_apply {FD : D → D → Type*} {CD : D → Type w}
   α.app d (F.map f x) = G.map f (α.app c x) := by
   rw [← CategoryTheory.comp_apply, ← CategoryTheory.comp_apply, α.naturality]
 lemma cancel_inv_left_types {c d : Type u}
-  (f : c ⟶ d) [IsIso f] (x : c) : inv f (f x) = x := by
-  apply cancel_inv_left (C := Type u)
+  (f : c ⟶ d) [IsIso f] (x : c) : inv f (f x) = x := by apply cancel_inv_left (C := Type u)
 lemma cancel_inv_right_types {c d : Type u}
-  (f : c ⟶ d) [IsIso f] (x : d) : f (inv f x) = x := by
-  apply cancel_inv_right (C := Type u)
+  (f : c ⟶ d) [IsIso f] (x : d) : f (inv f x) = x := by apply cancel_inv_right (C := Type u)
 lemma naturality_apply_types {F G : C ⥤ Type u} (α : F ⟶ G)
   {c d : C} (f : c ⟶ d) (x : F.obj c) :
-  α.app d (F.map f x) = G.map f (α.app c x) := by
-  apply naturality_apply (D := Type u)
+  α.app d (F.map f x) = G.map f (α.app c x) := by apply naturality_apply (D := Type u)
 
 @[simp] lemma cat_preimage_id {c : Type u} (x : Set c) :
   (𝟙 c)⁻¹' x = x := Set.preimage_id
@@ -170,20 +167,15 @@ lemma coprod_type_isIso_iff {J : Type u1} {F G : Discrete J ⥤ Type (max u1 v1)
       haveI : Mono (s.ι.app ⟨j⟩) := h1 ⟨j⟩
       haveI : IsIso (hs.map t df) := by simpa [df] using hi
       have hMap : Mono (hs.map t df) := by infer_instance
-      have h : Mono (s.ι.app ⟨j⟩ ≫ hs.map t df) :=
-        mono_comp' (h1 ⟨j⟩) hMap
-      have hEq : s.ι.app ⟨j⟩ ≫ hs.map t df = f j ≫ t.ι.app ⟨j⟩ := by
-        exact hs.ι_map t df ⟨j⟩
-      haveI : Mono (f j ≫ t.ι.app ⟨j⟩) := by
-        rw [← hEq]
-        exact h
+      have h : Mono (s.ι.app ⟨j⟩ ≫ hs.map t df) := mono_comp' (h1 ⟨j⟩) hMap
+      have hEq : s.ι.app ⟨j⟩ ≫ hs.map t df = f j ≫ t.ι.app ⟨j⟩ := hs.ι_map t df ⟨j⟩
+      haveI : Mono (f j ≫ t.ι.app ⟨j⟩) := hEq ▸ h
       exact mono_of_mono _ (t.ι.app ⟨j⟩)
     · intro y
       obtain ⟨i, x, h⟩ := h3 (inv (hs.map t df) (t.ι.app ⟨j⟩ y))
       have h' : (t.ι.app i) (df.app i x) = (t.ι.app ⟨j⟩) y := by
         have hmap : (s.ι.app i ≫ hs.map t df) x =
-            (inv (hs.map t df) ≫ hs.map t df) (t.ι.app ⟨j⟩ y) :=
-          congr_arg (hs.map t df) h
+            (inv (hs.map t df) ≫ hs.map t df) (t.ι.app ⟨j⟩ y) := congr_arg (hs.map t df) h
         rw [hs.ι_map] at hmap
         simp only [Discrete.natTrans_app, IsIso.inv_hom_id, id_apply, df] at hmap
         exact hmap

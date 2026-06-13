@@ -41,8 +41,7 @@ abbrev getTree {A : Type*} {G : Game A} {k : ℕ} {hyp : Hyp G k} (x : List A') 
   getTree' hyp x
 variable {hyp}
 @[simp] lemma getTree_nil : getTree' hyp ([] : List (upA hyp)) = G.tree := rfl
-@[simp] lemma getTree_concat x (a : upA hyp) : getTree' hyp (x ++ [a]) = a.2 := by
-  simp [getTree']
+@[simp] lemma getTree_concat x (a : upA hyp) : getTree' hyp (x ++ [a]) = a.2 := by simp [getTree']
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def LosingCondition (x : List (upA hyp)) (h : x.length = 2 * k + 2) :=
@@ -593,8 +592,7 @@ lemma T'_snd_medium' (x : gameTree hyp) (h : x.val.length = 2 * k + 1) :
     rfl
   have hlast := congrArg List.getLast? hval'
   have hleft : (ExtensionsAt.map (treeHom hyp) h a).val'.getLast? =
-      some (ExtensionsAt.map (treeHom hyp) h a).val := by
-    exact List.getLast?_append_of_ne_nil _ (by simp)
+      some (ExtensionsAt.map (treeHom hyp) h a).val := List.getLast?_append_of_ne_nil _ (by simp)
   have hright : (a.val'.map Prod.fst).getLast? = some a.val.1 := by
     change (List.map Prod.fst (x.val ++ [a.val])).getLast? = some a.val.1
     have hmap : List.map Prod.fst (x.val ++ [a.val]) = x.val.map Prod.fst ++ [a.val.1] := by
@@ -682,10 +680,8 @@ lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ 
   let u := List.map Prod.fst (List.take (2 * k + 2) x.val) ++ H.y.val
   rw [pullSub_append] at hx
   change List.map Prod.fst x.val ∈ pullSub (subAt G.tree u) u at hx
-  have htakeLen : (List.take (2 * k + 2) x.val).length = 2 * k + 2 := by
-    simp [hxl]
-  have hlong : (List.take (2 * k + 2) x.val).length + H.y.val.length ≤ x.val.length := by
-    omega
+  have htakeLen : (List.take (2 * k + 2) x.val).length = 2 * k + 2 := by simp [hxl]
+  have hlong : (List.take (2 * k + 2) x.val).length + H.y.val.length ≤ x.val.length := by omega
   have hlongMap : u.length ≤ (List.map Prod.fst x.val).length := by
     calc
       u.length = (List.take (2 * k + 2) x.val).length + H.y.val.length := by
@@ -705,9 +701,7 @@ lemma LosingCondition.not_lost_short {x : (game hyp).tree} (hxl : 2 * k + 2 ≤ 
     have hp : ((Player.one.residual u).swap).residual u = Player.zero := by
       rw [Player.residual_swap, Player.residual_residual]
       simp
-    rw [hp]
-    rw [Player.payoff_zero]
-    rw [Set.eq_empty_iff_forall_notMem]
+    rw [hp, Player.payoff_zero, Set.eq_empty_iff_forall_notMem]
     intro s hs
     rw [Set.eq_empty_iff_forall_notMem] at hW
     apply hW s
@@ -739,8 +733,7 @@ lemma extensionsAt_eq_of_lost
   let u := List.map Prod.fst (List.take (2 * k + 2) x.val) ++ H.y.val
   change List.map Prod.fst (x.val ++ [a.val]) ∈ pullSub (subAt G.tree u) u at ha
   change List.map Prod.fst (x.val ++ [b.val]) ∈ pullSub (subAt G.tree u) u at hb
-  have htakeLen : (List.take (2 * k + 2) x.val).length = 2 * k + 2 := by
-    simp [hxl]
+  have htakeLen : (List.take (2 * k + 2) x.val).length = 2 * k + 2 := by simp [hxl]
   have hshortA :
       (List.map Prod.fst (x.val ++ [a.val])).length ≤ u.length := by
     calc

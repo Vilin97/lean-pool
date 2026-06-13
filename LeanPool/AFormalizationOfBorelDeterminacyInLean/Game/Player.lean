@@ -97,14 +97,11 @@ namespace Player
   p.residual x = p.swap := by synthIsPosition
 @[simp] lemma residual_append_both {y} : (p.residual (x ++ (y ++ x))) = p.residual y := by
   synthIsPosition
-@[simp] lemma residual_cons {a} : (p.residual (a :: x)) = (p.residual x).swap := by
-  synthIsPosition
+@[simp] lemma residual_cons {a} : (p.residual (a :: x)) = (p.residual x).swap := by synthIsPosition
 @[simp] lemma residual_append_cons {a} {y} :
   (p.residual (x ++ a :: y)) = (p.residual (x ++ y)).swap := by synthIsPosition
-lemma residual_concat {a} : (p.residual (x ++ [a])) = (p.residual x).swap := by
-  synthIsPosition
-lemma residual_concat2 {a b} : (p.residual (x ++ [a, b])) = p.residual x := by
-  synthIsPosition
+lemma residual_concat {a} : (p.residual (x ++ [a])) = (p.residual x).swap := by synthIsPosition
+lemma residual_concat2 {a b} : (p.residual (x ++ [a, b])) = p.residual x := by synthIsPosition
 end Player
 /-this should probably be removed
 namespace Player
@@ -126,12 +123,10 @@ namespace Player
   p.residual x = p.swap := by synthIsPosition
 @[simp] lemma residual_residual {x y : List A} :
   (p.residual x).residual y = p.residual (x ++ y) := by synthIsPosition
-@[simp] lemma residual_toNat : (p.residual x).toNat = (p.toNat + x.length) % 2 := by
-  synthIsPosition
+@[simp] lemma residual_toNat : (p.residual x).toNat = (p.toNat + x.length) % 2 := by synthIsPosition
 @[simp] lemma residual_swap :
   (p.residual x).swap = p.swap.residual x := by synthIsPosition
-@[simp] lemma residual_cons {a} : (p.residual (a :: x)) = (p.residual x).swap := by
-  synthIsPosition
+@[simp] lemma residual_cons {a} : (p.residual (a :: x)) = (p.residual x).swap := by synthIsPosition
 @[simp] lemma residual_concat {a} : (p.residual (x ++ [a])) = (p.residual x).swap := by
   synthIsPosition
 @[simp] lemma residual_concat2 {a b} : (p.residual (x ++ [a, b])) = p.residual x := by

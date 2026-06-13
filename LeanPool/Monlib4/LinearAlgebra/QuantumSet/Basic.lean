@@ -482,8 +482,7 @@ theorem LinearMap.adjoint_real_eq [hA : QuantumSet A] [hB : QuantumSet B]
           (hb.modAut (-(2 * hB.k) - 1)).toLinearMap) x, u⟫_ℂ := by
           symm
           simp only [LinearMap.comp_apply, AlgEquiv.toLinearMap_apply]
-          rw [QuantumSet.modAut_isSymmetric]
-          rw [LinearMap.adjoint_inner_left]
+          rw [QuantumSet.modAut_isSymmetric, LinearMap.adjoint_inner_left]
           simp only [LinearMap.real_apply, starAlgebra.modAut_star]
           ring_nf
 

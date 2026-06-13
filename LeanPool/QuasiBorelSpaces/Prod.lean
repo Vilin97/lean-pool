@@ -110,9 +110,7 @@ lemma isHom_of_uncurry
     {g : D → A} (hg : IsHom g)
     {h : D → B} (hh : IsHom h)
     : IsHom fun x ↦ f (g x) (h x) := by
-  apply isHom_comp' (f := Function.uncurry f) (g := fun x ↦ (g x, h x))
-  · apply hf
-  · fun_prop
+  exact isHom_comp' (f := Function.uncurry f) (g := fun x ↦ (g x, h x)) hf (by fun_prop)
 
 end QuasiBorelSpace.Prod
 

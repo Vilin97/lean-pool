@@ -63,21 +63,8 @@ lemma gaussianBinom_gt (q m k : ℕ) (h : m < k) : gaussianBinom q m k = 0 := by
 
 private lemma conjAct_smul_eq_of_mem {G : Type*} [Group G] (H : Subgroup G)
     {h : G} (hh : h ∈ H) :
-    ConjAct.toConjAct h • H = H := by
-  ext x; constructor
-  · intro hx
-    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem] at hx
-    have h_eq : ConjAct.toConjAct h • ((ConjAct.toConjAct h)⁻¹ • x) = x :=
-      smul_inv_smul _ x
-    rw [ConjAct.smul_def, ConjAct.ofConjAct_toConjAct] at h_eq
-    rw [← h_eq]; exact H.mul_mem (H.mul_mem hh hx) (H.inv_mem hh)
-  · intro hx
-    rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem]
-    have : (ConjAct.toConjAct h)⁻¹ • x = h⁻¹ * x * h := by
-      change ConjAct.ofConjAct (ConjAct.toConjAct h)⁻¹ * x *
-        (ConjAct.ofConjAct (ConjAct.toConjAct h)⁻¹)⁻¹ = _
-      simp [ConjAct.ofConjAct_toConjAct, mul_assoc]
-    rw [this]; exact H.mul_mem (H.mul_mem (H.inv_mem hh) hx) hh
+    ConjAct.toConjAct h • H = H :=
+  Subgroup.conjAct_pointwise_smul_eq_self (Subgroup.le_normalizer hh)
 
 variable (n : ℕ)
 

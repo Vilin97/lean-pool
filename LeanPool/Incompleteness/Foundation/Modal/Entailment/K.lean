@@ -255,8 +255,7 @@ def distributeMultiboxAnd :
   implyRightAnd (implyMultiboxDistribute' and₁) (implyMultiboxDistribute' and₂)
 omit [DecidableEq F] in
 @[simp] lemma «distributeMultiboxAnd!» :
-    𝓢 ⊢! □^[n](φ ⋏ ψ) ==> □^[n]φ ⋏ □^[n]ψ :=
-  by
+    𝓢 ⊢! □^[n](φ ⋏ ψ) ==> □^[n]φ ⋏ □^[n]ψ := by
   classical
   exact ⟨distributeMultiboxAnd⟩
 
@@ -273,8 +272,7 @@ def distributeMultiboxAnd' (h : 𝓢 ⊢ □^[n](φ ⋏ ψ)) :
   distributeMultiboxAnd ⨀ h
 omit [DecidableEq F] in
 lemma «distributeMultiboxAnd'!» (d : 𝓢 ⊢! □^[n](φ ⋏ ψ)) :
-    𝓢 ⊢! □^[n]φ ⋏ □^[n]ψ :=
-  by
+    𝓢 ⊢! □^[n]φ ⋏ □^[n]ψ := by
   classical
   exact ⟨distributeMultiboxAnd' d.some⟩
 
@@ -575,8 +573,7 @@ noncomputable def lemmaGrz₁ :
 
 omit [DecidableEq F] in
 lemma «lemmaGrz₁!» :
-    𝓢 ⊢! (□φ ==> □(□((φ ⋏ (□φ ==> □□φ)) ==> □(φ ⋏ (□φ ==> □□φ))) ==> (φ ⋏ (□φ ==> □□φ)))) :=
-  by
+    𝓢 ⊢! (□φ ==> □(□((φ ⋏ (□φ ==> □□φ)) ==> □(φ ⋏ (□φ ==> □□φ))) ==> (φ ⋏ (□φ ==> □□φ)))) := by
   classical
   exact ⟨lemmaGrz₁⟩
 

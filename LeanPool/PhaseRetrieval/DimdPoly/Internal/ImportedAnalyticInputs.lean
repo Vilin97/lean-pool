@@ -530,15 +530,12 @@ theorem arcAverage_eq_arcIntegral_div
 theorem norm_circleChar (n : Nat) (x : Circle) : ‖circleChar n x‖ = 1 := by
   simp [circleChar, norm_zeta]
 
-theorem circleChar_zero (x : Circle) : circleChar 0 x = 1 := by
-  simp [circleChar]
+theorem circleChar_zero (x : Circle) : circleChar 0 x = 1 := by simp [circleChar]
 
-theorem circleChar_one (x : Circle) : circleChar 1 x = zeta x := by
-  simp [circleChar]
+theorem circleChar_one (x : Circle) : circleChar 1 x = zeta x := by simp [circleChar]
 
 theorem circleChar_add (m n : Nat) (x : Circle) :
-    circleChar (m + n) x = circleChar m x * circleChar n x := by
-  simp [circleChar, pow_add]
+    circleChar (m + n) x = circleChar m x * circleChar n x := by simp [circleChar, pow_add]
 
 theorem circleChar_mk (n : Nat) (theta : ℝ) :
     circleChar n (QuotientAddGroup.mk theta : Circle) =
@@ -1314,12 +1311,10 @@ theorem translateL2_neg_coeFn {d : Nat} (a : RealVec d) (f : L2Real d) :
   simpa [sub_eq_add_neg] using translateL2_coeFn (-a) f
 
 theorem norm_translateL2 {d : Nat} (a : RealVec d) (f : L2Real d) :
-    ‖translateL2 a f‖ = ‖f‖ := by
-  simp [translateL2]
+    ‖translateL2 a f‖ = ‖f‖ := by simp [translateL2]
 
 theorem dist_translateL2 {d : Nat} (a : RealVec d) (f g : L2Real d) :
-    dist (translateL2 a f) (translateL2 a g) = dist f g := by
-  simp [translateL2]
+    dist (translateL2 a f) (translateL2 a g) = dist f g := by simp [translateL2]
 
 theorem continuous_translateL2_apply {d : Nat} (f : L2Real d) :
     Continuous fun a : RealVec d => translateL2 a f := by
@@ -1361,8 +1356,7 @@ private theorem star_modulationPhase {d : Nat} (ω t : RealVec d) :
 private theorem modulationPhase_neg_inv {d : Nat} (ω a : RealVec d) :
     modulationPhase ω a * modulationPhase (-ω) a = 1 := by
   unfold modulationPhase
-  rw [inner_neg_left]
-  rw [← Complex.exp_add]
+  rw [inner_neg_left, ← Complex.exp_add]
   have hzero :
       -(2 * Real.pi : ℂ) * Complex.I * ↑⟪ω, a⟫ +
           (-(2 * Real.pi : ℂ) * Complex.I * ↑(-⟪ω, a⟫)) = 0 := by
@@ -1386,10 +1380,7 @@ private theorem symplecticFourier_phase_eq_modulationPhase {d : Nat}
           (((inner ℝ η x : ℝ) - (inner ℝ y ω : ℝ) : ℝ) : ℂ)) =
       modulationPhase ω y * modulationPhase (-x) η := by
   unfold modulationPhase
-  rw [← Complex.exp_add]
-  rw [inner_neg_left]
-  rw [real_inner_comm y ω]
-  rw [real_inner_comm η x]
+  rw [← Complex.exp_add, inner_neg_left, real_inner_comm y ω, real_inner_comm η x]
   rw [Complex.ofReal_sub, Complex.ofReal_neg]
   congr 1
   ring
@@ -1413,8 +1404,7 @@ theorem fourier_translate_realVec {d : Nat} (a : RealVec d) (f : RealVec d -> �
     mul_left_comm, mul_comm] using hω
 
 private theorem sub_const_hasTemperateGrowth {d : Nat} (a : RealVec d) :
-    (fun x : RealVec d => x - a).HasTemperateGrowth := by
-  fun_prop
+    (fun x : RealVec d => x - a).HasTemperateGrowth := by fun_prop
 
 private theorem sub_const_antilipschitz {d : Nat} (a : RealVec d) :
     AntilipschitzWith 1 (fun x : RealVec d => x - a) := by
@@ -1431,8 +1421,7 @@ noncomputable def schwartzCompSubConstCLM {d : Nat} (a : RealVec d) :
 
 @[simp] theorem schwartzCompSubConstCLM_apply {d : Nat} (a : RealVec d)
     (f : SchwartzMap (RealVec d) ℂ) :
-    schwartzCompSubConstCLM a f = f ∘ fun x : RealVec d => x - a := by
-  rfl
+    schwartzCompSubConstCLM a f = f ∘ fun x : RealVec d => x - a := by rfl
 
 theorem fourier_schwartzCompSubConstCLM_realVec {d : Nat}
     (f : SchwartzMap (RealVec d) ℂ) (a : RealVec d) :
@@ -1450,8 +1439,7 @@ private def stftWindowSchwartz {d : Nat} (x : RealVec d)
 
 @[simp] private theorem stftWindowSchwartz_apply {d : Nat}
     (x t : RealVec d) (h : SchwartzMap (RealVec d) ℂ) :
-    stftWindowSchwartz x h t = star (h (t - x)) := by
-  simp [stftWindowSchwartz]
+    stftWindowSchwartz x h t = star (h (t - x)) := by simp [stftWindowSchwartz]
 
 private def stftSliceSchwartz {d : Nat}
     (h f : SchwartzMap (RealVec d) ℂ) (x : RealVec d) : SchwartzMap (RealVec d) ℂ :=
@@ -1460,8 +1448,7 @@ private def stftSliceSchwartz {d : Nat}
 
 @[simp] private theorem stftSliceSchwartz_apply {d : Nat}
     (h f : SchwartzMap (RealVec d) ℂ) (x t : RealVec d) :
-    stftSliceSchwartz h f x t = f t * star (h (t - x)) := by
-  simp [stftSliceSchwartz]
+    stftSliceSchwartz h f x t = f t * star (h (t - x)) := by simp [stftSliceSchwartz]
 
 private theorem stftRep_schwartz_eq_fourier_apply {d : Nat}
     (h f : SchwartzMap (RealVec d) ℂ) (x ω : RealVec d) :
@@ -2010,8 +1997,7 @@ private theorem integral_window_autocorr_phase_schwartz_realVec {d : Nat}
             rw [hneg, hshift_x, hamb]
     _ = modulationPhase ω (t + a) *
           star (ambiguityRep (h.toLp 2 μ) (h.toLp 2 μ) (x, ω)) := by
-            rw [ambiguityRep_neg_neg_schwartz_realVec h x ω]
-            rw [modulationPhase_add]
+            rw [ambiguityRep_neg_neg_schwartz_realVec h x ω, modulationPhase_add]
             ring
 
 private theorem modulateL2_mem {d : Nat} (ω : RealVec d) (f : L2Real d) :
@@ -2060,8 +2046,7 @@ private theorem tendsto_lintegral_filter_of_dominated_convergence_ae
   rw [tendsto_iff_seq_tendsto]
   intro x xl
   have hxl := by
-    rw [tendsto_atTop'] at xl
-    exact xl
+    rwa [tendsto_atTop'] at xl
   have h := inter_mem hF_meas h_bound
   replace h := hxl _ h
   rcases h with ⟨k, h⟩
@@ -2857,8 +2842,7 @@ private theorem lpNorm_stftRep_le_lpNorm {d : Nat} (h f : L2Real d) :
 private theorem lpNorm_stftRep_le {d : Nat} (h f : L2Real d) :
     MeasureTheory.lpNorm (stftRep h f) 2
         (MeasureTheory.volume : MeasureTheory.Measure (PhaseSpace d)) ≤
-      ‖f‖ * ‖h‖ := by
-  simpa [lpNorm_coeFn_L2Real_eq_norm] using lpNorm_stftRep_le_lpNorm h f
+      ‖f‖ * ‖h‖ := by simpa [lpNorm_coeFn_L2Real_eq_norm] using lpNorm_stftRep_le_lpNorm h f
 
 private theorem translateL2_sub {d : Nat} (a : RealVec d) (f g : L2Real d) :
     translateL2 a (f - g) = translateL2 a f - translateL2 a g := by
@@ -3025,8 +3009,7 @@ private theorem lpNorm_mul_le_real
     filter_upwards with x
     simp [Real.norm_eq_abs]
   rw [hleft]
-  rw [hf_lp, hg_lp] at hholder
-  exact hholder
+  rwa [hf_lp, hg_lp] at hholder
 
 -- This is the Hölder/square-difference estimate over phase space; the proof is copied
 -- from the one-dimensional STFT route but with vector-valued `L2Real` approximants.

@@ -233,10 +233,8 @@ private lemma legal_label_add_le
     intro a h₁ h₂
     have hak : a + k < m := by omega
     have ihk := ih a h₁ hak
-    have step : G.Adj (p ⟨a + k, hak⟩) (p ⟨a + k + 1, h₂⟩) :=
-      hp ⟨a + k, hak⟩ h₂
-    have stepl : ℓ (p ⟨a + k, hak⟩) < ℓ (p ⟨a + k + 1, h₂⟩) :=
-      hℓ _ _ step
+    have step : G.Adj (p ⟨a + k, hak⟩) (p ⟨a + k + 1, h₂⟩) := hp ⟨a + k, hak⟩ h₂
+    have stepl : ℓ (p ⟨a + k, hak⟩) < ℓ (p ⟨a + k + 1, h₂⟩) := hℓ _ _ step
     change ℓ (p ⟨a, h₁⟩) + (k + 1) ≤ ℓ (p ⟨a + k + 1, h₂⟩)
     omega
 
@@ -383,8 +381,7 @@ private lemma firstDifferBit_mem_Ioc
     firstDifferBit k (G.canonicalLabel e.1 - 1) (G.canonicalLabel e.2 - 1) ∈
       Finset.Ioc 0 k := by
   have huv : G.Adj e.1 e.2 := Digraph.mem_edgeFinset.mp he
-  have h12 : G.canonicalLabel e.1 < G.canonicalLabel e.2 :=
-    canonicalLabel_isLegal G hac _ _ huv
+  have h12 : G.canonicalLabel e.1 < G.canonicalLabel e.2 := canonicalLabel_isLegal G hac _ _ huv
   have h1' : 1 ≤ G.canonicalLabel e.1 := one_le_canonicalLabel G _
   have hab : G.canonicalLabel e.1 - 1 ≠ G.canonicalLabel e.2 - 1 := by omega
   obtain ⟨hpos, hle, _⟩ := firstDifferBit_of_ne hab
@@ -462,8 +459,7 @@ lemma exists_r_levels_small
     exists_r_subset_sum_le (fun i => (levelEdges G k i).card)
       k (Finset.Ioc 0 k) hcard r hrk
   refine ⟨I, hI_sub, hI_card, ?_⟩
-  rw [hsum] at hI_le
-  exact hI_le
+  rwa [hsum] at hI_le
 
 /-- Restrict `x` to its `k` low bits, then zero out the bits at MSB
 positions `i ∈ I` (1-indexed; equivalently, LSB positions `k - i`). -/
@@ -650,14 +646,11 @@ lemma depth_deleteEdges_levelEdges_le
     have hcanon_lt : G.canonicalLabel u < G.canonicalLabel v :=
       canonicalLabel_isLegal G hac _ _ huv_G
     have hcu_pos : 1 ≤ G.canonicalLabel u := one_le_canonicalLabel G _
-    have hu_lt : G.canonicalLabel u - 1 < 2 ^ k :=
-      canonicalLabel_sub_one_lt_two_pow G hac hd _
-    have hv_lt : G.canonicalLabel v - 1 < 2 ^ k :=
-      canonicalLabel_sub_one_lt_two_pow G hac hd _
+    have hu_lt : G.canonicalLabel u - 1 < 2 ^ k := canonicalLabel_sub_one_lt_two_pow G hac hd _
+    have hv_lt : G.canonicalLabel v - 1 < 2 ^ k := canonicalLabel_sub_one_lt_two_pow G hac hd _
     have hxy : G.canonicalLabel u - 1 < G.canonicalLabel v - 1 := by omega
     exact maskOutI_lt_of_firstDifferBit_not_mem hxy hu_lt hv_lt hfd_not_in_I
-  have himg : (Finset.univ.image ℓ).card ≤ 2 ^ (k - I.card) :=
-    maskOutI_image_card_le hI _
+  have himg : (Finset.univ.image ℓ).card ≤ 2 ^ (k - I.card) := maskOutI_image_card_le hI _
   exact (depth_le_image_card G' hlegal).trans himg
 
 end CircuitComplexity.Valiant

@@ -185,8 +185,7 @@ lemma spacetimeOfTimeSpace_norm_ge (t : ℝ) (x : SpatialCoords3) :
     have h3 : (spacetimeOfTimeSpace t x).ofLp 3 = x 2 := spacetimeOfTimeSpace_spatial t x 2
     simp only [h1, h2, h3]
     ring
-  have hsq_le : ‖x‖ ^ 2 ≤ ‖spacetimeOfTimeSpace t x‖ ^ 2 := by
-    rw [hsq]; nlinarith [sq_nonneg t]
+  have hsq_le : ‖x‖ ^ 2 ≤ ‖spacetimeOfTimeSpace t x‖ ^ 2 := by rw [hsq]; nlinarith [sq_nonneg t]
   have hx : 0 ≤ ‖x‖ := norm_nonneg _
   have hy : 0 ≤ ‖spacetimeOfTimeSpace t x‖ := norm_nonneg _
   exact (sq_le_sq₀ hx hy).mp hsq_le
@@ -303,15 +302,13 @@ lemma spatialNormIntegral_zero_of_neg (f : TestFunctionℂ)
   simp only [spatialNormIntegral]
   have h_zero : ∀ x : SpatialCoords3, ‖f (spacetimeOfTimeSpace t x)‖ = 0 := by
     intro x
-    have h : (spacetimeOfTimeSpace t x) 0 ≤ 0 := by
-      rw [spacetimeOfTimeSpace_time]; exact ht
+    have h : (spacetimeOfTimeSpace t x) 0 ≤ 0 := by rw [spacetimeOfTimeSpace_time]; exact ht
     simp [hf_supp _ h]
   simp [h_zero]
 
 /-- G(t) is nonnegative. -/
 lemma spatialNormIntegral_nonneg (f : TestFunctionℂ) (t : ℝ) :
-    0 ≤ spatialNormIntegral f t :=
-  integral_nonneg (fun _ => norm_nonneg _)
+    0 ≤ spatialNormIntegral f t := integral_nonneg (fun _ => norm_nonneg _)
 
 /-! ### FTC-based decay bound for Schwartz functions vanishing at t=0 -/
 

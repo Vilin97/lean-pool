@@ -36,23 +36,17 @@ def inr {A B : ZFSet} (b : {x // x ∈ B}) : Sum A B :=
 
 theorem _root_.ZFSet.Sum.inl.injEq
     {A B : ZFSet} {x y : {x // x ∈ A}} : (inl x : A ⊎ B) = inl y ↔ x = y := by
-  constructor
-  · intro heq
-    injection heq with heq
-    rw [pair_inj] at heq
-    exact Subtype.val_inj.mp heq.2
-  · intro
-    congr
+  refine ⟨fun heq => ?_, fun _ => by congr⟩
+  injection heq with heq
+  rw [pair_inj] at heq
+  exact Subtype.val_inj.mp heq.2
 
 theorem _root_.ZFSet.Sum.inr.injEq
     {A B : ZFSet} {x y : {x // x ∈ B}} : (inr x : A ⊎ B) = inr y ↔ x = y := by
-  constructor
-  · intro heq
-    injection heq with heq
-    rw [pair_inj] at heq
-    exact Subtype.val_inj.mp heq.2
-  · intro
-    congr
+  refine ⟨fun heq => ?_, fun _ => by congr⟩
+  injection heq with heq
+  rw [pair_inj] at heq
+  exact Subtype.val_inj.mp heq.2
 
 theorem cases {A B : ZFSet} (x : A ⊎ B) : x.val.π₂ ∈ A ∨ x.val.π₂ ∈ B := by
   let ⟨x, hx⟩ := x
@@ -270,21 +264,14 @@ private noncomputable def into {T : ZFSet} : Option T → _root_.Option {x // x 
 
 theorem _root_.ZFSet.Option.some.injEq
     {T : ZFSet} {x y : {x // x ∈ T}} : some x = some y ↔ x = y := by
-  constructor
-  · intro heq
-    injection heq with heq
-    rw [pair_inj] at heq
-    exact Subtype.val_inj.mp heq.2
-  · intro
-    congr
+  refine ⟨fun heq => ?_, fun _ => by congr⟩
+  injection heq with heq
+  rw [pair_inj] at heq
+  exact Subtype.val_inj.mp heq.2
 
 theorem some_val_injEq {T : ZFSet} {x y : {x // x ∈ T}} :
-    (some x).val = (some y).val ↔ x = y := by
-  constructor
-  · intro heq
-    exact some.injEq.mp (Subtype.ext heq)
-  · intro heq
-    rw [heq]
+    (some x).val = (some y).val ↔ x = y :=
+  ⟨fun heq => some.injEq.mp (Subtype.ext heq), fun heq => by rw [heq]⟩
 
 theorem ne_none_is_some {T : ZFSet} (x : Option T) : x ≠ none → ∃ y, x = some y := by
   intro h
@@ -456,8 +443,7 @@ theorem flift_bijective {f A B : ZFSet} (hf : IsFunc A B f) :
         · apply SetLike.coe_mem
         · apply fapply.def
       · exact False.elim (ZFSet.Option.some_ne_none _ (Subtype.ext eq))
-  mpr := by
-    intro hbij
+  mpr hbij := by
     rw [bijective_exists1_iff] at hbij ⊢
     intro y hy
     obtain eq | ⟨⟨y, hy⟩, eq⟩ := Option.casesOn ⟨y, hy⟩

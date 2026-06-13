@@ -64,8 +64,7 @@ lemma nth_lt_qqFunc_of_lt {i k f v : V} (hi : i < len v) : v.[i] < ^func k f v :
 @[simp] lemma qqFvar_inj {x x' : V} : ^&x = ^&x' ↔ x = x' := by simp [qqFvar]
 
 @[simp] lemma qqFunc_inj
-    {k f v k' f' w : V} : ^func k f v = ^func k' f' w ↔ k = k' ∧ f = f' ∧ v = w :=
-  by simp [qqFunc]
+    {k f v k' f' w : V} : ^func k f v = ^func k' f' w ↔ k = k' ∧ f = f' ∧ v = w := by simp [qqFunc]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Arith.qqBvarDef : Sg0.Semisentence 2 :=

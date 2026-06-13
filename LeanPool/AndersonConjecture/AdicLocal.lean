@@ -89,42 +89,17 @@ noncomputable def mkInverse (x : AdicCompletion I R)
   -- factorPow I hmn (↑u_n⁻¹) = ↑u_m⁻¹
   have h_map := factorPow_comp_evalₐ I hmn x
   have hfp : Quotient.factorPow I hmn (↑(hu n).unit⁻¹) * evalₐ I m x = 1 := by
-    calc Quotient.factorPow I hmn (↑(hu n).unit⁻¹) * evalₐ I m x
-        = Quotient.factorPow I hmn (↑(hu n).unit⁻¹) *
-          Quotient.factorPow I hmn (evalₐ I n x) := by rw [h_map]
-      _ = Quotient.factorPow I hmn (↑(hu n).unit⁻¹ * evalₐ I n x) := by rw [map_mul]
-      _ = Quotient.factorPow I hmn (↑(hu n).unit⁻¹ * ↑(hu n).unit) := by
-            rw [(hu n).unit_spec]
-      _ = Quotient.factorPow I hmn 1 := by rw [(hu n).unit.inv_mul]
-      _ = 1 := map_one _
-  have hfp2 : (↑(hu m).unit⁻¹ : R ⧸ I ^ m) * evalₐ I m x = 1 :=
-    (hu m).val_inv_mul
-  -- Both are left inverses of the same unit, hence equal
+    rw [← h_map, ← map_mul, (hu n).val_inv_mul, map_one]
   have hright : evalₐ I m x * ↑(hu m).unit⁻¹ = 1 := (hu m).mul_val_inv
-  calc (Quotient.factorPow I hmn (↑(hu n).unit⁻¹) : R ⧸ I ^ m)
-      = Quotient.factorPow I hmn (↑(hu n).unit⁻¹) * 1 := (mul_one _).symm
-    _ = Quotient.factorPow I hmn (↑(hu n).unit⁻¹) * (evalₐ I m x * ↑(hu m).unit⁻¹) := by
-        rw [hright]
-    _ = (Quotient.factorPow I hmn (↑(hu n).unit⁻¹) * evalₐ I m x) *
-          ↑(hu m).unit⁻¹ := by ring
-    _ = 1 * ↑(hu m).unit⁻¹ := by rw [hfp]
-    _ = ↑(hu m).unit⁻¹ := one_mul _
+  rw [← one_mul (↑(hu m).unit⁻¹ : R ⧸ I ^ m), ← hfp, mul_assoc, hright, mul_one]
 
 omit [I.IsMaximal] in
 lemma evalₐ_mkInverse (x : AdicCompletion I R) (hu : ∀ n, IsUnit (evalₐ I n x)) (n : ℕ) :
     evalₐ I n (mkInverse I x hu) = ↑(hu n).unit⁻¹ := by
-  -- evalₐ I n y = quotientEquivAlgOfEq R h (y.val n)
-  -- mkInverse.val n = (quotientEquivAlgOfEq R h').symm (↑unit⁻¹)
-  -- So evalₐ I n (mkInverse ..) = equiv (equiv'.symm (↑unit⁻¹))
-  -- Since equiv and equiv' have the same proof (Subsingleton of proofs), this equals ↑unit⁻¹
-  -- Lean may not see this definitionally; use Quotient induction instead
-  have : (mkInverse I x hu).val n = (Ideal.quotientEquivAlgOfEq R
-    (show (I ^ n • ⊤ : Ideal R) = I ^ n by
-       ext
-       simp)).symm (↑(hu n).unit⁻¹) := rfl
-  -- evalₐ I n applies the equiv to val n
   have h_eq : (I ^ n • ⊤ : Ideal R) = I ^ n := by ext
                                                   simp
+  have : (mkInverse I x hu).val n =
+      (Ideal.quotientEquivAlgOfEq R h_eq).symm (↑(hu n).unit⁻¹) := rfl
   change (Ideal.quotientEquivAlgOfEq R h_eq) ((mkInverse I x hu).val n) = ↑(hu n).unit⁻¹
   rw [this]
   exact AlgEquiv.apply_symm_apply _ _
@@ -135,7 +110,6 @@ lemma mkInverse_mul (x : AdicCompletion I R) (hu : ∀ n, IsUnit (evalₐ I n x)
   apply ext_evalₐ
   intro n
   simp only [map_mul, map_one]
-  show evalₐ I n (mkInverse I x hu) * evalₐ I n x = 1
   rw [evalₐ_mkInverse]
   exact (hu n).val_inv_mul
 
@@ -150,7 +124,6 @@ lemma isUnit_of_evalOneₐ_isUnit (x : AdicCompletion I R) (hu : IsUnit (evalOne
     apply ext_evalₐ
     intro n
     simp only [map_mul, map_one]
-    show evalₐ I n x * evalₐ I n (mkInverse I x hu_all) = 1
     rw [evalₐ_mkInverse]
     exact (hu_all n).mul_val_inv
   exact ⟨⟨x, mkInverse I x hu_all, hmul', hmul⟩, rfl⟩
@@ -182,8 +155,7 @@ lemma field_isUnit_or_isUnit {K : Type*} [Field K] {a b : K} (hab : a + b = 1) :
     rw [ha, zero_add] at hab
     rw [hab]
     exact isUnit_one
-  · left
-    exact IsUnit.mk0 a ha
+  · exact Or.inl (IsUnit.mk0 a ha)
 
 theorem adicCompletion_isLocalRing :
     IsLocalRing (AdicCompletion (M' R) R) := by

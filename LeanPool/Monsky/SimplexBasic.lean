@@ -290,14 +290,9 @@ lemma open_closedHull_minus_boundary {n : ℕ} {P : Fin n → ℝ²} :
 lemma boundary_constant {n : ℕ} {P : ℝ²} :
     boundary (fun (_ : Fin n) ↦ P) = ∅ := by
   rcases (ne_or_eq n 0) with hn | hz
-  · unfold boundary
-    rw [openHull_constant hn, closedHull_constant hn]
-    simp only [sdiff_self, Set.bot_eq_empty]
-  · unfold boundary
-    unfold closedHull
-    rw [hz]
-    rw [closedSimplex_zero_empty]
-    simp only [univ_eq_empty, sum_empty, Set.image_empty, Set.empty_diff]
+  · simp [boundary, openHull_constant hn, closedHull_constant hn]
+  · subst hz
+    simp [boundary, closedHull, closedSimplex_zero_empty]
 
 
 
@@ -305,20 +300,14 @@ lemma boundary_constant {n : ℕ} {P : ℝ²} :
 lemma openHull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
     (ho : openHull f = {P}) : ∀ i, f i = P :=  by
   rcases eq_or_ne 0 n with hz | hn
-  · intro i
-    subst hz
-    by_contra h
-    unfold openHull at ho
-    rw [openSimplex_zero_empty] at ho
-    simp only [univ_eq_empty, sum_empty, Set.image_empty] at ho
-    symm at ho
-    exact Set.singleton_ne_empty P ho
+  · subst hz
+    simp only [openHull, openSimplex_zero_empty, univ_eq_empty, sum_empty, Set.image_empty] at ho
+    exact absurd ho.symm (Set.singleton_ne_empty P)
   · by_contra hc; push Not at hc
     have hP : P ∈ openHull f := by
       rw [ho, Set.mem_singleton_iff]
     have ⟨i, hi⟩ := hc
     have this := closedHull_openHull_com hP (corner_in_closedHull (i := i) (P := f))
-    have bla := (one_smul (M := ℝ) P)
     rw [ho, Set.mem_singleton_iff, add_comm, ←eq_sub_iff_add_eq] at this
     nth_rw 1 [←(one_smul (M := ℝ) P), ←sub_smul] at this
     ring_nf at this

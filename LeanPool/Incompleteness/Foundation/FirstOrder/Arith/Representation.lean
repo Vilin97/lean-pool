@@ -26,8 +26,7 @@ namespace Vector
 variable {α : Type*}
 
 lemma _root_.Mathlib.List.Vector.cons_get (a : α) (v : List.Vector α k) :
-    (a ::ᵥ v).get = a :> v.get := by
-  ext i; cases i using Fin.cases <;> simp
+    (a ::ᵥ v).get = a :> v.get := by ext i; cases i using Fin.cases <;> simp
 
 end Vector
 end List

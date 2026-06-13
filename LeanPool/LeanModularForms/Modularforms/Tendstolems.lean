@@ -41,9 +41,7 @@ lemma nat_tendsto_pnat (f : ℕ → ℂ) (x : ℂ) (hf : Tendsto f atTop (𝓝 x
 
 lemma rest (f g : ℕ → ℂ) (x : ℂ) (hf : Tendsto f atTop (𝓝 x)) (hfg : Tendsto (g - f) atTop (𝓝 0)) :
   Tendsto g atTop (𝓝 x) := by
-  have := Tendsto.add hf hfg
-  simp only [Pi.sub_apply, add_sub_cancel, add_zero] at this
-  exact this
+  simpa only [Pi.sub_apply, add_sub_cancel, add_zero] using Tendsto.add hf hfg
 
 
 lemma aux47 (r : ℂ) (hr : ‖r‖ < 1) : Tendsto (fun n : ℕ => 1 - r^n) atTop (𝓝 1) := by

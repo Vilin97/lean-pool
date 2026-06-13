@@ -185,8 +185,7 @@ private lemma dixonH2_integrand_integrable (f : ℂ → ℂ) (γ : PiecewiseC1Im
     rw [norm_mul, norm_div]
     have hbound1 : ‖f (γ.toFun t)‖ / ‖γ.toFun t - x‖ ≤ M_f / ε :=
       calc ‖f (γ.toFun t)‖ / ‖γ.toFun t - x‖
-          ≤ ‖f (γ.toFun t)‖ / ε :=
-            div_le_div_of_nonneg_left (norm_nonneg _) hε_pos (hdist_lb t ht)
+          ≤ ‖f (γ.toFun t)‖ / ε := div_le_div_of_nonneg_left (norm_nonneg _) hε_pos (hdist_lb t ht)
         _ ≤ M_f / ε := by gcongr; exact hM_f t ht
     calc ‖f (γ.toFun t)‖ / ‖γ.toFun t - x‖ * ‖deriv γ.toFun t‖
         ≤ (M_f / ε) * M_d :=
@@ -204,8 +203,7 @@ private lemma dixonH2_pointwise_hasDerivAt (fz c z x : ℂ) (hne : z - x ≠ 0) 
   have h1 : HasDerivAt (fun x => z - x) (-1) x := by
     convert (hasDerivAt_const x z).sub (hasDerivAt_id x) using 1
     simp only [zero_sub]
-  have h2 : HasDerivAt (fun x => (z - x)⁻¹) (-(-1) / (z - x) ^ 2) x :=
-    h1.fun_inv hne
+  have h2 : HasDerivAt (fun x => (z - x)⁻¹) (-(-1) / (z - x) ^ 2) x := h1.fun_inv hne
   simp only [neg_neg, one_div] at h2
   have h3 : HasDerivAt (fun x => fz * (z - x)⁻¹) (fz * ((z - x) ^ 2)⁻¹) x := by
     convert h2.const_mul fz using 1
@@ -223,8 +221,7 @@ private lemma dixonH2_deriv_bound (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
           M_f * ε⁻¹ ^ 2 * M_d := by
   have hab : γ.a ≤ γ.b := le_of_lt γ.hab
   filter_upwards with t _ht x hx_ball
-  have ht : t ∈ Icc γ.a γ.b := by
-    rw [Set.uIoc_of_le hab] at _ht; exact Set.Ioc_subset_Icc_self _ht
+  have ht : t ∈ Icc γ.a γ.b := by rw [Set.uIoc_of_le hab] at _ht; exact Set.Ioc_subset_Icc_self _ht
   rw [norm_mul, norm_mul, norm_pow, norm_inv]
   calc ‖f (γ.toFun t)‖ * ‖γ.toFun t - x‖⁻¹ ^ 2 * ‖deriv γ.toFun t‖
       ≤ M_f * ε⁻¹ ^ 2 * M_d := by
@@ -310,8 +307,7 @@ private lemma dixonH2_hasDerivAt (f : ℂ → ℂ) (γ : PiecewiseC1Immersion)
       ∀ x ∈ Metric.ball w ε,
         HasDerivAt (fun x => dixonH2_F f γ x t) (dixonH2_F' f γ x t) x := by
     filter_upwards with t _ht x hx_ball
-    have ht' : t ∈ Icc γ.a γ.b := by
-      rw [Set.uIoc_of_le hab] at _ht; exact Ioc_subset_Icc_self _ht
+    have ht' : t ∈ Icc γ.a γ.b := by rw [Set.uIoc_of_le hab] at _ht; exact Ioc_subset_Icc_self _ht
     simp only [dixonH2_F, dixonH2_F']
     exact dixonH2_pointwise_hasDerivAt (f (γ.toFun t)) (deriv γ.toFun t) (γ.toFun t) x
       (sub_ne_zero.mpr (_hball_avoids x hx_ball t ht'))
@@ -416,8 +412,7 @@ private lemma dslope_uniform_bound (hU : IsOpen U) (hf : DifferentiableOn ℂ f 
         (fun z hz => (hf z (hcb_sub hz)).differentiableAt (hU.mem_nhds (hcb_sub hz)))
         hC_d hc_near hw_cb
       calc ‖f w - f c‖ / ‖w - c‖
-          ≤ C_d * ‖w - c‖ / ‖w - c‖ :=
-            div_le_div_of_nonneg_right h_mvt (norm_nonneg _)
+          ≤ C_d * ‖w - c‖ / ‖w - c‖ := div_le_div_of_nonneg_right h_mvt (norm_nonneg _)
         _ = C_d := mul_div_cancel_right₀ C_d (norm_ne_zero_iff.mpr (sub_ne_zero.mpr hne))
         _ ≤ C_d + 1 := by linarith
         _ ≤ _ := le_max_left _ _
@@ -662,8 +657,7 @@ theorem dixonFunction_differentiable (hU : IsOpen U) (hf : DifferentiableOn ℂ 
   · have hab : γ.a ≤ γ.b := le_of_lt γ.hab
     have hoff : ∀ t ∈ Icc γ.a γ.b, γ.toFun t ≠ w := fun t ht heq =>
       hw (heq ▸ h_null.image_subset t ht)
-    have himage_closed :=
-      (isCompact_Icc.image_of_continuousOn γ.continuous_toFun).isClosed
+    have himage_closed := (isCompact_Icc.image_of_continuousOn γ.continuous_toFun).isClosed
     have hw_notmem : w ∉ γ.toFun '' Icc γ.a γ.b := fun ⟨t, ht, heq⟩ => hoff t ht heq
     have hinfDist_pos : 0 < Metric.infDist w (γ.toFun '' Icc γ.a γ.b) :=
       (himage_closed.notMem_iff_infDist_pos

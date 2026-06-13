@@ -164,8 +164,7 @@ private theorem taylor_remainder_factored (G : ℂ → ℂ) (s : ℂ) (N : ℕ)
     change G z - P z = (z - s) ^ N * H z
     set c := fun k => (z - s) ^ k * pG.coeff k with hc_def
     have hG_tail : HasSum (fun j => c (j + N))
-        (G z - ∑ i ∈ Finset.range N, c i) :=
-      (hasSum_nat_add_iff' N).mpr hG_z
+        (G z - ∑ i ∈ Finset.range N, c i) := (hasSum_nat_add_iff' N).mpr hG_z
     have hP_eq : P z = ∑ i ∈ Finset.range N, c i := by
       rw [hP_def]
       simp only [c, pG, FormalMultilinearSeries.coeff_ofScalars]
@@ -434,12 +433,9 @@ private theorem residueAt_eq_residueAt_principalPart_sum (f : ℂ → ℂ) (s : 
           iteratedDeriv k g s / ↑(k.factorial) * (z - s) ^ ((k : ℤ) - (N : ℤ))) s := by
   set pp := fun z => ∑ k ∈ Finset.range N,
     iteratedDeriv k g s / ↑(k.factorial) * (z - s) ^ ((k : ℤ) - (N : ℤ))
-  have h_pp_is : pp = meromorphicPrincipalPart f s := by
-    ext z; rw [h_pp_eq]
-  obtain ⟨g_an, hg_an_at, hg_eq⟩ :=
-    meromorphicAt_sub_principalPart_eventually f s hf
-  have hg_eq' : ∀ᶠ z in 𝓝[≠] s, f z - pp z = g_an z := by
-    rw [h_pp_is]; exact hg_eq
+  have h_pp_is : pp = meromorphicPrincipalPart f s := by ext z; rw [h_pp_eq]
+  obtain ⟨g_an, hg_an_at, hg_eq⟩ := meromorphicAt_sub_principalPart_eventually f s hf
+  have hg_eq' : ∀ᶠ z in 𝓝[≠] s, f z - pp z = g_an z := by rw [h_pp_is]; exact hg_eq
   obtain ⟨rg, hrg_pos, hg_ball⟩ := hg_an_at.exists_ball_analyticOnNhd
   rw [Filter.Eventually, Metric.mem_nhdsWithin_iff] at hg_eq'
   obtain ⟨rf, hrf_pos, hrf_eq⟩ := hg_eq'
@@ -455,10 +451,8 @@ private theorem residueAt_eq_residueAt_principalPart_sum (f : ℂ → ℂ) (s : 
     rw [h_circ]
   have h_eq_on : Set.EqOn f (fun z => pp z + g_an z) (Metric.sphere s r) := by
     intro z hz
-    have h_ne : z ≠ s := by
-      intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
-    have h_in : dist z s < rf := by
-      rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
+    have h_ne : z ≠ s := by intro heq; rw [heq, Metric.mem_sphere, dist_self] at hz; linarith
+    have h_in : dist z s < rf := by rw [Metric.mem_sphere.mp hz]; exact hr_lt_rf
     have h_mem : z ∈ Metric.ball s rf ∩ {s}ᶜ :=
       ⟨Metric.mem_ball.mpr h_in, Set.mem_compl_singleton_iff.mpr h_ne⟩
     rw [show f z = pp z + (f z - pp z) from (add_sub_cancel _ _).symm,
@@ -475,8 +469,7 @@ private theorem residueAt_eq_residueAt_principalPart_sum (f : ℂ → ℂ) (s : 
     apply ContinuousOn.zpow₀ (continuousOn_id.sub continuousOn_const)
     intro z hz
     exact Or.inl (sub_ne_zero.mpr (ne_of_mem_of_not_mem hz hs_not))
-  have h_ci_pp : CircleIntegrable pp s r :=
-    h_pp_cont.circleIntegrable hr_pos.le
+  have h_ci_pp : CircleIntegrable pp s r := h_pp_cont.circleIntegrable hr_pos.le
   rw [circleIntegral.integral_congr hr_pos.le h_eq_on,
     circleIntegral.integral_add h_ci_pp h_ci_g]
   have h_g_zero : (∮ z in C(s, r), g_an z) = 0 :=

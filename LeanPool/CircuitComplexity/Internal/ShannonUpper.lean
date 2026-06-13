@@ -614,8 +614,7 @@ noncomputable def colPatIdx (N : Nat) (f : BitString N → Bool)
 
 theorem colPatIdx_lt (N : Nat) (f : BitString N → Bool)
     (k q : Nat) (hkq : k + q = N) (y : Fin (2 ^ q)) :
-    colPatIdx N f k q hkq y < 2^(2^k) :=
-  encodeCol_lt k (colFun N f k q hkq y)
+    colPatIdx N f k q hkq y < 2^(2^k) := encodeCol_lt k (colFun N f k q hkq y)
 
 /-- The sum Σ_{j < k} (if b j then 2^j else 0) has no overlap between
     powers, so it is bounded by 2^k. -/
@@ -883,8 +882,7 @@ private noncomputable def shannonGateArray (N : Nat) [NeZero N]
       unfold szSections at *; omega
     -- cw is the last gate of column block p (in section D, before section E)
     have hcw_in_D : p * (2^k - 1) + (2^k - 2) < 2^(2^k) * (2^k - 1) := by
-      have hmul : (p + 1) * (2^k - 1) ≤ 2^(2^k) * (2^k - 1) :=
-        Nat.mul_le_mul_right _ (by omega)
+      have hmul : (p + 1) * (2^k - 1) ≤ 2^(2^k) * (2^k - 1) := Nat.mul_le_mul_right _ (by omega)
       have hexp : p * (2^k - 1) + (2^k - 1) = (p + 1) * (2^k - 1) := by ring
       omega
     have hcw_b : cw < N + i.val := by
@@ -934,8 +932,6 @@ private theorem lastWire_is_orChain_last (N : Nat) (hN : 16 ≤ N) :
     N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2) := by
   have hq2 : 2 ≤ dataBits N := dataBits_ge_two N hN
   have h4q : 4 ≤ 2 ^ dataBits N := pow_ge_4 (dataBits N) hq2
-  change N + szSections (addrBits N) (dataBits N) - 1 =
-    N + oF (addrBits N) (dataBits N) + (2 ^ dataBits N - 2)
   unfold szSections oF oE oD oC; omega
 
 private noncomputable def shannonCircuit (N : Nat) [NeZero N]
@@ -1034,8 +1030,7 @@ private theorem foldl_or_unique_true {n : Nat} {P : Nat → Bool}
     rw [List.range_succ, List.foldl_append, List.foldl_cons, List.foldl_nil]
     by_cases htm : target < m
     · -- target < m: result after first m was already P target
-      rw [ih htm (fun y hy hne => hP y (by omega) hne)]
-      rw [hP m (by omega) (by omega)]
+      rw [ih htm (fun y hy hne => hP y (by omega) hne), hP m (by omega) (by omega)]
       simp [Bool.or_false]
     · -- target = m
       have htm_eq : target = m := by omega
@@ -1201,8 +1196,7 @@ private theorem wireValue_dataLeaf (N : Nat) [NeZero N]
           decide (∀ (i : Fin (treeLevel j + 1)),
             x ⟨addrBits N + i.val, by have := i.isLt; omega⟩ =
             (treePos j (treeLevel j)).testBit i.val)
-        rw [Bool.false_xor, hpar]
-        rw [Bool.eq_iff_iff, Bool.and_eq_true]
+        rw [Bool.false_xor, hpar, Bool.eq_iff_iff, Bool.and_eq_true]
         constructor
         · rintro ⟨h1, h2⟩
           rw [decide_eq_true_eq] at h1 ⊢
@@ -1372,8 +1366,7 @@ private theorem colOutput_addrLeaf (N : Nat) [NeZero N]
           decide (∀ (i : Fin (treeLevel j + 1)),
             x ⟨i.val, by have := i.isLt; linarith [hkq, hlk]⟩ =
             (treePos j (treeLevel j)).testBit i.val)
-        rw [hpar]
-        rw [Bool.eq_iff_iff, Bool.and_eq_true]
+        rw [hpar, Bool.eq_iff_iff, Bool.and_eq_true]
         constructor
         · rintro ⟨h1, h2⟩
           rw [decide_eq_true_eq] at h1 ⊢
@@ -1430,8 +1423,7 @@ private theorem colOutput_addrLeaf (N : Nat) [NeZero N]
             (lt_of_lt_of_le haSum_lt (Nat.pow_le_pow_right (by omega) (by omega)))]
   · intro h i
     have hlt : i.val < k := by have := i.isLt; omega
-    have e : aSum.testBit i.val = addr ⟨i.val, hlt⟩ :=
-      testBit_sum_cond_pow_fin k addr i.val hlt
+    have e : aSum.testBit i.val = addr ⟨i.val, hlt⟩ := testBit_sum_cond_pow_fin k addr i.val hlt
     have key : a.testBit i.val = addr ⟨i.val, hlt⟩ :=
       (congrArg (fun n => Nat.testBit n i.val) h).trans e
     exact Eq.mpr (by congr 1) key.symm
@@ -1495,11 +1487,9 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
   have addrLeaf : ∀ (a : Nat) (_ha : a < 2 ^ k)
       (haW : N + oC q + (2 ^ k - 4) + a < N + szSections k q),
       (shannonCircuit N f hN).wireValue x
-        ⟨N + oC q + (2 ^ k - 4) + a, haW⟩ = decide (a = aSum) :=
-    colOutput_addrLeaf N f hN x
+        ⟨N + oC q + (2 ^ k - 4) + a, haW⟩ = decide (a = aSum) := colOutput_addrLeaf N f hN x
   have constFalse_wire : ∀ (hW : N < N + szSections k q),
-      (shannonCircuit N f hN).wireValue x ⟨N, hW⟩ = false :=
-    colOutput_constFalse N f hN x
+      (shannonCircuit N f hN).wireValue x ⟨N, hW⟩ = false := colOutput_constFalse N f hN x
   have colChain : ∀ (r : Nat) (hr : r < 2 ^ k - 1)
       (hrW : N + oD k q + p * (2 ^ k - 1) + r < N + szSections k q),
       (shannonCircuit N f hN).wireValue x
@@ -1638,16 +1628,14 @@ private theorem wireValue_colOutput (N : Nat) [NeZero N]
           exact colOutput_constFalse N f hN x _
   change (shannonCircuit N f hN).wireValue x
     ⟨N + oD k q + p * (2 ^ k - 1) + (2 ^ k - 2), by omega⟩ = _
-  rw [colChain (2 ^ k - 2) (by omega) (by omega)]
-  rw [show (2 ^ k - 2) + 2 = 2 ^ k from by omega]
+  rw [colChain (2 ^ k - 2) (by omega) (by omega), show (2 ^ k - 2) + 2 = 2 ^ k from by omega]
   have hfold := foldl_or_unique_true aSum haSum_lt
     (P := fun a => Nat.testBit p a && decide (a = aSum))
     (fun a _ hne => by simp [show ¬(a = aSum) from hne])
   rw [hfold]; simp only [decide_true, Bool.and_true]
   change (colPatIdx N f k q hkq ⟨y, hy⟩).testBit aSum = _
   unfold colPatIdx
-  rw [encodeCol]
-  rw [testBit_sum_cond_pow_fin (2 ^ k) _ aSum haSum_lt]
+  rw [encodeCol, testBit_sum_cond_pow_fin (2 ^ k) _ aSum haSum_lt]
 
 /-! ### OR chain induction
 
@@ -1776,7 +1764,6 @@ private theorem wireValue_orChain_sem (N : Nat) [NeZero N]
     rw [hih, andLayer_sem (r' + 2) (by omega) (by linarith)]
     rw [show r' + 1 + 2 = (r' + 2) + 1 from by omega,
         List.range_succ, List.foldl_append, List.foldl_cons, List.foldl_nil]
-    have hr2 : r' + 2 < 2 ^ dataBits N := by omega
     have hr2 : r' + 2 < 2 ^ dataBits N := by omega
     rw [show andLayerSem N f hN x (r' + 2) hr2 =
       (if h : r' + 2 < 2 ^ dataBits N then andLayerSem N f hN x (r' + 2) h else false) from

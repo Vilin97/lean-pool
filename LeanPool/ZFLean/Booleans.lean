@@ -421,22 +421,16 @@ theorem toBool_not (p : ZFBool) : toBool p.not = ¬ p.toBool := by
     exact eq_false (fun h => h rfl) |>.symm
 
 theorem not_top_iff_bot {P : ZFBool} : P ≠ ⊤ ↔ P = ⊥ := by
-  constructor
-  · intro
-    cases P <;> trivial
-  · intro _ h
-    subst P
-    injections h
-    nomatch zftrue_ne_zffalse h.symm
+  refine ⟨fun _ => by cases P <;> trivial, ?_⟩
+  rintro rfl h
+  injections h
+  nomatch zftrue_ne_zffalse h.symm
 
 theorem not_bot_iff_top {P : ZFBool} : P ≠ ⊥ ↔ P = ⊤ := by
-  constructor
-  · intro
-    cases P <;> trivial
-  · intro _ h
-    subst P
-    injections h
-    nomatch zftrue_ne_zffalse h
+  refine ⟨fun _ => by cases P <;> trivial, ?_⟩
+  rintro rfl h
+  injections h
+  nomatch zftrue_ne_zffalse h
 
 /-- Conversion of `Lean.Bool` to `ZFBool` -/
 def ofBool : Bool → ZFBool

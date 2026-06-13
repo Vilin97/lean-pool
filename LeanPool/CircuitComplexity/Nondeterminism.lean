@@ -166,8 +166,7 @@ theorem existQuantify_complexity_le [CompleteBasis Basis.andOr2]
   | succ k ih =>
     have hfun : existQuantify (k := k + 1) f = fun y =>
         (existQuantify (k := k) (restrictFirst f false) y ||
-         existQuantify (k := k) (restrictFirst f true) y) :=
-      funext (existQuantify_succ f)
+         existQuantify (k := k) (restrictFirst f true) y) := funext (existQuantify_succ f)
     rw [hfun]
     set g₁ := existQuantify (k := k) (restrictFirst f false)
     set g₂ := existQuantify (k := k) (restrictFirst f true)
@@ -181,8 +180,7 @@ theorem existQuantify_complexity_le [CompleteBasis Basis.andOr2]
         (Nat.mul_le_mul_left _ (Nat.add_le_add_right (restrict_size_complexity_le f true) 1))
     calc Circuit.sizeComplexity Basis.andOr2 (fun y => g₁ y || g₂ y) + 1
         ≤ (Circuit.sizeComplexity Basis.andOr2 g₁ +
-           Circuit.sizeComplexity Basis.andOr2 g₂ + 1) + 1 :=
-          Nat.add_le_add_right hor 1
+           Circuit.sizeComplexity Basis.andOr2 g₂ + 1) + 1 := Nat.add_le_add_right hor 1
       _ = (Circuit.sizeComplexity Basis.andOr2 g₁ + 1) +
           (Circuit.sizeComplexity Basis.andOr2 g₂ + 1) := by omega
       _ ≤ 2 ^ k * (s + 1) + 2 ^ k * (s + 1) := Nat.add_le_add h₁ h₂

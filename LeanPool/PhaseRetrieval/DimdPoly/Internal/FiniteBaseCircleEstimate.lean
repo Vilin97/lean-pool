@@ -51,8 +51,7 @@ private theorem bandPoly_sub_fast_mul_slow_sub
   ring_nf
 
 private theorem norm_circleChar_wip (n : Nat) (x : Circle) :
-    ‖circleChar n x‖ = 1 := by
-  simp [circleChar, norm_zeta]
+    ‖circleChar n x‖ = 1 := by simp [circleChar, norm_zeta]
 
 private theorem circleChar_mk_wip (n : Nat) (theta : ℝ) :
     circleChar n (QuotientAddGroup.mk theta : Circle) =
@@ -624,8 +623,7 @@ private theorem const_center_abs_defect_eq_norm_mul_rho
     _ = ‖c‖ * FockSPR.rho (c⁻¹ * w) := rfl
 
 private theorem abs_norm_sub_one_le_norm_sub_one (lam : ℂ) :
-    |‖lam‖ - 1| <= ‖lam - 1‖ := by
-  simpa [norm_one] using abs_norm_sub_norm_le lam (1 : ℂ)
+    |‖lam‖ - 1| <= ‖lam - 1‖ := by simpa [norm_one] using abs_norm_sub_norm_le lam (1 : ℂ)
 
 private theorem abs_rho_sub_rho_le_norm_sub (w z : ℂ) :
     |FockSPR.rho w - FockSPR.rho z| <= ‖w - z‖ := by
@@ -729,8 +727,7 @@ private theorem norm_inv_le_two_of_norm_sub_one_le_half {lam : ℂ}
       exact neg_le_abs _
     linarith
   have hpos : 0 < ‖lam‖ := by linarith
-  rw [norm_inv]
-  rw [inv_le_comm₀ hpos (by norm_num : (0 : ℝ) < 2)]
+  rw [norm_inv, inv_le_comm₀ hpos (by norm_num : (0 : ℝ) < 2)]
   nlinarith
 
 private theorem norm_inv_sub_one_le_two_mul_norm_sub_one_of_close {lam : ℂ}
@@ -1516,8 +1513,7 @@ private theorem mem_goodCarrierIndices
 private theorem goodCarrierIndices_not_bad
     {N : Nat} {roots : Multiset ℂ} {delta : ℝ}
     {k : Fin N} (hk : k ∈ goodCarrierIndices N roots delta) :
-    k ∉ badCarrierIndices N roots delta :=
-  mem_goodCarrierIndices.mp hk
+    k ∉ badCarrierIndices N roots delta := mem_goodCarrierIndices.mp hk
 
 private theorem goodCarrier_root_distance_ge
     {N : Nat} {roots : Multiset ℂ} {delta : ℝ} {k : Fin N}
@@ -1781,8 +1777,7 @@ private theorem addCircle_norm_mk_le_pi_div_two_chord (theta : ℝ) :
     simpa [hleft, hright] using hjmul
   have hchord_phi :
       ‖Complex.exp (Complex.I * phi) - 1‖ = 2 * |Real.sin (phi / 2)| := by
-    rw [Complex.norm_exp_I_mul_ofReal_sub_one]
-    rw [Real.norm_eq_abs]
+    rw [Complex.norm_exp_I_mul_ofReal_sub_one, Real.norm_eq_abs]
     simp [abs_mul]
   have hperiod : Complex.exp (phi * Complex.I) = Complex.exp (theta * Complex.I) := by
     have hperiod0 :
@@ -1803,8 +1798,7 @@ private theorem zeta_mk_wip (theta : ℝ) :
   rw [AddCircle.toCircle_apply_mk]
   have hT : (2 * Real.pi) / (2 * Real.pi) = (1 : ℝ) := by
     field_simp [Real.pi_ne_zero]
-  rw [hT, one_mul, Circle.coe_exp]
-  rw [mul_comm]
+  rw [hT, one_mul, Circle.coe_exp, mul_comm]
 
 private theorem zeta_mk_sub_norm_eq (a b : ℝ) :
     ‖zeta (QuotientAddGroup.mk a : Circle) -
@@ -2246,8 +2240,7 @@ private theorem carrierIocImage_haar_setIntegral_eq_real_Ioc
       (∫ x in S, f x ∂ (MeasureTheory.volume : MeasureTheory.Measure Circle)) =
         (2 * Real.pi) * ∫ x in S, f x ∂ μCircle := by
     rw [AddCircle.volume_eq_smul_haarAddCircle (T := 2 * Real.pi)]
-    rw [MeasureTheory.Measure.restrict_smul]
-    rw [MeasureTheory.integral_smul_measure]
+    rw [MeasureTheory.Measure.restrict_smul, MeasureTheory.integral_smul_measure]
     rw [ENNReal.toReal_ofReal]
     · simp [smul_eq_mul, μCircle]
     · positivity
@@ -2331,8 +2324,7 @@ private theorem carrierIocImage_haar_setIntegral_eq_real_Ioc_complex
       (∫ x in S, f x ∂ (MeasureTheory.volume : MeasureTheory.Measure Circle)) =
         (2 * Real.pi : ℝ) • ∫ x in S, f x ∂ μCircle := by
     rw [AddCircle.volume_eq_smul_haarAddCircle (T := 2 * Real.pi)]
-    rw [MeasureTheory.Measure.restrict_smul]
-    rw [MeasureTheory.integral_smul_measure]
+    rw [MeasureTheory.Measure.restrict_smul, MeasureTheory.integral_smul_measure]
     rw [ENNReal.toReal_ofReal (by positivity)]
     simp only [μCircle, Complex.real_smul]
   have hbridge := carrierIocImage_volume_setIntegral_eq_real_Ioc_complex k f
@@ -2348,8 +2340,7 @@ private theorem carrierIocImage_haar_setIntegral_eq_real_Ioc_complex
               ((1 / (2 * Real.pi) : ℝ) : ℂ) *
                 ((2 * Real.pi : ℝ) : ℂ) = 1 := by
             exact_mod_cast hcoeff_real
-          rw [Complex.real_smul, Complex.real_smul]
-          rw [← mul_assoc, hcoeff_complex, one_mul]
+          rw [Complex.real_smul, Complex.real_smul, ← mul_assoc, hcoeff_complex, one_mul]
     _ = (1 / (2 * Real.pi) : ℝ) •
         ∫ t in Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right),
           f (QuotientAddGroup.mk t : Circle) ∂
@@ -2581,8 +2572,7 @@ private theorem carrierIocImage_setIntegral_biUnion_finset_wip
           (∫ x in ⋃ k ∈ K, carrierIocImage k, f x ∂ μCircle) =
             ∑ k ∈ K, ∫ x in carrierIocImage k, f x ∂ μCircle :=
         ih (fun k hk => hf k (Finset.mem_insert_of_mem hk))
-      rw [Finset.set_biUnion_insert]
-      rw [MeasureTheory.setIntegral_union₀ hdisj hnull_union hfa hfunion]
+      rw [Finset.set_biUnion_insert, MeasureTheory.setIntegral_union₀ hdisj hnull_union hfa hfunion]
       rw [hrec, Finset.sum_insert haK]
 
 private theorem carrierIocImage_union_mu_real_eq_card_inv_nat
@@ -2877,8 +2867,7 @@ private theorem carrierAverage_sub_mean_integral_zero
   have hNnat : 0 < N := Nat.lt_of_le_of_lt (Nat.zero_le k.1) k.2
   have hNneR : (N : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt hNnat)
   have hmu : (μCircle.restrict s).real Set.univ = (N : ℝ)⁻¹ := by
-    rw [MeasureTheory.Measure.real]
-    rw [MeasureTheory.Measure.restrict_apply MeasurableSet.univ]
+    rw [MeasureTheory.Measure.real, MeasureTheory.Measure.restrict_apply MeasurableSet.univ]
     simp only [Set.univ_inter]
     change μCircle.real s = (N : ℝ)⁻¹
     simpa [s] using carrierArc_mu_real_eq_inv_nat k
@@ -2892,8 +2881,7 @@ private theorem carrierAverage_sub_mean_integral_zero
         (fun _x : Circle => carrierAverage (N := N) k f)
         (μCircle.restrict s) := by
     exact MeasureTheory.integrable_const _
-  rw [MeasureTheory.integral_sub hf.restrict hconst]
-  rw [MeasureTheory.integral_const]
+  rw [MeasureTheory.integral_sub hf.restrict hconst, MeasureTheory.integral_const]
   simp only [hmu, carrierAverage, s]
   change (∫ x in arcSet (carrierArc N k), f x ∂ μCircle) -
       ((N : ℝ)⁻¹ •
@@ -2932,8 +2920,7 @@ private theorem setIntegral_bias_variance_of_mean_zero
       intro x
       simp [innerSL_apply_apply]
     simp_rw [key]
-    rw [ContinuousLinearMap.integral_comp_comm (innerSL ℝ c) hgc.restrict]
-    rw [hmean]
+    rw [ContinuousLinearMap.integral_comp_comm (innerSL ℝ c) hgc.restrict, hmean]
     simp
   have hpw : ∀ x, ‖f x‖ ^ 2 - ‖f x - c‖ ^ 2 =
       2 * @inner ℝ ℂ _ c (f x - c) + ‖c‖ ^ 2 := by
@@ -2976,8 +2963,7 @@ private theorem setIntegral_bias_variance_of_mean_zero
           μ.real s * ‖c‖ ^ 2 := by
     rw [MeasureTheory.integral_add hi2cross.restrict
       (MeasureTheory.integrable_const _)]
-    rw [MeasureTheory.integral_const_mul]
-    rw [MeasureTheory.integral_const]
+    rw [MeasureTheory.integral_const_mul, MeasureTheory.integral_const]
     simp [MeasureTheory.Measure.real, mul_comm]
   linarith [h1, hsplit, hrhs, hcross]
 
@@ -4295,8 +4281,7 @@ private theorem slowBandPolyDerivCircle_l2_le {L : Nat}
     (p : Fin L -> ℂ) :
     circleL2Sq (slowBandPolyDerivCircle p) <=
       ((L : ℝ) - 1) ^ 2 * circleL2Sq (slowBandPoly p) := by
-  rw [circleL2Sq_slowBandPolyDerivCircle, circleL2Sq_slowBandPoly]
-  rw [Finset.mul_sum]
+  rw [circleL2Sq_slowBandPolyDerivCircle, circleL2Sq_slowBandPoly, Finset.mul_sum]
   refine Finset.sum_le_sum ?_
   intro m hm
   have hT_ne : ((2 * Real.pi : ℝ) : ℂ) ≠ 0 := by

@@ -114,8 +114,7 @@ lemma continuousOn_pv_base (f : ℂ → ℂ) (γ : ℝ → ℂ)
 /-- If `f =ᶠ g` along a filter, their `limUnder` values agree. -/
 theorem limUnder_eventually_eq {α : Type*} [TopologicalSpace α] [Nonempty α]
     {f g : ℝ → α} {l : Filter ℝ} [l.NeBot] (h : ∀ᶠ x in l, f x = g x) :
-    limUnder l f = limUnder l g := by
-  simp only [limUnder, Filter.map_congr h]
+    limUnder l f = limUnder l g := by simp only [limUnder, Filter.map_congr h]
 
 private theorem aEStronglyMeasurable_pv_integrand
     {f : ℂ → ℂ} {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ} {ε : ℝ}
@@ -126,15 +125,12 @@ private theorem aEStronglyMeasurable_pv_integrand
       (fun t => if ε < ‖γ t - z₀‖ then f (γ t) * deriv γ t
         else 0) (volume.restrict (Icc a b)) := by
   let S := {t | ε < ‖γ t - z₀‖}
-  have hS_meas : MeasurableSet (S ∩ Icc a b) :=
-    measurableSet_pv_support γ a b z₀ ε hγ
+  have hS_meas : MeasurableSet (S ∩ Icc a b) := measurableSet_pv_support γ a b z₀ ε hγ
   have h_cont : ContinuousOn (fun t => f (γ t) * deriv γ t)
-      (S ∩ Icc a b) :=
-    continuousOn_pv_base f γ a b z₀ ε hf hγ hγ'
+      (S ∩ Icc a b) := continuousOn_pv_base f γ a b z₀ ε hf hγ hγ'
   have h_base_meas : AEStronglyMeasurable
       (fun t => f (γ t) * deriv γ t)
-      (volume.restrict (S ∩ Icc a b)) :=
-    h_cont.aestronglyMeasurable hS_meas
+      (volume.restrict (S ∩ Icc a b)) := h_cont.aestronglyMeasurable hS_meas
   have h_piecewise := AEStronglyMeasurable.piecewise
     hS_meas h_base_meas
     (aestronglyMeasurable_const :
@@ -245,18 +241,14 @@ private theorem pv_uniform_bound_of_continuous_aux
     (hγ' : ContinuousOn (deriv γ) (Icc a b)) :
     ∃ M > 0, ∀ ε > 0, ∀ t ∈ Icc a b,
       ‖cauchyPrincipalValueIntegrand' g γ z₀ ε t‖ ≤ M := by
-  obtain ⟨Mg, hMg⟩ :=
-    (isCompact_Icc.image_of_continuousOn hγ).exists_bound_of_continuousOn hg.norm
-  obtain ⟨Mγ', hMγ'⟩ :=
-    isCompact_Icc.exists_bound_of_continuousOn hγ'.norm
+  obtain ⟨Mg, hMg⟩ := (isCompact_Icc.image_of_continuousOn hγ).exists_bound_of_continuousOn hg.norm
+  obtain ⟨Mγ', hMγ'⟩ := isCompact_Icc.exists_bound_of_continuousOn hγ'.norm
   have hMg' : ∀ z ∈ γ '' Icc a b, ‖g z‖ ≤ Mg := fun z hz => by
     have := hMg z hz; simp only [Real.norm_eq_abs, abs_norm] at this; exact this
   have hMγ'' : ∀ t ∈ Icc a b, ‖deriv γ t‖ ≤ Mγ' := fun t ht => by
     have := hMγ' t ht; simp only [Real.norm_eq_abs, abs_norm] at this; exact this
-  have hMg_nn : (0 : ℝ) ≤ Mg :=
-    le_trans (norm_nonneg _) (hMg' _ ⟨a, left_mem_Icc.mpr hab.le, rfl⟩)
-  have hMγ_nn : (0 : ℝ) ≤ Mγ' :=
-    le_trans (norm_nonneg _) (hMγ'' a (left_mem_Icc.mpr hab.le))
+  have hMg_nn : (0 : ℝ) ≤ Mg := le_trans (norm_nonneg _) (hMg' _ ⟨a, left_mem_Icc.mpr hab.le, rfl⟩)
+  have hMγ_nn : (0 : ℝ) ≤ Mγ' := le_trans (norm_nonneg _) (hMγ'' a (left_mem_Icc.mpr hab.le))
   refine ⟨Mg * Mγ' + 1, by linarith [mul_nonneg hMg_nn hMγ_nn],
     fun ε _ t ht => ?_⟩
   unfold cauchyPrincipalValueIntegrand'; split_ifs with h
@@ -274,8 +266,7 @@ theorem cauchyPrincipalValueExists_of_continuous
     (hγ : ContinuousOn γ (Icc a b))
     (hγ' : ContinuousOn (deriv γ) (Icc a b)) :
     CauchyPrincipalValueExists' g γ a b z₀ := by
-  obtain ⟨M, hM_pos, h_bound⟩ :=
-    pv_uniform_bound_of_continuous_aux g γ a b z₀ hab hg hγ hγ'
+  obtain ⟨M, hM_pos, h_bound⟩ := pv_uniform_bound_of_continuous_aux g γ a b z₀ hab hg hγ hγ'
   refine cauchyPrincipalValue_of_dominated g γ a b z₀ hab M hM_pos
     h_bound ?_ ?_
   · apply Eventually.of_forall; intro t
@@ -325,11 +316,9 @@ theorem cauchyPrincipalValueExists_of_singular_inv
     obtain ⟨t₀, ht₀, ht₀_min⟩ :=
       IsCompact.exists_isMinOn isCompact_Icc
         ⟨γ.a, left_mem_Icc.mpr γ.hab.le⟩ h_cont
-    have hδ : 0 < ‖γ.toFun t₀ - z₀‖ :=
-      norm_pos_iff.mpr (sub_ne_zero.mpr (h_cross t₀ ht₀))
+    have hδ : 0 < ‖γ.toFun t₀ - z₀‖ := norm_pos_iff.mpr (sub_ne_zero.mpr (h_cross t₀ ht₀))
     have hδ_le : ∀ t ∈ Icc γ.a γ.b,
-        ‖γ.toFun t₀ - z₀‖ ≤ ‖γ.toFun t - z₀‖ :=
-      Filter.eventually_principal.mp ht₀_min
+        ‖γ.toFun t₀ - z₀‖ ≤ ‖γ.toFun t - z₀‖ := Filter.eventually_principal.mp ht₀_min
     refine ⟨∫ t in γ.a..γ.b,
         (γ.toFun t - z₀)⁻¹ * deriv γ.toFun t, ?_⟩
     exact tendsto_const_nhds.congr' (by
@@ -411,8 +400,7 @@ private theorem pv_simple_pole_integrand_split
     (if ε < ‖γ_fun t - z₀‖
     then c / (γ_fun t - z₀) * deriv γ_fun t else 0) +
     (if ε < ‖γ_fun t - z₀‖
-    then g (γ_fun t) * deriv γ_fun t else 0) := by
-  split_ifs <;> ring
+    then g (γ_fun t) * deriv γ_fun t else 0) := by split_ifs <;> ring
 
 private theorem pv_simple_pole_tendsto
     (γ : PiecewiseC1Immersion) (z₀ c : ℂ) (g : ℂ → ℂ)

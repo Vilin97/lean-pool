@@ -262,20 +262,17 @@ theorem local_stability
       exact ι.norm_map f0
     have hXnorm : ‖X‖ = ‖A‖ := by
       dsimp [X]
-      rw [MeasureTheory.Lp.norm_toLp]
-      rw [MeasureTheory.toReal_eLpNorm hX_mem.1]
+      rw [MeasureTheory.Lp.norm_toLp, MeasureTheory.toReal_eLpNorm hX_mem.1]
       simpa [Xfun] using lpNorm_norm_l2 μ A
     have hYnorm : ‖Y‖ = ‖F‖ := by
       dsimp [Y]
-      rw [MeasureTheory.Lp.norm_toLp]
-      rw [MeasureTheory.toReal_eLpNorm hY_mem.1]
+      rw [MeasureTheory.Lp.norm_toLp, MeasureTheory.toReal_eLpNorm hY_mem.1]
       simpa [Yfun] using lpNorm_norm_l2 μ F
     have hsubnorm : ‖X - Y‖ = defect h := by
       have hsub : X - Y = (hX_mem.sub hY_mem).toLp (Xfun - Yfun) := by
         dsimp [X, Y]
         exact (MeasureTheory.MemLp.toLp_sub hX_mem hY_mem).symm
-      rw [hsub, MeasureTheory.Lp.norm_toLp]
-      rw [MeasureTheory.toReal_eLpNorm (hX_mem.sub hY_mem).1]
+      rw [hsub, MeasureTheory.Lp.norm_toLp, MeasureTheory.toReal_eLpNorm (hX_mem.sub hY_mem).1]
       rfl
     have hsum_bound : ‖X + Y‖ ≤ 2 + ‖h‖ := by
       calc

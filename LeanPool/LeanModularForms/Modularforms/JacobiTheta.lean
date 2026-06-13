@@ -397,9 +397,7 @@ lemma differentiableAt_jacobiTheta₂_half (τ : ℍ) :
     (differentiableAt_id.mul_const ((2 : ℂ)⁻¹)).prodMk differentiableAt_id
   have hg : DifferentiableAt ℂ (fun p : ℂ × ℂ => jacobiTheta₂ p.1 p.2) (f ↑τ) := by
     simpa [f] using (hasFDerivAt_jacobiTheta₂ ((τ : ℂ) / 2) τ.2).differentiableAt
-  have h := DifferentiableAt.comp (x := (τ : ℂ)) hg hf
-  simp only [f, Function.comp_def] at h
-  exact h
+  simpa only [f, Function.comp_def] using DifferentiableAt.comp (x := (τ : ℂ)) hg hf
 
 lemma Θ₂_MDifferentiable : MDiff Θ₂ := by
   intro τ

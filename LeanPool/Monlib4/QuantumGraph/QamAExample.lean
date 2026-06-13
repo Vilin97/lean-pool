@@ -210,8 +210,7 @@ theorem Qam.iso_preserves_ir_reflexive [Nontrivial n] {φ : Module.Dual ℂ ℍ}
     intro A B hAB
     ext z i j
     have hz := LinearMap.congr_fun hAB (f z)
-    have hmatrix : A z = B z := by
-      simpa [conjugateMap, LinearMap.comp_apply] using hz
+    have hmatrix : A z = B z := by simpa [conjugateMap, LinearMap.comp_apply] using hz
     exact congrFun (congrFun hmatrix i) j
   have hconj_one : conjugateMap 1 = 1 := by
     ext z

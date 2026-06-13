@@ -116,8 +116,7 @@ private theorem aestronglyMeasurable_of_continuousOn_off_finite
     (hf_cont : ContinuousOn f ((Icc a b) \ P)) :
     AEStronglyMeasurable f (volume.restrict (Icc a b)) := by
   have h_union : Icc a b =
-      (Icc a b \ (P : Set ℝ)) ∪ ((P : Set ℝ) ∩ Icc a b) := by
-    ext x; simp [and_comm]; tauto
+      (Icc a b \ (P : Set ℝ)) ∪ ((P : Set ℝ) ∩ Icc a b) := by ext x; simp [and_comm]; tauto
   rw [h_union, aestronglyMeasurable_union_iff]
   constructor
   · exact hf_cont.aestronglyMeasurable
@@ -149,11 +148,9 @@ private theorem exists_min_above_in_finite_union
     ∃ s_min : ℝ, t < s_min ∧ s_min ≤ b ∧
       (∀ x ∈ Ioo t s_min, x ∉ ({b} ∪ (P : Set ℝ))) := by
   let S : Set ℝ := {b} ∪ (P : Set ℝ)
-  have hS_finite : S.Finite :=
-    (Set.finite_singleton b).union (Finset.finite_toSet P)
+  have hS_finite : S.Finite := (Set.finite_singleton b).union (Finset.finite_toSet P)
   let S_above : Set ℝ := {s ∈ S | t < s}
-  have hS_above_finite : S_above.Finite :=
-    hS_finite.subset (fun s hs => hs.1)
+  have hS_above_finite : S_above.Finite := hS_finite.subset (fun s hs => hs.1)
   have hne : hS_above_finite.toFinset.Nonempty := by
     rw [Set.Finite.toFinset_nonempty]
     exact ⟨b, by simp [S_above, S, ht_lt_b]⟩
@@ -182,8 +179,7 @@ private theorem eq_on_Ioo_of_deriv_zero
       f x = f y :=
     fun x hx y hy => IsOpen.is_const_of_deriv_eq_zero
       isOpen_Ioo isPreconnected_Ioo h_diff h_dz hx hy
-  have h_mid : (t + s_min) / 2 ∈ Ioo t s_min := by
-    constructor <;> linarith
+  have h_mid : (t + s_min) / 2 ∈ Ioo t s_min := by constructor <;> linarith
   have h_eq_mid : ∀ x ∈ Ioo t s_min, f x = f ((t + s_min) / 2) :=
     fun x hx => h_const x hx _ h_mid
   have h_cont_Ioo : ContinuousWithinAt f (Ioo t s_min) t :=
@@ -214,8 +210,7 @@ theorem hasDerivWithinAt_zero_of_deriv_zero_off_finite
       deriv f t = 0) :
     ∀ t ∈ Ico a b, HasDerivWithinAt f 0 (Ici t) t := by
   intro t ht
-  obtain ⟨s_min, ht_lt_s, h_smin_le_b, h_avoid⟩ :=
-    exists_min_above_in_finite_union P t b ht.2
+  obtain ⟨s_min, ht_lt_s, h_smin_le_b, h_avoid⟩ := exists_min_above_in_finite_union P t b ht.2
   have h_Ioo_sub : Ioo t s_min ⊆ Ioo a b := fun x hx =>
     ⟨lt_of_le_of_lt ht.1 hx.1, lt_of_lt_of_le hx.2 h_smin_le_b⟩
   have h_not_P : ∀ x ∈ Ioo t s_min, x ∉ (P : Set ℝ) :=

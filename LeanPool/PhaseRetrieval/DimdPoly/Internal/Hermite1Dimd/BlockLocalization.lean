@@ -400,8 +400,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
     Integrable
       (fun z : CSpace 1 => HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))
       (gaussianMeasure 1)
-  rw [gaussianMeasure]
-  rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+  rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
   · have hcross :
         Integrable
           (fun z : CSpace 1 =>
@@ -1339,8 +1338,7 @@ private lemma shell_sum_localizationLeakageCoefficient_bound
             · simp [u, v]
             · simp [u, v]
           unfold localizationLeakageCoefficient
-          rw [show (∑' r : ℕ, u r) = ∑' r : ℕ, C * v r by simp [huv]]
-          rw [tsum_mul_left]
+          rw [show (∑' r : ℕ, u r) = ∑' r : ℕ, C * v r by simp [huv], tsum_mul_left]
 
 private lemma remainderPart_annulus_le_of_support_image_bound
     {d : ℕ} (κ : MultiIndex d) {C c B R : ℝ}

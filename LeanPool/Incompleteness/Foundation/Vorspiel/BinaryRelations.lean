@@ -134,11 +134,9 @@ lemma irreflexive_of_assymetric (hAssym : Assymetric rel) : ∀ x, ¬ rel x x :=
   have := hAssym Rxx;
   contradiction;
 
-lemma refl_of_universal (h : Universal rel) : ∀ x, rel x x := by
-  intro x; exact @h x x;
+lemma refl_of_universal (h : Universal rel) : ∀ x, rel x x := by intro x; exact @h x x;
 
-lemma eucl_of_universal (h : Universal rel) : Euclidean rel := by
-  rintro x y z _ _; exact @h z y;
+lemma eucl_of_universal (h : Universal rel) : Euclidean rel := by rintro x y z _ _; exact @h z y;
 
 lemma confluent_of_refl_connected (hRefl : ∀ x, rel x x) (hConfl : Connected rel) :
     Confluent rel := by

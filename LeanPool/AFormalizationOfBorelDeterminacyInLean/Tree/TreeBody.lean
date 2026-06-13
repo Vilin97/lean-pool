@@ -22,8 +22,7 @@ variable {A : Type*} (S T : tree A)
 /-- The body of a tree T, also written [T] in the literature, is the set of infinite branches,
   implemented as `Stream` -/
 def body : Set (Stream' A) := { y | ∀ x, y ∈ principalOpen x → x ∈ T }
-@[gcongr] lemma body_mono {S T : tree A} (h : S ≤ T) : body S ⊆ body T :=
-  fun _ h' x y ↦ h (h' x y)
+@[gcongr] lemma body_mono {S T : tree A} (h : S ≤ T) : body S ⊆ body T := fun _ h' x y ↦ h (h' x y)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simp] lemma take_mem_body {T : tree A} {x} (h : x ∈ body T) n : x.take n ∈ T := h _ (by simp)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/

@@ -88,8 +88,7 @@ include hW in lemma liftMedium_mem : H.toWLift.liftMediumVal ∈ T' := by
     intro a ha
     rcases ha with ⟨haBody, haPay⟩
     have haBody' : (body.append [H.liftNode] a).val ∈
-        body (subAt G.tree (H.x.val.take (2 * k + 1))) := by
-      simpa [subAt_body] using haBody
+        body (subAt G.tree (H.x.val.take (2 * k + 1))) := by simpa [subAt_body] using haBody
     let x : body (subAt G.tree (H.x.val.take (2 * k + 1))) :=
       ⟨(body.append [H.liftNode] a).val, haBody'⟩
     have hxmem : x ∈ body.append (H.x.val.take (2 * k + 1)) ⁻¹' G.payoff := by
@@ -209,10 +208,7 @@ lemma extension_conLong hp R : (hW.toWLift'.extensionLift hp R).ConLong := by
         List.map Prod.fst (hW.toWLift'.extension hp R).val'
       exact ExtensionsAt.map_val' (treeHom hyp) hW.toWLift'.lift_lift
         (hW.toWLift'.extension hp R)
-    rw [hval']
-    rw [← List.singleton_append]
-    rw [← liftNode]
-    rw [← WLLift.liftMediumVal_length H.toWLift]
+    rw [hval', ← List.singleton_append, ← liftNode, ← WLLift.liftMediumVal_length H.toWLift]
     exact hsub
   conv => simp [PreLift.ConLong]
   convert hm using 1
@@ -266,8 +262,7 @@ lemma losable (h : H.ConLong) : H.Losable := by
     apply hnot
     simpa [body.append, ← Stream'.append_append_stream, List.take_append_drop] using hpay
   · rfl
-lemma exists_prefix : ∃ n h, (H.take n h).Lost' :=
-  ⟨H.x.val.length, H.h'lvl, by simpa using H.lost'⟩
+lemma exists_prefix : ∃ n h, (H.take n h).Lost' := ⟨H.x.val.length, H.h'lvl, by simpa using H.lost'⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 noncomputable def minLength := by
   classical
@@ -282,8 +277,7 @@ noncomputable def minLength := by
 @[simp] lemma lt_minLength : 2 * k + 1 < H.minLength := by have := H.le_minLength; omega
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[simps!] def takeMin := H.take H.minLength H.le_minLength
-@[simp] lemma takeMin_liftShort : H.takeMin.liftShort = H.liftShort := by
-  simp [takeMin]
+@[simp] lemma takeMin_liftShort : H.takeMin.liftShort = H.liftShort := by simp [takeMin]
 @[simp] lemma takeMin_game : H.takeMin.game = H.game := by simp [takeMin]
 lemma min_prefix : H.takeMin.Lost' := by
   classical
@@ -332,12 +326,10 @@ lemma extend'_le' : hL.mk.minLength ≤ n := by simpa using extend'_le hL
   simp [LLift.takeMin]; congr; simpa using extend'_le hL
 @[simp] lemma liftTree_extend' :
   (extend' (H := H) (n := n) (h := h) hL).toWLLift.liftTree =
-    hL.mk.toWLLift.liftTree := by
-  simp [LLift.toWLLift, List.take_take, extend'_le' hL]
+    hL.mk.toWLLift.liftTree := by simp [LLift.toWLLift, List.take_take, extend'_le' hL]
 @[simp] lemma liftMediumVal_extend' :
   (extend' (H := H) (n := n) (h := h) hL).toWLLift.liftMediumVal =
-    hL.mk.toWLLift.liftMediumVal := by
-  simp [WLLift.liftMediumVal]
+    hL.mk.toWLLift.liftMediumVal := by simp [WLLift.liftMediumVal]
 @[simp] lemma liftVal_extend' :
   (extend' (H := H) (n := n) (h := h) hL).toWLLift.liftVal.take n =
     hL.mk.toWLLift.liftVal := by
@@ -459,8 +451,7 @@ lemma lift_mem n : hL.1.mk.toWLLift.liftMediumVal ++
                     (List.drop (2 * k + 2) (List.take hL.1.mk.minLength H.x.val)))
                   y))
               (g := Prod.fst)).symm
-          _ = List.take n (List.drop (2 * k + 2) H.x.val) := by
-            simp
+          _ = List.take n (List.drop (2 * k + 2) H.x.val) := by simp
       have hmem : List.take n (List.drop (2 * k + 2) H.x.val) ++
           [H.x.val[2 * k + 2 + n]] ∈
           pullSub (subAt G.tree (List.take hL.1.mk.minLength H.x.val))

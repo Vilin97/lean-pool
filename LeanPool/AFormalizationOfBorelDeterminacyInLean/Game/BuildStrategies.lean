@@ -243,14 +243,12 @@ namespace Game
 def WinningPosition (G : Game A) (x : List A) (p : Player := Player.zero) :=
   (G.residual x).ExistsWinning p
 @[simp] lemma winningPosition_residual x y :
-  (G.residual x).WinningPosition y p ↔ G.WinningPosition (x ++ y) p := by
-  simp [WinningPosition]
+  (G.residual x).WinningPosition y p ↔ G.WinningPosition (x ++ y) p := by simp [WinningPosition]
 /-- a position is won if it cannot be lost by playing however -/
 def WonPosition (G : Game A) (x : List A) (p : Player := Player.zero) :=
   (G.residual x).AllWinning p
 @[simp] lemma wonPosition_residual x y :
- (G.residual x).WonPosition y p ↔ G.WonPosition (x ++ y) p := by
-  simp [WonPosition]
+ (G.residual x).WonPosition y p ↔ G.WonPosition (x ++ y) p := by simp [WonPosition]
 lemma WonPosition.extend {x} y (hW : WonPosition G x p) :
   WonPosition G (x ++ y) (p.residual y) := by
   rw [WonPosition, ← Game.residual_append]
@@ -314,8 +312,7 @@ lemma subtree_induction_body {f g : PreStrategy T p} {x} (h : x ∈ body f.subtr
     ext
     simp [hm.le]
   intro ha
-  let hp' : IsPosition (f.subtreeIncl (body.take m ⟨x, h⟩)).val p := by
-    simpa [← hnode] using hp
+  let hp' : IsPosition (f.subtreeIncl (body.take m ⟨x, h⟩)).val p := by simpa [← hnode] using hp
   have ha' : ⟨x.get m, by apply subtree_sub; apply h; simp⟩ ∈
       f (f.subtreeIncl (body.take m ⟨x, h⟩)) hp' :=
     (PreStrategy.eval_mem_congr f hnode hp hp' (by simp)).mp ha

@@ -260,8 +260,7 @@ Integrating over an interval of length 1 and applying Theorem 2.9.
 def distToInterval (x : ℝ) (j : ℕ) : ℝ :=
   max (max ((j : ℝ) - x) (x - (j + 1 : ℝ))) 0
 
-private lemma distToInterval_nonneg (x : ℝ) (j : ℕ) : 0 ≤ distToInterval x j :=
-  le_max_right _ _
+private lemma distToInterval_nonneg (x : ℝ) (j : ℕ) : 0 ≤ distToInterval x j := le_max_right _ _
 
 private lemma distToInterval_le_abs_sub (x r : ℝ) (j : ℕ)
     (hrj : (j : ℝ) ≤ r) (hrj1 : r ≤ (j : ℝ) + 1) :

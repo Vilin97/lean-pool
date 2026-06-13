@@ -144,8 +144,7 @@ theorem Qam.symm'_symm_real_apply_adjoint_tFAE [hφ : φ.IsFaithfulPosMap] (A : 
       (List.TFAE
         [symmMap ℂ ℍ _ A = A, (symmMap ℂ ℍ _).symm A = A,
           A.real = LinearMap.adjoint A,
-          ∀ x y, φ (A x * y) = φ (x * A y)]) :=
-by
+          ∀ x y, φ (A x * y) = φ (x * A y)]) := by
   classical
   exact withMatrixQuantum[φ] (by
     letI : Coalgebra ℂ ℍ := Coalgebra.ofFiniteDimensionalHilbertAlgebra
@@ -157,8 +156,7 @@ by
       conjTranspose_one, one_mul])
 
 theorem sig_comp_eq_iff [hφ : φ.IsFaithfulPosMap] (t : ℝ) (A B : ℍ →ₗ[ℂ] ℍ) :
-    (hφ.sig t).toLinearMap.comp A = B ↔ A = (hφ.sig (-t)).toLinearMap.comp B :=
-by
+    (hφ.sig t).toLinearMap.comp A = B ↔ A = (hφ.sig (-t)).toLinearMap.comp B := by
   rw [AlgEquiv.comp_linearMap_eq_iff, Module.Dual.IsFaithfulPosMap.sig_symm_eq]
 
 theorem stdBasisMatrix_squash (i j k l : n) (x : Matrix n n ℂ) :
@@ -188,8 +186,7 @@ private theorem Psi.adjoint_rank_one [hφ : φ.IsFaithfulPosMap] (a b : ℍ) (t 
     withMatrixQuantum[φ]
       (hφ.psi (ψ := φ) t s (LinearMap.adjoint ((|a⟩⟨b|).toLinearMap)) =
         ((hφ.sig (t - s)).toLinearMap ⊗ₘ (hφ.sig (t - s)).op.toLinearMap)
-          (tenSwap ℂ (Star.star (hφ.psi (ψ := φ) t s (|a⟩⟨b|).toLinearMap)))) :=
-by
+          (tenSwap ℂ (Star.star (hφ.psi (ψ := φ) t s (|a⟩⟨b|).toLinearMap)))) := by
   exact withMatrixQuantum[φ] (Psi.adjoint_apply (A := ℍ) (B := ℍ) t s (|a⟩⟨b|).toLinearMap)
 
 -- set_option maxHeartbeats 0 in

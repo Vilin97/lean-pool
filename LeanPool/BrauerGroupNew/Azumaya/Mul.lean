@@ -510,8 +510,8 @@ lemma tensor_projection_inclusion1' : tensorProjection1' R M ∘ₗ tensorInclus
   rw [← LinearMap.comp_assoc, fg, LinearMap.id_comp]
   rw [← LinearMap.comp_assoc, fg, LinearMap.id_comp, op_unop]
 
-lemma tensorInclusion1'_inj : Function.Injective (tensorInclusion1' R M) := by
-  exact Function.LeftInverse.injective (g := tensorProjection1' R M)
+lemma tensorInclusion1'_inj : Function.Injective (tensorInclusion1' R M) :=
+  Function.LeftInverse.injective (g := tensorProjection1' R M)
     <| DFunLike.congr_fun <| tensor_projection_inclusion1' R M
 
 /-- Inclusion between second endomorphism algebras induced by the free-module splitting. -/
@@ -533,8 +533,8 @@ lemma projection2'_inclusion2' : projection2' R M ∘ₗ inclusion2' R M = Linea
   simp [LinearMap.comp_assoc, fg]
   simp [← LinearMap.comp_assoc, fg]
 
-lemma projection2'_surj : Function.Surjective (projection2' R M) := by
-  exact Function.RightInverse.surjective <| DFunLike.congr_fun <| projection2'_inclusion2' R M
+lemma projection2'_surj : Function.Surjective (projection2' R M) :=
+  Function.RightInverse.surjective <| DFunLike.congr_fun <| projection2'_inclusion2' R M
 
 /--
 End R M ⊗ (End R M)ᵐᵒᵖ ------------> End R (End R M)

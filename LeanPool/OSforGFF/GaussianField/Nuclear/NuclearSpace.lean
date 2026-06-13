@@ -100,8 +100,7 @@ lemma exists_CLF_le_seminorm
     -- g(f) = q(f)
     have hg_f : g f = q f := by
       have h := hg_ext ⟨f, Submodule.mem_span_singleton.mpr ⟨1, one_smul _ _⟩⟩
-      simp only [f₀, LinearPMap.mkSpanSingleton'_apply_self] at h
-      exact h
+      simpa only [f₀, LinearPMap.mkSpanSingleton'_apply_self] using h
     -- |g(x)| ≤ q(x) from g(x) ≤ q(x) and g(-x) ≤ q(-x) = q(x)
     have hg_abs : ∀ x, |g x| ≤ q x := by
       intro x; rw [abs_le]
@@ -211,8 +210,7 @@ lemma seminorm_le_nuclear_expansion
             apply mul_le_mul_of_nonneg_right (hcoeff f m)
             apply div_nonneg (mul_nonneg (le_of_lt hC₁_pos) (le_of_lt hD))
             positivity
-        _ = C₂ * (s₂.sup hN.p) f * (C₁ : ℝ) * D * (1 / ((m : ℝ) + 1) ^ 2) := by
-            field_simp; ring
+        _ = C₂ * (s₂.sup hN.p) f * (C₁ : ℝ) * D * (1 / ((m : ℝ) + 1) ^ 2) := by field_simp; ring
     · have hsumm_shift : Summable (fun m : ℕ => (1 : ℝ) / ((m : ℝ) + 1) ^ 2) := by
         have := (summable_nat_add_iff 1).mpr
           (Real.summable_one_div_nat_pow.mpr (by norm_num : 1 < 2))
@@ -256,8 +254,7 @@ lemma _root_.GaussianField.DyninMityaginSpace.summable_coeff_seminorm_basis
       _ ≤ (C_d * (s_d.sup hN.p) f) * (C_g / (1 + (m : ℝ)) ^ 2) :=
           mul_le_mul_of_nonneg_right (hdecay f m)
             (div_nonneg (le_of_lt hC_g) (by positivity))
-      _ = C_d * (s_d.sup hN.p) f * C_g * (1 / ((m : ℝ) + 1) ^ 2) := by
-          field_simp; ring
+      _ = C_d * (s_d.sup hN.p) f * C_g * (1 / ((m : ℝ) + 1) ^ 2) := by field_simp; ring
   · have hsumm_shift : Summable (fun m : ℕ => (1 : ℝ) / ((m : ℝ) + 1) ^ 2) := by
       have := (summable_nat_add_iff 1).mpr
         (Real.summable_one_div_nat_pow.mpr (by norm_num : 1 < 2))
@@ -309,8 +306,7 @@ private lemma schauder_remainder_le
   have hh_summ_compl : Summable (fun (m : ↥(↑s : Set ℕ)ᶜ) => h ↑m) :=
     hh_sum.subtype _
   calc hN.p i err = φ err := hφerr.symm
-    _ = |φ err| := by
-        rw [abs_of_nonneg]; rw [hφerr]; exact apply_nonneg _ _
+    _ = |φ err| := by rw [abs_of_nonneg]; rw [hφerr]; exact apply_nonneg _ _
     _ = ‖φ err‖ := (Real.norm_eq_abs _).symm
     _ = ‖∑' (m : ↥(↑s : Set ℕ)ᶜ), g ↑m‖ := by rw [hφerr_eq]
     _ ≤ ∑' (m : ↥(↑s : Set ℕ)ᶜ), ‖g ↑m‖ := norm_tsum_le_tsum_norm hg_norm_summ_compl

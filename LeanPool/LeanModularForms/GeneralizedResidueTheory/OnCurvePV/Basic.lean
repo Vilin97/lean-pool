@@ -54,12 +54,9 @@ lemma pv_limit_via_dyadic {γ : ℝ → ℂ} {a b t₀ : ℝ} {L : ℂ}
     calc ‖I (δ / 2 ^ (n + 1)) - I (δ / 2 ^ n)‖
         ≤ K * (δ / 2 ^ n) := h_bound
       _ = K * δ / 2 ^ n := by ring
-  have h_cauchy_seq : CauchySeq (fun n => I (δ / 2 ^ n)) :=
-    cauchySeq_pv_dyadic hδ_pos hK_pos h_step
-  obtain ⟨limit_dyadic, h_limit_dyadic⟩ :=
-    CompleteSpace.complete h_cauchy_seq
-  have h_limit_tendsto : Tendsto (fun n => I (δ / 2 ^ n)) atTop (𝓝 limit_dyadic) :=
-    h_limit_dyadic
+  have h_cauchy_seq : CauchySeq (fun n => I (δ / 2 ^ n)) := cauchySeq_pv_dyadic hδ_pos hK_pos h_step
+  obtain ⟨limit_dyadic, h_limit_dyadic⟩ := CompleteSpace.complete h_cauchy_seq
+  have h_limit_tendsto : Tendsto (fun n => I (δ / 2 ^ n)) atTop (𝓝 limit_dyadic) := h_limit_dyadic
   use limit_dyadic
   rw [Metric.tendsto_nhdsWithin_nhds]
   intro η hη_pos
@@ -138,11 +135,9 @@ lemma pv_limit_via_dyadic {γ : ℝ → ℂ} {a b t₀ : ℝ} {L : ℂ}
           _ ≤ K * δ / 2 ^ M + (2 * K * δ / 2 ^ N - 2 * K * δ / 2 ^ M) := by
               linarith [h_first_piece, h_sum_bound]
           _ = 2 * K * δ / 2 ^ N - K * δ / 2 ^ M := by ring
-          _ ≤ 2 * K * δ / 2 ^ N := by
-              linarith [show (0 : ℝ) ≤ K * δ / 2 ^ M from by positivity]
+          _ ≤ 2 * K * δ / 2 ^ N := by linarith [show (0 : ℝ) ≤ K * δ / 2 ^ M from by positivity]
     have hN_ge_N₂ : N ≥ N₂ := le_max_right _ _
-    have h_pow_le : (2 : ℝ) ^ N₂ ≤ 2 ^ N :=
-      pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hN_ge_N₂
+    have h_pow_le : (2 : ℝ) ^ N₂ ≤ 2 ^ N := pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hN_ge_N₂
     have h_step_small : K * δ / 2 ^ N ≤ K * δ / 2 ^ N₂ :=
       div_le_div_of_nonneg_left (mul_nonneg hK_pos.le hδ_pos.le) (by positivity) h_pow_le
     have h_Kδ_bound : K * δ / 2 ^ N < η / 4 := lt_of_le_of_lt h_step_small hN₂
@@ -201,8 +196,7 @@ theorem aEStronglyMeasurable_pv_integrand_piecewiseC1
     have hγt_not_ball : γ t ∉ Metric.ball z₀ ε := by
       simp only [S, mem_setOf_eq] at ht_S
       simp only [Metric.mem_ball, not_lt, dist_eq_norm]; exact le_of_lt ht_S
-    have hγt_in : γ t ∈ γ '' Icc a b \ Metric.ball z₀ ε :=
-      ⟨mem_image_of_mem γ ht_Icc, hγt_not_ball⟩
+    have hγt_in : γ t ∈ γ '' Icc a b \ Metric.ball z₀ ε := ⟨mem_image_of_mem γ ht_Icc, hγt_not_ball⟩
     have h_maps : MapsTo γ ((S ∩ Icc a b) \ P)
         (γ '' Icc a b \ Metric.ball z₀ ε) := by
       intro s ⟨⟨hs_S, hs_Icc⟩, _⟩
@@ -272,8 +266,7 @@ lemma arc_angle_injective {t t' : ℝ}
   obtain ⟨n, hn⟩ := h_eq
   have h_vals : Real.pi * (1 + t) / 6 - Real.pi * (1 + t') / 6 = 2 * Real.pi * ↑n := by
     have : (↑(Real.pi * (1 + t) / 6) : ℂ) * I - ↑(Real.pi * (1 + t') / 6) * I =
-        ↑(2 * Real.pi * ↑n) * I := by
-      rw [hn]; push_cast; ring
+        ↑(2 * Real.pi * ↑n) * I := by rw [hn]; push_cast; ring
     have h2 : (↑(Real.pi * (1 + t) / 6 - Real.pi * (1 + t') / 6) : ℂ) * I =
         ↑(2 * Real.pi * ↑n) * I := by
       rw [show (↑(Real.pi * (1 + t) / 6 - Real.pi * (1 + t') / 6) : ℂ) * I =
@@ -302,8 +295,7 @@ lemma cpv_avoidance (f : ℂ → ℂ) (γ : ℝ → ℂ) (a b : ℝ) (z₀ : ℂ
     (h_cont.sub continuousOn_const).norm
   obtain ⟨t₀, ht₀, ht₀_min⟩ := isCompact_Icc.exists_isMinOn
     ⟨a, Set.left_mem_Icc.mpr hab⟩ h_cont_norm
-  have hδ : 0 < ‖γ t₀ - z₀‖ :=
-    norm_pos_iff.mpr (sub_ne_zero.mpr (h_avoid t₀ ht₀))
+  have hδ : 0 < ‖γ t₀ - z₀‖ := norm_pos_iff.mpr (sub_ne_zero.mpr (h_avoid t₀ ht₀))
   set C := ∫ t in a..b, f (γ t) * deriv γ t
   refine ⟨C, ?_⟩
   apply Tendsto.congr' _ tendsto_const_nhds

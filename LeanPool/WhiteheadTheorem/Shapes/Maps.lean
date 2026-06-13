@@ -24,15 +24,13 @@ lemma mulRight_one (X : Type*) [TopologicalSpace X]
     [mulOne : MulOneClass X] [ContinuousMul X] :
     ContinuousMap.mulRight 1 = ContinuousMap.id X := by
   ext x
-  simp only [coe_mulRight, id_apply]
-  exact mulOne.mul_one x
+  simp only [coe_mulRight, id_apply, mul_one]
 
 lemma mulRight_zero (X : Type*) [TopologicalSpace X]
     [mulOne : MulZeroClass X] [ContinuousMul X] :
     ContinuousMap.mulRight 0 = ContinuousMap.const X 0 := by
   ext x
-  simp only [coe_mulRight]
-  exact mulOne.mul_zero x
+  simp only [coe_mulRight, mul_zero, const_apply]
 
 lemma prodMap_id_id (X Y : Type u) [TopologicalSpace X] [TopologicalSpace Y] :
     ContinuousMap.prodMap (ContinuousMap.id X) (ContinuousMap.id Y) = ContinuousMap.id _ :=
@@ -78,13 +76,11 @@ lemma set_neq_zero_eq_compl_range_i₀ (X : TopCat.{u}) :
   rw [(by rfl: (Set.range (Cyl.i₀ X))ᶜ = {z | z ∉ Set.range (Cyl.i₀ X)})]
   simp only [ne_eq, hom_ofHom, ContinuousMap.coe_mk, Set.mem_range, not_exists]
   apply Set.eq_of_subset_of_subset
-  · intro z hz x heq
-    subst heq
+  · rintro z hz x rfl
     simp only [Set.mem_setOf_eq, not_true_eq_false] at hz
   · intro z hz
     simp only [Set.mem_setOf_eq] at hz ⊢
-    obtain ⟨fst, snd⟩ := z
-    obtain ⟨val, property⟩ := snd
+    obtain ⟨fst, ⟨val, property⟩⟩ := z
     simp only [Prod.mk.injEq, not_and, forall_eq] at hz ⊢
     intro a
     simp_all only [not_true_eq_false]
@@ -106,9 +102,7 @@ lemma isClosed_range_i₀ (X : TopCat.{u}) :
     apply compl_inj_iff.mp
     convert Cyl.set_neq_zero_eq_compl_range_i₀ X using 1
   rw [← this]
-  apply isClosed_eq
-  · exact continuous_snd
-  · exact continuous_const
+  exact isClosed_eq continuous_snd continuous_const
 
 lemma isClosedEmbedding_i₁ToComplRangeI₀ (X : TopCat.{u}) :
     Topology.IsClosedEmbedding (Cyl.i₁ToComplRangeI₀ X) := by
@@ -130,15 +124,10 @@ lemma isClosedEmbedding_i₁ToComplRangeI₀ (X : TopCat.{u}) :
       simp only [hom_ofHom, ContinuousMap.coe_mk]
       ext x : 1
       simp_all only [Set.mem_image, exists_exists_and_eq_and, Set.mem_prod, Set.mem_singleton_iff]
-      obtain ⟨fst, snd⟩ := x
-      obtain ⟨val, property⟩ := snd
+      obtain ⟨fst, ⟨val, property⟩⟩ := x
       simp_all only [Prod.mk.injEq, existsAndEq, true_and, and_congr_right_iff]
       intro a
-      apply Iff.intro
-      · intro a_1
-        simp_all only
-      · intro a_1
-        simp_all only
+      constructor <;> (intro a_1; simp_all only)
     have : IsClosed (Subtype.val '' ((Cyl.i₁ToComplRangeI₀ X) '' s)) := by
       rw [this]
       exact IsClosed.prod hs isClosed_singleton

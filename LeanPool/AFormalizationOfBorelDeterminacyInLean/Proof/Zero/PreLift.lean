@@ -109,8 +109,7 @@ lemma take_of_length_le {h} (h' : H.x.val.length ≤ n) : H.take n h = H := by
     · rw [pInv_treeHom_val]
       · change pInvTreeHomMap hyp (List.take (2 * k) (List.take n H.x.val)) =
           pInvTreeHomMap hyp (List.take (2 * k) H.x.val)
-        rw [List.take_take]
-        rw [min_eq_left (by omega : 2 * k ≤ n)]
+        rw [List.take_take, min_eq_left (by omega : 2 * k ≤ n)]
       · simp
     · simp
   apply tree_ext
@@ -351,12 +350,10 @@ variable (hp : IsPosition H.x.val Player.zero)
 @[simp] lemma extension_take :
   (H.extension hp R).val' (A := no_index _).take (α := no_index _)
     (H.x.val.length (α := no_index _))
-  = H.liftVal := by
-  exact ExtensionsAt.val'_take_of_eq _ H.liftVal_length.symm
+  = H.liftVal := ExtensionsAt.val'_take_of_eq _ H.liftVal_length.symm
 @[simp] lemma extensionMap_take (h : n ≤ H.x.val.length) :
   (H.extensionMap hp R).val' (A := no_index _).take (α := no_index _) n
-  = H.x.val.take n := by
-  exact ExtensionsAt.val'_take_of_le _ h
+  = H.x.val.take n := ExtensionsAt.val'_take_of_le _ h
 @[simp] lemma extension_take_medium :
   (H.extension hp R).val'.take (α := no_index _) (2 * k + 2) = H.liftMediumVal := by
   rw [ExtensionsAt.val'_take_of_le _ (by

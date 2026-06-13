@@ -145,8 +145,8 @@ theorem orderOfVanishingAt'_ne_zero_of_eq_zero (hf : f ≠ 0) (p : ℍ) (hp : f 
 
 private theorem modularFormCompOfComplex_eq' (p : ℍ) :
     modularFormCompOfComplex f (p : ℂ) = f p := by
-  simp only [modularFormCompOfComplex, Function.comp_apply]
-  congr 1; rw [UpperHalfPlane.ofComplex_apply_of_im_pos p.im_pos]
+  simp only [modularFormCompOfComplex, Function.comp_apply,
+    UpperHalfPlane.ofComplex_apply_of_im_pos p.im_pos]
 
 theorem fd_im_gt_half (p : ℍ) (hp : p ∈ 𝒟) : (1 : ℝ)/2 < (p : ℂ).im := by
   by_contra h_le; push Not at h_le
@@ -248,8 +248,7 @@ theorem s₀_complete (hf : f ≠ 0) :
 theorem orb_rho_plus_one_eq_orb_rho :
     orb ellipticPointRhoPlusOne' = (orho : Orbit) := by
   change Quotient.mk'' ellipticPointRhoPlusOne' = Quotient.mk'' ellipticPointRho'
-  rw [Quotient.eq'']
-  rw [MulAction.orbitRel_apply, MulAction.mem_orbit_iff]
+  rw [Quotient.eq'', MulAction.orbitRel_apply, MulAction.mem_orbit_iff]
   exact ⟨ModularGroup.T, by
     rw [UpperHalfPlane.modular_T_smul]
     ext

@@ -81,8 +81,7 @@ lemma sub_spec_of_le (h : a ≤ b) : a - b = 0 := by
   rcases lt_or_eq_of_le h with (lt | rfl) <;> simp [sub_spec_of_lt, *]
 
 lemma sub_add_self_of_le (h : b ≤ a) :
-    a - b + b = a := by
-  symm; rw [add_comm]; exact sub_spec_of_ge h
+    a - b + b = a := by symm; rw [add_comm]; exact sub_spec_of_ge h
 
 lemma add_tsub_self_of_le (h : b ≤ a) : b + (a - b) = a := by symm; exact sub_spec_of_ge h
 

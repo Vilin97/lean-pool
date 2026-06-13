@@ -512,8 +512,7 @@ private theorem last_gate_no_input_ref {n s : Nat} (d : CircDesc (n + 1) s)
       ⟨0, by omega⟩ = x₀ ⟨0, by omega⟩ from by
       rw [wireValD]; simp [show (0 : Nat) < n + 1 from by omega]]
     have hx0 : x₀ ⟨0, by omega⟩ = kv := Function.update_self ..
-    simp only [hx0]
-    simp only [show (0 : Nat) < n + 1 + s - 1 from by omega, ite_true]
+    simp only [hx0, show (0 : Nat) < n + 1 + s - 1 from by omega, ite_true]
     split <;> simp_all [kv]
 
 /-- If gate `g` is the only gate directly reading input `a`, and no gate references
@@ -623,8 +622,7 @@ private theorem wireValD_at_gate {N s : Nat} (d : CircDesc N s) (x : BitString N
           wireValD d x ⟨(d g).2.1.2.val, (d g).2.1.2.isLt⟩ else false))) := by
   have h := wireValD.eq_def d x ⟨N + g.val, by omega⟩
   simp only [show ¬(N + g.val < N) from by omega, dite_false] at h
-  rw [show (⟨N + g.val - N, _⟩ : Fin s) = g from by ext; simp] at h
-  exact h
+  rwa [show (⟨N + g.val - N, _⟩ : Fin s) = g from by ext; simp] at h
 
 /-- The output (last) gate of an essential XOR circuit (`N ≥ 2`) reads no primary
     input directly: both of its wires have index `≥ N`. -/
@@ -1230,8 +1228,7 @@ private theorem restrictionElimTwoA {n t : Nat} (d : CircDesc (n + 1) (t + 3))
         (∀ w' flip, rd = .wire w' flip → w'.val < n + g.val) :=
     fun g hg0 => gateElimRedirect d g hg0
   obtain ⟨g₂, hg₂, hg₂_ne⟩ := h_two
-  have hg₂_not_last : g₂.val < t + 2 :=
-    last_gate_no_input_ref d (by omega) hn comp heval g₂ hg₂
+  have hg₂_not_last : g₂.val < t + 2 := last_gate_no_input_ref d (by omega) hn comp heval g₂ hg₂
   obtain ⟨rd₁, hrd₁, hrd₁_wire⟩ := gate_elim_rd g₁ hg₁
   obtain ⟨rd₂, hrd₂, hrd₂_wire⟩ := gate_elim_rd g₂ hg₂
   have hne : g₁.val ≠ g₂.val := fun h => hg₂_ne (Fin.ext h.symm)
@@ -1554,8 +1551,7 @@ theorem restriction_eliminates_two {n s : Nat} (d : CircDesc (n + 1) s)
   -- Some gate reads input 0
   obtain ⟨g₁, hg₁⟩ := evalD_essential_means_referenced d (by omega) ⟨0, by omega⟩
     ⟨fun _ => false, hessential ⟨0, by omega⟩ (fun _ => false)⟩
-  have hg₁_not_last : g₁.val < t + 2 :=
-    last_gate_no_input_ref d (by omega) hn comp heval g₁ hg₁
+  have hg₁_not_last : g₁.val < t + 2 := last_gate_no_input_ref d (by omega) hn comp heval g₁ hg₁
   simp only [] at hg₁
   -- Restricted circuit computes XOR_n for any restriction value b
   have hrestrict : ∀ b : Bool, ∀ x : BitString n,

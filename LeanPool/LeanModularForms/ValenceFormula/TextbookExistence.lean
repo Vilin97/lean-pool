@@ -100,6 +100,16 @@ private lemma uhp_norm_one_re_zero_eq_i (p : ℍ) (hn : ‖(p : ℂ)‖ = 1) (hr
     · exact absurd h (ne_of_gt (add_pos p.2 one_pos))
   exact Complex.ext (hr.trans Complex.I_re.symm) (h_im.trans Complex.I_im.symm)
 
+private lemma uhp_im_eq_sqrt3_div2 (p : ℍ) (h_sq : (p : ℂ).im ^ 2 = 3 / 4) :
+    (p : ℂ).im = Real.sqrt 3 / 2 := by
+  have h_im_sq : (p : ℂ).im ^ 2 = (Real.sqrt 3 / 2) ^ 2 := by
+    rw [h_sq, div_pow, Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num)]; norm_num
+  rcases sq_eq_sq_iff_eq_or_eq_neg.mp h_im_sq with h | h
+  · exact h
+  · exact absurd h (by
+      have : (↑p : ℂ).im > 0 := p.2
+      linarith [Real.sqrt_pos.mpr (show (3 : ℝ) > 0 by norm_num)])
+
 private lemma uhp_norm_one_re_neg_half_eq_rho (p : ℍ)
     (hn : ‖(p : ℂ)‖ = 1) (hr : (p : ℂ).re = -1 / 2) :
     p = ellipticPointRho' := by
@@ -108,15 +118,7 @@ private lemma uhp_norm_one_re_neg_half_eq_rho (p : ℍ)
   have h_nsq : Complex.normSq (p : ℂ) = 1 := by
     rw [Complex.normSq_eq_norm_sq, hn, one_pow]
   rw [Complex.normSq_apply, hr] at h_nsq
-  have h_im : (p : ℂ).im = Real.sqrt 3 / 2 := by
-    have h_sq : (p : ℂ).im ^ 2 = 3 / 4 := by nlinarith
-    have h_im_sq : (p : ℂ).im ^ 2 = (Real.sqrt 3 / 2) ^ 2 := by
-      rw [h_sq, div_pow, Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num)]; norm_num
-    rcases sq_eq_sq_iff_eq_or_eq_neg.mp h_im_sq with h | h
-    · exact h
-    · exact absurd h (by
-        have : (↑p : ℂ).im > 0 := p.2
-        linarith [Real.sqrt_pos.mpr (show (3 : ℝ) > 0 by norm_num)])
+  have h_im : (p : ℂ).im = Real.sqrt 3 / 2 := uhp_im_eq_sqrt3_div2 p (by nlinarith)
   apply Complex.ext
   · simp [ellipticPointRho']; have : p.re = (↑p : ℂ).re := rfl; linarith
   · simp [ellipticPointRho']; have : p.im = (↑p : ℂ).im := rfl; linarith
@@ -129,15 +131,7 @@ private lemma uhp_norm_one_re_half_eq_rho_plus_one (p : ℍ)
   have h_nsq : Complex.normSq (p : ℂ) = 1 := by
     rw [Complex.normSq_eq_norm_sq, hn, one_pow]
   rw [Complex.normSq_apply, hr] at h_nsq
-  have h_im : (p : ℂ).im = Real.sqrt 3 / 2 := by
-    have h_sq : (p : ℂ).im ^ 2 = 3 / 4 := by nlinarith
-    have h_im_sq : (p : ℂ).im ^ 2 = (Real.sqrt 3 / 2) ^ 2 := by
-      rw [h_sq, div_pow, Real.sq_sqrt (show (3 : ℝ) ≥ 0 by norm_num)]; norm_num
-    rcases sq_eq_sq_iff_eq_or_eq_neg.mp h_im_sq with h | h
-    · exact h
-    · exact absurd h (by
-        have : (↑p : ℂ).im > 0 := p.2
-        linarith [Real.sqrt_pos.mpr (show (3 : ℝ) > 0 by norm_num)])
+  have h_im : (p : ℂ).im = Real.sqrt 3 / 2 := uhp_im_eq_sqrt3_div2 p (by nlinarith)
   apply Complex.ext
   · simp [ellipticPointRhoPlusOne']; have : p.re = (↑p : ℂ).re := rfl; linarith
   · simp [ellipticPointRhoPlusOne']; have : p.im = (↑p : ℂ).im := rfl; linarith

@@ -79,8 +79,7 @@ lemma summable_sq_mul_of_bounded (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → �
 /-- Nonnegativity of the weighted square series. -/
 lemma tsum_sq_mul_nonneg (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
     (hc_nn : ∀ n, 0 ≤ c n) (x : E) :
-    0 ≤ ∑' n, (f n x) ^ 2 * c n :=
-  tsum_nonneg (fun n => mul_nonneg (sq_nonneg _) (hc_nn n))
+    0 ≤ ∑' n, (f n x) ^ 2 * c n := tsum_nonneg (fun n => mul_nonneg (sq_nonneg _) (hc_nn n))
 
 /-- The **Hilbertian lift** of a nuclear expansion: `r(x) = √(Σₖ fₖ(x)² · cₖ)`.
 This seminorm satisfies the parallelogram law and dominates the original
@@ -176,8 +175,7 @@ def hilbertianLift (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
 theorem hilbertianLift_apply (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → ℝ)
     (hc_nn : ∀ n, 0 ≤ c n) (hc_sum : Summable c)
     (q : Seminorm ℝ E) (hfq : ∀ n x, |f n x| ≤ q x) (x : E) :
-    hilbertianLift f c hc_nn hc_sum q hfq x = Real.sqrt (∑' n, (f n x) ^ 2 * c n) :=
-  rfl
+    hilbertianLift f c hc_nn hc_sum q hfq x = Real.sqrt (∑' n, (f n x) ^ 2 * c n) := rfl
 
 /-- The Hilbertian lift satisfies the parallelogram law.
 
@@ -234,8 +232,7 @@ theorem hilbertianLift_dominates (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ → �
   calc ∑ n ∈ s, (|f n x| * √(c n)) * √(c n)
       ≤ √(∑ n ∈ s, (|f n x| * √(c n)) ^ 2) * √(∑ n ∈ s, (√(c n)) ^ 2) :=
         Real.sum_mul_le_sqrt_mul_sqrt s _ _
-    _ = √(∑ n ∈ s, (f n x) ^ 2 * c n) * √(∑ n ∈ s, c n) := by
-        simp_rw [hsq_ab, hsq_b]
+    _ = √(∑ n ∈ s, (f n x) ^ 2 * c n) * √(∑ n ∈ s, c n) := by simp_rw [hsq_ab, hsq_b]
     _ ≤ √(∑' n, (f n x) ^ 2 * c n) * √(∑' n, c n) := by
         apply mul_le_mul
         · exact Real.sqrt_le_sqrt
@@ -269,10 +266,8 @@ theorem hilbertianLift_le_dominator (f : ℕ → (E →L[ℝ] ℝ)) (c : ℕ →
                 · linarith [abs_nonneg (f n x), hfq n x]
                 · exact hfq n x
           exact mul_le_mul_of_nonneg_right h1 (hc_nn n))
-    _ = Real.sqrt ((q x) ^ 2 * ∑' n, c n) := by
-        rw [tsum_mul_left]
-    _ = q x * Real.sqrt (∑' n, c n) := by
-        rw [Real.sqrt_mul (sq_nonneg _), Real.sqrt_sq hqx]
+    _ = Real.sqrt ((q x) ^ 2 * ∑' n, c n) := by rw [tsum_mul_left]
+    _ = q x * Real.sqrt (∑' n, c n) := by rw [Real.sqrt_mul (sq_nonneg _), Real.sqrt_sq hqx]
     _ = Real.sqrt (∑' n, c n) * q x := mul_comm _ _
 
 /-! ### Bilinearity of Polarization Inner Product (Jordan-von Neumann) -/
@@ -294,8 +289,7 @@ lemma Seminorm.innerProd_comm (R : Seminorm ℝ E) (x y : E) :
     R.innerProd x y = R.innerProd y x := by
   simp only [Seminorm.innerProd]
   have h1 : R (x + y) = R (y + x) := R_congr' R (by abel)
-  have h2 : R (x - y) = R (y - x) := by
-    rw [show x - y = -(y - x) from by abel, map_neg_eq_map]
+  have h2 : R (x - y) = R (y - x) := by rw [show x - y = -(y - x) from by abel, map_neg_eq_map]
   rw [h1, h2]
 
 omit [TopologicalSpace E] in
@@ -303,10 +297,8 @@ omit [TopologicalSpace E] in
 lemma Seminorm.innerProd_neg_left (R : Seminorm ℝ E) (x y : E) :
     R.innerProd (-x) y = -R.innerProd x y := by
   simp only [Seminorm.innerProd]
-  have h1 : R (-x + y) = R (x - y) := by
-    rw [show -x + y = -(x - y) from by abel, map_neg_eq_map]
-  have h2 : R (-x - y) = R (x + y) := by
-    rw [show -x - y = -(x + y) from by abel, map_neg_eq_map]
+  have h1 : R (-x + y) = R (x - y) := by rw [show -x + y = -(x - y) from by abel, map_neg_eq_map]
+  have h2 : R (-x - y) = R (x + y) := by rw [show -x - y = -(x + y) from by abel, map_neg_eq_map]
   rw [h1, h2]; ring
 
 omit [TopologicalSpace E] in
@@ -391,16 +383,14 @@ omit [TopologicalSpace E] in
 private lemma Seminorm.sq_add_of_innerProd_eq_zero (R : Seminorm ℝ E)
     (hR : R.IsHilbertian) (x y : E) (hxy : R.innerProd x y = 0) :
     R (x + y) ^ 2 = R x ^ 2 + R y ^ 2 := by
-  have h1 : R (x + y) ^ 2 = R (x - y) ^ 2 := by
-    simp only [Seminorm.innerProd] at hxy; linarith
+  have h1 : R (x + y) ^ 2 = R (x - y) ^ 2 := by simp only [Seminorm.innerProd] at hxy; linarith
   linarith [hR x y]
 
 omit [TopologicalSpace E] in
 /-- `R(vⱼ) = 1` for an R-orthonormal sequence. -/
 private lemma R_orthonormal_norm (R : Seminorm ℝ E) {N : ℕ} (v : Fin N → E)
     (hv : R.IsOrthonormalSeq v) (j : Fin N) : R (v j) = 1 := by
-  have h : R (v j) ^ 2 = 1 := by
-    simpa [R.innerProd_self] using hv j j
+  have h : R (v j) ^ 2 = 1 := by simpa [R.innerProd_self] using hv j j
   nlinarith [apply_nonneg R (v j)]
 
 omit [TopologicalSpace E] in
@@ -521,8 +511,7 @@ theorem isHilbertSchmidtEmbedding_of_nuclear
           calc ∑ j, (∑' n, |f n (e j)| * c n) ^ 2
               ≤ ∑ j, (∑' n, c n) * (∑' n, (f n (e j)) ^ 2 * c n) :=
                 Finset.sum_le_sum (fun j _ => hCS j)
-            _ = (∑' n, c n) * ∑ j, (∑' n, (f n (e j)) ^ 2 * c n) := by
-                rw [← Finset.mul_sum]
+            _ = (∑' n, c n) * ∑ j, (∑' n, (f n (e j)) ^ 2 * c n) := by rw [← Finset.mul_sum]
             _ = (∑' n, c n) * (∑' n, ∑ j, (f n (e j)) ^ 2 * c n) := by
                 -- Swap finite sum and tsum
                 congr 1

@@ -149,8 +149,7 @@ lemma freePropagatorMomentum_mathlib_pos (m : ℝ) (hm : 0 < m) (k : SpaceTime) 
 
 /-- The Mathlib propagator is non-negative. -/
 lemma freePropagatorMomentum_mathlib_nonneg (m : ℝ) (hm : 0 < m) (k : SpaceTime) :
-    0 ≤ freePropagatorMomentumMathlib m k :=
-  le_of_lt (freePropagatorMomentum_mathlib_pos m hm k)
+    0 ≤ freePropagatorMomentumMathlib m k := le_of_lt (freePropagatorMomentum_mathlib_pos m hm k)
 
 /-- The regulated free covariance kernel in position space.
     This is the Fourier transform of the momentum space propagator with Gaussian regulator:
@@ -249,9 +248,7 @@ lemma heatKernelPositionSpace_4D (t : ℝ) (ht : 0 < t) (r : ℝ) :
   -- (4πt)^{-2} = 1/(16π²t²)
   have hpos : 0 < 4 * Real.pi * t := by positivity
   have h1 : (4 * Real.pi * t) ^ (-(4 : ℝ) / 2) = 1 / (16 * Real.pi^2 * t^2) := by
-    rw [show -(4 : ℝ) / 2 = -2 by norm_num]
-    rw [Real.rpow_neg (le_of_lt hpos)]
-    rw [Real.rpow_two]
+    rw [show -(4 : ℝ) / 2 = -2 by norm_num, Real.rpow_neg (le_of_lt hpos), Real.rpow_two]
     field_simp
     ring
   rw [h1]
@@ -317,12 +314,10 @@ lemma heatKernelPositionSpace_bounded (r : ℝ) (hr : 0 < r) :
       have h2 : (4 * Real.pi * s)^2 = 16 * Real.pi^2 * s^2 := by ring
       rw [h2]
       -- s = u⁻¹, so s² = u⁻², and 1/(16π²s²) = u²/(16π²)
-      have h3 : (16 * Real.pi^2 * s^2)⁻¹ = (16 * Real.pi^2)⁻¹ * u^2 := by
-        rw [hs_eq]; field_simp
+      have h3 : (16 * Real.pi^2 * s^2)⁻¹ = (16 * Real.pi^2)⁻¹ * u^2 := by rw [hs_eq]; field_simp
       rw [h3]
       -- Now simplify the exponential: -r²/(4s) = -r²u/4
-      have h4 : -r^2 / (4 * s) = -(r^2 / 4) * u := by
-        rw [hs_eq]; field_simp
+      have h4 : -r^2 / (4 * s) = -(r^2 / 4) * u := by rw [hs_eq]; field_simp
       rw [h4]
     rw [h_kernel_eq]
     -- Apply the bound u² * exp(-cu) ≤ (2/c)² where c = r²/4
@@ -359,8 +354,7 @@ lemma heatKernelPositionSpace_bounded (r : ℝ) (hr : 0 < r) :
     -- Now combine: H = (16π²)⁻¹ * u² * exp(-cu) ≤ (16π²)⁻¹ * 64/r⁴ = 4/(π²r⁴)
     calc (16 * Real.pi^2)⁻¹ * u^2 * Real.exp (-(r^2 / 4) * u)
         = (16 * Real.pi^2)⁻¹ * (u^2 * Real.exp (-(r^2 / 4) * u)) := by ring
-      _ ≤ (16 * Real.pi^2)⁻¹ * (64 / r^4) := by
-          apply mul_le_mul_of_nonneg_left h_div; positivity
+      _ ≤ (16 * Real.pi^2)⁻¹ * (64 / r^4) := by apply mul_le_mul_of_nonneg_left h_div; positivity
       _ = 4 / (Real.pi^2 * r^4) := by field_simp; ring
       _ ≤ 4 / (Real.pi^2 * r^4) + 1 := by linarith
 
@@ -400,11 +394,9 @@ theorem heatKernelPositionSpace_integral_eq_one (t : ℝ) (ht : 0 < t) :
   rw [hd_real]
   have h_div_eq : π / (1 / (4 * t)) = 4 * π * t := by field_simp
   rw [h_div_eq]
-  have h_pow_eq : (4 * π * t) ^ ((4 : ℝ) / 2) = (4 * π * t) ^ (2 : ℝ) := by
-    congr 1; norm_num
+  have h_pow_eq : (4 * π * t) ^ ((4 : ℝ) / 2) = (4 * π * t) ^ (2 : ℝ) := by congr 1; norm_num
   rw [h_pow_eq]
-  have h_neg_pow : (4 * π * t) ^ (-(4 : ℝ) / 2) = (4 * π * t) ^ (-(2 : ℝ)) := by
-    congr 1; norm_num
+  have h_neg_pow : (4 * π * t) ^ (-(4 : ℝ) / 2) = (4 * π * t) ^ (-(2 : ℝ)) := by congr 1; norm_num
   rw [h_neg_pow]
   have h_pos : 0 < 4 * π * t := by positivity
   rw [Real.rpow_neg (le_of_lt h_pos)]
@@ -435,8 +427,7 @@ lemma covarianceSchwingerRep_4D (m : ℝ) (_hm : 0 < m) (r : ℝ) (_hr : 0 < r) 
     intro t ht
     rw [heatKernelPositionSpace_4D t ht r]
     ring
-  rw [setIntegral_congr_fun measurableSet_Ioi h]
-  rw [MeasureTheory.integral_const_mul]
+  rw [setIntegral_congr_fun measurableSet_Ioi h, MeasureTheory.integral_const_mul]
 
 /-- The Schwinger representation of the covariance equals the Bessel formula.
     C(r) = covarianceSchwingerRep m r = (m/(4π²r)) K₁(mr)
@@ -1420,8 +1411,7 @@ lemma freeCovariance_regulated_uniformly_bounded (α : ℝ) (hα : 0 < α) (m : 
       _ = ∫ k : SpaceTime, |Real.exp (-α * ‖k‖^2) *
           freePropagatorMomentum m k / (2 * Real.pi) ^ STDimension| := by
         congr 1; ext k
-        rw [Complex.norm_mul]
-        rw [norm_exp_neg_I_mul_real, mul_one]
+        rw [Complex.norm_mul, norm_exp_neg_I_mul_real, mul_one]
         simp only [Complex.norm_real]
         exact norm_eq_abs _
       -- Step 4: |exp * prop / norm| ≤ exp / (m² * norm) since prop ≤ 1/m²
@@ -1508,8 +1498,7 @@ lemma aestronglyMeasurable_freeCovariance_regulated (α : ℝ) (hα : 0 < α) (m
       apply Filter.Eventually.of_forall
       intro k
       simp only [F, bound]
-      rw [Complex.norm_mul, Complex.norm_real]
-      rw [norm_exp_neg_I_mul_real, mul_one]
+      rw [Complex.norm_mul, Complex.norm_real, norm_exp_neg_I_mul_real, mul_one]
       have h_prop_bound : freePropagatorMomentum m k ≤ 1 / m^2 := by
         simp only [freePropagatorMomentum]
         apply one_div_le_one_div_of_le (by positivity : 0 < m ^ 2)
@@ -1782,8 +1771,7 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
               field_simp [ne_of_gt hr_pos, ne_of_gt hm]
         _ = C * ‖z‖^(-2 : ℝ) := by
               rw [hC_def]
-              have h_rpow : ‖z‖ ^ (-2 : ℝ) = (‖z‖ ^ (2 : ℝ))⁻¹ := by
-                rw [rpow_neg (norm_nonneg z)]
+              have h_rpow : ‖z‖ ^ (-2 : ℝ) = (‖z‖ ^ (2 : ℝ))⁻¹ := by rw [rpow_neg (norm_nonneg z)]
               rw [h_rpow, rpow_two]
               field_simp [ne_of_gt hr_pos]
     · -- Case: mr > 1, use besselK1_asymptotic
@@ -1861,8 +1849,7 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
           have := add_one_le_exp (m * ‖z‖)
           linarith
         -- Invert the inequality (anti-monotonicity of inverse)
-        have h2 : (Real.exp (m * ‖z‖))⁻¹ ≤ (m * ‖z‖)⁻¹ := by
-          exact inv_anti₀ hmr_pos h1
+        have h2 : (Real.exp (m * ‖z‖))⁻¹ ≤ (m * ‖z‖)⁻¹ := by exact inv_anti₀ hmr_pos h1
         calc Real.exp (-(m * ‖z‖)) = (Real.exp (m * ‖z‖))⁻¹ := by rw [Real.exp_neg]
           _ ≤ (m * ‖z‖)⁻¹ := h2
       have h_K_bound : besselK1 (m * ‖z‖) ≤ (Real.sinh 1 + 2) / (m * ‖z‖) := by
@@ -1888,8 +1875,7 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
               nlinarith [Real.pi_pos, sq_nonneg ‖z‖]
         _ = C * ‖z‖^(-2 : ℝ) := by
               rw [hC_def]
-              have h_rpow : ‖z‖ ^ (-2 : ℝ) = (‖z‖ ^ (2 : ℝ))⁻¹ := by
-                rw [rpow_neg (norm_nonneg z)]
+              have h_rpow : ‖z‖ ^ (-2 : ℝ) = (‖z‖ ^ (2 : ℝ))⁻¹ := by rw [rpow_neg (norm_nonneg z)]
               rw [h_rpow, rpow_two]
               field_simp [ne_of_gt hr_pos]
 
@@ -1964,8 +1950,7 @@ for compatibility with code that uses the Fact type class.
 lemma freeCovariance_exponential_bound' (m : ℝ) [Fact (0 < m)] (u v : SpaceTime)
     (h_sep : 1 ≤ m * ‖u - v‖) :
     |freeCovariance m u v| ≤ (m^2 * (Real.sinh 1 + 2) / (4 * Real.pi^2)) * Real.exp (-m * ‖u - v‖)
-       :=
-  freeCovariance_exponential_bound m Fact.out u v h_sep
+       := freeCovariance_exponential_bound m Fact.out u v h_sep
 
 /-- **Continuity of the free covariance kernel away from the origin.**
 
@@ -2051,8 +2036,7 @@ theorem integral_comp_neg_spacetime {E : Type*} [NormedAddCommGroup E] [NormedSp
 
 /-- Position-space free covariance is symmetric: `C(x,y) = C(y,x)`. -/
 lemma freeCovariance_symmetric (m : ℝ) (x y : SpaceTime) :
-    freeCovariance m x y = freeCovariance m y x :=
-  freeCovarianceBessel_symm m x y
+    freeCovariance m x y = freeCovariance m y x := freeCovarianceBessel_symm m x y
 
 /-- The position-space free covariance is real-valued after ℂ coercion. -/
 lemma freeCovariance_star (m : ℝ) (x y : SpaceTime) :

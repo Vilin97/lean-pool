@@ -95,11 +95,9 @@ theorem exp_pv_eq_exp_neg_crossing_angle
     Complex.exp (cauchyPrincipalValue' (·⁻¹)
       (fun t => γ.toFun t - z₀) γ.a γ.b 0) =
     Complex.exp (-(I * angleAtCrossing γ t₀ ht₀)) := by
-  obtain ⟨L, hL⟩ :=
-    cpv_exists_of_unique_crossing γ z₀ t₀ ht₀ honly hγ_meas hC2 h_cont_deriv
+  obtain ⟨L, hL⟩ := cpv_exists_of_unique_crossing γ z₀ t₀ ht₀ honly hγ_meas hC2 h_cont_deriv
   -- exp(R(ε)) → exp(L) by continuity; exp(R(ε)) → exp(-iα) by core analysis
-  have h_exp_target :=
-    tendsto_exp_cutoff_integral_crossing γ hclosed z₀ t₀ ht₀ hcross honly
+  have h_exp_target := tendsto_exp_cutoff_integral_crossing γ hclosed z₀ t₀ ht₀ hcross honly
   rw [cpv_inv_sub_eq_limit γ z₀ L hL]
   exact tendsto_nhds_unique
     (Complex.continuous_exp.continuousAt.tendsto.comp hL) h_exp_target
@@ -144,8 +142,7 @@ theorem externalWindingContribution_isInt
       Icc a' b' ⊆ Icc γ.a γ.b ∧
       ContinuousOn (deriv γ.toFun) (Icc a' b')) :
     ∃ N : ℤ, externalWindingContribution γ z₀ t₀ ht₀ = N := by
-  obtain ⟨L, hL⟩ :=
-    cpv_exists_of_unique_crossing γ z₀ t₀ ht₀ honly hγ_meas hC2 h_cont_deriv
+  obtain ⟨L, hL⟩ := cpv_exists_of_unique_crossing γ z₀ t₀ ht₀ honly hγ_meas hC2 h_cont_deriv
   have hPV_eq := cpv_inv_sub_eq_limit γ z₀ L hL
   -- exp(PV) = exp(-i·α) by FTC + direction limit, so exp(L) = exp(-iα)
   have h_exp := exp_pv_eq_exp_neg_crossing_angle γ hclosed z₀ t₀ ht₀
@@ -198,8 +195,7 @@ theorem generalizedWindingNumber_eq_neg_half_smooth_crossing
   rw [generalizedWindingNumber_eq_neg_angleContribution_single
     γ hclosed z₀ t₀ ht₀ hcross honly h_external,
     angleAtCrossing_smooth γ t₀ ht₀ hsmooth]
-  have : (Real.pi : ℂ) ≠ 0 :=
-    Complex.ofReal_ne_zero.mpr Real.pi_ne_zero
+  have : (Real.pi : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr Real.pi_ne_zero
   field_simp [this]
 
 /-- At a corner crossing with angle α and zero external winding,
@@ -247,8 +243,7 @@ theorem externalWindingContribution_translate
     cauchyPrincipalValue' (·⁻¹)
       (fun t => γ.toFun t - z₀) γ.a γ.b 0
   have h_eq : (fun t => (γ.translate c).toFun t - (z₀ + c)) =
-      (fun t => γ.toFun t - z₀) := by
-    ext t; simp only [PiecewiseC1Immersion.translate]; ring
+      (fun t => γ.toFun t - z₀) := by ext t; simp only [PiecewiseC1Immersion.translate]; ring
   rw [h_eq]
 
 /-- Winding number with angles is additive over disjoint crossing sets. -/

@@ -194,8 +194,7 @@ noncomputable abbrev coconeDropFirst
     Limits.Cocone <| Functor.ofSequence fun n ↦ i (n + 1) where
   pt := cc.pt
   ι := NatTrans.ofSequence (fun n ↦ cc.ι.app (n + 1))
-        (fun n ↦ by
-          exact (cc.w (homOfLE (Nat.le_succ (n + 1)))).trans (Category.comp_id _).symm )
+        (fun n ↦ (cc.w (homOfLE (Nat.le_succ (n + 1)))).trans (Category.comp_id _).symm)
 
 /-- `coconeUndropFirst` -/
 noncomputable abbrev coconeUndropFirst
@@ -208,10 +207,8 @@ noncomputable abbrev coconeUndropFirst
         | 0 => (Functor.ofSequence i).map (homOfLE (by omega : 0 ≤ 1)) ≫ cc'.ι.app 0
         | n + 1 => cc'.ι.app n )
       (fun n ↦ match n with
-        | 0 => by
-            exact (Category.comp_id (i 0 ≫ cc'.ι.app 0)).symm
-        | n + 1 => by
-            exact (cc'.w (homOfLE (Nat.le_succ n))).trans (Category.comp_id _).symm )
+        | 0 => (Category.comp_id (i 0 ≫ cc'.ι.app 0)).symm
+        | n + 1 => (cc'.w (homOfLE (Nat.le_succ n))).trans (Category.comp_id _).symm)
 
 /-- Undrop (recover) the first morphism of
 `Limits.colimit.cocone (Functor.ofSequence fun n ↦ i (n + 1))` -/

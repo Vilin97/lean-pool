@@ -28,8 +28,7 @@ namespace subformulasGrz
 lemma mem_self : φ ∈ φ.subformulasGrz := by simp [subformulasGrz, subformulas.mem_self]
 
 lemma mem_boximpbox (h : ψ ∈ φ.subformulas.prebox) :
-    □(ψ ==> □ψ) ∈ φ.subformulasGrz := by
-  simp_all [subformulasGrz];
+    □(ψ ==> □ψ) ∈ φ.subformulasGrz := by simp_all [subformulasGrz];
 
 lemma mem_origin (h : ψ ∈ φ.subformulas) : ψ ∈ φ.subformulasGrz := by simp_all [subformulasGrz];
 
@@ -83,8 +82,7 @@ abbrev miniCanonicalFrame (φ : Formula ℕ) : Kripke.FiniteFrame where
 
 namespace miniCanonicalFrame
 
-lemma reflexive : Std.Refl (miniCanonicalFrame φ).Rel := by
-  exact ⟨fun _ => by simp ⟩
+lemma reflexive : Std.Refl (miniCanonicalFrame φ).Rel := by exact ⟨fun _ => by simp ⟩
 
 lemma transitive : IsTrans (miniCanonicalFrame φ).World (miniCanonicalFrame φ).Rel := by
   constructor
@@ -121,8 +119,7 @@ lemma truthlemma_lemma1
   : ((X.1.prebox.modalBox) ∪ {□(ψ ==> □ψ), -ψ}) ⊆ (φ.subformulasGrz)⁻ := by
   simp only [FormulaFinset.complementary];
   intro χ hr;
-  replace hr : χ = □(ψ ==> □ψ) ∨ χ = -ψ ∨ (∃ a, □a ∈ X ∧ □a = χ) := by
-    simp at hr; tauto;
+  replace hr : χ = □(ψ ==> □ψ) ∨ χ = -ψ ∨ (∃ a, □a ∈ X ∧ □a = χ) := by simp at hr; tauto;
   apply Finset.mem_union.mpr;
   rcases hr with (rfl | rfl | ⟨χ, hr, rfl⟩);
   · left;

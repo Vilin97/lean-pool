@@ -85,8 +85,7 @@ lemma of_sqrt (hm : SPPow2 m) {i : V} (pi : Pow2 i) (him : i ≤ m) (hsqi : (√
     LenBit i m := by
   by_cases ne1 : i = 1
   · rcases ne1; simpa using hi
-  · have ne2 : i ≠ 2 := by
-      rintro rfl; simp [sqrt_two] at hsqi
+  · have ne2 : i ≠ 2 := by rintro rfl; simp [sqrt_two] at hsqi
     have : 2 < i := lt_of_le_of_ne
       (one_lt_iff_two_le.mp <| lt_of_le_of_ne (pos_iff_one_le.mp pi.pos) <|
           Ne.symm ne1) (Ne.symm ne2)
@@ -97,11 +96,9 @@ lemma of_sqrt (hm : SPPow2 m) {i : V} (pi : Pow2 i) (him : i ≤ m) (hsqi : (√
     intro i hi pi
     rcases le_two_iff_eq_zero_or_one_or_two.mp hi with (rfl | rfl | rfl) <;> simp⟩
 
-@[simp] lemma not_zero : ¬SPPow2 (0 : V) := by
-  rintro ⟨_, h, _⟩; simp at h
+@[simp] lemma not_zero : ¬SPPow2 (0 : V) := by rintro ⟨_, h, _⟩; simp at h
 
-@[simp] lemma not_one : ¬SPPow2 (1 : V) := by
-  rintro ⟨_, h, _⟩; simp [LenBit.iff_rem] at h
+@[simp] lemma not_one : ¬SPPow2 (1 : V) := by rintro ⟨_, h, _⟩; simp [LenBit.iff_rem] at h
 
 lemma sq_le_of_lt (hm : SPPow2 m) {i j : V} (pi : Pow2 i) (pj : Pow2 j) (hi : LenBit i m) (hj :
     LenBit j m) :
@@ -275,8 +272,7 @@ lemma elim' {i : V} : PPow2 i ↔ i = 2 ∨ 2 < i ∧ ∃ j, i = j ^ 2 ∧ PPow2
 lemma two_le {i : V} (hi : PPow2 i) : 2 ≤ i := by
   simp [←one_add_one_eq_two, ←lt_iff_succ_le, hi.one_lt]
 
-lemma not_three : ¬PPow2 (3 : V) := by
-  intro h; simpa [sqrt_three] using h.sqrt (by simp)
+lemma not_three : ¬PPow2 (3 : V) := by intro h; simpa [sqrt_three] using h.sqrt (by simp)
 
 lemma two_lt {i : V} (hi : PPow2 i) (ne : i ≠ 2) : 2 < i := by
   by_contra A

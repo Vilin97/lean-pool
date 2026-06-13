@@ -395,8 +395,7 @@ private theorem qam_A_is_sa_iff_aux4 [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ 
         (inner ℂ x.1 x.1ᴴ • x.1 * φ.matrix) := by
       simp only [Matrix.mul_smul, Matrix.smul_mul, smul_smul, Matrix.mul_assoc, mul_one_div]
     _ = ((1 / inner ℂ x.1ᴴ x.1ᴴ) • φ.matrix⁻¹) *
-        (inner ℂ x.1ᴴ x.1ᴴ • φ.matrix * x.1ᴴ) := by
-      simp_rw [smul_mul_assoc, ← h]
+        (inner ℂ x.1ᴴ x.1ᴴ • φ.matrix * x.1ᴴ) := by simp_rw [smul_mul_assoc, ← h]
     _ = (inner ℂ x.1ᴴ x.1ᴴ / inner ℂ x.1ᴴ x.1ᴴ) •
         φ.matrix⁻¹ * φ.matrix * x.1ᴴ := by
       simp_rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul,
@@ -547,8 +546,7 @@ private theorem qam_A_is_sa_iff_aux3_aux6 [hφ : φ.IsFaithfulPosMap] (x : ℍ) 
   rw [H, h]
   have hsqrt_star :
       ((Real.sqrt ((α : NNReal) : ℝ) : ℂ) • x) =
-        (star (Real.sqrt ((α : NNReal) : ℝ) : ℂ)) • x := by
-    simp [Complex.conj_ofReal]
+        (star (Real.sqrt ((α : NNReal) : ℝ) : ℂ)) • x := by simp [Complex.conj_ofReal]
   calc
     rankOne ℂ ((Real.sqrt ((α : NNReal) : ℝ) : ℂ) • x)
         ((Real.sqrt ((α : NNReal) : ℝ) : ℂ) • x) =
@@ -590,10 +588,8 @@ private theorem qam_A_is_sa_iff_aux4_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x 
       rw [sig_eq_iff_eq_sig_inv] at hzero
       have hzero' : x = 0 := by simpa using hzero
       exact hx hzero'
-    have hnum : ‖hφ.sig (1 / 2) x‖ ^ 2 ≠ 0 := by
-      simpa [norm_eq_zero] using hsig
-    have hden : ‖x‖ ^ 2 ≠ 0 := by
-      simpa [norm_eq_zero] using hx
+    have hnum : ‖hφ.sig (1 / 2) x‖ ^ 2 ≠ 0 := by simpa [norm_eq_zero] using hsig
+    have hden : ‖x‖ ^ 2 ≠ 0 := by simpa [norm_eq_zero] using hx
     intro hzero
     have hαzero : α = 0 := by
       change (α' : ℝ) = 0
@@ -766,8 +762,7 @@ private theorem qam_A_is_sa_iff_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x : ℍ
   obtain ⟨α, hα⟩ := qam_A_is_sa_iff_aux4_aux6 x' this
   have hα' := (qam_A_is_sa_iff_aux3_aux6 _ α H hα).symm
   -- have hα'' := qam_A_is_sa_iff_aux2_aux6 _ _ hα
-  have hxstar : xᴴ ≠ 0 := by
-    simpa [star_eq_conjTranspose] using star_ne_zero.mpr hx
+  have hxstar : xᴴ ≠ 0 := by simpa [star_eq_conjTranspose] using star_ne_zero.mpr hx
   have hsqrtx : ((Real.sqrt ((α : NNReal) : ℝ) : ℂ) • x) ≠ 0 := by
     apply smul_ne_zero
     · simp [Units.ne_zero α]
@@ -991,8 +986,7 @@ theorem qamA.is_reflexive_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n] (x : { 
   have hstar :
       star (star ((1 : ℂ) / (↑‖x.1‖ : ℂ) ^ 2) *
           star (inner ℂ x.1 φ.matrix⁻¹)) =
-        ((1 : ℂ) / (↑‖x.1‖ : ℂ) ^ 2) * inner ℂ x.1 φ.matrix⁻¹ := by
-    simp
+        ((1 : ℂ) / (↑‖x.1‖ : ℂ) ^ 2) * inner ℂ x.1 φ.matrix⁻¹ := by simp
   rw [hstar, ← rankOne.left_sub, rankOne.eq_zero_iff]
   haveI := hφ.matrixIsPosDef.invertible
   simp only [sub_eq_zero, Module.Dual.IsFaithfulPosMap.inner_eq']
