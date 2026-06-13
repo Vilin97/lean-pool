@@ -433,7 +433,7 @@ lemma chain_proof_prop
     rcases chain prop w_prop n with ⟨x_ih, w_ih, w_ih_prop⟩
     simp only
     split
-    case h_1 Δ r_def =>
+    case h_1 Δ r_def | h_4 Δ φ in_Δ r_def | h_5 Δ φ in_Δ r_def =>
       split
       · rename_i y p_def
         simp [edge, p_def]
@@ -445,7 +445,7 @@ lemma chain_proof_prop
         exfalso
         have := 𝕏.step x_ih
         simp [r_def, p_def] at this
-    case h_2 Δ φ r_def =>
+    case h_2 Δ φ r_def | h_3 Δ φ r_def | h_12 Δ φ ψ in_Δ r_def | h_13 Δ φ ψ in_Δ r_def =>
       split
       · rename_i y z p_def
         by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
@@ -458,46 +458,6 @@ lemma chain_proof_prop
         have := 𝕏.step x_ih
         simp [r_def, p_def] at this
       · rename_i x y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-    case h_3 Δ φ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i x y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-    case h_4 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-    case h_5 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
         exfalso
         have := 𝕏.step x_ih
         simp [r_def, p_def] at this
@@ -537,75 +497,8 @@ lemma chain_proof_prop
         exact ⟨Sum.inr (at i), by simpa [f, r_def] using in_Δ.1, by simpa using h⟩
       · apply w_ih_prop
         exact ⟨Sum.inr (na i), by simpa [f, r_def] using in_Δ.2, by simpa using h⟩
-    case h_12 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i x y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-    case h_13 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i x y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-    case h_14 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-    case h_15 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-    case h_16 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-      · rename_i y z ys p_def
-        exfalso
-        have := 𝕏.step x_ih
-        simp [r_def, p_def] at this
-    case h_17 Δ φ in_Δ r_def =>
+    case h_14 Δ φ ψ in_Δ r_def | h_15 Δ φ ψ in_Δ r_def | h_16 Δ φ in_Δ r_def
+        | h_17 Δ φ in_Δ r_def =>
       split
       · rename_i y p_def
         simp [edge, p_def]

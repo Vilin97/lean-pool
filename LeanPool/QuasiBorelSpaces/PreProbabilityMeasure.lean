@@ -120,14 +120,8 @@ instance setoid (A : Type*) [QuasiBorelSpace A] : Setoid (PreProbabilityMeasure 
   r μ₁ μ₂ := ∀⦃f⦄, IsHom f → μ₁.lintegral f = μ₂.lintegral f
   iseqv := {
     refl _ _ _ := rfl
-    symm h₁ _ h₂ := by
-      symm
-      apply h₁
-      apply h₂
-    trans h₁ h₂ _ h₃ := by
-      trans
-      · apply h₁ h₃
-      · apply h₂ h₃
+    symm h₁ _ h₂ := (h₁ h₂).symm
+    trans h₁ h₂ _ h₃ := (h₁ h₃).trans (h₂ h₃)
   }
 
 lemma lintegral_mul_left

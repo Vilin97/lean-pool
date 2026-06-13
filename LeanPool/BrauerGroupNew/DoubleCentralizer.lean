@@ -302,27 +302,13 @@ def Module.End.leftMul : Subalgebra F (Module.End F B) where
   carrier := Set.range <| LinearMap.mulLeft F
   mul_mem' := by
     rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-    refine ⟨x * y, ?_⟩
-    ext z
-    simp
-  one_mem' := by
-    refine ⟨1, ?_⟩
-    simp only [LinearMap.mulLeft_one]
-    rfl
+    exact ⟨x * y, by ext z; simp⟩
+  one_mem' := ⟨1, by simp only [LinearMap.mulLeft_one]; rfl⟩
   add_mem' := by
     rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-    refine ⟨x + y, ?_⟩
-    ext z
-    simp [add_mul]
-  zero_mem' := by
-    refine ⟨0, ?_⟩
-    ext z
-    simp
-  algebraMap_mem' := by
-    intro c
-    refine ⟨algebraMap _ _ c, ?_⟩
-    ext z
-    simp [Algebra.smul_def]
+    exact ⟨x + y, by ext z; simp [add_mul]⟩
+  zero_mem' := ⟨0, by ext z; simp⟩
+  algebraMap_mem' c := ⟨algebraMap _ _ c, by ext z; simp [Algebra.smul_def]⟩
 
 variable (F B) in
 /-- The subalgebra of endomorphisms given by right multiplication. -/
@@ -331,24 +317,15 @@ def Module.End.rightMul : Subalgebra F (Module.End F B) where
   one_mem' := ⟨1, by ext; simp⟩
   add_mem' := by
     rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-    refine ⟨x + y, ?_⟩
-    ext z
-    simp [mul_add]
-  zero_mem' := by
-    refine ⟨0, ?_⟩
-    ext z
-    simp
+    exact ⟨x + y, by ext z; simp [mul_add]⟩
+  zero_mem' := ⟨0, by ext z; simp⟩
   mul_mem' := by
     rintro _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-    refine ⟨y * x, ?_⟩
-    ext z
-    simp
-  algebraMap_mem' := by
-    intro c
-    refine ⟨algebraMap _ _ c, ?_⟩
+    exact ⟨y * x, by ext z; simp⟩
+  algebraMap_mem' c := ⟨algebraMap _ _ c, by
     ext z
     simp only [LinearMap.mulRight_apply, algebraMap_end_apply]
-    rw [Algebra.smul_def, Algebra.commutes c z]
+    rw [Algebra.smul_def, Algebra.commutes c z]⟩
 
 /-- Right multiplication endomorphisms are equivalent to the opposite algebra. -/
 noncomputable def Module.End.rightMulEquiv : Module.End.rightMul F B ≃ₐ[F] Bᵐᵒᵖ :=
@@ -421,18 +398,14 @@ def Subalgebra.conj (B : Subalgebra F A) (x : Aˣ) : Subalgebra F A where
   mul_mem' := by
     rintro _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩
     exact ⟨b * c, B.mul_mem hb hc, by simp [mul_assoc]⟩
-  one_mem' := by
-    exact ⟨1, B.one_mem, by simp⟩
+  one_mem' := ⟨1, B.one_mem, by simp⟩
   add_mem' := by
     rintro _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩
     exact ⟨b + c, B.add_mem hb hc, by simp [mul_add, add_mul]⟩
-  zero_mem' := by
-    exact ⟨0, B.zero_mem, by simp⟩
-  algebraMap_mem' := by
-    intro c
-    refine ⟨algebraMap _ _ c, B.algebraMap_mem c, ?_⟩
+  zero_mem' := ⟨0, B.zero_mem, by simp⟩
+  algebraMap_mem' c := ⟨algebraMap _ _ c, B.algebraMap_mem c, by
     rw [mul_assoc, Algebra.commutes c (x⁻¹).1, ← mul_assoc]
-    simp
+    simp⟩
 
 omit [FiniteDimensional F A] [Algebra.IsCentral F A] [IsSimpleRing A] in
 lemma Subalgebra.mem_conj {B : Subalgebra F A} {x : Aˣ} {y : A} :
@@ -442,21 +415,16 @@ lemma Subalgebra.mem_conj {B : Subalgebra F A} {x : Aˣ} {y : A} :
 @[simps]
 def Subalgebra.toConj (B : Subalgebra F A) (x : Aˣ) : B →ₐ[F] B.conj x where
   toFun b := ⟨x * b * x⁻¹, by simp [Subalgebra.mem_conj]⟩
-  map_one' := by
-    ext
-    simp
-  map_mul' := by
-    intros y z
+  map_one' := by ext; simp
+  map_mul' y z := by
     ext
     simp only [MulMemClass.coe_mul, MulMemClass.mk_mul_mk, mul_assoc]
     rw [← mul_assoc x⁻¹.1, Units.inv_mul, one_mul]
   map_zero' := by ext; simp
-  map_add' := by
-    intros y z
+  map_add' y z := by
     ext
     simp only [AddMemClass.coe_add, mul_add, add_mul, AddMemClass.mk_add_mk]
-  commutes' := by
-    intros r
+  commutes' r := by
     ext
     change (x : A) * algebraMap F A r * (↑x⁻¹ : A) = algebraMap F A r
     rw [← Algebra.commutes r (x : A), mul_assoc]
@@ -468,9 +436,7 @@ def Subalgebra.fromConj (B : Subalgebra F A) (x : Aˣ) : B.conj x →ₐ[F] B wh
   toFun b := ⟨x⁻¹ * b * x, by
     rcases b with ⟨_, ⟨b, hb, rfl⟩⟩
     simpa [mul_assoc]⟩
-  map_one' := by
-    ext
-    simp
+  map_one' := by ext; simp
   map_mul' := by
     intros; ext; simp only [MulMemClass.coe_mul, ← mul_assoc, MulMemClass.mk_mul_mk,
       Units.mul_inv_cancel_right]

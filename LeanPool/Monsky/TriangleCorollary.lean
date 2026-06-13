@@ -190,8 +190,7 @@ theorem area_translation (a : ℝ²) (A : Set ℝ²)
 lemma lincom_commutes (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (a : Fin n → ℝ) (f : Fin n → ℝ²)
     : ∑ i : Fin n, a i • L (f i)  =L (∑ i : Fin n, (a i) • (f i)) := by
   rw[  map_sum L (fun i ↦  a i • f i) univ]
-  apply Fintype.sum_congr
-  exact fun i ↦ Eq.symm (LinearMap.CompatibleSMul.map_smul L (a i) (f i))
+  exact Fintype.sum_congr _ _ (fun i ↦ Eq.symm (LinearMap.CompatibleSMul.map_smul L (a i) (f i)))
 
 theorem openHull_lin_trans (L : ℝ² →ₗ[ℝ] ℝ²) {n : ℕ} (f : (Fin n → ℝ²))
     : openHull (L ∘ f ) = Set.image L (openHull f) := by
@@ -244,8 +243,7 @@ lemma aux_for_translation {n : ℕ} {f : Fin n → ℝ²} {a : Fin n → ℝ} {b
     rw[← sum_smul, h3, one_smul]
   nth_rewrite 2 [h4]
   rw[← sum_add_distrib]
-  apply Fintype.sum_congr
-  exact fun i ↦ DistribSMul.smul_add (a i) (f i) b
+  exact Fintype.sum_congr _ _ (fun i ↦ DistribSMul.smul_add (a i) (f i) b)
 
 --Most of the proof of openHull_lin_trans now gets copied
 theorem translation_commutes {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²)
@@ -272,8 +270,7 @@ theorem aux_for_translation_closed {n : ℕ} {f : Fin n → ℝ²} {a : Fin n �
     rw[← sum_smul, h3, one_smul]
   nth_rewrite 2 [h4]
   rw[← sum_add_distrib]
-  apply Fintype.sum_congr
-  exact fun i ↦ DistribSMul.smul_add (a i) (f i) b
+  exact Fintype.sum_congr _ _ (fun i ↦ DistribSMul.smul_add (a i) (f i) b)
 
 theorem translation_commutes_closed {n : ℕ} (f : (Fin n → ℝ²)) (b : ℝ²)
     : closedHull ( (translation b) ∘ f) = Set.image (translation b) (closedHull f) := by
@@ -638,10 +635,8 @@ theorem pre_triangle_to_unitTriangle (T : Triangle) (h : det T ≠ 0) :
   rw[Function.LeftInverse.preimage_preimage (inv_translation_left T) ]
 
 --In order to actually use this, we need that all these maps are measurable
-theorem meas_lin_map (L : ℝ² →ₗ[ℝ] ℝ²) : Measurable L := by
-  let K := LinearMap.toContinuousLinearMap L
-  have h := ContinuousLinearMap.measurable K
-  exact h
+theorem meas_lin_map (L : ℝ² →ₗ[ℝ] ℝ²) : Measurable L :=
+  ContinuousLinearMap.measurable (LinearMap.toContinuousLinearMap L)
 
 theorem meas_translation (a : ℝ²) : Measurable (translation a) := by
   unfold translation

@@ -288,10 +288,8 @@ lemma rewind_turn_one_step {g n h1 h2} :
       other (coalgebraGame.turn (rewindHistory g ⟨n, h2⟩)) := by
   cases n
   case zero =>
-    rcases g with ⟨Γ | R, Γs, Rs⟩
-    · simp [rewindHistory, rewindHistoryOneStep]
-      rfl
-    · simp [rewindHistory, rewindHistoryOneStep]
+    rcases g with ⟨Γ | R, Γs, Rs⟩ <;>
+      simp [rewindHistory, rewindHistoryOneStep] <;>
       rfl
   case succ n =>
     unfold rewindHistory

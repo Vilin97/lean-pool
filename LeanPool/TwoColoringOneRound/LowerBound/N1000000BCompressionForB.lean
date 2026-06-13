@@ -87,9 +87,7 @@ private lemma B_eq_bVal_of_baseOrbit (r : Block) {k : DirIdx} (u : BaseOrbit k) 
 noncomputable def vertexSigmaEquiv : V ≃ Σ k : DirIdx, BaseOrbit k where
   toFun := fun u => ⟨dirIdxBase u, ⟨u, (maskAt_dirIdxBase (u := u)).symm⟩⟩
   invFun := fun s => s.2.1
-  left_inv := by
-    intro u
-    rfl
+  left_inv _ := rfl
   right_inv := by
     rintro ⟨k, u⟩
     -- First, identify the index by injectivity of `maskAt`.
@@ -123,12 +121,8 @@ private noncomputable def interEquivBaseOrbit {k : DirIdx} (u : BaseOrbit k) (a 
     Inter u a d ≃ { v : BaseOrbit a // dirMask v.1 u.1 = maskAt d } where
   toFun := fun w => ⟨⟨w.1, w.2.1⟩, w.2.2⟩
   invFun := fun w => ⟨w.1.1, ⟨w.1.2, w.2⟩⟩
-  left_inv := by
-    intro w
-    rfl
-  right_inv := by
-    intro w
-    rfl
+  left_inv _ := rfl
+  right_inv _ := rfl
 
 private lemma sum_A_over_baseOrbit_eq_N {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) :
     (∑ v : BaseOrbit a, (A d) u.1 v.1) = (N k a d : Q) := by

@@ -73,65 +73,48 @@ noncomputable def gT2B (b : Rand) : ℝ≥0∞ :=
   ENNReal.ofReal (t2 : ℝ) * ENNReal.ofReal (b : ℝ) +
     ENNReal.ofReal (1 - (t2 : ℝ)) * ENNReal.ofReal (1 - (b : ℝ))
 
+/-- The common affine-rewrite step shared by the four `g*_eq_linear` lemmas: a product-of-`ofReal`
+expression in a variable `v` against a threshold `x` collapses to the affine form `(2x-1)v + (1-x)`.
+-/
+private lemma ofReal_affine_aux {v x : ℝ} (hv0 : 0 ≤ v) (hx0 : 0 ≤ x)
+    (h1v0 : 0 ≤ 1 - v) (h1x0 : 0 ≤ 1 - x) (hA0 : 0 ≤ 2 * x - 1) :
+    ENNReal.ofReal v * ENNReal.ofReal x + ENNReal.ofReal (1 - v) * ENNReal.ofReal (1 - x) =
+      ENNReal.ofReal ((2 * x - 1) * v) + ENNReal.ofReal (1 - x) := by
+  rw [← ENNReal.ofReal_mul hv0, ← ENNReal.ofReal_mul h1v0,
+    ← ENNReal.ofReal_add (mul_nonneg hv0 hx0) (mul_nonneg h1v0 h1x0),
+    ← ENNReal.ofReal_add (mul_nonneg hA0 hv0) h1x0]
+  congr 1
+  ring
+
 lemma gCt_eq_linear (c : Rand) :
     gCt c =
       ENNReal.ofReal ((2 * (t : ℝ) - 1) * (c : ℝ)) + ENNReal.ofReal (1 - (t : ℝ)) := by
-  have ht0 : 0 ≤ (t : ℝ) := t.property.1
-  have hc0 : 0 ≤ (c : ℝ) := c.property.1
-  have h1t0 : 0 ≤ (1 - (t : ℝ)) := sub_nonneg.2 (le_of_lt t_lt_one)
-  have h1c0 : 0 ≤ (1 - (c : ℝ)) := sub_nonneg.2 c.property.2
-  have hA0 : 0 ≤ (2 * (t : ℝ) - 1) := by norm_num [t]
-  have hprod0 : 0 ≤ (2 * (t : ℝ) - 1) * (c : ℝ) := mul_nonneg hA0 hc0
-  rw [gCt, ← ENNReal.ofReal_mul hc0, ← ENNReal.ofReal_mul h1c0,
-    ← ENNReal.ofReal_add (mul_nonneg hc0 ht0) (mul_nonneg h1c0 h1t0),
-    ← ENNReal.ofReal_add hprod0 h1t0]
-  congr 1
-  ring
+  rw [gCt]
+  exact ofReal_affine_aux c.property.1 t.property.1 (sub_nonneg.2 c.property.2)
+    (sub_nonneg.2 (le_of_lt t_lt_one)) (by norm_num [t])
 
 lemma gCt2_eq_linear (c : Rand) :
     gCt2 c =
       ENNReal.ofReal ((2 * (t2 : ℝ) - 1) * (c : ℝ)) + ENNReal.ofReal (1 - (t2 : ℝ)) := by
-  have ht0 : 0 ≤ (t2 : ℝ) := t2.property.1
-  have hc0 : 0 ≤ (c : ℝ) := c.property.1
-  have h1t0 : 0 ≤ (1 - (t2 : ℝ)) := sub_nonneg.2 t2.property.2
-  have h1c0 : 0 ≤ (1 - (c : ℝ)) := sub_nonneg.2 c.property.2
-  have hA0 : 0 ≤ (2 * (t2 : ℝ) - 1) := by norm_num [t2]
-  have hprod0 : 0 ≤ (2 * (t2 : ℝ) - 1) * (c : ℝ) := mul_nonneg hA0 hc0
-  rw [gCt2, ← ENNReal.ofReal_mul hc0, ← ENNReal.ofReal_mul h1c0,
-    ← ENNReal.ofReal_add (mul_nonneg hc0 ht0) (mul_nonneg h1c0 h1t0),
-    ← ENNReal.ofReal_add hprod0 h1t0]
-  congr 1
-  ring
+  rw [gCt2]
+  exact ofReal_affine_aux c.property.1 t2.property.1 (sub_nonneg.2 c.property.2)
+    (sub_nonneg.2 t2.property.2) (by norm_num [t2])
 
 lemma gTB_eq_linear (b : Rand) :
     gTB b =
       ENNReal.ofReal ((2 * (t : ℝ) - 1) * (b : ℝ)) + ENNReal.ofReal (1 - (t : ℝ)) := by
-  have ht0 : 0 ≤ (t : ℝ) := t.property.1
-  have hb0 : 0 ≤ (b : ℝ) := b.property.1
-  have h1t0 : 0 ≤ (1 - (t : ℝ)) := sub_nonneg.2 (le_of_lt t_lt_one)
-  have h1b0 : 0 ≤ (1 - (b : ℝ)) := sub_nonneg.2 b.property.2
-  have hA0 : 0 ≤ (2 * (t : ℝ) - 1) := by norm_num [t]
-  have hprod0 : 0 ≤ (2 * (t : ℝ) - 1) * (b : ℝ) := mul_nonneg hA0 hb0
-  rw [gTB, ← ENNReal.ofReal_mul ht0, ← ENNReal.ofReal_mul h1t0,
-    ← ENNReal.ofReal_add (mul_nonneg ht0 hb0) (mul_nonneg h1t0 h1b0),
-    ← ENNReal.ofReal_add hprod0 h1t0]
-  congr 1
-  ring
+  rw [gTB, mul_comm (ENNReal.ofReal (t : ℝ)),
+    mul_comm (ENNReal.ofReal (1 - (t : ℝ)))]
+  exact ofReal_affine_aux b.property.1 t.property.1 (sub_nonneg.2 b.property.2)
+    (sub_nonneg.2 (le_of_lt t_lt_one)) (by norm_num [t])
 
 lemma gT2B_eq_linear (b : Rand) :
     gT2B b =
       ENNReal.ofReal ((2 * (t2 : ℝ) - 1) * (b : ℝ)) + ENNReal.ofReal (1 - (t2 : ℝ)) := by
-  have ht0 : 0 ≤ (t2 : ℝ) := t2.property.1
-  have hb0 : 0 ≤ (b : ℝ) := b.property.1
-  have h1t0 : 0 ≤ (1 - (t2 : ℝ)) := sub_nonneg.2 t2.property.2
-  have h1b0 : 0 ≤ (1 - (b : ℝ)) := sub_nonneg.2 b.property.2
-  have hA0 : 0 ≤ (2 * (t2 : ℝ) - 1) := by norm_num [t2]
-  have hprod0 : 0 ≤ (2 * (t2 : ℝ) - 1) * (b : ℝ) := mul_nonneg hA0 hb0
-  rw [gT2B, ← ENNReal.ofReal_mul ht0, ← ENNReal.ofReal_mul h1t0,
-    ← ENNReal.ofReal_add (mul_nonneg ht0 hb0) (mul_nonneg h1t0 h1b0),
-    ← ENNReal.ofReal_add hprod0 h1t0]
-  congr 1
-  ring
+  rw [gT2B, mul_comm (ENNReal.ofReal (t2 : ℝ)),
+    mul_comm (ENNReal.ofReal (1 - (t2 : ℝ)))]
+  exact ofReal_affine_aux b.property.1 t2.property.1 (sub_nonneg.2 b.property.2)
+    (sub_nonneg.2 t2.property.2) (by norm_num [t2])
 
 lemma innerBC_eq_constAboveT_of_t_lt_b {b c : Rand} (hb : t < b) (htc : t ≤ c)
     (hc1 : c ∈ (Set.Iio (1 : Rand) : Set Rand)) : innerBC b c = constAboveT := by
@@ -914,25 +897,22 @@ lemma lintegral_gCt_Iio_t1 :
   -- Rewrite the products and sum as a single `ofReal`, then do real arithmetic.
   have hmul1 :
       ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) =
-        ENNReal.ofReal ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) := by
-    exact (ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 4)).symm
+        ENNReal.ofReal ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) :=
+    ofReal_mul_eq (by norm_num) rfl
   have hmul2 :
       ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) =
-        ENNReal.ofReal ((3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-    exact (ENNReal.ofReal_mul hb0).symm
+        ENNReal.ofReal ((3 / 8 : ℝ) * (3 / 8 : ℝ)) := ofReal_mul_eq hb0 rfl
   have hnonneg1 : 0 ≤ (1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by
     have : 0 ≤ (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by
       have ht1sq : 0 ≤ ((t1 : ℝ) ^ 2) := sq_nonneg _
       nlinarith
     exact mul_nonneg (by norm_num) this
-  have hnonneg2 : 0 ≤ (3 / 8 : ℝ) * (3 / 8 : ℝ) := mul_nonneg hb0 hb0
   have hadd :
       ENNReal.ofReal ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) +
           ENNReal.ofReal ((3 / 8 : ℝ) * (3 / 8 : ℝ)) =
         ENNReal.ofReal
-          ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) + (3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-    symm
-    exact ENNReal.ofReal_add hnonneg1 hnonneg2
+          ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) + (3 / 8 : ℝ) * (3 / 8 : ℝ)) :=
+    ofReal_add_eq hnonneg1 (mul_nonneg hb0 hb0) rfl
   calc
     ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) +
         ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) =
@@ -941,8 +921,7 @@ lemma lintegral_gCt_Iio_t1 :
           rw [hmul1, hmul2]
     _ =
         ENNReal.ofReal
-          ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) + (3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-          simpa using hadd
+          ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) + (3 / 8 : ℝ) * (3 / 8 : ℝ)) := hadd
     _ = ENNReal.ofReal (81 / 512 : ℝ) := by
           -- Evaluate the real expression at `t1 = 3/8`.
           norm_num [t1]
@@ -964,17 +943,8 @@ lemma lintegral_b_above_t_value :
         ENNReal.ofReal (17 / 32 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) := by
           simp [hμ]
     _ = ENNReal.ofReal ((17 / 32 : ℝ) * (3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-          -- merge `ofReal` factors
-          have h1 :
-              ENNReal.ofReal (17 / 32 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) =
-                ENNReal.ofReal ((17 / 32 : ℝ) * (3 / 8 : ℝ)) := by
-            simpa using (ENNReal.ofReal_mul h17).symm
-          have h2 :
-              ENNReal.ofReal ((17 / 32 : ℝ) * (3 / 8 : ℝ)) * ENNReal.ofReal (3 / 8 : ℝ) =
-                ENNReal.ofReal (((17 / 32 : ℝ) * (3 / 8 : ℝ)) * (3 / 8 : ℝ)) := by
-            have h173 : 0 ≤ ((17 / 32 : ℝ) * (3 / 8 : ℝ)) := mul_nonneg h17 h3
-            simpa [mul_assoc] using (ENNReal.ofReal_mul h173).symm
-          simp [h1, h2, mul_assoc]
+          rw [ofReal_mul_eq h17 (rfl : (17 / 32 : ℝ) * (3 / 8 : ℝ) = _),
+            ofReal_mul_eq (mul_nonneg h17 h3) (rfl : _ * (3 / 8 : ℝ) = _)]
     _ = ENNReal.ofReal (153 / 2048 : ℝ) := by norm_num
 
 lemma lintegral_b_t2_t_value :
@@ -996,51 +966,24 @@ lemma lintegral_b_t2_t_value :
   -- Fold all products/sums into a single `ofReal`.
   have hA :
       ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (5 / 32 : ℝ) =
-        ENNReal.ofReal (75 / 1024 : ℝ) := by
-    have : (15 / 32 : ℝ) * (5 / 32 : ℝ) = (75 / 1024 : ℝ) := by norm_num
-    simpa [this] using
-      (ENNReal.ofReal_mul (p := (15 / 32 : ℝ)) (q := (5 / 32 : ℝ)) h15).symm
+        ENNReal.ofReal (75 / 1024 : ℝ) := ofReal_mul_eq h15 (by norm_num)
   have hB :
       ENNReal.ofReal (257 / 512 : ℝ) * ENNReal.ofReal (3 / 32 : ℝ) =
-        ENNReal.ofReal (771 / 16384 : ℝ) := by
-    have : (257 / 512 : ℝ) * (3 / 32 : ℝ) = (771 / 16384 : ℝ) := by norm_num
-    simpa [this] using
-      (ENNReal.ofReal_mul (p := (257 / 512 : ℝ)) (q := (3 / 32 : ℝ)) h257).symm
+        ENNReal.ofReal (771 / 16384 : ℝ) := ofReal_mul_eq h257 (by norm_num)
   -- First combine the inner sum.
   have hS1 :
       ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ) =
-        ENNReal.ofReal (237 / 1024 : ℝ) := by
-    have h75 : 0 ≤ (75 / 1024 : ℝ) := by norm_num
-    have : (81 / 512 : ℝ) + (75 / 1024 : ℝ) = (237 / 1024 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h81 h75).symm
+        ENNReal.ofReal (237 / 1024 : ℝ) := ofReal_add_eq h81 (by norm_num) (by norm_num)
   have hS :
       ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ) +
           ENNReal.ofReal (771 / 16384 : ℝ) =
         ENNReal.ofReal (4563 / 16384 : ℝ) := by
-    have h237 : 0 ≤ (237 / 1024 : ℝ) := by norm_num
-    have h771 : 0 ≤ (771 / 16384 : ℝ) := by norm_num
-    have hS2 :
-        ENNReal.ofReal (237 / 1024 : ℝ) + ENNReal.ofReal (771 / 16384 : ℝ) =
-          ENNReal.ofReal (4563 / 16384 : ℝ) := by
-      have : (237 / 1024 : ℝ) + (771 / 16384 : ℝ) = (4563 / 16384 : ℝ) := by norm_num
-      simpa [this] using (ENNReal.ofReal_add h237 h771).symm
-    -- rewrite using `hS1` and reassociate
-    calc
-      ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ) +
-            ENNReal.ofReal (771 / 16384 : ℝ) =
-          (ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ)) +
-            ENNReal.ofReal (771 / 16384 : ℝ) := by simp [add_assoc]
-      _ = ENNReal.ofReal (237 / 1024 : ℝ) + ENNReal.ofReal (771 / 16384 : ℝ) := by
-          simp [hS1]
-      _ = ENNReal.ofReal (4563 / 16384 : ℝ) := hS2
+    rw [hS1]
+    exact ofReal_add_eq (by norm_num) (by norm_num) (by norm_num)
   -- Multiply by `3/32`.
   have hFin :
       ENNReal.ofReal (3 / 32 : ℝ) * ENNReal.ofReal (4563 / 16384 : ℝ) =
-        ENNReal.ofReal (13689 / 524288 : ℝ) := by
-    have h4563 : 0 ≤ (4563 / 16384 : ℝ) := by norm_num
-    have : (3 / 32 : ℝ) * (4563 / 16384 : ℝ) = (13689 / 524288 : ℝ) := by norm_num
-    simpa [this] using
-      (ENNReal.ofReal_mul (p := (3 / 32 : ℝ)) (q := (4563 / 16384 : ℝ)) h3).symm
+        ENNReal.ofReal (13689 / 524288 : ℝ) := ofReal_mul_eq h3 (by norm_num)
   -- Put everything together.
   simp [hA, hB, hS, hFin]
 

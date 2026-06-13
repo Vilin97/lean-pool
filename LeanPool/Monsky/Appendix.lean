@@ -436,16 +436,14 @@ lemma inclusion_maximal_valuation (B : Subring ℝ) (h1 : (1 / 2) ∉ B)
     rcases m_eq_zero with ⟨x, eq⟩
     rw[← eq, Polynomial.aeval_C, algebramap x] at p_eval
     rw[← p_eval] at h1
-    apply h1
-    exact SetLike.coe_mem x
+    exact h1 (SetLike.coe_mem x)
   have zero_lt_n : n ≠ 0 := by
     intro n_eq_zero
     rw[← n_eq_degree_q, natDegree_eq_zero] at n_eq_zero
     rcases n_eq_zero with ⟨x, eq⟩
     rw[← eq, aeval_C, algebramap x] at q_eval
     rw[← q_eval] at h1
-    apply h1
-    exact SetLike.coe_mem x
+    exact h1 (SetLike.coe_mem x)
   by_cases leq : n ≤ m
   · rcases (lower_degree B α m n H p q m_eq_degree_p n_eq_degree_q
      zero_lt_m zero_lt_n p_eval q_eval leq) with ⟨m', pq, deg, eval, deg2⟩

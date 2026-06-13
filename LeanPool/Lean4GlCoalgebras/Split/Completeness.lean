@@ -319,10 +319,8 @@ lemma rewind_turn_one_step {g n h1 h2} :
       other (coalgebraGame.turn (rewindHistory g ⟨n, h2⟩)) := by
   cases n
   case zero =>
-    rcases g with ⟨Γ | R, Γs, Rs⟩
-    · simp [rewindHistory, rewindHistoryOneStep]
-      rfl
-    · simp [rewindHistory, rewindHistoryOneStep]
+    rcases g with ⟨Γ | R, Γs, Rs⟩ <;>
+      simp [rewindHistory, rewindHistoryOneStep] <;>
       rfl
   case succ n =>
     unfold rewindHistory
@@ -690,10 +688,8 @@ lemma rep_next_cor (Γ : SplitSequent) {Δ : SplitSequent} {strat : Strategy coa
       (Fin.find _ (List.mem_iff_get.1 rep)).1 _ _ _ _ g.2.1).1 _ <;>
       try simp_all <;>
       try grind
-  · have length := history_length_in_cone strat g.1 g.2.1
-    simp [g.2.2] at *
-    grind
-  · have length := history_length_in_cone strat g.1 g.2.1
+  all_goals
+    have length := history_length_in_cone strat g.1 g.2.1
     simp [g.2.2] at *
     grind
 

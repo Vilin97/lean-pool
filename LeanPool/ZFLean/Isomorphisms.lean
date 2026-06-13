@@ -20,14 +20,13 @@ theorem isIso_refl (A : ZFSet) : A ≅ᶻ A :=
   ⟨A.Id, Id.IsFunc, Id.IsBijective⟩
 instance : Std.Refl ZFSet.isIso where
   refl := isIso_refl
+theorem isIso_trans (x y z : ZFSet) (x_iso_y : x ≅ᶻ y) (y_iso_z : y ≅ᶻ z) : x ≅ᶻ z := by
+  obtain ⟨bij, is_func, is_bij⟩ := x_iso_y
+  obtain ⟨bij', is_func', is_bij'⟩ := y_iso_z
+  exists ZFSet.composition bij' bij x y z, ZFSet.IsFunc_of_composition_IsFunc is_func' is_func
+  exact ZFSet.IsBijective.composition_of_bijective is_bij is_bij'
 instance : Trans ZFSet.isIso ZFSet.isIso ZFSet.isIso where
-  trans := by
-    intro x y z x_iso_y y_iso_z
-    obtain ⟨bij, is_func, is_bij⟩ := x_iso_y
-    obtain ⟨bij', is_func', is_bij'⟩ := y_iso_z
-    set bij'' := ZFSet.composition bij' bij x y z
-    exists bij'', ZFSet.IsFunc_of_composition_IsFunc is_func' is_func
-    exact ZFSet.IsBijective.composition_of_bijective is_bij is_bij'
+  trans := isIso_trans _ _ _
 theorem isIso_symm : Symmetric ZFSet.isIso := by
   intro x y iso
   obtain ⟨bij, is_func, is_bij⟩ := iso
@@ -36,12 +35,6 @@ theorem isIso_symm : Symmetric ZFSet.isIso := by
   exact inv_bijective_of_bijective is_bij
 instance : Std.Symm (α := ZFSet) isIso where
   symm := isIso_symm
-theorem isIso_trans (x y z : ZFSet) (x_iso_y : x ≅ᶻ y) (y_iso_z : y ≅ᶻ z) : x ≅ᶻ z := by
-  obtain ⟨bij, is_func, is_bij⟩ := x_iso_y
-  obtain ⟨bij', is_func', is_bij'⟩ := y_iso_z
-  set bij'' := ZFSet.composition bij' bij x y z
-  exists bij'', ZFSet.IsFunc_of_composition_IsFunc is_func' is_func
-  exact ZFSet.IsBijective.composition_of_bijective is_bij is_bij'
 instance : IsTrans ZFSet isIso where
   trans := isIso_trans
 theorem isIso_equiv : Equivalence ZFSet.isIso where

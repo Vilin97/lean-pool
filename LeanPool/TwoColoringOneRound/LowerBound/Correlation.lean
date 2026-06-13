@@ -30,14 +30,8 @@ instance (n : Nat) : MulAction (G n) (Vertex n) where
     ⟨fun i => σ (v.1 i), by
       intro i j hij
       exact v.2 (σ.injective hij)⟩
-  one_smul v := by
-    apply Subtype.ext
-    funext i
-    rfl
-  mul_smul σ τ v := by
-    apply Subtype.ext
-    funext i
-    rfl
+  one_smul v := Subtype.ext (funext fun _ => rfl)
+  mul_smul σ τ v := Subtype.ext (funext fun _ => rfl)
 
 @[simp] lemma vertex_smul_apply {n : Nat} (σ : G n) (v : Vertex n) (i : Fin 3) :
     (σ • v).1 i = σ (v.1 i) := rfl
@@ -47,14 +41,8 @@ instance (n : Nat) : MulAction (G n) (Edge n) where
     ⟨fun i => σ (e.1 i), by
       intro i j hij
       exact e.2 (σ.injective hij)⟩
-  one_smul e := by
-    apply Subtype.ext
-    funext i
-    rfl
-  mul_smul σ τ e := by
-    apply Subtype.ext
-    funext i
-    rfl
+  one_smul e := Subtype.ext (funext fun _ => rfl)
+  mul_smul σ τ e := Subtype.ext (funext fun _ => rfl)
 
 @[simp] lemma edge_smul_apply {n : Nat} (σ : G n) (e : Edge n) (i : Fin 4) :
     (σ • e).1 i = σ (e.1 i) := rfl

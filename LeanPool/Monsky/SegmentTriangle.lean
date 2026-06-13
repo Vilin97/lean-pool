@@ -161,71 +161,34 @@ lemma open_segment_sub {L₁ L₂ : Segment} (hsub : ∀ i : Fin 2, L₁ i ∈ c
     | 0 => (α 0 * α₁ 0 + α 1 * α₂ 0)
     | 1 => (α 0 * α₁ 1 + α 1 * α₂ 1)
   have hαx₁ : x₁ ∈ openSimplex 2 := by
-    have x₁0_pos : x₁ 0 > 0 := by
-      simp only [Fin.isValue, gt_iff_lt, x₁]
+    -- Both coordinates of `x₁` are strictly positive: if `x₁ j ≤ 0` then `α₁ j = α₂ j = 0`,
+    -- forcing `α₁ = α₂` (both summing to 1), whence `L₁ 0 = L₁ 1`, a contradiction.
+    have x₁_pos : ∀ j : Fin 2, x₁ j > 0 := by
+      intro j
+      have hx₁j : x₁ j = α 0 * α₁ j + α 1 * α₂ j := by fin_cases j <;> rfl
+      rw [gt_iff_lt, hx₁j]
       by_contra h
-      simp only [Fin.isValue, not_lt] at h
-      have p : α₁ 0 = 0 := by
+      simp only [not_lt] at h
+      have p : α₁ j = 0 := by
         by_contra hα₁0
-        have p' : α 0 * α₁ 0 + α 1 * α₂ 0 > 0 := by
-          simp only [add_pos_of_pos_of_nonneg, mul_pos (pos 0),
-            lt_of_le_of_ne (pos1 0) (Ne.symm hα₁0), mul_nonneg (pos 1).le (hα₂.1 0)]
-        linarith [p', h]
-      have q : α₂ 0 = 0 := by
-          by_contra hα₂0
-          have q' : α 0 * α₁ 0 + α 1 * α₂ 0 > 0 := by
-            simp only [add_pos_of_nonneg_of_pos, mul_nonneg (pos 0).le (hα₁.1 0), mul_pos (pos 1),
-            lt_of_le_of_ne (pos2 0) (Ne.symm hα₂0)]
-          linarith [q', h]
-      have r : α₁ 1 = 1 := by
-        by_contra
-        rcases hα₁ with ⟨_,hα₁₂⟩
-        rw [Fin.sum_univ_two, p, zero_add] at hα₁₂
-        contradiction
-      have  s : α₂ 1 = 1 := by
-        by_contra
-        rcases hα₂ with ⟨_,hα₂₂⟩
-        rw [Fin.sum_univ_two, q, zero_add] at hα₂₂
-        contradiction
-      simp only [Fin.isValue, Fin.sum_univ_two, p, zero_smul, r, one_smul, zero_add, q, s]
-        at hL₁₀ hL₁₁
-      rw [← hL₁₁] at hL₁₀
-      exact hL₁ hL₁₀
-    have x₁1_pos : x₁ 1 > 0 := by
-      simp only [Fin.isValue, gt_iff_lt, x₁]
-      by_contra h
-      simp only [Fin.isValue, not_lt] at h
-      have t : α₁ 1 = 0 := by
-        by_contra hα₁0
-        have t' : α 0 * α₁ 1 + α 1 * α₂ 1 > 0 := by
-          simp only [add_pos_of_pos_of_nonneg, mul_pos (pos 0),
-            lt_of_le_of_ne (pos1 1) (Ne.symm hα₁0), mul_nonneg (pos 1).le (hα₂.1 1)]
-        linarith [t', h]
-      have u : α₂ 1 = 0 := by
-          by_contra hα₂0
-          have u' : α 0 * α₁ 1 + α 1 * α₂ 1 > 0 := by
-            simp only [add_pos_of_nonneg_of_pos, mul_nonneg (pos 0).le (hα₁.1 1), mul_pos (pos 1),
-            lt_of_le_of_ne (pos2 1) (Ne.symm hα₂0)]
-          linarith [u', h]
-      have v : α₁ 0 = 1 := by
-        by_contra
-        rcases hα₁ with ⟨_,hα₁₂⟩
-        rw [Fin.sum_univ_two, t, add_zero] at hα₁₂
-        contradiction
-      have  w : α₂ 0 = 1 := by
-        by_contra
-        rcases hα₂ with ⟨_,hα₂₂⟩
-        rw [Fin.sum_univ_two, u, add_zero] at hα₂₂
-        contradiction
-      simp only [Fin.isValue, Fin.sum_univ_two, v, one_smul, t, zero_smul, add_zero, w, u]
-        at hL₁₀ hL₁₁
-      rw [← hL₁₁] at hL₁₀
-      absurd hL₁
-      exact hL₁₀
+        exact absurd h (not_le.mpr (add_pos_of_pos_of_nonneg
+          (mul_pos (pos 0) (lt_of_le_of_ne (pos1 j) (Ne.symm hα₁0)))
+          (mul_nonneg (pos 1).le (pos2 j))))
+      have q : α₂ j = 0 := by
+        by_contra hα₂0
+        exact absurd h (not_le.mpr (add_pos_of_nonneg_of_pos
+          (mul_nonneg (pos 0).le (pos1 j))
+          (mul_pos (pos 1) (lt_of_le_of_ne (pos2 j) (Ne.symm hα₂0)))))
+      have hαeq : α₁ = α₂ := by
+        have e₁ := hα₁.2
+        have e₂ := hα₂.2
+        rw [Fin.sum_univ_two] at e₁ e₂
+        funext i
+        fin_cases i <;> fin_cases j <;> simp_all
+      have hsum : (∑ i, α₁ i • L₂ i) = ∑ i, α₂ i • L₂ i := by rw [hαeq]
+      exact hL₁ (hL₁₀.trans (hsum.trans hL₁₁.symm))
     constructor
-    · exact fun i ↦ by
-        fin_cases i
-        all_goals (simp [x₁, x₁0_pos, x₁1_pos])
+    · exact fun i ↦ x₁_pos i
     · simp only [x₁]
       rcases hα with ⟨_,h₂⟩
       rcases hα₁ with ⟨hα₁₁,hα₁₂⟩
@@ -1483,11 +1446,8 @@ lemma colin_sub_aux {u v w x : ℝ²} {L : Segment} (hc : colin u v w)
         exact hLivw.1
       · by_contra hcontra
         rw [hcontra] at hLi
-        have hvcl : v ∈ closedHull (toSegment u v) := by
-          apply boundary_in_closed
-          have huv : u ≠ v := (middle_not_boundary_colin hc).1
-          have hvinboundary : v ∈ boundary (toSegment u v) := boundary_seg' huv 1
-          exact hvinboundary
+        have hvcl : v ∈ closedHull (toSegment u v) :=
+          boundary_in_closed (boundary_seg' (middle_not_boundary_colin hc).1 1)
         tauto_set
     have hc₂ : colin x v (L i) := by
       apply sub_collinear_right' hc₁ hx
@@ -1741,8 +1701,7 @@ lemma linePar_closed {a b : ℝ} {v₁ v₂ : ℝ²} (hab : a ≤ b) :
       refine ⟨α 0 * a + α 1 * b, ?_,?_⟩
       · refine ⟨?_,?_⟩
         · rw [hα0, sub_mul, one_mul, add_comm_sub, le_add_iff_nonneg_right]
-          apply sub_nonneg_of_le
-          exact mul_le_mul_of_nonneg_left (by assumption) (hα.1 1)
+          exact sub_nonneg_of_le (mul_le_mul_of_nonneg_left (by assumption) (hα.1 1))
         · rw [hα1, sub_mul, one_mul, ←add_comm_sub]
           apply add_le_of_nonpos_left
           rw [tsub_nonpos]

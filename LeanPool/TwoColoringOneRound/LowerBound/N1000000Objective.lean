@@ -52,13 +52,8 @@ noncomputable def embOfEdge (e : Edge n) : Emb4 :=
 noncomputable def edgeEquivEmb : Edge n ≃ Emb4 where
   toFun := embOfEdge
   invFun := edgeOfEmb
-  left_inv := by
-    intro e
-    apply Subtype.ext
-    funext i
-    rfl
-  right_inv := by
-    intro x
+  left_inv _ := Subtype.ext (funext fun _ => rfl)
+  right_inv _ := by
     ext i
     rfl
 

@@ -45,25 +45,7 @@ lemma gradX_stronglyMeasurable_v
   apply stronglyMeasurable_of_tendsto Filter.atTop hG_sm
   rw [tendsto_pi_nhds]
   intro v
-  set F := periodicLift (fun y => f y v)
-  have hF_diff : DifferentiableAt ℝ F x₀ :=
-    (hf_smooth_x v).differentiable (by decide) |>.differentiableAt
-  have hg : HasDerivAt (fun t : ℝ => x₀ + t • ei) ei 0 := by
-    simpa using ((hasDerivAt_id (0 : ℝ)).smul_const ei).const_add x₀
-  have h_eq : x₀ + (0 : ℝ) • ei = x₀ := by simp
-  have hF_at : HasFDerivAt F (fderiv ℝ F x₀) (x₀ + (0 : ℝ) • ei) := by
-    rw [h_eq]; exact hF_diff.hasFDerivAt
-  have hline : HasDerivAt (fun t : ℝ => F (x₀ + t • ei)) (fderiv ℝ F x₀ ei) 0 := by
-    convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1
-  have htendsto_inv : Filter.Tendsto (fun n : ℕ => ((↑n + 1 : ℝ))⁻¹) Filter.atTop
-      (nhdsWithin 0 (Set.Ioi 0)) :=
-    tendsto_nhdsWithin_iff.mpr ⟨
-      Filter.Tendsto.comp tendsto_inv_atTop_zero
-        (Filter.Tendsto.atTop_add (tendsto_natCast_atTop_atTop (R := ℝ)) tendsto_const_nhds),
-      Filter.Eventually.of_forall fun n => Set.mem_Ioi.mpr (by positivity)⟩
-  have h := Filter.Tendsto.comp hline.tendsto_slope_zero_right htendsto_inv
-  simp only [smul_eq_mul, Function.comp_def, inv_inv, zero_smul, add_zero, zero_add] at h
-  convert h using 1
+  exact torusGradX_diffQuotient_tendsto hf_smooth_x x i v
 
 
 /-- Uniform bound on `|v ⬝ᵥ gradX(f·v)(x) * log(f x v)|` over all `x` and `v`.
@@ -139,6 +121,27 @@ private lemma spatial_transport_uniform_bound
     _ ≤ ((C0 + C1 + C2) * (|C_log| + 1) + 1) / (1 + ‖v‖) ^ 4 := by gcongr; linarith
 
 
+/-- The spatial transport integrand `x ↦ v ⬝ᵥ gradX(f)(x) * log(f(x,v))` is continuous
+    in `x` for each fixed velocity `v`. -/
+private lemma spatial_transport_integrand_continuous_x
+    {f : Torus3 → (Fin 3 → ℝ) → ℝ}
+    (hf_pos : ∀ x v, 0 < f x v)
+    (hf_smooth_x : ∀ v, ContDiff ℝ 2 (periodicLift (fun x => f x v)))
+    (v : Fin 3 → ℝ) :
+    Continuous (fun x => v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x * Real.log (f x v)) := by
+  have hcont_f : Continuous (fun x => f x v) :=
+    FlatTorus3.hDiff_continuous 0 _ ((hf_smooth_x v).of_le (by decide))
+  have hcont_log : Continuous (fun x => Real.log (f x v)) :=
+    hcont_f.log (fun x => ne_of_gt (hf_pos x v))
+  have hcont_grad : ∀ i, Continuous (fun x => FlatTorus3.gradX (fun y => f y v) x i) :=
+    fun i => FlatTorus3.hDiff_continuous 0 _
+      (FlatTorus3.hDiff_grad 1 _ i ((hf_smooth_x v).of_le (by decide)))
+  have hcont_dot : Continuous (fun x => v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x) := by
+    simp only [dotProduct, Fin.sum_univ_three]
+    exact ((continuous_const.mul (hcont_grad 0)).add
+      (continuous_const.mul (hcont_grad 1))).add (continuous_const.mul (hcont_grad 2))
+  exact hcont_dot.mul hcont_log
+
 /-- Spatial transport joint integrability (Fubini on compact torus × ℝ³).
     Uses: uniform Schwartz grad decay → uniform velocity integral bound,
     combined with finite measure on compact T³ → joint integrability. -/
@@ -169,23 +172,8 @@ lemma spatial_transport_joint_integrable
   refine (integrable_prod_iff ?_).mpr ⟨?_, ?_⟩
   · -- AEStronglyMeasurable on product (joint regularity)
     -- Use stronglyMeasurable_uncurry: need ∀ v, Continuous(x ↦ g x v) and ∀ x, SM(v ↦ g x v)
-    have hg_cont_x : ∀ v, Continuous (fun x => g x v) := by
-      intro v
-      have hcont_f : Continuous (fun x => f x v) :=
-        FlatTorus3.hDiff_continuous 0 _ ((hf_smooth_x v).of_le (by decide))
-      have hcont_log : Continuous (fun x => Real.log (f x v)) :=
-        hcont_f.log (fun x => ne_of_gt (hf_pos x v))
-      have hcont_grad : ∀ i, Continuous (fun x =>
-          FlatTorus3.gradX (fun y => f y v) x i) :=
-        fun i => FlatTorus3.hDiff_continuous 0 _
-          (FlatTorus3.hDiff_grad 1 _ i
-            ((hf_smooth_x v).of_le (by decide)))
-      have hcont_dot : Continuous (fun x =>
-          v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x) := by
-        simp only [dotProduct, Fin.sum_univ_three]
-        exact ((continuous_const.mul (hcont_grad 0)).add
-          (continuous_const.mul (hcont_grad 1))).add (continuous_const.mul (hcont_grad 2))
-      exact hcont_dot.mul hcont_log
+    have hg_cont_x : ∀ v, Continuous (fun x => g x v) :=
+      fun v => spatial_transport_integrand_continuous_x hf_pos hf_smooth_x v
     have hg_sm_v : ∀ x, StronglyMeasurable (fun v => g x v) := by
       intro x
       have hlog_sm : StronglyMeasurable (fun v => Real.log (f x v)) :=
@@ -210,23 +198,8 @@ lemma spatial_transport_joint_integrable
     -- where M = ∫ v, 1/(1+‖v‖)^4, so the function is bounded on T³ (finite measure)
     apply (integrable_const (C_total * ∫ v : Fin 3 → ℝ, (1 + ‖v‖)⁻¹ ^ 4)).mono'
     · -- AEStronglyMeasurable (x ↦ ∫ v, ‖g x v‖) via dominated convergence → continuous
-      have hg_cont : ∀ v, Continuous (fun x => g x v) := by
-        intro v
-        have hcont_f : Continuous (fun x => f x v) :=
-          FlatTorus3.hDiff_continuous 0 _ ((hf_smooth_x v).of_le (by decide))
-        have hcont_log : Continuous (fun x => Real.log (f x v)) :=
-          hcont_f.log (fun x => ne_of_gt (hf_pos x v))
-        have hcont_grad : ∀ i, Continuous (fun x =>
-            FlatTorus3.gradX (fun y => f y v) x i) :=
-          fun i => FlatTorus3.hDiff_continuous 0 _
-            (FlatTorus3.hDiff_grad 1 _ i
-              ((hf_smooth_x v).of_le (by decide)))
-        have hcont_dot : Continuous (fun x =>
-            v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x) := by
-          simp only [dotProduct, Fin.sum_univ_three]
-          exact ((continuous_const.mul (hcont_grad 0)).add
-            (continuous_const.mul (hcont_grad 1))).add (continuous_const.mul (hcont_grad 2))
-        exact hcont_dot.mul hcont_log
+      have hg_cont : ∀ v, Continuous (fun x => g x v) :=
+        fun v => spatial_transport_integrand_continuous_x hf_pos hf_smooth_x v
       exact (continuous_of_dominated
         (fun x => (spatial_transport_integrable hf_pos hf_smooth_v hf_smooth_x hSchwartz
           ⟨C_log, K_log, hLB⟩ x).norm.aestronglyMeasurable)
@@ -272,19 +245,8 @@ lemma spatial_transport_continuous
     (fun x => Filter.Eventually.of_forall fun v => by
       rw [Real.norm_eq_abs]; exact h_bound x v)
     (inverse_poly_integrable C_total)
-    (Filter.Eventually.of_forall fun v => by
-      have hcont_f : Continuous (fun x => f x v) :=
-        FlatTorus3.hDiff_continuous 0 _ ((hf_smooth_x v).of_le (by decide))
-      have hcont_log : Continuous (fun x => Real.log (f x v)) :=
-        hcont_f.log (fun x => ne_of_gt (hf_pos x v))
-      have hcont_grad : ∀ i, Continuous (fun x => FlatTorus3.gradX (fun y => f y v) x i) :=
-        fun i => FlatTorus3.hDiff_continuous 0 _
-          (FlatTorus3.hDiff_grad 1 _ i ((hf_smooth_x v).of_le (by decide)))
-      have hcont_dot : Continuous (fun x => v ⬝ᵥ FlatTorus3.gradX (fun y => f y v) x) := by
-        simp only [dotProduct, Fin.sum_univ_three]
-        exact ((continuous_const.mul (hcont_grad 0)).add
-          (continuous_const.mul (hcont_grad 1))).add (continuous_const.mul (hcont_grad 2))
-      exact hcont_dot.mul hcont_log)
+    (Filter.Eventually.of_forall fun v =>
+      spatial_transport_integrand_continuous_x hf_pos hf_smooth_x v)
 
 /-- Continuity of entropy dissipation for the Coulomb kernel.
     Derives from the Vlasov equation: force transport vanishes by IBP,

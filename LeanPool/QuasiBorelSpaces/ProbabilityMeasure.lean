@@ -690,13 +690,7 @@ instance : PartialOrder (ProbabilityMeasure A) where
 /-- `ProbabilityMeasure` is an ωCPO with the discrete order -/
 instance : OmegaCompletePartialOrder (ProbabilityMeasure A) where
   ωSup c := c 0
-  le_ωSup c := by
-    intro n
-    have := c.monotone' (Nat.zero_le n)
-    exact this.symm
-  ωSup_le c := by
-    intro x h
-    have h0 := h 0
-    exact h0
+  le_ωSup c n := (c.monotone' (Nat.zero_le n)).symm
+  ωSup_le _ _ h := h 0
 
 end QuasiBorelSpace

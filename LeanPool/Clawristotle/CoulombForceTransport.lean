@@ -19,6 +19,42 @@ open MeasureTheory Matrix Finset BigOperators Real
 noncomputable section
 namespace VML
 
+/-- The difference quotients `(n+1)·(f(x₀ + (n+1)⁻¹eᵢ) − f(x₀))` converge to the spatial
+    gradient `torusGradX f x i`, pointwise in `v`. Shared limit argument for both the
+    `StronglyMeasurable` and `AEStronglyMeasurable` versions. -/
+lemma torusGradX_diffQuotient_tendsto
+    {f : Torus3 → (Fin 3 → ℝ) → ℝ}
+    (hf_smooth_x : ∀ v, ContDiff ℝ 2 (periodicLift (fun x => f x v)))
+    (x : Torus3) (i : Fin 3) (v : Fin 3 → ℝ) :
+    Filter.Tendsto
+      (fun n : ℕ => (↑n + 1 : ℝ) *
+        (f (torusMk ((torusMk_surjective x).choose +
+            (↑n + 1 : ℝ)⁻¹ • (Pi.single i (1 : ℝ) : Fin 3 → ℝ))) v -
+          f (torusMk (torusMk_surjective x).choose) v))
+      Filter.atTop (nhds (torusGradX (fun y => f y v) x i)) := by
+  set x₀ := (torusMk_surjective x).choose
+  set ei := (Pi.single i (1 : ℝ) : Fin 3 → ℝ)
+  unfold torusGradX
+  set F := periodicLift (fun y => f y v)
+  have hF_diff : DifferentiableAt ℝ F x₀ :=
+    (hf_smooth_x v).differentiable (by decide) |>.differentiableAt
+  have hg : HasDerivAt (fun t : ℝ => x₀ + t • ei) ei 0 := by
+    simpa using ((hasDerivAt_id (0 : ℝ)).smul_const ei).const_add x₀
+  have h_eq : x₀ + (0 : ℝ) • ei = x₀ := by simp
+  have hF_at : HasFDerivAt F (fderiv ℝ F x₀) (x₀ + (0 : ℝ) • ei) := by
+    rw [h_eq]; exact hF_diff.hasFDerivAt
+  have hline : HasDerivAt (fun t : ℝ => F (x₀ + t • ei)) (fderiv ℝ F x₀ ei) 0 := by
+    convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1
+  have htendsto_inv : Filter.Tendsto (fun n : ℕ => ((↑n + 1 : ℝ))⁻¹) Filter.atTop
+      (nhdsWithin 0 (Set.Ioi 0)) :=
+    tendsto_nhdsWithin_iff.mpr ⟨
+      Filter.Tendsto.comp tendsto_inv_atTop_zero
+        (Filter.Tendsto.atTop_add (tendsto_natCast_atTop_atTop (R := ℝ)) tendsto_const_nhds),
+      Filter.Eventually.of_forall fun n => Set.mem_Ioi.mpr (by positivity)⟩
+  have h := Filter.Tendsto.comp hline.tendsto_slope_zero_right htendsto_inv
+  simp only [smul_eq_mul, Function.comp_def, inv_inv, zero_smul, add_zero, zero_add] at h
+  convert h using 1
+
 /-- Spatial gradient of f w.r.t. x is AEStronglyMeasurable in v, via difference quotient limits. -/
 lemma torusGradX_aestronglyMeasurable
     {f : Torus3 → (Fin 3 → ℝ) → ℝ}
@@ -35,34 +71,23 @@ lemma torusGradX_aestronglyMeasurable
     ((hf_smooth_v (torusMk (x₀ + _))).continuous.sub
       (hf_smooth_v (torusMk x₀)).continuous).aestronglyMeasurable.const_mul _
   have hG_lim : ∀ v, Filter.Tendsto (fun n => G n v) Filter.atTop
-      (nhds (torusGradX (fun y => f y v) x i)) := by
-    intro v
-    unfold torusGradX
-    set F := periodicLift (fun y => f y v)
-    have hF_diff : DifferentiableAt ℝ F x₀ :=
-      (hf_smooth_x v).differentiable (by decide) |>.differentiableAt
-    have hg : HasDerivAt (fun t : ℝ => x₀ + t • (Pi.single i (1 : ℝ) : Fin 3 → ℝ))
-        (Pi.single i (1 : ℝ) : Fin 3 → ℝ) 0 := by
-      simpa using ((hasDerivAt_id (0 : ℝ)).smul_const
-        (Pi.single i (1 : ℝ) : Fin 3 → ℝ)).const_add x₀
-    have h_eq : x₀ + (0 : ℝ) • (Pi.single i (1 : ℝ) : Fin 3 → ℝ) = x₀ := by simp
-    have hF_at : HasFDerivAt F (fderiv ℝ F x₀)
-        (x₀ + (0 : ℝ) • (Pi.single i (1 : ℝ) : Fin 3 → ℝ)) := by
-      rw [h_eq]; exact hF_diff.hasFDerivAt
-    have hline : HasDerivAt (fun t : ℝ => F (x₀ + t • ei)) (fderiv ℝ F x₀ ei) 0 := by
-      convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1
-    have htendsto_inv : Filter.Tendsto (fun n : ℕ => ((↑n + 1 : ℝ))⁻¹) Filter.atTop
-        (nhdsWithin 0 (Set.Ioi 0)) :=
-      tendsto_nhdsWithin_iff.mpr ⟨
-        Filter.Tendsto.comp tendsto_inv_atTop_zero
-          (Filter.Tendsto.atTop_add (tendsto_natCast_atTop_atTop (R := ℝ)) tendsto_const_nhds),
-        Filter.Eventually.of_forall fun n => Set.mem_Ioi.mpr (by positivity)⟩
-    have h := Filter.Tendsto.comp hline.tendsto_slope_zero_right htendsto_inv
-    simp only [smul_eq_mul, Function.comp_def, inv_inv, zero_smul, add_zero, zero_add] at h
-    convert h using 1
+      (nhds (torusGradX (fun y => f y v) x i)) :=
+    fun v => torusGradX_diffQuotient_tendsto hf_smooth_x x i v
   exact aestronglyMeasurable_of_tendsto_ae Filter.atTop hG_meas
     (Filter.Eventually.of_forall hG_lim)
 
+
+/-- Each component of the Lorentz force `v ↦ (e + v × b) i` is continuous in `v`. -/
+private lemma lorentzForce_component_continuous (e b : Fin 3 → ℝ) (i : Fin 3) :
+    Continuous (fun v : Fin 3 → ℝ => (e + cross v b) i) := by
+  change Continuous (fun v => e i + (cross v b) i)
+  apply Continuous.add continuous_const
+  unfold cross
+  fin_cases i <;>
+    simp only [Fin.isValue, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Matrix.cons_val,
+      cons_val_zero, cons_val_one] <;>
+    exact (continuous_apply _ |>.mul continuous_const).sub
+      (continuous_apply _ |>.mul continuous_const)
 
 /-- Spatial transport integrand is dominated by inverse polynomial
     (from Schwartz grad decay + log bound). -/
@@ -141,15 +166,8 @@ lemma force_fderiv_log_component_integrable
   apply (inverse_poly_integrable (CL * |C_log| * C_fder + 1)).mono'
   · -- AEStronglyMeasurable: each factor is continuous in v
     refine Continuous.aestronglyMeasurable ?_
-    have h1 : Continuous (fun v => (E x + cross v (B x)) i) := by
-      change Continuous (fun v => E x i + (cross v (B x)) i)
-      apply Continuous.add continuous_const
-      unfold cross
-      fin_cases i <;>
-        simp only [Fin.isValue, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Matrix.cons_val,
-          cons_val_zero, cons_val_one] <;>
-        exact (continuous_apply _ |>.mul continuous_const).sub
-          (continuous_apply _ |>.mul continuous_const)
+    have h1 : Continuous (fun v => (E x + cross v (B x)) i) :=
+      lorentzForce_component_continuous (E x) (B x) i
     have h2 : Continuous (fun v => fderiv ℝ (f x) v (Pi.single i 1)) :=
       ((hf_smooth x).continuous_fderiv (by norm_num)).clm_apply continuous_const
     have h3 : Continuous (fun v => Real.log (f x v)) :=
@@ -272,15 +290,8 @@ lemma force_ibp_fg_integrable_coulomb
     (fun k => schwartz_norm_pow_integrable hf_pos hf_smooth hSchwartz x k)
   · -- AEStronglyMeasurable: force term * entropy density is continuous in v
     refine Continuous.aestronglyMeasurable ?_
-    have h1 : Continuous (fun v => (E x + cross v (B x)) i) := by
-      change Continuous (fun v => E x i + (cross v (B x)) i)
-      apply Continuous.add continuous_const
-      unfold cross
-      fin_cases i <;>
-        simp only [Fin.isValue, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Matrix.cons_val,
-          cons_val_zero, cons_val_one] <;>
-        exact (continuous_apply _ |>.mul continuous_const).sub
-          (continuous_apply _ |>.mul continuous_const)
+    have h1 : Continuous (fun v => (E x + cross v (B x)) i) :=
+      lorentzForce_component_continuous (E x) (B x) i
     have h2 : Continuous (fun v => f x v * Real.log (f x v) - f x v) :=
       ((hf_smooth x).continuous.mul
         ((hf_smooth x).continuous.log (fun v => ne_of_gt (hf_pos x v)))).sub

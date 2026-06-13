@@ -429,8 +429,7 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
         intro i
         simp only [boundary, Set.mem_diff]
         refine ⟨hLS (corner_in_closedHull),?_⟩
-        apply Scard
-        exact segmentSet_vertex (basicAvoidingSegmentSet_sub hL) i
+        exact Scard (segmentSet_vertex (basicAvoidingSegmentSet_sub hL) i)
       have hLdif := segmentSet_vertex_distinct (basicAvoidingSegmentSet_sub hL)
       simp only [hSboundary, coe_image, coe_univ, Set.image_univ, Set.mem_range, Fin.exists_fin_two,
         Fin.isValue, Fin.forall_fin_two] at hLi
@@ -1425,8 +1424,7 @@ lemma triangleBoundary_decomposition {Δ : Finset Triangle} {T : Triangle} (hdet
         have xclosedhullS : x ∈ closedHull S := open_sub_closed S hx
         have xinboundaryT : x ∈ boundary T := by
           rw [boundary_is_union_sides hdet]
-          apply hα at xclosedhullS
-          exact xclosedhullS
+          exact hα xclosedhullS
         have xinTsideopen: ∃ i : Fin 3, x ∈ openHull (Tside T i) := by
           apply el_in_boundary_imp_side
           · apply hdet
@@ -1876,8 +1874,7 @@ theorem interior_purpleSum (Δ : Finset Triangle) :
       rfl
     unfold triangulationInteriorBasicSegments at ha
     rw [mem_filter] at ha
-    apply basic_seg_non_degenerate ha.1
-    exact h_eq
+    exact basic_seg_non_degenerate ha.1 h_eq
   · intro a ha
     unfold triangulationInteriorBasicSegments at *
     rw [mem_filter] at *
@@ -1910,8 +1907,7 @@ lemma open_triangle_segment (Δ : Finset Triangle) (S : Segment)
   intro T hT
   simp only [Set.disjoint_iUnion_right, mem_filter] at hS
   rw [← Set.disjoint_iff_inter_eq_empty]
-  apply Disjoint.symm
-  exact hS.1.2 T hT
+  exact Disjoint.symm (hS.1.2 T hT)
 
 lemma split_segment_sum (Δ : Finset Triangle)
   (hDisjointCover : isDisjointCover (closedHull unitSquare) (↑Δ : Set Triangle))

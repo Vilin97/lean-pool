@@ -103,9 +103,8 @@ lemma bijective_iStar_mapCyl_of_isIso
     (hf : IsIso <| inducedPointedHom' n x₀ f) :
     Function.Bijective <| iStar n (MapCyl f) (MapCyl.top f) (MapCyl.domInclToTop f x₀) := by
   rw [← inducedPointedHom_subtype_val_eq_iStar]
-  apply (Pointed.isIso_iff_bijective _).mp
-  apply isIso_inducedPointedHom_mapCyl_domInclFromTop_of_isIso
-  exact hf
+  exact (Pointed.isIso_iff_bijective _).mp <|
+    isIso_inducedPointedHom_mapCyl_domInclFromTop_of_isIso _ _ _ hf
 
 /-- If `f` is a weak homotopy equivalence, then the relative homotopy group
 `π_rel n (MapCyl f) (MapCyl.top f) (MapCyl.domInclToTop f x₀)` is zero for all `n ≥ 1` and `x`. -/
@@ -113,9 +112,7 @@ theorem unique_pi_mapCyl_of_isWeakHomotopyEquiv (hf : IsWeakHomotopyEquiv f.hom)
     Nonempty <| Unique <| π_rel (n + 1) (MapCyl f) (MapCyl.top f) (MapCyl.domInclToTop f x₀) := by
   replace hf := isIso_inducedPointedHom_of_isWeakHomotopyEquiv hf
   apply unique_relHomotopyGroup_of_bijective_iStar
-  intro n
-  apply bijective_iStar_mapCyl_of_isIso
-  exact hf n x₀
+  exact fun n ↦ bijective_iStar_mapCyl_of_isIso _ _ _ (hf n x₀)
 
 end RelHomotopyGroup
 
@@ -502,13 +499,8 @@ theorem homotopicRel_boundary_of_unique_pi
   obtain ⟨a, H⟩ := homotopicWith_const_isMapOfPairs_of_unique_pi X A f hf hpi
   let g : C(disk.{u} (n + 1), X) := ContinuousMap.const (𝔻 (n + 1)) a
   have gr : Set.range g ⊆ A := by
-    unfold g
-    intro x hx
-    obtain ⟨y, hy⟩ := Set.mem_range.mp hx
-    simp only [ContinuousMap.const_apply] at hy
-    subst hy
-    simp_all only [ContinuousMap.coe_const, Set.mem_range, Function.const_apply, exists_const_iff,
-      and_true, Subtype.coe_prop]
+    rintro x ⟨y, rfl⟩
+    exact a.property
   apply homotopicRel_boundary_of_homotopicWith_isMapOfPairs X A
   use g
 

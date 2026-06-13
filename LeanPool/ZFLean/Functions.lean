@@ -435,10 +435,7 @@ theorem mem_composition (g f : ZFSet) {A B C : ZFSet} {z : ZFSet} :
     rw [pair_inj] at eq
     obtain ⟨rfl, rfl⟩ := eq
     simp only [pair_inj, existsAndEq, and_true, exists_and_left, exists_eq_left']
-    and_intros
-    · exact ha
-    · exact hc
-    · exact ⟨_, memB, memf, memg⟩
+    exact ⟨ha, hc, _, memB, memf, memg⟩
   · rintro ⟨x, w, y, rfl, xA, yC, wB, xw_f, wy_g⟩
     simp only [pair_inj, exists_eq_right_right', existsAndEq, and_true, exists_eq_left']
     and_intros
@@ -457,11 +454,10 @@ theorem _root_.ZFSet.Id.composition_left
     obtain ⟨rfl, rfl⟩ := eq
     exact memf
   · intro xf
+    obtain ⟨a, aA, b, bB, rfl⟩ := mem_prod.mp <| hf xf
     and_intros
-    · obtain ⟨a, aA, b, bB, rfl⟩ := mem_prod.mp <| hf xf
-      exists a, aA, b, bB
-    · obtain ⟨a, aA, b, bB, rfl⟩ := mem_prod.mp <| hf xf
-      exists a, b
+    · exists a, aA, b, bB
+    · exists a, b
 
 theorem _root_.ZFSet.Id.composition_right
     {f A B : ZFSet} (hf : f ⊆ A.prod B) : composition f 𝟙A A A B = f := by
@@ -474,11 +470,10 @@ theorem _root_.ZFSet.Id.composition_right
     obtain ⟨rfl, rfl⟩ := eq
     exact memf
   · intro xf
+    obtain ⟨a, aA, b, bB, rfl⟩ := mem_prod.mp <| hf xf
     and_intros
-    · obtain ⟨a, aA, b, bB, rfl⟩ := mem_prod.mp <| hf xf
-      exists a, aA, b, bB
-    · obtain ⟨a, aA, b, bB, rfl⟩ := mem_prod.mp <| hf xf
-      exists a, b
+    · exists a, aA, b, bB
+    · exists a, b
 
 @[zpfun]
 theorem IsPFunc_of_composition_IsPFunc {f g : ZFSet} {A B C : ZFSet}

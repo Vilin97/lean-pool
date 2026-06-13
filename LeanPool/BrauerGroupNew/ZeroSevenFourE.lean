@@ -478,6 +478,23 @@ instance end_simple_mod_finite
 --   rw [show x = (MulOpposite.op x : Dᵐᵒᵖ) • 1 by simp]
 --   exact Submodule.smul_mem _ _ <| Submodule.subset_span rfl
 
+/-- Scalar multiplication by `r : k` as an `A`-linear endomorphism of `M`. -/
+private def smulEndOfScalarTower (M : Type v) [AddCommGroup M] [Module A M]
+    [Module k M] [IsScalarTower k A M] (r : k) : Module.End A M where
+  toFun x := r • x
+  map_add' := by simp
+  map_smul' a x := by
+    simp only [RingHom.id_apply]
+    rw [algebra_compatible_smul A, ← mul_smul, algebra_compatible_smul A, ← mul_smul]
+    congr 1
+    exact Algebra.commutes r a
+
+omit [IsSimpleRing A] [FiniteDimensional k A] in
+@[simp]
+private lemma smulEndOfScalarTower_apply (M : Type v) [AddCommGroup M] [Module A M]
+    [Module k M] [IsScalarTower k A M] (r : k) (x : M) :
+    smulEndOfScalarTower k A M r x = r • x := rfl
+
 instance instAlgebraEndOfIsScalarTowerLeanPool (M : Type v) [AddCommGroup M] [Module A M]
     [Module k M] [IsScalarTower k A M] :
     Algebra k (Module.End (Module.End A M) M) where
@@ -503,14 +520,7 @@ instance instAlgebraEndOfIsScalarTowerLeanPool (M : Type v) [AddCommGroup M] [Mo
     ext m
     simp only [RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, Module.End.mul_apply,
       LinearMap.coe_mk, AddHom.coe_mk]
-    let s : Module.End A M :=
-    { toFun x := r • x
-      map_add' := by simp
-      map_smul' := fun a x => by
-        simp only [RingHom.id_apply]
-        rw [algebra_compatible_smul A, ← mul_smul, algebra_compatible_smul A, ← mul_smul]
-        congr 1
-        exact Algebra.commutes r a }
+    let s : Module.End A M := smulEndOfScalarTower k A M r
     rw [show r • m = s • m by rfl, f.map_smul]
     rfl
   smul r f :=
@@ -519,18 +529,10 @@ instance instAlgebraEndOfIsScalarTowerLeanPool (M : Type v) [AddCommGroup M] [Mo
     map_smul' := by
       intro g m
       simp only [Module.End.smul_def, RingHom.id_apply]
-      let s : Module.End A M :=
-      { toFun x := r • x
-        map_add' := by simp
-        map_smul' := fun a x => by
-          simp only [RingHom.id_apply]
-          rw [algebra_compatible_smul A, ← mul_smul, algebra_compatible_smul A, ← mul_smul]
-          congr 1
-          exact Algebra.commutes r a }
+      let s : Module.End A M := smulEndOfScalarTower k A M r
       change f (s • g m) = g (f <| s • m)
       rw [f.map_smul, f.map_smul]
-      simp only [Module.End.smul_def, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.map_smul_of_tower,
-        s]
+      simp only [Module.End.smul_def, smulEndOfScalarTower_apply, s]
       change r • f (g • m) = _
       rw [f.map_smul]
       simp }
@@ -539,14 +541,7 @@ instance instAlgebraEndOfIsScalarTowerLeanPool (M : Type v) [AddCommGroup M] [Mo
     ext m
     simp only [RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, Module.End.mul_apply,
       LinearMap.coe_mk, AddHom.coe_mk]
-    let s : Module.End A M :=
-      { toFun x := r • x
-        map_add' := by simp
-        map_smul' := fun a x => by
-          simp only [RingHom.id_apply]
-          rw [algebra_compatible_smul A, ← mul_smul, algebra_compatible_smul A, ← mul_smul]
-          congr 1
-          exact Algebra.commutes r a }
+    let s : Module.End A M := smulEndOfScalarTower k A M r
     change _ = s • f m
     rw [← f.map_smul]
     rfl
@@ -657,10 +652,8 @@ lemma IsBalanced.congr_aux (M N : Type v) [AddCommGroup M] [AddCommGroup N] [Mod
 
 omit [IsSimpleRing A] in
 lemma IsBalanced.congr {M N : Type v} [AddCommGroup M] [AddCommGroup N] [Module A M] [Module A N]
-    (l : M ≃ₗ[A] N) : IsBalanced A M ↔ IsBalanced A N := by
-  constructor
-  · apply IsBalanced.congr_aux; exact l
-  · apply IsBalanced.congr_aux; exact l.symm
+    (l : M ≃ₗ[A] N) : IsBalanced A M ↔ IsBalanced A N :=
+  ⟨IsBalanced.congr_aux _ _ _ l, IsBalanced.congr_aux _ _ _ l.symm⟩
 
 lemma isBalanced_of_simpleMod (M : Type v) [AddCommGroup M] [Module A M] [IsSimpleModule A M]
     [Module k M] [IsScalarTower k A M] : IsBalanced A M := by

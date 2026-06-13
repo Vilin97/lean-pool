@@ -148,15 +148,14 @@ lemma _root_.VML.VMLInput.hKilling (p : VMLInput X) :
       dotProduct v (FlatTorus3.gradX p.aLoc x) +
       dotProduct (p.E x) (p.bLoc x) +
       dotProduct v ((2 * p.cLoc x) • p.E x + cross (p.B x) (p.bLoc x)) = 0 := by
-    intro v; have := hpoly v
-    rw [hgrad_c, dotProduct_zero, zero_mul, zero_add] at this
-    exact this
+    intro v
+    have h := hpoly v
+    rw [hgrad_c, dotProduct_zero, zero_mul, zero_add] at h
+    exact h
   -- C = 0: substitute v = 0
   have hC : dotProduct (p.E x) (p.bLoc x) = 0 := by
-    have := hred 0
-    simp only [Pi.zero_apply, mul_zero, zero_mul, sum_const_zero, zero_dotProduct, add_zero,
-      zero_add, dotProduct_add, dotProduct_smul, smul_eq_mul] at this
-    exact this
+    simpa only [Pi.zero_apply, mul_zero, zero_mul, sum_const_zero, zero_dotProduct, add_zero,
+      zero_add, dotProduct_add, dotProduct_smul, smul_eq_mul] using hred 0
   -- Q(v) + L(v) = 0
   have hQL : ∀ v : Fin 3 → ℝ,
       (∑ i : Fin 3, ∑ j : Fin 3, v i * v j *
@@ -245,8 +244,7 @@ lemma _root_.VML.VMLInput.hJ_def' (p : VMLInput X) :
   have hform' : ∀ x, ∃ a₀, ∀ v,
       p.f x v = Real.exp (a₀ + dotProduct ((fun _ => p.b₀) x) v + p.c₀ * normSq v) :=
     hform
-  have := p.hJ_from_maxwellian (fun _ => p.b₀) p.c₀ hform'
-  exact this
+  exact p.hJ_from_maxwellian (fun _ => p.b₀) p.c₀ hform'
 
 /-- The drift parameter b₀ vanishes.
     Proof: Ampère + Stokes on T³ gives |u₀|² ∫ ρ = 0, and ∫ ρ > 0,

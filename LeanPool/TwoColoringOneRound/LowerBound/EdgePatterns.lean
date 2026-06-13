@@ -99,12 +99,8 @@ private lemma disjoint_range_big_small {n : Nat} {two : Sym n}
 
 private lemma disjoint_range_small_big {n : Nat} {two : Sym n}
     (bc : Fin 2 ↪ Small (two := two)) (ad : Fin 2 ↪ Big (two := two)) :
-    Disjoint (Set.range (bc.trans smallValEmbedding)) (Set.range (ad.trans bigValEmbedding)) := by
-  refine Set.disjoint_left.2 ?_
-  rintro x ⟨i, rfl⟩ ⟨j, h⟩
-  have h' : (bc i).1 = (ad j).1 := by
-    simpa [bigValEmbedding, smallValEmbedding] using h.symm
-  exact (small_ne_big (two := two) (x := bc i) (y := ad j) h').elim
+    Disjoint (Set.range (bc.trans smallValEmbedding)) (Set.range (ad.trans bigValEmbedding)) :=
+  (disjoint_range_big_small (two := two) ad bc).symm
 
 private def outerPos : Fin 2 ↪ Fin 4 where
   toFun

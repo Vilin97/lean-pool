@@ -216,6 +216,18 @@ lemma g_eq_one_iff (x y z : Rand) : g x y z = 1 ↔ (z : ℝ) < z0 x y := by
 lemma g_eq_zero_iff (x y z : Rand) : g x y z = 0 ↔ ¬ (z : ℝ) < z0 x y := by
   by_cases h : (z : ℝ) < z0 x y <;> simp [g, h]
 
+/-- Combine an `ENNReal.ofReal` product into a single `ENNReal.ofReal` of the (precomputed)
+real product. Used pervasively to evaluate numeric integral contributions. -/
+lemma ofReal_mul_eq {p q r : ℝ} (hp : 0 ≤ p) (h : p * q = r) :
+    ENNReal.ofReal p * ENNReal.ofReal q = ENNReal.ofReal r := by
+  rw [← ENNReal.ofReal_mul hp, h]
+
+/-- Combine an `ENNReal.ofReal` sum into a single `ENNReal.ofReal` of the (precomputed)
+real sum. Used pervasively to evaluate numeric integral contributions. -/
+lemma ofReal_add_eq {p q r : ℝ} (hp : 0 ≤ p) (hq : 0 ≤ q) (h : p + q = r) :
+    ENNReal.ofReal p + ENNReal.ofReal q = ENNReal.ofReal r := by
+  rw [← ENNReal.ofReal_add hp hq, h]
+
 end Recursive3Param
 end UpperBound
 

@@ -279,7 +279,7 @@ theorem Theorem42
     hρ_cont := hρ_cont
     J := J
     hAmpere := hAmpere
-    hGauss := fun x => hGauss x
+    hGauss := hGauss
     hDivB := hDivB
     hDiff_fv := hDiff_fv
     hDiff_B := hDiff_B
@@ -289,8 +289,7 @@ theorem Theorem42
     hPSD_inner := hDecay.hPSD_inner_int
     hPSD_outer := hDecay.hPSD_outer_int
     hDiff_maxwellian := hDiff_maxwellian
-    hPolynomialIdentity := fun a b c ha hb hc hform =>
-      hPolynomialId a b c ha hb hc hform
+    hPolynomialIdentity := hPolynomialId
     hJ_from_maxwellian := fun b_func c₀ hform => by
       intro x
       obtain ⟨a₀, ha₀⟩ := hform x

@@ -35,6 +35,25 @@ The BSS framework follows the informal proof's dynamic approach:
 3. Coloring with one-sided barrier tracking monochromatic matrix M_t
 4. Pullback: M_k ≤ u_k·I → each color class ε-light (via eps_light_of_loewner_bound) -/
 
+/-- The spectral decomposition `M = U * diagonal (eigenvalues) * U★` of a Hermitian matrix. -/
+private lemma isHermitian_spectral_decomp {M : Matrix V V ℝ} (hM : M.IsHermitian) :
+    M = (hM.eigenvectorUnitary : Matrix V V ℝ) * diagonal hM.eigenvalues *
+      (star (hM.eigenvectorUnitary : Matrix V V ℝ)) := by
+  have hspec := hM.spectral_theorem
+  simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
+    RCLike.ofReal_real_eq_id, id] at hspec
+  exact hspec
+
+/-- A unitary-diagonal-conjugate `U * diagonal D * U★` with a real diagonal is Hermitian. -/
+private lemma conjugate_diagonal_isHermitian (U : Matrix V V ℝ) (D : V → ℝ) :
+    (U * diagonal D * (star U : Matrix V V ℝ))ᴴ =
+    U * diagonal D * (star U : Matrix V V ℝ) := by
+  calc (U * diagonal D * star U)ᴴ
+      = (star U)ᴴ * (diagonal D)ᴴ * Uᴴ := by
+        rw [conjTranspose_mul, conjTranspose_mul, Matrix.mul_assoc]
+    _ = U * diagonal D * star U := by
+        simp [star_eq_conjTranspose]
+
 /-- **Sub-lemma 1 (Spectral setup)**: For any graph G, there exists a Hermitian matrix
     Lhalf with Lhalf * Lhalf = graphLaplacian G (the PSD square root), constructed
     via the spectral theorem. This is Step 1 of the informal proof.
@@ -59,27 +78,13 @@ lemma spectral_sqrt_exists
   have hev_nn : ∀ i, 0 ≤ ev i := hL_psd.eigenvalues_nonneg
   set sqrtEv : V → ℝ := fun i => Real.sqrt (ev i) with hsqrtEv_def
   set Lhalf := (U : Matrix V V ℝ) * diagonal sqrtEv * (star U : Matrix V V ℝ) with hLhalf_def
-  have hL_eq : L = (U : Matrix V V ℝ) * diagonal ev * (star U : Matrix V V ℝ) := by
-    have hspec := hL_herm.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-      RCLike.ofReal_real_eq_id, id] at hspec
-    rw [hL_def]; exact hspec
+  have hL_eq : L = (U : Matrix V V ℝ) * diagonal ev * (star U : Matrix V V ℝ) :=
+    isHermitian_spectral_decomp hL_herm
   refine ⟨Lhalf, ?_, ?_⟩
   · -- Lhalf is Hermitian
     change Lhalfᴴ = Lhalf
     rw [hLhalf_def]
-    have h_diag_herm : (diagonal sqrtEv)ᴴ = diagonal sqrtEv := by
-      ext i j; simp only [conjTranspose_apply, diagonal, Matrix.of_apply, star_trivial]
-      split_ifs with h1 h2 h2
-      · rw [h1]
-      · exact absurd h1.symm h2
-      · exact absurd h2.symm h1
-      · rfl
-    calc (U * diagonal sqrtEv * star U)ᴴ
-        = (star U)ᴴ * (diagonal sqrtEv)ᴴ * Uᴴ := by
-          rw [conjTranspose_mul, conjTranspose_mul, Matrix.mul_assoc]
-      _ = U * diagonal sqrtEv * star U := by
-          simp only [star_eq_conjTranspose, conjTranspose_conjTranspose, h_diag_herm]
+    exact conjugate_diagonal_isHermitian U sqrtEv
   · -- Lhalf * Lhalf = L
     rw [hLhalf_def, hL_eq]
     have h1 : (U : Matrix V V ℝ) * diagonal sqrtEv * (star U : Matrix V V ℝ) *
@@ -140,29 +145,13 @@ lemma hermitian_pseudo_inverse_exists
   set ev := hM.eigenvalues with hev_def
   have hUstarU : (star U : Matrix V V ℝ) * U = 1 :=
     Unitary.coe_star_mul_self hM.eigenvectorUnitary
-  have hM_eq : M = U * diagonal ev * (star U : Matrix V V ℝ) := by
-    have hspec := hM.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-      RCLike.ofReal_real_eq_id, id] at hspec
-    exact hspec
+  have hM_eq : M = U * diagonal ev * (star U : Matrix V V ℝ) :=
+    isHermitian_spectral_decomp hM
   -- Pseudo-inverse eigenvalues: invert nonzero, keep zero
   set pinvEv : V → ℝ := fun i => if ev i = 0 then 0 else (ev i)⁻¹ with hpinvEv_def
   refine ⟨U * diagonal pinvEv * (star U : Matrix V V ℝ), ?_, ?_, ?_, ?_, ?_⟩
   · -- M_pinv is Hermitian: U * diag(real) * U★ is Hermitian for real diagonal
-    change (U * diagonal pinvEv * (star U : Matrix V V ℝ))ᴴ =
-         U * diagonal pinvEv * (star U : Matrix V V ℝ)
-    have h_diag : (diagonal pinvEv)ᴴ = diagonal pinvEv := by
-      ext i j; simp only [conjTranspose_apply, diagonal, Matrix.of_apply, star_trivial]
-      split_ifs with h1 h2 h2
-      · rw [h1]
-      · exact absurd h1.symm h2
-      · exact absurd h2.symm h1
-      · rfl
-    calc (U * diagonal pinvEv * (star U : Matrix V V ℝ))ᴴ
-        = (star U : Matrix V V ℝ)ᴴ * (diagonal pinvEv)ᴴ * Uᴴ := by
-          rw [conjTranspose_mul, conjTranspose_mul, Matrix.mul_assoc]
-      _ = U * diagonal pinvEv * (star U : Matrix V V ℝ) := by
-          simp only [star_eq_conjTranspose, conjTranspose_conjTranspose, h_diag]
+    exact conjugate_diagonal_isHermitian U pinvEv
   · -- (1) M * M_pinv * M = M via eigenvalue identity ev * pinvEv * ev = ev
     rw [hM_eq, unitary_diag_mul U hUstarU ev pinvEv,
         unitary_diag_mul U hUstarU (ev * pinvEv) ev]

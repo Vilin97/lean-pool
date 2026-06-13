@@ -987,13 +987,7 @@ private lemma condIndepFun_map_triple_real_singleton
         map_measureReal_apply hh (measurableSet_singleton _),
         h_T_eq, h_A_eq, h_B_eq]
     -- Convert ENNReal → Real.
-    rw [show μ.real (h ⁻¹' {c} ∩ (f ⁻¹' {a} ∩ g ⁻¹' {b}))
-          = (μ (h ⁻¹' {c} ∩ (f ⁻¹' {a} ∩ g ⁻¹' {b}))).toReal from rfl,
-        show μ.real (h ⁻¹' {c}) = (μ (h ⁻¹' {c})).toReal from rfl,
-        show μ.real (h ⁻¹' {c} ∩ f ⁻¹' {a}) =
-          (μ (h ⁻¹' {c} ∩ f ⁻¹' {a})).toReal from rfl,
-        show μ.real (h ⁻¹' {c} ∩ g ⁻¹' {b}) =
-          (μ (h ⁻¹' {c} ∩ g ⁻¹' {b})).toReal from rfl]
+    simp only [measureReal_def]
     rw [← ENNReal.toReal_mul, ← ENNReal.toReal_mul, mul_comm (μ (h ⁻¹' {c} ∩ _)) _]
     exact congrArg ENNReal.toReal h_step2
 

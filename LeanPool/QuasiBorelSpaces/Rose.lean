@@ -125,16 +125,8 @@ private def foldAlgHom
 
 private lemma map_congr'
     {α β : Type*} {l : List α} {f g : α → β}
-    (h : ∀ x ∈ l, f x = g x) : List.map f l = List.map g l := by
-  induction l with
-  | nil => simp
-  | cons x xs ih =>
-      have hx : f x = g x := by
-        exact h x (by simp)
-      have hxs : ∀ y ∈ xs, f y = g y := by
-        intro y hy
-        exact h y (by simp [hy])
-      simp [hx, ih hxs]
+    (h : ∀ x ∈ l, f x = g x) : List.map f l = List.map g l :=
+  List.map_congr_left h
 
 private lemma fold_pointwise
     (mk : A → B → List C → C)

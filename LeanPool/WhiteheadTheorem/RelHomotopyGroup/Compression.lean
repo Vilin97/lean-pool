@@ -53,9 +53,8 @@ lemma compression_criterion_1_subtype (f : RelGenLoop (n + 1) X A a) (g : C(I^Fi
     (H : ContinuousMap.HomotopyRel f ⟨Subtype.val ∘ g, g.continuous.subtype_val⟩ (∂I^(n + 1))) :
     ⟦f⟧ = (⟦RelGenLoop.const⟧ : π_rel (n + 1) X A a) := by
   refine compression_criterion_1 n X A a f _ ?_ H
-  intro x
-  simp only [coe_mk, Set.mem_range, Function.comp_apply, forall_exists_index]
-  intro y hy; rw [← hy]; exact Subtype.coe_prop (g y)
+  rintro _ ⟨y, rfl⟩
+  exact (g y).coe_prop
 
 /-- If `f` represents zero in the relative homotopy group `π_rel n X A a`,
 then `f` is homotopic rel `∂I^n` to some map `g` whose image is in `A`. -/
@@ -68,9 +67,7 @@ lemma compression_criterion_2
   use H.some.toContinuousMap.comp <| (toContinuousMap Cube.splitAtLast).comp <|
     R.r.comp <| Cube.inclToTop
   constructor
-  · intro x hx
-    have ⟨y, hy⟩ := Set.mem_range.mp hx
-    rw [← hy]
+  · rintro _ ⟨y, rfl⟩
     have : ∀ y ∈ ⊔I^(n+1), (Nonempty.some H) (Cube.splitAtLast y) ∈ A := by
       intro y hy
       rcases Cube.mem_boundaryJar_iff_splitAtLast.mp hy with h_bot | h_side

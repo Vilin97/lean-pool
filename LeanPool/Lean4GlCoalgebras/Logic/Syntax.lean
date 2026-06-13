@@ -118,18 +118,11 @@ def isBox : Formula → Bool
 lemma neg_eq {φ ψ : Formula} : (~φ) = (~ψ) → φ = ψ := by
   intro mpp
   cases φ <;> cases ψ <;> simp [Formula.neg] at mpp <;> try grind
-  case and.and φ₁ φ₂ φ₃ φ₄ =>
+  case and.and | or.or =>
     have := neg_eq mpp.1
     have := neg_eq mpp.2
     grind
-  case or.or φ₁ φ₂ φ₃ φ₄ =>
-    have := neg_eq mpp.1
-    have := neg_eq mpp.2
-    grind
-  case box.box φ₁ φ₂ =>
-    have := neg_eq mpp
-    grind
-  case diamond.diamond φ₁ φ₂ =>
+  case box.box | diamond.diamond =>
     have := neg_eq mpp
     grind
 
@@ -215,33 +208,18 @@ lemma FL_refl {φ : Formula} : φ ∈ FL φ := by
 lemma FL_mon {φ ψ : Formula} (ψ_sub_φ : ψ ∈ FL φ) : FL ψ ⊆ FL φ := by
   cases φ <;>
     simp only [FL, Finset.mem_singleton, Finset.mem_union, Finset.subset_iff] at ψ_sub_φ ⊢
-  · intro x x_in
+  case bottom | top | atom | negAtom =>
+    intro x x_in
     subst ψ
     simpa only [FL, Finset.mem_singleton] using x_in
-  · intro x x_in
-    subst ψ
-    simpa only [FL, Finset.mem_singleton] using x_in
-  · intro x x_in
-    subst ψ
-    simpa only [FL, Finset.mem_singleton] using x_in
-  · intro x x_in
-    subst ψ
-    simpa only [FL, Finset.mem_singleton] using x_in
-  · intro x x_in
+  case and | or =>
+    intro x x_in
     rcases ψ_sub_φ with (rfl | ψ_sub) | ψ_sub
     · simpa only [FL, Finset.mem_singleton, Finset.mem_union] using x_in
     · exact Or.inl (Or.inr (FL_mon ψ_sub x_in))
     · exact Or.inr (FL_mon ψ_sub x_in)
-  · intro x x_in
-    rcases ψ_sub_φ with (rfl | ψ_sub) | ψ_sub
-    · simpa only [FL, Finset.mem_singleton, Finset.mem_union] using x_in
-    · exact Or.inl (Or.inr (FL_mon ψ_sub x_in))
-    · exact Or.inr (FL_mon ψ_sub x_in)
-  · intro x x_in
-    rcases ψ_sub_φ with rfl | ψ_sub
-    · simpa only [FL, Finset.mem_singleton, Finset.mem_union] using x_in
-    · exact Or.inr (FL_mon ψ_sub x_in)
-  · intro x x_in
+  case box | diamond =>
+    intro x x_in
     rcases ψ_sub_φ with rfl | ψ_sub
     · simpa only [FL, Finset.mem_singleton, Finset.mem_union] using x_in
     · exact Or.inr (FL_mon ψ_sub x_in)

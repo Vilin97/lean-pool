@@ -382,15 +382,14 @@ lemma rwTargetPt_eq
 end inducedPointedHom'
 
 lemma isIso_inducedPointedHom_of_isHomeomorph (n : ℕ) (x₀ : X) (f : C(X, Y))
-    (hf : IsHomeomorph f) : IsIso (inducedPointedHom n x₀ f) := by
-  unfold inducedPointedHom
-  have : IsIso (PointedTopCat.ofHom f x₀) := PointedTopCat.isIso_of_isHomeomorph f _ hf
-  exact Functor.map_isIso (functorToPointed n) (PointedTopCat.ofHom f x₀)
+    (hf : IsHomeomorph f) : IsIso (inducedPointedHom n x₀ f) :=
+  haveI : IsIso (PointedTopCat.ofHom f x₀) := PointedTopCat.isIso_of_isHomeomorph f _ hf
+  Functor.map_isIso (functorToPointed n) (PointedTopCat.ofHom f x₀)
 
 instance isIso_inducedPointedHom_id (n : ℕ) (x₀ : X) :
-    IsIso (inducedPointedHom n x₀ (ContinuousMap.id X)) := by
-  apply isIso_inducedPointedHom_of_isHomeomorph
-  exact isHomeomorph_iff_exists_homeomorph.mpr ⟨Homeomorph.refl X, rfl⟩
+    IsIso (inducedPointedHom n x₀ (ContinuousMap.id X)) :=
+  isIso_inducedPointedHom_of_isHomeomorph n x₀ _ <|
+    isHomeomorph_iff_exists_homeomorph.mpr ⟨Homeomorph.refl X, rfl⟩
 
 lemma inducedPointedHom_comp (n : ℕ) (x₀ : X) (f : C(X, Y)) (g : C(Y, Z)) :
     inducedPointedHom n x₀ (g.comp f) =

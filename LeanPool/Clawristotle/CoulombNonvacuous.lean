@@ -320,6 +320,15 @@ lemma integral_equilibriumMaxwellian (ρ T : ℝ) (hT : 0 < T) :
   rw [h_sqrt_cube]
   exact div_mul_cancel₀ ρ (ne_of_gt (rpow_pos_of_pos h2piT_pos _))
 
+/-- The directional derivative of the periodic lift of a zero spatial field vanishes;
+    used for the divergence-zero goals (11) and (12). -/
+private lemma fderiv_zero_field_periodicLift (p : Fin 3 → ℝ) (j : Fin 3) :
+    fderiv ℝ (fun y => ((fun _ : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) p
+      (Pi.single j 1) = 0 := by
+  rw [show (fun y => ((fun _ : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) =
+      (fun _ => (0 : ℝ)) from by ext; simp]
+  simp
+
 /-- **Non-vacuousness of CoulombConcreteTheorem42.**
 
     The equilibrium Maxwellian f(v) = ρ/(2πT)^{3/2} exp(-|v|²/(2T)) with
@@ -472,27 +481,15 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρIon : ℝ)
   · intro x
     simp only [torusDivX, periodicLift]
     -- Each summand: fderiv of (fun z => 0 i) ∘ torusMk = 0
-    have hzero : ∀ j : Fin 3,
-        fderiv ℝ (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y)
-          (torusMk_surjective x).choose (Pi.single j 1) = 0 := by
-      intro j
-      rw [show (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) =
-          (fun _ => (0 : ℝ)) from by ext; simp]
-      simp
-    simp only [hzero, Finset.sum_const_zero]
+    simp only [fderiv_zero_field_periodicLift (torusMk_surjective x).choose,
+      Finset.sum_const_zero]
     -- ∫ eM(v) dv = ρIon (Gaussian normalization)
     linarith [integral_equilibriumMaxwellian ρIon T hT]
   -- (12) hDivB: divergence of B = 0
   · intro x
     simp only [torusDivX, periodicLift]
-    have hzero : ∀ j : Fin 3,
-        fderiv ℝ (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y)
-          (torusMk_surjective x).choose (Pi.single j 1) = 0 := by
-      intro j
-      rw [show (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) =
-          (fun _ => (0 : ℝ)) from by ext; simp]
-      simp
-    simp only [hzero, Finset.sum_const_zero]
+    simp only [fderiv_zero_field_periodicLift (torusMk_surjective x).choose,
+      Finset.sum_const_zero]
 
 /-- **Full round-trip for CoulombConcreteTheorem42.**
 
