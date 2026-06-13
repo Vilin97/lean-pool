@@ -165,25 +165,13 @@ lemma _root_.VirasoroProject.virasoroTri_lgen_pos_mem_upper {n : ℤ} (n_pos : 0
 
 lemma _root_.VirasoroProject.VirasoroAlgebra.hw_apply_cgen (c h : 𝕜) :
     VirasoroAlgebra.hw 𝕜 c h (virasoroTriCgen 𝕜) = c := by
-  rw [← virasoroTri_cartan_basis_none_eq_cgen]
-  simp only [VirasoroAlgebra.hw, Basis.constr_apply_fintype]
-  simp only [Basis.equivFun_self, smul_eq_mul, mul_ite, ite_mul, one_mul, zero_mul]
-  rw [Finset.sum_eq_single ⟨none, Set.mem_insert none {some 0}⟩]
-  · simp
-  · intro j _ hj
-    simp [hj.symm, show ¬ (j : Option ℤ) = none by aesop]
-  · simp
+  rw [← virasoroTri_cartan_basis_none_eq_cgen, VirasoroAlgebra.hw, Basis.constr_basis]
+  simp
 
 lemma _root_.VirasoroProject.VirasoroAlgebra.hw_apply_lzero (c h : 𝕜) :
     VirasoroAlgebra.hw 𝕜 c h (virasoroTriLzero 𝕜) = h := by
-  rw [← virasoroTri_cartan_basis_some_eq_lzero]
-  simp only [VirasoroAlgebra.hw, Basis.constr_apply_fintype]
-  simp only [Basis.equivFun_self, smul_eq_mul, mul_ite, ite_mul, one_mul, zero_mul]
-  rw [Finset.sum_eq_single ⟨some 0, by exact Set.mem_insert_of_mem none rfl⟩]
-  · simp
-  · intro j _ hj
-    simp [hj.symm]
-  · simp
+  rw [← virasoroTri_cartan_basis_some_eq_lzero, VirasoroAlgebra.hw, Basis.constr_basis]
+  simp
 
 /-- The Verma module for the Virasoso algebra with central charge `c` and conformal weight `h`. -/
 abbrev _root_.VirasoroProject.VirasoroVerma

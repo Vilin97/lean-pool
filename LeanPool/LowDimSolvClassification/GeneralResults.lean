@@ -403,10 +403,8 @@ namespace LieAlgebra
 lemma coeff_zero_of_lin_dep {X Y : L} {α β : K} (hXY : ⁅X, Y⁆ ≠ 0)
     (Hzero : α • X + β • Y = 0) : α = 0 := by
   have : α • ⁅X, Y⁆ = 0 :=
-    calc α • ⁅X, Y⁆ = ⁅α • X + β • Y, Y⁆ := by
-          simp
-    _ = 0 := by
-          simp [Hzero]
+    calc α • ⁅X, Y⁆ = ⁅α • X + β • Y, Y⁆ := by simp
+    _ = 0 := by simp [Hzero]
   simp_all only [smul_eq_zero, or_false]
 
 /-- If `⁅X, Y⁆ ≠ 0`, then `X` and `Y` are linearly independent. -/
@@ -681,11 +679,9 @@ theorem isTwoStepNilpotent_iff_lowerCentral :
 /-- A Lie algebra is two-step nilpotent iff its lower central series terminates after two steps. -/
 theorem isTwoStepNilpotent_iff_lowerCentral' :
     IsTwoStepNilpotent K L ↔ LieModule.lowerCentralSeries ℤ L L 2 = ⊥ := by
-  rw [isTwoStepNilpotent_iff_lowerCentral]
-  rw [← LieSubmodule.coe_injective.eq_iff]
-  rw [LieModule.coe_lowerCentralSeries_eq_int K L L 2]
-  rw [LieSubmodule.bot_coe, ← LieSubmodule.bot_coe (R := ℤ) (L := L)]
-  rw [LieSubmodule.coe_injective.eq_iff]
+  rw [isTwoStepNilpotent_iff_lowerCentral, ← LieSubmodule.coe_injective.eq_iff,
+    LieModule.coe_lowerCentralSeries_eq_int K L L 2, LieSubmodule.bot_coe,
+    ← LieSubmodule.bot_coe (R := ℤ) (L := L), LieSubmodule.coe_injective.eq_iff]
 
 --here L is necesarily finite dimensional (if K is a field). Could generalize this to
 --infinite dimensions.

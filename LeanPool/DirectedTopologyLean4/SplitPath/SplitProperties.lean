@@ -147,8 +147,7 @@ lemma firstPart_range_interval_partial_coe (γ : Dipath x₀ x₁) {n d i : ℕ}
         ((↑i+1)/(↑d+1))
       = γ.extend ''  Icc (↑i/(↑n+1)) ((↑i+1)/(↑n+1)) := by
   have := firstPart_range_interval_partial γ hd hi
-  rw [←Dipath.image_extend_eq_image] at this
-  rw [←Dipath.image_extend_eq_image] at this
+  rw [←Dipath.image_extend_eq_image, ←Dipath.image_extend_eq_image] at this
   convert this <;> exact (Nat.cast_succ _).symm
 
 /-! ### Second Part -/
@@ -253,8 +252,7 @@ lemma secondPart_range_interval_coe (γ : Dipath x₀ x₁) {i n : ℕ} (hi : i 
     (SecondPart γ (Fraction.ofPos (Nat.succ_pos n))).extend '' Icc (↑i/↑n) ((↑i+1)/↑n) =
     γ.extend ''  Icc ((↑i+1)/(↑n+1)) ((↑i+1+1)/(↑n+1)) := by
   have := secondPart_range_interval γ hi hn
-  rw [←Dipath.image_extend_eq_image] at this
-  rw [←Dipath.image_extend_eq_image] at this
+  rw [←Dipath.image_extend_eq_image, ←Dipath.image_extend_eq_image] at this
   convert this
   · exact (Nat.cast_succ i).symm
   · exact (Nat.cast_succ i).symm
@@ -299,10 +297,7 @@ lemma secondPart_range_partial_interval (γ : Dipath x₀ x₁) {i d n : ℕ} (h
   · simp only [Nat.succ_eq_add_one, unitInterval.coe_symm_eq, Nat.cast_add, Nat.cast_one,
     Subtype.mk.injEq]
     have : d < n := Nat.lt_of_succ_lt_succ hd
-    rw [Nat.cast_sub (le_of_lt this)]
-    rw [add_assoc]
-    rw [add_comm (↑d + 1 : ℝ) 1]
-    rw [←add_assoc]
+    rw [Nat.cast_sub (le_of_lt this), add_assoc, add_comm (↑d + 1 : ℝ) 1, ←add_assoc]
     apply FractionEqualities.frac_special
     · exact (ne_of_lt (Nat.cast_lt.mpr this))
     · rw [←Nat.cast_succ]
@@ -319,8 +314,7 @@ lemma secondPart_range_partial_interval_coe (γ : Dipath x₀ x₁) {i d n : ℕ
       ((↑i+1)/(↑n-↑d))
     = γ.extend ''  Icc ((↑(i+d.succ))/(↑n+1)) ((↑(i+d.succ) + 1)/(↑n+1)) := by
   have := secondPart_range_partial_interval γ hd hi
-  rw [←Dipath.image_extend_eq_image] at this
-  rw [←Dipath.image_extend_eq_image] at this
+  rw [←Dipath.image_extend_eq_image, ←Dipath.image_extend_eq_image] at this
   convert this
   · exact (Nat.cast_sub (le_of_lt <| Nat.lt_of_succ_lt_succ hd)).symm
   · exact (Nat.cast_succ _).symm
@@ -381,15 +375,13 @@ lemma first_part_of_second_part (γ : Dipath x₀ x₁) {n k : ℕ} (hkn : k < n
     one_div, Subtype.mk.injEq]
   have : (k : ℝ) > 0 := Nat.cast_pos.mpr hk
   have : (n : ℝ) > 0 := Nat.cast_pos.mpr (lt_trans hk hkn)
-  rw [←one_div, ←one_div]
-  rw [FractionEqualities.one_sub_inverse_of_add_one _]
+  rw [←one_div, ←one_div, FractionEqualities.one_sub_inverse_of_add_one _]
   · rw [FractionEqualities.one_sub_inverse_of_add_one _]
-    · rw [mul_comm ((k : ℝ)/(↑k + 1)) (x : ℝ)]
-      rw [mul_div, ← add_div, FractionEqualities.frac_cancel']
-      · rw [← mul_assoc ((n : ℝ) / (n+1 : ℝ)) (k/n : ℝ) (x : ℝ)]
-        rw [FractionEqualities.frac_cancel']
-        · rw [mul_comm ((k : ℝ)/(↑n + 1)) (x : ℝ)]
-          rw [mul_div, ← add_div]
+    · rw [mul_comm ((k : ℝ)/(↑k + 1)) (x : ℝ), mul_div, ← add_div,
+        FractionEqualities.frac_cancel']
+      · rw [← mul_assoc ((n : ℝ) / (n+1 : ℝ)) (k/n : ℝ) (x : ℝ),
+          FractionEqualities.frac_cancel']
+        · rw [mul_comm ((k : ℝ)/(↑n + 1)) (x : ℝ), mul_div, ← add_div]
         · linarith
       · linarith
     · linarith
@@ -427,19 +419,12 @@ lemma second_part_of_second_part (γ : Dipath x₀ x₁) {n k : ℕ} (hkn : k < 
     one_div, Subtype.mk.injEq]
   have : (n : ℝ) > 0 := Nat.cast_pos.mpr (lt_of_le_of_lt (Nat.zero_le k) hkn)
   -- Rewrite left side to ... / (n+1+1)
-  rw [← one_div]
-  rw [FractionEqualities.one_sub_inverse_of_add_one _]
+  rw [← one_div, FractionEqualities.one_sub_inverse_of_add_one _]
   · rw [FractionEqualities.one_sub_frac]
     · rw [FractionEqualities.one_sub_frac]
-      · rw [mul_comm (((n : ℝ) - ↑k) / _) (x : ℝ)]
-        rw [mul_div]
-        rw [← add_div]
-        rw [FractionEqualities.frac_cancel']
-        · rw [← add_div]
-          -- Rewrite right side to ... / (n+1+1)
-          rw [mul_comm _ (x : ℝ)]
-          rw [mul_div]
-          rw [← add_div]
+      · rw [mul_comm (((n : ℝ) - ↑k) / _) (x : ℝ), mul_div, ← add_div,
+          FractionEqualities.frac_cancel']
+        · rw [← add_div, mul_comm _ (x : ℝ), mul_div, ← add_div]
           -- Show that numerators are equal
           congr 1
           ring
@@ -470,9 +455,7 @@ lemma second_part_trans (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) :
   rw [second_part_apply, Dipath.trans_apply]
   have h_two : 2 * (2⁻¹ : ℝ) = 1 := by norm_num
   have ht : 2 * (2⁻¹ * (t : ℝ) + 2⁻¹) - 1 = ↑t := by
-    rw [mul_add]
-    rw [←mul_assoc]
-    rw [h_two]
+    rw [mul_add, ←mul_assoc, h_two]
     ring
   have hone_sub : (1 - 2⁻¹ : ℝ) = 2⁻¹ := by norm_num
   simp only [unitInterval.coe_symm_eq, Nat.succ_eq_add_one, zero_add, Nat.cast_one,
@@ -489,9 +472,7 @@ same as `γ₁` split at `1/(n + 1)`.
 lemma trans_first_part (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) (n : ℕ) (t : I) :
     (FirstPart (γ₁.trans γ₂) (Fraction.ofPos (Nat.succ_pos (n + n).succ))) t =
       (FirstPart γ₁ (Fraction.ofPos (Nat.succ_pos n))) t := by
-  rw [first_part_apply]
-  rw [first_part_apply]
-  rw [Dipath.trans_apply]
+  rw [first_part_apply, first_part_apply, Dipath.trans_apply]
   simp only [Nat.succ_eq_add_one, zero_add, Nat.cast_one, Nat.cast_add, one_div]
   have : (n + n + 1 + 1 : ℝ) ≥ 2 := by
     rw [←Nat.cast_add]
@@ -510,9 +491,7 @@ lemma trans_first_part (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x₂) (n 
   rw [←mul_assoc]
   congr 1
   have : (n + n + 1 + 1 : ℝ)  = (2 * (n + 1)) := by ring
-  rw [this]
-  rw [mul_inv]
-  rw [←mul_assoc]
+  rw [this, mul_inv, ←mul_assoc]
   norm_num
 
 namespace AuxEqualities
@@ -523,10 +502,7 @@ lemma h₃ (n : ℕ) : (n + 1 + 1 : ℝ) ≠ 0 := by linarith [h₂ n]
 lemma h₄ (n : ℕ) : (↑n + ↑n + 1 + 1 + 1 + 1 : ℝ) > 0 := by linarith [h₂ n]
 lemma h₅ (n : ℕ) : (↑n + ↑n + 1 + 1 + 1 + 1 : ℝ) = 2 * (↑n + 1 + 1) := by ring
 lemma h₆ (n : ℕ) : (↑n + 1 + 1 : ℝ) / (↑n + ↑n + 1 + 1 + 1 + 1) = 2⁻¹ := by
-  rw [h₅ n]
-  rw [mul_comm]
-  rw [div_mul_eq_div_div]
-  rw [div_self (h₃ n)]
+  rw [h₅ n, mul_comm, div_mul_eq_div_div, div_self (h₃ n)]
   exact one_div _
 lemma h₇ (n : ℕ) : (n + n + 1 + 1 + 1: ℝ) ≠ 0 := by linarith [h₂ n]
 lemma h₈ (n : ℕ) : (↑n + 1 + (↑n + 1) + 1 + 1 : ℝ) = (↑n + ↑n + 1 + 1 + 1 + 1) := by ring
@@ -554,8 +530,7 @@ lemma e₄ (n : ℕ) (t : I) :
     ((↑n + ↑n + 1 + 1 + 1 : ℝ) / (↑n + ↑n + 1 + 1 + 1 + 1) *
         ((↑t + ↑n + ↑n + 1 + 1) / (↑n + ↑n + 1 + 1 + 1))) =
     (↑t + ↑n + ↑n + 1 + 1) / (↑n + ↑n + 1 + 1 + 1 + 1) := by
-  rw [mul_comm]
-  rw [div_mul_div_cancel₀ (h₇ n)]
+  rw [mul_comm, div_mul_div_cancel₀ (h₇ n)]
 
 lemma e₅ (n : ℕ) (r : ℝ) :
     2 * (r / (n + n + 1 + 1 + 1 + 1 : ℝ) + ((n : ℝ) + 1 + (↑n + 1) + 1 + 1)⁻¹) =
@@ -593,24 +568,16 @@ lemma trans_first_part_of_second_part (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath
     apply congr_arg
     simp only [Nat.succ_eq_add_one, unitInterval.coe_symm_eq, zero_add, Nat.cast_one, Nat.cast_add,
       one_div, Nat.cast_ofNat, Subtype.mk.injEq]
-    rw [e₃, mul_comm _ (t : ℝ), mul_div]
-    rw [mul_comm (_/_) (_/_)]
-    rw [this]
-    rw [div_mul_div_cancel₀ (h₇ n)]
-    rw [e₆]
-    rw [e₅]
+    rw [e₃, mul_comm _ (t : ℝ), mul_div, mul_comm (_/_) (_/_), this,
+      div_mul_div_cancel₀ (h₇ n), e₆, e₅]
     ring
   · exfalso
     revert h
     apply not_le.mpr
     simp only [one_div, Nat.succ_eq_add_one, unitInterval.coe_symm_eq, zero_add, Nat.cast_one,
       Nat.cast_add, Nat.cast_ofNat]
-    rw [e₃]
-    rw [mul_comm _ (t : ℝ)]
-    rw [mul_div]
-    rw [mul_comm (_/_) (_/_)]
-    rw [this]
-    rw [div_mul_div_cancel₀ (h₇ n)]
+    rw [e₃, mul_comm _ (t : ℝ), mul_div, mul_comm (_/_) (_/_), this,
+      div_mul_div_cancel₀ (h₇ n)]
     apply (mul_lt_mul_iff_of_pos_left (show 0 < (2 : ℝ) by norm_num)).mp
     rw [e₅]
     apply (lt_div_iff₀ (show (n + 1 + 1 : ℝ) > 0 by linarith [h₂ n])).mpr
@@ -630,9 +597,7 @@ lemma trans_first_part_of_second_part (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath
     apply not_not.mpr
     simp only [Nat.succ_eq_add_one, unitInterval.coe_symm_eq, zero_add, Nat.cast_one, Nat.cast_add,
       one_div, Nat.cast_ofNat]
-    rw [e₃, mul_comm _ (t : ℝ), mul_div, mul_comm (_/_) (_/_)]
-    rw [this]
-    rw [div_mul_div_cancel₀ (h₇ n)]
+    rw [e₃, mul_comm _ (t : ℝ), mul_div, mul_comm (_/_) (_/_), this, div_mul_div_cancel₀ (h₇ n)]
     apply (mul_le_mul_iff_of_pos_left (show 0 < (2 : ℝ) by norm_num)).mp
     rw [e₅]
     apply (div_le_iff₀ (show (n + 1 + 1 : ℝ) > 0 by linarith [h₂ n])).mpr
@@ -648,13 +613,8 @@ lemma trans_first_part_of_second_part (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath
     apply congr_arg
     simp only [Nat.succ_eq_add_one, unitInterval.coe_symm_eq, zero_add, Nat.cast_one, Nat.cast_add,
       one_div, Nat.cast_ofNat, Subtype.mk.injEq]
-    rw [e₃]
-    rw [mul_comm _ (t : ℝ)]
-    rw [mul_div]
-    rw [mul_comm (_/_) (_/_)]
-    rw [this]
-    rw [div_mul_div_cancel₀ (h₇ n)]
-    rw [e₅]
+    rw [e₃, mul_comm _ (t : ℝ), mul_div, mul_comm (_/_) (_/_), this,
+      div_mul_div_cancel₀ (h₇ n), e₅]
     nth_rewrite 6 [←div_self (h₃ n)]
     ring
 
@@ -670,22 +630,13 @@ lemma trans_second_part_second_part (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x
    ) t
   =
     (SecondPart γ₂ (Fraction (Nat.succ_pos n.succ) (Nat.le_succ n.succ))) t := by
-  rw [second_part_apply]
-  rw [second_part_apply]
-  rw [second_part_apply]
-  rw [Dipath.trans_apply]
+  rw [second_part_apply, second_part_apply, second_part_apply, Dipath.trans_apply]
   simp only [Nat.succ_eq_add_one, unitInterval.coe_symm_eq, zero_add, Nat.cast_one, Nat.cast_add,
     one_div, Nat.cast_ofNat]
   have : (n : ℝ) + ↑n + 2 = ↑n + ↑n + 1 + 1 := by ring
   split_ifs with h
   · exfalso
-    rw [this] at h
-    rw [e₂] at h
-    rw [e₃] at h
-    rw [e₄] at h
-    rw [←one_div] at h
-    rw [h₈] at h
-    rw [show (1 / (n + n + 1 + 1 + 1 + 1 : ℝ)) = 1 / (n + n + 1 + 1 + 1 + 1 : ℝ) from rfl] at h
+    rw [this, e₂, e₃, e₄, ←one_div, h₈] at h
     have hne : (↑n + ↑n + 1 + 1 + 1 + 1 : ℝ) ≠ 0 := (h₄ n).ne'
     have hcombine : (↑t + ↑n + ↑n + 1 + 1) / (↑n + ↑n + 1 + 1 + 1 + 1) +
         1 / (↑n + ↑n + 1 + 1 + 1 + 1 : ℝ) =
@@ -698,8 +649,7 @@ lemma trans_second_part_second_part (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x
     exact lt_irrefl _ hfinal
   apply congr_arg
   simp only [Subtype.mk.injEq]
-  rw [this]
-  rw [e₁, e₂, e₃, e₄, e₅]
+  rw [this, e₁, e₂, e₃, e₄, e₅]
   nth_rewrite 6 [←div_self (h₃ n)]
   rw [div_sub_div_same]
   ring
@@ -711,8 +661,7 @@ lemma trans_image_inv_eq_first (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x₁ x
     (γ₁.trans γ₂) (Fraction.ofPos (Nat.succ_pos (n + n).succ)) =
       γ₁ (Fraction.ofPos (Nat.succ_pos n)) := by
   have := trans_first_part γ₁ γ₂ n 1
-  rw [SplitDipath.first_part_apply] at this
-  rw [SplitDipath.first_part_apply] at this
+  rw [SplitDipath.first_part_apply, SplitDipath.first_part_apply] at this
   convert this using 2
   · simp
   simp
@@ -725,31 +674,21 @@ lemma second_part_trans_eval_at_end (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath x
     (SecondPart (γ₁.trans γ₂) <| Fraction.ofPos <| Nat.succ_pos (n.succ + n.succ).succ)
     (Fraction (Nat.succ_pos (n+n).succ.succ) (le_of_lt (Nat.lt_succ_self _)))
     = γ₂ (Fraction (Nat.succ_pos (n.succ)) (le_of_lt (Nat.lt_succ_self _))) := by
-  rw [second_part_apply]
-  rw [Dipath.trans_apply]
+  rw [second_part_apply, Dipath.trans_apply]
   have : (n : ℝ) + ↑n + 2 = ↑n + ↑n + 1 + 1 := by ring
   rw [dif_neg]
   · apply congr_arg
     simp only [Nat.succ_eq_add_one, unitInterval.coe_symm_eq, zero_add, Nat.cast_one, Nat.cast_add,
       one_div, Nat.cast_ofNat, Subtype.mk.injEq]
-    rw [e₃]
-    rw [mul_comm (_ / _) (_ / _)]
-    rw [this]
-    rw [div_mul_div_cancel₀ (h₇ n)]
-    rw [e₅ n (↑n + ↑n + 1 + 1)]
+    rw [e₃, mul_comm (_ / _) (_ / _), this, div_mul_div_cancel₀ (h₇ n), e₅ n (↑n + ↑n + 1 + 1)]
     nth_rewrite 6 [←div_self (h₃ n)]
     ring
   simp only [Nat.succ_eq_add_one, unitInterval.coe_symm_eq, zero_add, Nat.cast_one, Nat.cast_add,
     one_div, Nat.cast_ofNat, not_le]
-  rw [e₃]
-  rw [mul_comm]
-  rw [this]
-  rw [div_mul_div_cancel₀ (h₇ n)]
-  rw [h₈]
-  rw [← one_div (n + n + 1 + 1 + 1 + 1 : ℝ)]
+  rw [e₃, mul_comm, this, div_mul_div_cancel₀ (h₇ n), h₈, ← one_div (n + n + 1 + 1 + 1 + 1 : ℝ)]
   have hpos : (0 : ℝ) < ↑n + ↑n + 1 + 1 + 1 + 1 := by linarith [h₂ n]
-  rw [div_add_div _ _ hpos.ne' hpos.ne', show (2⁻¹ : ℝ) = 1/2 from by norm_num]
-  rw [div_lt_div_iff₀ (by norm_num) (by positivity)]
+  rw [div_add_div _ _ hpos.ne' hpos.ne', show (2⁻¹ : ℝ) = 1/2 from by norm_num,
+    div_lt_div_iff₀ (by norm_num) (by positivity)]
   ring_nf
   nlinarith [sq_nonneg ((n : ℝ) - 1), sq_nonneg ((n : ℝ) + 1), h₂ n]
 

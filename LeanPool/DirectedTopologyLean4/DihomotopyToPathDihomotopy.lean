@@ -174,8 +174,7 @@ def dihomToPathDihom (F : Dihomotopy f g) : Dipath.Dihomotopy
     case inl hx => -- x = 0
       subst hx
       change (Dihomotopy.hcomp' _ _ _) (t, 0) = _
-      rw [Dihomotopy.hcomp'_apply_zero_right]
-      rw [Dihomotopy.hcomp'_apply_zero_right]
+      rw [Dihomotopy.hcomp'_apply_zero_right, Dihomotopy.hcomp'_apply_zero_right]
       simp only [Dipath.coe_toDirectedMap, Dipath.source]
       change F (min t 0, 0) = f 0
       rw [min_eq_right]

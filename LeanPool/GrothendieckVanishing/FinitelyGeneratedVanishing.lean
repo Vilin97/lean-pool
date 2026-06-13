@@ -251,6 +251,6 @@ theorem directLimit_cohomology_vanishing
       (f : (TopCat.Sheaf.zeroOutsideInt V).obj ⟶ G),
       TopCat.Presheaf.IsLocallySurjective f →
       Subsingleton (Sheaf.H (⟨G, hG⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m)) :
-    Subsingleton (Sheaf.H (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m) := by
-  exact cohomology_vanishing_of_finitelyGenerated_vanishing hK m
+    Subsingleton (Sheaf.H (⟨K, hK⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) m) :=
+  cohomology_vanishing_of_finitelyGenerated_vanishing hK m
     (fun S _ ↦ finsetGeneratedSheaf_vanishing hK m hzero S)

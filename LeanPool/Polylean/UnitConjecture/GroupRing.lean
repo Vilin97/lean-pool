@@ -301,11 +301,7 @@ instance : Ring (R[G]) :=
         intro x
         let l := FreeModule.coeffs_distrib (-1 : R) (1 : R) x
         simp only [neg_add_cancel] at l
-        have lc : (-1 : R) + 1 = 0 := by
-            apply neg_add_cancel
-        -- rw [lc] at l
-        rw [FreeModule.unit_coeffs] at l
-        rw [FreeModule.zero_coeffs] at l
+        rw [FreeModule.unit_coeffs, FreeModule.zero_coeffs] at l
         exact l
 
     left_distrib := by
@@ -387,9 +383,7 @@ instance : Ring (R[G]) :=
       apply funext; intro x₀
       rw [← append_coords]
       simp only [Nat.cast_add, Nat.cast_one]
-      cases m: 1 == x₀ with
-      | true => simp only [coords, monomCoeff, m, add_zero]
-      | false => simp only [coords, monomCoeff, m, add_zero]
+      cases m: 1 == x₀ <;> simp only [coords, monomCoeff, m, add_zero]
     mul_assoc := by
       apply @Quotient.ind (motive := fun a =>
         ∀ b c, a * b * c = a * (b * c))
@@ -483,9 +477,7 @@ theorem groupInclusionHom_injective {F : Type} [Field F] [DecidableEq F]
     (G : Type) [Group G] [DecidableEq G] :
     Function.Injective (groupInclusionHom (R := F) G) := by
   intro _ _
-  apply groupInclusionHom_injective'
-  have : (0 : F) ≠ (1 : F) := zero_ne_one
-  simp_all only [ne_eq, zero_ne_one, not_false_iff, one_ne_zero]
+  apply groupInclusionHom_injective' one_ne_zero
 
 /-- The ring homomorphism `R → R[G]` given by `a ↦  a ⬝ 1` -/
 def ringInclusionHom (G : Type) [Group G] [DecidableEq G] : R →+* R[G] :=
@@ -509,9 +501,7 @@ def ringInclusionHom (G : Type) [Group G] [DecidableEq G] : R →+* R[G] :=
       funext x
       rw [← FormalSum.append_coords]
       simp only [FormalSum.coords, monomCoeff]
-      by_cases h : (1 : G) == x
-      · simp only [h, add_zero]
-      · simp only [h, add_zero]
+      cases (1 : G) == x <;> simp only [add_zero]
   }
 
 

@@ -319,8 +319,7 @@ protected theorem hausdorffMeasure_image_le_mul {X : Type*} [MetricSpace X]
     · finiteness
     · left; positivity
     · left; finiteness
-  · positivity
-  · positivity
+  all_goals positivity
 
 theorem hausdorffMeasure_image_null_of_isBigO {X : Type*} [MetricSpace X]
     [MeasurableSpace E] [BorelSpace E]
@@ -429,10 +428,7 @@ theorem hausdorffMeasure_image_null_of_isLittleO {X : Type*} [MetricSpace X]
         ENNReal.rpow_ne_top_of_nonneg, mul_ne_zero, IsOpen.measure_ne_zero, isOpen_ball,
         ENNReal.pow_ne_top]
       · positivity
-      · simp
-      · simp
-      · simp
-      · simp
+      all_goals simp
     fun_prop (disch := assumption)
   · suffices (0 : ℝ) < (n - dim E) / (k + α) by simp [this]
     refine div_pos (sub_pos_of_lt <| mod_cast hnp) ?_

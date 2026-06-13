@@ -322,8 +322,8 @@ noncomputable def sheafHFilteredColimitSuccQuotientCoconeIsColimit
             cokernel.π ((sheafHFilteredColimitSuccEta Y').app j) ≫ s.ι.app j := by
         simpa [lifted, sheafH_filtered_colimit_succ_liftedCocone, injCocone,
           sheafHFilteredColimitSuccInjCocone] using injColim.fac lifted j
-      have hι : ι' ≫ injColim.desc lifted = 0 := by
-        exact hc'.hom_ext fun k ↦ by
+      have hι : ι' ≫ injColim.desc lifted = 0 :=
+        hc'.hom_ext fun k ↦ by
           have hfac_lifted_k :
               injCocone.ι.app k ≫ injColim.desc lifted =
                 cokernel.π ((sheafHFilteredColimitSuccEta Y').app k) ≫ s.ι.app k := by
@@ -525,8 +525,8 @@ noncomputable def sheafHFilteredColimitComparison
     (n : ℕ) (c' : Cocone Y') (j : J') :
     colimit.ι (Y' ⋙ sheafCohomologyFunctor X n) j ≫
         sheafHFilteredColimitComparison Y' n c' =
-      (sheafCohomologyFunctor X n).map (c'.ι.app j) := by
-  exact colimit.ι_desc ((sheafCohomologyFunctor X n).mapCocone c') j
+      (sheafCohomologyFunctor X n).map (c'.ι.app j) :=
+  colimit.ι_desc ((sheafCohomologyFunctor X n).mapCocone c') j
 
 /-- Successor-step compatibility for the filtered-colimit comparison map: whenever the
 associated sheaf diagram and its colimit have vanishing injective-replacement cohomology in

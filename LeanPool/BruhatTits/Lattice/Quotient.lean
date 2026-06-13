@@ -358,6 +358,12 @@ def _root_.Module.Basis.quotientStdLine₁ (b : Basis (Fin 2) K (Fin 2 → K))
     Submodule (ResidueField R) (b.toLattice (R := R)).quotient :=
   (b.toLattice (R := R)).mapIntermediate (b.ntwist₂ hϖ 0 1).toLattice
 
+open IsLocalRing in
+private lemma residue_irreducible_eq_zero {ϖ : R} (hϖ : Irreducible ϖ) : residue R ϖ = 0 := by
+  change (Ideal.Quotient.mk (maximalIdeal R)) ϖ = (0 : R ⧸ maximalIdeal R)
+  rw [Ideal.Quotient.eq_zero_iff_mem, mem_maximalIdeal, mem_nonunits_iff]
+  exact hϖ.not_isUnit
+
 /-- The image of the span of `(ϖ • b₀, b₁)` in `L ⧸ ϖ L` is the submodule generated
 by the image of `b₁`. -/
 lemma mapIntermediate_stdLine₀ [IsFractionRing R K] (b : Basis (Fin 2) K (Fin 2 → K))
@@ -375,13 +381,9 @@ lemma mapIntermediate_stdLine₀ [IsFractionRing R K] (b : Basis (Fin 2) K (Fin 
     rw [Submodule.mem_span_singleton]
     use Ideal.Quotient.mk _ β
     simp only [hab, Fin.isValue, Basis.toQuotient'_apply, Basis.toLattice_module, map_add, map_smul]
-    have : residue R ϖ = 0 := by
-      change (Ideal.Quotient.mk (maximalIdeal R)) ϖ = (0 : R ⧸ maximalIdeal R)
-      rw [Ideal.Quotient.eq_zero_iff_mem, mem_maximalIdeal, mem_nonunits_iff]
-      exact hϖ.not_isUnit
     have : α • ϖ • (b.toLattice (R := R)).toQuotient (b.restrict (R := R) 0) = 0 := by
       change α • residue R ϖ • (b.toLattice (R := R)).toQuotient (b.restrict (R := R) 0) = 0
-      rw [this]
+      rw [residue_irreducible_eq_zero hϖ]
       simp
     erw [this]
     simp only [Fin.isValue, zero_add]
@@ -421,13 +423,9 @@ lemma mapIntermediate_stdLine₁ [IsFractionRing R K] (b : Basis (Fin 2) K (Fin 
     use Ideal.Quotient.mk _ α
     rw [hab]
     simp only [Fin.isValue, Basis.toQuotient'_apply, Basis.toLattice_module, map_add, map_smul]
-    have : residue R ϖ = 0 := by
-      change (Ideal.Quotient.mk (maximalIdeal R)) ϖ = (0 : R ⧸ maximalIdeal R)
-      rw [Ideal.Quotient.eq_zero_iff_mem, mem_maximalIdeal, mem_nonunits_iff]
-      exact hϖ.not_isUnit
     have : β • ϖ • (b.toLattice (R := R)).toQuotient (b.restrict (R := R) 1) = 0 := by
       change β • residue R ϖ • (b.toLattice (R := R)).toQuotient (b.restrict (R := R) 1) = 0
-      rw [this]
+      rw [residue_irreducible_eq_zero hϖ]
       simp
     erw [this]
     simp

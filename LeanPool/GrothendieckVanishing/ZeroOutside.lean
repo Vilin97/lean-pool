@@ -364,8 +364,8 @@ theorem sHomVal_app_generator {X : TopCat.{u}} {U : Opens X}
 
 theorem sHom_app_generator {X : TopCat.{u}} {U : Opens X}
     {F : Sheaf AddCommGrpCat.{u} X} (s : F.presheaf.obj (op U)) :
-    (sHom s).hom.app (op U) (generator U) = s := by
-  exact sHomVal_app_generator F.property s
+    (sHom s).hom.app (op U) (generator U) = s :=
+  sHomVal_app_generator F.property s
 
 theorem openHom_val_app_generator {X : TopCat.{u}} {V U : Opens X} (h : V ≤ U) :
     (openHom h).hom.app (op V) (generator V) =

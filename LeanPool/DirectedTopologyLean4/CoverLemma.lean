@@ -80,8 +80,7 @@ theorem lebesgue_number_lemma_unit_interval {ι : Sort u} {c : ι → Set ℝ}
     have : (2 : ℝ) ≤ 0 := hn
     linarith
   have n_cast_pos : 0 < (n : ℝ) := Nat.cast_pos.mpr n_pos
-  constructor
-  · exact n_pos
+  refine ⟨n_pos, ?_⟩
   intros i hi
   have mid_point_I : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈ I := mid_point_I hi
   have mid_point_Icc : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈ Set.Icc ((i :ℝ)/(n :ℝ)) ((i+1 :ℝ)/(n :ℝ))

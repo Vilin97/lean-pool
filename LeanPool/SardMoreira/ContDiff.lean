@@ -115,8 +115,7 @@ theorem compAlongOrderedFinpartition_sub_compAlongOrderedFinpartition_isBigO
     c.norm_compAlongOrderedFinpartition_sub_compAlongOrderedFinpartition_le ..) ?_
   refine .add ?_ ?_
   · simp only [← isBigO_one_iff ℝ, ← isBigO_pi] at *
-    have hqB_pi : (fun x ↦ q₁ x - q₂ x) =O[l] B := by
-      simpa [Pi.sub_apply] using hqB
+    have hqB_pi : (fun x ↦ q₁ x - q₂ x) =O[l] B := by simpa [Pi.sub_apply] using hqB
     have H := ((hq₁_bdd.prod_left hq₂_bdd).norm_left.pow (c.length - 1)).mul
       hqB_pi.norm_left
     simpa [mul_assoc, Pi.sub_apply] using hp_bdd.norm_left.mul <| H.const_mul_left c.length
@@ -222,8 +221,7 @@ theorem OpenPartialHomeomorph.iteratedFDeriv_symm_eq_rec [CompleteSpace E]
       _ = iteratedFDeriv 𝕜 i id (f.symm y) := by
         refine (EventuallyEq.iteratedFDeriv _ ?_ _).self_of_nhds
         filter_upwards [H₁] using f.leftInvOn
-      _ = FormalMultilinearSeries.id 𝕜 E (f.symm y) i := by
-        rw [← ftaylorSeries_id, ftaylorSeries]
+      _ = FormalMultilinearSeries.id 𝕜 E (f.symm y) i := by rw [← ftaylorSeries_id, ftaylorSeries]
     simp only [← H₃, FormalMultilinearSeries.taylorComp,
       FormalMultilinearSeries.compAlongOrderedFinpartition]
     rw [Fintype.sum_eq_add_sum_compl (OrderedFinpartition.atomic i), Finset.compl_singleton]

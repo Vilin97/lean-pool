@@ -624,8 +624,7 @@ theorem _root_.LieAlgebra.Dim3.Hyperbolic.commutator_is_span_e₂e₃ : (commuta
   apply le_antisymm
   · rw [span_le]
     intro x ⟨y, z, h⟩
-    rw [← h]
-    rw [SetLike.mem_coe, mem_span_pair]
+    rw [← h, SetLike.mem_coe, mem_span_pair]
     use y 0 * z 1 - z 0 * y 1, y 0 * z 2 - z 0 * y 2
     unfold e₂ e₃
     rw [Hyperbolic.bracket]
@@ -1220,26 +1219,7 @@ theorem _root_.LieAlgebra.Dim3.Family.B_basis_repr {hα : α ≠ 0} {x : commuta
   have h_repr := Basis.repr_fin_two (commutatorBasis α β hα) ⟨x, hx⟩
   rw [Subtype.ext_iff] at h_repr
   simp only [LieSubmodule.coe_add, SetLike.val_smul] at h_repr
-  rw [h_repr] at w
-  rw [B_basis_0, B_basis_1] at w
-  let B : Fin 2 → Family K α β := ![e₂, e₃]
-  have B_is_li_ambient : LinearIndependent K (M := Family K α β) B := by
-    unfold B
-    refine LinearIndependent.pair_iff.mpr ?_
-    simp only [e₂_def, e₃_def]
-    intro s t hst
-    unfold Family at hst
-    constructor
-    · apply_fun (fun f ↦ f 1) at hst
-      simp only [Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.smul_cons, smul_eq_mul, mul_zero,
-        mul_one, Matrix.smul_empty, Fin.isValue, Pi.add_apply, Matrix.cons_val_one,
-        Matrix.cons_val_zero, add_zero, Pi.zero_apply] at hst
-      exact hst
-    · apply_fun (fun f ↦ f 2) at hst
-      simp only [Matrix.smul_cons, smul_eq_mul, mul_zero,
-        mul_one, Matrix.smul_empty, Pi.add_apply, Matrix.cons_val_two,
-        Matrix.tail_cons, Matrix.head_cons, zero_add, Pi.zero_apply] at hst
-      exact hst
+  rw [h_repr, B_basis_0, B_basis_1] at w
   obtain ⟨a_eq, b_eq⟩ := LinearIndependent.eq_of_pair (R := K) (M := Family K α β) (x := e₂) (y
       := e₃) B_is_li_ambient w
   rw [a_eq] at x1a
@@ -1328,8 +1308,8 @@ theorem _root_.LieAlgebra.Dim3.Family.M_is_ade₁_restr {hα : α ≠ 0} : Linea
 
 theorem _root_.LieAlgebra.Dim3.Family.tr_ade₁ (hα : α ≠ 0) : LinearMap.trace _ (commutator K
     (Family K α β)) (ade₁Restr α β) = β :=by
-    rw [LinearMap.trace_eq_matrix_trace K (commutatorBasis α β hα) (ade₁Restr α β)]
-    rw [M_is_ade₁_restr]
+    rw [LinearMap.trace_eq_matrix_trace K (commutatorBasis α β hα) (ade₁Restr α β),
+      M_is_ade₁_restr]
     exact M_trace
 
 theorem _root_.LieAlgebra.Dim3.Family.det_ade₁ (hα : α ≠ 0) : LinearMap.det (ade₁Restr α β) = -α

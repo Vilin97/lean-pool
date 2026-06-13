@@ -105,11 +105,10 @@ theorem of_contDiffOn_holderWith {f : E → F} {s : Set E} {k : ℕ} {α : I} {a
     ContDiffMoreiraHolderAt k α f a where
   contDiffAt := hf.contDiffAt hs
   isBigO := .of_bound C <| mem_of_superset hs fun x hx ↦ by
-    have hdist := hd.dist_le hx (mem_of_mem_nhds hs)
     have hdist' :
         dist (iteratedFDeriv ℝ k f x) (iteratedFDeriv ℝ k f a) ≤
           (C : ℝ) * dist x a ^ (α : ℝ) := by
-      convert hdist using 2
+      convert hd.dist_le hx (mem_of_mem_nhds hs) using 2
     simpa [Real.abs_rpow_of_nonneg, ← dist_eq_norm, dist_nonneg] using hdist'
 
 theorem fst {k : ℕ} {α : I} {a : E × F} : ContDiffMoreiraHolderAt k α Prod.fst a :=

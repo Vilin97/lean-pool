@@ -636,6 +636,13 @@ def IsNormalDiag (g : Matrix (Fin k) (Fin k) K) : Prop :=
     Monotone f ∧ (∀ (j : Fin r), g (j.castLE hr) (j.castLE hr) = ϖ ^ f j) ∧
       ∀ (j : Fin k) (_ : r ≤ j), g j j = 0
 
+omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
+include hϖ in
+private lemma irreducible_coe_ne_zero : (↑ϖ : K) ≠ 0 := by
+  intro hzero
+  rw [Subring.coe_eq_zero_iff] at hzero
+  exact hϖ.ne_zero hzero
+
 include hϖ in
 lemma exists_normalization_of_isMonotoneDiag [IsDiscreteValuationRing R] (g : GL (Fin k) K)
     (h : IsMonotoneDiag (R := R) g.val) :
@@ -673,17 +680,9 @@ def cartanDiag {k : ℕ} (f : Fin k → ℤ) : GL (Fin k) K :=
     val := ϖ ^ f j
     inv := ϖ ^ (-f j)
     val_inv := by
-      have hzero : (↑ϖ : K) ≠ 0 := by
-        intro hzero
-        rw [Subring.coe_eq_zero_iff] at hzero
-        exact Irreducible.ne_zero hϖ hzero
-      rw [← zpow_add₀ hzero, add_neg_cancel, zpow_zero]
+      rw [← zpow_add₀ (irreducible_coe_ne_zero ϖ hϖ), add_neg_cancel, zpow_zero]
     inv_val := by
-      have hzero : (↑ϖ : K) ≠ 0 := by
-        intro hzero
-        rw [Subring.coe_eq_zero_iff] at hzero
-        exact Irreducible.ne_zero hϖ hzero
-      rw [← zpow_add₀ hzero, neg_add_cancel, zpow_zero]
+      rw [← zpow_add₀ (irreducible_coe_ne_zero ϖ hϖ), neg_add_cancel, zpow_zero]
   }
   GL.diagonal d
 
@@ -707,10 +706,7 @@ lemma conj_cartanDiag_zero_zero {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) 
   simp only [Fin.isValue, zpow_neg, Units.inv_mk]
   rw [mul_inv_cancel₀]
   · simp
-  · apply zpow_ne_zero
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
+  · exact zpow_ne_zero _ (irreducible_coe_ne_zero ϖ hϖ)
 
 omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
 lemma conj_cartanDiag_one_one {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K) (f : Fin 2 → ℤ) :
@@ -719,21 +715,14 @@ lemma conj_cartanDiag_one_one {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K)
   simp only [Fin.isValue, zpow_neg, Units.inv_mk]
   rw [mul_inv_cancel₀]
   · simp
-  · apply zpow_ne_zero
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
+  · exact zpow_ne_zero _ (irreducible_coe_ne_zero ϖ hϖ)
 
 omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
 lemma conj_cartanDiag_one_zero {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K) (f : Fin 2 → ℤ) :
     MulAut.conj (cartanDiag ϖ hϖ f) g 1 0 = ϖ.val ^ (f 1 - f 0) * g 1 0 := by
   rw [cartanDiag, Matrix.GL.conj_diagonal_apply]
   simp only [Fin.isValue, zpow_neg, Units.inv_mk, mul_eq_mul_right_iff]
-  have hzero : (↑ϖ : K) ≠ 0 := by
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
-  rw [zpow_sub₀ hzero]
+  rw [zpow_sub₀ (irreducible_coe_ne_zero ϖ hϖ)]
   ring_nf
   left
   trivial
@@ -743,11 +732,7 @@ lemma conj_cartanDiag_zero_one {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K
     MulAut.conj (cartanDiag ϖ hϖ f) g 0 1 = ϖ.val ^ (f 0 - f 1) * g 0 1 := by
   rw [cartanDiag, Matrix.GL.conj_diagonal_apply]
   simp only [Fin.isValue, zpow_neg, Units.inv_mk, mul_eq_mul_right_iff]
-  have hzero : (↑ϖ : K) ≠ 0 := by
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
-  rw [zpow_sub₀ hzero]
+  rw [zpow_sub₀ (irreducible_coe_ne_zero ϖ hϖ)]
   ring_nf
   left
   trivial

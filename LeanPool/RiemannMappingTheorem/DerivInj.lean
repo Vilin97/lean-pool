@@ -45,8 +45,7 @@ lemma crucial (hU : IsOpen U) (hcr : closedBall c r ⊆ U) (hz₀ : z₀ ∈ bal
     have e1 : DifferentiableAt ℂ (fun y => y - z₀) z := differentiableAt_id.sub_const z₀
     have e2 : DifferentiableAt ℂ g z := h1.differentiableAt e0
     have h5 : deriv f z = g z + (z - z₀) * deriv g z := by
-      rw [h4, deriv_fun_mul e1 e2]
-      simp
+      simp [h4, deriv_fun_mul e1 e2]
     have e3 : g z ≠ 0 := h2 z (sphere_subset_closedBall hz)
     have := h10 z hz
     field_simp

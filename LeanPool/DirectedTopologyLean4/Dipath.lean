@@ -292,10 +292,7 @@ def dipathProduct (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath y₀ y₁) : Dipath
   toFun := fun t => (γ₁ t, γ₂ t)
   source' := by simp
   target' := by simp
-  dipath_toPath := by
-      constructor
-      { convert γ₁.dipath_toPath }
-      { convert γ₂.dipath_toPath }
+  dipath_toPath := ⟨γ₁.dipath_toPath, γ₂.dipath_toPath⟩
 
 /-- Given a directed path in a product space, we can project it to its first coordinate to
 obtain a directed path -/

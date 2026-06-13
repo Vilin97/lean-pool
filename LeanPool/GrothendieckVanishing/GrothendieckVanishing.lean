@@ -134,11 +134,10 @@ theorem GrothendieckVanishing (X : TopCat.{u}) [NoetherianSpace X]
       (n : ℕ) (F : TopCat.Sheaf AddCommGrpCat.{u} X),
       topologicalKrullDim X = d → n > d →
         Subsingleton (Sheaf.H F n))
-    (topologicalKrullDim X) (fun d ih X _ n F hd hn ↦ by
+    (topologicalKrullDim X) (fun d ih X _ n F hd hn ↦
       -- Reduce to irreducible X
-      exact
-        grothendieck_vanishing_of_irreducible X n (hd ▸ hn) F
-          (fun Y _ _ m G hle hY ↦ by
+      grothendieck_vanishing_of_irreducible X n (hd ▸ hn) F
+        (fun Y _ _ m G hle hY ↦ by
             by_cases hposY : topologicalKrullDim Y > 0
             · exact irreducible_pos_vanishing (F := G.obj) G.property hposY m hY
                 (by

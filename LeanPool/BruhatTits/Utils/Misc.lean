@@ -61,9 +61,8 @@ lemma exp_zero_of_zpow_eq_one {a : Γ₀} (h : a < 1) {n : ℤ} (han : a ^ n = 1
   · subst ha
     exact exp_zero_of_zpow_eq_one' han
   · apply le_antisymm
-    · apply exp_le_exp_of_pow_le_pow a h ha
-      simp [han]
-    · apply exp_le_exp_of_pow_le_pow a h ha
+    all_goals
+      apply exp_le_exp_of_pow_le_pow a h ha
       simp [han]
 
 lemma Pi.basisFun_eq_single {ι : Type*} [Finite ι] [DecidableEq ι] {R : Type*}

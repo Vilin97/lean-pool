@@ -229,8 +229,7 @@ lemma trans_first_case {a₀ a₁ : I × X} {γ : Path a₀ a₁} (γ_dipath : I
   have h : ∀ (t : I) (x : X), (ht : (t : ℝ) ≤ 2⁻¹) → Γ (t, x)
       = F (⟨2 * (t : ℝ), double_mem_I ht⟩, x) := by
     intros t x ht
-    rw [Γ_def]
-    rw [ContinuousMap.Homotopy.trans_apply (dihomToHom F) (dihomToHom G) (t, x)]
+    rw [Γ_def, ContinuousMap.Homotopy.trans_apply (dihomToHom F) (dihomToHom G) (t, x)]
     simp [ht]
     rfl
   have : (t₀ : ℝ) ≤ 2⁻¹ := by
@@ -256,8 +255,7 @@ lemma trans_second_case {a₀ a₁ : I × X} {γ : Path a₀ a₁} (γ_dipath : 
   have h : ∀ (t : I) (x : X), (ht : (2⁻¹ : ℝ) ≤ ↑t) →
     Γ (t, x) = G (⟨2 * (t : ℝ) - 1, double_sub_one_mem_I ht⟩, x) := by
     intros t x ht
-    rw [Γ_def]
-    rw [ContinuousMap.Homotopy.trans_apply (dihomToHom F) (dihomToHom G) (t, x)]
+    rw [Γ_def, ContinuousMap.Homotopy.trans_apply (dihomToHom F) (dihomToHom G) (t, x)]
     split_ifs with ht'
     · simp at ht'
       simp [show (t : ℝ) = 2⁻¹ by linarith]
@@ -292,8 +290,7 @@ def trans {f₂ : D(X,Y)} (F : Dihomotopy f₀ f₁) (G : Dihomotopy f₁ f₂) 
     exact trans_second_case F G γ_dipath ht₀
   · -- Complicated
     push Not at ht₁
-    obtain ⟨T, hT⟩ := has_T_half (γ.map continuous_fst) ht₀ ht₁
-    obtain ⟨hT₀, ⟨hT₁, hT_half⟩⟩ := hT
+    obtain ⟨T, hT₀, hT₁, hT_half⟩ := has_T_half (γ.map continuous_fst) ht₀ ht₁
     /- Split γ into two parts (one with image in [0, 2⁻¹] × X, the other with image in [2⁻¹, 1] × X)
     -/
     set a₁ := SplitDipath.FirstPart γ_as_dipath T

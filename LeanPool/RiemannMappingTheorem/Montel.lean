@@ -46,8 +46,8 @@ lemma UniformlyBoundedOn.equicontinuousOn (h1 : UniformlyBoundedOn F U) (hU : Is
   have : ∃ M > 0, ∀ i, MapsTo (_root_.deriv (F i)) (closedBall z δ) (closedBall 0 M) := by
     obtain ⟨Q, hQ1, hQ2⟩ := h1.deriv hU h2 (closedBall z δ) ⟨h, isCompact_closedBall _ _⟩
     obtain ⟨M, hM⟩ := hQ1.isBounded.subset_closedBall 0
-    refine ⟨M ⊔ 1, by simp, fun i => ?_⟩
-    exact ((hQ2 i).mono_right hM).mono_right <| closedBall_subset_closedBall le_sup_left
+    exact ⟨M ⊔ 1, by simp, fun i =>
+      ((hQ2 i).mono_right hM).mono_right <| closedBall_subset_closedBall le_sup_left⟩
   obtain ⟨M, hMp, hM⟩ := this
   rw [equicontinuousAt_iff]
   rintro ε hε
@@ -80,8 +80,8 @@ theorem isCompact_𝓑 (hU : IsOpen U) (hQ : ∀ K ∈ compacts U, IsCompact (Q 
     ⟨Q K, hQ K hK, fun f => f.2.2 K hK _hx⟩
   rw [isCompact_iff_compactSpace]
   refine ArzelaAscoli.compactSpace_of_isClosedEmbedding (fun K hK => hK.2) ?_ l1 l2
-  refine ⟨⟨by tauto, fun f g => Subtype.ext⟩, ?_⟩
-  simpa [range, UniformOnFun.ofFun] using isClosed_𝓑 hU hQ
+  exact ⟨⟨by tauto, fun f g => Subtype.ext⟩,
+    by simpa [range, UniformOnFun.ofFun] using isClosed_𝓑 hU hQ⟩
 
 theorem montel (hU : IsOpen U) (h1 : UniformlyBoundedOn F U)
     (h2 : ∀ i, DifferentiableOn ℂ (F i) U) :

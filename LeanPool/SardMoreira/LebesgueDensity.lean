@@ -181,8 +181,7 @@ theorem MeasureTheory.Measure.AbsolutelyContinuous.exists_pos_forall_lt_imp_lt
       · apply hδ' _ inter_subset_right
         grw [inter_subset_left, ← hδδ']
         assumption
-    _ ≤ ε := by
-      grw [hδε, ENNReal.add_halves]
+    _ ≤ ε := by grw [hδε, ENNReal.add_halves]
 
 -- TODO: write a readable docstring
 -- TODO: move some code to lemmas
@@ -348,8 +347,7 @@ theorem exists_pos_forall_measure_le_exists_mem_sphere_dist_lt_volume_lineMap_me
         dist (a + r • y) x = dist y (r⁻¹ • (-a + x)) * r := by
           rw [mul_comm, ← NNReal.dist_smul, ← dist_add_left (-a)]
           simp (disch := positivity)
-        _ < ε * r := by
-          gcongr
+        _ < ε * r := by gcongr
     · simpa (disch := positivity) [AffineMap.lineMap_apply_module', mem_inv_smul_set_iff₀,
         mem_neg_vadd_set_iff, add_comm, smul_comm r] using hyε
 

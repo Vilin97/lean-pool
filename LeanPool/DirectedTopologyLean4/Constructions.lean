@@ -62,8 +62,7 @@ topological space
     rintro x y z γ₁ γ₂ hγ₁ hγ₂
     rw [Path.map_trans γ₁ γ₂ hf]
     exact isDipath_concat hγ₁ hγ₂
-  isDipath_reparam := fun {x y : α} γ t₀ t₁ φ hφ_mono hγ => by
-    exact isDipath_reparam hφ_mono hγ
+  isDipath_reparam := fun {x y : α} γ t₀ t₁ φ hφ_mono hγ => isDipath_reparam hφ_mono hγ
 
 instance DirectedSubspace {α : Type u} {p : α → Prop} [DirectedSpace α] :
   DirectedSpace (Subtype p) :=
@@ -108,10 +107,8 @@ instance DirectedProduct {α : Type u} {β : Type v} [t₁ : DirectedSpace α] [
   isDipath_constant := fun ⟨x₁, x₂⟩ => ⟨isDipath_constant x₁, isDipath_constant x₂⟩
   isDipath_concat := by
       rintro _ _ _ p q ⟨p₁_dipath, p₂_dipath⟩ ⟨q₁_dipath, q₂_dipath⟩
-      convert (And.intro (isDipath_concat p₁_dipath q₁_dipath)
-        (isDipath_concat p₂_dipath q₂_dipath))
-      · rw [Path.map_trans]
-      rw [Path.map_trans]
+      rw [Path.map_trans, Path.map_trans]
+      exact ⟨isDipath_concat p₁_dipath q₁_dipath, isDipath_concat p₂_dipath q₂_dipath⟩
   isDipath_reparam := fun {a b : α × β} γ t₀ t₁ φ hφ_mono ⟨γ₁_dipath, γ₂_dipath⟩ =>
       ⟨isDipath_reparam hφ_mono γ₁_dipath, isDipath_reparam hφ_mono γ₂_dipath⟩
 

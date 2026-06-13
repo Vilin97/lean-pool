@@ -217,21 +217,17 @@ lemma coveredPartwise_first_vpart {x y : X} {γ₁ γ₂ : Dipath x y} {F : Dipa
 -/
 lemma spv_aux₁_coed {t : ℝ} {n i : ℕ} (_ : i < n.succ) (ht : (i : ℝ) / (n.succ : ℝ) ≤ t) :
     (i+1 : ℝ) / (n+2 : ℝ) ≤ (1 - 1/(n+1+1)) * t + (1/(n+1+1)) := by
-  have h₀ : 0 ≤ (i : ℝ)/(n.succ : ℝ) := by
-    apply div_nonneg
-    · exact Nat.cast_nonneg i
-    exact Nat.cast_nonneg n.succ
+  have h₀ : 0 ≤ (i : ℝ)/(n.succ : ℝ) := div_nonneg (Nat.cast_nonneg i) (Nat.cast_nonneg n.succ)
   have h₁ : 0 ≤ t := le_trans h₀ ht
   have h₂ : (n.succ : ℝ) > 0 := Nat.cast_pos.mpr (Nat.succ_pos n)
   have h₃ : 0 ≤ (n : ℝ) + 1 := by
-    apply le_of_lt
     rw [Nat.cast_succ _] at h₂
-    exact h₂
+    exact le_of_lt h₂
   have hne : ((n : ℝ) + 1 + 1) ≠ 0 := by positivity
   rw [show (↑n.succ : ℝ) = (n : ℝ) + 1 from by push_cast; ring] at ht h₂
   have h₃' : ((n : ℝ) + 1) > 0 := h₂
-  rw [show ((n : ℝ) + 2) = ((n : ℝ) + 1 + 1) from by ring]
-  rw [div_le_iff₀ (by positivity : (0 : ℝ) < (n : ℝ) + 1 + 1)]
+  rw [show ((n : ℝ) + 2) = ((n : ℝ) + 1 + 1) from by ring,
+    div_le_iff₀ (by positivity : (0 : ℝ) < (n : ℝ) + 1 + 1)]
   have ht' : (i : ℝ) ≤ t * (↑n + 1) := (div_le_iff₀ h₃').mp ht
   have hexpand : ((1 - 1 / ((n : ℝ) + 1 + 1)) * t + 1 / ((n : ℝ) + 1 + 1)) * ((n : ℝ) + 1 + 1) =
       ((n : ℝ) + 1) * t + 1 := by
@@ -261,8 +257,8 @@ lemma spv_aux₂_coed {t : ℝ} {n i : ℕ} (_ : i < n.succ) (_ : 0 ≤ t)
   rw [show (↑n.succ : ℝ) = (n : ℝ) + 1 from by push_cast; ring] at h₀ ht
   rw [show (↑i.succ : ℝ) = (i : ℝ) + 1 from by push_cast; ring] at ht
   have hne : ((n : ℝ) + 1 + 1) ≠ 0 := by positivity
-  rw [show ((n : ℝ) + 2) = ((n : ℝ) + 1 + 1) from by ring]
-  rw [le_div_iff₀ (by positivity : (0 : ℝ) < (n : ℝ) + 1 + 1)]
+  rw [show ((n : ℝ) + 2) = ((n : ℝ) + 1 + 1) from by ring,
+    le_div_iff₀ (by positivity : (0 : ℝ) < (n : ℝ) + 1 + 1)]
   have ht' : t * ((n : ℝ) + 1) ≤ (i : ℝ) + 1 := (le_div_iff₀ h₀).mp ht
   have hexpand : ((1 - 1 / ((n : ℝ) + 1 + 1)) * t + 1 / ((n : ℝ) + 1 + 1)) * ((n : ℝ) + 1 + 1) =
       ((n : ℝ) + 1) * t + 1 := by

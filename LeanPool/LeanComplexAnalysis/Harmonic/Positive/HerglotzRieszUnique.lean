@@ -40,8 +40,8 @@ lemma moments_eq_integers (μ₁ μ₂ : ProbabilityMeasure (sphere (0 : ℂ) 1)
     ∀ n : ℤ, ∫ x : sphere (0 : ℂ) 1, x.val ^ n ∂μ₁ = ∫ x : sphere (0 : ℂ) 1, x.val ^ n ∂μ₂ := by
   intro n
   by_cases h_neg : n < 0
-  · obtain ⟨m, rfl⟩ : ∃ m : ℕ, n = -m := by
-      exact ⟨Int.toNat (-n), by rw [Int.toNat_of_nonneg (neg_nonneg.mpr h_neg.le)]; ring⟩
+  · obtain ⟨m, rfl⟩ : ∃ m : ℕ, n = -m :=
+      ⟨Int.toNat (-n), by rw [Int.toNat_of_nonneg (neg_nonneg.mpr h_neg.le)]; ring⟩
     have h_inv : ∀ x : sphere (0 : ℂ) 1, x ^ (-m : ℤ) = starRingEnd ℂ (x ^ m) := by
       simp only [mem_sphere_zero_iff_norm, Subtype.forall]
       intro x hx
@@ -260,6 +260,17 @@ lemma measure_eq_of_moments (μ₁ μ₂ : Measure (sphere (0 : ℂ) 1))
     · exact Eq.symm (by erw [integral_ofReal]; norm_cast)
   exact ext_of_forall_integral_eq_of_IsFiniteMeasure fun f ↦ h_eq f.toContinuousMap
 
+/-- A bounded coefficient sequence times `z ^ (n + 1)` is summable for `‖z‖ < 1`. -/
+private lemma summable_pow_succ_mul {c : ℕ → ℂ} (hc : ∃ M, ∀ n, ‖c n‖ ≤ M)
+    {z : ℂ} (hz : ‖z‖ < 1) : Summable (fun n => z ^ (n + 1) * c n) := by
+  have h_summable : Summable (fun n => ‖z‖ ^ (n + 1) * ‖c n‖) :=
+    Summable.of_nonneg_of_le (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _)
+      (norm_nonneg _)) (fun n => mul_le_mul_of_nonneg_left (hc.choose_spec n)
+        (pow_nonneg (norm_nonneg _) _))
+          (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
+            hz |> Summable.comp_injective <| Nat.succ_injective)
+  exact Summable.of_norm <| by simpa using h_summable
+
 /-- If two power series are equal on the unit disc, then their coefficients are equal. -/
 lemma coeffs_eq_of_series_eq (c1 c2 : ℕ → ℂ)
     (hc1 : ∃ M, ∀ n, ‖c1 n‖ ≤ M) (hc2 : ∃ M, ∀ n, ‖c2 n‖ ≤ M)
@@ -272,21 +283,8 @@ lemma coeffs_eq_of_series_eq (c1 c2 : ℕ → ℂ)
     · congr
       ext n
       ring
-    · have h_summable : Summable (fun n => ‖z‖ ^ (n + 1) * ‖c1 n‖) := by
-        exact Summable.of_nonneg_of_le (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _)
-          (norm_nonneg _)) (fun n => mul_le_mul_of_nonneg_left (hc1.choose_spec n)
-            (pow_nonneg (norm_nonneg _) _))
-              (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
-                hz |> Summable.comp_injective <| Nat.succ_injective)
-      exact Summable.of_norm <| by simpa using h_summable
-    · have h_summable : Summable (fun n => ‖z‖ ^ (n + 1) * ‖c2 n‖) := by
-        exact Summable.of_nonneg_of_le (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _)
-          (norm_nonneg _))
-            (fun n => mul_le_mul_of_nonneg_left (hc2.choose_spec n)
-              (pow_nonneg (norm_nonneg _) _))
-                (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
-                  hz |> Summable.comp_injective <| Nat.succ_injective)
-      exact Summable.of_norm <| by simpa using h_summable
+    · exact summable_pow_succ_mul hc1 hz
+    · exact summable_pow_succ_mul hc2 hz
   induction n using Nat.strong_induction_on with
   | _ n ih =>
   have h_limit : Filter.Tendsto (fun z : ℂ => (∑' k, z ^ (k + 1) * (c1 k - c2 k)) / z ^ (n + 1))
@@ -297,25 +295,8 @@ lemma coeffs_eq_of_series_eq (c1 c2 : ℕ → ℂ)
       rw [← Summable.sum_add_tsum_nat_add]
       rotate_left
       · use n + 1
-      · have h_summable : Summable (fun k => z ^ (k + 1) * (c1 k)) ∧
-                          Summable (fun k => z ^ (k + 1) * (c2 k)) := by
-          have h_summable : Summable (fun k => ‖z‖ ^ (k + 1) * ‖c1 k‖) ∧
-                            Summable (fun k => ‖z‖ ^ (k + 1) * ‖c2 k‖) :=
-                ⟨Summable.of_nonneg_of_le
-                  (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _) (norm_nonneg _))
-                  (fun n => mul_le_mul_of_nonneg_left (hc1.choose_spec n)
-                                                      (pow_nonneg (norm_nonneg _) _))
-                  (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
-                                    hz |> Summable.comp_injective <| Nat.succ_injective),
-                Summable.of_nonneg_of_le
-                  (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _) (norm_nonneg _))
-                  (fun n => mul_le_mul_of_nonneg_left (hc2.choose_spec n)
-                                                      (pow_nonneg (norm_nonneg _) _))
-                  (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
-                                    hz |> Summable.comp_injective <| Nat.succ_injective)⟩
-          exact ⟨Summable.of_norm <| by simpa using h_summable.1,
-                  Summable.of_norm <| by simpa using h_summable.2⟩
-        simpa only [mul_sub] using h_summable.1.sub h_summable.2
+      · simpa only [mul_sub] using
+          (summable_pow_succ_mul hc1 hz).sub (summable_pow_succ_mul hc2 hz)
       · simp only [Finset.sum_range_succ, add_assoc, Nat.reduceAdd, add_eq_right]
         exact Finset.sum_eq_zero fun i hi => by simp [ih i (Finset.mem_range.mp hi)]
     have h_factor : Filter.Tendsto
@@ -480,18 +461,8 @@ theorem HerglotzRiesz_representation_uniqueness
     apply_rules [measure_eq_of_moments]
     ext (_ | k) <;> simp only [star_pow, RCLike.star_def, pow_zero, integral_const, probReal_univ,
       one_smul] at h_coeffs ⊢
-    convert congr_arg Star.star (h_coeffs k) using 1
-    · rw [Complex.star_def]
-      rw [show (starRingEnd ℂ) (∫ (x : sphere (0 : ℂ) 1),
-              (starRingEnd ℂ) (x : ℂ) ^ (k + 1) ∂↑μ₁) =
-            ∫ (x : sphere (0 : ℂ) 1), (starRingEnd ℂ) ((starRingEnd ℂ) (x : ℂ) ^ (k + 1)) ∂↑μ₁
-          from integral_conj.symm]
-      simp
-    · rw [Complex.star_def]
-      rw [show (starRingEnd ℂ) (∫ (x : sphere (0 : ℂ) 1),
-              (starRingEnd ℂ) (x : ℂ) ^ (k + 1) ∂↑μ₂) =
-            ∫ (x : sphere (0 : ℂ) 1), (starRingEnd ℂ) ((starRingEnd ℂ) (x : ℂ) ^ (k + 1)) ∂↑μ₂
-          from integral_conj.symm]
+    convert congr_arg Star.star (h_coeffs k) using 1 <;>
+      rw [Complex.star_def, ← integral_conj] <;>
       simp
   exact Subtype.ext h
 

@@ -112,8 +112,8 @@ theorem sHom_stalk_bijective_at
     have hab' : n • R.germ U x hxU s = m • R.germ U x hxU s :=
       h_left.symm.trans (hab.trans h_right)
     have h_i : n • i_x (R.germ U x hxU s) =
-        m • i_x (R.germ U x hxU s) := by
-      exact (map_zsmul i_x n _).symm.trans
+        m • i_x (R.germ U x hxU s) :=
+      (map_zsmul i_x n _).symm.trans
         ((congrArg i_x hab').trans (map_zsmul i_x m _))
     let genV := (TopCat.Sheaf.zeroOutsideInt V).presheaf.germ V x (hUV hxU)
       (TopCat.Sheaf.zeroOutsideInt.generator V)
@@ -398,8 +398,8 @@ theorem closedComplementVanishing
   let CY := ((TopCat.Sheaf.pullback AddCommGrpCat.{u} closedIncl).obj Csh)
   let S := closedImmersionSES (Z := Y) (hZ := hYcl) Csh
   have hSE := closedImmersionSES_shortExact (Z := Y) (hZ := hYcl) Csh
-  have hSX₁_zero : IsZero S.X₁ := by
-    exact sheaf_isZero_of_zero_stalks X S.X₁.property (fun x a ↦ by
+  have hSX₁_zero : IsZero S.X₁ :=
+    sheaf_isZero_of_zero_stalks X S.X₁.property (fun x a ↦ by
       by_cases hxY : x ∈ Y
       · haveI : IsIso ((TopCat.Presheaf.stalkFunctor AddCommGrpCat.{u} x).map S.g.hom) := by
           change IsIso
@@ -500,8 +500,8 @@ theorem subsheaf_zeroOutsideInt_vanishing
     haveI : Mono j := hj_mono
     let jsh : TopCat.Sheaf.zeroOutsideInt V' ⟶
         (⟨R, hRsh⟩ : TopCat.Sheaf AddCommGrpCat.{u} X) := ObjectProperty.homMk j
-    haveI : Mono jsh := by
-      exact (Sheaf.Hom.mono_iff_presheaf_mono
+    haveI : Mono jsh :=
+      (Sheaf.Hom.mono_iff_presheaf_mono
         (J := Opens.grothendieckTopology X) (D := AddCommGrpCat.{u}) jsh).2
           (inferInstanceAs (Mono j))
     let C : TopCat.Sheaf AddCommGrpCat.{u} X :=

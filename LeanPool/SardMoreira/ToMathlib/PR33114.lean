@@ -310,8 +310,7 @@ theorem _root_.WithRPowDist.ediam_image_val (s : Set (WithRPowDist X α hα₀ h
 
 @[simp]
 theorem _root_.WithRPowDist.ediam_preimage_mk (s : Set (WithRPowDist X α hα₀ hα₁)) :
-    ediam (mk ⁻¹' s) = ediam s ^ α⁻¹ := by
-  rw [← image_val_eq_preimage, ediam_image_val]
+    ediam (mk ⁻¹' s) = ediam s ^ α⁻¹ := by rw [← image_val_eq_preimage, ediam_image_val]
 
 @[simp]
 theorem _root_.WithRPowDist.ediam_preimage_val (s : Set X) :

@@ -36,9 +36,8 @@ lemma isClosed_𝓗 (hU : IsOpen U) : IsClosed (𝓗 U) := by
   haveI : (𝓝 f ⊓ 𝓟 (𝓗 U)).NeBot := hf
   have hconv : TendstoLocallyUniformlyOn (id : 𝓒 U → 𝓒 U) f (𝓝 f ⊓ 𝓟 (𝓗 U)) U :=
     (tendsto_𝓒_iff hU).1 (tendsto_id.mono_left inf_le_left)
-  have hF : ∀ᶠ (g : 𝓒 U) in 𝓝 f ⊓ 𝓟 (𝓗 U), DifferentiableOn ℂ g U := by
-    rw [eventually_inf_principal]
-    exact Eventually.of_forall fun g hg => hg
+  have hF : ∀ᶠ (g : 𝓒 U) in 𝓝 f ⊓ 𝓟 (𝓗 U), DifferentiableOn ℂ g U :=
+    eventually_inf_principal.2 (Eventually.of_forall fun g hg => hg)
   exact hconv.differentiableOn hF hU
 
 lemma ContinuousOn_uderiv (hU : IsOpen U) : ContinuousOn uderiv (𝓗 U) := by

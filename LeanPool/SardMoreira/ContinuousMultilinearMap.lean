@@ -102,8 +102,7 @@ theorem const_apply_sub_const_apply_isBigO [Finite ι] (f : ContinuousMultilinea
   have := Fintype.ofFinite ι
   refine .trans (.of_norm_le fun _ ↦ norm_image_sub_le _ _ _) ?_
   simp only [← Asymptotics.isBigO_one_iff ℝ, ← Asymptotics.isBigO_pi] at *
-  have hsub_pi : (fun a ↦ g₁ a - g₂ a) =O[l] B := by
-    simpa [Pi.sub_apply] using hsub
+  have hsub_pi : (fun a ↦ g₁ a - g₂ a) =O[l] B := by simpa [Pi.sub_apply] using hsub
   simpa using hg₁.prod_left hg₂ |>.norm_left |>.pow (Fintype.card ι - 1)
     |>.const_mul_left (‖f‖ * Fintype.card ι) |>.mul hsub_pi.norm_norm
 

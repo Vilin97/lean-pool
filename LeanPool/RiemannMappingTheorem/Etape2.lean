@@ -82,11 +82,11 @@ lemma non_injective_schwarz {f : ℂ → ℂ} (f_diff : DifferentiableOn ℂ f �
   have g_diff : DifferentiableOn ℂ g 𝔻 := (φ u_in_𝔻).is_diff.comp f_diff f_img
   have g_maps : MapsTo g 𝔻 𝔻 := (φ u_in_𝔻).maps_to.comp f_img
   have g_0_eq_0 : g 0 = 0 := by simp [g, φ, u]
+  have h2 : MapsTo g (ball 0 1) (closedBall (g 0) 1) := by
+    rw [g_0_eq_0]
+    exact g_maps.mono_right ball_subset_closedBall
   by_cases h : ‖deriv g 0‖ = 1
   case pos =>
-    have h2 : MapsTo g (ball 0 1) (closedBall (g 0) 1) := by
-      rw [g_0_eq_0]
-      exact g_maps.mono_right ball_subset_closedBall
     have hdiv : ‖dslope g 0 0‖ = 1 / 1 := by
       rw [dslope_same, div_one]
       exact h
@@ -102,11 +102,8 @@ lemma non_injective_schwarz {f : ℂ → ℂ} (f_diff : DifferentiableOn ℂ f �
       simp [g'0_ne_0]
     exact absurd g_inj (mt InjOn.of_comp f_noninj)
   case neg =>
-    have g_maps_cl : MapsTo g (ball 0 1) (closedBall (g 0) 1) := by
-      rw [g_0_eq_0]
-      exact g_maps.mono_right ball_subset_closedBall
     have g'0_lt_1 : ‖deriv g 0‖ < 1 :=
-      Ne.lt_of_le h (norm_deriv_le_one_of_mapsTo_ball g_diff g_maps_cl zero_lt_one)
+      Ne.lt_of_le h (norm_deriv_le_one_of_mapsTo_ball g_diff h2 zero_lt_one)
     have g'0_eq_mul : deriv g 0 = deriv (φ u_in_𝔻) u * deriv f 0 :=
       deriv_comp 0 ((φ u_in_𝔻).is_diff.differentiableAt (isOpen_ball.mem_nhds u_in_𝔻))
         (f_diff.differentiableAt (ball_mem_nhds _ zero_lt_one))

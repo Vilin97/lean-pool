@@ -127,10 +127,9 @@ theorem sub_isLittleO_norm_rpow_add_one_of_fderiv_of_density_point [FiniteDimens
         fderiv ℝ g =ᶠ[𝓝 a] (e ∘L fderiv ℝ f ·) := hdg_eq
         _ =O[𝓝 a] (‖e‖ * ‖fderiv ℝ f ·‖) :=
           .of_norm_le fun _ ↦ ContinuousLinearMap.opNorm_comp_le _ _
-        _ =O[𝓝 a] fderiv ℝ f := by
-          refine .of_norm_right <| .const_mul_left (isBigO_refl _ _) _
-        _ =O[𝓝 a] (‖· - a‖ ^ r) := by
-          exact hderiv
+        _ =O[𝓝 a] fderiv ℝ f :=
+          .of_norm_right <| .const_mul_left (isBigO_refl _ _) _
+        _ =O[𝓝 a] (‖· - a‖ ^ r) := hderiv
     have hg₀ : fderiv ℝ g =ᶠ[𝓝[s] a] 0 := by
       filter_upwards [mem_nhdsWithin_of_mem_nhds hdg_eq, hs] with x hx₁ hx₂
       simp [hx₁, hx₂]

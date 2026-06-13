@@ -325,9 +325,9 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
   have h₃ : (n' : ℝ) - (d' : ℝ) = (↑(n * k - 1) : ℝ) + 1 := by
     rw [←Nat.cast_sub (le_of_lt <| Nat.lt_of_succ_lt_succ h₁), ←Nat.cast_succ,
       ← (Nat.pred_eq_sub_one (n := n * k))]
-    rw [Nat.succ_pred_eq_of_pos (Nat.mul_pos hn hk), n_def, d_def, Nat.sub_sub, add_comm 1 (k-1)]
-    rw [Nat.add_one (k-1), Nat.sub_one k, Nat.succ_pred_eq_of_pos hk, add_mul, one_mul]
-    rw [Nat.add_sub_assoc (le_refl k), Nat.sub_self]
+    rw [Nat.succ_pred_eq_of_pos (Nat.mul_pos hn hk), n_def, d_def, Nat.sub_sub, add_comm 1 (k-1),
+      Nat.add_one (k-1), Nat.sub_one k, Nat.succ_pred_eq_of_pos hk, add_mul, one_mul,
+      Nat.add_sub_assoc (le_refl k), Nat.sub_self]
     rfl
   by_cases h : i < k
   · -- Use the covering of the first part of γ
@@ -388,9 +388,8 @@ lemma covered_partwise_trans {hX : X₀ ∪ X₁ = Set.univ} {n : ℕ} {x₀ x�
     ring
   by_cases h : i < n.succ
   · rw [←SplitProperties.firstPart_range_interval_partial_coe (γ₁.trans γ₂) h_lt h]
-    rw [SplitProperties.firstPart_eq_of_split_point_eq (γ₁.trans γ₂) h₁]
-    rw [SplitProperties.first_part_trans γ₁ γ₂]
-    rw [Dipath.cast_image, Dipath.cast_image]
+    rw [SplitProperties.firstPart_eq_of_split_point_eq (γ₁.trans γ₂) h₁,
+      SplitProperties.first_part_trans γ₁ γ₂, Dipath.cast_image, Dipath.cast_image]
     exact covered_by_intervals_of_covered_partwise n hγ₁ i h
   · set k := i - n.succ with k_def
     push Not at h
@@ -403,10 +402,9 @@ lemma covered_partwise_trans {hX : X₀ ∪ X₁ = Set.univ} {n : ℕ} {x₀ x�
     have : i < n.succ + n.succ := by linarith
     have hk : k < n.succ := k_def ▸ (tsub_lt_iff_left h).mpr this
     have hk' : k < (n + n).succ - n := hn.symm ▸ hk
-    rw [←SplitProperties.secondPart_range_partial_interval_coe (γ₁.trans γ₂) h_lt hk']
-    rw [SplitProperties.secondPart_eq_of_split_point_eq (γ₁.trans γ₂) h₁]
-    rw [SplitProperties.second_part_trans γ₁ γ₂]
-    rw [Dipath.cast_image, Dipath.cast_image, hn']
+    rw [←SplitProperties.secondPart_range_partial_interval_coe (γ₁.trans γ₂) h_lt hk',
+      SplitProperties.secondPart_eq_of_split_point_eq (γ₁.trans γ₂) h₁,
+      SplitProperties.second_part_trans γ₁ γ₂, Dipath.cast_image, Dipath.cast_image, hn']
     exact covered_by_intervals_of_covered_partwise n hγ₂ k hk
 
 lemma has_interval_division {X₁ X₂ : Set X} (hX : X₁ ∪ X₂ = Set.univ) (X₁_open : IsOpen X₁)

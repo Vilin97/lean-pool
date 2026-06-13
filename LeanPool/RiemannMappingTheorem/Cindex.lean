@@ -88,10 +88,9 @@ lemma eventually_deriv_div_self_eq (hp : HasFPowerSeriesAt f p z₀) (h : p ≠ 
   obtain ⟨r, h2⟩ := hp.has_fpower_series_iterate_dslope_fslope p.order
   have lh1 := h2.differentiableOn.eventually_differentiableAt (Metric.eball_mem_nhds _ h2.r_pos)
   have lh2 := hp.dslope_order_eventually_ne_zero h
-  have lh3 : ∀ᶠ z in 𝓝 z₀, f =ᶠ[𝓝 z] fun w => (w - z₀) ^ p.order * g w := by
-    exact Eventually.of_forall fun _ =>
-      Eventually.of_forall fun w => by
-        simpa [g, smul_eq_mul] using hp.eq_pow_order_mul_iterate_dslope w
+  have lh3 : ∀ᶠ z in 𝓝 z₀, f =ᶠ[𝓝 z] fun w => (w - z₀) ^ p.order * g w :=
+    Eventually.of_forall fun _ => Eventually.of_forall fun w => by
+      simpa [g, smul_eq_mul] using hp.eq_pow_order_mul_iterate_dslope w
   filter_upwards [lh1, lh2, lh3] with z using deriv_div_self_eq_div_add_deriv_div_self
 
 lemma cindex_eq_zero (hU : IsOpen U) (hr : 0 < r) (hcr : closedBall c r ⊆ U)
@@ -161,9 +160,7 @@ lemma exists_cindex_eq_order (hp : HasFPowerSeriesAt f p z₀) :
       have hev : f =ᶠ[𝓝 z] 0 :=
         Filter.eventually_of_mem (Metric.ball_mem_nhds z (sub_pos.mpr hd))
           fun y hy => hf (by linarith [dist_triangle y z z₀, mem_ball.mp hy])
-      have hderiv : deriv f z = 0 := by
-        rw [hev.deriv_eq]
-        simp
+      have hderiv : deriv f z = 0 := by simp [hev.deriv_eq]
       simp [hderiv, hf hd]
     simp only [cindex, mul_inv_rev, inv_I, neg_mul, FormalMultilinearSeries.order_zero,
       CharP.cast_eq_zero, neg_eq_zero, _root_.mul_eq_zero, I_ne_zero, inv_eq_zero,

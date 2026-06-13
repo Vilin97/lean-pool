@@ -101,10 +101,8 @@ def bracket : γ.CentralExtension
     map_smul' := by
       rintro m ⟨Y, _⟩
       ext
-      · change ⁅X, m • Y⁆ = m • ⁅X, Y⁆
-        exact lie_smul m X Y
-      · change (γ X) (m • Y) = m • (γ X) Y
-        exact map_smul (γ X) m Y }
+      · exact lie_smul m X Y
+      · exact map_smul (γ X) m Y }
   map_add' := by
     intros
     simp_all only [add_lie, map_add, LinearMap.add_apply]
@@ -112,10 +110,8 @@ def bracket : γ.CentralExtension
   map_smul' := by
     rintro m ⟨X, _⟩
     ext ⟨Y, _⟩
-    · change ⁅m • X, Y⁆ = m • ⁅X, Y⁆
-      exact smul_lie m X Y
-    · change (γ (m • X)) Y = m • (γ X) Y
-      exact congrArg (fun f => f Y) (map_smul γ m X)
+    · exact smul_lie m X Y
+    · exact congrArg (fun f => f Y) (map_smul γ m X)
 
 @[simp] lemma bracket_apply (Z W : γ.CentralExtension) :
     γ.bracket Z W = ⟨⁅Z.fst, W.fst⁆, γ Z.fst W.fst⟩ := rfl
@@ -203,12 +199,8 @@ def congr {γ₁ γ₂ : LieTwoCocycle 𝕜 𝓰 𝓪} (h : γ₁ = γ₂) :
     ext <;>
     · simp only [lie_def, h, Prod.mk.eta]; rfl
   invFun := fun Z ↦ ⟨Z.1, Z.2⟩
-  left_inv := by
-    intro Z
-    ext <;> dsimp only
-  right_inv := by
-    intro Z
-    ext <;> dsimp only
+  left_inv Z := by ext <;> dsimp only
+  right_inv Z := by ext <;> dsimp only
 
 lemma congr_apply {γ₁ γ₂ : LieTwoCocycle 𝕜 𝓰 𝓪} (h : γ₁ = γ₂) (Z : γ₁.CentralExtension) :
     congr h Z = ⟨Z.1, Z.2⟩ := rfl

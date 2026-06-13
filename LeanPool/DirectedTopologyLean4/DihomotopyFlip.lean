@@ -179,12 +179,8 @@ lemma hcomp'_range (F : Dihomotopy p₀.toDirectedMap q₀.toDirectedMap)
     Set.range (hcomp' F G h) ⊆ Set.range F ∪ Set.range G := fun z ⟨⟨t₁, t₂⟩, ht⟩ =>  by
   rw [hcomp'_apply] at ht
   split_ifs at ht with h
-  · left
-    constructor
-    exact ht
-  · right
-    constructor
-    exact ht
+  · exact Or.inl ⟨_, ht⟩
+  · exact Or.inr ⟨_, ht⟩
 
 end Dihomotopy
 end DirectedMap

@@ -67,16 +67,12 @@ def multiply {G : Graph V E} {x y z : V} :
 theorem term_bar_equals_init {G : Graph V E} {x : V} {e : E} :
     G.init e = x → (term G (G.bar e) = x) := by
   intro h
-  have h₁ : G.bar (G.bar e) = e := congr G.barInv (Eq.refl e)
-  have h₂ : G.init (G.bar (G.bar e)) = G.init e := congrArg G.init h₁
+  have h₂ : G.init (G.bar (G.bar e)) = G.init e := congrArg G.init (bar_involution e)
   apply Eq.trans h₂ h
 
 /-- proves that initial vertex of reversed edge is the terminal vertex of the original edge -/
 theorem init_bar_equals_term {G : Graph V E} {x : V} {e : E} :
-    (term G e = x) → G.init (G.bar e) = x := by
-  intro hyp
-  have : G.init (G.bar e) = term G e := by rfl
-  exact Eq.trans this hyp
+    (term G e = x) → G.init (G.bar e) = x := id
 
 /-- proves associativity of path multiplication -/
 theorem mult_assoc {G : Graph V E}
@@ -162,8 +158,7 @@ theorem inverse_involution {G : Graph V E} {x y : V} (p : EdgePath G x y) :
     rw[k]
     have p₂ : inverse (inverse (basicpath _ ex h₁ h₂)) = basicpath _ ex h₁ h₂ := by
       simp[basicpath, inverse]
-      have p₃ : G.bar (G.bar ex) = ex := by apply congr G.barInv (Eq.refl ex)
-      simp only [p₃, inverse, multiply]
+      simp only [bar_involution ex, inverse, multiply]
     rw[p₂]
     simp[basicpath_mult ex h₁ h₂ exy, ih]
 
@@ -235,12 +230,7 @@ def homotopy {G : Graph V E} {x y : V} (p' q' : EdgePath G x y) : Prop :=
 
 /-- proves that homotopy is a transitive relation -/
 theorem homotopy_trans {G : Graph V E} {x y : V} (p q r : EdgePath G x y) :
-    homotopy p q → homotopy q r → homotopy p r := by
-  intro h₁ h₂
-  change Quot.mk basicht p = Quot.mk basicht r
-  have p₁ : Quot.mk basicht p = Quot.mk basicht q := by apply h₁
-  have p₂ : Quot.mk basicht q = Quot.mk basicht r := by apply h₂
-  apply Eq.trans p₁ p₂
+    homotopy p q → homotopy q r → homotopy p r := Eq.trans
 
 
 /-- proves that homotopy is preserved by multiplying an edge to the left -/
@@ -251,10 +241,7 @@ theorem homotopy_left_mult_edge {G : Graph V E} {x y z : V} :
   let func (r : EdgePath G y z) : ht G x z := htclass (cons ex h1 h2 r)
   have g : (r₁ r₂ : EdgePath G y z) →  basicht r₁ r₂ → func r₁ = func r₂ := by
      intro r₁ r₂ h₁
-     let t := basicht.mult h₁ ex h1 h2
-     have : htclass (cons ex h1 h2 r₁) = htclass (cons ex h1 h2 r₂) := by
-       exact Quot.sound t
-     exact this
+     exact Quot.sound (basicht.mult h₁ ex h1 h2)
   change Quot.lift func g (htclass p) = Quot.lift func g (htclass q)
   let k := Quot.lift func g
   apply congrArg k h
