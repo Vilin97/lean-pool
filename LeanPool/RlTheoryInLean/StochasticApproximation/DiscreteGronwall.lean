@@ -48,13 +48,11 @@ private theorem prod_one_add_le_prod_one_add_of_le
   · apply prod_nonneg
     intro i hi
     simp only [mem_Ico] at hi
-    have := hc i (by linarith)
-    linarith
+    linarith [hc i (by linarith)]
   · apply Finset.one_le_prod
     intro i hi
     simp only [mem_Ico] at hi
-    have := hc i (by linarith)
-    linarith
+    linarith [hc i (by linarith)]
 
 private theorem prod_one_add_le_exp_sum
     {n₀ n : ℕ} (hc : ∀ m ≥ n₀, c m ≥ 0) :
@@ -63,8 +61,7 @@ private theorem prod_one_add_le_exp_sum
   apply prod_le_prod
   · intro i hi
     simp only [mem_Ico] at hi
-    have := hc i (by linarith)
-    linarith
+    linarith [hc i (by linarith)]
   · intro i _
     rw [add_comm]
     exact add_one_le_exp (c i)
@@ -80,19 +77,14 @@ theorem discrete_gronwall
   intro n hn
   grw [discrete_gronwall_aux hu hc n hn]
   have hsum : ∑ k ∈ Ico n₀ n, b k * ∏ i ∈ Ico (k + 1) n, (1 + c i) ≤
-      ∑ k ∈ Ico n₀ n, b k * ∏ i ∈ Ico n₀ n, (1 + c i) := by
-    apply sum_le_sum
-    intro j hj
-    simp only [mem_Ico] at hj
-    exact mul_le_mul_of_nonneg_left
-      (prod_one_add_le_prod_one_add_of_le hc (by linarith) (by linarith))
-      (hb j (by linarith))
-  have hnn : 0 ≤ u n₀ + ∑ k ∈ Ico n₀ n, b k := by
-    apply add_nonneg hun₀
-    apply sum_nonneg
-    intro i hi
-    simp only [mem_Ico] at hi
-    exact hb i (by linarith)
+      ∑ k ∈ Ico n₀ n, b k * ∏ i ∈ Ico n₀ n, (1 + c i) :=
+    sum_le_sum fun j hj => by
+      simp only [mem_Ico] at hj
+      exact mul_le_mul_of_nonneg_left
+        (prod_one_add_le_prod_one_add_of_le hc (by linarith) (by linarith))
+        (hb j (by linarith))
+  have hnn : 0 ≤ u n₀ + ∑ k ∈ Ico n₀ n, b k :=
+    add_nonneg hun₀ (sum_nonneg fun i hi => by simp only [mem_Ico] at hi; exact hb i (by linarith))
   calc u n₀ * ∏ i ∈ Ico n₀ n, (1 + c i) +
         ∑ k ∈ Ico n₀ n, b k * ∏ i ∈ Ico (k + 1) n, (1 + c i)
       ≤ u n₀ * ∏ i ∈ Ico n₀ n, (1 + c i) +
@@ -114,21 +106,16 @@ theorem discrete_gronwall_Ico
   simp only [mem_Ico] at hn
   grw [discrete_gronwall hun₀ hu hc hb n hn.1]
   have hsubset : Ico n₀ n ⊆ Ico n₀ n₁ := Ico_subset_Ico_right (by omega)
-  have hbsum : ∑ k ∈ Ico n₀ n, b k ≤ ∑ k ∈ Ico n₀ n₁, b k := by
-    apply sum_le_sum_of_subset_of_nonneg hsubset
-    intro i hi _
-    simp only [mem_Ico] at hi
-    exact hb i (by linarith)
-  have hcsum : ∑ i ∈ Ico n₀ n, c i ≤ ∑ i ∈ Ico n₀ n₁, c i := by
-    apply sum_le_sum_of_subset_of_nonneg hsubset
-    intro i hi _
-    simp only [mem_Ico] at hi
-    exact hc i (by linarith)
-  apply mul_le_mul (by linarith) (exp_le_exp.mpr hcsum) (by positivity)
-  apply add_nonneg hun₀
-  apply sum_nonneg
-  intro i hi
-  simp only [mem_Ico] at hi
-  exact hb i (by linarith)
+  have hbsum : ∑ k ∈ Ico n₀ n, b k ≤ ∑ k ∈ Ico n₀ n₁, b k :=
+    sum_le_sum_of_subset_of_nonneg hsubset
+      fun i hi _ => by simp only [mem_Ico] at hi
+                       exact hb i (by linarith)
+  have hcsum : ∑ i ∈ Ico n₀ n, c i ≤ ∑ i ∈ Ico n₀ n₁, c i :=
+    sum_le_sum_of_subset_of_nonneg hsubset
+      fun i hi _ => by simp only [mem_Ico] at hi
+                       exact hc i (by linarith)
+  have hbnn : 0 ≤ u n₀ + ∑ k ∈ Ico n₀ n₁, b k :=
+    add_nonneg hun₀ (sum_nonneg fun i hi => by simp only [mem_Ico] at hi; exact hb i (by linarith))
+  exact mul_le_mul (by linarith) (exp_le_exp.mpr hcsum) (by positivity) hbnn
 
 end StochasticApproximation

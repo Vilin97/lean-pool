@@ -79,13 +79,12 @@ theorem reducible_vanishing
         · exact stalk_zero_of_shortExact_kernel S hSE x (hG_stalks x (by
             simpa only [Finset.coe_insert, Set.sUnion_insert, Set.mem_union, not_or]
               using ⟨hxZ, hx⟩)) a
+    haveI : IrreducibleSpace (TopCat.of Z) := isIrreducible_iff_irreducibleSpace.mp hZ_comp.1
     exact subsingleton_sheafH_of_closedImmersion_middle
       (Z := Z) (hZ := hZ_closed) Gsh n hker
-      (by
-        haveI : IrreducibleSpace (TopCat.of Z) := isIrreducible_iff_irreducibleSpace.mp hZ_comp.1
-        exact ih_irred (TopCat.of Z) GZ
-          (topologicalKrullDim_subspace_le (X := (↑X : Type u)) Z)
-          (topologicalKrullDim_subspace_lt_of_lt (X := (↑X : Type u)) Z hn))
+      (ih_irred (TopCat.of Z) GZ
+        (topologicalKrullDim_subspace_le (X := (↑X : Type u)) Z)
+        (topologicalKrullDim_subspace_lt_of_lt (X := (↑X : Type u)) Z hn))
 
 private theorem irreducible_dim_zero_vanishing
     {X : TopCat.{u}} [NoetherianSpace X] [IrreducibleSpace X]

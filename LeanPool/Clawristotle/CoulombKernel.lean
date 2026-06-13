@@ -48,14 +48,13 @@ lemma schwartz_log_bound
   -- Lower bound from stretched-exponential decay
   obtain ⟨C_exp, K_exp, hbound_low⟩ := hExpDecay
   -- From Schwartz: ‖iteratedFDeriv ℝ 0 (f x) v‖ * 1 ≤ C_up → |f x v| ≤ C_up
-  have hf_le : ∀ x v, f x v ≤ C_up := by
-    intro x v
+  have hf_le : ∀ x v, f x v ≤ C_up := fun x v => by
     have h := hbound_up x v
     simp only [norm_iteratedFDeriv_zero, norm_eq_abs, pow_zero, mul_one] at h
     exact le_trans (le_abs_self _) h
   -- log(f x v) ≤ log(C_up)
-  have hlog_upper : ∀ x v, Real.log (f x v) ≤ Real.log C_up := by
-    intro x v; exact Real.log_le_log (hf_pos x v) (hf_le x v)
+  have hlog_upper : ∀ x v, Real.log (f x v) ≤ Real.log C_up :=
+    fun x v => Real.log_le_log (hf_pos x v) (hf_le x v)
   -- log(f x v) ≥ -C_exp * (1 + ‖v‖)^K_exp from exp lower bound
   have hlog_lower : ∀ x v, -C_exp * (1 + ‖v‖) ^ K_exp ≤ Real.log (f x v) := by
     intro x v

@@ -81,6 +81,18 @@ theorem Nat_primeFactors_lcm {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
       erw [lcm_eq_zero_iff] at hp3
       refine hp3.elim (fun ha' => absurd ha' ha) id
 
+private lemma Nat_lcm_pow_n (n a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) :
+    (Nat.lcm a b) ^ n = Nat.lcm (a ^ n) (b ^ n) := by
+  apply Nat.eq_of_factorization_eq
+  · exact pow_ne_zero n (Nat.lcm_ne_zero ha hb)
+  · exact Nat.lcm_ne_zero (pow_ne_zero n ha) (pow_ne_zero n hb)
+  intro p
+  rw [Nat.factorization_pow, Nat.factorization_lcm ha hb,
+    Nat.factorization_lcm (pow_ne_zero n ha) (pow_ne_zero n hb), Nat.factorization_pow,
+    Nat.factorization_pow]
+  simp only [Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, Finsupp.sup_apply]
+  exact mul_max_of_nonneg _ _ (Nat.zero_le n)
+
 theorem Nat_lcm_pow_two (a b : ℕ) : (Nat.lcm a b) ^ 2 = Nat.lcm (a ^ 2) (b ^ 2) := by
   by_cases ha : a = 0
   · subst ha
@@ -88,17 +100,7 @@ theorem Nat_lcm_pow_two (a b : ℕ) : (Nat.lcm a b) ^ 2 = Nat.lcm (a ^ 2) (b ^ 2
   by_cases hb : b = 0
   · subst hb
     simp
-  apply Nat.eq_of_factorization_eq
-  · exact pow_ne_zero 2 (Nat.lcm_ne_zero ha hb)
-  · exact Nat.lcm_ne_zero (pow_ne_zero 2 ha) (pow_ne_zero 2 hb)
-  intro p
-  rw [Nat.factorization_pow, Nat.factorization_lcm ha hb,
-    Nat.factorization_lcm (pow_ne_zero 2 ha) (pow_ne_zero 2 hb), Nat.factorization_pow,
-    Nat.factorization_pow]
-  simp only [Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, Finsupp.sup_apply]
-  change 2 * (a.factorization p ⊔ b.factorization p) =
-    2 * a.factorization p ⊔ 2 * b.factorization p
-  exact mul_max_of_nonneg _ _ (Nat.zero_le 2)
+  exact Nat_lcm_pow_n 2 a b ha hb
 
 theorem Nat_lcm_pow_three (a b : ℕ) :
     (Nat.lcm a b) ^ 3 = Nat.lcm (a ^ 3) (b ^ 3) := by
@@ -108,17 +110,7 @@ theorem Nat_lcm_pow_three (a b : ℕ) :
   by_cases hb : b = 0
   · subst hb
     simp
-  apply Nat.eq_of_factorization_eq
-  · exact pow_ne_zero 3 (Nat.lcm_ne_zero ha hb)
-  · exact Nat.lcm_ne_zero (pow_ne_zero 3 ha) (pow_ne_zero 3 hb)
-  intro p
-  rw [Nat.factorization_pow, Nat.factorization_lcm ha hb,
-    Nat.factorization_lcm (pow_ne_zero 3 ha) (pow_ne_zero 3 hb), Nat.factorization_pow,
-    Nat.factorization_pow]
-  simp only [Finsupp.coe_smul, Pi.smul_apply, smul_eq_mul, Finsupp.sup_apply]
-  change 3 * (a.factorization p ⊔ b.factorization p) =
-    3 * a.factorization p ⊔ 3 * b.factorization p
-  exact mul_max_of_nonneg _ _ (Nat.zero_le 3)
+  exact Nat_lcm_pow_n 3 a b ha hb
 
 theorem d_sq (s : Finset ℕ) : (d s)^2 = d (s.image (· ^ 2)) := by
   induction s using Finset.induction_on with

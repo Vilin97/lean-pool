@@ -24,16 +24,14 @@ variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
 lemma prod_preimage_snd
   (μ : Measure α) (ν : Measure β) (hν : SFinite ν) (A : Set β) :
   (μ.prod ν) (Prod.snd ⁻¹' A) = μ Set.univ * ν A := by
-    have h : Prod.snd ⁻¹' A = (Set.univ : Set α) ×ˢ A := by
-      ext p; obtain ⟨x, y⟩ := p; simp
-    rw [h, Measure.prod_prod]
+  rw [show Prod.snd ⁻¹' A = (Set.univ : Set α) ×ˢ A from by ext ⟨x, y⟩; simp,
+      Measure.prod_prod]
 
 lemma prod_preimage_fst
   (μ : Measure α) (ν : Measure β) (hν : SFinite ν) (A : Set α) :
   (μ.prod ν) (Prod.fst ⁻¹' A) = μ A * ν Set.univ := by
-    have h : Prod.fst ⁻¹' A = A ×ˢ (Set.univ : Set β) := by
-      ext p; obtain ⟨x, y⟩ := p; simp
-    rw [h, Measure.prod_prod]
+  rw [show Prod.fst ⁻¹' A = A ×ˢ (Set.univ : Set β) from by ext ⟨x, y⟩; simp,
+      Measure.prod_prod]
 
 lemma map_prodMk_dirac
   {X : α → β} {Y : α → γ} {μ : Measure α}

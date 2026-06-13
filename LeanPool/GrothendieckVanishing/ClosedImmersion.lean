@@ -407,20 +407,16 @@ theorem closedIncl_unit_stalk_isIso
   let adj := Sheaf.pullbackPushforwardAdjunction C i
   let pb := Sheaf.pullback C i
   let η := adj.unit.app F
-  have hCounit : IsIso (adj.counit.app (pb.obj F)) :=
+  haveI hCounit : IsIso (adj.counit.app (pb.obj F)) :=
     closedIncl_counit_isIso (C := C) (hs := hs) (pb.obj F)
-  haveI : IsIso (adj.counit.app (pb.obj F)) := hCounit
-  have hId : IsIso (𝟙 (pb.obj F)) := IsIso.id _
-  haveI : IsIso (𝟙 (pb.obj F)) := hId
-  have hEta : IsIso (pb.map η) := by
-    exact @IsIso.of_isIso_fac_right (TopCat.Sheaf C (TopCat.of s)) _ _ _ _
+  haveI hId : IsIso (𝟙 (pb.obj F)) := IsIso.id _
+  haveI hEta : IsIso (pb.map η) :=
+    @IsIso.of_isIso_fac_right (TopCat.Sheaf C (TopCat.of s)) _ _ _ _
       (adj.counit.app (pb.obj F)) (pb.map η) (𝟙 (pb.obj F))
       hCounit hId (adj.left_triangle_components F)
-  haveI : IsIso (pb.map η) := hEta
   -- Step 2: val stalk of pb.map(η) is iso
-  have hEtaHom : IsIso (pb.map η).hom := by
-    exact @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) (pb.map η) hEta
-  haveI : IsIso (pb.map η).hom := hEtaHom
+  haveI hEtaHom : IsIso (pb.map η).hom :=
+    @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) (pb.map η) hEta
   let Tz := Presheaf.stalkFunctor C x
   let K := Opens.grothendieckTopology (TopCat.of s)
   let pull := Presheaf.pullback C i
@@ -428,12 +424,10 @@ theorem closedIncl_unit_stalk_isIso
   let pi := Sheaf.pullbackIso C i
   let piF := pi.hom.app F
   let piT := pi.hom.app ((pb ⋙ Sheaf.pushforward C i).obj F)
-  have hPiFHom : IsIso piF.hom := by
-    exact @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piF inferInstance
-  have hPiTHom : IsIso piT.hom := by
-    exact @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piT inferInstance
-  haveI : IsIso piF.hom := hPiFHom
-  haveI : IsIso piT.hom := hPiTHom
+  haveI hPiFHom : IsIso piF.hom :=
+    @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piF inferInstance
+  haveI hPiTHom : IsIso piT.hom :=
+    @Functor.map_isIso _ _ _ _ _ _ (sheafToPresheaf _ _) piT inferInstance
   have hnat : (pb.map η).hom ≫ piT.hom = piF.hom ≫ sheafifyMap K (pull.map η.hom) :=
     congr_arg InducedCategory.Hom.hom (pi.hom.naturality η)
   have hnat_stalk : Tz.map (pb.map η).hom ≫ Tz.map piT.hom =
@@ -441,29 +435,18 @@ theorem closedIncl_unit_stalk_isIso
     rw [← Tz.map_comp, ← Tz.map_comp]
     exact congr_arg Tz.map hnat
   -- Step 4: presheafToSheaf.map(pull.map(η.hom)) stalk is iso
-  have hStalkEtaHom : IsIso (Tz.map (pb.map η).hom) := by
-    exact @Functor.map_isIso _ _ _ _ _ _ Tz ((pb.map η).hom) hEtaHom
-  have hStalkPiFHom : IsIso (Tz.map piF.hom) := by
-    exact @Functor.map_isIso _ _ _ _ _ _ Tz piF.hom hPiFHom
-  have hStalkPiTHom : IsIso (Tz.map piT.hom) := by
-    exact @Functor.map_isIso _ _ _ _ _ _ Tz piT.hom hPiTHom
-  haveI : IsIso (Tz.map (pb.map η).hom) := hStalkEtaHom
-  haveI : IsIso (Tz.map piF.hom) := hStalkPiFHom
-  haveI : IsIso (Tz.map piT.hom) := hStalkPiTHom
-  have hSheafifyComp :
-      IsIso (Tz.map piF.hom ≫ Tz.map (sheafifyMap K (pull.map η.hom))) := by
+  haveI hStalkEtaHom : IsIso (Tz.map (pb.map η).hom) :=
+    @Functor.map_isIso _ _ _ _ _ _ Tz _ hEtaHom
+  haveI hStalkPiFHom : IsIso (Tz.map piF.hom) :=
+    @Functor.map_isIso _ _ _ _ _ _ Tz _ hPiFHom
+  haveI hStalkPiTHom : IsIso (Tz.map piT.hom) :=
+    @Functor.map_isIso _ _ _ _ _ _ Tz _ hPiTHom
+  haveI hSheafifyComp : IsIso (Tz.map piF.hom ≫ Tz.map (sheafifyMap K (pull.map η.hom))) := by
     rw [← hnat_stalk]
     exact @IsIso.comp_isIso _ _ _ _ _ _ _ hStalkEtaHom hStalkPiTHom
-  haveI : IsIso (Tz.map piF.hom ≫ Tz.map (sheafifyMap K (pull.map η.hom))) :=
-    hSheafifyComp
-  have hSheafifyMap : IsIso (Tz.map (sheafifyMap K (pull.map η.hom))) := by
-    letI : IsIso (Tz.map piF.hom) := hStalkPiFHom
-    letI :
-        IsIso (Tz.map piF.hom ≫ Tz.map (sheafifyMap K (pull.map η.hom))) :=
-      hSheafifyComp
-    exact @IsIso.of_isIso_comp_left _ _ _ _ _ (Tz.map piF.hom)
+  haveI hSheafifyMap : IsIso (Tz.map (sheafifyMap K (pull.map η.hom))) :=
+    @IsIso.of_isIso_comp_left _ _ _ _ _ (Tz.map piF.hom)
       (Tz.map (sheafifyMap K (pull.map η.hom))) hStalkPiFHom hSheafifyComp
-  haveI : IsIso (Tz.map (sheafifyMap K (pull.map η.hom))) := hSheafifyMap
   -- Step 5: toSheafify naturality → pull.map(η.hom) stalk is iso
   let P₁ := pull.obj F.obj
   let P₂ := pull.obj ((pb ⋙ Sheaf.pushforward C i).obj F).obj
@@ -474,35 +457,22 @@ theorem closedIncl_unit_stalk_isIso
   have hToSheafifyIso (P : (TopCat.of s).Presheaf C) :
       IsIso (Tz.map (toSheafify K P)) :=
     stalkFunctor_map_iso_toSheafify P x
-  have hPullComp :
+  haveI hPullComp :
       IsIso (Tz.map (pull.map η.hom) ≫ Tz.map (CategoryTheory.toSheafify K P₂)) := by
     rw [hts]
     exact @IsIso.comp_isIso _ _ _ _ _ _ _ (hToSheafifyIso P₁) hSheafifyMap
-  have hPullMap : IsIso (Tz.map (pull.map η.hom)) := by
-    letI : IsIso (Tz.map (CategoryTheory.toSheafify K P₂)) := hToSheafifyIso P₂
-    letI :
-        IsIso (Tz.map (pull.map η.hom) ≫
-      Tz.map (CategoryTheory.toSheafify K P₂)) :=
-      hPullComp
-    exact @IsIso.of_isIso_comp_right _ _ _ _ _ (Tz.map (pull.map η.hom))
+  haveI hPullMap : IsIso (Tz.map (pull.map η.hom)) :=
+    @IsIso.of_isIso_comp_right _ _ _ _ _ (Tz.map (pull.map η.hom))
       (Tz.map (CategoryTheory.toSheafify K P₂)) (hToSheafifyIso P₂) hPullComp
-  haveI : IsIso (Tz.map (pull.map η.hom)) := hPullMap
   -- Step 6: stalkPull_nat → η.hom stalk is iso
-  have hStalkPullback (G : Sheaf C X) :
-      IsIso (Presheaf.stalkPullbackHom C i G.obj x) :=
-    (Presheaf.stalkPullbackIso C i G.obj x).isIso_hom
-  have hStalkPullbackF : IsIso (Presheaf.stalkPullbackHom C i F.obj x) :=
-    hStalkPullback F
-  have hStalkPullbackTarget : IsIso (Presheaf.stalkPullbackHom C i
+  haveI hStalkPullbackF : IsIso (Presheaf.stalkPullbackHom C i F.obj x) :=
+    (Presheaf.stalkPullbackIso C i F.obj x).isIso_hom
+  haveI hStalkPullbackTarget : IsIso (Presheaf.stalkPullbackHom C i
       ((pb ⋙ Sheaf.pushforward C i).obj F).obj x) :=
-    hStalkPullback ((pb ⋙ Sheaf.pushforward C i).obj F)
-  have hStalkPullbackComp :
-      IsIso (Presheaf.stalkPullbackHom C i F.obj x ≫ Tz.map (pull.map η.hom)) := by
-    exact @IsIso.comp_isIso _ _ _ _ _ _ _ hStalkPullbackF hPullMap
-  letI : IsIso (Presheaf.stalkPullbackHom C i
-      ((pb ⋙ Sheaf.pushforward C i).obj F).obj x) := hStalkPullbackTarget
-  letI : IsIso (Presheaf.stalkPullbackHom C i F.obj x ≫
-      Tz.map (pull.map η.hom)) := hStalkPullbackComp
+    (Presheaf.stalkPullbackIso C i _ x).isIso_hom
+  haveI hStalkPullbackComp :
+      IsIso (Presheaf.stalkPullbackHom C i F.obj x ≫ Tz.map (pull.map η.hom)) :=
+    @IsIso.comp_isIso _ _ _ _ _ _ _ hStalkPullbackF hPullMap
   exact @IsIso.of_isIso_fac_right _ _ _ _ _ _ _ _
     hStalkPullbackTarget hStalkPullbackComp
     (stalkPullbackHom_naturality i η.hom x)

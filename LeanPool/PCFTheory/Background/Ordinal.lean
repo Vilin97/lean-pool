@@ -138,9 +138,9 @@ theorem not_exists_ssubset_chain_lift {α : Type u} {S : Set α} {ℓ : Ordinal.
   rintro ⟨f, hf⟩
   have hsub : ∀ (o p : ↑(Iio ℓ)), o ≤ p → f p ⊆ f o := by
     intro o p h
-    rcases h.lt_or_eq with h' | h'
+    rcases h.lt_or_eq with h' | rfl
     · exact (hf.2 _ _ h').subset
-    · rw [h']
+    · exact le_refl _
   suffices g : Iio ℓ ↪ S by
     have hle : Cardinal.lift.{u, v + 1} #(↑(Iio ℓ)) ≤ Cardinal.lift.{v + 1, u} #↑S :=
       lift_mk_le'.mpr ⟨g⟩
@@ -168,11 +168,9 @@ theorem not_exists_ssubset_chain_lift {α : Type u} {S : Set α} {ℓ : Ordinal.
   have spec' := h ▸ Classical.choose_spec pfj
   refine ((lt_trichotomy i j).resolve_left ?_).resolve_right ?_
   · intro ho
-    have : succ i ≤ j := succ_le_of_lt ho
-    exact spec.2 <| hsub _ _ this spec'.1
+    exact spec.2 <| hsub _ _ (succ_le_of_lt ho) spec'.1
   · intro ho
-    have : succ j ≤ i := succ_le_of_lt ho
-    exact spec'.2 <| hsub _ _ this spec.1
+    exact spec'.2 <| hsub _ _ (succ_le_of_lt ho) spec.1
 
 theorem mk_Iio_subtype {o : Ordinal} {p : Iio o} : #(Iio p) = #(Iio p.1) := by
   apply mk_congr

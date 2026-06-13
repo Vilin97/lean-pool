@@ -72,9 +72,8 @@ theorem embed_indicator_subset (free S T : Finset (Fin n))
   simp only [embed]
   by_cases hj : j ∈ free
   · simp only [if_pos hj]
-  · simp only [if_neg hj, indicator]
-    have : j ∉ T := fun hjT => absurd (hS (hT hjT)) hj
-    simp only [decide_eq_false this]
+  · have : j ∉ T := fun hjT => absurd (hS (hT hjT)) hj
+    simp [indicator, this]
 
 namespace BoolFun
 

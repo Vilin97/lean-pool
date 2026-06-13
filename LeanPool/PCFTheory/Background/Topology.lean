@@ -27,8 +27,7 @@ instance {o : Ordinal.{u}} : Small.{max u v} (Iio o) := small_lift (Iio o)
 theorem instNoMaxOrderIio {o : Ordinal} (h : IsSuccLimit o) : NoMaxOrder (Iio o) := by
   constructor
   rintro ⟨a, ha⟩
-  refine ⟨⟨Order.succ a, h.succ_lt ha⟩, ?_⟩
-  exact Subtype.mk_lt_mk.mpr (lt_succ a)
+  exact ⟨⟨Order.succ a, h.succ_lt ha⟩, Subtype.mk_lt_mk.mpr (lt_succ a)⟩
 
 namespace IsAcc
 
@@ -37,8 +36,8 @@ theorem inter_Ioi {o p : Ordinal} {S : Set Ordinal} (h : o.IsAcc S) (hp : p < o)
   rw [isAcc_iff]
   refine ⟨h.pos.ne.symm, fun q hq ↦ ?_⟩
   obtain ⟨x, xmem⟩ := h.forall_lt (max p q) (max_lt hp hq)
-  use x
-  exact ⟨⟨xmem.1, (max_lt_iff.mp xmem.2.1).1⟩, ⟨(max_lt_iff.mp xmem.2.1).2, xmem.2.2⟩⟩
+  have hmx := max_lt_iff.mp xmem.2.1
+  exact ⟨x, ⟨xmem.1, hmx.1⟩, ⟨hmx.2, xmem.2.2⟩⟩
 
 end IsAcc
 
@@ -58,14 +57,10 @@ theorem isAcc_iSup {o : Ordinal.{u}} {α : Iio o} (ho : IsSuccLimit o) (f : Iio 
     exact not_lt_bot this
   · intro β hβ
     obtain ⟨γ, hγ⟩ := (lt_ciSup_iff bddAbove_of_small).mp hβ
-    use f (succ (max α γ))
-    constructor
-    · exact hp (succ (max α γ)) <| (le_max_left α γ).trans_lt (lt_succ (max α γ))
-    · constructor
-      · exact hγ.trans <| hf _ _ <| (le_max_right α γ).trans_lt (lt_succ (max α γ))
-      · apply (lt_ciSup_iff bddAbove_of_small).mpr
-        use succ (succ (max α γ))
-        exact hf _ _ (lt_succ _)
+    refine ⟨f (succ (max α γ)),
+      hp (succ (max α γ)) <| (le_max_left α γ).trans_lt (lt_succ (max α γ)),
+      hγ.trans <| hf _ _ <| (le_max_right α γ).trans_lt (lt_succ (max α γ)),
+      (lt_ciSup_iff bddAbove_of_small).mpr ⟨succ (succ (max α γ)), hf _ _ (lt_succ _)⟩⟩
 
 open Classical in
 theorem mk_derivedSet_le (S : Set Ordinal) : #(derivedSet S) ≤ #S := by
@@ -102,8 +97,7 @@ theorem mk_derivedSet_le (S : Set Ordinal) : #(derivedSet S) ≤ #S := by
       obtain ⟨x, hx⟩ := IsAcc.forall_lt b.2 a.1 altb
       have hkey : sInf (S ∩ Ioi a.1) < b.1 :=
         csInf_lt_of_lt (a := x) (OrderBot.bddBelow _) ⟨hx.1, hx.2.1⟩ hx.2.2
-      have hcontra : sInf (S ∩ Ioi b.1) < b.1 := heq ▸ hkey
-      exact lt_irrefl _ (lt_of_lt_of_le hcontra blt)
+      exact lt_irrefl _ (lt_of_lt_of_le (heq ▸ hkey) blt)
     · unfold f at hab
       rw [dif_pos ha, dif_neg hb] at hab
       cases hab

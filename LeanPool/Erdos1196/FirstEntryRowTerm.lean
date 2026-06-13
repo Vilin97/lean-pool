@@ -46,12 +46,7 @@ noncomputable def firstEntryPairWeight (x Y : ℕ) (mq : ℕ × ℕ) : ℝ :=
 /-- The lower-threshold condition is exactly the conjunction `q ≥ Y` and `x ≤ m * q`. -/
 lemma entryThreshold_le_iff (x Y m q : ℕ) (hm : 0 < m) :
     entryThreshold x Y m ≤ q ↔ Y ≤ q ∧ x ≤ m * q := by
-  rw [entryThreshold, max_le_iff]
-  constructor
-  · rintro ⟨hY, hq⟩
-    exact ⟨hY, (ceilDiv_le_iff_le_mul hm).1 hq⟩
-  · rintro ⟨hY, hxq⟩
-    exact ⟨hY, (ceilDiv_le_iff_le_mul hm).2 hxq⟩
+  simp [entryThreshold, ceilDiv_le_iff_le_mul hm]
 
 /-- For a parent state already known to satisfy `1 ≤ m < x`, the pairwise first-entry weight is
 the corresponding scaled tail summand. -/
@@ -62,8 +57,8 @@ lemma firstEntryPairWeight_eq {x Y m q : ℕ} (hm1 : 1 ≤ m) (hmx : m < x) :
           Λ q / ((q : ℝ) * (Real.log ((m * q : ℕ) : ℝ)) ^ 2)
         else 0) := by
   by_cases hq : entryThreshold x Y m ≤ q
-  · rw [firstEntryPairWeight, if_pos ⟨hm1, hmx, hq⟩, if_pos hq]
-    rw [Nat.cast_mul, div_eq_mul_inv, div_eq_mul_inv]
+  · rw [firstEntryPairWeight, if_pos ⟨hm1, hmx, hq⟩, if_pos hq, Nat.cast_mul,
+      div_eq_mul_inv, div_eq_mul_inv]
     ring_nf
   · rw [firstEntryPairWeight, if_neg, if_neg hq]
     · simp
@@ -86,9 +81,7 @@ lemma firstEntryPairWeight_row (x Y m : ℕ) :
     simp [firstEntryPairWeight_eq (x := x) (Y := Y) (m := m) (q := q) hm1 hmx, hm1, hmx]
   · funext q
     by_cases hm1 : 1 ≤ m
-    · have hmx : ¬ m < x := by
-        intro hmx
-        exact hm ⟨hm1, hmx⟩
+    · have hmx : ¬ m < x := fun hmx => hm ⟨hm1, hmx⟩
       simp [firstEntryPairWeight, hm1, hmx]
     · simp [firstEntryPairWeight, hm1]
 

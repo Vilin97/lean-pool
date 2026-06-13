@@ -323,20 +323,11 @@ lemma eq_dist_iff₂ (M L : BruhatTits.Lattice R) (n : ℕ) :
   · rintro ⟨ϖ, bM, bL, f, hϖ, _, hrep, hdiff⟩
     refine ⟨ϖ, bM, bL, f 0, f 1, hϖ, Int.le.intro_sub n hdiff, hrep 0, hrep 1, hdiff⟩
   · rintro ⟨ϖ, bM, bL, a, b, hϖ, hle, h0, h1, hdiff⟩
-    let f (i : Fin 2) : ℤ := match i with
-      | 0 => a
-      | 1 => b
-    refine ⟨ϖ, bM, bL, f, hϖ, ?_, ?_, hdiff⟩
+    refine ⟨ϖ, bM, bL, ![a, b], hϖ, ?_, ?_, hdiff⟩
     · intro i j hij
-      match i, j with
-      | 0, 0 => rfl
-      | 0, 1 => exact hle
-      | 1, 0 => simp at hij
-      | 1, 1 => rfl
+      fin_cases i <;> fin_cases j <;> simp_all [Matrix.cons_val_zero, Matrix.cons_val_one]
     · intro i
-      match i with
-      | 0 => exact h0
-      | 1 => exact h1
+      fin_cases i <;> simp_all [Matrix.cons_val_zero, Matrix.cons_val_one]
 
 /-- Monotone variant of `BruhatTits.eq_dist_iff`. -/
 lemma eq_dist_iff_monotone (M L : BruhatTits.Lattice R) (n : ℕ) :

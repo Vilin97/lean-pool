@@ -42,18 +42,14 @@ lemma brunn_minkowski_1d_compact
       exact ⟨hA_compact.sSup_mem hA_nonempty, hB_compact.sInf_mem hB_nonempty⟩
   calc
     volume C ≥ volume (A + B) := measure_mono h
-    -- Replacing A+B with A'+B' preserves volume
     _ = volume (A + B + {-sSup A} + {-sInf B}) := by simp
     _ = volume (A' + B') := by
       congr 1; nth_rw 2 [add_assoc]; nth_rw 3 [add_comm]; rw [← add_assoc]; rw [add_assoc]
-    -- The volume of A'+B' is at least that of A'∪B', since both A' and B' contain 0.
     _ ≥ volume (A' ∪ B') := by
       apply measure_mono
       rw [union_subset_iff]
       have h_zero_in_inter : 0 ∈ A' ∩ B' := by simp [h_inter_zero]
       exact ⟨subset_add_left A' h_zero_in_inter.2, subset_add_right B' h_zero_in_inter.1⟩
-    -- Finish the proof using the fact that A' and B' have intersection {0}
-    -- and using translation invariance of volume.
     _ = volume (A' ∪ B') + volume (A' ∩ B') := by simp [h_inter_zero]
     _ = volume A' + volume B' := by
       rw [measure_union_add_inter]

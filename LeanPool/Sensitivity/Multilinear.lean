@@ -71,8 +71,8 @@ noncomputable def degree (f : BoolFun n) : ℕ :=
 theorem degree_le (f : BoolFun n) : f.degree ≤ n := by
   apply Finset.sup_le
   intro S hS
-  rw [Finset.mem_filter] at hS
-  exact le_trans (Finset.card_le_univ S) (le_of_eq (Fintype.card_fin n))
+  simp only [Finset.mem_filter] at hS
+  simpa using Finset.card_le_univ S
 
 /-- If the multilinear degree is positive, there exists a "witness" set `S`
 of cardinality equal to the degree at which the Möbius coefficient is
@@ -86,8 +86,7 @@ theorem exists_degree_witness (f : BoolFun n) (hd : 0 < f.degree) :
     rw [Finset.not_nonempty_iff_eq_empty] at h
     simp [F, h] at hd
   obtain ⟨S, hS, heq⟩ := Finset.exists_mem_eq_sup F hne Finset.card
-  rw [Finset.mem_filter] at hS
-  exact ⟨S, heq.symm, hS.2⟩
+  exact ⟨S, heq.symm, (Finset.mem_filter.mp hS).2⟩
 
 end BoolFun
 

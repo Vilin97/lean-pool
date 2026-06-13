@@ -47,11 +47,7 @@ instance (v : V) [Finite (X.incidenceSet v)] : Finite { e : X.edgeSet | v ∈ e.
 
 /-- The finset of the edges of `X` consisting of all edges connected to `v`. -/
 def incidenceFinset' (v : V) [Fintype (X.neighborSet v)] : Finset X.edgeSet :=
-  let s : Set X.edgeSet := { e | v ∈ e.val }
-  have hs : s.Finite := by
-    change Finite s
-    infer_instance
-  hs.toFinset
+  (Set.toFinite { e : X.edgeSet | v ∈ e.val }).toFinset
 
 lemma mem_incidenceFinset' (v : V) [Fintype (X.neighborSet v)] (e : X.edgeSet) :
     e ∈ incidenceFinset' v ↔ v ∈ e.val := by
@@ -127,10 +123,8 @@ lemma dist_ne_of_of_adj {v w : V} (h : X.Adj v w) : X.dist v₀ v ≠ X.dist v�
     have : pw.length = pv.length + 1 := by simp [this, hpr]
     omega
   let q' : X.Path v v₀ := ⟨q, hqpath⟩
-  have : pv' = q' := X.isTree.isAcyclic.path_unique _ _
-  have heq : pv = q := by
-    change pv'.val = q'.val
-    rwa [← Subtype.ext_iff]
+  have hpeq : pv' = q' := X.isTree.isAcyclic.path_unique _ _
+  have heq : pv = q := congrArg Subtype.val hpeq
   have : q.length = pw.length + 1 := by simp [q]
   rw [← heq, hpvlength, dist_comm, hdist, dist_comm, ← hpwlength] at this
   omega
@@ -231,11 +225,7 @@ lemma source_eq_origin_of_mem (e : X.edgeSet) (h : v₀ ∈ e.val) :
 a bigger distance to `v₀` than `w`. -/
 def outwardCone (w : V) : Finset V :=
   let s : Set V := { v : V | X.Adj w v ∧ X.dist v₀ w < X.dist v₀ v }
-  have hs : s.Finite := by
-    apply Set.Finite.subset
-    · exact Set.toFinite (X.neighborSet w)
-    · intro a ha
-      exact ha.left
+  have hs : s.Finite := (Set.toFinite (X.neighborSet w)).subset fun _ ha ↦ ha.left
   hs.toFinset
 
 omit [DecidableEq V] in
@@ -252,11 +242,8 @@ lemma not_mem_outwardCone (w : V) : w ∉ X.outwardCone v₀ w := by
 /-- The outward edge cone of a vertex `w` wrt. `v₀` is the finset of neighboring edges
 where `w` is the source vertex wrt. to `v₀`. -/
 def outwardEdgeCone (w : V) : Finset X.edgeSet :=
-  let s : Set X.edgeSet :=
-    { e | w ∈ e.val ∧ X.source v₀ e = w }
-  have hs : s.Finite := by
-    apply Set.Finite.subset (Finset.finite_toSet (incidenceFinset' w))
-    intro e he
+  let s : Set X.edgeSet := { e | w ∈ e.val ∧ X.source v₀ e = w }
+  have hs : s.Finite := (Finset.finite_toSet (incidenceFinset' w)).subset fun e he ↦ by
     simp only [Finset.mem_coe, mem_incidenceFinset']
     exact he.left
   hs.toFinset
@@ -361,17 +348,13 @@ lemma edgeTowardsOrigin_target_eq (w : V) (hw : 0 < X.dist v₀ w) :
 
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma eq_of_isPath {x y : V} {p q : X.Walk x y} (hp : p.IsPath) (hq : q.IsPath) :
-    p = q := by
-  let p' : X.Path x y := ⟨p, hp⟩
-  let q' : X.Path x y := ⟨q, hq⟩
-  have : p' = q' := X.isTree.isAcyclic.path_unique _ _
-  simpa [p', q'] using this
+    p = q :=
+  congrArg Subtype.val (X.isTree.isAcyclic.path_unique ⟨p, hp⟩ ⟨q, hq⟩)
 
 omit [DecidableEq V] [(v : V) → Fintype ↑(X.neighborSet v)] in
 lemma dist_eq_of_isPath {x y : V} (p : X.Walk x y) (hp : p.IsPath) :
     X.dist x y = p.length := by
   obtain ⟨q, hq, hqlen⟩ := X.isTree.connected.exists_path_of_dist x y
-  have : p = q := eq_of_isPath hp hq
   rw [eq_of_isPath hp hq, hqlen]
 
 omit [DecidableEq V] [(v : V) → Fintype ↑(X.neighborSet v)] in

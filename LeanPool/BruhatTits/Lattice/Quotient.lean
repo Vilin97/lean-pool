@@ -210,25 +210,12 @@ lemma _root_.Module.Basis.unipotentResidue_mk [IsFractionRing R K]
         Basis.transvectEquiv_apply₁, b']
       simp_rw [h0, h1]
       rfl
-  · let z : (b.toLattice (R := R)).M :=
-      ⟨(b.transvectEquiv x) ↑(0 : b.toSubmodule (R := R)),
-        b.transvectEquiv_apply_mem x 0⟩
-    have hmk0 :
-        (Submodule.Quotient.mk
-          (p := (maximalIdeal R • ⊤ : Submodule R (b.toLattice (R := R)).M))
-          (0 : (b.toLattice (R := R)).M)) = 0 := rfl
-    have hz : z = 0 := by
+  · have hz : (⟨(b.transvectEquiv x) (0 : b.toSubmodule (R := R)).val,
+        b.transvectEquiv_apply_mem x 0⟩ : (b.toLattice (R := R)).M) = 0 := by
       ext i
-      simp [z]
-    calc
-      (b.unipotentResidue x) (Submodule.Quotient.mk 0) =
-          (b.unipotentResidue x) (0 : (b.toLattice (R := R)).quotient) := by
-            rw [hmk0]
-            rfl
-      _ = 0 := map_zero (b.unipotentResidue x)
-      _ = Submodule.Quotient.mk z := by
-            rw [hz]
-            rfl
+      simp
+    rw [hz]
+    exact map_zero (b.unipotentResidue x)
   · intro u v _ _ hu hv
     calc
       (b.unipotentResidue x) (Submodule.Quotient.mk (u + v)) =

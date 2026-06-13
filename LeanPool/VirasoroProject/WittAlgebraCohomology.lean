@@ -43,22 +43,13 @@ noncomputable def normalizingCochain : LieOneCochain 𝕜 (WittAlgebra 𝕜) �
 
 lemma normalizingCochain_apply_lgen_zero :
     normalizingCochain γ (lgen 𝕜 0) = (-2⁻¹ : 𝕜) * γ (lgen 𝕜 1) (lgen 𝕜 (-1)) := by
-  have aux := (WittAlgebra.lgen 𝕜).constr_basis 𝕜 (fun n ↦ if n = 0
-        then (-2⁻¹ : 𝕜) • γ (lgen 𝕜 1) (lgen 𝕜 (-1))
-        else (1/n : 𝕜) • γ (lgen 𝕜 0) (lgen 𝕜 n)) 0
-  dsimp at aux
-  rw [← aux]
-  congr
+  change ((WittAlgebra.lgen 𝕜).constr 𝕜 _) (lgen 𝕜 0) = _
+  simp [smul_eq_mul]
 
 lemma normalizingCochain_apply_lgen (n : ℤ) (hn : n ≠ 0) :
     normalizingCochain γ (lgen 𝕜 n) = (1/n : 𝕜) * γ (lgen 𝕜 0) (lgen 𝕜 n) := by
-  have aux := (WittAlgebra.lgen 𝕜).constr_basis 𝕜 (fun n ↦ if n = 0
-        then (-2⁻¹ : 𝕜) • γ (lgen 𝕜 1) (lgen 𝕜 (-1))
-        else (1/n : 𝕜) • γ (lgen 𝕜 0) (lgen 𝕜 n)) n
-  dsimp at aux
-  simp only [hn, ↓reduceIte] at aux
-  rw [← aux]
-  congr
+  change ((WittAlgebra.lgen 𝕜).constr 𝕜 _) (lgen 𝕜 n) = _
+  simp [smul_eq_mul, hn]
 
 lemma add_bdry_normalizingCochain_apply_lgen_one :
     (γ + (normalizingCochain γ).bdry) (lgen 𝕜 1) (lgen 𝕜 (-1)) = 0 := by

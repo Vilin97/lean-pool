@@ -1036,11 +1036,8 @@ private def thresholdClass : ConceptClass ℕ Bool :=
 
 /-- Threshold functions are monotone: if x ≤ y and f(y) = true then f(x) = true. -/
 private theorem threshold_monotone {n x y : ℕ} (hxy : x ≤ y)
-    (hy : decide (y ≤ n) = true) : decide (x ≤ n) = true := by
-  simp only [decide_eq_true_eq] at *; omega
+    (hy : decide (y ≤ n) = true) : decide (x ≤ n) = true := by grind
 
-/-- No 2-element subset of ℕ is shattered by the threshold class.
-    Key: the labeling (smaller → false, larger → true) is impossible by monotonicity. -/
 private theorem threshold_not_shatter_pair {S : Finset ℕ} (hcard : 2 ≤ S.card) :
     ¬ Shatters ℕ thresholdClass S := by
   intro hshat

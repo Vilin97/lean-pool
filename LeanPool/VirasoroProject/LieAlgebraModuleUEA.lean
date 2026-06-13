@@ -332,13 +332,8 @@ def UniversalEnvelopingAlgebra.representation
     exact Module.add_smul _ _ ((unMkAddHom 𝕜 (𝓤 𝕜 𝓰) V) v)
   map_smul' r X := by
     ext v
-    simp only [lsmul_apply, LinearMap.smul_apply]
-    simp only [map_smul, RingHom.id_apply]
-    set v' := unMkAddHom 𝕜 (𝓤 𝕜 𝓰) V v with def_v'
-    set a := ιUEA 𝕜 X with def_a
-    have : ((algebraMap 𝕜 (𝓤 𝕜 𝓰) r) • a) • v' = algebraMap 𝕜 (𝓤 𝕜 𝓰) r • a • v' :=
-      IsScalarTower.smul_assoc ((algebraMap 𝕜 (𝓤 𝕜 𝓰)) r) a v'
-    exact this
+    simp only [lsmul_apply, LinearMap.smul_apply, map_smul, RingHom.id_apply]
+    exact IsScalarTower.smul_assoc ((algebraMap 𝕜 (𝓤 𝕜 𝓰)) r) (ιUEA 𝕜 X) _
   map_lie' := by
     intro X Y
     ext v

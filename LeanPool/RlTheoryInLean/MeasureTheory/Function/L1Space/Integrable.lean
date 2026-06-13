@@ -19,14 +19,9 @@ lemma integrable_of_norm_le {α : Type*} {β : Type*} {m : MeasurableSpace α}
   (hm : AEStronglyMeasurable f μ) (hbdd : ∃ C, ∀ᵐ ω ∂μ, ‖f ω‖ ≤ C)
   : Integrable f μ := by
   obtain ⟨C, hC⟩ := hbdd
-  apply integrable_of_norm_sub_le (f₀ := 0) (g := fun ω => C)
-  · exact hm
-  · apply integrable_const
-  · apply integrable_const
-  · apply Eventually.mono hC
-    intro ω hC
-    simp only [Pi.zero_apply, zero_sub, norm_neg]
-    exact hC
+  apply integrable_of_norm_sub_le (f₀ := 0) (g := fun ω => C) hm (integrable_const _)
+    (integrable_const _)
+  exact hC.mono fun ω hω => by simp [hω]
 
 lemma Integrable.finset_sum
   {α ι : Type*} {m : MeasurableSpace α}
@@ -38,8 +33,7 @@ lemma Integrable.finset_sum
   | empty => simp
   | insert a s ha ih =>
     simp only [Finset.sum_insert ha]
-    apply Integrable.add
-    · exact hf a (Finset.mem_insert_self a s)
-    · exact ih (fun i hi => hf i (Finset.mem_insert_of_mem hi))
+    exact (hf a (Finset.mem_insert_self a s)).add
+      (ih (fun i hi => hf i (Finset.mem_insert_of_mem hi)))
 
 end MeasureTheory

@@ -41,23 +41,15 @@ theorem summable_indicatorLogSeries_and_tsum_le_of_hitMass
     · simp [hnA, visitProbabilityFormula chain hx (hA hnA)]
       grind only
     · simp [hnA]
-  constructor
-  · exact (hHitSummable.mul_left _).congr fun n =>
-      hpoint n
-  · have hWeight :
-        (∑' m : ℕ, A.indicator (fun k : ℕ => 1 / ((k : ℝ) * Real.log (k : ℝ))) m) ≤
-          normalizationConstant x Y := by
-      calc
-        ∑' m : ℕ, A.indicator (fun k : ℕ => 1 / ((k : ℝ) * Real.log (k : ℝ))) m
-          = ∑' n : ℕ, normalizationConstant x Y * A.indicator (chain.visitProbability) n := by
-              simpa using tsum_congr fun n => (hpoint n).symm
-        _ = normalizationConstant x Y * ∑' n : ℕ, A.indicator (chain.visitProbability) n := by
-              rw [tsum_mul_left]
-        _ ≤ normalizationConstant x Y * 1 := by
-              gcongr
-        _ = normalizationConstant x Y := by ring
-    refine hWeight.trans ?_
-    have hupper : normalizationConstant x Y - 1 ≤ C / Real.log (x : ℝ) := (abs_le.mp hNorm).2
-    linarith
+  refine ⟨(hHitSummable.mul_left _).congr fun n => hpoint n, ?_⟩
+  have hWeight : (∑' m : ℕ, A.indicator (fun k : ℕ => 1 / ((k : ℝ) * Real.log (k : ℝ))) m) ≤
+      normalizationConstant x Y := by
+    calc ∑' m : ℕ, A.indicator (fun k : ℕ => 1 / ((k : ℝ) * Real.log (k : ℝ))) m
+        = ∑' n : ℕ, normalizationConstant x Y * A.indicator (chain.visitProbability) n := by
+            simpa using tsum_congr fun n => (hpoint n).symm
+      _ = normalizationConstant x Y * ∑' n : ℕ, A.indicator (chain.visitProbability) n :=
+            tsum_mul_left
+      _ ≤ normalizationConstant x Y := by simpa using mul_le_of_le_one_right hB.le hHit
+  linarith [hWeight, (abs_le.mp hNorm).2]
 
 end PrimitiveSetsAboveX

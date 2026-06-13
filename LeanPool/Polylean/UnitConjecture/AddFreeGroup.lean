@@ -65,17 +65,10 @@ open EnumDecide in
 def decideHomsEqual {F : Type _} [AddCommGroup F] {X : Type _} [DecideForall X]
     [fgp : AddFreeGroup F X]
     {A : Type _} [AddCommGroup A] [DecidableEq A] : DecidableEq (F →+ A) := fun f g =>
-  if c : ∀ x : X, f (fgp.ι x) = g (fgp.ι x) then by
-    apply Decidable.isTrue
-    apply fgp.unique_extension
-    funext x
-    exact c x
-  else by
-    apply Decidable.isFalse
-    intro contra
-    let c' : ∀ (x : X), f (fgp.ι x) = g (fgp.ι x) := by
-      intro; apply congrFun (congrArg _ contra)
-    contradiction
+  if c : ∀ x : X, f (fgp.ι x) = g (fgp.ι x) then
+    .isTrue (fgp.unique_extension f g (funext c))
+  else
+    .isFalse (fun contra => c (fun _ => congrFun (congrArg _ contra) _))
 
 namespace AddFreeGroup.Product
 
@@ -106,15 +99,15 @@ instance prodFree : AddFreeGroup (A × B) (X_A ⊕ X_B) :=
       funext x
       cases x with
       | inl x =>
-          unfold inducedProdHom ι
-          dsimp
-          rw [map_zero, add_zero]
-          exact congrFun (FAb_A.induced_extends (f ∘ Sum.inl)) x
+        unfold inducedProdHom ι
+        dsimp
+        rw [map_zero, add_zero]
+        exact congrFun (FAb_A.induced_extends (f ∘ Sum.inl)) x
       | inr x =>
-          unfold inducedProdHom ι
-          dsimp
-          rw [map_zero, zero_add]
-          exact congrFun (FAb_B.induced_extends (f ∘ Sum.inr)) x
+        unfold inducedProdHom ι
+        dsimp
+        rw [map_zero, zero_add]
+        exact congrFun (FAb_B.induced_extends (f ∘ Sum.inr)) x
     unique_extension := by
       intro _ _ f g hyp
       ext ⟨a, b⟩

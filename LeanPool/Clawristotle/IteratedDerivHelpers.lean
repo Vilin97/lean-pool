@@ -167,20 +167,14 @@ lemma quadratic_iteratedFDeriv_bound (T : ℝ) (hT : 0 < T) (k : ℕ) :
               (by positivity)
         _ = 1 / T * (1 + ‖v‖) := by ring
     · simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
-      ring_nf; exact le_refl _
+      ring_nf
+      exact le_refl _
   -- Step 2: (3/T)(1+‖v‖) ≤ c(1+‖v‖) ≤ (c(1+‖v‖))^i
   calc ‖iteratedFDeriv ℝ i (fun v => -(normSq v) / (2 * T)) v‖
       ≤ 3 / T * (1 + ‖v‖) := hbound
-    _ ≤ c * (1 + ‖v‖) := by
-        have hv := norm_nonneg v
-        have : 3 / T * (1 + ‖v‖) ≤ (3 / T + 1) * (1 + ‖v‖) := by nlinarith
-        exact this
+    _ ≤ c * (1 + ‖v‖) := by nlinarith [norm_nonneg v]
     _ ≤ (c * (1 + ‖v‖)) ^ i := le_self_pow₀
-        (by have hv := norm_nonneg v
-            have h3T : 0 ≤ 3 / T := by positivity
-            calc (1 : ℝ) = 1 * 1 := by ring
-              _ ≤ (3 / T + 1) * (1 + ‖v‖) := by
-                  apply mul_le_mul <;> linarith
-            : 1 ≤ c * (1 + ‖v‖)) (by omega : i ≠ 0)
+        (by nlinarith [norm_nonneg v, show (0:ℝ) ≤ 3 / T from by positivity])
+        (by omega)
 
 end VML

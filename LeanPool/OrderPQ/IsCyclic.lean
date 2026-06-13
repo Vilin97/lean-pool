@@ -83,8 +83,7 @@ lemma subgroup_eq [Finite α] (s : Subgroup α) [Finite s] :
   refine Subgroup.eq_of_le_of_card_ge ?_ (Nat.le_of_eq ?_)
   · exact fun a ha => orderOf_dvd_iff_pow_eq_one.mp <|
       Subgroup.orderOf_mk a ha ▸ orderOf_dvd_natCard ..
-  · refine card_torsionBy' ?_
-    exact Subgroup.card_subgroup_dvd_card s
+  · exact card_torsionBy' (Subgroup.card_subgroup_dvd_card s)
 
 @[to_additive]
 lemma subgroup_eq_of_card_eq [Finite α] (s t : Subgroup α) [Finite s] [Finite t]
@@ -153,9 +152,7 @@ theorem IsCyclic.of_card_eq_prime {p : ℕ} [hp : Fact (Nat.Prime p)]
   use g
   have := orderOf_dvd_natCard g
   rw [h] at this ⊢
-  symm
-  refine (hp.elim.dvd_iff_eq ?_).mp this
-  simp only [ne_eq, orderOf_eq_one_iff, hg, not_false_eq_true]
+  exact (hp.elim.dvd_iff_eq (by simp [hg])).mp this |>.symm
 
 open IsCyclic in
 /-- Any two groups of the same prime order are isomorphic. -/

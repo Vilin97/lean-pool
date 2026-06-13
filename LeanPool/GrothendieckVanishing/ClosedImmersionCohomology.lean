@@ -104,11 +104,9 @@ theorem subsingleton_sheafH_of_closedImmersion_middle
   let FZ := ((TopCat.Sheaf.pullback AddCommGrpCat.{u} closedIncl).obj F)
   let S := closedImmersionSES (Z := Z) (hZ := hZ) F
   have hSE := closedImmersionSES_shortExact (Z := Z) (hZ := hZ) F
-  have h₁' : Subsingleton (Sheaf.H S.X₁ n) := by
-    simpa [S] using h₁
-  have h₃' : Subsingleton (Sheaf.H FZ n) := by
-    simpa [closedIncl, FZ] using h₃
+  have h₁' : Subsingleton (Sheaf.H S.X₁ n) := by simpa [S] using h₁
   have hPush : Subsingleton (Sheaf.H S.X₃ n) := by
+    have h₃' : Subsingleton (Sheaf.H FZ n) := by simpa [closedIncl, FZ] using h₃
     let e :
         Sheaf.H FZ n ≃
           Sheaf.H ((TopCat.Sheaf.pushforward AddCommGrpCat.{u} closedIncl).obj FZ) n :=

@@ -38,26 +38,21 @@ def nonUnitalSubringEq
     (h : (Subtype.val '' A.carrier) = B.carrier) : A ≃+* B := by
   have h' (x : R) : x ∈ B ↔ x ∈ Subtype.val '' A.carrier := by rw [h]; rfl
   have h'' (b : B) : b.val ∈ S := by
-    have hx : b.val ∈ Subtype.val '' A.carrier := by rw [← h']; exact b.property
-    obtain ⟨w, ⟨_, weqb⟩⟩ := hx
-    rw [← weqb]
-    exact w.property
+    obtain ⟨w, _, weqb⟩ := (h' b.val).mp b.property
+    rw [← weqb]; exact w.property
   have h''' (b : B) : ⟨b.val, h'' b⟩ ∈ A := by
-    have hx : b.val ∈ Subtype.val '' A.carrier := by rw [← h']; exact b.property
-    obtain ⟨w, ⟨ca, weqb⟩⟩ := hx
-    simp only [← weqb, Subtype.coe_eta]
-    exact ca
+    obtain ⟨w, ca, weqb⟩ := (h' b.val).mp b.property
+    simp only [← weqb, Subtype.coe_eta]; exact ca
   exact
     { toFun := fun a => ⟨a.val, by rw [h']; simp⟩
-      invFun := fun b => ⟨⟨b, by apply h''⟩, by apply h'''⟩
-      left_inv := by intro a; simp,
-      right_inv := by intro b; simp,
+      invFun := fun b => ⟨⟨b, h'' b⟩, h''' b⟩
+      left_inv := by intro a; simp
+      right_inv := by intro b; simp
       map_mul' := by
         intro a b
         simp only [NonUnitalSubring.val_mul, MulMemClass.mk_mul_mk, Subtype.mk.injEq]
         rw [hs a b]
-      map_add' := by
-        simp [ha] }
+      map_add' := by simp [ha] }
 
 variable {R : Type*} [Ring R]
 variable {e : R}
@@ -75,20 +70,15 @@ theorem double_corner_set_eq :
   rw [corner_ring_carrier, corner_ring_carrier]
   ext x
   constructor
-  · intro hx
-    obtain ⟨y, ⟨hy, rfl⟩⟩ := hx
-    obtain ⟨z, ⟨hz, rfl⟩⟩ := hy
+  · rintro ⟨y, ⟨⟨z, ⟨hz, rfl⟩⟩, rfl⟩⟩
     simp only [NonUnitalSubring.val_mul]
     exact ⟨z, rfl⟩
-  · intro hx
-    obtain ⟨y, ⟨hy, rfl⟩⟩ := hx
+  · rintro ⟨y, hy, rfl⟩
     let a : CornerSubring idem_e := ⟨e * y * e, ⟨y, rfl⟩⟩
     refine ⟨f * a * f, ⟨a, rfl⟩, ?_⟩
     simp only [NonUnitalSubring.val_mul]
-    have h1f : f = 1 * f := by simp
-    have heff : e * (f : R) = f := by nth_rewrite 2 [h1f]; rfl
-    have hf1 : f = f * 1 := by simp
-    have hffe : f = f * e := by nth_rewrite 1 [hf1]; rfl
+    have heff : e * (f : R) = f := by nth_rewrite 2 [show f = 1 * f by simp]; rfl
+    have hffe : f = f * e := by nth_rewrite 1 [show f = f * 1 by simp]; rfl
     rw [mul_assoc, mul_assoc, heff, ← mul_assoc, ← mul_assoc, ← hffe]
 
 -- auxiliary lemma since there is a problem with direct application

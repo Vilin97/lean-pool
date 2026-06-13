@@ -159,8 +159,8 @@ theorem filtered_colimit_restriction_eventually_zero_of_zero
   obtain ⟨j', f, hf⟩ := h0
   refine ⟨j', f, ?_⟩
   have hf' : ConcreteCategory.hom (((Y' ⋙ ev U).map f))
-      (ConcreteCategory.hom ((Y'.obj j₀).map φ.op) b₀) = 0 := by
-    exact hf.trans (map_zero (ConcreteCategory.hom (((Y' ⋙ ev U).map f))))
+      (ConcreteCategory.hom ((Y'.obj j₀).map φ.op) b₀) = 0 :=
+    hf.trans (map_zero (ConcreteCategory.hom (((Y' ⋙ ev U).map f))))
   have hnatf : ConcreteCategory.hom ((Y'.obj j').map φ.op)
       (ConcreteCategory.hom ((Y'.map f).app (op V)) b₀) =
     ConcreteCategory.hom ((Y'.map f).app (op U))
@@ -171,7 +171,7 @@ theorem filtered_colimit_restriction_eventually_zero_of_zero
     change ConcreteCategory.hom (((Y' ⋙ ev U).map f))
       (ConcreteCategory.hom ((Y'.obj j₀).map φ.op) b₀) = 0
     exact hf'
-  exact Eq.trans hnatf hzero
+  exact hnatf.trans hzero
 
 /-- A section of a filtered colimit that restricts to zero on a finite open cover is zero.
     Combines representative extraction, per-element eventual vanishing,
@@ -190,22 +190,13 @@ theorem colimit_section_zero_of_zero_on_cover
   let ev V := (CategoryTheory.evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op V)
   have hcV : ∀ V, IsColimit ((ev V).mapCocone c) := fun V ↦ isColimitOfPreserves (ev V) hc
   obtain ⟨j₀, b₀, hb₀⟩ := Concrete.isColimit_exists_rep _ (hcV V) a
-  -- For each k ∈ t: ι(b₀|_{W_k}) = a|_{W_k} = 0, so eventually zero
-  have h_ev_zero : ∀ k ∈ t, ∃ (jk : J') (fk : j₀ ⟶ jk),
-      ConcreteCategory.hom ((Y'.obj jk).map (homOfLE (hW k)).op)
-        (ConcreteCategory.hom ((Y'.map fk).app (op V)) b₀) = 0 := by
-    intro k hk
-    exact filtered_colimit_restriction_eventually_zero_of_zero
-      Y' hc (homOfLE (hW k)) a b₀ hb₀ (ha k hk)
   -- Merge via filtered_colimit_kills_all_restrictions
-  obtain ⟨j₁, g₀, hg₀⟩ := filtered_colimit_kills_all_restrictions Y' hW j₀ b₀ t h_ev_zero
+  obtain ⟨j₁, g₀, hg₀⟩ := filtered_colimit_kills_all_restrictions Y' hW j₀ b₀ t
+    (fun k hk ↦ filtered_colimit_restriction_eventually_zero_of_zero
+      Y' hc (homOfLE (hW k)) a b₀ hb₀ (ha k hk))
   -- Conclude: the transition is zero by sheaf separation, hence a = 0
   rw [← hb₀]; change ConcreteCategory.hom ((c.ι.app j₀).app (op V)) b₀ = 0
-  have hnat : (c.ι.app j₀).app (op V) =
-      (Y'.map g₀).app (op V) ≫
-      (c.ι.app j₁).app (op V) := by
-    exact congrArg (fun η ↦ η.app (op V)) (c.w g₀).symm
-  rw [hnat]
+  rw [congrArg (fun η ↦ η.app (op V)) (c.w g₀).symm]
   change ConcreteCategory.hom ((c.ι.app j₁).app (op V))
     (ConcreteCategory.hom ((Y'.map g₀).app (op V)) b₀) = 0
   rw [sheaf_section_zero_of_zero_on_cover (hY j₁) hW hcov _ hg₀]
@@ -282,13 +273,11 @@ theorem filtered_colimit_exists_compatible_representatives
       have hleft : ConcreteCategory.hom ((P.map f).app (op Wkl)) left0 =
           ConcreteCategory.hom ((P.obj j').map (Opens.infLELeft (U k.1) (U l.1)).op)
             (ConcreteCategory.hom ((P.map f).app (op (U k.1))) (x' k)) := by
-        dsimp [left0, Wkl]
-        simp
+        simp [left0, Wkl]
       have hright : ConcreteCategory.hom ((P.map f).app (op Wkl)) right0 =
           ConcreteCategory.hom ((P.obj j').map (Opens.infLERight (U k.1) (U l.1)).op)
             (ConcreteCategory.hom ((P.map f).app (op (U l.1))) (x' l)) := by
-        dsimp [right0, Wkl]
-        simp
+        simp [right0, Wkl]
       exact hleft.symm.trans (hf0.trans hright)
     obtain ⟨j₁, T, hT⟩ := IsFiltered.sup_exists ({j₀} ∪ Finset.univ.image j_pair) <|
       Finset.univ.image fun p : ↥t × ↥t ↦ ⟨j₀, j_pair p, by simp, by simp, f_pair p⟩
@@ -341,14 +330,10 @@ theorem colimit_exists_gluing_of_compatible_finite_subcover
     intro k hk
     dsimp [s₀]
     rw [← ConcreteCategory.comp_apply, ← (P.obj j₁).map_comp]
-    have hle_k : Opens.leSupr U k ≫ eqToHom hcov_W.symm = Opens.leSupr W ⟨k, hk⟩ := by
-      simpa [W] using
-        (Subsingleton.elim
-          (Opens.leSupr U k ≫ eqToHom hcov_W.symm)
-          (Opens.leSupr W ⟨k, hk⟩))
     rw [show (eqToHom hcov_W.symm).op ≫ (Opens.leSupr U k).op =
         (Opens.leSupr W ⟨k, hk⟩).op by
-      simpa using congrArg Quiver.Hom.op hle_k]
+      simpa [W] using congrArg Quiver.Hom.op (Subsingleton.elim
+        (Opens.leSupr U k ≫ eqToHom hcov_W.symm) (Opens.leSupr W ⟨k, hk⟩))]
     exact hsW ⟨k, hk⟩
   let s : ToType (c.pt.obj (op (iSup U))) :=
     ConcreteCategory.hom ((c.ι.app j₁).app (op (iSup U))) s₀
