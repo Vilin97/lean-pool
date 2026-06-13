@@ -31,23 +31,19 @@ class PosDefAsymm : Prop where
 
 lemma posDefAsymm_iff : PosDefAsymm A ↔ Matrix.PosDef (A + Aᵀ) := by
   constructor
-  case mp =>
-    intro h
+  · intro h
     apply PosDef.of_dotProduct_mulVec_pos
     · apply isHermitian_add_transpose_self
     · intro x hx
       simp only [star_trivial]
       rw [add_mulVec, dotProduct_add, dotProduct_transpose_mulVec]
-      have := h.pd x hx
-      linarith
-  case mpr =>
-    intro h
-    constructor
-    intro x hx
-    have := h.dotProduct_mulVec_pos hx
-    simp only [star_trivial] at this
-    rw [add_mulVec, dotProduct_add, dotProduct_transpose_mulVec] at this
-    linarith
+      linarith [h.pd x hx]
+  · intro h
+    exact ⟨fun x hx => by
+      have := h.dotProduct_mulVec_pos hx
+      simp only [star_trivial] at this
+      rw [add_mulVec, dotProduct_add, dotProduct_transpose_mulVec] at this
+      linarith⟩
 
 theorem posDefAsymm_iff'
   {α : Type*} [Fintype α] (A : Matrix α α ℝ) :
@@ -56,24 +52,10 @@ theorem posDefAsymm_iff'
   by_cases hα : Nonempty α
   case neg =>
     simp at hα
-    constructor
-    case mp =>
-      intro h
-      use 1
-      constructor
-      · norm_num
-      · intro x
-        simp only [dotProduct, Finset.univ_eq_empty, Finset.sum_empty, mul_zero, le_refl]
-    case mpr =>
-      intro h
-      constructor
-      intro x hx
-      apply False.elim
-      simp at hx
-      have : x = 0 := by
-        ext i
-        exact (IsEmpty.false i).elim
-      contradiction
+    exact ⟨fun _ => ⟨1, by norm_num, fun x => by simp [dotProduct]⟩,
+           fun _ => ⟨fun x hx => by
+             have : x = 0 := funext fun i => (IsEmpty.false i).elim
+             simp [this] at hx⟩⟩
   case pos =>
     rw [posDefAsymm_iff]
     constructor
@@ -161,27 +143,19 @@ noncomputable instance [PosDefAsymm A] : Invertible A.det := by
   apply ker_toLin'_eq_bot_iff.mpr
   intro x hx
   by_contra h
-  have hA : PosDefAsymm A := by infer_instance
-  have hA := hA.pd x h
-  have : x ⬝ᵥ A *ᵥ x = 0 := by
-    rw [hx]
-    simp
-  linarith
+  have hA := (inferInstance : PosDefAsymm A).pd x h
+  linarith [show x ⬝ᵥ A *ᵥ x = 0 by rw [hx]; simp]
 
 noncomputable instance [PosDefAsymm A] : Invertible A := by
   apply Matrix.invertibleOfDetInvertible
 
 noncomputable instance [NegDefAsymm A] : Invertible A.det := by
   apply invertibleOfNonzero
+  intro h
   have hdet := det_neg A
-  by_contra h
-  rw [h] at hdet
-  simp only [mul_zero] at hdet
-  have := (inferInstance : NegDefAsymm A).nd
-  have : Invertible (-A).det := by infer_instance
-  have := this.ne_zero
-  rw [hdet] at this
-  simp at this
+  rw [h, mul_zero] at hdet
+  haveI : PosDefAsymm (-A) := (inferInstance : NegDefAsymm A).nd
+  exact absurd hdet (inferInstance : Invertible (-A).det).ne_zero
 
 noncomputable instance [NegDefAsymm A] : Invertible A := by
   apply Matrix.invertibleOfDetInvertible

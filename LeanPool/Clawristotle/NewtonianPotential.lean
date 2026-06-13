@@ -108,7 +108,7 @@ lemma inv_norm_summable_series (R : ℝ) (hR : 0 < R) :
 lemma inv_norm_ball_volume (R : ℝ) (hR : 0 < R) (k : ℕ) :
     (MeasureTheory.volume (Metric.closedBall (0 : Fin 3 → ℝ) (2^(-k : ℝ) * R))).toReal =
     (2^(-k : ℝ) * R)^3 * (MeasureTheory.volume (Metric.closedBall (0 : Fin 3 → ℝ) 1)).toReal := by
-  rw [ MeasureTheory.Measure.addHaar_closedBall ]
+  rw [MeasureTheory.Measure.addHaar_closedBall]
   · norm_num
     ring_nf
     positivity
@@ -295,21 +295,15 @@ lemma convolution_local_int_schwartz
         MeasureTheory.IntegrableOn (fun w => M * ‖v - w‖⁻¹) (Metric.closedBall v 1) :=
       h_inv_integrable.const_mul M
     refine h_prod_integrable.mono' ?_ ?_
-    · exact MeasureTheory.AEStronglyMeasurable.mul
-        (Measurable.aestronglyMeasurable <| by
-          exact Measurable.inv <|
-            measurable_norm.comp <|
-            measurable_const.sub measurable_id')
-        (hg_meas.mono_measure <|
-          MeasureTheory.Measure.restrict_le_self)
+    · exact (Measurable.inv (measurable_norm.comp (measurable_const.sub measurable_id'))
+        |>.aestronglyMeasurable).mul
+        (hg_meas.mono_measure MeasureTheory.Measure.restrict_le_self)
     · filter_upwards [
         MeasureTheory.ae_restrict_mem
           measurableSet_closedBall]
         with w hw
       rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (inv_nonneg.mpr (norm_nonneg (v - w)))]
-      calc ‖v - w‖⁻¹ * |g w| ≤ ‖v - w‖⁻¹ * M :=
-            mul_le_mul_of_nonneg_left (hM.2 w hw) (inv_nonneg.mpr (norm_nonneg _))
-        _ = M * ‖v - w‖⁻¹ := mul_comm _ _
+      linarith [mul_le_mul_of_nonneg_left (hM.2 w hw) (inv_nonneg.mpr (norm_nonneg (v - w)))]
   have h_far :
       MeasureTheory.IntegrableOn
         (fun w => ‖v - w‖⁻¹ * g w)
@@ -342,8 +336,7 @@ lemma convolution_local_int_schwartz
           exact hw.2 (Metric.mem_closedBall.mpr (by rw [dist_comm, dist_eq_norm]; linarith))
         calc ‖v - w‖⁻¹ * |g w| ≤ 1 * |g w| :=
               mul_le_mul_of_nonneg_right (inv_le_one_of_one_le₀ hw_far) (abs_nonneg _)
-          _ = |g w| := one_mul _
-          _ = ‖g w‖ := (Real.norm_eq_abs _).symm)
+          _ = ‖g w‖ := by rw [one_mul, Real.norm_eq_abs])
   rw [← MeasureTheory.integrableOn_univ]
   rw [show (Set.univ : Set (Fin 3 → ℝ)) = Metric.closedBall v 1 ∪ (Set.univ \ Metric.closedBall v 1)
     from by simp [Set.union_diff_cancel (Set.subset_univ _)]]
@@ -369,9 +362,7 @@ lemma newtonian_near_bound
     ∫ z in Metric.closedBall (0 : Fin 3 → ℝ) 1, ‖z‖⁻¹ * |g (v - z)| ≤
       C₀ * ∫ z in Metric.closedBall (0 : Fin 3 → ℝ) 1, ‖z‖⁻¹ := by
   have h_pw : ∀ z : Fin 3 → ℝ, ‖z‖⁻¹ * |g (v - z)| ≤ C₀ * ‖z‖⁻¹ := fun z =>
-    calc ‖z‖⁻¹ * |g (v - z)| ≤ ‖z‖⁻¹ * C₀ :=
-        mul_le_mul_of_nonneg_left (hg_sup _) (inv_nonneg.mpr (norm_nonneg _))
-      _ = C₀ * ‖z‖⁻¹ := mul_comm _ _
+    mul_comm ‖z‖⁻¹ C₀ ▸ mul_le_mul_of_nonneg_left (hg_sup _) (inv_nonneg.mpr (norm_nonneg _))
   calc ∫ z in Metric.closedBall (0 : Fin 3 → ℝ) 1, ‖z‖⁻¹ * |g (v - z)|
       ≤ ∫ z in Metric.closedBall (0 : Fin 3 → ℝ) 1, C₀ * ‖z‖⁻¹ :=
         setIntegral_mono h_int_translated.integrableOn

@@ -38,15 +38,10 @@ private lemma deterministic_of_all_zero_or_one {α : Type} [Fintype α]
     (p : ProbDist α) (h : ∀ a, p a = 0 ∨ p a = 1) :
     IsDeterministic p := by
   by_contra hnd
-  unfold IsDeterministic at hnd
-  push Not at hnd
-  have hall0 : ∀ a, p a = 0 := by
-    intro a
-    cases h a with
-    | inl h0 => exact h0
-    | inr h1 => exact absurd (hnd a) (not_not.mpr h1)
-  linarith [prob_sum_eq_one p, show (∑ a, p a) = 0 from
-    Finset.sum_eq_zero fun a _ => hall0 a]
+  simp only [IsDeterministic, not_exists] at hnd
+  have hall0 : ∀ a, p a = 0 := fun a => (h a).resolve_right (hnd a)
+  linarith [prob_sum_eq_one p,
+    Finset.sum_eq_zero (s := Finset.univ) (f := fun a => p a) (fun a _ => hall0 a)]
 
 /-- **Property 1**: `H(p) = 0` if and only if `p` is deterministic.
 
@@ -64,34 +59,31 @@ theorem entropyNat_eq_zero_iff {α : Type} [Fintype α]
       have hnonneg : ∀ a ∈ Finset.univ, 0 ≤ Real.negMulLog (p a) :=
         fun a _ => Real.negMulLog_nonneg (prob_nonneg p a) (prob_le_one p a)
       exact fun a => (Finset.sum_eq_zero_iff_of_nonneg hnonneg).mp hH a (Finset.mem_univ a)
-    have h01 : ∀ a, p a = 0 ∨ p a = 1 := by
-      intro a
-      have hpa := hterms a
-      unfold Real.negMulLog at hpa
-      have hmul : p a * Real.log (p a) = 0 := by linarith
-      rcases mul_eq_zero.mp hmul with h0 | hlog
-      · left; linarith [prob_nonneg p a]
-      · rw [Real.log_eq_zero] at hlog
-        rcases hlog with h0 | h1 | hneg1
-        · left; exact h0
-        · right; exact h1
-        · linarith [prob_nonneg p a]
-    exact deterministic_of_all_zero_or_one p h01
+    apply deterministic_of_all_zero_or_one p
+    intro a
+    have hmul : p a * Real.log (p a) = 0 := by
+      have := hterms a; unfold Real.negMulLog at this; linarith
+    rcases mul_eq_zero.mp hmul with h0 | hlog
+    · left; linarith [prob_nonneg p a]
+    · rw [Real.log_eq_zero] at hlog
+      rcases hlog with h0 | h1 | hneg1
+      · left; exact h0
+      · right; exact h1
+      · linarith [prob_nonneg p a]
   · intro ⟨a₀, ha₀⟩
     rw [entropyNat_eq_sum_negMulLog]
     apply Finset.sum_eq_zero
     intro a _
     by_cases haa : a = a₀
     · rw [haa, ha₀]; exact Real.negMulLog_one
-    · have : p a = 0 := by
-        have hrest : ∑ b ∈ Finset.univ.erase a₀, p b = 0 := by
-          have h1 := prob_sum_eq_one p
-          rw [← Finset.add_sum_erase _ _ (Finset.mem_univ a₀)] at h1
-          linarith
-        exact le_antisymm
-          ((Finset.sum_eq_zero_iff_of_nonneg (fun b _ => prob_nonneg p b)).mp
-            hrest a (Finset.mem_erase.mpr ⟨haa, Finset.mem_univ a⟩)).le
-          (prob_nonneg p a)
+    · have hrest : ∑ b ∈ Finset.univ.erase a₀, p b = 0 := by
+        have h1 := prob_sum_eq_one p
+        rw [← Finset.add_sum_erase _ _ (Finset.mem_univ a₀)] at h1
+        linarith
+      have : p a = 0 := le_antisymm
+        ((Finset.sum_eq_zero_iff_of_nonneg (fun b _ => prob_nonneg p b)).mp
+          hrest a (Finset.mem_erase.mpr ⟨haa, Finset.mem_univ a⟩)).le
+        (prob_nonneg p a)
       rw [this]; exact Real.negMulLog_zero
 
 /-! ## Property 2: H maximized at uniform -/
@@ -104,10 +96,10 @@ theorem entropyNat_eq_log_card_iff {α : Type} [Fintype α] [Nonempty α]
     (p : ProbDist α) :
     entropyNat p = Real.log (Fintype.card α) ↔
     ∀ a, p a = 1 / Fintype.card α := by
+  have hcard_pos : (0 : ℝ) < Fintype.card α := by exact_mod_cast Fintype.card_pos (α := α)
+  have hcard_ne : (Fintype.card α : ℝ) ≠ 0 := ne_of_gt hcard_pos
   constructor
   · intro hH
-    have hcard_pos : (0 : ℝ) < Fintype.card α := by exact_mod_cast Fintype.card_pos (α := α)
-    have hcard_ne : (Fintype.card α : ℝ) ≠ 0 := ne_of_gt hcard_pos
     by_contra hne
     push Not at hne
     obtain ⟨a₀, ha₀⟩ := hne
@@ -118,7 +110,6 @@ theorem entropyNat_eq_log_card_iff {α : Type} [Fintype α] [Nonempty α]
         unfold Real.negMulLog
         rw [Real.log_div one_ne_zero hcard_ne, Real.log_one, zero_sub]; field_simp
       rw [hlogcard]
-      -- Not all p_i equal: if all were equal to p(a₀), then p(a₀) = 1/|α|
       have hexists : ∃ k ∈ Finset.univ, (fun a => p a) a₀ ≠ (fun a => p a) k := by
         by_contra h_all_eq
         push Not at h_all_eq
@@ -127,7 +118,6 @@ theorem entropyNat_eq_log_card_iff {α : Type} [Fintype α] [Nonempty α]
           simp_rw [hall]; rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
         rw [prob_sum_eq_one p] at hsum
         exact ha₀ (by field_simp at hsum ⊢; linarith)
-      -- Apply strict Jensen for concave negMulLog with uniform weights
       have hscjensen := Real.strictConcaveOn_negMulLog.lt_map_sum
         (t := Finset.univ) (w := fun _ => 1 / (Fintype.card α : ℝ)) (p := fun a => p a)
         (fun _ _ => by positivity)
@@ -144,8 +134,6 @@ theorem entropyNat_eq_log_card_iff {α : Type} [Fintype α] [Nonempty α]
     linarith
   · intro hunif
     rw [entropyNat_eq_sum_negMulLog]
-    have hcard_pos : (0 : ℝ) < Fintype.card α := by exact_mod_cast Fintype.card_pos (α := α)
-    have hcard_ne : (Fintype.card α : ℝ) ≠ 0 := ne_of_gt hcard_pos
     simp_rw [hunif, Finset.sum_const, Finset.card_univ]
     unfold Real.negMulLog
     rw [Real.log_div one_ne_zero hcard_ne, Real.log_one, zero_sub]
@@ -164,7 +152,6 @@ theorem entropyNat_jointLe_add {α β : Type} [Fintype α] [Fintype β]
   let q := prodDist (marginalFst p) (marginalSnd p)
   have hsupp : ∀ ab, 0 < p ab → 0 < q ab := by
     intro ⟨a, b⟩ hab
-    change 0 < marginalFst p a * marginalSnd p b
     exact mul_pos (marginalFst_pos_of_prob_pos p a b hab)
       (lt_of_lt_of_le hab
         (Finset.single_le_sum (fun a' _ => prob_nonneg p (a', b)) (Finset.mem_univ a)))
@@ -172,7 +159,6 @@ theorem entropyNat_jointLe_add {α β : Type} [Fintype α] [Fintype β]
   suffices h : ∑ ab, p ab * Real.log (q ab / p ab) =
       entropyNat p - entropyNat (marginalFst p) - entropyNat (marginalSnd p) by linarith
   unfold entropyNat
-  have hqval : ∀ ab : α × β, q ab = marginalFst p ab.1 * marginalSnd p ab.2 := fun _ => rfl
   have hterm : ∀ ab : α × β,
       p ab * Real.log (q ab / p ab) =
       p ab * Real.log (marginalFst p ab.1) +
@@ -186,25 +172,21 @@ theorem entropyNat_jointLe_add {α β : Type} [Fintype α] [Fintype β]
       have hm2 : 0 < marginalSnd p ab.2 :=
         lt_of_lt_of_le hpab
           (Finset.single_le_sum (fun a' _ => prob_nonneg p (a', ab.2)) (Finset.mem_univ ab.1))
-      rw [hqval, Real.log_div (ne_of_gt (mul_pos hm1 hm2)) (ne_of_gt hpab),
+      simp only [show q ab = marginalFst p ab.1 * marginalSnd p ab.2 from rfl]
+      rw [Real.log_div (ne_of_gt (mul_pos hm1 hm2)) (ne_of_gt hpab),
           Real.log_mul (ne_of_gt hm1) (ne_of_gt hm2)]
       ring
-  simp_rw [hterm, sub_eq_add_neg]
-  rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
+  simp_rw [hterm, sub_eq_add_neg, Finset.sum_add_distrib]
   have hm1sum : ∑ ab : α × β, p ab * Real.log (marginalFst p ab.1) =
       ∑ a, marginalFst p a * Real.log (marginalFst p a) := by
-    calc ∑ ab : α × β, p ab * Real.log (marginalFst p ab.1)
-        = ∑ a, ∑ b, p (a, b) * Real.log (marginalFst p a) := Fintype.sum_prod_type _
-      _ = ∑ a, (∑ b, p (a, b)) * Real.log (marginalFst p a) := by
-          apply Finset.sum_congr rfl; intro a _; rw [Finset.sum_mul]
-      _ = ∑ a, marginalFst p a * Real.log (marginalFst p a) := rfl
+    rw [Fintype.sum_prod_type]
+    simp_rw [← Finset.sum_mul]
+    rfl
   have hm2sum : ∑ ab : α × β, p ab * Real.log (marginalSnd p ab.2) =
       ∑ b, marginalSnd p b * Real.log (marginalSnd p b) := by
-    calc ∑ ab : α × β, p ab * Real.log (marginalSnd p ab.2)
-        = ∑ b, ∑ a, p (a, b) * Real.log (marginalSnd p b) := Fintype.sum_prod_type_right _
-      _ = ∑ b, (∑ a, p (a, b)) * Real.log (marginalSnd p b) := by
-          apply Finset.sum_congr rfl; intro b _; rw [Finset.sum_mul]
-      _ = ∑ b, marginalSnd p b * Real.log (marginalSnd p b) := rfl
+    rw [Fintype.sum_prod_type_right]
+    simp_rw [← Finset.sum_mul]
+    rfl
   rw [hm1sum, hm2sum, Finset.sum_neg_distrib]; linarith
 
 /-! ## Property 4: Schur-concavity (doubly stochastic averaging) -/
@@ -213,17 +195,13 @@ open Matrix in
 /-- Apply a doubly stochastic matrix `A` to a probability distribution `p`,
 yielding the distribution with `(Ap)_i = ∑_j A_{ij} p_j`. -/
 def doublyStochasticApply {n : Type} [Fintype n] [DecidableEq n]
-    (A : Matrix n n ℝ) (hA : A ∈ doublyStochastic ℝ n) (p : ProbDist n) : ProbDist n := by
-  refine ⟨fun i => ∑ j, A i j * p j, ?_⟩
-  constructor
-  · intro i
-    exact Finset.sum_nonneg fun j _ =>
-      mul_nonneg (nonneg_of_mem_doublyStochastic hA) (prob_nonneg p j)
-  · calc ∑ i, ∑ j, A i j * p j
-        = ∑ j, (∑ i, A i j) * p j := by rw [Finset.sum_comm]; simp_rw [Finset.sum_mul]
-      _ = ∑ j, 1 * p j := by
-          congr 1; ext j; congr 1; exact sum_col_of_mem_doublyStochastic hA j
-      _ = 1 := by simp [prob_sum_eq_one p]
+    (A : Matrix n n ℝ) (hA : A ∈ doublyStochastic ℝ n) (p : ProbDist n) : ProbDist n :=
+  ⟨fun i => ∑ j, A i j * p j,
+    fun i => Finset.sum_nonneg fun j _ =>
+      mul_nonneg (nonneg_of_mem_doublyStochastic hA) (prob_nonneg p j),
+    by rw [Finset.sum_comm (s := Finset.univ) (t := Finset.univ)]
+       simp_rw [← Finset.sum_mul, sum_col_of_mem_doublyStochastic hA, one_mul]
+       exact prob_sum_eq_one p⟩
 
 open Matrix in
 /-- **Property 4** (Schur-concavity): `H(p) ≤ H(Ap)` for doubly stochastic `A`.
@@ -234,27 +212,20 @@ theorem entropyNat_doublyStochastic_le {n : Type} [Fintype n] [DecidableEq n]
     (A : Matrix n n ℝ) (hA : A ∈ doublyStochastic ℝ n) (p : ProbDist n) :
     entropyNat p ≤ entropyNat (doublyStochasticApply A hA p) := by
   rw [entropyNat_eq_sum_negMulLog, entropyNat_eq_sum_negMulLog]
-  -- Per-row Jensen: ∑_j A_{ij} * negMulLog(p_j) ≤ negMulLog(∑_j A_{ij} * p_j)
   have hrow : ∀ i, ∑ j, A i j * negMulLog (p j) ≤
-      negMulLog (doublyStochasticApply A hA p i) := by
-    intro i
+      negMulLog (doublyStochasticApply A hA p i) := fun i => by
     change ∑ j, A i j * negMulLog (p j) ≤ negMulLog (∑ j, A i j * p j)
-    have := Real.concaveOn_negMulLog.le_map_sum
-      (t := Finset.univ) (w := fun j => A i j) (p := fun j => (p j : ℝ))
-      (fun j _ => nonneg_of_mem_doublyStochastic hA)
-      (sum_row_of_mem_doublyStochastic hA i)
-      (fun j _ => prob_nonneg p j)
-    simp_rw [smul_eq_mul] at this
-    exact this
-  -- Sum over rows: ∑_i ∑_j A_{ij} * negMulLog(p_j) ≤ ∑_i negMulLog((Ap)_i)
-  have hsum : ∑ i, ∑ j, A i j * negMulLog (p j) ≤
-      ∑ i, negMulLog (doublyStochasticApply A hA p i) :=
-    Finset.sum_le_sum fun i _ => hrow i
-  -- Collapse LHS: swap sums, use column-stochasticity ∑_i A_{ij} = 1
+    have := Real.concaveOn_negMulLog.le_map_sum (t := Finset.univ) (w := fun j => A i j)
+      (p := fun j => (p j : ℝ)) (fun j _ => nonneg_of_mem_doublyStochastic hA)
+      (sum_row_of_mem_doublyStochastic hA i) (fun j _ => prob_nonneg p j)
+    simpa [smul_eq_mul] using this
   have hlhs : ∑ i, ∑ j, A i j * negMulLog (p j) = ∑ j, negMulLog (p j) := by
-    rw [Finset.sum_comm]; congr 1; ext j
-    rw [← Finset.sum_mul, sum_col_of_mem_doublyStochastic hA j, one_mul]
-  linarith
+    rw [Finset.sum_comm]
+    simp_rw [← Finset.sum_mul, sum_col_of_mem_doublyStochastic hA, one_mul]
+  calc ∑ a, negMulLog (p a)
+      = ∑ i, ∑ j, A i j * negMulLog (p j) := hlhs.symm
+    _ ≤ ∑ i, negMulLog (doublyStochasticApply A hA p i) :=
+        Finset.sum_le_sum (fun i _ => hrow i)
 
 /-! ## Properties 5-6: Conditioning reduces entropy -/
 
@@ -273,10 +244,9 @@ theorem condEntropy_nonneg {α β : Type} [Fintype α] [Fintype β]
   · simp [hp]
   · have hpab : 0 < p ab := lt_of_le_of_ne (prob_nonneg p ab) (Ne.symm hp)
     have hm : 0 < marginalFst p ab.1 := marginalFst_pos_of_prob_pos p ab.1 ab.2 hpab
-    exact mul_nonpos_of_nonneg_of_nonpos hpab.le
-      (Real.log_nonpos (div_pos hpab hm).le
-        ((div_le_one hm).mpr
-          (Finset.single_le_sum (fun b _ => prob_nonneg p (ab.1, b)) (Finset.mem_univ ab.2))))
+    exact mul_nonpos_of_nonneg_of_nonpos hpab.le (Real.log_nonpos (div_pos hpab hm).le
+      ((div_le_one hm).mpr
+        (Finset.single_le_sum (fun b _ => prob_nonneg p (ab.1, b)) (Finset.mem_univ ab.2))))
 
 /-- **Property 5**: conditioning reduces entropy, `H_X(Y) ≤ H(Y)`.
 

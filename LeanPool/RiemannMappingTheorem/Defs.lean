@@ -119,9 +119,7 @@ noncomputable def embedding.inv (w : ℂ) {r : ℝ} (hr : 0 < r) :
     · simpa only [sub_ne_zero] using ne_center_of_not_mem_closed_ball hr.le hx
     · simpa only [sub_ne_zero] using ne_center_of_not_mem_closed_ball hr.le hy
   maps_to := fun x hx => by
-    replace hx : r < ‖x - w‖ := by
-      simp only [mem_compl_iff, mem_closedBall, not_le, dist_eq_norm] at hx
-      exact hx
+    simp only [mem_compl_iff, mem_closedBall, not_le, dist_eq_norm] at hx
     simpa only [𝔻, mem_ball_zero_iff, norm_div, div_lt_one (hr.trans hx), norm_real,
       Real.norm_eq_abs, abs_of_nonneg hr.le]
 

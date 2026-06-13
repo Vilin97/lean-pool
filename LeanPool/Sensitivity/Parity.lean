@@ -63,30 +63,18 @@ private theorem filter_flipBit_true (x : Fin n → Bool) (i : Fin n) (hi : x i =
     (Finset.univ.filter (fun j : Fin n => x j = true)).erase i := by
   ext j
   simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_erase]
-  constructor
-  · intro hj
-    by_cases hji : j = i
-    · subst hji; simp [flipBit_apply_same, hi] at hj
-    · exact ⟨hji, by rwa [flipBit_apply_ne x i hji] at hj⟩
-  · intro ⟨hji, hj⟩
-    rwa [flipBit_apply_ne x i hji]
+  by_cases hji : j = i
+  · subst hji; simp [flipBit_apply_same, hi]
+  · simp [hji]
 
 private theorem filter_flipBit_false (x : Fin n → Bool) (i : Fin n) (hi : x i = false) :
     Finset.univ.filter (fun j : Fin n => flipBit x i j = true) =
     insert i (Finset.univ.filter (fun j : Fin n => x j = true)) := by
   ext j
   simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert]
-  constructor
-  · intro hj
-    by_cases hji : j = i
-    · left; exact hji
-    · right; rwa [flipBit_apply_ne x i hji] at hj
-  · intro hj
-    rcases hj with rfl | hj
-    · simp [flipBit_apply_same, hi]
-    · by_cases hji : j = i
-      · subst hji; simp [flipBit_apply_same, hi]
-      · rwa [flipBit_apply_ne x i hji]
+  by_cases hji : j = i
+  · subst hji; simp [flipBit_apply_same, hi]
+  · simp [hji]
 
 /-- Flipping any single bit negates the parity. -/
 theorem parity_flipBit (x : Fin n → Bool) (i : Fin n) :
@@ -121,17 +109,15 @@ theorem sensitiveAt_of_paritySigned_eq (f : BoolFun n)
     (x : Fin n → Bool) (i : Fin n)
     (h : f.paritySigned (flipBit x i) = f.paritySigned x) :
     f.sensitiveAt x i := by
-  unfold sensitiveAt
-  unfold paritySigned pmOne at h
+  unfold sensitiveAt paritySigned pmOne at *
   rw [parity_flipBit] at h
   intro heq
   rw [heq] at h
   have hpnz := parity_ne_zero x
-  have : (if f x then (1 : ℤ) else -1) * (-parity x - parity x) = 0 := by linarith
-  rw [show -parity x - parity x = -2 * parity x from by ring] at this
-  have := mul_eq_zero.mp this
-  rcases this with h1 | h1
-  · split_ifs at h1; all_goals omega
+  rcases mul_eq_zero.mp (by linarith : (if f x then (1 : ℤ) else -1) * (-2 * parity x) = 0)
+    with h1 | h1
+  · split_ifs at h1
+    omega
   · exact hpnz (by linarith)
 
 end BoolFun
@@ -142,19 +128,12 @@ private theorem parity_sum_zero (hn : 0 < n) :
     ∑ x : Fin n → Bool, parity x = 0 := by
   have i₀ : Fin n := ⟨0, hn⟩
   have hbij : Function.Bijective (fun x : Fin n → Bool => flipBit x i₀) :=
-    ⟨fun a b h => by
-       have h' : flipBit a i₀ = flipBit b i₀ := h
-       calc a = flipBit (flipBit a i₀) i₀ := (flipBit_flipBit_same a i₀).symm
-         _ = flipBit (flipBit b i₀) i₀ := by rw [h']
-         _ = b := flipBit_flipBit_same b i₀,
+    ⟨fun a b h => by simpa [flipBit_flipBit_same] using congr_arg (flipBit · i₀) h,
      fun y => ⟨flipBit y i₀, flipBit_flipBit_same y i₀⟩⟩
-  have h : ∑ x : Fin n → Bool, parity x =
-           ∑ x : Fin n → Bool, -parity x := by
-    conv_lhs =>
-      rw [← Fintype.sum_bijective _ hbij _ _ (fun x => rfl)]
+  have h : ∑ x : Fin n → Bool, parity x = ∑ x : Fin n → Bool, -parity x := by
+    rw [← Fintype.sum_bijective _ hbij _ _ (fun x => rfl)]
     simp [parity_flipBit]
-  linarith [Finset.sum_neg_distrib (f := fun x : Fin n → Bool => parity x)
-              (s := Finset.univ)]
+  linarith [Finset.sum_neg_distrib (f := fun x : Fin n → Bool => parity x) (s := Finset.univ)]
 
 /-- The indicator function is a left inverse to the "true bits" map. -/
 private theorem indicator_filter_true (x : Fin n → Bool) :
@@ -173,30 +152,25 @@ private theorem filter_true_indicator (T : Finset (Fin n)) :
 theorem moebius_parity_sum (f : BoolFun n) (hn : 0 < n) :
     ∑ x : Fin n → Bool, f.paritySigned x =
     2 * (-1 : ℤ) ^ n * f.moebius Finset.univ := by
-  have pmOne_eq : ∀ x, f.pmOne x = 2 * boolToInt (f x) - 1 := by
-    intro x; unfold BoolFun.pmOne boolToInt; split <;> ring
-  simp_rw [BoolFun.paritySigned, pmOne_eq, sub_mul, Finset.sum_sub_distrib, one_mul]
-  rw [parity_sum_zero hn, sub_zero]
+  have pmOne_eq : ∀ x, f.pmOne x = 2 * boolToInt (f x) - 1 := fun x => by
+    unfold BoolFun.pmOne boolToInt; split <;> ring
+  simp_rw [BoolFun.paritySigned, pmOne_eq, sub_mul, Finset.sum_sub_distrib, one_mul,
+    parity_sum_zero hn, sub_zero]
   suffices h : ∑ x : Fin n → Bool, boolToInt (f x) * parity x =
                (-1 : ℤ) ^ n * f.moebius Finset.univ by
     simp_rw [show ∀ x : Fin n → Bool,
-      2 * boolToInt (f x) * parity x = 2 * (boolToInt (f x) * parity x) from
-      fun x => by ring]
+      2 * boolToInt (f x) * parity x = 2 * (boolToInt (f x) * parity x) from fun x => by ring]
     rw [← Finset.mul_sum, h]; ring
   unfold BoolFun.moebius parity
   rw [Finset.mul_sum]
   conv_rhs =>
     arg 2; ext T
     rw [← mul_assoc, ← pow_add, Finset.card_univ, Fintype.card_fin]
-    rw [show n + (n - Finset.card T) =
-        Finset.card T + 2 * (n - Finset.card T) from by
-      have : T.card ≤ n := by
-        have := Finset.card_le_univ T
-        rwa [Fintype.card_fin] at this
+    rw [show n + (n - Finset.card T) = Finset.card T + 2 * (n - Finset.card T) from by
+      have : T.card ≤ n := by simpa using Finset.card_le_univ T
       omega]
     rw [pow_add, pow_mul, neg_one_sq, one_pow, mul_one]
-  rw [show Finset.univ.powerset = (Finset.univ : Finset (Finset (Fin n))) from by
-    ext S; simp]
+  rw [show Finset.univ.powerset = (Finset.univ : Finset (Finset (Fin n))) from by ext S; simp]
   symm
   apply Fintype.sum_equiv
     (Equiv.ofBijective (fun T : Finset (Fin n) => indicator T)
@@ -207,8 +181,6 @@ theorem moebius_parity_sum (f : BoolFun n) (hn : 0 < n) :
   intro T
   simp only [Equiv.ofBijective_apply]
   have hcard := congrArg Finset.card (filter_true_indicator T)
-  -- Both sides display as `{i | indicator T i = true}.card`; the hypothesis
-  -- and the goal use the same set-builder form for the same Finset.
   rw [show
         (-1 : ℤ) ^ T.card * boolToInt (f (indicator T)) =
           boolToInt (f (indicator T)) * (-1) ^ T.card from by ring]
@@ -270,17 +242,14 @@ theorem fullDegree_imbalance (f : BoolFun n) (hn : 0 < n)
   · refine ⟨-1, Or.inr rfl, ?_⟩
     have hA : A.card ≤ 2 ^ (n - 1) := Nat.not_lt.mp hA
     change 2 ^ (n - 1) < B.card
+    have h2pow : 2 ^ n = 2 * 2 ^ (n - 1) := by
+      conv_lhs => rw [show n = (n - 1) + 1 from by omega]
+      rw [pow_succ]; ring
     suffices hne' : B.card ≠ 2 ^ (n - 1) by
-      have h2pow : 2 ^ n = 2 * 2 ^ (n - 1) := by
-        conv_lhs => rw [show n = (n - 1) + 1 from by omega]
-        rw [pow_succ]; ring
       set p := 2 ^ (n - 1)
       omega
     intro heq
     have hA_eq : A.card = 2 ^ (n - 1) := by
-      have h2pow : 2 ^ n = 2 * 2 ^ (n - 1) := by
-        conv_lhs => rw [show n = (n - 1) + 1 from by omega]
-        rw [pow_succ]; ring
       set p := 2 ^ (n - 1)
       omega
     apply hne

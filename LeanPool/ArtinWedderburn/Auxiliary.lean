@@ -37,57 +37,43 @@ def IsDivisionRing (R : Type*) [Ring R] : Prop :=
 theorem left_inv_implies_divring [Nontrivial R]
     (h : ∀ x : R, x ≠ 0 → ∃ y : R, y * x = 1) : IsDivisionRing R := by
   unfold IsDivisionRing
-  refine ⟨exists_ne 0, ?_⟩
-  intro x x_nz
-  let ⟨y, hy⟩ := h x x_nz
-  have y_nz : y ≠ 0 := left_ne_zero_of_mul_eq_one hy
-  let ⟨z, hz⟩ := h y y_nz
+  refine ⟨exists_ne 0, fun x x_nz => ?_⟩
+  obtain ⟨y, hy⟩ := h x x_nz
+  obtain ⟨z, hz⟩ := h y (left_ne_zero_of_mul_eq_one hy)
   have x_eq_z : x = z := by
     calc x = (z * y) * x := by rw [hz]; noncomm_ring
-        _ = z * (y * x) := by noncomm_ring
-        _ = z := by rw [hy]; noncomm_ring
-  refine ⟨y, hy, ?_⟩
-  rw [x_eq_z]
-  exact hz
+      _ = z := by rw [mul_assoc, hy]
+                  noncomm_ring
+  exact ⟨y, hy, x_eq_z ▸ hz⟩
 
 /-- Promote a proof of `IsDivisionRing R` to a Mathlib `DivisionRing R` instance. -/
 @[reducible]
 noncomputable
 def IsDivisionRingToDivisionRing (div : IsDivisionRing R) : DivisionRing R := by
   unfold IsDivisionRing at div
-  have nontriv : Nontrivial R := by
-    let ⟨⟨x, hx⟩, _⟩ := div
+  haveI : Nontrivial R := by
+    obtain ⟨⟨x, hx⟩, _⟩ := div
     exact ⟨x, 0, hx⟩
   apply DivisionRing.ofIsUnitOrEqZero
   intro a
   rw [isUnit_iff_exists]
-  let ⟨_, h⟩ := div
   by_cases ha : a = 0
-  · right
-    exact ha
-  · left
-    specialize h a ha
-    obtain ⟨y, ⟨hy1, hy2⟩⟩ := h
-    exact ⟨y, hy2, hy1⟩
+  · exact Or.inr ha
+  · obtain ⟨y, hy1, hy2⟩ := div.2 a ha
+    exact Or.inl ⟨y, hy2, hy1⟩
 
 -- a ring isomorphic to a division ring is itself a division ring
 theorem isomorphic_ring_div {R' : Type*} [Ring R'] (f : R ≃+* R') (h_div : IsDivisionRing R) :
     IsDivisionRing R' := by
   unfold IsDivisionRing at *
-  let ⟨⟨x, hx⟩, h⟩ := h_div
-  let ⟨y, hy⟩ := h x hx
-  refine ⟨⟨f x, ?_⟩, ?_⟩
-  · rw [RingEquiv.map_ne_zero_iff]
-    exact hx
-  · intro x' hx'
-    let ⟨a, ha⟩ : ∃ (a : R), f a = x' := ⟨f.symm x', f.right_inv x'⟩
-    let ⟨b, hb⟩ := h a (by rw [← ha] at hx'; exact (RingEquiv.map_ne_zero_iff f).mp hx')
-    refine ⟨f b, ?_⟩
-    rw [← ha]
-    refine ⟨?_, ?_⟩
-    · rw [map_mul_eq_one]
-      exact hb.1
-    · rw [map_mul_eq_one]
-      exact hb.2
+  have hfnz : f h_div.1.choose ≠ 0 := (RingEquiv.map_ne_zero_iff f).mpr h_div.1.choose_spec
+  refine ⟨⟨f h_div.1.choose, hfnz⟩, fun x' hx' => ?_⟩
+  obtain ⟨a, rfl⟩ : ∃ a : R, f a = x' := ⟨f.symm x', f.right_inv x'⟩
+  obtain ⟨b, hb1, hb2⟩ := h_div.2 a ((RingEquiv.map_ne_zero_iff f).mp hx')
+  refine ⟨f b, ?_, ?_⟩
+  · rw [map_mul_eq_one]
+    exact hb1
+  · rw [map_mul_eq_one]
+    exact hb2
 
 end LeanPool.ArtinWedderburn

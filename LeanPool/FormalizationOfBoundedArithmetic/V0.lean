@@ -214,10 +214,7 @@ instance : LinearOrder num where
 instance : CanonicallyOrderedAdd num where
   exists_add_of_le := exists_add_of_le
   le_self_add := by apply B8
-  le_add_self := by
-    intro a b
-    rw [add_comm]
-    apply B8
+  le_add_self := fun a b => add_comm b a ▸ B8
 
 instance : AddCommMonoid num where
   add_comm := add_comm
@@ -240,14 +237,8 @@ by
 lemma ex_elt_of_len_pos :
     ∀ {X : str}, (0 : num) < (len X) -> ∃ x, x ∈ X ∧ x + 1 = len X := by
   intro X h_len
-  obtain ⟨len_pred, h_le, h_eq⟩ := B12 (by
-    exact Ne.symm (ne_of_lt h_len)
-  )
-  exists len_pred
-  constructor
-  · apply L2
-    exact h_eq
-  · exact h_eq
+  obtain ⟨len_pred, h_le, h_eq⟩ := B12 (ne_of_gt h_len)
+  exact ⟨len_pred, L2 h_eq, h_eq⟩
 
 lemma lt_succ : ∀ (x : num), x < x + 1 := by
   intro x
@@ -264,8 +255,7 @@ lemma lt_succ : ∀ (x : num), x < x + 1 := by
 
 lemma len_not_in : ∀ {X : str}, len X ∉ X := by
   intro X h
-  apply (L1 h).right
-  rfl
+  exact absurd rfl (L1 h).ne'
 
 -- Exercise V.1.1
 lemma not_lt_zero
@@ -279,9 +269,7 @@ instance : CanonicallyOrderedAdd num where
   le_self_add := by
     intro a b
     conv => lhs; rw [<- M.B3 a]
-    apply add_le_add
-    · apply _root_.le_refl
-    · apply M.B9
+    exact add_le_add (_root_.le_refl _) (M.B9 _)
   le_add_self := by
     intro a b
     rw [add_comm]
@@ -446,10 +434,7 @@ lemma len_ne_zero_of_in : ∀ {x : num}, ∀ {X : str},
   x ∈ X -> len X ≠ (0 : num) :=
 by
   intro x X h
-  have h2 := L1 h
-  apply ne_of_gt
-  apply lt_of_le_of_lt _ h2
-  exact B9 x
+  exact (lt_of_le_of_lt (B9 x) (L1 h)).ne'
 
 theorem xind :
   ∀ {X : str}, ∀ {z : num},
@@ -465,26 +450,15 @@ by
     rw [h_Y]
     · exact h_z
     · exact lt_succ z
-  have h_Y_pos : (0 : num) < len Y := by
-    rw [lt_iff_le_and_ne]
-    constructor
-    · apply B9
-    · exact Ne.symm (len_ne_zero_of_in h_z_in_Y)
+  have h_Y_pos : (0 : num) < len Y :=
+    lt_of_le_of_ne (B9 _) (len_ne_zero_of_in h_z_in_Y).symm
   obtain ⟨y0, h_y0⟩ := xmin h_Y_pos
   have h_y0_ne_zero : y0 ≠ 0 := by
     have h_0_notin_Y : 0 ∉ Y := by
       rw [h_Y]
       · rw [@not_not]
         exact h_base
-      · constructor
-        · apply B9
-        · rw [le_iff_eq_or_lt]
-          intro contr
-          cases contr with
-          | inl contr =>
-            apply M.B1 contr
-          | inr contr =>
-            apply M.not_lt_zero contr
+      · exact lt_of_le_of_lt (B9 z) (lt_succ z)
     intro contr
     apply h_0_notin_Y
     rw [<-contr]
@@ -609,11 +583,7 @@ lemma len_empty : len (0 : str) = (0 : num) := by
   false_or_by_contra
   rename_i h
   obtain ⟨pred, pred_le, pred_eq⟩ := B12 (num := num) h
-  have witness := L2 pred_eq
-  have aux := @ax_empty _ _ M pred
-  apply @not_lt_zero _ _ _ pred
-  apply aux.mp
-  exact witness
+  exact @not_lt_zero _ _ _ pred ((@ax_empty _ _ M pred).mp (L2 pred_eq))
 
 /-- Majority predicate on three propositions. -/
 def Maj (P Q R : Prop) :=
@@ -653,10 +623,7 @@ by
     intro hlt hcj
     exact cprev j (lt_of_le_of_ne (by rw [B11]; exact hlt) hji) hcj
 
-lemma not_lt_self : ∀ (i : num), ¬ i < i := by
-  intro i h
-  rw [<- lt_self_iff_false i]
-  exact h
+lemma not_lt_self : ∀ (i : num), ¬ i < i := lt_irrefl
 
 lemma carry_rec2 : ∀ {X Y : str}, ∀ {i : num},
   i ∈ X ∧ i ∈ Y -> Carry (i + 1) X Y :=
@@ -725,43 +692,23 @@ lemma exists_of_len_lt :
     ∀ {X Y : str}, (len X : num) < len Y ->
       ∃ z, z ∈ Y ∧ z ∉ X ∧ z + 1 = len Y := by
   intro X Y h_lt
-  have h_len_ne_zero : len Y ≠ (0 : num) := by
-    intro h_len_zero
-    rw [h_len_zero] at h_lt
-    exact V0Model.not_lt_zero h_lt
-  obtain ⟨len_pred, pred_le, pred_eq⟩ := B12 (num := num) h_len_ne_zero
+  obtain ⟨len_pred, pred_le, pred_eq⟩ := B12 (num := num) (pos_of_gt h_lt).ne'
   have pred_in := L2 pred_eq
   rw [lt_iff_le_not_ge] at h_lt
-  exists len_pred
-  refine ⟨pred_in, ?_, pred_eq⟩
-  intro h_in_X
-  apply h_lt.2
-  rw [B11]
-  rw [<- pred_eq]
-  rw [add_lt_add_iff_right]
-  apply L1
-  exact h_in_X
+  refine ⟨len_pred, pred_in, fun h_in_X => h_lt.2 ?_, pred_eq⟩
+  rw [B11, ← pred_eq, add_lt_add_iff_right]
+  exact L1 h_in_X
 
 lemma exists_of_len_lt' :
     ∀ {X : str}, ∀ {i : num}, i < len X ->
       ∃ z, z ∈ X ∧ i ≤ z ∧ z + 1 = len X := by
   intro X i h_lt
-  have h_len_ne_zero : len X ≠ (0 : num) := by
-    intro h_len_zero
-    rw [h_len_zero] at h_lt
-    exact V0Model.not_lt_zero h_lt
-  obtain ⟨len_pred, pred_le, pred_eq⟩ := B12 (num := num) h_len_ne_zero
+  obtain ⟨len_pred, pred_le, pred_eq⟩ := B12 (num := num) (pos_of_gt h_lt).ne'
   have pred_in := L2 pred_eq
   rw [lt_iff_le_not_ge] at h_lt
-  exists len_pred
-  refine ⟨pred_in, ?_, pred_eq⟩
-  rw [B11]
-  rw [pred_eq]
-  constructor
-  · exact h_lt.1
-  · intro h
-    apply h_lt.2
-    exact h
+  refine ⟨len_pred, pred_in, ?_, pred_eq⟩
+  rw [B11, pred_eq]
+  exact ⟨h_lt.1, h_lt.2⟩
 
 lemma len_pos_of_exists : ∀ {i : num} {X : str}, i ∈ X -> len X > (0 : num) := by
   intro i X iX
@@ -787,11 +734,7 @@ lemma carry_lt_add_len :
       i < len X + len Y := by
   intro X Y i h_Carry
   obtain ⟨k, h_k_lt_i, h_kX, h_kY, h_kprop⟩ := h_Carry
-  have h_i_ne_zero : i ≠ 0 := by
-    intro h_i_zero
-    rw [h_i_zero] at h_k_lt_i
-    exact V0Model.not_lt_zero h_k_lt_i
-  obtain ⟨pred_i, hpred_i_le, hpred_i_eq⟩ := B12 h_i_ne_zero
+  obtain ⟨pred_i, hpred_i_le, hpred_i_eq⟩ := B12 (pos_of_gt h_k_lt_i).ne'
   have h_len_X_pos : (0 : num) < len X := len_pos_of_exists h_kX
   have h_len_Y_pos : (0 : num) < len Y := len_pos_of_exists h_kY
   have h_pred_or : pred_i ∈ X ∨ pred_i ∈ Y := by

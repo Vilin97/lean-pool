@@ -110,30 +110,15 @@ lemma ntwist_isStandardNeighbour (b : Basis (Fin 2) K (Fin 2 → K)) {ϖ : R} (h
   lt := by
     simp only [Basis.toLattice_module]
     nth_rw 2 [← b.twist_zero hϖ]
-    rw [Module.Basis.ntwist₂, Module.Basis.twist₂]
-    rw [b.twist_lt_twist_iff]
-    constructor
-    · intro i
-      match i with
-      | 0 => simp
-      | 1 => simp
-    · use 0
-      simp
+    rw [Module.Basis.ntwist₂, Module.Basis.twist₂, b.twist_lt_twist_iff]
+    exact ⟨fun i ↦ by fin_cases i <;> simp, ⟨0, by simp⟩⟩
   ϖlt := by
     intro ϖ' hϖ'
     rw [← maximalIdeal_smul_eq_uniformizer_smul _ hϖ', maximalIdeal_smul_eq_uniformizer_smul _ hϖ]
     simp only [Basis.toLattice_module]
     nth_rw 1 [← b.twist_zero hϖ]
-    rw [b.smul_twist]
-    rw [Module.Basis.ntwist₂, Module.Basis.twist₂]
-    rw [b.twist_lt_twist_iff]
-    constructor
-    · intro i
-      match i with
-      | 0 => simp
-      | 1 => simp
-    · use 1
-      simp
+    rw [b.smul_twist, Module.Basis.ntwist₂, Module.Basis.twist₂, b.twist_lt_twist_iff]
+    exact ⟨fun i ↦ by fin_cases i <;> simp, ⟨1, by simp⟩⟩
 
 variable [IsFractionRing R K]
 

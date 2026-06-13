@@ -23,7 +23,7 @@ lemma Nat.pow_factorization_dvd {n : ℕ} (hn : n ≠ 0) {p : ℕ} (hp : p.Prime
   rw [Nat.Prime.pow_dvd_iff_le_factorization hp hn]
 
 lemma Nat.Prime.mem_self_primeFactors {p : ℕ} (hp : p.Prime) : p ∈ p.primeFactors := by
-  rw [hp.primeFactors, Finset.mem_singleton]
+  simp [hp.primeFactors]
 
 lemma Nat.Prime.mem_self_primeFactorsList {p : ℕ} (hp : p.Prime) : p ∈ p.primeFactorsList :=
   Nat.mem_primeFactors_iff_mem_primeFactorsList.mp hp.mem_self_primeFactors

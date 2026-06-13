@@ -80,10 +80,8 @@ lemma mvt_test (g : (Fin 3 → ℝ) → ℝ) (hg_diff : Differentiable ℝ g)
     · exact convex_segment 0 v
     · exact left_mem_segment ℝ 0 v
     · exact right_mem_segment ℝ 0 v
-  have h_norm_g : |g v - g 0| = ‖g v - g 0‖ := by rfl
-  rw [← h_norm_g] at H
-  have h_norm_v : ‖v - 0‖ = ‖v‖ := by simp
-  rw [h_norm_v] at H
+  simp only [sub_zero] at H
+  change |g v - g 0| ≤ _ at H
   have h1 : |g v| - |g 0| ≤ |g v - g 0| := abs_sub_abs_le_abs_sub (g v) (g 0)
   calc |g v| ≤ |g 0| + |g v - g 0| := by linarith
        _ ≤ |g 0| + Cg * (1 + ‖v‖)^Kg * ‖v‖ := by linarith
@@ -181,10 +179,8 @@ lemma log_bound_from_grad (f : Torus3 → (Fin 3 → ℝ) → ℝ)
       _ = Cg' * (1 + ‖w‖) ^ Kg := by
         rw [inv_mul_cancel₀ hw_pos.ne', one_mul]
   have h_mvt := mvt_test (fun v => log (f x v)) hg_diff Cg' Kg (by positivity) h_fderiv v
-  have hpow : (1 : ℝ) ≤ (1 + ‖v‖) ^ (Kg + 1) := by
-    calc (1 : ℝ) = 1 ^ (Kg + 1) := by ring
-      _ ≤ (1 + ‖v‖) ^ (Kg + 1) := by
-        gcongr; exact le_add_of_nonneg_right (norm_nonneg v)
+  have hpow : (1 : ℝ) ≤ (1 + ‖v‖) ^ (Kg + 1) :=
+    one_le_pow₀ (le_add_of_nonneg_right (norm_nonneg v))
   calc
     |log (f x v)|
       ≤ |log (f x 0)| + Cg' * (1 + ‖v‖) ^ (Kg + 1) :=

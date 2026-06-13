@@ -102,10 +102,8 @@ theorem brunn_minkowski
   let va : ℝ := (volume A).toReal^D⁻¹
   let vb : ℝ := (volume B).toReal^D⁻¹
   let θ : ℝ := vb * (va + vb)⁻¹
-  have h_va_pos : 0 < va := by
-    apply Real.rpow_pos_of_pos; exact ENNReal.toReal_pos hvolAzero hvolAinf
-  have h_vb_pos : 0 < vb := by
-    apply Real.rpow_pos_of_pos; exact ENNReal.toReal_pos hvolBzero hvolBinf
+  have h_va_pos : 0 < va := Real.rpow_pos_of_pos (ENNReal.toReal_pos hvolAzero hvolAinf) _
+  have h_vb_pos : 0 < vb := Real.rpow_pos_of_pos (ENNReal.toReal_pos hvolBzero hvolBinf) _
   have h_va_plus_vb_pos : 0 < va + vb := by linarith
   -- We have θ ∈ (0, 1) since A and B both have nonzero and non-infinite volume.
   have hθ0 : 0 < θ := div_pos h_vb_pos (add_pos' h_va_pos h_vb_pos)
@@ -116,13 +114,10 @@ theorem brunn_minkowski
   -- Raise both sides to the 1/D power
   have h_result_simp : ENNReal.ofReal ((1-θ)^(1-θ)*θ^θ)⁻¹
       * (volume A^(1-θ))^D⁻¹ * (volume B^θ)^D⁻¹ ≤ volume (A + B)^D⁻¹ := by
-    have h_D_θ_expr_pos : 0 < (1-θ)^(D*(1-θ))*θ^(D*θ) := by
-      apply mul_pos
-      · apply Real.rpow_pos_of_pos; linarith
-      apply Real.rpow_pos_of_pos hθ0
-    have h_Dinv_pos : 0 < D⁻¹ := Nat.inv_pos_of_nat
-    have h_Dinv_nonneg : 0 ≤ D⁻¹ := le_of_lt h_Dinv_pos
-    rw [← ENNReal.rpow_le_rpow_iff h_Dinv_pos,
+    have h_D_θ_expr_pos : 0 < (1-θ)^(D*(1-θ))*θ^(D*θ) :=
+      mul_pos (Real.rpow_pos_of_pos (by linarith) _) (Real.rpow_pos_of_pos hθ0 _)
+    have h_Dinv_nonneg : 0 ≤ D⁻¹ := Nat.inv_pos_of_nat.le
+    rw [← ENNReal.rpow_le_rpow_iff Nat.inv_pos_of_nat,
       ENNReal.mul_rpow_of_nonneg _ _ h_Dinv_nonneg,
       ENNReal.mul_rpow_of_nonneg _ _ h_Dinv_nonneg,
       ENNReal.ofReal_rpow_of_pos (by rw [inv_pos]; exact h_D_θ_expr_pos)] at h_result
@@ -210,13 +205,11 @@ theorem brunn_minkowski
     rw [this] at h_result_simp
     exact h_result_simp
   -- Final manipulation to remove ENNReal.ofReal and .toReal
-  have h_result_simp_3 : volume A^D⁻¹ + volume B^D⁻¹ ≤ volume (A + B)^D⁻¹ := by
-    rw [ENNReal.ofReal_add (le_of_lt h_va_pos) (le_of_lt h_vb_pos),
-      ← ENNReal.ofReal_rpow_of_pos (ENNReal.toReal_pos hvolAzero hvolAinf),
-      ← ENNReal.ofReal_rpow_of_pos (ENNReal.toReal_pos hvolBzero hvolBinf),
-      ENNReal.ofReal_toReal hvolAinf, ENNReal.ofReal_toReal hvolBinf] at h_result_simp_2
-    exact h_result_simp_2
-  exact h_result_simp_3
+  rw [ENNReal.ofReal_add (le_of_lt h_va_pos) (le_of_lt h_vb_pos),
+    ← ENNReal.ofReal_rpow_of_pos (ENNReal.toReal_pos hvolAzero hvolAinf),
+    ← ENNReal.ofReal_rpow_of_pos (ENNReal.toReal_pos hvolBzero hvolBinf),
+    ENNReal.ofReal_toReal hvolAinf, ENNReal.ofReal_toReal hvolBinf] at h_result_simp_2
+  exact h_result_simp_2
 
 /-- Brunn–Minkowski for `EuclideanSpace ℝ (Fin (d + 1))` (a wrapper around `brunn_minkowski`). -/
 theorem brunn_minkowski_euclideanSpace

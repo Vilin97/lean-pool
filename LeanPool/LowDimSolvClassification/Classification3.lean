@@ -265,10 +265,7 @@ theorem family_iff (α β : K) : Nonempty (L ≃ₗ⁅K⁆ (Family K α β)) ↔
           funext i
           change (![0, _, _] : Fin 3 → K) i = (α • (Pi.single 1 1 : Fin 3 → K)) i
             + (β • (Pi.single 2 1 : Fin 3 → K)) i
-          fin_cases i
-          · simp
-          · simp
-          · simp
+          fin_cases i <;> simp
         rw [← LieEquiv.map_lie f.symm,
           key (Pi.single 0 1) (Pi.single 1 1) (Pi.single 2 1) rfl rfl rfl,
           map_add, map_smul, map_smul]

@@ -79,13 +79,9 @@ structure ProvedBound (g : Word) : Type where
            normalized l → conjInv l → triangIneq l → l g ≤ bound
 
 theorem conj_split (x : Letter) (ys fst snd : Word) :
-          ys = fst ++ [x⁻¹] ++ snd → x :: ys = fst^x ++ snd :=
-            by
-              intro hyp
-              have expand : fst^x = [x] ++ fst ++ [x⁻¹] := rfl
-              rw [expand]
-              rw [hyp]
-              simp
+          ys = fst ++ [x⁻¹] ++ snd → x :: ys = fst^x ++ snd := fun hyp => by
+  rw [show fst^x = [x] ++ fst ++ [x⁻¹] from rfl, hyp]
+  simp
 
 -- deducing bound using `l (xh₁x⁻¹h₂) ≤ b₁ + b₂` given `l (hᵢ) ≤ bᵢ`, `i = 1, 2`
 namespace ProvedBound
@@ -95,20 +91,12 @@ def headMatches (x : Letter) (ys fst snd : Word)
   (eqn : ys = fst ++ [x⁻¹] ++ snd) :
   ProvedBound fst → ProvedBound snd → ProvedBound (x :: ys) :=
     fun pb1 pb2 =>
-    let bound := pb1.bound + pb2.bound
-    let pf :
-      (l : Length) → emptyWord l → normalized l → conjInv l → triangIneq l →
-          l (x :: ys) ≤ bound := by
-            intros l emp norm conj triang
-            rw [conj_split x ys fst snd eqn]
-            have lem : l (fst ^ x ++ snd) ≤ l (fst^x) + l snd := by apply triang
-            have clem : l (fst^x) = l fst := by apply conj
-            rw [clem] at lem
-            apply Nat.le_trans lem
-            have l1 : l fst ≤ pb1.bound := pb1.pf l emp norm conj triang
-            have l2 : l snd ≤ pb2.bound := pb2.pf l emp norm conj triang
-            apply Nat.add_le_add l1 l2
-    ⟨bound, pf⟩
+    ⟨pb1.bound + pb2.bound, fun l emp norm conj triang => by
+      rw [conj_split x ys fst snd eqn]
+      have h1 := triang (fst^x) snd
+      have h2 : l (fst^x) = l fst := conj x fst
+      exact Nat.le_trans (h2 ▸ h1)
+        (Nat.add_le_add (pb1.pf l emp norm conj triang) (pb2.pf l emp norm conj triang))⟩
 
 -- deducing `l(xh) ≤ b + 1` given `l(h) ≤ b`
 /-- Prepend a letter to a certified bound. -/
@@ -116,20 +104,18 @@ def prepend {w : Word} (x : Letter)
         (ps : ProvedBound w) : ProvedBound (x :: w) :=
       let newBound := ps.bound + 1
       ⟨newBound, fun l emp norm conj triang => by
-        let prev := ps.pf l emp norm conj triang
-        have lemTri : l (x :: w) ≤ l ([x]) + l w := by apply triang [x]
+        have lemTri : l (x :: w) ≤ l [x] + l w := triang [x] w
+        rw [norm x] at lemTri
         apply Nat.le_trans lemTri
-        rw [norm x]
         rw [Nat.add_comm]
-        apply Nat.add_le_add_right prev⟩
+        apply Nat.add_le_add_right (ps.pf l emp norm conj triang)⟩
 
 -- `l(e) ≤ 0`
 /-- The zero bound for the empty word. -/
 def emptyWord : ProvedBound [] :=
   ⟨0, fun l emp _ _ _ => by
     rw [emp]
-    apply Nat.zero_le
-    ⟩
+    apply Nat.zero_le⟩
 
 -- the best proved bound for a word
 /-- Choose the better bound from a nonempty list of alternatives. -/
@@ -142,30 +128,16 @@ def min {w : Word} : ProvedBound w → List (ProvedBound w) →
 end ProvedBound
 
 theorem splitFirst {l : Letter} {w : Word} (ps : ProvedSplit l w) :
-          ps.fst.length + 1 ≤ w.length :=
-          by
-            let lem : (ps.fst ++ [l] ++ ps.snd).length =
-                (ps.fst ++ [l]).length + ps.snd.length := by apply List.length_append
-            rw [← ps.proof] at lem
-            rw [lem]
-            have lem2 : List.length (ps.fst ++ [l]) = ps.fst.length + 1 := by
-                apply List.length_append
-            rw [lem2]
-            apply Nat.le_add_right
+          ps.fst.length + 1 ≤ w.length := by
+  have h := congr_arg List.length ps.proof
+  simp [List.length_append] at h
+  omega
 
 theorem splitSecond {l : Letter} {w : Word} (ps : ProvedSplit l w) :
-          ps.snd.length + 1 ≤ w.length :=
-          by
-            let lem : (ps.fst ++ [l] ++ ps.snd).length =
-                (ps.fst ++ [l]).length + ps.snd.length := by apply List.length_append
-            rw [← ps.proof] at lem
-            rw [lem]
-            have lem2 : List.length (ps.fst ++ [l]) = ps.fst.length + 1 := by
-                apply List.length_append
-            rw [lem2]
-            rw [Nat.add_assoc]
-            rw [Nat.add_comm]
-            apply Nat.le_add_left
+          ps.snd.length + 1 ≤ w.length := by
+  have h := congr_arg List.length ps.proof
+  simp [List.length_append] at h
+  omega
 
 -- bound with proof for words
 /-- Compute a certified length bound for a word. -/
@@ -173,26 +145,15 @@ def provedBound : (w : Word) → ProvedBound w := fun w =>
   match h:w with
   | [] => ProvedBound.emptyWord
   | x :: ys =>
-    have lb : (List.length ys) < List.length (x :: ys) := by
-      simp [List.length_cons]
     let head := ProvedBound.prepend x (provedBound ys)
-    let splits := provedSplits x⁻¹  ys
-    have wl:  w.length = ys.length + 1 := by
-      rw[h]
-      rfl
+    let splits := provedSplits x⁻¹ ys
     let tail := splits.map (fun ps : ProvedSplit x⁻¹ ys =>
-      have l1 : ps.fst.length + 1 ≤ ys.length + 1 :=
-        by
-        have lm := splitFirst ps
-        apply Nat.le_trans lm
-        apply Nat.le_succ
-      have l2 : ps.snd.length + 1 ≤ ys.length + 1 :=
-        by
-        have lm := splitSecond ps
-        apply Nat.le_trans lm
-        apply Nat.le_succ
+      have l1 : ps.fst.length + 1 ≤ ys.length + 1 := by
+        exact Nat.le_succ_of_le (splitFirst ps)
+      have l2 : ps.snd.length + 1 ≤ ys.length + 1 := by
+        exact Nat.le_succ_of_le (splitSecond ps)
       ProvedBound.headMatches x ys ps.fst ps.snd ps.proof
         (provedBound ps.fst) (provedBound ps.snd))
     ProvedBound.min head tail
-termination_by  w => w.length
+termination_by w => w.length
 end LeanPool.Polylean

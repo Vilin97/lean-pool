@@ -78,8 +78,6 @@ def splits (l : Letter) : (w : Word) → List {p : Word × Word // p.1.length + 
 def length : Word → Nat
   | [] => 0
   | x :: ys =>
-    have lb : (List.length ys) < List.length (x :: ys) := by
-      simp [List.length_cons]
     let base := 1 + (length ys)
     let derived := (splits x⁻¹ ys).map fun ⟨(fst, snd), h⟩ =>
       have h : fst.length + snd.length < ys.length + 1 := Nat.lt_trans h (Nat.lt_succ_self _)

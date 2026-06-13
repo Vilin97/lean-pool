@@ -69,9 +69,7 @@ lemma mem_unitDisc_of_scaled_exp_ofReal_mul_I {r : ℝ} (hr : r ∈ Ioo 0 1) (t 
 lemma neq_in_unitDisc_of_exp_ofReal_mul_I {z : ℂ} (hz : z ∈ ball 0 1) (t : ℝ) :
     exp (t * I) - z ≠ 0 := by
   intro h
-  rw [sub_eq_zero] at h
-  rw [← h, mem_ball, dist_zero_right, norm_exp_ofReal_mul_I] at hz
-  exact (lt_self_iff_false 1).mp hz
+  simp [← sub_eq_zero.mp h, mem_ball, dist_zero_right, norm_exp_ofReal_mul_I] at hz
 
 /-- The conjugate of `exp (t * I)` is its inverse. -/
 lemma star_exp_ofReal_mul_I_eq_inv {t : ℝ} : star (exp (t * I)) = (exp (t * I))⁻¹ := by
@@ -82,16 +80,12 @@ lemma star_exp_ofReal_mul_I_eq_inv {t : ℝ} : star (exp (t * I)) = (exp (t * I)
 lemma one_sub_star_mul_neq_zero {z : ℂ} {w : ℂ} (hz : z ∈ ball 0 1) (hw : w ∈ closedBall 0 1) :
     1 - star z * w ≠ 0 := by
   intro h
-  have hz_norm : ‖z‖ < 1 := by rw [mem_ball_zero_iff] at hz; exact hz
-  have hw_norm : ‖w‖ ≤ 1 := mem_closedBall_zero_iff.mp hw
-  have : ‖star z * w‖ < 1 := by
-    calc ‖star z * w‖ ≤ ‖star z‖ * ‖w‖ := norm_mul_le _ _
-      _ = ‖z‖ * ‖w‖ := by rw [norm_star]
-      _ < 1 := by nlinarith [norm_nonneg z, norm_nonneg w]
-  rw [sub_eq_zero] at h
-  rw [← h] at this
-  rw [norm_one] at this
-  exact absurd this (lt_irrefl 1)
+  have : ‖star z * w‖ < 1 :=
+    have hmul := norm_mul_le (star z) w
+    have hstar : ‖star z‖ = ‖z‖ := norm_star z
+    by nlinarith [mem_ball_zero_iff.mp hz, mem_closedBall_zero_iff.mp hw,
+                  norm_nonneg z, norm_nonneg w]
+  linarith [sub_eq_zero.mp h ▸ norm_one (α := ℂ)]
 
 /-- If f is analytic on the unit disc, then `ζ ↦ f (r * ζ)` is differentiable at `z`
 for `r` in `(0,1)` and `z` in the closed unit ball. -/
@@ -136,8 +130,7 @@ lemma cauchy_integral_formula_on_scaled_unitDisc {E : Type*} [NormedAddCommGroup
   simp only [circleIntegral]
   congr 1
   ext t
-  have : f (r * circleMap 0 1 t) = f (r * exp (t * I)) := by simp [circleMap]
-  rw [this]
+  rw [show f (r * circleMap 0 1 t) = f (r * exp (t * I)) from by simp [circleMap]]
   simp only [← smul_assoc]
   have : (deriv (circleMap 0 1) t • (1 / (2 * π * I))) • (1 / (circleMap 0 1 t - z)) =
          ((1 / (2 * π)) • (exp (t * I) / (exp (t * I) - z))) := by
@@ -196,8 +189,7 @@ lemma vanishing_goursat_integral_scaled_unitDisc {E : Type*} [NormedAddCommGroup
     (hf : AnalyticOn ℂ f (ball 0 1)) (hr : r ∈ Ioo 0 1) (hz : z ∈ ball 0 1) :
     ∫ t in 0..2 * π, (star z / (star (exp (t * I)) - star z)) • f (r * exp (t * I)) = 0 := by
   convert (vanishing_goursat_circleIntegral_scaled_unitDisc hf hr hz) using 3
-  rw [circleIntegral_def_Icc]
-  rw [intervalIntegral.integral_of_le (mul_nonneg zero_le_two pi_pos.le)]
+  rw [circleIntegral_def_Icc, intervalIntegral.integral_of_le (mul_nonneg zero_le_two pi_pos.le)]
   congr 1
   · exact MeasureTheory.Measure.restrict_congr_set MeasureTheory.Ioc_ae_eq_Icc
   · funext θ
@@ -264,12 +256,10 @@ theorem poisson_formula_of_harmonicOn_scaled_unitDisc {u : ℂ → ℝ} {z : ℂ
     (hr : r ∈ Ioo 0 1) (hz : z ∈ ball 0 1) :
     u (r * z) = (1 / (2 * π)) * ∫ t in (0)..(2 * π),
       ((1 - ‖z‖ ^ 2) / ‖exp (t * I) - z‖ ^ 2) * u (r * exp (t * I)) := by
-  have hfu : ∃ (f : ℂ → ℂ), AnalyticOn ℂ f (ball 0 1) ∧
-    EqOn (fun (z : ℂ) => (f z).re) u (ball 0 1) := by
+  obtain ⟨f, hf, hf_eq⟩ : ∃ f : ℂ → ℂ, AnalyticOn ℂ f (ball 0 1) ∧
+      EqOn (fun z => (f z).re) u (ball 0 1) := by
     obtain ⟨f, hf⟩ := hu.exists_analyticOnNhd_ball_re_eq
-    use f
-    exact ⟨hf.1.analyticOn, hf.2⟩
-  obtain ⟨f, hf, hf_eq⟩ := hfu
+    exact ⟨f, hf.1.analyticOn, hf.2⟩
   rw [← hf_eq (mem_ball_of_scaled_norm_le_one (LT.lt.le (mem_ball_zero_iff.mp hz)) hr)]
   have hrt_eq : EqOn
     (fun t : ℝ => (1 - ‖z‖^2) / ‖exp (t * I) - z‖^2 * (f (r * exp (t * I))).re)
@@ -290,11 +280,7 @@ theorem poisson_formula_of_harmonicOn_scaled_unitDisc {u : ℂ → ℝ} {z : ℂ
   · simp only [real_smul, RCLike.mul_re, RCLike.re_to_complex, ofReal_re, RCLike.im_to_complex,
                ofReal_im, zero_mul, sub_zero]
   · refine ContinuousOn.integrableOn_Icc ?_ |> fun h => h.mono_set <| Ioc_subset_Icc_self
-    have h_eq : (fun t : ℝ => ((1 - ‖z‖ ^ 2) / ‖cexp (↑t * I) - z‖ ^ 2) • f (↑r * cexp (↑t * I)))
-              = fun t : ℝ => (((1 - ‖z‖ ^ 2) / ‖cexp (↑t * I) - z‖ ^ 2 : ℝ) : ℂ) *
-                              f (↑r * cexp (↑t * I)) := by
-      funext t; rw [Complex.real_smul]
-    rw [h_eq]
+    simp_rw [Complex.real_smul]
     refine ContinuousOn.mul ?_ ?_
     · refine Continuous.continuousOn ?_
       have hd : Continuous fun (t : ℝ) =>
@@ -314,24 +300,20 @@ lemma bounds_of_continuousOn_unitCircle_closedUnitDisc {E : Type*} [NormedAddCom
     (hf : ContinuousOn f (closedBall 0 1)) (hk : ContinuousOn k (sphere 0 1)) :
     ‖k (exp (t * I)) • f (r * exp (t * I))‖ ≤
     sSup ((fun ζ ↦ |k ζ|) '' sphere 0 1) * sSup ((fun w ↦ ‖f w‖) '' closedBall 0 1) := by
-  have h_bds :
-      ‖f (r * exp (t * I))‖ ≤ sSup (image (fun w => ‖f w‖) (closedBall 0 1)) ∧
-      ‖k (exp (t * I))‖ ≤ sSup (image (fun w => ‖k w‖) (sphere 0 1)) := by
-    refine ⟨le_csSup ?_ ?_, le_csSup ?_ ?_⟩
-    · exact IsCompact.bddAbove (isCompact_closedBall 0 1 |>.image_of_continuousOn hf.norm)
-    · exact ⟨_, ball_subset_closedBall (mem_unitDisc_of_scaled_exp_ofReal_mul_I hr t), rfl⟩
-    · exact IsCompact.bddAbove (IsCompact.image_of_continuousOn (isCompact_sphere 0 1) hk.norm)
-    · exact ⟨exp (t * I), ⟨by simp only [mem_sphere_zero_iff_norm, norm_exp_ofReal_mul_I], rfl⟩⟩
-  have hmul_bds : |k (exp (t * I))| * ‖f (r * exp (t * I))‖ ≤
-    (sSup (image (fun ζ => |k ζ|) (sphere 0 1))) *
-    (sSup (image (fun w => ‖f w‖) (closedBall 0 1))) := by
-        apply mul_le_mul h_bds.2 h_bds.1 (norm_nonneg (f (r * exp (t * I))))
-        apply sSup_nonneg
-        rintro _ ⟨_, ⟨_, hx⟩⟩
-        simp_rw [← hx, norm_nonneg]
-  have hmul_norm : ‖k (exp (t * I)) • f (r * exp (t * I))‖ ≤
-    ‖k (exp (t * I))‖ * ‖f (r * exp (t * I))‖ := by rw [norm_smul]
-  exact le_trans hmul_norm hmul_bds
+  calc ‖k (exp (t * I)) • f (r * exp (t * I))‖
+      _ ≤ ‖k (exp (t * I))‖ * ‖f (r * exp (t * I))‖ := norm_smul_le _ _
+      _ ≤ sSup ((fun ζ ↦ |k ζ|) '' sphere 0 1) * sSup ((fun w ↦ ‖f w‖) '' closedBall 0 1) := by
+          apply mul_le_mul
+          · exact le_csSup
+              (IsCompact.bddAbove (IsCompact.image_of_continuousOn (isCompact_sphere 0 1) hk.norm))
+              ⟨exp (t * I), ⟨by simp [norm_exp_ofReal_mul_I], rfl⟩⟩
+          · exact le_csSup
+              (IsCompact.bddAbove (isCompact_closedBall 0 1 |>.image_of_continuousOn hf.norm))
+              ⟨_, ball_subset_closedBall (mem_unitDisc_of_scaled_exp_ofReal_mul_I hr t), rfl⟩
+          · exact norm_nonneg _
+          · apply sSup_nonneg
+            rintro _ ⟨_, ⟨_, hx⟩⟩
+            simp_rw [← hx, abs_nonneg]
 
 /-- For a sequence `r_n → 1` with `r_n ∈ (0,1)`, the integral of `t ↦ k(e^{it}) • f(r_n*e^{it})`
 on `[0 , 2π]` converges to the integral of `t ↦ k(e^{it}) • f(e^{it})` on `[0 , 2π]`,
@@ -420,13 +402,13 @@ theorem poisson_integral_of_harmonicOn_unitDisc_continuousOn_closedUnitDisc
   let r : ℕ → ℝ := fun n => 1 - 1 / (n + 2)
   obtain ⟨hr, hr_lim⟩ := seq_tendsto_to_oneIn_unit_interval_aux
   have h_poisson (n : ℕ) := poisson_formula_of_harmonicOn_scaled_unitDisc hu (hr n) hz
-  have hu_lim := tendsto_integral_prod_of_continuousOn_unitCircle_closedUnitDisc hc
-                 (poisson_kernel_continousOn_circle hz) hr hr_lim
   have hu_lim : Tendsto (fun n => (u (r n * z))) atTop (𝓝 ((1 / (2 * π)) * ∫ t in 0..2 * π,
       ((1 - ‖z‖^2) / ‖(exp (t * I)) - z‖^2 * u (exp (t * I))))) := by
+    have := tendsto_integral_prod_of_continuousOn_unitCircle_closedUnitDisc hc
+               (poisson_kernel_continousOn_circle hz) hr hr_lim
     simp only [r, h_poisson]
-    dsimp only [smul_eq_mul] at hu_lim
-    exact (Tendsto.const_mul (1 / (2 * π)) hu_lim)
+    dsimp only [smul_eq_mul] at this
+    exact Tendsto.const_mul (1 / (2 * π)) this
   rw [← tendsto_nhds_unique hu_lim
         (tendsto_of_radius_tendsto_one_of_continuousOn_closedUnitDisc hc hr_lim hz)]
 

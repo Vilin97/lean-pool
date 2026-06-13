@@ -53,38 +53,24 @@ postfix:max " ⁻¹ " => Groupoid.inv -- type as `\inv`
   simp at this; assumption
 
 @[simp] theorem left_cancel : g ≫ h = g ≫ h' ↔ h = h' :=
-  ⟨by
-    intro hyp
-    have := congrArg (g⁻¹ ≫ ·) hyp
-    simp at this
-    assumption
-  ,
+  ⟨fun hyp => by have := congrArg (g⁻¹ ≫ ·) hyp; simp at this; exact this,
     congrArg _⟩
 
 @[simp] theorem right_cancel : g ≫ h = g' ≫ h ↔ g = g' :=
-  ⟨by
-    intro hyp
-    have := congrArg (· ≫ h⁻¹) hyp
-    simp at this
-    assumption
-  ,
+  ⟨fun hyp => by have := congrArg (· ≫ h⁻¹) hyp; simp at this; exact this,
     congrArg (· ≫ h)⟩
 
 @[simp] theorem left_cancel_id : (g = g ≫ e) ↔ 𝟙 Y = e := by
-  have := left_cancel g (𝟙 _) e
-  simp at this; assumption
+  have := left_cancel g (𝟙 _) e; simp at this; exact this
 
 @[simp] theorem left_cancel_id' : (g ≫ e = g) ↔ e = 𝟙 Y := by
-  have := left_cancel g e (𝟙 Y)
-  simp at this; assumption
+  have := left_cancel g e (𝟙 Y); simp at this; exact this
 
 @[simp] theorem right_cancel_id : (g = e ≫ g) ↔ 𝟙 X = e := by
-  have := right_cancel (𝟙 X) e g
-  simp at this; assumption
+  have := right_cancel (𝟙 X) e g; simp at this; exact this
 
 @[simp] theorem right_cancel_id' : (e ≫ g = g) ↔ e = 𝟙 X := by
-  have := right_cancel e (𝟙 X) g
-  simp at this; assumption
+  have := right_cancel e (𝟙 X) g; simp at this; exact this
 
 end Groupoid
 

@@ -412,38 +412,22 @@ noncomputable def _root_.VML.VMLInput.toSteadyState (p : VMLInput X) : VMLSteady
     rw [p.hb_const x]
     ext i
     simp [Pi.smul_apply, smul_eq_mul]
-    have hc₀_ne : p.c₀ ≠ 0 := ne_of_lt p.hc₀_neg
-    field_simp
+    field_simp [ne_of_lt p.hc₀_neg]
   hForceBalance := fun x => by
     -- ∇a = -(2c₀)E + b₀ × B, and VMLSteadyState expects -(2c₀)(E + drift × B)
     -- where drift = (-1/(2c₀))b₀. These are equal since -(2c₀)*(-1/(2c₀)) = 1.
-    have hfb := p.hForceBalance x
-    rw [hfb]
-    have hc₀_ne : p.c₀ ≠ 0 := ne_of_lt p.hc₀_neg
-    rw [smul_add, cross_smul_left, smul_smul]
+    rw [p.hForceBalance x, smul_add, cross_smul_left, smul_smul]
     have h1 : -(2 * p.c₀) * (-1 / (2 * p.c₀)) = 1 := by
-      field_simp
+      field_simp [ne_of_lt p.hc₀_neg]
     rw [h1, one_smul]
-  hJ_def := fun x => by
-    exact p.hJ_def' x
+  hJ_def := p.hJ_def'
   hDensityConst := p.hDensityConst
-  hGradA_zero := fun hb0 hdens => by
-    -- (-1/(2c₀)) • b₀ = 0 implies b₀ = 0 (since c₀ ≠ 0)
-    have hc₀_ne : p.c₀ ≠ 0 := ne_of_lt p.hc₀_neg
-    have hcoeff_ne : (-1 : ℝ) / (2 * p.c₀) ≠ 0 := by
-      apply div_ne_zero (by norm_num)
-      exact mul_ne_zero two_ne_zero hc₀_ne
-    have hb₀_zero : p.b₀ = 0 :=
-      (smul_eq_zero.mp hb0).resolve_left hcoeff_ne
-    exact p.hGradA_zero hb₀_zero hdens
-  hNormalization := fun hb0 hdens => by
-    have hc₀_ne : p.c₀ ≠ 0 := ne_of_lt p.hc₀_neg
-    have hcoeff_ne : (-1 : ℝ) / (2 * p.c₀) ≠ 0 := by
-      apply div_ne_zero (by norm_num)
-      exact mul_ne_zero two_ne_zero hc₀_ne
-    have hb₀_zero : p.b₀ = 0 :=
-      (smul_eq_zero.mp hb0).resolve_left hcoeff_ne
-    exact p.hNorm hb₀_zero hdens
+  hGradA_zero := fun hb0 hdens => p.hGradA_zero
+    ((smul_eq_zero.mp hb0).resolve_left
+      (div_ne_zero (by norm_num) (mul_ne_zero two_ne_zero (ne_of_lt p.hc₀_neg)))) hdens
+  hNormalization := fun hb0 hdens => p.hNorm
+    ((smul_eq_zero.mp hb0).resolve_left
+      (div_ne_zero (by norm_num) (mul_ne_zero two_ne_zero (ne_of_lt p.hc₀_neg)))) hdens
 
 /-- Main theorem (honest version): From physical inputs alone,
     any smooth steady state (f, E, B) on T³ × ℝ³ with ν > 0 is:

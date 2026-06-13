@@ -51,8 +51,7 @@ lemma thickening_inter_eq_empty : thickening u s ∩ t = ∅ ↔ ∀ a ∈ s, �
 lemma thickening_inter_eq_empty_comm (hu : SetRel.IsSymm u) :
     thickening u s ∩ t = ∅ ↔ s ∩ thickening u t = ∅ := by
   rw [inter_comm s, thickening_inter_eq_empty, thickening_inter_eq_empty]
-  exact ⟨fun h a ha b hb hab => h b hb a ha (SetRel.symm u hab),
-    fun h a ha b hb hab => h b hb a ha (SetRel.symm u hab)⟩
+  constructor <;> exact fun h a ha b hb hab => h b hb a ha (SetRel.symm u hab)
 
 lemma thickening_inter_thickening_eq_empty_of_comp (hv : SetRel.IsSymm v) (hvu : v ○ v ⊆ u)
     (hST : thickening u s ∩ t = ∅) :
