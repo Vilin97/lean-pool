@@ -57,11 +57,6 @@ private lemma fourier_orthogonality (m n : ℤ) :
     intro t; rw [← fourier_neg (n := n), ← fourier_add]; ring_nf
   simp_rw [key]; rw [integral_fourier]; simp [sub_eq_zero]
 
-/-- `‖fourier n t‖ = 1` pointwise. -/
-private lemma norm_fourier_eq_one (n : ℤ) (t : AddCircle T) :
-    ‖(fourier n t : ℂ)‖ = 1 := by
-  simp [fourier_apply, AddCircle.toCircle]
-
 /-- Rewrite `blockPoly` at `r · fourier(1)(t)` as a Fourier series. -/
 private lemma blockPoly_fourier_expansion {D : ℕ} (a : Fin D → ℂ) (ℓ : ℕ)
     (r : ℝ) (t : AddCircle T) :

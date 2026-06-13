@@ -357,9 +357,8 @@ private lemma nonemptyBonus_submodular (α β : Finset (Fin 4)) :
   by_cases hα : α.Nonempty
   · by_cases hβ : β.Nonempty
     · have hUnion : (α ∪ β).Nonempty := Finset.union_nonempty.2 (Or.inl hα)
-      by_cases hInter : (α ∩ β).Nonempty
-      · simp [nonemptyBonus, hα, hβ, hUnion, hInter]
-      · simp [nonemptyBonus, hα, hβ, hUnion, hInter]
+      by_cases hInter : (α ∩ β).Nonempty <;>
+        simp [nonemptyBonus, hα, hβ, hUnion, hInter]
     · have hβ' : β = ∅ := Finset.not_nonempty_iff_eq_empty.mp hβ
       rw [hβ']
       simp [nonemptyBonus, hα]
@@ -791,12 +790,13 @@ lemma _root_.ZhangYeung.zhangYeungAt_entropyFn
     (μ : Measure Ω) [IsProbabilityMeasure μ] (π : Equiv.Perm (Fin 4)) :
     zhangYeungAt (entropyFn X μ) (π 0) (π 1) (π 2) (π 3) := by
   -- Distinctness of the four permuted indices from injectivity of `π`.
-  have h01 : π 0 ≠ π 1 := fun h => absurd (π.injective h) (by decide)
-  have h02 : π 0 ≠ π 2 := fun h => absurd (π.injective h) (by decide)
-  have h03 : π 0 ≠ π 3 := fun h => absurd (π.injective h) (by decide)
-  have h12 : π 1 ≠ π 2 := fun h => absurd (π.injective h) (by decide)
-  have h13 : π 1 ≠ π 3 := fun h => absurd (π.injective h) (by decide)
-  have h23 : π 2 ≠ π 3 := fun h => absurd (π.injective h) (by decide)
+  have d : ∀ a b : Fin 4, a ≠ b → π a ≠ π b := fun _ _ hab h => hab (π.injective h)
+  have h01 : π 0 ≠ π 1 := d 0 1 (by decide)
+  have h02 : π 0 ≠ π 2 := d 0 2 (by decide)
+  have h03 : π 0 ≠ π 3 := d 0 3 (by decide)
+  have h12 : π 1 ≠ π 2 := d 1 2 (by decide)
+  have h13 : π 1 ≠ π 3 := d 1 3 (by decide)
+  have h23 : π 2 ≠ π 3 := d 2 3 (by decide)
   -- Apply M3 at the labeling `(X_M3, Y_M3, Z_M3, U_M3) =
   -- (X (π 2), X (π 3), X (π 0), X (π 1))`.
   have hM3 := ZhangYeung.zhangYeung (hX (π 2)) (hX (π 3)) (hX (π 0)) (hX (π 1)) μ
@@ -1147,20 +1147,11 @@ theorem _root_.ZhangYeung.not_zhangYeungHolds_witness_n {n : ℕ} (hn : 4 ≤ n)
     ¬ zhangYeungHoldsN (FWitnessN hn) := by
   intro h
   have inj := Fin.castLE_injective hn
-  have d23 : (Fin.castLE hn 2 : Fin n) ≠ Fin.castLE hn 3 :=
-    fun e => absurd (inj e) (by decide)
-  have d20 : (Fin.castLE hn 2 : Fin n) ≠ Fin.castLE hn 0 :=
-    fun e => absurd (inj e) (by decide)
-  have d21 : (Fin.castLE hn 2 : Fin n) ≠ Fin.castLE hn 1 :=
-    fun e => absurd (inj e) (by decide)
-  have d30 : (Fin.castLE hn 3 : Fin n) ≠ Fin.castLE hn 0 :=
-    fun e => absurd (inj e) (by decide)
-  have d31 : (Fin.castLE hn 3 : Fin n) ≠ Fin.castLE hn 1 :=
-    fun e => absurd (inj e) (by decide)
-  have d01 : (Fin.castLE hn 0 : Fin n) ≠ Fin.castLE hn 1 :=
-    fun e => absurd (inj e) (by decide)
+  have d : ∀ a b : Fin 4, a ≠ b → (Fin.castLE hn a : Fin n) ≠ Fin.castLE hn b :=
+    fun _ _ hab e => hab (inj e)
   have hat := h (Fin.castLE hn 2) (Fin.castLE hn 3) (Fin.castLE hn 0) (Fin.castLE hn 1)
-    d23 d20 d21 d30 d31 d01
+    (d 2 3 (by decide)) (d 2 0 (by decide)) (d 2 1 (by decide))
+    (d 3 0 (by decide)) (d 3 1 (by decide)) (d 0 1 (by decide))
   exact not_zhangYeungAt_witness_canonical ((zhangYeungAtN_witness_castLE hn 2 3 0 1).mp hat)
 
 /--

@@ -355,16 +355,16 @@ theorem _root_.ZhangYeung.theorem5
     exact hPairXZU.mutualInfo_eq.symm
   have hTupleSecond :
       IdentDistrib (fun ω' => fun k : Fin n => XstarCoord k ω') (fun ω => fun k :
-        Fin n => X k ω) ν μ := by
-    exact hSecond.comp measurable_fst
+        Fin n => X k ω) ν μ :=
+    hSecond.comp measurable_fst
   have hMargJoint :
       H[(fun ω' => fun k : Fin n => XstarCoord k ω'); ν] =
         H[(fun ω : Ω => fun k : Fin n => X k ω); μ] :=
     hTupleSecond.entropy_congr
   have hMargSingle : ∀ k : Fin n, H[XstarCoord k; ν] = H[X k; μ] := by
     intro k
-    have hCoord : IdentDistrib (XstarCoord k) (X k) ν μ := by
-      exact hTupleSecond.comp (measurable_pi_apply k)
+    have hCoord : IdentDistrib (XstarCoord k) (X k) ν μ :=
+      hTupleSecond.comp (measurable_pi_apply k)
     exact hCoord.entropy_congr
   have hMargSingles : ∑ k : Fin n, H[XstarCoord k; ν] = ∑ k : Fin n, H[X k; μ] := by
     refine Finset.sum_congr rfl ?_
@@ -445,15 +445,14 @@ theorem _root_.ZhangYeung.theorem5_averaged
   have hn_pos_nat : 0 < n := lt_of_lt_of_le (by decide : 0 < 2) hn
   have hn_pos : (0 : ℝ) < n := by exact_mod_cast hn_pos_nat
   have hn_ne : (n : ℝ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hn_pos_nat)
-  have hdiv : lhs ≤ ((∑ i : Fin n, rhs i) + n * tail) / n := by
-    exact (le_div_iff₀ hn_pos).2 (by simpa [mul_comm] using hscaled)
+  have hdiv : lhs ≤ ((∑ i : Fin n, rhs i) + n * tail) / n :=
+    (le_div_iff₀ hn_pos).2 (by simpa [mul_comm] using hscaled)
   have hsplit : ((∑ i : Fin n, rhs i) + n * tail) / n = (1 / n : ℝ) * (∑ i : Fin n,
     rhs i) + tail := by
     field_simp [hn_ne]
-  have hfinal := hdiv
-  rw [hsplit] at hfinal
+  rw [hsplit] at hdiv
   simpa [lhs, rhs, tail, sub_eq_add_neg, add_assoc, add_left_comm, add_comm,
-    mul_add, add_mul, mul_comm, mul_left_comm, mul_assoc] using hfinal
+    mul_add, add_mul, mul_comm, mul_left_comm, mul_assoc] using hdiv
 
 end MainTheorems
 

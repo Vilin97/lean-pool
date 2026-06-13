@@ -111,11 +111,6 @@ private lemma freq_ratio_decreasing {j₁ j₂ : ℕ} (hj₁ : 6 ≤ j₁) (hj�
       (mul_nonneg (by linarith : (0 : ℝ) ≤ (j₁ : ℝ) - 5)
         (by linarith : (0 : ℝ) ≤ (j₂ : ℝ) - 5))]
 
-/-! ## Private Lemma 6.1b: Numerical verification at j = 818 -/
-
-private lemma numerical_check_818 : 1343 * (11 * 1637) ^ 2 ≤ 813 ^ 4 := by
-  norm_num
-
 /-! ## Structural matching: localPoly as a Fourier sum -/
 
 /-- The frequency support of `localPoly a 5 j`, restricted to indices `≤ D`. -/

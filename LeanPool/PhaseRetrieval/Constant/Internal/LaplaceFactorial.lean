@@ -76,11 +76,6 @@ private lemma hasDerivAt_phiFunc (n : ℕ) {r : ℝ} (hr : 0 < r) :
     simpa using hasDerivAt_pow 2 r
   convert h1.sub h2 using 1
 
-/-- Derivative: `φ_n'(r) = (2n+1)/r − 2r`, vanishing at `r = r_n`. -/
-private lemma phiFunc_deriv {n : ℕ} (_hn : 1 ≤ n) {r : ℝ} (hr : 0 < r) :
-    HasDerivAt (phiFunc n) ((2 * ↑n + 1) / r - 2 * r) r :=
-  hasDerivAt_phiFunc n hr
-
 /-! ## Theorem 2.7: Concavity of φ_n
 
 `φ_n''(r) = −(2n+1)/r² − 2 ≤ −2` for `r > 0`.
