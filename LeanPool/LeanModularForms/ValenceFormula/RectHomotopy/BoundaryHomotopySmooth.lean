@@ -17,42 +17,6 @@ open Complex Set Metric Filter Topology
 
 namespace RectHomotopyProof
 
-/-- Derivative of an affine-angle complex exponential `t' ↦ exp((α + (t' - c)·β)·I)`. -/
-private lemma hasDerivAt_arc_exp' (α β c t : ℝ) :
-    HasDerivAt (fun t' : ℝ => Complex.exp (((α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) * I))
-      ((β : ℂ) * I * Complex.exp (((α : ℂ) + ((t : ℂ) - c) * (β : ℂ)) * I)) t := by
-  have h_shift : HasDerivAt (fun t' : ℝ => (t' : ℂ) - c) 1 t := by
-    have h := @ContinuousLinearMap.hasDerivAt ℝ _ ℂ _ _ t Complex.ofRealCLM
-    simp only [Complex.ofRealCLM_apply] at h
-    exact h.sub_const (c : ℂ)
-  have h_inner : HasDerivAt (fun t' : ℝ => (α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) (β : ℂ) t := by
-    have h_mul := h_shift.mul_const (β : ℂ)
-    simp only [one_mul] at h_mul
-    exact h_mul.const_add (α : ℂ)
-  have h_times_I : HasDerivAt (fun t' : ℝ => ((α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) * I)
-      ((β : ℂ) * I) t := h_inner.mul_const I
-  have h := (Complex.hasDerivAt_exp (((α : ℂ) + ((t : ℂ) - c) * (β : ℂ)) * I)).comp t h_times_I
-  simp only [mul_comm (Complex.exp _)] at h
-  exact h
-
-/-- Derivative of the chord segment `t' ↦ chordSegment a b (t' - c)` is `b - a`. -/
-private lemma hasDerivAt_chordSegment_shift' (a b : ℂ) (c t : ℝ) :
-    HasDerivAt (fun t' : ℝ => chordSegment a b (t' - c)) (b - a) t := by
-  simp only [chordSegment]
-  have h_shift : HasDerivAt (fun t' : ℝ => t' - c) (1 : ℝ) t := (hasDerivAt_id t).sub_const c
-  have h1 : HasDerivAt (fun t' : ℝ => (1 - (t' - c)) • a) (-a) t := by
-    have h_coef : HasDerivAt (fun t' : ℝ => (1 - (t' - c) : ℝ)) (-1 : ℝ) t := by
-      have := (hasDerivAt_const t (1 : ℝ)).sub h_shift
-      simp only [zero_sub] at this
-      exact this
-    have := h_coef.smul_const a
-    simpa only [neg_one_smul] using this
-  have h2 : HasDerivAt (fun t' : ℝ => (t' - c) • b) b t := by
-    have := h_shift.smul_const b
-    simpa only [one_smul] using this
-  convert h1.add h2 using 1
-  ring
-
 /-- Derivative of a straight segment `t' ↦ c₀ + (c₁ + (t' - c)·d)·I` is `d·I`. -/
 private lemma hasDerivAt_straight_seg (c₀ c₁ d : ℂ) (c t : ℝ) :
     HasDerivAt (fun t' : ℝ => c₀ + (c₁ + ((t' : ℂ) - c) * d) * I) (d * I) t := by
@@ -112,7 +76,7 @@ private lemma not_diffAt_at_one (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
             Complex.exp (((Real.pi : ℝ) / 3 +
                 (t' - 1) * ((Real.pi : ℝ) / 6)) * I))
           (((Real.pi : ℝ) / 6) * I * rho') (1 : ℝ) := by
-        have h_raw := hasDerivAt_arc_exp' (Real.pi / 3) (Real.pi / 6) 1 1
+        have h_raw := hasDerivAt_arc_exp (Real.pi / 3) (Real.pi / 6) 1 1
         have h_val : Complex.exp (((↑(Real.pi / 3) : ℂ) +
             ((↑(1 : ℝ) : ℂ) - ↑(1 : ℝ)) * (↑(Real.pi / 6) : ℂ)) * I) = rho' := by
           rw [show ((↑(1 : ℝ) : ℂ) - ↑(1 : ℝ)) = 0 from by norm_num, zero_mul, add_zero,
@@ -121,7 +85,7 @@ private lemma not_diffAt_at_one (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
         convert h_raw using 2 <;> push_cast <;> ring
       have h_chord : HasDerivAt (fun t' : ℝ => chordSegment rho' iPoint (t' - 1))
           (iPoint - rho') (1 : ℝ) :=
-        hasDerivAt_chordSegment_shift' rho' iPoint 1 1
+        hasDerivAt_chordSegment_shift rho' iPoint 1 1
       have h_combined : HasDerivAt g
           ((1 - s) • (((Real.pi : ℝ) / 6) * I * rho') + s • (iPoint - rho')) (1 : ℝ) := by
         have h1 := h_arc.const_smul (1 - s)
@@ -234,7 +198,7 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
             Complex.exp (((Real.pi : ℝ) / 2 +
                 (t' - 2) * ((Real.pi : ℝ) / 6)) * I))
           (((Real.pi : ℝ) / 6) * I * rho) (3 : ℝ) := by
-        have h_raw := hasDerivAt_arc_exp' (Real.pi / 2) (Real.pi / 6) 2 3
+        have h_raw := hasDerivAt_arc_exp (Real.pi / 2) (Real.pi / 6) 2 3
         have h_val : Complex.exp (((↑(Real.pi / 2) : ℂ) +
             ((↑(3 : ℝ) : ℂ) - ↑(2 : ℝ)) * (↑(Real.pi / 6) : ℂ)) * I) = rho := by
           rw [show ((↑(Real.pi / 2) : ℂ) + ((↑(3 : ℝ) : ℂ) - ↑(2 : ℝ)) * (↑(Real.pi / 6) : ℂ)) =
@@ -244,7 +208,7 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
         convert h_raw using 2 <;> push_cast <;> ring
       have h_chord : HasDerivAt (fun t' : ℝ => chordSegment iPoint rho (t' - 2))
           (rho - iPoint) (3 : ℝ) :=
-        hasDerivAt_chordSegment_shift' iPoint rho 2 3
+        hasDerivAt_chordSegment_shift iPoint rho 2 3
       have h_combined : HasDerivAt g
           ((1 - s) • (((Real.pi : ℝ) / 6) * I * rho) + s • (rho - iPoint)) (3 : ℝ) := by
         have h1 := h_arc.const_smul (1 - s)

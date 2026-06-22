@@ -344,53 +344,43 @@ lemma slope_fdPolygon_tendsto_seg5_right :
     exact (slope_fdPolygon_at_t4_right s hs.1).symm
   · exact tendsto_const_nhds
 
+/-- If `fdPolygon` is differentiable at `k` and the slope tends to `vL` from the left and
+    `vR` from the right, then `vL = vR`. Used to derive a contradiction at partition points. -/
+private lemma fdPolygon_slope_lr_eq {vL vR : ℂ} (k₀ : ℝ)
+    (hLbot : (𝓝[<] k₀).NeBot) (hRbot : (𝓝[>] k₀).NeBot)
+    (hdiff : DifferentiableAt ℝ fdPolygon k₀)
+    (hLtends : Tendsto (slope fdPolygon k₀) (𝓝[<] k₀) (𝓝 vL))
+    (hRtends : Tendsto (slope fdPolygon k₀) (𝓝[>] k₀) (𝓝 vR)) : vL = vR := by
+  have hslope : Tendsto (slope fdPolygon k₀) (𝓝[≠] k₀) (𝓝 (deriv fdPolygon k₀)) :=
+    hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
+  have hL := tendsto_nhds_unique' hLbot
+    (hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))) hLtends
+  have hR := tendsto_nhds_unique' hRbot
+    (hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))) hRtends
+  rw [← hL, ← hR]
+
 lemma fdPolygon_not_differentiableAt_partition (t : ℝ) (ht : t ∈ ({1, 2, 3, 4} : Finset ℝ)) :
     ¬DifferentiableAt ℝ fdPolygon t := by
   simp only [Finset.mem_insert, Finset.mem_singleton] at ht
   rcases ht with rfl | rfl | rfl | rfl
   · intro hdiff
-    have hslope : Tendsto (slope fdPolygon 1) (𝓝[≠] 1) (𝓝 (deriv fdPolygon 1)) :=
-      hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
-    have hL : Tendsto (slope fdPolygon 1) (𝓝[<] 1) (𝓝 (deriv fdPolygon 1)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))
-    have hR : Tendsto (slope fdPolygon 1) (𝓝[>] 1) (𝓝 (deriv fdPolygon 1)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))
-    have hL' := tendsto_nhds_unique hL slope_fdPolygon_tendsto_seg1_left
-    have hR' := tendsto_nhds_unique hR slope_fdPolygon_tendsto_seg2_right
-    rw [hL'] at hR'; rw [fdPolygon_seg1_deriv_val] at hR'
-    exact fdPolygon_deriv_ne_at_t1 hR'
+    have h := fdPolygon_slope_lr_eq 1 inferInstance inferInstance hdiff
+      slope_fdPolygon_tendsto_seg1_left slope_fdPolygon_tendsto_seg2_right
+    rw [fdPolygon_seg1_deriv_val] at h
+    exact fdPolygon_deriv_ne_at_t1 h
+  · exact fun hdiff => fdPolygon_deriv_ne_at_t2
+      (fdPolygon_slope_lr_eq 2 inferInstance inferInstance hdiff
+        slope_fdPolygon_tendsto_seg2_left slope_fdPolygon_tendsto_seg3_right)
   · intro hdiff
-    have hslope : Tendsto (slope fdPolygon 2) (𝓝[≠] 2) (𝓝 (deriv fdPolygon 2)) :=
-      hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
-    have hL : Tendsto (slope fdPolygon 2) (𝓝[<] 2) (𝓝 (deriv fdPolygon 2)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))
-    have hR : Tendsto (slope fdPolygon 2) (𝓝[>] 2) (𝓝 (deriv fdPolygon 2)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))
-    have hL' := tendsto_nhds_unique hL slope_fdPolygon_tendsto_seg2_left
-    have hR' := tendsto_nhds_unique hR slope_fdPolygon_tendsto_seg3_right
-    rw [hL'] at hR'; exact fdPolygon_deriv_ne_at_t2 hR'
+    have h := fdPolygon_slope_lr_eq 3 inferInstance inferInstance hdiff
+      slope_fdPolygon_tendsto_seg3_left slope_fdPolygon_tendsto_seg4_right
+    rw [fdPolygon_seg4_deriv_val] at h
+    exact fdPolygon_deriv_ne_at_t3 h
   · intro hdiff
-    have hslope : Tendsto (slope fdPolygon 3) (𝓝[≠] 3) (𝓝 (deriv fdPolygon 3)) :=
-      hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
-    have hL : Tendsto (slope fdPolygon 3) (𝓝[<] 3) (𝓝 (deriv fdPolygon 3)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))
-    have hR : Tendsto (slope fdPolygon 3) (𝓝[>] 3) (𝓝 (deriv fdPolygon 3)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))
-    have hL' := tendsto_nhds_unique hL slope_fdPolygon_tendsto_seg3_left
-    have hR' := tendsto_nhds_unique hR slope_fdPolygon_tendsto_seg4_right
-    rw [hL'] at hR'; rw [fdPolygon_seg4_deriv_val] at hR'
-    exact fdPolygon_deriv_ne_at_t3 hR'
-  · intro hdiff
-    have hslope : Tendsto (slope fdPolygon 4) (𝓝[≠] 4) (𝓝 (deriv fdPolygon 4)) :=
-      hasDerivAt_iff_tendsto_slope.mp hdiff.hasDerivAt
-    have hL : Tendsto (slope fdPolygon 4) (𝓝[<] 4) (𝓝 (deriv fdPolygon 4)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_lt hx))
-    have hR : Tendsto (slope fdPolygon 4) (𝓝[>] 4) (𝓝 (deriv fdPolygon 4)) :=
-      hslope.mono_left (nhdsWithin_mono _ (fun x hx => ne_of_gt hx))
-    have hL' := tendsto_nhds_unique hL slope_fdPolygon_tendsto_seg4_left
-    have hR' := tendsto_nhds_unique hR slope_fdPolygon_tendsto_seg5_right
-    rw [hL'] at hR'; rw [fdPolygon_seg4_deriv_val] at hR'
-    exact fdPolygon_deriv_ne_at_t4 hR'
+    have h := fdPolygon_slope_lr_eq 4 inferInstance inferInstance hdiff
+      slope_fdPolygon_tendsto_seg4_left slope_fdPolygon_tendsto_seg5_right
+    rw [fdPolygon_seg4_deriv_val] at h
+    exact fdPolygon_deriv_ne_at_t4 h
 
 lemma fdPolygon_deriv_bounded :
     ∃ M : ℝ, ∀ t ∈ Icc 0 5, ‖deriv fdPolygon t‖ ≤ M := by

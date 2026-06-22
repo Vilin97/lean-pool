@@ -146,17 +146,23 @@ private theorem explicit_coefficients (S : Finset UpperHalfPlane) (hS : ∀ p �
   rw [h_split, h_ell_sum, hg_i, hg_ρ, hg_ρ1] at h_sum
   linear_combination -h_sum
 
+omit f hf in
+/-- A unit-circle point with `re*re = 1/4` (so `re*re + im*im = 1`) has `im = √3/2`. -/
+private lemma unit_circle_im_eq_sqrt3_half (s : ℍ)
+    (h_nsq : (s : ℂ).re * (s : ℂ).re + (s : ℂ).im * (s : ℂ).im = 1)
+    (h_re_sq : (s : ℂ).re * (s : ℂ).re = 1 / 4) : (s : ℂ).im = Real.sqrt 3 / 2 := by
+  have h_prod : ((s : ℂ).im - Real.sqrt 3 / 2) * ((s : ℂ).im + Real.sqrt 3 / 2) = 0 := by
+    nlinarith [Real.mul_self_sqrt (show (3 : ℝ) ≥ 0 by norm_num)]
+  rcases mul_eq_zero.mp h_prod with h | h
+  · linarith
+  · exact absurd h (ne_of_gt (add_pos s.2 (by positivity)))
+
 private lemma unit_circle_re_neg_half_eq_rho (s : ℍ)
     (hs_norm : ‖(s : ℂ)‖ = 1) (hs_re : (s : ℂ).re = -1 / 2) : s = ellipticPointRho' := by
   have h_nsq : Complex.normSq (s : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hs_norm, one_pow]
-  rw [Complex.normSq_apply, hs_re] at h_nsq
-  have h_im : (s : ℂ).im = Real.sqrt 3 / 2 := by
-    have h_prod : ((s : ℂ).im - Real.sqrt 3 / 2) *
-        ((s : ℂ).im + Real.sqrt 3 / 2) = 0 := by
-      nlinarith [Real.mul_self_sqrt (show (3 : ℝ) ≥ 0 by norm_num)]
-    rcases mul_eq_zero.mp h_prod with h | h
-    · linarith
-    · exact absurd h (ne_of_gt (add_pos s.2 (by positivity)))
+  rw [Complex.normSq_apply] at h_nsq
+  have h_im : (s : ℂ).im = Real.sqrt 3 / 2 :=
+    unit_circle_im_eq_sqrt3_half s h_nsq (by rw [hs_re]; norm_num)
   apply UpperHalfPlane.ext; apply Complex.ext <;>
     simp only [ellipticPointRho', UpperHalfPlane.coe_mk, add_re, add_im, neg_re, neg_im, one_re,
       one_im, div_ofNat_re, div_ofNat_im, mul_re, mul_im, ofReal_re, ofReal_im, I_re, I_im,
@@ -167,14 +173,9 @@ private lemma unit_circle_re_pos_half_eq_rho_plus_one (s : ℍ)
     (hs_norm : ‖(s : ℂ)‖ = 1) (hs_re : (s : ℂ).re = 1 / 2) :
     s = ellipticPointRhoPlusOne' := by
   have h_nsq : Complex.normSq (s : ℂ) = 1 := by rw [Complex.normSq_eq_norm_sq, hs_norm, one_pow]
-  rw [Complex.normSq_apply, hs_re] at h_nsq
-  have h_im : (s : ℂ).im = Real.sqrt 3 / 2 := by
-    have h_prod : ((s : ℂ).im - Real.sqrt 3 / 2) *
-        ((s : ℂ).im + Real.sqrt 3 / 2) = 0 := by
-      nlinarith [Real.mul_self_sqrt (show (3 : ℝ) ≥ 0 by norm_num)]
-    rcases mul_eq_zero.mp h_prod with h | h
-    · linarith
-    · exact absurd h (ne_of_gt (add_pos s.2 (by positivity)))
+  rw [Complex.normSq_apply] at h_nsq
+  have h_im : (s : ℂ).im = Real.sqrt 3 / 2 :=
+    unit_circle_im_eq_sqrt3_half s h_nsq (by rw [hs_re]; norm_num)
   apply UpperHalfPlane.ext; apply Complex.ext <;>
     simp only [ellipticPointRhoPlusOne', UpperHalfPlane.coe_mk, add_re, add_im, one_re, one_im,
       div_ofNat_re, div_ofNat_im, mul_re, mul_im, ofReal_re, ofReal_im, I_re, I_im, mul_zero,

@@ -25,6 +25,36 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+/-- Re-positivity for the log-div split: the difference at `t₀-δ'` and the negated difference
+at `t₀+δ'` both have positive real part. -/
+private lemma unitArc_re_pos_at_offsets (s : ℂ) (t₀ δ' : ℝ)
+    (_ht₀_Ioo : t₀ ∈ Ioo (1 : ℝ) 3)
+    (h_s_arc : s = exp (↑(Real.pi * (1 + t₀) / 6) * I))
+    (_hδ'_pos : 0 < δ') (hδ'_left : 1 < t₀ - δ') (hδ'_right : t₀ + δ' < 3) :
+    0 < (exp (↑(Real.pi * (1 + (t₀ - δ')) / 6) * I) - s).re ∧
+    0 < (-(exp (↑(Real.pi * (1 + (t₀ + δ')) / 6) * I) - s)).re := by
+  constructor
+  · set θ_m := Real.pi * (1 + (t₀ - δ')) / 6
+    set θ₀' := Real.pi * (1 + t₀) / 6
+    rw [h_s_arc, exp_real_angle_I, exp_real_angle_I]
+    simp only [Complex.sub_re, Complex.add_re, Complex.ofReal_re,
+      Complex.mul_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
+      mul_zero, zero_mul, sub_self, add_zero]
+    have hθ_m_lt : θ_m < θ₀' := by simp [θ_m, θ₀']; nlinarith [Real.pi_pos]
+    have hθ_m_nn : 0 ≤ θ_m := by simp [θ_m]; nlinarith [Real.pi_pos, hδ'_left]
+    have hθ₀_le_pi : θ₀' ≤ Real.pi := by simp [θ₀']; nlinarith [Real.pi_pos, hδ'_right]
+    linarith [Real.cos_lt_cos_of_nonneg_of_le_pi hθ_m_nn hθ₀_le_pi hθ_m_lt]
+  · set θ_p := Real.pi * (1 + (t₀ + δ')) / 6
+    set θ₀' := Real.pi * (1 + t₀) / 6
+    rw [h_s_arc, exp_real_angle_I, exp_real_angle_I]
+    simp only [Complex.sub_re, Complex.add_re, Complex.ofReal_re,
+      Complex.mul_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
+      mul_zero, zero_mul, sub_self, add_zero, neg_sub]
+    have hθ_gt : θ₀' < θ_p := by simp [θ₀', θ_p]; nlinarith [Real.pi_pos]
+    have hθ₀_nn : 0 ≤ θ₀' := by simp [θ₀']; nlinarith [Real.pi_pos, hδ'_left]
+    have hθ_p_le_pi : θ_p ≤ Real.pi := by simp [θ_p]; nlinarith [Real.pi_pos, hδ'_right]
+    linarith [Real.cos_lt_cos_of_nonneg_of_le_pi hθ₀_nn hθ_p_le_pi hθ_gt]
+
 private lemma unitArc_log_ratio_tendsto (s : ℂ)
     (_hs_norm : ‖s‖ = 1) (_hs_re : |s.re| < 1 / 2) (_hs_im_pos : 0 < s.im)
     (t₀ : ℝ) (_ht₀_Ioo : t₀ ∈ Ioo (1 : ℝ) 3) (_h_s_arc : s = exp (↑(Real.pi * (1 + t₀) / 6) * I)) :
@@ -73,30 +103,8 @@ private lemma unitArc_log_diff_tendsto (s : ℂ)
     apply h_ev.mono; intro δ ⟨hδ_pos, hδ_small⟩
     have hδ_lt1 : δ < t₀ - 1 := lt_of_lt_of_le hδ_small (min_le_left _ _)
     have hδ_lt2 : δ < 3 - t₀ := lt_of_lt_of_le hδ_small (min_le_right _ _)
-    set θ_m := Real.pi * (1 + (t₀ - δ)) / 6
-    set θ₀' := Real.pi * (1 + t₀) / 6
-    have hθ_lt : θ_m < θ₀' := by simp [θ_m, θ₀']; nlinarith [Real.pi_pos]
-    have hθ_m_nn : 0 ≤ θ_m := by simp [θ_m]; nlinarith [Real.pi_pos, ht₀_Ioo.1]
-    have hθ₀_le_pi : θ₀' ≤ Real.pi := by simp [θ₀']; nlinarith [Real.pi_pos, ht₀_Ioo.2]
-    have hcos_m : Real.cos θ₀' < Real.cos θ_m :=
-      Real.cos_lt_cos_of_nonneg_of_le_pi hθ_m_nn hθ₀_le_pi hθ_lt
-    have h_re_a : 0 < (exp (↑(Real.pi * (1 + (t₀ - δ)) / 6) * I) - s).re := by
-      rw [h_s_arc, exp_real_angle_I, exp_real_angle_I]
-      simp only [Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.ofReal_im,
-        Complex.I_re, Complex.I_im, mul_zero, zero_mul, sub_self, add_zero, Complex.sub_re]
-      change 0 < Real.cos θ_m - Real.cos θ₀'; linarith
-    set θ_p := Real.pi * (1 + (t₀ + δ)) / 6
-    have hθ_gt : θ₀' < θ_p := by simp [θ₀', θ_p]; nlinarith [Real.pi_pos]
-    have hθ₀_nn : 0 ≤ θ₀' := by simp [θ₀']; nlinarith [Real.pi_pos, ht₀_Ioo.1]
-    have hθ_p_le_pi : θ_p ≤ Real.pi := by simp [θ_p]; nlinarith [Real.pi_pos, ht₀_Ioo.2]
-    have hcos_p : Real.cos θ_p < Real.cos θ₀' :=
-      Real.cos_lt_cos_of_nonneg_of_le_pi hθ₀_nn hθ_p_le_pi hθ_gt
-    have h_re_b : 0 < (-(exp (↑(Real.pi * (1 + (t₀ + δ)) / 6) * I) - s)).re := by
-      rw [h_s_arc, exp_real_angle_I, exp_real_angle_I]
-      simp only [Complex.sub_re, Complex.add_re, Complex.ofReal_re,
-        Complex.mul_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
-        mul_zero, zero_mul, sub_self, add_zero, neg_sub]
-      change 0 < Real.cos θ₀' - Real.cos θ_p; linarith
+    obtain ⟨h_re_a, h_re_b⟩ := unitArc_re_pos_at_offsets s t₀ δ ht₀_Ioo h_s_arc hδ_pos
+      (by linarith) (by linarith)
     exact (log_div_of_re_pos h_re_a h_re_b).symm
   exact h_ratio.congr' (h_ev_agree.mono fun _ h => h.symm)
 
@@ -272,36 +280,6 @@ private lemma unitArc_h_near (H : ℝ) (s : ℂ)
   have ht3 : t < 3 := by have : t - t₀ ≤ δ := (abs_le.mp habs).2; linarith
   exact unitArc_arc_inside_le_eps s H t₀ δ ε ht₀_Ioo h_s_arc hδ_pos hδ_left hδ_right hδ_eq
     t ht1 ht3 habs
-
-/-! ### Helper 6: Re-positivity for the log-div split -/
-
-private lemma unitArc_re_pos_at_offsets (s : ℂ) (t₀ δ' : ℝ)
-    (_ht₀_Ioo : t₀ ∈ Ioo (1 : ℝ) 3)
-    (h_s_arc : s = exp (↑(Real.pi * (1 + t₀) / 6) * I))
-    (_hδ'_pos : 0 < δ') (hδ'_left : 1 < t₀ - δ') (hδ'_right : t₀ + δ' < 3) :
-    0 < (exp (↑(Real.pi * (1 + (t₀ - δ')) / 6) * I) - s).re ∧
-    0 < (-(exp (↑(Real.pi * (1 + (t₀ + δ')) / 6) * I) - s)).re := by
-  constructor
-  · set θ_m := Real.pi * (1 + (t₀ - δ')) / 6
-    set θ₀' := Real.pi * (1 + t₀) / 6
-    rw [h_s_arc, exp_real_angle_I, exp_real_angle_I]
-    simp only [Complex.sub_re, Complex.add_re, Complex.ofReal_re,
-      Complex.mul_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
-      mul_zero, zero_mul, sub_self, add_zero]
-    have hθ_m_lt : θ_m < θ₀' := by simp [θ_m, θ₀']; nlinarith [Real.pi_pos]
-    have hθ_m_nn : 0 ≤ θ_m := by simp [θ_m]; nlinarith [Real.pi_pos, hδ'_left]
-    have hθ₀_le_pi : θ₀' ≤ Real.pi := by simp [θ₀']; nlinarith [Real.pi_pos, hδ'_right]
-    linarith [Real.cos_lt_cos_of_nonneg_of_le_pi hθ_m_nn hθ₀_le_pi hθ_m_lt]
-  · set θ_p := Real.pi * (1 + (t₀ + δ')) / 6
-    set θ₀' := Real.pi * (1 + t₀) / 6
-    rw [h_s_arc, exp_real_angle_I, exp_real_angle_I]
-    simp only [Complex.sub_re, Complex.add_re, Complex.ofReal_re,
-      Complex.mul_re, Complex.ofReal_im, Complex.I_re, Complex.I_im,
-      mul_zero, zero_mul, sub_self, add_zero, neg_sub]
-    have hθ_gt : θ₀' < θ_p := by simp [θ₀', θ_p]; nlinarith [Real.pi_pos]
-    have hθ₀_nn : 0 ≤ θ₀' := by simp [θ₀']; nlinarith [Real.pi_pos, hδ'_left]
-    have hθ_p_le_pi : θ_p ≤ Real.pi := by simp [θ_p]; nlinarith [Real.pi_pos, hδ'_right]
-    linarith [Real.cos_lt_cos_of_nonneg_of_le_pi hθ₀_nn hθ_p_le_pi hθ_gt]
 
 /-! ### Main tendsto lemma, wired through `pv_tendsto_of_crossing_limit` -/
 

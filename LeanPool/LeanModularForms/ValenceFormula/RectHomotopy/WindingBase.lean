@@ -27,6 +27,16 @@ open Complex Set Metric Filter Topology
 
 namespace RectHomotopyProof
 
+/-- The reference point `refP₀ = I·Y₀` has zero real part. -/
+private lemma refP₀_re_eq_zero : refP₀.re = 0 := by
+  unfold refP₀
+  simp only [mul_re, I_re, I_im, ofReal_re, ofReal_im, mul_zero, sub_zero, zero_mul]
+
+/-- The reference point `refP₀ = I·Y₀` has imaginary part `refY₀`. -/
+private lemma refP₀_im_eq : refP₀.im = refY₀ := by
+  unfold refP₀
+  simp only [mul_im, I_re, I_im, ofReal_re, ofReal_im, mul_zero, zero_add, one_mul]
+
 private lemma sqrt_one_minus_sq_plus_linear_ge_one (x : ℝ) (hx0 : 0 ≤ x) (hx1 : x ≤ 1 / 2) :
     Real.sqrt (1 - x^2) + (2 - Real.sqrt 3) * x ≥ 1 := by
   have hsq3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3)
@@ -216,12 +226,8 @@ lemma fdPolygon_avoids_line_to_ref (p : ℂ) (hp_norm : ‖p‖ > 1)
   have hsq3 : Real.sqrt 3 ^ 2 = 3 := Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3)
   have hsq3_pos : 0 < Real.sqrt 3 := Real.sqrt_pos_of_pos (by norm_num : (0 : ℝ) < 3)
   have hsq3_lt2 : Real.sqrt 3 < 2 := by nlinarith [hsq3]
-  have href_re : refP₀.re = 0 := by
-    unfold refP₀
-    simp only [mul_re, I_re, I_im, ofReal_re, ofReal_im, mul_zero, sub_zero, zero_mul]
-  have href_im : refP₀.im = refY₀ := by
-    unfold refP₀
-    simp only [mul_im, I_re, I_im, ofReal_re, ofReal_im, mul_zero, zero_add, one_mul]
+  have href_re : refP₀.re = 0 := refP₀_re_eq_zero
+  have href_im : refP₀.im = refY₀ := refP₀_im_eq
   have hp_sq : p.re ^ 2 + p.im ^ 2 > 1 := by
     rw [Complex.norm_eq_sqrt_sq_add_sq] at hp_norm
     nlinarith [Real.sq_sqrt (add_nonneg (sq_nonneg p.re) (sq_nonneg p.im)),
@@ -325,12 +331,8 @@ lemma rc_sub_ref_p₀_mem_slitPlane (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5)
     · left; exact div_pos hre hnorm_pos
     · right; exact div_ne_zero him (ne_of_gt hnorm_pos)
   simp only [Complex.slitPlane, Set.mem_setOf_eq]
-  have ref_re : refP₀.re = 0 := by
-    unfold refP₀
-    simp only [mul_re, I_re, I_im, ofReal_re, ofReal_im, mul_zero, sub_zero, zero_mul]
-  have ref_im : refP₀.im = refY₀ := by
-    unfold refP₀
-    simp only [mul_im, I_re, I_im, ofReal_re, ofReal_im, mul_zero, zero_add, one_mul]
+  have ref_re : refP₀.re = 0 := refP₀_re_eq_zero
+  have ref_im : refP₀.im = refY₀ := refP₀_im_eq
   have hw_re : w.re = (fdPolygon t).re := by simp only [hw_def, Complex.sub_re, ref_re, sub_zero]
   have hw_im : w.im = (fdPolygon t).im - refY₀ := by simp only [hw_def, Complex.sub_im, ref_im]
   have ht0 : 0 ≤ t := ht.1

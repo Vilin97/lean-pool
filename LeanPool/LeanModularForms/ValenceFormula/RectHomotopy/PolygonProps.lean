@@ -295,13 +295,22 @@ lemma fdPolygon_deriv_seg5 :
     push_cast; ring
   rw [hrw, deriv_affine_mul]
 
+/-- An affine map `t ↦ a + ↑t * b` is `ℝ`-differentiable. -/
+private lemma differentiable_affine_mul (a b : ℂ) :
+    Differentiable ℝ (fun t : ℝ => a + ↑t * b) :=
+  (differentiable_const _).add (Complex.ofRealCLM.differentiable.mul (differentiable_const _))
+
+/-- A shifted affine map `t ↦ a + (↑t - c) * b` is `ℝ`-differentiable. -/
+private lemma differentiable_affine_shifted_mul (a b c : ℂ) :
+    Differentiable ℝ (fun t : ℝ => a + (↑t - c) * b) :=
+  (differentiable_const _).add
+    ((Complex.ofRealCLM.differentiable.sub (differentiable_const _)).mul (differentiable_const _))
+
 lemma fdPolygon_seg1_differentiable :
     Differentiable ℝ fdPolygonSeg1 := by
   have h : fdPolygonSeg1 = fun (t : ℝ) => ((1 : ℂ)/2 + HHeight * I) + ↑t *
         (-(HHeight - Real.sqrt 3 / 2) * I) := by ext t; simp only [fdPolygonSeg1]; ring
-  rw [h]
-  exact (differentiable_const _).add (Complex.ofRealCLM.differentiable.mul
-      (differentiable_const _))
+  rw [h]; exact differentiable_affine_mul _ _
 
 lemma fdPolygon_seg2_differentiable :
     Differentiable ℝ fdPolygonSeg2 := by
@@ -312,10 +321,7 @@ lemma fdPolygon_seg2_differentiable :
       iPoint, Complex.real_smul, Complex.ofReal_sub,
       Complex.ofReal_one]
     ring
-  rw [h]
-  exact (differentiable_const _).add ((Complex.ofRealCLM.differentiable.sub
-        (differentiable_const _)).mul
-      (differentiable_const _))
+  rw [h]; exact differentiable_affine_shifted_mul _ _ _
 
 lemma fdPolygon_seg3_differentiable :
     Differentiable ℝ fdPolygonSeg3 := by
@@ -326,10 +332,7 @@ lemma fdPolygon_seg3_differentiable :
       iPoint, Complex.real_smul, Complex.ofReal_sub,
       Complex.ofReal_ofNat, Complex.ofReal_one]
     ring
-  rw [h]
-  exact (differentiable_const _).add ((Complex.ofRealCLM.differentiable.sub
-        (differentiable_const _)).mul
-      (differentiable_const _))
+  rw [h]; exact differentiable_affine_shifted_mul _ _ _
 
 lemma fdPolygon_seg4_differentiable :
     Differentiable ℝ fdPolygonSeg4 := by
@@ -337,19 +340,14 @@ lemma fdPolygon_seg4_differentiable :
         ((HHeight - Real.sqrt 3 / 2) * I) := by
     ext t; simp only [fdPolygonSeg4, HHeight]
     push_cast; ring
-  rw [h]
-  exact (differentiable_const _).add ((Complex.ofRealCLM.differentiable.sub
-        (differentiable_const _)).mul
-      (differentiable_const _))
+  rw [h]; exact differentiable_affine_shifted_mul _ _ _
 
 lemma fdPolygon_seg5_differentiable :
     Differentiable ℝ fdPolygonSeg5 := by
   have h : fdPolygonSeg5 = fun (t : ℝ) => (-(9 : ℂ)/2 + HHeight * I) + ↑t * (1 : ℂ) := by
     ext t; simp only [fdPolygonSeg5, HHeight]
     push_cast; ring
-  rw [h]
-  exact (differentiable_const _).add (Complex.ofRealCLM.differentiable.mul
-      (differentiable_const _))
+  rw [h]; exact differentiable_affine_mul _ _
 
 lemma fdPolygon_differentiableAt_off_partition (t : ℝ) (ht : t ∈ Ioo 0 5)
     (ht_not_P : t ∉ ({1, 2, 3, 4} : Finset ℝ)) :

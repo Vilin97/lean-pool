@@ -71,6 +71,39 @@ lemma H_seg4_continuous : Continuous HSeg4 := by unfold HSeg4; continuity
 
 lemma H_seg5_continuous : Continuous HSeg5 := by unfold HSeg5; continuity
 
+/-- Derivative of an affine-angle complex exponential `t' ↦ exp((α + (t' - c)·β)·I)`. -/
+lemma hasDerivAt_arc_exp (α β c t : ℝ) :
+    HasDerivAt (fun t' : ℝ => Complex.exp (((α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) * I))
+      ((β : ℂ) * I * Complex.exp (((α : ℂ) + ((t : ℂ) - c) * (β : ℂ)) * I)) t := by
+  have h_shift : HasDerivAt (fun t' : ℝ => (t' : ℂ) - c) 1 t :=
+    Complex.ofRealCLM.hasDerivAt.sub_const (c : ℂ)
+  have h_inner : HasDerivAt (fun t' : ℝ => (α : ℂ) + ((t' : ℂ) - c) * (β : ℂ)) (β : ℂ) t := by
+    have h_mul := h_shift.mul_const (β : ℂ)
+    simp only [one_mul] at h_mul
+    exact h_mul.const_add (α : ℂ)
+  have h := (Complex.hasDerivAt_exp (((α : ℂ) + ((t : ℂ) - c) * (β : ℂ)) * I)).comp t
+    (h_inner.mul_const I)
+  simp only [mul_comm (Complex.exp _)] at h
+  exact h
+
+/-- Derivative of the chord segment `t' ↦ chordSegment a b (t' - c)` is `b - a`. -/
+lemma hasDerivAt_chordSegment_shift (a b : ℂ) (c t : ℝ) :
+    HasDerivAt (fun t' : ℝ => chordSegment a b (t' - c)) (b - a) t := by
+  simp only [chordSegment]
+  have h_shift : HasDerivAt (fun t' : ℝ => t' - c) (1 : ℝ) t := (hasDerivAt_id t).sub_const c
+  have h1 : HasDerivAt (fun t' : ℝ => (1 - (t' - c)) • a) (-a) t := by
+    have h_coef : HasDerivAt (fun t' : ℝ => (1 - (t' - c) : ℝ)) (-1 : ℝ) t := by
+      have := (hasDerivAt_const t (1 : ℝ)).sub h_shift
+      simp only [zero_sub] at this
+      exact this
+    have := h_coef.smul_const a
+    simpa only [neg_one_smul] using this
+  have h2 : HasDerivAt (fun t' : ℝ => (t' - c) • b) b t := by
+    have := h_shift.smul_const b
+    simpa only [one_smul] using this
+  convert h1.add h2 using 1
+  ring
+
 lemma exp_pi_div_three_eq_rho' :
     Complex.exp (↑(Real.pi / 3) * I) = rho' := by
   rw [exp_real_angle_I, Real.cos_pi_div_three,

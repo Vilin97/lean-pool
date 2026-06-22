@@ -19,6 +19,12 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+/-- The curve hits `ρ` at `t = 3`, so if `s ≠ ρ` then `fdBoundaryH H 3 = s` is impossible. -/
+private theorem absurd_fdBoundaryH_three_eq {H : ℝ} {s : ℂ} (hs_rho : ¬s = ellipticPointRho)
+    (h_eq : fdBoundaryH H 3 = s) : False := by
+  rw [fdBoundary_H_at_three] at h_eq
+  exact hs_rho h_eq.symm
+
 /-! ### Helper: s = I, H ≤ 1, H < 1 -/
 
 private theorem cpv_exists_at_I_H_lt_one (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
@@ -334,11 +340,7 @@ private theorem cpv_exists_generic_arc_seg5_cross (H : ℝ) (hH : Real.sqrt 3 / 
     · push Not at ht3
       by_cases ht4 : t ≤ 4
       · rcases eq_or_lt_of_le ht3 with rfl | ht3'
-        · have hγ3_eq : fdBoundaryH H 3 = fdBoundary 3 := by
-            rw [fdBoundary_H_at_three]
-            exact fdBoundary_at_three.symm
-          rw [hγ3_eq, fdBoundary_at_three] at h_eq
-          exact hs_rho h_eq.symm
+        · exact absurd_fdBoundaryH_three_eq hs_rho h_eq
         · have := fdBoundary_H_seg4_re' H ht3' ht4
           rw [h_eq] at this; linarith
       · push Not at ht4
@@ -406,11 +408,7 @@ private theorem cpv_exists_generic_arc_no_cross (H : ℝ) (hH : Real.sqrt 3 / 2 
     · push Not at ht3
       by_cases ht4 : t ≤ 4
       · rcases eq_or_lt_of_le ht3 with rfl | ht3'
-        · have hγ3_eq : fdBoundaryH H 3 = fdBoundary 3 := by
-            rw [fdBoundary_H_at_three]
-            exact fdBoundary_at_three.symm
-          rw [hγ3_eq, fdBoundary_at_three] at h_eq
-          exact hs_rho h_eq.symm
+        · exact absurd_fdBoundaryH_three_eq hs_rho h_eq
         · have := fdBoundary_H_seg4_re' H ht3' ht4
           rw [h_eq] at this; linarith
       · push Not at ht4
@@ -725,11 +723,7 @@ private theorem cpv_exists_generic_seg5_normSq_one (H : ℝ) (hH : Real.sqrt 3 /
     · push Not at ht3
       by_cases ht4 : t ≤ 4
       · rcases eq_or_lt_of_le ht3 with rfl | ht3'
-        · have hγ3_eq : fdBoundaryH H 3 = fdBoundary 3 := by
-            rw [fdBoundary_H_at_three]
-            exact fdBoundary_at_three.symm
-          rw [hγ3_eq, fdBoundary_at_three] at h_eq
-          exact hs_rho h_eq.symm
+        · exact absurd_fdBoundaryH_three_eq hs_rho h_eq
         · have := fdBoundary_H_seg4_re' H ht3' ht4
           rw [h_eq] at this; linarith [h_re_s]
       · push Not at ht4

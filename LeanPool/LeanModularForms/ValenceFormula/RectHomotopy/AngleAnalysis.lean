@@ -221,11 +221,7 @@ lemma seg4_im_formula (t : ℝ) (ht : t ∈ Set.Ioc (3 : ℝ) 4) : (fdPolygon t)
   · linarith [ht.1]
   · linarith [ht.1]
   · linarith [ht.1]
-  · have h : (-1/2 + (Real.sqrt 3 / 2 + (t - 3) * (HHeight - Real.sqrt 3 / 2)) * I).im =
-        Real.sqrt 3 / 2 + (t - 3) * (HHeight - Real.sqrt 3 / 2) := by
-      simp [Complex.add_im, Complex.mul_im, Complex.I_re,
-        Complex.I_im, Complex.ofReal_im]
-    exact h
+  · simp [Complex.add_im, Complex.mul_im, Complex.I_re, Complex.I_im, Complex.ofReal_im]
   · linarith [ht.2]
 
 /-- Sign of (fdPolygon t - p).im on seg4: negative before tL, zero at tL,

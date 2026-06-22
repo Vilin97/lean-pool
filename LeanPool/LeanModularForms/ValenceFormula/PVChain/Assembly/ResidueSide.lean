@@ -244,6 +244,37 @@ private lemma cpv_residue_side_eventually_eq
   · rfl
 
 include hf in
+/-- The on-curve singular points that are not box-zeros contribute zero to the
+    residue sum (the curve avoids non-zeros, so the residue vanishes there).
+    Shared between `cpv_residue_side_sum_convert` and `cpv_residue_side_tendsto`. -/
+private lemma residue_sum_over_S_on_sdiff_Sbox_zero
+    (S : Finset UpperHalfPlane)
+    (hS : ∀ p ∈ S, p ∈ 𝒟)
+    {H : ℝ} (hH_sqrt3 : Real.sqrt 3 / 2 < H)
+    (hH_ge1 : 1 ≤ H)
+    (hH_bound : ∀ s ∈ S, (s : ℂ).im < H)
+    {M : ℝ} (hM_half : (1 : ℝ) / 2 < M) (hHM : H < M)
+    (Sbox : Finset ℂ) (hSbox : Sbox = allZerosInFdBox f hf hM_half)
+    (S_on : Finset ℂ) (hS_on : S_on = sArcOfS S ∪ sVertOfS S) :
+    ∑ s ∈ S_on \ Sbox,
+      generalizedWindingNumber' (fdBoundaryH H) 0 5 s *
+        residueSimplePole (logDeriv (modularFormCompOfComplex f)) s = 0 := by
+  apply Finset.sum_eq_zero; intro s hs
+  have hs_on := (Finset.mem_sdiff.mp hs).1
+  have h_nz : modularFormCompOfComplex f s ≠ 0 := by
+    intro h_zero
+    exact (Finset.mem_sdiff.mp hs).2 (hSbox ▸
+      (mem_allZerosInFdBox_iff f hf hM_half).mpr
+        ⟨fdBox_of_on_curve S hS hH_sqrt3 hHM hH_ge1 hH_bound s
+          (hS_on ▸ hs_on), h_zero⟩)
+  have h_im : 0 < s.im := by
+    rw [hS_on] at hs_on
+    rcases Finset.mem_union.mp hs_on with h | h
+    · exact sArcOfS_im_pos S s h
+    · exact sVertOfS_im_pos S s h
+  rw [residueSimplePole_logDeriv_eq_zero_at_nonzero f s h_im h_nz, mul_zero]
+
+include hf in
 private lemma cpv_residue_side_sum_convert
     (S : Finset UpperHalfPlane)
     (hS : ∀ p ∈ S, p ∈ 𝒟)
@@ -267,22 +298,9 @@ private lemma cpv_residue_side_sum_convert
   have hHM : H < H + 1 := lt_add_one H
   have h_sarc_zero : ∑ s ∈ S_on \ Sbox,
       generalizedWindingNumber' γ 0 5 s *
-        residueSimplePole F s = 0 := by
-    apply Finset.sum_eq_zero; intro s hs
-    have hs_on := (Finset.mem_sdiff.mp hs).1
-    have h_nz : modularFormCompOfComplex f s ≠ 0 := by
-      intro h_zero
-      exact (Finset.mem_sdiff.mp hs).2
-        ((mem_allZerosInFdBox_iff f hf hM_half).mpr
-          ⟨fdBox_of_on_curve S hS hH_sqrt3 hHM hH_ge1 hH_bound s
-            (hS_on ▸ hs_on), h_zero⟩)
-    have h_im : 0 < s.im := by
-      rw [hS_on] at hs_on
-      rcases Finset.mem_union.mp hs_on with h | h
-      · exact sArcOfS_im_pos S s h
-      · exact sVertOfS_im_pos S s h
-    rw [residueSimplePole_logDeriv_eq_zero_at_nonzero f s h_im h_nz,
-      mul_zero]
+        residueSimplePole F s = 0 :=
+    residue_sum_over_S_on_sdiff_Sbox_zero f hf S hS hH_sqrt3 hH_ge1 hH_bound
+      hM_half hHM Sbox rfl S_on hS_on
   set S_zeros := S.filter (fun p => f p = 0) with hS_zeros_def
   have h_image_sub : S_zeros.image (↑· : ℍ → ℂ) ⊆ Sbox :=
     Finset.image_subset_iff.mpr (fun p hp => by
@@ -429,22 +447,9 @@ theorem cpv_residue_side_tendsto
     rw [Finset.sum_union Finset.disjoint_sdiff]
     have h_sarc_zero : ∑ s ∈ S_on \ Sbox,
         generalizedWindingNumber' γ 0 5 s *
-          residueSimplePole F s = 0 := by
-      apply Finset.sum_eq_zero; intro s hs
-      have hs_on := (Finset.mem_sdiff.mp hs).1
-      have h_nz : modularFormCompOfComplex f s ≠ 0 := by
-        intro h_zero
-        exact (Finset.mem_sdiff.mp hs).2 (hSbox_def ▸
-          (mem_allZerosInFdBox_iff f hf hM_half).mpr
-            ⟨fdBox_of_on_curve S hS hH_sqrt3 hHM hH_ge1 hH_bound s
-              (hS_on_def ▸ hs_on), h_zero⟩)
-      have h_im : 0 < s.im := by
-        rw [hS_on_def] at hs_on
-        rcases Finset.mem_union.mp hs_on with h | h
-        · exact sArcOfS_im_pos S s h
-        · exact sVertOfS_im_pos S s h
-      rw [residueSimplePole_logDeriv_eq_zero_at_nonzero f s h_im h_nz,
-        mul_zero]
+          residueSimplePole F s = 0 :=
+      residue_sum_over_S_on_sdiff_Sbox_zero f hf S hS hH_sqrt3 hH_ge1 hH_bound
+        hM_half hHM Sbox hSbox_def S_on hS_on_def
     rw [h_sarc_zero, add_zero]
     exact cpv_residue_side_sum_convert f hf S hS hS_complete
       hH_sqrt3 hH_ge1 hH_bound S_on hS_on_def

@@ -24,6 +24,32 @@ open Complex Set Metric Filter Topology MeasureTheory
 
 namespace RectHomotopyProof
 
+/-- The lifted-angle branch `t ↦ arg(fdPolygon t - refP₀) - 2π` tends to `-π` as `t → tL` from
+    the right (over `Ici (tL refP₀)`). Shared between the two right-limit obligations below. -/
+private lemma lifted_angle_right_tendsto_neg_pi :
+    Tendsto (fun t => (↑(Complex.arg (fdPolygon t - refP₀) - 2 * Real.pi) : ℂ))
+      (𝓝[Ici (tL refP₀)] (tL refP₀)) (𝓝 (↑(-Real.pi : ℝ) : ℂ)) := by
+  have hIci_eq : Ici (tL refP₀) = {tL refP₀} ∪ Ioi (tL refP₀) := by
+    ext; simp [le_iff_lt_or_eq, or_comm]
+  have h_arg_right : Tendsto (fun t => Complex.arg (fdPolygon t - refP₀))
+      (𝓝[Ici (tL refP₀)] (tL refP₀)) (𝓝 Real.pi) := by
+    rw [hIci_eq, nhdsWithin_union]
+    exact Filter.tendsto_sup.mpr ⟨by
+      rw [nhdsWithin_singleton, Filter.tendsto_pure_left]
+      intro s hs
+      rw [arg_at_tL_eq_pi refP₀ ref_p₀_norm ref_p₀_re ref_p₀_im_pos ref_p₀_im]
+      exact mem_of_mem_nhds hs, tendsto_arg_w_right⟩
+  have hcomp_fun : (fun t => (↑(Complex.arg (fdPolygon t - refP₀) - 2 * Real.pi) : ℂ)) =
+      (fun x : ℝ => (↑(x - 2 * Real.pi) : ℂ)) ∘
+      (fun t => Complex.arg (fdPolygon t - refP₀)) := by ext; rfl
+  rw [hcomp_fun]
+  have h_outer : Tendsto (fun x : ℝ => (↑(x - 2 * Real.pi) : ℂ))
+      (𝓝 Real.pi) (𝓝 ↑(-Real.pi : ℝ)) := by
+    rw [show (↑(-Real.pi : ℝ) : ℂ) = (↑(Real.pi - 2 * Real.pi) : ℂ) from by push_cast; ring]
+    exact (Complex.continuous_ofReal.comp
+      (continuous_sub_right (2 * Real.pi))).continuousAt.tendsto
+  exact h_outer.comp h_arg_right
+
 /-- The lifted angle function is continuous on [0, 5] for the reference point ref_p0. -/
 lemma angle_lifted_ref_p₀_continuousOn :
     ContinuousOn (fun t => (fdPolygonRadialCircleAngleLifted refP₀ t : ℂ)) (Icc 0 5) := by
@@ -54,28 +80,8 @@ lemma angle_lifted_ref_p₀_continuousOn :
     subst ha_eq
     rw [if_neg (lt_irrefl T), hval_at_T]
     apply Filter.Tendsto.mono_left _ (nhdsWithin_mono _ Set.inter_subset_right)
-    have hset_eq : {t : ℝ | ¬t < T} = Ici T := by ext; simp [not_lt]
-    rw [hset_eq]
-    have hIci_eq : Ici T = {T} ∪ Ioi T := by ext; simp [le_iff_lt_or_eq, or_comm]
-    have h_arg_right : Tendsto (fun t => Complex.arg (fdPolygon t - refP₀))
-        (𝓝[Ici T] T) (𝓝 Real.pi) := by
-      rw [hIci_eq, nhdsWithin_union]
-      exact Filter.tendsto_sup.mpr ⟨by
-        rw [nhdsWithin_singleton, Filter.tendsto_pure_left]
-        intro s hs
-        rw [arg_at_tL_eq_pi refP₀ ref_p₀_norm ref_p₀_re ref_p₀_im_pos ref_p₀_im]
-        exact mem_of_mem_nhds hs, tendsto_arg_w_right⟩
-    have hcomp_fun : (fun t => (↑(Complex.arg (fdPolygon t - refP₀) - 2 * Real.pi) : ℂ)) =
-        (fun x : ℝ => (↑(x - 2 * Real.pi) : ℂ)) ∘
-        (fun t => Complex.arg (fdPolygon t - refP₀)) := by ext; rfl
-    rw [hcomp_fun]
-    have h_outer : Tendsto (fun x : ℝ => (↑(x - 2 * Real.pi) : ℂ))
-        (𝓝 Real.pi) (𝓝 ↑(-Real.pi : ℝ)) := by
-      have : ↑(-Real.pi : ℝ) = (↑(Real.pi - 2 * Real.pi) : ℂ) := by push_cast; ring
-      rw [this]
-      exact (Complex.continuous_ofReal.comp
-        (continuous_sub_right (2 * Real.pi))).continuousAt.tendsto
-    exact h_outer.comp h_arg_right
+    rw [show {t : ℝ | ¬t < T} = Ici T from by ext; simp [not_lt]]
+    exact lifted_angle_right_tendsto_neg_pi
   · apply ContinuousOn.comp Complex.continuous_ofReal.continuousOn
     · exact continuousOn_arg_w.mono (fun t ⟨ht, htT⟩ =>
         ⟨ht, fun h => (ne_of_lt htT) (Set.mem_singleton_iff.mp h)⟩)
@@ -88,28 +94,8 @@ lemma angle_lifted_ref_p₀_continuousOn :
     · subst htT
       rw [ContinuousWithinAt, hval_at_T]
       apply Filter.Tendsto.mono_left _ (nhdsWithin_mono _ (fun x hx => hx.2))
-      have hset_eq : {t : ℝ | ¬t < T} = Ici T := by ext; simp [not_lt]
-      rw [hset_eq]
-      have hIci_eq : Ici T = {T} ∪ Ioi T := by ext; simp [le_iff_lt_or_eq, or_comm]
-      have h_arg_right : Tendsto (fun t => Complex.arg (fdPolygon t - refP₀))
-          (𝓝[Ici T] T) (𝓝 Real.pi) := by
-        rw [hIci_eq, nhdsWithin_union]
-        exact Filter.tendsto_sup.mpr ⟨by
-          rw [nhdsWithin_singleton, Filter.tendsto_pure_left]
-          intro s hs
-          rw [arg_at_tL_eq_pi refP₀ ref_p₀_norm ref_p₀_re ref_p₀_im_pos ref_p₀_im]
-          exact mem_of_mem_nhds hs, tendsto_arg_w_right⟩
-      have hcomp_fun : (fun t => (↑(Complex.arg (fdPolygon t - refP₀) - 2 * Real.pi) : ℂ)) =
-          (fun x : ℝ => (↑(x - 2 * Real.pi) : ℂ)) ∘
-          (fun t => Complex.arg (fdPolygon t - refP₀)) := by ext; rfl
-      rw [hcomp_fun]
-      have h_outer : Tendsto (fun x : ℝ => (↑(x - 2 * Real.pi) : ℂ))
-          (𝓝 Real.pi) (𝓝 ↑(-Real.pi : ℝ)) := by
-        have : ↑(-Real.pi : ℝ) = (↑(Real.pi - 2 * Real.pi) : ℂ) := by push_cast; ring
-        rw [this]
-        exact (Complex.continuous_ofReal.comp
-        (continuous_sub_right (2 * Real.pi))).continuousAt.tendsto
-      exact h_outer.comp h_arg_right
+      rw [show {t : ℝ | ¬t < T} = Ici T from by ext; simp [not_lt]]
+      exact lifted_angle_right_tendsto_neg_pi
     · have h_slit : fdPolygon t - refP₀ ∈ Complex.slitPlane :=
         fdPolygon_sub_ref_p₀_mem_slitPlane t ht htT
       apply ContinuousWithinAt.mono _ Set.inter_subset_left

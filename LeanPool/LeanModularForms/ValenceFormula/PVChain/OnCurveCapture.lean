@@ -31,6 +31,14 @@ noncomputable section
 
 variable {k : ℤ} (f : ModularForm (Gamma 1) k) (hf : f ≠ 0)
 
+omit hf in
+/-- Transfer a zero of `modularFormCompOfComplex f` at a point of positive imaginary part
+    to a zero of `f` at the corresponding upper-half-plane point. -/
+private lemma modform_zero_to_uhp {z : ℂ} (h_im_pos : 0 < z.im)
+    (h_zero : modularFormCompOfComplex f z = 0) : f ⟨z, h_im_pos⟩ = 0 := by
+  simp only [modularFormCompOfComplex, Function.comp_apply] at h_zero
+  rwa [UpperHalfPlane.ofComplex_apply_of_im_pos h_im_pos] at h_zero
+
 include hf
 
 /-- Arc points with ‖·‖ = 1 are captured by `sArcOfS S`. -/
@@ -55,9 +63,7 @@ theorem oncurve_arc_capture
     refine ⟨?_, h_abs_re⟩
     change 1 ≤ Complex.normSq z
     rw [Complex.normSq_apply]; nlinarith
-  have hp_zero : f p = 0 := by
-    simp only [modularFormCompOfComplex, Function.comp_apply] at h_zero
-    rwa [UpperHalfPlane.ofComplex_apply_of_im_pos h_im_pos] at h_zero
+  have hp_zero : f p = 0 := modform_zero_to_uhp f h_im_pos h_zero
   have hp_in_S := hS_complete p hp_fd (orderOfVanishingAt'_ne_zero_of_eq_zero f hf p hp_zero)
   change z ∈ (↑(sArcOfS S) : Set ℂ)
   simp only [sArcOfS, Finset.coe_union, Finset.coe_image, Finset.coe_insert,
@@ -96,9 +102,7 @@ theorem oncurve_vert_capture
     rw [Complex.normSq_apply]
     nlinarith [mul_self_le_mul_self (by positivity : 0 ≤ Real.sqrt 3 / 2) h_im_gt.le,
       Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
-  have hp_zero : f p = 0 := by
-    simp only [modularFormCompOfComplex, Function.comp_apply] at h_zero
-    rwa [UpperHalfPlane.ofComplex_apply_of_im_pos h_im_pos] at h_zero
+  have hp_zero : f p = 0 := modform_zero_to_uhp f h_im_pos h_zero
   have hp_in_S := hS_complete p hp_fd (orderOfVanishingAt'_ne_zero_of_eq_zero f hf p hp_zero)
   change z ∈ (↑(sVertOfS S) : Set ℂ)
   unfold sVertOfS
@@ -120,9 +124,7 @@ theorem height_contradiction
     change 1 ≤ Complex.normSq z
     rw [Complex.normSq_apply]
     nlinarith [sq_nonneg z.re, sq_nonneg z.im, sq_abs z.im]
-  have hp_zero : f p = 0 := by
-    simp only [modularFormCompOfComplex, Function.comp_apply] at h_zero
-    rwa [UpperHalfPlane.ofComplex_apply_of_im_pos h_im_pos] at h_zero
+  have hp_zero : f p = 0 := modform_zero_to_uhp f h_im_pos h_zero
   have hp_in_S := hS_complete p hp_fd (orderOfVanishingAt'_ne_zero_of_eq_zero f hf p hp_zero)
   have h_p_im : (↑p : ℂ).im = z.im := rfl
   linarith [hH_bound p hp_in_S]
@@ -180,9 +182,7 @@ theorem oncurve_seg4_capture
     rw [Complex.normSq_apply]
     nlinarith [mul_self_le_mul_self (by positivity : 0 ≤ Real.sqrt 3 / 2) h_im_gt.le,
       Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
-  have hp_zero : f p = 0 := by
-    simp only [modularFormCompOfComplex, Function.comp_apply] at h_zero_seg1
-    rwa [UpperHalfPlane.ofComplex_apply_of_im_pos h_im_pos] at h_zero_seg1
+  have hp_zero : f p = 0 := modform_zero_to_uhp f h_im_pos h_zero_seg1
   have hp_in_S := hS_complete p hp_fd (orderOfVanishingAt'_ne_zero_of_eq_zero f hf p hp_zero)
   change z ∈ (↑(sVertOfS S) : Set ℂ)
   rw [h_seg_eq]

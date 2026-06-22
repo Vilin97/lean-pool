@@ -27,6 +27,19 @@ attribute [local instance] Classical.propDecidable
 
 noncomputable section
 
+/-- Half-angle factorization of `sin(δπ/6)` used across the i-point trig proofs. -/
+private lemma sin_delta_pi_six_factor (δ : ℝ) :
+    Real.sin (δ * Real.pi / 6) =
+      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := by
+  rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+
+/-- Half-angle factorization of `cos(δπ/6) - 1` used across the i-point trig proofs. -/
+private lemma cos_delta_pi_six_sub_one_factor (δ : ℝ) :
+    Real.cos (δ * Real.pi / 6) - 1 =
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
+  rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
+  nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+
 private lemma arg_approach_i_left (hδ : 0 < δ) (hδ_small : δ < 1) :
     (fdBoundaryH H (2 - δ) - I).arg = -(δ * Real.pi / 12) := by
   have h1 : 1 < 2 - δ := by linarith
@@ -38,12 +51,10 @@ private lemma arg_approach_i_left (hδ : 0 < δ) (hδ_small : δ < 1) :
   have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by rw [hθ_def, Real.cos_pi_div_two_sub]
   have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by rw [hθ_def, Real.sin_pi_div_two_sub]
   have h_re_factor : Real.sin (δ * Real.pi / 6) =
-      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := sin_delta_pi_six_factor δ
   have h_im_factor : Real.cos (δ * Real.pi / 6) - 1 =
-      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
-    nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) :=
+    cos_delta_pi_six_sub_one_factor δ
   have h_sin_pos : 0 < Real.sin (δ * Real.pi / 12) :=
     ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
   have h_eq : ↑(Real.cos θ) + ↑(Real.sin θ) * I - I =
@@ -78,11 +89,10 @@ private lemma arg_approach_i_right (hδ : 0 < δ) (hδ_small : δ < 1) :
     rw [hθ_def, Real.sin_add, Real.sin_pi_div_two, Real.cos_pi_div_two]; ring
   have h_re_factor : -Real.sin (δ * Real.pi / 6) =
       -(2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+    rw [sin_delta_pi_six_factor]
   have h_im_factor : Real.cos (δ * Real.pi / 6) - 1 =
-      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
-    nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) :=
+    cos_delta_pi_six_sub_one_factor δ
   have h_sin_pos : 0 < Real.sin (δ * Real.pi / 12) :=
     ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
   set w := (↑(Real.cos (δ * Real.pi / 12)) : ℂ) +
@@ -126,12 +136,10 @@ private lemma g_i_norm_left {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ < 1) :
   have h_cos : Real.cos θ = Real.sin (δ * Real.pi / 6) := by rw [hθ_def, Real.cos_pi_div_two_sub]
   have h_sin : Real.sin θ = Real.cos (δ * Real.pi / 6) := by rw [hθ_def, Real.sin_pi_div_two_sub]
   have h_re_factor : Real.sin (δ * Real.pi / 6) =
-      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+      2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12) := sin_delta_pi_six_factor δ
   have h_im_factor : Real.cos (δ * Real.pi / 6) - 1 =
-      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
-    nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) :=
+    cos_delta_pi_six_sub_one_factor δ
   have h_sin_pos : 0 < Real.sin (δ * Real.pi / 12) :=
     ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
   have h_eq : ↑(Real.cos θ) + ↑(Real.sin θ) * I - I =
@@ -157,11 +165,10 @@ private lemma g_i_norm_right {δ : ℝ} (hδ : 0 < δ) (hδ1 : δ < 1) :
     rw [hθ_def, Real.sin_add, Real.sin_pi_div_two, Real.cos_pi_div_two]; ring
   have h_re_factor : -Real.sin (δ * Real.pi / 6) =
       -(2 * Real.sin (δ * Real.pi / 12) * Real.cos (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.sin_two_mul]
+    rw [sin_delta_pi_six_factor]
   have h_im_factor : Real.cos (δ * Real.pi / 6) - 1 =
-      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) := by
-    rw [show δ * Real.pi / 6 = 2 * (δ * Real.pi / 12) from by ring, Real.cos_two_mul]
-    nlinarith [Real.sin_sq_add_cos_sq (δ * Real.pi / 12)]
+      -(2 * Real.sin (δ * Real.pi / 12) * Real.sin (δ * Real.pi / 12)) :=
+    cos_delta_pi_six_sub_one_factor δ
   have h_sin_pos : 0 < Real.sin (δ * Real.pi / 12) :=
     ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
   have h_eq : ↑(Real.cos θ) + ↑(Real.sin θ) * I - I =
@@ -668,6 +675,27 @@ private lemma ftc_logDeriv_telescope_i (H : ℝ) (hH : 1 < H) {δ : ℝ} (hδ : 
     linear_combination h_branch_t₀
   rw [hg_closed, h_branch_3, h_branch_t₀']; ring
 
+-- Helper: for ε < threshold where threshold ≤ min(2sin(π/12), 1),
+-- the map δ(ε) = 12/π · arcsin(ε/2) satisfies δ < 1.
+private lemma i_delta_lt_one {ε : ℝ} (hε_pos : 0 < ε)
+    (hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12)) :
+    12 / Real.pi * Real.arcsin (ε / 2) < 1 := by
+  have hpi_pos : 0 < Real.pi := Real.pi_pos
+  have hsin_pos : 0 < Real.sin (Real.pi / 12) :=
+    ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
+  have hε_half_pos : 0 < ε / 2 := by linarith
+  have hε_lt_sin : ε / 2 < Real.sin (Real.pi / 12) := by linarith
+  have hε_half_neg : -1 ≤ ε / 2 := by linarith
+  have harcsin_lt : Real.arcsin (ε / 2) < Real.pi / 12 :=
+    calc Real.arcsin (ε / 2) < Real.arcsin (Real.sin (Real.pi / 12)) :=
+          Real.arcsin_lt_arcsin hε_half_neg hε_lt_sin (Real.sin_le_one _)
+      _ = Real.pi / 12 :=
+          Real.arcsin_sin (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
+  calc 12 / Real.pi * Real.arcsin (ε / 2)
+      < 12 / Real.pi * (Real.pi / 12) :=
+        mul_lt_mul_of_pos_left harcsin_lt (div_pos (by norm_num) hpi_pos)
+    _ = 1 := by field_simp
+
 private lemma i_h_far (H : ℝ) (hH : 1 < H) :
     let threshold := min (min (min (1/2 : ℝ) (H - 1)) (2 * Real.sin (Real.pi / 12))) 1
     ∀ ε, 0 < ε → ε < threshold →
@@ -693,18 +721,7 @@ private lemma i_h_far (H : ℝ) (hH : 1 < H) :
   have harcsin_pos : 0 < Real.arcsin (ε / 2) := Real.arcsin_pos.mpr hε_half_pos
   set δ := 12 / Real.pi * Real.arcsin (ε / 2) with hδ_def
   have hδ_pos : 0 < δ := by rw [hδ_def]; positivity
-  have hδ_lt_one : δ < 1 := by
-    rw [hδ_def]
-    have hε_lt_sin : ε / 2 < Real.sin (Real.pi / 12) := by linarith
-    have harcsin_lt : Real.arcsin (ε / 2) < Real.pi / 12 := by
-      calc Real.arcsin (ε / 2) < Real.arcsin (Real.sin (Real.pi / 12)) :=
-            Real.arcsin_lt_arcsin hε_half_neg hε_lt_sin (Real.sin_le_one _)
-        _ = Real.pi / 12 :=
-            Real.arcsin_sin (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
-    calc 12 / Real.pi * Real.arcsin (ε / 2)
-        < 12 / Real.pi * (Real.pi / 12) :=
-          mul_lt_mul_of_pos_left harcsin_lt (div_pos (by norm_num) hpi_pos)
-      _ = 1 := by field_simp
+  have hδ_lt_one : δ < 1 := i_delta_lt_one hε_pos hε_lt_2sin
   have hδ_angle : δ * Real.pi / 12 = Real.arcsin (ε / 2) := by rw [hδ_def]; field_simp
   have h_norm_L : ‖fdBoundaryH H (2 - δ) - I‖ = ε := by
     rw [g_i_norm_left hδ_pos hδ_lt_one, hδ_angle,
@@ -762,20 +779,10 @@ private lemma i_h_near (H : ℝ) :
   have hε_half_neg : -1 ≤ ε / 2 := by linarith
   have hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12) := lt_of_lt_of_le hε_lt
     (le_trans (min_le_left _ _) (min_le_right _ _))
-  have hε_lt_sin : ε / 2 < Real.sin (Real.pi / 12) := by linarith
   have harcsin_pos : 0 < Real.arcsin (ε / 2) := Real.arcsin_pos.mpr hε_half_pos
-  have harcsin_lt : Real.arcsin (ε / 2) < Real.pi / 12 :=
-    calc Real.arcsin (ε / 2) < Real.arcsin (Real.sin (Real.pi / 12)) :=
-          Real.arcsin_lt_arcsin hε_half_neg hε_lt_sin (Real.sin_le_one _)
-      _ = Real.pi / 12 :=
-          Real.arcsin_sin (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
   set δ := 12 / Real.pi * Real.arcsin (ε / 2) with hδ_def
   have hδ_pos : 0 < δ := by rw [hδ_def]; positivity
-  have hδ_lt_one : δ < 1 :=
-    calc δ = 12 / Real.pi * Real.arcsin (ε / 2) := rfl
-      _ < 12 / Real.pi * (Real.pi / 12) :=
-          mul_lt_mul_of_pos_left harcsin_lt (div_pos (by norm_num) hpi_pos)
-      _ = 1 := by field_simp
+  have hδ_lt_one : δ < 1 := i_delta_lt_one hε_pos hε_lt_2sin
   have hδ_angle : δ * Real.pi / 12 = Real.arcsin (ε / 2) := by rw [hδ_def]; field_simp
   have hδpi12_le : δ * Real.pi / 12 ≤ Real.pi / 2 := by
     rw [hδ_angle]; exact le_of_lt (Real.arcsin_lt_pi_div_two.mpr (by linarith))
@@ -827,27 +834,6 @@ private lemma i_angle_bound {δ ε : ℝ} (H : ℝ)
     rw [hx_def]
     linarith [g_i_norm_left (H := H) hδ_pos hδ_lt_one]
   linarith
-
--- Helper: for ε < threshold where threshold ≤ min(2sin(π/12), 1),
--- the map δ(ε) = 12/π · arcsin(ε/2) satisfies δ < 1.
-private lemma i_delta_lt_one {ε : ℝ} (hε_pos : 0 < ε)
-    (hε_lt_2sin : ε < 2 * Real.sin (Real.pi / 12)) :
-    12 / Real.pi * Real.arcsin (ε / 2) < 1 := by
-  have hpi_pos : 0 < Real.pi := Real.pi_pos
-  have hsin_pos : 0 < Real.sin (Real.pi / 12) :=
-    ArcCalculus.sin_pos_of_mem_Ioo_zero_pi (by constructor <;> nlinarith [Real.pi_pos])
-  have hε_half_pos : 0 < ε / 2 := by linarith
-  have hε_lt_sin : ε / 2 < Real.sin (Real.pi / 12) := by linarith
-  have hε_half_neg : -1 ≤ ε / 2 := by linarith
-  have harcsin_lt : Real.arcsin (ε / 2) < Real.pi / 12 :=
-    calc Real.arcsin (ε / 2) < Real.arcsin (Real.sin (Real.pi / 12)) :=
-          Real.arcsin_lt_arcsin hε_half_neg hε_lt_sin (Real.sin_le_one _)
-      _ = Real.pi / 12 :=
-          Real.arcsin_sin (by nlinarith [Real.pi_pos]) (by nlinarith [Real.pi_pos])
-  calc 12 / Real.pi * Real.arcsin (ε / 2)
-      < 12 / Real.pi * (Real.pi / 12) :=
-        mul_lt_mul_of_pos_left harcsin_lt (div_pos (by norm_num) hpi_pos)
-    _ = 1 := by field_simp
 
 -- Helper: integrability and FTC for the i-crossing, with integrand already in the
 -- form expected by pv_tendsto_of_crossing_limit (i.e. (γ t - I)⁻¹ * deriv γ t).

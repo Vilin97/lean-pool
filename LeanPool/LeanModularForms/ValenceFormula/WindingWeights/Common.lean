@@ -123,17 +123,16 @@ lemma continuousOn_clog_im_nonneg :
   · exact (continuous_ofReal.continuousAt.comp_continuousWithinAt
       (continuousOn_arg_im_nonneg z ⟨hz_im, hz_ne⟩)).mul continuousWithinAt_const
 
-lemma ftc_log_piece_upper {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
-    (hh_cont : ContinuousOn h (Icc a b)) (hh_diff : ∀ t ∈ Ioo a b, DifferentiableAt ℝ h t)
-    (hh_deriv_cont : ContinuousOn (deriv h) (Icc a b)) (hh_im_nn : ∀ t ∈ Icc a b, 0 ≤ (h t).im)
-    (hh_ne : ∀ t ∈ Icc a b, h t ≠ 0) (hh_slit_interior : ∀ t ∈ Ioo a b, h t ∈ slitPlane)
-    (heq : ∀ t ∈ Ioo a b, g t = h t ∧ deriv g t = deriv h t)
-    (heq_a : g a = h a) (heq_b : g b = h b) :
-    IntervalIntegrable (fun t => deriv g t / g t) volume a b ∧
-    ∫ t in a..b, deriv g t / g t = Complex.log (g b) - Complex.log (g a) := by
-  have hh_log_cont : ContinuousOn (fun t => Complex.log (h t)) (Icc a b) := by
-    apply ContinuousOn.comp continuousOn_clog_im_nonneg hh_cont
-    intro t ht; exact ⟨hh_im_nn t ht, hh_ne t ht⟩
+/-- Shared integrability/congruence scaffolding for the upper/lower FTC log pieces:
+    integrability of `deriv h / h`, ae-agreement of the `g` and `h` log-derivatives on `Ι a b`,
+    and the resulting integrability of `deriv g / g`. -/
+private lemma logDeriv_integrable_congr {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
+    (hh_cont : ContinuousOn h (Icc a b)) (hh_deriv_cont : ContinuousOn (deriv h) (Icc a b))
+    (hh_ne : ∀ t ∈ Icc a b, h t ≠ 0)
+    (heq : ∀ t ∈ Ioo a b, g t = h t ∧ deriv g t = deriv h t) :
+    IntervalIntegrable (fun t => deriv h t / h t) volume a b ∧
+    (∀ᵐ t ∂volume, t ∈ Ι a b → deriv g t / g t = deriv h t / h t) ∧
+    IntervalIntegrable (fun t => deriv g t / g t) volume a b := by
   have hh_div_cont : ContinuousOn (fun t => deriv h t / h t) (Icc a b) :=
     hh_deriv_cont.div hh_cont hh_ne
   have hint_h : IntervalIntegrable (fun t => deriv h t / h t) volume a b :=
@@ -146,14 +145,28 @@ lemma ftc_log_piece_upper {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     rw [uIoc_of_le hab] at ht_mem
     obtain ⟨hval, hderiv⟩ := heq t ⟨ht_mem.1, lt_of_le_of_ne ht_mem.2 ht_ne⟩
     rw [hval, hderiv]
-  have hint_g : IntervalIntegrable (fun t => deriv g t / g t) volume a b := by
-    constructor
-    · exact MeasureTheory.Integrable.congr
-        (show Integrable _ (volume.restrict (Ioc a b)) from hint_h.1)
-        ((MeasureTheory.ae_restrict_iff' measurableSet_Ioc).mpr
-          (h_congr.mono (fun t ht hm => (ht (uIoc_of_le hab ▸ hm)).symm)))
-    · rw [show Ioc b a = ∅ from Set.Ioc_eq_empty (not_lt.mpr hab)]
-      exact MeasureTheory.integrableOn_empty
+  refine ⟨hint_h, h_congr, ?_⟩
+  constructor
+  · exact MeasureTheory.Integrable.congr
+      (show Integrable _ (volume.restrict (Ioc a b)) from hint_h.1)
+      ((MeasureTheory.ae_restrict_iff' measurableSet_Ioc).mpr
+        (h_congr.mono (fun t ht hm => (ht (uIoc_of_le hab ▸ hm)).symm)))
+  · rw [show Ioc b a = ∅ from Set.Ioc_eq_empty (not_lt.mpr hab)]
+    exact MeasureTheory.integrableOn_empty
+
+lemma ftc_log_piece_upper {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
+    (hh_cont : ContinuousOn h (Icc a b)) (hh_diff : ∀ t ∈ Ioo a b, DifferentiableAt ℝ h t)
+    (hh_deriv_cont : ContinuousOn (deriv h) (Icc a b)) (hh_im_nn : ∀ t ∈ Icc a b, 0 ≤ (h t).im)
+    (hh_ne : ∀ t ∈ Icc a b, h t ≠ 0) (hh_slit_interior : ∀ t ∈ Ioo a b, h t ∈ slitPlane)
+    (heq : ∀ t ∈ Ioo a b, g t = h t ∧ deriv g t = deriv h t)
+    (heq_a : g a = h a) (heq_b : g b = h b) :
+    IntervalIntegrable (fun t => deriv g t / g t) volume a b ∧
+    ∫ t in a..b, deriv g t / g t = Complex.log (g b) - Complex.log (g a) := by
+  have hh_log_cont : ContinuousOn (fun t => Complex.log (h t)) (Icc a b) := by
+    apply ContinuousOn.comp continuousOn_clog_im_nonneg hh_cont
+    intro t ht; exact ⟨hh_im_nn t ht, hh_ne t ht⟩
+  obtain ⟨hint_h, h_congr, hint_g⟩ :=
+    logDeriv_integrable_congr hab hh_cont hh_deriv_cont hh_ne heq
   have h_ftc := intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le hab
     hh_log_cont (fun t ht => (hh_diff t ht).hasDerivAt.clog_real
       (hh_slit_interior t ht)) hint_h
@@ -177,26 +190,8 @@ lemma ftc_log_piece_lower {g h : ℝ → ℂ} {a b : ℝ} (hab : a ≤ b)
     intro t ht; constructor
     · simp only [Complex.neg_im, Left.nonneg_neg_iff]; exact hh_im_np t ht
     · exact neg_ne_zero.mpr (hh_ne t ht)
-  have hh_div_cont : ContinuousOn (fun t => deriv h t / h t) (Icc a b) :=
-    hh_deriv_cont.div hh_cont hh_ne
-  have hint_h : IntervalIntegrable (fun t => deriv h t / h t) volume a b :=
-    (hh_div_cont.mono (uIcc_of_le hab ▸ Subset.rfl)).intervalIntegrable
-  have hb_ae : ({b} : Set ℝ)ᶜ ∈ ae volume :=
-    mem_ae_iff.mpr (by rw [compl_compl]; exact measure_singleton b)
-  have h_congr : ∀ᵐ t ∂volume, t ∈ Ι a b → deriv g t / g t = deriv h t / h t := by
-    filter_upwards [hb_ae] with t ht_ne_b ht_mem
-    have ht_ne : t ≠ b := fun h => ht_ne_b (mem_singleton_iff.mpr h)
-    rw [uIoc_of_le hab] at ht_mem
-    obtain ⟨hval, hderiv⟩ := heq t ⟨ht_mem.1, lt_of_le_of_ne ht_mem.2 ht_ne⟩
-    rw [hval, hderiv]
-  have hint_g : IntervalIntegrable (fun t => deriv g t / g t) volume a b := by
-    constructor
-    · exact MeasureTheory.Integrable.congr
-        (show Integrable _ (volume.restrict (Ioc a b)) from hint_h.1)
-        ((MeasureTheory.ae_restrict_iff' measurableSet_Ioc).mpr
-          (h_congr.mono (fun t ht hm => (ht (uIoc_of_le hab ▸ hm)).symm)))
-    · rw [show Ioc b a = ∅ from Set.Ioc_eq_empty (not_lt.mpr hab)]
-      exact MeasureTheory.integrableOn_empty
+  obtain ⟨hint_h, h_congr, hint_g⟩ :=
+    logDeriv_integrable_congr hab hh_cont hh_deriv_cont hh_ne heq
   have hnh_slit : ∀ t ∈ Ioo a b, (-(h t)) ∈ slitPlane := by
     intro t ht; rw [Complex.mem_slitPlane_iff]; right
     simp only [Complex.neg_im, ne_eq, neg_eq_zero]

@@ -32,6 +32,11 @@ noncomputable def polygonToCircleRadial (p : ℂ) : ℝ × ℝ → ℂ := fun (t
   let dir := z - p
   p + ((1 - s) * ‖dir‖ + s) • (dir / ‖dir‖)
 
+/-- Distance from `fdPolygon t` to an interior point `p` is positive. -/
+private lemma fdPolygon_sub_p_norm_pos (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)
+    (hp_im : p.im < HHeight) (t : ℝ) (ht : t ∈ Icc 0 5) : ‖fdPolygon t - p‖ > 0 :=
+  norm_pos_iff.mpr (sub_ne_zero.mpr (fdPolygon_avoids_interior p hp_norm hp_re hp_im t ht))
+
 /-- The radial homotopy avoids p when z ≠ p. -/
 lemma polygonToCircleRadial_avoids (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)
     (hp_im : p.im < HHeight) (t : ℝ) (ht : t ∈ Icc 0 5) (s : ℝ) (hs : s ∈ Icc 0 1) :
@@ -73,9 +78,8 @@ noncomputable def fdPolygonRadialCircle (p : ℂ) : ℝ → ℂ := fun t =>
 lemma fdPolygonRadialCircle_dist (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)
     (hp_im : p.im < HHeight) (t : ℝ) (ht : t ∈ Icc 0 5) :
     ‖fdPolygonRadialCircle p t - p‖ = 1 := by
-  have hz_ne : fdPolygon t ≠ p := fdPolygon_avoids_interior p hp_norm hp_re hp_im t ht
-  have hdir_ne : fdPolygon t - p ≠ 0 := sub_ne_zero.mpr hz_ne
-  have hnorm_pos : ‖fdPolygon t - p‖ > 0 := norm_pos_iff.mpr hdir_ne
+  have hnorm_pos : ‖fdPolygon t - p‖ > 0 :=
+    fdPolygon_sub_p_norm_pos p hp_norm hp_re hp_im t ht
   simp only [fdPolygonRadialCircle, polygonToCircleRadial, sub_self, zero_mul, zero_add,
     add_sub_cancel_left]
   erw [one_smul]
@@ -155,9 +159,8 @@ lemma polygonToCircleRadial_continuous (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re 
 lemma polygonToCircleRadial_at_s_zero (p : ℂ) (hp_norm : ‖p‖ > 1) (hp_re : |p.re| < 1 / 2)
     (hp_im : p.im < HHeight) (t : ℝ) (ht : t ∈ Icc 0 5) :
     polygonToCircleRadial p (t, 0) = fdPolygon t := by
-  have hz_ne : fdPolygon t ≠ p := fdPolygon_avoids_interior p hp_norm hp_re hp_im t ht
-  have hdir_ne : fdPolygon t - p ≠ 0 := sub_ne_zero.mpr hz_ne
-  have hnorm_pos : ‖fdPolygon t - p‖ > 0 := norm_pos_iff.mpr hdir_ne
+  have hnorm_pos : ‖fdPolygon t - p‖ > 0 :=
+    fdPolygon_sub_p_norm_pos p hp_norm hp_re hp_im t ht
   have hnorm_ne : (‖fdPolygon t - p‖ : ℂ) ≠ 0 :=
     Complex.ofReal_ne_zero.mpr (ne_of_gt hnorm_pos)
   simp only [polygonToCircleRadial, sub_zero, one_mul, add_zero]
@@ -523,9 +526,8 @@ lemma polygonToCircleRadial_deriv_bounded (p : ℂ) (hp_norm : ‖p‖ > 1)
       ‖deriv (fun t' => polygonToCircleRadial p (t', s)) t‖ ≤ M := by
   have h_dist_cont : Continuous (fun t => ‖fdPolygon t - p‖) :=
     continuous_norm.comp (fdPolygon_continuous.sub continuous_const)
-  have h_dist_pos : ∀ t ∈ Icc (0 : ℝ) 5, 0 < ‖fdPolygon t - p‖ := by
-    intro t ht
-    exact norm_pos_iff.mpr (sub_ne_zero.mpr (fdPolygon_avoids_interior p hp_norm hp_re hp_im t ht))
+  have h_dist_pos : ∀ t ∈ Icc (0 : ℝ) 5, 0 < ‖fdPolygon t - p‖ :=
+    fun t ht => fdPolygon_sub_p_norm_pos p hp_norm hp_re hp_im t ht
   obtain ⟨t_min, ht_min_mem, ht_min_le⟩ :=
     isCompact_Icc.exists_isMinOn (Set.nonempty_Icc.mpr (by norm_num : (0 : ℝ) ≤ 5))
       h_dist_cont.continuousOn

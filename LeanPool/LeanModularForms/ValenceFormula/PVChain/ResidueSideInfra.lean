@@ -445,6 +445,12 @@ private lemma fdBoundary_H_eq_fdBoundary_on_13 (H : ℝ) {t : ℝ}
   simp only [ht1, ↓reduceIte, ht3]
 
 omit f hf in
+private lemma norm_ge_one_of_normSq_ge_one {z : ℂ} (h : normSq z ≥ 1) : ‖z‖ ≥ 1 :=
+  calc ‖z‖ = Real.sqrt (normSq z) := rfl
+    _ ≥ Real.sqrt 1 := Real.sqrt_le_sqrt h
+    _ = 1 := Real.sqrt_one
+
+omit f hf in
 /-- `‖fdBoundaryH H t‖ ≥ 1` for `t ∈ [0, 5]` when `H ≥ 1`. -/
 lemma fdBoundary_H_norm_ge_one {H : ℝ} (hH : 1 ≤ H) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 5) :
     ‖fdBoundaryH H t‖ ≥ 1 := by
@@ -460,9 +466,7 @@ lemma fdBoundary_H_norm_ge_one {H : ℝ} (hH : 1 ≤ H) (t : ℝ) (ht : t ∈ Ic
       rw [normSq_apply, hre]
       nlinarith [mul_self_le_mul_self (by positivity : (0 : ℝ) ≤ Real.sqrt 3 / 2) him,
                  Real.mul_self_sqrt (show (0 : ℝ) ≤ 3 from by norm_num)]
-    calc ‖fdBoundarySeg1H H t‖ = Real.sqrt (normSq (fdBoundarySeg1H H t)) := rfl
-      _ ≥ Real.sqrt 1 := Real.sqrt_le_sqrt h_nsq
-      _ = 1 := by simp only [Real.sqrt_one]
+    exact norm_ge_one_of_normSq_ge_one h_nsq
   · push Not at h1; by_cases h3 : t ≤ 3
     · rw [fdBoundary_H_eq_fdBoundary_on_13 H (by linarith) h3]
       suffices ‖fdBoundary t‖ = 1 by linarith
@@ -490,9 +494,7 @@ lemma fdBoundary_H_norm_ge_one {H : ℝ} (hH : 1 ≤ H) (t : ℝ) (ht : t ∈ Ic
           rw [normSq_apply, hre]
           nlinarith [mul_self_le_mul_self (by positivity : (0 : ℝ) ≤ Real.sqrt 3 / 2) him,
                      Real.mul_self_sqrt (show (0 : ℝ) ≤ 3 from by norm_num)]
-        calc ‖fdBoundarySeg4H H t‖ = Real.sqrt (normSq (fdBoundarySeg4H H t)) := rfl
-          _ ≥ Real.sqrt 1 := Real.sqrt_le_sqrt h_nsq
-          _ = 1 := by simp only [Real.sqrt_one]
+        exact norm_ge_one_of_normSq_ge_one h_nsq
       · push Not at h4
         rw [fdBoundary_H_eq_seg5_H h4]
         have him : (fdBoundarySeg5H H t).im = H := by
@@ -503,9 +505,7 @@ lemma fdBoundary_H_norm_ge_one {H : ℝ} (hH : 1 ≤ H) (t : ℝ) (ht : t ∈ Ic
           have him_ge : (fdBoundarySeg5H H t).im ≥ 1 := by rw [him]; linarith
           nlinarith [mul_self_nonneg (fdBoundarySeg5H H t).re,
             mul_self_le_mul_self (by linarith : (0 : ℝ) ≤ 1) him_ge]
-        calc ‖fdBoundarySeg5H H t‖ = Real.sqrt (normSq (fdBoundarySeg5H H t)) := rfl
-          _ ≥ Real.sqrt 1 := Real.sqrt_le_sqrt h_nsq
-          _ = 1 := by simp only [Real.sqrt_one]
+        exact norm_ge_one_of_normSq_ge_one h_nsq
 
 omit f hf in
 /-- The boundary `fdBoundaryH H` avoids every point NOT in the closed FD. -/

@@ -286,27 +286,7 @@ lemma fdBoundary_H_im_le_H {H : ℝ} (hH : 1 ≤ H) :
 lemma fdBoundary_im_le_heightCutoff :
     ∀ t ∈ Icc (0 : ℝ) 5, (fdBoundary t).im ≤ heightCutoff := by
   rw [fdBoundary_eq_fdBoundary_H]
-  intro t ⟨ht0, ht5⟩
-  have hH := sqrt3_div2_lt_heightCutoff
-  by_cases h1 : t ≤ 1
-  · rw [fdBoundary_H_eq_seg1_H h1, seg1_H_im ht0 h1]
-    nlinarith
-  · push Not at h1
-    by_cases h2 : t ≤ 2
-    · rw [fdBoundary_H_eq_seg2_H heightCutoff h1 h2, fdBoundarySeg2H, seg2_im]
-      calc Real.sin _ ≤ 1 := Real.sin_le_one _
-        _ ≤ heightCutoff := le_of_lt one_lt_heightCutoff
-    · push Not at h2
-      by_cases h3 : t ≤ 3
-      · rw [fdBoundary_H_eq_seg3_H heightCutoff h2 h3, fdBoundarySeg3H, seg3_im]
-        calc Real.sin _ ≤ 1 := Real.sin_le_one _
-          _ ≤ heightCutoff := le_of_lt one_lt_heightCutoff
-      · push Not at h3
-        by_cases h4 : t ≤ 4
-        · rw [fdBoundary_H_eq_seg4_H h3 h4, seg4_H_im]
-          nlinarith
-        · push Not at h4
-          rw [fdBoundary_H_eq_seg5_H h4, seg5_H_im]
+  exact fdBoundary_H_im_le_H (le_of_lt one_lt_heightCutoff)
 
 lemma fdBoundary_re_abs_le_half :
     ∀ t ∈ Icc (0 : ℝ) 5,
