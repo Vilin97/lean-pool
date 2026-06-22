@@ -5,7 +5,6 @@ Authors: Shuhao Song
 -/
 import LeanPool.SetTheory.Basic
 import LeanPool.SetTheory.OrderTheory
-import Mathlib.Tactic.Cases
 
 /-!
 # Ordinals in models of ZF
