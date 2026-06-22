@@ -434,49 +434,25 @@ lemma chain_proof_prop
     simp only
     split
     case h_1 Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_2 Δ φ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i x y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_3 Δ φ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i x y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_4 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_5 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_6 Δ in_Δ r_def =>
       exfalso
       apply w_ih_prop
@@ -514,57 +490,29 @@ lemma chain_proof_prop
       · apply w_ih_prop
         exact ⟨Sum.inr (na i), by simpa [f, r_def] using in_Δ.2, by simpa using h⟩
     case h_12 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i x y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_13 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y z p_def
-        by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i x y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · by_cases h : ¬evaluate (M, w_ih) φ <;> simp [edge, p_def, h]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_14 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_15 Δ φ ψ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_16 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
     case h_17 Δ φ in_Δ r_def =>
-      split
-      · rename_i y p_def
-        simp [edge, p_def]
-      · rename_i p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
-      · rename_i y z ys p_def
-        simpa [r_def, p_def] using 𝕏.step x_ih
+      split <;> rename_i p_def
+      · simp [edge, p_def]
+      all_goals simpa [r_def, p_def] using 𝕏.step x_ih
 
 /-- The right projection of `chain` makes progress in the model on box nodes. -/
 lemma chain_model_prop {𝕏 : Proof}
