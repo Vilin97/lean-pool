@@ -57,15 +57,14 @@ lemma qExpansion_coe_sub {k : ℤ} (f g : ModularForm Γ(1) k) :
 
 lemma mul_Delta_IsCuspForm (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 1) (k - 12)) :
   IsCuspForm (CongruenceSubgroup.Gamma 1) k (mulDeltaMap k f) := by
-  rw [IsCuspForm_iff_coeffZero_eq_zero]
-  rw [qExpansion_ext2 _ _ (mul_Delta_map_eq_mul k f)]
-  rw [← Nat.cast_one (R := ℝ), qExpansion_mul_coeff]
+  rw [IsCuspForm_iff_coeffZero_eq_zero, qExpansion_ext2 _ _ (mul_Delta_map_eq_mul k f),
+    ← Nat.cast_one (R := ℝ), qExpansion_mul_coeff]
   simp only [PowerSeries.coeff_mul, Finset.antidiagonal_zero, Prod.mk_zero_zero,
     Finset.sum_singleton, Prod.fst_zero, Prod.snd_zero]
   simp only [mul_eq_zero]
   right
-  rw [Nat.cast_one, ← IsCuspForm_iff_coeffZero_eq_zero]
-  rw [IsCuspForm, CuspFormSubmodule, CuspFormToModularForm]
+  rw [Nat.cast_one, ← IsCuspForm_iff_coeffZero_eq_zero, IsCuspForm, CuspFormSubmodule,
+    CuspFormToModularForm]
   simp
 
 /-- Multiplication by the discriminant `Δ` packaged as a cusp form of weight `k`. -/
@@ -103,15 +102,13 @@ def CuspFormsIsoModforms (k : ℤ) : CuspForm (CongruenceSubgroup.Gamma 1) k ≃
         intro f
         ext z
         simp only [Modform_mul_Delta_apply, CuspForm_div_Discriminant_apply]
-        rw [Delta_apply]
-        rw [div_mul_cancel₀ ]
+        rw [Delta_apply, div_mul_cancel₀]
         apply Δ_ne_zero
       right_inv := by
         intro f
         ext z
         simp only [CuspForm_div_Discriminant_apply, Modform_mul_Delta_apply]
-        rw [Delta_apply]
-        rw [mul_div_cancel_right₀]
+        rw [Delta_apply, mul_div_cancel_right₀]
         apply Δ_ne_zero
 
 /-- Transport a rank fact about level-one modular forms from `𝒮ℒ` to the (definitionally distinct)
@@ -504,8 +501,7 @@ lemma dim_modforms_eq_one_add_dim_cuspforms (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk
       calc
         qExpansion 1 ⇑(c • E k hk) = qExpansion 1 (c • ⇑(E k hk)) := by rfl
         _ = c • qExpansion 1 (E k hk) := by simpa using (qExpansion_smul2 1 c (E k hk)).symm
-    rw [hqsub, hsmul]
-    rw [← Nat.cast_one (R := ℝ)]
+    rw [hqsub, hsmul, ← Nat.cast_one (R := ℝ)]
     simp [PowerSeries.coeff_zero_eq_constantCoeff, map_sub, smul_eq_mul, Ek_q_exp_zero k hk hk2,
       c]
 

@@ -75,11 +75,13 @@ lemma E₄_periodic (z : ℍ) : E₄ ((1 : ℝ) +ᵥ z) = E₄ z := by
 lemma E₆_periodic (z : ℍ) : E₆ ((1 : ℝ) +ᵥ z) = E₆ z := by
   simpa using SlashInvariantForm.vAdd_width_periodic 1 6 1 E₆.toSlashInvariantForm z
 
-/-- E₄ transforms under S as: E₄(-1/z) = z⁴ · E₄(z) -/
-lemma E₄_S_transform (z : ℍ) : E₄ (ModularGroup.S • z) = z ^ (4 : ℕ) * E₄ z := by
-  have h : (E₄.toFun ∣[(4 : ℤ)] ModularGroup.S) z = E₄.toFun z := by
+/-- A level-one modular form transforms under `S` as `g(-1/z) = z^k · g(z)`. -/
+private lemma modularForm_gammaOne_S_transform {k : ℕ}
+    (g : ModularForm (CongruenceSubgroup.Gamma 1) k) (z : ℍ) :
+    g (ModularGroup.S • z) = z ^ k * g z := by
+  have h : (g.toFun ∣[(k : ℤ)] ModularGroup.S) z = g.toFun z := by
     apply congrFun
-    apply E₄.slash_action_eq'
+    apply g.slash_action_eq'
     simp only [Subgroup.mem_map, CongruenceSubgroup.mem_Gamma_one]
     use ModularGroup.S
   rw [SL_slash_apply] at h
@@ -87,17 +89,13 @@ lemma E₄_S_transform (z : ℍ) : E₄ (ModularGroup.S • z) = z ^ (4 : ℕ) *
   field_simp [ne_zero z] at h
   exact h
 
+/-- E₄ transforms under S as: E₄(-1/z) = z⁴ · E₄(z) -/
+lemma E₄_S_transform (z : ℍ) : E₄ (ModularGroup.S • z) = z ^ (4 : ℕ) * E₄ z :=
+  modularForm_gammaOne_S_transform E₄ z
+
 /-- E₆ transforms under S as: E₆(-1/z) = z⁶ · E₆(z) -/
-lemma E₆_S_transform (z : ℍ) : E₆ (ModularGroup.S • z) = z ^ (6 : ℕ) * E₆ z := by
-  have h : (E₆.toFun ∣[(6 : ℤ)] ModularGroup.S) z = E₆.toFun z := by
-    apply congrFun
-    apply E₆.slash_action_eq'
-    simp only [Subgroup.mem_map, CongruenceSubgroup.mem_Gamma_one]
-    use ModularGroup.S
-  rw [SL_slash_apply] at h
-  simp only [ModularGroup.denom_S, zpow_neg, ModularForm.toFun_eq_coe] at h
-  field_simp [ne_zero z] at h
-  exact h
+lemma E₆_S_transform (z : ℍ) : E₆ (ModularGroup.S • z) = z ^ (6 : ℕ) * E₆ z :=
+  modularForm_gammaOne_S_transform E₆ z
 
 variable (f : ℍ → ℂ) (k : ℤ) (z : ℍ)
 
@@ -373,8 +371,7 @@ lemma sigma_bound (k n : ℕ) : σ k n ≤ n ^ (k + 1) := by
     exact Nat.divisor_le hi
   apply le_trans this
   simp only [Finset.sum_const, smul_eq_mul]
-  rw [pow_add]
-  rw [mul_comm]
+  rw [pow_add, mul_comm]
   gcongr
   simp only [pow_one]
   exact Nat.card_divisors_le_self n
@@ -443,16 +440,14 @@ lemma qexpsummable (k : ℕ) (hk : 3 ≤ (k : ℤ)) (z : ℍ) :
   simpa using Nat.card_divisors_le_self (b + 1)
 
 
-lemma Ek_q_exp_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : (qExpansion 1 (E k hk)).coeff 0 =
-    1 := by
+/-- The `EkQ`-style coefficients give the `q`-expansion `HasSum` for `E k hk`. -/
+private lemma Ek_hasSum (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) :
+    HasSum (fun m : ℕ ↦ (if m = 0 then 1 else
+      (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m)) •
+      𝕢 ((1 : ℕ) : ℝ) ↑z ^ m) (E k hk z) := by
   let c : ℕ → ℂ := fun m => if m = 0 then 1 else
     (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m)
-  have h := q_exp_unique 1 c (E k hk) ?_
-  · have hc := congr_fun h 0
-    rw [Nat.cast_one] at hc
-    rw [← hc]
-    simp [c]
-  intro z
+  change HasSum (fun m : ℕ ↦ c m • 𝕢 ((1 : ℕ) : ℝ) ↑z ^ m) (E k hk z)
   have := E_k_q_expansion k hk hk2 z
   rw [Summable.hasSum_iff]
   · simp only [one_div, neg_mul] at this
@@ -467,8 +462,7 @@ lemma Ek_q_exp_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : (qExpansio
       ring_nf
       field_simp
       congr
-      rw [Function.Periodic.qParam]
-      rw [← Complex.exp_nsmul]
+      rw [Function.Periodic.qParam, ← Complex.exp_nsmul]
       congr
       simp
       ring
@@ -482,6 +476,16 @@ lemma Ek_q_exp_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : (qExpansio
   have := qexpsummable k hk z
   simp only [one_div, neg_mul, EkQ, smul_eq_mul, ite_mul, one_mul, Nat.cast_one, c] at *
   apply this
+
+lemma Ek_q_exp_zero (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) : (qExpansion 1 (E k hk)).coeff 0 =
+    1 := by
+  let c : ℕ → ℂ := fun m => if m = 0 then 1 else
+    (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m)
+  have h := q_exp_unique 1 c (E k hk) (fun z => Ek_hasSum k hk hk2 z)
+  have hc := congr_fun h 0
+  rw [Nat.cast_one] at hc
+  rw [← hc]
+  simp [c]
 
 
 lemma Ek_q_exp (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
@@ -490,38 +494,8 @@ lemma Ek_q_exp (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
     (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m) := by
   let c : ℕ → ℂ := fun m => if m = 0 then 1 else
       (1 / (riemannZeta (k))) * ((-2 * ↑π * Complex.I) ^ k / (k - 1)!) * (σ (k-1) m)
-  have h := q_exp_unique 1 c (E k hk) ?_
-  · rw [← Nat.cast_one (R := ℝ), ← h]
-  intro z
-  have := E_k_q_expansion k hk hk2 z
-  rw [Summable.hasSum_iff]
-  · simp only [one_div, neg_mul] at this
-    rw [this, tsum_eq_zero_add']
-    · have V := tsum_pnat_eq_tsum_succ (f := fun b => c (b) • 𝕢 ↑1 ↑z ^ (b))
-      simp only [smul_eq_mul, Nat.cast_one, pow_zero, mul_one] at *
-      rw [← V]
-      simp only [one_div, neg_mul, ↓reduceIte, PNat.ne_zero, add_right_inj, c]
-      rw [← tsum_mul_left]
-      apply tsum_congr
-      intro b
-      ring_nf
-      field_simp
-      congr
-      rw [Function.Periodic.qParam]
-      rw [← Complex.exp_nsmul]
-      congr
-      simp
-      ring
-    have hr := (summable_nat_add_iff 1 (f := fun n : ℕ ↦ c (n) • 𝕢 (1 : ℝ) ↑z ^ (n)))
-    simp only [smul_eq_mul, Nat.cast_one] at *
-    rw [hr]
-    have := qexpsummable k hk z
-    simp only [one_div, neg_mul, Nat.add_eq_zero_iff, one_ne_zero, and_false, ↓reduceIte, ite_mul,
-      one_mul, EkQ, smul_eq_mul, c] at *
-    apply this
-  have := qexpsummable k hk z
-  simp only [one_div, neg_mul, EkQ, smul_eq_mul, ite_mul, one_mul, Nat.cast_one, c] at *
-  apply this
+  have h := q_exp_unique 1 c (E k hk) (fun z => Ek_hasSum k hk hk2 z)
+  rw [← Nat.cast_one (R := ℝ), ← h]
 
 lemma E4_q_exp : (fun m => (qExpansion 1 E₄).coeff m) =
     fun m => if m = 0 then 1 else (240 : ℂ) * (σ 3 m) := by
@@ -753,8 +727,8 @@ theorem diffwithinat_prod_1 :
 lemma Delta_q_one_term : (qExpansion 1 Delta).coeff 1 = 1 := by
   rw [qExpansion_coeff]
   simp only [Nat.factorial_one, Nat.cast_one, inv_one, iteratedDeriv_one, one_mul]
-  rw [← derivWithin_of_isOpen (s := Metric.ball 0 (1 / 2 : ℝ)) (isOpen_ball) (by simp) ]
-  rw [derivWithin_congr Delta_cuspFuntion_eq]
+  rw [← derivWithin_of_isOpen (s := Metric.ball 0 (1 / 2 : ℝ)) (isOpen_ball) (by simp),
+    derivWithin_congr Delta_cuspFuntion_eq]
   · rw [derivWithin_fun_mul]
     · simp only [one_div, ne_eq, Nat.add_eq_zero_iff, one_ne_zero, and_false, not_false_eq_true,
       zero_pow, sub_zero, one_pow, tprod_one, mul_one, zero_mul, add_zero]
@@ -796,8 +770,8 @@ lemma antidiagonal_one : Finset.antidiagonal 1 = {(1,0), (0,1)} := by
   omega
 
 lemma E4_pow_q_exp_one : (qExpansion 1 ((E₄).mul ((E₄).mul E₄))).coeff 1 = 3 * 240 := by
-  rw [← Nat.cast_one (R := ℝ), qExpansion_mul_coeff, qExpansion_mul_coeff]
-  rw [PowerSeries.coeff_mul, antidiagonal_one]
+  rw [← Nat.cast_one (R := ℝ), qExpansion_mul_coeff, qExpansion_mul_coeff,
+    PowerSeries.coeff_mul, antidiagonal_one]
   simp only [Nat.cast_one, Finset.mem_singleton, Prod.mk.injEq, one_ne_zero, zero_ne_one, and_self,
     not_false_eq_true, Finset.sum_insert, PowerSeries.coeff_zero_eq_constantCoeff, map_mul,
     Finset.sum_singleton]

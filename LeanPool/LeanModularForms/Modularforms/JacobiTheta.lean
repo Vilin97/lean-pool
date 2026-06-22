@@ -107,8 +107,8 @@ lemma H₂_T_action : (H₂ ∣[(2 : ℤ)] T) = -H₂ := by
       convert Int.even_mul_succ_self b using 1
       ring_nf
     norm_cast
-    rw [Complex.exp_add]
-    rw [mul_comm (π * I), Complex.exp_int_mul, Complex.exp_pi_mul_I, this.neg_one_zpow, one_mul]
+    rw [Complex.exp_add, mul_comm (π * I), Complex.exp_int_mul, Complex.exp_pi_mul_I,
+      this.neg_one_zpow, one_mul]
 
 lemma H₃_T_action : (H₃ ∣[(2 : ℤ)] T) = H₄ := by
   ext x
@@ -1108,7 +1108,6 @@ lemma Θ₄_term_imag_axis_real (n : ℤ) (t : ℝ) (ht : 0 < t) :
     (Θ₄Term n ⟨I * t, by simp [ht]⟩).im = 0 := by
   unfold Θ₄Term
   change ((-1 : ℂ) ^ n * cexp (Real.pi * I * (n : ℂ) ^ 2 * (I * t))).im = 0
-  -- Simplify the exponent: π * I * n² * (I*t) = -π * n² * t
   have hexpr : Real.pi * I * (n : ℂ) ^ 2 * (I * t) =
       (-(Real.pi * (n : ℝ) ^ 2 * t) : ℝ) := by
     have hI : I ^ 2 = -1 := I_sq
@@ -1117,10 +1116,7 @@ lemma Θ₄_term_imag_axis_real (n : ℤ) (t : ℝ) (ht : 0 < t) :
     simp only [hI]
     ring
   rw [hexpr]
-  -- Now we have (-1)^n * exp(real), both are real
-  have hexp_real : (cexp (-(Real.pi * (n : ℝ) ^ 2 * t) : ℝ)).im = 0 := exp_ofReal_im _
-  have hneg_one_real : ((-1 : ℂ) ^ n).im = 0 := neg_one_zpow_im_eq_zero n
-  simp only [Complex.mul_im, hneg_one_real, hexp_real, mul_zero, zero_mul, add_zero]
+  simp only [Complex.mul_im, neg_one_zpow_im_eq_zero n, exp_ofReal_im, mul_zero, zero_mul, add_zero]
 
 /-- Θ₄(I*t) has zero imaginary part for t > 0. -/
 lemma Θ₄_imag_axis_real (t : ℝ) (ht : 0 < t) :
@@ -1163,8 +1159,7 @@ lemma Θ₂_term_imag_axis_re (n : ℤ) (t : ℝ) (ht : 0 < t) :
     ring_nf
     simp only [hI]
     ring
-  rw [hexpr]
-  rw [Complex.exp_ofReal_re]
+  rw [hexpr, Complex.exp_ofReal_re]
   ring_nf
 
 /-- Each term Θ₂Term n (I*t) has positive real part for t > 0. -/
@@ -1214,16 +1209,10 @@ theorem H₂_imag_axis_pos : ResToImagAxis.Pos H₂ := by
     -- For z with z.im = 0 and z.re > 0, (z^4).re = (z.re)^4 > 0
     have hΘ₂_im := Θ₂_imag_axis_real t ht
     have hΘ₂_re_pos := Θ₂_imag_axis_re_pos t ht
-    -- z^4 for z real equals z.re^4
     have hpow : (Θ₂ ⟨I * t, by simp [ht]⟩ ^ 4).re =
         (Θ₂ ⟨I * t, by simp [ht]⟩).re ^ 4 := by
       set z := Θ₂ ⟨I * t, by simp [ht]⟩ with hz_def
-      have hz_real : z.im = 0 := hΘ₂_im
-      -- When im = 0, z = z.re (as complex), so z^4 = (z.re)^4
-      have hz_eq : z = (z.re : ℂ) := by
-        apply Complex.ext
-        · simp
-        · simp [hz_real]
+      have hz_eq : z = (z.re : ℂ) := Complex.ext (by simp) (by simp [hΘ₂_im])
       rw [hz_eq]
       norm_cast
     rw [hpow]
@@ -1254,57 +1243,33 @@ theorem H₄_imag_axis_pos : ResToImagAxis.Pos H₄ := by
   constructor
   · exact H₄_imag_axis_real
   · intro t ht
-    -- Strategy: Use H₄_S_action and ResToImagAxis.SlashActionS to relate
-    -- H₄ positivity to H₂ positivity via the modular S-transformation
+    -- Use H₄_S_action and ResToImagAxis.SlashActionS to relate H₄ to H₂ via S.
     have h1t_pos : 0 < 1 / t := one_div_pos.mpr ht
-    -- Apply SlashActionS at 1/t
     have hSlash := ResToImagAxis.SlashActionS H₄ 2 h1t_pos
-    -- Use H₄_S_action: (H₄ ∣[2] S) = -H₂
     rw [H₄_S_action] at hSlash
-    -- Now hSlash : (-H₂).resToImagAxis (1/t) = I^(-2) * (1/t)^(-2) * H₄.resToImagAxis t
-    -- Simplify: I^(-2) = -1
     have hI_neg2 : (I : ℂ) ^ (-2 : ℤ) = -1 := by
       change (I ^ 2)⁻¹ = -1
-      rw [I_sq]
-      norm_num
-    -- Simplify: (1/t)^(-2) = t^2
+      rw [I_sq]; norm_num
     have h1t_neg2 : ((1 / t : ℝ) : ℂ) ^ (-2 : ℤ) = (t : ℂ) ^ 2 := by
       have ht_ne : (t : ℂ) ≠ 0 := ofReal_ne_zero.mpr (ne_of_gt ht)
       simp only [one_div, ofReal_inv, zpow_neg]
-      -- Goal: ((↑t)⁻¹ ^ 2)⁻¹ = ↑t ^ 2
       field_simp
-    -- Simplify 1/(1/t) = t
     have h1_div_1t : 1 / (1 / t) = t := by field_simp
-    -- The negation of resToImagAxis
     have hNeg : (-H₂).resToImagAxis (1 / t) = -(H₂.resToImagAxis (1 / t)) := by
       simp only [Function.resToImagAxis_apply, ResToImagAxis, h1t_pos, ↓reduceDIte, Pi.neg_apply]
-    -- Substitute into hSlash
     rw [hNeg, hI_neg2, h1t_neg2, h1_div_1t] at hSlash
-    -- hSlash : -(H₂.resToImagAxis (1/t)) = -1 * t^2 * H₄.resToImagAxis t
-    -- Simplify: H₂.resToImagAxis (1/t) = t^2 * H₄.resToImagAxis t
     have hEq : H₂.resToImagAxis (1 / t) = (t : ℂ) ^ 2 * H₄.resToImagAxis t := by
-      have h : -H₂.resToImagAxis (1 / t) = -(↑t ^ 2 * H₄.resToImagAxis t) := by
-        simp only [neg_mul, one_mul] at hSlash ⊢
-        exact hSlash
-      exact neg_inj.mp h
-    -- H₂.resToImagAxis (1/t).re > 0 from H₂_imag_axis_pos
+      simp only [neg_mul, one_mul] at hSlash
+      exact neg_inj.mp hSlash
     have hH₂_pos := H₂_imag_axis_pos.2 (1 / t) h1t_pos
-    -- H₄.resToImagAxis t is real (im = 0)
     have hH₄_real := H₄_imag_axis_real t ht
-    -- From hEq, extract real parts
-    have hRe : (H₂.resToImagAxis (1 / t)).re = ((t : ℂ) ^ 2 * H₄.resToImagAxis t).re := by rw [hEq]
-    -- Since t^2 is real positive and H₄.resToImagAxis t is real:
-    -- (t^2 * H₄.resToImagAxis t).re = t^2 * (H₄.resToImagAxis t).re
     have hProd_re : ((t : ℂ) ^ 2 * H₄.resToImagAxis t).re =
         (t : ℝ) ^ 2 * (H₄.resToImagAxis t).re := by
       simp only [Function.resToImagAxis_apply, ResToImagAxis, ht, ↓reduceDIte] at hH₄_real ⊢
       simp only [sq, Complex.mul_re, ofReal_re, ofReal_im, zero_mul, sub_zero]
       ring_nf
       simp only [hH₄_real, mul_zero, sub_zero]
-    -- Combine: t^2 * (H₄.resToImagAxis t).re > 0 and t^2 > 0 imply (H₄.resToImagAxis t).re > 0
-    rw [hRe, hProd_re] at hH₂_pos
-    have ht2_pos : 0 < (t : ℝ) ^ 2 := sq_pos_of_pos ht
-    rw [mul_comm] at hH₂_pos
-    exact pos_of_mul_pos_left hH₂_pos (le_of_lt ht2_pos)
+    rw [hEq, hProd_re, mul_comm] at hH₂_pos
+    exact pos_of_mul_pos_left hH₂_pos (le_of_lt (sq_pos_of_pos ht))
 
 end ImagAxisProperties

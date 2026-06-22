@@ -83,8 +83,7 @@ lemma eta_logDeriv_eql (z : ℍ) : (logDeriv (η ∘ (fun z : ℂ => -1/z))) z =
           simp
           ring_nf
         rw [h00] at E
-        rw [← mul_assoc, mul_comm, ← mul_assoc]
-        rw [E, add_mul, add_comm]
+        rw [← mul_assoc, mul_comm, ← mul_assoc, E, add_mul, add_comm]
         congr 1
         · have hzne := ne_zero z
           have hI : Complex.I ≠ 0 := I_ne_zero
@@ -130,8 +129,7 @@ lemma eta_logderivs_const : ∃ z : ℂ, z ≠ 0 ∧ {z : ℂ | 0 < z.im}.EqOn (
       have := UpperHalfPlane.im_inv_neg_coe_pos (⟨y, hy⟩ : ℍ)
       conv =>
         enter [2,1]
-        rw [neg_div]
-        rw [div_eq_mul_inv]
+        rw [neg_div, div_eq_mul_inv]
         simp
       simp only [inv_neg, neg_im, inv_im, Left.neg_pos_iff] at *
       exact this

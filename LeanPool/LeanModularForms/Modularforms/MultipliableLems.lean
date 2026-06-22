@@ -55,9 +55,7 @@ theorem multipliable_lt_one (x : ℂ) (hx : x ∈ ball 0 1) :
     ext n
     rw [sub_eq_add_neg]
   · exact this
-  rw [@summable_neg_iff]
-  rw [@summable_nat_add_iff]
-  rw [@summable_geometric_iff_norm_lt_one]
+  rw [@summable_neg_iff, @summable_nat_add_iff, @summable_geometric_iff_norm_lt_one]
   simpa using hx
 
 lemma MultipliableEtaProductExpansion (z : ℍ) :
@@ -126,9 +124,7 @@ lemma tprod_pow (f : ℕ → ℂ) (hf : Multipliable f) (n : ℕ) : (∏' (i : �
   induction n with
   | zero => simp
   | succ n hn =>
-    rw [pow_succ]
-    rw [hn]
-    rw [← Multipliable.tprod_mul]
+    rw [pow_succ, hn, ← Multipliable.tprod_mul]
     · congr
     · apply Multipliable_pow f hf n
     exact hf

@@ -37,8 +37,7 @@ lemma trex (f : ℤ → ℂ) (N : ℕ) (hn : 1 ≤ N) : ∑ m ∈ Finset.Icc (-N
   | zero => aesop
   | succ N ih =>
     zify
-    rw [Icc_succ]
-    rw [Finset.sum_union]
+    rw [Icc_succ, Finset.sum_union]
     · ring_nf
       rw [add_assoc]
       congr

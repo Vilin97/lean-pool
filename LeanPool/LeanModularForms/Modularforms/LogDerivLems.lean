@@ -27,11 +27,8 @@ theorem logDeriv_tprod_eq_tsum2 {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ �
     (hd : ∀ i : ℕ, DifferentiableOn ℂ (f i) s) (hm : Summable fun i ↦ logDeriv (f i) ↑x)
     (htend : MultipliableLocallyUniformlyOn f s) (hnez : ∏' (i : ℕ), f i ↑x ≠ 0) :
     logDeriv (∏' i : ℕ, f i ·) x = ∑' i : ℕ, logDeriv (f i) x := by
-    have h2 := Summable.hasSum hm
-    rw [Summable.hasSum_iff_tendsto_nat hm] at h2
     apply symm
-    rw [← Summable.hasSum_iff hm]
-    rw [Summable.hasSum_iff_tendsto_nat hm]
+    rw [← Summable.hasSum_iff hm, Summable.hasSum_iff_tendsto_nat hm]
     let g := (∏' i : ℕ, f i ·)
     have h_tlu : TendstoLocallyUniformlyOn (fun n z ↦ ∏ i ∈ Finset.range n, f i z) g atTop s := by
       have := htend.hasProdLocallyUniformlyOn.tendstoLocallyUniformlyOn_finsetRange
@@ -61,11 +58,8 @@ theorem logDeriv_tprod_eq_tsumold {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ
     (htend : TendstoLocallyUniformlyOn (fun n ↦ ∏ i ∈ Finset.range n, f i)
     (fun x ↦ ∏' (i : ℕ), f i x) atTop s) (hnez : ∏' (i : ℕ), f i ↑x ≠ 0) :
     logDeriv (∏' i : ℕ, f i ·) x = ∑' i : ℕ, logDeriv (f i) x := by
-    have h2 := Summable.hasSum hm
-    rw [Summable.hasSum_iff_tendsto_nat hm] at h2
     apply symm
-    rw [← Summable.hasSum_iff hm]
-    rw [Summable.hasSum_iff_tendsto_nat hm]
+    rw [← Summable.hasSum_iff hm, Summable.hasSum_iff_tendsto_nat hm]
     let g := (∏' i : ℕ, f i ·)
     have HT := logDeriv_tendsto (f := fun n ↦ ∏ i ∈ Finset.range n, (f i)) (g := g)
       (s := s) hs (x.2) (p := atTop) ?_ ?_ ?_
@@ -138,8 +132,7 @@ lemma logDeriv_q_expo_summable (r : ℂ) (hr : ‖r‖ < 1) : Summable fun n : �
     have := norm_lt_of_mem_ball (Metric.mem_ball.mpr this) (E := ℂ)
     simp only [tendsto_const_nhds_iff, norm_inv, one_mem, CStarRing.norm_of_mem_unitary,
       ge_iff_le] at *
-    rw [div_eq_mul_inv]
-    rw [mul_comm]
+    rw [div_eq_mul_inv, mul_comm]
     gcongr
     apply le_trans this.le
     norm_cast
@@ -166,8 +159,7 @@ variable {F : Type*} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 lemma deriv_EqOn_congr {f g : ℂ → ℂ} (s : Set ℂ) (hfg : s.EqOn f g) (hs : IsOpen s) :
     s.EqOn (deriv f) ( deriv g) := by
   intro x hx
-  rw [← derivWithin_of_isOpen hs hx]
-  rw [← derivWithin_of_isOpen hs hx]
+  rw [← derivWithin_of_isOpen hs hx, ← derivWithin_of_isOpen hs hx]
   apply derivWithin_congr hfg
   apply hfg hx
 

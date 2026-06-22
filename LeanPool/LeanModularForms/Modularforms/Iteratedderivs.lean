@@ -54,8 +54,7 @@ theorem aut_iter_deriv (d : ℤ) (k : ℕ) :
           rfl
         rw [h0]
         have h1 : (fun z : ℂ => ((z + d) ^ (k + 1))) = (fun z : ℂ => (z + d)) ^ (k + 1) := by rfl
-        rw [h1]
-        rw [deriv_inv'', deriv_pow, deriv_add_const', deriv_id'']
+        rw [h1, deriv_inv'', deriv_pow, deriv_add_const', deriv_id'']
         · simp only [Nat.cast_add, Nat.cast_one, add_tsub_cancel_right, mul_one]
           rw [pow_add]
           simp only [pow_one, Pi.mul_apply, Pi.pow_apply]

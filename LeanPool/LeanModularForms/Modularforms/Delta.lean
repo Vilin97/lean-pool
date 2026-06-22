@@ -90,8 +90,7 @@ lemma Discriminant_S_invariant : (Δ ∣[(12 : ℤ)] ModularGroup.S) = Δ := by
   simp only [comp_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul,
     Int.reduceNeg, zpow_neg] at *
   have hi : -1/(z.1 : ℂ) = (-(z : ℂ))⁻¹ := by
-    rw [neg_div]
-    rw [← neg_inv]
+    rw [neg_div, ← neg_inv]
     simp
   rw [hi] at he
   rw [he, mul_pow, mul_pow, inv_pow, csqrt_I]
@@ -113,9 +112,7 @@ def DiscriminantSIF : SlashInvariantForm (CongruenceSubgroup.Gamma 1) 12 where
 /-- Δ is 1-periodic: Δ(z + 1) = Δ(z) -/
 lemma Δ_periodic (z : ℍ) : Δ ((1 : ℝ) +ᵥ z) = Δ z := by
   have h := SlashInvariantForm.vAdd_width_periodic 1 12 1 DiscriminantSIF z
-  have harg : ((1 : ℕ) * (1 : ℤ) : ℝ) = (1 : ℝ) := by norm_num
-  rw [harg] at h
-  exact h
+  rwa [show ((1 : ℕ) * (1 : ℤ) : ℝ) = (1 : ℝ) by norm_num] at h
 
 /-- Δ transforms under S as: Δ(-1/z) = z¹² · Δ(z) -/
 lemma Δ_S_transform (z : ℍ) : Δ (ModularGroup.S • z) = z ^ (12 : ℕ) * Δ z := by
@@ -156,17 +153,12 @@ lemma atImInfy_pnat_mono (S : Set ℍ) (hS : S ∈ atImInfty) (B : ℝ) : ∃ A 
       simp only [mul_im, natCast_re, coe_im, natCast_im, coe_re, zero_mul, add_zero]
       have hs2 := hs.2
       simp only [sup_le_iff] at *
-      constructor
-      · apply le_trans hs2.1
-        have hn : (1 : ℝ) ≤ n := by
-          norm_cast
-          exact one_le
-        apply (le_mul_iff_one_le_left s.2).mpr hn
-      apply le_trans hs2.2
       have hn : (1 : ℝ) ≤ n := by
         norm_cast
         exact one_le
-      apply (le_mul_iff_one_le_left s.2).mpr hn
+      constructor
+      · exact le_trans hs2.1 ((le_mul_iff_one_le_left s.2).mpr hn)
+      · exact le_trans hs2.2 ((le_mul_iff_one_le_left s.2).mpr hn)
     refine ⟨?_, K⟩
     simp only [sup_le_iff] at K
     apply hA _ K.1

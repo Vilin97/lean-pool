@@ -657,8 +657,8 @@ lemma D_slash (k : ℤ) (F : ℍ → ℂ) (hF : MDiff F) (γ : SL(2, ℤ)) :
     ring
   -- Rewrite powers on LHS
   conv_lhs =>
-    rw [mul_assoc (deriv (F ∘ ofComplex) (num γ z / denom γ z)) (1 / denom γ z ^ 2) _]
-    rw [hpow_combine, hpow_m1]
+    rw [mul_assoc (deriv (F ∘ ofComplex) (num γ z / denom γ z)) (1 / denom γ z ^ 2) _,
+      hpow_combine, hpow_m1]
   -- Now the goal should be cleaner - distribute and simplify
   simp only [zpow_neg_one]
   ring

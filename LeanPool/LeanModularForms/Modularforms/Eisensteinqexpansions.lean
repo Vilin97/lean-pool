@@ -234,13 +234,11 @@ lemma EQ1 (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) : ∑' (x : 
     enter [1,2,1]
     ext c
     rw [h1 c]
-  rw [tsum_mul_left]
-  rw [← mul_assoc]
+  rw [tsum_mul_left, ← mul_assoc]
   congr 1
   rw [Summable.tsum_comm]
   · rw [← tsum_sigma_eqn2]
-    rw [← (piFinTwoEquiv fun _ => ℕ+).symm.tsum_eq]
-    rw [Summable.tsum_prod']
+    rw [← (piFinTwoEquiv fun _ => ℕ+).symm.tsum_eq, Summable.tsum_prod']
     · simp only [Fin.isValue, piFinTwoEquiv_symm_apply, Fin.cons_zero, Fin.cons_one]
       congr
       ext i

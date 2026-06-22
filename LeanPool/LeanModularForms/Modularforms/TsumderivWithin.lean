@@ -118,8 +118,7 @@ theorem iter_deriv_comp_bound2 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
           (fun s : ℂ => Complex.exp (2 * ↑π * Complex.I * n * s)) ℍ') ℍ' r)‖ ≤ u n := by
   have : CompactSpace K := by
     rw [← isCompact_univ_iff]
-    rw [isCompact_iff_isCompact_univ] at hK2
-    apply hK2
+    rwa [isCompact_iff_isCompact_univ] at hK2
   set r : ℝ := ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖
   have hr : ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖ < 1 := by
     rw [BoundedContinuousFunction.norm_lt_iff_of_compact]
@@ -203,7 +202,7 @@ theorem hasDerivAt_tsum_fun {α : Type _} (f : α → ℂ → ℂ)
           (𝓝 (∑' n : α, (fun z => f n z) x)) := by
     intro y hy
     apply Summable.hasSum
-    simp?
+    simp only
     apply hf y hy
   apply hasDerivAt_of_tendstoLocallyUniformlyOn hs _ _ A hx
   · use fun n : Finset α => fun a => ∑ i ∈ n, derivWithin (fun z => f i z) s a
@@ -245,8 +244,7 @@ theorem iter_deriv_comp_bound3 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
           (2 * |π| * n) ^ k * ‖(Complex.exp (2 * ↑π * Complex.I * n * r))‖ ≤ u n := by
   have : CompactSpace K := by
     rw [← isCompact_univ_iff]
-    rw [isCompact_iff_isCompact_univ] at hK2
-    apply hK2
+    rwa [isCompact_iff_isCompact_univ] at hK2
   set r : ℝ := ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖
   have hr : ‖BoundedContinuousFunction.mkOfCompact (ctsExpTwoPiN K )‖ < 1 := by
     rw [BoundedContinuousFunction.norm_lt_iff_of_compact]
@@ -287,9 +285,9 @@ theorem iter_deriv_comp_bound3 (K : Set ℂ) (hK1 : K ⊆ ℍ') (hK2 : IsCompact
       ‖ (Complex.exp (2 * π * Complex.I * n * t))‖ =
         ‖ (Complex.exp (2 * π * Complex.I * t))‖ ^ n := by
           norm_cast
-          rw [← Complex.norm_pow];
-          congr;
-          rw [← exp_nat_mul];
+          rw [← Complex.norm_pow]
+          congr
+          rw [← exp_nat_mul]
           ring_nf
     rw [hw1]
     norm_cast

@@ -280,8 +280,7 @@ theorem slashaction_generators'
     -- key idea: this lemma allows induction on the "words" of the group
     apply Subgroup.closure_induction (G := G) (p := fun γ _ ↦ f ∣[k] γ.1 = f) (k := s) ?_ ?_
     · intro _ _ _ _ hf₁ hf₂
-      rw [@Subgroup.coe_mul]
-      rw [SlashAction.slash_mul, hf₁, hf₂]
+      rw [@Subgroup.coe_mul, SlashAction.slash_mul, hf₁, hf₂]
     · intro x _ hf
       rw [← hf, ← SlashAction.slash_mul]
       simp [hf]

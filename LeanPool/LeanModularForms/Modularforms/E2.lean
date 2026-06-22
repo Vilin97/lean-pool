@@ -155,8 +155,7 @@ lemma E₂_eq (z : UpperHalfPlane) : E₂ z =
                         (1 - cexp (2 * π * Complex.I * n * z)) := by
   rw [E₂, EisensteinSeries.E2]
   simp only [one_div, mul_inv_rev, Pi.smul_apply, smul_eq_mul]
-  rw [EisensteinSeries.G2_eq_tsum_cexp]
-  rw [mul_sub]
+  rw [EisensteinSeries.G2_eq_tsum_cexp, mul_sub]
   congr 1
   · rw [riemannZeta_two]
     have hpi : (π : ℂ) ≠ 0 := by simp
