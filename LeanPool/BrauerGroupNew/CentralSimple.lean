@@ -24,17 +24,6 @@ algebras in this case according to our definition.
 -/
 universe u v w
 open Module
--- class IsCentralSimple
---     (K : Type u) [Field K] (D : Type v) [Ring D] [Algebra K D] : Prop where
---   is_central : Subalgebra.center K D ≤ ⊥
---   [is_simple : IsSimpleRing D]
--- lemma IsCentralSimple.center_eq
---     (K D : Type*) [Field K] [Ring D] [Algebra K D] [IsCentralSimple K D] :
---     Subalgebra.center K D = ⊥ :=
---   le_antisymm IsCentralSimple.is_central <| by
---     rintro _ ⟨x, rfl⟩
---     rw [Subalgebra.mem_center_iff]
---     exact (Algebra.commutes' x · |>.symm)
 variable (K : Type u) [Field K]
 open Matrix in
 instance MatrixRing.isCentral (ι : Type) [Fintype ι] [Nonempty ι] [DecidableEq ι] :

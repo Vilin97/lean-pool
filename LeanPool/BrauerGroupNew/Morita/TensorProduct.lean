@@ -440,10 +440,6 @@ abbrev MoritaTensorAux1 (e : ModuleCat A ≌ ModuleCat B) [e.functor.Additive] [
   (equivModuleOverTensor R A C).symm.trans ((MoritaTensorAux0 R A B C e).trans
       (equivModuleOverTensor R B C))
 
--- instance : Functor.Additive (@ModuleCat.restrictScalars A (A ⊗[R] C) _ _
---     Algebra.TensorProduct.includeLeftRingHom) where
---   map_add := rfl
-
 instance : Functor.Linear R (@ModuleCat.restrictScalars A (A ⊗[R] C) _ _
     Algebra.TensorProduct.includeLeftRingHom) where
   map_smul {X Y} f r := by

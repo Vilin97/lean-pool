@@ -210,13 +210,6 @@ end formathlib
 
 open MulOpposite
 
--- @[ext]
--- structure Azumaya (R : Type u) [CommRing R] where
---   carrier : Type v
---   [isRing : Ring carrier]
---   [isAlgebra : Algebra R carrier]
---   isAzumaya : IsAzumaya R carrier
-
 /-- An Azumaya algebra over a commutative base ring, bundled as an algebra object. -/
 structure Azumaya (R : Type u) [CommRing R] extends AlgCat R where
   isAzumaya : IsAzumaya R carrier
@@ -268,22 +261,6 @@ instance faithfulSMulTensor [Module.Projective R A] [Module.Projective R B]
     exact eq_of_smul_eq_smul (M := R) (α := A) (m₁ := r1) (m₂ := r2) <|
       fun a ↦ by rw [← one_mul a, ← smul_mul_assoc, this, smul_mul_assoc, one_mul]
 
--- abbrev u (n : ℕ) : Fin n → (Fin n → R) := fun i ↦ Function.update (0 : Fin n → R) i 1
-
--- abbrev v (n : ℕ) : Basis (Fin n) R (Fin n → R) := Basis.mk (v := u R n) (by
---   rw [Fintype.linearIndependent_iff]
---   refine fun f hf j ↦ ?_
---   apply congrFun at hf
---   specialize hf j
---   change (∑ _, _ • Function.update _ _ _) _ = _ at hf
---   simp only [Finset.sum_apply, Pi.smul_apply, Function.update_apply, Pi.zero_apply, smul_eq_mul,
---     mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte] at hf
---   exact hf) fun x _ ↦ by
---   refine Submodule.mem_span_range_iff_exists_fun R|>.2 ⟨x, ?_⟩
---   change ∑ i : Fin n, _ • Function.update _ _ _ = x
---   ext j
---   simp [Function.update_apply]
-
 open Algebra.TensorProduct (assoc congr opAlgEquiv) in
 variable {R A B} in
 /-- Rebracketing equivalence used to compare `mulLeftRight` with tensor products. -/
@@ -297,14 +274,6 @@ abbrev e : (A ⊗[R] Aᵐᵒᵖ) ⊗[R] (B ⊗[R] Bᵐᵒᵖ) ≃ₐ[R] (A ⊗[R
 
 lemma e_apply (a : A) (b : B) (a' : Aᵐᵒᵖ) (b' : Bᵐᵒᵖ) :
     e ((a ⊗ₜ a') ⊗ₜ (b ⊗ₜ b')) = (a ⊗ₜ b) ⊗ₜ op (a'.unop ⊗ₜ[R] b'.unop) := rfl
-
--- lemma top_square_comm' (A B : Azumaya R) (a : A) (a' : Aᵐᵒᵖ) (b : B) (b' : Bᵐᵒᵖ) :
---     ((TensorProduct.homTensorHomMap _ A B A B) ∘ (Algebra.TensorProduct.congr
---     (AlgEquiv.ofBijective (AlgHom.mulLeftRight R A) A.isAzumaya.bij)
---     (AlgEquiv.ofBijective (AlgHom.mulLeftRight R B) B.isAzumaya.bij))) ((a ⊗ₜ a') ⊗ₜ (b ⊗ₜ b')) =
---     ((AlgHom.mulLeftRight R (A ⊗[R] B)) ∘ e) ((a ⊗ₜ a') ⊗ₜ (b ⊗ₜ b')) := by
---   ext a0 b0
---   simp [e_apply, AlgHom.mulLeftRight_apply, Module.endTensorEndAlgHom_apply]
 
 open TensorProduct.AlgebraTensorModule in
 lemma top_square_comm'' (A B : Azumaya R) :

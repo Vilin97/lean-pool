@@ -469,13 +469,6 @@ instance end_simple_mod_finite
   have : FiniteDimensional k Dᵐᵒᵖ := E.symm.finiteDimensional
   refine iso.symm.toLinearEquiv.finiteDimensional
 
--- instance (D : Type v) [DivisionRing D] : Module.Finite Dᵐᵒᵖ D := by
---   rw [Module.finite_def]
---   refine ⟨{1}, eq_top_iff.2 fun x _ => ?_⟩
---   simp only [Finset.coe_singleton]
---   rw [show x = (MulOpposite.op x : Dᵐᵒᵖ) • 1 by simp]
---   exact Submodule.smul_mem _ _ <| Submodule.subset_span rfl
-
 instance instAlgebraEndOfIsScalarTowerLeanPool (M : Type v) [AddCommGroup M] [Module A M]
     [Module k M] [IsScalarTower k A M] :
     Algebra k (Module.End (Module.End A M) M) where

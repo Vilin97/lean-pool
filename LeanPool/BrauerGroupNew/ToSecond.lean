@@ -710,6 +710,17 @@ namespace RelativeBrGroup
 
 open CrossProductAlgebra
 
+omit [FiniteDimensional F K] in
+private lemma crossProduct_F_smul_eq_K_smul (f : Gal(K, F) × Gal(K, F) → Kˣ)
+    [Fact (IsMulCocycle₂ f)] (c : F) (a : CrossProductAlgebra f) :
+    c • a = algebraMap F K c • a := by
+  apply CrossProductAlgebra.val_injective
+  change c • a.val = (algebraMap F K c) • a.val
+  induction a.val using Finsupp.induction_linear with
+  | zero => simp
+  | add f g _ _ => simp_all
+  | single σ k => simp
+
 variable [IsGalois F K] [DecidableEq Gal(K, F)] in
 /-- Build a relative Brauer class from a two-cocycle via the cross-product algebra. -/
 noncomputable def fromCocycles₂ (f : cocycles₂ (galAct F K)) : RelativeBrGroup K F :=
@@ -724,10 +735,7 @@ variable (F K) in
 /-- Descend the cross-product construction to second cohomology. -/
 noncomputable def fromSnd :
     (groupCohomology.shortComplexH2 (galAct F K)).moduleCatLeftHomologyData.H
-    -- H2 (galAct F K)
     → RelativeBrGroup K F :=
-  -- ShortComplex.descHomology _ (groupCohomology.isoCocycles₂ (galAct F K) ≫ )--_ _ _
-  -- sorry
   Quotient.lift fromCocycles₂ <| by
     rintro ⟨(a : _ → Kˣ), ha⟩ ⟨(b : _ → Kˣ), hb⟩ (hab : Submodule.quotientRel _ _ _)
     have H' : H2π (galAct F K) ⟨a, ha⟩ - H2π (galAct F K) ⟨b, hb⟩ = 0 := by
@@ -752,20 +760,10 @@ noncomputable def fromSnd :
     let φ0 : A ≃ₗ[K] B := CrossProductAlgebra.basis.equiv basis (.refl _)
     haveI : LinearMap.CompatibleSMul A B F K := by
       constructor
-      have eq (c : F) (a : A) : c • a = algebraMap F K c • a := by
-        apply val_injective
-        change c • a.val = (algebraMap F K c) • a.val
-        induction a.val using Finsupp.induction_linear with
-        | zero => simp
-        | add f g _ _ => simp_all
-        | single σ k => simp
-      have eq' (c : F) (a : B) : c • a = algebraMap F K c • a := by
-        apply val_injective
-        change c • a.val = (algebraMap F K c) • a.val
-        induction a.val using Finsupp.induction_linear with
-        | zero => simp
-        | add f g _ _ => simp_all
-        | single σ k => simp
+      have eq (c : F) (a : A) : c • a = algebraMap F K c • a :=
+        crossProduct_F_smul_eq_K_smul _ c a
+      have eq' (c : F) (a : B) : c • a = algebraMap F K c • a :=
+        crossProduct_F_smul_eq_K_smul _ c a
       intro l c a
       rw [eq, eq', map_smul]
     let φ1 : A ≃ₗ[F] B := φ0.restrictScalars F
@@ -899,7 +897,6 @@ open GoodRep groupCohomology in
 lemma toSnd_fromSnd : toSnd ∘ fromSnd F K ∘ (H2Iso (galAct F K)).hom = id := by
   ext a
   induction a using H2_induction_on with | h a =>
-  -- rcases a with ⟨(a : _ → Kˣ), ha'⟩
   let am : Gal(K, F) × Gal(K, F) → Kˣ :=
     fun p => Additive.toMul (Amelia.toAdditive Gal(K, F) Kˣ (a p))
   have hmem : (fun p : Gal(K, F) × Gal(K, F) =>
@@ -923,30 +920,20 @@ lemma toSnd_fromSnd : toSnd ∘ fromSnd F K ∘ (H2Iso (galAct F K)).hom = id :=
     (ModuleCat.Hom.hom (π (galAct F K) 2)) ((ModuleCat.Hom.hom (isoCocycles₂ (galAct F K)).inv) a)
   rw [fromSnd_wd]
   rw [toSnd_wd _ _ y_]
-  -- rw [toSnd_wd (fromSnd F K _)]
-  let b : Gal(K, F) × Gal(K, F) → Kˣ := A.toCocycles₂ y_
-  -- rw [show A.toH2 y_ = Quotient.mk'' ⟨b, _⟩ by rfl]
-  -- rw [Quotient.eq'']
-  -- change (twoCoboundaries (galAct F K)).quotientRel.r _ _
   change H2π _ _ = H2π _ _
   rw [← sub_eq_zero, ← map_sub, H2π_eq_zero_iff]
-  -- rw [Submodule.quotientRel_def]
   suffices H : IsMulCoboundary₂ _ from
     (Amfix.coboundariesOfIsMulCoboundary₂ H).2
   refine ⟨fun _ => 1, ?_⟩
   intro σ τ
   simp only [smul_one, div_self', _root_.mul_one, cocyclesOfIsMulCocycle₂_coe, Function.comp_apply,
     cocycles₂.val_eq_coe]
-  -- change _ = (Additive.toMul _) / (am (σ, τ))
   erw [Equiv.symm_apply_apply]
   simp only [toCocycles₂, conjFactorCompCoeffAsUnit]
-  -- change _ = _ / _
   ext : 1
   simp only [Units.val_one, Units.val_div_eq_div_val]
   field_simp
   change (am (σ, τ)).1 = _
-  -- simp [conjFactorCompCoeff, conjFactorTwistCoeff]
-  -- simp only [AlgEquiv.mul_apply, y_]
   change _ = A.conjFactorCompCoeff (y_ σ) (y_ τ) (y_ (σ * τ))
   apply_fun A.ι using RingHom.injective _
   rw [conjFactorCompCoeff_spec'']
@@ -993,13 +980,8 @@ lemma fromSnd_toSnd : (fromSnd F K ∘ (H2Iso (galAct F K)).hom) ∘ toSnd = id 
     constructor
     have eq (c : F) (a : A) : c • a = algebraMap F K c • a := by
       simp only [algebraMap_smul]
-    have eq' (c : F) (a : CrossProductAlgebra f) : c • a = algebraMap F K c • a := by
-      apply CrossProductAlgebra.val_injective
-      change c • a.val = (algebraMap F K c) • a.val
-      induction a.val using Finsupp.induction_linear with
-      | zero => simp
-      | add f g _ _ => simp_all
-      | single σ k => simp
+    have eq' (c : F) (a : CrossProductAlgebra f) : c • a = algebraMap F K c • a :=
+      crossProduct_F_smul_eq_K_smul f c a
     intro l c a
     rw [eq, eq', map_smul]
   let φ1 : CrossProductAlgebra f ≃ₗ[F] A := φ0.restrictScalars F

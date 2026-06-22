@@ -80,8 +80,6 @@ def TwoSidedIdeal.equivRingConMatrix (oo : ι) : TwoSidedIdeal A ≃ TwoSidedIde
     classical
     simp only [mem_mapMatrix]
     generalize_proofs h1 h2 h3 h4 h5
-    -- rw [TwoSidedIdeal.mem_mk']
-    -- simp only [mem_fromIdeal, Set.mem_image, SetLike.mem_coe, mem_mapMatrix]
     constructor
     · intro h
       choose y hy1 hy2 using h
@@ -150,21 +148,6 @@ open MulOpposite
 
 variable (K D : Type*) [Field K] [IsSimpleRing A] [Algebra K A] [DivisionRing D]
 
--- /--
--- Division rings are a simple ring
--- -/
--- instance : IsSimpleOrder (TwoSidedIdeal D) where
---   eq_bot_or_eq_top r := by
---     obtain h | h := _root_.forall_or_exists_not (fun x ↦ x ∈ r ↔ x = 0)
---     · left
---       exact SetLike.ext fun x ↦ (h x).trans (by rfl)
---     · right
---       obtain ⟨x, hx⟩ := h
---       refine SetLike.ext fun y ↦ ⟨fun _ ↦ trivial, fun _ ↦ ?_⟩
---       have hx' : x ≠ 0 := by rintro rfl; simp [r.zero_mem] at hx
---       rw [show y = y * x * x⁻¹ by field_simp]
---       refine r.mul_mem_right _ _ <| r.mul_mem_left _ _ (by tauto)
-
 instance op_simple : IsSimpleRing Aᵐᵒᵖ :=
   ⟨TwoSidedIdeal.opOrderIso.symm.isSimpleOrder⟩
 
@@ -228,11 +211,6 @@ def matrixEquivMatrixMop (n : ℕ) (D : Type*) [Ring D] :
   right_inv a := by aesop
   map_mul' x y := unop_injective <| by ext; simp [transpose_map, transpose_apply, mul_apply]
   map_add' x y := by aesop
-
--- instance matrix_simple_ring (ι : Type) [ne : Nonempty ι] [Fintype ι] [DecidableEq ι]
---     (R : Type*) [Ring R] [IsSimpleOrder (TwoSidedIdeal R)] :
---     IsSimpleOrder (TwoSidedIdeal M[ι, R]) :=
---   TwoSidedIdeal.equivRingConMatrix' _ ι (ne.some) |>.symm.isSimpleOrder
 
 universe u
 
@@ -471,15 +449,6 @@ theorem WedderburnArtin' (A : Type u) [Ring A] [IsArtinianRing A] [simple : IsSi
   classical
   obtain ⟨n, hn, I, inst, e⟩ := WedderburnArtin A
   exact ⟨n, hn, (Module.End A I)ᵐᵒᵖ, inferInstance, e⟩
-
--- theorem WedderburnArtin_divisionRing_unique
---     (D E : Type u) [DivisionRing D] [DivisionRing E] (m n : ℕ) [hm : NeZero m] [hn : NeZero n]
---     (iso : M[Fin m, D] ≃+* M[Fin n, E]) : Nonempty <| D ≃+* E := by
---   classical
---   have i1 : IsMoritaEquivalent D E := @IsMoritaEquivalent.trans _ _ _ _ _ _
---       (@IsMoritaEquivalent.trans _ _ _ _ _ _ (.matrix' D m) (.ofIso _ _ iso))
---       (IsMoritaEquivalent.matrix' E n).symm
---   exact ⟨i1.ringEquivOfDivisionRing⟩
 
 end simple_ring
 

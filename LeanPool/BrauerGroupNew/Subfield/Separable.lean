@@ -270,7 +270,6 @@ instance (L : SubField K D) : IsScalarTower K L (Subalgebra.centralizer K (A := 
 
 instance (L : SubField K D) : FiniteDimensional L (Subalgebra.centralizer K (A := D) L) :=
   haveI : FiniteDimensional K (Subalgebra.centralizer K (A := D) L) := inferInstance
-  -- haveI : FiniteDimensional K L := sorry
   Module.Finite.of_restrictScalars_finite K _ _
 
 /-- The center of a centralizer is equivalent to its image in the ambient division algebra. -/

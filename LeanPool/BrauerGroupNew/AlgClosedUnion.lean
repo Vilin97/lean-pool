@@ -265,7 +265,6 @@ def isoRestrict' : ℒ ⊗[k] A ≃ₗ[ℒ] Matrix (Fin n) (Fin n) ℒ :=
   Basis.equiv (e^) (Matrix.stdBasis ℒ (Fin n) (Fin n)) (Equiv.refl _)
 
 instance : SMulCommClass k ℒ ℒ := inferInstance
--- instance : Algebra ℒ (ℒ ⊗[k] A) := Algebra.TensorProduct.leftAlgebra
 
 /-- Scalar-extension inclusion from the restricted tensor product into the algebraic closure. -/
 def inclusion : ℒ ⊗[k] A →ₐ[ℒ] k⁻ ⊗[k] A :=
@@ -367,8 +366,6 @@ lemma isoRestrict_map_one : isoRestrict' n k k⁻ A iso 1 = 1 := by
   since inclusion' is injective, isoRestrict 1 = 1
   -/
   have eq := congr($(comm_square n k k_bar A iso) 1)
-  -- have : (inclusion n k k_bar A iso) 1 = 1 := by
-  --   erw [_root_.map_one (f := inclusion n k k_bar A iso)]
   conv_rhs at eq =>
     rw [LinearMap.comp_apply]
     change (LinearMap.restrictScalars (@Subtype k_bar fun x ↦ x ∈ ℒ)) iso.toLinearEquiv.toLinearMap

@@ -553,11 +553,6 @@ instance _root_.CategoryTheory.Equivalence.nontrivial
     inv := ModuleCat.ofHom ⟨⟨fun _ => 0, by intros; simp⟩, by intros; simp⟩
     hom_inv_id := by ext; simp only [Limits.id_zero]; rfl
     inv_hom_id := rfl }
-  -- have := iso3.toLinearEquiv.injective (by
-  --   have : ∀ x y : ModuleCat.of R PUnit.{1}, x = y x y :↦by
-  --     exact rfl
-  --   exact this m n
-  --   )
   refine h <| LinearEquiv.injective iso2.toLinearEquiv <|
     iso3.toLinearEquiv.injective <| Subsingleton.elim _ _
 

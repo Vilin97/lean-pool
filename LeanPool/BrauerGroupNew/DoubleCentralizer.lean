@@ -222,7 +222,6 @@ lemma centralizer_mulLeft_le_of_isCentralSimple :
         AddHom.coe_mk, eqv] ]
     ext b
     simp only [Module.End.mul_apply, LinearMap.mulLeft_apply]
-    -- change y * (eqv (eqv.symm x)) b = (eqv (eqv.symm x)) (y * b)
     rw [eqv.apply_symm_apply]
     exact congr($(hx (LinearMap.mulLeft F y) (by simp)) b)
   have eq : Subalgebra.centralizer F
