@@ -270,9 +270,7 @@ theorem proof_otp_loopBody : ∀ (p k c l : UInt64) (s : MState),
     simpSetEq
   · simpSetEq
   · intro neq
-    have hmem : (4 : UInt64) ∈ (({4} ∪ {14}): Set UInt64) := by
-      left
-      rfl
+    have hmem : (4 : UInt64) ∈ (({4} ∪ {14}): Set UInt64) := Or.inl rfl
     rw [neq] at hmem
     contradiction
   · exact h_code'
@@ -376,16 +374,14 @@ theorem proof_otp_loop (p k c l l' : UInt64) (h_l' : l' ∈ ({4} : Set UInt64)) 
       · rcases pre' with ⟨h_reg_3, h_term, h⟩
         simp only [gt_iff_lt, UInt64.not_lt, MState.getRegisterAt_def,
           UInt64.le_zero_iff] at h_reg_3
-        constructor
-        · intros i h_i
-          specialize h i
-          apply h
+        refine ⟨fun i h_i => ?_, ?_⟩
+        · apply h i
           simp only [MState.getRegisterAt_def]
           rw [h_reg_3]
           simp only [UInt64.sub_zero]
           exact h_i
         · simp only [MState.get_label_from_code, MState.getRegisterAt_def, Bool.not_eq_true]
-          constructor
+          refine ⟨?_, ?_⟩
           · rw [h_code']
             simp [p_update_eq]
           · simp only [Bool.not_eq_true] at h_term
@@ -395,13 +391,8 @@ theorem proof_otp_loop (p k c l l' : UInt64) (h_l' : l' ∈ ({4} : Set UInt64)) 
     · simp
     · exact h_code'
     · exact h_pc
-    · rcases pre with ⟨h_cond, h_temp, h_terminated⟩
-      constructor
-      · exact h_cond
-      · constructor
-        · exact h_terminated
-        · rcases h_temp with ⟨h_I, _⟩
-          exact h_I
+    · obtain ⟨h_cond, ⟨h_I, _⟩, h_terminated⟩ := pre
+      exact ⟨h_cond, h_terminated, h_I⟩
   · ext a
     simp
   · simp
@@ -411,15 +402,11 @@ theorem proof_otp_loop (p k c l l' : UInt64) (h_l' : l' ∈ ({4} : Set UInt64)) 
   · unfold iPre at pre
     rcases pre with ⟨⟨h_x0, h_x1, h_x2, h_x3, h_noOverlap⟩, h_terminated⟩
     rw [h_x3]
-    constructor
-    · constructor
-      · intros i h_i'
-        simp at h_i'
-      · unfold iPre
-        simp only [MState.getRegisterAt_def, UInt64.sub_self, UInt64.add_zero, Std.le_refl,
-          true_and]
-        exact ⟨h_x0, h_x1, h_x2, h_noOverlap⟩
-    · exact h_terminated
+    refine ⟨⟨fun i h_i' => by simp at h_i', ?_⟩, h_terminated⟩
+    unfold iPre
+    simp only [MState.getRegisterAt_def, UInt64.sub_self, UInt64.add_zero, Std.le_refl,
+      true_and]
+    exact ⟨h_x0, h_x1, h_x2, h_noOverlap⟩
 
 theorem proof_otp : ∀ (p k c l: UInt64),
   mriscx

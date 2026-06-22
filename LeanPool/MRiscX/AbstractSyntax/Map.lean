@@ -181,24 +181,10 @@ theorem t_update_neq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
   := by
   intros α β HBEq HLawfulBEq t k k' v HNeq
   simp at HNeq
-  unfold TMap.get
-  cases t; simp
-  · cases HEq: (k' == k); simp at HEq
-    · simp
-      unfold TMap.get
-      rfl
-    · simp at HEq
-      rw[HEq] at HNeq
-      exfalso
-      apply HNeq
-      rfl
-  · cases HEq: (k' == k); simp at HEq
-    · rfl
-    · simp at HEq
-      rw[HEq] at HNeq
-      exfalso
-      apply HNeq
-      rfl
+  show (if k' == k then v else t.get k') = t.get k'
+  rw [if_neg]
+  simp only [beq_iff_eq]
+  exact fun h => HNeq h.symm
 
 /--
 This theorem states, when a given map [p] which contains the key [k]
@@ -226,21 +212,7 @@ theorem p_update_neq : forall (α : Type) (β : Type) [BEq α] [LawfulBEq α]
   := by
   intros α β HBEq HLawfulBEq p k k' v HNeq
   simp at HNeq
-  unfold PMap.get
-  cases p; simp
-  · cases HEq: (k' == k); simp at HEq
-    · simp
-      unfold PMap.get
-      rfl
-    · simp at HEq
-      rw[HEq] at HNeq
-      exfalso
-      apply HNeq
-      rfl
-  · cases HEq: (k' == k); simp at HEq
-    · rfl
-    · simp at HEq
-      rw[HEq] at HNeq
-      exfalso
-      apply HNeq
-      rfl
+  show (if k' == k then some v else p.get k') = p.get k'
+  rw [if_neg]
+  simp only [beq_iff_eq]
+  exact fun h => HNeq h.symm

@@ -59,16 +59,6 @@ theorem addMem_terminated : ∀(ms:MState) (r v: UInt64),
   simp [MState.addMemory]
 
 
--- @[simp] theorem setReg_setMem_symm: ∀(ms:MState) (r:Registers) (m:Memory),
---  ((ms.setRegister r).setMemory m).incPc = (ms.setRegister r).incPc.setMemory m ∧
---   (ms.setRegister r).incPc.setMemory m = (ms.incPc.setRegister r).setMemory m ∧
---   (ms.incPc.setRegister r).setMemory m = (ms.incPc.setMemory m).setRegister r ∧
---   (ms.incPc.setMemory m).setRegister r = ((ms.setMemory m).setRegister r).incPc ∧
---   ((ms.setMemory m).setRegister r).incPc = (ms.setMemory m).incPc.setRegister r := by
---   intros ms r m
---   unfold MState.setMemory MState.setRegister MState.incPc
---   simp
-
 theorem addRegister_getRegister_neq :
   ∀(ms:MState) (r1 r2 v : UInt64),
   r1 ≠ r2 →
@@ -76,7 +66,8 @@ theorem addRegister_getRegister_neq :
   := by
   intros ms r1 r2 v H
   unfold MState.addRegister MState.getRegisterAt
-  rw [t_update_neq]; simp at H
+  rw [t_update_neq]
+  simp at H
   simp [H]
 
 theorem addRegister_getRegister_eq :
@@ -358,7 +349,7 @@ theorem runNSteps_diff : ∀ (s : MState) (n : Nat) (L1 L2 : Set UInt64),
   (s.runNSteps n).pc ∉ L2
   := by
   intros s n L1 L2 HSub H
-  apply Set.notMem_subset (t := L1) <;> try assumption
+  exact Set.notMem_subset HSub H
 
 theorem runNSteps_pc_in_superset : ∀ (s : MState) (n : Nat) (L1 L2 : Set UInt64),
   L2 ⊆ L1 →
@@ -366,7 +357,7 @@ theorem runNSteps_pc_in_superset : ∀ (s : MState) (n : Nat) (L1 L2 : Set UInt6
   (s.runNSteps n).pc ∈ L1
   := by
   intros s n L1 L2 HSub H
-  apply Set.mem_of_subset_of_mem <;> try assumption
+  exact Set.mem_of_subset_of_mem HSub H
 
 theorem runNSteps_add : ∀ (s s' s'':MState) (n n' : Nat),
   s.runNSteps n = s' →
@@ -384,20 +375,8 @@ theorem runNSteps_pc_nin : ∀ (s s' s'': MState) (n n' : Nat) (L : Set UInt64),
   (s.runNSteps (n + n')).pc ∉ L
   := by
   intros s s' s'' n n' L HRun HRun' _ HNin'
-  rw [runNSteps_add s s' s'' n n', ← HRun']
-  repeat assumption
-
--- theorem runNSteps_min_1_pc_nin_extra_plus_one : ∀ (s s' : MState) (n n': Nat) (L : Set UInt64),
---   s.runNSteps n = s' →
---   s'.pc ∉ L →
---   0 < n' ∧ n' = n - 1 →
---   (s.runNSteps n').pc ∉ L →
---   (s.runNSteps n').runOneStep.pc ∉ L
---   := by
---   intros s s' n n' L HRun HPc HN' HRunLTNin
---   rcases HN' with ⟨HnGtZ, HnMinusOne⟩
-
-
+  rw [runNSteps_add s s' s'' n n' HRun HRun', ← HRun']
+  exact HNin'
 
 theorem runNSteps_pc_nin_extra_step : ∀ (s s' : MState) (n : Nat) (L : Set UInt64),
   s.runNSteps n = s' →
@@ -424,7 +403,7 @@ private theorem exists_tail_run (s s' : MState) (m m' n'' : Nat)
     (h_eq : s.runNSteps m = s') (h : m < n'') (hnlt : n'' < m + m') :
     ∃ n', (0 < n' ∧ n' < m') ∧ s.runNSteps n'' = s'.runNSteps n' := by
   refine ⟨n'' - m, ⟨Nat.sub_pos_of_lt h, ?_⟩, ?_⟩
-  · apply Nat.lt_sub_left <;> try assumption
+  · exact Nat.lt_sub_left _ _ _ h hnlt
   · rw [← h_eq]
     simp only [run_n_m_steps_comp]
     rw [← Nat.add_sub_assoc, Nat.add_comm, Nat.add_sub_cancel]
@@ -489,27 +468,17 @@ theorem run_n_plus_m_intersect : ∀ (s s' : MState) (m m' : Nat) (L_w L_b L_w' 
         rw [Set.mem_union]
         simp only [not_or]
         rw [Set.mem_union] at h_safe1
-        simp only [
-          not_or] at h_safe1
+        simp only [not_or] at h_safe1
         rcases h_safe1 with ⟨_, h_safe1_r⟩
-        constructor
-        · apply Set.notMem_subset (a:= (s.runNSteps n'').pc) (s := L_w') (t := L_b)
-          repeat assumption
-        · exact h_safe1_r
+        exact ⟨Set.notMem_subset h_Lw'SubL_b h_safe1_r, h_safe1_r⟩
       intros h_in
       exact h_safe1_NinLw' (Set.mem_of_mem_inter_left h_in)
     | inr heq =>
+      have h_pc_not_b' : (s.runNSteps m).pc ∉ L_b := h_run1 ▸ h_pc_not_b
       have h_safe1_m: (s.runNSteps n'').pc ∉ L_w' ∪ L_b := by
-        rw [heq]
-        rw [Set.mem_union]
+        rw [heq, Set.mem_union]
         simp only [not_or]
-        constructor
-        · apply Set.notMem_subset (a:= (s.runNSteps m).pc) (s := L_w') (t := L_b)
-          · exact h_Lw'SubL_b
-          · rw [h_run1]
-            exact h_pc_not_b
-        · rw [h_run1]
-          exact h_pc_not_b
+        exact ⟨Set.notMem_subset h_Lw'SubL_b h_pc_not_b', h_pc_not_b'⟩
       intros h_in
       exact h_safe1_m (Set.mem_of_mem_inter_left h_in)
   · push Not at h

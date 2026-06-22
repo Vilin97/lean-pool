@@ -155,8 +155,7 @@ theorem S_SEQ {L_b'' : Set UInt64} :
   specialize HFirstWeak HCode
   rcases HFirstWeak with ⟨m, ⟨HFW1, HFW2, HFW3, HFW4⟩⟩
   have HCode' : s'.code = c := by
-    rw [<- HCode, <- HFW2]
-    simp
+    rw [← HCode, ← HFW2, MState.runNSteps_code_remains]
   specialize HSecond s'.pc HFW3 TInter' h_empty' s' HCode' rfl HFirstPost
   unfold weak at HSecond
   rcases HSecond with ⟨s'', ⟨HSecondWeak, HSecondPost, HSecondPc⟩⟩
@@ -220,8 +219,7 @@ theorem PRE_STR : ∀(c : Code) (P1 P2 Q : Assertion) (L_w L_b : Set UInt64) (l 
   intros c P1 P2 Q L_w L_b l HTaut
   unfold hoareTripleUp
   intros H HInter HEmpty s HCode H_pc pre
-  apply H HInter <;> try assumption
-  exact HTaut s HCode ⟨H_pc, pre⟩
+  exact H HInter HEmpty s HCode H_pc (HTaut s HCode ⟨H_pc, pre⟩)
 
 
 /--
@@ -241,21 +239,14 @@ theorem POST_WEAK : ∀(c : Code) (P Q1 Q2 : Assertion) (L_w L_b : Set UInt64) (
   intros HTaut H HInter HEmpty  s HCode pre H_pc
   specialize H HInter HEmpty s HCode pre H_pc
   rcases H with ⟨s', ⟨P1, P2, P3⟩⟩
+  unfold weak at P1
+  obtain ⟨_, _, K1, K2, _⟩ := P1 HCode
   exists s'
-  constructor; try assumption
-  · constructor <;> try assumption
-    · apply HTaut
-      · unfold weak at P1
-        specialize P1 HCode
-        rcases P1 with ⟨_, _, K, _⟩
-        rw [← K]
-        simp only [MState.runNSteps_code_remains]
-        exact HCode
-      · constructor <;> try assumption
-        · unfold weak at P1
-          specialize P1 HCode
-          rcases P1 with ⟨_, _, _, K, _⟩
-          exact K
+  refine ⟨P1, ?_, P3⟩
+  apply HTaut
+  · rw [← K1, MState.runNSteps_code_remains]
+    exact HCode
+  · exact ⟨K2, P2⟩
 
 
 /--
@@ -277,10 +268,8 @@ theorem S_COND : ∀ (c : Code) (P C Q : Assertion) (l : UInt64)
   specialize h_RunCondTrue h_LwInterLb h_LwNotEmpty s h_code
   specialize h_RunCondFalse h_LwInterLb h_LwNotEmpty s h_code
   apply excluded_middle_implication (P s) (C s)
-  constructor
-  · exact fun H => h_RunCondTrue h_pc H
-  · exact fun H => h_RunCondFalse h_pc H
-  exact pre
+  · exact ⟨fun H => h_RunCondTrue h_pc H, fun H => h_RunCondFalse h_pc H⟩
+  · exact pre
 
 
 /--
@@ -349,9 +338,7 @@ theorem S_LOOP {α : Type} [Preorder α] [WellFoundedLT α] :
     intro v ih s h_code h_pc hI hV
     by_cases hC : C s
     · -- Guard true: run one loop iteration, then recurse on the smaller variant.
-      have hpre : C s ∧ I s ∧ V s = v := by
-        exact ⟨hC, hI, hV⟩
-      specialize h_true v h_inter' h_nonempty' s h_code h_pc hpre
+      specialize h_true v h_inter' h_nonempty' s h_code h_pc ⟨hC, hI, hV⟩
       rcases h_true with ⟨s', hweak', ⟨hVlt, hI', hpc'⟩, hnotinLb'⟩
       have h_code' : s'.code = code := by
         specialize hweak' h_code

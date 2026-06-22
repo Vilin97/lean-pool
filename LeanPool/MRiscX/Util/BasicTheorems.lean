@@ -21,18 +21,14 @@ theorem excluded_middle_implication : ∀ (P Q C : Prop),
   C
   := by
   intros P Q C
-  simp only [and_imp]
-  intros H1 H2 HP
-  by_cases hQ : Q
-  · exact H1 HP hQ
-  · exact H2 HP hQ
+  tauto
 
 
 theorem Nat.mod_succ_eq {a b m : ℕ} : a % m = b % m ↔ (a + 1) % m = (b + 1) % m := by
   constructor
   · exact add_mod_eq_add_mod_right 1
   · intro h₁
-    rw[← ModEq] at *
+    rw [← ModEq] at *
     exact ModEq.add_right_cancel' 1 h₁
 
 
@@ -111,19 +107,11 @@ theorem UInt64.add_lt_add : ∀ (n m k c : UInt64),
   m.toNat + c.toNat < UInt64.size →
   n + k < m + c := by
   rintro n m k c ⟨hlt_l, hlt_r⟩ hsum
-  have hnm : n.toNat < m.toNat := hlt_l
-  have hkc : k.toNat < c.toNat := hlt_r
-  have hfin : n.toNat + k.toNat < m.toNat + c.toNat :=  Nat.add_lt_add hnm hkc
+  have hfin : n.toNat + k.toNat < m.toNat + c.toNat := Nat.add_lt_add hlt_l hlt_r
   have mcNat : (m + c).toNat = m.toNat + c.toNat := by
-    rw [UInt64.toNat_add]
-    apply Nat.mod_eq_of_lt
-    exact hsum
+    rw [UInt64.toNat_add, Nat.mod_eq_of_lt hsum]
   have nkNat : (n + k).toNat = n.toNat + k.toNat := by
-    rw [UInt64.toNat_add]
-    apply Nat.mod_eq_of_lt
-    apply Nat.lt_trans
-    · exact hfin
-    · exact hsum
+    rw [UInt64.toNat_add, Nat.mod_eq_of_lt (Nat.lt_trans hfin hsum)]
   rw [←UInt64.lt_toNat_iff, mcNat, nkNat]
   exact hfin
 
@@ -132,23 +120,22 @@ theorem UInt64.add_lt_add : ∀ (n m k c : UInt64),
 theorem UInt64.add_cancel_right_iff : ∀ (u i k : UInt64),
   u + k = i + k ↔ u = i := by
   intros u i k
-  apply Iff.intro
-  · intros h
-    simp at h
-    (repeat assumption)
-  · intros h
-    rw [h]
+  constructor
+  · intro h
+    simpa using h
+  · rintro rfl
+    rfl
 
 theorem UInt64.add_cancel_left_iff : ∀ (u i k: UInt64),
   k + u = k + i ↔ u = i := by
   intros u i k
-  apply Iff.intro
-  · intros h
+  constructor
+  · intro h
     rw [←UInt64.add_cancel_right_iff (k := k), UInt64.add_comm]
     nth_rewrite 2 [UInt64.add_comm]
     exact h
-  · intros h
-    rw [h]
+  · rintro rfl
+    rfl
 
 
 theorem UInt64.add_sub_assoc : ∀ (p l x : UInt64),
@@ -177,17 +164,14 @@ instance instPreorderUInt64LeanPool : Preorder UInt64 where
   lt_iff_le_not_ge := by
     intros a b
     constructor
-    · intros h
+    · intro h
       simp only [UInt64.not_le]
-      constructor
-      · apply UInt64.le_of_lt h
-      · exact h
+      exact ⟨UInt64.le_of_lt h, h⟩
     · simp
 
 
 instance : WellFoundedLT UInt64 where
   wf := by
     apply Subrelation.wf (r := InvImage (· < ·) UInt64.toNat)
-    · intro a b h
-      exact UInt64.lt_iff_toNat_lt_toNat.mp h
-    · exact InvImage.wf _ wellFounded_lt
+      (fun h => UInt64.lt_iff_toNat_lt_toNat.mp h)
+    exact InvImage.wf _ wellFounded_lt

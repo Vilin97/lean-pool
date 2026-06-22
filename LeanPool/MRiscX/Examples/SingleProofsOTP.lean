@@ -45,7 +45,7 @@ theorem help_I_pre' : ∀ (p k c l: UInt64),
   c + (l - x) ≠ p + (l - x) := by
   intros p k c l h_I
   unfold iPre' at h_I
-  rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
+  rcases h_I with ⟨h_pk, h_kc, -⟩
   by_contra heq
   rw [UInt64.add_cancel_right_iff] at heq
   rw [heq] at h_kc
@@ -57,7 +57,7 @@ theorem help_I_pre'' : ∀ (p k c l: UInt64),
   c + (l - x) ≠ k + (l - x) := by
   intros p k c l h_I
   unfold iPre' at h_I
-  rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
+  rcases h_I with ⟨-, h_kc, -⟩
   by_contra heq
   rw [UInt64.add_cancel_right_iff] at heq
   rw [heq] at h_kc
@@ -72,21 +72,18 @@ theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
   (c + (l - x) ≠ k + i) := by
   intros p k c l i x h_I hlx hxLeL
   unfold iPre' at h_I
-  rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
+  rcases h_I with ⟨_, h_kc, h_noOverfl, -⟩
   simp only [ne_eq]
   by_contra neq
   have : k + i < c + (l - x) := by
       apply UInt64.add_lt_add
       · exact ⟨h_kc, hlx⟩
-      · apply Nat.lt_of_le_of_lt (m := c.toNat + l.toNat)
-        · simp only [Nat.add_le_add_iff_left]
-          rw [UInt64.toNat_sub_of_le]
-          · rw [←Nat.add_le_add_iff_right (n := x.toNat)]
-            simp
-          · exact hxLeL
-        · exact h_noOverfl
-  · rw [neq] at this
-    apply UInt64.lt_asymm <;> try assumption
+      · apply Nat.lt_of_le_of_lt (m := c.toNat + l.toNat) _ h_noOverfl
+        simp only [Nat.add_le_add_iff_left]
+        rw [UInt64.toNat_sub_of_le _ _ hxLeL, ← Nat.add_le_add_iff_right (n := x.toNat)]
+        simp
+  rw [neq] at this
+  apply UInt64.lt_asymm <;> try assumption
 
 
 theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
@@ -97,22 +94,19 @@ theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
   (c + (l - x) ≠ p + i) := by
   intros p k c l i x h_I hlx hxLeL
   unfold iPre' at h_I
-  rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
+  rcases h_I with ⟨h_pk, h_kc, h_noOverfl, -⟩
   simp only [ne_eq]
   by_contra neq
   have h_pc : p < c := UInt64.lt_trans h_pk h_kc
   have : p + i < c + (l - x) := by
     apply UInt64.add_lt_add
     · exact ⟨h_pc, hlx⟩
-    · apply Nat.lt_of_le_of_lt (m := c.toNat + l.toNat)
-      · simp only [Nat.add_le_add_iff_left]
-        rw [UInt64.toNat_sub_of_le]
-        · rw [←Nat.add_le_add_iff_right (n := x.toNat)]
-          simp
-        · exact hxLeL
-      · exact h_noOverfl
-  · rw [neq] at this
-    exact UInt64.lt_irrefl (p + i) this
+    · apply Nat.lt_of_le_of_lt (m := c.toNat + l.toNat) _ h_noOverfl
+      simp only [Nat.add_le_add_iff_left]
+      rw [UInt64.toNat_sub_of_le _ _ hxLeL, ← Nat.add_le_add_iff_right (n := x.toNat)]
+      simp
+  rw [neq] at this
+  exact UInt64.lt_irrefl (p + i) this
 
 
 
@@ -121,9 +115,7 @@ theorem help_I_pre''''' : ∀ (p k c l i x: UInt64),
   i.toNat < (l - x).toNat →
   x ≤ l →
   (c + (l - x) ≠ c + i) := by
-  intros p k c l i x h_I hlx hxLeL
-  unfold iPre' at h_I
-  rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
+  intros p k c l i x _ hlx hxLeL
   simp only [ne_eq, UInt64.add_right_inj]
   push Not
   grind only
