@@ -45,12 +45,6 @@ theorem repeatedAnd_cons (p : pred σ) (ps : List (pred σ)) :
   ((repeatedAnd (p :: ps))) =tla= (p ∧ (repeatedAnd ps)) := by
   rw [← List.singleton_append, repeatedAnd_append]; rfl
 
-/-
-theorem repeatedAnd_reorder (ps1 ps2 : List (pred σ)) (p : pred σ) :
-  ((repeatedAnd (ps1 ++ p :: ps2))) =tla= ((repeatedAnd (ps1 ++ ps2)) ∧ p) := by
-  rw [repeatedAnd_eq_in_iff (ps2 := (ps1 ++ ps2) ++ [p]), repeatedAnd_append]; rfl; grind
--/
-
 theorem repeatedAnd_add_duplicate {ps : List (pred σ)} {p : pred σ} (h : p ∈ ps) :
   ((repeatedAnd ps)) =tla= ((repeatedAnd ps) ∧ p) := by
   simp [repeatedAnd_eq_bigwedge, bigwedge_forall_list]
