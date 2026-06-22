@@ -71,10 +71,7 @@ private lemma zero_mem_canonicalLabel_set (G : Digraph V) (v : V) :
     (0 : ℕ) ∈ { n | ∃ p : Fin (n + 1) → V, G.IsSimplePath p ∧ p (Fin.last n) = v } := by
   refine ⟨fun _ => v, ⟨fun i h => by omega, ?_⟩, rfl⟩
   intro a b _
-  apply Fin.ext
-  have ha := a.isLt
-  have hb := b.isLt
-  omega
+  exact Fin.ext (by omega)
 
 /-- Every canonical label is at least `1`: immediate from the outer
 `+ 1` in the definition. -/
@@ -100,8 +97,8 @@ lies in `{1,...,2^k}`, so `ℓ(v) - 1 < 2 ^ k`. -/
 private lemma canonicalLabel_sub_one_lt_two_pow
     (G : Digraph V) (hac : IsAcyclic G) {k : ℕ} (hd : G.depth ≤ 2 ^ k)
     (v : V) : G.canonicalLabel v - 1 < 2 ^ k := by
-  have h1 : G.canonicalLabel v ≤ 2 ^ k := (canonicalLabel_le_depth G hac v).trans hd
-  have h2 : 1 ≤ G.canonicalLabel v := one_le_canonicalLabel G v
+  have h1 := (canonicalLabel_le_depth G hac v).trans hd
+  have h2 := one_le_canonicalLabel G v
   omega
 
 omit [Fintype V] in
@@ -233,10 +230,8 @@ private lemma legal_label_add_le
     intro a h₁ h₂
     have hak : a + k < m := by omega
     have ihk := ih a h₁ hak
-    have step : G.Adj (p ⟨a + k, hak⟩) (p ⟨a + k + 1, h₂⟩) :=
-      hp ⟨a + k, hak⟩ h₂
     have stepl : ℓ (p ⟨a + k, hak⟩) < ℓ (p ⟨a + k + 1, h₂⟩) :=
-      hℓ _ _ step
+      hℓ _ _ (hp ⟨a + k, hak⟩ h₂)
     change ℓ (p ⟨a, h₁⟩) + (k + 1) ≤ ℓ (p ⟨a + k + 1, h₂⟩)
     omega
 
@@ -248,18 +243,13 @@ private lemma legal_label_strictMono
     StrictMono (fun i : Fin m => ℓ (p i)) := by
   intro i j hij
   have hile : i.val < j.val := hij
-  have hd : i.val + (j.val - i.val) < m := by
-    have : i.val + (j.val - i.val) = j.val := by omega
-    rw [this]; exact j.isLt
+  have hjm : j.val < m := j.isLt
+  have hd : i.val + (j.val - i.val) < m := by omega
   have key := legal_label_add_le hℓ hp (j.val - i.val) i.val i.isLt hd
-  have e1 : (⟨i.val, i.isLt⟩ : Fin m) = i := rfl
-  have e2 : (⟨i.val + (j.val - i.val), hd⟩ : Fin m) = j := by
-    apply Fin.ext
-    change i.val + (j.val - i.val) = j.val
-    omega
-  rw [e1, e2] at key
+  have e2 : (⟨i.val + (j.val - i.val), hd⟩ : Fin m) = j :=
+    Fin.ext (show i.val + (j.val - i.val) = j.val by omega)
+  rw [show (⟨i.val, i.isLt⟩ : Fin m) = i from rfl, e2] at key
   change ℓ (p i) < ℓ (p j)
-  have : 0 < j.val - i.val := by omega
   omega
 
 end LegalLabelHelpers
@@ -286,8 +276,7 @@ lemma depth_le_image_card (G : Digraph V)
     have hcard :
         ((Finset.univ : Finset (Fin m)).image (fun i => ℓ (p i))).card = m := by
       rw [Finset.card_image_of_injective _ hinj, Finset.card_univ, Fintype.card_fin]
-    calc m = ((Finset.univ : Finset (Fin m)).image (fun i => ℓ (p i))).card := hcard.symm
-      _ ≤ (Finset.univ.image ℓ).card := Finset.card_le_card hsubset
+    exact hcard ▸ Finset.card_le_card hsubset
 
 /-! ### Partitioning edges by first-differing bit
 
@@ -478,9 +467,8 @@ private lemma sum_range_pow_two (n : ℕ) :
   induction n with
   | zero => simp
   | succ n ih =>
-    rw [Finset.sum_range_succ, ih]
+    rw [Finset.sum_range_succ, ih, pow_succ]
     have h1 : 1 ≤ 2 ^ n := Nat.one_le_two_pow
-    have h2 : 2 ^ (n + 1) = 2 * 2 ^ n := by rw [pow_succ]; ring
     omega
 
 omit [Fintype V] [DecidableEq V] in

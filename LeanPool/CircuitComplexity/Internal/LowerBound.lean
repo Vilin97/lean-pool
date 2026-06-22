@@ -35,12 +35,10 @@ theorem wireValue_eq_of_unreferenced
     (x : BitString N) (w : Fin (N + G)) (hw : w.val ≠ i.val) :
     c.wireValue x w = c.wireValue (Function.update x i b) w := by
   by_cases h : w.val < N
-  · -- Primary input wire, not wire i
-    rw [wireValue_lt c x w h, wireValue_lt c _ w h]
+  · rw [wireValue_lt c x w h, wireValue_lt c _ w h]
     have hne : (⟨w.val, h⟩ : Fin N) ≠ i := fun heq => hw (congrArg Fin.val heq)
     exact (Function.update_of_ne hne b x).symm
-  · -- Gate output wire: recurse on fan-in wires
-    have hG : w.val - N < G := by omega
+  · have hG : w.val - N < G := by omega
     rw [wireValue_ge c x w h, wireValue_ge c _ w h]
     simp only [Gate.eval]
     congr 1; funext k; congr 1
@@ -96,7 +94,6 @@ theorem mem_coveredInputs (g : Gate B (N + G)) (i : Fin N) :
 
 theorem card_coveredInputs_le (g : Gate B (N + G)) :
     (coveredInputs g : Finset (Fin N)).card ≤ g.fanIn := by
-  -- coveredInputs is contained in the image of a map from Fin g.fanIn
   suffices coveredInputs g ⊆
       (Finset.univ : Finset (Fin g.fanIn)).image
         (fun k => if h : (g.inputs k).val < N
@@ -110,9 +107,7 @@ theorem card_coveredInputs_le (g : Gate B (N + G)) :
   rw [mem_coveredInputs] at hi
   obtain ⟨k, hk⟩ := hi
   simp only [Finset.mem_image, Finset.mem_univ, true_and]
-  refine ⟨k, ?_⟩
-  have hlt : (g.inputs k).val < N := by omega
-  simp [hk]
+  exact ⟨k, by simp [hk]⟩
 
 /-- For a gate over bounded fan-in k AON basis, covered inputs has card ≤ k. -/
 theorem boundedAON_coveredInputs_card_le {k : Nat}
@@ -179,11 +174,9 @@ theorem lower_bound_all_inputs {k : Nat}
     (hall : ∀ i : Fin N, IsEssentialInput f i) :
     N ≤ k * c.size := by
   have hcard : (EssentialInputs f).card = N := by
-    have : EssentialInputs f = Finset.univ := by
-      simp [EssentialInputs, Finset.filter_true_of_mem (fun i _ => hall i)]
-    rw [this, Finset.card_univ, Fintype.card_fin]
-  calc N = (EssentialInputs f).card := hcard.symm
-    _ ≤ k * c.size := essential_inputs_le_mul_size c f hf
+    simp [EssentialInputs, Finset.filter_true_of_mem (fun i _ => hall i),
+      Finset.card_univ, Fintype.card_fin]
+  exact hcard.symm.trans_le (essential_inputs_le_mul_size c f hf)
 
 end Circuit
 

@@ -278,7 +278,6 @@ theorem restrictCircuit_eval {G : Nat} [NeZero m] (b : Bool)
     (c.wireValue (prependInput b x)) ((restrictCircuit b c).wireValue x)
     (wireValue_zero b c x)
   intro i hi hip
-  have := wireValue_restrict b c x i (by omega) hip
-  convert this using 2
+  convert wireValue_restrict b c x i (by omega) hip using 2
 
 end CircuitComplexity

@@ -73,7 +73,7 @@ theorem restrict_size_complexity_le [CompleteBasis Basis.andOr2] [NeZero m]
   calc Circuit.sizeComplexity Basis.andOr2 (restrictFirst f b)
       ≤ (restrictCircuit (k := k) b c).size :=
         Circuit.size_complexity_le _ _ (restrictCircuit_eval b c f heval)
-    _ = c.size := by unfold Circuit.size; rfl
+    _ = c.size := rfl
     _ = Circuit.sizeComplexity Basis.andOr2 f := hsize
 
 /-- The OR of two Boolean functions has circuit complexity bounded by the
@@ -95,7 +95,9 @@ theorem or_size_complexity_le [CompleteBasis Basis.andOr2] [NeZero N]
     _ = (G₁ + G₂ + 2) + 1 := rfl
     _ = Circuit.sizeComplexity Basis.andOr2 g₁ +
         Circuit.sizeComplexity Basis.andOr2 g₂ + 1 := by
-        rw [← hsize₁, ← hsize₂]; unfold Circuit.size; omega
+        rw [← hsize₁, ← hsize₂]
+        unfold Circuit.size
+        omega
 
 /-! ## Transport lemma for the base case -/
 

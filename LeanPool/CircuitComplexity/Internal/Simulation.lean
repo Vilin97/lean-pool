@@ -98,7 +98,7 @@ lemma chainLen_pos (k : Nat) : 0 < chainLen k := by
   unfold chainLen; split <;> omega
 
 lemma chainLen_of_ge_two {k : Nat} (hk : 2 ≤ k) : chainLen k = k - 1 := by
-  simp only [chainLen, show ¬(k ≤ 1) from by omega, ite_false]
+  rw [chainLen, if_neg (by omega)]
 
 /-- Prefix sum: `prefixSum f n = f 0 + f 1 + ⋯ + f (n-1)`. -/
 def prefixSum (f : Nat → Nat) : Nat → Nat
@@ -145,8 +145,7 @@ lemma segLookup_snd_lt (n : Nat) (f : Nat → Nat) (idx : Nat) (h : idx < prefix
     simp only [segLookup]
     split
     · exact ih _
-    · rename_i h'
-      dsimp only
+    · dsimp only
       rw [prefixSum_succ] at h; omega
 
 lemma segLookup_sum (n : Nat) (f : Nat → Nat) (idx : Nat) (h : idx < prefixSum f n) :
@@ -157,8 +156,7 @@ lemma segLookup_sum (n : Nat) (f : Nat → Nat) (idx : Nat) (h : idx < prefixSum
     simp only [segLookup]
     split
     · exact ih _
-    · rename_i h'
-      dsimp only; omega
+    · dsimp only; omega
 
 /-! ## Wire layout definitions -/
 
@@ -210,10 +208,8 @@ lemma oOffset_chain_le_G' (c : Circuit Basis.unboundedAON N M G) {j : Nat} (hj :
     oOffset c j + chainLen (c.outputs ⟨j, hj⟩).fanIn ≤ G' c := by
   suffices h : prefixSum (oChainF c) j + chainLen (c.outputs ⟨j, hj⟩).fanIn
       ≤ prefixSum (oChainF c) M by unfold oOffset G' iTotal oTotal at *; omega
-  calc prefixSum (oChainF c) j + chainLen (c.outputs ⟨j, hj⟩).fanIn
-      = prefixSum (oChainF c) j + oChainF c j := by rw [oChainF_eq c hj]
-    _ = prefixSum (oChainF c) (j + 1) := (prefixSum_succ _ _).symm
-    _ ≤ prefixSum (oChainF c) M := prefixSum_mono _ (by omega)
+  rw [← oChainF_eq c hj, ← prefixSum_succ]
+  exact prefixSum_mono _ (by omega)
 
 /-! ## Wire remapping -/
 
@@ -252,9 +248,8 @@ lemma remapWire_lt_of_lt (c : Circuit Basis.unboundedAON N M G) (w : Fin (N + G)
     simp only []
     have key : iOffset c (w.val - N) + chainLen (c.gates ⟨w.val - N, by omega⟩).fanIn
         ≤ iOffset c i := by
-      calc iOffset c (w.val - N) + chainLen (c.gates ⟨w.val - N, by omega⟩).fanIn
-          = iOffset c (w.val - N + 1) := by rw [iOffset_succ c (by omega : w.val - N < G)]
-        _ ≤ iOffset c i := prefixSum_mono _ (by omega)
+      rw [← iOffset_succ c (by omega : w.val - N < G)]
+      exact prefixSum_mono _ (by omega)
     have := chainLen_pos (c.gates ⟨w.val - N, by omega⟩).fanIn
     omega
 
@@ -322,7 +317,7 @@ private lemma mkChainInputs_lt {W : Nat} (hW : 0 < W) (k : Nat)
   simp only [mkChainInputs]
   split_ifs with hk0 hk1 hj0
   · dsimp only; omega
-  · simp only []; exact Nat.lt_of_lt_of_le (hri_lt _) (Nat.le_add_right _ _)
+  · exact Nat.lt_of_lt_of_le (hri_lt _) (Nat.le_add_right _ _)
   · simp only [fin2]; split_ifs
     · exact Nat.lt_of_lt_of_le (hri_lt _) (by omega)
     · exact Nat.lt_of_lt_of_le (hri_lt _) (by omega)
@@ -470,20 +465,12 @@ lemma segLookup_of_prefixSum (n : Nat) (f : Nat → Nat) (i j : Nat)
     simp only [segLookup]
     by_cases hlt : prefixSum f i + j < prefixSum f n
     · have hin : i < n := by
-        by_contra h'
-        push Not at h'
-        have : n ≤ i := by omega
-        have := prefixSum_mono f this
-        omega
+        by_contra h'; have := prefixSum_mono f (show n ≤ i by omega); omega
       simp [hlt, ihn hin hlt]
-    · -- i = n
-      push Not at hlt
-      have : i = n := by
+    · have : i = n := by
         by_contra h'
-        have : i < n := by omega
         have := prefixSum_mono f (by omega : i + 1 ≤ n)
-        rw [prefixSum_succ] at this
-        omega
+        rw [prefixSum_succ] at this; omega
       subst this
       simp
 
@@ -519,20 +506,16 @@ private lemma iSegLookup_eq (c : Circuit Basis.unboundedAON N M G)
     (i : Nat) (hi : i < G) (j : Nat) (hj : j < chainLen (c.gates ⟨i, hi⟩).fanIn)
     (h : iOffset c i + j < iTotal c := by
       have := iOffset_chain_le_iTotal c hi; omega) :
-    segLookup G (iChainF c) (iOffset c i + j) h = (i, j) := by
-  apply segLookup_of_prefixSum
-  · exact hi
-  · rw [iChainF_eq c hi]; exact hj
+    segLookup G (iChainF c) (iOffset c i + j) h = (i, j) :=
+  segLookup_of_prefixSum G (iChainF c) i j hi (by rw [iChainF_eq c hi]; exact hj) h
 
 /-- The segLookup at `prefixSum (oChainF c) j' + p` returns `(j', p)`. -/
 private lemma oSegLookup_eq (c : Circuit Basis.unboundedAON N M G)
     (j' : Nat) (hj' : j' < M) (p : Nat) (hp : p < chainLen (c.outputs ⟨j', hj'⟩).fanIn)
     (h : prefixSum (oChainF c) j' + p < oTotal c := by
       have := oOffset_chain_le_G' c hj'; unfold G' oOffset oTotal at *; omega) :
-    segLookup M (oChainF c) (prefixSum (oChainF c) j' + p) h = (j', p) := by
-  apply segLookup_of_prefixSum
-  · exact hj'
-  · rw [oChainF_eq c hj']; exact hp
+    segLookup M (oChainF c) (prefixSum (oChainF c) j' + p) h = (j', p) :=
+  segLookup_of_prefixSum M (oChainF c) j' p hj' (by rw [oChainF_eq c hj']; exact hp) h
 
 /-- Evaluating a fan-in-2 gate: `op.eval 2 v = op.binOp (v 0) (v 1)`. -/
 private lemma andOr2_eval (op : AONOp) (v : BitString 2) :

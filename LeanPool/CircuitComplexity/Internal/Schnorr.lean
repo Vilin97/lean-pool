@@ -4,10 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
 import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Data.Nat.Log
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
 import Mathlib.Tactic.IntervalCases
 import LeanPool.CircuitComplexity.XOR
 import LeanPool.CircuitComplexity.Internal.CircDesc
@@ -49,8 +45,6 @@ theorem xorBool_insertAt {N : Nat} (x : BitString N) (a : Fin (N + 1)) (b : Bool
       have htail : insertAt x 0 b ∘ Fin.succ = x := by
         funext i; simp [insertAt, Fin.succ, Function.comp]
       rw [h0, htail]
-      -- Goal: b.xor (xorBool (n+1) x) = b.xor ((x 0).xor (xorBool n (x ∘ Fin.succ)))
-      -- LHS unfolds since xorBool (n+1) x = (x 0).xor (xorBool n (x ∘ Fin.succ))
       rfl
     · have hpos : 0 < a.val := Nat.pos_of_ne_zero (fun h => ha (Fin.ext h))
       have h0 : insertAt x a b 0 = x 0 := by simp [insertAt]; omega
@@ -60,10 +54,7 @@ theorem xorBool_insertAt {N : Nat} (x : BitString N) (a : Fin (N + 1)) (b : Bool
         funext i; simp only [Function.comp, insertAt, Fin.succ, Fin.val_mk, a']
         split <;> split <;> (try split) <;> (try split)
         all_goals (first | rfl | congr 1; ext; simp_all; omega | omega)
-      rw [htail, ih]
-      -- Goal: (x 0).xor (b.xor (xorBool n (x ∘ Fin.succ))) =
-      --       b.xor ((x 0).xor (xorBool n (x ∘ Fin.succ)))
-      rw [Bool.xor_left_comm]
+      rw [htail, ih, Bool.xor_left_comm]
 
 /-! ## CircDesc Insensitivity -/
 
@@ -91,12 +82,9 @@ theorem wireValD_eq_of_unreferenced
         wireValD d x ⟨(d ⟨w.val - N, hi⟩).2.1.2.val, by omega⟩ =
         wireValD d (Function.update x a b) ⟨(d ⟨w.val - N, hi⟩).2.1.2.val, by omega⟩ :=
       fun _ => wireValD_eq_of_unreferenced d a b hno x _ hw2
-    -- Both sides evaluate the same gate with equal inputs
     conv_lhs => rw [wireValD]
     conv_rhs => rw [wireValD]
     simp only [hw_lt, dite_false]
-    -- The gate descriptor is the same; only wireValD calls differ
-    -- Rewrite the recursive calls using hrec1 and hrec2
     split <;> {
       congr 1
       · congr 1; split
@@ -120,6 +108,22 @@ theorem evalD_essential_means_referenced
     change N + s - 1 ≠ a.val; have := a.isLt; omega
   exact wireValD_eq_of_unreferenced d a (!x a)
     (fun g => ⟨(hall g).1, (hall g).2⟩) x ⟨N + s - 1, by omega⟩ hw
+
+/-- Every input of a circuit computing `comp ⊕ XOR_N` is essential: flipping any
+    bit flips the output. -/
+private theorem xor_circuit_essential {N s : Nat} (d : CircDesc N s) (hs : 0 < s)
+    (comp : Bool) (heval : ∀ x, evalD hs d x = comp.xor (xorBool N x))
+    (a : Fin N) (x : BitString N) :
+    evalD hs d x ≠ evalD hs d (Function.update x a (!x a)) := by
+  rw [heval, heval, xorBool_flip]
+  cases comp <;> cases xorBool N x <;> simp [Bool.xor]
+
+/-- When `2 ≤ N`, there is an index distinct from any given `a : Fin N`. -/
+private theorem exists_index_ne {N : Nat} (hN : 2 ≤ N) (a : Fin N) :
+    ∃ b : Fin N, b ≠ a := by
+  rcases Nat.lt_or_ge a.val 1 with h | h
+  · exact ⟨⟨1, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
+  · exact ⟨⟨0, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
 
 /-! ## Circuit Restriction -/
 
@@ -450,19 +454,10 @@ private theorem last_gate_no_input_ref {n s : Nat} (d : CircDesc (n + 1) s)
     g.val < s - 1 := by
   by_contra hge; push Not at hge
   have hg_last : g.val = s - 1 := by omega
-  -- Restricted circuit computes XOR_n for any b
-  have hrestrict : ∀ b : Bool, ∀ x : BitString n,
-      evalD hs (restrictD d ⟨0, by omega⟩ b) x = (comp.xor b).xor (xorBool n x) := by
-    intro b x; rw [evalD_restrictD, heval, xorBool_insertAt, Bool.xor_assoc]
   have hg_eq : (⟨s - 1, by omega⟩ : Fin s) = g := Fin.ext hg_last.symm
-  -- All inputs are essential (derived from heval)
-  have hessential : ∀ (a : Fin (n + 1)) (x : BitString (n + 1)),
-      evalD hs d x ≠ evalD hs d (Function.update x a (!x a)) := by
-    intro a x; rw [heval, heval, xorBool_flip]
-    cases comp <;> cases xorBool (n + 1) x <;> simp [Bool.xor]
-  -- Strategy: pick x with input 0 at "killing value" for gate g.
-  -- Then the last gate is constant, so flipping input 1 doesn't change output.
-  -- This contradicts essentiality of input 1.
+  have hessential := xor_circuit_essential d hs comp heval
+  -- Pick x with input 0 at gate g's killing value: the last gate becomes constant,
+  -- so flipping input 1 leaves the output fixed, contradicting essentiality of input 1.
   rcases hg with hg0 | hg0
   · -- First wire input of gate g reads input 0
     -- Killing value: AND → x₀ = n₁, OR → x₀ = ¬n₁
@@ -638,9 +633,7 @@ private theorem gateConstW1 {N s : Nat} (d : CircDesc N s) (gg : Fin s) (a : Fin
     rw [wireValD]; simp only [show (d gg).2.1.1.val < N from by have := a.isLt; omega, dite_true]
     congr 1; exact Fin.ext hw
   simp only [ha_lt, ite_true, hval, hya]
-  have hlit : (d gg).2.2.1.xor ((d gg).2.2.1.xor (!(d gg).1)) = !(d gg).1 := by
-    cases (d gg).2.2.1 <;> cases (d gg).1 <;> rfl
-  rw [hlit]; cases (d gg).1 <;> simp
+  cases (d gg).2.2.1 <;> cases (d gg).1 <;> simp
 
 /-- If gate `gg`'s second wire reads primary input `a`, setting `a` to the gate's
     second-wire killing value forces gate `gg`'s output to the constant `!(d gg).1`. -/
@@ -654,9 +647,7 @@ private theorem gateConstW2 {N s : Nat} (d : CircDesc N s) (gg : Fin s) (a : Fin
     rw [wireValD]; simp only [show (d gg).2.1.2.val < N from by have := a.isLt; omega, dite_true]
     congr 1; exact Fin.ext hw
   simp only [ha_lt, ite_true, hval, hya]
-  have hlit : (d gg).2.2.2.xor ((d gg).2.2.2.xor (!(d gg).1)) = !(d gg).1 := by
-    cases (d gg).2.2.2 <;> cases (d gg).1 <;> rfl
-  rw [hlit]; cases (d gg).1 <;> simp
+  cases (d gg).2.2.2 <;> cases (d gg).1 <;> simp
 
 /-- The output (last) gate of an essential XOR circuit (`N ≥ 2`) reads no primary
     input directly: both of its wires have index `≥ N`. -/
@@ -664,10 +655,7 @@ private theorem lastGateNoInput {N s : Nat} (d : CircDesc N s) (hs : 0 < s) (hN 
     (comp : Bool) (heval : ∀ x, evalD hs d x = comp.xor (xorBool N x)) :
     N ≤ (d ⟨s - 1, by omega⟩).2.1.1.val ∧ N ≤ (d ⟨s - 1, by omega⟩).2.1.2.val := by
   set g : Fin s := ⟨s - 1, by omega⟩ with hg_def
-  have hessential : ∀ (a : Fin N) (x : BitString N),
-      evalD hs d x ≠ evalD hs d (Function.update x a (!x a)) := by
-    intro a x; rw [heval, heval, xorBool_flip]
-    cases comp <;> cases xorBool N x <;> simp [Bool.xor]
+  have hessential := xor_circuit_essential d hs comp heval
   have houtput : ∀ x, evalD hs d x = wireValD d x ⟨N + g.val, by omega⟩ := by
     intro x; simp only [evalD]; congr 1; ext; simp only [hg_def]; omega
   -- If gate g's first wire reads input a, fixing a to the killing value makes g constant.
@@ -682,10 +670,7 @@ private theorem lastGateNoInput {N s : Nat} (d : CircDesc N s) (hs : 0 < s) (hN 
   have dom : ∀ (a : Fin N),
       (d g).2.1.1.val = a.val ∨ (d g).2.1.2.val = a.val → False := by
     intro a hga
-    obtain ⟨b, hba⟩ : ∃ b : Fin N, b ≠ a := by
-      rcases Nat.lt_or_ge a.val 1 with h | h
-      · exact ⟨⟨1, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
-      · exact ⟨⟨0, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
+    obtain ⟨b, hba⟩ := exists_index_ne hN a
     rcases hga with hw1 | hw2
     · set kv : Bool := (d g).2.2.1.xor (!(d g).1) with hkv
       set x₀ : BitString N := Function.update (fun _ => false) a kv with hx₀
@@ -714,10 +699,7 @@ private theorem xor_needs_three_gates {N s : Nat} (hN : 2 ≤ N) (hs : 0 < s) (h
     ∀ (d : CircDesc N s) (comp : Bool),
     ¬(∀ x : BitString N, evalD hs d x = comp.xor (xorBool N x)) := by
   intro d comp heval
-  have hessential : ∀ (a : Fin N) (x : BitString N),
-      evalD hs d x ≠ evalD hs d (Function.update x a (!x a)) := by
-    intro a x; rw [heval, heval, xorBool_flip]
-    cases comp <;> cases xorBool N x <;> simp [Bool.xor]
+  have hessential := xor_circuit_essential d hs comp heval
   have notConst : ∀ (c : Bool), ¬(∀ x, evalD hs d x = c) := fun c hc =>
     hessential ⟨0, by omega⟩ (fun _ => false) ((hc _).trans (hc _).symm)
   by_cases hcount : 2 * s < N
@@ -786,14 +768,11 @@ private theorem xor_needs_three_gates {N s : Nat} (hN : 2 ≤ N) (hs : 0 < s) (h
         obtain ⟨c, hc⟩ := hg0const; exact notConst c hc
       by_cases hg0in : ∃ a : Fin N,
           (d ⟨0, by omega⟩).2.1.1.val = a.val ∨ (d ⟨0, by omega⟩).2.1.2.val = a.val
-      · -- gate 0 reads input a: fix a to gate-0 killing value → contradiction (not used here);
-        -- instead show evalD is constant under that restriction, contradicting essentiality.
+      · -- gate 0 reads input a: fixing a to gate-0's killing value makes evalD
+        -- constant, contradicting essentiality.
         exfalso
         obtain ⟨a, ha⟩ := hg0in
-        obtain ⟨b, hba⟩ : ∃ b : Fin N, b ≠ a := by
-          rcases Nat.lt_or_ge a.val 1 with h | h
-          · exact ⟨⟨1, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
-          · exact ⟨⟨0, by omega⟩, fun he => by simp [Fin.ext_iff] at he; omega⟩
+        obtain ⟨b, hba⟩ := exists_index_ne hN a
         rcases ha with ha1 | ha2
         · set kv : Bool := (d ⟨0, by omega⟩).2.2.1.xor (!(d ⟨0, by omega⟩).1) with hkv
           set x₀ : BitString N := Function.update (fun _ => false) a kv with hx₀
@@ -964,21 +943,13 @@ private theorem gateElimRedirect {n t : Nat} (d : CircDesc (n + 1) (t + 3))
             flip.xor (wireValD (restrictD d ⟨0, by omega⟩ false) x ⟨w.val, by omega⟩)) ∧
       (∀ w' flip, rd = .wire w' flip → w'.val < n + g.val) := by
   set d_r := restrictD d ⟨0, by omega⟩ false with hd_r_def
-  -- After restriction with a=⟨0,...⟩ b=false, a wire reading input 0 becomes a
-  -- self-reference ⟨n + g.val,...⟩ which evaluates to false (not < itself).
-  -- So one effective input = negation_flag ⊕ false = negation_flag.
-  -- This determines the gate output: const if killing, wire/const if non-killing.
-  -- Shorthand for gate components
+  -- After restriction with b=false, a wire reading input 0 becomes a self-reference
+  -- ⟨n + g.val,...⟩ (evaluating to false), so its effective value is its negation flag.
   set isAnd := (d g).1
   set w1 := (d g).2.1.1
   set w2 := (d g).2.1.2
   set n1 := (d g).2.2.1
   set n2 := (d g).2.2.2
-  -- Key fact: wireValD at a self-referencing wire evaluates to false
-  -- because ¬(n + g.val < n + g.val).
-  -- After restriction with b=false, a wire reading input 0 gets mapped to
-  -- a self-reference ⟨n + g.val,...⟩ with the original negation flag.
-  -- So the effective value of that input = neg_flag ⊕ false = neg_flag.
   rcases hg0 with h1 | h2
   · -- First wire reads input 0 (w1.val = 0)
     by_cases hkill : n1 = !isAnd
@@ -1019,9 +990,9 @@ private theorem gateElimRedirect {n t : Nat} (d : CircDesc (n + 1) (t + 3))
               simp only [h_w2_val, show (d g).2.2.1 = n1 from rfl,
                 show (d g).2.2.2 = n2 from rfl] at step1
               rw [step1]
-              have hne : ¬n1 = !isAnd := hkill
               have : n1 = isAnd := by rcases isAnd <;> rcases n1 <;> simp_all
-              simp only [this]; rcases isAnd <;> simp,
+              simp only [this]
+              rcases isAnd <;> simp,
              fun w' flip h => by
               simp only [GateRedirect.wire.injEq] at h; obtain ⟨rfl, _⟩ := h
               exact hw2_back⟩⟩
@@ -1067,9 +1038,9 @@ private theorem gateElimRedirect {n t : Nat} (d : CircDesc (n + 1) (t + 3))
               simp only [h_w1_val, show (d g).2.2.1 = n1 from rfl,
                 show (d g).2.2.2 = n2 from rfl] at step1
               rw [step1]
-              have hne : ¬n2 = !isAnd := hkill
               have : n2 = isAnd := by rcases isAnd <;> rcases n2 <;> simp_all
-              simp only [this]; rcases isAnd <;> simp,
+              simp only [this]
+              rcases isAnd <;> simp,
              fun w' flip h => by
               simp only [GateRedirect.wire.injEq] at h; obtain ⟨rfl, _⟩ := h
               exact hw1_back⟩⟩
@@ -1201,8 +1172,7 @@ private theorem truncateAtGate {n t j : Nat} (d₁ : CircDesc n (t + 2))
      (clampW i (d₁ ⟨i.val, by omega⟩).2.1.1,
       clampW i (d₁ ⟨i.val, by omega⟩).2.1.2),
      (d₁ ⟨i.val, by omega⟩).2.2)
-  -- Prove wireValD agrees on truncated circuit
-  -- Prove wireValD agrees on truncated circuit by strong induction
+  -- wireValD agrees on the truncated circuit (by strong induction on the wire index)
   have htrunc : ∀ x (w : Fin (n + (j + 1))),
       wireValD d₂ x w = wireValD d₁ x ⟨w.val, by omega⟩ := by
     intro x
@@ -1272,16 +1242,7 @@ private theorem restrictionElimTwoB {n t : Nat} (d : CircDesc (n + 1) (t + 3))
       (d g').2.1.2.val ≠ (⟨0, by omega⟩ : Fin (n + 1)).val := by
     intro g' hne
     exact ⟨fun h1 => absurd (h_two g' (.inl h1)) hne, fun h2 => absurd (h_two g' (.inr h2)) hne⟩
-  -- g₁ must be referenced (otherwise input 0 is inessential)
-  have hg₁_ref : ∃ g' : Fin (t + 3),
-      (d g').2.1.1.val = (n + 1) + g₁.val ∨ (d g').2.1.2.val = (n + 1) + g₁.val := by
-    by_contra hunref_all; push Not at hunref_all
-    exact hessential ⟨0, by omega⟩ (fun _ => false)
-      (by simp only [evalD]
-          exact wireValD_eq_sole_unreferenced d ⟨0, by omega⟩ true g₁ honly hunref_all
-            (fun _ => false) ⟨(n + 1) + (t + 3) - 1, by omega⟩
-            (by dsimp only []; omega) (by dsimp only []; omega))
-  -- Strengthen: back-reference exists (g'.val > g₁.val)
+  -- g₁ must be referenced by a strictly later gate (else input 0 is inessential).
   have hg₁_back_ref : ∃ g' : Fin (t + 3), g₁.val < g'.val ∧
       ((d g').2.1.1.val = (n + 1) + g₁.val ∨ (d g').2.1.2.val = (n + 1) + g₁.val) := by
     by_contra h; push Not at h
@@ -1354,7 +1315,6 @@ private theorem restrictionElimTwoB {n t : Nat} (d : CircDesc (n + 1) (t + 3))
     have hig : ¬(g'.val - 1 < g₁.val) := by omega
     have hg'_bound2 : g'.val - 1 < t + 2 := by omega
     have hg'_bound3 : g'.val - 1 + 1 < t + 3 := by omega
-    clear hg₁_ref
     change (elimGateD d_rb g₁ (.const c₁) ⟨g'.val - 1, hg'_bound2⟩).2.1.1.val = n + (g'.val - 1) ∨
         (elimGateD d_rb g₁ (.const c₁) ⟨g'.val - 1, hg'_bound2⟩).2.1.2.val = n + (g'.val - 1)
     simp only [elimGateD, hig, dite_false]
@@ -1448,20 +1408,11 @@ private theorem restrictionElimTwoB {n t : Nat} (d : CircDesc (n + 1) (t + 3))
         -- Need: wireValD d₁ x ⟨w₂, _⟩ = (f₂ ^^ comp ^^ b_kill) ^^ xorBool n x
         revert h2; cases f₂ <;> cases (comp.xor b_kill) <;> cases xorBool n x <;>
           simp [Bool.xor]
-      -- Build circuit by truncating d₁ to just the gates needed for w₂
       by_cases hw₂n : w₂ < n
-      · -- Wire w₂ is an input: use the truncation approach with j = 0
-        -- Actually, reuse the gate-output case by noting w₂ < n means
-        -- we can use the same approach with a 1-gate trivial circuit.
-        -- Since w₂ < n, wireValD d₁ x ⟨w₂,_⟩ = x ⟨w₂,hw₂n⟩
-        -- xorBool n x = (f₂ ⊕ comp ⊕ b_kill) ⊕ x w₂
-        -- We need s' ≥ 1 with s'+2 ≤ t+3, so s' = 1 works.
-        -- Build a 1-gate AND-self circuit reading w₂
+      · -- Wire w₂ is an input: build a 1-gate AND-self circuit reading w₂
+        -- (gate 0 computes AND(x w₂, x w₂) = x w₂).
         refine ⟨1, fun _ => (true, (⟨w₂, by omega⟩, ⟨w₂, by omega⟩), (false, false)),
           by omega, f₂.xor (comp.xor b_kill), by omega, fun x => ?_⟩
-        -- Need: evalD of this circuit = (f₂ ⊕ comp ⊕ b_kill) ⊕ xorBool n x
-        -- evalD reads wire n (gate 0 output)
-        -- gate 0: AND(x w₂, x w₂) = x w₂
         change wireValD (fun _ => (true, (⟨w₂, by omega⟩, ⟨w₂, by omega⟩), (false, false)))
           x ⟨n, by omega⟩ = _
         rw [wireValD]
@@ -1544,10 +1495,7 @@ theorem xor_lower_bound_2 (N s : Nat) (hs : 0 < s) (d : CircDesc N s) (comp : Bo
     · subst hn; omega
     -- n ≥ 1, so N = n+1 ≥ 2. Need s ≥ 2n+1.
     -- Every input is essential
-    have hessential : ∀ (a : Fin (n + 1)) (x : BitString (n + 1)),
-        evalD hs d x ≠ evalD hs d (Function.update x a (!x a)) := by
-      intro a x; rw [heval, heval, xorBool_flip]
-      cases comp <;> cases xorBool (n + 1) x <;> simp [Bool.xor]
+    have hessential := xor_circuit_essential d hs comp heval
     -- Restrict one input + eliminate 2 gates → smaller circuit for XOR_n
     obtain ⟨s', d', hs', comp', hsize, heval'⟩ :=
       restriction_eliminates_two d hs (by omega) comp heval hessential

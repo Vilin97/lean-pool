@@ -30,7 +30,8 @@ namespace CircuitComplexity
 
 private lemma xor_neg_polarity_eq_eval (l : Literal N) (x : BitString N) :
     (!l.polarity).xor (x l.var) = l.eval x := by
-  simp [Literal.eval]; cases l.polarity <;> simp
+  simp only [Literal.eval]
+  cases l.polarity <;> simp
 
 private lemma foldl_bor_eq_true (n : Nat) (g : Fin n → Bool) :
     (Fin.foldl n (fun acc i => acc || g i) false = true) ↔ (∃ i : Fin n, g i = true) := by
@@ -56,22 +57,18 @@ private lemma foldl_band_eq_true (n : Nat) (g : Fin n → Bool) :
   induction n with
   | zero => simp [Fin.foldl_zero]
   | succ n ih =>
-    rw [Fin.foldl_succ_last]; constructor
-    · intro h; rw [Bool.and_eq_true] at h; obtain ⟨h1, h2⟩ := h
-      rw [ih] at h1; intro i; exact Fin.lastCases h2 (fun j => h1 j) i
-    · intro h; rw [Bool.and_eq_true]
-      exact ⟨(ih _).mpr (fun j => h j.castSucc), h (Fin.last n)⟩
+    rw [Fin.foldl_succ_last, Bool.and_eq_true]
+    refine ⟨fun ⟨h1, h2⟩ i => Fin.lastCases h2 (fun j => (ih _).mp h1 j) i, fun h => ?_⟩
+    exact ⟨(ih _).mpr (fun j => h j.castSucc), h (Fin.last n)⟩
 
 private lemma foldl_bor_eq_list_any {α : Type} (l : List α) (p : α → Bool) :
     Fin.foldl l.length (fun acc (i : Fin l.length) => acc || p (l.get i)) false = l.any p := by
   have h_iff : (Fin.foldl l.length (fun acc i => acc || p (l.get i)) false = true) ↔
       (l.any p = true) := by
     rw [foldl_bor_eq_true, List.any_eq_true]
-    constructor
-    · rintro ⟨i, hi⟩; exact ⟨l.get i, List.get_mem l i, hi⟩
-    · rintro ⟨a, ha, hp⟩
-      obtain ⟨i, rfl⟩ := List.mem_iff_get.mp ha
-      exact ⟨i, hp⟩
+    refine ⟨fun ⟨i, hi⟩ => ⟨l.get i, List.get_mem l i, hi⟩, fun ⟨a, ha, hp⟩ => ?_⟩
+    obtain ⟨i, rfl⟩ := List.mem_iff_get.mp ha
+    exact ⟨i, hp⟩
   cases h1 : Fin.foldl l.length (fun acc i => acc || p (l.get i)) false <;>
     cases h2 : l.any p <;> simp_all
 
@@ -80,11 +77,9 @@ private lemma foldl_band_eq_list_all {α : Type} (l : List α) (p : α → Bool)
   have h_iff : (Fin.foldl l.length (fun acc i => acc && p (l.get i)) true = true) ↔
       (l.all p = true) := by
     rw [foldl_band_eq_true, List.all_eq_true]
-    constructor
-    · intro h a ha
-      obtain ⟨i, rfl⟩ := List.mem_iff_get.mp ha
-      exact h i
-    · intro h i; exact h (l.get i) (List.get_mem l i)
+    refine ⟨fun h a ha => ?_, fun h i => h (l.get i) (List.get_mem l i)⟩
+    obtain ⟨i, rfl⟩ := List.mem_iff_get.mp ha
+    exact h i
   cases h1 : Fin.foldl l.length (fun acc i => acc && p (l.get i)) true <;>
     cases h2 : l.all p <;> simp_all
 
@@ -130,11 +125,9 @@ private lemma wireValue_gate [NeZero N] (φ : CNF N) (x : BitString N) (i : Fin 
   -- Unfold gate definition
   simp only [toCircuit, Gate.eval, Basis.unboundedAON, AONOp.eval]
   -- Handle wireValue for primary inputs + xor-negation inside foldl
-  conv_lhs => arg 2; ext acc j; arg 2; arg 2
-              rw [Circuit.wireValue_lt _ _ _
-                ((φ.clauses.get ⟨↑i, i.isLt⟩).get j).var.isLt]
   conv_lhs => arg 2; ext acc j; arg 2
-              rw [xor_neg_polarity_eq_eval]
+              rw [Circuit.wireValue_lt _ _ _
+                ((φ.clauses.get ⟨↑i, i.isLt⟩).get j).var.isLt, xor_neg_polarity_eq_eval]
   exact foldl_bor_eq_list_any (φ.clauses.get ⟨↑i, i.isLt⟩) (fun l => l.eval x)
 
 /-- The circuit produced by `toCircuit` correctly computes the CNF formula. -/
@@ -198,11 +191,9 @@ private lemma wireValue_gate [NeZero N] (φ : DNF N) (x : BitString N) (i : Fin 
   -- Unfold gate definition
   simp only [toCircuit, Gate.eval, Basis.unboundedAON, AONOp.eval]
   -- Handle wireValue for primary inputs + xor-negation inside foldl
-  conv_lhs => arg 2; ext acc j; arg 2; arg 2
-              rw [Circuit.wireValue_lt _ _ _
-                ((φ.terms.get ⟨↑i, i.isLt⟩).get j).var.isLt]
   conv_lhs => arg 2; ext acc j; arg 2
-              rw [xor_neg_polarity_eq_eval]
+              rw [Circuit.wireValue_lt _ _ _
+                ((φ.terms.get ⟨↑i, i.isLt⟩).get j).var.isLt, xor_neg_polarity_eq_eval]
   exact foldl_band_eq_list_all (φ.terms.get ⟨↑i, i.isLt⟩) (fun l => l.eval x)
 
 /-- The circuit produced by `toCircuit` correctly computes the DNF formula. -/
@@ -270,8 +261,7 @@ theorem DNF.term_mentions_all (φ : DNF N)
     exact ⟨term, hterm, hsat'⟩
   -- But f flips, so f x ≠ f (flip x i)
   have := hflip x i
-  rw [← hcomp, ← hcomp] at this
-  rw [hx_true, hx'_true] at this
+  rw [← hcomp, ← hcomp, hx_true, hx'_true] at this
   simp at this
 
 /-- If a term mentions all N variables, it is satisfied by at most one assignment. -/
@@ -283,10 +273,9 @@ theorem full_term_unique {term : List (Literal N)}
     x = y := by
   funext i
   obtain ⟨l, hl_mem, hl_var⟩ := hfull i
-  have hx_l : l.eval x = true := by
-    rw [List.all_eq_true] at hx; exact hx l hl_mem
-  have hy_l : l.eval y = true := by
-    rw [List.all_eq_true] at hy; exact hy l hl_mem
+  rw [List.all_eq_true] at hx hy
+  have hx_l := hx l hl_mem
+  have hy_l := hy l hl_mem
   simp only [Literal.eval, hl_var] at hx_l hy_l
   split at hx_l <;> split at hy_l <;> simp_all
 
@@ -304,7 +293,7 @@ theorem card_true_of_flip_sensitive {N : Nat} (hN : 1 ≤ N)
   have flip0_inv : ∀ x, flip0 (flip0 x) = x := by
     intro x; ext j; simp only [flip0]
     by_cases h : j = ⟨0, hN'⟩
-    · subst h; simp [Function.update_self, Bool.not_not]
+    · subst h; simp
     · simp [Function.update_of_ne h]
   -- flip0 maps true-set to false-set
   have flip0_tf : ∀ x, f x = true → f (flip0 x) = false := by
@@ -323,7 +312,7 @@ theorem card_true_of_flip_sensitive {N : Nat} (hN : 1 ≤ N)
       simp only [S_true, S_false, Finset.mem_filter, Finset.mem_univ, true_and] at hb ⊢
       -- f b = false, need f (flip0 b) = true
       have h1 := hflip b ⟨0, hN'⟩
-      rw [hb] at h1; simpa using h1
+      rwa [hb, Bool.not_false] at h1
   -- |S_true| + |S_false| = 2^N
   have hcard_total : S_true.card + S_false.card = 2 ^ N := by
     have h := Finset.card_filter_add_card_filter_not (s := Finset.univ)
@@ -335,7 +324,6 @@ theorem card_true_of_flip_sensitive {N : Nat} (hN : 1 ≤ N)
     simp only [S_false]
     congr 1; ext x; cases f x <;> simp
   -- 2 * S_true.card = 2^N, so S_true.card = 2^{N-1}
-  have : 2 * S_true.card = 2 ^ N := by omega
   have : 2 ^ N = 2 * 2 ^ (N - 1) := by
     cases N with
     | zero => omega
@@ -391,7 +379,6 @@ theorem DNF.flip_complexity_lb (φ : DNF N) (hN : 1 ≤ N)
     have sat₁ : (φ.terms[φ.terms.findIdx (fun t => t.all (fun l => l.eval x₁))]'hlt₁).all
         (fun l => l.eval x₁) = true :=
       List.findIdx_getElem (w := hlt₁)
-    have heq' : φ.terms.findIdx (fun t => t.all (fun l => l.eval x₁)) = k := heq
     rw [show (φ.terms[φ.terms.findIdx (fun t => t.all (fun l => l.eval x₁))]'hlt₁) =
         (φ.terms[k]'hlt) from by congr 1] at sat₁
     exact huniq _ (List.getElem_mem ..) x₁ x₂ sat₁ sat₂

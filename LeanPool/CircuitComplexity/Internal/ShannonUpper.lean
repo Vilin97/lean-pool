@@ -347,10 +347,9 @@ private theorem two_n_plus_one_le (N : Nat) (hN : 4 ≤ N) : 2 * N + 1 ≤ 2 ^ N
     | inl h => interval_cases n <;> omega
     | inr h =>
       have := ih (by omega)
-      calc 2 * (n + 1) + 1 = 2 * n + 1 + 2 := by ring
-        _ ≤ 2 ^ n + 2 := by omega
-        _ ≤ 2 ^ n + 2 ^ n := by nlinarith [@Nat.lt_pow_self n 2 (by omega)]
-        _ = 2 ^ (n + 1) := by ring
+      have := @Nat.lt_pow_self n 2 (by omega)
+      have : 2 ^ (n + 1) = 2 ^ n + 2 ^ n := by ring
+      omega
 
 private theorem sq_le_pow (N : Nat) (hN : 16 ≤ N) : N * N ≤ 2 ^ N := by
   induction N with
@@ -361,23 +360,19 @@ private theorem sq_le_pow (N : Nat) (hN : 16 ≤ N) : N * N ≤ 2 ^ N := by
     | inr h =>
       have := ih (by omega)
       have := two_n_plus_one_le n (by omega)
-      calc (n + 1) * (n + 1) = n * n + 2 * n + 1 := by ring
-        _ ≤ 2 ^ n + (2 * n + 1) := by omega
-        _ ≤ 2 ^ n + 2 ^ n := by omega
-        _ = 2 ^ (n + 1) := by ring
+      have hsq : (n + 1) * (n + 1) = n * n + 2 * n + 1 := by ring
+      have : 2 ^ (n + 1) = 2 ^ n + 2 ^ n := by ring
+      omega
 
 /-! ### Term-by-term bounds -/
 
 private theorem term1 (N : Nat) (hN : 16 ≤ N) :
     4 * 2 ^ dataBits N * N ≤ 16 * 2 ^ N := by
   have hlt := n_lt_four_pow_addr N hN
-  calc 4 * 2 ^ dataBits N * N
-      ≤ 4 * 2 ^ dataBits N * (4 * 2 ^ addrBits N - 1) := by
-        apply Nat.mul_le_mul_left; omega
-    _ ≤ 4 * 2 ^ dataBits N * (4 * 2 ^ addrBits N) := by
-        apply Nat.mul_le_mul_left; omega
-    _ = 16 * (2 ^ dataBits N * 2 ^ addrBits N) := by ring
-    _ = 16 * 2 ^ N := by rw [pow_split N hN]
+  have hsplit := pow_split N hN
+  have : 4 * 2 ^ dataBits N * N ≤ 4 * 2 ^ dataBits N * (4 * 2 ^ addrBits N) :=
+    Nat.mul_le_mul_left _ (by omega)
+  nlinarith [this, hsplit]
 
 private theorem term2 (N : Nat) (hN : 16 ≤ N) :
     2 * 2 ^ addrBits N * N ≤ 2 ^ N := by
@@ -393,10 +388,9 @@ private theorem pow_ge_four_mul (k : Nat) (hk : 4 ≤ k) : 4 * k ≤ 2 ^ k := by
     | inl h => interval_cases n <;> omega
     | inr h =>
       have := ih (by omega)
-      calc 4 * (n + 1) = 4 * n + 4 := by ring
-        _ ≤ 2 ^ n + 4 := by omega
-        _ ≤ 2 ^ n + 2 ^ n := by nlinarith [@Nat.lt_pow_self n 2 (by omega)]
-        _ = 2 ^ (n + 1) := by ring
+      have := @Nat.lt_pow_self n 2 (by omega)
+      have : 2 ^ (n + 1) = 2 ^ n + 2 ^ n := by ring
+      omega
 
 private theorem log_le_quarter (N : Nat) (hN : 16 ≤ N) : 4 * Nat.log 2 N ≤ N := by
   have hlog4 : 4 ≤ Nat.log 2 N := Nat.le_log_of_pow_le (by omega) (by omega)
@@ -426,14 +420,10 @@ private theorem term3 (N : Nat) (hN : 16 ≤ N) :
   have hsplit : 2 ^ (2 ^ addrBits N + addrBits N) *
       2 ^ (N - (2 ^ addrBits N + addrBits N)) = 2 ^ N := by
     rw [← Nat.pow_add]; congr 1; omega
-  calc 2 ^ (2 ^ addrBits N + addrBits N) * N
-      ≤ 2 ^ (2 ^ addrBits N + addrBits N) *
-        (2 ^ (N - (2 ^ addrBits N + addrBits N)) - 1) := by
-        apply Nat.mul_le_mul_left; omega
-    _ ≤ 2 ^ (2 ^ addrBits N + addrBits N) *
-        2 ^ (N - (2 ^ addrBits N + addrBits N)) := by
-        apply Nat.mul_le_mul_left; omega
-    _ = 2 ^ N := hsplit
+  have : 2 ^ (2 ^ addrBits N + addrBits N) * N ≤
+      2 ^ (2 ^ addrBits N + addrBits N) * 2 ^ (N - (2 ^ addrBits N + addrBits N)) :=
+    Nat.mul_le_mul_left _ (by omega)
+  omega
 
 private theorem n_le_pow (N : Nat) : N ≤ 2 ^ N := by
   have := @Nat.lt_pow_self N 2 (by omega); omega
@@ -537,17 +527,12 @@ lemma treeParentIdx_lt_j (l m j : Nat) (hl : 2 ≤ l)
     (hm : m = treePos j l) (hbase : treeBase l ≤ j) :
     treeParentIdx l m < j := by
   unfold treeParentIdx treeBase treePos at *
-  have h4l : 4 ≤ 2^l := pow_ge_4 l hl
+  have h4l : 4 ≤ 2 ^ l := pow_ge_4 l hl
   have hlm1 : l - 1 + 1 = l := by omega
-  have h4lm1 : 4 ≤ 2^(l-1+1) := by rw [hlm1]; exact h4l
-  -- 2^(l-1) ≤ 2^l
-  have hpow_le : 2^(l-1) ≤ 2^l := Nat.pow_le_pow_right (by omega) (by omega)
-  -- 2^(l-1+1) = 2^l
-  have hpow_eq : 2^(l-1+1) = 2^l := by rw [hlm1]
-  have hmod : m % 2^l < 2^l := Nat.mod_lt _ (by positivity)
-  have h2l : 2^l ≤ 2^(l+1) := Nat.pow_le_pow_right (by omega) (by omega)
+  have hpow_eq : 2 ^ (l - 1 + 1) = 2 ^ l := by rw [hlm1]
+  have hmod : m % 2 ^ l < 2 ^ l := Nat.mod_lt _ (by positivity)
+  have h2l : 2 ^ l ≤ 2 ^ (l + 1) := Nat.pow_le_pow_right (by omega) (by omega)
   subst hm
-  -- Need: 2^(l-1+1) - 4 + (j - (2^(l+1) - 4)) % 2^l < j
   rw [hpow_eq]
   omega
 
@@ -568,8 +553,7 @@ private lemma treeLevel_parent (l m : Nat) (hl : 2 ≤ l) :
 
 private lemma treePos_parent (l m : Nat) (_hl : 2 ≤ l) :
     treePos (treeParentIdx l m) (l - 1) = m % 2 ^ l := by
-  change treeParentIdx l m - treeBase (l - 1) = m % 2 ^ l
-  change treeBase (l - 1) + m % 2 ^ l - treeBase (l - 1) = m % 2 ^ l
+  unfold treePos treeParentIdx
   omega
 
 /-! ### Column pattern encoding -/
@@ -949,9 +933,6 @@ private noncomputable def shannonCircuit (N : Nat) [NeZero N]
 
 /-! ### Correctness -/
 
-/-! #### Bit-vector testBit lemma -/
-
-
 /-! #### colFun reconstruction lemma -/
 
 /-- Shift the data bits of x to form a q-bit function. -/
@@ -986,12 +967,6 @@ private theorem colFun_at_actual_bits (N : Nat) [NeZero N]
     congr 1; ext; simp; omega
 
 /-! #### Circuit correctness -/
-
-/-! ##### Key identity -/
-
-/-! ##### Connecting the last wire to the OR chain -/
-
-/-! ##### Semantic decomposition of the circuit -/
 
 /-- The semantic value of each AND-layer wire (Section E). -/
 private noncomputable def andLayerSem (N : Nat)
