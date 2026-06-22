@@ -193,8 +193,8 @@ lemma repr_finsum_mem_eq_ite {R M ι : Type*} [Semiring R] [Nontrivial R] [IsCan
     map_add' x y := f.map_add x y
     map_smul' m x := LinearMap.CompatibleSMul.map_smul f m x
     invFun := g
-    left_inv := by exact congrFun gof
-    right_inv := by exact congrFun fog
+    left_inv := congrFun gof
+    right_inv := congrFun fog
   }⟩
 
 -- TODO: To Mathlib?

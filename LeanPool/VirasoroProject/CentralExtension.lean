@@ -174,16 +174,14 @@ def _root_.VirasoroProject.LieOneCochain.bdryHom :
   map_add' Z W := by
     ext
     · rfl
-    · calc Z.2 + W.2 + β (Z.1 + W.1)
-       _ = Z.2 + β Z.1 + (W.2 + β W.1)                   := by simp only [map_add]; ac_rfl
-       _ = ((Z.1, Z.2 + β Z.1) + (W.1, W.2 + β W.1)).2   := by rfl
+    · change Z.2 + W.2 + β (Z.1 + W.1) = Z.2 + β Z.1 + (W.2 + β W.1)
+      simp only [map_add]
+      ac_rfl
   map_smul' c Z := by
     ext
     · rfl
-    · calc ((c • Z).1, (c • Z).2 + β (c • Z).1).2
-       _ = c • Z.2 + β (c • Z.1)           := by rfl
-       _ = c • (Z.2 + β Z.1)               := by simp only [LinearMapClass.map_smul, smul_add]
-       _ = (c • (Z.1, Z.2 + β Z.1)).2      := by rfl
+    · change c • Z.2 + β (c • Z.1) = c • (Z.2 + β Z.1)
+      simp only [LinearMapClass.map_smul, smul_add]
   map_lie' := by
     intro Z W
     ext <;> rfl

@@ -195,12 +195,8 @@ instance : Add (LieTwoCocycle 𝕜 𝓰 𝓪) where
     { toBilin := γ.toBilin + γ'.toBilin
       self' := fun X ↦ by simp [γ.self', γ'.self']
       leibniz' := fun X Y Z ↦ by
-        calc (γ.toBilin X) ⁅Y, Z⁆ + (γ'.toBilin X) ⁅Y, Z⁆
-            = (γ.toBilin ⁅X, Y⁆) Z + (γ.toBilin Y) ⁅X, Z⁆
-              + (γ'.toBilin ⁅X, Y⁆) Z + (γ'.toBilin Y) ⁅X, Z⁆ := by
-              simp [γ.leibniz' X Y Z, γ'.leibniz' X Y Z, ← add_assoc]
-          _ = ((γ.toBilin + γ'.toBilin) ⁅X, Y⁆) Z + ((γ.toBilin + γ'.toBilin) Y) ⁅X, Z⁆ := by
-              simp only [LinearMap.add_apply]; ac_rfl }
+        simp only [LinearMap.add_apply, γ.leibniz' X Y Z, γ'.leibniz' X Y Z]
+        ac_rfl }
 
 instance : SMul 𝕜 (LieTwoCocycle 𝕜 𝓰 𝓪) where
   smul c γ :=
@@ -295,8 +291,8 @@ variable {𝕜 𝓰 𝓪}
 /-- A Lie algebra 1-cochain determines a bilinear map via the differential. -/
 def _root_.VirasoroProject.LieOneCochain.bdry' (β : LieOneCochain 𝕜 𝓰 𝓪) : 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓪 where
   toFun := fun X ↦ β ∘ₗ LieAlgebra.bracketHom 𝕜 𝓰 X
-  map_add' X₁ X₂ := by simp_all only [map_add]; ext; simp_all
-  map_smul' c X := by simp_all only [LinearMapClass.map_smul, RingHom.id_apply]; ext; simp_all
+  map_add' X₁ X₂ := by ext; simp
+  map_smul' c X := by ext; simp
 
 /-- A Lie algebra 1-cochain linearly determines a bilinear map via the differential. -/
 def _root_.VirasoroProject.LieOneCochain.bdryHom'

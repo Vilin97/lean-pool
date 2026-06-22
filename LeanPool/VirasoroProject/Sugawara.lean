@@ -86,13 +86,11 @@ def pairNO' (k l : ℤ) : (V →ₗ[𝕜] V) :=
 lemma pairNO_apply_eq_zero (A : ℤ → (V →ₗ[𝕜] V)) {v : V} {N : ℤ}
     (A_trunc : ∀ n ≥ N, A n v = 0) {k l : ℤ} (h : N ≤ max k l) :
     (pairNO A k l) v = 0 := by
-  rcases le_sup_iff.mp h with k_large | l_large
-  · by_cases hlk : l ≤ k
-    · simp [pairNO, hlk, A_trunc k k_large]
-    · simp [pairNO, hlk, A_trunc l (by linarith)]
-  · by_cases hlk : l ≤ k
-    · simp [pairNO, hlk, A_trunc k (by linarith)]
-    · simp [pairNO, hlk, A_trunc l l_large]
+  rcases le_sup_iff.mp h with k_large | l_large <;> by_cases hlk : l ≤ k
+  · simp [pairNO, hlk, A_trunc k k_large]
+  · simp [pairNO, hlk, A_trunc l (by linarith)]
+  · simp [pairNO, hlk, A_trunc k (by linarith)]
+  · simp [pairNO, hlk, A_trunc l l_large]
 
 include heiComm
 
@@ -327,15 +325,11 @@ lemma commutator_heiPair_heiGen (l k m : ℤ) :
       = ((-m : 𝕜) * ((if k + m = 0 then 1 else 0)
                + (if l + m = 0 then 1 else 0))) • heiOper (k + l + m) := by
   simp [LinearMap.commutator_pair, heiComm]
-  by_cases hkm : k + m = 0
-  · simp [show k = -m by linarith]
-    by_cases hlm : l + m = 0
-    · simp [show l = -m by linarith, mul_add, add_smul]
-    · simp [hlm]
-  · simp [hkm]
-    by_cases hlm : l + m = 0
-    · simp [show l = -m by linarith]
-    · simp [hlm]
+  by_cases hkm : k + m = 0 <;> by_cases hlm : l + m = 0
+  · simp [show k = -m by linarith, show l = -m by linarith, mul_add, add_smul]
+  · simp [show k = -m by linarith, hlm]
+  · simp [hkm, show l = -m by linarith]
+  · simp [hkm, hlm]
 
 /-- `[:(heiOper l)(heiOper k):, (heiOper m)] = -m * (δ[k+m=0] + δ[l+m=0]) • heiOper (k + l + m)` -/
 lemma commutator_heiPairNO_heiGen (l k m : ℤ) :
@@ -689,7 +683,6 @@ noncomputable def _root_.VirasoroProject.VirasoroAlgebra.representationOfCentral
       = (n - m) • lOper (n + m)
         + if n + m = 0 then (c / 12 * (n ^ 3 - n)) • (1 : V →ₗ[𝕂] V) else 0) :
     LieAlgebra.Representation 𝕂 𝕂 (VirasoroAlgebra 𝕂) V := by
-    --VirasoroAlgebra 𝕂 →ₗ⁅𝕂⁆ (V →ₗ[𝕂] V) := by
   let ops : Option ℤ → (V →ₗ[𝕂] V) := fun n' ↦ match n' with
     | none => c • 1
     | some n => lOper n

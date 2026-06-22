@@ -243,8 +243,8 @@ lemma _root_.VirasoroProject.ChargedFockSpace.kgen_smul (α : 𝕜) (v : Charged
 
 /-- `J₀ • v = α • v` for all `v` in `ChargedFockSpace 𝕜 α` -/
 lemma _root_.VirasoroProject.ChargedFockSpace.jgen_zero_smul (α : 𝕜) (v : ChargedFockSpace 𝕜 α) :
-    (ιUEA 𝕜 (HeisenbergAlgebra.jgen 𝕜 0)) • v = α • v := by
-  exact UniversalEnvelopingAlgebra.smul_eq_of_cyclic_of_forall_lie_eq_zero 𝕜
+    (ιUEA 𝕜 (HeisenbergAlgebra.jgen 𝕜 0)) • v = α • v :=
+  UniversalEnvelopingAlgebra.smul_eq_of_cyclic_of_forall_lie_eq_zero 𝕜
     (HeisenbergAlgebra 𝕜) (Z := .jgen 𝕜 0) (ζ := α) (HeisenbergAlgebra.lie_jgen_zero _)
     (ChargedFockSpace.vacuum_cyclic 𝕜 α) (ChargedFockSpace.jgen_zero_vacuum 𝕜 α) v
 
@@ -307,11 +307,8 @@ lemma _root_.VirasoroProject.ChargedFockSpace.eventually_jgen_smul_eq_zero
   obtain ⟨a, hav⟩ := Submodule.mem_span_singleton.mp aux
   filter_upwards [HeisenbergAlgebra.ueaEventually_commute_jgen _ a, Ioi_mem_atTop 0] with
     k hk k_pos
-  -- `calcify`?
-  rw [← hav, ← mul_smul]
-  rw [show _ * a = a * _ from hk]
-  rw [mul_smul]
-  rw [ChargedFockSpace.jgen_pos_vacuum _ _ k_pos, smul_zero]
+  rw [← hav, ← mul_smul, show _ * a = a * _ from hk, mul_smul,
+      ChargedFockSpace.jgen_pos_vacuum _ _ k_pos, smul_zero]
 
 end ChargedFockSpace
 

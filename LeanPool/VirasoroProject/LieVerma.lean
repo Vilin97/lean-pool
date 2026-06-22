@@ -105,12 +105,10 @@ def ofBasis {ι : Type*} [Nontrivial 𝕜] [IsCancelMulZero 𝕜] [Module.IsTors
         rw [← finsum_mem_union' ?_ ?_ (supp_finite 0)]
         · have Bp_cover' : Bp 1 ∪ Bp (-1) ∪ Bp 0 = Set.univ := by
             rw [← Bp_cover]
-            apply subset_antisymm
+            refine subset_antisymm ?_ (Set.iUnion_subset fun ε ↦ ?_)
             · refine Set.union_subset (Set.union_subset ?_ ?_) ?_ <;>
               · exact Set.subset_iUnion_of_subset _ subset_rfl
-            · apply Set.iUnion_subset
-              intro ε
-              match ε with
+            · match ε with
               | 1 => apply Set.subset_union_of_subset_left (by simp)
               | 0 => simp
               | -1 => apply Set.subset_union_of_subset_left (by simp)

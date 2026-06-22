@@ -92,9 +92,9 @@ lemma bracket_antisymm (X Y : WittAlgebra 𝕜) :
 lemma bracket_self [CharZero 𝕜] [NoZeroSMulDivisors 𝕜 (WittAlgebra 𝕜)] (X : WittAlgebra 𝕜) :
     bracket 𝕜 X X = 0 := by
   have aux : (2 : 𝕜) • bracket 𝕜 X X = 0 := by
-    have obs := congr_arg (· + bracket 𝕜 X X) (bracket_antisymm X X)
-    simp only [neg_add_cancel] at obs
-    rwa [← one_smul 𝕜 (bracket 𝕜 X X), ← add_smul, one_add_one_eq_two] at obs
+    rw [two_smul]
+    nth_rw 1 [bracket_antisymm X X]
+    abel
   simpa only [OfNat.ofNat_ne_zero, false_or] using eq_zero_or_eq_zero_of_smul_eq_zero aux
 
 variable (𝕜)
@@ -111,8 +111,7 @@ lemma bracketCyclic_eq_zero :
   rw [show n + (m + k) = n + m + k by ring,
       show m + (k + n) = n + m + k by ring,
       show k + (n + m) = n + m + k by ring]
-  simp only [← add_smul]
-  convert zero_smul 𝕜 ((lgen 𝕜) (n + m + k))
+  match_scalars
   ring
 
 variable {𝕜}

@@ -264,9 +264,7 @@ lemma ses_directSum_isInternal (hf : ker f = ⊥) (hfg : range f = ker g) (hgσ 
         obtain ⟨w, hw⟩ := M_le₀ v_in_M
         have gv_eq_w : g v = w := by simpa [← hw] using LinearMap.congr_fun hgσ w
         have v_eq_σgv : v = σ (g v) := by nth_rw 1 [← hw]; rw [← gv_eq_w]
-        calc  f ((corrector hf hfg hgσ) v)
-            = f 0         := by rw [(corrector_eq_iff hf hfg hgσ v 0).mpr (by simp [← v_eq_σgv])]
-          _ = 0           := map_zero f
+        rw [(corrector_eq_iff hf hfg hgσ v 0).mpr (by simp [← v_eq_σgv]), map_zero]
       rw [corrector_spec hf hfg hgσ v]
       simp [obs₁, obs₀]
     intro j M M_le M_le' v v_in_M

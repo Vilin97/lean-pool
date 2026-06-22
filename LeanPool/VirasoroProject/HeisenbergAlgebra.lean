@@ -109,11 +109,6 @@ lemma _root_.VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin_apply_jg
     heisenbergCocycleBilin 𝕜 (jgen 𝕜 k) (jgen 𝕜 l) = if k + l = 0 then k else 0 := by
   simp [heisenbergCocycleBilin]
 
-example (R U V W : Type) [Field R] [AddCommGroup U] [AddCommGroup V] [AddCommGroup W]
-    [Module R U] [Module R V] [Module R W] (β : U →ₗ[R] V →ₗ[R] W) :
-    V →ₗ[R] U →ₗ[R] W := by
-  exact β.flip
-
 lemma _root_.VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin_eq_neg_flip :
     heisenbergCocycleBilin 𝕜 = -(heisenbergCocycleBilin 𝕜).flip := by
   apply LinearMap.ext_basis (jgen _) (jgen _)
@@ -275,8 +270,7 @@ lemma _root_.VirasoroProject.HeisenbergAlgebra.toAbelianLieAlgebraOn_kgen :
   split_ifs with h
   · apply ext' <;> simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, kgen_eq', h]
   · apply ext'
-    · change (0 : AbelianLieAlgebraOn ℤ 𝕜) = 0
-      rfl
+    · rfl
     · change AbelianLieAlgebraOn.heisenbergCocycle 𝕜 (AbelianLieAlgebraOn.jgen 𝕜 k)
           (AbelianLieAlgebraOn.jgen 𝕜 l) = 0
       simp [AbelianLieAlgebraOn.heisenbergCocycle_apply_jgen_jgen, h]
