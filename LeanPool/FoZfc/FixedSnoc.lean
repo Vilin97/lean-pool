@@ -80,9 +80,7 @@ theorem add_coe_eq_coe_add {n k m : ℕ} [NeZero (n + m)] :
 theorem sum_fixedSnoc_castSucc {n : ℕ} {s : ℕ → V} {xs : Fin n → V} {a : V} :
     (Sum.elim s (fixedSnoc xs a) ∘ Sum.map id fun (i : Fin n) ↦ i.castSucc) = Sum.elim s xs := by
   funext i
-  rcases i with k | k
-  · simp
-  · simp
+  rcases i with k | k <;> simp
 
 /-- Describes the cancellation of fixedSnoc and castSucc with Sum.elim. -/
 @[simp]
@@ -148,122 +146,77 @@ theorem FixedSnoc_2_1 {xs : Fin 0 → V} {a b : V} :
 /-- `fixedSnoc (fixedSnoc xs a) b 0 = a` over `Fin (0 + 2)`. -/
 theorem FixedSnoc_0_2_0 {xs : Fin 0 → V} {a b : V} :
     fixedSnoc (fixedSnoc xs a) b (@OfNat.ofNat (Fin (0 + 2)) 0 Fin.instOfNat) = a := by
-  have h : (@OfNat.ofNat (Fin (0 + 2)) 0 Fin.instOfNat) = (Fin.last 0).castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
-  simp only [snoc_init, snoc_last]
+  simp [fixedSnoc]
 
 /-- `fixedSnoc (fixedSnoc xs a) b 1 = b` over `Fin (0 + 2)`. -/
 theorem FixedSnoc_0_2_1 {xs : Fin 0 → V} {a b : V} :
     fixedSnoc (fixedSnoc xs a) b (@OfNat.ofNat (Fin (0 + 2)) 1 Fin.instOfNat) = b := by
-  have h : (@OfNat.ofNat (Fin (0 + 2)) 1 Fin.instOfNat) = Fin.last 1 := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
-  simp only [snoc_last]
+  simp [fixedSnoc]
 
 /-- `fixedSnoc^3 ... 0 = a` over `Fin (0 + 3)`. -/
 @[simp]
 theorem FixedSnoc_0_3_0 {xs : Fin 0 → V} {a b c : V} :
     fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c
     (@OfNat.ofNat (Fin (0 + 3)) 0 Fin.instOfNat) = a := by
-  have h : (@OfNat.ofNat (Fin (0 + 3)) 0 Fin.instOfNat) = (Fin.last 0).castSucc.castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
-  simp only [snoc_init, snoc_last]
+  simp [fixedSnoc]
 
 /-- `fixedSnoc^3 ... 1 = b` over `Fin (0 + 3)`. -/
 @[simp]
 theorem FixedSnoc_0_3_1 {xs : Fin 0 → V} {a b c : V} :
     fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c
     (@OfNat.ofNat (Fin (0 + 3)) 1 Fin.instOfNat) = b := by
-  have h : (@OfNat.ofNat (Fin (0 + 3)) 1 Fin.instOfNat) = (Fin.last 1).castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
-  simp only [snoc_init, snoc_last]
+  simp [fixedSnoc]
 
 /-- `fixedSnoc^3 ... 2 = c` over `Fin (0 + 3)`. -/
 @[simp]
 theorem FixedSnoc_0_3_2 {xs : Fin 0 → V} {a b c : V} :
     fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c
     (@OfNat.ofNat (Fin (0 + 3)) 2 Fin.instOfNat) = c := by
-  have h : (@OfNat.ofNat (Fin (0 + 3)) 2 Fin.instOfNat) = Fin.last 2 := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
-  simp only [snoc_last]
+  simp [fixedSnoc]
 
 /-- `fixedSnoc^4 ... 0 = a` over `Fin (0 + 4)`. -/
 @[simp]
 theorem FixedSnoc_0_4_0 {xs : Fin 0 → V} {a b c d : V} :
     fixedSnoc (fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c) d
     (@OfNat.ofNat (Fin (0 + 4)) 0 Fin.instOfNat) = a := by
-  have h : (@OfNat.ofNat (Fin (0 + 4)) 0 Fin.instOfNat)
-      = (Fin.last 0).castSucc.castSucc.castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
-  simp only [snoc_init, snoc_last]
+  simp [fixedSnoc]
 
 /-- `fixedSnoc^4 ... 1 = b` over `Fin (0 + 4)`. -/
 @[simp]
 theorem FixedSnoc_0_4_1 {xs : Fin 0 → V} {a b c d : V} :
     fixedSnoc (fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c) d
       (@OfNat.ofNat (Fin (0 + 4)) 1 Fin.instOfNat) = b := by
-  have h : (@OfNat.ofNat (Fin (0 + 4)) 1 Fin.instOfNat)
-      = (Fin.last 1).castSucc.castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
-  simp only [snoc_init, snoc_last]
+  simp [fixedSnoc]
 
 /-- `fixedSnoc^4 ... 2 = c` over `Fin (0 + 4)`. -/
 @[simp]
 theorem FixedSnoc_0_4_2 {xs : Fin 0 → V} {a b c d : V} :
     fixedSnoc (fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c) d
     (@OfNat.ofNat (Fin (0 + 4)) 2 Fin.instOfNat) = c := by
-  have h : (@OfNat.ofNat (Fin (0 + 4)) 2 Fin.instOfNat) = (Fin.last 2).castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
-  simp only [snoc_init, snoc_last]
+  simp [fixedSnoc]
 
 /-- `fixedSnoc^4 ... 3 = d` over `Fin (0 + 4)`. -/
 @[simp]
 theorem FixedSnoc_0_4_3 {xs : Fin 0 → V} {a b c d : V} :
     fixedSnoc (fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c) d
     (@OfNat.ofNat (Fin (0 + 4)) 3 Fin.instOfNat) = d := by
-  have h : (@OfNat.ofNat (Fin (0 + 4)) 3 Fin.instOfNat) = Fin.last 3 := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
-  simp only [snoc_last]
+  simp [fixedSnoc]
 
 /-- `fixedSnoc^2 ... n = a` over `Fin (n + 2)`. -/
 @[simp]
 theorem FixedSnoc_n_2_0 {n : ℕ} {xs : Fin n → V} {a b : V} :
     fixedSnoc (fixedSnoc xs a) b
     (@Nat.cast (Fin (n + 1 + 1)) (Fin.NatCast.instNatCast (n + 1 + 1)) n) = a := by
-  have h : (@Nat.cast (Fin (n + 1 + 1)) (Fin.NatCast.instNatCast (n + 1 + 1)) n)
-      = (Fin.last n).castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-    omega
-  rw [h]
+  rw [show (@Nat.cast (Fin (n + 1 + 1)) (Fin.NatCast.instNatCast (n + 1 + 1)) n)
+      = (Fin.last n).castSucc from Fin.eq_of_val_eq (by simp; omega)]
   simp
 
 /-- `fixedSnoc^2 ... (n+1) = b` over `Fin (n + 2)`. -/
 theorem FixedSnoc_n_2_1 {n : ℕ} {xs : Fin n → V} {a b : V} :
     fixedSnoc (fixedSnoc xs a) b (@Nat.cast (Fin (n + 1 + 1))
     (Fin.NatCast.instNatCast (n + 1 + 1)) (n + 1)) = b := by
-  have h : (@Nat.cast (Fin (n + 1 + 1)) (Fin.NatCast.instNatCast (n + 1 + 1)) (n + 1))
-      = Fin.last (n + 1) := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
+  rw [show (@Nat.cast (Fin (n + 1 + 1)) (Fin.NatCast.instNatCast (n + 1 + 1)) (n + 1))
+      = Fin.last (n + 1) from Fin.eq_of_val_eq (by simp)]
   simp
 
 /-- `fixedSnoc^3 ... n = a` over `Fin (n + 3)`. -/
@@ -271,34 +224,24 @@ theorem FixedSnoc_n_2_1 {n : ℕ} {xs : Fin n → V} {a b : V} :
 theorem FixedSnoc_n_3_0 {n : ℕ} {xs : Fin n → V} {a b c : V} :
     fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c
     (@Nat.cast (Fin (n + 3)) (Fin.NatCast.instNatCast (n+3)) n) = a := by
-  have h : (@Nat.cast (Fin (n + 3)) (Fin.NatCast.instNatCast (n+3)) n)
-      = (Fin.last n).castSucc.castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-    omega
-  rw [h]
+  rw [show (@Nat.cast (Fin (n + 3)) (Fin.NatCast.instNatCast (n+3)) n)
+      = (Fin.last n).castSucc.castSucc from Fin.eq_of_val_eq (by simp; omega)]
   simp
 
 /-- `fixedSnoc^3 ... (n+1) = b` over `Fin (n + 3)`. -/
 theorem FixedSnoc_n_3_1 {n : ℕ} {xs : Fin n → V} {a b c : V} :
     fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c
     (@Nat.cast (Fin (n + 3)) (Fin.NatCast.instNatCast (n+3)) (n+1)) = b := by
-  have h : (@Nat.cast (Fin (n + 3)) (Fin.NatCast.instNatCast (n+3)) (n+1))
-      = (Fin.last (n+1)).castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
+  rw [show (@Nat.cast (Fin (n + 3)) (Fin.NatCast.instNatCast (n+3)) (n+1))
+      = (Fin.last (n+1)).castSucc from Fin.eq_of_val_eq (by simp)]
   simp
 
 /-- `fixedSnoc^3 ... (n+2) = c` over `Fin (n + 3)`. -/
 theorem FixedSnoc_n_3_2 {n : ℕ} {xs : Fin n → V} {a b c : V} :
     fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c
     (@Nat.cast (Fin (n + 3)) (Fin.NatCast.instNatCast (n+3)) (n+2)) = c := by
-  have h : (@Nat.cast (Fin (n + 3)) (Fin.NatCast.instNatCast (n+3)) (n+2)) =
-      Fin.last (n+2) := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
+  rw [show (@Nat.cast (Fin (n + 3)) (Fin.NatCast.instNatCast (n+3)) (n+2))
+      = Fin.last (n+2) from Fin.eq_of_val_eq (by simp)]
   simp
 
 /-- `fixedSnoc^4 ... n = a` over `Fin (n + 4)`. -/
@@ -306,45 +249,32 @@ theorem FixedSnoc_n_3_2 {n : ℕ} {xs : Fin n → V} {a b c : V} :
 theorem FixedSnoc_n_4_0 {n : ℕ} {xs : Fin n → V} {a b c d : V} :
     fixedSnoc (fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c) d
     (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n+4)) n) = a := by
-  have h : (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n+4)) n)
-      = (Fin.last n).castSucc.castSucc.castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-    omega
-  rw [h]
+  rw [show (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n+4)) n)
+      = (Fin.last n).castSucc.castSucc.castSucc from Fin.eq_of_val_eq (by simp; omega)]
   simp
 
 /-- `fixedSnoc^4 ... (n+1) = b` over `Fin (n + 4)`. -/
 theorem FixedSnoc_n_4_1 {n : ℕ} {xs : Fin n → V} {a b c d : V} :
     fixedSnoc (fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c) d
     (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n+4)) (n+1)) = b := by
-  have h : (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n+2+1+1)) (n+1))
-      = (Fin.last (n+1)).castSucc.castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
+  rw [show (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n+2+1+1)) (n+1))
+      = (Fin.last (n+1)).castSucc.castSucc from Fin.eq_of_val_eq (by simp)]
   simp
 
 /-- `fixedSnoc^4 ... (n+2) = c` over `Fin (n + 4)`. -/
 theorem FixedSnoc_n_4_2 {n : ℕ} {xs : Fin n → V} {a b c d : V} :
     fixedSnoc (fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c) d
     (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n + 4)) (n + 2)) = c := by
-  have h : (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n + 4)) (n + 2))
-      = (Fin.last (n+2)).castSucc := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
+  rw [show (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n + 4)) (n + 2))
+      = (Fin.last (n+2)).castSucc from Fin.eq_of_val_eq (by simp)]
   simp
 
 /-- `fixedSnoc^4 ... (n+3) = d` over `Fin (n + 4)`. -/
 theorem FixedSnoc_n_4_3 {n : ℕ} {xs : Fin n → V} {a b c d : V} :
     fixedSnoc (fixedSnoc (fixedSnoc (fixedSnoc xs a) b) c) d
     (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n + 4)) (n + 3)) = d := by
-  have h : (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n + 4)) (n + 3))
-      = Fin.last (n+3) := by
-    apply Fin.eq_of_val_eq
-    simp
-  rw [h]
+  rw [show (@Nat.cast (Fin (n + 4)) (Fin.NatCast.instNatCast (n + 4)) (n + 3))
+      = Fin.last (n+3) from Fin.eq_of_val_eq (by simp)]
   simp
 
 /-- `fixedSnoc^2 ... ∘ castSucc^2 = xs`. -/

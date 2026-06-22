@@ -147,30 +147,15 @@ theorem realize_replaceFV {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
     Term.realize (Sum.elim s xs) (Term.replaceFV t tsN) =
     Term.realize (Sum.elim (fun k => Term.realize (Sum.elim s xs) (tsN k)) xs) t := by
   induction t with
-  | var i =>
-    rcases i with k | k
-    · unfold Term.replaceFV
-      simp
-    · unfold Term.replaceFV
-      simp
-  | func _f _ts _ih =>
-    unfold Term.replaceFV
-    simp only [Term.realize_func]
-    apply congr
-    · rfl
-    · funext i
-      apply _ih
+  | var i => rcases i with k | k <;> simp [Term.replaceFV]
+  | func _f _ts _ih => simp only [Term.replaceFV, Term.realize_func, _ih]
 
 theorem realize_liftAt'_one {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
     {t : L.Term (ℕ ⊕ Fin n)} {a : V} :
     Term.realize (Sum.elim s (Fin.snoc xs a)) (Term.liftAt 1 n t)
     = Term.realize (Sum.elim s xs) t := by
   induction t with
-  | var i =>
-    rcases i with k | k
-    · unfold Term.liftAt
-      simp
-    · simp
+  | var i => rcases i with k | k <;> simp [Term.liftAt]
   | func _f _ts _ih => simp
 
 /-- Realization of `liftAt n' n t` agrees with realization of `t` when the
@@ -208,67 +193,40 @@ theorem realize_replaceFV {n : ℕ} {s : ℕ → V} {xs : Fin n → V}
     (BoundedFormula.replaceFV ϕ tsN).Realize s xs ↔
     ϕ.Realize (fun k => Term.realize (Sum.elim s xs) (tsN k)) xs := by
   induction ϕ with
-  | falsum =>
-    unfold BoundedFormula.replaceFV
-    exact Eq.to_iff rfl
+  | falsum => rfl
   | equal t₁ t₂ =>
     unfold BoundedFormula.replaceFV
-    let s1 := fun k ↦ Term.realize (Sum.elim s xs) (tsN k)
-    have h_s1 : (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) = s1 := by rfl
-    rw [h_s1]
     have h1 : (equal (Term.replaceFV t₁ tsN) (Term.replaceFV t₂ tsN)).Realize s xs ↔
         Term.realize (Sum.elim s xs) (Term.replaceFV t₁ tsN) =
-        Term.realize (Sum.elim s xs) (Term.replaceFV t₂ tsN) := by
+        Term.realize (Sum.elim s xs) (Term.replaceFV t₂ tsN) := by apply realize_bdEqual
+    have h2 : (equal t₁ t₂).Realize (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) xs ↔
+        Term.realize (Sum.elim (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) xs) t₁ =
+        Term.realize (Sum.elim (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) xs) t₂ := by
       apply realize_bdEqual
-    rw [h1]
-    have h2 : (equal t₁ t₂).Realize s1 xs ↔ Term.realize (Sum.elim s1 xs) t₁ =
-        Term.realize (Sum.elim s1 xs) t₂ := by
-      apply realize_bdEqual
-    rw [h2]
-    rw [Term.realize_replaceFV, Term.realize_replaceFV]
+    rw [h1, h2, Term.realize_replaceFV, Term.realize_replaceFV]
   | rel _R _ts =>
     unfold BoundedFormula.replaceFV
     have h1 : (rel _R fun i ↦ Term.replaceFV (_ts i) tsN).Realize s xs ↔
         Structure.RelMap _R fun i ↦
-          Term.realize (Sum.elim s xs) (Term.replaceFV (_ts i) tsN) := by
-      apply realize_rel
-    rw [h1]
-    let s1 := fun k ↦ Term.realize (Sum.elim s xs) (tsN k)
-    have h_s1 : (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) = s1 := by rfl
-    rw [h_s1]
-    have h2 : (rel _R _ts).Realize s1 xs ↔ Structure.RelMap _R fun i ↦
-        Term.realize (Sum.elim s1 xs) (_ts i) := by
-      apply realize_rel
-    rw [h2]
-    have h3 : ∀ i, Term.realize (Sum.elim s xs) (Term.replaceFV (_ts i) tsN) =
-        Term.realize (Sum.elim s1 xs) (_ts i) := by
-      intro i
-      rw [← h_s1, Term.realize_replaceFV]
+          Term.realize (Sum.elim s xs) (Term.replaceFV (_ts i) tsN) := by apply realize_rel
+    have h2 : (rel _R _ts).Realize (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) xs ↔
+        Structure.RelMap _R fun i ↦
+          Term.realize (Sum.elim (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) xs)
+            (_ts i) := by apply realize_rel
+    rw [h1, h2]
     have h4 : (fun i ↦ Term.realize (Sum.elim s xs) (Term.replaceFV (_ts i) tsN)) =
-        (fun i ↦ Term.realize (Sum.elim s1 xs) (_ts i)) := by
-      funext
-      apply h3
+        (fun i ↦ Term.realize (Sum.elim (fun k ↦ Term.realize (Sum.elim s xs) (tsN k)) xs)
+          (_ts i)) := funext fun i ↦ Term.realize_replaceFV
     rw [h4]
   | imp _f₁ _f₂ ih₁ ih₂ =>
-    unfold BoundedFormula.replaceFV
-    simp only [realize_imp]
-    rw [ih₁, ih₂]
+    simp only [BoundedFormula.replaceFV, realize_imp, ih₁, ih₂]
   | @all _n _f ih =>
-    unfold BoundedFormula.replaceFV
-    simp only [realize_all, Nat.succ_eq_add_one, snoc_conv]
+    simp only [BoundedFormula.replaceFV, realize_all, Nat.succ_eq_add_one, snoc_conv, ih]
     apply forall_congr'
     intro a
-    rw [ih]
-    have h1 : ∀ (k : ℕ), Term.realize (Sum.elim s (fixedSnoc xs a))
-        (Term.liftAt 1 _n (tsN k)) = Term.realize (Sum.elim s xs) (tsN k) := by
-      intro k
-      apply Term.realize_liftAt'_one
-    have h2 : (fun k ↦ Term.realize (Sum.elim s (fixedSnoc xs a))
-        (Term.liftAt 1 _n (tsN k))) = (fun k ↦ Term.realize (Sum.elim s xs)
-        (tsN k)) := by
-      funext k
-      apply h1
-    rw [h2]
+    rw [show (fun k ↦ Term.realize (Sum.elim s (fixedSnoc xs a))
+        (Term.liftAt 1 _n (tsN k))) = (fun k ↦ Term.realize (Sum.elim s xs) (tsN k))
+      from funext fun k ↦ Term.realize_liftAt'_one]
 
 end BoundedFormula
 
