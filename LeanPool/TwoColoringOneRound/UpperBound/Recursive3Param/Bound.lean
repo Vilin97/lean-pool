@@ -909,41 +909,14 @@ lemma lintegral_gCt_Iio_t1 :
     simp [MeasureTheory.lintegral_const]
   rw [hconstInt, ht1]
   -- Rewrite the products and sum as a single `ofReal`, then do real arithmetic.
-  have hmul1 :
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) =
-        ENNReal.ofReal ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) := by
-    exact (ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 4)).symm
-  have hmul2 :
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) =
-        ENNReal.ofReal ((3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-    exact (ENNReal.ofReal_mul hb0).symm
   have hnonneg1 : 0 ≤ (1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by
-    have : 0 ≤ (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by
-      have ht1sq : 0 ≤ ((t1 : ℝ) ^ 2) := sq_nonneg _
-      nlinarith
+    have ht1sq : 0 ≤ ((t1 : ℝ) ^ 2) := sq_nonneg _
+    have : 0 ≤ (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by nlinarith
     exact mul_nonneg (by norm_num) this
-  have hnonneg2 : 0 ≤ (3 / 8 : ℝ) * (3 / 8 : ℝ) := mul_nonneg hb0 hb0
-  have hadd :
-      ENNReal.ofReal ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) +
-          ENNReal.ofReal ((3 / 8 : ℝ) * (3 / 8 : ℝ)) =
-        ENNReal.ofReal
-          ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) + (3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-    symm
-    exact ENNReal.ofReal_add hnonneg1 hnonneg2
-  calc
-    ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) +
-        ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) =
-        ENNReal.ofReal ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) +
-          ENNReal.ofReal ((3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-          rw [hmul1, hmul2]
-    _ =
-        ENNReal.ofReal
-          ((1 / 4 : ℝ) * (((t1 : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) + (3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-          simpa using hadd
-    _ = ENNReal.ofReal (81 / 512 : ℝ) := by
-          -- Evaluate the real expression at `t1 = 3/8`.
-          simp [t1]
-          norm_num
+  rw [← ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 4), ← ENNReal.ofReal_mul hb0,
+    ← ENNReal.ofReal_add hnonneg1 (mul_nonneg hb0 hb0)]
+  simp only [t1]
+  norm_num
 
 /-- Evaluate the `b ≥ t` region as an explicit rational value. -/
 lemma lintegral_b_above_t_value :
@@ -957,23 +930,8 @@ lemma lintegral_b_above_t_value :
     simp [μ, t]
     norm_num
   -- Fold the product into a single `ofReal`.
-  calc
-    ENNReal.ofReal (17 / 32 : ℝ) * μ (Set.Ico t (1 : Rand)) * μ (Set.Ico t (1 : Rand)) =
-        ENNReal.ofReal (17 / 32 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) := by
-          simp [hμ]
-    _ = ENNReal.ofReal ((17 / 32 : ℝ) * (3 / 8 : ℝ) * (3 / 8 : ℝ)) := by
-          -- merge `ofReal` factors
-          have h1 :
-              ENNReal.ofReal (17 / 32 : ℝ) * ENNReal.ofReal (3 / 8 : ℝ) =
-                ENNReal.ofReal ((17 / 32 : ℝ) * (3 / 8 : ℝ)) := by
-            simpa using (ENNReal.ofReal_mul h17).symm
-          have h2 :
-              ENNReal.ofReal ((17 / 32 : ℝ) * (3 / 8 : ℝ)) * ENNReal.ofReal (3 / 8 : ℝ) =
-                ENNReal.ofReal (((17 / 32 : ℝ) * (3 / 8 : ℝ)) * (3 / 8 : ℝ)) := by
-            have h173 : 0 ≤ ((17 / 32 : ℝ) * (3 / 8 : ℝ)) := mul_nonneg h17 h3
-            simpa [mul_assoc] using (ENNReal.ofReal_mul h173).symm
-          simp [h1, h2, mul_assoc]
-    _ = ENNReal.ofReal (153 / 2048 : ℝ) := by norm_num
+  rw [hμ, ← ENNReal.ofReal_mul h17, ← ENNReal.ofReal_mul (mul_nonneg h17 h3)]
+  norm_num
 
 lemma lintegral_b_t2_t_value :
     (∫⁻ b in Set.Ico t2 t, ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ ∂μ) =
@@ -991,56 +949,12 @@ lemma lintegral_b_t2_t_value :
     simp [μ, t1, t2]
     norm_num
   rw [hμt2t, lintegral_gCt_Iio_t1, constT1T_eq, constT2T2_eq, hμt1t2]
-  -- Fold all products/sums into a single `ofReal`.
-  have hA :
-      ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (5 / 32 : ℝ) =
-        ENNReal.ofReal (75 / 1024 : ℝ) := by
-    have : (15 / 32 : ℝ) * (5 / 32 : ℝ) = (75 / 1024 : ℝ) := by norm_num
-    simpa [this] using
-      (ENNReal.ofReal_mul (p := (15 / 32 : ℝ)) (q := (5 / 32 : ℝ)) h15).symm
-  have hB :
-      ENNReal.ofReal (257 / 512 : ℝ) * ENNReal.ofReal (3 / 32 : ℝ) =
-        ENNReal.ofReal (771 / 16384 : ℝ) := by
-    have : (257 / 512 : ℝ) * (3 / 32 : ℝ) = (771 / 16384 : ℝ) := by norm_num
-    simpa [this] using
-      (ENNReal.ofReal_mul (p := (257 / 512 : ℝ)) (q := (3 / 32 : ℝ)) h257).symm
-  -- First combine the inner sum.
-  have hS1 :
-      ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ) =
-        ENNReal.ofReal (237 / 1024 : ℝ) := by
-    have h75 : 0 ≤ (75 / 1024 : ℝ) := by norm_num
-    have : (81 / 512 : ℝ) + (75 / 1024 : ℝ) = (237 / 1024 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h81 h75).symm
-  have hS :
-      ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ) +
-          ENNReal.ofReal (771 / 16384 : ℝ) =
-        ENNReal.ofReal (4563 / 16384 : ℝ) := by
-    have h237 : 0 ≤ (237 / 1024 : ℝ) := by norm_num
-    have h771 : 0 ≤ (771 / 16384 : ℝ) := by norm_num
-    have hS2 :
-        ENNReal.ofReal (237 / 1024 : ℝ) + ENNReal.ofReal (771 / 16384 : ℝ) =
-          ENNReal.ofReal (4563 / 16384 : ℝ) := by
-      have : (237 / 1024 : ℝ) + (771 / 16384 : ℝ) = (4563 / 16384 : ℝ) := by norm_num
-      simpa [this] using (ENNReal.ofReal_add h237 h771).symm
-    -- rewrite using `hS1` and reassociate
-    calc
-      ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ) +
-            ENNReal.ofReal (771 / 16384 : ℝ) =
-          (ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (75 / 1024 : ℝ)) +
-            ENNReal.ofReal (771 / 16384 : ℝ) := by simp [add_assoc]
-      _ = ENNReal.ofReal (237 / 1024 : ℝ) + ENNReal.ofReal (771 / 16384 : ℝ) := by
-          simp [hS1]
-      _ = ENNReal.ofReal (4563 / 16384 : ℝ) := hS2
-  -- Multiply by `3/32`.
-  have hFin :
-      ENNReal.ofReal (3 / 32 : ℝ) * ENNReal.ofReal (4563 / 16384 : ℝ) =
-        ENNReal.ofReal (13689 / 524288 : ℝ) := by
-    have h4563 : 0 ≤ (4563 / 16384 : ℝ) := by norm_num
-    have : (3 / 32 : ℝ) * (4563 / 16384 : ℝ) = (13689 / 524288 : ℝ) := by norm_num
-    simpa [this] using
-      (ENNReal.ofReal_mul (p := (3 / 32 : ℝ)) (q := (4563 / 16384 : ℝ)) h3).symm
-  -- Put everything together.
-  simp [hA, hB, hS, hFin]
+  -- Fold all products/sums into a single `ofReal`, then evaluate.
+  rw [← ENNReal.ofReal_mul h15, ← ENNReal.ofReal_mul h257,
+    ← ENNReal.ofReal_add h81 (mul_nonneg h15 (by norm_num)),
+    ← ENNReal.ofReal_add (by positivity) (mul_nonneg h257 h3),
+    ← ENNReal.ofReal_mul h3]
+  norm_num
 
 end Recursive3Param
 end UpperBound
