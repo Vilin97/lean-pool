@@ -77,22 +77,17 @@ private lemma ryApproximation :
   refine ⟨C, hCpos, ?_⟩
   intro Y m hY hm
   have hm1 : 1 ≤ m := le_trans (by decide : 1 ≤ 2) hm
-  have htail' := htail hm1 hY
-  have hm_log_nonneg : 0 ≤ Real.log (m : ℝ) := by
-    exact Real.log_nonneg (by exact_mod_cast hm1)
-  have hm_log_pos : 0 < Real.log (m : ℝ) := by
-    exact Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hm))
-  have hlogMY_pos : 0 < Real.log ((m * Y : ℕ) : ℝ) := by
-    exact Real.log_pos (by
-      exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 4) (show 4 ≤ m * Y by
-        simpa using Nat.mul_le_mul hm hY)))
+  have hm_log_nonneg : 0 ≤ Real.log (m : ℝ) := Real.log_nonneg (by exact_mod_cast hm1)
+  have hm_log_pos : 0 < Real.log (m : ℝ) :=
+    Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hm))
+  have hlogMY_pos : 0 < Real.log ((m * Y : ℕ) : ℝ) :=
+    Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 4) (show 4 ≤ m * Y by
+      simpa using Nat.mul_le_mul hm hY)))
   have hsq : (Real.log (m : ℝ)) ^ 2 ≤ (Real.log ((m * Y : ℕ) : ℝ)) ^ 2 := by
-    have hlog_le : Real.log (m : ℝ) ≤ Real.log ((m * Y : ℕ) : ℝ) := by
-      refine Real.log_le_log ?_ ?_
-      · exact_mod_cast (lt_of_lt_of_le (by decide : 0 < 2) hm)
-      · exact_mod_cast (by
-          have hY1 : 1 ≤ Y := le_trans (by decide : 1 ≤ 2) hY
-          simpa using Nat.mul_le_mul_left m hY1 : m ≤ m * Y)
+    have hlog_le : Real.log (m : ℝ) ≤ Real.log ((m * Y : ℕ) : ℝ) :=
+      Real.log_le_log (by exact_mod_cast (lt_of_lt_of_le (by decide : 0 < 2) hm))
+        (by exact_mod_cast (show m ≤ m * Y by
+          simpa using Nat.mul_le_mul_left m (le_trans (by decide : 1 ≤ 2) hY)))
     nlinarith
   have hmain :
       Real.log (m : ℝ) * (1 / Real.log ((m * Y : ℕ) : ℝ)) =
@@ -113,6 +108,7 @@ private lemma ryApproximation :
       rw [abs_mul]
     _ ≤ |Real.log (m : ℝ)| * (C / Real.log ((m * Y : ℕ) : ℝ) ^ 2) := by
       gcongr
+      exact htail hm1 hY
     _ ≤ C / Real.log (m : ℝ) := by
       rw [abs_of_nonneg hm_log_nonneg]
       have hm_log_ne : Real.log (m : ℝ) ≠ 0 := hm_log_pos.ne'
@@ -132,20 +128,15 @@ lemma subMarkovRowSumBound :
   intro Y hYlarge
   refine ⟨Y, le_rfl, ?_⟩
   intro m hm
-  have hY_gt_one : (1 : ℝ) < (Y : ℝ) := by
-    exact lt_trans
-      (by simpa using Real.one_lt_exp_iff.2 (by nlinarith [hCpos]))
-      hYlarge
-  have hY_nat_gt_one : 1 < Y := by
-    exact_mod_cast hY_gt_one
-  have hY2 : 2 ≤ Y := by
-    exact Nat.succ_le_iff.mpr hY_nat_gt_one
+  have hY_gt_one : (1 : ℝ) < (Y : ℝ) :=
+    lt_trans (by simpa using Real.one_lt_exp_iff.2 (by nlinarith [hCpos])) hYlarge
+  have hY2 : 2 ≤ Y := Nat.succ_le_iff.mpr (by exact_mod_cast hY_gt_one)
   have hm2 : 2 ≤ m := le_trans hY2 hm
-  have hm_log_pos : 0 < Real.log (m : ℝ) := by
-    exact Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hm2))
+  have hm_log_pos : 0 < Real.log (m : ℝ) :=
+    Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 2) hm2))
   have hmY_ge_four : 4 ≤ m * Y := Nat.mul_le_mul hm2 hY2
-  have hlogMY_pos : 0 < Real.log ((m * Y : ℕ) : ℝ) := by
-    exact Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 4) hmY_ge_four))
+  have hlogMY_pos : 0 < Real.log ((m * Y : ℕ) : ℝ) :=
+    Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 4) hmY_ge_four))
   have hupper : ry Y m ≤ 1 - Real.log (Y : ℝ) / Real.log ((m * Y : ℕ) : ℝ) +
       C / Real.log (m : ℝ) := by
     linarith [(abs_le.mp (hC hY2 hm2)).2]
@@ -153,18 +144,13 @@ lemma subMarkovRowSumBound :
   refine hupper.trans ?_
   have hmul_le_sq : (m * Y : ℕ) ≤ m * m := Nat.mul_le_mul_left m hm
   have hlogMY_le : Real.log ((m * Y : ℕ) : ℝ) ≤ 2 * Real.log (m : ℝ) := by
-    have hcast_le : ((m * Y : ℕ) : ℝ) ≤ (m : ℝ) * m := by
-      exact_mod_cast hmul_le_sq
     calc
       Real.log ((m * Y : ℕ) : ℝ) ≤ Real.log ((m : ℝ) * m) :=
         Real.log_le_log
           (by exact_mod_cast (lt_of_lt_of_le (by decide : 0 < 4) hmY_ge_four))
-          hcast_le
+          (by exact_mod_cast hmul_le_sq)
       _ = 2 * Real.log (m : ℝ) := by
-        rw [Real.log_mul]
-        · ring
-        · positivity
-        · positivity
+        rw [Real.log_mul (by positivity) (by positivity)]; ring
   have htwoC_lt_logY : 2 * C < Real.log (Y : ℝ) := by
     simpa [Real.log_exp] using (Real.log_lt_log (Real.exp_pos _) hYlarge)
   have herror :
@@ -195,9 +181,7 @@ lemma normalizationEstimate {Y : ℕ} (hY : 2 ≤ Y) :
   have hfirst := hentry hxentry
   have hsmall_nonneg : 0 ≤ ∑' n : ℕ, normalizationSmallPrimePart x Y n :=
     tsum_nonneg fun n => by
-      by_cases hn : x ≤ n
-      · simp [normalizationSmallPrimePart, hn, smallPrimeEntryWeight_nonneg]
-      · simp [normalizationSmallPrimePart, hn]
+      by_cases hn : x ≤ n <;> simp [normalizationSmallPrimePart, hn, smallPrimeEntryWeight_nonneg]
   have hdecomp :
       normalizationConstant x Y =
         (∑' n : ℕ, normalizationSmallPrimePart x Y n) +

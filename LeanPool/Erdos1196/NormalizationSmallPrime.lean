@@ -38,9 +38,7 @@ private lemma smallPrimeTailTerm_nonneg (q m : ℕ) : 0 ≤ smallPrimeTailTerm q
 /-- The real kernel is nonnegative once `t q > 1`. -/
 private lemma smallPrimeKernel_nonneg {q : ℕ} {t : ℝ} (htq : 1 < t * q) :
     0 ≤ smallPrimeKernel q t := by
-  have ht : 0 < t := by
-    have hq : (0 : ℝ) ≤ q := by positivity
-    nlinarith
+  have ht : 0 < t := by nlinarith [show (0:ℝ) ≤ q by positivity]
   have hlog : 0 < Real.log (t * q) := Real.log_pos htq
   dsimp [smallPrimeKernel]
   positivity
@@ -52,20 +50,17 @@ private lemma smallPrimeKernel_antitoneOn {q : ℕ} (hq : 0 < q) {a : ℝ} (ha :
   have hs' : a ≤ s := hs
   have ht' : a ≤ t := ht
   have hqpos : (0 : ℝ) < q := by exact_mod_cast hq
-  have has : a * q ≤ s * q := by
-    gcongr
-  have hat : a * q ≤ t * q := by
-    gcongr
+  have has : a * q ≤ s * q := by gcongr
+  have hat : a * q ≤ t * q := by gcongr
   have hsq_gt_one : 1 < s * q := lt_of_lt_of_le ha has
   have htq_gt_one : 1 < t * q := lt_of_lt_of_le ha hat
   have htpos : 0 < t := by nlinarith
   have hmul : s * q ≤ t * q := by gcongr
-  have hlog_le : Real.log (s * q) ≤ Real.log (t * q) := by
-    exact Real.log_le_log (by positivity) hmul
+  have hlog_le : Real.log (s * q) ≤ Real.log (t * q) := Real.log_le_log (by positivity) hmul
   have hlog_sq_le : (Real.log (s * q)) ^ 2 ≤ (Real.log (t * q)) ^ 2 := by
     nlinarith [hlog_le, Real.log_pos hsq_gt_one, Real.log_pos htq_gt_one]
-  have hden_le : s * (Real.log (s * q)) ^ 2 ≤ t * (Real.log (t * q)) ^ 2 := by
-    exact mul_le_mul hst hlog_sq_le (sq_nonneg _) (le_of_lt htpos)
+  have hden_le : s * (Real.log (s * q)) ^ 2 ≤ t * (Real.log (t * q)) ^ 2 :=
+    mul_le_mul hst hlog_sq_le (sq_nonneg _) (le_of_lt htpos)
   have hsden_pos : 0 < s * (Real.log (s * q)) ^ 2 := by
     have hspos : 0 < s := by nlinarith
     have hslogpos : 0 < Real.log (s * q) := Real.log_pos hsq_gt_one
@@ -174,16 +169,14 @@ lemma sum_range_smallPrimeTail_le_two_inv_log {x q N : ℕ} (hx : 3 ≤ x) (hq :
   have hxq : x ≤ q * M := by
     change x ≤ q • M
     exact le_smul_ceilDiv hq
-  have hx_log_pos : 0 < Real.log (x : ℝ) := by
-    exact Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 3) hx))
+  have hx_log_pos : 0 < Real.log (x : ℝ) :=
+    Real.log_pos (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 3) hx))
   have hMq_ge_x : (x : ℝ) ≤ (M : ℝ) * q := by
     exact_mod_cast (by simpa [Nat.mul_comm] using hxq)
-  have hMq_gt_one : 1 < (M : ℝ) * q := by
-    have hx_one : (1 : ℝ) < x := by
-      exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 3) hx)
-    exact lt_of_lt_of_le hx_one hMq_ge_x
-  have hlog_mono : Real.log (x : ℝ) ≤ Real.log ((M : ℝ) * q) := by
-    exact Real.log_le_log (by positivity) hMq_ge_x
+  have hMq_gt_one : 1 < (M : ℝ) * q :=
+    lt_of_lt_of_le (by exact_mod_cast (lt_of_lt_of_le (by decide : 1 < 3) hx)) hMq_ge_x
+  have hlog_mono : Real.log (x : ℝ) ≤ Real.log ((M : ℝ) * q) :=
+    Real.log_le_log (by positivity) hMq_ge_x
   have htail := summable_smallPrimeKernel_shift_and_tsum_le (q := q) (N := M) hq hMq_gt_one
   have hkernel_nonneg : ∀ n : ℕ, 0 ≤ smallPrimeKernel q (M + n + 1) := by
     intro n
@@ -198,10 +191,9 @@ lemma sum_range_smallPrimeTail_le_two_inv_log {x q N : ℕ} (hx : 3 ≤ x) (hq :
   · have hhead :
         smallPrimeTailTerm q M ≤ 1 / Real.log (x : ℝ) := by
       have hMpos : 0 < M := by
-        by_contra hMpos
-        have hM0 : M = 0 := Nat.eq_zero_of_not_pos hMpos
-        rw [hM0, Nat.mul_zero] at hxq
-        omega
+        rcases Nat.eq_zero_or_pos M with hM0 | hM0
+        · rw [hM0, Nat.mul_zero] at hxq; omega
+        · exact hM0
       have hlogMq_ge_one : 1 ≤ Real.log ((M : ℝ) * q) := by
         rw [← Real.log_exp 1]
         exact Real.log_le_log (Real.exp_pos 1) <|
@@ -213,17 +205,14 @@ lemma sum_range_smallPrimeTail_le_two_inv_log {x q N : ℕ} (hx : 3 ≤ x) (hq :
       dsimp [smallPrimeTailTerm, M]
       simpa [Nat.cast_mul, mul_assoc, mul_left_comm, mul_comm] using
         (one_div_le_one_div_of_le hx_log_pos hden)
-    have hshift_le :
-        ∑' n : ℕ, smallPrimeKernel q (M + n + 1) ≤ 1 / Real.log (x : ℝ) := by
-      exact htail.2.trans <| one_div_le_one_div_of_le hx_log_pos hlog_mono
     have hprefix :
         ∑ m ∈ Finset.range N, (if M ≤ m then smallPrimeTailTerm q m else 0) ≤
           smallPrimeTailTerm q M + ∑' n : ℕ, smallPrimeKernel q (M + n + 1) := by
       calc
         ∑ m ∈ Finset.range N, (if M ≤ m then smallPrimeTailTerm q m else 0)
           = smallPrimeTailTerm q M +
-              ∑ n ∈ Finset.range (N - (M + 1)), smallPrimeKernel q (M + n + 1) := by
-                exact sum_range_smallPrimeTail_eq_head_add hMN
+              ∑ n ∈ Finset.range (N - (M + 1)), smallPrimeKernel q (M + n + 1) :=
+                sum_range_smallPrimeTail_eq_head_add hMN
         _ ≤ smallPrimeTailTerm q M + ∑' n : ℕ, smallPrimeKernel q (M + n + 1) := by
               gcongr
               exact htail.1.sum_le_tsum _ (fun n _ => hkernel_nonneg n)
@@ -233,6 +222,7 @@ lemma sum_range_smallPrimeTail_le_two_inv_log {x q N : ℕ} (hx : 3 ≤ x) (hq :
             simpa [M] using hprefix
       _ ≤ 1 / Real.log (x : ℝ) + 1 / Real.log (x : ℝ) := by
             gcongr
+            exact htail.2.trans <| one_div_le_one_div_of_le hx_log_pos hlog_mono
       _ = 2 / Real.log (x : ℝ) := by ring
   · have hzero :
         ∑ m ∈ Finset.range N, (if x ⌈/⌉ q ≤ m then smallPrimeTailTerm q m else 0) = 0 := by
@@ -264,16 +254,16 @@ private lemma sum_range_smallPrimeRow_le {x q N Y : ℕ} (hx : 3 ≤ x) :
         ≤ ∑ m ∈ Finset.range N, coeff * (if x ⌈/⌉ q ≤ m then smallPrimeTailTerm q m else 0) := by
             refine Finset.sum_le_sum ?_
             intro m hm
-            by_cases hmcut : x ⌈/⌉ q ≤ m <;> by_cases hbase : 0 < m ∧ q * m < N
-            · simp [coeff, hqpos, hqY, hmcut, hbase]
-            · simpa [coeff, hqpos, hqY, hmcut, hbase] using
-                mul_nonneg hcoeff_nonneg (smallPrimeTailTerm_nonneg q m)
-            · simp [coeff, hmcut]
+            by_cases hmcut : x ⌈/⌉ q ≤ m
+            · by_cases hbase : 0 < m ∧ q * m < N
+              · simp [coeff, hqpos, hqY, hmcut, hbase]
+              · simpa [coeff, hqpos, hqY, hmcut, hbase] using
+                  mul_nonneg hcoeff_nonneg (smallPrimeTailTerm_nonneg q m)
             · simp [coeff, hmcut]
       _ = coeff * ∑ m ∈ Finset.range N, (if x ⌈/⌉ q ≤ m then smallPrimeTailTerm q m else 0) := by
             rw [Finset.mul_sum]
-      _ ≤ coeff * (2 / Real.log (x : ℝ)) := by
-            exact mul_le_mul_of_nonneg_left
+      _ ≤ coeff * (2 / Real.log (x : ℝ)) :=
+            mul_le_mul_of_nonneg_left
               (sum_range_smallPrimeTail_le_two_inv_log (x := x) (q := q) (N := N) hx hqpos)
               hcoeff_nonneg
       _ = if 1 ≤ q ∧ q < Y then coeff * (2 / Real.log (x : ℝ)) else 0 := by
@@ -300,9 +290,8 @@ lemma summable_normalizationSmallPrimePart_and_tsum_le {x Y : ℕ} (hx : 3 ≤ x
       ∑' n : ℕ, normalizationSmallPrimePart x Y n ≤
         (2 * ∑ q ∈ Finset.Ico 1 Y, Λ q / (q : ℝ)) / Real.log (x : ℝ) := by
   let coeff : ℕ → ℝ := fun q => Λ q / (q : ℝ)
-  have hcoeff_nonneg : ∀ q, 0 ≤ coeff q := by
-    intro q
-    exact div_nonneg ArithmeticFunction.vonMangoldt_nonneg (by positivity)
+  have hcoeff_nonneg : ∀ q, 0 ≤ coeff q := fun q =>
+    div_nonneg ArithmeticFunction.vonMangoldt_nonneg (by positivity)
   have hpart_nonneg : ∀ n : ℕ, 0 ≤ normalizationSmallPrimePart x Y n := by
     intro n
     by_cases hn : x ≤ n <;> simp [normalizationSmallPrimePart, hn, smallPrimeEntryWeight_nonneg]
@@ -336,9 +325,9 @@ lemma summable_normalizationSmallPrimePart_and_tsum_le {x Y : ℕ} (hx : 3 ≤ x
       _ = (2 * ∑ q ∈ Finset.Ico 1 Y, coeff q) / Real.log (x : ℝ) := by
               rw [← Finset.sum_mul]
               ring
-  refine ⟨?_, ?_⟩
-  · exact summable_of_sum_range_le
+  exact ⟨summable_of_sum_range_le
       (f := fun n : ℕ => normalizationSmallPrimePart x Y n)
-      (c := (2 * ∑ q ∈ Finset.Ico 1 Y, coeff q) / Real.log (x : ℝ)) hpart_nonneg hprefix
-  · exact Real.tsum_le_of_sum_range_le (hf := hpart_nonneg) (h := hprefix)
+      (c := (2 * ∑ q ∈ Finset.Ico 1 Y, coeff q) / Real.log (x : ℝ)) hpart_nonneg hprefix,
+    Real.tsum_le_of_sum_range_le (hf := hpart_nonneg) (h := hprefix)⟩
+
 end PrimitiveSetsAboveX

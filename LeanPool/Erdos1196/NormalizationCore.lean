@@ -317,8 +317,8 @@ lemma sum_range_normalizationSmallPrimePart_eq
             refine Finset.sum_congr rfl fun p hp => ?_
             rcases Nat.mem_divisorsAntidiagonal.1 hp with ⟨hp_mul, _⟩
             simp [F, hp_mul, hx]
-          · have hzero : ∑ p ∈ n.divisorsAntidiagonal, F p.1 p.2 = 0 := by
-              exact Finset.sum_eq_zero fun p hp => by
+          · have hzero : ∑ p ∈ n.divisorsAntidiagonal, F p.1 p.2 = 0 :=
+              Finset.sum_eq_zero fun p hp => by
                 rcases Nat.mem_divisorsAntidiagonal.1 hp with ⟨hp_mul, _⟩
                 simp [F, hp_mul, hx]
             simp [normalizationSmallPrimePart, hx, hzero]
@@ -343,13 +343,10 @@ lemma sum_range_normalizationSmallPrimePart_eq
           refine Finset.sum_congr rfl fun q _ => Finset.sum_congr rfl fun m _ => ?_
           by_cases hbase : 0 < q ∧ 0 < m ∧ q * m < N
           · rcases hbase with ⟨hqpos, hmpos, hqmN⟩
-            by_cases hxqm : x ≤ q * m <;> by_cases hqY : q < Y
-            · simp [F, hqpos, hmpos, hqmN, hxqm, hqY, ceilDiv_le_iff_le_mul hqpos]
-              simpa [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm, Nat.mul_comm] using
-                (entryWeightFactor_mul_vonMangoldt_eq_smallFactor q m)
-            · simp [F, hqpos, hmpos, hqmN, hxqm, hqY, ceilDiv_le_iff_le_mul hqpos]
-            · simp [F, hqpos, hmpos, hqmN, hxqm, hqY, ceilDiv_le_iff_le_mul hqpos]
-            · simp [F, hqpos, hmpos, hqmN, hxqm, hqY, ceilDiv_le_iff_le_mul hqpos]
+            by_cases hxqm : x ≤ q * m <;> by_cases hqY : q < Y <;>
+              simp [F, hqpos, hmpos, hqmN, hxqm, hqY, ceilDiv_le_iff_le_mul hqpos]
+            simpa [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm, Nat.mul_comm] using
+              (entryWeightFactor_mul_vonMangoldt_eq_smallFactor q m)
           · simp [F, hbase, show ¬ (0 < q ∧ 0 < m ∧ q * m < N ∧ q < Y ∧ x ⌈/⌉ q ≤ m) from
               fun h => hbase ⟨h.1, h.2.1, h.2.2.1⟩]
 
@@ -395,9 +392,7 @@ lemma tsum_firstEntryPairWeight_fiber_prod {x Y n : ℕ} (hx : 1 ≤ x) :
               by_cases hcond : Y ≤ q ∧ n / q < x
               · rw [firstEntryPairWeight_eq (x := x) (Y := Y) hmq_ge hcond.2, if_pos hcond,
                   if_pos (hiff.2 hcond.1)]
-                have hmul' : q * (n / q) = n := by
-                  rw [mul_comm]
-                  exact hmul
+                have hmul' : q * (n / q) = n := (mul_comm q (n / q)).trans hmul
                 simpa [div_eq_mul_inv, Nat.cast_mul, mul_comm, mul_left_comm, mul_assoc, hmul']
                   using (entryWeightFactor_mul_vonMangoldt_eq_smallFactor q (n / q)).symm
               · simp [firstEntryPairWeight, hiff, hmq_ge, hcond, and_comm]
