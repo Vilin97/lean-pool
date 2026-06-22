@@ -322,29 +322,6 @@ private lemma congMod_mul (d : ℕ) (a b : SpecialLinearGroup (Fin n) ℤ)
   exact dvd_add (Finset.dvd_sum (fun k _ => dvd_mul_of_dvd_left (ha i k) _)) (hb i j)
 
 omit [NeZero n] in
-private lemma congMod_inv (d : ℕ) (a : SpecialLinearGroup (Fin n) ℤ)
-    (ha : congMod n d a) : congMod n d a⁻¹ := by
-  intro i j
-  have h_mul_inv : a.1 * (a⁻¹).1 = 1 := by
-    rw [← SpecialLinearGroup.coe_mul, ← SpecialLinearGroup.coe_one]
-    exact congr_arg Subtype.val (mul_inv_cancel a)
-  have h_entry : ∑ k : Fin n, a.1 i k * (a⁻¹).1 k j = if i = j then 1 else 0 := by
-    simpa [Matrix.mul_apply, Matrix.one_apply] using congr_fun (congr_fun h_mul_inv i) j
-  have h_div : (d : ℤ) ∣
-      ∑ k : Fin n, (a.1 i k - if i = k then 1 else 0) * (a⁻¹).1 k j :=
-    Finset.dvd_sum (fun k _ => dvd_mul_of_dvd_left (ha i k) _)
-  have h_sum_eq : ∑ k : Fin n, (a.1 i k - if i = k then 1 else 0) * (a⁻¹).1 k j =
-      (if i = j then 1 else 0) - (a⁻¹).1 i j := by
-    trans (∑ k, a.1 i k * (a⁻¹).1 k j) -
-        (∑ k, (if i = k then (1 : ℤ) else 0) * (a⁻¹).1 k j)
-    · rw [← Finset.sum_sub_distrib]; congr 1; ext k; ring
-    · rw [h_entry]; simp [Finset.mem_univ]
-  rw [show (a⁻¹).1 i j - (if i = j then 1 else 0) =
-      -(∑ k : Fin n, (a.1 i k - if i = k then 1 else 0) * (a⁻¹).1 k j) from by
-    linarith [h_sum_eq]]
-  exact dvd_neg.mpr h_div
-
-omit [NeZero n] in
 private lemma congMod_conj (d : ℕ) (σ τ : SpecialLinearGroup (Fin n) ℤ)
     (hτ : congMod n d τ) : congMod n d (σ⁻¹ * τ * σ) := by
   intro i j

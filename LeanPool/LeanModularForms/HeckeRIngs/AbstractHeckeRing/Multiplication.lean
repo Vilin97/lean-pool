@@ -53,8 +53,6 @@ lemma subsingleton_decompQuot_T_one :
   unfold decompQuot; rw [decompQuot_T_one_eq_top]
   exact QuotientGroup.subsingleton_quotient_top
 
-private lemma self_mem_singleton_mul (a : G) : a ∈ {a} * (H : Set G) := by simp
-
 private lemma conjAct_mem_of_leftCoset_eq (d : Δ) (h h' : H)
     (hyp : {(h : G)} * {(d : G)} * (H : Set G) =
       {(h' : G)} * {(d : G)} * (H : Set G)) :
@@ -101,61 +99,6 @@ lemma leftCoset_eq_of_not_disjoint (f g : G)
   refine Set.ext ?intro.intro.h; intro Y
   simp only [singleton_mul, image_mul_left, mem_preimage, SetLike.mem_coe]
   simp_rw [← @QuotientGroup.eq] at *; rw [← ha] at ha2; rw [ha2]
-
-private lemma singleton_mul_subset_mul (g : G) (T S : Set G) (h : g ∈ S) :
-    {g} * T ⊆ S * T := mul_subset_mul_right (singleton_subset_iff.mpr h)
-
-private lemma leftCoset_exists (g : P.Δ) : ∃ (i : decompQuot P g),
-    {(g : G)} * (P.H : Set G) =
-      {(i.out : G)} * {(g : G)} * P.H := by
-  have hc : HeckeCoset.toSet (⟦g⟧ : HeckeCoset P) =
-    DoubleCoset.doubleCoset (g : G) P.H P.H := HeckeCoset.toSet_mk g
-  rw [DoubleCoset.doubleCoset_eq_iUnion_leftCosets] at hc
-  have h1 : {(g : G)} * (P.H : Set G) ⊆
-      HeckeCoset.toSet (⟦g⟧ : HeckeCoset P) := by
-    rw [HeckeCoset.toSet_mk]
-    intro i hi
-    simp only [singleton_mul, image_mul_left, mem_preimage, SetLike.mem_coe] at *
-    rw [mem_doubleCoset]
-    use 1
-    simp only [SetLike.mem_coe, one_mem, one_mul, true_and]
-    use (g : G)⁻¹ * i
-    simp [hi]
-  have hr := hc.le
-  have h3 := le_trans h1 hr
-  simp only [le_eq_subset] at h3
-  have h4 : (g : G) ∈ {(g : G)} * (P.H : Set G) := by
-    simp [singleton_mul, image_mul_left, mem_preimage, SetLike.mem_coe]
-  have h45 := h3 h4
-  simp only [mem_iUnion] at h45
-  obtain ⟨i, hi⟩ := h45
-  use i
-  rw [smul_eq_singleton_mul] at hi
-  have h6 := singleton_mul_subset_mul _ P.H _ hi
-  conv at h6 =>
-    enter [2]
-    rw [mul_assoc, coe_mul_coe]
-  rw [Set.singleton_mul_singleton]
-  apply leftCoset_eq_of_not_disjoint
-  apply Set.Nonempty.not_disjoint
-  simp_rw [smul_eq_singleton_mul]
-  have := Set.inter_eq_self_of_subset_left h6
-  have ht := nonempty_of_mem h4
-  rw [← this] at ht
-  convert ht
-
-private lemma leftCoset_exists_unique (g : P.Δ) :
-    ∃! (i : decompQuot P g),
-      {(g : G)} * (P.H : Set G) =
-        {(i.out : G) * (g : G)} * P.H := by
-  obtain ⟨i, hi⟩ := leftCoset_exists P g
-  use i
-  rw [Set.singleton_mul_singleton] at hi
-  simp only [hi, true_and]
-  intro j h
-  by_contra c
-  have := (decompQuot_coset_diff P g j i c).symm
-  aesop
 
 private lemma mul_mem_delta (a : H) (g : Δ)
     (h₀ : H.toSubmonoid ≤ Δ) :

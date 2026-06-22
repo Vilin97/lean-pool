@@ -355,12 +355,6 @@ private lemma mulSupport_pp_subset (k : ℕ) (_hk : 0 < k) (A : HeckeCoset (GLPa
     SL_j₀ hD1_eq hD2_eq hSL_i₀.symm hSL_j₀.symm h_prod_eq
   rw [hA_eq]; exact mulSupport_pp_case_split p hp k _hk a ha_pos hdiv h_det h_dvd
 
-private lemma D_out1_group_aux {G : Type*} [Group G] (L₁ D₁ R₁ L₂ D₂ R₂ κ₁ κ₂ : G) :
-    L₁⁻¹ * κ₁ * (L₁ * D₁ * R₁) *
-      (((L₁ * D₁ * R₁)⁻¹ * κ₁ * (L₁ * D₁ * R₁))⁻¹ * R₁⁻¹ * L₂⁻¹ * κ₂ *
-        (L₂ * D₂ * R₂)) =
-    1 * (D₁ * D₂) * (R₂ * ((L₂ * D₂ * R₂)⁻¹ * κ₂ * (L₂ * D₂ * R₂))) := by group
-
 include hp in
 private lemma D_out1_pp_in_mulSupport (k : ℕ) (_hk : 0 < k) :
     TDiag (![1, p ^ (k + 1)]) ∈ HeckeRing.mulSupport (GLPair 2)
@@ -1021,20 +1015,6 @@ private lemma T_pp_pow_eq_T_ad (q : ℕ) (hq : q.Prime) (i : ℕ) : TPp q ^ i =
 /-- `gcd(q^r, q^s) = q^r` when `r <= s`. -/
 lemma gcd_pow_pow_of_le (q : ℕ) (r s : ℕ) (hrs : r ≤ s) : Nat.gcd (q ^ r) (q ^ s) = q ^ r :=
   Nat.dvd_antisymm (Nat.gcd_dvd_left _ _) (Nat.dvd_gcd (dvd_refl _) (Nat.pow_dvd_pow q hrs))
-
-/-- Prime-power product in divisor-sum form. -/
-private lemma T_sum_mul_prime_pow_aux (q : ℕ) (hq : q.Prime) (r s : ℕ) (hrs : r ≤ s) :
-    TSum ⟨q ^ r, pow_pos hq.pos r⟩ * TSum ⟨q ^ s, pow_pos hq.pos s⟩ = ∑ d ∈
-      (Nat.gcd (q ^ r) (q ^ s)).divisors, (d : ℤ) • (TAd d d *
-        TSumNat (q ^ r * q ^ s / (d * d))) := by
-  rw [T_sum_ppow_mul q hq r s hrs, gcd_pow_pow_of_le q r s hrs, Nat.sum_divisors_prime_pow hq]
-  apply Finset.sum_congr rfl; intro i hi; rw [Finset.mem_range] at hi
-  rw [show (q ^ i : ℤ) = (↑(q ^ i) : ℤ) by push_cast; ring, T_pp_pow_eq_T_ad q hq i]
-  congr 2
-  rw [← pow_add, ← pow_add,
-    show i + i = 2 * i from by ring,
-    Nat.pow_div (by omega) hq.pos]
-  exact (T_sum_nat_eq ⟨q ^ (r + s - 2 * i), pow_pos hq.pos _⟩).symm
 
 /-- Coprime base case for the divisor sum formula. -/
 private lemma T_sum_mul_of_coprime_aux (m n : ℕ+) (hcop : Nat.Coprime m n) :

@@ -64,14 +64,6 @@ private lemma isTransvec_append {m : ℕ} (L₁ L₂ : List (Matrix.SpecialLinea
     ∀ E ∈ L₁ ++ L₂, IsTransvec E :=
   fun E hE => (List.mem_append.mp hE).elim (h₁ E) (h₂ E)
 
-private def liftTransvec {m : ℕ} (i j : Fin m) (hij : i ≠ j) (c : ℤ) :
-    Matrix.SpecialLinearGroup (Fin (m + 1)) ℤ :=
-  slTransvecG i.castSucc j.castSucc (Fin.castSucc_injective m |>.ne hij) c
-
-private lemma liftTransvec_isTransvec {m : ℕ} (i j : Fin m) (hij : i ≠ j) (c : ℤ) :
-    IsTransvec (liftTransvec i j hij c) :=
-  ⟨i.castSucc, j.castSucc, Fin.castSucc_injective m |>.ne hij, c, rfl⟩
-
 private def col0Sum {m : ℕ} (σ : Matrix.SpecialLinearGroup (Fin (m + 1)) ℤ) : ℕ :=
   ∑ i : Fin (m+1), (σ.1 i 0).natAbs
 

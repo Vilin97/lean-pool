@@ -390,10 +390,6 @@ theorem exists_diagonal_of_posdet (A : Matrix (Fin n) (Fin n) ℤ) (hdet : 0 < A
 private noncomputable def finEquivSum (k : ℕ) : Fin (k + 2) ≃ Fin 2 ⊕ Fin k :=
   (Fin.castOrderIso (by omega : k + 2 = 2 + k)).toEquiv.trans finSumFinEquiv.symm
 
-private lemma diagonal_submatrix_finEquivSum (k : ℕ) (d : Fin (k + 2) → ℤ) :
-    (Matrix.diagonal (d ∘ (finEquivSum k).symm)).submatrix (finEquivSum k) (finEquivSum k) =
-    Matrix.diagonal d := by ext i j; simp [submatrix_apply, diagonal_apply]
-
 private lemma gcd_2x2_det_L (a b : ℤ) (ha : 0 < a) :
     let g : ℤ := ↑(a.gcd b); let s := a.gcdA b; let t := a.gcdB b
     (!![s, t; -(b / g), a / g] : Matrix (Fin 2) (Fin 2) ℤ).det = 1 := by
@@ -448,103 +444,6 @@ private lemma gcd_2x2_mul (a b : ℤ) :
       _ = 0 := by ring
   · rw [← hpg, ← hqg]; ring
   · rw [← hpg, ← hqg]; ring
-
-private lemma gcd_step_divchain (k : ℕ) (d : Fin (k + 2) → ℤ) (hd : ∀ i, 0 < d i) :
-    let a := d ⟨0, by omega⟩; let b := d ⟨1, by omega⟩
-    let g : ℤ := ↑(a.gcd b); let p := a / g; let q := b / g
-    ∃ (L R : SpecialLinearGroup (Fin (k + 2)) ℤ) (d' : Fin (k + 2) → ℤ),
-      (∀ i, 0 < d' i) ∧ d' ⟨0, by omega⟩ = g ∧ d' ⟨1, by omega⟩ = p * q * g ∧
-      (∀ j : Fin k, d' ⟨j.val + 2, by omega⟩ = d ⟨j.val + 2, by omega⟩) ∧
-      g ∣ (p * q * g) ∧ (g.natAbs ≤ a.natAbs) ∧ (¬(a ∣ b) → g.natAbs < a.natAbs) ∧
-      (L : Matrix _ _ ℤ) * Matrix.diagonal d * (R : Matrix _ _ ℤ) = Matrix.diagonal d' := by
-  intro a b g p q
-  set e := finEquivSum k
-  set d' : Fin (k + 2) → ℤ := fun i =>
-    if i.val = 0 then g else if i.val = 1 then p * q * g else d i
-  have ha : 0 < a := hd ⟨0, by omega⟩; have hb : 0 < b := hd ⟨1, by omega⟩
-  have hg_pos : (0 : ℤ) < g :=
-    Int.natCast_pos.mpr (Nat.gcd_pos_of_pos_left _ (Int.natAbs_pos.mpr (ne_of_gt ha)))
-  have hp_pos : 0 < p := Int.ediv_pos_of_pos_of_dvd ha (le_of_lt hg_pos) (Int.gcd_dvd_left a b)
-  have hq_pos : 0 < q := Int.ediv_pos_of_pos_of_dvd hb (le_of_lt hg_pos) (Int.gcd_dvd_right a b)
-  have hd'_pos : ∀ i, 0 < d' i := by
-    intro i; simp only [d']; split_ifs <;> [exact hg_pos; positivity; exact hd i]
-  set L22 := !![a.gcdA b, a.gcdB b; -(b / g), a / g]
-  set R22 := !![(1 : ℤ), -(a.gcdB b * (b / g)); 1, 1 - a.gcdB b * (b / g)]
-  set L_big : Matrix (Fin (k + 2)) (Fin (k + 2)) ℤ :=
-    (fromBlocks L22 0 0 (1 : Matrix (Fin k) (Fin k) ℤ)).submatrix e e
-  set R_big : Matrix (Fin (k + 2)) (Fin (k + 2)) ℤ :=
-    (fromBlocks R22 0 0 (1 : Matrix (Fin k) (Fin k) ℤ)).submatrix e e
-  have hL_det_big : L_big.det = 1 := by
-    simp only [L_big]; rw [det_submatrix_equiv_self, det_fromBlocks_zero₂₁, det_one, mul_one,
-      gcd_2x2_det_L a b ha]
-  have hR_det_big : R_big.det = 1 := by
-    simp only [R_big]; rw [det_submatrix_equiv_self, det_fromBlocks_zero₂₁, det_one, mul_one,
-      gcd_2x2_det_R a b]
-  refine ⟨⟨L_big, hL_det_big⟩, ⟨R_big, hR_det_big⟩, d', hd'_pos,
-    by simp [d'], by simp [d'], ?_, dvd_mul_left g (p * q), ?_, ?_, ?_⟩
-  · intro j; simp [d', show j.val + 2 ≠ 1 by omega]
-  · exact Nat.le_of_dvd (Int.natAbs_pos.mpr (ne_of_gt ha))
-      (Int.natAbs_dvd_natAbs.mpr (Int.gcd_dvd_left a b))
-  · intro hndvd
-    have hle : g.natAbs ≤ a.natAbs := Nat.le_of_dvd (Int.natAbs_pos.mpr (ne_of_gt ha))
-      (Int.natAbs_dvd_natAbs.mpr (Int.gcd_dvd_left a b))
-    exact lt_of_le_of_ne hle (fun heq => hndvd (by
-      have h1 : g.natAbs = a.gcd b := by simp [g]
-      have h2 : a.gcd b = a.natAbs := by omega
-      exact Int.natAbs_dvd_natAbs.mp (h2 ▸ Nat.gcd_dvd_right a.natAbs b.natAbs)))
-  · change L_big * Matrix.diagonal d * R_big = Matrix.diagonal d'
-    rw [show Matrix.diagonal d = (Matrix.diagonal (d ∘ e.symm)).submatrix e e from
-      (diagonal_submatrix_finEquivSum k d).symm]
-    simp only [L_big, R_big, Matrix.submatrix_mul_equiv]
-    rw [show Matrix.diagonal d' = (Matrix.diagonal (d' ∘ e.symm)).submatrix e e from
-      (diagonal_submatrix_finEquivSum k d').symm]; congr 1
-    have h_diag_decomp : Matrix.diagonal (d ∘ e.symm) =
-        fromBlocks (Matrix.diagonal (fun i : Fin 2 => (d ∘ e.symm) (Sum.inl i)))
-          0 0 (Matrix.diagonal (fun i : Fin k => (d ∘ e.symm) (Sum.inr i))) := by
-      ext (i | i) (j | j) <;> simp [fromBlocks, diagonal_apply, Sum.elim, Function.comp]
-    rw [h_diag_decomp]
-    rw [fromBlocks_multiply]; simp only [Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add,
-      Matrix.one_mul]
-    rw [fromBlocks_multiply]; simp only [Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add,
-      Matrix.mul_one]
-    have h_diag'_decomp : Matrix.diagonal (d' ∘ e.symm) =
-        fromBlocks (Matrix.diagonal (fun i : Fin 2 => (d' ∘ e.symm) (Sum.inl i)))
-          0 0 (Matrix.diagonal (fun i : Fin k => (d' ∘ e.symm) (Sum.inr i))) := by
-      ext (i | i) (j | j) <;> simp [fromBlocks, diagonal_apply, Sum.elim, Function.comp]
-    rw [h_diag'_decomp]; congr 1
-    · have he0 : e.symm (Sum.inl (0 : Fin 2)) = (0 : Fin (k + 2)) := by
-        apply e.injective; rw [Equiv.apply_symm_apply]; change finEquivSum k ⟨0, by omega⟩ = _
-        unfold finEquivSum; simp [Equiv.trans_apply, Fin.castOrderIso]; rfl
-      have he1 : e.symm (Sum.inl (1 : Fin 2)) = (1 : Fin (k + 2)) := by
-        apply e.injective; rw [Equiv.apply_symm_apply]; change finEquivSum k ⟨1, by omega⟩ = _
-        unfold finEquivSum; simp [Equiv.trans_apply, Fin.castOrderIso]; rfl
-      have h_head : Matrix.diagonal (fun i : Fin 2 => (d ∘ e.symm) (Sum.inl i)) =
-          !![a, (0 : ℤ); 0, b] := by
-        ext i j; fin_cases i <;> fin_cases j <;> simp [Function.comp, he0, he1, a, b]
-      have h_head' : Matrix.diagonal (fun i : Fin 2 => (d' ∘ e.symm) (Sum.inl i)) =
-          !![g, (0 : ℤ); 0, p * q * g] := by
-        ext i j; fin_cases i <;> fin_cases j <;> simp [Function.comp, he0, he1, d', g, p, q]
-      rw [h_head, h_head']; exact gcd_2x2_mul a b
-    · congr 1; ext i
-      have h1 : e.symm (Sum.inr i) ≠ ⟨0, by omega⟩ := by
-        intro h
-        have h_ap := Equiv.apply_symm_apply e (Sum.inr i)
-        rw [h] at h_ap
-        have h_e0 : e ⟨0, by omega⟩ = Sum.inl ⟨0, by omega⟩ := by
-          change finEquivSum k ⟨0, by omega⟩ = _
-          unfold finEquivSum; simp [Equiv.trans_apply, Fin.castOrderIso]; rfl
-        rw [h_e0] at h_ap; exact (by nomatch h_ap)
-      have h2 : e.symm (Sum.inr i) ≠ ⟨1, by omega⟩ := by
-        intro h
-        have h_ap := Equiv.apply_symm_apply e (Sum.inr i)
-        rw [h] at h_ap
-        have h_e1 : e ⟨1, by omega⟩ = Sum.inl ⟨1, by omega⟩ := by
-          change finEquivSum k ⟨1, by omega⟩ = _
-          unfold finEquivSum; simp [Equiv.trans_apply, Fin.castOrderIso]; rfl
-        rw [h_e1] at h_ap; exact (by nomatch h_ap)
-      have hv1 : (e.symm (Sum.inr i)).val ≠ 0 := fun h => h1 (Fin.ext h)
-      have hv2 : (e.symm (Sum.inr i)).val ≠ 1 := fun h => h2 (Fin.ext h)
-      simp only [Function.comp, d', ite_false, hv1, hv2]
 
 private noncomputable def genEquiv (k : ℕ) (j : Fin (k + 2)) (_hj : j.val ≠ 0) :
     Fin (k + 2) ≃ Fin 2 ⊕ Fin k :=
