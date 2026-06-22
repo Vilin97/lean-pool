@@ -7,15 +7,6 @@ import Mathlib.Algebra.Ring.Subring.Basic
 import Mathlib.LinearAlgebra.Basis.Basic
 import Mathlib.RingTheory.Localization.Module
 import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # LeanPool.BruhatTits.Utils.Subring
 -/
@@ -30,8 +21,7 @@ variable {A : Subring R}
 lemma Subtype.val_comp_single (i : ι) (a : A) :
     Subtype.val ∘ Pi.single i a = Pi.single i a := by
   ext j
-  by_cases h : i = j
-  all_goals aesop
+  by_cases h : i = j <;> aesop
 
 omit [DecidableEq ι]
 @[simp]

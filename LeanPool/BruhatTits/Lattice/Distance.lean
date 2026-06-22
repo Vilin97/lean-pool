@@ -161,7 +161,7 @@ lemma exists_normal_basis_uniformizer (M L : BruhatTits.Lattice R) :
     Irreducible ϖ ∧ Antitone f ∧ ∀ i, (bL i).val = (ϖ ^ f i : K) • (bM i).val := by
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
   obtain ⟨bM, bL, f, hf, heq⟩ := exists_normal_basis ϖ hϖ M L
-  use ϖ, bM, bL, f
+  exact ⟨ϖ, bM, bL, f, hϖ, hf, heq⟩
 
 /-- The integers `fᵢ` of `BruhatTits.exists_normal_basis` are unique. More precisely,
 given two lattices `M` and `L`, uniformizers `ϖ`, `ϖ'`, basis
@@ -261,10 +261,8 @@ lemma eq_signature_iff (M L : BruhatTits.Lattice R)
       Irreducible ϖ ∧ ∀ i, (bL i).val = (ϖ ^ f i : K) • (bM i).val := by
   constructor
   · rintro rfl
-    use signatureϖ M L
-    use signatureBasisSource M L
-    use signatureBasisTarget M L
-    exact ⟨signatureϖ_irreducible M L, signatureBasisTarget_eq M L⟩
+    exact ⟨signatureϖ M L, signatureBasisSource M L, signatureBasisTarget M L,
+      signatureϖ_irreducible M L, signatureBasisTarget_eq M L⟩
   · intro ⟨ϖ, bM, bL, hϖ, h⟩
     exact signature_unique (signatureϖ_irreducible M L) hϖ (signature_antitone M L) hf
       (signatureBasisTarget_eq M L)
@@ -280,10 +278,8 @@ noncomputable def dist (M L : BruhatTits.Lattice R) : ℕ :=
 lemma signature_diff_eq_dist (M L : BruhatTits.Lattice R) :
     signature M L 0 - signature M L 1 = dist M L := by
   simp only [dist]
-  have : signature M L 0 - signature M L 1 ≥ 0 := by
-    apply Int.sub_nonneg_of_le
-    apply signature_antitone M L
-    exact Fin.zero_le 1
+  have : signature M L 0 - signature M L 1 ≥ 0 :=
+    Int.sub_nonneg_of_le (signature_antitone M L (Fin.zero_le 1))
   exact (Int.toNat_of_nonneg this).symm
 
 /-- A rephrasing of uniqueness of signatures in terms of the distance of lattices. -/
@@ -295,15 +291,9 @@ lemma eq_dist_iff (M L : BruhatTits.Lattice R) (n : ℕ) :
         (∀ i, (bL i).val = (ϖ ^ f i : K) • (bM i).val) ∧ f 0 - f 1 = n := by
   constructor
   · rintro rfl
-    use signatureϖ M L
-    use signatureBasisSource M L
-    use signatureBasisTarget M L
-    use signature M L
-    refine ⟨?_, ?_, ?_, ?_⟩
-    · exact signatureϖ_irreducible M L
-    · exact signature_antitone M L
-    · exact signatureBasisTarget_eq M L
-    · exact signature_diff_eq_dist M L
+    exact ⟨signatureϖ M L, signatureBasisSource M L, signatureBasisTarget M L, signature M L,
+      signatureϖ_irreducible M L, signature_antitone M L, signatureBasisTarget_eq M L,
+      signature_diff_eq_dist M L⟩
   · intro ⟨ϖ, bM, bL, f, hϖ, hf, hi, hn⟩
     have : signature M L = f := by
       apply (eq_signature_iff M L f hf).mpr

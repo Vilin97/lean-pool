@@ -184,9 +184,7 @@ lemma unit_mul_zpow_congr_zpow' (a b : Rˣ) (m n : ℤ) (h : a * ϖ.val ^ m = b 
   have : a * ϖ ^ 0 = b * ϖ ^ (Int.toNat (n - m)) := by
     ext
     simp only [pow_zero, mul_one, Subring.coe_mul, SubmonoidClass.coe_pow]
-    rw [h']
-    rw [← sub_eq_add_neg]
-    rw [← Int.toNat_sub_of_le hmn]
+    rw [h', ← sub_eq_add_neg, ← Int.toNat_sub_of_le hmn]
     norm_cast
   have : 0 = Int.toNat (n - m) :=
     IsDiscreteValuationRing.unit_mul_pow_congr_pow hϖ hϖ a b 0 (Int.toNat (n - m)) this
@@ -223,9 +221,7 @@ omit [ValuationRing R] [IsDiscreteValuationRing ↥R] [IsFractionRing (↥R) K] 
 lemma inv_irreducible_not_mem_subring : ϖ.val⁻¹ ∉ R := by
   by_contra h
   apply hϖ.not_isUnit
-  have hϖnzero : ϖ.val ≠ 0 := by
-    simp only [ne_eq, ZeroMemClass.coe_eq_zero]
-    exact hϖ.ne_zero
+  have hϖnzero : ϖ.val ≠ 0 := by simpa using hϖ.ne_zero
   let x : Rˣ :=
     ⟨ϖ, ⟨ϖ.val⁻¹, h⟩,
       by
@@ -244,9 +240,7 @@ lemma neg_pow_not_mem_subring (n : ℕ) (hn : n > 0) : ϖ.val ^ (- n : ℤ) ∉ 
   induction n with
   | zero => contradiction
   | succ n ih =>
-      have hϖnzero : ϖ.val ≠ 0 := by
-        simp only [ne_eq, ZeroMemClass.coe_eq_zero]
-        exact hϖ.ne_zero
+      have hϖnzero : ϖ.val ≠ 0 := by simpa using hϖ.ne_zero
       simp only [Nat.cast_add, Nat.cast_one, neg_add_rev, Int.reduceNeg]
       rw [zpow_add₀ hϖnzero]
       simp only [Int.reduceNeg, zpow_neg, zpow_one, zpow_natCast]

@@ -44,20 +44,15 @@ lemma smul_GL_mono {M L : Submodule R (ι → K)} (g : GL ι K) (hML : M ≤ L) 
   use y, (hML hy)
 
 lemma smul_le_iff {M L : Submodule R (ι → K)} (g : GL ι K) : g • M ≤ g • L ↔ M ≤ L := by
-  constructor
-  · intro h
-    rw [← one_smul (GL ι K) M, ← one_smul (GL ι K) L, ← inv_mul_cancel g, mul_smul, mul_smul]
-    exact smul_GL_mono _ h
-  · intro h
-    exact smul_GL_mono _ h
+  refine ⟨fun h ↦ ?_, fun h ↦ smul_GL_mono _ h⟩
+  rw [← one_smul (GL ι K) M, ← one_smul (GL ι K) L, ← inv_mul_cancel g, mul_smul, mul_smul]
+  exact smul_GL_mono _ h
 
 lemma smul_eq_iff (g : GL ι K) (M L : Submodule R (ι → K)) :
     g • M = g • L ↔ M = L := by
-  refine ⟨fun h ↦ le_antisymm ?_ ?_, by rintro rfl; rfl⟩
+  refine ⟨fun h ↦ le_antisymm ?_ ?_, by rintro rfl; rfl⟩ <;>
   · rw [← smul_le_iff g]
-    exact le_of_eq h
-  · rw [← smul_le_iff g]
-    exact ge_of_eq h
+    first | exact le_of_eq h | exact ge_of_eq h
 
 lemma smul_lt_iff (g : GL ι K) (M L : Submodule R (ι → K)) : g • M < g • L ↔ M < L := by
   constructor

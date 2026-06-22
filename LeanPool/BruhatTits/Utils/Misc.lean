@@ -9,15 +9,6 @@ import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
 import Mathlib.RingTheory.LocalRing.Defs
 import Mathlib.RingTheory.LocalRing.MaximalIdeal.Basic
 import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
-import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # LeanPool.BruhatTits.Utils.Misc
 -/
@@ -60,9 +51,7 @@ lemma exp_zero_of_zpow_eq_one {a : Γ₀} (h : a < 1) {n : ℤ} (han : a ^ n = 1
   by_cases ha : a = 0
   · subst ha
     exact exp_zero_of_zpow_eq_one' han
-  · apply le_antisymm
-    · apply exp_le_exp_of_pow_le_pow a h ha
-      simp [han]
+  · refine le_antisymm ?_ ?_ <;>
     · apply exp_le_exp_of_pow_le_pow a h ha
       simp [han]
 
@@ -90,7 +79,6 @@ namespace Finset
 
 variable {ι α β : Type*} [CommGroupWithZero β]
 
---@[to_additive sum_zsmul_assoc]
 lemma prod_zpow_eq_zpow_sum (s : Finset ι) (f : ι → ℤ) (a : β) (ha : a ≠ 0) :
     ∏ i ∈ s, a ^ f i = a ^ ∑ i ∈ s, f i :=
   cons_induction (by simp) (fun _ _ _ h ↦ by simp [h, zpow_add₀ ha]) s

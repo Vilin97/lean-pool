@@ -629,6 +629,12 @@ lemma exists_trafo_isDiag (g : Matrix (Fin k) (Fin k) K) :
 
 variable (ϖ : R) (hϖ : Irreducible ϖ)
 
+omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
+private lemma coe_uniformizer_ne_zero {ϖ : R} (hϖ : Irreducible ϖ) : (↑ϖ : K) ≠ 0 := by
+  intro hzero
+  rw [Subring.coe_eq_zero_iff] at hzero
+  exact Irreducible.ne_zero hϖ hzero
+
 /-- A matrix is normal diagonal if it is diagonal, the first entries on the
 diagonal are given by powers of the uniformiser `ϖ` and the last entries by `0`. -/
 def IsNormalDiag (g : Matrix (Fin k) (Fin k) K) : Prop :=
@@ -656,9 +662,7 @@ lemma exists_normalization_of_isMonotoneDiag [IsDiscreteValuationRing R] (g : GL
     apply exp_le_exp_of_pow_le_pow (v ϖ) _ _ hle
     · apply valuation_lt_one_of_irreducible ϖ hϖ
     · rw [Valuation.ne_zero_iff]
-      intro hzero
-      rw [Subring.coe_eq_zero_iff] at hzero
-      apply Irreducible.ne_zero hϖ hzero
+      exact coe_uniformizer_ne_zero hϖ
   · intro j
     simp only [GL.map, GL.val_diagonal, RingHom.mapMatrix_apply, map_zero, diagonal_map,
       map_units_inv, Units.inv_eq_val_inv, coe_units_inv, Units.val_mul, diagonal_mul]
@@ -673,17 +677,9 @@ def cartanDiag {k : ℕ} (f : Fin k → ℤ) : GL (Fin k) K :=
     val := ϖ ^ f j
     inv := ϖ ^ (-f j)
     val_inv := by
-      have hzero : (↑ϖ : K) ≠ 0 := by
-        intro hzero
-        rw [Subring.coe_eq_zero_iff] at hzero
-        exact Irreducible.ne_zero hϖ hzero
-      rw [← zpow_add₀ hzero, add_neg_cancel, zpow_zero]
+      rw [← zpow_add₀ (coe_uniformizer_ne_zero hϖ), add_neg_cancel, zpow_zero]
     inv_val := by
-      have hzero : (↑ϖ : K) ≠ 0 := by
-        intro hzero
-        rw [Subring.coe_eq_zero_iff] at hzero
-        exact Irreducible.ne_zero hϖ hzero
-      rw [← zpow_add₀ hzero, neg_add_cancel, zpow_zero]
+      rw [← zpow_add₀ (coe_uniformizer_ne_zero hϖ), neg_add_cancel, zpow_zero]
   }
   GL.diagonal d
 
@@ -707,10 +703,7 @@ lemma conj_cartanDiag_zero_zero {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) 
   simp only [Fin.isValue, zpow_neg, Units.inv_mk]
   rw [mul_inv_cancel₀]
   · simp
-  · apply zpow_ne_zero
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
+  · exact zpow_ne_zero _ (coe_uniformizer_ne_zero hϖ)
 
 omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
 lemma conj_cartanDiag_one_one {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K) (f : Fin 2 → ℤ) :
@@ -719,21 +712,14 @@ lemma conj_cartanDiag_one_one {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K)
   simp only [Fin.isValue, zpow_neg, Units.inv_mk]
   rw [mul_inv_cancel₀]
   · simp
-  · apply zpow_ne_zero
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
+  · exact zpow_ne_zero _ (coe_uniformizer_ne_zero hϖ)
 
 omit [ValuationRing ↥R] [IsFractionRing (↥R) K] in
 lemma conj_cartanDiag_one_zero {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K) (f : Fin 2 → ℤ) :
     MulAut.conj (cartanDiag ϖ hϖ f) g 1 0 = ϖ.val ^ (f 1 - f 0) * g 1 0 := by
   rw [cartanDiag, Matrix.GL.conj_diagonal_apply]
   simp only [Fin.isValue, zpow_neg, Units.inv_mk, mul_eq_mul_right_iff]
-  have hzero : (↑ϖ : K) ≠ 0 := by
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
-  rw [zpow_sub₀ hzero]
+  rw [zpow_sub₀ (coe_uniformizer_ne_zero hϖ)]
   ring_nf
   left
   trivial
@@ -743,11 +729,7 @@ lemma conj_cartanDiag_zero_one {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) K
     MulAut.conj (cartanDiag ϖ hϖ f) g 0 1 = ϖ.val ^ (f 0 - f 1) * g 0 1 := by
   rw [cartanDiag, Matrix.GL.conj_diagonal_apply]
   simp only [Fin.isValue, zpow_neg, Units.inv_mk, mul_eq_mul_right_iff]
-  have hzero : (↑ϖ : K) ≠ 0 := by
-    intro hzero
-    rw [Subring.coe_eq_zero_iff] at hzero
-    exact hϖ.ne_zero hzero
-  rw [zpow_sub₀ hzero]
+  rw [zpow_sub₀ (coe_uniformizer_ne_zero hϖ)]
   ring_nf
   left
   trivial

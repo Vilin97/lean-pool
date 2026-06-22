@@ -52,14 +52,9 @@ lemma reachable (M L : Vertices R) {n : ℕ} : (h : inv M L = n) → BTgraph.Rea
   | succ k ih =>
     intro M L h
     obtain ⟨T, hLT, hTM⟩ := exists_intermediate_vertex _ M L h
-    apply SimpleGraph.Reachable.trans
-    · apply SimpleGraph.Reachable.symm
-      apply SimpleGraph.Adj.reachable
-      exact hTM
-    · show BTgraph.Reachable T L
-      apply ih
-      rw [inv_symm]
-      exact hLT
+    refine (SimpleGraph.Adj.reachable hTM).symm.trans (ih T L ?_)
+    rw [inv_symm]
+    exact hLT
 
 /-- The Bruhat-Tits graph is connected. -/
 lemma BTgraph_connected : SimpleGraph.Connected (BTgraph (R := R)) where

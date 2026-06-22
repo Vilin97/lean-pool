@@ -253,14 +253,13 @@ instance IsLattice.free (M : Submodule R (ι → K)) [IsLattice M] : Module.Free
     Function.Injective.noZeroSMulDivisors Subtype.val Subtype.val_injective rfl (by
       intro c x
       rfl)
-  Module.free_of_finite_type_torsion_free' --inferInstance
+  Module.free_of_finite_type_torsion_free'
 
 variable [Fintype ι]
 
 /-- Any lattice has the cardinality of `ι` as `R`-rank. -/
 theorem IsLattice.rank' (M : Submodule R (ι → K)) [IsLattice M] :
     Module.rank R M = Fintype.card ι := by
-  --have : Module.Free R M := IsLattice.free M
   let b := Module.Free.chooseBasis R M
   have hli : LinearIndependent K (fun i ↦ (b i).val) :=
     Basis.linearIndependent_of_submodule b
@@ -414,19 +413,16 @@ lemma _root_.BruhatTits.Lattice.IsSimilar.equivalence : Equivalence (IsSimilar R
   refl M := ⟨1, MulAction.one_smul M⟩
   symm {M N} h := by
     obtain ⟨a, ha⟩ := h
-    use a⁻¹
-    rw [← ha, inv_smul_smul]
+    exact ⟨a⁻¹, by rw [← ha, inv_smul_smul]⟩
   trans {M N P} h1 h2 := by
     obtain ⟨a, ha⟩ := h1
     obtain ⟨b, hb⟩ := h2
-    use b * a
-    rw [← hb, ← ha, mul_smul]
+    exact ⟨b * a, by rw [← hb, ← ha, mul_smul]⟩
 
 lemma isSimilar_smul (L : Lattice R) (a : Kˣ) : IsSimilar R L (a • L) := ⟨a, rfl⟩
 
-lemma smul_isSimilar (L : Lattice R) (a : Kˣ) : IsSimilar R (a • L) L := by
-  apply (IsSimilar.equivalence R).symm
-  apply isSimilar_smul
+lemma smul_isSimilar (L : Lattice R) (a : Kˣ) : IsSimilar R (a • L) L :=
+  (IsSimilar.equivalence R).symm (isSimilar_smul R L a)
 
 instance _root_.BruhatTits.Lattice.IsSimilar.setoid : Setoid (Lattice R) where
   r := IsSimilar R

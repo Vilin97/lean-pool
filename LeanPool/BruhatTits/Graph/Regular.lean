@@ -122,10 +122,7 @@ def neighborsEquivStandardNeighbors (L : Lattice R) :
   right_inv M := by
     ext : 1
     simp only [Set.mem_setOf_eq]
-    symm
-    apply eq_standardNeighbour_of_isStandardNeighbour
-    · rfl
-    · exact M.property
+    exact (eq_standardNeighbour_of_isStandardNeighbour _ _ rfl M.property).symm
 
 /-- Restrict scalars from the residue field quotient to an `R`-submodule. -/
 def _root_.BruhatTits.Lattice.quotientRestrictScalarsEquiv (L : Lattice R) :

@@ -74,7 +74,6 @@ namespace Tree
 
 variable {X : Tree V} [∀ v, Fintype (X.neighborSet v)] (w : V → Aˣ) (f : V → M)
 
--- an arbitrary root vertex
 variable (v₀ : V)
 
 section «API»
@@ -86,9 +85,7 @@ lemma exists_path_eq_append_of_isPath_of_mem_support {v w x : V} (p : X.Walk v w
   rw [p.mem_support_iff_exists_append] at hx
   obtain ⟨r, s, hrs⟩ := hx
   have : (r.append s).IsPath := by rwa [← hrs]
-  refine ⟨r, s, ?_, ?_, hrs⟩
-  · apply Walk.IsPath.of_append_left this
-  · apply Walk.IsPath.of_append_right this
+  exact ⟨r, s, this.of_append_left, this.of_append_right, hrs⟩
 
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma exists_path_eq_cons_of_isPath_of_mem_support {v w : V} (h : X.Adj w v) (p : X.Walk w v₀)
@@ -182,11 +179,9 @@ omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma source_adj_target (e : X.edgeSet) :
     X.Adj (X.source v₀ e) (X.target v₀ e) := by
   rw [adj_iff_exists_edge]
-  refine ⟨?_, ?_⟩
-  · intro hc
-    have := norm_source_lt_norm_target v₀ e
-    simp [hc] at this
-  · exact ⟨e, e.property, source_mem v₀ e, target_mem v₀ e⟩
+  refine ⟨fun hc ↦ ?_, e, e.property, source_mem v₀ e, target_mem v₀ e⟩
+  have := norm_source_lt_norm_target v₀ e
+  simp [hc] at this
 
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 lemma norm_target_eq_norm_source_add_one (e : X.edgeSet) :
@@ -290,9 +285,9 @@ lemma outwardEdgeCone_eq_union (w : V) (hw : (X.outwardEdgeCone v₀ w).Nonempty
     by_cases hde : e = distinguishedEdge v₀ w hw
     · exact Or.inl hde
     · exact Or.inr ⟨h, fun a ↦ hde a.symm⟩
-  · rintro ⟨_, _⟩
+  · rintro (rfl | ⟨h, _⟩)
     · exact distinguishedEdge_mem v₀ w hw
-    · next h => exact h.left
+    · exact h
 
 omit [DecidableEq V] [(v : V) → Fintype (X.neighborSet v)] in
 /-- For every vertex `w` different from the root vertex `v₀` there exists an edge `e`, whose
@@ -406,8 +401,7 @@ lemma eq_edgeTowardsOrigin_iff_of_mem (w : V) (hw : 0 < X.dist v₀ w) (e : X.ed
   · rintro rfl
     apply edgeTowardsOrigin_target_eq
   · intro h
-    apply eq_of_target_eq v₀
-    simpa
+    exact eq_of_target_eq v₀ _ _ (by simpa)
 
 omit [DecidableEq V] [(v : V) → Fintype ↑(X.neighborSet v)] in
 lemma vertex_mem_edgeTowardsOrigin (w : V) (hw : 0 < X.dist v₀ w) :
@@ -589,11 +583,7 @@ lemma aux_spec₀ (e : X.edgeSet) (n : ℕ) (he : X.dist v₀ (X.target v₀ e) 
     intro h'
     simp only [auxBorder, Nat.reduceAdd]
     match n with
-    | 0 =>
-      rw [ite_eq_right_iff]
-      intro hc
-      contradiction
-    | n + 1 =>
+    | 0 | n + 1 =>
       rw [ite_eq_right_iff]
       intro hc
       contradiction

@@ -47,10 +47,7 @@ lemma _root_.SimpleGraph.Walk.exists_repr_isChain {x y : Vertices R} (p : BTgrap
     refine ⟨[L], singleton_isChain L, by rfl⟩
   | @cons u v w hadj p ih =>
     obtain ⟨l, hchain, hl⟩ := ih
-    have lnenil : l ≠ [] := by
-      intro hnil
-      rw [hnil] at hchain
-      exact hchain.ne_nil rfl
+    have lnenil : l ≠ [] := hchain.ne_nil
     match l with
     | (L :: l) =>
     have hLv : ⟦L⟧ = v := by
@@ -113,12 +110,9 @@ lemma isSimpleChain_of_isTrail_aux {x y : Vertices R} (p : BTgraph.Walk x y)
       simp only [List.tail_cons, List.zipWith₃, List.forall_cons, id_eq]
       refine ⟨?_, ?_⟩
       · intro h
-        have h' : (⟦L₁⟧ : Vertices R) = ⟦L₃⟧ := by
-          apply Quotient.sound
-          exact h
         have hx : x = v₁ := by
           rw [← hfirst, ← hthird]
-          exact h'
+          exact Quotient.sound h
         exact hp.2.1.2 hx
       · apply isSimpleChain_of_isTrail_aux (.cons adj' <| .cons adj'' q)
         · simpa [SimpleGraph.Walk.isTrail_cons, SimpleGraph.Walk.edges_cons, List.mem_cons,
@@ -213,11 +207,9 @@ lemma BTgraph_isAcyclic : (BTgraph (R := R)).IsAcyclic := by
   intro x c h
   -- then `c` is a trail, but the length of such a chain is the distance
   -- of the endpoints, which yields a contradiction
-  have : c.length = inv x x := length_eq_inv h.isCircuit.isTrail
-  rw [inv_self] at this
-  have : 3 ≤ 0 := by
-    rw [← this]
-    exact SimpleGraph.Walk.IsCycle.three_le_length h
+  have hlen : c.length = inv x x := length_eq_inv h.isCircuit.isTrail
+  rw [inv_self] at hlen
+  have : 3 ≤ 0 := hlen ▸ SimpleGraph.Walk.IsCycle.three_le_length h
   contradiction
 
 end «Acyclic»

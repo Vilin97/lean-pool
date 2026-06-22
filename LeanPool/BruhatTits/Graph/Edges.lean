@@ -137,15 +137,12 @@ lemma isNeighbour_of_isStandardNeighbour {M L : Lattice R} (h : IsStandardNeighb
   rw [b.smul_twist] at h2
   rw [b.twist_lt_twist_iff] at h2
   simp at h2 h1
-  have h3 : f 1 ≤ f 0 := by
-    apply hf
-    simp
+  have h3 : f 1 ≤ f 0 := hf (by simp)
   have : 0 ≤ f 1 := h1.left 1
   have : 0 ≤ f 0 := h1.left 0
   have : f 0 ≤ 1 := h2.left 0
   have : f 1 ≤ 1 := h2.left 1
-  have : f 1 = 0 ∧ f 0 = 1 := by
-    omega
+  have : f 1 = 0 ∧ f 0 = 1 := by omega
   rw [this.left, this.right] at hdiff
   simp at hdiff
   change dist _ _ = 1
@@ -158,8 +155,7 @@ lemma exists_basis_eq_ntwist_of_isNeighbour (M : Lattice R) (L : Vertices R)
     b.toLattice = M ∧ ⟦(b.ntwist₂ hϖ 1 0).toLattice⟧ = L := by
   classical
   obtain ⟨ϖ, hϖ, b, rfl, h1⟩ := exists_repr_inv'_of_fixed M L
-  have : inv _ _ = 1 := h
-  rw [this] at h1
+  rw [show inv _ _ = 1 from h] at h1
   use b, ϖ, hϖ
 
 /-- If `M` is a lattice with neighbour `x`, there exists a representative `L` of `x` such that
@@ -280,8 +276,7 @@ lemma smul_isSimilar_iff (g : GL (Fin 2) K) (M L : Lattice R) :
     apply Lattice.ext
     change a • M.M = L.M
     rw [Units.smul_def] at ha ⊢
-    rw [scalar_smul_GL_smul] at ha
-    rw [smul_eq_iff] at ha
+    rw [scalar_smul_GL_smul, smul_eq_iff] at ha
     assumption
   · intro ⟨a, ha⟩
     use a
@@ -513,11 +508,10 @@ lemma _root_.BruhatTits.Lattice.exists_GL_smul_eq_ntwist₂_of_isSimpleChain_con
     exact hMl.isStandardNeighbour.rel_head
   refine hstd.exists_unipotent_smul_eq_ntwist₂ hϖ l.length M b fun heq ↦ ?_
   have hϖ' : ϖ.val ≠ 0 := by simpa using hϖ.ne_zero
-  have : (Units.mk0 ϖ.val hϖ') • L₂ = M := by
+  have hsim : Lattice.IsSimilar R L₂ M := ⟨Units.mk0 ϖ.val hϖ', by
     rw [hl.right.left]
     apply Lattice.ext
-    simpa [Units.smul_def]
-  have hsim : Lattice.IsSimilar R L₂ M := ⟨(Units.mk0 ϖ.val hϖ'), this⟩
+    simpa [Units.smul_def]⟩
   have := hMl.no_backtrack
   simp only [List.tail_cons, List.zipWith₃, List.forall_cons, id_eq] at this
   exact this.left <| (Lattice.IsSimilar.equivalence R).symm hsim

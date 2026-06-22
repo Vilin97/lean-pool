@@ -469,9 +469,8 @@ lemma _root_.BruhatTits.Lattice.mapIntermediate_ne_bot_of (L M : Lattice R)
   intro heq
   have : M.M = ϖ • L.M := by
     apply L.mapIntermediateSubmodule_inj_of _ _ h1
-    · apply le_of_lt
-      rw [maximalIdeal_smul_eq_uniformizer_smul _ hϖ]
-      exact h2
+    · rw [maximalIdeal_smul_eq_uniformizer_smul _ hϖ]
+      exact le_of_lt h2
     · exact Submodule.smul_le_self_of_tower ϖ L.M
     · rw [maximalIdeal_smul_eq_uniformizer_smul _ hϖ]
     · exact heq
@@ -493,8 +492,7 @@ lemma _root_.BruhatTits.Lattice.mapIntermediate_ne_top_of (L M : Lattice R)
   intro heq
   have : M.M = L.M := by
     apply L.mapIntermediateSubmodule_inj_of
-    · apply le_of_lt
-      exact h1
+    · exact le_of_lt h1
     · rw [maximalIdeal_smul_eq_uniformizer_smul _ hϖ]
       exact h2
     · rfl
@@ -553,7 +551,7 @@ lemma _root_.BruhatTits.Lattice.mapIntermediate_eq_span''
         apply b.ntwist₂_toSubmodule_le_ntwist₂_toSubmodule
         · simp
         · simp
-      · apply le_of_lt h1
+      · exact le_of_lt h1
       · rw [maximalIdeal_smul_eq_uniformizer_smul _ hϖ]
         exact le_of_lt h2
       · exact heq.symm

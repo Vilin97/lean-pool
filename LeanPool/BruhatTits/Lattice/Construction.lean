@@ -249,8 +249,8 @@ lemma twist_eq_twist_iff [Fintype ι] (b : Basis ι K (ι → K)) {ϖ : R}
     apply le_antisymm
     · rw [← b.twist_le_twist_iff hϖ, h]
     · rw [← b.twist_le_twist_iff hϖ, h]
-  · intro h
-    rw [h]
+  · rintro rfl
+    rfl
 
 lemma twist_lt_twist_iff [Fintype ι] (b : Basis ι K (ι → K)) {ϖ : R}
     (hϖ : Irreducible ϖ) (f g : ι → ℤ) :
@@ -260,8 +260,7 @@ lemma twist_lt_twist_iff [Fintype ι] (b : Basis ι K (ι → K)) {ϖ : R}
   · intro h
     have hgf : g ≤ f := by
       rw [← b.twist_le_twist_iff hϖ]
-      apply le_of_lt
-      exact h
+      exact le_of_lt h
     by_contra hnotlt
     simp only [not_and, not_exists, not_lt] at hnotlt
     have hfg : f ≤ g := hnotlt hgf
@@ -602,7 +601,7 @@ lemma toLinear_symm_ofLinearEquiv_mulVec (e : (ι → K) ≃ₗ[K] (ι → K)) (
     simp only [Pi.basisFun_apply, Matrix.mulVecBilin_apply, Matrix.mulVec_single,
       MulOpposite.op_one, one_smul, LinearEquiv.coe_coe]
     ext j
-    simp []
+    simp
   change Matrix.mulVecLin _ x = e x
   rw [this]
   rfl
@@ -767,8 +766,7 @@ lemma IsLattice.of_le_of_isLattice_right [IsDiscreteValuationRing R] (L : Submod
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
   rw [maximalIdeal_smul_eq_uniformizer_smul _ hϖ] at h₂
   have hϖ' : ϖ.val ≠ 0 := by simpa using hϖ.ne_zero
-  replace h₂ : Units.mk0 ϖ.val hϖ' • L ≤ M := by
-    exact h₂
+  replace h₂ : Units.mk0 ϖ.val hϖ' • L ≤ M := h₂
   apply IsLattice.of_le_of_isLattice h₂ h₁
 
 end

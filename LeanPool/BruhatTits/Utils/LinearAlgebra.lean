@@ -11,15 +11,8 @@ import Mathlib.LinearAlgebra.TensorProduct.Quotient
 import Mathlib.Algebra.Module.Torsion.Basic
 import Mathlib.RingTheory.Ideal.Quotient.Operations
 import Mathlib.Tactic.Common
-import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Ring.RingNF
 import Mathlib.Tactic.FieldSimp
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
-import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # LeanPool.BruhatTits.Utils.LinearAlgebra
 -/
@@ -105,8 +98,7 @@ lemma Submodule.exists_generator_of_finrank_eq_one_basis (b : Basis (Fin 2) R M)
     · rw [Submodule.span_le]
       simp only [Fin.isValue, Set.singleton_subset_iff, SetLike.mem_coe]
       have : b 0 = (c 0)⁻¹ • c 0 • b 0 := by
-        rw [smul_smul]
-        rw [inv_mul_cancel₀ this, one_smul]
+        rw [smul_smul, inv_mul_cancel₀ this, one_smul]
       nth_rw 2 [this]
       apply Submodule.smul_mem
       apply Submodule.subset_span
@@ -163,8 +155,7 @@ variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 noncomputable def TensorProduct.quotientEquivPiOfBasis (b : Basis ι R M) :
     (M ⧸ (I • ⊤ : Submodule R M)) ≃ₗ[R ⧸ I] (ι → R ⧸ I) :=
   let f := TensorProduct.piScalarRight R (R ⧸ I) (R ⧸ I) ι
-  let g : (R ⧸ I) ⊗[R] M ≃ₗ[R ⧸ I] M ⧸ I • ⊤ :=
-    (quotTensorEquivQuotSMul M I).extendScalarsOfSurjective Ideal.Quotient.mk_surjective
+  let g : (R ⧸ I) ⊗[R] M ≃ₗ[R ⧸ I] M ⧸ I • ⊤ := quotTensorEquivQuotSMul' M I
   let h : M ≃ₗ[R] (ι → R) := b.equivFun
   let h' : (R ⧸ I) ⊗[R] M ≃ₗ[R ⧸ I] (R ⧸ I) ⊗[R] (ι → R) :=
     AlgebraTensorModule.congr (LinearEquiv.refl (R ⧸ I) (R ⧸ I)) h
