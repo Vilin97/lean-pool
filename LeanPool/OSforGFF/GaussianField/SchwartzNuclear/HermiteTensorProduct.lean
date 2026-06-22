@@ -112,6 +112,13 @@ Forward: `f ↦ (cₙ(f))ₙ` where `cₙ(f) = ∫ f ψₙ`.
 Backward: `a ↦ ∑' n, aₙ ψₙ` (tsum in Schwartz topology).
 -/
 
+/-- Summability of `(1 + n)^(-2)` over `ℕ`, a recurring tail bound. -/
+private lemma summable_one_add_rpow_neg_two :
+    Summable (fun n : ℕ => (1 + (n : ℝ)) ^ ((-2) : ℝ)) :=
+  ((summable_nat_rpow.mpr (by norm_num : (-2 : ℝ) < -1)).comp_injective
+    (fun _ _ h => Nat.succ_injective h)).congr
+    (fun n => by change ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
+
 /-- Kronecker property: the Hermite coefficient of a basis function is δₙₘ. -/
 theorem hermiteCoeff1D_basis_kronecker (n m : ℕ) :
     hermiteCoeff1D n (schwartzHermiteBasis1D m) = if n = m then 1 else 0 := by
@@ -150,14 +157,8 @@ private theorem hermiteCoeff_rapid_decay (f : SchwartzMap ℝ ℝ) (k : ℕ) :
         _ ≤ C * S := h_bd
     rwa [div_eq_mul_inv, ← rpow_neg h1m.le] at hle
   -- ∑ C * S * (1+m)^{-2} converges
-  have h_sum : Summable (fun m : ℕ => C * S * (1 + (m : ℝ)) ^ ((-2) : ℝ)) := by
-    have h_base : Summable (fun n : ℕ => ((n : ℝ)) ^ ((-2) : ℝ)) :=
-      summable_nat_rpow.mpr (by norm_num)
-    have h_shifted := h_base.comp_injective
-      (show Function.Injective (· + 1 : ℕ → ℕ) from fun a b h => Nat.succ_injective h)
-    have h1 : Summable (fun n : ℕ => (1 + (n : ℝ)) ^ ((-2) : ℝ)) :=
-      h_shifted.congr (fun n => by change ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
-    exact h1.const_smul (C * S)
+  have h_sum : Summable (fun m : ℕ => C * S * (1 + (m : ℝ)) ^ ((-2) : ℝ)) :=
+    summable_one_add_rpow_neg_two.const_smul (C * S)
   exact .of_nonneg_of_le (fun m => mul_nonneg (abs_nonneg _)
     (pow_nonneg (by positivity) k)) h_le h_sum
 
@@ -184,12 +185,7 @@ private noncomputable def toRapidDecay1DCLM : SchwartzMap ℝ ℝ →L[ℝ] Rapi
     -- So the sum ≤ C * S * ∑ (1+n)^{-2} = C' * S where S is a sup of Schwartz seminorms
     obtain ⟨C, q, hC, hbound⟩ := hermiteCoeff1D_decay ((k : ℝ) + 2)
     -- Sum of (1+n)^{-2}
-    have h_base : Summable (fun n : ℕ => ((n : ℝ)) ^ ((-2) : ℝ)) :=
-      summable_nat_rpow.mpr (by norm_num)
-    have h_shifted := h_base.comp_injective
-      (show Function.Injective (· + 1 : ℕ → ℕ) from fun a b h => Nat.succ_injective h)
-    have h_rpow_sum : Summable (fun n : ℕ => (1 + (n : ℝ)) ^ ((-2) : ℝ)) :=
-      h_shifted.congr (fun n => by change ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
+    have h_rpow_sum := summable_one_add_rpow_neg_two
     set L := ∑' n : ℕ, (1 + (n : ℝ)) ^ ((-2) : ℝ)
     -- Total bound: C * L
     refine ⟨Finset.Iic q, ⟨C * L, by positivity⟩, fun f => ?_⟩
@@ -343,144 +339,109 @@ private noncomputable def rapidDecay_schwartzMap (a : RapidDecaySeq) : SchwartzM
 private lemma rapidDecay_schwartzMap_apply (a : RapidDecaySeq) (x : ℝ) :
     rapidDecay_schwartzMap a x = ∑' n, a.val n * hermiteFunction n x := rfl
 
-/-- The Hermite expansion converges to `rapidDecay_schwartzMap a` in Schwartz topology. -/
-private theorem rapidDecay_hermite_hasSum (a : RapidDecaySeq) :
-    HasSum (fun n => a.val n • schwartzHermiteBasis1D n) (rapidDecay_schwartzMap a) := by
+/-- Generic convergence of a rapid-decay Schwartz expansion `∑ aₙ • bₙ` to a limit `g`
+whose coercion is the pointwise tsum. Abstracts the shared 1D and multi-d arguments over an
+arbitrary domain `E`, basis family `b`, scalar-derivative bound, and seminorm summability. -/
+private theorem rapidDecay_hasSum_generic {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (b : ℕ → SchwartzMap E ℝ) (a : RapidDecaySeq) (g : SchwartzMap E ℝ)
+    (hg_apply : ∀ x, g x = ∑' n, a.val n * b n x)
+    (h_summ : ∀ k l, Summable (fun n => |a.val n| * SchwartzMap.seminorm ℝ k l (b n)))
+    (h_scalar : ∀ (c : ℝ) (n l : ℕ) (x : E),
+      ‖iteratedFDeriv ℝ l (fun y => c * b n y) x‖ ≤ |c| * SchwartzMap.seminorm ℝ 0 l (b n)) :
+    HasSum (fun n => a.val n • b n) g := by
+  have h_contDiff : ∀ (n m : ℕ), ContDiff ℝ m (⇑(b n)) :=
+    fun n m => contDiff_infty.mp (b n).smooth' m
   rw [HasSum]
   change Filter.Tendsto _ Filter.atTop _
-  rw [(schwartz_withSeminorms ℝ ℝ ℝ).tendsto_nhds _ (rapidDecay_schwartzMap a)]
+  rw [(schwartz_withSeminorms ℝ E ℝ).tendsto_nhds _ g]
   intro ⟨k, l⟩ ε hε
-  -- Get vanishing condition from summability of ∑ |aₙ| * p_{k,l}(ψₙ)
-  have h_sem := rapidDecay_seminorm_summable a k l
-  obtain ⟨s₀, hs₀⟩ := summable_iff_vanishing_norm.mp h_sem (ε / 2) (half_pos hε)
+  obtain ⟨s₀, hs₀⟩ := summable_iff_vanishing_norm.mp (h_summ k l) (ε / 2) (half_pos hε)
   rw [Filter.eventually_atTop]
   refine ⟨s₀, fun s hs => ?_⟩
-  -- Flip subtraction order: (∑ - limit) = -(limit - ∑)
-  rw [show (∑ i ∈ s, a.val i • schwartzHermiteBasis1D i) - rapidDecay_schwartzMap a =
-    -(rapidDecay_schwartzMap a - ∑ i ∈ s, a.val i • schwartzHermiteBasis1D i) from by abel,
+  rw [show (∑ i ∈ s, a.val i • b i) - g = -(g - ∑ i ∈ s, a.val i • b i) from by abel,
     map_neg_eq_map]
-  -- Suffices to show seminorm(limit - partial sum) ≤ ε/2 < ε
-  calc SchwartzMap.seminorm ℝ k l
-        (rapidDecay_schwartzMap a - ∑ i ∈ s, a.val i • schwartzHermiteBasis1D i)
+  calc SchwartzMap.seminorm ℝ k l (g - ∑ i ∈ s, a.val i • b i)
       ≤ ε / 2 := by
-        -- Reduce to pointwise bound via seminorm_le_bound
         apply SchwartzMap.seminorm_le_bound ℝ k l _ (half_pos hε).le
         intro x
-        -- Set up notation
-        set r := rapidDecay_schwartzMap a -
-          ∑ i ∈ s, a.val i • schwartzHermiteBasis1D i with hr_def
-        let g : ℕ → ℝ → ℝ := fun n y => a.val n * hermiteFunction n y
-        -- Summability of iteratedFDeriv values
-        have h_summ_iFD : Summable (fun n => iteratedFDeriv ℝ l (g n) x) := by
+        set r := g - ∑ i ∈ s, a.val i • b i with hr_def
+        let G : ℕ → E → ℝ := fun n y => a.val n * b n y
+        have h_summ_iFD : Summable (fun n => iteratedFDeriv ℝ l (G n) x) := by
           apply Summable.of_norm_bounded
-            (g := fun n => |a.val n| *
-              SchwartzMap.seminorm ℝ 0 l (schwartzHermiteBasis1D n))
-          · exact rapidDecay_seminorm_summable a 0 l
-          · intro n; exact scalar_hermite_iteratedFDeriv_bound (a.val n) n l x
-        -- Step 1: iteratedFDeriv of the limit = ∑' iteratedFDeriv(gₙ)
-        have h_iFD_limit : iteratedFDeriv ℝ l
-            (fun y => ∑' n, a.val n * hermiteFunction n y) x =
-            ∑' n, iteratedFDeriv ℝ l (g n) x := by
+            (g := fun n => |a.val n| * SchwartzMap.seminorm ℝ 0 l (b n))
+          · exact h_summ 0 l
+          · intro n; exact h_scalar (a.val n) n l x
+        have h_iFD_limit : iteratedFDeriv ℝ l (fun y => ∑' n, a.val n * b n y) x =
+            ∑' n, iteratedFDeriv ℝ l (G n) x := by
           apply iteratedFDeriv_tsum_apply (N := ⊤)
-            (v := fun j n => |a.val n| *
-              SchwartzMap.seminorm ℝ 0 j (schwartzHermiteBasis1D n))
-          · intro n
-            exact contDiff_infty.mpr (fun m =>
-              contDiff_const.mul (hermiteFunction_contDiff n m))
-          · intro j _; exact rapidDecay_seminorm_summable a 0 j
-          · intro j n y _; exact scalar_hermite_iteratedFDeriv_bound (a.val n) n j y
+            (v := fun j n => |a.val n| * SchwartzMap.seminorm ℝ 0 j (b n))
+          · intro n; exact contDiff_const.mul (b n).smooth'
+          · intro j _; exact h_summ 0 j
+          · intro j n y _; exact h_scalar (a.val n) n j y
           · exact le_top
-        -- Step 2: coercion of finite Schwartz sum = pointwise finite sum
         have hsum_coe : ∀ y,
-            (∑ i ∈ s, a.val i • schwartzHermiteBasis1D i : SchwartzMap ℝ ℝ) y =
-            ∑ i ∈ s, g i y := by
+            (∑ i ∈ s, a.val i • b i : SchwartzMap E ℝ) y = ∑ i ∈ s, G i y := by
           intro y
           have : ∀ (t : Finset ℕ),
-              (∑ i ∈ t, a.val i • schwartzHermiteBasis1D i : SchwartzMap ℝ ℝ) y =
-              ∑ i ∈ t, g i y := by
+              (∑ i ∈ t, a.val i • b i : SchwartzMap E ℝ) y = ∑ i ∈ t, G i y := by
             intro t; induction t using Finset.cons_induction with
             | empty => simp
-            | cons a' t' ha' ih =>
-              simp [SchwartzMap.smul_apply, smul_eq_mul, schwartzHermiteBasis1D_apply, g]
+            | cons a' t' ha' ih => simp [SchwartzMap.smul_apply, smul_eq_mul, G]
           exact this s
-        -- Step 3: iteratedFDeriv of the finite sum
-        have h_iFD_sum : iteratedFDeriv ℝ l
-            (⇑(∑ i ∈ s, a.val i • schwartzHermiteBasis1D i : SchwartzMap ℝ ℝ)) x =
-            ∑ i ∈ s, iteratedFDeriv ℝ l (g i) x := by
-          have hcoe : ⇑(∑ i ∈ s, a.val i • schwartzHermiteBasis1D i : SchwartzMap ℝ ℝ) =
-              fun y => ∑ i ∈ s, g i y := funext hsum_coe
-          rw [hcoe]
-          have h_eq := iteratedFDeriv_sum (𝕜 := ℝ) (f := g) (u := s) (i := l)
-            (fun i _ => (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)
-          exact congr_fun h_eq x |>.trans (Finset.sum_apply x s _)
-        -- Step 4: iteratedFDeriv of r = ∑'_{i∉s} iteratedFDeriv(gₙ)
         have h_iFD_r : iteratedFDeriv ℝ l (⇑r) x =
-            ∑' (i : ↥(↑s : Set ℕ)ᶜ), iteratedFDeriv ℝ l (g ↑i) x := by
-          have hf_cd : ContDiff ℝ l (fun y => ∑' n, a.val n * hermiteFunction n y) :=
-            (rapidDecay_hermite_contDiff a).of_le (mod_cast le_top)
-          have hg_cd : ContDiff ℝ l (fun y => ∑ i ∈ s, g i y) :=
-            ContDiff.sum (fun i _ =>
-              (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)
-          have hcoe_r : (⇑r : ℝ → ℝ) = fun y =>
-              (∑' n, a.val n * hermiteFunction n y) - ∑ i ∈ s, g i y := by
-            ext y; simp only [hr_def, SchwartzMap.sub_apply, rapidDecay_schwartzMap_apply]
-            exact congrArg ((∑' n, a.val n * hermiteFunction n y) - ·) (hsum_coe y)
+            ∑' (i : ↥(↑s : Set ℕ)ᶜ), iteratedFDeriv ℝ l (G ↑i) x := by
+          have hf_cd : ContDiff ℝ l (fun y => ∑' n, a.val n * b n y) := by
+            rw [← funext hg_apply]; exact contDiff_infty.mp g.smooth' l
+          have hg_cd : ContDiff ℝ l (fun y => ∑ i ∈ s, G i y) :=
+            ContDiff.sum (fun i _ => contDiff_const.mul (h_contDiff i l))
+          have hcoe_r : (⇑r : E → ℝ) = fun y =>
+              (∑' n, a.val n * b n y) - ∑ i ∈ s, G i y := by
+            ext y; simp only [hr_def, SchwartzMap.sub_apply, hg_apply]
+            exact congrArg ((∑' n, a.val n * b n y) - ·) (hsum_coe y)
           rw [hcoe_r]
-          set h_sum := fun y => ∑ i ∈ s, g i y with h_sum_def
+          set h_sum := fun y => ∑ i ∈ s, G i y with h_sum_def
           have h_neg_cd : ContDiff ℝ l (-h_sum) := hg_cd.neg
-          have h_rw : (fun y => (∑' n, a.val n * hermiteFunction n y) - h_sum y) =
-              (fun y => ∑' n, a.val n * hermiteFunction n y) + (-h_sum) := by
+          have h_rw : (fun y => (∑' n, a.val n * b n y) - h_sum y) =
+              (fun y => ∑' n, a.val n * b n y) + (-h_sum) := by
             ext; simp [sub_eq_add_neg]
           rw [h_rw, iteratedFDeriv_add hf_cd h_neg_cd, Pi.add_apply,
             iteratedFDeriv_neg, Pi.neg_apply, h_iFD_limit]
           have h_iFD_h : iteratedFDeriv ℝ l h_sum x =
-              ∑ i ∈ s, iteratedFDeriv ℝ l (g i) x := by
+              ∑ i ∈ s, iteratedFDeriv ℝ l (G i) x := by
             rw [h_sum_def]
-            have h_eq := iteratedFDeriv_sum (𝕜 := ℝ) (f := g) (u := s) (i := l)
-              (fun i _ =>
-                (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)
-            calc iteratedFDeriv ℝ l (fun y => ∑ i ∈ s, g i y) x
-                = (∑ j ∈ s, iteratedFDeriv ℝ l (g j)) x := congr_fun h_eq x
-              _ = ∑ i ∈ s, iteratedFDeriv ℝ l (g i) x := Finset.sum_apply x s _
-          rw [h_iFD_h]
-          rw [← h_summ_iFD.sum_add_tsum_compl (s := s)]
+            have h_eq := iteratedFDeriv_sum (𝕜 := ℝ) (f := G) (u := s) (i := l)
+              (fun i _ => contDiff_const.mul (h_contDiff i l))
+            calc iteratedFDeriv ℝ l (fun y => ∑ i ∈ s, G i y) x
+                = (∑ j ∈ s, iteratedFDeriv ℝ l (G j)) x := congr_fun h_eq x
+              _ = ∑ i ∈ s, iteratedFDeriv ℝ l (G i) x := Finset.sum_apply x s _
+          rw [h_iFD_h, ← h_summ_iFD.sum_add_tsum_compl (s := s)]
           abel
-        -- Summability on complement
         have h_norm_summ : Summable (fun (i : ↥(↑s : Set ℕ)ᶜ) =>
-            ‖iteratedFDeriv ℝ l (g ↑i) x‖) :=
+            ‖iteratedFDeriv ℝ l (G ↑i) x‖) :=
           (Summable.of_nonneg_of_le (fun _ => norm_nonneg _)
-            (fun n => scalar_hermite_iteratedFDeriv_bound (a.val n) n l x)
-            (rapidDecay_seminorm_summable a 0 l)).subtype _
+            (fun n => h_scalar (a.val n) n l x) (h_summ 0 l)).subtype _
         have h_sem_summ : Summable (fun (i : ↥(↑s : Set ℕ)ᶜ) =>
-            |a.val ↑i| *
-            SchwartzMap.seminorm ℝ k l (schwartzHermiteBasis1D ↑i)) :=
-          (rapidDecay_seminorm_summable a k l).subtype _
-        -- Key pointwise bound
+            |a.val ↑i| * SchwartzMap.seminorm ℝ k l (b ↑i)) := (h_summ k l).subtype _
         have h_ptwise : ∀ (i : ↥(↑s : Set ℕ)ᶜ),
-            ‖x‖ ^ k * ‖iteratedFDeriv ℝ l (g ↑i) x‖ ≤
-            |a.val ↑i| * SchwartzMap.seminorm ℝ k l (schwartzHermiteBasis1D ↑i) := by
+            ‖x‖ ^ k * ‖iteratedFDeriv ℝ l (G ↑i) x‖ ≤
+            |a.val ↑i| * SchwartzMap.seminorm ℝ k l (b ↑i) := by
           intro ⟨n, _⟩
-          have hg_eq : g n = ⇑(a.val n • schwartzHermiteBasis1D n) := by
-            ext y; simp [g, smul_eq_mul, schwartzHermiteBasis1D_apply]
+          have hg_eq : G n = ⇑(a.val n • b n) := by
+            ext y; simp [G, smul_eq_mul]
           rw [hg_eq]
-          calc ‖x‖ ^ k * ‖iteratedFDeriv ℝ l (⇑(a.val n • schwartzHermiteBasis1D n)) x‖
-              ≤ SchwartzMap.seminorm ℝ k l (a.val n • schwartzHermiteBasis1D n) :=
+          calc ‖x‖ ^ k * ‖iteratedFDeriv ℝ l (⇑(a.val n • b n)) x‖
+              ≤ SchwartzMap.seminorm ℝ k l (a.val n • b n) :=
                 SchwartzMap.le_seminorm ℝ k l _ x
-            _ = |a.val n| * SchwartzMap.seminorm ℝ k l (schwartzHermiteBasis1D n) := by
+            _ = |a.val n| * SchwartzMap.seminorm ℝ k l (b n) := by
                 rw [map_smul_eq_mul, Real.norm_eq_abs]
-        -- Chain the bounds
         rw [h_iFD_r]
-        calc ‖x‖ ^ k * ‖∑' (i : ↥(↑s : Set ℕ)ᶜ), iteratedFDeriv ℝ l (g ↑i) x‖
-            ≤ ‖x‖ ^ k * ∑' (i : ↥(↑s : Set ℕ)ᶜ),
-                ‖iteratedFDeriv ℝ l (g ↑i) x‖ :=
+        calc ‖x‖ ^ k * ‖∑' (i : ↥(↑s : Set ℕ)ᶜ), iteratedFDeriv ℝ l (G ↑i) x‖
+            ≤ ‖x‖ ^ k * ∑' (i : ↥(↑s : Set ℕ)ᶜ), ‖iteratedFDeriv ℝ l (G ↑i) x‖ :=
               mul_le_mul_of_nonneg_left (norm_tsum_le_tsum_norm h_norm_summ)
                 (pow_nonneg (norm_nonneg _) k)
-          _ = ∑' (i : ↥(↑s : Set ℕ)ᶜ),
-                (‖x‖ ^ k * ‖iteratedFDeriv ℝ l (g ↑i) x‖) := by
+          _ = ∑' (i : ↥(↑s : Set ℕ)ᶜ), (‖x‖ ^ k * ‖iteratedFDeriv ℝ l (G ↑i) x‖) := by
               rw [tsum_mul_left]
-          _ ≤ ∑' (i : ↥(↑s : Set ℕ)ᶜ),
-                (|a.val ↑i| *
-                  SchwartzMap.seminorm ℝ k l (schwartzHermiteBasis1D ↑i)) :=
+          _ ≤ ∑' (i : ↥(↑s : Set ℕ)ᶜ), (|a.val ↑i| * SchwartzMap.seminorm ℝ k l (b ↑i)) :=
               (h_norm_summ.mul_left _).tsum_le_tsum h_ptwise h_sem_summ
           _ ≤ ε / 2 := by
               apply h_sem_summ.tsum_le_of_sum_le
@@ -492,13 +453,25 @@ private theorem rapidDecay_hermite_hasSum (a : RapidDecaySeq) :
                 rw [Finset.mem_map] at hn
                 obtain ⟨⟨m, hm⟩, _, rfl⟩ := hn
                 exact hm hn_s
-              have h_disj₀ : Disjoint t' s₀ := Disjoint.mono_right hs h_disj
-              have h_lt := hs₀ t' h_disj₀
+              have h_lt := hs₀ t' (Disjoint.mono_right hs h_disj)
               rw [Real.norm_of_nonneg (Finset.sum_nonneg fun i _ =>
                 mul_nonneg (abs_nonneg _) (apply_nonneg _ _))] at h_lt
               rw [ht'_def, Finset.sum_map] at h_lt
               exact le_of_lt h_lt
     _ < ε := half_lt_self hε
+
+/-- The Hermite expansion converges to `rapidDecay_schwartzMap a` in Schwartz topology. -/
+private theorem rapidDecay_hermite_hasSum (a : RapidDecaySeq) :
+    HasSum (fun n => a.val n • schwartzHermiteBasis1D n) (rapidDecay_schwartzMap a) :=
+  rapidDecay_hasSum_generic schwartzHermiteBasis1D a (rapidDecay_schwartzMap a)
+    (fun x => by
+      rw [rapidDecay_schwartzMap_apply]
+      exact tsum_congr fun n => by rw [schwartzHermiteBasis1D_apply])
+    (rapidDecay_seminorm_summable a)
+    (fun c n l x => by
+      rw [show (fun y => c * schwartzHermiteBasis1D n y) = (fun y => c * hermiteFunction n y) from
+        by ext y; rw [schwartzHermiteBasis1D_apply]]
+      exact scalar_hermite_iteratedFDeriv_bound c n l x)
 
 /-- **Summability of Hermite expansion for rapid-decay coefficients.** -/
 private theorem rapidDecay_hermite_summable (a : RapidDecaySeq) :
@@ -830,6 +803,38 @@ private lemma euclidean_proj_norm_le_one (d : ℕ) (i : Fin d) :
   ContinuousLinearMap.opNorm_le_bound _ zero_le_one
     (fun x => by simp only [one_mul]; exact PiLp.norm_apply_le (p := 2) x i)
 
+/-- The Euclidean (ℓ²) norm is bounded by the ℓ¹ norm of the coordinates. -/
+private lemma euclidean_norm_le_l1 (d : ℕ) (x : EuclideanSpace ℝ (Fin (d + 1))) :
+    ‖x‖ ≤ ∑ j : Fin (d + 1), |x j| := by
+  rw [EuclideanSpace.norm_eq]
+  have hsq : ∑ j : Fin (d + 1), ‖x j‖ ^ 2 ≤ (∑ j : Fin (d + 1), |x j|) ^ 2 := by
+    convert Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
+      (fun j _ => abs_nonneg (x j)) using 2
+  calc √(∑ j, ‖x j‖ ^ 2) ≤ √((∑ j, |x j|) ^ 2) := Real.sqrt_le_sqrt hsq
+    _ = ∑ j, |x j| := by
+        rw [Real.sqrt_sq_eq_abs,
+          abs_of_nonneg (Finset.sum_nonneg (fun j _ => abs_nonneg _))]
+
+/-- Power of the Euclidean norm is controlled by the sum of coordinate powers. -/
+private lemma euclidean_norm_pow_le (d k : ℕ) (x : EuclideanSpace ℝ (Fin (d + 1))) :
+    ‖x‖ ^ k ≤ ((d + 1 : ℝ) ^ k) * ∑ j : Fin (d + 1), |x j| ^ k := by
+  rcases k with _ | k
+  · simp only [pow_zero, one_mul, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+      nsmul_eq_mul, mul_one]
+    exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
+  have h1 : (1 : ℝ) ≤ (d + 1 : ℝ) := by exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
+  calc ‖x‖ ^ (k + 1) ≤ (∑ j : Fin (d + 1), |x j|) ^ (k + 1) :=
+        pow_le_pow_left₀ (norm_nonneg _) (euclidean_norm_le_l1 d x) _
+    _ ≤ ((Finset.univ : Finset (Fin (d + 1))).card : ℝ) ^ k *
+          ∑ j ∈ Finset.univ, |x j| ^ (k + 1) :=
+        _root_.pow_sum_le_card_mul_sum_pow (fun j _ => abs_nonneg (x j)) k
+    _ = (d + 1 : ℝ) ^ k * ∑ j : Fin (d + 1), |x j| ^ (k + 1) := by
+        simp [Finset.card_univ, Fintype.card_fin]
+    _ ≤ (d + 1 : ℝ) ^ (k + 1) * ∑ j : Fin (d + 1), |x j| ^ (k + 1) := by
+        apply mul_le_mul_of_nonneg_right
+        · exact pow_le_pow_right₀ h1 (Nat.le_succ k)
+        · exact Finset.sum_nonneg (fun j _ => pow_nonneg (abs_nonneg _) _)
+
 -- The norm of the iterated derivative of (hermiteFunction n ∘ proj_i) at x is bounded
 -- by the norm of the 1D iterated derivative at x i.
 -- This follows from the chain rule and ‖proj_i‖ ≤ 1.
@@ -945,45 +950,8 @@ private lemma hermiteFunctionNd_decay (d : ℕ) (α : MultiIndex d) (k n : ℕ) 
         |x j| ^ k * ‖iteratedFDeriv ℝ m (fac j) x‖ ≤ C := by
     intro j m
     exact iteratedFDeriv_hermite_comp_proj_bound (d + 1) (α j) j k m
-  -- Step A: Prove ‖x‖ ≤ ∑ |x j| (ℓ² ≤ ℓ¹ norm inequality)
-  have h_l2_le_l1 : ∀ x : EuclideanSpace ℝ (Fin (d + 1)),
-      ‖x‖ ≤ ∑ j : Fin (d + 1), |x j| := by
-    intro x
-    rw [EuclideanSpace.norm_eq]
-    -- ‖x‖² = ∑ |x j|² ≤ (∑ |x j|)² by sum_sq_le_sq_sum_of_nonneg
-    have hsq : ∑ j : Fin (d + 1), ‖x j‖ ^ 2 ≤
-        (∑ j : Fin (d + 1), |x j|) ^ 2 := by
-      convert Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
-        (fun j _ => abs_nonneg (x j)) using 2
-    calc √(∑ j, ‖x j‖ ^ 2) ≤ √((∑ j, |x j|) ^ 2) :=
-          Real.sqrt_le_sqrt hsq
-      _ = ∑ j, |x j| := by
-          rw [Real.sqrt_sq_eq_abs, abs_of_nonneg
-            (Finset.sum_nonneg (fun j _ => abs_nonneg _))]
-  -- Step B: ‖x‖^k ≤ (d+1)^(k-1) * ∑ |x j|^k (from power mean inequality)
-  -- Combined: ‖x‖^k ≤ (d+1)^k * ∑ |x j|^k
-  have h_norm_pow_le : ∀ x : EuclideanSpace ℝ (Fin (d + 1)),
-      ‖x‖ ^ k ≤ ((d + 1 : ℝ) ^ k) * ∑ j : Fin (d + 1), |x j| ^ k := by
-    intro x
-    rcases k with _ | k
-    · -- k = 0: ‖x‖^0 = 1 ≤ (d+1)^0 * ∑ |x j|^0 = 1 * (d+1)
-      simp only [pow_zero, one_mul, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-        nsmul_eq_mul, mul_one]
-      exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
-    -- k + 1 ≥ 1
-    -- ‖x‖^(k+1) ≤ (∑ |x j|)^(k+1) ≤ (d+1)^k * ∑ |x j|^(k+1)
-    have h1 : (1 : ℝ) ≤ (d + 1 : ℝ) := by exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
-    calc ‖x‖ ^ (k + 1) ≤ (∑ j : Fin (d + 1), |x j|) ^ (k + 1) :=
-          pow_le_pow_left₀ (norm_nonneg _) (h_l2_le_l1 x) _
-      _ ≤ ((Finset.univ : Finset (Fin (d + 1))).card : ℝ) ^ k *
-            ∑ j ∈ Finset.univ, |x j| ^ (k + 1) :=
-          _root_.pow_sum_le_card_mul_sum_pow (fun j _ => abs_nonneg (x j)) k
-      _ = (d + 1 : ℝ) ^ k * ∑ j : Fin (d + 1), |x j| ^ (k + 1) := by
-          simp [Finset.card_univ, Fintype.card_fin]
-      _ ≤ (d + 1 : ℝ) ^ (k + 1) * ∑ j : Fin (d + 1), |x j| ^ (k + 1) := by
-          apply mul_le_mul_of_nonneg_right
-          · exact pow_le_pow_right₀ h1 (Nat.le_succ k)
-          · exact Finset.sum_nonneg (fun j _ => pow_nonneg (abs_nonneg _) _)
+  -- Step A/B: ‖x‖^k ≤ (d+1)^k * ∑ |x j|^k (ℓ²≤ℓ¹ + power-mean)
+  have h_norm_pow_le := euclidean_norm_pow_le d k
   -- Step C: Apply the multinomial Leibniz rule and bound each term
   -- First get the Leibniz bound
   have hprod_bound : ∀ y : EuclideanSpace ℝ (Fin (d + 1)),
@@ -1650,38 +1618,7 @@ private lemma schwartzHermiteBasisNd_weighted_product_bound (d k l : ℕ)
   have h_count_le : ∀ (p : Sym (Fin (d + 1)) l) (j : Fin (d + 1)),
       (p : Multiset (Fin (d + 1))).count j ≤ l :=
     fun p j => (Multiset.count_le_card j ↑p).trans (le_of_eq p.prop)
-  have h_l2_le_l1 : ∀ x : EuclideanSpace ℝ (Fin (d + 1)),
-      ‖x‖ ≤ ∑ j : Fin (d + 1), |x j| := by
-    intro x
-    rw [EuclideanSpace.norm_eq]
-    have hsq : ∑ j : Fin (d + 1), ‖x j‖ ^ 2 ≤
-        (∑ j : Fin (d + 1), |x j|) ^ 2 := by
-      convert Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
-        (fun j _ => abs_nonneg (x j)) using 2
-    calc √(∑ j, ‖x j‖ ^ 2) ≤ √((∑ j, |x j|) ^ 2) :=
-          Real.sqrt_le_sqrt hsq
-      _ = ∑ j, |x j| := by
-          rw [Real.sqrt_sq_eq_abs, abs_of_nonneg
-            (Finset.sum_nonneg (fun j _ => abs_nonneg _))]
-  have h_norm_pow_le : ∀ x : EuclideanSpace ℝ (Fin (d + 1)),
-      ‖x‖ ^ k ≤ ((d + 1 : ℝ) ^ k) * ∑ j : Fin (d + 1), |x j| ^ k := by
-    intro x
-    rcases k with _ | k_
-    · simp only [pow_zero, one_mul, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
-        nsmul_eq_mul, mul_one]
-      exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
-    have h1 : (1 : ℝ) ≤ (d + 1 : ℝ) := by exact_mod_cast Nat.succ_le_succ (Nat.zero_le d)
-    calc ‖x‖ ^ (k_ + 1) ≤ (∑ j : Fin (d + 1), |x j|) ^ (k_ + 1) :=
-          pow_le_pow_left₀ (norm_nonneg _) (h_l2_le_l1 x) _
-      _ ≤ ((Finset.univ : Finset (Fin (d + 1))).card : ℝ) ^ k_ *
-            ∑ j ∈ Finset.univ, |x j| ^ (k_ + 1) :=
-          _root_.pow_sum_le_card_mul_sum_pow (fun j _ => abs_nonneg (x j)) k_
-      _ = (d + 1 : ℝ) ^ k_ * ∑ j : Fin (d + 1), |x j| ^ (k_ + 1) := by
-          simp [Finset.card_univ, Fintype.card_fin]
-      _ ≤ (d + 1 : ℝ) ^ (k_ + 1) * ∑ j : Fin (d + 1), |x j| ^ (k_ + 1) := by
-          apply mul_le_mul_of_nonneg_right
-          · exact pow_le_pow_right₀ h1 (Nat.le_succ k_)
-          · exact Finset.sum_nonneg (fun j _ => pow_nonneg (abs_nonneg _) _)
+  have h_norm_pow_le := euclidean_norm_pow_le d k
   have h_term : ∀ (α : MultiIndex (d + 1)) (x : EuclideanSpace ℝ (Fin (d + 1)))
       (j₀ : Fin (d + 1)) (p : Sym (Fin (d + 1)) l),
       |x j₀| ^ k *
@@ -2054,6 +1991,51 @@ private noncomputable def hermiteCoeffNdCLM (d : ℕ) (α : MultiIndex d) :
     (f : SchwartzMap (EuclideanSpace ℝ (Fin d)) ℝ) :
     hermiteCoeffNdCLM d α f = hermiteCoeffNd d α f := rfl
 
+/-- Per-term decay bound shared by `hermiteCoeffNd_rapid_decayFlat` and
+`toRapidDecayNdLM_isBounded`: combines the multi-index growth bound `hn_le` and the
+multi-index Hermite decay bound `h_bd` into a `(1+n)^(-2)` tail estimate. -/
+private lemma hermiteCoeffNd_flat_term_le {d' : ℕ}
+    (f : SchwartzMap (EuclideanSpace ℝ (Fin (d' + 1))) ℝ) (k k₁ : ℕ) (C₁ D S : ℝ)
+    (hC₁ : 0 < C₁)
+    (hgrowth : ∀ α : MultiIndex (d' + 1),
+      (1 + (multiIndexEquiv d' α : ℝ)) ≤ C₁ * (1 + (MultiIndex.abs α : ℝ)) ^ k₁)
+    (hdecay : ∀ α : MultiIndex (d' + 1),
+      |hermiteCoeffNd (d' + 1) α f| * (1 + (MultiIndex.abs α : ℝ)) ^ (↑(k₁ * (k + 2)) : ℝ) ≤
+        D * S) (n : ℕ) :
+    |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + (n : ℝ)) ^ k ≤
+      D * S * C₁ ^ (k + 2) * (1 + (n : ℝ)) ^ ((-2) : ℝ) := by
+  set α := (multiIndexEquiv d').symm n
+  have h1n : (0 : ℝ) < 1 + ↑n := by positivity
+  have hn_le : (1 + (n : ℝ)) ≤ C₁ * (1 + ↑(MultiIndex.abs α)) ^ k₁ := by
+    have := hgrowth α; simp only [α, Equiv.apply_symm_apply] at this; exact this
+  have h_bd : |hermiteCoeffNd (d' + 1) α f| *
+      (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2)) ≤ D * S := by
+    have := hdecay α; rwa [rpow_natCast] at this
+  have h_combined : |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ (k + 2) ≤
+      C₁ ^ (k + 2) * (D * S) := by
+    calc |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ (k + 2)
+        ≤ |hermiteCoeffNd (d' + 1) α f| *
+          (C₁ ^ (k + 2) * (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2))) := by
+          apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
+          calc (1 + ↑n) ^ (k + 2)
+              ≤ (C₁ * (1 + ↑(MultiIndex.abs α)) ^ k₁) ^ (k + 2) :=
+                pow_le_pow_left₀ (by positivity) hn_le _
+            _ = C₁ ^ (k + 2) * (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2)) := by
+                rw [mul_pow, ← pow_mul]
+      _ = C₁ ^ (k + 2) * (|hermiteCoeffNd (d' + 1) α f| *
+            (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2))) := by ring
+      _ ≤ C₁ ^ (k + 2) * (D * S) :=
+          mul_le_mul_of_nonneg_left h_bd (pow_nonneg hC₁.le _)
+  rw [pow_add, ← mul_assoc] at h_combined
+  calc |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ k
+      ≤ C₁ ^ (k + 2) * (D * S) / (1 + ↑n) ^ 2 :=
+        (le_div_iff₀ (by positivity : (0 : ℝ) < (1 + ↑n) ^ 2)).mpr h_combined
+    _ = D * S * C₁ ^ (k + 2) * ((1 + ↑n) ^ (2 : ℕ))⁻¹ := by rw [div_eq_mul_inv]; ring
+    _ = D * S * C₁ ^ (k + 2) * (1 + ↑n) ^ ((-2) : ℝ) := by
+        congr 1
+        rw [show ((-2 : ℝ) : ℝ) = -(↑2 : ℕ) from by norm_num]
+        rw [rpow_neg h1n.le, rpow_natCast]
+
 /-- Flattened multi-d Hermite coefficients form a rapid-decay sequence.
 Uses `hermiteCoeffNd_decay` and `multiIndexEquiv_growth`.
 -/
@@ -2064,48 +2046,10 @@ private theorem hermiteCoeffNd_rapid_decayFlat (d' : ℕ)
   obtain ⟨C₁, hC₁, k₁, hgrowth⟩ := multiIndexEquiv_growth d'
   obtain ⟨D, q, hD, hdecay⟩ := hermiteCoeffNd_decay d' (↑(k₁ * (k + 2)) : ℝ)
   set S := q.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d' + 1))) ℝ) f
-  -- Bound each term
-  have h_le : ∀ n : ℕ,
-      |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + (n : ℝ)) ^ k ≤
-      D * S * C₁ ^ (k + 2) * (1 + (n : ℝ)) ^ ((-2) : ℝ) := by
-    intro n
-    set α := (multiIndexEquiv d').symm n
-    have h1n : (0 : ℝ) < 1 + ↑n := by positivity
-    have hn_le : (1 + (n : ℝ)) ≤ C₁ * (1 + ↑(MultiIndex.abs α)) ^ k₁ := by
-      have := hgrowth α; simp only [α, Equiv.apply_symm_apply] at this; exact this
-    have h_bd : |hermiteCoeffNd (d' + 1) α f| *
-        (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2)) ≤ D * S := by
-      have := hdecay f α; rwa [rpow_natCast] at this
-    have h_combined : |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ (k + 2) ≤
-        C₁ ^ (k + 2) * (D * S) := by
-      calc |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ (k + 2)
-          ≤ |hermiteCoeffNd (d' + 1) α f| *
-            (C₁ ^ (k + 2) * (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2))) := by
-            apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
-            calc (1 + ↑n) ^ (k + 2)
-                ≤ (C₁ * (1 + ↑(MultiIndex.abs α)) ^ k₁) ^ (k + 2) :=
-                  pow_le_pow_left₀ (by positivity) hn_le _
-              _ = C₁ ^ (k + 2) * (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2)) := by
-                  rw [mul_pow, ← pow_mul]
-        _ = C₁ ^ (k + 2) * (|hermiteCoeffNd (d' + 1) α f| *
-              (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2))) := by ring
-        _ ≤ C₁ ^ (k + 2) * (D * S) :=
-            mul_le_mul_of_nonneg_left h_bd (pow_nonneg hC₁.le _)
-    rw [pow_add, ← mul_assoc] at h_combined
-    calc |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ k
-        ≤ C₁ ^ (k + 2) * (D * S) / (1 + ↑n) ^ 2 :=
-          (le_div_iff₀ (by positivity : (0 : ℝ) < (1 + ↑n) ^ 2)).mpr h_combined
-      _ = D * S * C₁ ^ (k + 2) * ((1 + ↑n) ^ (2 : ℕ))⁻¹ := by rw [div_eq_mul_inv]; ring
-      _ = D * S * C₁ ^ (k + 2) * (1 + ↑n) ^ ((-2) : ℝ) := by
-          congr 1
-          rw [show ((-2 : ℝ) : ℝ) = -(↑2 : ℕ) from by norm_num]
-          rw [rpow_neg h1n.le, rpow_natCast]
+  have h_le := hermiteCoeffNd_flat_term_le f k k₁ C₁ D S hC₁ hgrowth (hdecay f)
   -- Summable upper bound
   have h_sum : Summable (fun n : ℕ => D * S * C₁ ^ (k + 2) * (1 + (n : ℝ)) ^ ((-2) : ℝ)) :=
-    (((summable_nat_rpow.mpr (by norm_num : (-2 : ℝ) < -1)).comp_injective
-      (fun a b h => Nat.succ_injective h)).congr
-      (fun n => by change ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm]))
-    |>.const_smul (D * S * C₁ ^ (k + 2))
+    summable_one_add_rpow_neg_two.const_smul (D * S * C₁ ^ (k + 2))
   exact .of_nonneg_of_le
     (fun n => mul_nonneg (abs_nonneg _) (pow_nonneg (by positivity) _))
     h_le h_sum
@@ -2132,54 +2076,14 @@ private lemma toRapidDecayNdLM_isBounded (d' : ℕ) :
   intro k
   obtain ⟨C₁, hC₁, k₁, hgrowth⟩ := multiIndexEquiv_growth d'
   obtain ⟨D, q, hD, hdecay⟩ := hermiteCoeffNd_decay d' (↑(k₁ * (k + 2)) : ℝ)
-  have h_rpow_sum : Summable (fun n : ℕ => (1 + (n : ℝ)) ^ ((-2) : ℝ)) :=
-    ((summable_nat_rpow.mpr (by norm_num : (-2 : ℝ) < -1)).comp_injective
-      (fun a b h => Nat.succ_injective h)).congr
-      (fun n => by change ((↑(n + 1) : ℝ)) ^ ((-2) : ℝ) = _; simp [add_comm])
+  have h_rpow_sum := summable_one_add_rpow_neg_two
   set L := ∑' n : ℕ, (1 + (n : ℝ)) ^ ((-2) : ℝ)
   refine ⟨q, ⟨D * C₁ ^ (k + 2) * L, by positivity⟩, fun f => ?_⟩
   simp only [Seminorm.comp_apply, Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
   set S := q.sup (schwartzSeminormFamily ℝ (EuclideanSpace ℝ (Fin (d' + 1))) ℝ) f
   change ∑' n, |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + ↑n) ^ k ≤
     D * C₁ ^ (k + 2) * L * S
-  have h_le : ∀ n : ℕ,
-      |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + (n : ℝ)) ^ k ≤
-      D * S * C₁ ^ (k + 2) * (1 + (n : ℝ)) ^ ((-2) : ℝ) := by
-    intro n
-    set α := (multiIndexEquiv d').symm n
-    have h1n : (0 : ℝ) < 1 + ↑n := by positivity
-    have hn_le : (1 + (n : ℝ)) ≤ C₁ * (1 + ↑(MultiIndex.abs α)) ^ k₁ := by
-      have := hgrowth α; simp only [α, Equiv.apply_symm_apply] at this; exact this
-    have h_bd : |hermiteCoeffNd (d' + 1) α f| *
-        (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2)) ≤ D * S := by
-      have := hdecay f α; rwa [rpow_natCast] at this
-    have h_combined : |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ (k + 2) ≤
-        C₁ ^ (k + 2) * (D * S) := by
-      calc |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ (k + 2)
-          ≤ |hermiteCoeffNd (d' + 1) α f| *
-            (C₁ ^ (k + 2) * (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2))) := by
-            apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
-            calc (1 + ↑n) ^ (k + 2)
-                ≤ (C₁ * (1 + ↑(MultiIndex.abs α)) ^ k₁) ^ (k + 2) :=
-                  pow_le_pow_left₀ (by positivity) hn_le _
-              _ = C₁ ^ (k + 2) * (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2)) := by
-                  rw [mul_pow, ← pow_mul]
-        _ = C₁ ^ (k + 2) * (|hermiteCoeffNd (d' + 1) α f| *
-              (1 + ↑(MultiIndex.abs α)) ^ (k₁ * (k + 2))) := by ring
-        _ ≤ C₁ ^ (k + 2) * (D * S) :=
-            mul_le_mul_of_nonneg_left h_bd (pow_nonneg hC₁.le _)
-    rw [pow_add, ← mul_assoc] at h_combined
-    have hle : |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ k ≤
-        D * S * C₁ ^ (k + 2) * (1 + ↑n) ^ ((-2) : ℝ) := by
-      calc |hermiteCoeffNd (d' + 1) α f| * (1 + ↑n) ^ k
-          ≤ C₁ ^ (k + 2) * (D * S) / (1 + ↑n) ^ 2 :=
-            (le_div_iff₀ (by positivity : (0 : ℝ) < (1 + ↑n) ^ 2)).mpr h_combined
-        _ = D * S * C₁ ^ (k + 2) * ((1 + ↑n) ^ (2 : ℕ))⁻¹ := by rw [div_eq_mul_inv]; ring
-        _ = D * S * C₁ ^ (k + 2) * (1 + ↑n) ^ ((-2) : ℝ) := by
-            congr 1
-            rw [show ((-2 : ℝ) : ℝ) = -(↑2 : ℕ) from by norm_num]
-            rw [rpow_neg h1n.le, rpow_natCast]
-    exact hle
+  have h_le := hermiteCoeffNd_flat_term_le f k k₁ C₁ D S hC₁ hgrowth (hdecay f)
   calc ∑' n, |hermiteCoeffNd (d' + 1) ((multiIndexEquiv d').symm n) f| * (1 + ↑n) ^ k
       ≤ ∑' (n : ℕ), D * S * C₁ ^ (k + 2) * (1 + (n : ℝ)) ^ ((-2) : ℝ) :=
         (hermiteCoeffNd_rapid_decayFlat d' f k).tsum_le_tsum h_le
@@ -2338,153 +2242,10 @@ private noncomputable instance schwartzMapNd_T2Space (d : ℕ) :
 in the Schwartz topology.
 -/
 private theorem rapidDecay_hermite_hasSumNd (d : ℕ) (a : RapidDecaySeq) :
-    HasSum (fun n => a.val n • flatBasisNd d n) (rapidDecay_schwartzMapNd d a) := by
-  rw [HasSum]
-  change Filter.Tendsto _ Filter.atTop _
-  rw [(schwartz_withSeminorms ℝ (EuclideanSpace ℝ (Fin (d + 1))) ℝ).tendsto_nhds _
-    (rapidDecay_schwartzMapNd d a)]
-  intro ⟨k, l⟩ ε hε
-  have h_sem := rapidDecay_seminorm_summableNd d a k l
-  obtain ⟨s₀, hs₀⟩ := summable_iff_vanishing_norm.mp h_sem (ε / 2) (half_pos hε)
-  rw [Filter.eventually_atTop]
-  refine ⟨s₀, fun s hs => ?_⟩
-  rw [show (∑ i ∈ s, a.val i • flatBasisNd d i) - rapidDecay_schwartzMapNd d a =
-    -(rapidDecay_schwartzMapNd d a - ∑ i ∈ s, a.val i • flatBasisNd d i) from by abel,
-    map_neg_eq_map]
-  calc SchwartzMap.seminorm ℝ k l
-        (rapidDecay_schwartzMapNd d a - ∑ i ∈ s, a.val i • flatBasisNd d i)
-      ≤ ε / 2 := by
-        apply SchwartzMap.seminorm_le_bound ℝ k l _ (half_pos hε).le
-        intro x
-        set r := rapidDecay_schwartzMapNd d a -
-          ∑ i ∈ s, a.val i • flatBasisNd d i with hr_def
-        let g : ℕ → EuclideanSpace ℝ (Fin (d + 1)) → ℝ :=
-          fun n y => a.val n * flatBasisNd d n y
-        have h_summ_iFD : Summable (fun n => iteratedFDeriv ℝ l (g n) x) := by
-          apply Summable.of_norm_bounded
-            (g := fun n => |a.val n| * SchwartzMap.seminorm ℝ 0 l (flatBasisNd d n))
-          · exact rapidDecay_seminorm_summableNd d a 0 l
-          · intro n; exact scalar_flatBasisNd_iFDeriv_bound d (a.val n) n l x
-        have h_iFD_limit : iteratedFDeriv ℝ l
-            (fun y => ∑' n, a.val n * flatBasisNd d n y) x =
-            ∑' n, iteratedFDeriv ℝ l (g n) x := by
-          apply iteratedFDeriv_tsum_apply (N := ⊤)
-            (v := fun j n => |a.val n| * SchwartzMap.seminorm ℝ 0 j (flatBasisNd d n))
-          · intro n; exact contDiff_const.mul (flatBasisNd d n).smooth'
-          · intro j _; exact rapidDecay_seminorm_summableNd d a 0 j
-          · intro j n y _; exact scalar_flatBasisNd_iFDeriv_bound d (a.val n) n j y
-          · exact le_top
-        have hsum_coe : ∀ y,
-            (∑ i ∈ s, a.val i • flatBasisNd d i :
-              SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ) y =
-            ∑ i ∈ s, g i y := by
-          intro y
-          have : ∀ (t : Finset ℕ),
-              (∑ i ∈ t, a.val i • flatBasisNd d i :
-                SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ) y =
-              ∑ i ∈ t, g i y := by
-            intro t; induction t using Finset.cons_induction with
-            | empty => simp
-            | cons a' t' ha' ih =>
-              simp [SchwartzMap.smul_apply, smul_eq_mul, g]
-          exact this s
-        have h_iFD_sum : iteratedFDeriv ℝ l
-            (⇑(∑ i ∈ s, a.val i • flatBasisNd d i :
-              SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ)) x =
-            ∑ i ∈ s, iteratedFDeriv ℝ l (g i) x := by
-          have hcoe : ⇑(∑ i ∈ s, a.val i • flatBasisNd d i :
-              SchwartzMap (EuclideanSpace ℝ (Fin (d + 1))) ℝ) =
-              fun y => ∑ i ∈ s, g i y := funext hsum_coe
-          rw [hcoe]
-          have h_eq := iteratedFDeriv_sum (𝕜 := ℝ) (f := g) (u := s) (i := l)
-            (fun i _ => (contDiff_const.mul (flatBasisNd d i).smooth').of_le (mod_cast le_top))
-          exact congr_fun h_eq x |>.trans (Finset.sum_apply x s _)
-        have h_iFD_r : iteratedFDeriv ℝ l (⇑r) x =
-            ∑' (i : ↥(↑s : Set ℕ)ᶜ), iteratedFDeriv ℝ l (g ↑i) x := by
-          have hf_cd : ContDiff ℝ l
-              (fun y => ∑' n, a.val n * flatBasisNd d n y) :=
-            (rapidDecay_hermite_contDiffNd d a).of_le (mod_cast le_top)
-          have hg_cd : ContDiff ℝ l (fun y => ∑ i ∈ s, g i y) :=
-            ContDiff.sum (fun i _ =>
-              (contDiff_const.mul (flatBasisNd d i).smooth').of_le (mod_cast le_top))
-          have hcoe_r : (⇑r : EuclideanSpace ℝ (Fin (d + 1)) → ℝ) = fun y =>
-              (∑' n, a.val n * flatBasisNd d n y) - ∑ i ∈ s, g i y := by
-            ext y; simp only [hr_def, SchwartzMap.sub_apply,
-              rapidDecay_schwartzMapNd_apply]
-            exact congrArg
-              ((∑' n, a.val n * flatBasisNd d n y) - ·) (hsum_coe y)
-          rw [hcoe_r]
-          set h_sum := fun y => ∑ i ∈ s, g i y with h_sum_def
-          have h_neg_cd : ContDiff ℝ l (-h_sum) := hg_cd.neg
-          have h_rw : (fun y =>
-              (∑' n, a.val n * flatBasisNd d n y) - h_sum y) =
-              (fun y => ∑' n, a.val n * flatBasisNd d n y) + (-h_sum) := by
-            ext; simp [sub_eq_add_neg]
-          rw [h_rw, iteratedFDeriv_add hf_cd h_neg_cd, Pi.add_apply,
-            iteratedFDeriv_neg, Pi.neg_apply, h_iFD_limit]
-          have h_iFD_h : iteratedFDeriv ℝ l h_sum x =
-              ∑ i ∈ s, iteratedFDeriv ℝ l (g i) x := by
-            rw [h_sum_def]
-            have h_eq := iteratedFDeriv_sum (𝕜 := ℝ) (f := g) (u := s) (i := l)
-              (fun i _ =>
-                (contDiff_const.mul (flatBasisNd d i).smooth').of_le (mod_cast le_top))
-            calc iteratedFDeriv ℝ l (fun y => ∑ i ∈ s, g i y) x
-                = (∑ j ∈ s, iteratedFDeriv ℝ l (g j)) x := congr_fun h_eq x
-              _ = ∑ i ∈ s, iteratedFDeriv ℝ l (g i) x := Finset.sum_apply x s _
-          rw [h_iFD_h]
-          rw [← h_summ_iFD.sum_add_tsum_compl (s := s)]
-          abel
-        have h_norm_summ : Summable (fun (i : ↥(↑s : Set ℕ)ᶜ) =>
-            ‖iteratedFDeriv ℝ l (g ↑i) x‖) :=
-          (Summable.of_nonneg_of_le (fun _ => norm_nonneg _)
-            (fun n => scalar_flatBasisNd_iFDeriv_bound d (a.val n) n l x)
-            (rapidDecay_seminorm_summableNd d a 0 l)).subtype _
-        have h_sem_summ : Summable (fun (i : ↥(↑s : Set ℕ)ᶜ) =>
-            |a.val ↑i| * SchwartzMap.seminorm ℝ k l (flatBasisNd d ↑i)) :=
-          (rapidDecay_seminorm_summableNd d a k l).subtype _
-        have h_ptwise : ∀ (i : ↥(↑s : Set ℕ)ᶜ),
-            ‖x‖ ^ k * ‖iteratedFDeriv ℝ l (g ↑i) x‖ ≤
-            |a.val ↑i| * SchwartzMap.seminorm ℝ k l (flatBasisNd d ↑i) := by
-          intro ⟨n, _⟩
-          have hg_eq : g n = ⇑(a.val n • flatBasisNd d n) := by
-            ext y; simp [g, smul_eq_mul]
-          rw [hg_eq]
-          calc ‖x‖ ^ k * ‖iteratedFDeriv ℝ l
-                (⇑(a.val n • flatBasisNd d n)) x‖
-              ≤ SchwartzMap.seminorm ℝ k l (a.val n • flatBasisNd d n) :=
-                SchwartzMap.le_seminorm ℝ k l _ x
-            _ = |a.val n| * SchwartzMap.seminorm ℝ k l (flatBasisNd d n) := by
-                rw [map_smul_eq_mul, Real.norm_eq_abs]
-        rw [h_iFD_r]
-        calc ‖x‖ ^ k * ‖∑' (i : ↥(↑s : Set ℕ)ᶜ),
-                iteratedFDeriv ℝ l (g ↑i) x‖
-            ≤ ‖x‖ ^ k * ∑' (i : ↥(↑s : Set ℕ)ᶜ),
-                ‖iteratedFDeriv ℝ l (g ↑i) x‖ :=
-              mul_le_mul_of_nonneg_left (norm_tsum_le_tsum_norm h_norm_summ)
-                (pow_nonneg (norm_nonneg _) k)
-          _ = ∑' (i : ↥(↑s : Set ℕ)ᶜ),
-                (‖x‖ ^ k * ‖iteratedFDeriv ℝ l (g ↑i) x‖) := by
-              rw [tsum_mul_left]
-          _ ≤ ∑' (i : ↥(↑s : Set ℕ)ᶜ),
-                (|a.val ↑i| * SchwartzMap.seminorm ℝ k l (flatBasisNd d ↑i)) :=
-              (h_norm_summ.mul_left _).tsum_le_tsum h_ptwise h_sem_summ
-          _ ≤ ε / 2 := by
-              apply h_sem_summ.tsum_le_of_sum_le
-              intro t
-              set t' := t.map ⟨Subtype.val, Subtype.val_injective⟩ with ht'_def
-              have h_disj : Disjoint t' s := by
-                rw [Finset.disjoint_left]
-                intro n hn hn_s
-                rw [Finset.mem_map] at hn
-                obtain ⟨⟨m, hm⟩, _, rfl⟩ := hn
-                exact hm hn_s
-              have h_disj₀ : Disjoint t' s₀ := Disjoint.mono_right hs h_disj
-              have h_lt := hs₀ t' h_disj₀
-              rw [Real.norm_of_nonneg (Finset.sum_nonneg fun i _ =>
-                mul_nonneg (abs_nonneg _) (apply_nonneg _ _))] at h_lt
-              rw [ht'_def, Finset.sum_map] at h_lt
-              exact le_of_lt h_lt
-    _ < ε := half_lt_self hε
+    HasSum (fun n => a.val n • flatBasisNd d n) (rapidDecay_schwartzMapNd d a) :=
+  rapidDecay_hasSum_generic (flatBasisNd d) a (rapidDecay_schwartzMapNd d a)
+    (rapidDecay_schwartzMapNd_apply d a) (rapidDecay_seminorm_summableNd d a)
+    (fun c n l x => scalar_flatBasisNd_iFDeriv_bound d c n l x)
 
 /-- Summability of multi-d Hermite expansion for rapid-decay coefficients. -/
 private theorem rapidDecay_hermite_summableNd (d : ℕ) (a : RapidDecaySeq) :
