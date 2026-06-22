@@ -1078,8 +1078,8 @@ theorem bisect_angle_iso (aL : OnLine a L) (bL : OnLine b L) (aM : OnLine a M) (
     (iso_abc : isoTri a b c) : ∃ d, angle b a d = angle c a d ∧ SameSide d b M ∧
     SameSide d c L := by
   rcases bisect_segment (ne_23_of_tri iso_abc.1) with ⟨d, Bbdc, bd_cd⟩
-  have bad_cad : angle b a d = angle c a d := (sss bd_cd rfl <| by perma[iso_abc.2]).2.2
-  refine ⟨d, bad_cad, sameside_of_B_online_3 (B_symm Bbdc) cM <| online_2_of_triangle aM cM
+  refine ⟨d, (sss bd_cd rfl <| by perma[iso_abc.2]).2.2,
+    sameside_of_B_online_3 (B_symm Bbdc) cM <| online_2_of_triangle aM cM
     iso_abc.1, sameside_of_B_online_3 Bbdc bL <| online_3_of_triangle aL bL iso_abc.1⟩
 
 /-- Euclid I.9 lemma, bisecting an angle -/
@@ -1105,10 +1105,8 @@ theorem perpendicular_of_online (Babc : B a b c) (aL : OnLine a L) (bL : OnLine 
   rcases iseqtri_sameside_of_ne (ne_13_of_B Babd) aL (online_3_of_B Babd aL bL) fL
     with ⟨e, eL, efL, eqtri⟩
   have eba_ebd : angle e b a = angle e b d := (sss rfl eqtri.2.2.2 ba_bd).2.1
-  have rightangles : angle e b a = rightangle ∧ angle e b c = rightangle :=
-    rightangle_of_angle_eq Babc aL (online_3_of_B Babc aL bL) eL <| eba_ebd.trans
-    <| angle_extension_of_B_B (ne_of_online bL eL) Babc Babd
-  refine ⟨e, efL, rightangles⟩
+  exact ⟨e, efL, rightangle_of_angle_eq Babc aL (online_3_of_B Babc aL bL) eL <| eba_ebd.trans
+    <| angle_extension_of_B_B (ne_of_online bL eL) Babc Babd⟩
 
 /-- Euclid I.11, Obtaining a perpendicular angle from a point on a line -/
 theorem perpendicular_of_online' (ab : a ≠ b) (aL : OnLine a L) (bL : OnLine b L)
@@ -1134,9 +1132,8 @@ theorem perpendicular_of_not_online (aL : ¬OnLine a L) : ∃ c d e, B c e d ∧
   rcases pts_line_circle_of_not_sameside aα bα abL.2.2 with ⟨c, d, cd, cL, dL, cα, dα⟩
   rcases bisect_segment cd with ⟨e, Bced, ce_de⟩
   have aec_aed : angle a e c = angle a e d := (sss (length_eq_of_oncircle aα cα dα) ce_de rfl).2.2
-  have rightangles : angle a e c = rightangle ∧ angle a e d = rightangle :=
-    rightangle_of_angle_eq Bced cL dL aL aec_aed
-  refine ⟨c, d, e, Bced, cL, dL, online_2_of_B Bced cL dL, rightangles⟩
+  exact ⟨c, d, e, Bced, cL, dL, online_2_of_B Bced cL dL,
+    rightangle_of_angle_eq Bced cL dL aL aec_aed⟩
 
 /-- Euclid I.13, A generalization of I.11. Instead of requiring the angles to be perpendicular,
   they can be arbitrary -/
