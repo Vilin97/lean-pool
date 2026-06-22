@@ -253,8 +253,8 @@ lemma rel_transitive (F_trans : IsTrans F.World F.Rel) :
     IsTrans (F↾r).World (F↾r).Rel := by
   exact ⟨fun _ _ _ hxy hyz => F_trans.trans _ _ _ hxy hyz⟩
 
-lemma rel_irreflexive (F_irrefl : Std.Irrefl F.Rel) : Std.Irrefl (F↾r).Rel := by
-  exact ⟨fun x h => F_irrefl.irrefl x.1 h⟩
+lemma rel_irreflexive (F_irrefl : Std.Irrefl F.Rel) : Std.Irrefl (F↾r).Rel :=
+  ⟨fun x h => F_irrefl.irrefl x.1 h⟩
 
 lemma rel_universal (F_refl : Std.Refl F.Rel) (F_eucl : Euclidean F.Rel) : Universal (F↾r).Rel := by
   have F_symm := symm_of_refl_eucl F_refl.refl F_eucl;

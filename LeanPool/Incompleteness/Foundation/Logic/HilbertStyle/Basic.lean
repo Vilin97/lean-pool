@@ -455,10 +455,8 @@ lemma «unprovable_imp_trans''!» [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢
 def iffTrans''
     [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢]
     (h₁ : 𝓢 ⊢ φ <=> ψ) (h₂ : 𝓢 ⊢ ψ <=> χ) :
-    𝓢 ⊢ φ <=> χ := by
-  apply iffIntro;
-  · exact impTrans'' (and₁' h₁) (and₁' h₂);
-  · exact impTrans'' (and₂' h₂) (and₂' h₁);
+    𝓢 ⊢ φ <=> χ :=
+  iffIntro (impTrans'' (and₁' h₁) (and₁' h₂)) (impTrans'' (and₂' h₂) (and₂' h₁))
 lemma «iff_trans''!»
     [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢]
     (h₁ : 𝓢 ⊢! φ <=> ψ) (h₂ : 𝓢 ⊢! ψ <=> χ) :
@@ -565,10 +563,8 @@ def _root_.LO.Entailment.andImplyIffImplyImply'.mpr
 
 lemma «and_imply_iff_imply_imply'!»
     [HasAxiomAndInst 𝓢] [HasAxiomAndElim 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢]: (𝓢 ⊢! φ ⋏ ψ ==>
-        χ) ↔ (𝓢 ⊢! φ ==> ψ ==> χ) := by
-  apply Iff.intro;
-  · intro ⟨h⟩; exact ⟨andImplyIffImplyImply'.mp h⟩
-  · intro ⟨h⟩; exact ⟨andImplyIffImplyImply'.mpr h⟩
+        χ) ↔ (𝓢 ⊢! φ ==> ψ ==> χ) :=
+  ⟨fun ⟨h⟩ => ⟨andImplyIffImplyImply'.mp h⟩, fun ⟨h⟩ => ⟨andImplyIffImplyImply'.mpr h⟩⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def implyLeftVerum [HasAxiomVerum 𝓢] [HasAxiomImply₁ 𝓢] : 𝓢 ⊢ φ ==> ⊤ := imply₁' verum

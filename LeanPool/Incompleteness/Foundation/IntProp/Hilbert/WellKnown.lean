@@ -26,11 +26,9 @@ class HasLEM (H : Hilbert α) where
   mem_lem : (.atom p ⋎ ∼(.atom p)) ∈ H.axioms := by tauto;
 
 instance [DecidableEq α] [hLEM : H.HasLEM] : Entailment.HasAxiomLEM H where
-  lem φ := by
-    apply maxm;
-    refine ⟨Axioms.LEM (.atom hLEM.p), hLEM.mem_lem,
-      fun b => if hLEM.p = b then φ else (.atom b), ?_⟩;
-    simp;
+  lem φ :=
+    maxm ⟨Axioms.LEM (.atom hLEM.p), hLEM.mem_lem,
+      fun b => if hLEM.p = b then φ else (.atom b), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -40,11 +38,9 @@ class HasDNE (H : Hilbert α) where
   mem_dne : (∼∼(.atom p) ==> (.atom p)) ∈ H.axioms := by tauto;
 
 instance [DecidableEq α] [hDNE : H.HasDNE] : Entailment.HasAxiomDNE H where
-  dne φ := by
-    apply maxm;
-    refine ⟨Axioms.DNE (.atom hDNE.p), hDNE.mem_dne,
-      fun b => if hDNE.p = b then φ else (.atom b), ?_⟩;
-    simp;
+  dne φ :=
+    maxm ⟨Axioms.DNE (.atom hDNE.p), hDNE.mem_dne,
+      fun b => if hDNE.p = b then φ else (.atom b), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -54,11 +50,9 @@ class HasWeakLEM (H : Hilbert α) where
   mem_wlem : (∼(.atom p) ⋎ ∼∼(.atom p)) ∈ H.axioms := by tauto;
 
 instance [DecidableEq α] [hWLEM : H.HasWeakLEM] : Entailment.HasAxiomWeakLEM H where
-  wlem φ := by
-    apply maxm;
-    refine ⟨Axioms.WeakLEM (.atom hWLEM.p), hWLEM.mem_wlem,
-      fun b => if hWLEM.p = b then φ else (.atom b), ?_⟩;
-    simp;
+  wlem φ :=
+    maxm ⟨Axioms.WeakLEM (.atom hWLEM.p), hWLEM.mem_wlem,
+      fun b => if hWLEM.p = b then φ else (.atom b), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -71,11 +65,10 @@ class HasDummett (H : Hilbert α) where
   mem_dummet : ((.atom p) ==> (.atom q)) ⋎ ((.atom q) ==> (.atom p)) ∈ H.axioms := by tauto;
 
 instance [DecidableEq α] [hDummett : H.HasDummett] : Entailment.HasAxiomDummett H where
-  dummett φ ψ := by
-    apply maxm;
-    refine ⟨Axioms.Dummett (.atom hDummett.p) (.atom hDummett.q), hDummett.mem_dummet,
-      fun b => if hDummett.p = b then φ else if hDummett.q = b then ψ else (.atom b), ?_⟩;
-    simp [hDummett.ne_pq];
+  dummett φ ψ :=
+    maxm ⟨Axioms.Dummett (.atom hDummett.p) (.atom hDummett.q), hDummett.mem_dummet,
+      fun b => if hDummett.p = b then φ else if hDummett.q = b then ψ else (.atom b),
+      by simp [hDummett.ne_pq]⟩
 
 end «lp_section_1»
 

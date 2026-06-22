@@ -83,8 +83,8 @@ abbrev miniCanonicalFrame (φ : Formula ℕ) : Kripke.FiniteFrame where
 
 namespace miniCanonicalFrame
 
-lemma reflexive : Std.Refl (miniCanonicalFrame φ).Rel := by
-  exact ⟨fun _ => by simp ⟩
+lemma reflexive : Std.Refl (miniCanonicalFrame φ).Rel :=
+  ⟨fun _ => by simp⟩
 
 lemma transitive : IsTrans (miniCanonicalFrame φ).World (miniCanonicalFrame φ).Rel := by
   constructor

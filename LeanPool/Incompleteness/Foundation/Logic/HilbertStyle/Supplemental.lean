@@ -57,20 +57,16 @@ lemma «efqOfMemEither!» [HasAxiomEFQ 𝓢] (h₁ : φ ∈ Γ) (h₂ : ∼φ �
   exact ⟨efqOfMemEither h₁ h₂⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def efqImplyNot₁ [HasAxiomEFQ 𝓢] : 𝓢 ⊢ ∼φ ==> φ ==> ψ := by
-  apply deduct';
-  apply deduct;
-  apply efqOfMemEither (φ := φ) (by simp) (by simp);
+def efqImplyNot₁ [HasAxiomEFQ 𝓢] : 𝓢 ⊢ ∼φ ==> φ ==> ψ :=
+  deduct' <| deduct <| efqOfMemEither (φ := φ) (by simp) (by simp)
 omit [DecidableEq F] in
 @[simp] lemma «efqImplyNot₁!» [HasAxiomEFQ 𝓢] : 𝓢 ⊢! ∼φ ==> φ ==> ψ := by
   classical
   exact ⟨efqImplyNot₁⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def efqImplyNot₂ [HasAxiomEFQ 𝓢] : 𝓢 ⊢ φ ==> ∼φ ==> ψ := by
-  apply deduct';
-  apply deduct;
-  apply efqOfMemEither (φ := φ) (by simp) (by simp);
+def efqImplyNot₂ [HasAxiomEFQ 𝓢] : 𝓢 ⊢ φ ==> ∼φ ==> ψ :=
+  deduct' <| deduct <| efqOfMemEither (φ := φ) (by simp) (by simp)
 omit [DecidableEq F] in
 @[simp] lemma «efqImplyNot₂!» [HasAxiomEFQ 𝓢] : 𝓢 ⊢! φ ==> ∼φ ==> ψ := by
   classical
@@ -109,22 +105,16 @@ lemma «dne_or!» [HasAxiomDNE 𝓢] (d : 𝓢 ⊢! ∼∼φ ⋎ ∼∼ψ) : �
   exact ⟨dneOr d.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def implyLeftOr' (h : 𝓢 ⊢ φ ==> χ) : 𝓢 ⊢ φ ==> (χ ⋎ ψ) := by
-  apply deduct';
-  apply or₁';
-  apply deductInv;
-  exact of h;
+def implyLeftOr' (h : 𝓢 ⊢ φ ==> χ) : 𝓢 ⊢ φ ==> (χ ⋎ ψ) :=
+  deduct' <| or₁' <| deductInv <| of h
 omit [DecidableEq F] in
 lemma «imply_left_or'!» (h : 𝓢 ⊢! φ ==> χ) : 𝓢 ⊢! φ ==> (χ ⋎ ψ) := by
   classical
   exact ⟨implyLeftOr' h.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def implyRightOr' (h : 𝓢 ⊢ ψ ==> χ) : 𝓢 ⊢ ψ ==> (φ ⋎ χ) := by
-  apply deduct';
-  apply or₂';
-  apply deductInv;
-  exact of h;
+def implyRightOr' (h : 𝓢 ⊢ ψ ==> χ) : 𝓢 ⊢ ψ ==> (φ ⋎ χ) :=
+  deduct' <| or₂' <| deductInv <| of h
 omit [DecidableEq F] in
 lemma «imply_right_or'!» (h : 𝓢 ⊢! ψ ==> χ) : 𝓢 ⊢! ψ ==> (φ ⋎ χ) := by
   classical
@@ -170,9 +160,8 @@ lemma «cut!» (d₁ : 𝓢 ⊢! φ₁ ⋏ c ==> ψ₁) (d₂ : 𝓢 ⊢! φ₂ 
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def orComm : 𝓢 ⊢ φ ⋎ ψ ==> ψ ⋎ φ := by
-  apply deduct';
-  exact or₃''' or₂ or₁ <| FiniteContext.id
+def orComm : 𝓢 ⊢ φ ⋎ ψ ==> ψ ⋎ φ :=
+  deduct' <| or₃''' or₂ or₁ FiniteContext.id
 omit [DecidableEq F] in
 lemma «or_comm!» : 𝓢 ⊢! φ ⋎ ψ ==> ψ ⋎ φ := by
   classical
@@ -238,9 +227,8 @@ lemma «and_replace_left'!» (hc :
   exact ⟨andReplaceLeft' hc.some h.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def andReplaceLeft (h : 𝓢 ⊢ φ ==> χ) : 𝓢 ⊢ φ ⋏ ψ ==> χ ⋏ ψ := by
-  apply deduct';
-  exact andReplaceLeft' FiniteContext.id (of h)
+def andReplaceLeft (h : 𝓢 ⊢ φ ==> χ) : 𝓢 ⊢ φ ⋏ ψ ==> χ ⋏ ψ :=
+  deduct' <| andReplaceLeft' FiniteContext.id (of h)
 omit [DecidableEq F] in
 lemma «and_replace_left!» (h : 𝓢 ⊢! φ ==> χ) : 𝓢 ⊢! φ ⋏ ψ ==> χ ⋏ ψ := by
   classical
@@ -257,9 +245,8 @@ lemma andReplaceRight'! (hc : 𝓢 ⊢! φ ⋏ ψ) (h : 𝓢 ⊢! ψ ==> χ) : �
   exact ⟨andReplaceRight' hc.some h.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def andReplaceRight (h : 𝓢 ⊢ ψ ==> χ) : 𝓢 ⊢ φ ⋏ ψ ==> φ ⋏ χ := by
-  apply deduct';
-  exact andReplaceRight' (FiniteContext.id) (of h)
+def andReplaceRight (h : 𝓢 ⊢ ψ ==> χ) : 𝓢 ⊢ φ ⋏ ψ ==> φ ⋏ χ :=
+  deduct' <| andReplaceRight' FiniteContext.id (of h)
 omit [DecidableEq F] in
 lemma «and_replace_right!» (h : 𝓢 ⊢! ψ ==> χ) : 𝓢 ⊢! φ ⋏ ψ ==> φ ⋏ χ := by
   classical
@@ -277,9 +264,8 @@ lemma «and_replace'!» (hc :
   exact ⟨andReplace' hc.some h₁.some h₂.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def andReplace (h₁ : 𝓢 ⊢ φ ==> χ) (h₂ : 𝓢 ⊢ ψ ==> s) : 𝓢 ⊢ φ ⋏ ψ ==> χ ⋏ s := by
-  apply deduct';
-  exact andReplace' FiniteContext.id (of h₁) (of h₂)
+def andReplace (h₁ : 𝓢 ⊢ φ ==> χ) (h₂ : 𝓢 ⊢ ψ ==> s) : 𝓢 ⊢ φ ⋏ ψ ==> χ ⋏ s :=
+  deduct' <| andReplace' FiniteContext.id (of h₁) (of h₂)
 omit [DecidableEq F] in
 lemma «and_replace!» (h₁ : 𝓢 ⊢! φ ==> χ) (h₂ : 𝓢 ⊢! ψ ==> s) :
     𝓢 ⊢! φ ⋏ ψ ==> χ ⋏ s := by
@@ -298,9 +284,8 @@ lemma «or_replace_left'!» (hc :
   exact ⟨orReplaceLeft' hc.some hp.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def orReplaceLeft (hp : 𝓢 ⊢ φ ==> χ) : 𝓢 ⊢ φ ⋎ ψ ==> χ ⋎ ψ := by
-  apply deduct';
-  exact orReplaceLeft' FiniteContext.id (of hp)
+def orReplaceLeft (hp : 𝓢 ⊢ φ ==> χ) : 𝓢 ⊢ φ ⋎ ψ ==> χ ⋎ ψ :=
+  deduct' <| orReplaceLeft' FiniteContext.id (of hp)
 omit [DecidableEq F] in
 lemma «or_replace_left!» (hp : 𝓢 ⊢! φ ==> χ) : 𝓢 ⊢! φ ⋎ ψ ==> χ ⋎ ψ := by
   classical
@@ -318,9 +303,8 @@ lemma «or_replace_right'!» (hc :
   exact ⟨orReplaceRight' hc.some hq.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def orReplaceRight (hq : 𝓢 ⊢ ψ ==> χ) : 𝓢 ⊢ φ ⋎ ψ ==> φ ⋎ χ := by
-  apply deduct';
-  exact orReplaceRight' FiniteContext.id (of hq)
+def orReplaceRight (hq : 𝓢 ⊢ ψ ==> χ) : 𝓢 ⊢ φ ⋎ ψ ==> φ ⋎ χ :=
+  deduct' <| orReplaceRight' FiniteContext.id (of hq)
 omit [DecidableEq F] in
 lemma «or_replace_right!» (hq : 𝓢 ⊢! ψ ==> χ) : 𝓢 ⊢! φ ⋎ ψ ==> φ ⋎ χ := by
   classical
@@ -339,9 +323,8 @@ lemma «or_replace'!» (h :
   exact ⟨orReplace' h.some hp.some hq.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def orReplace (hp : 𝓢 ⊢ φ₁ ==> φ₂) (hq : 𝓢 ⊢ ψ₁ ==> ψ₂) : 𝓢 ⊢ φ₁ ⋎ ψ₁ ==> φ₂ ⋎ ψ₂ := by
-  apply deduct';
-  exact orReplace' FiniteContext.id (of hp) (of hq);
+def orReplace (hp : 𝓢 ⊢ φ₁ ==> φ₂) (hq : 𝓢 ⊢ ψ₁ ==> ψ₂) : 𝓢 ⊢ φ₁ ⋎ ψ₁ ==> φ₂ ⋎ ψ₂ :=
+  deduct' <| orReplace' FiniteContext.id (of hp) (of hq)
 omit [DecidableEq F] in
 lemma «or_replace!» (hp : 𝓢 ⊢! φ₁ ==> φ₂) (hq : 𝓢 ⊢! ψ₁ ==> ψ₂) :
     𝓢 ⊢! φ₁ ⋎ ψ₁ ==> φ₂ ⋎ ψ₂ := by
@@ -349,10 +332,8 @@ lemma «or_replace!» (hp : 𝓢 ⊢! φ₁ ==> φ₂) (hq : 𝓢 ⊢! ψ₁ ==>
   exact ⟨orReplace hp.some hq.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def orReplaceIff (hp : 𝓢 ⊢ φ₁ <=> φ₂) (hq : 𝓢 ⊢ ψ₁ <=> ψ₂) : 𝓢 ⊢ φ₁ ⋎ ψ₁ <=> φ₂ ⋎ ψ₂ := by
-  apply iffIntro;
-  · exact orReplace (and₁' hp) (and₁' hq);
-  · exact orReplace (and₂' hp) (and₂' hq);
+def orReplaceIff (hp : 𝓢 ⊢ φ₁ <=> φ₂) (hq : 𝓢 ⊢ ψ₁ <=> ψ₂) : 𝓢 ⊢ φ₁ ⋎ ψ₁ <=> φ₂ ⋎ ψ₂ :=
+  iffIntro (orReplace (and₁' hp) (and₁' hq)) (orReplace (and₂' hp) (and₂' hq))
 omit [DecidableEq F] in
 lemma «or_replace_iff!» (hp : 𝓢 ⊢! φ₁ <=> φ₂) (hq : 𝓢 ⊢! ψ₁ <=> ψ₂) :
     𝓢 ⊢! φ₁ ⋎ ψ₁ <=> φ₂ ⋎ ψ₂ := by
@@ -369,23 +350,17 @@ lemma «or_assoc!» : 𝓢 ⊢! φ ⋎ (ψ ⋎ χ) <=> (φ ⋎ ψ) ⋎ χ := by
 omit [DecidableEq F] in
 lemma «or_replace_right_iff!» (d : 𝓢 ⊢! ψ <=> χ) : 𝓢 ⊢! φ ⋎ ψ <=> φ ⋎ χ := by
   classical
-  apply iff_intro!;
-  · apply or_replace_right!; exact and₁'! d;
-  · apply or_replace_right!; exact and₂'! d;
+  exact iff_intro! (or_replace_right! <| and₁'! d) (or_replace_right! <| and₂'! d)
 
 omit [DecidableEq F] in
 lemma «or_replace_left_iff!» (d : 𝓢 ⊢! φ <=> χ) : 𝓢 ⊢! φ ⋎ ψ <=> χ ⋎ ψ := by
   classical
-  apply iff_intro!;
-  · apply or_replace_left!; exact and₁'! d;
-  · apply or_replace_left!; exact and₂'! d;
+  exact iff_intro! (or_replace_left! <| and₁'! d) (or_replace_left! <| and₂'! d)
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def andReplaceIff (hp : 𝓢 ⊢ φ₁ <=> φ₂) (hq : 𝓢 ⊢ ψ₁ <=> ψ₂) : 𝓢 ⊢ φ₁ ⋏ ψ₁ <=> φ₂ ⋏ ψ₂ := by
-  apply iffIntro;
-  · exact andReplace (and₁' hp) (and₁' hq);
-  · exact andReplace (and₂' hp) (and₂' hq);
+def andReplaceIff (hp : 𝓢 ⊢ φ₁ <=> φ₂) (hq : 𝓢 ⊢ ψ₁ <=> ψ₂) : 𝓢 ⊢ φ₁ ⋏ ψ₁ <=> φ₂ ⋏ ψ₂ :=
+  iffIntro (andReplace (and₁' hp) (and₁' hq)) (andReplace (and₂' hp) (and₂' hq))
 omit [DecidableEq F] in
 lemma «and_replace_iff!» (hp : 𝓢 ⊢! φ₁ <=> φ₂) (hq : 𝓢 ⊢! ψ₁ <=> ψ₂) :
     𝓢 ⊢! φ₁ ⋏ ψ₁ <=> φ₂ ⋏ ψ₂ := by
@@ -413,11 +388,8 @@ lemma «imp_replace_iff!'» (hp : 𝓢 ⊢! φ₁ <=> φ₂) (hq : 𝓢 ⊢! ψ�
   exact provable_iff_of_iff (imp_replace_iff! hp hq)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def dni : 𝓢 ⊢ φ ==> ∼∼φ := by
-  apply deduct';
-  apply negEquiv'.mpr;
-  apply deduct;
-  exact botOfMemEither (φ := φ) (by simp) (by simp);
+def dni : 𝓢 ⊢ φ ==> ∼∼φ :=
+  deduct' <| negEquiv'.mpr <| deduct <| botOfMemEither (φ := φ) (by simp) (by simp)
 omit [DecidableEq F] in
 @[simp] lemma «dni!» : 𝓢 ⊢! φ ==> ∼∼φ := by
   classical
@@ -558,10 +530,8 @@ lemma «neg_replace_iff'!» (b : 𝓢 ⊢! φ <=> ψ) : 𝓢 ⊢! ∼φ <=> ∼�
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def iffNegLeftToRight' [HasAxiomDNE 𝓢] (h : 𝓢 ⊢ φ <=> ∼ψ) : 𝓢 ⊢ ∼φ <=> ψ := by
-  apply iffIntro;
-  · apply contra₂' <| and₂' h;
-  · apply contra₁' <| and₁' h;
+def iffNegLeftToRight' [HasAxiomDNE 𝓢] (h : 𝓢 ⊢ φ <=> ∼ψ) : 𝓢 ⊢ ∼φ <=> ψ :=
+  iffIntro (contra₂' <| and₂' h) (contra₁' <| and₁' h)
 omit [DecidableEq F] in
 lemma «iff_neg_left_to_right'!» [HasAxiomDNE 𝓢] (h : 𝓢 ⊢! φ <=> ∼ψ) :
     𝓢 ⊢! ∼φ <=> ψ := by
@@ -629,9 +599,8 @@ lemma «tne'!» (b : 𝓢 ⊢! ∼(∼∼φ)) : 𝓢 ⊢! ∼φ := by
 def tneIff : 𝓢 ⊢ ∼∼∼φ <=> ∼φ := andIntro tne dni
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def implyLeftReplace (h : 𝓢 ⊢ ψ ==> φ) : 𝓢 ⊢ (φ ==> χ) ==> (ψ ==> χ) := by
-  apply deduct';
-  exact impTrans'' (of h) id;
+def implyLeftReplace (h : 𝓢 ⊢ ψ ==> φ) : 𝓢 ⊢ (φ ==> χ) ==> (ψ ==> χ) :=
+  deduct' <| impTrans'' (of h) id
 omit [DecidableEq F] in
 lemma «replace_imply_left!» (h : 𝓢 ⊢! ψ ==> φ) :
     𝓢 ⊢! (φ ==> χ) ==> (ψ ==> χ) := by
@@ -654,10 +623,8 @@ lemma «replace_imply_right_by_iff'!» (h : 𝓢 ⊢! φ <=> ψ) : 𝓢 ⊢! χ 
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def impSwap' (h : 𝓢 ⊢ φ ==> ψ ==> χ) : 𝓢 ⊢ ψ ==> φ ==> χ := by
-  apply deduct';
-  apply deduct;
-  exact (of (Γ := [φ, ψ]) h) ⨀ FiniteContext.byAxm ⨀ FiniteContext.byAxm;
+def impSwap' (h : 𝓢 ⊢ φ ==> ψ ==> χ) : 𝓢 ⊢ ψ ==> φ ==> χ :=
+  deduct' <| deduct <| (of (Γ := [φ, ψ]) h) ⨀ FiniteContext.byAxm ⨀ FiniteContext.byAxm
 omit [DecidableEq F] in
 lemma «imp_swap'!» (h : 𝓢 ⊢! (φ ==> ψ ==> χ)) : 𝓢 ⊢! (ψ ==> φ ==> χ) := by
   classical
@@ -671,10 +638,8 @@ omit [DecidableEq F] in
   exact ⟨impSwap⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ppq (h : 𝓢 ⊢ φ ==> φ ==> ψ) : 𝓢 ⊢ φ ==> ψ := by
-  apply deduct';
-  have := of (Γ := [φ]) h;
-  exact this ⨀ (FiniteContext.byAxm) ⨀ (FiniteContext.byAxm);
+def ppq (h : 𝓢 ⊢ φ ==> φ ==> ψ) : 𝓢 ⊢ φ ==> ψ :=
+  deduct' <| of (Γ := [φ]) h ⨀ FiniteContext.byAxm ⨀ FiniteContext.byAxm
 omit [DecidableEq F] in
 lemma «ppq!» (h : 𝓢 ⊢! φ ==> φ ==> ψ) : 𝓢 ⊢! φ ==> ψ := by
   classical
@@ -703,10 +668,8 @@ lemma «revDhypImp'!» (h : 𝓢 ⊢! ψ ==> φ) : 𝓢 ⊢! (φ ==> χ) ==> (ψ
 
 -- TODO: Actually this can be computable but it's too slow.
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def dnDistributeImply : 𝓢 ⊢ ∼∼(φ ==> ψ) ==> (∼∼φ ==> ∼∼ψ) := by
-  apply impSwap';
-  apply deduct';
-  exact impTrans'' (contra₀x2' <| deductInv <| of <| impSwap' <| contra₀x2) tne;
+noncomputable def dnDistributeImply : 𝓢 ⊢ ∼∼(φ ==> ψ) ==> (∼∼φ ==> ∼∼ψ) :=
+  impSwap' <| deduct' <| impTrans'' (contra₀x2' <| deductInv <| of <| impSwap' <| contra₀x2) tne
 omit [DecidableEq F] in
 @[simp] lemma «dn_distribute_imply!» : 𝓢 ⊢! ∼∼(φ ==> ψ) ==> (∼∼φ ==> ∼∼ψ) := by
   classical
@@ -733,9 +696,8 @@ lemma «intro_falsum_of_and'!» (h : 𝓢 ⊢! φ ⋏ ∼φ) : 𝓢 ⊢! ⊥ := 
 alias lac'! := intro_falsum_of_and'!
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def introFalsumOfAnd : 𝓢 ⊢ φ ⋏ ∼φ ==> ⊥ := by
-  apply deduct';
-  exact introFalsumOfAnd' (φ := φ) <| FiniteContext.id
+def introFalsumOfAnd : 𝓢 ⊢ φ ⋏ ∼φ ==> ⊥ :=
+  deduct' <| introFalsumOfAnd' (φ := φ) FiniteContext.id
 omit [DecidableEq F] in
 @[simp] lemma «intro_bot_of_and!» : 𝓢 ⊢! φ ⋏ ∼φ ==> ⊥ := by
   classical
@@ -804,9 +766,8 @@ lemma «demorgan₂'!» (d : 𝓢 ⊢! ∼φ ⋏ ∼ψ) : 𝓢 ⊢! ∼(φ ⋎ �
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def demorgan₃ : 𝓢 ⊢ ∼(φ ⋎ ψ) ==> (∼φ ⋏ ∼ψ) := by
-  apply deduct';
-  exact and₃' (deductInv <| contra₀' <| or₁) (deductInv <| contra₀' <| or₂)
+def demorgan₃ : 𝓢 ⊢ ∼(φ ⋎ ψ) ==> (∼φ ⋏ ∼ψ) :=
+  deduct' <| and₃' (deductInv <| contra₀' or₁) (deductInv <| contra₀' or₂)
 omit [DecidableEq F] in
 @[simp] lemma «demorgan₃!» : 𝓢 ⊢! ∼(φ ⋎ ψ) ==> (∼φ ⋏ ∼ψ) := by
   classical
@@ -822,10 +783,8 @@ lemma «demorgan₃'!» (b : 𝓢 ⊢! ∼(φ ⋎ ψ)) : 𝓢 ⊢! ∼φ ⋏ ∼
 
 -- TODO: Actually this can be computable but it's too slow.
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def demorgan₄ [HasAxiomDNE 𝓢] : 𝓢 ⊢ ∼(φ ⋏ ψ) ==> (∼φ ⋎ ∼ψ) := by
-  apply contra₂';
-  apply deduct';
-  exact andReplace' (demorgan₃' <| FiniteContext.id) dne dne;
+noncomputable def demorgan₄ [HasAxiomDNE 𝓢] : 𝓢 ⊢ ∼(φ ⋏ ψ) ==> (∼φ ⋎ ∼ψ) :=
+  contra₂' <| deduct' <| andReplace' (demorgan₃' FiniteContext.id) dne dne
 omit [DecidableEq F] in
 @[simp] lemma «demorgan₄!» [HasAxiomDNE 𝓢] : 𝓢 ⊢! ∼(φ ⋏ ψ) ==> (∼φ ⋎ ∼ψ) := by
   classical
@@ -854,10 +813,8 @@ lemma «not_or_of_imply'!» [HasAxiomDNE 𝓢] (d : 𝓢 ⊢! φ ==> ψ) : 𝓢 
   exact ⟨NotOrOfImply' d.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-noncomputable def NotOrOfImply [HasAxiomDNE 𝓢] : 𝓢 ⊢ (φ ==> ψ) ==> (∼φ ⋎ ψ) := by
-  apply deduct';
-  apply NotOrOfImply';
-  exact FiniteContext.byAxm;
+noncomputable def NotOrOfImply [HasAxiomDNE 𝓢] : 𝓢 ⊢ (φ ==> ψ) ==> (∼φ ⋎ ψ) :=
+  deduct' <| NotOrOfImply' FiniteContext.byAxm
 omit [DecidableEq F] in
 lemma «not_or_of_imply!» [HasAxiomDNE 𝓢] : 𝓢 ⊢! (φ ==> ψ) ==> ∼φ ⋎ ψ := by
   classical

@@ -166,9 +166,9 @@ local notation "‖" φ "‖" => cresswellModel.truthset φ
 namespace cresswellModel
 namespace truthset
 
-lemma infinite_of_all_flat (h : ∀ n, n♭ ∈ ‖φ‖) : (‖φ‖.Infinite) := by
-  apply Set.infinite_coe_iff.mp;
-  exact Infinite.of_injective (fun n => ⟨n♭, h n⟩) <| by simp [Function.Injective]
+lemma infinite_of_all_flat (h : ∀ n, n♭ ∈ ‖φ‖) : (‖φ‖.Infinite) :=
+  Set.infinite_coe_iff.mp <|
+    Infinite.of_injective (fun n => ⟨n♭, h n⟩) <| by simp [Function.Injective]
 
 -- TODO: need golf
 lemma exists_max_sharp (h₁ : ∀ n, n♭ ∈ ‖φ‖) (h₂ : ‖φ‖ᶜ.Finite) (h₃ : ‖φ‖ᶜ.Nonempty) :

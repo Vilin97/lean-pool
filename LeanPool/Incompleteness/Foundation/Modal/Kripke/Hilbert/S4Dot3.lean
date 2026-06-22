@@ -90,9 +90,8 @@ instance _root_.LO.Modal.Hilbert.S4Dot3.Kripke.canonical :
         aesop;
     have : (□(□φ ==> ψ) ⋎ □(□ψ ==> φ)) ∉ X := by
       apply iff_mem_or.not.mpr; push Not; exact ⟨hpqX, hqpX⟩;
-    have : □(□φ ==> ψ) ⋎ □(□ψ ==> φ) ∈ X := by
-      apply membership_iff.mpr;
-      exact Entailment.axiomDot3!;
+    have : □(□φ ==> ψ) ⋎ □(□ψ ==> φ) ∈ X :=
+      membership_iff.mpr Entailment.axiomDot3!
     contradiction;
 
 instance _root_.LO.Modal.Hilbert.S4Dot3.Kripke.complete :

@@ -786,8 +786,7 @@ namespace Part
         exact h 0
       refine ⟨w.head, hhead, w.tail, ?_, (List.Vector.cons_head_tail w).symm⟩
       intro i
-      have htail : w.tail.get i = w.get i.succ := by
-        exact List.Vector.get_tail_succ w i
+      have htail : w.tail.get i = w.get i.succ := List.Vector.get_tail_succ w i
       exact htail.symm ▸ h i.succ
 
 end Part

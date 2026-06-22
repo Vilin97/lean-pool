@@ -796,8 +796,8 @@ lemma embSubsts_bv (t : Semiterm L Empty n) (v : Fin n → Semiterm L ξ m) :
   simp only [Semiterm.Positive, embSubsts_bv, Finset.mem_biUnion, forall_exists_index, and_imp]
   exact ⟨fun H i hi x hx ↦ H x i hi hx, fun H x i hi hx ↦ H i hi x hx⟩
 
-@[simp] lemma bshift_positive (t : Semiterm L ξ n) : Positive (Rew.bShift t) := by
-  exact bShift_positive t
+@[simp] lemma bshift_positive (t : Semiterm L ξ n) : Positive (Rew.bShift t) :=
+  bShift_positive t
 
 lemma emb_comp_bShift_comm {o : Type v₁} [IsEmpty o] :
     Rew.bShift.comp (Rew.emb : Rew L o n ξ n) = Rew.emb.comp Rew.bShift := by

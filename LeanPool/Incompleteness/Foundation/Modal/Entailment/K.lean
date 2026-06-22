@@ -37,10 +37,8 @@ alias multiboxed_imply_distribute! := multiboxAxiomK'!
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def boxIff' (h : 𝓢 ⊢ φ <=> ψ) : 𝓢 ⊢ (□φ <=> □ψ) := by
-  apply iffIntro;
-  · exact axiomK' <| nec <| and₁' h;
-  · exact axiomK' <| nec <| and₂' h;
+def boxIff' (h : 𝓢 ⊢ φ <=> ψ) : 𝓢 ⊢ (□φ <=> □ψ) :=
+  iffIntro (axiomK' <| nec <| and₁' h) (axiomK' <| nec <| and₂' h)
 omit [DecidableEq F] in @[simp] lemma box_iff! (h : 𝓢 ⊢! φ <=> ψ) : 𝓢 ⊢! □φ <=> □ψ :=
   ⟨boxIff' h.some⟩
 

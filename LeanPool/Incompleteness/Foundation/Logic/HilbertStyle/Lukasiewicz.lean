@@ -118,9 +118,8 @@ def mdp₂In₁ : 𝓢 ⊢ (φ ==> ψ ==> χ) ==> (φ ==> ψ) ==> (φ ==> χ) :=
 def mdp₂In₂ : 𝓢 ⊢ (φ ==> ψ) ==> (φ ==> ψ ==> χ) ==> (φ ==> χ) := impSwap mdp₂In₁
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def impTrans'₁ (bpq : 𝓢 ⊢ φ ==> ψ) : 𝓢 ⊢ (ψ ==> χ) ==> (φ ==> χ) := by
-  apply impSwap;
-  exact impTrans'' bpq mdpIn₂;
+def impTrans'₁ (bpq : 𝓢 ⊢ φ ==> ψ) : 𝓢 ⊢ (ψ ==> χ) ==> (φ ==> χ) :=
+  impSwap (impTrans'' bpq mdpIn₂)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def impTrans'₂ (bqr : 𝓢 ⊢ ψ ==> χ) : 𝓢 ⊢ (φ ==> ψ) ==> (φ ==> χ) := imply₂ ⨀ (imply₁' bqr)

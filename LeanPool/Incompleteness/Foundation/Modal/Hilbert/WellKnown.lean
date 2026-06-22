@@ -32,9 +32,8 @@ class HasT (H : Hilbert α) where
   mem_T : Axioms.T (.atom p) ∈ H.axioms := by tauto;
 
 instance [hT : H.HasT] : Entailment.HasAxiomT H where
-  T φ := by
-    apply maxm;
-    exact ⟨Axioms.T (.atom hT.p), hT.mem_T, (fun b => if hT.p = b then φ else (.atom b)), by simp⟩;
+  T φ :=
+    maxm ⟨Axioms.T (.atom hT.p), hT.mem_T, (fun b => if hT.p = b then φ else (.atom b)), by simp⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 class HasB (H : Hilbert α) where
@@ -43,9 +42,8 @@ class HasB (H : Hilbert α) where
   mem_B : Axioms.B (.atom p) ∈ H.axioms := by tauto;
 
 instance [hB : H.HasB] : Entailment.HasAxiomB H where
-  B φ := by
-    apply maxm;
-    exact ⟨Axioms.B (.atom hB.p), hB.mem_B, (fun b => if hB.p = b then φ else (.atom b)), by simp⟩;
+  B φ :=
+    maxm ⟨Axioms.B (.atom hB.p), hB.mem_B, (fun b => if hB.p = b then φ else (.atom b)), by simp⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
 class HasD (H : Hilbert α) where
@@ -54,9 +52,8 @@ class HasD (H : Hilbert α) where
   mem_D : Axioms.D (.atom p) ∈ H.axioms := by tauto;
 
 instance [hD : H.HasD] : Entailment.HasAxiomD H where
-  D φ := by
-    apply maxm;
-    exact ⟨Axioms.D (.atom hD.p), hD.mem_D, (fun b => if hD.p = b then φ else (.atom b)), by simp⟩;
+  D φ :=
+    maxm ⟨Axioms.D (.atom hD.p), hD.mem_D, (fun b => if hD.p = b then φ else (.atom b)), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -66,10 +63,9 @@ class HasFour (H : Hilbert α) where
   mem_Four : Axioms.Four (.atom p) ∈ H.axioms := by tauto;
 
 instance [hFour : H.HasFour] : Entailment.HasAxiomFour H where
-  Four φ := by
-    apply maxm;
-    exact ⟨Axioms.Four (.atom hFour.p), hFour.mem_Four,
-      (fun b => if hFour.p = b then φ else (.atom b)), by simp⟩;
+  Four φ :=
+    maxm ⟨Axioms.Four (.atom hFour.p), hFour.mem_Four,
+      (fun b => if hFour.p = b then φ else (.atom b)), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -79,10 +75,9 @@ class HasFive (H : Hilbert α) where
   mem_Five : Axioms.Five (.atom p) ∈ H.axioms := by tauto;
 
 instance [hFive : H.HasFive] : Entailment.HasAxiomFive H where
-  Five φ := by
-    apply maxm;
-    exact ⟨Axioms.Five (.atom hFive.p), hFive.mem_Five,
-      (fun b => if hFive.p = b then φ else (.atom b)), by simp⟩;
+  Five φ :=
+    maxm ⟨Axioms.Five (.atom hFive.p), hFive.mem_Five,
+      (fun b => if hFive.p = b then φ else (.atom b)), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -92,10 +87,9 @@ class HasDot2 (H : Hilbert α) where
   mem_Dot2 : Axioms.Dot2 (.atom p) ∈ H.axioms := by tauto;
 
 instance [hDot2 : H.HasDot2] : Entailment.HasAxiomDot2 H where
-  Dot2 φ := by
-    apply maxm;
-    exact ⟨Axioms.Dot2 (.atom hDot2.p), hDot2.mem_Dot2,
-      (fun b => if hDot2.p = b then φ else (.atom b)), by simp⟩;
+  Dot2 φ :=
+    maxm ⟨Axioms.Dot2 (.atom hDot2.p), hDot2.mem_Dot2,
+      (fun b => if hDot2.p = b then φ else (.atom b)), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -108,11 +102,10 @@ class HasDot3 (H : Hilbert α) where
   mem_Dot3 : Axioms.Dot3 (.atom p) (.atom q) ∈ H.axioms := by tauto;
 
 instance [hDot3 : H.HasDot3] : Entailment.HasAxiomDot3 H where
-  Dot3 φ ψ := by
-    apply maxm;
-    exact ⟨Axioms.Dot3 (.atom hDot3.p) (.atom hDot3.q), hDot3.mem_Dot3,
+  Dot3 φ ψ :=
+    maxm ⟨Axioms.Dot3 (.atom hDot3.p) (.atom hDot3.q), hDot3.mem_Dot3,
       (fun b => if hDot3.p = b then φ else if hDot3.q = b then ψ else (.atom b)),
-      by simp [hDot3.ne_pq]⟩;
+      by simp [hDot3.ne_pq]⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -122,9 +115,8 @@ class HasL (H : Hilbert α) where
   mem_L : Axioms.L (.atom p) ∈ H.axioms := by tauto;
 
 instance [hL : H.HasL] : Entailment.HasAxiomL H where
-  L φ := by
-    apply maxm;
-    exact ⟨Axioms.L (.atom hL.p), hL.mem_L, (fun b => if hL.p = b then φ else (.atom b)), by simp⟩;
+  L φ :=
+    maxm ⟨Axioms.L (.atom hL.p), hL.mem_L, (fun b => if hL.p = b then φ else (.atom b)), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -134,10 +126,9 @@ class HasGrz (H : Hilbert α) where
   mem_Grz : Axioms.Grz (.atom p) ∈ H.axioms := by tauto;
 
 instance [hGrz : H.HasGrz] : Entailment.HasAxiomGrz H where
-  Grz φ := by
-    apply maxm;
-    exact ⟨Axioms.Grz (.atom hGrz.p), hGrz.mem_Grz,
-      (fun b => if hGrz.p = b then φ else (.atom b)), by simp⟩;
+  Grz φ :=
+    maxm ⟨Axioms.Grz (.atom hGrz.p), hGrz.mem_Grz,
+      (fun b => if hGrz.p = b then φ else (.atom b)), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -147,10 +138,9 @@ class HasTc (H : Hilbert α) where
   mem_Tc : Axioms.Tc (.atom p) ∈ H.axioms := by tauto;
 
 instance [hTc : H.HasTc] : Entailment.HasAxiomTc H where
-  Tc φ := by
-    apply maxm;
-    exact ⟨Axioms.Tc (.atom hTc.p), hTc.mem_Tc,
-      (fun b => if hTc.p = b then φ else (.atom b)), by simp⟩;
+  Tc φ :=
+    maxm ⟨Axioms.Tc (.atom hTc.p), hTc.mem_Tc,
+      (fun b => if hTc.p = b then φ else (.atom b)), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -160,10 +150,9 @@ class HasVer (H : Hilbert α) where
   mem_Ver : Axioms.Ver (.atom p) ∈ H.axioms := by tauto;
 
 instance [hVer : H.HasVer] : Entailment.HasAxiomVer H where
-  Ver φ := by
-    apply maxm;
-    exact ⟨Axioms.Ver (.atom hVer.p), hVer.mem_Ver,
-      (fun b => if hVer.p = b then φ else (.atom b)), by simp⟩;
+  Ver φ :=
+    maxm ⟨Axioms.Ver (.atom hVer.p), hVer.mem_Ver,
+      (fun b => if hVer.p = b then φ else (.atom b)), by simp⟩
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -173,9 +162,8 @@ class HasH (H : Hilbert α) where
   mem_H : Axioms.H (.atom p) ∈ H.axioms := by tauto;
 
 instance [hH : H.HasH] : Entailment.HasAxiomH H where
-  H φ := by
-    apply maxm;
-    exact ⟨Axioms.H (.atom hH.p), hH.mem_H, (fun b => if hH.p = b then φ else (.atom b)), by simp⟩;
+  H φ :=
+    maxm ⟨Axioms.H (.atom hH.p), hH.mem_H, (fun b => if hH.p = b then φ else (.atom b)), by simp⟩
 
 end «lp_section_1»
 
