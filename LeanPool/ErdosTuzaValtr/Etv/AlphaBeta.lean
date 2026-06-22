@@ -22,7 +22,7 @@ noncomputable section
 variable {α : Type _} [LinearOrder α] {C : Config α} {S : Finset α} (l : C.Label S)
 
 private theorem mem_imply_nnil {α : Type _} (a : α) {l : List α} (ha : a ∈ l) : l ≠ [] := by
-  intro eq; subst eq; simp at ha
+  rintro rfl; simp at ha
 
 namespace Config
 namespace Label
@@ -87,7 +87,7 @@ def alphaCup {a : α} (ha : a ∈ S) :
   by
   have some := l.alphaCup'_isSome ha
   set c := Option.get _ some with def_c
-  rw [alpha]; rw [dif_pos ha]; rw [← def_c]
+  rw [alpha, dif_pos ha, ← def_c]
   have h_argmax := Option.get_mem some
   rw [← def_c, alphaCup'] at h_argmax
   have c_alpha_cup := List.argmax_mem h_argmax
@@ -106,7 +106,7 @@ theorem cup_length_le_alpha {a : α} {c : List α} (c_in_S : c.In S) (c_sorted :
   have ha : a ∈ S := c_in_S _ (List.mem_of_mem_getLast? c_last)
   have some := l.alphaCup'_isSome ha
   set d := Option.get _ some with def_d
-  rw [alpha]; rw [dif_pos ha]; rw [← def_d]
+  rw [alpha, dif_pos ha, ← def_d]
   have h_argmax := Option.get_mem some
   rw [← def_d, alphaCup'] at h_argmax
   rcases List.takeLast' c_last with ⟨c', eq_c⟩
@@ -222,7 +222,7 @@ def betaCup {a : α} (ha : a ∈ S) :
   by
   have some := C.betaCup'_isSome S ha
   set c := Option.get _ some with def_c
-  rw [beta]; rw [dif_pos ha]; rw [← def_c]
+  rw [beta, dif_pos ha, ← def_c]
   have h_argmax := Option.get_mem some
   rw [← def_c, betaCup'] at h_argmax
   have c_beta_cup := List.argmax_mem h_argmax
@@ -245,7 +245,7 @@ theorem cup_length_le_beta {a : α} {c : List α} (c_in_S : c.In S) (c_cup : C.C
   have ha : a ∈ S := c_in_S _ (List.mem_of_mem_getLast? c_last)
   have some := C.betaCup'_isSome S ha
   set d := Option.get _ some with def_d
-  rw [beta]; rw [dif_pos ha]; rw [← def_d]
+  rw [beta, dif_pos ha, ← def_d]
   have h_argmax := Option.get_mem some
   rw [← def_d, betaCup'] at h_argmax
   rcases List.takeLast' c_last with ⟨c', eq_c⟩

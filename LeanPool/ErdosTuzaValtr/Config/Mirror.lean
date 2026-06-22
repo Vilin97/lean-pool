@@ -30,22 +30,14 @@ variable {C}
 @[simp]
 theorem Mirror.cap {l : List α} : C.Mirror.Cap l.Mirror ↔ C.Cap l := by
   constructor
-  · rw [Config.Cap]
-    intro h
-    exact ⟨List.chain'_mirror.mp h.left, List.chain3'_mirror.mp h.right⟩
-  · intro h
-    rw [Config.Cap]
-    exact ⟨List.chain'_mirror.mpr h.left, List.chain3'_mirror.mpr h.right⟩
+  · exact fun h => ⟨List.chain'_mirror.mp h.left, List.chain3'_mirror.mp h.right⟩
+  · exact fun h => ⟨List.chain'_mirror.mpr h.left, List.chain3'_mirror.mpr h.right⟩
 
 @[simp]
 theorem Mirror.cup {l : List α} : C.Mirror.Cup l.Mirror ↔ C.Cup l := by
   constructor
-  · rw [Config.Cup]
-    intro h
-    exact ⟨List.chain'_mirror.mp h.left, List.chain3'_mirror.mp h.right⟩
-  · intro h
-    rw [Config.Cup]
-    exact ⟨List.chain'_mirror.mpr h.left, List.chain3'_mirror.mpr h.right⟩
+  · exact fun h => ⟨List.chain'_mirror.mp h.left, List.chain3'_mirror.mp h.right⟩
+  · exact fun h => ⟨List.chain'_mirror.mpr h.left, List.chain3'_mirror.mpr h.right⟩
 
 theorem Mirror.gon {l1 l2 : List α} : C.Mirror.Gon l1.Mirror l2.Mirror ↔ C.Gon l1 l2 := by
   rw [Config.Gon]; rw [Config.Gon]

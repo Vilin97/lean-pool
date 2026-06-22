@@ -245,12 +245,10 @@ theorem main_induction_wlog (n : ℕ) : C.MainGoal n → C.MainGoalWlog (n + 1) 
     have q'_in_S := Finset.sdiff_subset q's_laced.mem_ends.left
     refine ⟨p, q, r, s, ⟨⟨?_, ?_, r_lt_s⟩, pr_laced, qs_laced⟩⟩
     · have ap_eq_aq := Eq.trans ap aq.symm
-      rw [C.alpha_eq_beta_inc p_in_S q_in_S ap_eq_aq]
-      rw [bp, bq]
       have ap'_eq_aq' := Eq.trans ap' aq'.symm
-      rw [← C.alpha_eq_beta_inc p'_in_S q'_in_S ap'_eq_aq']
+      rw [C.alpha_eq_beta_inc p_in_S q_in_S ap_eq_aq, bp, bq,
+        ← C.alpha_eq_beta_inc p'_in_S q'_in_S ap'_eq_aq']
       exact p'_lt_q'
-    · apply le_of_lt
-      exact lt_of_lt_of_le q_lt_q' q'_le_r
+    · exact le_of_lt (lt_of_lt_of_le q_lt_q' q'_le_r)
 
 end Config

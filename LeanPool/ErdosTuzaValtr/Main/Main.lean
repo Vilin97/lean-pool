@@ -39,6 +39,18 @@ theorem Config.Mirror_mainGoal (n : ℕ) : C.MainGoal n → C.Mirror.MainGoal n 
   rw [Mirror.hasInterweavedLaced]
   exact interweave
 
+private theorem hasLaced_pair {S : Finset γ} {x y : γ} (x_mem : x ∈ S) (y_mem : y ∈ S)
+    (hxy : x < y) : C.HasLaced (0 + 2) S x y := by
+  refine ⟨1, 1, [x], [x, y], [y], by simp, Config.NCup.pair.mpr hxy, by simp,
+    ⟨?_, ?_, ?_⟩, by omega, ?_, ?_, ?_, ?_⟩
+  · rw [List.cons_in]; exact ⟨x_mem, List.nil_in⟩
+  · rw [List.cons_in, List.cons_in]; exact ⟨x_mem, y_mem, List.nil_in⟩
+  · rw [List.cons_in]; exact ⟨y_mem, List.nil_in⟩
+  · rw [List.getLast?_singleton]; rfl
+  · rw [List.head?_cons]; rfl
+  · rw [List.getLast?_cons_cons, List.getLast?_singleton]; rfl
+  · rw [List.head?_cons]; rfl
+
 theorem Config.main_lemma (n : ℕ) : C.MainGoal n := by
   induction n with
   | zero =>
@@ -58,26 +70,8 @@ theorem Config.main_lemma (n : ℕ) : C.MainGoal n := by
       have sorted : Sl.Pairwise (· < ·) := (Finset.sortedLT_sort S).pairwise
       rw [eq_Sl, List.pairwise_cons, List.pairwise_cons] at sorted
       exact ⟨sorted.1 b (by simp), sorted.2.1 c (by simp)⟩
-    have laced1 : C.HasLaced (0 + 2) S a b := by
-      refine ⟨1, 1, [a], [a, b], [b], by simp, Config.NCup.pair.mpr abc_lt.left, by simp,
-        ⟨?_, ?_, ?_⟩, by omega, ?_, ?_, ?_, ?_⟩
-      · rw [List.cons_in]; exact ⟨a_mem, List.nil_in⟩
-      · rw [List.cons_in, List.cons_in]; exact ⟨a_mem, b_mem, List.nil_in⟩
-      · rw [List.cons_in]; exact ⟨b_mem, List.nil_in⟩
-      · rw [List.getLast?_singleton]; rfl
-      · rw [List.head?_cons]; rfl
-      · rw [List.getLast?_cons_cons, List.getLast?_singleton]; rfl
-      · rw [List.head?_cons]; rfl
-    have laced2 : C.HasLaced (0 + 2) S b c := by
-      refine ⟨1, 1, [b], [b, c], [c], by simp, Config.NCup.pair.mpr abc_lt.right, by simp,
-        ⟨?_, ?_, ?_⟩, by omega, ?_, ?_, ?_, ?_⟩
-      · rw [List.cons_in]; exact ⟨b_mem, List.nil_in⟩
-      · rw [List.cons_in, List.cons_in]; exact ⟨b_mem, c_mem, List.nil_in⟩
-      · rw [List.cons_in]; exact ⟨c_mem, List.nil_in⟩
-      · rw [List.getLast?_singleton]; rfl
-      · rw [List.head?_cons]; rfl
-      · rw [List.getLast?_cons_cons, List.getLast?_singleton]; rfl
-      · rw [List.head?_cons]; rfl
+    have laced1 := hasLaced_pair C a_mem b_mem abc_lt.left
+    have laced2 := hasLaced_pair C b_mem c_mem abc_lt.right
     exact ⟨a, b, b, c, ⟨abc_lt.left, le_refl b, abc_lt.right⟩, laced1, laced2⟩
   | succ n ih =>
     intro S hS cap4_free cup_free

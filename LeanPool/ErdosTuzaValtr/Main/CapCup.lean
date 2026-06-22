@@ -85,8 +85,7 @@ theorem cap_cup (a b : ℕ) (S : Finset α) (hS : Nat.choose (a + b) a < S.card)
     · rcases hab1 (S \ T) sz_cases with hcap | hcup
       · rcases hcap with ⟨c, ⟨c_cap, c_length⟩, c_in⟩
         have c_nnil : c ≠ [] := by
-          intro eq_c
-          subst eq_c
+          rintro rfl
           simp only [List.length_nil] at c_length
           omega
         rcases List.takeHead c_nnil with ⟨ch, ct, eq_c⟩

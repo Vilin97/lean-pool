@@ -39,6 +39,9 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (_cap4_free : ¬C.HasNCap 4 S) {
   rw [eq_Q] at hxQy xQy_in_S
   have a_in_S : a ∈ S := Px_in_S a (by simp)
   have b_in_S : b ∈ S := xQy_in_S b (by simp)
+  have hbQy : C.NCup (n + 2) (b :: Q') := by
+    have := hxQy.tail
+    rwa [List.tail_cons] at this
   have hR : C.NCup (n + 1) R := by
     have := hyR.tail
     rwa [List.tail_cons] at this
@@ -86,10 +89,7 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (_cap4_free : ¬C.HasNCap 4 S) {
   by_cases sab : label.Slope a b
   swap
   -- case ¬label.Slope a b
-  · have hbQy : C.NCup (n + 2) (b :: Q') := by
-      have := hxQy.tail
-      rwa [List.tail_cons] at this
-    have hbQy_in : (b :: Q').In S := fun w hw => xQy_in_S w (by rw [List.mem_cons]; right; exact hw)
+  · have hbQy_in : (b :: Q').In S := fun w hw => xQy_in_S w (by rw [List.mem_cons]; right; exact hw)
     have haQy : C.NCup (n + 3) (a :: b :: Q') :=
       hbQy.extend_left sab a_in_S a_lt_b hbQy_in (by simp)
     have ha : C.NCup 1 [a] := by simp
@@ -109,9 +109,6 @@ theorem Config.join_n2_n3_n2_ff (S : Finset α) (_cap4_free : ¬C.HasNCap 4 S) {
     exact ⟨a, x, y, z, ⟨a_lt_x, le_of_lt x_lt_y, y_lt_z⟩, ay_laced, xz_laced⟩
   -- case label.Slope a b
   have b_lt_y : b < y := by
-    have hbQy : C.NCup (n + 2) (b :: Q') := by
-      have := hxQy.tail
-      rwa [List.tail_cons] at this
     apply hbQy.head_lt_getLast b y (by simp)
     rw [← eq_Q, List.getLast?_append_of_ne_nil _ (by simp), List.getLast?_singleton]
     rfl

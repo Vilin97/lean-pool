@@ -28,8 +28,7 @@ theorem List.subset_in {l1 l2 : List α} {S : Finset α} (h : l1 ⊆ l2) (h_l2 :
   fun a ha => h_l2 a (h ha)
 
 @[simp]
-theorem List.nil_in {S : Finset α} : [].In S := by simp only [List.In, not_mem_nil, false_implies,
-  implies_true]
+theorem List.nil_in {S : Finset α} : [].In S := by simp [List.In]
 
 @[simp]
 theorem List.cons_in {a : α} {l : List α} {S : Finset α} : (a :: l).In S ↔ a ∈ S ∧ l.In S := by
@@ -131,9 +130,7 @@ theorem List.Mirror_mem_head {a : α} {l : List α} :
 @[simp]
 theorem List.Mirror_in [LinearOrder α] {l : List α} {S : Finset α} :
     l.Mirror.In S.Mirror ↔ l.In S := by
-  rw [List.Mirror]; simp; constructor
-  · simp [List.In, Finset.Mirror]
-  · simp [List.In, Finset.Mirror]
+  rw [List.Mirror]; simp; constructor <;> simp [List.In, Finset.Mirror]
 
 @[simp]
 theorem Finset.memMirror [LinearOrder α] {a : α} {S : Finset α} : toDual a ∈ S.Mirror ↔ a ∈ S := by

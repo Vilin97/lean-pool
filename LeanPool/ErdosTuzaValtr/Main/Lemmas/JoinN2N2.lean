@@ -30,9 +30,10 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
   have hxb : x < b := (List.isChain_cons_cons.mp hc2.left.left).1
   have hab : a < b := hax.trans hxb
   have h_b_c2 : (b::c2) ≠ [] := List.cons_ne_nil b c2
+  have bc2_in : (b::c2).In S := by rw [List.cons_in]; exact ⟨b_in_S, c2_in_S⟩
   rcases List.takeLast h_b_c2 with ⟨c, c3, eq_c2⟩
   have c_in_S : c ∈ S := by
-    have h_in : (b::c2).In S := by rw [List.cons_in]; exact ⟨b_in_S, c2_in_S⟩
+    have h_in := bc2_in
     rw [eq_c2] at h_in
     exact h_in c (by simp)
   have hc2' : C.NCup (n + 2) (x :: (c3 ++ [c])) := by rw [← eq_c2]; exact hc2
@@ -53,13 +54,12 @@ theorem Config.join_n2_n2_case_ff (S : Finset α) (n : ℕ) (a x b : α) (c1 c2 
       exact ⟨⟨c1_in_S, a_in_S, x_in_S, List.nil_in⟩, c_in_S, List.nil_in⟩
   · have key : C.Cup (a :: (c3 ++ [c])) := by
       have hbc2 : C.Cup (b :: c2) := by rw [eq_c2]; exact hc2'.tail.left
-      have hbc2_in : (b :: c2).In S := by rw [List.cons_in]; exact ⟨b_in_S, c2_in_S⟩
       rw [← eq_c2]
-      exact hbc2.extend_left sab a_in_S hab hbc2_in (by simp)
+      exact hbc2.extend_left sab a_in_S hab bc2_in (by simp)
     have key_in : (a :: (c3 ++ [c])).In S := by
       rw [List.cons_in]
       refine ⟨a_in_S, ?_⟩
-      have h_in : (b::c2).In S := by rw [List.cons_in]; exact ⟨b_in_S, c2_in_S⟩
+      have h_in := bc2_in
       rw [eq_c2] at h_in
       exact h_in
     refine ⟨[a, x, c], a :: (c3 ++ [c]), ⟨⟨?_, ?_, ?_, ?_, ?_, ?_⟩, ?_⟩, ?_, key_in⟩

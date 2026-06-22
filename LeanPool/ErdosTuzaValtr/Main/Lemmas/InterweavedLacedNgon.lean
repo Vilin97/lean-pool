@@ -30,18 +30,10 @@ theorem Config.hasInterweavedLaced_hasNGon_ff {n : ℕ} {S : Finset α} (cap4_fr
   rcases qs_laced with
     ⟨c, d, cq, c2, cs, hcq, hc2, hcs,
       ⟨⟨cq_in_S, c2_in_S, cs_in_S⟩, eq_cd, cq_last, c2_head, c2_last, cs_head⟩⟩
-  have p_in_S : p ∈ S := by
-    apply c1_in_S
-    exact List.mem_of_mem_head? c1_head
-  have q_in_S : q ∈ S := by
-    apply c2_in_S
-    exact List.mem_of_mem_head? c2_head
-  have r_in_S : r ∈ S := by
-    apply c1_in_S
-    exact List.mem_of_mem_getLast? c1_last
-  have s_in_S : s ∈ S := by
-    apply c2_in_S
-    exact List.mem_of_mem_getLast? c2_last
+  have p_in_S : p ∈ S := c1_in_S _ (List.mem_of_mem_head? c1_head)
+  have q_in_S : q ∈ S := c2_in_S _ (List.mem_of_mem_head? c2_head)
+  have r_in_S : r ∈ S := c1_in_S _ (List.mem_of_mem_getLast? c1_last)
+  have s_in_S : s ∈ S := c2_in_S _ (List.mem_of_mem_getLast? c2_last)
   have label := cap4FreeLabel cap4_free
   by_cases spq : label.Slope p q
   swap
