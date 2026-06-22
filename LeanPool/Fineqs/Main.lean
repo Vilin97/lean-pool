@@ -51,6 +51,23 @@ private lemma exists_linearMap_of_ker {F V : Type*} [Field F] [AddCommGroup V] [
   have he : LinearMap.ker e.toLinearMap = ⊥ := e.ker
   rw [he, Submodule.comap_bot, Submodule.ker_mkQ]
 
+/-- A member of the span of a finite family of functions is a linear combination of them. -/
+private lemma exists_coeffs_of_mem_span {F ι α : Type*} [Field F] [Fintype ι] {f : ι → α → F}
+    {h : α → F} (hh : h ∈ Submodule.span F (Set.range f)) :
+    ∃ c : ι → F, ∀ x, h x = ∑ i, c i * f i x := by
+  obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun (R := F) (v := f)).mp hh
+  exact ⟨c, fun x => by simpa [Finset.sum_apply, smul_eq_mul] using (congr_fun hc x).symm⟩
+
+/-- A wide matrix (more columns than rows) has a nonzero kernel vector. -/
+private lemma exists_nonzero_mulVec_zero {F : Type*} [Field F] {m k : ℕ} (hmk : m < k)
+    (A : Matrix (Fin m) (Fin k) F) : ∃ v : Fin k → F, v ≠ 0 ∧ A.mulVec v = 0 := by
+  have hker_ne : LinearMap.ker (Matrix.mulVecLin A) ≠ ⊥ := by
+    apply LinearMap.ker_ne_bot_of_finrank_lt
+    rw [Module.finrank_fin_fun, Module.finrank_fin_fun]
+    omega
+  obtain ⟨v, hvker, hvne⟩ := (Submodule.ne_bot_iff _).mp hker_ne
+  exact ⟨v, hvne, by simpa [LinearMap.mem_ker] using hvker⟩
+
 variable {F : Type*} [Field F] [Fintype F]
 
 /--
@@ -75,10 +92,10 @@ lemma card_projectivization_minus_point (n : ℕ) (α : Projectivization F (Fin 
   set q := Fintype.card F
   set P := Fintype.card (Projectivization F (Fin (n + 1) → F))
   have hqsub : 0 < q - 1 := by omega
-  -- Show: q^(n+1) - q = (q - 1) * (P - 1).
   have hPq : P * (q - 1) = q ^ (n + 1) - 1 := by omega
   have h_eq : q ^ (n + 1) - q = (P - 1) * (q - 1) := by
-    rw [Nat.sub_mul, one_mul]; omega
+    rw [Nat.sub_mul, one_mul]
+    omega
   rw [eq_comm, Nat.div_eq_iff_eq_mul_left hqsub ⟨P - 1, by rw [mul_comm]; exact h_eq⟩]
   exact h_eq
 
@@ -88,19 +105,12 @@ lemma card_projectivization_eq_bound_add_one (n : ℕ) :
     (Fintype.card F ^ (n + 1) - Fintype.card F) / (Fintype.card F - 1) + 1 := by
   classical
   let e : Fin (n + 1) → F := Pi.single 0 1
-  have he : e ≠ 0 := by
-    intro h
-    have := congr_fun h 0
-    simp [e] at this
+  have he : e ≠ 0 := fun h => by simpa [e] using congr_fun h 0
   let α : Projectivization F (Fin (n + 1) → F) := Projectivization.mk F e he
   have hcard := card_projectivization_minus_point (F := F) n α
   haveI : Fintype (Projectivization F (Fin (n + 1) → F)) := Fintype.ofFinite _
   rw [Nat.card_eq_fintype_card] at hcard ⊢
-  have hcompl :
-      Fintype.card {x : Projectivization F (Fin (n + 1) → F) // x ≠ α} =
-        Fintype.card (Projectivization F (Fin (n + 1) → F)) - 1 := by
-    rw [Fintype.card_subtype_compl (p := (· = α)), Fintype.card_subtype_eq α]
-  rw [hcompl] at hcard
+  rw [Fintype.card_subtype_compl (p := (· = α)), Fintype.card_subtype_eq α] at hcard
   have hpos : 0 < Fintype.card (Projectivization F (Fin (n + 1) → F)) :=
     Fintype.card_pos
   omega
@@ -134,10 +144,7 @@ lemma theorem_1_aux {X : Type*} [Finite X] (n : ℕ) (f : X → (Fin (n + 1) →
   haveI : Fintype X := Fintype.ofFinite X
   let P := Projectivization F (Fin (n + 1) → F)
   let e : Fin (n + 1) → F := Pi.single 0 1
-  have he : e ≠ 0 := by
-    intro h
-    have := congr_fun h 0
-    simp [e] at this
+  have he : e ≠ 0 := fun h => by simpa [e] using congr_fun h 0
   let α : P := Projectivization.mk F e he
   haveI : Fintype P := Fintype.ofFinite P
   have hbound_lt : (Fintype.card F ^ (n + 1) - Fintype.card F) /
@@ -147,13 +154,11 @@ lemma theorem_1_aux {X : Type*} [Finite X] (n : ℕ) (f : X → (Fin (n + 1) →
       rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
       exact Fintype.card_lt_of_injective_of_notMem
         (fun x : {x : P // x ≠ α} => (x : P)) Subtype.val_injective (b := α) (by simp)
-    rw [hcard] at hsubtype_lt
-    exact hsubtype_lt
+    rwa [hcard] at hsubtype_lt
   let badPoint (x : {x : X // f x ≠ 0}) : P := Projectivization.mk F (f x) x.property
   have hdomain_lt : Fintype.card {x : X // f x ≠ 0} < Fintype.card P := by
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card]
-    have hsub :
-        Nat.card {x : X // f x ≠ 0} ≤ Nat.card X := by
+    have hsub : Nat.card {x : X // f x ≠ 0} ≤ Nat.card X := by
       rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
       exact Fintype.card_le_of_injective (fun x : {x : X // f x ≠ 0} => (x : X))
         Subtype.val_injective
@@ -188,9 +193,7 @@ lemma theorem_1_aux {X : Type*} [Finite X] (n : ℕ) (f : X → (Fin (n + 1) →
     rw [hM] at hmem
     exact hp_avoid x hfx hmem
   · intro hx
-    have hfx : f x = 0 := by
-      simpa using hx
-    simp [hfx]
+    simp [show f x = 0 by simpa using hx]
 
 /--
 Base case of Theorem 1: `n + 1` equations over a small finite set can be replaced
@@ -230,10 +233,8 @@ lemma theorem_1_base_case {X : Type*} [Finite X] (n : ℕ) (S : Set (X → F))
     exact Submodule.sum_mem _ fun i _ =>
       Submodule.smul_mem _ _
         (Submodule.subset_span (by rw [← hf_range]; exact Set.mem_range_self i))
-  · calc
-      (Set.range g).ncard = (g '' Set.univ).ncard := by rw [Set.image_univ]
-      _ ≤ (Set.univ : Set (Fin n)).ncard := Set.ncard_image_le
-      _ = n := by simp
+  · rw [← Set.image_univ]
+    exact (Set.ncard_image_le (s := (Set.univ : Set (Fin n)))).trans (by simp)
   · ext x
     have hleft : (∀ y ∈ Set.range g, y x = 0) ↔ M (fun i => f i x) = 0 := by
       constructor
@@ -253,8 +254,7 @@ lemma theorem_1_base_case {X : Type*} [Finite X] (n : ℕ) (S : Set (X → F))
         rcases hy with ⟨i, rfl⟩
         exact congr_fun h i
     have hMx : M (fun i => f i x) = 0 ↔ (fun i => f i x) = 0 := by
-      have := congrArg (fun U : Set X => x ∈ U) hM
-      simpa using this
+      simpa using congrArg (fun U : Set X => x ∈ U) hM
     change (∀ y ∈ Set.range g, y x = 0) ↔ (∀ y ∈ S, y x = 0)
     exact hleft.trans (hMx.trans hright.symm)
 
@@ -308,7 +308,7 @@ theorem theorem_1 {X : Type*} [Finite X] (n : ℕ) (S : Set (X → F)) (hS : S.F
             · have hxS' : x ∈ ZeroSet S' := by
                 rw [← hT'_zero]
                 intro t ht
-                exact hx t (by exact Or.inl ht)
+                exact hx t (Or.inl ht)
               exact hxS' u ⟨huS, by simp [huf]⟩
           · intro hx u hu
             rcases hu with hu | hu
@@ -343,19 +343,14 @@ private lemma exists_lift_of_subset_span_image {K V W : Type*} [Field K]
   classical
   haveI : Finite U := hU_finite
   haveI : Fintype U := Fintype.ofFinite U
-  have hpre : ∀ y : U, ∃ v ∈ Submodule.span K S, φ v = y.1 := by
-    intro y
+  have hpre : ∀ y : U, ∃ v ∈ Submodule.span K S, φ v = y.1 := fun y => by
     have hyspan := hU_span y.2
     rw [Submodule.span_image] at hyspan
-    rcases hyspan with ⟨v, hv, hφ⟩
-    exact ⟨v, hv, hφ⟩
+    exact hyspan
   choose v hvspan hvmap using hpre
   refine ⟨Set.range v, Set.finite_range v, ?_, ?_, ?_⟩
-  · calc
-      (Set.range v).ncard = (v '' Set.univ).ncard := by rw [Set.image_univ]
-      _ ≤ (Set.univ : Set U).ncard := Set.ncard_image_le
-      _ = U.ncard := by simp
-      _ ≤ n := hU_card
+  · rw [← Set.image_univ]
+    exact (Set.ncard_image_le (s := (Set.univ : Set U))).trans (by simpa using hU_card)
   · rintro x ⟨y, rfl⟩
     exact hvspan y
   · ext y
@@ -430,14 +425,9 @@ theorem corollary_3 {K : Type*} [Field K] [Finite K] (n : ℕ)
     · exact ⟨Y', Submodule.subset_span, hY'_finite, le_of_not_gt hcard, rfl⟩
   obtain ⟨U, hU_finite, hU_card, hU_span, hU_image⟩ :=
     exists_lift_of_subset_span_image (K := K) n restrict hU'_finite hU'_card hU'_span
-  have hspan_vanish : ∀ f ∈ Submodule.span K Y, f α = 0 := by
-    intro f hf
-    have hle : Submodule.span K Y ≤
-        LinearMap.ker (LinearMap.proj α : (P → K) →ₗ[K] K) := by
-      rw [Submodule.span_le]
-      intro g hg
-      exact hα g hg
-    exact hle hf
+  have hspan_vanish : ∀ f ∈ Submodule.span K Y, f α = 0 := fun f hf =>
+    (Submodule.span_le.mpr (fun g hg => hα g hg) :
+      Submodule.span K Y ≤ LinearMap.ker (LinearMap.proj α : (P → K) →ₗ[K] K)) hf
   have hU_zero : ZeroSet U = ZeroSet Y := by
     ext x
     by_cases hx : x = α
@@ -503,27 +493,14 @@ theorem prop_1 (n : ℕ) (hn : n > 0) :
       exact p.rep_nonzero
     exact Function.ne_iff.mp hxne
   · intro g hg
-    have hcoeff :
-        ∀ j : Fin n, ∃ c : Fin (n + 1) → F,
-          ∀ x : X, g j x = ∑ i : Fin (n + 1), c i * x.1 i := by
-      intro j
-      obtain ⟨c, hc⟩ :=
-        (Submodule.mem_span_range_iff_exists_fun (R := F) (v := f)).mp (hg j)
-      refine ⟨c, ?_⟩
-      intro x
-      have := congr_fun hc x
-      simpa [f, Finset.sum_apply, smul_eq_mul] using this.symm
+    have hcoeff : ∀ j : Fin n, ∃ c : Fin (n + 1) → F,
+        ∀ x : X, g j x = ∑ i : Fin (n + 1), c i * x.1 i :=
+      fun j => exists_coeffs_of_mem_span (f := f) (hg j)
     choose c hc using hcoeff
     let A : Matrix (Fin n) (Fin (n + 1)) F := fun j i => c j i
-    have hker_ne : LinearMap.ker (Matrix.mulVecLin A) ≠ ⊥ := by
-      apply LinearMap.ker_ne_bot_of_finrank_lt
-      rw [Module.finrank_fin_fun, Module.finrank_fin_fun]
-      omega
-    obtain ⟨v, hvker, hvne⟩ := (Submodule.ne_bot_iff _).mp hker_ne
+    obtain ⟨v, hvne, hvzero⟩ := exists_nonzero_mulVec_zero (by omega) A
     let p : P := Projectivization.mk F v hvne
     let x : X := ⟨p.rep, ⟨p, rfl⟩⟩
-    have hvzero : A.mulVec v = 0 := by
-      simpa [LinearMap.mem_ker] using hvker
     have hxzero : A.mulVec x.1 = 0 := by
       obtain ⟨a, ha⟩ := Projectivization.exists_smul_eq_mk_rep (K := F) v hvne
       have hAv : Matrix.mulVecLin A v = 0 := by simpa [Matrix.mulVecLin] using hvzero
@@ -556,25 +533,12 @@ theorem remark_example (n : ℕ) (hn : n > 0) :
       rcases hy with ⟨i, rfl⟩
       simp [show x = 0 from by simpa using hx, f]
   · intro g hg
-    have hcoeff :
-        ∀ j : Fin (n - 1), ∃ c : Fin n → F,
-          ∀ x : Fin n → F, g j x = ∑ i : Fin n, c i * x i := by
-      intro j
-      obtain ⟨c, hc⟩ :=
-        (Submodule.mem_span_range_iff_exists_fun (R := F) (v := f)).mp (hg j)
-      refine ⟨c, ?_⟩
-      intro x
-      have := congr_fun hc x
-      simpa [f, Finset.sum_apply, smul_eq_mul] using this.symm
+    have hcoeff : ∀ j : Fin (n - 1), ∃ c : Fin n → F,
+        ∀ x : Fin n → F, g j x = ∑ i : Fin n, c i * x i :=
+      fun j => exists_coeffs_of_mem_span (f := f) (hg j)
     choose c hc using hcoeff
     let A : Matrix (Fin (n - 1)) (Fin n) F := fun j i => c j i
-    have hker_ne : LinearMap.ker (Matrix.mulVecLin A) ≠ ⊥ := by
-      apply LinearMap.ker_ne_bot_of_finrank_lt
-      rw [Module.finrank_fin_fun, Module.finrank_fin_fun]
-      omega
-    obtain ⟨v, hvker, hvne⟩ := (Submodule.ne_bot_iff _).mp hker_ne
-    have hvzero : A.mulVec v = 0 := by
-      simpa [LinearMap.mem_ker] using hvker
+    obtain ⟨v, hvne, hvzero⟩ := exists_nonzero_mulVec_zero (by omega) A
     let line : F → Fin n → F := fun a => a • v
     have hline_subset : Set.range line ⊆ ZeroSet (Set.range g) := by
       rintro x ⟨a, rfl⟩ y hy
