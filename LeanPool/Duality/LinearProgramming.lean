@@ -412,8 +412,7 @@ lemma EF.add_smul (k l : F≥0) (r : F∞) :
     if k_eq_0 : k = 0 then
       rw [k_eq_0, EF.zero_smul_nonbot top_ne_bot, zero_add, zero_add]
     else
-      have k_pos : 0 < k := by
-        exact pos_of_NN_not_zero k_eq_0
+      have k_pos : 0 < k := pos_of_NN_not_zero k_eq_0
       rw [EF.pos_smul_top (add_pos_of_pos_of_nonneg k_pos l.property)]
       rw [EF.pos_smul_top k_pos]
       if l_eq_0 : l = 0 then
@@ -465,8 +464,7 @@ lemma EF.mul_smul (k l : F≥0) (r : F∞) :
       if k_eq_0 : k = 0 then
         rw [k_eq_0, EF.zero_smul_nonbot top_ne_bot, zero_mul, EF.zero_smul_nonbot top_ne_bot]
       else
-        have c_pos : 0 < k := by
-          exact pos_of_NN_not_zero k_eq_0
+        have c_pos : 0 < k := pos_of_NN_not_zero k_eq_0
         rw [EF.pos_smul_top c_pos, EF.pos_smul_top (mul_pos c_pos l_pos)]
   | (f : F) =>
     change toE ((k * l) * f) = toE (k * (l * f))
@@ -903,8 +901,7 @@ private lemma ValidELP.strongDuality_aux_caseY (P : ValidELP I J F)
       rw [hcx, hby] at hbc
       exact (hbc.trans EF.zero_lt_top).false
     | (q : F) =>
-      have z_inv_pos : 0 < z⁻¹ := by
-        exact inv_pos_of_pos z_pos
+      have z_inv_pos : 0 < z⁻¹ := inv_pos_of_pos z_pos
       refine ⟨z⁻¹ * p, z⁻¹ * q, ⟨z⁻¹ • x, ?_, ?_⟩, ⟨z⁻¹ • y, ?_, ?_⟩, ?_⟩
       · rwa [
           ←EF.vec_smul_le_smul_left z_inv_pos, smul_zero,
@@ -1069,8 +1066,7 @@ lemma ExtendedLP.optimum_eq_of_reaches_bounded [Fintype J] {P : ExtendedLP I J F
     exact ⟨toE r, ⟨x, hx⟩, EF.coe_neq_top r⟩
   have hPP : ∃ r : F, P.Reaches (toE r) ∧ P.IsBoundedBy r := by
     use r
-  have hPb : ¬P.IsUnbounded := by
-    exact (· ⟨r, bounded⟩)
+  have hPb : ¬P.IsUnbounded := (· ⟨r, bounded⟩)
   have hopt : P.optimum = some (toE hPP.choose) := by
     unfold ExtendedLP.optimum
     rw [if_neg (not_not.mpr hP), if_neg hPb, dif_pos hPP]

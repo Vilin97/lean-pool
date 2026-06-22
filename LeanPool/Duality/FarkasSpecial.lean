@@ -578,7 +578,7 @@ private lemma extendedFarkas.bwd_witness {A : Matrix I J F∞} {b : I → F∞}
         rw [mul_comm]
         simp only [extendedFarkas.b']
         split <;> rename_i hbi
-        · simp_rw [hbi]; exact rfl
+        · exact hbi ▸ rfl
         · exact (hbot ⟨i, hbi⟩).elim
         · exact (hi.left hbi).elim
 
