@@ -117,29 +117,6 @@ private theorem productBasisPhaseLawCircle
       ring
     · rfl
 
-/-- The phase law rewritten in the `Circle`/`fourier` normal form used by the circle inputs. -/
-private theorem totalDegreePiecePhaseLawCircle
-    {d : ℕ} (κ : MultiIndex d) (n : ℕ) (G : FiniteHermiteSum d)
-    (t : Circle) (z : CSpace d) :
-    evalHermiteSum κ (totalDegreePiece n G) (fun q => (fourier (1 : ℤ) t : ℂ) * z q) =
-      (fourier (((n : ℤ) - (totalDegree κ : ℤ)) : ℤ) t : ℂ) *
-        evalHermiteSum κ (totalDegreePiece n G) z := by
-  induction t using Quotient.inductionOn with
-  | h θ =>
-  have hrot :
-      (fun q => (fourier (1 : ℤ) (QuotientAddGroup.mk θ : Circle) : ℂ) * z q) =
-        fun q => Complex.exp (Complex.I * θ) * z q := by
-    funext q
-    rw [fourier_mk_eq_exp]
-    congr 1
-    ring
-  rw [hrot, totalDegreePiecePhaseLaw, fourier_mk_eq_exp]
-  apply congrArg₂ (· * ·)
-  · congr 1
-    push_cast
-    ring
-  · rfl
-
 /-- Orbitwise coefficient grouped by total degree. -/
 private def orbitCoeff
     {d : ℕ} (κ : MultiIndex d) (j : MultiIndex d) (M : ℕ)
@@ -291,6 +268,14 @@ private lemma continuous_nuKappa
     {d : ℕ} (κ : MultiIndex d) :
     Continuous (nuKappa κ) := by
   simpa [nuKappa] using continuous_PhiKappaAlpha (κ := κ) (α := (0 : MultiIndex d))
+
+private lemma continuous_rho_localPart_sq
+    {d : ℕ} (κ : MultiIndex d) (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
+    Continuous (fun z : CSpace d =>
+      rho (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) ^ 2) := by
+  unfold rho
+  exact ((continuous_nuKappa (κ := κ)).add (continuous_evalHermiteSum (κ := κ)
+    (localPart j M G))).norm.sub (continuous_nuKappa (κ := κ)).norm |>.abs.pow 2
 
 private lemma rho_unit_mul (u a b : ℂ) (hu : ‖u‖ = 1) :
     rho (u * a) (u * b) = rho a b := by
@@ -466,6 +451,37 @@ private lemma localOrbit_defect_lintegral
         (ae_of_all _ (by intro t; positivity))]
       simp [circleL2NormSq]
 
+/-- Integrability of the indicator mass on a product annulus. -/
+private lemma indicator_mass_integrable
+    {d : ℕ} (κ : MultiIndex d) (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
+    Integrable
+      ((productAnnulus j).indicator
+        (fun z : CSpace d => ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2))
+      (gaussianMeasure d) := by
+  classical
+  have hmass_fun_eq :
+      (fun z : CSpace d => ‖indicatorMul (productAnnulus j)
+          (fun w => evalHermiteSum κ (localPart j M G) w *
+            conj (evalHermiteSum κ (localPart j M G) w)) z‖) =
+      (productAnnulus j).indicator
+        (fun z => ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2) := by
+    funext z
+    by_cases hz : z ∈ productAnnulus j
+    · have hnorm :
+        |Complex.normSq (evalHermiteSum κ (localPart j M G) z)| =
+          ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2 := by
+        have hnonneg : 0 ≤ Complex.normSq (evalHermiteSum κ (localPart j M G) z) := by
+          dsimp [Complex.normSq]
+          nlinarith [sq_nonneg (evalHermiteSum κ (localPart j M G) z).re,
+            sq_nonneg (evalHermiteSum κ (localPart j M G) z).im]
+        rw [abs_of_nonneg hnonneg, Complex.sq_norm]
+      simp [indicatorMul, Set.indicator, hz, Complex.mul_conj']
+    · simp [indicatorMul, Set.indicator, hz]
+  rw [← hmass_fun_eq]
+  simpa [indicatorMul] using
+    ((annulusIntegrablePolynomial (j := j) (κ := κ)
+      (G := localPart j M G) (H := localPart j M G)).norm)
+
 /-- Rewriting annulus mass as the outer Gaussian integral of orbitwise circle mass. -/
 private lemma annulusMass_localOrbit_lintegral
     {d : ℕ} (κ : MultiIndex d) (j : MultiIndex d) (M : ℕ)
@@ -476,34 +492,7 @@ private lemma annulusMass_localOrbit_lintegral
           (fun z => ENNReal.ofReal (circleL2NormSq (localOrbit κ j M G z))) z
       ∂ gaussianMeasure d := by
   classical
-  have hmass_int :
-      Integrable
-        ((productAnnulus j).indicator
-          (fun z : CSpace d => ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2))
-        (gaussianMeasure d) := by
-    classical
-    have hmass_fun_eq :
-        (fun z : CSpace d => ‖indicatorMul (productAnnulus j)
-            (fun w => evalHermiteSum κ (localPart j M G) w *
-              conj (evalHermiteSum κ (localPart j M G) w)) z‖) =
-        (productAnnulus j).indicator
-          (fun z => ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2) := by
-      funext z
-      by_cases hz : z ∈ productAnnulus j
-      · have hnorm :
-          |Complex.normSq (evalHermiteSum κ (localPart j M G) z)| =
-            ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2 := by
-          have hnonneg : 0 ≤ Complex.normSq (evalHermiteSum κ (localPart j M G) z) := by
-            dsimp [Complex.normSq]
-            nlinarith [sq_nonneg (evalHermiteSum κ (localPart j M G) z).re,
-              sq_nonneg (evalHermiteSum κ (localPart j M G) z).im]
-          rw [abs_of_nonneg hnonneg, Complex.sq_norm]
-        simp [indicatorMul, Set.indicator, hz, Complex.mul_conj']
-      · simp [indicatorMul, Set.indicator, hz]
-    rw [← hmass_fun_eq]
-    simpa [indicatorMul] using
-      ((annulusIntegrablePolynomial (j := j) (κ := κ)
-        (G := localPart j M G) (H := localPart j M G)).norm)
+  have hmass_int := indicator_mass_integrable (κ := κ) (j := j) (M := M) (G := G)
   have hmass0 :
       ENNReal.ofReal (annulusMass j (evalHermiteSum κ (localPart j M G))) =
         ∫⁻ z : CSpace d,
@@ -577,47 +566,15 @@ private lemma defectAnnulusMass_localOrbit_lintegral
               (circleL2NormSq (fun t : Circle => rho (nuKappa κ z) (localOrbit κ j M G z t)))) z
       ∂ gaussianMeasure d := by
   classical
-  have hmass_int :
-      Integrable
-        ((productAnnulus j).indicator
-          (fun z : CSpace d => ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2))
-        (gaussianMeasure d) := by
-    classical
-    have hmass_fun_eq :
-        (fun z : CSpace d => ‖indicatorMul (productAnnulus j)
-            (fun w => evalHermiteSum κ (localPart j M G) w *
-              conj (evalHermiteSum κ (localPart j M G) w)) z‖) =
-        (productAnnulus j).indicator
-          (fun z => ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2) := by
-      funext z
-      by_cases hz : z ∈ productAnnulus j
-      · have hnorm :
-          |Complex.normSq (evalHermiteSum κ (localPart j M G) z)| =
-            ‖evalHermiteSum κ (localPart j M G) z‖ ^ 2 := by
-          have hnonneg : 0 ≤ Complex.normSq (evalHermiteSum κ (localPart j M G) z) := by
-            dsimp [Complex.normSq]
-            nlinarith [sq_nonneg (evalHermiteSum κ (localPart j M G) z).re,
-              sq_nonneg (evalHermiteSum κ (localPart j M G) z).im]
-          rw [abs_of_nonneg hnonneg, Complex.sq_norm]
-        simp [indicatorMul, Set.indicator, hz, Complex.mul_conj']
-      · simp [indicatorMul, Set.indicator, hz]
-    rw [← hmass_fun_eq]
-    simpa [indicatorMul] using
-      ((annulusIntegrablePolynomial (j := j) (κ := κ)
-        (G := localPart j M G) (H := localPart j M G)).norm)
+  have hmass_int := indicator_mass_integrable (κ := κ) (j := j) (M := M) (G := G)
+  have hrho_cont := continuous_rho_localPart_sq (κ := κ) (j := j) (M := M) (G := G)
   have hdef_meas :
       AEStronglyMeasurable
         ((productAnnulus j).indicator
           (fun z : CSpace d => rho (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) ^ 2))
         (gaussianMeasure d) := by
-    have hcont :
-        Continuous (fun z : CSpace d =>
-          rho (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) ^ 2) := by
-      unfold rho
-      exact ((continuous_nuKappa (κ := κ)).add (continuous_evalHermiteSum (κ := κ)
-        (localPart j M G))).norm.sub (continuous_nuKappa (κ := κ)).norm |>.abs.pow 2
     simpa [Set.indicator] using
-      (hcont.measurable.indicator (measurableSet_productAnnulus (j := j))).aestronglyMeasurable
+      (hrho_cont.measurable.indicator (measurableSet_productAnnulus (j := j))).aestronglyMeasurable
   have hdef_le_mass :
       ∀ᵐ z ∂ gaussianMeasure d,
         ‖(productAnnulus j).indicator
@@ -664,15 +621,8 @@ private lemma defectAnnulusMass_localOrbit_lintegral
           · simp [hz])))
   have hFdef :
       Measurable (fun z : CSpace d => ENNReal.ofReal
-        (rho (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) ^ 2)) := by
-    have hcont :
-        Continuous (fun z : CSpace d =>
-          rho (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) ^ 2) := by
-      unfold rho
-      exact ((continuous_nuKappa (κ := κ)).add
-        (continuous_evalHermiteSum (κ := κ) (localPart j M G))).norm.sub
-          (continuous_nuKappa (κ := κ)).norm |>.abs.pow 2
-    exact ENNReal.measurable_ofReal.comp hcont.measurable
+        (rho (nuKappa κ z) (evalHermiteSum κ (localPart j M G) z) ^ 2)) :=
+    ENNReal.measurable_ofReal.comp hrho_cont.measurable
   have havg :=
     annulusRotationAveraging (j := j)
       (F := fun z : CSpace d => ENNReal.ofReal

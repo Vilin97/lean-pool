@@ -29,19 +29,19 @@ private theorem sum_Icc_eq_sum_Fin {α : Type*} [AddCommMonoid α]
     (N L : ℕ) (hL : 1 ≤ L) (f : ℕ → α) :
     ∑ n ∈ Finset.Icc N (N + L - 1), f n =
       ∑ m : Fin L, f (N + m.val) := by
-  symm
-  apply Finset.sum_nbij (fun (m : Fin L) => N + m.val)
-  · intro m _
-    exact Finset.mem_Icc.mpr ⟨Nat.le_add_right N m.val, by omega⟩
-  · intro a _ b _ hab
-    exact Fin.ext (Nat.add_left_cancel hab)
-  · intro n hn
-    obtain ⟨hlo, hhi⟩ := Finset.mem_Icc.mp hn
-    refine ⟨⟨n - N, by omega⟩, Finset.mem_univ _, ?_⟩
-    change N + (n - N) = n
-    omega
-  · intro _ _
-    rfl
+  rw [Fin.sum_univ_eq_sum_range (fun m => f (N + m)),
+    show Finset.Icc N (N + L - 1)
+        = Finset.map ⟨(N + ·), add_right_injective N⟩ (Finset.range L) by
+        ext x
+        simp only [Finset.mem_map, Finset.mem_range, Finset.mem_Icc,
+          Function.Embedding.coeFn_mk]
+        constructor
+        · rintro ⟨_, _⟩
+          exact ⟨x - N, by omega, by omega⟩
+        · rintro ⟨a, ha, rfl⟩
+          omega,
+    Finset.sum_map]
+  rfl
 
 /-- Imported theorem A: local circle estimate for positive frequencies. -/
 theorem local_circle_estimate
@@ -126,27 +126,13 @@ theorem phase_normalized_orthogonal_reduction
       dsimp [g]
       rw [inner_sub_left, hinner_real]
       exact sub_eq_zero.mpr hsmul.symm
-    have hg_bound : ‖g‖ ≤ C * (|a| + defect h) := by
-      have h1 : ‖g‖ ≤ C * defect g := horth g hgorth
-      have h2 : C * defect g ≤ C * (|a| + defect h) := by
-        exact mul_le_mul_of_nonneg_left (hcompare h a) (le_of_lt hC)
-      exact h1.trans h2
+    have hg_bound : ‖g‖ ≤ C * (|a| + defect h) :=
+      (horth g hgorth).trans (mul_le_mul_of_nonneg_left (hcompare h a) hC.le)
     have hscalar_h := hscalar h him
     have htwoa : 2 * |a| ≤ defect h * (2 + ‖h‖) + ‖h‖ ^ 2 := by
-      have htri :
-          2 * |a| ≤ |(2 : ℝ) * a + ‖h‖ ^ 2| + ‖h‖ ^ 2 := by
-        have hnorm0 := norm_add_le ((2 : ℝ) * a + ‖h‖ ^ 2) (-‖h‖ ^ 2)
-        have hnorm1 :
-            |(2 : ℝ) * a + ‖h‖ ^ 2 + -‖h‖ ^ 2| ≤
-              |(2 : ℝ) * a + ‖h‖ ^ 2| + ‖h‖ ^ 2 := by
-          simpa [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg ‖h‖)] using
-            hnorm0
-        have hnorm2 : |(2 : ℝ) * a| ≤ |(2 : ℝ) * a + ‖h‖ ^ 2| + ‖h‖ ^ 2 := by
-          simpa [show (2 : ℝ) * a + ‖h‖ ^ 2 + -‖h‖ ^ 2 = (2 : ℝ) * a by ring] using
-            hnorm1
-        simpa [abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)] using hnorm2
-      exact htri.trans (by nlinarith)
-    have ha_bound : |a| ≤ (defect h * (2 + ‖h‖) + ‖h‖ ^ 2) / 2 := by nlinarith
+      rcases abs_cases a with ⟨h1, _⟩ | ⟨h1, _⟩ <;>
+        rcases abs_cases ((2 : ℝ) * a + ‖h‖ ^ 2) with ⟨h2, _⟩ | ⟨h2, _⟩ <;>
+        nlinarith [sq_nonneg ‖h‖, hscalar_h, h1, h2]
     have hg_add : g + (a : ℂ) • f0 = h := by simp [g]
     have hsplit : ‖h‖ ≤ ‖g‖ + |a| := by
       calc
@@ -154,31 +140,13 @@ theorem phase_normalized_orthogonal_reduction
         _ ≤ ‖g‖ + ‖(a : ℂ) • f0‖ := norm_add_le _ _
         _ = ‖g‖ + |a| := by simp [norm_smul, hf0, Real.norm_eq_abs]
     have hh_main : ‖h‖ ≤ (C + 1) * |a| + C * defect h := by nlinarith
-    have hδ_le_one : (1 / (C + 1 : ℝ)) ≤ 1 := by
-      have hCp1 : 0 < C + 1 := by linarith
-      rw [div_le_iff₀ hCp1]
-      nlinarith
-    have hx_le_one : ‖h‖ ≤ 1 := hhδ.trans hδ_le_one
+    have hCp1 : 0 < C + 1 := by linarith
+    have hx_le_one : ‖h‖ ≤ 1 := hhδ.trans (by rw [div_le_iff₀ hCp1]; nlinarith)
     have ha_simple : |a| ≤ (3 : ℝ) / 2 * defect h + ‖h‖ ^ 2 / 2 := by
-      nlinarith [ha_bound, hx_le_one, hdefect_nonneg h]
-    have hh_quad :
-        ‖h‖ ≤ ((5 * C + 3) / 2) * defect h + ((C + 1) / 2) * ‖h‖ ^ 2 := by
-      nlinarith [hh_main, ha_simple, hdefect_nonneg h, hC]
-    have hx_sq : ‖h‖ ^ 2 ≤ (1 / (C + 1 : ℝ)) * ‖h‖ := by nlinarith [hhδ, norm_nonneg h]
-    have hCp1_nonneg : 0 ≤ C + 1 := by linarith
-    have hx_sq' : (C + 1) * ‖h‖ ^ 2 ≤ ‖h‖ := by
-      calc
-        (C + 1) * ‖h‖ ^ 2 ≤ (C + 1) * ((1 / (C + 1 : ℝ)) * ‖h‖) :=
-          mul_le_mul_of_nonneg_left hx_sq hCp1_nonneg
-        _ = ‖h‖ := by field_simp [show (C + 1 : ℝ) ≠ 0 by linarith]
-    have habsorb : ((C + 1) / 2) * ‖h‖ ^ 2 ≤ ‖h‖ / 2 := by
-      have hhalf := mul_le_mul_of_nonneg_right hx_sq' (show (0 : ℝ) ≤ 1 / 2 by norm_num)
-      simpa [div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm] using hhalf
-    have hh_half : ‖h‖ ≤ ((5 * C + 3) / 2) * defect h + ‖h‖ / 2 := by
-      exact hh_quad.trans <|
-        by simpa [add_assoc, add_left_comm, add_comm] using
-          add_le_add_left habsorb (((5 * C + 3) / 2) * defect h)
-    have hh_final : ‖h‖ / 2 ≤ ((5 * C + 3) / 2) * defect h := by nlinarith [hh_half]
-    nlinarith [hh_final, hdefect_nonneg h]
+      nlinarith [htwoa, hx_le_one, hdefect_nonneg h, norm_nonneg h]
+    have hx_sq : (C + 1) * ‖h‖ ^ 2 ≤ ‖h‖ := by
+      rw [le_div_iff₀ hCp1] at hhδ
+      nlinarith [hhδ, norm_nonneg h, hCp1]
+    nlinarith [hh_main, ha_simple, hx_sq, hdefect_nonneg h, hC, abs_nonneg a]
 
 end HermiteLEAN

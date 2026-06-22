@@ -28,10 +28,9 @@ namespace HermiteLEAN
 -- to_mathlib: Mathlib/Data/Finset/Intervals
 /-- Square blocks have the expected odd cardinality. -/
 theorem squareBlock_card (ℓ : ℕ) : (squareBlock ℓ).card = 2 * ℓ + 1 := by
-  rw [squareBlock, Nat.card_Ico, pow_two, pow_two]
-  have h : (ℓ + 1) * (ℓ + 1) = ℓ * ℓ + (2 * ℓ + 1) := by ring
-  rw [h]
-  exact Nat.add_sub_cancel_left (ℓ * ℓ) (2 * ℓ + 1)
+  rw [squareBlock, Nat.card_Ico]
+  ring_nf
+  omega
 
 -- to_mathlib: Mathlib/Data/Real/Interval
 /-- A convenient interval-distance lower bound for annulus arguments. -/
@@ -43,18 +42,17 @@ theorem annulus_distance_lower_bound (j : ℕ) (x : ℝ) :
   set b : ℝ := |(((j + 1 : ℕ) : ℝ) - x)|
   have ha0 : 0 ≤ a := by simp [a]
   have hb0 : 0 ≤ b := by simp [b]
-  have h1 : max (a - 1) 0 ≤ a := by exact max_le (by linarith) ha0
   have habs : |a - b| ≤ 1 := by
     have h := abs_abs_sub_abs_le_abs_sub ((j : ℝ) - x) ((((j + 1 : ℕ) : ℝ) - x))
     have hrhs : |((j : ℝ) - x) - ((((j + 1 : ℕ) : ℝ) - x))| = 1 := by
-      ring_nf
-      simp
+      push_cast
+      rw [abs_eq (by norm_num)]
+      right
+      ring
     simpa [a, b, hrhs] using h
-  have h2' : a - 1 ≤ b := by
-    have hrewrite : a - b ≤ 1 := (abs_sub_le_iff.mp habs).1
-    linarith
-  have h2 : max (a - 1) 0 ≤ b := by exact max_le h2' hb0
-  exact le_min h1 h2
+  rw [le_min_iff]
+  refine ⟨max_le (by linarith) ha0, max_le ?_ hb0⟩
+  linarith [(abs_sub_le_iff.mp habs).1]
 
 -- to_mathlib: Mathlib/Analysis/SpecialFunctions/Gaussian/Basic
 /-- A reusable Gaussian absorption lemma. -/
@@ -67,12 +65,10 @@ theorem polynomial_times_gaussian_le_gaussian
         (1 + x ^ k) * Real.exp (-a * x ^ 2)
           ≤ C * Real.exp (-(a / 2) * x ^ 2) := by
   let g : ℝ → ℝ := fun x => (1 + x ^ k) * Real.exp (-(a / 2) * x ^ 2)
-  have hsq : Tendsto (fun x : ℝ => x ^ 2) Filter.atTop Filter.atTop := by
-    exact tendsto_pow_atTop (by norm_num : (2 : ℕ) ≠ 0)
-  have hexp : Tendsto (fun x : ℝ => Real.exp (-(a / 2) * x ^ 2)) Filter.atTop (𝓝 0) := by
-    have hmul : Tendsto (fun x : ℝ => (-(a / 2)) * (x ^ 2)) Filter.atTop Filter.atBot := by
-      exact hsq.const_mul_atTop_of_neg (by nlinarith [ha])
-    convert Real.tendsto_exp_atBot.comp hmul using 1 with x
+  have hsq : Tendsto (fun x : ℝ => x ^ 2) Filter.atTop Filter.atTop :=
+    tendsto_pow_atTop (by norm_num : (2 : ℕ) ≠ 0)
+  have hexp : Tendsto (fun x : ℝ => Real.exp (-(a / 2) * x ^ 2)) Filter.atTop (𝓝 0) :=
+    Real.tendsto_exp_atBot.comp (hsq.const_mul_atTop_of_neg (by nlinarith [ha]))
   have hpoly : Tendsto (fun x : ℝ => x ^ k * Real.exp (-(a / 2) * x ^ 2)) Filter.atTop (𝓝 0) := by
     refine Tendsto.congr' ?_
       ((tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero ((k : ℝ) / 2) (a / 2) (by positivity)).comp
@@ -89,8 +85,7 @@ theorem polynomial_times_gaussian_le_gaussian
         congr 2
         ring
   have hgtendsto : Tendsto g Filter.atTop (𝓝 0) := by
-    have hsum := hexp.add hpoly
-    convert hsum using 1 <;> ext x <;> simp [g, add_mul]
+    simpa [g, add_mul] using hexp.add hpoly
   have hsmall : ∀ᶠ x : ℝ in Filter.atTop, g x < 1 := by
     exact (tendsto_order.1 hgtendsto).2 1 zero_lt_one
   rcases Filter.eventually_atTop.1 hsmall with ⟨R, hR⟩
@@ -105,32 +100,19 @@ theorem polynomial_times_gaussian_le_gaussian
   intro x hx
   have hbound_g : g x ≤ C := by
     by_cases hxr : x ≤ R
-    · have hxmem : x ∈ Set.Icc 0 R := ⟨hx, hxr⟩
-      have honepow_nonneg : 0 ≤ 1 + x ^ k := by positivity
-      have hcompact : g x ≤ C0 := by
-        simpa [Real.norm_eq_abs, g, abs_of_nonneg honepow_nonneg] using hC0 x hxmem
-      have hC0leC : C0 ≤ C := by
-        dsimp [C]
-        linarith [le_abs_self C0]
-      exact hcompact.trans hC0leC
-    · have hxR : R ≤ x := le_of_not_ge hxr
-      have htail : g x < 1 := hR x hxR
-      have hone_le : 1 ≤ C := by
-        dsimp [C]
-        nlinarith [abs_nonneg C0]
-      exact htail.le.trans hone_le
+    · have hcompact : g x ≤ C0 := by
+        simpa [Real.norm_eq_abs, g, abs_of_nonneg (by positivity : 0 ≤ 1 + x ^ k)] using
+          hC0 x ⟨hx, hxr⟩
+      simp only [C]
+      linarith [le_abs_self C0]
+    · simp only [C]
+      nlinarith [hR x (le_of_not_ge hxr), abs_nonneg C0]
   have hsplit :
       Real.exp (-a * x ^ 2) =
         Real.exp (-(a / 2) * x ^ 2) * Real.exp (-(a / 2) * x ^ 2) := by
     rw [← Real.exp_add]
-    congr 1
-    ring
-  calc
-    (1 + x ^ k) * Real.exp (-a * x ^ 2)
-      = (1 + x ^ k) * (Real.exp (-(a / 2) * x ^ 2) * Real.exp (-(a / 2) * x ^ 2)) := by rw [hsplit]
-    _ = g x * Real.exp (-(a / 2) * x ^ 2) := by simp [g, mul_left_comm, mul_comm]
-    _ ≤ C * Real.exp (-(a / 2) * x ^ 2) := by
-          have hexp_nonneg : 0 ≤ Real.exp (-(a / 2) * x ^ 2) := (Real.exp_pos _).le
-          exact mul_le_mul_of_nonneg_right hbound_g hexp_nonneg
+    ring_nf
+  rw [hsplit, ← mul_assoc]
+  exact mul_le_mul_of_nonneg_right hbound_g (Real.exp_pos _).le
 
 end HermiteLEAN

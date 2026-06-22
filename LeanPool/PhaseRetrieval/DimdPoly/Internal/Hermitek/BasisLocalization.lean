@@ -33,35 +33,6 @@ private theorem hermiteSeries_single (k n : ℕ) :
   · intro b hb
     simp [hb]
 
-private theorem circleSeries_l2_single (k n : ℕ) (r : ℝ) (hr : 0 < r) :
-    circleL2Sq (circleSeries k (fun m : ℕ => if m = n then (1 : ℂ) else 0) r) =
-      |qkn k n r| ^ 2 := by
-  have hPhi : Phi k n ∈ Hk k := Phi_mem_Hk k n
-  have hseries : Phi k n = hermiteSeries k (fun m : ℕ => if m = n then (1 : ℂ) else 0) :=
-    (hermiteSeries_single k n).symm
-  have hsummable :
-      Summable (fun m : ℕ => ‖if m = n then (1 : ℂ) else 0‖ ^ 2) := by
-    classical
-    apply summable_of_hasFiniteSupport
-    refine Set.Finite.subset (Set.finite_singleton n) ?_
-    intro m hm
-    by_contra hmn
-    have hmne : ‖if m = n then (1 : ℂ) else 0‖ ^ 2 ≠ 0 := by simpa [Function.mem_support] using hm
-    have hEq : m = n := by
-      by_contra hneq
-      apply hmne
-      simp [hneq]
-    exact hmn (by simp [hEq])
-  have h :=
-    circleSeries_l2_identity
-      (G := Phi k n)
-      (g := fun m : ℕ => if m = n then (1 : ℂ) else 0)
-      hPhi hseries hsummable r hr
-  rw [tsum_eq_single n] at h
-  · simpa using h
-  · intro b hb
-    simp [hb]
-
 private theorem qkn_zero (k : ℕ) {r : ℝ} (hr : 0 < r) : qkn k 0 r = 1 := by
   rw [qkn_explicit hr]
   simp
@@ -91,10 +62,6 @@ private theorem qkn_descFactorial_form
       (Nat.factorial n : ℝ) / (Nat.factorial (n - j) : ℝ) = (Nat.descFactorial n j : ℝ) := by
     exact (div_eq_iff hden).2 hmul'
   rw [hcoeff]
-
-private def qknPoly (k n : ℕ) (u : ℝ) : ℝ :=
-  Finset.sum (Finset.range (k + 1)) (fun j =>
-    ((-1 : ℝ) ^ j) * (Nat.choose k j : ℝ) * (Nat.descFactorial n j : ℝ) * u ^ (k - j))
 
 -- Nat-level coefficient identity for the Charlier recurrence (s = s'+2 case).
 private theorem charlier_coeff_nat (k n s' : ℕ) :
@@ -139,176 +106,13 @@ private theorem charlier_coeff_nat (k n s' : ℕ) :
         rw [h1, h2, ← Nat.add_mul, hkey, Nat.mul_assoc]
       · have hD : (n - 1).descFactorial s' = 0 := by rw [Nat.descFactorial_eq_zero_iff_lt]; omega
         simp [hD]
-  calc (k + 2).choose (s' + 2) * n.descFactorial (s' + 2) +
-      (k + 1) * n * (k.choose s' * (n - 1).descFactorial s')
-      = ((k + 1).choose (s' + 1) + (k + 1).choose (s' + 2)) *
-          n.descFactorial (s' + 2) +
-        (k + 1) * n * (k.choose s' * (n - 1).descFactorial s') := by rw [hpascal]
-    _ = (k + 1).choose (s' + 1) * n.descFactorial (s' + 2) +
-        (k + 1).choose (s' + 2) * n.descFactorial (s' + 2) +
-        (k + 1) * n * (k.choose s' * (n - 1).descFactorial s') := by rw [Nat.add_mul]
-    _ = (k + 1).choose (s' + 2) * n.descFactorial (s' + 2) +
-        ((k + 1).choose (s' + 1) * n.descFactorial (s' + 2) +
-         (k + 1) * n * (k.choose s' * (n - 1).descFactorial s')) := by omega
-    _ = (k + 1).choose (s' + 2) * n.descFactorial (s' + 2) +
-        n * ((k + 1).choose (s' + 1) * n.descFactorial (s' + 1)) := by rw [hsuff]
-
-private theorem qknPoly_succ_succ
-    (k n : ℕ) (u : ℝ) :
-    qknPoly (k + 2) n u =
-      (u - n) * qknPoly (k + 1) n u - ((k + 1 : ℕ) : ℝ) * (n : ℝ) * qknPoly k (n - 1) u := by
-  -- Reduce to polynomial equality via evaluation.
-  let Pk : ℕ → ℕ → Polynomial ℝ := fun k n =>
-    ∑ j ∈ Finset.range (k + 1),
-      (Polynomial.C ((-1 : ℝ) ^ j * ↑(k.choose j) * ↑(n.descFactorial j)) *
-        Polynomial.X ^ (k - j))
-  have heval : ∀ K N : ℕ, (Pk K N).eval u = qknPoly K N u := by
-    intro K N
-    simp only [Pk, Polynomial.eval_finsetSum, Polynomial.eval_mul, Polynomial.eval_C,
-      Polynomial.eval_pow, Polynomial.eval_X]
-    simp only [qknPoly, mul_comm, mul_left_comm]
-  suffices hpoly :
-      Pk (k + 2) n =
-        (Polynomial.X - Polynomial.C (↑n : ℝ)) * Pk (k + 1) n -
-          Polynomial.C ((↑(k + 1) : ℝ) * (↑n : ℝ)) * Pk k (n - 1) by
-    have h1 := congr_arg (Polynomial.eval u) hpoly
-    simp only [Polynomial.eval_sub, Polynomial.eval_mul, Polynomial.eval_X,
-      Polynomial.eval_C] at h1
-    rw [heval, heval, heval] at h1
-    linarith
-  have hcs : ∀ (K N m : ℕ),
-      (Pk K N).coeff m =
-        if m ≤ K then
-          (-1 : ℝ) ^ (K - m) * ↑(K.choose (K - m)) * ↑(N.descFactorial (K - m))
-        else 0 := by
-    intro K N m
-    simp only [Pk, Polynomial.finsetSum_coeff]
-    by_cases hmK : m ≤ K
-    · rw [if_pos hmK, Finset.sum_eq_single (K - m)]
-      · have : K - (K - m) = m := Nat.sub_sub_self hmK
-        rw [this, Polynomial.coeff_C_mul_X_pow]
-        simp
-      · intro j hj hjne
-        rw [Polynomial.coeff_C_mul_X_pow]
-        simp only [show m ≠ K - j from by
-          intro h; have hjK : j ≤ K := Nat.le_of_lt_succ (Finset.mem_range.mp hj)
-          exact hjne (by omega), ite_false]
-      · intro hnotmem; exfalso; apply hnotmem
-        exact Finset.mem_range.mpr (by omega)
-    · push Not at hmK
-      rw [if_neg (by omega), Finset.sum_eq_zero]
-      intro j hj
-      rw [Polynomial.coeff_C_mul_X_pow]
-      simp only [show m ≠ K - j from by
-        have hjK : j ≤ K := Nat.le_of_lt_succ (Finset.mem_range.mp hj); omega, ite_false]
-  ext m
-  rw [hcs, Polynomial.coeff_sub, Polynomial.coeff_C_mul, hcs]
-  cases m with
-  | zero =>
-    have h0 : ((Polynomial.X - Polynomial.C (↑n : ℝ)) * Pk (k + 1) n).coeff 0 =
-        -(↑n : ℝ) * (Pk (k + 1) n).coeff 0 := by
-      simp [Polynomial.coeff_mul]
-    rw [h0, hcs]
-    simp only [Nat.zero_le, ite_true, Nat.sub_zero, show (0 : ℕ) ≤ k from Nat.zero_le k]
-    have h := charlier_coeff_nat k n k
-    have hR : (↑((k + 2).choose (k + 2) * n.descFactorial (k + 2) +
-        (k + 1) * n * (k.choose k * (n - 1).descFactorial k)) : ℝ) =
-      (↑((k + 1).choose (k + 2) * n.descFactorial (k + 2) +
-        n * ((k + 1).choose (k + 1) * n.descFactorial (k + 1))) : ℝ) := by
-      exact_mod_cast h
-    simp only [Nat.choose_self,
-      Nat.choose_eq_zero_of_lt (show k + 1 < k + 2 by omega),
-      Nat.cast_add, Nat.cast_mul, Nat.cast_one, Nat.cast_zero] at hR
-    simp only [Nat.choose_self]
-    push_cast
-    have hpow : (-1 : ℝ) ^ (k + 2) = (-1) ^ k := by ring
-    have hpow1 : (-1 : ℝ) ^ (k + 1) = -(-1) ^ k := by ring
-    rw [hpow, hpow1]
-    have hR' : (↑(n.descFactorial (k + 2)) : ℝ) =
-        ↑n * ↑(n.descFactorial (k + 1)) - (↑k + 1) * ↑n * ↑((n - 1).descFactorial k) := by
-      linarith
-    calc (-1 : ℝ) ^ k * (↑1) * ↑(n.descFactorial (k + 2))
-        = (-1) ^ k * (↑n * ↑(n.descFactorial (k + 1)) -
-            (↑k + 1) * ↑n * ↑((n - 1).descFactorial k)) := by rw [mul_one, hR']
-      _ = -↑n * (-(-1) ^ k * (↑1) * ↑(n.descFactorial (k + 1))) -
-            (↑k + 1) * ↑n * ((-1) ^ k * (↑1) * ↑((n - 1).descFactorial k)) := by ring
-  | succ a =>
-    rw [Polynomial.coeff_X_sub_C_mul, hcs, hcs]
-    by_cases ha1 : k + 2 < a + 1
-    · simp only [show ¬(a + 1 ≤ k + 2) from by omega, ite_false,
-                  show ¬(a ≤ k + 1) from by omega, ite_false,
-                  show ¬(a + 1 ≤ k + 1) from by omega, ite_false,
-                  show ¬(a + 1 ≤ k) from by omega, ite_false]
-      ring
-    · push Not at ha1
-      by_cases ha2 : a + 1 ≤ k
-      · simp only [show a + 1 ≤ k + 2 from by omega, ite_true,
-                    show a ≤ k + 1 from by omega, ite_true,
-                    show a + 1 ≤ k + 1 from by omega, ite_true,
-                    show a + 1 ≤ k from ha2, ite_true]
-        have hnat := charlier_coeff_nat k n (k - 1 - a)
-        have hs2 : k - 1 - a + 2 = k + 1 - a := by omega
-        have hs1 : k - 1 - a + 1 = k - a := by omega
-        have hk2a : k + 2 - (a + 1) = k + 1 - a := by omega
-        have hk1a : k + 1 - (a + 1) = k - a := by omega
-        have hka : k - (a + 1) = k - 1 - a := by omega
-        rw [hs2, hs1] at hnat
-        rw [hk2a, hk1a, hka]
-        have hR :
-            (↑((k + 2).choose (k + 1 - a) * n.descFactorial (k + 1 - a) +
-            (k + 1) * n * (k.choose (k - 1 - a) *
-              (n - 1).descFactorial (k - 1 - a))) : ℝ) =
-          (↑((k + 1).choose (k + 1 - a) * n.descFactorial (k + 1 - a) +
-            n * ((k + 1).choose (k - a) * n.descFactorial (k - a))) : ℝ) := by
-          exact_mod_cast hnat
-        push_cast at hR ⊢
-        have hpow2 : ((-1 : ℝ) ^ (k + 1 - a)) = (-1) ^ (k - 1 - a) := by
-          have : k + 1 - a = (k - 1 - a) + 2 := by omega
-          rw [this]; ring
-        have hpow1 : ((-1 : ℝ) ^ (k - a)) = -((-1) ^ (k - 1 - a)) := by
-          have : k - a = (k - 1 - a) + 1 := by omega
-          rw [this]; ring
-        rw [hpow2, hpow1]
-        set s := (-1 : ℝ) ^ (k - 1 - a)
-        have : s * (↑((k + 2).choose (k + 1 - a)) *
-            ↑(n.descFactorial (k + 1 - a))) =
-          s * (↑((k + 1).choose (k + 1 - a)) *
-              ↑(n.descFactorial (k + 1 - a)) +
-            ↑n * (↑((k + 1).choose (k - a)) * ↑(n.descFactorial (k - a))) -
-            (↑k + 1) * ↑n * (↑(k.choose (k - 1 - a)) *
-              ↑((n - 1).descFactorial (k - 1 - a)))) := by
-          congr 1; linarith
-        linarith [mul_comm s (↑((k + 2).choose (k + 1 - a)) *
-          ↑(n.descFactorial (k + 1 - a)))]
-      · push Not at ha2
-        have hak : a = k ∨ a = k + 1 := by omega
-        rcases hak with ha_eq | ha_eq
-        · -- a = k case: m = k+1
-          subst ha_eq
-          simp only [show a + 1 ≤ a + 2 from by omega, ite_true,
-            show a ≤ a + 1 from by omega, ite_true,
-            show a + 1 ≤ a + 1 from le_refl _, ite_true,
-            show ¬(a + 1 ≤ a) from by omega, ite_false]
-          have h1 : a + 2 - (a + 1) = 1 := by omega
-          have h2 : a + 1 - a = 1 := by omega
-          have h3 : a + 1 - (a + 1) = 0 := by omega
-          rw [h1, h2, h3]
-          simp only [pow_one, pow_zero,
-            Nat.choose_one_right, Nat.descFactorial_one,
-            Nat.choose_zero_right, Nat.descFactorial_zero, mul_zero, sub_zero]
-          push_cast; ring
-        · -- a = k+1 case: m = k+2 (leading coefficient)
-          subst ha_eq
-          simp only [show k + 1 ≤ k + 1 from le_refl _, ite_true,
-            show k + 1 + 1 ≤ k + 2 from by omega, ite_true,
-            show ¬(k + 1 + 1 ≤ k + 1) from by omega, ite_false,
-            show ¬(k + 1 + 1 ≤ k) from by omega, ite_false]
-          norm_num [Nat.choose_zero_right, Nat.descFactorial_zero]
+  rw [hpascal, Nat.add_mul]
+  omega
 
 /-- The multiplier recurrence holds for the POLYNOMIAL variable u = r².
 The original `qknMultiplier_succ_succ` claimed a recurrence in r directly,
-which is false due to a power-parity mismatch. Use `qknPoly_succ_succ`
-(already proved) for the correct polynomial recurrence instead. -/
+which is false due to a power-parity mismatch; `Pkn_succ_succ` below gives the
+correct polynomial recurrence instead. -/
 private noncomputable def Pkn (k n : ℕ) : Polynomial ℝ :=
   Finset.sum (Finset.range (k + 1)) (fun j =>
     Polynomial.C (((-1 : ℝ) ^ j) * (Nat.choose k j : ℝ) * (Nat.descFactorial n j : ℝ)) *
@@ -327,13 +131,6 @@ private theorem Pkn_eval (k n : ℕ) (x : ℝ) :
   refine Finset.sum_congr rfl ?_
   intro j hj
   simp [mul_assoc, mul_left_comm, mul_comm]
-
-private theorem Pkn_eval_natShift (k n : ℕ) (x : ℝ) :
-    (Pkn k n).eval (x + n) =
-      Finset.sum (Finset.range (k + 1)) (fun j =>
-        ((-1 : ℝ) ^ j) * (Nat.choose k j : ℝ) *
-        (Nat.descFactorial n j : ℝ) * (x + n) ^ (k - j)) := by
-  simpa using Pkn_eval k n (x + n)
 
 private theorem Pkn_coeff (k n m : ℕ) :
     (Pkn k n).coeff m =
@@ -581,6 +378,25 @@ private lemma norm_sq_circleLeadingFactor
       (((r ^ k) / Real.sqrt ((Nat.factorial k : ℕ) : ℝ)) ^ 2) := by
   rw [circleLeadingFactor, Complex.norm_real, Real.norm_eq_abs, sq_abs]
 
+/-- The squared modulus of `finiteHermiteSum` evaluated at a positive-radius circle point
+factors through the radial leading factor and the circle polynomial. -/
+private lemma normSq_finiteHermiteSum_circlePoint
+    (k : ℕ) {D : ℕ} (a : Fin D → ℂ) {r : ℝ} (hr : 0 < r) (θ : ℝ) :
+    ‖finiteHermiteSum k a (circlePoint r ((QuotientAddGroup.mk θ : Circle)))‖ ^ 2 =
+      (((r ^ k) / Real.sqrt ((Nat.factorial k : ℕ) : ℝ)) ^ 2) *
+        ‖finiteCirclePoly k r a (QuotientAddGroup.mk θ : Circle)‖ ^ 2 := by
+  have hcircle :
+      finiteHermiteSum k a (circlePoint r ((QuotientAddGroup.mk θ : Circle))) =
+        circleLeadingFactor k r *
+          (fourier (-(k : ℤ)) (QuotientAddGroup.mk θ : Circle) : ℂ) *
+            finiteCirclePoly k r a (QuotientAddGroup.mk θ : Circle) := by
+    simpa using
+      (finiteHermiteSum_circle (k := k) (a := a) hr (QuotientAddGroup.mk θ : Circle))
+  have hfour : ‖(fourier (-(k : ℤ)) (QuotientAddGroup.mk θ : Circle) : ℂ)‖ ^ 2 = 1 := by
+    rw [fourier_mk_norm]; norm_num
+  rw [hcircle, norm_mul, norm_mul, mul_pow, mul_pow, hfour, norm_sq_circleLeadingFactor]
+  ring
+
 private lemma integral_addCircle_volume_eq_smul_haar
     {E : Type*}
     [NormedAddCommGroup E]
@@ -614,6 +430,30 @@ private lemma integral_Ioo_eq_T_smul_haar
     ∫ θ in Set.Ioo (-Real.pi) Real.pi, f (QuotientAddGroup.mk θ) =
       T • ∫ t : Circle, f t ∂AddCircle.haarAddCircle := by
   rw [integral_Ioo_eq_addCircle, integral_addCircle_volume_eq_smul_haar]
+
+/-- The radial integral over the positive radial strip `Ioi 0 ∩ Ico j (j+1)` agrees with
+the interval integral over `[j, j+1]`. Shared by the `finiteHermiteSum` and `phi0` annulus
+reductions. -/
+private lemma setIntegral_radialStrip_eq_intervalIntegral (j : ℕ) (f : ℝ → ℝ) :
+    (∫ r in Set.Ioi (0 : ℝ) ∩ Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)), f r)
+      = ∫ r in (j : ℝ)..(((j + 1 : ℕ) : ℝ)), f r := by
+  set strip : Set ℝ := Set.Ioi (0 : ℝ) ∩ Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)) with hstrip
+  have hIoiIco_ae : strip =ᵐ[volume] Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)) := by
+    filter_upwards [Ioi_ae_eq_Ici (a := (0 : ℝ)) (μ := volume)] with x hx
+    apply propext
+    constructor
+    · intro h
+      exact h.2
+    · intro h
+      refine ⟨hx.mpr ?_, h⟩
+      exact le_trans (show (0 : ℝ) ≤ (j : ℝ) by exact_mod_cast Nat.zero_le j) h.1
+  rw [MeasureTheory.setIntegral_congr_set hIoiIco_ae,
+    intervalIntegral.integral_of_le
+      (show (j : ℝ) ≤ (((j + 1 : ℕ) : ℝ)) by exact_mod_cast Nat.le_succ j)]
+  simpa using
+    (MeasureTheory.setIntegral_congr_set
+      (f := f) (μ := volume)
+      (Ico_ae_eq_Ioc (a := (j : ℝ)) (b := (((j + 1 : ℕ) : ℝ)))))
 
 private lemma continuous_mk_addCircle :
     Continuous (fun θ : ℝ => (QuotientAddGroup.mk θ : Circle)) :=
@@ -712,16 +552,7 @@ private lemma annulus_polar_indicator_rw
       (r, θ) ∈
         (Set.Ioi (0 : ℝ) ∩ Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ))) ×ˢ
           Set.Ioo (-Real.pi) Real.pi from ⟨⟨hrpos, hrj⟩, hθ⟩)]
-    have hcircle :
-        finiteHermiteSum k a (circlePoint r ((QuotientAddGroup.mk θ : Circle)))
-          =
-        circleLeadingFactor k r *
-          (fourier (-(k : ℤ)) (QuotientAddGroup.mk θ : Circle) : ℂ) *
-            finiteCirclePoly k r a (QuotientAddGroup.mk θ : Circle) := by
-      simpa using (finiteHermiteSum_circle (k := k) (a := a) hrpos'
-        (QuotientAddGroup.mk θ : Circle))
-    have hfour : ‖(fourier (-(k : ℤ)) (QuotientAddGroup.mk θ : Circle) : ℂ)‖ ^ 2 = 1 := by
-      rw [fourier_mk_norm]; norm_num
+    have hnormHerm := normSq_finiteHermiteSum_circlePoint k a hrpos' θ
     have hpolar :
         finiteHermiteSum k a (Complex.polarCoord.symm (r, θ))
           =
@@ -736,13 +567,8 @@ private lemma annulus_polar_indicator_rw
         ((((r ^ k) / Real.sqrt ((Nat.factorial k : ℕ) : ℝ)) ^ 2) *
           ‖finiteCirclePoly k r a (QuotientAddGroup.mk θ : Circle)‖ ^ 2) *
             Real.exp (-r ^ 2) := by
-      rw [hpolar, hcircle, norm_mul, norm_mul, mul_pow, mul_pow, hfour,
-        norm_sq_circleLeadingFactor, hnormPolar]
-      ring_nf
-    rw [hFpolar,
-      show (r, θ).1 = r by rfl, show (r, θ).2 = θ by rfl,
-      hcircle, norm_mul, norm_mul, mul_pow, mul_pow, hfour, norm_sq_circleLeadingFactor]
-    ring_nf
+      rw [hpolar, hnormHerm, hnormPolar]
+    rw [hFpolar, show (r, θ).1 = r by rfl, show (r, θ).2 = θ by rfl, hnormHerm]
   · have hann : Complex.polarCoord.symm (r, θ) ∉ annulus j := by
       intro hz
       apply hrj
@@ -831,18 +657,7 @@ private lemma annulusIntegralSq_finiteHermiteSum_eq_radial
             (((r ^ k) / Real.sqrt ((Nat.factorial k : ℕ) : ℝ)) ^ 2)) *
               ‖finiteCirclePoly k r a (QuotientAddGroup.mk θ : Circle)‖ ^ 2 := by
       intro θ
-      have hcircle :
-          finiteHermiteSum k a (circlePoint r ((QuotientAddGroup.mk θ : Circle)))
-            =
-          circleLeadingFactor k r *
-            (fourier (-(k : ℤ)) (QuotientAddGroup.mk θ : Circle) : ℂ) *
-              finiteCirclePoly k r a (QuotientAddGroup.mk θ : Circle) := by
-        simpa using (finiteHermiteSum_circle (k := k) (a := a) hrpos
-          (QuotientAddGroup.mk θ : Circle))
-      have hfour : ‖(fourier (-(k : ℤ)) (QuotientAddGroup.mk θ : Circle) : ℂ)‖ ^ 2 = 1 := by
-        rw [fourier_mk_norm]
-        norm_num
-      rw [hcircle, norm_mul, norm_mul, mul_pow, mul_pow, hfour, norm_sq_circleLeadingFactor]
+      rw [normSq_finiteHermiteSum_circlePoint k a hrpos θ]
       ring_nf
     simp_rw [hpoint]
     rw [MeasureTheory.integral_const_mul]
@@ -876,55 +691,9 @@ private lemma annulusIntegralSq_finiteHermiteSum_eq_radial
     r * Real.exp (-r ^ 2) *
       ((((r ^ k) / Real.sqrt ((Nat.factorial k : ℕ) : ℝ)) ^ 2) *
         circleL2Sq (finiteCirclePoly k r a))
-  have hIoiIco_ae :
-      srad =ᵐ[volume]
-      Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)) := by
-    have h0 :
-        srad =ᵐ[volume] Set.inter (Set.Ici (0 : ℝ)) (Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ))) := by
-      filter_upwards [Ioi_ae_eq_Ici (a := (0 : ℝ)) (μ := volume)] with x hx
-      apply propext
-      constructor
-      · intro h
-        exact ⟨hx.mp h.1, h.2⟩
-      · intro h
-        exact ⟨hx.mpr h.1, h.2⟩
-    have h1 :
-        (Set.Ici (0 : ℝ) ∩ Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)))
-          =
-        Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)) := by
-      ext x
-      constructor
-      · intro hx
-        exact hx.2
-      · intro hx
-        refine ⟨?_, hx⟩
-        exact le_trans (show (0 : ℝ) ≤ (j : ℝ) by exact_mod_cast Nat.zero_le j) hx.1
-    exact h0.trans (Filter.EventuallyEq.of_eq h1)
   have hset_eq :
-      (∫ r in srad,
-        radial r)
-        =
-      ∫ r in (j : ℝ)..(((j + 1 : ℕ) : ℝ)),
-        radial r := by
-    calc
-      (∫ r in srad, radial r)
-        =
-      ∫ r in Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)), radial r :=
-        MeasureTheory.setIntegral_congr_set hIoiIco_ae
-      _ =
-      ∫ r in (j : ℝ)..(((j + 1 : ℕ) : ℝ)), radial r := by
-        rw [intervalIntegral.integral_of_le
-          (show (j : ℝ) ≤ (((j + 1 : ℕ) : ℝ)) by exact_mod_cast Nat.le_succ j)]
-        have hIcoIoc :
-            (∫ r in Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)), radial r)
-              =
-            ∫ r in Set.Ioc (j : ℝ) (((j + 1 : ℕ) : ℝ)), radial r := by
-          simpa using
-            (MeasureTheory.setIntegral_congr_set
-              (f := radial)
-              (μ := volume)
-              (Ico_ae_eq_Ioc (a := (j : ℝ)) (b := (((j + 1 : ℕ) : ℝ)))))
-        exact hIcoIoc
+      (∫ r in srad, radial r) = ∫ r in (j : ℝ)..(((j + 1 : ℕ) : ℝ)), radial r :=
+    setIntegral_radialStrip_eq_intervalIntegral j radial
   calc
     (1 / Real.pi) *
         (T *
@@ -1045,15 +814,9 @@ private lemma intervalIntegrable_basisRadialTerm
   dsimp [g]
   have hphi := phi_polar (k := k) (n := n) hrpos t0
   have hfourk : ‖(fourier (-(k : ℤ)) t0 : ℂ)‖ ^ 2 = 1 := by
-    calc
-      ‖(fourier (-(k : ℤ)) t0 : ℂ)‖ ^ 2 = (‖(fourier (-(k : ℤ)) t0 : ℂ)‖) ^ 2 := by rfl
-      _ = 1 ^ 2 := by rw [fourier_mk_norm (n := (-(k : ℤ))) (θ := (0 : ℝ))]
-      _ = 1 := by norm_num
+    rw [fourier_mk_norm (n := (-(k : ℤ))) (θ := (0 : ℝ))]; norm_num
   have hfourn : ‖(fourier (n : ℤ) t0 : ℂ)‖ ^ 2 = 1 := by
-    calc
-      ‖(fourier (n : ℤ) t0 : ℂ)‖ ^ 2 = (‖(fourier (n : ℤ) t0 : ℂ)‖) ^ 2 := by rfl
-      _ = 1 ^ 2 := by rw [fourier_mk_norm (n := (n : ℤ)) (θ := (0 : ℝ))]
-      _ = 1 := by norm_num
+    rw [fourier_mk_norm (n := (n : ℤ)) (θ := (0 : ℝ))]; norm_num
   rw [hphi, norm_mul, norm_mul, mul_pow, mul_pow, hfourk, norm_sq_circleLeadingFactor,
     norm_mul, mul_pow, hfourn,
     Complex.norm_real, Real.norm_eq_abs]
@@ -1106,98 +869,6 @@ private lemma sqrt_nat_sub_self_le
     _ = ((n - (n - i) : ℕ) : ℝ) := by rw [← Nat.cast_sub (Nat.sub_le n i)]
     _ = (i : ℝ) := by exact_mod_cast (by omega : n - (n - i) = i)
 
-private lemma sqrt_nat_sub_shift_le
-    (n i k : ℕ)
-    (hik : i < k)
-    (hkn : k < n) :
-    |Real.sqrt (n : ℝ) - Real.sqrt ((n - i : ℕ) : ℝ)| ≤ k := by
-  have hin : i < n := lt_trans hik hkn
-  exact le_trans (sqrt_nat_sub_self_le n i hin) (by exact_mod_cast Nat.le_of_lt hik)
-
-private lemma rStar_shift_le
-    (k n : ℕ)
-    (hkn : k < n) :
-    |Real.sqrt (n : ℝ) - FockSPR.rStar (n - k)| ≤ k + 1 := by
-  have hnk_pos : 1 ≤ n - k := by omega
-  have hbase :
-      |Real.sqrt (n : ℝ) - Real.sqrt ((n - k : ℕ) : ℝ)| ≤ k := by
-    simpa using sqrt_nat_sub_self_le n k hkn
-  have hhalf :
-      |Real.sqrt ((n - k : ℕ) : ℝ) - FockSPR.rStar (n - k)| ≤ 1 := by
-    have hdiff_nonneg :
-        0 ≤ FockSPR.rStar (n - k) - Real.sqrt ((n - k : ℕ) : ℝ) := by
-      unfold FockSPR.rStar
-      exact sub_nonneg.mpr
-            (Real.sqrt_le_sqrt (by linarith : ((n - k : ℕ) : ℝ) ≤ ((n - k : ℕ) : ℝ) + 1 / 2))
-    rw [abs_sub_comm, abs_of_nonneg hdiff_nonneg]
-    unfold FockSPR.rStar
-    calc
-      Real.sqrt (((n - k : ℕ) : ℝ) + 1 / 2) - Real.sqrt ((n - k : ℕ) : ℝ)
-        ≤
-      (((n - k : ℕ) : ℝ) + 1 / 2) - ((n - k : ℕ) : ℝ) := by
-          exact
-            sqrt_sub_le_sub_of_one_le
-              (by exact_mod_cast hnk_pos)
-              (by linarith)
-      _ = (1 / 2 : ℝ) := by ring
-      _ ≤ 1 := by norm_num
-  calc
-    |Real.sqrt (n : ℝ) - FockSPR.rStar (n - k)|
-      ≤
-    |Real.sqrt (n : ℝ) - Real.sqrt ((n - k : ℕ) : ℝ)| +
-        |Real.sqrt ((n - k : ℕ) : ℝ) - FockSPR.rStar (n - k)| := by
-          simpa [abs_sub_comm, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
-            abs_add_le
-              (Real.sqrt (n : ℝ) - Real.sqrt ((n - k : ℕ) : ℝ))
-              (Real.sqrt ((n - k : ℕ) : ℝ) - FockSPR.rStar (n - k))
-    _ ≤ k + 1 := by
-          have hk_nonneg : 0 ≤ (k : ℝ) := by positivity
-          nlinarith [hbase, hhalf, hk_nonneg]
-
-private lemma centered_gap_le_rStar_dist
-    (k n : ℕ)
-    (hkn : k < n)
-    (r : ℝ) :
-    posPart (|r - Real.sqrt (n : ℝ)| - ((k + 3 : ℕ) : ℝ))
-      ≤
-    |r - FockSPR.rStar (n - k)| := by
-  have hshift :
-      |r - Real.sqrt (n : ℝ)|
-        ≤
-      |r - FockSPR.rStar (n - k)| + |Real.sqrt (n : ℝ) - FockSPR.rStar (n - k)| := by
-    calc
-      |r - Real.sqrt (n : ℝ)|
-        = |(r - FockSPR.rStar (n - k)) + (FockSPR.rStar (n - k) - Real.sqrt (n : ℝ))| := by ring_nf
-      _ ≤ |r - FockSPR.rStar (n - k)| + |FockSPR.rStar (n - k) - Real.sqrt (n : ℝ)| := by
-            exact abs_add_le _ _
-      _ = |r - FockSPR.rStar (n - k)| + |Real.sqrt (n : ℝ) - FockSPR.rStar (n - k)| := by
-            congr 1
-            rw [abs_sub_comm]
-  have hmain :
-      |r - Real.sqrt (n : ℝ)| - ((k + 3 : ℕ) : ℝ)
-        ≤
-      |r - FockSPR.rStar (n - k)| := by
-    have hshift' := rStar_shift_le k n hkn
-    have hshift'' :
-        |Real.sqrt (n : ℝ) - FockSPR.rStar (n - k)| ≤ ((k + 1 : ℕ) : ℝ) := by
-      simpa [Nat.cast_add, Nat.cast_one] using hshift'
-    calc
-      |r - Real.sqrt (n : ℝ)| - ((k + 3 : ℕ) : ℝ)
-        ≤
-      (|r - FockSPR.rStar (n - k)| + |Real.sqrt (n : ℝ) - FockSPR.rStar (n - k)|) -
-          ((k + 3 : ℕ) : ℝ) := by exact sub_le_sub_right hshift _
-      _ ≤ (|r - FockSPR.rStar (n - k)| + ((k + 1 : ℕ) : ℝ)) - ((k + 3 : ℕ) : ℝ) := by
-            have hadd :
-                |r - FockSPR.rStar (n - k)| + |Real.sqrt (n : ℝ) - FockSPR.rStar (n - k)| ≤
-                  |r - FockSPR.rStar (n - k)| + ((k + 1 : ℕ) : ℝ) :=
-              add_le_add_right hshift'' _
-            exact sub_le_sub_right hadd _
-      _ = |r - FockSPR.rStar (n - k)| + ((((k + 1 : ℕ) : ℝ) - ((k + 3 : ℕ) : ℝ)) : ℝ) := by ring
-      _ = |r - FockSPR.rStar (n - k)| + (-2 : ℝ) := by norm_num [Nat.cast_add]
-      _ ≤ |r - FockSPR.rStar (n - k)| := by nlinarith [abs_nonneg (r - FockSPR.rStar (n - k))]
-  have hright_nonneg : 0 ≤ |r - FockSPR.rStar (n - k)| := abs_nonneg _
-  exact max_le hmain hright_nonneg
-
 private lemma monomial_core_pointwise
     (m : ℕ)
     (hm : 1 ≤ m)
@@ -1238,130 +909,9 @@ private lemma monomial_core_pointwise
     _ ≤ (Real.exp (1 / 4) / 2) * Real.exp (-(r - FockSPR.rStar m) ^ 2) := by
           exact mul_le_mul_of_nonneg_right hcoef (by positivity)
 
-private lemma normalized_qkn_factor_bound
-    (k n i : ℕ)
-    (hik : i ∈ Finset.range k)
-    (hkn : k < n)
-    {r : ℝ}
-    (hr : 0 ≤ r) :
-    |r ^ 2 - ((n - i : ℕ) : ℝ)| / Real.sqrt ((n - i : ℕ) : ℝ)
-      ≤
-    (|r - Real.sqrt (n : ℝ)| + k) * (|r - Real.sqrt (n : ℝ)| + k + 2) := by
-  have hik' : i < k := Finset.mem_range.mp hik
-  have hni_pos : 0 < n - i := by omega
-  let s : ℝ := Real.sqrt ((n - i : ℕ) : ℝ)
-  let y : ℝ := |r - Real.sqrt (n : ℝ)|
-  have hs_pos : 0 < s := by
-    dsimp [s]
-    positivity
-  have hs_ge_one : 1 ≤ s := by
-    dsimp [s]
-    rw [Real.one_le_sqrt]
-    exact_mod_cast (show 1 ≤ n - i by omega)
-  have hsqrt_shift :
-      |Real.sqrt (n : ℝ) - s| ≤ k := by
-    dsimp [s]
-    simpa using sqrt_nat_sub_shift_le n i k hik' hkn
-  have hdist :
-      |r - s| ≤ y + k := by
-    dsimp [y]
-    calc
-      |r - s|
-        ≤
-      |r - Real.sqrt (n : ℝ)| + |Real.sqrt (n : ℝ) - s| := by
-          have := abs_add_le (r - Real.sqrt (n : ℝ)) (Real.sqrt (n : ℝ) - s)
-          simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using this
-      _ ≤ y + k := by nlinarith
-  have hratio :
-      r / s + 1 ≤ y + k + 2 := by
-    have hr_le : r ≤ |r - s| + s := by
-      calc
-        r = (r - s) + s := by ring
-        _ ≤ |r - s| + s := by
-            gcongr
-            exact le_abs_self _
-    have hdiv : r / s ≤ |r - s| + 1 := by
-      calc
-        r / s ≤ (|r - s| + s) / s := by exact div_le_div_of_nonneg_right hr_le hs_pos.le
-        _ = |r - s| / s + 1 := by field_simp [hs_pos.ne']
-        _ ≤ |r - s| + 1 := by
-            have habs_nonneg : 0 ≤ |r - s| := abs_nonneg _
-            have hdivabs : |r - s| / s ≤ |r - s| := by exact div_le_self habs_nonneg hs_ge_one
-            linarith
-    linarith [hdist]
-  have hfactor :
-      |r ^ 2 - ((n - i : ℕ) : ℝ)| / Real.sqrt ((n - i : ℕ) : ℝ)
-        =
-      |r - s| * (r / s + 1) := by
-    have hs_sq : s ^ 2 = ((n - i : ℕ) : ℝ) := by
-      dsimp [s]
-      rw [Real.sq_sqrt]
-      positivity
-    calc
-      |r ^ 2 - ((n - i : ℕ) : ℝ)| / Real.sqrt ((n - i : ℕ) : ℝ)
-        = |r ^ 2 - s ^ 2| / s := by rw [hs_sq]
-      _ = |(r - s) * (r + s)| / s := by
-            congr 1
-            ring_nf
-      _ = |r - s| * |r + s| / s := by rw [abs_mul]
-      _ = |r - s| * (r + s) / s := by
-            have hsum_nonneg : 0 ≤ r + s := by positivity
-            rw [abs_of_nonneg hsum_nonneg]
-      _ = |r - s| * (r / s + 1) := by field_simp [hs_pos.ne']
-  calc
-    |r ^ 2 - ((n - i : ℕ) : ℝ)| / Real.sqrt ((n - i : ℕ) : ℝ)
-      = |r - s| * (r / s + 1) := hfactor
-    _ ≤ (y + k) * (y + k + 2) := by
-          have hyk_nonneg : 0 ≤ y + k := by positivity
-          have hratio_nonneg : 0 ≤ r / s + 1 := by
-            have hdiv_nonneg : 0 ≤ r / s := by exact div_nonneg hr hs_pos.le
-            linarith
-          exact mul_le_mul hdist hratio hratio_nonneg hyk_nonneg
-    _ = (|r - Real.sqrt (n : ℝ)| + k) * (|r - Real.sqrt (n : ℝ)| + k + 2) := by dsimp [y]
-
 private lemma posPart_mono {x y : ℝ} (hxy : x ≤ y) : posPart x ≤ posPart y := by
   unfold posPart
   exact max_le_max hxy le_rfl
-
-private lemma small_centered_gap_le_shell_gap
-    (k n j : ℕ)
-    (hn : 1 ≤ n)
-    (hkn : n ≤ k) :
-    posPart (|((j : ℕ) : ℝ) - Real.sqrt (n : ℝ)| - ((k + 4 : ℕ) : ℝ))
-      ≤
-    posPart ((j : ℝ) - ((k + 5 : ℕ) : ℝ)) := by
-  have hsqrt_ge_one : 1 ≤ Real.sqrt (n : ℝ) := by
-    rw [Real.one_le_sqrt]
-    exact_mod_cast hn
-  have hsqrt_sq : (Real.sqrt (n : ℝ)) ^ 2 = (n : ℝ) := by
-    rw [Real.sq_sqrt]
-    positivity
-  have hsqrt_le_n : Real.sqrt (n : ℝ) ≤ (n : ℝ) := by nlinarith
-  have hsqrt_le_k : Real.sqrt (n : ℝ) ≤ (k : ℝ) := by
-    exact le_trans hsqrt_le_n (by exact_mod_cast hkn)
-  by_cases hjsqrt : Real.sqrt (n : ℝ) ≤ (j : ℝ)
-  · have hmain :
-        |((j : ℕ) : ℝ) - Real.sqrt (n : ℝ)| - ((k + 4 : ℕ) : ℝ)
-          ≤
-        (j : ℝ) - ((k + 5 : ℕ) : ℝ) := by
-      rw [abs_of_nonneg (sub_nonneg.mpr hjsqrt)]
-      norm_num [Nat.cast_add]
-      linarith
-    exact posPart_mono hmain
-  · have hjlt : (j : ℝ) < Real.sqrt (n : ℝ) := lt_of_not_ge hjsqrt
-    have hleft_nonpos :
-        |((j : ℕ) : ℝ) - Real.sqrt (n : ℝ)| - ((k + 4 : ℕ) : ℝ) ≤ 0 := by
-      rw [abs_of_neg (sub_neg.mpr hjlt)]
-      have hj_nonneg : 0 ≤ (j : ℝ) := by exact_mod_cast Nat.zero_le j
-      norm_num [Nat.cast_add]
-      linarith
-    have hleft :
-        posPart (|((j : ℕ) : ℝ) - Real.sqrt (n : ℝ)| - ((k + 4 : ℕ) : ℝ)) = 0 := by
-      unfold posPart
-      exact max_eq_right hleft_nonpos
-    rw [hleft]
-    unfold posPart
-    exact le_max_right _ _
 
 private lemma shell_centered_gap_le_pointwise_gap
     (k n j : ℕ)
@@ -1586,54 +1136,11 @@ private theorem annulusIntegralSq_phi0_eq
     rw [show T = 2 * Real.pi by rfl]
     field_simp
   let srad : Set ℝ := Set.Ioi (0 : ℝ) ∩ Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ))
-  let sradClosed : Set ℝ := Set.Ici (0 : ℝ) ∩ Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ))
-  have hIoiIco_ae :
-      srad =ᵐ[volume]
-      Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)) := by
-    have h0 : srad =ᵐ[volume] sradClosed := by
-      filter_upwards [Ioi_ae_eq_Ici (a := (0 : ℝ)) (μ := volume)] with x hx
-      apply propext
-      constructor
-      · intro h
-        exact ⟨hx.mp h.1, h.2⟩
-      · intro h
-        exact ⟨hx.mpr h.1, h.2⟩
-    have h1 :
-        sradClosed
-          =
-        Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)) := by
-      dsimp [sradClosed]
-      ext x
-      constructor
-      · intro hx
-        exact hx.2
-      · intro hx
-        refine ⟨?_, hx⟩
-        exact le_trans (show (0 : ℝ) ≤ (j : ℝ) by exact_mod_cast Nat.zero_le j) hx.1
-    exact h0.trans (Filter.EventuallyEq.of_eq h1)
   have hset_eq :
       (∫ r in srad, phi0AnnulusIntegrand k (‖g 0‖ ^ 2) r)
         =
-      ∫ r in (j : ℝ)..(((j + 1 : ℕ) : ℝ)), phi0AnnulusIntegrand k (‖g 0‖ ^ 2) r := by
-    calc
-      (∫ r in srad, phi0AnnulusIntegrand k (‖g 0‖ ^ 2) r)
-        =
-      ∫ r in Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)), phi0AnnulusIntegrand k (‖g 0‖ ^ 2) r :=
-        MeasureTheory.setIntegral_congr_set hIoiIco_ae
-      _ =
-      ∫ r in (j : ℝ)..(((j + 1 : ℕ) : ℝ)), phi0AnnulusIntegrand k (‖g 0‖ ^ 2) r := by
-        rw [intervalIntegral.integral_of_le
-          (show (j : ℝ) ≤ (((j + 1 : ℕ) : ℝ)) by exact_mod_cast Nat.le_succ j)]
-        have hIcoIoc :
-            (∫ r in Set.Ico (j : ℝ) (((j + 1 : ℕ) : ℝ)), phi0AnnulusIntegrand k (‖g 0‖ ^ 2) r)
-              =
-            ∫ r in Set.Ioc (j : ℝ) (((j + 1 : ℕ) : ℝ)), phi0AnnulusIntegrand k (‖g 0‖ ^ 2) r := by
-          simpa using
-            (MeasureTheory.setIntegral_congr_set
-              (f := phi0AnnulusIntegrand k (‖g 0‖ ^ 2))
-              (μ := volume)
-              (Ico_ae_eq_Ioc (a := (j : ℝ)) (b := (((j + 1 : ℕ) : ℝ)))))
-        exact hIcoIoc
+      ∫ r in (j : ℝ)..(((j + 1 : ℕ) : ℝ)), phi0AnnulusIntegrand k (‖g 0‖ ^ 2) r :=
+    setIntegral_radialStrip_eq_intervalIntegral j (phi0AnnulusIntegrand k (‖g 0‖ ^ 2))
   calc
     (1 / Real.pi) *
         (T *
@@ -1865,51 +1372,6 @@ private theorem qkn_eventual_upper_bound (k n : ℕ) :
     ‖(qkn k n r : ℂ)‖ = (‖(qkn k n r : ℂ)‖ / r ^ n) * r ^ n := by rw [hrewrite]
     _ ≤ C * r ^ n := hmul
 
-private theorem qkn_integrand_eventual_gamma_bound (k n : ℕ) :
-    ∃ R C : ℝ,
-      1 ≤ R ∧ 0 < C ∧
-        ∀ r : ℝ, R ≤ r →
-          r * (((r ^ k / Real.sqrt (Nat.factorial k : ℝ)) ^ 2) * |qkn k n r| ^ 2) *
-              Real.exp (-r ^ 2)
-            ≤
-          C * r ^ (2 * n + 2 * k + 1) * Real.exp (-r ^ 2) := by
-  obtain ⟨R, C0, hR, hC0, hbound⟩ := qkn_eventual_upper_bound k n
-  refine ⟨R, (C0 ^ 2) / (Nat.factorial k : ℝ), hR, by positivity, ?_⟩
-  intro r hr
-  have hr_nonneg : 0 ≤ r := le_trans zero_le_one (le_trans hR hr)
-  have hsqrt_pos : 0 < Real.sqrt (Nat.factorial k : ℝ) := by positivity
-  have hq : |qkn k n r| ≤ C0 * r ^ n := by
-    simpa [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hr_nonneg] using hbound r hr
-  have hq2mul : |qkn k n r| * |qkn k n r| ≤ (C0 * r ^ n) * (C0 * r ^ n) := by
-    exact mul_le_mul hq hq (abs_nonneg _) (mul_nonneg (le_of_lt hC0) (pow_nonneg hr_nonneg _))
-  have hq2 : |qkn k n r| ^ 2 ≤ (C0 * r ^ n) ^ 2 := by simpa [pow_two] using hq2mul
-  have hmain :
-      r * (((r ^ k / Real.sqrt (Nat.factorial k : ℝ)) ^ 2) * |qkn k n r| ^ 2) *
-          Real.exp (-r ^ 2)
-        ≤
-      r * (((r ^ k / Real.sqrt (Nat.factorial k : ℝ)) ^ 2) * (C0 * r ^ n) ^ 2) *
-          Real.exp (-r ^ 2) := by
-    gcongr
-  calc
-    r * (((r ^ k / Real.sqrt (Nat.factorial k : ℝ)) ^ 2) * |qkn k n r| ^ 2) *
-        Real.exp (-r ^ 2)
-      ≤
-      r * (((r ^ k / Real.sqrt (Nat.factorial k : ℝ)) ^ 2) * (C0 * r ^ n) ^ 2) *
-        Real.exp (-r ^ 2) := hmain
-    _ = (C0 ^ 2 / (Nat.factorial k : ℝ)) * r ^ (2 * n + 2 * k + 1) * Real.exp (-r ^ 2) := by
-        have hsq : (Real.sqrt (Nat.factorial k : ℝ)) ^ 2 = (Nat.factorial k : ℝ) := by
-          rw [Real.sq_sqrt]
-          positivity
-        have hC0sq : (C0 * r ^ n) ^ 2 = C0 ^ 2 * r ^ (2 * n) := by ring_nf
-        have hratio :
-            (r ^ k / Real.sqrt (Nat.factorial k : ℝ)) ^ 2 =
-              r ^ (2 * k) / (Nat.factorial k : ℝ) := by
-          field_simp [Real.sqrt_ne_zero'.2 (by positivity), hsq]
-          have hkpow : (r ^ k) ^ 2 = r ^ (2 * k) := by rw [← pow_mul, show k * 2 = 2 * k by omega]
-          rw [hsq, hkpow, mul_comm]
-        rw [hC0sq, hratio]
-        ring
-
 /-- The product `r^k * qkn(k,n,r)` equals `(1/√n!) * r^{n-k} * Pkn(k,n).eval(r²)`.
 This is the correct formula using the Charlier polynomial evaluation,
 replacing the false product-of-linear-factors version. -/
@@ -1937,14 +1399,6 @@ private theorem qkn_mul_rpow_eq_Pkn_eval
           (r ^ k * r ^ ((n : ℤ) - 2 * (k : ℤ))) * (Pkn k n).eval (r ^ 2) := by ring
     _ = (1 / Real.sqrt (Nat.factorial n : ℝ)) *
           r ^ (n - k) * (Pkn k n).eval (r ^ 2) := by rw [hzpow]
-
-/-- The radial integrand for `|Phi k n|² exp(-|z|²)` after polar decomposition.
-Uses the correct Charlier/Laguerre polynomial evaluation, NOT the false
-product-of-linear-factors formula. -/
-private def phiLargeIntegrand (k n : ℕ) (r : ℝ) : ℝ :=
-  (1 / ((Nat.factorial k : ℝ) * (Nat.factorial n : ℝ))) *
-    r ^ (2 * (n - k) + 1) * ((Pkn k n).eval (r ^ 2)) ^ 2 *
-    Real.exp (-r ^ 2)
 
 -- Helper: for 0 ≤ r and 0 ≤ m ≤ 2*k, r^m ≤ 1 + r^(2*k)
 private lemma pow_le_one_add_pow_of_le {r : ℝ} (hr : 0 ≤ r) {m : ℕ} {k : ℕ}
@@ -2161,6 +1615,20 @@ private lemma Pkn_combined (k n : ℕ) :
   rw [h1, show (n + 1 : ℕ) - 1 = n from by omega]
   simp only [map_mul]; ring
 
+/-- `m ^ (ℓ/2) = (√m)^ℓ` for `0 ≤ m`. -/
+private lemma rpow_half_eq_sqrt_pow {m : ℝ} (hm : 0 ≤ m) (ℓ : ℕ) :
+    m ^ ((ℓ : ℝ) / 2) = (Real.sqrt m) ^ ℓ := by
+  rw [Real.sqrt_eq_rpow, ← Real.rpow_natCast (m ^ ((1 : ℝ) / 2)) ℓ, ← Real.rpow_mul hm]
+  congr 1
+  ring
+
+/-- The scaled-Laguerre `S`-form identity:
+`m ^ (ℓ/2) * (1 + |y|/√m)^ℓ = (√m + |y|)^ℓ` when `0 < m`. -/
+private lemma rpow_half_mul_pow_eq {m : ℝ} (hm_pos : 0 < m) (y : ℝ) (ℓ : ℕ) :
+    m ^ ((ℓ : ℝ) / 2) * (1 + |y| / Real.sqrt m) ^ ℓ = (Real.sqrt m + |y|) ^ ℓ := by
+  have hsqrt_ne : Real.sqrt m ≠ 0 := ne_of_gt (Real.sqrt_pos_of_pos hm_pos)
+  rw [rpow_half_eq_sqrt_pow hm_pos.le, ← mul_pow, mul_add, mul_one, mul_div_cancel₀ _ hsqrt_ne]
+
 /-- GPT Lemma 3.1 (scaled Laguerre bound): For fixed k, there exists A_k > 0 such that
 for all n ≥ k and all x ≥ 0, with m = n - k + 1:
   |Pkn(k,n).eval(x)| ≤ A_k * m^{k/2} * (1 + |x - m| / √m)^k.
@@ -2260,22 +1728,14 @@ private theorem scaled_laguerre_bound_Pkn (k : ℕ) :
     rw [hcenter]
     -- Setup S = √m + |x - m| and key properties
     have hm_nn : (0 : ℝ) ≤ (m : ℝ) := by exact_mod_cast (show 0 ≤ m by omega)
-    have hsqrt_pos : 0 < Real.sqrt (m : ℝ) :=
-      Real.sqrt_pos_of_pos hm_pos
-    have hsqrt_ne : Real.sqrt (m : ℝ) ≠ 0 := ne_of_gt hsqrt_pos
     -- S^ℓ = m^(ℓ/2) * (1+|x-m|/√m)^ℓ
     have hSform : ∀ (y : ℝ) (ℓ : ℕ),
         (m : ℝ) ^ ((ℓ : ℝ) / 2) * (1 + |y| / Real.sqrt (m : ℝ)) ^ ℓ =
-          (Real.sqrt (m : ℝ) + |y|) ^ ℓ := by
-      intro y ℓ
-      have h1 : (m : ℝ) ^ ((ℓ : ℝ) / 2) = (Real.sqrt (m : ℝ)) ^ ℓ := by
-        rw [Real.sqrt_eq_rpow, ← Real.rpow_natCast ((m : ℝ) ^ ((1 : ℝ) / 2)) ℓ,
-            ← Real.rpow_mul hm_nn]
-        congr 1
-        ring
-      rw [h1, ← mul_pow, mul_add, mul_one, mul_div_cancel₀ _ hsqrt_ne]
+          (Real.sqrt (m : ℝ) + |y|) ^ ℓ :=
+      fun y ℓ => rpow_half_mul_pow_eq hm_pos y ℓ
     set S := Real.sqrt (m : ℝ) + |x - (m : ℝ)| with hS_def
-    have hS_pos : 0 < S := by linarith [abs_nonneg (x - (m : ℝ))]
+    have hS_pos : 0 < S := by
+      linarith [abs_nonneg (x - (m : ℝ)), Real.sqrt_pos_of_pos hm_pos]
     have hS_ge_one : 1 ≤ S := by
       have : 1 ≤ Real.sqrt (m : ℝ) := by rw [Real.one_le_sqrt]; exact_mod_cast (show 1 ≤ m by omega)
       linarith [abs_nonneg (x - (m : ℝ))]
@@ -2304,18 +1764,10 @@ private theorem scaled_laguerre_bound_Pkn (k : ℕ) :
       -- Convert IH0 to (√(m+1) + |x-(m+1)|)^k form
       have hm1_pos : (0 : ℝ) < (m : ℝ) + 1 := by linarith
       have hm1_nn : (0 : ℝ) ≤ (m : ℝ) + 1 := le_of_lt hm1_pos
-      have hsqrt_m1_ne : Real.sqrt ((m : ℝ) + 1) ≠ 0 :=
-        ne_of_gt (Real.sqrt_pos_of_pos hm1_pos)
       have hS1_eq : ((m : ℝ) + 1) ^ ((k : ℝ) / 2) *
           (1 + |x - ((m : ℝ) + 1)| / Real.sqrt ((m : ℝ) + 1)) ^ k =
-          (Real.sqrt ((m : ℝ) + 1) + |x - ((m : ℝ) + 1)|) ^ k := by
-        have h1 : ((m : ℝ) + 1) ^ ((k : ℝ) / 2) = (Real.sqrt ((m : ℝ) + 1)) ^ k := by
-          rw [Real.sqrt_eq_rpow,
-              ← Real.rpow_natCast (((m : ℝ) + 1) ^ ((1 : ℝ) / 2)) k,
-              ← Real.rpow_mul hm1_nn]
-          congr 1
-          ring
-        rw [h1, ← mul_pow, mul_add, mul_one, mul_div_cancel₀ _ hsqrt_m1_ne]
+          (Real.sqrt ((m : ℝ) + 1) + |x - ((m : ℝ) + 1)|) ^ k :=
+        rpow_half_mul_pow_eq hm1_pos (x - ((m : ℝ) + 1)) k
       -- Bound √(m+1) + |x-(m+1)| ≤ S + 2
       have hshift : Real.sqrt ((m : ℝ) + 1) + |x - ((m : ℝ) + 1)| ≤ S + 2 := by
         have h1 : Real.sqrt ((m : ℝ) + 1) ≤ Real.sqrt (m : ℝ) + 1 := by

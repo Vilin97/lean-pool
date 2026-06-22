@@ -1376,6 +1376,12 @@ theorem continuous_Phi (k n : ℕ) : Continuous (Phi k n) := by
     exact continuous_const.mul hpow
   simpa [mul_assoc] using hterm
 
+/-- Finite Hermite sums are continuous. -/
+private theorem continuous_finiteHermiteSum (k : ℕ) {D : ℕ} (a : Fin D → ℂ) :
+    Continuous (finiteHermiteSum k a) := by
+  unfold finiteHermiteSum
+  exact continuous_finsetSum _ (fun m _ => continuous_const.mul (continuous_Phi k m.1))
+
 theorem integrable_weightedDiag (k n : ℕ) :
     Integrable (fun z : ℂ => ‖Phi k n z‖ ^ 2 * Real.exp (-‖z‖ ^ 2)) := by
   let f : ℂ → ℝ := fun z => ‖Phi k n z‖ ^ 2 * Real.exp (-‖z‖ ^ 2)
@@ -2472,6 +2478,13 @@ private lemma truncate_tendsto_pointwise {k : ℕ} {G : ℂ → ℂ} (hG : G ∈
   rw [hrw]
   exact hseq.comp (Filter.tendsto_atTop_atTop.mpr (fun b => ⟨b, fun n hn => by omega⟩))
 
+/-- Every element of `H_k` is a.e. strongly measurable (limit of continuous truncations). -/
+private theorem aestronglyMeasurable_of_mem_Hk {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ Hk k) :
+    AEStronglyMeasurable G volume := by
+  apply aestronglyMeasurable_of_tendsto_ae (u := Filter.atTop) (f := fun J => truncate k J G)
+  · exact fun J => (continuous_finiteHermiteSum k _).aestronglyMeasurable
+  · exact Filter.Eventually.of_forall (fun z => truncate_tendsto_pointwise hG z)
+
 /-- Integrability of truncation norm squared with Gaussian weight. -/
 theorem integrable_truncate_normSq_exp (k J : ℕ) (G : ℂ → ℂ) :
     Integrable (fun z : ℂ => ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
@@ -2494,14 +2507,7 @@ private lemma integrable_Phi_conj_G_exp {k : ℕ} {G : ℂ → ℂ} (n : ℕ)
       ext z; ring
     rw [this]; exact hDiag.add hInt
   apply MeasureTheory.Integrable.mono' hBound
-  · -- G is AEStronglyMeasurable: truncate_J G → G pointwise, each truncation
-    -- is continuous (hence AEStronglyMeasurable).
-    have hG_aesm : AEStronglyMeasurable G volume := by
-      apply aestronglyMeasurable_of_tendsto_ae (u := Filter.atTop) (f := fun J => truncate k J G)
-      · intro J; unfold truncate finiteHermiteSum
-        exact (continuous_finsetSum _ (fun m _ =>
-          continuous_const.mul (continuous_Phi k m.1))).aestronglyMeasurable
-      · exact Filter.Eventually.of_forall (fun z => truncate_tendsto_pointwise hG z)
+  · have hG_aesm : AEStronglyMeasurable G volume := aestronglyMeasurable_of_mem_Hk hG
     exact (((continuous_Phi k n).aestronglyMeasurable.mul
       (hG_aesm.star)).mul
       (Complex.continuous_ofReal.comp (Real.continuous_exp.comp
@@ -2656,6 +2662,109 @@ private lemma bessel_truncate_le {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ Hk k)
     linarith
   simpa [Tfun, hReEq] using hTle
 
+/-- The Gaussian-weighted lintegral of `‖F J‖²` equals `π` times its weighted
+norm square. -/
+private lemma lintegral_ofReal_normSq_eq (F : ℂ → ℂ)
+    (hF : Integrable (fun z : ℂ => ‖F z‖ ^ 2 * rexp (-‖z‖ ^ 2))) :
+    ∫⁻ z : ℂ, ENNReal.ofReal (‖F z‖ ^ 2 * rexp (-‖z‖ ^ 2)) =
+      ENNReal.ofReal (Real.pi * weightedNormSq F) := by
+  have hIntEq :
+      ∫ z : ℂ, ‖F z‖ ^ 2 * rexp (-‖z‖ ^ 2) = Real.pi * weightedNormSq F := by
+    unfold weightedNormSq HermiteLEAN.weightedNormSq
+    field_simp [Real.pi_ne_zero]
+  rw [(MeasureTheory.ofReal_integral_eq_lintegral_ofReal hF
+    (Filter.Eventually.of_forall (fun z => by positivity))).symm, hIntEq]
+
+/-- Fatou step: if `F J → G` pointwise with each `F J` having integrable
+Gaussian-weighted squared norm, the lintegral of `‖G‖²` is bounded by the
+`liminf` of the truncation lintegrals. -/
+private lemma lintegral_normSq_le_liminf_of_tendsto {G : ℂ → ℂ} {F : ℕ → ℂ → ℂ}
+    (hFint : ∀ J, Integrable (fun z : ℂ => ‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
+    (hFpt : ∀ z, Filter.Tendsto (fun J => F J z) Filter.atTop (nhds (G z))) :
+    ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
+      Filter.liminf
+          (fun J => ∫⁻ z : ℂ, ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
+          Filter.atTop := by
+  have hmeas :
+      ∀ J : ℕ,
+        AEMeasurable (fun z : ℂ => ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2))) volume :=
+    fun J => (hFint J).aestronglyMeasurable.aemeasurable.ennreal_ofReal
+  have hLiminfPt :
+      ∀ z : ℂ,
+        Filter.liminf (fun J => ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2))) Filter.atTop =
+          ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := fun z =>
+    ((ENNReal.continuous_ofReal.tendsto _).comp
+      (((hFpt z).norm.pow 2).mul_const (rexp (-‖z‖ ^ 2)))).liminf_eq
+  have hcongr :
+      (∫⁻ z : ℂ,
+          Filter.liminf (fun J => ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2))) Filter.atTop) =
+        ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) :=
+    MeasureTheory.lintegral_congr_ae (Filter.Eventually.of_forall hLiminfPt)
+  exact hcongr.symm ▸ MeasureTheory.lintegral_liminf_le' (u := Filter.atTop) hmeas
+
+/-- Fatou bound: if `F J → G` pointwise with each `F J` having integrable
+Gaussian-weighted squared norm and `weightedNormSq (F J) → S`, then the
+Gaussian-weighted lintegral of `‖G‖²` is dominated by `π * S`.  This is the
+shared core of every Fatou estimate in the file. -/
+private lemma lintegral_normSq_le_pi_mul_of_tendsto {G : ℂ → ℂ} {F : ℕ → ℂ → ℂ} {S : ℝ}
+    (hFint : ∀ J, Integrable (fun z : ℂ => ‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
+    (hFnorm : Filter.Tendsto (fun J => weightedNormSq (F J)) Filter.atTop (nhds S))
+    (hFpt : ∀ z, Filter.Tendsto (fun J => F J z) Filter.atTop (nhds (G z))) :
+    ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤ ENNReal.ofReal (Real.pi * S) := by
+  have hLiminfENNR :
+      Filter.liminf (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (F J))) Filter.atTop =
+        ENNReal.ofReal (Real.pi * S) :=
+    ((ENNReal.continuous_ofReal.tendsto _).comp
+      (Filter.Tendsto.const_mul Real.pi hFnorm)).liminf_eq
+  calc
+    ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
+        ≤ Filter.liminf
+            (fun J => ∫⁻ z : ℂ, ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
+            Filter.atTop := lintegral_normSq_le_liminf_of_tendsto hFint hFpt
+    _ = Filter.liminf (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (F J))) Filter.atTop := by
+          congr 1
+          funext J
+          exact lintegral_ofReal_normSq_eq (F J) (hFint J)
+    _ = ENNReal.ofReal (Real.pi * S) := hLiminfENNR
+
+/-- The partial Hermite-norm-squared sums of `G ∈ H_k` converge to the squared
+coefficient sum. -/
+private lemma weightedNormSq_truncate_tendsto {k : ℕ} {G : ℂ → ℂ}
+    (hsum : Summable (fun n : ℕ => ‖hermiteCoeff k G n‖ ^ 2)) :
+    Filter.Tendsto (fun J => weightedNormSq (truncate k J G))
+      Filter.atTop (nhds (∑' n : ℕ, ‖hermiteCoeff k G n‖ ^ 2)) := by
+  set t : ℕ → ℝ := fun n => ‖hermiteCoeff k G n‖ ^ 2 with ht
+  have hnat :
+      Filter.Tendsto (fun J => ∑ n ∈ Finset.range J, t n)
+        Filter.atTop (nhds (∑' n : ℕ, t n)) :=
+    (hsum.hasSum_iff_tendsto_nat).1 hsum.hasSum
+  have hshift :
+      Filter.Tendsto (fun J => ∑ n ∈ Finset.range (J + 1), t n)
+        Filter.atTop (nhds (∑' n : ℕ, t n)) :=
+    hnat.comp (Filter.tendsto_atTop_atTop.mpr (fun b => ⟨b, fun n hn => by omega⟩))
+  have hEqFun :
+      (fun J => weightedNormSq (truncate k J G)) =
+        (fun J => ∑ n ∈ Finset.range (J + 1), t n) := by
+    funext J
+    rw [show ∑ n ∈ Finset.range (J + 1), t n =
+        ∑ n : Fin (J + 1), ‖hermiteCoeff k G n.1‖ ^ 2 from by rw [Finset.sum_range]]
+    exact truncate_normSq k J G
+  rw [hEqFun]
+  exact hshift
+
+/-- Fatou bound: the Gaussian-weighted lintegral of `‖G‖²` is dominated by `π`
+times the sum of squared Hermite coefficients, for any `G ∈ H_k` whose
+coefficient squares are summable.  Shared by the integrable and non-integrable
+branches of the Parseval argument. -/
+private lemma weightedNormSq_lintegral_le_pi_tsum {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ Hk k)
+    (hsum : Summable (fun n : ℕ => ‖hermiteCoeff k G n‖ ^ 2)) :
+    ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
+      ENNReal.ofReal (Real.pi * ∑' n : ℕ, ‖hermiteCoeff k G n‖ ^ 2) :=
+  lintegral_normSq_le_pi_mul_of_tendsto
+    (fun J => integrable_truncate_normSq_exp k J G)
+    (weightedNormSq_truncate_tendsto hsum)
+    (fun z => truncate_tendsto_pointwise hG z)
+
 /-- The non-integrable branch of `hermiteCoeff_parseval`: when `‖G‖²·exp` is not
 integrable, both the weighted norm and the Hermite coefficient sum vanish.
 Extracted to respect the proof size limit. -/
@@ -2668,151 +2777,11 @@ private lemma hermiteCoeff_parseval_not_integrable {k : ℕ} {G : ℂ → ℂ} (
   rw [hLHS]
   have hnotSummable : ¬ Summable (fun n : ℕ => ‖hermiteCoeff k G n‖ ^ 2) := by
     intro hsum
-    let t : ℕ → ℝ := fun n => ‖hermiteCoeff k G n‖ ^ 2
-    have htrunc_tendsto :
-        Filter.Tendsto (fun J => weightedNormSq (truncate k J G))
-          Filter.atTop (nhds (∑' n : ℕ, t n)) := by
-      have hnat :
-          Filter.Tendsto (fun J => ∑ n ∈ Finset.range J, t n)
-            Filter.atTop (nhds (∑' n : ℕ, t n)) :=
-        (hsum.hasSum_iff_tendsto_nat).1 hsum.hasSum
-      have hshift :
-          Filter.Tendsto (fun J => ∑ n ∈ Finset.range (J + 1), t n)
-            Filter.atTop (nhds (∑' n : ℕ, t n)) := by
-        exact hnat.comp (Filter.tendsto_atTop_atTop.mpr (fun b => ⟨b, fun n hn => by omega⟩))
-      have hEqFun :
-          (fun J => weightedNormSq (truncate k J G)) =
-            (fun J => ∑ n ∈ Finset.range (J + 1), t n) := by
-        funext J
-        change weightedNormSq (truncate k J G) =
-          ∑ n ∈ Finset.range (J + 1), ‖hermiteCoeff k G n‖ ^ 2
-        rw [show ∑ n ∈ Finset.range (J + 1), ‖hermiteCoeff k G n‖ ^ 2 =
-            ∑ n : Fin (J + 1), ‖hermiteCoeff k G n.1‖ ^ 2 from by
-          rw [Finset.sum_range]]
-        exact truncate_normSq k J G
-      rw [hEqFun]
-      exact hshift
-    have hpi_trunc_tendsto :
-        Filter.Tendsto (fun J => Real.pi * weightedNormSq (truncate k J G))
-          Filter.atTop (nhds (Real.pi * ∑' n : ℕ, t n)) :=
-      Filter.Tendsto.const_mul Real.pi htrunc_tendsto
-    have hLiminfENNR :
-        Filter.liminf
-            (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)))
-            Filter.atTop =
-          ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) := by
-      have hto :
-          Filter.Tendsto
-              (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)))
-              Filter.atTop
-              (nhds (ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n))) :=
-        (ENNReal.continuous_ofReal.tendsto _).comp hpi_trunc_tendsto
-      exact hto.liminf_eq
-    have hLiminfPt :
-        ∀ z : ℂ,
-          Filter.liminf
-              (fun J =>
-                ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop =
-            ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-      intro z
-      have htruncz : Filter.Tendsto (fun J => truncate k J G z) Filter.atTop (nhds (G z)) :=
-        truncate_tendsto_pointwise hG z
-      have hreal :
-          Filter.Tendsto (fun J => ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-            Filter.atTop (nhds (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))) := by
-        have hsq :
-            Filter.Tendsto (fun J => ‖truncate k J G z‖ ^ 2)
-              Filter.atTop (nhds (‖G z‖ ^ 2)) := by
-          exact (htruncz.norm.pow 2)
-        exact hsq.mul_const (rexp (-‖z‖ ^ 2))
-      have hto :
-          Filter.Tendsto
-              (fun J => ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop
-              (nhds (ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))) ) :=
-        (ENNReal.continuous_ofReal.tendsto _).comp hreal
-      exact hto.liminf_eq
-    have hFatou :
-        ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
-          Filter.liminf
-              (fun J =>
-                ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop := by
-      have hmeas :
-          ∀ J : ℕ,
-            AEMeasurable
-              (fun z : ℂ =>
-                ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ) volume := by
-        intro J
-        exact (integrable_truncate_normSq_exp k J
-            G).aestronglyMeasurable.aemeasurable.ennreal_ofReal
-      have hfatou_raw := MeasureTheory.lintegral_liminf_le' (u := Filter.atTop) hmeas
-      have hcongr :
-          (∫⁻ z : ℂ,
-              Filter.liminf
-                (fun J => ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-                Filter.atTop) =
-            ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-        apply MeasureTheory.lintegral_congr_ae
-        exact Filter.Eventually.of_forall hLiminfPt
-      calc
-        ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-            = ∫⁻ z : ℂ,
-                Filter.liminf
-                  (fun J => ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-                  Filter.atTop := hcongr.symm
-        _ ≤ Filter.liminf
-              (fun J =>
-                ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop := hfatou_raw
-    have hLinEqTrunc :
-        ∀ J : ℕ,
-          ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) =
-            ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)) := by
-      intro J
-      have hIntJ : Integrable (fun z : ℂ => ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-        exact integrable_truncate_normSq_exp k J G
-      have hNonnegJ :
-          ∀ᵐ z : ℂ ∂volume, 0 ≤ ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-        exact Filter.Eventually.of_forall (fun z => by positivity)
-      have hIntEq :
-          ∫ z : ℂ, ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2) =
-            Real.pi * weightedNormSq (truncate k J G) := by
-        unfold weightedNormSq HermiteLEAN.weightedNormSq
-        field_simp [Real.pi_ne_zero]
-      calc
-        ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-            = ENNReal.ofReal (∫ z : ℂ, ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-                symm
-                exact MeasureTheory.ofReal_integral_eq_lintegral_ofReal hIntJ hNonnegJ
-        _ = ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)) := by rw [hIntEq]
-    have hBound :
-        ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
-          ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) := by
-      calc
-        ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-            ≤ Filter.liminf
-                (fun J =>
-                  ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-                Filter.atTop := hFatou
-        _ = Filter.liminf
-              (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)))
-              Filter.atTop := by
-              congr 1
-              funext J
-              exact hLinEqTrunc J
-        _ = ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) := hLiminfENNR
+    have hBound := weightedNormSq_lintegral_le_pi_tsum hG hsum
     have hlin_lt_top :
         ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) < ⊤ := by
       exact lt_of_le_of_lt hBound ENNReal.ofReal_lt_top
-    have hG_aesm : AEStronglyMeasurable G volume := by
-      apply aestronglyMeasurable_of_tendsto_ae (u := Filter.atTop) (f := fun J => truncate k J G)
-      · intro J
-        unfold truncate finiteHermiteSum
-        exact (continuous_finsetSum _ (fun m _ =>
-          continuous_const.mul (continuous_Phi k m.1))).aestronglyMeasurable
-      · exact Filter.Eventually.of_forall (fun z => truncate_tendsto_pointwise hG z)
+    have hG_aesm : AEStronglyMeasurable G volume := aestronglyMeasurable_of_mem_Hk hG
     have hExp_aesm : AEStronglyMeasurable (fun z : ℂ => rexp (-‖z‖ ^ 2)) volume :=
       (continuous_neg.comp ((continuous_pow 2).comp continuous_norm)).rexp.aestronglyMeasurable
     have hf_aesm :
@@ -2850,163 +2819,22 @@ private lemma hermiteCoeff_parseval_le {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ H
       exact bessel_truncate_le hG hInt J'
   have hsum : Summable t := summable_of_sum_range_le (fun n => sq_nonneg ‖hermiteCoeff k G n‖)
     hsumRange
-  have htrunc_tendsto :
-      Filter.Tendsto (fun J => weightedNormSq (truncate k J G))
-        Filter.atTop (nhds (∑' n : ℕ, t n)) := by
-    have hnat :
-        Filter.Tendsto (fun J => ∑ n ∈ Finset.range J, t n)
-          Filter.atTop (nhds (∑' n : ℕ, t n)) :=
-      (hsum.hasSum_iff_tendsto_nat).1 hsum.hasSum
-    have hshift :
-        Filter.Tendsto (fun J => ∑ n ∈ Finset.range (J + 1), t n)
-          Filter.atTop (nhds (∑' n : ℕ, t n)) := by
-      exact hnat.comp (Filter.tendsto_atTop_atTop.mpr (fun b => ⟨b, fun n hn => by omega⟩))
-    have hEqFun :
-        (fun J => weightedNormSq (truncate k J G)) =
-          (fun J => ∑ n ∈ Finset.range (J + 1), t n) := by
-      funext J
-      change weightedNormSq (truncate k J G) =
-        ∑ n ∈ Finset.range (J + 1), ‖hermiteCoeff k G n‖ ^ 2
-      rw [show ∑ n ∈ Finset.range (J + 1), ‖hermiteCoeff k G n‖ ^ 2 =
-          ∑ n : Fin (J + 1), ‖hermiteCoeff k G n.1‖ ^ 2 from by
-        rw [Finset.sum_range]]
-      exact truncate_normSq k J G
-    rw [hEqFun]
-    exact hshift
-  have hpi_trunc_tendsto :
-      Filter.Tendsto (fun J => Real.pi * weightedNormSq (truncate k J G))
-        Filter.atTop (nhds (Real.pi * ∑' n : ℕ, t n)) :=
-    Filter.Tendsto.const_mul Real.pi htrunc_tendsto
-  have hLiminfENNR :
-      Filter.liminf
-          (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)))
-          Filter.atTop =
-        ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) := by
-    have hto :
-        Filter.Tendsto
-            (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)))
-            Filter.atTop
-            (nhds (ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n))) :=
-      (ENNReal.continuous_ofReal.tendsto _).comp hpi_trunc_tendsto
-    exact hto.liminf_eq
-  have hNonnegG : ∀ᵐ z : ℂ ∂volume, 0 ≤ ‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-    exact Filter.Eventually.of_forall (fun z => by positivity)
-  have hLiminfPt :
-      ∀ z : ℂ,
-        Filter.liminf
-            (fun J =>
-              ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop =
-          ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-    intro z
-    have htruncz : Filter.Tendsto (fun J => truncate k J G z) Filter.atTop (nhds (G z)) :=
-      truncate_tendsto_pointwise hG z
-    have hreal :
-        Filter.Tendsto (fun J => ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-          Filter.atTop (nhds (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))) := by
-      have hsq :
-          Filter.Tendsto (fun J => ‖truncate k J G z‖ ^ 2)
-            Filter.atTop (nhds (‖G z‖ ^ 2)) := by
-        exact (htruncz.norm.pow 2)
-      exact hsq.mul_const (rexp (-‖z‖ ^ 2))
-    have hto :
-        Filter.Tendsto
-            (fun J => ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop
-            (nhds (ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))) ) :=
-      (ENNReal.continuous_ofReal.tendsto _).comp hreal
-    exact hto.liminf_eq
-  have hFatou :
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
-        Filter.liminf
-            (fun J =>
-              ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop := by
-    have hmeas :
-        ∀ J : ℕ,
-          AEMeasurable
-            (fun z : ℂ =>
-              ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ) volume := by
-      intro J
-      exact (integrable_truncate_normSq_exp k J
-          G).aestronglyMeasurable.aemeasurable.ennreal_ofReal
-    have hfatou_raw := MeasureTheory.lintegral_liminf_le' (u := Filter.atTop) hmeas
-    have hcongr :
-        (∫⁻ z : ℂ,
-            Filter.liminf
-              (fun J => ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop) =
-          ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-      apply MeasureTheory.lintegral_congr_ae
-      exact Filter.Eventually.of_forall hLiminfPt
-    calc
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-          = ∫⁻ z : ℂ,
-              Filter.liminf
-                (fun J => ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-                Filter.atTop := hcongr.symm
-      _ ≤ Filter.liminf
-            (fun J =>
-              ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop := hfatou_raw
+  have hNonnegG : ∀ᵐ z : ℂ ∂volume, 0 ≤ ‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2) :=
+    Filter.Eventually.of_forall (fun z => by positivity)
   have hLinEqG :
       ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) =
         ENNReal.ofReal (Real.pi * weightedNormSq G) := by
     have hIntEq : ∫ z : ℂ, ‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2) = Real.pi * weightedNormSq G := by
       unfold weightedNormSq HermiteLEAN.weightedNormSq
       field_simp [Real.pi_ne_zero]
-    calc
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-          = ENNReal.ofReal (∫ z : ℂ, ‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-              symm
-              exact MeasureTheory.ofReal_integral_eq_lintegral_ofReal hInt hNonnegG
-      _ = ENNReal.ofReal (Real.pi * weightedNormSq G) := by rw [hIntEq]
-  have hLinEqTrunc :
-      ∀ J : ℕ,
-        ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) =
-          ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)) := by
-    intro J
-    have hIntJ : Integrable (fun z : ℂ => ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-      exact integrable_truncate_normSq_exp k J G
-    have hNonnegJ :
-        ∀ᵐ z : ℂ ∂volume, 0 ≤ ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-      exact Filter.Eventually.of_forall (fun z => by positivity)
-    have hIntEq :
-        ∫ z : ℂ, ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2) =
-          Real.pi * weightedNormSq (truncate k J G) := by
-      unfold weightedNormSq HermiteLEAN.weightedNormSq
-      field_simp [Real.pi_ne_zero]
-    calc
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-          = ENNReal.ofReal (∫ z : ℂ, ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-              symm
-              exact MeasureTheory.ofReal_integral_eq_lintegral_ofReal hIntJ hNonnegJ
-      _ = ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)) := by rw [hIntEq]
-  have hFatou' :
-      ENNReal.ofReal (Real.pi * weightedNormSq G) ≤
-        Filter.liminf
-            (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)))
-            Filter.atTop := by
-    calc
-      ENNReal.ofReal (Real.pi * weightedNormSq G)
-          = ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := hLinEqG.symm
-      _ ≤ Filter.liminf
-            (fun J =>
-              ∫⁻ z : ℂ, ENNReal.ofReal (‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop := hFatou
-      _ = Filter.liminf
-            (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)))
-            Filter.atTop := by
-            congr 1
-            funext J
-            exact hLinEqTrunc J
+    rw [(MeasureTheory.ofReal_integral_eq_lintegral_ofReal hInt hNonnegG).symm, hIntEq]
+  -- The Fatou bound, rewritten via `hLinEqG`, gives the ℝ≥0∞ inequality.
+  have hBound := hLinEqG ▸ weightedNormSq_lintegral_le_pi_tsum hG hsum
   have hpi_nonneg : 0 ≤ Real.pi * weightedNormSq G := by
     have hnorm_nonneg : 0 ≤ weightedNormSq G := by
       unfold weightedNormSq HermiteLEAN.weightedNormSq
-      have hpiinv_nonneg : 0 ≤ (1 / Real.pi : ℝ) := by positivity
-      have hint_nonneg : 0 ≤ ∫ z : ℂ, ‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-        exact MeasureTheory.integral_nonneg (fun z => by positivity)
-      exact mul_nonneg hpiinv_nonneg hint_nonneg
+      exact mul_nonneg (by positivity)
+        (MeasureTheory.integral_nonneg (fun z => by positivity))
     exact mul_nonneg (le_of_lt Real.pi_pos) hnorm_nonneg
   have htsum_nonneg : 0 ≤ ∑' n : ℕ, t n := tsum_nonneg (fun n => sq_nonneg ‖hermiteCoeff k G n‖)
   have hpi_tsum_nonneg : 0 ≤ Real.pi * ∑' n : ℕ, t n :=
@@ -3015,21 +2843,11 @@ private lemma hermiteCoeff_parseval_le {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ H
       Real.pi * weightedNormSq G ≤ Real.pi * ∑' n : ℕ, t n := by
     have hfatou_toReal :
         (ENNReal.ofReal (Real.pi * weightedNormSq G)).toReal ≤
-          (ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n)).toReal := by
-      have hfatou_eq :
-          ENNReal.ofReal (Real.pi * weightedNormSq G) ≤
-            ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) := by
-        calc
-          ENNReal.ofReal (Real.pi * weightedNormSq G)
-              ≤ Filter.liminf
-                  (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (truncate k J G)))
-                  Filter.atTop := hFatou'
-          _ = ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) := hLiminfENNR
-      exact (ENNReal.toReal_le_toReal (by simp) (by simp)).2 hfatou_eq
+          (ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n)).toReal :=
+      (ENNReal.toReal_le_toReal (by simp) (by simp)).2 hBound
     simpa [ENNReal.toReal_ofReal hpi_nonneg, ENNReal.toReal_ofReal hpi_tsum_nonneg]
       using hfatou_toReal
-  have hpi_pos : 0 < Real.pi := Real.pi_pos
-  have hfinal : weightedNormSq G ≤ ∑' n : ℕ, t n := by nlinarith [hpi_pos, hpi_mul_le]
+  have hfinal : weightedNormSq G ≤ ∑' n : ℕ, t n := by nlinarith [Real.pi_pos, hpi_mul_le]
   simpa [t] using hfinal
 
 /-- Parseval identity for the canonical Hermite coefficients. -/
@@ -3818,19 +3636,9 @@ theorem h_k_expansion_perp_phi0 :
 private lemma sub_truncate_mem_Hk {k : ℕ} {G : ℂ → ℂ} (hG : G ∈ Hk k) (J : ℕ) :
     (fun z => G z - truncate k J G z) ∈ Hk k := by
   refine ⟨?_, ?_⟩
-  · have hG_aesm : AEStronglyMeasurable G volume := by
-      apply aestronglyMeasurable_of_tendsto_ae (u := Filter.atTop) (f := fun J => truncate k J G)
-      · intro J
-        unfold truncate finiteHermiteSum
-        exact
-          (continuous_finsetSum _ (fun m _ =>
-            continuous_const.mul (continuous_Phi k m.1))).aestronglyMeasurable
-      · exact Filter.Eventually.of_forall (fun z => truncate_tendsto_pointwise hG z)
-    have hT_aesm : AEStronglyMeasurable (truncate k J G) volume := by
-      unfold truncate finiteHermiteSum
-      exact
-        (continuous_finsetSum _ (fun m _ =>
-          continuous_const.mul (continuous_Phi k m.1))).aestronglyMeasurable
+  · have hG_aesm : AEStronglyMeasurable G volume := aestronglyMeasurable_of_mem_Hk hG
+    have hT_aesm : AEStronglyMeasurable (truncate k J G) volume :=
+      (continuous_finiteHermiteSum k _).aestronglyMeasurable
     have hbound :
         Integrable
           (fun z : ℂ =>
@@ -3903,84 +3711,8 @@ theorem truncate_tendsto :
             ∃ J0 : ℕ, ∀ J ≥ J0, weightedNorm (truncate k J G - G) ≤ ε := by
   intro k G hG ε hε
   -- Step 1: G - truncate k J G ∈ Hk k
-  have hDiff_mem : ∀ J, (fun z => G z - truncate k J G z) ∈ Hk k := by
-    intro J
-    refine ⟨?_, ?_⟩
-    · have hG_aesm : AEStronglyMeasurable G volume := by
-        apply aestronglyMeasurable_of_tendsto_ae (u := Filter.atTop) (f := fun J => truncate k J G)
-        · intro J
-          unfold truncate finiteHermiteSum
-          exact
-            (continuous_finsetSum _ (fun m _ =>
-              continuous_const.mul (continuous_Phi k m.1))).aestronglyMeasurable
-        · exact Filter.Eventually.of_forall (fun z => truncate_tendsto_pointwise hG z)
-      have hT_aesm : AEStronglyMeasurable (truncate k J G) volume := by
-        unfold truncate finiteHermiteSum
-        exact
-          (continuous_finsetSum _ (fun m _ =>
-            continuous_const.mul (continuous_Phi k m.1))).aestronglyMeasurable
-      have hbound :
-          Integrable
-            (fun z : ℂ =>
-              (2 : ℝ) *
-                (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2) +
-                  ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2))) := by
-        simpa [two_mul, mul_add, add_comm, add_left_comm, add_assoc, mul_comm, mul_left_comm,
-          mul_assoc] using (hG.1.add (integrable_truncate_normSq_exp k J G)).const_mul (2 : ℝ)
-      have hExp_aesm : AEStronglyMeasurable (fun z : ℂ => rexp (-‖z‖ ^ 2)) volume :=
-        (continuous_neg.comp ((continuous_pow 2).comp continuous_norm)).rexp.aestronglyMeasurable
-      have hmeas :
-          AEStronglyMeasurable
-            (fun z : ℂ => ‖G z - truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) volume := by
-        exact ((hG_aesm.sub hT_aesm).norm.pow 2).mul hExp_aesm
-      refine MeasureTheory.Integrable.mono' hbound hmeas ?_
-      filter_upwards with z
-      have hsub : ‖G z - truncate k J G z‖ ≤ ‖G z‖ + ‖truncate k J G z‖ := norm_sub_le _ _
-      have hexp : 0 ≤ rexp (-‖z‖ ^ 2) := exp_nonneg _
-      have hsq :
-          ‖G z - truncate k J G z‖ ^ 2 ≤ 2 * (‖G z‖ ^ 2 + ‖truncate k J G z‖ ^ 2) := by
-        have hsubsq :
-            ‖G z - truncate k J G z‖ ^ 2 ≤ (‖G z‖ + ‖truncate k J G z‖) ^ 2 := by
-          exact pow_le_pow_left₀ (norm_nonneg _) hsub 2
-        have hab :
-            (‖G z‖ + ‖truncate k J G z‖) ^ 2 ≤ 2 * (‖G z‖ ^ 2 + ‖truncate k J G z‖ ^ 2) := by
-          nlinarith [sq_nonneg (‖G z‖ - ‖truncate k J G z‖)]
-        exact le_trans hsubsq hab
-      have hmul :
-          ‖G z - truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2) ≤
-            (2 * (‖G z‖ ^ 2 + ‖truncate k J G z‖ ^ 2)) * rexp (-‖z‖ ^ 2) := by
-        exact mul_le_mul_of_nonneg_right hsq hexp
-      have hnonneg :
-          0 ≤ ‖G z - truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-        positivity
-      rw [Real.norm_of_nonneg hnonneg]
-      calc
-        ‖G z - truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)
-            ≤ (2 * (‖G z‖ ^ 2 + ‖truncate k J G z‖ ^ 2)) * rexp (-‖z‖ ^ 2) := hmul
-        _ = (2 : ℝ) *
-              (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2) +
-                ‖truncate k J G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by ring
-    · intro z
-      have hGz := hG.2 z
-      have hTzH := (truncate_mem_Hk k J G).2 z
-      have hcoeff_decomp : ∀ n,
-          weightedInner (fun z' => G z' - truncate k J G z') (Phi k n) =
-            weightedInner G (Phi k n) - weightedInner (truncate k J G) (Phi k n) := by
-        intro n
-        have h1 := hermiteCoeff_sub_truncate k J G n
-        have h2 := hermiteCoeff_truncate (k := k) (J := J) (G := G) n
-        simp only [hermiteCoeff] at h1 h2
-        rw [h1]
-        by_cases hn : n < J + 1 <;> simp [hn, h2]
-      have hterm : ∀ n,
-          weightedInner (fun z' => G z' - truncate k J G z') (Phi k n) * Phi k n z =
-            weightedInner G (Phi k n) * Phi k n z -
-              weightedInner (truncate k J G) (Phi k n) * Phi k n z := by
-        intro n
-        rw [hcoeff_decomp]
-        ring
-      simp_rw [hterm]
-      exact hGz.sub hTzH
+  have hDiff_mem : ∀ J, (fun z => G z - truncate k J G z) ∈ Hk k := fun J =>
+    sub_truncate_mem_Hk hG J
   -- Step 2: Norm symmetry
   have hNormSym : ∀ J, weightedNorm (truncate k J G - G) =
       weightedNorm (fun z => G z - truncate k J G z) := by
@@ -4358,10 +4090,7 @@ theorem hermite_series_locally_uniform :
   have hε3 : (0 : ℝ) < ε / 3 := by linarith
   obtain ⟨J0, hJ0⟩ := truncate_locally_uniform hG R (ε / 3) hRpos hε3
   -- truncate k J0 G is continuous
-  have hcont_trunc : Continuous (truncate k J0 G) := by
-    unfold truncate finiteHermiteSum
-    refine continuous_finsetSum _ (fun n _ => ?_)
-    exact continuous_const.mul (continuous_Phi k n.1)
+  have hcont_trunc : Continuous (truncate k J0 G) := continuous_finiteHermiteSum k _
   -- By continuity of truncate at z₀, find δ₁ such that dist < ε/3
   have hcontAt : ContinuousAt (truncate k J0 G) z₀ := hcont_trunc.continuousAt
   rw [Metric.continuousAt_iff] at hcontAt
@@ -4736,11 +4465,7 @@ private theorem hermiteSeries_aestronglyMeasurable
     AEStronglyMeasurable (hermiteSeries k h) volume := by
   apply aestronglyMeasurable_of_tendsto_ae (u := Filter.atTop)
     (f := fun J => finiteHermiteSum k (fun n : Fin (J + 1) => h n.1))
-  · intro J
-    unfold finiteHermiteSum
-    exact
-      (continuous_finsetSum _ (fun m _ =>
-        continuous_const.mul (continuous_Phi k m.1))).aestronglyMeasurable
+  · exact fun J => (continuous_finiteHermiteSum k _).aestronglyMeasurable
   · exact Filter.Eventually.of_forall
       (finiteHermiteSum_tendsto_hermiteSeries k h hbdd hl2)
 
@@ -4959,6 +4684,8 @@ private lemma hermiteSeries_integrable_sq {k : ℕ} (h : ℕ → ℂ)
   set G : ℂ → ℂ := hermiteSeries k h with hGdef
   set F : ℕ → ℂ → ℂ := fun J => finiteHermiteSum k (fun n : Fin (J + 1) => h n.1) with hFdef
   let t : ℕ → ℝ := fun n => ‖h n‖ ^ 2
+  have hFint : ∀ J, Integrable (fun z : ℂ => ‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)) :=
+    fun J => (finiteHermiteSum_mem_Hk k (a := fun n : Fin (J + 1) => h n.1)).1
   have hF_tendsto :
       Filter.Tendsto (fun J => weightedNormSq (F J))
         Filter.atTop (nhds (∑' n : ℕ, t n)) := by
@@ -4968,8 +4695,8 @@ private lemma hermiteSeries_integrable_sq {k : ℕ} (h : ℕ → ℂ)
       (hh.hasSum_iff_tendsto_nat).1 hh.hasSum
     have hshift :
         Filter.Tendsto (fun J => ∑ n ∈ Finset.range (J + 1), t n)
-          Filter.atTop (nhds (∑' n : ℕ, t n)) := by
-      exact hnat.comp (Filter.tendsto_atTop_atTop.mpr (fun b => ⟨b, fun n hn => by omega⟩))
+          Filter.atTop (nhds (∑' n : ℕ, t n)) :=
+      hnat.comp (Filter.tendsto_atTop_atTop.mpr (fun b => ⟨b, fun n hn => by omega⟩))
     have hEqFun :
         (fun J => weightedNormSq (F J)) =
           (fun J => ∑ n ∈ Finset.range (J + 1), t n) := by
@@ -4981,122 +4708,16 @@ private lemma hermiteSeries_integrable_sq {k : ℕ} (h : ℕ → ℂ)
       exact finiteHermiteSum_normSq (k := k) (a := fun n : Fin (J + 1) => h n.1)
     rw [hEqFun]
     exact hshift
-  have hpi_F_tendsto :
-      Filter.Tendsto (fun J => Real.pi * weightedNormSq (F J))
-        Filter.atTop (nhds (Real.pi * ∑' n : ℕ, t n)) :=
-    Filter.Tendsto.const_mul Real.pi hF_tendsto
-  have hLiminfENNR :
-      Filter.liminf
-          (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (F J)))
-          Filter.atTop =
-        ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) := by
-    have hto :
-        Filter.Tendsto
-            (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (F J)))
-            Filter.atTop
-            (nhds (ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n))) :=
-      (ENNReal.continuous_ofReal.tendsto _).comp hpi_F_tendsto
-    exact hto.liminf_eq
-  have hNonnegG : ∀ᵐ z : ℂ ∂volume, 0 ≤ ‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-    exact Filter.Eventually.of_forall (fun z => by positivity)
-  have hLiminfPt :
-      ∀ z : ℂ,
-        Filter.liminf
-            (fun J => ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop =
-          ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-    intro z
-    have hFz :
-        Filter.Tendsto (fun J => F J z) Filter.atTop (nhds (G z)) := by
-      simpa [F, G] using finiteHermiteSum_tendsto_hermiteSeries k h hbdd hh z
-    have hreal :
-        Filter.Tendsto (fun J => ‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-          Filter.atTop (nhds (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))) := by
-      have hsq :
-          Filter.Tendsto (fun J => ‖F J z‖ ^ 2)
-            Filter.atTop (nhds (‖G z‖ ^ 2)) := by
-        exact (hFz.norm.pow 2)
-      exact hsq.mul_const (rexp (-‖z‖ ^ 2))
-    have hto :
-        Filter.Tendsto
-            (fun J => ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop
-            (nhds (ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)))) :=
-      (ENNReal.continuous_ofReal.tendsto _).comp hreal
-    exact hto.liminf_eq
-  have hFatou :
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
-        Filter.liminf
-            (fun J =>
-              ∫⁻ z : ℂ, ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop := by
-    have hmeas :
-        ∀ J : ℕ,
-          AEMeasurable
-            (fun z : ℂ =>
-              ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2))) volume := by
-      intro J
-      exact ((finiteHermiteSum_mem_Hk k (a := fun n : Fin (J + 1) => h
-          n.1)).1).aestronglyMeasurable.aemeasurable.ennreal_ofReal
-    have hfatou_raw := MeasureTheory.lintegral_liminf_le' (u := Filter.atTop) hmeas
-    have hcongr :
-        (∫⁻ z : ℂ,
-            Filter.liminf
-              (fun J => ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop) =
-          ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-      apply MeasureTheory.lintegral_congr_ae
-      exact Filter.Eventually.of_forall hLiminfPt
-    calc
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-          = ∫⁻ z : ℂ,
-              Filter.liminf
-                (fun J => ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-                Filter.atTop := hcongr.symm
-      _ ≤ Filter.liminf
-            (fun J =>
-              ∫⁻ z : ℂ, ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop := hfatou_raw
-  have hLinEqF :
-      ∀ J : ℕ,
-        ∫⁻ z : ℂ, ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)) =
-          ENNReal.ofReal (Real.pi * weightedNormSq (F J)) := by
-    intro J
-    have hIntJ :
-        Integrable (fun z : ℂ => ‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)) :=
-      (finiteHermiteSum_mem_Hk k (a := fun n : Fin (J + 1) => h n.1)).1
-    have hNonnegJ :
-        ∀ᵐ z : ℂ ∂volume, 0 ≤ ‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-      exact Filter.Eventually.of_forall (fun z => by positivity)
-    have hIntEq :
-        ∫ z : ℂ, ‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2) = Real.pi * weightedNormSq (F J) := by
-      unfold F weightedNormSq HermiteLEAN.weightedNormSq
-      field_simp [Real.pi_ne_zero]
-    calc
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-          = ENNReal.ofReal (∫ z : ℂ, ‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-              symm
-              exact MeasureTheory.ofReal_integral_eq_lintegral_ofReal hIntJ hNonnegJ
-      _ = ENNReal.ofReal (Real.pi * weightedNormSq (F J)) := by rw [hIntEq]
+  have hNonnegG : ∀ᵐ z : ℂ ∂volume, 0 ≤ ‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2) :=
+    Filter.Eventually.of_forall (fun z => by positivity)
   have hBound :
       ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
-        ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) := by
-    calc
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-          ≤ Filter.liminf
-              (fun J =>
-                ∫⁻ z : ℂ, ENNReal.ofReal (‖F J z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop := hFatou
-      _ = Filter.liminf
-            (fun J => ENNReal.ofReal (Real.pi * weightedNormSq (F J)))
-            Filter.atTop := by
-              congr 1
-              funext J
-              exact hLinEqF J
-      _ = ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) := hLiminfENNR
+        ENNReal.ofReal (Real.pi * ∑' n : ℕ, t n) :=
+    lintegral_normSq_le_pi_mul_of_tendsto hFint hF_tendsto
+      (fun z => by simpa [F, G] using finiteHermiteSum_tendsto_hermiteSeries k h hbdd hh z)
   have hlin_lt_top :
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) < ⊤ := by
-    exact lt_of_le_of_lt hBound ENNReal.ofReal_lt_top
+      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z‖ ^ 2 * rexp (-‖z‖ ^ 2)) < ⊤ :=
+    lt_of_le_of_lt hBound ENNReal.ofReal_lt_top
   have hExp_aesm : AEStronglyMeasurable (fun z : ℂ => rexp (-‖z‖ ^ 2)) volume :=
     (continuous_neg.comp ((continuous_pow 2).comp continuous_norm)).rexp.aestronglyMeasurable
   have hf_aesm :
@@ -5186,21 +4807,6 @@ private lemma hermiteSeries_truncation_lintegral_bound {k : ℕ} (h : ℕ → �
       ∑' m : ℕ, ‖hermiteCoeff k (fun z : ℂ => GN N z - SJ z) m‖ ^ 2 ≤
         ∑' m : ℕ, s m := by
     exact Summable.tsum_le_tsum hCoeff_bound (summable_sq_hermiteCoeff hDiff_mem) hs_summ
-  have hNonnegN :
-      0 ≤ Real.pi * weightedNormSq (fun z : ℂ => GN N z - SJ z) := by
-    have hnorm_nonneg : 0 ≤ weightedNormSq (fun z : ℂ => GN N z - SJ z) := by
-      rw [hParseval]
-      exact tsum_nonneg fun m => sq_nonneg _
-    exact mul_nonneg (le_of_lt Real.pi_pos) hnorm_nonneg
-  have hs_nonneg : 0 ≤ Real.pi * ∑' m : ℕ, s m := by
-    have hs_nonneg_term' : ∀ m : ℕ, 0 ≤ s m := by
-      intro m
-      by_cases hm : m < J + 1
-      · have hm' : m ≤ J := by omega
-        simp [s, hm']
-      · simp only [s, if_neg hm]
-        positivity
-    exact mul_nonneg (le_of_lt Real.pi_pos) (tsum_nonneg hs_nonneg_term')
   have hmul_le :
       Real.pi * weightedNormSq (fun z : ℂ => GN N z - SJ z) ≤ Real.pi * ∑' m : ℕ, s m := by
     rw [hParseval]
@@ -5208,22 +4814,8 @@ private lemma hermiteSeries_truncation_lintegral_bound {k : ℕ} (h : ℕ → �
   have hIntN :
       Integrable (fun z : ℂ => ‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
     simpa [hSJ'] using (sub_truncate_mem_Hk hGN_mem J).1
-  have hNonnegIntN :
-      ∀ᵐ z : ℂ ∂volume, 0 ≤ ‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-    exact Filter.Eventually.of_forall (fun z => by positivity)
-  have hIntEq :
-      ∫ z : ℂ, ‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2) =
-        Real.pi * weightedNormSq (fun z : ℂ => GN N z - SJ z) := by
-    unfold weightedNormSq HermiteLEAN.weightedNormSq
-    field_simp [Real.pi_ne_zero]
-  calc
-    ∫⁻ z : ℂ, ENNReal.ofReal (‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-        = ENNReal.ofReal (∫ z : ℂ, ‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-            symm
-            exact MeasureTheory.ofReal_integral_eq_lintegral_ofReal hIntN hNonnegIntN
-    _ = ENNReal.ofReal (Real.pi * weightedNormSq (fun z : ℂ => GN N z - SJ z)) := by rw
-        [hIntEq]
-    _ ≤ ENNReal.ofReal (Real.pi * ∑' m : ℕ, s m) := by exact ENNReal.ofReal_le_ofReal hmul_le
+  rw [lintegral_ofReal_normSq_eq (fun z => GN N z - SJ z) hIntN]
+  exact ENNReal.ofReal_le_ofReal hmul_le
 
 /-- The tail bound for the truncation difference in the Hermite-coefficient
 recovery argument: `‖G − S_J‖²_w ≤ ∑_{m≥J+1} ‖hₘ‖²`.  Extracted from
@@ -5255,77 +4847,29 @@ private lemma hermiteSeries_truncation_tail_bound {k : ℕ} (h : ℕ → ℂ)
         Filter.Tendsto (fun N => GN N z) Filter.atTop (nhds (G z)) :=
       (finiteHermiteSum_tendsto_hermiteSeries k h hbdd hh z).comp hshift
     exact hGN.sub tendsto_const_nhds
+  have hGN_int :
+      ∀ N : ℕ, Integrable (fun z : ℂ => ‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
+    intro N
+    have hGN_mem : GN N ∈ Hk k := finiteHermiteSum_mem_Hk k (a := fun m : Fin ((N + (J + 1))
+        + 1) => h m.1)
+    have hSJ' : truncate k J (GN N) = SJ := by
+      ext z
+      change ∑ m : Fin (J + 1), hermiteCoeff k (GN N) m.1 * Phi k m.1 z =
+        ∑ m : Fin (J + 1), h m.1 * Phi k m.1 z
+      refine Finset.sum_congr rfl ?_
+      intro m hm
+      have hm' : (m : ℕ) < (N + (J + 1)) + 1 := by omega
+      rw [hermiteCoeff_finiteHermiteSum
+        (k := k) (a := fun q : Fin ((N + (J + 1)) + 1) => h q.1) m.1, dif_pos hm']
+    simpa [hSJ'] using (sub_truncate_mem_Hk hGN_mem J).1
   have hFatou :
       ∫⁻ z : ℂ, ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
         Filter.liminf
           (fun N =>
             ∫⁻ z : ℂ, ENNReal.ofReal (‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-          Filter.atTop := by
-    have hmeas :
-        ∀ N : ℕ,
-          AEMeasurable
-            (fun z : ℂ =>
-              ENNReal.ofReal (‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2))) volume := by
-      intro N
-      have hGN_mem : GN N ∈ Hk k := finiteHermiteSum_mem_Hk k (a := fun m : Fin ((N + (J + 1))
-          + 1) => h m.1)
-      have hGN_int : Integrable (fun z : ℂ => ‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-        have hSJ' :
-            truncate k J (GN N) = SJ := by
-          ext z
-          change ∑ m : Fin (J + 1), hermiteCoeff k (GN N) m.1 * Phi k m.1 z =
-            ∑ m : Fin (J + 1), h m.1 * Phi k m.1 z
-          refine Finset.sum_congr rfl ?_
-          intro m hm
-          have hm' : (m : ℕ) < (N + (J + 1)) + 1 := by omega
-          rw [hermiteCoeff_finiteHermiteSum
-            (k := k) (a := fun q : Fin ((N + (J + 1)) + 1) => h q.1) m.1, dif_pos hm']
-        have hsub := (sub_truncate_mem_Hk hGN_mem J).1
-        simpa [hSJ'] using hsub
-      exact hGN_int.aestronglyMeasurable.aemeasurable.ennreal_ofReal
-    have hfatou_raw := MeasureTheory.lintegral_liminf_le' (u := Filter.atTop) hmeas
-    have hLiminfPt :
-        ∀ z : ℂ,
-          Filter.liminf
-              (fun N => ENNReal.ofReal (‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop =
-            ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-      intro z
-      have hreal :
-          Filter.Tendsto (fun N => ‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-            Filter.atTop
-            (nhds (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2))) := by
-        have hsq :
-            Filter.Tendsto (fun N => ‖GN N z - SJ z‖ ^ 2)
-              Filter.atTop
-              (nhds (‖G z - SJ z‖ ^ 2)) := by
-          exact ((hPoint z).norm.pow 2)
-        exact hsq.mul_const (rexp (-‖z‖ ^ 2))
-      have hto :
-          Filter.Tendsto
-              (fun N => ENNReal.ofReal (‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop
-              (nhds (ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)))) :=
-        (ENNReal.continuous_ofReal.tendsto _).comp hreal
-      exact hto.liminf_eq
-    have hcongr :
-        (∫⁻ z : ℂ,
-            Filter.liminf
-              (fun N => ENNReal.ofReal (‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-              Filter.atTop) =
-          ∫⁻ z : ℂ, ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
-      apply MeasureTheory.lintegral_congr_ae
-      exact Filter.Eventually.of_forall hLiminfPt
-    calc
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2))
-          = ∫⁻ z : ℂ,
-              Filter.liminf
-                (fun N => ENNReal.ofReal (‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-                Filter.atTop := hcongr.symm
-      _ ≤ Filter.liminf
-            (fun N =>
-              ∫⁻ z : ℂ, ENNReal.ofReal (‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)))
-            Filter.atTop := hfatou_raw
+          Filter.atTop :=
+    lintegral_normSq_le_liminf_of_tendsto
+      (G := fun z => G z - SJ z) (F := fun N z => GN N z - SJ z) hGN_int hPoint
   have hLinEq :
       ∀ N : ℕ,
         ∫⁻ z : ℂ, ENNReal.ofReal (‖GN N z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) ≤
@@ -5383,48 +4927,14 @@ private lemma hermiteSeries_truncation_tail_bound {k : ℕ} (h : ℕ → ℂ)
       · push Not at hlt
         exact ⟨b - (J + 1), show b - (J + 1) + (J + 1) = b from Nat.sub_add_cancel hlt⟩
     exact (Function.Injective.tsum_eq hinj hsupp).symm
-  have hNonnegDiff :
-      ∀ᵐ z : ℂ ∂volume, 0 ≤ ‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-    exact Filter.Eventually.of_forall (fun z => by positivity)
-  have hIntEq' :
-      ∫ z : ℂ, ‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2) =
-        Real.pi * weightedNormSq (fun z : ℂ => G z - SJ z) := by
-    unfold weightedNormSq HermiteLEAN.weightedNormSq
-    field_simp [Real.pi_ne_zero]
-  have hlin_lt_top_diff :
-      ∫⁻ z : ℂ, ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) < ⊤ := by
-    exact lt_of_le_of_lt hBound ENNReal.ofReal_lt_top
-  have hInt_le :
-      ∫ z : ℂ, ‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2) ≤
-        Real.pi * ∑' m : ℕ, s m := by
-    have hto :
-        (∫⁻ z : ℂ, ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2))).toReal ≤
-          (ENNReal.ofReal (Real.pi * ∑' m : ℕ, s m)).toReal :=
-      (ENNReal.toReal_le_toReal hlin_lt_top_diff.ne (by simp)).2 hBound
-    have hleft :
-        (∫⁻ z : ℂ, ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2))).toReal =
-          ∫ z : ℂ, ‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-      have hint_nonneg :
-          0 ≤ ∫ z : ℂ, ‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2) := by
-        exact MeasureTheory.integral_nonneg (fun z => by positivity)
-      have hlin :=
-        congrArg ENNReal.toReal
-          (MeasureTheory.ofReal_integral_eq_lintegral_ofReal hDiff_int hNonnegDiff).symm
-      simpa [ENNReal.toReal_ofReal hint_nonneg] using hlin
-    calc
-      ∫ z : ℂ, ‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)
-          = (∫⁻ z : ℂ, ENNReal.ofReal (‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2))).toReal := by rw [hleft]
-      _ ≤ (ENNReal.ofReal (Real.pi * ∑' m : ℕ, s m)).toReal := hto
-      _ = Real.pi * ∑' m : ℕ, s m := by
-            rw [ENNReal.toReal_ofReal (mul_nonneg (le_of_lt Real.pi_pos) htail_nonneg)]
+  -- Rewrite the lintegral as `π * weightedNormSq` to extract the real inequality.
+  have hBound' := lintegral_ofReal_normSq_eq (fun z => G z - SJ z) hDiff_int ▸ hBound
   have hmul_le :
-      Real.pi * weightedNormSq (fun z : ℂ => G z - SJ z) ≤
-        Real.pi * ∑' m : ℕ, s m := by
-    rwa [hIntEq'] at hInt_le
-  have hpi_pos : 0 < Real.pi := Real.pi_pos
+      Real.pi * weightedNormSq (fun z : ℂ => G z - SJ z) ≤ Real.pi * ∑' m : ℕ, s m :=
+    (ENNReal.ofReal_le_ofReal_iff (mul_nonneg (le_of_lt Real.pi_pos) htail_nonneg)).1 hBound'
   have hfinal :
       weightedNormSq (fun z : ℂ => G z - SJ z) ≤ ∑' m : ℕ, s m := by
-    nlinarith [hpi_pos, hmul_le]
+    nlinarith [Real.pi_pos, hmul_le]
   simpa [hShift] using hfinal
 
 /-- The Hermite coefficients of the series `G = hermiteSeries k h` recover the
@@ -5470,11 +4980,8 @@ private lemma hermiteSeries_weightedInner_eq {k : ℕ} (h : ℕ → ℂ)
   let SJ : ℂ → ℂ := F J
   have hSJ_mem : SJ ∈ Hk k := finiteHermiteSum_mem_Hk k (a := fun m : Fin (J + 1) => h m.1)
   have hSJ_int : Integrable (fun z : ℂ => ‖SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := hSJ_mem.1
-  have hSJ_aesm : AEStronglyMeasurable SJ volume := by
-    unfold SJ F finiteHermiteSum
-    exact
-      (continuous_finsetSum _ (fun m _ =>
-        continuous_const.mul (continuous_Phi k m.1))).aestronglyMeasurable
+  have hSJ_aesm : AEStronglyMeasurable SJ volume :=
+    (continuous_finiteHermiteSum k _).aestronglyMeasurable
   have hDiff_int :
       Integrable (fun z : ℂ => ‖G z - SJ z‖ ^ 2 * rexp (-‖z‖ ^ 2)) := by
     have hbound :

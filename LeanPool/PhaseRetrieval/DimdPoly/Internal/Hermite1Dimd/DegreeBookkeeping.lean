@@ -22,6 +22,41 @@ Finite degree intervals and support-width bounds on a fixed annulus.
 Scaffolding notes: `ScaffoldingNotes/Blocks/degree_bookkeeping.md`.
 -/
 
+private theorem coord_le_annulusRadius {d : ℕ} (j : MultiIndex d) (q : Fin d) :
+    j q ≤ annulusRadius j :=
+  Finset.le_sup (s := Finset.univ) (f := fun q : Fin d => j q) (Finset.mem_univ q)
+
+private theorem degreeWidth_le_upper_succ
+    {d : ℕ} (j : MultiIndex d) (M : ℕ) :
+    degreeWidth j M ≤ degreeIntervalUpper j M + 1 := by
+  dsimp [degreeWidth]
+  omega
+
+/-- Crude width bound from a uniform coordinate bound `j q + M + 1 ≤ Y`. -/
+private theorem degreeWidth_le_of_coord_bound
+    {d : ℕ} (hd : 1 ≤ d) (j : MultiIndex d) (M Y : ℕ) (hY : 0 < Y)
+    (hb : ∀ q : Fin d, j q + M + 1 ≤ Y) :
+    degreeWidth j M ≤ d * Y ^ 2 := by
+  have hupper_sum : degreeIntervalUpper j M ≤ d * (Y ^ 2 - 1) := by
+    dsimp [degreeIntervalUpper]
+    calc
+      ∑ q : Fin d, ((j q + M + 1) ^ 2 - 1)
+          ≤ ∑ q : Fin d, (Y ^ 2 - 1) :=
+            Finset.sum_le_sum fun q _ => by
+              have hsquare : (j q + M + 1) ^ 2 ≤ Y ^ 2 := Nat.pow_le_pow_left (hb q) 2
+              omega
+      _ = d * (Y ^ 2 - 1) := by simp
+  have hA : 1 ≤ Y ^ 2 := Nat.succ_le_of_lt (Nat.pow_pos hY)
+  have hfinal : d * (Y ^ 2 - 1) + 1 ≤ d * Y ^ 2 := by
+    calc
+      d * (Y ^ 2 - 1) + 1 ≤ d * (Y ^ 2 - 1) + d := Nat.add_le_add_left hd _
+      _ = d * ((Y ^ 2 - 1) + 1) := by rw [Nat.mul_add, Nat.mul_one]
+      _ = d * Y ^ 2 := by rw [Nat.sub_add_cancel hA]
+  calc
+    degreeWidth j M ≤ degreeIntervalUpper j M + 1 := degreeWidth_le_upper_succ j M
+    _ ≤ d * (Y ^ 2 - 1) + 1 := Nat.add_le_add_right hupper_sum 1
+    _ ≤ d * Y ^ 2 := hfinal
+
 /-- Local degree support lies in an explicit interval. -/
 theorem localDegreeInterval
     {d : ℕ} (j : MultiIndex d) (M : ℕ) (G : FiniteHermiteSum d) :
@@ -102,152 +137,38 @@ theorem localDegreeInterval
 theorem degreeIntervalOrder
     {d : ℕ} (j : MultiIndex d) (M : ℕ) :
     degreeIntervalLower j M ≤ degreeIntervalUpper j M := by
-  let R := annulusRadius j
-  have hR : ∀ q : Fin d, j q ≤ R := by
-    intro q
-    dsimp [R, annulusRadius]
-    exact Finset.le_sup (s := Finset.univ) (f := fun q : Fin d => j q) (by simp)
-  have hcoord_order :
-      ∀ q : Fin d, (max (j q) M - M) ^ 2 ≤ ((j q + M + 1) ^ 2 - 1) := by
-    intro q
-    have hmax : max (j q) M - M ≤ j q := by
-      by_cases hjM : j q ≤ M
-      · simp [max_eq_right hjM]
-      · have hMj : M ≤ j q := le_of_lt (lt_of_not_ge hjM)
-        simp [max_eq_left hMj]
-    have hsquare : (max (j q) M - M) ^ 2 ≤ (j q) ^ 2 :=
-      Nat.pow_le_pow_left hmax 2
-    have hupper : (j q) ^ 2 ≤ ((j q + M + 1) ^ 2 - 1) := by
-      have hstep : (j q) ^ 2 + 1 ≤ (j q + 1) ^ 2 := by
-        ring_nf
-        omega
-      have hmono : (j q + 1) ^ 2 ≤ (j q + M + 1) ^ 2 := by exact Nat.pow_le_pow_left (by omega) 2
-      omega
-    exact hsquare.trans hupper
-  have hinterval :
-      degreeIntervalLower j M ≤ degreeIntervalUpper j M := by
-    dsimp [degreeIntervalLower, degreeIntervalUpper]
-    exact Finset.sum_le_sum fun q _ => hcoord_order q
-  have hcoord_upper :
-      ∀ q : Fin d, ((j q + M + 1) ^ 2 - 1) ≤ ((R + M + 1) ^ 2 - 1) := by
-    intro q
-    have hmono : j q + M + 1 ≤ R + M + 1 := by
-      exact Nat.add_le_add_right (Nat.add_le_add_right (hR q) M) 1
-    have hsquare : (j q + M + 1) ^ 2 ≤ (R + M + 1) ^ 2 :=
-      Nat.pow_le_pow_left hmono 2
-    omega
-  have hupper_sum :
-      degreeIntervalUpper j M ≤ d * (((R + M + 1) ^ 2) - 1) := by
-    dsimp [degreeIntervalUpper]
-    calc
-      ∑ q : Fin d, ((j q + M + 1) ^ 2 - 1)
-          ≤ ∑ q : Fin d, (((R + M + 1) ^ 2) - 1) := by
-              exact Finset.sum_le_sum fun q _ => hcoord_upper q
-      _ = d * (((R + M + 1) ^ 2) - 1) := by simp
-  have hwidth_le_upper :
-      degreeWidth j M ≤ degreeIntervalUpper j M + 1 := by
-    dsimp [degreeWidth]
-    omega
-  have hwidth :
-      degreeWidth j M ≤ d * ((R + M + 1) ^ 2 - 1) + 1 := by
-    exact le_trans hwidth_le_upper (Nat.add_le_add_right hupper_sum 1)
-  have hfinal :
-      degreeWidth j M ≤ d * (R + M + 1) ^ 2 + 1 := by
-    have hmul :
-        d * ((R + M + 1) ^ 2 - 1) ≤ d * (R + M + 1) ^ 2 := by
-      exact Nat.mul_le_mul_left d (Nat.sub_le _ _)
-    exact le_trans hwidth (Nat.add_le_add_right hmul 1)
-  exact hinterval
-
-private theorem degreeWidth_le_upper_succ
-    {d : ℕ} (j : MultiIndex d) (M : ℕ) :
-    degreeWidth j M ≤ degreeIntervalUpper j M + 1 := by
-  dsimp [degreeWidth]
+  dsimp [degreeIntervalLower, degreeIntervalUpper]
+  refine Finset.sum_le_sum fun q _ => ?_
+  have hmax : max (j q) M - M ≤ j q := by
+    by_cases hjM : j q ≤ M
+    · simp [max_eq_right hjM]
+    · simp [max_eq_left (le_of_lt (lt_of_not_ge hjM))]
+  have hsquare : (max (j q) M - M) ^ 2 ≤ (j q) ^ 2 := Nat.pow_le_pow_left hmax 2
+  have hmono : (j q + 1) ^ 2 ≤ (j q + M + 1) ^ 2 := Nat.pow_le_pow_left (by omega) 2
+  have hstep : (j q) ^ 2 + 1 ≤ (j q + 1) ^ 2 := by ring_nf; omega
   omega
 
 /-- Low-annulus crude width bound in terms of the annulus radius. -/
 theorem lowAnnulusDegreeWidthBound
     {d : ℕ} (hd : 1 ≤ d) (j : MultiIndex d) (M : ℕ)
-    (hj : annulusRadius j < M + 1) :
-    degreeWidth j M ≤ d * (annulusRadius j + M + 1) ^ 2 := by
-  let R := annulusRadius j
-  have _ : annulusRadius j < M + 1 := hj
-  have hcoord_upper :
-      ∀ q : Fin d, ((j q + M + 1) ^ 2 - 1) ≤ ((R + M + 1) ^ 2 - 1) := by
-    intro q
-    have hqR : j q ≤ R := by
-      dsimp [R, annulusRadius]
-      exact Finset.le_sup (s := Finset.univ) (f := fun q : Fin d => j q) (by simp)
-    have hmono : j q + M + 1 ≤ R + M + 1 := by omega
-    have hsquare : (j q + M + 1) ^ 2 ≤ (R + M + 1) ^ 2 := Nat.pow_le_pow_left hmono 2
-    omega
-  have hupper_sum : degreeIntervalUpper j M ≤ d * (((R + M + 1) ^ 2) - 1) := by
-    dsimp [degreeIntervalUpper]
-    calc
-      ∑ q : Fin d, ((j q + M + 1) ^ 2 - 1)
-          ≤ ∑ q : Fin d, (((R + M + 1) ^ 2) - 1) := by
-              exact Finset.sum_le_sum fun q _ => hcoord_upper q
-      _ = d * (((R + M + 1) ^ 2) - 1) := by simp
-  have hmain : degreeWidth j M ≤ d * (((R + M + 1) ^ 2) - 1) + 1 := by
-    calc
-      degreeWidth j M ≤ degreeIntervalUpper j M + 1 := degreeWidth_le_upper_succ j M
-      _ ≤ d * (((R + M + 1) ^ 2) - 1) + 1 := Nat.add_le_add_right hupper_sum 1
-  have hA : 1 ≤ (R + M + 1) ^ 2 := by
-    have hbase : 0 < R + M + 1 := by omega
-    exact Nat.succ_le_of_lt (Nat.pow_pos hbase)
-  have hfinal : d * (((R + M + 1) ^ 2) - 1) + 1 ≤ d * (R + M + 1) ^ 2 := by
-    calc
-      d * (((R + M + 1) ^ 2) - 1) + 1 ≤ d * (((R + M + 1) ^ 2) - 1) + d := Nat.add_le_add_left hd _
-      _ = d * (((R + M + 1) ^ 2) - 1) + d * 1 := by rw [Nat.mul_one]
-      _ = d * ((((R + M + 1) ^ 2) - 1) + 1) := by rw [← Nat.mul_add]
-      _ = d * (R + M + 1) ^ 2 := by rw [Nat.sub_add_cancel hA]
-  exact le_trans hmain hfinal
+    (_hj : annulusRadius j < M + 1) :
+    degreeWidth j M ≤ d * (annulusRadius j + M + 1) ^ 2 :=
+  degreeWidth_le_of_coord_bound hd j M (annulusRadius j + M + 1) (by omega)
+    (fun q => by have := coord_le_annulusRadius j q; omega)
 
 /-- Uniform low-annulus width bound at the frozen threshold `J(d,M)`. -/
 theorem uniformLowAnnulusWidthBound
     {d : ℕ} (hd : 1 ≤ d) (j : MultiIndex d) (M : ℕ)
     (hj : annulusRadius j < degreeThreshold d M) :
     degreeWidth j M ≤ d * (degreeThreshold d M + M) ^ 2 := by
-  let T := degreeThreshold d M
-  have hcoord_upper :
-      ∀ q : Fin d, ((j q + M + 1) ^ 2 - 1) ≤ ((T + M) ^ 2 - 1) := by
-    intro q
-    have hqR : j q ≤ annulusRadius j := by
-      dsimp [annulusRadius]
-      exact Finset.le_sup (s := Finset.univ) (f := fun q : Fin d => j q) (by simp)
-    have hqT : j q + 1 ≤ T := by
-      have : j q < T := lt_of_le_of_lt hqR (by simpa [T] using hj)
-      exact Nat.succ_le_of_lt this
-    have hmono : j q + M + 1 ≤ T + M := by omega
-    have hsquare : (j q + M + 1) ^ 2 ≤ (T + M) ^ 2 := Nat.pow_le_pow_left hmono 2
+  have hTpos : 0 < degreeThreshold d M := by
+    unfold degreeThreshold
+    have : 0 < 120 * d * (2 * M + 1) :=
+      Nat.mul_pos (Nat.mul_pos (by decide) (by omega)) (by omega)
     omega
-  have hupper_sum : degreeIntervalUpper j M ≤ d * (((T + M) ^ 2) - 1) := by
-    dsimp [degreeIntervalUpper]
-    calc
-      ∑ q : Fin d, ((j q + M + 1) ^ 2 - 1)
-          ≤ ∑ q : Fin d, (((T + M) ^ 2) - 1) := by exact Finset.sum_le_sum fun q _ => hcoord_upper q
-      _ = d * (((T + M) ^ 2) - 1) := by simp
-  have hmain : degreeWidth j M ≤ d * (((T + M) ^ 2) - 1) + 1 := by
-    calc
-      degreeWidth j M ≤ degreeIntervalUpper j M + 1 := degreeWidth_le_upper_succ j M
-      _ ≤ d * (((T + M) ^ 2) - 1) + 1 := Nat.add_le_add_right hupper_sum 1
-  have hTpos : 0 < T := by
-    unfold T degreeThreshold
-    have hdpos : 0 < d := by omega
-    have hodd : 0 < 2 * M + 1 := by omega
-    have hprod : 0 < 120 * d * (2 * M + 1) := by
-      exact Nat.mul_pos (Nat.mul_pos (by decide : 0 < 120) hdpos) hodd
-    omega
-  have hA : 1 ≤ (T + M) ^ 2 := by
-    have hbase : 0 < T + M := by omega
-    exact Nat.succ_le_of_lt (Nat.pow_pos hbase)
-  have hfinal : d * (((T + M) ^ 2) - 1) + 1 ≤ d * (T + M) ^ 2 := by
-    calc
-      d * (((T + M) ^ 2) - 1) + 1 ≤ d * (((T + M) ^ 2) - 1) + d := Nat.add_le_add_left hd _
-      _ = d * (((T + M) ^ 2) - 1) + d * 1 := by rw [Nat.mul_one]
-      _ = d * ((((T + M) ^ 2) - 1) + 1) := by rw [← Nat.mul_add]
-      _ = d * (T + M) ^ 2 := by rw [Nat.sub_add_cancel hA]
-  exact le_trans hmain hfinal
+  refine degreeWidth_le_of_coord_bound hd j M (degreeThreshold d M + M) (by omega) (fun q => ?_)
+  have := coord_le_annulusRadius j q
+  omega
 
 private theorem annulusRadius_exists_coord
     {d : ℕ} (hd : 1 ≤ d) (j : MultiIndex d) :
@@ -353,10 +274,7 @@ theorem highAnnulusDegreeBounds
   have hlower : (annulusRadius j - M) ^ 2 ≤ degreeIntervalLower j M := by
     exact highAnnulusDegreeLowerBound (hd := hd) (j := j) (M := M) hj
   rcases annulusRadius_exists_coord (hd := hd) (j := j) with ⟨q0, hq0⟩
-  have hR : ∀ q : Fin d, j q ≤ R := by
-    intro q
-    dsimp [R, annulusRadius]
-    exact Finset.le_sup (s := Finset.univ) (f := fun q : Fin d => j q) (by simp)
+  have hR : ∀ q : Fin d, j q ≤ R := fun q => coord_le_annulusRadius j q
   let gap : Fin d → ℕ := fun q =>
     (((j q + M + 1) ^ 2 - 1) - (max (j q) M - M) ^ 2)
   let gap' : Fin d → ℕ := fun q => if q = q0 then gap q + 1 else gap q
