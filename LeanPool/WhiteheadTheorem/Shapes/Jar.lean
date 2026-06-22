@@ -12,11 +12,8 @@ import LeanPool.WhiteheadTheorem.Shapes.Disk
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Jar`.
 -/
--- import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
--- import Mathlib.CategoryTheory.LiftingProperties.Limits
 
 
--- open CategoryTheory
 open TopCat
 open scoped Topology unitInterval
 

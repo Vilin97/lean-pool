@@ -267,7 +267,6 @@ def boundaryJarDeformRetrToBot {n : ℕ} : C(I × ⊔I^(n + 1), ⊔I^(n + 1)) :=
     (ContinuousMap.id _).prodMap <| boundaryJarIncl (n + 1)
   { toFun ty := ⟨deformRetrToBot (f₀ ty), by
       obtain ⟨t, ⟨y, hy⟩⟩ := ty
-      -- simp? [f₀, deformRetrToBot]
       obtain hbot | hsides := mem_boundaryJar_iff_splitAtLast.mp hy
       · simp only [boundaryJarIncl, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
           ContinuousMap.coe_mk, Prod.map_apply, id_eq, f₀]

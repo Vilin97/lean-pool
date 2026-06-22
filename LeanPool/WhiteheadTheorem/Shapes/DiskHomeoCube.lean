@@ -290,16 +290,6 @@ end pDiskPair
 end TopCat
 
 
-
--- noncomputable def diskHomeoPDisk : 𝔻 n ≃ₜ pDisk n 2 where
---   toFun := id
---   -- invFun := id
---   left_inv := congrFun rfl
---   right_inv := congrFun rfl
---   -- continuous_toFun := continuous_id
---   -- continuous_invFun := continuous_id
-
-
 namespace TopCat
 
 /-- The large cube $[-1, 1]^n$ is homeomorphic to `pDisk n ∞`

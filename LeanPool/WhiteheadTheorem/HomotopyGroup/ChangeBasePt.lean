@@ -396,7 +396,6 @@ noncomputable def FundamentalGroupoid.changeBasePt (n : ℕ) : FundamentalGroupo
 instance FundamentalGroupoid.isIso_changeBasePt_map
     {x₀ x₁ : FundamentalGroupoid X} (p : x₀ ⟶ x₁) :
     CategoryTheory.IsIso ((FundamentalGroupoid.changeBasePt n).map p) := by
-  -- have : CategoryTheory.IsIso p := by infer_instance  -- CategoryTheory.IsIso.of_groupoid
   infer_instance
 
 
@@ -520,8 +519,6 @@ lemma injective_toFun_surjective_invFun_of_homotopyEquiv (n : ℕ) (x₀ : X) (E
 theorem isIso_inducedPointedHom_of_isHomotopyEquiv (n : ℕ) (x₀ : X) (f : C(X, Y))
     (hf : IsHomotopyEquiv f) : IsIso (inducedPointedHom n x₀ f) := by
   obtain ⟨E, Ef⟩ := hf
-  -- have : f = E.toFun := Ef.symm
-  -- let g := E.invFun
   have inj_f : Function.Injective (inducedPointedHom n x₀ f).toFun := by
     rw [← Ef]
     exact (injective_toFun_surjective_invFun_of_homotopyEquiv n x₀ E).left

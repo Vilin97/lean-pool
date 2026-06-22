@@ -21,7 +21,6 @@ Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Auxiliary`.
 
 namespace CategoryTheory
 
--- #check CategoryTheory.eq_of_comp_right_eq
 lemma eq_of_comp_right_iso_eq {C : Type*} [Category C] {X Y Z : C}
     (h : X ⟶ Y) [IsIso h] {f g : Y ⟶ Z} (e : h ≫ f = h ≫ g) : f = g := by
   simpa only [IsIso.inv_hom_id_assoc] using congrArg (inv h ≫ ·) e
@@ -123,15 +122,7 @@ lemma Real.exists_eq_of_iSup_eq_of_finite_domain {ι : Type*} {f : ι → ℝ} {
 
 
 
--- /-- The result of embedding `i : Fin n` in `Fin (n+1)` is not equal to `n : Fin (n+1)` -/
--- lemma Fin.castSucc_ne_last {n : ℕ} (i : Fin n) : i.castSucc ≠ Fin.last n :=
---   fun heq ↦ Nat.ne_of_lt i.isLt (congrArg Fin.val heq)
-
-
-
 namespace ContinuousMap
-
--- #check ContinuousMap.liftCover -- gluing lemma for an open cover
 
 variable {α β : Type*} [TopologicalSpace α] [TopologicalSpace β]
 
@@ -168,20 +159,3 @@ theorem liftCoverClosed_coe' {i : ι} (x : α) (hx : x ∈ S i) :
   rw [← liftCoverClosed_coe]
 
 end ContinuousMap
-
-
-
-
--- namespace CategoryTheory.IsPushout
-
--- variable {C : Type*} [Category C] {Z X Y P : C}
---   {f : Z ⟶ X} {g : Z ⟶ Y} {inl : X ⟶ P} {inr : Y ⟶ P}
-
--- lemma uniq (hP : IsPushout f g inl inr) {W : C} (h : X ⟶ W) (k : Y ⟶ W) (w : f ≫ h = g ≫ k)
---     (d : P ⟶ W) (hl : inl ≫ d = h) (hr : inr ≫ d = k) : d = hP.desc h k w :=
---   hP.isColimit.uniq (CommSq.mk w).cocone d fun j => match j with
---     | none => by simp; congr
---     | some Limits.WalkingPair.left => by simp; congr
---     | some Limits.WalkingPair.right => by simp; congr
-
--- end CategoryTheory.IsPushout

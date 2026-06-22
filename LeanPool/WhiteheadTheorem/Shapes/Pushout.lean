@@ -13,7 +13,6 @@ import Mathlib.CategoryTheory.Limits.Shapes.Pullback.Square
 
 Imported Lean Pool material for `LeanPool.WhiteheadTheorem.Shapes.Pushout`.
 -/
--- import Mathlib.Topology.Category.TopCat.Limits.Pullbacks  -- does not contain pushouts
 
 /-!
 TODO:
@@ -83,7 +82,6 @@ lemma eq_inl_or_eq_inr_of_mem_pushout (a : (pushout f g).carrier) :
     ext x : 1
     change some ((f ≫ pushout.inl f g) x) = some ((g ≫ pushout.inr f g) x)
     rw [pushout.condition]
-  -- let d : pushout f g ⟶ A' := pushout.desc inl' inr' w'
   let d1 : pushout f g ⟶ A' := homToDiscreteSpaceOfFun fun b ↦ some b
   let d2 : pushout f g ⟶ A' := homToDiscreteSpaceOfFun fun b ↦ if b = a then none else some b
   by_contra! h

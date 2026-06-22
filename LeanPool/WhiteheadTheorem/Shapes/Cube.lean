@@ -310,30 +310,6 @@ def inclToBoundaryJarBot {n : ℕ} : C(I^ Fin n, ⊔I^(n+1)) where
   toFun y := ⟨ inclToBot y, inclToBot.mem_boundaryJar y ⟩
   continuous_toFun := Continuous.subtype_mk inclToBot.continuous _
 
--- /-- The inclusion `(y, t) ↦ (y₀, y₁, …, yₙ₋₁, t)` to
--- the sides of `⊔I^(n+1)`, i.e.,
--- the closure of the complement of the top and bottom faces of `∂I^(n+1)`. -/
--- def inclToBoundaryJarSides {n : ℕ} : C((∂I^n) × I, ⊔I^(n+1)) where
---   toFun := fun ⟨⟨y, hy⟩, t⟩ ↦
---     ⟨ fun ⟨i, hi⟩ ↦
---         ⟨ if _ : i < n then y ⟨i, ‹_›⟩ else t,
---           by split_ifs; repeat {simp only [Subtype.coe_prop]} ⟩,
---       by
---         obtain ⟨⟨i, hi⟩, hyi⟩ := hy
---         constructor
---         · use ⟨i, hi.trans (by omega : n < n + 1)⟩; simp [hi, hyi]
---         · intro _
---           use ⟨i, hi.trans (by omega : n < n + 1)⟩; simpa [hi, hyi] ⟩
---   continuous_toFun := by
---     refine Continuous.subtype_mk ?_ _
---     refine continuous_pi fun i ↦ ?_
---     refine Continuous.subtype_mk ?_ _
---     split_ifs
---     · apply Continuous.subtype_val
---       exact continuous_apply (⟨i.val, ‹_›⟩ : Fin n) |>.comp <|
---         Continuous.subtype_val continuous_fst
---     · exact Continuous.subtype_val continuous_snd
-
 /-- The inclusion `(y, t) ↦ (y₀, y₁, …, yₙ₋₁, t)` to
 the sides of `⊔I^(n+1)`, i.e.,
 the closure of the complement of the top and bottom faces of `∂I^(n+1)`. -/
@@ -480,7 +456,6 @@ lemma castSucc_mem_sides {n : ℕ} (t : I) (y : ∂𝕀 n) :
   constructor
   · exact Fin.castSucc_lt_last i
   · simp only [↓cubeSplitAtLast_inv_down_eq, ↓cubeBoundaryIncl_apply_down_eq]
-    -- change Cube.splitAtLast.symm _ _ = 0 ∨ Cube.splitAtLast.symm _ _ = 1
     rw [Cube.splitAtLast_symm_apply_eq_of_neq_last t y i.castSucc (Fin.castSucc_ne_last i)]
     exact hi
 

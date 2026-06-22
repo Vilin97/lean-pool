@@ -254,7 +254,6 @@ noncomputable def backMap
   toFun := fun yt ↦
     let r := Cube.strongDeformRetrToBoundaryJar n
     let yt' := r.r (backIsoCube n yt)
-    -- let yt'' := backIsoCube.{u}.symm yt'
     jarMap f h fh <| ULift.up.{u} ⟨yt', Set.range_subset_iff.mp r.r_range _⟩
   continuous_toFun := by simp only [Set.coe_setOf]; fun_prop
 

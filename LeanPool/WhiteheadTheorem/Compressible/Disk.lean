@@ -92,11 +92,6 @@ lemma inducedPointedHom_subtype_val_eq_iStar
       iStar n X A a :=
   rfl
 
--- lemma inducedPointedHom_domInclFromTop_eq_iStar :
---     ⇑(inducedPointedHom n (MapCyl.domInclToTop f x₀) (MapCyl.domInclFromTop f)) =
---     iStar n (MapCyl f) (MapCyl.top f) (MapCyl.domInclToTop f x₀) := by
---   apply inducedPointedHom_subtype_val_eq_iStar
-
 /-- If the map `πₙ(X, x₀) ⟶ πₙ(Y, f x₀)` induced by `f` is an isomorphism,
 then the map `iStar : πₙ(X, MapCyl.top f) → πₙ(MapCyl f, ⋯)` is bijective. -/
 lemma bijective_iStar_mapCyl_of_isIso

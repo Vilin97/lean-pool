@@ -36,9 +36,6 @@ namespace IsPointedMap
 
 variable {X Y : Type*} [Inhabited X] [Inhabited Y] (f : X → Y) [IsPointedMap f]
 
--- /-- The kernel of a pointed map is the preimage of the default point. -/
--- def IsPointedMap.ker (f : X → Y) [IsPointedMap f] : Set X := f ⁻¹' default
-
 lemma default_mem_image_of_default_mem {A : Set X} : default ∈ A → default ∈ f '' A :=
   fun h ↦ (Set.mem_image _ _ _).mpr ⟨default, ⟨h, IsPointedMap.map_default⟩⟩
 
@@ -94,11 +91,6 @@ of five pointed sets, if `a` is surjective and `d` is injective, then `C = 0`.
 
 variable {A B C D E : Type*}
 variable [Inhabited A] [Inhabited B] [Inhabited C] [Inhabited D] [Inhabited E]
--- variable (a : A → B) (b : B → C) (c : C → D) (d : D → E)
--- variable [pma : IsPointedMap a] [pmb : IsPointedMap b] [pmc : IsPointedMap c]
--- variable [pmd : IsPointedMap d]
--- variable (a_surj : Function.Surjective a) (d_inj : Function.Injective d)
--- variable (exb : IsExactAt a b) (exc : IsExactAt b c) (exd : IsExactAt c d)
 
 private lemma im_B_eq_zero (a : A → B) (b : B → C) (a_surj : Function.Surjective a)
     [IsPointedMap a] [IsPointedMap b] (exb : IsExactAt a b) :
