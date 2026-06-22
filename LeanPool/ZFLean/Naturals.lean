@@ -89,16 +89,6 @@ private abbrev some_inf := @Classical.choose _ inductiveSet ⟨_, omega_inductiv
 /-- The set `some_inf` is inductive. -/
 private lemma inductive_some_inf : inductiveSet some_inf := Classical.choose_spec _
 
-private lemma some_inf_nonempty : some_inf ≠ ∅ := by
-  intro h
-  let h' := inductive_some_inf.left
-  rw [h] at h'
-  exact (ZFSet.notMem_empty ∅) h'
-
-private lemma some_inf_mem_sep_inductiveSet : some_inf ∈ some_inf.powerset.sep inductiveSet := by
-  simp only [mem_sep, mem_powerset, subset_refl, true_and]
-  exact inductive_some_inf
-
 
 /-! ## Natural numbers -/
 

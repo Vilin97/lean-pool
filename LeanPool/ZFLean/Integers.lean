@@ -1152,108 +1152,10 @@ def _root_.ZFSet.ZFInt.EmbeddingIntZFInt : {x // x ∈ Int} ↪ ZFInt where
 end ZFInt
 /-- Imported ZFLean declaration. -/
 instance : LT {x // x ∈ Int} where
-  -- lt := fun ⟨x, hx⟩ ⟨y, hy⟩ =>
-  --   let x₁ : ZFNat := ⟨x.π₁, by
-  --     unfold Int at hx
-  --     simp_rw [mem_union, mem_prod, mem_singleton, exists_eq_left] at hx
-  --     rcases hx with ⟨a, ha, rfl⟩ | ⟨b, hb, rfl⟩
-  --     · rwa [π₁_pair]
-  --     · rw [π₁_pair]
-  --       exact ZFNat.zero_in_Nat⟩
-  --   let x₂ : ZFNat := ⟨x.π₂, by
-  --     unfold Int at hx
-  --     simp_rw [mem_union, mem_prod, mem_singleton, exists_eq_left] at hx
-  --     rcases hx with ⟨a, ha, rfl⟩ | ⟨b, hb, rfl⟩
-  --     · rw [π₂_pair]
-  --       exact ZFNat.zero_in_Nat
-  --     · rwa [π₂_pair]⟩
-  --   let y₁ : ZFNat := ⟨y.π₁, by
-  --     unfold Int at hy
-  --     simp_rw [mem_union, mem_prod, mem_singleton, exists_eq_left] at hy
-  --     rcases hy with ⟨a, ha, rfl⟩ | ⟨b, hb, rfl⟩
-  --     · rwa [π₁_pair]
-  --     · rw [π₁_pair]
-  --       exact ZFNat.zero_in_Nat⟩
-  --   let y₂ : ZFNat := ⟨y.π₂, by
-  --     unfold Int at hy
-  --     simp_rw [mem_union, mem_prod, mem_singleton, exists_eq_left] at hy
-  --     rcases hy with ⟨a, ha, rfl⟩ | ⟨b, hb, rfl⟩
-  --     · rw [π₂_pair]
-  --       exact ZFNat.zero_in_Nat
-  --     · rwa [π₂_pair]⟩
-  --   x₁ + y₂ < x₂ + y₁
   lt x y :=
     let f := Classical.choice
       (Function.Embedding.antisymm ZFInt.EmbeddingZFIntInt ZFInt.EmbeddingIntZFInt)
     f.invFun x < f.invFun y
--- instance instPreorderSubtypeMemInt.{u} : Preorder {x // x ∈ Int} where
---   le x y := instLTSubtypeMemInt.lt x y ∨ x = y
---   le_refl := fun _ => Or.inr rfl
---   le_trans := by
---     rintro ⟨x, hx⟩ ⟨y, hy⟩ ⟨z, hz⟩ hxy hyz
---     have (w : {x : ZFSet.{u} // x ∈ Int.{u}}) : ∃ (a b : ZFNat), w = a.val.pair b.val := by
---       obtain ⟨w, hw⟩ := w
---       simp_rw [mem_union, mem_prod, mem_singleton, exists_eq_left] at hw
---       exists ⟨w.π₁, ?_⟩, ⟨w.π₂, ?_⟩
---       · rcases hw with ⟨a, ha, rfl⟩ | ⟨b, hb, rfl⟩
---         · rwa [π₁_pair]
---         · rw [π₁_pair]
---           exact ZFNat.zero_in_Nat
---       · rcases hw with ⟨a, ha, rfl⟩ | ⟨b, hb, rfl⟩
---         · rw [π₂_pair]
---           exact ZFNat.zero_in_Nat
---         · rwa [π₂_pair]
---       · rcases hw with ⟨a, ha, rfl⟩ | ⟨b, hb, rfl⟩ <;>
---         · dsimp
---           rw [pair_inj, π₁_pair, π₂_pair]
---           exact ⟨rfl, rfl⟩
---     obtain ⟨x₁, x₂, rfl⟩ := this ⟨x, hx⟩
---     obtain ⟨y₁, y₂, rfl⟩ := this ⟨y, hy⟩
---     obtain ⟨z₁, z₂, rfl⟩ := this ⟨z, hz⟩
---     unfold LT.lt instLTSubtypeMemInt at hxy hyz ⊢
---     simp at hxy hyz ⊢
---     rcases hxy with hxy | ⟨rfl, rfl⟩ <;>
---     rcases hyz with hyz | ⟨rfl, rfl⟩
---     · left
---       have : x₁ + z₂ + y₁ + y₂ < x₂ + z₁ + y₁ + y₂ := by
---         conv_lhs =>
---           rw [add_assoc, add_comm y₁, add_assoc, add_comm z₂, add_assoc, ←add_assoc]
---         conv_rhs =>
---           rw [add_assoc, add_assoc, add_comm z₁, add_assoc, ←add_assoc]
---         exact ZFNat.add_lt_add_of_le_of_lt (.inl hxy) hyz
---       simp_rw [ZFNat.add_lt_add_iff_right] at this
---       exact this
---     · left
---       exact hxy
---     · left
---       exact hyz
---     · right
---       exact ⟨rfl, rfl⟩
---   lt_iff_le_not_ge := by
---     intro x y
---     constructor
---     · intro h
---       and_intros
---       · left; exact h
---       · rw [not_or]
---         and_intros
---         · unfold LT.lt instLTSubtypeMemInt at h ⊢
---           simp only [gt_iff_lt, not_lt] at h ⊢
---           left
---           conv_lhs => rw [add_comm]
---           conv_rhs => rw [add_comm]
---           exact h
---         · rintro rfl
---           unfold LT.lt instLTSubtypeMemInt at h
---           dsimp at h
---           rw [add_comm] at h
---           apply ZFNat.lt_irrefl h
---     · intro ⟨l, r⟩
---       rcases l with l | rfl
---       · rw [not_or] at r
---         exact l
---       · rw [not_or] at r
---         nomatch r.2 rfl
 namespace ZFInt
 
 /--

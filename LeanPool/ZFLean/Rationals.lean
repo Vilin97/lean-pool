@@ -27,7 +27,6 @@ protected theorem qrel_eq : Equivalence ZFSet.qrel where
   trans := by
     rintro ⟨p, q, hq⟩ ⟨u, v, hv⟩ ⟨s, t, ht⟩ hpq huv
     dsimp [ZFSet.qrel] at hpq huv ⊢
-    -- have : p * v * u * t = q * u * s * v := by
     have : p * t * u * v = q * s * u * v := by
       suffices p * v * u * t = q * u * s * v by
         rw [

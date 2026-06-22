@@ -252,9 +252,6 @@ theorem casesOn {S : ZFSet} (x : Option S) : x = none ∨ (∃ y, x = some y) :=
       unfold some Sum.inr
       exists ⟨val, hx.right⟩
 
--- theorem ZFInt.into.injective : Function.Injective into := into_inj
--- theorem ZFInt.outof.injective : Function.Injective outof := outof_inj
-
 open Classical in
 /-- Imported ZFLean declaration. -/
 noncomputable abbrev the {S : ZFSet} (S_nemp : S ≠ ∅) (x : Option S) : {x // x ∈ S} :=
