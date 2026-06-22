@@ -190,10 +190,7 @@ lemma map_sat_le
   induction ψ <;> simp only [mapSubtypeImp, Functor.map, map, Sat, Set.mem_setOf_eq] at Hsat ⊢
   next a => exact Hsat
   next f g f_ih g_ih => exact ⟨f_ih Hsat.left, g_ih Hsat.right⟩
-  next f g f_ih g_ih =>
-    rcases Hsat with Hsat|Hsat
-    · left; apply f_ih Hsat
-    · right; apply g_ih Hsat
+  next f g f_ih g_ih => exact Hsat.imp f_ih g_ih
 
 lemma mapSubtypeImp_embed
   {T : Type} [PartialOrder T] {x y : T} (hle : x ≤ y)
@@ -349,8 +346,7 @@ def runDag
       exists Subtype.embedLe hle '' Y
       constructor
       · specialize h_delta_eq ⟨q, qp⟩ l
-        rw [h_delta_eq]
-        rw [PositiveBool.mapSubtypeImp_embed hle]
+        rw [h_delta_eq, PositiveBool.mapSubtypeImp_embed hle]
         assumption
       · rw [Set.subset_def]
         simp only [Set.mem_image, Set.mem_prod]
@@ -452,8 +448,7 @@ def runDag
       exists Subtype.embedLe hle '' Y
       constructor
       · specialize h_delta_eq ⟨z, hz⟩ (l + 1)
-        rw [h_delta_eq]
-        rw [PositiveBool.mapSubtypeImp_embed hle]
+        rw [h_delta_eq, PositiveBool.mapSubtypeImp_embed hle]
         assumption
       · rw [Set.subset_def]
         simp only [Set.mem_image, Set.mem_prod]
@@ -626,8 +621,7 @@ lemma runDag_p_sat
       obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
       exists Subtype.embedLe leφ₁ '' Y₁
       constructor
-      · rw [delta_eq_1]
-        rw [PositiveBool.mapSubtypeImp_embed leφ₁]
+      · rw [delta_eq_1, PositiveBool.mapSubtypeImp_embed leφ₁]
         exact p_sat₁
       · rw [Set.subset_def]
         simp only [dag, base]
@@ -643,9 +637,8 @@ lemma runDag_p_sat
         obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
         exists Subtype.embedLe leφ₁ '' Y₁
         constructor
-        · rw [show Subtype.embedLe leφ₂ ⟨q, pq⟩ = Subtype.embedLe leφ₁ ⟨q, hq1⟩ by rfl]
-          rw [delta_eq_1]
-          rw [PositiveBool.mapSubtypeImp_embed leφ₁]
+        · rw [show Subtype.embedLe leφ₂ ⟨q, pq⟩ = Subtype.embedLe leφ₁ ⟨q, hq1⟩ by rfl,
+            delta_eq_1, PositiveBool.mapSubtypeImp_embed leφ₁]
           exact p_sat₁
         · rw [Set.subset_def]
           simp only [dag, base]
@@ -660,8 +653,7 @@ lemma runDag_p_sat
       · obtain ⟨Y₂, p_sat₂, p_sub₂⟩ := G₂.p_sat _ hV₂
         exists Subtype.embedLe leφ₂ '' Y₂
         constructor
-        · rw [delta_eq_2]
-          rw [PositiveBool.mapSubtypeImp_embed leφ₂]
+        · rw [delta_eq_2, PositiveBool.mapSubtypeImp_embed leφ₂]
           exact p_sat₂
         · rw [Set.subset_def]
           simp only [dag, base]
@@ -736,8 +728,7 @@ def shiftConjoinDag.runDag
       obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
       exists Subtype.embedLe leφ₁ '' Y₁
       constructor
-      · rw [delta_eq_1]
-        rw [PositiveBool.mapSubtypeImp_embed leφ₁]
+      · rw [delta_eq_1, PositiveBool.mapSubtypeImp_embed leφ₁]
         exact p_sat₁
       · rw [Set.subset_def]
         simp only [
@@ -758,8 +749,7 @@ def shiftConjoinDag.runDag
         obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
         exists Subtype.embedLe leφ₁ '' Y₁
         constructor
-        · rw [delta_eq_1 ⟨q, hq1⟩]
-          rw [PositiveBool.mapSubtypeImp_embed leφ₁]
+        · rw [delta_eq_1 ⟨q, hq1⟩, PositiveBool.mapSubtypeImp_embed leφ₁]
           exact p_sat₁
         · rw [Set.subset_def]
           simp only [conjoinDag.dag, conjoinDag.base, shiftDag.dag]
@@ -1041,8 +1031,7 @@ def runDag
           l - i') (by apply mini_in (G := (fun i => (G i).toDAG)); exact hv)
       exists Subtype.embedLe ltφ.le '' Y
       constructor
-      · rw [h_delta_eq]
-        rw [PositiveBool.mapSubtypeImp_embed]
+      · rw [h_delta_eq, PositiveBool.mapSubtypeImp_embed]
         have eq : l - i' + i' = l := by have := mini_le (fun i => (G i).toDAG); grind
         rwa [eq] at p_sat
       · simp only [dag, base, E]
@@ -1106,15 +1095,11 @@ theorem sub_trans {AP} {a b c : NNF AP} (h1 : a ≤ b) (h2 : b ≤ c) : a ≤ c 
   induction h2 generalizing a
   case refl => exact h1
   all_goals rename_i ih; first
-    | exact sub.and_left (ih h1)
-    | exact sub.and_right (ih h1)
-    | exact sub.or_left (ih h1)
-    | exact sub.or_right (ih h1)
+    | exact sub.and_left (ih h1) | exact sub.and_right (ih h1)
+    | exact sub.or_left (ih h1) | exact sub.or_right (ih h1)
     | exact sub.next (ih h1)
-    | exact sub.until_left (ih h1)
-    | exact sub.until_right (ih h1)
-    | exact sub.release_left (ih h1)
-    | exact sub.release_right (ih h1)
+    | exact sub.until_left (ih h1) | exact sub.until_right (ih h1)
+    | exact sub.release_left (ih h1) | exact sub.release_right (ih h1)
 
 instance {AP} : PartialOrder (NNF AP) where
   le_refl _ := sub.refl
@@ -1627,25 +1612,17 @@ theorem NNF.toABW_lang {AP} (ψ : NNF AP) : ψ.toABW.language = ψ.language := b
   -- and
   next f g f_ih g_ih =>
     funext w; simp only [language, eq_iff_iff]
-    rw [←f_ih, ←g_ih]; clear f_ih g_ih
-    constructor
-    · intros H
-      exact ⟨and_mp.left H, and_mp.right H⟩
-    · rintro ⟨H1, H2⟩
-      exact and_mpr H1 H2
+    rw [←f_ih, ←g_ih]
+    exact ⟨fun H => ⟨and_mp.left H, and_mp.right H⟩, fun ⟨H1, H2⟩ => and_mpr H1 H2⟩
   -- or
   next f g f_ih g_ih =>
     funext w; simp only [language, eq_iff_iff]
-    rw [←f_ih, ←g_ih]; clear f_ih g_ih
-    constructor
-    · exact or_mp
-    · rintro (H|H)
-      · exact or_mpr.left H
-      · exact or_mpr.right H
+    rw [←f_ih, ←g_ih]
+    exact ⟨or_mp, fun H => H.elim or_mpr.left or_mpr.right⟩
   -- next
   next f f_ih =>
     funext w; simp only [language, eq_iff_iff]
-    rw [←f_ih]; clear f_ih
+    rw [←f_ih]
     exact ⟨next_mp, next_mpr⟩
   -- until
   next f g f_ih g_ih =>

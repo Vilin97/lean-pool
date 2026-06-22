@@ -51,32 +51,17 @@ def NNF.language {AP} (f : NNF AP) (w : Nat → Letter AP) : Prop :=
 
 lemma not_exists_until_iff_forall {P Q : Nat → Prop} :
     (¬ ∃ i, Q i ∧ ∀ k < i, P k) ↔ ∀ i, ¬ Q i ∨ ∃ k < i, ¬ P k := by
+  classical
   constructor
   · intro h i
-    cases Classical.em (Q i) with
-    | inl hQi =>
-        refine Or.inr ?_
-        have hforall : ¬ ∀ k < i, P k := by
-          intro hPi
-          exact h ⟨i, hQi, hPi⟩
-        obtain ⟨k, hk⟩ := Classical.not_forall.mp hforall
-        have hklt : k < i := by
-          by_contra hnot
-          exact hk (fun hlt => (hnot hlt).elim)
-        have hnotPk : ¬ P k := by
-          intro hPk
-          exact hk (fun _ => hPk)
-        exact ⟨k, hklt, hnotPk⟩
-    | inr hQi =>
-        exact Or.inl hQi
-  · intro h
-    rintro ⟨i, hQi, hPi⟩
-    have hi := h i
-    cases hi with
-    | inl hneg => exact hneg hQi
-    | inr hcounter =>
-        rcases hcounter with ⟨k, hk, hk'⟩
-        exact hk' (hPi k hk)
+    rcases Classical.em (Q i) with hQi | hQi
+    · obtain ⟨k, hk⟩ := Classical.not_forall.mp fun hPi => h ⟨i, hQi, hPi⟩
+      exact Or.inr ⟨k, Classical.not_imp.mp hk⟩
+    · exact Or.inl hQi
+  · rintro h ⟨i, hQi, hPi⟩
+    rcases h i with hneg | ⟨k, hk, hk'⟩
+    · exact hneg hQi
+    · exact hk' (hPi k hk)
 
 namespace LTL
 
@@ -120,20 +105,7 @@ lemma toNNFCore_sound {AP} (f : LTL AP) :
     · simp [toNNFNeg, toNNFCore, LTL.language, NNF.language, ih.2]
   | «until» f g ihf ihg =>
     refine ⟨?_, ?_⟩
-    · intro w
-      constructor
-      · intro h
-        rcases h with ⟨i, hgi, hfi⟩
-        refine ⟨i, ?_, ?_⟩
-        · exact (ihg.1 _).mp hgi
-        · intro k hk
-          exact (ihf.1 _).mp (hfi k hk)
-      · intro h
-        rcases h with ⟨i, hgi, hfi⟩
-        refine ⟨i, ?_, ?_⟩
-        · exact (ihg.1 _).mpr hgi
-        · intro k hk
-          exact (ihf.1 _).mpr (hfi k hk)
+    · simp [toNNF, toNNFCore, LTL.language, NNF.language, ihf.1, ihg.1]
     · intro w
       have hf : ∀ k,
           ¬ LTL.language f (fun j => w (j + k)) ↔
