@@ -164,8 +164,7 @@ def _root_.LO.FirstOrder.Derivation.axL' {k} (r : L.Rel k) (v)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.all'
-    {φ} (h : ∀' φ ∈ Δ) (d : T ⟹ Rewriting.free φ :: Δ⁺) : T ⟹ Δ :=
-  d.all.wk (by simp [h])
+    {φ} (h : ∀' φ ∈ Δ) (d : T ⟹ Rewriting.free φ :: Δ⁺) : T ⟹ Δ := d.all.wk (by simp [h])
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.ex' {φ} (h : ∃' φ ∈ Δ) (t) (d : T ⟹ φ/[t] :: Δ) : T ⟹ Δ :=
@@ -177,8 +176,7 @@ lemma _root_.LO.FirstOrder.Derivation.ne_step_max (n m : ℕ) : n ≠ max n m + 
 @[simp 1100] lemma _root_.LO.FirstOrder.Derivation.ne_step_max' (n m : ℕ) : n ≠ max m n + 1 :=
   ne_of_lt <| Nat.lt_succ_of_le <| by simp
 
-private lemma neg_ne_and {φ ψ : SyntacticFormula L} : ¬∼φ = φ ⋏ ψ :=
-  ne_of_ne_complexity (by simp)
+private lemma neg_ne_and {φ ψ : SyntacticFormula L} : ¬∼φ = φ ⋏ ψ := ne_of_ne_complexity (by simp)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Derivation.em
@@ -241,8 +239,7 @@ def _root_.LO.FirstOrder.Derivation.specialize {φ : SyntacticSemiformula L 1} (
   have dn : T ⟹ ∼(∀' φ) :: φ/[t] :: Γ := by
     simp only [neg_all, Nat.reduceAdd]
     exact Derivation.ex t (by simp only [LogicalConnective.HomClass.map_neg]; exact this)
-  have dp : T ⟹ (∀' φ) :: φ/[t] :: Γ :=
-    Derivation.wk d (List.cons_subset_cons _ <| by simp)
+  have dp : T ⟹ (∀' φ) :: φ/[t] :: Γ := Derivation.wk d (List.cons_subset_cons _ <| by simp)
   Derivation.cut dp dn
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -429,10 +426,9 @@ def _root_.LO.FirstOrder.Derivation.lMap (Φ : L₁ →ᵥ L₂) {Δ} : T₁ ⟹
   | axL Δ r v            =>
     .cast (axL (Δ.map (.lMap Φ)) (Φ.rel r) (fun i ↦ .lMap Φ (v i)))
     (by simp [Semiformula.lMap_rel, Semiformula.lMap_nrel])
-  | verum Δ              => by exact verum _
+  | verum Δ              => verum _
   | @or _ _ Δ φ ψ d      => by
-    have : T₁.lMap Φ ⟹ (.lMap Φ φ ⋎ .lMap Φ ψ :: Δ.map (.lMap Φ) : Sequent L₂) :=
-      or (by exact lMap Φ d)
+    have : T₁.lMap Φ ⟹ (.lMap Φ φ ⋎ .lMap Φ ψ :: Δ.map (.lMap Φ) : Sequent L₂) := or (lMap Φ d)
     exact Derivation.cast this (by simp)
   | @and _ _ Δ φ ψ dp dq =>
     have : T₁.lMap Φ ⟹ (.lMap Φ φ ⋏ .lMap Φ ψ :: (Δ.map (.lMap Φ)) : Sequent L₂) :=
@@ -457,7 +453,7 @@ def _root_.LO.FirstOrder.Derivation.lMap (Φ : L₁ →ᵥ L₂) {Δ} : T₁ ⟹
 
 lemma _root_.LO.FirstOrder.Derivation.inconsistent_lMap (Φ : L₁ →ᵥ L₂) :
     Entailment.Inconsistent T₁ → Entailment.Inconsistent (T₁.lMap Φ) := by
-  simp only [Entailment.inconsistent_iff_provable_bot]; intro ⟨b⟩; exact ⟨by exact lMap Φ b⟩
+  simp only [Entailment.inconsistent_iff_provable_bot]; intro ⟨b⟩; exact ⟨lMap Φ b⟩
 
 end «lp_section_3»
 

@@ -51,8 +51,7 @@ lemma rec_eq {α : Sort*} (a : α) (f₁ f₂ : ℕ → α → α) (n : ℕ) (H 
   induction n with
   | zero => simp
   | succ n ih =>
-    simp
-    have : (n.rec a f₁ : α) = n.rec a f₂ := ih (fun m hm a =>  H m (Nat.lt_succ_of_lt hm) a)
+    have : (n.rec a f₁ : α) = n.rec a f₂ := ih (fun m hm a => H m (Nat.lt_succ_of_lt hm) a)
     simpa [this] using H n (Nat.lt_add_one n) (n.rec a f₂)
 
 lemma least_number (P : ℕ → Prop) (hP : ∃ x, P x) : ∃ x, P x ∧ ∀ z < x, ¬P z := by
@@ -201,12 +200,9 @@ lemma vecTail_comp (f : α → β) (v : Fin (n + 1) → α) : vecTail (f ∘ v) 
 
 lemma vecConsLast_vecEmpty {s : Fin 0 → α} (a : α) : s <: a = ![a] :=
   funext (fun x => by
-    have : 0 = Fin.last 0 := by rfl
     cases x using Fin.cases with
-    | zero => rw [this, rightConcat_last, cons_val_fin_one]
-    | succ i =>
-      have := i.isLt
-      contradiction )
+    | zero => rw [show (0 : Fin 1) = Fin.last 0 from rfl, rightConcat_last, cons_val_fin_one]
+    | succ i => exact absurd i.isLt (by simp))
 
 lemma constant_eq_singleton {a : α} : (fun _ => a) = ![a] := by funext x; simp
 
@@ -290,7 +286,7 @@ def vecToNat : {n : ℕ} → (Fin n → ℕ) → ℕ
 
 open Encodable
 
-@[simp] lemma vecToNat_empty (v : Fin 0 → ℕ) : vecToNat v = 0 := by rfl
+@[simp] lemma vecToNat_empty (v : Fin 0 → ℕ) : vecToNat v = 0 := rfl
 
 @[simp] lemma encode_succ {n} (x : ℕ) (v : Fin n → ℕ) :
     vecToNat (x :> v) = Nat.pair x (vecToNat v) + 1 := by
@@ -561,8 +557,8 @@ variable [DecidableEq α] [DecidableEq β]
 lemma toFinset_map {f : α → β} (l : List α) : (l.map f).toFinset = Finset.image f l.toFinset := by
   induction l <;> simp [*]
 
-lemma toFinset_mono {l l' : List α} (h : l ⊆ l') : l.toFinset ⊆ l'.toFinset := by
-  intro a; simp only [mem_toFinset]; intro ha; exact h ha
+lemma toFinset_mono {l l' : List α} (h : l ⊆ l') : l.toFinset ⊆ l'.toFinset :=
+  fun _ ha => mem_toFinset.mpr (h (mem_toFinset.mp ha))
 
 end «lp_section_5»
 
@@ -643,8 +639,8 @@ lemma remove_singleton_of_ne {φ ψ : α} (h : φ ≠ ψ) :
 lemma mem_remove_iff {l : List α} : b ∈ l.remove a ↔ b ∈ l ∧ b ≠ a := by
   simp [List.remove]
 
-lemma mem_of_mem_remove {a b : α} {l : List α} (h : b ∈ l.remove a) : b ∈ l := by
-  rw [mem_remove_iff] at h; exact h.1
+lemma mem_of_mem_remove {a b : α} {l : List α} (h : b ∈ l.remove a) : b ∈ l :=
+  (mem_remove_iff.mp h).1
 
 lemma remove_cons_self (l : List α) (a) :
   (a :: l).remove a = l.remove a := by simp [remove]
@@ -653,9 +649,7 @@ lemma remove_cons_of_ne (l : List α) {a b} (ne : a ≠ b) :
   (a :: l).remove b = a :: l.remove b := by simp_all [remove];
 
 lemma remove_subset (a) (l : List α) :
-    l.remove a ⊆ l := by
-  simp only [subset_def, mem_remove_iff, ne_eq, and_imp]
-  intros; simp [*]
+    l.remove a ⊆ l := fun _ h => (mem_remove_iff.mp h).1
 
 lemma remove_subset_remove (a) {l₁ l₂ : List α} (h : l₁ ⊆ l₂) :
     l₁.remove a ⊆ l₂.remove a := by

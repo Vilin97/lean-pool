@@ -95,8 +95,7 @@ instance : HomClass (M₁ →ₛ[L] M₂) L M₁ M₂ where
 
 omit [Nonempty M₁] [Nonempty M₂]
 @[ext] lemma _root_.LO.FirstOrder.Structure.Hom.ext (φ ψ : M₁ →ₛ[L] M₂) (h : ∀ x, φ x = ψ x) :
-    φ = ψ :=
-  DFunLike.ext φ ψ h
+    φ = ψ := DFunLike.ext φ ψ h
 
 namespace HomClass
 
@@ -132,8 +131,7 @@ instance : EmbeddingClass (M₁ ↪ₛ[L] M₂) L M₁ M₂ where
   map_rel_inv := fun φ => φ.rel_inv'
 
 @[ext] lemma _root_.LO.FirstOrder.Structure.Embedding.ext (φ ψ : M₁ ↪ₛ[L] M₂) (h : ∀ x, φ x = ψ x) :
-    φ = ψ :=
-  DFunLike.ext φ ψ h
+    φ = ψ := DFunLike.ext φ ψ h
 
 namespace EmbeddingClass
 open HomClass
@@ -169,8 +167,7 @@ instance : IsoClass (M₁ ≃ₛ[L] M₂) L M₁ M₂ where
   map_bij := fun φ => φ.toFun_bij
 
 @[ext] lemma _root_.LO.FirstOrder.Structure.Iso.ext (φ ψ : M₁ ≃ₛ[L] M₂) (h : ∀ x, φ x = ψ x) :
-    φ = ψ :=
-  DFunLike.ext φ ψ h
+    φ = ψ := DFunLike.ext φ ψ h
 
 namespace IsoClass
 
@@ -185,20 +182,17 @@ instance : SetLike (ClosedSubset L M) M := ⟨ClosedSubset.domain, fun _ _ ↦ C
 
 omit [Nonempty M]
 lemma closed {k} (f : L.Func k) {v : Fin k → M} (hv : ∀ i, v i ∈ u) :
-    s.func f v ∈ u :=
-  u.domain_closed f hv
+    s.func f v ∈ u := u.domain_closed f hv
 
 instance toStructure (u : ClosedSubset L M) : Structure L u where
   func := fun k f v => ⟨s.func f (fun i ↦ ↑(v i)), u.closed f (by simp)⟩
   rel := fun k r v => s.rel r (fun i ↦ v i)
 
 protected lemma func {k} (f : L.Func k) (v : Fin k → u) :
-    u.toStructure.func f v = s.func f (fun i ↦ v i) :=
-  rfl
+    u.toStructure.func f v = s.func f (fun i ↦ v i) := rfl
 
 protected lemma rel {k} (r : L.Rel k) (v : Fin k → u) :
-    u.toStructure.rel r v ↔ s.rel r (fun i ↦ v i) :=
-  of_eq rfl
+    u.toStructure.rel r v ↔ s.rel r (fun i ↦ v i) := of_eq rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def inclusion : u ↪ₛ[L] M where
@@ -262,8 +256,7 @@ namespace ElementaryEquiv
 lemma refl (M) [Nonempty M] [Structure L M] : M ≡ₑ[L] M := fun σ => by rfl
 
 @[symm]
-lemma symm : (M₁ ≡ₑ[L] M₂) → (M₂ ≡ₑ[L] M₁) :=
-  fun h σ => (h σ).symm
+lemma symm : (M₁ ≡ₑ[L] M₂) → (M₂ ≡ₑ[L] M₁) := fun h σ => (h σ).symm
 
 @[trans]
 lemma trans :

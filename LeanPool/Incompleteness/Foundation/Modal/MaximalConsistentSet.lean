@@ -23,8 +23,6 @@ namespace FormulaSet
 
 variable {T : FormulaSet α}
 
--- abbrev Consistent (𝓢 : Hilbert α) (T : FormulaSet α) := T *⊬[𝓢] ⊥
-
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev Consistent (𝓢 : S) (T : FormulaSet α) := T *⊬[𝓢] ⊥
 
@@ -202,16 +200,6 @@ lemma unprovable_iff_singleton_consistent : Consistent 𝓢 {φ} ↔ 𝓢 ⊬ �
   rw [e] at h₂;
   suffices 𝓢 ⊬ ∼φ ↔ ∅ *⊬[𝓢] ∼φ by tauto;
   exact Context.provable_iff_provable.not;
-
-/-
-omit [DecidableEq α] in
-lemma unprovable_falsum (T_consis : T.Consistent 𝓢) : Consistent 𝓢 := by
-  classical
-  by_contra hC;
-  obtain ⟨Γ, hΓ₁, _⟩ := Context.provable_iff.mp <| hC;
-  have : Γ ⊬[𝓢] ⊥ := (def_consistent.mp T_consis) _ hΓ₁;
-  contradiction;
--/
 
 omit [DecidableEq α] in
 lemma unprovable_either (T_consis : Consistent 𝓢 T) : ¬(T *⊢[𝓢]! φ ∧ T *⊢[𝓢]! ∼φ) := by
@@ -440,16 +428,6 @@ lemma membership_iff : (φ ∈ Ω) ↔ (Ω.1 *⊢[𝓢]! φ) := by
     have : Ω.1 *⊬[𝓢] ⊥ := Ω.consistent;
     contradiction;
 
-/-
-lemma subset_axiomset : H.axioms ⊆ Ω.1 := by
-  intro φ hp;
-  apply membership_iff.mpr;
-  apply Context.of!;
-  apply maxm!;
-  apply Hilbert.mem_axiomInstances_of_mem_axioms;
-  assumption;
--/
-
 omit [DecidableEq α] in
 @[simp]
 lemma not_mem_falsum : ⊥ ∉ Ω := by
@@ -664,20 +642,12 @@ lemma mem_multibox_dual : □^[n]φ ∈ Ω ↔ ∼(◇^[n](∼φ)) ∈ Ω := by
   constructor;
   · intro h;
     obtain ⟨Γ, hΓ₁, hΓ₂⟩ := Context.provable_iff.mp h;
-    apply Context.provable_iff.mpr;
-    use Γ;
-    constructor;
-    · assumption;
-    · exact FiniteContext.provable_iff.mpr <|
-        imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₁'! multibox_duality!);
+    exact Context.provable_iff.mpr ⟨Γ, hΓ₁, FiniteContext.provable_iff.mpr <|
+      imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₁'! multibox_duality!)⟩;
   · intro h;
     obtain ⟨Γ, hΓ₁, hΓ₂⟩ := Context.provable_iff.mp h;
-    apply Context.provable_iff.mpr;
-    use Γ;
-    constructor;
-    · assumption;
-    · exact FiniteContext.provable_iff.mpr <|
-        imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₂'! multibox_duality!);
+    exact Context.provable_iff.mpr ⟨Γ, hΓ₁, FiniteContext.provable_iff.mpr <|
+      imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₂'! multibox_duality!)⟩;
 
 omit [DecidableEq α] in
 lemma mem_box_dual : □φ ∈ Ω ↔ (∼(◇(∼φ)) ∈ Ω) := by
@@ -691,20 +661,12 @@ lemma mem_multidia_dual : ◇^[n]φ ∈ Ω ↔ ∼(□^[n](∼φ)) ∈ Ω := by
   constructor;
   · intro h;
     obtain ⟨Γ, hΓ₁, hΓ₂⟩ := Context.provable_iff.mp h;
-    apply Context.provable_iff.mpr;
-    existsi Γ;
-    constructor;
-    · assumption;
-    · exact FiniteContext.provable_iff.mpr <|
-        imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₁'! multidia_duality!);
+    exact Context.provable_iff.mpr ⟨Γ, hΓ₁, FiniteContext.provable_iff.mpr <|
+      imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₁'! multidia_duality!)⟩;
   · intro h;
     obtain ⟨Γ, hΓ₁, hΓ₂⟩ := Context.provable_iff.mp h;
-    apply Context.provable_iff.mpr;
-    existsi Γ;
-    constructor;
-    · assumption;
-    · exact FiniteContext.provable_iff.mpr <|
-        imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₂'! multidia_duality!);
+    exact Context.provable_iff.mpr ⟨Γ, hΓ₁, FiniteContext.provable_iff.mpr <|
+      imp_trans''! (FiniteContext.provable_iff.mp hΓ₂) (and₂'! multidia_duality!)⟩;
 omit [DecidableEq α] in
 lemma mem_dia_dual : ◇φ ∈ Ω ↔ (∼(□(∼φ)) ∈ Ω) := by
   classical
@@ -780,9 +742,6 @@ lemma iff_mem_box_conj : (□⋀Γ ∈ Ω) ↔ (∀ φ ∈ Γ, □φ ∈ Ω) := 
   exact iff_mem_multibox_conj (n := 1)
 
 end «lp_section_1»
-
--- lemma dia_dn_iff : (◇(∼∼φ) ∈ Ω) ↔
---     (◇φ) ∈ Ω := neg_iff box_dn_iff -- TODO: multidia_dn_iff (n := 1)
 
 end MaximalConsistentSet
 

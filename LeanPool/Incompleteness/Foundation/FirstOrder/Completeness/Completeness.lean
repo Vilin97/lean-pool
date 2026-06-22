@@ -85,8 +85,7 @@ theorem complete_iff : T ⊨ φ ↔ T ⊢! φ :=
 instance (T : Theory L) : Complete T (Semantics.models (SmallStruc L) T) := ⟨complete⟩
 
 lemma satisfiable_of_consistent' (h : Entailment.Consistent T) :
-    Semantics.Satisfiable (SmallStruc L) T :=
-  Complete.satisfiable_of_consistent h
+    Semantics.Satisfiable (SmallStruc L) T := Complete.satisfiable_of_consistent h
 
 lemma satisfiable_of_consistent (h : Entailment.Consistent T) :
     Semantics.Satisfiable (Struc.{max u w} L) T := by
@@ -99,8 +98,7 @@ lemma satisfiable_iff_consistent' :
   ⟨consistent_of_satidfiable, satisfiable_of_consistent.{u, w}⟩
 
 lemma satisfiable_iff_consistent :
-    Satisfiable T ↔ Entailment.Consistent T :=
-  satisfiable_iff_consistent'.{u, u}
+    Satisfiable T ↔ Entailment.Consistent T := satisfiable_iff_consistent'.{u, u}
 
 lemma satidfiable_iff_satisfiable :
     Semantics.Satisfiable (Struc.{max u w} L) T ↔ Satisfiable T := by

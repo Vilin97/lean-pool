@@ -185,8 +185,7 @@ instance : ORingStruc OmegaAddOne where
   | n + 2 => by simp [ORingStruc.numeral, numeral_eq (n + 1)]; rfl
 
 @[simp] lemma coe_inj_iff (n m : ℕ) : (↑n : OmegaAddOne) = (↑m :
-    OmegaAddOne) ↔ n = m :=
-  Option.some_inj
+    OmegaAddOne) ↔ n = m := Option.some_inj
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def cases' {P : OmegaAddOne → Sort*}

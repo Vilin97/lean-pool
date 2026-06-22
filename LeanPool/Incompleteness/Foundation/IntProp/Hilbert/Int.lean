@@ -28,11 +28,9 @@ class HasEFQ (H : Hilbert α) where
 instance [DecidableEq α] [hEfq : H.HasEFQ] : Entailment.HasAxiomEFQ H where
   efq φ := by
     apply maxm;
-    use Axioms.EFQ (Formula.atom hEfq.p);
-    constructor;
-    · exact hEfq.mem_efq;
-    · use (fun b => if hEfq.p = b then φ else (.atom b));
-      simp;
+    refine ⟨Axioms.EFQ (Formula.atom hEfq.p), hEfq.mem_efq,
+      fun b => if hEfq.p = b then φ else (.atom b), ?_⟩;
+    simp;
 instance [DecidableEq α] [H.HasEFQ] : Entailment.Intuitionistic H where
 
 end «lp_section_1»

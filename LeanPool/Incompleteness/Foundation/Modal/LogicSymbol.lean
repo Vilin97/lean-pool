@@ -50,10 +50,7 @@ attribute [aesop safe 5 forward] Subclosed.box_closed
 variable {φ ψ : F} {n : ℕ}
 
 @[simp]
-lemma box_injective' : □φ = □ψ ↔ φ = ψ := by
-  constructor;
-  · apply box_injective;
-  · simp_all;
+lemma box_injective' : □φ = □ψ ↔ φ = ψ := box_injective.eq_iff
 
 @[simp] lemma multibox_succ : □^[(n + 1)]φ = □(□^[n]φ) := by apply iterate_succ_apply'
 
@@ -62,10 +59,7 @@ lemma box_injective' : □φ = □ψ ↔ φ = ψ := by
   apply Function.Injective.iterate (by simp);
 
 @[simp]
-lemma multimop_injective' : □^[n]φ = □^[n]ψ ↔ φ = ψ := by
-  constructor;
-  · apply multibox_injective;
-  · simp_all;
+lemma multimop_injective' : □^[n]φ = □^[n]ψ ↔ φ = ψ := multibox_injective.eq_iff
 
 end Box
 
@@ -107,10 +101,7 @@ attribute [aesop safe 5 forward] Subclosed.dia_closed
 variable {φ ψ : F} {n : ℕ}
 
 @[simp]
-lemma dia_injective' : ◇φ = ◇ψ ↔ φ = ψ := by
-  constructor;
-  · apply dia_injective;
-  · simp_all;
+lemma dia_injective' : ◇φ = ◇ψ ↔ φ = ψ := dia_injective.eq_iff
 
 @[simp] lemma multidia_succ : ◇^[(n + 1)]φ = ◇(◇^[n]φ) := by apply iterate_succ_apply'
 
@@ -119,10 +110,7 @@ lemma dia_injective' : ◇φ = ◇ψ ↔ φ = ψ := by
   apply Function.Injective.iterate (by simp);
 
 @[simp]
-lemma multidia_injective' : ◇^[n]φ = ◇^[n]ψ ↔ φ = ψ := by
-  constructor;
-  · apply multidia_injective;
-  · simp_all;
+lemma multidia_injective' : ◇^[n]φ = ◇^[n]ψ ↔ φ = ψ := multidia_injective.eq_iff
 
 end Dia
 
@@ -139,7 +127,6 @@ class _root_.LO.BasicModalLogicConnective.Subclosed [BasicModalLogicalConnective
 /-- Imported declaration from the Incompleteness formalization. -/
 class DiaAbbrev (F : Type*) [Box F] [Dia F] [Tilde F] where
   dia_abbrev {φ : F} : ◇φ =  ∼(□(∼φ))
--- attribute [aesop safe 5 forward] DiaAbbrev.dia_abbrev
 
 /-- Imported declaration from the Incompleteness formalization. -/
 class ModalDeMorgan (F : Type*) [LogicalConnective F] [Box F] [Dia F] extends DeMorgan F where

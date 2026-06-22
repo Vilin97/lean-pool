@@ -146,18 +146,10 @@ lemma multidia_def : x ⊧ ◇^[n]φ ↔ ∃ y, x ≺^[n] y ∧ y ⊧ φ := by
       replace h : x ⊧ (◇◇^[n]φ) := by simpa using h;
       obtain ⟨y, Rxy, hv⟩ := Satisfies.dia_def.mp h;
       obtain ⟨x, Ryx, hx⟩ := ih.mp hv;
-      use x;
-      constructor;
-      · use y;
-      · assumption;
+      exact ⟨x, ⟨y, Rxy, Ryx⟩, hx⟩;
     · rintro ⟨y, ⟨z, Rxz, Rzy⟩, hy⟩;
       suffices x ⊧ ◇◇^[n]φ by simpa;
-      apply Satisfies.dia_def.mpr;
-      use z;
-      constructor;
-      · assumption;
-      · apply ih.mpr;
-        use y;
+      exact Satisfies.dia_def.mpr ⟨z, Rxz, ih.mpr ⟨y, Rzy, hy⟩⟩;
 
 lemma trans (hpq : x ⊧ φ ==> ψ) (hqr : x ⊧ ψ ==> χ) : x ⊧ φ ==> χ :=
   Satisfies.imp_def.mpr fun hφ => Satisfies.imp_def.mp hqr (Satisfies.imp_def.mp hpq hφ)
@@ -179,24 +171,12 @@ lemma iff_subst_self {x : F.World} (s) :
   | hfalsum => simp [Satisfies];
   | hbox φ ih =>
     constructor;
-    · intro hbφ y Rxy;
-      apply ih.mp;
-      exact hbφ y Rxy;
-    · intro hbφ y Rxy;
-      apply ih.mpr;
-      exact hbφ y Rxy;
+    · exact fun hbφ y Rxy => ih.mp <| hbφ y Rxy;
+    · exact fun hbφ y Rxy => ih.mpr <| hbφ y Rxy;
   | himp φ ψ ihφ ihψ =>
     constructor;
-    · intro hφψ hφ;
-      apply ihψ.mp;
-      apply hφψ;
-      apply ihφ.mpr;
-      exact hφ;
-    · intro hφψs hφ;
-      apply ihψ.mpr;
-      apply hφψs;
-      apply ihφ.mp;
-      exact hφ;
+    · exact fun hφψ hφ => ihψ.mp <| hφψ <| ihφ.mpr hφ;
+    · exact fun hφψs hφ => ihψ.mpr <| hφψs <| ihφ.mp hφ;
 
 end Satisfies
 
@@ -418,8 +398,6 @@ abbrev DefinedByFormula (C : Kripke.FrameClass) (φ : Formula ℕ) := FrameClass
 lemma definedByFormula_of_iff_mem_validate (h : ∀ F, F ∈ C ↔ F ⊧ φ) : DefinedByFormula C φ := by
   constructor;
   simpa;
-
--- variable (C₁ C₂ C₃ : Kripke.FrameClass) (φ₁ φ₂ φ₃ : Formula ℕ) (Γ₁ Γ₂ Γ₃ : Set (Formula ℕ))
 
 instance definedBy_inter
   (C₁ Γ₁) [h₁ : DefinedBy C₁ Γ₁]

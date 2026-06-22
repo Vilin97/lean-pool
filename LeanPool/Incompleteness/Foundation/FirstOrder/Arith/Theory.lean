@@ -19,18 +19,15 @@ variable {L : Language} [L.ORing] {ξ : Type*} [DecidableEq ξ]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def succInd {ξ} (φ : Semiformula L ξ 1) :
-    Formula L ξ :=
-  “!φ 0 → (∀ x, !φ x → !φ (x + 1)) → ∀ x, !φ x”
+    Formula L ξ := “!φ 0 → (∀ x, !φ x → !φ (x + 1)) → ∀ x, !φ x”
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def orderInd {ξ} (φ : Semiformula L ξ 1) :
-    Formula L ξ :=
-  “(∀ x, (∀ y < x, !φ y) → !φ x) → ∀ x, !φ x”
+    Formula L ξ := “(∀ x, (∀ y < x, !φ y) → !φ x) → ∀ x, !φ x”
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def leastNumber {ξ} (φ : Semiformula L ξ 1) :
-    Formula L ξ :=
-  “(∃ x, !φ x) → ∃ z, !φ z ∧ ∀ x < z, ¬!φ x”
+    Formula L ξ := “(∃ x, !φ x) → ∃ z, !φ z ∧ ∀ x < z, ¬!φ x”
 
 namespace Theory
 
@@ -53,14 +50,12 @@ variable {L}
 abbrev _root_.LO.FirstOrder.Theory.Arith.addZero : SyntacticFormula L := “x | x + 0 = x”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.addAssoc :
-    SyntacticFormula L :=
-  “x y z | (x + y) + z = x + (y + z)”
+    SyntacticFormula L := “x y z | (x + y) + z = x + (y + z)”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.addComm : SyntacticFormula L := “x y | x + y = y + x”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.addEqOfLt :
-    SyntacticFormula L :=
-  “x y | x < y → ∃ z, x + z = y”
+    SyntacticFormula L := “x y | x < y → ∃ z, x + z = y”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.zeroLe : SyntacticFormula L := “x | 0 ≤ x”
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -69,36 +64,30 @@ abbrev _root_.LO.FirstOrder.Theory.Arith.zeroLtOne : SyntacticFormula L := “0 
 abbrev _root_.LO.FirstOrder.Theory.Arith.oneLeOfZeroLt : SyntacticFormula L := “x | 0 < x → 1 ≤ x”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.addLtAdd :
-    SyntacticFormula L :=
-  “x y z | x < y → x + z < y + z”
+    SyntacticFormula L := “x y z | x < y → x + z < y + z”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.mulZero : SyntacticFormula L := “x | x * 0 = 0”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.mulOne : SyntacticFormula L := “x | x * 1 = x”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.mulAssoc :
-    SyntacticFormula L :=
-  “x y z | (x * y) * z = x * (y * z)”
+    SyntacticFormula L := “x y z | (x * y) * z = x * (y * z)”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.mulComm : SyntacticFormula L := “x y | x * y = y * x”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.mulLtMul :
-    SyntacticFormula L :=
-  “x y z | x < y ∧ 0 < z → x * z < y * z”
+    SyntacticFormula L := “x y z | x < y ∧ 0 < z → x * z < y * z”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.distr :
-    SyntacticFormula L :=
-  “x y z | x * (y + z) = x * y + x * z”
+    SyntacticFormula L := “x y z | x * (y + z) = x * y + x * z”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.ltIrrefl : SyntacticFormula L := “x | x </ x”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.ltTrans :
-    SyntacticFormula L :=
-  “x y z | x < y ∧ y < z → x < z”
+    SyntacticFormula L := “x y z | x < y ∧ y < z → x < z”
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.FirstOrder.Theory.Arith.ltTri :
-    SyntacticFormula L :=
-  “x y | x < y ∨ x = y ∨ x > y”
+    SyntacticFormula L := “x y | x < y ∨ x = y ∨ x > y”
 
 /-- Imported declaration from the Incompleteness formalization. -/
 inductive PeanoMinus : Theory ℒₒᵣ
@@ -207,8 +196,7 @@ instance (i) : 𝐈open wkn 𝐈Sgi :=
 lemma iSigma_weakerThan_of_le {s₁ s₂} (h : s₁ ≤ s₂) : 𝐈Sg s₁ wkn 𝐈Sg s₂ :=
   Entailment.WeakerThan.ofSubset (iSigma_subset_mono h)
 
-instance : 𝐈Sg0 wkn 𝐈Sg1 :=
-  iSigma_weakerThan_of_le (by decide)
+instance : 𝐈Sg0 wkn 𝐈Sg1 := iSigma_weakerThan_of_le (by decide)
 
 instance (i) : 𝐈Sgi wkn 𝐏𝐀 :=
   Entailment.WeakerThan.ofSubset <| Set.union_subset_union_right _  <|

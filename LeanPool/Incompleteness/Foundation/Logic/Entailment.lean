@@ -147,16 +147,10 @@ lemma strictlyWeakerThan_iff : 𝓢 swkn 𝓣 ↔ (∀ {f}, 𝓢 ⊢! f → 𝓣
 
 @[trans]
 lemma _root_.LO.Entailment.strictlyWeakerThan.trans : 𝓢 swkn 𝓣 → 𝓣 swkn 𝓤 → 𝓢 swkn 𝓤 := by
-  rintro ⟨h₁, nh₁⟩ ⟨h₂, _⟩;
-  constructor;
-  · exact WeakerThan.trans h₁ h₂;
-  · apply not_weakerThan_iff.mpr;
-    obtain ⟨f, hf₁, hf₂⟩ := not_weakerThan_iff.mp nh₁;
-    use f;
-    constructor;
-    · apply weakerThan_iff.mp h₂;
-      assumption;
-    · assumption;
+  rintro ⟨h₁, nh₁⟩ ⟨h₂, _⟩
+  refine ⟨WeakerThan.trans h₁ h₂, not_weakerThan_iff.mpr ?_⟩
+  obtain ⟨f, hf₁, hf₂⟩ := not_weakerThan_iff.mp nh₁
+  exact ⟨f, weakerThan_iff.mp h₂ hf₁, hf₂⟩
 
 lemma weakening (h : 𝓢 wkn 𝓣) {f} : 𝓢 ⊢! f → 𝓣 ⊢! f := weakerThan_iff.mp h
 
@@ -177,11 +171,10 @@ lemma _root_.LO.Entailment.Equiv.iff : 𝓢 ≊ 𝓣 ↔ (∀ f, 𝓢 ⊢! f ↔
   fun e₁ e₂ ↦ ⟨Eq.trans e₁.eq e₂.eq⟩
 
 lemma _root_.LO.Entailment.Equiv.antisymm_iff : 𝓢 ≊ 𝓣 ↔ 𝓢 wkn 𝓣 ∧ 𝓣 wkn 𝓢 := by
-  constructor
-  · intro e
-    exact ⟨⟨Set.Subset.antisymm_iff.mp e.eq |>.1⟩, ⟨Set.Subset.antisymm_iff.mp e.eq |>.2⟩⟩
-  · rintro ⟨w₁, w₂⟩
-    exact ⟨Set.Subset.antisymm w₁.subset w₂.subset⟩
+  refine ⟨fun e ↦ ⟨⟨Set.Subset.antisymm_iff.mp e.eq |>.1⟩, ⟨Set.Subset.antisymm_iff.mp e.eq |>.2⟩⟩,
+    ?_⟩
+  rintro ⟨w₁, w₂⟩
+  exact ⟨Set.Subset.antisymm w₁.subset w₂.subset⟩
 
 alias ⟨_, Equiv.antisymm⟩ := Equiv.antisymm_iff
 

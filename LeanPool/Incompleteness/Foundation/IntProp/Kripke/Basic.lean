@@ -172,22 +172,17 @@ lemma iff_subst_self {F : Frame} {V : Valuation F} {x : F.World} (s) :
   | hand φ ψ ihφ ihψ =>
     constructor;
     · rintro ⟨hφ, hψ⟩;
-      constructor;
-      · apply ihφ.mp hφ;
-      · apply ihψ.mp hψ;
+      exact ⟨ihφ.mp hφ, ihψ.mp hψ⟩
     · rintro ⟨hφ, hψ⟩;
-      apply Satisfies.and_def.mpr;
-      constructor;
-      · apply ihφ.mpr hφ;
-      · apply ihψ.mpr hψ;
+      exact ⟨ihφ.mpr hφ, ihψ.mpr hψ⟩
   | hor φ ψ ihφ ihψ =>
     constructor;
-    · rintro (hφ | hψ);
-      · left; apply ihφ.mp hφ;
-      · right; apply ihψ.mp hψ;
-    · rintro (hφ | hψ);
-      · left; apply ihφ.mpr hφ;
-      · right; apply ihψ.mpr hψ;
+    · rintro (hφ | hψ)
+      · exact .inl <| ihφ.mp hφ
+      · exact .inr <| ihψ.mp hψ
+    · rintro (hφ | hψ)
+      · exact .inl <| ihφ.mpr hφ
+      · exact .inr <| ihψ.mpr hψ
 
 end Satisfies
 
@@ -475,22 +470,12 @@ instance definedBy_inter
   : DefinedBy (C₁ ∩ C₂) (Γ₁ ∪ Γ₂) := ⟨by
   rintro F;
   constructor
-  · rintro ⟨hF₁, hF₂⟩;
-    rintro φ (hφ₁ | hφ₂);
-    · exact h₁.defines F |>.mp hF₁ _ hφ₁;
-    · exact h₂.defines F |>.mp hF₂ _ hφ₂;
-  · intro h;
-    constructor;
-    · apply h₁.defines F |>.mpr;
-      intro φ hφ;
-      apply h;
-      left;
-      assumption;
-    · apply h₂.defines F |>.mpr;
-      intro φ hφ;
-      apply h;
-      right;
-      assumption;
+  · rintro ⟨hF₁, hF₂⟩ φ (hφ₁ | hφ₂)
+    · exact h₁.defines F |>.mp hF₁ _ hφ₁
+    · exact h₂.defines F |>.mp hF₂ _ hφ₂
+  · intro h
+    exact ⟨h₁.defines F |>.mpr fun φ hφ => h _ (.inl hφ),
+      h₂.defines F |>.mpr fun φ hφ => h _ (.inr hφ)⟩
 ⟩
 
 instance definedByFormula_inter

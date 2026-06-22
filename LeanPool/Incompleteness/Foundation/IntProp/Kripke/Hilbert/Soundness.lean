@@ -43,11 +43,7 @@ lemma soundness_of_FrameClass_definedBy_axiomInstances [defined : C.DefinedBy H.
   | mdp => exact ValidOnFrame.mdp (by assumption) (by assumption);
   | maxm hi =>
     obtain ⟨ψ, h, ⟨s, rfl⟩⟩ := hi;
-    apply defined.defines F |>.mp hF (ψ⟦s⟧);
-    use ψ;
-    constructor
-    · assumption;
-    · use s;
+    exact defined.defines F |>.mp hF (ψ⟦s⟧) ⟨ψ, h, s, rfl⟩
 
 instance [defs : C.DefinedBy H.axioms] : C.DefinedBy H.axiomInstances := ⟨by
   intro F;
@@ -58,11 +54,8 @@ instance [defs : C.DefinedBy H.axioms] : C.DefinedBy H.axiomInstances := ⟨by
     apply defs.defines F |>.mpr;
     intro φ hφ;
     apply h;
-    use φ;
-    constructor;
-    · assumption;
-    · use .id;
-      simp;
+    refine ⟨φ, hφ, .id, ?_⟩;
+    simp;
 ⟩
 
 instance [C.DefinedBy H.axioms] :
@@ -73,10 +66,7 @@ lemma consistent_of_FrameClass_aux [nonempty : C.IsNonempty] [sound : Sound H C]
   apply not_imp_not.mpr sound.sound;
   apply ValidOnFrameClass.not_of_exists_frame;
   obtain ⟨F, hF⟩ := nonempty;
-  use F;
-  constructor;
-  · assumption;
-  · simp;
+  exact ⟨F, hF, by simp⟩
 
 lemma consistent_of_FrameClass (C : Kripke.FrameClass) [C.IsNonempty] [Sound H C] :
     Entailment.Consistent H := by

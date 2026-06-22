@@ -79,8 +79,7 @@ lemma positive_operator_iff {k} {o : Operator L k} {v : Fin k → Semiterm L ξ 
   exact ⟨fun h i hi x hx ↦ h x i hi hx, fun h x i hi hx ↦ h i hi x hx⟩
 
 @[simp] lemma positive_const (c : Const L) : (c :
-    Semiterm L ξ (n + 1)).Positive := by
-  simp [const, positive_operator_iff]
+    Semiterm L ξ (n + 1)).Positive := by simp [const, positive_operator_iff]
 
 -- f.operator ![ ... f.operator ![f.operator ![z, t 0], t 1], ... ,t (n-1)]
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -175,28 +174,22 @@ instance [L.Exp] : Operator.Exp L := ⟨⟨Semiterm.func Language.Exp.exp Semite
 instance [L.Star] : Operator.Star L := ⟨⟨Semiterm.func Language.Star.star ![]⟩⟩
 
 lemma _root_.LO.FirstOrder.Semiterm.Operator.Zero.term_eq [L.Zero] :
-    (@Zero.zero L _).term = Semiterm.func Language.Zero.zero ![] :=
-  rfl
+    (@Zero.zero L _).term = Semiterm.func Language.Zero.zero ![] := rfl
 
 lemma _root_.LO.FirstOrder.Semiterm.Operator.One.term_eq [L.One] :
-    (@One.one L _).term = Semiterm.func Language.One.one ![] :=
-  rfl
+    (@One.one L _).term = Semiterm.func Language.One.one ![] := rfl
 
 lemma _root_.LO.FirstOrder.Semiterm.Operator.Add.term_eq [L.Add] :
-    (@Add.add L _).term = Semiterm.func Language.Add.add Semiterm.bvar :=
-  rfl
+    (@Add.add L _).term = Semiterm.func Language.Add.add Semiterm.bvar := rfl
 
 lemma _root_.LO.FirstOrder.Semiterm.Operator.Mul.term_eq [L.Mul] :
-    (@Mul.mul L _).term = Semiterm.func Language.Mul.mul Semiterm.bvar :=
-  rfl
+    (@Mul.mul L _).term = Semiterm.func Language.Mul.mul Semiterm.bvar := rfl
 
 lemma _root_.LO.FirstOrder.Semiterm.Operator.Exp.term_eq [L.Exp] :
-    (@Exp.exp L _).term = Semiterm.func Language.Exp.exp Semiterm.bvar :=
-  rfl
+    (@Exp.exp L _).term = Semiterm.func Language.Exp.exp Semiterm.bvar := rfl
 
 lemma _root_.LO.FirstOrder.Semiterm.Operator.Star.term_eq [L.Star] :
-    (@Star.star L _).term = Semiterm.func Language.Star.star ![] :=
-  rfl
+    (@Star.star L _).term = Semiterm.func Language.Star.star ![] := rfl
 
 open Language Semiterm
 
@@ -324,8 +317,7 @@ section «lp_section_4»
 def _root_.LO.FirstOrder.Semiterm.Operator.val
     {M : Type w} [s : Structure L M] (o : Operator L k) (v :
     Fin k → M) :
-    M :=
-  Semiterm.val s v Empty.elim o.term
+    M := Semiterm.val s v Empty.elim o.term
 
 variable {M : Type w} {s : Structure L M}
 
@@ -337,12 +329,10 @@ lemma val_operator {k} (o : Operator L k) (v) :
   exact Empty.elim x
 
 @[simp 1100] lemma val_const (o : Const L) :
-    val s e ε o.const = o.val ![] := by
-  simp [Operator.const, val_operator, Matrix.empty_eq]
+    val s e ε o.const = o.val ![] := by simp [Operator.const, val_operator, Matrix.empty_eq]
 
 @[simp] lemma val_operator₀ (o : Const L) :
-    val s e ε (o.operator v) = o.val ![] := by
-  simp [Matrix.empty_eq]
+    val s e ε (o.operator v) = o.val ![] := by simp [Matrix.empty_eq]
 
 @[simp] lemma val_operator₁ (o : Operator L 1) :
     val s e ε (o.operator ![t]) = o.val ![t.val s e ε] := by
@@ -354,17 +344,16 @@ lemma val_operator {k} (o : Operator L k) (v) :
   | succ i => exact Fin.elim0 i
 
 @[simp] lemma val_operator₂ (o : Operator L 2) (t u) :
-    val s e ε (o.operator ![t, u]) = o.val ![t.val s e ε, u.val s e ε] :=
-  by
-    rw [val_operator]
-    congr
-    funext i
+    val s e ε (o.operator ![t, u]) = o.val ![t.val s e ε, u.val s e ε] := by
+  rw [val_operator]
+  congr
+  funext i
+  cases i using Fin.cases with
+  | zero => rfl
+  | succ i =>
     cases i using Fin.cases with
     | zero => rfl
-    | succ i =>
-      cases i using Fin.cases with
-      | zero => rfl
-      | succ i => exact Fin.elim0 i
+    | succ i => exact Fin.elim0 i
 
 lemma _root_.LO.FirstOrder.Semiterm.Operator.val_comp (o₁ : Operator L k) (o₂ :
     Fin k → Operator L m) (v :
@@ -395,8 +384,7 @@ namespace Operator
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def operator {arity : ℕ} (o : Operator L arity) (v : Fin arity → Semiterm L ξ n) :
-    Semiformula L ξ n :=
-  Rewriting.embedding o.sentence <~ v
+    Semiformula L ξ n := Rewriting.embedding o.sentence <~ v
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[coe] def const (c : Const L) : Semiformula L ξ n := c.operator ![]
@@ -468,16 +456,13 @@ instance [Language.LT L] : Operator.LT L := ⟨⟨Semiformula.rel Language.LT.lt
 instance [Operator.Eq L] [Operator.LT L] : Operator.LE L := ⟨Eq.eq.or LT.lt⟩
 
 lemma _root_.LO.FirstOrder.Semiformula.Operator.Eq.sentence_eq [L.Eq] :
-    (@Eq.eq L _).sentence = Semiformula.rel Language.Eq.eq Semiterm.bvar :=
-  rfl
+    (@Eq.eq L _).sentence = Semiformula.rel Language.Eq.eq Semiterm.bvar := rfl
 
 lemma _root_.LO.FirstOrder.Semiformula.Operator.LT.sentence_eq [L.LT] :
-    (@LT.lt L _).sentence = Semiformula.rel Language.LT.lt Semiterm.bvar :=
-  rfl
+    (@LT.lt L _).sentence = Semiformula.rel Language.LT.lt Semiterm.bvar := rfl
 
 lemma _root_.LO.FirstOrder.Semiformula.Operator.LE.sentence_eq [L.Eq] [L.LT] :
-    (@LE.le L _).sentence = Eq.eq.sentence ⋎ LT.lt.sentence :=
-  rfl
+    (@LE.le L _).sentence = Eq.eq.sentence ⋎ LT.lt.sentence := rfl
 
 lemma _root_.LO.FirstOrder.Semiformula.Operator.LE.def_of_Eq_of_LT [Operator.Eq L] [Operator.LT L] :
     (@Operator.LE.le L _) = Eq.eq.or LT.lt := rfl
@@ -532,8 +517,7 @@ end Operator
 def _root_.LO.FirstOrder.Semiformula.Operator.val
     {M : Type w} [s : Structure L M] {k} (o : Operator L k) (v :
     Fin k → M) :
-    Prop :=
-  Semiformula.Eval s v Empty.elim o.sentence
+    Prop := Semiformula.Eval s v Empty.elim o.sentence
 
 section «lp_section_5»
 
@@ -550,8 +534,7 @@ lemma eval_operator {k} {o : Operator L k} {v : Fin k → Semiterm L ξ n} :
   simp [Operator.operator, eval_substs, Operator.val]
 
 @[simp] lemma eval_operator₀ {o : Const L} {v} :
-    Eval s e ε (o.operator v) ↔ o.val (M := M) ![] := by
-  simp [eval_operator, Matrix.empty_eq]
+    Eval s e ε (o.operator v) ↔ o.val (M := M) ![] := by simp [eval_operator, Matrix.empty_eq]
 
 @[simp] lemma eval_operator₁ {o : Operator L 1} {t : Semiterm L ξ n} :
     Eval s e ε (o.operator ![t]) ↔ o.val ![t.val s e ε] := by
@@ -574,33 +557,27 @@ end «lp_section_5»
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def ballLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
-    Semiformula L ξ n :=
-  ∀[Operator.LT.lt.operator ![#0, Rew.bShift t]] φ
+    Semiformula L ξ n := ∀[Operator.LT.lt.operator ![#0, Rew.bShift t]] φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def bexLT [Operator.LT L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
-    Semiformula L ξ n :=
-  ∃[Operator.LT.lt.operator ![#0, Rew.bShift t]] φ
+    Semiformula L ξ n := ∃[Operator.LT.lt.operator ![#0, Rew.bShift t]] φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def ballLE [Operator.LE L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
-    Semiformula L ξ n :=
-  ∀[Operator.LE.le.operator ![#0, Rew.bShift t]] φ
+    Semiformula L ξ n := ∀[Operator.LE.le.operator ![#0, Rew.bShift t]] φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def bexLE [Operator.LE L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
-    Semiformula L ξ n :=
-  ∃[Operator.LE.le.operator ![#0, Rew.bShift t]] φ
+    Semiformula L ξ n := ∃[Operator.LE.le.operator ![#0, Rew.bShift t]] φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def ballMem [Operator.Mem L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
-    Semiformula L ξ n :=
-  ∀[Operator.Mem.mem.operator ![#0, Rew.bShift t]] φ
+    Semiformula L ξ n := ∀[Operator.Mem.mem.operator ![#0, Rew.bShift t]] φ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def bexMem [Operator.Mem L] (t : Semiterm L ξ n) (φ : Semiformula L ξ (n + 1)) :
-    Semiformula L ξ n :=
-  ∃[Operator.Mem.mem.operator ![#0, Rew.bShift t]] φ
+    Semiformula L ξ n := ∃[Operator.Mem.mem.operator ![#0, Rew.bShift t]] φ
 
 end Semiformula
 
@@ -769,8 +746,7 @@ variable {L}
 lemma le_iff_of_eq_of_lt
     [Operator.Eq L] [Operator.LT L] [LT M] [Structure.Eq L M] [Structure.LT L M] {a b :
     M} :
-    (@Operator.LE.le L _).val ![a, b] ↔ a = b ∨ a < b := by
-  simp [Operator.LE.def_of_Eq_of_LT]
+    (@Operator.LE.le L _).val ![a, b] ↔ a = b ∨ a < b := by simp [Operator.LE.def_of_Eq_of_LT]
 
 @[simp] lemma eq_lang [L.Eq] [Structure.Eq L M] {v : Fin 2 → M} :
     Structure.rel (L := L) Language.Eq.eq v ↔ v 0 = v 1 := by

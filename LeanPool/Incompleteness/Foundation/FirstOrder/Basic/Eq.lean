@@ -114,8 +114,7 @@ namespace Eq
 variable (L)
 
 instance models_eqAxiom' (M : Type u) [Nonempty M] [Structure L M] [Structure.Eq L M] : M ⊧ₘ* (𝐄𝐐 :
-    Theory L) :=
-  Structure.Eq.models_eqAxiom
+    Theory L) := Structure.Eq.models_eqAxiom
 
 variable {M : Type u} [Nonempty M] [Structure L M]
 
@@ -182,8 +181,7 @@ def QuotEq := Quotient (eqvSetoid L M)
 variable {L M}
 
 instance _root_.LO.FirstOrder.Structure.Eq.QuotEq.inhabited :
-    Nonempty (QuotEq L M) :=
-  Nonempty.map (⟦·⟧) inferInstance
+    Nonempty (QuotEq L M) := Nonempty.map (⟦·⟧) inferInstance
 
 lemma of_eq_of {a b : M} : (⟦a⟧ : QuotEq L M) = ⟦b⟧ ↔ eqv L a b := Quotient.eq (r := eqvSetoid L M)
 
@@ -326,8 +324,7 @@ instance {T : Theory L} [𝐄𝐐 wkn T] (sat : Semantics.Satisfiable (Struc.{v,
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def ModelOfSatEq {T : Theory L} [𝐄𝐐 wkn T] (sat : Semantics.Satisfiable (Struc.{v, u} L) T) :
-    Type _ :=
-  Structure.Eq.QuotEq L (ModelOfSat sat)
+    Type _ := Structure.Eq.QuotEq L (ModelOfSat sat)
 
 namespace ModelOfSatEq
 

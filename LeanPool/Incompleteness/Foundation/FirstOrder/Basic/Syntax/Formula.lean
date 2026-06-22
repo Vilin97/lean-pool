@@ -209,40 +209,30 @@ def complexity {n : ℕ} : Semiformula L ξ n → ℕ
 @[simp] lemma complexity_bot : complexity (⊥ : Semiformula L ξ n) = 0 := rfl
 
 @[simp] lemma complexity_rel {k} (r : L.Rel k) (v : Fin k → Semiterm L ξ n) :
-    complexity (rel r v) = 0 :=
-  rfl
+    complexity (rel r v) = 0 := rfl
 
 @[simp] lemma complexity_nrel {k} (r : L.Rel k) (v : Fin k → Semiterm L ξ n) :
-    complexity (nrel r v) = 0 :=
-  rfl
+    complexity (nrel r v) = 0 := rfl
 
 @[simp] lemma complexity_and (φ ψ : Semiformula L ξ n) :
-    complexity (φ ⋏ ψ) = max φ.complexity ψ.complexity + 1 :=
-  rfl
+    complexity (φ ⋏ ψ) = max φ.complexity ψ.complexity + 1 := rfl
 @[simp] lemma complexity_and' (φ ψ : Semiformula L ξ n) :
-    complexity (and φ ψ) = max φ.complexity ψ.complexity + 1 :=
-  rfl
+    complexity (and φ ψ) = max φ.complexity ψ.complexity + 1 := rfl
 
 @[simp] lemma complexity_or (φ ψ : Semiformula L ξ n) :
-    complexity (φ ⋎ ψ) = max φ.complexity ψ.complexity + 1 :=
-  rfl
+    complexity (φ ⋎ ψ) = max φ.complexity ψ.complexity + 1 := rfl
 @[simp] lemma complexity_or' (φ ψ : Semiformula L ξ n) :
-    complexity (or φ ψ) = max φ.complexity ψ.complexity + 1 :=
-  rfl
+    complexity (or φ ψ) = max φ.complexity ψ.complexity + 1 := rfl
 
 @[simp] lemma complexity_all (φ : Semiformula L ξ (n + 1)) :
-    complexity (∀' φ) = φ.complexity + 1 :=
-  rfl
+    complexity (∀' φ) = φ.complexity + 1 := rfl
 @[simp] lemma complexity_all' (φ : Semiformula L ξ (n + 1)) :
-    complexity (all φ) = φ.complexity + 1 :=
-  rfl
+    complexity (all φ) = φ.complexity + 1 := rfl
 
 @[simp] lemma complexity_ex (φ : Semiformula L ξ (n + 1)) :
-    complexity (∃' φ) = φ.complexity + 1 :=
-  rfl
+    complexity (∃' φ) = φ.complexity + 1 := rfl
 @[simp] lemma complexity_ex' (φ : Semiformula L ξ (n + 1)) :
-    complexity (ex φ) = φ.complexity + 1 :=
-  rfl
+    complexity (ex φ) = φ.complexity + 1 := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[elab_as_elim]
@@ -439,8 +429,7 @@ lemma open_nrel {k} (r : L.Rel k) (v : Fin k → Semiterm L ξ n) : (nrel r v).O
 
 @[simp] lemma not_open_ex {φ : Semiformula L ξ (n + 1)} : ¬(∃' φ).Open := by simp[Open]
 
-@[simp] lemma open_neg {φ : Semiformula L ξ n} : (∼φ).Open ↔ φ.Open := by
-  simp[Open]
+@[simp] lemma open_neg {φ : Semiformula L ξ n} : (∼φ).Open ↔ φ.Open := by simp[Open]
 
 @[simp] lemma open_imply {φ ψ : Semiformula L ξ n} : (φ ==> ψ).Open ↔ φ.Open ∧ ψ.Open :=
   by simp[Open]
@@ -468,39 +457,32 @@ def freeVariables : {n : ℕ} → Semiformula L ξ n → Finset ξ
   | _, ∃' φ     => freeVariables φ
 
 lemma freeVariables_rel {k} (r : L.Rel k) (v : Fin k → Semiterm L ξ n) :
-    (rel r v).freeVariables = .biUnion .univ fun i ↦ (v i).freeVariables :=
-  rfl
+    (rel r v).freeVariables = .biUnion .univ fun i ↦ (v i).freeVariables := rfl
 
 lemma freeVariables_nrel {k} (r : L.Rel k) (v : Fin k → Semiterm L ξ n) :
-    (nrel r v).freeVariables = .biUnion .univ fun i ↦ (v i).freeVariables :=
-  rfl
+    (nrel r v).freeVariables = .biUnion .univ fun i ↦ (v i).freeVariables := rfl
 
 @[simp] lemma freeVariables_verum : (⊤ : Semiformula L ξ n).freeVariables = ∅ := rfl
 
 @[simp] lemma freeVariables_falsum : (⊥ : Semiformula L ξ n).freeVariables = ∅ := rfl
 
 @[simp] lemma freeVariables_and (φ ψ : Semiformula L ξ n) :
-    (φ ⋏ ψ).freeVariables = φ.freeVariables ∪ ψ.freeVariables :=
-  rfl
+    (φ ⋏ ψ).freeVariables = φ.freeVariables ∪ ψ.freeVariables := rfl
 
 @[simp] lemma freeVariables_or (φ ψ : Semiformula L ξ n) :
-    (φ ⋎ ψ).freeVariables = φ.freeVariables ∪ ψ.freeVariables :=
-  rfl
+    (φ ⋎ ψ).freeVariables = φ.freeVariables ∪ ψ.freeVariables := rfl
 
 @[simp] lemma freeVariables_all (φ : Semiformula L ξ (n + 1)) :
-    (∀' φ).freeVariables = φ.freeVariables :=
-  rfl
+    (∀' φ).freeVariables = φ.freeVariables := rfl
 
 @[simp] lemma freeVariables_ex (φ : Semiformula L ξ (n + 1)) :
-    (∃' φ).freeVariables = φ.freeVariables :=
-  rfl
+    (∃' φ).freeVariables = φ.freeVariables := rfl
 
 @[simp] lemma freeVariables_not (φ : Semiformula L ξ n) : (∼φ).freeVariables = φ.freeVariables := by
   induction φ using rec' <;> simp [*, freeVariables_rel, freeVariables_nrel]
 
 @[simp] lemma freeVariables_imp (φ ψ : Semiformula L ξ n) :
-    (φ ==> ψ).freeVariables = φ.freeVariables ∪ ψ.freeVariables := by
-  simp [imp_eq]
+    (φ ==> ψ).freeVariables = φ.freeVariables ∪ ψ.freeVariables := by simp [imp_eq]
 
 @[simp] lemma freeVariables_univClosure (φ : Semiformula L ξ n) :
     (∀* φ).freeVariables = φ.freeVariables := by
@@ -524,24 +506,19 @@ abbrev «FVar?» (φ : Semiformula L ξ n) (x : ξ) : Prop := x ∈ φ.freeVaria
 @[simp] lemma «fvar?_falsum» (x) : ¬(⊥ : Semiformula L ξ n).FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_and» (x) (φ ψ : Semiformula L ξ n) :
-    (φ ⋏ ψ).FVar? x ↔ φ.FVar? x ∨ ψ.FVar? x := by
-  simp [FVar?]
+    (φ ⋏ ψ).FVar? x ↔ φ.FVar? x ∨ ψ.FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_or» (x) (φ ψ : Semiformula L ξ n) :
-    (φ ⋎ ψ).FVar? x ↔ φ.FVar? x ∨ ψ.FVar? x := by
-  simp [FVar?]
+    (φ ⋎ ψ).FVar? x ↔ φ.FVar? x ∨ ψ.FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_all» (x) (φ : Semiformula L ξ (n + 1)) :
-    (∀' φ).FVar? x ↔ φ.FVar? x := by
-  simp [FVar?]
+    (∀' φ).FVar? x ↔ φ.FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_ex» (x) (φ : Semiformula L ξ (n + 1)) :
-    (∃' φ).FVar? x ↔ φ.FVar? x := by
-  simp [FVar?]
+    (∃' φ).FVar? x ↔ φ.FVar? x := by simp [FVar?]
 
 @[simp] lemma «fvar?_univClosure» (x) (φ : Semiformula L ξ n) :
-    (∀* φ).FVar? x ↔ φ.FVar? x := by
-  simp [FVar?]
+    (∀* φ).FVar? x ↔ φ.FVar? x := by simp [FVar?]
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def fvSup (φ : SyntacticSemiformula L n) : ℕ := (φ.freeVariables.max).recBotCoe 0 .succ
@@ -704,8 +681,7 @@ instance : Collection (Sentence L) (ClosedTheory L) := inferInstance
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def _root_.LO.FirstOrder.Theory.lMap (Φ : L₁ →ᵥ L₂) (T : Theory L₁) :
-    Theory L₂ :=
-  Semiformula.lMap Φ '' T
+    Theory L₂ := Semiformula.lMap Φ '' T
 
 namespace Theory
 

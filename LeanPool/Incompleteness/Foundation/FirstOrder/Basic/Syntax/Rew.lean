@@ -81,12 +81,10 @@ instance : Rewriting L ξ (Semiformula L ξ) ζ (Semiformula L ζ) where
   app_ex (_ _) := rfl
 
 lemma rew_rel (ω : Rew L ξ₁ n₁ ξ₂ n₂) {k} (r : L.Rel k) (v : Fin k → Semiterm L ξ₁ n₁) :
-    ω ▹ rel r v = rel r fun i ↦ ω (v i) :=
-  rfl
+    ω ▹ rel r v = rel r fun i ↦ ω (v i) := rfl
 
 lemma rew_nrel (ω : Rew L ξ₁ n₁ ξ₂ n₂) {k} (r : L.Rel k) (v : Fin k → Semiterm L ξ₁ n₁) :
-    ω ▹ nrel r v = nrel r fun i ↦ ω (v i) :=
-  rfl
+    ω ▹ nrel r v = nrel r fun i ↦ ω (v i) := rfl
 
 lemma rew_rel' (ω : Rew L ξ₁ n₁ ξ₂ n₂) {k} {r : L.Rel k} {v : Fin k → Semiterm L ξ₁ n₁} :
     ω ▹ rel r v = rel r (ω ∘ v) := rfl
@@ -320,8 +318,7 @@ end «lp_section_1»
 instance : Coe (Semisentence L n) (SyntacticSemiformula L n) := ⟨Rewriting.embedding (ξ := ℕ)⟩
 
 @[simp] lemma coe_inj (σ π : Semisentence L n) : (σ :
-    SyntacticSemiformula L n) = π ↔ σ = π :=
-  Rewriting.embedding_injective.eq_iff
+    SyntacticSemiformula L n) = π ↔ σ = π := Rewriting.embedding_injective.eq_iff
 
 lemma coe_substitute_eq_substitute_coe (φ : Semisentence L k) (v : Fin k → Semiterm L Empty n) :
     (↑(φ <~ v) : SyntacticSemiformula L n) =
@@ -477,8 +474,7 @@ lemma rew_eq_self_of [DecidableEq ξ] {ω : Rew L ξ n ξ n} {φ : Semiformula L
   · intro x hx; simp [hf x hx]
 
 @[simp] lemma ex_ne_subst (φ : Semiformula L ξ 1) (t) :
-    φ/[t] ≠ ∃' φ :=
-  ne_of_ne_complexity (by simp)
+    φ/[t] ≠ ∃' φ := ne_of_ne_complexity (by simp)
 
 section «lp_section_2»
 
@@ -568,21 +564,17 @@ def toEmpty [DecidableEq ξ] {n : ℕ} : (φ :
 
 @[simp] lemma toEmpty_and [DecidableEq ξ] (φ ψ : Semiformula L ξ n) (h) :
     (φ ⋏ ψ).toEmpty h = φ.toEmpty (by simp [by simpa [Finset.union_eq_empty] using h]) ⋏ ψ.toEmpty
-      (by simp [by simpa [Finset.union_eq_empty] using h]) :=
-      rfl
+      (by simp [by simpa [Finset.union_eq_empty] using h]) := rfl
 
 @[simp] lemma toEmpty_or [DecidableEq ξ] (φ ψ : Semiformula L ξ n) (h) :
     (φ ⋎ ψ).toEmpty h = φ.toEmpty (by simp [by simpa [Finset.union_eq_empty] using h]) ⋎ ψ.toEmpty
-      (by simp [by simpa [Finset.union_eq_empty] using h]) :=
-      rfl
+      (by simp [by simpa [Finset.union_eq_empty] using h]) := rfl
 
 @[simp] lemma toEmpty_all [DecidableEq ξ] (φ : Semiformula L ξ (n + 1)) (h) :
-    (∀' φ).toEmpty h = ∀' (φ.toEmpty (by simpa using h)) :=
-  rfl
+    (∀' φ).toEmpty h = ∀' (φ.toEmpty (by simpa using h)) := rfl
 
 @[simp] lemma toEmpty_ex [DecidableEq ξ] (φ : Semiformula L ξ (n + 1)) (h) :
-    (∃' φ).toEmpty h = ∃' (φ.toEmpty (by simpa using h)) :=
-  rfl
+    (∃' φ).toEmpty h = ∃' (φ.toEmpty (by simpa using h)) := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def close₀ (φ : SyntacticFormula L) : Sentence L := (∀∀φ).toEmpty (by simp)
@@ -616,8 +608,7 @@ lemma lMap_substs (w : Fin k → Semiterm L₁ ξ n) (φ : Semiformula L₁ ξ k
     lMap Φ (φ <~ w) = (lMap Φ φ)<~(Semiterm.lMap Φ ∘ w) := lMap_bind _ _ _
 
 lemma lMap_shift (φ : SyntacticSemiformula L₁ n) :
-    lMap Φ (@Rew.shift L₁ n ▹ φ) = @Rew.shift L₂ n ▹ lMap Φ φ :=
-  lMap_bind _ _ _
+    lMap Φ (@Rew.shift L₁ n ▹ φ) = @Rew.shift L₂ n ▹ lMap Φ φ := lMap_bind _ _ _
 
 lemma lMap_free (φ : SyntacticSemiformula L₁ (n + 1)) :
     lMap Φ (@Rew.free L₁ n ▹ φ) = @Rew.free L₂ n ▹ lMap Φ φ := by

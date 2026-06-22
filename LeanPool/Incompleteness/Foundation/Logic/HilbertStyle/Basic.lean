@@ -481,9 +481,6 @@ def imply₁₁ [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (φ ψ χ : F) :
     𝓢 ⊢! φ ==> ψ ==> χ ==> φ :=
   ⟨imply₁₁ φ ψ χ⟩
 
--- lemma generalConjFinset! [DecidableEq F] {Γ : Finset F} (h : φ ∈ Γ) : 𝓢 ⊢! ⋀Γ ==>
---     φ := by simp [Finset.conj, (generalConj! (Finset.mem_toList.mpr h))];
-
 /-- Imported declaration from the Incompleteness formalization. -/
 def implyAnd [HasAxiomAndInst 𝓢] [HasAxiomImply₁ 𝓢] [HasAxiomImply₂ 𝓢] (bq : 𝓢 ⊢ φ ==> ψ) (br :
     𝓢 ⊢ φ ==> χ) :

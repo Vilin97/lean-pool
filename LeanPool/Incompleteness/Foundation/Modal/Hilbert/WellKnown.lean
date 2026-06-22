@@ -34,11 +34,7 @@ class HasT (H : Hilbert α) where
 instance [hT : H.HasT] : Entailment.HasAxiomT H where
   T φ := by
     apply maxm;
-    use Axioms.T (.atom hT.p);
-    constructor;
-    · exact hT.mem_T;
-    · use (fun b => if hT.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.T (.atom hT.p), hT.mem_T, (fun b => if hT.p = b then φ else (.atom b)), by simp⟩;
 
 /-- Imported declaration from the Incompleteness formalization. -/
 class HasB (H : Hilbert α) where
@@ -49,11 +45,7 @@ class HasB (H : Hilbert α) where
 instance [hB : H.HasB] : Entailment.HasAxiomB H where
   B φ := by
     apply maxm;
-    use Axioms.B (.atom hB.p);
-    constructor;
-    · exact hB.mem_B;
-    · use (fun b => if hB.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.B (.atom hB.p), hB.mem_B, (fun b => if hB.p = b then φ else (.atom b)), by simp⟩;
 
 /-- Imported declaration from the Incompleteness formalization. -/
 class HasD (H : Hilbert α) where
@@ -64,11 +56,7 @@ class HasD (H : Hilbert α) where
 instance [hD : H.HasD] : Entailment.HasAxiomD H where
   D φ := by
     apply maxm;
-    use Axioms.D (.atom hD.p);
-    constructor;
-    · exact hD.mem_D;
-    · use (fun b => if hD.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.D (.atom hD.p), hD.mem_D, (fun b => if hD.p = b then φ else (.atom b)), by simp⟩;
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -80,11 +68,8 @@ class HasFour (H : Hilbert α) where
 instance [hFour : H.HasFour] : Entailment.HasAxiomFour H where
   Four φ := by
     apply maxm;
-    use Axioms.Four (.atom hFour.p);
-    constructor;
-    · exact hFour.mem_Four;
-    · use (fun b => if hFour.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.Four (.atom hFour.p), hFour.mem_Four,
+      (fun b => if hFour.p = b then φ else (.atom b)), by simp⟩;
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -96,11 +81,8 @@ class HasFive (H : Hilbert α) where
 instance [hFive : H.HasFive] : Entailment.HasAxiomFive H where
   Five φ := by
     apply maxm;
-    use Axioms.Five (.atom hFive.p);
-    constructor;
-    · exact hFive.mem_Five;
-    · use (fun b => if hFive.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.Five (.atom hFive.p), hFive.mem_Five,
+      (fun b => if hFive.p = b then φ else (.atom b)), by simp⟩;
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -112,11 +94,8 @@ class HasDot2 (H : Hilbert α) where
 instance [hDot2 : H.HasDot2] : Entailment.HasAxiomDot2 H where
   Dot2 φ := by
     apply maxm;
-    use Axioms.Dot2 (.atom hDot2.p);
-    constructor;
-    · exact hDot2.mem_Dot2;
-    · use (fun b => if hDot2.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.Dot2 (.atom hDot2.p), hDot2.mem_Dot2,
+      (fun b => if hDot2.p = b then φ else (.atom b)), by simp⟩;
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -131,11 +110,9 @@ class HasDot3 (H : Hilbert α) where
 instance [hDot3 : H.HasDot3] : Entailment.HasAxiomDot3 H where
   Dot3 φ ψ := by
     apply maxm;
-    use Axioms.Dot3 (.atom hDot3.p) (.atom hDot3.q);
-    constructor;
-    · exact hDot3.mem_Dot3;
-    · use (fun b => if hDot3.p = b then φ else if hDot3.q = b then ψ else (.atom b));
-      simp [hDot3.ne_pq];
+    exact ⟨Axioms.Dot3 (.atom hDot3.p) (.atom hDot3.q), hDot3.mem_Dot3,
+      (fun b => if hDot3.p = b then φ else if hDot3.q = b then ψ else (.atom b)),
+      by simp [hDot3.ne_pq]⟩;
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -147,11 +124,7 @@ class HasL (H : Hilbert α) where
 instance [hL : H.HasL] : Entailment.HasAxiomL H where
   L φ := by
     apply maxm;
-    use Axioms.L (.atom hL.p);
-    constructor;
-    · exact hL.mem_L;
-    · use (fun b => if hL.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.L (.atom hL.p), hL.mem_L, (fun b => if hL.p = b then φ else (.atom b)), by simp⟩;
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -163,11 +136,8 @@ class HasGrz (H : Hilbert α) where
 instance [hGrz : H.HasGrz] : Entailment.HasAxiomGrz H where
   Grz φ := by
     apply maxm;
-    use Axioms.Grz (.atom hGrz.p);
-    constructor;
-    · exact hGrz.mem_Grz;
-    · use (fun b => if hGrz.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.Grz (.atom hGrz.p), hGrz.mem_Grz,
+      (fun b => if hGrz.p = b then φ else (.atom b)), by simp⟩;
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -179,11 +149,8 @@ class HasTc (H : Hilbert α) where
 instance [hTc : H.HasTc] : Entailment.HasAxiomTc H where
   Tc φ := by
     apply maxm;
-    use Axioms.Tc (.atom hTc.p);
-    constructor;
-    · exact hTc.mem_Tc;
-    · use (fun b => if hTc.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.Tc (.atom hTc.p), hTc.mem_Tc,
+      (fun b => if hTc.p = b then φ else (.atom b)), by simp⟩;
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -195,11 +162,8 @@ class HasVer (H : Hilbert α) where
 instance [hVer : H.HasVer] : Entailment.HasAxiomVer H where
   Ver φ := by
     apply maxm;
-    use Axioms.Ver (.atom hVer.p);
-    constructor;
-    · exact hVer.mem_Ver;
-    · use (fun b => if hVer.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.Ver (.atom hVer.p), hVer.mem_Ver,
+      (fun b => if hVer.p = b then φ else (.atom b)), by simp⟩;
 
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -211,11 +175,7 @@ class HasH (H : Hilbert α) where
 instance [hH : H.HasH] : Entailment.HasAxiomH H where
   H φ := by
     apply maxm;
-    use Axioms.H (.atom hH.p);
-    constructor;
-    · exact hH.mem_H;
-    · use (fun b => if hH.p = b then φ else (.atom b));
-      simp;
+    exact ⟨Axioms.H (.atom hH.p), hH.mem_H, (fun b => if hH.p = b then φ else (.atom b)), by simp⟩;
 
 end «lp_section_1»
 

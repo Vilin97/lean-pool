@@ -96,8 +96,7 @@ lemma models_of_subtheory {T U : Theory L} [U wkn T] {M : Type*} [Structure L M]
     exact sound! this hM ⟩
 
 lemma consistent_of_satidfiable (h : Semantics.Satisfiable (Struc.{v, u} L) T) :
-    Entailment.Consistent T :=
-  Sound.consistent_of_satisfiable h
+    Entailment.Consistent T := Sound.consistent_of_satisfiable h
 
 lemma unprovable_of_countermodel {M : Type*} [s : Structure L M] [Nonempty M] [hM : M ⊧ₘ* T]
     (f : ℕ → M) (φ : SyntacticFormula L) (c : ¬Semiformula.Evalfm M f φ) : T ⊬ φ := by

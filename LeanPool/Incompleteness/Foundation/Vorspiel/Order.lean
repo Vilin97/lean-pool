@@ -48,13 +48,6 @@ lemma isInfiniteDescendingChain_of_non_acc (z : α) (hz : ¬Acc r z) :
     | succ i ih =>
       have : ∃ y, y ≺ (descendingChain r z i) ∧ ¬Acc r y := (not_acc_iff r).mp ih.2
       have hs := Classical.epsilon_spec this
-      change
-        (i.succ ≠ 0 →
-          (@Classical.epsilon α ⟨z⟩
-              (fun y => y ≺ descendingChain r z i ∧ ¬Acc r y)) ≺ descendingChain r z i) ∧
-          ¬Acc r
-            (@Classical.epsilon α ⟨z⟩
-              (fun y => y ≺ descendingChain r z i ∧ ¬Acc r y))
       exact ⟨fun _ => hs.1, hs.2⟩
   intro i; simpa using (this (i + 1)).1
 

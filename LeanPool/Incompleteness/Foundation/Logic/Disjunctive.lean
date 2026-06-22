@@ -21,10 +21,8 @@ class Disjunctive (𝓢 : S) : Prop where
 
 alias disjunctive := Disjunctive.disjunctive
 
-lemma iff_disjunctive {𝓢 : S} : (Disjunctive 𝓢) ↔ ∀ {φ ψ}, 𝓢 ⊢! φ ⋎ ψ → 𝓢 ⊢! φ ∨ 𝓢 ⊢! ψ := by
-  constructor;
-  · apply Disjunctive.disjunctive;
-  · exact fun d ↦ ⟨d⟩;
+lemma iff_disjunctive {𝓢 : S} : (Disjunctive 𝓢) ↔ ∀ {φ ψ}, 𝓢 ⊢! φ ⋎ ψ → 𝓢 ⊢! φ ∨ 𝓢 ⊢! ψ :=
+  ⟨fun h ↦ h.disjunctive, fun d ↦ ⟨d⟩⟩
 
 lemma iff_complete_disjunctive {𝓢 : S} [Entailment.Classical 𝓢] :
     (Entailment.Complete 𝓢) ↔ (Disjunctive 𝓢) := by

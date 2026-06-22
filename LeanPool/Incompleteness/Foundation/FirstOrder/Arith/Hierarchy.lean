@@ -203,8 +203,7 @@ lemma neg {φ : Semiformula L ξ n} : Hierarchy Γ s φ → Hierarchy Γ.alt s (
   ⟨fun h => by simpa using neg h, fun h => by simpa using neg h⟩
 
 @[simp] lemma imp_iff {φ ψ : Semiformula L ξ n} :
-    Hierarchy Γ s (φ ==> ψ) ↔ (Hierarchy Γ.alt s φ ∧ Hierarchy Γ s ψ) := by
-  simp[Semiformula.imp_eq]
+    Hierarchy Γ s (φ ==> ψ) ↔ (Hierarchy Γ.alt s φ ∧ Hierarchy Γ s ψ) := by simp[Semiformula.imp_eq]
 
 @[simp] lemma ball_iff {Γ s n} {φ : Semiformula L ξ (n + 1)} {t : Semiterm L ξ (n + 1)} (ht :
     t.Positive) :
@@ -453,8 +452,7 @@ variable {L : Language} [L.LT] [Structure L ℕ]
 abbrev Sigma1Sound (T : Theory L) := SoundOn T (Hierarchy Sg 1)
 
 lemma consistent_of_sigma1Sound (T : Theory L) [Sigma1Sound T] :
-    Entailment.Consistent T := consistent_of_sound T (Hierarchy Sg 1) (by
-  exact Hierarchy.falsum _ _ _)
+    Entailment.Consistent T := consistent_of_sound T (Hierarchy Sg 1) (Hierarchy.falsum _ _ _)
 
 end «lp_section_2»
 

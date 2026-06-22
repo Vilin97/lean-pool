@@ -34,10 +34,7 @@ lemma soundness_of_FrameClass_definedBy_axiomInstances [defined : C.DefinedBy H.
   | maxm h =>
     obtain ⟨ψ, h, ⟨s, rfl⟩⟩ := h;
     apply defined.defines F |>.mp hF (ψ⟦s⟧);
-    use ψ;
-    constructor;
-    · assumption;
-    · use s;
+    exact ⟨ψ, by assumption, s, rfl⟩;
   | mdp ihpq ihp => exact ValidOnFrame.mdp ihpq ihp;
   | nec ih => exact ValidOnFrame.nec ih;
   | imply₁ => exact ValidOnFrame.imply₁;
@@ -53,11 +50,7 @@ instance [defs : C.DefinedBy H.axioms] : C.DefinedBy H.axiomInstances := ⟨by
     apply defs.defines F |>.mpr;
     intro φ hφ;
     apply h;
-    use φ;
-    constructor;
-    · assumption;
-    · use .id;
-      simp;
+    exact ⟨φ, by assumption, .id, by simp⟩;
 ⟩
 
 instance [C.DefinedBy H.axioms] :
@@ -68,10 +61,7 @@ lemma consistent_of_FrameClass_aux [nonempty : C.IsNonempty] [sound : Sound H C]
   apply not_imp_not.mpr sound.sound;
   apply ValidOnFrameClass.not_of_exists_frame;
   obtain ⟨F, hF⟩ := nonempty;
-  use F;
-  constructor;
-  · assumption;
-  · simp;
+  exact ⟨F, hF, by simp⟩;
 
 lemma consistent_of_FrameClass (C : Kripke.FrameClass) [C.IsNonempty] [Sound H C] :
     Entailment.Consistent H := by
@@ -93,10 +83,7 @@ lemma soundness_of_FiniteFrameClass_definedBy_axiomInstances [defined :
   | maxm h =>
     obtain ⟨ψ, h, ⟨s, rfl⟩⟩ := h;
     apply defined.defines F |>.mp hF (ψ⟦s⟧);
-    use ψ;
-    constructor;
-    · assumption;
-    · use s;
+    exact ⟨ψ, by assumption, s, rfl⟩;
   | mdp ihpq ihp => exact ValidOnFrame.mdp ihpq ihp;
   | nec ih => exact ValidOnFrame.nec ih;
   | imply₁ => exact ValidOnFrame.imply₁;
@@ -112,11 +99,7 @@ instance [defs : C.DefinedBy H.axioms] : C.DefinedBy H.axiomInstances := ⟨by
     apply defs.defines F |>.mpr;
     intro φ hφ;
     apply h;
-    use φ;
-    constructor;
-    · assumption;
-    · use .id;
-      simp;
+    exact ⟨φ, by assumption, .id, by simp⟩;
 ⟩
 
 instance [C.DefinedBy H.axioms] :
@@ -127,10 +110,7 @@ lemma consistent_of_FiniteFrameClass_aux [nonempty : C.IsNonempty] [sound : Soun
   apply not_imp_not.mpr sound.sound;
   apply ValidOnFrameClass.not_of_exists_frame;
   obtain ⟨F, hF⟩ := nonempty;
-  use F.toFrame;
-  constructor;
-  · use F;
-  · simp;
+  exact ⟨F.toFrame, ⟨F, hF, rfl⟩, by simp⟩;
 
 lemma consistent_of_FiniteFrameClass (C : Kripke.FiniteFrameClass) [C.IsNonempty] [Sound H C] :
     Entailment.Consistent H := by

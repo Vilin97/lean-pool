@@ -104,17 +104,7 @@ lemma intro_triunion_consistent
   rw [←iff_theory_consistent_formulae_consistent];
   convert FormulaSet.intro_triunion_consistent h;
   ext;
-  constructor;
-  · simp only [Finset.coe_union, Set.mem_union, Finset.mem_coe];
-    rintro ((hp₁ | hp₂) | hp₃);
-    · left; left; assumption;
-    · left; right; assumption;
-    · right; assumption;
-  · simp only [Set.mem_union, Finset.coe_union, Finset.mem_coe];
-    rintro ((hp₁ | hp₂) | hp₃);
-    · left; left; assumption;
-    · left; right; assumption;
-    · right; assumption;
+  simp only [Finset.coe_union, Set.mem_union, Finset.mem_coe, or_assoc]
 
 end «lp_section_1»
 
@@ -194,10 +184,7 @@ lemma subset {l : List (Formula α)} {φ : Formula α} (h : φ ∈ Φ[l])
     simp_all;
   | cons ψ qs ih =>
     simp_all only [enum, next, List.mem_cons, exists_eq_or_imp];
-    split at h;
-    · rcases Finset.mem_insert.mp h with (rfl | h)
-      · tauto;
-      · rcases ih h <;> tauto;
+    split at h <;>
     · rcases Finset.mem_insert.mp h with (rfl | h)
       · tauto;
       · rcases ih h <;> tauto;

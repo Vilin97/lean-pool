@@ -160,12 +160,10 @@ instance sigma : Structure (Language.sigma L) M where
   rel  := fun _ ⟨_, r⟩ v => rel r v
 
 @[simp] lemma func_sigma {k} (f : (L i).Func k) (v : Fin k → M) :
-    (sigma L M).func ⟨i, f⟩ v = func f v :=
-  rfl
+    (sigma L M).func ⟨i, f⟩ v = func f v := rfl
 
 @[simp] lemma rel_sigma {k} (r : (L i).Rel k) (v : Fin k → M) :
-    (sigma L M).rel ⟨i, r⟩ v ↔ rel r v :=
-  iff_of_eq rfl
+    (sigma L M).rel ⟨i, r⟩ v ↔ rel r v := iff_of_eq rfl
 
 @[simp] lemma val_lMap_sigma {n} (t : Semiterm (L i) μ n) (e : Fin n → M) (ε : μ → M) :
     Semiterm.val (sigma L M) e ε (t.lMap (Language.Hom.sigma L i)) = t.val (str i) e ε := by

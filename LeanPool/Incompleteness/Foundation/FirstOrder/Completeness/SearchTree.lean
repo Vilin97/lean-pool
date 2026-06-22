@@ -122,8 +122,7 @@ variable (wf : WellFounded (SearchTree.Lt T Γ))
 /-- Imported declaration from the Incompleteness formalization. -/
 noncomputable def _root_.LO.FirstOrder.Completeness.SearchTree.recursion {C :
     SearchTree T Γ → Sort v}
-  (τ) (h : ∀ τ₁, (∀ τ₂, SearchTree.Lt T Γ τ₂ τ₁ → C τ₂) → C τ₁) : C τ :=
-  WellFounded.fix wf h τ
+  (τ) (h : ∀ τ₁, (∀ τ₂, SearchTree.Lt T Γ τ₂ τ₁ → C τ₂) → C τ₁) : C τ := WellFounded.fix wf h τ
 
 /-- Imported declaration from the Incompleteness formalization. -/
 noncomputable def syntacticMainLemma (φ : SearchTree T Γ) : T ⟹ φ.seq := by
@@ -185,8 +184,7 @@ section «lp_section_2»
 
 /-- Imported declaration from the Incompleteness formalization. -/
 noncomputable def chainU (T : Theory L) (Γ : Sequent L) :
-    ℕ → SearchTree T Γ :=
-  descendingChain (SearchTree.Lt T Γ) ⊤
+    ℕ → SearchTree T Γ := descendingChain (SearchTree.Lt T Γ) ⊤
 
 /-- Imported declaration from the Incompleteness formalization. -/
 noncomputable def chain (T : Theory L) (Γ : Sequent L) (s : ℕ) : Sequent L := (chainU T Γ s).seq

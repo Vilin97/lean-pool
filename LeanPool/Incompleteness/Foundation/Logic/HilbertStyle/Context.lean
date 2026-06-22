@@ -290,9 +290,7 @@ lemma mem_def {φ : F} {Γ : Context F 𝓢} : φ ∈ Γ ↔ φ ∈ Γ.ctx := if
 
 @[simp] lemma mem_coe_iff {φ : F} {Γ : Set F} : φ ∈ (Γ : Context F 𝓢) ↔ φ ∈ Γ := iff_of_eq rfl
 
-@[simp 1100] lemma not_mem_empty (φ : F) : ¬φ ∈ (∅ : Context F 𝓢) := by
-  intro h
-  exact h
+@[simp 1100] lemma not_mem_empty (φ : F) : ¬φ ∈ (∅ : Context F 𝓢) := fun h ↦ h
 
 instance : Collection F (Context F 𝓢) where
   subset_iff := by rintro ⟨s⟩ ⟨u⟩; simp [Set.subset_def]
@@ -411,10 +409,10 @@ lemma «by_axm!» (h : φ ∈ Γ) : Γ *⊢[𝓢]! φ := by
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def emptyPrf {φ : F} : ∅ *⊢[𝓢] φ → 𝓢 ⊢ φ := by
-  rintro ⟨Γ, hΓ, h⟩;
-  have := List.eq_nil_iff_forall_not_mem.mpr hΓ;
-  subst this;
-  exact FiniteContext.emptyPrf h;
+  rintro ⟨Γ, hΓ, h⟩
+  have := List.eq_nil_iff_forall_not_mem.mpr hΓ
+  subst this
+  exact FiniteContext.emptyPrf h
 
 lemma «emptyPrf!» {φ : F} : ∅ *⊢[𝓢]! φ → 𝓢 ⊢! φ := fun h ↦ ⟨emptyPrf h.some⟩
 

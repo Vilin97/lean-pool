@@ -439,14 +439,7 @@ variable (ω : Rew L ξ₁ n₁ ξ₂ n₂)
 @[simp] lemma q_eq_zero_iff : ω.q t = #0 ↔ t = #0 := by
   cases t
   · rename_i i
-    cases i using Fin.cases
-    · simp only [q_bvar_zero]
-    · simp only [q_bvar_succ, bShift_ne_zero]
-      constructor
-      · intro h
-        cases h
-      · intro h
-        cases h
+    cases i using Fin.cases <;> simp
   · simp only [q_fvar, bShift_ne_zero, reduceCtorEq]
   · simp only [Rew.func, reduceCtorEq]
 
@@ -457,11 +450,7 @@ variable (ω : Rew L ξ₁ n₁ ξ₂ n₂)
     · simp only [q_bvar_zero, Semiterm.Positive.bvar]
       rfl
     · simp only [q_bvar_succ, bShift_positive, Semiterm.Positive.bvar]
-      constructor
-      · intro _
-        exact Nat.succ_pos _
-      · intro _
-        trivial
+      exact ⟨fun _ ↦ Nat.succ_pos _, fun _ ↦ trivial⟩
   · simp only [q_fvar, bShift_positive, Semiterm.Positive.fvar]
   · rename_i v ih
     simp only [Rew.func, Semiterm.Positive.func]
@@ -737,8 +726,6 @@ variable (ω : SyntacticRew L n₁ n₂)
   ext x
   · cases x using Fin.cases <;> simp
   · cases x <;> simp
-
---@[simp] lemma qpow_fix (k : ℕ) : (fix (L := L) (n := n)).qpow k = fix := by
 
 end «lp_section_18»
 
