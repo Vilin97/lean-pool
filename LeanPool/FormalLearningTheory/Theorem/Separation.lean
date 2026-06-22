@@ -179,55 +179,7 @@ private def goodBlockEvent
           L.learn (fun i => (blockExtract k n ω j i, c (blockExtract k n ω j i))) x ≠ c x }
         ≤ ENNReal.ofReal (rate n) }
 
-/-- T2: goodBlockEvent is measurable for each block index j. -/
-private lemma goodBlockEvent_measurable
-    {X : Type u} [MeasurableSpace X]
-    (L : BatchLearner X Bool) [MeasurableBatchLearner X L]
-    (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
-    (c : Concept X Bool) (hc_meas : Measurable c)
-    (rate : ℕ → ℝ) (k n : ℕ) :
-    ∀ j : Fin k, MeasurableSet (goodBlockEvent L D c rate k n j) := by
-  have hL_meas : LearnEvalMeasurable L := MeasurableBatchLearner.eval_measurable
-  intro j
-  -- Prove measurability of the "good training set" event (inline T0 argument)
-  have h_label : Measurable (fun p : (Fin n → X) × X =>
-      fun i : Fin n => (p.1 i, c (p.1 i))) :=
-    measurable_pi_lambda _ (fun i =>
-      ((measurable_pi_apply i).comp measurable_fst).prodMk
-        (hc_meas.comp ((measurable_pi_apply i).comp measurable_fst)))
-  have h_joint : Measurable (fun p : (Fin n → X) × X =>
-      L.learn (fun i => (p.1 i, c (p.1 i))) p.2) :=
-    (hL_meas n).comp (h_label.prodMk measurable_snd)
-  have h_c_snd : Measurable (fun p : (Fin n → X) × X => c p.2) :=
-    hc_meas.comp measurable_snd
-  have h_disagree : MeasurableSet {p : (Fin n → X) × X |
-      L.learn (fun i => (p.1 i, c (p.1 i))) p.2 ≠ c p.2} :=
-    (measurableSet_eq_fun h_joint h_c_snd).compl
-  have h_sec_eq : ∀ xs : Fin n → X, Prod.mk xs ⁻¹' {p : (Fin n → X) × X |
-      L.learn (fun i => (p.1 i, c (p.1 i))) p.2 ≠ c p.2} =
-      {x | L.learn (fun i => (xs i, c (xs i))) x ≠ c x} := by
-    intro xs; ext x; rfl
-  have h_meas_fn : Measurable (fun xs : Fin n → X =>
-      D { x | L.learn (fun i => (xs i, c (xs i))) x ≠ c x }) := by
-    have := measurable_measure_prodMk_left (ν := D) h_disagree
-    simp only [h_sec_eq] at this
-    exact this
-  have hA : MeasurableSet
-      { xs : Fin n → X |
-          D { x : X | L.learn (fun i => (xs i, c (xs i))) x ≠ c x }
-            ≤ ENNReal.ofReal (rate n) } :=
-    h_meas_fn measurableSet_Iic
-  -- goodBlockEvent is the preimage of A under blockExtract
-  have hpre : goodBlockEvent L D c rate k n j =
-      (fun ω : Fin (k * n) → X => blockExtract k n ω j) ⁻¹'
-        { xs : Fin n → X |
-            D { x : X | L.learn (fun i => (xs i, c (xs i))) x ≠ c x }
-              ≤ ENNReal.ofReal (rate n) } := by
-    ext ω; rfl
-  rw [hpre]
-  exact measurableSet_preimage (block_extract_measurable k n j) hA
-
-/-- T0: Shared helper — measurability of the "good training set" event for a single block. -/
+/-- Shared helper — measurability of the "good training set" event for a single block. -/
 private lemma measurableSet_goodBlock_A
     {X : Type u} [MeasurableSpace X]
     (L : BatchLearner X Bool) [MeasurableBatchLearner X L]
@@ -239,24 +191,19 @@ private lemma measurableSet_goodBlock_A
           D { x : X | L.learn (fun i => (xs i, c (xs i))) x ≠ c x }
             ≤ ENNReal.ofReal (rate n) } := by
   have hL_meas : LearnEvalMeasurable L := MeasurableBatchLearner.eval_measurable
-  -- Step 1: The labeling map (xs, x) ↦ (fun i => (xs i, c (xs i))) is measurable
   have h_label : Measurable (fun p : (Fin n → X) × X =>
       fun i : Fin n => (p.1 i, c (p.1 i))) :=
     measurable_pi_lambda _ (fun i =>
       ((measurable_pi_apply i).comp measurable_fst).prodMk
         (hc_meas.comp ((measurable_pi_apply i).comp measurable_fst)))
-  -- Joint measurability: (xs, x) ↦ L.learn(labeled(xs)) x
   have h_joint : Measurable (fun p : (Fin n → X) × X =>
       L.learn (fun i => (p.1 i, c (p.1 i))) p.2) :=
     (hL_meas n).comp (h_label.prodMk measurable_snd)
-  -- c ∘ snd: (xs, x) ↦ c x
   have h_c_snd : Measurable (fun p : (Fin n → X) × X => c p.2) :=
     hc_meas.comp measurable_snd
-  -- Disagreement set is measurable in the product space
   have h_disagree : MeasurableSet {p : (Fin n → X) × X |
       L.learn (fun i => (p.1 i, c (p.1 i))) p.2 ≠ c p.2} :=
     (measurableSet_eq_fun h_joint h_c_snd).compl
-  -- Step 2: Section-measure function xs ↦ D{x | learn(xs)(x) ≠ c(x)} is measurable
   have h_sec_eq : ∀ xs : Fin n → X, Prod.mk xs ⁻¹' {p : (Fin n → X) × X |
       L.learn (fun i => (p.1 i, c (p.1 i))) p.2 ≠ c p.2} =
       {x | L.learn (fun i => (xs i, c (xs i))) x ≠ c x} := by
@@ -266,8 +213,26 @@ private lemma measurableSet_goodBlock_A
     have := measurable_measure_prodMk_left (ν := D) h_disagree
     simp only [h_sec_eq] at this
     exact this
-  -- Step 3: Preimage of Iic under measurable function
   exact h_meas_fn measurableSet_Iic
+
+/-- goodBlockEvent is measurable for each block index j. -/
+private lemma goodBlockEvent_measurable
+    {X : Type u} [MeasurableSpace X]
+    (L : BatchLearner X Bool) [MeasurableBatchLearner X L]
+    (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
+    (c : Concept X Bool) (hc_meas : Measurable c)
+    (rate : ℕ → ℝ) (k n : ℕ) :
+    ∀ j : Fin k, MeasurableSet (goodBlockEvent L D c rate k n j) := by
+  intro j
+  have hpre : goodBlockEvent L D c rate k n j =
+      (fun ω : Fin (k * n) → X => blockExtract k n ω j) ⁻¹'
+        { xs : Fin n → X |
+            D { x : X | L.learn (fun i => (xs i, c (xs i))) x ≠ c x }
+              ≤ ENNReal.ofReal (rate n) } := by
+    ext ω; rfl
+  rw [hpre]
+  exact measurableSet_preimage (block_extract_measurable k n j)
+    (measurableSet_goodBlock_A L D c hc_meas rate n)
 
 /-- T3: Block extraction pushforward of product measure equals product measure. -/
 private lemma map_block_extract_eq_pi
@@ -871,43 +836,6 @@ private theorem boost_two_thirds_to_pac (X : Type u) [MeasurableSpace X]
     else 0, ?_⟩
   -- Step 3: Prove the PAC bound.
   intro ε δ hε hδ D hD c hcC
-  -- The proof goal is:
-  --   Measure.pi (fun _ : Fin m => D) { xs | D { x | L'.learn ... x ≠ c x } ≤ ofReal ε }
-  --     ≥ ofReal (1 - δ)
-  -- where m = mf ε δ = (n + 1) * n.
-  --
-  -- PROOF STRUCTURE:
-  -- 1. PARAMETER EXTRACTION:
-  --    kmin = ⌈9/δ⌉ + 2, ε' = ε/kmin, m₀ from hrate(ε'), n = max m₀ (kmin-1).
-  --    k = n+1 ≥ kmin ≥ ⌈9/δ⌉+2, so 9/δ ≤ k.
-  --    rate(n) < ε' = ε/kmin since n ≥ m₀. Block size = n.
-  --
-  -- 2. LEARNER UNFOLDING:
-  --    At sample size m = (n+1)*n, Nat.sqrt(m) = n (via Nat.sqrt_add_eq),
-  --    so L' uses k = n+1 blocks of size n. The majority vote branch is entered
-  --    since blk = n > 0.
-  --
-  -- 3. EVENT DEFINITION:
-  --    events j = {ω : Fin m → X | D{x | h_j(ω)(x) ≠ c(x)} ≤ ofReal(rate n)}
-  --    where h_j(ω) = L.learn(block_j(ω)) is the j-th block hypothesis.
-  --
-  -- 4. CONCENTRATION (requires chebyshev_majority_bound + independence):
-  --    Each events j has μ-probability ≥ 2 / 3 (from huniv + marginal).
-  --    Events are independent (from iIndepFun of block extractions).
-  --    By Chebyshev: μ({> k/2 good}) ≥ 1 - 9/(4k) ≥ 1 - δ.
-  --
-  -- 5. EVENT CONTAINMENT (requires majority analysis + Markov bound):
-  --    On {ALL blocks good}: for random x ~ D, let Y = #{j : h_j(x) ≠ c(x)}.
-  --    E_D[Y] = Σ_j err_j ≤ k · rate(n). Majority errs iff Y > k/2.
-  --    By Markov: D{Y > k/2} ≤ E[Y]/(k/2) = 2·rate(n) < 2·ε/kmin ≤ ε.
-  --    (When kmin ≥ 2, we have 2/kmin ≤ 1, so 2·ε/kmin ≤ ε.)
-  --    NOTE: This uses {ALL blocks good}, not just {> k/2 good}. The probability
-  --    P[all good] ≥ 1 - k/3 requires k ≤ 3δ (too small). The full proof needs
-  --    either the tournament/validation approach (SSBD Thm 7.7) or a more careful
-  --    two-step analysis. Both routes require the same missing infrastructure.
-  --
-  -- 6. COMPOSE: μ({D-err ≤ ε}) ≥ μ({> k/2 good}) ≥ 1 - δ.
-  -- Step 3a: Parameter extraction
   dsimp only
   rw [dif_pos hε, dif_pos hδ]
   have hε'_pos : 0 < ε / 7 := by positivity
@@ -1033,10 +961,6 @@ private def thresholdClass : ConceptClass ℕ Bool :=
 -- ============================================================
 -- PAC SIDE: VCDim(thresholdClass) ≤ 1 < ⊤
 -- ============================================================
-
-/-- Threshold functions are monotone: if x ≤ y and f(y) = true then f(x) = true. -/
-private theorem threshold_monotone {n x y : ℕ} (hxy : x ≤ y)
-    (hy : decide (y ≤ n) = true) : decide (x ≤ n) = true := by grind
 
 private theorem threshold_not_shatter_pair {S : Finset ℕ} (hcard : 2 ≤ S.card) :
     ¬ Shatters ℕ thresholdClass S := by
@@ -1195,24 +1119,6 @@ theorem pac_not_implies_online :
   · -- PAC learnable: VCDim < ⊤ → PACLearnable (via UC route)
     have hWB : @WellBehavedVC ℕ ⊤ thresholdClass := by
       intro D _ c m ε
-      -- Pi of ⊤ over Fin m → ℕ is ⊤ because Fin m → ℕ is countable and
-      -- singletons are finite intersections of cylinders.
-      have hpi_eq_top : @MeasurableSpace.pi (Fin m) (fun _ => ℕ) (fun _ => ⊤) = ⊤ := by
-        apply le_antisymm le_top
-        intro s _
-        have hs_union : s = ⋃ f ∈ s, {f} := by ext f; simp
-        rw [hs_union]
-        apply MeasurableSet.biUnion (Set.to_countable s)
-        intro f _
-        have hf_inter : ({f} : Set (Fin m → ℕ)) = ⋂ i : Fin m, (fun g => g i) ⁻¹' {f i} := by
-          ext g; simp [funext_iff]
-        rw [hf_inter]
-        exact MeasurableSet.iInter (fun i =>
-          measurable_pi_apply i (MeasurableSpace.measurableSet_top))
-      -- In pi of ⊤, singletons are measurable. Since Fin m → ℕ is countable,
-      -- pi = ⊤. For the product, singletons {(a,b)} are measurable via
-      -- MeasurableSet.prod, so the product sigma-algebra is also ⊤.
-      -- We use the singleton argument on the product directly.
       have hmeas_singleton_pi : ∀ (f : Fin m → ℕ),
           @MeasurableSet _ (@MeasurableSpace.pi (Fin m) (fun _ => ℕ) (fun _ => ⊤)) {f} := by
         intro f

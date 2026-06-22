@@ -171,10 +171,8 @@ theorem shatters_iff_finset_shatters {X : Type u} [Fintype X] [DecidableEq X]
     intro ⟨x, hxS⟩
     -- From hSu: S ∩ conceptToFinset c = t
     -- x ∈ S, so: c x = true ↔ x ∈ t ↔ f ⟨x, hxS⟩ = true
-    have hx_in_inter : x ∈ S ∩ conceptToFinset c ↔ x ∈ t := by
-      constructor <;> intro h
-      · exact (Finset.ext_iff.mp hSu x).mp h
-      · exact (Finset.ext_iff.mp hSu x).mpr h
+    have hx_in_inter : x ∈ S ∩ conceptToFinset c ↔ x ∈ t :=
+      Finset.ext_iff.mp hSu x
     have hx_in_t : x ∈ t ↔ f ⟨x, hxS⟩ = true := by
       simp only [t, Finset.mem_map, Finset.mem_filter, Finset.mem_attach, true_and,
         Function.Embedding.coeFn_mk]
@@ -286,8 +284,8 @@ def restrictConceptClass {X : Type u}
     This lemma connects GrowthFunction to the restriction operation. -/
 theorem growthFunction_le_card_restrict {X : Type u}
     (C : Finset (X → Bool)) (S : Finset X) :
-    (restrictConceptClass C S).card ≤ C.card := by
-  exact Finset.card_image_le
+    (restrictConceptClass C S).card ≤ C.card :=
+  Finset.card_image_le
 
 /-- Sauer-Shelah via Mathlib: |C|_S| ≤ Σ_{i ≤ d} C(|S|, i).
     The proof chain:
@@ -340,10 +338,8 @@ private theorem restrict_shatters_lift {X : Type u} [Fintype X] [DecidableEq X]
   simp only [Finset.mem_inter, Finset.mem_map, Function.Embedding.coeFn_mk,
     conceptToFinset, Finset.mem_filter, Finset.mem_univ, true_and]
   -- Key helper: membership in T ∩ filter ↔ membership in t'
-  have mem_iff : ∀ (z : ↥S), z ∈ T ∩ Finset.univ.filter (fun x => c ↑x = true) ↔ z ∈ t' := by
-    intro z; constructor
-    · intro h; exact hTA ▸ h
-    · intro h; exact hTA ▸ h
+  have mem_iff : ∀ (z : ↥S), z ∈ T ∩ Finset.univ.filter (fun x => c ↑x = true) ↔ z ∈ t' :=
+    fun z => Finset.ext_iff.mp hTA z
   constructor
   · -- y ∈ (T.map val) ∩ {x | c x = true} → y ∈ t
     rintro ⟨⟨⟨x, hxS⟩, hxT, rfl⟩, hcx⟩
@@ -520,10 +516,8 @@ theorem withTopNatToOrdinal_mono :
   intro a b hab
   match a, b with
   | some n, some m =>
-    simp only [withTopNatToOrdinal]
     exact Nat.cast_le.mpr (WithTop.coe_le_coe.mp hab)
   | some n, none =>
-    simp only [withTopNatToOrdinal]
     exact le_of_lt (Ordinal.natCast_lt_omega0 n)
   | none, none =>
     exact le_refl _

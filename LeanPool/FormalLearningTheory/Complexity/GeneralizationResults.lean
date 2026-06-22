@@ -206,6 +206,18 @@ theorem uc_does_not_imply_online' (X : Type u) [MeasurableSpace X] [Infinite X]
 -- Block 2: consistent_learner_pac (moved from Generalization.lean)
 -- ============================================================
 
+/-- PAC learnability from finite VCDim plus measurability data, with an empty-class
+    fallback. Shared by `consistent_learner_pac` and `sample_complexity_lower_bound`. -/
+private theorem pacLearnable_of_vcdim_finite (X : Type u) [MeasurableSpace X]
+    (C : ConceptClass X Bool) (hvcdim : VCDim X C < ⊤)
+    (hmeas_C : ∀ h ∈ C, Measurable h) (hc_meas : ∀ c : Concept X Bool, Measurable c)
+    (hWB : WellBehavedVC X C) : PACLearnable X C := by
+  by_cases hne : C.Nonempty
+  · exact uc_imp_pac X C hne (vcdim_finite_imp_uc' X C hvcdim hmeas_C hc_meas hWB)
+  · rw [Set.not_nonempty_iff_eq_empty] at hne
+    exact ⟨⟨Set.univ, fun _ => fun _ => false, fun _ => Set.mem_univ _⟩,
+           fun _ _ => 0, fun _ _ _ _ _ _ c hcC => by simp [hne] at hcC⟩
+
 /-- Consistent learners are PAC learners when VCDim < ⊤. -/
 theorem consistent_learner_pac (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) (hvcdim : VCDim X C < ⊤)
@@ -213,12 +225,8 @@ theorem consistent_learner_pac (X : Type u) [MeasurableSpace X]
     (hWB : WellBehavedVC X C)
     (L : BatchLearner X Bool)
     (_hcons : ∀ {m : ℕ} (S : Fin m → X × Bool), ∀ i, L.learn S (S i).1 = (S i).2) :
-    PACLearnable X C := by
-  by_cases hne : C.Nonempty
-  · exact uc_imp_pac X C hne (vcdim_finite_imp_uc' X C hvcdim hmeas_C hc_meas hWB)
-  · rw [Set.not_nonempty_iff_eq_empty] at hne
-    exact ⟨⟨Set.univ, fun _ => fun _ => false, fun _ => Set.mem_univ _⟩,
-           fun _ _ => 0, fun _ _ _ _ _ _ c hcC => by simp [hne] at hcC⟩
+    PACLearnable X C :=
+  pacLearnable_of_vcdim_finite X C hvcdim hmeas_C hc_meas hWB
 
 /-- Typeclass version of consistent_learner_pac. -/
 theorem consistent_learner_pac' (X : Type u) [MeasurableSpace X]
@@ -253,13 +261,8 @@ theorem sample_complexity_lower_bound (X : Type u) [MeasurableSpace X] [Measurab
           ≥ ENNReal.ofReal (1 - δ) } with hS_def
   have hvcdim_fin : VCDim X C < ⊤ := by
     rw [hd]; exact WithTop.coe_lt_top d
-  have hpac : PACLearnable X C := by
-    by_cases hne : C.Nonempty
-    · exact uc_imp_pac X C hne (vcdim_finite_imp_uc' X C hvcdim_fin hmeas_C hc_meas hWB)
-    · rw [Set.not_nonempty_iff_eq_empty] at hne
-      exact ⟨⟨Set.univ, fun _ => fun _ => false, fun _ => Set.mem_univ _⟩,
-             fun _ _ => 0, fun _ _ _ _ _ _ c hcC => by simp [hne] at hcC⟩
-  obtain ⟨L, mf, hpac_wit⟩ := hpac
+  obtain ⟨L, mf, hpac_wit⟩ :=
+    pacLearnable_of_vcdim_finite X C hvcdim_fin hmeas_C hc_meas hWB
   have hmem : mf ε δ ∈ S := ⟨L, fun D hD c hcC => hpac_wit ε δ hε hδ D hD c hcC⟩
   exact le_csInf ⟨mf ε δ, hmem⟩ fun m hm =>
     pac_lower_bound_member X C d hd ε δ hε hε1 hδ hδ1 hδ2 hd_pos m hm

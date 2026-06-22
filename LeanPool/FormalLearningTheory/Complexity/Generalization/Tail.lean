@@ -185,10 +185,8 @@ theorem nfl_per_sample_shattered {X : Type u} {C : ConceptClass X Bool}
     -- Combine: disagree.card ≥ T.card - m
     have hdisagree_ge : T.card - m ≤ disagree.card :=
       le_trans hsdiff_card (Finset.card_le_card hsub)
-    -- Since 2m < T.card: T.card - m > T.card / 2, so 4*(T.card - m) > 2*T.card > T.card
-    -- More precisely: T.card < 4 * (T.card - m) ≤ 4 * disagree.card
-    calc T.card < 4 * (T.card - m) := by omega
-      _ ≤ 4 * disagree.card := by omega
+    -- Since 2m < T.card: T.card < 4 * (T.card - m) ≤ 4 * disagree.card
+    omega
 /-- If VCDim = ⊤, then C is not PAC learnable.
     Proof: for any learner L with sample function mf, pick ε = 1 / 4, δ = 1 / 4.
     Let m = mf(1 / 4, 1 / 4). Since VCDim = ⊤, ∃ shattered set S with |S| ≥ 2m.
@@ -239,13 +237,8 @@ theorem vcdim_infinite_not_pac (X : Type u) [MeasurableSpace X]
     pac_lower_bound_good_event_le_half (X := X) (T := T) hTne L m c₀
       (1 / 4 : ℝ) (by norm_num) (by simpa using hcount)
   refine ⟨D, hDprob, c₀, hc₀C, ?_⟩
-  calc MeasureTheory.Measure.pi (fun _ : Fin m => D)
-        { xs : Fin m → X |
-          D { x | L.learn (fun i => (xs i, c₀ (xs i))) x ≠ c₀ x }
-            ≤ ENNReal.ofReal (1 / 4 : ℝ) }
-      ≤ ENNReal.ofReal (1 / 2 : ℝ) := hgood_half
-    _ < ENNReal.ofReal (1 - 1 / 4 : ℝ) := by
-        exact ENNReal.ofReal_lt_ofReal_iff_of_nonneg (by norm_num) |>.mpr (by norm_num)
+  exact lt_of_le_of_lt hgood_half
+    ((ENNReal.ofReal_lt_ofReal_iff_of_nonneg (by norm_num)).mpr (by norm_num))
 
 end PACTheoremHelpers
 

@@ -71,13 +71,10 @@ theorem shatters_iff {m n : ℕ} (M : BinaryMatrix m n) (S : Finset (Fin n)) :
     constructor
     · intro hMij
       have : j ∈ S ∩ Finset.univ.filter (fun j => M i j = true) := by
-        simp only [mem_inter, mem_filter, mem_univ, true_and]
-        exact ⟨hj, hMij⟩
-      rw [hut] at this
-      exact this
+        simp only [mem_inter, mem_filter, mem_univ, true_and]; exact ⟨hj, hMij⟩
+      rwa [hut] at this
     · intro hjt
-      have : j ∈ S ∩ Finset.univ.filter (fun j => M i j = true) := by
-        rw [hut]; exact hjt
+      have : j ∈ S ∩ Finset.univ.filter (fun j => M i j = true) := by rw [hut]; exact hjt
       simp only [mem_inter, mem_filter, mem_univ, true_and] at this
       exact this.2
 
@@ -91,15 +88,11 @@ theorem bool_fun_eq_of_filter_eq {n : ℕ} (f g : Fin n → Bool)
   by_cases hf : f j = true <;> by_cases hg : g j = true
   · rw [hf, hg]
   · exfalso
-    have : j ∈ Finset.univ.filter (fun j => f j = true) := by
-      simp [hf]
-    rw [h] at this
-    simp [hg] at this
+    have : j ∈ Finset.univ.filter (fun j => f j = true) := by simp [hf]
+    rw [h] at this; simp [hg] at this
   · exfalso
-    have : j ∈ Finset.univ.filter (fun j => g j = true) := by
-      simp [hg]
-    rw [← h] at this
-    simp [hf] at this
+    have : j ∈ Finset.univ.filter (fun j => g j = true) := by simp [hg]
+    rw [← h] at this; simp [hf] at this
   · simp only [Bool.not_eq_true] at hf hg
     rw [hf, hg]
 
@@ -114,10 +107,9 @@ theorem card_toFinsetFamily_le {m n : ℕ} (M : BinaryMatrix m n)
           card_shatterer_le_sum_vcDim
       _ = ∑ k ∈ Iic M.toFinsetFamily.vcDim, n.choose k := by
           simp [Fintype.card_fin]
-      _ ≤ ∑ k ∈ Iic d, n.choose k := by
-          have hsub : Iic M.toFinsetFamily.vcDim ⊆ Iic d := Iic_subset_Iic.mpr hd
-          exact le_trans (le_refl _)
-            (Finset.sum_le_sum_of_subset_of_nonneg hsub (fun _ _ _ => Nat.zero_le _))
+      _ ≤ ∑ k ∈ Iic d, n.choose k :=
+          Finset.sum_le_sum_of_subset_of_nonneg (Iic_subset_Iic.mpr hd)
+            (fun _ _ _ => Nat.zero_le _)
 
 /-!
 ## Assouad's Dual VC Bound for Matrices
@@ -156,18 +148,13 @@ theorem transpose_shatters_imp_shatters {m n : ℕ} (M : BinaryMatrix m n)
       (M i c = true ↔ i ∈ T_k k) := by
     intro k
     obtain ⟨c, hc⟩ := hS (T_k k) (hT_k_sub k)
-    exact ⟨c, fun i hi => by
-      have := hc i hi
-      simp only [transpose] at this
-      exact this⟩
+    exact ⟨c, fun i hi => by simpa only [transpose] using hc i hi⟩
   choose c hc using hcols
   -- The key property: M (embed b) (c k) = b k
   have hM_embed : ∀ (b : Fin (d + 1) → Bool) (k : Fin (d + 1)),
       M (embed b).val (c k) = b k := by
     intro b k
     have hemb_mem : (embed b).val ∈ S := (embed b).property
-    have := (hc k (embed b).val hemb_mem).mp
-    have := (hc k (embed b).val hemb_mem).mpr
     by_cases hbk : b k = true
     · -- b k = true, so embed b ∈ T_k k
       have hmem : (embed b).val ∈ T_k k := by
@@ -201,10 +188,9 @@ theorem transpose_shatters_imp_shatters {m n : ℕ} (M : BinaryMatrix m n)
       rw [hM_embed b0 k]; simp only [b0]
       cases hkj : (k == j)
       · rfl
-      · exfalso; exact hjk_ne (beq_iff_eq.mp hkj).symm
+      · exact absurd (beq_iff_eq.mp hkj).symm hjk_ne
     rw [hjk] at h1
-    rw [h1] at h2
-    exact Bool.noConfusion h2
+    exact Bool.noConfusion (h1 ▸ h2)
   have hT_card : T.card = d + 1 := by
     simp only [T, card_image_of_injective _ hc_inj, card_univ, Fintype.card_fin]
   -- M shatters T
@@ -218,15 +204,8 @@ theorem transpose_shatters_imp_shatters {m n : ℕ} (M : BinaryMatrix m n)
     simp only [T] at hj
     rw [Finset.mem_image] at hj
     obtain ⟨k, _, rfl⟩ := hj
-    constructor
-    · intro hM
-      rw [hM_embed g k] at hM
-      simp only [g] at hM
-      rwa [decide_eq_true_eq] at hM
-    · intro hck
-      rw [hM_embed g k]
-      simp only [g]
-      rwa [decide_eq_true_eq]
+    rw [hM_embed g k]
+    simp only [g, decide_eq_true_eq]
   exact ⟨T, hT_card, hT_shatters⟩
 
 /-- **Assouad's dual VC bound (matrix form)**: if `M` has VC dimension ≤ `d`,
@@ -243,12 +222,9 @@ theorem assouad_transpose_vcDim {m n : ℕ} (M : BinaryMatrix m n)
   have hge : 2 ^ (d + 1) ≤ M.transpose.vcDim := by omega
   -- vcDim = shatterer.sup card. Extract a shattered set of size ≥ 2^(d+1).
   -- Use Finset.le_sup_iff with ⊥ < 2^(d+1) (since 2^(d+1) > 0)
-  have hpos : (⊥ : ℕ) < 2 ^ (d + 1) := by
-    change 0 < 2 ^ (d + 1)
-    exact Nat.two_pow_pos (d + 1)
+  have hpos : (⊥ : ℕ) < 2 ^ (d + 1) := Nat.two_pow_pos (d + 1)
   -- Extract shattered set from vcDim bound using le_sup_iff
-  have hge' : 2 ^ (d + 1) ≤ M.transpose.toFinsetFamily.shatterer.sup Finset.card := hge
-  obtain ⟨S, hS_mem, hS_card⟩ := (Finset.le_sup_iff hpos).mp hge'
+  obtain ⟨S, hS_mem, hS_card⟩ := (Finset.le_sup_iff hpos).mp hge
   -- S ∈ shatterer means M^T.toFinsetFamily.Shatters S
   rw [Finset.mem_shatterer] at hS_mem
   -- Convert to our shatters definition

@@ -347,9 +347,7 @@ private theorem boolTestExpectation_empirical_agreeTest_eq_avg {X : Type u} {T :
   congr 1
   apply Finset.sum_congr rfl
   intro t _
-  by_cases h : (↑(reps t) : X → Bool) x = c x
-  · simp [agreeTest, h]
-  · simp [agreeTest, h]
+  by_cases h : (↑(reps t) : X → Bool) x = c x <;> simp [agreeTest, h]
 
 /-! ## Roundtrip helpers for the compression proof -/
 
@@ -408,13 +406,12 @@ lemma decodeWitnessXCoords_encode_eq
         simp only [dif_pos hltCard, Finset.mem_singleton] at hx
         have hrt := congrArg Subtype.val
           (Equiv.symm_apply_apply (kernel.equivFin) ⟨(x0, c x0), hmk⟩)
-        simp only [] at hrt
         rw [hrt] at hx
         have hx_eq : x = x0 := by simpa using hx
         rw [hx_eq]
         exact hx0W
-      · simp only [dif_pos hmk, dif_neg hlt] at hidx_mem2; exact absurd hidx_mem2 (by simp)
-    · simp only [dif_neg hmk] at hidx_mem2; exact absurd hidx_mem2 (by simp)
+      · simp [dif_pos hmk, dif_neg hlt] at hidx_mem2
+    · simp [dif_neg hmk] at hidx_mem2
   · intro hxW
     have hmk : (x, c x) ∈ kernel := hWker x hxW
     have hltK : (kernel.equivFin ⟨(x, c x), hmk⟩).val < K :=
@@ -805,12 +802,7 @@ private lemma good_on_support_gives_row_response
       ⟨Finset.mem_powerset.mpr hZY, hZcard⟩, rfl⟩
   refine ⟨⟨h, hh_mem⟩, ?_⟩
   have hag := supportAgreement_eq_one_sub_supportError Y q h c
-  have : (fun y : ↥Y => q.prob y *
-      (if decide (h (y : X) = c (y : X)) then (1 : ℝ) else 0)) =
-    (fun y : ↥Y => q.prob y *
-      (if h (y : X) = c (y : X) then (1 : ℝ) else 0)) := by
-    ext y; congr 1; simp [decide_eq_true_eq]
-  simp only [this] at *
+  simp only [decide_eq_true_eq] at *
   linarith
 
 @[reducible]
@@ -973,10 +965,8 @@ private theorem moran_yehudayoff_forward_construction
         (1 / 2 : ℝ) := by
     intro m S hreal i
     have hm : 0 < m := Fin.pos i
-    -- Phase 1: Roundtrip — decoded block hyp = raw representative
-    -- Key insight: dsimp only [localLet] works on GOALS but NOT hypotheses.
-    -- So unfold in the goal FIRST, then intro.
-    -- Step A: All pairs in kernel have label c.
+    -- Phase 1: Roundtrip — decoded block hyp = raw representative.
+    -- (`dsimp only [localLet]` works on goals, not hypotheses, so unfold in the goal first.)
     have h_kernel_labels : ∀ pair ∈ (compressCore S).1,
         pair.2 = hreal.choose pair.1 := by
       -- Unfold compressCore in the GOAL, resolve dite branches, THEN intro
@@ -1009,39 +999,10 @@ private theorem moran_yehudayoff_forward_construction
         (kernel := (compressCore S).1) (c := c) (K := Kreal)
         (W := W) (h := (reps t).val)
         hKbound hWker hlabels hrep (x := (S i).1)
-      -- hrt : L.learn (labeledSampleOfFinset (decodeWitnessLabel (compressCore S).1)
-      --         (decodeWitnessXCoords (compressCore S).1
-      --           (encodeWitnessInfo (compressCore S).1 c Kreal W)))
-      --       (S i).1 = (reps t).val (S i).1
-      -- Goal: rowHyp S hreal t (S i).1 = (reps t).val (S i).1
-      -- rowHyp = blockHyp (compressCore S).1 (compressCore S).2 t (S i).1
-      -- blockHyp Z info t x =
-      --   L.learn (labeledSampleOfFinset (decodeWitnessLabel Z)
-      --     (decodeWitnessXCoords Z (info t))) x
-      -- (compressCore S).2 t = encodeWitnessInfo (compressCore S).1 c Kreal (getWitness t)
-      -- getWitness t = W  (by definition)
-      -- So: rowHyp = L.learn (labeledSampleOfFinset (decodeWitnessLabel (compressCore S).1)
-      --                (decodeWitnessXCoords (compressCore S).1
-      --                  (encodeWitnessInfo (compressCore S).1 c Kreal W)))
-      --             (S i).1
-      -- = hrt's LHS. So we need to show rowHyp reduces to hrt's LHS.
-      -- This is true definitionally since rowHyp → blockHyp → decodeWitness...
-      -- and (compressCore S).2 t → encodeWitnessInfo (compressCore S).1 c Kreal W
-      -- But Lean may need help with the dite reduction.
-      -- Let's unfold the goal's LHS and match hrt.
+      -- rowHyp reduces definitionally to hrt's LHS once `(compressCore S).2 t` is
+      -- rewritten to `encodeWitnessInfo (compressCore S).1 c Kreal W` (getWitness t = W).
       dsimp only [rowHyp]
       dsimp only [blockHyp, moranBlockHyp]
-      -- Now the goal is:
-      -- L.learn (labeledSampleOfFinset (decodeWitnessLabel (compressCore S).1)
-      --   (decodeWitnessXCoords (compressCore S).1 ((compressCore S).2 t))) (S i).1
-      --   = (mkReps S hreal hm t).val (S i).1
-      -- We need: (compressCore S).2 t = encodeWitnessInfo (compressCore S).1 c Kreal W
-      -- After unfolding compressCore, (compressCore S).2 =
-      --   fun t => encodeWitnessInfo kernel c Kreal (getWitness t)
-      -- So (compressCore S).2 t =
-      --   encodeWitnessInfo kernel c Kreal (getWitness t) = encodeWitnessInfo kernel c Kreal W
-      -- (since getWitness t = W by definition)
-      -- Let's use show + convert to bridge:
       have hinfo_eq : (compressCore S).2 t = encodeWitnessInfo (compressCore S).1 c Kreal W := by
         dsimp only [compressCore, pointSupportNonempty, c, reps, W]
         simp only [dif_pos hreal, dif_pos hm]
@@ -1096,8 +1057,6 @@ private theorem moran_yehudayoff_forward_construction
     have h_minimax : boolTestExpectation p (agreeTest c' (S i).1 HY') ≥ 7 / 12 := by
       have h_gp := hp ⟨(S i).1, hxi_in_Y⟩
       rw [boolGamePayoff_eq_boolTestExpectation] at h_gp
-      -- h_gp: 7 / 12 ≤ boolTestExpectation p (fun h => M' h ⟨(S i).1, ...⟩)
-      -- Need: (fun h => M' h ⟨(S i).1, ...⟩) = agreeTest c' (S i).1 HY'
       have hfun : (fun h => M' h ⟨(S i).1, hxi_in_Y⟩) = agreeTest c' (S i).1 HY' := by
         ext h; simp only [M', agreeTest]
       rw [hfun] at h_gp; linarith

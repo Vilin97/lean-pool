@@ -73,14 +73,12 @@ theorem Shatters.subset {X : Type u} {C : ConceptClass X Bool}
     {S T : Finset X} (hS : Shatters X C S) (hTS : T ⊆ S) : Shatters X C T := by
   classical
   intro f
-  -- Extend f from T to S: use f on T, false elsewhere
+  -- Extend `f` from `T` to `S` by `false` outside `T`.
   let g : ↥S → Bool := fun ⟨x, _⟩ => if h : x ∈ T then f ⟨x, h⟩ else false
   obtain ⟨c, hcC, hc⟩ := hS g
   refine ⟨c, hcC, fun ⟨x, hx⟩ => ?_⟩
-  have hxS : x ∈ S := hTS hx
-  have := hc ⟨x, hxS⟩
-  simp only [g, dif_pos hx] at this
-  exact this
+  have := hc ⟨x, hTS hx⟩
+  simpa only [g, dif_pos hx] using this
 
 /-- A shattered tree can be built from any list of elements from a shattered Finset. -/
 theorem MistakeTree.fromList_shattered {X : Type u} [DecidableEq X] {C : ConceptClass X Bool}
@@ -95,15 +93,12 @@ theorem MistakeTree.fromList_shattered {X : Type u} [DecidableEq X] {C : Concept
     have hsub : xs.toFinset ⊆ (x :: xs).toFinset := by
       intro a ha
       simp only [List.toFinset_cons, Finset.mem_insert, List.mem_toFinset] at ha ⊢
-      right
-      exact ha
+      exact Or.inr ha
     have hxs_shat : Shatters X C xs.toFinset := hS.subset hsub
-    constructor
-    · -- ∃ c ∈ C, c x = true ∧ subtree shattered
-      obtain ⟨c, hcC, hc⟩ := hS (fun _ => true)
+    refine ⟨?_, ?_⟩
+    · obtain ⟨c, hcC, hc⟩ := hS (fun _ => true)
       exact ⟨c, hcC, hc ⟨x, hxS⟩, ih hnd hxs_shat⟩
-    · -- ∃ c ∈ C, c x = false ∧ subtree shattered
-      obtain ⟨c, hcC, hc⟩ := hS (fun _ => false)
+    · obtain ⟨c, hcC, hc⟩ := hS (fun _ => false)
       exact ⟨c, hcC, hc ⟨x, hxS⟩, ih hnd hxs_shat⟩
 
 /-- Ldim (branch-wise) upper bounds VCdim: Ldim(C) ≥ VCdim(C) for all C.
@@ -118,10 +113,6 @@ theorem BranchWiseLittlestoneDim_ge_VCDim (X : Type u)
   have hd : T.depth = S.card := by
     simp only [T, MistakeTree.fromList_depth]
     exact S.length_toList
-  have ht : T.isShattered X C := by
-    apply MistakeTree.fromList_shattered
-    · exact S.nodup_toList
-    · rwa [Finset.toList_toFinset]
-  calc (S.card : WithTop ℕ) = ↑T.depth := by rw [hd]
-    _ ≤ ⨆ (T : MistakeTree X) (_ : T.isShattered X C), (T.depth : WithTop ℕ) :=
-        le_iSup₂_of_le T ht (le_refl _)
+  have ht : T.isShattered X C :=
+    MistakeTree.fromList_shattered _ S.nodup_toList (by rwa [Finset.toList_toFinset])
+  exact hd ▸ le_iSup₂_of_le T ht le_rfl

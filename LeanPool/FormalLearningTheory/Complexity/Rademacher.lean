@@ -46,11 +46,7 @@ theorem boolToSign_sum_zero : ∑ b : Bool, boolToSign b = 0 := by
   simp [boolToSign]
 
 theorem boolToSign_mul_abs_le_one (b₁ b₂ : Bool) : |boolToSign b₁ * boolToSign b₂| ≤ 1 := by
-  rw [abs_mul]
-  calc |boolToSign b₁| * |boolToSign b₂|
-      ≤ 1 * 1 := mul_le_mul (boolToSign_abs_le_one b₁) (boolToSign_abs_le_one b₂)
-          (abs_nonneg _) (by norm_num)
-    _ = 1 := one_mul 1
+  rw [abs_mul, boolToSign_abs_eq_one, boolToSign_abs_eq_one, mul_one]
 
 /-- Boolean sign assignments used as Rademacher variables. -/
 abbrev SignVector (m : ℕ) := Fin m → Bool
@@ -104,78 +100,6 @@ private theorem sum_boolToSign_cancel {m : ℕ} (i : Fin m) (f : SignVector m �
     simp_rw [h_neg]
     simp [Finset.sum_neg_distrib]
   linarith
-
-/-- Rademacher cross-term cancellation: Σ_σ boolToSign(σ i) * boolToSign(σ j) = 0 for i ≠ j.
-    Follows from sum_boolToSign_cancel since boolToSign(σ j) doesn't depend on coordinate i. -/
-private theorem rademacher_cross_cancel {m : ℕ} (i j : Fin m) (hij : i ≠ j) :
-    ∑ σ : SignVector m, boolToSign (σ i) * boolToSign (σ j) = 0 := by
-  exact sum_boolToSign_cancel i (fun σ => boolToSign (σ j))
-    (fun σ σ' h => by rw [h j hij.symm])
-
-/-- Rademacher diagonal: Σ_σ boolToSign(σ i)² = |SignVector m| = 2^m. -/
-private theorem rademacher_diagonal {m : ℕ} (i : Fin m) :
-    ∑ σ : SignVector m, boolToSign (σ i) ^ 2 = (Fintype.card (SignVector m) : ℝ) := by
-  simp_rw [boolToSign_sq]
-  simp [Finset.sum_const, Finset.card_univ]
-
-/-- Rademacher variance identity:
-    Σ_σ (Σ_i boolToSign(σ i) * a_i)² = m * |SignVector m|
-    when |a_i| = 1. Uses cross-term cancellation (rademacher_cross_cancel)
-    and diagonal identity (rademacher_diagonal). -/
-private theorem rademacher_variance_eq {m : ℕ} (_hm : 0 < m) (a : Fin m → ℝ)
-    (ha : ∀ i, |a i| = 1) :
-    ∑ σ : SignVector m, (∑ i : Fin m, boolToSign (σ i) * a i) ^ 2 =
-      (m : ℝ) * (Fintype.card (SignVector m) : ℝ) := by
-  set N := (Fintype.card (SignVector m) : ℝ)
-  -- Suffices: show each coordinate contributes N to the sum, giving m * N.
-  suffices h_each : ∀ i : Fin m, ∑ σ : SignVector m,
-      ∑ j : Fin m, (boolToSign (σ i) * a i) * (boolToSign (σ j) * a j) = N by
-    -- Step 1: Expand (Σ f_i)² = Σ_i Σ_j f_i * f_j
-    simp_rw [sq, Finset.sum_mul, Finset.mul_sum]
-    -- Step 2: Swap outermost sums: Σ_σ Σ_i ... = Σ_i Σ_σ ...
-    rw [Finset.sum_comm (s := Finset.univ) (t := Finset.univ)]
-    -- Now goal is Σ_i (Σ_σ Σ_j ...) = m * N
-    -- Each inner sum = N by h_each, so Σ_i N = m * N.
-    simp_rw [h_each]
-    simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin]
-  -- Prove: for fixed i, Σ_σ Σ_j (boolToSign(σ i) * a_i) * (boolToSign(σ j) * a_j) = N.
-  intro i
-  -- Swap: Σ_σ Σ_j ... = Σ_j Σ_σ ...
-  rw [Finset.sum_comm (s := Finset.univ) (t := Finset.univ)]
-  -- Factor out a terms in each inner sum.
-  have h_term : ∀ j : Fin m, ∑ σ : SignVector m,
-      (boolToSign (σ i) * a i) * (boolToSign (σ j) * a j) =
-      (a i * a j) * ∑ σ : SignVector m, boolToSign (σ i) * boolToSign (σ j) := by
-    intro j; rw [Finset.mul_sum]
-    apply Finset.sum_congr rfl; intro σ _; ring
-  simp_rw [h_term]
-  -- Split into j = i (diagonal) and j ≠ i (cross terms).
-  rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i)]
-  -- After simp_rw [h_term], the goal is:
-  -- Σ_j (a i * a j) * Σ_σ boolToSign(σ i) * boolToSign(σ j) = N
-  -- After rw [← Finset.add_sum_erase]:
-  -- (a i * a i) * (Σ_σ ...) + Σ_{j ∈ erase i} ... = N
-  -- Cross terms vanish, diagonal = N.
-  --
-  -- Cross terms are 0.
-  have h_cross : ∀ j, j ≠ i →
-      a i * a j * ∑ σ : SignVector m, boolToSign (σ i) * boolToSign (σ j) = 0 := by
-    intro j hj
-    rw [rademacher_cross_cancel i j hj.symm, mul_zero]
-  have h_cross_sum : ∑ j ∈ Finset.univ.erase i, a i * a j *
-      ∑ σ : SignVector m, boolToSign (σ i) * boolToSign (σ j) = 0 :=
-    Finset.sum_eq_zero (fun j hj => h_cross j (Finset.ne_of_mem_erase hj))
-  rw [h_cross_sum, add_zero]
-  -- Diagonal
-  have h_diag : ∑ σ : SignVector m, boolToSign (σ i) * boolToSign (σ i) =
-      ∑ σ : SignVector m, boolToSign (σ i) ^ 2 :=
-    Finset.sum_congr rfl (fun σ _ => by ring)
-  rw [h_diag, rademacher_diagonal]
-  have hai : a i * a i = 1 := by
-    have hab := ha i
-    have : a i ^ 2 = 1 := by nlinarith [sq_abs (a i)]
-    nlinarith [this]
-  rw [hai, one_mul]
 
 /-- Normalized signed correlation of a hypothesis on a finite sample. -/
 noncomputable def rademacherCorrelation {X : Type u} {m : ℕ}
@@ -337,7 +261,7 @@ private theorem corr_eq_one_of_agree {X : Type u} {m : ℕ} (hm : 0 < m)
   -- Each term boolToSign(σ i) * boolToSign(h(xs i)) = boolToSign(σ i)² = 1
   have h_terms : ∀ i : Fin m,
       boolToSign (σ i) * boolToSign (h (xs i)) = 1 := by
-    intro i; rw [hagree i]; exact by unfold boolToSign; cases σ i <;> simp
+    intro i; rw [hagree i]; unfold boolToSign; cases σ i <;> simp
   simp_rw [h_terms]
   simp [Finset.sum_const]
   field_simp

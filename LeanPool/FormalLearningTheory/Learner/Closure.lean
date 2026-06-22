@@ -80,9 +80,7 @@ theorem measurableBatchLearner_boost
     (hL : ∀ i, MeasurableBatchLearner X (L i)) :
     MeasurableBatchLearner X (boostLearner k L) := by
   apply measurableBatchLearner_combine
-  · show Measurable (fun p : X × (Fin k → Bool) => majorityVote k p.2)
-    have : Measurable (fun v : Fin k → Bool => majorityVote k v) := measurable_of_finite _
-    exact this.comp measurable_snd
+  · exact (measurable_of_finite (fun v : Fin k → Bool => majorityVote k v)).comp measurable_snd
   · exact hL
 
 /-! ## Part 4: Interpolation learner -/
@@ -110,17 +108,13 @@ theorem measurableBatchLearner_interp
     (h₂ : MeasurableBatchLearner X L₂) :
     MeasurableBatchLearner X (interpLearner A L₁ L₂) := by
   apply measurableBatchLearner_combine
-  · -- Measurable (fun p : X × (Fin 2 → Bool) => if p.1 ∈ A then p.2 0 else p.2 1)
-    change Measurable (fun p : X × (Fin 2 → Bool) => if p.1 ∈ A then p.2 0 else p.2 1)
-    apply Measurable.ite (measurable_fst hA)
-    · exact (measurable_pi_apply 0).comp measurable_snd
-    · exact (measurable_pi_apply 1).comp measurable_snd
+  · change Measurable (fun p : X × (Fin 2 → Bool) => if p.1 ∈ A then p.2 0 else p.2 1)
+    exact Measurable.ite (measurable_fst hA) ((measurable_pi_apply 0).comp measurable_snd)
+      ((measurable_pi_apply 1).comp measurable_snd)
   · intro i
     fin_cases i
-    · simp only [Fin.zero_eta, Fin.isValue, ↓reduceIte]
-      assumption
-    · simp only [Fin.mk_one, Fin.isValue, one_ne_zero, ↓reduceIte]
-      assumption
+    · simpa using h₁
+    · simpa using h₂
 
 /-! ## Part 5: Uniform measurability for indexed families -/
 

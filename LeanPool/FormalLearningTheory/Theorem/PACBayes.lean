@@ -104,18 +104,12 @@ theorem pac_bayes_per_hypothesis {X : Type u} [MeasurableSpace X]
   -- Handle the t = 0 case vs t > 0 case
   by_cases ht_pos_case : t = 0
   case pos =>
-    -- t = 0 means P(h₀)·δ ≥ 1, so the bound is ≥ 1 ≥ μ(anything)
     have h_Pδ_ge_one : P.prob h₀ * δ ≥ 1 := by
-      -- t = √(log(1/(P·δ))/(2m)) = 0 with the argument ≥ 0
-      -- implies log(1/(P·δ))/(2m) = 0, hence log(1/(P·δ)) = 0
-      -- log(x) = 0 for x > 0 implies x = 1, so 1/(P·δ) = 1, so P·δ = 1 ≥ 1
       have ht_sq_zero : Real.log (1 / (P.prob h₀ * δ)) / (2 * ↑m) = 0 := by
         rwa [Real.sqrt_eq_zero h_quot_nonneg] at ht_pos_case
       have h_log_zero : Real.log (1 / (P.prob h₀ * δ)) = 0 := by
         by_contra h_ne
         exact absurd (div_ne_zero h_ne (ne_of_gt h_denom_pos)) (not_not.mpr ht_sq_zero)
-      -- log(1/(P·δ)) = 0 and 1/(P·δ) > 0 implies 1/(P·δ) ≤ 1
-      -- Combined with log ≥ 0, we get 1/(P·δ) = 1
       have h_le : 1 / (P.prob h₀ * δ) ≤ 1 := by
         by_contra h_not_le
         push Not at h_not_le
@@ -274,16 +268,10 @@ theorem pac_bayes_all_hypotheses {X : Type u} [MeasurableSpace X]
       _ ≤ ∑ h : H, ENNReal.ofReal (P.prob h * δ) :=
           Finset.sum_le_sum (fun h _ => h_per h)
       _ ≤ ENNReal.ofReal δ := by
-          -- Each P(h)·δ ≤ δ since P(h) ≤ 1, so we bound each term
-          -- More directly: the sum telescopes because ∑ P(h)·δ = δ
-          -- We prove the ENNReal version by going through toReal
-          -- Since all terms are nonneg and finite, ∑ ofReal(P(h)·δ) = ofReal(∑ P(h)·δ) = ofReal(δ)
-          -- Use the fact that ofReal is additive on nonneg reals
           rw [← ENNReal.ofReal_sum_of_nonneg
-            (fun h _ => le_of_lt (mul_pos (hP_pos h) hδ))]
-          rw [← Finset.sum_mul, P.prob_sum_one, one_mul]
+            (fun h _ => le_of_lt (mul_pos (hP_pos h) hδ)),
+            ← Finset.sum_mul, P.prob_sum_one, one_mul]
   have h_result := prob_ge_one_sub_compl' μ Good (ENNReal.ofReal δ) h_compl_bound
-  -- Convert 1 - ENNReal.ofReal δ to ENNReal.ofReal (1 - δ)
   rw [ge_iff_le] at h_result ⊢
   calc ENNReal.ofReal (1 - δ) = 1 - ENNReal.ofReal δ := by
         rw [← ENNReal.ofReal_one]
@@ -300,52 +288,23 @@ private lemma jensen_sqrt_finpmf {H : Type*} [Fintype H]
     (Q : FinitePMF H) (f : H → ℝ) (hf : ∀ h, 0 ≤ f h) :
     ∑ h : H, Q.prob h * Real.sqrt (f h) ≤
     Real.sqrt (∑ h : H, Q.prob h * f h) := by
-  -- Cauchy-Schwarz approach: (∑ q_h √f_h)² ≤ (∑ q_h)(∑ q_h f_h) = ∑ q_h f_h
+  -- Via the variance identity ∑ q_h (√f_h - c)² ≥ 0 with c = ∑ q_h √f_h,
+  -- which expands to c² ≤ ∑ q_h f_h (Cauchy-Schwarz).
   have h_sum_nonneg : 0 ≤ ∑ h : H, Q.prob h * Real.sqrt (f h) := by
     apply Finset.sum_nonneg; intro h _
     exact mul_nonneg (Q.prob_nonneg h) (Real.sqrt_nonneg _)
   rw [← Real.sqrt_sq h_sum_nonneg]
   apply Real.sqrt_le_sqrt
-  -- Need: (∑ q_h √f_h)² ≤ ∑ q_h · f_h
-  -- By Cauchy-Schwarz: (∑ a_h · b_h)² ≤ (∑ a_h²)(∑ b_h²)
-  -- Let a_h = √q_h, b_h = √q_h · √f_h
-  -- Then a_h · b_h = q_h · √f_h, ∑ a_h² = ∑ q_h = 1, ∑ b_h² = ∑ q_h · f_h
-  -- So (∑ q_h √f_h)² ≤ 1 · ∑ q_h f_h = ∑ q_h f_h
-  -- Using sq_sum_le_card_mul_sum_sq: (∑ f_i)² ≤ |s| · ∑ f_i²
-  -- with f_i = q_i · √(f_i), then (∑ q_i √f_i)² ≤ |H| · ∑ q_i² · f_i
-  -- This gives a weaker bound. We need the weighted version.
-  -- Prove inline via the identity: ∑ q_h (√f_h - c)² ≥ 0 for c = ∑ q_h √f_h
-  -- Expanding: ∑ q_h f_h - 2c·∑q_h√f_h + c²·∑q_h = ∑ q_h f_h - 2c² + c² = ∑q_h f_h - c²
-  -- So c² ≤ ∑ q_h f_h. This is exactly what we need.
   set c := ∑ h : H, Q.prob h * Real.sqrt (f h)
-  -- ∑ q_h · (√f_h - c)² ≥ 0
   have h_var_nonneg : 0 ≤ ∑ h : H, Q.prob h * (Real.sqrt (f h) - c) ^ 2 :=
     Finset.sum_nonneg (fun h _ => mul_nonneg (Q.prob_nonneg h) (sq_nonneg _))
-  -- Expand: ∑ q_h (√f_h - c)² = ∑ q_h (f_h - 2c√f_h + c²)
-  --       = ∑ q_h f_h - 2c · ∑ q_h √f_h + c² · ∑ q_h
-  --       = ∑ q_h f_h - 2c² + c²
-  --       = ∑ q_h f_h - c²
-  -- Instead of expanding variance, use a direct substitution.
-  -- We need c² ≤ ∑ q_h · f_h. Use h_var_nonneg to get this.
-  -- ∑ q_h (√f_h - c)² = ∑ q_h · (√f_h)² - 2c · ∑ q_h · √f_h + c² · ∑ q_h
-  --                    = ∑ q_h · f_h - 2c² + c² = ∑ q_h f_h - c²
-  -- But expanding this algebraically in Lean is tricky with √.
-  -- Alternative: use nlinarith with sq_abs or positivity hints.
-  -- Simplest: note that each term q_h · (√f_h - c)² ≥ 0, and
-  -- ∑ q_h · (√f_h)² = ∑ q_h · f_h (since (√f_h)² = f_h for f_h ≥ 0).
-  -- Expand (√f_h - c)² = f_h - 2c√f_h + c².
-  -- Then ∑ q_h(f_h - 2c√f_h + c²) = ∑ q_h f_h - 2c·c + c²·1 = ∑ q_h f_h - c².
-  -- So 0 ≤ ∑ q_h f_h - c², i.e., c² ≤ ∑ q_h f_h.
   suffices h_sq_le : c ^ 2 ≤ ∑ h : H, Q.prob h * f h by
     linarith
-  -- Expand ∑ q_h (√f_h - c)² and use nonnegativity
   have h_expand_term : ∀ h : H, Q.prob h * (Real.sqrt (f h) - c) ^ 2 =
       Q.prob h * f h - 2 * Q.prob h * Real.sqrt (f h) * c + Q.prob h * c ^ 2 := by
     intro h
     have hsq : Real.sqrt (f h) * Real.sqrt (f h) = f h := Real.mul_self_sqrt (hf h)
     nlinarith [sq_nonneg (Real.sqrt (f h) - c), Q.prob_nonneg h, sq_nonneg c, hsq]
-  -- Direct proof: each term q_h(√f_h - c)² ≥ 0, and sum expands to ∑q_h·f_h - c²
-  -- Instead of expanding the sum, use nlinarith with the individual term expansion
   have h_sum_qf : ∑ h : H, Q.prob h * (Real.sqrt (f h) - c) ^ 2 =
       ∑ h : H, (Q.prob h * f h - 2 * Q.prob h * Real.sqrt (f h) * c + Q.prob h * c ^ 2) := by
     congr 1; ext h; exact h_expand_term h
@@ -380,7 +339,6 @@ private lemma gibbs_bound_of_pointwise {X : Type u} [MeasurableSpace X]
       gibbsEmpError Q hs c S +
       Real.sqrt ((crossEntropyFinitePMF Q P + Real.log (1 / δ)) / (2 * ↑m)) := by
   unfold gibbsError gibbsEmpError expectFinitePMF
-  -- Step 1: pointwise bound → weighted sum bound
   set g := fun h : H => Real.log (1 / (P.prob h * δ)) / (2 * ↑m)
   have h_step1 : ∑ h : H, Q.prob h * TrueErrorReal X (hs h) c D ≤
       ∑ h : H, Q.prob h * EmpiricalError X Bool (hs h)
@@ -396,7 +354,6 @@ private lemma gibbs_bound_of_pointwise {X : Type u} [MeasurableSpace X]
             (zeroOneLoss Bool) + Q.prob h * Real.sqrt (g h)) :=
           Finset.sum_le_sum (fun h _ => this h)
       _ = _ := Finset.sum_add_distrib
-  -- Step 2: Jensen's inequality for √
   have hg_nonneg : ∀ h : H, 0 ≤ g h := by
     intro h; apply div_nonneg _ (by positivity)
     apply Real.log_nonneg; rw [le_div_iff₀ (mul_pos (hP_pos h) hδ)]
@@ -406,17 +363,13 @@ private lemma gibbs_bound_of_pointwise {X : Type u} [MeasurableSpace X]
         (le_of_eq P.prob_sum_one)
     nlinarith
   have h_jensen := jensen_sqrt_finpmf Q g hg_nonneg
-  -- Step 3: ∑ Q(h)·g(h) = (crossEntropyFinitePMF Q P + log(1/δ))/(2m)
   have h_sum_g : ∑ h : H, Q.prob h * g h =
       (crossEntropyFinitePMF Q P + Real.log (1 / δ)) / (2 * ↑m) := by
     simp only [g]
-    -- Rewrite Q.prob h * (log(...)/(2m)) to (Q.prob h * log(...)) / (2m)
     simp_rw [mul_div_assoc']
     rw [← Finset.sum_div]
     congr 1
-    -- Now need: ∑ Q.prob h * log(1/(P.prob h * δ)) = crossEntropy Q P + log(1/δ)
     unfold crossEntropyFinitePMF
-    -- log(1/(P(h)·δ)) = log(1/P(h)) + log(1/δ)
     have h_split : ∀ h : H, Q.prob h * Real.log (1 / (P.prob h * δ)) =
         (if Q.prob h = 0 then 0 else Q.prob h * Real.log (1 / P.prob h)) +
         Q.prob h * Real.log (1 / δ) := by
@@ -430,9 +383,7 @@ private lemma gibbs_bound_of_pointwise {X : Type u} [MeasurableSpace X]
         ring
     simp_rw [h_split, Finset.sum_add_distrib]
     congr 1
-    -- ∑ Q(h) · log(1/δ) = log(1/δ)
     rw [← Finset.sum_mul, Q.prob_sum_one, one_mul]
-  -- Combine: step1 gives ≤ empErr + ∑Q√g, Jensen gives ∑Q√g ≤ √(∑Qg), sum_g rewrites
   have h_sqrt_eq : Real.sqrt (∑ h : H, Q.prob h * g h) =
       Real.sqrt ((crossEntropyFinitePMF Q P + Real.log (1 / δ)) / (2 * ↑m)) := by
     rw [h_sum_g]

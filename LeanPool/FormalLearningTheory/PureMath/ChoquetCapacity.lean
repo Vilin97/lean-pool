@@ -246,18 +246,14 @@ private lemma iInter_closure_image_cyl_eq
     have hg_conv : Tendsto (fun n => g (φ n)) atTop (𝓝 g_star) := by
       rw [tendsto_pi_nhds]
       intro i
-      -- In discrete ℕ, convergence means eventually equal
       simp only [nhds_discrete, Filter.tendsto_pure]
-      -- Eventually g'(φ n) i = g_star i (from hg'_conv)
       have hg'_ev : ∀ᶠ n in atTop, g' (φ n) i = g_star i := by
         rw [tendsto_pi_nhds] at hg'_conv
         have := hg'_conv i
         simp only [nhds_discrete, Filter.tendsto_pure] at this
         exact this
-      -- Eventually φ n ≥ i (since φ is strictly monotone)
       have hφ_ev : ∀ᶠ n in atTop, i ≤ φ n :=
         (hφ_strict.tendsto_atTop).eventually (Filter.eventually_ge_atTop i)
-      -- When both hold, g(φ n) i = g'(φ n) i = g_star i
       filter_upwards [hg'_ev, hφ_ev] with n h1 h2
       rw [← h1, hg'_agree (φ n) i h2]
     -- f(g(φ n)) → f(g_star) by continuity
@@ -267,12 +263,9 @@ private lemma iInter_closure_image_cyl_eq
     have hfy : Tendsto (fun n => f (g (φ n))) atTop (𝓝 y) := by
       rw [Metric.tendsto_atTop]
       intro ε hε
-      -- 1/(n+1) → 0, so eventually 1/(φ n + 1) < ε
       have h1div : Tendsto (fun n : ℕ => (1 : ℝ) / (↑n + 1)) atTop (𝓝 0) :=
         tendsto_one_div_add_atTop_nhds_zero_nat
-      -- φ n → ∞
       have hφ_top := hφ_strict.tendsto_atTop
-      -- So 1/(φ n + 1) → 0
       have h_comp : Tendsto (fun n => (1 : ℝ) / (↑(φ n) + 1)) atTop (𝓝 0) :=
         h1div.comp hφ_top
       obtain ⟨M, hM⟩ := (Metric.tendsto_atTop.mp h_comp) ε hε

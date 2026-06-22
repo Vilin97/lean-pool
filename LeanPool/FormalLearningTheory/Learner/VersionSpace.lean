@@ -89,11 +89,8 @@ theorem measurableSet_isConsistent
       = ⋂ i, {S | enum n (S i).1 = (S i).2} := by
     ext S; simp [mem_iInter]
   rw [this]
-  apply MeasurableSet.iInter
-  intro i
-  exact measurableSet_eq_fun
-    ((h_meas n).comp ((measurable_pi_apply i).fst))
-    ((measurable_pi_apply i).snd)
+  refine MeasurableSet.iInter fun i => measurableSet_eq_fun ?_ (measurable_pi_apply i).snd
+  exact (h_meas n).comp (measurable_pi_apply i).fst
 
 /-- The "first consistent index is n" event is measurable. -/
 theorem measurableSet_isFirstConsistent
@@ -109,11 +106,9 @@ theorem measurableSet_isFirstConsistent
         (⋂ k, ⋂ (_ : k < n), {S | IsSampleConsistent (enum k) S}ᶜ) := by
     ext S; simp [mem_inter_iff, mem_iInter, mem_compl_iff, mem_setOf_eq]
   rw [this]
-  apply MeasurableSet.inter
-  · exact measurableSet_isConsistent enum h_meas m n
-  · apply MeasurableSet.iInter; intro k
-    apply MeasurableSet.iInter; intro _
-    exact (measurableSet_isConsistent enum h_meas m k).compl
+  refine (measurableSet_isConsistent enum h_meas m n).inter ?_
+  exact MeasurableSet.iInter fun k => MeasurableSet.iInter fun _ =>
+    (measurableSet_isConsistent enum h_meas m k).compl
 
 /-- Bridge: `Nat.find h = n ↔ IsFirstConsistent`. -/
 theorem nat_find_eq_iff_isFirstConsistent
@@ -143,31 +138,19 @@ theorem measurableSet_versionSpace_true
     constructor
     · intro hlearn
       show ∃ i, IsFirstConsistent enum S i ∧ enum i x = true
-      have : (versionSpaceLearner enum).learn S x =
-          (if h : ∃ n, IsSampleConsistent (enum n) S then enum (Nat.find h)
-            else fun _ => false) x := rfl
-      rw [this] at hlearn
+      change (if h : ∃ n, IsSampleConsistent (enum n) S then enum (Nat.find h)
+            else fun _ => false) x = true at hlearn
       by_cases hex : ∃ n, IsSampleConsistent (enum n) S
       · simp only [dif_pos hex] at hlearn
-        refine ⟨Nat.find hex, ?_, hlearn⟩
-        exact (nat_find_eq_iff_isFirstConsistent enum S hex (Nat.find hex)).mp rfl
+        exact ⟨Nat.find hex, (nat_find_eq_iff_isFirstConsistent enum S hex _).mp rfl, hlearn⟩
       · rw [dif_neg hex] at hlearn; simp at hlearn
     · rintro ⟨n, hfirst, henum⟩
-      show (versionSpaceLearner enum).learn S x = true
-      have : (versionSpaceLearner enum).learn S x =
-          (if h : ∃ n, IsSampleConsistent (enum n) S then enum (Nat.find h)
-            else fun _ => false) x := rfl
-      rw [this]
+      change (if h : ∃ n, IsSampleConsistent (enum n) S then enum (Nat.find h)
+            else fun _ => false) x = true
       have hex : ∃ k, IsSampleConsistent (enum k) S := ⟨n, hfirst.1⟩
       simp only [dif_pos hex]
-      have hfind := (nat_find_eq_iff_isFirstConsistent enum S hex (Nat.find hex)).mp rfl
-      have heq : Nat.find hex = n := by
-        rcases hfind with ⟨hcons_find, hmin_find⟩
-        rcases hfirst with ⟨hcons_n, hmin_n⟩
-        by_contra hne
-        rcases lt_or_gt_of_ne hne with h | h
-        · exact hmin_n _ h hcons_find
-        · exact hmin_find _ h hcons_n
+      have heq : Nat.find hex = n :=
+        (nat_find_eq_iff_isFirstConsistent enum S hex n).mpr hfirst
       rw [heq]; exact henum
   rw [key]
   exact .iUnion fun n =>

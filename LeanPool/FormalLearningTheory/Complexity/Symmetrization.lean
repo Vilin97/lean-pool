@@ -51,6 +51,71 @@ open MeasureTheory ENNReal
 
 /-! ## T1: One-sided Hoeffding Inequality -/
 
+/-- Shared sub-Gaussian tail bound: for a measurable centered `g : X → ℝ` whose range
+    lies in an interval of width `1`, the per-coordinate sum exceeds `m * t` with
+    probability at most `exp(-2 m t²)`. This is the common core of the upper- and
+    lower-tail Hoeffding bounds. -/
+private theorem subgaussian_sum_tail {X : Type u} [MeasurableSpace X]
+    (D : MeasureTheory.Measure X) [MeasureTheory.IsProbabilityMeasure D]
+    (m : ℕ) (t : ℝ) (ht : 0 < t) (g : X → ℝ) (a : ℝ)
+    (h_g_meas : Measurable g) (h_g_bound : ∀ x : X, g x ∈ Set.Icc a (a + 1))
+    (h_int_g : ∫ x, g x ∂D = 0) :
+    (MeasureTheory.Measure.pi (fun _ : Fin m => D)).real
+      {xs : Fin m → X | ↑m * t ≤ ∑ i : Fin m, g (xs i)}
+    ≤ Real.exp (-2 * ↑m * t ^ 2) := by
+  set μ := MeasureTheory.Measure.pi (fun _ : Fin m => D) with hμ_def
+  have : MeasureTheory.IsProbabilityMeasure μ := by rw [hμ_def]; infer_instance
+  have h_g_subG : ProbabilityTheory.HasSubgaussianMGF g ((1 / 2 : NNReal) ^ 2) D := by
+    have h_param : (‖(a + 1) - a‖₊ / 2) ^ 2 = ((1 : NNReal) / 2) ^ 2 := by
+      congr 1
+      rw [show (a + 1) - a = (1 : ℝ) from by ring]
+      simp [nnnorm_one]
+    rw [← h_param]
+    exact ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero
+      h_g_meas.aemeasurable (Filter.Eventually.of_forall h_g_bound) h_int_g
+  have h_indep : ProbabilityTheory.iIndepFun
+      (m := fun _ => inferInstance)
+      (fun i (xs : Fin m → X) => g (xs i)) μ := by
+    rw [hμ_def]
+    exact ProbabilityTheory.iIndepFun_pi (fun _ => h_g_meas.aemeasurable)
+  have h_subG_each : ∀ i : Fin m, ProbabilityTheory.HasSubgaussianMGF
+      (fun xs : Fin m → X => g (xs i)) ((1 / 2 : NNReal) ^ 2) μ := fun i =>
+    have : ProbabilityTheory.HasSubgaussianMGF
+        (g ∘ fun (xs : Fin m → X) => xs i) ((1 / 2 : NNReal) ^ 2) μ :=
+      ProbabilityTheory.HasSubgaussianMGF.of_map (measurable_pi_apply i).aemeasurable
+        (by rw [hμ_def, MeasureTheory.measurePreserving_eval _ i |>.map_eq]; exact h_g_subG)
+    this
+  have h_eps_pos : (0 : ℝ) ≤ ↑m * t := by positivity
+  have h_hoeff := ProbabilityTheory.HasSubgaussianMGF.measure_sum_ge_le_of_iIndepFun
+    h_indep (c := fun _ => (1 / 2 : NNReal) ^ 2) (s := Finset.univ)
+    (fun i _ => h_subG_each i) h_eps_pos
+  have h_sum_c : (∑ i ∈ (Finset.univ : Finset (Fin m)), ((1 / 2 : NNReal) ^ 2 : NNReal)) =
+      ↑m * (1 / 2 : NNReal) ^ 2 := by
+    simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+  rw [h_sum_c] at h_hoeff
+  rwa [show Real.exp (-(↑m * t) ^ 2 / (2 * ↑(↑m * (1 / 2 : NNReal) ^ 2 : NNReal))) =
+      Real.exp (-2 * ↑m * t ^ 2) from by
+    congr 1
+    push_cast
+    field_simp] at h_hoeff
+
+/-- The zero-one empirical error is nonnegative. -/
+private theorem empiricalError_zeroOne_nonneg {X : Type u} (h : Concept X Bool) {m : ℕ}
+    (hm : 0 < m) (S : Fin m → X × Bool) :
+    0 ≤ EmpiricalError X Bool h S (zeroOneLoss Bool) := by
+  simp only [EmpiricalError, Nat.pos_iff_ne_zero.mp hm, ↓reduceIte]
+  exact div_nonneg (Finset.sum_nonneg fun i _ => by
+    simp only [zeroOneLoss]; split <;> linarith) (Nat.cast_nonneg' m)
+
+/-- The zero-one empirical error is at most one. -/
+private theorem empiricalError_zeroOne_le_one {X : Type u} (h : Concept X Bool) {m : ℕ}
+    (hm : 0 < m) (S : Fin m → X × Bool) :
+    EmpiricalError X Bool h S (zeroOneLoss Bool) ≤ 1 := by
+  simp only [EmpiricalError, Nat.pos_iff_ne_zero.mp hm, ↓reduceIte]
+  rw [div_le_one (Nat.cast_pos.mpr hm)]
+  exact (Finset.sum_le_card_nsmul Finset.univ _ 1 fun i _ => by
+    simp only [zeroOneLoss]; split <;> linarith).trans (by simp)
+
 /-- One-sided Hoeffding: for iid Bernoulli(p) draws, the empirical average
     undershoots the mean by ≥ t with probability ≤ exp(-2mt²).
 
@@ -130,12 +195,11 @@ theorem hoeffding_one_sided {X : Type u} [MeasurableSpace X]
         rw [ofReal_measureReal]
     _ ≤ ENNReal.ofReal (Real.exp (-2 * ↑m * t ^ 2)) := by
         apply ENNReal.ofReal_le_ofReal
-        have : MeasureTheory.IsProbabilityMeasure μ := by rw [hμ_def]; infer_instance
         set g : X → ℝ := fun x => p - indicator x with hg_def
         have h_ind_bound : ∀ x : X, indicator x ∈ Set.Icc (0 : ℝ) 1 := fun x => by
           simp only [hind_def, zeroOneLoss, Set.mem_Icc]
           split <;> norm_num
-        have h_g_bound : ∀ x : X, g x ∈ Set.Icc (p - 1) p := fun x => by
+        have h_g_bound : ∀ x : X, g x ∈ Set.Icc (p - 1) ((p - 1) + 1) := fun x => by
           simp only [hg_def, Set.mem_Icc]
           constructor <;> linarith [(h_ind_bound x).1, (h_ind_bound x).2]
         have h_ind_meas : Measurable indicator := by
@@ -155,42 +219,7 @@ theorem hoeffding_one_sided {X : Type u} [MeasurableSpace X]
             (Integrable.of_mem_Icc 0 1 h_ind_meas.aemeasurable
               (Filter.Eventually.of_forall h_ind_bound))]
           simp [h_int_ind]
-        have h_g_subG : ProbabilityTheory.HasSubgaussianMGF g ((1 / 2 : NNReal) ^ 2) D := by
-          have h_param : (‖p - (p - 1)‖₊ / 2) ^ 2 = ((1 : NNReal) / 2) ^ 2 := by
-            congr 1
-            rw [show p - (p - 1) = (1 : ℝ) from by ring]
-            simp [nnnorm_one]
-          rw [← h_param]
-          exact ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero
-            h_g_meas.aemeasurable (Filter.Eventually.of_forall h_g_bound) h_int_g
-        have h_indep : ProbabilityTheory.iIndepFun
-            (m := fun _ => inferInstance)
-            (fun i (xs : Fin m → X) => g (xs i)) μ := by
-          rw [hμ_def]
-          exact ProbabilityTheory.iIndepFun_pi (fun _ => h_g_meas.aemeasurable)
-        have h_subG_each : ∀ i : Fin m, ProbabilityTheory.HasSubgaussianMGF
-            (fun xs : Fin m → X => g (xs i)) ((1 / 2 : NNReal) ^ 2) μ := fun i =>
-          have : ProbabilityTheory.HasSubgaussianMGF
-              (g ∘ fun (xs : Fin m → X) => xs i) ((1 / 2 : NNReal) ^ 2) μ :=
-            ProbabilityTheory.HasSubgaussianMGF.of_map (measurable_pi_apply i).aemeasurable
-              (by rw [hμ_def, MeasureTheory.measurePreserving_eval _ i |>.map_eq]; exact h_g_subG)
-          this
-        have h_eps_pos : (0 : ℝ) ≤ ↑m * t := by positivity
-        have h_hoeff := ProbabilityTheory.HasSubgaussianMGF.measure_sum_ge_le_of_iIndepFun
-          h_indep
-          (c := fun _ => (1 / 2 : NNReal) ^ 2)
-          (s := Finset.univ)
-          (fun i _ => h_subG_each i)
-          h_eps_pos
-        have h_sum_c : (∑ i ∈ (Finset.univ : Finset (Fin m)), ((1 / 2 : NNReal) ^ 2 : NNReal)) =
-            ↑m * (1 / 2 : NNReal) ^ 2 := by
-          simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-        rw [h_sum_c] at h_hoeff
-        rwa [show Real.exp (-(↑m * t) ^ 2 / (2 * ↑(↑m * (1 / 2 : NNReal) ^ 2 : NNReal))) =
-            Real.exp (-2 * ↑m * t ^ 2) from by
-          congr 1
-          push_cast
-          field_simp] at h_hoeff
+        exact subgaussian_sum_tail D m t ht g (p - 1) h_g_meas h_g_bound h_int_g
 
 /-! ## T2: Symmetrization Step -/
 
@@ -320,11 +349,7 @@ theorem symmetrization_step {X : Type u} [MeasurableSpace X]
           have hmeas_disagree : MeasurableSet {x | h_star x ≠ c x} :=
             (measurableSet_eq_fun (hmeas_C h_star h_star_in_C) hc_meas).compl
           have h_true_le_one : TrueErrorReal X h_star c D ≤ 1 := measureReal_le_one
-          have h_emp_nonneg : 0 ≤ EmpiricalError X Bool h_star
-              (fun i => (xs i, c (xs i))) (zeroOneLoss Bool) := by
-            simp only [EmpiricalError, Nat.pos_iff_ne_zero.mp hm, ↓reduceIte]
-            exact div_nonneg (Finset.sum_nonneg fun i _ => by
-              simp only [zeroOneLoss]; split <;> linarith) (Nat.cast_nonneg' m)
+          have h_emp_nonneg := empiricalError_zeroOne_nonneg h_star hm (fun i => (xs i, c (xs i)))
           by_cases hε1 : ε ≤ 1
           case neg =>
             push Not at hε1
@@ -1035,17 +1060,8 @@ theorem double_sample_pattern_bound {X : Type u} [MeasurableSpace X] [Infinite X
       have hE_empty : E = ∅ := by
         ext p; simp only [hE_def, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
         intro ⟨h_hyp, h_in_C, h_gap⟩
-        have h_emp_le : EmpiricalError X Bool h_hyp (fun i => (p.2 i, c (p.2 i)))
-            (zeroOneLoss Bool) ≤ 1 := by
-          simp only [EmpiricalError, Nat.pos_iff_ne_zero.mp hm, ↓reduceIte]
-          rw [div_le_one (Nat.cast_pos.mpr hm)]
-          exact (Finset.sum_le_card_nsmul Finset.univ _ 1 fun i _ => by
-            simp only [zeroOneLoss]; split <;> linarith).trans (by simp)
-        have h_emp_nn : 0 ≤ EmpiricalError X Bool h_hyp (fun i => (p.1 i, c (p.1 i)))
-            (zeroOneLoss Bool) := by
-          simp only [EmpiricalError, Nat.pos_iff_ne_zero.mp hm, ↓reduceIte]
-          exact div_nonneg (Finset.sum_nonneg fun i _ => by
-            simp only [zeroOneLoss]; split <;> linarith) (Nat.cast_nonneg' m)
+        have h_emp_le := empiricalError_zeroOne_le_one h_hyp hm (fun i => (p.2 i, c (p.2 i)))
+        have h_emp_nn := empiricalError_zeroOne_nonneg h_hyp hm (fun i => (p.1 i, c (p.1 i)))
         linarith
       rw [hE_empty, MeasureTheory.measure_empty]; exact bot_le
     · -- ε ≤ 2
@@ -1115,12 +1131,11 @@ theorem hoeffding_one_sided_upper {X : Type u} [MeasurableSpace X]
         rw [ofReal_measureReal]
     _ ≤ ENNReal.ofReal (Real.exp (-2 * ↑m * t ^ 2)) := by
         apply ENNReal.ofReal_le_ofReal
-        have : MeasureTheory.IsProbabilityMeasure μ := by rw [hμ_def]; infer_instance
         set g : X → ℝ := fun x => indicator x - p with hg_def
         have h_ind_bound : ∀ x : X, indicator x ∈ Set.Icc (0 : ℝ) 1 := fun x => by
           simp only [hind_def, zeroOneLoss, Set.mem_Icc]
           split <;> norm_num
-        have h_g_bound : ∀ x : X, g x ∈ Set.Icc (-p) (1 - p) := fun x => by
+        have h_g_bound : ∀ x : X, g x ∈ Set.Icc (-p) ((-p) + 1) := fun x => by
           simp only [hg_def, Set.mem_Icc]
           constructor <;> linarith [(h_ind_bound x).1, (h_ind_bound x).2]
         have h_ind_meas : Measurable indicator := by
@@ -1141,42 +1156,7 @@ theorem hoeffding_one_sided_upper {X : Type u} [MeasurableSpace X]
               (Filter.Eventually.of_forall h_ind_bound))
             (integrable_const p)]
           simp [h_int_ind]
-        have h_g_subG : ProbabilityTheory.HasSubgaussianMGF g ((1 / 2 : NNReal) ^ 2) D := by
-          have h_param : (‖(1 - p) - (-p)‖₊ / 2) ^ 2 = ((1 : NNReal) / 2) ^ 2 := by
-            congr 1
-            rw [show (1 - p) - (-p) = (1 : ℝ) from by ring]
-            simp [nnnorm_one]
-          rw [← h_param]
-          exact ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero
-            h_g_meas.aemeasurable (Filter.Eventually.of_forall h_g_bound) h_int_g
-        have h_indep : ProbabilityTheory.iIndepFun
-            (m := fun _ => inferInstance)
-            (fun i (xs : Fin m → X) => g (xs i)) μ := by
-          rw [hμ_def]
-          exact ProbabilityTheory.iIndepFun_pi (fun _ => h_g_meas.aemeasurable)
-        have h_subG_each : ∀ i : Fin m, ProbabilityTheory.HasSubgaussianMGF
-            (fun xs : Fin m → X => g (xs i)) ((1 / 2 : NNReal) ^ 2) μ := fun i =>
-          have : ProbabilityTheory.HasSubgaussianMGF
-              (g ∘ fun (xs : Fin m → X) => xs i) ((1 / 2 : NNReal) ^ 2) μ :=
-            ProbabilityTheory.HasSubgaussianMGF.of_map (measurable_pi_apply i).aemeasurable
-              (by rw [hμ_def, MeasureTheory.measurePreserving_eval _ i |>.map_eq]; exact h_g_subG)
-          this
-        have h_eps_pos : (0 : ℝ) ≤ ↑m * t := by positivity
-        have h_hoeff := ProbabilityTheory.HasSubgaussianMGF.measure_sum_ge_le_of_iIndepFun
-          h_indep
-          (c := fun _ => (1 / 2 : NNReal) ^ 2)
-          (s := Finset.univ)
-          (fun i _ => h_subG_each i)
-          h_eps_pos
-        have h_sum_c : (∑ i ∈ (Finset.univ : Finset (Fin m)), ((1 / 2 : NNReal) ^ 2 : NNReal)) =
-            ↑m * (1 / 2 : NNReal) ^ 2 := by
-          simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-        rw [h_sum_c] at h_hoeff
-        rwa [show Real.exp (-(↑m * t) ^ 2 / (2 * ↑(↑m * (1 / 2 : NNReal) ^ 2 : NNReal))) =
-            Real.exp (-2 * ↑m * t ^ 2) from by
-          congr 1
-          push_cast
-          field_simp] at h_hoeff
+        exact subgaussian_sum_tail D m t ht g (-p) h_g_meas h_g_bound h_int_g
 
 /-- Symmetrization step for the lower tail:
     P[∃h: EmpErr-TrueErr ≥ ε] ≤
@@ -1234,21 +1214,12 @@ theorem symmetrization_step_lower {X : Type u} [MeasurableSpace X]
         ≤ μ S_ghost := by
           have hmeas_disagree : MeasurableSet {x | h_star x ≠ c x} :=
             (measurableSet_eq_fun (hmeas_C h_star h_star_in_C) hc_meas).compl
-          have h_emp_nonneg : 0 ≤ EmpiricalError X Bool h_star
-              (fun i => (xs i, c (xs i))) (zeroOneLoss Bool) := by
-            simp only [EmpiricalError, Nat.pos_iff_ne_zero.mp hm, ↓reduceIte]
-            exact div_nonneg (Finset.sum_nonneg fun i _ => by
-              simp only [zeroOneLoss]; split <;> linarith) (Nat.cast_nonneg' m)
+          have h_emp_nonneg := empiricalError_zeroOne_nonneg h_star hm (fun i => (xs i, c (xs i)))
           have h_true_le_one : TrueErrorReal X h_star c D ≤ 1 := measureReal_le_one
           have h_true_nonneg : (0 : ℝ) ≤ TrueErrorReal X h_star c D := by
             simp only [TrueErrorReal, TrueError]
             positivity
-          have h_emp_le_one : EmpiricalError X Bool h_star
-              (fun i => (xs i, c (xs i))) (zeroOneLoss Bool) ≤ 1 := by
-            simp only [EmpiricalError, Nat.pos_iff_ne_zero.mp hm, ↓reduceIte]
-            rw [div_le_one (Nat.cast_pos.mpr hm)]
-            exact (Finset.sum_le_card_nsmul Finset.univ _ 1 fun i _ => by
-              simp only [zeroOneLoss]; split <;> linarith).trans (by simp)
+          have h_emp_le_one := empiricalError_zeroOne_le_one h_star hm (fun i => (xs i, c (xs i)))
           by_cases hε1 : ε ≤ 1
           case neg =>
             push Not at hε1
