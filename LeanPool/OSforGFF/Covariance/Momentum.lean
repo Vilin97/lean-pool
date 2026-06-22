@@ -140,7 +140,7 @@ noncomputable def freePropagatorMomentumMathlib (m : ℝ) (k : SpaceTime) : ℝ 
 lemma freePropagatorMomentum_mathlib_pos (m : ℝ) (hm : 0 < m) (k : SpaceTime) :
     0 < freePropagatorMomentumMathlib m k := by
   have h2 : 0 < m^2 := sq_pos_of_pos hm
-  simp only [freePropagatorMomentumMathlib]
+  unfold freePropagatorMomentumMathlib
   positivity
 
 /-- The Mathlib propagator is non-negative. -/
@@ -245,9 +245,7 @@ lemma heatKernelPositionSpace_4D (t : ℝ) (ht : 0 < t) (r : ℝ) :
   -- (4πt)^{-2} = 1/(16π²t²)
   have hpos : 0 < 4 * Real.pi * t := by positivity
   have h1 : (4 * Real.pi * t) ^ (-(4 : ℝ) / 2) = 1 / (16 * Real.pi^2 * t^2) := by
-    rw [show -(4 : ℝ) / 2 = -2 by norm_num]
-    rw [Real.rpow_neg (le_of_lt hpos)]
-    rw [Real.rpow_two]
+    rw [show -(4 : ℝ) / 2 = -2 by norm_num, Real.rpow_neg hpos.le, Real.rpow_two]
     field_simp
     ring
   rw [h1]
@@ -256,26 +254,18 @@ lemma heatKernelPositionSpace_4D (t : ℝ) (ht : 0 < t) (r : ℝ) :
 lemma heatKernelPositionSpace_nonneg (t : ℝ) (ht : 0 < t) (r : ℝ) :
     0 ≤ heatKernelPositionSpace t r := by
   unfold heatKernelPositionSpace
-  apply mul_nonneg
-  · apply Real.rpow_nonneg
-    positivity
-  · exact Real.exp_nonneg _
+  exact mul_nonneg (Real.rpow_nonneg (by positivity) _) (Real.exp_nonneg _)
 
 
 /-- The heat kernel is continuous in t for t > 0. -/
 lemma heatKernelPositionSpace_continuous_at (t : ℝ) (ht : 0 < t) (r : ℝ) :
     ContinuousAt (fun s => heatKernelPositionSpace s r) t := by
   unfold heatKernelPositionSpace
-  apply ContinuousAt.mul
-  · apply ContinuousAt.rpow
-    · exact continuousAt_const.mul continuousAt_id
-    · exact continuousAt_const
-    · left; positivity
-  · apply Real.continuous_exp.continuousAt.comp
-    apply ContinuousAt.div
-    · exact continuousAt_const
-    · exact continuousAt_const.mul continuousAt_id
-    · simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]; exact ht.ne'
+  refine ContinuousAt.mul (ContinuousAt.rpow ?_ continuousAt_const (Or.inl (by positivity)))
+    (Real.continuous_exp.continuousAt.comp (ContinuousAt.div continuousAt_const ?_ ?_))
+  · exact continuousAt_const.mul continuousAt_id
+  · exact continuousAt_const.mul continuousAt_id
+  · simp only [ne_eq, mul_eq_zero, OfNat.ofNat_ne_zero, false_or]; exact ht.ne'
 
 /-- The heat kernel is bounded by a constant depending only on r > 0.
     Maximum of H(s,r) = (4πs)^{-d/2} exp(-r²/(4s)) occurs at s = r²/(2d).
@@ -1987,59 +1977,35 @@ lemma freeCovariance_hermitian (m : ℝ) (x y : SpaceTime) :
 /-- The free propagator function is smooth (infinitely differentiable). -/
 lemma freePropagator_smooth (m : ℝ) [Fact (0 < m)] :
   ContDiff ℝ (⊤ : ℕ∞) (fun k => freePropagatorMomentum m k) := by
-  -- The function k ↦ 1/(‖k‖² + m²) is smooth as a composition of smooth functions
   unfold freePropagatorMomentum
-  apply ContDiff.div
-  · -- The numerator 1 is smooth (constant)
-    exact contDiff_const
-  · -- The denominator ‖k‖² + m² is smooth
-    apply ContDiff.add
-    · exact contDiff_norm_sq ℝ
-    · exact contDiff_const
-  · -- The denominator is never zero
-    intro k
-    apply ne_of_gt
-    apply add_pos_of_nonneg_of_pos
-    · exact sq_nonneg ‖k‖
-    · exact pow_pos (Fact.out : 0 < m) 2
+  refine ContDiff.div contDiff_const ((contDiff_norm_sq ℝ).add contDiff_const)
+    (fun k => ne_of_gt ?_)
+  exact add_pos_of_nonneg_of_pos (sq_nonneg ‖k‖) (pow_pos (Fact.out : 0 < m) 2)
 
 /-- The complex-valued free propagator function is smooth. -/
 lemma freePropagator_complex_smooth (m : ℝ) [Fact (0 < m)] :
-  ContDiff ℝ (⊤ : ℕ∞) (fun k : SpaceTime => (freePropagatorMomentum m k : ℂ)) := by
-  have : (fun k : SpaceTime => (freePropagatorMomentum m k : ℂ)) =
-         (fun x : ℝ => (x : ℂ)) ∘ (fun k => freePropagatorMomentum m k) := rfl
-  rw [this]
-  apply ContDiff.comp
-  · exact ofRealCLM.contDiff
-  · exact freePropagator_smooth m
+  ContDiff ℝ (⊤ : ℕ∞) (fun k : SpaceTime => (freePropagatorMomentum m k : ℂ)) :=
+  ofRealCLM.contDiff.comp (freePropagator_smooth m)
 
 /-- The free propagator is positive -/
 lemma freePropagator_pos {m : ℝ} [Fact (0 < m)] (k : SpaceTime) : 0 < freePropagatorMomentum m k :=
   by
   unfold freePropagatorMomentum
-  apply div_pos
-  · norm_num
-  · apply add_pos_of_nonneg_of_pos
-    · exact sq_nonneg ‖k‖
-    · exact pow_pos (Fact.out : 0 < m) 2
+  exact div_pos one_pos (add_pos_of_nonneg_of_pos (sq_nonneg ‖k‖) (pow_pos (Fact.out : 0 < m) 2))
 
 /-- The free propagator is bounded above by 1/m² -/
 lemma freePropagator_bounded {m : ℝ} [Fact (0 < m)] (k : SpaceTime) :
   freePropagatorMomentum m k ≤ 1 / m^2 := by
   unfold freePropagatorMomentum
-  -- Since ‖k‖² ≥ 0, we have ‖k‖² + m² ≥ m², so 1/(‖k‖² + m²) ≤ 1/m²
-  apply div_le_div_of_nonneg_left
-  · norm_num
-  · exact pow_pos (Fact.out : 0 < m) 2
-  · apply le_add_of_nonneg_left
-    exact sq_nonneg ‖k‖
+  exact div_le_div_of_nonneg_left one_pos.le (pow_pos (Fact.out : 0 < m) 2)
+    (le_add_of_nonneg_left (sq_nonneg ‖k‖))
 
 /-- The free propagator is continuous -/
 lemma freePropagator_continuous {m : ℝ} [Fact (0 < m)] :
   Continuous (freePropagatorMomentum m) := by
   unfold freePropagatorMomentum
-  apply Continuous.div continuous_const ((continuous_norm.pow 2).add continuous_const)
-  intro k
+  refine Continuous.div continuous_const ((continuous_norm.pow 2).add continuous_const)
+    (fun k => ?_)
   exact ne_of_gt (add_pos_of_nonneg_of_pos (sq_nonneg ‖k‖) (pow_pos (Fact.out : 0 < m) 2))
 
 /-! ## Complex conjugation properties of the propagator -/
@@ -2085,12 +2051,8 @@ noncomputable def momentumWeightSqrtMathlib (m : ℝ) (k : SpaceTime) : ℝ :=
 lemma momentumWeightSqrt_mathlib_pos (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
     0 < momentumWeightSqrtMathlib m k := by
   unfold momentumWeightSqrtMathlib
-  apply div_pos
-  · norm_num
-  · apply Real.sqrt_pos.mpr
-    have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
-    have h2 : 0 < m^2 := sq_pos_of_pos (Fact.out : 0 < m)
-    linarith
+  refine div_pos one_pos (Real.sqrt_pos.mpr ?_)
+  exact add_pos_of_nonneg_of_pos (by positivity) (sq_pos_of_pos (Fact.out : 0 < m))
 
 /-- The square of the sqrt weight equals the weight (Mathlib convention). -/
 lemma momentumWeightSqrt_mathlib_sq (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
@@ -2106,33 +2068,16 @@ lemma momentumWeightSqrt_mathlib_sq (m : ℝ) [Fact (0 < m)] (k : SpaceTime) :
 lemma momentumWeightSqrt_continuous (m : ℝ) [Fact (0 < m)] :
     Continuous (fun k : SpaceTime => momentumWeightSqrt m k) := by
   unfold momentumWeightSqrt
-  apply Continuous.div continuous_const
-  · apply Continuous.sqrt
-    apply Continuous.add
-    · exact continuous_norm.pow 2
-    · exact continuous_const
-  · intro k
-    apply ne_of_gt
-    apply Real.sqrt_pos.mpr
-    apply add_pos_of_nonneg_of_pos
-    · exact sq_nonneg _
-    · exact pow_pos (Fact.out : 0 < m) 2
+  refine Continuous.div continuous_const (by fun_prop) (fun k => ne_of_gt ?_)
+  exact Real.sqrt_pos.mpr (add_pos_of_nonneg_of_pos (sq_nonneg _) (pow_pos (Fact.out : 0 < m) 2))
 
 /-- The momentum weight sqrt function is continuous (Mathlib convention). -/
 lemma momentumWeightSqrt_mathlib_continuous (m : ℝ) [Fact (0 < m)] :
     Continuous (fun k : SpaceTime => momentumWeightSqrtMathlib m k) := by
   unfold momentumWeightSqrtMathlib
-  apply Continuous.div continuous_const
-  · apply Continuous.sqrt
-    apply Continuous.add
-    · exact continuous_const.mul (continuous_norm.pow 2)
-    · exact continuous_const
-  · intro k
-    apply ne_of_gt
-    apply Real.sqrt_pos.mpr
-    have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
-    have h2 : 0 < m^2 := sq_pos_of_pos (Fact.out : 0 < m)
-    linarith
+  refine Continuous.div continuous_const (by fun_prop) (fun k => ne_of_gt ?_)
+  exact Real.sqrt_pos.mpr
+    (add_pos_of_nonneg_of_pos (by positivity) (sq_pos_of_pos (Fact.out : 0 < m)))
 
 /-- The momentum weight sqrt function is measurable (physics convention). -/
 lemma momentumWeightSqrt_measurable (m : ℝ) [Fact (0 < m)] :
@@ -2144,58 +2089,28 @@ lemma momentumWeightSqrt_mathlib_measurable (m : ℝ) [Fact (0 < m)] :
     Measurable (fun k : SpaceTime => momentumWeightSqrtMathlib m k) :=
   (momentumWeightSqrt_mathlib_continuous m).measurable
 
+/-- Helper: `1 / √(A + m²) ≤ 1 / m` for `0 < m` and `0 ≤ A`. -/
+private lemma one_div_sqrt_add_sq_le_inv (m : ℝ) (hm : 0 < m) {A : ℝ} (hA : 0 ≤ A) :
+    1 / Real.sqrt (A + m^2) ≤ 1 / m := by
+  refine one_div_le_one_div_of_le hm ?_
+  calc m = Real.sqrt (m^2) := (Real.sqrt_sq hm.le).symm
+    _ ≤ Real.sqrt (A + m^2) := Real.sqrt_le_sqrt (by linarith)
+
 /-- Helper: The weight function as an L^∞ function (essentially bounded). -/
 lemma momentumWeightSqrt_bounded_ae (m : ℝ) [Fact (0 < m)] :
     ∀ᵐ k ∂(volume : Measure SpaceTime), ‖(momentumWeightSqrt m k : ℂ)‖ ≤ 1 / m := by
   filter_upwards with k
-  simp only [Complex.norm_real]
-  unfold momentumWeightSqrt
-  have hmpos : 0 < m := Fact.out
-  have hk_nonneg : 0 ≤ ‖k‖^2 := sq_nonneg _
-  have hm_sq : m^2 ≤ ‖k‖^2 + m^2 := by linarith
-  have hm_sqrt_le : m ≤ Real.sqrt (‖k‖^2 + m^2) := by
-    calc m = Real.sqrt (m^2) := by rw [Real.sqrt_sq (le_of_lt hmpos)]
-      _ ≤ Real.sqrt (‖k‖^2 + m^2) := Real.sqrt_le_sqrt hm_sq
-  have h_sqrt_pos : 0 < Real.sqrt (‖k‖^2 + m^2) := by
-    apply Real.sqrt_pos.mpr
-    apply add_pos_of_nonneg_of_pos hk_nonneg (pow_pos hmpos 2)
-  have h_inv_le : 1 / Real.sqrt (‖k‖^2 + m^2) ≤ 1 / m :=
-    one_div_le_one_div_of_le hmpos hm_sqrt_le
-  have h_inv_pos : 0 < 1 / Real.sqrt (‖k‖^2 + m^2) := by
-    apply div_pos
-    · norm_num
-    · exact h_sqrt_pos
-  calc ‖1 / Real.sqrt (‖k‖^2 + m^2)‖
-      = |1 / Real.sqrt (‖k‖^2 + m^2)| := Real.norm_eq_abs _
-    _ = 1 / Real.sqrt (‖k‖^2 + m^2) := abs_of_pos h_inv_pos
-    _ ≤ 1 / m := h_inv_le
+  simp only [Complex.norm_real, momentumWeightSqrt, Real.norm_eq_abs,
+    abs_of_nonneg (by positivity : (0:ℝ) ≤ 1 / Real.sqrt (‖k‖^2 + m^2))]
+  exact one_div_sqrt_add_sq_le_inv m Fact.out (sq_nonneg _)
 
 /-- Helper: The mathlib weight function as an L^∞ function (essentially bounded). -/
 lemma momentumWeightSqrt_mathlib_bounded_ae (m : ℝ) [Fact (0 < m)] :
     ∀ᵐ k ∂(volume : Measure SpaceTime), ‖(momentumWeightSqrtMathlib m k : ℂ)‖ ≤ 1 / m := by
   filter_upwards with k
-  simp only [Complex.norm_real]
-  unfold momentumWeightSqrtMathlib
-  have hmpos : 0 < m := Fact.out
-  have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
-  have hm_sq : m^2 ≤ (2 * Real.pi)^2 * ‖k‖^2 + m^2 := by linarith
-  have hm_sqrt_le : m ≤ Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := by
-    calc m = Real.sqrt (m^2) := by rw [Real.sqrt_sq (le_of_lt hmpos)]
-      _ ≤ Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := Real.sqrt_le_sqrt hm_sq
-  have h_sqrt_pos : 0 < Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := by
-    apply Real.sqrt_pos.mpr
-    have h2 : 0 < m^2 := sq_pos_of_pos hmpos
-    linarith
-  have h_inv_le : 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) ≤ 1 / m :=
-    one_div_le_one_div_of_le hmpos hm_sqrt_le
-  have h_inv_pos : 0 < 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := by
-    apply div_pos
-    · norm_num
-    · exact h_sqrt_pos
-  calc ‖1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2)‖
-      = |1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2)| := Real.norm_eq_abs _
-    _ = 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := abs_of_pos h_inv_pos
-    _ ≤ 1 / m := h_inv_le
+  simp only [Complex.norm_real, momentumWeightSqrtMathlib, Real.norm_eq_abs,
+    abs_of_nonneg (by positivity : (0:ℝ) ≤ 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2))]
+  exact one_div_sqrt_add_sq_le_inv m Fact.out (by positivity)
 
 /-- Multiplication by the square-root momentum weight defines a bounded
     linear operator on complex L² (physics convention).
@@ -2234,14 +2149,6 @@ lemma momentumWeightSqrt_mathlib_mul_CLM_spec (m : ℝ) [Fact (0 < m)]
 
 /-- The square-root momentum weight is pointwise bounded by `1 / m` (Mathlib convention). -/
 lemma momentumWeightSqrt_mathlib_le_inv_mass (m : ℝ) [Fact (0 < m)] :
-    ∀ k : SpaceTime, momentumWeightSqrtMathlib m k ≤ 1 / m := by
-  intro k
-  have hmpos : 0 < m := Fact.out
-  have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
-  have hm_sq : m^2 ≤ (2 * Real.pi)^2 * ‖k‖^2 + m^2 := by linarith
-  have hm_sqrt_le : m ≤ Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := by
-    calc m = Real.sqrt (m^2) := by rw [Real.sqrt_sq (le_of_lt hmpos)]
-      _ ≤ Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) := Real.sqrt_le_sqrt hm_sq
-  have h_inv_le : 1 / Real.sqrt ((2 * Real.pi)^2 * ‖k‖^2 + m^2) ≤ 1 / m :=
-    one_div_le_one_div_of_le hmpos hm_sqrt_le
-  simpa [momentumWeightSqrtMathlib, one_div] using h_inv_le
+    ∀ k : SpaceTime, momentumWeightSqrtMathlib m k ≤ 1 / m := fun k => by
+  simpa [momentumWeightSqrtMathlib] using
+    one_div_sqrt_add_sq_le_inv m Fact.out (A := (2 * Real.pi)^2 * ‖k‖^2) (by positivity)
