@@ -51,9 +51,7 @@ theorem sqrtTwoAddSeriesN_ub_pos (n k : ℕ) : (0 : ℝ) ≤ (sqrtTwoAddSeriesN 
 theorem sqrtTwoAddSeriesN_lb_lt_two (n k : ℕ) : (sqrtTwoAddSeriesN n).lb k < 2 := by
   rify
   refine lt_of_le_of_lt ?_ (Real.sqrtTwoAddSeries_lt_two n)
-  convert ComputableℝSeq.hlb _ _
-  symm
-  exact IsComputable.prop
+  exact_mod_cast sqrtTwoAddSeriesN_lb_le n k
 
 theorem sqrtTwoAddSeriesN_succ_lb (n k : ℕ) :
     (sqrtTwoAddSeriesN (n + 1)).lb k = (Sqrt.sqrtq (2 + (sqrtTwoAddSeriesN n).lub k) k).fst := by
@@ -110,16 +108,11 @@ theorem sqrtTwoAddSeriesN_bounds (n k : ℕ) (hk : 3 ≤ k) :
   have hl : (2 + x).fst ≤ 2 + Real.sqrtTwoAddSeries 0 n := by
     change ((2 + _ : ℚ) : ℝ) ≤ _
     rw [Rat.cast_add, Rat.cast_ofNat, add_le_add_iff_left]
-    convert ComputableℝSeq.hlb _ _
-    symm
-    exact IsComputable.prop
+    exact_mod_cast sqrtTwoAddSeriesN_lb_le n k
   have hu : 2 + Real.sqrtTwoAddSeries 0 n ≤ (2 + x).snd := by
     change _ ≤ ((2 + _ : ℚ) : ℝ)
     rw [Rat.cast_add, Rat.cast_ofNat, add_le_add_iff_left]
-    rw [← ge_iff_le]
-    convert ComputableℝSeq.hub _ _
-    symm
-    exact IsComputable.prop
+    exact_mod_cast sqrtTwoAddSeriesN_ub_ge n k
   have hm : 0 < (2 + x).fst := by
     change 0 < 2 + _
     suffices 0 ≤ x.fst by linarith
@@ -195,15 +188,11 @@ theorem sqrtTwoSubSqrtTwoAddSeries_lb (n k : ℕ) (hk : 3 ≤ k) :
     rw [Rat.cast_add, Rat.cast_ofNat, Rat.cast_neg]
     apply tsub_le_tsub_left
     rw [← ge_iff_le]
-    convert ComputableℝSeq.hub _ _
-    symm
-    exact IsComputable.prop
+    exact_mod_cast sqrtTwoAddSeriesN_ub_ge n k
   · change _ ≤ ((2 + -_ : ℚ) : ℝ)
     rw [Rat.cast_add, Rat.cast_ofNat, Rat.cast_neg]
     apply tsub_le_tsub_left
-    convert ComputableℝSeq.hlb _ _
-    symm
-    exact IsComputable.prop
+    exact_mod_cast sqrtTwoAddSeriesN_lb_le n k
   · linarith [Real.sqrtTwoAddSeries_lt_two n]
   have hx : ((2 - sqrtTwoAddSeriesN n).lub k).fst = 2 - (sqrtTwoAddSeriesN n).ub k := by
     change (2 +- _) = _
@@ -256,15 +245,11 @@ theorem sqrtTwoSubSqrtTwoAddSeries_ub (n k : ℕ) (hk : 3 ≤ k) :
     rw [Rat.cast_add, Rat.cast_ofNat, Rat.cast_neg]
     apply tsub_le_tsub_left
     rw [← ge_iff_le]
-    convert ComputableℝSeq.hub _ _
-    symm
-    exact IsComputable.prop
+    exact_mod_cast sqrtTwoAddSeriesN_ub_ge n k
   · change _ ≤ ((2 + -_ : ℚ) : ℝ)
     rw [Rat.cast_add, Rat.cast_ofNat, Rat.cast_neg]
     apply tsub_le_tsub_left
-    convert ComputableℝSeq.hlb _ _
-    symm
-    exact IsComputable.prop
+    exact_mod_cast sqrtTwoAddSeriesN_lb_le n k
   · linarith [Real.sqrtTwoAddSeries_lt_two n]
   have hx : ((2 - sqrtTwoAddSeriesN n).lub k).fst = 2 - (sqrtTwoAddSeriesN n).ub k := by
     change (2 +- _) = _
@@ -392,7 +377,7 @@ theorem piLb_causeq : ∃ (h' : IsCauSeq abs piLb), Real.mk ⟨piLb, h'⟩ = Rea
   have h₁ := Filter.Tendsto.const_mul 41 (tendsto_pow_const_div_const_pow_of_one_lt 1 one_lt_two)
   simp only [pow_one, mul_zero] at h₁
   replace h₁ := h₁.eventually_mem (Ioo_mem_nhds (neg_neg_iff_pos.mpr hε) hε)
-  simp only [Set.mem_Ioo, Filter.eventually_atTop, ge_iff_le] at h₁
+  simp only [Set.mem_Ioo, Filter.eventually_atTop] at h₁
   obtain ⟨i, hi⟩ := h₁
   use max i 1
   intro j hj
@@ -410,7 +395,7 @@ theorem piUb_causeq : ∃ (h' : IsCauSeq abs piUb), Real.mk ⟨piUb, h'⟩ = Rea
   have h₁ := Filter.Tendsto.const_mul 51 (tendsto_pow_const_div_const_pow_of_one_lt 1 one_lt_two)
   simp only [pow_one, mul_zero] at h₁
   replace h₁ := h₁.eventually_mem (Ioo_mem_nhds (neg_neg_iff_pos.mpr hε) hε)
-  simp only [Set.mem_Ioo, Filter.eventually_atTop, ge_iff_le] at h₁
+  simp only [Set.mem_Ioo, Filter.eventually_atTop] at h₁
   obtain ⟨i, hi⟩ := h₁
   use max i 1
   intro j hj

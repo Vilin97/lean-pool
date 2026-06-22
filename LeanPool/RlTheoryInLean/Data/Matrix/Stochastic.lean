@@ -754,7 +754,8 @@ theorem stationary_distribution_exists (P : Matrix S S ℝ) [RowStochastic P]
     obtain ⟨nk, hn_increasing, hn_lim⟩ := hstationary
     have ha : Tendsto (fun n => ‖xn (nk n) - μ‖) atTop (𝓝 0) := by
       have := tendsto_iff_norm_sub_tendsto_zero.mp hn_lim
-      convert this using 2
+      convert this using 2 with n
+      rfl
     have halmostinv : ∀ n, ‖WithLp.toLp 1 ((xn n).ofLp ᵥ* P - (xn n).ofLp)‖₁ ≤ 2 / (n + 1) := by
       intro n
       unfold xn

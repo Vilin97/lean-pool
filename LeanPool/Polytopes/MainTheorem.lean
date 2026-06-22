@@ -159,13 +159,13 @@ lemma ExtremePointsofHpolytope {H_ : Set (Halfspace E)} (hH_ : H_.Finite) :
         unfold Hpolytope at hxH
         have hxIcinterior : x ∈ ⋂₀ ((interior <| SetLike.coe ·) '' (H_ \ Hpolytope.I H_ x)) := by
           rintro HiS ⟨ Hi_, hHi_, rfl ⟩
-          rw [Set.mem_diff, Hpolytope.I_mem, IsClosed.frontier_eq <| Halfspace_closed Hi_,
-            Set.mem_diff] at hHi_
+          rw [Set.mem_sdiff, Hpolytope.I_mem, IsClosed.frontier_eq <| Halfspace_closed Hi_,
+            Set.mem_sdiff] at hHi_
           push Not at hHi_
           exact hHi_.2 hHi_.1 <| hxH Hi_ ⟨ Hi_, hHi_.1, rfl ⟩
         have hIcinteriorOpen :
             IsOpen (⋂₀ ((interior <| SetLike.coe ·) '' (H_ \ Hpolytope.I H_ x))) := by
-          apply Set.Finite.isOpen_sInter (Set.Finite.image _ (Set.Finite.diff hH_))
+          apply Set.Finite.isOpen_sInter (Set.Finite.image _ (Set.Finite.sdiff hH_))
           exact fun _ ⟨ Hi_, _, h ⟩ => h ▸ isOpen_interior
         rw [Metric.isOpen_iff] at hIcinteriorOpen
         exact hIcinteriorOpen x hxIcinterior
@@ -220,7 +220,7 @@ lemma ExtremePointsofHpolytope {H_ : Set (Halfspace E)} (hH_ : H_.Finite) :
         apply openSegment_subset_segment
         exact Set.mem_of_mem_inter_left hsub
       · have : Hi_ ∈ H_ \ Hpolytope.I H_ x := by
-          rw [Set.mem_diff]
+          rw [Set.mem_sdiff]
           exact ⟨ hHi_, hninI ⟩
         exact hmemballmemIc x1 (Set.mem_of_mem_inter_right hsub) Hi_ this
     · -- x2 ∈ Hpolytope hH_
@@ -230,7 +230,7 @@ lemma ExtremePointsofHpolytope {H_ : Set (Halfspace E)} (hH_ : H_.Finite) :
         apply openSegment_subset_segment
         exact Set.mem_of_mem_inter_left hsub
       · have : Hi_ ∈ H_ \ Hpolytope.I H_ x := by
-          rw [Set.mem_diff]
+          rw [Set.mem_sdiff]
           exact ⟨ hHi_, hninI ⟩
         exact hmemballmemIc x2 (Set.mem_of_mem_inter_right hsub) Hi_ this
   · -- 2.
@@ -311,7 +311,7 @@ lemma DualOfVpolytope_compactHpolytope [FiniteDimensional ℝ E] {S : Set E} (hS
   use pointDual '' (Subtype.val ⁻¹' (S \ {0}))
   use (by
     apply Set.Finite.image
-    exact (Set.Finite.diff hS).preimage (Set.injOn_of_injective Subtype.val_injective))
+    exact (Set.Finite.sdiff hS).preimage (Set.injOn_of_injective Subtype.val_injective))
   apply subset_antisymm
   · -- hard direction
     -- take x from Hpolytope of nonzero elements of S
@@ -340,7 +340,7 @@ lemma DualOfVpolytope_compactHpolytope [FiniteDimensional ℝ E] {S : Set E} (hS
     rcases em (s = 0) with h | h
     · exact h ▸ pointDual_origin x'
     specialize hx (pointDual ⟨ s, h ⟩) (Set.mem_image_of_mem _ ?_)
-    · rw [Set.mem_preimage, Subtype.coe_mk, Set.mem_diff]
+    · rw [Set.mem_preimage, Subtype.coe_mk, Set.mem_sdiff]
       exact ⟨ hs, h ⟩
     rw [← Halfspace_mem, mem_pointDual, Subtype.coe_mk] at hx
     rw [mem_pointDual, Subtype.coe_mk, real_inner_comm]
@@ -353,7 +353,7 @@ lemma DualOfVpolytope_compactHpolytope [FiniteDimensional ℝ E] {S : Set E} (hS
     · apply subset_trans (by simp) <| subset_convexHull _ _
     · rw [Subtype.range_coe_subtype]
       intro x hx
-      rw [Set.mem_diff, Set.mem_singleton_iff] at hx
+      rw [Set.mem_sdiff, Set.mem_singleton_iff] at hx
       rw [Set.mem_setOf]
       exact hx.2
 

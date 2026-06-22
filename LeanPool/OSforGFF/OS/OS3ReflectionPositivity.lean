@@ -872,7 +872,7 @@ private lemma star_sum_antilinear {n : ℕ} (v : Fin n → ℂ) (g : Fin n → T
     star (∑ j, starRingEnd ℂ (v j) • g j) = ∑ j, v j • star (g j) := by
   ext x
   rw [star_apply]
-  simp only [SchwartzMap.sum_apply, SchwartzMap.smul_apply, smul_eq_mul]
+  simp only [_root_.sum_apply, _root_.smul_apply, smul_eq_mul]
   rw [map_sum]
   congr 1; ext j
   rw [map_mul, RCLike.conj_conj, star_apply]
@@ -936,7 +936,7 @@ private lemma reflection_matrix_IsRePSD
       change starRingEnd ℂ (v j) * (f j).val x = 0
       rw [PositiveTimeTestFunctionℂ.zero_on_nonpositive (f j) hx, mul_zero]
     change h x = 0
-    rw [h_def, SchwartzMap.sum_apply]
+    rw [h_def, _root_.sum_apply]
     exact Finset.sum_eq_zero fun j _ => this j
   -- star h = ∑ v_j star(f_j) by antilinearity of star
   have h_star : star h = ∑ j, v j • star ((f j).val) :=

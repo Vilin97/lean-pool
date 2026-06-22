@@ -253,11 +253,14 @@ lemma _root_.ProbabilityTheory.Kernel.entropy_reverse
     (hκ : AEFiniteKernelSupport κ μ) :
     Hk[reverse κ, μ] = Hk[κ, μ] := by
   refine le_antisymm ?_ ?_
-  · convert entropy_map_le (fun p ↦ (p.2.2, p.2.1, p.1)) hκ
-    simp [reverse_eq]
-  · conv_lhs => rw [← reverse_reverse κ]
-    convert entropy_map_le (κ := reverse κ) (fun p ↦ (p.2.2, p.2.1, p.1)) hκ.reverse
-    · rw [reverse_eq]
+  · have h : reverse κ = map κ (fun p ↦ (p.2.2, p.2.1, p.1)) := reverse_eq κ
+    have key := entropy_map_le (κ := κ) (μ := μ) (fun p ↦ (p.2.2, p.2.1, p.1)) hκ
+    rwa [← h] at key
+  · have hmap : map (reverse κ) (fun p ↦ (p.2.2, p.2.1, p.1)) = κ :=
+      (reverse_eq (reverse κ)).symm.trans (reverse_reverse κ)
+    have key := entropy_map_le (κ := reverse κ) (μ := μ) (fun p ↦ (p.2.2, p.2.1, p.1))
+      hκ.reverse
+    rwa [hmap] at key
 
 instance _root_.ProbabilityTheory.Kernel.IsZeroOrProbabilityMeasure.compProd
     {α β : Type*} {mα : MeasurableSpace α} {mβ : MeasurableSpace β}

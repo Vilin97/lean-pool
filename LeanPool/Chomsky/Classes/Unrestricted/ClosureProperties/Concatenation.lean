@@ -610,14 +610,14 @@ private lemma unwrap_eq_some_of_correspondingSymbols₁ {N₁ N₂ : Type} {s₁
 by
   rcases s₁ with t₁ | n₁
   · rcases s with t | n
-    · rw [show t = t₁ by convert hNss]
+    · rw [show t = t₁ from hNss]
       rfl
     · rcases n with o | t
       · rcases o with _ | n'
         · simp [wrapSymbol₁, correspondingSymbols] at hNss
         · simp [wrapSymbol₁, correspondingSymbols] at hNss
       · rcases t with t' | t''
-        · rw [show t₁ = t' by convert hNss]
+        · rw [show t₁ = t' from hNss]
           rfl
         · simp [wrapSymbol₁, correspondingSymbols] at hNss
   · rcases s with t | n
@@ -626,7 +626,7 @@ by
       · rcases o with _ | n'
         · simp [wrapSymbol₁, correspondingSymbols] at hNss
         · rcases n' with n'₁ | n'₂
-          · rw [show n₁ = n'₁ by convert hNss]
+          · rw [show n₁ = n'₁ from hNss]
             rfl
           · simp [wrapSymbol₁, correspondingSymbols] at hNss
       · rcases t with t' | t''
@@ -640,7 +640,7 @@ private lemma unwrap_eq_some_of_correspondingSymbols₂ {N₁ N₂ : Type} {s₂
 by
   rcases s₂ with t₂ | n₂
   · rcases s with t | n
-    · rw [show t = t₂ by convert hNss]
+    · rw [show t = t₂ from hNss]
       rfl
     · rcases n with o | t
       · rcases o with _ | n'
@@ -648,7 +648,7 @@ by
         · simp [wrapSymbol₂, correspondingSymbols] at hNss
       · rcases t with t' | t''
         · simp [wrapSymbol₂, correspondingSymbols] at hNss
-        · rw [show t₂ = t'' by convert hNss]
+        · rw [show t₂ = t'' from hNss]
           rfl
   · rcases s with t | n
     · simp [wrapSymbol₂, correspondingSymbols] at hNss
@@ -657,7 +657,7 @@ by
         · simp [wrapSymbol₂, correspondingSymbols] at hNss
         · rcases n' with n'₁ | n'₂
           · simp [wrapSymbol₂, correspondingSymbols] at hNss
-          · rw [show n₂ = n'₂ by convert hNss]
+          · rw [show n₂ = n'₂ from hNss]
             rfl
       · rcases t with t' | t''
         · simp [wrapSymbol₂, correspondingSymbols] at hNss
@@ -1107,7 +1107,9 @@ by
       rw [← wrap_r₁_eq_r] at ih_concat
       simp only [List.append_assoc] at ih_concat ⊢
       convert correspondingStrings_take x.length ih_concat using 2
-      rw [← List.length_map (f := wrapSymbol₁ g₂.nt), List.take_left]
+      all_goals first
+        | rfl
+        | rw [← List.length_map (f := wrapSymbol₁ g₂.nt), List.take_left]
     clear * - x_equiv critical
     have ul_le_xl : u.length ≤ x.length := by
       clear * - critical
@@ -1244,8 +1246,10 @@ by
         (((x.drop (r₁.inputL.length + u.length)).take 1).map (wrapSymbol₁ g₂.nt))
         ([Symbol.nonterminal r₁.inputN].map (wrapSymbol₁ g₂.nt)) := by
       convert equiv_sgmnt_3
-      rw [List.map_take, List.map_drop, ←add_assoc, List.drop_take, add_comm]
-      simp
+      all_goals first
+        | rfl
+        | (rw [List.map_take, List.map_drop, ←add_assoc, List.drop_take, add_comm]
+           simp)
     have segment_3_equ := (filterMap_unwrap_of_correspondingStrings₁ segment_3_eqi).symm
     rw [unwrap_wrap₁_string] at segment_3_equ
     rw [Nat.add_comm u.length r₁.inputL.length,

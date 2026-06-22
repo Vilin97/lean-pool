@@ -145,13 +145,13 @@ instance instClosedBallCoveringMeasureOfIsUnifLocDoublingMeasure
         rintro ⟨y, hy, rfl⟩
         refine (hv_sub hc).2 <| mem_iUnion₂_of_mem hy ?_
         simp [(hus hy).2.1.2.1.le]
-    · rw [tsum_congr_set_coe (fun x ↦ μ (closedBall x (goodR x))) Set.union_diff_self.symm]
+    · rw [tsum_congr_set_coe (fun x ↦ μ (closedBall x (goodR x))) Set.union_sdiff_self.symm]
       grw [ENNReal.tsum_union_le (fun x ↦ μ (closedBall x (goodR x)))]
       rw [tsum_image (fun x ↦ μ (closedBall x (goodR x))) hinj]
       simp only [hgoodR_fst_u _ (Subtype.prop _),
         fun x : ↑(v \ Prod.fst '' u) ↦ hgoodR_not_u x x.2.2]
       grw [← measure_biUnion huc hud (fun _ _ ↦ measurableSet_closedBall),
-        ENNReal.tsum_mono_subtype (fun x ↦ μ (closedBall x (r' x))) diff_subset, ← ε.add_halves,
+        ENNReal.tsum_mono_subtype (fun x ↦ μ (closedBall x (r' x))) sdiff_subset, ← ε.add_halves,
         ← add_assoc, hv_tsum, ← hμU]
       gcongr
       refine iUnion₂_subset fun x hx ↦ ?_
@@ -227,17 +227,17 @@ lemma outerMeasure_null_of_forall_le_mul_ae_null {μ : Measure α} [SigmaFinite 
     (h : ∀ x ∈ s, ∃ᶠ εr : ℝ≥0∞ × ℝ in 𝓝[>] 0 ×ˢ 𝓝[>] 0,
       ν (s ∩ closedBall x εr.2) ≤ (C x + εr.1) * μ (closedBall x εr.2)) :
     ν s = 0 := by
-  grw [← nonpos_iff_eq_zero, measure_le_inter_add_diff (t := {x | C x = 0})]
+  grw [← nonpos_iff_eq_zero, measure_le_inter_add_sdiff (t := {x | C x = 0})]
   apply add_nonpos
   · calc
       ν (s ∩ {x | C x = 0}) ≤ 0 * μ (s ∩ {x | C x = 0}) := by
         refine outerMeasure_le_mul (by simp) fun x hx ↦ ?_
-        grw [inter_subset_left]
+        grw [inter_subset_inter_left _ inter_subset_left]
         simpa [hx.2.out] using h x hx.1
       _ = 0 := zero_mul _
   · set t := s \ {x | C x = 0}
     have hμt : μ t = 0 := by
-      simpa [t, ae_iff, Set.diff_eq, Set.compl_setOf, Set.inter_def, Set.mem_setOf_eq] using hC
+      simpa [t, ae_iff, Set.sdiff_eq, Set.compl_setOf, Set.inter_def, Set.mem_setOf_eq] using hC
     calc
       ν t = ν (⋃ n : ℕ, {x ∈ t | C x ≤ n}) := by
         congr with x
@@ -249,7 +249,7 @@ lemma outerMeasure_null_of_forall_le_mul_ae_null {μ : Measure α} [SigmaFinite 
         · simp
         · intro x hx
           simp only [t]
-          grw [sep_subset, diff_subset, ← (mod_cast hx.2 : (C x : ℝ≥0∞) ≤ n)]
+          grw [sep_subset, sdiff_subset, ← (mod_cast hx.2 : (C x : ℝ≥0∞) ≤ n)]
           exact h x hx.1.1
       _ ≤ ∑' n : ℕ, n * μ t := by gcongr; apply Set.sep_subset
       _ ≤ 0 := by simp [hμt]

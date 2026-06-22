@@ -516,8 +516,9 @@ lemma Multiset.smul_EF_sum {k : F≥0} (hk : 0 < k) (s : Multiset F∞) :
 omit [IsStrictOrderedRing F] in
 lemma Finset.smul_EF_sum [Fintype J] {k : F≥0} (hk : 0 < k) (v : J → F∞) :
     ∑ j : J, k • v j = k • ∑ j : J, v j := by
-  convert Multiset.smul_EF_sum hk (Finset.univ.val.map v)
-  simp
+  convert Multiset.smul_EF_sum hk (Finset.univ.val.map v) using 2
+  · simp
+  · rfl
 
 end misc_EF_properties
 
@@ -655,6 +656,7 @@ lemma ValidELP.unbounded_of_feasible_of_neg (P : ValidELP I J F) (hP : P.IsFeasi
               convert hAx₀
               · change 0 = 0 • -(toE bᵢ)
                 rw [←EF.coe_neg, EF.zero_smul_coe]
+              · rfl
             rw [add_zero] at zeros
             rw [Matrix.mulWeig_add, Matrix.mulWeig_smul k_pos, Pi.add_apply]
             apply add_le_of_le_of_nonpos
@@ -1082,6 +1084,7 @@ lemma oppositesOpt_comm (p q : Option F∞) : OppositesOpt p q ↔ OppositesOpt 
   cases p with
   | none =>
     convert_to False ↔ False
+    · simp [OppositesOpt]
     · simp [OppositesOpt]
     rfl
   | some r =>

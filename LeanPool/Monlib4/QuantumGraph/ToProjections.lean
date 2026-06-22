@@ -518,7 +518,7 @@ theorem Qam.fdOrthogonalProjection_eq_sum_rankOne [hφ : φ.IsFaithfulPosMap]
   unfold Qam.fdOrthogonalProjection
   change ((orthogonalProjection' U : L(ℍ)) : l(ℍ)) =
     ∑ i : ι, ((rankOne ℂ (b i).1 (b i).1 : L(ℍ)) : l(ℍ))
-  rw [← ContinuousLinearMap.coe_sum]
+  rw [← ContinuousLinearMap.toLinearMap_sum]
   rw [@OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne ι ℂ _ ℍ _ _ _ U completeU b]
 
 theorem Qam.idempotent_and_real_iff_exists_ortho_proj [hφ : φ.IsFaithfulPosMap] (A : l(ℍ)) :
@@ -885,7 +885,7 @@ theorem RealQam.edges_eq_one_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : 
     let t1 := Qam.orthogonalProjection'_eq hA.toIdempotent hA.toIsReal
     simp_rw [← rankOne_toMatrix_transpose_psi_symm, ← LinearEquiv.map_smul,
       ← LinearMap.map_smul, ← _root_.map_smul,
-      ← ContinuousLinearMap.coe_smul,
+      ← ContinuousLinearMap.toLinearMap_smul,
       Complex.ofReal'_eq_isROrC_ofReal, ← hu]
     simp_rw [LinearEquiv.eq_symm_apply, ← oneMapTranspose_symm_eq,
       StarAlgEquiv.eq_apply_iff_symm_eq,

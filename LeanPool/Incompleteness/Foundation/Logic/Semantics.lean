@@ -314,7 +314,7 @@ lemma conseq_compact [LogicalConnective F] [Semantics.Tarski M] {f : F} :
   · intro ⟨u, ss, hu⟩
     exact ⟨Finset.erase u (∼f), by simp [ss],
       by
-        simp only [Finset.coe_erase, Set.insert_diff_singleton]
+        simp only [Finset.coe_erase, Set.insert_sdiff_singleton]
         intro h
         exact hu (Semantics.Satisfiable.of_subset h (by simp))⟩
   · intro ⟨u, ss, hu⟩

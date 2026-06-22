@@ -99,7 +99,7 @@ private lemma arc_hasDerivAt' (s : ℝ) :
   have h1 : HasDerivAt (fun s : ℝ => (s : ℂ)) 1 s := by
     simpa using (hasDerivAt_id s).ofReal_comp
   have h2 : HasDerivAt (fun s : ℝ => (s : ℂ) + 1) 1 s := by
-    convert h1.add (hasDerivAt_const s (1 : ℂ)) using 1; simp only [add_zero]
+    simpa using h1.add_const (1 : ℂ)
   have h3 : HasDerivAt (fun s : ℝ =>
       ↑Real.pi * ((s : ℂ) + 1)) (↑Real.pi * 1) s := by
     have := (hasDerivAt_const s (↑Real.pi : ℂ)).mul h2

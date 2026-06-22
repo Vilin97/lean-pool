@@ -547,7 +547,7 @@ private lemma pvIntegrand_intervalIntegrable
     integrableOn_zero.congr_fun h_compl_zero.symm (measurableSet_uIoc.diff hK_meas)
   rw [intervalIntegrable_iff]
   have := h_int_K.union h_int_compl
-  rwa [union_diff_cancel (fun t ht => ht.1)] at this
+  rwa [union_sdiff_cancel (fun t ht => ht.1)] at this
 
 omit hf in
 private theorem tendsto_pvIntegral_split

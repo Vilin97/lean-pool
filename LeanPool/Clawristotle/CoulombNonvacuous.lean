@@ -48,10 +48,10 @@ lemma fderiv_equilibriumMaxwellian (ρ T : ℝ) (_hT : 0 < T) (v : Fin 3 → ℝ
     (Real.differentiable_exp.comp hq_diff).differentiableAt
   rw [show (pf • expq : (Fin 3 → ℝ) → ℝ) = fun w => pf * expq w from by
     ext w; simp [Pi.smul_apply, smul_eq_mul]]
-  rw [fderiv_const_mul hexpq_diff pf, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  rw [fderiv_const_mul hexpq_diff pf, _root_.smul_apply, smul_eq_mul]
   -- fderiv expq = exp(q v) • fderiv q by chain rule
   rw [show expq = fun w => Real.exp (q w) from rfl,
-    fderiv_exp_comp_always q v, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    fderiv_exp_comp_always q v, _root_.smul_apply, smul_eq_mul]
   -- Compute fderiv of q at v applied to e_i
   have h_comp_diff : ∀ j : Fin 3, DifferentiableAt ℝ (fun w : Fin 3 → ℝ => w j * w j) v :=
     fun j => (differentiableAt_apply j v).mul (differentiableAt_apply j v)
@@ -61,9 +61,9 @@ lemma fderiv_equilibriumMaxwellian (ρ T : ℝ) (_hT : 0 < T) (v : Fin 3 → ℝ
   have hq_eq : q = fun w => (-1/(2*T)) * (normSq w) := by
     ext w; simp only [q]; unfold normSq dotProduct; ring
   rw [hq_eq, fderiv_const_mul (by unfold normSq dotProduct; exact h_sum_diff) (-1/(2*T)),
-    ContinuousLinearMap.smul_apply, smul_eq_mul]
+    _root_.smul_apply, smul_eq_mul]
   unfold normSq dotProduct
-  rw [fderiv_fun_sum (fun j _ => h_comp_diff j), ContinuousLinearMap.sum_apply]
+  rw [fderiv_fun_sum (fun j _ => h_comp_diff j), _root_.sum_apply]
   -- Each fderiv (w_j * w_j) at v applied to e_i = 2 * v j * δ_{ij}
   have hfderiv_sq : ∀ j : Fin 3,
       (fderiv ℝ (fun w : Fin 3 → ℝ => w j * w j) v) (Pi.single i 1) =
@@ -78,7 +78,7 @@ lemma fderiv_equilibriumMaxwellian (ρ T : ℝ) (_hT : 0 < T) (v : Fin 3 → ℝ
         ContinuousLinearMap.fderiv]
       simp [ContinuousLinearMap.proj_apply, Pi.single_apply]
     rw [fderiv_fun_mul hd1 hd1]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, hd_proj]
+    simp only [_root_.add_apply, _root_.smul_apply, smul_eq_mul, hd_proj]
     ring
   simp only [hfderiv_sq, Fin.sum_univ_three]
   fin_cases i <;> simp <;> ring
@@ -451,7 +451,7 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρIon : ℝ)
       intro i; simp
     conv => arg 2; rw [show (0:ℝ) = ν * 0 from by ring]
     simp only [hflux_zero]
-    simp [ContinuousLinearMap.zero_apply]
+    simp
   -- (10) hAmpere: Ampere's law (curl 0 = ∫ vᵢ eM dv)
   · intro x
     ext i

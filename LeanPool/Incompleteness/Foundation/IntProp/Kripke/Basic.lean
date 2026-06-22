@@ -258,8 +258,8 @@ protected lemma mdp (hpq : M ⊧ φ ==> ψ) (hp : M ⊧ φ) : M ⊧ ψ := by
 
 protected lemma efq : M ⊧ Axioms.EFQ φ := by simp [ValidOnModel, Satisfies];
 
-protected lemma lem : Symmetric M.Rel → M ⊧ Axioms.LEM φ := by
-  unfold Symmetric Axioms.LEM;
+protected lemma lem : IsSymmetric M.Rel → M ⊧ Axioms.LEM φ := by
+  unfold IsSymmetric Axioms.LEM;
   contrapose;
   push Not;
   intro h;
@@ -386,7 +386,7 @@ protected lemma mdp (hpq : F ⊧ φ ==> ψ) (hp : F ⊧ φ) :
 
 protected lemma efq : F ⊧ Axioms.EFQ φ := fun _ => ValidOnModel.efq
 
-protected lemma lem (F_symm : Symmetric F.Rel) :
+protected lemma lem (F_symm : IsSymmetric F.Rel) :
     F ⊧ Axioms.LEM φ :=
   fun _ => ValidOnModel.lem F_symm
 
@@ -527,8 +527,8 @@ variable {C : Kripke.FrameClass} {Γ : Set (Formula ℕ)}
 
 lemma definedBy_with_axiomEFQ (defines : C.DefinedBy Γ) :
     DefinedBy C (insert (Axioms.EFQ (.atom 0)) Γ) := by
-  convert definedBy_inter AllFrameClass {Axioms.EFQ (.atom 0)} C Γ
-  tauto_set;
+  convert definedBy_inter AllFrameClass {Axioms.EFQ (.atom 0)} C Γ <;>
+    simp [AllFrameClass, Set.singleton_union];
 
 end FrameClass
 

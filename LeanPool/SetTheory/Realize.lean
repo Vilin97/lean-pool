@@ -799,9 +799,9 @@ def classParamBinders (typeLetter : String := "M") :
     ← `(bracketedBinder | [$structIdent : $(mkCIdent ``ZFStructure) $typeIdent])
   ] ++ (
   ← if (← isFunction) && (← numHypotheses) > 0 && !(← hasEmptyInstanceState) then
-      return #[← `(bracketedBinder | [$(mkCIdent ``HasEmpty) $typeIdent])]
+      pure #[← `(bracketedBinder | [$(mkCIdent ``HasEmpty) $typeIdent])]
     else
-      return #[]
+      pure #[]
   ) ++ (
   ← ((← classParams).zip (← classIdents typeLetter)).mapM
       fun (cls, id) => `(bracketedBinder | [$id : headBeta($cls $typeIdent $structIdent)])

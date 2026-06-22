@@ -10,7 +10,7 @@ import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Analysis.Matrix.PosDef
 import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.LinearAlgebra.UnitaryGroup
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 
 import LeanPool.RlTheoryInLean.Data.Matrix.Mul
 

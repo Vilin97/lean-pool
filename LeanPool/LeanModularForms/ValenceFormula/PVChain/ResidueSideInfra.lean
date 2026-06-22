@@ -165,7 +165,7 @@ theorem hasSimplePoleAt_logDeriv_of_zero_full (s : ℍ) (hs : f s = 0) :
       have hzs : z - (s : ℂ) ≠ 0 := sub_ne_zero.mpr hz_ne_s
       have hn' : 0 < n := by exact_mod_cast hn_pos
       have h_hd : HasDerivAt (fun w => (w - (s : ℂ)) ^ n) (↑n * (z - (s : ℂ)) ^ (n - 1)) z := by
-        convert ((hasDerivAt_id z).sub (hasDerivAt_const z (s : ℂ))).pow n using 1
+        refine (((hasDerivAt_id z).sub (hasDerivAt_const z (s : ℂ))).pow n).congr_deriv ?_
         simp only [Pi.sub_apply, id_eq, sub_zero, mul_one]
       rw [logDeriv_apply, h_hd.deriv]
       rw [div_eq_div_iff (pow_ne_zero _ hzs) hzs]
@@ -542,15 +542,15 @@ lemma ftc_integral_zero_of_closed_slit {γ : ℝ → ℂ} {z₀ : ℂ} {ω : ℂ
       HasDerivAt F (F' t) t := by
     intro t ⟨ht_ioo, ht_not_P⟩
     have h_inner : HasDerivAt (fun u => ω * (γ u - z₀)) (ω * deriv γ t) t := by
-      convert ((hγ_diff t (Finset.mem_coe.not.mp ht_not_P)).hasDerivAt.sub_const z₀).const_mul ω
-        using 1
+      have hγd := (hγ_diff t (Finset.mem_coe.not.mp ht_not_P)).hasDerivAt
+      rw [hγd.deriv]
+      exact (hγd.sub_const z₀).const_mul ω
+    have hωne : ω * (γ t - z₀) ≠ 0 :=
+      mul_ne_zero hω (sub_ne_zero.mpr (h_off t (Ioo_subset_Icc_self ht_ioo)))
     convert (@HasDerivAt.scomp ℝ _ ℂ _ _ t ℂ _ _ _ IsScalarTower.right _ _ _ _
       (Complex.hasDerivAt_log (h_slit t (Ioo_subset_Icc_self ht_ioo))) h_inner)
       using 1
-    rw [smul_eq_mul]
-    have hωne : ω * (γ t - z₀) ≠ 0 :=
-      mul_ne_zero hω (sub_ne_zero.mpr (h_off t (Ioo_subset_Icc_self ht_ioo)))
-    simp only [hF'_def]; field_simp
+    all_goals first | rfl | (rw [smul_eq_mul]; simp only [hF'_def]; field_simp)
   have hF'_int : IntervalIntegrable F' volume 0 5 := by
     obtain ⟨Mγ, hMγ⟩ := hγ_deriv_bdd
     have hg_cont : ContinuousOn (fun z => (z - z₀)⁻¹) (γ '' Icc 0 5) :=

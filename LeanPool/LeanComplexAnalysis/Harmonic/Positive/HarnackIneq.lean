@@ -167,9 +167,9 @@ lemma harnack_ineq_cont_normalized_lower
   simp_all only [mem_ball, dist_zero_right, division_def, mul_inv_rev, one_mul,
     intervalIntegral.integral_const_mul, mul_one, ge_iff_le]
   convert mul_le_mul_of_nonneg_left ‹_› (show 0 ≤ π⁻¹ * 2⁻¹ by positivity) using 1
-  ring_nf
-  field_simp
-  ring
+  · rfl
+  · field_simp
+    ring
 
 /--
 Removing the normalization at `0` from Lemma `harnack_ineq_normalized_cont`.

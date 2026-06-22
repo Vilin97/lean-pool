@@ -39,7 +39,7 @@ theorem logDeriv_tprod_eq_tsum2 {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ �
         intro z _; change ∏ i ∈ Finset.range n, f i z = ∏ i ∈ Finset.range n, f i z; rfl)
     have h_diff :
         ∀ᶠ (n : ℕ) in atTop, DifferentiableOn ℂ (fun z => ∏ i ∈ Finset.range n, f i z) s := by
-      simp only [eventually_atTop, ge_iff_le]
+      simp only [eventually_atTop]
       use 0; intro b _ z hz
       have := DifferentiableAt.finsetProd (fun i (_ : i ∈ Finset.range b) =>
         (hd i z hz).differentiableAt (IsOpen.mem_nhds hs hz))
@@ -80,7 +80,7 @@ theorem logDeriv_tprod_eq_tsumold {s : Set ℂ} (hs : IsOpen s) (x : s) (f : ℕ
       ext i
       simp only [Finset.prod_apply]
     · exact htend
-    · simp only [eventually_atTop, ge_iff_le]
+    · simp only [eventually_atTop]
       use 0
       intro b hb
       rw [DifferentiableOn]
@@ -130,8 +130,7 @@ lemma logDeriv_q_expo_summable (r : ℂ) (hr : ‖r‖ < 1) : Summable fun n : �
     have := (summable_norm_pow_mul_geometric_of_norm_lt_one 1 hr)
     simp only [pow_one, Complex.norm_mul, RCLike.norm_natCast, norm_pow] at this
     apply this
-  · simp only [Complex.norm_div, Complex.norm_mul, RCLike.norm_natCast, norm_pow, eventually_atTop,
-    ge_iff_le]
+  · simp only [Complex.norm_div, Complex.norm_mul, RCLike.norm_natCast, norm_pow, eventually_atTop]
     obtain ⟨N, hN⟩ := h3
     use N
     intro n hn

@@ -376,9 +376,9 @@ lemma cross_edge_sum_le_graphLaplacian
   -- Strategy: L - double_sum = graphLaplacian G_same where G_same keeps edges
   -- with both endpoints having the same colored/uncolored status. Then PSD.
   let G_same : SimpleGraph V :=
-    ⟨fun v w => G.Adj v w ∧ (v ∈ pc.colored ↔ w ∈ pc.colored),
-     fun a b ⟨h, hiff⟩ => ⟨G.symm h, hiff.symm⟩,
-     ⟨fun v ⟨h, _⟩ => G.loopless.irrefl v h⟩⟩
+    { Adj := fun v w => G.Adj v w ∧ (v ∈ pc.colored ↔ w ∈ pc.colored)
+      symm.symm := fun a b ⟨h, hiff⟩ => ⟨G.adj_symm h, hiff.symm⟩
+      loopless.irrefl := fun v ⟨h, _⟩ => G.loopless.irrefl v h }
   haveI : DecidableRel G_same.Adj := inferInstance
   let S : Fin r → Finset V := fun γ => pc.colored.filter (fun w => pc.color w = γ)
   suffices h_eq : graphLaplacian G -

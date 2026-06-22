@@ -58,19 +58,14 @@ lemma landau_flux_integrable_coulomb
                 simpa using (ContinuousLinearMap.le_opNorm (fderiv ℝ f w) (Pi.single j 1))
                   |> le_trans <| mul_le_of_le_one_right (norm_nonneg _) <|
                   by simp [Pi.norm_single]
-              generalize_proofs at *
-              erw [iteratedFDeriv_succ_eq_comp_left]; norm_num [fderiv_apply_one_eq_deriv]
-              erw [iteratedFDeriv_zero_eq_comp]
-              erw [fderiv_comp] <;> norm_num [hf_smooth.contDiffAt.differentiableAt]
-              · erw [LinearIsometryEquiv.fderiv]; norm_num [fderiv_apply_one_eq_deriv]
-                erw [ContinuousLinearMap.norm_def]; norm_num [ContinuousLinearMap.opNorm]
-                ring_nf; exact this
-              · exact (LinearIsometryEquiv.differentiable _) _
+              rw [norm_iteratedFDeriv_one]
+              simpa [VML.vGrad] using this
             exact le_trans (mul_le_mul_of_nonneg_right h_deriv_bound (by positivity)) (hC w)
           · exact ((hf_smooth.continuous_fderiv (by norm_num)).eval_const
               (Pi.single j 1)).aestronglyMeasurable
       convert h_int.1.mul_const ((vGrad f v) j) |>.sub (h_int.2.const_mul (f v)) using 2
-      simp [Pi.smul_apply, Pi.sub_apply, smul_eq_mul]; ring
+      · rfl
+      · simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul]; ring
     intro i j
     refine (h_inv i j).norm.mono' ?_ ?_
     · refine AEStronglyMeasurable.mul ?_ ?_
@@ -85,8 +80,8 @@ lemma landau_flux_integrable_coulomb
               Continuous.dotProduct (continuous_const.sub continuous_id')
                 (continuous_const.sub continuous_id')) _
         · unfold innerLandauMatrix
-          simp only [normSq, dotProduct_sub, sub_dotProduct, vecMulVec, Pi.sub_apply, sub_apply,
-            smul_apply, smul_eq_mul, of_apply]
+          simp only [normSq, dotProduct_sub, sub_dotProduct, vecMulVec, Pi.sub_apply,
+            Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, of_apply]
           fun_prop (disch := norm_num)
       · exact AEStronglyMeasurable.sub
           (Continuous.aestronglyMeasurable (hf_smooth.continuous.mul continuous_const))
@@ -159,7 +154,7 @@ lemma flux_component_aestronglyMeasurable
   · -- landauMatrix coulombKernel (p.1-p.2) i j is measurable
     show Measurable (fun p : (Fin 3 → ℝ) × (Fin 3 → ℝ) =>
       landauMatrix coulombKernel (p.1 - p.2) i j)
-    simp only [landauMatrix, smul_apply, smul_eq_mul]
+    simp only [landauMatrix, Matrix.smul_apply, smul_eq_mul]
     apply Measurable.mul
     · -- coulombKernel (eucNorm (p.1-p.2)) is measurable
       apply ((Measurable.ite measurableSet_Iic measurable_const

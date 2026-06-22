@@ -831,7 +831,7 @@ private theorem hasDerivAt_contour_neg1_to_i (t : ℝ) :
   have h1 := (ofRealCLM.hasDerivAt (x := t)).const_mul (1 + I : ℂ)
   simp only [ofRealCLM, LinearIsometry.coe_toContinuousLinearMap, ofRealLI_apply, ofReal_one,
     mul_one] at h1
-  convert (hasDerivAt_const t (-1 : ℂ)).add h1 using 1; ring
+  simpa only [contourNeg1ToI] using h1.const_add (-1 : ℂ)
 
 /-- The derivative of the vertical contour map. -/
 private theorem hasDerivAt_vert_contour (t : ℝ) :
@@ -839,7 +839,7 @@ private theorem hasDerivAt_vert_contour (t : ℝ) :
   have h1 := (ofRealCLM.hasDerivAt (x := t)).const_mul (I : ℂ)
   simp only [ofRealCLM, LinearIsometry.coe_toContinuousLinearMap, ofRealLI_apply, ofReal_one,
     mul_one] at h1
-  convert (hasDerivAt_const t (-1 : ℂ)).add h1 using 1; ring
+  simpa using h1.const_add (-1 : ℂ)
 
 /-- FTC for the tail diagonal integral: for delta in (0, 1], the integral from
 delta to 1 of the diagonal integrand equals G(I) - G(contour(delta)). -/

@@ -48,7 +48,7 @@ def toDirectedMap (γ : Dipath x y) : D(I,X) where
 
 instance instFunLike : FunLike (Dipath x y) I X where
   coe := fun γ => γ.toFun
-  coe_injective' := fun γ γ' h => by
+  coe_injective := fun γ γ' h => by
     obtain ⟨⟨⟨_, _⟩, _, _⟩, _⟩ := γ
     obtain ⟨⟨⟨_, _⟩, _, _⟩, _⟩ := γ'
     congr
@@ -147,6 +147,7 @@ lemma image_extend_eq_image (γ : Dipath x y) (a b : I) :
     refine ⟨t, t_ab, ?_⟩
     rw [← ht]
     convert Path.extend_apply γ.toPath ⟨le_trans a.2.1 t_ab.1, le_trans t_ab.2 b.2.2⟩
+    rfl
 
 /-! ### Reflexive dipaths -/
 
@@ -294,8 +295,12 @@ def dipathProduct (γ₁ : Dipath x₀ x₁) (γ₂ : Dipath y₀ y₁) : Dipath
   target' := by simp
   dipath_toPath := by
       constructor
-      { convert γ₁.dipath_toPath }
-      { convert γ₂.dipath_toPath }
+      { convert γ₁.dipath_toPath
+        ext t
+        rfl }
+      { convert γ₂.dipath_toPath
+        ext t
+        rfl }
 
 /-- Given a directed path in a product space, we can project it to its first coordinate to
 obtain a directed path -/

@@ -83,9 +83,9 @@ lemma fdBoundaryToPolygonHomotopy_seg2_differentiable (t s : ℝ) :
         Complex.ofRealCLM.differentiableAt.comp
           t (DifferentiableAt.sub
             differentiableAt_id (differentiableAt_const 1)) using 1
-      funext y
-      simp only [Function.comp_apply]
-      exact (Complex.ofReal_sub y 1).symm
+      all_goals first
+        | rfl
+        | (funext y; simp only [Function.comp_apply]; exact (Complex.ofReal_sub y 1).symm)
     exact h_exp.const_smul (1 - s)
   · have h_chord :
         DifferentiableAt ℝ (fun t' : ℝ => (1 - (t' - 1)) • rho' +
@@ -137,9 +137,9 @@ lemma fdBoundaryToPolygonHomotopy_seg3_differentiable (t s : ℝ) :
         Complex.ofRealCLM.differentiableAt.comp
           t (DifferentiableAt.sub
             differentiableAt_id (differentiableAt_const 2)) using 1
-      funext y
-      simp only [Function.comp_apply]
-      exact (Complex.ofReal_sub y 2).symm
+      all_goals first
+        | rfl
+        | (funext y; simp only [Function.comp_apply]; exact (Complex.ofReal_sub y 2).symm)
     exact h_exp.const_smul (1 - s)
   · have h_chord :
         DifferentiableAt ℝ (fun t' : ℝ => (1 - (t' - 2)) • iPoint +

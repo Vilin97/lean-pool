@@ -9,7 +9,7 @@ import LeanPool.SardMoreira.NormedSpace
 import LeanPool.SardMoreira.MeasureComap
 import LeanPool.SardMoreira.MeasureBallSemicontinuous
 import LeanPool.SardMoreira.Topology
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.LinearAlgebra.FreeModule.PID
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import Mathlib.MeasureTheory.Covering.Besicovitch
@@ -169,12 +169,12 @@ theorem MeasureTheory.Measure.AbsolutelyContinuous.exists_pos_forall_lt_imp_lt
   refine ⟨δ, hδ₀, fun s hs ↦ ?_⟩
   calc
     μ s = μ (s ∩ {x | C < μ.rnDeriv ν x}) + μ (s \ {x | C < μ.rnDeriv ν x}) := by
-      rw [measure_inter_add_diff]
+      rw [measure_inter_add_sdiff]
       apply measurableSet_lt <;> fun_prop
     _ < ε / 2 + C * δ := by
       have : μ (s \ {x | ↑C < μ.rnDeriv ν x}) ≤ ↑C * ↑δ := by
         grw [← setLIntegral_rnDeriv h, ← hs, ← setLIntegral_const]
-        refine (setLIntegral_mono measurable_const ?_).trans (lintegral_mono_set diff_subset)
+        refine (setLIntegral_mono measurable_const ?_).trans (lintegral_mono_set sdiff_subset)
         simp
       refine ENNReal.add_lt_add_of_lt_of_le ?_ ?_ this
       · refine ne_top_of_le_ne_top (by finiteness) this
@@ -384,8 +384,9 @@ theorem eventually_forall_le_continuousWithinAt_Ici_measure_closedBall
   filter_upwards [eventually_lt_nhds ε₀] with r hr ν hν
   rw [← continuousWithinAt_Ioi_iff_Ici, ContinuousWithinAt]
   convert tendsto_measure_biInter_gt (by measurability) (by intros; gcongr)
-    ⟨ε, hr, ((hν _).trans_lt hε).ne⟩
-  rw [biInter_gt_closedBall]
+    ⟨ε, hr, ((hν _).trans_lt hε).ne⟩ using 2
+  · rfl
+  · rw [biInter_gt_closedBall]
 
 theorem eventually_continuousWithinAt_Ici_measure_inter_closedBall_div
     {X : Type*} [PseudoMetricSpace X] [MeasurableSpace X] [OpensMeasurableSpace X]

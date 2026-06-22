@@ -224,7 +224,7 @@ theorem lintegral_lintegral_swap
 /-- The `FunLike` instance for `ProbabilityMeasure`. -/
 noncomputable instance : FunLike (ProbabilityMeasure A) (Set A) ENNReal where
   coe μ s := μ.toPreProbabilityMeasure.measureOf s
-  coe_injective' := by
+  coe_injective := by
     intro μ₁ μ₂ h
     induction μ₁ with | mk μ₁ =>
     induction μ₂ with | mk μ₂ =>

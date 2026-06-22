@@ -200,7 +200,8 @@ def wonLift (h : ∀ n, (takeLift y n).Winnable) : body R.pre.subtree :=
     ((Lift.wLift_liftVal_mono ((takeLift_mono y).mpr (Nat.le_succ _))).take k).trans (by
       convert List.take_prefix k (List.take (k + 1) (takeLift y (k + 1)).toWLift.liftVal)
         using 1
-      simp [List.take_take])⟩
+      · simp only [List.take_take, min_eq_left (Nat.le_succ k)]
+      · congr 1)⟩
 lemma wonLift_map h :
   (bodyFunctor.map π ⟨(wonLift y h).val, body_mono R.pre.subtree_sub (wonLift y h).prop⟩).val
   = y.val := by
@@ -224,7 +225,8 @@ def lostLift (h : (takeLift y n).Lost) : body R.pre.subtree :=
     ((Lift.lLift_liftVal_mono (h' k).1 ((takeLift_mono y).mpr (Nat.le_succ _))).take k).trans
       (by
         convert List.take_prefix k (List.take (k + 1) (h' (k + 1)).toLLift'.liftVal) using 1
-        simp [List.take_take])⟩
+        · simp [List.take_take]
+        · congr 1)⟩
 lemma lostLift_map (h : (takeLift y n).Lost) :
   (bodyFunctor.map π ⟨(lostLift y h).val, body_mono R.pre.subtree_sub (lostLift y h).prop⟩).val
   = y.val := by

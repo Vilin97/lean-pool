@@ -33,6 +33,7 @@ lemma nat_card_range_of_injective
     {f : α →* β} (hf : Function.Injective f) :
     Nat.card (range f) = Nat.card α := by
   convert Set.nat_card_range_of_injective f hf using 1
+  exact Nat.card_congr (Equiv.setCongr (MonoidHom.coe_range f))
 
 end MonoidHom
 

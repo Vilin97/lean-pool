@@ -38,8 +38,10 @@ private lemma hasDerivAt_norm_sub_const (z₀ : ℂ) (f : ℝ → ℂ) (t : ℝ)
   have hpos : (0 : ℝ) < ‖f t - z₀‖ := norm_pos_iff.mpr hne'
   have hgsq := (hf.sub_const z₀).norm_sq
   convert (Real.hasDerivAt_sqrt (by positivity)).comp t hgsq using 1
-  · ext s; simp only [Function.comp, Real.sqrt_sq (norm_nonneg _)]
-  · rw [Real.sqrt_sq hpos.le]; field_simp [ne_of_gt hpos]
+  all_goals first
+    | rfl
+    | (ext s; simp only [Function.comp, Real.sqrt_sq (norm_nonneg _)])
+    | (rw [Real.sqrt_sq hpos.le]; field_simp [ne_of_gt hpos])
 
 /-- The identity `⟪a, b⟫ / ‖a‖ = ⟪a / ‖a‖, b⟫` for the real inner product on `ℂ`,
 valid even when `a = 0`. -/
@@ -123,12 +125,12 @@ lemma piecewiseC1Immersion_norm_strictMono_near_crossing
   -- Step 4: Slope tendsto (γ t - z₀)/(t - t₀) → L_R (right) and L_L (left)
   have hslope_R : Filter.Tendsto
       (fun t => (γ.toFun t - z₀) / ((t - t₀ : ℝ) : ℂ)) (𝓝[>] t₀) (𝓝 L_R) := by
-    rw [hasDerivWithinAt_iff_tendsto_slope, Set.Ici_diff_left] at hHDWA_R
+    rw [hasDerivWithinAt_iff_tendsto_slope, Set.Ici_sdiff_left] at hHDWA_R
     convert hHDWA_R using 1; ext t; simp only [slope, vsub_eq_sub, hcross, div_eq_mul_inv, mul_comm]
     erw [Complex.real_smul]; simp only [Complex.ofReal_inv]
   have hslope_L : Filter.Tendsto
       (fun t => (γ.toFun t - z₀) / ((t - t₀ : ℝ) : ℂ)) (𝓝[<] t₀) (𝓝 L_L) := by
-    rw [hasDerivWithinAt_iff_tendsto_slope, Set.Iic_diff_right] at hHDWA_L
+    rw [hasDerivWithinAt_iff_tendsto_slope, Set.Iic_sdiff_right] at hHDWA_L
     convert hHDWA_L using 1; ext t; simp only [slope, vsub_eq_sub, hcross, div_eq_mul_inv, mul_comm]
     erw [Complex.real_smul]; simp only [Complex.ofReal_inv]
   have hL_R_pos : ‖L_R‖ > 0 := norm_pos_iff.mpr hL_R_ne
@@ -196,6 +198,7 @@ lemma piecewiseC1Immersion_norm_strictMono_near_crossing
     rw [hLR_inner]
     convert (continuous_inner (E := ℂ) (𝕜 := ℝ)).continuousAt.tendsto.comp
         (hdir_R.prodMk_nhds htend_R) using 1
+    rfl
   have hinner_tend_L : Filter.Tendsto
       (fun t => inner ℝ (γ.toFun t - z₀) (deriv γ.toFun t) /
         ‖γ.toFun t - z₀‖) (𝓝[<] t₀) (𝓝 (-‖L_L‖)) := by
@@ -211,6 +214,7 @@ lemma piecewiseC1Immersion_norm_strictMono_near_crossing
     rw [hLL_inner]
     convert (continuous_inner (E := ℂ) (𝕜 := ℝ)).continuousAt.tendsto.comp
         (hdir_L.prodMk_nhds htend_L) using 1
+    rfl
   -- Step 7: Eventually positive/negative inner product ratio near t₀
   have hev_R : ∀ᶠ t in 𝓝[>] t₀,
       0 < inner ℝ (γ.toFun t - z₀) (deriv γ.toFun t) / ‖γ.toFun t - z₀‖ :=
@@ -749,7 +753,7 @@ private lemma crossing_sigma_tendsto_t₀
   by_cases hK_ne : K.Nonempty
   · have hcont_norm : ContinuousOn (fun t => ‖γ.toFun t - z₀‖) K :=
       continuous_norm.comp_continuousOn
-        (γ.continuous_toFun.mono diff_subset |>.sub continuousOn_const)
+        (γ.continuous_toFun.mono sdiff_subset |>.sub continuousOn_const)
     obtain ⟨tm, htm, htm_min⟩ := hK_compact.exists_isMinOn hK_ne hcont_norm
     have hm_pos : 0 < ‖γ.toFun tm - z₀‖ :=
       norm_pos_iff.mpr (sub_ne_zero.mpr (hK_nonzero tm htm))
@@ -860,13 +864,13 @@ lemma crossing_ratio_tendsto
   -- Slope tendsto: (γ(t) - z₀)/(t - t₀) → L
   have hslope_R : Filter.Tendsto
       (fun t => (γ.toFun t - z₀) / ((t - t₀ : ℝ) : ℂ)) (𝓝[>] t₀) (𝓝 L_R) := by
-    rw [hasDerivWithinAt_iff_tendsto_slope, Set.Ici_diff_left] at hHDWA_R
+    rw [hasDerivWithinAt_iff_tendsto_slope, Set.Ici_sdiff_left] at hHDWA_R
     convert hHDWA_R using 1
     ext t; simp only [slope, vsub_eq_sub, hcross, div_eq_mul_inv, mul_comm]
     erw [Complex.real_smul]; simp only [Complex.ofReal_inv]
   have hslope_L : Filter.Tendsto
       (fun t => (γ.toFun t - z₀) / ((t - t₀ : ℝ) : ℂ)) (𝓝[<] t₀) (𝓝 L_L) := by
-    rw [hasDerivWithinAt_iff_tendsto_slope, Set.Iic_diff_right] at hHDWA_L
+    rw [hasDerivWithinAt_iff_tendsto_slope, Set.Iic_sdiff_right] at hHDWA_L
     convert hHDWA_L using 1
     ext t; simp only [slope, vsub_eq_sub, hcross, div_eq_mul_inv, mul_comm]
     erw [Complex.real_smul]; simp only [Complex.ofReal_inv]

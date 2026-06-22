@@ -248,6 +248,7 @@ lemma le_roundf_of_le (r : IntRounder) [rh : ValidRounder r] (q1 q2 : ℚ) (q1_n
     simp_rw [floatrepLe, roundf_of_neg' r q1 q1h, roundf_of_neg' r q2 q2h]
     simp_rw [floatrepLe, FloatRep.neg] at ih
     simp_rw [roundf_of_neg' r q1 q1h, roundf_of_neg' r q2 q2h] at ih
+    simp only [Bool.not_true, FloatRep.neg, floatrepLePos] at ih ⊢
     convert ih
 
 lemma le_round_down_of_le (q1 q2 : ℚ) (q1_nezero : q1 ≠ 0) (q2_nezero : q2 ≠ 0) :
@@ -463,6 +464,7 @@ lemma roundf_up_minus_down {q : ℚ} (q_nezero : q ≠ 0) :
   · rw [Nat.cast_natAbs]
     nth_rw 5 [abs_of_nonneg]
     · convert this using 1
+      · rfl
       ring
     · apply Int.floor_nonneg.mpr
       apply mantissa_nonneg C q q_nezero

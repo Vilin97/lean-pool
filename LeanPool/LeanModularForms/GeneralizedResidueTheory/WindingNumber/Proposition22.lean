@@ -55,9 +55,9 @@ private lemma eventually_not_in_partition_left
     (γ : PiecewiseC1Immersion) (p : ℝ) :
     ∀ᶠ t in 𝓝[<] p, t ∉ γ.toPiecewiseC1Curve.partition := by
   have hcl : IsClosed ((↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)) :=
-    (γ.toPiecewiseC1Curve.partition.finite_toSet.subset diff_subset).isClosed
+    (γ.toPiecewiseC1Curve.partition.finite_toSet.subset sdiff_subset).isClosed
   have hmem : p ∉ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ) := by
-    simp only [Set.mem_diff, Finset.mem_coe, Set.mem_singleton_iff, not_and, not_not,
+    simp only [Set.mem_sdiff, Finset.mem_coe, Set.mem_singleton_iff, not_and, not_not,
       implies_true]
   have h1 : ∀ᶠ t in 𝓝[<] p, t ∈ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)ᶜ :=
     eventually_nhdsWithin_of_eventually_nhds (hcl.isOpen_compl.mem_nhds hmem)
@@ -69,9 +69,9 @@ private lemma eventually_not_in_partition_right
     (γ : PiecewiseC1Immersion) (p : ℝ) :
     ∀ᶠ t in 𝓝[>] p, t ∉ γ.toPiecewiseC1Curve.partition := by
   have hcl : IsClosed ((↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)) :=
-    (γ.toPiecewiseC1Curve.partition.finite_toSet.subset diff_subset).isClosed
+    (γ.toPiecewiseC1Curve.partition.finite_toSet.subset sdiff_subset).isClosed
   have hmem : p ∉ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ) := by
-    simp only [Set.mem_diff, Finset.mem_coe, Set.mem_singleton_iff, not_and, not_not,
+    simp only [Set.mem_sdiff, Finset.mem_coe, Set.mem_singleton_iff, not_and, not_not,
       implies_true]
   have h1 : ∀ᶠ t in 𝓝[>] p, t ∈ (↑γ.toPiecewiseC1Curve.partition \ {p} : Set ℝ)ᶜ :=
     eventually_nhdsWithin_of_eventually_nhds (hcl.isOpen_compl.mem_nhds hmem)
@@ -501,7 +501,7 @@ theorem cpv_integrand_intervalIntegrable
         have h_P_inter_meas : MeasurableSet (↑γ.partition ∩ S) :=
           γ.partition.finite_toSet.measurableSet.inter hS_meas
         have h_eq_S : S = (S \ γ.partition) ∪ (↑γ.partition ∩ S) := by
-          ext x; simp only [S, Set.mem_union, Set.mem_diff, Set.mem_inter_iff]; tauto
+          ext x; simp only [S, Set.mem_union, Set.mem_sdiff, Set.mem_inter_iff]; tauto
         have h_restrict_eq : volume.restrict S =
             volume.restrict ((S \ γ.partition) ∪ (↑γ.partition ∩ S)) := by
           rw [← h_eq_S]

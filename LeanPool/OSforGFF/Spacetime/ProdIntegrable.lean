@@ -535,8 +535,9 @@ lemma schwartz_vanishing_ftc_decay (f : TestFunctionℂ)
       have h1 : HasDerivAt (fun _ : ℝ => spacetimeOfTimeSpace 0 x_sp) 0 s := hasDerivAt_const s _
       have h2 : HasDerivAt (fun r : ℝ => r • e₀) ((1 : ℝ) • e₀) s := hasDerivAt_id s |>.smul_const
         e₀
-      convert h1.add h2 using 1
-      simp only [zero_add, one_smul]
+      have h12 := h1.add h2
+      simp only [zero_add, one_smul] at h12
+      exact h12
     -- Step 2: Chain rule for F = f ∘ path
     -- derivWithin F I s = (fderiv f (path s)) (path' s) = (fderiv f ...) e₀
     have h_in_Icc : s ∈ Set.Icc 0 t := ⟨hs.1, le_of_lt hs.2⟩

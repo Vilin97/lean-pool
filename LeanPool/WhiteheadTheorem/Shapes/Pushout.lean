@@ -278,7 +278,8 @@ lemma isOpenMap_pushoutInr' (hg : IsClosed {z | z ∈ Set.range g}) :
       rw [this]
       apply Set.disjoint_image_image
       intro z hz y hy
-      convert pushoutInr_neq_pushoutInl_of_mem_compl_range f g z z.property y
+      convert pushoutInr_neq_pushoutInl_of_mem_compl_range f g z z.property y using 2
+      rfl
     rw [this]
     exact isOpen_empty
   · simp only []

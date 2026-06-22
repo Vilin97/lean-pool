@@ -38,7 +38,7 @@ theorem antitone_nat_eventually_constant
   {f : ℕ → ℕ} (hf : Antitone f)
     : ∃ N c, (∀ n ≥ N, f n = c) ∧ c ≤ f 0 := by
   have h := tendsto_atTop_ciInf hf ⟨0, Set.forall_mem_range.mpr fun _ => Nat.zero_le _⟩
-  simp only [nhds_discrete, Filter.tendsto_pure, Filter.eventually_atTop, ge_iff_le] at h
+  simp only [nhds_discrete, Filter.tendsto_pure, Filter.eventually_atTop] at h
   obtain ⟨N, h⟩ := h
   refine ⟨N, f N, ?_, hf (Nat.zero_le N)⟩
   intro n hn
@@ -347,7 +347,7 @@ def runDag
         simp only [Set.mem_prod] at p_sub
         specialize p_sub ((M.q₀, 0), ⟨q, qp⟩)
         grind
-    · simp only [Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Prod.mk.injEq, Prod.exists,
+    · simp only [Set.mem_image, Set.mem_sdiff, Set.mem_singleton_iff, Prod.mk.injEq, Prod.exists,
       not_and, exists_eq_right_right, Subtype.exists] at hq
       rcases hq with ⟨q, qp, ⟨hV, not_root⟩, rfl⟩
       obtain ⟨Y, p_sat, p_sub⟩ := p_sat q qp l hV
@@ -505,26 +505,26 @@ def dag : DAG (Iic Φ) := {
           left; left
           simp only [Set.mem_singleton_iff]
         · left; right
-          simp only [Set.mem_image, Set.mem_diff]
+          simp only [Set.mem_image, Set.mem_sdiff]
           grind
       · simp only [Set.singleton_union, Set.mem_union, Set.mem_insert_iff,
-          Set.mem_image, Set.mem_diff, Set.mem_singleton_iff]
+          Set.mem_image, Set.mem_sdiff, Set.mem_singleton_iff]
         grind
     · simp only [exists_prop, Subtype.exists] at he
       obtain ⟨q, qp, l, q', q'p, ⟨hV₂, hnV₁, hE₂⟩, rfl⟩ := he
       constructor
       · right
-        simp only [Set.mem_image, Set.mem_diff]
+        simp only [Set.mem_image, Set.mem_sdiff]
         exists (⟨q, qp⟩, l)
         simp only [hV₂, Set.mem_setOf_eq, not_and, not_or, true_and, and_true]
         rintro rfl
         grind
       · simp only [Set.singleton_union, Set.mem_union, Set.mem_insert_iff,
-          Set.mem_image, Set.mem_diff, Set.mem_singleton_iff]
+          Set.mem_image, Set.mem_sdiff, Set.mem_singleton_iff]
         grind
     · simp only [exists_prop, Subtype.exists, Set.mem_setOf_eq] at he
       rcases he with ⟨q, pq, he, rfl⟩
-      simp only [Set.mem_union, Set.mem_image, Set.mem_diff]
+      simp only [Set.mem_union, Set.mem_image, Set.mem_sdiff]
       grind
 }
 
@@ -604,7 +604,7 @@ lemma runDag_p_sat
         rintro (⟨⟨q_eq, rfl⟩, ⟨pq', q'_in_Y₁⟩⟩|⟨⟨q_eq, rfl⟩, ⟨pq', q'_in_Y₂⟩⟩)
         · left; grind
         · right; grind
-    · simp only [Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Prod.exists, Prod.mk.injEq,
+    · simp only [Set.mem_image, Set.mem_sdiff, Set.mem_singleton_iff, Prod.exists, Prod.mk.injEq,
       not_and, Subtype.exists] at hv
       rcases hv with ⟨q, pq, l, ⟨hV₁, not_root⟩, rfl⟩
       obtain ⟨Y₁, p_sat₁, p_sub₁⟩ := G₁.p_sat _ hV₁
@@ -617,7 +617,7 @@ lemma runDag_p_sat
         simp only [dag, base]
         simp only [Set.mem_image, Subtype.exists, Set.mem_union, Prod.exists, Set.mem_setOf_eq]
         grind
-    · simp only [Set.mem_image, Set.mem_diff, Set.mem_setOf_eq, not_and, not_or, Prod.exists,
+    · simp only [Set.mem_image, Set.mem_sdiff, Set.mem_setOf_eq, not_and, not_or, Prod.exists,
       Subtype.exists] at hv
       rcases hv with ⟨q, pq, l, ⟨hV₂, not_root⟩, rfl⟩
       by_cases H₁ : (q, l) ∈ (Subtype.val <$> G₁.toDAG).V
@@ -713,7 +713,7 @@ def shiftConjoinDag.runDag
           Prod.exists, exists_prop, Set.mem_union, Set.mem_setOf_eq
         ]
         grind
-    · simp only [Set.mem_diff, Set.mem_singleton_iff, Prod.exists, Prod.mk.injEq, not_and,
+    · simp only [Set.mem_sdiff, Set.mem_singleton_iff, Prod.exists, Prod.mk.injEq, not_and,
       Subtype.exists] at hv
       rcases hv with ⟨q, qp, l, ⟨hV₁, not_root⟩, rfl⟩
       simp only
@@ -731,7 +731,7 @@ def shiftConjoinDag.runDag
         ]
         grind
     · simp only [Subtype.coe_eta, Set.singleton_union, Set.mem_setOf_eq, or_true, and_self,
-      Set.insert_diff_of_mem, Set.mem_diff, Set.mem_image, Prod.exists, Subtype.exists, not_and,
+      Set.insert_sdiff_of_mem, Set.mem_sdiff, Set.mem_image, Prod.exists, Subtype.exists, not_and,
       not_or, Prod.mk.eta, exists_eq_right] at hv
       rcases hv with ⟨⟨q, pq, l, hV₂, rfl⟩, not_root⟩
       simp at not_root

@@ -3,6 +3,7 @@ Copyright (c) 2026 the LieLean team. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Heather Macbeth, the LieLean team
 -/
+import Lean.Meta.Tactic.NormCast
 import Mathlib.Algebra.Algebra.Tower
 import Mathlib.Algebra.BigOperators.GroupWithZero.Action
 import Mathlib.Tactic.Ring

@@ -85,7 +85,7 @@ lemma mem_CuspFormSubmodule (Γ : Subgroup SL(2, ℤ)) (k : ℤ) (f : ModularFor
 
 instance (priority := 100) CuspFormSubmodule.funLike : FunLike (CuspFormSubmodule Γ k) ℍ ℂ where
   coe f := f.1.toFun
-  coe_injective' f g h := by cases f; cases g; congr; exact DFunLike.ext' h
+  coe_injective f g h := by cases f; cases g; congr; exact DFunLike.ext' h
 
 instance (Γ : Subgroup SL(2, ℤ)) (k : ℤ) : CuspFormClass (CuspFormSubmodule Γ k) Γ k where
   slash_action_eq f := f.1.slash_action_eq'

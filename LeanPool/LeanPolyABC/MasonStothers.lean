@@ -199,7 +199,7 @@ theorem abc_char0 [CharZero k] {a b c : k[X]}
   rcases LeanPolyABC.Polynomial.abc ha hb hc hab hsum with _ | h
   · left
     repeat (any_goals constructor)
-    all_goals (apply natDegree_eq_zero_of_derivative_eq_zero; tauto)
+    all_goals (apply derivative_eq_zero.mp; tauto)
   · tauto
 
 end Polynomial

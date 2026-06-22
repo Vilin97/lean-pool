@@ -353,7 +353,7 @@ private lemma hasDerivAt_rho'_seg0 (H : ℝ) (t : ℝ) :
       (-(↑(H - Real.sqrt 3 / 2) : ℂ) * I) t := by
   have := ((hasDerivAt_const t (1 : ℝ)).sub (hasDerivAt_id t)).mul_const
     (H - Real.sqrt 3 / 2) |>.ofReal_comp.mul_const I
-  convert this using 1; push_cast; ring
+  exact this.congr_deriv (by push_cast; ring)
 
 private lemma hasDerivAt_rho'_arc (t : ℝ) :
     HasDerivAt (fun s : ℝ => exp (↑(Real.pi * (1 + s) / 6) * I) - ellipticPointRhoPlusOne)
@@ -379,7 +379,7 @@ private lemma hasDerivAt_rho'_seg4 (H : ℝ) (t : ℝ) :
     HasDerivAt (fun s : ℝ => ↑(s - 5) + ↑(H - Real.sqrt 3 / 2) * I) (1 : ℂ) t := by
   have key := (((hasDerivAt_id t).sub (hasDerivAt_const t (5 : ℝ))).ofReal_comp.add
     (hasDerivAt_const t (↑(H - Real.sqrt 3 / 2) * I)))
-  convert key using 1; simp [sub_zero]
+  exact key.congr_deriv (by simp [sub_zero])
 
 private lemma ftc_logDeriv_telescope_rho_plus_one (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
     {δ_L δ_R : ℝ} (hδ_L : 0 < δ_L) (hδ_L1 : δ_L < 1) (hδ_R : 0 < δ_R) (hδ_R1 : δ_R < 1) :

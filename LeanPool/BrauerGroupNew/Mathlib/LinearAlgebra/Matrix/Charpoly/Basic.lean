@@ -60,6 +60,6 @@ lemma Matrix.reindex_diagonal_charpoly (r n m : ℕ) (eq : m = r * n)
       (finProdFinEquiv.trans (finCongr (by rw [eq, mul_comm])) : Fin n × Fin r ≃ Fin m)
     ((Matrix.blockDiagonalRingHom (Fin n) (Fin r) F) fun _ ↦ A)).charpoly =
     A.charpoly ^ r := by
-  rw [Matrix.blockDiagonalRingHom_apply, Matrix.reindexAlgEquiv_apply,
+  rw [Matrix.blockDiagonalRingHom_apply, Matrix.coe_reindexAlgEquiv,
     Matrix.charpoly_reindex, blockDiagonal_charpoly]
   simp

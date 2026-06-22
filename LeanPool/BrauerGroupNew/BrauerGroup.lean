@@ -240,8 +240,7 @@ def mul (A B : CSA K) : CSA K where
   fin_dim := Module.Finite.tensorProduct K A B
 
 /-- Finite-dimensionality is preserved by passing to the opposite algebra. -/
-@[implicit_reducible]
-def isFinDimOfMop (A : Type*) [Ring A] [Algebra K A] [FiniteDimensional K A] :
+theorem isFinDimOfMop (A : Type*) [Ring A] [Algebra K A] [FiniteDimensional K A] :
     FiniteDimensional K Aᵐᵒᵖ := by
   have f:= MulOpposite.opLinearEquiv K (M:= A)
   exact Module.Finite.equiv f
@@ -702,14 +701,11 @@ def e6Aux0 : (E ⊗[K] A) ⊗[E] (E ⊗[K] B) →ₐ[E] E ⊗[K] (A ⊗[K] B) :=
         map_zero' := by simp
         map_add' := fun _ _ => by simp [TensorProduct.add_tmul, TensorProduct.tmul_add]
         commutes' k := by
-          simp only [Algebra.TensorProduct.algebraMap_apply]
-          rw [show (algebraMap K A) k ⊗ₜ[K] (1 : B) = k • (1 : A ⊗[K] B) by
-            rw [Algebra.algebraMap_eq_smul_one]
-            rw [← TensorProduct.smul_tmul']
-            rfl]
-          rw [TensorProduct.tmul_smul]
-          rw [Algebra.smul_def (A := E ⊗[K] (A ⊗[K] B))]
-          convert _root_.mul_one _ } fun e a =>
+          rw [Algebra.algebraMap_eq_smul_one (R := K) (A := E ⊗[K] (A ⊗[K] B)),
+            Algebra.algebraMap_eq_smul_one (R := K) (A := A)]
+          rw [TensorProduct.smul_tmul (R := K), TensorProduct.tmul_smul,
+            TensorProduct.tmul_smul, Algebra.TensorProduct.one_def,
+            Algebra.TensorProduct.one_def] } fun e a =>
             show (_ ⊗ₜ[K] _) * (_ ⊗ₜ[K] _) = (_ ⊗ₜ[K] _) * (_ ⊗ₜ[K] _) by simp)
     (Algebra.TensorProduct.lift
       { toFun e := e ⊗ₜ[K] (1 ⊗ₜ 1)
@@ -726,14 +722,10 @@ def e6Aux0 : (E ⊗[K] A) ⊗[E] (E ⊗[K] B) →ₐ[E] E ⊗[K] (A ⊗[K] B) :=
         map_zero' := by simp
         map_add' := fun _ _ => by simp [TensorProduct.tmul_add]
         commutes' k := by
-          simp only [Algebra.TensorProduct.algebraMap_apply]
-          rw [show (1 : A) ⊗ₜ[K] (algebraMap K B) k = k • (1 : A ⊗[K] B) by
-            rw [Algebra.algebraMap_eq_smul_one]
-            rw [TensorProduct.tmul_smul]
-            rfl]
-          rw [TensorProduct.tmul_smul]
-          rw [Algebra.smul_def (A := E ⊗[K] (A ⊗[K] B))]
-          convert _root_.mul_one _ }
+          rw [Algebra.algebraMap_eq_smul_one (R := K) (A := E ⊗[K] (A ⊗[K] B)),
+            Algebra.algebraMap_eq_smul_one (R := K) (A := B)]
+          rw [TensorProduct.tmul_smul, TensorProduct.tmul_smul,
+            Algebra.TensorProduct.one_def, Algebra.TensorProduct.one_def] }
     fun e b => show (_ ⊗ₜ _) * (_ ⊗ₜ _) = (_ ⊗ₜ _) * (_ ⊗ₜ _) by simp)
       fun x y => show _ = _ by
         induction x using TensorProduct.induction_on with

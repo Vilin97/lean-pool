@@ -267,13 +267,13 @@ lemma timeTranslationSchwartz_add_fun (s : ℝ) (f g : TestFunction) :
     timeTranslationSchwartz s (f + g) =
       timeTranslationSchwartz s f + timeTranslationSchwartz s g := by
   ext u
-  simp only [timeTranslationSchwartz_apply, SchwartzMap.add_apply]
+  simp only [timeTranslationSchwartz_apply, add_apply]
 
 /-- Time translation preserves scalar multiplication of Schwartz functions -/
 lemma timeTranslationSchwartz_smul (s : ℝ) (c : ℝ) (f : TestFunction) :
     timeTranslationSchwartz s (c • f) = c • timeTranslationSchwartz s f := by
   ext u
-  simp only [timeTranslationSchwartz_apply, SchwartzMap.smul_apply]
+  simp only [timeTranslationSchwartz_apply, smul_apply]
 
 /-! ### Fundamental Theorem of Calculus for Time Translation
 
@@ -389,7 +389,7 @@ private lemma schwartz_timeTranslation_mvt_bound
               ContinuousLinearMap.fderiv _
       rw [h1, hg_eq]
       rw [fderiv_comp t h_iter_diff h_path_diff]
-      simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, path, h_fderiv_path]
+      simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, path, h_fderiv_path]
       simp only [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.id_apply, one_smul]
       rfl
     have h_fderiv_iter : fderiv ℝ (iteratedFDeriv ℝ n (f : SpaceTime → ℝ)) (x + t • y) =

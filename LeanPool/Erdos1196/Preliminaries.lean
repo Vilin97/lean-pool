@@ -594,9 +594,9 @@ private lemma integral_tailKernel_mainTerm {m y : ℕ} (hm : 1 ≤ m) (hy : 2 �
       ∀ x ∈ Set.Ioi (y : ℝ),
         HasDerivAt (fun t : ℝ => Real.log t - Real.log (y : ℝ)) (1 / x) x := by
     intro x hx
-    convert (Real.hasDerivAt_log (show x ≠ 0 by exact (zero_lt_of_mem_Ioi hy hx).ne')).sub_const
-      (Real.log (y : ℝ)) using 1
-    field_simp
+    rw [one_div]
+    exact (Real.hasDerivAt_log (show x ≠ 0 by exact (zero_lt_of_mem_Ioi hy hx).ne')).sub_const
+      (Real.log (y : ℝ))
   have huv' :
       IntegrableOn
         ((tailKernel m) * fun t : ℝ => 1 / t)

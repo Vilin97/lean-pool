@@ -113,7 +113,7 @@ theorem nullspace_sufficiency (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ)
     funext hIntZero
   rw [hFluxFn]
   unfold vDiv
-  simp [ContinuousLinearMap.zero_apply]
+  simp
 
 /-- Density is positive when f > 0 and integrable.
     Proof: ∫ f > 0 for continuous positive integrable f on ℝ³ (positive measure).
@@ -191,6 +191,7 @@ theorem fubini_symmetrization_logf (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → �
             MeasureSpace.volume) := by
         rw [h_mp.map_eq]; exact h_integrable.1
       convert this.comp_measurable measurable_swap using 1
+      rfl
     convert h_swap_int.neg using 1
     ext p
     simp only [Pi.neg_apply]

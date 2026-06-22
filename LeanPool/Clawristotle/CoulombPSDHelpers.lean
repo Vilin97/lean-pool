@@ -238,8 +238,10 @@ lemma psd_continuous_coulomb
   have h_G_smooth : ContDiff ℝ 1 G := by
     apply_rules [ ContDiff.fderiv, h_log_smooth ]
     exacts [ h_log_smooth.comp (contDiff_snd), contDiff_id, by norm_num ]
-  convert continuous_landau_quadratic (fun v => (fun i => G v (Pi.single i 1) )) ?_ using 1
-  exact contDiff_pi.mpr fun i => h_G_smooth.clm_apply (contDiff_const)
+  refine (continuous_landau_quadratic (fun v => (fun i => G v (Pi.single i 1))) ?_).congr
+    (fun p => ?_)
+  · exact contDiff_pi.mpr fun i : Fin 3 => h_G_smooth.clm_apply (contDiff_const)
+  · rfl
 
 
 /-- Pointwise bound on PSD integrand for Coulomb kernel:
@@ -376,8 +378,7 @@ lemma fubini_double_pointwise_bound
             (pow_pos (by linarith [norm_nonneg v]) _)
           exact mul_nonneg (by linarith)
             (mul_nonneg hCg (pow_nonneg (by linarith [norm_nonneg v]) _))
-        · next j _ =>
-          simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
+        · simp only [Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
           have := norm_sub_le (f w * vGrad f v j) (f v * vGrad f w j)
           rw [Real.norm_eq_abs, Real.norm_eq_abs, Real.norm_eq_abs,
             abs_mul, abs_mul, abs_of_pos (hf_pos w), abs_of_pos (hf_pos v)] at this
@@ -404,7 +405,7 @@ lemma fubini_double_aestronglyMeasurable
     intro j _
     apply Measurable.mul
     · -- landauMatrix entry: measurable via coulombKernel ∘ eucNorm and innerLandauMatrix
-      simp only [landauMatrix, smul_apply, smul_eq_mul]
+      simp only [landauMatrix, Matrix.smul_apply, smul_eq_mul]
       apply Measurable.mul
       · apply ((Measurable.ite measurableSet_Iic measurable_const
           (measurable_id.pow measurable_const)) : Measurable coulombKernel).comp

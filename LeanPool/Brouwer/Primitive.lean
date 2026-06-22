@@ -1482,7 +1482,7 @@ omit [Inhabited T] in
 def reachableComponentGraph {α : Type*} (G : SimpleGraph α) (v₀ : α) :
     SimpleGraph {v : α // G.Reachable v₀ v} where
   Adj a b := G.Adj a.1 b.1
-  symm := by intro a b h; exact G.symm h
+  symm := ⟨fun a b h => G.symm.symm a.1 b.1 h⟩
   loopless := ⟨fun a h => G.loopless.1 a.1 h⟩
 
 omit [Inhabited T] in

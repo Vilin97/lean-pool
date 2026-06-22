@@ -38,15 +38,15 @@ end
 variable {E 𝕜 : Type _} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
 theorem orthogonalProjection_eq_linear_proj' {K : Submodule 𝕜 E} [K.HasOrthogonalProjection] :
-    (K.orthogonalProjection : E →ₗ[𝕜] K) =
-      Submodule.projectionOnto K _ Submodule.isCompl_orthogonal_of_hasOrthogonalProjection :=
-  Submodule.toLinearMap_orthogonalProjection_eq_linearProjOfIsCompl
+    (K.orthogonalProjectionOnto : E →ₗ[𝕜] K) =
+      Submodule.projectionOnto K _ K.isCompl_orthogonal :=
+  Submodule.toLinearMap_orthogonalProjectionOnto_eq_projectionOnto
 
 theorem orthogonalProjection_eq_linear_proj''
     {K : Submodule 𝕜 E} [K.HasOrthogonalProjection] (x : E) :
-    K.orthogonalProjection x =
-      Submodule.projectionOnto K _ Submodule.isCompl_orthogonal_of_hasOrthogonalProjection x :=
-  Submodule.orthogonalProjection_apply_eq_linearProjOfIsCompl x
+    K.orthogonalProjectionOnto x =
+      Submodule.projectionOnto K _ K.isCompl_orthogonal x :=
+  Submodule.orthogonalProjectionOnto_apply_eq_projectionOnto x
 
 /-- The orthogonal projection onto a submodule as an endomorphism of the ambient space. -/
 noncomputable def orthogonalProjection'
@@ -54,10 +54,10 @@ noncomputable def orthogonalProjection'
   U.starProjection
 
 theorem orthogonalProjection'_apply (U : Submodule 𝕜 E) [U.HasOrthogonalProjection] (x : E) :
-    orthogonalProjection' U x = U.orthogonalProjection x :=
+    orthogonalProjection' U x = U.orthogonalProjectionOnto x :=
   rfl
 
-local notation "P" => Submodule.orthogonalProjection
+local notation "P" => Submodule.orthogonalProjectionOnto
 
 local notation "↥P" => orthogonalProjection'
 
@@ -75,9 +75,9 @@ theorem orthogonalProjection'_eq (U : Submodule 𝕜 E) [U.HasOrthogonalProjecti
   rfl
 
 theorem orthogonal_projection'_eq_linear_proj {K : Submodule 𝕜 E} [K.HasOrthogonalProjection] :
-    (K.subtypeL.comp K.orthogonalProjection : E →ₗ[𝕜] E) =
+    (K.subtypeL.comp K.orthogonalProjectionOnto : E →ₗ[𝕜] E) =
       (K.subtype).comp
-        (K.projectionOnto Kᗮ Submodule.isCompl_orthogonal_of_hasOrthogonalProjection) :=
+        (K.projectionOnto Kᗮ K.isCompl_orthogonal) :=
   by simpa [Submodule.starProjection, Submodule.projection] using
     Submodule.toLinearMap_starProjection_eq_isComplProjection (K := K)
 
@@ -85,7 +85,7 @@ theorem orthogonalProjection'_eq_linear_proj'
     {K : Submodule 𝕜 E} [K.HasOrthogonalProjection] (x : E) :
     (orthogonalProjection' K : E →ₗ[𝕜] E) x =
       (K.subtype).comp
-        (K.projectionOnto Kᗮ Submodule.isCompl_orthogonal_of_hasOrthogonalProjection) x :=
+        (K.projectionOnto Kᗮ K.isCompl_orthogonal) x :=
   by
   rw [← orthogonal_projection'_eq_linear_proj]
   rfl

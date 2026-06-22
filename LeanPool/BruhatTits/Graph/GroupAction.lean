@@ -294,7 +294,8 @@ lemma _root_.Matrix.GL.mem_range_map_iff {R K : Type*} [CommRing R]
   simp only [map_mul, RingHom.map_det, RingHom.mapMatrix_apply, map_one]
   rw [hu]
   convert (Matrix.GeneralLinearGroup.det g).val_inv using 2
-  congr; ext; simp [hr]
+  · congr; ext; simp [hr]
+  · exact (Units.inv_eq_val_inv _).symm
 
 lemma mem_stabilizer_twist_iff_mem {ϖ : R} (hϖ : Irreducible ϖ) (g : GL (Fin 2) R)
     (f : Fin 2 → ℤ) :

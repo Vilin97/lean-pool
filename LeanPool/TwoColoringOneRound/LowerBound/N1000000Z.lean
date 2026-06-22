@@ -205,6 +205,7 @@ theorem Z_posSemidef (r : Block) : (Z r).PosSemidef := by
         ((L r) * Matrix.diagonal (Dvec r) * (Matrix.conjTranspose (L r))).PosSemidef :=
       Matrix.PosSemidef.mul_mul_conjTranspose_same (A := Matrix.diagonal (Dvec r)) hD (B := L r)
     convert this using 1
+    rw [Matrix.conjTranspose_eq_transpose_of_trivial]
   simpa [Z_eq_LDL r] using hLDL
 
 theorem trace_mul_nonneg_of_Z_posSemidef {r : Block} {S : Matrix (Fin 3) (Fin 3) Q}
@@ -217,6 +218,7 @@ theorem trace_mul_nonneg_of_Z_posSemidef {r : Block} {S : Matrix (Fin 3) (Fin 3)
         ((Matrix.conjTranspose (L r)) * S * (L r)).PosSemidef :=
       Matrix.PosSemidef.conjTranspose_mul_mul_same (A := S) hS (B := L r)
     convert this using 1
+    rw [Matrix.conjTranspose_eq_transpose_of_trivial]
   have hTrace :
       ((Z r) * S).trace =
         (Matrix.diagonal (Dvec r) * ((Matrix.transpose (L r)) * S * (L r))).trace := by

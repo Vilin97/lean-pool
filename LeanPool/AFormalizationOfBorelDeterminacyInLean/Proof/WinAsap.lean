@@ -43,7 +43,9 @@ lemma mem_defensiveQuasi (x : G.tree) (h : ¬ WinningPrefix G p.swap x.val) hpr 
   apply subtree_induction (S := ⊤) (by simp)
   intro n hn hx hp _
   conv => simp [defensiveQuasi, tryAndElse, defensivePre, preserveProp, ExtensionsAt.val']
-  intro _ hW; apply h; use n + 1; convert hW; synthIsPosition
+  intro _ hW; apply h; use n + 1
+  rw [show Player.residual (List.take (n + 1) x.val) p.swap = Player.zero by synthIsPosition]
+  exact hW
 lemma winningPrefix_of_residual {x y : List A}
   (hW : WinningPrefix (G.residual x) p y) :
   WinningPrefix G (p.residual x) (x ++ y) := by

@@ -559,7 +559,7 @@ lemma non_coprime_subset_union (A B : ℤ) (_hAB : A ≤ B) (B' : ℕ)
       ({x : ℤ | A ≤ x ∧ x ≤ B ∧ (ℓ : ℤ) ∣ x}) ×ˢ
       ({x : ℤ | A ≤ x ∧ x ≤ B ∧ (ℓ : ℤ) ∣ x}) := by
   intro S C pq hpq
-  simp only [Set.mem_diff] at hpq
+  simp only [Set.mem_sdiff] at hpq
   obtain ⟨hS, hnotC⟩ := hpq
   rw [Set.mem_prod] at hS
   have hAp := (Set.mem_Icc.mp hS.1).1
@@ -724,7 +724,7 @@ lemma coprime_pairs_sieve_lower_bound (A B : ℤ) (hAB : A ≤ B) (B' : ℕ)
   have hC_sub : C ⊆ S := coprime_pairs_subset_product A B
   have hS_fin : S.Finite := (Set.finite_Icc A B).prod (Set.finite_Icc A B)
   have hNC := non_coprime_pairs_upper_bound A B hAB B' hB'
-  have h_part := Set.ncard_diff_add_ncard_of_subset hC_sub hS_fin
+  have h_part := Set.ncard_sdiff_add_ncard_of_subset hC_sub hS_fin
   have hS_card : S.ncard = L * L := Set.ncard_prod
   rw [hS_card] at h_part
   exact coprime_lower_bound_from_complement L C.ncard (S \ C).ncard B'
@@ -9284,7 +9284,7 @@ lemma totient_sq_mul_of_coprime (a b : ℕ) (hcop : a.Coprime b)
   exact h₅
 
 lemma odd_le_totient_sq (n : ℕ) (hn : 1 ≤ n) (hodd : ¬ 2 ∣ n) : n ≤ n.totient ^ 2 := by
-  induction n using Nat.strongRec' with
+  induction n using Nat.strongRec with
   | _ n ih =>
   obtain rfl | hn2 := eq_or_lt_of_le hn
   · simp [Nat.totient_one]

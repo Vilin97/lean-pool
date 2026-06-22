@@ -166,10 +166,10 @@ by
     intro x ⟨y, hy⟩
     rw [← hy, LinearMap.mem_ker]
     have hfun := congrArg (fun f : B →L[ℂ] B => f y) h
-    simpa [ContinuousLinearMap.mul_apply] using hfun
+    simpa [mul_apply_eq_comp] using hfun
   rw [← orthogonalProjection.range (LinearMap.ker T.toLinearMap)] at this
   rw [← ContinuousLinearMap.coe_inj, ContinuousLinearMap.mul_def,
-    ContinuousLinearMap.coe_comp, IsIdempotentElem.comp_idempotent_iff]
+    ContinuousLinearMap.toLinearMap_comp, IsIdempotentElem.comp_idempotent_iff]
   · exact this
   · exact ContinuousLinearMap.IsIdempotentElem.toLinearMap
       (orthogonalProjection.isIdempotentElem _)
@@ -267,10 +267,10 @@ by
   simp only [_root_.map_mul, map_zero]
   simp only [Matrix.CLM_apply_orthogonalProjection]
   ext1
-  simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.zero_apply]
-  simp only [orthogonalProjection'_eq, ContinuousLinearMap.coe_comp', Submodule.coe_subtypeL,
+  simp only [mul_apply_eq_comp, _root_.zero_apply]
+  simp only [orthogonalProjection'_eq, ContinuousLinearMap.coe_comp, Submodule.coe_subtypeL,
     Submodule.coe_subtype, Function.comp_apply, ZeroMemClass.coe_eq_zero,
-    Submodule.orthogonalProjection_eq_zero_iff]
+    Submodule.orthogonalProjectionOnto_eq_zero_iff]
   rw [ContinuousLinearMap.ker_eq_ortho_adjoint_range, Submodule.orthogonal_orthogonal,
     ← ContinuousLinearMap.star_eq_adjoint]
   simp only [← map_star, star_eq_conjTranspose, hx.eq]
@@ -1010,16 +1010,16 @@ by
     have :=
       calc
         p = Star.star p * p ↔ ∀ x, ‖(p - (Star.star p * p)) x‖ = 0 := by
-          simp only [norm_eq_zero, ContinuousLinearMap.sub_apply, sub_eq_zero]
+          simp only [norm_eq_zero, sub_apply, sub_eq_zero]
           rw [@ContinuousLinearMap.ext_iff]
         _ ↔ ∀ x, ‖(ContinuousLinearMap.adjoint (1 - p)) (p x)‖ = 0 := by
           simp only [← ContinuousLinearMap.star_eq_adjoint, star_sub, star_one,
-            ContinuousLinearMap.sub_apply, ContinuousLinearMap.mul_apply]
+            sub_apply, mul_apply_eq_comp]
           rfl
         _ ↔ ∀ x, ‖(1 - p) (p x)‖ = 0 := by simp only [this]
         _ ↔ ∀ x, ‖(p - p * p) x‖ = 0 := by simp
         _ ↔ p - p * p = 0 := by
-          simp only [norm_eq_zero, ContinuousLinearMap.ext_iff, ContinuousLinearMap.zero_apply]
+          simp only [norm_eq_zero, ContinuousLinearMap.ext_iff, zero_apply]
         _ ↔ IsIdempotentElem p := by simp only [sub_eq_zero, IsIdempotentElem, eq_comm]
     rw [this.mpr hp]
     exact IsSelfAdjoint.star_mul_self _

@@ -52,22 +52,22 @@ lemma tendsto_zero_of_regular_addContent (hR : IsSetRing R) (m : AddContent ℝ�
         congr
         exact le_antisymm (le_iInf₂ fun i hi ↦ hs_anti hi)
           (iInf₂_le (κ := fun i ↦ i ≤ n) (f := fun i _ ↦ s i) n le_rfl)
-    _ = m ((⋂ i ≤ n, s i) \ (⋂ i ≤ n, t i)) := by simp only [ht_empty' n hn, Set.diff_empty]
+    _ = m ((⋂ i ≤ n, s i) \ (⋂ i ≤ n, t i)) := by simp only [ht_empty' n hn, Set.sdiff_empty]
     _ ≤ m (⋃ i ≤ n, (s i \ t i)) := by
         refine addContent_mono hR.isSetSemiring ?_ ?_ ?_
-        · exact hR.diff_mem (hR.iInter_le_mem hs n) (hR.iInter_le_mem (fun i ↦ hCR (ht_mem_C i)) n)
-        · exact hR.iUnion_le_mem (fun i ↦ hR.diff_mem (hs i) (hCR (ht_mem_C i))) n
-        · rw [Set.diff_iInter]
+        · exact hR.sdiff_mem (hR.iInter_le_mem hs n) (hR.iInter_le_mem (fun i ↦ hCR (ht_mem_C i)) n)
+        · exact hR.iUnion_le_mem (fun i ↦ hR.sdiff_mem (hs i) (hCR (ht_mem_C i))) n
+        · rw [Set.sdiff_iInter]
           refine Set.iUnion_mono (fun i ↦ ?_)
           by_cases hin : i ≤ n
           · simp only [hin, Set.iInter_true, Set.iUnion_true]
-            refine Set.diff_subset_diff ?_ subset_rfl
+            refine Set.sdiff_subset_sdiff ?_ subset_rfl
             exact Set.biInter_subset_of_mem hin
-          · simp only [hin, Set.iInter_of_empty, Set.diff_univ, Set.iUnion_of_empty,
+          · simp only [hin, Set.iInter_of_empty, Set.sdiff_univ, Set.iUnion_of_empty,
               Set.empty_subset]
     _ = m (⋃ i ∈ Finset.range (n + 1), (s i \ t i)) := by simp only [Finset.mem_range_succ_iff]
     _ ≤ ∑ i ∈ Finset.range (n + 1), m (s i \ t i) :=
-        addContent_biUnion_le hR (fun i _ ↦ hR.diff_mem (hs i) (hCR (ht_mem_C i)))
+        addContent_biUnion_le hR (fun i _ ↦ hR.sdiff_mem (hs i) (hCR (ht_mem_C i)))
     _ ≤ ∑ i ∈ Finset.range (n + 1), (δ i : ℝ≥0∞) := Finset.sum_le_sum (fun i _ ↦ ht i)
     _ ≤ ∑' i, (δ i : ℝ≥0∞) := ENNReal.sum_le_tsum _
     _ ≤ ε := hδ_sum.le

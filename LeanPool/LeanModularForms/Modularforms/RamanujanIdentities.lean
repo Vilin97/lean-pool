@@ -124,6 +124,7 @@ theorem ramanujan_E₆' : serreD 6 E₆.toFun = - 2⁻¹ * E₄.toFun * E₄.toF
   have hfun : ∀ z, serreD 6 E₆.toFun z = c * (E₄.toFun z * E₄.toFun z) := fun z => by
     have := smul_modularForm_eq_pointwise hc z
     convert this using 2
+    all_goals rfl
   have hc_val : c = -(1/2 : ℂ) := scalar_eq_of_tendsto hfun serre_DE₆_tendsto_atImInfty
     (by simpa [mul_one] using E₄_tendsto_one_atImInfty.mul E₄_tendsto_one_atImInfty)
   ext z

@@ -478,20 +478,21 @@ private lemma extendedFarkas.fwd_witness {A : Matrix I J F∞} {b : I → F∞}
       (fun i : I => b i ≠ ⊤ ∧ ∀ (j : J), A i j ≠ ⊥)] at inequality
     · rw [←EF.coe_le_coe_iff]
       convert inequality
-      simp only [Matrix.mulVec, dotProduct]
-      rw [Finset.sum_toE]
-      congr
-      ext i'
-      simp only [extendedFarkas.A', Matrix.neg_apply, Matrix.transpose_apply, Matrix.of_apply]
-      split <;> rename_i hAij
-      · rewrite [hAij, mul_comm]
-        rfl
-      · exfalso
-        apply i'.property.right
-        exact hAij
-      · exfalso
-        apply j'.property
-        exact hAij
+      · simp only [Matrix.mulVec, dotProduct]
+        rw [Finset.sum_toE]
+        congr
+        ext i'
+        simp only [extendedFarkas.A', Matrix.neg_apply, Matrix.transpose_apply, Matrix.of_apply]
+        split <;> rename_i hAij
+        · rewrite [hAij, mul_comm]
+          rfl
+        · exfalso
+          apply i'.property.right
+          exact hAij
+        · exfalso
+          apply j'.property
+          exact hAij
+      · simp [EF.coe_zero]
     · intro i hi
       rw [h0 i hi]
       apply EF.zero_smul_nonbot
@@ -502,18 +503,19 @@ private lemma extendedFarkas.fwd_witness {A : Matrix I J F∞} {b : I → F∞}
       (fun i : I => b i ≠ ⊤ ∧ ∀ (j : J), A i j ≠ ⊥)] at sharpine
     · unfold dotProduct
       rw [←EF.coe_lt_coe_iff, Finset.sum_toE]
-      convert sharpine with i'
-      simp only [extendedFarkas.b']
-      split <;> rename_i hbi
-      · rewrite [hbi, mul_comm]
-        rfl
-      · exfalso
-        apply hbot
-        use i'
-        exact hbi
-      · exfalso
-        apply i'.property.left
-        exact hbi
+      convert sharpine using 2 with i'
+      · simp only [extendedFarkas.b']
+        split <;> rename_i hbi
+        · rewrite [hbi, mul_comm]
+          rfl
+        · exfalso
+          apply hbot
+          use i'
+          exact hbi
+        · exfalso
+          apply i'.property.left
+          exact hbi
+      · simp [EF.coe_zero]
     · intro i hi
       rw [h0 i hi]
       apply EF.zero_smul_nonbot
@@ -530,29 +532,30 @@ private lemma extendedFarkas.bwd_witness {A : Matrix I J F∞} {b : I → F∞}
   constructor
   · intro j
     if hj : (∀ i : I, A i j ≠ ⊤) then
-      convert EF.coe_le_coe_iff.← (ineqalities ⟨j, (hj ·.val)⟩)
-      simp only [Matrix.mulWeig]
-      simp only [dotWeig, dite_smul]
-      rw [Finset.sum_dite]
-      convert add_zero _
-      · apply Finset.sum_eq_zero
-        intro i _
-        apply EF.zero_smul_nonbot
-        intro contr
-        rw [Matrix.neg_apply, EF.neg_eq_bot_iff] at contr
-        exact hj i contr
-      · simp only [Matrix.mulVec, dotProduct, Matrix.neg_apply, Matrix.transpose_apply]
-        rw [Finset.sum_toE]
-        apply Finset.subtype_univ_sum_eq_subtype_univ_sum
-        · ext
-          simp
-        · intro i hi hif
-          rw [mul_comm]
-          simp only [extendedFarkas.A', Matrix.of_apply]
-          split <;> rename_i hAij
-          · exact hAij ▸ rfl
-          · exact (hi.right _ hAij).elim
-          · exact (hj _ hAij).elim
+      convert EF.coe_le_coe_iff.← (ineqalities ⟨j, (hj ·.val)⟩) using 2
+      · simp only [Matrix.mulWeig]
+        simp only [dotWeig, dite_smul]
+        rw [Finset.sum_dite]
+        convert add_zero _
+        · apply Finset.sum_eq_zero
+          intro i _
+          apply EF.zero_smul_nonbot
+          intro contr
+          rw [Matrix.neg_apply, EF.neg_eq_bot_iff] at contr
+          exact hj i contr
+        · simp only [Matrix.mulVec, dotProduct, Matrix.neg_apply, Matrix.transpose_apply]
+          rw [Finset.sum_toE]
+          apply Finset.subtype_univ_sum_eq_subtype_univ_sum
+          · ext
+            simp
+          · intro i hi hif
+            rw [mul_comm]
+            simp only [extendedFarkas.A', Matrix.of_apply]
+            split <;> rename_i hAij
+            · exact hAij ▸ rfl
+            · exact (hi.right _ hAij).elim
+            · exact (hj _ hAij).elim
+      · simp [EF.coe_zero]
     else
       push Not at hj
       obtain ⟨i, Aij_eq_top⟩ := hj
@@ -560,27 +563,28 @@ private lemma extendedFarkas.bwd_witness {A : Matrix I J F∞} {b : I → F∞}
       rw [has_bot_dotWeig_nneg]
       · apply bot_le
       · rwa [Matrix.neg_apply, Matrix.transpose_apply, EF.neg_eq_bot_iff]
-  · convert EF.coe_lt_coe_iff.← sharpine
-    unfold dotProduct dotWeig
-    simp_rw [dite_smul]
-    rw [Finset.sum_dite]
-    convert add_zero _
-    · apply Finset.sum_eq_zero
-      intro j _
-      apply EF.zero_smul_nonbot
-      exact (hbot ⟨j.val, ·⟩)
-    · erw [←Finset.sum_coe_sort_eq_attach]
-      rw [Finset.sum_toE]
-      apply Finset.subtype_univ_sum_eq_subtype_univ_sum
-      · ext
-        simp
-      · intro i hi _
-        rw [mul_comm]
-        simp only [extendedFarkas.b']
-        split <;> rename_i hbi
-        · simp_rw [hbi]; exact rfl
-        · exact (hbot ⟨i, hbi⟩).elim
-        · exact (hi.left hbi).elim
+  · convert EF.coe_lt_coe_iff.← sharpine using 2
+    · unfold dotProduct dotWeig
+      simp_rw [dite_smul]
+      rw [Finset.sum_dite]
+      convert add_zero _
+      · apply Finset.sum_eq_zero
+        intro j _
+        apply EF.zero_smul_nonbot
+        exact (hbot ⟨j.val, ·⟩)
+      · erw [←Finset.sum_coe_sort_eq_attach]
+        rw [Finset.sum_toE]
+        apply Finset.subtype_univ_sum_eq_subtype_univ_sum
+        · ext
+          simp
+        · intro i hi _
+          rw [mul_comm]
+          simp only [extendedFarkas.b']
+          split <;> rename_i hbi
+          · simp_rw [hbi]; exact rfl
+          · exact (hbot ⟨i, hbi⟩).elim
+          · exact (hi.left hbi).elim
+    · simp [EF.coe_zero]
 
 /-- Just like `inequalityFarkas_neg` but for `A` and `b` over `F∞`. -/
 theorem extendedFarkas

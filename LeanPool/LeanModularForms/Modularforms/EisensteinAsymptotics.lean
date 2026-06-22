@@ -197,14 +197,16 @@ lemma serre_DE₄_tendsto_atImInfty :
     Filter.Tendsto (serreD 4 E₄.toFun) atImInfty (nhds (-(1/3 : ℂ))) := by
   convert serre_D_tendsto_neg_k_div_12 4 E₄.toFun E₄.holo'
     (ModularFormClass.bdd_at_infty E₄) E₄_tendsto_one_atImInfty using 2
-  norm_num
+  · rw [show ((4 : ℤ) : ℂ) = 4 from by norm_num]
+  · norm_num
 
 /-- serreD 6 E₆ → -1/2 at i∞. -/
 lemma serre_DE₆_tendsto_atImInfty :
     Filter.Tendsto (serreD 6 E₆.toFun) atImInfty (nhds (-(1/2 : ℂ))) := by
   convert serre_D_tendsto_neg_k_div_12 6 E₆.toFun E₆.holo'
     E₆_isBoundedAtImInfty E₆_tendsto_one_atImInfty using 2
-  norm_num
+  · rw [show ((6 : ℤ) : ℂ) = 6 from by norm_num]
+  · norm_num
 
 /-- serreD 1 E₂ is a weight-4 modular form.
 Note: E₂ itself is NOT a modular form, but serreD 1 E₂ IS. -/
@@ -245,8 +247,7 @@ lemma summable_pow_shift (k : ℕ) :
     ring
   simp_rw [h_eq]
   apply Summable.mul_left
-  convert h.comp_injective Nat.succ_injective using 1
-  ext m
+  refine (h.comp_injective Nat.succ_injective).congr (fun m => ?_)
   simp [Function.comp_apply, Nat.succ_eq_add_one]
 
 /-- Derivative bounds for q-expansion coefficients.
@@ -269,8 +270,8 @@ lemma qexp_deriv_bound_of_coeff_bound {a : ℕ+ → ℂ} {k : ℕ}
         2 * π * ((n : ℕ) : ℝ)^(k + 1) * rexp (-(2 * π * k_min.im) * (n : ℕ))) := by
       have : Summable (fun n : ℕ+ =>
           ((n : ℕ) : ℝ)^(k + 1) * rexp (-(2 * π * k_min.im) * (n : ℕ))) := h.subtype _
-      convert this.mul_left (2 * π) using 1
-      ext n; ring
+      refine (this.mul_left (2 * π)).congr (fun n => ?_)
+      ring
     use fun n => 2 * π * (n : ℝ)^(k + 1) * rexp (-2 * π * ↑n * k_min.im)
     constructor
     · apply hconv.of_nonneg_of_le

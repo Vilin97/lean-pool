@@ -385,8 +385,13 @@ theorem exists_sep_masSubfield' : ∃ (a : D), IsMax (SubField.botAdjoin K D a) 
     contrapose! h
     apply Subalgebra.toSubring_injective
     convert congr(Subring.map CL.val.toRingHom $h)
-    ext
-    simp
+    all_goals first
+      | rfl
+      | exact (Subalgebra.center_toSubring K ↥CL).symm
+      | · ext x
+          simp only [Subalgebra.mem_toSubring, Subring.mem_map, Subring.mem_top,
+            true_and, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, Subalgebra.coe_val,
+            Subtype.exists, exists_prop, exists_eq_right]
   obtain ⟨a, ha1, ha2⟩ := @JacobsonNoether.exists_separable_and_not_isCentral
     (Subalgebra.centralizer K (A := D) L) _ inst3 ass
   obtain ⟨L, hLsep⟩ := L

@@ -163,7 +163,9 @@ instance HasLiftingProperty.of_colimit_ofSequence_zero :
     have uniq_f : f = cc.isColimit.desc ccy := by   -- f is a morphism of cocones
       apply cc.isColimit.uniq ccy; intro n
       induction n with
-      | zero => convert sq.w.symm
+      | zero =>
+          change cc.cocone.ι.app 0 ≫ f = h ≫ p
+          exact sq.w.symm
       | succ n =>
           dsimp [ccy, Limits.Cocone.postcompose, ccz]
           simp only [Limits.Cocone.ofSequenceOfHasLiftingProperty, NatTrans.ofSequence_app]

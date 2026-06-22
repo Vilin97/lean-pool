@@ -109,7 +109,7 @@ theorem ContinuousLinearMap.inner_map_self_eq_zero [InnerProductSpace ℂ E] {p 
     (∀ x : E, ⟪p x, x⟫_ℂ = 0) ↔ p = 0 :=
   by
   simp_rw [ContinuousLinearMap.ext_iff, ← ContinuousLinearMap.coe_coe,
-    ← LinearMap.ext_iff, coe_zero]
+    ← LinearMap.ext_iff, ContinuousLinearMap.toLinearMap_zero]
   exact @_root_.inner_map_self_eq_zero E _ _ _
 
 theorem ContinuousLinearMap.adjoint_smul {K E₁ E₂ : Type _} [RCLike K] [NormedAddCommGroup E₁]

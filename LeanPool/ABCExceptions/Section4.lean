@@ -5,7 +5,7 @@ Authors: Bhavik Mehta
 -/
 
 import Mathlib.Analysis.RCLike.Basic
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Tactic.NormNum.BigOperators
 import LeanPool.ABCExceptions.ForMathlib.Misc
 

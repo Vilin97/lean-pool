@@ -63,7 +63,7 @@ instance TT.inhabited : Inhabited (TT n l) where
 
 instance TT.funlike : FunLike (TT n l) (Fin n) (Fin (l+1)) where
   coe := fun a => a.1
-  coe_injective' := Subtype.val_injective
+  coe_injective := Subtype.val_injective
 
 variable {n l} in
 /-- The point of the standard simplex associated to an integer point of `TT n l`. -/

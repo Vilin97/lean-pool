@@ -465,7 +465,7 @@ private lemma ftc_logDeriv_telescope_rho (H : ℝ) (hH : Real.sqrt 3 / 2 < H)
     intro t
     have key := (((hasDerivAt_id t).sub (hasDerivAt_const t (4 : ℝ))).ofReal_comp.add
       (hasDerivAt_const t (↑(H - Real.sqrt 3 / 2) * I)))
-    convert key using 1; simp [sub_zero]
+    exact key.congr_deriv (by simp [sub_zero])
   have heq_01 : ∀ t ∈ Ioo (0 : ℝ) 1, g t = h₀ t ∧ deriv g t = deriv h₀ t := by
     intro t ⟨_, ht1⟩
     refine ⟨hg_eq_h₀ t (le_of_lt ht1), ?_⟩

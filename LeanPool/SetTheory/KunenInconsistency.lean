@@ -157,7 +157,7 @@ def s (α : ν.ToType) : ℕ → κω := by
   suffices {x : ℕ → κω | (∀ n, ↑(x n) ∈ X α) ∧ ∀ β, s' β ≠ x}.Nonempty from this.some
   convert_to ({x : ℕ → κω | ∀ n, ↑(x n) ∈ X α} \ Set.range s').Nonempty using 1
   · ext x; simp
-  · apply diff_nonempty_of_mk_lt_mk
+  · apply sdiff_nonempty_of_mk_lt_mk
     refine lt_of_le_of_lt mk_range_le ?_
     refine lt_of_lt_of_le (mk_Iio_ToType_lt _) ?_
     have equivType : {x : ℕ → κω | ∀ n, ↑(x n) ∈ X α} ≃ (ℕ → X α) := {

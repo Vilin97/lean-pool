@@ -34,7 +34,7 @@ distance is equal to `1`.
 @[simps -isSimp]
 def BTgraph : SimpleGraph (Vertices R) where
   Adj L M := BruhatTits.IsNeighbour L M
-  symm L M := (isNeighbour_symm L M).mp
+  symm := ⟨fun L M => (isNeighbour_symm L M).mp⟩
   loopless := ⟨by
     intro L (h : inv L L = 1)
     rw [inv_self] at h

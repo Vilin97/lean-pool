@@ -46,6 +46,10 @@ Virasoro algebra
 
 namespace VirasoroProject
 
+-- `LieRing.ofAssociativeRing` is only a local instance in Mathlib; it provides the Lie ring
+-- structure on the scalar field `𝕜`, which acts as the abelian centre of the central extension.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 section VirasoroAlgebra
 
 /-! ### The Virasoro algebra -/

@@ -66,7 +66,11 @@ lemma glasser_lower_bound (c u : ℝ) (hu : u ≠ 0) : (c / u - u)^2 ≥ u^2 - 2
 /-- The derivative of u ↦ c/u - u is -c/u² - 1 -/
 lemma hasDerivAt_glasser_map (c : ℝ) (u : ℝ) (hu : u ≠ 0) :
     HasDerivAt (fun x => c / x - x) (-c / u^2 - 1) u := by
-  convert ((hasDerivAt_inv hu).const_mul c).sub (hasDerivAt_id u) using 1; field_simp
+  have h := ((hasDerivAt_inv hu).const_mul c).sub (hasDerivAt_id u)
+  have hf : (fun x : ℝ => c / x - x) = (fun y => c * y⁻¹) - id := by
+    ext x; simp only [Pi.sub_apply, id_eq]; ring
+  have hv : -c / u^2 - 1 = c * -(u^2)⁻¹ - 1 := by rw [div_eq_mul_inv]; ring
+  rw [hf, hv]; exact h
 
 /-! ## Part 3: The core Glasser integral
 
@@ -237,8 +241,10 @@ theorem glasser_weighted_integrable (c : ℝ) (hc : 0 < c) :
       by
       intro u hu
       have hu_ne : u ≠ 0 := ne_of_gt hu.1
-      convert (HasDerivAt.const_mul c (hasDerivAt_inv hu_ne)).hasDerivWithinAt using 1
-      field_simp
+      have h := (HasDerivAt.const_mul c (hasDerivAt_inv hu_ne)).hasDerivWithinAt (s := Ioc (0:ℝ) 1)
+      have hf : (fun u : ℝ => c / u) = fun y => c * y⁻¹ := by ext y; ring
+      have hv : -c / u^2 = c * -(u^2)⁻¹ := by rw [div_eq_mul_inv]; ring
+      rw [hf, hv]; exact h
     -- Apply the key change of variables lemma for integrability
     rw [← h_image] at h_int_image
     have h_cov := integrableOn_image_iff_integrableOn_deriv_smul_of_antitoneOn

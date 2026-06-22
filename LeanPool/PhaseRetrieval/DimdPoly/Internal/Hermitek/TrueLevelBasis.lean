@@ -1401,6 +1401,8 @@ theorem integrable_weightedDiag (k n : ℕ) :
     intro hC
     apply hf
     convert hC.re using 1
+    funext x
+    exact (RCLike.ofReal_re (f x)).symm
   have hzero : weightedInner (Phi k n) (Phi k n) = 0 := by
     unfold weightedInner HermiteLEAN.weightedInner
     calc

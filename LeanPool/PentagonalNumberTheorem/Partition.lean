@@ -70,7 +70,9 @@ theorem hasProd_powerSeriesMk_card_partition [IsTopologicalSemiring R] :
     HasProd (fun i ↦ ∑' j : ℕ, X ^ ((i + 1) * j))
     (PowerSeries.mk fun n ↦ (Fintype.card n.Partition : R)) := by
   convert hasProd_powerSeriesMk_card_restricted R (fun _ ↦ True)
-  simp [restricted]
+  · rfl
+  · simp
+  · simp [restricted]
 
 theorem powerSeriesMk_card_partition_mul_tprod_one_sub_pow [Nontrivial R]
     [IsTopologicalRing R] [NoZeroDivisors R] :

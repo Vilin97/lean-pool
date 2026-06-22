@@ -37,7 +37,7 @@ infixr:25 " →𝒒 " => QuasiBorelHom
 
 instance [QuasiBorelSpace A] [QuasiBorelSpace B] : FunLike (A →𝒒 B) A B where
   coe := toFun
-  coe_injective' f g := by
+  coe_injective f g := by
     cases f
     cases g
     simp only [mk.injEq, imp_self]

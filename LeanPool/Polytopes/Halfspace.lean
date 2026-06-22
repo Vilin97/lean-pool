@@ -40,7 +40,7 @@ lemma unitSphereDual_surj : ∀ f : {f : (StrongDual ℝ E) // norm f = 1},
   intro f
   apply LinearMap.surjective_of_ne_zero
   intro h
-  rw [← ContinuousLinearMap.coe_zero, ContinuousLinearMap.coe_inj] at h
+  rw [← ContinuousLinearMap.toLinearMap_zero, ContinuousLinearMap.coe_inj] at h
   have := h ▸ f.2
   simp only [norm_zero, zero_ne_one] at this
 
@@ -51,7 +51,7 @@ variable [CompleteSpace E]
 
 instance Halfspace.SetLike : SetLike (Halfspace E) E where
   coe := Halfspace.S
-  coe_injective' := by
+  coe_injective := by
     intro H1 H2 h
     obtain ⟨f1, α1⟩ := H1
     obtain ⟨f2, α2⟩ := H2
@@ -233,7 +233,7 @@ lemma Halfspace.val_raw (p : Subspace ℝ E) [CompleteSpace p] (H_' : Halfspace 
   ∃ H_ : Halfspace E, ((∀ (x : { x // x ∈ p }), H_.f.1 x = H_'.f.1 x) ∧ ‖H_.f.1‖ = ‖H_'.f.1‖) ∧
     H_.α = H_'.α := by
   rcases H_' with ⟨ ⟨ f, hf ⟩, C ⟩
-  choose g hg using Real.exists_extension_norm_eq p f
+  choose g hg using exists_extension_norm_eq p f
   exact ⟨ ⟨ ⟨ g, hg.2 ▸ hf ⟩, C ⟩, hg, rfl ⟩
 
 /-- A halfspace of the subspace `p` extended to a halfspace of the whole space `E`. -/

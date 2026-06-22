@@ -116,7 +116,7 @@ theorem pv_sector_higher_power (r : ℝ) (_hr : 0 < r) (α : ℝ)
     intro t ⟨ht, ht_not⟩
     have ht_not' : t ∉ ({1, 2} : Set ℝ) := fun h => ht_not ⟨h, ht⟩
     change HasDerivAt F (sectorCurve r α t ^ (n - 1) * deriv (sectorCurve r α) t) t
-    convert ((hγ_diff t ht ht_not').hasDerivAt.pow n).div_const (↑n : ℂ) using 1
+    refine (((hγ_diff t ht ht_not').hasDerivAt.pow n).div_const (↑n : ℂ)).congr_deriv ?_
     rw [mul_assoc, mul_div_cancel_left₀ _ (Nat.cast_ne_zero.mpr (by omega) : (↑n : ℂ) ≠ 0)]
   have hf_int : IntervalIntegrable f volume 0 3 :=
     (pow_integrableOn_01 r α n).trans (pow_integrableOn_12 r α n) |>.trans
@@ -698,7 +698,7 @@ private theorem zpow_primitive_hasDerivAt (r : ℝ) (hr : 0 < r) (α : ℝ) (n :
         ⟨lt_trans hδ_pos ht.1, lt_of_lt_of_le ht.2 (by linarith)⟩ ht_not').hasDerivAt
   have hm_sub : m - 1 = -(↑n : ℤ) := by simp [m]
   change HasDerivAt F ((γ t) ^ (-(↑n : ℤ)) * deriv γ t) t
-  convert h_zpow.div_const (m : ℂ) using 1
+  refine (h_zpow.div_const (m : ℂ)).congr_deriv ?_
   rw [smul_eq_mul, mul_assoc, mul_div_cancel_left₀ _ hm_ne, hm_sub]
 
 private theorem zpow_ftc_vanishes (r : ℝ) (_hr : 0 < r) (α : ℝ) (n : ℕ) (_hn : 2 ≤ n)

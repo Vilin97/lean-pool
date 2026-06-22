@@ -200,7 +200,7 @@ def mk (x : ℝ) (lub : ℕ → ℚInterval)
     exact ⟨hlb n, hub n⟩
 
 theorem mk_val_eq_val : (mk x v h₁ h₂ h₃ h₄ h₅).val = x :=
-  val_uniq (by convert h₃) (by convert h₄)
+  val_uniq (fun n ↦ h₃ n) (fun n ↦ h₄ n)
 
 theorem lb_le_ub (x : ComputableℝSeq) : ∀n, x.lb n ≤ x.ub n :=
   fun n ↦ Rat.cast_le.mp (le_trans (x.hlb n) (x.hub n))
@@ -393,11 +393,14 @@ def mul (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq where
   lub := mul' x y
   hcl := mul'_fst_iscau
   hcu := mul'_snd_iscau
-  heq' := by convert lb_ub_mul_equiv x y
+  heq' := by
+    convert lb_ub_mul_equiv x y using 2
+    · exact Subtype.ext fst_mul'_eq_mulLb
+    · exact Subtype.ext snd_mul'_eq_mulUb
   hlub n :=
     let h₀ : Real.mk _ = x.val * y.val := by
       apply val_uniq' (mulLb_is_lb x y) (mulUb_is_ub x y)
-      convert lb_ub_mul_equiv x y
+      exact lb_ub_mul_equiv x y
     h₀ ▸ QInterval.mem_mulPair _ (x.val_mem_interval n) _ (y.val_mem_interval n)
 
 instance instComputableZero : Zero ComputableℝSeq :=
@@ -492,8 +495,8 @@ theorem ub_add : (x + y).ub = x.ub + y.ub :=
   rfl
 
 @[simp]
-theorem val_add : (x + y).val = x.val + y.val := by
-  convert (mk_val_eq_val : (add x y).val = x.val + y.val)
+theorem val_add : (x + y).val = x.val + y.val :=
+  (mk_val_eq_val : (add x y).val = x.val + y.val)
 
 @[simp]
 theorem lb_neg : (-x).lb = -x.ub :=
@@ -504,13 +507,13 @@ theorem ub_neg : (-x).ub = -x.lb := by
   rfl
 
 @[simp]
-theorem val_neg : (-x).val = -x.val := by
-  convert (mk_val_eq_val : (neg x).val = -x.val)
+theorem val_neg : (-x).val = -x.val :=
+  (mk_val_eq_val : (neg x).val = -x.val)
 
 @[simp]
 theorem lb_sub : (x - y).lb = x.lb - y.ub := by
   suffices (sub x y).lb = x.lb - y.ub by
-    convert this
+    exact this
   rw [sub, add, neg]
   ext
   simp [mk, lb, ub, sub_eq_add_neg]
@@ -518,7 +521,7 @@ theorem lb_sub : (x - y).lb = x.lb - y.ub := by
 @[simp]
 theorem ub_sub : (x - y).ub = x.ub - y.lb := by
   suffices (sub x y).ub = x.ub - y.lb by
-    convert this
+    exact this
   rw [sub, add, neg]
   ext
   simp [mk, lb, ub, sub_eq_add_neg]
@@ -526,7 +529,7 @@ theorem ub_sub : (x - y).ub = x.ub - y.lb := by
 @[simp]
 theorem val_sub : (x - y).val = x.val - y.val := by
   suffices (sub x y).val = x.val - y.val by
-    convert this
+    exact this
   rw [sub, add, neg, mk_val_eq_val, mk_val_eq_val]
   rfl
 
@@ -545,7 +548,7 @@ theorem ub_mul : (x * y).ub = ((x.lb * y.lb) ⊔ (x.ub * y.lb)) ⊔ ((x.lb * y.u
 @[simp]
 theorem val_mul : (x * y).val = x.val * y.val := by
   suffices (mul x y).val = x.val * y.val by
-    convert this
+    exact this
   rw [val_def]
   exact val_uniq' (mulLb_is_lb x y) (mulUb_is_ub x y) (lb_ub_mul_equiv x y)
 

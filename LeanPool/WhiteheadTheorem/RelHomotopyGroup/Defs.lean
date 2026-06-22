@@ -197,11 +197,9 @@ def bd : π_rel (n + 1) X A a → π_ n A a :=
         simp only [ContinuousMap.Homotopy.comp_apply, ContinuousMap.Homotopy.refl_apply,
           ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk, Function.comp_apply,
           Subtype.mk.injEq]
-        rw [← H.some.map_zero_left (Cube.inclToTop y)]
-        change H.some (t, Cube.inclToTop y) = H.some (0, Cube.inclToTop y)
-        convert H.some.prop' t |>.right _ (Cube.inclToTop.mem_boundaryJar_of hy)
-        rw [H.some.apply_zero]
-        exact f.property.right _ (Cube.inclToTop.mem_boundaryJar_of hy) }
+        have hjar := H.some.prop' t |>.right _ (Cube.inclToTop.mem_boundaryJar_of hy)
+        rw [f.property.right _ (Cube.inclToTop.mem_boundaryJar_of hy)]
+        exact hjar }
 
 
 /-!

@@ -103,7 +103,14 @@ by
   simp_rw [← Coalgebra.comul_eq_mul_adjoint, LinearMap.comp_assoc]
   nth_rw 1 [← hp.map_real]
   simp only [QFun.mapReal', Coalgebra.counit_eq_unit_adjoint]
-  congr <;> exact IsScalarTower.Algebra.ext_iff.mpr fun r ↦ congrFun rfl
+  apply congrArg LinearMap.adjoint
+  have hB₁ : (@Algebra.linearMap ℂ B₁ _ _ QuantumSet.isFrobeniusAlgebra.toAlgebra)
+      = Algebra.linearMap ℂ B₁ :=
+    LinearMap.ext fun r => by simp [Algebra.linearMap_apply, Algebra.algebraMap_eq_smul_one]
+  have hB₂ : (@Algebra.linearMap ℂ B₂ _ _ QuantumSet.isFrobeniusAlgebra.toAlgebra)
+      = Algebra.linearMap ℂ B₂ :=
+    LinearMap.ext fun r => by simp [Algebra.linearMap_apply, Algebra.algebraMap_eq_smul_one]
+  rw [hB₁, hB₂]
 
 /-- The counit-preservation expression for a quantum function. -/
 noncomputable abbrev QFun.mapCounit' (P : (B₁ ⊗[ℂ] H) →ₗ[ℂ] (H ⊗[ℂ] B₂)) :=
@@ -383,10 +390,10 @@ by
     _ = rT H 1 :=
       by
         convert congrArg (rT H) (@FrobeniusAlgebra.snake_equation_2 ℂ _ B₁ _
-          (QuantumSet.isFrobeniusAlgebra (A := B₁))) using 2
-        congr 4
-        ext r
-        simp [Algebra.linearMap_apply, Algebra.algebraMap_eq_smul_one]
+          (QuantumSet.isFrobeniusAlgebra (A := B₁))) using 2 <;>
+          first
+            | rfl
+            | (congr 4; ext r; simp [Algebra.algebraMap_eq_smul_one])
     _ = 1 := by ext; simp
 
 theorem QFun.map_counit_of_adjoint_comp_self_eq_id

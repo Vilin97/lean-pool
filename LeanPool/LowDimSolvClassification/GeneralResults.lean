@@ -576,6 +576,10 @@ lemma binary_predicate_3_choose_2 {P : Fin 3 → Fin 3 → Prop} (h₀₁ : P 0 
   fin_cases i, j <;> intro ij <;> dsimp! at ij <;> try omega
   assumption'
 
+-- `LieRing.ofAssociativeRing` is a local instance in Mathlib (a `def`, not a global instance), so
+-- we re-enable it locally to view the commutative ring `K` as a Lie ring over itself.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- `LinearMap.smulRight` as a Lie algebra homomorphism. -/
 def LieHom.smulRight (f : End K L) : K →ₗ⁅K⁆ End K L := {
   LinearMap.smulRight (LinearMap.id : K →ₗ[K] K) f with

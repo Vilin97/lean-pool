@@ -20,7 +20,7 @@ variable {X : Type*} [tX : TopologicalSpace X] {A B : Set X} {U V : tX.Opens}
 
 namespace TopologicalSpace.Opens
 lemma le_def : U ≤ V ↔ (U : Set X) ⊆ V := by simp only [SetLike.coe_subset_coe]
-@[simp] lemma coe_himp : U ⇨ V = interior (V ∪ (U : Set X)ᶜ) := by
+@[simp] lemma coe_himp' : U ⇨ V = interior (V ∪ (U : Set X)ᶜ) := by
   suffices U ⇨ V = Opens.interior (V ∪ (U : Set X)ᶜ) by
     apply_fun (fun U ↦ (U : Set X)) at this
     simpa using this
@@ -28,7 +28,7 @@ lemma le_def : U ≤ V ↔ (U : Set X) ⊆ V := by simp only [SetLike.coe_subset
   simp_rw [le_himp_iff, ← SetLike.coe_subset_coe, coe_inf, coe_interior,
     W.isOpen.subset_interior_iff]
   constructor <;> (intro h; tauto_set)
-@[simp] lemma coe_compl' : Uᶜ = interior (U : Set X)ᶜ := by rw [← himp_bot, coe_himp]; simp
+@[simp] lemma coe_compl' : Uᶜ = interior (U : Set X)ᶜ := by rw [← himp_bot, coe_himp']; simp
 lemma coe_compl_compl : ((Uᶜᶜ : tX.Opens) : Set X) = interior (closure U) := by simp
 lemma isRegular_iff : Heyting.IsRegular U ↔ interior (closure U) = (U : Set X) := by
   simp [Heyting.IsRegular, Opens.ext_iff]

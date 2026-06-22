@@ -151,7 +151,7 @@ theorem sqrtPropagatorMap_eq_zero_iff (m : ℝ) [Fact (0 < m)] (f : TestFunction
     rw [h1]
     have h2 : SchwartzMap.fourierTransformCLM ℂ (0 : TestFunctionℂ) = 0 :=
       ContinuousLinearMap.map_zero _
-    simp only [h2, SchwartzMap.zero_apply, zero_mul]
+    simp only [h2, zero_apply, zero_mul]
 
 /-- The embedding `T : S(ℝ⁴,ℝ) → L²(ℝ⁴,ℂ)` is injective.
 

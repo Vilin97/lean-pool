@@ -39,7 +39,10 @@ private lemma inv_norm_bounded_integrable
     have h_inv_ball : IntegrableOn (fun w => ‖v - w‖⁻¹) (Metric.closedBall v 1) := by
       rw [← integrable_indicator_iff measurableSet_closedBall] at *
       convert hK_local.comp_sub_left v using 1
-      ext w; simp [Set.indicator, dist_eq_norm', norm_sub_rev]
+      · rfl
+      · ext w
+        simp only [Set.indicator, Metric.mem_closedBall, dist_eq_norm, sub_zero,
+          norm_sub_rev v w]
     exact (h_inv_ball.const_mul M).mono'
       ((Measurable.aestronglyMeasurable (Measurable.inv
         (measurable_norm.comp (measurable_const.sub measurable_id')))).mul
@@ -58,7 +61,7 @@ private lemma inv_norm_bounded_integrable
           with w hw
           rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (inv_nonneg.mpr (norm_nonneg _))]
           have hw_far : 1 ≤ ‖v - w‖ := by
-            rw [Set.mem_diff] at hw
+            rw [Set.mem_sdiff] at hw
             by_contra h_lt; rw [not_le] at h_lt
             exact hw.2 (Metric.mem_closedBall.mpr (by rw [dist_comm, dist_eq_norm]; linarith))
           calc ‖v - w‖⁻¹ * |g w| ≤ 1 * |g w| :=
@@ -68,7 +71,7 @@ private lemma inv_norm_bounded_integrable
   rw [← integrableOn_univ]
   rw [show (Set.univ : Set (Fin 3 → ℝ)) =
     Metric.closedBall v 1 ∪ (Set.univ \ Metric.closedBall v 1) from by
-    simp [Set.union_diff_cancel (Set.subset_univ _)]]
+    simp [Set.union_sdiff_cancel (Set.subset_univ _)]]
   exact h_near.union h_far
 
 /-- Partial derivatives of a Schwartz function are Schwartz. Uses
@@ -122,8 +125,8 @@ lemma coulomb_entry_schwartz_integrable
         (continuous_const.sub continuous_id')
         (continuous_const.sub continuous_id'))).sqrt)).mul
       (by apply Continuous.measurable; unfold innerLandauMatrix
-          simp only [normSq, dotProduct_sub, sub_dotProduct, vecMulVec, Pi.sub_apply, sub_apply,
-            smul_apply, smul_eq_mul, of_apply]
+          simp only [normSq, dotProduct_sub, sub_dotProduct, vecMulVec, Pi.sub_apply,
+            Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, of_apply]
           fun_prop (disch := norm_num)
       )).aestronglyMeasurable).mul hg_smooth.continuous.aestronglyMeasurable
   · -- Domination bound
@@ -211,7 +214,8 @@ private lemma coulomb_entry_conv_hasFDerivAt_aux
         (measurable_id.pow_const _)).comp ((Continuous.measurable (Continuous.dotProduct
           continuous_id' continuous_id')).sqrt)).mul
         (by apply Continuous.measurable; unfold innerLandauMatrix
-            simp only [normSq, vecMulVec, sub_apply, smul_apply, smul_eq_mul, of_apply]
+            simp only [normSq, vecMulVec, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul,
+              of_apply]
             fun_prop (disch := norm_num)
         )).aestronglyMeasurable)
     exact h_sc.smul

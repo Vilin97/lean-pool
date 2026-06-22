@@ -151,7 +151,7 @@ lemma interior_open_cover {I} (U : I → Set X) (hO : ∀ i, IsOpen (U i))
 lemma open_cover_closed {I} (U : I → Set X) (hO : ∀ i, IsOpen (U i)) (hcov : ⋃ i, U i = Set.univ)
   (hd : Pairwise (Function.onFun Disjoint U)) i :
     IsClosed (U i) := by
-  rw [← isOpen_compl_iff, Set.compl_eq_univ_diff, ← hcov, Set.iUnion_diff]
+  rw [← isOpen_compl_iff, Set.compl_eq_univ_sdiff, ← hcov, Set.iUnion_sdiff]
   apply isOpen_iUnion; intro j
   by_cases h : i = j
   · simp [h]
@@ -266,7 +266,7 @@ lemma forces_iff_isMeagre : U ⊩ A ↔ IsMeagre (U \ A) := by
     convert isMeagre_image Subtype.val IsInducing.subtypeVal h
     conv => simp [← Set.preimage_compl, Set.image_preimage_eq_inter_range]
     tauto_set
-  · simpa [IsMeagre, - SetLike.coe_sort_coe, Set.compl_eq_univ_diff] using
+  · simpa [IsMeagre, - SetLike.coe_sort_coe, Set.compl_eq_univ_sdiff] using
       h.preimage_of_isOpenMap continuous_subtype_val U.isOpen.isOpenMap_subtype_val
 lemma forces_empty_iff_isMeagre : U ⊩ ∅ ↔ IsMeagre (U : Set X) := by
   simpa using forces_iff_isMeagre (A := ∅)
@@ -293,20 +293,22 @@ private lemma forces_disjoint_iUnion_left {I} (U : I → tX.Opens)
   let V i := (h i).eq_countable_union_isNowhereDense.choose
   have hV i : (U i : Set X) \ A = ⋃ n, V i n := (h i).eq_countable_union_isNowhereDense.choose_spec
   have hVU i n : (V i n).val ⊆ U i :=
-    subset_trans (Set.subset_iUnion_of_subset n subset_rfl) ((hV i).superset.trans Set.diff_subset)
-  simp_rw [TopologicalSpace.Opens.coe_iSup, Set.iUnion_diff, hV]
+    subset_trans (Set.subset_iUnion_of_subset n subset_rfl) ((hV i).superset.trans Set.sdiff_subset)
+  simp_rw [TopologicalSpace.Opens.coe_iSup, Set.iUnion_sdiff, hV]
   rw [Set.iUnion_comm]; apply isMeagre_iUnion
   intro n; apply IsNowhereDense.isMeagre
   apply isNowhereDense_disjoint_open (fun i ↦ (U i : Set X)) (fun i ↦ (U i).isOpen)
     (by rw [Set.iUnion_subset_iff]; intro i; apply Set.subset_iUnion_of_subset; apply hVU) hd
     (fun i ↦ by
-      convert (V i n).prop
-      apply subset_antisymm _ (by simpa [hVU] using Set.subset_iUnion (fun i ↦ (V i n).val) i)
-      intro x ⟨h, hxU⟩
-      obtain ⟨j, hj⟩ := by simpa using h
-      specialize hd (i := i) (j := j)
-      simp [Function.onFun, - TopologicalSpace.Opens.coe_disjoint] at hd
-      by_cases i = j <;> tauto_set)
+      have heq : (⋃ i, (V i n).val) ∩ (U i : Set X) = (V i n).val := by
+        apply subset_antisymm _ (by simpa [hVU] using Set.subset_iUnion (fun i ↦ (V i n).val) i)
+        intro x ⟨h, hxU⟩
+        obtain ⟨j, hj⟩ := by simpa using h
+        specialize hd (i := i) (j := j)
+        simp [Function.onFun, - TopologicalSpace.Opens.coe_disjoint] at hd
+        by_cases i = j <;> tauto_set
+      rw [heq]
+      exact (V i n).prop)
 end residual.dom
 open residual.dom in
 /-- a Baire category analogue of outer measure -/
@@ -385,6 +387,6 @@ lemma eq_residual (h : BaireMeasurableSet A) : A =ᵇ (dom A : Set X) := by
   refine ⟨?_, forces_iff_isMeagre.mp forces⟩
   have hUs := forces_rfl (U := ⟨U, hUo⟩)
   rw [forces_iff_subset_dom] at hUs
-  simp [← Set.diff_eq_empty] at hUs
+  simp [← Set.sdiff_eq_empty] at hUs
   simp [hUs]
 end residual.dom

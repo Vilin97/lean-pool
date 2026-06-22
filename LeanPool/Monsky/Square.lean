@@ -96,7 +96,7 @@ lemma open_unitSquare_eq : openHull unitSquare = {x | ∀ i, 0 < x i ∧ x i < 1
 lemma element_in_boundary_square {x : ℝ²} (hx : x ∈ boundary unitSquare) :
     ∃ i, x i = 0 ∨ x i = 1 := by
   by_contra hc; push Not at hc
-  rw [boundary, closed_unitSquare_eq, open_unitSquare_eq, @Set.mem_diff] at hx
+  rw [boundary, closed_unitSquare_eq, open_unitSquare_eq, @Set.mem_sdiff] at hx
   apply hx.2
   exact fun i ↦ ⟨lt_of_le_of_ne (hx.1 i).1 (hc i).1.symm, lt_of_le_of_ne (hx.1 i).2 (hc i).2⟩
 
@@ -106,7 +106,7 @@ lemma boundary_unitSquare_eq :
   rw [Set.setOf_and, ←closed_unitSquare_eq]
   ext
   refine ⟨fun hx ↦ ⟨boundary_sub_closed _ hx, element_in_boundary_square hx⟩,
-          fun ⟨hc, ⟨i, hno⟩⟩ ↦ (Set.mem_diff _).mpr ⟨hc, ?_⟩⟩
+          fun ⟨hc, ⟨i, hno⟩⟩ ↦ (Set.mem_sdiff _).mpr ⟨hc, ?_⟩⟩
   rw [open_unitSquare_eq]
   exact fun hco ↦ by rcases hno <;> linarith [hco i]
 
@@ -371,7 +371,7 @@ lemma segment_triangle_pairing_int
         )
       -- This means that x lies in some side of Δ'
       have ⟨i',hi'⟩ := el_in_boundary_imp_side (hArea Δ' hΔ')
-        (Set.mem_diff_of_mem hxΔ' (fun d ↦ hU Δ' hΔ' d)) (fun i ht ↦ hv Δ' hΔ' i (by rwa [←ht]))
+        (Set.mem_sdiff_of_mem hxΔ' (fun d ↦ hU Δ' hΔ' d)) (fun i ht ↦ hv Δ' hΔ' i (by rwa [←ht]))
       -- This again means that L lies completely in Tside Δ' i
       have hLΔ' := seg_sub_side (hArea Δ' hΔ') hLx hi' (hInt Δ' hΔ') (hv Δ' hΔ')
       -- We now have our two elements that should give the cardinality 2.
@@ -642,8 +642,8 @@ x ∈ closedHull (squareBoundaryBig i) ∧ y ∈ closedHull (squareBoundaryBig i
   have h_inter := squareBoundaryBig_inter_seg hp hpiface
     (closedHull_convex (by intro i; fin_cases i <;> assumption))
   refine ⟨?_,?_⟩
-  · convert h_inter (corner_in_closedHull (i := 0))
-  · convert h_inter (corner_in_closedHull (i := 1))
+  · convert h_inter (corner_in_closedHull (i := 0)) using 2; rfl
+  · convert h_inter (corner_in_closedHull (i := 1)) using 2; rfl
 
 lemma convex_faces'' {p : ℝ²} {L : Segment} (i : Fin 4)
 (hpiface : p ∈ closedHull (squareBoundaryBig i))

@@ -304,9 +304,10 @@ lemma backFlrCover_mapVec_compatible_01
   let yt_jar : ⊔𝕀 (n + 1) := ULift.up.{u} ⟨backIsoCube n yt, ‹_›⟩
   -- `backIsoCube n yt` is fixed by `r.r`
   replace : yt' = backIsoCube n yt := by
-    convert r.H.prop' 1 yt_jar.down.val yt_jar.down.property
+    have hp := r.H.prop' 1 yt_jar.down.val yt_jar.down.property
     simp only [ContinuousMap.toFun_eq_coe, ContinuousMap.id_apply,
-      ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_one]
+      ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_one] at hp
+    exact hp
   simp only [this]
   change (jarMap f h fh) yt_jar = _
   replace : yt_jar ∈ cubeBoundaryJar.botSidesCover n 1 := by
@@ -392,9 +393,10 @@ theorem cubeBoundaryJarInclToBoundary_hasHEP
       -- `backIsoCube n yt` is fixed by `r.r`
       let yt_jar : ⊔𝕀 (n + 1) := ULift.up.{u} ⟨backIsoCube n yt_back, ‹_›⟩
       replace : yt' = backIsoCube n yt_back := by
-        convert r.H.prop' 1 yt_jar.down.val yt_jar.down.property
+        have hp := r.H.prop' 1 yt_jar.down.val yt_jar.down.property
         simp only [ContinuousMap.toFun_eq_coe, ContinuousMap.id_apply,
-          ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_one]
+          ContinuousMap.Homotopy.coe_toContinuousMap, ContinuousMap.Homotopy.apply_one] at hp
+        exact hp
       simp only [this]
       change _ = jarMap f h fh yt_jar
       replace : yt_jar ∈ cubeBoundaryJar.botSidesCover n 0 := by

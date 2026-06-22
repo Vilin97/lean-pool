@@ -44,8 +44,13 @@ lemma hasDerivAt_inv_log_mul {c t : ℝ} (hc : 0 < c) (hct : 1 < c * t) :
     (Real.hasDerivAt_log (show c * t ≠ 0 by positivity)).comp t hmul
   have hlog_ne : Real.log (c * t) ≠ 0 :=
     Real.log_ne_zero.mpr ⟨by linarith, by constructor <;> linarith⟩
-  convert hlog.inv hlog_ne using 1
-  field_simp
+  have ht_ne : t ≠ 0 := by
+    have : 0 < t := by nlinarith [hct]
+    exact ne_of_gt this
+  have hval : -((c * t)⁻¹ * c) / Real.log (c * t) ^ 2
+      = -(1 / (t * Real.log (c * t) ^ 2)) := by field_simp
+  rw [← hval]
+  exact hlog.inv hlog_ne
 
 /--
 Squaring the inverse logarithm gives the exact derivative
@@ -55,8 +60,17 @@ lemma hasDerivAt_inv_log_sq_mul {c t : ℝ} (hc : 0 < c) (hct : 1 < c * t) :
     HasDerivAt (fun u => (Real.log (c * u))⁻¹ ^ 2)
       (-(2 / (t * Real.log (c * t) ^ 3))) t := by
   have h := (hasDerivAt_inv_log_mul hc hct).pow 2
-  convert h using 1
-  ring
+  have hlog_ne : Real.log (c * t) ≠ 0 :=
+    Real.log_ne_zero.mpr ⟨by linarith, by constructor <;> linarith⟩
+  have ht_ne : t ≠ 0 := by
+    have : 0 < t := by nlinarith [hct]
+    exact ne_of_gt this
+  have hval : (↑2 * (Real.log (c * t))⁻¹ ^ (2 - 1) * -(1 / (t * Real.log (c * t) ^ 2)))
+      = -(2 / (t * Real.log (c * t) ^ 3)) := by
+    push_cast
+    field_simp
+  rw [← hval]
+  exact h
 
 /-- The logarithmic kernel `1 / (t log(ct)^2)` is integrable on every admissible tail, and its
 integral is exactly `1 / log(cy)`. -/

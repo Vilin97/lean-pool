@@ -151,10 +151,10 @@ noncomputable def skIncl (X : RelCWComplex.{u}) (n : ℕ) : X.sk n ⟶ X :=
 @[simp]
 lemma skInclSucc_skIncl_eq (X : RelCWComplex.{u}) (n : ℕ) :
     X.skInclSucc n ≫ X.skIncl (n + 1) = X.skIncl n := by
-  unfold skInclSucc skIncl
-  convert Limits.colimit.w (Functor.ofSequence X.skInclSucc) <| homOfLE <| Nat.le_succ <| n
-  simp only [Nat.succ_eq_add_one, homOfLE_leOfHom, Functor.ofSequence_map_homOfLE_succ]
-  rfl
+  unfold skIncl
+  rw [show X.skInclSucc n = (Functor.ofSequence X.skInclSucc).map (homOfLE (Nat.le_succ n)) from
+    (Functor.ofSequence_map_homOfLE_succ X.skInclSucc n).symm]
+  exact Limits.colimit.w (Functor.ofSequence X.skInclSucc) (homOfLE (Nat.le_succ n))
 
 
 namespace AttachGeneralizedCells

@@ -75,8 +75,9 @@ theorem ResToImagAxis.Differentiable (F : ℍ → ℂ) (hF : MDiff F) (t : ℝ)
   have h_diff :
       DifferentiableAt ℝ (fun t : ℝ => F (ofComplex (Complex.I * t))) t := by
     haveI : IsScalarTower ℝ ℂ ℂ := IsScalarTower.complexToReal
-    convert hcdiff.restrictScalars ℝ |> DifferentiableAt.comp t <|
-      DifferentiableAt.const_mul ofRealCLM.differentiableAt _ using 1
+    have := hcdiff.restrictScalars ℝ |> DifferentiableAt.comp t <|
+      DifferentiableAt.const_mul ofRealCLM.differentiableAt _
+    exact this
   apply h_diff.congr_of_eventuallyEq
   filter_upwards [lt_mem_nhds ht] with t ht
   simp_all only [ResToImagAxis, ↓reduceDIte]

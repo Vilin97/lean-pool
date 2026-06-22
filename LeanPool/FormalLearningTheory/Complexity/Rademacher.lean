@@ -784,7 +784,8 @@ private theorem ncard_restrictions_le_sum_choose_set {X : Type u}
     rw [hcf_y]
     have : f ⟨y', hy'S⟩ = g ⟨y', hyTval⟩ := by
       rw [← h_g'_eq]
-      cases hf : f ⟨y', hy'S⟩ <;> cases hg : g' ⟨y', hy'S⟩ <;> simp_all
+      cases hf : f ⟨y', hy'S⟩ <;> cases hg : g' ⟨y', hy'S⟩ <;>
+        simp_all only [Bool.false_eq_true, true_iff, iff_true]
     exact this
   -- Step 5: Fintype.card ↥S = S.card
   have h5 : Fintype.card ↥S = S.card := Fintype.card_coe S

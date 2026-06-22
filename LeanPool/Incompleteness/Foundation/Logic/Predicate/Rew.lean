@@ -49,11 +49,7 @@ variable (ω : Rew L ξ₁ n₁ ξ₂ n₂)
 
 instance : FunLike (Rew L ξ₁ n₁ ξ₂ n₂) (Semiterm L ξ₁ n₁) (Semiterm L ξ₂ n₂) where
   coe := fun f => f.toFun
-  coe_injective' := fun f g h => by rcases f; rcases g; simpa using h
-
-instance :
-    CoeFun (Rew L ξ₁ n₁ ξ₂ n₂) (fun _ => Semiterm L ξ₁ n₁ → Semiterm L ξ₂ n₂) :=
-  DFunLike.hasCoeToFun
+  coe_injective := fun f g h => by rcases f; rcases g; simpa using h
 
 protected lemma func {k} (f : L.Func k) (v : Fin k → Semiterm L ξ₁ n₁) :
     ω (func f v) = func f (fun i => ω (v i)) := ω.func' f v

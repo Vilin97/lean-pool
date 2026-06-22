@@ -163,7 +163,7 @@ by
     (Submodule.tensorProductOrthonormalBasis v w),
     OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne v,
     OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne w]
-  simp_rw [ContinuousLinearMap.coe_sum, TensorProduct.sum_map, TensorProduct.map_sum,
+  simp_rw [ContinuousLinearMap.toLinearMap_sum, TensorProduct.sum_map, TensorProduct.map_sum,
     ← rankOne_tmul, Submodule.tensorProductOrthonormalBasis_apply]
   rw [← Finset.sum_product']
   simp only [Finset.univ_product_univ]

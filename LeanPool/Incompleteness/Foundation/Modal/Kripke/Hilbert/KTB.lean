@@ -20,11 +20,11 @@ open Geachean
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.Modal.Kripke.ReflexiveSymmetricFrameClass :
     FrameClass :=
-  { F | Std.Refl F ∧ Symmetric F }
+  { F | Std.Refl F ∧ IsSymmetric F }
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev _root_.LO.Modal.Kripke.ReflexiveSymmetricFiniteFrameClass :
     FiniteFrameClass :=
-  { F | Std.Refl F.Rel ∧ Symmetric F.Rel }
+  { F | Std.Refl F.Rel ∧ IsSymmetric F.Rel }
 
 namespace Hilbert
 namespace KTB

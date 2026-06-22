@@ -684,8 +684,8 @@ protected theorem toMatrixLinEquiv_symm_apply (hφ : φ.IsFaithfulPosMap) (hψ :
   intro a
   simp_rw [LinearMap.toMatrix_symm, toLin_apply, mulVec, dotProduct,
     IsFaithfulPosMap.basis_repr_apply,
-    ContinuousLinearMap.coe_sum,
-    LinearMap.sum_apply, ContinuousLinearMap.coe_smul,
+    ContinuousLinearMap.toLinearMap_sum,
+    LinearMap.sum_apply, ContinuousLinearMap.toLinearMap_smul,
     LinearMap.smul_apply, ContinuousLinearMap.coe_coe, rankOne_apply,
     IsFaithfulPosMap.basis_apply, Finset.sum_smul]
   symm
@@ -857,7 +857,7 @@ protected theorem basis_apply (hψ : ∀ i, (ψ i).IsFaithfulPosMap) (ijk : Σ i
   split_ifs with h
   · rw [← Module.Dual.IsFaithfulPosMap.basis_apply (hψ _)]
     aesop
-  · simp only [zero_apply]
+  · simp only [Matrix.zero_apply]
 
 protected theorem basis_apply' (hψ : ∀ i, (ψ i).IsFaithfulPosMap) (i : k) (j l : s i) :
     Module.Dual.pi.IsFaithfulPosMap.basis hψ ⟨i, (j, l)⟩ =

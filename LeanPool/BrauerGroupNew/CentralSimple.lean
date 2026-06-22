@@ -287,7 +287,7 @@ instance _root_.IsCentralSimple.TensorProduct.nontrivial
     Algebra.TensorProduct.map (Algebra.ofId _ _) (.id _ _)
   have hf : Function.Injective f := Module.Flat.rTensor_preserves_injective_linearMap _
     (algebraMap K A).injective
-  have r' : f 0 = f 1 := by convert r; simp [f]
+  have r' : f 0 = f 1 := by rw [map_zero, map_one]; exact r
   specialize hf r'
   apply_fun Algebra.TensorProduct.lid K B at hf
   simp only [map_zero, map_one] at hf

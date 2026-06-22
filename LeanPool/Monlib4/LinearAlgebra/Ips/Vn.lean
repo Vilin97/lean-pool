@@ -84,7 +84,7 @@ theorem elem_idempotent_iff_ker_and_range_invariantUnder_commutant (M : VonNeuma
       star_commutant_iff, or_self] at hm
     have hv_ker : e (v : H) = 0 := LinearMap.map_coe_ker e.toLinearMap v
     have hw_fixed : e (w : H) = w := by
-      rw [← hy, ← ContinuousLinearMap.mul_apply e e, IsIdempotentElem.eq h, hy]
+      rw [← hy, ← mul_apply_eq_comp e e, IsIdempotentElem.eq h, hy]
     have hmv_ker : e (m (v : H)) = 0 := (H' m hm).1 (v : H) hv_ker
     have hmw_fixed : e (m (w : H)) = m w := by
       obtain ⟨p, hp⟩ := (H' m hm).2 (w : H) ⟨y, hy⟩

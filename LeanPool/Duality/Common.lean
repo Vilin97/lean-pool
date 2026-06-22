@@ -20,9 +20,9 @@ lemma Finset.subtype_univ_sum_eq_subtype_univ_sum {p q : α → Prop} (hpq : p =
     Finset.univ.sum f = Finset.univ.sum g := by
   subst hpq
   convert rfl
-  ext
-  symm
-  apply hfg
+  rename_i x _
+  obtain ⟨a, ha⟩ := x
+  exact (hfg a ha ha).symm
 
 lemma Finset.univ_sum_of_zero_when_not [Fintype α] [AddCommMonoid β]
     {f : α → β} (p : α → Prop) [DecidablePred p] (hpf : ∀ a : α, ¬(p a) → f a = 0) :

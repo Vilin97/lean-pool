@@ -266,22 +266,22 @@ lemma closedHull_openHull_com {n : ℕ} {P : Fin n → ℝ²} {x y : ℝ²}
 def boundary {n : ℕ} (P : Fin n → ℝ²) : Set ℝ² := (closedHull P) \ (openHull P)
 
 lemma boundary_sub_closed {n : ℕ} (P : Fin n → ℝ²) : boundary P ⊆ closedHull P :=
-  Set.diff_subset
+  Set.sdiff_subset
 
 lemma boundary_not_in_open {n : ℕ} {P : Fin n → ℝ²} {x : ℝ²} (hx : x ∈ boundary P) :
     x ∉ openHull P := hx.2
 
 lemma boundary_in_closed {n : ℕ} {P : Fin n → ℝ²} {x : ℝ²} (hx : x ∈ boundary P) :
-    x ∈ closedHull P := Set.mem_of_mem_diff hx
+    x ∈ closedHull P := Set.mem_of_mem_sdiff hx
 
 lemma boundary_int_open_empty {n : ℕ} {P : Fin n → ℝ²} : boundary P ∩ openHull P = ∅ :=
-  Set.diff_inter_self
+  Set.sdiff_inter_self
 
 lemma boundary_open_disjoint {n : ℕ} {P : Fin n → ℝ²} : Disjoint (boundary P) (openHull P) :=
   Set.disjoint_iff_inter_eq_empty.mpr boundary_int_open_empty
 
 lemma boundary_union_open_closed {n : ℕ} {P : Fin n → ℝ²} :
-    boundary P ∪ openHull P = closedHull P := Set.diff_union_of_subset (open_sub_closed P)
+    boundary P ∪ openHull P = closedHull P := Set.sdiff_union_of_subset (open_sub_closed P)
 
 lemma open_closedHull_minus_boundary {n : ℕ} {P : Fin n → ℝ²} :
     closedHull P \ boundary P = openHull P := by
@@ -297,7 +297,7 @@ lemma boundary_constant {n : ℕ} {P : ℝ²} :
     unfold closedHull
     rw [hz]
     rw [closedSimplex_zero_empty]
-    simp only [univ_eq_empty, sum_empty, Set.image_empty, Set.empty_diff]
+    simp only [univ_eq_empty, sum_empty, Set.image_empty, Set.empty_sdiff]
 
 
 

@@ -188,7 +188,8 @@ lemma pushout {A' A B X' X Y : TopCat.{u}}
       simp only [ContinuousMap.argSwap, ContinuousMap.coe_mk, ContinuousMap.comp_apply,
         ContinuousMap.prodSwap_apply, ContinuousMap.uncurry_apply, Function.uncurry_apply_pair,
         hom_comp] at this
-      convert this.symm
+      convert this.symm using 1
+      simp only [hom_comp, ContinuousMap.comp_apply]
     refine ⟨Nonempty.intro <| LiftStructUpToRelHomotopy.curriedMk l ?_ G ?_ ?_ fun t ↦ ?_⟩
     · apply po.inl_desc
     · apply po.hom_ext
@@ -320,7 +321,7 @@ private lemma H_skInclSucc (n m step : ℕ) (hstep : m + step = n) :
       intro x t
       simp only [hom_comp, H, ContinuousMap.argSwap, ContinuousMap.coe_mk,
         ContinuousMap.toFun_eq_coe, ContinuousMap.Homotopy.coe_toContinuousMap,
-        ContinuousMap.coe_coe, ContinuousMap.Homotopy.refl_apply, ContinuousMap.comp_apply]
+        ContinuousMap.Homotopy.refl_apply, ContinuousMap.comp_apply]
       simp only [ContinuousMap.Homotopy.trans_apply, one_div]
       by_cases ht : t.val ≤ 2⁻¹
       all_goals simp only [ht, ↓reduceDIte]

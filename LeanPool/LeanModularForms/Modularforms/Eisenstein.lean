@@ -743,7 +743,7 @@ theorem diffwithinat_prod_1 :
   have hu := asdf.differentiableOn ?_ ?_
   · apply hu
     simp
-  · simp only [one_div, eventually_atTop, ge_iff_le]
+  · simp only [one_div, eventually_atTop]
     use 0
     intro b hb
     simpa [Finset.prod_fn] using

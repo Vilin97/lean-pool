@@ -88,7 +88,7 @@ private lemma homotopy_integrand_continuousOn_t
     have h1 := (min_le_right (ε / 2) _).trans (min_le_left (t - a) (b - t))
     have h2 := (min_le_right (ε / 2) _).trans (min_le_right (t - a) (b - t))
     exact ⟨by linarith [hx.1], by linarith [hx.2]⟩
-  apply ContinuousWithinAt.mono _ (Set.diff_subset_diff_right (Finset.coe_subset.mpr
+  apply ContinuousWithinAt.mono _ (Set.sdiff_subset_sdiff_right (Finset.coe_subset.mpr
     (Finset.subset_union_left (s₂ := {a, b}))))
   exact ContinuousWithinAt.mul
     ((hH_cont.comp (continuous_id.prodMk continuous_const)).continuousAt.sub
@@ -327,6 +327,7 @@ theorem windingNumber_eq_of_piecewise_homotopic
         (continuous_id.prodMk continuous_const).continuousOn
         (fun t (ht : t ∈ Ioo p₁ p₂) => (show (t, s) ∈ Ioo p₁ p₂ ×ˢ Icc 0 1 from ⟨ht, hs⟩))
         using 1
+      rfl
     · exact fun t ht => hH_avoid t ht s hs
     · exact ⟨M, fun t ht => hM_bound t ht s hs⟩
   have heq : n 0 = n 1 := continuous_integer_valued_constant n hn_cont hn_int

@@ -56,6 +56,10 @@ Sugawara construction, Virasoro algebra, Heisenberg algebra, bosonic Fock space
 
 namespace VirasoroProject
 
+-- `LieRing.ofAssociativeRing` is only a local instance in Mathlib; it provides the Lie ring
+-- structure on operator algebras and the scalar field used throughout the Sugawara construction.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 
 
 section Sugawara_boson
@@ -300,7 +304,8 @@ lemma commutator_sugawaraGen_apply_eq_finsum_commutator_apply (n : ℤ) (A : V �
   rw [finsum_add_distrib]
   · rw [smul_add]
     congr
-    convert comp_sugawaraGenAux_apply heiTrunc (-A) n v using 1
+    convert comp_sugawaraGenAux_apply heiTrunc (-A) n v using 1 <;>
+      simp only [LinearMap.neg_apply, sugawaraGen_apply, sugawaraGenAux_def, sub_eq_add_neg]
   · exact finite_support_pairNO_heiOper_apply₀ heiTrunc n (A v)
   · apply (finite_support_pairNO_heiOper_apply₀ heiTrunc n v).subset
     refine Function.support_subset_iff'.mpr ?_
@@ -728,8 +733,8 @@ lemma _root_.VirasoroProject.VirasoroAlgebra.representationOfCentralChargeOfL_cg
         + if n + m = 0 then (c / 12 * (n ^ 3 - n)) • (1 : V →ₗ[𝕂] V) else 0) :
     (VirasoroAlgebra.representationOfCentralChargeOfL c lComm) (VirasoroAlgebra.cgen 𝕂) =
       c • 1 := by
-  convert LieAlgebra.representationOfBasisAux_apply_basis (VirasoroAlgebra.basisLC 𝕂) _ none
-  simp
+  rw [show VirasoroAlgebra.cgen 𝕂 = VirasoroAlgebra.basisLC 𝕂 none from by simp]
+  exact LieAlgebra.representationOfBasisAux_apply_basis (VirasoroAlgebra.basisLC 𝕂) _ none
 
 lemma _root_.VirasoroProject.VirasoroAlgebra.representationOfCentralChargeOfL_lgen
     {𝕂 : Type*} [Field 𝕂] [CharZero 𝕂]
@@ -740,8 +745,8 @@ lemma _root_.VirasoroProject.VirasoroAlgebra.representationOfCentralChargeOfL_lg
     (n : ℤ) :
     (VirasoroAlgebra.representationOfCentralChargeOfL c lComm) (VirasoroAlgebra.lgen 𝕂 n) =
       lOper n := by
-  convert LieAlgebra.representationOfBasisAux_apply_basis (VirasoroAlgebra.basisLC 𝕂) _ (some n)
-  simp
+  rw [show VirasoroAlgebra.lgen 𝕂 n = VirasoroAlgebra.basisLC 𝕂 (some n) from by simp]
+  exact LieAlgebra.representationOfBasisAux_apply_basis (VirasoroAlgebra.basisLC 𝕂) _ (some n)
 
 variable {heiOper} in
 /-- **The basic bosonic Sugawara representation of Virasoro algebra (c=1)**:
@@ -765,8 +770,8 @@ open VirasoroAlgebra in
 by the basic bosonic Sugawara construction. -/
 lemma _root_.VirasoroProject.sugawaraRepresentation_cgen [CharZero 𝕜] :
     sugawaraRepresentation heiTrunc heiComm (cgen 𝕜) = 1 := by
-  convert VirasoroAlgebra.representationOfCentralChargeOfL_cgen ..
-  simp
+  unfold sugawaraRepresentation
+  rw [VirasoroAlgebra.representationOfCentralChargeOfL_cgen, one_smul]
 
 open VirasoroAlgebra in
 /-- The formula for the action of the Virasoro generator `Lₙ` on the representation obtained
@@ -776,7 +781,8 @@ lemma _root_.VirasoroProject.sugawaraRepresentation_lgen_apply' [CharZero 𝕜] 
       (2 : 𝕜)⁻¹ • ∑ᶠ k, pairNO heiOper (n-k) k v := by
   rw [← sugawaraGen_apply heiTrunc]
   apply LinearMap.congr_fun _ v
-  convert VirasoroAlgebra.representationOfCentralChargeOfL_lgen ..
+  unfold sugawaraRepresentation
+  rw [VirasoroAlgebra.representationOfCentralChargeOfL_lgen]
 
 open VirasoroAlgebra in
 /-- The formula for the action of the Virasoro generator `Lₙ` on the representation obtained

@@ -21,6 +21,11 @@ import LeanPool.LowDimSolvClassification.InstancesLowDim
 
 open Module
 open Submodule
+
+-- `LieRing.ofAssociativeRing` is a local instance in Mathlib (a `def`, not a global instance), so
+-- we re-enable it locally to view the commutative ring `K` as a Lie ring over itself.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 namespace LieAlgebra
 namespace Dim1
 

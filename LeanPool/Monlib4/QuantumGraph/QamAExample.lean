@@ -105,7 +105,7 @@ private theorem aux.ug :
   rw [AlgEquiv.ext_iff]; intro x
   simp_rw [Module.Dual.IsFaithfulPosMap.toMatrix_symm_apply]
   simp_rw [toLinOfAlgEquiv_eq, rankOneStdBasis, one_smul, LinearMap.ext_iff,
-    ContinuousLinearMap.coe_sum, ContinuousLinearMap.coe_smul,
+    ContinuousLinearMap.toLinearMap_sum, ContinuousLinearMap.toLinearMap_smul,
     LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.coe_mk, ContinuousLinearMap.coe_coe,
     rankOne_apply, Module.Dual.IsFaithfulPosMap.inner_coord', ←
     PosDef_one_rpow_eq_trace_matrix_rpow, posDefOne_rpow, Matrix.mul_one, AddHom.coe_mk,

@@ -104,7 +104,9 @@ lemma isClosed_range_i₀ (X : TopCat.{u}) :
     IsClosed <| Set.range (Cyl.i₀ X) := by
   have : {xt : TopCat.of (X × I) | xt.snd = 0} = Set.range (Cyl.i₀ X) := by
     apply compl_inj_iff.mp
-    convert Cyl.set_neq_zero_eq_compl_range_i₀ X using 1
+    rw [← Cyl.set_neq_zero_eq_compl_range_i₀ X]
+    ext ⟨fst, t⟩
+    simp only [Set.mem_compl_iff, Set.mem_setOf_eq]
   rw [← this]
   apply isClosed_eq
   · exact continuous_snd

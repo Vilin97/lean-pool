@@ -28,7 +28,7 @@ instance : Trans ZFSet.isIso ZFSet.isIso ZFSet.isIso where
     set bij'' := ZFSet.composition bij' bij x y z
     exists bij'', ZFSet.IsFunc_of_composition_IsFunc is_func' is_func
     exact ZFSet.IsBijective.composition_of_bijective is_bij is_bij'
-theorem isIso_symm : Symmetric ZFSet.isIso := by
+theorem isIso_symm : ∀ ⦃x y⦄, ZFSet.isIso x y → ZFSet.isIso y x := by
   intro x y iso
   obtain ⟨bij, is_func, is_bij⟩ := iso
   have := is_func.1

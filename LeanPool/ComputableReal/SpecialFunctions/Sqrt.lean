@@ -50,12 +50,13 @@ theorem boundedSqrt_le_rsqrt (y : ℚ) (n : ℕ) (b : ℕ) (hb : 0 < b) :
       ring
   apply div_le_div₀
   · exact Real.sqrt_nonneg _
-  · convert Real.nat_sqrt_le_real_sqrt
-    have h₄ : 0 < y.num * b ^ n := by positivity
-    have := Int.toNat_of_nonneg h₄.le
-    rify at this
-    rw [this]
-    norm_cast
+  · have h₄ : 0 < y.num * b ^ n := by positivity
+    have hcast : (((y.num * b ^ n).toNat : ℕ) : ℝ) = ((y.num * b ^ n : ℤ) : ℝ) := by
+      rw [← Int.cast_natCast, Int.toNat_of_nonneg h₄.le]
+    rw [Int.sqrt.eq_1]
+    have hle := @Real.nat_sqrt_le_real_sqrt (y.num * b ^ n).toNat
+    rw [hcast] at hle
+    exact_mod_cast hle
   · simp only [Nat.cast_mul, Nat.cast_pow, Nat.cast_nonneg, Real.sqrt_mul, Real.sqrt_pos,
       Nat.cast_pos, ← Nat.ne_zero_iff_zero_lt, ne_eq, Rat.den_ne_zero, not_false_eq_true,
       mul_pos_iff_of_pos_left]
@@ -95,12 +96,13 @@ theorem rsqrt_le_boundedSqrt (y : ℚ) (n : ℕ) (b : ℕ) (hb : 0 < b) :
       by_contra h₁
       simp [← Nat.ne_zero_iff_zero_lt, Nat.sqrt_eq_zero, hy, hb.ne'] at h₁
     positivity
-  · convert Real.real_sqrt_le_nat_sqrt_succ
-    have h₄ : 0 < y.num * b ^ n := by positivity
-    have := Int.toNat_of_nonneg h₄.le
-    rify at this
-    rw [this]
-    norm_cast
+  · have h₄ : 0 < y.num * b ^ n := by positivity
+    have hcast : (((y.num * b ^ n).toNat : ℕ) : ℝ) = ((y.num * b ^ n : ℤ) : ℝ) := by
+      rw [← Int.cast_natCast, Int.toNat_of_nonneg h₄.le]
+    rw [Int.sqrt.eq_1]
+    have hle := @Real.real_sqrt_le_nat_sqrt_succ (y.num * b ^ n).toNat
+    rw [hcast] at hle
+    exact_mod_cast hle
   · simp [← Nat.ne_zero_iff_zero_lt, Nat.sqrt_eq_zero, hb.ne']
   · exact Real.nat_sqrt_le_real_sqrt
 
@@ -131,12 +133,14 @@ def sqrtq (x : ℚInterval) (n : ℕ) : ℚInterval :=
 theorem sqrt_lb_def (q : ℚInterval) (n : ℕ) :
     (sqrtq q n).fst = if q.snd ≤ 0 then 0 else
       mkRat (Int.sqrt (q.fst.num * 4^n)) ((q.fst.den * 4^n).sqrt + 1) := by
-  convert apply_ite (fun (x : ℚInterval) ↦ x.fst) _ _ _
+  rw [sqrtq, apply_ite (fun (x : ℚInterval) ↦ x.fst)]
+  rfl
 
 theorem sqrt_ub_def (q : ℚInterval) (n : ℕ) :
     (sqrtq q n).snd = if q.snd ≤ 0 then 0 else
        mkRat (Int.sqrt (q.snd.num * 4 ^ n) + 1) (q.snd.den * 4 ^ n).sqrt := by
-  convert apply_ite (fun (x : ℚInterval) ↦ x.snd) _ _ _
+  rw [sqrtq, apply_ite (fun (x : ℚInterval) ↦ x.snd)]
+  rfl
 
 theorem sqrtq_nonneg (q : ℚInterval) (n : ℕ) : 0 ≤ (sqrtq q n).fst := by
   rw [sqrt_lb_def]

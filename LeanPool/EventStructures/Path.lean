@@ -248,7 +248,8 @@ lemma pathEquiv_refl {c₁ c₂ : Conf es} : ∀ p, @PathEquiv es c₁ c₂ p p 
   fun _ => TraceEquiv.refl _
 
 /-- Path equivalence is symmetric. -/
-lemma pathEquiv_symm {c₁ c₂ : Conf es} : Symmetric (@PathEquiv es c₁ c₂) :=
+lemma pathEquiv_symm {c₁ c₂ : Conf es} :
+    ∀ ⦃p₁ p₂⦄, @PathEquiv es c₁ c₂ p₁ p₂ → @PathEquiv es c₁ c₂ p₂ p₁ :=
   fun _ _ h => Trace.traceEquiv_symm es h
 
 /-- Path equivalence is transitive. -/

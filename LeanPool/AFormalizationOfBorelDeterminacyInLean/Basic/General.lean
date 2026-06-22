@@ -79,9 +79,9 @@ lemma Cardinal.choose_injection {α β : Type u} (f : α → Set β) (h : ∀ a,
       (Cardinal.mk_le_of_surjective Set.rangeFactorization_surjective :
         #(Set.range (uncurryProp recg)) ≤ _)
       (Cardinal.card_typein_lt (r := wo) a hwol)) (h a))
-      (Cardinal.mk_le_mk_of_subset (Set.diff_eq_empty.mp hf))).some
+      (Cardinal.mk_le_mk_of_subset (Set.sdiff_eq_empty.mp hf))).some
   refine ⟨hwo.fix (r := wo) recg, ?_, ?_⟩
   · intro a a' he
     rcases trichotomous_of wo a a' with h | h | h <;> [symm at he; exact h; skip] <;>
      (rw [hwo.fix_eq] at he; cases (equals_nonempty_some he.symm).2 ⟨⟨_, h⟩, rfl⟩)
-  · intro a; rw [hwo.fix_eq]; exact Set.diff_subset (Set.Nonempty.some_mem _)
+  · intro a; rw [hwo.fix_eq]; exact Set.sdiff_subset (Set.Nonempty.some_mem _)

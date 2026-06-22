@@ -76,7 +76,7 @@ lemma p_recursive3ParamAlg_eq :
   -- Split the `b`-integral into the four regions.
   have hs_t : MeasurableSet (Set.Iio t : Set Rand) := by simp
   have hsplit_t :=
-    (MeasureTheory.lintegral_inter_add_diff (μ := μ)
+    (MeasureTheory.lintegral_inter_add_sdiff (μ := μ)
       (f := fun b : Rand => ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ)
       (A := (Set.Iio (1 : Rand) : Set Rand)) (B := (Set.Iio t : Set Rand)) hs_t)
   have hAint_t : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t := by
@@ -103,7 +103,7 @@ lemma p_recursive3ParamAlg_eq :
     simpa [hAint_t, hAdiff_t] using hsplit_t.symm
   have hs_t2 : MeasurableSet (Set.Iio t2 : Set Rand) := by simp
   have hsplit_t2 :=
-    (MeasureTheory.lintegral_inter_add_diff (μ := μ)
+    (MeasureTheory.lintegral_inter_add_sdiff (μ := μ)
       (f := fun b : Rand => ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ)
       (A := (Set.Iio t : Set Rand)) (B := (Set.Iio t2 : Set Rand)) hs_t2)
   have hAint_t2 : ((Set.Iio t : Set Rand) ∩ Set.Iio t2) = Set.Iio t2 := by
@@ -128,7 +128,7 @@ lemma p_recursive3ParamAlg_eq :
     simpa [hAint_t2, hAdiff_t2] using hsplit_t2.symm
   have hs_t1 : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
   have hsplit_t1 :=
-    (MeasureTheory.lintegral_inter_add_diff (μ := μ)
+    (MeasureTheory.lintegral_inter_add_sdiff (μ := μ)
       (f := fun b : Rand => ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ)
       (A := (Set.Iio t2 : Set Rand)) (B := (Set.Iio t1 : Set Rand)) hs_t1)
   have hAint_t1 : ((Set.Iio t2 : Set Rand) ∩ Set.Iio t1) = Set.Iio t1 := by

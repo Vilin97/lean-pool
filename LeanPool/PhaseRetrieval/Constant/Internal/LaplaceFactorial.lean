@@ -74,7 +74,10 @@ private lemma hasDerivAt_phiFunc (n : ℕ) {r : ℝ} (hr : 0 < r) :
   have h1 := (Real.hasDerivAt_log (ne_of_gt hr)).const_mul (2 * ↑n + 1 : ℝ)
   have h2 : HasDerivAt (fun r => r ^ 2) (2 * r) r := by
     simpa using hasDerivAt_pow 2 r
-  convert h1.sub h2 using 1
+  have h3 := h1.sub h2
+  rw [show (2 * (n : ℝ) + 1) / r - 2 * r = (2 * ↑n + 1) * r⁻¹ - 2 * r by
+    rw [div_eq_mul_inv]]
+  exact h3
 
 /-- Derivative: `φ_n'(r) = (2n+1)/r − 2r`, vanishing at `r = r_n`. -/
 private lemma phiFunc_deriv {n : ℕ} (_hn : 1 ≤ n) {r : ℝ} (hr : 0 < r) :
@@ -118,11 +121,17 @@ private lemma hasDerivAt_hFunc (n : ℕ) {r : ℝ} (hr : 0 < r) :
     HasDerivAt (hFunc n) ((2 * ↑n + 1) / r - 2 * rStar n) r := by
   unfold hFunc
   have hsq : HasDerivAt (fun r => (r - rStar n) ^ 2) (2 * (r - rStar n)) r := by
-    have h := ((hasDerivAt_id r).sub (hasDerivAt_const r (rStar n))).pow 2
-    convert h using 1
-    simp only [id_eq, Pi.sub_apply, Nat.cast_ofNat, sub_zero, mul_one]; ring
-  convert (hasDerivAt_phiFunc n hr).add hsq using 1
-  ring
+    have h : HasDerivAt (fun x : ℝ => (x - rStar n) ^ 2)
+        ((2 : ℕ) * (r - rStar n) ^ (2 - 1) * (1 - 0)) r :=
+      ((hasDerivAt_id r).sub (hasDerivAt_const r (rStar n))).pow 2
+    have hval : ((2 : ℕ) : ℝ) * (r - rStar n) ^ (2 - 1) * (1 - 0)
+        = 2 * (r - rStar n) := by
+      norm_num
+    rwa [hval] at h
+  have hadd := (hasDerivAt_phiFunc n hr).add hsq
+  rw [show ((2 * ↑n + 1) / r - 2 * r) + 2 * (r - rStar n)
+      = (2 * (↑n : ℝ) + 1) / r - 2 * rStar n by ring] at hadd
+  exact hadd
 
 private lemma hFunc_deriv_val {n : ℕ} (_hn : 1 ≤ n) :
     (2 * ↑n + 1 : ℝ) / rStar n - 2 * rStar n = 0 := by

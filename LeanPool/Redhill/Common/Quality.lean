@@ -62,7 +62,7 @@ lemma quality_ge_of_liminf (f : ℕ → Fin n → ℤ) (s : Set ℕ)
   rw [eventually_atTop] at qf
   obtain ⟨N₀, hN₀⟩ := qf
   have key : {i | N₀ ≤ i ∧ i ∈ s}.Infinite := by
-    convert infs.diff (Set.finite_lt_nat N₀) using 1
+    convert infs.sdiff (Set.finite_lt_nat N₀) using 1
     ext
     simp [and_comm]
   refine key.image (injs.mono fun _ m ↦ m.2) |>.mono fun a ma ↦ ?_

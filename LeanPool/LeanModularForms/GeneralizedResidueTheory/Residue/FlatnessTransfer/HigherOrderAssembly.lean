@@ -909,7 +909,7 @@ private theorem cpv_perTerm_crossed_positive_order
   exact cpv_tendsto_zero_of_add_split U S0 γ hγ_in_U term_s err_nf
     (assembly_polarHigher a_s s) s hs (fun z hz => by
       simp only [err_nf, assembly_errNF, if_neg hz, assembly_polarHigher]; ring)
-    (hD.continuousOn.mono Set.diff_subset)
+    (hD.continuousOn.mono Set.sdiff_subset)
     ((assembly_polarHigher_differentiableOn a_s s).continuousOn.mono fun z ⟨_, hz⟩ =>
       Set.mem_compl_singleton_iff.mpr fun heq => hz (Finset.mem_coe.mpr (heq ▸ hs)))
     (tendsto_cpv_of_continuousOn_zero_integral S0 err_nf γ
@@ -1012,7 +1012,7 @@ private theorem assembly_abstract_crossings_case (U : Set ℂ) (hU : IsOpen U)
     rw [dif_neg hz_not_S]
     simp only [hh_eq, assembly_reg, assembly_pol, assembly_totalPP, Finset.sum_sub_distrib]; ring
   exact cpv_tendsto_zero_of_add_split_set U S0 γ hγ_in_U h h_reg_nf (assembly_pol S0 f)
-    h_fun_eq_off_S0 (h_reg_nf_diff_U.continuousOn.mono Set.diff_subset)
+    h_fun_eq_off_S0 (h_reg_nf_diff_U.continuousOn.mono Set.sdiff_subset)
     (continuousOn_finsetSum _ fun s hs => assembly_ppMinusRes_continuousOn S0 f U hMero s hs)
     (tendsto_cpv_of_continuousOn_zero_integral S0 h_reg_nf γ
       (h_reg_nf_diff_U.continuousOn.mono fun z ⟨t, ht, htz⟩ => htz ▸ hγ_in_U t ht)

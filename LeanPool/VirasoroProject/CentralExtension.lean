@@ -251,6 +251,10 @@ noncomputable def equivOfLieTwoCoboundary {γ' : LieTwoCocycle 𝕜 𝓰 𝓪}
       (g := (LieTwoCocycle.CentralExtension.congr obs').toLieHom.comp <| (-β).bdryHom γ')
       (by
         convert LieTwoCocycle.CentralExtension.hom_of_coboundary_add γ γ' γ β (-β) obs obs'
+        all_goals try first
+          | exact (LieOneCochain.neg_bdry β).symm
+          | rw [LieOneCochain.neg_bdry]
+          | rfl
         ext1 Z
         simp only [LieHom.coe_id, id_eq, LieTwoCocycle.CentralExtension.congr, Prod.mk.eta,
                   LieOneCochain.bdryHom, add_neg_cancel, LieHom.comp_apply, LieHom.coe_mk]
@@ -259,6 +263,10 @@ noncomputable def equivOfLieTwoCoboundary {γ' : LieTwoCocycle 𝕜 𝓰 𝓪}
         · simp only [left_eq_add]; rfl)
       (by
         convert LieTwoCocycle.CentralExtension.hom_of_coboundary_add γ' γ γ' (-β) β obs' obs
+        all_goals try first
+          | exact (LieOneCochain.neg_bdry β).symm
+          | rw [LieOneCochain.neg_bdry]
+          | rfl
         ext1 Z
         simp only [LieHom.coe_id, id_eq, LieTwoCocycle.CentralExtension.congr, Prod.mk.eta,
                   LieOneCochain.bdryHom, LieHom.comp_apply, LieHom.coe_mk]

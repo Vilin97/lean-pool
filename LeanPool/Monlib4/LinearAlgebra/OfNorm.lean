@@ -378,7 +378,7 @@ def IsLmLeftIsClmRight.toLmClm {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [
   toFun x := (hf₂ x).mk'
   map_add' y z := by
     ext x
-    simp only [ContinuousLinearMap.add_apply]
+    simp only [add_apply]
     exact (hf₁ x).map_add _ _
   map_smul' r z := by
     ext x
@@ -670,7 +670,7 @@ by
     _ ≤ _ := f.symm.toLinearIsometry.norm_comp_toContinuousLinearMap_le _
   apply ContinuousLinearMap.opNorm_ext
   intro y
-  simp only [ContinuousLinearMap.coe_comp', LinearIsometry.coe_toContinuousLinearMap,
+  simp only [ContinuousLinearMap.coe_comp, LinearIsometry.coe_toContinuousLinearMap,
     LinearIsometryEquiv.coe_toLinearIsometry, Function.comp_apply,
     LinearIsometryEquiv.apply_symm_apply]
 
@@ -709,12 +709,12 @@ open NormedSpace in
   invFun := NormedSpace.Dual.transpose 𝕜 (f.symm.toLinearIsometry).toContinuousLinearMap
   left_inv := fun x => by
     ext
-    simp only [Dual.transpose_apply, ContinuousLinearMap.coe_comp',
+    simp only [Dual.transpose_apply, ContinuousLinearMap.coe_comp,
       LinearIsometry.coe_toContinuousLinearMap, LinearIsometryEquiv.coe_toLinearIsometry,
       Function.comp_apply, LinearIsometryEquiv.apply_symm_apply]
   right_inv := fun x => by
     ext
-    simp only [Dual.transpose_apply, ContinuousLinearMap.coe_comp',
+    simp only [Dual.transpose_apply, ContinuousLinearMap.coe_comp,
       LinearIsometry.coe_toContinuousLinearMap, LinearIsometryEquiv.coe_toLinearIsometry,
       Function.comp_apply, LinearIsometryEquiv.symm_apply_apply]
   map_add' := fun x y => by
@@ -729,7 +729,7 @@ theorem Set.subset_diff_inj {α : Type _} (s : Set α) {t u : Set α}
   (h : u ⊆ t) :
   s ⊆ t ↔ s \ u ⊆ t \ u :=
 by
-  simp only [Set.diff_subset_iff, union_diff_self]
+  simp only [Set.sdiff_subset_iff, union_sdiff_self]
   rw [union_eq_self_of_subset_left h]
 
 lemma example_pos_commute_iff_pos_mul_of {𝕜 R : Type _} [RCLike 𝕜] [Ring R]

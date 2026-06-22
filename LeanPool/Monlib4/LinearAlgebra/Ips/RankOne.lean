@@ -188,7 +188,7 @@ theorem rankOne.apply_rankOne {E₃ : Type*} [NormedAddCommGroup E₃] [InnerPro
     (rankOne 𝕜 x y) ∘L rankOne 𝕜 z w = ⟪y,z⟫_𝕜 • rankOne 𝕜 x w :=
   by
   ext r
-  simp_rw [ContinuousLinearMap.smul_apply, comp_apply, rankOne_apply,
+  simp_rw [smul_apply, comp_apply, rankOne_apply,
     inner_smul_right, mul_comm, smul_smul]
 
 /-- $u \circ | x \rangle\langle y | = | u(x) \rangle\langle y |$ -/
@@ -263,8 +263,8 @@ theorem ContinuousLinearMap.commutes_with_all_iff [CompleteSpace E₁] {T : E₁
     push Not at H
     obtain ⟨x, hx⟩ := H
     use (⟪x,x⟫_𝕜)⁻¹ * ⟪adjoint T x, x⟫_𝕜
-    simp_rw [ContinuousLinearMap.ext_iff, ContinuousLinearMap.smul_apply, one_apply,
-      mul_smul, h', smul_smul]
+    simp_rw [ContinuousLinearMap.ext_iff, smul_apply,
+      one_apply_eq_self, mul_smul, h', smul_smul]
     rw [inv_mul_cancel₀]
     · simp_rw [one_smul, forall_true_iff]
     · rw [inner_self_ne_zero]
@@ -296,7 +296,7 @@ by
   have : x = 0 ↔ y = 0 :=
     by
     constructor <;> intro hh <;>
-      simp only [hh, ContinuousLinearMap.ext_iff, map_zero, ContinuousLinearMap.zero_apply,
+      simp only [hh, ContinuousLinearMap.ext_iff, map_zero, zero_apply,
         @eq_comm _ (0 : E₁ →L[𝕜] E₁), rankOne_apply, smul_eq_zero] at h
     on_goal 1 => specialize h y
     on_goal 2 => specialize h x
@@ -457,8 +457,8 @@ by
   intros
   apply @ext_inner_left 𝕜 _
   intro v
-  simp_rw [ContinuousLinearMap.sum_apply, rankOne_apply, ← OrthonormalBasis.repr_apply_apply,
-    OrthonormalBasis.sum_repr, ContinuousLinearMap.one_apply]
+  simp_rw [sum_apply, rankOne_apply, ← OrthonormalBasis.repr_apply_apply,
+    OrthonormalBasis.sum_repr, one_apply_eq_self]
 
 end rankOne
 
@@ -579,7 +579,7 @@ theorem rankOne.sum_orthonormalBasis_eq_id_lm {𝕜 : Type _} {E : Type _} [RCLi
     (b : OrthonormalBasis ι 𝕜 E) :
     ∑ i, (rankOne 𝕜 (b i) (b i) : E →L[𝕜] E).toLinearMap = 1 :=
 by
-  simp only [← ContinuousLinearMap.coe_sum, rankOne.sum_orthonormalBasis_eq_id b]
+  simp only [← ContinuousLinearMap.toLinearMap_sum, rankOne.sum_orthonormalBasis_eq_id b]
   rfl
 
 theorem ContinuousLinearMap.coe_eq_zero {𝕜 E₁ E₂ : Type _} [RCLike 𝕜] [NormedAddCommGroup E₁]
@@ -604,7 +604,7 @@ theorem rankOne.eq_zero_iff {𝕜 E₁ E₂ : Type _} [RCLike 𝕜] [NormedAddCo
   [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₁] [InnerProductSpace 𝕜 E₂]
     (x : E₁) (y : E₂) :
     rankOne 𝕜 x y = 0 ↔ x = 0 ∨ y = 0 := by
-  simp_rw [ContinuousLinearMap.ext_iff, rankOne_apply, ContinuousLinearMap.zero_apply,
+  simp_rw [ContinuousLinearMap.ext_iff, rankOne_apply, zero_apply,
     smul_eq_zero, forall_or_right, forall_inner_eq_zero_iff, or_comm]
 
 theorem LinearMap.rankOne_comp {𝕜 E₁ E₂ E₃ : Type _} [RCLike 𝕜] [NormedAddCommGroup E₁]
@@ -630,8 +630,8 @@ theorem OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne {ι 𝕜 : Type _}
     orthogonalProjection' U = ∑ i : ι, rankOne 𝕜 (b i : E) (b i : E) :=
 by
   ext
-  simp_rw [orthogonalProjection'_apply, OrthonormalBasis.orthogonalProjection_apply_eq_sum b,
-    ContinuousLinearMap.sum_apply, rankOne_apply, Submodule.coe_sum, Submodule.coe_smul_of_tower]
+  simp_rw [orthogonalProjection'_apply, OrthonormalBasis.orthogonalProjectionOnto_apply_eq_sum b,
+    sum_apply, rankOne_apply, Submodule.coe_sum, Submodule.coe_smul_of_tower]
 
 theorem LinearMap.comp_rankOne {𝕜 E₁ E₂ E₃ : Type _} [RCLike 𝕜] [NormedAddCommGroup E₁]
   [NormedAddCommGroup E₂] [NormedAddCommGroup E₃] [InnerProductSpace 𝕜 E₁]
@@ -655,7 +655,7 @@ theorem _root_.rankOne_lm_smul_smul {𝕜 E₁ E₂ : Type _} [RCLike 𝕜] [Nor
     (x : E₁) (y : E₂) (r₁ r₂ : 𝕜) :
     (rankOne 𝕜 (r₁ • x) (star r₂ • y)).toLinearMap =
       (r₁ * r₂) • ((rankOne 𝕜 x y : _ →L[𝕜] _).toLinearMap) :=
-  by rw [rankOne_smul_smul, ContinuousLinearMap.coe_smul]
+  by rw [rankOne_smul_smul, ContinuousLinearMap.toLinearMap_smul]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem _root_.rankOne_lm_sum_sum {𝕜 E₁ E₂ : Type _} [RCLike 𝕜] [NormedAddCommGroup E₁]
@@ -664,7 +664,7 @@ theorem _root_.rankOne_lm_sum_sum {𝕜 E₁ E₂ : Type _} [RCLike 𝕜] [Norme
     (rankOne 𝕜 (∑ i ∈ k, f i) (∑ i ∈ k₂, g i)).toLinearMap =
       ∑ i ∈ k, ∑ j ∈ k₂, (rankOne 𝕜 (f i) (g j)).toLinearMap :=
 by
-  simp_rw [map_sum, LinearMap.sum_apply, ContinuousLinearMap.coe_sum]
+  simp_rw [map_sum, LinearMap.sum_apply, ContinuousLinearMap.toLinearMap_sum]
   rw [Finset.sum_comm]
 
 theorem ContinuousLinearMap.linearMap_adjoint {𝕜 B C : Type _} [RCLike 𝕜] [NormedAddCommGroup B]

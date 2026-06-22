@@ -312,7 +312,7 @@ theorem permutationMap_isLiftable : M.IsLiftable (cs.permutationMap) := by
       simp[mul_assoc]
   rw[h (M i j)]
   funext ⟨t, z⟩
-  convert_to permutationMapOfList cs (alternatingWord i j (2 * M.M i j)) (t, z) = ⟨t,z⟩
+  change permutationMapOfList cs (alternatingWord i j (2 * M.M i j)) (t, z) = ⟨t,z⟩
   rw[permutationMap_ofList_mk]
   apply Prod.ext
   · simp[conjOfReflection, cs.prod_alternatingWord_eq_mul_pow]

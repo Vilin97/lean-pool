@@ -33,7 +33,7 @@ theorem inter_mem (hC : IsSetField C) (hs : s ∈ C) (ht : t ∈ C) : s ∩ t �
   hC.toIsSetRing.inter_mem hs ht
 
 theorem compl_mem (hC : IsSetField C) (hs : s ∈ C) : sᶜ ∈ C := by
-  rw [compl_eq_univ_diff]; exact hC.diff_mem hC.univ_mem hs
+  rw [compl_eq_univ_sdiff]; exact hC.sdiff_mem hC.univ_mem hs
 
 theorem toIsSetSemiring (hC : IsSetField C) : IsSetSemiring C :=
   hC.toIsSetRing.isSetSemiring

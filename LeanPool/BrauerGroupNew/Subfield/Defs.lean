@@ -37,7 +37,7 @@ lemma toSubalgebra_injective : Injective (toSubalgebra : SubField R A → Subalg
 
 instance : SetLike (SubField R A) A where
   coe L := L.1
-  coe_injective' := SetLike.coe_injective.comp toSubalgebra_injective
+  coe_injective := SetLike.coe_injective.comp toSubalgebra_injective
 
 instance : PartialOrder (SubField R A) := .ofSetLike (SubField R A) A
 

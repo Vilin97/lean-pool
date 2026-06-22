@@ -100,7 +100,7 @@ lemma cover_mem_side {S : Set Triangle} {X : Set ℝ²} (hCover : isDisjointCove
     (hv : ∀ i, ∀ Δ ∈ S, x ≠ Δ i) : ∃ Δ ∈ S, ∃ i : Fin 3, x ∈ openHull (Tside Δ i) := by
   rw [hCover.1, @Set.mem_iUnion₂] at hx
   have ⟨Δ, hΔ, hxΔ⟩ := hx
-  have hxBoundary : x ∈ boundary Δ := Set.mem_diff_of_mem hxΔ (hInt Δ hΔ)
+  have hxBoundary : x ∈ boundary Δ := Set.mem_sdiff_of_mem hxΔ (hInt Δ hΔ)
   have ⟨i,hi⟩ := el_in_boundary_imp_side (hArea Δ hΔ) hxBoundary ?_
   · exact ⟨Δ,hΔ,i,hi⟩
   · exact fun i ↦ hv i Δ hΔ

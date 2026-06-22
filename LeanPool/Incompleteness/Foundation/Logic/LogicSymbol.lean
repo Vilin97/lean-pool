@@ -179,14 +179,12 @@ variable {α β γ}
 
 instance : FunLike (α →ˡᶜ β) α β where
   coe := toTr
-  coe_injective' := by
+  coe_injective := by
     intro f g h
     rcases f
     rcases g
     simp only [mk.injEq]
     exact h
-
-instance : CoeFun (α →ˡᶜ β) (fun _ => α → β) := DFunLike.hasCoeToFun
 
 @[ext] lemma ext (f g : α →ˡᶜ β) (h : ∀ x, f x = g x) : f = g := DFunLike.ext f g h
 

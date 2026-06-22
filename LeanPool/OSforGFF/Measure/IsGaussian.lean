@@ -149,7 +149,8 @@ lemma gff_slice_analytic_z0 (f g : TestFunction) (t : ℂ) :
       GJGeneratingFunctionalℂ (gaussianFreeFieldFree m) (z₀ • toComplex f + t • toComplex g))
       Set.univ := by
     have hc := AnalyticOn.comp h2param he_an (fun _ _ => trivial)
-    convert hc using 2
+    convert hc using 2 with x
+    simp [e, Function.comp]
   -- AnalyticOn on univ → AnalyticOnNhd on univ
   exact analyticOn_univ.mp hcomp
 
@@ -464,8 +465,8 @@ lemma schwinger_eq_covarianceℂ_on_reals (f g : TestFunction) :
   rw [integral_ofReal_eq _ _ h_int]
   -- Step 4: Apply the real Schwinger = covariance equality and agreement on reals
   -- Note: ω f is notation for distributionPairing ω f, and convert handles this
-  convert congrArg (↑· : ℝ → ℂ) (schwinger_eq_covariance_real m f g) using 2
-  · exact freeCovarianceℂ_bilinear_agrees_on_reals m f g
+  rw [(freeCovarianceℂ_bilinear_agrees_on_reals m f g)]
+  exact congrArg (↑· : ℝ → ℂ) (schwinger_eq_covariance_real m f g)
 
 end GFFIsGaussian
 

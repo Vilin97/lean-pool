@@ -203,12 +203,11 @@ theorem deriv_sectorCurve_seg2 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Ioo 1 
       (I * ↑α * exp (I * ↑((t - 1) * α))) t := by
     have := (hasDerivAt_exp (I * ↑((t - 1) * α))).comp t
       ((hasDerivAt_const t I).mul h_inner)
-    convert this using 1
-    ring
+    exact this.congr_deriv (by ring)
   have h_full : HasDerivAt (fun s => ↑r * exp (I * ↑((s - 1) * α)))
       (↑r * (I * ↑α * exp (I * ↑((t - 1) * α)))) t := by
     have := (hasDerivAt_const t (↑r : ℂ)).mul h_exp
-    convert this using 1; ring
+    exact this.congr_deriv (by ring)
   rw [h_full.deriv]; ring
 
 /-- Derivative on segment 3 (t in (2,3)):
@@ -225,7 +224,7 @@ theorem deriv_sectorCurve_seg3 (r : ℝ) (α : ℝ) (t : ℝ) (ht : t ∈ Ioo 2 
   have h_inner : HasDerivAt (fun s => (↑((3 - s) * r) : ℂ)) (↑(-r)) t := by
     have h1 : HasDerivAt (fun s => (3 - s) * r) (-r) t := by
       have := ((hasDerivAt_const t 3).sub (hasDerivAt_id t)).mul_const r
-      convert this using 1; ring
+      exact this.congr_deriv (by ring)
     exact h1.ofReal_comp
   have h_full : HasDerivAt (fun s => ↑((3 - s) * r) * exp (I * ↑α))
       (↑(-r) * exp (I * ↑α)) t :=

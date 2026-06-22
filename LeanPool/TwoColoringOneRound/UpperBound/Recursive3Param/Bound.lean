@@ -576,7 +576,7 @@ lemma lintegral_innerBC_Iio_one_of_t_lt_b {b : Rand} (hb : t < b) :
   classical
   have htmeas : MeasurableSet (Set.Iio t : Set Rand) := by measurability
   have hsplit :=
-    (MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+    (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio (1 : Rand) : Set Rand)) (B := (Set.Iio t : Set Rand)) htmeas)
   have hIio : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t := by
     ext c
@@ -734,7 +734,7 @@ lemma lintegral_b_t2_t :
     have htmeas : MeasurableSet (Set.Iio t : Set Rand) := by
       simp
     have hsplit :=
-      (MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+      (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
         (A := (Set.Iio (1 : Rand) : Set Rand)) (B := (Set.Iio t : Set Rand)) htmeas)
     have hAint : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t := by
       ext c
@@ -758,7 +758,7 @@ lemma lintegral_b_t2_t :
       simpa [hAdiff] using hIco0
     -- Now compute the `c < t` part by splitting at `t1` and `t2`.
     have hsplit_t1 :=
-      (MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+      (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
         (A := (Set.Iio t : Set Rand)) (B := (Set.Iio t1 : Set Rand))
         (by simp))
     have hIio_t1 : (Set.Iio t ∩ Set.Iio t1 : Set Rand) = Set.Iio t1 := by
@@ -778,7 +778,7 @@ lemma lintegral_b_t2_t :
         refine ⟨hc.2, ?_⟩
         exact not_lt_of_ge hc.1
     have hsplit_t2 :=
-      (MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+      (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
         (A := (Set.Ico t1 t : Set Rand)) (B := (Set.Iio t2 : Set Rand))
         (by simp))
     have hIco_t1_t2 : (Set.Ico t1 t ∩ Set.Iio t2 : Set Rand) = Set.Ico t1 t2 := by

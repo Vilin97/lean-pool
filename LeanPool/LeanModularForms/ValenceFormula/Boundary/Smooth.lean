@@ -131,7 +131,7 @@ lemma fdBoundary_H_hasDerivAt_seg1' (H : ℝ) (t : ℝ)
   have hd : HasDerivAt (fun s : ℝ =>
       (1 : ℂ) / 2 + (↑H - ↑s * (↑H - ↑(Real.sqrt 3) / 2)) * I)
       (-(↑H - ↑(Real.sqrt 3) / 2) * I) t := by
-    convert (hasDerivAt_const t ((1 : ℂ) / 2)).add h1 using 1; simp only [zero_add]
+    exact h1.const_add ((1 : ℂ) / 2)
   exact hd.congr_of_eventuallyEq heq
 
 lemma fdBoundary_H_hasDerivAt_seg4' (H : ℝ) (t : ℝ)
@@ -330,7 +330,7 @@ lemma fdBoundary_H_hasDerivAt_seg1 (H : ℝ) {t : ℝ} (ht : t < 1) :
   have hd : HasDerivAt (fun s : ℝ =>
       (1 : ℂ) / 2 + (↑H - ↑s * (↑H - ↑(Real.sqrt 3) / 2)) * I)
       (-(↑H - ↑(Real.sqrt 3) / 2) * I) t := by
-    convert (hasDerivAt_const t ((1 : ℂ) / 2)).add h1 using 1; simp only [zero_add]
+    exact h1.const_add ((1 : ℂ) / 2)
   exact hd.congr_of_eventuallyEq heq
 
 lemma fdBoundary_H_hasDerivAt_seg4 (H : ℝ) {t : ℝ} (h3 : 3 < t) (h4 : t < 4) :
@@ -349,7 +349,7 @@ lemma fdBoundary_H_hasDerivAt_seg5 (H : ℝ) {t : ℝ} (h4 : 4 < t) :
     have := ((hasDerivAt_id t).ofReal_comp).sub (hasDerivAt_const t (9/2 : ℂ))
     simp only [sub_zero, ofReal_one] at this; exact this
   have hd : HasDerivAt (fun s : ℝ => (↑s - 9/2 : ℂ) + ↑H * I) (1 : ℂ) t := by
-    convert h1.add (hasDerivAt_const t (↑H * I : ℂ)) using 1; simp only [add_zero]
+    exact h1.add_const (↑H * I : ℂ)
   exact hd.congr_of_eventuallyEq heq
 
 theorem continuous_fdBoundary_seg1_H (H : ℝ) :

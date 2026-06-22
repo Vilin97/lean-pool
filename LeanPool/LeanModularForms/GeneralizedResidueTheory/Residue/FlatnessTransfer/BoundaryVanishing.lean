@@ -146,7 +146,7 @@ private lemma slope_tendsto_right_of_deriv
   have h_deriv : HasDerivWithinAt γ.toFun L (Ici t₀) t₀ :=
     hasDerivWithinAt_Ici_of_tendsto_deriv h_diff h_cont (Ioo_mem_nhdsGT hδ_gt) hL_lim
   rw [hasDerivWithinAt_iff_tendsto_slope] at h_deriv
-  rw [show (Ici t₀ \ {t₀} : Set ℝ) = Ioi t₀ from Ici_diff_left] at h_deriv
+  rw [show (Ici t₀ \ {t₀} : Set ℝ) = Ioi t₀ from Ici_sdiff_left] at h_deriv
   have h_map : Tendsto (fun ε : ℝ => t₀ + ε) (𝓝[>] (0 : ℝ)) (𝓝[>] t₀) := by
     apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
     · have : Tendsto (fun ε : ℝ => t₀ + ε) (𝓝 (0 : ℝ)) (𝓝 t₀) := by
@@ -230,7 +230,7 @@ private lemma slope_tendsto_left_of_deriv
   have h_deriv : HasDerivWithinAt γ.toFun L (Iic t₀) t₀ :=
     hasDerivWithinAt_Iic_of_tendsto_deriv h_diff h_cont (Ioo_mem_nhdsLT hδ_lt) hL_lim
   rw [hasDerivWithinAt_iff_tendsto_slope, show (Iic t₀ \ {t₀} : Set ℝ) = Iio t₀ from
-    Iic_diff_right] at h_deriv
+    Iic_sdiff_right] at h_deriv
   have h_map : Tendsto (fun ε : ℝ => t₀ - ε) (𝓝[>] (0 : ℝ)) (𝓝[<] t₀) := by
     apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
     · have : Tendsto (fun ε : ℝ => t₀ - ε) (𝓝 (0 : ℝ)) (𝓝 t₀) := by
@@ -558,7 +558,7 @@ lemma re_pos_right_of_slope
     γ.continuous_toFun.continuousAt (Icc_mem_nhds ht₀.1 ht₀.2)
   have hdiff_right : ∀ᶠ t in 𝓝[>] t₀, DifferentiableAt ℝ γ.toFun t := by
     have hcl : IsClosed ((↑γ.partition : Set ℝ) \ {t₀}) :=
-      (γ.partition.finite_toSet.subset Set.diff_subset).isClosed
+      (γ.partition.finite_toSet.subset Set.sdiff_subset).isClosed
     filter_upwards [nhdsWithin_le_nhds
         (hcl.isOpen_compl.mem_nhds (Set.mem_compl (fun h => h.2 rfl))),
       nhdsWithin_le_nhds (Icc_mem_nhds ht₀.1 ht₀.2),
@@ -605,7 +605,7 @@ lemma re_pos_left_of_slope
     γ.continuous_toFun.continuousAt (Icc_mem_nhds ht₀.1 ht₀.2)
   have hdiff_left : ∀ᶠ t in 𝓝[<] t₀, DifferentiableAt ℝ γ.toFun t := by
     have hcl : IsClosed ((↑γ.partition : Set ℝ) \ {t₀}) :=
-      (γ.partition.finite_toSet.subset Set.diff_subset).isClosed
+      (γ.partition.finite_toSet.subset Set.sdiff_subset).isClosed
     filter_upwards [nhdsWithin_le_nhds
         (hcl.isOpen_compl.mem_nhds (Set.mem_compl (fun h => h.2 rfl))),
       nhdsWithin_le_nhds (Icc_mem_nhds ht₀.1 ht₀.2),

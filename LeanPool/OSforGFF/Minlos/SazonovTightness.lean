@@ -466,7 +466,9 @@ private lemma tendsto_exp_slope' (A : ℝ) :
       change HasDerivAt (fun t : ℝ => rexp (t * A)) A 0
       simpa [zero_mul, Real.exp_zero, Function.comp_def] using this
     have h2 : HasDerivAt (fun _ : ℝ => (1 : ℝ)) 0 0 := hasDerivAt_const 0 1
-    convert h1.sub h2 using 1; simp
+    have h := h1.sub h2
+    rw [sub_zero] at h
+    exact h
   have := hd.tendsto_slope_zero_right
   simp only [zero_add, zero_mul, Real.exp_zero, sub_self, sub_zero] at this
   exact this.congr fun t => by rw [smul_eq_mul, ← div_eq_inv_mul]
@@ -978,9 +980,13 @@ theorem orthonormal_diag_le_hilbert_trace (S : H →L[ℝ] H) (hS : S.IsPositive
       (∑' k, @inner ℝ H _ (b k) (S (b k)) -
        ∑ j, @inner ℝ H _ (v j) (S (v j))) := by
     have h := ((hsum.hasSum.sub (hA.add hA)).add hB)
-    convert h using 1
-    · ext k; ring
-    · ring
+    have hv : (∑' k, @inner ℝ H _ (b k) (S (b k)) -
+        (∑ j, @inner ℝ H _ (v j) (S (v j)) + ∑ j, @inner ℝ H _ (v j) (S (v j))) +
+        ∑ j, @inner ℝ H _ (v j) (S (v j))) =
+        ∑' k, @inner ℝ H _ (b k) (S (b k)) - ∑ j, @inner ℝ H _ (v j) (S (v j)) := by ring
+    rw [← hv]
+    refine h.congr (fun k => ?_)
+    ring
   linarith [hQ.tsum_eq]
 
 omit [CompleteSpace H] in

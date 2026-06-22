@@ -174,12 +174,13 @@ lemma herglotz_hasDerivAt (μ : ProbabilityMeasure (sphere (0 : ℂ) 1))
           have h_norm : ‖(x : ℂ)‖ = 1 := by exact mem_sphere_zero_iff_norm.mp x.2
           have h_lim : HasDerivAt (fun n : ℂ => (x + n) / (x - n))
             (2 * x / (x - w₀) ^ 2) w₀ := by
+            have h_ne : (x : ℂ) - w₀ ≠ 0 := sub_ne_zero_of_ne <| by
+              rintro rfl
+              exact absurd hw₀ <| by simp [h_norm]
             convert HasDerivAt.div (HasDerivAt.add (hasDerivAt_const _ _) (hasDerivAt_id w₀))
-              (HasDerivAt.sub (hasDerivAt_const _ _) (hasDerivAt_id w₀)) _ using 1 <;> norm_num
-            · ring
-            · exact sub_ne_zero_of_ne <| by
-                rintro rfl
-                exact absurd hw₀ <| by simp [h_norm]
+              (HasDerivAt.sub (hasDerivAt_const _ _) (hasDerivAt_id w₀)) h_ne using 1 <;>
+              first | rfl
+                    | (simp only [Pi.sub_apply, Pi.add_apply, id_eq]; field_simp; ring)
           rw [hasDerivAt_iff_tendsto_slope] at h_lim
           exact h_lim.congr fun n => by rw [slope_def_field]
         refine MeasureTheory.measure_mono_null (t := μ.toMeasure.supportᶜ) ?_ ?_
@@ -278,7 +279,9 @@ theorem HerglotzRiesz_realPos (μ : ProbabilityMeasure (sphere (0 : ℂ) 1)) :
       convert h_integral_pos using 1
       have h_integral_re (f : sphere (0 : ℂ) 1 → ℂ) (hf : Integrable f μ) :
         ∫ x : sphere (0 : ℂ) 1, Complex.re (f x) ∂μ = Complex.re (
-          ∫ x : sphere (0 : ℂ) 1, f x ∂μ) := by exact (by convert integral_re hf)
+          ∫ x : sphere (0 : ℂ) 1, f x ∂μ) := by
+        simp only [← RCLike.re_eq_complex_re]
+        exact integral_re hf
       rw [h_integral_re]
       exact herglotz_integrable μ z hz
     exact fun z hz => h_real_part z hz
@@ -367,9 +370,11 @@ noncomputable def ΛN (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
     norm_eq_abs, div_eq_inv_mul, mul_inv_rev, mul_left_comm, one_mul, mul_assoc]
     at h_integral_bound ⊢
   unfold ΛNVal; intro f; convert mul_le_mul_of_nonneg_left (h_integral_bound f) (
-    by positivity : 0 ≤ (1 : ℝ) / (2 * π)) using 1; focus ring_nf
-  · norm_num [mul_assoc, mul_comm, mul_left_comm, abs_mul, abs_inv, abs_of_nonneg, Real.pi_pos.le]
-  · ring)
+    by positivity : 0 ≤ (1 : ℝ) / (2 * π)) using 1 <;>
+    first | rfl
+          | (ring_nf; done)
+          | (norm_num [mul_assoc, mul_comm, mul_left_comm, abs_mul, abs_inv, abs_of_nonneg,
+              Real.pi_pos.le]))
 
 /-- TODO. -/
 abbrev CUnitCircleDual := CUnitCircle →L[ℝ] ℝ
@@ -469,8 +474,8 @@ lemma u_n_mean_value (p : ℂ → ℂ) (r : ℕ → ℝ) (n : ℕ)
       ∫ t in (0)..2 * π, (f t).re = (∫ t in (0)..2 * π, f t).re := by
       rw [intervalIntegral.integral_of_le Real.two_pi_pos.le,
         intervalIntegral.integral_of_le Real.two_pi_pos.le]
-      convert (integral_re (hf.integrableOn_Ioc))
-      infer_instance
+      simp only [← RCLike.re_eq_complex_re]
+      exact integral_re (hf.integrableOn_Ioc)
     rw [h_real_part_integral]; focus norm_num [mul_assoc, mul_comm, mul_left_comm]
     refine ContinuousOn.comp_continuous (s := ball 0 1) ?_ ?_ ?_
     · refine hp_analytic.continuousOn.mono fun x hx => ?_
@@ -499,12 +504,14 @@ lemma u_limit_at_z (p : ℂ → ℂ) (r_seq : ℕ → ℝ)
     (z : ℂ) (hz : z ∈ ball 0 1) :
     Filter.Tendsto (fun n => u p (r_seq n * z)) Filter.atTop (nhds (u p z)) := by
   have h_cont : Filter.Tendsto (fun n => p (r_seq n * z)) Filter.atTop (nhds (p z)) := by
-    convert hp_analytic.continuousOn.continuousAt _ |> Filter.Tendsto.comp <| ?_ using 2
-    · apply IsOpen.mem_nhds
-      · exact isOpen_ball
-      · exact hz
-    · simpa using Filter.Tendsto.mul (
-      Complex.continuous_ofReal.continuousAt.tendsto.comp hr_lim) tendsto_const_nhds
+    have h_at : Filter.Tendsto (fun n => (r_seq n : ℂ) * z) Filter.atTop (nhds z) := by
+      have := Filter.Tendsto.mul
+        (Complex.continuous_ofReal.continuousAt.tendsto.comp hr_lim)
+        (tendsto_const_nhds (x := z))
+      simpa using this
+    have h_pca : ContinuousAt p z :=
+      (hp_analytic.continuousOn.continuousAt (isOpen_ball.mem_nhds hz))
+    exact h_pca.tendsto.comp h_at
   exact Filter.Tendsto.comp (Complex.continuous_re.tendsto _) h_cont
 
 /-- The real part of an analytic function is harmonic. -/
@@ -759,8 +766,10 @@ lemma riesz_rep (Λ : WeakDual ℝ CUnitCircle)
       Λ_c f = Λ (ContinuousMap.mk (fun z : sphere (0 : ℂ) 1 => f z)) := by
     refine ⟨?_, ?_⟩
     · exact { toFun := fun f => Λ ⟨fun z => f z, f.continuous⟩
-              map_add' := by intro x y; convert Λ.map_add _ _ using 1
-              map_smul' := by intro m x; convert Λ.map_smul m _ using 1
+              map_add' := by
+                intro x y; convert Λ.map_add _ _ using 2 <;> rfl
+              map_smul' := by
+                intro m x; convert Λ.map_smul m _ using 2 <;> rfl
               monotone' := by
                 intro f g hfg
                 have key : 0 ≤ Λ ⟨fun z => g z - f z, by continuity⟩ := by
@@ -846,9 +855,9 @@ lemma u_eq_limit_Lambda (p : ℂ → ℂ) (r : ℕ → ℝ)
     exact funext fun k => u_approx_eq_Lambda p r (phi k) hp_analytic (hr (phi k)) z hz
   have h_u_limit : Filter.Tendsto (fun k =>
     u p (r (phi k) * z)) Filter.atTop (nhds (u p z)) := by
-    convert u_limit_at_z p r hp_analytic _ z hz |> Filter.Tendsto.comp <|
+    convert u_limit_at_z p r hp_analytic hr_lim z hz |> Filter.Tendsto.comp <|
       hphi_strict_mono.tendsto_atTop using 1
-    exact hr_lim
+    rfl
   exact tendsto_nhds_unique h_u_limit h_lambda_limit ▸ integral_poisson_eq_re_integral μ z hz
 
 /-- If two analytic functions on the unit disc have the same value at 0
@@ -888,7 +897,8 @@ lemma analytic_unique_of_real_part
         · convert HasDerivAt.comp 0 (show HasDerivAt h (deriv h z) (
           z + Complex.I * 0) from by simpa using h_cauchy_riemann) (
             HasDerivAt.const_add z <| HasDerivAt.const_mul Complex.I <|
-              hasDerivAt_id 0 |> HasDerivAt.ofReal_comp) using 1; norm_num
+              hasDerivAt_id 0 |> HasDerivAt.ofReal_comp) using 1 <;>
+            first | rfl | norm_num
       have h_cauchy_riemann : HasDerivAt (
         fun x : ℝ => (h (z + x)).re) (deriv h z).re 0 ∧ HasDerivAt (
           fun x : ℝ => (h (z + Complex.I * x)).re) (deriv h z * Complex.I).re 0 := by
@@ -940,7 +950,8 @@ lemma analytic_unique_of_real_part
             _ < 1 := hz
           convert HasDerivAt.deriv (HasDerivAt.comp (t : ℂ) (
             h_analytic.differentiableOn.differentiableAt (isOpen_ball.mem_nhds hmem) |>
-                DifferentiableAt.hasDerivAt) (hasDerivAt_mul_const z)) using 1
+                DifferentiableAt.hasDerivAt) (hasDerivAt_mul_const z)) using 2 <;>
+            rfl
         simp_all only [mem_ball, dist_zero_right, mem_Icc, mul_eq_zero]
         exact Or.inl <| h_const _ <| by simpa [abs_of_nonneg ht.1] using lt_of_le_of_lt (
           mul_le_of_le_one_left (norm_nonneg _) ht.2) hz

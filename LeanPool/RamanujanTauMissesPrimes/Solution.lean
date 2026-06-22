@@ -1009,7 +1009,9 @@ lemma E2_ysq_le_x11_add_X_int_step (X : ℝ) (p : ℕ+ × ℤ)
     (h3 : (|(↑p.1 : ℤ) ^ 11 - p.2 ^ 2| : ℝ) ≤ X) :
     (p.2 : ℝ) ^ 2 - ((p.1 : ℕ) : ℝ) ^ 11 ≤ X := by
   have h3' : |((↑↑p.1 : ℝ) ^ 11 - (↑p.2 : ℝ) ^ 2)| ≤ X := by
-    convert h3 using 1
+    convert h3 using 2
+    push_cast
+    ring
   linarith [neg_le_abs ((↑↑p.1 : ℝ) ^ 11 - (↑p.2 : ℝ) ^ 2)]
 
 lemma E2_ysq_le_x11_add_X_helper (X : ℝ) (p : ℕ+ × ℤ)

@@ -54,7 +54,7 @@ lemma gradX_stronglyMeasurable_v
   have hF_at : HasFDerivAt F (fderiv ℝ F x₀) (x₀ + (0 : ℝ) • ei) := by
     rw [h_eq]; exact hF_diff.hasFDerivAt
   have hline : HasDerivAt (fun t : ℝ => F (x₀ + t • ei)) (fderiv ℝ F x₀ ei) 0 := by
-    convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1
+    convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1 <;> rfl
   have htendsto_inv : Filter.Tendsto (fun n : ℕ => ((↑n + 1 : ℝ))⁻¹) Filter.atTop
       (nhdsWithin 0 (Set.Ioi 0)) :=
     tendsto_nhdsWithin_iff.mpr ⟨
@@ -64,6 +64,7 @@ lemma gradX_stronglyMeasurable_v
   have h := Filter.Tendsto.comp hline.tendsto_slope_zero_right htendsto_inv
   simp only [smul_eq_mul, Function.comp_def, inv_inv, zero_smul, add_zero, zero_add] at h
   convert h using 1
+  rfl
 
 
 /-- Spatial transport joint integrability (Fubini on compact torus × ℝ³).

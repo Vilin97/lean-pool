@@ -249,13 +249,14 @@ lemma winning_condition : WinningCondition H.toLift.liftShort.val (by simp) := b
     use of_not_not hlos, rfl
     rw [List.append_cons]
     convert hu2 using 4
-    have hconcat := congrArg (List.map Prod.fst)
-      (H.toLift.liftShort.val.eq_take_concat (2 * k + 1) (by simp))
-    rw [hconcat]
-    erw [List.map_append, List.map_singleton]
-    rw [H.toLift.liftShort_val_take]
-    rw [H.toLift.liftVeryShort_val_map]
-    rfl
+    · rfl
+    · have hconcat := congrArg (List.map Prod.fst)
+        (H.toLift.liftShort.val.eq_take_concat (2 * k + 1) (by simp))
+      rw [hconcat]
+      erw [List.map_append, List.map_singleton]
+      rw [H.toLift.liftShort_val_take]
+      rw [H.toLift.liftVeryShort_val_map]
+      rfl
   apply Set.mem_iUnion₂_of_mem hWon
   change (body.append (H.toLift.liftShort.val[2 * k + 1].1 :: u) a).val ∈
     principalOpen (H.toLift.liftShort.val[2 * k + 1].1 :: u)

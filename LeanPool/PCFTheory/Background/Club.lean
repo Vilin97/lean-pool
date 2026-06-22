@@ -34,7 +34,7 @@ namespace Ordinal
 
 /-- A set of ordinals is a club below an ordinal if it is closed and unbounded in it. -/
 def IsClub (C : Set Ordinal) (o : Ordinal) : Prop :=
-  IsClosedBelow C o ∧ IsAcc o C
+  IsClosedBelowPt C o ∧ IsAccPt o C
 
 /-- A club below an ordinal `α` is a bundled `IsClub` set: closed and unbounded. -/
 structure Club (α : Ordinal) where
@@ -45,7 +45,7 @@ structure Club (α : Ordinal) where
 
 instance {α : Ordinal} : SetLike (Club α) Ordinal where
   coe := Club.carrier
-  coe_injective' s t h := by cases s; cases t; congr
+  coe_injective s t h := by cases s; cases t; congr
 
 instance {α : Ordinal} : HasSubset (Club α) where
   Subset := fun C D ↦ C.carrier ⊆ D.carrier
@@ -61,15 +61,15 @@ instance {α : Ordinal} : Std.Antisymm ((· ⊆ ·) : Club α → Club α → Pr
 
 
 theorem isClub_iff {C : Set Ordinal} {o : Ordinal} : IsClub C o
-    ↔ ((∀ p < o, IsAcc p C → p ∈ C) ∧ (o ≠ 0 ∧ ∀ p < o, (C ∩ Ioo p o).Nonempty)) :=
-  and_congr isClosedBelow_iff (isAcc_iff _ _)
+    ↔ ((∀ p < o, IsAccPt p C → p ∈ C) ∧ (o ≠ 0 ∧ ∀ p < o, (C ∩ Ioo p o).Nonempty)) :=
+  and_congr isClosedBelowPt_iff (isAccPt_iff _ _)
 
 namespace IsClub
 
-theorem isClosedBelow {C : Set Ordinal} {o : Ordinal} (h : IsClub C o) :
-    IsClosedBelow C o := h.1
+theorem isClosedBelowPt {C : Set Ordinal} {o : Ordinal} (h : IsClub C o) :
+    IsClosedBelowPt C o := h.1
 
-theorem isAcc {C : Set Ordinal} {o : Ordinal} (h : IsClub C o) : IsAcc o C := h.2
+theorem isAcc {C : Set Ordinal} {o : Ordinal} (h : IsClub C o) : IsAccPt o C := h.2
 
 theorem pos {C : Set Ordinal} {o : Ordinal} (h : IsClub C o) : 0 < o :=
   h.isAcc.pos
@@ -78,10 +78,10 @@ theorem ne_zero {C : Set Ordinal} {o : Ordinal} {h : IsClub C o} : o ≠ 0 :=
   h.pos.ne.symm
 
 theorem mem_of_isAcc {C : Set Ordinal} {o p : Ordinal} (h : IsClub C o) (hp : p < o) :
-    IsAcc p C → p ∈ C := (isClub_iff.mp h).1 _ hp
+    IsAccPt p C → p ∈ C := (isClub_iff.mp h).1 _ hp
 
 theorem forall_lt {o : Ordinal} {S : Set Ordinal} (h : o.IsClub S) :
-    ∀ p < o, (S ∩ Ioo p o).Nonempty := ((isAcc_iff _ _).mp h.isAcc).2
+    ∀ p < o, (S ∩ Ioo p o).Nonempty := ((isAccPt_iff _ _).mp h.isAcc).2
 
 theorem inter_Iio {C : Set Ordinal} {o : Ordinal} (h : IsClub C o) :
     IsClub (C ∩ Iio o) o := by
@@ -106,7 +106,7 @@ def univClub {α : Ordinal} (h : IsSuccLimit α) : Club α := ⟨Set.univ, isClu
 namespace IsClub
 
 theorem isClub_of_isAcc {α β : Ordinal} {C : Set Ordinal} (h : β < α) (hC : IsClub C α)
-    (hacc : IsAcc β C) : IsClub C β := by
+    (hacc : IsAccPt β C) : IsClub C β := by
   refine isClub_iff.mpr ⟨?_, ?_, ?_⟩
   · exact fun p plt hp ↦ hC.mem_of_isAcc (plt.trans h) hp
   · exact hacc.isSuccLimit.bot_lt.ne.symm
@@ -122,7 +122,7 @@ variable {ι : Type u} {f : ι → Set Ordinal}
 /-- Given less than `o.cof` unbounded sets in `o` and some `q < o`, there is a `q < p < o`
   such that `Ioo q p` contains an element of every unbounded set. -/
 theorem exists_above_of_lt_cof {p : Ordinal} (h : p < o) (hSemp : Nonempty S)
-    (hSacc : ∀ U ∈ S, o.IsAcc U) (hScard : #S < Cardinal.lift.{u + 1, u} o.cof) :
+    (hSacc : ∀ U ∈ S, o.IsAccPt U) (hScard : #S < Cardinal.lift.{u + 1, u} o.cof) :
     ∃ q < o, p < q ∧ ∀ U ∈ S, (U ∩ Ioo p q).Nonempty := by
   rw [lift_cof] at hScard
   have oLim : IsSuccLimit o := hSemp.casesOn fun ⟨T, hT⟩ ↦ (hSacc T hT).isSuccLimit
@@ -206,11 +206,11 @@ theorem exists_omega0_seq_succ_prop (opos : 0 < o) {P : Ordinal → Ordinal → 
 /-- If between every 2 consecutive elements of a weakly increasing `δ`-sequence
   there is an element of `C`, and `δ` is a limit ordinal,
   then the supremum of the sequence is an accumulation point of `C`. -/
-theorem isAcc_iSup_of_between {δ : Ordinal.{u}} (C : Set Ordinal) (δLim : IsSuccLimit δ)
+theorem isAccPt_iSup_of_between {δ : Ordinal.{u}} (C : Set Ordinal) (δLim : IsSuccLimit δ)
     (s : Iio δ → Ordinal.{max u v}) (sInc : ∀ o, s o < s (succ o))
     (h : ∀ o, (C ∩ (Icc (s o) (s (succ o)))).Nonempty) :
-    IsAcc (iSup s) C := by
-  rw [isAcc_iff]
+    IsAccPt (iSup s) C := by
+  rw [isAccPt_iff]
   constructor
   · rw [← pos_iff_ne_zero, Ordinal.lt_iSup_iff]
     use ⟨1, one_lt_of_isSuccLimit δLim⟩
@@ -234,7 +234,7 @@ The intersection of less than `o.cof` clubs in `o` is a club in `o`.
 -/
 theorem sInter (hCof : ℵ₀ < o.cof) (hS : ∀ C ∈ S, IsClub C o) (hSemp : S.Nonempty)
     (Scard : #S < Cardinal.lift.{u + 1, u} o.cof) : IsClub (⋂₀ S) o := by
-  refine ⟨IsClosedBelow.sInter (fun C CmemS ↦ (hS C CmemS).1), (isAcc_iff _ _).mpr ?_⟩
+  refine ⟨IsClosedBelowPt.sInter (fun C CmemS ↦ (hS C CmemS).1), (isAccPt_iff _ _).mpr ?_⟩
   have nonemptyS : Nonempty S := hSemp.to_subtype
   have oLim : IsSuccLimit o := one_lt_cof_iff.mp (one_lt_aleph0.trans_le hCof.le)
   use oLim.bot_lt.ne.symm
@@ -252,7 +252,7 @@ theorem sInter (hCof : ℵ₀ < o.cof) (hS : ∀ C ∈ S, IsClub C o) (hSemp : S
   constructor
   · intro s hs
     apply (hS s hs).1.forall_lt sup suplt
-    apply isAcc_iSup_of_between
+    apply isAccPt_iSup_of_between
     · exact isSuccLimit_omega0
     · intro n
       rw [@Subtype.coe_lt_coe]
@@ -278,7 +278,7 @@ theorem iInter_lift {ι : Type v} {f : ι → Set Ordinal.{u}} [Nonempty ι] (hC
   have aux : Cardinal.lift.{max v (u + 1), u + 1} #↑(range f) =
       Cardinal.lift.{max v, u + 1} #↑(range f) := by
     convert (@lift_umax_eq.{u + 1, u + 1, v} #(range f) #(range f)).mpr rfl
-    exact Cardinal.lift_umax.symm
+    exact congrFun Cardinal.lift_umax.{u + 1, v}.symm _
   rw [aux]
   apply this.trans_lt
   convert lift_strictMono.{max u v, max (u + 1) v} ιCard
@@ -336,8 +336,8 @@ theorem derivedSet {α : Ordinal.{u}} {C : Set Ordinal} (hcof : ℵ₀ < α.cof)
   rw [isClub_iff]
   refine ⟨?_, h.ne_zero, ?_⟩
   · intro p pltα pacc
-    change IsAcc _ _
-    rw [isAcc_iff]
+    change IsAccPt _ _
+    rw [isAccPt_iff]
     refine ⟨pacc.pos.ne.symm, ?_⟩
     intro q qltp
     obtain ⟨x, hx⟩ := pacc.forall_lt q qltp
@@ -350,7 +350,7 @@ theorem derivedSet {α : Ordinal.{u}} {C : Set Ordinal} (hcof : ℵ₀ < α.cof)
       ⟨p, pltα⟩
     use iSup (fun x ↦ f x)
     constructor
-    · apply isAcc_iSup (o := ω) (α := ⟨0, omega0_pos⟩) isSuccLimit_omega0
+    · apply isAccPt_iSup (o := ω) (α := ⟨0, omega0_pos⟩) isSuccLimit_omega0
       · exact hf.2.1
       · intro n h
         convert hf.1 ⟨pred n, (pred_le_self n.1).trans_lt n.2⟩
@@ -364,13 +364,14 @@ theorem derivedSet {α : Ordinal.{u}} {C : Set Ordinal} (hcof : ℵ₀ < α.cof)
 
 end IsClub
 
-theorem exists_unbounded_Iio_cof {α : Ordinal} (hlim : IsSuccLimit α) : ∃ S, S ⊆ Iio α ∧ IsAcc α S
+theorem exists_unbounded_Iio_cof {α : Ordinal} (hlim : IsSuccLimit α) :
+    ∃ S, S ⊆ Iio α ∧ IsAccPt α S
     ∧ #S = Cardinal.lift.{u + 1, u} α.cof := by
   obtain ⟨S, hUnb, hCard⟩ :=
     Order.exists_cof_eq ↑(Iio α)
   refine ⟨Subtype.val '' S, ?_, ?_, ?_⟩
   · exact Subtype.coe_image_subset (Iio α) S
-  · rw [isAcc_iff]
+  · rw [isAccPt_iff]
     refine ⟨hlim.bot_lt.ne.symm, ?_⟩
     intro β βltα
     obtain ⟨x, hxS, hxle⟩ := hUnb ⟨succ β, hlim.succ_lt βltα⟩
@@ -382,7 +383,7 @@ theorem exists_club_card {o : Ordinal.{u}} (h : IsSuccLimit o) :
     ∃ C : Club o, #C = Cardinal.lift.{u + 1, u} o.cof := by
   obtain ⟨S, hS⟩ := exists_unbounded_Iio_cof h
   let C := S ∪ (derivedSet S)
-  use ⟨C, ⟨isClosedBelow_derivedSet o, hS.2.1.mono subset_union_left⟩⟩
+  use ⟨C, ⟨isClosedBelowPt_derivedSet o, hS.2.1.mono subset_union_left⟩⟩
   apply (hS.2.2 ▸ mk_le_mk_of_subset subset_union_left).antisymm'
   calc
     #C ≤ #S + #(derivedSet S) := mk_union_le _ _

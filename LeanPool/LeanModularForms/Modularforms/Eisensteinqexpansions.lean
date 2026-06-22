@@ -363,7 +363,8 @@ lemma E_k_q_expansion (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) (z : ℍ) 
     1 + (riemannZeta ↑k)⁻¹ * ((-(2 * ↑π * Complex.I)) ^ k / ↑(k - 1)!) *
       ∑' (n : ℕ+), ↑((σ (k - 1)) ↑n) * cexp (2 * ↑π * Complex.I * ↑z * ↑↑n) by
     -- step.symm ▸ h gives the goal; `convert` handles alpha-equiv binder names
-    convert step.symm ▸ h
+    convert step.symm ▸ h using 2
+    rfl
   simp_rw [← mul_assoc]
   rw [HE1, mul_add]
   have : 2⁻¹ * (riemannZeta (k))⁻¹ * (2 * riemannZeta (k)) = 1 := by

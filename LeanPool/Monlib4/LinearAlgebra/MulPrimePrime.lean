@@ -141,12 +141,12 @@ private def mul_map_aux (𝕜 X : Type _) [RCLike 𝕜] [NormedAddCommGroupOfRin
   map_add' x y := by
     ext
     simp_rw [map_add, ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk,
-      LinearMap.add_apply, ContinuousLinearMap.add_apply]
+      LinearMap.add_apply, _root_.add_apply]
     rfl
   map_smul' r x := by
     ext
     simp_rw [_root_.map_smul, ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk,
-      LinearMap.smul_apply, ContinuousLinearMap.smul_apply]
+      LinearMap.smul_apply, _root_.smul_apply]
     rfl
 
 namespace LinearMap

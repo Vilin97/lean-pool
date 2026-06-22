@@ -106,9 +106,10 @@ lemma tendsto_uniformly_on_add_const :
     TendstoUniformlyOn (fun (ε z : ℂ) => g z + ε) g (𝓝[≠] 0) U := by
   have : Tendsto id (𝓝[≠] (0 : ℂ)) (𝓝 0) := nhdsWithin_le_nhds
   have : TendstoUniformlyOn (fun (ε _ : ℂ) => ε) 0 (𝓝[≠] 0) U := this.tendstoUniformlyOn_const U
-  convert tendsto_uniformly_on_const.add this using 2
+  convert (tendsto_uniformly_on_const (f := g)).add this using 2
   · ext ε
     simp
+  · simp
 
 lemma deriv_ne_zero_of_inj_aux {g : ℂ → ℂ} (hU : IsOpen U) (hg : DifferentiableOn ℂ g U)
     (hi : InjOn g U) (hz₀ : z₀ ∈ U) (hgz₀ : g z₀ = 0) :

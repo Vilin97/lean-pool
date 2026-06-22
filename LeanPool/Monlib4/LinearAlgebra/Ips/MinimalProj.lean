@@ -140,7 +140,7 @@ open ContinuousLinearMap
 
 variable {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
 
-local notation "P" => Submodule.orthogonalProjection
+local notation "P" => Submodule.orthogonalProjectionOnto
 
 /-- given self-adjoint operators $p,q$,
   we have $pq=p$ iff $qp=p$ -/
@@ -162,13 +162,13 @@ theorem orthogonalProjection_isSelfAdjoint [InnerProductSpace 𝕜 E] [CompleteS
 
 theorem orthogonalProjection_eq_self_iff [InnerProductSpace 𝕜 E]
     (U : Submodule 𝕜 E) [U.HasOrthogonalProjection] {x : E} :
-    (U.orthogonalProjection x : E) = x ↔ x ∈ U :=
+    (U.orthogonalProjectionOnto x : E) = x ↔ x ∈ U :=
   starProjection_eq_self_iff (K := U)
 
 theorem inner_orthogonalProjection_left_eq_right [InnerProductSpace 𝕜 E]
     (U : Submodule 𝕜 E) [U.HasOrthogonalProjection] (x y : E) :
-    inner 𝕜 (U.orthogonalProjection x : E) y =
-      inner 𝕜 x (U.orthogonalProjection y : E) :=
+    inner 𝕜 (U.orthogonalProjectionOnto x : E) y =
+      inner 𝕜 x (U.orthogonalProjectionOnto y : E) :=
   inner_starProjection_left_eq_right U x y
 
 theorem orthogonalProjection.isIdempotentElem [InnerProductSpace 𝕜 E] (U : Submodule 𝕜 E)
@@ -176,9 +176,9 @@ theorem orthogonalProjection.isIdempotentElem [InnerProductSpace 𝕜 E] (U : Su
   by
   rw [IsIdempotentElem]
   ext
-  simp_rw [ContinuousLinearMap.mul_apply, orthogonalProjection'_eq, comp_apply,
+  simp_rw [mul_apply_eq_comp, orthogonalProjection'_eq, comp_apply,
     Submodule.subtypeL_apply,
-    orthogonalProjection_mem_subspace_eq_self]
+    orthogonalProjectionOnto_mem_subspace_eq_self]
 
 /-- A continuous linear map is an orthogonal projection if it is idempotent and
 its kernel is the orthogonal complement of its range. -/
@@ -195,8 +195,7 @@ lemma ContinuousLinearMap.IsOrthogonalProjection.eq [InnerProductSpace 𝕜 E]
 theorem IsIdempotentElem.clm_to_lm [InnerProductSpace 𝕜 E] {T : E →L[𝕜] E} :
     IsIdempotentElem T ↔ IsIdempotentElem (T : E →ₗ[𝕜] E) :=
   by
-  simp_rw [IsIdempotentElem, Module.End.mul_eq_comp, ← coe_comp, coe_inj]
-  rfl
+  simp_rw [IsIdempotentElem, ← ContinuousLinearMap.toLinearMap_mul, coe_inj]
 
 lemma ContinuousLinearMap.HasOrthogonalProjection_of_isOrthogonalProjection [InnerProductSpace 𝕜 E]
     {T : E →L[𝕜] E} [h : T.IsOrthogonalProjection] : HasOrthogonalProjection T.range :=
@@ -206,7 +205,7 @@ by
   refine ⟨T x, ⟨x, rfl⟩, ?_⟩
   rw [← h.kerEqRangeOrtho]
   change T (x - T x) = 0
-  rw [map_sub, ← mul_apply, h.isIdempotent.eq, sub_self]
+  rw [map_sub, ← _root_.mul_apply_eq_comp, h.isIdempotent.eq, sub_self]
 
 lemma ker_to_clm
   {R R₂ M M₂ : Type*} [Semiring R]
@@ -236,7 +235,7 @@ lemma orthogonalProjection.isOrthogonalProjection [InnerProductSpace 𝕜 E]
     (↥P U).IsOrthogonalProjection :=
 by
   refine ⟨orthogonalProjection.isIdempotentElem _, ?_⟩
-  rw [orthogonalProjection.range, ← ker_orthogonalProjection, orthogonalProjection'_eq,
+  rw [orthogonalProjection.range, ← ker_orthogonalProjectionOnto, orthogonalProjection'_eq,
     subtype_compL_ker]
 
 open LinearMap in
@@ -318,7 +317,7 @@ theorem sub_of_isOrthogonalProjection [InnerProductSpace ℂ E] [CompleteSpace E
         exact congrArg ContinuousLinearMap.toLinearMap h
     rw [LinearMap.commutes_iff_isIdempotentElem (IsIdempotentElem.clm_to_lm.mp hp)
         (IsIdempotentElem.clm_to_lm.mp hq),
-      ← coe_sub, ← IsIdempotentElem.clm_to_lm] at h_and
+      ← ContinuousLinearMap.toLinearMap_sub, ← IsIdempotentElem.clm_to_lm] at h_and
     refine ⟨h_and, ?_⟩
     exact (IsIdempotentElem.isSelfAdjoint_iff_ker_isOrtho_to_range _ h_and).mp
       (IsSelfAdjoint.sub hqa hpa)
@@ -528,9 +527,10 @@ theorem ContinuousLinearMap.hasLe_norm [InnerProductSpace 𝕜 E] [CompleteSpace
     (hqa : IsSelfAdjoint q) : (∀ x : E, re ⟪x,p x⟫ ≤ re ⟪x,q x⟫) ↔ ∀ x : E, ‖p x‖ ≤ ‖q x‖ :=
   by
   rw [← hp.eq, ← hq.eq]
-  simp_rw [mul_apply, ← adjoint_inner_left _ (q _) _, ← adjoint_inner_left _ (p _) _,
+  simp_rw [_root_.mul_apply_eq_comp, ← adjoint_inner_left _ (q _) _,
+    ← adjoint_inner_left _ (p _) _,
     isSelfAdjoint_iff'.mp hpa, isSelfAdjoint_iff'.mp hqa, inner_self_eq_norm_sq, sq_le_sq,
-    abs_norm, ← mul_apply, hp.eq, hq.eq]
+    abs_norm, ← _root_.mul_apply_eq_comp, hp.eq, hq.eq]
 
 theorem IsPositive.HasLe.sub [InnerProductSpace 𝕜 E] [CompleteSpace E] {p q : E →L[𝕜] E} :
     p ≤ q ↔ 0 ≤ q - p := by simp only [LE.le, sub_zero]
@@ -551,13 +551,13 @@ theorem self_adjoint_and_idempotent_is_positive_iff_commutes
     nth_rw 1 [← mul_one p]
     simp_rw [ContinuousLinearMap.mul_def, ← comp_sub, ← ContinuousLinearMap.inner_map_self_eq_zero,
       comp_apply, sub_apply,
-      ContinuousLinearMap.one_apply]
+      one_apply_eq_self]
     intro x
     specialize h ((1 - q) x)
-    simp_rw [sub_apply, map_sub, ← ContinuousLinearMap.mul_apply, mul_one, hq.eq,
-      sub_self, inner_zero_right, ContinuousLinearMap.one_apply,
-      ContinuousLinearMap.mul_apply, ← map_sub, zero_re] at h
-    rw [← hp.eq, ContinuousLinearMap.mul_apply, ← adjoint_inner_left, isSelfAdjoint_iff'.mp hpa,
+    simp_rw [sub_apply, map_sub, ← mul_apply_eq_comp, mul_one, hq.eq,
+      sub_self, inner_zero_right, one_apply_eq_self,
+      mul_apply_eq_comp, ← map_sub, zero_re] at h
+    rw [← hp.eq, mul_apply_eq_comp, ← adjoint_inner_left, isSelfAdjoint_iff'.mp hpa,
       re_inner_self_nonpos] at h
     rw [h, inner_zero_left]
   · intro h
@@ -588,10 +588,12 @@ theorem ContinuousLinearMap.image_subset_iff_sub_of_is_idempotent [InnerProductS
     [CompleteSpace E] {p q : E →L[𝕜] E} (hp : IsIdempotentElem p) (hq : IsIdempotentElem q)
     (hpa : IsSelfAdjoint p) (hqa : IsSelfAdjoint q) :
     p.range ≤ q.range ↔ IsIdempotentElem (q - p) := by
-  simp_rw [IsIdempotentElem.clm_to_lm, coe_sub, ←
+  simp_rw [IsIdempotentElem.clm_to_lm, ContinuousLinearMap.toLinearMap_sub, ←
     LinearMap.commutes_iff_isIdempotentElem (IsIdempotentElem.clm_to_lm.mp hp)
-      (IsIdempotentElem.clm_to_lm.mp hq),
-    ← coe_comp, coe_inj, self_adjoint_proj_commutes hpa hqa, and_self_iff, ← coe_inj, coe_comp,
+      (IsIdempotentElem.clm_to_lm.mp hq)]
+  simp_rw [← ContinuousLinearMap.toLinearMap_comp, ContinuousLinearMap.coe_inj,
+    self_adjoint_proj_commutes hpa hqa, and_self_iff, ← ContinuousLinearMap.coe_inj,
+    ContinuousLinearMap.toLinearMap_comp,
     IsIdempotentElem.comp_idempotent_iff (IsIdempotentElem.clm_to_lm.mp hq)]
 
 section MinProj
@@ -762,7 +764,7 @@ theorem orthogonal_projection_iff [InnerProductSpace 𝕜 E] [FiniteDimensional 
   · rintro ⟨h1, h2⟩
     simp_rw [IsIdempotentElem, ContinuousLinearMap.mul_def, ContinuousLinearMap.ext_iff,
       ← ContinuousLinearMap.coe_coe,
-      coe_comp, ← LinearMap.ext_iff] at h2
+      ContinuousLinearMap.toLinearMap_comp, ← LinearMap.ext_iff] at h2
     rcases(LinearMap.isProj_iff_isIdempotentElem _).mpr h2 with ⟨W, hp⟩
     let p' := isProj' hp
     have hp' : p' = isProj' hp := rfl
@@ -840,7 +842,7 @@ theorem orthogonal_projection_iff' [InnerProductSpace 𝕜 E] [FiniteDimensional
     · intro h'
       rw [← Submodule.coe_eq_zero, ← @inner_self_eq_zero 𝕜, isProj'_apply hp,
         ContinuousLinearMap.coe_coe, ← adjoint_inner_left, IsSelfAdjoint.adjoint_eq h, ←
-        ContinuousLinearMap.mul_apply, this, h' _ (LinearMap.IsProj.map_mem h2 _)]
+        mul_apply_eq_comp, this, h' _ (LinearMap.IsProj.map_mem h2 _)]
 
 theorem orthogonalProjection.isMinimalProjection_to_clm [InnerProductSpace 𝕜 E]
     [FiniteDimensional 𝕜 E] [CompleteSpace E] (U : Submodule 𝕜 E) :
@@ -880,16 +882,16 @@ theorem Submodule.is_pairwise_orthogonal_iff_orthogonal_projection_comp_eq_zero
   constructor
   · intro h
     ext v
-    rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.zero_apply, ← @inner_self_eq_zero 𝕜,
+    rw [ContinuousLinearMap.comp_apply, zero_apply, ← @inner_self_eq_zero 𝕜,
       orthogonalProjection'_apply, orthogonalProjection'_apply, ←
-      inner_orthogonalProjection_left_eq_right, orthogonalProjection_mem_subspace_eq_self]
+      inner_orthogonalProjection_left_eq_right, orthogonalProjectionOnto_mem_subspace_eq_self]
     exact h _ _
   · intro h x y
     rw [← (orthogonalProjection_eq_self_iff U).mpr (SetLike.coe_mem x), ←
       (orthogonalProjection_eq_self_iff W).mpr (SetLike.coe_mem y),
       inner_orthogonalProjection_left_eq_right, ← orthogonalProjection'_apply, ←
       orthogonalProjection'_apply, ← ContinuousLinearMap.comp_apply, h,
-      ContinuousLinearMap.zero_apply, inner_zero_right]
+      zero_apply, inner_zero_right]
 
 --
 theorem orthogonalProjection.orthogonal_complement_eq [InnerProductSpace 𝕜 E]
@@ -1001,7 +1003,7 @@ theorem orthogonalProjection'_isProj {R M : Type*} [RCLike R] [NormedAddCommGrou
   LinearMap.IsProj U (orthogonalProjection' U) :=
 by
   constructor <;>
-  simp only [orthogonalProjection'_eq, coe_comp', Submodule.coe_subtypeL, Submodule.coe_subtype,
+  simp only [orthogonalProjection'_eq, coe_comp, Submodule.coe_subtypeL, Submodule.coe_subtype,
     Function.comp_apply, SetLike.coe_mem, implies_true,
     orthogonalProjection_eq_self_iff, imp_self, implies_true]
 
@@ -1054,7 +1056,7 @@ theorem orthogonalProjection_of_top {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCo
     orthogonalProjection' (⊤ : Submodule 𝕜 E) = 1 :=
   by
   ext1
-  simp_rw [ContinuousLinearMap.one_apply, orthogonalProjection'_apply]
+  simp_rw [one_apply_eq_self, orthogonalProjection'_apply]
   rw [orthogonalProjection_eq_self_iff]
   simp only [Submodule.mem_top]
 

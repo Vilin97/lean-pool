@@ -163,13 +163,21 @@ noncomputable def firstMove : PreStrategy T Player.zero := by
       exact congrArg Subtype.val hs |>.symm
     subst heq; use rfl, hf; intro y b hpr hpo
     convert hs (y := a :: y) (by simpa) (by synthIsPosition) using 1
-    simp [PreStrategy.firstMove]
+    · rfl
+    · rfl
+    · rfl
+    · simp only [PreStrategy.firstMove, dif_pos]; rfl
+    · rfl
   · rintro ⟨rfl, hf, hs⟩; use hf; intro y b hpr hpo
     rcases y with (_ | ⟨a', y⟩)
     · simp [List.cons_prefix_cons] at hpr; simp [hpr, PreStrategy.firstMove]
     · obtain ⟨rfl, hpr2⟩ := List.cons_prefix_cons.mp hpr
       convert hs hpr2 (by synthIsPosition) using 1
-      simp [PreStrategy.firstMove]
+      · rfl
+      · rfl
+      · rfl
+      · simp only [PreStrategy.firstMove, dif_pos]; rfl
+      · rfl
 @[simp] lemma firstMove_body a' (x : Stream' A) :
   x.cons a' ∈ body (s.firstMove a h).subtree ↔ a = a' ∧ x ∈ body s.subtree := by
   constructor
@@ -207,9 +215,10 @@ lemma firstMove_extQuasi_tree (hs : s.IsQuasi) (hT : IsPruned G.tree) :
     obtain ⟨rfl, hx'⟩ := hx
     obtain ⟨b, hbs⟩ := hs ⟨_, hx'.1⟩ (by synthIsPosition)
     exact ⟨b, by
-      convert hbs using 1
-      simp [firstMove, subtreeIncl]
-      rfl⟩
+      convert hbs using 1 <;>
+        first
+          | rfl
+          | (simp only [firstMove, subtreeIncl, dif_pos]; rfl)⟩
 @[simp] lemma firstMove_extQuasi_isWinning (hT : IsPruned G.tree) (hs : s.IsQuasi) :
   ((s.firstMove a h).extQuasi hT).1.IsWinning ↔ s.IsWinning := by
   unfold IsWinning; rw [firstMove_extQuasi_tree a h s hs]; apply firstMove_isWinning a h s
@@ -279,7 +288,7 @@ lemma wonPosition_iff_disjoint' {x} :
       exact hpay'⟩
 lemma wonPosition_iff_disjoint {x} :
   G.WonPosition x p ↔ principalOpen x ∩ (p.swap.residual x).payoff G = ∅ := by
-  simpa [← Set.image_val_inj, Set.inter_assoc, ← Set.inter_diff_assoc] using
+  simpa [← Set.image_val_inj, Set.inter_assoc, ← Set.inter_sdiff_assoc] using
     wonPosition_iff_disjoint'
 
 /-- the defensive PreStrategy never moves into a winning position of the opponent -/

@@ -48,7 +48,7 @@ variable (n : ℕ)
 
 /-- The diagonal `GL_n(ℚ)` matrix with natural number entries.
     Positivity is needed to ensure the determinant is nonzero. -/
-private def natDiagDetNeZero (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) :
+private theorem natDiagDetNeZero (a : Fin n → ℕ) (ha : ∀ i, 0 < a i) :
     (Matrix.diagonal (fun i => (a i : ℚ))).det ≠ 0 := by
   rw [Matrix.det_diagonal]
   exact ne_of_gt (Finset.prod_pos fun i _ => Nat.cast_pos.mpr (ha i))

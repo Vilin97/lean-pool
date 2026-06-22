@@ -123,7 +123,7 @@ lemma cauchy_circleIntegral_formula_scaled_disc {E : Type*} [NormedAddCommGroup 
   · simp only [smul_smul, inv_mul_cancel₀ two_pi_I_ne_zero]
     exact Eq.symm (MulAction.one_smul (f (r * z)))
   · intro x hx
-    simp only [diff_empty] at hx
+    simp only [sdiff_empty] at hx
     exact differentiableAt_of_differentiableOn_disc_of_mul (pos_of_mem_ball hz) hf
             (ball_subset_closedBall hx) hr
 
@@ -181,7 +181,7 @@ lemma vanishing_goursat_circleIntegral_scaled_disc
           (pos_of_mem_ball hz).le countable_empty
   · exact fun ζ hζ => (DifferentiableAt.continuousAt
           (differentiableAt_goursat_integrand_scaled_disc hf hr hz hζ)).continuousWithinAt
-  · rw [diff_empty]
+  · rw [sdiff_empty]
     exact fun ζ hζ => differentiableAt_goursat_integrand_scaled_disc hf hr hz
                       (ball_subset_closedBall hζ)
 

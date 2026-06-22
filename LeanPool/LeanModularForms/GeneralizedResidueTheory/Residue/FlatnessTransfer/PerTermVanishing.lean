@@ -331,7 +331,7 @@ lemma measurableSet_goodSet_Icc
   rw [h_eq2]; apply Finset.measurableSet_biUnion; intro s' _
   have : {t | ‖γ.toFun t - s'‖ ≤ ε} ∩ Icc γ.a γ.b =
       Icc γ.a γ.b \ ({t | ε < ‖γ.toFun t - s'‖} ∩ Icc γ.a γ.b) := by
-    ext t; simp only [mem_inter_iff, mem_setOf_eq, mem_diff, not_and]; constructor
+    ext t; simp only [mem_inter_iff, mem_setOf_eq, Set.mem_sdiff, not_and]; constructor
     · intro ⟨h_le, ht⟩; exact ⟨ht, fun h_gt => absurd h_gt (not_lt.mpr h_le)⟩
     · intro ⟨ht, h_not⟩; exact ⟨le_of_not_gt (fun h => (h_not h) ht), ht⟩
   rw [this]; exact isClosed_Icc.measurableSet.diff
@@ -402,14 +402,14 @@ private lemma aesm_diff_single_multi_cpv_zpow
         {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}) ∩
         Icc γ.a γ.b ⊆
       {t | ε < ‖γ.toFun t - s‖} ∩ Icc γ.a γ.b :=
-    Set.inter_subset_inter_left _ Set.diff_subset
+    Set.inter_subset_inter_left _ Set.sdiff_subset
   have hSG_meas : MeasurableSet (({t | ε < ‖γ.toFun t - s‖} \
       {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}) ∩ Icc γ.a γ.b) := by
     rw [show ({t | ε < ‖γ.toFun t - s‖} \
         {t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖}) ∩ Icc γ.a γ.b =
       ({t | ε < ‖γ.toFun t - s‖} ∩ Icc γ.a γ.b) \
         ({t | ∀ s' ∈ S0, ε < ‖γ.toFun t - s'‖} ∩ Icc γ.a γ.b) from by
-        ext x; simp only [mem_inter_iff, mem_diff]; tauto]
+        ext x; simp only [mem_inter_iff, Set.mem_sdiff]; tauto]
     exact hSF_meas.diff (measurableSet_goodSet_Icc S0 γ ε)
   apply ((AEStronglyMeasurable.piecewise hSG_meas
     ((aesm_zpow_on_singleFar γ s m ε hε).mono_measure (Measure.restrict_mono hSG_sub le_rfl))

@@ -96,8 +96,8 @@ theorem List.ofMirrorMirror {l : List αᵒᵈ} : l.ofMirror.Mirror = l := by
 theorem Finset.ofMirrorMirror [LinearOrder α] {S : Finset αᵒᵈ} : S.ofMirror.Mirror = S :=
   by
   rw [Finset.ofMirror, Finset.Mirror]
-  rw [Finset.image_image]; convert Finset.image_id
-  infer_instance
+  rw [Finset.image_image]
+  simp only [Function.comp_def, OrderDual.toDual_ofDual, Finset.image_id']
 
 @[simp]
 theorem List.Mirror_length {l : List α} : l.Mirror.length = l.length := by rw [List.Mirror]; simp

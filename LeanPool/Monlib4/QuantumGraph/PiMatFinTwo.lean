@@ -410,7 +410,7 @@ lemma Pi.nat_eq_zero_of_sum_eq_one_and_unique_one
   {j : ι} (hj : j ≠ i) : f j = 0 :=
 by
   classical
-  rw [Finset.sum_eq_add_sum_diff_singleton_of_mem (Finset.mem_univ i), hd] at h
+  rw [Finset.sum_eq_add_sum_sdiff_singleton_of_mem (Finset.mem_univ i), hd] at h
   simp only [add_eq_left, Finset.sum_eq_zero_iff, Finset.mem_sdiff, Finset.mem_univ,
     Finset.mem_singleton, true_and] at h
   exact h _ hj
@@ -429,7 +429,7 @@ by
     calc 1 = ∑ j, f j := h.symm
       _ = f i
         + ∑ j ∈ Finset.univ \ {i}, f j :=
-          by rw [Finset.sum_eq_add_sum_diff_singleton_of_mem (Finset.mem_univ _)]
+          by rw [Finset.sum_eq_add_sum_sdiff_singleton_of_mem (Finset.mem_univ _)]
       _ > 1 + ∑ j ∈ Finset.univ \ {i}, f j :=
         by
           nlinarith
@@ -451,8 +451,8 @@ by
           + ∑ i ∈ (Finset.univ \ {y₁}) \ {y₂}, f i :=
             by
               have : y₂ ∈ Finset.univ \ {y₁} := by simp [this.symm]
-              rw [Finset.sum_eq_add_sum_diff_singleton_of_mem (Finset.mem_univ y₁),
-                Finset.sum_eq_add_sum_diff_singleton_of_mem this, add_assoc]
+              rw [Finset.sum_eq_add_sum_sdiff_singleton_of_mem (Finset.mem_univ y₁),
+                Finset.sum_eq_add_sum_sdiff_singleton_of_mem this, add_assoc]
         _ ≥ 1 + 1
           + ∑ i ∈ (Finset.univ \ {y₁}) \ {y₂}, f i :=
             by
@@ -536,7 +536,7 @@ by
     ∘ₗ LinearMap.proj i.1 :=
   by
     nth_rw 1 [LinearMap.eq_sum_conj_adjoint_proj_comp_proj (hφ := hφ) A]
-    rw [Finset.sum_eq_add_sum_diff_singleton_of_mem (Finset.mem_univ i)]
+    rw [Finset.sum_eq_add_sum_sdiff_singleton_of_mem (Finset.mem_univ i)]
     simp only [this, add_zero]
     rw [this₃.1]
   refine ⟨i.1, hAA.symm, fun j hj => ?_⟩
@@ -1065,7 +1065,7 @@ by
     simp only [map_sum, LinearMap.sum_apply]
     congr
     ext1 i
-    rw [Finset.sum_eq_add_sum_diff_singleton_of_mem (Finset.mem_univ i)]
+    rw [Finset.sum_eq_add_sum_sdiff_singleton_of_mem (Finset.mem_univ i)]
     simp only [LinearMap.comp_assoc, (h i).1, add_eq_left]
     apply Finset.sum_eq_zero
     intro j hj

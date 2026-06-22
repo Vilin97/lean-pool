@@ -133,7 +133,7 @@ variable {𝕜 𝓰 𝓪}
 
 instance : FunLike (LieOneCochain 𝕜 𝓰 𝓪) 𝓰 𝓪 where
   coe := fun β X ↦ β.toLinearMap X
-  coe_injective' := fun β β' h ↦ by ext1; exact LinearMap.ext_iff.mpr (congrFun h)
+  coe_injective := fun β β' h ↦ by ext1; exact LinearMap.ext_iff.mpr (congrFun h)
 
 instance : LinearMapClass (LieOneCochain 𝕜 𝓰 𝓪) 𝕜 𝓰 𝓪 where
   map_add β X Y := β.toLinearMap.map_add X Y
@@ -158,7 +158,7 @@ namespace LieTwoCocycle
 
 instance : FunLike (LieTwoCocycle 𝕜 𝓰 𝓪) 𝓰 (𝓰 →ₗ[𝕜] 𝓪) where
   coe := fun γ X ↦ LieTwoCocycle.toBilin γ X
-  coe_injective' := by
+  coe_injective := by
     intro γ γ' h
     ext
     exact congrFun (congrArg DFunLike.coe (congrFun h _)) _

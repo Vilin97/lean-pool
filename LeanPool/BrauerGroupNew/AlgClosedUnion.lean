@@ -70,8 +70,11 @@ lemma intermediateTensorEquiv_apply_tmul (L : IntermediateField K K_bar)
     intermediateTensorEquiv K K_bar A L ⟨_, h⟩ =
     x ⊗ₜ a := by
   simp only [intermediateTensorEquiv]
-  convert LinearEquiv.ofBijective_symm_apply_apply _ _
-  rfl
+  refine Eq.trans (congrArg _ ?_) (LinearEquiv.ofBijective_symm_apply_apply
+    (LinearMap.rTensor A L.val.toLinearMap).rangeRestrict (x ⊗ₜ[K] a))
+  apply Subtype.ext
+  simp only [LinearMap.codRestrict_apply, LinearMap.rTensor_tmul,
+    AlgHom.toLinearMap_apply, IntermediateField.coe_val]
 /-- The `L`-linear version of `intermediateTensorEquiv`. -/
 def intermediateTensorEquiv' (L : IntermediateField K K_bar) :
     intermediateTensor' K K_bar A L ≃ₗ[L] L ⊗[K] A where
@@ -231,6 +234,7 @@ theorem eHat_linear_independent : LinearIndependent ℒ e^' := by
   intro s g h
   have h' : ∑ i ∈ s, algebraMap ℒ k⁻ (g i) • e i = 0 := by
     apply_fun Submodule.subtype _ at h
+    rw [map_zero] at h
     convert h using 1
     simp only [map_sum, map_smul, Submodule.coe_subtype, eHat']
     apply Finset.sum_congr rfl

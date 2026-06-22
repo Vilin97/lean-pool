@@ -568,6 +568,9 @@ def repNext (Γ : Sequent) {Δ : Sequent} {strat : Strategy coalgebraGame Prover
         omega
       have turn := @rewind_turn g.1 ⟨(2 * (Fin.find _ (List.mem_iff_get.1 rep)).1), hbound⟩
       simp only [g.2.2, Nat.even_mul, even_two, true_or, if_true] at turn
+      have hpos : repPos g rep = rewindHistory g.1
+          ⟨2 * (Fin.find _ (List.mem_iff_get.1 rep)).1, hbound⟩ := rfl
+      rw [hpos]
       convert turn⟩
 
 /-- The sequent at the premise defined by `repNext` is the sequent `Δ` which we expect. -/
@@ -1122,7 +1125,7 @@ def gameBModel (Γ : Sequent) {strat : Strategy coalgebraGame Builder}
     apply WellFounded.transGen
     let instFunLike : FunLike Unit (MaximalPath Γ strat) GamePos := by exact {
       coe := fun u π ↦ π.first
-      coe_injective' := by intro u w; grind}
+      coe_injective := by intro u w; grind}
     have instRelHome :
         RelHomClass Unit (Function.swap (pathRelation Γ strat))
           (Relation.TransGen (Function.swap Move)) := by exact {
@@ -1341,7 +1344,9 @@ lemma formula_in_successor_of_diamond_formula_in {Γ : Sequent}
       have := max (Sum.inr R, Γ :: Γs, Rs)
       simp only [nonBoxMove, isBox, Bool.not_eq_true, not_and, Bool.not_eq_false] at this
       apply this
-      convert x_y
+      have last_eq : π.getLast ne = (Sum.inl Γ, Γs, Rs) := last_def
+      rw [last_eq]
+      exact x_y
     cases R <;> simp [RuleApp.isBox] at R_box
     rename_i Δ ψ ψ_in
     simp only [f] at R_f
@@ -1619,8 +1624,9 @@ private lemma no_penultimate_prover_turn {Δ : Sequent} {strat : Strategy coalge
     List.IsChain.getElem chain (π.length - (0 + 1) - 1) (by omega)
   have helper_last : π[π.length - 1]'(by omega) = π.getLast ne := by grind
   have u₁_last' : nonBoxMove π[π.length - 2] (π.getLast ne) := by
-    convert u₁_last using 1
-    · simpa [eq2] using helper_last.symm
+    convert u₁_last using 2
+    · omega
+    · rw [← helper_last]; congr 1; omega
   rcases u₁_def : π[π.length - 2] with ⟨Γ | R, Γs, Rs⟩
   · have u₁_last_mem := move_iff_in_moves.1 u₁_last'.1
     rw [u₁_def] at u₁_last_mem
@@ -1751,7 +1757,8 @@ lemma builder_win_strong {Δ : Sequent} (strat : Strategy coalgebraGame Builder)
       have u₁_u₂ :
           nonBoxMove (Sum.inr R, Γ :: Γs, Rs)
             (π[π.length - (i + 1 + 1) - 1 + 1 + 1]'(by grind)) := by
-        convert u₁_u₂ -- dont understand why simp or rw doesn't do this
+        convert u₁_u₂ using 2 -- dont understand why simp or rw doesn't do this
+        exact u₁_def
       have u₁_u₂_mem := move_iff_in_moves.1 u₁_u₂.1
       change π[π.length - (i + 1 + 1) - 1 + 1 + 1] ∈
         Finset.filterMap

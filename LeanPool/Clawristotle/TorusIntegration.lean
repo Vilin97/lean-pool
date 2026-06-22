@@ -52,16 +52,25 @@ lemma measure_torus_eq_map :
           · convert (AddCircle.measurePreserving_mk 1 (0 : ℝ) |>
                 MeasureTheory.MeasurePreserving.map_eq) using 1
             norm_num +zetaDelta at *
-        convert MeasureTheory.Measure.pi_map_pi _ using 1
-        any_goals tauto
-        case convert_6 => exact fun _ => MeasureTheory.MeasureSpace.volume
-        all_goals try infer_instance
-        · exact Eq.symm Measure.map_id'
-        · convert MeasureTheory.Measure.pi_map_pi (fun i => _) using 1
-          · congr 1; funext i; simp only [Measure.map_id']; exact (h_volume_eq i).symm
-          · exact fun i ↦ sigmaFinite_of_locallyFinite
-          · exact Continuous.aemeasurable (by continuity)
-        · exact fun i => measurable_id.aemeasurable
+        have hmk : ∀ i : Fin 3,
+            AEMeasurable (fun x : ℝ => QuotientAddGroup.mk x : ℝ → AddCircle (1 : ℝ))
+              (MeasureTheory.MeasureSpace.volume.restrict (Set.Ioc 0 1)) :=
+          fun _ => QuotientAddGroup.continuous_mk.aemeasurable
+        haveI hsf : ∀ i : Fin 3,
+            SigmaFinite
+              (((MeasureTheory.MeasureSpace.volume.restrict (Set.Ioc 0 1)).map
+                (fun x : ℝ => QuotientAddGroup.mk x : ℝ → AddCircle (1 : ℝ)))) := by
+          intro i; rw [h_volume_eq i]; infer_instance
+        rw [show (torusMk : (Fin 3 → ℝ) → Torus3) =
+            (fun x i =>
+              (fun y : ℝ => QuotientAddGroup.mk y : ℝ → AddCircle (1 : ℝ)) (x i)) from rfl,
+          MeasureTheory.Measure.pi_map_pi hmk]
+        rw [show (fun i : Fin 3 =>
+            (MeasureTheory.MeasureSpace.volume.restrict (Set.Ioc 0 1)).map
+              (fun y : ℝ => QuotientAddGroup.mk y : ℝ → AddCircle (1 : ℝ))) =
+            (fun _ : Fin 3 => MeasureTheory.MeasureSpace.volume) from
+          funext fun i => h_volume_eq i]
+        exact MeasureTheory.volume_pi
       suffices h_restrict : volume.restrict box3 =
           MeasureTheory.Measure.pi (fun _ => volume.restrict (Set.Ioc 0 1)) by
         rw [h_volume_eq, h_restrict]
@@ -239,26 +248,25 @@ private lemma box3_ftc_slice_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3) (hF 
           · exact fun x => F (Fin.insertNth i x z)
           · rfl
           · intro x hx
-            convert HasFDerivAt.hasDerivAt
-                (HasFDerivAt.comp x
-                  (hF.contDiffAt.differentiableAt one_ne_zero |> DifferentiableAt.hasFDerivAt)
-                  (hasFDerivAt_pi.mpr _)) using 1
-            rotate_left
-            · exact fun j => if j = i then 1 else 0
-            · intro j
-              fin_cases i <;> fin_cases j <;>
-                first
-                | change HasFDerivAt (fun x : ℝ => x) 1 x
-                  fun_prop
-                | change HasFDerivAt (fun x : ℝ => z 0) 0 x
-                  fun_prop
-                | change HasFDerivAt (fun x : ℝ => z 1) 0 x
-                  fun_prop
-            · simp only [ContinuousLinearMap.comp_apply]
-              congr 1
-              ext j
-              simp only [ContinuousLinearMap.pi_apply, Pi.single_apply]
-              split <;> simp
+            have hsplit : (fun y : ℝ => (Fin.insertNth i y z : Fin 3 → ℝ)) =
+                fun y : ℝ => (Fin.insertNth i (0 : ℝ) z : Fin 3 → ℝ) + y • Pi.single i 1 := by
+              funext y; funext j
+              by_cases hji : j = i
+              · subst hji
+                simp [Fin.insertNth_apply_same, Pi.single_eq_same]
+              · rcases lt_or_gt_of_ne hji with h | h
+                · rw [Fin.insertNth_apply_below h]
+                  simp [Fin.insertNth_apply_below h, Pi.single_eq_of_ne hji]
+                · rw [Fin.insertNth_apply_above h]
+                  simp [Fin.insertNth_apply_above h, Pi.single_eq_of_ne hji]
+            have hg : HasDerivAt (fun y : ℝ => (Fin.insertNth i y z : Fin 3 → ℝ))
+                (Pi.single i 1) x := by
+              rw [hsplit]
+              have hsmul : HasDerivAt (fun y : ℝ => y • (Pi.single i 1 : Fin 3 → ℝ))
+                  (Pi.single i 1) x := by
+                simpa using (hasDerivAt_id x).smul_const (Pi.single i 1 : Fin 3 → ℝ)
+              simpa using hsmul.const_add (Fin.insertNth i (0 : ℝ) z : Fin 3 → ℝ)
+            exact (hF.contDiffAt.differentiableAt one_ne_zero).hasFDerivAt.comp_hasDerivAt x hg
           · apply_rules [ Continuous.intervalIntegrable ]
             have h_cont : Continuous (fun y => fderiv ℝ F (Fin.insertNth i y z)) := by
               exact hF.continuous_fderiv one_ne_zero |> Continuous.comp <|
@@ -281,51 +289,53 @@ lemma integral_derivative_periodic_zero (F : (Fin 3 → ℝ) → ℝ) (i : Fin 3
     (hF : ContDiff ℝ 1 F) (hper : ∀ x, F (x + Pi.single i 1) = F x) :
     ∫ y in box3, fderiv ℝ F y (Pi.single i 1) = 0 := by
       have h_ftc := box3_ftc_slice_zero F i hF hper
-      convert box3_fubini_slice i _ _ using 1
-      · rw [ MeasureTheory.integral_integral_swap ]
-        · simp_rw [h_ftc]; simp
-        · have h_cont : Continuous
-              (fun p : ℝ × (Fin 2 → ℝ) => (fderiv ℝ F (i.insertNth p.1 p.2)) (Pi.single i 1)) := by
-            have h_cont : Continuous
-                (fun p : ℝ × (Fin 2 → ℝ) => fderiv ℝ F (i.insertNth p.1 p.2)) := by
-              have h_cont : Continuous (fun p : Fin 3 → ℝ => fderiv ℝ F p) := by
-                exact hF.continuous_fderiv one_ne_zero
-              refine h_cont.comp ?_
-              refine continuous_pi_iff.mpr ?_
-              intro j
-              fin_cases j <;>
-                simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
-                  Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk]
-              · fin_cases i <;>
-                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                    ↓reduceDIte, Fin.mk_one, zero_ne_one, Fin.lt_one_iff, Fin.castPred_zero,
-                    Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT]
-                · exact continuous_fst
-                · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
-                · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
-              · fin_cases i <;>
-                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                    one_ne_zero, ↓reduceDIte, Fin.not_lt_zero, Fin.pred_one, Fin.mk_one,
-                    Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT, Fin.castPred_one]
-                · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
-                · exact continuous_fst
-                · exact continuous_apply _ |> Continuous.comp <| continuous_snd
-              · fin_cases i <;>
-                  simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
-                    Fin.reduceEq, ↓reduceDIte, Fin.not_lt_zero, Fin.reducePred, Fin.mk_one,
-                    Fin.lt_one_iff, Fin.reduceFinMk]
-                · exact continuous_apply _ |> Continuous.comp <| continuous_snd
-                · exact continuous_apply _ |> Continuous.comp <| continuous_snd
-                · exact continuous_fst
-            exact Continuous.eval_const h_cont (Pi.single i 1)
-          rw [ MeasureTheory.Measure.prod_restrict ]
-          exact ContinuousOn.integrableOn_compact
-              (isCompact_Icc.prod (isCompact_univ_pi fun _ => CompactIccSpace.isCompact_Icc))
-              (h_cont.continuousOn)
-            |> fun h => h.mono_set
-              (Set.prod_mono (Set.Ioc_subset_Icc_self)
-                (Set.pi_mono fun _ _ => Set.Ioc_subset_Icc_self))
-      · fun_prop (disch := norm_num)
+      have hg : Continuous (fun y : Fin 3 → ℝ => (fderiv ℝ F y) (Pi.single i 1)) :=
+        (hF.continuous_fderiv one_ne_zero).clm_apply continuous_const
+      rw [show box3 = Set.pi Set.univ (fun _ => Set.Ioc 0 1) from rfl,
+        box3_fubini_slice i (fun y => (fderiv ℝ F y) (Pi.single i 1)) hg]
+      rw [ MeasureTheory.integral_integral_swap ]
+      · simp_rw [h_ftc]; simp
+      · have h_cont : Continuous
+            (fun p : ℝ × (Fin 2 → ℝ) => (fderiv ℝ F (i.insertNth p.1 p.2)) (Pi.single i 1)) := by
+          have h_cont : Continuous
+              (fun p : ℝ × (Fin 2 → ℝ) => fderiv ℝ F (i.insertNth p.1 p.2)) := by
+            have h_cont : Continuous (fun p : Fin 3 → ℝ => fderiv ℝ F p) := by
+              exact hF.continuous_fderiv one_ne_zero
+            refine h_cont.comp ?_
+            refine continuous_pi_iff.mpr ?_
+            intro j
+            fin_cases j <;>
+              simp only [Fin.insertNth, Fin.succAbove_cases_eq_insertNth, Nat.reduceAdd,
+                Fin.zero_eta, Fin.isValue, Fin.mk_one, Fin.reduceFinMk]
+            · fin_cases i <;>
+                simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                  ↓reduceDIte, Fin.mk_one, zero_ne_one, Fin.lt_one_iff, Fin.castPred_zero,
+                  Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT]
+              · exact continuous_fst
+              · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
+              · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
+            · fin_cases i <;>
+                simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                  one_ne_zero, ↓reduceDIte, Fin.not_lt_zero, Fin.pred_one, Fin.mk_one,
+                  Fin.reduceFinMk, Fin.reduceEq, Fin.reduceLT, Fin.castPred_one]
+              · exact continuous_apply 0 |> Continuous.comp <| continuous_snd
+              · exact continuous_fst
+              · exact continuous_apply _ |> Continuous.comp <| continuous_snd
+            · fin_cases i <;>
+                simp only [Fin.succAboveCases, Nat.reduceAdd, Fin.isValue, Fin.zero_eta,
+                  Fin.reduceEq, ↓reduceDIte, Fin.not_lt_zero, Fin.reducePred, Fin.mk_one,
+                  Fin.lt_one_iff, Fin.reduceFinMk]
+              · exact continuous_apply _ |> Continuous.comp <| continuous_snd
+              · exact continuous_apply _ |> Continuous.comp <| continuous_snd
+              · exact continuous_fst
+          exact Continuous.eval_const h_cont (Pi.single i 1)
+        rw [ MeasureTheory.Measure.prod_restrict ]
+        exact ContinuousOn.integrableOn_compact
+            (isCompact_Icc.prod (isCompact_univ_pi fun _ => CompactIccSpace.isCompact_Icc))
+            (h_cont.continuousOn)
+          |> fun h => h.mono_set
+            (Set.prod_mono (Set.Ioc_subset_Icc_self)
+              (Set.pi_mono fun _ _ => Set.Ioc_subset_Icc_self))
 
 end AristotleLemmas
 
@@ -357,7 +367,7 @@ lemma torusGradX_mul (φ ψ : Torus3 → ℝ) (i : Fin 3)
   let x₀ := (torusMk_surjective x).choose
   have hx₀ := (torusMk_surjective x).choose_spec
   rw [fderiv_mul hφ.differentiableAt hψ.differentiableAt]
-  simp only [ContinuousLinearMap.add_apply, periodicLift, Function.comp_apply]
+  simp only [_root_.add_apply, periodicLift, Function.comp_apply]
   rw [show torusMk x₀ = x from hx₀]
   simp [smul_eq_mul]
 
@@ -492,7 +502,7 @@ theorem torus_hHarmonic_const (φ : Torus3 → ℝ)
     intro y; ext v
     have hv : v = ∑ i : Fin 3, v i • (Pi.single i (1 : ℝ) : Fin 3 → ℝ) := by
       ext j; simp [Finset.sum_apply, Pi.single_apply]
-    rw [hv, map_sum, ContinuousLinearMap.zero_apply]
+    rw [hv, map_sum, _root_.zero_apply]
     apply Finset.sum_eq_zero; intro i _
     rw [map_smul, smul_eq_mul, show (fderiv ℝ (periodicLift φ) y) (Pi.single i 1) =
         torusGradX φ (torusMk y) i from (periodicLift_torusGradX φ i y).symm,

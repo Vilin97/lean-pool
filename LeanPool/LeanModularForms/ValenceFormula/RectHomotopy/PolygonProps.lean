@@ -211,7 +211,7 @@ lemma fdPolygon_continuous : Continuous fdPolygon := by
             exact fdPolygon_match_t4
           · exact fdPolygon_seg4_continuous
           · exact fdPolygon_seg5_continuous
-  convert h_full using 1
+  exact h_full
 
 lemma fdPolygon_closed : fdPolygon 0 = fdPolygon 5 := by
   simp only [fdPolygon]

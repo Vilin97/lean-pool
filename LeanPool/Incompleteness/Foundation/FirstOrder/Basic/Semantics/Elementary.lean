@@ -82,7 +82,7 @@ variable {L M M₁ M₂ M₃}
 
 instance : FunLike (M₁ →ₛ[L] M₂) M₁ M₂ where
   coe := fun φ => φ.toFun
-  coe_injective' := fun φ ψ h => by
+  coe_injective := fun φ ψ h => by
     rcases φ
     rcases ψ
     simp only [Hom.mk.injEq] at h ⊢
@@ -118,7 +118,7 @@ end HomClass
 
 instance : FunLike (M₁ ↪ₛ[L] M₂) M₁ M₂ where
   coe := fun φ => φ.toFun
-  coe_injective' := fun φ ψ h => by
+  coe_injective := fun φ ψ h => by
     rcases φ
     rcases ψ
     simp only [Embedding.mk.injEq] at h ⊢
@@ -154,7 +154,7 @@ end EmbeddingClass
 
 instance : FunLike (M₁ ≃ₛ[L] M₂) M₁ M₂ where
   coe := fun φ => φ.toFun
-  coe_injective' := fun φ ψ h => by
+  coe_injective := fun φ ψ h => by
     rcases φ
     rcases ψ
     simp only [Iso.mk.injEq] at h ⊢

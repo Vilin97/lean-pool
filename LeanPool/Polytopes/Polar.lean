@@ -226,7 +226,7 @@ lemma compact_polarDual_iff [FiniteDimensional ℝ E] {X : Set E} (hXcl : IsClos
         calc (1 : ℝ) ≤ ‖y‖ * ‖b‖ := this
           _ ≤ M * ‖b‖ := by apply mul_le_mul_of_nonneg_right hM hbnonneg
           _ = ‖b‖ * M := mul_comm _ _
-  · rw [Set.not_nonempty_iff_eq_empty, Set.diff_eq_empty, Set.subset_singleton_iff_eq] at hXempty
+  · rw [Set.not_nonempty_iff_eq_empty, Set.sdiff_eq_empty, Set.subset_singleton_iff_eq] at hXempty
     rcases hXempty with hXempty | hX0
     · rw [hXempty, polarDual_empty, interior_univ]
       exact ⟨ fun _ => isCompact_empty, fun _ => trivial ⟩

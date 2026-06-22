@@ -111,7 +111,7 @@ variable {S} [Sequence S]
 
 instance : DFunLike (Limit S) ℕ S where
   coe := toFun
-  coe_injective' := by
+  coe_injective := by
     rintro ⟨f, _⟩ ⟨g, _⟩ h
     simpa only [mk.injEq] using h
 

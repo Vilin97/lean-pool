@@ -7,7 +7,7 @@ import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite1Dimd.ProductBasisAndAnn
 import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermitek.TrueLevelBasis
 import LeanPool.PhaseRetrieval.DimdPoly.Internal.Hermite.MissingMathlib
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Data.Finite.Card
+import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Int.Interval
 import Mathlib.Data.Pi.Interval
@@ -425,6 +425,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
       funext z
       simp [Algebra.smul_def, mul_left_comm, mul_comm]
     convert hsmul.const_mul (1 / Real.pi) using 1
+    case e'_5 => rfl
     funext z
     have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by
       positivity

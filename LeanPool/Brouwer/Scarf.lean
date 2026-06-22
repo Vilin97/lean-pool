@@ -132,7 +132,7 @@ class IndexedLOrder (I T : Type*) where
 
 instance : FunLike (IndexedLOrder I T) I (LinearOrder T) where
   coe := fun a => a.IST
-  coe_injective' := fun f g h => by cases f; cases g; congr
+  coe_injective := fun f g h => by cases f; cases g; congr
 
 
 variable [IST : IndexedLOrder I T]
@@ -1924,12 +1924,12 @@ lemma pairEqOfCollision [DecidableEq T] {x y a b : T}
     have h_x_in_sdiff : x ∈ σ \ {a, b} := Finset.mem_sdiff.mpr ⟨h_x_in_σ, h_x_notin_ab⟩
     have h_y_in_sdiff : y ∈ σ \ {a, b} := Finset.mem_sdiff.mpr ⟨h_y_in_σ, h_y_notin_ab⟩
     have h_x_in_set : x ∈ (↑σ : Set T) \ {a, b} := by
-      simp only [Set.mem_diff, SetLike.mem_coe, h_x_in_σ, Set.mem_insert_iff,
+      simp only [Set.mem_sdiff, SetLike.mem_coe, h_x_in_σ, Set.mem_insert_iff,
         Set.mem_singleton_iff, not_or, true_and]
       simp only [mem_insert, mem_singleton, not_or] at h_x_notin_ab
       exact h_x_notin_ab
     have h_y_in_set : y ∈ (↑σ : Set T) \ {a, b} := by
-      simp only [Set.mem_diff, SetLike.mem_coe, h_y_in_σ, Set.mem_insert_iff,
+      simp only [Set.mem_sdiff, SetLike.mem_coe, h_y_in_σ, Set.mem_insert_iff,
         Set.mem_singleton_iff, not_or, true_and]
       simp only [mem_insert, mem_singleton, not_or] at h_y_notin_ab
       exact h_y_notin_ab
@@ -1955,7 +1955,7 @@ lemma pairEqOfCollision [DecidableEq T] {x y a b : T}
             rw [Finset.mem_sdiff]
             exact ⟨h_y_in_σ, by simp [h_y_ne_a, h_y_eq_b]⟩
           have h_y_in_set : y ∈ (↑σ : Set T) \ {a, b} := by
-            simp [Set.mem_diff, h_y_in_σ, h_y_ne_a, h_y_eq_b]
+            simp [h_y_in_σ, h_y_ne_a, h_y_eq_b]
           have h_pairs_different : ({a, y} : Finset T) ≠ {a, b} := by
             intro h_eq
             have h_y_in : y ∈ ({a, b} : Finset T) := by
@@ -1991,7 +1991,7 @@ lemma pairEqOfCollision [DecidableEq T] {x y a b : T}
             rw [Finset.mem_sdiff]
             exact ⟨h_y_in_σ, by simp [h_y_eq_a, h_y_ne_b]⟩
           have h_y_in_set : y ∈ (↑σ : Set T) \ {a, b} := by
-            simp [Set.mem_diff, h_y_in_σ, h_y_eq_a, h_y_ne_b]
+            simp [h_y_in_σ, h_y_eq_a, h_y_ne_b]
           have h_pairs_different : ({b, y} : Finset T) ≠ {a, b} := by
             intro h_eq
             have h_y_in : y ∈ ({a, b} : Finset T) := by
@@ -2030,7 +2030,7 @@ lemma pairEqOfCollision [DecidableEq T] {x y a b : T}
             rw [Finset.mem_sdiff]
             exact ⟨h_x_in_σ, by simp [h_x_ne_a, h_x_eq_b]⟩
           have h_x_in_set : x ∈ (↑σ : Set T) \ {a, b} := by
-            simp [Set.mem_diff, h_x_in_σ, h_x_ne_a, h_x_eq_b]
+            simp [h_x_in_σ, h_x_ne_a, h_x_eq_b]
           have h_pairs_different : ({a, x} : Finset T) ≠ {a, b} := by
             intro h_eq
             have h_x_in : x ∈ ({a, b} : Finset T) := by
@@ -2064,7 +2064,7 @@ lemma pairEqOfCollision [DecidableEq T] {x y a b : T}
             rw [Finset.mem_sdiff]
             exact ⟨h_x_in_σ, by simp [h_x_eq_a, h_x_ne_b]⟩
           have h_x_in_set : x ∈ (↑σ : Set T) \ {a, b} := by
-            simp [Set.mem_diff, h_x_in_σ, h_x_eq_a, h_x_ne_b]
+            simp [h_x_in_σ, h_x_eq_a, h_x_ne_b]
           have h_pairs_different : ({b, x} : Finset T) ≠ {a, b} := by
             intro h_eq
             have h_x_in : x ∈ ({a, b} : Finset T) := by

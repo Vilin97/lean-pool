@@ -37,7 +37,7 @@ instance instModuleMulOppositeSubtypeMemLeanPool : Module Rᵐᵒᵖ I where
   smul_zero x := by ext; simp
   zero_smul x := by ext; simp
   add_smul x y z := by ext; simp [left_distrib]
-  smul_add x y z := by ext; simp [right_distrib]
+  smul_add x y z := by ext; simp
 
 end Ring
 

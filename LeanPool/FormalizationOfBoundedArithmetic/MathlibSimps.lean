@@ -6,7 +6,7 @@ Authors: ruplet
 
 -- In this file this is crucial to be careful with imports,
 -- as all `simp` lemmas in scope will get our `delta0_simp` attribute!
-import Lean
+import Lean.Elab.Command
 import Mathlib.Lean.Meta.Simp
 import Mathlib.Tactic.Simps.Basic
 

@@ -285,9 +285,9 @@ theorem theorem_1 {X : Type*} [Finite X] (n : ℕ) (S : Set (X → F)) (hS : S.F
           have hpos : 0 < S.ncard := by omega
           exact (Set.ncard_pos hS).mp hpos
         let S' : Set (X → F) := S \ {f}
-        have hS'_finite : S'.Finite := hS.diff
+        have hS'_finite : S'.Finite := hS.sdiff
         have hS'_card : S'.ncard = k := by
-          rw [Set.ncard_diff_singleton_of_mem hf, hcard]
+          rw [Set.ncard_sdiff_singleton_of_mem hf, hcard]
           omega
         obtain ⟨T', hT'_span, hT'_finite, hT'_card, hT'_zero⟩ :=
           ih S' hS'_finite hS'_card
@@ -296,7 +296,7 @@ theorem theorem_1 {X : Type*} [Finite X] (n : ℕ) (S : Set (X → F)) (hS : S.F
         have hU_span : U ⊆ Submodule.span F S := by
           intro u hu
           rcases hu with hu | hu
-          · exact (Submodule.span_mono (Set.diff_subset : S' ⊆ S)) (hT'_span hu)
+          · exact (Submodule.span_mono (Set.sdiff_subset : S' ⊆ S)) (hT'_span hu)
           · rcases hu with rfl
             exact Submodule.subset_span hf
         have hU_zero : ZeroSet U = ZeroSet S := by

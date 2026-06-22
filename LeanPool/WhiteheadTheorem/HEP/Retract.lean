@@ -106,7 +106,7 @@ lemma inclToSides_projToSides_eq_of {n : ℕ} (y : I^Fin (n + 1 + 1))
   rw [h_pj]
   ext i
   simp only [inclToSides, inclToBoundaryJarSides, splitAtLastComm, splitAtLast, boundaryIncl,
-    ContinuousMap.coe_mk, ContinuousMap.comp_apply, ContinuousMap.coe_coe,
+    ContinuousMap.coe_mk, ContinuousMap.comp_apply,
     ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
     Function.comp_apply,
     Homeomorph.symm_trans_apply, Homeomorph.prodCongr_symm, Homeomorph.refl_symm,
@@ -127,7 +127,7 @@ lemma inclToBoundaryJarSides_projToSides_eq_of {n : ℕ} (y : I^Fin (n + 1 + 1))
   ext i
   -- Reduce inclToBoundaryJarSides to its underlying ContinuousMap component
   simp only [inclToBoundaryJarSides, splitAtLastComm, splitAtLast, boundaryIncl,
-    ContinuousMap.coe_mk, ContinuousMap.comp_apply, ContinuousMap.coe_coe,
+    ContinuousMap.coe_mk, ContinuousMap.comp_apply,
     ContinuousMap.prodMap_apply, ContinuousMap.coe_id, Prod.map_apply, id_eq,
     Homeomorph.symm_trans_apply,
     Homeomorph.prodCongr_symm, Homeomorph.refl_symm, Homeomorph.symm_symm,
@@ -242,7 +242,7 @@ lemma deformRetrToBot_apply_bot {n : ℕ}
     deformRetrToBot ⟨t, y⟩ (Fin.last n) = 0 := by
   unfold deformRetrToBot
   simp only [ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
-    ContinuousMap.coe_coe, Prod.map_apply, id_eq, ContinuousMap.coe_mk]
+    Prod.map_apply, id_eq, ContinuousMap.coe_mk]
   unfold splitAtLast
   simp only [ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
     Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply, id_eq,
@@ -306,7 +306,7 @@ def hequivBoundaryJar {n : ℕ} : (I^ Fin n) ≃ₕ ⊔I^(n + 1) where
           Prod.map_apply, id_eq, ContinuousMap.comp_apply, Subtype.mk.injEq]
         unfold deformRetrToBot inclToBot
         simp only [ContinuousMap.comp_apply, ContinuousMap.prodMap_apply, ContinuousMap.coe_id,
-          ContinuousMap.coe_coe, Prod.map_apply, id_eq, ContinuousMap.coe_mk, mul_zero, ne_eq]
+          Prod.map_apply, id_eq, ContinuousMap.coe_mk, mul_zero, ne_eq]
         unfold splitAtLast homeoNeqLast
         simp only [ne_eq, Homeomorph.trans_apply, Homeomorph.funSplitAt_apply,
           Homeomorph.coe_prodCongr, Homeomorph.refl_apply, Prod.map_apply,
@@ -320,7 +320,7 @@ def hequivBoundaryJar {n : ℕ} : (I^ Fin n) ≃ₕ ⊔I^(n + 1) where
       map_one_left y := by
         unfold boundaryJarDeformRetrToBot boundaryJarIncl deformRetrToBot
         simp only [ContinuousMap.prodMap_apply, ContinuousMap.coe_id, ContinuousMap.coe_mk,
-          Prod.map_apply, id_eq, ContinuousMap.comp_apply, ContinuousMap.coe_coe, mul_one,
+          Prod.map_apply, id_eq, ContinuousMap.comp_apply, mul_one,
           Prod.mk.eta, Homeomorph.symm_apply_apply, Subtype.coe_eta, ContinuousMap.id_apply] }
 
 /-- Deformation retraction from the cube to the point `0`. -/

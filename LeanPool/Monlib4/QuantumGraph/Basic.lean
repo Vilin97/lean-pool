@@ -671,20 +671,20 @@ by simp_rw [le_antisymm_iff, orthogonalProjection.is_le_iff_subset]
 open scoped FiniteDimensional in
 theorem Submodule.adjoint_subtype {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [FiniteDimensional ℂ E] {U : Submodule ℂ E} :
-  LinearMap.adjoint U.subtype = (orthogonalProjection U).toLinearMap :=
+  LinearMap.adjoint U.subtype = (U.orthogonalProjectionOnto).toLinearMap :=
 by
-  rw [← Submodule.adjoint_subtypeL]
+  rw [← Submodule.adjoint_subtypeL U]
   rfl
 
 theorem Submodule.map_orthogonalProjection_self {E :
     Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [FiniteDimensional ℂ E] {U : Submodule ℂ E} :
-  Submodule.map (orthogonalProjection U).toLinearMap U = ⊤ :=
+  Submodule.map (U.orthogonalProjectionOnto).toLinearMap U = ⊤ :=
 by
   ext x
   simp only [mem_map, ContinuousLinearMap.coe_coe, mem_top, iff_true]
   use x
-  simp only [SetLike.coe_mem, orthogonalProjection_mem_subspace_eq_self, and_self]
+  simp only [SetLike.coe_mem, orthogonalProjectionOnto_mem_subspace_eq_self, and_self]
 
 theorem orthogonalProjection_submoduleMap {E E' :
     Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
@@ -880,11 +880,11 @@ by
   symm
   have := Upsilon_symm_tmul (A := A) (B:=A)
   simp only [gns, neg_zero, zero_sub] at this
-  simp_rw [ContinuousLinearMap.coe_sum, ContinuousLinearMap.coe_smul,
+  simp_rw [ContinuousLinearMap.toLinearMap_sum, ContinuousLinearMap.toLinearMap_smul,
     ← this, ← map_smul]
   simp_rw [← map_sum, ← Finset.smul_sum, a, TensorProduct.of_othonormalBasis_prod_eq',
     ← rankOne_apply (𝕜 := ℂ) (1 : A ⊗[ℂ] A),
-    ← ContinuousLinearMap.sum_apply,
+    ← sum_apply,
     ← OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne]
   rw [upsilonOrthogonalProjection]
   simp_rw [TensorProduct.toIsBimoduleMap_apply_coe,
@@ -904,7 +904,7 @@ by
   intro u b a
   nth_rw 1 [← (LinearMap.isReal_iff _).mp hf.isReal]
   nth_rw 1 [QuantumGraph.Real.upsilon_eq hf gns]
-  simp only [ContinuousLinearMap.coe_sum, ContinuousLinearMap.coe_smul,
+  simp only [ContinuousLinearMap.toLinearMap_sum, ContinuousLinearMap.toLinearMap_smul,
     LinearMap.real_sum, LinearMap.real_smul, rankOne_real, gns, mul_zero, neg_zero,
     zero_sub, QuantumSet.modAut_star, QuantumSet.modAut_apply_modAut,
     add_neg_cancel, QuantumSet.modAut_zero, star_star, AlgEquiv.one_apply,
@@ -946,7 +946,7 @@ by
   nth_rw 1 [QuantumGraph.Real.upsilon_eq' hf gns]
   let u := QuantumGraph.Real.upsilonOrthonormalBasis gns hf
   simp_rw [P, u.orthogonalProjection'_eq_sum_rankOne]
-  simp only [ContinuousLinearMap.sum_apply, a, ← TensorProduct.ofOrthonormalBasisProd₁Lm_eq,
+  simp only [sum_apply, a, ← TensorProduct.ofOrthonormalBasisProd₁Lm_eq,
     map_sum, rankOne_apply, map_smul,
     Finset.sum_apply, Pi.smul_apply, map_smulₛₗ, inner_conj_symm]
   rw [Finset.sum_comm]
@@ -1040,8 +1040,8 @@ theorem
 by
   intro u b a
   nth_rw 1 [hf.upsilon_eq gns]
-  simp only [ContinuousLinearMap.coe_sum,
-    ContinuousLinearMap.coe_smul,
+  simp only [ContinuousLinearMap.toLinearMap_sum,
+    ContinuousLinearMap.toLinearMap_smul,
     LinearMap.comp_sum, LinearMap.sum_comp,
     LinearMap.smul_comp, LinearMap.comp_smul,
     LinearMap.comp_rankOne, LinearMap.rankOne_comp']

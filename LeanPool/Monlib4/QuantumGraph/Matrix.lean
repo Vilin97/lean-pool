@@ -232,7 +232,7 @@ by
   rw [← map_sum (StarAlgEquiv.lTensor (Matrix n n ℂ) (transposeStarAlgEquiv n))]
   rw [← map_sum kroneckerToTensor]
   rw [← map_sum onb.toMatrix]
-  rw [← ContinuousLinearMap.coe_sum]
+  rw [← ContinuousLinearMap.toLinearMap_sum]
   rw [← OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne u]
   rw [hA.matrix_orthogonalProjection_eq]
   simp only [ContinuousLinearMap.toLinearMapAlgEquiv_symm_apply]
@@ -335,7 +335,7 @@ by
     rfl
   simp only [this, star_eq_conjTranspose, conjTranspose_conjTranspose]
   ext
-  simp only [sum_apply, kroneckerMap_apply, vecMulVec_apply,
+  simp only [Matrix.sum_apply, kroneckerMap_apply, vecMulVec_apply,
     Pi.star_apply, OrthonormalBasis.repr_apply_apply, transpose_apply,
     Module.Dual.IsFaithfulPosMap.orthonormalBasis_apply, mul_apply,
     single_eq, boole_mul]
@@ -583,7 +583,7 @@ by
     have := x.property
     simp only [hα, norm_smul, y.property, mul_one] at this
     simp only [hα, _root_.map_smul, map_smulₛₗ,
-      LinearMap.smul_apply, ContinuousLinearMap.coe_smul]
+      LinearMap.smul_apply, ContinuousLinearMap.toLinearMap_smul]
     rw [smul_smul, RCLike.conj_mul, this, RCLike.ofReal_one, one_pow, one_smul]
 
 theorem QuantumGraph.Real.reflexive_matrix_numOfEdges_eq_one_iff_eq_trivialGraph_of_counit_eq_trace

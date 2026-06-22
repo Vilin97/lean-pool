@@ -120,7 +120,7 @@ lemma cauchy_circleIntegral_formula_on_scaled_unitDisc {E : Type*} [NormedAddCom
   · simp only [smul_smul, inv_mul_cancel₀ two_pi_I_ne_zero]
     exact Eq.symm (MulAction.one_smul (f (r * z)))
   · intro x hx
-    simp only [diff_empty] at hx
+    simp only [sdiff_empty] at hx
     exact differentiableAt_of_analyticOn_unitDisc_of_mul hf (ball_subset_closedBall hx) hr
 
 /-- Cauchy's integral formula for analytic functions on the unit disc,
@@ -173,7 +173,7 @@ lemma vanishing_goursat_circleIntegral_scaled_unitDisc
   apply circleIntegral_eq_zero_of_differentiable_on_off_countable (zero_le_one) countable_empty
   · exact fun ζ hζ => (DifferentiableAt.continuousAt
           (diffferentiableAt_goursat_integrand_scaled_unitDisc hf hr hz hζ)).continuousWithinAt
-  · rw [diff_empty]
+  · rw [sdiff_empty]
     exact fun ζ hζ => diffferentiableAt_goursat_integrand_scaled_unitDisc hf hr hz
                       (ball_subset_closedBall hζ)
 

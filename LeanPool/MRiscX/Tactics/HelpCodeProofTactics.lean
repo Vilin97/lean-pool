@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julius Marx
 -/
 
-import Lean
+import Lean.Elab.Tactic.Basic
 import LeanPool.MRiscX.Elab.HandleExpr
 import LeanPool.MRiscX.Hoare.HoareCore
 

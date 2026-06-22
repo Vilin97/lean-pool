@@ -311,7 +311,7 @@ theorem epi_pushforward_map_closedIncl_of_locallySurjective
         ((TopCat.closedIncl hs) z)).map
         ((TopCat.Presheaf.pushforward AddCommGrpCat.{u} (TopCat.closedIncl hs)).map f) ≫
       TopCat.Presheaf.stalkPushforward AddCommGrpCat.{u} (TopCat.closedIncl hs) G z) := by
-      convert hcomp using 1
+      rw [hnat]; exact hcomp
     exact (epi_comp_iff_of_isIso _
       (TopCat.Presheaf.stalkPushforward AddCommGrpCat.{u} (TopCat.closedIncl hs) G z)).mp hcomp'
   · intro b

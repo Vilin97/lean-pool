@@ -692,8 +692,8 @@ theorem lmul_toMatrix_apply {n : Type*} [Fintype n] [DecidableEq n]
 theorem rankOne_trace {𝕜 A : Type*} [RCLike 𝕜] [NormedAddCommGroup A]
     [InnerProductSpace 𝕜 A] [Module.Finite 𝕜 A] (x y : A) :
     LinearMap.trace 𝕜 A (rankOne 𝕜 x y).toLinearMap = ⟪y, x⟫_𝕜 := by
-  rw [← ket_bra_eq_rankOne, ContinuousLinearMap.coe_comp, LinearMap.trace_comp_comm',
-    ← ContinuousLinearMap.coe_comp, bra_ket_apply]
+  rw [← ket_bra_eq_rankOne, ContinuousLinearMap.toLinearMap_comp, LinearMap.trace_comp_comm',
+    ← ContinuousLinearMap.toLinearMap_comp, bra_ket_apply]
   rw [LinearMap.trace_eq_matrix_trace 𝕜 (Module.Basis.singleton Unit 𝕜), ket_toMatrix,
     Matrix.trace]
   simp only [Finset.univ_unique, PUnit.default_eq_unit, Matrix.diag_apply,

@@ -99,7 +99,7 @@ theorem nilMove_wordProd (nm : cs.NilMove) (l : List B) : π (cs.applyNilMove nm
       rw[wordProd_append]
       rw[h]
       have h_pair : cs.wordProd [i, i] = 1 := by
-        convert_to cs.wordProd ([i] ++ [i]) = 1
+        change cs.wordProd ([i] ++ [i]) = 1
         rw[wordProd_append]
         simp
       rw [h_pair, one_mul]

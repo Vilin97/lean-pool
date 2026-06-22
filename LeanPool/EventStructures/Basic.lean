@@ -25,7 +25,7 @@ structure EventStructure where
   /-- The binary conflict relation on events. -/
   conflict : Event → Event → Prop
   conflict_irrefl : ∀ e, ¬ conflict e e
-  conflict_symm : Symmetric conflict
+  conflict_symm : ∀ ⦃e₁ e₂⦄, conflict e₁ e₂ → conflict e₂ e₁
   conflict_hereditary : ∀ {e₁ e₂ e₃}, conflict e₁ e₂ → e₂ ≤ e₃ → conflict e₁ e₃
 
 namespace EventStructure
@@ -45,7 +45,7 @@ def consistent (e₁ e₂ : es.Event) : Prop := ¬ (e₁ # e₂)
 lemma consistent_refl : ∀ e, es.consistent e e := es.conflict_irrefl
 
 /-- Consistency is symmetric. -/
-lemma consistent_symm : Symmetric es.consistent :=
+lemma consistent_symm : ∀ ⦃e₁ e₂⦄, es.consistent e₁ e₂ → es.consistent e₂ e₁ :=
   fun _ _ h h' => h (es.conflict_symm h')
 
 /-- Concurrency relation: two events are concurrent if they are
@@ -60,7 +60,7 @@ lemma concurrent_irrefl : ∀ e, ¬ es.concurrent e e :=
   fun _ ⟨_, hNotLe, _⟩ => hNotLe le_rfl
 
 /-- Concurrency is symmetric. -/
-lemma concurrent_symm : Symmetric es.concurrent := by
+lemma concurrent_symm : ∀ ⦃e₁ e₂⦄, es.concurrent e₁ e₂ → es.concurrent e₂ e₁ := by
   intro e₁ e₂ h
   rcases h with ⟨hCons, hNotLe12, hNotLe21⟩
   refine ⟨?_, hNotLe21, hNotLe12⟩
@@ -78,7 +78,7 @@ def minimalConflict (e₁ e₂ : es.Event) : Prop :=
 local infixl:50 " ## " => es.minimalConflict
 
 /-- Minimal conflict is symmetric. -/
-lemma minimalConflict_symm : Symmetric es.minimalConflict := by
+lemma minimalConflict_symm : ∀ ⦃e₁ e₂⦄, es.minimalConflict e₁ e₂ → es.minimalConflict e₂ e₁ := by
   intro e₁ e₂ ⟨hConf, hMin⟩
   refine ⟨es.conflict_symm hConf, ?_⟩
   intro e₂' e₁' he₂ he₁ hConf'

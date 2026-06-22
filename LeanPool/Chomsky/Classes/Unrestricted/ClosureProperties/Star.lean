@@ -187,6 +187,7 @@ by
                         | inl rin =>
                           rw [List.mem_map] at rin
                           convert rin
+                          rfl
                         | inr rin =>
                           exfalso
                           unfold rulesThatScanTerminals at rin
@@ -194,11 +195,13 @@ by
                           rcases rin with ⟨t, tin, r_of_tg⟩
                           rw [←r_of_tg] at nrn
                           simp at nrn)
-          convert_to G.g.Derives [Symbol.nonterminal ◄g.initial]
-            (liftString G.liftNt (v.map Symbol.terminal))
-          · symm
-            apply List.map_map
-          exact lift_deri G hwg
+          have key := lift_deri G hwg
+          have e2 : liftString G.liftNt (v.map Symbol.terminal)
+              = v.map Symbol.terminal := by
+            rw [liftString, List.map_map]
+            rfl
+          rw [e2] at key
+          exact key
         have ass_postf := gr_deri_append [H] hgSv
         simp only [vx_reverse, ←List.cons_append,
           List.map_append, List.map_cons, List.map_nil, List.flatten_append, List.flatten_cons,
@@ -336,9 +339,10 @@ by
           · rw [List.take_add_one, List.map_append]
             simp [*]
       convert scan_segment (w[w.length - k.succ]'lt_wl).length (by rfl) using 2
-      · rw [List.take_length]
-      · rewrite [List.drop_length, List.map_nil]
-        rfl
+      all_goals first
+        | rfl
+        | rw [List.take_length]
+        | rw [List.drop_length, List.map_nil, List.append_nil]
 
 private lemma terminal_scan_aux {g : Grammar T} {w : List (List T)}
     (terminals : ∀ v ∈ w, ∀ t ∈ v, Symbol.terminal t ∈ (g.rules.map Grule.output).flatten) :
@@ -801,7 +805,7 @@ by
         exact Z_not_in_join_mpHmmw Z_in_tail
     have v_rest : v = ((x.map (List.map wrapSym)).map (· ++ [H])).flatten := by
       rw [u_nil, cat] at bef
-      convert congr_arg List.tail bef.symm
+      simpa using congr_arg List.tail bef.symm
     rewrite [aft, u_nil, v_rest, List.nil_append, List.map_cons]
     rfl
   | tail _ rin =>
@@ -834,7 +838,7 @@ by
           exact Z_not_in_join_mpHmmw Z_in_tail
       have v_rest : v = ((x.map (List.map wrapSym)).map (· ++ [H])).flatten := by
         rw [cat, u_nil] at bef
-        convert congr_arg List.tail bef.symm
+        simpa using congr_arg List.tail bef.symm
       rw [aft, u_nil, v_rest]
       rfl
     | tail _ rin =>
@@ -2563,6 +2567,9 @@ by
       g.star.Derives
         ([R] ++ ([H] ++ ((w.map (List.map Symbol.terminal)).map (· ++ [H])).flatten))
         (w.flatten.map Symbol.terminal ++ [R, H])
+    · show (g.star.rules.get ⟨1, Nat.one_lt_succ_succ _⟩).output ++ _ = _
+      rw [show (g.star.rules.get ⟨1, Nat.one_lt_succ_succ _⟩).output = [R, H] from rfl]
+      simp only [List.cons_append, List.nil_append]
     have rebracket :
       [H] ++ ((w.map (List.map (@Symbol.terminal T (nn g.nt)))).map (· ++ [H])).flatten =
              ((w.map (List.map (@Symbol.terminal T (nn g.nt)))).map ([H] ++ ·)).flatten ++ [H] := by

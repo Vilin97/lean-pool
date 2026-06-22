@@ -29,6 +29,11 @@ section representation
 
 open Module
 
+-- `LieRing.ofAssociativeRing` is only a local instance in Mathlib; the construction of
+-- `Representation` as a Lie algebra homomorphism into `V →ₗ[𝕂] V` needs the Lie ring
+-- structure coming from the operator commutator, so we activate it locally here.
+attribute [local instance 100] LieRing.ofAssociativeRing
+
 /-- A representation of a `𝕜`-Lie algebra `𝓰` on a `𝕂`-vector space `V`. -/
 abbrev Representation (𝕜 𝕂 : Type*) [CommRing 𝕜] [CommRing 𝕂]
     (𝓰 : Type*) [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]

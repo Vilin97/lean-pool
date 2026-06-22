@@ -752,7 +752,7 @@ theorem loglog_bigO_log :
   rw [Filter.eventually_iff, Filter.mem_atTop_sets]
   use 10
   intro x hx; simp only [Real.norm_eq_abs, Set.mem_setOf_eq]
-  rw [ge_iff_le, ←Nat.cast_le (α:=ℝ)] at hx
+  rw [←Nat.cast_le (α:=ℝ)] at hx
   conv at hx => {lhs; norm_num}
   rw [le_abs]; left
   rw [abs_le]
@@ -802,9 +802,10 @@ theorem pi_le_id_div_log_of_eps (N : ℕ) (ε : ℝ) (_hε_pos : ε > 0) (hε : 
     rw [Real.log_rpow (by norm_cast; exact Nat.pos_of_ne_zero hN)] at h
     apply le_trans h
     gcongr (?_ + ?_)
-    apply le_of_eq
-    field_simp
-    ring_nf
+    · apply le_of_eq
+      field_simp
+      ring_nf
+    · exact le_refl _
 
 theorem pi_le_id_div_log (N : ℕ) :
     π N ≤ (4 : ℝ) * N / Real.log N +
@@ -928,7 +929,7 @@ theorem pi_le_mul : ∃ N C, ∀ n ≥ N, π n ≤ C*n/Real.log n := by
   obtain ⟨C, h⟩ := pi_ll.bound
   rw [Filter.eventually_iff, Filter.mem_atTop_sets] at h
   obtain ⟨N, h⟩ := h
-  simp only [ge_iff_le, RCLike.norm_natCast, norm_div, Real.norm_eq_abs, Set.mem_setOf_eq] at h
+  simp only [RCLike.norm_natCast, norm_div, Real.norm_eq_abs, Set.mem_setOf_eq] at h
   use N
   use C
   intro n

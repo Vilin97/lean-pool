@@ -102,7 +102,7 @@ def f : (α : S) → Club α := fun _ ↦ Classical.choose <| exists_club_card i
 point in `S` that is an accumulation point of `E` by intersecting every `f α` with `E`. -/
 def restrict (E : Club Ϟ) : (α : S) → Club α := fun α ↦
   open Classical in
-  if h : IsAcc α.1 E then
+  if h : IsAccPt α.1 E then
     ⟨(f α).1 ∩ E,
       IsClub.inter (hS α α.2 ▸ hκ) (f α).2 <| IsClub.isClub_of_isAcc (hSub α.2) E.2 h⟩
   else univClub isSuccLimit_of_mem_S
@@ -133,19 +133,19 @@ def α : assumptions.S := by
   have : Set.Nonempty _ := hStat.inter_isClub (E.2.derivedSet aleph0_lt_cof_Ϟ)
   exact ⟨Classical.choose this, (Classical.choose_spec this).1.1⟩
 
-theorem isAcc_α : IsAcc α E := by
+theorem isAcc_α : IsAccPt α E := by
   unfold α
   generalize_proofs pf
   exact (Classical.choose_spec pf).1.2
 
-theorem isAcc_α_F' (β : Iio (succ κ).ord) : IsAcc α (F' β) :=
+theorem isAcc_α_F' (β : Iio (succ κ).ord) : IsAccPt α (F' β) :=
   isAcc_α.mono (by exact fun x hx y ⟨z, hz⟩ ↦ hx y ⟨z, hz⟩)
 
 theorem restrict_subset_α (β : Iio (succ κ).ord) : restrict (F' β) α ⊆ f α := by
   rw [restrict, dif_pos (isAcc_α_F' _)]
   exact inter_subset_left
 
-theorem restrict_subset_restrict {C D : Club Ϟ} (h : C ⊆ D) (ha : IsAcc α C) :
+theorem restrict_subset_restrict {C D : Club Ϟ} (h : C ⊆ D) (ha : IsAccPt α C) :
     restrict C α ⊆ restrict D α := by
   unfold restrict
   rw [dif_pos ha, dif_pos (by exact ha.mono h)]
@@ -184,8 +184,7 @@ theorem contradiction : False := by
     have : #↑(f α).carrier = Cardinal.lift.{u + 1, u} κ := by
       unfold f
       generalize_proofs pf
-      convert Classical.choose_spec pf
-      exact (hS α α.2).symm
+      exact (hS α α.2) ▸ Classical.choose_spec pf
     rw [card_ord, this, Cardinal.lift_lift, Cardinal.lift_lt]
     exact lt_succ κ
   apply not_exists_ssubset_chain_lift (isSuccLimit_ord (hκ.trans (lt_succ κ)).le) this

@@ -189,8 +189,16 @@ local notation "γ" => 𝔅.goedel
 
 lemma goedel_spec : T₀ ⊢!. γ <=> ∼𝔅 γ := by
   convert (diag (T := T₀) “x. ¬!𝔅.prov x”);
-  simp [goedel, ← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
-  rfl;
+  case e'_4 =>
+    unfold goedel pr;
+    change ∼(Rew.substs ![_] ▹ 𝔅.prov) = Rew.substs ![_] ▹ (∼(Rew.substs ![#0] ▹ 𝔅.prov));
+    rw [LogicalConnective.HomClass.map_neg (Rewriting.app (Rew.substs ![_]))];
+    rw [← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
+    congr 3;
+    apply congrArg;
+    funext i;
+    simp only [Function.comp_apply, Matrix.cons_val_fin_one, Rew.substs_bvar];
+  case e'_3 => unfold goedel; rfl;
 
 variable [T₀ wkn T]
 
@@ -343,8 +351,19 @@ omit [L.DecidableEq] [𝔅.HBL] in
 lemma _root_.LO.FirstOrder.DerivabilityCondition.kreisel_spec
     (σ : Sentence L) : T₀ ⊢!. κ(σ) <=> (𝔅 (κ(σ)) ==> σ) := by
   convert (diag (T := T₀) “x. !𝔅.prov x → !σ”);
-  simp [kreisel, ← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
-  rfl;
+  case e'_4 =>
+    unfold kreisel pr;
+    change (Rew.substs ![_] ▹ 𝔅.prov) ==> σ
+      = Rew.substs ![_] ▹ ((Rew.substs ![#0] ▹ 𝔅.prov) ==> (Rew.substs ![] ▹ σ));
+    rw [LogicalConnective.HomClass.map_imply (Rewriting.app (Rew.substs ![_]))];
+    rw [← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
+    congr 1;
+    · congr 3;
+      funext i;
+      simp only [Function.comp_apply, Matrix.cons_val_fin_one, Rew.substs_bvar];
+    · rw [← TransitiveRewriting.comp_app, Rew.substs_comp_substs];
+      simp only [Matrix.empty_eq, Rew.substs_zero, ReflectiveRewriting.id_app];
+  case e'_3 => unfold kreisel; rfl;
 
 omit [L.DecidableEq] in
 private lemma kreisel_specAux₁ [T₀ wkn T] (σ : Sentence L) :

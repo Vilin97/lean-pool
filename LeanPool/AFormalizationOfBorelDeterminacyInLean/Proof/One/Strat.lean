@@ -237,18 +237,18 @@ lemma x_mem_tree_short' (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player
     exact min_le_iff.mpr (Or.inr hpInvLen))
   erw [take_apply (treeHom hyp)]
   rw [cancel_pInv_right]
-  convert hvalT using 1
+  refine Eq.trans ?_ (hvalT.trans ?_)
   · ext1
     conv => simp [subtreeIncl_coe, take_coe, ExtensionsAt.valT', ExtensionsAt.val']
     rw [min_eq_left (by omega)]
     rfl
-  · convert (ExtensionsAt.map_valT' (f := treeHom hyp)
+  · exact ExtensionsAt.map_valT' (f := treeHom hyp)
       (x := pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
         (H.pInv_fixing h.le))
       (y := (stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
       (h := by simp_rw [cancel_pInv_right])
       (a := H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
-        (H.pInv_fixing h.le)) (H.pInv_isPosition h.le hp))).symm
+        (H.pInv_fixing h.le)) (H.pInv_isPosition h.le hp))
 lemma x_mem_tree_short (h : n < 2 * k) (hp : IsPosition (H.x.val.take n) Player.one) :
   (pInvTreeHomMap hyp (H.x.val.take (2 * k)))[n]'(by simpa) =
   (H.R (pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
@@ -515,7 +515,7 @@ lemma winnable_subtree (hL : H.preLift.Winnable) (hnL : ¬ ∃ h, (H.dropLast h)
   apply subtree_induction (S := ⊤) (by
     refine ⟨?_, ?_⟩
     · conv => simp [PreLift.game_tree, residual_tree]
-      convert subtree_sub _ H.x.prop using 1
+      exact subtree_sub _ H.x.prop
     · intros
       exact Set.mem_univ _)
   intro n hn _ _ _

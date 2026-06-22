@@ -381,7 +381,7 @@ by
               (QuantumGraph.Real.gns_le_one h gns) 1)).1)
     _ = (‖(1 : A)‖ ^ 2) ^ 2 :=
       by
-        rw [ContinuousLinearMap.one_apply, inner_self_eq_norm_sq (𝕜 := ℂ) (E := A ⊗[ℂ] A),
+        rw [one_apply_eq_self, inner_self_eq_norm_sq (𝕜 := ℂ) (E := A ⊗[ℂ] A),
           Algebra.TensorProduct.one_def, norm_tmul, ← pow_two]
         simp
     _ = ‖(1 : A)‖ ^ 4 := by simp only [← pow_mul]

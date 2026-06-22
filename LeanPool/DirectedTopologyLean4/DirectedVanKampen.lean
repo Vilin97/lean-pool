@@ -131,8 +131,7 @@ variable {F₁ F₂}
 include h_comm
 lemma functorOnObj_apply_one {x : X} (hx : x ∈ X₁) : F₁.obj ⟨x, hx⟩ = F_obj ⟨x⟩ := by
   have := h_comm
-  convert (dif_pos hx).symm using 1
-  rfl
+  rw [FunctorOnObj, Or.by_cases, dif_pos hx]
 lemma functorOnObj_apply_two {x : X} (hx₂ : x ∈ X₂) :
     F₂.obj ⟨x, hx₂⟩ = F_obj ⟨x⟩ := by
   by_cases hx₁ : x ∈ X₁
@@ -149,9 +148,9 @@ lemma functorOnObj_apply_two {x : X} (hx₂ : x ∈ X₂) :
         _ = F₂.obj ((dπₘ i₂).obj ⟨x, hx₀⟩) := this
         _ = F₂.obj (⟨x, hx₂⟩) := rfl
     rw [this.symm]
-    convert (dif_pos hx₁).symm using 1; rfl
+    rw [FunctorOnObj, Or.by_cases, dif_pos hx₁]
   case neg =>
-    convert (dif_neg hx₁).symm using 1; rfl
+    rw [FunctorOnObj, Or.by_cases, dif_neg hx₁]
 /- ### Functor on Maps -/
 /-
   Define the mapping behaviour on paths that are fully covered by one set

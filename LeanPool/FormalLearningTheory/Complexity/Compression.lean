@@ -813,8 +813,7 @@ private lemma good_on_support_gives_row_response
   simp only [this] at *
   linarith
 
-@[reducible]
-private def pointSupportNonempty {X : Type u} {m : ℕ} (S : Fin m → X × Bool)
+private theorem pointSupportNonempty {X : Type u} {m : ℕ} (S : Fin m → X × Bool)
     (hm : 0 < m) : Nonempty ↥(pointSupport S) :=
   ⟨⟨(S ⟨0, hm⟩).1, by simp [pointSupport, Finset.mem_image]⟩⟩
 
@@ -983,7 +982,7 @@ private theorem moran_yehudayoff_forward_construction
       let reps := mkReps S hreal hm
       let getWitness : Fin Tvc → Finset X :=
         fun t => (Finset.mem_image.mp (reps t).property).choose
-      dsimp only [compressCore, pointSupportNonempty]
+      dsimp only [compressCore]
       simp only [dif_pos hreal, dif_pos hm]
       simpa only [reps, getWitness] using moranKernel_labels hreal.choose getWitness
     have hround : ∀ t : Fin Tvc,
@@ -999,7 +998,7 @@ private theorem moran_yehudayoff_forward_construction
       have hKbound : (compressCore S).1.card ≤ Kreal := hsmall S
       have hWker : ∀ x ∈ W, (x, c x) ∈ (compressCore S).1 := by
         intro x hx
-        dsimp only [compressCore, pointSupportNonempty]
+        dsimp only [compressCore]
         simpa only [dif_pos hreal, dif_pos hm] using witness_mem_moranKernel c _ t hx
       have hrep : L.learn (labeledSampleOfFinset c W) = (reps t).val := hWspec.2
       have hlabels : ∀ p ∈ (compressCore S).1, p.2 = c p.1 := h_kernel_labels
@@ -1043,7 +1042,7 @@ private theorem moran_yehudayoff_forward_construction
       -- (since getWitness t = W by definition)
       -- Let's use show + convert to bridge:
       have hinfo_eq : (compressCore S).2 t = encodeWitnessInfo (compressCore S).1 c Kreal W := by
-        dsimp only [compressCore, pointSupportNonempty, c, reps, W]
+        dsimp only [compressCore, c, reps, W]
         simp only [dif_pos hreal, dif_pos hm]
       rw [hinfo_eq]
       exact hrt

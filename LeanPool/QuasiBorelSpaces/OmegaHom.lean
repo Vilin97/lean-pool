@@ -40,7 +40,7 @@ variable {X Y Z : Type*} [OmegaQuasiBorelSpace X] [OmegaQuasiBorelSpace Y] [Omeg
 
 instance : FunLike (X →ω𝒒 Y) X Y where
   coe f := (f.1 : X → Y)
-  coe_injective' f g h := by
+  coe_injective f g h := by
     cases f
     cases g
     simp_all only

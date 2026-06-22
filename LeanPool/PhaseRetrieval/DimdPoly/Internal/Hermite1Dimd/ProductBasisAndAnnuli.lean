@@ -59,6 +59,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
       funext z
       simp [Algebra.smul_def, mul_left_comm, mul_comm]
     convert hsmul.const_mul (1 / Real.pi) using 1
+    case e'_5 => rfl
     funext z
     have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by
       positivity
@@ -822,6 +823,7 @@ private lemma annulusInner_finite_sum
     convert
       (((integrable_productBasis_cross κ α β).indicator (measurableSet_productAnnulus j)).const_mul
         (conj (b β) * a α)) using 1
+    case e'_3 => rfl
     funext z
     by_cases hz : z ∈ productAnnulus j
     · simp [Set.indicator, hz, mul_left_comm, mul_comm]
@@ -1046,7 +1048,7 @@ private lemma PhiKappaAlpha_rotate_one
   rw [hupdate]
   rw [Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp)]
   rw [oneDimPhi_phaseLaw]
-  conv_rhs => rw [Finset.prod_eq_mul_prod_diff_singleton_of_mem (s := Finset.univ) (i := q0) (by
+  conv_rhs => rw [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem (s := Finset.univ) (i := q0) (by
       simp)]
   ring
 

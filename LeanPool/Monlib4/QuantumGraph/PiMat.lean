@@ -726,9 +726,14 @@ by
   simp only [LinearEquiv.symm_apply_apply]
   convert
     (InnerProductSpace.symm_toEuclideanLin_rankOne (𝕜 := ℂ) (x := x) (y := star y)).symm
-    using 2
-  ext i
-  simp [PiLp.star_apply]
+    using 1
+  case e'_2 =>
+    ext i j
+    simp [vecMulVec_apply, PiLp.star_apply]
+  case e'_3 =>
+    apply congrArg
+    ext z
+    simp only [ContinuousLinearMap.coe_coe, rankOne_apply, InnerProductSpace.rankOne_apply]
 
 open Matrix in
 theorem EuclideanSpaceTensor_apply_eq_reshape_vecMulVec {n m : Type*} [Fintype n]
@@ -962,7 +967,7 @@ by
   apply_fun LinearMap.toContinuousLinearMap using LinearEquiv.injective _
   rw [← QuantumGraph.Real.PiMatSubmoduleOrthogonalProjection hA i,
     OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne (hA.PiMatOrthonormalBasis i)]
-  simp only [ContinuousLinearMap.coe_sum, map_sum,
+  simp only [ContinuousLinearMap.toLinearMap_sum, map_sum,
     QuantumSet.Psi_apply, QuantumSet.PsiToFun_apply,
     StarAlgEquiv.lTensor_tmul,
     PiMatToEuclideanLM]
@@ -1609,7 +1614,7 @@ by
   have hU₂ := piInnerAut_modAut_commutes_of hU
   nth_rw 1 [QuantumGraph.Real.PiMat_eq hA]
   simp only [piInnerAut] at hU₂ ⊢
-  simp only [ContinuousLinearMap.coe_sum, LinearMap.sum_comp, LinearMap.comp_sum,
+  simp only [ContinuousLinearMap.toLinearMap_sum, LinearMap.sum_comp, LinearMap.comp_sum,
     LinearMap.rankOne_comp', LinearMap.comp_rankOne, StarAlgEquiv.toLinearMap_apply, hU₂]
   repeat apply Finset.sum_congr rfl; intro _ _
   congr 2
@@ -1635,7 +1640,7 @@ by
   nth_rw 1 [OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne (hA.PiMatOrthonormalBasis i)]
   simp_rw [QuantumGraph.Real.PiMatSubmoduleOrthogonalProjection]
   rw [QuantumGraph.Real.PiMat_applyConjInnerAut hA hU]
-  simp only [ContinuousLinearMap.coe_sum, map_sum, Psi_apply, PsiToFun_apply,
+  simp only [ContinuousLinearMap.toLinearMap_sum, map_sum, Psi_apply, PsiToFun_apply,
     Finset.sum_apply, StarAlgEquiv.lTensor_tmul, PiMatTensorProductEquiv_tmul, PiMatToEuclideanLM,
       StarAlgEquiv.piCongrRight_apply]
   simp only [LinearMap.sum_comp, LinearMap.comp_sum]

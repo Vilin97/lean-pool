@@ -296,15 +296,14 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
           (nhdsWithin 0 (Set.Ioi 0))
           (nhds ((fderiv ℝ g v) w)) := by
         have h_lim : HasDerivAt (fun t : ℝ => g (v + t • w)) ((fderiv ℝ g v) w) 0 := by
-          convert HasFDerivAt.hasDerivAt
-            (HasFDerivAt.comp 0
-              (hg_smooth.differentiable (by norm_num)
-                |> Differentiable.differentiableAt
-                |> DifferentiableAt.hasFDerivAt)
-              (HasFDerivAt.add (hasFDerivAt_const _ _)
-                (HasFDerivAt.smul (hasFDerivAt_id 0)
-                  (hasFDerivAt_const _ _)))) using 1
-          norm_num
+          have hsmul : HasDerivAt (fun t : ℝ => t • w) w 0 := by
+            simpa using (hasDerivAt_id (0 : ℝ)).smul_const w
+          have hinner : HasDerivAt (fun t : ℝ => v + t • w) w 0 := hsmul.const_add v
+          have hgd : HasFDerivAt g (fderiv ℝ g (v + (0 : ℝ) • w)) (v + (0 : ℝ) • w) :=
+            (hg_smooth.differentiable (by norm_num)).differentiableAt.hasFDerivAt
+          have hcomp := hgd.comp_hasDerivAt 0 hinner
+          rw [zero_smul, add_zero] at hcomp
+          exact hcomp
         simpa [div_eq_inv_mul] using h_lim.tendsto_slope_zero_right
       exact Submodule.closed_of_finiteDimensional _
         |> fun h => h.mem_of_tendsto h_lim <|
@@ -426,8 +425,10 @@ lemma parallel_curl_free_affine (g : (Fin 3 → ℝ) → (Fin 3 → ℝ))
       have h_diff_c : Differentiable ℝ c := by
         have : ContDiff ℝ 1 (fun v => (fderiv ℝ g v) (Pi.single 0 1) 0) :=
           (contDiff_apply ℝ ℝ 0).comp (h_diff_fderiv.clm_apply contDiff_const)
-        convert this.differentiable one_ne_zero using 1
-        funext v; simp [hc, smul_eq_mul]
+        have heq : c = (fun v => (fderiv ℝ g v) (Pi.single 0 1) 0) := by
+          funext v; simp [hc, smul_eq_mul]
+        rw [heq]
+        exact this.differentiable one_ne_zero
       intro v w; exact is_const_of_fderiv_eq_zero h_diff_c h_const_c v w
     use c 0
     intro v w
@@ -468,22 +469,24 @@ lemma affine_gradient_antiderivative (h : (Fin 3 → ℝ) → ℝ) (b : Fin 3 �
       deriv (fun t => h (t • v)) t =
       (b + 2 * c₀ • (t • v)) ⬝ᵥ v := by
     intro v t
-    have h_deriv_def : deriv (fun t => h (t • v)) t = (VML.vGrad h (t • v)) ⬝ᵥ v := by
+    -- For a fixed point `p`, the Fréchet derivative applied to `v` equals `(vGrad h p) ⬝ᵥ v`.
+    have hfderiv_dot : ∀ p : Fin 3 → ℝ, fderiv ℝ h p v = (VML.vGrad h p) ⬝ᵥ v := by
+      intro p
       unfold VML.vGrad
-      convert HasDerivAt.deriv
-        (HasFDerivAt.hasDerivAt
-          (hh_smooth.differentiable (by norm_num)
-            |> Differentiable.differentiableAt
-            |> DifferentiableAt.hasFDerivAt
-            |> HasFDerivAt.comp _
-            <| HasFDerivAt.smul (hasFDerivAt_id t)
-            <| hasFDerivAt_const _ _)) using 1
-      norm_num [fderiv_apply_one_eq_deriv, dotProduct]
-      set L := fderiv ℝ h (t • v)
       have hv_decomp : v = ∑ i, v i • (Pi.single i (1 : ℝ) : Fin 3 → ℝ) := by
         ext i; simp [Pi.single_apply, Finset.sum_apply, smul_eq_mul]
-      conv_rhs => rw [hv_decomp]
-      simp only [map_sum, map_smul, smul_eq_mul, mul_comm]
+      conv_lhs => rw [hv_decomp]
+      simp only [map_sum, map_smul, smul_eq_mul, dotProduct, mul_comm]
+    have h_deriv_def : deriv (fun t => h (t • v)) t = (VML.vGrad h (t • v)) ⬝ᵥ v := by
+      -- The line `fun t => t • v` has derivative `v` at every point.
+      have hline : HasDerivAt (fun t : ℝ => t • v) v t := by
+        simpa using (hasDerivAt_id t).smul_const v
+      -- Compose with `h` to obtain the derivative of `fun t => h (t • v)`.
+      have hfd : HasFDerivAt h (fderiv ℝ h (t • v)) (t • v) :=
+        (hh_smooth.differentiable (by norm_num) (t • v)).hasFDerivAt
+      have hcomp := (hfd.comp_hasDerivAt t hline).deriv
+      rw [← hfderiv_dot (t • v), ← hcomp]
+      rfl
     simp_all [two_mul]
     ring
   intro v

@@ -61,7 +61,7 @@ private lemma seg2_deriv_eq (s t : ℝ) (ht1 : 1 < t) (ht2 : t < 2) :
     have h2 : HasDerivAt (fun t' : ℝ => (t' - 1) • iPoint) iPoint t := by
       have := h_shift.smul_const iPoint
       simpa only [one_smul] using this
-    convert h1.add h2 using 1; ring
+    exact (h1.add h2).congr_deriv (by ring)
   exact ((h_arc.const_smul (1 - s)).add (h_chord.const_smul s)).deriv
 
 private lemma deriv_cont_seg1 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂) (h_seg1 : p₂ ≤ 1) :
@@ -121,6 +121,7 @@ private lemma deriv_cont_seg1 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂) (h_se
           ((1/2 : ℂ))).add h4
       simp only [zero_add] at h5
       convert h5.deriv using 2
+      all_goals rfl
     apply ContinuousOn.congr
       continuousOn_const hconst
 
@@ -321,7 +322,7 @@ private lemma deriv_cont_seg3 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
               (1 : ℝ)).sub h_shift
           simp only [zero_sub]
             at this
-          convert this using 1
+          exact this
         have := h_coef.smul_const iPoint
         simp only [neg_one_smul] at this
         exact this
@@ -332,7 +333,7 @@ private lemma deriv_cont_seg3 (p₁ p₂ : ℝ) (_hp₁p₂ : p₁ < p₂)
         have := h_shift.smul_const rho
         simp only [one_smul] at this
         exact this
-      convert h1.add h2 using 1; ring
+      exact (h1.add h2).congr_deriv (by ring)
     have h_combined :
         HasDerivAt (fun t' : ℝ =>
           let arc_point :=

@@ -169,7 +169,7 @@ theorem sub_isLittleO_norm_rpow_add_one_of_fderiv_of_density_point [FiniteDimens
     replace hr := ENNReal.mul_lt_of_lt_div hr
     have : μ (closedBall a r ∩ s) ≠ ∞ :=
       measure_ne_top_of_subset inter_subset_left measure_closedBall_lt_top.ne
-    rw [inter_comm, ← diff_eq, ← ENNReal.add_le_add_iff_left this, measure_inter_add_diff _ hsm,
+    rw [inter_comm, ← sdiff_eq, ← ENNReal.add_le_add_iff_left this, measure_inter_add_sdiff _ hsm,
       ← tsub_le_iff_right, inter_comm]
     rw [ENNReal.sub_mul, one_mul] at hr
     exacts [hr.le, fun _ _ ↦ measure_closedBall_lt_top.ne]

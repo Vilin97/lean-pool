@@ -693,7 +693,10 @@ theorem gff_complex_CF_covariance (f : TestFunctionℂ) :
         have : AnalyticOnNhd ℂ (fun t : ℂ =>
             (2 * (freeCovarianceFormR m f_re f_im : ℂ)) * t) Set.univ :=
           AnalyticOnNhd.mul analyticOnNhd_const analyticOnNhd_id
-        convert this using 2; ring
+        have heq : (fun t : ℂ => 2 * t * (freeCovarianceFormR m f_re f_im : ℂ))
+            = (fun t : ℂ => (2 * (freeCovarianceFormR m f_re f_im : ℂ)) * t) := by
+          funext t; ring
+        rw [heq]; exact this
     · -- t^2 * Q_ii is polynomial in t
       apply AnalyticOnNhd.mul _ analyticOnNhd_const
       exact (analyticOnNhd_id (𝕜 := ℂ)).pow 2

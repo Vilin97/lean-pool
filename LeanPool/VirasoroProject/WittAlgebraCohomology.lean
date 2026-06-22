@@ -140,8 +140,7 @@ lemma exists_add_bdry_eq_smul_virasoroCocycle :
         · -- k = 0 case is true for any cocycle by skew-symmetry
           simp
         · -- k = 1 case follows due to the choice of the normalizing coboundary
-          convert add_bdry_normalizingCochain_apply_lgen_one γ
-          ring
+          convert add_bdry_normalizingCochain_apply_lgen_one γ <;> norm_num
         · -- k = 2 case is what determines the multiplicative factor r
           rw [hr]
           norm_num
@@ -204,9 +203,10 @@ theorem rank_lieTwoCohomology_eq_one :
     obtain ⟨γ, hγ'⟩ := Quotient.exists_rep γ'
     obtain ⟨r, hr⟩ := exists_add_bdry_eq_smul_virasoroCocycle γ
     use r
-    convert (LinearMap.congr_arg (f := LieTwoCocycle.toLieTwoCohomology 𝕜 ..) hr).symm
     rw [← hγ']
-    exact (LieTwoCocycle.cohomologyClass_add_bdry γ (normalizingCochain γ)).symm
+    change r • (virasoroCocycle 𝕜).cohomologyClass = γ.cohomologyClass
+    rw [← LieTwoCocycle.cohomologyClass_add_bdry γ (normalizingCochain γ), hr]
+    exact (map_smul (LieTwoCocycle.toLieTwoCohomology 𝕜 (WittAlgebra 𝕜) 𝕜) r _).symm
 
 end WittAlgebra -- namespace
 

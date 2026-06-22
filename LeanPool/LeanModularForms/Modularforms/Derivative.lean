@@ -250,8 +250,7 @@ private lemma hasDerivAt_qexp (a c w : ℂ) :
   simp only [mul_one, id] at h
   have := ((Complex.hasDerivAt_exp _).scomp w h).const_mul a
   simp only [smul_eq_mul] at this ⊢
-  convert this using 1
-  ring
+  exact this.congr_deriv (by ring)
 
 /-- Helper: derivWithin for qexp term on upper half-plane. -/
 private lemma derivWithin_qexp (a c : ℂ) (w : ℂ) (hw : 0 < w.im) :
@@ -956,10 +955,11 @@ theorem serre_D_isBoundedAtImInfty_of_bounded {f : ℍ → ℂ} (k : ℂ)
   have hE₂f : IsBoundedAtImInfty (fun z => k * 12⁻¹ * E₂ z * f z) := by
     have hconst : IsBoundedAtImInfty (fun _ : ℍ => k * 12⁻¹) :=
       Filter.const_boundedAtFilter _ _
-    convert hconst.mul (E₂_isBoundedAtImInfty.mul hbdd) using 1
-    ext z
-    simp only [Pi.mul_apply]
-    ring
+    have hfun : (fun z => k * 12⁻¹ * E₂ z * f z) =
+        ((fun _ : ℍ => k * 12⁻¹) * (E₂ * f)) := by
+      ext z; simp only [Pi.mul_apply]; ring
+    rw [hfun]
+    exact hconst.mul (E₂_isBoundedAtImInfty.mul hbdd)
   exact hD.sub hE₂f
 
 /-- A level-1 modular form is invariant under slash action by any element of SL(2,ℤ). -/

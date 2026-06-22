@@ -460,7 +460,7 @@ private lemma nat_pair_sample_marginal
       {xs : Fin N → X | (fun j : {i : Fin N // p i} => xs j.1) ∈ SuccessSub} := by
     ext xs
     simp only [Set.mem_preimage, Set.mem_setOf_eq, SuccessSub, p, N, n]
-    constructor <;> intro h <;> convert h using 1
+    constructor <;> intro h <;> (convert h using 1; rfl)
   have hSuccessSub_meas : MeasurableSet SuccessSub :=
     measurableSet_preimage (measurable_pi_lambda _ (fun j => measurable_pi_apply (e₁ j))) hSuccess
   rw [h_eq, pi_cylinder_set_eq D p SuccessSub hSuccessSub_meas]
@@ -474,7 +474,7 @@ private lemma nat_pair_sample_marginal
       (MeasurableEquiv.piCongrLeft (fun _ => X) e₁) ⁻¹' SuccessSub = Success := by
     ext f
     simp only [Set.mem_preimage, SuccessSub]
-    constructor <;> intro h <;> convert h using 1
+    constructor <;> intro h <;> (convert h using 1; rfl)
   rw [← h_preimage, h_mp.measure_preimage_equiv]
 
 /-- Split D^{m₁+m₂} into D^{m₁} × D^{m₂} via splitUsedEquiv. -/

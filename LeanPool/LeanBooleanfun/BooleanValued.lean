@@ -152,7 +152,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
       let g : BooleanFunc (n + 1) := fun x ↦ f (Fin.insertNth i₀ 0 x)
       have hgeq : g = ∑ i, 𝓕 f {i₀.succAbove i} • χ {i} := by
         ext x
-        simp only [isValue, sum_apply, Pi.smul_apply, prod_singleton, smul_eq_mul, g]
+        simp only [isValue, Finset.sum_apply, Pi.smul_apply, prod_singleton, smul_eq_mul, g]
         nth_rewrite 1 [hf]
         rw [← sum_erase_add (a := i₀) (h := mem_univ i₀), hFi0zero, zero_mul, add_zero]
         symm
@@ -178,7 +178,7 @@ lemma eq_character_of_eq_sum_degree_one (hn : n > 0)
           _ = 𝓕 f {i₀.succAbove i}                     := by
             (conv => enter [1, 2, i']; rw [walsh_inner_eq]); simp
       have hgeq' : ∀ x, g x = ∑ i, 𝓕 g {i} * (-1)^(x i).val := by
-        intro x; nth_rewrite 1 [hgeq]; rw [sum_apply]; apply sum_congr (by rfl); intro i _;
+        intro x; nth_rewrite 1 [hgeq]; rw [Finset.sum_apply]; apply sum_congr (by rfl); intro i _;
         simp [this]
       have : g 0 = 1 := by
         unfold g

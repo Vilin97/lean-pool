@@ -9,7 +9,7 @@ import LeanPool.MRiscX.Semantics.Run
 import LeanPool.MRiscX.Util.BasicTheorems
 
 import Mathlib.Data.Set.Basic
-import Lean
+import Lean.Elab.Command
 
 /-!
 Basic theorems

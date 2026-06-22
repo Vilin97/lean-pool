@@ -307,7 +307,7 @@ lemma prob_ge_exp_neg_entropy [MeasurableSingletonClass S] (X : Ω → S) (μ : 
   let g_lhs s := pdf s * neg_log_pdf s_max
   let g_rhs s := -pdf s * log (pdf s)
   suffices ∑ s ∈ A, g_lhs s ≤ ∑ s ∈ A, g_rhs s by
-    convert this
+    refine le_of_le_of_eq this ?_
     rw [entropy_eq_sum_finset hA]
     congr with s
     simp only [negMulLog, neg_mul, ENNReal.toReal_mul, neg_inj, g_rhs, pdf, pdf_nn]
@@ -818,7 +818,8 @@ lemma _root_.ProbabilityTheory.mutualInfo_eq_zero
     rw [Measure.map_map measurable_snd (hX.prodMk hY)]
     congr
   rw [h_fst, h_snd]
-  convert measureMutualInfo_eq_zero_iff (μ := μ.map (⟨X, Y⟩))
+  convert measureMutualInfo_eq_zero_iff (μ := μ.map (⟨X, Y⟩)) using 2
+  · exact measureMutualInfo_def _
   rw [indepFun_iff_map_prod_eq_prod_map_map hX.aemeasurable hY.aemeasurable,
     Measure.ext_iff_measureReal_singleton_finiteSupport]
   congr! with p
@@ -860,13 +861,16 @@ lemma _root_.ProbabilityTheory.iIndepFun.entropy_eq_add {Ω S : Type*} [hΩ:
     _ = H[ ⟨(fun ω (i:Fin m) ↦ X i.castSucc ω), X (.last _)⟩ ] := by
       let f : (Fin (m + 1) → S) → (Fin m → S) × S := fun x ↦ (fun i ↦ x i.castSucc,
         x (.last m))
-      convert (entropy_comp_of_injective _ _ f _).symm
-      · fun_prop
-      intro x y hxy
-      simp only [Prod.mk.injEq, f] at hxy
-      ext i; rcases Fin.eq_castSucc_or_eq_last i with h | rfl
-      · obtain ⟨j, rfl⟩ := h; replace hxy := hxy.1; exact congr($hxy j)
-      tauto
+      have hf_inj : Function.Injective f := by
+        intro x y hxy
+        simp only [Prod.mk.injEq, f] at hxy
+        ext i; rcases Fin.eq_castSucc_or_eq_last i with h | rfl
+        · obtain ⟨j, rfl⟩ := h; replace hxy := hxy.1; exact congr($hxy j)
+        tauto
+      have hcomp : (f ∘ fun ω i ↦ X i ω) =
+          ⟨(fun ω (i : Fin m) ↦ X i.castSucc ω), X (.last _)⟩ := rfl
+      rw [← hcomp]
+      exact (entropy_comp_of_injective _ (by fun_prop) f hf_inj).symm
     _ = H[fun ω (i:Fin m) ↦ X i.castSucc ω] + H[X (.last m)] := by
       apply (entropy_pair_eq_add _ _).mpr _ <;> try fun_prop
       let T : Finset (Fin (m + 1)) := {.last m}ᶜ
@@ -1095,11 +1099,11 @@ lemma _root_.ProbabilityTheory.condMutualInfo_of_inj'
     _ = I[f ∘ X : g ∘ Y | Z; μ] := by rw [condMutualInfo_of_inj _ _ _ _ hh] <;> try fun_prop
     _ = I[X : g ∘ Y | Z; μ] := by
       convert condMutualInfo_of_inj_map hX _ hZ (fun _ ↦ f) (fun _ ↦ hf) <;> try infer_instance
-      fun_prop
+      all_goals first | rfl | fun_prop
     _ = I[g ∘ Y : X | Z; μ] := by apply condMutualInfo_comm <;> fun_prop
     _ = I[Y : X | Z; μ] := by
       convert condMutualInfo_of_inj_map hY _ hZ (fun _ ↦ g) (fun _ ↦ hg) <;> try infer_instance
-      fun_prop
+      all_goals first | rfl | fun_prop
     _ = _ := by apply condMutualInfo_comm <;> fun_prop
 
 

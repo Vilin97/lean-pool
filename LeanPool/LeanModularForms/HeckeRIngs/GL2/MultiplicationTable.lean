@@ -1246,6 +1246,7 @@ theorem T_sum_mul (m n : ℕ+) : TSum m * TSum n =
       show g = Nat.gcd (q ^ a_ord * ↑m') (q ^ b_ord * ↑n') from by
         rw [← h_gcd, ← hm_eq, ← hn_eq]]
     convert T_sum_mul_peel_prime_aux q hq a_ord b_ord ha hb m' n' hqm' hqn'
-      (ih _ h_smaller m' n' rfl) using 2
+      (ih _ h_smaller m' n' rfl) using 2 with x
+    rfl
 
 end HeckeRing.GL2

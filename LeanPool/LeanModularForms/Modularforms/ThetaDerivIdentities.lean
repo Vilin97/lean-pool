@@ -124,8 +124,10 @@ lemma f₂_add_f₄_eq_f₃ : f₂ + f₄ = f₃ := by
   -- Key relation: serreD 2 H₂ z + serreD 2 H₄ z = serreD 2 H₃ z (via Jacobi identity)
   have h_serre : serreD 2 H₂ z + serreD 2 H₄ z = serreD 2 H₃ z := by
     have h := congrFun (serre_D_add (2 : ℤ) H₂ H₄ H₂_SIF_MDifferentiable H₄_SIF_MDifferentiable) z
-    simp only [Pi.add_apply] at h
-    convert h.symm using 2; exact jacobi_identity.symm
+    simp only [Pi.add_apply, Int.cast_ofNat] at h
+    rw [← h]
+    congr 1
+    exact jacobi_identity
   calc serreD 2 H₂ z - 1/6 * (H₂ z * (H₂ z + 2 * H₄ z)) +
        (serreD 2 H₄ z + 1/6 * (H₄ z * (2 * H₂ z + H₄ z)))
       = (serreD 2 H₂ z + serreD 2 H₄ z) +
@@ -306,11 +308,19 @@ lemma theta_g_S_action : (thetaG ∣[(6 : ℤ)] S) = thetaG := by
   have h_term1 : ((((2 : ℂ) • H₂ + H₄) * f₂) ∣[(6 : ℤ)] S) = ((2 : ℂ) • H₄ + H₂) * f₄ := by
     have hmul := mul_slash_SL2 2 4 S ((2 : ℂ) • H₂ + H₄) f₂
     simp only [h_2H₂_H₄, f₂_S_action] at hmul
-    convert hmul using 1; ext z; simp only [Pi.mul_apply, Pi.neg_apply]; ring
+    convert hmul using 1
+    all_goals first
+      | (ext z; simp only [Pi.mul_apply, Pi.neg_apply, Pi.add_apply, Pi.smul_apply,
+          smul_eq_mul]; ring)
+      | norm_num
   have h_term2 : (((H₂ + (2 : ℂ) • H₄) * f₄) ∣[(6 : ℤ)] S) = (H₄ + (2 : ℂ) • H₂) * f₂ := by
     have hmul := mul_slash_SL2 2 4 S (H₂ + (2 : ℂ) • H₄) f₄
     simp only [h_H₂_2H₄, f₄_S_action] at hmul
-    convert hmul using 1; ext z; simp only [Pi.mul_apply, Pi.neg_apply]; ring
+    convert hmul using 1
+    all_goals first
+      | (ext z; simp only [Pi.mul_apply, Pi.neg_apply, Pi.add_apply, Pi.smul_apply,
+          smul_eq_mul]; ring)
+      | norm_num
   -- g|S = (2H₄ + H₂)f₄ + (H₄ + 2H₂)f₂ = g
   simp only [thetaG, add_slash, h_term1, h_term2]
   ext z; simp only [Pi.add_apply, Pi.mul_apply, Pi.smul_apply]; ring
@@ -367,9 +377,8 @@ lemma theta_h_S_action : (thetaH ∣[(8 : ℤ)] S) = thetaH := by
   have h_f₂f₄ : ((f₂ * f₄) ∣[(8 : ℤ)] S) = f₂ * f₄ := by
     have hmul := mul_slash_SL2 4 4 S f₂ f₄
     simp only [f₂_S_action, f₄_S_action] at hmul
-    convert hmul using 1
-    ext z
-    simp only [Pi.mul_apply, Pi.neg_apply, neg_mul_neg, mul_comm]
+    convert hmul using 1 <;> ext z <;>
+      simp [Pi.mul_apply, Pi.neg_apply, mul_comm]
   -- h|S = f₄² + f₂f₄ + f₂² = h
   simp only [thetaH, add_slash, h_f₂_sq, h_f₂f₄, h_f₄_sq]
   ext z
@@ -400,9 +409,11 @@ lemma theta_h_T_action : (thetaH ∣[(8 : ℤ)] T) = thetaH := by
     have hmul := mul_slash_SL2 4 4 T f₂ f₄
     simp only [f₂_T_action, f₄_T_action] at hmul
     convert hmul using 1
-    ext z
-    simp only [Pi.mul_apply, Pi.neg_apply]
-    rw [(congrFun f₂_add_f₄_eq_f₃ z).symm, Pi.add_apply]
+    all_goals first
+      | (ext z
+         simp only [Pi.mul_apply, Pi.neg_apply]
+         rw [(congrFun f₂_add_f₄_eq_f₃ z).symm, Pi.add_apply])
+      | norm_num
   -- h|T = f₂² + (-f₂)(f₂+f₄) + (f₂+f₄)² = h
   simp only [thetaH, add_slash, h_f₂_sq, h_f₂f₄, h_f₄_sq]
   ext z
@@ -483,7 +494,8 @@ lemma f₄_tendsto_atImInfty : Tendsto f₄ atImInfty (𝓝 0) := by
   have h_serre_H₄ : Tendsto (serreD 2 H₄) atImInfty (𝓝 (-(1/6 : ℂ))) := by
     convert serre_D_tendsto_neg_k_div_12 2 H₄ H₄_SIF_MDifferentiable isBoundedAtImInfty_H₄
       H₄_tendsto_atImInfty using 2
-    norm_num
+    · rw [show ((2 : ℤ) : ℂ) = 2 from by norm_num]
+    · norm_num
   have h_sum : Tendsto (2 * H₂ + H₄) atImInfty (𝓝 1) := by
     have h := (H₂_tendsto_atImInfty.const_mul 2).add H₄_tendsto_atImInfty
     norm_num at h; exact h

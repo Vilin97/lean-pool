@@ -106,12 +106,12 @@ theorem analyticSet_nullMeasurableSet
     have hKmeas : MeasurableSet K := hKc.isClosed.measurableSet
     -- μ.real(t \ K) = μ.real t - μ.real K (since K ⊆ t, K measurable)
     have hdiff_eq : μ.real (t \ K) = μ.real t - μ.real K :=
-      measureReal_diff hKt hKmeas
+      measureReal_sdiff hKt hKmeas
     -- μ.real t = μ.real s (from ht_eq)
     have ht_real : μ.real t = μ.real s := by
       simp only [Measure.real]; rw [ht_eq]
     -- t \ s ⊆ t \ K when K ⊆ s
-    have hsub : t \ s ⊆ t \ K := Set.diff_subset_diff_right hKs
+    have hsub : t \ s ⊆ t \ K := Set.sdiff_subset_sdiff_right hKs
     have hle : μ.real (t \ s) ≤ μ.real (t \ K) :=
       measureReal_mono hsub
     -- Combine: μ.real(t \ s) ≤ μ.real t - μ.real K = μ.real s - μ.real K
@@ -122,5 +122,5 @@ theorem analyticSet_nullMeasurableSet
     linarith
   have h_ae : s =ᵐ[μ] t := by
     rw [Filter.eventuallyEq_comm, ae_eq_set]
-    exact ⟨hzero, by simp [Set.diff_eq_empty.mpr hst]⟩
+    exact ⟨hzero, by simp [Set.sdiff_eq_empty.mpr hst]⟩
   exact ht_meas.nullMeasurableSet.congr h_ae.symm

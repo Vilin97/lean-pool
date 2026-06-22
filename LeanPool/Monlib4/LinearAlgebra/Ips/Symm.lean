@@ -29,7 +29,7 @@ theorem inner_map_self_eq_zero [CompleteSpace E] {T : E →L[𝕜] E} (hT : IsSe
     (∀ x, ⟪T x,x⟫ = 0) ↔ T = 0 :=
   by
   simp_rw [ContinuousLinearMap.ext_iff, ← ContinuousLinearMap.coe_coe, ← LinearMap.ext_iff,
-    coe_zero]
+    ContinuousLinearMap.toLinearMap_zero]
   simp_rw [isSelfAdjoint_iff_isSymmetric] at hT
   exact hT.inner_map_self_eq_zero
 

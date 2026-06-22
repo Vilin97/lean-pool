@@ -401,7 +401,7 @@ private theorem rapidDecay_hermite_hasSum (a : RapidDecaySeq) :
             intro t; induction t using Finset.cons_induction with
             | empty => simp
             | cons a' t' ha' ih =>
-              simp [SchwartzMap.smul_apply, smul_eq_mul, schwartzHermiteBasis1D_apply, g]
+              simp [smul_eq_mul, schwartzHermiteBasis1D_apply, g]
           exact this s
         -- Step 3: iteratedFDeriv of the finite sum
         have h_iFD_sum : iteratedFDeriv ℝ l
@@ -423,7 +423,7 @@ private theorem rapidDecay_hermite_hasSum (a : RapidDecaySeq) :
               (contDiff_const.mul (hermiteFunction_contDiff i l)).of_le le_rfl)
           have hcoe_r : (⇑r : ℝ → ℝ) = fun y =>
               (∑' n, a.val n * hermiteFunction n y) - ∑ i ∈ s, g i y := by
-            ext y; simp only [hr_def, SchwartzMap.sub_apply, rapidDecay_schwartzMap_apply]
+            ext y; simp only [hr_def, sub_apply, rapidDecay_schwartzMap_apply]
             exact congrArg ((∑' n, a.val n * hermiteFunction n y) - ·) (hsum_coe y)
           rw [hcoe_r]
           set h_sum := fun y => ∑ i ∈ s, g i y with h_sum_def
@@ -953,8 +953,11 @@ private lemma hermiteFunctionNd_decay (d : ℕ) (α : MultiIndex d) (k n : ℕ) 
     -- ‖x‖² = ∑ |x j|² ≤ (∑ |x j|)² by sum_sq_le_sq_sum_of_nonneg
     have hsq : ∑ j : Fin (d + 1), ‖x j‖ ^ 2 ≤
         (∑ j : Fin (d + 1), |x j|) ^ 2 := by
-      convert Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
-        (fun j _ => abs_nonneg (x j)) using 2
+      have heq : ∀ j : Fin (d + 1), ‖x j‖ ^ 2 = |x j| ^ 2 := fun j => by
+        rw [Real.norm_eq_abs]
+      simp only [heq]
+      exact Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
+        (fun j _ => abs_nonneg (x j))
     calc √(∑ j, ‖x j‖ ^ 2) ≤ √((∑ j, |x j|) ^ 2) :=
           Real.sqrt_le_sqrt hsq
       _ = ∑ j, |x j| := by
@@ -1432,6 +1435,7 @@ private lemma hermiteCoeffNd_injective_succ (d' : ℕ)
     exact congr_fun (congrArg SchwartzMap.toFun (h_slice y)) t
   have h_val := h_zero (euclideanInit (d' + 1) x) (x (Fin.last (d' + 1)))
   rw [schwartz_slice_eq] at h_val
+  rw [zero_apply]
   convert h_val using 1
   congr 1
   exact (euclideanSnoc_init_last (d' + 1) x).symm
@@ -1656,8 +1660,11 @@ private lemma schwartzHermiteBasisNd_weighted_product_bound (d k l : ℕ)
     rw [EuclideanSpace.norm_eq]
     have hsq : ∑ j : Fin (d + 1), ‖x j‖ ^ 2 ≤
         (∑ j : Fin (d + 1), |x j|) ^ 2 := by
-      convert Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
-        (fun j _ => abs_nonneg (x j)) using 2
+      have heq : ∀ j : Fin (d + 1), ‖x j‖ ^ 2 = |x j| ^ 2 := fun j => by
+        rw [Real.norm_eq_abs]
+      simp only [heq]
+      exact Finset.sum_sq_le_sq_sum_of_nonneg (s := Finset.univ)
+        (fun j _ => abs_nonneg (x j))
     calc √(∑ j, ‖x j‖ ^ 2) ≤ √((∑ j, |x j|) ^ 2) :=
           Real.sqrt_le_sqrt hsq
       _ = ∑ j, |x j| := by
@@ -2386,7 +2393,7 @@ private theorem rapidDecay_hermite_hasSumNd (d : ℕ) (a : RapidDecaySeq) :
             intro t; induction t using Finset.cons_induction with
             | empty => simp
             | cons a' t' ha' ih =>
-              simp [SchwartzMap.smul_apply, smul_eq_mul, g]
+              simp [smul_eq_mul, g]
           exact this s
         have h_iFD_sum : iteratedFDeriv ℝ l
             (⇑(∑ i ∈ s, a.val i • flatBasisNd d i :
@@ -2409,7 +2416,7 @@ private theorem rapidDecay_hermite_hasSumNd (d : ℕ) (a : RapidDecaySeq) :
               (contDiff_const.mul (flatBasisNd d i).smooth').of_le (mod_cast le_top))
           have hcoe_r : (⇑r : EuclideanSpace ℝ (Fin (d + 1)) → ℝ) = fun y =>
               (∑' n, a.val n * flatBasisNd d n y) - ∑ i ∈ s, g i y := by
-            ext y; simp only [hr_def, SchwartzMap.sub_apply,
+            ext y; simp only [hr_def, sub_apply,
               rapidDecay_schwartzMapNd_apply]
             exact congrArg
               ((∑' n, a.val n * flatBasisNd d n y) - ·) (hsum_coe y)

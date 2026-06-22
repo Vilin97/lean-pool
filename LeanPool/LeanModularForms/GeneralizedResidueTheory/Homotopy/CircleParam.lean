@@ -73,11 +73,10 @@ lemma circleParam_deriv (z₀ : ℂ) (r : ℝ) (a b : ℝ)
     rw [h_eq]
     have h1 : HasDerivAt (fun t : ℝ => (t : ℂ) - (a : ℂ)) 1 t :=
       Complex.ofRealCLM.hasDerivAt.sub_const (a : ℂ)
-    convert h1.const_mul (2 * Real.pi * I / (b - a)) using 1; ring
+    simpa using h1.const_mul (2 * Real.pi * I / (b - a))
   have hexp_comp : HasDerivAt (fun t => exp (f t))
-      (exp (f t) * (2 * Real.pi * I / (b - a))) t := by
-    convert (hasDerivAt_exp (f t)).scomp t hf_deriv using 1
-    rw [smul_eq_mul, mul_comm]
+      (exp (f t) * (2 * Real.pi * I / (b - a))) t :=
+    hf_deriv.cexp
   have hmul : HasDerivAt (fun t => (r : ℂ) * exp (f t))
       ((r : ℂ) * (exp (f t) *
         (2 * Real.pi * I / (b - a)))) t :=
@@ -228,11 +227,7 @@ lemma circleParamCW_hasDerivAt (z₀ : ℂ) (r : ℝ)
     (circleParam_differentiable z₀ r a b).differentiableAt
   have hg : HasDerivAt
       (fun t : ℝ => (a + b - t : ℝ)) (-1 : ℝ) t := by
-    have h1 : HasDerivAt (fun _ : ℝ => (a + b : ℝ)) 0 t :=
-      hasDerivAt_const t (a + b)
-    have h2 : HasDerivAt (fun t : ℝ => t) 1 t :=
-      hasDerivAt_id t
-    convert h1.sub h2 using 1; ring
+    simpa using (hasDerivAt_id t).const_sub (a + b)
   have hf : HasDerivAt (circleParam z₀ r a b)
       (r * (2 * Real.pi * I / (b - a)) *
         exp (2 * Real.pi * I *
@@ -341,11 +336,7 @@ theorem circleParamCW_winding_eq_neg_one (z₀ : ℂ)
 private lemma hasDerivAt_ofReal_comp (θ : ℝ → ℝ) (t : ℝ)
     (hθ : DifferentiableAt ℝ θ t) :
     HasDerivAt (fun u => (θ u : ℂ)) (Complex.ofReal (deriv θ t)) t := by
-  have h3f := (Complex.ofRealCLM : ℝ →L[ℝ] ℂ).hasFDerivAt (x := θ t) |>.comp t
-    hθ.hasDerivAt.hasFDerivAt
-  rw [show Complex.ofRealCLM ∘ θ = fun u => (θ u : ℂ) from rfl] at h3f
-  convert h3f.hasDerivAt using 1
-  simp [ContinuousLinearMap.comp_apply, smul_eq_mul]
+  simpa using (hθ.hasDerivAt).ofReal_comp (z := t)
 
 /-- For a C¹ curve on S¹ with angle lift θ, the winding number equals the degree. -/
 theorem winding_of_S1_curve_eq_degree (z₀ : ℂ) (a b : ℝ) (_hab : a < b)
@@ -365,7 +356,8 @@ theorem winding_of_S1_curve_eq_degree (z₀ : ℂ) (a b : ℝ) (_hab : a < b)
         (exp (I * (θ t : ℂ)) * (I * (Complex.ofReal (deriv θ t)))) t :=
       ((hasDerivAt_exp _).scomp t h2).congr_deriv (by rw [smul_eq_mul]; ring)
     have h4 := (hasDerivAt_const t z₀).add h3
-    simp only [zero_add] at h4; convert h4 using 1; ring
+    simp only [zero_add] at h4
+    exact h4.congr_deriv (by ring)
   have h_integrand : ∀ t,
       (γ t - z₀)⁻¹ * deriv γ t =
       I * (Complex.ofReal (deriv θ t)) := by

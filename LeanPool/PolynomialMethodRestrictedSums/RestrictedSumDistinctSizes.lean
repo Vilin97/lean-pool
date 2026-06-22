@@ -113,7 +113,7 @@ lemma vandermonde_degree_eq (k : ℕ) (p : ℕ) [Fact (Nat.Prime p)] :
         j.val < i.val → (X i - X j : MvPolynomial (Fin (k + 1)) (ZMod p)).totalDegree = 1 := by
       intro i j a
       refine le_antisymm ?_ ?_ <;> norm_num [MvPolynomial.totalDegree];
-      · intro b hb; rw [MvPolynomial.coeff_X', MvPolynomial.coeff_X'] at hb; aesop;
+      · intro b hb; rw [MvPolynomial.coeff_X, MvPolynomial.coeff_X] at hb; aesop;
       · refine ⟨Finsupp.single i 1, ?_, ?_⟩ <;> aesop;
     -- The total degree of a product of polynomials is the sum of their total degrees.
     have h_total_deg : ∀ (S : Finset (Fin (k + 1) × Fin (k + 1))),
@@ -210,10 +210,8 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
                  MvPolynomial.X i) ^ m * ∏ i : Fin (k + 1), ∏ j : Fin (k + 1),
                      if j.val < i.val then (X i - X j) else 1 : MvPolynomial (Fin (k + 1)) (ℤ)))
                          = expectedValue c m := by
-           convert Vandermonde_coefficient_formula c m h_sum using 1;
-           norm_num [Finsupp.equivFunOnFinite];
-           unfold toFinsupp
-           simp_all only [ne_eq];
+           have h_index : (Finsupp.equivFunOnFinite.symm c : (Fin (k + 1)) →₀ ℕ) = toFinsupp c := by
+             ext i; simp [Finsupp.equivFunOnFinite, toFinsupp]
            -- By definition of polynomial multiplication and the properties of coefficients, the
            -- coefficient of the monomial corresponding to `c` in the product of the power sum and
            -- the Vandermonde polynomial is equal to the coefficient of the monomial corresponding
@@ -226,19 +224,19 @@ lemma vandermonde_coeff_nonzero (c : Fin (k + 1) → ℕ) (m : ℕ)
                        = MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c)
                            (MvPolynomial.map (algebraMap ℤ ℚ) (f * g)) := by
              intros f g; rw [MvPolynomial.coeff_map]; aesop;
-           convert h_coeff_eq _ _ using 3;
-           · aesop;
-           · -- Push `map` through the polynomial product.
-             rw [map_mul, map_pow, map_sum, map_prod]
-             refine congrArg₂ (· * ·) ?_ ?_
-             · refine congrArg (· ^ m) ?_
-               refine Finset.sum_congr rfl fun i _ => ?_
-               rw [MvPolynomial.map_X]
-             · refine Finset.prod_congr rfl fun i _ => ?_
-               rw [map_prod]
-               refine Finset.prod_congr rfl fun j _ => ?_
-               split_ifs <;>
-                 simp [MvPolynomial.map_X, map_sub, map_one]
+           rw [h_coeff_eq, h_index, ← Vandermonde_coefficient_formula c m h_sum]
+           congr 1
+           -- Push `map` through the polynomial product.
+           rw [map_mul, map_pow, map_sum, map_prod]
+           refine congrArg₂ (· * ·) ?_ ?_
+           · refine congrArg (· ^ m) ?_
+             refine Finset.sum_congr rfl fun i _ => ?_
+             rw [MvPolynomial.map_X]
+           · refine Finset.prod_congr rfl fun i _ => ?_
+             rw [map_prod]
+             refine Finset.prod_congr rfl fun j _ => ?_
+             rw [apply_ite (MvPolynomial.map (algebraMap ℤ ℚ))]
+             simp only [Fin.val_fin_lt, map_sub, MvPolynomial.map_X, map_one]
          have h_coeff_not_zero_in_K' : (algebraMap ℤ (ZMod p)) (
              MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (
              (∑ i : Fin (k + 1), MvPolynomial.X i) ^ m * ∏ i : Fin (k + 1), ∏ j : Fin (k + 1),

@@ -67,7 +67,7 @@ lemma uIoo_eq_uIoc_sdiff_ends : uIoo a b = Ι a b \ {a, b} := by
     cases hh with
     | inl h => simp [uIoc, h, h.2.le, h.1.ne.symm, h.2.ne]
     | inr h => simp [uIoc, h, h.2.le, h.1.ne.symm, h.2.ne]
-  · simp_rw [uIoc, mem_diff, mem_Ioc, mem_insert_iff, mem_singleton_iff] at hh
+  · simp_rw [uIoc, Set.mem_sdiff, mem_Ioc, mem_insert_iff, mem_singleton_iff] at hh
     push Not at hh
     refine ⟨hh.1.1, lt_of_le_of_ne hh.1.2 ?_⟩
     cases le_total a b <;> simp [*]
@@ -99,7 +99,7 @@ lemma derivWithin_of_mem_uIoo {f : ℝ → E} (ht : t ∈ uIoo a b) :
     derivWithin f (uIcc a b) t = deriv f t := by
   rw [derivWithin, deriv, fderivWithin_of_mem_nhds (uIcc_mem_nhds ht)]
 
-lemma intervalIntegral.integral_congr_uIoo (h : EqOn f g (uIoo a b)) :
+lemma intervalIntegral.integral_congr_uIoo' (h : EqOn f g (uIoo a b)) :
     ∫ t in a..b, f t = ∫ t in a..b, g t := by
   apply intervalIntegral.integral_congr_ae
   filter_upwards [eventually_mem_uIoo_of_mem_uIoc] with t ht1 ht2 using h (ht1 ht2)
@@ -167,7 +167,7 @@ theorem integral_eq_sub'' (h : ContDiffOn ℝ 1 f (Icc a b)) (hab : a ≤ b) (ht
   intro u hu
   have l3 : u ∈ uIoo a b := by
     rw [mem_uIoo]
-    rw [uIoo_eq_uIoc_sdiff_ends, mem_diff, mem_uIoc, Set.mem_insert_iff,
+    rw [uIoo_eq_uIoc_sdiff_ends, Set.mem_sdiff, mem_uIoc, Set.mem_insert_iff,
       Set.mem_singleton_iff] at hu
     obtain ⟨huoc, hua, hut⟩ : ((a < u ∧ u ≤ t) ∨ (t < u ∧ u ≤ a)) ∧ u ≠ a ∧ u ≠ t := by
       refine ⟨hu.1, ?_, ?_⟩

@@ -254,7 +254,7 @@ lemma gaussian_first_moment (a : ℝ) (b : Fin 3 → ℝ) (c : ℝ) (hc : c < 0)
             then v * Real.exp (a + b j * v + c * v^2)
             else Real.exp (b j * v + c * v^2))) := by
         erw [← MeasureTheory.integral_fintype_prod_eq_prod]; rfl
-      simp_all only [Finset.prod_eq_mul_prod_diff_singleton_of_mem (Finset.mem_univ i), ↓reduceIte,
+      simp_all only [Finset.prod_eq_mul_prod_sdiff_singleton_of_mem (Finset.mem_univ i), ↓reduceIte,
         mul_eq_mul_left_iff, mul_eq_zero, div_eq_zero_iff, neg_eq_zero, OfNat.ofNat_ne_zero,
         false_or]
       exact Or.inl (by rw [ Finset.sdiff_singleton_eq_erase ]
@@ -380,11 +380,10 @@ lemma analysis_gaussian_integrability
               Real.exp (b 1 * a 0) *
               Real.exp (b 2 * a 1) = 0 <;>
           simp_all only [isUnit_iff_ne_zero, ne_eq, exp_ne_zero, not_false_eq_true,
-            integrable_const_mul_iff, Fin.isValue, Filter.eventually_const, mul_zero,
-            integrable_zero, and_true]
+            integrable_const_mul_iff, Fin.isValue, Filter.eventually_const, mul_zero]
         · rw [ MeasureTheory.integral_eq_zero_iff_of_nonneg (fun _ => by positivity) ] at h
           · exact absurd (h.exists) (by norm_num [ Real.exp_ne_zero ])
-          · exact h_integrable
+          · exact h_integrable.1
         · convert h_integrable.2.div_const
             (∫ (a : Fin 2 → ℝ),
               Real.exp (b 1 * a 0) *

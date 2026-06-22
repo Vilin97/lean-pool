@@ -211,7 +211,7 @@ lemma lower_degree (B : Subring ℝ) (α : ℝ) (m n : ℕ) (H : α ∉ B ∧ α
     ring
   have coeff_erase_neq_zero : coeff (q1.erase n) 0 = (coeff q) n := by
     -- the constant term of q' is the n-th coefficient of q
-    rw[erase_ne q1 n 0 zero_lt_n.symm, Polynomial.finsetSum_coeff, Finset.sum_range_succ,
+    rw[erase_ne q1 zero_lt_n.symm, Polynomial.finsetSum_coeff, Finset.sum_range_succ,
                 Nat.sub_self, coeff_monomial_same 0 (q.coeff n), add_eq_right]
     apply Finset.sum_eq_zero
     intro x in_Finset

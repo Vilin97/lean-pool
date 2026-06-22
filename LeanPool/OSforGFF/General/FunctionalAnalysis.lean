@@ -127,10 +127,10 @@ instance instBorelSpaceLpComplexTwoLeanPool (μ : Measure α) : BorelSpace (Lp �
 lemma Complex.ofRealCLM_isometry : Isometry (Complex.ofRealCLM : ℝ →L[ℝ] ℂ) := by
   -- Complex.ofRealCLM is defined as ofRealLI.toContinuousLinearMap,
   -- where ofRealLI is a linear isometry
-  have h : (Complex.ofRealCLM : ℝ →L[ℝ] ℂ) = Complex.ofRealLI.toContinuousLinearMap := rfl
-  rw [h]
+  have h : ⇑(Complex.ofRealCLM : ℝ →L[ℝ] ℂ) = ⇑Complex.ofRealLI := rfl
+  rw [Isometry, h]
   -- The coercion to function is the same for both
-  convert Complex.ofRealLI.isometry
+  exact Complex.ofRealLI.isometry.edist_eq
 
 -- Use this to prove our specific case
 lemma Complex.ofRealCLM_continuous_compLp {α : Type*} [MeasurableSpace α] {μ : Measure α} :
@@ -406,7 +406,7 @@ lemma integrableOn_compact_diff_ball {d : ℕ}
       intro x hx
       have hx_in_K : x ∈ K := hx.1
       have hx_norm_lower : δ ≤ ‖x‖ := by
-        simp only [Set.mem_diff, Metric.mem_ball, dist_zero_right, not_lt] at hx
+        simp only [Set.mem_sdiff, Metric.mem_ball, dist_zero_right, not_lt] at hx
         exact hx.2
       have hx_norm_upper : ‖x‖ ≤ R := hR x hx_in_K
       have hx_norm_pos : 0 < ‖x‖ := hδ.trans_le hx_norm_lower
@@ -563,6 +563,8 @@ theorem schwartz_bilinear_integrable_of_translationInvariant_L1
       -- Use measurePreserving_sub_prod: (x, y) ↦ (x - y, y) preserves measure
       have := measurePreserving_sub_prod (G := EuclideanSpace ℝ (Fin d)) volume volume
       convert this using 1
+      ext p : 1
+      rfl
     have hchange : Integrable (fun p : EuclideanSpace ℝ (Fin d) × EuclideanSpace ℝ (Fin d) =>
         ‖K₀ (p.1 - p.2)‖ * ‖g p.2‖) (volume.prod volume) := by
       -- We have hprod : Integrable (fun p => ‖K₀ p.1‖ * ‖g p.2‖)

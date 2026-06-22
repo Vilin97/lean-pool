@@ -130,7 +130,7 @@ lemma chebyshev_majority_bound
     change ProbabilityTheory.variance (fun ω => ∑ j : Fin k, X j ω) μ ≤ _
     have : ProbabilityTheory.variance (fun ω => ∑ j : Fin k, X j ω) μ =
         ProbabilityTheory.variance (∑ j : Fin k, X j) μ := by
-      congr 1; ext ω; simp [sum_apply]
+      congr 1; ext ω; simp [Finset.sum_apply]
     rw [this]; exact hvar_S
   -- Step 14: Apply Chebyshev
   have hk6_pos : (0 : ℝ) < ↑k / 6 := by positivity

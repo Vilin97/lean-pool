@@ -235,7 +235,7 @@ theorem Psi.one [hφ : φ.IsFaithfulPosMap] :
     rw [← inner_conj_symm]
     simp [hφ.inner_coord]]
   rw [hφ.inner_coord, ← PosDef.rpow_neg_one_eq_inv_self hφ.matrixIsPosDef]
-  simp only [sum_apply, kroneckerMap_apply, transpose_apply, starAlgebra.modAut_zero,
+  simp only [Matrix.sum_apply, kroneckerMap_apply, transpose_apply, starAlgebra.modAut_zero,
     AlgEquiv.one_apply, Module.Dual.IsFaithfulPosMap.orthonormalBasis_apply, mul_apply,
     single_eq, boole_mul]
   simp_rw [ite_and, Finset.sum_ite_irrel, Finset.sum_const_zero, Finset.sum_ite_eq,
@@ -819,7 +819,7 @@ theorem qamA.of_is_self_adjoint [hφ : φ.IsFaithfulPosMap] (x : { x : ℍ // x 
   -- letI gg : NoZeroSMulDivisors ℂ l(ℍ) := LinearMap.noZeroSMulDivisors
   simp_rw [starRingEnd_apply, star_div₀, star_one, Complex.star_def, ← Complex.ofReal_pow,
     Complex.conj_ofReal, Complex.ofReal_pow] at h
-  simp_rw [← ContinuousLinearMap.coe_smul, ContinuousLinearMap.coe_inj] at h
+  simp_rw [← ContinuousLinearMap.toLinearMap_smul, ContinuousLinearMap.coe_inj] at h
   letI gg : NoZeroSMulDivisors ℂ (ℍ →ₗ[ℂ] ℍ) := by infer_instance
   -- have h'' := smul_right_inj this
   rw [smul_right_inj thisss] at h

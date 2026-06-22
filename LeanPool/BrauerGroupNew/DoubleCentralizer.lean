@@ -794,18 +794,15 @@ end centralizerIsSimple.aux
 open centralizerIsSimple.aux in
 lemma centralizerIsSimple {ι : Type*} (ℬ : Basis ι F <| Module.End F B) :
     IsSimpleRing (Subalgebra.centralizer F (B : Set A)) := by
-  letI (X : Subalgebra F (A ⊗[F] Module.End F B)) : Ring X :=
-      Subalgebra.toRing (R := F) (A := A ⊗[F] Module.End F B) X
   obtain ⟨x, ⟨eqv⟩⟩ := step1 B ℬ
   have : IsSimpleRing (Subalgebra.centralizer F (B : Set A) ⊗[F] Module.End F B) := by
-    have := TwoSidedIdeal.orderIsoOfRingEquiv eqv
+    have := TwoSidedIdeal.orderIsoOfRingEquiv eqv.toRingEquiv
     constructor
     rw [OrderIso.isSimpleOrder_iff this]
     rw [Subalgebra.conj_simple_iff]
     let eqv'' := auxRight (Module.End.rightMul F B) A
-    have := TwoSidedIdeal.orderIsoOfRingEquiv eqv''.toRingEquiv
-    rw [← OrderIso.isSimpleOrder_iff this]
-    infer_instance
+    have e := TwoSidedIdeal.orderIsoOfRingEquiv eqv''.toRingEquiv
+    exact (OrderIso.isSimpleOrder_iff e).mp inferInstance
   exact IsSimpleRing.left_of_tensor (K := F)
     (B := Subalgebra.centralizer F (B : Set A))
     (C := Module.End F B)

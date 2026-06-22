@@ -46,7 +46,7 @@ instance : forgetPO.Faithful where
   map_injective {_ _} _ _ h := LenHom.ext (congr_arg (OrderHom.toFun ∘ PartOrd.Hom.hom) h)
 instance : FunLike (S ⟶ T) S T where
   coe f := f.toFun
-  coe_injective' f g h := by
+  coe_injective f g h := by
     apply LenHom.ext
     exact h
 instance : OrderHomClass (S ⟶ T) S.2 T.2 where

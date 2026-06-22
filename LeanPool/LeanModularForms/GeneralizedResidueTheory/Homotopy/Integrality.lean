@@ -237,7 +237,7 @@ private lemma logDeriv_continuousOn_off_finset
       (Ioo_mem_nhds ht_in.1 ht_in.2)).continuousWithinAt
     ((hγ_cont.sub continuousOn_const).continuousWithinAt ht_Icc)
     (sub_ne_zero.mpr (hγ_avoids t ht_Icc))
-    |>.mono diff_subset
+    |>.mono sdiff_subset
 
 private lemma logDeriv_continuousAt_off_finset
     {γ : ℝ → ℂ} {a b : ℝ} {z₀ : ℂ} {P : Finset ℝ}
@@ -598,10 +598,11 @@ private lemma gFunc_constant_smooth
           filter_upwards [h_Ioo_mem] with t ht; exact (h_deriv_zero t ht).symm))
     · have ht' : t ∈ Ioo a b := ⟨lt_of_le_of_ne ht.1 (Ne.symm ha_eq), ht.2⟩
       have hG_hasDerivAt : HasDerivAt G 0 t := by
-        convert ((hγ_diff t ht').hasDerivAt.sub_const z₀).mul
-          (hF_hasDerivAt t ht').neg.cexp using 1
-        have := sub_ne_zero.mpr (hγ_avoid t (Ioo_subset_Icc_self ht'))
-        field_simp; ring
+        refine (((hγ_diff t ht').hasDerivAt.sub_const z₀).mul
+          (hF_hasDerivAt t ht').neg.cexp).congr_deriv ?_
+        have hne := sub_ne_zero.mpr (hγ_avoid t (Ioo_subset_Icc_self ht'))
+        field_simp
+        ring
       exact hG_hasDerivAt.hasDerivWithinAt
   exact constant_of_has_deriv_right_zero hG_cont hG_deriv_right
 

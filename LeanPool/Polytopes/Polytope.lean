@@ -103,7 +103,7 @@ lemma empty_Hpolytope [Nontrivial E] :
   intro h
   have h1 := h (Halfspace.mk f (-1)) (by simp)
   have h2 := h (Halfspace.mk (-f) (-1)) (by simp)
-  rw [unitSphereDual_neg, ContinuousLinearMap.neg_apply, neg_le, neg_neg] at h2
+  rw [unitSphereDual_neg, neg_apply, neg_le, neg_neg] at h2
   change f.1 x ≤ -1 at h1
   linarith
 
@@ -147,7 +147,7 @@ lemma hyperplane_Hpolytope : ∀ (f : {f : (StrongDual ℝ E) // norm f = 1}) (c
     intro h
     have h1 := h (Halfspace.mk f c) (by simp)
     have h2 := h (Halfspace.mk (-f) (-c)) (by simp)
-    rw [unitSphereDual_neg, ContinuousLinearMap.neg_apply, neg_le, neg_neg] at h2
+    rw [unitSphereDual_neg, neg_apply, neg_le, neg_neg] at h2
     change f.1 x ≤ c at h1
     exact le_antisymm h1 h2
   · -- 2.
@@ -155,7 +155,7 @@ lemma hyperplane_Hpolytope : ∀ (f : {f : (StrongDual ℝ E) // norm f = 1}) (c
     simp only [Set.mem_singleton_iff, Set.mem_insert_iff] at hHi
     rcases hHi with rfl | rfl
     · exact le_of_eq h
-    · rw [unitSphereDual_neg, ContinuousLinearMap.neg_apply, neg_le, neg_neg]
+    · rw [unitSphereDual_neg, neg_apply, neg_le, neg_neg]
       exact le_of_eq h.symm
 
 lemma inter_Hpolytope (H_1 H_2 : Set (Halfspace E)) (hH_1 : H_1.Finite) (hH_2 : H_2.Finite) :

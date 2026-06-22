@@ -70,13 +70,12 @@ lemma continuous_zpow_on_unit_circle (n : ℤ) :
     Continuous (fun x : sphere (0 : ℂ) 1 => x.val ^ n) := by
   cases n with
   | ofNat m =>
-      convert continuous_subtype_val.pow (n := m) using 1
-      infer_instance
+      simp only [Int.ofNat_eq_natCast, zpow_natCast]
+      exact continuous_subtype_val.pow m
   | negSucc m =>
        simp only [zpow_negSucc]
        apply Continuous.inv₀
-       · convert continuous_subtype_val.pow (n := m+1) using 1
-         infer_instance
+       · exact continuous_subtype_val.pow (m + 1)
        · intro x
          apply pow_ne_zero _
          have : ‖(x : ℂ)‖ = 1 := mem_sphere_zero_iff_norm.mp x.2
@@ -96,17 +95,16 @@ lemma span_moments_dense : (Submodule.span ℂ (Set.range (fun n : ℤ => Contin
         (∀ c : ℂ, ContinuousMap.const (sphere (0 : ℂ) 1) c ∈ A) →
           Dense (A : Set (ContinuousMap (sphere (0 : ℂ) 1) ℂ)) := by
       intro A hA hA'
-      have := @ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints ℂ
-        (sphere (0 : ℂ) 1)
-      simp only [SetLike.ext_iff, StarSubalgebra.mem_top, iff_true, ne_eq, Subtype.forall,
-        mem_sphere_iff_norm, sub_zero, Subtype.mk.injEq] at this hA hA'
-      convert this A _ using 2
-      · intro x y hxy
-        have hx_norm : ‖(x : ℂ)‖ = 1 := by exact mem_sphere_zero_iff_norm.mp x.2
-        have hy_norm : ‖(y : ℂ)‖ = 1 := by exact mem_sphere_zero_iff_norm.mp y.2
-        specialize hA x.1 hx_norm y.1 hy_norm
-        obtain ⟨f, hf_mem, hf_ne⟩ := hA (Subtype.coe_ne_coe.mpr hxy)
+      have h_sep : A.SeparatesPoints := by
+        intro x y hxy
+        obtain ⟨f, hf_mem, hf_ne⟩ := hA x y hxy
         exact ⟨f, ⟨f, hf_mem, rfl⟩, hf_ne⟩
+      have h_top := ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints
+        A h_sep
+      have h_closure : closure (A : Set C(↑(sphere (0 : ℂ) 1), ℂ)) = Set.univ := by
+        rw [← StarSubalgebra.topologicalClosure_coe, h_top]
+        simp
+      rw [dense_iff_closure_eq, h_closure]
     apply h_stone_weierstrass A
     · rintro ⟨a, ha⟩ ⟨b, hb⟩ hab
       refine ⟨⟨fun x => x.val, continuous_subtype_val⟩, ?_, ?_⟩
@@ -116,7 +114,12 @@ lemma span_moments_dense : (Submodule.span ℂ (Set.range (fun n : ℤ => Contin
         intro h
         exact hab (Subtype.ext h)
     · intro c
-      convert Subalgebra.algebraMap_mem _ c
+      have h_eq : ContinuousMap.const (↑(sphere (0 : ℂ) 1)) c
+          = algebraMap ℂ C(↑(sphere (0 : ℂ) 1), ℂ) c := by
+        ext x
+        simp [Algebra.algebraMap_eq_smul_one]
+      rw [h_eq]
+      exact StarSubalgebra.algebraMap_mem _ c
   intro x hx
   refine closure_mono ?_ (h_dense x)
   intro f hf

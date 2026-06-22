@@ -186,7 +186,7 @@ theorem smul_onePosDef_rpow_eq {𝕜 : Type*} [RCLike 𝕜]
 by
   by_cases H : IsEmpty n
   · simp only [← Matrix.ext_iff]
-    simp only [IsEmpty.forall_iff, smul_apply]
+    simp only [IsEmpty.forall_iff, Matrix.smul_apply]
   · rw [not_isEmpty_iff] at H
     have := (smulPosDef_isPosDef_iff
       (Matrix.posDefOne : PosDef (1 : Matrix n n 𝕜)) α).mp h
@@ -243,7 +243,7 @@ theorem smul_onePosSemidef_rpow_eq {𝕜 : Type*} [RCLike 𝕜]
 by
   by_cases H : IsEmpty n
   · simp only [← Matrix.ext_iff]
-    simp only [IsEmpty.forall_iff, smul_apply]
+    simp only [IsEmpty.forall_iff, Matrix.smul_apply]
   · rw [not_isEmpty_iff] at H
     have := (smulPosSemidef_isPosSemidef_iff
       (Matrix.PosSemidef.one : PosSemidef (1 : Matrix n n 𝕜)) α).mp h

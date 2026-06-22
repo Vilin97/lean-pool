@@ -356,14 +356,11 @@ noncomputable def _root_.TopCat.Cyl.stretchToWall :
       · exact t.property.left
     · by_cases hxt : 2 * ‖x‖ ≥ 2 - t
       · simp only [hxt, sup_of_le_left]
-        have := t1.trans hxt
-        replace := (add_le_add_iff_left 1).mpr this
-        convert this
-        norm_num
+        have h2 := t1.trans hxt
+        linarith only [h2]
       · replace hxt := le_of_not_ge hxt
         simp only [hxt, sup_of_le_right, ge_iff_le]
-        convert (add_le_add_iff_left 1).mpr t1
-        norm_num
+        linarith only [t1]
   · simp only [ContinuousMap.coe_mk, Metric.mem_closedBall, dist_zero_right, β]
     by_cases hxt : 2 * ‖x‖ ≥ 2 - t
     · simp only [hxt, sup_of_le_left]
@@ -375,13 +372,12 @@ noncomputable def _root_.TopCat.Cyl.stretchToWall :
       rw [norm_smul]
       replace hxt := le_div_iff₀' (by norm_num : (2 : ℝ) > 0) |>.mpr hxt
       replace hxt := mul_le_mul_of_nonneg_left hxt (norm_nonneg _ : ‖(2 : ℝ) / (2 - t)‖ ≥ 0)
-      convert hxt
+      refine hxt.trans_eq ?_
       have : ‖(2 : ℝ) / (2 - t)‖ = (2 : ℝ) / (2 - t) := by
         apply Real.norm_of_nonneg
         exact div_nonneg (by norm_num : (0 : ℝ) ≤ 2) (by linarith only [t.property.right])
       rw [this]
       simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, div_mul_div_cancel₀']
-      apply Eq.symm
       apply div_self
       linarith only [t.property.right]
   · simp only [ContinuousMap.coe_mk, β]
@@ -539,12 +535,15 @@ theorem isCompressible_subtype_val_of_unique_pi
       have := H.some.prop' 1 x' x'r
       simp only [ContinuousMap.toFun_eq_coe, ContinuousMap.Homotopy.coe_toContinuousMap,
         ContinuousMap.Homotopy.apply_one, ContinuousMap.coe_mk] at this
-      convert this
-      unfold x'
-      change _ = (diskBoundaryIncl (n + 1) ≫ F) x
-      rw [← sq.w]
-      simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk]
+      convert this using 2
+      · rfl
+      · unfold x'
+        change (ConcreteCategory.hom f) x = (diskBoundaryIncl (n + 1) ≫ F) x
+        rw [← sq.w]
+        simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_mk]
     · convert H
+      ext y
+      rfl
 
 open RelHomotopyGroup in
 /-- If `iStar : π_ 0 A pt → π_ 0 X pt` is bijective (for some basepoint `pt`, which is irrelevant),
@@ -622,7 +621,8 @@ lemma isCompressible_mapcyl_domInclFromTop_of_isWeakHomotopyEquiv
         unfold MapCyl.domInclToTop x
         simp only [Equiv.invFun_as_coe, Homeomorph.coe_symm_toEquiv, ContinuousMap.coe_coe,
           Homeomorph.apply_symm_apply]
-      convert isCompressible_subtype_val_of_unique_pi n (MapCyl φ) (MapCyl.top φ) hpi
+      convert isCompressible_subtype_val_of_unique_pi n (MapCyl φ) (MapCyl.top φ) hpi using 3
+      rfl
 
 /-- If `φ : X ⟶ Y` is a weak homotopy equivalence,
 then the inclusion map `MapCyl.domIncl φ` from `X` to the mapping cylinder of `φ`
@@ -640,10 +640,11 @@ theorem isCompressible_mapCyl_domIncl_of_isWeakHomotopyEquiv
     use l.l ≫ ofHom inv
     · have := congrArg₂ CategoryStruct.comp l.fac_left (Eq.refl (ofHom inv))
       convert this using 1
-      rw [Category.assoc]
-      unfold inv MapCyl.domInclToTop
-      ext x : 1
-      simp only [hom_comp, hom_ofHom, Homeomorph.symm_comp_toContinuousMap, ContinuousMap.id_comp]
+      all_goals rw [Category.assoc]
+      all_goals unfold inv MapCyl.domInclToTop
+      all_goals ext x : 1
+      all_goals simp only [hom_comp, hom_ofHom, ContinuousMap.comp_apply, ContinuousMap.coe_coe,
+        Homeomorph.symm_apply_apply]
     · convert l.H using 2
       rw [Category.assoc]
       congr 1

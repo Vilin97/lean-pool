@@ -624,9 +624,8 @@ lemma hom_orthogonal_aux_uniq
         apply whisker_eq m
         exact diagonals_hom_cospan_lift_fst l r
       _ = s.fst := comm₁
-      _ = lift ≫ homPullbackFst l r := by
-        convert
-          ((homPullbackConeIsLimit l r).fac s Limits.WalkingCospan.left).symm
+      _ = lift ≫ homPullbackFst l r :=
+        ((homPullbackConeIsLimit l r).fac s Limits.WalkingCospan.left).symm
   have comm₂' :
       (m ≫ homOrthogonalAuxHom l r h) ≫ homPullbackSnd l r =
       lift ≫ homPullbackSnd l r := by
@@ -638,9 +637,8 @@ lemma hom_orthogonal_aux_uniq
         apply whisker_eq m
         exact diagonals_hom_cospan_lift_snd l r
       _ = s.snd := comm₂
-      _ = lift ≫ homPullbackSnd l r := by
-        convert
-          ((homPullbackConeIsLimit l r).fac s Limits.WalkingCospan.right).symm
+      _ = lift ≫ homPullbackSnd l r :=
+        ((homPullbackConeIsLimit l r).fac s Limits.WalkingCospan.right).symm
   have whee : m ≫ homOrthogonalAuxHom l r h = (homPullbackConeIsLimit l r).lift s :=
     Limits.pullback.hom_ext comm₁' comm₂'
   calc

@@ -107,7 +107,7 @@ lemma GiEdge.irrefl {c : T → I} {i : I} (v : GiCell T I) :
 /-- The Mathlib `SimpleGraph` whose vertices and edges are the graph `G_i`. -/
 def GiGraph (c : T → I) (i : I) : SimpleGraph (GiCell T I) where
   Adj := GiEdge (IST := IST) c i
-  symm := fun _ _ h => GiEdge.symm h
+  symm := ⟨fun _ _ h => GiEdge.symm h⟩
   loopless := ⟨fun v => GiEdge.irrefl (IST := IST) (c := c) (i := i) v⟩
 
 /-- The finite neighbor set of a vertex in `G_i`. -/

@@ -323,16 +323,19 @@ lemma round_near_eq_iff (q : ℚ) (z : ℤ) :
 open Lean Meta Qq Mathlib.Meta.Positivity in
 /-- A `positivity` extension proving `0 ≤ roundNearInt q` from `0 ≤ q`. -/
 @[positivity roundNearInt _]
-def evalRoundNearInt : PositivityExt where eval {u α} _ _ e := do
+def evalRoundNearInt : PositivityExt where eval {u α} _ pα? e := do
   match u, α, e with
   | 0, ~q(ℤ), ~q(roundNearInt $a) =>
-    let zα : Q(Zero ℚ) := q(inferInstance)
-    let pα : Q(PartialOrder ℚ) := q(inferInstance)
-    assumeInstancesCommute
-    match ← core zα pα a with
-    | .positive pa => pure (.nonnegative q(round_near_int_of_pos $pa))
-    | .nonnegative pa => pure (.nonnegative q(round_near_int_of_nonneg $pa))
-    | _ => pure .none
+    match (dependent := true) pα? with
+    | some _pα =>
+      let zα : Q(Zero ℚ) := q(inferInstance)
+      let pα : Q(PartialOrder ℚ) := q(inferInstance)
+      assumeInstancesCommute
+      match ← core zα pα a with
+      | .positive pa => pure (.nonnegative q(round_near_int_of_pos $pa))
+      | .nonnegative pa => pure (.nonnegative q(round_near_int_of_nonneg $pa))
+      | _ => pure .none
+    | none => pure .none
 
 
 /-- A rounding rule is *valid* if it is monotone on nonnegative inputs and is a

@@ -42,7 +42,9 @@ namespace RelReflTransGen
 @[simp] lemma transitive : IsTrans F.World F.RelReflTransGen :=
   ⟨fun _ _ _ hxy hyz => ReflTransGen.trans hxy hyz⟩
 
-@[simp] lemma symmetric : Symmetric F.Rel → Symmetric F.RelReflTransGen := ReflTransGen.symmetric
+@[simp] lemma symmetric : IsSymmetric F.Rel → IsSymmetric F.RelReflTransGen := fun h => by
+  letI : Std.Symm F.Rel := ⟨fun _ _ => @h _ _⟩
+  exact fun _ _ hxy => Std.Symm.symm (r := F.RelReflTransGen) _ _ hxy
 
 end RelReflTransGen
 end Frame
@@ -65,7 +67,9 @@ lemma rel_reflexive : Std.Refl (F^*.Rel) := ⟨fun _ => ReflTransGen.refl⟩
 lemma rel_transitive : IsTrans (F^*) (F^*.Rel) :=
   ⟨fun _ _ _ hxy hyz => ReflTransGen.trans hxy hyz⟩
 
-lemma rel_symmetric : Symmetric F.Rel → Symmetric (F^*) := ReflTransGen.symmetric
+lemma rel_symmetric : IsSymmetric F.Rel → IsSymmetric (F^*) := fun h => by
+  letI : Std.Symm F.Rel := ⟨fun _ _ => @h _ _⟩
+  exact fun _ _ hxy => Std.Symm.symm (r := F^*.Rel) _ _ hxy
 
 end TransitiveReflexiveClosure
 end Frame
@@ -92,7 +96,7 @@ lemma transitive : IsTrans F.World F.RelTransGen :=
   ⟨fun _ _ _ => TransGen.trans⟩
 
 @[simp]
-lemma symmetric (hSymm : Symmetric F.Rel) : Symmetric F.RelTransGen := by
+lemma symmetric (hSymm : IsSymmetric F.Rel) : IsSymmetric F.RelTransGen := by
   intro x y rxy;
   induction rxy with
   | single h => exact TransGen.single <| hSymm h;
@@ -117,7 +121,7 @@ lemma single (hxy : x ≺ y) : F^+.Rel x y := TransGen.single hxy
 lemma rel_transitive : IsTrans (F^+) (F^+.Rel) :=
   ⟨fun _ _ _ => TransGen.trans⟩
 
-lemma rel_symmetric (hSymm : Symmetric F.Rel) : Symmetric (F^+) := by simp_all
+lemma rel_symmetric (hSymm : IsSymmetric F.Rel) : IsSymmetric (F^+) := by simp_all
 
 end TransitiveClosure
 end Frame

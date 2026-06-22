@@ -74,7 +74,8 @@ def ModformMulDelta' (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 1) (k 
     CuspForm (CongruenceSubgroup.Gamma 1) k :=
   IsCuspFormToCuspForm _ k (mulDeltaMap k f) (mul_Delta_IsCuspForm k f)
 
-theorem mul_apply {k₁ k₂ : ℤ} {Γ : Subgroup SL(2, ℤ)} (f : SlashInvariantForm Γ k₁)
+theorem slashInvariantForm_mul_apply {k₁ k₂ : ℤ} {Γ : Subgroup SL(2, ℤ)}
+    (f : SlashInvariantForm Γ k₁)
     (g : SlashInvariantForm Γ k₂) (z : ℍ) : (f.mul g) z = f z * g z := rfl
 
 lemma Modform_mul_Delta_apply (k : ℤ) (f : ModularForm (CongruenceSubgroup.Gamma 1) (k - 12))
@@ -579,29 +580,32 @@ lemma dim_modforms_lvl_one (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
     · convert (congrArg (1 + ·) (rank_modularForm_gammaOne
         (ModularForm.levelOne_neg_weight_rank_zero
           (show (-8 : ℤ) < 0 by norm_num)))) using 1
-      norm_cast
+      all_goals first | rfl | (rw [Nat.floor_eq_zero.mpr (by norm_num)]; norm_num)
     -- k = 6: weight k - 12 = -6
     · convert (congrArg (1 + ·) (rank_modularForm_gammaOne
         (ModularForm.levelOne_neg_weight_rank_zero
           (show (-6 : ℤ) < 0 by norm_num)))) using 1
-      norm_cast
+      all_goals first | rfl | (rw [Nat.floor_eq_zero.mpr (by norm_num)]; norm_num)
     -- k = 8: weight k - 12 = -4
     · convert (congrArg (1 + ·) (rank_modularForm_gammaOne
         (ModularForm.levelOne_neg_weight_rank_zero
           (show (-4 : ℤ) < 0 by norm_num)))) using 1
-      norm_cast
+      all_goals first | rfl | (rw [Nat.floor_eq_zero.mpr (by norm_num)]; norm_num)
     -- k = 10: weight k - 12 = -2
     · convert (congrArg (1 + ·) (rank_modularForm_gammaOne
         (ModularForm.levelOne_neg_weight_rank_zero
           (show (-2 : ℤ) < 0 by norm_num)))) using 1
-      norm_cast
+      all_goals first | rfl | (rw [Nat.floor_eq_zero.mpr (by norm_num)]; norm_num)
     -- k = 12: weight k - 12 = 0
     · convert (congrArg (1 + ·)
         (rank_modularForm_gammaOne ModularForm.levelOne_weight_zero_rank_one)) using 1
-      norm_cast
+      all_goals first | rfl | norm_num [show ⌊(12 : ℚ) / 12⌋₊ = 1 from by norm_num]
     -- k = 14: weight k - 12 = 2
-    · convert (congrArg (1 + ·) dim_weight_two) using 1
-      norm_cast
+    · have hfloor : ⌊(14 : ℚ) / 12⌋₊ = 1 := by
+        rw [Nat.floor_eq_iff] <;> norm_num
+      convert (congrArg (1 + ·) dim_weight_two) using 1
+      all_goals first | rfl | simp only [hfloor, Nat.cast_one]
+      all_goals norm_num
 
 lemma ModularForm.dimension_level_one (k : ℕ) (hk : 3 ≤ (k : ℤ)) (hk2 : Even k) :
     Module.rank ℂ (ModularForm (CongruenceSubgroup.Gamma 1) (k)) = if 12 ∣ ((k) : ℤ) - 2 then

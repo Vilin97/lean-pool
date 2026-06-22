@@ -110,6 +110,7 @@ theorem of_contDiffOn_holderWith {f : E → F} {s : Set E} {k : ℕ} {α : I} {a
         dist (iteratedFDeriv ℝ k f x) (iteratedFDeriv ℝ k f a) ≤
           (C : ℝ) * dist x a ^ (α : ℝ) := by
       convert hdist using 2
+      rfl
     simpa [Real.abs_rpow_of_nonneg, ← dist_eq_norm, dist_nonneg] using hdist'
 
 theorem fst {k : ℕ} {α : I} {a : E × F} : ContDiffMoreiraHolderAt k α Prod.fst a :=

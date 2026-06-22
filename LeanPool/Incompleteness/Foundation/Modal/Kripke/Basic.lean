@@ -491,8 +491,8 @@ variable {C : Kripke.FrameClass}
 
 lemma definedBy_with_axiomK (defines : C.DefinedBy Γ) :
     DefinedBy C (insert (Axioms.K (.atom 0) (.atom 1)) Γ) := by
-  convert definedBy_inter AllFrameClass {Axioms.K (.atom 0) (.atom 1)} C Γ
-  simp;
+  convert definedBy_inter AllFrameClass {Axioms.K (.atom 0) (.atom 1)} C Γ <;>
+    simp [AllFrameClass, Set.singleton_union];
 
 end FrameClass
 

@@ -195,10 +195,10 @@ theorem hausdorffMeasure_image_le_mul_aux {X : Type*} [MetricSpace X]
     exact MeasurableEquiv.map_apply (WithRPowDist.measurableEquiv.symm.prodCongr (.refl F)) s
   suffices μH[sardMoreiraBound n k α (dim E)] (g '' t) ≤ C * μ t by
     simp only [hμ, g, Set.image_comp] at this
-    convert this using 3
-    ext ⟨x, y⟩
-    rcases @WithRPowDist.surjective_val _ β hβ₀ hβ₁ x with ⟨x, rfl⟩
-    simp [e, and_comm, ← WithRPowDist.ext_iff, t]
+    convert this using 3 <;>
+    · ext ⟨x, y⟩
+      rcases @WithRPowDist.surjective_val _ β hβ₀ hβ₁ x with ⟨x, rfl⟩
+      simp [e, and_comm, ← WithRPowDist.ext_iff, t]
   apply hasudorffMeasure_image_le_mul (holderExp := k + α) (dimDom := (k + α) * dim E + dim F)
   case holderExp_pos => positivity
   case hμ_dim =>
@@ -509,7 +509,7 @@ theorem hausdorffMeasure_image_piProd_fst_null_of_isBigO_isLittleO
       refine .of_norm_norm ?_
       simp only [← dist_eq_norm_sub, hgf]
       simp [Asymptotics.isBigO_refl]
-  rw [← Set.inter_union_diff s t, Set.image_union]
+  rw [← Set.inter_union_sdiff s t, Set.image_union]
   exact measure_union_null ht ht'
 
 theorem hausdorffMeasure_image_piProd_fst_null_of_fderiv_comp_inr_zero
@@ -554,7 +554,8 @@ theorem hausdorffMeasure_image_piProd_fst_null_of_fderiv_comp_inr_zero
     · filter_upwards [eventually_mem_nhdsWithin] with y hy using hf _ hy
     · filter_upwards [eventually_mem_nhdsWithin] using hs
     · convert hx
-      simp [Set.indicator_of_mem (subset_closure hψx)]
+      · rfl
+      · simp [Set.indicator_of_mem (subset_closure hψx)]
 
 theorem hausdorffMeasure_image_piProd_fst_null_of_finrank_eq
     [MeasurableSpace E] [BorelSpace E] [MeasurableSpace G] [BorelSpace G]
@@ -565,9 +566,9 @@ theorem hausdorffMeasure_image_piProd_fst_null_of_finrank_eq
       (Function.prod Prod.fst f '' s) = 0 := by
   apply hausdorffMeasure_image_piProd_fst_null_of_fderiv_comp_inr_zero hf hk
   intro x hx
-  rw [← ContinuousLinearMap.coe_inj, ContinuousLinearMap.coe_comp, ContinuousLinearMap.coe_inr,
-    ContinuousLinearMap.coe_zero, ← LinearMap.finrank_range_prod_fst_iff_comp_inr_eq_zero,
-    ← hs x hx]
+  rw [← ContinuousLinearMap.coe_inj, ContinuousLinearMap.toLinearMap_comp,
+    ContinuousLinearMap.coe_inr, ContinuousLinearMap.toLinearMap_zero,
+    ← LinearMap.finrank_range_prod_fst_iff_comp_inr_eq_zero, ← hs x hx]
   suffices fderiv ℝ (Function.prod Prod.fst f) x = .prod (.fst ℝ E F) (fderiv ℝ f x) by
     -- TODO: introduce&use `ContinuousLinearMap.rank`/`ContinuousLinearMap.finrank`?
     generalize H : fderiv ℝ (Function.prod Prod.fst f) x = f'
@@ -693,7 +694,7 @@ theorem hausdorffMeasure_sardMoreiraBound_image_null_of_finrank_le
     · apply this
       · exact fun x hx ↦ (hf x hx).continuousLinearMap_comp e.toContinuousLinearMap
       · intro x hx
-        grw [fderiv_comp', ← hs x hx]
+        grw [fderiv_fun_comp, ← hs x hx]
         · change dim (LinearMap.range ((fderiv ℝ e (f x)).toLinearMap ∘ₗ
             (fderiv ℝ f x).toLinearMap)) ≤ _
           rw [LinearMap.range_comp, ← LinearMap.range_domRestrict, LinearMap.finrank_range_of_inj]

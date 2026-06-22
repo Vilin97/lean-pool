@@ -280,7 +280,7 @@ private lemma h_coset_mem_H (D : HeckeCoset (GLPair 2))
   rw [Subgroup.mem_subgroupOf] at h_K
   rw [Subgroup.mem_pointwise_smul_iff_inv_smul_mem, ConjAct.smul_def] at h_K
   simp only [ConjAct.ofConjAct_toConjAct, map_inv, inv_inv] at h_K
-  exact (GLPair 2).H.mul_mem (by convert h_K using 1) hh₂
+  exact (GLPair 2).H.mul_mem (by convert h_K using 1; push_cast; rfl) hh₂
 
 /-- The transpose round-trip: `(h₁ * δ * h₂)ᵀ = h_cosetᵀ * (q.out * δ)ᵀ`
     where `h_coset = δ⁻¹ * (q.out⁻¹ * h₁) * δ * h₂`. -/

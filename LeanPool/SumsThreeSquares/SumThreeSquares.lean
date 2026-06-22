@@ -311,8 +311,8 @@ lemma exists_t (m : ℕ) (q : ℕ) (hm_sq : Squarefree m) (hm_mod : m % 8 = 3)
       use t * inv_2q
       convert ht.mul_left (2 * q * inv_2q ^ 2) |> Int.ModEq.trans <| ?_ using 1 <;>
         ring_nf
-      convert hinv_2q.pow 2 |> Int.ModEq.neg using 1
-      ring
+      convert hinv_2q.pow 2 |> Int.ModEq.neg using 1 <;>
+        ring
     choose! t ht using h_exists_tp
     have h_crt :
         ∀ p ∈ m.primeFactors,
@@ -1008,9 +1008,11 @@ lemma p_mod4_of_dvd_v_dvd_m (p : ℕ) (q : ℕ) (b h x y : ℤ) (R v : ℤ) (m :
       exact hRv.symm ▸ Int.natCast_dvd_natCast.mpr hpm
   have hp_2qx_by : (p : ℤ) ∣ (2 * q * x + b * y) := by
     have hp_2qx_by : (p : ℤ) ∣ ((2 * q * x + b * y) ^ 2 + m * y ^ 2) := by
-      convert hpv.mul_left (4 * q) using 1
-      rw [hv]
-      linear_combination hbqm * y ^ 2
+      have heq : (2 * q * x + b * y) ^ 2 + (m : ℤ) * y ^ 2 = 4 * q * v := by
+        rw [hv]
+        linear_combination hbqm * y ^ 2
+      rw [heq]
+      exact hpv.mul_left (4 * q)
     haveI := Fact.mk hp
     simp_all +decide [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     obtain ⟨k, hk⟩ := hpm

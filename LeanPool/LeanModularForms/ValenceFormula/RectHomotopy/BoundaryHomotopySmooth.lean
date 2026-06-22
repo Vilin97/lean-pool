@@ -50,8 +50,7 @@ private lemma hasDerivAt_chordSegment_shift' (a b : ℂ) (c t : ℝ) :
   have h2 : HasDerivAt (fun t' : ℝ => (t' - c) • b) b t := by
     have := h_shift.smul_const b
     simpa only [one_smul] using this
-  convert h1.add h2 using 1
-  ring
+  exact (h1.add h2).congr_deriv (by ring)
 
 /-- Derivative of a straight segment `t' ↦ c₀ + (c₁ + (t' - c)·d)·I` is `d·I`. -/
 private lemma hasDerivAt_straight_seg (c₀ c₁ d : ℂ) (c t : ℝ) :
@@ -126,8 +125,7 @@ private lemma not_diffAt_at_one (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
           ((1 - s) • (((Real.pi : ℝ) / 6) * I * rho') + s • (iPoint - rho')) (1 : ℝ) := by
         have h1 := h_arc.const_smul (1 - s)
         have h2 := h_chord.const_smul s
-        have := h1.add h2
-        convert this
+        exact h1.add h2
       have h_deriv_eq : (1 - s) • (((Real.pi : ℝ) / 6) * I * rho') + s • (iPoint - rho') =
           (1 - ↑s) * (-↑Real.pi * ↑(Real.sqrt 3) / 12 + ↑Real.pi / 12 * I) +
           ↑s * (-1 / 2 + (1 - ↑(Real.sqrt 3) / 2) * I) := by
@@ -249,7 +247,7 @@ private lemma not_diffAt_at_three (s : ℝ) (hs : s ∈ Set.Icc (0 : ℝ) 1) :
           ((1 - s) • (((Real.pi : ℝ) / 6) * I * rho) + s • (rho - iPoint)) (3 : ℝ) := by
         have h1 := h_arc.const_smul (1 - s)
         have h2 := h_chord.const_smul s
-        have := h1.add h2; convert this
+        exact h1.add h2
       have h_deriv_eq : (1 - s) • (((Real.pi : ℝ) / 6) * I * rho) + s • (rho - iPoint) =
           (1 - ↑s) * (-↑Real.pi * ↑(Real.sqrt 3) / 12 - ↑Real.pi / 12 * I) +
           ↑s * (-1 / 2 + (↑(Real.sqrt 3) / 2 - 1) * I) := by

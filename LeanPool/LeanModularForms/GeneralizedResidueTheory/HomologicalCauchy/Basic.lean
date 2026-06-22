@@ -224,7 +224,7 @@ theorem integrand_intervalIntegrable_of_avoids (γ : PiecewiseC1Immersion)
     (P := γ.partition) (M_inv * M_d) hab
   · intro t ⟨ht_Icc, ht_not_part⟩
     apply ContinuousWithinAt.mul
-    · exact (h_inv_cont t ht_Icc).mono diff_subset
+    · exact (h_inv_cont t ht_Icc).mono sdiff_subset
     · exact (γ.deriv_continuous_off_partition t
         (mem_Ioo_of_Icc_not_partition γ.toPiecewiseC1Curve t ht_Icc ht_not_part)
         ht_not_part).continuousWithinAt

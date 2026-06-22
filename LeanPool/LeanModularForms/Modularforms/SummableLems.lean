@@ -289,10 +289,12 @@ theorem sum_int_even {α : Type*} [UniformSpace α] [CommRing α] [IsUniformAddG
     by
     have h1 : (fun n : ℕ => f (-↑n.succ)) = fun n : ℕ => f ↑n.succ :=
       by
-      funext
-      apply hf
+      funext n
+      exact (hf _).symm
     rw [h1]
-    convert hpos
+    convert hpos using 2 with n
+    push_cast
+    ring
   have := (HasSum.pos_add_zero_add_neg hpos hneg).tsum_eq
   rw [this]
   ring
@@ -1066,23 +1068,22 @@ lemma sub_bound (s : ℍ) (A B : ℝ) (hB : 0 < B) (hs : s ∈ verticalStrip A B
   simp only [Fin.isValue, Matrix.cons_val_zero, Int.cast_one, one_mul, Matrix.cons_val_one,
     Matrix.cons_val_fin_one, Int.cast_neg, Int.cast_natCast, neg_add_rev, ge_iff_le] at *
   simp_rw [← zpow_natCast, ← zpow_neg]
-  convert this
-  · rw [Int.natCast_add]
-    simp [sub_eq_add_neg]
-    norm_cast
-  · simp only [Nat.cast_add, Nat.cast_ofNat, neg_add_rev, Int.reduceNeg]
-    norm_cast
-    congr
-    rw [@abs_eq_self]
-    apply (EisensteinSeries.r_pos _).le
-  rw [EisensteinSeries.norm_eq_max_natAbs]
-  simp only [neg_add_rev, Int.reduceNeg, Fin.isValue, Matrix.cons_val_zero, isUnit_one,
-    Int.natAbs_of_isUnit, Matrix.cons_val_one, Matrix.cons_val_fin_one, Int.natAbs_neg,
-    Int.natAbs_natCast, Nat.cast_max, Nat.cast_one]
-  norm_cast
-  congr
-  simp only [right_eq_sup]
-  exact n.2
+  have hnorm : ‖(![1, -↑↑n] : Fin 2 → ℤ)‖ = (n : ℝ) := by
+    rw [EisensteinSeries.norm_eq_max_natAbs]
+    simp only [Fin.isValue, Matrix.cons_val_zero, isUnit_one, Int.natAbs_of_isUnit,
+      Matrix.cons_val_one, Matrix.cons_val_fin_one, Int.natAbs_neg, Int.natAbs_natCast,
+      Nat.cast_max, Nat.cast_one]
+    rw [max_eq_right (by exact_mod_cast n.2)]
+  have habs : |r (⟨⟨A, B⟩, hB⟩ : ℍ)| = r ⟨⟨A, B⟩, hB⟩ :=
+    abs_of_nonneg (EisensteinSeries.r_pos _).le
+  rw [hnorm] at this
+  have hcast : (-(2 : ℝ) + -↑k) = ((-2 + -↑k : ℤ) : ℝ) := by push_cast; ring
+  rw [hcast] at this
+  simp only [Real.rpow_intCast] at this
+  have hexp : (-(↑(k + 2) : ℤ)) = -2 + -↑k := by push_cast; ring
+  have hexp2 : (-((k : ℤ) + 2)) = -2 + -↑k := by ring
+  rw [show (s : ℂ) - n = s + -↑↑n by ring, habs, hexp, hexp2]
+  exact this
 
 
 lemma add_bound (s : ℍ) (A B : ℝ) (hB : 0 < B) (hs : s ∈ verticalStrip A B) (k : ℕ)
@@ -1098,24 +1099,22 @@ lemma add_bound (s : ℍ) (A B : ℝ) (hB : 0 < B) (hs : s ∈ verticalStrip A B
   simp only [Fin.isValue, Matrix.cons_val_zero, Int.cast_one, one_mul, Matrix.cons_val_one,
     Matrix.cons_val_fin_one, Int.cast_natCast, neg_add_rev, ge_iff_le] at *
   simp_rw [← zpow_natCast, ← zpow_neg]
-  convert this
-  · rw [Int.natCast_add]
-    simp
-    norm_cast
-  · rw [Int.natCast_add]
-    simp only [Nat.cast_ofNat, neg_add_rev, Int.reduceNeg]
-    norm_cast
-    congr
-    rw [@abs_eq_self]
-    apply (EisensteinSeries.r_pos _).le
-  rw [EisensteinSeries.norm_eq_max_natAbs]
-  simp only [neg_add_rev, Int.reduceNeg, Fin.isValue, Matrix.cons_val_zero, isUnit_one,
-    Int.natAbs_of_isUnit, Matrix.cons_val_one, Matrix.cons_val_fin_one, Int.natAbs_natCast,
-    Nat.cast_max, Nat.cast_one]
-  norm_cast
-  congr
-  simp only [right_eq_sup]
-  exact n.2
+  have hnorm : ‖(![1, ↑↑n] : Fin 2 → ℤ)‖ = (n : ℝ) := by
+    rw [EisensteinSeries.norm_eq_max_natAbs]
+    simp only [Fin.isValue, Matrix.cons_val_zero, isUnit_one, Int.natAbs_of_isUnit,
+      Matrix.cons_val_one, Matrix.cons_val_fin_one, Int.natAbs_natCast,
+      Nat.cast_max, Nat.cast_one]
+    rw [max_eq_right (by exact_mod_cast n.2)]
+  have habs : |r (⟨⟨A, B⟩, hB⟩ : ℍ)| = r ⟨⟨A, B⟩, hB⟩ :=
+    abs_of_nonneg (EisensteinSeries.r_pos _).le
+  rw [hnorm] at this
+  have hcast : (-(2 : ℝ) + -↑k) = ((-2 + -↑k : ℤ) : ℝ) := by push_cast; ring
+  rw [hcast] at this
+  simp only [Real.rpow_intCast] at this
+  have hexp : (-(↑(k + 2) : ℤ)) = -2 + -↑k := by push_cast; ring
+  have hexp2 : (-((k : ℤ) + 2)) = -2 + -↑k := by ring
+  rw [show (s : ℂ) + n = s + ↑↑n by ring, habs, hexp, hexp2]
+  exact this
 
 theorem aut_bound_on_comp (K : Set ℍ) (hk2 : IsCompact K) (k : ℕ) :
     ∃ u : ℕ+ → ℝ,

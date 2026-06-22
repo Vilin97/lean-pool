@@ -42,7 +42,8 @@ lemma mid_point_I {i n : ℕ} (hi : i < n) : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈
     · exact mul_nonneg (by norm_num) (Nat.cast_nonneg n)
   · refine (div_le_one (mul_pos (by norm_num) n_cast_pos)).mpr ?_
     have hcast : (↑(2 * i + 1) : ℝ) ≤ ↑(2 * n) := Nat.cast_le.mpr hbound
-    convert hcast <;> simp
+    push_cast at hcast
+    linarith
 
 namespace UnitIntervalSub
 
@@ -168,24 +169,38 @@ theorem lebesgue_number_lemma_unitSquare {ι : Sort u} {c : ι → Set (I × I)}
       rw [Nat.cast_succ, add_mul, one_mul]
       exact lt_add_of_le_of_pos hnδ δ_pos
     linarith
+  have hx2_mem : (x.2 : ℝ) ∈ Set.Icc ((j : ℝ) / n.succ) ((j + 1) / n.succ) := by
+    refine ⟨?_, ?_⟩
+    · have := hx.2.1
+      rwa [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
+    · have := hx.2.2
+      rw [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
+      push_cast at this ⊢
+      linarith
+  have hx1_mem : (x.1 : ℝ) ∈ Set.Icc ((i : ℝ) / n.succ) ((i + 1) / n.succ) := by
+    refine ⟨?_, ?_⟩
+    · have := hx.1.1
+      rwa [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
+    · have := hx.1.2
+      rw [← Subtype.coe_le_coe, Fraction.Fraction_coe] at this
+      push_cast at this ⊢
+      linarith
+  have hsub_v : ((j + 1 : ℝ) / n.succ) - ((j : ℝ) / n.succ) = 1 / n.succ := by
+    rw [div_sub_div_same]; ring_nf
+  have hsub_h : ((i + 1 : ℝ) / n.succ) - ((i : ℝ) / n.succ) = 1 / n.succ := by
+    rw [div_sub_div_same]; ring_nf
   have h₁ : dist x (x.1, ⟨mp_v, mid_point_v_I⟩) < (δ/2) := by
     apply lt_of_le_of_lt _ hδ_bound
     have hxeq : x = (x.1, x.2) := by ext <;> rfl
-    rw [hxeq, dist_prod_same_left]
-    convert Real.dist_le_of_mem_Icc hx.2 _ using 1
-    · simp only [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one, one_div]
-      rw [div_sub_div_same]
-      simp
-    · convert mid_point_v_Icc using 2
-      rw [Fraction.Fraction_coe, Nat.cast_succ]
+    rw [hxeq, dist_prod_same_left, Subtype.dist_eq, Real.dist_eq, ← hsub_v]
+    have := Real.dist_le_of_mem_Icc hx2_mem mid_point_v_Icc
+    rw [Real.dist_eq] at this
+    exact this
   have h₂ : dist (x.1, (⟨mp_v, mid_point_v_I⟩ : I))
       ((⟨mp_h, mid_point_h_I⟩ : I), (⟨mp_v, mid_point_v_I⟩ : I)) < (δ/2) := by
     apply lt_of_le_of_lt _ hδ_bound
-    rw [dist_prod_same_right]
-    convert Real.dist_le_of_mem_Icc hx.1 _ using 1
-    · simp only [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one, one_div]
-      rw [div_sub_div_same]
-      simp
-    · convert mid_point_h_Icc using 2
-      rw [Fraction.Fraction_coe, Nat.cast_succ]
+    rw [dist_prod_same_right, Subtype.dist_eq, Real.dist_eq, ← hsub_h]
+    have := Real.dist_le_of_mem_Icc hx1_mem mid_point_h_Icc
+    rw [Real.dist_eq] at this
+    exact this
   linarith

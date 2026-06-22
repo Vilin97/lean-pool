@@ -271,7 +271,7 @@ lemma boundary_seg {L : Segment} (hL : L 0 ≠ L 1)
     simp only [←hαx, Fin.sum_univ_two]
     fin_cases i <;> simp_all [f]
   · intro ⟨i, _, hi⟩
-    rw [boundary, @Set.mem_diff]
+    rw [boundary, @Set.mem_sdiff]
     constructor
     · rw [← hi]
       exact corner_in_closedHull
@@ -534,8 +534,9 @@ lemma linearCombinationDetLast {n : ℕ} {x y : ℝ²} {P : Fin n → ℝ²} {α
     (hα : ∑ i, α i = 1) :
   det (fun | 0 => x | 1 => y | 2 => (∑ i, α i • P i)) =
   ∑ i, (α i * det (fun | 0 => x | 1 => y | 2 => (P i))) := by
-  simp only [det, Fin.isValue, WithLp.ofLp_sum, WithLp.ofLp_smul, sum_apply _, Pi.smul_apply,
-    smul_eq_mul, mul_sum, left_distrib, sum_add_distrib, ← sum_mul, hα, one_mul, add_left_inj]
+  simp only [det, Fin.isValue, WithLp.ofLp_sum, WithLp.ofLp_smul, Finset.sum_apply _,
+    Pi.smul_apply, smul_eq_mul, mul_sum, left_distrib, sum_add_distrib, ← sum_mul, hα, one_mul,
+    add_left_inj]
   congr <;> (ext; ring)
 
 
@@ -691,12 +692,12 @@ lemma boundary_iff {T : Triangle} (hdet : det T ≠ 0) {x : ℝ²} (hx : x ∈ c
   · intro hxB
     by_contra hAll
     push Not at hAll
-    apply ((Set.mem_diff _).mp hxB).2
+    apply ((Set.mem_sdiff _).mp hxB).2
     rw [open_triangle_iff hdet]
     rw [closed_triangle_iff hdet] at hx
     exact fun i ↦ lt_of_le_of_ne (hx i) (hAll i).symm
   · intro ⟨i,hi⟩
-    rw [boundary, Set.mem_diff]
+    rw [boundary, Set.mem_sdiff]
     refine ⟨hx,?_⟩
     intro hxOpen
     rw [open_triangle_iff hdet] at hxOpen
@@ -713,8 +714,8 @@ lemma boundary_is_union_sides {T : Triangle} (hdet : det T ≠ 0)
   ext x
   constructor
   · intro hx
-    have ⟨i,_⟩ := (boundary_iff hdet (Set.mem_of_mem_diff hx)).1 hx
-    exact Set.mem_iUnion.mpr ⟨i, by rwa [←mem_closed_side hdet (Set.mem_of_mem_diff hx) i]⟩
+    have ⟨i,_⟩ := (boundary_iff hdet (Set.mem_of_mem_sdiff hx)).1 hx
+    exact Set.mem_iUnion.mpr ⟨i, by rwa [←mem_closed_side hdet (Set.mem_of_mem_sdiff hx) i]⟩
   · intro hx
     have ⟨_,hx⟩ := Set.mem_iUnion.1 hx
     exact side_in_boundary hdet _ hx
@@ -726,7 +727,7 @@ lemma el_boundary_imp_side {T : Triangle} (hdet : det T ≠ 0) {x : ℝ²} (hx :
 
 lemma el_in_boundary_imp_side {T : Triangle} {x : ℝ²} (hdet : det T ≠ 0)
     (hx : x ∈ boundary T) (hv : ∀ i, x ≠ T i) : ∃ i, x ∈ openHull (Tside T i) := by
-  have hxClosed := (Set.mem_of_mem_diff hx)
+  have hxClosed := (Set.mem_of_mem_sdiff hx)
   have ⟨i,hi⟩ := (boundary_iff hdet hxClosed).1 hx
   use i
   rw [←mem_open_side hdet hxClosed]
@@ -1263,8 +1264,8 @@ lemma sub_collinear_right' {u v w t : ℝ²} (hc : colin u v w) (ht : t ∈ clos
     (htv : t ≠ v) : colin t v w := by
   by_cases ht_open : t ∈ openHull (toSegment u v)
   · exact sub_collinear_right hc ht_open
-  · have ht_boundary : t ∈ boundary (toSegment u v) := Set.mem_diff_of_mem ht ht_open
-    rw [boundary_seg (by convert (middle_not_boundary_colin hc).1)] at ht_boundary
+  · have ht_boundary : t ∈ boundary (toSegment u v) := Set.mem_sdiff_of_mem ht ht_open
+    rw [boundary_seg (by simpa [toSegment] using (middle_not_boundary_colin hc).1)] at ht_boundary
     simp only [coe_image, coe_univ, Set.image_univ, Set.mem_range] at ht_boundary
     have ⟨i, hi⟩ := ht_boundary
     fin_cases i
@@ -1283,7 +1284,7 @@ closedHull (toSegment z w) ⊆ closedHull (toSegment v w) \ {v} := by
       apply closedHull_constant
       linarith
     rw [hzwconst]
-    simp only [Set.singleton_subset_iff, Set.mem_diff, Set.mem_singleton_iff]
+    simp only [Set.singleton_subset_iff, Set.mem_sdiff, Set.mem_singleton_iff]
     constructor
     · tauto_set
     · apply hvw.symm
@@ -1307,7 +1308,7 @@ closedHull (toSegment z w) ⊆ closedHull (toSegment v w) \ {v} := by
     have hw : w ∈ closedHull (toSegment v w) \ {v} := by
       rw [← boundary_union_open_closed]
       rw [hvwboundary]
-      simp only [Set.mem_diff, Set.mem_union, Set.mem_insert_iff, Set.mem_singleton_iff, or_true,
+      simp only [Set.mem_sdiff, Set.mem_union, Set.mem_insert_iff, Set.mem_singleton_iff, or_true,
         true_or, true_and]
       apply hvw.symm
     have hzwboundary : boundary (toSegment z w) = {z, w} := by
@@ -1324,12 +1325,12 @@ closedHull (toSegment z w) ⊆ closedHull (toSegment v w) \ {v} := by
         · rw [hxz]
           exact hz
         · have hxw : x = w := by
-            simp_all only [ne_eq, Set.mem_diff, Set.mem_singleton_iff, true_and, Set.mem_insert_iff,
-              false_or]
+            simp_all only [ne_eq, Set.mem_sdiff, Set.mem_singleton_iff, true_and,
+              Set.mem_insert_iff, false_or]
           rw [hxw]
           rw [← boundary_union_open_closed]
           rw [hvwboundary]
-          simp only [Set.mem_diff, Set.mem_union, Set.mem_insert_iff,
+          simp only [Set.mem_sdiff, Set.mem_union, Set.mem_insert_iff,
             Set.mem_singleton_iff, or_true, true_or, true_and, ne_eq]
           apply hvw.symm
       apply hzhw
@@ -1604,8 +1605,8 @@ lemma closedHull_eq_imp_eq_or_rev_seg_aux {u v x y : ℝ²}
     by_contra hc; push Not at hc
     have hu : u ∈ openHull (toSegment u v) := by
       refine open_segment_sub' (L₁ := toSegment x y) (by simp only [h, subset_refl]) hxy ?_
-      rw [←open_closedHull_minus_boundary, Set.mem_diff, ←h, boundary_seg_set hxy]
-      refine ⟨by convert corner_in_closedHull (P := toSegment u v) (i := 0 ),?_⟩
+      rw [←open_closedHull_minus_boundary, Set.mem_sdiff, ←h, boundary_seg_set hxy]
+      refine ⟨by simpa [toSegment] using corner_in_closedHull (P := toSegment u v) (i := 0),?_⟩
       simp_all [toSegment]
     apply Set.eq_empty_iff_forall_notMem.1 (boundary_int_open_empty (P := toSegment u v)) u
     exact ⟨boundary_seg' huv 0 ,hu⟩
@@ -1867,9 +1868,9 @@ lemma seg_par_openHull {L : Segment} {a b : ℝ} {v₁ v₂ : ℝ²} (hab : a < 
 lemma seg_par_boundary {L : Segment} {a b : ℝ} {v₁ v₂ : ℝ²} (hab : a < b) (h : v₂ ≠ 0)
     (hc : closedHull L = linePar v₁ v₂ '' (Set.Icc a b : Set ℝ)) :
     boundary L = linePar v₁ v₂ '' {a,b} := by
-  rw [boundary, hc, seg_par_openHull hab hc, ←Set.image_diff (seg_par_injective h) _ _]
+  rw [boundary, hc, seg_par_openHull hab hc, ←Set.image_sdiff (seg_par_injective h) _ _]
   apply (Set.image_eq_image (seg_par_injective h)).mpr
-  exact Set.Icc_diff_Ioo_same (le_of_lt hab)
+  exact Set.Icc_sdiff_Ioo_same (le_of_lt hab)
 
 lemma seg_par_nontrivial {L : Segment} {a b : ℝ} {v₁ v₂ : ℝ²} (hL : L 0 ≠ L 1)
     (hc : closedHull L = linePar v₁ v₂ '' (Set.Icc a b : Set ℝ)) :
@@ -2121,8 +2122,8 @@ lemma real_number_bound_aux {n : ℕ} {f g : Fin n → ℝ}
             rw [@mem_image]
             use i
             simp only [mem_univ, and_self]
-          · convert hMg i using 1
-            refine Eq.symm (abs_of_neg (by linarith))
+          · rw [← abs_of_neg (not_le.mp hgi)]
+            exact hMg i
           · exact le_of_lt hM₂pos
         · simp_rw [←neg_lt_neg_iff (a := -f i * M)]
           simp only [neg_mul, neg_neg, mul_neg]
@@ -2270,7 +2271,7 @@ lemma seg_inter_open_triangle {T : Triangle} {S : Segment} (hDet : det T ≠ 0)
   have ⟨x, hxS, hxT⟩ := hST
   by_cases hxO : x ∈ openHull S
   · exact ⟨x, hxO, hxT⟩
-  · have hxB : x ∈ boundary S := Set.mem_diff_of_mem hxS hxO
+  · have hxB : x ∈ boundary S := Set.mem_sdiff_of_mem hxS hxO
     have hSn := boundary_seg_nonempty hxB
     rw [boundary_seg hSn, mem_coe, mem_image] at hxB
     have ⟨i, temp, hi⟩ := hxB
@@ -2281,10 +2282,10 @@ lemma seg_inter_open_triangle {T : Triangle} {S : Segment} (hDet : det T ≠ 0)
       · use i + 1, by simp
         convert hi using 1
         fin_cases i <;> simp [reverseSegment, toSegment]
-      · convert hSn.symm using 1
+      · simpa [reverseSegment, toSegment] using hSn.symm
       · have hi1 : i = 1 := by fin_cases i <;> simp_all
         rw [hi1] at hi
-        convert hi using 1
+        simpa [reverseSegment, toSegment] using hi
       · assumption
     · rw [hi0] at hi
       rw [←hi] at hxS hxT hxO

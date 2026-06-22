@@ -6,6 +6,7 @@ Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Order.Ring.Star
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.Analysis.SpecialFunctions.Log.Summable
 import Mathlib.Data.Int.CardIntervalMod
@@ -13,7 +14,6 @@ import Mathlib.Data.Int.Star
 import Mathlib.Data.Nat.ChineseRemainder
 import Mathlib.Data.PNat.Prime
 import Mathlib.Data.Rat.Star
-import Mathlib.Data.Real.StarOrdered
 import Mathlib.NumberTheory.SumPrimeReciprocals
 import Mathlib.Order.BourbakiWitt
 import Mathlib.Order.CompletePartialOrder

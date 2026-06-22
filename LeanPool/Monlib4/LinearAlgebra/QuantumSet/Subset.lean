@@ -378,7 +378,8 @@ theorem QuantumSet.subsetTensorAlgEquiv_adjoint
   letI h2 := QuantumSet.instSubset (A := B) (by infer_instance) r;
   letI h3 := QuantumSet.tensorProduct (h := h);
   letI := QuantumSet.tensorProduct (hA := h1) (hB := h2) (h := Fact.mk rfl);
-  letI := QuantumSet.instSubset (A := A ⊗[ℂ] B) h3 r;
+  letI h4 := QuantumSet.instSubset (A := A ⊗[ℂ] B) h3 r;
+  letI : FiniteDimensional ℂ (subset r (A ⊗[ℂ] B)) := QuantumSet.toFinite (hA := h4);
     LinearMap.adjoint (QuantumSet.subsetTensorAlgEquiv (A := A) (B := B) r).toLinearMap
     = (QuantumSet.subsetTensorAlgEquiv r).symm.toLinearMap :=
 by
@@ -388,7 +389,8 @@ by
   letI h2 := QuantumSet.instSubset (A := B) (by infer_instance) r
   letI h3 := QuantumSet.tensorProduct (h := h)
   letI := QuantumSet.tensorProduct (hA := h1) (hB := h2) (h := Fact.mk rfl)
-  letI := QuantumSet.instSubset (A := A ⊗[ℂ] B) h3 r
+  letI h4 := QuantumSet.instSubset (A := A ⊗[ℂ] B) h3 r
+  letI : FiniteDimensional ℂ (subset r (A ⊗[ℂ] B)) := QuantumSet.toFinite (hA := h4)
   refine (LinearMap.adjoint_comp
     (QuantumSet.toSubsetAlgEquiv r : A ⊗[ℂ] B ≃ₐ[ℂ] subset r (A ⊗[ℂ] B)).toLinearMap
     (TensorProduct.map (QuantumSet.toSubsetAlgEquiv r).symm.toLinearMap

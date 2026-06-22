@@ -49,8 +49,7 @@ private lemma mtb_hasDerivAt_chordSegment_shift (a b : ℂ) (c t : ℝ) :
   have h2 : HasDerivAt (fun t' : ℝ => (t' - c) • b) b t := by
     have := h_shift.smul_const b
     simpa only [one_smul] using this
-  convert h1.add h2 using 1
-  ring
+  exact (h1.add h2).congr_deriv (by ring)
 
 /-- The homotopy is not differentiable at `t = 2` when `s ≠ 0`: the left limit of the slope
 involves the arc-vs-chord increment `iPoint - rho'`, the right limit `rho - iPoint`, and these

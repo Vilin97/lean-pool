@@ -389,6 +389,7 @@ lemma eta_equality' : {z : ℂ | 0 < z.im}.EqOn ((η ∘ (fun z : ℂ => -1/z)))
   have he : η Complex.I ≠ 0 := by
     have h:=  dedekindEtaFun'_ne_zero UpperHalfPlane.I
     convert h
+    exact UpperHalfPlane.coe_I.symm
   have hcd := (mul_eq_right₀ he).mp (_root_.id (Eq.symm h3))
   rw [mul_eq_one_iff_inv_eq₀ hz] at hcd
   rw [@inv_eq_iff_eq_inv] at hcd

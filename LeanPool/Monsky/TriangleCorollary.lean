@@ -107,7 +107,7 @@ theorem unit_is_unit_in_prod
   constructor <;>
     unfold regionBetween openHull openSimplex lower upper unitTriangle <;> intro hx <;>
     simp only [idMap_apply, Fin.isValue, Set.mem_image, Set.mem_setOf_eq,
-      exists_exists_and_eq_and, WithLp.ofLp_sum, WithLp.ofLp_smul, sum_apply, Pi.smul_apply,
+      exists_exists_and_eq_and, WithLp.ofLp_sum, WithLp.ofLp_smul, Finset.sum_apply, Pi.smul_apply,
       smul_eq_mul, Set.mem_Ioc, Set.mem_Ioo, Pi.zero_apply] at *
   · rcases hx with ⟨a, ⟨ha, ha''⟩, ha'⟩
     rw [Fin.sum_univ_three] at ha'' ha'
@@ -779,10 +779,10 @@ theorem closed_triangle_is_union (T : Triangle)
 lemma volume_zero (A B : Set ℝ²) (h : MeasureTheory.volume B = 0)
     : MeasureTheory.volume (A ∪ B) = MeasureTheory.volume A := by
   symm
-  apply MeasureTheory.measure_eq_measure_of_null_diff
+  apply MeasureTheory.measure_eq_measure_of_null_sdiff
   · exact Set.subset_union_left
   · have h1 : ((A ∪ B) \ A) ⊆ B :=
-      Set.diff_subset_iff.mpr fun ⦃a⦄ a ↦ a
+      Set.sdiff_subset_iff.mpr fun ⦃a⦄ a ↦ a
     exact MeasureTheory.measure_mono_null h1 h
 
 --This shows that the boundary (but not Pjotrs boundary) of a triangle has measure zero

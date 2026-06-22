@@ -230,8 +230,9 @@ private lemma integrable_oneDimPhi_cross_gaussian_wip
       convert hcross using 1
       funext z
       simp [Algebra.smul_def, mul_left_comm, mul_comm]
-    convert hsmul.const_mul (1 / Real.pi) using 1
-    funext z
+    refine (hsmul.const_mul (1 / Real.pi)).congr ?_
+    filter_upwards with z
+    symm
     let X : ℂ :=
       HermitekLEAN.Phi k m (z 0) * (starRingEnd ℂ) (HermitekLEAN.Phi k n (z 0))
     change (ENNReal.ofReal (gaussianDensity 1 z)).toReal • X =

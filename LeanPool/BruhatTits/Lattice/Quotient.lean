@@ -195,7 +195,7 @@ lemma _root_.Module.Basis.unipotentResidue_mk [IsFractionRing R K]
         (Submodule.Quotient.mk
           (p := (maximalIdeal R • ⊤ : Submodule R (b.toLattice (R := R)).M)) (b' i)) =
           b.toQuotient' (R := R) i := by
-      convert (b.toQuotient'_apply (R := R) i).symm using 1
+      exact (b.toQuotient'_apply (R := R) i).symm
     rw [hq]
     match i with
     | 0 =>
@@ -607,6 +607,8 @@ lemma mapIntermediate_unipotent_smul (b : Basis (Fin 2) K (Fin 2 → K)) (x : R)
     · rw [Lattice.mem_mapIntermediate]
       refine ⟨⟨m, hmL⟩, hm, rfl⟩
     · convert Basis.unipotentResidue_mk (R := R) b x (⟨m, hmL⟩ : b.toSubmodule (R := R)) using 1
+      · rfl
+      · rfl
   · rw [Submodule.map_le_iff_le_comap]
     intro y hy
     rw [(b.toLattice (R := R)).mem_mapIntermediate] at hy

@@ -291,13 +291,18 @@ lemma x_mem_tree_short' h' (h : n ≤ 2 * k) (hp : IsPosition (H.x.val.take n) P
       exact (List.length_take_le (n + 1) (H.lift h').liftShort.val).trans (by omega))
     erw [take_apply (treeHom hyp), Lift.liftShort_lift]
     convert hvalT using 1
-    · ext1
+    case e'_1 => rfl
+    case e'_2 =>
+      apply heq_of_eq
+      ext1
       conv => simp [take_coe, ExtensionsAt.valT', h.le]
       change List.take (n + 1) (List.take (2 * k + 1) H.x.val) =
         List.take n H.x.val ++ [H.x.val[n]]
       rw [List.take_take, min_eq_left (by omega)]
       exact (List.take_concat_get' H.x.val n (by omega)).symm
-    · convert (ExtensionsAt.map_valT' (f := treeHom hyp)
+    case e'_3 =>
+      apply heq_of_eq
+      exact (ExtensionsAt.map_valT' (f := treeHom hyp)
         (x := pInv (treeHom hyp) ((stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
           (H.pInv_fixing h.le))
         (y := (stratMap' H.R).pre.subtreeIncl (Tree.take n H.x))
@@ -518,6 +523,7 @@ lemma lLift_mem_tree h (hL : (H.lift h).Lost) : hL.toLLift'.liftVal ∈ H.R.pre.
           · simp [hnx]
           · simp [Lift.LLift.toWLLift, Lift.Lost'.mk, Lift.LLift.takeMin, take_coe, hnx,
               ]
+        all_goals omega
     · rename_i _ hif; cases hif (lost_of_lost' (by
         conv at hL' => simp [dropLast]
         conv => simp [dropLast]
@@ -547,7 +553,7 @@ lemma losable_subtree {h} (hL : (H.lift h).Losable) (hnL : ¬ ∃ h', ((H.dropLa
     refine ⟨?_, ?_⟩
     · simp only [lift_toPreLift, preLift_x_coe, residual_tree, mem_subAt,
         List.drop_take_append_drop]
-      convert hL.1 using 1
+      exact hL.1
     · intros
       exact Set.mem_univ _)
   intro n hn _ _ _

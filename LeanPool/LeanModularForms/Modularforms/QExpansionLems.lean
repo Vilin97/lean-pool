@@ -7,7 +7,7 @@ Authors: Chris Birkbeck
 module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Mathlib.Data.Real.StarOrdered
+public import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.NumberTheory.ModularForms.QExpansion
 public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.Tactic.Cases
@@ -46,7 +46,7 @@ theorem modform_tendto_ndhs_zero {k : ℤ} (n : ℕ) [ModularFormClass F Γ(n) k
       (by simp only [Nat.cast_pos]; exact Nat.pos_of_neZero n) ?_ ?_ ?_).continuousAt.tendsto
     · apply SlashInvariantFormClass.periodic_comp_ofComplex
       simp
-    · simp only [eventually_comap, eventually_atTop, ge_iff_le]
+    · simp only [eventually_comap, eventually_atTop]
       use 1
       intro b hb a ha
       refine UpperHalfPlane.mdifferentiableAt_iff.mp (ModularFormClass.holo f ⟨a, ?_⟩)
@@ -152,7 +152,7 @@ lemma qExpansion_smul2 (a : ℂ) (f : ModularForm Γ(n) k) [NeZero n] :
       (hh := Nat.cast_pos.mpr (Nat.pos_of_neZero n)) (hΓ := by simp) a f).symm
 
 instance instFunLikeUpperHalfPlaneFun :
-    FunLike (ℍ → ℂ) ℍ ℂ := { coe := fun ⦃a₁⦄ ↦ a₁, coe_injective' := fun ⦃_ _⦄ a ↦ a}
+    FunLike (ℍ → ℂ) ℍ ℂ := { coe := fun ⦃a₁⦄ ↦ a₁, coe_injective := fun ⦃_ _⦄ a ↦ a}
 
 lemma qExpansion_ext (f g : ℍ → ℂ) (h : f = g) : qExpansion 1 f =
     qExpansion 1 g := by

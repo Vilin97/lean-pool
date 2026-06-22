@@ -187,8 +187,8 @@ instance filterOf : FilterOf (finestFilterationModel M T) M T where
     simp_all [Satisfies];
 
 omit [T.SubformulaClosed] in
-lemma symmetric_of_symmetric (hSymm : Symmetric M.toFrame) :
-    Symmetric (finestFilterationModel M T).Rel := by
+lemma symmetric_of_symmetric (hSymm : IsSymmetric M.toFrame) :
+    IsSymmetric (finestFilterationModel M T).Rel := by
   intro Qx Qy RQxQy;
   obtain ⟨x, y, hx, hy, h⟩ := RQxQy; subst_vars;
   use y, x;
@@ -242,8 +242,8 @@ lemma transitive :
   Frame.TransitiveClosure.rel_transitive
 
 omit [T.SubformulaClosed] in
-lemma symmetric_of_symmetric (M_symm : Symmetric M.Rel) :
-    Symmetric (finestFilterationTransitiveClosureModel M T).Rel :=
+lemma symmetric_of_symmetric (M_symm : IsSymmetric M.Rel) :
+    IsSymmetric (finestFilterationTransitiveClosureModel M T).Rel :=
   Frame.TransitiveClosure.rel_symmetric <| finestFilterationModel.symmetric_of_symmetric M_symm
 
 lemma reflexive_of_transitive_reflexive (M_trans : IsTrans M.World M.Rel) (M_refl :

@@ -113,15 +113,15 @@ lemma TendstoUniformlyOn.mul_of_le
       by_cases h : g x = 0
       case pos => simp [h, half_pos hε]
       case neg =>
-        convert mul_lt_mul (hF x hx) (h1 x hx) (norm_pos_iff.mpr h) (by positivity) using 1
-        simp only [div_mul, isUnit_iff_ne_zero, Ne, hMg.ne', not_false_eq_true,
-          IsUnit.mul_div_cancel_right]
+        refine (mul_lt_mul (hF x hx) (h1 x hx) (norm_pos_iff.mpr h)
+          (by positivity)).trans_eq ?_
+        field_simp
     have h3 : ‖F i x * (g x - G i x)‖ < ε / 2 := by
       rw [norm_mul]
       by_cases h : F i x = 0
       case pos => simp [h, half_pos hε]
       case neg =>
-        convert mul_lt_mul' (hf x hx) (hG x hx) (norm_nonneg _) hMf using 1
+        refine (mul_lt_mul' (hf x hx) (hG x hx) (norm_nonneg _) hMf).trans_eq ?_
         field_simp
     simp_rw [Pi.mul_apply, lxyab]
     exact (norm_add_le _ _).trans_lt (add_halves ε ▸ add_lt_add h2 h3)

@@ -352,10 +352,10 @@ lemma avoidingSegmentSet_sub_right {X : Finset ℝ²} {A : Set ℝ²} {S : Segme
 --         rw [@or_iff_not_imp_left]
 --         intro ha; by_contra hb
 --         have haB : a ∈ boundary S := by
---           rw [boundary, Set.mem_diff]
+--           rw [boundary, Set.mem_sdiff]
 --           refine ⟨hLS (corner_in_closedHull (i := ⟨0, by omega⟩)), ha⟩
 --         have hbB : b ∈ boundary S := by
---           rw [boundary, Set.mem_diff]
+--           rw [boundary, Set.mem_sdiff]
 --           refine ⟨hLS (corner_in_closedHull (i := ⟨1, by omega⟩)), hb⟩
 -- simp only [boundary_seg (segmentSet_vertex_distinct (basicAvoidingSegmentSet_sub hS)),
 --             coe_image, coe_univ, Set.image_univ, Set.mem_range] at hbB haB
@@ -427,7 +427,7 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
     · intro ⟨hL, hLS⟩
       have hLi : ∀ i, L i ∈ boundary S := by
         intro i
-        simp only [boundary, Set.mem_diff]
+        simp only [boundary, Set.mem_sdiff]
         refine ⟨hLS (corner_in_closedHull),?_⟩
         apply Scard
         exact segmentSet_vertex (basicAvoidingSegmentSet_sub hL) i
@@ -459,13 +459,17 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
     have hSlefti : ∀ i, Sleft i ∈ closedHull S := by
       rw [mem_filter] at hx
       intro i; fin_cases i
-      · convert (corner_in_closedHull (i := 0) (P := S)) using 1
-      · convert open_sub_closed _ hx.2
+      · change Sleft 0 ∈ closedHull S
+        exact corner_in_closedHull (i := 0) (P := S)
+      · change Sleft 1 ∈ closedHull S
+        exact open_sub_closed _ hx.2
     have hSrighti : ∀ i, Sright i ∈ closedHull S := by
       rw [mem_filter] at hx
       intro i; fin_cases i
-      · convert open_sub_closed _ hx.2
-      · convert (corner_in_closedHull (i := 1) (P := S)) using 1
+      · change Sright 0 ∈ closedHull S
+        exact open_sub_closed _ hx.2
+      · change Sright 1 ∈ closedHull S
+        exact corner_in_closedHull (i := 1) (P := S)
     have hcolin : colin (S 0) x (S 1) := by
       rw [mem_filter] at hx
       exact ⟨segmentSet_vertex_distinct (avoidingSegmentSet_sub hS), hx.2⟩
@@ -475,26 +479,26 @@ theorem segment_decomposition {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
       · intro t ht
         simp only [mem_filter] at *
         refine ⟨ht.1, (open_segment_sub hSlefti ?_) ht.2⟩
-        convert (middle_not_boundary_colin hcolin).1 using 1
+        convert (middle_not_boundary_colin hcolin).1 using 1 <;> rfl
       · rw [@not_subset]
         use x, hx
         intro hcontra
         rw [mem_filter] at hcontra
         refine (boundary_not_in_open (boundary_seg' ?_ 1)) hcontra.2
-        convert (middle_not_boundary_colin hcolin).1 using 1
+        convert (middle_not_boundary_colin hcolin).1 using 1 <;> rfl
     have Srightcard : (filter (fun p ↦ p ∈ openHull Sright) X).card < N := by
       rw [←Scard]
       refine card_lt_card ⟨?_,?_⟩
       · intro t ht
         simp only [mem_filter] at *
         refine ⟨ht.1, (open_segment_sub hSrighti ?_) ht.2⟩
-        convert (middle_not_boundary_colin hcolin).2 using 1
+        convert (middle_not_boundary_colin hcolin).2 using 1 <;> rfl
       · rw [@not_subset]
         use x, hx
         intro hcontra
         rw [mem_filter] at hcontra
         refine (boundary_not_in_open (boundary_seg' ?_ 0)) hcontra.2
-        convert (middle_not_boundary_colin hcolin).2 using 1
+        convert (middle_not_boundary_colin hcolin).2 using 1 <;> rfl
     rw [mem_filter] at hx
     have ⟨CL,hSCL,hLSegUnion⟩ :=
       hm (filter (fun p ↦ p ∈ openHull Sleft) X).card Sleftcard
@@ -590,6 +594,7 @@ lemma sum_two_mod_fun_seg {A : Set ℝ²} {X : Finset ℝ²} {S : Segment}
   · rw [symmFunction_reverse_sum hf₂, ←Nat.two_mul]
     apply mod_two_mul
     convert twoModFunction_chains hf₁ C
+    funext i; fin_cases i <;> rfl
   · exact reverseChain_basic_segments_disjoint _
       (segmentSet_vertex_distinct (avoidingSegmentSet_sub hS))
 
@@ -1235,7 +1240,7 @@ lemma open_triangle_in_open_square {Δ : Finset Triangle} {T : Triangle} (hT : T
     use p
     refine ⟨hp.left, ?_⟩
     unfold boundary
-    rw [Set.mem_diff]
+    rw [Set.mem_sdiff]
     exact ⟨by tauto, hp.right⟩
   obtain ⟨p, hp⟩ := hp
   obtain ⟨σ, hσ⟩ := (boundary_leave_dir hp.2)

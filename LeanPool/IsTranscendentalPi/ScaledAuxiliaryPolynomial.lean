@@ -147,11 +147,8 @@ lemma aeval_RpolyFp_derivative_Fp
         hks]
       field_simp [pow_ne_zero k (by exact_mod_cast hc),
         Nat.cast_ne_zero.mpr (Nat.factorial_ne_zero p)]
-      rw [div_eq_mul_inv]
-      simpa [mul_assoc, mul_left_comm, mul_comm] using
-        (mul_inv_cancel_right₀
-          (pow_ne_zero k (by exact_mod_cast hc) : (c : ℂ) ^ k ≠ 0)
-          (a m ^ k * ((c : ℂ) ^ s * (((derivative^[i] (Fp T p)).coeff k : ℤ) : ℂ))))
+      rw [algebraMap_int_eq, eq_intCast]
+      ring
     · rw [← ScaledCoeffDerivFp_from_Sp (K := ℂ) T c p s i k hpi]
       rw [Polynomial.coeff_eq_zero_of_natDegree_lt
         (lt_of_le_of_lt hs (lt_of_not_ge hks))]

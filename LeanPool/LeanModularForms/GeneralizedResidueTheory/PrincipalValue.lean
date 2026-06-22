@@ -299,7 +299,7 @@ theorem cauchyPrincipalValueExists_of_continuous
           else 0 := funext fun _ => rfl
     rw [h_eq]
     exact (aEStronglyMeasurable_pv_integrand
-      (hg.mono diff_subset) hγ hγ').mono_measure
+      (hg.mono sdiff_subset) hγ hγ').mono_measure
       (Measure.restrict_mono
         (by rw [uIoc_of_le hab.le]; exact Ioc_subset_Icc_self)
         le_rfl)

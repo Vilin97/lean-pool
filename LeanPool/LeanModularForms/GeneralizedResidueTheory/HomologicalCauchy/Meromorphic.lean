@@ -115,7 +115,7 @@ private lemma contourIntegral_add_principalPart_regularPart (f : ℂ → ℂ) (s
         (hf_diff.sub
           ((GeneralizedResidueTheory.meromorphicPrincipalPart_differentiableOn
             f s hf).mono
-            (fun z hz => (Set.mem_diff_singleton.mp hz).2))).continuousOn.comp
+            (fun z hz => (Set.mem_sdiff_singleton.mp hz).2))).continuousOn.comp
           γ.toPiecewiseC1Curve.continuous_toFun
           (fun t ht =>
             ⟨h_null.image_subset t ht,

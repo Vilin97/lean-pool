@@ -673,7 +673,9 @@ def repNext (Γ : SplitSequent) {Δ : SplitSequent} {strat : Strategy coalgebraG
         simp only [g.2.2, reduceCtorEq, if_false]
         omega⟩
       simp only [g.2.2, Nat.even_mul, even_two, true_or, if_true] at this
-      convert this⟩
+      convert this using 2
+      unfold repPos
+      congr 1⟩
 
 /-- The sequent at the premise defined by `repNext` is the sequent `Δ` which we expect. -/
 lemma rep_next_cor (Γ : SplitSequent) {Δ : SplitSequent} {strat : Strategy coalgebraGame Prover}
@@ -1370,7 +1372,7 @@ def gameBModel (Γ : SplitSequent) {strat : Strategy coalgebraGame Builder}
     apply WellFounded.transGen
     let instFunLike : FunLike Unit (MaximalPath Γ strat) GamePos := by exact {
       coe := fun u π ↦ π.first
-      coe_injective' := by intro u w; grind}
+      coe_injective := by intro u w; grind}
     have instRelHome :
         RelHomClass Unit (Function.swap (pathRelation Γ strat))
           (Relation.TransGen (Function.swap Move)) := by
@@ -1558,7 +1560,9 @@ lemma formula_in_successor_of_diamond_formula_in {Γ : SplitSequent}
       have := max (Sum.inr R, Γ :: Γs, Rs)
       simp only [nonBoxMove, isBox, not_and, not_not] at this
       apply this
-      convert x_y
+      have last_eq : π.getLast ne = (Sum.inl Γ, Γs, Rs) := last_def
+      rw [last_eq]
+      exact x_y
     cases R <;> simp [RuleApp.isBox] at R_box
     all_goals
       simp only [f] at R_f
@@ -1916,8 +1920,9 @@ private lemma no_penultimate_prover_turn {Δ : SplitSequent}
   have u₁_last := List.IsChain.getElem chain (π.length - (0 + 1) - 1) (by omega)
   have helper_last : π[π.length - 1]'(by omega) = π.getLast ne := by grind
   have u₁_last' : nonBoxMove π[π.length - 2] (π.getLast ne) := by
-    convert u₁_last using 1
-    · simpa [eq2] using helper_last.symm
+    convert u₁_last using 2
+    · omega
+    · rw [← helper_last]; congr 1; omega
   rcases u₁_def : π[π.length - 2] with ⟨Γ | R, Γs, Rs⟩
   · have u₁_last_mem := move_iff_in_moves.1 u₁_last'.1
     rw [u₁_def] at u₁_last_mem

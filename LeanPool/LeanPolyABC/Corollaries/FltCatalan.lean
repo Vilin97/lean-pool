@@ -135,8 +135,7 @@ theorem flt_catalan_deriv
     have hpqr : 0 < p * q * r := Nat.mul_le_mul (Nat.mul_le_mul hp hq) hr
     apply Nat.le_of_mul_le_mul_left _ hpqr
     apply le_trans _ (Nat.mul_le_mul_right _ hineq)
-    convert weighted_average_le_max₃ using 1
-    ring_nf
+    convert weighted_average_le_max₃ using 1 <;> first | rfl | ring
 
 end Polynomial
 

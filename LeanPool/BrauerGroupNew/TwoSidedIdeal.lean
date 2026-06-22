@@ -118,9 +118,11 @@ instance [Nontrivial A] : Nontrivial (TwoSidedIdeal A) :=
 ⟨⊥, ⊤, by
       apply_fun (fun I => I.ringCon 0 1)
       convert false_ne_true
-      -- Change after https://github.com/leanprover-community/mathlib4/pull/12860
-      simp only [iff_false]
-      exact zero_ne_one⟩
+      · -- Change after https://github.com/leanprover-community/mathlib4/pull/12860
+        simp only [iff_false]
+        exact zero_ne_one
+      · simp only [TwoSidedIdeal.top_ringCon, iff_true]
+        trivial⟩
 
 lemma _root_.IsSimpleRing.iff_eq_zero_or_injective'
     (k : Type*) [CommRing k] [Algebra k A] [Nontrivial A] :

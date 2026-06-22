@@ -113,8 +113,9 @@ variable {C : Kripke.FiniteFrameClass}
 @[simp] protected lemma models_iff : C ⊧ φ ↔ Formula.Kripke.ValidOnFrameClass C φ := iff_of_eq rfl
 
 lemma iff_not_exists_frame : (¬C ⊧ φ) ↔ (∃ F ∈ C, ¬F ⊧ φ) := by
-  convert ValidOnFrameClass.iff_not_exists_frame;
-  simp [Kripke.FiniteFrameClass.toFrameClass, ValidOnFiniteFrame ];
+  have h := ValidOnFrameClass.iff_not_exists_frame (φ := φ) (C := C.toFrameClass);
+  rw [show (¬C ⊧ φ) = (¬C.toFrameClass ⊧ φ) from rfl, h];
+  simp [Kripke.FiniteFrameClass.toFrameClass, ValidOnFiniteFrame];
 
 alias ⟨exists_frame_of_not, not_of_exists_frame⟩ := iff_not_exists_frame
 
@@ -197,8 +198,9 @@ variable {C : Kripke.FiniteFrameClass}
 
 lemma definedBy_with_axiomK (defines : C.DefinedBy Γ) :
     DefinedBy C (insert (Axioms.K (.atom 0) (.atom 1)) Γ) := by
-  convert FiniteFrameClass.definedBy_inter AllFiniteFrameClass {Axioms.K (.atom 0) (.atom 1)} C Γ
-  simp;
+  convert FiniteFrameClass.definedBy_inter AllFiniteFrameClass
+      {Axioms.K (.atom 0) (.atom 1)} C Γ <;>
+    simp [AllFiniteFrameClass, Set.singleton_union];
 
 end FiniteFrameClass
 

@@ -5,7 +5,7 @@ Authors: David Renshaw
 -/
 
 import Mathlib.Analysis.InnerProductSpace.PiL2
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 
 /-!
 # LeanPool.Rupert.Convex
@@ -110,8 +110,9 @@ lemma mem_interior_hull {n : ℕ} {X : Set (E n)} {ε₀ ε₁ : ℝ}
     {p : E n}
     (h : p ∈ convexHull ℝ ((fun v : E n ↦ (1 - ε₁) • v) '' X)) :
     p ∈ interior (convexHull ℝ X) := by
-  revert h p
-  convert subset_interior_hull hε₀ hε₁ h0
+  apply subset_interior_hull hε₀ hε₁ h0
+  rw [← Set.image_smul]
+  exact h
 
 lemma ball_in_hull_of_corners_in_hull {X : Set (E 2)} {ε : ℝ} (hε : ε ∈ Set.Ioo 0 1)
     (h₀ : !₂[ε, ε] ∈ convexHull ℝ X)

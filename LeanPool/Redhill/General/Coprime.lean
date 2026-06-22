@@ -405,7 +405,9 @@ theorem pairwiseCoprime_tup : ∀ᶠ h in atTop, PairwiseCoprime (tup n F h) := 
   have cp₃' (i j) (hij : i < j) := @isCoprime_natAdd_natAdd n F _ _ hij
   simp_rw [← eventually_all] at cp₂' cp₃'
   filter_upwards [cp₂', cp₃'] with h cp₂ cp₃
-  refine Pairwise.of_lt (fun _ _ h ↦ h.symm) fun i j hij ↦ ?_
+  haveI : Std.Symm (fun i j ↦ IsCoprime (tup n F h i) (tup n F h j)) :=
+    ⟨fun {a b} (hab : IsCoprime (tup n F h a) (tup n F h b)) ↦ hab.symm⟩
+  refine Pairwise.of_lt fun i j hij ↦ ?_
   cases i using Fin.addCases <;> cases j using Fin.addCases
   case left.left i j =>
     simp only [tup_castAdd, Nat.isCoprime_iff_coprime]

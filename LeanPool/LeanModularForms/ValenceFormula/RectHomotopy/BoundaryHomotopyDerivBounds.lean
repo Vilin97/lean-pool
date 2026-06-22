@@ -50,8 +50,7 @@ private lemma hasDerivAt_chordSegment_shift (a b : ℂ) (c t : ℝ) :
   have h2 : HasDerivAt (fun t' : ℝ => (t' - c) • b) b t := by
     have := h_shift.smul_const b
     simpa only [one_smul] using this
-  convert h1.add h2 using 1
-  ring
+  exact (h1.add h2).congr_deriv (by ring)
 
 /-- Norm bound for segment 2 derivative. -/
 lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
@@ -150,8 +149,7 @@ lemma norm_deriv_H_seg2_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
            s • (iPoint - rho')) t := by
         have h1 := h_arc.const_smul (1 - s)
         have h2 := h_chord.const_smul s
-        have := h1.add h2
-        convert this
+        exact h1.add h2
       rw [h_combined.deriv]
       calc ‖(1 - s) • (((Real.pi : ℝ) / 6) * I *
                 Complex.exp (((Real.pi : ℝ) / 3 +
@@ -348,7 +346,7 @@ lemma norm_deriv_H_seg3_le (t s : ℝ) (hs : s ∈ Icc (0 : ℝ) 1) :
            s • (rho - iPoint)) t := by
         have h1 := h_arc.const_smul (1 - s)
         have h2 := h_chord.const_smul s
-        convert h1.add h2
+        exact h1.add h2
       rw [h_combined.deriv]
       calc ‖(1 - s) • (((Real.pi : ℝ) / 6) * I *
                 Complex.exp (((Real.pi : ℝ) / 2 +

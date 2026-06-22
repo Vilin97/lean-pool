@@ -3,7 +3,7 @@ Copyright (c) 2026 Vasily Ilin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vasily Ilin
 -/
-import Mathlib.Data.Real.StarOrdered
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
 
 /-!
@@ -80,7 +80,8 @@ def landauMatrix (Ψ : ℝ → ℝ) (z : Fin 3 → ℝ) : Matrix (Fin 3) (Fin 3)
 
 lemma innerLandauMatrix_apply (z : Fin 3 → ℝ) (i j : Fin 3) :
     innerLandauMatrix z i j = (if i = j then normSq z else 0) - z i * z j := by
-  simp [innerLandauMatrix, sub_apply, smul_apply, one_apply, vecMulVec_apply, smul_eq_mul]
+  simp [innerLandauMatrix, one_apply, vecMulVec_apply,
+    smul_eq_mul]
 
 -- ============================================================================
 -- Section 3: Maxwellian Distributions

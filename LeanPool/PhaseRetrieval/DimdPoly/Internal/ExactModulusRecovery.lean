@@ -88,14 +88,16 @@ theorem realHermiteGenerating_hasDerivAt (t : ℝ) (u : ℂ) :
     have hquad : HasDerivAt (fun v : ℂ => v ^ 2 / 2) u u := by
       simpa [id, two_mul] using
         HasDerivAt.div_const ((hasDerivAt_id u).fun_pow 2) 2
-    convert ((hlin.add_const (-(((t : ℂ) ^ 2) / 2))).sub hquad) using 1
-    ext v
-    simp only [Pi.sub_apply]
-    ring_nf
+    convert ((hlin.add_const (-(((t : ℂ) ^ 2) / 2))).sub hquad) using 1 <;>
+      first
+      | rfl
+      | (funext v; simp only [Pi.sub_apply]; ring_nf)
   unfold realHermiteGenerating
   convert HasDerivAt.const_mul
-    (((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ)) hpoly.cexp using 1
-  ring
+    (((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ)) hpoly.cexp using 1 <;>
+      first
+      | rfl
+      | ring
 
 theorem realHermiteGenerating_integral_mul (u w : ℂ) :
     (∫ t : ℝ, realHermiteGenerating t u * realHermiteGenerating t w) =
@@ -1533,7 +1535,10 @@ theorem hasDerivAt_integral_shifted_generating_mul_modulated_right_closed
   have hlin :
       HasDerivAt (fun w : ℂ => u * w + z * u - star z * w) (u - star z) w0 := by
     have h := (hu.add_const (z * u)).sub hz
-    convert h using 1
+    have heq : (fun w : ℂ => u * w + z * u - star z * w) =
+        (fun x => u * x + z * u) - fun w => star z * w := by
+      funext w; simp [Pi.sub_apply]
+    rw [heq]; exact h
   simpa [z, E, mul_assoc, mul_left_comm, mul_comm] using hlin.cexp.mul_const E
 
 private theorem integral_shifted_generating_right_deriv_eq_closed
@@ -5186,14 +5191,21 @@ private theorem deriv_mgf_five_formula (z : ℂ) :
             ((3 / 2 : ℂ) * z) z := by
           have hpow : HasDerivAt (fun c : ℂ => c ^ 2) (2 * z) z := by
             simpa using hasDerivAt_pow 2 z
-          convert hpow.const_mul (3 / 4 : ℂ) using 1
-          ring
+          have := hpow.const_mul (3 / 4 : ℂ)
+          rw [show (3 / 4 : ℂ) * (2 * z) = (3 / 2 : ℂ) * z by ring] at this
+          exact this
         have h4 : HasDerivAt (fun c : ℂ => c ^ 4 / 16) (z ^ 3 / 4) z := by
           have hpow : HasDerivAt (fun c : ℂ => c ^ 4) (4 * z ^ 3) z := by
             simpa using hasDerivAt_pow 4 z
-          convert hpow.const_mul (1 / 16 : ℂ) using 1 <;> ring_nf
+          have := (hpow.div_const 16)
+          rw [show (4 * z ^ 3) / 16 = z ^ 3 / 4 by ring] at this
+          exact this
         have h := (hconst.add h2).add h4
-        convert h.deriv using 1
+        have hfun : (fun c : ℂ => (3 / 4 : ℂ) + (3 / 4 : ℂ) * c ^ 2 + c ^ 4 / 16) =
+            ((fun _ : ℂ => (3 / 4 : ℂ)) + fun c : ℂ => (3 / 4 : ℂ) * c ^ 2) +
+              fun c : ℂ => c ^ 4 / 16 := by
+          funext c; simp [Pi.add_apply]
+        rw [hfun, h.deriv]
         ring]
     rw [deriv_cexp_sq_div_four]
     ring
@@ -5217,19 +5229,23 @@ private theorem deriv_mgf_six_formula (z : ℂ) :
           (15 / 8 : ℂ) + (15 / 8 : ℂ) * z ^ 2 + (5 / 32 : ℂ) * z ^ 4 by
         have h1 : HasDerivAt (fun c : ℂ => (15 / 8 : ℂ) * c)
             (15 / 8 : ℂ) z := by
-          convert (hasDerivAt_id z).const_mul (15 / 8 : ℂ) using 1
-          ring
+          have := (hasDerivAt_id z).const_mul (15 / 8 : ℂ)
+          rw [show (15 / 8 : ℂ) * (1 : ℂ) = (15 / 8 : ℂ) by ring] at this
+          exact this
         have h3 : HasDerivAt (fun c : ℂ => (5 / 8 : ℂ) * c ^ 3)
             ((15 / 8 : ℂ) * z ^ 2) z := by
           have hpow : HasDerivAt (fun c : ℂ => c ^ 3) (3 * z ^ 2) z := by
             simpa using hasDerivAt_pow 3 z
-          convert hpow.const_mul (5 / 8 : ℂ) using 1
-          ring
+          have := hpow.const_mul (5 / 8 : ℂ)
+          rw [show (5 / 8 : ℂ) * (3 * z ^ 2) = (15 / 8 : ℂ) * z ^ 2 by ring] at this
+          exact this
         have h5 : HasDerivAt (fun c : ℂ => c ^ 5 / 32)
             ((5 / 32 : ℂ) * z ^ 4) z := by
           have hpow : HasDerivAt (fun c : ℂ => c ^ 5) (5 * z ^ 4) z := by
             simpa using hasDerivAt_pow 5 z
-          convert hpow.const_mul (1 / 32 : ℂ) using 1 <;> ring_nf
+          have := hpow.div_const 32
+          rw [show (5 * z ^ 4) / 32 = (5 / 32 : ℂ) * z ^ 4 by ring] at this
+          exact this
         have h := (h1.add h3).add h5
         exact h.deriv]
     rw [deriv_cexp_sq_div_four]
@@ -8165,12 +8181,15 @@ private theorem oneDWindowAmbiguityOneOneShiftedMoment_eq_closed
         ((1 - zeta * star zeta) * E) 0 := by
     have hlin : HasDerivAt (fun u : ℂ => u - star zeta) 1 0 := by
       simpa using (hasDerivAt_id (0 : ℂ)).sub_const (star zeta)
-    have harg : HasDerivAt (fun u : ℂ => zeta * u) zeta 0 := by
-      simpa using HasDerivAt.const_mul zeta (hasDerivAt_id (0 : ℂ))
+    have harg : HasDerivAt (fun u : ℂ => zeta * u) zeta 0 :=
+      hasDerivAt_const_mul zeta
     have hprod := hlin.mul harg.cexp
-    convert hprod.mul_const E using 1
-    simp only [mul_zero, Complex.exp_zero, mul_one, zero_sub, one_mul]
-    ring
+    have hd := hprod.mul_const E
+    rw [show (1 * Complex.exp (zeta * 0) +
+        (0 - star zeta) * (Complex.exp (zeta * 0) * zeta)) * E
+        = (1 - zeta * star zeta) * E by
+      simp only [mul_zero, Complex.exp_zero, mul_one, zero_sub]; ring] at hd
+    exact hd
   have hclosed_F : HasDerivAt F ((1 - zeta * star zeta) * E) 0 := by
     simpa [hF_closed] using hclosed_deriv
   simpa [zeta, E] using hderiv_moment.unique hclosed_F

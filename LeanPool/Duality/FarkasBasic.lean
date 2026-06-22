@@ -48,6 +48,7 @@ theorem equalityFarkas (A : Matrix I J F) (b : I → F) :
       intro w
       rw [←hAx w]
       finishit
+  · rfl
 
 /- The following two theorems could be given in much more generality.
 In our work, however, this is the only setting we provide.
@@ -69,8 +70,12 @@ theorem basicLinearAlgebra_lt (A : Matrix I J F) (b : I → F) :
         exact ⟨posPart_nonneg x, negPart_nonneg x⟩
       · rw [Matrix.fromCols_mulVec_sumElim, Matrix.neg_mulVec, ←Matrix.mulVec_neg,
           ←Matrix.mulVec_add, ←sub_eq_add_neg]
-        convert hAx
-        aesop
+        have hxx : x⁺ - x⁻ = x := by
+          funext j
+          simp only [Pi.sub_apply, Pi.posPart_apply, Pi.negPart_apply]
+          exact posPart_sub_negPart (x j)
+        rw [hxx]
+        exact hAx
     · intro ⟨x, _, hAx⟩
       use x ∘ Sum.inl - x ∘ Sum.inr
       rw [Matrix.mulVec_sub]

@@ -50,7 +50,7 @@ private lemma integral_shifted_inv_eq_log (η : ℝ) (hη : 0 < η) (hη1 : η <
     intro t ht; rw [Set.uIcc_of_le h5η] at ht
     have : t - 5 ≠ 0 := ne_of_lt (by linarith [ht.2])
     have h1 := (Real.hasDerivAt_log this).comp t ((hasDerivAt_id t).sub_const 5)
-    simp only [Function.comp_def, mul_one] at h1; convert h1 using 1
+    simp only [Function.comp_def, mul_one] at h1; exact h1
   have hint : IntervalIntegrable (fun t => (t - 5)⁻¹) MeasureTheory.volume 4 (5 - η) := by
     apply ContinuousOn.intervalIntegrable
     apply ContinuousOn.inv₀ (continuousOn_id.sub continuousOn_const)

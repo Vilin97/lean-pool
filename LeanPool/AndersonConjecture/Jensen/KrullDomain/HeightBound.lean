@@ -217,7 +217,9 @@ include T in theorem height_bound_wf_descent
       intro hdvd
       apply hp₀_ndvd_y
       have : p₀_S ∣ ⟨(↑y_elem : T), hR_le y_elem.2⟩ ^ m := by
-        convert hdvd using 1
+        have hpow : (⟨(↑y_elem : T), hR_le y_elem.2⟩ : S_sub) ^ m
+            = ⟨(↑y_elem : T) ^ m, hym_S⟩ := Subtype.ext (by push_cast; ring)
+        rw [hpow]; exact hdvd
       exact hp₀_prime_S.dvd_of_dvd_pow this
     -- p₀ | u·yⁿ and p₀ ∤ yⁿ (since y ∉ P), so by primality p₀ | u
     have hdvd_u : p₀_S ∣ (⟨u_val, hu_S⟩ : S_sub) :=
@@ -758,12 +760,13 @@ private def build_intersection_nsubring_proof
   have hx₁_A₂ : x₁ ∈ adjoinLocSetY R x₂ y₁ := by
     refine ⟨C c - X * C y₂, 1, ?_⟩
     rw [pow_one]
-    rw [Polynomial.aeval_def, eval₂_sub, eval₂_mul, eval₂_C, eval₂_X, eval₂_C]
+    rw [Polynomial.aeval_def, eval₂_sub, eval₂_mul, eval₂_C, eval₂_X, eval₂_C,
+      show algebraMap R.carrier T = R.carrier.subtype from rfl]
     have hc' : x₁ * (↑y₁ : T) = (↑c : T) - x₂ * (↑y₂ : T) := by
       have h := hc_eq
       rw [h]
       ring
-    convert hc'
+    convert hc' using 2 <;> rfl
   have hx₁_Rbar : x₁ ∈ Rbar := ⟨hx₁_A₁, hx₁_A₂⟩
   -- Symmetrically, x₂ ∈ Rbar using x₂ = (c - x₁y₁)/y₂
   have hx₂_A₂ : x₂ ∈ adjoinLocSetY R x₂ y₁ := x_mem_adjoinLocSetY R x₂ y₁

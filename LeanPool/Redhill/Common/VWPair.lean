@@ -84,7 +84,7 @@ lemma zero_notMem_fourAndOddPrimes : 0 ∉ fourAndOddPrimes m := by
   simp [fourAndOddPrimes]
 
 lemma fourAndOddPrimes_pairwise_coprime : Set.Pairwise (fourAndOddPrimes m) Coprime := by
-  rw [fourAndOddPrimes, coe_insert, coe_filter, Set.pairwise_insert_of_symmetric Coprime.symmetric]
+  rw [fourAndOddPrimes, coe_insert, coe_filter, Set.pairwise_insert_of_symm]
   refine ⟨fun p mp q mq hn ↦ (coprime_primes mp.2 mq.2).mpr hn, fun p ⟨bp, pp⟩ _ ↦ ?_⟩
   rw [show 4 = 2 ^ 2 by rfl]
   apply Coprime.pow_left

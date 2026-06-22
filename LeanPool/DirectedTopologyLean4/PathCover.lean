@@ -352,7 +352,7 @@ lemma covered_partwise_of_parts (hX : X₀ ∪ X₁ = Set.univ) {n : ℕ} (hn : 
       apply (tsub_lt_iff_right h).mpr _
       nth_rewrite 2 [←one_mul k]
       rw [←add_mul, ←Nat.succ_pred_eq_of_pos prod_pos]
-      convert hi using 1
+      exact hi
     rw [←SplitProperties.secondPart_range_partial_interval_coe γ h₁ h₂]
     convert (covered_by_intervals_of_covered_partwise (n * k - 1) hγ_second (i - k) this)
 

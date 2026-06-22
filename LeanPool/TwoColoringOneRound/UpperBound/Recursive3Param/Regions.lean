@@ -87,7 +87,7 @@ lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
   classical
   have htmeas : MeasurableSet (Set.Iio t : Set Rand) := by simp
   have hsplit :=
-    (MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+    (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio (1 : Rand) : Set Rand)) (B := (Set.Iio t : Set Rand)) htmeas)
   have hAint : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t := by
     ext c
@@ -124,7 +124,7 @@ lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
   have hb_lt_t : b < t := lt_trans hb (lt_trans t1_lt_t2 t2_lt_t)
   have hbmeas : MeasurableSet (Set.Iio b : Set Rand) := by simp
   have hsplit2 :=
-    (MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+    (MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio t : Set Rand)) (B := (Set.Iio b : Set Rand)) hbmeas)
   have hBint : (Set.Iio t ∩ Set.Iio b : Set Rand) = Set.Iio b := by
     ext c
@@ -497,7 +497,7 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
   classical
   have htmeas : MeasurableSet (Set.Iio t : Set Rand) := by simp
   have hsplit :=
-    MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+    MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio (1 : Rand) : Set Rand)) (B := (Set.Iio t : Set Rand)) htmeas
   have hAint : ((Set.Iio (1 : Rand) : Set Rand) ∩ Set.Iio t) = Set.Iio t := by
     ext c
@@ -541,7 +541,7 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
   -- Split `c < t` at `t2`.
   have ht2meas : MeasurableSet (Set.Iio t2 : Set Rand) := by simp
   have hsplit2 :=
-    MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+    MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio t : Set Rand)) (B := (Set.Iio t2 : Set Rand)) ht2meas
   have hBint : (Set.Iio t ∩ Set.Iio t2 : Set Rand) = Set.Iio t2 := by
     ext c
@@ -577,7 +577,7 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
   -- Split `c < t2` at `t1`.
   have ht1meas : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
   have hsplit3 :=
-    MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+    MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Iio t2 : Set Rand)) (B := (Set.Iio t1 : Set Rand)) ht1meas
   have hCint : (Set.Iio t2 ∩ Set.Iio t1 : Set Rand) = Set.Iio t1 := by
     ext c
@@ -604,7 +604,7 @@ lemma lintegral_innerBC_Iio_one_of_t1_le_b_lt_t2 {b : Rand} (hb1 : t1 ≤ b) (hb
   -- Split `c ∈ [t1,t2)` at `b`.
   have hbmeas : MeasurableSet (Set.Iio b : Set Rand) := by simp
   have hsplit4 :=
-    MeasureTheory.lintegral_inter_add_diff (μ := μ) (f := fun c => innerBC b c)
+    MeasureTheory.lintegral_inter_add_sdiff (μ := μ) (f := fun c => innerBC b c)
       (A := (Set.Ico t1 t2 : Set Rand)) (B := (Set.Iio b : Set Rand)) hbmeas
   have hDint : (Set.Ico t1 t2 ∩ Set.Iio b : Set Rand) = Set.Ico t1 b := by
     ext c
@@ -813,7 +813,7 @@ private lemma lintegral_gCt2_triangle_t1_t2_value :
   -- Reduce the `b`-domain from `Iio t2` to `Ico t1 t2` by splitting at `t1`.
   have ht1meas : MeasurableSet (Set.Iio t1 : Set Rand) := by simp
   have hsplitb :=
-    MeasureTheory.lintegral_inter_add_diff (μ := μ)
+    MeasureTheory.lintegral_inter_add_sdiff (μ := μ)
       (f := fun b : Rand => ∫⁻ c in Set.Iio b, f c ∂μ)
       (A := (Set.Iio t2 : Set Rand)) (B := (Set.Iio t1 : Set Rand)) ht1meas
   have hBint : (Set.Iio t2 ∩ Set.Iio t1 : Set Rand) = Set.Iio t1 := by

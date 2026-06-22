@@ -103,7 +103,7 @@ theorem preimage_singleton_measure_zero_of_deriv_ne_zero
     exact h_ball h_in_ball h_ne' ht_eq
   have h_countable : S.Countable := by
     have h_eq : S = (S ∩ ↑P) ∪ (S \ ↑P) :=
-      (Set.inter_union_diff S ↑P).symm
+      (Set.inter_union_sdiff S ↑P).symm
     rw [h_eq]
     apply Set.Countable.union
     · exact (P.finite_toSet.subset

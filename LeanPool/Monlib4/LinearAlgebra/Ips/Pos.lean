@@ -434,7 +434,7 @@ theorem _root_.LinearMap.IsSymmetric.rePow_eq_rankOne {𝕜 E : Type _} [RCLike 
           (_root_.rankOne 𝕜 (hT.eigenvectorBasis rfl i) (hT.eigenvectorBasis rfl i)) :=
   by
   simp_rw [LinearMap.ext_iff, LinearMap.rePow_apply,
-    ContinuousLinearMap.coe_sum, ContinuousLinearMap.coe_smul,
+    ContinuousLinearMap.toLinearMap_sum, ContinuousLinearMap.toLinearMap_smul,
     LinearMap.sum_apply, LinearMap.smul_apply,
     ContinuousLinearMap.coe_coe]
   intros
@@ -572,7 +572,7 @@ theorem LinearMap.IsSymmetric.rePowIsPositive'OfIsPositive' {𝕜 E : Type _} [R
     (T.rePow hT.1 r).IsPositive' :=
   by
   haveI := FiniteDimensional.complete 𝕜 E
-  simp_rw [LinearMap.IsSymmetric.rePow_eq_rankOne, ContinuousLinearMap.coe_sum]
+  simp_rw [LinearMap.IsSymmetric.rePow_eq_rankOne, ContinuousLinearMap.toLinearMap_sum]
   apply LinearMap.IsPositive'.sum
   intro i
   apply LinearMap.IsPositive'.smulNonneg

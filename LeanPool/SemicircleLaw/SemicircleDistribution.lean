@@ -987,7 +987,7 @@ lemma centralMoment_fun_two_mul_semicircleReal (μ : ℝ) (v : ℝ≥0) (n : ℕ
 /-- The `2 * n`-th central moment of the identity equals `v ^ n` times the `n`-th Catalan number. -/
 lemma centralMoment_two_mul_semicircleReal (μ : ℝ) (v : ℝ≥0) (n : ℕ) :
     ProbabilityTheory.centralMoment id (2 * n) (semicircleReal μ v) = v ^ n * catalan n := by
-  unfold id; apply centralMoment_fun_two_mul_semicircleReal
+  apply centralMoment_fun_two_mul_semicircleReal
 
 variable {μ : ℝ} {v : ℝ≥0}
 
@@ -1038,6 +1038,6 @@ lemma centralMoment_fun_odd_semicircleReal (μ : ℝ) (v : ℝ≥0) (n : ℕ) :
 /-- The odd central moments of the identity vanish. -/
 lemma centralMoment_odd_semicircleReal (μ : ℝ) (v : ℝ≥0) (n : ℕ) :
     ProbabilityTheory.centralMoment id ((2 * n) + 1) (semicircleReal μ v) = 0 := by
-  unfold id; apply centralMoment_fun_odd_semicircleReal
+  apply centralMoment_fun_odd_semicircleReal
 
 end LeanPool.SemicircleLaw

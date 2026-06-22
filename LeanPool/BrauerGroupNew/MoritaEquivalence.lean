@@ -576,7 +576,7 @@ lemma functor
   rcases H _ F with H|H
   · have hzero : e.inverse.map f = 0 := by
       apply (cancel_epi (e.unit.app M)).1
-      convert H using 1
+      exact H.trans Limits.comp_zero.symm
     replace H : e.inverse.map f = e.inverse.map 0 := by simpa using hzero
     exact .inl <| e.inverse.map_injective H
   · refine Or.inr ?_

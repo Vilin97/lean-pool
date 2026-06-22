@@ -77,7 +77,7 @@ theorem polynomial_times_gaussian_le_gaussian
   have hexp : Tendsto (fun x : ℝ => Real.exp (-(a / 2) * x ^ 2)) Filter.atTop (𝓝 0) := by
     have hmul : Tendsto (fun x : ℝ => (-(a / 2)) * (x ^ 2)) Filter.atTop Filter.atBot := by
       exact hsq.const_mul_atTop_of_neg (by nlinarith [ha])
-    convert Real.tendsto_exp_atBot.comp hmul using 1 with x
+    exact Real.tendsto_exp_atBot.comp hmul
   have hpoly : Tendsto (fun x : ℝ => x ^ k * Real.exp (-(a / 2) * x ^ 2)) Filter.atTop (𝓝 0) := by
     refine Tendsto.congr' ?_
       ((tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero ((k : ℝ) / 2) (a / 2) (by positivity)).comp

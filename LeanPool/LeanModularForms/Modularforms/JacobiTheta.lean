@@ -160,7 +160,7 @@ lemma H₂_S_action : (H₂ ∣[(2 : ℤ)] S) = -H₄ := by
   _ = cexp (-π * I / x) * jacobiTheta₂ (-1 / (2 * x)) (-1 / x) ^ 4 * x ^ (-2 : ℤ) := by
     rw [modular_slash_S_apply, H₂, Θ₂_as_jacobiTheta₂]
     simp only [inv_neg, mul_neg, mul_pow, ← Complex.exp_nat_mul, Nat.cast_ofNat, Int.reduceNeg,
-      zpow_neg, neg_mul, mul_eq_mul_right_iff, inv_eq_zero]
+      _root_.zpow_neg, neg_mul, mul_eq_mul_right_iff, inv_eq_zero]
     rw [mul_comm 4, div_mul_cancel₀ _ (by norm_num)]
     left
     congr 3
@@ -210,7 +210,7 @@ lemma H₃_S_action : (H₃ ∣[(2 : ℤ)] S) = -H₃ := by
   have := jacobiTheta₂_functional_equation 0
   simp only [neg_mul, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, mul_zero, zero_div,
     Complex.exp_zero, mul_one] at this
-  simp only [modular_slash_S_apply, H₃, inv_neg, Θ₃_as_jacobiTheta₂, Int.reduceNeg, zpow_neg,
+  simp only [modular_slash_S_apply, H₃, inv_neg, Θ₃_as_jacobiTheta₂, Int.reduceNeg, _root_.zpow_neg,
     Pi.neg_apply]
   rw [this, mul_pow, neg_div, div_neg, neg_neg, one_div (x : ℂ)⁻¹, inv_inv,
     mul_right_comm, ← neg_one_mul (_ ^ 4)]
@@ -228,13 +228,13 @@ lemma H₄_S_action : (H₄ ∣[(2 : ℤ)] S) = - H₂ := by
 
 lemma H₂_S_action' (z : ℍ) : H₂ (S • z) = - z ^ 2 * H₄ z := by
     have h := congrFun H₂_S_action z
-    simp only [SL_slash_apply, denom_S, zpow_neg, zpow_two, Pi.neg_apply] at h
+    simp only [SL_slash_apply, denom_S, _root_.zpow_neg, zpow_two, Pi.neg_apply] at h
     field_simp [ne_zero] at h ⊢
     exact h
 
 lemma H₄_S_action' (z : ℍ) : H₄ (S • z) = - z ^ 2 * H₂ z := by
     have h := congrFun H₄_S_action z
-    simp only [SL_slash_apply, denom_S, zpow_neg, zpow_two, Pi.neg_apply] at h
+    simp only [SL_slash_apply, denom_S, _root_.zpow_neg, zpow_two, Pi.neg_apply] at h
     field_simp [ne_zero z] at h ⊢
     exact h
 
@@ -880,15 +880,15 @@ theorem Θ₄_tendsto_atImInfty : Tendsto Θ₄ atImInfty (𝓝 1) := by
 
 theorem H₂_tendsto_atImInfty : Tendsto H₂ atImInfty (𝓝 0) := by
   convert Θ₂_tendsto_atImInfty.pow 4
-  norm_num
+  all_goals first | rfl | norm_num
 
 theorem H₃_tendsto_atImInfty : Tendsto H₃ atImInfty (𝓝 1) := by
   convert Θ₃_tendsto_atImInfty.pow 4
-  norm_num
+  all_goals first | rfl | norm_num
 
 theorem H₄_tendsto_atImInfty : Tendsto H₄ atImInfty (𝓝 1) := by
   convert Θ₄_tendsto_atImInfty.pow 4
-  norm_num
+  all_goals first | rfl | norm_num
 
 /-!
 ## Jacobi identity proof
@@ -901,12 +901,14 @@ Combined with the dimension vanishing for weight 4 cusp forms, this proves the J
     Since H₂ → 0, H₃ → 1, H₄ → 1, we have g → 0 + 1 - 1 = 0. -/
 theorem jacobi_g_tendsto_atImInfty : Tendsto jacobiG atImInfty (𝓝 0) := by
   convert (H₂_tendsto_atImInfty.add H₄_tendsto_atImInfty).sub H₃_tendsto_atImInfty using 1
-  norm_num
+  · ext x; rfl
+  · norm_num
 
 /-- The function f := g² tends to 0 at i∞. -/
 theorem jacobi_f_tendsto_atImInfty : Tendsto jacobiF atImInfty (𝓝 0) := by
   convert jacobi_g_tendsto_atImInfty.pow 2 using 1
-  norm_num
+  · ext x; rfl
+  · norm_num
 
 private noncomputable def jacobi_f_CF : CuspForm (Γ 1) 4 :=
   cuspFormOfSIFTendstoZero jacobiFSIF jacobi_f_SIF_MDifferentiable
@@ -1280,7 +1282,7 @@ theorem H₄_imag_axis_pos : ResToImagAxis.Pos H₄ := by
     -- Simplify: (1/t)^(-2) = t^2
     have h1t_neg2 : ((1 / t : ℝ) : ℂ) ^ (-2 : ℤ) = (t : ℂ) ^ 2 := by
       have ht_ne : (t : ℂ) ≠ 0 := ofReal_ne_zero.mpr (ne_of_gt ht)
-      simp only [one_div, ofReal_inv, zpow_neg]
+      simp only [one_div, ofReal_inv, _root_.zpow_neg]
       -- Goal: ((↑t)⁻¹ ^ 2)⁻¹ = ↑t ^ 2
       field_simp
     -- Simplify 1/(1/t) = t

@@ -140,6 +140,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
       funext z
       simp [Algebra.smul_def, mul_left_comm, mul_comm]
     convert hsmul.const_mul (1 / Real.pi) using 1
+    case e'_5 => rfl
     funext z
     have hnonneg : 0 ≤ π⁻¹ * rexp (-‖z 0‖ ^ 2) := by positivity
     simp only [gaussianDensity, pow_one, one_div, univ_unique, Fin.default_eq_zero, Fin.isValue,
@@ -200,6 +201,7 @@ private theorem gaussianInner_oneDimPhi_eq_weightedInner
           HermitekLEAN.Phi k m z *
             ((Real.exp (-‖z‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n z))))
     convert hEq0 using 1
+    rfl
   have hcomp :
         ∫ z : CSpace 1,
             HermitekLEAN.Phi k m (z 0) *
@@ -210,6 +212,7 @@ private theorem gaussianInner_oneDimPhi_eq_weightedInner
               ((Real.exp (-‖z‖ ^ 2) : ℂ) * conj (HermitekLEAN.Phi k n z))
               ∂(volume : Measure ℂ) := by
     convert hEq using 1
+    rfl
   calc
     ∫ z : CSpace 1,
         (ENNReal.ofReal (gaussianDensity 1 z)).toReal •
@@ -1348,6 +1351,7 @@ private theorem gaussianInner_oneDim_eq_weighted_coord
           (((1 / Real.pi) * Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ) *
             (f z * conj (g z))))
     convert hEq0 using 1
+    rfl
   calc
     ∫ z : CSpace 1,
         (ENNReal.ofReal (gaussianDensity 1 z)).toReal •
@@ -1422,6 +1426,7 @@ theorem tensorGaussianFactorization
     rw [gaussianMeasure]
     rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
     · convert hprod_volume using 1
+      case e'_5 => rfl
       funext z
       have hnonneg : 0 ≤ gaussianDensity d z := by
         unfold gaussianDensity

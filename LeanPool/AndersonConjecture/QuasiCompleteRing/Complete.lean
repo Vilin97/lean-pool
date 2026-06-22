@@ -183,7 +183,7 @@ theorem anderson_complete_isQuasiComplete
         ∃ y' ∈ A (σ (k + (n + 1))), ∃ a' ∈ M ^ (k + n + 1), z = y' + a' := by
       intro n z hz
       obtain ⟨y', hy', a', ha', heq⟩ := hdecomp (k + n) z hz
-      exact ⟨y', by convert hy' using 2, a', ha', heq⟩
+      exact ⟨y', hy', a', ha', heq⟩
     have bstep : ∀ n, ∀ z : {z : R // z ∈ A (σ (k + n))},
         ∃ (y' : {z : R // z ∈ A (σ (k + (n + 1)))}) (a' : {a : R // a ∈ M ^ (k + n + 1)}),
           z.val = y'.val + a'.val := by

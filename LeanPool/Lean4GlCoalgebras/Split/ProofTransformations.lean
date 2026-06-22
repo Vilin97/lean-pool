@@ -767,8 +767,9 @@ private theorem proofTransformation_path {𝕏 : Proof} {σ}
       simp only [r_def, List.mem_map, List.mem_singleton] at this
     case pre z z_in =>
       apply Sigma.Lex.left
-      convert z_in
-      simp [this]
+      change (f (n + 1)).1 ∈ p 𝕏.α (f n).1
+      rw [this]
+      exact z_in
     all_goals
       have ⟨z, z_prop, eq⟩ := this
       apply Sigma.lex_iff.2 (Or.inr ⟨?_, ?_⟩)

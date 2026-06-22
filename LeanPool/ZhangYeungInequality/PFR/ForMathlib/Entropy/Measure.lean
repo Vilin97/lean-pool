@@ -218,13 +218,13 @@ theorem _root_.ProbabilityTheory.Measure.ext_iff_singleton_finiteSupport
     intro h
     ext s
     have h1 : μ1 s = μ1 (s ∩ (A1 ∪ A2)) := by
-      apply (measure_eq_measure_of_null_diff _ _).symm
+      apply (measure_eq_measure_of_null_sdiff _ _).symm
       · simp
       refine measure_mono_null ?_ hA1
       intro x
       simp (config := { contextual := true }) [A1]
     have h2 : μ2 s = μ2 (s ∩ (A1 ∪ A2)) := by
-      apply (measure_eq_measure_of_null_diff _ _).symm
+      apply (measure_eq_measure_of_null_sdiff _ _).symm
       · simp
       exact measure_mono_null (fun x ↦ by simp (config := { contextual := true }) [A2]) hA2
     rw [h1, h2]
@@ -573,10 +573,12 @@ lemma _root_.ProbabilityTheory.measureMutualInfo_of_not_isFiniteMeasure
     rw [not_isFiniteMeasure_iff] at h ⊢
     rw [← h]
     convert Measure.map_apply measurable_fst MeasurableSet.univ
+    rw [Set.preimage_univ]
   have h2 : ¬ IsFiniteMeasure (μ.map Prod.snd) := by
     rw [not_isFiniteMeasure_iff] at h ⊢
     rw [← h]
     convert Measure.map_apply measurable_snd MeasurableSet.univ
+    rw [Set.preimage_univ]
   rw [measureEntropy_of_not_isFiniteMeasure h, measureEntropy_of_not_isFiniteMeasure h1,
     measureEntropy_of_not_isFiniteMeasure h2]
   simp
@@ -597,9 +599,11 @@ lemma _root_.ProbabilityTheory.measureMutualInfo_univ_smul
     · convert measureEntropy_univ_smul
       simp only [Measure.map_smul]; congr; symm
       convert Measure.map_apply measurable_fst MeasurableSet.univ
+      rw [Set.preimage_univ]
     · convert measureEntropy_univ_smul
       simp only [Measure.map_smul]; congr; symm
       convert Measure.map_apply measurable_snd MeasurableSet.univ
+      rw [Set.preimage_univ]
   convert measureEntropy_univ_smul
 
 variable [MeasurableSingletonClass S] [MeasurableSingletonClass T] [MeasurableSingletonClass U]
@@ -712,7 +716,7 @@ lemma _root_.ProbabilityTheory.measureMutualInfo_nonneg_aux
           exists_eq_right', E2, E] at h2 ⊢
         use s
       · convert measure_empty (μ := μ)
-        simp [Set.diff_eq_empty]
+        simp [Set.sdiff_eq_empty]
     · intro s1 _ s2 _ h; simp [h]
     intros; exact .singleton _
   have h2 z : (μ.map Prod.snd).real {z} = ∑ y ∈ E1, μ.real {(y, z)} := by
@@ -729,7 +733,7 @@ lemma _root_.ProbabilityTheory.measureMutualInfo_nonneg_aux
           E] at h2 ⊢
         use u
       · convert measure_empty (μ := μ)
-        simp [Set.diff_eq_empty]
+        simp [Set.sdiff_eq_empty]
     · intro s1 _ s2 _ h; simp [h]
     intros; exact .singleton _
   let w (p : S × U) := (μ.map Prod.fst).real {p.1} * (μ.map Prod.snd).real {p.2}
@@ -794,7 +798,10 @@ lemma _root_.ProbabilityTheory.measureMutualInfo_nonneg_aux
     rw [H, negMulLog_one]
   constructor
   · rw [← neg_nonpos, H1]
-    convert concaveOn_negMulLog.le_map_sum hw1 hw2 hf
+    have key := concaveOn_negMulLog.le_map_sum hw1 hw2 hf
+    simp only [smul_eq_mul] at key
+    rw [← H2] at key
+    exact key
   rw [← neg_eq_zero, H1, H2, eq_comm]
   refine (strictConcaveOn_negMulLog.map_sum_eq_iff' hw1 hw2 hf).trans ?_
   have w0 (p : S × U) (hp: w p = 0) : μ.real {p} = 0 := by
@@ -856,14 +863,16 @@ open Lean Meta Qq Function ProbabilityTheory
 
 /-- Extension for `measureMutualInfo`. -/
 @[positivity measureMutualInfo _]
-meta def evalMeasureMutualInfo : PositivityExt where eval {u α} _ _ e := do
+meta def evalMeasureMutualInfo : PositivityExt where eval {u α} _zα pα? e :=
+  match pα? with | none => pure .none | some _pα => do
   match u, α, e with
   | 0, ~q(ℝ), ~q(@measureMutualInfo $S $T $measS $measT $μ) =>
+    let _singS ← synthInstanceQ q(MeasurableSingletonClass $S)
+    let _singT ← synthInstanceQ q(MeasurableSingletonClass $T)
+    let _finSupp ← synthInstanceQ q(@FiniteSupport ($S × $T) (Prod.instMeasurableSpace) $μ)
     assertInstancesCommute
-    let _ ← synthInstanceQ q(MeasurableSingletonClass $S)
-    let _ ← synthInstanceQ q(MeasurableSingletonClass $T)
-    let _ ← synthInstanceQ q(FiniteSupport $μ)
-    pure <| .nonnegative q(measureMutualInfo_nonneg)
+    pure <| .nonnegative
+      q(@measureMutualInfo_nonneg $S $T $measS $measT $_singS $_singT $μ $_finSupp)
   | _, _, _ => throwError "failed to match ProbabilityTheory.measureMutualInfo"
 
 example {S T : Type*} [MeasurableSpace S] [MeasurableSpace T] [MeasurableSingletonClass S]

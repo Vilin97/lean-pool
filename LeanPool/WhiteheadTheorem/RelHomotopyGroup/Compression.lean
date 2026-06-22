@@ -35,7 +35,7 @@ lemma compression_criterion_1 (f : RelGenLoop (n + 1) X A a) (g : C(I^Fin (n + 1
       map_zero_left y := by simp [RelGenLoop.ofHomotopyRel]
       map_one_left y := by
         unfold RelGenLoop.const
-        simp only [id_apply, toFun_eq_coe, ContinuousMap.coe_coe, Homotopy.apply_one, comp_apply,
+        simp only [id_apply, Homotopy.apply_one, comp_apply,
           ContinuousMap.const_apply]
         have r_y_in_jar : R.r y ∈ ⊔I^(n+1) := Set.range_subset_iff.mp R.r_range y
         have r_y_in_bd : R.r y ∈ ∂I^(n+1) := Cube.boundaryJar_subset_boundary (n+1) r_y_in_jar

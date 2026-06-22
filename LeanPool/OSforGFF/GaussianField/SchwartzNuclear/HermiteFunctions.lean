@@ -300,7 +300,9 @@ private theorem deriv_hermiteEval_mul_gaussian (m : ℕ) (x : ℝ) :
   have hexp : deriv (fun u : ℝ => Real.exp (-(u ^ 2 / 2))) x = -x * gaussian x := by
     have h1 : HasDerivAt (fun u : ℝ => -(u ^ 2 / 2)) (-x) x := by
       have := ((hasDerivAt_pow 2 x).div_const 2).neg
-      convert this using 1; ring
+      have hf : (fun u : ℝ => -(u ^ 2 / 2)) = -fun x => x ^ 2 / 2 := by ext u; simp
+      have hv : (-x : ℝ) = -(↑2 * x ^ (2 - 1) / 2) := by norm_num
+      rw [hf, hv]; exact this
     exact h1.exp.deriv.trans (mul_comm _ _)
   rw [hexp]
   -- Hermite recurrence: H_{m+1}(x) = x · Hₘ(x) - Hₘ'(x)
@@ -633,11 +635,11 @@ private lemma poly_mul_gaussian_schwartz (P : ℝ[X]) :
     obtain ⟨φp, hφp⟩ := hp
     obtain ⟨φq, hφq⟩ := hq
     exact ⟨φp + φq, fun x => by
-      simp only [SchwartzMap.add_apply, Polynomial.eval_add, add_mul, hφp x, hφq x]⟩
+      simp only [add_apply, Polynomial.eval_add, add_mul, hφp x, hφq x]⟩
   | monomial k a =>
     obtain ⟨ψ, hψ⟩ := pow_mul_gaussian_schwartz k
     exact ⟨a • ψ, fun x => by
-      simp only [SchwartzMap.smul_apply, smul_eq_mul, Polynomial.eval_monomial, hψ x]
+      simp only [smul_apply, smul_eq_mul, Polynomial.eval_monomial, hψ x]
       ring⟩
 
 /-- Each Hermite function is a Schwartz function. -/
@@ -647,7 +649,7 @@ theorem hermiteFunction_schwartz (n : ℕ) :
   set Q := (hermiteR n).comp (C (Real.sqrt 2) * X) with hQ_def
   obtain ⟨ψ, hψ⟩ := poly_mul_gaussian_schwartz Q
   refine ⟨hermiteFunctionNormConst n • ψ, fun x => ?_⟩
-  simp only [SchwartzMap.smul_apply, smul_eq_mul, hψ x]
+  simp only [smul_apply, smul_eq_mul, hψ x]
   unfold hermiteFunction
   -- Q.eval x = (hermiteR n).eval (x * √2) = (hermite n).map(...).eval (x * √2)
   have hQeval : Q.eval x = ((hermite n).map (Int.castRingHom ℝ)).eval (x * Real.sqrt 2) := by
@@ -860,7 +862,9 @@ theorem deriv_hermiteFunction (n : ℕ) (x : ℝ) :
   have hexp_hasderiv : HasDerivAt (fun u : ℝ => Real.exp (-(u ^ 2) / 2)) (-x * e) x := by
     have h1 : HasDerivAt (fun u : ℝ => -(u ^ 2) / 2) (-x) x := by
       have := ((hasDerivAt_pow 2 x).neg.div_const 2)
-      convert this using 1; ring
+      have hf : (fun u : ℝ => -u ^ 2 / 2) = fun x => (-fun x => x ^ 2) x / 2 := by ext u; simp
+      have hv : (-x : ℝ) = -(↑2 * x ^ (2 - 1)) / 2 := by norm_num; ring
+      rw [hf, hv]; exact this
     have h2 := h1.exp
     rw [he_def]
     convert h2 using 1; ring
@@ -868,9 +872,9 @@ theorem deriv_hermiteFunction (n : ℕ) (x : ℝ) :
   have hprod : HasDerivAt (fun u => (hermiteR n).eval (u * Real.sqrt 2) * Real.exp (-(u ^ 2) / 2))
       (Real.sqrt 2 * (Polynomial.derivative (hermiteR n)).eval (x * Real.sqrt 2) * e +
        (hermiteR n).eval (x * Real.sqrt 2) * (-x * e)) x := by
-    have := hpoly_hasderiv.mul hexp_hasderiv
-    rw [he_def] at this
-    convert this using 2
+    have h := hpoly_hasderiv.mul hexp_hasderiv
+    rw [he_def] at h
+    exact h
   -- Compute HasDerivAt for the full hermiteFunction = c_n * (poly * exp)
   have hfn_eq : hermiteFunction n = fun u =>
       hermiteFunctionNormConst n * ((hermiteR n).eval (u * Real.sqrt 2) * Real.exp (-(u ^ 2) / 2))
@@ -1018,7 +1022,12 @@ private lemma hasDerivAt_hermiteFunction_sq (n : ℕ) (x : ℝ) :
   have hd : HasDerivAt (hermiteFunction n) (deriv (hermiteFunction n) x) x :=
     ((hermiteFunction_contDiff n 1).differentiable one_ne_zero x).hasDerivAt
   have := hd.mul hd
-  convert this using 1; ring
+  have hf : (fun t => hermiteFunction n t * hermiteFunction n t)
+      = hermiteFunction n * hermiteFunction n := rfl
+  have hv : 2 * hermiteFunction n x * deriv (hermiteFunction n) x
+      = deriv (hermiteFunction n) x * hermiteFunction n x
+        + hermiteFunction n x * deriv (hermiteFunction n) x := by ring
+  rw [hf, hv]; exact this
 
 /-- The derivative of hermiteFunction n is in L² (as a MemLp function). -/
 private lemma deriv_hermiteFunction_memLp (n : ℕ) :
@@ -1405,7 +1414,7 @@ theorem sobolevHermite_hs_sum_bound (s : ℝ) (hs : 1 / 2 < s) :
     have h := (summable_nat_add_iff (f := fun n => (↑n : ℝ) ^ (-2 * s)) 1).mpr
       (Real.summable_nat_rpow.mpr hexp)
     simp only [Nat.cast_add, Nat.cast_one] at h
-    convert h using 1; ext m; simp [add_comm]
+    exact h.congr (fun m => by rw [add_comm])
   exact ⟨∑' (i : ℕ), (1 + (i : ℝ)) ^ (-2 * s), fun N =>
     hsumm.sum_le_tsum (Finset.range N) (fun i _ =>
       Real.rpow_nonneg (by positivity : (0 : ℝ) ≤ 1 + ↑i) _)⟩

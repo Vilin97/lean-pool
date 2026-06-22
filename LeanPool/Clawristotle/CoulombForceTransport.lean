@@ -50,7 +50,7 @@ lemma torusGradX_aestronglyMeasurable
         (x₀ + (0 : ℝ) • (Pi.single i (1 : ℝ) : Fin 3 → ℝ)) := by
       rw [h_eq]; exact hF_diff.hasFDerivAt
     have hline : HasDerivAt (fun t : ℝ => F (x₀ + t • ei)) (fderiv ℝ F x₀ ei) 0 := by
-      convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1
+      convert hF_at.comp_hasDerivAt (x := (0 : ℝ)) hg using 1 <;> rfl
     have htendsto_inv : Filter.Tendsto (fun n : ℕ => ((↑n + 1 : ℝ))⁻¹) Filter.atTop
         (nhdsWithin 0 (Set.Ioi 0)) :=
       tendsto_nhdsWithin_iff.mpr ⟨
@@ -60,6 +60,7 @@ lemma torusGradX_aestronglyMeasurable
     have h := Filter.Tendsto.comp hline.tendsto_slope_zero_right htendsto_inv
     simp only [smul_eq_mul, Function.comp_def, inv_inv, zero_smul, add_zero, zero_add] at h
     convert h using 1
+    rfl
   exact aestronglyMeasurable_of_tendsto_ae Filter.atTop hG_meas
     (Filter.Eventually.of_forall hG_lim)
 
@@ -252,8 +253,8 @@ lemma force_ibp_f_dg_integrable_coulomb
       hfx_hfd.fun_mul hlog_hfd
     have h_sub_hfd := h_mul_hfd.fun_sub hfx_hfd
     rw [h_sub_hfd.fderiv]
-    simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.add_apply,
-      ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [_root_.sub_apply, _root_.add_apply,
+      _root_.smul_apply, smul_eq_mul]
     have hfv_ne : f x v ≠ 0 := ne_of_gt (hf_pos x v)
     rw [← mul_assoc, mul_inv_cancel₀ hfv_ne, one_mul]
     ring

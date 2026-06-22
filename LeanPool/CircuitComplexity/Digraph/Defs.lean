@@ -5,7 +5,7 @@ Authors: Samuel Schlesinger
 -/
 import Mathlib.Combinatorics.Digraph.Basic
 import Mathlib.Data.Fintype.Prod
-import Mathlib.Data.Nat.Lattice
+import Mathlib.Order.Lattice.Nat
 
 /-! # Basic digraph definitions
 

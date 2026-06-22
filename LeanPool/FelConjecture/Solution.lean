@@ -1854,13 +1854,13 @@ lemma binomial_sum_minus_j_pow (j n : ℕ) :
     ((j : ℚ) + 1)^n - (j : ℚ)^n := by
   have h := add_pow (1 : ℚ) (j : ℚ) n
   simp only [one_pow, add_comm] at h
-  rw [Finset.sum_eq_add_sum_diff_singleton 0 _
+  rw [Finset.sum_eq_add_sum_sdiff_singleton 0 _
       (fun hnot => absurd (Finset.mem_range.mpr (Nat.zero_lt_succ n)) hnot)]
   simp only [↓reduceIte, zero_add]
   have hne : ∀ x ∈ (Finset.range n.succ \ {0}), x ≠ 0 := by
     simp [Finset.mem_sdiff, Finset.mem_singleton]
   rw [Finset.sum_congr rfl (fun x hx => if_neg (hne x hx))]
-  rw [Finset.sum_eq_add_sum_diff_singleton 0 _
+  rw [Finset.sum_eq_add_sum_sdiff_singleton 0 _
       (fun hnot => absurd (Finset.mem_range.mpr (Nat.zero_lt_succ n)) hnot)] at h
   simp only [Nat.choose_zero_right, Nat.cast_one, one_mul, Nat.sub_zero] at h
   calc

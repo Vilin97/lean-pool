@@ -325,7 +325,8 @@ lemma hasDerivAt_integral_of_analytic_mul (f : ℂ → ℂ) (hf : AnalyticOn ℂ
             isOpen_ball.mem_nhds <| ?_) |> DifferentiableAt.hasDerivAt) (
               HasDerivAt.add (hasDerivAt_const _ _) <|
                 HasDerivAt.mul (hasDerivAt_id _ |> HasDerivAt.ofReal_comp) <|
-                  hasDerivAt_const _ _) using 1 <;> norm_num
+                  hasDerivAt_const _ _) using 1 <;>
+            first | rfl | (norm_num; try ring)
           norm_num at *
           refine lt_of_le_of_lt (norm_add_le _ _) ?_
           norm_num [abs_of_nonneg hx.1.le, abs_of_nonneg ht.1]
@@ -364,12 +365,17 @@ lemma hasDerivAt_integral_of_analytic_mul (f : ℂ → ℂ) (hf : AnalyticOn ℂ
               (by norm_num)) (by positivity)) (by positivity)
     · exact Continuous.intervalIntegrable (by continuity) _ _
     · refine Filter.Eventually.of_forall fun x hx => ?_
+      have hx0 : (0 : ℝ) < x := by simpa using hx.1
+      have hx1 : x ≤ 1 := by simpa using hx.2
+      have h_mem : (x : ℂ) * z ∈ ball (0 : ℂ) 1 := by
+        simp only [mem_ball_zero_iff, Complex.norm_mul, Complex.norm_real, Real.norm_eq_abs]
+        nlinarith [abs_of_pos hx0, hx1, norm_nonneg z,
+          show ‖z‖ < 1 from by simpa using hz]
       have h_deriv : HasDerivAt (fun w => f (x * w)) (deriv f (x * z) * x) z := by
         convert HasDerivAt.comp z (hf.differentiableOn.differentiableAt (
-          IsOpen.mem_nhds isOpen_ball <| ?_) |> DifferentiableAt.hasDerivAt) (
-            HasDerivAt.const_mul (x : ℂ) (hasDerivAt_id z)) using 1; focus aesop
-        simp_all
-        nlinarith [abs_of_pos hx.1]
+          IsOpen.mem_nhds isOpen_ball h_mem) |> DifferentiableAt.hasDerivAt) (
+            HasDerivAt.const_mul (x : ℂ) (hasDerivAt_id z)) using 1 <;>
+          first | rfl | aesop
       simpa [div_eq_inv_mul] using h_deriv.tendsto_slope_zero
   refine h_dominated_convergence.congr' ?_
   rw [Filter.EventuallyEq, eventually_nhdsWithin_iff]
@@ -404,7 +410,8 @@ lemma hasDerivAt_primitiveOnBall (f : ℂ → ℂ)
     HasDerivAt (primitiveOnBall f) (f z) z := by
   have h_deriv : HasDerivAt (fun w => w * ∫ t in (0 : ℝ)..1, f (t * w)) (1 * (
     ∫ t in (0 : ℝ)..1, f (t * z)) + z * (∫ t in (0 : ℝ)..1, deriv f (t * z) * t)) z := by
-    convert HasDerivAt.mul (hasDerivAt_id z) (hasDerivAt_integral_of_analytic_mul f hf z hz) using 1
+    convert HasDerivAt.mul (hasDerivAt_id z) (hasDerivAt_integral_of_analytic_mul f hf z hz)
+      using 2 <;> rfl
   have h_ftc : ∀ t ∈ Set.Icc (0 : ℝ) 1, HasDerivAt (fun t : ℝ => t * f (t * z)) (
     f (t * z) + t * z * deriv f (t * z)) t := by
     intro t ht
@@ -412,7 +419,8 @@ lemma hasDerivAt_primitiveOnBall (f : ℂ → ℂ)
       HasDerivAt.comp t (hf.differentiableOn.differentiableAt (
         IsOpen.mem_nhds isOpen_ball <| ?_) |> DifferentiableAt.hasDerivAt) <|
           HasDerivAt.mul (hasDerivAt_id t |> HasDerivAt.ofReal_comp) <|
-            hasDerivAt_const _ _) using 1 <;> norm_num ; focus ring
+            hasDerivAt_const _ _) using 1 <;>
+      first | rfl | (norm_num; try ring)
     exact lt_of_le_of_lt (mul_le_of_le_one_left (norm_nonneg _) (
       abs_le.mpr ⟨by linarith [ht.1], by linarith [ht.2]⟩)) (by simpa using hz)
   have h_ftc_integral : ∫ t in (0 : ℝ)..1, (f (t * z) + t * z * deriv f (t * z)) =
@@ -447,7 +455,7 @@ lemma hasDerivAt_primitiveOnBall (f : ℂ → ℂ)
                   mul_le_of_le_one_left (norm_nonneg _) <| show (|x| : ℝ) ≤ 1 by
                   norm_num at hx; exact abs_le.mpr ⟨by linarith, by linarith⟩) <| by simpa using hz
   rw [intervalIntegral.integral_add] at h_ftc_integral <;> norm_num at *
-  · convert h_deriv using 1
+  · convert h_deriv using 2 <;> try rfl
     exact h_ftc_integral.symm.trans (
       by rw [show z * ∫ t in (0 : ℝ)..1, deriv f (↑t * z) * ↑t =
               ∫ t in (0 : ℝ)..1, z * (deriv f (↑t * z) * ↑t) from
@@ -510,7 +518,8 @@ lemma exists_log_of_analytic_nonzero_on_ball (f : ℂ → ℂ)
         isOpen_ball.mem_nhds hz) |>
           DifferentiableAt.hasDerivAt) (HasDerivAt.comp z (hasDerivAt_exp _) (
             HasDerivAt.neg (hg0_anal.differentiableOn.differentiableAt (isOpen_ball.mem_nhds hz) |>
-              DifferentiableAt.hasDerivAt)))) using 1; ring!
+              DifferentiableAt.hasDerivAt)))) using 2 <;>
+        first | rfl | ring!
     grind
   have hH_const : ∀ z ∈ ball 0 1, H z = H 0 := by
     intro z hz
@@ -535,9 +544,10 @@ lemma exists_log_of_analytic_nonzero_on_ball (f : ℂ → ℂ)
           simp only [real_smul, mul_comm (↑t : ℂ) z] at this
           simp only [real_smul]
           convert this.comp t (HasDerivAt.const_mul z (hasDerivAt_id t |>
-            HasDerivAt.ofReal_comp)) using 1
-          · norm_num [mul_assoc, mul_comm, mul_left_comm, Function.comp_def]
-          · push_cast; ring_nf
+            HasDerivAt.ofReal_comp)) using 1 <;>
+            first | rfl
+                  | (ext s; simp [mul_comm])
+                  | (norm_num [mul_assoc, mul_comm, mul_left_comm, Function.comp_def])
         · exact (ContinuousOn.intervalIntegrable (by rw [continuousOn_congr fun t ht =>
             by rw [hH_const _ (h_path t <| by simpa using ht)]]; exact continuousOn_const)) ..
       have h_zero : ∫ t in (0 : ℝ)..1, deriv H (t • z) * z = 0 := by
@@ -618,7 +628,8 @@ theorem square_root_transform_in_S (f : ℂ → ℂ) (hf : f ∈ classS) :
     · norm_num
     · convert HasDerivAt.deriv (HasDerivAt.mul (hasDerivAt_id 0) (HasDerivAt.comp 0 (
         h_analytic.differentiableOn.differentiableAt (isOpen_ball.mem_nhds <| by norm_num) |>
-          DifferentiableAt.hasDerivAt) (hasDerivAt_pow 2 0))) using 1; norm_num [h_eq]
+          DifferentiableAt.hasDerivAt) (hasDerivAt_pow 2 0))) using 1 <;>
+        first | rfl | norm_num [h_eq, Function.comp_def]
   · intro z hz; by_cases hz' : z = 0
     · subst hz'
       simp [hf.2.2.1, h_eq.1]

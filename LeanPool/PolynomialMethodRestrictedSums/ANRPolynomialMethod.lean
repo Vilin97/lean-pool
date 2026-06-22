@@ -300,7 +300,7 @@ lemma coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq
       obtain ⟨left, right⟩ := h
       subst right
       norm_num [MvPolynomial.totalDegree]
-      intro b hb; contrapose! hb; simp_all? +decide [MvPolynomial.coeff_sum, MvPolynomial.coeff_X']
+      intro b hb; contrapose! hb; simp_all? +decide [MvPolynomial.coeff_sum, MvPolynomial.coeff_X]
       rw [Finset.card_eq_zero.mpr] <;> aesop
     · rw [Finset.sum_subset (Finset.subset_univ snd.support)] <;> aesop
   · -- the case fst ≠ 0: simplify the C-coeff to 0 and reduce to a disjunction
@@ -330,7 +330,7 @@ lemma coeff_prod_sumX_minus_C_eq_coeff_sumX_pow_of_degree_eq
         have h_one : ∑ y, (Finsupp.single x 1 : Fin (k + 1) →₀ ℕ) y = 1 := by
           simp [Finsupp.single_apply, Finset.mem_univ]
         omega
-      rw [MvPolynomial.coeff_X']
+      rw [MvPolynomial.coeff_X]
       simp_all only [ne_eq, ite_eq_right_iff, one_ne_zero, imp_false]
       apply Aesop.BuiltinRules.not_intro
       intro a_1
@@ -519,7 +519,7 @@ private lemma elimination_polynomial_degreeOf_eq
         intro h_notin
         exfalso; apply h_notin
         simp [Finset.mem_antidiagonal]
-      simp only [MvPolynomial.coeff_X',
+      simp only [MvPolynomial.coeff_X,
         a_2, mul_one, if_true, sub_eq_self, mul_eq_zero]
       refine Or.inr ?_
       erw [MvPolynomial.coeff_eq_zero_of_totalDegree_lt]
@@ -539,7 +539,7 @@ private lemma elimination_polynomial_degreeOf_eq
             simp_all only [coeff_zero_X, zero_sub, neg_eq_zero, sum_zero_index, zero_le]
           next h =>
             simp_all only [sub_zero]
-            rw [MvPolynomial.coeff_X'] at a_4
+            rw [MvPolynomial.coeff_X] at a_4
             simp_all only [ite_eq_right_iff, one_ne_zero, imp_false, Decidable.not_not]
             subst a_4
             simp_all only [sum_single_index, le_refl]
@@ -563,7 +563,7 @@ private lemma elimination_polynomial_degreeOf_eq
       simp_all only [Finset.mem_antidiagonal, ne_eq, mul_eq_zero]
       obtain ⟨fst, snd⟩ := b
       simp_all only [Prod.mk.injEq, not_and]
-      rw [MvPolynomial.coeff_X']
+      rw [MvPolynomial.coeff_X]
       simp_all only [ite_eq_right_iff, one_ne_zero, imp_false]
       contrapose! a_4
       simp_all only [ne_eq, true_and]
@@ -623,7 +623,7 @@ private lemma elimination_polynomial_coeff_top_eq_one
         by_cases hx : x = (fun₀ | i => 1)
         · subst hx
           rw [eq_comm] at hxy
-          simp only [MvPolynomial.coeff_X']
+          simp only [MvPolynomial.coeff_X]
           by_cases h : (0 : Fin (k+1) →₀ ℕ) = fun₀ | i => 1
           · by_cases h_1 : y = fun₀ | i => #s
             · subst h_1
@@ -642,7 +642,7 @@ private lemma elimination_polynomial_coeff_top_eq_one
                 simp_all only [ne_eq, single_eq_same]
                 linarith
               · simp_all only [ne_eq, not_false_eq_true, single_eq_of_ne, add_zero, zero_add]
-        · rw [MvPolynomial.coeff_X'];
+        · rw [MvPolynomial.coeff_X];
           simp_all only [false_and, ↓reduceIte, mul_eq_zero]
           split
           next h =>
@@ -790,7 +790,7 @@ private lemma elimination_polynomial_sub_top_totalDegree_lt
         have h_deg_j_zero :
             MvPolynomial.degreeOf j (MvPolynomial.X i - MvPolynomial.C a) = 0 := by
           refine Nat.eq_zero_of_le_zero (MvPolynomial.degreeOf_le_iff.mpr fun m hm => ?_)
-          rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, MvPolynomial.coeff_X',
+          rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, MvPolynomial.coeff_X,
             MvPolynomial.coeff_C] at hm
           by_cases h1 : Finsupp.single i 1 = m
           · subst h1
@@ -895,9 +895,9 @@ lemma monomial_reduction_step (m : Fin (k + 1) →₀ ℕ) (i : Fin (k + 1))
                 rw [show m.sum (fun _ n => n) = ∑ j, m j from by
                     rw [Finsupp.sum_fintype]; intros; rfl]
                 -- Split each sum at index i.
-                rw [Finset.sum_eq_add_sum_diff_singleton (s := Finset.univ) i
+                rw [Finset.sum_eq_add_sum_sdiff_singleton (s := Finset.univ) i
                       (fun j => (m - Finsupp.single i (c i + 1)) j) (fun h => by simp at h),
-                    Finset.sum_eq_add_sum_diff_singleton (s := Finset.univ) i
+                    Finset.sum_eq_add_sum_sdiff_singleton (s := Finset.univ) i
                       (fun j => m j) (fun h => by simp at h)]
                 -- The sums over `Finset.univ \ {i}` agree.
                 have h_outside :
@@ -940,7 +940,7 @@ lemma monomial_reduction_step (m : Fin (k + 1) →₀ ℕ) (i : Fin (k + 1))
                   sub_eq_zero, hx]
             rw [h_gi_zero x a, sub_zero]; simp +decide [MvPolynomial.eval_monomial]; ring_nf
             simp? +decide [Finsupp.single_apply,
-                Finset.prod_eq_prod_diff_singleton_mul (Finset.mem_univ i), mul_assoc, ← pow_succ']
+                Finset.prod_eq_prod_sdiff_singleton_mul (Finset.mem_univ i), mul_assoc, ← pow_succ']
             rw [← pow_add, Nat.sub_add_cancel (by linarith)]
             exact congrArg₂ _ (Finset.prod_congr rfl fun j hj => by
             simp_all only [Finset.mem_sdiff, Finset.mem_univ, Finset.mem_singleton, true_and]
@@ -1170,7 +1170,7 @@ lemma degree_product_minus_pow_lt {p : ℕ} [Fact (Nat.Prime p)] {k : ℕ}
             refine mul_le_of_le_one_right hE.le ?_
             refine le_trans (b := ?_) (Finset.sup_le ?_) ?_
             · exact 1
-            · simp? +decide [MvPolynomial.coeff_sum, MvPolynomial.coeff_X']
+            · simp? +decide [MvPolynomial.coeff_sum, MvPolynomial.coeff_X]
               intro b hb; contrapose! hb; simp_all? +decide
               rw [Finset.card_eq_zero.mpr] <;> aesop
             · norm_num
@@ -1275,10 +1275,10 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
               MvPolynomial.X i) - MvPolynomial.C e)).prod - (∑ i : Fin (k + 1),
                   MvPolynomial.X i) ^ m).totalDegree < m := by
             intro h1 h2
-            convert degree_product_minus_pow_lt E _
-            · exact hE_card.symm
-            · exact hE_card.symm
-            · contrapose! h1; simp_all (config := { singlePass := Bool.true })
+            have key := degree_product_minus_pow_lt (k := k) E
+              (by contrapose! h1; simp_all (config := { singlePass := Bool.true }))
+            simp only [sumXPolynomial, hE_card] at key
+            exact key
         by_cases h_diff_zero :
             (E.map (fun e => (∑ i : Fin (k + 1),
                 MvPolynomial.X i) - MvPolynomial.C e)).prod - (∑ i : Fin (k + 1),
@@ -1328,10 +1328,11 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
             · -- Apply the lemma `degree_product_minus_pow_lt` with the hypothesis `hm` (which
               -- states that m is not zero).
               apply Or.inr; exact (by
-              convert degree_product_minus_pow_lt _ _
-              · exact hE_card.symm
-              · exact hE_card.symm
-              · exact hE_card.symm ▸ Nat.pos_of_ne_zero hm)
+              have key := degree_product_minus_pow_lt (k := k) E
+                (hE_card.symm ▸ Nat.pos_of_ne_zero hm)
+              simp only [sumXPolynomial] at key
+              rw [hE_card] at key
+              exact key)
         exact h_coeff (by simpa only [mul_comm] using h_coeff_mul_eq.symm.trans h_coeff_zero)
       · -- By contradiction, assume the constant term of h is zero.
         by_contra h_const_zero
@@ -1353,12 +1354,11 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
           -- term are equal.
           have h_diff_deg :
               (productPolynomial k E - (∑ i, MvPolynomial.X i) ^ m).totalDegree < m := by
-            convert degree_product_minus_pow_lt E _
-            · linarith
-            · linarith
-            · simp_all (config := { decide := Bool.true }) only [gt_iff_lt]
-              contrapose! h_coeff
-              have hm0 : m = 0 := Nat.le_zero.mp h_coeff
+            have hE_pos : E.card > 0 := by
+              by_contra hcard
+              apply h_coeff
+              have hm0 : m = 0 := by
+                rw [← hE_card]; omega
               subst hm0
               simp only [pow_zero, one_mul]
               have hS_empty : S = ∅ := by
@@ -1376,9 +1376,10 @@ theorem ANR_polynomial_method (h : MvPolynomial (Fin (k + 1)) (ZMod p))
                 have : ∑ i, x i ∈ S := Finset.mem_image.mpr ⟨x, hx_mem', rfl⟩
                 rw [hS_empty] at this
                 exact Finset.notMem_empty _ this
-              convert coeff_target_eq_zero_of_vanishes_on_grid h A c hA _ _
-              · linarith
-              · exact H_eval
+              exact coeff_target_eq_zero_of_vanishes_on_grid h A c hA (by linarith) H_eval
+            have key := degree_product_minus_pow_lt (k := k) E hE_pos
+            simp only [sumXPolynomial, hE_card, productPolynomial] at key ⊢
+            exact key
           have h_coeff_eq : ∀ (P Q : MvPolynomial (Fin (k + 1)) (ZMod p)),
               (P - Q).totalDegree < m → MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (
                   h * P) = MvPolynomial.coeff (Finsupp.equivFunOnFinite.symm c) (h * Q) := by

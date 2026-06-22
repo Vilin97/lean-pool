@@ -202,6 +202,7 @@ theorem α_eval {n : ℕ} [NeZero n] (J : SignedInterval n) (t : Fin n) :
     - (if (J.j : ℕ) + 1 = (t : ℕ) then 1 else 0)) := by
   have := @Ae_sum_eq;
   convert congr_arg ( fun x : ℤ => J.sign * x ) ( this J.i J.j J.hij t ) using 1
+  simp [α, Pi.smul_apply, Finset.sum_apply]
 
 /-
 Key consequence: αDual(J) evaluated on a test function
@@ -224,6 +225,7 @@ theorem pairing_formula {n : ℕ} [NeZero n] (J K : SignedInterval n) :
       (ZnPairing n (α K)) (αDual J) =
         J.sign * ∑ v ∈ Finset.Icc J.i J.j, (α K) v := by
     convert α_dual_eval J ( α K ) using 1;
+    simp [Module.Dual.eval_apply]
   simp_all +decide only [Module.Dual.eval_apply, α_eval, mul_assoc, mul_eq_mul_left_iff];
   have h_simplify3 :
       ∑ x ∈ Finset.Icc J.i J.j,
