@@ -15,9 +15,7 @@ import Mathlib.Tactic.Ring.RingNF
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.IntervalCases
 import Mathlib.Tactic.LinearCombination
-import Mathlib.Tactic.Polyrith
 /-!
 # Uniqueness of the Herglotz–Riesz measure
 
@@ -260,6 +258,17 @@ lemma measure_eq_of_moments (μ₁ μ₂ : Measure (sphere (0 : ℂ) 1))
     · exact Eq.symm (by erw [integral_ofReal]; norm_cast)
   exact ext_of_forall_integral_eq_of_IsFiniteMeasure fun f ↦ h_eq f.toContinuousMap
 
+/-- A power series `∑ z^(k+1) * c k` with bounded coefficients is summable for `‖z‖ < 1`. -/
+private lemma summable_zpow_mul {z : ℂ} (hz : ‖z‖ < 1) {c : ℕ → ℂ} {M : ℝ}
+    (hc : ∀ n, ‖c n‖ ≤ M) : Summable (fun k => z ^ (k + 1) * c k) := by
+  have h_summable : Summable (fun k => ‖z‖ ^ (k + 1) * ‖c k‖) :=
+    Summable.of_nonneg_of_le
+      (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _) (norm_nonneg _))
+      (fun n => mul_le_mul_of_nonneg_left (hc n) (pow_nonneg (norm_nonneg _) _))
+      (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _) hz
+        |> Summable.comp_injective <| Nat.succ_injective)
+  exact Summable.of_norm <| by simpa using h_summable
+
 /-- If two power series are equal on the unit disc, then their coefficients are equal. -/
 lemma coeffs_eq_of_series_eq (c1 c2 : ℕ → ℂ)
     (hc1 : ∃ M, ∀ n, ‖c1 n‖ ≤ M) (hc2 : ∃ M, ∀ n, ‖c2 n‖ ≤ M)
@@ -272,21 +281,8 @@ lemma coeffs_eq_of_series_eq (c1 c2 : ℕ → ℂ)
     · congr
       ext n
       ring
-    · have h_summable : Summable (fun n => ‖z‖ ^ (n + 1) * ‖c1 n‖) := by
-        exact Summable.of_nonneg_of_le (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _)
-          (norm_nonneg _)) (fun n => mul_le_mul_of_nonneg_left (hc1.choose_spec n)
-            (pow_nonneg (norm_nonneg _) _))
-              (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
-                hz |> Summable.comp_injective <| Nat.succ_injective)
-      exact Summable.of_norm <| by simpa using h_summable
-    · have h_summable : Summable (fun n => ‖z‖ ^ (n + 1) * ‖c2 n‖) := by
-        exact Summable.of_nonneg_of_le (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _)
-          (norm_nonneg _))
-            (fun n => mul_le_mul_of_nonneg_left (hc2.choose_spec n)
-              (pow_nonneg (norm_nonneg _) _))
-                (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
-                  hz |> Summable.comp_injective <| Nat.succ_injective)
-      exact Summable.of_norm <| by simpa using h_summable
+    · exact summable_zpow_mul hz hc1.choose_spec
+    · exact summable_zpow_mul hz hc2.choose_spec
   induction n using Nat.strong_induction_on with
   | _ n ih =>
   have h_limit : Filter.Tendsto (fun z : ℂ => (∑' k, z ^ (k + 1) * (c1 k - c2 k)) / z ^ (n + 1))
@@ -297,25 +293,8 @@ lemma coeffs_eq_of_series_eq (c1 c2 : ℕ → ℂ)
       rw [← Summable.sum_add_tsum_nat_add]
       rotate_left
       · use n + 1
-      · have h_summable : Summable (fun k => z ^ (k + 1) * (c1 k)) ∧
-                          Summable (fun k => z ^ (k + 1) * (c2 k)) := by
-          have h_summable : Summable (fun k => ‖z‖ ^ (k + 1) * ‖c1 k‖) ∧
-                            Summable (fun k => ‖z‖ ^ (k + 1) * ‖c2 k‖) :=
-                ⟨Summable.of_nonneg_of_le
-                  (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _) (norm_nonneg _))
-                  (fun n => mul_le_mul_of_nonneg_left (hc1.choose_spec n)
-                                                      (pow_nonneg (norm_nonneg _) _))
-                  (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
-                                    hz |> Summable.comp_injective <| Nat.succ_injective),
-                Summable.of_nonneg_of_le
-                  (fun n => mul_nonneg (pow_nonneg (norm_nonneg _) _) (norm_nonneg _))
-                  (fun n => mul_le_mul_of_nonneg_left (hc2.choose_spec n)
-                                                      (pow_nonneg (norm_nonneg _) _))
-                  (Summable.mul_right _ <| summable_geometric_of_lt_one (norm_nonneg _)
-                                    hz |> Summable.comp_injective <| Nat.succ_injective)⟩
-          exact ⟨Summable.of_norm <| by simpa using h_summable.1,
-                  Summable.of_norm <| by simpa using h_summable.2⟩
-        simpa only [mul_sub] using h_summable.1.sub h_summable.2
+      · simpa only [mul_sub] using
+          (summable_zpow_mul hz hc1.choose_spec).sub (summable_zpow_mul hz hc2.choose_spec)
       · simp only [Finset.sum_range_succ, add_assoc, Nat.reduceAdd, add_eq_right]
         exact Finset.sum_eq_zero fun i hi => by simp [ih i (Finset.mem_range.mp hi)]
     have h_factor : Filter.Tendsto

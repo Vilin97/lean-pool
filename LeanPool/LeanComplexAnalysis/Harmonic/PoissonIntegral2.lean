@@ -277,9 +277,8 @@ theorem poisson_integral_of_harmonicOn_scaled_disc {u : ℂ → ℝ} {z : ℂ} {
     u (r * z) = (1 / (2 * π)) * ∫ t in (0)..(2 * π),
       ((R ^ 2 - ‖z‖ ^ 2) / ‖R * exp (t * I) - z‖ ^ 2) * u (r * R * exp (t * I)) := by
   obtain ⟨f, hf, hf_eq⟩ : ∃ f : ℂ → ℂ, DifferentiableOn ℂ f (ball 0 R) ∧
-      EqOn (fun z => (f z).re) u (ball 0 R) := by
-    obtain ⟨f, hf⟩ := hu.exists_analyticOnNhd_ball_re_eq
-    exact ⟨f, hf.1.differentiableOn, hf.2⟩
+      EqOn (fun z => (f z).re) u (ball 0 R) :=
+    hu.exists_analyticOnNhd_ball_re_eq.imp fun _ hf => ⟨hf.1.differentiableOn, hf.2⟩
   rw [← hf_eq (mem_disc_of_scaled (pos_of_mem_ball hz) (LT.lt.le (mem_ball_zero_iff.mp hz)) hr)]
   -- We replace `u(rz)` by `Re(f(rz))`.
   have hrt_eq : EqOn

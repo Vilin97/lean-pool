@@ -22,6 +22,11 @@ namespace LeanPool.LeanComplexAnalysis
 
 open  Complex InnerProductSpace Metric Set Real
 
+/-- `t ↦ u (exp (t * I))` is continuous on any set when `u` is continuous on the closed disc. -/
+private lemma continuousOn_u_exp {u : ℂ → ℝ} (hc : ContinuousOn u (closedBall 0 1)) (s : Set ℝ) :
+    ContinuousOn (fun t : ℝ => u (Complex.exp (t * Complex.I))) s :=
+  hc.comp (Continuous.continuousOn (by continuity)) fun x _ => by simp [Complex.norm_exp]
+
 lemma non_neg_boundary
     (u : ℂ → ℝ) (t : ℝ)
     (h_pos : ∀ z ∈ ball (0 : ℂ) 1, 0 < u z)
@@ -67,12 +72,9 @@ lemma harnack_ineq_cont_normalized_upper
           intro heq
           rw [norm_eq_zero, mem_ball_zero_iff] at *
           exact absurd (by simp [sub_eq_zero.mp heq |>.symm] : ‖z‖ = 1) (by linarith)
-      · exact hc.comp (Continuous.continuousOn <| by continuity) fun x hx =>
-          by simp [Complex.norm_exp]
+      · exact continuousOn_u_exp hc _
     · apply_rules [ContinuousOn.intervalIntegrable]
-      exact ContinuousOn.mul continuousOn_const <|
-        hc.comp (Continuous.continuousOn <| by continuity) fun x hx =>
-          by simp [Complex.norm_exp]
+      exact ContinuousOn.mul continuousOn_const (continuousOn_u_exp hc _)
     · intro t ht₁; gcongr
       · convert non_neg_boundary u t h_pos hc using 1
       · exact sub_nonneg_of_le (pow_le_one₀ (norm_nonneg _) (le_of_lt (by simpa using hz)))
@@ -121,19 +123,16 @@ lemma harnack_ineq_cont_normalized_lower
     refine intervalIntegral.integral_mono_on ?_ ?_ ?_ ?_
     · positivity
     · apply_rules [ContinuousOn.intervalIntegrable]
-      exact ContinuousOn.mul continuousOn_const <| hc.comp (Continuous.continuousOn <|
-        by continuity) fun x hx => by simp [Complex.norm_exp]
+      exact ContinuousOn.mul continuousOn_const (continuousOn_u_exp hc _)
     · apply_rules [ContinuousOn.intervalIntegrable]
-      refine ContinuousOn.mul ?_ ?_
-      · refine ContinuousOn.div ?_ ?_ ?_
-        · exact continuousOn_const
-        · fun_prop
-        · rw [mem_ball_zero_iff] at hz
-          simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, pow_eq_zero_iff, norm_eq_zero]
-          intro x _ heq
-          exact absurd (by simp [← sub_eq_zero.mp heq] : ‖z‖ = 1) (by linarith)
-      · exact hc.comp (Continuous.continuousOn <| by continuity) fun x hx =>
-         by simp [Complex.norm_exp]
+      refine ContinuousOn.mul ?_ (continuousOn_u_exp hc _)
+      refine ContinuousOn.div ?_ ?_ ?_
+      · exact continuousOn_const
+      · fun_prop
+      · rw [mem_ball_zero_iff] at hz
+        simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, pow_eq_zero_iff, norm_eq_zero]
+        intro x _ heq
+        exact absurd (by simp [← sub_eq_zero.mp heq] : ‖z‖ = 1) (by linarith)
     · intro x hx₁; gcongr
       · exact non_neg_boundary u x h_pos hc
       · nlinarith only [show ‖z‖ < 1 from by simpa using hz, show ‖z‖ ≥ 0 from norm_nonneg z]
