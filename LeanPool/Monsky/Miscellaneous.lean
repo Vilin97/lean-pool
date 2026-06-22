@@ -108,13 +108,8 @@ lemma mul_cancel {a b c : ℝ} (h : a ≠ 0) (h2 : a * b = a * c) :
         b = c := by simp_all only [ne_eq, mul_eq_mul_left_iff, or_false]
 
 lemma smul_cancel {a : ℝ} {b c : ℝ²} (h₁ : a ≠ 0) (h₂ : a • b = a • c)
-    : b = c := by
-  refine PiLp.ext ?_
-  intro i
-  rw [PiLp.ext_iff] at h₂
-  have l := h₂ i
-  simp [PiLp.smul_apply, smul_eq_mul, mul_eq_mul_left_iff, h₁] at l
-  assumption
+    : b = c :=
+  smul_right_injective ℝ² h₁ h₂
 
 
 lemma fin2_im {α : Type} [DecidableEq α] {f : Fin 2 → α}
@@ -178,7 +173,6 @@ lemma real_interval_δ {x : ℝ} (y : ℝ) (hx : 0 < x) : ∃ δ > 0, ∀ a, |a|
 /- Pigeonhole lemma of the form that I have not been able to find. -/
 lemma finset_infinite_pigeonhole {α β : Type} [Infinite α] {f : α → β} {B : Finset β}
     (hf : ∀ a, f a ∈ B) : ∃ b ∈ B, Set.Infinite (f⁻¹' {b}) := by
-  have : Finite B := by exact Finite.of_fintype { x // x ∈ B }
   let f_B := fun (a : α) => (⟨f a, hf a⟩ : B)
   have ⟨b, hb⟩ := Finite.exists_infinite_fiber f_B
   use b

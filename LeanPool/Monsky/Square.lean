@@ -153,10 +153,7 @@ lemma open_unitSquare_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ openHull unit
   -- The constant we will choose is of order 1/ y, so we have to make an exception for y =0
   by_cases h : ∀ i, (y i = 0) -- this formulation was slightly easier for me
   · use 1
-    have h1: y = 0 := by
-      ext i
-      exact h i
-    rw[h1]
+    rw [show y = 0 by ext i; exact h i]
     refine ⟨by norm_num, fun n => ?_⟩
     simpa using hx
   -- I would prefer to define the epsilon with an infinum over i, rather than doing it explicitly,
@@ -228,6 +225,16 @@ lemma open_unitSquare_open_dir {x : ℝ²} (y : ℝ²) (hx : x ∈ openHull unit
 
 
 
+private lemma square_side_det₂_ne {x : ℝ²} (hx : x ∈ boundary unitSquare) {Δ : Triangle}
+    {k : Fin 3} (hArea : det Δ ≠ 0) (hΔP : closedHull Δ ⊆ closedHull unitSquare)
+    (hSide : x ∈ openHull (Tside Δ k)) : det₂ (segVec (Tside Δ k)) (v 1 1) ≠ 0 := by
+  apply aux_det₂
+  · intro this
+    rw [segVec_zero_iff] at this
+    exact (nondegen_triangle_imp_nondegen_side k hArea) this
+  · have ⟨i, hi⟩ := segment_in_boundary_square hx
+    exact ⟨i, hi _ hSide (subset_trans closed_side_sub' hΔP)⟩
+
 lemma el_boundary_square_triangle_dir {x : ℝ²} (hx : x ∈ boundary unitSquare) :
     ∃ σ ∈ ({-1,1} : Finset ℝ), ∀ (Δ : Triangle), (det Δ ≠ 0) →
     (closedHull Δ ⊆ closedHull unitSquare) → (∃ i, x ∈ openHull (Tside Δ i))
@@ -276,18 +283,8 @@ lemma el_boundary_square_triangle_dir {x : ℝ²} (hx : x ∈ boundary unitSquar
                   try simp [neg_eq_zero] at hL
                   linarith [lt_min hδ hδ']
                   ))
-        · apply aux_det₂
-          · intro this
-            rw [segVec_zero_iff] at this
-            exact (nondegen_triangle_imp_nondegen_side j' hArea') this
-          · have ⟨i,hi⟩ := segment_in_boundary_square hx
-            exact ⟨i, hi _ hSide' (subset_trans closed_side_sub' hΔ'P)⟩
-      · apply aux_det₂
-        · intro this
-          rw [segVec_zero_iff] at this
-          exact (nondegen_triangle_imp_nondegen_side j hArea) this
-        · have ⟨i,hi⟩ := segment_in_boundary_square hx
-          exact ⟨i, hi _ hSide (subset_trans closed_side_sub' hΔP)⟩
+        · exact square_side_det₂_ne hx hArea' hΔ'P hSide'
+      · exact square_side_det₂_ne hx hArea hΔP hSide
     · push Not at hΔ
       use (1 : ℝ), by simp
       intro Δ hArea hΔP ⟨i,hSide⟩
@@ -321,11 +318,8 @@ lemma segment_triangle_pairing_int
   -- We first take an element from openHull L
   have ⟨x, hLx⟩ := open_seg_nonempty L
   -- A useful statement:
-  have hU : ∀ Δ ∈ S, x ∉ openHull Δ := by
-    intro Δ hΔ hxΔ
-    have this := Set.mem_inter hxΔ (open_sub_closed _ hLx )
-    rw [hInt Δ hΔ] at this
-    exact this
+  have hU : ∀ Δ ∈ S, x ∉ openHull Δ := fun Δ hΔ hxΔ ↦
+    (hInt Δ hΔ).subset (Set.mem_inter hxΔ (open_sub_closed _ hLx))
   -- This x is a member of side i of some triangle Δ.
   have ⟨Δ, hΔ, i, hxi⟩ := cover_mem_side hCover hArea (open_sub_closed _ (hLunit hLx)) hU ?_
   · -- Now it should follow that the closed hull of L is contained in the closed hull of Tside Δ i
@@ -396,12 +390,12 @@ lemma segment_triangle_pairing_int
         have ⟨σ'', hσ'', ⟨δ'',hδ'', hain''⟩, haout''⟩ := seg_inter_open hi'' (hArea Δ'' hΔ'') yΔi''
         -- First we show that σ ≠ σ' The following argument is repeated
         -- three times and could use its own lemma
-        have σneq : σ ≠ σ' := by
-          intro σeq
-          rw [σeq] at hain
-          specialize hain (min δ δ') (lt_min hδ hδ') (min_le_left δ δ')
-          specialize hain' (min δ δ') (lt_min hδ hδ') (min_le_right δ δ')
-          exact hΔneq (isCover_open_el_imp_eq hCover.2 hΔ' hΔ hain' hain)
+        have rays_eq : ∀ {Δa Δb : Triangle} {δa δb τ : ℝ}, Δa ∈ S → Δb ∈ S → 0 < δa → 0 < δb →
+            (∀ a, 0 < a → a ≤ δa → x + a • τ • y ∈ openHull Δa) →
+            (∀ a, 0 < a → a ≤ δb → x + a • τ • y ∈ openHull Δb) → Δa = Δb :=
+          fun hΔa hΔb hδa hδb ha hb ↦ isCover_open_el_imp_eq hCover.2 hΔa hΔb
+            (ha _ (lt_min hδa hδb) (min_le_left _ _)) (hb _ (lt_min hδa hδb) (min_le_right _ _))
+        have σneq : σ ≠ σ' := fun σeq ↦ hΔneq (rays_eq hΔ' hΔ hδ' hδ hain' (σeq ▸ hain))
         have σ''mem : σ'' = σ ∨ σ'' = σ' := by
           simp only [mem_insert, mem_singleton] at hσ hσ' hσ''
           obtain t | t := hσ <;> obtain t' | t' := hσ' <;> obtain t'' | t'' := hσ'' <;> (
@@ -409,19 +403,9 @@ lemma segment_triangle_pairing_int
             rw [t,t'] at σneq
             tauto)
         rcases σ''mem with h | h
-        · have hl : Δ'' = Δ := by
-            by_contra hneq
-            rw [h] at hain''
-            specialize hain (min δ δ'') (lt_min hδ hδ'') (min_le_left δ δ'')
-            specialize hain'' (min δ δ'') (lt_min hδ hδ'') (min_le_right δ δ'')
-            exact hneq (isCover_open_el_imp_eq hCover.2 hΔ'' hΔ hain'' hain)
+        · have hl : Δ'' = Δ := rays_eq hΔ'' hΔ hδ'' hδ (h ▸ hain'') hain
           simp only [hl, mem_insert, mem_singleton, or_true]
-        · have hl : Δ'' = Δ' := by
-            by_contra hneq
-            rw [h] at hain''
-            specialize hain' (min δ' δ'') (lt_min hδ' hδ'') (min_le_left δ' δ'')
-            specialize hain'' (min δ' δ'') (lt_min hδ' hδ'') (min_le_right δ' δ'')
-            exact hneq (isCover_open_el_imp_eq hCover.2 hΔ'' hΔ' hain'' hain')
+        · have hl : Δ'' = Δ' := rays_eq hΔ'' hΔ' hδ'' hδ' (h ▸ hain'') hain'
           simp only [hl, mem_insert, mem_singleton, true_or]
       · intro hΔ''; simp only [mem_insert, mem_singleton] at hΔ''
         obtain hΔ'' | hΔ'' := hΔ'' <;> (rw [hΔ'']; simp only [mem_filter])
@@ -447,16 +431,11 @@ lemma segment_triangle_pairing_boundary (S : Finset Triangle)
   -- We first take an element from openHull L
   have ⟨x, hLx⟩ := open_seg_nonempty L
   -- The point x is not in any open triangle:
-  have hU : ∀ Δ ∈ S, x ∉ openHull Δ := by
-    intro Δ hΔ hxΔ
-    have this := Set.mem_inter hxΔ (open_sub_closed _ hLx )
-    rw [hInt Δ hΔ] at this
-    exact this
+  have hU : ∀ Δ ∈ S, x ∉ openHull Δ := fun Δ hΔ hxΔ ↦
+    (hInt Δ hΔ).subset (Set.mem_inter hxΔ (open_sub_closed _ hLx))
   -- The point x is also not a vertex of any triangle
-  have hxNvtx : ∀ (i : Fin 3), ∀ Δ ∈ S, x ≠ Δ i := by
-    intro i Δ hΔ hxΔ
-    rw [hxΔ] at hLx
-    exact hv Δ hΔ i hLx
+  have hxNvtx : ∀ (i : Fin 3), ∀ Δ ∈ S, x ≠ Δ i := fun i Δ hΔ hxΔ ↦
+    hv Δ hΔ i (hxΔ ▸ hLx)
   -- This x is a member of side i of some triangle Δ.
   have ⟨Δ, hΔ, i, hxi⟩ :=
     cover_mem_side hCover hArea (boundary_sub_closed unitSquare (hLunit hLx)) hU hxNvtx
@@ -493,10 +472,6 @@ def squareBoundaryBig : Fin 4 → Segment := fun
 /-- The four sides of the unit square, as a set of segments. -/
 noncomputable def squareBoundaryBigSet : Finset Segment :=
    @Finset.biUnion (Fin 4) Segment _ ⊤ (fun i ↦ {squareBoundaryBig i})
-
-
--- noncomputable def squareBoundaryBigSet₂ : Finset Segment :=
---   Finset.image squareBoundaryBig (univ : Finset (Fin 4))
 
 
 lemma squareBoundaryBig_corners : ∀ i, ∀ j, ∃ k,
@@ -538,23 +513,13 @@ lemma squareBoundaryBig_eq (i : Fin 4) :
     fin_cases i <;>
     simp [←hαx, squareBoundaryBig, simplex_co_leq_1 hα, hα.1]
   · intro ⟨hx₀, hx₁, hxr⟩
-    fin_cases i
-    · rw [←reverseSegment_closedHull]
-      convert linear_co_closed _ (real_to_fin_2_closed hx₀ hx₁)
-      ext k; fin_cases k <;>
-      all_goals simp_all [linearCombination, real_to_fin_2, reverseSegment,
-        squareBoundaryBig, toSegment, v]
-    · rw [←reverseSegment_closedHull]
-      convert linear_co_closed _ (real_to_fin_2_closed hx₀ hx₁)
-      ext k; fin_cases k <;>
-      all_goals simp_all [linearCombination, real_to_fin_2, reverseSegment,
-        squareBoundaryBig, toSegment, v]
+    fin_cases i <;>
+      [rw [←reverseSegment_closedHull]; rw [←reverseSegment_closedHull]; skip; skip] <;>
     · convert linear_co_closed _ (real_to_fin_2_closed hx₀ hx₁)
-      ext k; fin_cases k <;>
-      all_goals simp_all [linearCombination, real_to_fin_2, squareBoundaryBig, v]
-    · convert linear_co_closed _ (real_to_fin_2_closed hx₀ hx₁)
-      ext k; fin_cases k <;>
-      all_goals simp_all [linearCombination, real_to_fin_2, squareBoundaryBig, v]
+      ext k
+      fin_cases k <;>
+        all_goals simp_all [linearCombination, real_to_fin_2, reverseSegment,
+          squareBoundaryBig, toSegment, v]
 
 
 lemma square_boundary_in_boundary (i : Fin 4) :
@@ -565,23 +530,17 @@ lemma square_boundary_in_boundary (i : Fin 4) :
       ⟨boundaryLine i + 1, by fin_cases i <;> simp_all⟩⟩
 
 lemma square_boundary_segments_in_boundary : ∀ i : Fin 4, closedHull (squareBoundaryBig i) ⊆
-    boundary unitSquare := by
-  intro i
-  fin_cases i <;> simp_all [square_boundary_in_boundary]
+    boundary unitSquare := square_boundary_in_boundary
 
 lemma boundary_in_square_boundary {x : ℝ²} (hx : x ∈ boundary unitSquare) :
     ∃ i, x ∈ closedHull (squareBoundaryBig i) := by
   rw [boundary_unitSquare_eq] at hx
   have ⟨j, hj⟩ := hx.2
   fin_cases j <;> obtain hj | hj := hj
-  · use 3
-    simp_all [squareBoundaryBig_eq]
-  · use 1
-    simp_all [squareBoundaryBig_eq]
-  · use 0
-    simp_all [squareBoundaryBig_eq]
-  · use 2
-    simp_all [squareBoundaryBig_eq]
+  · exact ⟨3, by simp_all [squareBoundaryBig_eq]⟩
+  · exact ⟨1, by simp_all [squareBoundaryBig_eq]⟩
+  · exact ⟨0, by simp_all [squareBoundaryBig_eq]⟩
+  · exact ⟨2, by simp_all [squareBoundaryBig_eq]⟩
 
 
 lemma square_boundary_is_union_sides
@@ -641,7 +600,7 @@ lemma convex_faces {x y p : ℝ²} (i : Fin 4) (hpiface : p ∈ closedHull (squa
 x ∈ closedHull (squareBoundaryBig i) ∧ y ∈ closedHull (squareBoundaryBig i) := by
   have h_inter := squareBoundaryBig_inter_seg hp hpiface
     (closedHull_convex (by intro i; fin_cases i <;> assumption))
-  refine ⟨?_,?_⟩
+  refine ⟨?_, ?_⟩
   · convert h_inter (corner_in_closedHull (i := 0))
   · convert h_inter (corner_in_closedHull (i := 1))
 
@@ -649,20 +608,14 @@ lemma convex_faces'' {p : ℝ²} {L : Segment} (i : Fin 4)
 (hpiface : p ∈ closedHull (squareBoundaryBig i))
 (hp : p ∈ openHull L) (hx : L 0 ∈ closedHull unitSquare) (hy : L 1 ∈ closedHull unitSquare) :
 closedHull L ⊆ closedHull (squareBoundaryBig i) := by
-  apply closedHull_convex
-  intro j
-  fin_cases j
-  · exact (convex_faces i hpiface hp hx hy).1
-  · exact (convex_faces i hpiface hp hx hy).2
+  have h := convex_faces i hpiface hp hx hy
+  exact closedHull_convex (fun j ↦ by fin_cases j <;> [exact h.1; exact h.2])
 
 
 lemma square_boundary_pairwise_inter {i : Fin 4} :
     closedHull (squareBoundaryBig (i - 1)) ∩ closedHull (squareBoundaryBig i)
       = {unitSquare i} := by
-  rw [squareBoundaryBig_eq, squareBoundaryBig_eq]
-  have hprev : i - 1 = i + 3 := by
-    fin_cases i <;> rfl
-  rw [hprev]
+  rw [squareBoundaryBig_eq, squareBoundaryBig_eq, show i - 1 = i + 3 by fin_cases i <;> rfl]
   ext x; rw [Set.mem_singleton_iff]
   constructor
   · intro _; ext j
@@ -710,18 +663,12 @@ lemma line_in_boundary {x : ℝ²} {L : Segment} (hL : closedHull L ⊆ closedHu
   rw [square_boundary_is_union_sides] at hboundary
   simp only [Set.mem_inter_iff, Set.mem_iUnion] at hboundary
   rcases hboundary with ⟨hx, ⟨i, h1⟩⟩
-  have : closedHull L ⊆ closedHull (squareBoundaryBig i) := by
-    apply squareBoundaryBig_inter_seg hx h1 hL
-  exact subset_trans this (square_boundary_in_boundary i)
+  exact subset_trans (squareBoundaryBig_inter_seg hx h1 hL) (square_boundary_in_boundary i)
 
 
 lemma unitSquare_is_convex {x y : ℝ²} (hx : x ∈ closedHull unitSquare) (hy : y ∈ closedHull
-unitSquare) : closedHull (toSegment x y) ⊆ closedHull unitSquare := by
-  have h: ∀ i, toSegment x y i ∈ closedHull unitSquare := by
-    intro i; fin_cases i
-    · exact hx
-    · exact hy
-  apply closedHull_convex h
+unitSquare) : closedHull (toSegment x y) ⊆ closedHull unitSquare :=
+  closedHull_convex (fun i ↦ by fin_cases i <;> [exact hx; exact hy])
 
 lemma unitSquare_is_convex' {S : Segment} (hS : closedHull S ⊆ boundary unitSquare) :
     ∃ i : Fin 4, closedHull S ⊆ closedHull (squareBoundaryBig i) := by
@@ -736,9 +683,8 @@ lemma unitSquare_is_convex' {S : Segment} (hS : closedHull S ⊆ boundary unitSq
 lemma unitSquare_is_convex_open {S : Segment} (hS : closedHull S ⊆ boundary unitSquare)
     (hNondegen : S 0 ≠ S 1) :
     ∃ i : Fin 4, openHull S ⊆ openHull (squareBoundaryBig i) := by
-  apply unitSquare_is_convex' at hS
-  rcases hS with ⟨ i, hS⟩
-  exact ⟨ i, open_segment_sub' hS hNondegen⟩
+  have ⟨i, hS⟩ := unitSquare_is_convex' hS
+  exact ⟨i, open_segment_sub' hS hNondegen⟩
 
 
 lemma openHull_segment_in_boundary {S : Segment}
@@ -747,8 +693,7 @@ lemma openHull_segment_in_boundary {S : Segment}
   : ∃ i, closedHull S ⊆ closedHull (squareBoundaryBig i) := by
   have ⟨x, hx⟩ := open_pol_nonempty (by norm_num) S
   have ⟨i, hi⟩ := boundary_in_square_boundary (hS hx)
-  use i
-  apply squareBoundaryBig_inter_seg hx hi hcS
+  exact ⟨i, squareBoundaryBig_inter_seg hx hi hcS⟩
 
 end Monsky
 end LeanPool

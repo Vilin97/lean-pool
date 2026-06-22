@@ -289,14 +289,12 @@ lemma open_closedHull_minus_boundary {n : ℕ} {P : Fin n → ℝ²} :
 
 lemma boundary_constant {n : ℕ} {P : ℝ²} :
     boundary (fun (_ : Fin n) ↦ P) = ∅ := by
+  unfold boundary
   rcases (ne_or_eq n 0) with hn | hz
-  · unfold boundary
-    rw [openHull_constant hn, closedHull_constant hn]
+  · rw [openHull_constant hn, closedHull_constant hn]
     simp only [sdiff_self, Set.bot_eq_empty]
-  · unfold boundary
-    unfold closedHull
-    rw [hz]
-    rw [closedSimplex_zero_empty]
+  · unfold closedHull
+    rw [hz, closedSimplex_zero_empty]
     simp only [univ_eq_empty, sum_empty, Set.image_empty, Set.empty_diff]
 
 
@@ -318,7 +316,6 @@ lemma openHull_constant_rev {n : ℕ} {P : ℝ²} {f : Fin n → ℝ²}
       rw [ho, Set.mem_singleton_iff]
     have ⟨i, hi⟩ := hc
     have this := closedHull_openHull_com hP (corner_in_closedHull (i := i) (P := f))
-    have bla := (one_smul (M := ℝ) P)
     rw [ho, Set.mem_singleton_iff, add_comm, ←eq_sub_iff_add_eq] at this
     nth_rw 1 [←(one_smul (M := ℝ) P), ←sub_smul] at this
     ring_nf at this

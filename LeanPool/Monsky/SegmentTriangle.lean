@@ -110,33 +110,6 @@ lemma aux_det₂ {L : ℝ²} (hL : L ≠ 0) (hi : ∃ i, L i = 0) : det₂ L (v 
     fin_cases j <;> (simp_all [])
   )
 
--- Maybe useful but not used
--- lemma det₂_scalar {x y : ℝ²} (hy : y ≠ 0) (hdet : det₂ x y = 0) :
---     ∃ t : ℝ, x = t • y := by
---   rw [det₂, sub_eq_zero] at hdet
---   by_cases hy0 : y 0 = 0
---   · by_cases hy1 : y 1 = 0
---     · exfalso
---       apply hy (PiLp.ext ?_)
---       intro i
---       fin_cases i <;> assumption
---     · use x 1 / y 1
---       refine (PiLp.ext ?_)
---       intro i
---       fin_cases i
---       · field_simp
---         assumption
---       · field_simp
---   · use x 0 / y 0
---     refine (PiLp.ext ?_)
---     intro i
---     fin_cases i
---     · field_simp
---     · field_simp
---       exact hdet.symm
-
-
-
 
 
 /- Segments -/
@@ -1270,10 +1243,7 @@ closedHull (toSegment z w) ⊆ closedHull (toSegment v w) \ {v} := by
 
 lemma corrollary_closed_in_clopen_right {v z w : ℝ²}
   (hclop : closedHull (toSegment z w) ⊆ closedHull (toSegment v w) \ {v}) :
-    v ∉ closedHull (toSegment z w) := by
-  by_contra h
-  have this := hclop h
-  simp at this
+    v ∉ closedHull (toSegment z w) := fun h ↦ by simpa using hclop h
 
 
 lemma middle_intersection_empty {u v w : ℝ²} {h : colin u v w} :
@@ -1414,8 +1384,6 @@ lemma colin_sub_aux {u v w x : ℝ²} {L : Segment} (hc : colin u v w)
       rw [hcontra] at hxL
       exact boundary_not_in_open (boundary_seg' hL01 i) hxL
 
---test
-
 /-- The closed hull of the segment associated to an unordered pair of points. -/
 def ClosedSymSeg : Sym2 ℝ² → Set ℝ² :=
   Sym2.lift ⟨fun a b ↦ closedHull (toSegment a b), by
@@ -1526,8 +1494,8 @@ noncomputable def linePar (v₁ v₂ : ℝ²) : ℝ → ℝ² := fun t ↦ v₁ 
 lemma seg_par_injective {v₁ v₂ : ℝ²} (h : v₂ ≠ 0) : (linePar v₁ v₂).Injective := by
   intro t₁ t₂ ht
   rw [linePar, linePar, add_right_inj] at ht
-  have this := sub_eq_zero_of_eq ht
-  rwa [←sub_smul, propext (smul_eq_zero_iff_left h), sub_eq_zero] at this
+  have ht := sub_eq_zero_of_eq ht
+  rwa [←sub_smul, propext (smul_eq_zero_iff_left h), sub_eq_zero] at ht
 
 
 lemma seg_par₀ {v₁ v₂ : ℝ²} : linePar v₁ v₂ 0 = v₁ := by
