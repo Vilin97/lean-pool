@@ -74,29 +74,8 @@ local notation "id" => (1 : Matrix n n ℂ →ₗ[ℂ] Matrix n n ℂ)
 
 open TensorProduct
 
-theorem Finset.sum_fin_one {α : Type _} [AddCommMonoid α] (f : Fin 1 → α) : ∑ i, f i = f 0 := by
-  have h : (Finset.univ : Finset (Fin 1)) = {0} := by
-    ext i
-    simp [Subsingleton.elim i 0]
-  rw [h, Finset.sum_singleton]
-
--- theorem LinearMap.IsReal.adjoint_isReal_iff_commute_with_sig  [hφ : φ.IsFaithfulPosMap] {f : ℍ
--- →ₗ[ℂ] ℍ} (hf : LinearMap.IsReal f) :
---     LinearMap.IsReal (LinearMap.adjoint f) ↔ Commute f (hφ.sig 1).toLinearMap :=
---   by
---   rw [LinearMap.isReal_iff] at hf
---   let σ := hφ.sig
---   have : Commute f (σ 1).toLinearMap ↔ Commute (LinearMap.adjoint f) (σ 1).toLinearMap :=
---     by
---     simp_rw [σ]
---     nth_rw 2 [← Module.Dual.IsFaithfulPosMap.sig_adjoint]
---     rw [commute.adjoint_adjoint_lm]
---   rw [this]
---   clear this
---   rw [LinearMap.isReal_iff, LinearMap.adjoint_real_apply, hf, ← LinearMap.comp_assoc,
--- comp_sig_eq,
---     neg_neg]
---   simp_rw [Commute, SemiconjBy, LinearMap.mul_eq_comp, @eq_comm _ _ ((σ 1).toLinearMap ∘ₗ _)]
+theorem Finset.sum_fin_one {α : Type _} [AddCommMonoid α] (f : Fin 1 → α) : ∑ i, f i = f 0 :=
+  Fin.sum_univ_one f
 
 theorem sig_apply_posDef_matrix_hMul [hφ : φ.IsFaithfulPosMap] (t : ℝ) (x : ℍ) :
     hφ.sig t (hφ.matrixIsPosDef.rpow t * x) = x * hφ.matrixIsPosDef.rpow t := by
@@ -173,37 +152,12 @@ private theorem nontracial_basis_apply {Q : ℍ} (hQ : Q.PosDef) (i j k l : n) :
     (e_{i,j} * hQ.rpow (-(1 / 2))) k l = ite (i = k) (hQ.rpow (-(1 / 2)) j l) 0 := by
   simp [Matrix.mul_apply, Matrix.stdBasisMatrix, Matrix.single, ite_and]
 
--- theorem tenSwap_sig [hφ : φ.IsFaithfulPosMap] (x y : ℝ) :
---     (tenSwap : l(ℍ ⊗[ℂ] ℍᵐᵒᵖ)) ∘ₗ
---         TensorProduct.map ((hφ.sig x).toLinearMap : l(ℍ)) (sigop hφ y : l(ℍᵐᵒᵖ)) =
---       (((hφ.sig y).toLinearMap : l(ℍ)) ⊗ₘ sigop hφ x : l(ℍ ⊗[ℂ] ℍᵐᵒᵖ)) ∘ₗ tenSwap :=
---   by
---   rw [TensorProduct.ext_iff]
---   intro x y
---   simp only [LinearMap.comp_apply, map_tmul, tenSwap_apply, op_apply, unop_apply,
---     MulOpposite.unop_op, MulOpposite.op_unop]
---   rfl
-
 private theorem Psi.adjoint_rank_one [hφ : φ.IsFaithfulPosMap] (a b : ℍ) (t s : ℝ) :
     withMatrixQuantum[φ]
       (hφ.psi (ψ := φ) t s (LinearMap.adjoint ((|a⟩⟨b|).toLinearMap)) =
         ((hφ.sig (t - s)).toLinearMap ⊗ₘ (hφ.sig (t - s)).op.toLinearMap)
           (tenSwap ℂ (Star.star (hφ.psi (ψ := φ) t s (|a⟩⟨b|).toLinearMap)))) :=
-by
-  exact withMatrixQuantum[φ] (Psi.adjoint_apply (A := ℍ) (B := ℍ) t s (|a⟩⟨b|).toLinearMap)
-
--- set_option maxHeartbeats 0 in
--- set_option synthInstance.maxHeartbeats 0 in
--- theorem map_sig_star [hφ : φ.IsFaithfulPosMap] (t s : ℝ) (x : ℍ ⊗[ℂ] ℍᵐᵒᵖ) :
---     star (((hφ.sig t).toLinearMap ⊗ₘ (hφ.sig s).op.toLinearMap) x) =
---       ((hφ.sig (-t)).toLinearMap ⊗ₘ (hφ.sig (-s)).op.toLinearMap) (star x) :=
--- x.induction_on
---   (by simp only [star_zero, map_zero])
---   (fun _ _ =>
---     by simp only [map_tmul, tensor_op_star_apply, Module.Dual.IsFaithfulPosMap.sig_conjTranspose,
---     LinearMap.comp_apply, op_apply, unop_apply, MulOpposite.unop_op, MulOpposite.op_unop,
---     AlgEquiv.toLinearMap_apply, sigop, star_eq_conjTranspose])
---   (fun z w hz hw => by simp only [_root_.map_add, hz, hw, StarAddMonoid.star_add])
+withMatrixQuantum[φ] (Psi.adjoint_apply (A := ℍ) (B := ℍ) t s (|a⟩⟨b|).toLinearMap)
 
 theorem map_sig_mulLeft_injective [hφ : φ.IsFaithfulPosMap] (t s : ℝ) :
     Function.Injective
@@ -265,8 +219,7 @@ theorem LinearMap.matrix.mulRight_adjoint [hφ : φ.IsFaithfulPosMap] (x : ℍ) 
     withMatrixQuantum[φ]
       (LinearMap.adjoint (LinearMap.mulRight ℂ x) =
         LinearMap.mulRight ℂ (hφ.sig (-1) xᴴ)) :=
-  by
-  exact withMatrixQuantum[φ] (by
+  withMatrixQuantum[φ] (by
     symm
     rw [@LinearMap.eq_adjoint_iff ℂ _]
     intro a b

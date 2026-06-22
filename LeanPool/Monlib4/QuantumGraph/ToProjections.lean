@@ -370,8 +370,8 @@ open LinearMap in
 private theorem is_self_adjoint_to_clm {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] [CompleteSpace E]
     {p : E →ₗ[𝕜] E} :
-    IsSelfAdjoint p ↔ IsSelfAdjoint (toContinuousLinearMap p) := by
-  exact (LinearMap.isSelfAdjoint_toContinuousLinearMap p).symm
+    IsSelfAdjoint p ↔ IsSelfAdjoint (toContinuousLinearMap p) :=
+  (LinearMap.isSelfAdjoint_toContinuousLinearMap p).symm
 
 -- Orthogonal projection existence goes through finite-dimensional completeness and CLM coercions.
 open LinearMap in
@@ -750,10 +750,6 @@ by
 theorem RealQam.edges_eq_zero_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : RealQam hφ A) :
     hA.edges = 0 ↔ A = 0 :=
   by
-  have : ∀ α β : ℕ, α = β ↔ (α : ℂ) = (β : ℂ) :=
-    by
-    intro α β
-    simp only [Nat.cast_inj]
   constructor
   · intro h
     rw [RealQam.edges] at h
@@ -767,7 +763,7 @@ theorem RealQam.edges_eq_zero_iff [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA :
     norm_cast
     simp_rw [Matrix.zero_mul, LinearMap.mulLeft_zero_eq_zero, MulZeroClass.zero_mul]
   · intro h
-    rw [this, RealQam.edges_eq, h, LinearMap.zero_apply, trace_zero]
+    rw [← Nat.cast_inj (R := ℂ), RealQam.edges_eq, h, LinearMap.zero_apply, trace_zero]
     norm_cast
 
 theorem psi_apply_complete_graph [hφ : φ.IsFaithfulPosMap] {t s : ℝ} :

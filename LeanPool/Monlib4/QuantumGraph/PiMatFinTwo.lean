@@ -796,8 +796,8 @@ by
     have hadj :
         LinearMap.adjoint (Coalgebra.comul :
           PiMat ℂ ι p →ₗ[ℂ] PiMat ℂ ι p ⊗[ℂ] PiMat ℂ ι p) =
-          LinearMap.mul' ℂ (PiMat ℂ ι p) := by
-      exact LinearMap.adjoint_adjoint (LinearMap.mul' ℂ (PiMat ℂ ι p))
+          LinearMap.mul' ℂ (PiMat ℂ ι p) :=
+      LinearMap.adjoint_adjoint (LinearMap.mul' ℂ (PiMat ℂ ι p))
     rw [hadj]
     exact (nonUnitalAlgHom_comp_mul
       (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i)).symm
@@ -859,16 +859,11 @@ by
           LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i := by
       rw [NonUnitalAlgHom.single_toLinearMap, ← LinearMap.proj_adjoint]
       exact LinearMap.adjoint_adjoint _
-    have hadjMat :
-        LinearMap.adjoint (Coalgebra.comul :
-          Mat ℂ (p i) →ₗ[ℂ] Mat ℂ (p i) ⊗[ℂ] Mat ℂ (p i)) =
-          LinearMap.mul' ℂ (Mat ℂ (p i)) := by
-      exact LinearMap.adjoint_adjoint (LinearMap.mul' ℂ (Mat ℂ (p i)))
     have hadjPi :
         LinearMap.adjoint (Coalgebra.comul :
           PiMat ℂ ι p →ₗ[ℂ] PiMat ℂ ι p ⊗[ℂ] PiMat ℂ ι p) =
-          LinearMap.mul' ℂ (PiMat ℂ ι p) := by
-      exact LinearMap.adjoint_adjoint (LinearMap.mul' ℂ (PiMat ℂ ι p))
+          LinearMap.mul' ℂ (PiMat ℂ ι p) :=
+      LinearMap.adjoint_adjoint (LinearMap.mul' ℂ (PiMat ℂ ι p))
     rw [hsingle]
     simp only [hadjPi]
     rw [← AlgHom.proj_toLinearMap]
@@ -1009,8 +1004,8 @@ by
     have hadj :
         LinearMap.adjoint (Coalgebra.comul :
           PiMat ℂ ι p →ₗ[ℂ] PiMat ℂ ι p ⊗[ℂ] PiMat ℂ ι p) =
-          LinearMap.mul' ℂ (PiMat ℂ ι p) := by
-      exact LinearMap.adjoint_adjoint (LinearMap.mul' ℂ (PiMat ℂ ι p))
+          LinearMap.mul' ℂ (PiMat ℂ ι p) :=
+      LinearMap.adjoint_adjoint (LinearMap.mul' ℂ (PiMat ℂ ι p))
     rw [hadj]
     change LinearMap.mul' ℂ ((i : ι) → Mat ℂ (p i)) ∘ₗ
         TensorProduct.map

@@ -36,18 +36,6 @@ variable {n : Type _} [Fintype n] [DecidableEq n]
 
 local notation "ℍ" => Matrix n n ℂ
 
-private theorem and_true_iff (p : Prop) : p ∧ True ↔ p :=
-  by simp
-
-private theorem true_and_iff (p : Prop) : True ∧ p ↔ p :=
-  by simp
-
-private theorem false_and_iff (p : Prop) : False ∧ p ↔ False :=
-  by simp
-
-private theorem false_or_iff (p : Prop) : False ∨ p ↔ p :=
-  by simp
-
 /-- The trace functional on square matrices. -/
 def traceModuleDual {𝕜 n : Type _} [Fintype n] [RCLike 𝕜] : Module.Dual 𝕜 (Matrix n n 𝕜) :=
   traceLinearMap n 𝕜 𝕜
@@ -59,7 +47,7 @@ instance trace_isFaithfulPosMap {n : Type _} [Fintype n] {𝕜 : Type _} [RCLike
   simp_rw [Module.Dual.IsFaithfulPosMap_iff, Module.Dual.IsFaithful, Module.Dual.IsPosMap,
     traceModuleDual, traceLinearMap_apply,
     star_eq_conjTranspose, trace_conjTranspose_hMul_self_nonneg,
-    trace_conjTranspose_hMul_self_eq_zero, imp_true_iff, and_true_iff]
+    trace_conjTranspose_hMul_self_eq_zero, imp_true_iff, and_true]
 
 theorem traceModuleDual_matrix {n : Type _} [Fintype n] [DecidableEq n] :
     (traceModuleDual : Module.Dual ℂ (Matrix n n ℂ)).matrix = 1 :=
@@ -334,7 +322,7 @@ theorem spectra_fin_two_ext {α : Type _} (α₁ α₂ β₁ β₂ : α) :
       · exact ⟨h1, h2⟩
       · exact ⟨h2, h1⟩
   by_cases h' : α₁ = β₁
-  · simp_rw [h', true_and_iff, Multiset.insert_eq_cons, Multiset.cons_inj_right,
+  · simp_rw [h', true_and, Multiset.insert_eq_cons, Multiset.cons_inj_right,
       Multiset.singleton_inj]
     constructor
     · intro hi
@@ -345,9 +333,9 @@ theorem spectra_fin_two_ext {α : Type _} (α₁ α₂ β₁ β₂ : α) :
     · rw [← h', eq_comm] at h2
       contradiction
   simp_rw [Multiset.insert_eq_cons, Multiset.cons_eq_cons, Multiset.singleton_inj,
-    Multiset.singleton_eq_cons_iff, ne_eq, h', false_and_iff, false_or_iff, not_false_iff,
-    true_and_iff]
-  simp only [exists_eq_right_right, and_true_iff, eq_comm]
+    Multiset.singleton_eq_cons_iff, ne_eq, h', false_and, false_or, not_false_iff,
+    true_and]
+  simp only [exists_eq_right_right, and_true, eq_comm]
   simp_rw [and_comm]
 
 @[reducible, instance]
@@ -464,7 +452,7 @@ theorem qamA.finTwoIso (x y : { x : Matrix (Fin 2) (Fin 2) ℂ // x ≠ 0 })
   letI : Coalgebra ℂ (Matrix (Fin 2) (Fin 2) ℂ) :=
     Coalgebra.ofFiniteDimensionalHilbertAlgebra
   intro hx1 hx2 hy1 hy2
-  simp_rw [qamA.iso_iff, traceModuleDual_matrix, Commute.one_left, and_true_iff,
+  simp_rw [qamA.iso_iff, traceModuleDual_matrix, Commute.one_left, and_true,
     _root_.map_smul]
   rw [exists_comm]
   obtain ⟨Hx, _⟩ := (qamA.is_self_adjoint_iff x).mp hx1
@@ -476,14 +464,12 @@ theorem qamA.finTwoIso (x y : { x : Matrix (Fin 2) (Fin 2) ℂ // x ≠ 0 })
     by
     rw [← hx2, ← Matrix.ext_iff]
     simp only [Fin.forall_fin_two, diagonal_apply, of_apply, if_true, one_ne_zero,
-      if_false, zero_ne_one, if_false]
-    simp only [cons_val_zero, cons_val_one, and_self_iff]
+      if_false, zero_ne_one, cons_val_zero, cons_val_one, and_self_iff]
   have HY : diagonal Hy.eigenvalues = of ![![-Hy.eigenvalues 1, 0], ![0, Hy.eigenvalues 1]] :=
     by
     rw [← hy2, ← Matrix.ext_iff]
     simp only [Fin.forall_fin_two, diagonal_apply, of_apply, if_true, one_ne_zero,
-      if_false, zero_ne_one, if_false]
-    simp only [cons_val_zero, cons_val_one, and_self_iff]
+      if_false, zero_ne_one, cons_val_zero, cons_val_one, and_self_iff]
   simp_rw [HY, HX, innerAut_apply_innerAut]
   have hx₁ : Hx.eigenvalues 1 ≠ 0 := by
     intro hx₁
@@ -491,8 +477,7 @@ theorem qamA.finTwoIso (x y : { x : Matrix (Fin 2) (Fin 2) ℂ // x ≠ 0 })
       by
       rw [HX, hx₁, neg_zero, ← Matrix.ext_iff]
       simp_rw [Fin.forall_fin_two]
-      simp only [of_apply]
-      simp only [cons_val_zero, cons_val_one]
+      simp only [of_apply, cons_val_zero, cons_val_one]
       aesop
     rw [Matrix.diagonal_eq_zero_iff, Matrix.IsAlmostHermitian.eigenvalues_eq_zero_iff] at this
     exact (Subtype.mem x) this
@@ -502,8 +487,7 @@ theorem qamA.finTwoIso (x y : { x : Matrix (Fin 2) (Fin 2) ℂ // x ≠ 0 })
       by
       rw [HY, hy₁, neg_zero, ← Matrix.ext_iff]
       simp_rw [Fin.forall_fin_two]
-      simp only [of_apply]
-      simp only [cons_val_zero, cons_val_one]
+      simp only [of_apply, cons_val_zero, cons_val_one]
       aesop
     rw [Matrix.diagonal_eq_zero_iff, Matrix.IsAlmostHermitian.eigenvalues_eq_zero_iff] at this
     exact (Subtype.mem y) this

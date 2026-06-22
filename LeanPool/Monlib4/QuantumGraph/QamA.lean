@@ -194,7 +194,6 @@ theorem qamA.is_idempotent [hφ : φ.IsFaithfulPosMap] (x : { x : Matrix n n ℂ
   have this' := one_div_mul_cancel this
   simp_rw [Complex.ofReal'_eq_isROrC_ofReal] at this' ⊢
   simp_rw [this', mul_one]
-  -- rw [this', mul_one]
 
 theorem Psi.one [hφ : φ.IsFaithfulPosMap] :
     withMatrixQuantum[φ]
@@ -247,8 +246,6 @@ theorem Psi.one [hφ : φ.IsFaithfulPosMap] :
   ring_nf
   rw [← conjTranspose_apply, (PosDef.rpow.isPosDef _ _).1.eq, mul_comm]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k l) -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k l) -/
 theorem one_map_transpose_psi_eq [hφ : φ.IsFaithfulPosMap] (A : l(ℍ)) :
     withMatrixQuantum[φ]
       ((TensorProduct.map (1 : l(ℍ)) (transposeAlgEquiv n ℂ ℂ).symm.toLinearMap)
@@ -754,14 +751,11 @@ private theorem qam_A_is_sa_iff_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x : ℍ
     rw [Qam.RankOne.symmetric'_eq] at h'
     exact h'.symm
   have : (|hφ.sig 1 x⟩⟨x| : l(ℍ)) = |x⟩⟨hφ.sig 1 x| := by rw [← H, ← H']
-  -- have this' : |hφ.sig 1 x⟩⟨x| = |x⟩⟨hφ.sig 1 x| :=
-    -- by rw [ContinuousLinearMap.coe_inj] at this; exact this
   simp_rw [ContinuousLinearMap.coe_inj] at H this
   simp_rw [ContinuousLinearMap.ext_iff, rankOne_apply] at this
   specialize this x
   obtain ⟨α, hα⟩ := qam_A_is_sa_iff_aux4_aux6 x' this
   have hα' := (qam_A_is_sa_iff_aux3_aux6 _ α H hα).symm
-  -- have hα'' := qam_A_is_sa_iff_aux2_aux6 _ _ hα
   have hxstar : xᴴ ≠ 0 := by
     simpa [star_eq_conjTranspose] using star_ne_zero.mpr hx
   have hsqrtx : ((Real.sqrt ((α : NNReal) : ℝ) : ℂ) • x) ≠ 0 := by

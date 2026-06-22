@@ -429,14 +429,12 @@ noncomputable instance QuantumSet.mulOpposite {A : Type*} [starAlgebra A] [Quant
     simp only [MulOpposite.inner_eq, modAut, MulOpposite.unop_mul, MulOpposite.unop_star,
       AlgEquiv.op_apply_apply, MulOpposite.unop_op]
     rw [inner_conj_left]
-    simp [kms.out]
-    norm_num
+    norm_num [kms.out]
   inner_conj_left _ _ _ := by
     simp only [MulOpposite.inner_eq, modAut, MulOpposite.unop_mul, MulOpposite.unop_star,
       AlgEquiv.op_apply_apply, MulOpposite.unop_op]
     rw [inner_star_left]
-    simp [kms.out]
-    norm_num
+    norm_num [kms.out]
   n := n A
   nIsFintype := nIsFintype
   nIsDecidableEq := nIsDecidableEq

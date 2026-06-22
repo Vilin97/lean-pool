@@ -143,6 +143,12 @@ section TrivialGraph
 
 variable [hAc : CoalgebraStruct ℂ A]
 
+private theorem starRingEnd_delta [hA2 : QuantumSetDeltaForm A] :
+    (starRingEnd ℂ) hA2.delta = hA2.delta := by
+  have := hA2.delta_pos
+  rw [RCLike.pos_def, ← RCLike.conj_eq_iff_im] at this
+  exact this.2
+
 theorem Qam.trivialGraph_eq [hA2 : QuantumSetDeltaForm A] :
     Qam.trivialGraph A = hA2.delta⁻¹ • (1 : l(A)) :=
   by
@@ -169,9 +175,7 @@ theorem Qam.Nontracial.TrivialGraph.qam.is_self_adjoint [hA2 : QuantumSetDeltaFo
   simp_rw [Qam.trivialGraph_eq, LinearMap.adjoint_smul, LinearMap.adjoint_one, starRingEnd_apply,
     star_inv₀, ← starRingEnd_apply]
   congr 2
-  have := hA2.delta_pos
-  rw [RCLike.pos_def, ← RCLike.conj_eq_iff_im] at this
-  exact this.2
+  exact starRingEnd_delta
 
 theorem Qam.Nontracial.trivialGraph [hA2 : QuantumSetDeltaForm A] :
     (Qam.trivialGraph A) •ₛ 1 = 1 :=
@@ -324,9 +328,7 @@ theorem Qam.Nontracial.trivialGraph.isReal [hA2 : QuantumSetDeltaForm A] :
   rw [LinearMap.isReal_iff, Qam.trivialGraph_eq, LinearMap.real_smul, LinearMap.real_one,
     starRingEnd_apply, star_inv₀]
   congr
-  have := hA2.delta_pos
-  rw [RCLike.pos_def, ← RCLike.conj_eq_iff_im] at this
-  exact this.2
+  exact starRingEnd_delta
 
 theorem Qam.irreflexiveComplement.isReal [hA2 : QuantumSetDeltaForm A]
   {x : l(A)} (hx : LinearMap.IsReal x) : LinearMap.IsReal (Qam.irreflexiveComplement x) := by

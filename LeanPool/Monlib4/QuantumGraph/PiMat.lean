@@ -764,14 +764,11 @@ by
     rw [hyw]
     ext a
     simp [Matrix.reshape_apply, Matrix.vecMulVec_apply]
-  have hss : star (star yw) = yw := by
-    ext a
-    simp
   calc
     rankOne ℂ (euclideanSpaceTensor' (R := ℂ) (x ⊗ₜ[ℂ] z))
         (euclideanSpaceTensor' (R := ℂ) (y ⊗ₜ[ℂ] w))
         = rankOne ℂ xz yw := rfl
-    _ = rankOne ℂ xz (star (star yw)) := by rw [hss]
+    _ = rankOne ℂ xz (star (star yw)) := by rw [star_star]
     _ = LinearMap.toContinuousLinearMap (Matrix.toEuclideanLin (Matrix.vecMulVec xz (star yw))) :=
       by
       apply ContinuousLinearMap.ext
@@ -885,18 +882,9 @@ private theorem PiMat_eq_left_block_miss_sum {b j c : ι} (h : j ≠ b)
         (Matrix.kroneckerMap (fun x y : ℂ => x * y)
           ((Matrix.includeBlock (X k q s1 s2 t1 t2) : PiMat ℂ ι p) b)
           (Y k q s1 s2 t1 t2)))) = 0 := by
-  apply Fintype.sum_eq_zero
-  intro k
-  apply Fintype.sum_eq_zero
-  intro q
-  apply Fintype.sum_eq_zero
-  intro s1
-  apply Fintype.sum_eq_zero
-  intro s2
-  apply Fintype.sum_eq_zero
-  intro t1
-  apply Fintype.sum_eq_zero
-  intro t2
+  refine Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ =>
+    Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ =>
+    Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ => ?_
   exact PiMat_eq_left_block_miss h _ _
 
 omit [Fintype ι] in
@@ -910,16 +898,9 @@ private theorem PiMat_eq_right_block_miss_sum {b j c : ι} (h : j ≠ c)
           ((Matrix.includeBlock (X q s1 s2 t1 t2) : PiMat ℂ ι p) b)
           ((((1 : PiMat ℂ ι p ≃ₐ[ℂ] PiMat ℂ ι p)
             (Matrix.includeBlock (Y q s1 s2 t1 t2) : PiMat ℂ ι p)) c)ᵀ)))) = 0 := by
-  apply Fintype.sum_eq_zero
-  intro q
-  apply Fintype.sum_eq_zero
-  intro s1
-  apply Fintype.sum_eq_zero
-  intro s2
-  apply Fintype.sum_eq_zero
-  intro t1
-  apply Fintype.sum_eq_zero
-  intro t2
+  refine Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ =>
+    Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ =>
+    Fintype.sum_eq_zero _ fun _ => ?_
   simp only [AlgEquiv.one_apply]
   exact PiMat_eq_right_block_miss h _ _
 
@@ -979,20 +960,12 @@ by
           intro h₂
           apply hj
           ext <;> simp [h₂]
-        apply Fintype.sum_eq_zero
-        intro q
-        apply Fintype.sum_eq_zero
-        intro s
-        apply Fintype.sum_eq_zero
-        intro t
+        refine Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ =>
+          Fintype.sum_eq_zero _ fun _ => ?_
         simp only [AlgEquiv.one_apply]
         exact PiMat_eq_right_block_miss h₂ _ _
-      · apply Fintype.sum_eq_zero
-        intro q
-        apply Fintype.sum_eq_zero
-        intro s
-        apply Fintype.sum_eq_zero
-        intro t
+      · refine Fintype.sum_eq_zero _ fun _ => Fintype.sum_eq_zero _ fun _ =>
+          Fintype.sum_eq_zero _ fun _ => ?_
         exact PiMat_eq_left_block_miss h₁ _ _)]
   simp only [AlgEquiv.one_apply, Matrix.includeBlock_apply_same]
   simp only [map_sum]
@@ -1480,10 +1453,7 @@ theorem PiMat.counit_eq_dual :
 by
   classical
   withPiQuantumCtx[φ]
-  apply LinearMap.ext
-  intro x
-  rw [← congrFun (QuantumSet.inner_eq_counit' (B := PiMat ℂ ι p)) x,
-    Module.Dual.pi.IsFaithfulPosMap.inner_eq, star_one, one_mul]
+  exact LinearMap.ext (Coalgebra.counit_piMat_eq_moduleDual_pi (φ := φ))
 
 omit [DecidableEq ι] in
 theorem modAut_eq_id_iff :
@@ -1650,12 +1620,8 @@ by
     simp only [rankOne_euclideanSpaceTensor_eq_toEuclideanLin_vecMulVec]
     simp only [LinearMap.coe_toContinuousLinearMap]
   · intro x hx
-    apply Finset.sum_eq_zero
-    intro x_1 _
-    apply Finset.sum_eq_zero
-    intro x_2 _
-    apply Finset.sum_eq_zero
-    intro x_3 _
+    refine Finset.sum_eq_zero fun _ _ => Finset.sum_eq_zero fun _ _ =>
+      Finset.sum_eq_zero fun _ _ => ?_
     rcases x with ⟨x₁, x₂⟩
     by_cases h₂ : x₂ = i.2
     · by_cases h₁ : x₁ = i.1
