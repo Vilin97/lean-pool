@@ -147,8 +147,6 @@ lemma tensorHom_eq_left
     (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) :
     ((tensorHomVal f g v).get t).get (Fin.castAdd Y₂.obj j) =
     (f.val (Stream'.map tensorHomEq' v) t).get j := by
-  have hsz := (f.val (Stream'.map (fun w =>
-    Vector.ofFn fun i ↦ w.get (Fin.castAdd X₂.obj i)) v) t).size_toArray
   simp only [tensorHom_take, tensorHomVal, Stream'.get_zip,
     Vector.get, Vector.append]
   exact Array.getElem_append_left (by simp)
@@ -266,17 +264,13 @@ abbrev isoInv (h : n = m) :
 @[simp]
 lemma iso_hom_inv_id
     (h : n = m) :
-    isoHom h ≫ isoInv h = 𝟙 (OfNat.ofNat n : SequentialCircuitCategory V G) := by
-  apply Subtype.ext
-  funext v
-  rfl
+    isoHom h ≫ isoInv h = 𝟙 (OfNat.ofNat n : SequentialCircuitCategory V G) :=
+  Subtype.ext (funext fun _ => rfl)
 
 lemma iso_inv_hom_id
     (h : n = m) :
-    isoInv h ≫ isoHom h = 𝟙 (OfNat.ofNat m : SequentialCircuitCategory V G) := by
-  apply Subtype.ext
-  funext v
-  rfl
+    isoInv h ≫ isoHom h = 𝟙 (OfNat.ofNat m : SequentialCircuitCategory V G) :=
+  Subtype.ext (funext fun _ => rfl)
 
 omit [Preorder V] in
 @[simp]

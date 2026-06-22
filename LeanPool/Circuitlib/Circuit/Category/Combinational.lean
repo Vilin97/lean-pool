@@ -161,10 +161,7 @@ lemma tensorHom_eq_right
     (g : X₂ ⟶ Y₂) :
     (tensorHomVal f g a).get (Fin.natAdd Y₁.obj j) =
     Vector.get (g.val (Vector.ofFn fun i => Vector.get a (Fin.natAdd X₁.obj i))) j := by
-  have htake : (a.take X₁.obj).cast tensorHom_val_add =
-    Vector.ofFn fun i => a.get (Fin.castAdd X₂.obj i) := by
-    apply Wires.ext; intro i
-    simp [Vector.get, Vector.take, Fin.val_castAdd]
+  have htake := tensorHom_take a
   have hdrop : (a.drop X₁.obj).cast tensorHom_val_sub =
     Vector.ofFn fun i => a.get (Fin.natAdd X₁.obj i) := by
     apply Wires.ext; intro i
@@ -384,8 +381,7 @@ lemma associator_naturality
     tensorHom (tensorHom f₁ f₂) f₃ ≫ (Y₁.associator Y₂ Y₃).hom =
       (X₁.associator X₂ X₃).hom ≫ tensorHom f₁ (tensorHom f₂ f₃) := by
   apply Subtype.ext; funext v; apply Vector.ext; intro i hi
-  simp only [CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
-  simp
+  simp [CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
 
 lemma pentagon
     (W X Y Z : CombinationalCircuitCategory V G) :
@@ -425,8 +421,7 @@ lemma leftUnitor_naturality
     {X Y : CombinationalCircuitCategory V G} (f : X ⟶ Y) :
     whiskerLeft tensorUnit f ≫ (leftUnitor Y).hom = (leftUnitor X).hom ≫ f := by
   apply Subtype.ext; funext v; apply Vector.ext; intro i hi
-  simp only [iso, CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
-  simp
+  simp [iso, CategoryStruct.comp, Function.comp, Vector.append, Vector.cast]
 
 lemma rightUnitor_naturality
     {X Y : CombinationalCircuitCategory V G}
@@ -444,8 +439,7 @@ lemma triangle
     (associator X tensorUnit Y).hom ≫ whiskerLeft X (leftUnitor Y).hom =
     whiskerRight (rightUnitor X).hom Y := by
   apply Subtype.ext; funext v; apply Vector.ext; intro i hi
-  simp only [CategoryStruct.comp, Vector.append, Function.comp]
-  simp
+  simp [CategoryStruct.comp, Vector.append, Function.comp]
 
 @[inline, simp]
 instance : MonoidalCategory.{v} (CombinationalCircuitCategory V G) where
