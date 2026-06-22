@@ -39,7 +39,6 @@ lemma first_part_is_dipath {γ : Path x₀ x₁} (γ_dipath : IsDipath γ) (T : 
   apply isDipath_cast _ γ.source.symm rfl
   exact isDipath_reparam φ_mono γ_dipath
 
-
 lemma second_part_is_dipath {γ : Path x₀ x₁} (γ_dipath : IsDipath γ) (T : I) :
   IsDipath (SecondPart γ T) := by
   let φ : Path T 1 := {

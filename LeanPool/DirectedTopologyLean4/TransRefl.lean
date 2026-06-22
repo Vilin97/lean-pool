@@ -48,13 +48,7 @@ lemma directed_transReflReparamAux : DirectedMap.Directed
   unfold transReflReparamAux
   simp only [one_div, ContinuousMap.coe_mk, Subtype.mk_le_mk]
   have hxy' : (x : ℝ) ≤ (y : ℝ) := hxy
-  split_ifs with h₁ h₂
-  · linarith
-  · calc 2 * (x : ℝ)
-      _ ≤ 2 * 2⁻¹ := (mul_le_mul_iff_of_pos_left (by norm_num)).mpr h₁
-      _ = 1       := by simp
-  · linarith
-  · linarith
+  split_ifs <;> linarith
 
 /-- The auxiliary reparametrization map `I → I` used to show that `p.trans (refl _)` is
 dihomotopic to `p`, packaged as a directed map. -/
@@ -67,8 +61,8 @@ lemma trans_refl_reparam_dipath (p : Dipath x₀ x₁) : p.trans (Dipath.refl x�
     p.reparam TransReflReparamAuxMap (Subtype.ext transReflReparamAux_zero)
       (Subtype.ext transReflReparamAux_one) := by
   ext t
-  have : (p.trans (Dipath.refl x₁)) t = p.toPath.trans (Path.refl x₁) t := rfl
-  rw [this, Path.Homotopy.trans_refl_reparam p.toPath]
+  rw [show (p.trans (Dipath.refl x₁)) t = p.toPath.trans (Path.refl x₁) t from rfl,
+    Path.Homotopy.trans_refl_reparam p.toPath]
   rfl
 
 /-- Auxilliary function for `ReflTransReparam` -/
@@ -107,11 +101,8 @@ lemma directed_ReflTransReparamAux : DirectedMap.Directed
   have hxy' : (x : ℝ) ≤ (y : ℝ) := hxy
   split_ifs with h₁ h₂
   · linarith
-  · calc (0 : ℝ)
-      _ = (2 : ℝ) * (2⁻¹ : ℝ) - (1 : ℝ) := by norm_num
-      _ ≤ 2 * (y : ℝ) - 1 := le_of_lt <|
-        sub_lt_sub_right ((mul_lt_mul_iff_of_pos_left (by norm_num)).mpr
-          (lt_of_not_ge h₂)) 1
+  · have := lt_of_not_ge h₂
+    linarith
   · linarith
   · linarith
 
@@ -129,18 +120,14 @@ lemma refl_trans_reparam (p : Path x₀ x₁) :
   ext
   unfold ReflTransReparamAux
   simp [Path.trans_apply, Function.comp_apply]
-  split_ifs
-  · simp
-  · simp
-  · rfl
-  · rfl
+  split_ifs <;> simp
 
 lemma refl_trans_reparam_dipath (p : Dipath x₀ x₁) : (Dipath.refl x₀).trans p =
     p.reparam ReflTransReparamAuxMap
       (Subtype.ext reflTransReparamAux_zero) (Subtype.ext reflTransReparamAux_one) := by
   ext t
-  have : ((Dipath.refl x₀).trans p) t =  (Path.refl x₀).trans p.toPath t := rfl
-  rw [this, refl_trans_reparam p.toPath]
+  rw [show ((Dipath.refl x₀).trans p) t = (Path.refl x₀).trans p.toPath t from rfl,
+    refl_trans_reparam p.toPath]
   rfl
 
 end Dihomotopy

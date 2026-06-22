@@ -36,13 +36,10 @@ lemma mid_point_Icc {i n : ℕ} (hn : n > 0) :
 lemma mid_point_I {i n : ℕ} (hi : i < n) : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈ I := by
   have n_cast_pos : 0 < (n : ℝ) := Nat.cast_pos.mpr (lt_of_le_of_lt (Nat.zero_le i) hi)
   have hbound : 2 * i + 1 ≤ 2 * n := by linarith
-  refine ⟨?_, ?_⟩
-  · apply div_nonneg
-    · exact add_nonneg (mul_nonneg (by norm_num) (Nat.cast_nonneg i)) (by norm_num)
-    · exact mul_nonneg (by norm_num) (Nat.cast_nonneg n)
-  · refine (div_le_one (mul_pos (by norm_num) n_cast_pos)).mpr ?_
-    have hcast : (↑(2 * i + 1) : ℝ) ≤ ↑(2 * n) := Nat.cast_le.mpr hbound
-    convert hcast <;> simp
+  refine ⟨div_nonneg (by positivity) (by positivity), ?_⟩
+  refine (div_le_one (mul_pos (by norm_num) n_cast_pos)).mpr ?_
+  have hcast : (↑(2 * i + 1) : ℝ) ≤ ↑(2 * n) := Nat.cast_le.mpr hbound
+  convert hcast <;> simp
 
 namespace UnitIntervalSub
 
@@ -74,14 +71,13 @@ theorem lebesgue_number_lemma_unit_interval {ι : Sort u} {c : ι → Set ℝ}
   rcases Real.instArchimedean.arch 2 δ_pos with ⟨n, hn⟩
   use n
   have n_pos : 0 < n := by
-    by_contra
-    have : n = 0 := by linarith
-    rw [this] at hn
-    have : (2 : ℝ) ≤ 0 := hn
-    linarith
+    rcases Nat.eq_zero_or_pos n with h | h
+    · rw [h] at hn
+      simp at hn
+      linarith
+    · exact h
   have n_cast_pos : 0 < (n : ℝ) := Nat.cast_pos.mpr n_pos
-  constructor
-  · exact n_pos
+  refine ⟨n_pos, ?_⟩
   intros i hi
   have mid_point_I : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈ I := mid_point_I hi
   have mid_point_Icc : (2 * i + 1 : ℝ)/(2 * n : ℝ) ∈ Set.Icc ((i :ℝ)/(n :ℝ)) ((i+1 :ℝ)/(n :ℝ))

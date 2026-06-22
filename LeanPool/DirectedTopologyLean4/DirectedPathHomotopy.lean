@@ -156,14 +156,12 @@ variable (F : Dihomotopy p₀ q₀) (G : Dihomotopy p₁ q₁) (s t : I) (ht : t
 lemma _root_.Dipath.Dihomotopy.hcomp_apply_half_left (ht : t = halfI) :
     (dihomToHom F).hcomp (dihomToHom G) (s, t) = F (s, 1) := by
   rw [Path.Homotopy.hcomp_apply]
-  have ht_coe : (t : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr ht
-  simp [ht_coe]
+  simp [show (t : ℝ) = 2⁻¹ from Subtype.coe_inj.mpr ht]
 
 lemma _root_.Dipath.Dihomotopy.hcomp_apply_half_right (ht : t = halfI) :
     (dihomToHom F).hcomp (dihomToHom G) (s, t) = G (s, 0) := by
   rw [Path.Homotopy.hcomp_apply]
-  have ht_coe : (t : ℝ) = 2⁻¹ := Subtype.coe_inj.mpr ht
-  split_ifs <;> simp [ht_coe]
+  split_ifs <;> simp [show (t : ℝ) = 2⁻¹ from Subtype.coe_inj.mpr ht]
 
 lemma _root_.Dipath.Dihomotopy.hcomp_apply_left (ht : (t : ℝ) ≤ 2⁻¹) :
     (dihomToHom F).hcomp (dihomToHom G) (s, t) = F (s, ⟨2 * t, double_mem_I ht⟩) := by
@@ -437,9 +435,7 @@ def _root_.Dipath.Dihomotopy.transRefl (p : Dipath x y) :
     split_ifs
     · linarith [t.2.1]
     · exact t.2.2
-  have hf₀ : f 0 = 0 := rfl
-  have hf₁ : f 1 = 1 := rfl
-  convert reparam p f g hf_le_g hf₀ hf₁
+  convert reparam p f g hf_le_g rfl rfl
     (Subtype.ext Path.Homotopy.transReflReparamAux_zero)
     (Subtype.ext Path.Homotopy.transReflReparamAux_one)
   exact trans_refl_reparam_dipath p
@@ -457,10 +453,8 @@ def _root_.Dipath.Dihomotopy.reflTrans (p : Dipath x y) :
     split_ifs
     · exact t.2.1
     · linarith [t.2.2]
-  have hg₀ : g 0 = 0 := rfl
-  have hg₁ : g 1 = 1 := rfl
   convert reparam p f g hf_le_g (Subtype.ext reflTransReparamAux_zero)
-    (Subtype.ext reflTransReparamAux_one) hg₀ hg₁
+    (Subtype.ext reflTransReparamAux_one) rfl rfl
   exact refl_trans_reparam_dipath p
 
 /-- For any `p : Dipath x y`, there is a homotopy from `(Dipath.refl x).trans p` to `q.trans
@@ -485,18 +479,15 @@ def _root_.Dipath.Dihomotopy.reflTransToReparamTransRefl (p : Dipath x y) (f : D
       · exact absurd hh h₁
       · exact absurd hh h₁
     · have hh : ¬(t : ℝ) ≤ 1/2 := by linarith
+      have h1 : (f ⟨(1 : ℝ), unitInterval.one_mem⟩ : ℝ) = 1 := by
+        rw [show (⟨(1 : ℝ), unitInterval.one_mem⟩ : I) = (1 : I) from rfl, hf₁]; rfl
+      have ht1 : (t : ℝ) ≤ 1 := t.2.2
       split_ifs with h₁ h₂
       · exact absurd h₁ hh
       · exact absurd h₁ hh
-      · have ht1 : (t : ℝ) ≤ 1 := t.2.2
-        have h1 : (f ⟨(1 : ℝ), unitInterval.one_mem⟩ : ℝ) = 1 := by
-          rw [show (⟨(1 : ℝ), unitInterval.one_mem⟩ : I) = (1 : I) from rfl, hf₁]; rfl
-        rw [h1]
+      · rw [h1]
         linarith
-      · have ht1 : (t : ℝ) ≤ 1 := t.2.2
-        have h1 : (f ⟨(1 : ℝ), unitInterval.one_mem⟩ : ℝ) = 1 := by
-          rw [show (⟨(1 : ℝ), unitInterval.one_mem⟩ : I) = (1 : I) from rfl, hf₁]; rfl
-        rw [h1]
+      · rw [h1]
         linarith
   have hφ₂₀ : φ₂ 0 = 0 := by
     change f ⟨Path.Homotopy.transReflReparamAux 0, _⟩ = 0

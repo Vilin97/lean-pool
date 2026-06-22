@@ -27,21 +27,11 @@ lemma double_pos_of_pos {T : I} (hT₀ : 0 < T) : 0 < (2 * T : ℝ) :=
 lemma double_sigma_pos_of_lt_one {T : I} (hT₁ : T < 1) : 0 < (2 * (1 - T) : ℝ) :=
   mul_pos two_pos (by simpa using hT₁)
 
-lemma double_mem_I {t : I} (ht : ↑t ≤ (2⁻¹ : ℝ)) : 2 * (t : ℝ) ∈ I := by
-  refine ⟨mul_nonneg zero_le_two t.2.1, ?_⟩
-  calc 2 * (t : ℝ)
-      _ ≤ 2 * 2⁻¹ := (mul_le_mul_iff_of_pos_left two_pos).mpr ht
-      _ = 1 := by norm_num
+lemma double_mem_I {t : I} (ht : ↑t ≤ (2⁻¹ : ℝ)) : 2 * (t : ℝ) ∈ I :=
+  ⟨by nlinarith [t.2.1], by nlinarith⟩
 
-lemma double_sub_one_mem_I {t : I} (ht : (2⁻¹ : ℝ) ≤ ↑t) : 2 * (t : ℝ) - 1 ∈ I := by
-  refine ⟨?_, ?_⟩
-  · calc (0 : ℝ) = 2 * (2⁻¹ : ℝ) - 1 := by norm_num
-      _ ≤ 2 * ↑t - 1 :=
-        sub_le_sub_right ((mul_le_mul_iff_of_pos_left (by norm_num)).mpr ht) 1
-  · calc 2 * (t : ℝ) - 1
-      _ ≤ 2 * 1 - 1 :=
-        sub_le_sub_right ((mul_le_mul_iff_of_pos_left (by norm_num)).mpr t.2.2) 1
-      _ = 1         := by norm_num
+lemma double_sub_one_mem_I {t : I} (ht : (2⁻¹ : ℝ) ≤ ↑t) : 2 * (t : ℝ) - 1 ∈ I :=
+  ⟨by nlinarith, by nlinarith [t.2.2]⟩
 
 lemma interp_left_le_of_le (T : I) {a b : I} (hab : a ≤ b) :
     (σ T : ℝ) * ↑a + ↑T ≤ (σ T : ℝ) * ↑b + ↑T := by

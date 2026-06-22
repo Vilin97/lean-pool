@@ -30,9 +30,7 @@ lemma interp_mem_I (T a b : I) : (σ T : ℝ) * ↑a + ↑T * ↑b ∈ I := by
   have hT₂ : (T : ℝ) ≤ 1 := T.2.2
   have hσT₁ : (0 : ℝ) ≤ σ T := (σ T).2.1
   have hσT₂ : (σ T : ℝ) = 1 - T := by simp [unitInterval.symm]
-  refine ⟨?_, ?_⟩
-  · nlinarith
-  · nlinarith
+  exact ⟨by nlinarith, by nlinarith⟩
 
 lemma interp_left_mem_I (T a : I) : (σ T : ℝ) * ↑a + ↑T ∈ I := by
   convert interp_mem_I T a 1

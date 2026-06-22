@@ -109,8 +109,7 @@ instance DirectedProduct {α : Type u} {β : Type v} [t₁ : DirectedSpace α] [
   isDipath_concat := by
       rintro _ _ _ p q ⟨p₁_dipath, p₂_dipath⟩ ⟨q₁_dipath, q₂_dipath⟩
       convert (And.intro (isDipath_concat p₁_dipath q₁_dipath)
-        (isDipath_concat p₂_dipath q₂_dipath))
-      · rw [Path.map_trans]
+        (isDipath_concat p₂_dipath q₂_dipath)) <;>
       rw [Path.map_trans]
   isDipath_reparam := fun {a b : α × β} γ t₀ t₁ φ hφ_mono ⟨γ₁_dipath, γ₂_dipath⟩ =>
       ⟨isDipath_reparam hφ_mono γ₁_dipath, isDipath_reparam hφ_mono γ₂_dipath⟩

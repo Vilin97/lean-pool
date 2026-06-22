@@ -41,21 +41,19 @@ variable {X : dTopCat} {x y : X} (γ : Dipath x y)
 /-- The directed map taking the pointwise minimum of the two coordinates on `I × I`. -/
 def MinDirected : D(I × I, I) where
   toFun := fun t => min t.1 t.2
-  continuous_toFun := by
-    apply Continuous.subtype_mk
-    exact (continuous_subtype_val.comp continuous_fst).min
-      (continuous_subtype_val.comp continuous_snd)
-  directed_toFun := fun t₀ t₁ γ ⟨h₁, h₂⟩ a b hab =>
+  continuous_toFun :=
+    Continuous.subtype_mk ((continuous_subtype_val.comp continuous_fst).min
+      (continuous_subtype_val.comp continuous_snd)) _
+  directed_toFun := fun _ _ _ ⟨h₁, h₂⟩ _ _ hab =>
     le_min (min_le_of_left_le (h₁ hab)) (min_le_of_right_le (h₂ hab))
 
 /-- The directed map taking the pointwise maximum of the two coordinates on `I × I`. -/
 def MaxDirected : D(I × I, I) where
   toFun := fun t => max t.1 t.2
-  continuous_toFun := by
-    apply Continuous.subtype_mk
-    exact (continuous_subtype_val.comp continuous_fst).max
-      (continuous_subtype_val.comp continuous_snd)
-  directed_toFun := fun t₀ t₁ γ ⟨h₁, h₂⟩ a b hab =>
+  continuous_toFun :=
+    Continuous.subtype_mk ((continuous_subtype_val.comp continuous_fst).max
+      (continuous_subtype_val.comp continuous_snd)) _
+  directed_toFun := fun _ _ _ ⟨h₁, h₂⟩ _ _ hab =>
     max_le (le_max_of_le_left (h₁ hab)) (le_max_of_le_right (h₂ hab))
 
 /-- Dihomotopy from the constant path at the source to a dipath, given by
@@ -174,8 +172,7 @@ def dihomToPathDihom (F : Dihomotopy f g) : Dipath.Dihomotopy
     case inl hx => -- x = 0
       subst hx
       change (Dihomotopy.hcomp' _ _ _) (t, 0) = _
-      rw [Dihomotopy.hcomp'_apply_zero_right]
-      rw [Dihomotopy.hcomp'_apply_zero_right]
+      rw [Dihomotopy.hcomp'_apply_zero_right, Dihomotopy.hcomp'_apply_zero_right]
       simp only [Dipath.coe_toDirectedMap, Dipath.source]
       change F (min t 0, 0) = f 0
       rw [min_eq_right]

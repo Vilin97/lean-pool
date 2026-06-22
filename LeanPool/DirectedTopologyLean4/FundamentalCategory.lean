@@ -77,8 +77,8 @@ lemma trans_assoc_reparam_directed {x₀ x₁ x₂ x₃ : X} (p : Dipath x₀ x�
       (Subtype.ext transAssocReparamAux_zero)
       (Subtype.ext transAssocReparamAux_one) := by
   ext t
-  have : (p.trans q).trans r t =  (p.toPath.trans q.toPath).trans r.toPath t := rfl
-  rw [this, trans_assoc_reparam p.toPath q.toPath r.toPath]
+  rw [show (p.trans q).trans r t = (p.toPath.trans q.toPath).trans r.toPath t from rfl,
+    trans_assoc_reparam p.toPath q.toPath r.toPath]
   rfl
 
 /-- For any three dipaths `p q r`, `(p.trans q).trans r` is dihomotopic with
