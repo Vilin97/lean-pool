@@ -110,10 +110,7 @@ theorem realHermiteGenerating_conj (t : ℝ) (u : ℂ) :
     Complex.exp (-(↑t ^ 2 / 2) + ↑√2 * ↑t * star u - star u ^ 2 / 2)
   rw [← Complex.exp_conj]
   congr 1
-  have htwo : (starRingEnd ℂ) 2 = (2 : ℂ) := by
-    apply Complex.ext
-    · norm_num [Complex.conj_re]
-    · norm_num [Complex.conj_im]
+  have htwo : (starRingEnd ℂ) 2 = (2 : ℂ) := Complex.conj_ofReal 2
   simp only [map_sub, map_add, map_neg, map_div₀, map_pow, Complex.conj_ofReal,
     map_mul, RCLike.star_def]
   rw [htwo]
@@ -2463,8 +2460,7 @@ private lemma scaled_gamma_moment_eq_standard (r : ℕ) :
     have hsqrt2pow : (Real.sqrt 2 : ℂ) ^ (2 * s) = (2 : ℂ) ^ s := by
       rw [show (Real.sqrt 2 : ℂ) ^ (2 * s) =
           ((Real.sqrt 2 : ℂ) ^ 2) ^ s by rw [pow_mul]]
-      have hsqrt2 : (Real.sqrt 2 : ℂ) ^ 2 = 2 := by norm_num [← Complex.ofReal_pow, Real.sq_sqrt]
-      rw [hsqrt2]
+      rw [sqrtTwoC_sq]
     rw [hsqrt2pow]
     have hcancel :
         (2 : ℂ) ^ s *
@@ -2791,9 +2787,7 @@ private lemma hermite_coeff_eq_choose_mul_cexp_neg_sq_deriv
   have hscale_ne :
       (((Real.pi ^ (-(1 / 4 : ℝ)) : ℝ) : ℂ) ≠ 0) := by
     exact_mod_cast (Real.rpow_pos_of_pos Real.pi_pos (-(1 / 4 : ℝ))).ne'
-  have hsqrt_ne : (Real.sqrt 2 : ℂ) ^ k ≠ 0 := by
-    exact pow_ne_zero k (by
-      exact_mod_cast (Real.sqrt_pos.2 (by norm_num : (0 : ℝ) < 2)).ne')
+  have hsqrt_ne : (Real.sqrt 2 : ℂ) ^ k ≠ 0 := pow_ne_zero k sqrtTwoC_ne
   unfold realHermiteGeneratingExpansionCoeff at h
   have hcancel := mul_left_cancel₀ hscale_ne h
   apply (mul_left_cancel₀ hsqrt_ne)
@@ -4470,7 +4464,7 @@ private theorem realHermiteGeneratingExpansionCoeff_two_two :
   simp only [realHermiteGeneratingExpansionCoeff, one_div, Nat.choose_self, Nat.cast_one, one_mul,
     tsub_self, iteratedDeriv_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
     neg_zero, zero_div, Complex.exp_zero, mul_one]
-  rw [show (Real.sqrt 2 : ℂ) ^ 2 = 2 by norm_num [← Complex.ofReal_pow, Real.sq_sqrt]]
+  rw [sqrtTwoC_sq]
   ring
 
 private theorem realHermiteGeneratingExpansionCoeff_three_zero :
@@ -4502,7 +4496,7 @@ private theorem realHermiteGeneratingExpansionCoeff_three_three :
   rw [show (Real.sqrt 2 : ℂ) ^ 3 = 2 * (Real.sqrt 2 : ℂ) by
     rw [show (Real.sqrt 2 : ℂ) ^ 3 =
         (Real.sqrt 2 : ℂ) ^ 2 * (Real.sqrt 2 : ℂ) by ring]
-    rw [show (Real.sqrt 2 : ℂ) ^ 2 = 2 by norm_num [← Complex.ofReal_pow, Real.sq_sqrt]]]
+    rw [sqrtTwoC_sq]]
   ring
 
 private theorem realHermite1D_finite_monomial_expansion
@@ -4528,7 +4522,7 @@ private theorem star_complex_monomial_gaussian (k : ℕ) (t : ℝ) :
     star (complexMonomialGaussian k t) = complexMonomialGaussian k t := by
   unfold complexMonomialGaussian
   rw [star_mul, star_pow]
-  have ht : star ((t : ℂ)) = (t : ℂ) := by exact Complex.conj_ofReal t
+  have ht : star ((t : ℂ)) = (t : ℂ) := Complex.conj_ofReal t
   rw [ht]
   have hexp : star (Complex.exp (-(((t : ℂ) ^ 2) / 2))) =
       Complex.exp (-(((t : ℂ) ^ 2) / 2)) := by
@@ -4537,10 +4531,7 @@ private theorem star_complex_monomial_gaussian (k : ℕ) (t : ℝ) :
     rw [← Complex.exp_conj]
     congr 1
     simp only [map_neg, map_div₀, map_pow, Complex.conj_ofReal]
-    have htwo : (starRingEnd ℂ) (2 : ℂ) = 2 := by
-      apply Complex.ext
-      · norm_num [Complex.conj_re]
-      · norm_num [Complex.conj_im]
+    have htwo : (starRingEnd ℂ) (2 : ℂ) = 2 := Complex.conj_ofReal 2
     rw [htwo]
   rw [hexp]
   ring
@@ -4652,21 +4643,6 @@ private theorem gaussian_half_integrable_monomial_exp (n : ℕ) (z : ℂ) :
     (μ := ProbabilityTheory.gaussianReal 0 (1 / 2 : NNReal))
     (z := z) (by simp) n
 
-private theorem deriv_cexp_sq_div_four (z : ℂ) :
-    deriv (fun c : ℂ => Complex.exp (c ^ 2 / 4)) z =
-      (z / 2) * Complex.exp (z ^ 2 / 4) := by
-  rw [deriv_cexp]
-  · rw [show deriv (fun c : ℂ => c ^ 2 / 4) z = z / 2 by
-      rw [show (fun c : ℂ => c ^ 2 / 4) = fun c : ℂ => (1 / 4 : ℂ) * c ^ 2 by
-        funext c
-        ring]
-      rw [deriv_const_mul]
-      · rw [deriv_pow_field]
-        ring
-      · fun_prop]
-    ring
-  · fun_prop
-
 private theorem deriv_div_two (z : ℂ) :
     deriv (fun c : ℂ => c / 2) z = (1 / 2 : ℂ) := by
   rw [show (fun c : ℂ => c / 2) = fun c : ℂ => (1 / 2 : ℂ) * c by
@@ -4684,6 +4660,14 @@ private theorem deriv_sq_div_four (z : ℂ) :
     ring]
   rw [deriv_const_mul]
   · rw [deriv_pow_field]
+    ring
+  · fun_prop
+
+private theorem deriv_cexp_sq_div_four (z : ℂ) :
+    deriv (fun c : ℂ => Complex.exp (c ^ 2 / 4)) z =
+      (z / 2) * Complex.exp (z ^ 2 / 4) := by
+  rw [deriv_cexp]
+  · rw [deriv_sq_div_four]
     ring
   · fun_prop
 
@@ -4710,11 +4694,8 @@ private theorem deriv_mgf_three_formula (z : ℂ) :
   · rw [show deriv (fun c : ℂ => (1 / 2 : ℂ) + c ^ 2 / 4) z = z / 2 by
       rw [show (fun c : ℂ => (1 / 2 : ℂ) + c ^ 2 / 4) =
           (fun _ : ℂ => (1 / 2 : ℂ)) + (fun c : ℂ => c ^ 2 / 4) by rfl]
-      rw [deriv_add]
-      · rw [deriv_const, deriv_sq_div_four]
-        ring
-      · fun_prop
-      · fun_prop]
+      rw [deriv_add (by fun_prop) (by fun_prop), deriv_const, deriv_sq_div_four]
+      ring]
     rw [deriv_cexp_sq_div_four]
     ring
   · fun_prop
@@ -4732,25 +4713,11 @@ private theorem deriv_mgf_four_formula (z : ℂ) :
   rw [deriv_mul]
   · rw [show deriv (fun c : ℂ => (3 / 4 : ℂ) * c + c ^ 3 / 8) z =
         (3 / 4 : ℂ) + (3 / 8 : ℂ) * z ^ 2 by
-      rw [show (fun c : ℂ => (3 / 4 : ℂ) * c + c ^ 3 / 8) =
-          (fun c : ℂ => (3 / 4 : ℂ) * c) + (fun c : ℂ => c ^ 3 / 8) by rfl]
-      rw [deriv_add]
-      · rw [deriv_const_mul]
-        · rw [deriv_id'']
-          rw [show deriv (fun c : ℂ => c ^ 3 / 8) z =
-              (3 / 8 : ℂ) * z ^ 2 by
-            rw [show (fun c : ℂ => c ^ 3 / 8) =
-                fun c : ℂ => (1 / 8 : ℂ) * c ^ 3 by
-              funext c
-              ring]
-            rw [deriv_const_mul]
-            · rw [deriv_pow_field]
-              ring
-            · fun_prop]
-          ring
-        · fun_prop
-      · fun_prop
-      · fun_prop]
+      have h := ((hasDerivAt_id z).const_mul (3 / 4 : ℂ)).add
+          ((hasDerivAt_pow 3 z).div_const (8 : ℂ))
+      convert h.deriv using 1
+      push_cast
+      ring]
     rw [deriv_cexp_sq_div_four]
     ring
   · fun_prop
@@ -4771,19 +4738,11 @@ private theorem deriv_mgf_five_formula (z : ℂ) :
   · rw [show
         deriv (fun c : ℂ => (3 / 4 : ℂ) + (3 / 4 : ℂ) * c ^ 2 + c ^ 4 / 16) z =
           (3 / 2 : ℂ) * z + z ^ 3 / 4 by
-        have hconst : HasDerivAt (fun _ : ℂ => (3 / 4 : ℂ)) 0 z :=
-          hasDerivAt_const z _
-        have h2 : HasDerivAt (fun c : ℂ => (3 / 4 : ℂ) * c ^ 2)
-            ((3 / 2 : ℂ) * z) z := by
-          have hpow : HasDerivAt (fun c : ℂ => c ^ 2) (2 * z) z := by simpa using hasDerivAt_pow 2 z
-          convert hpow.const_mul (3 / 4 : ℂ) using 1
-          ring
-        have h4 : HasDerivAt (fun c : ℂ => c ^ 4 / 16) (z ^ 3 / 4) z := by
-          have hpow : HasDerivAt (fun c : ℂ => c ^ 4) (4 * z ^ 3) z := by
-            simpa using hasDerivAt_pow 4 z
-          convert hpow.const_mul (1 / 16 : ℂ) using 1 <;> ring_nf
-        have h := (hconst.add h2).add h4
+        have h := ((hasDerivAt_const z (3 / 4 : ℂ)).add
+            (((hasDerivAt_pow 2 z).const_mul (3 / 4 : ℂ)))).add
+            (((hasDerivAt_pow 4 z).div_const (16 : ℂ)))
         convert h.deriv using 1
+        push_cast
         ring]
     rw [deriv_cexp_sq_div_four]
     ring
@@ -4805,23 +4764,12 @@ private theorem deriv_mgf_six_formula (z : ℂ) :
   · rw [show
         deriv (fun c : ℂ => (15 / 8 : ℂ) * c + (5 / 8 : ℂ) * c ^ 3 + c ^ 5 / 32) z =
           (15 / 8 : ℂ) + (15 / 8 : ℂ) * z ^ 2 + (5 / 32 : ℂ) * z ^ 4 by
-        have h1 : HasDerivAt (fun c : ℂ => (15 / 8 : ℂ) * c)
-            (15 / 8 : ℂ) z := by
-          convert (hasDerivAt_id z).const_mul (15 / 8 : ℂ) using 1
-          ring
-        have h3 : HasDerivAt (fun c : ℂ => (5 / 8 : ℂ) * c ^ 3)
-            ((15 / 8 : ℂ) * z ^ 2) z := by
-          have hpow : HasDerivAt (fun c : ℂ => c ^ 3) (3 * z ^ 2) z := by
-            simpa using hasDerivAt_pow 3 z
-          convert hpow.const_mul (5 / 8 : ℂ) using 1
-          ring
-        have h5 : HasDerivAt (fun c : ℂ => c ^ 5 / 32)
-            ((5 / 32 : ℂ) * z ^ 4) z := by
-          have hpow : HasDerivAt (fun c : ℂ => c ^ 5) (5 * z ^ 4) z := by
-            simpa using hasDerivAt_pow 5 z
-          convert hpow.const_mul (1 / 32 : ℂ) using 1 <;> ring_nf
-        have h := (h1.add h3).add h5
-        exact h.deriv]
+        have h := (((hasDerivAt_id z).const_mul (15 / 8 : ℂ)).add
+            (((hasDerivAt_pow 3 z).const_mul (5 / 8 : ℂ)))).add
+            (((hasDerivAt_pow 5 z).div_const (32 : ℂ)))
+        convert h.deriv using 1
+        push_cast
+        ring]
     rw [deriv_cexp_sq_div_four]
     ring
   · fun_prop
@@ -5063,23 +5011,12 @@ private theorem oneDWindowAmbiguityTwoClosedPolynomial_eq (x ω : ℝ) :
             (Real.sqrt 2 : ℂ)) *
           star (((x : ℂ) - (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
             (Real.sqrt 2 : ℂ))) ^ (2 : Nat)) := by
-  rw [show star (((x : ℂ) - (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
-          (Real.sqrt 2 : ℂ)) =
-        ((x : ℂ) + (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
-          (Real.sqrt 2 : ℂ) by
-    change (starRingEnd ℂ)
-        (((x : ℂ) - (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
-          (Real.sqrt 2 : ℂ)) = _
-    simp only [map_div₀, map_sub, map_mul, map_ofNat, Complex.conj_ofReal]
-    rw [Complex.conj_I]
-    ring]
-  have hsqrt2_ne : (Real.sqrt 2 : ℂ) ≠ 0 := by
-    exact_mod_cast (Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2))
+  rw [star_sub_div_sqrtTwo]
   have hsqrt2_two : Real.sqrt 2 ^ 2 = (2 : ℝ) := by rw [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
   have hsqrt2_four : Real.sqrt 2 ^ 4 = (4 : ℝ) := by
     rw [show Real.sqrt 2 ^ 4 = (Real.sqrt 2 ^ 2) ^ 2 by ring, hsqrt2_two]
     norm_num
-  field_simp [hsqrt2_ne]
+  field_simp [sqrtTwoC_ne]
   ring_nf
   norm_num [← Complex.ofReal_pow, hsqrt2_two, hsqrt2_four]
   ring_nf
@@ -5111,18 +5048,7 @@ private theorem oneDWindowAmbiguityThreeClosedPolynomial_eq (x ω : ℝ) :
             (Real.sqrt 2 : ℂ)) *
           star (((x : ℂ) - (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
             (Real.sqrt 2 : ℂ))) ^ (3 : Nat)) := by
-  rw [show star (((x : ℂ) - (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
-          (Real.sqrt 2 : ℂ)) =
-        ((x : ℂ) + (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
-          (Real.sqrt 2 : ℂ) by
-    change (starRingEnd ℂ)
-        (((x : ℂ) - (2 * Real.pi : ℂ) * Complex.I * (ω : ℂ)) /
-          (Real.sqrt 2 : ℂ)) = _
-    simp only [map_div₀, map_sub, map_mul, map_ofNat, Complex.conj_ofReal]
-    rw [Complex.conj_I]
-    ring]
-  have hsqrt2_ne : (Real.sqrt 2 : ℂ) ≠ 0 := by
-    exact_mod_cast (Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2))
+  rw [star_sub_div_sqrtTwo]
   have hsqrt2_two : Real.sqrt 2 ^ 2 = (2 : ℝ) := by rw [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
   have hsqrt2_four : Real.sqrt 2 ^ 4 = (4 : ℝ) := by
     rw [show Real.sqrt 2 ^ 4 = (Real.sqrt 2 ^ 2) ^ 2 by ring, hsqrt2_two]
@@ -5130,7 +5056,7 @@ private theorem oneDWindowAmbiguityThreeClosedPolynomial_eq (x ω : ℝ) :
   have hsqrt2_six : Real.sqrt 2 ^ 6 = (8 : ℝ) := by
     rw [show Real.sqrt 2 ^ 6 = (Real.sqrt 2 ^ 2) ^ 3 by ring, hsqrt2_two]
     norm_num
-  field_simp [hsqrt2_ne]
+  field_simp [sqrtTwoC_ne]
   ring_nf
   norm_num [← Complex.ofReal_pow, hsqrt2_two, hsqrt2_four, hsqrt2_six]
   ring_nf
@@ -5181,16 +5107,13 @@ private theorem shifted_mgf_generating_eq_kernel
         lam ^ 2 / 4 + (u * w + z * u - star z * w) := by
     rw [hstar]
     simp only [z]
-    have hsqrt2_sq : (Real.sqrt 2 : ℂ) ^ 2 = 2 := by norm_num [← Complex.ofReal_pow, Real.sq_sqrt]
     have hsqrt2_cube : (Real.sqrt 2 : ℂ) ^ 3 = 2 * (Real.sqrt 2 : ℂ) := by
       rw [show (Real.sqrt 2 : ℂ) ^ 3 = (Real.sqrt 2 : ℂ) ^ 2 * (Real.sqrt 2 : ℂ)
         by ring]
-      rw [hsqrt2_sq]
-    have hsqrt2_ne : (Real.sqrt 2 : ℂ) ≠ 0 := by
-      exact_mod_cast (Real.sqrt_pos.2 (by norm_num : (0 : ℝ) < 2)).ne'
-    field_simp [hsqrt2_ne]
+      rw [sqrtTwoC_sq]
+    field_simp [sqrtTwoC_ne]
     ring_nf
-    rw [hsqrt2_cube, hsqrt2_sq]
+    rw [hsqrt2_cube, sqrtTwoC_sq]
     ring
   rw [show
       -(2 * Real.pi : ℂ) * Complex.I * (ω : ℂ) +
@@ -6963,7 +6886,7 @@ private theorem oneDWindowAmbiguityFactor_two_eq_finite_monomial_kernel_integral
     mul_zero, add_zero, realHermiteGeneratingExpansionCoeff_two_two, map_mul, neg_neg, neg_zero]
   apply MeasureTheory.integral_congr_ae
   filter_upwards with t
-  have hsqrt2 : (Real.sqrt 2 : ℂ) ^ 2 = 2 := by norm_num [← Complex.ofReal_pow, Real.sq_sqrt]
+  have hsqrt2 := sqrtTwoC_sq
   have hpi := piPowQuarterC_sq
   simp only [map_ofNat]
   ring_nf at hsqrt2 hpi ⊢
@@ -6991,7 +6914,7 @@ private theorem oneDWindowAmbiguityFactor_three_eq_finite_monomial_kernel_integr
     realHermiteGeneratingExpansionCoeff_three_three, neg_zero, neg_neg]
   apply MeasureTheory.integral_congr_ae
   filter_upwards with t
-  have hsqrt2 : (Real.sqrt 2 : ℂ) ^ 2 = 2 := by norm_num [← Complex.ofReal_pow, Real.sq_sqrt]
+  have hsqrt2 := sqrtTwoC_sq
   have hsqrt6_sq :
       (Real.sqrt (Nat.factorial 3 : ℝ) : ℂ) ^ 2 = (6 : ℂ) := by
     norm_num [← Complex.ofReal_pow, Real.sq_sqrt]
@@ -7004,8 +6927,8 @@ private theorem oneDWindowAmbiguityFactor_three_eq_finite_monomial_kernel_integr
     norm_num
   ring_nf at hsqrt2 hsqrt6_sq hpi ⊢
   rw [hsqrt2, hsqrt6_sq, hpi]
-  have hstar_two : (starRingEnd ℂ) (2 : ℂ) = 2 := by exact Complex.conj_ofReal 2
-  have hstar_three : (starRingEnd ℂ) (3 : ℂ) = 3 := by exact Complex.conj_ofReal 3
+  have hstar_two : (starRingEnd ℂ) (2 : ℂ) = 2 := Complex.conj_ofReal 2
+  have hstar_three : (starRingEnd ℂ) (3 : ℂ) = 3 := Complex.conj_ofReal 3
   rw [hstar_two, hstar_three]
   ring
 
@@ -7266,7 +7189,7 @@ private theorem oneDWindowAmbiguityOneOneShiftedMoment_eq_closed
           unfold realHermiteGenerating complexMonomialGaussian
           simp only [pow_one]
           ring_nf
-          rw [show (Real.sqrt 2 : ℂ) ^ 2 = 2 by norm_num [← Complex.ofReal_pow, Real.sq_sqrt]]
+          rw [sqrtTwoC_sq]
           have hpi :
               (((Real.pi ^ (-1 / 4 : ℝ) : ℝ) : ℂ) ^ 2) =
                 (((Real.pi ^ (-1 / 2 : ℝ) : ℝ) : ℂ)) := by
