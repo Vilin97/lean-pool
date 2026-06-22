@@ -26,11 +26,8 @@ lemma completeBlocks_subset_Icc (M X : ℕ) (_hM : 0 < M) (k : ℕ) (hk : k < X 
       _ ≤ X := Nat.div_mul_le_self X M
 
 lemma completeBlock_card (M k : ℕ) (hM : 0 < M) : (completeBlock M k).card = M := by
-  have h₂ : k * M + 1 ≤ (k + 1) * M := by nlinarith
-  rw [Finset.card_eq_sum_ones]
-  simp [completeBlock]
-  ring_nf at *
-  simp_all
+  rw [completeBlock, Nat.card_Icc, Nat.succ_mul]
+  omega
 
 lemma completeBlock_mapsTo (M k : ℕ) (hM : 0 < M) :
     Set.MapsTo (· % M) (completeBlock M k : Set ℕ) (Finset.range M : Set ℕ) := by
@@ -203,21 +200,12 @@ lemma sum_valid_from_blocks_le_count (b : ℕ) (T : Finset ℕ) (S : Finset Nat.
       (fun k => (completeBlock M k).filter P) := by
     intro i _ j _ hij
     simp only [Function.onFun, Finset.disjoint_iff_ne]
-    intro x hxi y hyj
-    have hblocks := completeBlocks_pairwise_disjoint M hM
+    intro x hxi y hyj heq
     have hdisj_ij : Disjoint (completeBlock M i : Set ℕ) (completeBlock M j : Set ℕ) :=
-      hblocks (Set.mem_univ i) (Set.mem_univ j) hij
-    have hxi' : x ∈ completeBlock M i := Finset.mem_of_mem_filter x hxi
-    have hyj' : y ∈ completeBlock M j := Finset.mem_of_mem_filter y hyj
-    intro heq
-    rw [heq] at hxi'
+      completeBlocks_pairwise_disjoint M hM (Set.mem_univ i) (Set.mem_univ j) hij
     rw [Set.disjoint_iff] at hdisj_ij
-    exact hdisj_ij ⟨hxi', hyj'⟩
-  have hsum : (Finset.range (X / M)).sum (fun k => ((completeBlock M k).filter P).card)
-      = ((Finset.range (X / M)).biUnion (fun k => (completeBlock M k).filter P)).card := by
-    rw [Finset.card_biUnion]
-    · exact hdisj
-  rw [hsum]
+    exact hdisj_ij ⟨heq ▸ Finset.mem_of_mem_filter x hxi, Finset.mem_of_mem_filter y hyj⟩
+  rw [← Finset.card_biUnion hdisj]
   have hsub : (Finset.range (X / M)).biUnion (fun k => (completeBlock M k).filter P)
       ⊆ (Finset.Icc 1 X).filter P := by
     rw [Finset.biUnion_subset]
@@ -295,8 +283,7 @@ lemma partialBlock_validMapsTo (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes
   change N % M ∈ validResiduesMod b T S
   rw [validResiduesMod, Finset.mem_filter, Finset.mem_range]
   refine ⟨Nat.mod_lt N (primeSquareProduct_pos S), ?_⟩
-  have hmod : N % M = (N % M) % M :=
-    (Nat.ModEq.eq_1 M (N % M) N ▸ Nat.mod_modEq N M).symm
+  have hmod : N % M = (N % M) % M := (Nat.mod_mod_of_dvd N dvd_rfl).symm
   exact (condition_mod_invariant b T S N (N % M) hmod).mp hvalid
 
 lemma partialBlock_valid_count_le (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : ℕ) :
@@ -336,7 +323,7 @@ lemma mem_completeBlock_of_div_lt (M X n : ℕ) (hM : 0 < M) (hn_pos : 1 ≤ n) 
     omega
   have h₂ : n ≤ ((n - 1) / M + 1) * M := by
     have h : n - 1 < (n - 1) / M * M + M := Nat.lt_div_mul_add hM
-    have heq : ((n - 1) / M + 1) * M = (n - 1) / M * M + M := by ring
+    rw [Nat.succ_mul]
     omega
   omega
 

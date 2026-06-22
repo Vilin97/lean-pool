@@ -43,7 +43,7 @@ lemma exists_finset_tsum_compl_lt (f : Nat.Primes → ℝ) (_hf : ∀ p, 0 ≤ f
     simpa using tendsto_tsum_compl_atTop_zero f
   obtain ⟨s, hs⟩ := Metric.tendsto_atTop.mp htail ε hε
   refine ⟨s, ?_⟩
-  have hs_self := hs s (by simp)
+  have hs_self := hs s le_rfl
   rw [Real.dist_eq] at hs_self
   linarith [(abs_lt.mp hs_self).2]
 
@@ -55,10 +55,8 @@ lemma prime_tail_sum_small (ε : ℝ) (hε : 0 < ε) :
   obtain ⟨s, hs⟩ := exists_finset_tsum_compl_lt f hfnn primes_summable_one_div_sq ε hε
   use s.sup (·.val)
   have h1 : ∑' (p : {q : Nat.Primes // (q : ℕ) > s.sup (·.val)}), f p ≤
-            ∑' (p : {q : Nat.Primes // q ∉ s}), f p := by
-    apply tsum_primes_gt_le_tsum_compl
-    · exact hfnn
-    · exact primes_summable_one_div_sq
+            ∑' (p : {q : Nat.Primes // q ∉ s}), f p :=
+    tsum_primes_gt_le_tsum_compl f hfnn primes_summable_one_div_sq s
   simp only [hf] at h1 hs
   exact lt_of_le_of_lt h1 hs
 
@@ -83,12 +81,10 @@ lemma sqrt_div_X_small (ε : ℝ) (hε : 0 < ε) :
     nlinarith [Real.sq_sqrt (le_of_lt hXpos), Real.sqrt_nonneg (X : ℝ)]
   have hNatsqrt : (Nat.sqrt X : ℝ) ≤ Real.sqrt (X : ℝ) := by
     have h₁ : (Nat.sqrt X : ℝ) ^ 2 ≤ (X : ℝ) := by
-      have hmul : Nat.sqrt X * Nat.sqrt X ≤ X := Nat.sqrt_le X
-      have hcast : (Nat.sqrt X : ℝ) * (Nat.sqrt X : ℝ) ≤ (X : ℝ) := by exact_mod_cast hmul
+      have hcast : (Nat.sqrt X : ℝ) * (Nat.sqrt X : ℝ) ≤ (X : ℝ) := by exact_mod_cast Nat.sqrt_le X
       nlinarith [sq_nonneg (Nat.sqrt X : ℝ)]
-    have hsqrtpos : Real.sqrt (X : ℝ) ≥ 0 := Real.sqrt_nonneg _
     nlinarith [Real.sq_sqrt (le_of_lt hXpos), sq_nonneg ((Nat.sqrt X : ℝ) - Real.sqrt (X : ℝ)),
-      mul_self_nonneg (Real.sqrt (X : ℝ))]
+      Real.sqrt_nonneg (X : ℝ), mul_self_nonneg (Real.sqrt (X : ℝ))]
   have h8 : 1 / Real.sqrt (X : ℝ) < ε := by
     have hsqrtpos : Real.sqrt (X : ℝ) > 0 := Real.sqrt_pos.mpr hXpos
     calc 1 / Real.sqrt (X : ℝ) < 1 / (1 / ε) := by
@@ -109,9 +105,7 @@ lemma card_multiples_Icc (q : ℕ) (X : ℕ) :
     intro N hN
     simp only [Finset.mem_filter, Finset.mem_Icc, Finset.mem_range] at hN ⊢
     exact ⟨by omega, by omega, hN.2⟩
-  have h_card_multiples' : ((Finset.range (X + 1)).filter (fun k => k ≠ 0 ∧ q ^ 2 ∣ k)).card =
-      X / q ^ 2 := Nat.card_multiples' X (q ^ 2)
-  simpa [h_card_multiples'] using Finset.card_le_card h_subset
+  simpa [Nat.card_multiples' X (q ^ 2)] using Finset.card_le_card h_subset
 
 /-- The number of N ∈ (0, X] satisfying N ≡ v (mod r) is at most X / r + 1.
 
@@ -253,9 +247,8 @@ lemma card_union_shifted_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (_hT : 
 
 lemma combined_bound_aux (T : Finset ℕ) (X q_sq : ℕ) :
     X / q_sq + T.card * (X / q_sq + 1) ≤ (T.card + 1) * (X / q_sq + 1) := by
-  have h_main : X / q_sq + T.card * (X / q_sq + 1) ≤ (T.card + 1) * (X / q_sq + 1) := by
-    rw [add_mul, one_mul]; omega
-  aesop
+  rw [add_mul, one_mul]
+  omega
 
 lemma single_prime_violation_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (q : Nat.Primes) (hq : (q : ℕ) > b) (X : ℕ) :

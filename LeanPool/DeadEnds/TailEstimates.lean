@@ -12,76 +12,25 @@ Asymptotic tail estimates that turn finite-prime counts into density bounds.
 
 namespace LeanPool.DeadEnds
 
-lemma sqrt_bXb_div_X_small (b : ℕ) (hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
+lemma sqrt_bXb_div_X_small (b : ℕ) (_hb : 2 ≤ b) (ε : ℝ) (hε : 0 < ε) :
     ∃ X₀ : ℕ, ∀ X ≥ X₀, (Nat.sqrt (b * X + b) : ℝ) / X < ε := by
-  have h₃ : ∃ (X₀ : ℕ), (X₀ : ℝ) > 2 * (b : ℝ) / ε ^ 2 := by
-    have h₄ : ∃ (n : ℕ), (2 * (b : ℝ) / ε ^ 2 : ℝ) < n := by
-      obtain ⟨n, hn⟩ := exists_nat_gt (2 * (b : ℝ) / ε ^ 2)
-      exact ⟨n, by linarith⟩
-    obtain ⟨X₀, hX₀⟩ := h₄
-    refine ⟨X₀, ?_⟩
-    norm_cast at hX₀ ⊢
-  obtain ⟨X₀, hX₀⟩ := h₃
-  use max 1 X₀
-  intro X hX
-  have h₄ : X ≥ 1 := by
-    have h₅ : max 1 X₀ ≥ 1 := by simp
-    linarith
-  have h₅ : (X : ℝ) ≥ 1 := by exact_mod_cast h₄
-  have h₆ : (X : ℝ) ≥ (X₀ : ℝ) := by
-    have h₇ : (max 1 X₀ : ℕ) ≥ X₀ := by simp
-    have h₉ : (X : ℕ) ≥ X₀ := by linarith
-    exact_mod_cast h₉
-  have h₈ : (ε : ℝ) ^ 2 * (X : ℝ) > 2 * (b : ℝ) := by
-    have h₁₀ : 0 < (ε : ℝ) ^ 2 := by positivity
-    have h₁₁ : 0 < (ε : ℝ) ^ 2 := by positivity
-    have h₁₂ : (ε : ℝ) ^ 2 * (X : ℝ) > (ε : ℝ) ^ 2 * (2 * (b : ℝ) / ε ^ 2) := by
-      nlinarith
-    have h₁₃ : (ε : ℝ) ^ 2 * (2 * (b : ℝ) / ε ^ 2) = 2 * (b : ℝ) := by
-      field_simp [h₁₁.ne']
-    linarith
-  have h₉ : (b : ℝ) * X + b ≤ 2 * (b : ℝ) * X := by
-    have h₁₂ : (b : ℝ) * (X : ℝ) ≥ (b : ℝ) := by
-      nlinarith
-    have h₁₃ : (b : ℝ) * (X : ℝ) + (b : ℝ) ≤ 2 * (b : ℝ) * (X : ℝ) := by
-      nlinarith
-    norm_cast at h₁₃ ⊢
-  have h₁₀ : (b : ℝ) * X + b < (ε : ℝ) ^ 2 * (X : ℝ) ^ 2 := by
-    have h₁₆ : (ε : ℝ) ^ 2 * (X : ℝ) ^ 2 > 2 * (b : ℝ) * (X : ℝ) := by
-      nlinarith [sq_nonneg ((X : ℝ) - 1)]
-    nlinarith
-  have h₁₁ : (Nat.sqrt (b * X + b) : ℝ) < (ε : ℝ) * X := by
-    have h₁₄ : (Nat.sqrt (b * X + b) : ℕ) * (Nat.sqrt (b * X + b) : ℕ) ≤ (b * X + b) := by
-      have h₁₅ : (Nat.sqrt (b * X + b)) * (Nat.sqrt (b * X + b)) ≤ (b * X + b) := by
-        nlinarith [Nat.sqrt_le (b * X + b), Nat.lt_succ_sqrt (b * X + b)]
-      exact h₁₅
-    have h₁₈ : (Nat.sqrt (b * X + b) : ℕ) < (ε : ℝ) * X := by
-      by_contra h
-      have h₁₉ : (ε : ℝ) * X ≤ (Nat.sqrt (b * X + b) : ℕ) := by
-        norm_num at h ⊢;
-        (try linarith)
-      have h₂₀ : ((ε : ℝ) * X) ^ 2 ≤ ((Nat.sqrt (b * X + b) : ℕ) : ℝ) ^ 2 := by
-        have h₂₂ : ((ε : ℝ) * X) ^ 2 ≤ ((Nat.sqrt (b * X + b) : ℕ) : ℝ) ^ 2 := by
-          gcongr
-        exact h₂₂
-      have h₂₂ : ((Nat.sqrt (b * X + b) : ℕ) : ℝ) * ((Nat.sqrt (b * X + b) : ℕ) : ℝ) ≤ (b * X +
-          b : ℝ) := by
-        have h₂₃ : (Nat.sqrt (b * X + b) : ℕ) * (Nat.sqrt (b * X + b) : ℕ) ≤ (b * X + b) := h₁₄
-        norm_cast at h₂₃ ⊢
-      linarith
-    have h₁₉ : (Nat.sqrt (b * X + b) : ℝ) < (ε : ℝ) * X := by
-      norm_cast at h₁₈ ⊢
-    exact h₁₉
-  have h₁₂ : (Nat.sqrt (b * X + b) : ℝ) / X < ε := by
-    have h₁₃ : 0 < (X : ℝ) := by
-      linarith
-    have h₁₅ : (Nat.sqrt (b * X + b) : ℝ) / X < ε := by
-      calc
-        (Nat.sqrt (b * X + b) : ℝ) / X < ((ε : ℝ) * X) / X := by gcongr
-        _ = (ε : ℝ) := by
-          field_simp [h₁₃.ne']
-    exact h₁₅
-  exact h₁₂
+  obtain ⟨X₀, hX₀⟩ := exists_nat_gt (2 * (b : ℝ) / ε ^ 2)
+  refine ⟨max 1 X₀, fun X hX => ?_⟩
+  have h₅ : (1 : ℝ) ≤ (X : ℝ) := by exact_mod_cast le_trans (le_max_left _ _) hX
+  have h₆ : (X₀ : ℝ) ≤ (X : ℝ) := by exact_mod_cast le_trans (le_max_right _ _) hX
+  have hX₀' : (X₀ : ℝ) > 2 * (b : ℝ) / ε ^ 2 := hX₀
+  have hεsq : (0 : ℝ) < ε ^ 2 := by positivity
+  have h₈ : ε ^ 2 * (X : ℝ) > 2 * (b : ℝ) := by
+    rw [gt_iff_lt, ← div_lt_iff₀' hεsq]; linarith
+  have h₁₀ : (b : ℝ) * X + b < ε ^ 2 * (X : ℝ) ^ 2 := by
+    nlinarith [sq_nonneg ((X : ℝ) - 1)]
+  have hsq : ((Nat.sqrt (b * X + b) : ℝ)) * (Nat.sqrt (b * X + b) : ℝ) ≤ (b : ℝ) * X + b := by
+    exact_mod_cast Nat.sqrt_le (b * X + b)
+  have h₁₁ : (Nat.sqrt (b * X + b) : ℝ) < ε * X := by
+    nlinarith [Nat.cast_nonneg (α := ℝ) (Nat.sqrt (b * X + b)),
+      mul_pos hε (lt_of_lt_of_le one_pos h₅)]
+  calc (Nat.sqrt (b * X + b) : ℝ) / X < (ε * X) / X := by gcongr
+    _ = ε := by field_simp
 
 lemma combine_violation_bounds (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (y : ℕ) (hy : ∀ p : Nat.Primes, (p : ℕ) ≤ y → p ∈ S) (hyb : y ≥ b)
@@ -188,34 +137,15 @@ lemma error_term_vanishes (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (_hT : T ⊆
 
 lemma exists_large_for_ratio (M : ℕ) (δ : ℝ) (hδ : 0 < δ) :
     ∃ X₀ : ℕ, ∀ X ≥ X₀, (M : ℝ) / X < δ := by
-  have h₁ : 0 ≤ (M : ℝ) / δ := by
-    positivity
-  have h₂ : ∃ X₀ : ℕ, ∀ X ≥ X₀, (M : ℝ) / X < δ := by
-    obtain ⟨X₀, hX₀⟩ := exists_nat_gt ((M : ℝ) / δ)
-    use X₀
-    intro X hX
-    have h₃ : (X : ℝ) ≥ (X₀ : ℝ) := by
-      exact_mod_cast hX
-    have h₅ : 0 < (X : ℝ) := by
-      have h₅₅ : (X : ℝ) > 0 := by linarith
-      exact h₅₅
-    have h₆ : (M : ℝ) / X < δ := by
-      have h₆₁ : (M : ℝ) < (X : ℝ) * δ := by
-        calc
-          (M : ℝ) = ((M : ℝ) / δ) * δ := by
-            field_simp [hδ.ne']
-          _ < (X : ℝ) * δ := by
-            nlinarith
-      have h₆₂ : 0 < (X : ℝ) := h₅
-      have h₆₃ : (M : ℝ) / X < δ := by
-        calc
-          (M : ℝ) / X < ((X : ℝ) * δ) / X := by
-            gcongr
-          _ = δ := by
-            field_simp [h₆₂.ne']
-      exact h₆₃
-    exact h₆
-  exact h₂
+  obtain ⟨X₀, hX₀⟩ := exists_nat_gt (max ((M : ℝ) / δ) 1)
+  refine ⟨X₀, fun X hX => ?_⟩
+  have h₃ : (X₀ : ℝ) ≤ (X : ℝ) := by exact_mod_cast hX
+  have hmax := lt_of_le_of_lt (le_max_left _ _) hX₀
+  have hone := lt_of_le_of_lt (le_max_right _ _) hX₀
+  have h₅ : 0 < (X : ℝ) := by linarith
+  rw [div_lt_iff₀ h₅]
+  have : (M : ℝ) < X₀ * δ := by rw [div_lt_iff₀ hδ] at hmax; linarith
+  nlinarith
 
 /-- Lower bound: for large X, C(X)/X ≥ D(b,T) - ε.
     The count equals the count for all primes up to some bound, which is close to X·D(b,T).
@@ -255,10 +185,8 @@ theorem finite_count_upper_bound (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT :
     linarith [this.1, this.2]
   have h4 : ((∏ p ∈ S, (p : ℕ) ^ 2 : ℕ) : ℝ) = prodPsq := by
     rw [hprodPsq, Nat.cast_prod]
-    congr 1
-    ext p
     push_cast
-    ring
+    rfl
   calc (countJointSquarefree b T X : ℝ) ≤ (count : ℝ) := h1
     _ ≤ (X : ℝ) * prodMu + prodPsq := h3
     _ = (X : ℝ) * prodMu + (∏ p ∈ S, (p : ℕ) ^ 2 : ℕ) := by rw [h4]
@@ -267,9 +195,7 @@ lemma finite_prod_lt_density_add (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT
     (S : Finset Nat.Primes) (ε : ℝ) (_hε : 0 < ε)
     (h : |∏ p ∈ S, localDensityFactor (p : ℕ) b T - jointSquarefreeDensity b T| < ε) :
     ∏ p ∈ S, localDensityFactor (p : ℕ) b T < jointSquarefreeDensity b T + ε := by
-  have h₁ : ∏ p ∈ S, localDensityFactor (p : ℕ) b T - jointSquarefreeDensity b T < ε := by
-    exact (abs_lt.mp h).2
-  linarith
+  linarith [(abs_lt.mp h).2]
 
 lemma combine_upper_bounds (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (X : ℕ) (ε : ℝ) (_hε : 0 < ε) (hX : 0 < X)
@@ -279,37 +205,19 @@ lemma combine_upper_bounds (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT : T �
     (hprod : ∏ p ∈ S, localDensityFactor (p : ℕ) b T < jointSquarefreeDensity b T + ε / 2)
     (hratio : (M : ℝ) / X < ε / 2) :
     (countJointSquarefree b T X : ℝ) / X ≤ jointSquarefreeDensity b T + ε := by
-  have h_div : (countJointSquarefree b T X : ℝ) / X ≤ (∏ p ∈ S, localDensityFactor (p : ℕ) b T) + (
-      M : ℝ) / X := by
-    have h₁ : 0 < (X : ℝ) := by exact_mod_cast hX
-    have h₂ : (countJointSquarefree b T X : ℝ) / X ≤ ((X : ℝ) * ∏ p ∈ S, localDensityFactor (
-        p : ℕ) b T + M) / X := by
-      have h₄ : (countJointSquarefree b T X : ℝ) / X ≤ ((X : ℝ) * ∏ p ∈ S, localDensityFactor (
-          p : ℕ) b T + M) / X := by
-        calc
-          (countJointSquarefree b T X : ℝ) / X ≤ ((X : ℝ) * ∏ p ∈ S, localDensityFactor (
-              p : ℕ) b T + M) / X := by
-            gcongr
-          _ = ((X : ℝ) * ∏ p ∈ S, localDensityFactor (p : ℕ) b T + M) / X := by rfl
-      exact h₄
-    have h₃ : ((X : ℝ) * ∏ p ∈ S, localDensityFactor (p : ℕ) b T + M) / X = (∏ p ∈ S,
-        localDensityFactor (p : ℕ) b T) + (M : ℝ) / X := by
-      field_simp [h₁.ne']
-    rw [h₃] at h₂
-    exact h₂
-  have h_final : (countJointSquarefree b T X : ℝ) / X ≤ jointSquarefreeDensity b T + ε := by
-    linarith
-  exact h_final
+  have h₁ : 0 < (X : ℝ) := by exact_mod_cast hX
+  have heq : ((X : ℝ) * ∏ p ∈ S, localDensityFactor (p : ℕ) b T + M) / X =
+      (∏ p ∈ S, localDensityFactor (p : ℕ) b T) + (M : ℝ) / X := by field_simp [h₁.ne']
+  have h_div : (countJointSquarefree b T X : ℝ) / X ≤
+      (∏ p ∈ S, localDensityFactor (p : ℕ) b T) + (M : ℝ) / X := by
+    rw [← heq]; gcongr
+  linarith
 
 lemma exists_finite_prime_set (y : ℕ) :
     ∃ S : Finset Nat.Primes, (∀ p : Nat.Primes, (p : ℕ) ≤ y → p ∈ S) := by
-  have hfin : {p : Nat.Primes | (p : ℕ) ≤ y}.Finite := by
-    have heq : {p : Nat.Primes | (p : ℕ) ≤ y} = Subtype.val ⁻¹' (Set.Iic y) := rfl
-    rw [heq]
-    apply Set.Finite.preimage _ (Set.finite_Iic y)
-    exact Set.injOn_of_injective Subtype.val_injective
-  use hfin.toFinset
-  intro p hp
+  have hfin : {p : Nat.Primes | (p : ℕ) ≤ y}.Finite :=
+    Set.Finite.preimage (Set.injOn_of_injective Subtype.val_injective) (Set.finite_Iic y)
+  refine ⟨hfin.toFinset, fun p hp => ?_⟩
   rw [Set.Finite.mem_toFinset]
   exact hp
 

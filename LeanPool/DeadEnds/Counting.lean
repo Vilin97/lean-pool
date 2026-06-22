@@ -19,14 +19,9 @@ lemma count_upper_bound (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes) (X : 
         ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card
     count ≤ (X / M + 1) * A.card := by
   intro M A count
-  show count ≤ (X / M + 1) * A.card
   have hdecomp := count_eq_sum_blocks b T S X
   simp only at hdecomp
-  have hcount_eq : count = ∑ k ∈ Finset.range (X / M), ((completeBlock M k).filter fun N =>
-      ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card +
-      ((partialBlock M X).filter fun N =>
-      ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card := hdecomp
-  rw [hcount_eq]
+  rw [show count = _ from hdecomp]
   have hblock : ∀ k, ((completeBlock M k).filter fun N =>
       ∀ p ∈ S, ¬((p : ℕ) ^ 2 ∣ N) ∧ ∀ d ∈ T, ¬((p : ℕ) ^ 2 ∣ b * N + d)).card = A.card :=
     fun k => completeBlock_valid_count b T S k
@@ -57,10 +52,8 @@ lemma localDensityProduct_nonneg (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Prim
 lemma interval_bound {a b lo hi d : ℝ}
     (ha_lo : lo ≤ a) (ha_hi : a ≤ hi) (hb_lo : lo ≤ b) (hb_hi : b ≤ hi)
     (hd : hi - lo ≤ d) : |a - b| ≤ d := by
-  have h₃ : |a - b| ≤ hi - lo := by
-    rw [abs_le]
-    constructor <;> linarith
-  linarith
+  rw [abs_le]
+  constructor <;> linarith
 
 lemma floor_div_bounds (X M : ℕ) (hM : 0 < M) :
     (X / M) * M ≤ X ∧ X < (X / M + 1) * M :=
@@ -244,8 +237,7 @@ lemma count_finite_lower (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ F
     (countFinitePrime b T S X : ℝ) ≥ (X : ℝ) * localDensityProduct b T S -
       (primeSquareProduct S : ℝ) := by
   have h := crt_error_bound b hb T hT S X
-  have h' := neg_abs_le ((countFinitePrime b T S X : ℝ) - (X : ℝ) * localDensityProduct b T S)
-  linarith
+  linarith [neg_abs_le ((countFinitePrime b T S X : ℝ) - (X : ℝ) * localDensityProduct b T S)]
 
 lemma finite_product_ge_density (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) :
@@ -334,8 +326,8 @@ lemma count_ge_finite_minus_violations (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ
   have hAB : A ⊆ B := jointSquarefree_subset_finitePrime b T S X
   have hDiffCard : (B \ A).card ≤ V.card := Finset.card_le_card (sdiff_subset_violations b T S X)
   have hCard : (B \ A).card + A.card = B.card := Finset.card_sdiff_add_card_eq_card hAB
-  have h2 : (A.card : ℤ) ≥ B.card - V.card := by omega
-  exact_mod_cast (show (A.card : ℤ) ≥ (B.card : ℤ) - (V.card : ℤ) from h2)
+  have h2 : (A.card : ℤ) ≥ (B.card : ℤ) - (V.card : ℤ) := by omega
+  exact_mod_cast h2
 
 lemma combine_bounds_lower (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ) (hT : T ⊆ Finset.range b)
     (S : Finset Nat.Primes) (X : ℕ) (hX : 0 < X)

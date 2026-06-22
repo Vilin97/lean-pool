@@ -174,9 +174,8 @@ lemma dead_end_tendsto_explicit_formula (b : ℕ) (hb : 2 ≤ b) :
       Filter.atTop (nhds (explicitDensityFormula b)) := by
   have h_joint : ∀ T ∈ (Finset.range b).powerset,
       Filter.Tendsto (fun X : ℕ => (countJointSquarefree b T X : ℝ) / (X : ℝ))
-        Filter.atTop (nhds (jointSquarefreeDensity b T)) := by
-    intro T hT
-    exact joint_density_eq_euler_product b hb T (Finset.mem_powerset.mp hT)
+        Filter.atTop (nhds (jointSquarefreeDensity b T)) :=
+    fun T hT => joint_density_eq_euler_product b hb T (Finset.mem_powerset.mp hT)
   have h_alt := alternating_sum_tendsto b hb h_joint
   have h_eq : (fun X : ℕ => (countBaseBDeadEnds b X : ℝ) / (X : ℝ)) =ᶠ[Filter.atTop]
       (fun X : ℕ => ∑ T ∈ (Finset.range b).powerset,
@@ -192,8 +191,8 @@ theorem baseBDeadEnd_density_exists (b : ℕ) (hb : 2 ≤ b) :
 
 theorem baseBDeadEnd_density_unique (b : ℕ) (D₁ D₂ : ℝ)
     (h₁ : HasAsymptoticDensity b D₁) (h₂ : HasAsymptoticDensity b D₂) :
-    D₁ = D₂ := by
-  exact tendsto_nhds_unique h₁ h₂
+    D₁ = D₂ :=
+  tendsto_nhds_unique h₁ h₂
 
 /-- The asymptotic density `D_b` of base-`b` dead ends, defined (when `b ≥ 2`) as the
 unique limit guaranteed by `baseBDeadEnd_density_exists`. -/
@@ -206,9 +205,9 @@ theorem baseBDeadEndDensity_spec (b : ℕ) (hb : 2 ≤ b) :
 
 theorem jointSquarefreeDensity_convergent (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ)
     (hT : T ⊆ Finset.range b) :
-    Multipliable (fun p : Nat.Primes => localDensityFactor (p : ℕ) b T) := by
-  exact multipliable_of_deviation_summable b hb T hT (
-      sum_localDensityFactor_deviation_summable b hb T hT)
+    Multipliable (fun p : Nat.Primes => localDensityFactor (p : ℕ) b T) :=
+  multipliable_of_deviation_summable b hb T hT
+    (sum_localDensityFactor_deviation_summable b hb T hT)
 
 theorem jointSquarefreeDensity_is_asymptotic_density (b : ℕ) (hb : 2 ≤ b) (T : Finset ℕ)
     (hT : T ⊆ Finset.range b) :
@@ -216,8 +215,8 @@ theorem jointSquarefreeDensity_is_asymptotic_density (b : ℕ) (hb : 2 ≤ b) (T
       (Finset.Icc 1 X).filter (fun N =>
         Squarefree N ∧ ∀ d ∈ T, Squarefree (b * N + d)) |>.card
     Filter.Tendsto (fun X : ℕ => (countJoint X : ℝ) / (X : ℝ))
-      Filter.atTop (nhds (jointSquarefreeDensity b T)) := by
-  exact joint_density_eq_euler_product b hb T hT
+      Filter.atTop (nhds (jointSquarefreeDensity b T)) :=
+  joint_density_eq_euler_product b hb T hT
 
 theorem baseBDeadEnd_density_formula (b : ℕ) (hb : 2 ≤ b) :
     baseBDeadEndDensity b hb = explicitDensityFormula b := by

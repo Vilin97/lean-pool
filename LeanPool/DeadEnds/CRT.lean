@@ -33,15 +33,10 @@ def localValidResidues (p : ℕ) (b : ℕ) (T : Finset ℕ) : Finset ℕ :=
 
 lemma localValidResidues_card_eq (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (T : Finset ℕ) :
     ((localValidResidues p b T).card : ℝ) = (p : ℝ) ^ 2 * localDensityFactor p b T := by
-  have h6 : (p : ℝ) ^ 2 ≠ 0 := by
-    have : (p : ℝ) ≠ 0 := by exact_mod_cast hp.ne_zero
-    positivity
-  have h : ((p : ℝ) ^ 2 : ℝ) = (p ^ 2 : ℕ) := by norm_cast
-  simp only [localDensityFactor, localValidResidues]
-  rw [h]
   have hp2 : ((p ^ 2 : ℕ) : ℝ) ≠ 0 := by
-    rw [← h]
-    exact h6
+    exact_mod_cast pow_ne_zero 2 hp.pos.ne'
+  simp only [localDensityFactor, localValidResidues]
+  rw [show ((p : ℝ) ^ 2 : ℝ) = (p ^ 2 : ℕ) by norm_cast]
   field_simp [hp2]
 
 lemma prime_sq_coprime (p q : Nat.Primes) (hne : p ≠ q) :
@@ -89,13 +84,10 @@ lemma crtMap_injective_on_range (S : Finset Nat.Primes) :
     Set.InjOn (fun r => fun p (_hp : p ∈ S) => r % ((p : ℕ) ^ 2))
       {r | r < primeSquareProduct S} := by
   intro r₁ hr₁ r₂ hr₂ heq
-  have h_modEq : ∀ p ∈ S, r₁ ≡ r₂ [MOD (p : ℕ) ^ 2] := by
-    intro p hp
-    have h : r₁ % (p : ℕ) ^ 2 = r₂ % (p : ℕ) ^ 2 := congrFun (congrFun heq p) hp
-    exact h
-  have h_modEq_M : r₁ ≡ r₂ [MOD primeSquareProduct S] :=
-    modEq_primeSquareProduct_of_forall_modEq S r₁ r₂ h_modEq
-  exact Nat.ModEq.eq_of_lt_of_lt h_modEq_M hr₁ hr₂
+  have h_modEq : ∀ p ∈ S, r₁ ≡ r₂ [MOD (p : ℕ) ^ 2] :=
+    fun p hp => congrFun (congrFun heq p) hp
+  exact Nat.ModEq.eq_of_lt_of_lt
+    (modEq_primeSquareProduct_of_forall_modEq S r₁ r₂ h_modEq) hr₁ hr₂
 
 lemma dvd_iff_mod_dvd (p : ℕ) (_hp : 0 < p ^ 2) (r : ℕ) :
     p ^ 2 ∣ r ↔ r % (p ^ 2) = 0 :=
@@ -293,23 +285,20 @@ lemma localDensityProduct_le_one (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Prim
     exact localDensityFactor_le_one p b T
 
 lemma prime_sq_dvd_primeSquareProduct (S : Finset Nat.Primes) (p : Nat.Primes) (hp : p ∈ S) :
-    (p : ℕ) ^ 2 ∣ primeSquareProduct S := by
-  have h₁ : (p : ℕ) ^ 2 ∣ ∏ q ∈ S, (q : ℕ) ^ 2 := by
-    apply Finset.dvd_prod_of_mem; simp_all
-  simpa [primeSquareProduct] using h₁
+    (p : ℕ) ^ 2 ∣ primeSquareProduct S :=
+  Finset.dvd_prod_of_mem _ hp
 
 lemma dvd_iff_of_mod_eq_primeSquareProduct (S : Finset Nat.Primes) (p : Nat.Primes) (hp : p ∈ S)
     (N₁ N₂ : ℕ) (hmod : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S) :
-    ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) := by
-  have h : N₁ ≡ N₂ [MOD primeSquareProduct S] := hmod
-  exact Nat.ModEq.dvd_iff h (prime_sq_dvd_primeSquareProduct S p hp)
+    ((p : ℕ) ^ 2 ∣ N₁ ↔ (p : ℕ) ^ 2 ∣ N₂) :=
+  Nat.ModEq.dvd_iff hmod (prime_sq_dvd_primeSquareProduct S p hp)
 
 lemma shifted_dvd_iff_of_mod_eq_primeSquareProduct (b d : ℕ) (S : Finset Nat.Primes)
     (p : Nat.Primes) (hp : p ∈ S) (N₁ N₂ : ℕ)
     (hmod : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S) :
     ((p : ℕ) ^ 2 ∣ b * N₁ + d ↔ (p : ℕ) ^ 2 ∣ b * N₂ + d) := by
-  have h : N₁ ≡ N₂ [MOD primeSquareProduct S] := hmod
-  have hN : N₁ ≡ N₂ [MOD (p : ℕ) ^ 2] := h.of_dvd (prime_sq_dvd_primeSquareProduct S p hp)
+  have hN : N₁ ≡ N₂ [MOD (p : ℕ) ^ 2] :=
+    Nat.ModEq.of_dvd (prime_sq_dvd_primeSquareProduct S p hp) hmod
   exact Nat.ModEq.dvd_iff ((hN.mul_left b).add_right d) dvd_rfl
 theorem condition_mod_invariant (b : ℕ) (T : Finset ℕ) (S : Finset Nat.Primes)
     (N₁ N₂ : ℕ) (hmod : N₁ % primeSquareProduct S = N₂ % primeSquareProduct S) :

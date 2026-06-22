@@ -4,19 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Evan Chen, Kenny Lau, Seewoo Lee, Ken Ono, Jujian Zhang
 -/
 
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Order.Ring.Star
-import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.Analysis.SpecialFunctions.Log.Summable
 import Mathlib.Data.Int.CardIntervalMod
-import Mathlib.Data.Int.Star
 import Mathlib.Data.Nat.ChineseRemainder
 import Mathlib.Data.PNat.Prime
-import Mathlib.Data.Rat.Star
-import Mathlib.Data.Real.StarOrdered
 import Mathlib.NumberTheory.SumPrimeReciprocals
-import Mathlib.Order.BourbakiWitt
-import Mathlib.Order.CompletePartialOrder
 
 /-! ## Counting functions for joint conditions -/
 
@@ -249,10 +241,9 @@ lemma primes_summable_one_div_sq : Summable (fun p : Nat.Primes => 1 / ((p : ℕ
 
 lemma bound_summable (b : ℕ) (_hb : 2 ≤ b) (T : Finset ℕ) (_hT : T ⊆ Finset.range b) :
     Summable (fun p : Nat.Primes => (T.card + 1 : ℝ) / ((p : ℕ) : ℝ) ^ 2) := by
-  have h := primes_summable_one_div_sq
   simp_rw [show ∀ p : Nat.Primes, (T.card + 1 : ℝ) / ((p : ℕ) : ℝ) ^ 2 =
       (T.card + 1 : ℝ) * (1 / ((p : ℕ) : ℝ) ^ 2) from fun p => by ring]
-  exact h.mul_left _
+  exact primes_summable_one_div_sq.mul_left _
 theorem deviation_bound_for_large_prime (p : ℕ) (hp : Nat.Prime p) (b : ℕ) (hb : 2 ≤ b)
     (hbp : b < p) (T : Finset ℕ) (hT : T ⊆ Finset.range b) :
     ‖|localDensityFactor p b T - 1|‖ ≤ (T.card + 1 : ℝ) / (p : ℝ) ^ 2 := by
