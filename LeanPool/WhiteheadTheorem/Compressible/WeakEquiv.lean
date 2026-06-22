@@ -35,9 +35,7 @@ theorem _root_.TopCat.IsCompressible.relCWComplex_of_isWeakHomotopyEquiv
     (hf : IsWeakHomotopyEquiv f.hom) (X : RelCWComplex) :
     IsCompressible (X.skIncl 0) (MapCyl.domIncl f) := by
   apply IsCompressible.relCWComplex_of_diskBoundaryIncl
-  intro n
-  apply disk.isCompressible_mapCyl_domIncl_of_isWeakHomotopyEquiv
-  exact hf
+  exact fun n ↦ disk.isCompressible_mapCyl_domIncl_of_isWeakHomotopyEquiv n f hf
 
 end TopCat
 

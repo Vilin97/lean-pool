@@ -163,10 +163,7 @@ lemma isHom_projl
     : IsHom (fun x ↦ Chain.Sum.projl (hA := ⟨g x⟩) (f x)) := by
   simp only [Chain.isHom_iff, Chain.Sum.projl_coe]
   intro i
-  apply Sum.isHom_elim'
-  · fun_prop
-  · fun_prop
-  · apply isHom_comp' (Chain.isHom_apply i) hf
+  exact Sum.isHom_elim' (by fun_prop) (by fun_prop) (isHom_comp' (Chain.isHom_apply i) hf)
 
 @[fun_prop]
 lemma isHom_projr
@@ -178,10 +175,7 @@ lemma isHom_projr
     : IsHom (fun x ↦ Chain.Sum.projr (hB := ⟨g x⟩) (f x)) := by
   simp only [Chain.isHom_iff, Chain.Sum.projr_coe]
   intro i
-  apply Sum.isHom_elim'
-  · fun_prop
-  · fun_prop
-  · apply isHom_comp' (Chain.isHom_apply i) hf
+  exact Sum.isHom_elim' (by fun_prop) (by fun_prop) (isHom_comp' (Chain.isHom_apply i) hf)
 
 @[fun_prop, simp]
 lemma isHom_distrib

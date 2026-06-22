@@ -264,8 +264,7 @@ by
   letI : CoalgebraStruct ℂ (PiMat ℂ ι p) :=
     PiMat.finiteDimensionalHilbertCoalgebraStruct (φ := φ)
   intro A hA
-  rw [← Nat.cast_inj (R := ℂ)]
-  rw [QuantumGraph.dimOfPiMatSubmodule_eq_trace]
+  rw [← Nat.cast_inj (R := ℂ), QuantumGraph.dimOfPiMatSubmodule_eq_trace]
   simp only [Nat.cast_sum, ←
     orthogonalProjection_trace (R := ℂ),
     QuantumGraph.Real.PiMatSubmoduleOrthogonalProjection,
@@ -858,8 +857,7 @@ by
               (NonUnitalAlgHom.single ℂ (fun r => Mat ℂ (p r)) i) :
                 Mat ℂ (p i) →ₗ[ℂ] PiMat ℂ ι p) =
           LinearMap.proj (R := ℂ) (φ := fun r => Mat ℂ (p r)) i := by
-      rw [NonUnitalAlgHom.single_toLinearMap]
-      rw [← LinearMap.proj_adjoint]
+      rw [NonUnitalAlgHom.single_toLinearMap, ← LinearMap.proj_adjoint]
       exact LinearMap.adjoint_adjoint _
     have hadjMat :
         LinearMap.adjoint (Coalgebra.comul :
@@ -917,8 +915,7 @@ by
   intro f
   simp only [QuantumGraph.real_iff, LinearMap.isReal_iff, LinearMap.real_comp]
   simp only [← LinearMap.comp_assoc]
-  rw [schurMul_comp_proj, schurMul_proj_adjoint_comp]
-  rw [LinearMap.proj_adjoint]
+  rw [schurMul_comp_proj, schurMul_proj_adjoint_comp, LinearMap.proj_adjoint]
   nth_rw 2 [LinearMap.real_of_isReal (LinearMap.single_isReal i)]
   nth_rw 3 [LinearMap.real_of_isReal (LinearMap.proj_isReal i)]
   rw [LinearMap.comp_proj_inj (R := ℂ) (ι := ι) (φ := fun r => Mat ℂ (p r)) i,

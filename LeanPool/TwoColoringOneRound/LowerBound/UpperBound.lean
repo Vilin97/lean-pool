@@ -44,6 +44,18 @@ namespace UpperBound
 open scoped BigOperators
 open LocalRule
 
+/-- The cardinality of a 4-way disjunction subtype is bounded by the sum of the parts. -/
+private lemma card_or4_le {α : Type*} [Fintype α] (p q r s : α → Prop)
+    [DecidablePred p] [DecidablePred q] [DecidablePred r] [DecidablePred s] :
+    Fintype.card {e : α // p e ∨ q e ∨ r e ∨ s e} ≤
+      Fintype.card {e : α // p e} +
+        (Fintype.card {e : α // q e} +
+          (Fintype.card {e : α // r e} + Fintype.card {e : α // s e})) := by
+  refine le_trans (Fintype.card_subtype_or (p := p) (q := fun e => q e ∨ r e ∨ s e)) ?_
+  refine Nat.add_le_add_left ?_ _
+  refine le_trans (Fintype.card_subtype_or (p := q) (q := fun e => r e ∨ s e)) ?_
+  exact Nat.add_le_add_left (Fintype.card_subtype_or (p := r) (q := s)) _
+
 /-!
 ### `n = 9`
 
@@ -191,48 +203,8 @@ theorem monoFraction_f9_le_13_63 : monoFraction f9 ≤ (13 : ℚ) / 63 := by
         ≤
           Fintype.card Edge0000
             + (Fintype.card Edge1111 + (Fintype.card Edge1001 + Fintype.card Edge0110)) := by
-    -- Break into three applications of `Fintype.card_subtype_or`,
-    -- avoiding re-association simp loops.
-    have h0 :
-        Fintype.card {e : Edge n // pat0000 e ∨ (pat1111 e ∨ pat1001 e ∨ pat0110 e)}
-          ≤ Fintype.card {e : Edge n // pat0000 e}
-              + Fintype.card {e : Edge n // (pat1111 e ∨ pat1001 e ∨ pat0110 e)} :=
-      Fintype.card_subtype_or
-        (p := pat0000)
-        (q := fun e => pat1111 e ∨ pat1001 e ∨ pat0110 e)
-    have h1 :
-        Fintype.card {e : Edge n // pat1111 e ∨ (pat1001 e ∨ pat0110 e)}
-          ≤ Fintype.card {e : Edge n // pat1111 e}
-              + Fintype.card {e : Edge n // (pat1001 e ∨ pat0110 e)} :=
-      Fintype.card_subtype_or
-        (p := pat1111)
-        (q := fun e => pat1001 e ∨ pat0110 e)
-    have h2 :
-        Fintype.card {e : Edge n // pat1001 e ∨ pat0110 e}
-          ≤
-            Fintype.card {e : Edge n // pat1001 e}
-              + Fintype.card {e : Edge n // pat0110 e} :=
-      Fintype.card_subtype_or (p := pat1001) (q := pat0110)
-    have hRest :
-        Fintype.card {e : Edge n // (pat1111 e ∨ pat1001 e ∨ pat0110 e)}
-          ≤ Fintype.card {e : Edge n // pat1111 e}
-              + (Fintype.card {e : Edge n // pat1001 e}
-                + Fintype.card {e : Edge n // pat0110 e}) := by
-      -- `pat1111 ∨ pat1001 ∨ pat0110` is definitionally
-      -- `pat1111 ∨ (pat1001 ∨ pat0110)`.
-      exact le_trans h1 (Nat.add_le_add_left h2 (Fintype.card {e : Edge n // pat1111 e}))
-    have hAll :
-        Fintype.card {e : Edge n // pat0000 e ∨ pat1111 e ∨ pat1001 e ∨ pat0110 e}
-          ≤ Fintype.card {e : Edge n // pat0000 e}
-              + (Fintype.card {e : Edge n // pat1111 e}
-                + (Fintype.card {e : Edge n // pat1001 e}
-                  + Fintype.card {e : Edge n // pat0110 e})) := by
-      -- `pat0000 ∨ pat1111 ∨ pat1001 ∨ pat0110` is definitionally
-      -- `pat0000 ∨ (pat1111 ∨ pat1001 ∨ pat0110)`.
-      exact le_trans h0 (Nat.add_le_add_left hRest (Fintype.card {e : Edge n // pat0000 e}))
-    -- Rewrite the subtype cards as `Edge....` by unfolding the local type synonyms.
-    dsimp [Edge0000, Edge1111, Edge1001, Edge0110]
-    exact hAll
+    dsimp only [Edge0000, Edge1111, Edge1001, Edge0110]
+    exact card_or4_le pat0000 pat1111 pat1001 pat0110
   have hmonoNat : monoCount f9 ≤ 624 := by
     have : monoCount f9 ≤
         Fintype.card Edge0000
@@ -405,53 +377,9 @@ private lemma monoCount_le_bound :
           Fintype.card (Edge0000 (n := n) hn)
             + (Fintype.card (Edge1111 (n := n) hn)
               + (Fintype.card (Edge1001 (n := n) hn) + Fintype.card (Edge0110 (n := n) hn))) := by
-    have h0 :
-        Fintype.card {e : Edge n //
-            pat0000 (n := n) hn e ∨
-              (pat1111 (n := n) hn e ∨ pat1001 (n := n) hn e ∨ pat0110 (n := n) hn e)}
-          ≤
-            Fintype.card {e : Edge n // pat0000 (n := n) hn e}
-              + Fintype.card {e : Edge n //
-                  (pat1111 (n := n) hn e ∨ pat1001 (n := n) hn e ∨ pat0110 (n := n) hn e)} :=
-      Fintype.card_subtype_or (p := pat0000 (n := n) hn)
-        (q := fun e => pat1111 (n := n) hn e ∨ pat1001 (n := n) hn e ∨ pat0110 (n := n) hn e)
-    have h1 :
-        Fintype.card {e : Edge n //
-            pat1111 (n := n) hn e ∨ (pat1001 (n := n) hn e ∨ pat0110 (n := n) hn e)}
-          ≤
-            Fintype.card {e : Edge n // pat1111 (n := n) hn e}
-              + Fintype.card {e : Edge n // (pat1001 (n := n) hn e ∨ pat0110 (n := n) hn e)} :=
-      Fintype.card_subtype_or (p := pat1111 (n := n) hn)
-        (q := fun e => pat1001 (n := n) hn e ∨ pat0110 (n := n) hn e)
-    have h2 :
-        Fintype.card {e : Edge n // pat1001 (n := n) hn e ∨ pat0110 (n := n) hn e}
-          ≤
-            Fintype.card {e : Edge n // pat1001 (n := n) hn e}
-              + Fintype.card {e : Edge n // pat0110 (n := n) hn e} :=
-      Fintype.card_subtype_or (p := pat1001 (n := n) hn) (q := pat0110 (n := n) hn)
-    have hRest :
-        Fintype.card {e : Edge n //
-            (pat1111 (n := n) hn e ∨ pat1001 (n := n) hn e ∨ pat0110 (n := n) hn e)}
-          ≤
-            Fintype.card {e : Edge n // pat1111 (n := n) hn e}
-              + (Fintype.card {e : Edge n // pat1001 (n := n) hn e}
-                + Fintype.card {e : Edge n // pat0110 (n := n) hn e}) := by
-      have hadd := Nat.add_le_add_left h2 (Fintype.card {e : Edge n // pat1111 (n := n) hn e})
-      exact le_trans h1 hadd
-    have hAll :
-        Fintype.card {e : Edge n //
-            pat0000 (n := n) hn e ∨
-              pat1111 (n := n) hn e ∨ pat1001 (n := n) hn e ∨ pat0110 (n := n) hn e}
-          ≤
-            Fintype.card {e : Edge n // pat0000 (n := n) hn e}
-              + (Fintype.card {e : Edge n // pat1111 (n := n) hn e}
-                + (Fintype.card {e : Edge n // pat1001 (n := n) hn e}
-                  + Fintype.card {e : Edge n // pat0110 (n := n) hn e})) := by
-      have hadd := Nat.add_le_add_left hRest (Fintype.card {e : Edge n // pat0000 (n := n) hn e})
-      exact le_trans h0 hadd
-    -- Unfold `Edge....` abbreviations.
-    dsimp [Edge0000, Edge1111, Edge1001, Edge0110]
-    exact hAll
+    dsimp only [Edge0000, Edge1111, Edge1001, Edge0110]
+    exact card_or4_le (pat0000 (n := n) hn) (pat1111 (n := n) hn) (pat1001 (n := n) hn)
+      (pat0110 (n := n) hn)
   have hMono :
       monoCount (f (n := n) hn)
         ≤

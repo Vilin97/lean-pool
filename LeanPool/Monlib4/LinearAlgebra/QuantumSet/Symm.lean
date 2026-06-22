@@ -181,19 +181,15 @@ by
         ⟪(modAut (-(2 * k A) - 1)).toLinearMap (star y), b⟫_ℂ
     simp_rw [← LinearMap.adjoint_inner_right]
     rw [QuantumSet.modAut_adjoint]
-    simp_rw [AlgEquiv.toLinearMap_apply]
-    simp_rw [← TensorProduct.inner_tmul]
+    simp_rw [AlgEquiv.toLinearMap_apply, ← TensorProduct.inner_tmul]
     rw [← sum_inner]
     have hcomm :
         ∑ i, β i ⊗ₜ[ℂ] α i =
           (TensorProduct.comm ℂ A A).toLinearMap (∑ i, α i ⊗ₜ[ℂ] β i) := by
       simp only [_root_.map_sum, LinearEquiv.coe_toLinearMap, TensorProduct.comm_tmul]
-    rw [hcomm, this]
-    rw [← LinearMap.adjoint_inner_right]
-    rw [TensorProduct.comm_adjoint]
+    rw [hcomm, this, ← LinearMap.adjoint_inner_right, TensorProduct.comm_adjoint]
     simp only [LinearEquiv.coe_toLinearMap, TensorProduct.comm_symm_tmul]
-    rw [Coalgebra.comul_eq_mul_adjoint]
-    rw [LinearMap.adjoint_inner_left]
+    rw [Coalgebra.comul_eq_mul_adjoint, LinearMap.adjoint_inner_left]
     simp only [LinearMap.mul'_apply]
     rw [QuantumSet.modAut_adjoint]
     simp only [AlgEquiv.toLinearMap_apply]
@@ -274,18 +270,13 @@ theorem symmMap_symm_eq (f : A →ₗ[ℂ] B) :
       ⟪(modAut (-k B)).toLinearMap a,
           (modAut (-k B - 1)).toLinearMap (star x)⟫_ℂ =
         ⟪a, (modAut (-(2 * k B) - 1)).toLinearMap (star x)⟫_ℂ
-    rw [← LinearMap.adjoint_inner_right]
-    rw [QuantumSet.modAut_adjoint]
+    rw [← LinearMap.adjoint_inner_right, QuantumSet.modAut_adjoint]
     simp only [AlgEquiv.toLinearMap_apply, QuantumSet.modAut_apply_modAut]
     ring_nf
   · simp_rw [← LinearMap.adjoint_inner_right]
     rw [QuantumSet.modAut_adjoint]
-    simp_rw [AlgEquiv.toLinearMap_apply]
-    simp_rw [← TensorProduct.inner_tmul]
-    rw [← sum_inner]
-    rw [this]
-    rw [Coalgebra.comul_eq_mul_adjoint]
-    rw [LinearMap.adjoint_inner_left]
+    simp_rw [AlgEquiv.toLinearMap_apply, ← TensorProduct.inner_tmul]
+    rw [← sum_inner, this, Coalgebra.comul_eq_mul_adjoint, LinearMap.adjoint_inner_left]
     simp only [LinearMap.mul'_apply]
     conv_rhs => rw [QuantumSet.inner_eq_counit]
     rw [star_star, ← QuantumSet.inner_eq_counit']

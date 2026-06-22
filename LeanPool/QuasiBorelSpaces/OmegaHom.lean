@@ -160,20 +160,14 @@ lemma isHom_eval : IsHom (fun p : (X →ω𝒒 Y) × X ↦ p.1 p.2) := by
   have h_func : IsHom (fun r ↦ (φ r).1) := isHom_comp Prod.isHom_fst hφ
   have h_arg  : IsHom (fun r ↦ (φ r).2) := isHom_comp Prod.isHom_snd hφ
   rw [isHom_def] at h_func
-  have h_input : IsHom (fun r : ℝ ↦ (r, (φ r).2)) := by
-    apply Prod.isHom_mk
-    · exact isHom_id
-    · exact h_arg
+  have h_input : IsHom (fun r : ℝ ↦ (r, (φ r).2)) := Prod.isHom_mk isHom_id h_arg
   apply isHom_comp (hf := h_func) (hg := h_input)
 
 @[simp]
 lemma ωScottContinuous_eval : ωScottContinuous (fun p : (X →ω𝒒 Y) × X ↦ p.1 p.2) := by
   rw [ωScottContinuous_iff_monotone_map_ωSup]
   refine ⟨fun x y ⟨h₁, h₂⟩ ↦ ?_, fun c ↦ ?_⟩
-  · trans
-    · apply h₁
-    · apply y.1.monotone_coe
-      apply h₂
+  · exact (h₁ _).trans (y.1.monotone_coe h₂)
   · simp only [Prod.ωSup_fst, Prod.ωSup_snd, ωSup_coe]
     apply le_antisymm
     · simp only [
@@ -205,18 +199,15 @@ lemma isHom_eval' [QuasiBorelSpace X]
     {f : X → Y →ω𝒒 Z} (hf : IsHom f)
     {g : X → Y} (hg : IsHom g)
     : IsHom (fun x ↦ f x (g x)) := by
-  apply isHom_comp' (f := fun x ↦ x.1 x.2) (g := fun x ↦ (f x, g x))
-  · simp only [isHom_eval]
-  · fun_prop
+  exact isHom_comp' (f := fun x ↦ x.1 x.2) (g := fun x ↦ (f x, g x)) isHom_eval (by fun_prop)
 
 @[fun_prop]
 lemma ωScottContinuous_eval'
     {f : X → Y →ω𝒒 Z} (hf : ωScottContinuous f)
     {g : X → Y} (hg : ωScottContinuous g)
     : ωScottContinuous (fun x ↦ f x (g x)) := by
-  apply ωScottContinuous.comp (g := fun x ↦ x.1 x.2) (f := fun x ↦ (f x, g x))
-  · simp only [ωScottContinuous_eval]
-  · fun_prop
+  exact ωScottContinuous.comp (g := fun x ↦ x.1 x.2) (f := fun x ↦ (f x, g x))
+    ωScottContinuous_eval (by fun_prop)
 
 omit [OmegaQuasiBorelSpace X] in
 @[simp]

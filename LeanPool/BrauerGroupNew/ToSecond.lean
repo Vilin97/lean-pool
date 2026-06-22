@@ -696,9 +696,6 @@ lemma conjFactor_linearIndependent (x_ : Π σ, A.conjFactor σ) :
   subst eq7
   exact hσ τ.2
 
-private lemma conjFactor_linearIndependent_boundary : True := by
-  trivial
-
 variable [IsGalois F K] in
 /-- The basis of a good representative obtained from conjugating units. -/
 def conjFactorBasis (x_ : Π σ, A.conjFactor σ) : Basis Gal(K, F) K A :=

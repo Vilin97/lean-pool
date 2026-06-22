@@ -390,8 +390,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
     -- Robust proof without external lemma names: |Im z|^2 ≤ ‖z‖^2
     have habs_sq : |(f x).im| ^ 2 = ((f x).im) ^ 2 := by
       simp [pow_two]
-    have hineq : ((f x).im) ^ 2 ≤ (f x).re ^ 2 + (f x).im ^ 2 := by
-      exact le_add_of_nonneg_left (sq_nonneg _)
+    have hineq : ((f x).im) ^ 2 ≤ (f x).re ^ 2 + (f x).im ^ 2 := le_add_of_nonneg_left (sq_nonneg _)
     have hnorm_sq : ‖f x‖ ^ 2 = (f x).re ^ 2 + (f x).im ^ 2 := by
       simpa [Complex.normSq_apply, pow_two] using (Complex.sq_norm (f x))
     have hsq : |(f x).im| ^ 2 ≤ ‖f x‖ ^ 2 := by simpa [habs_sq, hnorm_sq] using hineq
@@ -414,8 +413,7 @@ lemma covariance_imaginary_L2_bound (m : ℝ) [Fact (0 < m)] (f : TestFunction�
   calc (freeCovarianceℂBilinear m (toComplex fIm) (toComplex fIm)).re
       ≤ (1 / m^2) * (∫ k, ‖F k‖^2 ∂volume) := this
     _ = (1 / m^2) * ∫ x, ‖(toComplex fIm) x‖^2 ∂volume := by simp [h_plancherel]
-    _ ≤ (1 / m^2) * ∫ x, ‖f x‖^2 ∂volume := by
-          exact mul_le_mul_of_nonneg_left h_imag_bound (by positivity)
+    _ ≤ (1 / m^2) * ∫ x, ‖f x‖^2 ∂volume := mul_le_mul_of_nonneg_left h_imag_bound (by positivity)
 
 
 /-- The GFF generating functional satisfies the exponential bound
@@ -519,8 +517,7 @@ theorem gaussianFreeField_satisfies_OS1_revised (m : ℝ) [Fact (0 < m)] :
         exact integral_nonneg hpt
       have hcpos : 0 ≤ (1 / (2 * m^2)) := by positivity
       -- Use `add_nonneg` and rearrange
-      have hadd : (1 / (2 * m^2)) * ∫ x, ‖f x‖ ∂volume ≥ 0 := by
-        exact mul_nonneg hcpos hI1_nonneg
+      have hadd : (1 / (2 * m^2)) * ∫ x, ‖f x‖ ∂volume ≥ 0 := mul_nonneg hcpos hI1_nonneg
       calc (1 / (2 * m^2)) * ∫ x, ‖f x‖^(2:ℝ) ∂volume
         _ ≤ (1 / (2 * m^2)) * ∫ x, ‖f x‖^(2:ℝ) ∂volume + (1 / (2 * m^2)) * ∫ x, ‖f x‖ ∂volume :=
             le_add_of_nonneg_right hadd

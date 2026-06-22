@@ -443,13 +443,11 @@ def Subalgebra.conj (B : Subalgebra F A) (x : Aˣ) : Subalgebra F A where
   mul_mem' := by
     rintro _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩
     exact ⟨b * c, B.mul_mem hb hc, by simp [mul_assoc]⟩
-  one_mem' := by
-    exact ⟨1, B.one_mem, by simp⟩
+  one_mem' := ⟨1, B.one_mem, by simp⟩
   add_mem' := by
     rintro _ _ ⟨b, hb, rfl⟩ ⟨c, hc, rfl⟩
     exact ⟨b + c, B.add_mem hb hc, by simp [mul_add, add_mul]⟩
-  zero_mem' := by
-    exact ⟨0, B.zero_mem, by simp⟩
+  zero_mem' := ⟨0, B.zero_mem, by simp⟩
   algebraMap_mem' := by
     intro c
     refine ⟨algebraMap _ _ c, B.algebraMap_mem c, ?_⟩
@@ -621,20 +619,14 @@ open FiniteDimensional
 
 instance :
     Algebra.IsCentral F (Matrix (Fin (Module.finrank F B)) (Fin (Module.finrank F B)) F) := by
-  haveI : NeZero (Module.finrank F B) := by
-    have : 0 < Module.finrank F B := Module.finrank_pos
-    constructor
-    omega
+  haveI : NeZero (Module.finrank F B) := ⟨Module.finrank_pos.ne'⟩
   infer_instance
 
 instance : Algebra.IsCentral F (Module.End F B) :=
   algEquivMatrix (Module.finBasis F B) |>.symm.isCentral
 
 instance : IsSimpleRing (Module.End F B) := by
-  haveI : NeZero (Module.finrank F B) := by
-    have : 0 < Module.finrank F B := Module.finrank_pos
-    constructor
-    omega
+  haveI : NeZero (Module.finrank F B) := ⟨Module.finrank_pos.ne'⟩
   constructor
   rw [TwoSidedIdeal.orderIsoOfRingEquiv
     (algEquivMatrix (Module.finBasis F B) |>.toRingEquiv) |>.isSimpleOrder_iff]
@@ -769,10 +761,9 @@ lemma step1 {ι : Type*} (ℬ : Basis ι F <| Module.End F B) :
       exact hx ⟨z, hz⟩
   have eq2 := congr(Subalgebra.centralizer F $(eq1).carrier)
   erw [centralizer_inclusionLeft (𝒜' := ℬ)] at eq2
-  have temp := Subalgebra.conj_centralizer' (F := F) (A := A ⊗[F] Module.End F B)
+  rw [Subalgebra.conj_centralizer' (F := F) (A := A ⊗[F] Module.End F B)
     (B := (Algebra.TensorProduct.includeRight (R := F) (A := A) (B := Module.End F B) |>.comp
-          (Module.End.leftMul F B).val).range) (x := x)
-  rw [temp] at eq2; clear temp
+          (Module.End.leftMul F B).val).range) (x := x)] at eq2
   rw [centralizer_inclusionRight (𝒜 := Module.finBasis F A)] at eq2
   rw [centralizer_mulLeft] at eq2
   rw [← eq2]

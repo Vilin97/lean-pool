@@ -62,8 +62,8 @@ noncomputable section
 of the real integral. -/
 theorem integral_ofReal_eq {α} [MeasurableSpace α] (μ : Measure α) (h : α → ℝ)
   (_hf : Integrable h μ) :
-  ∫ x, (h x : ℂ) ∂μ = Complex.ofReal (∫ x, h x ∂μ) := by
-  exact integral_complex_ofReal
+  ∫ x, (h x : ℂ) ∂μ = Complex.ofReal (∫ x, h x ∂μ) :=
+  integral_complex_ofReal
 
 
 /-- Helper lemma: Schwartz functions are L²-integrable. -/
@@ -80,16 +80,14 @@ lemma schwartz_L2_integrable (f : TestFunctionℂ) :
 constant. -/
 theorem integral_const_mul {α} [MeasurableSpace α] (μ : Measure α) (c : ℝ)
   (f : α → ℝ) (hf : Integrable f μ) :
-  Integrable (fun x => c * f x) μ := by
-  exact MeasureTheory.Integrable.const_mul hf c
+  Integrable (fun x => c * f x) μ :=
+  MeasureTheory.Integrable.const_mul hf c
 
 /-- Helper theorem: Integral of a real constant multiple pulls out of the integral. -/
 theorem integral_const_mul_eq {α} [MeasurableSpace α] (μ : Measure α) (c : ℝ)
-  (f : α → ℝ) (hf : Integrable f μ) :
-  ∫ x, c * f x ∂ μ = c * ∫ x, f x ∂ μ := by
-  -- The integrability assumption ensures both integrals are well-defined
-  have := hf  -- Acknowledge we need integrability for the integral to be well-defined
-  exact MeasureTheory.integral_const_mul c f
+  (f : α → ℝ) (_hf : Integrable f μ) :
+  ∫ x, c * f x ∂ μ = c * ∫ x, f x ∂ μ :=
+  MeasureTheory.integral_const_mul c f
 
 /-- Helper theorem: Monotonicity of the real integral for pointwise ≤ between nonnegative functions,
     assuming the larger one is integrable.
@@ -97,8 +95,8 @@ theorem integral_const_mul_eq {α} [MeasurableSpace α] (μ : Measure α) (c : �
 theorem real_integral_mono_of_le
   {α} [MeasurableSpace α] (μ : Measure α) (f g : α → ℝ)
   (hg : Integrable g μ) (hf_nonneg : ∀ x, 0 ≤ f x) (hle : ∀ x, f x ≤ g x) :
-  ∫ x, f x ∂ μ ≤ ∫ x, g x ∂ μ := by
-  exact MeasureTheory.integral_mono_of_nonneg (ae_of_all _ hf_nonneg) hg (ae_of_all _ hle)
+  ∫ x, f x ∂ μ ≤ ∫ x, g x ∂ μ :=
+  MeasureTheory.integral_mono_of_nonneg (ae_of_all _ hf_nonneg) hg (ae_of_all _ hle)
 
 /-! ## Free Covariance in Euclidean QFT
 
@@ -141,10 +139,8 @@ noncomputable def freePropagatorMomentumMathlib (m : ℝ) (k : SpaceTime) : ℝ 
 /-- The Mathlib propagator is positive for m > 0. -/
 lemma freePropagatorMomentum_mathlib_pos (m : ℝ) (hm : 0 < m) (k : SpaceTime) :
     0 < freePropagatorMomentumMathlib m k := by
-  simp only [freePropagatorMomentumMathlib]
-  apply div_pos one_pos
-  have h1 : 0 ≤ (2 * Real.pi)^2 * ‖k‖^2 := by positivity
   have h2 : 0 < m^2 := sq_pos_of_pos hm
+  simp only [freePropagatorMomentumMathlib]
   positivity
 
 /-- The Mathlib propagator is non-negative. -/
@@ -914,8 +910,7 @@ theorem fubini_schwinger_fourier (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m
           ring
       _ = (↑(Real.exp (-t * m^2) / normalisation) : ℂ) *
             ∫ k : SpaceTime, ↑(Real.exp (-(α + t) * ‖k‖^2)) *
-              Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ) := by
-          exact MeasureTheory.integral_const_mul _ _
+              Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ) := MeasureTheory.integral_const_mul _ _
       _ = (↑(Real.exp (-t * m^2) / normalisation) : ℂ) *
             ∫ k : SpaceTime, Complex.exp (-↑(α + t) * ‖k‖^2) *
               Complex.exp (-Complex.I * ⟪k, x - y⟫_ℝ) := by
@@ -969,22 +964,9 @@ theorem fubini_schwinger_fourier (α : ℝ) (hα : 0 < α) (m : ℝ) (hm : 0 < m
       rw [abs_of_nonneg (mul_nonneg h_exp_nonneg h_heat_nonneg)]
       rw [abs_of_nonneg (mul_nonneg h_exp_nonneg (le_of_lt hCpos))]
       exact mul_le_mul_of_nonneg_left (hCbound (α + t) hαt) h_exp_nonneg
-  -- For the final equality, we use that both compute the same real integral
-  -- The LHS integral after Fubini equals ∫_t exp(-tm²) H(α+t, r) dt
-  -- This is exactly the RHS by definition
-  -- Due to the complexity of the formal Fubini manipulation,
-  -- we use the key mathematical ingredients established above
-  -- The proof follows from:
-  -- 1. h_schwinger gives the Schwinger representation
-  -- 2. h_combine shows exponent factorization
-  -- 3. h_gaussFT evaluates the k-integral
-  -- 4. h_int justifies Fubini
-  -- 5. h_inner_k combines these for each t
-  -- The formal Fubini step with complex integrals
-  -- involves showing the iterated integral matches
-  -- Since the inner k-integral (h_inner_k) gives a real-valued result,
-  -- and the t-integral matches covarianceSchwingerRegulated by definition,
-  -- the equality holds.
+  -- The LHS integral after Fubini equals ∫_t exp(-tm²) H(α+t, r) dt, which is the RHS.
+  -- Ingredients: h_schwinger (Schwinger rep), h_combine (exponent factorization),
+  -- h_gaussFT (k-integral), h_int (Fubini), h_inner_k (combination per t).
   -- Step 1: Substitute Schwinger representation
   have h_lhs_step1 : (∫ k : SpaceTime,
     ↑(Real.exp (-α * ‖k‖^2) * freePropagatorMomentum m k / normalisation) *
@@ -1524,8 +1506,7 @@ lemma aestronglyMeasurable_freeCovariance_regulated (α : ℝ) (hα : 0 < α) (m
             · apply mul_le_mul_of_nonneg_left h_prop_bound (Real.exp_nonneg _)
             · positivity
         _ = Real.exp (-α * ‖k‖ ^ 2) / (m^2 * (2 * Real.pi) ^ STDimension) := by ring
-    have h_bound_int : Integrable bound volume := by
-      exact (gaussian_regulator_integrable' α hα).div_const _
+    have h_bound_int : Integrable bound volume := (gaussian_regulator_integrable' α hα).div_const _
     have h_cont_k : ∀ᵐ k ∂volume, Continuous fun p => F p k := by
       apply Filter.Eventually.of_forall
       intro k
@@ -1790,69 +1771,8 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
       push Not at hmr_small
       have hmr_ge : 1 ≤ m * ‖z‖ := le_of_lt hmr_small
       have h_bessel_bound := besselK1_asymptotic (m * ‖z‖) hmr_ge
-      -- For mr > 1, we have exp(-mr) < exp(-1), and we need to show
-      -- (m/(4π²r)) · (sinh(1) + 2) · exp(-mr) ≤ C/r²
-      -- Since exp(-mr) ≤ 1 and m/r ≤ m²/(mr) = m²/1 ≤ m² when r ≥ 1/m, we have
-      -- (m/(4π²r)) · (sinh(1) + 2) · exp(-mr) ≤ (sinh(1) + 2) · m · exp(-1) / (4π² r)
-      -- We need this ≤ C/r². This requires r ≤ (cosh(1)+2)/((sinh(1)+2) · m · e⁻¹)
-      -- But we can use a simpler bound: for r > 1/m, mr > 1 so exp(-mr) < 1/(mr)²
-      -- Actually, let's use: for any z ≥ 1, K₁(z) ≤ K₁(1) since K₁ is decreasing
-      -- And K₁(1) ≤ cosh(1) + 2 by besselK1_mul_self_le (z·K₁(z) ≤ cosh(1)+2 for z≤1)
-      -- Wait, we need a bound that works for all z. Let me use a simpler approach.
-      -- For z ≥ 1: K₁(z) ≤ (sinh(1)+2)·exp(-z) ≤ (sinh(1)+2)·exp(-1) < sinh(1)+2
-      -- So K₁(mr) ≤ (sinh(1)+2)·exp(-1) for mr ≥ 1
-      -- Then (m/(4π²r))·K₁(mr) ≤ (m/(4π²r))·(sinh(1)+2)·exp(-1) = (sinh(1)+2)·exp(-1)·m/(4π²r)
-      -- For r > 1/m: m/r < m² (since r > 1/m), so this ≤ (sinh(1)+2)·exp(-1)·m²/(4π²)
-      -- But we need ≤ C/r². Since r > 1/m, we have 1/r² < m²
-      -- So if (sinh(1)+2)·exp(-1)/(4π²) ≤ C = (cosh(1)+2)/(4π²), which needs
-      -- (sinh(1)+2)·exp(-1) ≤ cosh(1)+2. Since exp(-1) < 1 and sinh(1) < cosh(1), this holds.
-      -- But we need a tighter argument. Let's use the fact that for mr ≥ 1:
-      -- K₁(mr) ≤ (cosh(1)+2)/(mr) · (mr) · K₁(mr) / (cosh(1)+2)
-      -- Hmm, this is getting complicated. Let me just use: for mr ≥ 1,
-      -- exp(-(mr)) ≤ exp(-1) < 1, and (m/r) · exp(-mr) ≤ m · exp(-1) · (mr)/(mr·r) = exp(-1)/r
-      -- Wait, let me think more carefully.
-      -- We have K₁(mr) ≤ (sinh(1)+2) · exp(-mr)
-      -- So (m/(4π²r)) · K₁(mr) ≤ (sinh(1)+2) · m · exp(-mr) / (4π²r)
-      -- Now exp(-mr)/r = exp(-mr)/r. For r ≥ 1/m, mr ≥ 1.
-      -- The function f(r) = exp(-mr)/r for r ≥ 1/m has f(1/m) = exp(-1) · m
-      -- and is decreasing, so f(r) ≤ exp(-1) · m for all r ≥ 1/m.
-      -- Thus (m/(4π²r)) · K₁(mr) ≤ (sinh(1)+2) · m · exp(-1) · m / (4π²) = (sinh(1)+2) · m² ·
-      -- exp(-1) / (4π²)
-      -- But this gives a bound independent of r, not 1/r². We need 1/r².
-      -- Key insight: for r ≥ 1/m, we have 1/r ≤ m and 1/r² ≤ m². So the bound we computed
-      -- (sinh(1)+2) · m² · exp(-1) / (4π²) ≤ (sinh(1)+2) · exp(-1) / (4π² · (1/m)²) = (sinh(1)+2) ·
-      -- exp(-1) · m² / (4π²)
-      -- doesn't help directly. Let me try another approach.
-      --
-      -- For the 1/r² bound, we note that for r ≥ 1/m:
-      -- (m/r) · exp(-mr) / r = m · exp(-mr) / r²
-      -- The function g(r) = m · exp(-mr) achieves max at r = 0 where it's m, and at r = 1/m it's
-      -- m·exp(-1).
-      -- So m · exp(-mr) ≤ m for all r ≥ 0.
-      -- Thus (m/r) · (sinh(1)+2) · exp(-mr) / (4π²) = (sinh(1)+2) · m · exp(-mr) / (4π² r)
-      --                                            ≤ (sinh(1)+2) · m · 1 / (4π² r)
-      --                                            = (sinh(1)+2) · m / (4π² r)
-      -- For r ≥ 1/m, m/r ≤ m² / (mr) ≤ m². So this ≤ (sinh(1)+2) · m² / (4π²).
-      -- Still not 1/r². The issue is that the bound needs to work for all r > 0.
-      --
-      -- Let's use a different approach: bound (m/r) · K₁(mr) by something proportional to 1/r.
-      -- For mr ≤ 1: K₁(mr) ≤ (cosh(1)+2)/(mr), so (m/r) · K₁(mr) ≤ (cosh(1)+2)/r² ✓
-      -- For mr > 1: K₁(mr) ≤ (sinh(1)+2) · exp(-mr). Note that exp(-mr) < 1/(e·mr) for mr > 1.
-      --             Actually, exp(-x) ≤ 1/x for x ≥ 1 (since e^x ≥ ex for x ≥ 1).
-      --             Wait, e^x ≥ x for all x, so exp(-x) ≤ 1/x only for x ≥ 0 where 1/x ≥ e^{-x}.
-      --             For x = 1: e^{-1} ≈ 0.368, 1/1 = 1 ✓. For x = 2: e^{-2} ≈ 0.135, 1/2 = 0.5 ✓.
-      --             Actually, e^x ≥ x+1, so for x ≥ 1: e^x ≥ x, hence e^{-x} ≤ 1/x when e^x ≥ x,
-      -- i.e., always.
-      --             Wait no, e^x ≥ x for x ≥ 0, so e^{-x} ≤ 1/x iff x ≤ e^x, which is true for x ≥
-      -- 0.
-      --             So for mr ≥ 1: exp(-mr) ≤ 1/(mr).
-      --             Thus K₁(mr) ≤ (sinh(1)+2)/(mr).
-      --             Hence (m/r) · K₁(mr) ≤ (m/r) · (sinh(1)+2)/(mr) = (sinh(1)+2)/r².
-      -- So the bound (cosh(1)+2)/r² works for mr ≤ 1, and (sinh(1)+2)/r² works for mr > 1.
-      -- Since cosh(1) > sinh(1) (cosh is even, sinh is odd, both positive for x > 0),
-      -- we have cosh(1) + 2 > sinh(1) + 2, so C = (cosh(1)+2)/(4π²) works for both cases!
-      --
-      -- Let me formalize the bound exp(-x) ≤ 1/x for x ≥ 1:
+      -- For mr ≥ 1: exp(-mr) ≤ 1/(mr), so K₁(mr) ≤ (sinh 1 + 2)/(mr), giving the 1/r² bound.
+      -- Since cosh 1 + 2 > sinh 1 + 2, the constant C works for both cases.
       have hmr_pos : 0 < m * ‖z‖ := by positivity
       have h_exp_bound : Real.exp (-(m * ‖z‖)) ≤ 1 / (m * ‖z‖) := by
         rw [one_div]
@@ -1861,8 +1781,7 @@ lemma freeCovarianceKernel_decay_bound (m : ℝ) (hm : 0 < m) :
           have := add_one_le_exp (m * ‖z‖)
           linarith
         -- Invert the inequality (anti-monotonicity of inverse)
-        have h2 : (Real.exp (m * ‖z‖))⁻¹ ≤ (m * ‖z‖)⁻¹ := by
-          exact inv_anti₀ hmr_pos h1
+        have h2 : (Real.exp (m * ‖z‖))⁻¹ ≤ (m * ‖z‖)⁻¹ := inv_anti₀ hmr_pos h1
         calc Real.exp (-(m * ‖z‖)) = (Real.exp (m * ‖z‖))⁻¹ := by rw [Real.exp_neg]
           _ ≤ (m * ‖z‖)⁻¹ := h2
       have h_K_bound : besselK1 (m * ‖z‖) ≤ (Real.sinh 1 + 2) / (m * ‖z‖) := by
@@ -2094,10 +2013,6 @@ lemma freePropagator_complex_smooth (m : ℝ) [Fact (0 < m)] :
   · exact ofRealCLM.contDiff
   · exact freePropagator_smooth m
 
---   - iteratedFDeriv_freePropagator_polynomial_bound
---   - theorem freePropagator_temperate_growth
---   - theorem schwartz_mul_by_temperate
-
 /-- The free propagator is positive -/
 lemma freePropagator_pos {m : ℝ} [Fact (0 < m)] (k : SpaceTime) : 0 < freePropagatorMomentum m k :=
   by
@@ -2122,29 +2037,10 @@ lemma freePropagator_bounded {m : ℝ} [Fact (0 < m)] (k : SpaceTime) :
 /-- The free propagator is continuous -/
 lemma freePropagator_continuous {m : ℝ} [Fact (0 < m)] :
   Continuous (freePropagatorMomentum m) := by
-  -- This follows from continuity of the norm function and division
-  -- since the denominator ‖k‖² + m² is never zero
   unfold freePropagatorMomentum
-  apply Continuous.div
-  · exact continuous_const
-  · apply Continuous.add
-    · exact continuous_norm.pow 2
-    · exact continuous_const
-  · intro k
-    apply ne_of_gt
-    apply add_pos_of_nonneg_of_pos
-    · exact sq_nonneg ‖k‖
-    · exact pow_pos (Fact.out : 0 < m) 2
-
-
--- Note: The propagator is not globally L¹ in d ≥ 2, but it is integrable on every closed ball.
-
--- (Integrability facts for the propagator on bounded sets can be added here if/when needed.)
-
-
-
---   propagatorMultiplication_bounded_schwartz (~150 lines)
-
+  apply Continuous.div continuous_const ((continuous_norm.pow 2).add continuous_const)
+  intro k
+  exact ne_of_gt (add_pos_of_nonneg_of_pos (sq_nonneg ‖k‖) (pow_pos (Fact.out : 0 < m) 2))
 
 /-! ## Complex conjugation properties of the propagator -/
 

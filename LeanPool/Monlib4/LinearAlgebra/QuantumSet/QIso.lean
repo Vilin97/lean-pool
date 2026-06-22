@@ -89,8 +89,8 @@ by
   simp_rw [Coalgebra.comul_eq_mul_adjoint, Coalgebra.counit_eq_unit_adjoint]
   nth_rw 1 [← LinearMap.adjoint_adjoint (LinearMap.mul' ℂ B₂)]
   nth_rw 1 [← LinearMap.adjoint_adjoint (Algebra.linearMap ℂ B₁)]
-  simp_rw [← LinearMap.adjoint_comp, ← LinearMap.lTensor_adjoint, ← LinearMap.rTensor_adjoint]
-  simp_rw [← TensorProduct.lid_adjoint, ← TensorProduct.assoc_adjoint]
+  simp_rw [← LinearMap.adjoint_comp, ← LinearMap.lTensor_adjoint, ← LinearMap.rTensor_adjoint,
+    ← TensorProduct.lid_adjoint, ← TensorProduct.assoc_adjoint]
   nth_rw 4 [← TensorProduct.assoc_symm_adjoint]
   nth_rw 3 [← TensorProduct.assoc_symm_adjoint]
   simp_rw [← LinearMap.adjoint_comp, ← LinearMap.rTensor_adjoint]

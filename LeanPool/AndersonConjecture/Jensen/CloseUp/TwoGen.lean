@@ -249,10 +249,7 @@ theorem close_up_two_gen
     set y₁_S := (⟨(y₁ : T), hle y₁.2⟩ : S.carrier)
     set y₂_S := (⟨(y₂ : T), hle y₂.2⟩ : S.carrier)
     have hc_eq : (⟨(c : T), hle c.2⟩ : S.carrier) = x₁ * y₁_S + x₂ * y₂_S := by
-      have : (⟨(c : T), hle c.2⟩ : S.carrier) - x₁ * y₁_S = x₂ * y₂_S := by
-        rw [hx₂, mul_comm]
-      rw [add_comm]
-      exact (sub_eq_iff_eq_add.mp this)
+      linear_combination hx₂
     rw [hc_eq]
     exact Ideal.add_mem _
       (Ideal.mul_mem_left _ x₁ (Ideal.subset_span (Set.mem_insert _ _)))

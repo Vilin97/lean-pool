@@ -161,8 +161,7 @@ private theorem phi1D_eq_oneDimPhi_wip
         ((Nat.factorial j : ℂ) * (Nat.choose n j : ℂ)) * (Nat.factorial (n - j) : ℂ)
             = (Nat.choose n j : ℂ) * (Nat.factorial j : ℂ) *
                 (Nat.factorial (n - j) : ℂ) := by ring
-        _ = (Nat.factorial n : ℂ) := by
-            exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
+        _ = (Nat.factorial n : ℂ) := by exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
         _ = ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ)) *
               (Nat.factorial (n - j) : ℂ) := by
             field_simp [hfac_ne]
@@ -204,8 +203,7 @@ private lemma integrable_oneDimPhi_cross_gaussian_wip
       (fun z : Cd 1 => HermitekLEAN.Phi k m (z 0) *
         (starRingEnd ℂ) (HermitekLEAN.Phi k n (z 0)))
       (gammaD 1)
-  rw [gammaD]
-  rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+  rw [gammaD, MeasureTheory.integrable_withDensity_iff_integrable_smul']
   · have hcross :
         Integrable
           (fun z : Cd 1 =>
@@ -412,8 +410,7 @@ private theorem memLp_two_defectFunctionPkappa_wip
           2 * ‖evalPkappa kappa (F + G) z‖ ^ 2 + 2 * ‖evalPkappa kappa F z‖ ^ 2 := by
         nlinarith [sq_nonneg (‖evalPkappa kappa (F + G) z‖ + ‖evalPkappa kappa F z‖)]
       simpa [sq_abs] using this
-    have hnonneg : 0 ≤ defectFunctionPkappa_wip kappa F G z ^ 2 := by
-      positivity
+    have hnonneg : 0 ≤ defectFunctionPkappa_wip kappa F G z ^ 2 := by positivity
     simpa [Real.norm_eq_abs, abs_of_nonneg hnonneg] using hsqz
   simpa [Real.norm_eq_abs, abs_of_nonneg] using
     MeasureTheory.Integrable.mono' hsq hmeasSq hbound
@@ -448,8 +445,7 @@ private lemma evalPkappa_pointwise_bound_wip
     unfold defectFunctionPkappa_wip
     exact sub_le_iff_le_add.mp (le_abs_self _)
   calc
-    ‖evalPkappa kappa G z‖ = ‖evalPkappa kappa (F + G) z - evalPkappa kappa F z‖ := by
-      rw [hsub]
+    ‖evalPkappa kappa G z‖ = ‖evalPkappa kappa (F + G) z - evalPkappa kappa F z‖ := by rw [hsub]
     _ ≤ ‖evalPkappa kappa (F + G) z‖ + ‖evalPkappa kappa F z‖ := norm_sub_le _ _
     _ ≤ defectFunctionPkappa_wip kappa F G z + ‖evalPkappa kappa F z‖ + ‖evalPkappa kappa F z‖ := by
           linarith
@@ -544,18 +540,15 @@ theorem orthogonal_coercivity
     exact mul_nonneg (le_of_lt hC_F_perp_pos) (defect_nonneg_wip hd F 0)
   · let t : ℝ := ‖G‖
     let H : Pk := (((t : ℂ)⁻¹) : ℂ) • G
-    have ht_ne : t ≠ 0 := by
-      exact norm_ne_zero_of_ne_zero_pkappa_wip hd hG
-    have ht_pos : 0 < t := by
-      exact lt_of_le_of_ne (norm_nonneg_pkappa_wip hd G) ht_ne.symm
+    have ht_ne : t ≠ 0 := by exact norm_ne_zero_of_ne_zero_pkappa_wip hd hG
+    have ht_pos : 0 < t := by exact lt_of_le_of_ne (norm_nonneg_pkappa_wip hd G) ht_ne.symm
     have hH_orth : OrthogonalToPk kappa F H := by
       simpa [OrthogonalToPk, H] using
         orthogonalToPk_smul_right_wip hd F G (((t : ℂ)⁻¹) : ℂ) horth
     have hH_norm : ‖H‖ = 1 := by
       dsimp [H, t]
       rw [norm_smul_pkappa_wip hd]
-      have htinv : t⁻¹ * t = 1 := by
-        field_simp [ht_ne]
+      have htinv : t⁻¹ * t = 1 := by field_simp [ht_ne]
       simpa [Complex.norm_real, Real.norm_eq_abs, abs_of_pos ht_pos,
         abs_of_nonneg (inv_nonneg.mpr (le_of_lt ht_pos)), t] using htinv
     have hG_eq : G = t • H := by

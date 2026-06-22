@@ -274,9 +274,7 @@ instance [Preorder A] : Preorder (Rose A) where
     cases v with | mk _ zs =>
     simp only [le_mk] at ⊢ h₁ h₂
     apply And.intro
-    · trans
-      · apply h₁.1
-      · apply h₂.1
+    · exact h₁.1.trans h₂.1
     · induction xs generalizing ys zs with
       | nil =>
         simp_all only [

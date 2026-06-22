@@ -166,16 +166,7 @@ lemma freeCovarianceFormR_reflection_matrix_posSemidef
           c j • (f j).val) := by
         congr 1
         ext i
-        -- The goal after ext is to show:
-        -- ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j = c i * freeCovarianceFormR m (θf_i)
-        -- (∑ j, c j • f_j)
-        -- This follows by factoring out c i and applying h_right i
-        -- Goal: ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j = c i * freeCovarianceFormR m
-        -- (θf_i) (∑ j, c j • f_j)
-        -- We need to rewrite: ∑ j, c i * freeCovarianceFormR m (θf_i) (f_j) * c j
-        -- as: c i * ∑ j, freeCovarianceFormR m (θf_i) (f_j) * c j
-        -- Then apply h_right i
-        -- The key insight: we can rewrite each term using mul_assoc and then factor out c i
+        -- Factor out c i (via mul_assoc + Finset.mul_sum), then apply h_right i.
         conv_lhs =>
           rw [show ∑ j,
             c i * freeCovarianceFormR m (QFT.compTimeReflectionReal (f i).val) (f j).val * c j =
@@ -227,8 +218,7 @@ lemma freeCovarianceFormR_reflection_expansion
     intro u v
     calc
       freeCovarianceFormR m u (-v)
-          = freeCovarianceFormR m (-v) u := by
-              exact freeCovarianceFormR_symm m u (-v)
+          = freeCovarianceFormR m (-v) u := freeCovarianceFormR_symm m u (-v)
       _ = -freeCovarianceFormR m v u := h_neg_left v u
       _ = -freeCovarianceFormR m u v := by
             simp [freeCovarianceFormR_symm]
@@ -251,8 +241,7 @@ lemma freeCovarianceFormR_reflection_expansion
       simpa [sub_eq_add_neg, θg] using h_add
     calc
       freeCovarianceFormR m f (f - θg)
-          = freeCovarianceFormR m (f - θg) f := by
-              exact freeCovarianceFormR_symm m f (f - θg)
+          = freeCovarianceFormR m (f - θg) f := freeCovarianceFormR_symm m f (f - θg)
       _ = freeCovarianceFormR m f f
             + freeCovarianceFormR m (-θg) f := h_add'
       _ = Cf + (-freeCovarianceFormR m θg f) := by
@@ -281,13 +270,11 @@ lemma freeCovarianceFormR_reflection_expansion
       calc
         freeCovarianceFormR m (-θg) (-θg)
             = -freeCovarianceFormR m θg (-θg) := h₁'
-        _ = -(-freeCovarianceFormR m θg θg) := by
-              exact neg_inj.mpr h₂'
+        _ = -(-freeCovarianceFormR m θg θg) := neg_inj.mpr h₂'
         _ = freeCovarianceFormR m θg θg := by simp
     calc
       freeCovarianceFormR m (-θg) (f - θg)
-          = freeCovarianceFormR m (f - θg) (-θg) := by
-              exact freeCovarianceFormR_symm m (-θg) (f - θg)
+          = freeCovarianceFormR m (f - θg) (-θg) := freeCovarianceFormR_symm m (-θg) (f - θg)
       _ = freeCovarianceFormR m f (-θg)
             + freeCovarianceFormR m (-θg) (-θg) := h_add'
       _ = -freeCovarianceFormR m f θg
@@ -409,8 +396,7 @@ lemma gaussianFreeField_real_entry_factor
         -- Exponential of sums factorises; use `Real.exp_add` twice
         calc
         Real.exp (-(1 / 2 : ℝ) * (Cf + Cg - 2 * Cfg))
-          = Real.exp (A + Cfg) := by
-              exact Real.exp_eq_exp.mpr h_factor
+          = Real.exp (A + Cfg) := Real.exp_eq_exp.mpr h_factor
         _ = Real.exp A * Real.exp Cfg := by
               simp [Real.exp_add]
         _ =

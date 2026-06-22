@@ -47,14 +47,12 @@ abbrev pure [DecidableEq α] (i : α) : stdSimplex k α := ⟨fun j => if i = j 
 
 variable {k α} in
 lemma pure_eval_eq [DecidableEq α] {i j : α} (h : i = j) : pure i j = (1 : k) := by
-  unfold pure
   rw [← funlike_eval2]
   simp [h]
 
 
 variable {k α} in
 lemma pure_eval_neq [DecidableEq α] {i j : α} (h : ¬ i = j) : pure i j = (0 : k) := by
-  unfold pure
   rw [← funlike_eval2]
   simp [h]
 
@@ -78,9 +76,7 @@ lemma wsum_magic_ineq [PosMulMono k]
     have h_exists_pos : ∃ i, 0 < σ i := by
       by_contra h_all_zero
       push Not at h_all_zero
-      have h_all_eq_zero : ∀ i, σ i = 0 := by
-        intro i
-        exact le_antisymm (h_all_zero i) (σ.2.1 i)
+      have h_all_eq_zero : ∀ i, σ i = 0 := fun i => le_antisymm (h_all_zero i) (σ.2.1 i)
       have h_sum_zero : ∑ i, σ i = 0 := by simp [h_all_eq_zero]
       have h_sum_one : ∑ i, σ i = 1 := σ.2.2
       rw [h_sum_zero] at h_sum_one

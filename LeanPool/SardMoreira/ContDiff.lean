@@ -188,8 +188,8 @@ theorem OpenPartialHomeomorph.injective_fderiv_symm (f : OpenPartialHomeomorph E
 
 theorem OpenPartialHomeomorph.contDiffAt_symm' [CompleteSpace E] (f : OpenPartialHomeomorph E F)
     {a : F} (ha : a ∈ f.target) (hf' : (fderiv 𝕜 f (f.symm a)).IsInvertible)
-    (hf : ContDiffAt 𝕜 n f (f.symm a)) : ContDiffAt 𝕜 n f.symm a := by
-  exact f.contDiffAt_symm ha hf'.hasFDerivAt hf
+    (hf : ContDiffAt 𝕜 n f (f.symm a)) : ContDiffAt 𝕜 n f.symm a :=
+  f.contDiffAt_symm ha hf'.hasFDerivAt hf
 
 theorem iteratedFDeriv_one_eq (f : E → F) (x : E) :
     iteratedFDeriv 𝕜 1 f x = (continuousMultilinearCurryFin1 𝕜 E F).symm (fderiv 𝕜 f x) := by

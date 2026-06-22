@@ -195,8 +195,7 @@ instance instIsEmptyZero : IsEmpty (pDiskBoundary 0 p) where
 lemma neq_zero (x : pDiskBoundary n p) : x.down.val ≠ 0 := fun xz ↦ by
   have x0 : ‖x.down.val‖ = 0 := by rw [xz]; apply norm_zero
   have x1 : ‖x.down.val‖ = 1 := by
-    have := x.down.property
-    simp only [mem_sphere_iff_norm, sub_zero] at this; exact this
+    simpa only [mem_sphere_iff_norm, sub_zero] using x.down.property
   exact (by norm_num : (0 : ℝ) ≠ 1) (x0.symm.trans x1)
 
 /-- `toQDiskBoundary` -/

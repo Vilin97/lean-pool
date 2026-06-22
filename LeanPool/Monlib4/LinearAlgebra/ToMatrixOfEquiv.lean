@@ -149,8 +149,7 @@ theorem OrthonormalBasis.std_toMatrix {n : Type _} [Fintype n] [DecidableEq n] :
   by
   change ((EuclideanSpace.orthonormalBasis n 𝕜).toMatrix.toAlgEquiv.symm).toLinearEquiv
     = Matrix.toEuclideanLin
-  rw [← orthonormalBasis_toMatrix_eq_basis_toMatrix]
-  rw [Matrix.toEuclideanLin_eq_toLin_orthonormal]
+  rw [← orthonormalBasis_toMatrix_eq_basis_toMatrix, Matrix.toEuclideanLin_eq_toLin_orthonormal]
   rfl
 
 namespace LinearEquiv

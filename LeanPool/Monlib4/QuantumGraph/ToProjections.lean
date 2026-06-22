@@ -115,8 +115,7 @@ theorem isReal_and_idempotent_iff_psi_orthogonal_projection
   rw [← schurIdempotent_iff_Psi_isIdempotentElem A 0 (1 / 2)]
   convert (and_congr_right ?_) using 1
   intro _
-  rw [isReal_iff_Psi_isSelfAdjoint A]
-  rw [show QuantumSet.k ℍ = 0 by rfl]
+  rw [isReal_iff_Psi_isSelfAdjoint A, show QuantumSet.k ℍ = 0 by rfl]
   norm_num
 
 end Qam
@@ -220,9 +219,8 @@ theorem rankOne_psi_transpose_to_lin {n : Type _} [DecidableEq n] [Fintype n]
     LinearEquiv.coe_coe, transposeAlgEquiv_symm_op_apply]
   rw [starAlgebra.modAut_zero, this]
   simp only [AlgEquiv.one_apply]
-  rw [show modAut (1 / 2) y = hφ.sig (1 / 2) y by rfl]
-  rw [Matrix.star_eq_conjTranspose]
-  rw [Module.Dual.IsFaithfulPosMap.sig_conjTranspose hφ (1 / 2) y]
+  rw [show modAut (1 / 2) y = hφ.sig (1 / 2) y by rfl, Matrix.star_eq_conjTranspose,
+    Module.Dual.IsFaithfulPosMap.sig_conjTranspose hφ (1 / 2) y]
 
 private theorem matrix.stdBasisMatrix.transpose' {R n p : Type _} [DecidableEq n] [DecidableEq p]
     [Semiring R] {i : n} {j : p} {α : R} :
@@ -518,8 +516,8 @@ theorem Qam.fdOrthogonalProjection_eq_sum_rankOne [hφ : φ.IsFaithfulPosMap]
   unfold Qam.fdOrthogonalProjection
   change ((orthogonalProjection' U : L(ℍ)) : l(ℍ)) =
     ∑ i : ι, ((rankOne ℂ (b i).1 (b i).1 : L(ℍ)) : l(ℍ))
-  rw [← ContinuousLinearMap.coe_sum]
-  rw [@OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne ι ℂ _ ℍ _ _ _ U completeU b]
+  rw [← ContinuousLinearMap.coe_sum,
+    @OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne ι ℂ _ ℍ _ _ _ U completeU b]
 
 theorem Qam.idempotent_and_real_iff_exists_ortho_proj [hφ : φ.IsFaithfulPosMap] (A : l(ℍ)) :
       withMatrixQuantum[φ]
@@ -690,8 +688,7 @@ theorem RealQam.edges_eq [hφ : φ.IsFaithfulPosMap] {A : l(ℍ)} (hA : RealQam 
       _ = inner ℂ (Qam.onbOfIdempotentAndReal hA1 hA2 x).1
           (Qam.onbOfIdempotentAndReal hA1 hA2 x).1 :=
         by
-          rw [Module.Dual.IsFaithfulPosMap.inner_eq' hφ]
-          rw [← trace_mul_cycle]
+          rw [Module.Dual.IsFaithfulPosMap.inner_eq' hφ, ← trace_mul_cycle]
       _ = inner ℂ (Qam.onbOfIdempotentAndReal hA1 hA2 x)
           (Qam.onbOfIdempotentAndReal hA1 hA2 x) := rfl
       _ = 1 := by

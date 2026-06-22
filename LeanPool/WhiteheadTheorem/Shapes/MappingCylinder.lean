@@ -67,8 +67,8 @@ theorem isEmbedding_domIncl : Topology.IsEmbedding (domIncl f) := by
   have em_inr : Topology.IsOpenEmbedding (pushoutInr' f (Cyl.i₀ X)) := by
     apply isOpenEmbedding_pushoutInr'
     apply Cyl.isClosed_range_i₀
-  have em_i₁ : Topology.IsClosedEmbedding (Cyl.i₁ToComplRangeI₀ X) := by
-    apply Cyl.isClosedEmbedding_i₁ToComplRangeI₀
+  have em_i₁ : Topology.IsClosedEmbedding (Cyl.i₁ToComplRangeI₀ X) :=
+    Cyl.isClosedEmbedding_i₁ToComplRangeI₀ X
   convert em_inr.toIsEmbedding.comp em_i₁.toIsEmbedding
 
 /-- The domain `X` of a continuous map `f` is homeomorphic to the top surface of

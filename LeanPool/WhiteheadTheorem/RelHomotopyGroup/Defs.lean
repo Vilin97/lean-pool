@@ -248,7 +248,7 @@ def ofHomotopyRel {n : ℕ} {X : Type*} [TopologicalSpace X] {A : Set X} {a : A}
     fun y hy ↦ (H.map_one_left y).symm.trans (H.prop' 1 y hy)
   ⟨g, ⟨ fun y hy ↦ by rw [g_bd y hy]; exact f.property.left y hy,
         fun y hy ↦ by
-          rw [g_bd y (Cube.boundaryJar_subset_boundary n hy)];
+          rw [g_bd y (Cube.boundaryJar_subset_boundary n hy)]
           exact f.property.right y hy ⟩⟩
 
 namespace ofHomotopyRel

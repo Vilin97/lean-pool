@@ -224,11 +224,7 @@ omit [Inhabited T] in
 lemma empty_Dominant (h : D.Nonempty) : IST.isDominant Finset.empty D := by
   intro y
   obtain ⟨j,hj⟩ := h
-  use j
-  constructor
-  · exact hj
-  · intro x hx
-    contradiction
+  exact ⟨j, hj, fun x hx => absurd hx (Finset.notMem_empty x)⟩
 
 /-- A cell: `σ` is dominant for `C`. -/
 abbrev isCell := isDominant σ C
@@ -237,11 +233,8 @@ abbrev isCell := isDominant σ C
 abbrev isRoom :=  isCell σ C ∧ C.card = σ.card
 
 lemma sigma_nonempty_of_room {σ : Finset T} {C : Finset I} (h : isRoom σ C) : σ.Nonempty  := by
-  have hC : C.Nonempty := Nonempty_of_Dominant h.1
-  have hCpos : 0 < C.card := Finset.card_pos.2 hC
-  have h_card : σ.card = C.card := h.2.symm
-  have hpos : 0 < σ.card := by rwa [h_card]
-  exact Finset.card_pos.1 hpos
+  rw [← Finset.card_pos, h.2.symm]
+  exact Finset.card_pos.2 (Nonempty_of_Dominant h.1)
 
 /-- A door: a cell whose color set is one larger than its goods set. -/
 abbrev isDoor :=  isCell σ C ∧ C.card = σ.card + 1
@@ -320,17 +313,10 @@ abbrev isInternalDoor := IST.isDoor τ D ∧ τ.Nonempty
 /- Lemma 2-/
 omit [Inhabited T] [DecidableEq T] [DecidableEq I] in
 lemma outsidedoor_singleton (i : I) : IST.isOutsideDoor Finset.empty {i} := by
-  constructor
-  · rw [isDoor,isCell,isDominant]
-    constructor
-    · intro y; use i
-      constructor
-      · exact Finset.mem_singleton.2 (rfl)
-      · intro x hx
-        contradiction
-    · simp only [Finset.card_singleton]
-      rfl
-  · rfl
+  refine ⟨⟨fun y => ⟨i, Finset.mem_singleton.2 rfl, fun x hx => absurd hx (Finset.notMem_empty x)⟩,
+    ?_⟩, rfl⟩
+  simp only [Finset.card_singleton]
+  rfl
 
 
 --variable (τ D) in
@@ -1357,15 +1343,9 @@ lemma not_colorful_of_TypedNC (h1 : isTypedNC c i σ C) : ¬ IST.isColorful c σ
 
 omit [Inhabited T] [DecidableEq T] in
 lemma NC_of_TNC (h1 : isTypedNC c i σ C) : isNearlyColorful c σ C := by
-  have hcell := h1.1
-  have heq := h1.2
-  constructor
-  · exact hcell
-  · rw [heq]
-    have h_eq : C \ image c σ = {i} := by
-      rw [heq]
-    rw [←heq, h_eq]
-    exact Finset.card_singleton i
+  refine ⟨h1.1, ?_⟩
+  rw [h1.2]
+  exact Finset.card_singleton i
 
 
 --Useless lemma, remain sorry first.
@@ -1398,14 +1378,11 @@ lemma Finset.eq_of_mem_of_card_one {α : Type*} {s : Finset α} {a : α}
 
 omit [Inhabited T] [DecidableEq T] in
 lemma room_of_colorful (h : IST.isColorful c σ C) : IST.isRoom σ C := by
-  unfold isRoom
-  unfold isColorful at h
-  constructor
-  · exact h.1
-  · have h1 : C.card = (σ.image c).card := by rw [h.2]
-    have h2 : (σ.image c).card ≤ σ.card := Finset.card_image_le
-    have h3 : σ.card ≤ C.card := card_le_of_domiant h.1
-    linarith
+  refine ⟨h.1, ?_⟩
+  have h1 : C.card = (σ.image c).card := by rw [h.2]
+  have h2 : (σ.image c).card ≤ σ.card := Finset.card_image_le
+  have h3 : σ.card ≤ C.card := card_le_of_domiant h.1
+  linarith
 
 
 
@@ -1438,6 +1415,25 @@ lemma NC_of_outsidedoor (h : isOutsideDoor σ C) : isNearlyColorful c σ C  := b
 /-variable {c σ C} in
 lemma type_unique_of_outsidedoor (h : isOutsideDoor σ C) : ∃! i,
     i = isNCtype (NC_of_outsidedoor (c:=c) h)  := sorry-/
+omit [Inhabited T] in
+private lemma sdiff_image_subset_of_doorof (c : T → I) (h2 : isDoorof τ D σ C) :
+    C \ (σ.image c) ⊆ D \ (τ.image c) := by
+  intro y hy
+  simp only [Finset.mem_sdiff] at hy ⊢
+  obtain ⟨y_in_C, y_notin_img_sigma⟩ := hy
+  constructor
+  · cases h2
+    · rename_i h_D_eq; rw [h_D_eq]; exact y_in_C
+    · rename_i h_D_eq; rw [h_D_eq]; exact Finset.mem_insert_of_mem y_in_C
+  · cases h2 with
+    | idoor h0 hdoor x h_x_notin h_sigma_eq h_D_eq =>
+      rw [← h_sigma_eq, Finset.image_insert] at y_notin_img_sigma
+      simp only [Finset.mem_insert, not_or] at y_notin_img_sigma
+      exact y_notin_img_sigma.2
+    | odoor h0 hdoor j h_j_notin h_sigma_eq h_D_eq =>
+      rw [← h_sigma_eq] at y_notin_img_sigma
+      exact y_notin_img_sigma
+
 /-Lemma 5-/
 omit [Inhabited T] in
 lemma NC_or_C_of_door (h1 : isTypedNC c i τ D) (h2 : isDoorof τ D σ C)
@@ -1450,64 +1446,32 @@ lemma NC_or_C_of_door (h1 : isTypedNC c i τ D) (h2 : isDoorof τ D σ C)
     cases h2 with
     | idoor h0 _ _ _ _ _ => exact h0
     | odoor h0 _ _ _ _ _ => exact h0
-  have step1_subset : C \ (σ.image c) ⊆ D \ (τ.image c) := by
-    intro y hy
-    simp only [Finset.mem_sdiff] at hy ⊢
-    obtain ⟨y_in_C, y_notin_img_sigma⟩ := hy
-    constructor
-    · cases h2
-      · rename_i h_D_eq; rw [h_D_eq]; exact y_in_C
-      · rename_i h_D_eq; rw [h_D_eq]; exact Finset.mem_insert_of_mem y_in_C
-    · cases h2 with
-      | idoor h0 hdoor x h_x_notin h_sigma_eq h_D_eq =>
-        rw [← h_sigma_eq, Finset.image_insert] at y_notin_img_sigma
-        simp only [Finset.mem_insert, not_or] at y_notin_img_sigma
-        exact y_notin_img_sigma.2
-      | odoor h0 hdoor j h_j_notin h_sigma_eq h_D_eq =>
-        rw [← h_sigma_eq] at y_notin_img_sigma
-        exact y_notin_img_sigma
+  have step1_subset : C \ (σ.image c) ⊆ D \ (τ.image c) :=
+    sdiff_image_subset_of_doorof c h2
   have step2_D_card : (D \ (τ.image c)).card = 1 := by
-    have D_sdiff_eq_i : D \ (τ.image c) = {i} := by
-      rw [h1_eq]
-    rw [D_sdiff_eq_i, Finset.card_singleton]
+    rw [h1_eq, Finset.card_singleton]
   have step3_C_card_le : (C \ σ.image c).card ≤ 1 := by
     rw [← step2_D_card]
     exact Finset.card_le_card step1_subset
   by_cases h : (C \ σ.image c).card = 0
   · right
-    constructor
-    · exact h_sigma_cell
-    · have h_C_subset_img : C ⊆ σ.image c := by
-        rw [Finset.subset_iff]
-        intro x hx
-        by_contra hxn
-        have : x ∈ C \ σ.image c := by simp [hx, hxn]
-        have : (C \ σ.image c).Nonempty := ⟨x, this⟩
-        have : 0 < (C \ σ.image c).card := Finset.card_pos.2 this
-        linarith [h]
-      have h_room: isRoom σ C := isRoom_of_Door h2
-      have h_card_eq : C.card = σ.card := h_room.2
-      have h_img_le_C_card : (σ.image c).card ≤ C.card := by
-        calc (σ.image c).card
-          ≤ σ.card := Finset.card_image_le
-          _ = C.card := h_card_eq.symm
-      exact (Finset.eq_of_subset_of_card_le h_C_subset_img h_img_le_C_card).symm
+    refine ⟨h_sigma_cell, ?_⟩
+    have h_C_subset_img : C ⊆ σ.image c := by
+      rw [← Finset.sdiff_eq_empty_iff_subset, ← Finset.card_eq_zero]
+      exact h
+    have h_room: isRoom σ C := isRoom_of_Door h2
+    have h_img_le_C_card : (σ.image c).card ≤ C.card := by
+      rw [h_room.2]
+      exact Finset.card_image_le
+    exact (Finset.eq_of_subset_of_card_le h_C_subset_img h_img_le_C_card).symm
   · left
-    constructor
-    · exact h_sigma_cell
-    · have h_card_one : (C \ σ.image c).card = 1 := by omega
-      have h_subset_singleton : C \ σ.image c ⊆ {i} := by
-        have D_sdiff_eq_i : D \ (τ.image c) = {i} := by
-          rw [h1_eq]
-        rw [← D_sdiff_eq_i]
-        exact step1_subset
-      have C_sdiff_eq_i : C \ σ.image c = {i} :=
-        Finset.eq_of_subset_of_card_le h_subset_singleton (by rw [h_card_one,
-            Finset.card_singleton])
-      have h_i_notin_img : i ∉ σ.image c := by
-        have h_i_in_sdiff : i ∈ C \ σ.image c := by rw [C_sdiff_eq_i]; simp
-        exact (Finset.mem_sdiff.mp h_i_in_sdiff).2
-      exact C_sdiff_eq_i
+    refine ⟨h_sigma_cell, ?_⟩
+    have h_card_one : (C \ σ.image c).card = 1 := by omega
+    have h_subset_singleton : C \ σ.image c ⊆ {i} := by
+      rw [← h1_eq]
+      exact step1_subset
+    exact Finset.eq_of_subset_of_card_le h_subset_singleton (by rw [h_card_one,
+      Finset.card_singleton])
 
 omit [Inhabited T] in
 lemma NCtype_of_door (h1 : isTypedNC c i τ D) (_ : isDoorof τ D σ C) (_ : isTypedNC c i σ C)
@@ -1518,22 +1482,8 @@ lemma isTypedNC_of_isNearlyColorful_of_isDoorof_isTypedNC (h_nc : isNearlyColorf
     (h_door : isDoorof τ D σ C) (h_room_typed : isTypedNC c i σ C) : isTypedNC c i τ D := by
   constructor
   · exact h_nc.1
-  · have h_subset : C \ image c σ ⊆ D \ image c τ := by
-      intro y hy
-      simp only [Finset.mem_sdiff] at hy ⊢
-      obtain ⟨y_in_C, y_notin_img_sigma⟩ := hy
-      constructor
-      · cases h_door with
-        | idoor h0 _ _ _ _ h_D_eq => rw [h_D_eq]; exact y_in_C
-        | odoor h0 _ _ _ _ h_D_eq => rw [h_D_eq]; exact Finset.mem_insert_of_mem y_in_C
-      · cases h_door with
-        | idoor h0 _ x _ h_sigma_eq _ =>
-          rw [← h_sigma_eq, Finset.image_insert] at y_notin_img_sigma
-          simp only [Finset.mem_insert, not_or] at y_notin_img_sigma
-          exact y_notin_img_sigma.2
-        | odoor h0 _ _ _ h_sigma_eq _ =>
-          rw [← h_sigma_eq] at y_notin_img_sigma
-          exact y_notin_img_sigma
+  · have h_subset : C \ image c σ ⊆ D \ image c τ :=
+      sdiff_image_subset_of_doorof c h_door
     have h_i_in_diff : i ∈ D \ image c τ := h_subset (h_room_typed.2 ▸ Finset.mem_singleton_self i)
     have h_card_one : (D \ image c τ).card = 1 := h_nc.2
     exact Finset.eq_of_mem_of_card_one h_i_in_diff h_card_one
@@ -1544,26 +1494,13 @@ lemma card_of_NCcell (h : isNearlyColorful c σ D) : #σ = #(image c σ)  ∨  #
     + 1 := by
   unfold isNearlyColorful at h
   rcases h with ⟨h_cell, h_nc_card⟩
-  let img := image c σ
   have h_card_le_D : σ.card ≤ D.card := card_le_of_domiant h_cell
-  have h_D_card_eq := (Finset.card_sdiff_add_card_inter D img).symm
+  have h_D_card_eq := (Finset.card_sdiff_add_card_inter D (image c σ)).symm
   rw [h_nc_card] at h_D_card_eq
-  have h_inter_le_img : (D ∩ img).card ≤ img.card := card_le_card (Finset.inter_subset_right)
-  have h_D_le : D.card ≤ 1 + img.card := by
-    linarith [h_D_card_eq, h_inter_le_img]
-  have h_img_le_sigma : img.card ≤ σ.card := card_image_le
-  have h_sigma_le_plus_one : σ.card ≤ img.card + 1 := by
-    linarith [h_card_le_D, h_D_le]
-  have h_or : σ.card ≤ img.card ∨ σ.card = img.card + 1 := by
-    apply Nat.le_or_eq_of_le_succ
-    exact h_sigma_le_plus_one
-  cases h_or with
-  | inl h_le =>
-    left
-    exact le_antisymm h_le h_img_le_sigma
-  | inr h_eq =>
-    right
-    exact h_eq
+  have h_inter_le_img : (D ∩ image c σ).card ≤ (image c σ).card :=
+    card_le_card Finset.inter_subset_right
+  have h_img_le_sigma : (image c σ).card ≤ σ.card := card_image_le
+  omega
 
 omit [Inhabited T] [DecidableEq T] in
 lemma image_subset_of_NCdoor (h1 : isNearlyColorful c σ C) (h2 : isDoor σ C) : image c σ ⊆ C := by
@@ -1574,19 +1511,10 @@ lemma image_subset_of_NCdoor (h1 : isNearlyColorful c σ C) (h2 : isDoor σ C) :
   let img := image c σ
   have h_img_le_sigma : img.card ≤ σ.card := card_image_le
   have h_sigma_le_C : σ.card ≤ C.card := card_le_of_domiant h_cell
-  have h_inter_card : (C ∩ img).card = σ.card := by
-    have h_C_card_eq := (Finset.card_sdiff_add_card_inter C img).symm
-    rw [h_nc_card] at h_C_card_eq
-    have h_C_eq : C.card = 1 + (C ∩ img).card := by linarith [h_C_card_eq]
-    rw [h_door_card] at h_C_eq
-    linarith [h_C_eq]
-  have h_img_eq_inter : img.card = (C ∩ img).card := by
-    have h_le1 : (C ∩ img).card ≤ img.card := card_le_card (Finset.inter_subset_right)
-    have h_le2 : img.card ≤ (C ∩ img).card := by
-      calc img.card
-        ≤ σ.card := h_img_le_sigma
-        _ = (C ∩ img).card := h_inter_card.symm
-    exact le_antisymm h_le2 h_le1
+  have h_le1 : (C ∩ img).card ≤ img.card := card_le_card (Finset.inter_subset_right)
+  have h_C_card_eq := (Finset.card_sdiff_add_card_inter C img).symm
+  rw [h_nc_card, h_door_card] at h_C_card_eq
+  have h_img_eq_inter : img.card = (C ∩ img).card := by omega
   have h_inter_eq_img : C ∩ img = img :=
     Finset.eq_of_subset_of_card_le (Finset.inter_subset_right) (by rw [h_img_eq_inter])
   rwa [Finset.inter_eq_right] at h_inter_eq_img
@@ -2151,25 +2079,13 @@ omit [DecidableEq T] [Inhabited T] IST in
 /-- A nearly colorful room has a unique missing color in `C`. -/
 lemma uniqueMissingColor (h_missing_card : (C \ σ.image c).card = 1) :
     ∃! i₀, i₀ ∈ C ∧ i₀ ∉ σ.image c := by
-  have h_nonempty : (C \ σ.image c).Nonempty := by
-    rw [←Finset.card_pos]
-    rw [h_missing_card]
-    norm_num
-  have h_singleton : ∃ i₀, C \ σ.image c = {i₀} := by
-    exact Finset.card_eq_one.mp h_missing_card
-  obtain ⟨i₀, h_eq⟩ := h_singleton
-  use i₀
-  constructor
-  · constructor
-    · have h_i₀_in_diff : i₀ ∈ C \ image c σ := by rw [h_eq]; simp
-      exact (Finset.mem_sdiff.mp h_i₀_in_diff).1
-    · have h_i₀_in_diff : i₀ ∈ C \ image c σ := by rw [h_eq]; simp
-      exact (Finset.mem_sdiff.mp h_i₀_in_diff).2
-  · intro j ⟨h_j_in_C, h_j_notin_img⟩
-    have h_j_in_diff : j ∈ C \ σ.image c := by
-      exact Finset.mem_sdiff.mpr ⟨h_j_in_C, h_j_notin_img⟩
-    rw [h_eq] at h_j_in_diff
-    exact Finset.mem_singleton.mp h_j_in_diff
+  obtain ⟨i₀, h_eq⟩ := Finset.card_eq_one.mp h_missing_card
+  have h_i₀_in_diff : i₀ ∈ C \ image c σ := by rw [h_eq]; simp
+  refine ⟨i₀, ⟨(Finset.mem_sdiff.mp h_i₀_in_diff).1, (Finset.mem_sdiff.mp h_i₀_in_diff).2⟩, ?_⟩
+  intro j ⟨h_j_in_C, h_j_notin_img⟩
+  have h_j_in_diff : j ∈ C \ σ.image c := Finset.mem_sdiff.mpr ⟨h_j_in_C, h_j_notin_img⟩
+  rw [h_eq] at h_j_in_diff
+  exact Finset.mem_singleton.mp h_j_in_diff
 
 omit [DecidableEq T] [Inhabited T] in
 /-- The two doors of a nearly colorful room, when one color of `σ` is repeated. -/
@@ -2446,9 +2362,7 @@ lemma dbcount_outside_door' (i : I) : ∃ x,  filter (fun x => isOutsideDoor x.1
     have h_j_eq_i : j = i := by
       have h_eq_j : x_gen.1.2 = {j} := h_D_eq
       rw [h_x_gen_1_2_eq] at h_eq_j
-      have : j ∈ {j} := Finset.mem_singleton_self j
-      rw [←h_eq_j] at this
-      exact Finset.eq_of_mem_singleton this
+      exact (Finset.singleton_inj.mp h_eq_j.symm)
     cases h_door with
     | idoor h_cell_σC h_door_τD x h_x_notin h_insert_eq h_D_eq_C =>
       have h_σ_eq : x_gen.2.1 = {x} := by
@@ -2499,10 +2413,9 @@ variable (c)
 -- Use Lemme 2
 lemma dbcount_outside_door_odd (i : I) : Odd (filter (fun x => isOutsideDoor x.1.1 x.1.2)
     (dbcountingset c i)).card  := by
-  have cardone: (filter (fun x => isOutsideDoor x.1.1 x.1.2) (dbcountingset c i)).card = 1 := by
-    obtain ⟨x,hx⟩ := dbcount_outside_door' c i
-    simp [hx]
-  convert odd_one
+  obtain ⟨x,hx⟩ := dbcount_outside_door' c i
+  rw [hx, Finset.card_singleton]
+  exact odd_one
 
 omit [Inhabited T] in
 lemma fiber_size_internal_door (c : T → I) (i : I) (y : Finset T × Finset I)
@@ -2733,12 +2646,9 @@ lemma dbcount_NCroom (i : I) : Even (filter (fun x => ¬isColorful c x.2.1 x.2.2
 
 lemma parity_lemma {a b c d : ℕ} (h1 : Odd a) (h2 : Even b) (h3 : Even d) (h4 : a + b = c + d)
     : Odd c := by
-  by_contra h0
-  replace h0 := Nat.not_odd_iff_even.1 h0
-  have oddab := Even.odd_add h2 h1
-  rw [h4] at oddab
-  have evencd := Even.add h0 h3
-  exact Nat.not_odd_iff_even.2 evencd oddab
+  rw [Nat.odd_iff] at h1 ⊢
+  rw [Nat.even_iff] at h2 h3
+  omega
 
 
 theorem _root_.Finset.card_filter_filter_neg {α : Type*} (s : Finset α) (p : α → Prop)
@@ -2762,12 +2672,9 @@ variable [Inhabited I]
 
 omit [DecidableEq T] in
 theorem Scarf : (IST.colorful c).Nonempty := by
-  have cardpos := Odd.pos <| typed_colorful_room_odd c default
-  replace nonempty:= Finset.card_pos.1 cardpos
-  obtain ⟨x,hx⟩ := nonempty
+  obtain ⟨x,hx⟩ := Finset.card_pos.1 (Odd.pos <| typed_colorful_room_odd c default)
   replace hx := (Finset.mem_filter.1 hx).2
-  use x.2
-  simp only [mem_filter, mem_univ, hx, and_self]
+  exact ⟨x.2, by simp only [mem_filter, mem_univ, hx, and_self]⟩
 
 
 end Scarf

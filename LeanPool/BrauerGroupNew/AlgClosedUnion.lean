@@ -88,8 +88,7 @@ def intermediateTensorEquiv' (L : IntermediateField K K_bar) :
     | tmul y a =>
       change (intermediateTensorEquiv K K_bar A L) ⟨↑(x * y) ⊗ₜ[K] a, _⟩ =
         x • (intermediateTensorEquiv K K_bar A L) ⟨↑y ⊗ₜ[K] a, _⟩
-      rw [intermediateTensorEquiv_apply_tmul]
-      rw [intermediateTensorEquiv_apply_tmul]
+      rw [intermediateTensorEquiv_apply_tmul, intermediateTensorEquiv_apply_tmul]
       rfl
     | add y z hy hz =>
       simp only [LinearMap.coe_mk, LinearMap.coe_toAddHom, SetLike.mk_smul_mk, map_add,

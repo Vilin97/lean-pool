@@ -169,6 +169,29 @@ lemma ufd_height_one_principal
   exact absurd (le_trans (add_le_add_right h4 1 |>.trans_eq (add_comm _ _)) h1)
     (by norm_num : ¬((2 : ℕ∞) ≤ 1))
 
+/-- `algebraMap A Â` is a local ring hom: if `r ∈ M_A` then `evalOneₐ` sends its
+image to `0`, so it cannot be a unit. -/
+lemma isLocalHom_algebraMap_adicCompletion
+    {A : Type*} [CommRing A] [IsLocalRing A] [IsNoetherianRing A]
+    [IsLocalRing (AdicCompletion (IsLocalRing.maximalIdeal A) A)] :
+    IsLocalHom (algebraMap A (AdicCompletion (IsLocalRing.maximalIdeal A) A)) := by
+  set M := IsLocalRing.maximalIdeal A
+  set Ahat := AdicCompletion M A
+  constructor
+  intro r hr
+  by_contra h_not_unit
+  have hr_mem : r ∈ M := (IsLocalRing.mem_maximalIdeal r).mpr h_not_unit
+  have h_mk_zero : (Ideal.Quotient.mk M) r = 0 := Ideal.Quotient.eq_zero_iff_mem.mpr hr_mem
+  have h_eval_zero : (AdicCompletion.evalOneₐ M) (algebraMap A Ahat r) = 0 := by
+    rw [show algebraMap A Ahat r = AdicCompletion.of M A r from by
+      rw [AdicCompletion.algebraMap_apply]
+      rfl]
+    rw [AdicCompletion.evalOneₐ_of, h_mk_zero]
+  have h_unit := hr.map (AdicCompletion.evalOneₐ M).toRingHom
+  rw [AlgHom.toRingHom_eq_coe, show (AdicCompletion.evalOneₐ M : Ahat →+* _)
+    (algebraMap A Ahat r) = (0 : A ⧸ M) from h_eval_zero] at h_unit
+  exact not_isUnit_zero h_unit
+
 /-- dim(A) ≤ dim(Â) for Noetherian local rings via flat going-down.
     Proof: algebraMap A Â is a local ring hom (via evalOneₐ), so maximalIdeal Â lies over
     maximalIdeal A, then height_eq_height_add gives ht(M_A) ≤ ht(M_Â) = dim(Â). -/
@@ -179,22 +202,7 @@ lemma ringKrullDim_le_of_adic_completion
   set M := IsLocalRing.maximalIdeal A
   set Ahat := AdicCompletion M A
   haveI : IsLocalRing Ahat := φ.symm.isLocalRing
-  -- algebraMap A Ahat is local: r ∈ M → evalOneₐ(algebraMap r) = 0 → not a unit
-  haveI : IsLocalHom (algebraMap A Ahat) := by
-    constructor
-    intro r hr
-    by_contra h_not_unit
-    have hr_mem : r ∈ M := (IsLocalRing.mem_maximalIdeal r).mpr h_not_unit
-    have h_mk_zero : (Ideal.Quotient.mk M) r = 0 := Ideal.Quotient.eq_zero_iff_mem.mpr hr_mem
-    have h_eval_zero : (AdicCompletion.evalOneₐ M) (algebraMap A Ahat r) = 0 := by
-      rw [show algebraMap A Ahat r = AdicCompletion.of M A r from by
-        rw [AdicCompletion.algebraMap_apply]
-        rfl]
-      rw [AdicCompletion.evalOneₐ_of, h_mk_zero]
-    have h_unit := hr.map (AdicCompletion.evalOneₐ M).toRingHom
-    rw [AlgHom.toRingHom_eq_coe, show (AdicCompletion.evalOneₐ M : Ahat →+* _)
-      (algebraMap A Ahat r) = (0 : A ⧸ M) from h_eval_zero] at h_unit
-    exact not_isUnit_zero h_unit
+  haveI : IsLocalHom (algebraMap A Ahat) := isLocalHom_algebraMap_adicCompletion
   haveI : IsNoetherianRing Ahat := isNoetherianRing_of_ringEquiv T φ.symm
   haveI : Module.Flat A Ahat := AdicCompletion.flat_of_isNoetherian _
   haveI : Algebra.HasGoingDown A Ahat := Algebra.HasGoingDown.of_flat
@@ -504,21 +512,7 @@ lemma quotient_prime_dim_one
   have hdim_A : ringKrullDim A = 2 := le_antisymm hdim_A_le (by
     set M := IsLocalRing.maximalIdeal A
     haveI : IsLocalRing Ahat := φ.symm.isLocalRing
-    haveI : IsLocalHom (algebraMap A Ahat) := by
-      constructor
-      intro r hr
-      by_contra h_not_unit
-      have hr_mem : r ∈ M := (IsLocalRing.mem_maximalIdeal r).mpr h_not_unit
-      have h_mk_zero : (Ideal.Quotient.mk M) r = 0 := Ideal.Quotient.eq_zero_iff_mem.mpr hr_mem
-      have h_eval_zero : (AdicCompletion.evalOneₐ M) (algebraMap A Ahat r) = 0 := by
-        rw [show algebraMap A Ahat r = AdicCompletion.of M A r from by
-          rw [AdicCompletion.algebraMap_apply]
-          rfl]
-        rw [AdicCompletion.evalOneₐ_of, h_mk_zero]
-      have h_unit := hr.map (AdicCompletion.evalOneₐ M).toRingHom
-      rw [AlgHom.toRingHom_eq_coe, show (AdicCompletion.evalOneₐ M : Ahat →+* _)
-        (algebraMap A Ahat r) = (0 : A ⧸ M) from h_eval_zero] at h_unit
-      exact not_isUnit_zero h_unit
+    haveI : IsLocalHom (algebraMap A Ahat) := isLocalHom_algebraMap_adicCompletion
     haveI : Module.Flat A Ahat := AdicCompletion.flat_of_isNoetherian _
     haveI : Algebra.HasGoingDown A Ahat := Algebra.HasGoingDown.of_flat
     haveI : (IsLocalRing.maximalIdeal Ahat).LiesOver M :=

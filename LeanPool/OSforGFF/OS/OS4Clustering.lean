@@ -132,8 +132,7 @@ lemma generating_euclidean_invariant
     (h_inv : os2EuclideanInvariance dμ_config)
     (g : E) (f : TestFunctionℂ) :
     GJGeneratingFunctionalℂ dμ_config (euclideanAction g f) =
-    GJGeneratingFunctionalℂ dμ_config f := by
-  exact (h_inv g f).symm
+    GJGeneratingFunctionalℂ dμ_config f := (h_inv g f).symm
 
 /-! ## GFF Generating Functional Norm Bound -/
 

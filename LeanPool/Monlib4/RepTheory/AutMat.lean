@@ -53,10 +53,8 @@ theorem automorphism_matrix_inner [Field R] [DecidableEq n] [Nonempty n]
     ∃ T : Mₙ n,
       (∀ a : Mₙ n, f a * T = T * a) ∧
         Function.Bijective (Matrix.toLin' T) := by
-  have exists_vector : ∃ u : n → R, u ≠ 0 := ⟨1, one_ne_zero⟩
-  have exists_vector' := exists_vector
-  obtain ⟨u, hu⟩ := exists_vector
-  obtain ⟨y, hy⟩ := exists_vector'
+  obtain ⟨u, hu⟩ : ∃ u : n → R, u ≠ 0 := ⟨1, one_ne_zero⟩
+  obtain ⟨y, hy⟩ : ∃ u : n → R, u ≠ 0 := ⟨1, one_ne_zero⟩
   have f_ne_zero_iff :
       f (vecMulVec u y) ≠ 0 ↔ vecMulVec u y ≠ 0 := by
     rw [not_iff_not]
@@ -667,14 +665,11 @@ theorem AlgEquiv.matrix_prod_aut {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
   have he₂ : e₂ = (0, 1) := rfl
   rw [← he₁, ← he₂]
   have h₁ : e₁ + e₂ = 1 := by
-    rw [he₁, he₂]
-    simp only [Prod.mk_add_mk, add_zero, zero_add, Prod.mk_eq_one, and_self]
+    simp only [he₁, he₂, Prod.mk_add_mk, add_zero, zero_add, Prod.mk_eq_one, and_self]
   have h₂ : e₁ * e₂ = 0 := by
-    rw [he₁, he₂]
-    simp only [Prod.mk_mul_mk, mul_zero, mul_one, Prod.mk_eq_zero, and_self]
+    simp only [he₁, he₂, Prod.mk_mul_mk, mul_zero, mul_one, Prod.mk_eq_zero, and_self]
   have h₃ : e₂ * e₁ = 0 := by
-    rw [he₁, he₂]
-    simp only [Prod.mk_mul_mk, mul_one, mul_zero, Prod.mk_eq_zero, and_self]
+    simp only [he₁, he₂, Prod.mk_mul_mk, mul_one, mul_zero, Prod.mk_eq_zero, and_self]
   have h₄ : e₁ * e₁ = e₁ := by
     rw [he₁]
     simp only [Prod.mk_mul_mk, mul_one, mul_zero]
@@ -835,10 +830,10 @@ def matrixPiFinAlgEquivPiFinTwo {𝕜 : Type*} [CommSemiring 𝕜]
     simp only [↓reduceDIte, eq_mpr_eq_cast, cast_eq]
     simp only [true_and]
     aesop
-  right_inv _ := by rfl
-  map_add' _ _ := by rfl
-  map_mul' _ _ := by rfl
-  commutes' _ := by rfl
+  right_inv _ := rfl
+  map_add' _ _ := rfl
+  map_mul' _ _ := rfl
+  commutes' _ := rfl
 
 theorem matrixPiFinAlgEquivPiFinTwo_apply {𝕜 : Type*} [CommSemiring 𝕜]
     {k : ℕ} {n : Fin (k + 1) → Type*}

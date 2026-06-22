@@ -29,8 +29,7 @@ namespace HermiteLEAN
 /-- Square blocks have the expected odd cardinality. -/
 theorem squareBlock_card (ℓ : ℕ) : (squareBlock ℓ).card = 2 * ℓ + 1 := by
   rw [squareBlock, Nat.card_Ico, pow_two, pow_two]
-  have h : (ℓ + 1) * (ℓ + 1) = ℓ * ℓ + (2 * ℓ + 1) := by
-    ring
+  have h : (ℓ + 1) * (ℓ + 1) = ℓ * ℓ + (2 * ℓ + 1) := by ring
   rw [h]
   exact Nat.add_sub_cancel_left (ℓ * ℓ) (2 * ℓ + 1)
 
@@ -42,12 +41,9 @@ theorem annulus_distance_lower_bound (j : ℕ) (x : ℝ) :
   dsimp [posPart]
   set a : ℝ := |((j : ℕ) : ℝ) - x|
   set b : ℝ := |(((j + 1 : ℕ) : ℝ) - x)|
-  have ha0 : 0 ≤ a := by
-    simp [a]
-  have hb0 : 0 ≤ b := by
-    simp [b]
-  have h1 : max (a - 1) 0 ≤ a := by
-    exact max_le (by linarith) ha0
+  have ha0 : 0 ≤ a := by simp [a]
+  have hb0 : 0 ≤ b := by simp [b]
+  have h1 : max (a - 1) 0 ≤ a := by exact max_le (by linarith) ha0
   have habs : |a - b| ≤ 1 := by
     have h := abs_abs_sub_abs_le_abs_sub ((j : ℝ) - x) ((((j + 1 : ℕ) : ℝ) - x))
     have hrhs : |((j : ℝ) - x) - ((((j + 1 : ℕ) : ℝ) - x))| = 1 := by
@@ -57,8 +53,7 @@ theorem annulus_distance_lower_bound (j : ℕ) (x : ℝ) :
   have h2' : a - 1 ≤ b := by
     have hrewrite : a - b ≤ 1 := (abs_sub_le_iff.mp habs).1
     linarith
-  have h2 : max (a - 1) 0 ≤ b := by
-    exact max_le h2' hb0
+  have h2 : max (a - 1) 0 ≤ b := by exact max_le h2' hb0
   exact le_min h1 h2
 
 -- to_mathlib: Mathlib/Analysis/SpecialFunctions/Gaussian/Basic
@@ -132,10 +127,8 @@ theorem polynomial_times_gaussian_le_gaussian
     ring
   calc
     (1 + x ^ k) * Real.exp (-a * x ^ 2)
-      = (1 + x ^ k) * (Real.exp (-(a / 2) * x ^ 2) * Real.exp (-(a / 2) * x ^ 2)) := by
-          rw [hsplit]
-    _ = g x * Real.exp (-(a / 2) * x ^ 2) := by
-          simp [g, mul_left_comm, mul_comm]
+      = (1 + x ^ k) * (Real.exp (-(a / 2) * x ^ 2) * Real.exp (-(a / 2) * x ^ 2)) := by rw [hsplit]
+    _ = g x * Real.exp (-(a / 2) * x ^ 2) := by simp [g, mul_left_comm, mul_comm]
     _ ≤ C * Real.exp (-(a / 2) * x ^ 2) := by
           have hexp_nonneg : 0 ≤ Real.exp (-(a / 2) * x ^ 2) := (Real.exp_pos _).le
           exact mul_le_mul_of_nonneg_right hbound_g hexp_nonneg

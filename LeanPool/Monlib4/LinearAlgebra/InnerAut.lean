@@ -387,14 +387,13 @@ theorem _root_.Matrix.innerAut_posSemidef_iff (U : unitaryGroup n 𝕜) {a : Mat
   · intro h
     rw [← Matrix.nonneg_iff_posSemidef] at h ⊢
     rcases CStarAlgebra.nonneg_iff_eq_star_mul_self.mp h with ⟨b, hb⟩
-    rw [← innerAut_inv_apply_innerAut_self U a, hb, Matrix.innerAut.map_mul]
-    rw [← Matrix.innerAut.map_star]
+    rw [← innerAut_inv_apply_innerAut_self U a, hb, Matrix.innerAut.map_mul,
+      ← Matrix.innerAut.map_star]
     exact CStarAlgebra.nonneg_iff_eq_star_mul_self.mpr ⟨innerAut U⁻¹ b, rfl⟩
   · intro h
     rw [← Matrix.nonneg_iff_posSemidef] at h ⊢
     rcases CStarAlgebra.nonneg_iff_eq_star_mul_self.mp h with ⟨b, hb⟩
-    rw [hb, Matrix.innerAut.map_mul]
-    rw [← Matrix.innerAut.map_star]
+    rw [hb, Matrix.innerAut.map_mul, ← Matrix.innerAut.map_star]
     exact CStarAlgebra.nonneg_iff_eq_star_mul_self.mpr ⟨innerAut U b, rfl⟩
 
 theorem _root_.Matrix.posSemidef_innerAut {a : Matrix n n 𝕜} (ha : a.PosSemidef)

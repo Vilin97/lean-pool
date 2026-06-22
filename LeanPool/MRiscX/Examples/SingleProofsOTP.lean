@@ -49,9 +49,7 @@ theorem help_I_pre' : ∀ (p k c l: UInt64),
   by_contra heq
   rw [UInt64.add_cancel_right_iff] at heq
   rw [heq] at h_kc
-  apply UInt64.lt_asymm (a := p) (b := k)
-  · exact h_pk
-  · exact h_kc
+  exact UInt64.lt_asymm h_pk h_kc
 
 theorem help_I_pre'' : ∀ (p k c l: UInt64),
   iPre' p k c l →
@@ -63,8 +61,7 @@ theorem help_I_pre'' : ∀ (p k c l: UInt64),
   by_contra heq
   rw [UInt64.add_cancel_right_iff] at heq
   rw [heq] at h_kc
-  apply UInt64.lt_irrefl (a := k)
-  exact h_kc
+  exact UInt64.lt_irrefl k h_kc
 
 
 theorem help_I_pre''' : ∀ (p k c l i x: UInt64),
@@ -103,10 +100,7 @@ theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
   rcases h_I with ⟨h_pk, h_kc, h_noOverfl, h_klc, h_plk⟩
   simp only [ne_eq]
   by_contra neq
-  have h_pc : p < c := by
-    apply UInt64.lt_trans (b := k)
-    · exact h_pk
-    · exact h_kc
+  have h_pc : p < c := UInt64.lt_trans h_pk h_kc
   have : p + i < c + (l - x) := by
     apply UInt64.add_lt_add
     · exact ⟨h_pc, hlx⟩
@@ -118,8 +112,7 @@ theorem help_I_pre'''' : ∀ (p k c l i x: UInt64),
         · exact hxLeL
       · exact h_noOverfl
   · rw [neq] at this
-    apply UInt64.lt_irrefl (a := p+i)
-    exact this
+    exact UInt64.lt_irrefl (p + i) this
 
 
 
@@ -188,9 +181,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
     intros p k c l
     rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6,
       h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
-    have: ({9} : Set UInt64)  = {8 + 1}  := by
-      simp
-    rw [this]
+    rw [show ({9} : Set UInt64) = {8 + 1} by simp]
     rw [←h_code']
     apply specification_StoreWordImmediate (regWithAddr := 2) (regWithValue := 7)
     · simp
@@ -216,16 +207,8 @@ theorem sw_otp : ∀ (p k c l : UInt64),
                 rw [←h_x3] at v
                 apply h_I
                 exact v
-              · apply help_I_pre''' (p := p)
-                · exact h_I_pre'
-                · exact v
-                · rw [←h_x3]
-                  exact h_x3LtL
-            · apply help_I_pre'''' p k c l i x
-              · exact h_I_pre'
-              · exact v
-              · rw [←h_x3]
-                exact h_x3LtL
+              · exact help_I_pre''' p k c l i x h_I_pre' v (h_x3 ▸ h_x3LtL)
+            · exact help_I_pre'''' p k c l i x h_I_pre' v (h_x3 ▸ h_x3LtL)
           · apply help_I_pre''''' (p:=p) (k:=k) <;> try assumption
             rw [←h_x3]
             exact h_x3LtL
@@ -245,20 +228,14 @@ theorem sw_otp : ∀ (p k c l : UInt64),
               unfold iPre' at h_I_pre'
               rcases h_I_pre' with ⟨_, h_kc, _⟩
               rw [←neq] at h_kc
-              apply UInt64.lt_irrefl c
-              exact h_kc
+              exact UInt64.lt_irrefl c h_kc
           · rw [h_x0, h_x2]
             unfold iPre' at h_I_pre'
             rcases h_I_pre' with ⟨h_pk, h_kc, _⟩
             simp only [ne_eq, UInt64.add_left_inj]
             intros neq
             rw [←neq] at h_pk
-            apply UInt64.lt_irrefl c
-            have: c < c := by
-              apply UInt64.lt_trans (b := k)
-              · exact h_pk
-              · exact h_kc
-            exact this
+            exact UInt64.lt_irrefl c (UInt64.lt_trans h_pk h_kc)
       · repeat (constructor; try assumption)
         · rw [h_x0, h_x5, h_x0]
           rw [t_update_neq]
@@ -268,8 +245,7 @@ theorem sw_otp : ∀ (p k c l : UInt64),
           unfold iPre' at h_I_pre'
           rcases h_I_pre' with ⟨pk, kc, _⟩
           rw [neq] at kc
-          apply UInt64.lt_asymm (pk)
-          exact kc
+          exact UInt64.lt_asymm pk kc
         · constructor
           · rw [h_x2, h_x3]
             rw [t_update_neq]
@@ -314,9 +290,7 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6,
       h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
-    have: ({10} : Set UInt64)  = {9 + 1}  := by
-      simp
-    rw [this]
+    rw [show ({10} : Set UInt64) = {9 + 1} by simp]
     apply specification_Increment (dst := 0)
     · simp
     · simp
@@ -360,9 +334,7 @@ theorem inc_otp_1 : ∀ (p k c l : UInt64),
     ¬⸨terminated⸩ = true⦄
     := by
     intros p k c l
-    have: ({11}: Set UInt64)  = {10 + 1}  := by
-      simp
-    rw [this]
+    rw [show ({11} : Set UInt64) = {10 + 1} by simp]
     unfold hoareTripleUp
     rintro h_inter h_empty s h_code' h_pc ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6,
       h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
@@ -423,9 +395,7 @@ theorem inc_otp_2 {x} : ∀ (p k c l : UInt64),
     rintro h_inter h_empty s h_code' h_pc
       ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
-    have: ({12}: Set UInt64) = {11 + 1}  := by
-      simp
-    rw [this]
+    rw [show ({12} : Set UInt64) = {11 + 1} by simp]
     apply specification_Increment (dst := 2)
     · simp
     · simp
@@ -475,9 +445,7 @@ theorem dec_otp : ∀ (p k c l : UInt64),
     rintro h_inter h_empty s h_code' h_pc
       ⟨⟨h_cond, h_I, h_x0, h_x1, h_x2, h_x3LtL, h_x5, h_x6, h_x7, h_x3, h_I_pre'⟩, h_terminated⟩
     rw [←h_code']
-    have: ({13} : Set UInt64) = {12 + 1}  := by
-      simp
-    rw [this]
+    rw [show ({13} : Set UInt64) = {12 + 1} by simp]
     apply specification_Decrement (dst := 3)
     · simp
     · simp
@@ -625,31 +593,7 @@ theorem beqz_otp : ∀ (p k c l : UInt64),
   have: ({n | n ≤ 4} ∪ {n | n > 5}) = {n:UInt64| n ≠ 4 + 1} := by
     ext a
     simp only [gt_iff_lt, Set.mem_union, Set.mem_setOf_eq, UInt64.reduceAdd, ne_eq]
-    apply Iff.intro
-    · intros h
-      cases h with
-      | inl v =>
-        intros neq
-        rw [neq] at v
-        contradiction
-      | inr v =>
-        intros neq
-        rw [neq] at v
-        contradiction
-    · intros h
-      push Not at h
-      -- rw [←UInt64.lt_toNat_iff]
-      by_contra h'
-      push Not at h'
-      simp only [UInt64.not_le, UInt64.not_lt] at h'
-      rcases h' with ⟨h_1, h_2⟩
-      have h_eq : a = 5 := by
-        -- rw [UInt64.ext_iff]
-        apply UInt64.le_antisymm
-        · exact h_2
-        · grind
-      rw [h_eq] at h
-      contradiction
+    grind
   rw [this]
   apply specification_JumpEqZero_false (pc := 4) (reg := 3) (label := "finish")
   · simp

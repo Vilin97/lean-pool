@@ -83,8 +83,7 @@ theorem MeasureTheory.Measure.AbsolutelyContinuous.exists_pos_forall_lt_imp_lt_o
     ∃ δ : ℝ≥0, δ > 0 ∧ ∀ s, ν s < δ → μ s < ε := by
   obtain ⟨φ, hφm, rfl⟩ : ∃ φ : α → ℝ≥0∞, Measurable φ ∧ μ = ν.withDensity φ := by
     refine ⟨μ.rnDeriv ν, by fun_prop, ?_⟩
-    symm
-    refine Measure.absolutelyContinuous_iff_withDensity_rnDeriv_eq.mp h
+    exact (Measure.absolutelyContinuous_iff_withDensity_rnDeriv_eq.mp h).symm
   have hφ : ∫⁻ x, φ x ∂ν ≠ ⊤ := by
     rw [← setLIntegral_univ, ← withDensity_apply _ .univ]
     apply measure_ne_top
@@ -111,7 +110,7 @@ theorem exists_absolutelyContinuous_forall_pos_exists_lt_gt :
   -- Define the measures μ and ν as described.
   use MeasureTheory.volume.withDensity (‖·‖ₑ), MeasureTheory.volume
   constructor
-  · exact withDensity_absolutelyContinuous volume fun x ↦ ↑(Real.nnabs x);
+  · exact withDensity_absolutelyContinuous volume fun x ↦ ↑(Real.nnabs x)
   · intro C δ hδ
     -- Choose $a > 0$ large enough such that $a * δ / 2 > C$.
     obtain ⟨a, ha₀, ha⟩ : ∃ a : ℝ≥0, a > 0 ∧ a * δ / 2 > C := by

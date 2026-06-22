@@ -24,6 +24,25 @@ open Cardinal Ideal Polynomial Set Pointwise
 
 variable {T : Type*} [CommRing T] [IsLocalRing T] [IsNoetherianRing T] [IsDomain T]
 
+/- A nonzero prime ideal `J` contained in a prime ideal `I` of height `≤ 1` must
+equal `I`: a strict inclusion `J < I` would force `J.height < 1`, but `⊥ < J`
+already gives `J.height ≥ 1`. -/
+private theorem eq_of_le_of_height_le_one {A : Type*} [CommRing A] [IsDomain A]
+    {J I : Ideal A} [J.IsPrime] [I.IsPrime] (hJ_ne_bot : J ≠ ⊥) (hJI : J ≤ I)
+    (hI_ht : I.height ≤ (1 : ℕ∞)) : J = I := by
+  by_contra hne
+  have hstrict : J < I := lt_of_le_of_ne hJI hne
+  rw [show (1 : ℕ∞) = ↑(1 : ℕ) from rfl, Ideal.height_le_iff] at hI_ht
+  have hJ_height : J.height < ↑(1 : ℕ) := hI_ht J inferInstance hstrict
+  have hbot_lt : (⊥ : Ideal A) < J := bot_lt_iff_ne_bot.mpr hJ_ne_bot
+  have hbot_fin : (⊥ : Ideal A).FiniteHeight := ⟨Or.inr (by simp [Ideal.height_bot])⟩
+  have h0 : (⊥ : Ideal A).height < J.height :=
+    @Ideal.height_strict_mono_of_isPrime A _ (⊥ : Ideal A) J Ideal.isPrime_bot hbot_lt hbot_fin
+  rw [Ideal.height_bot] at h0
+  rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hJ_height
+  rw [hJ_height] at h0
+  exact lt_irrefl _ h0
+
 /- Derive mod-principal transcendence from the stronger mod-P version.
 If for every associated prime P of T/(p) with y ∉ P, the polynomial
 evaluation aeval x f ∈ P implies C(p) | f, then aeval x f ∈ span{p}
@@ -69,21 +88,8 @@ include T in theorem derive_mod_principal_trans
   haveI : (Ideal.span {p}).IsPrime :=
     (Ideal.span_singleton_prime (α := R.carrier) hp.ne_zero).mpr hp
   -- Since R is a UFD and P∩R has height ≤ 1, the prime ideal (p) must equal P∩R
-  have hspan_eq : Ideal.span {p} = P.comap R.carrier.subtype := by
-    by_contra hne
-    have hstrict := lt_of_le_of_ne hspan_le hne
-    rw [show (1 : ℕ∞) = ↑(1 : ℕ) from rfl] at hR_ht
-    rw [Ideal.height_le_iff] at hR_ht
-    have hspan_ht := hR_ht (Ideal.span {p}) inferInstance hstrict
-    have hbot_lt := bot_lt_iff_ne_bot.mpr hspan_ne
-    have hbot_fin : (⊥ : Ideal R.carrier).FiniteHeight :=
-      ⟨Or.inr (by simp [Ideal.height_bot])⟩
-    have h0 := @Ideal.height_strict_mono_of_isPrime R.carrier _
-      (⊥ : Ideal R.carrier) (Ideal.span {p}) Ideal.isPrime_bot hbot_lt hbot_fin
-    rw [Ideal.height_bot] at h0
-    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_ht
-    rw [hspan_ht] at h0
-    exact lt_irrefl _ h0
+  have hspan_eq : Ideal.span {p} = P.comap R.carrier.subtype :=
+    eq_of_le_of_height_le_one hspan_ne hspan_le hR_ht
   -- y ∉ P because p ∤ y and (p) = P∩R
   have hy_nP : (↑y : T) ∉ P := by
     intro hyP
@@ -159,25 +165,8 @@ include T in theorem height_bound_wf_descent
   have hspan_le : Ideal.span {p₀} ≤ Ideal.comap R.carrier.subtype P :=
     Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hp₀_mem)
   -- Height-1 argument: (p₀) = P∩R since there is no room for a strict inclusion
-  have hspan_eq : Ideal.span {p₀} = Ideal.comap R.carrier.subtype P := by
-    by_contra hne
-    have hstrict : Ideal.span {p₀} < Ideal.comap R.carrier.subtype P :=
-      lt_of_le_of_ne hspan_le hne
-    have hht' : (Ideal.comap R.carrier.subtype P).height ≤ ↑(1 : ℕ) := hR_bound
-    rw [Ideal.height_le_iff] at hht'
-    have hspan_height : (Ideal.span {p₀}).height < ↑(1 : ℕ) :=
-      hht' _ inferInstance hstrict
-    have hbot_lt : (⊥ : Ideal R.carrier) < Ideal.span {p₀} :=
-      bot_lt_iff_ne_bot.mpr hspan_ne_bot
-    have hbot_fin : (⊥ : Ideal R.carrier).FiniteHeight :=
-      ⟨Or.inr (by simp [Ideal.height_bot])⟩
-    have h0 : (⊥ : Ideal R.carrier).height < (Ideal.span {p₀}).height :=
-      @Ideal.height_strict_mono_of_isPrime R.carrier _ (⊥ : Ideal R.carrier)
-        (Ideal.span {p₀}) Ideal.isPrime_bot hbot_lt hbot_fin
-    rw [Ideal.height_bot] at h0
-    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_height
-    rw [hspan_height] at h0
-    exact lt_irrefl _ h0
+  have hspan_eq : Ideal.span {p₀} = Ideal.comap R.carrier.subtype P :=
+    eq_of_le_of_height_le_one hspan_ne_bot hspan_le hR_bound
   have hp₀_P : (↑p₀ : T) ∈ P :=
     (hspan_eq ▸ Ideal.mem_span_singleton_self p₀ : p₀ ∈ Ideal.comap R.carrier.subtype P)
   have hp₀_not_unit_T : ¬IsUnit (↑p₀ : T) :=
@@ -389,38 +378,25 @@ private def build_height_bound_proof
     intro x hx
     by_contra hxnM
     exact hP_prime.ne_top (P.eq_top_of_isUnit_mem hx (IsLocalRing.notMem_maximalIdeal.mp hxnM))
-  have heval_x₁_Rbar : ∀ f : Polynomial R.carrier, (aeval x₁ f : T) ∈ Rbar := by
-    intro f
+  have heval_Rbar : ∀ x' : T, x' ∈ Rbar → ∀ f : Polynomial R.carrier,
+      (aeval x' f : T) ∈ Rbar := by
+    intro x' hx'_Rbar f
     induction f using Polynomial.induction_on' with
     | add f g hf hg => rw [map_add]
                        exact hRbar_add _ _ hf hg
     | monomial n r =>
       rw [Polynomial.aeval_monomial]
-      change (algebraMap R.carrier T r) * x₁ ^ n ∈ Rbar
+      change (algebraMap R.carrier T r) * x' ^ n ∈ Rbar
       exact hRbar_mul _ _ (R_le_intersectionSet R x₁ x₂ y₁ y₂ r) (by
         induction n with
         | zero => simp only [pow_zero]
                   exact hRbar_one
         | succ n ih => rw [pow_succ]
-                       exact hRbar_mul _ _ ih hx₁_Rbar)
+                       exact hRbar_mul _ _ ih hx'_Rbar)
   have heval_x₁_S : ∀ f : Polynomial R.carrier, (aeval x₁ f : T) ∈ S_sub :=
-    fun f => hRbar_le_S _ (heval_x₁_Rbar f)
-  have heval_x₂_Rbar : ∀ f : Polynomial R.carrier, (aeval x₂ f : T) ∈ Rbar := by
-    intro f
-    induction f using Polynomial.induction_on' with
-    | add f g hf hg => rw [map_add]
-                       exact hRbar_add _ _ hf hg
-    | monomial n r =>
-      rw [Polynomial.aeval_monomial]
-      change (algebraMap R.carrier T r) * x₂ ^ n ∈ Rbar
-      exact hRbar_mul _ _ (R_le_intersectionSet R x₁ x₂ y₁ y₂ r) (by
-        induction n with
-        | zero => simp only [pow_zero]
-                  exact hRbar_one
-        | succ n ih => rw [pow_succ]
-                       exact hRbar_mul _ _ ih hx₂_Rbar)
+    fun f => hRbar_le_S _ (heval_Rbar x₁ hx₁_Rbar f)
   have heval_x₂_S : ∀ f : Polynomial R.carrier, (aeval x₂ f : T) ∈ S_sub :=
-    fun f => hRbar_le_S _ (heval_x₂_Rbar f)
+    fun f => hRbar_le_S _ (heval_Rbar x₂ hx₂_Rbar f)
   -- Coprimality of y₁, y₂: at least one of them avoids P
   have hy_or : (↑y₁ : T) ∉ P ∨ (↑y₂ : T) ∉ P := by
     by_cases hPR : Ideal.comap R.carrier.subtype P = ⊥
@@ -852,71 +828,44 @@ private def build_intersection_nsubring_proof
     refine ⟨1, t, hRbar_one, ht, ht_notM, ?_⟩
     rw [ht_unit.val_inv_mul]
   -- Rbar is closed under division by primes of R (key for building the UFD structure)
+  have hdiv_aux : ∀ (p : R.carrier), Prime p → ∀ (d : T) (x' : T) (y' : R.carrier),
+      (∀ (q : R.carrier), Prime q → ¬q ∣ y' → ∀ (g : Polynomial R.carrier),
+        aeval x' g ∈ Ideal.span {(↑q : T)} → (C q : Polynomial R.carrier) ∣ g) →
+      (↑p : T) * d ∈ adjoinLocSetY R x' y' → d ∈ adjoinLocSetY R x' y' := by
+    intro p hp d x' y' hmod_trans ⟨f, n, hfn⟩
+    have hpd_eq : (↑p : T) * (d * (↑y' : T) ^ n) = aeval x' f := by
+      rw [← hfn]
+      ring
+    by_cases hpy' : p ∣ y'
+    · obtain ⟨q, hq⟩ := hpy'
+      have hy'_eq : (↑y' : T) = (↑p : T) * (↑q : T) := by
+        rw [hq]
+        simp
+      refine ⟨f * C q, n + 1, ?_⟩
+      have key : d * (↑y' : T) ^ (n + 1) = aeval x' f * (↑q : T) := by
+        have hpow : (↑y' : T) ^ (n + 1) = (↑y' : T) ^ n * ((↑p : T) * (↑q : T)) := by
+          rw [pow_succ, hy'_eq]
+        rw [hpow]
+        have : d * ((↑y' : T) ^ n * ((↑p : T) * (↑q : T))) =
+            ((↑p : T) * (d * (↑y' : T) ^ n)) * (↑q : T) := by ring
+        rw [this, hpd_eq]
+      rw [key, map_mul, aeval_C,
+        show algebraMap R.carrier T = R.carrier.subtype from rfl, Subring.coe_subtype]
+    · suffices hCp_dvd : (C p : Polynomial R.carrier) ∣ f by
+        obtain ⟨g, hfg⟩ := hCp_dvd
+        have hr_ne : (↑p : T) ≠ 0 :=
+          fun h => hp.ne_zero (R.carrier.subtype_injective h)
+        refine ⟨g, n, mul_left_cancel₀ hr_ne ?_⟩
+        rw [hpd_eq, hfg, map_mul, aeval_C,
+          show algebraMap R.carrier T = R.carrier.subtype from rfl]
+        rfl
+      exact hmod_trans p hp hpy' f
+        (Ideal.mem_span_singleton.mpr ⟨d * (↑y' : T) ^ n, hpd_eq.symm⟩)
   have hR_prime_div_Rbar : ∀ (p : R.carrier), Prime p → ∀ t ∈ Rbar,
       ∀ (d : T), t = (↑p : T) * d → d ∈ Rbar := by
     intro p hp t ⟨ht_A1, ht_A2⟩ d htpd
-    have hcop := hcoprime p hp
-    push Not at hcop
-    constructor
-    · obtain ⟨f, n, hfn⟩ := ht_A1
-      have hpd_eq : (↑p : T) * (d * (↑y₂ : T) ^ n) = aeval x₁ f := by
-        rw [← hfn, htpd]
-        ring
-      -- If p | y₂, absorb extra y₂ into the polynomial; otherwise use mod-principal transcendence
-      by_cases hpy₂ : p ∣ y₂
-      · obtain ⟨q, hq⟩ := hpy₂
-        have hy₂_eq : (↑y₂ : T) = (↑p : T) * (↑q : T) := by
-          rw [hq]
-          simp
-        refine ⟨f * C q, n + 1, ?_⟩
-        have key : d * (↑y₂ : T) ^ (n + 1) = aeval x₁ f * (↑q : T) := by
-          have hpow : (↑y₂ : T) ^ (n + 1) = (↑y₂ : T) ^ n * ((↑p : T) * (↑q : T)) := by
-            rw [pow_succ, hy₂_eq]
-          rw [hpow]
-          have : d * ((↑y₂ : T) ^ n * ((↑p : T) * (↑q : T))) =
-              ((↑p : T) * (d * (↑y₂ : T) ^ n)) * (↑q : T) := by ring
-          rw [this, hpd_eq]
-        rw [key, map_mul, aeval_C,
-          show algebraMap R.carrier T = R.carrier.subtype from rfl, Subring.coe_subtype]
-      · suffices hCp_dvd : (C p : Polynomial R.carrier) ∣ f by
-          obtain ⟨g, hfg⟩ := hCp_dvd
-          have hr_ne : (↑p : T) ≠ 0 :=
-            fun h => hp.ne_zero (R.carrier.subtype_injective h)
-          refine ⟨g, n, mul_left_cancel₀ hr_ne ?_⟩
-          rw [hpd_eq, hfg, map_mul, aeval_C,
-            show algebraMap R.carrier T = R.carrier.subtype from rfl]
-          rfl
-        exact hx₁_mod_trans p hp hpy₂ f
-          (Ideal.mem_span_singleton.mpr ⟨d * (↑y₂ : T) ^ n, hpd_eq.symm⟩)
-    · obtain ⟨f, n, hfn⟩ := ht_A2
-      have hpd_eq : (↑p : T) * (d * (↑y₁ : T) ^ n) = aeval x₂ f := by
-        rw [← hfn, htpd]
-        ring
-      by_cases hpy₁ : p ∣ y₁
-      · obtain ⟨q, hq⟩ := hpy₁
-        have hy₁_eq : (↑y₁ : T) = (↑p : T) * (↑q : T) := by
-          rw [hq]
-          simp
-        refine ⟨f * C q, n + 1, ?_⟩
-        have key : d * (↑y₁ : T) ^ (n + 1) = aeval x₂ f * (↑q : T) := by
-          have hpow : (↑y₁ : T) ^ (n + 1) = (↑y₁ : T) ^ n * ((↑p : T) * (↑q : T)) := by
-            rw [pow_succ, hy₁_eq]
-          rw [hpow]
-          have : d * ((↑y₁ : T) ^ n * ((↑p : T) * (↑q : T))) =
-              ((↑p : T) * (d * (↑y₁ : T) ^ n)) * (↑q : T) := by ring
-          rw [this, hpd_eq]
-        rw [key, map_mul, aeval_C,
-          show algebraMap R.carrier T = R.carrier.subtype from rfl, Subring.coe_subtype]
-      · suffices hCp_dvd : (C p : Polynomial R.carrier) ∣ f by
-          obtain ⟨g, hfg⟩ := hCp_dvd
-          have hr_ne : (↑p : T) ≠ 0 :=
-            fun h => hp.ne_zero (R.carrier.subtype_injective h)
-          refine ⟨g, n, mul_left_cancel₀ hr_ne ?_⟩
-          rw [hpd_eq, hfg, map_mul, aeval_C,
-            show algebraMap R.carrier T = R.carrier.subtype from rfl]
-          rfl
-        exact hx₂_mod_trans p hp hpy₁ f
-          (Ideal.mem_span_singleton.mpr ⟨d * (↑y₁ : T) ^ n, hpd_eq.symm⟩)
+    exact ⟨hdiv_aux p hp d x₁ y₂ hx₁_mod_trans (htpd ▸ ht_A1),
+      hdiv_aux p hp d x₂ y₁ hx₂_mod_trans (htpd ▸ ht_A2)⟩
   -- Primes of R remain prime in S, then build UFD structure on S
   have hR_prime_in_S := build_R_prime_in_S R x₁ x₂ y₁ y₂ S_sub
     hR_le hx₁_trans hx₂_trans hcoprime hS_sub_eq hR_prime_div_Rbar hinv

@@ -374,8 +374,7 @@ instance instPartialOrderLinearMapIdLeanPool {𝕜 E : Type _} [RCLike 𝕜] [No
     exact LinearMap.IsPositive'.add hbc hab
   le_antisymm := by
     rintro a b hba hab
-    rw [← sub_eq_zero]
-    rw [← LinearMap.IsSymmetric.inner_map_self_eq_zero hab.1]
+    rw [← sub_eq_zero, ← LinearMap.IsSymmetric.inner_map_self_eq_zero hab.1]
     intro x
     have hba2 := hba.2 x
     rw [← neg_le_neg_iff, ← inner_neg_right, ← LinearMap.neg_apply, neg_sub, neg_zero] at hba2
@@ -729,8 +728,7 @@ theorem rankOne_self_isMinimalProjection' [InnerProductSpace ℂ E] [CompleteSpa
       by
       rw [Submodule.span_singleton_smul_eq _]
       refine Ne.isUnit ?_
-      rw [ne_eq]
-      rw [← pow_eq_zero_iff two_ne_zero]
+      rw [ne_eq, ← pow_eq_zero_iff two_ne_zero]
       norm_cast
     rw [← Complex.coe_smul, this]
     exact rankOne_self_isMinimalProjection hy

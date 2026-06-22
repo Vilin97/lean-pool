@@ -87,8 +87,7 @@ def S : Set (A ⊗[F] B) :=
 @[simp]
 lemma mem_S (x : A ⊗[F] B) :
     x ∈ S α β ↔ ∃ (k : K) (a : A) (b : B), x = (k • a) ⊗ₜ b - a ⊗ₜ (k • b) := by
-  simp only [S, Set.mem_range, Prod.exists]
-  aesop
+  simp only [S, Set.mem_range, Prod.exists, eq_comm]
 
 variable (α β) in
 /-- The balanced tensor-product module used in the multiplicativity proof. -/

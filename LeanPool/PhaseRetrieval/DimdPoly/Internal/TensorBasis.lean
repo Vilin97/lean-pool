@@ -102,8 +102,7 @@ theorem exact_truncate_coeff_energy
   have hsupp : (truncateFinset E F).support ⊆ E := by
     intro alpha halpha
     by_contra hnot
-    have hzero : truncateFinset E F alpha = 0 := by
-      simp [hcoeff alpha, hnot]
+    have hzero : truncateFinset E F alpha = 0 := by simp [hcoeff alpha, hnot]
     exact (Finsupp.mem_support_iff.mp halpha) hzero
   change
     (Real.sqrt (Finset.sum (truncateFinset E F).support
@@ -143,8 +142,7 @@ private theorem phi1D_eq_oneDimPhi
       calc
         ((Nat.factorial j : ℂ) * (Nat.choose n j : ℂ)) * (Nat.factorial (n - j) : ℂ)
             = (Nat.choose n j : ℂ) * (Nat.factorial j : ℂ) * (Nat.factorial (n - j) : ℂ) := by ring
-        _ = (Nat.factorial n : ℂ) := by
-            exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
+        _ = (Nat.factorial n : ℂ) := by exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
         _ = ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ)) *
               (Nat.factorial (n - j) : ℂ) := by
             field_simp [hfac_ne]
@@ -174,10 +172,8 @@ private lemma oneDimPhi_phaseLaw
         ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) := by
     calc
       Complex.exp (Complex.I * t) * z =
-          Complex.exp (Complex.I * t) * ((‖z‖ : ℂ) * Complex.exp (Complex.I * z.arg)) := by
-            rw [hz]
-      _ = ((‖z‖ : ℂ) * Complex.exp (Complex.I * t)) * Complex.exp (Complex.I * z.arg) := by
-            ring_nf
+          Complex.exp (Complex.I * t) * ((‖z‖ : ℂ) * Complex.exp (Complex.I * z.arg)) := by rw [hz]
+      _ = ((‖z‖ : ℂ) * Complex.exp (Complex.I * t)) * Complex.exp (Complex.I * z.arg) := by ring_nf
       _ = (‖z‖ : ℂ) * (Complex.exp (Complex.I * t) * Complex.exp (Complex.I * z.arg)) := by
             rw [mul_assoc]
       _ = ((‖z‖ : ℂ) * Complex.exp (Complex.I * (t + z.arg))) := by
@@ -236,9 +232,7 @@ theorem Phi_rotate_one_exp
     · subst hq
       simp
     · simp [Function.update, hq]
-  rw [hupdate]
-  rw [Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp)]
-  rw [oneDimPhi_phaseLaw]
+  rw [hupdate, Finset.prod_update_of_mem (s := Finset.univ) (i := q0) (by simp), oneDimPhi_phaseLaw]
   conv_rhs =>
     rw [Finset.prod_eq_mul_prod_diff_singleton_of_mem (s := Finset.univ) (i := q0) (by simp)]
   ring_nf
@@ -262,16 +256,15 @@ theorem Phi_rotateCoord_circle_phase
       Phi kappa alpha z := by
   induction x using Quotient.inductionOn with
   | h θ =>
-      rw [fourier_mk_eq_exp ((kappa q0 : Nat) : Int) θ]
-      rw [fourier_mk_eq_exp ((alpha q0 : Nat) : Int) θ]
-      rw [fourier_mk_eq_exp (1 : Int) θ]
+      rw [fourier_mk_eq_exp ((kappa q0 : Nat) : Int) θ,
+        fourier_mk_eq_exp ((alpha q0 : Nat) : Int) θ,
+        fourier_mk_eq_exp (1 : Int) θ]
       have hone :
         Complex.exp (Complex.I * ((1 : ℤ) : ℂ) * θ) =
             Complex.exp (Complex.I * θ) := by
         congr 1
         ring_nf
-      rw [hone]
-      rw [Phi_rotate_one_exp]
+      rw [hone, Phi_rotate_one_exp]
       have hphase :
           Complex.exp (Complex.I * (((kappa q0 : Nat) : Int) : ℂ) * θ) *
               (Complex.exp
@@ -313,8 +306,7 @@ theorem evalPkappa_rotateCoord_circle_phase_sum
             Phi kappa alpha
               (Function.update z q0 ((fourier (1 : Int) x : ℂ) * z q0))) := by
           ring_nf
-    _ = F alpha * ((fourier ((alpha q0 : Nat) : Int) x : ℂ) * Phi kappa alpha z) := by
-          rw [hphase]
+    _ = F alpha * ((fourier ((alpha q0 : Nat) : Int) x : ℂ) * Phi kappa alpha z) := by rw [hphase]
     _ = F alpha * Phi kappa alpha z * circleChar (alpha q0) x := by
           rw [hchar]
           ring_nf
@@ -750,8 +742,7 @@ theorem evalPkappaL2_smul
             rw [congrFun (evalPkappa_smul hd kappa c F) z]
             rfl
     _ = c • hF.toLp (evalPkappa kappa F) := hF.toLp_const_smul c
-    _ = c • evalPkappaL2 kappa F := by
-          rw [← evalPkappaL2_eq_toLp hd kappa F]
+    _ = c • evalPkappaL2 kappa F := by rw [← evalPkappaL2_eq_toLp hd kappa F]
 
 theorem evalPkappaL2_zero
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) :
@@ -918,8 +909,7 @@ private lemma choose_partial_sum_le_pow_two (k n : ℕ) :
             omega
           · intro j _ _
             positivity
-    _ = (2 : ℝ) ^ k := by
-          exact_mod_cast Nat.sum_range_choose k
+    _ = (2 : ℝ) ^ k := by exact_mod_cast Nat.sum_range_choose k
 
 private lemma summable_nat_pow_mul_pow_div_factorial_nonneg
     (m : ℕ) {x : ℝ} (hx : 0 ≤ x) :
@@ -946,8 +936,7 @@ private lemma summable_nat_pow_mul_pow_div_factorial_nonneg
           gcongr
           nlinarith
         _ = (m + 1 : ℝ) ^ m * (n + 1 : ℝ) ^ m := by rw [mul_pow]
-        _ ≤ (m + 1 : ℝ) ^ m * (((n + m).descFactorial m : ℕ) : ℝ) := by
-          gcongr
+        _ ≤ (m + 1 : ℝ) ^ m * (((n + m).descFactorial m : ℕ) : ℝ) := by gcongr
     have hfact :
         (Nat.factorial n : ℝ) * (((n + m).descFactorial m : ℕ) : ℝ) =
           (Nat.factorial (n + m) : ℝ) := by
@@ -963,8 +952,7 @@ private lemma summable_nat_pow_mul_pow_div_factorial_nonneg
       have hnfact : (Nat.factorial n : ℝ) ≠ 0 := by positivity
       have hndesc_nat : (n + m).descFactorial m ≠ 0 := by
         exact Nat.ne_of_gt (Nat.descFactorial_pos.mpr (show m ≤ n + m by omega))
-      have hndesc : (((n + m).descFactorial m : ℕ) : ℝ) ≠ 0 := by
-        exact_mod_cast hndesc_nat
+      have hndesc : (((n + m).descFactorial m : ℕ) : ℝ) ≠ 0 := by exact_mod_cast hndesc_nat
       field_simp [hnfact, hndesc]
     calc
       f (n + m) =
@@ -1064,16 +1052,12 @@ private lemma phi1D_norm_le_majorant
     have hratio := factorial_ratio_le_pow_succ hjn hjk
     have hz1 : ‖z‖ ^ (n - j) ≤ R ^ n := by
       calc
-        ‖z‖ ^ (n - j) ≤ R ^ (n - j) := by
-          exact pow_le_pow_left₀ (norm_nonneg _) hz _
-        _ ≤ R ^ n := by
-          exact pow_le_pow_right₀ hR (Nat.sub_le _ _)
+        ‖z‖ ^ (n - j) ≤ R ^ (n - j) := by exact pow_le_pow_left₀ (norm_nonneg _) hz _
+        _ ≤ R ^ n := by exact pow_le_pow_right₀ hR (Nat.sub_le _ _)
     have hz2 : ‖z‖ ^ (k - j) ≤ R ^ k := by
       calc
-        ‖z‖ ^ (k - j) ≤ R ^ (k - j) := by
-          exact pow_le_pow_left₀ (norm_nonneg _) hz _
-        _ ≤ R ^ k := by
-          exact pow_le_pow_right₀ hR (Nat.sub_le _ _)
+        ‖z‖ ^ (k - j) ≤ R ^ (k - j) := by exact pow_le_pow_left₀ (norm_nonneg _) hz _
+        _ ≤ R ^ k := by exact pow_le_pow_right₀ hR (Nat.sub_le _ _)
     calc
       ‖term j‖ =
           (Nat.choose k j : ℝ) *
@@ -1081,8 +1065,7 @@ private lemma phi1D_norm_le_majorant
               ‖z‖ ^ (n - j) * ‖z‖ ^ (k - j) := by
             dsimp [term]
             simp [norm_pow]
-      _ ≤ (Nat.choose k j : ℝ) * ((n + 1 : ℝ) ^ k) * R ^ n * R ^ k := by
-            gcongr
+      _ ≤ (Nat.choose k j : ℝ) * ((n + 1 : ℝ) ^ k) * R ^ n * R ^ k := by gcongr
       _ = (Nat.choose k j : ℝ) * common := by
             dsimp [common]
             ring
@@ -1254,8 +1237,7 @@ private lemma compact_exists_coord_bound
   refine ⟨max 1 r, le_max_left _ _, ?_⟩
   intro z hz q
   have hzball := hr hz
-  have hznorm : ‖z‖ ≤ r := by
-    simpa [Metric.mem_closedBall, dist_eq_norm] using hzball
+  have hznorm : ‖z‖ ≤ r := by simpa [Metric.mem_closedBall, dist_eq_norm] using hzball
   exact le_trans (norm_le_pi_norm z q) (le_trans hznorm (le_max_right _ _))
 
 private lemma partialSum_uniformCauchy_on_compact
@@ -1430,8 +1412,7 @@ theorem coeff_recovery
   let _ := hd
   let Φ : L2Tensor d := PhiL2 kappa beta
   have hlimL2 := (toL2_eq_boxLimit hd kappa U).1
-  have hinner_cont : Continuous (fun F : L2Tensor d => inner ℂ Φ F) := by
-    fun_prop
+  have hinner_cont : Continuous (fun F : L2Tensor d => inner ℂ Φ F) := by fun_prop
   have hlim_inner :
       Filter.Tendsto
         (fun J : MultiIndex d =>
@@ -1456,8 +1437,7 @@ theorem coeff_recovery
             simpa [Φ] using (finite_coeff_recovery hd kappa (truncateFinset (box J) U) beta).symm
       _ = coeffSkappa U beta := by
             simp only [coeffPkappa, coeffSkappa, truncateFinset]
-            rw [Finsupp.finsetSum_apply]
-            rw [Finset.sum_eq_single beta]
+            rw [Finsupp.finsetSum_apply, Finset.sum_eq_single beta]
             · simp
             · intro alpha halpha hne
               simp [Finsupp.single_eq_of_ne hne.symm]
@@ -1509,8 +1489,7 @@ theorem toFun_smul_complex
           change (w * U.coeff alpha) * Phi kappa alpha z =
             w * (U.coeff alpha * Phi kappa alpha z)
           rw [mul_assoc]
-    _ = w * ∑' alpha : Idx d, U.coeff alpha * Phi kappa alpha z := by
-          rw [tsum_mul_left]
+    _ = w * ∑' alpha : Idx d, U.coeff alpha * Phi kappa alpha z := by rw [tsum_mul_left]
 
 theorem skappa_ext_of_toFun_eq
     {d : Nat} (hd : 0 < d) {kappa : MultiIndex d} {U V : Skappa d kappa}
@@ -1521,9 +1500,7 @@ theorem skappa_ext_of_toFun_eq
   calc
     coeffSkappa U beta = inner ℂ (PhiL2 kappa beta) (toL2 kappa U) := by
       exact coeff_recovery hd kappa U beta
-    _ = inner ℂ (PhiL2 kappa beta) (toL2 kappa V) := by
-      rw [toL2_eq_of_toFun_eq hd h]
-    _ = coeffSkappa V beta := by
-      exact (coeff_recovery hd kappa V beta).symm
+    _ = inner ℂ (PhiL2 kappa beta) (toL2 kappa V) := by rw [toL2_eq_of_toFun_eq hd h]
+    _ = coeffSkappa V beta := by exact (coeff_recovery hd kappa V beta).symm
 
 end DimdPolyLEAN

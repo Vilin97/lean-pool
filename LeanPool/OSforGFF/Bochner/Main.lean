@@ -1156,8 +1156,7 @@ theorem gaussianRegularize_measures_tight (φ : V → ℂ)
       calc 16 * ‖y‖ ^ 2 / δ
           ≤ Real.sqrt (16 * ‖y‖ ^ 2 / δ) ^ 2 :=
             le_of_eq (Real.sq_sqrt (by positivity)).symm
-        _ < r ^ 2 := by
-            exact pow_lt_pow_left₀ hsqrt_le (Real.sqrt_nonneg _) (by norm_num)
+        _ < r ^ 2 := pow_lt_pow_left₀ hsqrt_le (Real.sqrt_nonneg _) (by norm_num)
     rw [inv_pow, mul_inv_lt_iff₀ (sq_pos_of_pos hr_pos)]
     -- hr_sq: 16 * ‖y‖² / δ < r², i.e. 16 * ‖y‖² < δ * r²
     rw [div_lt_iff₀ hδ_pos] at hr_sq

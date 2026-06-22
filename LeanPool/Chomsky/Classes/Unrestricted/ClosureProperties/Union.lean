@@ -91,12 +91,7 @@ def lg₁ : LiftedGrammar T :=
     )
     (by
       rintro r ⟨rin, n₁, rnt⟩
-      rw [show (unionGrammar g₁ g₂).rules =
-        ⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩ ::
-        ⟨[], none, [], [Symbol.nonterminal (some ▶g₂.initial)]⟩ ::
-        (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
-          g₂.rules.map (liftRule (some ∘ Sum.inr))) from rfl] at rin
-      rw [List.mem_cons, List.mem_cons] at rin
+      rw [unionGrammar_rules, List.mem_cons, List.mem_cons] at rin
       obtain req₁ | req₂ | rin₃ := rin
       on_goal 3 => obtain rin₁ | rin₂ := List.mem_append.mp rin₃
       · exfalso
@@ -142,12 +137,7 @@ def lg₂ : LiftedGrammar T :=
     )
     (by
       rintro r ⟨rin, n₁, rnt⟩
-      rw [show (unionGrammar g₁ g₂).rules =
-        ⟨[], none, [], [Symbol.nonterminal (some ◄g₁.initial)]⟩ ::
-        ⟨[], none, [], [Symbol.nonterminal (some ▶g₂.initial)]⟩ ::
-        (g₁.rules.map (liftRule (some ∘ Sum.inl)) ++
-          g₂.rules.map (liftRule (some ∘ Sum.inr))) from rfl] at rin
-      rw [List.mem_cons, List.mem_cons] at rin
+      rw [unionGrammar_rules, List.mem_cons, List.mem_cons] at rin
       obtain req₁ | req₂ | rin₃ := rin
       on_goal 3 => obtain rin₁ | rin₂ := List.mem_append.mp rin₃
       · exfalso
@@ -175,9 +165,7 @@ by
   rcases hggw with hggw₁ | hggw₂
   · exfalso
     have zeroth := congr_arg (·[0]?) hggw₁
-    cases w
-    · simp at zeroth
-    · simp at zeroth
+    cases w <;> simp at zeroth
   rcases hggw₂ with ⟨i, ⟨r, rin, u, v, bef, aft⟩, deri⟩
   have uv_nil : u = [] ∧ v = [] := by
     have bef_len := congr_arg List.length bef

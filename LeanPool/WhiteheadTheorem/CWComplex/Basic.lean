@@ -170,8 +170,8 @@ noncomputable abbrev pushoutInr :=
   Limits.pushout.inr (Limits.Sigma.desc att.attachMaps) (Limits.Sigma.map fun _ ↦ f)
 
 lemma attachMaps_apply_eq_ι_desc : att.attachMaps α =
-    Limits.Sigma.ι (fun _ ↦ S) α ≫ Limits.Sigma.desc att.attachMaps := by
-  exact (Limits.Sigma.ι_desc _ _).symm
+    Limits.Sigma.ι (fun _ ↦ S) α ≫ Limits.Sigma.desc att.attachMaps :=
+  (Limits.Sigma.ι_desc _ _).symm
 
 /--
 ```

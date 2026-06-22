@@ -73,16 +73,12 @@ private lemma rho_mul_right (a u : ℂ) :
     simp [rho]
   · have hnn : 0 ≤ ‖a‖ := norm_nonneg _
     rw [rho, rho]
-    have h1 : a + a * u = a * (1 + u) := by
-      ring
+    have h1 : a + a * u = a * (1 + u) := by ring
     rw [h1, norm_mul]
     calc
-      |‖a‖ * ‖1 + u‖ - ‖a‖| = |‖a‖ * (‖1 + u‖ - 1)| := by
-          ring_nf
-      _ = ‖a‖ * |‖1 + u‖ - 1| := by
-          rw [abs_mul, abs_of_nonneg hnn]
-      _ = ‖a‖ * rho 1 u := by
-          simp [rho]
+      |‖a‖ * ‖1 + u‖ - ‖a‖| = |‖a‖ * (‖1 + u‖ - 1)| := by ring_nf
+      _ = ‖a‖ * |‖1 + u‖ - 1| := by rw [abs_mul, abs_of_nonneg hnn]
+      _ = ‖a‖ * rho 1 u := by simp [rho]
 
 private lemma measurableSet_oneDimAnnulus
     (j : ℕ) :
@@ -115,8 +111,7 @@ private lemma integrable_oneDimPhi_cross_gaussian
     Integrable
       (fun z : CSpace 1 => HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))
       (gaussianMeasure 1)
-  rw [gaussianMeasure]
-  rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+  rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
   · have hcross :
         Integrable
           (fun z : CSpace 1 =>
@@ -225,8 +220,7 @@ private theorem gaussianInner_oneDimPhi_eq_weightedInner
           have hdens :
               (ENNReal.ofReal (gaussianDensity 1 z)).toReal =
                 (1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2) := by
-            have hnonneg : 0 ≤ Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by
-              positivity
+            have hnonneg : 0 ≤ Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by positivity
             simp [gaussianDensity, hnonneg]
           rw [Algebra.smul_def, hdens]
           have hcast :
@@ -238,13 +232,11 @@ private theorem gaussianInner_oneDimPhi_eq_weightedInner
                 (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0)))
                 =
               ((1 / Real.pi : ℂ) * (Real.exp (-‖z 0‖ ^ 2) : ℂ)) *
-                (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) := by
-                  rw [hcast]
+                (HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) := by rw [hcast]
             _ =
               (1 / Real.pi : ℂ) *
                 ((HermitekLEAN.Phi k m (z 0) * conj (HermitekLEAN.Phi k n (z 0))) *
-                  (Real.exp (-‖z 0‖ ^ 2) : ℂ)) := by
-                    ring
+                  (Real.exp (-‖z 0‖ ^ 2) : ℂ)) := by ring
     _ =
       (1 / Real.pi : ℂ) *
         ∫ z : CSpace 1,
@@ -350,8 +342,7 @@ private theorem annulusMass_oneDimPhi_eq_annulusIntegralSq
           have hdens :
               (ENNReal.ofReal (gaussianDensity 1 z)).toReal =
                 (1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2) := by
-            have hnonneg : 0 ≤ Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by
-              positivity
+            have hnonneg : 0 ≤ Real.pi⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by positivity
             simp [gaussianDensity, hnonneg]
           rw [hdens]
           simp [smul_eq_mul]
@@ -661,8 +652,7 @@ theorem oneVariableFiniteParseval
               symm
               exact gaussianInner_self (F := evalHermiteSum (fun _ => k) G)
       _ = Finset.sum G.support (fun α => G.coeff α * conj (G.coeff α)) := hinner
-      _ = (((Finset.sum G.support fun α => ‖G.coeff α‖ ^ 2 : ℝ)) : ℂ) := by
-            simp [Complex.mul_conj']
+      _ = (((Finset.sum G.support fun α => ‖G.coeff α‖ ^ 2 : ℝ)) : ℂ) := by simp [Complex.mul_conj']
   exact hsq
 
 /-- Imported one-variable localization estimate for `n ≥ 1`. -/
@@ -719,10 +709,8 @@ private lemma zero_shift_exp_compare
     rw [hx, hy, ← Real.exp_add]
     apply Real.exp_le_exp.mpr
     let y : ℝ := (j : ℝ) - ((k + 5 : ℕ) : ℝ)
-    have hybound : 2 * y ≤ y ^ 2 + 1 := by
-      nlinarith [sq_nonneg (y - 1)]
-    have hsq : (y + 1) ^ 2 ≤ 4 * (y ^ 2 + 1) := by
-      nlinarith
+    have hybound : 2 * y ≤ y ^ 2 + 1 := by nlinarith [sq_nonneg (y - 1)]
+    have hsq : (y + 1) ^ 2 ≤ 4 * (y ^ 2 + 1) := by nlinarith
     have hsq' :
         ((j : ℝ) - ((k + 4 : ℕ) : ℝ)) ^ 2 ≤
           4 * (((j : ℝ) - ((k + 5 : ℕ) : ℝ)) ^ 2 + 1) := by
@@ -793,8 +781,7 @@ theorem highFrequencyBandEstimate
       _ ≤ 32 * HermiteLEAN.circleRhoNormSq
             (HermiteLEAN.positiveTrigonometricPolynomial
               (HermiteLEAN.frequencyBand N L) (bandCoeff N L c)) := by
-            have hgap_real : 1343 * (L : ℝ) ^ 2 ≤ (N : ℝ) ^ 2 := by
-              exact_mod_cast hgap
+            have hgap_real : 1343 * (L : ℝ) ^ 2 ≤ (N : ℝ) ^ 2 := by exact_mod_cast hgap
             simpa using
               HermitekLEAN.high_frequency_circle_estimate N L hN hL (bandCoeff N L c)
                 hgap_real
@@ -931,12 +918,9 @@ theorem scaledPositiveFrequencyCircleEstimate
         unfold circleL2NormSq
         positivity
       have hcard : 0 < E.card := Finset.card_pos.mpr (Finset.nonempty_iff_ne_empty.mpr hE)
-      have hcardR : (0 : ℝ) < E.card := by
-        exact_mod_cast hcard
-      have honeR : (1 : ℝ) ≤ E.card := by
-        exact_mod_cast (Nat.succ_le_of_lt hcard)
-      have hfac : (1 : ℝ) ≤ 144 * (E.card : ℝ) := by
-        nlinarith
+      have hcardR : (0 : ℝ) < E.card := by exact_mod_cast hcard
+      have honeR : (1 : ℝ) ≤ E.card := by exact_mod_cast (Nat.succ_le_of_lt hcard)
+      have hfac : (1 : ℝ) ≤ 144 * (E.card : ℝ) := by nlinarith
       calc
         circleL2NormSq (positiveFrequencyPolynomial E b)
             = 1 * circleL2NormSq (positiveFrequencyPolynomial E b) := by ring
@@ -964,8 +948,7 @@ theorem scaledPositiveFrequencyCircleEstimate
     have hmulR : (fun t => rho a (a * Q t)) = fun t => ‖a‖ * rho 1 (Q t) := by
       funext t
       simp [rho_mul_right]
-    rw [← hmulP]
-    rw [circleL2NormSq_const_mul]
+    rw [← hmulP, circleL2NormSq_const_mul]
     have hconstR :
         circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) =
           ‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t)) := by
@@ -975,8 +958,7 @@ theorem scaledPositiveFrequencyCircleEstimate
             = ∫ t, (‖a‖ ^ 2) * ‖rho 1 (Q t)‖ ^ 2 ∂AddCircle.haarAddCircle := by
                 apply integral_congr_ae
                 filter_upwards with t
-                have hrho_nn : 0 ≤ rho 1 (Q t) := by
-                  exact abs_nonneg _
+                have hrho_nn : 0 ≤ rho 1 (Q t) := by exact abs_nonneg _
                 have hnorm : ‖‖a‖ * rho 1 (Q t)‖ = ‖a‖ * rho 1 (Q t) := by
                   apply abs_of_nonneg
                   exact mul_nonneg (norm_nonneg _) hrho_nn
@@ -992,10 +974,8 @@ theorem scaledPositiveFrequencyCircleEstimate
           144 * E.card * (‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t))) := by
             have hscaled := mul_le_mul_of_nonneg_left hbaseQ (sq_nonneg ‖a‖)
             simpa [mul_assoc, mul_left_comm, mul_comm] using hscaled
-      _ = 144 * E.card * circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) := by
-            rw [hconstR]
-      _ = 144 * E.card * circleL2NormSq (fun t => rho a (a * Q t)) := by
-            rw [hmulR]
+      _ = 144 * E.card * circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) := by rw [hconstR]
+      _ = 144 * E.card * circleL2NormSq (fun t => rho a (a * Q t)) := by rw [hmulR]
 
 /-- Scalar-rescaled high-frequency estimate for an arbitrary background `a`. -/
 theorem scaledHighFrequencyBandEstimate
@@ -1009,10 +989,8 @@ theorem scaledHighFrequencyBandEstimate
       unfold circleL2NormSq
       positivity
     calc
-      circleL2NormSq P ≤ 32 * circleL2NormSq P := by
-        nlinarith
-      _ = 32 * circleL2NormSq (fun t => rho 0 (P t)) := by
-        simp [circleL2NormSq, rho]
+      circleL2NormSq P ≤ 32 * circleL2NormSq P := by nlinarith
+      _ = 32 * circleL2NormSq (fun t => rho 0 (P t)) := by simp [circleL2NormSq, rho]
   · rcases hP with ⟨c, rfl⟩
     let Q : Circle → ℂ := bandLimitedPolynomial N L (fun m => a⁻¹ * c m)
     have hQ : HasBandlimitedSupport Q N L := ⟨fun m => a⁻¹ * c m, rfl⟩
@@ -1028,8 +1006,7 @@ theorem scaledHighFrequencyBandEstimate
     have hmulR : (fun t => rho a (a * Q t)) = fun t => ‖a‖ * rho 1 (Q t) := by
       funext t
       simp [rho_mul_right]
-    rw [← hmulP]
-    rw [circleL2NormSq_const_mul]
+    rw [← hmulP, circleL2NormSq_const_mul]
     have hscaled :=
       mul_le_mul_of_nonneg_left hbase (sq_nonneg ‖a‖)
     have hconstR :
@@ -1041,8 +1018,7 @@ theorem scaledHighFrequencyBandEstimate
             = ∫ t, (‖a‖ ^ 2) * ‖rho 1 (Q t)‖ ^ 2 ∂AddCircle.haarAddCircle := by
                 apply integral_congr_ae
                 filter_upwards with t
-                have hrho_nn : 0 ≤ rho 1 (Q t) := by
-                  exact abs_nonneg _
+                have hrho_nn : 0 ≤ rho 1 (Q t) := by exact abs_nonneg _
                 have hnorm : ‖‖a‖ * rho 1 (Q t)‖ = ‖a‖ * rho 1 (Q t) := by
                   apply abs_of_nonneg
                   exact mul_nonneg (norm_nonneg _) hrho_nn
@@ -1057,10 +1033,8 @@ theorem scaledHighFrequencyBandEstimate
       ‖a‖ ^ 2 * circleL2NormSq Q ≤
           32 * (‖a‖ ^ 2 * circleL2NormSq (fun t => rho 1 (Q t))) := by
             exact mul_le_mul_of_nonneg_left hbaseQ (sq_nonneg ‖a‖) |>.trans_eq (by ring)
-      _ = 32 * circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) := by
-            rw [hconstR]
-      _ = 32 * circleL2NormSq (fun t => rho a (a * Q t)) := by
-            rw [hmulR]
+      _ = 32 * circleL2NormSq (fun t => ‖a‖ * rho 1 (Q t)) := by rw [hconstR]
+      _ = 32 * circleL2NormSq (fun t => rho a (a * Q t)) := by rw [hmulR]
 
 /-- One-variable angular factorization used in the annulus orthogonality argument. -/
 private lemma oneVariableAngularFactorization_termwise
@@ -1081,8 +1055,7 @@ private lemma oneVariableAngularFactorization_termwise
       (r : ℂ) ^ (k - j) * (r : ℂ) ^ (n - j) =
         (r : ℂ) ^ (n + k - j * 2) := by
     rw [← pow_add]
-    have hpow : (k - j) + (n - j) = n + k - j * 2 := by
-      omega
+    have hpow : (k - j) + (n - j) = n + k - j * 2 := by omega
     rw [hpow]
   have hphase :
       Complex.exp (Complex.I * (t : ℂ)) ^ (n - j) *
@@ -1164,8 +1137,7 @@ theorem oneVariableAngularFactorization
         (r : ℂ) * Complex.exp (-(Complex.I * t)) := by
     calc
       star ((r : ℂ) * Complex.exp (Complex.I * t)) =
-          star (r : ℂ) * star (Complex.exp (Complex.I * t)) := by
-            simp
+          star (r : ℂ) * star (Complex.exp (Complex.I * t)) := by simp
       _ = (r : ℂ) * star (Complex.exp (Complex.I * t)) := by simp
       _ = (r : ℂ) * Complex.exp (star (Complex.I * t)) := by
             simpa using
@@ -1258,9 +1230,7 @@ private lemma gaussianDensity_eq_prod
   | zero =>
       simp [gaussianDensity]
   | succ d ih =>
-      rw [gaussianDensity_succ_split]
-      rw [ih]
-      rw [Fin.prod_univ_succ]
+      rw [gaussianDensity_succ_split, ih, Fin.prod_univ_succ]
 
 private lemma integrable_weighted_coord_of_integrable_gaussian
     (f g : ℂ → ℂ)
@@ -1309,8 +1279,7 @@ private lemma integrable_weighted_coord_of_integrable_gaussian
   have hdens :
       (ENNReal.ofReal (gaussianDensity 1 (e z))).toReal =
         (1 / Real.pi) * Real.exp (-‖z‖ ^ 2) := by
-    have hnonneg' : 0 ≤ π⁻¹ * Real.exp (-‖z‖ ^ 2) := by
-      positivity
+    have hnonneg' : 0 ≤ π⁻¹ * Real.exp (-‖z‖ ^ 2) := by positivity
     simpa [e, gaussianDensity] using (ENNReal.toReal_ofReal hnonneg')
   rw [hdens]
   simp [e, Algebra.smul_def, mul_assoc, mul_left_comm]
@@ -1359,8 +1328,7 @@ private theorem gaussianInner_oneDim_eq_weighted_coord
         ∂(volume : Measure (CSpace 1)) := by
           apply integral_congr_ae
           filter_upwards with z
-          have hnonneg : 0 ≤ π⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by
-            positivity
+          have hnonneg : 0 ≤ π⁻¹ * Real.exp (-‖z 0‖ ^ 2) := by positivity
           have hdens :
               (ENNReal.ofReal (gaussianDensity 1 z)).toReal =
                 (1 / Real.pi) * Real.exp (-‖z 0‖ ^ 2) := by
@@ -1419,8 +1387,7 @@ theorem tensorGaussianFactorization
       Integrable
         (fun z : CSpace d => ∏ q : Fin d, F q (z q) * conj (G q (z q)))
         (gaussianMeasure d) := by
-    rw [gaussianMeasure]
-    rw [MeasureTheory.integrable_withDensity_iff_integrable_smul']
+    rw [gaussianMeasure, MeasureTheory.integrable_withDensity_iff_integrable_smul']
     · convert hprod_volume using 1
       funext z
       have hnonneg : 0 ≤ gaussianDensity d z := by
@@ -1498,15 +1465,13 @@ theorem tensorGaussianFactorization
           ∏ q : Fin d,
             ((((1 / Real.pi) * Real.exp (-‖z q‖ ^ 2) : ℝ) : ℂ) *
               (F q (z q) * conj (G q (z q))))
-          ∂(volume : Measure (CSpace d)) := by
-            rfl
+          ∂(volume : Measure (CSpace d)) := by rfl
       _ = ∫ z : CSpace d,
             ∏ q : Fin d,
               (fun q : Fin d => fun z : ℂ =>
                 ((((1 / Real.pi) * Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ) *
                   (F q z * conj (G q z)))) q (z q)
-            ∂(volume : Measure (CSpace d)) := by
-              rfl
+            ∂(volume : Measure (CSpace d)) := by rfl
       _ = ∏ q : Fin d,
             ∫ z : ℂ,
               (((1 / Real.pi) * Real.exp (-‖z‖ ^ 2) : ℝ) : ℂ) *

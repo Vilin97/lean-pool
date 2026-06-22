@@ -91,8 +91,7 @@ theorem sq_setIntegral_le_measure_mul_setIntegral_sq_proved
   by_cases hf_aesm : AEStronglyMeasurable f (volume.restrict (Icc a b))
   · -- Use Hölder with p = q = 2
     have hpq : (2:ℝ).HolderConjugate 2 := ⟨by norm_num, by norm_num, by norm_num⟩
-    haveI : IsFiniteMeasure (volume.restrict (Icc a b)) := by
-      exact Real.isFiniteMeasure_restrict_Icc a b
+    haveI : IsFiniteMeasure (volume.restrict (Icc a b)) := Real.isFiniteMeasure_restrict_Icc a b
     have h_memLp1 : MemLp (fun (_ : ℝ) => (1:ℂ)) (ENNReal.ofReal 2)
         (volume.restrict (Icc a b)) := by
       rw [show ENNReal.ofReal 2 = (2 : ENNReal) from by norm_num]; exact memLp_const 1

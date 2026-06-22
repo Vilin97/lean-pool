@@ -146,9 +146,9 @@ theorem evalPkappa_lpNorm_eq_norm
 theorem evalPkappaL2_norm
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d) (F : Pkappa d kappa) :
     ‖evalPkappaL2 kappa F‖ = ‖F‖ := by
-  rw [evalPkappaL2_eq_toLp hd kappa F]
-  rw [MeasureTheory.Lp.norm_toLp]
-  rw [MeasureTheory.toReal_eLpNorm (memLp_two_evalPkappa hd kappa F).1]
+  rw [evalPkappaL2_eq_toLp hd kappa F,
+    MeasureTheory.Lp.norm_toLp,
+    MeasureTheory.toReal_eLpNorm (memLp_two_evalPkappa hd kappa F).1]
   exact evalPkappa_lpNorm_eq_norm hd kappa F
 
 theorem evalPkappaL2_sub
@@ -220,8 +220,7 @@ private theorem defect_lpNorm_evalPkappaL2_eq
   filter_upwards [hGF, hF] with z hGFz hFz
   rw [evalPkappaL2_eq_toLp hd kappa (G + F),
     evalPkappaL2_eq_toLp hd kappa F]
-  rw [hGFz, hFz]
-  rw [add_comm G F]
+  rw [hGFz, hFz, add_comm G F]
 
 private theorem phase_alignment
     {H : Type*}
@@ -255,12 +254,9 @@ private theorem phase_alignment
     rw [hu_decomp, sub_eq_add_neg]
     calc
       phase • (f0 + (a • f0 + g)) + -f0
-          = phase • ((1 + a) • f0 + g) + (-1 : ℂ) • f0 := by
-              simp [add_smul, add_assoc]
-      _ = (phase * β) • f0 + phase • g + (-1 : ℂ) • f0 := by
-            simp [β, smul_add, mul_smul]
-      _ = (phase * β) • f0 + (-1 : ℂ) • f0 + phase • g := by
-            abel_nf
+          = phase • ((1 + a) • f0 + g) + (-1 : ℂ) • f0 := by simp [add_smul, add_assoc]
+      _ = (phase * β) • f0 + phase • g + (-1 : ℂ) • f0 := by simp [β, smul_add, mul_smul]
+      _ = (phase * β) • f0 + (-1 : ℂ) • f0 + phase • g := by abel_nf
       _ = ((phase * β - 1 : ℂ) • f0) + phase • g := by
             rw [← add_smul]
             congr 1
@@ -301,8 +297,7 @@ private theorem phase_alignment
   have hcomp : ‖((phase * β - 1 : ℂ) • f0)‖ ≤ ‖a • f0‖ := by
     rw [norm_smul, norm_smul]
     simpa [hf0] using hcoef
-  have hphase_g : ‖phase • g‖ = ‖g‖ := by
-    rw [norm_smul, hphase, one_mul]
+  have hphase_g : ‖phase • g‖ = ‖g‖ := by rw [norm_smul, hphase, one_mul]
   have hnorm_sq_le :
       ‖phase • (f0 + u) - f0‖ * ‖phase • (f0 + u) - f0‖ ≤ ‖u‖ * ‖u‖ := by
     rw [hh_sq, hu_sq, hphase_g]
@@ -443,8 +438,8 @@ theorem modulusDefect_phase_smul
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
     (F Q : Pkappa d kappa) {phase : ℂ} (hphase : ‖phase‖ = 1) :
     modulusDefect kappa F (phase • Q) = modulusDefect kappa F Q := by
-  rw [← defect_sub_eq_modulusDefect hd kappa F (phase • Q)]
-  rw [defect_phase_sub_eq_modulusDefect hd kappa F Q hphase]
+  rw [← defect_sub_eq_modulusDefect hd kappa F (phase • Q),
+    defect_phase_sub_eq_modulusDefect hd kappa F Q hphase]
 
 /--
 Global stable recovery after fixing the positive phase gauge.
@@ -524,8 +519,8 @@ theorem localPhaseStability
       (phase • (f0 + u) - f0 : S) = ⟨evalPkappaL2 kappa H, ⟨H, rfl⟩⟩ := by
     apply Subtype.ext
     dsimp [H, f0, u]
-    rw [evalPkappaL2_sub hd kappa (phase • Q) F, evalPkappaL2_smul hd kappa phase Q]
-    rw [evalPkappaL2_sub hd kappa Q F]
+    rw [evalPkappaL2_sub hd kappa (phase • Q) F, evalPkappaL2_smul hd kappa phase Q,
+      evalPkappaL2_sub hd kappa Q F]
     module
   have hH_norm_le : ‖H‖ ≤ δ := by
     have hu_norm : ‖u‖ = ‖Q - F‖ := by

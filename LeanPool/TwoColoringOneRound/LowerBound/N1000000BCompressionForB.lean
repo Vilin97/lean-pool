@@ -143,55 +143,18 @@ private lemma sum_A_over_baseOrbit_eq_N {k : DirIdx} (u : BaseOrbit k) (a d : Di
     simp [N1000000OrbitalBasis.A, p]
   rw [hA]
   -- Sum of indicators equals the cardinality of the satisfying subtype.
-  have hsum_filter :
-      (∑ v : BaseOrbit a, (if p v then (1 : Q) else 0)) = ((Finset.univ.filter p).card : Q) := by
-    -- Turn the `Fintype` sum into a `Finset` sum and rewrite by filtering.
-    -- Rewrite the sum of indicators as a sum over the filtered set.
-    have hFilter :
-        (Finset.univ.sum (fun v : BaseOrbit a => if p v then (1 : Q) else 0)) =
-          ∑ v ∈ (Finset.univ : Finset (BaseOrbit a)) with p v, (1 : Q) := by
-      -- `Finset.sum_filter` gives `∑ v ∈ univ with p v, 1 = ∑ v ∈ univ, if p v then 1 else 0`.
-      -- We use the symmetric orientation, and `change` to avoid `simp` recursion.
-      exact
-        (Finset.sum_filter (s := (Finset.univ : Finset (BaseOrbit a))) (p := p)
-          (f := fun _v : BaseOrbit a => (1 : Q))).symm
-    -- Sum of `1`s is the cardinality (as a cast to `ℚ`).
-    have hOnes :
-        (∑ v ∈ (Finset.univ : Finset (BaseOrbit a)) with p v, (1 : Q)) =
-          ((Finset.univ.filter p).card : Q) := by
-      -- The LHS is the constant sum over the filtered `Finset`.
-      change (∑ _v ∈ (Finset.univ.filter p), (1 : Q)) = ((Finset.univ.filter p).card : Q)
-      -- Evaluate the constant sum and simplify `card • 1`.
-      have h := (Finset.sum_const (s := (Finset.univ.filter p)) (b := (1 : Q)))
-      -- `Finset.sum_const` returns the sum as `card • 1`; for `ℚ` this is the same as the cast.
-      calc
-        (∑ _v ∈ (Finset.univ.filter p), (1 : Q)) = (Finset.univ.filter p).card • (1 : Q) := h
-        _ = ((Finset.univ.filter p).card : Q) := by
-              exact nsmul_one (Finset.univ.filter p).card
-    exact hFilter.trans hOnes
-  have hcardNat : Fintype.card { v : BaseOrbit a // p v } = (Finset.univ.filter p).card := by
-    simpa using (Fintype.card_subtype (α := BaseOrbit a) (p := p))
-  have hcard :
-      (Fintype.card { v : BaseOrbit a // p v } : Q) =
-        ((Finset.univ.filter p).card : Q) := by
-    exact_mod_cast hcardNat
   have hsum_sub :
-      (∑ v : BaseOrbit a,
-        (if p v then (1 : Q) else 0)) = (Fintype.card { v : BaseOrbit a // p v } : Q) :=
-    hsum_filter.trans hcard.symm
+      (∑ v : BaseOrbit a, (if p v then (1 : Q) else 0)) =
+        (Fintype.card { v : BaseOrbit a // p v } : Q) := by
+    rw [Finset.sum_boole, Fintype.card_subtype]
   -- Identify this subtype with `Inter u a d` and use the exact intersection count.
   have hcardInter :
-      (Fintype.card { v : BaseOrbit a // p v } : Q) = (Fintype.card (Inter u a d) : Q) := by
+      (Fintype.card { v : BaseOrbit a // p v } : Q) = (N k a d : Q) := by
     have hNat : Fintype.card { v : BaseOrbit a // p v } = Fintype.card (Inter u a d) := by
       simpa using (Fintype.card_congr (interEquivBaseOrbit (u := u) (a := a) (d := d))).symm
-    exact_mod_cast hNat
-  have hsumInter :
-      (∑ v : BaseOrbit a, (if p v then (1 : Q) else 0)) = (Fintype.card (Inter u a d) : Q) :=
-    hsum_sub.trans hcardInter
-  -- Finally, replace the cardinality by the closed-form intersection number.
-  have hcardN : (Fintype.card (Inter u a d) : Q) = (N k a d : Q) := by
+    rw [hNat]
     exact_mod_cast (card_inter_eq_N (u := u) (a := a) (d := d))
-  exact hsumInter.trans hcardN
+  exact hsum_sub.trans hcardInter
 
 -- `A`-compression: `(B_r)ᴴ * A_d * (B_r)` computed via intersection numbers.
 theorem congr_A_eq_compBasis (r : Block) (d : DirIdx) :
@@ -204,22 +167,8 @@ theorem congr_A_eq_compBasis (r : Block) (d : DirIdx) :
     classical
     -- Expand outer, then inner multiplication, distribute, swap sums, and remove `star`.
     have sum_swap (f : V → V → Q) :
-        (∑ v : V, ∑ u : V, f u v) = ∑ u : V, ∑ v : V, f u v := by
-      -- Convert both sides to a single sum over `V × V`, then use `prodComm`.
-      have h1 :
-          (∑ v : V, ∑ u : V, f u v) = ∑ x : V × V, f x.2 x.1 := by
-        simpa using (Fintype.sum_prod_type (f := fun x : V × V => f x.2 x.1)).symm
-      have h2 :
-          (∑ u : V, ∑ v : V, f u v) = ∑ x : V × V, f x.1 x.2 := by
-        simpa using (Fintype.sum_prod_type (f := fun x : V × V => f x.1 x.2)).symm
-      have h3 :
-          (∑ x : V × V, f x.2 x.1) = ∑ x : V × V, f x.1 x.2 := by
-        refine
-          Fintype.sum_equiv (Equiv.prodComm V V) (fun x : V × V => f x.2 x.1)
-            (fun x : V × V => f x.1 x.2) ?_
-        intro x
-        rfl
-      exact h1.trans (h3.trans h2.symm)
+        (∑ v : V, ∑ u : V, f u v) = ∑ u : V, ∑ v : V, f u v :=
+      Finset.sum_comm
     calc
       ((B r)ᴴ * (A d) * (B r)) p q
           = ∑ v : V, ((B r)ᴴ * (A d)) p v * (B r) v q := by
@@ -233,23 +182,7 @@ theorem congr_A_eq_compBasis (r : Block) (d : DirIdx) :
       _ = ∑ v : V, ∑ u : V, ((B r)ᴴ) p u * (A d) u v * (B r) v q := by
             refine Fintype.sum_congr _ _ ?_
             intro v
-            -- Distribute multiplication by the (constant-in-`u`) factor `(B r) v q`.
-            -- We avoid `Finset.sum_mul`/`Finset.mul_sum` over the huge type `V` by using
-            -- `Fintype.sum_mul_sum` with a dummy `Unit` index.
-            have hDist :
-                (∑ u : V, ((B r)ᴴ) p u * (A d) u v) * (B r) v q
-                  = ∑ u : V, ((B r)ᴴ) p u * (A d) u v * (B r) v q := by
-              calc
-                (∑ u : V, ((B r)ᴴ) p u * (A d) u v) * (B r) v q
-                    = (∑ u : V, ((B r)ᴴ) p u * (A d) u v) * (∑ _ : Unit, (B r) v q) := by
-                        simp
-                _ = ∑ u : V, ∑ _ : Unit, ((B r)ᴴ) p u * (A d) u v * (B r) v q := by
-                      simpa [mul_assoc] using
-                        (Fintype.sum_mul_sum (f := fun u : V => ((B r)ᴴ) p u * (A d) u v)
-                          (g := fun _ : Unit => (B r) v q))
-                _ = ∑ u : V, ((B r)ᴴ) p u * (A d) u v * (B r) v q := by
-                      simp
-            exact hDist
+            exact Finset.sum_mul _ _ _
       _ = ∑ u : V, ∑ v : V, ((B r)ᴴ) p u * (A d) u v * (B r) v q := by
             simpa using (sum_swap (f := fun u v => ((B r)ᴴ) p u * (A d) u v * (B r) v q))
       _ = ∑ u : V, ∑ v : V, (B r u p) * (A d u v) * (B r v q) := by
@@ -290,33 +223,7 @@ theorem congr_A_eq_compBasis (r : Block) (d : DirIdx) :
           = bVal r p k * (∑ v : BaseOrbit a, (A d) u.1 v.1) * bVal r q a := by
     intro k u a
     classical
-    -- Unfold the `Fintype` sum to a `Finset` sum and factor out the constants using
-    -- `Finset.sum_mul` and `Finset.mul_sum`.
-    have hRight :
-        Finset.univ.sum (fun v : BaseOrbit a => bVal r p k * (A d) u.1 v.1 * bVal r q a)
-          =
-          (Finset.univ.sum (fun v : BaseOrbit a => bVal r p k * (A d) u.1 v.1)) * bVal r q a := by
-      exact
-        (Finset.sum_mul (s := (Finset.univ : Finset (BaseOrbit a)))
-            (f := fun v : BaseOrbit a => bVal r p k * (A d) u.1 v.1) (a := bVal r q a)).symm
-    have hLeft :
-        Finset.univ.sum (fun v : BaseOrbit a => bVal r p k * (A d) u.1 v.1)
-          =
-          bVal r p k * (Finset.univ.sum (fun v : BaseOrbit a => (A d) u.1 v.1)) := by
-      exact
-        (Finset.mul_sum (a := bVal r p k) (s := (Finset.univ : Finset (BaseOrbit a)))
-            (f := fun v : BaseOrbit a => (A d) u.1 v.1)).symm
-    calc
-      Finset.univ.sum (fun v : BaseOrbit a => bVal r p k * (A d) u.1 v.1 * bVal r q a)
-          =
-          (Finset.univ.sum (fun v : BaseOrbit a => bVal r p k * (A d) u.1 v.1)) * bVal r q a := by
-            exact hRight
-      _ =
-          (bVal r p k * (Finset.univ.sum (fun v : BaseOrbit a => (A d) u.1 v.1))) * bVal r q a := by
-            rw [hLeft]
-      _ =
-          bVal r p k * (Finset.univ.sum (fun v : BaseOrbit a => (A d) u.1 v.1)) * bVal r q a := by
-            rfl
+    rw [← Finset.sum_mul, ← Finset.mul_sum]
   -- Apply the factorization and evaluate the `v`-sum via `sum_A_over_baseOrbit_eq_N`.
   have hvEval :
       ∀ (k : DirIdx) (u : BaseOrbit k) (a : DirIdx),
@@ -346,41 +253,9 @@ theorem congr_A_eq_compBasis (r : Block) (d : DirIdx) :
           = (baseTypeCount k : Q) * (∑ a : DirIdx, bVal r p k * (N k a d : Q) * bVal r q a) := by
     intro k
     classical
-    -- Turn the `u`-sum into a `Finset` sum and use `Finset.sum_const`.
-    -- `univ.card = card (BaseOrbit k)`, and `card (BaseOrbit k) = baseTypeCount k`.
-    have hcardNat : (Finset.univ : Finset (BaseOrbit k)).card = baseTypeCount k := by
-      -- `Fintype.card` is definitionally `Finset.univ.card`.
-      change Fintype.card (BaseOrbit k) = baseTypeCount k
-      exact N1000000OrbitCounting.baseOrbit_card (k := k)
-    have hcardQ : ((Finset.univ : Finset (BaseOrbit k)).card : Q) = (baseTypeCount k : Q) := by
-      exact_mod_cast hcardNat
-    -- Sum of a constant.
-    have hsum :
-        (Finset.univ.sum (fun _u : BaseOrbit k => (∑ a : DirIdx,
-          bVal r p k * (N k a d : Q) * bVal r q a)))
-          = ((Finset.univ : Finset (BaseOrbit k)).card : Q)
-              * (∑ a : DirIdx, bVal r p k * (N k a d : Q) * bVal r q a) := by
-      -- `∑ _u in univ, c = card • c`.
-      -- Align with `Finset.sum_const` and rewrite `card • c` as multiplication.
-      let C : Q := (∑ a : DirIdx, bVal r p k * (N k a d : Q) * bVal r q a)
-      change (∑ _u ∈ (Finset.univ : Finset (BaseOrbit k)), C) =
-          ((Finset.univ : Finset (BaseOrbit k)).card : Q) * C
-      calc
-        (∑ _u ∈ (Finset.univ : Finset (BaseOrbit k)), C)
-            = ((Finset.univ : Finset (BaseOrbit k)).card) • C := by
-                  exact (Finset.sum_const (s := (Finset.univ : Finset (BaseOrbit k))) (b := C))
-        _ = ((Finset.univ : Finset (BaseOrbit k)).card : Q) * C := by
-              exact (nsmul_eq_mul ((Finset.univ : Finset (BaseOrbit k)).card) C)
-    -- Replace the cardinality by `baseTypeCount k`.
-    -- Rewrite the scalar factor via `hcardQ`.
-    calc
-      (Finset.univ.sum fun _u : BaseOrbit k =>
-            (∑ a : DirIdx, bVal r p k * (N k a d : Q) * bVal r q a))
-          = ((Finset.univ : Finset (BaseOrbit k)).card : Q)
-              * (∑ a : DirIdx, bVal r p k * (N k a d : Q) * bVal r q a) := hsum
-      _ = (baseTypeCount k : Q) * (∑ a : DirIdx, bVal r p k * (N k a d : Q) * bVal r q a) := by
-            exact congrArg (fun t : Q => t * (∑ a : DirIdx,
-              bVal r p k * (N k a d : Q) * bVal r q a)) hcardQ
+    have hcardNat : (Finset.univ : Finset (BaseOrbit k)).card = baseTypeCount k :=
+      N1000000OrbitCounting.baseOrbit_card (k := k)
+    rw [Finset.sum_const, nsmul_eq_mul, hcardNat]
   -- Use `huConst` to remove the `u`-sum, then match `compBasis`.
   -- First collapse the `u`-sum.
   have hUsum :

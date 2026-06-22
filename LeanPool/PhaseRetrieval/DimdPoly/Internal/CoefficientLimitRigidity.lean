@@ -149,8 +149,7 @@ private theorem phi1D_eq_oneDimPhi_wip
             (Nat.factorial (n - j) : ℂ)
             = (Nat.choose n j : ℂ) * (Nat.factorial j : ℂ) *
                 (Nat.factorial (n - j) : ℂ) := by ring
-        _ = (Nat.factorial n : ℂ) := by
-            exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
+        _ = (Nat.factorial n : ℂ) := by exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
         _ = ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ)) *
               (Nat.factorial (n - j) : ℂ) := by
             field_simp [hfac_ne]
@@ -448,8 +447,8 @@ private theorem evalPkappa_sub_apply_wip
   have hneg : -G = (-1 : ℂ) • G := by
     ext alpha
     simp
-  rw [sub_eq_add_neg, hneg, evalPkappa_add_apply_wip]
-  rw [congrFun (evalPkappa_smul_complex_wip kappa (-1 : ℂ) G) z]
+  rw [sub_eq_add_neg, hneg, evalPkappa_add_apply_wip,
+    congrFun (evalPkappa_smul_complex_wip kappa (-1 : ℂ) G) z]
   ring
 
 private theorem annulusMass_ofPkappa_eq_hermite_annulusMass_coeff_wip
@@ -1188,8 +1187,7 @@ private theorem farPart_norm_sq_eq_tailMass_wip
     (K : Finset (Idx d)) (H : Pkappa d kappa) :
     ‖H - truncateFinset K (ofPkappa kappa H)‖ ^ 2 =
       Finset.sum (H.support \ K) (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) := by
-  rw [norm_sq_eq_sum_coeff_wip]
-  rw [farPart_support_eq_sdiff_wip kappa K H]
+  rw [norm_sq_eq_sum_coeff_wip, farPart_support_eq_sdiff_wip kappa K H]
   refine Finset.sum_congr rfl ?_
   intro alpha halpha
   have hnotK : alpha ∉ K := (Finset.mem_sdiff.mp halpha).2
@@ -1288,8 +1286,7 @@ private theorem mem_nearLowBlocks_wip
     have hidx_upper : ℓ q <= j q + M := by
       have htri : ℓ q <= j q + Nat.dist (ℓ q) (j q) :=
         Nat.dist_tri_right' (ℓ q) (j q)
-      have hdist' : Nat.dist (ℓ q) (j q) <= M := by
-        simpa [Nat.dist_comm] using hqdist
+      have hdist' : Nat.dist (ℓ q) (j q) <= M := by simpa [Nat.dist_comm] using hqdist
       exact le_trans htri (Nat.add_le_add_left hdist' _)
     exact Finset.mem_range.mpr (Nat.lt_succ_of_le hidx_upper)
 
@@ -1641,8 +1638,7 @@ private def skappaOfCoeffBound_wip
       ∀ E : Finset (Idx d), Finset.sum E (fun alpha => ‖u alpha‖ ^ 2) <= 1) :
     Skappa d kappa :=
   { coeff := u
-    summable_norm_sq := by
-      exact summable_of_sum_le (fun alpha => sq_nonneg (‖u alpha‖)) hpartial }
+    summable_norm_sq := by exact summable_of_sum_le (fun alpha => sq_nonneg (‖u alpha‖)) hpartial }
 
 private theorem coeff_limit_subseq_with_head_mass_wip
     {d : Nat} (kappa : MultiIndex d)
@@ -1740,16 +1736,14 @@ private theorem scalar_coeff_limit_subseq_with_head_mass_wip
       (s := Set.Icc (0 : ℝ) 4)
       (Metric.isBounded_Icc (0 : ℝ) 4)
       ht_mem
-  have hT_mem : T ∈ Set.Icc (0 : ℝ) 4 := by
-    simpa [closure_Icc] using hT_closure
+  have hT_mem : T ∈ Set.Icc (0 : ℝ) 4 := by simpa [closure_Icc] using hT_closure
   obtain ⟨U, φ, hφ_strict, hcoeff, hpartial, hmass_U⟩ :=
     coeff_limit_subseq_with_head_mass_wip kappa K
       (fun m => H (ψ m))
       (fun m => hH_norm (ψ m))
       (fun m => hmass (ψ m))
   let σ : ℕ -> ℕ := fun m => ψ (φ m)
-  have hσ_strict : StrictMono σ := by
-    exact hψ_strict.comp hφ_strict
+  have hσ_strict : StrictMono σ := by exact hψ_strict.comp hφ_strict
   have hσ_t_tendsto :
       Filter.Tendsto (fun m => t (σ m)) Filter.atTop (nhds T) := by
     exact hψ_tendsto.comp hφ_strict.tendsto_atTop
@@ -1929,8 +1923,7 @@ private theorem positiveGauge_im_inner_normed_perturbation_wip
   have him := hpos.1
   rw [pkappaInner_add_left_wip, pkappaInner_smul_left_real_wip,
     pkappaInner_self_of_norm_one_wip hF_norm] at him
-  have htim : t * (pkappaInner H F).im = 0 := by
-    simpa using him
+  have htim : t * (pkappaInner H F).im = 0 := by simpa using him
   exact (mul_eq_zero.mp htim).resolve_left ht_pos.ne'
 
 private theorem positiveGauge_limit_inner_im_zero_wip
@@ -2155,13 +2148,10 @@ private lemma norm_sq_add_real_smul_wip (a w : ℂ) (t : ℝ) :
   rw [hsq]
   have hre :
       Complex.re (a * star ((t : ℂ) * w)) = t * Complex.re (w * star a) := by
-    have hstar : star ((t : ℂ) * w) = (t : ℂ) * star w := by
-      simp
+    have hstar : star ((t : ℂ) * w) = (t : ℂ) * star w := by simp
     rw [hstar]
-    have hmul : a * ((t : ℂ) * star w) = (a * star w) * (t : ℂ) := by
-      ring
-    rw [hmul]
-    rw [Complex.re_mul_ofReal]
+    have hmul : a * ((t : ℂ) * star w) = (a * star w) * (t : ℂ) := by ring
+    rw [hmul, Complex.re_mul_ofReal]
     have hre' : Complex.re (a * star w) = Complex.re (w * star a) := by
       simp [Complex.mul_re, sub_eq_add_neg, mul_comm]
     rw [hre']
@@ -2202,8 +2192,7 @@ private lemma defectFunction_div_eq_abs_linearization_wip
     _ = |t * (2 * Complex.re (w * star a) + t * ‖w‖ ^ 2)| / t := by
           congr 1
           ring_nf
-    _ = |t| * |2 * Complex.re (w * star a) + t * ‖w‖ ^ 2| / t := by
-          rw [abs_mul]
+    _ = |t| * |2 * Complex.re (w * star a) + t * ‖w‖ ^ 2| / t := by rw [abs_mul]
     _ = |2 * Complex.re (w * star a) + t * ‖w‖ ^ 2| := by
           rw [abs_of_pos ht, mul_div_cancel_left₀ _ ht0]
 
@@ -2332,8 +2321,7 @@ private theorem pkappa_eq_of_evalPkappa_ae_eq_wip
   have hdiff_ae :
       evalPkappa kappa (F - G) =ᵐ[gammaD d] fun _ => 0 := by
     filter_upwards [hfg] with z hz
-    rw [evalPkappa_sub_apply_wip]
-    rw [hz]
+    rw [evalPkappa_sub_apply_wip, hz]
     simp
   have hmem :
       MeasureTheory.MemLp (evalPkappa kappa (F - G)) 2 (gammaD d) :=
@@ -2389,8 +2377,7 @@ private theorem memLp_two_defectFunctionPkappa_coeff_wip
           2 * ‖evalPkappa kappa (F + G) z‖ ^ 2 + 2 * ‖evalPkappa kappa F z‖ ^ 2 := by
         nlinarith [sq_nonneg (‖evalPkappa kappa (F + G) z‖ + ‖evalPkappa kappa F z‖)]
       simpa [sq_abs] using this
-    have hnonneg : 0 <= defectFunctionPkappa_coeff_wip kappa F G z ^ 2 := by
-      positivity
+    have hnonneg : 0 <= defectFunctionPkappa_coeff_wip kappa F G z ^ 2 := by positivity
     simpa [Real.norm_eq_abs, abs_of_nonneg hnonneg] using hsqz
   simpa [Real.norm_eq_abs, abs_of_nonneg] using
     MeasureTheory.Integrable.mono' hsq hmeasSq hbound
@@ -2436,8 +2423,7 @@ private lemma defectFunction_le_add_eval_norm_wip
           <= ‖evalPkappa kappa (F + G) z -
               (evalPkappa kappa (F + G) z + evalPkappa kappa R z)‖ :=
             abs_norm_sub_norm_le _ _
-      _ = ‖evalPkappa kappa R z‖ := by
-            simp
+      _ = ‖evalPkappa kappa R z‖ := by simp
   linarith
 
 private theorem defect_le_defect_add_norm_wip
@@ -2546,8 +2532,7 @@ private theorem defect_truncate_le_defect_add_scaled_tail_norm_wip
     calc
       t • Hnear + t • Hfar = t • (Hnear + Hfar) := by rw [smul_add]
       _ = t • H := by
-          have htf : Hnear + Hfar = H := by
-            simp [Hnear, Hfar]
+          have htf : Hnear + Hfar = H := by simp [Hnear, Hfar]
           rw [htf]
   have hpert := defect_le_defect_add_norm_wip hd kappa F (t • Hnear) (t • Hfar)
   have hnorm : ‖t • Hfar‖ = t * ‖Hfar‖ :=
@@ -2566,8 +2551,7 @@ private theorem defect_le_defect_truncate_add_scaled_tail_norm_wip
     calc
       t • Hnear + t • Hfar = t • (Hnear + Hfar) := by rw [smul_add]
       _ = t • H := by
-          have htf : Hnear + Hfar = H := by
-            simp [Hnear, Hfar]
+          have htf : Hnear + Hfar = H := by simp [Hnear, Hfar]
           rw [htf]
   have hpert := defect_add_le_defect_plus_norm_wip hd kappa F (t • Hnear) (t • Hfar)
   have hnorm : ‖t • Hfar‖ = t * ‖Hfar‖ :=
@@ -2640,13 +2624,11 @@ private lemma productAnnulus_eq_of_mem_coeff_wip
   refine le_antisymm ?_ ?_
   · by_contra hlt
     have hlt' : l q + 1 <= j q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((l q : Nat) : ℝ) + 1 <= j q := by
-      exact_mod_cast hlt'
+    have hlt_real : ((l q : Nat) : ℝ) + 1 <= j q := by exact_mod_cast hlt'
     linarith
   · by_contra hlt
     have hlt' : j q + 1 <= l q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((j q : Nat) : ℝ) + 1 <= l q := by
-      exact_mod_cast hlt'
+    have hlt_real : ((j q : Nat) : ℝ) + 1 <= l q := by exact_mod_cast hlt'
     linarith
 
 private lemma sum_indicator_productAnnulus_le_coeff_wip
@@ -2976,8 +2958,7 @@ private theorem lowAnnulusMass_farPart_le_leakage_of_witness_wip
                           hd kappa j Hfar
               _ = Hermite1DimdLEAN.annulusMass j
                     (Hermite1DimdLEAN.evalHermiteSum kappa
-                      (Hermite1DimdLEAN.remainderPart j M ⟨Hfar⟩)) := by
-                        rw [hfar_self j hj]
+                      (Hermite1DimdLEAN.remainderPart j M ⟨Hfar⟩)) := by rw [hfar_self j hj]
     _ <= Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M *
           Hermite1DimdLEAN.hermiteNormSq kappa ⟨Hfar⟩ := by
           simpa using hpartial (lowAnnuli d J) M ⟨Hfar⟩
@@ -3050,8 +3031,7 @@ private theorem sqrt_gap_for_tail_contradiction_wip
       Real.sqrt (1 - tau) <= Real.sqrt 1 := Real.sqrt_le_sqrt (by linarith)
       _ = 1 := by norm_num
   have hrhs_nonneg : 0 <= Real.sqrt (1 - tau) + tau / 16 := by positivity
-  rw [gt_iff_lt]
-  rw [Real.lt_sqrt hrhs_nonneg]
+  rw [gt_iff_lt, Real.lt_sqrt hrhs_nonneg]
   have hsquare_bound :
       (Real.sqrt (1 - tau) + tau / 16) ^ 2 <=
         (1 - tau) + tau / 8 + tau ^ 2 / 256 := by
@@ -3127,8 +3107,7 @@ private theorem coefficient_tail_lt_of_highAnnulus_small_and_leakage_wip
   have hH_sq : ‖H‖ ^ 2 = 1 := by nlinarith [hH_norm]
   have htail_le_one : tail <= 1 := by
     have hle := tail_mass_le_norm_sq_wip hd kappa E H
-    have hle' : tail <= ‖H‖ ^ 2 := by
-      simpa [tail] using hle
+    have hle' : tail <= ‖H‖ ^ 2 := by simpa [tail] using hle
     nlinarith
   by_contra hnot
   have htail_ge : tau <= tail := le_of_not_gt hnot
@@ -3137,16 +3116,14 @@ private theorem coefficient_tail_lt_of_highAnnulus_small_and_leakage_wip
   have hnear_sq_eq : ‖Hnear‖ ^ 2 = 1 - tail := by
     have h := truncate_norm_sq_eq_one_sub_tail_of_norm_one_wip hd kappa E hH_norm
     simpa [Hnear, E, tail] using h
-  have hnear_sq_le : ‖Hnear‖ ^ 2 <= 1 - tau := by
-    nlinarith
+  have hnear_sq_le : ‖Hnear‖ ^ 2 <= 1 - tau := by nlinarith
   have hnear_norm_le : ‖Hnear‖ <= Real.sqrt (1 - tau) := by
     calc
       ‖Hnear‖ = Real.sqrt (‖Hnear‖ ^ 2) := by
         rw [Real.sqrt_sq_eq_abs]
         exact (abs_of_nonneg (norm_nonneg_pkappa_coeff_wip Hnear)).symm
       _ <= Real.sqrt (1 - tau) := Real.sqrt_le_sqrt hnear_sq_le
-  have hHfar_sq_le_one : ‖Hfar‖ ^ 2 <= 1 := by
-    nlinarith
+  have hHfar_sq_le_one : ‖Hfar‖ ^ 2 <= 1 := by nlinarith
   have hfar_norm_le_one : ‖Hfar‖ <= 1 := by
     calc
       ‖Hfar‖ = Real.sqrt (‖Hfar‖ ^ 2) := by
@@ -3186,8 +3163,7 @@ private theorem coefficient_tail_lt_of_highAnnulus_small_and_leakage_wip
       Real.sqrt (1 - tau / 16) <=
         Real.sqrt (lowAnnulusMass J (ofPkappa kappa H)) :=
     Real.sqrt_le_sqrt hlow_lower
-  have hdecomp : Hnear + Hfar = H := by
-    simp [Hnear, Hfar, E, truncate_add_farPart_eq_wip kappa E H]
+  have hdecomp : Hnear + Hfar = H := by simp [Hnear, Hfar, E, truncate_add_farPart_eq_wip kappa E H]
   have htri :
       Real.sqrt (lowAnnulusMass J (ofPkappa kappa H)) <=
         Real.sqrt (lowAnnulusMass J (ofPkappa kappa Hnear)) +
@@ -3221,8 +3197,7 @@ private theorem coefficient_tail_lt_of_highAnnulus_small_wip
         (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) < tau := by
   obtain ⟨C, c, B, hCpos, _hcpos, _hBnonneg, htail, hpartial⟩ :=
     Hermite1DimdLEAN.finitePartialLeakage (κ := kappa)
-  have htarget_pos : 0 < tau ^ 2 / 256 := by
-    nlinarith [htau_pos]
+  have htarget_pos : 0 < tau ^ 2 / 256 := by nlinarith [htau_pos]
   have hsmall_event :
       ∀ᶠ M : Nat in Filter.atTop,
         Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M < tau ^ 2 / 256 := by
@@ -3355,9 +3330,9 @@ private theorem finite_head_bad_limit_defect_ae_tendsto_zero_wip
     have hsub : (f m - fun _ : Cd d => (0 : ℝ)) = f m := by
       funext z
       simp
-    rw [hsub]
-    rw [← MeasureTheory.ofReal_lpNorm (hf_mem m)]
-    rw [← defect_lpNorm_eq_coeff_wip hd kappa F (t (φ m) • H (φ m))]
+    rw [hsub,
+      ← MeasureTheory.ofReal_lpNorm (hf_mem m),
+      ← defect_lpNorm_eq_coeff_wip hd kappa F (t (φ m) • H (φ m))]
   have heLp_tendsto :
       Filter.Tendsto
         (fun m =>
@@ -3432,8 +3407,7 @@ private theorem finite_head_bad_limit_defect_quotient_ae_tendsto_zero_wip
           ENNReal.ofReal (1 / ((m + 1 : Nat) : ℝ)) := by
     intro m
     have hf_mem_m := hf_mem m
-    have hfin : MeasureTheory.eLpNorm (f m) 2 (gammaD d) ≠ ⊤ := by
-      simpa using hf_mem_m.2.ne
+    have hfin : MeasureTheory.eLpNorm (f m) 2 (gammaD d) ≠ ⊤ := by simpa using hf_mem_m.2.ne
     refine (ENNReal.le_ofReal_iff_toReal_le hfin (by positivity)).2 ?_
     rw [MeasureTheory.toReal_eLpNorm hf_mem_m.1, hf_eq m,
       MeasureTheory.lpNorm_const_smul]
@@ -3484,8 +3458,7 @@ private theorem finite_head_bad_limit_defect_quotient_ae_tendsto_zero_wip
       congr 1
       funext z
       simp
-    rw [hfun]
-    rw [ENNReal.tendsto_nhds_zero]
+    rw [hfun, ENNReal.tendsto_nhds_zero]
     intro eps heps
     filter_upwards [(ENNReal.tendsto_nhds_zero.mp htarget) eps heps] with m hm
     exact le_trans (hbound m) hm
@@ -3928,8 +3901,7 @@ private theorem skappa_real_part_scalar_relation_wip
             ‖f‖ ^ 2 + (-1 : ℝ) ^ 2 * ‖u‖ ^ 2 +
               2 * (-1 : ℝ) * Complex.re (u * star f) := by
         simpa using hminus
-      have hz' : Complex.re (u * star f) = 0 := by
-        simpa [f, u] using hz
+      have hz' : Complex.re (u * star f) = 0 := by simpa [f, u] using hz
       nlinarith
     have hnorm : ‖f + u‖ = ‖f + (-1 : ℂ) * u‖ := by
       have hcases := (sq_eq_sq_iff_eq_or_eq_neg.mp hsq)
@@ -3988,8 +3960,7 @@ private theorem skappa_real_part_scalar_relation_wip
         _ = (w - 1) * coeffPkappa F alpha := by ring
     calc
       coeffSkappa U alpha
-          = (((1 : ℂ) + w)⁻¹) * (((1 : ℂ) + w) * coeffSkappa U alpha) := by
-              field_simp [hw_add_ne]
+          = (((1 : ℂ) + w)⁻¹) * (((1 : ℂ) + w) * coeffSkappa U alpha) := by field_simp [hw_add_ne]
       _ = (((1 : ℂ) + w)⁻¹) * ((w - 1) * coeffPkappa F alpha) := by rw [hlin]
       _ = c * coeffPkappa F alpha := by
             dsimp [c]
@@ -3999,8 +3970,7 @@ private theorem cayley_re_eq_zero_of_norm_eq_one_wip {w : ℂ}
     (hw : ‖w‖ = 1) (hw_add_ne : (1 : ℂ) + w ≠ 0) :
     (((w - 1) / ((1 : ℂ) + w)).re = 0) := by
   let c : ℂ := (w - 1) / ((1 : ℂ) + w)
-  have hw_conj : w * (starRingEnd ℂ) w = 1 := by
-    simpa [hw] using (RCLike.mul_conj w)
+  have hw_conj : w * (starRingEnd ℂ) w = 1 := by simpa [hw] using (RCLike.mul_conj w)
   have hden_star : (1 : ℂ) + (starRingEnd ℂ) w ≠ 0 := by
     simpa [map_add] using (star_ne_zero.mpr hw_add_ne :
       (starRingEnd ℂ) (1 + w) ≠ 0)
@@ -4016,8 +3986,7 @@ private theorem cayley_re_eq_zero_of_norm_eq_one_wip {w : ℂ}
   have hre : (c + star c).re = 0 := by
     rw [hc_add]
     simp
-  have hre' : 2 * c.re = 0 := by
-    simpa [Complex.add_re, Complex.conj_re, two_mul] using hre
+  have hre' : 2 * c.re = 0 := by simpa [Complex.add_re, Complex.conj_re, two_mul] using hre
   have htwo : (2 : ℝ) ≠ 0 := by norm_num
   exact mul_eq_zero.mp hre' |>.resolve_left htwo
 
@@ -4048,8 +4017,7 @@ private theorem skappa_real_part_pure_imag_scalar_relation_wip
             ‖f‖ ^ 2 + (-1 : ℝ) ^ 2 * ‖u‖ ^ 2 +
               2 * (-1 : ℝ) * Complex.re (u * star f) := by
         simpa using hminus
-      have hz' : Complex.re (u * star f) = 0 := by
-        simpa [f, u] using hz
+      have hz' : Complex.re (u * star f) = 0 := by simpa [f, u] using hz
       nlinarith
     have hnorm : ‖f + u‖ = ‖f + (-1 : ℂ) * u‖ := by
       have hcases := (sq_eq_sq_iff_eq_or_eq_neg.mp hsq)
@@ -4108,8 +4076,7 @@ private theorem skappa_real_part_pure_imag_scalar_relation_wip
         _ = (w - 1) * coeffPkappa F alpha := by ring
     calc
       coeffSkappa U alpha
-          = (((1 : ℂ) + w)⁻¹) * (((1 : ℂ) + w) * coeffSkappa U alpha) := by
-              field_simp [hw_add_ne]
+          = (((1 : ℂ) + w)⁻¹) * (((1 : ℂ) + w) * coeffSkappa U alpha) := by field_simp [hw_add_ne]
       _ = (((1 : ℂ) + w)⁻¹) * ((w - 1) * coeffPkappa F alpha) := by rw [hlin]
       _ = c * coeffPkappa F alpha := by
             dsimp [c]
@@ -4124,8 +4091,7 @@ private theorem coeff_zero_of_modulus_phase_relation_wip
         w * coeffPkappa F alpha)
     (horth : orthogonalToSkappa_wip F U) :
     ∀ alpha, coeffSkappa U alpha = 0 := by
-  have hT_ne : (T : ℂ) ≠ 0 := by
-    exact_mod_cast hT_pos.ne'
+  have hT_ne : (T : ℂ) ≠ 0 := by exact_mod_cast hT_pos.ne'
   have hcoeff :
       ∀ alpha,
         coeffSkappa U alpha =
@@ -4138,13 +4104,11 @@ private theorem coeff_zero_of_modulus_phase_relation_wip
         (T : ℂ) * coeffSkappa U alpha
             = (coeffPkappa F alpha + (T : ℂ) * coeffSkappa U alpha) -
                 coeffPkappa F alpha := by ring
-        _ = w * coeffPkappa F alpha - coeffPkappa F alpha := by
-              rw [hrel alpha]
+        _ = w * coeffPkappa F alpha - coeffPkappa F alpha := by rw [hrel alpha]
         _ = (w - 1) * coeffPkappa F alpha := by ring
     calc
       coeffSkappa U alpha
-          = (T : ℂ)⁻¹ * ((T : ℂ) * coeffSkappa U alpha) := by
-              field_simp [hT_ne]
+          = (T : ℂ)⁻¹ * ((T : ℂ) * coeffSkappa U alpha) := by field_simp [hT_ne]
       _ = (T : ℂ)⁻¹ * ((w - 1) * coeffPkappa F alpha) := by rw [hTU]
       _ = (((T : ℂ)⁻¹ * (w - 1)) * coeffPkappa F alpha) := by ring
   exact coeff_zero_of_scalar_multiple_orthogonalToSkappa_wip hF_norm hcoeff horth
@@ -4298,13 +4262,10 @@ private theorem coeff_zero_of_modulus_phase_relation_positiveGauge_wip
               rw [hsum_one, mul_one]
   have hL_im : L.im = 0 := hlimit.1
   have hL_re : 0 ≤ L.re := hlimit.2
-  have hw_im : w.im = 0 := by
-    simpa [hL_eq_w] using hL_im
-  have hw_re : 0 ≤ w.re := by
-    simpa [hL_eq_w] using hL_re
+  have hw_im : w.im = 0 := by simpa [hL_eq_w] using hL_im
+  have hw_re : 0 ≤ w.re := by simpa [hL_eq_w] using hL_re
   have hw_one : w = 1 := unit_complex_of_real_nonneg_wip hw hw_im hw_re
-  have hT_ne : (T : ℂ) ≠ 0 := by
-    exact_mod_cast hT_pos.ne'
+  have hT_ne : (T : ℂ) ≠ 0 := by exact_mod_cast hT_pos.ne'
   intro alpha
   have hTU : (T : ℂ) * coeffSkappa U alpha = 0 := by
     calc
@@ -4447,14 +4408,12 @@ private lemma evalPkappa_pointwise_bound_coeff_wip
     unfold defectFunctionPkappa_coeff_wip
     exact sub_le_iff_le_add.mp (le_abs_self _)
   calc
-    ‖evalPkappa kappa G z‖ = ‖evalPkappa kappa (F + G) z - evalPkappa kappa F z‖ := by
-      rw [hsub]
+    ‖evalPkappa kappa G z‖ = ‖evalPkappa kappa (F + G) z - evalPkappa kappa F z‖ := by rw [hsub]
     _ ≤ ‖evalPkappa kappa (F + G) z‖ + ‖evalPkappa kappa F z‖ := norm_sub_le _ _
     _ ≤ defectFunctionPkappa_coeff_wip kappa F G z +
           ‖evalPkappa kappa F z‖ + ‖evalPkappa kappa F z‖ := by
           linarith
-    _ = defectFunctionPkappa_coeff_wip kappa F G z + 2 * ‖evalPkappa kappa F z‖ := by
-          ring
+    _ = defectFunctionPkappa_coeff_wip kappa F G z + 2 * ‖evalPkappa kappa F z‖ := by ring
 
 private theorem norm_le_defect_add_two_coeff_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -4596,8 +4555,7 @@ private theorem coefficient_head_mass_of_highAnnulus_small_wip
   intro H hH_norm hhigh
   have hpartition := annulusMassPartition hd kappa J H
   have hH_sq : ‖H‖ ^ 2 = 1 := by nlinarith
-  have hlow_lower : 1 / 4 < lowAnnulusMass J (ofPkappa kappa H) := by
-    nlinarith
+  have hlow_lower : 1 / 4 < lowAnnulusMass J (ofPkappa kappa H) := by nlinarith
   have hKextra_mass_gt :
       rho_head < Finset.sum Kextra (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) := by
     by_contra hnot
@@ -4650,11 +4608,9 @@ private theorem highAnnulusControl_eps_wip
   have hCdelta_le : C * delta_high <= eps / 2 := by
     have hmul := mul_le_mul_of_nonneg_left hdelta_le (le_of_lt hC_pos)
     have hC_ne : C ≠ 0 := ne_of_gt hC_pos
-    have hcalc : C * (eps / (2 * C)) = eps / 2 := by
-      field_simp [hC_ne]
+    have hcalc : C * (eps / (2 * C)) = eps / 2 := by field_simp [hC_ne]
     nlinarith
-  have hdelta_sq_le : delta_high ^ 2 <= delta_high := by
-    nlinarith [sq_nonneg delta_high]
+  have hdelta_sq_le : delta_high ^ 2 <= delta_high := by nlinarith [sq_nonneg delta_high]
   have hCdelta_sq_le : C * delta_high ^ 2 <= eps / 2 := by
     calc
       C * delta_high ^ 2 <= C * delta_high := by
@@ -4695,11 +4651,9 @@ private theorem highAnnulusControl_eps_noOrth_wip
   have hCdelta_le : C * delta_high <= eps / 2 := by
     have hmul := mul_le_mul_of_nonneg_left hdelta_le (le_of_lt hC_pos)
     have hC_ne : C ≠ 0 := ne_of_gt hC_pos
-    have hcalc : C * (eps / (2 * C)) = eps / 2 := by
-      field_simp [hC_ne]
+    have hcalc : C * (eps / (2 * C)) = eps / 2 := by field_simp [hC_ne]
     nlinarith
-  have hdelta_sq_le : delta_high ^ 2 <= delta_high := by
-    nlinarith [sq_nonneg delta_high]
+  have hdelta_sq_le : delta_high ^ 2 <= delta_high := by nlinarith [sq_nonneg delta_high]
   have hCdelta_sq_le : C * delta_high ^ 2 <= eps / 2 := by
     calc
       C * delta_high ^ 2 <= C * delta_high := by
@@ -4754,8 +4708,7 @@ theorem positiveGauge_coercivity
       rw [norm_smul_pkappa_complex_wip]
       have htinv : ‖(t : ℂ)⁻¹‖ * ‖G‖ = 1 := by
         rw [norm_inv, Complex.norm_real, Real.norm_eq_abs, abs_of_pos ht_pos]
-        have hGnorm_ne : ‖G‖ ≠ 0 := by
-          simpa [t] using ht_ne
+        have hGnorm_ne : ‖G‖ ≠ 0 := by simpa [t] using ht_ne
         dsimp [t]
         field_simp [hGnorm_ne]
       simpa [t] using htinv
@@ -4763,8 +4716,7 @@ theorem positiveGauge_coercivity
       ext alpha
       change G alpha = ((t : ℂ) * (((t : ℂ)⁻¹) * G alpha))
       field_simp [ht_ne]
-    have hposH : positivePhaseGauge F (F + t • H) := by
-      simpa [hG_eq] using hposG
+    have hposH : positivePhaseGauge F (F + t • H) := by simpa [hG_eq] using hposG
     have hlarge_bridge : t ≤ defect F G + 2 := by
       simpa [t] using norm_le_defect_add_two_coeff_wip hd kappa F G hF_norm
     by_cases hlt4 : t < 4
@@ -4819,8 +4771,7 @@ theorem positiveGauge_coercivity
       calc
         ‖G‖ = t := rfl
         _ ≤ 2 * defect F G := htwo_defect
-        _ ≤ C_F * defect F G := by
-          exact mul_le_mul_of_nonneg_right htwo_le_C (Real.sqrt_nonneg _)
+        _ ≤ C_F * defect F G := by exact mul_le_mul_of_nonneg_right htwo_le_C (Real.sqrt_nonneg _)
 
 private theorem coefficient_tail_lt_of_small_defect_wip
     {d : Nat} (hd : 0 < d) (kappa : MultiIndex d)
@@ -4933,8 +4884,7 @@ theorem lowAnnulusDefectControl
     intro H t horth hH_norm ht_pos ht_le_four hhigh hdefect
     subst J
     have hnonempty : Nonempty (Fin d) := Fin.pos_iff_nonempty.mp hd
-    have hempty : lowAnnuli d 0 = ∅ := by
-      simp [lowAnnuli]
+    have hempty : lowAnnuli d 0 = ∅ := by simp [lowAnnuli]
     simp [lowAnnulusMass, hempty]
   · exact finite_window_lowAnnulusDefectControl_core_wip hd kappa F hF_ne hF_norm J
 

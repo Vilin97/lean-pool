@@ -162,10 +162,7 @@ lemma ωScottContinuous_map
   have {x} : Option.map (f x) (g x) = Option.elim (g x) .none (.some ∘ f x) := by
     cases g x <;> rfl
   simp only [this]
-  apply ωScottContinuous_elim
-  · apply hg
-  · rfl
-  · fun_prop
+  exact ωScottContinuous_elim hg rfl (by fun_prop)
 
 @[fun_prop]
 lemma ωScottContinuous_bind
@@ -175,10 +172,7 @@ lemma ωScottContinuous_bind
   have {x} : Option.bind (g x) (f x) = Option.elim (g x) .none (f x) := by
     cases g x <;> rfl
   simp only [this]
-  apply ωScottContinuous_elim
-  · apply hg
-  · rfl
-  · fun_prop
+  exact ωScottContinuous_elim hg rfl (by fun_prop)
 
 @[fun_prop]
 lemma ωScottContinuous_bind'

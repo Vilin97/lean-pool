@@ -48,16 +48,12 @@ lemma binomial_coeff_ne_zero_mod_p (n k : ℕ) (hp : p.Prime) (h_k : k ≤ n) (h
   intro h_dvd
   -- 4.  p ∣ n.choose k → p ∣ n!
   have key : n.choose k ∣ n.factorial := by
-    have h_eq := Nat.choose_mul_factorial_mul_factorial h_k
-    rw [mul_assoc] at h_eq
-    rw [mul_comm] at h_eq
-    rw [← h_eq]
+    rw [← Nat.choose_mul_factorial_mul_factorial h_k, mul_assoc, mul_comm]
     exact Nat.dvd_mul_left _ _
   have h_dvd_fact : p ∣ n.factorial := dvd_trans h_dvd key
   -- 5.  p ∣ n!  p ≤ n
-  rw [Nat.Prime.dvd_factorial] at h_dvd_fact
-  · linarith
-  exact hp
+  rw [Nat.Prime.dvd_factorial hp] at h_dvd_fact
+  linarith
 
 
 
@@ -87,8 +83,8 @@ lemma cauchy_davenport_small_sum (A B S : Finset (ZMod p)) (hp : p.Prime)
       Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one, add_zero]
     rw [show 2 = 1 + 1 by rfl]
     rw [Nat.sub_add_eq]-- x - (y + z) = x - y - z
-    have h_A_neg_zero : 1 ≤ A.card := by exact Finset.one_le_card.mpr hA
-    have h_B_neg_zero : 1 ≤ B.card := by exact Finset.one_le_card.mpr hB
+    have h_A_neg_zero : 1 ≤ A.card := Finset.one_le_card.mpr hA
+    have h_B_neg_zero : 1 ≤ B.card := Finset.one_le_card.mpr hB
     rw [Nat.add_comm, Nat.add_sub_assoc h_A_neg_zero, add_comm,← Nat.add_sub_assoc h_B_neg_zero]
   have h_coeff_ne_zero : coeff (equivFunOnFinite.symm cs) ((∑ i : Fin 2, X i) ^ m * h_poly) ≠ 0 :=
       by
@@ -206,12 +202,7 @@ theorem cauchy_davenport (A B S : Finset (ZMod p)) (hp : p.Prime)
   {
     -- === Case 1:  ===
     rw [min_eq_right (Nat.sub_le_iff_le_add.mpr h)]
-    apply cauchy_davenport_small_sum
-    · exact hp
-    · exact hA
-    · exact hB
-    · exact h
-    · omega
+    exact cauchy_davenport_small_sum A B S hp hA hB h hS
   }
   {
     -- === Case 2: (Subset Reduction) ===
@@ -222,11 +213,9 @@ theorem cauchy_davenport (A B S : Finset (ZMod p)) (hp : p.Prime)
       have h_target_le_B : target ≤ B.card := by omega
       --  B'  ( |A| ≤ p)
       have h_target_pos : target > 0 := by
-         apply Nat.sub_pos_of_lt
-         apply Nat.lt_succ_of_le
+         refine Nat.sub_pos_of_lt (Nat.lt_succ_of_le ?_)
          have h_le : A.card ≤ Fintype.card (ZMod p) := Finset.card_le_univ A
-         rw [ZMod.card p] at h_le
-         exact h_le
+         rwa [ZMod.card p] at h_le
       obtain ⟨B', hB'_sub, hB'_card⟩ := Finset.exists_subset_card_eq h_target_le_B
       have hB'_ne : B'.Nonempty := by rw [←Finset.card_pos, hB'_card]; exact h_target_pos
       have h_sum_exact : A.card + B'.card = p + 1 := by

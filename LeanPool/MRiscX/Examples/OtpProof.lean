@@ -239,10 +239,7 @@ theorem proof_otp_loopBody : ∀ (p k c l : UInt64) (s : MState),
                   · simpSetEq
                 · applySpec specification_LoadWordReg (pc := 6) (dst := 6) (regWithAddr := 1)
                 · simpSetEq
-              · have : @singleton UInt64 (Set UInt64) Set.instSingletonSet 8
-                    = @singleton UInt64 (Set UInt64) Set.instSingletonSet (7 + 1) := by
-                  simp
-                rw [this]
+              · rw [show ({8} : Set UInt64) = {7 + 1} by simp]
                 applySpec specification_XOR (dst := 7) (reg1 := 5) (reg2 := 6)
               · simpSetEq
             · intros l' h_l'
@@ -421,8 +418,6 @@ theorem proof_otp_loop (p k c l l' : UInt64) (h_l' : l' ∈ ({4} : Set UInt64)) 
       · unfold iPre
         simp only [MState.getRegisterAt_def, UInt64.sub_self, UInt64.add_zero, Std.le_refl,
           true_and]
-        have : l ≤ l := by
-          simp
         exact ⟨h_x0, h_x1, h_x2, h_noOverlap⟩
     · exact h_terminated
 

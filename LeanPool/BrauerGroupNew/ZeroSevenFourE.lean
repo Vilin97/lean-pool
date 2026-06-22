@@ -411,8 +411,7 @@ def endSimpleModOfWedderburn (n : ℕ) (hn : n ≠ 0) (D : Type v) [DivisionRing
   letI _ : IsScalarTower k A (Fin n → D) :=
   { smul_assoc a b x := by
       change wdb (a • b) • x = _
-      rw [map_smul, Algebra.smul_def, mul_smul]
-      rw [algebraMap_smul]
+      rw [map_smul, Algebra.smul_def, mul_smul, algebraMap_smul]
       rfl }
   letI _ : SMulCommClass A k (Fin n → D) :=
     { smul_comm a b x := by
@@ -439,8 +438,7 @@ lemma endSimpleModOfWedderburn' (n : ℕ) (hn : n ≠ 0) (D : Type v) [DivisionR
   letI _ : IsScalarTower k A (Fin n → D) :=
   { smul_assoc a b x := by
       change wdb (a • b) • x = _
-      rw [map_smul, Algebra.smul_def, mul_smul]
-      rw [algebraMap_smul]
+      rw [map_smul, Algebra.smul_def, mul_smul, algebraMap_smul]
       rfl }
   letI _ : SMulCommClass A k (Fin n → D) :=
     { smul_comm a b x := by
@@ -743,8 +741,7 @@ lemma WedderburnArtin_uniqueness₀
   letI _ : IsScalarTower k A (Fin n → D) :=
   { smul_assoc a b x := by
       change wdb (a • b) • x = _
-      rw [map_smul, Algebra.smul_def, mul_smul]
-      rw [algebraMap_smul]
+      rw [map_smul, Algebra.smul_def, mul_smul, algebraMap_smul]
       rfl }
   letI _ : SMulCommClass A k (Fin n → D) :=
     { smul_comm a b x := by

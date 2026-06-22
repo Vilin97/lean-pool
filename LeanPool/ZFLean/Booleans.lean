@@ -85,7 +85,7 @@ lemma _root_.ZFSet.ZFBool.𝔹.nonempty : ZFSet.𝔹 ≠ ∅ := by
   intro h
   rw [ZFSet.ext_iff] at h
   simp only [ZFSet.notMem_empty, iff_false] at h
-  nomatch h ZFSet.zffalse (ZFSet.ZFBool.zffalse_mem_𝔹)
+  exact h ZFSet.zffalse ZFSet.ZFBool.zffalse_mem_𝔹
 
 /-- False value, lifted on `ZFBool`. -/
 abbrev false : ZFBool := ⟨zffalse, zffalse_mem_𝔹⟩
@@ -109,9 +109,7 @@ theorem powerset_false : zffalse.powerset = zftrue := by
   unfold zftrue zffalse
   ext x
   simp only [mem_powerset, mem_singleton]
-  apply Iff.intro
-  · exact subset_of_empty
-  · exact (subset_of_subset_of_eq (fun _ a => a) ·)
+  exact ⟨subset_of_empty, (subset_of_subset_of_eq (fun _ a => a) ·)⟩
 
 /--
 The enumeration of the powerset of `𝔹`.
@@ -204,18 +202,10 @@ protected abbrev and (p q : ZFBool) : ZFBool :=
     rw [mem_𝔹_iff]
     rw [mem_𝔹_iff] at hP hQ
     cases hP <;> cases hQ <;> subst_eqs
-    · apply Or.inl
-      ext1
-      rw [mem_inter, and_self]
-    · apply Or.inl
-      ext1
-      simp only [mem_inter, notMem_empty, false_and]
-    · apply Or.inl
-      ext1
-      simp only [mem_inter,  notMem_empty, and_false]
-    · apply Or.inr
-      ext1
-      simp only [mem_inter, and_self]⟩
+    · exact Or.inl (by ext1; rw [mem_inter, and_self])
+    · exact Or.inl (by ext1; simp only [mem_inter, notMem_empty, false_and])
+    · exact Or.inl (by ext1; simp only [mem_inter, notMem_empty, and_false])
+    · exact Or.inr (by ext1; simp only [mem_inter, and_self])⟩
 /-- Imported ZFLean declaration. -/
 infixl:55 " ⋀ " => ZFBool.and
 /-- Imported ZFLean declaration. -/
@@ -227,18 +217,10 @@ protected abbrev or (p q : ZFBool) : ZFBool :=
     rw [mem_𝔹_iff]
     rw [mem_𝔹_iff] at hP hQ
     cases hP <;> cases hQ <;> subst_eqs
-    · apply Or.inl
-      ext1
-      rw [mem_union, or_self]
-    · apply Or.inr
-      ext1
-      simp only [mem_union, notMem_empty, mem_singleton, false_or]
-    · apply Or.inr
-      ext1
-      simp only [mem_union, notMem_empty, or_false]
-    · apply Or.inr
-      ext1
-      simp only [mem_union, or_self]⟩
+    · exact Or.inl (by ext1; rw [mem_union, or_self])
+    · exact Or.inr (by ext1; simp only [mem_union, notMem_empty, mem_singleton, false_or])
+    · exact Or.inr (by ext1; simp only [mem_union, notMem_empty, or_false])
+    · exact Or.inr (by ext1; simp only [mem_union, or_self])⟩
 /-- Imported ZFLean declaration. -/
 infixl:55 " ⋁ " => ZFBool.or
 
@@ -290,11 +272,9 @@ theorem and_true (p : ZFBool) : p ⋀ ⊤ = p := by
   rw [mem_𝔹_iff] at hP
   rw [and_iff_left_iff_imp]
   intro h
-  cases hP
-  · subst_eqs
-    simp only [notMem_empty] at h
-  · subst_eqs
-    assumption
+  rcases hP with rfl | rfl
+  · simp only [notMem_empty] at h
+  · assumption
 
 @[simp]
 theorem and_false (p : ZFBool) : p ⋀ ⊥ = ⊥ := by
@@ -304,11 +284,7 @@ theorem and_false (p : ZFBool) : p ⋀ ⊥ = ⊥ := by
   rw [mem_𝔹_iff] at hP
   rcases hP with rfl | rfl
   · exact and_iff_left_of_imp id
-  · constructor
-    · rintro ⟨_, h⟩
-      exact h
-    · intro h
-      nomatch notMem_empty _ h
+  · exact ⟨fun h => h.2, fun h => absurd h (notMem_empty _)⟩
 
 theorem and_iff (p q : ZFBool) : p ⋀ q = ⊤ ↔ p = ⊤ ∧ q = ⊤ := by
   constructor

@@ -136,64 +136,34 @@ lemma basic_segment_in_openHull {u v : ℝ²} (C : Chain u v) {S : Segment}
 
 
 
-lemma basic_segments_colin_disjoint {u v w : ℝ²} {C : Chain v w} (h : colin u v w) :
-    toSegment u v ∉ toBasicSegments C := by
-  intro hc
-  have this := basic_segment_in_openHull _ hc
-  have other : openHull (toSegment u v) ∩ openHull (toSegment v w) = ∅ := by
-    apply colin_intersection_openHulls_empty
-    apply h
-  have nonempty : ∃ (b : ℝ²), b ∈ openHull (toSegment u v) := by
-    apply open_pol_nonempty
-    linarith
-  rcases nonempty with ⟨p, q⟩
-  have contra' :  p ∈ openHull (toSegment v w) := by
-      tauto_set
-  have contra : openHull (toSegment u v) ∩ openHull (toSegment v w) ≠ ∅ := by
-    rw [← Set.nonempty_iff_ne_empty]
-    tauto
-  contradiction
+/-- Helper: a segment whose open hull lands in `openHull (toSegment u v)` cannot also land in
+`openHull (toSegment v w)` when `u, v, w` are collinear. -/
+private lemma basic_segments_colin_disjoint_aux {u v w : ℝ²} {S : Segment} (h : colin u v w)
+    (hL : openHull S ⊆ openHull (toSegment u v))
+    (hR : openHull S ⊆ openHull (toSegment v w)) : False := by
+  have other : openHull (toSegment u v) ∩ openHull (toSegment v w) = ∅ :=
+    colin_intersection_openHulls_empty (h := h)
+  have ⟨p, q⟩ : ∃ (b : ℝ²), b ∈ openHull S := open_pol_nonempty (by linarith) S
+  rw [Set.eq_empty_iff_forall_notMem] at other
+  exact other p ⟨hL q, hR q⟩
 
+lemma basic_segments_colin_disjoint {u v w : ℝ²} {C : Chain v w} (h : colin u v w) :
+    toSegment u v ∉ toBasicSegments C := fun hc ↦
+  basic_segments_colin_disjoint_aux h (fun _ a ↦ a) (basic_segment_in_openHull _ hc)
 
 lemma basic_segments_colin_disjoint2 {u v w : ℝ²} {C : Chain v w} (h : colin u v w) :
     toSegment v u ∉ toBasicSegments C := by
   intro hc
   have this := basic_segment_in_openHull _ hc
-  rw [← reverseSegment_toSegment, reverseSegment_openHull] at this
-  have other : openHull (toSegment u v) ∩ openHull (toSegment v w) = ∅ := by
-    apply colin_intersection_openHulls_empty
-    apply h
-  have nonempty : ∃ (b : ℝ²), b ∈ openHull (toSegment u v) := by
-    apply open_pol_nonempty
-    linarith
-  rcases nonempty with ⟨p, q⟩
-  have contra' :  p ∈ openHull (toSegment v w) := by
-      tauto_set
-  have contra : openHull (toSegment u v) ∩ openHull (toSegment v w) ≠ ∅ := by
-    rw [← Set.nonempty_iff_ne_empty]
-    tauto
-  contradiction
+  refine basic_segments_colin_disjoint_aux h ?_ this
+  rw [← reverseSegment_toSegment, reverseSegment_openHull]
 
 lemma basic_segments_colin_disjoint_reverse {u v w : ℝ²} {C : Chain v w} (h : colin u v w) :
     toSegment  u v ∉ toBasicSegments (reverseChain C ):= by
-    intro hc
-    have this := basic_segment_in_openHull _ hc
-    have other : openHull (toSegment u v) ∩ openHull (toSegment v w) = ∅ := by
-      apply colin_intersection_openHulls_empty
-      apply h
-    have nonempty : ∃ (b : ℝ²), b ∈ openHull (toSegment u v) := by
-      apply open_pol_nonempty
-      linarith
-    rcases nonempty with ⟨p, q⟩
-    have contra' :  p ∈ openHull (toSegment w v) := by
-        tauto_set
-    have contra : openHull (toSegment u v) ∩ openHull (toSegment v w) ≠ ∅ := by
-      rw [← Set.nonempty_iff_ne_empty]
-      have hvw : openHull (toSegment v w) = openHull (toSegment w v) := by
-        rw [← reverseSegment_toSegment, reverseSegment_openHull]
-      rw [hvw]
-      tauto
-    contradiction
+  intro hc
+  have this := basic_segment_in_openHull _ hc
+  refine basic_segments_colin_disjoint_aux h (fun _ a ↦ a) ?_
+  rwa [← reverseSegment_toSegment (u := v) (v := w), reverseSegment_openHull] at this
 
 lemma reverseChain_basic_segments {u v : ℝ²} (C : Chain u v) :
     toBasicSegments (reverseChain C) =

@@ -47,8 +47,7 @@ by
   rw [PosSemidef.rpow, IsHermitian.rpow, innerAut_eq_iff, _root_.map_smul, innerAut_apply_one]
   symm
   nth_rw 1 [← diagonal_one]
-  rw [← diagonal_smul]
-  rw [diagonal_eq_diagonal_iff]
+  rw [← diagonal_smul, diagonal_eq_diagonal_iff]
   intro i
   simp_rw [Pi.smul_apply, Function.comp_apply, Pi.pow_apply]
   rw [← RCLike.ofReal_one, smul_eq_mul, ← RCLike.ofReal_mul,
@@ -73,8 +72,7 @@ by
   rw [PosDef.rpow_eq, innerAut_eq_iff, _root_.map_smul, innerAut_apply_one]
   symm
   nth_rw 1 [← diagonal_one]
-  rw [← diagonal_smul]
-  rw [diagonal_eq_diagonal_iff]
+  rw [← diagonal_smul, diagonal_eq_diagonal_iff]
   intro i
   simp_rw [Pi.smul_apply, Function.comp_apply, Pi.pow_apply]
   rw [← RCLike.ofReal_one, smul_eq_mul, ← RCLike.ofReal_mul,
@@ -211,8 +209,8 @@ by
   · by_cases hQQ : Q = 0
     · simp_rw [hQQ, smul_zero, or_true, PosSemidef.zero]
     · simp only [hQQ, or_false]
-      rw [Matrix.posSemidef_iff_dotProduct_mulVec, IsHermitian, conjTranspose_smul, hQ.1.eq]
-      rw [← sub_eq_zero, ← sub_smul, smul_eq_zero, sub_eq_zero]
+      rw [Matrix.posSemidef_iff_dotProduct_mulVec, IsHermitian, conjTranspose_smul, hQ.1.eq,
+        ← sub_eq_zero, ← sub_smul, smul_eq_zero, sub_eq_zero]
       simp_rw [smul_mulVec_assoc, dotProduct_smul,
         RCLike.nonneg_def (K := 𝕜), ← RCLike.conj_eq_iff_im,
         starRingEnd_apply, star_smul, smul_eq_mul, RCLike.mul_re,
@@ -345,8 +343,7 @@ by
         rintro ⟨α, hα⟩
         ext1
         rw [sig_apply]
-        simp_rw [PosDef.rpow_cast hφ.matrixIsPosDef _ hα]
-        simp_rw [smul_onePosDef_rpow_eq]
+        simp_rw [PosDef.rpow_cast hφ.matrixIsPosDef _ hα, smul_onePosDef_rpow_eq]
         have := (smulPosDef_isPosDef_iff
           (Matrix.posDefOne : PosDef (1 : Matrix n n ℂ)) α).mp
           (by rw [← hα]; exact hφ.matrixIsPosDef)

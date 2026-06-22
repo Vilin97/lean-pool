@@ -421,73 +421,19 @@ lemma aSlice_eq_of_t1_le_b_lt_t2 {b c : Rand} (hb1 : t1 ≤ b) (hb2 : b < t2) :
   classical
   ext a
   by_cases hc1 : c < t1
-  · have hR :
-        a ∈
-          (if c < t1 then Set.Iic t
-            else if c < b then Set.Iio t2
-            else if c < t2 then Set.Iic b
-            else if c < t then Set.Iio t1
-            else ∅) ↔
-          a ≤ t := by
-      simp [hc1]
-    have hL : a ∈ aSlice b c ↔ a ≤ t :=
-      mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t1 (a := a) hb1 hb2 hc1
-    exact (hL.trans hR.symm)
-  · have hc1' : ¬ c < t1 := hc1
-    by_cases hcb : c < b
-    · have hR :
-          a ∈
-            (if c < t1 then Set.Iic t
-              else if c < b then Set.Iio t2
-              else if c < t2 then Set.Iic b
-              else if c < t then Set.Iio t1
-              else ∅) ↔
-            a < t2 := by
-        simp [hc1', hcb]
-      have hL : a ∈ aSlice b c ↔ a < t2 :=
-        mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_b (a := a) hb1 hb2 hc1' hcb
-      exact (hL.trans hR.symm)
-    · have hcb' : ¬ c < b := hcb
-      by_cases hc2 : c < t2
-      · have hR :
-            a ∈
-              (if c < t1 then Set.Iic t
-                else if c < b then Set.Iio t2
-                else if c < t2 then Set.Iic b
-                else if c < t then Set.Iio t1
-                else ∅) ↔
-              a ≤ b := by
-          simp [hc1', hcb', hc2]
-        have hL : a ∈ aSlice b c ↔ a ≤ b :=
-          mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t2 (a := a) hb1 hb2 hcb' hc2
-        exact (hL.trans hR.symm)
-      · have hc2' : ¬ c < t2 := hc2
-        by_cases hct : c < t
-        · have hR :
-              a ∈
-                (if c < t1 then Set.Iic t
-                  else if c < b then Set.Iio t2
-                  else if c < t2 then Set.Iic b
-                  else if c < t then Set.Iio t1
-                  else ∅) ↔
-                a < t1 := by
-            simp [hc1', hcb', hc2', hct]
-          have hL : a ∈ aSlice b c ↔ a < t1 :=
-            mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t (a := a) hb1 hb2 hc2' hct
-          exact (hL.trans hR.symm)
-        · have hct' : ¬ c < t := hct
-          have hR :
-              a ∈
-                (if c < t1 then Set.Iic t
-                  else if c < b then Set.Iio t2
-                  else if c < t2 then Set.Iic b
-                  else if c < t then Set.Iio t1
-                  else ∅) ↔
-                False := by
-            simp [hc1', hcb', hc2', hct']
-          have hL : a ∈ aSlice b c ↔ False :=
-            mem_aSlice_of_t1_le_b_lt_t2_of_not_c_lt_t (a := a) hb1 hb2 hct'
-          exact (hL.trans hR.symm)
+  · rw [mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t1 (a := a) hb1 hb2 hc1]
+    simp [hc1]
+  · by_cases hcb : c < b
+    · rw [mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_b (a := a) hb1 hb2 hc1 hcb]
+      simp [hc1, hcb]
+    · by_cases hc2 : c < t2
+      · rw [mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t2 (a := a) hb1 hb2 hcb hc2]
+        simp [hc1, hcb, hc2]
+      · by_cases hct : c < t
+        · rw [mem_aSlice_of_t1_le_b_lt_t2_of_c_lt_t (a := a) hb1 hb2 hc2 hct]
+          simp [hc1, hcb, hc2, hct]
+        · rw [mem_aSlice_of_t1_le_b_lt_t2_of_not_c_lt_t (a := a) hb1 hb2 hct]
+          simp [hc1, hcb, hc2, hct]
 
 /-!
 ## Computing `p`
@@ -693,36 +639,45 @@ lemma lintegral_ofReal_pow_Icc (n : ℕ) (a b : ℝ) (ha : 0 ≤ a) (hab : a ≤
 
 end RealHelpers
 
-lemma setLIntegral_ofReal_id_Icc (a b : Rand) (hab : a ≤ b) :
-    (∫⁻ x in Set.Icc a b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand)) =
-      ENNReal.ofReal (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2) := by
+/-- The image of `Icc a b ⊆ Rand` under the coercion is the real interval `Icc a b`. -/
+private lemma image_val_Icc (a b : Rand) :
+    (Subtype.val '' Set.Icc a b : Set ℝ) = Set.Icc (a : ℝ) (b : ℝ) := by
+  ext y
+  constructor
+  · rintro ⟨x, hx, rfl⟩
+    exact hx
+  · intro hy
+    exact ⟨⟨y, ⟨le_trans a.property.1 hy.1, le_trans hy.2 b.property.2⟩⟩, hy, rfl⟩
+
+/-- For `b ∈ Rand`, the order ideal `Iic b` is the closed interval `Icc 0 b`. -/
+private lemma Iic_eq_Icc_zero (b : Rand) : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := by
+  ext x
+  simp [Set.mem_Iic, Set.mem_Icc]
+
+/-- Lift a real `lintegral` over `Icc (a:ℝ) (b:ℝ)` to one over `Icc a b ⊆ Rand`. -/
+private lemma setLIntegral_ofReal_lift (a b : Rand) (g : ℝ → ℝ) (v : ℝ)
+    (hreal : (∫⁻ y in Set.Icc (a : ℝ) (b : ℝ), ENNReal.ofReal (g y) ∂(volume : Measure ℝ)) =
+      ENNReal.ofReal v) :
+    (∫⁻ x in Set.Icc a b, ENNReal.ofReal (g (x : ℝ)) ∂(volume : Measure Rand)) =
+      ENNReal.ofReal v := by
   classical
-  -- Rewrite `volume` on `Rand` using the comap description from `unitInterval`.
   rw [unitInterval.volume_def]
   have hs : MeasurableSet (Set.Icc (0 : ℝ) 1) := by measurability
   have hsub :
-      (∫⁻ x in Set.Icc a b, ENNReal.ofReal (x : ℝ) ∂(Measure.comap (↑) (volume : Measure ℝ))) =
-        ∫⁻ y in (Subtype.val '' Set.Icc a b), ENNReal.ofReal y ∂(volume : Measure ℝ) := by
+      (∫⁻ x in Set.Icc a b, ENNReal.ofReal (g (x : ℝ)) ∂
+          (Measure.comap (↑) (volume : Measure ℝ))) =
+        ∫⁻ y in (Subtype.val '' Set.Icc a b), ENNReal.ofReal (g y) ∂(volume : Measure ℝ) := by
     simpa using
       (MeasureTheory.setLIntegral_subtype (μ := (volume : Measure ℝ))
-        (s := Set.Icc (0 : ℝ) 1) hs (t := Set.Icc a b) (f := fun y : ℝ => ENNReal.ofReal y))
-  have himage : (Subtype.val '' Set.Icc a b : Set ℝ) = Set.Icc (a : ℝ) (b : ℝ) := by
-    ext y
-    constructor
-    · rintro ⟨x, hx, rfl⟩
-      exact hx
-    · intro hy
-      refine ⟨⟨y, ?_⟩, ?_, rfl⟩
-      · exact ⟨le_trans a.property.1 hy.1, le_trans hy.2 b.property.2⟩
-      · exact hy
-  have ha : (0 : ℝ) ≤ (a : ℝ) := a.property.1
-  have habR : (a : ℝ) ≤ b := hab
-  have hreal :
-      (∫⁻ y in (Subtype.val '' Set.Icc a b), ENNReal.ofReal y ∂(volume : Measure ℝ)) =
-        ENNReal.ofReal ((↑b ^ 2 - ↑a ^ 2) / 2) := by
-    simpa [himage] using
-      (RealHelpers.lintegral_ofReal_id_Icc (a := (a : ℝ)) (b := (b : ℝ)) ha habR)
-  simpa using hsub.trans hreal
+        (s := Set.Icc (0 : ℝ) 1) hs (t := Set.Icc a b) (f := fun y : ℝ => ENNReal.ofReal (g y)))
+  rw [hsub, image_val_Icc]
+  exact hreal
+
+lemma setLIntegral_ofReal_id_Icc (a b : Rand) (hab : a ≤ b) :
+    (∫⁻ x in Set.Icc a b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand)) =
+      ENNReal.ofReal (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2) :=
+  setLIntegral_ofReal_lift a b (fun y => y) _
+    (RealHelpers.lintegral_ofReal_id_Icc (a := (a : ℝ)) (b := (b : ℝ)) a.property.1 hab)
 
 lemma setLIntegral_ofReal_id_Iio (b : Rand) :
     (∫⁻ x in Set.Iio b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand)) =
@@ -731,9 +686,7 @@ lemma setLIntegral_ofReal_id_Iio (b : Rand) :
   have h0 : (0 : Rand) ≤ b := b.property.1
   have hIio : (Set.Iio b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Iic b := by
     simpa using (MeasureTheory.Iio_ae_eq_Iic (μ := (volume : Measure Rand)) (a := b))
-  have hIic : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := by
-    ext x
-    simp [Set.mem_Iic, Set.mem_Icc]
+  have hIic : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := Iic_eq_Icc_zero b
   calc
     (∫⁻ x in Set.Iio b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand)) =
         ∫⁻ x in Set.Iic b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand) := by
@@ -756,109 +709,26 @@ lemma setLIntegral_ofReal_id_Ico (a b : Rand) (hab : a ≤ b) :
 
 lemma setLIntegral_ofReal_pow_Icc (n : ℕ) (a b : Rand) (hab : a ≤ b) :
     (∫⁻ x in Set.Icc a b, ENNReal.ofReal ((x : ℝ) ^ n) ∂(volume : Measure Rand)) =
-      ENNReal.ofReal (((b : ℝ) ^ (n + 1) - (a : ℝ) ^ (n + 1)) / (n + 1)) := by
-  classical
-  rw [unitInterval.volume_def]
-  have hs : MeasurableSet (Set.Icc (0 : ℝ) 1) := by measurability
-  have hsub :
-      (∫⁻ x in Set.Icc a b, ENNReal.ofReal ((x : ℝ) ^ n) ∂
-          (Measure.comap (↑) (volume : Measure ℝ))) =
-        ∫⁻ y in (Subtype.val '' Set.Icc a b), ENNReal.ofReal (y ^ n) ∂(volume : Measure ℝ) := by
-    simpa using
-      (MeasureTheory.setLIntegral_subtype (μ := (volume : Measure ℝ))
-        (s := Set.Icc (0 : ℝ) 1) hs (t := Set.Icc a b) (f := fun y : ℝ => ENNReal.ofReal (y ^ n)))
-  have himage : (Subtype.val '' Set.Icc a b : Set ℝ) = Set.Icc (a : ℝ) (b : ℝ) := by
-    ext y
-    constructor
-    · rintro ⟨x, hx, rfl⟩
-      exact hx
-    · intro hy
-      refine ⟨⟨y, ?_⟩, ?_, rfl⟩
-      · exact ⟨le_trans a.property.1 hy.1, le_trans hy.2 b.property.2⟩
-      · exact hy
-  have ha : (0 : ℝ) ≤ (a : ℝ) := a.property.1
-  have habR : (a : ℝ) ≤ b := hab
-  have hreal :
-      (∫⁻ y in (Subtype.val '' Set.Icc a b), ENNReal.ofReal (y ^ n) ∂(volume : Measure ℝ)) =
-        ENNReal.ofReal (((b : ℝ) ^ (n + 1) - (a : ℝ) ^ (n + 1)) / (n + 1)) := by
-    simpa [himage] using
-      (RealHelpers.lintegral_ofReal_pow_Icc n (a := (a : ℝ)) (b := (b : ℝ)) ha habR)
-  simpa using hsub.trans hreal
+      ENNReal.ofReal (((b : ℝ) ^ (n + 1) - (a : ℝ) ^ (n + 1)) / (n + 1)) :=
+  setLIntegral_ofReal_lift a b (fun y => y ^ n) _
+    (RealHelpers.lintegral_ofReal_pow_Icc n (a := (a : ℝ)) (b := (b : ℝ)) a.property.1 hab)
 
 open scoped Real Interval
 
 lemma setLIntegral_ofReal_sub_id_Icc (r a b : Rand) (hab : a ≤ b) (hbr : (b : ℝ) ≤ (r : ℝ)) :
     (∫⁻ x in Set.Icc a b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand)) =
       ENNReal.ofReal
-        ((r : ℝ) * ((b : ℝ) - (a : ℝ)) - (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2)) := by
-  classical
-  rw [unitInterval.volume_def]
-  have hs : MeasurableSet (Set.Icc (0 : ℝ) 1) := by measurability
-  have hsub :
-      (∫⁻ x in Set.Icc a b, ENNReal.ofReal ((r : ℝ) - x) ∂
-          (Measure.comap (↑) (volume : Measure ℝ))) =
-        ∫⁻ y in (Subtype.val '' Set.Icc a b),
-          ENNReal.ofReal ((r : ℝ) - y) ∂(volume : Measure ℝ) := by
-    simpa using
-      (MeasureTheory.setLIntegral_subtype (μ := (volume : Measure ℝ))
-        (s := Set.Icc (0 : ℝ) 1) hs (t := Set.Icc a b)
-        (f := fun y : ℝ => ENNReal.ofReal ((r : ℝ) - y)))
-  have himage : (Subtype.val '' Set.Icc a b : Set ℝ) = Set.Icc (a : ℝ) (b : ℝ) := by
-    ext y
-    constructor
-    · rintro ⟨x, hx, rfl⟩
-      exact hx
-    · intro hy
-      refine ⟨⟨y, ?_⟩, ?_, rfl⟩
-      · exact ⟨le_trans a.property.1 hy.1, le_trans hy.2 b.property.2⟩
-      · exact hy
-  have habR : (a : ℝ) ≤ b := hab
-  have hreal :
-      (∫⁻ y in (Subtype.val '' Set.Icc a b),
-          ENNReal.ofReal ((r : ℝ) - y) ∂(volume : Measure ℝ)) =
-        ENNReal.ofReal
-          ((r : ℝ) * ((b : ℝ) - (a : ℝ)) - (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2)) := by
-    simpa [himage] using
-      (RealHelpers.lintegral_ofReal_sub_id_Icc (r := (r : ℝ)) (a := (a : ℝ)) (b := (b : ℝ))
-        hbr habR)
-  simpa using hsub.trans hreal
+        ((r : ℝ) * ((b : ℝ) - (a : ℝ)) - (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2)) :=
+  setLIntegral_ofReal_lift a b (fun y => (r : ℝ) - y) _
+    (RealHelpers.lintegral_ofReal_sub_id_Icc (r := (r : ℝ)) (a := (a : ℝ)) (b := (b : ℝ)) hbr hab)
 
 lemma setLIntegral_ofReal_mul_sub_Icc (r a b : Rand) (hab : a ≤ b) (hbr : (b : ℝ) ≤ (r : ℝ)) :
     (∫⁻ x in Set.Icc a b, ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂(volume : Measure Rand)) =
       ENNReal.ofReal
-        ((r : ℝ) * ((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (a : ℝ) ^ 3) / 3)) := by
-  classical
-  rw [unitInterval.volume_def]
-  have hs : MeasurableSet (Set.Icc (0 : ℝ) 1) := by measurability
-  have hsub :
-      (∫⁻ x in Set.Icc a b, ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂
-          (Measure.comap (↑) (volume : Measure ℝ))) =
-        ∫⁻ y in (Subtype.val '' Set.Icc a b),
-          ENNReal.ofReal (y * ((r : ℝ) - y)) ∂(volume : Measure ℝ) := by
-    simpa using
-      (MeasureTheory.setLIntegral_subtype (μ := (volume : Measure ℝ))
-        (s := Set.Icc (0 : ℝ) 1) hs (t := Set.Icc a b)
-        (f := fun y : ℝ => ENNReal.ofReal (y * ((r : ℝ) - y))))
-  have himage : (Subtype.val '' Set.Icc a b : Set ℝ) = Set.Icc (a : ℝ) (b : ℝ) := by
-    ext y
-    constructor
-    · rintro ⟨x, hx, rfl⟩
-      exact hx
-    · intro hy
-      refine ⟨⟨y, ?_⟩, ?_, rfl⟩
-      · exact ⟨le_trans a.property.1 hy.1, le_trans hy.2 b.property.2⟩
-      · exact hy
-  have ha : (0 : ℝ) ≤ (a : ℝ) := a.property.1
-  have habR : (a : ℝ) ≤ b := hab
-  have hreal :
-      (∫⁻ y in (Subtype.val '' Set.Icc a b),
-          ENNReal.ofReal (y * ((r : ℝ) - y)) ∂(volume : Measure ℝ)) =
-        ENNReal.ofReal
-          ((r : ℝ) * ((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (a : ℝ) ^ 3) / 3)) := by
-    simpa [himage] using
-      (RealHelpers.lintegral_ofReal_mul_sub_Icc (r := (r : ℝ)) (a := (a : ℝ)) (b := (b : ℝ))
-        ha hbr habR)
-  simpa using hsub.trans hreal
+        ((r : ℝ) * ((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (a : ℝ) ^ 3) / 3)) :=
+  setLIntegral_ofReal_lift a b (fun y => y * ((r : ℝ) - y)) _
+    (RealHelpers.lintegral_ofReal_mul_sub_Icc (r := (r : ℝ)) (a := (a : ℝ)) (b := (b : ℝ))
+      a.property.1 hbr hab)
 
 lemma setLIntegral_ofReal_sub_id_Ico (r a b : Rand) (hab : a ≤ b) (hbr : (b : ℝ) ≤ (r : ℝ)) :
     (∫⁻ x in Set.Ico a b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand)) =
@@ -894,9 +764,7 @@ lemma setLIntegral_ofReal_sub_id_Iio (r b : Rand) (hbr : (b : ℝ) ≤ (r : ℝ)
         ((r : ℝ) * ((b : ℝ) - (0 : ℝ)) - (((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) := by
   have hIio : (Set.Iio b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Iic b := by
     simpa using (MeasureTheory.Iio_ae_eq_Iic (μ := (volume : Measure Rand)) (a := b))
-  have hIic : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := by
-    ext x
-    simp [Set.mem_Iic, Set.mem_Icc]
+  have hIic : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := Iic_eq_Icc_zero b
   have h0 : (0 : Rand) ≤ b := b.property.1
   calc
     (∫⁻ x in Set.Iio b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand)) =
@@ -914,9 +782,7 @@ lemma setLIntegral_ofReal_mul_sub_Iio (r b : Rand) (hbr : (b : ℝ) ≤ (r : ℝ
         ((r : ℝ) * ((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (0 : ℝ) ^ 3) / 3)) := by
   have hIio : (Set.Iio b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Iic b := by
     simpa using (MeasureTheory.Iio_ae_eq_Iic (μ := (volume : Measure Rand)) (a := b))
-  have hIic : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := by
-    ext x
-    simp [Set.mem_Iic, Set.mem_Icc]
+  have hIic : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := Iic_eq_Icc_zero b
   have h0 : (0 : Rand) ≤ b := b.property.1
   calc
     (∫⁻ x in Set.Iio b, ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂(volume : Measure Rand)) =

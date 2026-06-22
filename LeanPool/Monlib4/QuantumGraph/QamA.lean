@@ -245,8 +245,7 @@ theorem Psi.one [hφ : φ.IsFaithfulPosMap] :
   simp_rw [← mul_apply]
   rw [PosDef.rpow_mul_rpow]
   ring_nf
-  rw [← conjTranspose_apply, (PosDef.rpow.isPosDef _ _).1.eq]
-  rw [mul_comm]
+  rw [← conjTranspose_apply, (PosDef.rpow.isPosDef _ _).1.eq, mul_comm]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k l) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (k l) -/
@@ -424,8 +423,7 @@ theorem symmetric_eq [hφ : φ.IsFaithfulPosMap] (x : ℍ) :
     withMatrixQuantum[φ]
       (symmMap ℂ ℍ ℍ |x⟩⟨x| = |hφ.sig (-1) xᴴ⟩⟨xᴴ|) := by
   withMatrixQuantumCtx[φ]
-  rw [symmMap_rankOne_apply]
-  rw [show k ℍ = 0 by rfl]
+  rw [symmMap_rankOne_apply, show k ℍ = 0 by rfl]
   simp_rw [star_eq_conjTranspose]
   rw [show modAut (-(2 * (0 : ℝ)) - 1) xᴴ =
       hφ.sig (-(2 * (0 : ℝ)) - 1) xᴴ by rfl]
@@ -435,8 +433,7 @@ theorem symmetric'_eq [hφ : φ.IsFaithfulPosMap] (x : ℍ) :
     withMatrixQuantum[φ]
       ((symmMap ℂ ℍ ℍ).symm |x⟩⟨x| = |xᴴ⟩⟨hφ.sig (-1) xᴴ|) := by
   withMatrixQuantumCtx[φ]
-  rw [symmMap_symm_rankOne_apply]
-  rw [show k ℍ = 0 by rfl]
+  rw [symmMap_symm_rankOne_apply, show k ℍ = 0 by rfl]
   simp_rw [star_eq_conjTranspose]
   rw [show modAut (-(2 * (0 : ℝ)) - 1) xᴴ =
       hφ.sig (-(2 * (0 : ℝ)) - 1) xᴴ by rfl]
@@ -564,8 +561,7 @@ private theorem qam_A_is_sa_iff_aux3_aux6 [hφ : φ.IsFaithfulPosMap] (x : ℍ) 
         simp]
     _ = rankOne ℂ (((((α : NNReal) : ℝ) : ℂ) • x)) x := by
       symm
-      rw [show x = star (1 : ℂ) • x by simp]
-      rw [rankOne_smul_smul]
+      rw [show x = star (1 : ℂ) • x by simp, rankOne_smul_smul]
       simp
 
 private theorem qam_A_is_sa_iff_aux4_aux6 [hφ : φ.IsFaithfulPosMap] (x' : { x : ℍ // x ≠ 0 })
@@ -1142,10 +1138,9 @@ theorem qamA.isometric_starAlgEquiv_conj [hφ : φ.IsFaithfulPosMap] [Nontrivial
   have hnorm : ‖(innerAutStarAlg U) x.1‖ = ‖x.1‖ := by
     rw [StarAlgEquiv.IsIsometry, isometry_iff_norm] at hf'
     exact hf' x.1
-  rw [this]
-  rw [hnorm]
-  simp_rw [innerAutStarAlg_apply, Matrix.mul_assoc, hU.eq, UnitaryGroup.inv_apply]
-  simp_rw [unitaryGroup.star_coe_eq_coe_star]
+  rw [this, hnorm]
+  simp_rw [innerAutStarAlg_apply, Matrix.mul_assoc, hU.eq, UnitaryGroup.inv_apply,
+    unitaryGroup.star_coe_eq_coe_star]
   simp only [rpow]
 
 theorem qamA.iso_iff [hφ : φ.IsFaithfulPosMap] [Nontrivial n]

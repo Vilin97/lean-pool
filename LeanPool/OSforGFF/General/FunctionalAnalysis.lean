@@ -4,22 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 
-
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
 import Mathlib.MeasureTheory.Function.Holder
 import Mathlib.Analysis.Fourier.Inversion
 import Mathlib.Analysis.Calculus.BumpFunction.Normed
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.MeasureTheory.Constructions.HaarToSphere
-
-
-
-
-
-
-
-
-
 
 /-!
 ## Functional Analysis for AQFT
@@ -87,7 +77,6 @@ The following L∞ × L² multiplication theorems are fully proven (2025-12-13):
 
 open MeasureTheory.Measure
 
-
 variable {d : ℕ} [NeZero d]
 
 -- Add inner product space structure
@@ -125,19 +114,12 @@ instance instBorelSpaceLpComplexTwoLeanPool (μ : Measure α) : BorelSpace (Lp �
 
 -- Check if Complex.ofRealCLM is an isometry
 lemma Complex.ofRealCLM_isometry : Isometry (Complex.ofRealCLM : ℝ →L[ℝ] ℂ) := by
-  -- Complex.ofRealCLM is defined as ofRealLI.toContinuousLinearMap,
-  -- where ofRealLI is a linear isometry
-  have h : (Complex.ofRealCLM : ℝ →L[ℝ] ℂ) = Complex.ofRealLI.toContinuousLinearMap := rfl
-  rw [h]
-  -- The coercion to function is the same for both
   convert Complex.ofRealLI.isometry
 
--- Use this to prove our specific case
+/-- The lift `φ ↦ ofRealCLM.compLp φ` to `Lp` is continuous. -/
 lemma Complex.ofRealCLM_continuous_compLp {α : Type*} [MeasurableSpace α] {μ : Measure α} :
-  Continuous (fun φ : Lp ℝ 2 μ => Complex.ofRealCLM.compLp φ : Lp ℝ 2 μ → Lp ℂ 2 μ) := by
-  -- The function φ ↦ L.compLp φ is the application of the continuous linear map
-  -- ContinuousLinearMap.compLpL p μ L, which is continuous
-  exact (ContinuousLinearMap.compLpL 2 μ Complex.ofRealCLM).continuous
+  Continuous (fun φ : Lp ℝ 2 μ => Complex.ofRealCLM.compLp φ : Lp ℝ 2 μ → Lp ℂ 2 μ) :=
+  (ContinuousLinearMap.compLpL 2 μ Complex.ofRealCLM).continuous
 
 /--
 Compose an Lp function with a continuous linear map.
@@ -184,8 +166,6 @@ noncomputable def liftMeasureRealToComplex
 
 end LiftMeasure
 
-
-
 /-! ## Fourier Transform as Linear Isometry on L² Spaces
 
 The key challenge in defining the Fourier transform on L² spaces is that the Fourier integral
@@ -212,7 +192,6 @@ abbrev SchwartzRd (d : ℕ) := SchwartzMap (EuclideanRd d) ℂ
 abbrev L2Complex (d : ℕ) := Lp ℂ 2 (volume : Measure (EuclideanRd d))
 
 /-! ### Core construction components (using Mathlib APIs) -/
-
 
 /-- Embedding Schwartz functions into L² space using Mathlib's toLpCLM.
     This is a continuous linear map from Schwartz space to L²(ℝᵈ, ℂ).

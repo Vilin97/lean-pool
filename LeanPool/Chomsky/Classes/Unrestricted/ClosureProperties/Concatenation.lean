@@ -167,27 +167,7 @@ lemma mem_bigGrammar_rules_iff {g₁ g₂ : Grammar T} (r : Grule T (bigGrammar 
         r ∈ g₂.rules.map (wrapGrule₂ g₁.nt) ∨
         r ∈ rulesForTerminals₁ g₂.nt g₁ ∨
         r ∈ rulesForTerminals₂ g₁.nt g₂ := by
-  constructor
-  · intro hr
-    rcases List.mem_cons.mp hr with hhead | htail
-    · exact Or.inl hhead
-    rcases List.mem_append.mp htail with hmaps | hterms
-    · rcases List.mem_append.mp hmaps with h₁ | h₂
-      · exact Or.inr (Or.inl h₁)
-      · exact Or.inr (Or.inr (Or.inl h₂))
-    · rcases List.mem_append.mp hterms with t₁ | t₂
-      · exact Or.inr (Or.inr (Or.inr (Or.inl t₁)))
-      · exact Or.inr (Or.inr (Or.inr (Or.inr t₂)))
-  · rintro (hhead | h₁ | h₂ | t₁ | t₂)
-    · exact List.mem_cons.mpr (Or.inl hhead)
-    · exact List.mem_cons.mpr (Or.inr (List.mem_append.mpr
-        (Or.inl (List.mem_append.mpr (Or.inl h₁)))))
-    · exact List.mem_cons.mpr (Or.inr (List.mem_append.mpr
-        (Or.inl (List.mem_append.mpr (Or.inr h₂)))))
-    · exact List.mem_cons.mpr (Or.inr (List.mem_append.mpr
-        (Or.inr (List.mem_append.mpr (Or.inl t₁)))))
-    · exact List.mem_cons.mpr (Or.inr (List.mem_append.mpr
-        (Or.inr (List.mem_append.mpr (Or.inr t₂)))))
+  simp only [List.mem_cons, List.mem_append, or_assoc]
 
 end the_construction
 
@@ -441,17 +421,7 @@ private def correspondingSymbols {N₁ N₂ : Type} : nst T N₁ N₂ → nst T 
 private lemma correspondingSymbols_self {N₁ N₂ : Type} (s : nst T N₁ N₂) :
   correspondingSymbols s s :=
 by
-  rcases s with t | n
-  · simp [correspondingSymbols]
-  · rcases n with a | b
-    · rcases a with _ | v
-      · simp [correspondingSymbols]
-      · rcases v with n₁ | n₂
-        · simp [correspondingSymbols]
-        · simp [correspondingSymbols]
-    · rcases b with t₁ | t₂
-      · simp [correspondingSymbols]
-      · simp [correspondingSymbols]
+  rcases s with _ | ((_ | (_ | _)) | (_ | _)) <;> simp [correspondingSymbols]
 
 private lemma correspondingSymbols_never₁ {N₁ N₂ : Type} {s₁ : Symbol T N₁} {s₂ : Symbol T N₂} :
   ¬ correspondingSymbols (wrapSymbol₁ N₂ s₁) (wrapSymbol₂ N₁ s₂) :=
@@ -462,6 +432,18 @@ private lemma correspondingSymbols_never₂ {N₁ N₂ : Type} {s₁ : Symbol T 
   ¬ correspondingSymbols (wrapSymbol₂ N₁ s₂) (wrapSymbol₁ N₂ s₁) :=
 by
   cases s₁ <;> cases s₂ <;> exact not_false
+
+private lemma correspondingSymbols_terminal_of_inl {N₁ N₂ : Type} {s : nst T N₁ N₂} {t : T}
+    (hst : correspondingSymbols s (Symbol.nonterminal ▶◄t : nst T N₁ N₂)) :
+  correspondingSymbols s (Symbol.terminal t) :=
+by
+  rcases s with _ | ((_ | (_ | _)) | (_ | _)) <;> simp_all [correspondingSymbols]
+
+private lemma correspondingSymbols_terminal_of_inr {N₁ N₂ : Type} {s : nst T N₁ N₂} {t : T}
+    (hst : correspondingSymbols s (Symbol.nonterminal ▶▶t : nst T N₁ N₂)) :
+  correspondingSymbols s (Symbol.terminal t) :=
+by
+  rcases s with _ | ((_ | (_ | _)) | (_ | _)) <;> simp_all [correspondingSymbols]
 
 private def correspondingStrings {N₁ N₂ : Type} : List (nst T N₁ N₂) → List (nst T N₁ N₂) → Prop :=
   List.Forall₂ correspondingSymbols
@@ -1761,37 +1743,7 @@ by
             · apply List.take_one_drop_eq_of_lt_length
             clear * - middle_nt_elem
             apply correspondingStrings_singleton
-            cases hxul
-              : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy with
-            | terminal =>
-              exfalso
-              unfold correspondingSymbols at middle_nt_elem
-              aesop
-            | nonterminal s =>
-              rw [hxul] at middle_nt_elem
-              cases hs : s with
-              | inl sₒ =>
-                rw [hs] at middle_nt_elem
-                cases sₒ with
-                | none =>
-                  exact middle_nt_elem
-                | some sₙ =>
-                  cases sₙ with
-                  | inl s₁ =>
-                    unfold correspondingSymbols at middle_nt_elem ⊢
-                    aesop
-                  | inr s₂ =>
-                    unfold correspondingSymbols at middle_nt_elem ⊢
-                    aesop
-              | inr sₜ =>
-                rw [hs] at middle_nt_elem
-                cases sₜ with
-                | inl s₁ =>
-                  unfold correspondingSymbols at middle_nt_elem ⊢
-                  aesop
-                | inr s₂ =>
-                  unfold correspondingSymbols at middle_nt_elem ⊢
-                  aesop
+            exact correspondingSymbols_terminal_of_inl middle_nt_elem
       · use x, y, ih_x, ih_y
         unfold rulesForTerminals₂ at rte₂
         rw [List.mem_map] at rte₂
@@ -1848,37 +1800,7 @@ by
             · apply list_drop_take_succ
             clear * - middle_nt_elem
             apply correspondingStrings_singleton
-            cases hxul
-              : (x.map (wrapSymbol₁ g₂.nt) ++ y.map (wrapSymbol₂ g₁.nt))[u.length]'ul_lt_len_xy with
-            | terminal =>
-              exfalso
-              unfold correspondingSymbols at middle_nt_elem
-              aesop
-            | nonterminal s =>
-              rw [hxul] at middle_nt_elem
-              cases hs : s with
-              | inl sₒ =>
-                rw [hs] at middle_nt_elem
-                cases sₒ with
-                | none =>
-                  exact middle_nt_elem
-                | some sₙ =>
-                  cases sₙ with
-                  | inl s₁ =>
-                    unfold correspondingSymbols at middle_nt_elem ⊢
-                    aesop
-                  | inr s₂ =>
-                    unfold correspondingSymbols at middle_nt_elem ⊢
-                    aesop
-              | inr sₜ =>
-                rw [hs] at middle_nt_elem
-                cases sₜ with
-                | inl s₁ =>
-                  unfold correspondingSymbols at middle_nt_elem ⊢
-                  aesop
-                | inr s₂ =>
-                  unfold correspondingSymbols at middle_nt_elem ⊢
-                  aesop
+            exact correspondingSymbols_terminal_of_inr middle_nt_elem
         · convert part_for_v using 1
           convert (congr_arg (List.drop u.length.succ) bef).symm
           simp

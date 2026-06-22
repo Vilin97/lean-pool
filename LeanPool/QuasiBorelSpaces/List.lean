@@ -284,10 +284,7 @@ lemma isHom_insert
     {f : A → B} (hf : IsHom f)
     {g : A → List B} (hg : IsHom g)
     : IsHom (fun x ↦ insert (f x) (g x)) := by
-  apply Prop.isHom_ite
-  · fun_prop
-  · fun_prop
-  · fun_prop
+  apply Prop.isHom_ite <;> fun_prop
 
 /-- List `union` is a homomorphism. -/
 @[fun_prop]

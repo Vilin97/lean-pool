@@ -92,8 +92,7 @@ def Coalgebra.ofFiniteDimensionalHilbertAlgebra
   coassoc := by
     rw [← LinearMap.rTensor_adjoint, ← LinearMap.lTensor_adjoint,
       ← TensorProduct.assoc_symm_adjoint]
-    simp_rw [← LinearMap.adjoint_comp, Algebra.mul_comp_rTensor_mul]
-    simp_rw [LinearMap.comp_assoc]
+    simp_rw [← LinearMap.adjoint_comp, Algebra.mul_comp_rTensor_mul, LinearMap.comp_assoc]
     simp only [LinearEquiv.comp_coe, LinearEquiv.symm_trans_self,
       LinearEquiv.refl_toLinearMap]
     rfl

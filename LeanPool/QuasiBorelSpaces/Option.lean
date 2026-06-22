@@ -166,9 +166,7 @@ lemma isHom_project
     · apply Nat.isHom_add'
       · apply Nat.isHom_find fun n ↦ ?_
         apply isHom_eq'
-        · apply isHom_comp' Option.isHom_isSome
-          apply isHom_comp' (Chain.isHom_apply n)
-          exact hf
+        · exact isHom_comp' Option.isHom_isSome (isHom_comp' (Chain.isHom_apply n) hf)
         · fun_prop
       · fun_prop
     · intro n
@@ -184,9 +182,7 @@ lemma isHom_distrib [QuasiBorelSpace A] [Preorder A] : IsHom (Chain.Option.distr
   apply Prop.isHom_dite
   · apply Prop.isHom_exists fun i ↦ ?_
     apply isHom_eq'
-    · apply isHom_comp' Option.isHom_isSome
-      apply isHom_comp' (Chain.isHom_apply i)
-      exact hφ
+    · exact isHom_comp' Option.isHom_isSome (isHom_comp' (Chain.isHom_apply i) hφ)
     · fun_prop
   · fun_prop
   · fun_prop

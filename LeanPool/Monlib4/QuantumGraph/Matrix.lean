@@ -228,13 +228,9 @@ by
   withMatrixCoalgebraQuantumCtx[φ]
   intro A hA ι _ u
   simp_rw [← QuantumSet.Psi_symm_transpose_kroneckerToTensor_toMatrix_rankOne]
-  rw [← map_sum]
-  rw [← map_sum (StarAlgEquiv.lTensor (Matrix n n ℂ) (transposeStarAlgEquiv n))]
-  rw [← map_sum kroneckerToTensor]
-  rw [← map_sum onb.toMatrix]
-  rw [← ContinuousLinearMap.coe_sum]
-  rw [← OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne u]
-  rw [hA.matrix_orthogonalProjection_eq]
+  rw [← map_sum, ← map_sum (StarAlgEquiv.lTensor (Matrix n n ℂ) (transposeStarAlgEquiv n)),
+    ← map_sum kroneckerToTensor, ← map_sum onb.toMatrix, ← ContinuousLinearMap.coe_sum,
+    ← OrthonormalBasis.orthogonalProjection'_eq_sum_rankOne u, hA.matrix_orthogonalProjection_eq]
   simp only [ContinuousLinearMap.toLinearMapAlgEquiv_symm_apply]
   simp only [LinearMap.coe_toContinuousLinearMap,
     StarAlgEquiv.apply_symm_apply, kroneckerToTensor, tensorToKronecker]
@@ -372,10 +368,7 @@ by
     ←
     Function.Injective.eq_iff (QuantumSet.Psi 0 (1 / 2)).injective,
     Psi.schurMul, LinearEquiv.apply_symm_apply, QuantumSet.Psi_apply_matrix_one]
-  rw [← _root_.map_mul]
-  rw [← _root_.map_mul]
-  rw [← _root_.map_mul onb.toMatrix]
-  rw [LinearEquiv.map_zero]
+  rw [← _root_.map_mul, ← _root_.map_mul, ← _root_.map_mul onb.toMatrix, LinearEquiv.map_zero]
   simp only [map_eq_zero_iff _ (StarAlgEquiv.injective _),
     map_eq_zero_iff _ (AlgEquiv.injective _)]
   simp only [Module.End.mul_eq_comp, LinearMap.comp_rankOne,
@@ -444,9 +437,7 @@ by
     ← QuantumSet.Psi_symm_transpose_kroneckerToTensor_toMatrix_rankOne,
     ← Function.Injective.eq_iff (QuantumSet.Psi 0 (1 / 2)).injective,
     Psi.schurMul, LinearEquiv.apply_symm_apply, QuantumSet.Psi_apply_matrix_one]
-  rw [← _root_.map_mul]
-  rw [← _root_.map_mul]
-  rw [← _root_.map_mul onb.toMatrix]
+  rw [← _root_.map_mul, ← _root_.map_mul, ← _root_.map_mul onb.toMatrix]
   simp only [(StarAlgEquiv.injective _).eq_iff, (AlgEquiv.injective _).eq_iff]
   simp only [Module.End.mul_eq_comp, LinearMap.comp_rankOne, ContinuousLinearMap.coe_coe,
     rankOne_apply, ContinuousLinearMap.coe_inj, hφ.inner_dualMatrix_right]

@@ -54,16 +54,10 @@ lemma besselK1_pos (z : ℝ) (hz : 0 < z) : 0 < besselK1 z := by
   unfold besselK1
   -- The integrand f(t) = exp(-z cosh(t)) * cosh(t) is strictly positive for all t
   set f : ℝ → ℝ := fun t => exp (-z * cosh t) * cosh t with hf_def
-  -- f is nonnegative (actually positive)
-  have hf_nonneg : ∀ t, 0 ≤ f t := fun t => by
-    apply mul_nonneg (exp_nonneg _) (cosh_pos t).le
-  have hf_pos : ∀ t, 0 < f t := fun t => by
-    apply mul_pos (exp_pos _) (cosh_pos t)
-  -- f is continuous
-  have hf_cont : Continuous f := by
-    apply Continuous.mul
-    · exact continuous_exp.comp (continuous_const.mul continuous_cosh)
-    · exact continuous_cosh
+  have hf_nonneg : ∀ t, 0 ≤ f t := fun t => mul_nonneg (exp_nonneg _) (cosh_pos t).le
+  have hf_pos : ∀ t, 0 < f t := fun t => mul_pos (exp_pos _) (cosh_pos t)
+  have hf_cont : Continuous f :=
+    (continuous_exp.comp (continuous_const.mul continuous_cosh)).mul continuous_cosh
   -- f is integrable on [0, ∞) because exp(-z cosh(t)) decays super-exponentially
   -- Key insight: for t ≥ 1, cosh(t) ≥ exp(t)/3, so exp(-z·cosh(t)) ≤ exp(-z·exp(t)/3)
   -- Thus f(t) ≤ exp(-z·exp(t)/3 + t), which decays faster than any exponential

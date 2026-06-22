@@ -100,8 +100,7 @@ private lemma cdf_continuous
   intro ε hε
   obtain ⟨δ, hδ₁, hδ₂⟩ := this ε hε
   use δ, hδ₁
-  intro j hj hj'
-  apply hδ₂ hj hj'
+  exact fun j hj hj' ↦ hδ₂ hj hj'
 
 /-- The quantile distribution function (i.e., the inverse of `cdf`). -/
 noncomputable def quantile (μ : Measure I) [IsProbabilityMeasure μ] (i : I) : I :=

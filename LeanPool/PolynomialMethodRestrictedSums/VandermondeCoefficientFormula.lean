@@ -232,10 +232,7 @@ lemma fallingFactorial_eq_factorial_div (n k : ℕ) :
           simp_all only [not_le]
           rw [Finset.prod_eq_zero_iff]
           simp_all only [mem_range]
-          apply Exists.intro
-          · apply And.intro
-            · exact hk
-            · simp_all only [tsub_self]
+          exact ⟨n, hk, by simp⟩
 
 /-- Symmetric group sum expression C = ∑_{σ∈S_{k + 1}} (-1)^{sign(σ)} * m! / ∏ᵢ (cᵢ - σ(i))!
     Corrected to use proper sign and handle 0 case. -/

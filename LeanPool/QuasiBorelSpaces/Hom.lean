@@ -108,9 +108,7 @@ lemma isHom_eval'
     {f : A → B →𝒒 C} (hf : IsHom f)
     {g : A → B} (hg : IsHom g)
     : IsHom (fun x ↦ f x (g x)) := by
-  apply isHom_comp' (f := fun x ↦ x.1 x.2) (g := fun x ↦ (f x, g x))
-  · simp only [isHom_eval]
-  · fun_prop
+  exact isHom_comp' (f := fun x ↦ x.1 x.2) (g := fun x ↦ (f x, g x)) isHom_eval (by fun_prop)
 
 @[fun_prop]
 lemma isHom_mk

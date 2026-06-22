@@ -131,12 +131,7 @@ lemma vandermonde_degree_eq (k : ℕ) (p : ℕ) [Fact (Nat.Prime p)] :
       obtain ⟨fst, snd⟩ := a
       obtain ⟨left, right⟩ := hS
       simp_all only
-      -- The total degree of the product of two polynomials is the sum of their total degrees.
-      have h_total_deg_prod : ∀ (f g : MvPolynomial (Fin (k + 1)) (ZMod p)),
-          f ≠ 0 → g ≠ 0 → (f * g).totalDegree = f.totalDegree + g.totalDegree := by
-        intro f g hf hg
-        exact totalDegree_mul_of_isDomain hf hg
-      rw [h_total_deg_prod, a_2, van_deg] <;> norm_num [left];
+      rw [totalDegree_mul_of_isDomain, a_2, van_deg] <;> norm_num [left];
       · ring;
       · intro hcontra
         replace hcontra := congr_arg
@@ -306,15 +301,14 @@ theorem restricted_sum_distinct_sizes (A : Fin (k + 1) → Finset (ZMod p))
       set m : ℕ := ∑ i, c i - (k + 1).choose 2;
       -- Show that $m < p$ and that the coefficient of $\prod X_i^{c_i}$ in $(\sum X_i)^m \cdot
       -- \text{vandermonde}$ is non-zero modulo $p$.
-      have hm_lt_p : m < p := by
-        exact restricted_sum_m_bound A h_nonempty h_sum_bound
+      have hm_lt_p : m < p := restricted_sum_m_bound A h_nonempty h_sum_bound
       have h_coeff_nonzero :
           (MvPolynomial.coeff (toFinsupp c) ((∑ i,
               (X i : MvPolynomial (Fin (k + 1)) (ZMod p))) ^ m *
             vandermondePolynomial k)) ≠ 0 := by
         -- Since $|A_i|$ are distinct, $c_i$ are distinct.
-        have hc_distinct : ∀ i j, i < j → c i ≠ c j := by
-          exact fun i j hij => fun h => h_sizes_distinct i j hij <|
+        have hc_distinct : ∀ i j, i < j → c i ≠ c j :=
+          fun i j hij => fun h => h_sizes_distinct i j hij <|
               by
                 linarith [
                   Nat.sub_add_cancel <| show 1 ≤ Finset.card (A i)

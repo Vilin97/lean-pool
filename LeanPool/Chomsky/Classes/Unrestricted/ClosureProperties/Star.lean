@@ -43,28 +43,13 @@ private def S {g : Grammar T} : ns T g.nt :=
   Symbol.nonterminal ◄g.initial
 
 private lemma Z_neq_H {N : Type} : Z ≠ @H T N :=
-by
-  intro ass
-  have imposs := Sum.inr.inj (Symbol.nonterminal.inj ass)
-  have zero_ne_one : (0 : Fin 3) ≠ (1 : Fin 3) := by
-    decide
-  exact zero_ne_one imposs
+fun ass => absurd (Sum.inr.inj (Symbol.nonterminal.inj ass)) (by decide)
 
 private lemma Z_neq_R {N : Type} : Z ≠ @R T N :=
-by
-  intro ass
-  have imposs := Sum.inr.inj (Symbol.nonterminal.inj ass)
-  have zero_ne_two : (0 : Fin 3) ≠ (2 : Fin 3) := by
-    decide
-  exact zero_ne_two imposs
+fun ass => absurd (Sum.inr.inj (Symbol.nonterminal.inj ass)) (by decide)
 
 private lemma H_neq_R {N : Type} : H ≠ @R T N :=
-by
-  intro ass
-  have imposs := Sum.inr.inj (Symbol.nonterminal.inj ass)
-  have one_ne_two : (1 : Fin 3) ≠ (2 : Fin 3) := by
-    decide
-  exact one_ne_two imposs
+fun ass => absurd (Sum.inr.inj (Symbol.nonterminal.inj ass)) (by decide)
 
 end specific_symbols
 
@@ -407,18 +392,7 @@ map_wrap_never_contains_nt_inr 2
 private lemma wrapSym_inj {N : Type} {a b : Symbol T N} (wrap_eq : wrapSym a = wrapSym b) :
   a = b :=
 by
-  cases a
-  · cases b
-    · congr
-      exact Symbol.terminal.inj wrap_eq
-    · exfalso
-      simp [wrapSym, liftSymbol] at wrap_eq
-  · cases b
-    · exfalso
-      simp [wrapSym, liftSymbol] at wrap_eq
-    · congr
-      unfold wrapSym at wrap_eq
-      exact Sum.inl.inj (Symbol.nonterminal.inj wrap_eq)
+  cases a <;> cases b <;> simp_all [wrapSym, liftSymbol]
 
 private lemma map_wrapSym_inj {N : Type} {x y : List (Symbol T N)}
     (wrap_eqs : x.map wrapSym = y.map wrapSym) :
@@ -840,25 +814,15 @@ by
     | tail _ rin =>
       cases rin with
       | head =>
-        exfalso
-        apply no_R_in_alpha
+        refine absurd ?_ no_R_in_alpha
         rw [bef]
-        apply List.mem_append_left
-        apply List.mem_append_left
-        apply List.mem_append_right
-        rw [List.mem_singleton]
-        rfl
+        simp [R]
       | tail _ rin =>
         cases rin with
         | head =>
-          exfalso
-          apply no_R_in_alpha
+          refine absurd ?_ no_R_in_alpha
           rw [bef]
-          apply List.mem_append_left
-          apply List.mem_append_left
-          apply List.mem_append_right
-          rw [List.mem_singleton]
-          rfl
+          simp [R]
         | tail _ rin =>
           have rin' : r ∈ rulesThatScanTerminals g ∨ r ∈ g.rules.map wrapGr := by
             rwa [or_comm, ←List.mem_append]
@@ -1797,25 +1761,15 @@ by
   rcases orig with ⟨r, rin, u, v, bef, aft⟩
   cases rin with
   | head =>
-    exfalso
-    apply no_Z_in_alpha
+    refine absurd ?_ no_Z_in_alpha
     rw [bef]
-    apply List.mem_append_left
-    apply List.mem_append_left
-    apply List.mem_append_right
-    rewrite [List.mem_singleton]
-    rfl
+    simp [Z]
   | tail _ rin' =>
     cases rin' with
     | head =>
-      exfalso
-      apply no_Z_in_alpha
+      refine absurd ?_ no_Z_in_alpha
       rw [bef]
-      apply List.mem_append_left
-      apply List.mem_append_left
-      apply List.mem_append_right
-      rewrite [List.mem_singleton]
-      rfl
+      simp [Z]
     | tail _ rin =>
       cases rin with
       | head =>
@@ -2064,6 +2018,66 @@ by
     simp [wrapGr]
     rfl
 
+private lemma star_case_5_Z_absurd {g : Grammar T} {w : List (Symbol T g.nt)}
+    {u v : List (ns T g.nt)}
+    (bef : w.map wrapSym ++ [R] = u ++ [] ++ [Symbol.nonterminal ▶0] ++ [] ++ v) :
+  False :=
+by
+  simp only [List.append_nil] at bef
+  have imposs := congr_arg (Z ∈ ·) bef
+  simp only [List.mem_append] at imposs
+  rw [List.mem_singleton] at imposs
+  rw [List.mem_singleton] at imposs
+  apply false_of_true_eq_false
+  convert imposs.symm
+  · simp [Z]
+  · rw [false_iff]
+    push Not
+    constructor
+    · apply map_wrap_never_contains_Z
+    · exact Z_neq_R
+
+private lemma star_case_5_RH_absurd {g : Grammar T} {w : List (Symbol T g.nt)}
+    {u v : List (ns T g.nt)}
+    (bef : w.map wrapSym ++ [R] = u ++ [] ++ [Symbol.nonterminal ▶2] ++ [H] ++ v) :
+  False :=
+by
+  rw [List.append_nil] at bef
+  have rev := congr_arg List.reverse bef
+  repeat rw [List.reverse_append] at rev
+  repeat rw [List.reverse_singleton] at rev
+  rw [List.singleton_append] at rev
+  cases hv : v.reverse with
+  | nil =>
+    rw [hv, List.nil_append, List.singleton_append] at rev
+    have tails := List.tail_eq_of_cons_eq rev
+    rw [←List.map_reverse] at tails
+    cases hw : w.reverse with
+    | nil =>
+      rw [hw, List.map_nil] at tails
+      have imposs := congr_arg List.length tails
+      rw [List.length, List.length_append, List.length_singleton] at imposs
+      clear * - imposs
+      linarith
+    | cons d' l' =>
+      rw [hw, List.map_cons, List.singleton_append] at tails
+      have heads := List.head_eq_of_cons_eq tails
+      exact wrap_never_outputs_R heads
+  | cons d l =>
+    rw [hv] at rev
+    have tails := List.tail_eq_of_cons_eq rev
+    have H_in_tails := congr_arg (H ∈ ·) tails
+    rw [List.mem_reverse] at H_in_tails
+    apply false_of_true_eq_false
+    convert H_in_tails.symm
+    · rw [true_iff]
+      apply List.mem_append_right
+      apply List.mem_append_left
+      apply List.mem_singleton_self
+    · rw [false_iff]
+      intro hyp_H_in
+      exact map_wrap_never_contains_H hyp_H_in
+
 private lemma star_case_5 {g : Grammar T} {α α' : List (ns T g.nt)}
     (orig : g.star.Transforms α α')
     (hyp : ∃ σ : List (Symbol T g.nt), α = σ.map wrapSym ++ [R]) :
@@ -2075,117 +2089,21 @@ by
   clear ends_with_R
   cases rin with
   | head =>
-    exfalso
-    simp only [List.append_nil] at bef
-    have imposs := congr_arg (Z ∈ ·) bef
-    simp only [List.mem_append] at imposs
-    rw [List.mem_singleton] at imposs
-    rw [List.mem_singleton] at imposs
-    apply false_of_true_eq_false
-    convert imposs.symm
-    · simp [Z]
-    · rw [false_iff]
-      push Not
-      constructor
-      · apply map_wrap_never_contains_Z
-      · exact Z_neq_R
+    exact (star_case_5_Z_absurd bef).elim
   | tail _ rin' =>
     cases rin' with
     | head =>
-      exfalso
-      simp only [List.append_nil] at bef
-      have imposs := congr_arg (Z ∈ ·) bef
-      simp only [List.mem_append] at imposs
-      rw [List.mem_singleton] at imposs
-      rw [List.mem_singleton] at imposs
-      apply false_of_true_eq_false
-      convert imposs.symm
-      · simp [Z]
-      · rw [false_iff]
-        push Not
-        constructor
-        · apply map_wrap_never_contains_Z
-        · exact Z_neq_R
+      exact (star_case_5_Z_absurd bef).elim
     | tail _ rin =>
       cases rin with
       | head =>
-        exfalso
         dsimp only at bef
-        rw [List.append_nil] at bef
-        have rev := congr_arg List.reverse bef
-        repeat rw [List.reverse_append] at rev
-        repeat rw [List.reverse_singleton] at rev
-        rw [List.singleton_append] at rev
-        cases hv : v.reverse with
-        | nil =>
-          rw [hv, List.nil_append, List.singleton_append] at rev
-          have tails := List.tail_eq_of_cons_eq rev
-          rw [←List.map_reverse] at tails
-          cases hw : w.reverse with
-          | nil =>
-            rw [hw, List.map_nil] at tails
-            have imposs := congr_arg List.length tails
-            rw [List.length, List.length_append, List.length_singleton] at imposs
-            clear * - imposs
-            linarith
-          | cons d' l' =>
-            rw [hw, List.map_cons, List.singleton_append] at tails
-            have heads := List.head_eq_of_cons_eq tails
-            exact wrap_never_outputs_R heads
-        | cons d l =>
-          rw [hv] at rev
-          have tails := List.tail_eq_of_cons_eq rev
-          have H_in_tails := congr_arg (H ∈ ·) tails
-          rw [List.mem_reverse] at H_in_tails
-          apply false_of_true_eq_false
-          convert H_in_tails.symm
-          · rw [true_iff]
-            apply List.mem_append_right
-            apply List.mem_append_left
-            apply List.mem_singleton_self
-          · rw [false_iff]
-            intro hyp_H_in
-            exact map_wrap_never_contains_H hyp_H_in
+        exact (star_case_5_RH_absurd bef).elim
       | tail _ rin' =>
         cases rin' with
         | head =>
-          exfalso
           dsimp only at bef
-          rw [List.append_nil] at bef
-          have rev := congr_arg List.reverse bef
-          repeat rw [List.reverse_append] at rev
-          repeat rw [List.reverse_singleton] at rev
-          rw [List.singleton_append] at rev
-          cases hv : v.reverse with
-          | nil =>
-            rw [hv, List.nil_append, List.singleton_append] at rev
-            have tails := List.tail_eq_of_cons_eq rev
-            rw [←List.map_reverse] at tails
-            cases hw : w.reverse with
-            | nil =>
-              rw [hw, List.map_nil] at tails
-              have imposs := congr_arg List.length tails
-              rw [List.length, List.length_append, List.length_singleton] at imposs
-              clear * - imposs
-              linarith
-            | cons d' l' =>
-              rw [hw, List.map_cons, List.singleton_append] at tails
-              have heads := List.head_eq_of_cons_eq tails
-              exact wrap_never_outputs_R heads
-          | cons d l =>
-            rw [hv] at rev
-            have tails := List.tail_eq_of_cons_eq rev
-            have H_in_tails := congr_arg (H ∈ ·) tails
-            rw [List.mem_reverse] at H_in_tails
-            apply false_of_true_eq_false
-            convert H_in_tails.symm
-            · rw [true_iff]
-              apply List.mem_append_right
-              apply List.mem_append_left
-              apply List.mem_singleton_self
-            · rw [false_iff]
-              intro hyp_H_in
-              exact map_wrap_never_contains_H hyp_H_in
+          exact (star_case_5_RH_absurd bef).elim
         | tail _ rin =>
           change r ∈ g.rules.map wrapGr ++ rulesThatScanTerminals g at rin
           rw [List.mem_append] at rin
@@ -2248,47 +2166,27 @@ by
   rcases orig with ⟨r, rin, u, v, bef, aft⟩
   cases rin with
   | head =>
-    exfalso
-    simp only [List.append_nil] at bef
-    rw [bef] at no_Z
-    apply no_Z
-    apply List.mem_append_left
-    apply List.mem_append_right
-    apply List.mem_singleton_self
+    refine absurd ?_ no_Z
+    rw [bef]
+    simp [Z]
   | tail _ rin' =>
     cases rin' with
     | head =>
-      exfalso
-      simp only [List.append_nil] at bef
-      rw [bef] at no_Z
-      apply no_Z
-      apply List.mem_append_left
-      apply List.mem_append_right
-      apply List.mem_singleton_self
+      refine absurd ?_ no_Z
+      rw [bef]
+      simp [Z]
     | tail _ rin =>
       cases rin with
       | head =>
-        exfalso
-        dsimp only at bef
-        rw [List.append_nil] at bef
-        rw [bef] at no_R
-        apply no_R
-        apply List.mem_append_left
-        apply List.mem_append_left
-        apply List.mem_append_right
-        apply List.mem_singleton_self
+        refine absurd ?_ no_R
+        rw [bef]
+        simp [R]
       | tail _ rin' =>
         cases rin' with
         | head =>
-          exfalso
-          dsimp only at bef
-          rw [List.append_nil] at bef
-          rw [bef] at no_R
-          apply no_R
-          apply List.mem_append_left
-          apply List.mem_append_left
-          apply List.mem_append_right
-          apply List.mem_singleton_self
+          refine absurd ?_ no_R
+          rw [bef]
+          simp [R]
         | tail _ rin =>
           change r ∈ g.rules.map wrapGr ++ rulesThatScanTerminals g at rin
           rw [List.mem_append] at rin

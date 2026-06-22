@@ -85,8 +85,7 @@ lemma psd_cauchy_schwarz
     calc
       a ⬝ᵥ (B.transpose * B).mulVec b
           = a ⬝ᵥ B.transpose.mulVec (B.mulVec b) := by rw [h1]
-      _ = (Matrix.vecMul a B.transpose) ⬝ᵥ (B.mulVec b) := by
-        exact dotProduct_mulVec a Bᵀ (B.mulVec b)
+      _ = (Matrix.vecMul a B.transpose) ⬝ᵥ (B.mulVec b) := dotProduct_mulVec a Bᵀ (B.mulVec b)
       _ = (B.mulVec a) ⬝ᵥ (B.mulVec b) := by
         have := (Matrix.vecMul_transpose (A := B) (x := a))
         simpa using congrArg (fun w => w ⬝ᵥ (B.mulVec b)) this
@@ -202,8 +201,7 @@ lemma frobenius_pos_of_psd_posdef
       -- Uu is a unitary group element, coerce to show membership
       rw [show U = Uu.val from rfl]
       exact Uu.property
-    have hU_unitary : U * U.conjTranspose = 1 := by
-      exact Matrix.mem_unitaryGroup_iff.mp hU_mem
+    have hU_unitary : U * U.conjTranspose = 1 := Matrix.mem_unitaryGroup_iff.mp hU_mem
     have hU_right : U * U.transpose = 1 := by
       simpa [Matrix.conjTranspose_eq_transpose_of_trivial] using hU_unitary
     exact congr_transpose_mul_mul_ne_zero U G hU_right hG_ne_zero

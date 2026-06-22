@@ -356,14 +356,10 @@ noncomputable def _root_.TopCat.Cyl.stretchToWall :
       · exact t.property.left
     · by_cases hxt : 2 * ‖x‖ ≥ 2 - t
       · simp only [hxt, sup_of_le_left]
-        have := t1.trans hxt
-        replace := (add_le_add_iff_left 1).mpr this
-        convert this
-        norm_num
+        linarith only [t1, hxt]
       · replace hxt := le_of_not_ge hxt
         simp only [hxt, sup_of_le_right, ge_iff_le]
-        convert (add_le_add_iff_left 1).mpr t1
-        norm_num
+        linarith only [t1]
   · simp only [ContinuousMap.coe_mk, Metric.mem_closedBall, dist_zero_right, β]
     by_cases hxt : 2 * ‖x‖ ≥ 2 - t
     · simp only [hxt, sup_of_le_left]
@@ -453,8 +449,7 @@ theorem homotopicRel_boundary_of_homotopicWith_isMapOfPairs
         ContinuousMap.HomotopyWith.coe_toHomotopy, ContinuousMap.coe_mk] at this
       exact this
     · replace hx1 := le_of_not_ge hx1
-      simp only [hx1, sup_of_le_right, div_one]
-      simp only [(by norm_num : (2 : ℝ) - 1 = 1)]
+      simp only [hx1, sup_of_le_right, div_one, (by norm_num : (2 : ℝ) - 1 = 1)]
       change H (1, _) ∈ A
       rw [H.apply_one]
       apply gA
@@ -501,14 +496,7 @@ theorem homotopicRel_boundary_of_unique_pi
       Set.range l ⊆ A ∧ f.HomotopicRel l (Set.range (diskBoundaryIncl _)) := by
   obtain ⟨a, H⟩ := homotopicWith_const_isMapOfPairs_of_unique_pi X A f hf hpi
   let g : C(disk.{u} (n + 1), X) := ContinuousMap.const (𝔻 (n + 1)) a
-  have gr : Set.range g ⊆ A := by
-    unfold g
-    intro x hx
-    obtain ⟨y, hy⟩ := Set.mem_range.mp hx
-    simp only [ContinuousMap.const_apply] at hy
-    subst hy
-    simp_all only [ContinuousMap.coe_const, Set.mem_range, Function.const_apply, exists_const_iff,
-      and_true, Subtype.coe_prop]
+  have gr : Set.range g ⊆ A := Set.range_subset_iff.mpr fun _ ↦ a.property
   apply homotopicRel_boundary_of_homotopicWith_isMapOfPairs X A
   use g
 
@@ -557,7 +545,7 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
   constructor
   intro F f sq
   have xD0 : 0 ∈ Metric.closedBall (0 : EuclideanSpace ℝ (Fin 0)) 1 := by
-    simp only [Metric.mem_closedBall, dist_self, zero_le_one]
+    simp
   let x : X := F.hom ⟨0, xD0⟩
   let β' : GenLoop (Fin 0) X pt :=
     ⟨ContinuousMap.const _ x, fun y hy ↦ isEmptyElim (⟨y, hy⟩ : ∂I^0)⟩
@@ -586,9 +574,7 @@ theorem isCompressible_zero_subtype_val_of_bijective_iStar_zero
         map_zero_left y := by
           simp only [ContinuousMap.const_apply, ContinuousMap.HomotopyWith.apply_zero, β', x]
           congr
-          have u : Unique <| EuclideanSpace ℝ (Fin 0) := by infer_instance
-          convert u.uniq 0
-          exact u.uniq _
+          apply Subsingleton.elim
         map_one_left y := by
           unfold l a
           simp only [

@@ -170,22 +170,12 @@ private theorem fintype_sum_div_const {α : Type*} [Fintype α] (f : α → Q) (
 private theorem zCoeff_eq_num (i : Var) :
     zCoeff i = ((zCoeffNumD2 i : Q) / ((D : Q) * (D : Q))) := by
   classical
-  -- Each term has denominator `D^2`; pull the constant denominator out of the finite sum.
-  let den : Q := (D : Q) * (D : Q)
-  have hcast :
-      (∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q)) = (zCoeffNumD2 i : Q) := by
-    simp [zCoeffNumD2]
-  calc
-    zCoeff i
-        = ∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q) / den := by
-            simp [zCoeff, Z, Si, frobInner_toMat3Scaled, den]
-    _ = (∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q)) / den := by
-            simpa using (fintype_sum_div_const
-              (f := fun r : Block => (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q)) (c := den))
-    _ = (zCoeffNumD2 i : Q) / den := by
-            simpa using congrArg (fun t : Q => t / den) hcast
-    _ = (zCoeffNumD2 i : Q) / ((D : Q) * (D : Q)) := by
-            simp [den]
+  have hstep :
+      zCoeff i =
+        ∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (SiNum r i) : Q) / ((D : Q) * (D : Q)) := by
+    simp [zCoeff, Z, Si, frobInner_toMat3Scaled]
+  rw [hstep, fintype_sum_div_const]
+  simp [zCoeffNumD2]
 
 private theorem zCoeffNumD2_eq_psdNumD2 (i : Var) : zCoeffNumD2 i = psdNumD2 i.1 := by
   fin_cases i <;> decide
@@ -200,20 +190,12 @@ private def zSum0NumD2 : Int :=
 private theorem zSum0_eq_num :
     zSum0 = ((zSum0NumD2 : Q) / ((D : Q) * (D : Q))) := by
   classical
-  let den : Q := (D : Q) * (D : Q)
-  have hcast :
-      (∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q)) = (zSum0NumD2 : Q) := by
-    simp [zSum0NumD2]
-  calc
-    zSum0 = ∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q) / den := by
-            simp [zSum0, Z, S0, frobInner_toMat3Scaled, den]
-    _ = (∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q)) / den := by
-            simpa using (fintype_sum_div_const
-              (f := fun r : Block => (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q)) (c := den))
-    _ = (zSum0NumD2 : Q) / den := by
-            simpa using congrArg (fun t : Q => t / den) hcast
-    _ = (zSum0NumD2 : Q) / ((D : Q) * (D : Q)) := by
-            simp [den]
+  have hstep :
+      zSum0 =
+        ∑ r : Block, (innerNum (ZBlocks.getD r.1 #[]) (S0Num r) : Q) / ((D : Q) * (D : Q)) := by
+    simp [zSum0, Z, S0, frobInner_toMat3Scaled]
+  rw [hstep, fintype_sum_div_const]
+  simp [zSum0NumD2]
 
 private def psdSumD2 : Int :=
   ∑ r : Block, innerD2 (S0Blocks.getD r.1 #[]) (ZBlocks.getD r.1 #[])
@@ -354,23 +336,10 @@ theorem weakDuality (x : Var → Q) (hx : PrimalFeasibleForCertificate x) :
       _ = ∑ k : Mu, muVal k * ∑ i : Var, aCoeff k i * x i := by
               refine Finset.sum_congr rfl ?_
               intro k _
-              -- pull `muVal k` out of the inner sum
-              have :
-                  (∑ i : Var, x i * (muVal k * aCoeff k i))
-                    = muVal k * ∑ i : Var, aCoeff k i * x i := by
-                  -- reorder multiplication inside the sum, then factor
-                  calc
-                    (∑ i : Var, x i * (muVal k * aCoeff k i))
-                        = ∑ i : Var, muVal k * (aCoeff k i * x i) := by
-                            refine Finset.sum_congr rfl ?_
-                            intro i _
-                            ring
-                    _ = muVal k * ∑ i : Var, aCoeff k i * x i := by
-                            simpa using
-                              (Finset.mul_sum (a := muVal k)
-                                (s := (Finset.univ : Finset Var))
-                                (f := fun i : Var => aCoeff k i * x i)).symm
-              simpa [mul_assoc, mul_comm, mul_left_comm] using this
+              rw [Finset.mul_sum]
+              refine Finset.sum_congr rfl ?_
+              intro i _
+              ring
       _ = ∑ k : Mu, muVal k * aDot k x := by
               simp [aDot]
   -- Commute the finite sums for the Z term.

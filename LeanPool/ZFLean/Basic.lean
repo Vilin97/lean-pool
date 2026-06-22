@@ -23,16 +23,10 @@ theorem nonempty_exists_iff {n : ZFSet} : n ≠ ∅ ↔ ∃ m, m ∈ n := by
 
 theorem subset_of_empty {x : ZFSet} (h : x ⊆ ∅) : x = ∅ := by
   ext1 z
-  constructor
-  · intro hz
-    exact h hz
-  · intro hz
-    nomatch notMem_empty z hz
+  exact ⟨fun hz ↦ h hz, fun hz ↦ nomatch notMem_empty z hz⟩
 
-theorem sep_subset_self {P : ZFSet → Prop} {a : ZFSet} : a.sep P ⊆ a := by
-  intros x hx
-  rw [mem_sep] at hx
-  exact hx.left
+theorem sep_subset_self {P : ZFSet → Prop} {a : ZFSet} : a.sep P ⊆ a :=
+  fun _ hx ↦ (mem_sep.mp hx).left
 
 theorem sUnion_insert {x : ZFSet} : (⋃₀ (insert x x) : ZFSet) = x ∪ (⋃₀ x : ZFSet) := by
   ext1
@@ -230,13 +224,7 @@ theorem prod_inj {A B C D : ZFSet} (h : A.prod B = C.prod D) (hA : A ≠ ∅) (h
     exact ⟨ha, hb⟩
   rw [ZFSet.ext_iff, ZFSet.ext_iff]
   suffices ∀ x y, (x ∈ A ↔ x ∈ C) ∧ (y ∈ B ↔ y ∈ D) by
-    and_intros
-    · intro z
-      specialize this z b
-      exact this.1
-    · intro z
-      specialize this a z
-      exact this.2
+    exact ⟨fun z ↦ (this z b).1, fun z ↦ (this a z).2⟩
   rw [ZFSet.ext_iff] at h
   simp only [mem_prod] at h
   intro x y

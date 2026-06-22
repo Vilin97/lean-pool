@@ -33,16 +33,11 @@ instance [QuasiBorelSpace A] [QuasiBorelSpace B] : QuasiBorelSpace (A × B) wher
     simp only [isHom_const', and_self]
   isVar_comp hf := by
     rintro ⟨hφ₁, hφ₂⟩
-    apply And.intro
-    · apply isHom_comp' hφ₁
-      simp only [isHom_ofMeasurableSpace, hf]
-    · apply isHom_comp' hφ₂
+    refine ⟨isHom_comp' hφ₁ ?_, isHom_comp' hφ₂ ?_⟩ <;>
       simp only [isHom_ofMeasurableSpace, hf]
   isVar_cases' {ix} {φ} hix hφ := by
-    apply And.intro
-    · apply isHom_cases (ix := ix) (f := fun n r ↦ (φ n r).1) ?_ (fun n ↦ (hφ n).1)
-      simp only [isHom_ofMeasurableSpace, hix]
-    · apply isHom_cases (ix := ix) (f := fun n r ↦ (φ n r).2) ?_ (fun n ↦ (hφ n).2)
+    refine ⟨isHom_cases (ix := ix) (f := fun n r ↦ (φ n r).1) ?_ (fun n ↦ (hφ n).1),
+      isHom_cases (ix := ix) (f := fun n r ↦ (φ n r).2) ?_ (fun n ↦ (hφ n).2)⟩ <;>
       simp only [isHom_ofMeasurableSpace, hix]
 
 @[local simp]
@@ -94,11 +89,9 @@ instance
     simp only [isHom_iff, isHom_iff_measurable]
     apply Iff.intro
     · rintro ⟨h₁, h₂⟩
-      apply Measurable.prodMk h₁ h₂
+      exact Measurable.prodMk h₁ h₂
     · intro h
-      apply And.intro
-      · fun_prop
-      · fun_prop
+      exact ⟨by fun_prop, by fun_prop⟩
 
 @[fun_prop]
 lemma isHom_map {f : A → B} {g : C → D} (hf : IsHom f) (hg : IsHom g) : IsHom (Prod.map f g) := by
@@ -110,9 +103,7 @@ lemma isHom_of_uncurry
     {g : D → A} (hg : IsHom g)
     {h : D → B} (hh : IsHom h)
     : IsHom fun x ↦ f (g x) (h x) := by
-  apply isHom_comp' (f := Function.uncurry f) (g := fun x ↦ (g x, h x))
-  · apply hf
-  · fun_prop
+  exact isHom_comp' (f := Function.uncurry f) (g := fun x ↦ (g x, h x)) hf (by fun_prop)
 
 end QuasiBorelSpace.Prod
 

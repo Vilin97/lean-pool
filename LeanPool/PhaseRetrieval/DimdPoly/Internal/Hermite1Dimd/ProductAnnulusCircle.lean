@@ -32,8 +32,7 @@ theorem rhoPointwise
   let B : ℝ := ‖a + v‖ - ‖a‖
   have hAB : |A - B| ≤ ‖u - v‖ := by
     calc
-      |A - B| = |‖a + u‖ - ‖a + v‖| := by
-        simp [A, B]
+      |A - B| = |‖a + u‖ - ‖a + v‖| := by simp [A, B]
       _ ≤ ‖(a + u) - (a + v)‖ := abs_norm_sub_norm_le (a + u) (a + v)
       _ = ‖u - v‖ := by
         rw [sub_eq_add_neg, sub_eq_add_neg]
@@ -42,8 +41,7 @@ theorem rhoPointwise
     |A| = |(A - B) + B| := by ring_nf
     _ ≤ |A - B| + |B| := abs_add_le _ _
     _ ≤ ‖u - v‖ + |B| := by gcongr
-    _ = rho a v + ‖u - v‖ := by
-      simp [rho, B, add_comm]
+    _ = rho a v + ‖u - v‖ := by simp [rho, B, add_comm]
 
 /-- Quadratic defect comparison derived from `rhoPointwise`. -/
 theorem rhoPointwiseSq
@@ -112,8 +110,7 @@ private theorem productBasisPhaseLawCircle
       rw [fourier_mk_eq_exp]
       congr 1
       ring_nf
-    rw [hrot, productBasisPhaseLaw]
-    rw [fourier_mk_eq_exp]
+    rw [hrot, productBasisPhaseLaw, fourier_mk_eq_exp]
     apply congrArg₂ (· * ·)
     · congr 1
       push_cast
@@ -136,8 +133,7 @@ private theorem totalDegreePiecePhaseLawCircle
     rw [fourier_mk_eq_exp]
     congr 1
     ring
-  rw [hrot, totalDegreePiecePhaseLaw]
-  rw [fourier_mk_eq_exp]
+  rw [hrot, totalDegreePiecePhaseLaw, fourier_mk_eq_exp]
   apply congrArg₂ (· * ·)
   · congr 1
     push_cast
@@ -216,8 +212,7 @@ private theorem localOrbit_eq_positiveFrequencyPolynomial
                       simp [hadd]
     _ = ∑ n ∈ s.image totalDegree, orbitCoeff κ j M G z n * fourier (n : ℤ) t := by
           simpa [s] using hgroup.symm
-    _ = ∑ n ∈ localDegreeSet j M G, orbitCoeff κ j M G z n * fourier (n : ℤ) t := by
-          rw [hs]
+    _ = ∑ n ∈ localDegreeSet j M G, orbitCoeff κ j M G z n * fourier (n : ℤ) t := by rw [hs]
     _ = positiveFrequencyPolynomial (localDegreeSet j M G) (orbitCoeff κ j M G z) t := by
           simp [positiveFrequencyPolynomial]
 
@@ -337,8 +332,7 @@ private lemma localOrbit_defect_sq
       nuKappa κ (fun q => (fourier (1 : ℤ) t : ℂ) * z q) =
         (fourier (-(totalDegree κ : ℤ)) t : ℂ) * nuKappa κ z := by
     simpa [nuKappa, h0] using hphase
-  have hu : ‖(fourier (totalDegree κ : ℤ) t : ℂ)‖ = 1 := by
-    simp
+  have hu : ‖(fourier (totalDegree κ : ℤ) t : ℂ)‖ = 1 := by simp
   have hphaseρ :=
     rho_unit_mul
       (u := (fourier (totalDegree κ : ℤ) t : ℂ))
@@ -360,8 +354,7 @@ private lemma localOrbit_defect_sq
               nuKappa κ (fun q => (fourier (1 : ℤ) t : ℂ) * z q))
             ((fourier (totalDegree κ : ℤ) t : ℂ) *
               evalHermiteSum κ (localPart j M G)
-                (fun q => (fourier (1 : ℤ) t : ℂ) * z q)) := by
-                  simpa using hphaseρ.symm
+                (fun q => (fourier (1 : ℤ) t : ℂ) * z q)) := by simpa using hphaseρ.symm
       _ = rho (nuKappa κ z) (localOrbit κ j M G z t) := by
             rw [hphase']
             have hcancel :
@@ -369,8 +362,7 @@ private lemma localOrbit_defect_sq
                     (fourier (-(totalDegree κ : ℤ)) t : ℂ) = 1 := by
               rw [← fourier_add]
               simp
-            rw [localOrbit]
-            rw [← mul_assoc, hcancel, one_mul]
+            rw [localOrbit, ← mul_assoc, hcancel, one_mul]
   exact congrArg (fun x : ℝ => x ^ 2) hmain
 
 /-- The orbitwise mass integrand is continuous and hence circle-integrable. -/
@@ -560,8 +552,7 @@ private lemma annulusMass_localOrbit_lintegral
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gaussianMeasure d := by
-          rw [hmass0]
-          rw [hmass_indicator]
+          rw [hmass0, hmass_indicator]
           exact havg.symm
     _ = ∫⁻ z : CSpace d,
           Set.indicator (productAnnulus j)
@@ -714,8 +705,7 @@ private lemma defectAnnulusMass_localOrbit_lintegral
             ∂ AddCircle.haarAddCircle
           else 0
         ∂ gaussianMeasure d := by
-          rw [hdef0]
-          rw [hdef_indicator]
+          rw [hdef0, hdef_indicator]
           exact havg.symm
     _ = ∫⁻ z : CSpace d,
           Set.indicator (productAnnulus j)
@@ -747,8 +737,7 @@ private lemma lowAnnulus_productAnnulusConstant_bound
     exact_mod_cast hwidth
   calc
     144 * (degreeWidth j M : ℝ)
-      ≤ 144 * ((d * (degreeThreshold d M + M) ^ 2 : ℕ) : ℝ) := by
-          gcongr
+      ≤ 144 * ((d * (degreeThreshold d M + M) ^ 2 : ℕ) : ℝ) := by gcongr
     _ = 144 * (d : ℝ) * (((degreeThreshold d M + M : ℕ) : ℝ) ^ 2) := by
           norm_num
           ring
@@ -760,24 +749,19 @@ private lemma highAnnulus_productAnnulusConstant_bound
     {d : ℕ} (hd : 1 ≤ d) (M : ℕ) :
     32 ≤ productAnnulusConstantSq d M := by
   have hd_pos : 0 < d := Nat.succ_le_iff.mp hd
-  have hodd_pos : 0 < 2 * M + 1 := by
-    omega
+  have hodd_pos : 0 < 2 * M + 1 := by omega
   have hprod_pos : 0 < 120 * d * (2 * M + 1) := by
     exact Nat.mul_pos (Nat.mul_pos (by decide) hd_pos) hodd_pos
   have hprod_le : 1 ≤ 120 * d * (2 * M + 1) := Nat.succ_le_iff.mpr hprod_pos
   have hdeg_nat : 1 ≤ degreeThreshold d M + M := by
     unfold degreeThreshold
     omega
-  have hdR : (1 : ℝ) ≤ d := by
-    exact_mod_cast hd
-  have hdegR : (1 : ℝ) ≤ ((degreeThreshold d M + M : ℕ) : ℝ) := by
-    exact_mod_cast hdeg_nat
-  have hsquareR : (1 : ℝ) ≤ (((degreeThreshold d M + M : ℕ) : ℝ) ^ 2) := by
-    nlinarith
+  have hdR : (1 : ℝ) ≤ d := by exact_mod_cast hd
+  have hdegR : (1 : ℝ) ≤ ((degreeThreshold d M + M : ℕ) : ℝ) := by exact_mod_cast hdeg_nat
+  have hsquareR : (1 : ℝ) ≤ (((degreeThreshold d M + M : ℕ) : ℝ) ^ 2) := by nlinarith
   calc
     32 ≤ 144 * (1 : ℝ) * (1 : ℝ) := by norm_num
-    _ ≤ 144 * (d : ℝ) * (((degreeThreshold d M + M : ℕ) : ℝ) ^ 2) := by
-      nlinarith
+    _ ≤ 144 * (d : ℝ) * (((degreeThreshold d M + M : ℕ) : ℝ) ^ 2) := by nlinarith
     _ = productAnnulusConstantSq d M := by
       unfold productAnnulusConstantSq
       ring
@@ -854,8 +838,7 @@ theorem productAnnulusEstimate
   have hdefMass_nonneg :
       0 ≤ defectAnnulusMass κ j (evalHermiteSum κ (localPart j M G)) := by
     unfold defectAnnulusMass
-    exact integral_nonneg fun z => by
-      by_cases hz : z ∈ productAnnulus j <;> simp [hz, sq_nonneg _]
+    exact integral_nonneg fun z => by by_cases hz : z ∈ productAnnulus j <;> simp [hz, sq_nonneg _]
   have hmass := annulusMass_localOrbit_lintegral (κ := κ) (j := j) (M := M) (G := G)
   have hdef := defectAnnulusMass_localOrbit_lintegral (κ := κ) (j := j) (M := M) (G := G)
   have hmainENN :

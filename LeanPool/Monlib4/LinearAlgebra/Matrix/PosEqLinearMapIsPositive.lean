@@ -129,8 +129,7 @@ noncomputable def Matrix.invertibleOfBijToLin' [Fintype n] [DecidableEq n]
     rw [LinearMap.isUnit_iff_ker_eq_bot]
     exact LinearMap.ker_eq_bot_of_injective h.1
   refine IsUnit.invertible ?_
-  rw [Matrix.isUnit_iff_isUnit_det]
-  rw [← LinearMap.det_toLin']
+  rw [Matrix.isUnit_iff_isUnit_det, ← LinearMap.det_toLin']
   apply LinearMap.isUnit_det
   rw [← nonempty_invertible_iff_isUnit]
   exact Nonempty.intro h
@@ -215,8 +214,8 @@ theorem _root_.rankOne.EuclideanSpace.toEuclideanLin_symm {𝕜 : Type*} [RCLike
       (InnerProductSpace.rankOne 𝕜 x y).toLinearMap := by
     ext z i
     rfl
-  rw [hrank, InnerProductSpace.symm_toEuclideanLin_rankOne]
-  rw [Matrix.vecMulVec_eq (Fin 1), Matrix.conjTranspose_replicateCol]
+  rw [hrank, InnerProductSpace.symm_toEuclideanLin_rankOne, Matrix.vecMulVec_eq (Fin 1),
+    Matrix.conjTranspose_replicateCol]
   rfl
 
 theorem _root_.rankOne.EuclideanSpace.toMatrix' {𝕜 : Type*} [RCLike 𝕜] {n m : Type*}
@@ -239,8 +238,7 @@ end rankOne
 
 theorem Matrix.vecMulVec_eq_replicateCol_conjTranspose (v : n → 𝕜) :
     vecMulVec v (star v) = replicateCol (Fin 1) v * (replicateCol (Fin 1) v)ᴴ := by
-  rw [Matrix.conjTranspose_replicateCol]
-  rw [Matrix.vecMulVec_eq (Fin 1)]
+  rw [Matrix.conjTranspose_replicateCol, Matrix.vecMulVec_eq (Fin 1)]
   rfl
 
 theorem Matrix.posSemidef_iff_replicateCol_mul_conjTranspose_replicateCol [Finite n]

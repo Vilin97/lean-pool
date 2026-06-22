@@ -25,61 +25,48 @@ namespace Recursive3Param
 lemma gCt_eq_affine (c : Rand) :
     gCt c =
       ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (c : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 4 : ℝ) := by norm_num
-  have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by
-    simp [t]
-    norm_num
-  have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by
-    simp [t]
-    norm_num
   have hlin : gCt c = ENNReal.ofReal ((1 / 4 : ℝ) * (c : ℝ)) + ENNReal.ofReal (3 / 8 : ℝ) := by
-    simpa [ht, hconst] using (gCt_eq_linear c)
-  -- rewrite `ofReal ((1/4) * c)` as `ofReal (1/4) * ofReal c`
-  simpa [ENNReal.ofReal_mul ha0, mul_assoc] using hlin
+    have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by norm_num [t]
+    have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by norm_num [t]
+    simpa [ht, hconst] using gCt_eq_linear c
+  rw [hlin, ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 4)]
 
 lemma gTB_eq_affine (b : Rand) :
     gTB b =
       ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (b : ℝ) + ENNReal.ofReal (3 / 8 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 4 : ℝ) := by norm_num
-  have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by
-    simp [t]
-    norm_num
-  have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by
-    simp [t]
-    norm_num
   have hlin : gTB b = ENNReal.ofReal ((1 / 4 : ℝ) * (b : ℝ)) + ENNReal.ofReal (3 / 8 : ℝ) := by
-    simpa [ht, hconst] using (gTB_eq_linear b)
-  simpa [ENNReal.ofReal_mul ha0, mul_assoc] using hlin
+    have ht : (2 * (t : ℝ) - 1) = (1 / 4 : ℝ) := by norm_num [t]
+    have hconst : (1 - (t : ℝ)) = (3 / 8 : ℝ) := by norm_num [t]
+    simpa [ht, hconst] using gTB_eq_linear b
+  rw [hlin, ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 4)]
 
 lemma gCt2_eq_affine (c : Rand) :
     gCt2 c =
       ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (c : ℝ) + ENNReal.ofReal (15 / 32 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 16 : ℝ) := by norm_num
-  have ht : (2 * (t2 : ℝ) - 1) = (1 / 16 : ℝ) := by
-    simp [t2]
-    norm_num
-  have hconst : (1 - (t2 : ℝ)) = (15 / 32 : ℝ) := by
-    simp [t2]
-    norm_num
-  have hlin :
-      gCt2 c = ENNReal.ofReal ((1 / 16 : ℝ) * (c : ℝ)) + ENNReal.ofReal (15 / 32 : ℝ) := by
-    simpa [ht, hconst] using (gCt2_eq_linear c)
-  simpa [ENNReal.ofReal_mul ha0, mul_assoc] using hlin
+  have hlin : gCt2 c = ENNReal.ofReal ((1 / 16 : ℝ) * (c : ℝ)) + ENNReal.ofReal (15 / 32 : ℝ) := by
+    have ht : (2 * (t2 : ℝ) - 1) = (1 / 16 : ℝ) := by norm_num [t2]
+    have hconst : (1 - (t2 : ℝ)) = (15 / 32 : ℝ) := by norm_num [t2]
+    simpa [ht, hconst] using gCt2_eq_linear c
+  rw [hlin, ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 16)]
 
 lemma gT2B_eq_affine (b : Rand) :
     gT2B b =
       ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (b : ℝ) + ENNReal.ofReal (15 / 32 : ℝ) := by
-  have ha0 : 0 ≤ (1 / 16 : ℝ) := by norm_num
-  have ht : (2 * (t2 : ℝ) - 1) = (1 / 16 : ℝ) := by
-    simp [t2]
-    norm_num
-  have hconst : (1 - (t2 : ℝ)) = (15 / 32 : ℝ) := by
-    simp [t2]
-    norm_num
-  have hlin :
-      gT2B b = ENNReal.ofReal ((1 / 16 : ℝ) * (b : ℝ)) + ENNReal.ofReal (15 / 32 : ℝ) := by
-    simpa [ht, hconst] using (gT2B_eq_linear b)
-  simpa [ENNReal.ofReal_mul ha0, mul_assoc] using hlin
+  have hlin : gT2B b = ENNReal.ofReal ((1 / 16 : ℝ) * (b : ℝ)) + ENNReal.ofReal (15 / 32 : ℝ) := by
+    have ht : (2 * (t2 : ℝ) - 1) = (1 / 16 : ℝ) := by norm_num [t2]
+    have hconst : (1 - (t2 : ℝ)) = (15 / 32 : ℝ) := by norm_num [t2]
+    simpa [ht, hconst] using gT2B_eq_linear b
+  rw [hlin, ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 16)]
+
+/-- Merge a product of `ofReal`s into a single `ofReal` of the (evaluated) product. -/
+private lemma ofReal_mul_eq {p q r : ℝ} (hp : 0 ≤ p) (hpq : p * q = r) :
+    ENNReal.ofReal p * ENNReal.ofReal q = ENNReal.ofReal r := by
+  rw [← ENNReal.ofReal_mul hp, hpq]
+
+/-- Merge a sum of `ofReal`s into a single `ofReal` of the (evaluated) sum. -/
+private lemma ofReal_add_eq {p q r : ℝ} (hp : 0 ≤ p) (hq : 0 ≤ q) (hpq : p + q = r) :
+    ENNReal.ofReal p + ENNReal.ofReal q = ENNReal.ofReal r := by
+  rw [← ENNReal.ofReal_add hp hq, hpq]
 
 lemma lintegral_innerBC_Iio_one_of_b_lt_t1 {b : Rand} (hb : b < t1) :
     (∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ) =
@@ -266,41 +253,10 @@ private lemma lintegral_b_below_t1_triangle_value :
       (MeasureTheory.lintegral_const_mul (μ := μ.restrict (Set.Iio t1))
         (r := ENNReal.ofReal (3 / 8 : ℝ)) mc)
   rw [hA, hB, hmul_int, hsub_int]
-  have h1 :
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (9 / 1024 : ℝ) =
-        ENNReal.ofReal (9 / 4096 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (9 / 1024 : ℝ) =
-          ENNReal.ofReal ((1 / 4 : ℝ) * (9 / 1024 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (1 / 4 : ℝ)) (q := (9 / 1024 : ℝ)) ha0).symm
-    have hr : (1 / 4 : ℝ) * (9 / 1024 : ℝ) = (9 / 4096 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (9 / 1024 : ℝ) =
-          ENNReal.ofReal ((1 / 4 : ℝ) * (9 / 1024 : ℝ)) := hmul
-      _ = ENNReal.ofReal (9 / 4096 : ℝ) := by rw [hr]
-  have h2 :
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (9 / 128 : ℝ) =
-        ENNReal.ofReal (27 / 1024 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (9 / 128 : ℝ) =
-          ENNReal.ofReal ((3 / 8 : ℝ) * (9 / 128 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (3 / 8 : ℝ)) (q := (9 / 128 : ℝ)) hb0).symm
-    have hr : (3 / 8 : ℝ) * (9 / 128 : ℝ) = (27 / 1024 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (9 / 128 : ℝ) =
-          ENNReal.ofReal ((3 / 8 : ℝ) * (9 / 128 : ℝ)) := hmul
-      _ = ENNReal.ofReal (27 / 1024 : ℝ) := by rw [hr]
-  have hsum :
-      ENNReal.ofReal (9 / 4096 : ℝ) + ENNReal.ofReal (27 / 1024 : ℝ) =
-        ENNReal.ofReal (117 / 4096 : ℝ) := by
-    have h9 : 0 ≤ (9 / 4096 : ℝ) := by norm_num
-    have h27 : 0 ≤ (27 / 1024 : ℝ) := by norm_num
-    have : (9 / 4096 : ℝ) + (27 / 1024 : ℝ) = (117 / 4096 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h9 h27).symm
-  rw [h1, h2]
-  exact hsum
+  rw [ofReal_mul_eq ha0 (by norm_num : (1 / 4 : ℝ) * (9 / 1024 : ℝ) = 9 / 4096),
+    ofReal_mul_eq hb0 (by norm_num : (3 / 8 : ℝ) * (9 / 128 : ℝ) = 27 / 1024)]
+  exact ofReal_add_eq (by norm_num) (by norm_num)
+    (by norm_num : (9 / 4096 : ℝ) + (27 / 1024 : ℝ) = 117 / 4096)
 
 private lemma lintegral_b_below_t1_gTB_value :
     (∫⁻ b in Set.Iio t1, gTB b * μ (Set.Ico b t) ∂μ) =
@@ -375,41 +331,10 @@ private lemma lintegral_b_below_t1_gTB_value :
       (MeasureTheory.lintegral_const_mul (μ := μ.restrict (Set.Iio t1))
         (r := ENNReal.ofReal (3 / 8 : ℝ)) mb)
   rw [hA, hB, hmul_int, hsub_int]
-  have h1 :
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (27 / 1024 : ℝ) =
-        ENNReal.ofReal (27 / 4096 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (27 / 1024 : ℝ) =
-          ENNReal.ofReal ((1 / 4 : ℝ) * (27 / 1024 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (1 / 4 : ℝ)) (q := (27 / 1024 : ℝ)) ha0).symm
-    have hr : (1 / 4 : ℝ) * (27 / 1024 : ℝ) = (27 / 4096 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (1 / 4 : ℝ) * ENNReal.ofReal (27 / 1024 : ℝ) =
-          ENNReal.ofReal ((1 / 4 : ℝ) * (27 / 1024 : ℝ)) := hmul
-      _ = ENNReal.ofReal (27 / 4096 : ℝ) := by rw [hr]
-  have h2 :
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (21 / 128 : ℝ) =
-        ENNReal.ofReal (63 / 1024 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (21 / 128 : ℝ) =
-          ENNReal.ofReal ((3 / 8 : ℝ) * (21 / 128 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (3 / 8 : ℝ)) (q := (21 / 128 : ℝ)) hb0).symm
-    have hr : (3 / 8 : ℝ) * (21 / 128 : ℝ) = (63 / 1024 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (3 / 8 : ℝ) * ENNReal.ofReal (21 / 128 : ℝ) =
-          ENNReal.ofReal ((3 / 8 : ℝ) * (21 / 128 : ℝ)) := hmul
-      _ = ENNReal.ofReal (63 / 1024 : ℝ) := by rw [hr]
-  have hsum :
-      ENNReal.ofReal (27 / 4096 : ℝ) + ENNReal.ofReal (63 / 1024 : ℝ) =
-        ENNReal.ofReal (279 / 4096 : ℝ) := by
-    have h27 : 0 ≤ (27 / 4096 : ℝ) := by norm_num
-    have h63 : 0 ≤ (63 / 1024 : ℝ) := by norm_num
-    have : (27 / 4096 : ℝ) + (63 / 1024 : ℝ) = (279 / 4096 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h27 h63).symm
-  rw [h1, h2]
-  exact hsum
+  rw [ofReal_mul_eq ha0 (by norm_num : (1 / 4 : ℝ) * (27 / 1024 : ℝ) = 27 / 4096),
+    ofReal_mul_eq hb0 (by norm_num : (3 / 8 : ℝ) * (21 / 128 : ℝ) = 63 / 1024)]
+  exact ofReal_add_eq (by norm_num) (by norm_num)
+    (by norm_num : (27 / 4096 : ℝ) + (63 / 1024 : ℝ) = 279 / 4096)
 
 lemma lintegral_b_below_t1_value :
     (∫⁻ b in Set.Iio t1, ∫⁻ c in (Set.Iio (1 : Rand) : Set Rand), innerBC b c ∂μ ∂μ) =
@@ -472,15 +397,9 @@ lemma lintegral_b_below_t1_value :
       (∫⁻ b in Set.Iio t1, gTB b * μ (Set.Ico b t) ∂μ) =
         ENNReal.ofReal (279 / 4096 : ℝ) :=
     lintegral_b_below_t1_gTB_value
-  have hsum :
-      ENNReal.ofReal (279 / 4096 : ℝ) + ENNReal.ofReal (117 / 4096 : ℝ) =
-        ENNReal.ofReal (99 / 1024 : ℝ) := by
-    have h279 : 0 ≤ (279 / 4096 : ℝ) := by norm_num
-    have h117 : 0 ≤ (117 / 4096 : ℝ) := by norm_num
-    have : (279 / 4096 : ℝ) + (117 / 4096 : ℝ) = (99 / 1024 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h279 h117).symm
   rw [hTB_val, htri_val]
-  exact hsum
+  exact ofReal_add_eq (by norm_num) (by norm_num)
+    (by norm_num : (279 / 4096 : ℝ) + (117 / 4096 : ℝ) = 99 / 1024)
 
 /-!
 ### `t1 ≤ b < t2` region
@@ -748,41 +667,10 @@ private lemma lintegral_gT2B_rect_t1_t2_value :
       (MeasureTheory.lintegral_const_mul (μ := μ.restrict (Set.Ico t1 t2))
         (r := ENNReal.ofReal (15 / 32 : ℝ)) mx)
   rw [hA, hB, hpoly1, hpoly2]
-  have h1 :
-      ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (1025 / 196608 : ℝ) =
-        ENNReal.ofReal (1025 / 3145728 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (1025 / 196608 : ℝ) =
-          ENNReal.ofReal ((1 / 16 : ℝ) * (1025 / 196608 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (1 / 16 : ℝ)) (q := (1025 / 196608 : ℝ)) ha0).symm
-    have hr : (1 / 16 : ℝ) * (1025 / 196608 : ℝ) = (1025 / 3145728 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (1 / 16 : ℝ) * ENNReal.ofReal (1025 / 196608 : ℝ) =
-          ENNReal.ofReal ((1 / 16 : ℝ) * (1025 / 196608 : ℝ)) := hmul
-      _ = ENNReal.ofReal (1025 / 3145728 : ℝ) := by rw [hr]
-  have h2 :
-      ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (25 / 2048 : ℝ) =
-        ENNReal.ofReal (18000 / 3145728 : ℝ) := by
-    have hmul :
-        ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (25 / 2048 : ℝ) =
-          ENNReal.ofReal ((15 / 32 : ℝ) * (25 / 2048 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (15 / 32 : ℝ)) (q := (25 / 2048 : ℝ)) hb0).symm
-    have hr : (15 / 32 : ℝ) * (25 / 2048 : ℝ) = (18000 / 3145728 : ℝ) := by norm_num
-    calc
-      ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (25 / 2048 : ℝ) =
-          ENNReal.ofReal ((15 / 32 : ℝ) * (25 / 2048 : ℝ)) := hmul
-      _ = ENNReal.ofReal (18000 / 3145728 : ℝ) := by rw [hr]
-  have hsum :
-      ENNReal.ofReal (1025 / 3145728 : ℝ) + ENNReal.ofReal (18000 / 3145728 : ℝ) =
-        ENNReal.ofReal (19025 / 3145728 : ℝ) := by
-    have h1' : 0 ≤ (1025 / 3145728 : ℝ) := by norm_num
-    have h2' : 0 ≤ (18000 / 3145728 : ℝ) := by norm_num
-    have : (1025 / 3145728 : ℝ) + (18000 / 3145728 : ℝ) = (19025 / 3145728 : ℝ) := by norm_num
-    simpa [this] using (ENNReal.ofReal_add h1' h2').symm
-  rw [h1, h2]
-  exact hsum
+  rw [ofReal_mul_eq ha0 (by norm_num : (1 / 16 : ℝ) * (1025 / 196608 : ℝ) = 1025 / 3145728),
+    ofReal_mul_eq hb0 (by norm_num : (15 / 32 : ℝ) * (25 / 2048 : ℝ) = 18000 / 3145728)]
+  exact ofReal_add_eq (by norm_num) (by norm_num)
+    (by norm_num : (1025 / 3145728 : ℝ) + (18000 / 3145728 : ℝ) = 19025 / 3145728)
 
 private lemma lintegral_gCt2_triangle_t1_t2_value :
     (∫⁻ b in Set.Ico t1 t2, ∫⁻ c in Set.Ico t1 b, gCt2 c ∂μ ∂μ) =
@@ -951,58 +839,25 @@ private lemma lintegral_t1_t2_main_value :
         ENNReal.ofReal (207 / 1024 : ℝ) := by
     have h45 :
         constT1T * μ (Set.Ico t2 t) = ENNReal.ofReal (45 / 1024 : ℝ) := by
-      have h15 : 0 ≤ (15 / 32 : ℝ) := by norm_num
-      have hmul :
-          ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (3 / 32 : ℝ) =
-            ENNReal.ofReal ((15 / 32 : ℝ) * (3 / 32 : ℝ)) := by
-        exact
-          (ENNReal.ofReal_mul (p := (15 / 32 : ℝ)) (q := (3 / 32 : ℝ)) h15).symm
-      have hr : (15 / 32 : ℝ) * (3 / 32 : ℝ) = (45 / 1024 : ℝ) := by norm_num
-      calc
-        constT1T * μ (Set.Ico t2 t) =
-            ENNReal.ofReal (15 / 32 : ℝ) * ENNReal.ofReal (3 / 32 : ℝ) := by
-              simp [constT1T_eq, hμt2t]
-        _ = ENNReal.ofReal ((15 / 32 : ℝ) * (3 / 32 : ℝ)) := hmul
-        _ = ENNReal.ofReal (45 / 1024 : ℝ) := by rw [hr]
-    have h81 : 0 ≤ (81 / 512 : ℝ) := by norm_num
-    have h45' : 0 ≤ (45 / 1024 : ℝ) := by norm_num
-    have hsum :
-        ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (45 / 1024 : ℝ) =
-          ENNReal.ofReal (207 / 1024 : ℝ) := by
-      have : (81 / 512 : ℝ) + (45 / 1024 : ℝ) = (207 / 1024 : ℝ) := by norm_num
-      simpa [this] using (ENNReal.ofReal_add h81 h45').symm
-    calc
-      (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) =
-          ENNReal.ofReal (81 / 512 : ℝ) + constT1T * μ (Set.Ico t2 t) := by
-            rw [hConstC]
-      _ = ENNReal.ofReal (81 / 512 : ℝ) + ENNReal.ofReal (45 / 1024 : ℝ) := by
-            rw [h45]
-      _ = ENNReal.ofReal (207 / 1024 : ℝ) := hsum
+      rw [constT1T_eq, hμt2t]
+      exact ofReal_mul_eq (by norm_num) (by norm_num : (15 / 32 : ℝ) * (3 / 32 : ℝ) = 45 / 1024)
+    rw [hConstC, h45]
+    exact ofReal_add_eq (by norm_num) (by norm_num)
+      (by norm_num : (81 / 512 : ℝ) + (45 / 1024 : ℝ) = 207 / 1024)
   -- Integral of the constant part.
   have hconstInt :
       (∫⁻ _b in Set.Ico t1 t2,
           (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) ∂μ) =
         ENNReal.ofReal (49680 / 1572864 : ℝ) := by
-    have hμ : μ (Set.Ico t1 t2) = ENNReal.ofReal (5 / 32 : ℝ) := hμt1t2
-    have h207 : 0 ≤ (207 / 1024 : ℝ) := by norm_num
-    have hmul :
-        ENNReal.ofReal (207 / 1024 : ℝ) * ENNReal.ofReal (5 / 32 : ℝ) =
-          ENNReal.ofReal ((207 / 1024 : ℝ) * (5 / 32 : ℝ)) := by
-      exact
-        (ENNReal.ofReal_mul (p := (207 / 1024 : ℝ)) (q := (5 / 32 : ℝ)) h207).symm
-    have hr : (207 / 1024 : ℝ) * (5 / 32 : ℝ) = (49680 / 1572864 : ℝ) := by norm_num
     calc
       (∫⁻ _b in Set.Ico t1 t2,
           (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) ∂μ) =
           ((∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t)) * μ (Set.Ico t1 t2) := by
             simp
-      _ = ENNReal.ofReal (207 / 1024 : ℝ) * ENNReal.ofReal (5 / 32 : ℝ) := by
-            have hconst' :
-                (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) =
-                  ENNReal.ofReal (207 / 1024 : ℝ) := hconst
-            rw [hconst', hμ]
-      _ = ENNReal.ofReal ((207 / 1024 : ℝ) * (5 / 32 : ℝ)) := hmul
-      _ = ENNReal.ofReal (49680 / 1572864 : ℝ) := by rw [hr]
+      _ = ENNReal.ofReal (207 / 1024 : ℝ) * ENNReal.ofReal (5 / 32 : ℝ) := by rw [hconst, hμt1t2]
+      _ = ENNReal.ofReal (49680 / 1572864 : ℝ) :=
+            ofReal_mul_eq (by norm_num)
+              (by norm_num : (207 / 1024 : ℝ) * (5 / 32 : ℝ) = 49680 / 1572864)
   -- Combine constant and rectangle.
   have hmeasRect : Measurable fun b : Rand => gT2B b * μ (Set.Ico b t2) := by
     -- same as `m_rect` above
@@ -1145,24 +1000,18 @@ lemma lintegral_b_t1_t2_value :
                 constT1T * μ (Set.Ico t2 t) ∂μ) =
           ENNReal.ofReal (49680 / 1572864 : ℝ) + ENNReal.ofReal (19025 / 3145728 : ℝ) := hMain
     rw [hMainVal, hTri]
-    have h19025 : 0 ≤ (19025 / 3145728 : ℝ) := by norm_num
     have h2J :
         ENNReal.ofReal (19025 / 3145728 : ℝ) + ENNReal.ofReal (19025 / 3145728 : ℝ) =
-          ENNReal.ofReal (19025 / 1572864 : ℝ) := by
-      have : (19025 / 3145728 : ℝ) + (19025 / 3145728 : ℝ) = (19025 / 1572864 : ℝ) := by norm_num
-      simpa [this] using (ENNReal.ofReal_add h19025 h19025).symm
+          ENNReal.ofReal (19025 / 1572864 : ℝ) :=
+      ofReal_add_eq (by norm_num) (by norm_num)
+        (by norm_num : (19025 / 3145728 : ℝ) + (19025 / 3145728 : ℝ) = 19025 / 1572864)
     have hsum :
         ENNReal.ofReal (49680 / 1572864 : ℝ) +
             (ENNReal.ofReal (19025 / 3145728 : ℝ) + ENNReal.ofReal (19025 / 3145728 : ℝ)) =
           ENNReal.ofReal (68705 / 1572864 : ℝ) := by
-      have h49680 : 0 ≤ (49680 / 1572864 : ℝ) := by norm_num
-      have h19025' : 0 ≤ (19025 / 1572864 : ℝ) := by norm_num
-      have : (49680 / 1572864 : ℝ) + (19025 / 1572864 : ℝ) = (68705 / 1572864 : ℝ) := by norm_num
-      have :
-          ENNReal.ofReal (49680 / 1572864 : ℝ) + ENNReal.ofReal (19025 / 1572864 : ℝ) =
-            ENNReal.ofReal (68705 / 1572864 : ℝ) := by
-        simpa [this] using (ENNReal.ofReal_add h49680 h19025').symm
-      simpa [h2J, add_assoc] using this
+      rw [h2J]
+      exact ofReal_add_eq (by norm_num) (by norm_num)
+        (by norm_num : (49680 / 1572864 : ℝ) + (19025 / 1572864 : ℝ) = 68705 / 1572864)
     simpa [add_assoc, add_left_comm, add_comm] using hsum
   exact htotal
 

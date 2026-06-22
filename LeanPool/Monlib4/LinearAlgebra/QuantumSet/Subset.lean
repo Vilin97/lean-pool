@@ -446,8 +446,7 @@ by
     ← (QuantumSet.modAut_isCoalgHom _).2, TensorProduct.map_comp,
     ← AlgEquiv.TensorProduct.map_toLinearMap, ← modAut_tensor]
   congr 1
-  rw [← LinearMap.comp_assoc]
-  rw [AlgEquiv.coe_comp, starAlgebra.modAut_trans]
+  rw [← LinearMap.comp_assoc, AlgEquiv.coe_comp, starAlgebra.modAut_trans]
   ring_nf
   simp only [starAlgebra.modAut_zero, AlgEquiv.one_toLinearMap, LinearMap.one_comp]
 

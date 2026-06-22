@@ -274,16 +274,15 @@ def aux1 : End (ModuleCat.of A A) ≃ₐ[R] End (e.eqv.functor.obj <| .of A A) w
     intro g
     exact e.eqv.fullyFaithfulFunctor.map_preimage g
   map_mul' x y := by simp
-  map_add' x y := by
-    exact Functor.map_add e.eqv.functor (f := x) (g := y)
+  map_add' x y := Functor.map_add e.eqv.functor (f := x) (g := y)
   commutes' r := by
     rw [Algebra.algebraMap_eq_smul_one (A := End (ModuleCat.of A A))]
     calc
       e.eqv.functor.map (r • (1 : End (ModuleCat.of A A)))
           = r • e.eqv.functor.map (1 : End (ModuleCat.of A A)) :=
             e.linear.map_smul (1 : End (ModuleCat.of A A)) r
-      _ = r • (1 : End (e.eqv.functor.obj (ModuleCat.of A A))) := by
-        exact congrArg (fun z ↦ r • z) (e.eqv.functor.map_id (ModuleCat.of A A))
+      _ = r • (1 : End (e.eqv.functor.obj (ModuleCat.of A A))) :=
+        congrArg (fun z ↦ r • z) (e.eqv.functor.map_id (ModuleCat.of A A))
       _ = (algebraMap R (End (e.eqv.functor.obj (ModuleCat.of A A)))) r :=
         (Algebra.algebraMap_eq_smul_one
           (A := End (e.eqv.functor.obj (ModuleCat.of A A))) r).symm
@@ -332,8 +331,8 @@ def aux2 (M N : ModuleCat B) (f : M ≅ N) : End M ≃ₐ[R] End N where
   map_mul' x y := by simp
   map_add' x y := by
     calc
-      f.inv ≫ (x + y) ≫ f.hom = (f.inv ≫ x + f.inv ≫ y) ≫ f.hom := by
-        exact congrArg (fun z ↦ z ≫ f.hom) (Preadditive.comp_add _ _ _ f.inv x y)
+      f.inv ≫ (x + y) ≫ f.hom = (f.inv ≫ x + f.inv ≫ y) ≫ f.hom :=
+        congrArg (fun z ↦ z ≫ f.hom) (Preadditive.comp_add _ _ _ f.inv x y)
       _ = f.inv ≫ x ≫ f.hom + f.inv ≫ y ≫ f.hom :=
         Preadditive.add_comp _ _ _ (f.inv ≫ x) (f.inv ≫ y) f.hom
   commutes' r := by

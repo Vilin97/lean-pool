@@ -106,8 +106,7 @@ by
     simp only [inner_self_eq_norm_sq_to_K, MulOpposite.norm_eq, MulOpposite.unop_one]
     ring_nf
     rfl
-  rw [oneInner_map_one_eq_oneInner_Psi_map _ 0 (k A + (1/2))]
-  rw [this]
+  rw [oneInner_map_one_eq_oneInner_Psi_map _ 0 (k A + (1/2)), this]
   nth_rw 3 [← QuantumSet.Psi_apply_one_one 0 (k A + ( 1 / 2))]
   rw [eq_comm, ← sub_eq_zero, ← inner_sub_right (𝕜 := ℂ) (E := A ⊗[ℂ] Aᵐᵒᵖ), ← map_sub,
     ← Qam.completeGraph_eq, ← Qam.complement'_eq]
@@ -412,8 +411,8 @@ by
     _ = ((‖(1 : A)‖ ^ 4 / ‖(1 : A)‖ ^ 2 : ℝ) : ℂ) := by simp [← pow_mul]
     _ ≥ (⟪1, f 1⟫_ℂ / (‖(1 : A)‖ ^ 2 : ℝ) : ℂ) :=
         by
-          rw [QuantumSet.innerOne_map_one_isReal_ofReal h.isReal]
-          rw [← Complex.ofReal_div, ge_iff_le, Complex.real_le_real]
+          rw [QuantumSet.innerOne_map_one_isReal_ofReal h.isReal, ← Complex.ofReal_div, ge_iff_le,
+            Complex.real_le_real]
           apply div_le_div_of_nonneg_right ?_ (sq_nonneg _)
           · simpa only [← Complex.real_le_real,
               ← QuantumSet.innerOne_map_one_isReal_ofReal h.isReal, Complex.ofReal_pow] using

@@ -200,6 +200,11 @@ theorem coeff_varOrbit_eq_xFromColoring (f : Coloring n) (i : Var) :
       (d := varOrbit i) hMask)
   simpa [hx] using hcoeff.symm
 
+-- If two directed indices have the same mask as `dirMask v u`, they are equal.
+private theorem eq_of_dirMask_eq {v u : V} {d0 d : DirIdx}
+    (hd0 : dirMask v u = maskAt d0) (hEq : dirMask v u = maskAt d) : d0 = d :=
+  maskAt_injective (hd0.symm.trans hEq)
+
 -- Directed index → the unique variable whose transpose-orbit contains it (excluding `idDirIdx`).
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 def dirToVar : Array (Option Var) :=
@@ -328,15 +333,11 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
         simp [hNone] at this'
       have hNe1 : dirMask v u ≠ maskAt (varOrbit i) := by
         intro hEq
-        have : d0 = varOrbit i := by
-          apply maskAt_injective
-          exact (hd0.symm.trans hEq)
+        have : d0 = varOrbit i := eq_of_dirMask_eq hd0 hEq
         exact hNotOrbit (Or.inl this)
       have hNe2 : dirMask v u ≠ maskAt (invDir (varOrbit i)) := by
         intro hEq
-        have : d0 = invDir (varOrbit i) := by
-          apply maskAt_injective
-          exact (hd0.symm.trans hEq)
+        have : d0 = invDir (varOrbit i) := eq_of_dirMask_eq hd0 hEq
         exact hNotOrbit (Or.inr this)
       by_cases hFix : N1000000Witness.tTr[(varOrbit i).1]! = (varOrbit i).1
       · -- fixed: `ASymm = A`
@@ -402,9 +403,7 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
     have hAid0 : A idDirIdx u v = 0 := by
       have : dirMask v u ≠ maskAt idDirIdx := by
         intro hEq
-        have : d0 = idDirIdx := by
-          apply maskAt_injective
-          exact (hd0.symm.trans hEq)
+        have : d0 = idDirIdx := eq_of_dirMask_eq hd0 hEq
         exact hId this
       simp [A, this]
     -- Evaluate the variable sum: `ASymm` is the indicator of the transpose-orbit.
@@ -433,23 +432,17 @@ theorem corrAvgMatrix_eq_A_id_add_sum_var (f : Coloring n) :
         · have hA : A (varOrbit i) u v = 0 := by
             have : dirMask v u ≠ maskAt (varOrbit i) := by
               intro hEq
-              have : d0 = varOrbit i := by
-                apply maskAt_injective
-                exact (hd0.symm.trans hEq)
+              have : d0 = varOrbit i := eq_of_dirMask_eq hd0 hEq
               exact hNot (Or.inl this)
             simp [A, this]
           simpa [ASymm, hFix] using hA
         · have hNeVar : dirMask v u ≠ maskAt (varOrbit i) := by
             intro hEq
-            have : d0 = varOrbit i := by
-              apply maskAt_injective
-              exact (hd0.symm.trans hEq)
+            have : d0 = varOrbit i := eq_of_dirMask_eq hd0 hEq
             exact hNot (Or.inl this)
           have hNeInv : dirMask v u ≠ maskAt (invDir (varOrbit i)) := by
             intro hEq
-            have : d0 = invDir (varOrbit i) := by
-              apply maskAt_injective
-              exact (hd0.symm.trans hEq)
+            have : d0 = invDir (varOrbit i) := eq_of_dirMask_eq hd0 hEq
             exact hNot (Or.inr this)
           -- Unfold `ASymm` into the non-fixed case and rewrite the transpose term as `invDir`.
           unfold ASymm

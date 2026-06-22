@@ -794,8 +794,8 @@ theorem QuantumGraph.Real.upsilonOrthogonalProjection' {f : A →ₗ[ℂ] A}
     = rmulMapLmul ((orthogonalProjection' (upsilonSubmodule gns hf)).toLinearMap 1) :=
 by
   symm
-  rw [← LinearMap.isBimoduleMap_iff', ← LinearMap.mem_isBimoduleMaps_iff]
-  rw [upsilonOrthogonalProjection gns hf, LinearMap.coe_toContinuousLinearMap]
+  rw [← LinearMap.isBimoduleMap_iff', ← LinearMap.mem_isBimoduleMaps_iff,
+    upsilonOrthogonalProjection gns hf, LinearMap.coe_toContinuousLinearMap]
   exact Submodule.coe_mem (TensorProduct.toIsBimoduleMap (Upsilon f))
 
 /-- A canonical orthonormal basis of `upsilonSubmodule`. -/
@@ -1109,8 +1109,8 @@ by
     simp only [map_zero, ZeroMemClass.coe_zero, AlgEquiv.TensorProduct.map_toLinearMap,
     LinearMap.zero_comp, LinearMap.comp_zero]
   | tmul _ _ =>
-    rw [TensorProduct.toIsBimoduleMap_apply_coe, AlgEquiv.TensorProduct.map_tmul, rmulMapLmul_apply]
-    rw [TensorProduct.ext_iff']
+    rw [TensorProduct.toIsBimoduleMap_apply_coe, AlgEquiv.TensorProduct.map_tmul, rmulMapLmul_apply,
+      TensorProduct.ext_iff']
     intro _ _
     rw [map_tmul, lmul_eq_mul, rmul_eq_mul, ← LinearMap.mulLeft_conj_of_mulEquivClass_apply,
       ← LinearMap.mulRight_conj_of_mulEquivClass_apply]

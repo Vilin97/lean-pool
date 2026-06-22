@@ -226,8 +226,7 @@ theorem Qam.iso_preserves_ir_reflexive [Nontrivial n] {φ : Module.Dual ℂ ℍ}
         conjugateMap (Qam.reflIdempotent hφ y 1) := by
     simpa [conjugateMap, hconj_one] using
       (Qam.reflIdempotent_starAlgEquiv_conj (φ := φ) (f := f) hisometry y 1)
-  rw [hf]
-  rw [hschur]
+  rw [hf, hschur]
   constructor
   · intro hA
     apply hconj_injective

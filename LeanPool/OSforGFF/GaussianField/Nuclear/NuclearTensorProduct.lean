@@ -782,8 +782,7 @@ private theorem one_add_pair_le_sq (i j : ℕ) :
   calc (1 : ℝ) + Nat.pair i j
       ≤ 1 + (i + j + 1) ^ 2 := by linarith
     _ ≤ (i + j + 2) ^ 2 := by nlinarith
-    _ ≤ (2 * (1 + i) * (1 + j)) ^ 2 := by
-        exact pow_le_pow_left₀ (by positivity) (by nlinarith) _
+    _ ≤ (2 * (1 + i) * (1 + j)) ^ 2 := pow_le_pow_left₀ (by positivity) (by nlinarith) _
 
 /-- The pure tensor map: given `e₁ : E₁` and `e₂ : E₂` with DM structure,
 produces the sequence `m ↦ coeff(unpair(m).1, e₁) * coeff(unpair(m).2, e₂)`.

@@ -705,19 +705,7 @@ lemma toFun_i_eq (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)
     } : QuaternionAlgebra.Basis D (-1 : ℝ) 0 (-1 : ℝ)).liftHom
       ({ re := 0, imI := 1, imJ := 0, imK := 0 } : ℍ[ℝ])) =
       ↑(e.symm { re := 0, im := 1 })
-  change (({
-      i := ↑(e.symm { re := 0, im := 1 })
-      j := (algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x
-      k := ↑(e.symm { re := 0, im := 1 }) *
-        ((algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x)
-      i_mul_i := by rw [i_mul_i _ e, zero_smul, add_zero]
-      j_mul_j := j_mul_j _ _ _ hx h
-      i_mul_j := by rfl
-      j_mul_i := by rw [j_mul_i_eq_neg_i_mul_j _ _ _ hx h, zero_smul, zero_sub]
-    } : QuaternionAlgebra.Basis D (-1 : ℝ) 0 (-1 : ℝ)).lift
-      ({ re := 0, imI := 1, imJ := 0, imK := 0 } : ℍ[ℝ])) =
-      ↑(e.symm { re := 0, im := 1 })
-  simp [QuaternionAlgebra.Basis.lift]
+  simp [QuaternionAlgebra.Basis.lift, QuaternionAlgebra.Basis.liftHom]
 
 lemma toFun_one_eq (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)
     (h : Module.finrank ℝ D = 4) :
@@ -737,18 +725,7 @@ lemma toFun_one_eq (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)
       j_mul_i := by rw [j_mul_i_eq_neg_i_mul_j _ _ _ hx h, zero_smul, zero_sub]
     } : QuaternionAlgebra.Basis D (-1 : ℝ) 0 (-1 : ℝ)).liftHom
       ({ re := 1, imI := 0, imJ := 0, imK := 0 } : ℍ[ℝ])) = 1
-  change (({
-      i := ↑(e.symm { re := 0, im := 1 })
-      j := (algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x
-      k := ↑(e.symm { re := 0, im := 1 }) *
-        ((algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x)
-      i_mul_i := by rw [i_mul_i _ e, zero_smul, add_zero]
-      j_mul_j := j_mul_j _ _ _ hx h
-      i_mul_j := by rfl
-      j_mul_i := by rw [j_mul_i_eq_neg_i_mul_j _ _ _ hx h, zero_smul, zero_sub]
-    } : QuaternionAlgebra.Basis D (-1 : ℝ) 0 (-1 : ℝ)).lift
-      ({ re := 1, imI := 0, imJ := 0, imK := 0 } : ℍ[ℝ])) = 1
-  simp [QuaternionAlgebra.Basis.lift]
+  simp [QuaternionAlgebra.Basis.lift, QuaternionAlgebra.Basis.liftHom]
 
 lemma toFun_j_eq (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)
     (h : Module.finrank ℝ D = 4) :
@@ -770,19 +747,7 @@ lemma toFun_j_eq (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)
     } : QuaternionAlgebra.Basis D (-1 : ℝ) 0 (-1 : ℝ)).liftHom
       ({ re := 0, imI := 0, imJ := 1, imK := 0 } : ℍ[ℝ])) =
       (algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x
-  change (({
-      i := ↑(e.symm { re := 0, im := 1 })
-      j := (algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x
-      k := ↑(e.symm { re := 0, im := 1 }) *
-        ((algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x)
-      i_mul_i := by rw [i_mul_i _ e, zero_smul, add_zero]
-      j_mul_j := j_mul_j _ _ _ hx h
-      i_mul_j := by rfl
-      j_mul_i := by rw [j_mul_i_eq_neg_i_mul_j _ _ _ hx h, zero_smul, zero_sub]
-    } : QuaternionAlgebra.Basis D (-1 : ℝ) 0 (-1 : ℝ)).lift
-      ({ re := 0, imI := 0, imJ := 1, imK := 0 } : ℍ[ℝ])) =
-      (algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x
-  simp [QuaternionAlgebra.Basis.lift]
+  simp [QuaternionAlgebra.Basis.lift, QuaternionAlgebra.Basis.liftHom]
 
 lemma toFun_k_eq (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)
     (h : Module.finrank ℝ D = 4) :
@@ -806,20 +771,7 @@ lemma toFun_k_eq (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)
       ({ re := 0, imI := 0, imJ := 0, imK := 1 } : ℍ[ℝ])) =
       ↑(e.symm { re := 0, im := 1 }) *
         ((algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x)
-  change (({
-      i := ↑(e.symm { re := 0, im := 1 })
-      j := (algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x
-      k := ↑(e.symm { re := 0, im := 1 }) *
-        ((algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x)
-      i_mul_i := by rw [i_mul_i _ e, zero_smul, add_zero]
-      j_mul_j := j_mul_j _ _ _ hx h
-      i_mul_j := by rfl
-      j_mul_i := by rw [j_mul_i_eq_neg_i_mul_j _ _ _ hx h, zero_smul, zero_sub]
-    } : QuaternionAlgebra.Basis D (-1 : ℝ) 0 (-1 : ℝ)).lift
-      ({ re := 0, imI := 0, imJ := 0, imK := 1 } : ℍ[ℝ])) =
-      ↑(e.symm { re := 0, im := 1 }) *
-        ((algebraMap ℝ D) (√(x_corre_R k e x hx h).choose)⁻¹ * ↑x)
-  simp [QuaternionAlgebra.Basis.lift]
+  simp [QuaternionAlgebra.Basis.lift, QuaternionAlgebra.Basis.liftHom]
 
 @[simp] theorem succ_two_eq_three (n : ℕ) : Fin.succ (2 : Fin (n + 3)) = 3 := rfl
 
@@ -828,31 +780,17 @@ lemma linEquivH_eq_toFun (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z
   apply Basis.ext (QuaternionAlgebra.basisOneIJK (-1 : ℝ) 0 (-1 : ℝ))
   intro i
   change (linEquivH _ _ _ hx h) _ = (toFun _ _ _ hx h) _
-  fin_cases i
+  fin_cases i <;>
   · erw [Basis.equiv_apply
       (b := QuaternionAlgebra.basisOneIJK (-1 : ℝ) 0 (-1 : ℝ))
       (b' := isBasisijk k e x hx h)]
     simp only [isBasisijk, basisijk, Equiv.coe_fn_mk, Basis.coe_mk]
     norm_num
-    simpa [toFun, QuaternionAlgebra.lift_apply] using (toFun_one_eq k e x hx h).symm
-  · erw [Basis.equiv_apply
-      (b := QuaternionAlgebra.basisOneIJK (-1 : ℝ) 0 (-1 : ℝ))
-      (b' := isBasisijk k e x hx h)]
-    simp only [isBasisijk, basisijk, Equiv.coe_fn_mk, Basis.coe_mk]
-    norm_num
-    simpa [toFun, QuaternionAlgebra.lift_apply] using (toFun_i_eq k e x hx h).symm
-  · erw [Basis.equiv_apply
-      (b := QuaternionAlgebra.basisOneIJK (-1 : ℝ) 0 (-1 : ℝ))
-      (b' := isBasisijk k e x hx h)]
-    simp only [isBasisijk, basisijk, Equiv.coe_fn_mk, Basis.coe_mk]
-    norm_num
-    simpa [toFun, QuaternionAlgebra.lift_apply] using (toFun_j_eq k e x hx h).symm
-  · erw [Basis.equiv_apply
-      (b := QuaternionAlgebra.basisOneIJK (-1 : ℝ) 0 (-1 : ℝ))
-      (b' := isBasisijk k e x hx h)]
-    simp only [isBasisijk, basisijk, Equiv.coe_fn_mk, Basis.coe_mk]
-    norm_num
-    simpa [toFun, QuaternionAlgebra.lift_apply] using (toFun_k_eq k e x hx h).symm
+    first
+    | simpa [toFun, QuaternionAlgebra.lift_apply] using (toFun_one_eq k e x hx h).symm
+    | simpa [toFun, QuaternionAlgebra.lift_apply] using (toFun_i_eq k e x hx h).symm
+    | simpa [toFun, QuaternionAlgebra.lift_apply] using (toFun_j_eq k e x hx h).symm
+    | simpa [toFun, QuaternionAlgebra.lift_apply] using (toFun_k_eq k e x hx h).symm
 
 -- set_option maxHeartbeats 600000 in
 lemma bij_tofun (x : Dˣ) (hx : ∀ z, x.1⁻¹ * f k e z * x = k.val z)

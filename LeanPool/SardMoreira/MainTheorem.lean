@@ -66,18 +66,16 @@ theorem ContinuousLinearEquiv.finrank_comp_left {R M N N' : Type*} [Semiring R]
     [AddCommMonoid M] [Module R M] [TopologicalSpace M]
     [AddCommMonoid N] [Module R N] [TopologicalSpace N]
     [AddCommMonoid N'] [Module R N'] [TopologicalSpace N']
-    (e : N ≃L[R] N') (f : M →L[R] N) : (e ∘L f : M →L[R] N').finrank = f.finrank := by
-  apply ContinuousLinearMap.finrank_comp_eq_right_of_injective
-  exact e.injective
+    (e : N ≃L[R] N') (f : M →L[R] N) : (e ∘L f : M →L[R] N').finrank = f.finrank :=
+  ContinuousLinearMap.finrank_comp_eq_right_of_injective e.injective f
 
 @[simp]
 theorem ContinuousLinearEquiv.finrank_comp_right {R M M' N : Type*} [Semiring R]
     [AddCommMonoid M] [Module R M] [TopologicalSpace M]
     [AddCommMonoid N] [Module R N] [TopologicalSpace N]
     [AddCommMonoid M'] [Module R M'] [TopologicalSpace M']
-    (f : M →L[R] N) (e : M' ≃L[R] M) : (f ∘L e : M' →L[R] N).finrank = f.finrank := by
-  apply ContinuousLinearMap.finrank_comp_eq_left_of_surjective
-  exact e.surjective
+    (f : M →L[R] N) (e : M' ≃L[R] M) : (f ∘L e : M' →L[R] N).finrank = f.finrank :=
+  ContinuousLinearMap.finrank_comp_eq_left_of_surjective f e.surjective
 
 theorem LipschitzWith.hausdorffMeasure_image_null {X Y : Type*} [EMetricSpace X] [EMetricSpace Y]
     [MeasurableSpace X] [BorelSpace X] [MeasurableSpace Y] [BorelSpace Y] {K : NNReal} {f : X → Y}
@@ -92,8 +90,8 @@ from an `n`-dimensional space to an `m`-dimensional space.
 
 Note that the estimate does not depend on `m`. -/
 noncomputable def sardMoreiraBound (n k : ℕ) (α : I) (p : ℕ) : ℝ≥0 :=
-  ⟨(p : ℝ) + ((n - p : ℕ) : ℝ) / ((k : ℝ) + α), by
-    exact add_nonneg (by positivity) (div_nonneg (by positivity)
+  ⟨(p : ℝ) + ((n - p : ℕ) : ℝ) / ((k : ℝ) + α),
+    add_nonneg (by positivity) (div_nonneg (by positivity)
       (add_nonneg (by positivity) α.2.1))⟩
 
 theorem mul_sardMoreiraBound {n k p : ℕ} (hk : k ≠ 0) (hpn : p ≤ n) (α : I) :

@@ -24,8 +24,7 @@ lemma mulRight_one (X : Type*) [TopologicalSpace X]
     [mulOne : MulOneClass X] [ContinuousMul X] :
     ContinuousMap.mulRight 1 = ContinuousMap.id X := by
   ext x
-  simp only [coe_mulRight, id_apply]
-  exact mulOne.mul_one x
+  simpa only [coe_mulRight, id_apply] using mulOne.mul_one x
 
 lemma mulRight_zero (X : Type*) [TopologicalSpace X]
     [mulOne : MulZeroClass X] [ContinuousMul X] :
@@ -96,9 +95,7 @@ def i₁ToComplRangeI₀ (X : TopCat.{u}) :
       rw [(by rfl: (Set.range (Cyl.i₀ X)).compl = {z | z ∉ Set.range (Cyl.i₀ X)})]
       simp_all only [hom_ofHom, ContinuousMap.coe_mk, Set.mem_range, not_exists, Set.mem_setOf_eq,
         Prod.mk.injEq, zero_ne_one, and_false, not_false_eq_true, implies_true] ⟩
-  continuous_toFun := by
-    apply Continuous.subtype_mk
-    apply ContinuousMap.continuous
+  continuous_toFun := (ContinuousMap.continuous _).subtype_mk _
 
 lemma isClosed_range_i₀ (X : TopCat.{u}) :
     IsClosed <| Set.range (Cyl.i₀ X) := by
@@ -106,9 +103,7 @@ lemma isClosed_range_i₀ (X : TopCat.{u}) :
     apply compl_inj_iff.mp
     convert Cyl.set_neq_zero_eq_compl_range_i₀ X using 1
   rw [← this]
-  apply isClosed_eq
-  · exact continuous_snd
-  · exact continuous_const
+  exact isClosed_eq continuous_snd continuous_const
 
 lemma isClosedEmbedding_i₁ToComplRangeI₀ (X : TopCat.{u}) :
     Topology.IsClosedEmbedding (Cyl.i₁ToComplRangeI₀ X) := by

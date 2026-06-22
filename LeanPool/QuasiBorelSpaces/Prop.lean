@@ -60,9 +60,8 @@ lemma isHom_or
 lemma isHom_imp
     {f g : A → Prop} (hf : IsHom f) (hg : IsHom g)
     : IsHom (fun x ↦ f x → g x) := by
-  apply isHom_comp' (f := fun x ↦ x.1 → x.2) (g := fun x ↦ (f x, g x))
-  · simp only [isHom_of_discrete_countable]
-  · fun_prop
+  exact isHom_comp' (f := fun x ↦ x.1 → x.2) (g := fun x ↦ (f x, g x))
+    (by simp only [isHom_of_discrete_countable]) (by fun_prop)
 
 @[fun_prop]
 lemma isHom_iff

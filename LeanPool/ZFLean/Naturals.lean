@@ -160,8 +160,7 @@ theorem not_lt_zero {n : ZFNat} : ¬ n < 0 := fun _ => notMem_empty _ ‹_›
 theorem zero_lt_ne_zero {n : ZFNat} : 0 < n → n ≠ 0 := by
   intro h h'
   subst h'
-  absurd not_lt_zero h
-  trivial
+  exact not_lt_zero h
 
 /-- Any inductive set contains zero. -/
 lemma zero_mem_inductive {a} (h : inductiveSet a) : ↑(0 : ZFNat).val ∈ a := h.left
@@ -354,8 +353,7 @@ theorem lt_trans {x y z : ZFNat} : x < y → y < z → x < z :=
 theorem lt_irrefl {n : ZFNat} : ¬ n < n := fun _ => mem_irrefl _ ‹_›
 theorem lt_imp_ne {n m : ZFNat} : n < m → n ≠ m := fun _ _ => by
   subst_eqs
-  absurd lt_irrefl ‹_›
-  trivial
+  exact lt_irrefl ‹_›
 
 theorem le_trans {x y z : ZFNat} : x ≤ y → y ≤ z → x ≤ z := by
   rintro (_ | rfl)  (_ | rfl)
@@ -888,8 +886,8 @@ theorem add_lt_add_right {n m : ZFNat} (h : n < m) (k : ZFNat) : n + k < m + k :
   add_comm k m ▸ add_comm k n ▸ add_lt_add_left h k
 
 theorem lt_add_of_pos_right {n k : ZFNat} (h : 0 < k) : n < n + k := by
-  let this := add_zero ▸ add_lt_add_left h n;
-  exact this
+  have := add_lt_add_left h n
+  rwa [add_zero] at this
 
 theorem lt_of_add_lt_add_left {n m k : ZFNat} : n + k < n + m → k < m := by
   rw [add_comm n, add_comm n]; exact lt_of_add_lt_add_right
@@ -1210,7 +1208,7 @@ theorem mul_lt_mono {n m k : ZFNat} (h : 0 < k) : n < m → k*n < k*m := by
   | succ m ih =>
     rw [← add_one_eq_succ, left_distrib, mul_one]
     rcases lt_le_iff.mpr h' with (h' | rfl)
-    · let this := add_lt_add_of_le_of_lt (@zero_le k) (ih h')
+    · have := add_lt_add_of_le_of_lt (@zero_le k) (ih h')
       rwa [zero_add, add_comm] at this
     · conv => lhs; rw [← @zero_add (k*n), add_comm]
       exact add_lt_add_left h (k*n)

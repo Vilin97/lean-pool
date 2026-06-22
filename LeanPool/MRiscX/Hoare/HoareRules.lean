@@ -38,18 +38,11 @@ theorem BL_SUBSET : ∀ (code : Code) (P Q : Assertion) (l: UInt64) (L_w L_b L :
   intros c P Q l L_w L_b L T
   unfold hoareTripleUp
   intros H _ h_LwEmpty s HCode pre H_pc
-  have L_b_sub : L_b \ L ⊆ L_b := by
-    apply Set.diff_subset
   specialize H T h_LwEmpty s HCode pre H_pc
   rcases H with ⟨s', ⟨H1, H2, H3⟩⟩
   exists s'
-  constructor
-  · apply weak_with_less_BL_weakens; exact H1
-  · constructor
-    · exact H2
-    · apply Set.notMem_subset
-      · exact L_b_sub
-      · exact H3
+  refine ⟨weak_with_less_BL_weakens _ _ _ _ _ _ H1, H2, ?_⟩
+  exact Set.notMem_subset Set.diff_subset H3
 
 /--
 Allows to weaken the Hoare triple
@@ -134,60 +127,6 @@ theorem WL_TO_BL : ∀ (c : Code) (P Q : Assertion) (l : UInt64) (L_w L_b L : Se
 /--
 Enables the merge of two Hoare-triples into one, given that the postcondition
 of the first triple is equal to the precondition of the second triple.
--/
-theorem S_SEQ' : ∀(P R Q : Assertion) (c : Code) (l : UInt64) (L_w L_b L_w' L_b' : Set UInt64),
-  L_w ∩ L_b = ∅ →
-  L_w ≠ ∅ →
-  L_w' ∩ L_b' = ∅ →
-  (L_w' ⊆ L_b ∧ L_w ∩ L_w' = ∅) →
-  c
-  ⦃P⦄ l ↦ ⟨L_w | L_b⟩ ⦃R⦄ →
-  (∀ l', l' ∈ L_w →
-  c
-  ⦃R⦄ l' ↦ ⟨L_w' | L_b'⟩ ⦃Q⦄) →
-  c
-  ⦃P⦄ l ↦ ⟨L_w' | L_b ∩ L_b'⟩ ⦃Q⦄
-  := by
-  intros P R Q c l L_w L_b L_w' L_b' TInter TEmpty TInter' T
-  unfold hoareTripleUp
-  intros HFirst HSecond _ h_empty' s HCode H_pc pre
-  specialize HFirst TInter TEmpty s HCode H_pc pre
-  rcases HFirst with ⟨s', ⟨HFirstWeak, HFirstPost, HFirstPc⟩⟩
-  unfold weak at HFirstWeak
-  specialize HFirstWeak HCode
-  rcases HFirstWeak with ⟨m, ⟨HFW1, HFW2, HFW3, HFW4⟩⟩
-  have HCode' : s'.code = c := by
-    rw [<- HCode, <- HFW2]
-    simp
-  specialize HSecond s'.pc HFW3 TInter' h_empty' s' HCode' rfl HFirstPost
-  unfold weak at HSecond
-  rcases HSecond with ⟨s'', ⟨HSecondWeak, HSecondPost, HSecondPc⟩⟩
-  specialize HSecondWeak HCode'
-  rcases HSecondWeak with ⟨m', ⟨_, HSW2, HSW3, HSW4⟩⟩
-  exists s''
-  constructor <;> try assumption
-  · unfold weak
-    intros HCode
-    exists (m + m')
-    constructor <;> try assumption
-    · exact Nat.add_gt_zero _ _ HFW1
-    · constructor <;> try assumption
-      · rw [<- HFW2] at HSW2
-        simp only [MState.run_n_m_steps_comp] at HSW2
-        exact HSW2
-      · constructor <;> try assumption
-        · intros m'' Hm''
-          apply MState.run_n_plus_m_intersect <;> assumption
-  · constructor <;> try assumption
-    · simp only [Set.mem_inter_iff, not_and]
-      intros _
-      exact HSecondPc
-
-
-
-/--
-Enables the merge of two Hoare-triples into one, given that the postcondition
-of the first triple is equal to the precondition of the second triple.
 
 This rule lets you apply S_SEQ with any form of `L_{B''}` but asks for
 a proof of `L_{B''} = L_B ∩ L_{B'}`
@@ -246,6 +185,27 @@ theorem S_SEQ {L_b'' : Set UInt64} :
 
 
 /--
+Enables the merge of two Hoare-triples into one, given that the postcondition
+of the first triple is equal to the precondition of the second triple.
+-/
+theorem S_SEQ' : ∀(P R Q : Assertion) (c : Code) (l : UInt64) (L_w L_b L_w' L_b' : Set UInt64),
+  L_w ∩ L_b = ∅ →
+  L_w ≠ ∅ →
+  L_w' ∩ L_b' = ∅ →
+  (L_w' ⊆ L_b ∧ L_w ∩ L_w' = ∅) →
+  c
+  ⦃P⦄ l ↦ ⟨L_w | L_b⟩ ⦃R⦄ →
+  (∀ l', l' ∈ L_w →
+  c
+  ⦃R⦄ l' ↦ ⟨L_w' | L_b'⟩ ⦃Q⦄) →
+  c
+  ⦃P⦄ l ↦ ⟨L_w' | L_b ∩ L_b'⟩ ⦃Q⦄
+  := by
+  intros P R Q c l L_w L_b L_w' L_b' TInter TEmpty TInter' T HFirst HSecond
+  exact S_SEQ P R Q c l L_w L_b L_w' L_b' TInter TEmpty TInter' T HFirst HSecond rfl
+
+
+/--
 Allows to strenghten the precondition of a given Hoare-triple
 -/
 theorem PRE_STR : ∀(c : Code) (P1 P2 Q : Assertion) (L_w L_b : Set UInt64) (l : UInt64),
@@ -261,9 +221,7 @@ theorem PRE_STR : ∀(c : Code) (P1 P2 Q : Assertion) (L_w L_b : Set UInt64) (l 
   unfold hoareTripleUp
   intros H HInter HEmpty s HCode H_pc pre
   apply H HInter <;> try assumption
-  specialize HTaut s HCode
-  · apply HTaut
-    · constructor <;> try assumption
+  exact HTaut s HCode ⟨H_pc, pre⟩
 
 
 /--
@@ -320,12 +278,8 @@ theorem S_COND : ∀ (c : Code) (P C Q : Assertion) (l : UInt64)
   specialize h_RunCondFalse h_LwInterLb h_LwNotEmpty s h_code
   apply excluded_middle_implication (P s) (C s)
   constructor
-  · intros H
-    specialize h_RunCondTrue h_pc H
-    exact h_RunCondTrue
-  · intros H
-    specialize h_RunCondFalse h_pc H
-    exact h_RunCondFalse
+  · exact fun H => h_RunCondTrue h_pc H
+  · exact fun H => h_RunCondFalse h_pc H
   exact pre
 
 

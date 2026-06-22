@@ -465,8 +465,7 @@ lemma posSemidef_entrywiseExp_hadamardSeries_of_posSemidef
   -- Step 4: Continuity of diagonal perturbation ε ↦ R + εI
   have h_perturb_continuous : Continuous (fun ε : ℝ => R + ε • (1 : Matrix ι ι ℝ)) := by
     -- Linear in ε, hence continuous
-    have : Continuous (fun ε : ℝ => ε • (1 : Matrix ι ι ℝ)) := by
-      exact continuous_id.smul continuous_const
+    have : Continuous (fun ε : ℝ => ε • (1 : Matrix ι ι ℝ)) := continuous_id.smul continuous_const
     exact Continuous.add continuous_const this
   -- Step 5: Composition gives continuity of ε ↦ entrywiseExpHadamardSeries(R + εI)
   have h_comp_continuous : Continuous (fun ε : ℝ => entrywiseExp (R + ε • (1 : Matrix ι ι ℝ))) := by

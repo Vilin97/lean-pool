@@ -115,13 +115,11 @@ private lemma productAnnulus_eq_of_mem_wip
   refine le_antisymm ?_ ?_
   · by_contra hlt
     have hlt' : ℓ q + 1 ≤ j q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((ℓ q : Nat) : ℝ) + 1 ≤ j q := by
-      exact_mod_cast hlt'
+    have hlt_real : ((ℓ q : Nat) : ℝ) + 1 ≤ j q := by exact_mod_cast hlt'
     linarith
   · by_contra hlt
     have hlt' : j q + 1 ≤ ℓ q := Nat.succ_le_of_lt (Nat.lt_of_not_ge hlt)
-    have hlt_real : ((j q : Nat) : ℝ) + 1 ≤ ℓ q := by
-      exact_mod_cast hlt'
+    have hlt_real : ((j q : Nat) : ℝ) + 1 ≤ ℓ q := by exact_mod_cast hlt'
     linarith
 
 private lemma sum_indicator_productAnnulus_le_wip
@@ -203,8 +201,7 @@ private theorem finite_sum_annulusMass_le_wip
           · filter_upwards with z
             exact sum_indicator_productAnnulus_le_wip s z
               (‖toFun kappa (ofPkappa kappa F) z‖ ^ 2) (by positivity)
-    _ = ‖F‖ ^ 2 := by
-          simpa [htoFun] using evalPkappa_total_mass hd kappa F
+    _ = ‖F‖ ^ 2 := by simpa [htoFun] using evalPkappa_total_mass hd kappa F
 
 private theorem phi1D_eq_oneDimPhi_wip
     (k n : Nat) (z : ℂ) :
@@ -227,8 +224,7 @@ private theorem phi1D_eq_oneDimPhi_wip
         ((Nat.factorial j : ℂ) * (Nat.choose n j : ℂ)) * (Nat.factorial (n - j) : ℂ)
             = (Nat.choose n j : ℂ) * (Nat.factorial j : ℂ) *
                 (Nat.factorial (n - j) : ℂ) := by ring
-        _ = (Nat.factorial n : ℂ) := by
-            exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
+        _ = (Nat.factorial n : ℂ) := by exact_mod_cast Nat.choose_mul_factorial_mul_factorial hjn
         _ = ((Nat.factorial n : ℂ) / (Nat.factorial (n - j) : ℂ)) *
               (Nat.factorial (n - j) : ℂ) := by
             field_simp [hfac_ne]
@@ -359,8 +355,7 @@ private theorem mem_nearLowBlocks_wip
     have hidx_upper : ℓ q ≤ j q + M := by
       have htri : ℓ q ≤ j q + Nat.dist (ℓ q) (j q) :=
         Nat.dist_tri_right' (ℓ q) (j q)
-      have hdist' : Nat.dist (ℓ q) (j q) ≤ M := by
-        simpa [Nat.dist_comm] using hqdist
+      have hdist' : Nat.dist (ℓ q) (j q) ≤ M := by simpa [Nat.dist_comm] using hqdist
       exact le_trans htri (Nat.add_le_add_left hdist' _)
     exact Finset.mem_range.mpr (Nat.lt_succ_of_le hidx_upper)
 
@@ -541,8 +536,7 @@ private theorem farPart_support_subset_wip
         (H - truncateFinset E (ofPkappa kappa H)) alpha = 0 := by
       simp [farPart_apply_wip kappa E H alpha, hE]
     exact (hcoeff_ne hzero).elim
-  · have hH_ne : H alpha ≠ 0 := by
-      simpa [farPart_apply_wip kappa E H alpha, hE] using hcoeff_ne
+  · have hH_ne : H alpha ≠ 0 := by simpa [farPart_apply_wip kappa E H alpha, hE] using hcoeff_ne
     exact Finsupp.mem_support_iff.mpr hH_ne
 
 private theorem norm_sq_farPart_le_wip
@@ -558,8 +552,7 @@ private theorem norm_sq_farPart_le_wip
           intro alpha halpha
           have hnotE : alpha ∉ E := by
             intro hE
-            have hzero : Hfar alpha = 0 := by
-              simp [Hfar, farPart_apply_wip kappa E H alpha, hE]
+            have hzero : Hfar alpha = 0 := by simp [Hfar, farPart_apply_wip kappa E H alpha, hE]
             exact (Finsupp.mem_support_iff.mp halpha) hzero
           simp [Hfar, farPart_apply_wip kappa E H alpha, hnotE]
     _ ≤ Finset.sum H.support (fun alpha => ‖H alpha‖ ^ 2) := by
@@ -643,15 +636,12 @@ theorem lowAnnulusProjection
           finite_sum_annulusMass_le_wip hd kappa Hnear (lowAnnuli d J)
       _ = Finset.sum E (fun alpha => ‖coeffPkappa H alpha‖ ^ 2) := hnear_norm_sq
       _ ≤ rho := hcoeff_small
-  have hH_sq : ‖H‖ ^ 2 = 1 := by
-    nlinarith [hH_norm]
+  have hH_sq : ‖H‖ ^ 2 = 1 := by nlinarith [hH_norm]
   have hfar_norm_sq_le_one : ‖Hfar‖ ^ 2 ≤ 1 := by
     calc
-      ‖Hfar‖ ^ 2 ≤ ‖H‖ ^ 2 := by
-        simpa [Hfar, Hnear] using norm_sq_farPart_le_wip kappa E H
+      ‖Hfar‖ ^ 2 ≤ ‖H‖ ^ 2 := by simpa [Hfar, Hnear] using norm_sq_farPart_le_wip kappa E H
       _ = 1 := hH_sq
-  have hfar_norm_sq_nonneg : 0 ≤ ‖Hfar‖ ^ 2 := by
-    positivity
+  have hfar_norm_sq_nonneg : 0 ≤ ‖Hfar‖ ^ 2 := by positivity
   have hfar_self :
       ∀ j ∈ lowAnnuli d J,
         Hermite1DimdLEAN.remainderPart j M ⟨Hfar⟩ = ⟨Hfar⟩ := by
@@ -695,8 +685,7 @@ theorem lowAnnulusProjection
                             exact annulusMass_ofPkappa_eq_annulusMass_wip hd kappa j Hfar
                 _ = Hermite1DimdLEAN.annulusMass j
                       (Hermite1DimdLEAN.evalHermiteSum kappa
-                        (Hermite1DimdLEAN.remainderPart j M ⟨Hfar⟩)) := by
-                          rw [hfar_self j hj]
+                        (Hermite1DimdLEAN.remainderPart j M ⟨Hfar⟩)) := by rw [hfar_self j hj]
       _ ≤ Hermite1DimdLEAN.localizationLeakageCoefficient C c B d M *
             Hermite1DimdLEAN.hermiteNormSq kappa ⟨Hfar⟩ := by
               simpa using hpartial (lowAnnuli d J) M ⟨Hfar⟩
@@ -710,9 +699,7 @@ theorem lowAnnulusProjection
       ≤ 2 * lowAnnulusMass J (ofPkappa kappa Hnear) +
           2 * lowAnnulusMass J (ofPkappa kappa Hfar) := by
             simpa [hdecomp] using lowAnnulusMass_add_le_two_wip hd kappa J Hnear Hfar
-    _ ≤ 2 * rho + 2 * rho := by
-          nlinarith [hnear_low, hfar_low]
-    _ = 1 / 4 := by
-          norm_num [rho]
+    _ ≤ 2 * rho + 2 * rho := by nlinarith [hnear_low, hfar_low]
+    _ = 1 / 4 := by norm_num [rho]
 
 end DimdPolyLEAN

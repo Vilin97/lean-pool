@@ -409,47 +409,33 @@ private lemma aCoeff_eq_triCoeff (k : Mu) (hk : muBoxCoeff[k.1]! = 0) (i : Var) 
   classical
   -- Reduce to the four triangle indices and then verify each finite `Var` case by computation
   -- (after rewriting `k` to a canonical `Fin` term so that no proof fields remain as variables).
-  have hkCases : k.1 = 23 ∨ k.1 = 24 ∨ k.1 = 25 ∨ k.1 = 26 := by
-    exact (muBoxCoeff_eq_zero_iff (k := k)).1 hk
-  rcases hkCases with hk23 | hkRest
-  · have hkEq : k = (⟨23, by decide⟩ : Mu) := by
-      ext
-      exact hk23
-    have : aCoeff (⟨23, by decide⟩ : Mu) i = triCoeff (⟨23, by decide⟩ : Mu) i := by
-      fin_cases i <;>
-        simp (config := { decide := true })
-          [N1000000WeakDuality.aCoeff, N1000000WeakDuality.aCoeffInt,
-            Distributed2Coloring.LowerBound.N1000000.coeffAt, triCoeff, aVec_23]
-    simpa [hkEq] using this
-  · rcases hkRest with hk24 | hkRest
-    · have hkEq : k = (⟨24, by decide⟩ : Mu) := by
-        ext
-        exact hk24
-      have : aCoeff (⟨24, by decide⟩ : Mu) i = triCoeff (⟨24, by decide⟩ : Mu) i := by
-        fin_cases i <;>
-          simp (config := { decide := true })
-            [N1000000WeakDuality.aCoeff, N1000000WeakDuality.aCoeffInt,
-              Distributed2Coloring.LowerBound.N1000000.coeffAt, triCoeff, aVec_24]
-      simpa [hkEq] using this
-    · rcases hkRest with hk25 | hk26
-      · have hkEq : k = (⟨25, by decide⟩ : Mu) := by
-          ext
-          exact hk25
-        have : aCoeff (⟨25, by decide⟩ : Mu) i = triCoeff (⟨25, by decide⟩ : Mu) i := by
-          fin_cases i <;>
-            simp (config := { decide := true })
-              [N1000000WeakDuality.aCoeff, N1000000WeakDuality.aCoeffInt,
-                Distributed2Coloring.LowerBound.N1000000.coeffAt, triCoeff, aVec_25]
-        simpa [hkEq] using this
-      · have hkEq : k = (⟨26, by decide⟩ : Mu) := by
-          ext
-          exact hk26
-        have : aCoeff (⟨26, by decide⟩ : Mu) i = triCoeff (⟨26, by decide⟩ : Mu) i := by
-          fin_cases i <;>
-            simp (config := { decide := true })
-              [N1000000WeakDuality.aCoeff, N1000000WeakDuality.aCoeffInt,
-                Distributed2Coloring.LowerBound.N1000000.coeffAt, triCoeff, aVec_26]
-        simpa [hkEq] using this
+  have hkCases : k.1 = 23 ∨ k.1 = 24 ∨ k.1 = 25 ∨ k.1 = 26 :=
+    (muBoxCoeff_eq_zero_iff (k := k)).1 hk
+  rcases hkCases with hk23 | hk24 | hk25 | hk26
+  · have hkEq : k = (⟨23, by decide⟩ : Mu) := by ext; exact hk23
+    rw [hkEq]
+    fin_cases i <;>
+      simp (config := { decide := true })
+        [N1000000WeakDuality.aCoeff, N1000000WeakDuality.aCoeffInt,
+          Distributed2Coloring.LowerBound.N1000000.coeffAt, triCoeff, aVec_23]
+  · have hkEq : k = (⟨24, by decide⟩ : Mu) := by ext; exact hk24
+    rw [hkEq]
+    fin_cases i <;>
+      simp (config := { decide := true })
+        [N1000000WeakDuality.aCoeff, N1000000WeakDuality.aCoeffInt,
+          Distributed2Coloring.LowerBound.N1000000.coeffAt, triCoeff, aVec_24]
+  · have hkEq : k = (⟨25, by decide⟩ : Mu) := by ext; exact hk25
+    rw [hkEq]
+    fin_cases i <;>
+      simp (config := { decide := true })
+        [N1000000WeakDuality.aCoeff, N1000000WeakDuality.aCoeffInt,
+          Distributed2Coloring.LowerBound.N1000000.coeffAt, triCoeff, aVec_25]
+  · have hkEq : k = (⟨26, by decide⟩ : Mu) := by ext; exact hk26
+    rw [hkEq]
+    fin_cases i <;>
+      simp (config := { decide := true })
+        [N1000000WeakDuality.aCoeff, N1000000WeakDuality.aCoeffInt,
+          Distributed2Coloring.LowerBound.N1000000.coeffAt, triCoeff, aVec_26]
 
 private lemma aDot_eq_triLinear (f : Coloring n) (k : Mu) (hk : muBoxCoeff[k.1]! = 0) :
     aDot k (xFromColoring f) =
@@ -521,229 +507,55 @@ private lemma pmUv_targets_true (k : Mu) (hk : muBoxCoeff[k.1]! = 0)
     (hs : (muMapUv[k.1]!).swap = true) :
     (muMapUv[k.1]!).tgtU = muWitV[k.1]! ∧ (muMapUv[k.1]!).tgtV = muWitU[k.1]! := by
   classical
-  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk23 | hk24 | hk25 | hk26
-  · have h :
-        (muMapUv[23]!).swap = true →
-          (muMapUv[23]!).tgtU = muWitV[23]! ∧ (muMapUv[23]!).tgtV = muWitU[23]! := by
+  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk | hk | hk | hk <;>
+    · rw [hk] at hs ⊢
+      revert hs
       decide
-    have hs' := hs
-    rw [hk23] at hs'
-    rw [hk23]
-    exact h hs'
-  · have h :
-        (muMapUv[24]!).swap = true →
-          (muMapUv[24]!).tgtU = muWitV[24]! ∧ (muMapUv[24]!).tgtV = muWitU[24]! := by
-      decide
-    have hs' := hs
-    rw [hk24] at hs'
-    rw [hk24]
-    exact h hs'
-  · have h :
-        (muMapUv[25]!).swap = true →
-          (muMapUv[25]!).tgtU = muWitV[25]! ∧ (muMapUv[25]!).tgtV = muWitU[25]! := by
-      decide
-    have hs' := hs
-    rw [hk25] at hs'
-    rw [hk25]
-    exact h hs'
-  · have h :
-        (muMapUv[26]!).swap = true →
-          (muMapUv[26]!).tgtU = muWitV[26]! ∧ (muMapUv[26]!).tgtV = muWitU[26]! := by
-      decide
-    have hs' := hs
-    rw [hk26] at hs'
-    rw [hk26]
-    exact h hs'
 
 private lemma pmUv_targets_false (k : Mu) (hk : muBoxCoeff[k.1]! = 0)
     (hs : (muMapUv[k.1]!).swap = false) :
     (muMapUv[k.1]!).tgtU = muWitU[k.1]! ∧ (muMapUv[k.1]!).tgtV = muWitV[k.1]! := by
   classical
-  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk23 | hk24 | hk25 | hk26
-  · have h :
-        (muMapUv[23]!).swap = false →
-          (muMapUv[23]!).tgtU = muWitU[23]! ∧ (muMapUv[23]!).tgtV = muWitV[23]! := by
+  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk | hk | hk | hk <;>
+    · rw [hk] at hs ⊢
+      revert hs
       decide
-    have hs' := hs
-    rw [hk23] at hs'
-    rw [hk23]
-    exact h hs'
-  · have h :
-        (muMapUv[24]!).swap = false →
-          (muMapUv[24]!).tgtU = muWitU[24]! ∧ (muMapUv[24]!).tgtV = muWitV[24]! := by
-      decide
-    have hs' := hs
-    rw [hk24] at hs'
-    rw [hk24]
-    exact h hs'
-  · have h :
-        (muMapUv[25]!).swap = false →
-          (muMapUv[25]!).tgtU = muWitU[25]! ∧ (muMapUv[25]!).tgtV = muWitV[25]! := by
-      decide
-    have hs' := hs
-    rw [hk25] at hs'
-    rw [hk25]
-    exact h hs'
-  · have h :
-        (muMapUv[26]!).swap = false →
-          (muMapUv[26]!).tgtU = muWitU[26]! ∧ (muMapUv[26]!).tgtV = muWitV[26]! := by
-      decide
-    have hs' := hs
-    rw [hk26] at hs'
-    rw [hk26]
-    exact h hs'
 
 private lemma pmUw_targets_true (k : Mu) (hk : muBoxCoeff[k.1]! = 0)
     (hs : (muMapUw[k.1]!).swap = true) :
     (muMapUw[k.1]!).tgtU = muWitW[k.1]! ∧ (muMapUw[k.1]!).tgtV = muWitU[k.1]! := by
   classical
-  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk23 | hk24 | hk25 | hk26
-  · have h :
-        (muMapUw[23]!).swap = true →
-          (muMapUw[23]!).tgtU = muWitW[23]! ∧ (muMapUw[23]!).tgtV = muWitU[23]! := by
+  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk | hk | hk | hk <;>
+    · rw [hk] at hs ⊢
+      revert hs
       decide
-    have hs' := hs
-    rw [hk23] at hs'
-    rw [hk23]
-    exact h hs'
-  · have h :
-        (muMapUw[24]!).swap = true →
-          (muMapUw[24]!).tgtU = muWitW[24]! ∧ (muMapUw[24]!).tgtV = muWitU[24]! := by
-      decide
-    have hs' := hs
-    rw [hk24] at hs'
-    rw [hk24]
-    exact h hs'
-  · have h :
-        (muMapUw[25]!).swap = true →
-          (muMapUw[25]!).tgtU = muWitW[25]! ∧ (muMapUw[25]!).tgtV = muWitU[25]! := by
-      decide
-    have hs' := hs
-    rw [hk25] at hs'
-    rw [hk25]
-    exact h hs'
-  · have h :
-        (muMapUw[26]!).swap = true →
-          (muMapUw[26]!).tgtU = muWitW[26]! ∧ (muMapUw[26]!).tgtV = muWitU[26]! := by
-      decide
-    have hs' := hs
-    rw [hk26] at hs'
-    rw [hk26]
-    exact h hs'
 
 private lemma pmUw_targets_false (k : Mu) (hk : muBoxCoeff[k.1]! = 0)
     (hs : (muMapUw[k.1]!).swap = false) :
     (muMapUw[k.1]!).tgtU = muWitU[k.1]! ∧ (muMapUw[k.1]!).tgtV = muWitW[k.1]! := by
   classical
-  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk23 | hk24 | hk25 | hk26
-  · have h :
-        (muMapUw[23]!).swap = false →
-          (muMapUw[23]!).tgtU = muWitU[23]! ∧ (muMapUw[23]!).tgtV = muWitW[23]! := by
+  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk | hk | hk | hk <;>
+    · rw [hk] at hs ⊢
+      revert hs
       decide
-    have hs' := hs
-    rw [hk23] at hs'
-    rw [hk23]
-    exact h hs'
-  · have h :
-        (muMapUw[24]!).swap = false →
-          (muMapUw[24]!).tgtU = muWitU[24]! ∧ (muMapUw[24]!).tgtV = muWitW[24]! := by
-      decide
-    have hs' := hs
-    rw [hk24] at hs'
-    rw [hk24]
-    exact h hs'
-  · have h :
-        (muMapUw[25]!).swap = false →
-          (muMapUw[25]!).tgtU = muWitU[25]! ∧ (muMapUw[25]!).tgtV = muWitW[25]! := by
-      decide
-    have hs' := hs
-    rw [hk25] at hs'
-    rw [hk25]
-    exact h hs'
-  · have h :
-        (muMapUw[26]!).swap = false →
-          (muMapUw[26]!).tgtU = muWitU[26]! ∧ (muMapUw[26]!).tgtV = muWitW[26]! := by
-      decide
-    have hs' := hs
-    rw [hk26] at hs'
-    rw [hk26]
-    exact h hs'
 
 private lemma pmVw_targets_true (k : Mu) (hk : muBoxCoeff[k.1]! = 0)
     (hs : (muMapVw[k.1]!).swap = true) :
     (muMapVw[k.1]!).tgtU = muWitW[k.1]! ∧ (muMapVw[k.1]!).tgtV = muWitV[k.1]! := by
   classical
-  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk23 | hk24 | hk25 | hk26
-  · have h :
-        (muMapVw[23]!).swap = true →
-          (muMapVw[23]!).tgtU = muWitW[23]! ∧ (muMapVw[23]!).tgtV = muWitV[23]! := by
+  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk | hk | hk | hk <;>
+    · rw [hk] at hs ⊢
+      revert hs
       decide
-    have hs' := hs
-    rw [hk23] at hs'
-    rw [hk23]
-    exact h hs'
-  · have h :
-        (muMapVw[24]!).swap = true →
-          (muMapVw[24]!).tgtU = muWitW[24]! ∧ (muMapVw[24]!).tgtV = muWitV[24]! := by
-      decide
-    have hs' := hs
-    rw [hk24] at hs'
-    rw [hk24]
-    exact h hs'
-  · have h :
-        (muMapVw[25]!).swap = true →
-          (muMapVw[25]!).tgtU = muWitW[25]! ∧ (muMapVw[25]!).tgtV = muWitV[25]! := by
-      decide
-    have hs' := hs
-    rw [hk25] at hs'
-    rw [hk25]
-    exact h hs'
-  · have h :
-        (muMapVw[26]!).swap = true →
-          (muMapVw[26]!).tgtU = muWitW[26]! ∧ (muMapVw[26]!).tgtV = muWitV[26]! := by
-      decide
-    have hs' := hs
-    rw [hk26] at hs'
-    rw [hk26]
-    exact h hs'
 
 private lemma pmVw_targets_false (k : Mu) (hk : muBoxCoeff[k.1]! = 0)
     (hs : (muMapVw[k.1]!).swap = false) :
     (muMapVw[k.1]!).tgtU = muWitV[k.1]! ∧ (muMapVw[k.1]!).tgtV = muWitW[k.1]! := by
   classical
-  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk23 | hk24 | hk25 | hk26
-  · have h :
-        (muMapVw[23]!).swap = false →
-          (muMapVw[23]!).tgtU = muWitV[23]! ∧ (muMapVw[23]!).tgtV = muWitW[23]! := by
+  rcases (muBoxCoeff_eq_zero_iff (k := k)).1 hk with hk | hk | hk | hk <;>
+    · rw [hk] at hs ⊢
+      revert hs
       decide
-    have hs' := hs
-    rw [hk23] at hs'
-    rw [hk23]
-    exact h hs'
-  · have h :
-        (muMapVw[24]!).swap = false →
-          (muMapVw[24]!).tgtU = muWitV[24]! ∧ (muMapVw[24]!).tgtV = muWitW[24]! := by
-      decide
-    have hs' := hs
-    rw [hk24] at hs'
-    rw [hk24]
-    exact h hs'
-  · have h :
-        (muMapVw[25]!).swap = false →
-          (muMapVw[25]!).tgtU = muWitV[25]! ∧ (muMapVw[25]!).tgtV = muWitW[25]! := by
-      decide
-    have hs' := hs
-    rw [hk25] at hs'
-    rw [hk25]
-    exact h hs'
-  · have h :
-        (muMapVw[26]!).swap = false →
-          (muMapVw[26]!).tgtU = muWitV[26]! ∧ (muMapVw[26]!).tgtV = muWitW[26]! := by
-      decide
-    have hs' := hs
-    rw [hk26] at hs'
-    rw [hk26]
-    exact h hs'
 
 private lemma tri_case (f : Coloring n) (k : Mu) (hk : muBoxCoeff[k.1]! = 0) :
     aDot k (xFromColoring f) ≤ (1 : Q) := by

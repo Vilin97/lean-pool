@@ -893,14 +893,7 @@ theorem schwinger_bilinear_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
   --    = Cf * ∫_x ‖f(x)‖ * 1 dx  (by heatKernelPositionSpace_integral_eq_one)
   --    = Cf * ‖f‖_{L¹}
   --
-  -- 2. The s-integral: ∫_{s>0} exp(-sm²) * Cf * ‖f‖_{L¹} ds
-  --    = Cf * ‖f‖_{L¹} * (1/m²) < ∞
-  --
-  -- Full formalization requires:
-  -- - Showing the bound is integrable on the triple product
-  -- - AEStronglyMeasurable of the integrand
-  -- - Pointwise norm bound
-  -- Then apply Integrable.mono'
+  -- 2. The s-integral: ∫_{s>0} exp(-sm²) * Cf * ‖f‖_{L¹} ds = Cf * ‖f‖_{L¹} / m² < ∞
   -- The heat kernel L¹ normalization is the key:
   have h_heat_L1 : ∀ s > 0, ∫ z : SpaceTime, heatKernelPositionSpace s ‖z‖ = 1 :=
     fun s hs => heatKernelPositionSpace_integral_eq_one s hs
@@ -965,35 +958,9 @@ theorem schwinger_bilinear_integrable (m : ℝ) [Fact (0 < m)] (f : TestFunction
       · apply mul_nonneg (norm_nonneg _) hCf_nonneg
       · exact le_of_lt (Real.exp_pos _)
     · exact heatKernelPositionSpace_nonneg p.1 hp _
-  -- The bound is integrable: ∫∫∫ bound = Cf * ‖f‖_{L¹} / m²
-  -- This follows from Tonelli's theorem applied in the order y, x, s
-  have h_bound_integrable : Integrable bound μ := by
-    -- Strategy: Use integrable_prod_iff to reduce to iterated integrals.
-    -- The bound factors as:
-    --   bound(s, x, y) = [‖f x‖ * Cf * exp(-sm²)] * H(s, ‖Θx - y‖)
-    --
-    -- Step 1: For each s > 0, ∫_y H(s, ‖Θx - y‖) dy = 1 (by h_heat_L1 and translation)
-    -- Step 2: Thus ∫∫ bound(s, x, y) dy dx = Cf * exp(-sm²) * ∫_x ‖f x‖ dx = Cf * exp(-sm²) *
-    -- ‖f‖_{L¹}
-    -- Step 3: ∫_s Cf * exp(-sm²) * ‖f‖_{L¹} ds = Cf * ‖f‖_{L¹} / m² < ∞
-    --
-    -- The formal proof requires showing:
-    -- (a) AEStronglyMeasurable bound μ
-    -- (b) For a.e. s: (x, y) ↦ bound(s, x, y) is integrable on SpaceTime × SpaceTime
-    -- (c) s ↦ ∫∫ |bound(s, x, y)| dy dx is integrable on Ioi 0
-    --
-    -- For (a): bound involves continuous functions (norm, exp, heatKernel)
-    -- For (b): Use heat kernel normalization + Schwartz integrability
-    -- For (c): Use exp(-sm²) integrability
-    --
-    -- Since bound ≥ 0, we have |bound| = bound.
-    --
-    -- Key lemma chain:
-    -- ∫∫∫ bound ≤ Cf * (∫_x ‖f x‖) * (∫_s exp(-sm²)) * sup_s(∫_y H(s,‖·‖))
-    --           = Cf * ‖f‖_{L¹} * (1/m²) * 1 < ∞
-    --
-    -- Use schwinger_bound_integrable
-    exact schwinger_bound_integrable m f Cf hCf
+  -- The bound ∫∫∫ = Cf * ‖f‖_{L¹} / m² is integrable by Tonelli (order y, x, s).
+  have h_bound_integrable : Integrable bound μ :=
+    schwinger_bound_integrable m f Cf hCf
   -- AEStronglyMeasurable of F
   have h_meas : AEStronglyMeasurable F μ := by
     -- F involves products of continuous functions
@@ -1288,20 +1255,8 @@ theorem bilinear_schwinger_eq_heatKernel (m : ℝ) [Fact (0 < m)] (f : TestFunct
   -- The integrand transformation:
   -- conj(f x) * C(Θx,y) * f y = conj(f x) * f y * ∫ s, exp(-sm²) H(s, ‖Θx-y‖)
   --                           = ∫ s, conj(f x) * f y * exp(-sm²) H(s, ‖Θx-y‖)
-  -- Step 2: Apply Fubini to swap the integration order
-  -- ∫ x ∫ y [∫ s, F(s,x,y)] = ∫ s [∫ x ∫ y, F(s,x,y)]
-  -- This is justified by h_int (integrability on product space)
-  -- The proof requires showing:
-  -- (a) The a.e. equality holds (diagonal has measure zero)
-  -- (b) Fubini applies (we have integrability)
-  -- (c) The constant exp(-sm²) can be factored out
-  -- Key insight: Both sides equal the same triple integral, just computed in different orders.
-  -- Define the integrand F(s,x,y) = conj(f x) * f y * exp(-sm²) * H(s, ‖Θx-y‖)
-  --
-  -- LHS computes: ∫ x ∫ y, [∫ s, F(s,x,y)]  (s innermost)
-  -- RHS computes: ∫ s, [∫ x ∫ y, F(s,x,y)]  (s outermost)
-  --
-  -- By Fubini (using h_int), these are equal.
+  -- Both sides equal the same triple integral with F(s,x,y) = conj(f x) * f y * exp(-sm²) *
+  -- H(s, ‖Θx-y‖), computed with s innermost (LHS) vs outermost (RHS); equal by Fubini.
   -- Step 1: Rewrite LHS using kernel equality
   -- For each (x,y) with Θx ≠ y, substitute the Schwinger representation
   have h_kernel_eq : ∀ x y, timeReflection x ≠ y →
