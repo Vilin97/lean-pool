@@ -3585,25 +3585,8 @@ private theorem carrier_fast_theta_error_le_half_base
           arcLength (carrierArc N k) <=
         arcLength (carrierArc N k) *
           ‖slowBandPoly p (carrierBase k)‖ ^ 2 := by
-    have hprod_nonneg : 0 <= ‖u‖ ^ 2 * arcLength (carrierArc N k) :=
-      mul_nonneg hnorm_sq hell_nonneg
-    have hmul :
-        (2 * 64 * 4 ^ 2 * theta ^ 2) *
-            (‖u‖ ^ 2 * arcLength (carrierArc N k)) <=
-          1 * (‖u‖ ^ 2 * arcLength (carrierArc N k)) :=
-      mul_le_mul_of_nonneg_right hcoef hprod_nonneg
-    calc
-      2 * 64 * 4 ^ 2 * theta ^ 2 * ‖u‖ ^ 2 *
-          arcLength (carrierArc N k)
-          =
-        (2 * 64 * 4 ^ 2 * theta ^ 2) *
-            (‖u‖ ^ 2 * arcLength (carrierArc N k)) := by ring
-      _ <= 1 * (‖u‖ ^ 2 * arcLength (carrierArc N k)) := hmul
-      _ =
-        arcLength (carrierArc N k) *
-          ‖slowBandPoly p (carrierBase k)‖ ^ 2 := by
-          rw [hu_norm]
-          ring
+    rw [← hu_norm]
+    nlinarith [mul_le_mul_of_nonneg_right hcoef (mul_nonneg hnorm_sq hell_nonneg)]
   field_simp [hpi_ne]
   linarith
 
@@ -6570,11 +6553,7 @@ private theorem circle_variance_ratio_le_one_div_520
     have htmp : 2 * A * (64 * A) * (L : ℝ) <= (N : ℝ) := by
       simpa [A, circleGoodBudget, mul_assoc, mul_left_comm, mul_comm] using
         hsep_real
-    have hrewrite : 128 * A ^ 2 * (L : ℝ) =
-        2 * A * (64 * A) * (L : ℝ) := by
-      ring
-    rw [hrewrite]
-    exact htmp
+    nlinarith [htmp]
   have hKpos : 0 < K := by norm_num [K]
   have hLpos : (0 : ℝ) < (L : ℝ) := by exact_mod_cast (lt_of_lt_of_le Nat.zero_lt_one hL)
   have hK_le_A : K * (L : ℝ) <= 128 * A ^ 2 * (L : ℝ) := by
