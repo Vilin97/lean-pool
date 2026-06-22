@@ -179,10 +179,6 @@ along the Euler path. -/
 theorem dist_deriv_le (hh : 0 < h) {t : ℝ} (ht₀ : t₀ ≤ t) :
     dist (deriv v h t₀ y₀ t) (v t (path v h t₀ y₀ t)) ≤ h * (L + K * M) := by
   obtain ⟨ht1, ht2⟩ := mem_Ico_Nat_floor_div hh ht₀; set n := ⌊(t - t₀) / h⌋₊
-  have h1 : dist (v (t₀ + n * h) (point v h t₀ y₀ n)) (v t (point v h t₀ y₀ n)) ≤
-      L * (t - (t₀ + n * h)) :=
-    ((hvt _).dist_le_mul _ _).trans
-      (by rw [dist_eq_norm, Real.norm_of_nonpos (by grind)]; grind)
   have h2 : dist (point v h t₀ y₀ n) (path v h t₀ y₀ t) ≤ h * M := by
     rw [show path v h t₀ y₀ t = _ from piecewiseLinear_eq_on_Ico hh ⟨ht1, ht2⟩, dist_eq_norm]
     simp +decide only [sub_add_cancel_left, norm_neg, norm_smul,
@@ -192,8 +188,10 @@ theorem dist_deriv_le (hh : 0 < h) {t : ℝ} (ht₀ : t₀ ≤ t) :
       = dist (v (t₀ + n * h) (point v h t₀ y₀ n)) (v t (path v h t₀ y₀ t)) := by
           simp only [deriv, piecewiseConst_eq_on_Ico hh ⟨ht1, ht2⟩, slope]
     _ ≤ L * (t - (t₀ + n * h)) + K * (h * M) :=
-          (dist_triangle _ _ _).trans
-            (add_le_add h1 (((hv t).dist_le_mul _ _).trans (by gcongr)))
+          (dist_triangle _ _ _).trans (add_le_add
+            (((hvt _).dist_le_mul _ _).trans
+              (by rw [dist_eq_norm, Real.norm_of_nonpos (by grind)]; grind))
+            (((hv t).dist_le_mul _ _).trans (by gcongr)))
     _ ≤ h * (L + K * M) := by
           nlinarith [NNReal.coe_nonneg K, NNReal.coe_nonneg L, hM t₀ y₀]
 
