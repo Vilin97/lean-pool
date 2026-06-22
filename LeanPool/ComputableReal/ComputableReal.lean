@@ -135,14 +135,12 @@ theorem val_sub : (x - y).val = x.val - y.val :=
   val_map₂ℝ_eq_val
 
 @[simp]
-theorem val_zero : (0 : Computableℝ).val = 0 := by
-  rw [Zero.toOfNat0, instComputableZero]
-  simp only [val_mk_eq_val, ComputableℝSeq.val_zero]
+theorem val_zero : (0 : Computableℝ).val = 0 :=
+  ComputableℝSeq.val_zero
 
 @[simp]
-theorem val_one : (1 : Computableℝ).val = 1 := by
-  rw [One.toOfNat1, instComputableOne]
-  simp only [val_mk_eq_val, ComputableℝSeq.val_one]
+theorem val_one : (1 : Computableℝ).val = 1 :=
+  ComputableℝSeq.val_one
 
 theorem add_mk (x y : ComputableℝSeq) : mk x + mk y = mk (x + y) :=
   rfl
@@ -244,8 +242,6 @@ theorem inv_val : (x⁻¹).val = (x.val)⁻¹ := by
   change (mapℝ' _ _ _).val = (x.val)⁻¹
   rw [mapℝ'_eq_mapℝ]
   exact val_mapℝ_eq_val (h := ComputableℝSeq.val_inv)
-
-example : True := ⟨⟩
 
 noncomputable instance instField : Field Computableℝ := { instCommRing with
   qsmul := _

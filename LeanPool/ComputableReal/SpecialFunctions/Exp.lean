@@ -146,26 +146,6 @@ theorem expUb₀_ge_exp (x : ℚ) (n : ℕ) (hx : 0 ≤ x) : Real.exp x ≤ expU
         simp only [Int.ofNat_toNat, le_sup_left]
     simpa
 
--- theorem _root_.Real.mul_log_one_plus_div_lt {x t : ℝ} (hx : 0 < x) (ht : 0 < t) :
---     x * Real.log (1 + t / x) < t := by
---   suffices Real.log (1 + t / x) < t / x by
---     rwa [_root_.mul_comm, ← lt_div_iff₀ hx]
---   convert Real.log_lt_sub_one_of_pos (x := 1 + t / x) (by positivity) ?_ using 1
---   · ring_nf
---   · simpa using ⟨ht.ne', hx.ne'⟩
-
--- theorem _root_.Real.mul_log_one_plus_div_le {x t : ℝ} (hx : 0 < x) (ht : 0 ≤ t) :
---     x * Real.log (1 + t / x) ≤ t := by
---   cases eq_or_lt_of_le ht
---   · subst t; simp
---   · apply (Real.mul_log_one_plus_div_lt hx ‹_›).le
-
--- theorem _root_.Real.one_plus_div_pow_lt_exp {x t : ℝ} (hx : 0 < x) (ht : 0 < t) :
---     (1 + t / x) ^ x < Real.exp t := by
---   convert Real.exp_lt_exp_of_lt (x := x * Real.log (1 + t / x))
---     (Real.mul_log_one_plus_div_lt hx ht) using 1
---   rw [← Real.log_rpow (by positivity), Real.exp_log (by positivity)]
-
 theorem _root_.Real.one_plus_pow_lt_exp_mul {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
     (1 + x) ^ y < Real.exp (x * y) := by
   rw [Real.exp_mul, _root_.add_comm]

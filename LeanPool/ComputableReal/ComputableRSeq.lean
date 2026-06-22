@@ -253,80 +253,6 @@ def neg (x : ComputableℝSeq) : ComputableℝSeq :=
 def sub (x : ComputableℝSeq) (y : ComputableℝSeq) : ComputableℝSeq :=
   add x (neg y)
 
--- def applyℚMono (x : ComputableℝSeq) (fq : ℚ → ℚ) (fr : ℝ → ℝ) (hfr : ∀q, fq q = fr q)
---     (hf₁ : Monotone fr) (hf₂ : Continuous fr) : ComputableℝSeq :=
---   mk (x := fr x.val)
---   (lb := x.lb.apply fq (hf₂.continuous_embed fq hfr))
---   (ub := x.ub.apply fq (hf₂.continuous_embed fq hfr))
---   (hlb := fun n ↦ (hfr _).symm ▸ (hf₁ (x.hlb n)))
---   (hub := fun n ↦ (hfr _).symm ▸ (hf₁ (x.hub n)))
---   (heq := CauSeq.equiv_apply x.lb x.ub fq (hf₂.continuous_embed fq hfr) x.heq)
-
--- @[simp]
--- theorem val_applyℚMono : (applyℚMono x fq fr h₁ h₂ h₃).val = fr x.val :=
---   mk_val_eq_val
-
--- def applyℚAnti (x : ComputableℝSeq) (fq : ℚ → ℚ) (fr : ℝ → ℝ) (hfr : ∀q, fq q = fr q)
---     (hf₁ : Antitone fr) (hf₂ : Continuous fr) : ComputableℝSeq :=
---   applyℚMono (neg x) (fq∘Neg.neg) (fr∘Neg.neg)
---     (fun q ↦ by have := hfr (-q); rwa [Rat.cast_neg] at this)
---     (hf₁.comp monotone_id.neg)
---     (hf₂.comp ContinuousNeg.continuous_neg)
-
--- @[simp]
--- theorem val_applyℚAnti : (applyℚAnti x fq fr h₁ h₂ h₃).val = fr x.val := by
---   rw [applyℚAnti, val_applyℚMono, neg, mk_val_eq_val]
---   dsimp
---   rw [neg_neg]
-
--- --Faster one for rational multiplcation
--- def lb_mulQ [hx : ComputableℝSeq x] : CauSeq ℚ qabs :=
---   if q ≥ 0 then hx.lb * CauSeq.const qabs q else hx.ub * CauSeq.const qabs q
-
--- def ub_mulQ [hx : ComputableℝSeq x] : CauSeq ℚ qabs :=
---   if q ≥ 0 then hx.ub * CauSeq.const qabs q else hx.lb * CauSeq.const qabs q
-
--- /- Multiplication of two computable sequences. Can't just use CauSeq mul because that
---  no longer gives correct upper/lower bounds. -/
--- def ComputableℝSeqMul [hx : ComputableℝSeq x] : ComputableℝSeq (x * q) where
---   lb := lb_mulQ x q
---   ub := ub_mulQ x q
---   hlb n := by
---     simp_rw [lb_mulQ, min_def]
---     by_cases hq : (q:ℝ) > 0
---     <;> split_ifs with h
---     <;> rify at *
---     <;> nlinarith (config := {splitNe := true}) [hx.hlb n, hx.hub n]
---   hub n := by
---     simp_rw [ub_mulQ, max_def]
---     by_cases hq : (q:ℝ) > 0
---     <;> split_ifs with h
---     <;> rify at *
---     <;> nlinarith (config := {splitNe := true}) [hx.hlb n, hx.hub n]
---   heq := by
---     have : (ub_mulQ x q - lb_mulQ x q)
---       = fun n => (abs (ub x n - lb x n)) * (abs q) := by
---       funext n
---       dsimp
---       simp_rw [ub_mulQ, lb_mulQ]
---       simp_rw [min_def, max_def, abs_ite_le]
---       split_ifs <;> nlinarith
---     rw [this]
---     apply IsCauSeq.mul
---     · intro ε hε
---       obtain ⟨i, hi⟩ := hx.hgap ε hε
---       use i
---       intro j hj
---       replace hi := hi j hj
---       simp_rw [abs_ite_le] at hi ⊢
---       split_ifs at hi ⊢
---       <;> dsimp at * <;> linarith
---     · exact IsCauSeq.const _
-
--- instance instComputableQMul [ComputableℝSeq x] : ComputableℝSeq (q * x) :=
---   mul_comm x q ▸ instComputableMulQ x q
-
-
 /-- "Bundled" multiplication to give lower and upper bounds. This bundling avoids the need to
   call lb and ub separately for each half (which, in a large product, leads to an exponential
   slowdown). This could be further optimized to use only two ℚ multiplications instead of four,
@@ -1025,10 +951,6 @@ theorem neg_eq_of_add (x y : ComputableℝSeq) (h : x + y = 0) : -x = y := by
   a * a⁻¹ ≠ 1, and (a⁻¹)⁻¹ ≠ a. This typeclass collects all these facts together.
 
 TODO could include mul_inv_rev, inv_eq_of_mul, intCast_ofNat, intCast_negSucc. -/
-/-TODO(mul_assoc)
-class CompSeqClass (G : Type u) extends
-  CommSemiring G, DivInvMonoid G, HasDistribNeg G, SubtractionCommMonoid G, IntCast G, RatCast G
--/
 class CompSeqClass (G : Type u) extends
   AddCommMonoid G, CommMagma G, MulZeroOneClass G, Inv G, Div G,
   HasDistribNeg G, SubtractionCommMonoid G, NatCast G, IntCast G, RatCast G
@@ -1076,15 +998,6 @@ noncomputable instance instSeqCompSeqClass : CompSeqClass ComputableℝSeq := by
             CauSeq.inf_idem, CauSeq.sup_idem, CauSeq.zero_apply, CauSeq.coe_inf, CauSeq.coe_sup,
             Pi.sup_apply, Pi.inf_apply, sup_eq_right, inf_eq_left, lb_le_ub a n]
        }
-
-/-TODO(mul_assoc)
-@[simp]
-theorem val_natpow (x : ComputableℝSeq) (n : ℕ): (x ^ n).val = x.val ^ n := by
-  induction n
-  · rw [pow_zero, val_one, pow_zero]
-  · rename_i ih
-    rw [pow_succ, pow_succ, val_mul, ih]
--/
 
 end semiring
 
