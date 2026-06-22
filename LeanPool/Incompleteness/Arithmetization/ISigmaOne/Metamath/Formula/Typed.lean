@@ -288,45 +288,6 @@ end Language
 
 end «lp_section_1»
 
-/-
-section typed_isfvfree
-
-namespace Language
-namespace Semiformula
-
-def FVFree (p : L.Semiformula n) : Prop := L.IsFVFree n p.val
-
-lemma FVFree.iff {p : L.Semiformula n} : p.FVFree ↔ p.shift = p := by
-  simp [FVFree, Language.IsFVFree, ext_iff]
-
-@[simp] lemma Fvfree.verum : (⊤ : L.Semiformula n).FVFree := by simp [FVFree]
-
-@[simp] lemma Fvfree.falsum : (⊥ : L.Semiformula n).FVFree := by simp [FVFree]
-
-@[simp] lemma Fvfree.and {p q : L.Semiformula n} :
-    (p ⋏ q).FVFree ↔ p.FVFree ∧ q.FVFree := by
-  simp [FVFree.iff, FVFree.iff]
-
-@[simp] lemma Fvfree.or {p q : L.Semiformula n} : (p ⋎ q).FVFree ↔ p.FVFree ∧ q.FVFree := by
-  simp [FVFree.iff]
-
-@[simp] lemma Fvfree.neg {p : L.Semiformula n} : (∼p).FVFree ↔ p.FVFree := by
-  simp [FVFree.iff]
-
-@[simp] lemma Fvfree.all {p : L.Semiformula (n + 1)} : p.all.FVFree ↔ p.FVFree := by
-  simp [FVFree.iff]
-
-@[simp] lemma Fvfree.ex {p : L.Semiformula (n + 1)} : p.ex.FVFree ↔ p.FVFree := by
-  simp [FVFree.iff]
-
-@[simp] lemma Fvfree.imp {p q : L.Semiformula n} : (p ==> q).FVFree ↔ p.FVFree ∧ q.FVFree := by
-  simp [FVFree.iff]
-
-end Semiformula
-end Language
-
-end typed_isfvfree
--/
 
 open Formalized
 

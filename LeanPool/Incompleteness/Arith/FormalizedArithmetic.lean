@@ -66,14 +66,6 @@ abbrev oneAbbrev {n} : ⌜ℒₒᵣ⌝[V].Semiterm n := (1 : V)
 /-- Imported declaration from the Incompleteness formalization. -/
 scoped notation "^1" => oneAbbrev
 
-/-
-section «lp_nc_section_2»
-
-def _root_.LO.FirstOrder.Arith.eqTheory : Sg1.Semisentence 0 := .mkSigma
-  “(∃ b0, !qqBvarDef b0 0 ∧ !qqAllDef )” (by simp)
-
-end «lp_nc_section_2»
--/
 
 variable (T : LOR.TTheory (V := V))
 

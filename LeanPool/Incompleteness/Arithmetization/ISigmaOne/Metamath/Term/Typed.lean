@@ -23,27 +23,6 @@ variable {V : Type*} [ORingStruc V] [V ⊧ₘ* 𝐈Sg1]
 
 variable {L : Arith.Language V} {pL : LDef} [Arith.Language.Defined L pL]
 
-/-
-section typed_fin
-
-structure TFin (n : V) where
-  val : V
-  prop : val < n
-
-attribute [simp] TFin.prop
-
-namespace TFin
-
-variable {n : V}
-
-lemma ext_iff {i j : TFin n} : i = j ↔ i.val = j.val := by rcases i; rcases j; simp
-
-@[ext] lemma ext {i j : TFin n} (h : i.val = j.val) : i = j := ext_iff.mpr h
-
-end TFin
-
-end typed_fin
--/
 
 section «lp_section_1»
 
@@ -415,39 +394,6 @@ variable {n : V}
 @[simp] lemma fvFree_mul (t₁ t₂ : ⌜ℒₒᵣ⌝.Semiterm n) :
     (t₁ * t₂).FVFree ↔ t₁.FVFree ∧ t₂.FVFree := by simp [Language.Semiterm.FVFree.iff]
 
-/-
-lemma replace {P : α → Prop} {x y} (hx : P x) (h : x = y) : P y := h ▸ hx
-
-lemma semiterm_induction (Γ) {n : V} {P : ⌜ℒₒᵣ⌝.Semiterm n → Prop}
-    (hP : Γ-[1]-Predicate (fun x ↦ (h : ⌜ℒₒᵣ⌝.IsSemiterm n x) → P ⟨x, h⟩))
-    (hBvar : ∀ (z : V) (h : z < n), P (⌜ℒₒᵣ⌝.bvar z h))
-    (hFvar : ∀ x, P (⌜ℒₒᵣ⌝.fvar x))
-    (hZero : P ((0 : V) : ⌜ℒₒᵣ⌝.Semiterm n))
-    (hOne : P ((1 : V) : ⌜ℒₒᵣ⌝.Semiterm n))
-    (hAdd : ∀ t₁ t₂, P t₁ → P t₂ → P (t₁ + t₂))
-    (hMul : ∀ t₁ t₂, P t₁ → P t₂ → P (t₁ * t₂)) :
-    ∀ (t : ⌜ℒₒᵣ⌝[V].Semiterm n), P t := by
-  let Q := fun x ↦ (h : ⌜ℒₒᵣ⌝.IsSemiterm n x) → P ⟨x, h⟩
-  suffices ∀ t, ⌜ℒₒᵣ⌝.IsSemiterm n t → Q t by intro t; exact this t.val t.prop t.prop
-  apply Language.IsSemiterm.induction Γ hP
-  case hbvar => intro z hz _; exact hBvar z hz
-  case hfvar => intro x _; exact hFvar x
-  case hfunc =>
-    intro k f v hf hv ih _
-    rcases (by simpa [func_iff] using hf) with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
-    · rcases (by simpa using hv)
-      exact replace hZero (by ext; simp [Formalized.zero, qqFunc_absolute])
-    · rcases (by simpa using hv)
-      exact replace hOne (by ext; simp [Formalized.one, qqFunc_absolute])
-    · rcases Language.IsSemitermVec.two_iff.mp hv with ⟨t₁, t₂, ht₁, ht₂, rfl⟩
-      exact hAdd ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩
-        (by simpa using ih 0 (by simp) (by simp [ht₁]))
-        (by simpa using ih 1 (by simp) (by simp [ht₂]))
-    · rcases Language.IsSemitermVec.two_iff.mp hv with ⟨t₁, t₂, ht₁, ht₂, rfl⟩
-      exact hMul ⟨t₁, ht₁⟩ ⟨t₂, ht₂⟩
-        (by simpa using ih 0 (by simp) (by simp [ht₁]))
-        (by simpa using ih 1 (by simp) (by simp [ht₂]))
--/
 
 end Formalized
 

@@ -391,12 +391,6 @@ lemma domain_subset_domain_of_subset {s t : V} (h : s ⊆ t) : domain s ⊆ doma
       intro h x hx
       exact h (π₁ x) ⟨π₂ x, by simpa using hx⟩, by rintro rfl; simp⟩
 
-/-
-@[simp] lemma domain_le_self {P : V → Prop}
-    (hempty : P ∅) (hinsert : ∀ s x, x ∉ s → P s → P (insert x s)) : ∀ x, P x := by {  }
-
-@[simp] lemma domain_le_self (P : V → Prop) (s : V) : domain s ≤ s := le_iff_lt_succ.mpr
--/
 
 end «lp_section_7»
 

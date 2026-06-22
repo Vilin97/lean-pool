@@ -75,12 +75,7 @@ lemma qqBvar_defined : Sg0-Function₁ (qqBvar : V → V) via qqBvarDef := by
   intro v
   suffices h : v 0 = ^#(v 1) ↔ ⟪0, v 1⟫ < v 0 ∧ v 0 = ⟪0, v 1⟫ + 1 by
     simpa [qqBvarDef] using h
-  constructor
-  · intro h
-    rw [h]
-    exact ⟨by simp [qqBvar], by simp [qqBvar]⟩
-  · rintro ⟨_, h⟩
-    exact h
+  exact ⟨fun h ↦ ⟨by simp [h, qqBvar], h⟩, fun h ↦ h.2⟩
 
 @[simp] lemma eval_qqBvarDef (v) :
     Semiformula.Evalbm V v qqBvarDef.val ↔ v 0 = ^#(v 1) := qqBvar_defined.df.iff v
@@ -93,12 +88,7 @@ lemma qqFvar_defined : Sg0-Function₁ (qqFvar : V → V) via qqFvarDef := by
   intro v
   suffices h : v 0 = ^&(v 1) ↔ ⟪1, v 1⟫ < v 0 ∧ v 0 = ⟪1, v 1⟫ + 1 by
     simpa [qqFvarDef] using h
-  constructor
-  · intro h
-    rw [h]
-    exact ⟨by simp [qqFvar], by simp [qqFvar]⟩
-  · rintro ⟨_, h⟩
-    exact h
+  exact ⟨fun h ↦ ⟨by simp [h, qqFvar], h⟩, fun h ↦ h.2⟩
 
 @[simp] lemma eval_qqFvarDef (v) :
     Semiformula.Evalbm V v qqFvarDef.val ↔ v 0 = ^&(v 1) := qqFvar_defined.df.iff v

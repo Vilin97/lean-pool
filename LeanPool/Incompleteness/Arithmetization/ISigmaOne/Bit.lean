@@ -728,18 +728,6 @@ theorem «finite_comprehension₁!» {P : V → Prop} (hP : Γ-[1]-Predicate P) 
       fun h ↦ (Hs i (mh i h)).mpr h⟩
   exact ExistsUnique.intro s H (fun s' H' ↦ mem_ext <| fun i ↦ by simp [H, H'])
 
-/-
-def setExt {Γ} (p : Dlt1.Semisentence (n + 1)) : Γ.Semisentence (n + 1) :=
-  match Γ with
-  | (Sg, m) => .mkSigma “u | ∀ x < u, x ∈ u ↔ !p x ⋯” (by {  })
-
-lemma set_iff {n} {f : (Fin n → V) → V} {R : (Fin (n + 1) → V) → Prop}
-    (hf : ∀ v x, x ∈ f v ↔ R (x :> v)) {Γ} (p : (Γ,
-        1).Semisentence (n + 1)) : DefinedFunction ℒₒᵣ (Γ, 1) f p := by
-      {
-
-     }
--/
 
 end «lp_section_7»
 

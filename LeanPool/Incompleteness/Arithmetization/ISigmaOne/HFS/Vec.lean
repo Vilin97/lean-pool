@@ -88,12 +88,7 @@ lemma cons_defined : Sg0-Function₂ (cons : V → V → V) via consDef := by
     Semiformula.eval_operator₂, Semiterm.val_operator₂, Semiterm.val_const,
     Structure.numeral_eq_numeral, ORingStruc.one_eq_one, Structure.Add.add, Structure.Eq.eq,
     LogicalConnective.Prop.and_eq, ↓existsAndEq, true_and]
-  constructor
-  · intro h
-    rw [h]
-    exact ⟨by simp [cons_def], by simp [cons_def]⟩
-  · rintro ⟨_, h⟩
-    exact h
+  exact ⟨fun h ↦ ⟨by simp [h, cons_def], h⟩, fun h ↦ h.2⟩
 
 @[simp] lemma eval_cons (v) :
     Semiformula.Evalbm V v consDef.val ↔ v 0 = v 1 ∷ v 2 := cons_defined.df.iff v
@@ -215,25 +210,14 @@ lemma graph_case {pr : V} :
 
 lemma graph_zero {v x : V} :
     Graph ⟪v, 0, x⟫ ↔ x = fstIdx v := by
-  constructor
-  · intro h
-    rcases graph_case.mp h with (⟨v, h⟩ | ⟨v, i, x, h, _⟩)
-    · simp only [pair_ext_iff, true_and] at h
-      rcases h with ⟨rfl, rfl⟩
-      rfl
-    · simp at h
-  · rintro rfl; exact graph_case.mpr <| Or.inl ⟨v, rfl⟩
+  refine ⟨fun h ↦ ?_, fun h ↦ h ▸ graph_case.mpr (Or.inl ⟨v, rfl⟩)⟩
+  rcases graph_case.mp h with (⟨v, h⟩ | ⟨v, i, x, h, _⟩) <;> simp_all [pair_ext_iff]
 
 lemma graph_succ {v i x : V} :
     Graph ⟪v, i + 1, x⟫ ↔ Graph ⟪sndIdx v, i, x⟫ := by
-  constructor
-  · intro h
-    rcases graph_case.mp h with (⟨v, h⟩ | ⟨v, i, x, h, hv⟩)
-    · simp at h
-    · simp only [pair_ext_iff, add_left_inj] at h
-      rcases h with ⟨rfl, rfl, rfl⟩
-      exact hv
-  · intro h; exact graph_case.mpr <| Or.inr ⟨v, i, x, rfl, h⟩
+  refine ⟨fun h ↦ ?_, fun h ↦ graph_case.mpr (Or.inr ⟨v, i, x, rfl, h⟩)⟩
+  rcases graph_case.mp h with (⟨v, h⟩ | ⟨v, i, x, h, hv⟩) <;>
+    simp_all [pair_ext_iff, add_left_inj]
 
 lemma graph_exists (v i : V) : ∃ x, Graph ⟪v, i, x⟫ := by
   suffices ∀ i' ≤ i, ∀ v' ≤ v, ∃ x, Graph ⟪v', i', x⟫ from this i (by simp) v (by simp)
@@ -519,25 +503,17 @@ lemma graph_case {pr : V} :
 
 lemma graph_nil {l : V} :
     c.Graph param ⟪0, l⟫ ↔ l = c.nil param := by
-  constructor
-  · intro h
-    rcases c.graph_case.mp h with (h | ⟨x, xs, ih, h, _⟩)
-    · simp only [pair_ext_iff, true_and] at h
-      rcases h with rfl
-      rfl
-    · simp at h
-  · rintro rfl; exact c.graph_case.mpr <| Or.inl rfl
+  refine ⟨fun h ↦ ?_, fun h ↦ h ▸ c.graph_case.mpr (Or.inl rfl)⟩
+  rcases c.graph_case.mp h with (h | ⟨x, xs, ih, h, _⟩) <;> simp_all [pair_ext_iff]
 
 lemma graph_cons {x xs y : V} :
     c.Graph param ⟪x ∷ xs, y⟫ ↔ ∃ y', y = c.cons param x xs y' ∧ c.Graph param ⟪xs, y'⟫ := by
-  constructor
-  · intro h
-    rcases c.graph_case.mp h with (h | ⟨x, xs, y, h, hg⟩)
-    · simp at h
-    · simp only [pair_ext_iff, cons_inj] at h
-      rcases h with ⟨⟨rfl, rfl⟩, rfl⟩
-      exact ⟨y, rfl, hg⟩
-  · rintro ⟨y, rfl, h⟩; exact c.graph_case.mpr <| Or.inr ⟨x, xs, y, rfl, h⟩
+  refine ⟨fun h ↦ ?_, fun ⟨y, hy, hg⟩ ↦ hy ▸ c.graph_case.mpr (Or.inr ⟨x, xs, y, rfl, hg⟩)⟩
+  rcases c.graph_case.mp h with (h | ⟨x, xs, y, h, hg⟩)
+  · simp at h
+  · simp only [pair_ext_iff, cons_inj] at h
+    rcases h with ⟨⟨rfl, rfl⟩, rfl⟩
+    exact ⟨y, rfl, hg⟩
 
 variable (param)
 
@@ -835,15 +811,6 @@ lemma listMaxss_le_iff {v z : V} : listMax v ≤ z ↔ ∀ i < len v, v.[i] ≤ 
   constructor
   · intro h i hi; exact le_trans (nth_le_listMax hi) h
   · exact listMaxss_le
-
-/-
-lemma nth_le_listMaxs (v : V) (hv : v ≠ 0) : ∃ i < len v, v.[i] = listMax v := by
-  induction v using cons_induction_sigma1
-  · definability
-  case nil => simp at hv
-  case cons x v ih =>
-    simp
--/
 
 end «lp_section_10»
 
