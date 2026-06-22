@@ -37,15 +37,12 @@ lemma normSq_nonneg (z : Fin 3 → ℝ) : 0 ≤ normSq z := by
   exact Finset.sum_nonneg fun i _ => mul_self_nonneg (a := z i)
 
 lemma normSq_eq_zero {z : Fin 3 → ℝ} : normSq z = 0 ↔ z = 0 := by
-  constructor
-  · intro h
-    unfold normSq dotProduct at h
-    ext i
-    have hsq : ∀ i ∈ Finset.univ, (0 : ℝ) ≤ z i * z i :=
-      fun i _ => mul_self_nonneg (a := z i)
-    have := (Finset.sum_eq_zero_iff_of_nonneg hsq).mp h i (Finset.mem_univ i)
-    exact mul_self_eq_zero.mp this
-  · rintro rfl; simp [normSq, dotProduct]
+  refine ⟨fun h => ?_, by rintro rfl; simp [normSq, dotProduct]⟩
+  unfold normSq dotProduct at h
+  ext i
+  exact mul_self_eq_zero.mp
+    ((Finset.sum_eq_zero_iff_of_nonneg fun i _ => mul_self_nonneg (a := z i)).mp h i
+      (Finset.mem_univ i))
 
 lemma normSq_pos {z : Fin 3 → ℝ} (hz : z ≠ 0) : 0 < normSq z :=
   lt_of_le_of_ne (normSq_nonneg z) (fun h => hz (normSq_eq_zero.mp h.symm))
@@ -225,8 +222,7 @@ lemma velocity_ibp
   -- Both sides equal Finset.sum over per-component integrals
   have lhs_eq : (fun v => vDiv F v * g v) = fun v =>
       ∑ i : Fin 3, fderiv ℝ (fun w => F w i) v (Pi.single i 1) * g v :=
-    funext fun v => by simp only [vDiv, Fin.sum_univ_three]
-                       ring
+    funext fun v => by simp only [vDiv, Fin.sum_univ_three]; ring
   have rhs_eq : (fun v => dotProduct (F v) (vGrad g v)) = fun v =>
       ∑ i : Fin 3, F v i * fderiv ℝ g v (Pi.single i 1) :=
     funext fun v => by simp only [dotProduct, vGrad, Fin.sum_univ_three]

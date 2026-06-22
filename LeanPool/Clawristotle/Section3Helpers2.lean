@@ -137,9 +137,7 @@ lemma D_zero_implies_maxwellian (Ψ : ℝ → ℝ) (f : (Fin 3 → ℝ) → ℝ)
     intro v
     rw [← Real.exp_log (hf_pos v)]
     congr 1
-    have := hquad v
-    simp only [Function.comp] at this
-    exact this
+    simpa only [Function.comp] using hquad v
   -- Step 5: c₀ < 0 from the form of f
   exact ⟨a₀, b, c₀, analysis_gaussian_integrability f a₀ b c₀ hf_pos hf_int hf_exp, hf_exp⟩
 

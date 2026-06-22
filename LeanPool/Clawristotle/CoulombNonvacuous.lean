@@ -261,10 +261,7 @@ lemma equilibriumMaxwellian_log_bound (ρ T : ℝ) (hρ : 0 < ρ) (hT : 0 < T) :
     ⟨fun N {k} _ => (equilibriumMaxwellian_schwartz_decay ρ T hρ hT N k).imp
       fun C hC => ⟨hC.1, fun _ v => hC.2 v⟩,
      fun N i => ⟨1, one_pos, fun x v => by
-      simp only [torusGradX, periodicLift]
-      have : (fun y => equilibriumMaxwellian ρ T v) ∘ torusMk =
-          fun _ => equilibriumMaxwellian ρ T v := by ext; rfl
-      rw [this]; simp⟩⟩
+      simp [torusGradX, periodicLift, Function.comp_def]⟩⟩
     ((equilibriumMaxwellian_exp_lower_bound ρ T hρ hT).imp
       fun C hC => hC.imp fun K hCK => fun _ => hCK)
   exact ⟨C_log, K_log, fun v => hbound default v⟩
@@ -387,10 +384,7 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρIon : ℝ)
     · -- hGradDecay: spatial gradient of constant function is 0
       intro N i
       refine ⟨1, one_pos, fun x v => ?_⟩
-      simp only [torusGradX, periodicLift]
-      have : (fun y => equilibriumMaxwellian ρIon T v) ∘ torusMk =
-          fun _ => equilibriumMaxwellian ρIon T v := by ext; rfl
-      rw [this]; simp
+      simp [torusGradX, periodicLift, Function.comp_def]
   -- (8) hGradBound: |∂eM/∂vᵢ| = |vᵢ/T| · eM ≤ (1+‖v‖)/T · eM
   · refine ⟨1 / T, 1, fun _ v i => ?_⟩
     rw [fderiv_equilibriumMaxwellian ρIon T hT v i]
@@ -409,10 +403,7 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρIon : ℝ)
     -- Spatial gradient of constant is 0
     have hgrad_zero : ∀ i : Fin 3,
         torusGradX (fun y => equilibriumMaxwellian ρIon T v) x i = 0 := by
-      intro i; simp only [torusGradX, periodicLift]
-      have : (fun y => equilibriumMaxwellian ρIon T v) ∘ torusMk =
-          fun _ => equilibriumMaxwellian ρIon T v := by ext; rfl
-      rw [this]; simp
+      intro i; simp [torusGradX, periodicLift, Function.comp_def]
     -- LandauOperator eM v = 0 because integrand vanishes
     suffices h : LandauOperator coulombKernel (equilibriumMaxwellian ρIon T) v = 0 by
       have hd : v ⬝ᵥ (fun i => torusGradX (fun y =>
@@ -447,8 +438,6 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρIon : ℝ)
         rw [hbracket, Matrix.mulVec_smul, landauMatrix_mulVec_self, smul_zero]
       simp [h_integrand]
     -- vDiv of zero function = 0
-    have : ∀ i, fderiv ℝ (fun w => (0 : Fin 3 → ℝ) i) v (Pi.single i 1) = 0 := by
-      intro i; simp
     conv => arg 2; rw [show (0:ℝ) = ν * 0 from by ring]
     simp only [hflux_zero]
     simp [ContinuousLinearMap.zero_apply]
@@ -460,9 +449,6 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρIon : ℝ)
     have hzero : ∀ (j : Fin 3) (p : Fin 3 → ℝ),
         fderiv ℝ (fun y => ((fun _ : Torus3 => (0 : ℝ)) ∘ torusMk) y) p (Pi.single j 1) = 0 := by
       intro j p
-      have : ((fun _ : Torus3 => (0 : ℝ)) ∘ torusMk) = fun _ => (0 : ℝ) := by ext; rfl
-      rw [show (fun y => ((fun _ : Torus3 => (0 : ℝ)) ∘ torusMk) y) =
-          (fun _ => (0 : ℝ)) from by ext; rfl]
       simp
     simp only [hzero, sub_self]
     -- ∫ vᵢ * eM = 0 by odd symmetry of Gaussian
@@ -476,8 +462,6 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρIon : ℝ)
         fderiv ℝ (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y)
           (torusMk_surjective x).choose (Pi.single j 1) = 0 := by
       intro j
-      rw [show (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) =
-          (fun _ => (0 : ℝ)) from by ext; simp]
       simp
     simp only [hzero, Finset.sum_const_zero]
     -- ∫ eM(v) dv = ρIon (Gaussian normalization)
@@ -489,8 +473,6 @@ theorem CoulombConcreteTheorem42_nonvacuous (ν T ρIon : ℝ)
         fderiv ℝ (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y)
           (torusMk_surjective x).choose (Pi.single j 1) = 0 := by
       intro j
-      rw [show (fun y => ((fun z : Torus3 => (0 : Fin 3 → ℝ) j) ∘ torusMk) y) =
-          (fun _ => (0 : ℝ)) from by ext; simp]
       simp
     simp only [hzero, Finset.sum_const_zero]
 

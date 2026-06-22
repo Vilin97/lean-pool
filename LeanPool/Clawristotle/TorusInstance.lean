@@ -77,23 +77,13 @@ private theorem killing_harmonic_rn' {n : ℕ} (b : (Fin n → ℝ) → (Fin n �
   have hK_fun : ∀ y, fderiv ℝ (fun z => b z j) y (Pi.single i 1) =
       -(fderiv ℝ (fun z => b z i) y (Pi.single j 1)) := by
     intro y; linarith [hKilling y i j]
-  have hfun_eq : (fun y => fderiv ℝ (fun z => b z j) y (Pi.single i 1)) =
-      (fun y => -(fderiv ℝ (fun z => b z i) y (Pi.single j 1))) := funext hK_fun
-  rw [hfun_eq]
-  have hdiff_j : Differentiable ℝ (fun y => fderiv ℝ (fun z => b z i) y (Pi.single j 1)) := by
-    have : ContDiff ℝ 1 (fun y => fderiv ℝ (fun z => b z i) y (Pi.single j 1)) := by
-      apply ContDiff.clm_apply
-      · exact (hb i).fderiv_right le_rfl
-      · exact contDiff_const
-    exact this.differentiable one_ne_zero
-  have hfun_neg : (fun y => -(fderiv ℝ (fun z => b z i) y (Pi.single j 1))) =
-      -(fun y => fderiv ℝ (fun z => b z i) y (Pi.single j 1)) := by ext; simp
-  rw [hfun_neg, fderiv_neg]
+  rw [funext hK_fun, show (fun y => -(fderiv ℝ (fun z => b z i) y (Pi.single j 1))) =
+      -(fun y => fderiv ℝ (fun z => b z i) y (Pi.single j 1)) from by ext; simp, fderiv_neg]
   simp only [ContinuousLinearMap.neg_apply, neg_eq_zero]
-  rw [clairaut_fderiv (fun z => b z i) x i j (hb i)]
-  have hK_diag_fun : (fun y => fderiv ℝ (fun z => b z i) y (Pi.single i 1)) = fun _ => 0 := by
-    ext y; linarith [hKilling y i i]
-  rw [hK_diag_fun]; simp
+  rw [clairaut_fderiv (fun z => b z i) x i j (hb i),
+    show (fun y => fderiv ℝ (fun z => b z i) y (Pi.single i 1)) = fun _ => 0 from by
+      ext y; linarith [hKilling y i i]]
+  simp
 
 /-- Irrotational + solenoidal → each component is harmonic on ℝⁿ. -/
 private theorem curl_div_harmonic_rn' {n : ℕ} (F : (Fin n → ℝ) → (Fin n → ℝ))
@@ -119,20 +109,18 @@ private theorem curl_div_harmonic_rn' {n : ℕ} (F : (Fin n → ℝ) → (Fin n 
     have : ContDiff ℝ 1 (fun y => fderiv ℝ (fun z => F z i) y (Pi.single i 1)) :=
       ContDiff.clm_apply ((hF i).fderiv_right le_rfl) contDiff_const
     exact (this.differentiable one_ne_zero).differentiableAt
-  have : ∑ i : Fin n,
+  have hap : ∑ i : Fin n,
         fderiv ℝ (fun y => fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x (Pi.single j 1) =
       (∑ i : Fin n,
         fderiv ℝ (fun y => fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x) (Pi.single j 1) :=
     (ContinuousLinearMap.sum_apply _ _ _).symm
-  rw [this]
+  rw [hap]
   have hfsum : (∑ i : Fin n, fderiv ℝ (fun y => fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x) =
       fderiv ℝ (fun y => ∑ i : Fin n, fderiv ℝ (fun z => F z i) y (Pi.single i 1)) x := by
     rw [fderiv_fun_sum (fun i _ => hdiff_comp i)]
-  rw [hfsum]
-  have hsum_fun :
-      (fun y => ∑ i : Fin n, fderiv ℝ (fun z => F z i) y (Pi.single i 1)) = fun _ => 0 :=
-    funext hdiv
-  rw [hsum_fun]; simp
+  rw [hfsum, show (fun y => ∑ i : Fin n, fderiv ℝ (fun z => F z i) y (Pi.single i 1)) =
+      fun _ => 0 from funext hdiv]
+  simp
 
 -- ============================================================================
 
@@ -310,15 +298,11 @@ theorem torus_hCurlZeroDivZeroHarmonic (F : Torus3 → Fin 3 → ℝ)
             torusGradX (fun w => F w 0) (torusMk y) 1] := rfl
     rw [hcurl_expand] at hcurl_y
     -- Extract the three symmetry conditions
-    have h0 : torusGradX (fun w => F w 2) (torusMk y) 1 =
-        torusGradX (fun w => F w 1) (torusMk y) 2 := by
-      have := congr_fun hcurl_y 0; simp at this; linarith
-    have h1 : torusGradX (fun w => F w 0) (torusMk y) 2 =
-        torusGradX (fun w => F w 2) (torusMk y) 0 := by
-      have := congr_fun hcurl_y 1; simp at this; linarith
-    have h2 : torusGradX (fun w => F w 1) (torusMk y) 0 =
-        torusGradX (fun w => F w 0) (torusMk y) 1 := by
-      have := congr_fun hcurl_y 2; simp at this; linarith
+    have h0 := congr_fun hcurl_y 0
+    have h1 := congr_fun hcurl_y 1
+    have h2 := congr_fun hcurl_y 2
+    simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.cons_val_two,
+      Matrix.tail_cons, Pi.zero_apply, sub_eq_zero] at h0 h1 h2
     fin_cases i <;> fin_cases j <;> simp_all
   -- Divergence-free in ℝⁿ form
   -- torusDivX F (torusMk y) = 0 gives the sum at x₀ = (torusMk_surjective (torusMk y)).choose.

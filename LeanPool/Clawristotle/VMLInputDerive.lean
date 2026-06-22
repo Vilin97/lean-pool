@@ -245,8 +245,7 @@ lemma _root_.VML.VMLInput.hJ_def' (p : VMLInput X) :
   have hform' : ∀ x, ∃ a₀, ∀ v,
       p.f x v = Real.exp (a₀ + dotProduct ((fun _ => p.b₀) x) v + p.c₀ * normSq v) :=
     hform
-  have := p.hJ_from_maxwellian (fun _ => p.b₀) p.c₀ hform'
-  exact this
+  exact p.hJ_from_maxwellian (fun _ => p.b₀) p.c₀ hform'
 
 /-- The drift parameter b₀ vanishes.
     Proof: Ampère + Stokes on T³ gives |u₀|² ∫ ρ = 0, and ∫ ρ > 0,
@@ -270,10 +269,7 @@ lemma _root_.VML.VMLInput.hb₀_zero (p : VMLInput X) : p.b₀ = 0 := by
     rwa [← FlatTorus3.hSpatialMul]
   -- Step 4: ∫ ρ > 0, so |u₀|² = 0, hence u₀ = 0
   have h5 : 0 < FlatTorus3.spatialIntegral p.ρ := FlatTorus3.hSpatialPos p.ρ p.hρ_cont p.hρ_pos
-  have h6 : normSq u₀ = 0 := by
-    rcases mul_eq_zero.mp h4 with h | h
-    · linarith
-    · exact h
+  have h6 : normSq u₀ = 0 := (mul_eq_zero.mp h4).resolve_left (by linarith)
   have hu₀ : u₀ = 0 := normSq_eq_zero.mp h6
   -- Step 5: (-1/(2c₀)) • b₀ = 0 and c₀ ≠ 0, so b₀ = 0
   have hcoeff_ne : (-1 : ℝ) / (2 * p.c₀) ≠ 0 := by

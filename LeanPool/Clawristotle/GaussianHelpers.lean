@@ -428,12 +428,10 @@ lemma current_density_of_gaussian
     (i : Fin 3) :
     ∫ v, v i * f v = (∫ v, f v) * ((-1 / (2 * c₀)) * b i) := by
   have hc₀_neg : c₀ < 0 := analysis_gaussian_integrability f a₀ b c₀ hf_pos hf_int hform
-  have h_int : Integrable (fun v : Fin 3 → ℝ =>
-      Real.exp (a₀ + dotProduct b v + c₀ * normSq v)) := hf_int.congr (by
-    filter_upwards [] with v; rw [hform])
   rw [show ∫ v, v i * f v = ∫ v, v i * Real.exp (a₀ + dotProduct b v + c₀ * normSq v) from
     congr_arg _ (funext fun v => by rw [hform]),
-    gaussian_first_moment a₀ b c₀ hc₀_neg h_int i,
+    gaussian_first_moment a₀ b c₀ hc₀_neg
+      (hf_int.congr (by filter_upwards [] with v; rw [hform])) i,
     show ∫ v : Fin 3 → ℝ, Real.exp (a₀ + dotProduct b v + c₀ * normSq v) = ∫ v, f v from
       congr_arg _ (funext fun v => by rw [hform])]
   ring

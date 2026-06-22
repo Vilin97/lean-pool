@@ -96,17 +96,11 @@ theorem landauMatrix_quadForm_eq_zero_iff {Ψ : ℝ → ℝ} {z : Fin 3 → ℝ}
                sq_nonneg (z 1 * Y 2 - z 2 * Y 1)]
   -- Step 4: Extract individual proportionality relations z_i * Y_j = z_j * Y_i
   have h01 : z 0 * Y 1 = z 1 * Y 0 := by
-    nlinarith [sq_nonneg (z 0 * Y 1 - z 1 * Y 0),
-               sq_nonneg (z 0 * Y 2 - z 2 * Y 0),
-               sq_nonneg (z 1 * Y 2 - z 2 * Y 1)]
+    nlinarith [hcross, sq_nonneg (z 0 * Y 2 - z 2 * Y 0), sq_nonneg (z 1 * Y 2 - z 2 * Y 1)]
   have h02 : z 0 * Y 2 = z 2 * Y 0 := by
-    nlinarith [sq_nonneg (z 0 * Y 1 - z 1 * Y 0),
-               sq_nonneg (z 0 * Y 2 - z 2 * Y 0),
-               sq_nonneg (z 1 * Y 2 - z 2 * Y 1)]
+    nlinarith [hcross, sq_nonneg (z 0 * Y 1 - z 1 * Y 0), sq_nonneg (z 1 * Y 2 - z 2 * Y 1)]
   have h12 : z 1 * Y 2 = z 2 * Y 1 := by
-    nlinarith [sq_nonneg (z 0 * Y 1 - z 1 * Y 0),
-               sq_nonneg (z 0 * Y 2 - z 2 * Y 0),
-               sq_nonneg (z 1 * Y 2 - z 2 * Y 1)]
+    nlinarith [hcross, sq_nonneg (z 0 * Y 1 - z 1 * Y 0), sq_nonneg (z 0 * Y 2 - z 2 * Y 0)]
   -- Step 5: Since z != 0, find a nonzero component and set l = Y_k / z_k
   have hne : ¬(z 0 = 0 ∧ z 1 = 0 ∧ z 2 = 0) :=
     fun ⟨h0, h1, h2⟩ => hz (funext fun i => by fin_cases i <;> assumption)

@@ -249,14 +249,12 @@ theorem Theorem42
     have hD_nonpos : ∀ x, entropyDissipation Ψ (f x) ≤ 0 := by
       intro x
       exact H_theorem Ψ (f x) (fun r => le_of_lt (hΨ r)) (hf_pos x) (hf_smooth x) (hSWF_all x)
-    have hD_int_zero : FlatTorus3.spatialIntegral (fun x => entropyDissipation Ψ (f x)) = 0 :=
-      hTransportEntropy
     intro x
     have hD_neg : ∀ y, 0 ≤ -(entropyDissipation Ψ (f y)) := fun y => neg_nonneg.mpr (hD_nonpos y)
     have hD_neg_int : FlatTorus3.spatialIntegral (fun y => -(entropyDissipation Ψ (f y))) = 0 := by
       have h := FlatTorus3.hSpatialMul (fun y => entropyDissipation Ψ (f y)) (-1)
       simp only [mul_neg_one] at h
-      linarith [hD_int_zero]
+      linarith [hTransportEntropy]
     linarith [FlatTorus3.hSpatialNonnegZero _ hDecay.hD_cont.neg hD_neg hD_neg_int x]
   -- Step 3: Apply the main theorem via VMLInput.
   have result := main_from_physics {
@@ -306,10 +304,8 @@ theorem Theorem42
     hPB_eq := hPB
     hNormalization := fun a₀ c₀ hc₀ hf_form hdens => by
       intro x v
-      have h_int : ∫ w : Fin 3 → ℝ, f x w = ρIon := by
-        rw [← hdens x]
       exact gaussian_normalization_maxwellian ρIon a₀ c₀ hρ_ion hc₀
-        (f x) (hf_form x) h_int v
+        (f x) (hf_form x) (by rw [← hdens x]) v
   }
   obtain ⟨eq, hf_eq, hE, hB⟩ := result
   exact ⟨eq.T, eq.B₀, eq.hT, hf_eq, hE, hB⟩

@@ -67,9 +67,7 @@ theorem electric_field_zero {X : Type*} [FlatTorus3 X] (ss : VMLSteadyState X) :
   -- hGradA : gradX aLoc x = 0
   rw [hGradA] at hfb
   -- hfb : 0 = -(2 * c₀) • E x
-  have hne : -(2 * ss.c₀) ≠ (0 : ℝ) := by nlinarith [ss.hc₀_neg]
-  have hsm : -(2 * ss.c₀) • ss.E x = 0 := hfb.symm
-  exact (smul_eq_zero.mp hsm).resolve_left hne
+  exact (smul_eq_zero.mp hfb.symm).resolve_left (by nlinarith [ss.hc₀_neg])
 
 /-- On a compact topological space, a continuous real-valued function attains
     its maximum. (Extreme value theorem.) -/

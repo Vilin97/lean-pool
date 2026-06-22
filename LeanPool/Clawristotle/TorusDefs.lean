@@ -252,8 +252,8 @@ theorem torus_hGradAdd' (f g : Torus3 → ℝ)
     Uses SigmaFinite (from CompactSpace + IsFiniteMeasure). -/
 theorem torus_hSpatialVelocityFubini (F : Torus3 → (Fin 3 → ℝ) → ℝ)
     (hF_joint : Integrable (Function.uncurry F) (volume.prod volume)) :
-    (∫ x, ∫ v, F x v) = ∫ v, ∫ x, F x v := by
-  exact integral_integral_swap hF_joint
+    (∫ x, ∫ v, F x v) = ∫ v, ∫ x, F x v :=
+  integral_integral_swap hF_joint
 
 -- ============================================================================
 -- Compact manifold axioms

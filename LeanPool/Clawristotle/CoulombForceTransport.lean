@@ -297,17 +297,12 @@ lemma force_ibp_fg_integrable_coulomb
     -- |log f - 1| ≤ |log f| + 1 ≤ (|C_log| + 1) * (1+‖v‖)^K_log
     have h1v : (1 : ℝ) ≤ (1 + ‖v‖) ^ K_log := one_le_pow₀ (by linarith [norm_nonneg v])
     have hlog_sub : |Real.log (f x v) - 1| ≤ (|C_log| + 1) * (1 + ‖v‖) ^ K_log := by
-      calc |Real.log (f x v) - 1|
-          = |Real.log (f x v) + (-1)| := by ring_nf
-        _ ≤ |Real.log (f x v)| + |-1| := by
-            have := norm_add_le (Real.log (f x v)) (-1)
-            rwa [show Real.log (f x v) + -1 = Real.log (f x v) - 1 from by ring,
-              Real.norm_eq_abs, Real.norm_eq_abs, Real.norm_eq_abs] at this
-        _ = |Real.log (f x v)| + 1 := by rw [abs_neg, abs_one]
-        _ ≤ |C_log| * (1 + ‖v‖) ^ K_log + 1 := by
-            linarith [le_trans (hLB x v) (mul_le_mul_of_nonneg_right (le_abs_self _)
-              (pow_nonneg (by linarith [norm_nonneg v]) _))]
-        _ ≤ (|C_log| + 1) * (1 + ‖v‖) ^ K_log := by nlinarith
+      have htri : |Real.log (f x v) - 1| ≤ |Real.log (f x v)| + 1 := by
+        have := abs_sub (Real.log (f x v)) 1
+        simpa using this
+      have hbnd := le_trans (hLB x v) (mul_le_mul_of_nonneg_right (le_abs_self _)
+        (pow_nonneg (by linarith [norm_nonneg v]) _))
+      nlinarith
     calc |(E x + cross v (B x)) i * (f x v * Real.log (f x v) - f x v)|
         = |(E x + cross v (B x)) i| * |f x v * Real.log (f x v) - f x v| := abs_mul _ _
       _ = |(E x + cross v (B x)) i| * (f x v * |Real.log (f x v) - 1|) := by rw [hab]
