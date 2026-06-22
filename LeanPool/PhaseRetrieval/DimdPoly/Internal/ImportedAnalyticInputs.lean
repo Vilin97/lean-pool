@@ -95,16 +95,13 @@ noncomputable def carrierArc (N : Nat) (k : Fin N) : CircleArc where
   left := (2 * Real.pi) * (k.1 : ℝ) / (N : ℝ)
   right := (2 * Real.pi) * ((k.1 + 1 : Nat) : ℝ) / (N : ℝ)
   left_le_right := by
-    have hNnat : 0 < N := Nat.lt_of_le_of_lt (Nat.zero_le k.1) k.2
-    have hN : 0 <= (N : ℝ) := by exact_mod_cast (Nat.le_of_lt hNnat)
+    have hN : 0 <= (N : ℝ) := by exact_mod_cast Nat.le_of_lt k.pos
     apply div_le_div_of_nonneg_right ?_ hN
     gcongr
     exact_mod_cast Nat.le_succ k.1
   width_le_period := by
-    have hNnat : 1 <= N :=
-      Nat.succ_le_of_lt (Nat.lt_of_le_of_lt (Nat.zero_le k.1) k.2)
-    have hNpos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast (Nat.lt_of_lt_of_le Nat.zero_lt_one hNnat)
-    have hNge : (1 : ℝ) <= (N : ℝ) := by exact_mod_cast hNnat
+    have hNpos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast k.pos
+    have hNge : (1 : ℝ) <= (N : ℝ) := by exact_mod_cast k.pos
     have hpi_nonneg : 0 <= (2 * Real.pi : ℝ) := by positivity
     have hwidth :
         (2 * Real.pi) * ((k.1 + 1 : Nat) : ℝ) / (N : ℝ) -
@@ -118,17 +115,14 @@ noncomputable def carrierArc (N : Nat) (k : Fin N) : CircleArc where
 theorem carrierArc_length {N : Nat} (k : Fin N) :
     arcLength (carrierArc N k) = (2 * Real.pi) / (N : ℝ) := by
   unfold arcLength carrierArc
-  have hNnat : 1 <= N :=
-    Nat.succ_le_of_lt (Nat.lt_of_le_of_lt (Nat.zero_le k.1) k.2)
-  have hNpos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast (Nat.lt_of_lt_of_le Nat.zero_lt_one hNnat)
+  have hNpos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast k.pos
   field_simp [ne_of_gt hNpos]
   norm_num
 
 theorem carrierArc_length_pos {N : Nat} (k : Fin N) :
     0 < arcLength (carrierArc N k) := by
   rw [carrierArc_length k]
-  have hNnat : 0 < N := Nat.lt_of_le_of_lt (Nat.zero_le k.1) k.2
-  have hNpos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hNnat
+  have hNpos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast k.pos
   positivity
 
 theorem carrierArc_left_nonneg {N : Nat} (k : Fin N) :
@@ -139,8 +133,7 @@ theorem carrierArc_left_nonneg {N : Nat} (k : Fin N) :
 theorem carrierArc_right_le_period {N : Nat} (k : Fin N) :
     (carrierArc N k).right <= 2 * Real.pi := by
   unfold carrierArc
-  have hNnat : 0 < N := Nat.lt_of_le_of_lt (Nat.zero_le k.1) k.2
-  have hNpos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hNnat
+  have hNpos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast k.pos
   have hle : ((k.1 + 1 : Nat) : ℝ) <= (N : ℝ) := by exact_mod_cast k.2
   have hT_nonneg : 0 <= (2 * Real.pi : ℝ) := by positivity
   calc
@@ -270,8 +263,10 @@ theorem μCircle_singleton (x : Circle) :
   have hcoef : ENNReal.ofReal (2 * Real.pi) ≠ 0 := by simp [ENNReal.ofReal_eq_zero, Real.pi_pos]
   simpa [μCircle] using (mul_eq_zero.mp hvol).resolve_left hcoef
 
-theorem carrierArc_arcSet_ae_eq_mk_image_Ioc {N : Nat} (k : Fin N) :
-    arcSet (carrierArc N k) =ᵐ[μCircle]
+private theorem carrierArc_arcSet_ae_eq_mk_image_Ioc_of_singleton_null
+    {N : Nat} (k : Fin N) (μ : MeasureTheory.Measure Circle)
+    (hsingleton : ∀ x : Circle, μ ({x} : Set Circle) = 0) :
+    arcSet (carrierArc N k) =ᵐ[μ]
       QuotientAddGroup.mk ''
         Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right) := by
   rw [carrierArc_arcSet_eq_mk_image_Ioc_union_left k]
@@ -279,45 +274,30 @@ theorem carrierArc_arcSet_ae_eq_mk_image_Ioc {N : Nat} (k : Fin N) :
     QuotientAddGroup.mk ''
       Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right)
   let e : Circle := QuotientAddGroup.mk ((carrierArc N k).left)
-  change (Set.union A ({e} : Set Circle)) =ᵐ[μCircle] A
+  change (Set.union A ({e} : Set Circle)) =ᵐ[μ] A
   rw [MeasureTheory.ae_eq_set]
   constructor
-  · refine MeasureTheory.measure_mono_null (μ := μCircle) (t := {e}) ?_
-      (μCircle_singleton e)
+  · refine MeasureTheory.measure_mono_null (μ := μ) (t := {e}) ?_ (hsingleton e)
     intro x hx
     rcases hx.1 with hxIoc | hxleft
     · exact False.elim (hx.2 hxIoc)
     · exact hxleft
-  · refine MeasureTheory.measure_mono_null (μ := μCircle) (t := (∅ : Set Circle)) ?_ ?_
+  · refine MeasureTheory.measure_mono_null (μ := μ) (t := (∅ : Set Circle)) ?_ ?_
     · intro x hx
       exact False.elim (hx.2 (Or.inl hx.1))
     · simp
 
+theorem carrierArc_arcSet_ae_eq_mk_image_Ioc {N : Nat} (k : Fin N) :
+    arcSet (carrierArc N k) =ᵐ[μCircle]
+      QuotientAddGroup.mk ''
+        Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right) :=
+  carrierArc_arcSet_ae_eq_mk_image_Ioc_of_singleton_null k μCircle μCircle_singleton
+
 theorem carrierArc_arcSet_ae_eq_mk_image_Ioc_volume {N : Nat} (k : Fin N) :
     arcSet (carrierArc N k) =ᵐ[(MeasureTheory.volume : MeasureTheory.Measure Circle)]
       QuotientAddGroup.mk ''
-        Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right) := by
-  rw [carrierArc_arcSet_eq_mk_image_Ioc_union_left k]
-  let A : Set Circle :=
-    QuotientAddGroup.mk ''
-      Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right)
-  let e : Circle := QuotientAddGroup.mk ((carrierArc N k).left)
-  change (Set.union A ({e} : Set Circle)) =ᵐ[(MeasureTheory.volume : MeasureTheory.Measure
-      Circle)] A
-  rw [MeasureTheory.ae_eq_set]
-  constructor
-  · refine MeasureTheory.measure_mono_null
-      (μ := (MeasureTheory.volume : MeasureTheory.Measure Circle)) (t := {e}) ?_
-      (volume_singleton_circle e)
-    intro x hx
-    rcases hx.1 with hxIoc | hxleft
-    · exact False.elim (hx.2 hxIoc)
-    · exact hxleft
-  · refine MeasureTheory.measure_mono_null
-      (μ := (MeasureTheory.volume : MeasureTheory.Measure Circle)) (t := (∅ : Set Circle)) ?_ ?_
-    · intro x hx
-      exact False.elim (hx.2 (Or.inl hx.1))
-    · simp
+        Set.Ioc ((carrierArc N k).left) ((carrierArc N k).right) :=
+  carrierArc_arcSet_ae_eq_mk_image_Ioc_of_singleton_null k _ volume_singleton_circle
 
 /-- `carrierAverage`: carrier Average. -/
 noncomputable def carrierAverage {N : Nat} (k : Fin N)
@@ -334,15 +314,7 @@ theorem continuous_arcParam (I : CircleArc) : Continuous (arcParam I) := by
     (continuous_const.add (continuous_id.mul continuous_const))
 
 theorem arcSet_eq_image (I : CircleArc) :
-    arcSet I = arcParam I '' Set.Icc (0 : ℝ) 1 := by
-  ext x
-  constructor
-  · intro hx
-    rcases hx with ⟨t, ht, rfl⟩
-    exact ⟨t, ht, rfl⟩
-  · intro hx
-    rcases hx with ⟨t, ht, rfl⟩
-    exact ⟨t, ht, rfl⟩
+    arcSet I = arcParam I '' Set.Icc (0 : ℝ) 1 := rfl
 
 theorem isCompact_arcSet (I : CircleArc) : IsCompact (arcSet I) := by
   rw [arcSet_eq_image]
@@ -609,8 +581,7 @@ private theorem carrierArc_interval_rho_sq_eq_full_circle
           ∂AddCircle.haarAddCircle) := by
   have hT_pos : (0 : ℝ) < 2 * Real.pi := by positivity
   have hT_ne : (2 * Real.pi : ℝ) ≠ 0 := ne_of_gt hT_pos
-  have hN_nat : 0 < N := Nat.lt_of_le_of_lt (Nat.zero_le k.1) k.2
-  have hN_pos : (0 : ℝ) < (↑N : ℝ) := Nat.cast_pos.mpr hN_nat
+  have hN_pos : (0 : ℝ) < (↑N : ℝ) := Nat.cast_pos.mpr k.pos
   have hN_ne : (↑N : ℝ) ≠ 0 := ne_of_gt hN_pos
   have fourier_rescale : ∀ s : ℝ,
       circleChar N (QuotientAddGroup.mk (s / ↑N) : Circle) =
@@ -693,8 +664,7 @@ private theorem carrierArc_interval_rho_sq_lower
     arcLength (carrierArc N k) * ‖q‖ ^ 2 / 8 <=
       ∫ t in (carrierArc N k).left..(carrierArc N k).right,
         (FockSPR.rho (circleChar N (QuotientAddGroup.mk t : Circle) * q)) ^ 2 := by
-  have hN_nat : 0 < N := Nat.lt_of_le_of_lt (Nat.zero_le k.1) k.2
-  have hN_pos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN_nat
+  have hN_pos : (0 : ℝ) < (N : ℝ) := by exact_mod_cast k.pos
   have hN_ne : (N : ℝ) ≠ 0 := ne_of_gt hN_pos
   have hrot := rotational_averaging_bound_complex q
   rw [carrierArc_interval_rho_sq_eq_full_circle k q]
@@ -769,9 +739,8 @@ theorem circleChar_carrierArc_arcParam {N : Nat} (k : Fin N) (t : ℝ) :
       Complex.exp (Complex.I * (2 * Real.pi * t)) := by
   rw [arcParam, circleChar_mk]
   unfold carrierArc arcLength
-  have hNnat : 0 < N := Nat.lt_of_le_of_lt (Nat.zero_le k.1) k.2
-  have hN : (N : ℂ) ≠ 0 := by exact_mod_cast (ne_of_gt hNnat)
-  have hNreal : (N : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt hNnat)
+  have hN : (N : ℂ) ≠ 0 := by exact_mod_cast (ne_of_gt k.pos)
+  have hNreal : (N : ℝ) ≠ 0 := by exact_mod_cast (ne_of_gt k.pos)
   have harg :
       Complex.I * (N : ℂ) *
           ↑((2 * Real.pi) * (k.1 : ℝ) / (N : ℝ) +
@@ -1499,14 +1468,20 @@ private theorem integrable_norm_sq_schwartz_realVec {d : Nat}
       (f := (f : RealVec d -> ℂ)) f.continuous.aestronglyMeasurable).mp
       (f.memLp 2 (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)))
 
+private theorem reflected_memLp_schwartz_realVec {d : Nat}
+    (h : SchwartzMap (RealVec d) ℂ) :
+    MemLp (fun y : RealVec d => h (-y)) 2
+      (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) := by
+  let μ : MeasureTheory.Measure (RealVec d) := MeasureTheory.volume
+  simpa [Function.comp_def, μ] using
+    (h.memLp 2 μ).comp_measurePreserving (Measure.measurePreserving_neg μ)
+
 private theorem integrable_norm_sq_neg_schwartz_realVec {d : Nat}
     (h : SchwartzMap (RealVec d) ℂ) :
     Integrable (fun y : RealVec d => ‖h (-y)‖ ^ 2)
       (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) := by
   let μ : MeasureTheory.Measure (RealVec d) := MeasureTheory.volume
-  have hmem : MemLp (fun y : RealVec d => h (-y)) 2 μ := by
-    simpa [Function.comp_def, μ] using
-      (h.memLp 2 μ).comp_measurePreserving (Measure.measurePreserving_neg μ)
+  have hmem : MemLp (fun y : RealVec d => h (-y)) 2 μ := reflected_memLp_schwartz_realVec h
   exact
     (MeasureTheory.memLp_two_iff_integrable_sq_norm
       (μ := μ) (f := fun y : RealVec d => h (-y))
@@ -1517,9 +1492,7 @@ private theorem integrable_norm_sq_translate_sub_schwartz_realVec {d : Nat}
     Integrable (fun y : RealVec d => ‖h (t - y)‖ ^ 2)
       (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) := by
   let μ : MeasureTheory.Measure (RealVec d) := MeasureTheory.volume
-  have hneg : MemLp (fun y : RealVec d => h (-y)) 2 μ := by
-    simpa [Function.comp_def, μ] using
-      (h.memLp 2 μ).comp_measurePreserving (Measure.measurePreserving_neg μ)
+  have hneg : MemLp (fun y : RealVec d => h (-y)) 2 μ := reflected_memLp_schwartz_realVec h
   have hcomp : MemLp (fun y : RealVec d => h (-(y - t))) 2 μ := by
     simpa [Function.comp_def, μ] using
       hneg.comp_measurePreserving (MeasureTheory.measurePreserving_sub_right μ t)
@@ -1680,14 +1653,6 @@ private theorem signal_autocorr_integrable_schwartz_realVec {d : Nat}
   refine hmul.congr ?_
   filter_upwards with t
   simp only [Pi.mul_apply, Pi.star_apply]
-
-private theorem reflected_memLp_schwartz_realVec {d : Nat}
-    (h : SchwartzMap (RealVec d) ℂ) :
-    MemLp (fun y : RealVec d => h (-y)) 2
-      (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)) := by
-  let μ : MeasureTheory.Measure (RealVec d) := MeasureTheory.volume
-  simpa [Function.comp_def, μ] using
-    (h.memLp 2 μ).comp_measurePreserving (Measure.measurePreserving_neg μ)
 
 private theorem window_autocorr_integrable_schwartz_realVec {d : Nat}
     (h : SchwartzMap (RealVec d) ℂ) (t x : RealVec d) :
@@ -2033,9 +1998,7 @@ private theorem tendsto_lintegral_filter_of_dominated_convergence_ae
     Tendsto (fun n => ∫⁻ a, F n a ∂μ) l (𝓝 <| ∫⁻ a, f a ∂μ) := by
   rw [tendsto_iff_seq_tendsto]
   intro x xl
-  have hxl := by
-    rw [tendsto_atTop'] at xl
-    exact xl
+  have hxl := tendsto_atTop'.mp xl
   have h := inter_mem hF_meas h_bound
   replace h := hxl _ h
   rcases h with ⟨k, h⟩
@@ -2644,6 +2607,17 @@ private theorem eLpNorm_stftRep_schwartz_eq {d : Nat}
               (MeasureTheory.volume : MeasureTheory.Measure (RealVec d))) := by
           rw [lpNorm_stftRep_schwartz_realVec]
 
+private theorem cross_norm_bound_tendsto_zero
+    {E : Type*} [NormedAddCommGroup E] {hN fN : Nat → E} {h f : E}
+    (hhN : Tendsto hN atTop (nhds h)) (hfN : Tendsto fN atTop (nhds f)) :
+    Tendsto (fun n : Nat => ‖fN n - f‖ * ‖hN n‖ + ‖f‖ * ‖hN n - h‖)
+      atTop (nhds 0) := by
+  have hf_err : Tendsto (fun n : Nat => ‖fN n - f‖) atTop (nhds 0) :=
+    tendsto_iff_norm_sub_tendsto_zero.mp hfN
+  have hh_err : Tendsto (fun n : Nat => ‖hN n - h‖) atTop (nhds 0) :=
+    tendsto_iff_norm_sub_tendsto_zero.mp hhN
+  simpa using (hf_err.mul hhN.norm).add (tendsto_const_nhds.mul hh_err)
+
 private theorem stftRep_tendsto_schwartzApprox_pointwise {d : Nat}
     (h f : L2Real d) (ξ : PhaseSpace d) :
     Tendsto
@@ -2663,24 +2637,8 @@ private theorem stftRep_tendsto_schwartzApprox_pointwise {d : Nat}
     simpa [hN, μ] using schwartzApproxRealVec_toLp_tendsto h
   have hfN : Tendsto fN atTop (nhds f) := by
     simpa [fN, μ] using schwartzApproxRealVec_toLp_tendsto f
-  have hf_err : Tendsto (fun n : Nat => ‖fN n - f‖) atTop (nhds 0) := by
-    have hf_const : Tendsto (fun _ : Nat => f) atTop (nhds f) := tendsto_const_nhds
-    simpa using (hfN.sub hf_const).norm
-  have hh_err : Tendsto (fun n : Nat => ‖hN n - h‖) atTop (nhds 0) := by
-    have hh_const : Tendsto (fun _ : Nat => h) atTop (nhds h) := tendsto_const_nhds
-    simpa using (hhN.sub hh_const).norm
-  have hh_norm : Tendsto (fun n : Nat => ‖hN n‖) atTop (nhds ‖h‖) := hhN.norm
-  have hbound_tendsto :
-      Tendsto
-        (fun n : Nat => ‖fN n - f‖ * ‖hN n‖ + ‖f‖ * ‖hN n - h‖)
-        atTop (nhds 0) := by
-    have h₁ : Tendsto (fun n : Nat => ‖fN n - f‖ * ‖hN n‖) atTop (nhds 0) := by
-      simpa using hf_err.mul hh_norm
-    have h₂ : Tendsto (fun n : Nat => ‖f‖ * ‖hN n - h‖) atTop (nhds 0) := by
-      simpa using (tendsto_const_nhds.mul hh_err)
-    simpa using h₁.add h₂
   rw [tendsto_iff_dist_tendsto_zero]
-  refine squeeze_zero (fun _ => dist_nonneg) ?_ hbound_tendsto
+  refine squeeze_zero (fun _ => dist_nonneg) ?_ (cross_norm_bound_tendsto_zero hhN hfN)
   intro n
   rw [dist_eq_norm]
   exact norm_stftRep_sub_le (hN n) h (fN n) f ξ
@@ -2914,23 +2872,8 @@ private theorem lpNorm_stftRep_tendsto_schwartzApprox {d : Nat}
     simpa [hN, μ] using schwartzApproxRealVec_toLp_tendsto h
   have hfN : Tendsto fN atTop (nhds f) := by
     simpa [fN, μ] using schwartzApproxRealVec_toLp_tendsto f
-  have hf_err : Tendsto (fun n : Nat => ‖fN n - f‖) atTop (nhds 0) := by
-    have hf_const : Tendsto (fun _ : Nat => f) atTop (nhds f) := tendsto_const_nhds
-    simpa using (hfN.sub hf_const).norm
-  have hh_err : Tendsto (fun n : Nat => ‖hN n - h‖) atTop (nhds 0) := by
-    have hh_const : Tendsto (fun _ : Nat => h) atTop (nhds h) := tendsto_const_nhds
-    simpa using (hhN.sub hh_const).norm
-  have hh_norm : Tendsto (fun n : Nat => ‖hN n‖) atTop (nhds ‖h‖) := hhN.norm
-  have hbound_tendsto :
-      Tendsto
-        (fun n : Nat => ‖fN n - f‖ * ‖hN n‖ + ‖f‖ * ‖hN n - h‖)
-        atTop (nhds 0) := by
-    have h₁ : Tendsto (fun n : Nat => ‖fN n - f‖ * ‖hN n‖) atTop (nhds 0) := by
-      simpa using hf_err.mul hh_norm
-    have h₂ : Tendsto (fun n : Nat => ‖f‖ * ‖hN n - h‖) atTop (nhds 0) := by
-      simpa using (tendsto_const_nhds.mul hh_err)
-    simpa using h₁.add h₂
-  refine squeeze_zero (fun _ => MeasureTheory.lpNorm_nonneg) ?_ hbound_tendsto
+  refine squeeze_zero (fun _ => MeasureTheory.lpNorm_nonneg) ?_
+    (cross_norm_bound_tendsto_zero hhN hfN)
   intro n
   simpa [hN, fN, μ, μP] using lpNorm_stftRep_sub_le (hN n) h (fN n) f
 
@@ -3161,20 +3104,8 @@ private theorem ambiguityRep_tendsto_schwartzApprox {d : Nat}
     (schwartzApproxRealVec (MeasureTheory.Lp.memLp f) n).toLp 2 μ
   have hfN : Tendsto fN atTop (nhds f) := by
     simpa [fN, μ] using schwartzApproxRealVec_toLp_tendsto f
-  have hf_err : Tendsto (fun n : Nat => ‖fN n - f‖) atTop (nhds 0) := by
-    have hf_const : Tendsto (fun _ : Nat => f) atTop (nhds f) := tendsto_const_nhds
-    simpa using (hfN.sub hf_const).norm
-  have hf_norm : Tendsto (fun n : Nat => ‖fN n‖) atTop (nhds ‖f‖) := hfN.norm
-  have hbound_tendsto :
-      Tendsto (fun n : Nat => ‖fN n - f‖ * ‖fN n‖ + ‖f‖ * ‖fN n - f‖)
-        atTop (nhds 0) := by
-    have h₁ : Tendsto (fun n : Nat => ‖fN n - f‖ * ‖fN n‖) atTop (nhds 0) := by
-      simpa using hf_err.mul hf_norm
-    have h₂ : Tendsto (fun n : Nat => ‖f‖ * ‖fN n - f‖) atTop (nhds 0) := by
-      simpa using (tendsto_const_nhds.mul hf_err)
-    simpa using h₁.add h₂
   rw [tendsto_iff_dist_tendsto_zero]
-  refine squeeze_zero (fun _ => dist_nonneg) ?_ hbound_tendsto
+  refine squeeze_zero (fun _ => dist_nonneg) ?_ (cross_norm_bound_tendsto_zero hfN hfN)
   intro n
   rw [dist_eq_norm]
   simpa [fN, μ] using norm_ambiguityRep_sub_le (fN n) f (fN n) f ξ
