@@ -62,11 +62,7 @@ lemma list_filterMap_eq_of_map_eq_map_some {f : α → Option β} :
     | some _ =>
       rw [hfa] at hf
       simp only [List.cons.injEq, Option.some.injEq] at hf ⊢
-      obtain ⟨hbb, hll⟩ := hf
-      constructor
-      · exact hbb
-      · apply list_filterMap_eq_of_map_eq_map_some
-        exact hll
+      exact ⟨hf.left, list_filterMap_eq_of_map_eq_map_some _ _ hf.right⟩
 
 lemma list_length_append_singleton_append (a b d : List α) (c : α) :
     (a ++ b ++ [c] ++ d).length = a.length + b.length + 1 + d.length := by
@@ -450,32 +446,22 @@ private def correspondingStrings {N₁ N₂ : Type} : List (nst T N₁ N₂) →
 
 private lemma correspondingStrings_self {N₁ N₂ : Type} {x : List (nst T N₁ N₂)} :
   correspondingStrings x x :=
-by
-  unfold correspondingStrings
-  rw [List.forall₂_same]
-  intros s _
-  exact correspondingSymbols_self s
+List.forall₂_same.← fun s _ => correspondingSymbols_self s
 
 private lemma correspondingStrings_nil {N₁ N₂ : Type} :
   @correspondingStrings T N₁ N₂ [] [] :=
-by
-  apply List.Forall₂.nil
+List.Forall₂.nil
 
 private lemma correspondingStrings_cons {N₁ N₂ : Type} {d₁ d₂ : nst T N₁ N₂}
   {l₁ l₂ : List (nst T N₁ N₂)} :
   correspondingStrings (d₁::l₁) (d₂::l₂) ↔ correspondingSymbols d₁ d₂ ∧ correspondingStrings l₁ l₂
     :=
-by
-  apply List.forall₂_cons
+List.forall₂_cons
 
 private lemma correspondingStrings_singleton {N₁ N₂ : Type} {s₁ s₂ : nst T N₁ N₂}
     (hss : correspondingSymbols s₁ s₂) :
   correspondingStrings [s₁] [s₂] :=
-by
-  rw [correspondingStrings_cons]
-  constructor
-  · exact hss
-  · exact correspondingStrings_nil
+correspondingStrings_cons.← ⟨hss, correspondingStrings_nil⟩
 
 private lemma correspondingStrings_append {N₁ N₂ : Type} {x₁ x₂ y₁ y₂ : List (nst T N₁ N₂)}
     (ass₁ : correspondingStrings x₁ y₁) (ass₂ : correspondingStrings x₂ y₂) :
@@ -504,16 +490,14 @@ private lemma correspondingStrings_reverse {N₁ N₂ : Type} {x y : List (nst T
   correspondingStrings x.reverse y.reverse :=
 by
   unfold correspondingStrings at *
-  rw [List.forall₂_reverse_iff]
-  exact hxy
+  rwa [List.forall₂_reverse_iff]
 
 private lemma correspondingStrings_of_reverse {N₁ N₂ : Type} {x y : List (nst T N₁ N₂)}
     (hxy : correspondingStrings x.reverse y.reverse) :
   correspondingStrings x y :=
 by
   unfold correspondingStrings at *
-  rw [List.forall₂_reverse_iff] at hxy
-  exact hxy
+  rwa [List.forall₂_reverse_iff] at hxy
 
 private lemma correspondingStrings_take {N₁ N₂ : Type} {x y : List (nst T N₁ N₂)}
     (n : ℕ) (hxy : correspondingStrings x y) :
@@ -533,10 +517,7 @@ private lemma correspondingStrings_split {N₁ N₂ : Type} {x y : List (nst T N
     (n : ℕ) (hxy : correspondingStrings x y) :
   correspondingStrings (x.take n) (y.take n) ∧
   correspondingStrings (x.drop n) (y.drop n) :=
-by
-  constructor
-  · exact correspondingStrings_take n hxy
-  · exact correspondingStrings_drop n hxy
+⟨correspondingStrings_take n hxy, correspondingStrings_drop n hxy⟩
 
 end correspondence_for_terminals
 
@@ -721,31 +702,8 @@ by
     | terminal t =>
       exact List.Forall₂.cons rfl ih
     | nonterminal n =>
-      cases n with
-      | inl n₀ =>
-        cases n₀ with
-        | none =>
-          cases z with
-          | nil => tauto
-          | cons a => cases a <;> tauto
-        | some n =>
-          cases n with
-          | inl n₁ =>
-            cases z with
-            | nil => tauto
-            | cons a => cases a <;> tauto
-          | inr n₂ =>
-            cases z with
-            | nil => tauto
-            | cons a => cases a <;> tauto
-      | inr t =>
-        cases t with
-        | inl t₁ =>
-          cases z with
-          | nil => tauto
-          | cons a => cases a <;> tauto
-        | inr t₂ =>
-          cases z with
+      rcases n with (_ | (_ | _)) | (_ | _) <;>
+        · cases z with
           | nil => tauto
           | cons a => cases a <;> tauto
 
@@ -765,31 +723,8 @@ by
     | terminal t =>
       exact List.Forall₂.cons rfl ih
     | nonterminal n =>
-      cases n with
-      | inl n₀ =>
-        cases n₀ with
-        | none =>
-          cases z with
-          | nil => tauto
-          | cons a => cases a <;> tauto
-        | some n =>
-          cases n with
-          | inl n₁ =>
-            cases z with
-            | nil => tauto
-            | cons a => cases a <;> tauto
-          | inr n₂ =>
-            cases z with
-            | nil => tauto
-            | cons a => cases a <;> tauto
-      | inr t =>
-        cases t with
-        | inl t₁ =>
-          cases z with
-          | nil => tauto
-          | cons a => cases a <;> tauto
-        | inr t₂ =>
-          cases z with
+      rcases n with (_ | (_ | _)) | (_ | _) <;>
+        · cases z with
           | nil => tauto
           | cons a => cases a <;> tauto
 
@@ -997,36 +932,8 @@ private lemma sum_of_min_lengths_eq {g₁ g₂ : Grammar T}
             (x.length - (r₁.inputR.length + (1 + (r₁.inputL.length + u.length))))))) =
       x.length :=
 by
-  have add_mirror : r₁.inputR.length + 1 + r₁.inputL.length = r₁.inputL.length + 1
-    + r₁.inputR.length := by
-    omega
-  rw [List.length_map, List.length_map, ←add_mirror] at critical
-  have min1 : min u.length x.length = u.length := by
-    apply min_eq_left
-    exact ul_le_xl
-  have min2 : min r₁.inputL.length (x.length - u.length) = r₁.inputL.length := by
-    clear * - critical
-    apply min_eq_left
-    apply le_trans _ critical
-    apply le_add_self
-  have min3 : min 1 (x.length - (r₁.inputL.length + u.length)) = 1 := by
-    clear * - critical
-    apply min_eq_left
-    omega
-  have min4 : min r₁.inputR.length (x.length - (1 + (r₁.inputL.length + u.length)))
-    = r₁.inputR.length := by
-    clear * - critical
-    apply min_eq_left
-    omega
-  rw [min1, min2, min3, min4]
-  rw [le_tsub_iff_right ul_le_xl] at critical
-  clear * - critical add_mirror
-  repeat rw [←add_assoc]
-  have sum_eq_sum : u.length + r₁.inputL.length + 1 + r₁.inputR.length = r₁.inputR.length + 1
-    + r₁.inputL.length + u.length := by
-    rw [add_mirror, add_assoc, add_assoc, add_comm, ←add_assoc _ 1 _]
-  rw [sum_eq_sum]
-  exact Nat.add_sub_of_le critical
+  simp only [List.length_map] at critical
+  omega
 
 private lemma segment_4_correspondingStrings {g₁ g₂ : Grammar T}
     {u : List (nst T g₁.nt g₂.nt)} {x : List (Symbol T g₁.nt)} {r₁ : Grule T g₁.nt}

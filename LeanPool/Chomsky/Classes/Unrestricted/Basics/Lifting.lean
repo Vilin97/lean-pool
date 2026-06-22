@@ -82,7 +82,7 @@ by
   rcases inje hGxn₀ with case_valu | case_none
   · exact x_neq case_valu
   rw [hGxn₀] at case_none
-  exact absurd case_none (Option.some_ne_none n₀)
+  exact Option.some_ne_none n₀ case_none
 
 end lifting_conditions
 
@@ -140,8 +140,7 @@ by
       use n₀
       have almost := congr_arg (Option.map G.liftNt) hn₀
       rw [lifted_grammar_inverse hn₀, Option.map_some] at almost
-      apply Option.some_injective
-      exact almost.symm
+      exact Option.some_injective _ almost.symm
     )
     with ⟨r₀, pre_in, preimage⟩
   constructor; swap
@@ -152,10 +151,7 @@ by
     clear * - hw₁
     rw [List.forall_mem_append_append] at hw₁ ⊢
     rw [List.forall_mem_append_append] at hw₁
-    constructor
-    · exact hw₁.left.left
-    constructor; swap
-    · exact hw₁.right.right
+    refine ⟨hw₁.left.left, ?_, hw₁.right.right⟩
     intro a a_in_ros
     cases a
     · simp [GoodLetter]
@@ -164,14 +160,8 @@ by
     rcases a_in_ros with ⟨s, -, a_from_s⟩
     rw [←a_from_s]
     cases s with
-    | terminal s' =>
-      exfalso
-      clear * - a_from_s
-      simp [liftSymbol] at a_from_s
-    | nonterminal s'' =>
-      simp only [GoodLetter, liftSymbol]
-      use s''
-      exact G.sinkNt_liftNt s''
+    | terminal s' => simp [liftSymbol] at a_from_s
+    | nonterminal s'' => exact ⟨s'', G.sinkNt_liftNt s''⟩
   use r₀
   constructor
   · exact pre_in

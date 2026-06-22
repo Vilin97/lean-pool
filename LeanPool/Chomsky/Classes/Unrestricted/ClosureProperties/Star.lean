@@ -59,8 +59,19 @@ section construction
 private def wrapSym {N : Type} : Symbol T N → ns T N :=
   liftSymbol Sum.inl
 
+private lemma wrapSym_nonterminal {N : Type} (n : N) :
+  [(Symbol.nonterminal ◄n : ns T N)] = List.map wrapSym [Symbol.nonterminal n] :=
+by apply List.map_singleton
+
 private def wrapGr {N : Type} : Grule T N → Grule T (nn N) :=
   liftRule Sum.inl
+
+private lemma derives_output_of_derives_input {g : Grammar T} {r₀ : Grule T g.nt}
+    {u₁ v₁ : List (Symbol T g.nt)} (orig_in : r₀ ∈ g.rules)
+    (hin : g.Derives [Symbol.nonterminal g.initial]
+      (u₁ ++ r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR ++ v₁)) :
+  g.Derives [Symbol.nonterminal g.initial] (u₁ ++ r₀.output ++ v₁) :=
+gr_deri_of_deri_tran hin ⟨r₀, orig_in, u₁, v₁, rfl, rfl⟩
 
 private def rulesThatScanTerminals (g : Grammar T) : List (Grule T (nn g.nt)) :=
   (allUsedTerminals g).map (fun t : T => Grule.mk [] ▶2 [Symbol.terminal t] [Symbol.terminal t, R])
@@ -860,14 +871,8 @@ by
                 | inl xiin =>
                   rw [List.mem_singleton] at xiin
                   rw [xiin]
-                  have last_step :
-                    g.Transforms
-                      (u₁ ++ r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR ++ v₁)
-                      (u₁ ++ r₀.output ++ v₁) := by
-                    use r₀, orig_in, u₁, v₁
-                  apply gr_deri_of_deri_tran _ last_step
-                  apply valid (u₁ ++ r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR ++ v₁)
-                  exact List.mem_of_getElem? xm_eq
+                  exact derives_output_of_derives_input orig_in
+                    (valid _ (List.mem_of_getElem? xm_eq))
                 | inr xiin =>
                   apply valid
                   exact List.mem_of_mem_drop xiin
@@ -1110,14 +1115,8 @@ by
         | inl xiin =>
           rw [List.mem_singleton] at xiin
           rw [xiin]
-          have last_step :
-            g.Transforms
-              (u₁ ++ r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR ++ v₁)
-              (u₁ ++ r₀.output ++ v₁) := by
-            use r₀, orig_in, u₁, v₁
-          apply gr_deri_of_deri_tran _ last_step
-          apply valid (u₁ ++ r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR ++ v₁)
-          exact List.mem_of_getElem? xm_eq
+          exact derives_output_of_derives_input orig_in
+            (valid _ (List.mem_of_getElem? xm_eq))
     simp [aft, ←wrap_orig]
     rfl
   · exfalso
@@ -1360,9 +1359,6 @@ private lemma case_3_le_u_len {g : Grammar T} {r₀ : Grule T g.nt}
   (w.flatten.map (@Symbol.terminal T (nn g.nt)) ++
       β.map (@Symbol.terminal T (nn g.nt)) ++ [@R T g.nt]).length ≤ u.length :=
 by
-  have very_middle : [@Symbol.nonterminal T _ ◄r₀.inputN] = List.map wrapSym
-    [Symbol.nonterminal r₀.inputN] := by
-    apply List.map_singleton
   by_contra! contr
   have contr' : u.length ≤ (w.flatten.map (@Symbol.terminal T (nn g.nt)) ++
       β.map (@Symbol.terminal T (nn g.nt))).length := by
@@ -1399,7 +1395,7 @@ by
       wrapSym := by
       obtain ⟨_, _, -⟩ := hbs
       simp_all
-    rw [very_middle, ←List.map_append_append] at Rin
+    rw [wrapSym_nonterminal, ←List.map_append_append] at Rin
     exact map_wrap_never_contains_R Rin
 
 private lemma case_3_lt_v'len {g : Grammar T} {r₀ : Grule T g.nt}
@@ -1415,9 +1411,6 @@ private lemma case_3_lt_v'len {g : Grammar T} {r₀ : Grule T g.nt}
   (r₀.inputL.map wrapSym ++ [Symbol.nonterminal ◄r₀.inputN] ++ r₀.inputR.map wrapSym).length
     < v'.length :=
 by
-  have very_middle : [@Symbol.nonterminal T _ ◄r₀.inputN] = List.map wrapSym
-    [Symbol.nonterminal r₀.inputN] := by
-    apply List.map_singleton
   cases hv' : v'.reverse with
   | nil =>
     exfalso
@@ -1429,7 +1422,7 @@ by
       simp [hv'] at left_half_rev
       exact left_half_rev.left.symm
     rw [hvₗ] at hv'
-    rw [very_middle, ←List.map_append_append] at right_half ⊢
+    rw [wrapSym_nonterminal, ←List.map_append_append] at right_half ⊢
     have right_middle := congr_arg
       (List.take
       ((r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR).map wrapSym).length)
@@ -1487,9 +1480,6 @@ by
     · exact v_eq
   | inr hypr =>
     rcases hypr with ⟨v', left_half, right_half⟩
-    have very_middle : [@Symbol.nonterminal T _ ◄r₀.inputN] = List.map wrapSym
-      [Symbol.nonterminal r₀.inputN] := by
-      apply List.map_singleton
     rw [List.append_assoc _ (γ.map wrapSym)] at left_half
     have v'_from_left := congr_arg (List.drop u.length) left_half
     simp only [List.drop_left'] at v'_from_left
@@ -1538,7 +1528,7 @@ by
               x₀.drop (r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR).length
           · rw [List.nil_append]
             congr
-            rw [List.map_cons, List.map_cons, List.flatten_cons, very_middle,
+            rw [List.map_cons, List.map_cons, List.flatten_cons, wrapSym_nonterminal,
                  ←List.map_append_append, List.append_assoc _ [H]] at right_half
             have taken := congr_arg
               (List.take
@@ -1611,7 +1601,7 @@ by
           rw [same_r_input_lengths,
               List.take_left,
               List.take_append_of_le_length lt_v'len.le,
-              very_middle,
+              wrapSym_nonterminal,
               ←List.map_append_append,
               v'_eq,
               List.take_append_of_le_length (by
@@ -1891,15 +1881,8 @@ by
                   | inl xiin =>
                     rw [List.mem_singleton] at xiin
                     rw [xiin]
-                    have last_step :
-                      g.Transforms
-                        (u₁ ++ r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR ++ v₁)
-                        (u₁ ++ r₀.output ++ v₁) := by
-                      use r₀, orig_in, u₁, v₁
-                    apply gr_deri_of_deri_tran _ last_step
-                    apply valid_x
-                      (u₁ ++ r₀.inputL ++ [Symbol.nonterminal r₀.inputN] ++ r₀.inputR ++ v₁)
-                    exact List.mem_of_getElem? xm_eq
+                    exact derives_output_of_derives_input orig_in
+                      (valid_x _ (List.mem_of_getElem? xm_eq))
                   | inr =>
                     apply valid_x
                     apply List.mem_of_mem_drop

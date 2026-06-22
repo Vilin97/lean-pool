@@ -67,9 +67,7 @@ rfl
 lemma replicate_succ_eq_append_singleton (s : α) (n : ℕ) :
   replicate n.succ s = replicate n s ++ [s] :=
 by
-  change replicate (n + 1) s = replicate n s ++ [s]
-  rw [replicate_add]
-  rfl
+  rw [show n.succ = n + 1 from rfl, replicate_add, replicate_one]
 
 end replicating_succ
 
@@ -79,16 +77,12 @@ private lemma cons_drop_succ {m : ℕ} (mlt : m < x.length) :
   x.drop m = x.get ⟨m, mlt⟩ :: x.drop m.succ :=
 by
   induction x generalizing m with
-  | nil =>
-    exfalso
-    rw [length] at mlt
-    exact Nat.not_lt_zero m mlt
+  | nil => exact absurd mlt (by simp)
   | cons d l ih =>
     cases m
-    · rw [get]
-      simp
-    rw [drop, drop, get]
-    apply ih
+    · simp [get]
+    · rw [drop, drop, get]
+      apply ih
 
 -- proof copied from https://github.com/leanprover/lean4/blob/master/src/Init/Data/List/Nat/TakeDrop.lean
 lemma take_append' (l₁ l₂ : List α) (n : ℕ) :
@@ -269,9 +263,7 @@ by
   | zero => rfl
   | succ m ih =>
     rw [replicate_succ, map_cons, sum_cons, ih, Nat.add_zero, ite_eq_right_iff]
-    intro impos
-    exfalso
-    exact hab impos
+    exact fun impos => absurd impos hab
 
 lemma countIn_singleton_eq (a : α) :
   countIn [a] a = 1 :=
@@ -285,10 +277,7 @@ lemma countIn_pos_of_in {a : α} (hax : a ∈ x) :
   countIn x a > 0 :=
 by
   induction x with
-  | nil =>
-    exfalso
-    rw [mem_nil_iff] at hax
-    exact hax
+  | nil => exact absurd hax (not_mem_nil)
   | cons d l ih =>
     by_contra contr
     rw [not_lt, Nat.le_zero] at contr
@@ -297,12 +286,9 @@ by
     simp at contr
     rcases hax with a_eq_d | a_in_l
     · exact contr.left a_eq_d.symm
-    specialize ih a_in_l
-    have zero_in_tail : countIn l a = 0 := by
-      unfold countIn
-      exact contr.right
+    have zero_in_tail : countIn l a = 0 := contr.right
     rw [zero_in_tail] at ih
-    exact Nat.lt_irrefl 0 ih
+    exact Nat.lt_irrefl 0 (ih a_in_l)
 
 lemma countIn_zero_of_notin {a : α} (hax : a ∉ x) :
   countIn x a = 0 :=
@@ -312,10 +298,7 @@ by
   | cons d l ih =>
     unfold countIn
     rw [map_cons, sum_cons, Nat.add_eq_zero_iff, ite_eq_right_iff]
-    constructor
-    · simp only [Nat.one_ne_zero]
-      exact (ne_of_not_mem_cons hax).symm
-    · exact ih (not_mem_of_not_mem_cons hax)
+    exact ⟨fun h => absurd h.symm (ne_of_not_mem_cons hax), ih (not_mem_of_not_mem_cons hax)⟩
 
 lemma countIn_flatten (L : List (List α)) (a : α) :
   countIn L.flatten a = sum (map (countIn · a) L) :=

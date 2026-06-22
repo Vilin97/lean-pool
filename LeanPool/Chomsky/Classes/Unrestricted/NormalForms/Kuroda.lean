@@ -94,32 +94,10 @@ by
           by rw [bef]; simp [gruleOfKurodaRule], by rw [aft]; simp [gruleOfKurodaRule]⟩
   · rintro ⟨r, rin, u, v, hruv⟩
     obtain ⟨r₀, rink, rfl⟩ := List.mem_map.mp rin
-    cases r₀ with
-    | two_two A B C D =>
-      obtain ⟨bef, aft⟩ := hruv
-      refine ⟨.two_two A B C D, rink, u, v, ?_, ?_⟩
-      · simp only [gruleOfKurodaRule] at bef
-        rw [bef]; simp
-      · simpa [gruleOfKurodaRule] using aft
-    | one_two A B C =>
-      obtain ⟨bef, aft⟩ := hruv
-      refine ⟨.one_two A B C, rink, u, v, ?_, ?_⟩
-      · simp only [gruleOfKurodaRule] at bef
-        rw [bef]; simp
-      · simpa [gruleOfKurodaRule] using aft
-    | one_one A t =>
-      obtain ⟨bef, aft⟩ := hruv
-      refine ⟨.one_one A t, rink, u, v, ?_, ?_⟩
-      · simp only [gruleOfKurodaRule] at bef
-        rw [bef]; simp
-      · simpa [gruleOfKurodaRule] using aft
-    | one_nil A =>
-      obtain ⟨bef, aft⟩ := hruv
-      refine ⟨.one_nil A, rink, u, v, ?_, ?_⟩
-      · simp only [gruleOfKurodaRule] at bef
-        rw [bef]; simp
-      · simp only [gruleOfKurodaRule] at aft
-        rw [aft]; simp
+    refine ⟨r₀, rink, u, v, ?_⟩
+    obtain ⟨bef, aft⟩ := hruv
+    cases r₀ <;>
+      simp_all [gruleOfKurodaRule]
 lemma KurodaGrammar.tran_rel_eq (k : KurodaGrammar T) :
   k.Transforms = (grammarOfKurodaGrammar k).Transforms :=
 by

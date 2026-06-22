@@ -51,11 +51,8 @@ by
       rw [List.mem_map] at rin
       rcases rin with ⟨r₀, rin₀, r_from_r₀⟩
       subst r_from_r₀
-      refine ⟨r₀, rin₀, y.reverse, x.reverse, ?_, ?_⟩
-      · rw [bef]
-        simp [List.reverse_append, List.append_assoc]
-      · rw [aft]
-        simp [List.reverse_append, List.append_assoc, List.reverse_reverse]
+      refine ⟨r₀, rin₀, y.reverse, x.reverse, ?_, ?_⟩ <;>
+        simp [bef, aft, List.reverse_append, List.append_assoc, List.reverse_reverse]
 
 private lemma reversed_word_in_original_language {g : CFG T} {w : List T}
     (hgw : w ∈ g.reverse.language) :
@@ -81,7 +78,6 @@ by
   rw [pre_rev] at hwL ⊢
   have finished_modulo_reverses := reversed_word_in_original_language hwL
   rw [dual_of_reversalGrammar]
-  rw [List.reverse_reverse] at finished_modulo_reverses
-  exact finished_modulo_reverses
+  rwa [List.reverse_reverse] at finished_modulo_reverses
 
 end Chomsky

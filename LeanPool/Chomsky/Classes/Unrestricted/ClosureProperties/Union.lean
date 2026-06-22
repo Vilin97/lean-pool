@@ -155,6 +155,13 @@ def lg₂ : LiftedGrammar T :=
     )
 
 
+private lemma good_initial_singleton {G : LiftedGrammar T} {a : Symbol T G.g.nt}
+    (ha : GoodLetter a) :
+  GoodString [a] := by
+  intro b hb
+  rw [List.mem_singleton] at hb
+  exact hb ▸ ha
+
 lemma in_L₁_or_L₂_of_in_union {w : List T}
     (hwgg : w ∈ (unionGrammar g₁ g₂).language) :
   w ∈ g₁.language ∨ w ∈ g₂.language :=
@@ -193,14 +200,7 @@ by
     rw [aft] at deri
     left
     change g₁.Derives _ _
-    have sinked := sink_deri lg₁ deri
-    clear * - sinked
-    specialize sinked (by
-        rw [GoodString]
-        intro a ha
-        cases ha with
-        | head => exact ⟨g₁.initial, rfl⟩
-        | tail _ h => exact (List.not_mem_nil h).elim)
+    have sinked := sink_deri lg₁ deri (good_initial_singleton ⟨g₁.initial, rfl⟩)
     convert sinked
     unfold sinkString
     exact filterMap_sinkSymbol_terminals lg₁.sinkNt w
@@ -209,27 +209,18 @@ by
     rw [aft] at deri
     right
     change g₂.Derives _ _
-    have sinked := sink_deri lg₂ deri
-    clear * - sinked
-    specialize sinked (by
-        rw [GoodString]
-        intro a ha
-        cases ha with
-        | head => exact ⟨g₂.initial, rfl⟩
-        | tail _ h => exact (List.not_mem_nil h).elim)
+    have sinked := sink_deri lg₂ deri (good_initial_singleton ⟨g₂.initial, rfl⟩)
     convert sinked
     unfold sinkString
     exact filterMap_sinkSymbol_terminals lg₂.sinkNt w
   · exfalso
     rcases List.mem_map.mp rin₁ with ⟨r₁, -, r_of_r₁⟩
-    rw [← r_of_r₁] at same_nt
-    rw [unionGrammar_initial] at same_nt
+    rw [← r_of_r₁, unionGrammar_initial] at same_nt
     simp only [liftRule, Function.comp_apply] at same_nt
     exact absurd same_nt (Option.some_ne_none _).symm
   · exfalso
     rcases List.mem_map.mp rin₂ with ⟨r₂, -, r_of_r₂⟩
-    rw [← r_of_r₂] at same_nt
-    rw [unionGrammar_initial] at same_nt
+    rw [← r_of_r₂, unionGrammar_initial] at same_nt
     simp only [liftRule, Function.comp_apply] at same_nt
     exact absurd same_nt (Option.some_ne_none _).symm
 
