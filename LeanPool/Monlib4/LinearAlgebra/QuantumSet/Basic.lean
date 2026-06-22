@@ -184,17 +184,9 @@ lemma QuantumSet.inner_modAut_right_conj [QuantumSet A] (a b : A) :
 lemma QuantumSet.inner_conj'' [QuantumSet A] (a b : A) :
     ⟪a, b⟫_ℂ =
       ⟪ha.modAut ((-(2 * k A) - 1) / 2) (star b),
-        ha.modAut ((-(2 * k A) - 1) / 2) (star a)⟫_ℂ :=
-calc
-  ⟪a, b⟫_ℂ = ⟪ha.modAut (-(2 * k A) - 1) (star b), star a⟫_ℂ := by
-    rw [inner_conj']
-  _ = ⟪ha.modAut ((-(2 * k A) - 1) / 2)
-        (ha.modAut ((-(2 * k A) - 1) / 2) (star b)), star a⟫_ℂ := by
-    rw [modAut_apply_modAut]
-    norm_num
-  _ = ⟪ha.modAut ((-(2 * k A) - 1) / 2) (star b),
         ha.modAut ((-(2 * k A) - 1) / 2) (star a)⟫_ℂ := by
-    rw [modAut_isSymmetric]
+  rw [inner_conj', ← modAut_isSymmetric, modAut_apply_modAut]
+  norm_num
 
 section Complex
 

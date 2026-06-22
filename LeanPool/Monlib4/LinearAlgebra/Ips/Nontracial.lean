@@ -178,11 +178,7 @@ theorem Nontracial.inner_symm [hφ : φ.IsFaithfulPosMap] (x y : ℍ) :
       rw [Matrix.trace_mul_cycle]
     _ = ((y * φ.matrix) * xᴴ).trace := by rw [Matrix.mul_assoc]
     _ = (φ.matrix * (φ.matrix⁻¹ * (y * φ.matrix)) * xᴴ).trace := by
-      have h :
-          φ.matrix * (φ.matrix⁻¹ * (y * φ.matrix)) * xᴴ =
-            (y * φ.matrix) * xᴴ := by
-        rw [Matrix.mul_inv_cancel_left_of_invertible]
-      rw [h]
+      rw [Matrix.mul_inv_cancel_left_of_invertible]
 
 end SingleBlock
 
@@ -202,6 +198,50 @@ open scoped ComplexOrder
     -- (Basis.ofVectorSpaceIndex ℂ _).toFinite
 
 open scoped Functional
+
+/-- Introduce the inner-product instances for a `PiMat` family in a proof. -/
+local syntax "withPiInnerTac" "[" term "]" : tactic
+local macro_rules
+  | `(tactic| withPiInnerTac[$ψ]) =>
+      `(tactic|
+        letI : _root_.NormedAddCommGroup (PiMat ℂ _ _) :=
+          Module.Dual.PiNormedAddCommGroup (φ := $ψ);
+        letI : _root_.InnerProductSpace ℂ (PiMat ℂ _ _) :=
+          Module.Dual.pi.InnerProductSpace (φ := $ψ))
+
+/-- Introduce the per-block inner-product instances for a `PiMat` family in a proof. -/
+local syntax "withPiBlockInnerTac" "[" term "]" : tactic
+local macro_rules
+  | `(tactic| withPiBlockInnerTac[$ψ]) =>
+      `(tactic|
+        withPiInnerTac[$ψ];
+        letI : ∀ i, _root_.NormedAddCommGroup (Matrix _ _ ℂ) :=
+          fun i => Module.Dual.NormedAddCommGroup ($ψ i);
+        letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix _ _ ℂ) :=
+          fun i => Module.Dual.InnerProductSpace (φ := $ψ i))
+
+/-- Introduce the topological/seminormed inner-product instances for a `PiMat` family. -/
+local syntax "withPiFullInnerTac" "[" term "]" : tactic
+local macro_rules
+  | `(tactic| withPiFullInnerTac[$ψ]) =>
+      `(tactic|
+        letI : _root_.NormedAddCommGroup (PiMat ℂ _ _) :=
+          Module.Dual.PiNormedAddCommGroup (φ := $ψ);
+        letI : _root_.TopologicalSpace (PiMat ℂ _ _) :=
+          (Module.Dual.PiNormedAddCommGroup (φ :=
+            $ψ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace;
+        letI : _root_.SeminormedAddCommGroup (PiMat ℂ _ _) :=
+          (Module.Dual.PiNormedAddCommGroup (φ := $ψ)).toSeminormedAddCommGroup;
+        letI : _root_.InnerProductSpace ℂ (PiMat ℂ _ _) :=
+          Module.Dual.pi.InnerProductSpace (φ := $ψ))
+
+/-- Introduce the inner-product instances for a single matrix functional in a proof. -/
+local syntax "withMatrixInnerTac" "[" term "]" : tactic
+local macro_rules
+  | `(tactic| withMatrixInnerTac[$φ]) =>
+      `(tactic|
+        letI : _root_.NormedAddCommGroup (Matrix _ _ ℂ) := Module.Dual.NormedAddCommGroup $φ;
+        letI : _root_.InnerProductSpace ℂ (Matrix _ _ ℂ) := Module.Dual.InnerProductSpace (φ := $φ))
 
 open scoped Classical in
 omit [DecidableEq k] in
@@ -226,8 +266,7 @@ omit [DecidableEq k] in
 theorem Nontracial.Pi.unit_adjoint_eq [hψ : ∀ i, (ψ i).IsFaithfulPosMap] :
     withPiInner[ψ]
     (LinearMap.adjoint (Algebra.linearMap ℂ (PiMat ℂ k s) : ℂ →ₗ[ℂ] PiMat ℂ k s) = pi ψ) := by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
+  withPiInnerTac[ψ]
   rw [← pi.IsFaithfulPosMap.adjoint_eq, LinearMap.adjoint_adjoint]
 
 /-- The positive-definite matrices associated to a faithful positive functional on each block. -/
@@ -271,22 +310,8 @@ theorem Module.Dual.pi.IsFaithfulPosMap.includeBlock_right_inner {k : Type _} [F
     {ψ : ∀ i : k, Module.Dual ℂ (Matrix (s i) (s i) ℂ)} [hψ : ∀ i : k, (ψ i).IsFaithfulPosMap]
     {i : k} (y : ∀ j : k, Matrix (s j) (s j) ℂ) (x : Matrix (s i) (s i) ℂ) :
     withPiInner[ψ] (⟪y, includeBlock x⟫_ℂ = ⟪y i, x⟫_ℂ) := by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.TopologicalSpace (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ :=
-      ψ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
-  letI : _root_.SeminormedAddCommGroup (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ := ψ)).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ i)
-  letI : ∀ i, _root_.TopologicalSpace (Matrix (s i) (s i) ℂ) :=
-    fun i => (Module.Dual.NormedAddCommGroup (ψ
-      i)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
-  letI : ∀ i, _root_.SeminormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => (Module.Dual.NormedAddCommGroup (ψ i)).toSeminormedAddCommGroup
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ i)
+  withPiFullInnerTac[ψ]
+  withPiBlockInnerTac[ψ]
   calc
     ⟪y, includeBlock x⟫_ℂ = star ⟪includeBlock x, y⟫_ℂ :=
       (inner_conj_symm y (includeBlock x)).symm
@@ -307,14 +332,8 @@ theorem pi_includeBlock_right_rankOne [hψ : ∀ i, (ψ i).IsFaithfulPosMap]
     (b : ℍ_ i) (c : PiMat ℂ k s) (j : k₂) :
     withPiInner[ψ] (withPiInner[ψ₂]
     |a⟩⟨includeBlock b| c j = ⟪b, c i⟫_ℂ • a j) := by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := ψ₂)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ := ψ₂)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ i)
+  withPiBlockInnerTac[ψ]
+  withPiInnerTac[ψ₂]
   simp only [rankOne_apply, pi.IsFaithfulPosMap.includeBlock_left_inner, Pi.smul_apply]
 
 open scoped Classical in
@@ -326,14 +345,8 @@ theorem pi_includeBlock_left_rankOne [hψ : ∀ i, (ψ i).IsFaithfulPosMap]
     |includeBlock a⟩⟨b| c j =
       ⟪b, c⟫_ℂ • dite (i = j) (fun h => by rw [← h]; exact a) fun h => 0) :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := ψ₂)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ := ψ₂)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s₂ i) (s₂ i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ₂ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s₂ i) (s₂ i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ₂ i)
+  withPiInnerTac[ψ]
+  withPiBlockInnerTac[ψ₂]
   simp only [rankOne_apply, Pi.smul_apply,
     includeBlock_apply, smul_dite, smul_zero]
   rfl
@@ -514,12 +527,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.toMatrix_eq_orthonormalBasis_toMatrix
     (pi.IsFaithfulPosMap.toMatrix fun i => (hψ i)) x =
       (pi.IsFaithfulPosMap.orthonormalBasis hψ).toMatrix x :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ i)
+  withPiBlockInnerTac[ψ]
   ext
   simp_rw [pi.IsFaithfulPosMap.toMatrix_apply', OrthonormalBasis.toMatrix_apply,
     pi.IsFaithfulPosMap.orthonormalBasis_apply, pi.IsFaithfulPosMap.includeBlock_left_inner,
@@ -548,12 +556,7 @@ lemma Module.Dual.pi.IsFaithfulPosMap.orthonormalBasis_eq_toBasis
   withPiInner[ψ]
   (IsFaithfulPosMap.orthonormalBasis hψ).toBasis = IsFaithfulPosMap.basis hψ :=
 by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ i)
+  withPiBlockInnerTac[ψ]
   ext
   simp_rw [OrthonormalBasis.coe_toBasis, pi.IsFaithfulPosMap.orthonormalBasis_apply,
     pi.IsFaithfulPosMap.basis_apply]
@@ -571,18 +574,8 @@ theorem Module.Dual.pi.IsFaithfulPosMap.linearMap_eq [hψ : ∀ i, (ψ i).IsFait
               (Module.Dual.pi.IsFaithfulPosMap.basis hψ₂ a)
               (Module.Dual.pi.IsFaithfulPosMap.basis hψ b)).toLinearMap) :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := ψ₂)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ := ψ₂)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ i)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s₂ i) (s₂ i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ₂ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s₂ i) (s₂ i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ₂ i)
+  withPiBlockInnerTac[ψ]
+  withPiBlockInnerTac[ψ₂]
   simp_rw [pi.IsFaithfulPosMap.basis_apply, ← pi.IsFaithfulPosMap.orthonormalBasis_apply]
   rw [← _root_.Matrix.toLin_apply_rankOne, ← LinearMap.toMatrix_symm]
   simp only [orthonormalBasis_eq_toBasis, toMatrixLinEquiv,
@@ -621,18 +614,8 @@ theorem Module.Dual.pi.IsFaithfulPosMap.toMatrixLinEquiv_rankOne_apply [hψ : �
             (reshape (y j.fst * (hψ j.1).matrixIsPosDef.rpow (1 / 2 : ℝ))))ᴴ)
         i.2 j.2) :=
 by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := ψ₂)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ := ψ₂)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ i)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s₂ i) (s₂ i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ₂ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s₂ i) (s₂ i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ₂ i)
+  withPiBlockInnerTac[ψ]
+  withPiBlockInnerTac[ψ₂]
   ext
   simp_rw [pi.IsFaithfulPosMap.toMatrixLinEquiv_apply', ContinuousLinearMap.coe_coe,
     _root_.rankOne_apply,
@@ -793,10 +776,8 @@ theorem Module.Dual.pi.IsFaithfulPosMap.psiInvFun'_apply [hψ : ∀ i, (ψ i).Is
       |Module.Dual.pi.IsFaithfulPosMap.sig hψ (-t)
           x⟩⟨Module.Dual.pi.IsFaithfulPosMap.sig hψ₂ (-r) (star (MulOpposite.unop y))|) :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := ψ₂)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ := ψ₂)
+  withPiInnerTac[ψ]
+  withPiInnerTac[ψ₂]
   -- letI : ∀ i, StarModule ℂ (Matrix ((fun i : k => s i) i) ((fun i : k => s i) i) ℂ) :=
   --   by
   --   intro i
@@ -817,10 +798,8 @@ theorem Module.Dual.pi.IsFaithfulPosMap.Psi_left_inv [hψ : ∀ i, (ψ i).IsFait
         (Module.Dual.pi.IsFaithfulPosMap.psiToFun' hψ₂ hψ t r |x⟩⟨y|) =
       |x⟩⟨y|) :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := ψ₂)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ := ψ₂)
+  withPiInnerTac[ψ]
+  withPiInnerTac[ψ₂]
   rw [Module.Dual.pi.IsFaithfulPosMap.psiToFun'_apply,
     Module.Dual.pi.IsFaithfulPosMap.psiInvFun'_apply]
   simp_rw [LinearEquiv.coe_coe, op_apply, MulOpposite.unop_op, star_star,
@@ -836,10 +815,8 @@ theorem Module.Dual.pi.IsFaithfulPosMap.Psi_right_inv [hψ : ∀ i, (ψ i).IsFai
         (Module.Dual.pi.IsFaithfulPosMap.psiInvFun' hψ hψ₂ t r (x ⊗ₜ[ℂ] y)) =
       x ⊗ₜ[ℂ] y) :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := ψ₂)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ := ψ₂)
+  withPiInnerTac[ψ]
+  withPiInnerTac[ψ₂]
   rw [Module.Dual.pi.IsFaithfulPosMap.psiInvFun'_apply,
     Module.Dual.pi.IsFaithfulPosMap.psiToFun'_apply]
   simp_rw [LinearEquiv.coe_coe, Module.Dual.pi.IsFaithfulPosMap.sig_apply_sig, add_neg_self,
@@ -855,19 +832,13 @@ noncomputable def Module.Dual.pi.IsFaithfulPosMap.psi (hψ : ∀ i, (ψ i).IsFai
   { toFun := fun x => Module.Dual.pi.IsFaithfulPosMap.psiToFun' hψ hψ₂ t r x
     invFun := fun x => Module.Dual.pi.IsFaithfulPosMap.psiInvFun' hψ₂ hψ t r x
     left_inv := fun x => by
-      letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-      letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-      letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := ψ₂)
-      letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ :=
-        ψ₂)
+      withPiInnerTac[ψ]
+      withPiInnerTac[ψ₂]
       obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne x
       simp only [map_sum, Module.Dual.pi.IsFaithfulPosMap.Psi_left_inv]
     right_inv := fun x => by
-      letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-      letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-      letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := ψ₂)
-      letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ :=
-        ψ₂)
+      withPiInnerTac[ψ]
+      withPiInnerTac[ψ₂]
       obtain ⟨α, β, rfl⟩ := x.eq_span
       simp only [Module.Dual.pi.IsFaithfulPosMap.Psi_right_inv, map_sum]
     map_add' := fun x y => by simp_rw [map_add]
@@ -880,12 +851,7 @@ theorem Pi.inner_symm [hψ : ∀ i, (ψ i).IsFaithfulPosMap] (x y : PiMat ℂ k 
     withPiInner[ψ]
     (⟪x, y⟫_ℂ = ⟪Module.Dual.pi.IsFaithfulPosMap.sig hψ (-1) (star y), star x⟫_ℂ) :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ i)
+  withPiBlockInnerTac[ψ]
   simp_rw [Module.Dual.pi.IsFaithfulPosMap.inner_eq', ← Module.Dual.IsFaithfulPosMap.inner_eq',
     Nontracial.inner_symm (x _)]
   rfl
@@ -898,12 +864,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.sig_adjoint [hψ : ∀ i, (ψ i).IsFaith
       PiMat ℂ k s ≃ₐ[ℂ] PiMat ℂ k s).toLinearMap =
       (Module.Dual.pi.IsFaithfulPosMap.sig hψ t).toLinearMap :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ i)
+  withPiBlockInnerTac[ψ]
   rw [LinearMap.ext_iff_inner_map]
   intro x
   simp_rw [LinearMap.adjoint_inner_left, AlgEquiv.toLinearMap_apply,
@@ -917,8 +878,7 @@ theorem Module.Dual.IsFaithfulPosMap.norm_eq {ψ : Module.Dual ℂ (Matrix n n �
     [hψ : ψ.IsFaithfulPosMap] (x : Matrix n n ℂ) :
     withMatrixInner[ψ] (‖x‖ = Real.sqrt (RCLike.re (ψ (xᴴ * x)))) :=
   by
-  letI : _root_.NormedAddCommGroup (Matrix n n ℂ) := Module.Dual.NormedAddCommGroup ψ
-  letI : _root_.InnerProductSpace ℂ (Matrix n n ℂ) := Module.Dual.InnerProductSpace (φ := ψ)
+  withMatrixInnerTac[ψ]
   simp_rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), ← Module.Dual.IsFaithfulPosMap.inner_eq]
 
 open scoped Classical in
@@ -926,13 +886,7 @@ omit [DecidableEq k] [(i : k) → DecidableEq (s i)] in
 theorem Module.Dual.pi.IsFaithfulPosMap.norm_eq {ψ : ∀ i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
     [hψ : Π i, (ψ i).IsFaithfulPosMap] (x : Π i, Matrix (s i) (s i) ℂ) :
     withPiInner[ψ] (‖x‖ = Real.sqrt (RCLike.re (pi ψ (star x * x)))) := by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.TopologicalSpace (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ :=
-      ψ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
-  letI : _root_.SeminormedAddCommGroup (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ := ψ)).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
+  withPiFullInnerTac[ψ]
   simp_rw [← Module.Dual.pi.IsFaithfulPosMap.inner_eq]
   exact norm_eq_sqrt_re_inner (𝕜 := ℂ) x
 
@@ -966,20 +920,8 @@ theorem Pi.rankOneLm_real_apply {k₂ : Type*} [Fintype k₂]
     LinearMap.real (rankOne ℂ x y : (PiMat ℂ k₂ s₂) →ₗ[ℂ] (PiMat ℂ k s)) =
       rankOne ℂ (star x) (Module.Dual.pi.IsFaithfulPosMap.sig hφ (-1) (star y))) :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.TopologicalSpace (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ :=
-      ψ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
-  letI : _root_.SeminormedAddCommGroup (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ := ψ)).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := φ)
-  letI : _root_.TopologicalSpace (PiMat ℂ k₂ s₂) :=
-    (Module.Dual.PiNormedAddCommGroup (φ :=
-      φ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
-  letI : _root_.SeminormedAddCommGroup (PiMat ℂ k₂ s₂) :=
-    (Module.Dual.PiNormedAddCommGroup (φ := φ)).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ := φ)
+  withPiFullInnerTac[ψ]
+  withPiFullInnerTac[φ]
   rw [LinearMap.ext_iff]
   intro x_1
   simp only [LinearMap.real_apply, ContinuousLinearMap.coe_coe, rankOne_apply,
@@ -1009,13 +951,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.inner_left_conj'
     withPiInner[ψ]
       (⟪a, b * c⟫_ℂ =
         ⟪a * Module.Dual.pi.IsFaithfulPosMap.sig hψ (-1) (star c), b⟫_ℂ) := by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.TopologicalSpace (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ :=
-      ψ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
-  letI : _root_.SeminormedAddCommGroup (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ := ψ)).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
+  withPiFullInnerTac[ψ]
   simp_rw [Module.Dual.pi.IsFaithfulPosMap.sig_apply, neg_neg, Pi.PosDef.rpow_one_eq_self,
     Pi.PosDef.rpow_neg_one_eq_inv_self, ← Module.Dual.pi.matrixBlock_apply, ←
     Module.Dual.pi.IsFaithfulPosMap.inner_left_conj]
@@ -1028,13 +964,7 @@ theorem Module.Dual.pi.IsFaithfulPosMap.inner_right_conj'
     withPiInner[ψ]
       (⟪a * c, b⟫_ℂ =
         ⟪a, b * Module.Dual.pi.IsFaithfulPosMap.sig hψ (-1) (star c)⟫_ℂ) := by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.TopologicalSpace (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ :=
-      ψ)).toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
-  letI : _root_.SeminormedAddCommGroup (PiMat ℂ k s) :=
-    (Module.Dual.PiNormedAddCommGroup (φ := ψ)).toSeminormedAddCommGroup
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
+  withPiFullInnerTac[ψ]
   rw [← inner_conj_symm, Module.Dual.pi.IsFaithfulPosMap.inner_left_conj', inner_conj_symm]
 
 omit [Fintype k] [DecidableEq k] in
@@ -1108,18 +1038,8 @@ theorem LinearMap.pi.adjoint_real_eq {k₂ : Type*} [Fintype k₂]
       (Module.Dual.pi.IsFaithfulPosMap.sig hψ 1).toLinearMap ∘ₗ
         (LinearMap.adjoint f.real) ∘ₗ (Module.Dual.pi.IsFaithfulPosMap.sig hφ (-1)).toLinearMap) :=
   by
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := Module.Dual.PiNormedAddCommGroup (φ := ψ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := Module.Dual.pi.InnerProductSpace (φ := ψ)
-  letI : _root_.NormedAddCommGroup (PiMat ℂ k₂ s₂) := Module.Dual.PiNormedAddCommGroup (φ := φ)
-  letI : _root_.InnerProductSpace ℂ (PiMat ℂ k₂ s₂) := Module.Dual.pi.InnerProductSpace (φ := φ)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (ψ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s i) (s i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := ψ i)
-  letI : ∀ i, _root_.NormedAddCommGroup (Matrix (s₂ i) (s₂ i) ℂ) :=
-    fun i => Module.Dual.NormedAddCommGroup (φ i)
-  letI : ∀ i, _root_.InnerProductSpace ℂ (Matrix (s₂ i) (s₂ i) ℂ) :=
-    fun i => Module.Dual.InnerProductSpace (φ := φ i)
+  withPiBlockInnerTac[ψ]
+  withPiBlockInnerTac[φ]
   rw [LinearMap.ext_iff]
   intro x
   apply ext_inner_right ℂ

@@ -68,12 +68,9 @@ open Submodule LinearMap
 theorem IsIdempotentElem.mem_range_iff {p : E →ₗ[R] E} (hp : IsIdempotentElem p) {x : E} :
     x ∈ range p ↔ p x = x := by
   simp_rw [mem_range]
-  constructor
-  · rintro ⟨y, hy⟩
-    nth_rw 1 [← hy]
-    rw [← mul_apply, hp.eq, hy]
-  · intro h
-    use x
+  refine ⟨fun ⟨y, hy⟩ => ?_, fun h => ⟨x, h⟩⟩
+  nth_rw 1 [← hy]
+  rw [← mul_apply, hp.eq, hy]
 
 variable {U V : Submodule R E} {q : E →ₗ[R] E} (hq : IsIdempotentElem q)
 
@@ -223,12 +220,9 @@ lemma subtype_compL_ker [InnerProductSpace 𝕜 E] (U : Submodule 𝕜 E)
     (U.subtypeL ∘L f).ker = f.ker := by
   ext x
   change U.subtypeL (f x) = 0 ↔ f x = 0
-  constructor
-  · intro h
-    exact Subtype.ext h
-  · intro h
-    rw [h]
-    simp
+  refine ⟨fun h => Subtype.ext h, fun h => ?_⟩
+  rw [h]
+  simp
 
 
 lemma orthogonalProjection.isOrthogonalProjection [InnerProductSpace 𝕜 E]
@@ -250,13 +244,11 @@ theorem IsIdempotentElem.isCompl_range_ker {V R : Type _} [Semiring R] [AddCommG
   · rw [disjoint_iff]
     ext x
     simp only [Submodule.mem_bot, Submodule.mem_inf, LinearMap.mem_ker, LinearMap.mem_range]
-    constructor
-    · intro h'
-      rcases h'.2 with ⟨y, hy⟩
+    refine ⟨fun h' => ?_, fun h' => ?_⟩
+    · rcases h'.2 with ⟨y, hy⟩
       rw [← hy, ← IsIdempotentElem.eq h, Module.End.mul_apply, hy]
       exact h'.1
-    · intro h'
-      rw [h', map_zero]
+    · rw [h', map_zero]
       simp only [true_and]
       use x
       simp only [h', map_zero]
@@ -333,8 +325,7 @@ section
 /-- instance for `≤` on linear maps -/
 instance LinearMap.IsSymmetric.hasLe {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E] : LE (E →ₗ[𝕜] E) :=
-  by
-  exact { le := fun u v => (v - u : E →ₗ[𝕜] E).IsPositive' }
+  { le := fun u v => (v - u : E →ₗ[𝕜] E).IsPositive' }
 
 /-- The subtype of symmetric linear endomorphisms of a complex inner product space. -/
 @[reducible]
@@ -387,12 +378,9 @@ theorem LinearMap.IsPositive'.hasLe {E : Type _} [NormedAddCommGroup E] [InnerPr
 
 noncomputable instance IsSymmetric.hasZero {E : Type _} [NormedAddCommGroup E]
     [InnerProductSpace ℂ E] : Zero ↥{x : E →ₗ[ℂ] E | x.IsSymmetric} :=
-  by
-  fconstructor
-  fconstructor
-  · exact 0
-  · simp_rw [Set.mem_setOf_eq, LinearMap.IsSymmetric, LinearMap.zero_apply, inner_zero_left,
-      inner_zero_right, forall_const]
+  ⟨⟨0, by
+    simp_rw [Set.mem_setOf_eq, LinearMap.IsSymmetric, LinearMap.zero_apply, inner_zero_left,
+      inner_zero_right, forall_const]⟩⟩
 
 /-- saying `p` is positive is the same as saying `0 ≤ p` -/
 theorem LinearMap.IsPositive'.is_nonneg {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
@@ -618,14 +606,10 @@ theorem Submodule.le_finrank_one
   simp_rw [Submodule.zero_eq_bot]
   constructor
   · intro h
-    have : Module.finrank R V ≤ 1 := by
-      rw [← hU]
-      apply Submodule.finrank_mono h
-    have : Module.finrank R V = 0 ∨ Module.finrank R V = 1 := Order.le_succ_bot_iff.mp this
-    rcases this with (this_1 | this_1)
-    · simp only [Submodule.finrank_eq_zero] at this_1
-      right
-      exact this_1
+    have : Module.finrank R V ≤ 1 := by rw [← hU]; exact Submodule.finrank_mono h
+    have h01 : Module.finrank R V = 0 ∨ Module.finrank R V = 1 := Order.le_succ_bot_iff.mp this
+    rcases h01 with this_1 | this_1
+    · exact Or.inr (Submodule.finrank_eq_zero.mp this_1)
     · left
       apply eq_of_le_of_finrank_eq h
       simp_rw [this_1, hU]
@@ -693,15 +677,9 @@ theorem normalize_op [InnerProductSpace ℂ E] (x : E) :
     (∃ (y : E) (r : ℝ), ‖y‖ = 1 ∧ x = (r : ℂ) • y) ∨ x = 0 :=
   by
   by_cases A : x = 0
-  · right
-    exact A
-  · have B : ‖x‖ ≠ 0 := by
-      simp only [ne_eq, norm_eq_zero]
-      exact A
-    left
-    use ((1 / ‖x‖) • x)
-    use‖x‖
-    constructor
+  · exact Or.inr A
+  · have B : ‖x‖ ≠ 0 := by simpa only [ne_eq, norm_eq_zero]
+    refine Or.inl ⟨(1 / ‖x‖) • x, ‖x‖, ?_, ?_⟩
     · simp_rw [norm_smul, one_div, norm_inv, norm_norm, mul_comm, mul_inv_cancel₀ B]
     · simp_rw [one_div, Complex.coe_smul, smul_inv_smul₀ B]
 
@@ -789,6 +767,11 @@ theorem orthogonal_projection_iff [InnerProductSpace 𝕜 E] [FiniteDimensional 
     --   rw [← LinearMap.range_of_isProj hp]
     --   simp only [range_toLinearMap]
 
+private theorem starProjection_isProj [InnerProductSpace 𝕜 E] (U : Submodule 𝕜 E)
+    [U.HasOrthogonalProjection] : LinearMap.IsProj U (↥P U) :=
+  ⟨Submodule.starProjection_apply_mem U,
+    fun _ hx => Submodule.starProjection_eq_self_iff.mpr hx⟩
+
 /-- a linear operator is an orthogonal projection onto a submodule, if and only if
   it is a self-adjoint linear projection onto the submodule;
   also see `orthogonal_projection_iff` -/
@@ -799,20 +782,9 @@ theorem orthogonal_projection_iff' [InnerProductSpace 𝕜 E] [FiniteDimensional
   constructor
   · intro h
     rw [← h]
-    refine ⟨orthogonalProjection_isSelfAdjoint _, ?_⟩
-    apply LinearMap.IsProj.mk
-    · intro x
-      exact Submodule.starProjection_apply_mem U x
-    · intro x hx
-      exact Submodule.starProjection_eq_self_iff.mpr hx
+    exact ⟨orthogonalProjection_isSelfAdjoint _, starProjection_isProj U⟩
   · rintro ⟨h, h2⟩
-    have hp : LinearMap.IsProj U (p : E →ₗ[𝕜] E) :=
-      by
-      apply LinearMap.IsProj.mk
-      · intro x
-        exact h2.1 x
-      · intro x hx
-        exact h2.2 x hx
+    have hp : LinearMap.IsProj U (p : E →ₗ[𝕜] E) := ⟨h2.1, h2.2⟩
     have : IsIdempotentElem p :=
       by
       rw [IsIdempotentElem.clm_to_lm]
@@ -844,27 +816,16 @@ theorem orthogonalProjection.isMinimalProjection_to_clm [InnerProductSpace 𝕜 
     [FiniteDimensional 𝕜 E] [CompleteSpace E] (U : Submodule 𝕜 E) :
     (↥P U).IsMinimalProjection U ↔ orthogonalProjection.IsMinimalProjection U :=
   by
-  constructor
-  · intro h
-    exact h.2.1
-  · intro h
-    refine ⟨orthogonalProjection_isSelfAdjoint U, h, ?_⟩
-    apply LinearMap.IsProj.mk
-    · intro x
-      exact Submodule.starProjection_apply_mem U x
-    · intro x hx
-      exact Submodule.starProjection_eq_self_iff.mpr hx
+  exact ⟨fun h => h.2.1,
+    fun h => ⟨orthogonalProjection_isSelfAdjoint U, h, starProjection_isProj U⟩⟩
 
 theorem Submodule.isOrtho_iff_inner_eq' {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E] {U W : Submodule 𝕜 E} :
     U ⟂ W ↔ ∀ (u : ↥U) (w : ↥W), inner 𝕜 (u : E) (w : E) = 0 :=
   by
   rw [Submodule.isOrtho_iff_inner_eq]
-  constructor
-  · intro h u w
-    exact h _ (SetLike.coe_mem _) _ (SetLike.coe_mem _)
-  · intro h x hx y hy
-    exact h ⟨x, hx⟩ ⟨y, hy⟩
+  exact ⟨fun h u w => h _ (SetLike.coe_mem _) _ (SetLike.coe_mem _),
+    fun h x hx y hy => h ⟨x, hx⟩ ⟨y, hy⟩⟩
 
 -- moved from `ips.lean`
 /-- `U` and `W` are mutually orthogonal if and only if `(P U).comp (P W) = 0`,
@@ -945,13 +906,9 @@ lemma LinearMap.isOrthogonalProjection_iff
   by
   rw [ContinuousLinearMap.isOrthogonalProjection_iff',
     isSelfAdjoint_toContinuousLinearMap]
-  constructor
-  · intro h
-    exact ⟨by simpa using (IsIdempotentElem.clm_to_lm.mp h.1), h.2⟩
-  · intro h
-    exact ⟨by
-      rw [IsIdempotentElem.clm_to_lm]
-      simpa using h.1, h.2⟩
+  refine ⟨fun h => ⟨by simpa using (IsIdempotentElem.clm_to_lm.mp h.1), h.2⟩, fun h => ⟨?_, h.2⟩⟩
+  rw [IsIdempotentElem.clm_to_lm]
+  simpa using h.1
 end
 
 lemma lmul_isIdempotentElem_iff {R A : Type*} [CommSemiring R]

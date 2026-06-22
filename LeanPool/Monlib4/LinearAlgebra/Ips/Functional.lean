@@ -373,6 +373,14 @@ theorem Module.Dual.isFaithful_of_matrix (φ : Module.Dual 𝕜 (Matrix n n 𝕜
   simp_rw [posSemidef_iff, exists_imp, Module.Dual.IsFaithful, forall_eq_apply_imp_iff,
     conjTranspose_mul_self_eq_zero, star_eq_conjTranspose]
 
+omit [DecidableEq n] in
+/-- The quadratic form `star y ⬝ᵥ Q *ᵥ y` equals `(Q * vecMulVec y (star y)).trace`. -/
+private lemma Matrix.dotProduct_mulVec_eq_trace_vecMulVec (Q : Matrix n n ℂ) (y : n → ℂ) :
+    star y ⬝ᵥ Q *ᵥ y = (Q * vecMulVec y (star y)).trace := by
+  rw [vecMulVec_eq Unit, trace_mul_cycle', ← replicateCol_mulVec]
+  simp_rw [Matrix.trace_iff', replicateRow_mul_replicateCol_apply, Fintype.univ_punit,
+    Finset.sum_const, Finset.card_singleton, nsmul_eq_mul, Nat.cast_one, one_mul]
+
 /--
 A linear functional $f$ is positive if and only if there exists a unique positive semi-definite
 matrix $Q\in M_n$ such that $f(x)=\operatorname{Tr}(Qx)$ for all $x\in M_n$.
@@ -383,14 +391,7 @@ theorem Module.Dual.isPosMap_iff_of_matrix (φ : Module.Dual ℂ (Matrix n n ℂ
   · intro hs
     rw [Module.Dual.isPosMap_of_matrix] at hs
     simp only [Module.Dual.apply] at hs
-    have thiseq : ∀ y, star y ⬝ᵥ φ.matrix *ᵥ y = (φ.matrix * vecMulVec y (star y)).trace :=
-      by
-      intro y
-      rw [vecMulVec_eq Unit, trace_mul_cycle', ← replicateCol_mulVec]
-      simp_rw [Matrix.trace_iff', replicateRow_mul_replicateCol_apply, Fintype.univ_punit,
-        Finset.sum_const,
-        Finset.card_singleton, nsmul_eq_mul, Nat.cast_one, one_mul]
-    simp_rw [PosSemidef.complex, thiseq]
+    simp_rw [PosSemidef.complex, Matrix.dotProduct_mulVec_eq_trace_vecMulVec]
     intro y
     exact hs (vecMulVec y (star y)) (vecMulVec_posSemidef _)
   · intro hy y
@@ -420,13 +421,7 @@ theorem Module.Dual.IsPosMap.isFaithful_iff_of_matrix {φ : Module.Dual ℂ (Mat
     intro HHH
     · refine Matrix.PosDef.of_dotProduct_mulVec_pos hs.1 ?_
       intro x hx
-      have : star x ⬝ᵥ φ.matrix.mulVec x = (φ.matrix * vecMulVec x (star x)).trace :=
-        by
-        rw [vecMulVec_eq Unit, trace_mul_cycle', ← replicateCol_mulVec]
-        simp_rw [Matrix.trace_iff', replicateRow_mul_replicateCol_apply, Fintype.univ_punit,
-          Finset.sum_const,
-          Finset.card_singleton, nsmul_eq_mul, Nat.cast_one, one_mul]
-      rw [this]
+      rw [Matrix.dotProduct_mulVec_eq_trace_vecMulVec]
       have this2 := HHH (vecMulVec x (star x)) (vecMulVec_posSemidef _)
       have this3 := hs' (vecMulVec x (star x)) (vecMulVec_posSemidef _)
       rw [le_iff_eq_or_lt] at this3
@@ -507,6 +502,43 @@ def Module.Dual.IsTracial {A : Type _} [NonUnitalSemiring A] [Module 𝕜 A] (φ
     Prop :=
   ∀ x y : A, φ (x * y) = φ (y * x)
 
+/-- Shared core of the tracial-positivity characterisations: a positive semidefinite tracial
+matrix is the scalar `RCLike.re (φ.matrix i i)` times the identity, and that scalar is
+nonnegative. -/
+private lemma Module.Dual.tracial_posSemidef_matrix_eq_re_smul_one
+    {φ : Module.Dual ℂ (Matrix n n ℂ)} (hQ : φ.matrix.PosSemidef) (h2 : φ.IsTracial) (i : n) :
+    0 ≤ RCLike.re (φ.matrix i i) ∧
+      φ.matrix = ((RCLike.re (φ.matrix i i) : ℝ) : ℂ) • 1 := by
+  simp_rw [Module.Dual.IsTracial, Module.Dual.apply, Matrix.trace, Matrix.diag,
+    mul_apply] at h2
+  set Q := φ.matrix with hQdef
+  have hdiag : ∀ p q r : n, Q p q = ite (p = q) (Q r r) 0 := fun p q r =>
+    calc
+      Q p q = ∑ i, ∑ j, Q i j * ∑ k, (single q r 1) j k * (single r p 1) k i := by
+        simp only [single, of_apply, ite_and, Finset.sum_ite_irrel,
+          Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+          mul_ite, MulZeroClass.mul_zero, mul_one]
+      _ = ∑ i, ∑ j, Q i j * ∑ k, (single r p 1) j k * (single q r 1) k i := by rw [h2]
+      _ = ite (p = q) (Q r r) 0 := by
+        simp only [single, of_apply, ite_and, Finset.sum_ite_irrel,
+          Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_ite,
+          MulZeroClass.mul_zero, mul_one]
+  have HH : Q = diagonal fun _ : n => Q i i := by ext; exact hdiag _ _ i
+  have hre : ∀ p, Q p p = RCLike.re (Q p p) := fun p => by
+    rw [eq_comm]
+    simp_rw [RCLike.re_eq_complex_re, ← Complex.conj_eq_iff_re, ← RCLike.star_def,
+      ← Matrix.star_apply, star_eq_conjTranspose]
+    rw [hQ.1.eq]
+  have hnn : 0 ≤ Q i i := by
+    rw [PosSemidef.complex] at hQ
+    specialize hQ fun j => ite (i = j) 1 0
+    simpa only [dotProduct, mulVec, dotProduct, Pi.star_apply, star_ite, star_zero, star_one,
+      boole_mul, mul_boole, Finset.sum_ite_eq, Finset.mem_univ, if_true] using hQ
+  refine ⟨(RCLike.nonneg_def'.mp hnn).2, ?_⟩
+  simp only [smul_eq_diagonal_mul, Matrix.mul_one]
+  rw [← hre]
+  exact HH
+
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /--
@@ -518,57 +550,13 @@ theorem Module.Dual.isTracial_pos_map_iff_of_matrix (φ : Module.Dual ℂ (Matri
   constructor
   · simp_rw [Module.Dual.isPosMap_iff_of_matrix]
     rintro ⟨hQ, h2⟩
-    simp_rw [Module.Dual.IsTracial, Module.Dual.apply, Matrix.trace, Matrix.diag,
-      mul_apply] at h2
-    let Q := φ.matrix
-    have : ∀ p q r : n, Q p q = ite (p = q) (Q r r) 0 := fun p q r =>
-      calc
-        Q p q =
-            ∑ i, ∑ j, Q i j * ∑ k, (single q r 1) j k * (single r p 1) k i :=
-          by
-          simp only [single, of_apply, ite_and, Finset.sum_ite_irrel,
-            Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true,
-            mul_ite, MulZeroClass.mul_zero, mul_one]
-        _ = ∑ i, ∑ j, Q i j * ∑ k, (single r p 1) j k * (single q r 1) k i :=
-          by rw [h2]
-        _ = ite (p = q) (Q r r) 0 := by
-          simp only [single, of_apply, ite_and, Finset.sum_ite_irrel,
-            Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_ite,
-            MulZeroClass.mul_zero, mul_one]
     by_cases h : IsEmpty n
-    · use 1
+    · refine ⟨1, ?_⟩
       haveI := h
       simp only [eq_iff_true_of_subsingleton]
     rw [not_isEmpty_iff] at h
-    let i : n := h.some
-    have HH : Q = diagonal fun _ : n => Q i i :=
-      by
-      ext
-      exact this _ _ i
-    have this' : ∀ p, Q p p = RCLike.re (Q p p) :=
-      by
-      intro p
-      rw [eq_comm]
-      simp_rw [RCLike.re_eq_complex_re, ← Complex.conj_eq_iff_re, ← RCLike.star_def,
-        ← Matrix.star_apply,
-        star_eq_conjTranspose]
-      rw [hQ.1.eq]
-    have : 0 ≤ Q i i := by
-      rw [PosSemidef.complex] at hQ
-      specialize hQ fun j => ite (i = j) 1 0
-      simp_rw [dotProduct, mulVec, dotProduct, Pi.star_apply, star_ite, star_zero, star_one,
-        boole_mul, mul_boole, Finset.sum_ite_eq, Finset.mem_univ, if_true] at hQ
-      exact hQ
-    have thisthis : 0 ≤ RCLike.re (Q i i) :=
-      by
-      rw [RCLike.nonneg_def'] at this
-      exact this.2
-    let α : NNReal := ⟨RCLike.re (Q i i), thisthis⟩
-    have hα' : RCLike.re (Q i i) = α := rfl
-    exact ⟨α, by
-      simp only [smul_eq_diagonal_mul, ← hα', Matrix.mul_one]
-      rw [← this']
-      exact HH⟩
+    obtain ⟨hnn, heq⟩ := φ.tracial_posSemidef_matrix_eq_re_smul_one hQ h2 h.some
+    exact ⟨⟨_, hnn⟩, heq⟩
   · rintro ⟨α, hα1⟩
     simp_rw [Module.Dual.IsPosMap, Module.Dual.IsTracial, Module.Dual.apply, hα1,
       smul_mul, one_mul, trace_smul, smul_eq_mul, star_eq_conjTranspose]
@@ -588,61 +576,12 @@ theorem Module.Dual.isTracial_pos_map_iff'_of_matrix [Nonempty n]
   constructor
   · simp_rw [Module.Dual.isPosMap_iff_of_matrix]
     rintro ⟨hQ, h2⟩
-    simp_rw [Module.Dual.IsTracial, Module.Dual.apply, Matrix.trace, Matrix.diag,
-      mul_apply] at h2
-    let Q := φ.matrix
-    have : ∀ p q r : n, Q p q = ite (p = q) (Q r r) 0 := fun p q r =>
-      calc
-        Q p q =
-            ∑ i, ∑ j, Q i j * ∑ k, (single q r 1) j k * (single r p 1) k i :=
-          by
-          simp only [single, of_apply, ite_and, Finset.sum_ite_irrel,
-            Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true,
-            mul_ite, MulZeroClass.mul_zero, mul_one]
-        _ = ∑ i, ∑ j, Q i j * ∑ k, (single r p 1) j k * (single q r 1) k i :=
-          by rw [h2]
-        _ = ite (p = q) (Q r r) 0 := by
-          simp only [single, of_apply, ite_and, Finset.sum_ite_irrel,
-            Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, mul_ite,
-            MulZeroClass.mul_zero, mul_one]
-    let i : n := Nonempty.some (by infer_instance)
-    have HH : Q = diagonal fun _ : n => Q i i :=
-      by
-      ext
-      exact this _ _ i
-    have this' : ∀ p, Q p p = RCLike.re (Q p p) :=
-      by
-      intro p
-      rw [eq_comm]
-      simp_rw [RCLike.re_eq_complex_re, ← Complex.conj_eq_iff_re, ← RCLike.star_def,
-        ← Matrix.star_apply,
-        star_eq_conjTranspose]
-      rw [hQ.1.eq]
-    have : 0 ≤ Q i i := by
-      rw [PosSemidef.complex] at hQ
-      specialize hQ fun j => ite (i = j) 1 0
-      simp_rw [dotProduct, mulVec, dotProduct, Pi.star_apply, star_ite, star_zero, star_one,
-        boole_mul, mul_boole, Finset.sum_ite_eq, Finset.mem_univ, if_true] at hQ
-      exact hQ
-    have thisthis : 0 ≤ RCLike.re (Q i i) :=
-      by
-      rw [RCLike.nonneg_def'] at this
-      exact this.2
-    let α : NNReal := ⟨RCLike.re (Q i i), thisthis⟩
-    have hα' : RCLike.re (Q i i) = α := rfl
-    use α
-    constructor
-    · simp only [smul_eq_diagonal_mul, ← hα', Matrix.mul_one]
-      rw [← this']
-      exact HH
-    · intro y hy
-      simp only [Q] at *
-      simp only [smul_eq_diagonal_mul, Matrix.mul_one] at hy
-      rw [HH, diagonal_eq_diagonal_iff, this'] at hy
-      specialize hy i
-      norm_cast at hy
-      simp_rw [α, Q, hy]
-      rfl
+    obtain ⟨hnn, heq⟩ :=
+      φ.tracial_posSemidef_matrix_eq_re_smul_one hQ h2 (Nonempty.some ‹_›)
+    refine ⟨⟨_, hnn⟩, heq, fun y hy => ?_⟩
+    have hsmul : ((_ : ℝ) : ℂ) • (1 : Matrix n n ℂ) = ((y : ℝ) : ℂ) • 1 := heq ▸ hy
+    rw [smul_left_injective ℂ one_ne_zero |>.eq_iff] at hsmul
+    exact (Subtype.coe_inj.mp (by exact_mod_cast hsmul)).symm
   · rintro ⟨α, ⟨hα1, _⟩⟩
     simp_rw [Module.Dual.IsPosMap, Module.Dual.IsTracial, Module.Dual.apply, hα1,
       smul_mul, one_mul, trace_smul]

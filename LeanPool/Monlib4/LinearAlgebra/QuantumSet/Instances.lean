@@ -68,24 +68,7 @@ theorem posDefOne_smul_rpow {𝕜 : Type*} [RCLike 𝕜]
       (RCLike.ofReal_pos.mpr (NNReal.coe_pos.mpr (Units.zero_lt α))) :
       PosDef ((((α : NNReal) : ℝ) : 𝕜) • 1 : Matrix n n 𝕜)).rpow r
         = ((((α : NNReal) : ℝ) ^ r : ℝ) : 𝕜) • 1 :=
-by
-  rw [PosDef.rpow_eq, innerAut_eq_iff, _root_.map_smul, innerAut_apply_one]
-  symm
-  nth_rw 1 [← diagonal_one]
-  rw [← diagonal_smul, diagonal_eq_diagonal_iff]
-  intro i
-  simp_rw [Pi.smul_apply, Function.comp_apply, Pi.pow_apply]
-  rw [← RCLike.ofReal_one, smul_eq_mul, ← RCLike.ofReal_mul,
-    RCLike.ofReal_inj, IsHermitian.eigenvalues_eq',
-    smul_mulVec_assoc, one_mulVec, dotProduct_smul,
-    ← RCLike.real_smul_eq_coe_smul, RCLike.smul_re,
-    Real.mul_rpow (NNReal.coe_nonneg _) _]
-  all_goals
-    simp_rw [dotProduct, Pi.star_apply, transpose_apply, ← conjTranspose_apply,
-      ← mul_apply, IsHermitian.eigenvectorMatrix_conjTranspose_mul, one_apply_eq,
-      RCLike.one_re]
-  · simp only [mul_one, Real.one_rpow]
-  · simp only [zero_le_one]
+  posSemidefOne_smul_rpow (α : NNReal) r
 
 theorem Module.Dual.IsFaithfulPosMap.sig_zero [hφ : φ.IsFaithfulPosMap] :
   sig hφ 0 = 1 :=
@@ -442,8 +425,8 @@ def Module.Dual.IsFaithfulPosMap.quantumSet [hφ : φ.IsFaithfulPosMap] :
       PosDef.rpow_one_eq_self, PosDef.rpow_neg_one_eq_inv_self]
     rfl
   n := n × n
-  nIsFintype := by infer_instance
-  nIsDecidableEq := by infer_instance
+  nIsFintype := inferInstance
+  nIsDecidableEq := inferInstance
   onb := hφ.orthonormalBasis }
 
 /-- Elaborate a term using the matrix quantum-set structure induced by a faithful
@@ -658,8 +641,8 @@ noncomputable instance Module.Dual.pi.IsFaithfulPosMap.quantumSet
         star_eq_conjTranspose]
       exact Module.Dual.IsFaithfulPosMap.inner_right_conj (hψ i) (x i) (y i) (z i)
     n := Σ i, (s i) × (s i)
-    nIsFintype := by infer_instance
-    nIsDecidableEq := by infer_instance
+    nIsFintype := inferInstance
+    nIsDecidableEq := inferInstance
     onb := Module.Dual.pi.IsFaithfulPosMap.orthonormalBasis hψ }
 
 /-- Elaborate a term using the product quantum-set structure induced by faithful
@@ -768,8 +751,7 @@ by
 
 theorem Qam.Nontracial.delta_pos [Nonempty n] {φ : Module.Dual ℂ (Matrix n n ℂ)}
     [hφ : φ.IsFaithfulPosMap] : 0 < φ.matrix⁻¹.trace :=
-by
-  exact Matrix.PosDef.trace_pos (Matrix.PosDef.inv hφ.matrixIsPosDef)
+  Matrix.PosDef.trace_pos (Matrix.PosDef.inv hφ.matrixIsPosDef)
 
 omit [Fintype k] [DecidableEq k] in
 theorem Pi.Qam.Nontracial.delta_ne_zero [Nonempty k] [∀ i, Nontrivial (s i)] {δ : ℂ}

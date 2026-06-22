@@ -110,9 +110,7 @@ noncomputable def Submodule.tensorProductLinearIsometryEquiv
   toFun x := ⟨(TensorProduct.mapIncl V W) x, ⟨_, rfl⟩⟩
   invFun x := Submodule.memTensorProduct x
   left_inv x := by simp only [Submodule.mapIncl_memTensorProduct]
-  right_inv x := by
-    refine SetCoe.ext ?_
-    exact Submodule.memTensorProduct_eq x
+  right_inv x := SetCoe.ext (Submodule.memTensorProduct_eq x)
   map_add' _ _ := by
     simp only [TensorProduct.mapIncl, map_add]; rfl
   map_smul' _ _ := by
@@ -141,8 +139,8 @@ theorem Submodule.tensorProduct_finrank {V : Submodule 𝕜 E} {W : Submodule �
   Module.finrank 𝕜 (V.tensorProduct W) = Module.finrank 𝕜 V * Module.finrank 𝕜 W :=
 by
   simp only [← Module.finrank_tensorProduct]
-  refine Eq.symm (LinearEquiv.finrank_eq ?f)
-  exact (Submodule.tensorProductLinearIsometryEquiv V W).toLinearEquiv
+  exact Eq.symm (LinearEquiv.finrank_eq
+    (Submodule.tensorProductLinearIsometryEquiv V W).toLinearEquiv)
 
 omit [FiniteDimensional 𝕜 E] [FiniteDimensional 𝕜 F] in
 theorem rankOne_tmul {x₁ y₁ : E} {x₂ y₂ : F} :
@@ -223,7 +221,7 @@ theorem TensorProduct.submodule_exists_le_tensorProduct_ofFiniteDimensional
 by
   obtain ⟨V, W, _, _, hVW⟩ := TensorProduct.submodule_exists_le_tensorProduct U
     (FiniteDimensional.finiteDimensional_submodule U)
-  refine ⟨V, W, hVW⟩
+  exact ⟨V, W, hVW⟩
 
 theorem orthogonalProjection_of_tensorProduct {E F : Type*}
   [NormedAddCommGroup E] [NormedAddCommGroup F] [InnerProductSpace ℂ E]
@@ -426,9 +424,8 @@ theorem submodule_neq_tensorProduct_of {R : Type*} [RCLike R]
 by
   push Not
   intro V W hVW₁ hVW₂ hVW
-  have : Module.finrank R (V.tensorProduct W) =
-    Module.finrank R V * Module.finrank R W := Submodule.tensorProduct_finrank
-  rw [← hVW, hU] at this
+  have : p = Module.finrank R V * Module.finrank R W := by
+    rw [← hU, hVW]; exact Submodule.tensorProduct_finrank
   exact
     (Nat.not_prime_of_mul_eq this.symm (Ne.symm (Nat.ne_of_lt hVW₁)) (Ne.symm (Nat.ne_of_lt hVW₂)))
     hp

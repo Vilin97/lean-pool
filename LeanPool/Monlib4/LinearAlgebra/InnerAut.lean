@@ -359,14 +359,9 @@ theorem innerAut_isHermitian_iff (U : unitaryGroup n 𝕜) (x : Matrix n n 𝕜)
 
 theorem _root_.Matrix.unitaryGroup.injective_hMul (U : unitaryGroup n 𝕜) (x y : Matrix n n 𝕜) :
     x = y ↔ x * (U : Matrix n n 𝕜) = y * (U : Matrix n n 𝕜) := by
-  constructor
-  · intro h
-    rw [h]
-  · intro h
-    have h' : x * (U : Matrix n n 𝕜) * (U⁻¹ : unitaryGroup n 𝕜) =
-        y * (U : Matrix n n 𝕜) * (U⁻¹ : unitaryGroup n 𝕜) :=
-      congrArg (fun z : Matrix n n 𝕜 => z * (U⁻¹ : unitaryGroup n 𝕜)) h
-    simpa [Matrix.mul_assoc, UnitaryGroup.inv_apply] using h'
+  refine ⟨fun h => by rw [h], fun h => ?_⟩
+  have h' := congrArg (fun z : Matrix n n 𝕜 => z * (U⁻¹ : unitaryGroup n 𝕜)) h
+  simpa [Matrix.mul_assoc, UnitaryGroup.inv_apply] using h'
 
 lemma unitaryGroup_conjTranspose (U : unitaryGroup n 𝕜) :
     (↑U)ᴴ = (↑(U⁻¹ : unitaryGroup n 𝕜) : Matrix n n 𝕜) :=
@@ -413,12 +408,10 @@ theorem _root_.Matrix.innerAut_isUnit_iff (U : unitaryGroup n 𝕜) {x : Matrix 
 /-- A unitary inner automorphism preserves positive definite matrices. -/
 theorem _root_.Matrix.innerAut_posDef_iff (U : unitaryGroup n 𝕜) {x : Matrix n n 𝕜} :
     (innerAut U x).PosDef ↔ x.PosDef := by
-  constructor
-  · intro h
-    exact ((innerAut_posSemidef_iff U).mp h.posSemidef).posDef_iff_isUnit.mpr
+  constructor <;> intro h
+  · exact ((innerAut_posSemidef_iff U).mp h.posSemidef).posDef_iff_isUnit.mpr
       ((innerAut_isUnit_iff U).mp h.isUnit)
-  · intro h
-    exact ((innerAut_posSemidef_iff U).mpr h.posSemidef).posDef_iff_isUnit.mpr
+  · exact ((innerAut_posSemidef_iff U).mpr h.posSemidef).posDef_iff_isUnit.mpr
       ((innerAut_isUnit_iff U).mpr h.isUnit)
 
 theorem _root_.Matrix.posDef_innerAut {a : Matrix n n 𝕜} (ha : a.PosDef)

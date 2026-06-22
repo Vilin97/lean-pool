@@ -47,10 +47,8 @@ local notation "pᵥ" => Submodule.projectionOnto V U hUV.symm
 /-- Projection to `p` along `q` of `x` equals `x` if and only if `x ∈ p`. -/
 theorem linearProjOfIsCompl_eq_self_iff {p q : Submodule R E} (hpq : IsCompl p q) (x : E) :
     (p.projectionOnto q hpq x : E) = x ↔ x ∈ p :=
-  by
-  constructor <;> intro H
-  · rw [← H]; exact Submodule.coe_mem _
-  · exact congr_arg _ (Submodule.projectionOnto_apply_left hpq ⟨x, H⟩)
+  ⟨fun H => H ▸ Submodule.coe_mem _,
+    fun H => congr_arg _ (Submodule.projectionOnto_apply_left hpq ⟨x, H⟩)⟩
 
 namespace InvariantUnder
 
@@ -167,11 +165,8 @@ theorem inv_linear_proj_comp_map_eq_linear_proj_iff_images_eq [Invertible T] :
   by
   simp_rw [← Submodule.commutes_with_linear_proj_iff_linear_proj_eq, ←
     isCompl_invariantUnder_iff_linear_proj_and_self_commute, Set.Subset.antisymm_iff]
-  have Hu : ∀ p q r s, ((p ∧ q) ∧ r ∧ s) = ((p ∧ r) ∧ q ∧ s) := fun _ _ _ _ =>
-    by
-    simp only [and_assoc, eq_iff_iff, and_congr_right_iff]
-    simp only [← and_assoc, and_congr_left_iff]
-    simp only [and_comm]; simp only [imp_true_iff]
+  have Hu : ∀ p q r s : Prop, ((p ∧ q) ∧ r ∧ s) = ((p ∧ r) ∧ q ∧ s) := fun _ _ _ _ => by
+    rw [eq_iff_iff]; tauto
   rw [Hu]
   clear Hu
   simp_rw [← Submodule.invariantUnder_iff _ _, iff_self_and, ←

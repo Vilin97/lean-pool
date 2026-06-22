@@ -85,15 +85,13 @@ theorem isAlmostHermitian_iff (x : Matrix n n ℂ) : x.IsAlmostHermitian ↔ (x 
     --   simp_rw [div_eq_div_iff (star_ne_zero.mpr hx₁) (star_ne_zero.mpr hx₂), mul_comm _ (star _),
     --     RCLike.star_def]
     --   exact h (_, _) (_, _)
-    have nonzero_ : ∃ i j : n, x i j ≠ 0 :=
-      by
+    have nonzero_ : ∃ i j : n, x i j ≠ 0 := by
       contrapose! h'
       ext i j
       exact h' i j
     rcases nonzero_ with ⟨i, k, hik⟩
     let α := x i k / star (x k i)
-    have hα' : α ≠ 0 :=
-      by
+    have hα' : α ≠ 0 := by
       simp_rw [α, div_ne_zero_iff, star_ne_zero, ne_eq, this k i]
       exact ⟨hik, hik⟩
     have Hα : α⁻¹ = conj α := by
@@ -106,8 +104,7 @@ theorem isAlmostHermitian_iff (x : Matrix n n ℂ) : x.IsAlmostHermitian ↔ (x 
     have Hα' : Real.sqrt (RCLike.normSq α) = 1 := by
       simp_rw [Real.sqrt_eq_iff_eq_sq (RCLike.normSq_nonneg _) zero_le_one, one_pow, conj_, ← Hα,
         inv_mul_cancel₀ hα', RCLike.one_re]
-    have another_hα : ∀ p q : n, x p q ≠ 0 → x p q = α * conj (x q p) :=
-      by
+    have another_hα : ∀ p q : n, x p q ≠ 0 → x p q = α * conj (x q p) := by
       intro p q _
       simp_rw [α, div_mul_eq_mul_div, mul_comm (x i k), ← RCLike.star_def, h (p, _) (_, _), ←
         div_mul_eq_mul_div, ← star_div₀, div_self ((not_iff_not.mpr (this i k)).mp hik), star_one,
@@ -119,8 +116,7 @@ theorem isAlmostHermitian_iff (x : Matrix n n ℂ) : x.IsAlmostHermitian ↔ (x 
     have hβ' : β ≠ 0 := by
       rw [ne_eq, ← sq_eq_zero_iff, hβ]
       exact hα'
-    have hβ'' : β⁻¹ = conj β :=
-      by
+    have hβ'' : β⁻¹ = conj β := by
       rw [← mul_left_inj' hβ', inv_mul_cancel₀ hβ', ← Complex.normSq_eq_conj_mul_self]
       norm_cast
       simp_rw [Complex.normSq_eq_norm_sq, ← Complex.norm_pow, hβ]
@@ -145,15 +141,14 @@ theorem isAlmostHermitian_iff (x : Matrix n n ℂ) : x.IsAlmostHermitian ↔ (x 
         · simp_rw [hαβ, hβ'', ← Complex.star_def]
 
 /-- 0 is almost Hermitian -/
-theorem isAlmostHermitian_zero [Semiring 𝕜] [StarRing 𝕜] : (0 : Matrix n n 𝕜).IsAlmostHermitian :=
-  by
+theorem isAlmostHermitian_zero [Semiring 𝕜] [StarRing 𝕜] :
+    (0 : Matrix n n 𝕜).IsAlmostHermitian := by
   use 0; use 0
   simp_rw [isHermitian_zero, zero_smul, and_true]
 
 /-- if $x$ is almost Hermitian, then it is also normal -/
 theorem _root_.Matrix.AlmostHermitian.isStarNormal [Fintype n] [CommSemiring 𝕜] [StarRing 𝕜]
-    {M : Matrix n n 𝕜} (hM : M.IsAlmostHermitian) : IsStarNormal M :=
-  by
+    {M : Matrix n n 𝕜} (hM : M.IsAlmostHermitian) : IsStarNormal M := by
   obtain ⟨α, N, ⟨rfl, hN⟩⟩ := hM
   apply IsStarNormal.mk
   simp_rw [Commute, SemiconjBy, star_smul, smul_mul_smul_comm, star_eq_conjTranspose,
@@ -161,25 +156,21 @@ theorem _root_.Matrix.AlmostHermitian.isStarNormal [Fintype n] [CommSemiring �
 
 /-- $x$ is almost Hermitian if and only if $\beta \cdot x$ is almost Hermitian for any $\beta$ -/
 theorem almost_hermitian_iff_smul [CommSemiring 𝕜] [StarRing 𝕜] {M : Matrix n n 𝕜} :
-    M.IsAlmostHermitian ↔ ∀ β : 𝕜, (β • M).IsAlmostHermitian :=
-  by
+    M.IsAlmostHermitian ↔ ∀ β : 𝕜, (β • M).IsAlmostHermitian := by
   constructor
   · rintro ⟨α, N, ⟨rfl, hN⟩⟩ β
     use β * α
     use N
     simp_rw [smul_smul, true_and, hN]
   · intro h
-    specialize h (1 : 𝕜)
-    simp_rw [one_smul] at h
-    exact h
+    simpa only [one_smul] using h (1 : 𝕜)
 
 /-- A matrix whose off-diagonal entries are zero. -/
 def IsDiagonal {R n : Type _} [Zero R] (A : Matrix n n R) : Prop :=
   ∀ i j : n, i ≠ j → A i j = 0
 
 theorem isDiagonal_eq {R : Type _} [Zero R] [DecidableEq n] (A : Matrix n n R) :
-    A.IsDiagonal ↔ diagonal A.diag = A :=
-  by
+    A.IsDiagonal ↔ diagonal A.diag = A := by
   simp_rw [← ext_iff, IsDiagonal, diagonal]
   constructor
   · intro h i j
@@ -198,8 +189,7 @@ open scoped BigOperators
 /-- an almost Hermitian matrix is upper-triangular if and only if it is diagonal -/
 theorem _root_.Matrix.IsAlmostHermitian.upper_triangular_iff_diagonal [Field 𝕜] [StarRing 𝕜]
     [LinearOrder n] {M : Matrix n n 𝕜} (hM : M.IsAlmostHermitian) :
-    M.BlockTriangular id ↔ M.IsDiagonal :=
-  by
+    M.BlockTriangular id ↔ M.IsDiagonal := by
   rcases hM with ⟨α, N, ⟨rfl, hN⟩⟩
   simp_rw [BlockTriangular, Function.id_def, Matrix.smul_apply]
   constructor
@@ -218,10 +208,6 @@ theorem _root_.Matrix.IsAlmostHermitian.upper_triangular_iff_diagonal [Field �
 
 theorem _root_.Matrix.IsHermitian.isAlmostHermitian [Semiring 𝕜] [Star 𝕜] {x : Matrix n n 𝕜}
     (hx : x.IsHermitian) : x.IsAlmostHermitian :=
-  by
-  use 1
-  use x
-  rw [one_smul]
-  exact ⟨rfl, hx⟩
+  ⟨1, x, one_smul _ _, hx⟩
 
 end Matrix

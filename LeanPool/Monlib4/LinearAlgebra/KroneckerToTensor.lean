@@ -98,29 +98,8 @@ by
   ext a b
   rcases a with ⟨a₁, a₂⟩
   rcases b with ⟨b₁, b₂⟩
-  simp only [Matrix.sum_apply, Matrix.smul_apply, Matrix.kroneckerMap, Matrix.of_apply,
-    Matrix.single, smul_eq_mul, mul_ite, mul_one, mul_zero]
-  rw [Finset.sum_eq_single a₁]
-  · rw [Finset.sum_eq_single b₁]
-    · rw [Finset.sum_eq_single a₂]
-      · rw [Finset.sum_eq_single b₂]
-        · simp
-        · intro y _ hy
-          simp [hy]
-        · intro h
-          simp at h
-      · intro y _ hy
-        simp [hy]
-      · intro h
-        simp at h
-    · intro y _ hy
-      simp [hy]
-    · intro h
-      simp at h
-  · intro y _ hy
-    simp [hy]
-  · intro h
-    simp at h
+  simp [Matrix.sum_apply, Matrix.kroneckerMap, Matrix.of_apply,
+    Matrix.single, mul_ite, mul_one, mul_zero, ite_and, eq_comm]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/

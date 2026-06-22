@@ -188,8 +188,7 @@ theorem _root_.Matrix.kronecker.star {R n : Type _} [CommSemiring R] [StarRing R
 
 theorem kronecker_transpose {R n : Type _} [CommSemiring R] (x y : Matrix n n R) :
     (x ⊗ₖ y)ᵀ = xᵀ ⊗ₖ yᵀ := by
-  simp_rw [← Matrix.ext_iff]
-  intro i j
+  ext i j
   simp only [Matrix.transpose_apply, Matrix.kroneckerMap, of_apply]
 
 theorem _root_.Matrix.kronecker.transpose {R n : Type _} [CommSemiring R] (x y : Matrix n n R) :
@@ -253,8 +252,7 @@ theorem Matrix.single_conjTranspose (i : n) (j : m) (a : R) :
       (Ne.ite_eq_right_iff (star_ne_zero.mpr h')).mpr h, star_eq_iff_star_eq, star_zero]
     symm
     rw [ite_eq_right_iff]
-    intro H
-    exact False.elim (h H)
+    exact fun H => (h H).elim
 
 theorem Matrix.single.star_apply (i k : n) (j l : m) (a : R) :
     star (Matrix.single i j a k l) = Matrix.single j i (star a) l k := by
@@ -383,9 +381,7 @@ theorem forall_left_hMul {n R : Type _} [Fintype n] [Semiring R]
     (x y : Matrix n n R) : x = y ↔ ∀ a : Matrix n n R, a * x = a * y := by
   classical
   refine ⟨fun h a => by rw [h], fun h => ?_⟩
-  specialize h 1
-  simp_rw [one_mul] at h
-  exact h
+  simpa only [one_mul] using h 1
 
 lemma _root_.Matrix.smul_one_eq_one_iff {𝕜 n : Type*} [DecidableEq n] [Field 𝕜] (c : 𝕜) :
     c • (1 : Matrix n n 𝕜) = (1 : Matrix n n 𝕜) ↔ c = 1 ∨ IsEmpty n := by

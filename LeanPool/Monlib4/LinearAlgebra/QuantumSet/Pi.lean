@@ -55,22 +55,18 @@ lemma PiLp.mul_apply (x y : PiQ A) (i : ι) :
 instance : StarRing (PiQ A) where
   star_involutive x := by
     ext i
-    change star (star (x i)) = x i
-    rw [star_star]
+    exact star_star (x i)
   star_mul x y := by
     ext i
-    change star (x i * y i) = star (y i) * star (x i)
-    rw [star_mul]
+    exact star_mul (x i) (y i)
   star_add x y := by
     ext i
-    change star (x i + y i) = star (x i) + star (y i)
-    rw [star_add]
+    exact star_add (x i) (y i)
 
 instance : StarModule ℂ (PiQ A) where
   star_smul c x := by
     ext i
-    change star (c • x i) = star c • star (x i)
-    rw [star_smul]
+    exact star_smul c (x i)
 
 /-- The pointwise modular automorphism on a finite product quantum set. -/
 noncomputable def Pi.modAut (r : ℝ) : PiQ A ≃ₐ[ℂ] PiQ A :=

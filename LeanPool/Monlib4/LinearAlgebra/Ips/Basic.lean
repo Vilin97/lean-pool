@@ -31,9 +31,7 @@ theorem forall_inner_eq_zero_iff {𝕜 E : Type _} [RCLike 𝕜] [NormedAddCommG
     [InnerProductSpace 𝕜 E] (x : E) : (∀ y, inner 𝕜 x y = 0) ↔ x = 0 :=
   by
   refine ⟨fun h => ?_, fun h y => by rw [h, inner_zero_left]⟩
-  specialize h x
-  rw [inner_self_eq_zero] at h
-  exact h
+  simpa [inner_self_eq_zero] using h x
 
 open RCLike ContinuousLinearMap
 open scoped InnerProductSpace
@@ -161,13 +159,7 @@ lemma _root_.isometry_iff_norm {E F : Type _} [SeminormedAddCommGroup E]
 by
   rw [isometry_iff_dist_eq]
   simp_rw [dist_eq_norm, ← map_sub]
-  constructor
-  · intro h x
-    specialize h x 0
-    simp_rw [sub_zero] at h
-    exact h
-  · intro h x y
-    exact h _
+  refine ⟨fun h x => by simpa using h x 0, fun h x y => h _⟩
 lemma _root_.isometry_iff_norm' {E F : Type _} [_root_.NormedAddCommGroup E]
     [_root_.NormedAddCommGroup F] {e : Type*} [FunLike e E F]
     [AddMonoidHomClass e E F] (f : e) :

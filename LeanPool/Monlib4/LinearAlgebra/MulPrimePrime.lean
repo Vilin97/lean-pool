@@ -33,9 +33,7 @@ theorem commutes_with_unit_iff [Semiring A] [Semiring B] [Algebra R A] [Algebra 
   simp_rw [LinearMap.ext_iff, LinearMap.comp_apply, Algebra.linearMap_apply,
     Algebra.algebraMap_eq_smul_one, _root_.map_smul]
   refine ⟨fun h => ?_, fun h x => by rw [h]⟩
-  · specialize h 1
-    simp_rw [one_smul] at h
-    exact h
+  simpa using h 1
 
 theorem commutes_with_mul'_iff [NonUnitalNonAssocSemiring A] [Module R A]
     [SMulCommClass R A A] [IsScalarTower R A A]

@@ -64,13 +64,7 @@ lemma Matrix.of_isHermitian' [Fintype n] {x : Matrix n n 𝕜}
         Finset.sum Finset.univ fun x_2 ↦ x i x_2 * x_1 x_2) =
         ⟪(EuclideanSpace.equiv n 𝕜).symm x_1,
           (toEuclideanLin x) ((EuclideanSpace.equiv n 𝕜).symm x_1)⟫_𝕜 := fun x_1 => by
-    calc (Finset.sum Finset.univ fun i ↦ star x_1 i *
-        Finset.sum Finset.univ fun x_2 ↦ x i x_2 * x_1 x_2)
-        = ⟪x_1, x *ᵥ x_1⟫_𝕜 := by simp [inner, mul_comm, mulVec, dotProduct]
-      _ = ⟪(EuclideanSpace.equiv n 𝕜).symm x_1,
-          (EuclideanSpace.equiv n 𝕜).symm (x *ᵥ x_1)⟫_𝕜 := rfl
-      _ = ⟪(EuclideanSpace.equiv n 𝕜).symm x_1,
-          (toEuclideanLin x) ((EuclideanSpace.equiv n 𝕜).symm x_1)⟫_𝕜 := rfl
+    simp [inner, mul_comm, mulVec, dotProduct]
   simp_rw [hinner, inner_conj_symm, ← LinearMap.adjoint_inner_left,
     ← Matrix.toEuclideanLin_conjTranspose_eq_adjoint, hx.eq, forall_true_iff]
 
@@ -187,8 +181,8 @@ alias Matrix.PosDef.pos_eigenvalues := Matrix.PosDef.eigenvalues_pos
 
 theorem Matrix.PosDef.trace_ne_zero [Fintype n] [Nonempty n]
     {x : Matrix n n 𝕜} (hx : x.PosDef) :
-    x.trace ≠ 0 := by
-  exact ne_of_gt hx.trace_pos
+    x.trace ≠ 0 :=
+  ne_of_gt hx.trace_pos
 
 /-- A positive definite matrix has trace with positive real part. -/
 theorem Matrix.PosDef.pos_trace [Fintype n] [Nonempty n]
@@ -250,9 +244,8 @@ theorem Matrix.posSemidef_iff_replicateCol_mul_conjTranspose_replicateCol [Finit
             replicateCol (Fin 1) (v i : n → 𝕜) *
               (replicateCol (Fin 1) (v i : n → 𝕜))ᴴ := by
   rw [Matrix.posSemidef_iff_vecMulVec]
-  constructor <;> rintro ⟨m, v, hv⟩ <;> refine ⟨m, v, ?_⟩
-  · simpa only [Matrix.vecMulVec_eq_replicateCol_conjTranspose] using hv
-  · simpa only [Matrix.vecMulVec_eq_replicateCol_conjTranspose] using hv
+  constructor <;> rintro ⟨m, v, hv⟩ <;>
+    exact ⟨m, v, by simpa only [Matrix.vecMulVec_eq_replicateCol_conjTranspose] using hv⟩
 
 theorem Matrix.posSemidef_iff_vecMulVec' [Finite n]
     {x : Matrix n n 𝕜} :
@@ -284,9 +277,8 @@ theorem Matrix.posSemidef_iff_replicateCol_mul_conjTranspose_replicateCol' [Fini
             replicateCol (Fin 1) (v i : n → 𝕜) *
               (replicateCol (Fin 1) (v i : n → 𝕜))ᴴ := by
   rw [Matrix.posSemidef_iff_vecMulVec']
-  constructor <;> rintro ⟨m, hm, v, hv⟩ <;> refine ⟨m, hm, v, ?_⟩
-  · simpa only [Matrix.vecMulVec_eq_replicateCol_conjTranspose] using hv
-  · simpa only [Matrix.vecMulVec_eq_replicateCol_conjTranspose] using hv
+  constructor <;> rintro ⟨m, hm, v, hv⟩ <;>
+    exact ⟨m, hm, v, by simpa only [Matrix.vecMulVec_eq_replicateCol_conjTranspose] using hv⟩
 
 theorem Matrix.posSemidef_iff_eq_rankOne [Fintype n] [DecidableEq n]
     {x : Matrix n n 𝕜} :
@@ -344,10 +336,8 @@ theorem Matrix.PosSemidef.complex [Fintype n] (x : Matrix n n ℂ) :
     simpa [Matrix.toLpLin_toLp, PiLp.inner_apply, Matrix.dotProduct_eq_inner,
       RCLike.inner_apply, Matrix.mulVec] using h
   · intro h v
-    let y : n → ℂ := v
-    specialize h y
-    simpa [y, Matrix.toLpLin_toLp, PiLp.inner_apply, Matrix.dotProduct_eq_inner,
-      RCLike.inner_apply, Matrix.mulVec] using h
+    simpa [Matrix.toLpLin_toLp, PiLp.inner_apply, Matrix.dotProduct_eq_inner,
+      RCLike.inner_apply, Matrix.mulVec] using h v
 
 theorem PosSemidef.complex [Fintype n] (x : Matrix n n ℂ) :
     x.PosSemidef ↔ ∀ y : n → ℂ, 0 ≤ star y ⬝ᵥ x.mulVec y :=
@@ -386,8 +376,7 @@ theorem existsUnique_trace [Fintype n] [DecidableEq n] [Nontrivial n] :
     have hcard_inv : (↑(Fintype.card n) : 𝕜)⁻¹ * ↑(@Finset.univ n _).card = 1 := by
       rw [inv_mul_eq_one₀]
       · rfl
-      · simp only [ne_eq, Nat.cast_eq_zero, Fintype.card_ne_zero]
-        exact not_false
+      · simp [Fintype.card_ne_zero]
     constructor
     · intro h
       rw [LinearMap.ext_iff]
@@ -481,18 +470,8 @@ namespace Matrix
 
 theorem _root_.Matrix.Finset.sum_abs_eq_zero_iff' {s : Type*} [Fintype s] {x : s → 𝕜} :
     ∑ i, ‖x i‖ ^ 2 = 0 ↔ ∀ i : s, ‖x i‖ ^ 2 = 0 := by
-  have hnonneg : ∀ i : s, 0 ≤ ‖x i‖ ^ 2 := fun i => sq_nonneg _
-  constructor
-  · intro h i
-    have hnonneg_mem : ∀ i : s, i ∈ Finset.univ → 0 ≤ ‖x i‖ ^ 2 := by
-      intro i _
-      exact hnonneg i
-    have hsum : ∑ i, ‖(x i : 𝕜)‖ ^ 2 = 0 := h
-    rw [Finset.sum_eq_zero_iff_of_nonneg hnonneg_mem] at hsum
-    simp only [Finset.mem_univ, forall_true_left] at hsum
-    exact hsum i
-  · intro h
-    simp_rw [h, Finset.sum_const_zero]
+  rw [Finset.sum_eq_zero_iff_of_nonneg fun i _ => sq_nonneg _]
+  simp only [Finset.mem_univ, forall_true_left]
 
 /-- The trace of `xᴴ * x` is nonnegative. -/
 theorem trace_conjTranspose_hMul_self_nonneg {m : Type*} [Fintype m] [Fintype n]

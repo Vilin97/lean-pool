@@ -166,9 +166,7 @@ theorem lmul_eq_one_iff {H₁ : Type _} [NonAssocSemiring H₁] [Module R H₁] 
   by
   simp_rw [LinearMap.ext_iff, lmul_apply, Module.End.one_apply]
   refine ⟨fun h => ?_, fun h a => by rw [h, one_mul]⟩
-  · specialize h 1
-    rw [mul_one] at h
-    exact h
+  simpa using h 1
 
 theorem LinearMap.mulLeft_eq_one_iff {H₁ : Type _} [NonAssocSemiring H₁] [Module R H₁]
     [SMulCommClass R H₁ H₁] [IsScalarTower R H₁ H₁] (x : H₁) : LinearMap.mulLeft R x = 1 ↔ x = 1 :=
@@ -179,9 +177,7 @@ theorem rmul_eq_one_iff {H₁ : Type _} [NonAssocSemiring H₁] [Module R H₁] 
   by
   simp_rw [LinearMap.ext_iff, rmul_apply, Module.End.one_apply]
   refine ⟨fun h => ?_, fun h a => by rw [h, mul_one]⟩
-  · specialize h 1
-    rw [one_mul] at h
-    exact h
+  simpa using h 1
 
 theorem LinearMap.mulRight_eq_one_iff {H₁ : Type _} [NonAssocSemiring H₁] [Module R H₁]
     [SMulCommClass R H₁ H₁] [IsScalarTower R H₁ H₁] (x : H₁) : LinearMap.mulRight R x = 1 ↔ x = 1 :=

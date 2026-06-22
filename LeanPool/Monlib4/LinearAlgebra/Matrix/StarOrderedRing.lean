@@ -68,12 +68,8 @@ def _root_.Matrix.NegDef {𝕜 n : Type _} [RCLike 𝕜] [Fintype n]
 
 theorem _root_.Matrix.IsHermitian.neg_iff {𝕜 n : Type _} [RCLike 𝕜]
     (x : Matrix n n 𝕜) :
-    (-x).IsHermitian ↔ x.IsHermitian := by
-  constructor
-  · intro h
-    rw [← neg_neg x]
-    exact Matrix.IsHermitian.neg h
-  · exact Matrix.IsHermitian.neg
+    (-x).IsHermitian ↔ x.IsHermitian :=
+  ⟨fun h => neg_neg x ▸ h.neg, Matrix.IsHermitian.neg⟩
 
 theorem _root_.Matrix.negSemidef_iff_neg_posSemidef {𝕜 n : Type _} [RCLike 𝕜]
     [Fintype n] (x : Matrix n n 𝕜) :
@@ -139,9 +135,7 @@ theorem _root_.Matrix.not_posDef_and_negDef {𝕜 n : Type _} [RCLike 𝕜] [Fin
   classical
   let i : n := Nonempty.some (by infer_instance)
   rintro ⟨h1, h2⟩
-  have hh1 := PosDef.pos_eigenvalues h1 i
-  have hh2 := NegDef.neg_eigenvalues h2 i
-  linarith
+  linarith [PosDef.pos_eigenvalues h1 i, NegDef.neg_eigenvalues h2 i]
 
 open scoped BigOperators
 
@@ -259,12 +253,12 @@ theorem _root_.Matrix.negDef_of_negSemidef {𝕜 n : Type _} [RCLike 𝕜] [Fint
 /-- The matrix partial order induced by positive semidefinite differences. -/
 @[reducible]
 noncomputable def _root_.Matrix.partialOrder {n : Type _} :
-    PartialOrder (Matrix n n ℂ) := by
-  infer_instance
+    PartialOrder (Matrix n n ℂ) :=
+  inferInstance
 
 theorem _root_.Matrix.starOrderedRing {n : Type _} [Fintype n] :
-    StarOrderedRing (Matrix n n ℂ) := by
-  infer_instance
+    StarOrderedRing (Matrix n n ℂ) :=
+  inferInstance
 
 theorem _root_.Matrix.Pi.le_iff_sub_nonneg {ι : Type _} {n : ι → Type _}
     [∀ i, Fintype (n i)] (x y : PiMat ℂ ι n) :

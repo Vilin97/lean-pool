@@ -219,8 +219,7 @@ theorem isBoundedLinearMap_iff_isContinuousLinearMap {𝕜 E : Type _} [Nontrivi
   refine
     ⟨fun h => ⟨IsBoundedLinearMap.toIsLinearMap h, IsBoundedLinearMap.continuous h⟩,
       fun h => ?_⟩
-  let f' : E →L[𝕜] F := ⟨h.1.mk' f, h.2⟩
-  exact f'.isBoundedLinearMap
+  exact (⟨h.1.mk' f, h.2⟩ : E →L[𝕜] F).isBoundedLinearMap
 
 private theorem linear_map.is_bounded_linear_map_iff_is_continuous {𝕜 E : Type _}
     [NontriviallyNormedField 𝕜] [NormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type _}
@@ -245,9 +244,8 @@ theorem LinearMap.withBound_iff_is_continuous {𝕜 E : Type _} [NontriviallyNor
     {f : E →ₗ[𝕜] F} : WithBound f ↔ Continuous f :=
   by
   have := @isBoundedLinearMap_iff_isContinuousLinearMap 𝕜 _ _ _ _ _ _ _ f
-  simp only [IsBoundedLinearMap.def, IsContinuousLinearMap, and_congr_right_iff, f.isLinear,
-    true_imp_iff] at this
-  exact this
+  simpa only [IsBoundedLinearMap.def, IsContinuousLinearMap, and_congr_right_iff, f.isLinear,
+    true_imp_iff] using this
 
 theorem LinearMap.ker_coe_def {R E F : Type _} [Semiring R] [AddCommMonoid E] [AddCommMonoid F]
     [Module R E] [Module R F] {f : E →ₗ[R] F} : (ker f : Set E) = {x : E | f x = 0} :=
@@ -260,14 +258,14 @@ theorem exists_dual_vector_of_ne {X : Type _} [NormedAddCommGroup X] [NormedSpac
   obtain ⟨f, ⟨_, hxy⟩⟩ := exists_dual_vector (𝕜 := 𝕜) (x - y) (by
     rwa [norm_ne_zero_iff])
   rw [map_sub] at hxy
-  use f
-  intro H
+  refine ⟨f, fun H => ?_⟩
   rw [H, sub_self, eq_comm, RCLike.ofReal_eq_zero, norm_eq_zero] at hxy
   contradiction
 
 theorem isLinearMap_zero (R : Type _) {E F : Type _} [CommSemiring R] [AddCommMonoid E] [Module R E]
-    [AddCommMonoid F] [Module R F] : IsLinearMap R (0 : E → F) := by
-  fconstructor <;> simp only [Pi.zero_apply, smul_zero, add_zero] <;> intros <;> trivial
+    [AddCommMonoid F] [Module R F] : IsLinearMap R (0 : E → F) :=
+  ⟨fun _ _ => by simp only [Pi.zero_apply, add_zero], fun _ _ => by simp only [Pi.zero_apply,
+    smul_zero]⟩
 
 theorem isContinuousLinearMapZero {𝕜 E : Type _} [NormedField 𝕜] [NormedAddCommGroup E]
     [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] :
@@ -331,23 +329,17 @@ theorem isBilinearMap_iff_is_linear_map_left_right {𝕜 : Type _} [NormedField 
     {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G] {f : E × F → G} :
     IsBilinearMapProd 𝕜 f ↔ IsLeftLinearMap 𝕜 f ∧ IsRightLinearMap 𝕜 f :=
   by
-  constructor
-  · intro hf
-    constructor
-    · intro x
-      exact ⟨fun y z => hf.add_left y z x, fun r a => hf.smul_left r a x⟩
-    · intro x
-      exact ⟨fun y z => hf.add_right x y z, fun r a => hf.smul_right r x a⟩
-  · rintro ⟨h1, h2⟩
-    fconstructor
-    · intro x₁ x₂ y
-      exact (h1 y).map_add _ _
-    · intro r x y
-      exact (h1 y).map_smul _ _
-    · intro y x₁ x₂
-      exact (h2 y).map_add _ _
-    · intro r x y
-      exact (h2 x).map_smul _ _
+  refine ⟨fun hf => ⟨fun x => ⟨fun y z => hf.add_left y z x, fun r a => hf.smul_left r a x⟩,
+    fun x => ⟨fun y z => hf.add_right x y z, fun r a => hf.smul_right r x a⟩⟩, fun ⟨h1, h2⟩ => ?_⟩
+  fconstructor
+  · intro x₁ x₂ y
+    exact (h1 y).map_add _ _
+  · intro r x y
+    exact (h1 y).map_smul _ _
+  · intro y x₁ x₂
+    exact (h2 y).map_add _ _
+  · intro r x y
+    exact (h2 x).map_smul _ _
 
 /-- Bundle a product bilinear map as a linear map into linear maps. -/
 def IsBilinearMapProd.toLmLm {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
@@ -651,8 +643,7 @@ theorem LinearIsometry.norm_comp_toContinuousLinearMap_le
   (f : X →ₗᵢ[𝕜] Y) (h : Y →L[𝕜] Z) :
   ‖h ∘L f.toContinuousLinearMap‖ ≤ ‖h‖ :=
 by
-  apply ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) (fun x => _)
-  intro x
+  refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) (fun x => ?_)
   rw [ContinuousLinearMap.comp_apply, LinearIsometry.coe_toContinuousLinearMap, ← f.norm_map x]
   exact h.le_opNorm _
 
@@ -691,12 +682,10 @@ lemma NormedSpace.Dual.transpose_isometry
   {f : X ≃ₗᵢ[𝕜] Y} :
   _root_.Isometry (NormedSpace.Dual.transpose 𝕜 f.toLinearIsometry.toContinuousLinearMap) :=
 by
-{
   rw [AddMonoidHomClass.isometry_iff_norm]
   intro x
   simp_rw [NormedSpace.Dual.transpose_apply]
   exact ContinuousLinearMap.opNorm_comp_linearIsometryEquiv _ _
-}
 
 open NormedSpace in
 /-- Pull back continuous linear functionals along a linear isometry equivalence. -/

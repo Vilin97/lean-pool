@@ -384,23 +384,13 @@ theorem ContinuousLinearMap.ext_inner_map {F : Type _} [NormedAddCommGroup F]
       T = S ↔ ∀ x y, ⟪T x,y⟫_𝕜 = ⟪S x,y⟫_𝕜 :=
 by
   simp only [ContinuousLinearMap.ext_iff]
-  constructor
-  · intro h x y
-    rw [h]
-  · intro h x
-    apply @ext_inner_right 𝕜
-    exact h x
+  exact ⟨fun h x _ => by rw [h], fun h x => ext_inner_right 𝕜 (h x)⟩
 theorem LinearMap.ext_inner_map {F : Type _} [NormedAddCommGroup F]
   [InnerProductSpace 𝕜 F] (T S : E₁ →ₗ[𝕜] F) :
       T = S ↔ ∀ x y, ⟪T x,y⟫_𝕜 = ⟪S x,y⟫_𝕜 :=
 by
   simp only [LinearMap.ext_iff]
-  constructor
-  · intro h x y
-    rw [h]
-  · intro h x
-    apply @ext_inner_right 𝕜
-    exact h x
+  exact ⟨fun h x _ => by rw [h], fun h x => ext_inner_right 𝕜 (h x)⟩
 
 open scoped BigOperators
 

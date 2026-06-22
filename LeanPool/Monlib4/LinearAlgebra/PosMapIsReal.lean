@@ -332,17 +332,22 @@ noncomputable def Matrix.IsHermitian.posSemidefDecompositionLeft
 /-- Notation for the positive part in the decomposition of a Hermitian matrix. -/
 notation3:80 (name := posL) x:81"₊" =>
   @Matrix.IsHermitian.posSemidefDecompositionLeft _ _ _ x _
+lemma Matrix.IsHermitian.sqSqrt_isHermitian {x : Matrix n n ℂ} (hx : x.IsHermitian) :
+  hx.sqSqrt.IsHermitian :=
+by
+  rw [sqSqrt]
+  apply (innerAut_isHermitian_iff _ _).mp _
+  rw [Matrix.isHermitian_diagonal_iff]
+  intro i
+  simp only [Function.comp_apply, _root_.IsSelfAdjoint, RCLike.star_def, RCLike.conj_ofReal]
+
 lemma Matrix.IsHermitian.posSemidefDecompositionLeft_isHermitian
   {x : Matrix n n ℂ} [hx : Fact x.IsHermitian] : x₊.IsHermitian :=
 by
   rw [IsHermitian, posSemidefDecompositionLeft, conjTranspose_smul,
     conjTranspose_add, hx.out.eq, RCLike.star_def]
   simp only [one_div, map_inv₀, map_ofNat]
-  congr
-  apply (innerAut_isHermitian_iff _ _).mp _
-  rw [Matrix.isHermitian_diagonal_iff]
-  intro i
-  simp only [Function.comp_apply, _root_.IsSelfAdjoint, RCLike.star_def, RCLike.conj_ofReal]
+  rw [hx.out.sqSqrt_isHermitian.eq]
 
 /-- The negative part in the decomposition of a Hermitian matrix. -/
 noncomputable def Matrix.IsHermitian.posSemidefDecompositionRight
@@ -358,11 +363,7 @@ by
   rw [IsHermitian, posSemidefDecompositionRight, conjTranspose_smul,
     conjTranspose_sub, hx.out.eq, RCLike.star_def]
   simp only [one_div, map_inv₀, map_ofNat]
-  congr
-  apply (innerAut_isHermitian_iff _ _).mp _
-  rw [Matrix.isHermitian_diagonal_iff]
-  intro i
-  simp only [Function.comp_apply, _root_.IsSelfAdjoint, RCLike.star_def, RCLike.conj_ofReal]
+  rw [hx.out.sqSqrt_isHermitian.eq]
 
 /-- a Hermitian matrix commutes with its positive squared-square-root,
   i.e., `x * √(x^2) = √(x^2) * x`. -/
@@ -575,6 +576,36 @@ by
   apply_fun hφ.φ
   simp_rw [h, map_sub, map_mul, map_star, StarAlgEquiv.apply_symm_apply]
 
+/-- Core of `isReal_of_isPosMap`: a positivity-preserving map out of a `ℂ`-star-algebra
+  whose self-adjoint elements decompose as `star a * a - star b * b` is star-preserving. -/
+private theorem isReal_of_isPosMap_of_selfAdjointDecomposition
+  {M K : Type*} [Ring M] [StarRing M] [PartialOrder M] [_root_.StarOrderedRing M]
+  [Module ℂ M] [StarModule ℂ M]
+  [Ring K] [StarRing K] [PartialOrder K] [Algebra ℂ K] [StarOrderedRing K] [StarModule ℂ K]
+  {φ : M →ₗ[ℂ] K} (hφ : LinearMap.IsPosMap φ)
+  (hdec : ∀ ⦃x : M⦄, _root_.IsSelfAdjoint x → ∃ a b, x = star a * a - star b * b) :
+  LinearMap.IsReal φ :=
+by
+  intro x
+  rw [selfAdjointDecomposition x]
+  let L := aL x
+  have hL : L = aL x := rfl
+  let R := aR x
+  have hR : R = aR x := rfl
+  rw [← hL, ← hR]
+  simp only [star_add, map_add, star_smul, _root_.map_smul]
+  repeat rw [selfAdjointDecompositionLeft_isSelfAdjoint _]
+  suffices h2 : ∀ a (_ : _root_.IsSelfAdjoint a), φ (star a) = star (φ a) by
+    rw [← h2 _ (selfAdjointDecompositionLeft_isSelfAdjoint _),
+      ← h2 _ (selfAdjointDecompositionRight_isSelfAdjoint _),
+      selfAdjointDecompositionLeft_isSelfAdjoint,
+      selfAdjointDecompositionRight_isSelfAdjoint]
+  intro x hx
+  obtain ⟨a, b, rfl⟩ := hdec hx
+  simp only [star_sub, star_mul, star_star, map_sub]
+  rw [IsSelfAdjoint.of_nonneg (hφ (star_mul_self_nonneg a)),
+    IsSelfAdjoint.of_nonneg (hφ (star_mul_self_nonneg b))]
+
 omit [Fintype n] [DecidableEq n] in
 /-- if a map preserves positivity, then it is star-preserving -/
 theorem Matrix.isReal_of_isPosMap
@@ -586,27 +617,9 @@ theorem Matrix.isReal_of_isPosMap
 by
   classical
   letI := Fintype.ofFinite n
-  intro x
-  rw [selfAdjointDecomposition x]
-  let L := aL x
-  have hL : L = aL x := rfl
-  let R := aR x
-  have hR : R = aR x := rfl
-  rw [← hL, ← hR]
-  simp only [star_add, map_add, star_smul, _root_.map_smul]
-  repeat rw [selfAdjointDecompositionLeft_isSelfAdjoint _]
-  suffices h2 : ∀ a (_ : _root_.IsSelfAdjoint a),
-      φ (star a) = star (φ a)
-  by
-    rw [← h2 _ (selfAdjointDecompositionLeft_isSelfAdjoint _),
-      ← h2 _ (selfAdjointDecompositionRight_isSelfAdjoint _),
-      selfAdjointDecompositionLeft_isSelfAdjoint,
-      selfAdjointDecompositionRight_isSelfAdjoint]
-  intro x hx
-  obtain ⟨a, b, rfl⟩ := Matrix.IsHermitian.posSemidefDecomposition' hx
-  simp only [star_sub, star_mul, star_star, map_sub, ← star_eq_conjTranspose]
-  rw [IsSelfAdjoint.of_nonneg (hφ (star_mul_self_nonneg a)),
-    IsSelfAdjoint.of_nonneg (hφ (star_mul_self_nonneg b))]
+  refine isReal_of_isPosMap_of_selfAdjointDecomposition hφ (fun x hx => ?_)
+  obtain ⟨a, b, hab⟩ := Matrix.IsHermitian.posSemidefDecomposition' hx
+  exact ⟨a, b, by simpa only [star_eq_conjTranspose] using hab⟩
 
 theorem StarNonUnitalAlgHom.toLinearMap_apply
   {R A B : Type*} [Semiring R] [NonUnitalNonAssocSemiring A]
@@ -664,27 +677,7 @@ theorem isReal_of_isPosMap
   [Ring K] [StarRing K] [PartialOrder K] [Algebra ℂ K] [StarOrderedRing K] [StarModule ℂ K]
   {φ : (B →L[ℂ] B) →ₗ[ℂ] K} (hφ : LinearMap.IsPosMap φ) :
   LinearMap.IsReal φ :=
-by
-  intro x
-  rw [selfAdjointDecomposition x]
-  let L := aL x
-  have hL : L = aL x := rfl
-  let R := aR x
-  have hR : R = aR x := rfl
-  rw [← hL, ← hR]
-  simp only [star_add, map_add, star_smul, map_smul]
-  repeat rw [selfAdjointDecompositionLeft_isSelfAdjoint _]
-  suffices h2 : ∀ a (_ : IsSelfAdjoint a),
-      φ (star a) = star (φ a)
-  by rw [← h2 _ (selfAdjointDecompositionLeft_isSelfAdjoint _),
-    ← h2 _ (selfAdjointDecompositionRight_isSelfAdjoint _),
-    selfAdjointDecompositionLeft_isSelfAdjoint,
-    selfAdjointDecompositionRight_isSelfAdjoint]
-  intro x hx
-  obtain ⟨a, b, rfl⟩ := hx.isPositiveDecomposition
-  simp only [star_sub, star_mul, star_star, map_sub]
-  rw [IsSelfAdjoint.of_nonneg (hφ (star_mul_self_nonneg a)),
-    IsSelfAdjoint.of_nonneg (hφ (star_mul_self_nonneg b))]
+isReal_of_isPosMap_of_selfAdjointDecomposition hφ (fun _ hx => hx.isPositiveDecomposition)
 
 theorem isReal_of_isPosMap_of_starAlgEquiv_piMat
   (hφ : isEquivToPiMat A)
@@ -692,27 +685,8 @@ theorem isReal_of_isPosMap_of_starAlgEquiv_piMat
   [Ring K] [StarRing K] [PartialOrder K] [Algebra ℂ K] [StarOrderedRing K] [StarModule ℂ K]
   {f : A →ₗ[ℂ] K} (hf : LinearMap.IsPosMap f) :
   LinearMap.IsReal f :=
-by
-  intro x
-  rw [selfAdjointDecomposition x]
-  let L := aL x
-  have hL : L = aL x := rfl
-  let R := aR x
-  have hR : R = aR x := rfl
-  rw [← hL, ← hR]
-  simp only [star_add, map_add, star_smul, map_smul]
-  repeat rw [selfAdjointDecompositionLeft_isSelfAdjoint _]
-  suffices h2 : ∀ a (_ : IsSelfAdjoint a),
-      f (star a) = star (f a)
-  by rw [← h2 _ (selfAdjointDecompositionLeft_isSelfAdjoint _),
-    ← h2 _ (selfAdjointDecompositionRight_isSelfAdjoint _),
-    selfAdjointDecompositionLeft_isSelfAdjoint,
-    selfAdjointDecompositionRight_isSelfAdjoint]
-  intro x hx
-  obtain ⟨a, b, rfl⟩ := hx.isPositiveDecomposition_of_starAlgEquiv_piMat hφ
-  simp only [star_sub, star_mul, star_star, map_sub]
-  rw [IsSelfAdjoint.of_nonneg (hf (star_mul_self_nonneg a)),
-    IsSelfAdjoint.of_nonneg (hf (star_mul_self_nonneg b))]
+isReal_of_isPosMap_of_selfAdjointDecomposition hf
+  (fun _ hx => hx.isPositiveDecomposition_of_starAlgEquiv_piMat hφ)
 
 /-- a $^*$-homomorphism from $A$ to $B$ is a positive map -/
 theorem starMulHom_isPosMap

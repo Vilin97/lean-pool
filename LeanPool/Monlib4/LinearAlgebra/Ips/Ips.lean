@@ -38,11 +38,9 @@ theorem Submodule.invariantUnder_iff_ortho_adjoint_invariant [FiniteDimensional 
     ∀ U : Submodule 𝕜 V,
       ∀ T : V →ₗ[𝕜] V, Submodule.InvariantUnder U T → Submodule.InvariantUnder Uᗮ (adjoint T)
     by
-    refine ⟨this U T, ?_⟩
-    intro h
+    refine ⟨this U T, fun h => ?_⟩
     rw [← LinearMap.adjoint_adjoint T, ← Submodule.orthogonal_orthogonal U]
-    apply this
-    exact h
+    exact this _ _ h
   clear U T
   simp only [Submodule.invariantUnder_iff, SetLike.mem_coe, Set.subset_def,
     Set.mem_image, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]

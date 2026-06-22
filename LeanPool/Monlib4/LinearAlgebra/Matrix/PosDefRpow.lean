@@ -120,13 +120,10 @@ noncomputable def _root_.Matrix.PosDef.eigenvaluesInvertible' {Q : Matrix n n �
     (hQ : Q.PosDef) :
     Invertible (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1) : n → 𝕜) := by
   letI := hQ.eigenvaluesInvertible
-  use (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1)⁻¹ : n → 𝕜)
-  · ext i
-    simp only [Pi.mul_def, Function.comp_apply, ← RCLike.ofReal_mul, Pi.inv_def,
-      inv_mul_cancel_of_invertible, RCLike.ofReal_one, Pi.one_def]
-  · ext i
-    simp only [Pi.mul_def, Function.comp_apply, ← RCLike.ofReal_mul, Pi.inv_def,
-      mul_inv_cancel_of_invertible, RCLike.ofReal_one, Pi.one_def]
+  use (RCLike.ofReal ∘ (IsHermitian.eigenvalues hQ.1)⁻¹ : n → 𝕜) <;>
+    · ext i
+      simp only [Pi.mul_def, Function.comp_apply, ← RCLike.ofReal_mul, Pi.inv_def,
+        inv_mul_cancel_of_invertible, mul_inv_cancel_of_invertible, RCLike.ofReal_one, Pi.one_def]
 
 theorem _root_.Matrix.PosDef.rpow_neg_one_eq_inv_self {Q : Matrix n n 𝕜}
     (hQ : Q.PosDef) :
