@@ -112,47 +112,7 @@ lemma inv_sub_posDef_of_trace_lt_one
     (htr : (B * U).trace < 1) :
     (U⁻¹ - B).PosDef := by
   classical
-  set hU_herm := hU.isHermitian
-  set eigP := (hU_herm.eigenvectorUnitary : Matrix V V ℝ)
-  set d := hU_herm.eigenvalues
-  have hP_star_mul : star eigP * eigP = 1 :=
-    Unitary.coe_star_mul_self hU_herm.eigenvectorUnitary
-  have hP_mul_star : eigP * star eigP = 1 :=
-    Unitary.coe_mul_star_self hU_herm.eigenvectorUnitary
-  have hU_eq : U = eigP * Matrix.diagonal d * star eigP := by
-    have h := hU_herm.spectral_theorem
-    simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-      RCLike.ofReal_real_eq_id, id] at h; exact h
-  have hd_pos : ∀ i, 0 < d i := hU.eigenvalues_pos
-  set sqrtd := fun i => Real.sqrt (d i) with sqrtd_def
-  set Uhalf := eigP * Matrix.diagonal sqrtd * star eigP with Uhalf_def
-  have hsqrtd_ne : ∀ i, sqrtd i ≠ 0 := fun i =>
-    ne_of_gt (Real.sqrt_pos_of_pos (hd_pos i))
-  have hUhalf_sq : Uhalf * Uhalf = U := by
-    rw [Uhalf_def, hU_eq]
-    calc eigP * Matrix.diagonal sqrtd * star eigP *
-        (eigP * Matrix.diagonal sqrtd * star eigP)
-      = eigP * Matrix.diagonal sqrtd * (star eigP * eigP) *
-          Matrix.diagonal sqrtd * star eigP := by simp only [Matrix.mul_assoc]
-      _ = eigP * (Matrix.diagonal sqrtd * Matrix.diagonal sqrtd) * star eigP := by
-          rw [hP_star_mul, Matrix.mul_one]; simp only [Matrix.mul_assoc]
-      _ = eigP * Matrix.diagonal d * star eigP := by
-          rw [Matrix.diagonal_mul_diagonal]
-          have hsq : (fun i => sqrtd i * sqrtd i) = d := by
-            ext i; exact Real.mul_self_sqrt (le_of_lt (hd_pos i))
-          rw [hsq]
-  have hdiag_herm : (Matrix.diagonal sqrtd).IsHermitian := by
-    simp [Matrix.IsHermitian]
-  have hUhalf_herm : Uhalf.IsHermitian := by
-    rw [Uhalf_def, Matrix.IsHermitian, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul]
-    simp only [star_eq_conjTranspose, Matrix.conjTranspose_conjTranspose, hdiag_herm.eq,
-      Matrix.mul_assoc]
-  have hUhalf_det : IsUnit Uhalf.det := by
-    rw [Uhalf_def, Matrix.det_mul, Matrix.det_mul, Matrix.det_diagonal]
-    refine IsUnit.mul (IsUnit.mul ?_ ?_) ?_
-    · exact IsUnit.of_mul_eq_one _ (by rw [← Matrix.det_mul, hP_mul_star, Matrix.det_one])
-    · exact IsUnit.mk0 _ (Finset.prod_ne_zero_iff.mpr fun i _ => hsqrtd_ne i)
-    · exact IsUnit.of_mul_eq_one _ (by rw [← Matrix.det_mul, hP_star_mul, Matrix.det_one])
+  obtain ⟨Uhalf, hUhalf_herm, hUhalf_det, hUhalf_sq⟩ := posDef_sqrt_exists U hU
   have hUhalf_inv_sq : Uhalf⁻¹ * Uhalf⁻¹ = U⁻¹ :=
     (Matrix.mul_inv_rev Uhalf Uhalf).symm ▸ congrArg Inv.inv hUhalf_sq
   set K := Uhalf * B * Uhalf with hK_def
@@ -164,31 +124,8 @@ lemma inv_sub_posDef_of_trace_lt_one
     rw [show Uhalf * B * Uhalf = Uhalf * (B * Uhalf) from Matrix.mul_assoc _ _ _,
         Matrix.trace_mul_comm Uhalf (B * Uhalf), Matrix.mul_assoc, hUhalf_sq]
     exact htr
-  have hIK_pd : ((1 : Matrix V V ℝ) - K).PosDef := by
-    set hK_herm := hK_psd.isHermitian
-    set eigQ := (hK_herm.eigenvectorUnitary : Matrix V V ℝ)
-    set eig := hK_herm.eigenvalues
-    have hQ_mul_star : eigQ * star eigQ = 1 :=
-      Unitary.coe_mul_star_self hK_herm.eigenvectorUnitary
-    have hK_eq : K = eigQ * Matrix.diagonal eig * star eigQ := by
-      have h := hK_herm.spectral_theorem
-      simp only [Unitary.conjStarAlgAut_apply, Function.comp_def,
-        RCLike.ofReal_real_eq_id, id] at h; exact h
-    have h_eig_lt_1 : ∀ i, eig i < 1 := fun i =>
-      lt_of_le_of_lt (eigenvalue_le_trace_of_posSemidef K hK_psd i) htrK_lt
-    have hQ_unit : IsUnit (eigQ : Matrix V V ℝ) := by
-      rw [Matrix.isUnit_iff_isUnit_det]
-      exact IsUnit.of_mul_eq_one _ (by rw [← Matrix.det_mul, hQ_mul_star, Matrix.det_one])
-    rw [hK_eq, ← hQ_mul_star,
-        show eigQ * star eigQ - eigQ * Matrix.diagonal eig * star eigQ =
-          eigQ * Matrix.diagonal (fun i => 1 - eig i) * star eigQ from by
-            rw [show eigQ * star eigQ = eigQ * 1 * star eigQ from by rw [Matrix.mul_one],
-                ← Matrix.sub_mul, ← Matrix.mul_sub]
-            congr 2; ext i j
-            simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.diagonal_apply]
-            split_ifs <;> simp,
-        hQ_unit.posDef_star_right_conjugate_iff]
-    exact Matrix.PosDef.diagonal (fun i => sub_pos.mpr (h_eig_lt_1 i))
+  have hIK_pd : ((1 : Matrix V V ℝ) - K).PosDef :=
+    one_sub_posDef_of_trace_lt_one K hK_psd htrK_lt
   have hUinv_sub_B : U⁻¹ - B = Uhalf⁻¹ * ((1 : Matrix V V ℝ) - K) * Uhalf⁻¹ := by
     rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one, hUhalf_inv_sq]
     congr 1; rw [hK_def]; symm
