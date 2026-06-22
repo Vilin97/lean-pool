@@ -197,9 +197,7 @@ attribute [simp] h'lvl
   calc
     List.map Prod.fst (List.take (2 * k) H.liftShort.val ++ [H.liftShort.val[2 * k]]) =
         List.map Prod.fst (List.take (2 * k) H.liftShort.val) ++
-          [H.liftShort.val[2 * k].1] := by
-      exact (List.map_append (f := Prod.fst) (l₁ := List.take (2 * k) H.liftShort.val)
-        (l₂ := [H.liftShort.val[2 * k]])).trans (by rfl)
+          [H.liftShort.val[2 * k].1] := List.map_append ..
     _ = List.take (2 * k) (List.take (2 * k + 1) H.x.val) ++
         [H.liftShort.val[2 * k].1] := by
       congr 1
@@ -264,8 +262,7 @@ def liftMediumVal : List (upA hyp) := H.liftShort.val ++ [⟨H.liftNode, H.liftT
   calc
     H.liftMediumVal.map Prod.fst = H.liftShort.val.map Prod.fst ++ [H.liftNode] := by
       rw [liftMediumVal]
-      exact (List.map_append (f := Prod.fst) (l₁ := H.liftShort.val)
-        (l₂ := [⟨H.liftNode, H.liftTree⟩])).trans (by rfl)
+      exact List.map_append ..
     _ = H.x.val.take (2 * k + 1) ++ [H.x.val[2 * k + 1]] := by
       rw [H.liftShort_val_map]
       rfl
@@ -286,8 +283,8 @@ def liftVal := H.liftMediumVal ++
   change List.map Prod.fst (H.liftMediumVal ++ tail) = H.x.val
   calc
     List.map Prod.fst (H.liftMediumVal ++ tail) =
-        H.liftMediumVal.map Prod.fst ++ tail.map Prod.fst := by
-      exact List.map_append (f := Prod.fst) (l₁ := H.liftMediumVal) (l₂ := tail)
+        H.liftMediumVal.map Prod.fst ++ tail.map Prod.fst :=
+      List.map_append ..
     _ = H.liftMediumVal.map Prod.fst ++ H.x.val.drop (2 * k + 2) := by
       congr 1
       change List.map Prod.fst

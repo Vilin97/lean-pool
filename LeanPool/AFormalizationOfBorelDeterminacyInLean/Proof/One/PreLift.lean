@@ -138,14 +138,7 @@ def liftVeryShort : gameTree hyp where
     H.liftVeryShort.val.map Prod.fst =
         (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.map Prod.fst ++
           [H.x.val[2 * k]] := by
-      change List.map Prod.fst
-          ((pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val ++
-            [⟨H.x.val[2 * k], H.liftTree⟩]) =
-        (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val.map Prod.fst ++
-          [H.x.val[2 * k]]
-      exact (List.map_append (f := Prod.fst)
-        (l₁ := (pInv (treeHom hyp) (Tree.take (2 * k) H.x)).val)
-        (l₂ := [⟨H.x.val[2 * k], H.liftTree⟩])).trans (by rfl)
+      exact List.map_append ..
     _ = H.x.val.take (2 * k) ++ [H.x.val[2 * k]] := by
       congr 1
       change (treeHom hyp (pInv (treeHom hyp) (Tree.take (2 * k) H.x))).val =
@@ -290,8 +283,7 @@ lemma take_le_take hm hn : H.take m hm ≤ H.take n hn ↔ m ≤ n ∨ H.x.val.l
 lemma eq_take {H H' : Lift hyp} (h : H ≤ H') (ht : H.liftTree = H'.liftTree) :
   H = H'.take H.x.val.length (by simp) := by
   ext1
-  · symm
-    exact h
+  · exact h.symm
   · exact ht
 lemma liftVal_mono {H H' : Lift hyp} (h : H ≤ H') (ht : H.liftTree = H'.liftTree) :
   H.liftVal <+: H'.liftVal := by rw [eq_take h ht]; simpa using List.take_prefix _ _
@@ -333,9 +325,7 @@ lemma conLong : H.x.val.drop (2 * k + 2) ∈ getTree' hyp H.liftShort.val := by
         [H.liftShort.val[2 * k + 1]]) =
         List.map Prod.fst (List.take (2 * k + 1) H.liftShort.val) ++
           [H.liftShort.val[2 * k + 1].1] := by
-      exact (List.map_append (f := Prod.fst)
-        (l₁ := List.take (2 * k + 1) H.liftShort.val)
-        (l₂ := [H.liftShort.val[2 * k + 1]])).trans (by rfl)
+      exact List.map_append ..
     _ = H.x.val.take (2 * k + 1) ++ [H.x.val[2 * k + 1]] := by
       congr 1
       · exact congrArg (List.map Prod.fst) H.liftShort_val_take |>.trans
@@ -358,7 +348,7 @@ lemma conLong : H.x.val.drop (2 * k + 2) ∈ getTree' hyp H.liftShort.val := by
     calc
       List.map Prod.fst (H.liftShort.val ++ tail) =
           H.liftShort.val.map Prod.fst ++ tail.map Prod.fst := by
-        exact List.map_append (f := Prod.fst) (l₁ := H.liftShort.val) (l₂ := tail)
+        exact List.map_append ..
       _ = H.liftShort.val.map Prod.fst ++ H.x.val.drop (2 * k + 2) := by
         congr 1
         change List.map Prod.fst

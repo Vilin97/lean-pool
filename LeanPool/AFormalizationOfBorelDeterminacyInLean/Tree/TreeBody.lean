@@ -101,9 +101,7 @@ lemma subAt_body_image_compl : Subtype.val '' ((body.append x)⁻¹' X)ᶜ
     · exact (body.append x b).prop
     · rintro ⟨z, hz, hz_eq⟩
       apply hb
-      have hbz : body.append x b = z := by
-        ext1
-        exact hz_eq.symm
+      have hbz : body.append x b = z := Subtype.ext hz_eq.symm
       simpa [hbz] using hz
   · intro h
     refine ⟨⟨a, ?_⟩, ?_, rfl⟩

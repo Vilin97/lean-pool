@@ -65,33 +65,18 @@ lemma losable_of_losable_not_lost n (hL : (takeLift y n).Losable)
         2 * k + 2 + (2 * k + 1 + max 1 pnum - (2 * k + 2)) =
           min (2 * k + 2 + n) (2 * k + 1 + hL.2.num + (1 - pnum)) := by
       rw [hpnum_def]
-      by_cases hpzero : pnum = 0
-      · simp [hpzero]
-      · have hpone : 1 ≤ pnum := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hpzero)
-        have hpmax_eq : max 1 pnum = pnum := max_eq_right hpone
-        simp [hpmax_eq]
-        omega
+      omega
     have hW : (takeLift y m).Winnable := hW
     replace hW := hW.take (2 * k + 1 + max 1 pnum) (by omega)
-    replace hL := hL.take (n := 1 - pnum) (by
-      by_cases hpzero : pnum = 0
-      · simp [pnum, hpzero]
-      · have hpone : 1 ≤ pnum := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hpzero)
-        omega)
+    replace hL := hL.take (n := 1 - pnum) (by omega)
     simp_rw [takeLift] at hW hL
     rw [← TreeLift.lift_take _ (by omega) (by simp; omega)] at hW
     rw [← TreeLift.lift_take _ (by
       change 2 * k < 2 * k + 1 + pnum + (1 - pnum)
-      by_cases hpzero : pnum = 0
-      · omega
-      · have hpone : 1 ≤ pnum := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hpzero)
-        omega) (by
+      omega) (by
       conv => simp
       change 2 * k + 2 ≤ 2 * k + 1 + pnum + (1 - pnum)
-      by_cases hpzero : pnum = 0
-      · omega
-      · have hpone : 1 ≤ pnum := Nat.succ_le_of_lt (Nat.pos_of_ne_zero hpzero)
-        omega)] at hL
+      omega)] at hL
     simp (disch := omega) only [bodyTake_take, min_eq_left] at hW hL
     cases hW (by
       convert hL.2 using 6

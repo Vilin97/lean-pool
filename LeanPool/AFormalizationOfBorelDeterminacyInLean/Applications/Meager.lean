@@ -70,12 +70,6 @@ lemma IsNowhereDense.preimage {A : Set Y} (h : IsNowhereDense A)
 
 lemma Dense.dense_in_open (hU : IsOpen U) (hD : Dense A) : Dense (U ↓∩ A) :=
   hD.preimage hU.isOpenMap_subtype_val
-/-lemma dense_in_open_mono {A U V : Set X} (hU : IsOpen U) (hUV : U ⊆ V) (hD : Dense (V ↓∩ A)) :
-  Dense (U ↓∩ A) := by
-  --have := hD.dense_in_open (U := V ↓∩ U) (hU.preimage continuous_subtype_val)
-  simp [Subtype.dense_iff] at *; intro x hx; rw [mem_closure_iff]; intro W hW hxW
-  have hx' := hD (hUV hx); rw [mem_closure_iff] at hx'
-  convert hx' (W ∩ U) (hW.inter hU) ⟨hxW, hx⟩ using 1; aesop-/
 lemma somewhereDense_iff : ¬ IsNowhereDense A ↔ ∃ U, U.Nonempty ∧ IsOpen U ∧ Dense (U ↓∩ A) := by
   simp_rw [Subtype.dense_iff, Subtype.image_preimage_coe]; constructor
   · intro h

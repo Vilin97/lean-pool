@@ -155,13 +155,9 @@ def resEqAdj (k : ℕ) : constTree k ⊣ resEq k := Adjunction.mkOfUnitCounit {
           _ = List.replicate k (headD x) := by
             rw [← headD_nonempty x hxl]
       rw [LenHom.h_length_simp, hhead]
-      have htake :
-          List.take x.val.length (List.replicate k (headD x)) =
-            List.replicate (min x.val.length k) (headD x) :=
-        List.take_replicate
       calc
         List.take x.val.length (List.replicate k (headD x)) =
-            List.replicate (min x.val.length k) (headD x) := htake
+            List.replicate (min x.val.length k) (headD x) := List.take_replicate
         _ = List.replicate x.val.length (headD x) := by
           rw [min_eq_left (constTree_length x)]
         _ = x.val := eq_replicate_headD x
@@ -277,10 +273,8 @@ def isLimit : Limits.IsLimit (limCone F) where
     · exact (LenHom.h_length_simp f x).trans (LenHom.h_length_simp (isLimitLift F s) x).symm
     · intro j
       have hπ := congrArg (fun g : s.pt ⟶ F.obj j ↦ (g x).val) (h j)
-      have hright :
-          List.mapEval j ((isLimitLift F s).toFun x).val = ((s.π.app j) x).val :=
-        coneZip_mapEval F s x j
-      rw [hright]
+      rw [show List.mapEval j ((isLimitLift F s).toFun x).val = ((s.π.app j) x).val from
+        coneZip_mapEval F s x j]
       convert hπ using 1
 end «TreeLimits»
 

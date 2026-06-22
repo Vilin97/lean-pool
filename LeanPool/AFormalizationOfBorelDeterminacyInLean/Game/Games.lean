@@ -113,23 +113,19 @@ def payoff (p : Player) (G : Game A) : Set (body G.tree) := match p with
   by_cases h : x.length % 2 = 0
   · cases p
     · unfold Player.payoff Player.residual
-      rw [if_pos h]
-      rw [Game.residual_payoff_even G x h]
+      rw [if_pos h, Game.residual_payoff_even G x h]
     · unfold Player.payoff Player.residual
-      rw [if_pos h]
-      rw [Game.residual_payoff_even G x h]
+      rw [if_pos h, Game.residual_payoff_even G x h]
       ext y
       rfl
   · have hodd : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp h
     cases p
     · unfold Player.payoff Player.residual
-      rw [if_neg h]
-      rw [Game.residual_payoff_odd G x hodd]
+      rw [if_neg h, Game.residual_payoff_odd G x hodd]
       ext y
       rfl
     · unfold Player.payoff Player.residual
-      rw [if_neg h]
-      rw [Game.residual_payoff_odd G x hodd]
+      rw [if_neg h, Game.residual_payoff_odd G x hodd]
       exact compl_compl (body.append x ⁻¹' G.payoff)
 end Player
 @[congr] lemma subtype_val_player_payoff {G' p'} (h : G = G') (hp : p = p') :

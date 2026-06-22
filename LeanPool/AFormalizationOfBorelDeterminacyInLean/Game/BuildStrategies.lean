@@ -30,14 +30,10 @@ noncomputable def tryAndElse (planA planB : PreStrategy T p) :
 variable {planA planB planB' : PreStrategy T p}
 @[gcongr] lemma tryAndElse_mono (hB : planB ≤ planB') :
   tryAndElse planA planB ≤ tryAndElse planA planB' := by
-  intro _ _; unfold tryAndElse; split_ifs
-  · rfl
-  · apply hB
+  intro _ _; unfold tryAndElse; split_ifs <;> [rfl; apply hB]
 lemma quasi_of_planB (h : planB.IsQuasi) :
   (planA.tryAndElse planB).IsQuasi := by
-  dsimp [IsQuasi, tryAndElse]; intros; split_ifs
-  · assumption
-  · apply h
+  dsimp [IsQuasi, tryAndElse]; intros; split_ifs <;> [assumption; apply h]
 lemma planA_sub : planA ≤ planA.tryAndElse planB := by
   intro _ _ _ h'; dsimp [tryAndElse]; split_ifs with h
   · exact h'
@@ -261,8 +257,7 @@ lemma wonPosition_iff_disjoint' {x} :
   simp only [Set.eq_univ_iff_forall, Set.eq_empty_iff_forall_notMem, Set.mem_inter_iff,
     Set.mem_range]
   constructor
-  · intro h z hz
-    rcases hz with ⟨⟨a, rfl⟩, hpay⟩
+  · rintro h z ⟨⟨a, rfl⟩, hpay⟩
     rw [Player.payoff_swap_residual] at hpay
     have hpre := h a
     rw [Player.payoff_residual] at hpre
@@ -310,9 +305,7 @@ lemma subtree_induction_body {f g : PreStrategy T p} {x} (h : x ∈ body f.subtr
   apply mem_body_of_take 0; intro n _; apply f.subtree_induction (by apply h; simp)
   intro m hm hx hp; simp at hm
   have hnode : take m (f.subtreeIncl ⟨Stream'.take n x, by apply h; simp⟩) =
-      f.subtreeIncl (body.take m ⟨x, h⟩) := by
-    ext
-    simp [hm.le]
+      f.subtreeIncl (body.take m ⟨x, h⟩) := by ext; simp [hm.le]
   intro ha
   let hp' : IsPosition (f.subtreeIncl (body.take m ⟨x, h⟩)).val p := by
     simpa [← hnode] using hp

@@ -149,6 +149,4 @@ lemma nat_add_initial {F : ℕᵒᵖ ⥤ C} {s : Limits.Cone F} (hs : Limits.IsL
   IsIso (s.π.app (Opposite.op k)) := by
   apply Functor.IsEventuallyConstantTo.isIso_π_of_isLimit _ hs
   intro c f
-  apply isIso_map_nat
-  · exact hn
-  · exact hk
+  exact isIso_map_nat _ hn _ hk

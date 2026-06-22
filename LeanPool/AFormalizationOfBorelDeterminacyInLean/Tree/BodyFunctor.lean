@@ -98,8 +98,8 @@ variable {S T : Trees}
 @[simps obj] def bodyPre : Prefunctor Trees (Type*) where
   obj S := body S.2
   map f := TypeCat.ofHom fun a ↦ bodyMap f.toOrderHom ⟨a, by simp⟩
-@[ext] lemma bodyPre_obj_ext {x y : bodyPre.obj S} (h : x.val = y.val) : x = y := by
-  exact Subtype.ext h
+@[ext] lemma bodyPre_obj_ext {x y : bodyPre.obj S} (h : x.val = y.val) : x = y :=
+  Subtype.ext h
 lemma LenHom.bodyMap_spec (f : S ⟶ T) (a : body S.2)
   x (hx : (a : Stream' S.1) ∈ principalOpen x) n (hlx : n < x.length) :
   (bodyPre.map f a).val.get n = (f ⟨x, a.prop x hx⟩).val[n]'(by simpa) := by

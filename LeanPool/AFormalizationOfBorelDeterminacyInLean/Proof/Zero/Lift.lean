@@ -183,11 +183,6 @@ include hW in lemma liftMedium_mem : H.toWLift.liftMediumVal ∈ T' := by
                 rw [WLLift.liftVal_lift]
                 simp [toWLift]
 attribute [simp_lengths] toWLift'_toWLLift
-/-lemma extracted_1 {H : WLLift' hyp} (hp) (R) (h') :
-  (ExtensionsAt.val' (ExtensionsAt.map π (x := H.lift)
-    (y := @PreLift.x A inferInstance G k hyp H.toPreLift) h' (H.extension hp R))) =
-    ... := by
-    rw [ExtensionsAt.map_val'] --adding π fixes-/
 lemma extension_conLong hp R : (hW.toWLift'.extensionLift hp R).ConLong := by
   have hm : H.x.val[2 * k + 1] :: (((hW.toWLift'.extensionMap hp R).val').drop (2 * k + 2))
     ∈ H.game.tree := by

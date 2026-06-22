@@ -109,8 +109,7 @@ lemma extracted_2 {G : Game A} {p : Player} {x : List A} (h : WinningPrefix G p 
   · rw [h.extend_num, h.take_num]
   · rw [h.extend_num, h.take_num]
   · congr!
-    symm
-    apply cast_heq
+    exact (cast_heq _ _).symm
 lemma extend_strat y : HEq (h.extend y).strat h.strat :=
   choose_eq' --even explicit arguments do not help with performance
     (α := Strategy (G.residual ((x ++ y).take (h.extend y).num)).tree
