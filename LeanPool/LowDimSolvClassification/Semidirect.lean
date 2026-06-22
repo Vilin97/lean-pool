@@ -147,11 +147,9 @@ def inr : J →ₗ⁅K⁆ L ⋉[φ] J := {
     · simp only [RingHom.id_apply, smul_right]
   map_lie' := by
     intro x y
-    ext
-    · simp only [bracket_def, lie_self, map_zero, LieDerivation.coe_zero, Pi.zero_apply,
-      sub_self, zero_add]
-    · simp only [bracket_def, lie_self, map_zero, LieDerivation.coe_zero, Pi.zero_apply,
-      sub_self, zero_add]
+    ext <;>
+      simp only [bracket_def, lie_self, map_zero, LieDerivation.coe_zero, Pi.zero_apply,
+        sub_self, zero_add]
 }
 
 /-- TODO. -/

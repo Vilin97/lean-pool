@@ -371,11 +371,8 @@ theorem LinearEquiv.toSpanSingleton_apply {x : L} (h : x ≠ 0) (a : K) :
   have range := LinearMap.span_singleton_eq_range K L x
   rw [← LinearMap.toSpanSingleton_apply, ← LinearEquiv.ofInjective_apply (h := inj)]
   congr 2
-  · rw [range]
-  · rw [range]
-  · rw [range]
-  · rw [range]
-  · apply cast_heq
+  any_goals rw [range]
+  apply cast_heq
 
 @[simp]
 theorem LinearEquiv.toSpanSingleton_symm_apply {x : L} (h : x ≠ 0) (a : K) :
@@ -447,8 +444,7 @@ theorem derivedSeries_succ_is_span {k : ℕ} : (LieAlgebra.derivedSeries K L (k 
     | lie x y _ hy =>
       refine span_induction ?mem ?zero ?add ?smul hy
       · intro z ⟨a, b, hz⟩
-        simp only [LieIdeal.coe_bracket_of_module, LieSubmodule.coe_bracket,
-          ] at hz
+        simp only [LieIdeal.coe_bracket_of_module, LieSubmodule.coe_bracket] at hz
         rw [← hz, leibniz_lie]
         apply add_mem
         · apply subset_span
