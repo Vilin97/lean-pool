@@ -528,6 +528,26 @@ lemma integrableOn_exp_neg_mul_sq_const_Ioi (m : ℝ) (hm : 0 < m) (C : ℝ) :
     IntegrableOn (fun t => Real.exp (-t * m^2) * C) (Set.Ioi 0) :=
   (integrableOn_exp_neg_mul_sq_Ioi m hm).mul_const C
 
+/-- Continuity on `(0, ∞)` of `s ↦ exp(-s m²) · H(s, r)`. -/
+private lemma continuousOn_exp_mul_heatKernel (m r : ℝ) :
+    ContinuousOn (fun s => Real.exp (-s * m^2) * heatKernelPositionSpace s r) (Set.Ioi 0) := by
+  refine ContinuousOn.mul
+    ((Real.continuous_exp.comp (continuous_neg.mul continuous_const)).continuousOn) ?_
+  intro s hs
+  exact (heatKernelPositionSpace_continuous_at s (Set.mem_Ioi.mp hs) r).continuousWithinAt
+
+/-- Integrability on `(0, ∞)` of `s ↦ exp(-s m²) · H(s, r)` for `m, r > 0`. -/
+private lemma integrableOn_exp_mul_heatKernel (m : ℝ) (hm : 0 < m) (r : ℝ) (hr : 0 < r) :
+    IntegrableOn (fun s => Real.exp (-s * m^2) * heatKernelPositionSpace s r) (Set.Ioi 0) := by
+  obtain ⟨C, hCpos, hCbound⟩ := heatKernelPositionSpace_bounded r hr
+  refine Integrable.mono (integrableOn_exp_neg_mul_sq_const_Ioi m hm C)
+    ((continuousOn_exp_mul_heatKernel m r).aestronglyMeasurable measurableSet_Ioi) ?_
+  refine MeasureTheory.ae_restrict_of_forall_mem measurableSet_Ioi fun s hs => ?_
+  rw [Real.norm_eq_abs, Real.norm_eq_abs,
+    abs_of_nonneg (mul_nonneg (Real.exp_nonneg _) (heatKernelPositionSpace_nonneg s hs r)),
+    abs_of_nonneg (mul_nonneg (Real.exp_nonneg _) hCpos.le)]
+  exact mul_le_mul_of_nonneg_left (hCbound s hs) (Real.exp_nonneg _)
+
 /-- The Gaussian Fourier transform gives the heat kernel (times normalization).
     ∫_k e^{-s‖k‖²} e^{-ik·z} dk = (2π)^d H(s, ‖z‖)
 
@@ -1245,28 +1265,7 @@ lemma covarianceSchwingerRegulated_le_const_mul (m : ℝ) (hm : 0 < m) (r : ℝ)
       ∫ s in Set.Ioi 0, Real.exp (-s * m^2) * heatKernelPositionSpace s r := by
     -- Use setIntegral_mono_set: ∫_s ≤ ∫_t when s ⊆ t and f ≥ 0
     apply MeasureTheory.setIntegral_mono_set
-    · -- IntegrableOn f (Ioi 0)
-      -- Bound heat kernel and use integrableOn_exp_neg_mul_sq_const_Ioi
-      obtain ⟨C, hCpos, hCbound⟩ := heatKernelPositionSpace_bounded r hr
-      have h_bound_int : IntegrableOn (fun s => Real.exp (-s * m^2) * C) (Set.Ioi 0) :=
-        integrableOn_exp_neg_mul_sq_const_Ioi m hm C
-      refine Integrable.mono h_bound_int ?_ ?_
-      · -- AEStronglyMeasurable
-        have h_cont : ContinuousOn (fun s => Real.exp (-s * m^2) * heatKernelPositionSpace s r)
-          (Set.Ioi 0) := by
-          apply ContinuousOn.mul
-          · exact (Real.continuous_exp.comp (continuous_neg.mul continuous_const)).continuousOn
-          · intro s hs
-            exact (heatKernelPositionSpace_continuous_at s hs r).continuousWithinAt
-        exact h_cont.aestronglyMeasurable measurableSet_Ioi
-      · -- Pointwise bound
-        apply MeasureTheory.ae_restrict_of_forall_mem measurableSet_Ioi
-        intro s hs
-        rw [Real.norm_eq_abs, Real.norm_eq_abs]
-        have h_nonneg : 0 ≤ Real.exp (-s * m^2) * heatKernelPositionSpace s r :=
-          mul_nonneg (Real.exp_nonneg _) (heatKernelPositionSpace_nonneg s hs r)
-        rw [abs_of_nonneg h_nonneg, abs_of_nonneg (mul_nonneg (Real.exp_nonneg _) (le_of_lt hCpos))]
-        exact mul_le_mul_of_nonneg_left (hCbound s hs) (Real.exp_nonneg _)
+    · exact integrableOn_exp_mul_heatKernel m hm r hr
     · -- f ≥ 0 a.e. on Ioi 0
       apply MeasureTheory.ae_restrict_of_forall_mem measurableSet_Ioi
       intro s hs

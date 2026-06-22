@@ -44,6 +44,9 @@ open BigOperators MeasureTheory Complex TopologicalSpace Finsupp
 
 noncomputable section
 
+private lemma real_inner_eq_mul (a b : ℝ) : @inner ℝ ℝ _ a b = b * a :=
+  RCLike.inner_apply a b
+
 /-! ## CF constantly 1 implies random variable is 0 a.e. -/
 
 /-- If X : Ω → ℝ is measurable and ∫ exp(I * ↑(t * X(ω))) dν = 1 for all t ∈ ℝ,
@@ -873,8 +876,7 @@ private lemma joint_kernel_bound_finite
   have h_inner : ∀ (ω : E → ℝ) (v : V),
       @inner ℝ V _ (eval_z ω) v = ∑ j, v j * ω (z j) := by
     intro ω v; erw [PiLp.inner_apply]
-    simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-      fun a b => RCLike.inner_apply a b, h_coord]
+    simp only [real_inner_eq_mul, h_coord]
   -- Step 3: CF of μ' equals v ↦ Φ(∑ vⱼ zⱼ)
   have h_cf : ∀ v : V, charFun μ'.toMeasure v = Φ (∑ i, v i • z i) := by
     intro v; rw [charFun_apply]
@@ -1333,8 +1335,7 @@ private lemma tail_bound_uniform_gaussian_average
   have h_inner_V : ∀ (ω : E → ℝ) (v : V),
       @inner ℝ V _ (eval_e ω) v = ∑ j, v j * ω (e j) := by
     intro ω v; erw [PiLp.inner_apply]
-    simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-      fun a b => RCLike.inner_apply a b, h_coord]
+    simp only [real_inner_eq_mul, h_coord]
   have h_cf : ∀ v : V, charFun μ'.toMeasure v = Φ (∑ i, v i • e i) := by
     intro v; rw [charFun_apply]
     change ∫ y : V, cexp (@inner ℝ V _ y v * I) ∂(ν.map eval_e) = Φ (∑ i, v i • e i)
@@ -1372,8 +1373,7 @@ private lemma tail_bound_uniform_gaussian_average
     intro v
     change @inner ℝ V _ v (S_fun v) = _
     erw [PiLp.inner_apply]
-    simp_rw [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-      fun a b => RCLike.inner_apply a b, hS_coord', Finset.sum_mul]
+    simp_rw [real_inner_eq_mul, hS_coord', Finset.sum_mul]
     rw [← Seminorm.innerProd_self p_inner, p_inner.innerProd_sum_left hp_inner]
     simp_rw [gs_innerProd_sum_right p_inner hp_inner,
       p_inner.innerProd_smul_left hp_inner, gs_innerProd_smul_right p_inner hp_inner]
@@ -1384,8 +1384,7 @@ private lemma tail_bound_uniform_gaussian_average
       have h_expand_inner : ∀ (a b : V),
           @inner ℝ V _ (S_fun a) b = ∑ j, ∑ l, Mij j l * a l * b j := by
         intro a b; erw [PiLp.inner_apply]
-        simp_rw [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-          fun a b => RCLike.inner_apply a b, hS_coord', Finset.mul_sum]
+        simp_rw [real_inner_eq_mul, hS_coord', Finset.mul_sum]
         congr 1; ext j; congr 1; ext l; ring
       rw [h_expand_inner]
       rw [show @inner ℝ V _ v (S_fun w) = @inner ℝ V _ (S_fun w) v from
@@ -1427,14 +1426,12 @@ private lemma tail_bound_uniform_gaussian_average
       have h_single_left : ∀ (v : V),
           @inner ℝ V _ (EuclideanSpace.single j 1) v = v j := by
         intro v; erw [PiLp.inner_apply]
-        simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-          fun a b => RCLike.inner_apply a b]
+        simp only [real_inner_eq_mul]
         simp [PiLp.single_apply]
       have h_single_right : ∀ (v : V),
           @inner ℝ V _ v (EuclideanSpace.single l 1) = v l := by
         intro v; erw [PiLp.inner_apply]
-        simp only [show ∀ (a b : ℝ), @inner ℝ ℝ _ a b = b * a from
-          fun a b => RCLike.inner_apply a b]
+        simp only [real_inner_eq_mul]
         simp [PiLp.single_apply]
       simp only [h_single_left, h_single_right, PiLp.single_apply] at key
       exact key.symm.symm

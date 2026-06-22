@@ -88,6 +88,21 @@ concentrates at ξ₀. Since φ̂ is continuous (Riemann-Lebesgue), the integral
 converges to φ̂(ξ₀) · (const), giving φ̂(ξ₀) ≥ 0.
 -/
 
+omit [FiniteDimensional ℝ V] in
+/-- On a finite measure, `x ↦ cexp (⟪x, v⟫ * I)` is integrable (it has norm 1). -/
+private lemma integrable_cexp_inner_mul_I (μ : Measure V) [IsFiniteMeasure μ] (v : V) :
+    Integrable (fun x : V => cexp (↑⟪x, v⟫_ℝ * I)) μ :=
+  (memLp_top_of_bound (by fun_prop : Continuous _).aestronglyMeasurable 1
+    (ae_of_all _ fun x => by simp [Complex.norm_exp_ofReal_mul_I])).integrable le_top
+
+/-- Gaussian x ↦ cexp(-t‖x‖²) is integrable for t > 0. -/
+private lemma gaussian_cexp_integrable (t : ℝ) (ht : 0 < t) :
+    Integrable (fun x : V => cexp (-(t : ℂ) * ↑(‖x‖ ^ 2))) := by
+  have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
+    (V := V) (b := (t : ℂ)) (show 0 < ((t : ℂ)).re from by simp [ht]) 0 (0 : V)
+  simp only [add_zero, zero_mul] at this
+  convert this using 1; ext x; push_cast; ring
+
 /-- The double sum ∑ᵢ ∑ⱼ conj(aᵢ) * aⱼ equals normSq(∑ₖ aₖ). -/
 private lemma sum_star_mul_eq_normSq {m : ℕ} (a : Fin m → ℂ) :
     ∑ i, ∑ j, starRingEnd ℂ (a i) * a j = ↑(Complex.normSq (∑ k, a k)) := by
@@ -129,8 +144,7 @@ lemma isPositiveDefinite_charFun (μ : Measure V) [IsFiniteMeasure μ] :
     -- Integrability of exponentials on a finite measure (norm ≤ 1)
     have hexp_int : ∀ v : V, Integrable (fun x : V =>
         cexp (↑⟪x, v⟫_ℝ * I)) μ :=
-      fun v => (memLp_top_of_bound (by fun_prop : Continuous _).aestronglyMeasurable 1
-        (ae_of_all _ fun x => by simp [Complex.norm_exp_ofReal_mul_I])).integrable le_top
+      fun v => integrable_cexp_inner_mul_I μ v
     -- Integrability of each summand cbarᵢcⱼ·exp
     have hterm_int : ∀ i j, Integrable (fun x : V =>
         (starRingEnd ℂ) (c i) * c j * cexp (↑⟪x, t i - t j⟫_ℝ * I)) μ :=
@@ -221,8 +235,7 @@ lemma isPositiveDefinite_mul_charFun {φ : V → ℂ} (hpd : IsPositiveDefinite 
     -- Integrability of exponentials on a finite measure (norm ≤ 1)
     have hexp_int : ∀ v : V, Integrable (fun x : V =>
         cexp (↑⟪x, v⟫_ℝ * I)) μ :=
-      fun v => (memLp_top_of_bound (by fun_prop : Continuous _).aestronglyMeasurable 1
-        (ae_of_all _ fun x => by simp [Complex.norm_exp_ofReal_mul_I])).integrable le_top
+      fun v => integrable_cexp_inner_mul_I μ v
     -- Integrability of each summand cbarᵢcⱼφ(dᵢⱼ)·exp
     have hterm_int : ∀ i j, Integrable (fun x : V =>
         (starRingEnd ℂ) (c i) * c j * φ (t i - t j) *
@@ -321,13 +334,8 @@ private lemma gaussian_eq_charFun (ε : ℝ) (hε : 0 < ε) :
   -- Define the measure
   set μ := volume.withDensity density
   -- Integrability of the complex Gaussian
-  have hgauss_cint : Integrable (fun x : V => cexp (-(a : ℂ) * ↑(‖x‖ ^ 2))) := by
-    have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
-      (show 0 < ((a : ℂ)).re by simp [ha]) (0 : ℂ) (0 : V)
-    simp only [neg_mul] at this
-    convert this using 1
-    ext x
-    simp [Complex.ofReal_pow]
+  have hgauss_cint : Integrable (fun x : V => cexp (-(a : ℂ) * ↑(‖x‖ ^ 2))) :=
+    gaussian_cexp_integrable a ha
   -- The real Gaussian is integrable (derived from complex version)
   have hgauss_rint : Integrable (fun x : V => C * rexp (-a * ‖x‖ ^ 2)) := by
     apply Integrable.const_mul
@@ -440,13 +448,8 @@ lemma gaussianRegularize_integrable (φ : V → ℂ) (hpd : IsPositiveDefinite �
     (hcont : Continuous φ) (ε : ℝ) (hε : 0 < ε) :
     Integrable (gaussianRegularize φ ε) := by
   -- The Gaussian exp(-ε‖x‖²) is integrable
-  have hgauss : Integrable (fun x : V => cexp (-(↑ε : ℂ) * ↑(‖x‖ ^ 2))) := by
-    have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
-      (show 0 < (↑ε : ℂ).re by simp [hε]) (0 : ℂ) (0 : V)
-    simp only [neg_mul] at this
-    convert this using 1
-    ext x
-    simp [Complex.ofReal_pow]
+  have hgauss : Integrable (fun x : V => cexp (-(↑ε : ℂ) * ↑(‖x‖ ^ 2))) :=
+    gaussian_cexp_integrable ε hε
   -- φ is bounded: ‖φ(x)‖ ≤ (φ 0).re
   -- So ‖φ(x) * exp(-ε‖x‖²)‖ = ‖φ(x)‖ * ‖exp(-ε‖x‖²)‖ ≤ (φ 0).re * ‖exp(-ε‖x‖²)‖
   -- The bound function (φ 0).re * ‖exp(-ε‖x‖²)‖ is integrable
@@ -774,14 +777,6 @@ private lemma parseval_l1 (f g : V → ℂ) (hf : Integrable f) (hg : Integrable
   simp only [smul_eq_mul] at h
   convert h using 2
   · ext x; congr 1; rw [flip_innerₗ]; rfl
-
-/-- Gaussian x ↦ cexp(-t‖x‖²) is integrable for t > 0. -/
-private lemma gaussian_cexp_integrable (t : ℝ) (ht : 0 < t) :
-    Integrable (fun x : V => cexp (-(t : ℂ) * ↑(‖x‖ ^ 2))) := by
-  have := GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
-    (V := V) (b := (t : ℂ)) (show 0 < ((t : ℂ)).re from by simp [ht]) 0 (0 : V)
-  simp only [add_zero, zero_mul] at this
-  convert this using 1; ext x; push_cast; ring
 
 /-- The Fourier transform of a Gaussian is integrable (it's also a Gaussian). -/
 private lemma ft_gaussian_integrable (t : ℝ) (ht : 0 < t) :

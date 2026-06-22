@@ -324,6 +324,13 @@ private lemma closedBall_sub_norm_subset (v : V) (R : ℝ) :
     simp only [dist_zero_right, dist_zero_left] at h1
     linarith
 
+/-- The real volume of a centered closed ball as a power of the radius. -/
+private lemma volume_closedBall_toReal_eq (r : ℝ) (hr : 0 ≤ r) :
+    (volume (Metric.closedBall (0 : V) r)).toReal =
+      r ^ Module.finrank ℝ V * (volume (Metric.ball (0 : V) 1)).toReal := by
+  rw [Measure.addHaar_closedBall volume (0 : V) hr, ENNReal.toReal_mul,
+    ENNReal.toReal_ofReal (by positivity)]
+
 /-- The overlap ratio → 1 as R → ∞ for fixed v.
     Proof: closedBall 0 (R-‖v‖) ⊆ closedBall 0 R ∩ closedBall v R, so
     overlapRatio ≥ ((R-‖v‖)/R)^d → 1. Upper bound is 1. Squeeze.
@@ -363,13 +370,11 @@ private lemma overlapRatio_tendsto_one (v : V) :
           ENNReal.toReal_pos (ne_of_gt (Metric.measure_ball_pos volume 0 one_pos))
             (ne_of_lt measure_ball_lt_top)
         have hvol_sub : (volume (Metric.closedBall (0 : V) (↑n - ‖v‖))).toReal =
-            (↑n - ‖v‖) ^ d * (volume (Metric.ball (0 : V) 1)).toReal := by
-          rw [Measure.addHaar_closedBall volume (0 : V) hsub_nn, ENNReal.toReal_mul,
-              ENNReal.toReal_ofReal (by positivity)]
+            (↑n - ‖v‖) ^ d * (volume (Metric.ball (0 : V) 1)).toReal :=
+          volume_closedBall_toReal_eq _ hsub_nn
         have hvol_n : (volume (Metric.closedBall (0 : V) (↑n))).toReal =
-            (↑n) ^ d * (volume (Metric.ball (0 : V) 1)).toReal := by
-          rw [Measure.addHaar_closedBall volume (0 : V) hn_pos.le, ENNReal.toReal_mul,
-              ENNReal.toReal_ofReal (by positivity)]
+            (↑n) ^ d * (volume (Metric.ball (0 : V) 1)).toReal :=
+          volume_closedBall_toReal_eq _ hn_pos.le
         calc ((↑n - ‖v‖) / ↑n) ^ d
             = (↑n - ‖v‖) ^ d / (↑n) ^ d := by rw [div_pow]
           _ = ((↑n - ‖v‖) ^ d * (volume (Metric.ball (0 : V) 1)).toReal) /

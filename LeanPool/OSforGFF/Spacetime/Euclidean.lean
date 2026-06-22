@@ -245,19 +245,13 @@ private lemma contDiff_act_inv (g : E) :
   change ContDiff ℝ ⊤ (fun x : SpaceTime => g⁻¹.R x + g⁻¹.t)
   exact h₁.add h₂
 
-private lemma fderiv_linear_add_const (L : SpaceTime →L[ℝ] SpaceTime) (c : SpaceTime) (x :
-  SpaceTime) :
-    fderiv ℝ (fun y => L y + c) x = fderiv ℝ L x := by
-  apply fderiv_add_const
-
 private def fderiv_act_inv_eq_linear (g : E) :
   (fun x => fderiv ℝ (act g⁻¹) x) = fun _ => g⁻¹.R.toContinuousLinearMap := by
   ext x v i
   let L := g⁻¹.R.toContinuousLinearMap
   calc (fderiv ℝ (act g⁻¹) x v) i
-      = (fderiv ℝ (fun y => L y + g⁻¹.t) x v) i := rfl
-      _ = ((fderiv ℝ (fun y => L y + g⁻¹.t) x) v) i := rfl
-      _ = ((fderiv ℝ L x) v) i := by rw [fderiv_linear_add_const]
+      = ((fderiv ℝ (fun y => L y + g⁻¹.t) x) v) i := rfl
+      _ = ((fderiv ℝ L x) v) i := by rw [fderiv_add_const]
       _ = (L v) i := by rw [ContinuousLinearMap.fderiv]
 
 private def fderiv_has_temperate_growth (g : E) :
@@ -276,10 +270,7 @@ private def act_inv_poly_bound (g : E) :
     _ = ‖x‖ + ‖g⁻¹.t‖ := by rw [g⁻¹.R.norm_map x]
     _ ≤ (1 + ‖g⁻¹.t‖) * (1 + ‖x‖)^1 := by
         simp only [pow_one]
-        ring_nf
-        have h1 : 0 ≤ ‖x‖ := norm_nonneg x
-        have h2 : 0 ≤ ‖g⁻¹.t‖ := norm_nonneg _
-        linarith [mul_nonneg h2 h1]
+        nlinarith [norm_nonneg x, norm_nonneg g⁻¹.t]
 /-! ### Unified Action of Euclidean group on function spaces ---------
 
     UNIFIED EUCLIDEAN ACTION FRAMEWORK
@@ -326,14 +317,10 @@ lemma euclidean_pullback_polynomial_bounds (g : E) :
   simp only [pow_one, euclideanPullback, act]
   have h_iso : ‖g⁻¹.R x‖ = ‖x‖ := g⁻¹.R.norm_map x
   rw [← h_iso]
-  have h_ineq : ‖g⁻¹.R x‖ ≤ ‖g⁻¹.R x + g⁻¹.t‖ + ‖g⁻¹.t‖ := norm_le_add_norm_add _ _
   calc ‖g⁻¹.R x‖
-      ≤ ‖g⁻¹.R x + g⁻¹.t‖ + ‖g⁻¹.t‖ := h_ineq
+      ≤ ‖g⁻¹.R x + g⁻¹.t‖ + ‖g⁻¹.t‖ := norm_le_add_norm_add _ _
     _ ≤ (1 + ‖g⁻¹.t‖) * (1 + ‖g⁻¹.R x + g⁻¹.t‖) := by
-        have h1 : 0 ≤ ‖g⁻¹.R x + g⁻¹.t‖ := norm_nonneg _
-        have h2 : 0 ≤ ‖g⁻¹.t‖ := norm_nonneg _
-        ring_nf
-        linarith [mul_nonneg h2 h1]
+        nlinarith [norm_nonneg (g⁻¹.R x + g⁻¹.t), norm_nonneg g⁻¹.t]
 
 /-- Action of Euclidean group on test functions via pullback.
     For g ∈ E and f ∈ TestFunctionℂ, define (g • f)(x) = f(g⁻¹ • x).
@@ -390,12 +377,6 @@ lemma euclidean_actions_unified (g : E) :
        ∀ f, euclideanAction g f = T_test f) ∧
     (∃ (T_L2 : Lp ℂ 2 μ → Lp ℂ 2 μ),
        ∀ f, euclideanActionL2 g f = T_L2 f) := by
-  constructor
-  · use euclideanActionCLM g
-    intro f
-    rfl  -- by definition of euclideanAction
-  · use euclideanActionL2 g
-    intro f
-    rfl  -- by definition of euclideanActionL2
+  exact ⟨⟨euclideanActionCLM g, fun _ => rfl⟩, ⟨euclideanActionL2 g, fun _ => rfl⟩⟩
 
 end QFT

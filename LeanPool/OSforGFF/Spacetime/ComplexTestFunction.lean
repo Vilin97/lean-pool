@@ -202,18 +202,12 @@ lemma norm_compContinuousMultilinearMap_ofReal {n : ℕ} {E : Fin n → Type*}
   apply le_antisymm
   · calc ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖
         ≤ ‖Complex.ofRealCLM‖ * ‖m‖ := ContinuousLinearMap.norm_compContinuousMultilinearMap_le _ _
-      _ = 1 * ‖m‖ := by rw [Complex.norm_ofRealCLM]
-      _ = ‖m‖ := one_mul _
-  · have h_nonneg : (0 : ℝ) ≤ ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖ := norm_nonneg _
-    have h_bound : ∀ v, ‖m v‖ ≤ ‖Complex.ofRealCLM.compContinuousMultilinearMap m‖ * ∏ i, ‖v i‖ :=
-      by
-      intro v
-      have h_eq : ‖m v‖ = ‖(Complex.ofRealCLM.compContinuousMultilinearMap m) v‖ := by
-        simp only [ContinuousLinearMap.compContinuousMultilinearMap_coe, Function.comp_apply]
-        exact (Complex.norm_real (m v)).symm
-      rw [h_eq]
-      exact (Complex.ofRealCLM.compContinuousMultilinearMap m).le_opNorm v
-    exact ContinuousMultilinearMap.opNorm_le_bound h_nonneg h_bound
+      _ = ‖m‖ := by rw [Complex.norm_ofRealCLM, one_mul]
+  · refine ContinuousMultilinearMap.opNorm_le_bound (norm_nonneg _) (fun v => ?_)
+    rw [show ‖m v‖ = ‖(Complex.ofRealCLM.compContinuousMultilinearMap m) v‖ from by
+      simp only [ContinuousLinearMap.compContinuousMultilinearMap_coe, Function.comp_apply]
+      exact (Complex.norm_real (m v)).symm]
+    exact (Complex.ofRealCLM.compContinuousMultilinearMap m).le_opNorm v
 
 /-- The norm of the n-th iterated derivative of a Schwartz function composed with
     real→complex embedding equals the norm of the n-th iterated derivative of the
@@ -344,18 +338,16 @@ noncomputable def conjSchwartz {E : Type*} [NormedAddCommGroup E] [NormedSpace �
       simp only [Function.comp_def] at this
       exact this
     rw [h_deriv]
-    have h_norm : ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n f
-      x)‖ ≤
-        ‖iteratedFDeriv ℝ n f x‖ := by
+    have h_norm : ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap
+        (iteratedFDeriv ℝ n f x)‖ ≤ ‖iteratedFDeriv ℝ n f x‖ :=
       calc ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n f x)‖
           ≤ ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ)‖ * ‖iteratedFDeriv ℝ n f x‖ :=
             ContinuousLinearMap.norm_compContinuousMultilinearMap_le _ _
-        _ = 1 * ‖iteratedFDeriv ℝ n f x‖ := by rw [Complex.conjCLE_norm]
-        _ = ‖iteratedFDeriv ℝ n f x‖ := one_mul _
-    calc ‖x‖ ^ k * ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap (iteratedFDeriv ℝ n
-      f x)‖
-        ≤ ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ := by
-          apply mul_le_mul_of_nonneg_left h_norm (pow_nonneg (norm_nonneg _) _)
+        _ = ‖iteratedFDeriv ℝ n f x‖ := by rw [Complex.conjCLE_norm, one_mul]
+    calc ‖x‖ ^ k * ‖(Complex.conjCLE : ℂ →L[ℝ] ℂ).compContinuousMultilinearMap
+          (iteratedFDeriv ℝ n f x)‖
+        ≤ ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ :=
+          mul_le_mul_of_nonneg_left h_norm (pow_nonneg (norm_nonneg _) _)
       _ ≤ C := hC x
 }
 

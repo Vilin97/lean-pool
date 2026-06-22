@@ -159,18 +159,9 @@ def timeReflectionLE : SpaceTime ≃ₗᵢ[ℝ] SpaceTime :=
   map_smul' := timeReflectionLinear.map_smul'
   norm_map' := by
     intro x
-    -- The goal is to show that the LinearIsometryEquiv preserves norms
-    -- First simplify the LinearIsometryEquiv application
     change ‖timeReflection x‖ = ‖x‖
-    -- Use that time reflection preserves inner products
-    have h : ⟪timeReflection x, timeReflection x⟫_ℝ = ⟪x, x⟫_ℝ := timeReflection_inner_map x x
-    -- For real inner product spaces, ⟪x, x⟫ = ‖x‖^2 directly
-    have h1 : ⟪timeReflection x, timeReflection x⟫_ℝ = ‖timeReflection x‖ ^ 2 := by
-      rw [← real_inner_self_eq_norm_sq]
-    have h2 : ⟪x, x⟫_ℝ = ‖x‖ ^ 2 := by
-      rw [← real_inner_self_eq_norm_sq]
-    rw [← sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)]
-    rw [← h1, ← h2, h] }
+    rw [← sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _), ← real_inner_self_eq_norm_sq,
+      ← real_inner_self_eq_norm_sq, timeReflection_inner_map x x] }
 
 /-- Time reflection preserves Lebesgue measure. -/
 lemma timeReflection_measurePreserving :
@@ -190,18 +181,12 @@ example (x : SpaceTime) :
 -/
 private lemma timeReflection_hg_upper :
     ∃ (k : ℕ) (C : ℝ), ∀ (x : SpaceTime), ‖x‖ ≤ C * (1 + ‖timeReflectionCLM x‖) ^ k := by
-  use 1, 1
-  intro x
+  refine ⟨1, 1, fun x => ?_⟩
   have h_iso : ‖timeReflectionCLM x‖ = ‖x‖ := by
-    have h_norm_preserved : ‖timeReflection x‖ = ‖x‖ := LinearIsometryEquiv.norm_map
-      timeReflectionLE x
-    rw [← h_norm_preserved]
-    rfl
+    rw [← LinearIsometryEquiv.norm_map timeReflectionLE x]; rfl
   rw [h_iso]
-  have hx : ‖x‖ ≤ 1 + ‖x‖ := by linarith [norm_nonneg x]
-  calc
-    ‖x‖ ≤ 1 + ‖x‖ := hx
-    _ = 1 * (1 + ‖x‖) ^ (1 : ℕ) := by simp [pow_one]
+  simp only [pow_one, one_mul]
+  linarith [norm_nonneg x]
 
 /-- The `compTimeReflection` declaration. -/
 noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ :=
@@ -214,8 +199,8 @@ noncomputable def compTimeReflection : TestFunctionℂ →L[ℝ] TestFunctionℂ
     subspaces defined over ℝ, so that reflection positivity can be formulated
     without passing through complex scalars.
 -/
-noncomputable def compTimeReflectionReal : TestFunction →L[ℝ] TestFunction := by
-  exact SchwartzMap.compCLM (𝕜 := ℝ)
+noncomputable def compTimeReflectionReal : TestFunction →L[ℝ] TestFunction :=
+  SchwartzMap.compCLM (𝕜 := ℝ)
     (hg := timeReflectionCLM.hasTemperateGrowth)
     (hg_upper := timeReflection_hg_upper)
 

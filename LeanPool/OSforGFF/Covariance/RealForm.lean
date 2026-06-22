@@ -349,6 +349,50 @@ noncomputable def embeddingMap (m : ℝ) [Fact (0 < m)] :
       rw [this]
       exact MeasureTheory.MemLp.toLp_const_smul c hf }
 
+/-- Squared L² norm of the embedded function in terms of the pointwise integral. -/
+lemma embeddingMap_norm_sq (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
+    ‖embeddingMap m f‖ ^ 2 = ∫ (k : SpaceTime), ‖sqrtPropagatorMap m f k‖ ^ 2 ∂volume := by
+  have h_memLp := sqrtPropagatorMap_memLp (m := m) (f := f)
+  change ‖h_memLp.toLp (sqrtPropagatorMap m f)‖ ^ 2 = _
+  have h_norm : ‖h_memLp.toLp (sqrtPropagatorMap m f)‖
+      = ENNReal.toReal (eLpNorm (sqrtPropagatorMap m f) 2 volume) :=
+    MeasureTheory.Lp.norm_toLp (sqrtPropagatorMap m f) h_memLp
+  rw [h_norm]
+  have h_integrable := sqrtPropagatorMap_sq_integrable (m := m) (f := f)
+  have h_two_ne : (2 : NNReal) ≠ 0 := by norm_num
+  calc
+    (ENNReal.toReal (eLpNorm (sqrtPropagatorMap m f) 2 volume)) ^ 2
+        = ENNReal.toReal ((eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ 2) := by
+            symm; exact ENNReal.toReal_pow _ 2
+    _ = ENNReal.toReal (∫⁻ k, (‖sqrtPropagatorMap m f k‖₊ : ENNReal) ^ 2) := by
+            congr 1
+            have h_eq := MeasureTheory.eLpNorm_nnreal_pow_eq_lintegral
+              (f := sqrtPropagatorMap m f) (p := 2) (μ := volume) h_two_ne
+            simp only [ENNReal.coe_ofNat, NNReal.coe_ofNat] at h_eq
+            have h_pow_cast : (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ)
+                = (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := by
+              simp [pow_two]
+            calc (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ)
+                = (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := h_pow_cast
+              _ = ∫⁻ (x : SpaceTime), ‖sqrtPropagatorMap m f x‖ₑ ^ 2 := h_eq
+              _ = ∫⁻ (k : SpaceTime), (‖sqrtPropagatorMap m f k‖₊ : ENNReal) ^ 2 := by
+                refine lintegral_congr_ae ?_
+                filter_upwards with k
+                simp only [enorm]
+                norm_cast
+    _ = ∫ k, ‖sqrtPropagatorMap m f k‖ ^ 2 := by
+            have h_ae_meas := h_integrable.aestronglyMeasurable
+            have h_nonneg : ∀ᵐ k ∂volume, 0 ≤ ‖sqrtPropagatorMap m f k‖ ^ 2 :=
+              Filter.Eventually.of_forall fun k => sq_nonneg _
+            rw [MeasureTheory.integral_eq_lintegral_of_nonneg_ae h_nonneg h_ae_meas]
+            congr 1
+            refine lintegral_congr_ae ?_
+            filter_upwards with k
+            rw [ENNReal.ofReal_pow (norm_nonneg _)]
+            simp only [pow_two]
+            conv_rhs => arg 1; rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
+            conv_rhs => arg 2; rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
+
 /-- ℝ-linear view of the Lp multiplication CLM (avoiding `restrictScalars`). -/
 private noncomputable def momentumWeightSqrt_mathlib_mul_CLM_real (m : ℝ) [Fact (0 < m)] :
     Lp ℂ 2 (volume : Measure SpaceTime) →L[ℝ]
@@ -418,90 +462,9 @@ theorem sqrtPropagatorEmbedding (m : ℝ) [Fact (0 < m)] :
   intro f
   rw [← sqrtPropagatorMap_norm_eq_covariance]
   unfold sqrtPropagatorMapNormSq
-  symm
-  have h_memLp := sqrtPropagatorMap_memLp (m := m) (f := f)
-  change ‖embeddingMap m f‖ ^ 2 = ∫ (k : SpaceTime), ‖sqrtPropagatorMap m f k‖ ^ 2
-  change ‖h_memLp.toLp (sqrtPropagatorMap m f)‖ ^ 2 = _
-  have h_norm : ‖h_memLp.toLp (sqrtPropagatorMap m f)‖ = ENNReal.toReal (eLpNorm (sqrtPropagatorMap
-    m f) 2 volume) :=
-    MeasureTheory.Lp.norm_toLp (sqrtPropagatorMap m f) h_memLp
-  rw [h_norm]
-  have h_integrable := sqrtPropagatorMap_sq_integrable (m := m) (f := f)
-  have h_two_ne : (2 : NNReal) ≠ 0 := by norm_num
-  calc (ENNReal.toReal (eLpNorm (sqrtPropagatorMap m f) 2 volume)) ^ 2
-      = ENNReal.toReal ((eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ 2) := by
-          symm; exact ENNReal.toReal_pow _ 2
-    _ = ENNReal.toReal (∫⁻ k, (‖sqrtPropagatorMap m f k‖₊ : ENNReal) ^ 2) := by
-          congr 1
-          have h_eq := MeasureTheory.eLpNorm_nnreal_pow_eq_lintegral (f := sqrtPropagatorMap m f)
-            (p := 2) (μ := volume) h_two_ne
-          simp only [ENNReal.coe_ofNat, NNReal.coe_ofNat] at h_eq
-          have h_pow_cast : (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ) = (eLpNorm
-            (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := by
-            simp [pow_two]
-          calc (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ)
-              = (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := h_pow_cast
-            _ = ∫⁻ (x : SpaceTime), ‖sqrtPropagatorMap m f x‖ₑ ^ 2 := h_eq
-            _ = ∫⁻ (k : SpaceTime), (‖sqrtPropagatorMap m f k‖₊ : ENNReal) ^ 2 := by
-              refine lintegral_congr_ae ?_; filter_upwards with k; simp only [enorm]; norm_cast
-    _ = ∫ k, ‖sqrtPropagatorMap m f k‖ ^ 2 := by
-          have h_ae_meas := h_integrable.aestronglyMeasurable
-          have h_nonneg : ∀ᵐ k ∂volume, 0 ≤ ‖sqrtPropagatorMap m f k‖ ^ 2 :=
-            Filter.Eventually.of_forall fun k => sq_nonneg _
-          rw [MeasureTheory.integral_eq_lintegral_of_nonneg_ae h_nonneg h_ae_meas]
-          congr 1
-          refine lintegral_congr_ae ?_
-          filter_upwards with k
-          rw [ENNReal.ofReal_pow (norm_nonneg _)]
-          simp only [pow_two]
-          conv_rhs => arg 1; rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
-          conv_rhs => arg 2; rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
+  exact (embeddingMap_norm_sq (m := m) (f := f)).symm
 
 /-! ## Auxiliary Lemmas for Continuity -/
-
-/-- Squared L² norm of the embedded function in terms of the pointwise integral. -/
-lemma embeddingMap_norm_sq (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
-    ‖embeddingMap m f‖ ^ 2 = ∫ (k : SpaceTime), ‖sqrtPropagatorMap m f k‖ ^ 2 ∂volume := by
-  have h_memLp := sqrtPropagatorMap_memLp (m := m) (f := f)
-  change ‖h_memLp.toLp (sqrtPropagatorMap m f)‖ ^ 2 = _
-  have h_norm : ‖h_memLp.toLp (sqrtPropagatorMap m f)‖
-      = ENNReal.toReal (eLpNorm (sqrtPropagatorMap m f) 2 volume) :=
-    MeasureTheory.Lp.norm_toLp (sqrtPropagatorMap m f) h_memLp
-  rw [h_norm]
-  have h_integrable := sqrtPropagatorMap_sq_integrable (m := m) (f := f)
-  have h_two_ne : (2 : NNReal) ≠ 0 := by norm_num
-  calc
-    (ENNReal.toReal (eLpNorm (sqrtPropagatorMap m f) 2 volume)) ^ 2
-        = ENNReal.toReal ((eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ 2) := by
-            symm; exact ENNReal.toReal_pow _ 2
-    _ = ENNReal.toReal (∫⁻ k, (‖sqrtPropagatorMap m f k‖₊ : ENNReal) ^ 2) := by
-            congr 1
-            have h_eq := MeasureTheory.eLpNorm_nnreal_pow_eq_lintegral
-              (f := sqrtPropagatorMap m f) (p := 2) (μ := volume) h_two_ne
-            simp only [ENNReal.coe_ofNat, NNReal.coe_ofNat] at h_eq
-            have h_pow_cast : (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ)
-                = (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := by
-              simp [pow_two]
-            calc (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℕ)
-                = (eLpNorm (sqrtPropagatorMap m f) 2 volume) ^ (2 : ℝ) := h_pow_cast
-              _ = ∫⁻ (x : SpaceTime), ‖sqrtPropagatorMap m f x‖ₑ ^ 2 := h_eq
-              _ = ∫⁻ (k : SpaceTime), (‖sqrtPropagatorMap m f k‖₊ : ENNReal) ^ 2 := by
-                refine lintegral_congr_ae ?_
-                filter_upwards with k
-                simp only [enorm]
-                norm_cast
-    _ = ∫ k, ‖sqrtPropagatorMap m f k‖ ^ 2 := by
-            have h_ae_meas := h_integrable.aestronglyMeasurable
-            have h_nonneg : ∀ᵐ k ∂volume, 0 ≤ ‖sqrtPropagatorMap m f k‖ ^ 2 :=
-              Filter.Eventually.of_forall fun k => sq_nonneg _
-            rw [MeasureTheory.integral_eq_lintegral_of_nonneg_ae h_nonneg h_ae_meas]
-            congr 1
-            refine lintegral_congr_ae ?_
-            filter_upwards with k
-            rw [ENNReal.ofReal_pow (norm_nonneg _)]
-            simp only [pow_two]
-            conv_rhs => arg 1; rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
-            conv_rhs => arg 2; rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
 
 lemma freeCovarianceFormR_eq_normSq (m : ℝ) [Fact (0 < m)] (f : TestFunction) :
     freeCovarianceFormR m f f = ‖embeddingMap m f‖ ^ 2 := by

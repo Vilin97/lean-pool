@@ -414,34 +414,16 @@ theorem freeCovarianceℂ_bilinear_add_smul_left
     have h_slice₂ :=
       freeCovarianceℂ_bilinear_slice_integrable m f₂ g
     refine (h_slice₁.and h_slice₂).mono ?_
-    intro x hx
-    rcases hx with ⟨hf₁x, hf₂x⟩
+    rintro x ⟨hf₁x, hf₂x⟩
     have hfun :
         (fun y => ((c • f₁ + f₂) x) * (freeCovariance m x y : ℂ) * (g y))
           = fun y =>
               c * (f₁ x * (freeCovariance m x y : ℂ) * (g y))
                 + f₂ x * (freeCovariance m x y : ℂ) * (g y) := by
       funext y
-      -- (c • f₁ + f₂) x = c * f₁ x + f₂ x
-      have h1 : (c • f₁ + f₂) x = c * f₁ x + f₂ x := rfl
-      rw [h1]
-      ring
-    calc
-      F x
-          = ∫ y,
-              ((c • f₁ + f₂) x) * (freeCovariance m x y) * (g y) ∂volume := rfl
-      _ = ∫ y,
-            (c * (f₁ x * (freeCovariance m x y) * (g y)) +
-              f₂ x * (freeCovariance m x y) * (g y)) ∂volume := by
-            rw [hfun]
-      _ = c * F₁ x + F₂ x := by
-            have h_const_out : ∫ y, c * (f₁ x * (freeCovariance m x y) * (g y)) ∂volume
-                             = c * ∫ y, (f₁ x * (freeCovariance m x y) * (g y)) ∂volume := by
-              exact MeasureTheory.integral_const_mul c _
-            rw [integral_add, h_const_out]
-            · apply Integrable.const_mul
-              exact hf₁x
-            · exact hf₂x
+      rw [show (c • f₁ + f₂) x = c * f₁ x + f₂ x from rfl]; ring
+    simp only [F, F₁, F₂, hfun, integral_add (hf₁x.const_mul c) hf₂x,
+      MeasureTheory.integral_const_mul]
   have h_int_eq : ∫ x, F x ∂volume = ∫ x, (c * F₁ x + F₂ x) ∂volume :=
     integral_congr_ae h_add_smul_ae
   -- Apply linearity of the outer integral.
@@ -460,30 +442,18 @@ theorem freeCovarianceℂ_bilinear_add_left
   (m : ℝ) [Fact (0 < m)] (f₁ f₂ g : TestFunctionℂ) :
     freeCovarianceℂBilinear m (f₁ + f₂) g
       = freeCovarianceℂBilinear m f₁ g + freeCovarianceℂBilinear m f₂ g := by
-  -- Use the generalized lemma with c = 1
-  have h := freeCovarianceℂ_bilinear_add_smul_left m 1 f₁ f₂ g
-  -- Simplify 1 • f₁ = f₁ and 1 * (...) = (...)
-  simp only [one_smul, one_mul] at h
-  exact h
+  simpa only [one_smul, one_mul] using freeCovarianceℂ_bilinear_add_smul_left m 1 f₁ f₂ g
 
 theorem freeCovarianceℂ_bilinear_smul_left
   (m : ℝ) [Fact (0 < m)] (c : ℂ) (f g : TestFunctionℂ) :
     freeCovarianceℂBilinear m (c • f) g = c * freeCovarianceℂBilinear m f g := by
   -- Use the generalized lemma with f₁ = f and f₂ = 0
   have h := freeCovarianceℂ_bilinear_add_smul_left m c f 0 g
-  -- Simplify: c • f + 0 = c • f
   rw [add_zero] at h
-  -- Need to show freeCovarianceℂBilinear m 0 g = 0
   have zero_bilinear : freeCovarianceℂBilinear m 0 g = 0 := by
     unfold freeCovarianceℂBilinear
-    -- 0 x = 0, so the integrand becomes 0 * ... = 0
-    have h : ∀ x y, (0 : TestFunctionℂ) x * (freeCovariance m x y : ℂ) * g y = 0 := by
-      intro x y
-      -- (0 : TestFunctionℂ) x = 0
-      have : (0 : TestFunctionℂ) x = 0 := rfl
-      rw [this]
-      simp only [zero_mul]
-    simp_rw [h]
+    simp_rw [show ∀ x y, (0 : TestFunctionℂ) x * (freeCovariance m x y : ℂ) * g y = 0 from
+      fun x y => by simp only [show (0 : TestFunctionℂ) x = 0 from rfl, zero_mul]]
     rw [integral_zero, integral_zero]
   rw [zero_bilinear, add_zero] at h
   exact h
@@ -493,29 +463,13 @@ theorem freeCovarianceℂ_bilinear_symm
   (m : ℝ) [Fact (0 < m)] (f g : TestFunctionℂ) :
     freeCovarianceℂBilinear m f g = freeCovarianceℂBilinear m g f := by
   unfold freeCovarianceℂBilinear
-  -- Use the symmetry of the underlying covariance kernel freeCovariance m x y = freeCovariance m y
-  -- x
-  -- Apply change of variables: swap x ↔ y in the integration domain
-  have h : ∫ x, ∫ y, (f x) * (freeCovariance m x y) * (g y) ∂volume ∂volume
-         = ∫ y, ∫ x, (f x) * (freeCovariance m x y) * (g y) ∂volume ∂volume := by
-    -- Swap the order of integration (follows from Fubini's theorem)
-    -- We have the necessary integrability condition from freeCovarianceℂ_bilinear_integrable
-    apply MeasureTheory.integral_integral_swap
-    -- The integrand is integrable on the product space
-    exact freeCovarianceℂ_bilinear_integrable m f g
-  rw [h]
-  -- Now apply variable relabeling: swap variable names x ↔ y in the second integral
-  -- ∫ y, ∫ x, f x * freeCovariance m x y * g y = ∫ x, ∫ y, f y * freeCovariance m y x * g x
-  have relabel : ∫ y, ∫ x, (f x) * (freeCovariance m x y) * (g y) ∂volume ∂volume
-               = ∫ x, ∫ y, (f y) * (freeCovariance m y x) * (g x) ∂volume ∂volume := by
-    -- This is just renaming bound variables, which is always valid
-    rfl
-  rw [relabel]
-  -- Now use symmetry of freeCovariance: freeCovariance m y x = freeCovariance m x y
+  -- Swap the order of integration via Fubini, then relabel bound variables.
+  rw [show ∫ x, ∫ y, (f x) * (freeCovariance m x y) * (g y) ∂volume ∂volume
+         = ∫ x, ∫ y, (f y) * (freeCovariance m y x) * (g x) ∂volume ∂volume from
+      MeasureTheory.integral_integral_swap (freeCovarianceℂ_bilinear_integrable m f g)]
   congr 1 with x
   congr 1 with y
   rw [freeCovariance_symmetric m y x]
-  -- Rearrange: g x * freeCovariance m x y * f y = g x * freeCovariance m x y * f y
   ring
 
 theorem freeCovarianceℂ_bilinear_smul_right
@@ -557,13 +511,9 @@ theorem freeCovarianceℂ_regulated_positive (α : ℝ) (hα : 0 < α) (m : ℝ)
   0 ≤ (freeCovarianceℂRegulated α m f f).re := by
   unfold freeCovarianceℂRegulated
   rw [parseval_covariance_schwartz_regulated' α hα m f]
-  apply MeasureTheory.integral_nonneg
-  intro k
-  apply mul_nonneg
-  · apply mul_nonneg
-    · exact Real.exp_nonneg _
-    · exact sq_nonneg _
-  · exact freePropagatorMomentum_mathlib_nonneg m (Fact.out) k
+  refine MeasureTheory.integral_nonneg (fun k => ?_)
+  exact mul_nonneg (mul_nonneg (Real.exp_nonneg _) (sq_nonneg _))
+    (freePropagatorMomentum_mathlib_nonneg m (Fact.out) k)
 
 /-- Complex extension of the covariance for complex test functions (limit form via Bessel). -/
 def freeCovarianceℂ (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
@@ -572,13 +522,11 @@ def freeCovarianceℂ (m : ℝ) (f g : TestFunctionℂ) : ℂ :=
 /-- The complex covariance (Bessel form) is positive definite. -/
 theorem freeCovarianceℂ_positive (m : ℝ) [Fact (0 < m)] (f : TestFunctionℂ) :
     0 ≤ (freeCovarianceℂ m f f).re := by
-  -- The regulated form converges to the Bessel form as α → 0⁺
-  -- Use the specialized f = f version which leverages momentum-space DCT
-  have h_tendsto := bilinear_covariance_regulated_tendsto_self m f
-  -- This is the same as: freeCovarianceℂRegulated α m f f → freeCovarianceℂ m f f
+  -- The regulated form converges to the Bessel form as α → 0⁺ (DCT in momentum space);
+  -- by continuity of .re, the real parts also converge.
   have h_tendsto' : Filter.Tendsto (fun α => freeCovarianceℂRegulated α m f f)
-      (nhdsWithin 0 (Set.Ioi 0)) (nhds (freeCovarianceℂ m f f)) := h_tendsto
-  -- By continuity of .re, the real parts also converge
+      (nhdsWithin 0 (Set.Ioi 0)) (nhds (freeCovarianceℂ m f f)) :=
+    bilinear_covariance_regulated_tendsto_self m f
   have h_tendsto_re : Filter.Tendsto (fun α => (freeCovarianceℂRegulated α m f f).re)
       (nhdsWithin 0 (Set.Ioi 0)) (nhds (freeCovarianceℂ m f f).re) :=
     Complex.continuous_re.continuousAt.tendsto.comp h_tendsto'
@@ -602,30 +550,13 @@ theorem parseval_covariance_schwartz_bessel (m : ℝ) [Fact (0 < m)] (f : TestFu
     (freeCovarianceℂ m f f).re
     = ∫ k, ‖(SchwartzMap.fourierTransformCLM ℂ f) k‖^2 * freePropagatorMomentumMathlib m k ∂volume
       := by
-  -- Strategy: Use uniqueness of limits
-  -- 1. bilinear_covariance_regulated_tendsto_self: lim (regulated) = Bessel (in ℂ) for f = f case
-  -- 2. parseval_covariance_schwartz_correct: lim (regulated).re = momentum (in ℝ)
-  -- 3. By continuity of .re: (Bessel).re = momentum
-  -- The Bessel form is defined as freeCovarianceℂ
-  -- freeCovarianceℂ m f f = ∫∫ f(x) * C(x,y) * conj(f(y))
-  have h_bessel_eq : freeCovarianceℂ m f f =
-      ∫ x, ∫ y, f x * (freeCovariance m x y : ℂ) * (starRingEnd ℂ (f y)) := rfl
-  -- The complex bilinear form converges to the Bessel form
-  -- Use the specialized f = f version which leverages momentum-space DCT
-  have h_tendsto_complex := bilinear_covariance_regulated_tendsto_self m f
-  -- The .re of the regulated form converges to the momentum integral
-  have h_tendsto_re := parseval_covariance_schwartz_correct m f
-  -- By continuity of .re, the limit of (regulated).re equals (limit of regulated).re
-  have h_re_continuous : Continuous Complex.re := Complex.continuous_re
-  -- The .re of the limit equals the limit of .re
+  -- Uniqueness of limits: the regulated forms tend to the Bessel form (in ℂ, via DCT)
+  -- and their real parts tend to the momentum integral (in ℝ).
   have h_re_tendsto : Filter.Tendsto
       (fun α => (∫ x, ∫ y, f x * (freeCovarianceRegulated α m x y : ℂ) * (starRingEnd ℂ (f y))).re)
       (nhdsWithin 0 (Set.Ioi 0))
       (nhds (∫ x, ∫ y, f x * (freeCovariance m x y : ℂ) * (starRingEnd ℂ (f y))).re) :=
-    h_re_continuous.continuousAt.tendsto.comp h_tendsto_complex
-  -- By uniqueness of limits in ℝ, the two limits are equal
-  have h_unique := tendsto_nhds_unique h_re_tendsto h_tendsto_re
-  rw [h_bessel_eq]
-  exact h_unique
+    Complex.continuous_re.continuousAt.tendsto.comp (bilinear_covariance_regulated_tendsto_self m f)
+  exact tendsto_nhds_unique h_re_tendsto (parseval_covariance_schwartz_correct m f)
 
 /-! ## OS Properties -/
