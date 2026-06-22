@@ -56,18 +56,10 @@ theorem classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
     add_mem' := by
       intro a b ha hb i
       obtain ⟨ma, hma⟩ := ha i; obtain ⟨mb, hmb⟩ := hb i
-      exact ⟨ma + mb, by
-        calc
-          ((ma + mb : ℤ) : ℝ) = (ma : ℝ) + mb := by norm_num
-          _ = a i + b i := by rw [hma, hmb]
-          _ = (a + b) i := by rfl⟩
+      exact ⟨ma + mb, by push_cast [hma, hmb]; rfl⟩
     neg_mem' := by
       intro a ha i; obtain ⟨m, hm⟩ := ha i
-      exact ⟨-m, by
-        calc
-          ((-m : ℤ) : ℝ) = -((m : ℤ) : ℝ) := by norm_num
-          _ = -(a i) := by rw [hm]
-          _ = (-a) i := by rfl⟩ }
+      exact ⟨-m, by push_cast [hm]; rfl⟩ }
   let F : Set E := {x | ∀ i, x i ∈ Set.Ico (0 : ℝ) 1}
   haveI : Countable L := by
     let f : L → (Fin n → ℤ) := fun x i => (x.property i).choose
@@ -129,21 +121,14 @@ theorem classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
               exact_mod_cast Int.lt_iff_add_one_le.mp hrt
             linarith [h_in.1, h_floor.2]
         change y i = g i
-        calc
-          y i = (m : ℝ) := hm.symm
-          _ = ((-⌊x i⌋ : ℤ) : ℝ) := by exact_mod_cast this
-          _ = g i := by rfl
+        rw [← hm, this]
   have hF : volume F = 1 := by
     rw [← (PiLp.volume_preserving_toLp (ι := Fin n)).measure_preimage
       euclideanSpace_F_measurableSet.nullMeasurableSet,
       show (@WithLp.toLp 2 (Fin n → ℝ)) ⁻¹' F =
         Set.pi Set.univ (fun _ : Fin n => Set.Ico (0 : ℝ) 1) from by
           ext x
-          constructor
-          · intro hx i _
-            exact hx i
-          · intro hx i
-            exact hx i (Set.mem_univ _)]
+          exact ⟨fun hx i _ => hx i, fun hx i => hx i (Set.mem_univ _)⟩]
     erw [Real.volume_pi_Ico]; norm_num
   have hmeas : volume F * 2 ^ finrank ℝ E < volume s := by
     rw [hF, show finrank ℝ E = n from by simp [E]]; simp only [one_mul]; exact h
