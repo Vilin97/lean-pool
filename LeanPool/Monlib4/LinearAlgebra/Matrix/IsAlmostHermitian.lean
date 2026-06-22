@@ -77,14 +77,6 @@ theorem isAlmostHermitian_iff (x : Matrix n n ℂ) : x.IsAlmostHermitian ↔ (x 
     · rw [h']
       use 0; use 0
       simp_rw [zero_smul, isHermitian_zero, true_and]
-    -- have hα_pre :
-    --   ∀ i j k l : n, x i j ≠ 0 → x k l ≠ 0 → x i j / star (x j i) = x k l / star (x l k) :=
-    --   by
-    --   intro m₁ m₂ m₃ m₄ hx₁ hx₂
-    --   rw [ne_eq, this] at hx₁ hx₂
-    --   simp_rw [div_eq_div_iff (star_ne_zero.mpr hx₁) (star_ne_zero.mpr hx₂), mul_comm _ (star _),
-    --     RCLike.star_def]
-    --   exact h (_, _) (_, _)
     have nonzero_ : ∃ i j : n, x i j ≠ 0 := by
       contrapose! h'
       ext i j

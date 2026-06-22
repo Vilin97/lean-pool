@@ -437,9 +437,6 @@ theorem Module.Dual.IsPosMap.isFaithful_iff_of_matrix {φ : Module.Dual ℂ (Mat
         Nontracial.trace_conjTranspose_hMul_self_eq_zero hQ] at h
       rw [h, Matrix.mul_zero], fun h => by rw [h, map_zero]⟩
 
--- def Module.Dual.IsFaithfulPosMap {A : Type _} [NonUnitalSemiring A] [StarRing A] [Module 𝕜 A]
---     (φ : Module.Dual 𝕜 A) : Prop :=
---   φ.IsPosMap ∧ φ.IsFaithful
 /-- A linear functional that is both positive and faithful on positive elements. -/
 @[class]
 structure Module.Dual.IsFaithfulPosMap {A : Type _} [NonUnitalSemiring A] [StarRing A]
@@ -635,75 +632,6 @@ theorem Module.Dual.isTracial_faithful_pos_map_iff_of_matrix [Nonempty n]
           Complex.ofReal_inj, NNReal.coe_inj] at hy
         exact hy.symm
 
--- lemma linear_map.is_tracial_state_iff [nonempty n] (φ : matrix n n ℂ →ₗ[ℂ] ℂ) :
---   (φ.is_state ∧ φ.is_tracial) ↔ ∃ α : ℂ, φ.matrix = α • 1 ∧ α * (1 : matrix n n ℂ).trace = 1 :=
--- begin
---   split,
---   { simp_rw [linear_map.is_state_iff],
---     -- rintros ⟨⟨Q, ⟨hQ1, hQ2, hQ3⟩, h1⟩, h2⟩,
---     simp_rw [linear_map.is_tracial, hQ3, matrix.trace, matrix.diag, mul_apply] at h2,
---     have : ∀ p q r : n, Q p q = ite (p = q) (Q r r) 0 :=
---     fun p q r, calc Q p q = ∑ i j, Q i j
---       * ∑ k, (single q r 1) j k * (single r p 1) k i :
---     by { simp only [single, boole_mul, ite_and, finset.sum_ite_irrel,
---       finset.sum_const_zero, finset.sum_ite_eq, finset.mem_univ, eq_self_iff_true, if_true,
---       mul_ite, mul_zero, mul_one], }
---       ... = ∑ i j, Q i j
---       * ∑ k, (single r p 1) j k * (single q r 1) k i : by rw h2
---       ... = ite (p = q) (Q r r) 0 :
---     by { simp only [single, boole_mul, ite_and, finset.sum_ite_irrel,
---       finset.sum_const_zero, finset.sum_ite_eq, finset.mem_univ, if_true, mul_ite,
---       mul_zero, mul_one], },
---     let i : n := _inst_5.some,
---     use Q i i,
---     simp_rw [trace_one, ← hQ2],
---     split,
---     { intros x,
---       simp_rw [hQ3, matrix.trace, matrix.diag, mul_apply],
---       calc ∑ k j, Q k j * x j k = ∑ k j, ite (k = j) (Q i i) 0 * x j k : by simp_rw ← this _ _ i
---         ... = Q i i * ∑ k, x k k : _,
---       simp_rw [ite_mul, zero_mul, finset.sum_ite_eq, finset.mem_univ, if_true,
---         finset.mul_sum], },
---     { rw eq_comm,
---       calc ∑ k, Q k k = ∑ k : n, ite (k = k) (Q i i) 0 : by simp_rw ← this _ _ i
---         ... = ∑ k : n, Q i i : by simp_rw [eq_self_iff_true, if_true]
---         ... = Q i i * ↑(fintype.card n) : _,
---       simp_rw [finset.sum_const, nsmul_eq_mul, mul_comm],
---       refl, }, },
---   { rintros ⟨α, ⟨hα1, hα2⟩⟩,
---     simp_rw [linear_map.is_state_iff, hα1],
---     split,
---     { use α • 1,
---       split,
---       { simp only [matrix.smul_mul, trace_smul, smul_eq_mul, matrix.one_mul],
---         refine ⟨_, hα2, fun _, rfl⟩,
---         simp only [← diagonal_one, ← diagonal_smul, posSemidef.diagonal],
---         intros i,
---         simp_rw [pi.smul_apply, ← is_R_or_C.conj_eq_iff_re, star_ring_end_apply,
---           smul_eq_mul, mul_one],
---         have : α = 1 / (1 : matrix n n ℂ).trace,
---         { rw [← hα2, trace_one, ← mul_div, div_self, mul_one],
---           { simp only [ne.def, nat.cast_eq_zero],
---             exact fintype.card_ne_zero, }, },
---         simp_rw [this, trace_one, star_div', star_one, star_nat_cast, eq_self_iff_true,
--- and_true],
---         simp only [one_div, is_R_or_C.re_to_complex, complex.inv_re, complex.nat_cast_re],
---         apply div_nonneg,
---         { exact (nat.cast_nonneg _), },
---         { simp_rw [complex.norm_sq_nonneg], }, },
---       { simp only,
---         rintros y ⟨hy1, hy2, hy3⟩,
---         ext1 i j,
---         simp_rw [pi.smul_apply, one_apply, smul_eq_mul, mul_boole],
---         specialize hy3 (single j i (1 : ℂ)),
---         simp_rw [single.trace, matrix.trace, matrix.diag, mul_apply,
---           single, mul_boole, ite_and] at hy3,
---         simp only [finset.sum_ite_eq, finset.mem_univ, if_true] at hy3,
---         simp_rw @eq_comm _ j i at hy3,
---         exact hy3.symm, }, },
---     { intros x y,
---       rw [hα1, trace_mul_comm, ← hα1], }, },
--- end
 theorem Matrix.ext_iff_trace' {R m n : Type _} [Semiring R] [StarRing R] [Fintype n] [Fintype m]
     (A B : Matrix m n R) :
     (∀ x, (xᴴ * A).trace = (xᴴ * B).trace) ↔ A = B :=
@@ -808,18 +736,9 @@ noncomputable def Module.Dual.NormedAddCommGroup [hφ : φ.IsFaithfulPosMap] :
       smul_left := fun _ _ _ => (φ.isFaithfulPosMap_iff_isInner_of_matrix.mp hφ).2.2.2.2 _ _ _ }
 
 
--- set_option trace.Meta.synthInstance true
--- set_option pp.all true
--- set_option trace.Meta.isDefEq true
--- set_option trace.Meta.isLevelDefEq true
--- set_option synthInstance.maxHeartbeats 100000
--- set_option synthInstance.maxSize 100000
 
 variable [hφ : φ.IsFaithfulPosMap]
 
--- #synth _root_.NormedAddCommGroup (Matrix n n ℂ)
--- #check inferInstanceAs (NormedAddCommGroup (Matrix n n ℂ))
--- #check @inferInstance _ (hφ)
 
 /-- The inner product space structure induced by a faithful positive functional on matrices. -/
 @[reducible]
@@ -893,33 +812,6 @@ noncomputable def Module.Dual.PiNormedAddCommGroup
   [_hφ : Π i, (φ i).IsFaithfulPosMap] :
   _root_.NormedAddCommGroup (PiMat ℂ k s) :=
 (Module.Dual.PiInnerProductCore (φ := φ)).toNormedAddCommGroup
--- -- by
---   -- letI := fun i => (hφ i).NormedAddCommGroup
-  -- letI := fun i => (hφ i).InnerProductSpace
-  -- @InnerProductSpace.Core.toNormedAddCommGroup ℂ (Π i, Matrix (s i) (s i) ℂ) _ _ _
-  --   { inner := fun x y => ∑ i, inner (x i) (y i)
-  --     conj_symm := fun x y => by
-  --       simp_rw [map_sum]
-  --       congr; ext
-  --       rw [inner_conj_symm]
-  --     nonneg_re := fun x => by
-  --       simp only [inner, map_sum]
-  --       apply Finset.sum_nonneg
-  --       intro i hi
-  --       exact inner_self_nonneg
-  --     definite := fun x hx => by
-  --       simp_rw [inner] at hx
-  --       rw [Finset.sum_eq_zero_iff_of_nonneg] at hx
-  --       simp_rw [Finset.mem_univ, true_imp_iff, inner_self_eq_zero] at hx
-  --       ext1 i
-  --       exact hx i
-  --       · intro i hi
-  --         rw [RCLike.nonneg_def', ← RCLike.conj_eq_iff_re]
-  --         exact ⟨inner_self_conj _, inner_self_nonneg⟩
-  --     add_left := fun x y z => by
-  --       simp_rw [inner, Pi.add_apply, inner_add_left, Finset.sum_add_distrib]
-  --     smul_left := fun x y r => by simp_rw [inner, Pi.smul_apply, inner_smul_left,
-  -- Finset.mul_sum] }
 
 /-- The inner product space on a finite product induced by faithful positive matrix functionals. -/
 @[reducible]
@@ -930,10 +822,6 @@ noncomputable def Module.Dual.pi.InnerProductSpace
   @_root_.InnerProductSpace ℂ (PiMat ℂ k s) _
   ((Module.Dual.PiNormedAddCommGroup (_hφ := hφ)).toSeminormedAddCommGroup)
    :=
-  -- letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := PiLp.normedAddCommGroup 2 _
-  -- letI this : Π i : k,
-  --   _root_.NormedAddCommGroup (Matrix (s i) (s i) ℂ) :=
-  --   -- fun i => (φ i).NormedAddCommGroup
 by
   letI : _root_.NormedAddCommGroup (PiMat ℂ k s) :=
     Module.Dual.PiNormedAddCommGroup (_hφ := hφ)

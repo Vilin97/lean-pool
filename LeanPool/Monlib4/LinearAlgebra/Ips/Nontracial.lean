@@ -62,93 +62,14 @@ section SingleBlock
 
 /-! # Section single_block -/
 
--- set_option trace.Meta.synthInstance true
--- set_option pp.all true
--- set_option trace.Meta.isDefEq true
--- set_option trace.Meta.isLevelDefEq true
 
--- /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x_5 x_6) -/
--- /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j k l) -/
--- set_option synthInstance.maxHeartbeats 300000 in
--- set_option maxHeartbeats 900000 in
--- /-- we can expres the nontracial adjoint of `linear_map.mul'` by
 
 local notation "|" x "⟩⟨" y "|" =>
   @rankOne ℂ _ _ _ _ _ _ _ x y
 
--- set_option synthInstance.maxHeartbeats 60000 in
--- theorem Module.Dual.IsFaithfulPosMap.psi_0_0_eq [hφ : φ.IsFaithfulPosMap] (x : l(ℍ)) :
---     hφ.psi 0 0 x = (TensorProduct.map x op) (LinearMap.adjoint (LinearMap.mul' ℂ ℍ) (1 : ℍ)) :=
---   by
---   suffices
---     ∀ a b : ℍ,
---       hφ.psi 0 0 |a⟩⟨b| =
---         (TensorProduct.map (↑|a⟩⟨b|) op) (LinearMap.adjoint (LinearMap.mul' ℂ ℍ) (1 : ℍ))
---     by
---     obtain ⟨α, β, rfl⟩ := LinearMap.exists_sum_rankOne x
---     simp_rw [map_sum, this, TensorProduct.sum_map, LinearMap.sum_apply]
---   intro a b
---   simp_rw [LinearMap.mul'_adjoint, one_apply, ite_mul, one_mul, MulZeroClass.zero_mul, ite_smul,
---     zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true, map_sum, _root_.map_smul,
---     TensorProduct.map_tmul, ContinuousLinearMap.coe_coe, rankOne_apply, ← inner_conj_symm b,
---     inner_stdBasisMatrix_left, starRingEnd_apply, ← conjTranspose_apply, conjTranspose_mul, ←
---     TensorProduct.smul_tmul', smul_smul]
---   rw [Finset.sum_rotate]
---   simp_rw [← Finset.sum_smul, ← mul_apply, hφ.matrixIsPosDef.1.eq,
---     @inv_mul_cancel_left_of_invertible n n ℂ _ _ _ φ.matrix bᴴ hφ.matrixIsPosDef.invertible,
---     ← TensorProduct.tmul_smul, ← TensorProduct.tmul_sum, ← _root_.map_smul, ← map_sum, ←
---     smul_stdBasisMatrix']
---   rw [← matrix_eq_sum_std_basis bᴴ, Module.Dual.IsFaithfulPosMap.psi_apply,
---     Module.Dual.IsFaithfulPosMap.psiToFun'_apply]
---   simp_rw [Module.Dual.IsFaithfulPosMap.sig_zero]
 
--- theorem Module.Dual.IsFaithfulPosMap.psi_eq [hφ : φ.IsFaithfulPosMap]
---   (t s : ℝ) (x : l(ℍ)) :
---   hφ.psi t s x =
---     (TensorProduct.map (hφ.sig t).toLinearMap (op ∘ₗ (hφ.sig (-s)).toLinearMap ∘ₗ unop))
---       ((TensorProduct.map x op) (LinearMap.adjoint (LinearMap.mul' ℂ ℍ) (1 : ℍ))) :=
---   by
---   simp_rw [← Module.Dual.IsFaithfulPosMap.psi_0_0_eq, Module.Dual.IsFaithfulPosMap.psi_apply, ←
---     LinearMap.comp_apply]
---   revert x
---   rw [← LinearMap.ext_iff]
---   apply LinearMap.ext_of_rank_one'
---   intro a b
---   simp_rw [LinearMap.comp_apply, Module.Dual.IsFaithfulPosMap.psiToFun'_apply,
---     TensorProduct.map_tmul, Module.Dual.IsFaithfulPosMap.sig_zero, LinearMap.comp_apply, unop_op,
---     Module.Dual.IsFaithfulPosMap.sig_conjTranspose]
---   rfl
 
--- theorem Module.Dual.IsFaithfulPosMap.sig_adjoint [hφ : φ.IsFaithfulPosMap] {t : ℝ} :
---     LinearMap.adjoint (hφ.sig t).toLinearMap = (hφ.sig t).toLinearMap :=
---   by
---   rw [LinearMap.ext_iff_inner_map]
---   intro x
---   simp_rw [LinearMap.adjoint_inner_left, Module.Dual.IsFaithfulPosMap.inner_eq',
---     AlgEquiv.toLinearMap_apply, Module.Dual.IsFaithfulPosMap.sig_conjTranspose,
---     Module.Dual.IsFaithfulPosMap.sig_apply, neg_neg]
---   let hQ := hφ.matrixIsPosDef
---   let Q := φ.matrix
---   calc
---     (Q * xᴴ * (hQ.rpow (-t) * x * hQ.rpow t)).trace =
---         (hQ.rpow t * Q * xᴴ * hQ.rpow (-t) * x).trace :=
---       ?_
---     _ = (hQ.rpow t * hQ.rpow 1 * xᴴ * hQ.rpow (-t) * x).trace := by rw [PosDef.rpow_one_eq_self]
---     _ = (hQ.rpow 1 * hQ.rpow t * xᴴ * hQ.rpow (-t) * x).trace := ?_
---     _ = (Q * (hQ.rpow t * xᴴ * hQ.rpow (-t)) * x).trace := by
---       simp_rw [PosDef.rpow_one_eq_self, Matrix.mul_assoc]
---   · rw [← Matrix.mul_assoc, trace_mul_cycle]
---     simp_rw [Matrix.mul_assoc]
---   · simp_rw [PosDef.rpow_mul_rpow, add_comm]
 
--- theorem Nontracial.inner_symm' [hφ : φ.IsFaithfulPosMap] (x y : ℍ) :
---     ⟪x, y⟫_ℂ = ⟪hφ.sig (-(1 / 2 : ℝ)) yᴴ, hφ.sig (-(1 / 2 : ℝ)) xᴴ⟫_ℂ :=
---   by
---   simp_rw [← AlgEquiv.toLinearMap_apply, ← LinearMap.adjoint_inner_left,
---     Module.Dual.IsFaithfulPosMap.sig_adjoint, AlgEquiv.toLinearMap_apply,
---     Module.Dual.IsFaithfulPosMap.sig_apply_sig]
---   rw [Nontracial.inner_symm]
---   norm_num
 
 theorem Module.Dual.IsFaithfulPosMap.basis_apply' [hφ : Module.Dual.IsFaithfulPosMap φ]
     (i j : n) :
@@ -190,12 +111,6 @@ open Module.Dual
 
 open scoped ComplexOrder
 
--- instance
---   Pi.tensorProduct_finiteDimensional :
---       FiniteDimensional ℂ (PiMat ℂ k s ⊗[ℂ] PiMat ℂ k s) :=
---   by infer_instance
-  -- FiniteDimensional.of_finite_basis (Basis.ofVectorSpace ℂ _)
-    -- (Basis.ofVectorSpaceIndex ℂ _).toFinite
 
 open scoped Functional
 
@@ -370,9 +285,6 @@ noncomputable def Module.Dual.pi.IsFaithfulPosMap.sig (hψ : ∀ i, (ψ i).IsFai
       simp_rw [mul_assoc]
       simp only [← mul_assoc (Pi.PosDef.rpow hQ z) (Pi.PosDef.rpow hQ (-z)),
         Pi.PosDef.rpow_hMul_rpow, add_neg_self, Pi.PosDef.rpow_zero, one_mul]
-    -- map_smul' := fun r x => by
-    --   simp only [MulAction.mul_smul, smul_mul, RingHom.id_apply]
-    --   simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
     commutes' := fun r => by
       simp only [Algebra.algebraMap_eq_smul_one, mul_smul_comm, smul_mul_assoc, mul_one,
         Pi.PosDef.rpow_hMul_rpow, neg_add_self, Pi.PosDef.rpow_zero]
@@ -669,21 +581,6 @@ theorem Module.Dual.pi.IsFaithfulPosMap.psiToFun'_apply [hψ : ∀ i, (ψ i).IsF
     -- ← Module.Dual.pi.IsFaithfulPosMap.basis_repr_apply_apply,
     Basis.sum_repr]
 
--- @[instance]
--- private def pi_matrix_tensor_is_semiring :
---     Semiring (∀ i : k × k, Matrix (s i.1) (s i.1) ℂ ⊗[ℂ] Matrix (s i.2) (s i.2) ℂ) :=
---   by
---   apply @Pi.semiring _ _ _
---   intro i
---   infer_instance
-
--- @[instance]
--- private def pi_matrix_tensor_is_algebra :
---     Algebra ℂ (∀ i : k × k, Matrix (s i.1) (s i.1) ℂ ⊗[ℂ] Matrix (s i.2) (s i.2) ℂ) :=
---   by
---   apply @Pi.algebra _ _ _ _ _ _
---   intro i
---   infer_instance
 
 /-- Transpose each matrix block of a product as an algebra equivalence to the opposite algebra. -/
 @[simps]
@@ -778,10 +675,6 @@ theorem Module.Dual.pi.IsFaithfulPosMap.psiInvFun'_apply [hψ : ∀ i, (ψ i).Is
   by
   withPiInnerTac[ψ]
   withPiInnerTac[ψ₂]
-  -- letI : ∀ i, StarModule ℂ (Matrix ((fun i : k => s i) i) ((fun i : k => s i) i) ℂ) :=
-  --   by
-  --   intro i
-  --   infer_instance
   simp_rw [Module.Dual.pi.IsFaithfulPosMap.psiInvFun', LinearMap.coe_mk,
     AddHom.coe_mk,
     Basis.tensorProduct_repr_tmul_apply, smul_eq_mul, mul_comm, ← rankOne_lm_smul_smul,
@@ -890,23 +783,8 @@ theorem Module.Dual.pi.IsFaithfulPosMap.norm_eq {ψ : ∀ i, Module.Dual ℂ (Ma
   simp_rw [← Module.Dual.pi.IsFaithfulPosMap.inner_eq]
   exact norm_eq_sqrt_re_inner (𝕜 := ℂ) x
 
--- instance Matrix.is_fd : FiniteDimensional ℂ (Matrix n n ℂ) := by infer_instance
 
--- instance Matrix.is_starModule {n : Type _} [Fintype n] [DecidableEq n] :
-    -- StarModule ℂ (Matrix n n ℂ) := by infer_instance
 
--- instance Pi.matrix.is_fd : FiniteDimensional ℂ PiMat ℂ k s := by infer_instance
-
--- instance Pi.matrix.is_starModule : StarModule ℂ PiMat ℂ k s := by infer_instance
-
--- instance Pi.matrix.is_topologicalAddGroup : TopologicalAddGroup (∀ i : k, Matrix (s i) (s i) ℂ)
--- :=
---   by
---   apply @Pi.topologicalAddGroup _ _ _ _ _
-  -- intro b
-  -- infer_instance
-
--- instance Pi.matrix.continuousSMul : ContinuousSMul ℂ PiMat ℂ k s := by infer_instance
 
 open scoped Classical in
 omit [DecidableEq k] [(i : k) → DecidableEq (s i)] in

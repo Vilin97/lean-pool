@@ -167,18 +167,6 @@ noncomputable def LinearMap.IsBimoduleMaps (R H₁ H₂ : Type _) [CommSemiring 
 -- { x : l(R,H₁ ⊗[R] H₂) // x.IsBimoduleMap }
 
 
--- noncomputable instance LinearMap.IsBidmoduleMaps.Add :
---   Add (LinearMap.IsBimoduleMaps R H₁ H₂) :=
--- ⟨fun x y => ⟨↑x + ↑y, x.property.add y.property⟩⟩
--- noncomputable instance LinearMap.IsBimoduleMaps.Zero :
---   Zero (LinearMap.IsBimoduleMaps R H₁ H₂) :=
--- ⟨⟨0, LinearMap.isBimoduleMap.zero⟩⟩
--- noncomputable instance LinearMap.IsBimoduleMaps.Smul :
---   SMul R (LinearMap.IsBimoduleMaps R H₁ H₂) :=
--- ⟨fun a x => ⟨a • ↑x, x.property.smul a⟩⟩
--- noncomputable instance LinearMap.IsBimoduleMaps.NSmul :
---   SMul ℕ (LinearMap.IsBimoduleMaps R H₁ H₂) :=
--- ⟨fun a x => ⟨a • ↑x, x.property.nsmul a⟩⟩
 
 @[simp] lemma LinearMap.IsBimoduleMaps.coe_add (x y : IsBimoduleMaps R H₁ H₂) :
    ((x + y : IsBimoduleMaps R H₁ H₂) : H₁ ⊗[R] H₂ →ₗ[R] H₁ ⊗[R] H₂) = ↑x + ↑y := rfl
@@ -191,22 +179,6 @@ noncomputable def LinearMap.IsBimoduleMaps (R H₁ H₂ : Type _) [CommSemiring 
 @[simp] lemma LinearMap.IsBimoduleMaps.coe_zero :
    ((0 : IsBimoduleMaps R H₁ H₂) : H₁ ⊗[R] H₂ →ₗ[R] H₁ ⊗[R] H₂) = 0 := rfl
 
--- @[instance]
--- noncomputable def LinearMap.IsBimoduleMaps.AddCommMonoid : AddCommMonoid (IsBimoduleMaps R H₁ H₂)
---     where
---   add_assoc x y z := by ext; simp only [coe_add, add_assoc]
---   zero_add x := by ext; simp only [coe_zero, coe_add, zero_add]
---   add_zero x := by ext; simp only [coe_zero, coe_add, add_zero]
---   nsmul n x := n • x
---   nsmul_zero x := by ext; simp only [coe_nsmul, coe_zero, zero_smul]
---   nsmul_succ k x :=
---     by
---     ext
---     simp only [coe_add, coe_nsmul, add_smul, one_mul, add_comm,
---       nsmul_eq_mul, Nat.cast_one]
---   add_comm x y := by
---     rw [← Subtype.coe_inj]
---     simp_rw [coe_add, add_comm]
 
 theorem LinearMap.IsBimoduleMap.add_smul (a b : R) (x : (IsBimoduleMaps R H₁ H₂)) :
     (a + b) • x = a • x + b • x := by
@@ -214,38 +186,9 @@ theorem LinearMap.IsBimoduleMap.add_smul (a b : R) (x : (IsBimoduleMaps R H₁ H
   simp_rw [IsBimoduleMaps.coe_smul, IsBimoduleMaps.coe_add, _root_.add_smul]
   rfl
 
--- open LinearMap.IsBimoduleMaps in
--- noncomputable instance : MulAction R (LinearMap.IsBimoduleMaps R H₁ H₂)
---     where
---   one_smul x := by
---     simp_rw [← Subtype.coe_inj]
---     simp_rw [coe_smul, one_smul]
---   mul_smul x y a := by
---     simp_rw [← Subtype.coe_inj]
---     simp_rw [coe_smul, ← smul_smul]
 
--- open LinearMap.IsBimoduleMaps in
--- noncomputable instance : DistribMulAction R (LinearMap.IsBimoduleMaps R H₁ H₂)
---     where
---   smul_zero x := rfl
---   smul_add x y z := by
---     simp only [← Subtype.coe_inj, coe_smul, coe_add, smul_add]
 
--- noncomputable instance LinearMap.IsBimoduleMaps.Module :
---   Module R (IsBimoduleMaps R H₁ H₂)
---     where
---   add_smul r s x := IsBimoduleMap.add_smul _ _ _
---   zero_smul x := by
---     simp_rw [← Subtype.coe_inj, coe_smul, zero_smul, coe_zero]
 
--- @[reducible]
--- def LinearMap.IsBimoduleMaps.submodule :
---   Submodule R (IsBimoduleMaps R H₁ H₂)
---     where
---   carrier x := x.IsBimoduleMap
---   add_mem' x y hx hy := hx.add hy
---   zero_mem' := LinearMap.isBimoduleMapZero
---   smul_mem' r x hx := hx.smul r
 
 theorem LinearMap.isBimoduleMap_iff {T : l(R,H₁ ⊗[R] H₂)} :
     T.IsBimoduleMap ↔ ∀ a b x y, T ((a * x) ⊗ₜ[R] (y * b)) = a •ₗ T (x ⊗ₜ[R] y) •ᵣ b :=
@@ -289,14 +232,6 @@ theorem LinearMap.isBimoduleMap_iff_ltensor_lsmul_rtensor_rsmul {R H₁ H₂ : T
     TensorProduct.tmul_eq_zero, sub_eq_zero, ha, hb, false_or, or_false] at H hxy
   exact ⟨H, fun _ _ => hxy _ _⟩
 
--- noncomputable def LinearMap.IsBimoduleMap.sum {p : Type _} {s : Finset p}
---   (x : p → (IsBimoduleMaps R H₁ H₂)) :
---   (IsBimoduleMaps R H₁ H₂) :=
--- ⟨∑ i in s, (x i).1, fun a b c =>
---   by
---   simp_rw [LinearMap.sum_apply, Bimodule.lsmul_sum, Bimodule.sum_rsmul]
---   apply Finset.sum_congr rfl; intros
---   rw [Subtype.mem (x _)]⟩
 
 theorem LinearMap.IsBimoduleMap.sum_coe {p : Type _} {s : Finset p}
   (x : p → (IsBimoduleMaps R H₁ H₂)) :

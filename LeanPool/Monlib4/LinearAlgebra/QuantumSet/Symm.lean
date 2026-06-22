@@ -48,10 +48,6 @@ theorem symmMap_real {R : Type _} [RCLike R] {M : Type _} [NormedAddCommGroup M]
 
 open scoped TensorProduct Matrix
 
--- variable {n : Type _} [Fintype n] [DecidableEq n] {s : n → Type _} [∀ i, Fintype (s i)]
---   [∀ i, DecidableEq (s i)] {ψ : ∀ i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
---   {n₂ : Type _} [Fintype n₂] [DecidableEq n₂] {s₂ : n₂ → Type _} [∀ i, Fintype (s₂ i)]
---   [∀ i, DecidableEq (s₂ i)] {φ : ∀ i, Module.Dual ℂ (Matrix (s₂ i) (s₂ i) ℂ)}
 
 -- local notation "𝔹" => PiMat ℂ n s
 -- local notation "𝔹₂" => PiMat ℂ n₂ s₂

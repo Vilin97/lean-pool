@@ -25,7 +25,6 @@ section
 variable {R m n : Type _} [CommSemiring R] [Fintype m] [Fintype n] [DecidableEq m]
   [DecidableEq n]
 
--- set_option synthInstance.maxHeartbeats 0 in
 /-- Convert a tensor of square matrices into its Kronecker-product matrix. -/
 noncomputable def TensorProduct.toKronecker :
     Matrix m m R ⊗[R] Matrix n n R →ₗ[R] Matrix (m × n) (m × n) R
@@ -136,7 +135,6 @@ theorem TensorProduct.matrix_eq_sum_std_basis (x : Matrix m m R ⊗[R] Matrix n 
     _ = kroneckerToTensorProduct (toKronecker x) := by rw [← Matrix.kronecker_eq_sum_std_basis]
     _ = x := TensorProduct.toKronecker_to_tensorProduct _
 
--- set_option maxHeartbeats 900000 in
 theorem TensorProduct.toKronecker_hMul (x y : Matrix m m R ⊗[R] Matrix n n R) :
     toKronecker (x * y) = toKronecker x * toKronecker y :=
 x.induction_on

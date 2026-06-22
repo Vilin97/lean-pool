@@ -86,9 +86,6 @@ private lemma coassoc_aux_1
   (TensorProduct.assoc R Aᵐᵒᵖ Aᵐᵒᵖ Aᵐᵒᵖ).toLinearMap ∘ₗ
     (TensorProduct.opLinearEquiv.toLinearMap
       ∘ₗ (MulOpposite.opLinearEquiv R).toLinearMap).rTensor Aᵐᵒᵖ
-  -- = 0:=
-  -- ((TensorProduct.map (MulOpposite.opLinearEquiv R).toLinearMap
-  --   (MulOpposite.opLinearEquiv R).toLinearMap)).rTensor A
   = (TensorProduct.map (MulOpposite.opLinearEquiv R).toLinearMap
       (((MulOpposite.opLinearEquiv R).toLinearMap.rTensor _)))
     ∘ₗ (TensorProduct.assoc R A A _).toLinearMap :=

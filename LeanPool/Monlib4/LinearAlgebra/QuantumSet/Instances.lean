@@ -398,12 +398,6 @@ def Module.Dual.IsFaithfulPosMap.quantumSet [hφ : φ.IsFaithfulPosMap] :
     @QuantumSet (Matrix n n ℂ) (Matrix.isStarAlgebra (φ := φ)) := by
   letI : starAlgebra (Matrix n n ℂ) := Matrix.isStarAlgebra (φ := φ)
   exact withMatrixInner[φ] {
-  -- modAut r := hφ.sig r
-  -- modAut_trans r s := sig_trans_sig _ _
-  -- modAut_zero := by
-    -- ext1
-    -- exact Module.Dual.IsFaithfulPosMap.sig_zero _ _
-  -- modAut_star r x := sig_conjTranspose _ _ _
   modAut_isSymmetric r x y := by
     simp_rw [← AlgEquiv.toLinearMap_apply, modAut, AlgEquiv.toLinearMap_apply, sig_apply,
       mul_assoc]
@@ -443,12 +437,6 @@ macro_rules
         letI := Module.Dual.InnerProductSpace (φ := $φ)
         $p)
 
-  -- map_one' := rfl
-  -- mapMul' x y := _root_.map_mul _ _ _
-  -- map_zero' := _root_.map_zero _
-  -- map_add' := _root_.map_add _
-  -- commutes' := Algebra.commutes
-  -- smul_def' r x := by ext; simp [Matrix.scalar, Algebra.smul_def r]
 
 section MatrixPsi
 
@@ -476,17 +464,7 @@ end MatrixPsi
 variable {k : Type*} [Fintype k] [DecidableEq k] {s : k → Type*} [Π i, Fintype (s i)]
   [Π i, DecidableEq (s i)] {ψ : Π i, Module.Dual ℂ (Matrix (s i) (s i) ℂ)}
 
--- theorem Module.Dual.pi.IsFaithfulPosMap.sig_trans_sig (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
---     (x y : ℝ) :
---     (Module.Dual.pi.IsFaithfulPosMap.sig hψ x).trans (Module.Dual.pi.IsFaithfulPosMap.sig hψ y) =
---       Module.Dual.pi.IsFaithfulPosMap.sig hψ (x + y) :=
--- by rw [Moudle.Dual.Pi.IsFaithfulPosMap.sig_trans_sig, add_comm]
 
--- theorem Module.Dual.pi.IsFaithfulPosMap.sig_isSymmetric (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
---     (r : ℝ) (x y : PiMat ℂ k s) :
---   ⟪sig hψ r x, y⟫_ℂ = ⟪x, sig hψ r y⟫_ℂ :=
--- by rw [← AlgEquiv.toLinearMap_apply, ← sig_adjoint, LinearMap.adjoint_inner_left,
-  -- AlgEquiv.toLinearMap_apply]
 
 private noncomputable def piSig (hψ : ∀ i, (ψ i).IsFaithfulPosMap)
     (z : ℝ) : PiMat ℂ k s ≃ₐ[ℂ] PiMat ℂ k s where
@@ -588,24 +566,7 @@ by
       smul_left := by
         intro x y r
         exact inner_smul_left x y r }
--- letI : _root_.NormedAddCommGroup (PiMat ℂ k s) := by infer_instance
--- letI : _root_.NormedSpace ℂ (PiMat ℂ k s) := by infer_instance
--- letI : _root_.InnerProductSpace ℂ (PiMat ℂ k s) := by infer_instance
--- { norm_smul_le := fun r x => by
---     rw [← norm_smul_le]
-    -- exact @norm_smul_le ℂ (PiMat ℂ k s) _ _ _ _ r x
-    -- rw [norm_eq_sqrt_inner (𝕜 := ℂ), inner_smul_left, inner_smul_right]
-    -- simp only [RCLike.re_to_complex, Complex.norm_eq_abs, ← mul_assoc,
-    --   Complex.conj_mul', ← Complex.ofReal_pow, Complex.re_ofReal_mul]
-    -- rw [Real.sqrt_mul (pow_two_nonneg _), Real.sqrt_sq, norm_eq_sqrt_inner (𝕜 := ℂ)]
-    -- rfl
-    -- simp only [apply_nonneg]
-  -- norm_sq_eq_inner := norm_sq_eq_inner (𝕜 := ℂ)
-  -- conj_symm := inner_conj_symm
-  -- add_left := inner_add_left
-  -- smul_left := inner_smul_left }
 
--- set_option synthInstance.checkSynthOrder false in
 @[reducible, instance]
 noncomputable instance Module.Dual.pi.IsFaithfulPosMap.quantumSet
   [hψ : Π i, (ψ i).IsFaithfulPosMap] :
@@ -659,22 +620,6 @@ macro_rules
         letI := Module.Dual.pi.InnerProductSpace (φ := $ψ)
         $p)
 
-  -- modAut r := (Module.Dual.pi.IsFaithfulPosMap.sig hψ r : PiMat ℂ k s ≃ₐ[ℂ] PiMat ℂ k s)
-  -- modAut_trans r s := Module.Dual.pi.IsFaithfulPosMap.sig_trans_sig hψ _ _
-  -- modAut_zero := Module.Dual.pi.IsFaithfulPosMap.sig_zero'
-  -- modAut_star r x := Module.Dual.pi.IsFaithfulPosMap.sig_star _ _ _
-  -- modAut_isSymmetric r x y :=
-  --   by simp only; exact Module.Dual.pi.IsFaithfulPosMap.sig_isSymmetric hψ _ _ _
-  -- -- modAut_isCoalgHom r :=
-  -- --   by simp only; exact Module.Dual.pi.IsFaithfulPosMap.sig_isCoalgHom hψ r
-  -- k := 0
-  -- inner_star_left x y z := by
-  --   simp_rw [neg_zero, sig_zero, inner_left_hMul]
-  -- inner_conj_left x y z := by
-  --   simp_rw [neg_zero, zero_sub, Module.Dual.pi.IsFaithfulPosMap.inner_right_conj']
-  -- commutes' a f := by ext1; simp only [RingHom.coe_mk, MonoidHom.coe_mk, Pi.mul_apply]
-  -- smul_def' a f := by ext1; simp only [Pi.smul_apply, RingHom.coe_mk, MonoidHom.coe_mk,
-  --   Pi.mul_apply]
 
 open scoped TensorProduct BigOperators Kronecker Matrix
 

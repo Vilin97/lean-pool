@@ -135,8 +135,6 @@ variable {B : Type*} [NormedAddCommGroup B] [InnerProductSpace ℂ B]
   [FiniteDimensional ℂ B]
 
 open scoped MatrixOrder ComplexOrder FiniteDimensional
--- set_option synthInstance.checkSynthOrder false in
--- attribute [instance] FiniteDimensional.complete
 theorem ContinuousLinearMap.nonneg_iff_isSelfAdjoint_and_nonneg_spectrum
   (T : B →L[ℂ] B) :
   0 ≤ T ↔ IsSelfAdjoint T ∧ spectrum ℂ T ⊆ {a : ℂ | 0 ≤ a} :=
@@ -150,14 +148,6 @@ theorem ContinuousLinearMap.nonneg_iff_exists
   0 ≤ T ↔ ∃ f, T = star f * f :=
 by rw [nonneg_iff_isPositive]; exact isPositive_iff_exists_adjoint_hMul_self _
 
--- def ContinuousLinearMap.StarOrderedRing :
---   _root_.StarOrderedRing (B →L[ℂ] B) :=
--- StarOrderedRing.of_nonneg_iff'
---   (fun hxy z => by simp_rw [le_def, add_sub_add_left_eq_sub]; exact hxy)
---   (fun x => by
---     rw [nonneg_iff_isPositive]
---     exact ContinuousLinearMap.isPositive_iff_exists_adjoint_hMul_self _)
--- attribute [local instance] ContinuousLinearMap.StarOrderedRing
 
 lemma orthogonalProjection_ker_comp_eq_of_comp_eq_zero {T S : B →L[ℂ] B} (h : T * S = 0) :
   orthogonalProjection' (LinearMap.ker T.toLinearMap) * S = S :=

@@ -99,9 +99,6 @@ noncomputable def QuantumSet.subsetInnerProductSpace (hA : QuantumSet A) (new_k 
 letI : starAlgebra (subset new_k A) := QuantumSet.subsetStarAlgebra new_k
 InnerProductSpace.ofCore _
 
--- theorem GNS.normedAddCommGroup.norm_eq [hA : QuantumSet A] (x : qS_GNS A) :
---   GNS.normedAddCommGroup.norm (x : qS_GNS A) = ‖modAut (- (hA.k / 2)) (x : A)‖ :=
--- rfl
 
 /-- The inner product algebra structure induced by shifting the quantum-set inner product. -/
 @[reducible]

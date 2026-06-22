@@ -74,10 +74,6 @@ lemma TensorProduct.rid_adjoint {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGro
         starRingEnd_apply, star_one, inner_smul_right, mul_comm, mul_one])
     (fun z w hz hw => by simp only [_root_.map_add, inner_add_right, hz, hw])
 
--- @[reducible]
--- structure FiniteDimensionalHilbertAlgebra (R A : Type*) [RCLike R] extends
---   NormedAddCommGroupOfRing A, InnerProductSpace R A, SMulCommClass R A A,
---   IsScalarTower R A A, Finite R A where
 
 @[reducible, instance]
 noncomputable
@@ -104,13 +100,6 @@ def Coalgebra.ofFiniteDimensionalHilbertAlgebra
     rw [← LinearMap.lTensor_adjoint, ← LinearMap.adjoint_comp, Algebra.mul_comp_lTensor_unit,
       TensorProduct.rid_adjoint]
     rfl }
--- scoped[ofFiniteDimensionalHilbertAlgebra] attribute [instance]
---   Coalgebra.ofFiniteDimensionalHilbertAlgebra
--- def NormedAddCommGroup.ofFiniteDimensionalCoAlgebra
---   [RCLike R] [Ring A] [Algebra R A] [Coalgebra R A] [FiniteDimensional R A] :
---   NormedAddCommGroup A :=
--- @InnerProductSpace.Core.toNormedAddCommGroup R A _ _ _
---     { inner := counit () }
 
 -- open scoped ofFiniteDimensionalHilbertAlgebra in
 lemma Coalgebra.comul_eq_mul_adjoint
@@ -139,9 +128,6 @@ by
   intro a
   simp_rw [LinearMap.adjoint_inner_right, Algebra.linearMap_apply,
     Algebra.algebraMap_eq_smul_one, inner_smul_left, inner, mul_comm, starRingEnd_apply]
--- @[reducible]
--- class NormedAddCommGroupOfStarRing (B : Type _) extends
---   NormedAddCommGroupOfRing B, StarRing B
 
 lemma Coalgebra.counit_eq_bra_one [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A] :
@@ -178,79 +164,6 @@ theorem Coalgebra.rTensor_mul_comp_lTensor_mul_adjoint
       ∘ₗ (lT A (LinearMap.adjoint (m A))) =
     (LinearMap.adjoint (m A)) ∘ₗ (m A) :=
 Coalgebra.rTensor_mul_comp_lTensor_comul h
-
--- /-- An equivalence between structures that are both co-algebras and algebras -/
--- structure CoAlgEquiv (R A B : Type*) [CommSemiring R]
---     [Semiring A] [Semiring B] [Algebra R A] [Algebra R B] [Coalgebra R A] [Coalgebra R B] extends
---     A ≃ₗc[R] B, A ≃ₐ[R] B where
-
--- attribute [nolint docBlame] CoAlgEquiv.toCoalgEquiv
--- attribute [nolint docBlame] CoAlgEquiv.toAlgEquiv
-
--- @[inherit_doc CoAlgEquiv]
--- infixr:25 " ≃ₐc " => CoAlgEquiv _
--- @[inherit_doc CoAlgEquiv]
--- notation:50 A " ≃ₐc[" R "] " B => CoAlgEquiv R A B
-
--- class CoAlgEquivClass (F : Type*) (R A B : outParam Type*) [CommSemiring R]
---     [Semiring A] [Semiring B] [Algebra R A] [Algebra R B] [Coalgebra R A] [Coalgebra R B]
---     [EquivLike F A B] extends CoalgEquivClass F R A B, AlgEquivClass F R A B :
---     Prop
-
--- namespace CoAlgEquivClass
-
--- variable {F R A B : Type*} [CommSemiring R]
---     [Semiring A] [Semiring B] [Algebra R A] [Algebra R B] [Coalgebra R A] [Coalgebra R B]
-
--- @[coe]
--- def toCoAlgEquiv [EquivLike F A B] [CoAlgEquivClass F R A B] (f : F) : A ≃ₐc[R] B :=
---   { (f : A ≃ₐ[R] B), (f : A →ₗc[R] B) with }
-
--- instance instCoeToCoAlgEquiv
---     [EquivLike F A B] [CoAlgEquivClass F R A B] : CoeHead F (A ≃ₐc[R] B) where
---   coe f := toCoAlgEquiv f
-
--- end CoAlgEquivClass
-
--- namespace CoAlgEquiv
--- variable {F R A B : Type*} [CommSemiring R]
---     [Semiring A] [Semiring B] [Algebra R A] [Algebra R B] [Coalgebra R A] [Coalgebra R B]
-
--- def toEquiv : (A ≃ₐc[R] B) → A ≃ B := fun f => f.toAlgEquiv.toEquiv
-
--- theorem toEquiv_injective : Function.Injective (toEquiv : (A ≃ₐc[R] B) → A ≃ B) :=
---   fun ⟨_, _, _⟩ ⟨_, _, _⟩ h =>
---     (CoAlgEquiv.mk.injEq _ _ _ _ _ _).mpr
---       (CoalgEquiv.toEquiv_inj.mp h)
-
--- @[simp]
--- theorem toEquiv_inj {e₁ e₂ : A ≃ₐc[R] B} : e₁.toEquiv = e₂.toEquiv ↔ e₁ = e₂ :=
---   toEquiv_injective.eq_iff
-
--- theorem toCoalgEquiv_injective : Function.Injective (toCoalgEquiv : (A ≃ₐc[R] B) → A ≃ₗc[R] B) :=
---   fun _ _ H => toEquiv_injective <| Equiv.ext <| CoalgEquiv.congr_fun H
-
--- instance : EquivLike (A ≃ₐc[R] B) A B where
---   inv := CoAlgEquiv.invFun
---   left_inv := CoAlgEquiv.left_inv
---   right_inv := CoAlgEquiv.right_inv
---   coe_injective' _ _ h _ := toCoalgEquiv_injective (DFunLike.coe_injective h)
---   -- left_inv := _
---   -- right_inv := _
-
--- instance : FunLike (A ≃ₐc[R] B) A B where
---   coe := DFunLike.coe
---   coe_injective' := DFunLike.coe_injective
-
--- instance : CoAlgEquivClass (A ≃ₐc[R] B) R A B where
---   map_add := (·.map_add')
---   map_smulₛₗ := (·.map_smul')
---   counit_comp := (·.counit_comp)
---   map_comp_comul := (·.map_comp_comul)
-
--- -- @[simp, norm_cast]
--- -- theorem coe_coe {e : A ≃ₐc[R] B} : (e : A → B) = e :=
--- --   rfl
 
 open Coalgebra LinearMap TensorProduct in
 theorem Coalgebra.lTensor_mul_comp_rTensor_comul_of

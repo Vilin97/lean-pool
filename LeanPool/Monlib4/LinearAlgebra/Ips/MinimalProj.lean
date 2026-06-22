@@ -763,9 +763,6 @@ theorem orthogonal_projection_iff [InnerProductSpace 𝕜 E] [FiniteDimensional 
           ContinuousLinearMap.coe_coe, ← adjoint_inner_left, IsSelfAdjoint.adjoint_eq h1, ←
           ContinuousLinearMap.coe_coe, ← LinearMap.comp_apply, h2,
           h _ (LinearMap.IsProj.map_mem hp _)]
-    -- . have : p = W.subtype ∘ₗ p' := by rfl
-    --   rw [← LinearMap.range_of_isProj hp]
-    --   simp only [range_toLinearMap]
 
 private theorem starProjection_isProj [InnerProductSpace 𝕜 E] (U : Submodule 𝕜 E)
     [U.HasOrthogonalProjection] : LinearMap.IsProj U (↥P U) :=
