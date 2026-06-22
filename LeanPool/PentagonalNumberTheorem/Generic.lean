@@ -99,8 +99,7 @@ theorem psi_sub_psi (k n : ℕ) (x : R) :
   unfold psi
   rw [Finset.prod_range_succ]
   unfold gamma
-  rw [Finset.prod_range_succ']
-  rw [Finset.prod_range_succ]
+  rw [Finset.prod_range_succ', Finset.prod_range_succ]
   ring_nf
 
 /-- By summing with telescoping, we get a recurrence formlua for $Γ$
@@ -111,10 +110,8 @@ theorem gamma_rec [TopologicalSpace R] [IsTopologicalRing R] [T2Space R]
     (k : ℕ) {x : R} (hx : IsTopologicallyNilpotent x) (hgamma : ∀ k, Summable (gamma k · x))
     (h : ∀ k, Multipliable (fun n ↦ 1 - x ^ (n + k + 1))) :
     ∑' n, gamma k n x = 1 - x ^ (2 * k + 3) - x ^ (3 * k + 5) * ∑' n, gamma (k + 1) n x := by
-  rw [eq_sub_iff_add_eq]
-  rw [show 1 - x ^ (2 * k + 3) = 0 - psi k 0 x by simp [psi]]
-  rw [← (hgamma _).tsum_mul_left]
-  rw [← (hgamma _).tsum_add ((hgamma _).mul_left _)]
+  rw [eq_sub_iff_add_eq, show 1 - x ^ (2 * k + 3) = 0 - psi k 0 x by simp [psi],
+    ← (hgamma _).tsum_mul_left, ← (hgamma _).tsum_add ((hgamma _).mul_left _)]
   apply HasSum.tsum_eq
   rw [((hgamma _).add ((hgamma _).mul_left _)).hasSum_iff_tendsto_nat]
   simp_rw [psi_sub_psi, Finset.sum_range_sub (psi k · x)]
