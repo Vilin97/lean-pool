@@ -82,15 +82,10 @@ private lemma card_freeSyms {k : DirIdx} (u : BaseOrbit k) :
     (freeSyms (k := k) u).card = Fintype.card (FreeCol k) := by
   classical
   -- The map `j ↦ u_j` is injective on `FreeCol k` since `u` is an injective triple.
-  have hinj : Function.Injective (fun j : FreeCol k => u.1.1 j.1) := by
-    intro a b hab
-    apply Subtype.ext
-    exact u.1.2 hab
-  have hcard :
-      (freeSyms (k := k) u).card = (Finset.univ : Finset (FreeCol k)).card := by
-    simpa [freeSyms] using (Finset.card_image_of_injective (s := (Finset.univ : Finset (FreeCol k)))
-      (f := fun j : FreeCol k => u.1.1 j.1) hinj)
-  simp [hcard]
+  have hinj : Function.Injective (fun j : FreeCol k => u.1.1 j.1) := fun a b hab =>
+    Subtype.ext (u.1.2 hab)
+  simpa [freeSyms] using Finset.card_image_of_injective
+    (s := (Finset.univ : Finset (FreeCol k))) (f := fun j : FreeCol k => u.1.1 j.1) hinj
 
 private lemma card_usedSet {k : DirIdx} (u : BaseOrbit k) :
     (baseSet ∪ freeSyms (k := k) u).card = 3 + freeCols (maskAt k) := by
@@ -100,16 +95,9 @@ private lemma card_usedSet {k : DirIdx} (u : BaseOrbit k) :
   have hdisj : Disjoint baseSet (freeSyms (k := k) u) := by
     simpa [disjoint_comm] using (freeSyms_disjoint_baseSet (k := k) u)
   have hfreeCard : (freeSyms (k := k) u).card = freeCols (maskAt k) := by
-    -- `freeSyms.card = card FreeCol = freeCols`.
-    have hCardFreeCol : Fintype.card (FreeCol k) = freeCols (maskAt k) := by
-      classical
-      exact Fintype.card_subtype (fun j : Fin 3 => colMatch (maskAt k) j = none)
-    simpa [card_freeSyms (k := k) u] using hCardFreeCol
-  calc
-    (baseSet ∪ freeSyms (k := k) u).card
-        = baseSet.card + (freeSyms (k := k) u).card := by
-            simp [Finset.card_union_of_disjoint hdisj]
-    _ = 3 + freeCols (maskAt k) := by simp [hbase, hfreeCard]
+    rw [card_freeSyms (k := k) u]
+    exact Fintype.card_subtype (fun j : Fin 3 => colMatch (maskAt k) j = none)
+  rw [Finset.card_union_of_disjoint hdisj, hbase, hfreeCard]
 
 /-- Available symbols for new coordinates: those not in `baseSet` and not used by `u` on
 its free columns. -/
@@ -127,34 +115,21 @@ theorem card_availFor {k : DirIdx} (u : BaseOrbit k) :
   let used : Finset SymN := baseSet ∪ freeSyms (k := k) u
   have husedCard : used.card = 3 + freeCols (maskAt k) := by
     simpa [used] using card_usedSet (k := k) u
-  have hsubCard : Fintype.card (↑used) = used.card := by
-    simp
   -- `AvailFor u` is the complement subtype.
   have hcompl :
       Fintype.card (AvailFor u)
         = Fintype.card SymN - Fintype.card (↑used) := by
-    -- `p x := x ∈ used`
     simpa [AvailFor,
       used] using (Fintype.card_subtype_compl (α := SymN) (p := fun x : SymN => x ∈ used))
-  -- `card SymN = n`.
   have hSym : Fintype.card SymN = n := by simp [SymN, Sym]
-  -- Finish.
-  calc
-    Fintype.card (AvailFor u)
-        = Fintype.card SymN - Fintype.card (↑used) := hcompl
-    _ = n - used.card := by simp [hSym, hsubCard]
-    _ = n - (3 + freeCols (maskAt k)) := by simp [husedCard]
+  rw [hcompl, hSym, Fintype.card_coe, husedCard]
 
 theorem card_embedding_freeCoord_availFor {k a d : DirIdx} (u : BaseOrbit k) :
     Fintype.card (FreeCoord a d ↪ AvailFor u) =
       (n - (3 + freeCols (maskAt k))).descFactorial (freeCoords (maskAt a) (maskAt d)) := by
   classical
   -- `card (α ↪ β) = card β P (card α)` for finite types.
-  have hEmb :
-      Fintype.card (FreeCoord a d ↪ AvailFor u)
-        = (Fintype.card (AvailFor u)).descFactorial (Fintype.card (FreeCoord a d)) := by
-    exact (Fintype.card_embedding_eq (α := FreeCoord a d) (β := AvailFor u))
-  -- Rewrite cardinalities.
+  have hEmb := Fintype.card_embedding_eq (α := FreeCoord a d) (β := AvailFor u)
   simp [hEmb, card_availFor (u := u), card_freeCoord (a := a) (d := d)]
 
 /-!
@@ -166,31 +141,18 @@ structure-constant formula from `N1000000StructureConstants`.
 
 private lemma not_mem_baseSet_of_ge_three {x : SymN} (hx : 3 ≤ x.1) : x ∉ baseSet := by
   intro hxmem
-  have hxlt : x.1 < 3 := by
-    -- `x ∈ {0,1,2}`
-    have : x = s0 ∨ x = s1 ∨ x = s2 := by
-      simpa [baseSet] using hxmem
-    rcases this with rfl | rfl | rfl <;> decide
+  have hmem : x = s0 ∨ x = s1 ∨ x = s2 := by simpa [baseSet] using hxmem
+  have hxlt : x.1 < 3 := by rcases hmem with rfl | rfl | rfl <;> decide
   exact (Nat.not_lt_of_ge hx hxlt).elim
 
 private lemma sym_mem_baseSet_of_lt_three {x : SymN} (hx : x.1 < 3) : x ∈ baseSet := by
-  have : x.1 = 0 ∨ x.1 = 1 ∨ x.1 = 2 := by
-    omega
-  rcases this with hx0 | hx1 | hx2
-  · -- `x = s0`
-    have : x = s0 := by
-      apply Fin.ext
-      simp [hx0]
+  have hx3 : x.1 = 0 ∨ x.1 = 1 ∨ x.1 = 2 := by omega
+  rcases hx3 with h | h | h
+  · have : x = s0 := Fin.ext (by simp [h])
     simp [this, baseSet]
-  · -- `x = s1`
-    have : x = s1 := by
-      apply Fin.ext
-      simp [hx1]
+  · have : x = s1 := Fin.ext (by simp [h])
     simp [this, baseSet]
-  · -- `x = s2`
-    have : x = s2 := by
-      apply Fin.ext
-      simp [hx2]
+  · have : x = s2 := Fin.ext (by simp [h])
     simp [this, baseSet]
 
 private lemma ge_three_of_not_mem_baseSet {x : SymN} (hx : x ∉ baseSet) : 3 ≤ x.1 := by
@@ -198,38 +160,26 @@ private lemma ge_three_of_not_mem_baseSet {x : SymN} (hx : x ∉ baseSet) : 3 �
   have hxlt : x.1 < 3 := Nat.lt_of_not_ge hge
   exact hx (sym_mem_baseSet_of_lt_three (x := x) hxlt)
 
+/-- Bridge the `(i,j)` bit of `dirMask u v = maskAt d` to the `rowMatch`/coordinate relation. -/
+private lemma decide_eq_decide_of_dirMask {u v : V} {d : DirIdx} (h : dirMask u v = maskAt d)
+    (i j : Fin 3) : decide (u.1 i = v.1 j) = decide (rowMatch (maskAt d) i = some j) := by
+  have hd : (dirMask u v).testBit (i.1 * 3 + j.1) = decide (u.1 i = v.1 j) := by
+    simp [dirMask_testBit]
+  have hm : (maskAt d).testBit (i.1 * 3 + j.1) = decide (rowMatch (maskAt d) i = some j) :=
+    maskAt_testBit_eq_decide_rowMatch (d := d) (i := i) (j := j)
+  rw [← hd, ← hm, h]
+
 private lemma eq_of_dirMask_rowMatch {u v : V} {d : DirIdx} (h : dirMask u v = maskAt d)
     {i j : Fin 3} (hrow : rowMatch (maskAt d) i = some j) : u.1 i = v.1 j := by
-  -- Compare the `(i,j)` bit in `dirMask u v = maskAt d`.
-  have hm :
-      (maskAt d).testBit (i.1 * 3 + j.1) = decide (rowMatch (maskAt d) i = some j) := by
-    exact (maskAt_testBit_eq_decide_rowMatch (d := d) (i := i) (j := j))
-  have hmTrue : (maskAt d).testBit (i.1 * 3 + j.1) = true := by
-    simp [hm, hrow]
-  have hdTrue : (dirMask u v).testBit (i.1 * 3 + j.1) = true := by
-    exact (congrArg (fun z => z.testBit (i.1 * 3 + j.1)) h).trans hmTrue
-  have hd :
-      (dirMask u v).testBit (i.1 * 3 + j.1) = decide (u.1 i = v.1 j) := by
-    simp [dirMask_testBit]
-  have hdec : decide (u.1 i = v.1 j) = true := hd.symm.trans hdTrue
-  exact of_decide_eq_true hdec
+  apply of_decide_eq_true
+  simp [decide_eq_decide_of_dirMask h i j, hrow]
 
 private lemma ne_of_dirMask_rowMatch_none {u v : V} {d : DirIdx} (h : dirMask u v = maskAt d)
     {i : Fin 3} (hrow : rowMatch (maskAt d) i = none) : ∀ j : Fin 3, u.1 i ≠ v.1 j := by
   intro j
-  have hm :
-      (maskAt d).testBit (i.1 * 3 + j.1) = decide (rowMatch (maskAt d) i = some j) := by
-    exact (maskAt_testBit_eq_decide_rowMatch (d := d) (i := i) (j := j))
-  have hmFalse : (maskAt d).testBit (i.1 * 3 + j.1) = false := by
-    have : decide (rowMatch (maskAt d) i = some j) = false := by simp [hrow]
-    simp [hm, this]
-  have hdFalse : (dirMask u v).testBit (i.1 * 3 + j.1) = false := by
-    exact (congrArg (fun z => z.testBit (i.1 * 3 + j.1)) h).trans hmFalse
-  have hd :
-      (dirMask u v).testBit (i.1 * 3 + j.1) = decide (u.1 i = v.1 j) := by
-    simp [dirMask_testBit]
-  have hdec : decide (u.1 i = v.1 j) = false := hd.symm.trans hdFalse
-  exact (decide_eq_false_iff_not).1 hdec
+  have : decide (u.1 i = v.1 j) = false := by
+    simp [decide_eq_decide_of_dirMask h i j, hrow]
+  exact decide_eq_false_iff_not.1 this
 
 private lemma u_coord_mem_usedSet {k : DirIdx} (u : BaseOrbit k) (j : Fin 3) :
     u.1.1 j ∈ (baseSet ∪ freeSyms (k := k) u) := by
@@ -259,38 +209,20 @@ private lemma availFor_ne_u_coord {k : DirIdx} (u : BaseOrbit k) (x : AvailFor u
 private lemma consistentAt_of_consistent {k a d : DirIdx}
     (h : consistent (maskAt k) (maskAt a) (maskAt d) = true) (j : Fin 3) :
     consistentAt (maskAt k) (maskAt a) (maskAt d) j = true := by
-  have h'' :
+  have h' :
       (consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨0, by decide⟩ = true ∧
           consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨1, by decide⟩ = true) ∧
         consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨2, by decide⟩ = true := by
     simpa [consistent] using h
-  have h' :
-      consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨0, by decide⟩ = true ∧
-        consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨1, by decide⟩ = true ∧
-          consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨2, by decide⟩ = true :=
-    (and_assoc).1 h''
   fin_cases j
-  · simpa using h'.1
-  · simpa using h'.2.1
-  · simpa using h'.2.2
+  · simpa using h'.1.1
+  · simpa using h'.1.2
+  · simpa using h'.2
 
 private lemma rowMatch_baseOrbit_of_eq {k : DirIdx} (u : BaseOrbit k) {i j : Fin 3}
     (hEq : baseVertex.1 i = u.1.1 j) : rowMatch (maskAt k) i = some j := by
-  -- Compare the `(i,j)` bit in `dirMask baseVertex u = maskAt k`.
-  have hbitDir :
-      (dirMask baseVertex u.1).testBit (i.1 * 3 + j.1) = true := by
-    have hbit :
-        (dirMask baseVertex u.1).testBit (i.1 * 3 + j.1) = decide (baseVertex.1 i = u.1.1 j) := by
-      exact dirMask_testBit (u := baseVertex) (v := u.1) (i := i) (j := j)
-    simp [hbit, hEq]
-  have hbitMask : (maskAt k).testBit (i.1 * 3 + j.1) = true := by
-    simpa [u.2] using hbitDir
-  have hm :
-      (maskAt k).testBit (i.1 * 3 + j.1) = decide (rowMatch (maskAt k) i = some j) := by
-    simpa using (maskAt_testBit_eq_decide_rowMatch (d := k) (i := i) (j := j))
-  have : decide (rowMatch (maskAt k) i = some j) = true := by
-    simpa [hm] using hbitMask
-  exact of_decide_eq_true this
+  apply of_decide_eq_true
+  simp [← decide_eq_decide_of_dirMask u.2 i j, hEq]
 
 private lemma consistent_of_inter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) (w : Inter u a d) :
     consistent (maskAt k) (maskAt a) (maskAt d) = true := by
@@ -354,15 +286,11 @@ private lemma consistent_of_inter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) 
               have : (w.1.1 j).1 < 3 := by simpa [hvbase] using hlt
               exact (Nat.not_lt_of_ge hwge this).elim
   -- Combine the three coordinate facts into `consistent = true`.
-  have h0 := hAt ⟨0, by decide⟩
-  have h1 := hAt ⟨1, by decide⟩
-  have h2 := hAt ⟨2, by decide⟩
-  have h' :
+  simpa [consistent] using
+    (⟨⟨hAt ⟨0, by decide⟩, hAt ⟨1, by decide⟩⟩, hAt ⟨2, by decide⟩⟩ :
       (consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨0, by decide⟩ = true ∧
           consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨1, by decide⟩ = true) ∧
-        consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨2, by decide⟩ = true :=
-    ⟨⟨h0, h1⟩, h2⟩
-  simpa [consistent] using h'
+        consistentAt (maskAt k) (maskAt a) (maskAt d) ⟨2, by decide⟩ = true)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
 abbrev AvailFrom3 := N1000000OrbitCounting.AvailFrom3
@@ -419,10 +347,8 @@ noncomputable def gOfEmbeddingVal {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
         Classical.choose_spec ((Option.ne_none_iff_exists').1 hne)
       have hAt : consistentAt (maskAt k) (maskAt a) (maskAt d) j.1 = true :=
         consistentAt_of_consistent (k := k) (a := a) (d := d) hcons j.1
-      have hkFree : colMatch (maskAt k) l = none := by
-        have : decide (colMatch (maskAt k) l = none) = true := by
-          simpa [consistentAt, j.2, hl] using hAt
-        exact of_decide_eq_true this
+      have hkFree : colMatch (maskAt k) l = none :=
+        of_decide_eq_true (by simpa [consistentAt, j.2, hl] using hAt)
       exact ⟨u.1.1 l, baseOrbit_freeCoord_outside (u := u) ⟨l, hkFree⟩⟩
 
 theorem gOfEmbeddingVal_val_of_rowMatch_some {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
@@ -431,18 +357,12 @@ theorem gOfEmbeddingVal_val_of_rowMatch_some {k : DirIdx} (u : BaseOrbit k) (a d
     (hrow : rowMatch (maskAt d) j.1 = some l) :
     (gOfEmbeddingVal (u := u) (a := a) (d := d) hcons e j).1 = u.1.1 l := by
   classical
-  have hne : rowMatch (maskAt d) j.1 ≠ none := by
-    intro hEq
-    have h0 := hrow
-    simp [hEq] at h0
+  have hne : rowMatch (maskAt d) j.1 ≠ none := by rw [hrow]; exact Option.some_ne_none l
   have hspec : rowMatch (maskAt d) j.1 =
       some (Classical.choose ((Option.ne_none_iff_exists').1 hne)) :=
     Classical.choose_spec ((Option.ne_none_iff_exists').1 hne)
-  have hchoose : Classical.choose ((Option.ne_none_iff_exists').1 hne) = l := by
-    have : some (Classical.choose ((Option.ne_none_iff_exists').1 hne)) = some l :=
-      hspec.symm.trans hrow
-    cases this
-    rfl
+  have hchoose : Classical.choose ((Option.ne_none_iff_exists').1 hne) = l :=
+    Option.some_injective _ (hspec.symm.trans hrow)
   dsimp [gOfEmbeddingVal]
   rw [dif_neg hne]
   -- Only the first component matters; avoid simplifying proof fields.
@@ -559,10 +479,8 @@ noncomputable def decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
                   (decodeTuple_of_colMatch_some (k := a) (g := g) (j := i) (i := ib) hcol)
               have hAti : consistentAt (maskAt k) (maskAt a) (maskAt d) i = true :=
                 consistentAt_of_consistent (k := k) (a := a) (d := d) hcons i
-              have hk : rowMatch (maskAt k) ib = some l := by
-                have : decide (rowMatch (maskAt k) ib = some l) = true := by
-                  simpa [consistentAt, hcol, hrow] using hAti
-                exact of_decide_eq_true this
+              have hk : rowMatch (maskAt k) ib = some l :=
+                of_decide_eq_true (by simpa [consistentAt, hcol, hrow] using hAti)
               have hubase : baseVertex.1 ib = u.1.1 l :=
                 eq_of_dirMask_rowMatch (u := baseVertex) (v := u.1) (d := k)
                   (h := u.2) (i := ib) (j := l) hk
@@ -604,10 +522,8 @@ noncomputable def decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
                   (decodeTuple_of_colMatch_some (k := a) (g := g) (j := i) (i := ib) hcol)
               have hAti : consistentAt (maskAt k) (maskAt a) (maskAt d) i = true :=
                 consistentAt_of_consistent (k := k) (a := a) (d := d) hcons i
-              have hkNone : rowMatch (maskAt k) ib = none := by
-                have : decide (rowMatch (maskAt k) ib = none) = true := by
-                  simpa [consistentAt, hcol, hrow] using hAti
-                exact of_decide_eq_true this
+              have hkNone : rowMatch (maskAt k) ib = none :=
+                of_decide_eq_true (by simpa [consistentAt, hcol, hrow] using hAti)
               have hne :=
                 ne_of_dirMask_rowMatch_none (u := baseVertex) (v := u.1) (d := k)
                   (h := u.2) (i := ib) hkNone j'
@@ -690,14 +606,7 @@ theorem encode_decodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
                 (e ⟨j.1, ⟨hjcol, hjrow⟩⟩).1 :=
             gOfEmbeddingVal_val_of_rowMatch_none (u := u) (a := a) (d := d) (hcons := hcons)
               (e := e) (j := (⟨j.1, hjcol⟩ : FreeCol a)) hjrow
-          have h0' :
-              (gOfEmbedding (u := u) (a := a) (d := d) hcons e ⟨j.1, hjcol⟩).1 =
-                (e ⟨j.1, ⟨hjcol, hjrow⟩⟩).1 := by
-            simpa [gOfEmbedding] using h0
-          have hjEq : (⟨j.1, ⟨hjcol, hjrow⟩⟩ : FreeCoord a d) = j := by
-            apply Subtype.ext
-            rfl
-          simpa [hjEq] using h0'
+          simpa [gOfEmbedding] using h0
 
 theorem decode_encodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
     (hcons : consistent (maskAt k) (maskAt a) (maskAt d) = true)
@@ -744,15 +653,8 @@ theorem decode_encodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
           simpa [gOfEmbedding] using
             (gOfEmbeddingVal_val_of_rowMatch_none (u := u) (a := a) (d := d) (hcons := hcons)
               (e := encodeInter (u := u) (a := a) (d := d) w) (j := (⟨j, hcol⟩ : FreeCol a)) hrow)
-        calc
-          (decodeInter (u := u) (a := a) (d := d) hcons
-            (encodeInter (u := u) (a := a) (d := d) w)).1.1 j
-              = (gOfEmbedding (u := u) (a := a) (d := d) hcons
-                    (encodeInter (u := u) (a := a) (d := d) w) ⟨j, hcol⟩).1 := hv0
-          _ = (encodeInter (u := u) (a := a) (d := d) w ⟨j, ⟨hcol, hrow⟩⟩).1 := by
-                simpa using hg
-          _ = w.1.1 j := by
-                simp [encodeInter]
+        rw [hv0, hg]
+        simp [encodeInter]
   · -- fixed column: evaluate via `decodeTuple_of_colMatch_some` and use
     -- `base_eq_of_colMatch` for `w`.
     rcases (Option.ne_none_iff_exists').1 hcol with ⟨i, hi⟩
@@ -762,9 +664,9 @@ theorem decode_encodeInter {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx)
           baseVertex.1 i := by
       -- Unfold `decodeInter`/`decodeVertex` and evaluate the decoded tuple at a fixed column.
       simp [decodeInter, N1000000OrbitCounting.decodeVertex, decodeTuple_of_colMatch_some, hi]
-    have hw0 : w.1.1 j = baseVertex.1 i := by
-      -- `w` lies in the base orbit `a`.
-      exact base_eq_of_colMatch (k := a) (u := ⟨w.1, w.2.1⟩) (j := j) (i := i) (h := hi)
+    -- `w` lies in the base orbit `a`.
+    have hw0 : w.1.1 j = baseVertex.1 i :=
+      base_eq_of_colMatch (k := a) (u := ⟨w.1, w.2.1⟩) (j := j) (i := i) (h := hi)
     simp [hv0, hw0]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -784,18 +686,9 @@ theorem card_inter_eq_N {k : DirIdx} (u : BaseOrbit k) (a d : DirIdx) :
         Fintype.card_congr (interEquivEmbedding (u := u) (a := a) (d := d) hcons)
     simpa [N, hcons, card_embedding_freeCoord_availFor (u := u)] using hcard
   · -- In the inconsistent case, `Inter u a d` is empty.
-    have hempty : IsEmpty (Inter u a d) := by
-      classical
-      refine ⟨?_⟩
-      intro w
-      have : consistent (maskAt k) (maskAt a) (maskAt d) = true :=
-        consistent_of_inter (k := k) u a d w
-      exact (hcons this).elim
-    have hcard : Fintype.card (Inter u a d) = 0 := by
-      classical
-      haveI : IsEmpty (Inter u a d) := hempty
-      exact (Fintype.card_eq_zero : Fintype.card (Inter u a d) = 0)
-    simp [N, hcons]
+    haveI : IsEmpty (Inter u a d) :=
+      ⟨fun w => (hcons (consistent_of_inter (k := k) u a d w)).elim⟩
+    simp [N, hcons, Fintype.card_eq_zero]
 
 end N1000000IntersectionCounting
 
