@@ -122,11 +122,6 @@ private def foldAlgHom
     QuasiBorelHom.mk
       (fun a ↦ mk a b (List.map (fun k : A →𝒒 C ↦ k a) ks)) (by fun_prop)
 
-private lemma map_congr'
-    {α β : Type*} {l : List α} {f g : α → β}
-    (h : ∀ x ∈ l, f x = g x) : List.map f l = List.map g l :=
-  List.map_congr_left h
-
 private lemma fold_pointwise
     (mk : A → B → List C → C)
     (hmk : IsHom fun (x, y, z) ↦ mk x y z)
@@ -205,7 +200,7 @@ private lemma fold_children_eq
                 ∘ Rose.Encoding.encode (A := C))
               children
             = List.map (fun child ↦ (child, child.children)) children := by
-        refine map_congr' ?_
+        refine List.map_congr_left ?_
         intro child hmem
         simpa using ih child hmem
       have hchildren :
@@ -249,11 +244,6 @@ lemma isHom_bind
     intro t
     induction t with
     | mk label children ih =>
-        have : List.map (Rose.fold (mkBind x)) children
-            = List.map (Rose.bind (f x)) children := by
-          simp only [List.map_inj_left]
-          intro child hmem
-          simpa [mkBind] using (ih child hmem).symm
         simp [Rose.bind, mkBind, bindFoldAlg]
   have : IsHom fun (x, y, z) ↦ mkBind x y z := by
     dsimp [mkBind, bindFoldAlg]

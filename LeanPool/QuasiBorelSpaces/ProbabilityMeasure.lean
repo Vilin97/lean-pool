@@ -293,8 +293,7 @@ lemma unit_inj [SeparatesPoints A] (x y : A) : unit x = unit y ↔ x = y := by
 lemma separatesPoints_iff_unit_injective
     : SeparatesPoints A ↔ Function.Injective (unit (A := A)) := by
   apply Iff.intro
-  · intro _
-    apply unit_injective
+  · exact fun _ ↦ unit_injective
   · intro h
     constructor
     intro x y h'
