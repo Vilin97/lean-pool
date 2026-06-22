@@ -27,84 +27,6 @@ section MainTheorem
 variable [IsAdicComplete (IsLocalRing.maximalIdeal T) T]
 
 omit [IsAdicComplete (IsLocalRing.maximalIdeal T) T] in
-/- Shared core of the two kernel lemmas. Assuming `¬ C p ∣ f` for `p ∈ P` prime
-in the UFD `R` and `P` a height-`≤ 1` prime of `T`, derives that `P` is an
-associated prime of `T/(p)` and that `f` does not reduce to `0` modulo `P` — the
-two facts both `ker_pf₁` and `ker_pf₂` feed into the avoidance argument. -/
-private theorem ker_shared_core
-    (R : NSubring T) (P : Ideal T) (hP_prime : P.IsPrime) (hP_ht : P.height ≤ 1)
-    (p : R.carrier) (hp : Prime p) (hp_P : (↑p : T) ∈ P)
-    (f : Polynomial R.carrier) (h_ndvd : ¬ (Polynomial.C p : Polynomial R.carrier) ∣ f) :
-    P ∈ associatedPrimes T (T ⧸ Ideal.span {(↑p : T)}) ∧
-      Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f ≠ 0 := by
-  haveI : IsDomain R.carrier := NSubring.isDomain R
-  haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
-  haveI : P.IsPrime := hP_prime
-  have hp_ne : (↑p : T) ≠ 0 := fun h => hp.ne_zero (R.carrier.subtype_injective h)
-  have hP_minimal : P ∈ (Ideal.span {(↑p : T)}).minimalPrimes := by
-    refine ⟨⟨hP_prime, Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hp_P)⟩, ?_⟩
-    intro Q ⟨hQ_prime, hQ_le⟩ hQ_le_P
-    by_contra hne
-    have hQ_strict : Q < P :=
-      lt_of_le_of_ne hQ_le_P (fun h => hne (h ▸ le_refl P))
-    have hp_Q : (↑p : T) ∈ Q := hQ_le (Ideal.mem_span_singleton_self _)
-    have hQ_ne_bot : Q ≠ ⊥ := fun h => hp_ne (Ideal.mem_bot.mp (h ▸ hp_Q))
-    have hQ_ht_le : Q.height ≤ 1 := le_trans (Ideal.height_mono hQ_le_P) hP_ht
-    have hQ_fin : Q.FiniteHeight := ⟨Or.inr (by
-      exact ne_top_of_le_ne_top (by norm_cast) hQ_ht_le)⟩
-    have hQ_ht_lt := @Ideal.height_strict_mono_of_isPrime T _ Q P hQ_prime hQ_strict hQ_fin
-    have hbot_lt : (⊥ : Ideal T) < Q := bot_lt_iff_ne_bot.mpr hQ_ne_bot
-    have hbot_fin : (⊥ : Ideal T).FiniteHeight :=
-      ⟨Or.inr (by simp [Ideal.height_bot])⟩
-    have h0 := @Ideal.height_strict_mono_of_isPrime T _
-      (⊥ : Ideal T) Q Ideal.isPrime_bot hbot_lt hbot_fin
-    rw [Ideal.height_bot] at h0
-    exact absurd h0 (not_lt.mpr (le_of_eq
-      (Order.lt_one_iff.mp (lt_of_lt_of_le hQ_ht_lt hP_ht))))
-  have hP_ass : P ∈ associatedPrimes T (T ⧸ Ideal.span {(↑p : T)}) := by
-    apply Module.associatedPrimes.minimalPrimes_annihilator_subset_associatedPrimes
-    rwa [Ideal.annihilator_quotient]
-  have hht := R.height_bound (↑p : T) hp_ne P hP_ass
-  haveI : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
-  have hspan_le : Ideal.span {p} ≤ P.comap R.carrier.subtype :=
-    Ideal.span_le.mpr (Set.singleton_subset_iff.mpr (show (↑p : T) ∈ P from hp_P))
-  have hspan_ne : Ideal.span {p} ≠ (⊥ : Ideal R.carrier) :=
-    Ideal.span_singleton_eq_bot.not.mpr hp.ne_zero
-  haveI : (Ideal.span {p}).IsPrime :=
-    (Ideal.span_singleton_prime (α := R.carrier) hp.ne_zero).mpr hp
-  have hspan_eq : Ideal.span {p} = P.comap R.carrier.subtype := by
-    by_contra hne
-    have hstrict := lt_of_le_of_ne hspan_le hne
-    rw [show (1 : ℕ∞) = ↑(1 : ℕ) from rfl] at hht
-    rw [Ideal.height_le_iff] at hht
-    have hspan_ht := hht (Ideal.span {p}) inferInstance hstrict
-    have hbot_lt := bot_lt_iff_ne_bot.mpr hspan_ne
-    have hbot_fin : (⊥ : Ideal R.carrier).FiniteHeight :=
-      ⟨Or.inr (by simp [Ideal.height_bot])⟩
-    have h0 := @Ideal.height_strict_mono_of_isPrime R.carrier _
-      (⊥ : Ideal R.carrier) (Ideal.span {p}) Ideal.isPrime_bot hbot_lt hbot_fin
-    rw [Ideal.height_bot] at h0
-    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_ht
-    rw [hspan_ht] at h0
-    exact lt_irrefl _ h0
-  refine ⟨hP_ass, ?_⟩
-  intro h_eq
-  apply h_ndvd
-  rw [Polynomial.C_dvd_iff_dvd_coeff]
-  intro n
-  have h_coeff : Polynomial.coeff
-      (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f) n = 0 := by
-    rw [h_eq]
-    exact Polynomial.coeff_zero n
-  rw [Polynomial.coeff_map] at h_coeff
-  have h_in_P : (↑(f.coeff n) : T) ∈ P := by
-    rw [← Ideal.Quotient.eq_zero_iff_mem]
-    exact h_coeff
-  have h_in_comap : f.coeff n ∈ P.comap R.carrier.subtype := h_in_P
-  rw [← hspan_eq] at h_in_comap
-  exact Ideal.mem_span_singleton.mp h_in_comap
-
-omit [IsAdicComplete (IsLocalRing.maximalIdeal T) T] in
 /-- Helper for `intersection_close_up`: kernel proof for x₁ = t₁ + u·y₂.
     Shows that for each height-≤-1 prime P with y₂ ∉ P and p ∈ P prime in R,
     any polynomial f with aeval(x₁) f ∈ P is divisible by C(p). -/
@@ -134,17 +56,89 @@ private def intersection_close_up_proof_ker_pf₁
   haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
   by_contra h_ndvd
   have hp_ne : (↑p : T) ≠ 0 := fun h => hp.ne_zero (R.carrier.subtype_injective h)
-  have hP_ne_bot : P ≠ ⊥ := fun h => hp_ne (Ideal.mem_bot.mp (h ▸ hp_P))
-  obtain ⟨hP_ass, hmap_ne⟩ := ker_shared_core R P hP_prime hP_ht p hp hp_P f h_ndvd
+  have hP_ne_bot : P ≠ ⊥ := by
+    intro h
+    rw [h] at hp_P
+    exact hp_ne (Ideal.mem_bot.mp hp_P)
+  have hP_minimal : P ∈ (Ideal.span {(↑p : T)}).minimalPrimes := by
+    refine ⟨⟨hP_prime, Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hp_P)⟩, ?_⟩
+    intro Q ⟨hQ_prime, hQ_le⟩ hQ_le_P
+    by_contra hne
+    have hQ_strict : Q < P :=
+      lt_of_le_of_ne hQ_le_P (fun h => hne (h ▸ le_refl P))
+    have hp_Q : (↑p : T) ∈ Q := hQ_le (Ideal.mem_span_singleton_self _)
+    have hQ_ne_bot : Q ≠ ⊥ := by
+      intro h
+      rw [h] at hp_Q
+      exact hp_ne (Ideal.mem_bot.mp hp_Q)
+    have hQ_ht_le : Q.height ≤ 1 := le_trans (Ideal.height_mono hQ_le_P) hP_ht
+    have hQ_fin : Q.FiniteHeight := ⟨Or.inr (by
+      exact ne_top_of_le_ne_top (by norm_cast) hQ_ht_le)⟩
+    have hQ_ht_lt := @Ideal.height_strict_mono_of_isPrime T _ Q P hQ_prime hQ_strict hQ_fin
+    have hbot_lt : (⊥ : Ideal T) < Q := bot_lt_iff_ne_bot.mpr hQ_ne_bot
+    have hbot_fin : (⊥ : Ideal T).FiniteHeight :=
+      ⟨Or.inr (by simp [Ideal.height_bot])⟩
+    have h0 := @Ideal.height_strict_mono_of_isPrime T _
+      (⊥ : Ideal T) Q Ideal.isPrime_bot hbot_lt hbot_fin
+    rw [Ideal.height_bot] at h0
+    exact absurd h0 (not_lt.mpr (le_of_eq
+      (Order.lt_one_iff.mp (lt_of_lt_of_le hQ_ht_lt hP_ht))))
+  have hP_ass : P ∈ associatedPrimes T (T ⧸ Ideal.span {(↑p : T)}) := by
+    apply Module.associatedPrimes.minimalPrimes_annihilator_subset_associatedPrimes
+    rwa [Ideal.annihilator_quotient]
   have hP_C : P ∈ C_ext := hC_ext_mem p hp_ne P hP_ass
-  have hy₂_ne_P : Ideal.Quotient.mk P (↑y₂ : T) ≠ 0 :=
-    fun h => hy₂_nP (Ideal.Quotient.eq_zero_iff_mem.mp h)
+  have hht := R.height_bound (↑p : T) hp_ne P hP_ass
+  haveI : P.IsPrime := hP_prime
+  haveI : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
+  have hspan_le : Ideal.span {p} ≤ P.comap R.carrier.subtype :=
+    Ideal.span_le.mpr (Set.singleton_subset_iff.mpr (show (↑p : T) ∈ P from hp_P))
+  have hspan_ne : Ideal.span {p} ≠ (⊥ : Ideal R.carrier) :=
+    Ideal.span_singleton_eq_bot.not.mpr hp.ne_zero
+  haveI : (Ideal.span {p}).IsPrime :=
+    (Ideal.span_singleton_prime (α := R.carrier) hp.ne_zero).mpr hp
+  -- (p)R = P ∩ R: if (p)R ⊊ P ∩ R, then ht(P ∩ R) ≤ 1 forces ht((p)R) = 0, contradicting p ≠ 0
+  have hspan_eq : Ideal.span {p} = P.comap R.carrier.subtype := by
+    by_contra hne
+    have hstrict := lt_of_le_of_ne hspan_le hne
+    rw [show (1 : ℕ∞) = ↑(1 : ℕ) from rfl] at hht
+    rw [Ideal.height_le_iff] at hht
+    have hspan_ht := hht (Ideal.span {p}) inferInstance hstrict
+    have hbot_lt := bot_lt_iff_ne_bot.mpr hspan_ne
+    have hbot_fin : (⊥ : Ideal R.carrier).FiniteHeight :=
+      ⟨Or.inr (by simp [Ideal.height_bot])⟩
+    have h0 := @Ideal.height_strict_mono_of_isPrime R.carrier _
+      (⊥ : Ideal R.carrier) (Ideal.span {p}) Ideal.isPrime_bot hbot_lt hbot_fin
+    rw [Ideal.height_bot] at h0
+    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_ht
+    rw [hspan_ht] at h0
+    exact lt_irrefl _ h0
+  -- fbar ≠ 0 in (T/P)[X]: if fbar = 0 then all coefficients lie in P ∩ R = (p), so p | f
+  have hmap_ne : Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f ≠ 0 := by
+    intro h_eq
+    apply h_ndvd
+    rw [Polynomial.C_dvd_iff_dvd_coeff]
+    intro n
+    have h_coeff : Polynomial.coeff
+        (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f) n = 0 := by
+      rw [h_eq]
+      exact Polynomial.coeff_zero n
+    rw [Polynomial.coeff_map] at h_coeff
+    have h_in_P : (↑(f.coeff n) : T) ∈ P := by
+      rw [← Ideal.Quotient.eq_zero_iff_mem]
+      exact h_coeff
+    have h_in_comap : f.coeff n ∈ P.comap R.carrier.subtype := h_in_P
+    rw [← hspan_eq] at h_in_comap
+    exact Ideal.mem_span_singleton.mp h_in_comap
+  have hy₂_ne_P : Ideal.Quotient.mk P (↑y₂ : T) ≠ 0 := by
+    rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
+    exact hy₂_nP
   -- Push f(x₁) ∈ P to fbar(tbar₁ + ū·ybar₂) = 0 in T/P via the quotient map
+  have heval_P : aeval (t₁ + u * (↑y₂ : T)) f ∈ P := hf_mem
   have heval_zero : (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
       (Ideal.Quotient.mk P t₁ + Ideal.Quotient.mk P u *
         Ideal.Quotient.mk P (↑y₂ : T)) = 0 := by
     have h1 : Ideal.Quotient.mk P (aeval (t₁ + u * (↑y₂ : T)) f) = 0 :=
-      Ideal.Quotient.eq_zero_iff_mem.mpr hf_mem
+      Ideal.Quotient.eq_zero_iff_mem.mpr heval_P
     rw [Polynomial.aeval_def,
       show algebraMap R.carrier T = R.carrier.subtype from rfl,
       Polynomial.hom_eval₂ f R.carrier.subtype (Ideal.Quotient.mk P)
@@ -160,8 +154,14 @@ private def intersection_close_up_proof_ker_pf₁
     Function.invFun_eq (hP_surj v₀)
   have hv₀_root : v₀ ∈ {v : T ⧸ P |
       (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
-        (Ideal.Quotient.mk P t₁ + v * Ideal.Quotient.mk P (↑y₂ : T)) = 0} := heval_zero
-  have hf_ne : f ≠ 0 := fun h => h_ndvd (h ▸ dvd_zero _)
+        (Ideal.Quotient.mk P t₁ + v * Ideal.Quotient.mk P (↑y₂ : T)) = 0} := by
+    simp only [Set.mem_setOf_eq]
+    exact heval_zero
+  have hf_ne : f ≠ 0 := by
+    intro h
+    apply h_ndvd
+    rw [h]
+    exact dvd_zero _
   have hr₀_D : r₀ ∈ D_ext :=
     hD_ext_invFun f hf_ne P hP_C hP_ne_bot hmap_ne hy₂_ne_P v₀ hv₀_root
   -- u ≡ r₀ mod P, so u ∈ P + {r₀}, contradicting the avoidance hypothesis
@@ -233,17 +233,90 @@ include T in theorem intersection_close_up_ker_pf₂
   haveI : UniqueFactorizationMonoid R.carrier := R.isUFD
   by_contra h_ndvd
   have hp_ne : (↑p : T) ≠ 0 := fun h => hp.ne_zero (R.carrier.subtype_injective h)
-  have hP_ne_bot : P ≠ ⊥ := fun h => hp_ne (Ideal.mem_bot.mp (h ▸ hp_P))
-  obtain ⟨hP_ass, hmap_ne⟩ := ker_shared_core R P hP_prime hP_ht p hp hp_P f h_ndvd
+  have hP_ne_bot : P ≠ ⊥ := by
+    intro h
+    rw [h] at hp_P
+    exact hp_ne (Ideal.mem_bot.mp hp_P)
+  -- P is minimal over (p) by the same height argument as ker_pf₁
+  have hP_minimal : P ∈ (Ideal.span {(↑p : T)}).minimalPrimes := by
+    refine ⟨⟨hP_prime, Ideal.span_le.mpr (Set.singleton_subset_iff.mpr hp_P)⟩, ?_⟩
+    intro Q ⟨hQ_prime, hQ_le⟩ hQ_le_P
+    by_contra hne
+    have hQ_strict : Q < P :=
+      lt_of_le_of_ne hQ_le_P (fun h => hne (h ▸ le_refl P))
+    have hp_Q : (↑p : T) ∈ Q := hQ_le (Ideal.mem_span_singleton_self _)
+    have hQ_ne_bot : Q ≠ ⊥ := by
+      intro h
+      rw [h] at hp_Q
+      exact hp_ne (Ideal.mem_bot.mp hp_Q)
+    have hQ_ht_le : Q.height ≤ 1 := le_trans (Ideal.height_mono hQ_le_P) hP_ht
+    have hQ_fin : Q.FiniteHeight := ⟨Or.inr (by
+      exact ne_top_of_le_ne_top (by norm_cast) hQ_ht_le)⟩
+    have hQ_ht_lt := @Ideal.height_strict_mono_of_isPrime T _ Q P hQ_prime hQ_strict hQ_fin
+    have hbot_lt : (⊥ : Ideal T) < Q := bot_lt_iff_ne_bot.mpr hQ_ne_bot
+    have hbot_fin : (⊥ : Ideal T).FiniteHeight :=
+      ⟨Or.inr (by simp [Ideal.height_bot])⟩
+    have h0 := @Ideal.height_strict_mono_of_isPrime T _
+      (⊥ : Ideal T) Q Ideal.isPrime_bot hbot_lt hbot_fin
+    rw [Ideal.height_bot] at h0
+    exact absurd h0 (not_lt.mpr (le_of_eq
+      (Order.lt_one_iff.mp (lt_of_lt_of_le hQ_ht_lt hP_ht))))
+  have hP_ass : P ∈ associatedPrimes T (T ⧸ Ideal.span {(↑p : T)}) := by
+    apply Module.associatedPrimes.minimalPrimes_annihilator_subset_associatedPrimes
+    rwa [Ideal.annihilator_quotient]
   have hP_C : P ∈ C_ext := hC_ext_mem p hp_ne P hP_ass
-  have hy₁_ne_P : Ideal.Quotient.mk P (↑y₁ : T) ≠ 0 :=
-    fun h => hy₁_nP (Ideal.Quotient.eq_zero_iff_mem.mp h)
+  have hht := R.height_bound (↑p : T) hp_ne P hP_ass
+  haveI : P.IsPrime := hP_prime
+  haveI : (P.comap R.carrier.subtype).IsPrime := Ideal.comap_isPrime _ _
+  have hspan_le : Ideal.span {p} ≤ P.comap R.carrier.subtype :=
+    Ideal.span_le.mpr (Set.singleton_subset_iff.mpr (show (↑p : T) ∈ P from hp_P))
+  have hspan_ne : Ideal.span {p} ≠ (⊥ : Ideal R.carrier) :=
+    Ideal.span_singleton_eq_bot.not.mpr hp.ne_zero
+  haveI : (Ideal.span {p}).IsPrime :=
+    (Ideal.span_singleton_prime (α := R.carrier) hp.ne_zero).mpr hp
+  -- (p)R = P ∩ R by the height-1 bound on P ∩ R in the N-subring
+  have hspan_eq : Ideal.span {p} = P.comap R.carrier.subtype := by
+    by_contra hne
+    have hstrict := lt_of_le_of_ne hspan_le hne
+    rw [show (1 : ℕ∞) = ↑(1 : ℕ) from rfl] at hht
+    rw [Ideal.height_le_iff] at hht
+    have hspan_ht := hht (Ideal.span {p}) inferInstance hstrict
+    have hbot_lt := bot_lt_iff_ne_bot.mpr hspan_ne
+    have hbot_fin : (⊥ : Ideal R.carrier).FiniteHeight :=
+      ⟨Or.inr (by simp [Ideal.height_bot])⟩
+    have h0 := @Ideal.height_strict_mono_of_isPrime R.carrier _
+      (⊥ : Ideal R.carrier) (Ideal.span {p}) Ideal.isPrime_bot hbot_lt hbot_fin
+    rw [Ideal.height_bot] at h0
+    rw [show (↑(1 : ℕ) : ℕ∞) = 1 from rfl, Order.lt_one_iff] at hspan_ht
+    rw [hspan_ht] at h0
+    exact lt_irrefl _ h0
+  -- fbar ≠ 0 mod P since p ∤ f and (p)R = P ∩ R
+  have hmap_ne : Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f ≠ 0 := by
+    intro h_eq
+    apply h_ndvd
+    rw [Polynomial.C_dvd_iff_dvd_coeff]
+    intro n
+    have h_coeff : Polynomial.coeff
+        (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f) n = 0 := by
+      rw [h_eq]
+      exact Polynomial.coeff_zero n
+    rw [Polynomial.coeff_map] at h_coeff
+    have h_in_P : (↑(f.coeff n) : T) ∈ P := by
+      rw [← Ideal.Quotient.eq_zero_iff_mem]
+      exact h_coeff
+    have h_in_comap : f.coeff n ∈ P.comap R.carrier.subtype := h_in_P
+    rw [← hspan_eq] at h_in_comap
+    exact Ideal.mem_span_singleton.mp h_in_comap
+  have hy₁_ne_P : Ideal.Quotient.mk P (↑y₁ : T) ≠ 0 := by
+    rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
+    exact hy₁_nP
   -- fbar(tbar₂ - ū·ybar₁) = 0 in T/P, so ū is a root of the shifted polynomial
+  have heval_P : aeval (t₂ - u * (↑y₁ : T)) f ∈ P := hf_mem
   have heval_zero : (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
       (Ideal.Quotient.mk P t₂ - Ideal.Quotient.mk P u *
         Ideal.Quotient.mk P (↑y₁ : T)) = 0 := by
     have h1 : Ideal.Quotient.mk P (aeval (t₂ - u * (↑y₁ : T)) f) = 0 :=
-      Ideal.Quotient.eq_zero_iff_mem.mpr hf_mem
+      Ideal.Quotient.eq_zero_iff_mem.mpr heval_P
     rw [Polynomial.aeval_def,
       show algebraMap R.carrier T = R.carrier.subtype from rfl,
       Polynomial.hom_eval₂ f R.carrier.subtype (Ideal.Quotient.mk P)
@@ -259,8 +332,14 @@ include T in theorem intersection_close_up_ker_pf₂
     Function.invFun_eq (hP_surj v₀)
   have hv₀_root : v₀ ∈ {v : T ⧸ P |
       (Polynomial.map ((Ideal.Quotient.mk P).comp R.carrier.subtype) f).eval
-        (Ideal.Quotient.mk P t₂ - v * Ideal.Quotient.mk P (↑y₁ : T)) = 0} := heval_zero
-  have hf_ne : f ≠ 0 := fun h => h_ndvd (h ▸ dvd_zero _)
+        (Ideal.Quotient.mk P t₂ - v * Ideal.Quotient.mk P (↑y₁ : T)) = 0} := by
+    simp only [Set.mem_setOf_eq]
+    exact heval_zero
+  have hf_ne : f ≠ 0 := by
+    intro h
+    apply h_ndvd
+    rw [h]
+    exact dvd_zero _
   have hr₀_D : r₀ ∈ D_ext :=
     hD_ext_invFun f hf_ne P hP_C hP_ne_bot hmap_ne hy₁_ne_P v₀ hv₀_root
   have hu_r₀_P : u - r₀ ∈ (P : Set T) := by
