@@ -91,8 +91,7 @@ lemma side_measure (b : Color) : (volume : Measure Rand) (side b) = (1 / 2 : ENN
   fin_cases b
   · simp [side, half]
   · have hhalf : (1 - (half : ℝ)) = (1 / 2 : ℝ) := by
-      simp [half]
-      norm_num
+      norm_num [half]
     calc
       (volume : Measure Rand) (side (1 : Color)) = ENNReal.ofReal (1 - (half : ℝ)) := by
         simp [side]
@@ -109,12 +108,8 @@ lemma measurableSet_cell (w : Fin 4 → Color) : MeasurableSet (cell w) := by
   by_cases h : w i = 0 <;> simp [side, h, measurableSet_Iio, measurableSet_Ici]
 
 lemma one_half_pow_four : ((1 / 2 : ENNReal) ^ 4) = (1 / 16 : ENNReal) := by
-  calc
-    ((1 / 2 : ENNReal) ^ 4) = ((2⁻¹ : ENNReal) ^ 4) := by simp [div_eq_mul_inv]
-    _ = ((2 : ENNReal) ^ 4)⁻¹ := by
-          simpa using (ENNReal.inv_pow (a := (2 : ENNReal)) (n := 4)).symm
-    _ = (16⁻¹ : ENNReal) := by norm_num
-    _ = (1 / 16 : ENNReal) := by simp [div_eq_mul_inv]
+  rw [show (1 / 2 : ENNReal) = (2 : ENNReal)⁻¹ by simp [div_eq_mul_inv], ← ENNReal.inv_pow]
+  norm_num [div_eq_mul_inv]
 
 lemma cell_measure (w : Fin 4 → Color) :
     (volume : Measure (Samples 4)) (cell w) = (1 / 16 : ENNReal) := by
@@ -283,15 +278,10 @@ theorem p_simpleUpperAlg : ClassicalAlgorithm.p simpleUpperAlg = (1 / 4 : ENNRea
     _ = (goodSet.card : ENNReal) * (1 / 16 : ENNReal) := hsum'
     _ = (4 : ENNReal) * (1 / 16 : ENNReal) := by simp [hcard]
     _ = (1 / 4 : ENNReal) := by
-      have : (4 : ENNReal) / 16 = (1 : ENNReal) / 4 := by
-        have h16 : (16 : ENNReal) = (4 : ENNReal) * 4 := by norm_num
-        have :
-            (4 : ENNReal) * (1 : ENNReal) / ((4 : ENNReal) * 4) = (1 : ENNReal) / 4 := by
-          simpa using
-            (ENNReal.mul_div_mul_left (a := (1 : ENNReal)) (b := (4 : ENNReal))
-              (c := (4 : ENNReal)) (by norm_num) (by norm_num))
-        simpa [h16, div_eq_mul_inv] using this
-      simpa [div_eq_mul_inv, mul_assoc, mul_comm, mul_left_comm] using this
+      rw [mul_one_div, show (16 : ENNReal) = 4 * 4 by norm_num]
+      simpa using
+        (ENNReal.mul_div_mul_left (a := (1 : ENNReal)) (b := (4 : ENNReal))
+          (c := (4 : ENNReal)) (by norm_num) (by norm_num))
 
 theorem exists_algorithm_p_le_one_quarter :
     ∃ alg : ClassicalAlgorithm, ClassicalAlgorithm.p alg ≤ (1 / 4 : ENNReal) :=

@@ -119,55 +119,30 @@ private abbrev Edge1001 : Type := {e : Edge n // pat1001 e}
 private abbrev Edge0110 : Type := {e : Edge n // pat0110 e}
 
 private lemma card_edge0000 : Fintype.card Edge0000 = 24 := by
-  classical
-  have h :
-      Fintype.card Edge0000 = (Fintype.card Small9).descFactorial 4 := by
-    exact EdgePatterns.card_pat0000 (n := n) (two := two9)
-  have hnum : (Fintype.card Small9).descFactorial 4 = 24 := by
-    calc
-      (Fintype.card Small9).descFactorial 4 = (4 : Nat).descFactorial 4 := by
-        rw [card_Small9]
-      _ = 24 := by decide
-  exact h.trans hnum
+  have h : Fintype.card Edge0000 = (Fintype.card Small9).descFactorial 4 :=
+    EdgePatterns.card_pat0000 (n := n) (two := two9)
+  rw [h, card_Small9]
+  decide
 
 private lemma card_edge1111 : Fintype.card Edge1111 = 120 := by
-  classical
-  have h :
-      Fintype.card Edge1111 = (Fintype.card Big9).descFactorial 4 := by
-    exact EdgePatterns.card_pat1111 (n := n) (two := two9)
-  have hnum : (Fintype.card Big9).descFactorial 4 = 120 := by
-    have hBig : Fintype.card Big9 = 5 := card_Big9
-    rw [hBig]
-    decide
-  exact h.trans hnum
+  have h : Fintype.card Edge1111 = (Fintype.card Big9).descFactorial 4 :=
+    EdgePatterns.card_pat1111 (n := n) (two := two9)
+  rw [h, card_Big9]
+  decide
 
 private lemma card_edge1001 : Fintype.card Edge1001 = 240 := by
-  classical
-  have h :
-      Fintype.card Edge1001 =
-        (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 := by
-    exact EdgePatterns.card_pat1001 (n := n) (two := two9)
-  have hnum :
-      (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 = 240 := by
-    have hBig : Fintype.card Big9 = 5 := card_Big9
-    have hSmall : Fintype.card Small9 = 4 := card_Small9
-    rw [hBig, hSmall]
-    decide
-  exact h.trans hnum
+  have h : Fintype.card Edge1001 =
+      (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 :=
+    EdgePatterns.card_pat1001 (n := n) (two := two9)
+  rw [h, card_Big9, card_Small9]
+  decide
 
 private lemma card_edge0110 : Fintype.card Edge0110 = 240 := by
-  classical
-  have h :
-      Fintype.card Edge0110 =
-        (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 := by
-    exact EdgePatterns.card_pat0110 (n := n) (two := two9)
-  have hnum :
-      (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 = 240 := by
-    have hBig : Fintype.card Big9 = 5 := card_Big9
-    have hSmall : Fintype.card Small9 = 4 := card_Small9
-    rw [hBig, hSmall]
-    decide
-  exact h.trans hnum
+  have h : Fintype.card Edge0110 =
+      (Fintype.card Big9).descFactorial 2 * (Fintype.card Small9).descFactorial 2 :=
+    EdgePatterns.card_pat0110 (n := n) (two := two9)
+  rw [h, card_Big9, card_Small9]
+  decide
 
 private lemma edgeCount_9 : edgeCount n = 3024 := by
   classical
@@ -408,6 +383,11 @@ private lemma monoCount_le_bound :
   -- Turn `x + x` into `2 * x`.
   simpa [two_mul, Nat.add_assoc, Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm] using this
 
+/-- The discriminant-style product `4·m·(m-1)·(4m-k)` is nonnegative once `1 ≤ m` and `0 ≤ 4m-k`. -/
+private lemma prod_quarter_nonneg {m k : ℚ} (hm1 : 1 ≤ m) (hk : 0 ≤ 4 * m - k) :
+    0 ≤ 4 * m * (m - 1) * (4 * m - k) :=
+  mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) (by linarith)) (by linarith)) hk
+
 private lemma bound_le_quarter_of_even (m : Nat) (hm : 3 ≤ m) :
     (4 : ℚ) *
         ((2 * (m.descFactorial 4) + 2 * (m.descFactorial 2 * m.descFactorial 2) : Nat) : ℚ)
@@ -435,28 +415,9 @@ private lemma bound_le_quarter_of_even (m : Nat) (hm : 3 ≤ m) :
       Nat.cast_sub hm1, Nat.cast_sub hm2, Nat.cast_sub hm, Nat.cast_sub h2m1, Nat.cast_sub h2m2,
       Nat.cast_sub h2m3]
     ring
-  have hm0Q : (0 : ℚ) ≤ (m : ℚ) := by exact_mod_cast (Nat.zero_le m)
   have hm1Q : (1 : ℚ) ≤ (m : ℚ) := by exact_mod_cast hm1
-  have hmMinus1 : (0 : ℚ) ≤ (m : ℚ) - 1 := by linarith
   have h4m9 : (0 : ℚ) ≤ (4 : ℚ) * (m : ℚ) - 9 := by nlinarith [hmQ]
-  have hProd :
-      (0 : ℚ) ≤ (4 : ℚ) * (m : ℚ) * ((m : ℚ) - 1) * ((4 : ℚ) * (m : ℚ) - 9) := by
-    have h4 : (0 : ℚ) ≤ (4 : ℚ) := by norm_num
-    have h4m : (0 : ℚ) ≤ (4 : ℚ) * (m : ℚ) := mul_nonneg h4 hm0Q
-    have h4m_m1 : (0 : ℚ) ≤ (4 : ℚ) * (m : ℚ) * ((m : ℚ) - 1) := mul_nonneg h4m hmMinus1
-    exact mul_nonneg h4m_m1 h4m9
-  have hSub :
-      (0 : ℚ)
-        ≤
-          ((2 * m).descFactorial 4 : ℚ)
-            -
-              (4 : ℚ) *
-                ((2 * (m.descFactorial 4) + 2 * (m.descFactorial 2 * m.descFactorial 2) : Nat) :
-                  ℚ) := by
-    -- Avoid `simp` rewriting `0 ≤ a - b` into `b ≤ a`.
-    rw [hdiff]
-    exact hProd
-  exact (sub_nonneg).1 hSub
+  exact (sub_nonneg).1 (hdiff ▸ prod_quarter_nonneg hm1Q h4m9)
 
 private lemma bound_le_quarter_of_odd (m : Nat) (hm : 2 ≤ m) :
     (4 : ℚ) *
@@ -494,29 +455,11 @@ private lemma bound_le_quarter_of_odd (m : Nat) (hm : 2 ≤ m) :
     -- Expand remaining casts like `↑(m + 1)` into `↑m + 1` so `ring_nf` can normalize.
     simp [Nat.cast_add, Nat.cast_mul]
     ring_nf
-  have hm0Q : (0 : ℚ) ≤ (m : ℚ) := by exact_mod_cast (Nat.zero_le m)
   have hm1 : 1 ≤ m := le_trans (by decide : 1 ≤ 2) hm
   have hmQ : (2 : ℚ) ≤ (m : ℚ) := by exact_mod_cast hm
   have hm1Q : (1 : ℚ) ≤ (m : ℚ) := by exact_mod_cast hm1
-  have hmMinus1 : (0 : ℚ) ≤ (m : ℚ) - 1 := by linarith
   have h4m5 : (0 : ℚ) ≤ (4 : ℚ) * (m : ℚ) - 5 := by nlinarith [hmQ]
-  have hProd :
-      (0 : ℚ) ≤ (4 : ℚ) * (m : ℚ) * ((m : ℚ) - 1) * ((4 : ℚ) * (m : ℚ) - 5) := by
-    have h4 : (0 : ℚ) ≤ (4 : ℚ) := by norm_num
-    have h4m : (0 : ℚ) ≤ (4 : ℚ) * (m : ℚ) := mul_nonneg h4 hm0Q
-    have h4m_m1 : (0 : ℚ) ≤ (4 : ℚ) * (m : ℚ) * ((m : ℚ) - 1) := mul_nonneg h4m hmMinus1
-    exact mul_nonneg h4m_m1 h4m5
-  have hSub :
-      (0 : ℚ)
-        ≤
-          ((2 * m + 1).descFactorial 4 : ℚ)
-            -
-              (4 : ℚ) *
-                ((m.descFactorial 4 + (m + 1).descFactorial 4 +
-                      2 * (m.descFactorial 2 * (m + 1).descFactorial 2) : Nat) : ℚ) := by
-    rw [hdiff]
-    exact hProd
-  exact (sub_nonneg).1 hSub
+  exact (sub_nonneg).1 (hdiff ▸ prod_quarter_nonneg hm1Q h4m5)
 
 /-- The rounding-based coloring has monochromatic fraction at most `1/4` for every `n ≥ 5`. -/
 theorem monoFraction_f_le_one_quarter : monoFraction (f (n := n) hn) ≤ (1 : ℚ) / 4 := by

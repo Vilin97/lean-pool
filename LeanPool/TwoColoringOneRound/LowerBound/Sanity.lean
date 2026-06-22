@@ -193,8 +193,7 @@ theorem monoCount_f5 : monoCount f5 = 24 := by
     _ = 24 := by decide
 
 theorem monoFraction_f5 : monoFraction f5 = (1 : ℚ) / 5 := by
-  simp [monoFraction, monoCount_f5, edgeCount_5]
-  norm_num
+  norm_num [monoFraction, monoCount_f5, edgeCount_5]
 
 end Sanity
 

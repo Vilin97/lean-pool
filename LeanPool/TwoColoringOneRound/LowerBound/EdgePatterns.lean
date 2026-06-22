@@ -223,9 +223,7 @@ theorem card_pat0000 :
       left_inv := by
         intro e
         apply Subtype.ext
-        apply Subtype.ext
-        funext i
-        rfl
+        exact Subtype.ext rfl
       right_inv := by
         intro x
         ext i
@@ -261,9 +259,7 @@ theorem card_pat1111 :
       left_inv := by
         intro e
         apply Subtype.ext
-        apply Subtype.ext
-        funext i
-        rfl
+        exact Subtype.ext rfl
       right_inv := by
         intro x
         ext i

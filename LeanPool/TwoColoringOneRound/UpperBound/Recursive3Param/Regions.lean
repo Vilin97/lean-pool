@@ -237,8 +237,7 @@ private lemma lintegral_b_below_t1_triangle_value :
         (hbr := (le_rfl : (t1 : ℝ) ≤ t1)))
     have hr :
         ((t1 : ℝ) * (t1 : ℝ) ^ 2 / 2 - (t1 : ℝ) ^ 3 / 3) = (9 / 1024 : ℝ) := by
-      simp [t1]
-      norm_num
+      norm_num [t1]
     simpa [μ, hr] using h
   have hsub_int :
       (∫⁻ c in Set.Iio t1, ENNReal.ofReal ((t1 : ℝ) - (c : ℝ)) ∂μ) =
@@ -248,8 +247,7 @@ private lemma lintegral_b_below_t1_triangle_value :
         (hbr := (le_rfl : (t1 : ℝ) ≤ t1)))
     have hr :
         ((t1 : ℝ) * (t1 : ℝ) - (t1 : ℝ) ^ 2 / 2) = (9 / 128 : ℝ) := by
-      simp [t1]
-      norm_num
+      norm_num [t1]
     simpa [μ, hr] using h
   rw [htri', lintegral_affine_mul_length gCt_eq_affine, hmul_int, hsub_int,
     ofReal_mul_eq ha0 (by norm_num : (1 / 4 : ℝ) * (9 / 1024 : ℝ) = 9 / 4096),
@@ -270,8 +268,7 @@ private lemma lintegral_b_below_t1_gTB_value :
     have h :=
       (setLIntegral_ofReal_mul_sub_Iio (r := t) (b := t1) (hbr := ht1))
     have hr : ((t : ℝ) * (t1 : ℝ) ^ 2 / 2 - (t1 : ℝ) ^ 3 / 3) = (27 / 1024 : ℝ) := by
-      simp [t1, t]
-      norm_num
+      norm_num [t1, t]
     simpa [hr] using h
   have hsub_int :
       (∫⁻ b in Set.Iio t1, ENNReal.ofReal ((t : ℝ) - (b : ℝ)) ∂(volume : Measure Rand)) =
@@ -279,8 +276,7 @@ private lemma lintegral_b_below_t1_gTB_value :
     have h :=
       (setLIntegral_ofReal_sub_id_Iio (r := t) (b := t1) (hbr := ht1))
     have hr : ((t : ℝ) * (t1 : ℝ) - (t1 : ℝ) ^ 2 / 2) = (21 / 128 : ℝ) := by
-      simp [t1, t]
-      norm_num
+      norm_num [t1, t]
     simpa [hr] using h
   simp_rw [mu_Ico_eq]
   rw [lintegral_affine_mul_length gTB_eq_affine, hmul_int, hsub_int,
@@ -500,8 +496,7 @@ private lemma lintegral_gT2B_rect_t1_t2_value :
         ((t2 : ℝ) * ((t2 : ℝ) ^ 2 - (t1 : ℝ) ^ 2) / 2 -
             (((t2 : ℝ) ^ 3 - (t1 : ℝ) ^ 3) / 3)) =
           (1025 / 196608 : ℝ) := by
-      simp [t1, t2]
-      norm_num
+      norm_num [t1, t2]
     simpa [μ, hr] using h
   have hpoly2 :
       (∫⁻ x in Set.Ico t1 t2, ENNReal.ofReal ((t2 : ℝ) - x) ∂μ) =
@@ -512,8 +507,7 @@ private lemma lintegral_gT2B_rect_t1_t2_value :
     have hr :
         ((t2 : ℝ) * ((t2 : ℝ) - (t1 : ℝ)) - (((t2 : ℝ) ^ 2 - (t1 : ℝ) ^ 2) / 2)) =
           (25 / 2048 : ℝ) := by
-      simp [t1, t2]
-      norm_num
+      norm_num [t1, t2]
     simpa [μ, hr] using h
   simp_rw [mu_Ico_eq]
   rw [lintegral_affine_mul_length gT2B_eq_affine, hpoly1, hpoly2,
@@ -651,11 +645,9 @@ private lemma lintegral_t1_t2_main_value :
   have hConstC : (∫⁻ c in Set.Iio t1, gCt c ∂μ) = ENNReal.ofReal (81 / 512 : ℝ) := by
     simpa using lintegral_gCt_Iio_t1
   have hμt1t2 : μ (Set.Ico t1 t2) = ENNReal.ofReal (5 / 32 : ℝ) := by
-    simp [μ, t1, t2]
-    norm_num
+    norm_num [μ, t1, t2]
   have hμt2t : μ (Set.Ico t2 t) = ENNReal.ofReal (3 / 32 : ℝ) := by
-    simp [μ, t2, t]
-    norm_num
+    norm_num [μ, t2, t]
   -- Split off the rectangle term; the rest is constant.
   have hconst :
       (∫⁻ c in Set.Iio t1, gCt c ∂μ) + constT1T * μ (Set.Ico t2 t) =

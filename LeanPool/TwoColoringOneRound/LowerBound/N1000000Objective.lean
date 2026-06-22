@@ -54,9 +54,7 @@ noncomputable def edgeEquivEmb : Edge n ≃ Emb4 where
   invFun := edgeOfEmb
   left_inv := by
     intro e
-    apply Subtype.ext
-    funext i
-    rfl
+    exact Subtype.ext rfl
   right_inv := by
     intro x
     ext i
@@ -80,15 +78,11 @@ private lemma sum_corrEdge_eq_sum_corrEmb (f : Coloring n) :
 
 private lemma edge_src_smul (σ : G) (e : Edge n) :
     Edge.src (σ • e) = σ • Edge.src e := by
-  apply Subtype.ext
-  funext i
-  rfl
+  exact Subtype.ext rfl
 
 private lemma edge_dst_smul (σ : G) (e : Edge n) :
     Edge.dst (σ • e) = σ • Edge.dst e := by
-  apply Subtype.ext
-  funext i
-  rfl
+  exact Subtype.ext rfl
 
 private lemma corrEdge_smul (f : Coloring n) (σ : G) (e : Edge n) :
     corrEdge f (σ • e) = corr f (σ • Edge.src e) (σ • Edge.dst e) := by
@@ -305,9 +299,7 @@ theorem xEdge_xFromColoring_eq_edgeCorrelation (f : Coloring n) :
   -- Express the `corrAvg` as a group average, then convert it to an edge average.
   let b : Emb4 := ⟨edgeRep.1, edgeRep.2⟩
   have hb : edgeOfEmb b = edgeRep := by
-    apply Subtype.ext
-    funext i
-    rfl
+    exact Subtype.ext rfl
   have hAvgGroup :
       corrAvg f (Edge.src edgeRep) (Edge.dst edgeRep)
         = (∑ σ : G, corrEmb f (σ • b)) / (Fintype.card G : Q) := by
@@ -320,9 +312,7 @@ theorem xEdge_xFromColoring_eq_edgeCorrelation (f : Coloring n) :
       refine Finset.sum_congr rfl ?_
       intro σ _hσ
       have h1 : edgeOfEmb (σ • b) = σ • edgeRep := by
-        apply Subtype.ext
-        funext i
-        rfl
+        exact Subtype.ext rfl
       calc
         corr f (σ • Edge.src edgeRep) (σ • Edge.dst edgeRep)
             = corrEdge f (σ • edgeRep) := by

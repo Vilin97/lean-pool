@@ -446,196 +446,66 @@ open scoped Real Interval
 
 namespace RealHelpers
 
+/-- Shared skeleton: for a continuous, a.e.-nonnegative `f` on `Icc a b` whose interval integral
+equals `v`, the `lintegral` of `ofReal ∘ f` is `ofReal v`. -/
+private lemma lintegral_ofReal_of_integral_eq {f : ℝ → ℝ} {a b v : ℝ} (hab : a ≤ b)
+    (hcont : Continuous f) (hnn : ∀ x ∈ Set.Icc a b, 0 ≤ f x)
+    (hint : (∫ x in a..b, f x) = v) :
+    (∫⁻ x in Set.Icc a b, ENNReal.ofReal (f x) ∂(volume : Measure ℝ)) = ENNReal.ofReal v := by
+  have hintOn : IntegrableOn f (Set.Icc a b) (volume : Measure ℝ) :=
+    (intervalIntegrable_iff_integrableOn_Icc_of_le (μ := (volume : Measure ℝ)) hab).1
+      (hcont.intervalIntegrable a b)
+  have hnonneg : 0 ≤ᵐ[(volume : Measure ℝ).restrict (Set.Icc a b)] f :=
+    MeasureTheory.ae_restrict_of_forall_mem (by measurability) hnn
+  have hlin :
+      (∫⁻ x in Set.Icc a b, ENNReal.ofReal (f x) ∂(volume : Measure ℝ)) =
+        ENNReal.ofReal (∫ x in Set.Icc a b, f x ∂(volume : Measure ℝ)) := by
+    simpa using
+      (MeasureTheory.ofReal_integral_eq_lintegral_ofReal
+        (μ := (volume : Measure ℝ).restrict (Set.Icc a b)) (f := f) hintOn hnonneg).symm
+  have hIcc : (∫ x in Set.Icc a b, f x ∂(volume : Measure ℝ)) = v := by
+    rw [MeasureTheory.integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le hab, hint]
+  rw [hlin, hIcc]
+
 lemma lintegral_ofReal_id_Icc (a b : ℝ) (ha : 0 ≤ a) (hab : a ≤ b) :
     (∫⁻ x in Set.Icc a b, ENNReal.ofReal x ∂(volume : Measure ℝ)) =
-      ENNReal.ofReal ((b ^ 2 - a ^ 2) / 2) := by
-  have hint : IntegrableOn (fun x : ℝ => x) (Set.Icc a b) (volume : Measure ℝ) := by
-    have hinterval : IntervalIntegrable (fun x : ℝ => x) (volume : Measure ℝ) a b :=
-      (continuous_id.intervalIntegrable a b)
-    exact
-      (intervalIntegrable_iff_integrableOn_Icc_of_le (μ := (volume : Measure ℝ)) hab).1 hinterval
-  have hnonneg :
-      0 ≤ᵐ[(volume : Measure ℝ).restrict (Set.Icc a b)] fun x : ℝ => x := by
-    have hs : MeasurableSet (Set.Icc a b) := by measurability
-    refine MeasureTheory.ae_restrict_of_forall_mem (μ := (volume : Measure ℝ)) hs ?_
-    intro x hx
-    exact le_trans ha hx.1
-  have hlin :
-      (∫⁻ x in Set.Icc a b, ENNReal.ofReal x ∂(volume : Measure ℝ)) =
-        ENNReal.ofReal (∫ x in Set.Icc a b, x ∂(volume : Measure ℝ)) := by
-    -- `ofReal_integral_eq_lintegral_ofReal` is stated for an unrestricted integral.
-    -- Apply it to the restricted measure.
-    have :=
-      (MeasureTheory.ofReal_integral_eq_lintegral_ofReal
-        (μ := (volume : Measure ℝ).restrict (Set.Icc a b))
-        (f := fun x : ℝ => x) (hfi := hint) (f_nn := hnonneg))
-    -- unfold the set-restricted integral / lintegral
-    simpa using this.symm
-  -- Evaluate the real integral using interval integrals.
-  have hint' :
-      (∫ x in Set.Icc a b, x ∂(volume : Measure ℝ)) = (b ^ 2 - a ^ 2) / 2 := by
-    calc
-      (∫ x in Set.Icc a b, x ∂(volume : Measure ℝ)) =
-          ∫ x in Set.Ioc a b, x ∂(volume : Measure ℝ) := by
-            simpa using
-              (MeasureTheory.integral_Icc_eq_integral_Ioc (μ := (volume : Measure ℝ))
-                (f := fun x : ℝ => x) (x := a) (y := b))
-      _ = ∫ x in a..b, x := by
-            -- `intervalIntegral.integral_of_le` gives the `Ioc` formulation for `a ≤ b`.
-            simp [intervalIntegral.integral_of_le hab]
-      _ = ∫ x in a..b, x ^ (1 : ℕ) := by
-            simp [pow_one]
-      _ = (b ^ 2 - a ^ 2) / 2 := by
-            simp
-  simpa [hint'] using hlin
+      ENNReal.ofReal ((b ^ 2 - a ^ 2) / 2) :=
+  lintegral_ofReal_of_integral_eq hab continuous_id (fun _ hx => le_trans ha hx.1) (by simp)
 
 lemma lintegral_ofReal_sub_id_Icc (r a b : ℝ) (hbr : b ≤ r) (hab : a ≤ b) :
     (∫⁻ x in Set.Icc a b, ENNReal.ofReal (r - x) ∂(volume : Measure ℝ)) =
-      ENNReal.ofReal (r * (b - a) - (b ^ 2 - a ^ 2) / 2) := by
-  have hint : IntegrableOn (fun x : ℝ => r - x) (Set.Icc a b) (volume : Measure ℝ) := by
-    have hinterval :
-        IntervalIntegrable (fun x : ℝ => r - x) (volume : Measure ℝ) a b := by
-      have : Continuous fun x : ℝ => r - x := by continuity
-      exact this.intervalIntegrable a b
-    exact
-      (intervalIntegrable_iff_integrableOn_Icc_of_le (μ := (volume : Measure ℝ)) hab).1 hinterval
-  have hnonneg :
-      0 ≤ᵐ[(volume : Measure ℝ).restrict (Set.Icc a b)] fun x : ℝ => r - x := by
-    have hs : MeasurableSet (Set.Icc a b) := by measurability
-    refine MeasureTheory.ae_restrict_of_forall_mem (μ := (volume : Measure ℝ)) hs ?_
-    intro x hx
-    exact sub_nonneg.2 (le_trans hx.2 hbr)
-  have hlin :
-      (∫⁻ x in Set.Icc a b, ENNReal.ofReal (r - x) ∂(volume : Measure ℝ)) =
-        ENNReal.ofReal (∫ x in Set.Icc a b, (r - x) ∂(volume : Measure ℝ)) := by
-    have :=
-      (MeasureTheory.ofReal_integral_eq_lintegral_ofReal
-        (μ := (volume : Measure ℝ).restrict (Set.Icc a b))
-        (f := fun x : ℝ => r - x) (hfi := hint) (f_nn := hnonneg))
-    simpa using this.symm
-  have hint' :
-      (∫ x in Set.Icc a b, (r - x) ∂(volume : Measure ℝ)) =
-        r * (b - a) - (b ^ 2 - a ^ 2) / 2 := by
-    have hconst : IntervalIntegrable (fun _x : ℝ => (r : ℝ)) (volume : Measure ℝ) a b :=
-      intervalIntegral.intervalIntegrable_const
-    have hid : IntervalIntegrable (fun x : ℝ => x) (volume : Measure ℝ) a b :=
-      continuous_id.intervalIntegrable a b
-    calc
-      (∫ x in Set.Icc a b, (r - x) ∂(volume : Measure ℝ)) =
-          ∫ x in Set.Ioc a b, (r - x) ∂(volume : Measure ℝ) := by
-            simpa using
-              (MeasureTheory.integral_Icc_eq_integral_Ioc (μ := (volume : Measure ℝ))
-                (f := fun x : ℝ => r - x) (x := a) (y := b))
-      _ = ∫ x in a..b, (r - x) := by
-            simp [intervalIntegral.integral_of_le hab]
-      _ = (∫ x in a..b, (r : ℝ)) - ∫ x in a..b, x := by
-            simpa using (intervalIntegral.integral_sub (μ := (volume : Measure ℝ)) hconst hid)
-      _ = r * (b - a) - (b ^ 2 - a ^ 2) / 2 := by
-            simp [intervalIntegral.integral_const]
-            ring_nf
-  simpa [hint'] using hlin
+      ENNReal.ofReal (r * (b - a) - (b ^ 2 - a ^ 2) / 2) :=
+  lintegral_ofReal_of_integral_eq hab (by continuity)
+    (fun _ hx => sub_nonneg.2 (le_trans hx.2 hbr)) <| by
+      have hconst : IntervalIntegrable (fun _x : ℝ => (r : ℝ)) (volume : Measure ℝ) a b :=
+        intervalIntegral.intervalIntegrable_const
+      have hid : IntervalIntegrable (fun x : ℝ => x) (volume : Measure ℝ) a b :=
+        continuous_id.intervalIntegrable a b
+      rw [intervalIntegral.integral_sub hconst hid]
+      simp [intervalIntegral.integral_const]
+      ring
 
 lemma lintegral_ofReal_mul_sub_Icc (r a b : ℝ) (ha : 0 ≤ a) (hbr : b ≤ r) (hab : a ≤ b) :
     (∫⁻ x in Set.Icc a b, ENNReal.ofReal (x * (r - x)) ∂(volume : Measure ℝ)) =
-      ENNReal.ofReal (r * (b ^ 2 - a ^ 2) / 2 - (b ^ 3 - a ^ 3) / 3) := by
-  have hint : IntegrableOn (fun x : ℝ => x * (r - x)) (Set.Icc a b) (volume : Measure ℝ) := by
-    have hinterval :
-        IntervalIntegrable (fun x : ℝ => x * (r - x)) (volume : Measure ℝ) a b := by
-      have : Continuous fun x : ℝ => x * (r - x) := by continuity
-      exact this.intervalIntegrable a b
-    exact
-      (intervalIntegrable_iff_integrableOn_Icc_of_le (μ := (volume : Measure ℝ)) hab).1 hinterval
-  have hnonneg :
-      0 ≤ᵐ[(volume : Measure ℝ).restrict (Set.Icc a b)] fun x : ℝ => x * (r - x) := by
-    have hs : MeasurableSet (Set.Icc a b) := by measurability
-    refine MeasureTheory.ae_restrict_of_forall_mem (μ := (volume : Measure ℝ)) hs ?_
-    intro x hx
-    have hx0 : 0 ≤ x := le_trans ha hx.1
-    have hx' : 0 ≤ r - x := sub_nonneg.2 (le_trans hx.2 hbr)
-    exact mul_nonneg hx0 hx'
-  have hlin :
-      (∫⁻ x in Set.Icc a b, ENNReal.ofReal (x * (r - x)) ∂(volume : Measure ℝ)) =
-        ENNReal.ofReal (∫ x in Set.Icc a b, x * (r - x) ∂(volume : Measure ℝ)) := by
-    have :=
-      (MeasureTheory.ofReal_integral_eq_lintegral_ofReal
-        (μ := (volume : Measure ℝ).restrict (Set.Icc a b))
-        (f := fun x : ℝ => x * (r - x)) (hfi := hint) (f_nn := hnonneg))
-    simpa using this.symm
-  have hint' :
-      (∫ x in Set.Icc a b, x * (r - x) ∂(volume : Measure ℝ)) =
-        r * (b ^ 2 - a ^ 2) / 2 - (b ^ 3 - a ^ 3) / 3 := by
-    have hpoly : (fun x : ℝ => x * (r - x)) = fun x : ℝ => r * x - x ^ (2 : ℕ) := by
-      funext x
+      ENNReal.ofReal (r * (b ^ 2 - a ^ 2) / 2 - (b ^ 3 - a ^ 3) / 3) :=
+  lintegral_ofReal_of_integral_eq hab (by continuity)
+    (fun _ hx => mul_nonneg (le_trans ha hx.1) (sub_nonneg.2 (le_trans hx.2 hbr))) <| by
+      have hpoly : (fun x : ℝ => x * (r - x)) = fun x : ℝ => r * x - x ^ (2 : ℕ) := by
+        funext x; ring
+      have hmul : IntervalIntegrable (fun x : ℝ => r * x) (volume : Measure ℝ) a b :=
+        (continuous_const.mul continuous_id).intervalIntegrable a b
+      have hsq : IntervalIntegrable (fun x : ℝ => x ^ (2 : ℕ)) (volume : Measure ℝ) a b :=
+        (continuous_id.pow 2).intervalIntegrable a b
+      rw [hpoly, intervalIntegral.integral_sub hmul hsq,
+        intervalIntegral.integral_const_mul]
+      simp
       ring
-    have hmul : IntervalIntegrable (fun x : ℝ => r * x) (volume : Measure ℝ) a b := by
-      exact (continuous_const.mul continuous_id).intervalIntegrable a b
-    have hsq : IntervalIntegrable (fun x : ℝ => x ^ (2 : ℕ)) (volume : Measure ℝ) a b := by
-      exact (continuous_id.pow 2).intervalIntegrable a b
-    calc
-      (∫ x in Set.Icc a b, x * (r - x) ∂(volume : Measure ℝ)) =
-          ∫ x in Set.Ioc a b, x * (r - x) ∂(volume : Measure ℝ) := by
-            simpa using
-              (MeasureTheory.integral_Icc_eq_integral_Ioc (μ := (volume : Measure ℝ))
-                (f := fun x : ℝ => x * (r - x)) (x := a) (y := b))
-      _ = ∫ x in a..b, x * (r - x) := by
-            simp [intervalIntegral.integral_of_le hab]
-      _ = ∫ x in a..b, (r * x - x ^ (2 : ℕ)) := by
-            simp [hpoly]
-      _ = (∫ x in a..b, r * x) - ∫ x in a..b, x ^ (2 : ℕ) := by
-            simpa using (intervalIntegral.integral_sub (μ := (volume : Measure ℝ)) hmul hsq)
-      _ = r * (b ^ 2 - a ^ 2) / 2 - (b ^ 3 - a ^ 3) / 3 := by
-            have hrx : (∫ x in a..b, r * x) = r * (b ^ 2 - a ^ 2) / 2 := by
-              have hix : (∫ x in a..b, x) = (b ^ 2 - a ^ 2) / 2 := by
-                simp
-              have hmul' : (∫ x in a..b, r * x) = r * ∫ x in a..b, x := by
-                simpa using
-                  (intervalIntegral.integral_const_mul (μ := (volume : Measure ℝ)) (a := a) (b := b)
-                    (r := r) (f := fun x : ℝ => x))
-              calc
-                (∫ x in a..b, r * x) = r * ∫ x in a..b, x := hmul'
-                _ = r * ((b ^ 2 - a ^ 2) / 2) := by simp [hix]
-                _ = r * (b ^ 2 - a ^ 2) / 2 := by ring
-            simp [hrx]
-            ring_nf
-  simpa [hint'] using hlin
 
 lemma lintegral_ofReal_pow_Icc (n : ℕ) (a b : ℝ) (ha : 0 ≤ a) (hab : a ≤ b) :
     (∫⁻ x in Set.Icc a b, ENNReal.ofReal (x ^ n) ∂(volume : Measure ℝ)) =
-      ENNReal.ofReal ((b ^ (n + 1) - a ^ (n + 1)) / (n + 1)) := by
-  have hint : IntegrableOn (fun x : ℝ => x ^ n) (Set.Icc a b) (volume : Measure ℝ) := by
-    have hinterval :
-        IntervalIntegrable (fun x : ℝ => x ^ n) (volume : Measure ℝ) a b :=
-      ((continuous_id.pow n).intervalIntegrable a b)
-    exact
-      (intervalIntegrable_iff_integrableOn_Icc_of_le (μ := (volume : Measure ℝ)) hab).1 hinterval
-  have hnonneg :
-      0 ≤ᵐ[(volume : Measure ℝ).restrict (Set.Icc a b)] fun x : ℝ => x ^ n := by
-    have hs : MeasurableSet (Set.Icc a b) := by measurability
-    refine MeasureTheory.ae_restrict_of_forall_mem (μ := (volume : Measure ℝ)) hs ?_
-    intro x hx
-    exact pow_nonneg (le_trans ha hx.1) _
-  have hlin :
-      (∫⁻ x in Set.Icc a b, ENNReal.ofReal (x ^ n) ∂(volume : Measure ℝ)) =
-        ENNReal.ofReal (∫ x in Set.Icc a b, x ^ n ∂(volume : Measure ℝ)) := by
-    have :=
-      (MeasureTheory.ofReal_integral_eq_lintegral_ofReal
-        (μ := (volume : Measure ℝ).restrict (Set.Icc a b))
-        (f := fun x : ℝ => x ^ n) (hfi := hint) (f_nn := hnonneg))
-    simpa using this.symm
-  have hint' :
-      (∫ x in Set.Icc a b, x ^ n ∂(volume : Measure ℝ)) =
-        (b ^ (n + 1) - a ^ (n + 1)) / (n + 1) := by
-    calc
-      (∫ x in Set.Icc a b, x ^ n ∂(volume : Measure ℝ)) =
-          ∫ x in Set.Ioc a b, x ^ n ∂(volume : Measure ℝ) := by
-            simpa using
-              (MeasureTheory.integral_Icc_eq_integral_Ioc (μ := (volume : Measure ℝ))
-                (f := fun x : ℝ => x ^ n) (x := a) (y := b))
-      _ = ∫ x in a..b, x ^ n := by
-            simp [intervalIntegral.integral_of_le hab]
-      _ = (b ^ (n + 1) - a ^ (n + 1)) / (n + 1) := by
-            simp
-  simpa [hint'] using hlin
+      ENNReal.ofReal ((b ^ (n + 1) - a ^ (n + 1)) / (n + 1)) :=
+  lintegral_ofReal_of_integral_eq hab (continuous_id.pow n)
+    (fun _ hx => pow_nonneg (le_trans ha hx.1) _) (by simp)
 
 end RealHelpers
 
@@ -679,33 +549,33 @@ lemma setLIntegral_ofReal_id_Icc (a b : Rand) (hab : a ≤ b) :
   setLIntegral_ofReal_lift a b (fun y => y) _
     (RealHelpers.lintegral_ofReal_id_Icc (a := (a : ℝ)) (b := (b : ℝ)) a.property.1 hab)
 
-lemma setLIntegral_ofReal_id_Iio (b : Rand) :
-    (∫⁻ x in Set.Iio b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand)) =
-      ENNReal.ofReal (((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by
-  -- Replace `Iio` by `Iic` (they differ only on a singleton) and then by an `Icc` interval.
-  have h0 : (0 : Rand) ≤ b := b.property.1
+/-- Lift an `Icc`-stated lintegral equality to an `Iio` one (the endpoint set is null). -/
+private lemma setLIntegral_Iio_of_Icc (b : Rand) (h : Rand → ℝ≥0∞) (v : ℝ≥0∞)
+    (hIcc : (∫⁻ x in Set.Icc (0 : Rand) b, h x ∂(volume : Measure Rand)) = v) :
+    (∫⁻ x in Set.Iio b, h x ∂(volume : Measure Rand)) = v := by
   have hIio : (Set.Iio b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Iic b := by
     simpa using (MeasureTheory.Iio_ae_eq_Iic (μ := (volume : Measure Rand)) (a := b))
-  have hIic : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := Iic_eq_Icc_zero b
-  calc
+  rw [MeasureTheory.setLIntegral_congr (μ := (volume : Measure Rand)) hIio,
+    Iic_eq_Icc_zero b, hIcc]
+
+/-- Lift an `Icc`-stated lintegral equality to an `Ico` one (the endpoint set is null). -/
+private lemma setLIntegral_Ico_of_Icc (a b : Rand) (h : Rand → ℝ≥0∞) (v : ℝ≥0∞)
+    (hIcc : (∫⁻ x in Set.Icc a b, h x ∂(volume : Measure Rand)) = v) :
+    (∫⁻ x in Set.Ico a b, h x ∂(volume : Measure Rand)) = v := by
+  have hIco : (Set.Ico a b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Icc a b := by
+    simpa using (MeasureTheory.Ico_ae_eq_Icc (μ := (volume : Measure Rand)) (a := a) (b := b))
+  rw [MeasureTheory.setLIntegral_congr (μ := (volume : Measure Rand)) hIco, hIcc]
+
+lemma setLIntegral_ofReal_id_Iio (b : Rand) :
     (∫⁻ x in Set.Iio b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand)) =
-        ∫⁻ x in Set.Iic b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand) := by
-          exact MeasureTheory.setLIntegral_congr (μ := (volume : Measure Rand)) hIio
-    _ = ∫⁻ x in Set.Icc (0 : Rand) b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand) := by
-          simp [hIic]
-    _ = ENNReal.ofReal (((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) := by
-          simpa using setLIntegral_ofReal_id_Icc (a := (0 : Rand)) (b := b) h0
+      ENNReal.ofReal (((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2) :=
+  setLIntegral_Iio_of_Icc b _ _
+    (by simpa using setLIntegral_ofReal_id_Icc (a := (0 : Rand)) (b := b) b.property.1)
 
 lemma setLIntegral_ofReal_id_Ico (a b : Rand) (hab : a ≤ b) :
     (∫⁻ x in Set.Ico a b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand)) =
-      ENNReal.ofReal (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2) := by
-  have hIco : (Set.Ico a b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Icc a b := by
-    simpa using (MeasureTheory.Ico_ae_eq_Icc (μ := (volume : Measure Rand)) (a := a) (b := b))
-  calc
-    (∫⁻ x in Set.Ico a b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand)) =
-        ∫⁻ x in Set.Icc a b, ENNReal.ofReal (x : ℝ) ∂(volume : Measure Rand) := by
-          exact MeasureTheory.setLIntegral_congr (μ := (volume : Measure Rand)) hIco
-    _ = ENNReal.ofReal (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2) := setLIntegral_ofReal_id_Icc a b hab
+      ENNReal.ofReal (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2) :=
+  setLIntegral_Ico_of_Icc a b _ _ (setLIntegral_ofReal_id_Icc a b hab)
 
 lemma setLIntegral_ofReal_pow_Icc (n : ℕ) (a b : Rand) (hab : a ≤ b) :
     (∫⁻ x in Set.Icc a b, ENNReal.ofReal ((x : ℝ) ^ n) ∂(volume : Measure Rand)) =
@@ -733,69 +603,28 @@ lemma setLIntegral_ofReal_mul_sub_Icc (r a b : Rand) (hab : a ≤ b) (hbr : (b :
 lemma setLIntegral_ofReal_sub_id_Ico (r a b : Rand) (hab : a ≤ b) (hbr : (b : ℝ) ≤ (r : ℝ)) :
     (∫⁻ x in Set.Ico a b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand)) =
       ENNReal.ofReal
-        ((r : ℝ) * ((b : ℝ) - (a : ℝ)) - (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2)) := by
-  have hIco : (Set.Ico a b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Icc a b := by
-    simpa using (MeasureTheory.Ico_ae_eq_Icc (μ := (volume : Measure Rand)) (a := a) (b := b))
-  calc
-    (∫⁻ x in Set.Ico a b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand)) =
-        ∫⁻ x in Set.Icc a b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand) := by
-          exact MeasureTheory.setLIntegral_congr (μ := (volume : Measure Rand)) hIco
-    _ = ENNReal.ofReal ((r : ℝ) * ((b : ℝ) - (a : ℝ)) - (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2)) := by
-          exact setLIntegral_ofReal_sub_id_Icc (r := r) (a := a) (b := b) hab hbr
+        ((r : ℝ) * ((b : ℝ) - (a : ℝ)) - (((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2)) :=
+  setLIntegral_Ico_of_Icc a b _ _ (setLIntegral_ofReal_sub_id_Icc r a b hab hbr)
 
 lemma setLIntegral_ofReal_mul_sub_Ico (r a b : Rand) (hab : a ≤ b) (hbr : (b : ℝ) ≤ (r : ℝ)) :
     (∫⁻ x in Set.Ico a b, ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂(volume : Measure Rand)) =
       ENNReal.ofReal
-        ((r : ℝ) * ((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (a : ℝ) ^ 3) / 3)) := by
-  have hIco : (Set.Ico a b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Icc a b := by
-    simpa using (MeasureTheory.Ico_ae_eq_Icc (μ := (volume : Measure Rand)) (a := a) (b := b))
-  calc
-    (∫⁻ x in Set.Ico a b, ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂(volume : Measure Rand)) =
-        ∫⁻ x in Set.Icc a b, ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂(volume : Measure Rand) := by
-          exact MeasureTheory.setLIntegral_congr (μ := (volume : Measure Rand)) hIco
-    _ =
-        ENNReal.ofReal
-          ((r : ℝ) * ((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (a : ℝ) ^ 3) / 3)) := by
-          exact setLIntegral_ofReal_mul_sub_Icc (r := r) (a := a) (b := b) hab hbr
+        ((r : ℝ) * ((b : ℝ) ^ 2 - (a : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (a : ℝ) ^ 3) / 3)) :=
+  setLIntegral_Ico_of_Icc a b _ _ (setLIntegral_ofReal_mul_sub_Icc r a b hab hbr)
 
 lemma setLIntegral_ofReal_sub_id_Iio (r b : Rand) (hbr : (b : ℝ) ≤ (r : ℝ)) :
     (∫⁻ x in Set.Iio b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand)) =
       ENNReal.ofReal
-        ((r : ℝ) * ((b : ℝ) - (0 : ℝ)) - (((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) := by
-  have hIio : (Set.Iio b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Iic b := by
-    simpa using (MeasureTheory.Iio_ae_eq_Iic (μ := (volume : Measure Rand)) (a := b))
-  have hIic : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := Iic_eq_Icc_zero b
-  have h0 : (0 : Rand) ≤ b := b.property.1
-  calc
-    (∫⁻ x in Set.Iio b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand)) =
-        ∫⁻ x in Set.Iic b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand) := by
-          exact MeasureTheory.setLIntegral_congr (μ := (volume : Measure Rand)) hIio
-    _ = ∫⁻ x in Set.Icc (0 : Rand) b, ENNReal.ofReal ((r : ℝ) - x) ∂(volume : Measure Rand) := by
-          simp [hIic]
-    _ =
-        ENNReal.ofReal ((r : ℝ) * ((b : ℝ) - (0 : ℝ)) - (((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) := by
-          simpa using setLIntegral_ofReal_sub_id_Icc (r := r) (a := (0 : Rand)) (b := b) h0 hbr
+        ((r : ℝ) * ((b : ℝ) - (0 : ℝ)) - (((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2)) :=
+  setLIntegral_Iio_of_Icc b _ _
+    (by simpa using setLIntegral_ofReal_sub_id_Icc r (0 : Rand) b b.property.1 hbr)
 
 lemma setLIntegral_ofReal_mul_sub_Iio (r b : Rand) (hbr : (b : ℝ) ≤ (r : ℝ)) :
     (∫⁻ x in Set.Iio b, ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂(volume : Measure Rand)) =
       ENNReal.ofReal
-        ((r : ℝ) * ((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (0 : ℝ) ^ 3) / 3)) := by
-  have hIio : (Set.Iio b : Set Rand) =ᵐ[(volume : Measure Rand)] Set.Iic b := by
-    simpa using (MeasureTheory.Iio_ae_eq_Iic (μ := (volume : Measure Rand)) (a := b))
-  have hIic : (Set.Iic b : Set Rand) = Set.Icc (0 : Rand) b := Iic_eq_Icc_zero b
-  have h0 : (0 : Rand) ≤ b := b.property.1
-  calc
-    (∫⁻ x in Set.Iio b, ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂(volume : Measure Rand)) =
-        ∫⁻ x in Set.Iic b, ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂(volume : Measure Rand) := by
-          exact MeasureTheory.setLIntegral_congr (μ := (volume : Measure Rand)) hIio
-    _ =
-        ∫⁻ x in Set.Icc (0 : Rand) b,
-          ENNReal.ofReal ((x : ℝ) * ((r : ℝ) - x)) ∂(volume : Measure Rand) := by
-          simp [hIic]
-    _ =
-        ENNReal.ofReal
-          ((r : ℝ) * ((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (0 : ℝ) ^ 3) / 3)) := by
-          simpa using setLIntegral_ofReal_mul_sub_Icc (r := r) (a := (0 : Rand)) (b := b) h0 hbr
+        ((r : ℝ) * ((b : ℝ) ^ 2 - (0 : ℝ) ^ 2) / 2 - (((b : ℝ) ^ 3 - (0 : ℝ) ^ 3) / 3)) :=
+  setLIntegral_Iio_of_Icc b _ _
+    (by simpa using setLIntegral_ofReal_mul_sub_Icc r (0 : Rand) b b.property.1 hbr)
 
 end Recursive3Param
 end UpperBound

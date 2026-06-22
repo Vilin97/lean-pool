@@ -38,16 +38,13 @@ noncomputable def t2 : Rand :=
   (⟨(17 / 32 : ℝ), by constructor <;> norm_num⟩ : I)
 
 lemma t1_lt_t2 : (t1 : ℝ) < t2 := by
-  simp [t1, t2]
-  norm_num
+  norm_num [t1, t2]
 
 lemma t2_lt_t : (t2 : ℝ) < t := by
-  simp [t2, t]
-  norm_num
+  norm_num [t2, t]
 
 lemma t_lt_one : (t : ℝ) < 1 := by
-  simp [t]
-  norm_num
+  norm_num [t]
 
 lemma zero_lt_t : (0 : ℝ) < t := by
   simp [t]
