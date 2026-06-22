@@ -6,16 +6,12 @@ Authors: Antoine de Saint Germain, Ambrose Tang
 
 import Mathlib.Order.Interval.Finset.Fin
 import Mathlib.LinearAlgebra.RootSystem.Defs
-import Mathlib.Tactic.Cases
 import Mathlib.Tactic.Ext
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Tauto
 import Aesop
 import Mathlib.LinearAlgebra.RootSystem.Reduced
-import Mathlib.LinearAlgebra.RootSystem.IsValuedIn
-import Mathlib.LinearAlgebra.RootSystem.Irreducible
 
 /-!
 # Type-Aₙ root systems
@@ -125,15 +121,11 @@ def s {n : ℕ} (J K : SignedInterval n) : SignedInterval n :=
 noncomputable abbrev ZnPairing (n : ℕ) : Zn n →ₗ[ℤ] ZnDual n →ₗ[ℤ] ℤ :=
   Module.Dual.eval ℤ (Zn n)
 
--- Helper: SignedInterval extensional equality
 @[ext]
 theorem SignedInterval.ext' {n : ℕ} {J K : SignedInterval n}
     (hi : J.i = K.i) (hj : J.j = K.j) (hε : J.ε = K.ε) : J = K := by
   cases J; cases K; simp_all
 
-/-
-s is involutive
--/
 theorem s_involutive {n : ℕ} [NeZero n] (J K : SignedInterval n) :
     s J (s J K) = K := by
   cases J; cases K; simp +decide only [s, Bool.not_false, Bool.if_true_right, Bool.decide_eq_true,
@@ -166,10 +158,8 @@ theorem s_involutive {n : ℕ} [NeZero n] (J K : SignedInterval n) :
       · grind;
     · aesop
 
-/-
-The key formula: sum of Ae columns over an interval [p,q] evaluated at t
-    gives δ_{t,p} + δ_{t,q} - δ_{t+1,p} - δ_{q+1,t} (using ℕ comparisons).
--/
+/-- The key formula: sum of Ae columns over an interval `[p,q]` evaluated at `t`
+gives `δ_{t,p} + δ_{t,q} - δ_{t+1,p} - δ_{q+1,t}` (using `ℕ` comparisons). -/
 theorem Ae_sum_eq {n : ℕ} [NeZero n] (p q : Fin n) (hpq : p ≤ q) (t : Fin n) :
     (∑ u ∈ Finset.Icc p q, Ae u) t =
     (if t = p then 1 else 0) + (if t = q then 1 else 0)
@@ -193,9 +183,7 @@ theorem Ae_sum_eq {n : ℕ} [NeZero n] (p q : Fin n) (hpq : p ≤ q) (t : Fin n)
         grind;
       · grind
 
-/-
-Key consequence of Ae_sum_eq: α(J)(t) expressed in terms of Kronecker deltas
--/
+/-- `α J` evaluated at `t`, expressed in terms of Kronecker deltas. -/
 theorem α_eval {n : ℕ} [NeZero n] (J : SignedInterval n) (t : Fin n) :
     α J t = J.sign * ((if t = J.i then 1 else 0) + (if t = J.j then 1 else 0)
     - (if (t : ℕ) + 1 = (J.i : ℕ) then 1 else 0)
@@ -203,23 +191,18 @@ theorem α_eval {n : ℕ} [NeZero n] (J : SignedInterval n) (t : Fin n) :
   have := @Ae_sum_eq;
   convert congr_arg ( fun x : ℤ => J.sign * x ) ( this J.i J.j J.hij t ) using 1
 
-/-
-Key consequence: αDual(J) evaluated on a test function
--/
+/-- `αDual J` evaluated on a test function. -/
 theorem α_dual_eval {n : ℕ} [NeZero n] (J : SignedInterval n) (f : Zn n) :
     αDual J f = J.sign * ∑ v ∈ Finset.Icc J.i J.j, f v := by
   unfold αDual; simp +decide [Finset.mul_sum _ _ _]; ring_nf;
   rfl
 
-/-
-Pairing computation: L(α K, α^v J) in terms of interval endpoints
--/
+/-- Pairing computation: `L(α K, α^v J)` in terms of interval endpoints. -/
 theorem pairing_formula {n : ℕ} [NeZero n] (J K : SignedInterval n) :
     (ZnPairing n (α K)) (αDual J) = J.sign * K.sign *
     ((if J.i = K.i then 1 else 0) + (if J.j = K.j then 1 else 0)
     - (if (J.i : ℕ) = (K.j : ℕ) + 1 then 1 else 0)
     - (if (K.i : ℕ) = (J.j : ℕ) + 1 then 1 else 0)) := by
-  -- By definition, `αDual J (α K)` is a signed sum over the interval `J`.
   have h_dual :
       (ZnPairing n (α K)) (αDual J) =
         J.sign * ∑ v ∈ Finset.Icc J.i J.j, (α K) v := by
@@ -278,33 +261,22 @@ theorem pairing_eq_two_iff_eq {n : ℕ} [NeZero n] (J K : SignedInterval n) :
     subst K
     exact pairing_self J
 
--- α is injective
 theorem α_injective {n : ℕ} [NeZero n] : Function.Injective (α (n := n)) := by
   intro J K h
   exact ((pairing_eq_two_iff_eq J K).mp (by
     rw [← h]
     exact pairing_self J)).symm
 
-/-
-αDual is injective
--/
 theorem α_dual_injective {n : ℕ} [NeZero n] : Function.Injective (αDual (n := n)) := by
   intro J K h
   exact (pairing_eq_two_iff_eq K J).mp (by
     rw [← h]
     exact pairing_self J)
 
-/-
-root_coroot_two
--/
 theorem root_coroot_two' {n : ℕ} [NeZero n] (J : SignedInterval n) :
     (ZnPairing n) (α J) (αDual J) = 2 :=
   pairing_self J
 
--- reflection formula for roots
--- Proof sketch: ext t, rewrite using α_eval and pairing_formula on both sides,
--- then unfold s, case-split on signs and s-conditions.
--- The normalized endpoint identity creates many Boolean cases for `grind`.
 theorem reflectionPerm_root_eval {n : ℕ} [NeZero n] (J K : SignedInterval n) (t : Fin n) :
     (α K - (ZnPairing n (α K)) (αDual J) • α J) t = α (s J K) t := by
   change (α K) t - ((ZnPairing n (α K)) (αDual J)) * (α J) t = α (s J K) t
@@ -319,7 +291,6 @@ theorem reflectionPerm_root' {n : ℕ} [NeZero n] (J K : SignedInterval n) :
   ext t
   exact reflectionPerm_root_eval J K t
 
--- Pairing symmetry: L(α J, α^v K) = L(α K, α^v J)
 theorem pairing_symm {n : ℕ} [NeZero n] (J K : SignedInterval n) :
     (ZnPairing n (α J)) (αDual K) = (ZnPairing n (α K)) (αDual J) := by
   rw [pairing_formula J K, pairing_formula K J]
@@ -328,10 +299,6 @@ theorem pairing_symm {n : ℕ} [NeZero n] (J K : SignedInterval n) :
   unfold SignedInterval.sign
   cases Jε <;> cases Kε <;> simp only [ite_true] <;> split_ifs <;> omega
 
--- reflection formula for coroots
--- Proof sketch: use dual extensionality, so it suffices to evaluate on the coordinate
--- basis vector `LinearMap.single ... t 1`; then rewrite by α_dual_eval and pairing_formula.
--- The coordinate-basis reduction has the same endpoint case split as `reflectionPerm_root_eval`.
 theorem reflectionPerm_coroot_single {n : ℕ} [NeZero n] (J K : SignedInterval n) (t : Fin n) :
     ((αDual K - (ZnPairing n (α J)) (αDual K) • αDual J) ∘ₗ
         LinearMap.single ℤ (fun _ : Fin n => ℤ) t) 1 =
@@ -372,8 +339,6 @@ noncomputable def rootPairing (n : ℕ) [NeZero n] :
   reflectionPerm_root := reflectionPerm_root'
   reflectionPerm_coroot := reflectionPerm_coroot'
 
-
-
 instance finite (n : ℕ) : Fintype (SignedInterval n) := by
   exact Fintype.ofEquiv {x : (Fin n × Fin n) × Bool // x.1.1 ≤ x.1.2}
     { toFun := fun x =>
@@ -404,52 +369,28 @@ lemma An_is_reduced (n : ℕ) [NeZero n] : (rootPairing n).IsReduced := by
   rw [pairing_formula K J, pairing_formula J K] at hcw
   obtain ⟨Ji, Jj, Jh, Jε⟩ := J
   obtain ⟨Ki, Kj, Kh, Kε⟩ := K
-  cases Jε <;> cases Kε
-  · simp +decide only [SignedInterval.sign] at hcw
-    have hends : Ji = Ki ∧ Jj = Kj := by
+  cases Jε <;> cases Kε <;>
+    simp +decide only [SignedInterval.sign] at hcw <;>
+    obtain ⟨rfl, rfl⟩ :
+        Ji = Ki ∧ Jj = Kj := by
       split_ifs at hcw <;> constructor <;> apply Fin.ext <;> omega
-    rcases hends with ⟨hi, hj⟩
-    subst Ki
-    subst Kj
-    left
-    rfl
-  · simp +decide only [SignedInterval.sign] at hcw
-    have hends : Ji = Ki ∧ Jj = Kj := by
-      split_ifs at hcw <;> constructor <;> apply Fin.ext <;> omega
-    rcases hends with ⟨hi, hj⟩
-    subst Ki
-    subst Kj
-    right
+  · left; rfl
+  · right
     ext t
     change α ({ i := Ji, j := Jj, hij := Jh, ε := false } : SignedInterval n) t =
       - α ({ i := Ji, j := Jj, hij := Kh, ε := true } : SignedInterval n) t
     rw [α_eval, α_eval]
     simp [SignedInterval.sign]
-  · simp +decide only [SignedInterval.sign] at hcw
-    have hends : Ji = Ki ∧ Jj = Kj := by
-      split_ifs at hcw <;> constructor <;> apply Fin.ext <;> omega
-    rcases hends with ⟨hi, hj⟩
-    subst Ki
-    subst Kj
-    right
+  · right
     ext t
     change α ({ i := Ji, j := Jj, hij := Jh, ε := true } : SignedInterval n) t =
       - α ({ i := Ji, j := Jj, hij := Kh, ε := false } : SignedInterval n) t
     rw [α_eval, α_eval]
     simp [SignedInterval.sign]
-  · simp +decide only [SignedInterval.sign] at hcw
-    have hends : Ji = Ki ∧ Jj = Kj := by
-      split_ifs at hcw <;> constructor <;> apply Fin.ext <;> omega
-    rcases hends with ⟨hi, hj⟩
-    subst Ki
-    subst Kj
-    left
-    rfl
+  · left; rfl
 
 lemma An_is_crystallographic (n : ℕ) [NeZero n] : (rootPairing n).IsCrystallographic :=
   ⟨fun i j => ⟨(rootPairing n).pairing i j, by simp⟩⟩
-
-
 
 -- Note that the root pairing is not irreducible. Indeed, the set of roots for A1 is {2e1, -2e1},
 -- whose ℤ-span is a proper sub-module of M which remains invariant under the s_i's.

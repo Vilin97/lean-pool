@@ -109,8 +109,7 @@ theorem eq_single_of_eq_zero {n : ℕ} {x : Space n} {i : Fin n} (h : ∀ k, k �
   funext k
   rcases eq_or_ne k i with rfl | hk
   · rw [Pi.single_eq_same]
-  · rw [Pi.single_eq_of_ne hk]
-    exact h k hk
+  · rw [Pi.single_eq_of_ne hk, h k hk]
 
 theorem eq_single_add_single_of_eq_zero {n : ℕ} {x : Space n} {i j : Fin n} (hij : i ≠ j)
     (h : ∀ k, k ≠ i → k ≠ j → x k = 0) :
